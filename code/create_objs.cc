@@ -3169,6 +3169,7 @@ void TTrap::changeTrapValue2(TBeing *ch, const char *arg, editorEnterTypeT type)
   ch->sendTo("Select to number to toggle, <ENTER> to return to the main menu.\n\r--> ");
 }
 
+
 void TTrap::changeTrapValue3(TBeing *ch, const char *arg, editorEnterTypeT type)
 { 
   int i, row;
@@ -3613,3 +3614,34 @@ int TBaseClothing::editAverageMe(TBeing *tBeing, const char *tString)
 
 
 
+
+void TGun::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnterTypeT type)
+{
+  int new_rof;
+  TGun *o=this;
+  
+  if (type != ENTER_CHECK) {
+    if (!*arg || (*arg == '\n')) {
+      ch->specials.edit = MAIN_MENU;
+      update_obj_menu(ch, o);
+      return;
+    }
+    new_rof = atoi(arg);
+
+    if (new_rof < 1 || new_rof > 10) {
+      ch->sendTo("Please enter a number from 0.1 to 500000.0\n\r");
+      return;
+    } else {
+      o->setROF(new_rof);
+      ch->specials.edit = MAIN_MENU;
+      update_obj_menu(ch, o);
+      return;
+    }
+  }
+  ch->sendTo(VT_HOMECLR);
+  ch->sendTo("Current rate of fire: %i", o->getROF());
+  ch->sendTo(VT_CURSPOS, 4, 1);
+  ch->sendTo("Select a new rate of fire.\n\r--> ");
+
+
+}

@@ -91,6 +91,8 @@ enum itemTypeT {
     ITEM_ARMOR_WAND,
     ITEM_DRUG_CONTAINER,
     ITEM_DRUG,
+    ITEM_GUN,
+    ITEM_AMMO,
     MAX_OBJ_TYPES
 };
 const itemTypeT MIN_OBJ_TYPE = itemTypeT(0);

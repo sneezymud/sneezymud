@@ -562,7 +562,17 @@ void assign_item_info()
      "Max Amount of drug", 75, 0,
      "Type of Drug", MAX_DRUG-1, 0,
      "", 0, 0);
-  
+  ItemInfo[ITEM_GUN] = new itemInfo("Gun","a gun",
+				    "Rate of fire", 10, 0,
+				    "Damage Level * 4", 240, 0,
+				    "Damage Precision", 10, 0,
+				    "Ammo type", 10, 0);
+  ItemInfo[ITEM_AMMO] = new itemInfo("Ammo", "some ammo",
+				     "Ammo type", 10, 0,
+				     "Rounds", 500, 0,
+				     "Unused", 0, 0,
+				     "Unused", 0, 0);
+				     
 };
 
 const char * const wear_bits[MAX_ITEM_WEARS] =

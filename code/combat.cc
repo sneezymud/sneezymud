@@ -69,6 +69,7 @@ struct attack_hit_type attack_hit_text[TYPE_MAX_HIT - TYPE_MIN_HIT] =
   {"maul", "mauls", "mauling"},  // TYPE_BEAR_CLAW
   {"kick", "kicks", "kicking"},
   {"maul", "mauls", "mauling"},
+  {"shoot", "shoots", "shooting"},
 };
 
 // isTanking() checks to see if I am tanking.  Conditions are if someone in
@@ -836,6 +837,10 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
 
     if (isPc() && v->isPc() && (roomp->isRoomFlag(ROOM_ARENA) || (inPkZone() && cutPeelPkDam())))
       *dam /= 2;   // raising this number will lower damage rates in arena
+
+    // guns rule
+    if(weapon && dynamic_cast<TGun *>(weapon))
+      *dam *= 2;
 
 
     // this changes damage done to limb only, mhit already returned from funct
@@ -2543,6 +2548,25 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
         }
         break;
     }
+  } else if (wtype == TYPE_SHOOT){
+    if (desc && !IS_SET(desc->autobits, AUTO_NOSPAM))
+      act("You shoot at $N, but miss.", FALSE, this, 0, v, TO_CHAR);
+    if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
+      act("You are missed by $n as $e tries to shoot you.",
+	  TRUE, this, 0, v, TO_VICT);
+    for (t = roomp->stuff; t; t = t->nextThing) {
+      other = dynamic_cast<TBeing *>(t);
+      if (!other)
+	continue;
+      if ((other == this) || (other == v))
+	continue;
+      if (!other->awake())
+	continue;
+      strcpy(namebuf, other->pers(this));
+      strcpy(victbuf, other->pers(v));
+      if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
+	other->sendTo(COLOR_MOBS,"%s tries to shoot %s, but misses.\n\r", good_cap(namebuf).c_str(), victbuf);
+    }
   } else if (pierceType(wtype)) {
     num = ::number(1,10);
     if ((num == 3 || num == 4) && v->isNaked())
@@ -3238,7 +3262,6 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     }
   }
 
-
   // handle a weapon's spec_proc 
   if (weapon && weapon->spec) {
     rc = weapon->checkSpec(vict, CMD_OBJ_HITTING, NULL, NULL);
@@ -3285,6 +3308,21 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       }
     }
   }
+
+
+  // handle ammunition
+  TGun *gun;
+  if(weapon && (gun=dynamic_cast<TGun *>(weapon))){
+    TAmmo *ammo;
+    if((ammo=dynamic_cast<TAmmo *>(gun->getAmmo()))
+       && ammo->getRounds()>0){
+      ammo->setRounds(ammo->getRounds()-1);
+    } else {
+      act("Click.  $N is out of ammunition.", TRUE, this, NULL, gun, TO_CHAR);
+      found=TRUE;
+    }
+  }
+
 
 // 1.  First check hitting vs missing outright
   result = hits(vict, mod);
@@ -4329,6 +4367,8 @@ spellNumT TGenWeapon::getWtype() const
       return TYPE_WATER;
     case WEAPON_TYPE_BEAR_CLAW:
       return TYPE_BEAR_CLAW;
+    case WEAPON_TYPE_SHOOT:
+      return TYPE_SHOOT;
     default:
       return TYPE_HIT;
   }
@@ -5115,6 +5155,7 @@ bool pierceType(spellNumT wtype)
     case TYPE_THRUST:
     case TYPE_SPEAR:
     case TYPE_BEAK:
+    case TYPE_SHOOT:
       return TRUE;
     default:
       return FALSE;

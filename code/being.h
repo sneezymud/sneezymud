@@ -1375,6 +1375,7 @@ class TBeing : public TThing {
     void doSacrifice(const char *);
     void doWhittle(const char *);
     void doBload(const char *);
+    void doGload(const char *);
     void doPrerequisite(const char *, int);
     void doBrew(const char *);
     void doScribe(const char *);

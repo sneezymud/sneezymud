@@ -1910,6 +1910,7 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
 {
   float num;
   TThing *prim, *sec;
+  TGun *gun;
 
   prim = heldInPrimHand();
   sec  = heldInSecHand();
@@ -1942,12 +1943,20 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
       fx += (0.60 * num);
     else {
       fx = prim->blowCountSplitter(this, true);
+      if((gun=dynamic_cast<TGun *>(prim))){
+	fx = gun->getROF();
+      }
     }
+
+
 
     if (!sec)
       fy += (0.40 * num);
     else if (sec != prim) {
       fy = sec->blowCountSplitter(this, false);
+      if((gun=dynamic_cast<TGun *>(sec))){
+	fy = gun->getROF();
+      }
     } else
       // don't give paired weapons extra hits
       fy = 0.00;
@@ -1992,6 +2001,10 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
       fx = (float) 1.0;
     }
 
+    if((gun=dynamic_cast<TGun *>(prim))){
+      fx = gun->getROF();
+    }
+
     tobj = dynamic_cast<TObj *>(sec);
     if (tobj && !tobj->isPaired() && !dynamic_cast<TBaseWeapon *>(tobj) && !check) 
       fy = (float) 0.0;
@@ -2001,6 +2014,10 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
     } else {
       // generic 1 attack
       fy = (float) 1.0;
+    }
+
+    if((gun=dynamic_cast<TGun *>(sec))){
+      fy = gun->getROF();
     }
 
     // specialization check

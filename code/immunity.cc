@@ -263,6 +263,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case TYPE_THRUST:
     case TYPE_SPEAR:
     case TYPE_BEAK:
+    case TYPE_SHOOT:
     case DAMAGE_TRAP_PIERCE:
     case DAMAGE_ARROWS:
       bit = IMMUNE_PIERCE;

@@ -192,7 +192,7 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	disc_water.o disc_wrath.o discipline.o disease.o doors.o game_drawpoker.o \
 	obj_drinkcon.o obj_drug_container.o obj_drug.o edit.o enum.o equip.o \
 	obj_expandable_container.o faction.o flame.o food.o obj_fuel.o gaining.o \
-	obj_gemstone.o obj_general_weapon.o 
+	obj_gemstone.o obj_general_weapon.o obj_gun.o
 
 OBJ2 = game_gin.o handler.o game_hearts.o hospital.o immortal.o immunity.o \
 	indexdata.o info.o inventory.o obj_jewelry.o obj_key.o obj_keyring.o obj_light.o \

@@ -2916,6 +2916,10 @@ TObj * makeNewObj(itemTypeT tmp)
       return new TDrugContainer();
     case ITEM_DRUG:
       return new TDrug();
+    case ITEM_GUN:
+      return new TGun();
+    case ITEM_AMMO:
+      return new TAmmo();
     case ITEM_UNDEFINED:
     case ITEM_MARTIAL_WEAPON:
     case MAX_OBJ_TYPES:

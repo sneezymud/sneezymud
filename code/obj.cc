@@ -226,6 +226,10 @@ itemTypeT mapFileToItemType(int num)
       return ITEM_DRUG_CONTAINER;
     case 56:
       return ITEM_DRUG;
+    case 57:
+      return ITEM_GUN;
+    case 58:
+      return ITEM_AMMO;
   }
   forceCrash("Unknown type %d in map file", num);
   return ITEM_UNDEFINED;
@@ -348,6 +352,10 @@ int mapItemTypeToFile(itemTypeT itt)
       return 55;
     case ITEM_DRUG:
       return 56;
+    case ITEM_GUN:
+      return 57;
+    case ITEM_AMMO:
+      return 58;
     case MAX_OBJ_TYPES:
       break;
   }

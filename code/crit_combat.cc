@@ -413,6 +413,10 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
       (v->isImmortal() || IS_SET(v->specials.act, ACT_IMMORTAL)))
     return FALSE;
 
+  if (dynamic_cast<TGun *>(weapon))
+    return FALSE;
+
+
   if ((mod == -1) && v->isImmune(getTypeImmunity(wtype), 0))
     return FALSE;
 #if 1

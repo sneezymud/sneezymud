@@ -537,6 +537,7 @@ enum spellNumT {
      TYPE_BEAR_CLAW,   // weap # : 31;
      TYPE_KICK,   // monk melee kick
      TYPE_MAUL,   // yet another blunt type
+     TYPE_SHOOT, 
 
      // keep this as the last of the "weapon" damage types
      TYPE_MAX_HIT,  

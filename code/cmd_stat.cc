@@ -1660,6 +1660,7 @@ void TBeing::statBeing(TBeing *k)
       case TYPE_SPEAR:
       case TYPE_BEAK:
       case TYPE_BITE:
+      case TYPE_SHOOT:
       case TYPE_UNDEFINED:
       case TYPE_MAX_HIT:
         vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", aff->type, k->getName());
