@@ -1030,6 +1030,7 @@ int cudgel(TBeing *thief, TBeing *victim)
 {
   int level = thief->getSkillLevel(SKILL_CUDGEL);
   int bKnown = thief->getSkillValue(SKILL_CUDGEL);
+  int i;
 
   if (thief->checkPeaceful("Naughty, naughty.  None of that here.\n\r"))
     return FALSE;
@@ -1103,11 +1104,7 @@ int cudgel(TBeing *thief, TBeing *victim)
     thief->sendTo("There's not enough room for you to knock them senseless!\n\r");
     return FALSE;
   }
-  //
-  //  if (thief->isNotPowerful(victim, level, SKILL_CUDGEL, SILENT_YES)) {
-  //    thief->sendTo("You can't knock them unconscious.\n\r");
-  //    return FALSE;
-  //  }
+
   if (victim->equipment[WEAR_HEAD]) {
     act("$N's $o prevents you from cudgeling $M.",
         FALSE, thief, victim->equipment[WEAR_HEAD], victim, TO_CHAR);
@@ -1119,7 +1116,8 @@ int cudgel(TBeing *thief, TBeing *victim)
   thief->reconcileHurt(victim,0.06);
   if ((bSuccess(thief, bKnown, SKILL_CUDGEL) && 
        !thief->isNotPowerful(victim, level, SKILL_CUDGEL, SILENT_YES)) || !victim->awake()) {
-    if (!victim->isLucky(thief->spellLuckModifier(SKILL_CUDGEL))) {
+    if ((i = thief->specialAttack(victim, SKILL_CUDGEL)) ||
+	(i == GUARANTEED_SUCCESS)) {
       act("You knock $N on the noggin, knocking $M unconscious.", FALSE, thief, obj, victim, TO_CHAR);
       act("$n knocks $N on the noggin, knocking $M unconscious.", FALSE, thief, obj, victim, TO_NOTVICT);
       act("WHAM!  Something smacks into your skull HARD!", FALSE, thief, obj, victim, TO_VICT, ANSI_RED);
