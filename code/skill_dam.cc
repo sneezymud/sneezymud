@@ -3,8 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: skill_dam.cc,v $
+// Revision 1.4  1999/10/09 05:39:50  batopr
+// typo
+//
 // Revision 1.3  1999/10/09 05:38:21  batopr
-// Added OUTSIDE_ONLY elsewhere it was needed
+// Added OUTDOOR_ONLY elsewhere it was needed
 //
 // Revision 1.2  1999/10/09 05:31:44  batopr
 // Added OUTDOOR_ONLY trigger for meteorswarm
@@ -280,7 +283,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       dam = genericDam(victim, skill, DISC_MAGE, level, adv_learn, 2.05, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_TORNADO:
-      dam = genericDam(victim, skill, DISC_MAGE, level, adv_learn, 2.05 * OUTSIDE_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, skill, DISC_MAGE, level, adv_learn, 2.05 * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_COLOR_SPRAY:
     case SPELL_ACID_BLAST:
@@ -331,7 +334,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       dam = (int) (dam * percModifier());
       break;
     case SPELL_CALL_LIGHTNING:
-      dam = genericDam(victim, skill, DISC_CLERIC, level, adv_learn, 1.667 * HAS_SAVING_THROW * OUTSIDE_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, skill, DISC_CLERIC, level, adv_learn, 1.667 * HAS_SAVING_THROW * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
       // additionally, do faction percent modification for clerics
       dam = (int) (dam * percModifier());
       break;
@@ -434,7 +437,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       break;
     case SPELL_STORMY_SKIES:
       // 4/3 factor added here due to save cutting into avg damage
-      dam =  genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529 * HAS_SAVING_THROW * OUTSIDE_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
+      dam =  genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529 * HAS_SAVING_THROW * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SKILL_KICK_MONK:
     case SKILL_CHOP:
