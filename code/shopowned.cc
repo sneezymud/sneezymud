@@ -189,11 +189,12 @@ void TShopOwned::doReserve()
   if(money < min){
     amt=even-money;
 
+    if(corp.getMoney() < amt)
+      amt=corp.getMoney();
+
     if(amt==0)
       return;
 
-    if(corp.getMoney() < amt)
-      amt=corp.getMoney();
 
     corp.setMoney(corp.getMoney() - amt);
     corp.corpLog(keeper->getName(), "reserve", -amt);
@@ -210,7 +211,6 @@ void TShopOwned::doReserve()
 
     if(amt==0)
       return;
-
 
     corp.setMoney(corp.getMoney() + amt);
     corp.corpLog(keeper->getName(), "reserve", amt);
