@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.6  2002/03/14 15:22:37  jesus
+// made move drain skill dependant
+//
 // Revision 5.5  2002/01/10 00:45:49  peel
 // more splitting up of obj2.h
 //
@@ -89,6 +92,8 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
 {
   TTool *forge = NULL, *anvil = NULL;
   int percent;
+  int movemod = ::number(5,22);
+  int movebonus = ::number(1,((ch->getSkillValue(SKILL_SMYTHE) / 10)));
   const int HEATING_TIME = 3;
 
   // sanity check
@@ -98,10 +103,14 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
     smythe_stop(ch);
     return;
   }
+
   if (ch->getRace() == RACE_DWARF) {
-    ch->addToMove(-16);
+    ch->addToMove(-movemod);
+    ch->addToMove(movebonus);
+    ch->addToMove(4);
   } else {
-    ch->addToMove(-20);
+    ch->addToMove(-movemod);
+    ch->addToMove(movebonus);
   }
   if (ch->getMove() < 10) {
     act("You are much too tired to continue repairing $p.", FALSE, ch, o, this, TO_CHAR);
