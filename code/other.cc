@@ -3082,6 +3082,9 @@ void TBeing::doLight(const string & argument)
 }
 
 void TObj::setBurning(TBeing *ch){
+  if(dynamic_cast<TPCorpse *>(this))
+    return;
+
   if(!isObjStat(ITEM_BURNING)){
     setObjStat(ITEM_BURNING);
     if(isObjStat(ITEM_CHARRED))
