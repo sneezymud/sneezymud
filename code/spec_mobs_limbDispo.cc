@@ -147,7 +147,6 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
   }
   if (chopper.isNumber())
     chopper = "UNKNOWN";
-  vlogf(LOG_BUG, fmt("limb chopper was %s") % chopper);
   if (partname.find("diseased") == sstring::npos &&
       partname.find("corpse of a") == sstring::npos &&
       partname.find("pile of dust") == sstring::npos ){
