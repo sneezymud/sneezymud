@@ -6637,15 +6637,16 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       return TRUE;
       }
     case CMD_MOB_GIVEN_ITEM:
+      if (!(item = o)) {
+        sprintf(buf, "%s, You don't have that item!", ch->getName());
+        me->doTell(buf);
+        return TRUE;
+      }
       // prohibit polys and charms from engraving 
       if (dynamic_cast<TMonster *>(ch)) {
         sprintf(buf, "%s, I don't identify for beasts.", fname(ch->name).c_str());
         me->doTell(buf);
-        return TRUE;
-      }
-      if (!(item = o)) {
-        sprintf(buf, "%s, You don't have that item!", ch->getName());
-        me->doTell(buf);
+        me->doGiveObj(ch, item,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
       }
       me->logItem(item, CMD_EAST);  // log the receipt of the item
@@ -6653,7 +6654,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       if (ch->getMoney() < cost) {
         sprintf(buf, "%s, I have to make a living! If you don't have the money, I don't do the work!", ch->getName());
         me->doTell(buf);
-        me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
+        me->doGiveObj(ch,item,GIVE_FLAG_IGN_DEX_TEXT);
         return TRUE;
       }
       sprintf(buf, "Thanks for your business, I'll take your %d talens payment in advance!", cost);
@@ -6664,10 +6665,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       ch->statObjForDivman(item);
       sprintf(buf, "Thank you, %s, for your business! Please come again!", ch->getName());
       me->doSay(buf);
-      strcpy(buf, item->name);
-      add_bars(buf);
-      sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
-      me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
+      me->doGiveObj(ch,item,GIVE_FLAG_IGN_DEX_TEXT);
       return TRUE;
     default:
       return FALSE;
