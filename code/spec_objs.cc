@@ -3285,7 +3285,7 @@ int fishingBoat(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
       if(myself->in_room == 15150){
 	sendrpf(real_roomp(15150), "The fishing boat is preparing to leave.\n\r");
       } else if(myself->in_room == 13091){
-	sendrpf(real_roomp(13091), "The fishing boat is preparing to leave.\n\r");
+	sendrpf(real_roomp(13108), "The fishing boat is preparing to leave.\n\r");
       }
       sendrpf(boatroom, "The fishing boat is preparing to leave.\n\r");
       
@@ -3299,7 +3299,7 @@ int fishingBoat(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
       if(myself->in_room == 15150){
 	sendrpf(real_roomp(15150), boatleaving[timer-1]);
       } else if(myself->in_room == 13091){
-	sendrpf(real_roomp(13091), boatleaving[timer-1]);
+	sendrpf(real_roomp(13108), boatleaving[timer-1]);
       }
       sendrpf(boatroom, boatleaving[timer-1]);
     }
