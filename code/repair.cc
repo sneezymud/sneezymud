@@ -842,3 +842,123 @@ void processRepairFiles(void)
 {
   dirwalk_subs_fullname("mobdata/repairs", processRepairFile);
 }
+
+int repairMetal(TBeing *ch, TObj *o)
+{
+  if (!ch->doesKnowSkill(SKILL_SMYTHE)) {
+    ch->sendTo("You really don't know enough about repairing metal items.\n\r");
+    return FALSE;
+  }
+  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+
+  start_task(ch, NULL, NULL, TASK_SMYTHE, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  return 0;
+}
+
+int repairDead(TBeing *ch, TObj *o)
+{
+  if (!ch->doesKnowSkill(SKILL_REPAIR_SHAMAN)) {
+    ch->sendTo("You really don't know enough about mending bodily materials.\n\r");
+    return FALSE;
+  }
+  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+
+  start_task(ch, NULL, NULL, TASK_REPAIR_DEAD, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  return 0;
+}
+
+int repairOrganic(TBeing *ch, TObj *o)
+{
+  if (!ch->doesKnowSkill(SKILL_REPAIR_RANGER)) {
+    ch->sendTo("You really don't know enough about repairing organic materials.\n\r");
+    return FALSE;
+  }
+  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+
+  start_task(ch, NULL, NULL, TASK_REPAIR_ORGANIC, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  return 0;
+}
+
+int repairMagical(TBeing *ch, TObj *o)
+{
+  if (!ch->doesKnowSkill(SKILL_REPAIR_MAGE)) {
+    ch->sendTo("You really don't know enough about repairing magical materials.\n\r");
+    return FALSE;
+  }
+  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+
+  start_task(ch, NULL, NULL, TASK_REPAIR_MAGICAL, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  return 0;
+}
+
+int repairRock(TBeing *ch, TObj *o)
+{
+  if (!ch->doesKnowSkill(SKILL_REPAIR_CLERIC) || !ch->doesKnowSkill(SKILL_REPAIR_RANGER)) {
+    ch->sendTo("You really don't know enough about repairing rocks.\n\r");
+    return FALSE;
+  }
+  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+
+  start_task(ch, NULL, NULL, TASK_REPAIR_ROCK, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  return 0;
+}
+
+int repairCrystal(TBeing *ch, TObj *o)
+{
+  if (!ch->doesKnowSkill(SKILL_SMYTHE_ADVANCED) || !ch->doesKnowSkill(SKILL_REPAIR_THIEF)) {
+    ch->sendTo("You really don't know enough about repairing crystalline materials.\n\r");
+    return FALSE;
+  }
+  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+
+  start_task(ch, NULL, NULL, TASK_SMYTHE_ADVANCED, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  return 0;
+}
+
+int repairHide(TBeing *ch, TObj *o)
+{
+  if (!ch->doesKnowSkill(SKILL_REPAIR_RANGER) || !ch->doesKnowSkill(SKILL_REPAIR_MONK)) {
+    ch->sendTo("You really don't know enough about mending hides.\n\r");
+    return FALSE;
+  }
+  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+
+  start_task(ch, NULL, NULL, TASK_MEND_HIDE, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  return 0;
+}
+
+int repairGeneric(TBeing *ch, TObj *o)
+{
+  if (!ch->doesKnowSkill(SKILL_MEND)) {
+    ch->sendTo("You really don't know enough about basic mending.\n\r");
+    return FALSE;
+  }
+  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+
+  start_task(ch, NULL, NULL, TASK_MEND, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  return 0;
+}
+
+int repairSpiritual(TBeing *ch, TObj *o)
+{
+  if (!ch->doesKnowSkill(SKILL_REPAIR_CLERIC) || !ch->doesKnowSkill(SKILL_REPAIR_DEIKHAN)) {
+    ch->sendTo("You really don't know enough about repairing holy items.\n\r");
+    return FALSE;
+  }
+  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+
+  start_task(ch, NULL, NULL, TASK_REPAIR_SPIRITUAL, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  return 0;
+}
+
+
+

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_adventuring.h,v $
+// Revision 5.3  2002/07/04 18:34:11  dash
+// added new repair skills
+//
 // Revision 5.2  2001/07/15 19:49:32  peel
 // added defense disc with advanced defense skill
 // adjusted the theoretical hp formula in score
@@ -67,6 +70,7 @@ class CDAdventuring : public CDiscipline
     CSkill skDefense;
     CSkill skGenWeapons;
     CSkill skWhittle;
+    CSkill skMend;
 
     CDAdventuring()
       : CDiscipline(),
@@ -80,7 +84,8 @@ class CDAdventuring : public CDiscipline
         skEvaluate(), skTactics(),
 //        skDull(),
         skDissect(), skOffense(), skDefense(), 
-        skGenWeapons(), skWhittle() {
+        skGenWeapons(), skWhittle(),
+      skMend() {
     }
     CDAdventuring(const CDAdventuring &a)
       : CDiscipline(a),
@@ -97,7 +102,8 @@ class CDAdventuring : public CDiscipline
 //        skDull(a.skDull),
         skDissect(a.skDissect), skOffense(a.skOffense),
         skDefense(a.skDefense), skGenWeapons(a.skGenWeapons),
-        skWhittle(a.skWhittle)  {
+        skWhittle(a.skWhittle),
+      skMend(a.skMend) {
     }
     CDAdventuring & operator=(const CDAdventuring &a) {
       if (this == &a) return *this;
@@ -132,6 +138,7 @@ class CDAdventuring : public CDiscipline
       skDefense = a.skDefense;
       skGenWeapons = a.skGenWeapons;
       skWhittle = a.skWhittle;
+      skMend = a.skMend;
       return *this;
     }
     virtual ~CDAdventuring() {};

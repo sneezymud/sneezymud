@@ -129,16 +129,19 @@ void TBeing::doRepair(const char *arg)
   }
 #endif
 
-  if (!doesKnowSkill(SKILL_SMYTHE)) {
-    sendTo("You know nothing about repairing items.\n\r");
-    return;
-  }
   TObj *item = dynamic_cast<TObj *>(obj);
   if (!item) {
     sendTo("You can only repair objects.\n\r");
     return;
   }
-  repair(this,item);
+
+  if (material_nums[min(max((int) obj->getMaterial(), 0), 200)].repair_proc)
+    (*(material_nums[min(max((int) obj->getMaterial(), 0), 200)].repair_proc)) (this, item);
+  else
+    sendTo("You have no idea how to repair something like that.\n\r");
+
+
+  //  repair(this,item);
 }
 
 void TThing::repairMeHammer(TBeing *caster, TObj *obj)
@@ -156,12 +159,12 @@ void TTool::repairMeHammer(TBeing *caster, TObj *obj)
     return;
   }
 
-  if (obj->getMaxStructPoints() <= obj->getStructPoints() - obj->getDepreciation()) {
+  if (obj->getMaxStructPoints() <= obj->getStructPoints()) {
     caster->sendTo("But it looks as good as good as its going to get!\n\r");
     return;
   }
   if (caster->getMove() < 10) {
-    caster->sendTo("You are much too tired to repair it.  Take a nap or something.\n\r");
+    caster->sendTo("You are much too tired to repair things right now.  Take a nap or something.\n\r");
     return;
   }
   if (material_nums[min(max((int) obj->getMaterial(), 0), 200)].repair_proc)
@@ -182,20 +185,6 @@ void repair(TBeing * caster, TObj *obj)
   hammer->repairMeHammer(caster, obj);
 }
 
-int repairMetal(TBeing *ch, TObj *o)
-{
-  if (!ch->doesKnowSkill(SKILL_SMYTHE)) {
-    ch->sendTo("You really don't know enough about repairing metal items.\n\r");
-    return FALSE;
-  }
-  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
-  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
-  o->addToDepreciation(2); // considering repairer prolly sucks compared to a pro, i think
-                           // this is fair. -dash, dec 2000, sometime before x-mas
-
-  start_task(ch, NULL, NULL, TASK_SMYTHE, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
-  return 0;
-}
 
 
 

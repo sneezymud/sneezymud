@@ -942,6 +942,26 @@ int mapSpellnumToFile(spellNumT stt)
       return 694;
     case SKILL_IRON_WILL:
       return 695;
+    case SKILL_REPAIR_MAGE:
+      return 696;
+    case SKILL_REPAIR_RANGER:
+      return 697;
+    case SKILL_REPAIR_DEIKHAN:
+      return 698;
+    case SKILL_REPAIR_CLERIC:
+      return 699;
+    case SKILL_REPAIR_MONK:
+      return 700;
+    case SKILL_REPAIR_SHAMAN:
+      return 701;
+    case SKILL_REPAIR_THIEF:
+      return 702;
+    case SKILL_MEND:
+      return 703;
+    case SKILL_SMYTHE_ADVANCED:
+      return 704;
+
+
 
     case AFFECT_DISEASE:
       return 2500;
@@ -1919,6 +1939,25 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_HEALING_GRASP;
     case 688:
       return SKILL_MANA;
+
+    case 696:
+      return SKILL_REPAIR_MAGE;
+    case 697:
+      return SKILL_REPAIR_RANGER;
+    case 698:
+      return SKILL_REPAIR_DEIKHAN;
+    case 699:
+      return SKILL_REPAIR_CLERIC;
+    case 700:
+      return SKILL_REPAIR_MONK;
+    case 701:
+      return SKILL_REPAIR_SHAMAN;
+    case 702:
+      return SKILL_REPAIR_THIEF;
+    case 703:
+      return SKILL_MEND;
+    case 704:
+      return SKILL_SMYTHE_ADVANCED;
 
     case 2500:
       return AFFECT_DISEASE;

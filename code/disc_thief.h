@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_thief.h,v $
+// Revision 5.2  2002/07/04 18:34:11  dash
+// added new repair skills
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -39,6 +45,8 @@ public:
     CSkill skHide;
     CSkill skDisarmThief;
 
+    CSkill skRepairThief;
+
     CDThief()
       : CDiscipline(),
       skSwindle(),
@@ -57,7 +65,8 @@ public:
       skDisarmTraps(),
       skCudgel(),
       skHide(),
-      skDisarmThief() {
+      skDisarmThief(),
+      skRepairThief() {
     }
     CDThief(const CDThief &a)
       : CDiscipline(a),
@@ -77,7 +86,8 @@ public:
       skDisarmTraps(a.skDisarmTraps),
       skCudgel(a.skCudgel),
       skHide(a.skHide),
-      skDisarmThief(a.skDisarmThief) {
+      skDisarmThief(a.skDisarmThief),
+      skRepairThief(a.skRepairThief) {
     }
     CDThief & operator=(const CDThief &a) {
       if (this == &a) return *this;
@@ -99,6 +109,7 @@ public:
       skCudgel = a.skCudgel;
       skHide = a.skHide;
       skDisarmThief = a.skDisarmThief;
+      skRepairThief = a.skRepairThief;
       return *this;
     }
     virtual ~CDThief() {}

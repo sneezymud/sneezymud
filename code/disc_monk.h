@@ -2,13 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_monk.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -38,6 +31,7 @@ public:
     CSkill skChi;
     CSkill skDisarmMonk;
     CSkill skCatfall;
+    CSkill skRepairMonk;
 
     CDMonk()
       : CDiscipline(),
@@ -59,7 +53,8 @@ public:
       skChop(),
       skChi(),
       skDisarmMonk(),
-      skCatfall(){
+      skCatfall(), 
+      skRepairMonk() {
     }
     CDMonk(const CDMonk &a)
       : CDiscipline(a),
@@ -81,7 +76,8 @@ public:
       skChop(a.skChop),
       skChi(a.skChi),
       skDisarmMonk(a.skDisarmMonk),
-      skCatfall(a.skDisarmMonk){
+      skCatfall(a.skDisarmMonk),
+      skRepairMonk(a.skRepairMonk) {
     }
     CDMonk & operator=(const CDMonk &a) {
       if (this == &a) return *this;
@@ -105,6 +101,7 @@ public:
       skChi = a.skChi;
       skDisarmMonk = a.skDisarmMonk;
       skCatfall = a.skCatfall;
+      skRepairMonk = a.skRepairMonk;
       return *this;
     }
     virtual ~CDMonk() {}
@@ -116,7 +113,7 @@ private:
     int task_yoginsa(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
     int grappleMonk(TBeing *, TBeing *, int);
     int springleap(TBeing *, TBeing *, bool);
-    void chiMe(TBeing *);
+    int chiMe(TBeing *);
     int chi(TBeing *, TBeing *);
     int chi(TBeing *, TObj *);
 

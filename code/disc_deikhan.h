@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_deikhan.h,v $
+// Revision 5.2  2002/07/04 18:34:11  dash
+// added new repair skills
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -73,37 +79,40 @@ public:
 // Level 30
     CSkill skHarmCriticalDeikhan;
 
+    CSkill skRepairDeikhan;
+    
     CDDeikhan()
       : CDiscipline(),
-        skKickDeikhan(),
-        skHealLightDeikhan(),
-        skHarmLightDeikhan(),
-        skChivalry(),
-        skArmorDeikhan(),
-        skBlessDeikhan(),
-        skBashDeikhan(),
-        skRescueDeikhan(),
-        skExpelDeikhan(),
-        skClotDeikhan(),
-        skRainBrimstoneDeikhan(),
-        skSterilizeDeikhan(),
-        skRemoveCurseDeikhan(),
-        skCurseDeikhan(),
-        skSmite(),
-        skInfectDeikhan(),
-        skCureDiseaseDeikhan(),
-        skCreateFoodDeikhan(),
-        skCreateWaterDeikhan(),
-        skHealSeriousDeikhan(),
-        skCurePoisonDeikhan(),
-        skCharge(),
-        skHarmSeriousDeikhan(),
-        skPoisonDeikhan(),
-        skSwitchDeikhan(),
-        skDisarmDeikhan(),
-        skLayHands(),
-        skHealCriticalDeikhan(),
-        skHarmCriticalDeikhan() {
+      skKickDeikhan(),
+      skHealLightDeikhan(),
+      skHarmLightDeikhan(),
+      skChivalry(),
+      skArmorDeikhan(),
+      skBlessDeikhan(),
+      skBashDeikhan(),
+      skRescueDeikhan(),
+      skExpelDeikhan(),
+      skClotDeikhan(),
+      skRainBrimstoneDeikhan(),
+      skSterilizeDeikhan(),
+      skRemoveCurseDeikhan(),
+      skCurseDeikhan(),
+      skSmite(),
+      skInfectDeikhan(),
+      skCureDiseaseDeikhan(),
+      skCreateFoodDeikhan(),
+      skCreateWaterDeikhan(),
+      skHealSeriousDeikhan(),
+      skCurePoisonDeikhan(),
+      skCharge(),
+      skHarmSeriousDeikhan(),
+      skPoisonDeikhan(),
+      skSwitchDeikhan(),
+      skDisarmDeikhan(),
+      skLayHands(),
+      skHealCriticalDeikhan(),
+      skHarmCriticalDeikhan(),
+      skRepairDeikhan() {
     }
     CDDeikhan(const CDDeikhan &a)
       : CDiscipline(a),
@@ -135,7 +144,8 @@ public:
         skDisarmDeikhan(a.skDisarmDeikhan),
         skLayHands(a.skLayHands),
         skHealCriticalDeikhan(a.skHealCriticalDeikhan),
-        skHarmCriticalDeikhan(a.skHarmCriticalDeikhan) {
+        skHarmCriticalDeikhan(a.skHarmCriticalDeikhan),
+      skRepairDeikhan(a.skRepairDeikhan) {
     }
     CDDeikhan & operator=(const CDDeikhan &a) {
       if (this == &a) return *this;
@@ -169,6 +179,7 @@ public:
       skLayHands = a.skLayHands;
       skHealCriticalDeikhan = a.skHealCriticalDeikhan;
       skHarmCriticalDeikhan = a.skHarmCriticalDeikhan;
+      skRepairDeikhan = a.skRepairDeikhan;
       return *this;
     }
     virtual ~CDDeikhan() {}

@@ -31,6 +31,8 @@ public:
     CSkill skLegbasGuidance;
     CSkill skDancingBones;
 
+    CSkill skRepairShaman;
+
     CDShaman()
       : CDiscipline(),
       skSacrifice(),
@@ -55,7 +57,8 @@ public:
       skDetectShadow(),
       skDjallasProtection(),
       skLegbasGuidance(),
-      skDancingBones() { 
+      skDancingBones(),
+      skRepairShaman() { 
     }
     CDShaman(const CDShaman &a)
       : CDiscipline(a),
@@ -81,7 +84,8 @@ public:
       skDetectShadow(a.skDetectShadow),
       skDjallasProtection(a.skDjallasProtection),
       skLegbasGuidance(a.skLegbasGuidance),
-      skDancingBones(a.skDancingBones) {
+      skDancingBones(a.skDancingBones),
+      skRepairShaman(a.skRepairShaman) {
     }
     CDShaman & operator=(const CDShaman &a) {
       if (this == &a) return *this;
@@ -109,6 +113,7 @@ public:
       skDjallasProtection = a.skDjallasProtection;
       skLegbasGuidance = a.skLegbasGuidance;
       skDancingBones = a.skDancingBones;
+      skRepairShaman = a.skRepairShaman;
       return *this;
     }
     virtual ~CDShaman() {}

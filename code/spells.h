@@ -169,6 +169,7 @@ enum spellNumT {
      SPELL_PLASMA_MIRROR,
      SPELL_GARMULS_TAIL,
      SPELL_ETHER_GATE,
+     SKILL_REPAIR_MAGE,
      SPELL_KNOT,
 
      // end of mage
@@ -228,7 +229,8 @@ enum spellNumT {
      SPELL_RESTORE_LIMB,
      SPELL_KNIT_BONE,
      SPELL_RELIVE,
-   
+  SKILL_REPAIR_CLERIC,
+
      // end of cleric
      // start of warrior
 
@@ -253,7 +255,8 @@ enum spellNumT {
      SKILL_DUAL_WIELD_WARRIOR,  
      SKILL_POWERMOVE,
      SKILL_TRANCE_OF_BLADES,
-   
+  SKILL_SMYTHE_ADVANCED,
+
      // end of warrior
      // start of ranger
 
@@ -286,12 +289,11 @@ enum spellNumT {
      SKILL_APPLY_HERBS,
      SKILL_DIVINATION,
      SKILL_ENCAMP,
-#if 1
   SPELL_EARTHMAW,
   SPELL_CREEPING_DOOM,
   SPELL_FERAL_WRATH,
   SPELL_SKY_SPIRIT,
-#endif
+  SKILL_REPAIR_RANGER,
      // end of ranger
      // start of deikhan
 
@@ -342,7 +344,9 @@ enum spellNumT {
      SPELL_NUMB_DEIKHAN,
      SPELL_EARTHQUAKE_DEIKHAN,
      SPELL_CALL_LIGHTNING_DEIKHAN,
-  
+  SKILL_REPAIR_DEIKHAN,
+
+
      // end of deikhan
      // start of monk
 
@@ -380,6 +384,7 @@ enum spellNumT {
      SKILL_IRON_MUSCLES,
      SKILL_IRON_LEGS,
      SKILL_IRON_WILL,
+     SKILL_REPAIR_MONK,
      SKILL_CHAIN_ATTACK,
 
      // end of monk
@@ -413,7 +418,8 @@ enum spellNumT {
      SKILL_DUAL_WIELD_THIEF,
      SKILL_DISARM_THIEF,
      SKILL_COUNTER_STEAL,
-  
+  SKILL_REPAIR_THIEF,
+
      // end of thief
      // start of shaman
      SKILL_RITUALISM,
@@ -462,7 +468,8 @@ enum spellNumT {
      SPELL_CHASE_SPIRIT,
      SPELL_CLEANSE,
      SKILL_TURN,
-     SPELL_HEALING_GRASP,  
+     SPELL_HEALING_GRASP,
+  SKILL_REPAIR_SHAMAN,
      // end of shaman
   
      // start of psionics
@@ -524,6 +531,7 @@ enum spellNumT {
      SKILL_FISHING,
      SKILL_ADVANCED_DEFENSE,
      SKILL_MANA,
+  SKILL_MEND,
      // end of generic
 
      // keep this as the last of the true skills

@@ -5960,6 +5960,197 @@ int ghostlyShiv(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   return TRUE;
 }
 
+//dashmark
+
+int HSCopsi(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  // weird proc
+  // three procs that work together, two hammers that charge the pendant, pendant does weird magic
+  // stuff when used.
+  // nothing works unless all three are being used.
+
+  if (::number(0,15))
+    return FALSE;
+  if (cmd != CMD_OBJ_HIT)
+    return FALSE;
+
+  TBeing *ch;
+  TObj *pendant = NULL;
+  TObj *hammer1 = NULL;
+  TObj *hammer2 = NULL;
+  affectedData aff;
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+  
+  
+  if(!(pendant = dynamic_cast<TObj *>(ch->equipment[WEAR_NECK])))
+    return FALSE;
+  if (obj_index[pendant->getItemIndex()].virt != 17258)
+    return FALSE;
+  
+  if(!(hammer1 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])))
+    return FALSE;
+  if (obj_index[hammer1->getItemIndex()].virt != 17256 || obj_index[hammer1->getItemIndex()].virt != 17257)
+    return FALSE;
+  
+  if(!(hammer2 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])))
+    return FALSE;
+  if (obj_index[hammer2->getItemIndex()].virt != 17256 || obj_index[hammer2->getItemIndex()].virt != 17257)
+    return FALSE;
+
+  // yay, he's using all three. 
+  int charge = 0;
+  sscanf(pendant->name, "pendant crystal hammer [quest] [charge=%d]", &charge);
+
+
+  int dam = (::number(1,5));
+  act("$p shines with a <c>co<b>ol <B>cobalt<1><b> au<1><c>ra<1> as it drains energy from $N.",TRUE,ch,o,vict,TO_CHAR,NULL);
+  act("$p shines with a <c>co<b>ol <B>cobalt<1><b> au<1><c>ra<1> as it drains energy from $N.",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+  act("$p shines with a <c>co<b>ol <B>cobalt<1><b> au<1><c>ra<1> as it drains energy from you!.",TRUE,ch,o,vict,TO_VICT,NULL);
+
+
+  act("Your $o flashes pale <b>blue<1> for a moment.",TRUE,ch,pendant,vict,TO_CHAR,NULL);
+  act("$n's $o flashes pale <b>blue<1> for a moment.",TRUE,ch,pendant,vict,TO_NOTVICT,NULL);
+  act("$n's $o flashes pale <b>blue<1> for a moment.",TRUE,ch,pendant,vict,TO_VICT,NULL);
+ 
+  
+  charge += dam;
+  sprintf(pendant->name, "pendant crystal hammer [quest] [charge=%d]", charge);
+  
+  int rc = ch->reconcileDamage(vict, dam, DAMAGE_DRAIN);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
+  return TRUE;
+
+  return FALSE;
+}
+
+
+int HSPeke(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  // weird proc
+  // three procs that work together, two hammers that charge the pendant, pendant does weird magic
+  // stuff when used.
+  // nothing works unless all three are being used.
+
+  if (::number(0,15))
+    return FALSE;
+  if (cmd != CMD_OBJ_HIT)
+    return FALSE;
+
+  TBeing *ch;
+  TObj *pendant = NULL;
+  TObj *hammer1 = NULL;
+  TObj *hammer2 = NULL;
+  affectedData aff;
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+
+  if(!(pendant = dynamic_cast<TObj *>(ch->equipment[WEAR_NECK])))
+    return FALSE;
+  if (obj_index[pendant->getItemIndex()].virt != 17258)
+    return FALSE;
+
+  if(!(hammer1 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])))
+    return FALSE;
+  if (obj_index[hammer1->getItemIndex()].virt != 17256 || obj_index[hammer1->getItemIndex()].virt != 17257)
+    return FALSE;
+
+  if(!(hammer2 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])))
+    return FALSE;
+  if (obj_index[hammer2->getItemIndex()].virt != 17256 || obj_index[hammer2->getItemIndex()].virt != 17257)
+    return FALSE;
+
+  // yay, he's using all three.
+  int charge = 0;
+  sscanf(pendant->name, "pendant crystal hammer [quest] [charge=%d]", &charge);
+
+
+  int dam = (::number(1,5));
+
+  act("$p shines with a <o>wa<r>rm <R>scarlet<1><r> au<1><o>ra<1> as it drains energy from $N.",TRUE,ch,o,vict,TO_CHAR,NULL);
+  act("$p shines with a <o>wa<r>rm <R>scarlet<1><r> au<1><o>ra<1> as it drains energy from $N.",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+  act("$p shines with a <o>wa<r>rm <R>scarlet<1><r> au<1><o>ra<1> as it drains energy from you!.",TRUE,ch,o,vict,TO_VICT,NULL);
+
+
+  act("Your $o flashes pale <r>red<1> for a moment.",TRUE,ch,pendant,vict,TO_CHAR,NULL);
+  act("$n's $o flashes pale <r>red<1> for a moment.",TRUE,ch,pendant,vict,TO_NOTVICT,NULL);
+  act("$n's $o flashes pale <r>red<1> for a moment.",TRUE,ch,pendant,vict,TO_VICT,NULL);
+
+  charge += dam;
+  sprintf(pendant->name, "pendant crystal hammer [quest] [charge=%d]", charge);
+
+  int rc = ch->reconcileDamage(vict, dam, DAMAGE_DRAIN);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
+  return TRUE;
+
+  return FALSE;
+}
+
+
+int HSPendant(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  // weird proc
+  // three procs that work together, two hammers that charge the pendant, pendant does weird magic
+  // stuff when used.
+  // nothing works unless all three are being used.
+
+  if (::number(0,5))
+    return FALSE;
+  if (cmd != CMD_GENERIC_QUICK_PULSE)
+    return FALSE;
+
+  TBeing *ch;
+  TObj *pendant = NULL;
+  TObj *hammer1 = NULL;
+  TObj *hammer2 = NULL;
+  affectedData aff;
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+
+  if(!(pendant = dynamic_cast<TObj *>(ch->equipment[WEAR_NECK])))
+    return FALSE;
+  if (obj_index[pendant->getItemIndex()].virt != 17258)
+    return FALSE;
+
+  if(!(hammer1 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])))
+    return FALSE;
+  if (obj_index[hammer1->getItemIndex()].virt != 17256 || obj_index[hammer1->getItemIndex()].virt != 17257)
+    return FALSE;
+
+  if(!(hammer2 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])))
+    return FALSE;
+  if (obj_index[hammer2->getItemIndex()].virt != 17256 || obj_index[hammer2->getItemIndex()].virt != 17257)
+    return FALSE;
+
+  // yay, he's using all three.
+  int charge = 0;
+  sscanf(pendant->name, "pendant crystal hammer [quest] [charge=%d]", &charge);
+
+  if (charge < 50)
+    return FALSE;
+
+  act("Your $o shines with a <p>violet<1> aura briefly.",TRUE,ch,o,vict,TO_CHAR,NULL);
+  act("$n's $o shines with a <p>violet<1> aura briefly.",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+
+  charge -= 50;
+  sprintf(pendant->name, "pendant crystal hammer [quest] [charge=%d]", charge);
+
+
+
+
+
+  return FALSE;
+}
+
+
+
 
 //MARKER: END OF SPEC PROCS
 
@@ -6086,5 +6277,14 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "poison cutlass", poisonCutlass},
   {FALSE, "unholy cutlass", unholyCutlass},
   {FALSE, "ghostly shiv", ghostlyShiv},
+  {FALSE, "hammer set: peke", HSPeke},
+  {FALSE, "hammer set: copsi", HSCopsi},
+  {FALSE, "hammer set: pendant", HSPendant},
   {FALSE, "last proc", bogusObjProc}
 };
+
+
+
+
+
+

@@ -412,6 +412,8 @@ void generate_mob_index()
         exit(0);
       }
 
+      lev = (long)((arm + hp + daml) / 3);
+
       tmpi->Class = Class;
       tmpi->level = lev;
 

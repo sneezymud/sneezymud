@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_ranger.h,v $
+// Revision 5.3  2002/07/04 18:34:11  dash
+// added new repair skills
+//
 // Revision 5.2  2001/12/15 04:26:52  jesus
 // added in butcher skill under adventuring disc
 // will add more descs for races as time goes on 30 of about 125 races supported
@@ -73,6 +76,8 @@ public:
 // Level 30
     CSkill skBarkskin;
 
+    CSkill skRepairRanger;
+
     CDRanger()
       : CDiscipline(),
       skHiking(),
@@ -91,7 +96,8 @@ public:
       skSwitchRanger(),
       skDualWield(),
       skBeastSummon(),
-      skBarkskin() {
+      skBarkskin(),
+      skRepairRanger() {
     }
     CDRanger(const CDRanger &a)
       : CDiscipline(a),
@@ -111,7 +117,8 @@ public:
       skSwitchRanger(a.skSwitchRanger),
       skDualWield(a.skDualWield),
       skBeastSummon(a.skBeastSummon),
-      skBarkskin(a.skBarkskin) {
+      skBarkskin(a.skBarkskin), 
+      skRepairRanger(a.skRepairRanger) {
     }
     CDRanger & operator=(const CDRanger &a) {
       if (this == &a) return *this;
@@ -133,6 +140,7 @@ public:
       skDualWield = a.skDualWield;
       skBeastSummon = a.skBeastSummon;
       skBarkskin = a.skBarkskin;
+      skRepairRanger = a.skRepairRanger;
       return *this;
     }
     virtual ~CDRanger() {}

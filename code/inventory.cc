@@ -59,6 +59,8 @@ void TBeing::logItem(const TThing *obj, cmdTypeT cmd) const
     strcpy(cmdbuf, "picked up");
   else if (cmd == CMD_REPAIR)
     strcpy(cmdbuf, "repairing");
+  else if (cmd == CMD_MEND)
+    strcpy(cmdbuf, "mending");
   else if (cmd == CMD_NORTH)      // kludge
     strcpy(cmdbuf, "repair retrieving");
   else if (cmd == CMD_GIVE)

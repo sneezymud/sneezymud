@@ -1189,6 +1189,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doDull(newarg);
 	  addToLifeforce(1);
           break;
+	case CMD_MEND:     // just aliasing this to repair
         case CMD_REPAIR:
           doRepair(newarg);
 	  addToLifeforce(1);
@@ -2653,6 +2654,7 @@ void buildCommandArray(void)
   commandArray[CMD_RECEIVE] = new commandInfo("receive", POSITION_CRAWLING, 0);
   commandArray[CMD_CLS] = new commandInfo("cls", POSITION_DEAD, 0);
   commandArray[CMD_REPAIR] = new commandInfo("repair", POSITION_CRAWLING, 0);
+  commandArray[CMD_MEND] = new commandInfo("mend", POSITION_CRAWLING, 0);
   commandArray[CMD_SACRIFICE] = new commandInfo("sacrifice", POSITION_CRAWLING, 0);
   commandArray[CMD_PROMPT] = new commandInfo("prompt", POSITION_DEAD, 0);
   commandArray[CMD_GLANCE] = new commandInfo("glance", POSITION_RESTING, 0);

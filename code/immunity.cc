@@ -630,6 +630,15 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SKILL_SCRIBE:
     case SKILL_RESCUE:
     case SKILL_SMYTHE:
+    case SKILL_REPAIR_MAGE:
+    case SKILL_REPAIR_RANGER:
+    case SKILL_REPAIR_MONK:
+    case SKILL_REPAIR_CLERIC:
+    case SKILL_REPAIR_DEIKHAN:
+    case SKILL_REPAIR_SHAMAN:
+    case SKILL_REPAIR_THIEF:
+    case SKILL_SMYTHE_ADVANCED:
+    case SKILL_MEND:
     case SKILL_SACRIFICE:
     case SKILL_SWITCH_OPP:
     case SKILL_RETREAT:

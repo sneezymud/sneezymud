@@ -261,6 +261,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDMage *) cd)->skCopy;
     case SPELL_HASTE:
       return &((CDMage *) cd)->skHaste;
+    case SKILL_REPAIR_MAGE:
+      return &((CDMage *) cd)->skRepairMage;
 
 // disc_air
 
@@ -421,6 +423,9 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDCleric *) cd)->skKnitBone;
     case SPELL_BLINDNESS:
       return &((CDCleric *) cd)->skBlindness;
+    case SKILL_REPAIR_CLERIC:
+      return &((CDCleric *) cd)->skRepairCleric;
+
 
 //disc_wrath.h
     case SPELL_PILLAR_SALT:
@@ -534,6 +539,10 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDPhysical *) cd)->skPowerMove;
 
 // disc_smythe
+    case SKILL_SMYTHE_ADVANCED:
+      return &((CDSmythe *) cd)->skSmytheAdvanced;
+
+
 // No skills currently
 
 
@@ -571,6 +580,9 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDRanger *) cd)->skBarkskin;
     case SKILL_BUTCHER:
       return &((CDRanger *) cd)->skButcher;
+    case SKILL_REPAIR_RANGER:
+      return &((CDRanger *) cd)->skRepairRanger;
+
 
 // disc_fight_ranger
 
@@ -668,6 +680,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDDeikhan *) cd)->skHealCriticalDeikhan;
     case SPELL_HARM_CRITICAL_DEIKHAN:  //     437
       return &((CDDeikhan *) cd)->skHarmCriticalDeikhan;
+    case SKILL_REPAIR_DEIKHAN:
+      return &((CDDeikhan *) cd)->skRepairDeikhan;
 
 
 // disc_deikhan_fight
@@ -768,6 +782,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDMonk *) cd)->skChi;
     case SKILL_CATFALL:
       return &((CDMonk *) cd)->skCatfall;
+    case SKILL_REPAIR_MONK:
+      return &((CDMonk *) cd)->skRepairMonk;
 
 // disc_meditation_monk
     case SKILL_WOHLIN:
@@ -853,6 +869,9 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDThief *) cd)->skHide;
     case SKILL_DISARM_THIEF:
       return &((CDThief *) cd)->skDisarmThief;
+    case SKILL_REPAIR_THIEF:
+      return &((CDThief *) cd)->skRepairThief;
+
 
 // disc_fighting_thief
 
@@ -951,6 +970,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDShaman *) cd)->skVoodoo;
     case SPELL_ENTHRALL_GHOUL:
       return &((CDShaman *) cd)->skEnthrallGhoul;
+    case SKILL_REPAIR_SHAMAN:
+      return &((CDShaman *) cd)->skRepairShaman;
 
       // spider abilities----------------------
 
@@ -1083,6 +1104,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDAdventuring *) cd)->skOffense;
     case SKILL_WHITTLE: // 663
       return &((CDAdventuring *) cd)->skWhittle;
+    case SKILL_MEND:
+      return &((CDAdventuring *) cd)->skMend;
 
   // disc_wizardry
     case SKILL_WIZARDRY: // 960
