@@ -3,7 +3,7 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: other.cc,v $
-// Revision 1.6  1999/09/27 00:34:06  lapsos
+// Revision 1.7  1999/09/27 01:03:53  lapsos
 // *** empty log message ***
 //
 // Revision 1.5  1999/09/27 00:07:47  lapsos
@@ -2288,7 +2288,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_STORMY_SKIES:
       stormySkies(caster,victim,obj);
       break;
-    case SPELL_ATMOZE:
+    case SPELL_ATOMIZE:
       /*
       atomize(caster,victim,obj);
       break;
