@@ -54,12 +54,13 @@ int main(int argc, char **argv){
   } else {
     db.query("select shop_nr, name, action, item, talens, shoptalens, shopvalue, logtime, itemcount from shoplog where shop_nr=%i order by logtime", convertTo<int>(**shop_nr));
     cout << "Content-type: text/plain\n\n";
-    
+    cout << "shop_nr, name, action, item, talens, shoptalens, shopvalue, logtime, itemcount\n";
+
     while(db.fetchRow()){
-      for(int i=0;i<7;++i){
-	cout << db.getColumn(i) << ",";
+      for(int i=0;i<8;++i){
+	cout << stripColorCodes(db.getColumn(i)) << ", ";
       }
-      cout << db.getColumn(8) << endl;
+      cout << stripColorCodes(db.getColumn(8)) << endl;
     }
   }
   
