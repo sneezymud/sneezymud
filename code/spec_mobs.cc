@@ -1384,8 +1384,6 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 	return TRUE;
       }
       break;
-
-
     case 36060:
       if (!myself->canSee(ch) || (myself == ch) || ch->isAnimal() || !myself->awake() || myself->fight()) {
         return FALSE;
@@ -1403,7 +1401,9 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
             if ((tObj = dynamic_cast<TObj *>(tThing)) && (tObj->objVnum() == 36060))
               return FALSE;
 
-        act("$n growls and says, 'Hey! Your not authorized to be here!'", FALSE, myself, 0, 0, TO_ROOM);
+        if (ch->isPc())
+          myself->doTell(ch->getName(), "Hey! Your not authorized to be here!");
+
         act("$n shoves you south out of the room!", FALSE, myself, 0, ch, TO_VICT);
         act("$n shoves $N south out of the room!", FALSE, myself, 0, ch, TO_NOTVICT);
 
@@ -1420,8 +1420,6 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
       } else
         return FALSE;
       break;
-
-
     case 22713:
       if((rev_dir[dir]==ch->specials.last_direction) || (cmd == CMD_OPEN)){
 	return FALSE;
