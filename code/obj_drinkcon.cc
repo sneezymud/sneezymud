@@ -141,7 +141,7 @@ void assign_drink_types()
   DrinkInfo[LIQ_SLIME]                = new drinkInfo(0,  1,  8, false, false, "<G>light green<1>", "<G>juice<1>", 0);
   DrinkInfo[LIQ_MILK]                 = new drinkInfo(0,  2,  6, false, false, "<W>white<1>", "<W>milk<1>", 0);
   DrinkInfo[LIQ_TEA]                  = new drinkInfo(-1, -1,  6, false, false, "<o>brown<1>", "<o>tea<1>", 0);
-  DrinkInfo[LIQ_COFFEE]               = new drinkInfo(-2, -3,  5, false, false, "<k>black<1>", "<k>coffee<1>", 0);
+  DrinkInfo[LIQ_COFFEE]               = new drinkInfo(-2, -3,  5, true, false, "<k>black<1>", "<k>coffee<1>", 0);
   DrinkInfo[LIQ_BLOOD]                = new drinkInfo(0,  2, -1, true, false, "<r>red<1>", "<r>blood<1>", 0);
   DrinkInfo[LIQ_SALTWATER]            = new drinkInfo(0,  1, -5, false, false, "clear", "salt water", 0);
   DrinkInfo[LIQ_MEAD]                 = new drinkInfo(2,  2,  4, false, false, "<k>black<1>", "<k>mead<1>", 0);

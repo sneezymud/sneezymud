@@ -2103,6 +2103,36 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
       else
 	bless(ch,vict,level/10,learn/10,SPELL_BLESS);
       break;
+    case LIQ_COFFEE:
+      aff.type = AFFECT_DRUG;
+      aff.level = level;
+      aff.duration = UPDATES_PER_MUDHOUR;
+      aff.modifier = 3;
+      aff.location = APPLY_SPE;
+      vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+
+      aff.type = AFFECT_DRUG;
+      aff.level = level;
+      aff.duration = UPDATES_PER_MUDHOUR;
+      aff.modifier = 3;
+      aff.location = APPLY_FOC;
+      vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+
+      aff.type = AFFECT_DRUG;
+      aff.level = level;
+      aff.duration = UPDATES_PER_MUDHOUR;
+      aff.modifier = -5;
+      aff.location = APPLY_CHA;
+      vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+
+      aff.type = AFFECT_DRUG;
+      aff.level = level;
+      aff.duration = UPDATES_PER_MUDHOUR;
+      aff.modifier = -3;
+      aff.location = APPLY_DEX;
+      vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+
+      break;
     case LIQ_POT_CURE_POISON:
       curePoison(ch,vict,level,learn,SPELL_CURE_POISON);
       break;
@@ -2280,11 +2310,11 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
       haste(ch,vict,level,learn);
 
       aff.type = SPELL_HASTE;
-      aff.level = 50;
+      aff.level = level;
       aff.duration = UPDATES_PER_MUDHOUR * 10;
       aff.modifier = 50;
       aff.location = APPLY_SPE;
-      vict->affectTo(&aff, -1);
+      vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES);
 
       break;
     case LIQ_POT_CLARITY:
