@@ -550,8 +550,15 @@ int TShopOwned::setRates(sstring arg)
     keeper->doTell(ch->getName(), fmt("Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i, all for player %s.") %
 		   profit_buy % profit_sell % max_num % buf);    
   } else if(buf == "repair"){
-    db.query("update shopownedrepair set quality=%f, speed=%f where shop_nr=%i", profit_buy, profit_sell, shop_nr);
-    
+    db.query("select 1 from shopownedrepair where shop_nr=%i", shop_nr);
+
+    if(!db.fetchRow()){
+      db.query("insert into shopownedrepair values (shop_nr, quality, speed)",
+	       shop_nr, profit_buy, profit_sell);
+    } else {
+      db.query("update shopownedrepair set quality=%f, speed=%f where shop_nr=%i", profit_buy, profit_sell, shop_nr);
+    }    
+
     keeper->doTell(ch->getName(), 
 		   fmt("Ok, my quality percentage is now %f and my speed modifier is now %f.") % profit_buy % profit_sell);
 
