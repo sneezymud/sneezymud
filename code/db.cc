@@ -1179,7 +1179,10 @@ void TBeing::doBoot(const sstring &arg)
   }
 
   sendTo("Boottime resetting zone.\n\r");
+  bool enabled=zone_table[z].enabled;
+  zone_table[z].enabled=true;
   zone_table[z].resetZone(true);
+  zone_table[z].enabled=enabled;
 }
 
 
