@@ -1906,7 +1906,7 @@ void TBeing::wearNTear(void)
 	if(doesKnowSkill(SKILL_IRON_SKIN)){
 	  amount = getSkillValue(SKILL_IRON_SKIN);
 	  amount = max(amount, 0);
-	  if (amount > ::number(1,100)) {
+	  if (amount >= ::number(1,100)) {
 	    return;	  
 	  }
 	}
