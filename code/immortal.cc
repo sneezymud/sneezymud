@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: immortal.cc,v $
+// Revision 5.1  1999/10/16 04:31:17  batopr
+// new branch
+//
 // Revision 1.15  1999/10/14 03:54:48  batopr
 // removed #if 0 code
 //

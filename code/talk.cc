@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: talk.cc,v $
+// Revision 5.1  1999/10/16 04:31:17  batopr
+// new branch
+//
 // Revision 1.2  1999/10/10 20:50:52  batopr
 // Added mud_assert in disturbMeditation to avoid crash bug
 //

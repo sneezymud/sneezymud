@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: create_objs.cc,v $
+// Revision 5.1  1999/10/16 04:31:17  batopr
+// new branch
+//
 // Revision 1.4  1999/10/09 05:04:23  batopr
 // Fixed errmsgs in obj_applys
 //

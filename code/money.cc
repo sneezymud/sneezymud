@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: money.cc,v $
+// Revision 5.1  1999/10/16 04:31:17  batopr
+// new branch
+//
 // Revision 1.2  1999/10/04 03:02:53  batopr
 // Added onObjLoad function
 //

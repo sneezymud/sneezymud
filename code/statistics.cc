@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: statistics.cc,v $
+// Revision 5.1  1999/10/16 04:31:17  batopr
+// new branch
+//
 // Revision 1.13  1999/10/14 03:04:51  batopr
 // Added self-adjustment of the global equipment load factor
 //

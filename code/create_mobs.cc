@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: create_mobs.cc,v $
+// Revision 5.1  1999/10/16 04:31:17  batopr
+// new branch
+//
 // Revision 1.3  1999/09/30 03:33:36  lapsos
 // Added code for mobile strings and the advanced menu stuff.
 //

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: utility.cc,v $
+// Revision 5.1  1999/10/16 04:31:17  batopr
+// new branch
+//
 // Revision 1.3  1999/10/15 21:37:06  batopr
 // Added crash protection sanity check to TObj::canGetMe
 //

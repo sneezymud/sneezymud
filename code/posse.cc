@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: posse.cc,v $
+// Revision 5.1  1999/10/16 04:31:17  batopr
+// new branch
+//
 // Revision 1.2  1999/09/29 22:19:03  batopr
 // Fixed so CMD_GENERIC_DESTROYED would always result in memory being freed
 //

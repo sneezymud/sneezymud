@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_afflictions.cc,v $
+// Revision 5.1  1999/10/16 04:31:17  batopr
+// new branch
+//
 // Revision 1.2  1999/09/30 11:47:00  lapsos
 // Fixed loop bug And unchecked paralyze bug in paralyzeLimb.
 //

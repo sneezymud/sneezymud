@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: skill_dam.cc,v $
+// Revision 5.1  1999/10/16 04:31:17  batopr
+// new branch
+//
 // Revision 1.5  1999/10/16 02:50:23  batopr
 // Added bonus for spells needing special weather-conditions
 //

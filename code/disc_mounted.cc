@@ -3,7 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_mounted.cc,v $
-// Revision 1.1  1999/09/12 17:24:04  peel
+// Revision 5.1  1999/10/16 04:31:17  batopr
+// new branch
+//
+// Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
 //

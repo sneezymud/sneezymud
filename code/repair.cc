@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: repair.cc,v $
+// Revision 5.1  1999/10/16 04:31:17  batopr
+// new branch
+//
 // Revision 1.5  1999/10/09 04:10:16  batopr
 // Removed 0.6 factor from repair_price, handled by gold_mod
 //

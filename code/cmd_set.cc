@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_set.cc,v $
+// Revision 5.1  1999/10/16 04:31:17  batopr
+// new branch
+//
 // Revision 1.4  1999/10/12 04:05:53  lapsos
 // gagged the granted/revoked lines on set wizpower.  Was something of a bitch point for some.
 //
