@@ -240,14 +240,9 @@ void TVehicle::vehiclePulse(int pulse)
     for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){
       if(troom->dir_option[dir] && dir != rev_dir[getDir()] &&
 	 isAllowedPath(troom->dir_option[dir]->to_room)){
-	vlogf(LOG_PEEL, fmt("allowed=%s") % 
-	      (isAllowedPath(troom->dir_option[dir]->to_room)?"true":"false"));
-
 	++dcount;
       }
     }
-
-    vlogf(LOG_PEEL, fmt("dcount=%i") % dcount);
     
     // if there's only one that isn't the way we came, change direction
     if(dcount == 1){
