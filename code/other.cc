@@ -1801,10 +1801,10 @@ void TBeing::doGroup(const char *argument)
       sendTo("But you are a member of no group?!\n\r");
     else {
       if(master){
-	sendTo("%s consists of:\n\r\n\r", 
+	sendTo(COLOR_BASIC, "%s consists of:\n\r\n\r", 
 	       master->desc->session.groupName.c_str());
       } else {
-	sendTo("%s consists of:\n\r\n\r", 
+	sendTo(COLOR_BASIC, "%s consists of:\n\r\n\r", 
 	       desc->session.groupName.c_str());
       }
 
