@@ -622,7 +622,7 @@ int TSocket::gameLoop()
 	    } else {
 	      tmp_ch->doGoto(tmpbuf);
 	    }
-	    act("$n appears in the room with a sheepish look in $s face.", TRUE, tmp_ch, 0, 0, TO_ROOM);
+	    act("$n appears in the room with a sheepish look on $s face.", TRUE, tmp_ch, 0, 0, TO_ROOM);
 	  }
 
 
