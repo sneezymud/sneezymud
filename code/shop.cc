@@ -56,12 +56,25 @@ bool shopOwned(int shop_nr){
 // this is the price the shop will buy an item for
 int TObj::sellPrice(int shop_nr, int chr, int *discount)
 {
-  int cost;
+  int cost, rc;
+  float profit_sell=shop_index[shop_nr].profit_sell;
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+
+  if(shopOwned(shop_nr)){
+    if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select profit_sell from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum()))==-1){
+      vlogf(LOG_BUG, "Database error in shop_keeper");
+      return FALSE;
+    }
+    if((row=mysql_fetch_row(res)))
+      profit_sell=atof(row[0]);
+  }
+
   if (chr != -1)
-    cost = (int) (adjPrice(discount) * shop_index[shop_nr].profit_sell *
+    cost = (int) (adjPrice(discount) * profit_sell *
                  (100 - (2 * (18 - chr))) / 100);
   else
-    cost = (int) (adjPrice(discount) * shop_index[shop_nr].profit_sell);
+    cost = (int) (adjPrice(discount) * profit_sell);
 
   if (obj_flags.cost <= 1) {
     cost = max(0, cost);
@@ -78,12 +91,26 @@ int TObj::sellPrice(int shop_nr, int chr, int *discount)
 // this is price shop will sell it at
 int TObj::shopPrice(int num, int shop_nr, int chr, int *discount) const
 {
-  int cost;
+  int cost, rc;
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+  float profit_buy=shop_index[shop_nr].profit_buy;
+  
+  if(shopOwned(shop_nr)){
+    if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum()))==-1){
+      vlogf(LOG_BUG, "Database error in shop_keeper");
+      return FALSE;
+    }
+    if((row=mysql_fetch_row(res)))
+      profit_buy=atof(row[0]);
+  }
+
+
   if (chr != -1)
-    cost = (int) (adjPrice(discount) * shop_index[shop_nr].profit_buy *
+    cost = (int) (adjPrice(discount) * profit_buy *
                  (100 + (2 * (18 - chr))) / 100);
   else
-    cost = (int) (adjPrice(discount) * shop_index[shop_nr].profit_buy);
+    cost = (int) (adjPrice(discount) * profit_buy);
 
   cost *= num;
   cost = max(1, cost);
