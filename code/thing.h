@@ -26,15 +26,15 @@ extern const sstring fname(const char *namelist);
 
 class extraDescription {
   public:
-    char *keyword;
-    char *description;
+    const char *keyword;
+    const char *description;
     extraDescription *next;
     extraDescription();
     ~extraDescription();
     extraDescription & operator= (const extraDescription &a);
     extraDescription(const extraDescription &a);
 
-    char *findExtraDesc(const char *word);
+    const char *findExtraDesc(const char *word);
 };
 
 class TThing {
@@ -47,8 +47,8 @@ class TThing {
     TBeing * the_caster;
     TThing *stuff;           // The stuff inside me
   public:
-    char *descr;             // Description of thing
-    char *real_descr;        // used with disguise/polymorph
+    const char *descr;             // Description of thing
+    const char *real_descr;        // used with disguise/polymorph
     TBeing *stuckIn;
     TThing *equippedBy;
     wearSlotT eq_pos;                 // what is the equip. pos?
@@ -66,10 +66,10 @@ class TThing {
     int number;              // Number of thing
     int height;              // Height in centimeters
     byte canBeSeen;          
-    char *name;              // Name of thing
-    char *real_name;         // used with disguise/polymorph
-    char *shortDescr;
-    char *real_shortDescr;   // used with disguise/polymorph
+    const char *name;              // Name of thing
+    const char *real_name;         // used with disguise/polymorph
+    const char *shortDescr;
+    const char *real_shortDescr;   // used with disguise/polymorph
     bool is_disguised;
     int disguise_level;
     int disguise_zone;
@@ -148,7 +148,7 @@ class TThing {
 
     // INLINE FUNCTIONS
     const char * getDescr() const { return descr; }
-    void setDescr(char *s) { descr = s; }
+    void setDescr(const char *s) { descr = s; }
     int getHeight() const{ return height; }
     void setHeight(int h) { height = h; }
     void setCaster(TBeing *c) { the_caster = c; }

@@ -2132,7 +2132,7 @@ bool affectedData::shouldGenerateText() const
   return true;
 }
 
-char * extraDescription::findExtraDesc(const char *word)
+const char * extraDescription::findExtraDesc(const char *word)
 {
   extraDescription *i;
 

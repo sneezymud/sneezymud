@@ -293,7 +293,7 @@ byte TRoom::getRiverSpeed() const
   return riverSpeed;
 }
 
-void TRoom::setDescr(char *tDescription)
+void TRoom::setDescr(const char *tDescription)
 {
   descr = tDescription;
 }

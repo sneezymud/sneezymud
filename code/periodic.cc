@@ -320,7 +320,7 @@ int TObj::riverFlow(int)
 int TBeing::teleportRoomFlow(int pulse)
 {
   TRoom *dest, *tmprp;
-  char *tmp_desc = NULL;
+  const char *tmp_desc = NULL;
   int rc;
 
   if (!roomp || roomp->getTeleTarg() <= 0 || roomp->getTeleTime() <= 0)

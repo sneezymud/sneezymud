@@ -213,7 +213,7 @@ class TRoom : public TThing {
 
     // Code to load the descs straight from the db file instead of
     // storing those big honkers in the memory.
-    void setDescr(char *);
+    void setDescr(const char *);
     const char * getDescr();
 
     virtual int chiMe(TBeing *);

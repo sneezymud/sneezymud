@@ -1623,7 +1623,8 @@ int TBeing::doOpen(const char *argument)
 {
   dirTypeT door;
   char type[MAX_INPUT_LENGTH], dir[MAX_INPUT_LENGTH];
-  char buf[256], *tmpdesc;
+  char buf[256];
+  const char *tmpdesc;
   roomDirData *exitp;
   TObj *obj;
   int rc;
@@ -1746,7 +1747,8 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
   int rc;
   dirTypeT door;
   char type[MAX_INPUT_LENGTH], dir[MAX_INPUT_LENGTH];
-  char buf[256], *tmpdesc;
+  char buf[256];
+  const char *tmpdesc;
   roomDirData *exitp;
   argument_interpreter(argument, type, dir);
 
@@ -1836,7 +1838,8 @@ void TBeing::doClose(const char *argument)
 {
   dirTypeT door;
   char type[MAX_INPUT_LENGTH], dir[MAX_INPUT_LENGTH];
-  char buf[256], *tmpdesc;
+  char buf[256];
+  const char *tmpdesc;
   roomDirData *exitp;
   TObj *obj;
 
@@ -1906,7 +1909,8 @@ int TBeing::doLower(const char *argument)
   dirTypeT door;
   int rc;
   char type[MAX_INPUT_LENGTH], dir[MAX_INPUT_LENGTH];
-  char buf[256], *tmpdesc;
+  char buf[256];
+  const char *tmpdesc;
   roomDirData *exitp;
  
   argument_interpreter(argument, type, dir);
@@ -2036,7 +2040,7 @@ void TBeing::doLock(const char *argument)
 {
   dirTypeT door;
   char type[MAX_INPUT_LENGTH], dir[MAX_INPUT_LENGTH];
-  char *tmpdesc;
+  const char *tmpdesc;
   roomDirData *back, *exitp;
   TObj *obj;
   TRoom *rp;
@@ -2094,7 +2098,7 @@ void TBeing::doUnlock(const char *argument)
 {
   dirTypeT door;
   char type[MAX_INPUT_LENGTH], dir[MAX_INPUT_LENGTH];
-  char *tmpdesc;
+  const char *tmpdesc;
   roomDirData *back, *exitp;
   TObj *obj;
   TRoom *rp;

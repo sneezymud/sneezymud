@@ -166,9 +166,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     desc->connected = CON_WRITING;
     strcpy(desc->name, recipient);
 
-    desc->str = new (char *);
-    *desc->str = new char[1];
-    *(*desc->str) = '\0';
+    desc->str = new const char *('\0');
     desc->max_str = MAX_MAIL_SIZE;
   }
   if (desc->m_bIsClient)
@@ -242,8 +240,7 @@ void TBeing::postmasterReceiveMail(TMonster *me)
     note->setDescr(mud_str_dup("A wrinkled <W>letter<1> lies here."));
     delete [] note->action_description;
     msg = read_delete(recipient, getName(), from);
-    note->action_description = new char[msg.length()+1];
-    strcpy(note->action_description, msg.c_str());
+    note->action_description = mud_str_dup(msg.c_str());
     if (!note->action_description)
       note->action_description = mud_str_dup("Mail system buggy, please report!!  Error #8.\n\r");
 

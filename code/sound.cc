@@ -63,7 +63,7 @@ void MakeRoomNoise(TMonster *mob, int room, const char *local_snd, const char *d
   }
 }
 
-void MakeNoise(int room, char *local_snd, char *distant_snd)
+void MakeNoise(int room, const char *local_snd, const char *distant_snd)
 {
   dirTypeT door;
   TBeing *ch = NULL;

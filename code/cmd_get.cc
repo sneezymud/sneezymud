@@ -246,7 +246,8 @@ static bool getAllObjChecks(TBeing *ch)
 int TBeing::doGet(const char *argument)
 {
   char arg1[160], arg2[160], newarg[100];
-  char *tmp_desc = NULL, *tptr;
+  const char *tmp_desc = NULL;
+  char *tptr;
   TObj *sub;
   TThing *t;
   bool found = FALSE, autoloot = FALSE;

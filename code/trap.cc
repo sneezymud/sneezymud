@@ -707,7 +707,8 @@ int TBeing::triggerDoorTrap(dirTypeT door)
 // returns DELETE_VICT
 int TTrap::moveTrapCheck(TBeing *ch, dirTypeT dir)
 {
-  char buf[256], *tmp_desc = NULL;
+  char buf[256];
+  const char *tmp_desc = NULL;
   TBeing *c;
   int rc;
 
@@ -3466,7 +3467,7 @@ int TMonster::grenadeHit(TTrap *o)
   if (!rc)
     return FALSE;
 
-  char * tmp_desc;
+  const char * tmp_desc;
   TBeing *ch = NULL;
   if ((tmp_desc = o->ex_description->findExtraDesc(GRENADE_EX_DESC))) {
     if ((ch = get_char(tmp_desc, EXACT_YES)))

@@ -1437,8 +1437,7 @@ int Descriptor::clientCreateChar(char *arg)
     return FALSE;
   }
 
-  ch->name = new char[strlen(tmp_name) + 1];
-  strcpy(ch->name, cap(tmp_name));
+  ch->name=mud_str_dup(sstring(tmp_name).cap());
 
   // Sex
   strcpy(dummy, nextToken('|', 1024, arg).c_str());

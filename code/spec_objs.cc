@@ -4771,6 +4771,7 @@ int minecart(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
 
 int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
 {
+#if 0
   if (cmd != CMD_PUSH && 
       cmd != CMD_PULL && 
       cmd != CMD_OPERATE && 
@@ -4873,6 +4874,7 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
     myself->setDescr(mud_str_dup(buf));
     return TRUE;
   }
+#endif
   return FALSE;
 }
 
@@ -6476,6 +6478,7 @@ int ghostlyShiv(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 int HSCopsi(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
+#if 0
   // weird proc
   // three procs that work together, two hammers that charge the pendant, pendant does weird magic
   // stuff when used.
@@ -6534,6 +6537,7 @@ int HSCopsi(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_VICT;
   return TRUE;
+#endif
 
   return FALSE;
 }
@@ -6541,6 +6545,7 @@ int HSCopsi(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
 int HSPeke(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
+#if 0
   // weird proc
   // three procs that work together, two hammers that charge the pendant, pendant does weird magic
   // stuff when used.
@@ -6600,12 +6605,15 @@ int HSPeke(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return DELETE_VICT;
   return TRUE;
 
+#endif
+
   return FALSE;
 }
 
 
 int HSPendant(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
+#if 0
   // weird proc
   // three procs that work together, two hammers that charge the pendant, pendant does weird magic
   // stuff when used.
@@ -6662,7 +6670,7 @@ int HSPendant(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   charge -= 50;
   sprintf(pendant->name, "pendant crystal hammer [quest] [charge=%d]", charge);
 
-
+#endif
 
 
 
@@ -6872,7 +6880,7 @@ int mobSpawnOpen(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
 int energyShield(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
 {
-
+#if 0
   TBeing *ch;
   TObj *generator = NULL;
   sstring buf, buf2;
@@ -6934,6 +6942,8 @@ int energyShield(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
   
   sprintf(generator->name, "generator shield belt [on=%d] [charge=%d]", isOn, newcharge);
   
+#endif
+
   return FALSE;
   
 }
@@ -6941,6 +6951,7 @@ int energyShield(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
 
 int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
 {
+#if 0
   TBeing *ch = NULL;
   //  TObj *shield = NULL;
   sstring buf, buf2, arg1, arg2;
@@ -7095,11 +7106,13 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
     }
   }       
 
+#endif
   return FALSE;
 }
 
 int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
 {
+#if 0
   TBeing *ch = NULL;
   //  TObj *shield = NULL;
 
@@ -7304,8 +7317,11 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
     }
     sprintf(o->name, "forearm-guard guard plastic lights stim wristband [on_%d] [charge_%d]", isOn, newcharge);
   }
-  
+
   return ret;
+#endif  
+  return FALSE;
+
 }
 
 

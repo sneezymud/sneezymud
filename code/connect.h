@@ -389,7 +389,7 @@ class Descriptor
     char *showstr_head;           // for paging through texts  
     int tot_pages;               // for tracking paged info
     int cur_page;                //       -
-    char **str;                   // for the modify-str system
+    const char **str;                   // for the modify-str system
     int max_str;
     int prompt_mode;              // control of prompt-printing 
     char m_raw[4096];               // buffer for raw input    

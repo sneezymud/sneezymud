@@ -1484,9 +1484,7 @@ void TPerson::doIdea(const sstring &arg)
     addPlayerAction(PLR_BUGGING);
     desc->connected = CON_WRITING;
     strcpy(desc->name, "Idea");
-    desc->str = new (char *);
-    *desc->str = new char[1];
-    *(*desc->str) = '\0';
+    desc->str = new const char *('\0');
     desc->max_str = MAX_MAIL_SIZE;
   }
   desc->clientf("%d", CLIENT_IDEA);
@@ -1517,9 +1515,7 @@ void TPerson::doTypo(const sstring &arg)
     addPlayerAction(PLR_BUGGING);
     desc->connected = CON_WRITING;
     strcpy(desc->name, "Typo");
-    desc->str = new (char *);
-    *desc->str = new char[1];
-    *(*desc->str) = '\0';
+    desc->str = new const char *('\0');
     desc->max_str = MAX_MAIL_SIZE;
   }
   desc->clientf("%d", CLIENT_TYPO);
@@ -1550,9 +1546,7 @@ void TPerson::doBug(const sstring &arg)
     addPlayerAction(PLR_BUGGING);
     desc->connected = CON_WRITING;
     strcpy(desc->name, "Bug");
-    desc->str = new (char *);
-    *desc->str = new char[1];
-    *(*desc->str) = '\0';
+    desc->str = new const char *('\0');
     desc->max_str = MAX_MAIL_SIZE;
   }
   desc->clientf("%d", CLIENT_BUG);

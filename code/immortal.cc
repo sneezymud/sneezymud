@@ -6104,7 +6104,8 @@ void TBeing::doSysViewoutput()
 int TBeing::doExec()
 {
   TObj *script;
-  char *lptr = NULL, lbuf[4096];
+  const char *lptr = NULL;
+  char lbuf[4096];
   const char *invalidcmds[] = {"exec", "oedit", "medit", "redit", 
    "bug", "idea", "typo", "description", "comment", 0};
   int  i, broken = FALSE, rc;
@@ -6783,9 +6784,7 @@ void TBeing::doComment(const char *argument)
   strcpy(desc->name, "Comment");
   strcpy(desc->delname, st.aname);
 
-  desc->str = new (char *);
-  *desc->str = new char[1];
-  *(*desc->str) = '\0';
+  desc->str = new const char *('\0');
 
   desc->max_str = MAX_MAIL_SIZE;
   if (desc->m_bIsClient)

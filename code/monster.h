@@ -85,8 +85,8 @@ class TMonster : public TBeing {
     unsigned short fearfield;
     ubyte moneyConst;
 
-    char *sounds;
-    char *distantSnds;
+    const char *sounds;
+    const char *distantSnds;
     float hpLevel;
     float damLevel;
     ubyte damPrecision;

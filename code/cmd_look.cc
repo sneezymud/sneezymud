@@ -52,7 +52,8 @@ void TThing::lookAtObj(TBeing *ch, const char *, showModeT x) const
 
 void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
 {
-  char buffer[256], *tmp_desc, *tmp;
+  char buffer[256], *tmp;
+  const char *tmp_desc;
   char arg1[MAX_INPUT_LENGTH], arg2[MAX_INPUT_LENGTH];
   int keyword_no, res, j, found, totalFound = 0, iNum = 0;
   unsigned int bits = 0;

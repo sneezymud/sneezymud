@@ -476,7 +476,7 @@ class TObj : public TThing {
     objFlagData obj_flags;
     objAffData affected[MAX_OBJ_AFFECT];
 
-    char *action_description;      /* What to write when used          */
+    const char *action_description;      /* What to write when used          */
     TObj *next;         /* For the object list              */
     const char * owners;
 

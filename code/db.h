@@ -128,10 +128,10 @@ class indexData {
  private:
   int number;
  public:
-  char *name;
-  char *short_desc;
-  char *long_desc;
-  char *description;
+  const char *name;
+  const char *short_desc;
+  const char *long_desc;
+  const char *description;
   
   short max_exist;        // for objs and mobs
   int spec;

@@ -197,7 +197,7 @@ extern dirTypeT choose_exit_global(int in_room, int tgt_room, int depth);
 extern void SetupCreateEngineData();
 extern sstring nextToken(char, unsigned int, char *);
 extern void MakeRoomNoise(TMonster *, int room, const char *local_snd, const char *distant_snd);
-extern void MakeNoise(int room, char *local_snd, char *distant_snd);
+extern void MakeNoise(int room, const char *local_snd, const char *distant_snd);
 extern bool has_healthy_body(TBeing *);
 extern int RecGetObjRoom(const TThing *);
 extern int ObjFromCorpse(TObj *c);

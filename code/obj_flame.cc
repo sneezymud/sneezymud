@@ -166,19 +166,19 @@ int TFFlame::pourWaterOnMe(TBeing *ch, TObj *sObj)
     // message depending on how Strong the substance is
     if (drunk < 5) {
       sprintf(Buf[0], "%s suddenly flares up as you pour %s on it.\n\r",
-              cap(shortDescr), lName);
+              sstring(shortDescr).cap().c_str(), lName);
       sprintf(Buf[1], "%s flares up as $n pours %s over it.",
-              cap(shortDescr), lName);
+              sstring(shortDescr).cap().c_str(), lName);
     } else if (drunk < 10) {
       sprintf(Buf[0], "%s bursts outwards as you pour %s on it.\n\r",
-              cap(shortDescr), lName);
+              sstring(shortDescr).cap().c_str(), lName);
       sprintf(Buf[1], "%s bursts outwards as $n pours %s over it.",
-              cap(shortDescr), lName);
+              sstring(shortDescr).cap().c_str(), lName);
     } else {
       sprintf(Buf[0], "%s nearly explodes as you pour %s on it.\n\r",
-              cap(shortDescr), lName);
+              sstring(shortDescr).cap().c_str(), lName);
       sprintf(Buf[1], "%s nearly explodes as $n pours %s over it.",
-              cap(shortDescr), lName);
+              sstring(shortDescr).cap().c_str(), lName);
     }
 
     ch->sendTo(COLOR_OBJECTS, Buf[0]);
@@ -193,9 +193,9 @@ int TFFlame::pourWaterOnMe(TBeing *ch, TObj *sObj)
     // If object is left, then we 'crack and pop'
     if (obj_flags.decay_time > 0) {
       ch->sendTo(COLOR_OBJECTS, fmt("%s lets off a large crack and pop as you pour some %s on it.\n\r") %
-                 cap(shortDescr) % DrinkInfo[dContainer->getDrinkType()]->name);
+                 sstring(shortDescr).cap().c_str() % DrinkInfo[dContainer->getDrinkType()]->name);
       sprintf(Buf[0], "%s dies down a little as $n pours %s over it.",
-              cap(shortDescr), DrinkInfo[dContainer->getDrinkType()]->name);
+              sstring(shortDescr).cap().c_str(), DrinkInfo[dContainer->getDrinkType()]->name);
       act(Buf[0], TRUE, ch, NULL, NULL, TO_ROOM);
       decayMe();
     } else {

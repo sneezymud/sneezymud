@@ -286,7 +286,7 @@ const int MAX_NAME_LENGTH = 80;
 class playerData
 {
   public:
-   char *longDescr;  
+   const char *longDescr;  
 
    sexTypeT sex;         
    ubyte level[MAX_SAVED_CLASSES];   

@@ -1098,8 +1098,7 @@ int Descriptor::nanny(const char *arg)
         return FALSE;
       }
 
-      character->name = new char[strlen(tmp_name) + 1];
-      strcpy(character->name, cap(tmp_name));
+      character->name=mud_str_dup(sstring(tmp_name).cap());
       character->cls();
       file_to_sstring("objdata/books/1458.28", str);
       str += "\n\r[Press Return to continue]\n\r";
@@ -4053,6 +4052,7 @@ void Descriptor::sstring_add(char *s)
 {
   char *scan;
   int terminator = 0, t2 = 0;
+  char buf[MAX_STRING_LENGTH];
 
   for (scan = s; *scan; scan++) {
     if ((terminator = (*scan == '~')) || (t2 = (*scan == '`'))) {
@@ -4075,19 +4075,17 @@ void Descriptor::sstring_add(char *s)
       if (iter < 0)
         break;
       if (!*str) {
-        *str = new char[iter + 3];
-        mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
-        strncpy(*str, s, iter);
-        (*str)[iter] = '\0';
-        strcat(*str, "\n\r");
+	strncpy(buf, s, iter);
+	buf[iter]='\0';
+	strcat(buf, "\n\r");
+	*str = mud_str_dup(buf);
       } else {
-        char *t = *str;
-        *str = new char[strlen(t) + iter + 3];
-        mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
-        strcpy(*str, t);
-        strncat(*str, s, iter);
-        (*str)[strlen(t) + iter] = '\0';
-        strcat(*str, "\n\r");
+        const char *t = *str;
+	strcpy(buf, t);
+	strncat(buf, s, iter);
+	buf[strlen(t)+iter]='\0';
+	strcat(buf, "\n\r");
+	*str=mud_str_dup(buf);
         delete [] t;
       }
 
@@ -4101,14 +4099,12 @@ void Descriptor::sstring_add(char *s)
     }
 
     if (!*str) {
-      *str = new char[strlen(s) + 3];
-      strcpy(*str, s);
+      *str = mud_str_dup(s);
     } else {
-      char *t = *str;
-      *str = new char[strlen(t) + strlen(s) + 3];
-      mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
-      strcpy(*str, t);
-      strcat(*str, s);
+      const char *t = *str;
+      strcpy(buf, t);
+      strcat(buf, s);
+      *str=mud_str_dup(buf);
       delete [] t;
       if (loop >= 1)
         delete [] s;
@@ -4122,7 +4118,7 @@ void Descriptor::sstring_add(char *s)
       if (character->isPlayerAction(PLR_BUGGING)) {
         if (!**str) {
           // we are on the subject line
-          char *t = s;
+          const char *t = s;
           for (;*t && isspace(*t); t++);
     
           if (!*t) {
@@ -4145,36 +4141,31 @@ void Descriptor::sstring_add(char *s)
 
             return;
           }
-          char buf[256];
           sprintf(buf, "Write your %s, use ~ when done, or ` to cancel.\n\r",
                 sstring(name).uncap().c_str());
           writeToQ(buf);
           t = *str;
           if (strcmp(name, "Comment")) {
             // bugs, ideas, typos in here
-            *str = new char[strlen(t) + strlen(s) + strlen("Subject: ") + 3 +
-                    strlen(name) + 3];
-            mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
-            strcpy(*str, t);
-            strcat(*str, "Subject: [");
-            strcat(*str, name);
-            strcat(*str, "] ");
-            strcat(*str, s);
+	    strcpy(buf, t);
+	    strcat(buf, "Subject: [");
+	    strcat(buf, name);
+	    strcat(buf, "] ");
+	    strcat(buf, s);
+	    *str=mud_str_dup(buf);
           } else {
             // comments in here
-            *str = new char[strlen(t) + strlen(s) + 3];
-            mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
-            strcpy(*str, t);
-            strcat(*str, s);
+	    strcpy(buf, t);
+	    strcat(buf, s);
+	    *str=mud_str_dup(buf);
           }
           delete [] t;
         } else {
           // body of idea
-          char *t = *str;
-          *str = new char[strlen(t) + strlen(s) + 3];
-          mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
-          strcpy(*str, t);
-          strcat(*str, s);
+          const char *t = *str;
+	  strcpy(buf, t);
+	  strcat(buf, s);
+	  *str=mud_str_dup(buf);
           if (!m_bIsClient)
             delete [] t;
         }
@@ -4198,13 +4189,12 @@ void Descriptor::sstring_add(char *s)
             break;
 
           loop++;
-          char *t = *str;
-          *str = new char[strlen(t) + iter + 3];
-          mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
-          strcpy(*str, t);
-          strncat(*str, s, iter);
-          (*str)[strlen(t) + iter] = '\0';
-          strcat(*str, "\n\r");
+          const char *t = *str;
+	  strcpy(buf, t);
+	  strncat(buf, s, iter);
+	  buf[strlen(t) + iter] = '\0';
+	  strcat(buf, "\n\r");
+	  *str=mud_str_dup(buf);
           delete [] t;
 
           // fix s
@@ -4223,11 +4213,10 @@ void Descriptor::sstring_add(char *s)
           }
         }
 
-        char *t = *str;
-        *str = new char[strlen(t) + strlen(s) + 3];
-        mud_assert(*str != NULL, "sstring_add(): Bad sstring memory");
-        strcpy(*str, t);
-        strcat(*str, s);
+        const char *t = *str;
+	strcpy(buf, t);
+	strcat(buf, s);
+	*str = mud_str_dup(buf);
         delete [] t;
         if (loop > 1)
           delete [] s;
@@ -4255,7 +4244,7 @@ void Descriptor::sstring_add(char *s)
       character->remPlayerAction(PLR_MAILING);
     } else if (character->isPlayerAction(PLR_BUGGING)) {
       if (terminator) {
-        char *t = *str;
+        const char *t = *str;
 
         for (;*t && isspace(*t); t++);
 
@@ -4301,7 +4290,12 @@ void Descriptor::sstring_add(char *s)
     if (m_bIsClient)
       clientf("%d|%d", CLIENT_ENABLEWINDOW, FALSE);
   } else {
-    strcat(*str, "\n\r");
+    const char *t=*str;
+    strcpy(buf, t);
+    strcat(buf, "\n\r");
+    *str=mud_str_dup(buf);
+    delete [] t;
+
     //if (m_bIsClient)
       //prompt_mode = -1;
   }
@@ -4360,7 +4354,7 @@ void setPrompts(fd_set out)
         }
       }
       if (d->str && (d->prompt_mode != DONT_SEND)) {
-        if (ch && ch->isPlayerAction(PLR_BUGGING) && !**d->str &&
+        if (ch && ch->isPlayerAction(PLR_BUGGING) && !*d->str &&
             strcmp(d->name, "Comment")) {
           // ideas, bugs, typos
           d->output.putInQ("Subject: ");

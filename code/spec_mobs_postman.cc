@@ -80,8 +80,7 @@ TObj *createletter(sstring from)
 
   delete [] note->action_description;
   sstring msg=randommessage(from);
-  note->action_description = new char[msg.length()+1];
-  strcpy(note->action_description, msg.c_str());
+  note->action_description = mud_str_dup(msg);
 
   if (!(envelope = read_object(124, VIRTUAL))) {
     vlogf(LOG_BUG, "Couldn't load object 124!");

@@ -1703,7 +1703,7 @@ void TMonster::autoCreateShop(int shop_nr)
 // if they are looking at something else (shopkeeper, etc) return FALSE
 static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
 {
-  char *tmp_desc;
+  const char *tmp_desc;
   int value;
   TObj *temp1;
 
