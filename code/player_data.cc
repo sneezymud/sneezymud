@@ -1227,7 +1227,7 @@ void do_the_player_stuff(const char *name)
 	    wipeRentFile(name);
 	    wipeCorpseFile(sstring(name).lower().c_str());
 
-	    sprintf(longbuf, "%s detected this character has been inactive for %ld days.  To avoid\n\r", MUD_NAME, ((time(0) - lastlogin)/SECS_PER_REAL_DAY));
+	    sprintf(longbuf, "%s detected this character has been inactive for %i days.  To avoid\n\r", MUD_NAME, ((time(0) - lastlogin)/SECS_PER_REAL_DAY));
 	    sprintf(longbuf + strlen(longbuf), "having equipment tied up on players that no longer play, players that have not\n\rconnected within a reasonable length of time have their rent files removed in\n\rorder for that equipment to go back into circulation.  Due to your inactivity,\n\ryour rent file has been wiped.  The %s administration apologizes\n\rfor any inconvenience this may cause.  Reimbursements for this eventuality\n\rare not typically granted since the item(s) in question have gone back into\n\rgeneral circulation, however an extremely basic set of equipment (newbie), and\n\rsimple adventuring supplies (lantern, food, drink) may be requested that you\n\rbe able to bootstrap your way back up the ladder.\n\r\n\rIf, however, you made arrangements prior to going inactive for things of\n\ryours to be preserved in stasis, then whatever deal was made at that time\n\rmay apply.  If such is the case, contact whichever 59+ immortal placed\n\ryour character into stasis.\n\r\n\rOn a final note, welcome back!\n\r", MUD_NAME);
 
 
