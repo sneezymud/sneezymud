@@ -2499,7 +2499,7 @@ void buildCommandArray(void)
   commandArray[CMD_GIGGLE] = new commandInfo("giggle", POSITION_RESTING, 0);
   commandArray[CMD_RESTORE]=new commandInfo("restore",POSITION_DEAD,GOD_LEVEL1);
   commandArray[CMD_RETURN] = new commandInfo("return", POSITION_DEAD, 0);
-  commandArray[CMD_SWITCH]=new commandInfo("switch", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_SWITCH]=new commandInfo("switch", POSITION_DEAD, 0);
   commandArray[CMD_QUAFF] = new commandInfo("quaff", POSITION_RESTING, 0);
   commandArray[CMD_RECITE] = new commandInfo("recite", POSITION_FIGHTING, 0);
   commandArray[CMD_USERS] = new commandInfo("users", POSITION_DEAD, GOD_LEVEL1);

@@ -2169,16 +2169,24 @@ void TPerson::doSwitch(const char *argument)
   bool    doLoadCmd = false;
   int     mobileIndex;
 
-  if (powerCheck(POWER_SWITCH))
+  TThing *switchProcObj = equipment[WEAR_NECK];
+  bool hasSwiO = switchProcObj && switchProcObj->spec == 139;
+  // see spec_objs.cc
+  
+  if ((!isImmortal() && !hasSwiO) || 
+      (isImmortal()) && powerCheck(POWER_SWITCH))
+  {
+    sendTo(fmt("%sIncorrect%s command. Please see help files if you need assistance!\n\r") % red() % norm());
     return;
-
+  }
+  
   tStMobile=tStArg.word(0);
   tStBuffer=tStArg.word(1);
 
   doLoadCmd = is_abbrev(tStMobile, "load");
 
   if (tStMobile.empty() || (doLoadCmd && tStBuffer.empty())) {
-    sendTo("switch with whom?\n\r");
+    sendTo("Switch with whom?\n\r");
     return;
   }
 
@@ -2207,7 +2215,8 @@ void TPerson::doSwitch(const char *argument)
       return;
     }
 
-    if(!limitPowerCheck(CMD_SWITCH, tBeing->number)) {
+    if((isImmortal() && !limitPowerCheck(CMD_SWITCH, tBeing->number)) ||
+        (!isImmortal() && !hasSwiO)) {
       sendTo("You're not allowed to switch/load that mobile.\n\r");
       return;
     }
@@ -2227,7 +2236,8 @@ void TPerson::doSwitch(const char *argument)
       return;
     }
   }
-  if(!limitPowerCheck(CMD_SWITCH, tBeing->number)) {
+  if((isImmortal() && !limitPowerCheck(CMD_SWITCH, tBeing->number)) ||
+      (!isImmortal() && !hasSwiO)) {
     sendTo("You're not allowed to switch into that mobile.\n\r");
     return;
   }

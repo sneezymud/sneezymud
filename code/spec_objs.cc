@@ -5640,6 +5640,38 @@ int statueArmTwist(TBeing *me, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   }
   return FALSE;
 }
+
+/* Intended use:
+ * If a PC is holding an object with this proc, it will allow him/her to
+ * switch into the mob with the same vnum
+ *
+ * This proc has attendant code in immortal.cc
+ */
+int switchObject(TBeing *me, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  if (!cmd || cmd != CMD_SWITCH || !me || !o)
+    return FALSE;
+  if (!(me = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+  
+// This just makes it easier to keep track of these items, and to check for
+// the item quickly later in doSwitch in immortal.cc 
+  if (o->eq_pos != WEAR_NECK)
+  {
+    me->sendTo("The switch proc should not be on an item that is not neckwear.  Bug an immort.\n\r");
+    return TRUE;
+  }
+  
+  // I hope there's a better way to do this, but I don't have the time to
+  // look for it/make it
+  TBeing *mob = read_mobile(obj_index[o->getItemIndex()].virt, VIRTUAL);
+  const char * mob_name = add_bars(mud_str_dup(mob->name)).c_str();
+  delete mob;
+  me->doSwitch(mob_name);
+  
+  return TRUE;
+}  
+
 //MARKER: END OF SPEC PROCS
 
 
@@ -5840,5 +5872,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "graffiti object", graffitiObject},
   {FALSE, "statue arm twist", statueArmTwist},
   {FALSE, "stock board", stockBoard},
+  {FALSE, "switch object", switchObject},
   {FALSE, "last proc", bogusObjProc}
 };
