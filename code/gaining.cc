@@ -2225,6 +2225,9 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
     gm->doSay(buf);
     return;
   }
+
+  int combatReq=(((35*getLevel(Class)) /10) - 4);
+
   switch (Class) {
     case MAGE_LEVEL_IND:
       combat = getDiscipline(DISC_COMBAT)->getNatLearnedness() + getDiscipline(DISC_LORE)->getNatLearnedness();
@@ -2240,7 +2243,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
          combatMax = 2;
          combatLearn = TRUE;
       }
-      if (combat >= (((35 * getLevel(Class)) /10) - 4)) {
+      if (combat >= combatReq) {
         combatLearn = TRUE;
       }
       strcpy(tmp_buf, "Combat or Magic Lores");
@@ -2261,7 +2264,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
          combatLearn = TRUE;
       }
 
-      if (combat >= (((35*getLevel(Class)) /10) - 4)) {
+      if (combat >= combatReq) {
         combatLearn = TRUE;
       }
       strcpy(tmp_buf, "Combat");
@@ -2281,7 +2284,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
          combatLearn = TRUE;
       }
 
-      if (combat >= (((35*getLevel(Class)) /10) - 4)) {
+      if (combat >= combatReq) {
         combatLearn = TRUE;
       }
       strcpy(tmp_buf, "Combat");
@@ -2301,7 +2304,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
          combatLearn = TRUE;
       }
 
-      if (combat >= (((35*getLevel(Class)) /10) - 4)) {
+      if (combat >= combatReq) {
         combatLearn = TRUE;
       }
       strcpy(tmp_buf, "Combat or Theology");
@@ -2322,7 +2325,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
          combatLearn = TRUE;
       }
 
-      if (combat >= (((35*getLevel(Class)) /10) - 4)) {
+      if (combat >= combatReq) {
         combatLearn = TRUE;
       }
       strcpy(tmp_buf, "Combat or Theology");
@@ -2343,7 +2346,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
          combatLearn = TRUE;
       }
 
-      if (combat >= (((35*getLevel(Class)) /10) - 4)) {
+      if (combat >= combatReq) {
         combatLearn = TRUE;
       }
       strcpy(tmp_buf, "Combat");
@@ -2364,7 +2367,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
          combatLearn = TRUE;
       }
 
-      if (combat >= (((35*getLevel(Class)) /10) - 4)) {
+      if (combat >= combatReq) {
         combatLearn = TRUE;
       }
       strcpy(tmp_buf, "Combat");
@@ -2383,7 +2386,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
          combatMax = 2;
          combatLearn = TRUE;
       }
-      if (combat >= (((35*getLevel(Class)) /10) - 4)) {
+      if (combat >= combatReq) {
         combatLearn = TRUE;
       }
       strcpy(tmp_buf, "Combat");
@@ -2400,7 +2403,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
   if (combatMax && basicLearn) {
     sprintf(buf, "Hmmm, looks like you are free to use these practices at any advanced %s trainer.", gm->getProfName());
   } else if (!combatLearn) {
-      sprintf(buf, "I think you need to first use some of these practices at your %s trainer.", tmp_buf);
+      sprintf(buf, "I think you need to first use %i practices at your %s trainer.", (int)((combatReq-combat)+0.5), tmp_buf);
   } else if (!combatMax && !basicLearn) {
     if (getDiscipline(DISC_COMBAT)->getNatLearnedness() >= MAX_DISC_LEARNEDNESS)
       sprintf(buf, "You could train in a weapon speciality or continue to use these practices at your %s or %s trainer.", gm->getProfName(),tmp2_buf);
