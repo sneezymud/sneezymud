@@ -115,6 +115,8 @@ class pathData {
     bool checked;
     int distance;
     pathData() : direct(DIR_NONE), source(0), checked(false), distance(0) {}
+    pathData(dirTypeT d, int s, bool c, int dist) : 
+      direct(d), source(s), checked(c), distance(dist) {}
 };
 
 

@@ -218,15 +218,13 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
   }
 
   // create this room as a starting point
-  pathData *pd = new pathData();
-  pd->direct = DIR_NONE;
-  pd->source = -1;
-  pd->checked = false;
 
   map<int, pathData *>path_map;
-  path_map[here] = pd;
+  path_map[here] = new pathData(DIR_NONE, -1, false, 0);
+
+  map<int, pathData *>::const_iterator CI;
   bool found=true;
-    map<int, pathData *>::const_iterator CI;
+  pathData *pd;
 
   for(int distance=0;found;++distance){
     found=false;
@@ -235,10 +233,9 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
       dest = path_map.size();
 
       // clean up allocated memory
-      for (CI = path_map.begin(); CI != path_map.end(); ++CI) {
-        pd = CI->second;
-        delete pd;
-      }
+      for (CI = path_map.begin(); CI != path_map.end(); ++CI)
+        delete CI->second;
+
       return DIR_NONE;
     }
 
@@ -285,10 +282,8 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	    for (;;) {
 	      if (pd->source == -1) {
 		// clean up allocated memory
-		for (CI = path_map.begin(); CI != path_map.end(); ++CI) {
-		  pathData *tpd = CI->second;
-		  delete tpd;
-		}
+		for (CI = path_map.begin(); CI != path_map.end(); ++CI)
+		  delete CI->second;
 		
 		return dir;
 	      }
@@ -297,12 +292,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	    }
 	  }
 	  // it's not our target, and we don't have this room yet
-	  pd = new pathData();
-	  pd->source = CI->first; 
-	  pd->direct = dir; 
-	  pd->checked = false; 
-	  pd->distance=distance+1;
-	  path_map[exitp->to_room] = pd;
+	  path_map[exitp->to_room] = new pathData(dir, CI->first, false, distance+1);
 	  found=true;
 	}
       }
@@ -356,12 +346,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
             }
           }
           // it's not our target, and we don't have this room yet
-          pd = new pathData();
-          pd->source = CI->first; 
-          pd->direct = dir; 
-          pd->checked = false; 
-	  pd->distance=distance+1;
-          path_map[tmp_room] = pd;
+          path_map[tmp_room] = new pathData(dir, CI->first, false, distance+1);
 	  found=true;
         }  // stuff in room
       }
