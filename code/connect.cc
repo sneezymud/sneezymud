@@ -1960,6 +1960,9 @@ int Descriptor::nanny(const char *arg)
       }
       if (go2next) {
         connected = CON_PERMA_DEATH;
+	writeToQ("If you select the Perma Death option this character will only be able to die\n\r");
+	writeToQ("once.  After that, the character will no longer be accessible.  This option\n\r");
+	writeToQ("is for experienced and/or insane players only.\n\r\n\r");
 	writeToQ("Perma Death? [Y/N]\n\r");
 	writeToQ("--> ");
       }
