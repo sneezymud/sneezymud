@@ -4949,7 +4949,7 @@ int totemMask(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
       , 0, v, o, 0, TO_CHAR);
   act("<r>The eyes of $p <r>glow blood red.<1>"
       , 0, v, o, 0, TO_ROOM);
-  ch->addToLifeforce(10);    
+  ch->addToLifeforce(50);    
   dam = ::number(3, 15);
     
   rc = ch->reconcileDamage(v, dam, DAMAGE_DRAIN);
