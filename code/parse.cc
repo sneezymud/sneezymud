@@ -1802,6 +1802,12 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn)
 
   arg2=one_argument(orig_arg, arg1);
 
+  if(orig_arg.substr(0,3) == "at "){
+    arg1="at";
+    arg2=arg1+arg2;
+  }
+
+
   if (arg1.empty())
     return FALSE;
 
