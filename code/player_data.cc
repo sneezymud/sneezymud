@@ -416,7 +416,9 @@ void TPerson::storeToSt(charFile *st)
   st->race = getRace();
   st->attack_type = getCombatMode();
 
-  st->stats = chosenStats.values;
+  for(int i=0;i<MAX_STATS;++i){
+    st->stats[i]=chosenStats.values[i];
+  }
   st->wimpy = wimpy;
 
   
@@ -676,7 +678,9 @@ void TPerson::loadFromSt(charFile *st)
   setWeight(st->weight);
   height = st->height;
 
-  chosenStats.values = st->stats;
+  for(int i=0;i<MAX_STATS;++i){
+    chosenStats.values[i]=st->stats[i];
+  }
   convertAbilities();
 
   // points = st->points;
