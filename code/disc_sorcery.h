@@ -66,6 +66,7 @@ private:
 
     int blastOfFury(TBeing *, TBeing *);
     int castBlastOfFury(TBeing *, TBeing *);
+    int blastOfFury(TBeing *, TBeing *, TMagicItem *);
     int blastOfFury(TBeing *, TBeing *, int, byte, int);
 
     int colorSpray(TBeing *);
