@@ -627,7 +627,7 @@ int TBeing::doSummonBeast(const char *argument)
   int rc = 0;
 
   if (!doesKnowSkill(SKILL_BEAST_SUMMON)) {
-    sendTo("You know nothing about summoning beasts.");
+    sendTo("You know nothing about summoning beasts.\n\r");
     return FALSE;
   }
 
