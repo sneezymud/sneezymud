@@ -924,11 +924,6 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
     if (isPc() && v->isPc() && (roomp->isRoomFlag(ROOM_ARENA) || (inPkZone() && cutPeelPkDam())))
       *dam /= 2;   // raising this number will lower damage rates in arena
 
-    // guns rule
-    if(weapon && dynamic_cast<TGun *>(weapon))
-      *dam *= 2;
-
-
     // this changes damage done to limb only, mhit already returned from funct
     // lessens damage based on level
     *dam *= 25 + GetMaxLevel();
@@ -1701,7 +1696,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
   // guns rule, just do straight damage none of that pussy modify
   // for skill crap.  BLAM BLAM!
   if(dynamic_cast<const TGun *>(wielded)){
-    return wepDam;
+    return wepDam/2;
   }
 
 
