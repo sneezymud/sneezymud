@@ -67,7 +67,7 @@ bool TShopOwned::doExpenses(int cashCost, TObj *obj)
   double value;
 
   if(ratio == 0)
-    return false;
+    return true;
 
   if(keeper->getMoney() < cashCost)
     return false;
