@@ -612,6 +612,11 @@ void assign_item_info()
      "Incubation period", 500, 0,
      "VNum of mob to hatch", 2147483647, 0,
      "1 = Poisoned, 2 = Spoiled, 3 = both", 3, 0);
+  ItemInfo[ITEM_CANNON] = new itemInfo("Cannon","a cannon",
+				    "Rate of fire", 1, 1,
+				    "Damage Level * 4 and Damage Precision", 10000, 0,
+				    "Bit flags", 2147483647, 0,
+				    "Ammo type", AMMO_CANNON_BALL, AMMO_CANNON_BALL);
   
 };
 
@@ -1931,6 +1936,7 @@ const char *shelldesc [] =
   "flechette",                  // 15
   "LAW rocket",                 // 16
   "lead shot",                  // 17
+  "cannon ball",                // 18
 };
 
 const char *shellkeyword [] = 
@@ -1953,6 +1959,7 @@ const char *shellkeyword [] =
   "flechette",                   // 15
   "lawrocket",
   "leadshot",                    // 17
+  "cannonball",                  // 18
 };
 
 

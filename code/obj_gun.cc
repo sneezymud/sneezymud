@@ -12,6 +12,7 @@
 #include "range.h"
 #include "obj_arrow.h"
 #include "obj_handgonne.h"
+#include "obj_tool.h"
 
 const char *getAmmoKeyword(int ammo){
   if(ammo < AMMO_NONE ||
@@ -124,7 +125,7 @@ void TBeing::doGload(sstring arg)
   }
   
   if(arg1 != "unload"){
-    generic_find(arg1.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tb, &bow);
+    generic_find(arg1.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP | FIND_OBJ_ROOM, this, &tb, &bow);
     
     if(!bow || !(gun=dynamic_cast<TGun *>(bow))){
       gload_usage(this);
@@ -157,7 +158,7 @@ void TBeing::doGload(sstring arg)
 
     gun->loadMe(this, ammo);
   } else {
-    generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tb, &bow);
+    generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP | FIND_OBJ_ROOM, this, &tb, &bow);
 
     if (!bow || !(gun=dynamic_cast<TGun *>(bow))){
       gload_usage(this);
@@ -477,3 +478,69 @@ void TGun::describeContains(const TBeing *ch) const
 {
   // just to avoid the "something in it" message
 }
+
+
+TThing *findFlint(TThing *stuff){
+  TThing *tt;
+  TTool *flint;
+  TThing *ret;
+
+  if(!stuff) 
+    return NULL;
+
+  for(tt=stuff;tt;tt=tt->nextThing){
+    if(tt && (flint=dynamic_cast<TTool *>(tt)) &&
+       (flint->getToolType() == TOOL_FLINTSTEEL))
+      return tt;
+
+    if(tt && tt->getStuff() && (ret=findFlint(tt->getStuff())))
+      return ret;
+  }
+
+  return NULL;
+}
+
+
+TThing *findPowder(TThing *stuff, int uses){
+  TThing *tt;
+  TTool *powder;
+  TThing *ret;
+
+  if(!stuff) 
+    return NULL;
+
+  for(tt=stuff;tt;tt=tt->nextThing){
+    if(tt && (powder=dynamic_cast<TTool *>(tt)) &&
+       (powder->getToolType() == TOOL_BLACK_POWDER) &&
+       powder->getToolUses() >= uses)
+      return tt;
+
+    if(tt && tt->getStuff() && (ret=findPowder(tt->getStuff(), uses)))
+      return ret;
+  }
+
+  return NULL;
+}
+
+
+TThing *findShot(TThing *stuff, ammoTypeT ammotype){
+  TThing *tt;
+  TAmmo *Shot;
+  TThing *ret;
+
+  if(!stuff) 
+    return NULL;
+
+  for(tt=stuff;tt;tt=tt->nextThing){
+    if(tt && (Shot=dynamic_cast<TAmmo *>(tt)) &&
+       Shot->getAmmoType()==ammotype)
+      return tt;
+
+    if(tt && tt->getStuff() && (ret=findShot(tt->getStuff(), ammotype)))
+      return ret;
+  }
+
+  return NULL;
+}
+
+

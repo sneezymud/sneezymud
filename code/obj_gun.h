@@ -34,12 +34,18 @@ enum ammoTypeT {
   AMMO_FLECHETTE,               // 15
   AMMO_LAW,                     // 16
   AMMO_LEAD_SHOT,               // 17
+  AMMO_CANNON_BALL,             // 18
   AMMO_MAX
 };
 
 
 extern const char *shelldesc [];
 extern const char *shellkeyword [];
+
+
+TThing *findFlint(TThing *stuff);
+TThing *findPowder(TThing *stuff, int uses);
+TThing *findShot(TThing *stuff, ammoTypeT ammotype);
 
 
 

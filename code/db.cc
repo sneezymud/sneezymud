@@ -84,6 +84,7 @@
 #include "obj_poison.h"
 #include "obj_handgonne.h"
 #include "obj_egg.h"
+#include "obj_cannon.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -2772,6 +2773,8 @@ TObj * makeNewObj(itemTypeT tmp)
       return new THandgonne();
     case ITEM_EGG:
       return new TEgg();
+    case ITEM_CANNON:
+      return new TCannon();
     case ITEM_UNDEFINED:
     case ITEM_MARTIAL_WEAPON:
     case MAX_OBJ_TYPES:

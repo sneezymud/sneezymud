@@ -120,6 +120,7 @@ enum taskTypeT {
      TASK_BUTCHER,
      TASK_COOK,
      TASK_HANDGONNE_LOAD,
+     TASK_CANNON_LOAD,
      NUM_TASKS  // keep this as max
 };
 

@@ -101,6 +101,7 @@ enum itemTypeT {
     ITEM_POISON,
     ITEM_HANDGONNE,
     ITEM_EGG,
+    ITEM_CANNON,
     MAX_OBJ_TYPES
 };
 const itemTypeT MIN_OBJ_TYPE = itemTypeT(0);

@@ -1,5 +1,5 @@
 #include "stdsneezy.h"
-#include "obj_handgonne.h"
+#include "obj_cannon.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
@@ -7,12 +7,9 @@
 #include "obj_arrow.h"
 #include "obj_tool.h"
 
-// this is a hand held cannon-lock firearm - essentially a small cannon
-// it takes a long time to load and is virtually unaimable
 
 
-
-int THandgonne::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir, int shoot_dist)
+int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir, int shoot_dist)
 {
   TAmmo *ammo;
   TObj *bullet;
@@ -131,24 +128,24 @@ int THandgonne::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirType
     capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
     
     if (targ){
-      ch->sendTo(COLOR_BASIC, "<Y>BANG!<1>  A loud blast sounds as you ignite %s.\n\r", shortDescr);
+      ch->sendTo(COLOR_BASIC, "<Y>BANG!<1>  A deafening blast sounds as you ignite %s.\n\r", shortDescr);
       ch->sendTo(COLOR_MOBS, "You shoot %s out of %s at %s.\n\r",
 		 good_uncap(capbuf).c_str(), good_uncap(capbuf2).c_str(),
 		 targ->getName());
     } else {
-      ch->sendTo(COLOR_BASIC, "<Y>BANG!<1>  A loud blast sounds as you ignite %s.\n\r", shortDescr);
+      ch->sendTo(COLOR_BASIC, "<Y>BANG!<1>  A deafening blast sounds as you ignite %s.\n\r", shortDescr);
       ch->sendTo("You shoot %s out of %s.\n\r",
 		 good_uncap(capbuf).c_str(), 
 		 good_uncap(capbuf2).c_str());
     }    
 
-    act("<Y>BANG!<1>  A loud blast sounds as $n ignites $p.",
+    act("<Y>BANG!<1>  A deafening blast sounds as $n ignites $p.",
 	FALSE, ch, this, bullet, TO_ROOM);
     sprintf(buf, "$n points $p %swards, and shoots $N out of it.",
 	    dirs[dir]);
     act(buf, FALSE, ch, this, bullet, TO_ROOM);
 
-    ch->dropSmoke(::number(1,5));
+    ch->dropSmoke(::number(5,15));
     
     // put the bullet in the room and then "throw" it
     *ch->roomp += *bullet;    
@@ -156,7 +153,7 @@ int THandgonne::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirType
     int rc = throwThing(bullet, dir, ch->in_room, &targ, shoot_dist, 1, ch);
 
     if(!isSilenced())
-      ch->roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r",
+      ch->roomp->getZone()->sendTo("<R>BOOM!<1>  A loud cannon shot echoes in the distance.\n\r",
 				   ch->in_room);
 
     // delete the bullet afterwards, arbitrary decision
@@ -179,10 +176,9 @@ int THandgonne::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirType
 
 
 
-
-int task_handgonne_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj *o)
+int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj *o)
 {
-  THandgonne *handgonne=dynamic_cast<THandgonne *>(o);
+  TCannon *cannon=dynamic_cast<TCannon *>(o);
   TAmmo *shot;
   TTool *powder;
   TThing *t;
@@ -204,18 +200,18 @@ int task_handgonne_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
   // find powder
   TThing *ss=ch->getStuff();
 
-  t=findPowder(ss, 1);
+  t=findPowder(ss, 12);
   
   int m=WEAR_NOWHERE;
   while(!t && m<MAX_WEAR){
     ++m;
-    t=findPowder(ch->equipment[m], 1);
+    t=findPowder(ch->equipment[m], 12);
   }
 
   powder=dynamic_cast<TTool *>(t);
 
   if(!powder){
-    ch->sendTo("You need to have some black powder.\n\r");
+    ch->sendTo("You need to have a full flask of black powder.\n\r");
     ch->stopTask();
     return FALSE;
   }
@@ -223,18 +219,18 @@ int task_handgonne_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
   // find shot
   ss=ch->getStuff();
 
-  t=findShot(ss, AMMO_LEAD_SHOT);
+  t=findShot(ss, AMMO_CANNON_BALL);
   
   m=WEAR_NOWHERE;
   while(!t && m<MAX_WEAR){
     ++m;
-    t=findShot(ch->equipment[m], AMMO_LEAD_SHOT);
+    t=findShot(ch->equipment[m], AMMO_CANNON_BALL);
   }
 
   shot=dynamic_cast<TAmmo *>(t);
 
-  if(!shot && !handgonne->getAmmo()){
-    ch->sendTo("You need to have some shot.\n\r");
+  if(!shot && !cannon->getAmmo()){
+    ch->sendTo("You need to have a cannon ball.\n\r");
     ch->stopTask();
     return FALSE;
   }
@@ -251,9 +247,19 @@ int task_handgonne_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
       ch->task->calcNextUpdate(pulse, PULSE_MOBACT * 5);
       
       switch (ch->task->timeLeft) {
-	case 3:
+	case 5:
+	  ssprintf(buf, "You clear out the barrel of %s.",
+		   cannon->shortDescr);
+	  act(buf, FALSE, ch, powder, cannon, TO_CHAR);
+	  ssprintf(buf, "$n clears out the barrel of %s.",
+		   cannon->shortDescr);
+	  act(buf, FALSE, ch, powder, cannon, TO_ROOM);
+
+	  ch->task->timeLeft--;
+	  break;
+	case 4:
 	  // powder
-	  handgonne->addToFlags(GUN_FLAG_FOULED);
+	  cannon->addToFlags(GUN_FLAG_FOULED);
 
 	  powder->addToToolUses(-1);
 	  if (powder->getToolUses() <= 0) {
@@ -262,42 +268,49 @@ int task_handgonne_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	    delete powder;
 	  }
 
-	  ssprintf(buf, "You pack some powder from $p into %s.",
-		   handgonne->shortDescr);
+	  ssprintf(buf, "You pour some powder from $p into %s.",
+		   cannon->shortDescr);
 	  act(buf, FALSE, ch, powder, 0, TO_CHAR);
 
-	  ssprintf(buf, "$n packs some powder from $p into %s.",
-		   handgonne->shortDescr);
-          act(buf, TRUE, ch, powder, 0, TO_ROOM);
+	  ssprintf(buf, "$n pour some powder from $p into %s.",
+		   cannon->shortDescr);
+          act(buf, FALSE, ch, powder, 0, TO_ROOM);
           ch->task->timeLeft--;
           break;
+	case 3:
+	  act("You pack down the charge in $N with a <o>ramrod<1>.",
+	      FALSE, ch, powder, cannon, TO_CHAR);
+	  act("$n packs down the charge in $N with a <o>ramrod<1>.",
+	      FALSE, ch, powder, cannon, TO_ROOM);
+	  ch->task->timeLeft--;
+	  break;
 	case 2:
 	  // plug
-	  act("You push a <o>wooden plug<1> down the barrel of $N.",
-	      TRUE, ch, shot, handgonne, TO_CHAR);
-	  act("$n pushes a <o>wooden plug<1> down the barrel of $N.",
-	      TRUE, ch, shot, handgonne, TO_ROOM);
+	  act("You shove a <W>ball of wadding<1> down the barrel of $N.",
+	      FALSE, ch, shot, cannon, TO_CHAR);
+	  act("$n shoves a <W>ball of wadding<1> down the barrel of $N.",
+	      FALSE, ch, shot, cannon, TO_ROOM);
 	  ch->task->timeLeft--;
 	  break;
 	case 1:
 	  // shot
 	  --(*shot);
-	  handgonne->setAmmo(shot);
+	  cannon->setAmmo(shot);
 
-	  act("You load $p into $N.", TRUE, ch, shot, handgonne, TO_CHAR);
-	  act("$n loads $p into $N.", TRUE, ch, shot, handgonne, TO_ROOM);
+	  act("You load $p into $N.", FALSE, ch, shot, cannon, TO_CHAR);
+	  act("$n loads $p into $N.", FALSE, ch, shot, cannon, TO_ROOM);
 	  
           ch->task->timeLeft--;
           break;
 	case 0:
 	  // primer
 	  act("You pour priming powder into the touchhole of $N.",
-	      TRUE, ch, shot, handgonne, TO_CHAR);
+	      FALSE, ch, shot, cannon, TO_CHAR);
 	  act("$n pours priming powder into the touchhole of $N.",
-	      TRUE, ch, shot, handgonne, TO_ROOM);
+	      FALSE, ch, shot, cannon, TO_ROOM);
 
-	  ch->sendTo(COLOR_BASIC, "You have finished loading %s.\n\r", handgonne->shortDescr);
-	  handgonne->remFromFlags(GUN_FLAG_FOULED);
+	  ch->sendTo(COLOR_BASIC, "You have finished loading %s.\n\r", cannon->shortDescr);
+	  cannon->remFromFlags(GUN_FLAG_FOULED);
 	  ch->stopTask();
 	  break;
       }
@@ -307,7 +320,7 @@ int task_handgonne_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
       act("You cease loading.",
           FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops loading.",
-          TRUE, ch, 0, 0, TO_ROOM);
+          FALSE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -322,7 +335,7 @@ int task_handgonne_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
   return TRUE;
 }
 
-void THandgonne::loadMe(TBeing *ch, TAmmo *ammo)
+void TCannon::loadMe(TBeing *ch, TAmmo *ammo)
 {
 
   // find black powder
@@ -330,11 +343,11 @@ void THandgonne::loadMe(TBeing *ch, TAmmo *ammo)
 
   ch->sendTo(COLOR_BASIC, "You start loading %s.\n\r", shortDescr);
 
-  start_task(ch, this, ch->roomp, TASK_HANDGONNE_LOAD, "", 3, ch->inRoom(), 0, 0, 5);
+  start_task(ch, this, ch->roomp, TASK_CANNON_LOAD, "", 5, ch->inRoom(), 0, 0, 5);
 
 }
 
-void THandgonne::unloadMe(TBeing *ch, TAmmo *ammo)
+void TCannon::unloadMe(TBeing *ch, TAmmo *ammo)
 {
   TThing *arrow=dynamic_cast<TThing *>(ammo);
 
@@ -356,24 +369,24 @@ void THandgonne::unloadMe(TBeing *ch, TAmmo *ammo)
 
 
 
-THandgonne::THandgonne() :
+TCannon::TCannon() :
   TGun()
 {
 }
 
-THandgonne::THandgonne(const THandgonne &a) :
+TCannon::TCannon(const TCannon &a) :
   TGun(a)
 {
 }
 
-THandgonne & THandgonne::operator=(const THandgonne &a)
+TCannon & TCannon::operator=(const TCannon &a)
 {
   if (this == &a) return *this;
   TGun::operator=(a);
   return *this;
 }
 
-THandgonne::~THandgonne()
+TCannon::~TCannon()
 {
 }
 
