@@ -504,8 +504,8 @@ void TPerson::storeToSt(charFile *st)
   if (title)
     strcpy(st->title, title);
   else
-#endif
     *st->title = '\0';
+#endif
 
   strcpy(st->lastHost, lastHost);
 
@@ -1671,6 +1671,7 @@ void TBeing::loadTitle()
   if (!(fp = fopen(buf.c_str(), "r"))) {
     vlogf(LOG_FILE, "Unable to open file (%s) for loading title (%d)",
           buf.c_str(), errno);
+    tp->setTitle(true);
     return;
   }
 
