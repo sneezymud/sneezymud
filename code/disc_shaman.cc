@@ -1807,11 +1807,11 @@ int distort(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
         else
           bBuf += " expels";
 
-        sprintf(buf, "%s from $n's hands course into $N's body!", bBuf.c_str());
+        sprintf(buf, "%s from $n's hands and course into $N's body!", bBuf.c_str());
         act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
-        sprintf(buf, "%s from your hands course into $N's body!", bBuf.c_str());
+        sprintf(buf, "%s from your hands and course into $N's body!", bBuf.c_str());
         act(buf, FALSE, caster, NULL, victim, TO_CHAR);
-        sprintf(buf, "%s from $n's hands course into your body distorting your soul!", bBuf.c_str());
+        sprintf(buf, "%s from $n's hands and course into your body distorting your soul!", bBuf.c_str());
         act(buf, FALSE, caster, NULL, victim, TO_VICT);
         break;
       case CRIT_S_TRIPLE:
@@ -1828,11 +1828,11 @@ int distort(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
         else
           bBuf += " streams";
 
-        sprintf(buf, "%s from $n's hands course into $N's body!", bBuf.c_str());
+        sprintf(buf, "%s from $n's hands and course into $N's body!", bBuf.c_str());
         act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
-        sprintf(buf, "%s from your hands course into $N's body!", bBuf.c_str());
+        sprintf(buf, "%s from your hands and course into $N's body!", bBuf.c_str());
         act(buf, FALSE, caster, NULL, victim, TO_CHAR);
-        sprintf(buf, "%s from $n's hands course into your body distorting your soul!", bBuf.c_str());
+        sprintf(buf, "%s from $n's hands and course into your body distorting your soul!", bBuf.c_str());
         act(buf, FALSE, caster, NULL, victim, TO_VICT);
         break;
       case CRIT_S_NONE:
@@ -1844,11 +1844,11 @@ int distort(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
         else
           bBuf += " streams";
 
-        sprintf(buf, "%s from $n's hands course into $N's body!", bBuf.c_str());
+        sprintf(buf, "%s from $n's hands and course into $N's body!", bBuf.c_str());
         act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
-        sprintf(buf, "%s from your hands course into $N's body!", bBuf.c_str());
+        sprintf(buf, "%s from your hands and course into $N's body!", bBuf.c_str());
         act(buf, FALSE, caster, NULL, victim, TO_CHAR);
-        sprintf(buf, "%s from $n's hands course into your body distorting your soul!", bBuf.c_str());
+        sprintf(buf, "%s from $n's hands and course into your body distorting your soul!", bBuf.c_str());
         act(buf, FALSE, caster, NULL, victim, TO_VICT);
         if (victim->isLucky(caster->spellLuckModifier(SPELL_DISTORT))) {
           SV(SPELL_DISTORT);
@@ -2056,3 +2056,12 @@ int castSoulTwist(TBeing *caster, TBeing *victim)
 
   return rc;
 }
+
+
+
+
+
+
+
+
+
