@@ -297,8 +297,7 @@ int Descriptor::read_client(char *str2)
         break;
 
       if (!character->isImmortal()) {
-        character->sendTo("You cannot do this as a mortal. If this is a client bug report to Brutius. Otherwise stop trying to hack 
-the client because the server double checks everything. Thanks. Brutius.\n\r");
+        character->sendTo("You cannot do this as a mortal. If this is a client bug report to Brutius. Otherwise stop trying to hack the client because the server double checks everything. Thanks. Brutius.\n\r");
         break;
       }
       strcpy(buf, nextToken('|', 255, str2).c_str());
@@ -951,8 +950,7 @@ int Descriptor::client_nanny(char *arg)
     *pwd = '\0';
 
   if (!*pwd) {
-    clientf(fmt("%d|No account %s exists! Please reenter account name, or create a
-new account.|%d") % CLIENT_ERROR % account->name % ERR_BAD_NAME);
+    clientf(fmt("%d|No account %s exists! Please reenter account name, or create a new account.|%d") % CLIENT_ERROR % account->name % ERR_BAD_NAME);
     delete account;
     account = NULL;
     return FALSE;   
