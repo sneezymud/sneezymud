@@ -45,6 +45,26 @@ const int PULSE_TICK        =1;
 // - 9600 pulses take 1237 secs : Bat 05/05/99  (low load)
 // - 7200 pulses take 2744 secs : Bat 01/12/00  (avg load, 1 day uptime)
 
+// July 2001 - new machine and stuff, pulse conversion stuff gives us
+// between 9.2 and 9.6 pulses per second
+// rounding up to ten, from our previous value of 4 (which we had balacned
+// to for playtime and stuff) gives us 5/2 conversion ratio... we need to
+// eat up that difference some how
+
+// these are all factors of 3, so going 2/3 will be easy... 2/3 * 5/2 is...
+// 5/3, duh i shouldn't have needed a calculator for that
+// so we still have a factor of 5/3 to account for
+// see statistics.cc for the remaining compensation in exp/damage rates
+
+const int ONE_SECOND        =10;
+const int PULSE_MOBACT      =ONE_SECOND * 2;
+const int PULSE_TELEPORT    =ONE_SECOND * 2;
+const int PULSE_COMBAT      =ONE_SECOND * 2;
+const int PULSE_DROWNING    =ONE_SECOND * 6;
+const int PULSE_SPEC_PROCS  =ONE_SECOND * 6;
+const int PULSE_NOISES      =ONE_SECOND * 8;
+
+/*
 const int ONE_SECOND        =4;
 const int PULSE_MOBACT      =ONE_SECOND * 3;
 const int PULSE_TELEPORT    =ONE_SECOND * 3;
@@ -52,7 +72,7 @@ const int PULSE_COMBAT      =ONE_SECOND * 3;
 const int PULSE_DROWNING    =ONE_SECOND * 9;
 const int PULSE_SPEC_PROCS  =ONE_SECOND * 9;
 const int PULSE_NOISES      =ONE_SECOND * 12;
-
+*/
 // Altering PULSE_UPDATES will speed up ticks, but also causes "mud time"
 // to totally recalculate (making it shorter will age people).
 // use caution!

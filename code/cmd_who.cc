@@ -116,8 +116,9 @@ static const string getWhoLevel(const TBeing *ch, TBeing *p)
     sprintf(tempbuf, "Level:[%s] ", tmpstring.c_str());
     TFaction *f = NULL;
     if((f = p->newfaction()) && TestCode5) {
-      if (f->ID && (IS_SET(f->flags, FACT_ACTIVE) || ch->isImmortal()) &&
-	  (!IS_SET(f->flags, FACT_HIDDEN) || ch->newfaction() == p->newfaction() || ch->isImmortal())) {
+      if (f->ID && (IS_SET(f->flags, FACT_ACTIVE) || ch->newfaction() == p->newfaction() || ch->isImmortal()) &&
+	  (!IS_SET(f->flags, FACT_HIDDEN) || ch->newfaction() == p->newfaction() || ch->isImmortal()) &&
+	  (!p->isImmortal() || ch->isImmortal())) {
 	sprintf(tempbuf, "%s %s[<1>%s%s]<1>", tempbuf,
 		heraldcodes[p->newfaction()->colors[0]],
 		p->newfaction()->getName(),
@@ -568,16 +569,18 @@ void TBeing::doWho(const char *argument)
                     if(TestCode5) {
 		      TFaction *f = NULL;
 		      if((f = p->newfaction()) && TestCode5) {
-
-			if (f->ID && (IS_SET(f->flags, FACT_ACTIVE) || isImmortal()) &&
-			    (!IS_SET(f->flags, FACT_HIDDEN) 
-			     || newfaction() == p->newfaction() || isImmortal())) {
-			  sprintf(buf + strlen(buf), "%s[<1>%s%s]<1> %s[<1>%s%s]<1>",
+			if (f->ID && (IS_SET(f->flags, FACT_ACTIVE) || newfaction()== p->newfaction()||isImmortal()) &&
+			    (!IS_SET(f->flags, FACT_HIDDEN) || newfaction() == p->newfaction() || isImmortal()) &&
+			    (!p->isImmortal() || isImmortal())) {
+			  sprintf(buf + strlen(buf), "%s[<1>%s%s]<1>",
 				  heraldcodes[p->newfaction()->colors[0]],
 				  p->newfaction()->getName(),
-				  heraldcodes[p->newfaction()->colors[0]],
+				  heraldcodes[p->newfaction()->colors[0]]);
+			  if(!IS_SET(f->flags, FACT_HIDE_RANKS) || newfaction() == p->newfaction()
+			     || isImmortal()) 
+			  sprintf(buf + strlen(buf), " %s[<1>%s%s]<1>",
 				  heraldcodes[p->newfaction()->colors[1]],
-                                  p->rank(),
+				  p->rank(),
                                   heraldcodes[p->newfaction()->colors[1]]);
 			}
 		      }

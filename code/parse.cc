@@ -2617,7 +2617,7 @@ void buildCommandArray(void)
   commandArray[CMD_CHANGE] = new commandInfo("change", POSITION_RESTING, 0);
   commandArray[CMD_REDIT]=new commandInfo("redit", POSITION_DEAD, GOD_LEVEL1); 
   commandArray[CMD_OEDIT] = new commandInfo("oedit", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_FEDIT] = new commandInfo("fedit", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_FEDIT] = new commandInfo("fedit", POSITION_DEAD, 0);
   commandArray[CMD_FADD]  = new commandInfo("fadd", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_JOIN] = new commandInfo("join", POSITION_RESTING, 0);
   commandArray[CMD_DEFECT] = new commandInfo("defect", POSITION_RESTING, 0);

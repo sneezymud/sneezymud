@@ -778,6 +778,9 @@ int TSocket::gameLoop()
       if (TestCode6) {
     	vlogf(LOG_MISC, "2400 pulses took %ld seconds.  ONE_SEC=%.3f pulses", secs, 2400.0/(float) secs);
       }
+
+      // THIS PUSLE = 0 IS NOT SIMPLY FOR LOGGING PURPOSES.
+      // if it gets removed all tasks go into hyper mode. So don't.
       pulse = 0;
     }
 
