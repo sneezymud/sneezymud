@@ -272,8 +272,8 @@ void TPerson::doToggle(const char *arg)
     }
 #endif
     TestCode1 = ! TestCode1;
-    sendTo("TestCode #1 is now %s.\n\r", TestCode1 ? "in use" : "off");
-    vlogf(LOG_MISC,"%s has %s TestCode #1.",getName(),TestCode1 ? "enabled" : "disabled");
+    sendTo("TestCode #1 (Shaman use) is now %s.\n\r", TestCode1 ? "in use" : "off");
+    vlogf(LOG_MISC,"%s has %s TestCode #1 (shaman use).",getName(),TestCode1 ? "enabled" : "disabled");
   } else if (is_abbrev(arg, "testcode2")) {
 #if 0
     // if you are using testcode, change this so we don't collide usages

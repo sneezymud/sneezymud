@@ -237,7 +237,20 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
     return FALSE;
   }
 
-  updatePos();
+  if (hasClass(CLASS_SHAMAN)) {
+    updatePos();
+    if (isPc()) {
+      if (-10 > getHit()) {
+	vlogf(LOG_MISC, "%s autokilled by lifeforce (room:%d)", getName(), in_room);
+	sendTo("The loa are disappointed in your state of life.\n\r");
+	reconcileDamage(this, 1, DAMAGE_DRAIN);
+	die(DAMAGE_DRAIN);
+	return DELETE_THIS;
+	doSave(SILENT_YES);
+      }
+    }
+  }
+
   // ADDED THIS TO MAKE SURE POSITIONS ARE UPDATED ON SHAMAN
 
   if (1) {

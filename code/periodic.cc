@@ -746,22 +746,31 @@ int TBeing::updateHalfTickStuff()
   if (hasClass(CLASS_SHAMAN)) {
     if ((isPc()) && (GetMaxLevel() < 51)) {
       if (0 >= getLifeforce()) {
+	reconcileDamage(this,::number(0,2),DAMAGE_DRAIN);
 	setLifeforce(0);
-	if (-10 > getHit()) {
-	  vlogf(LOG_MISC, "%s killed by excessive lifeforce drain at %s (%d)",
+	updatePos();
+	if ((0 > getHit()) && (getHit() > -3)) {
+	  vlogf(LOG_JESUS, "%s is stunned at %s (%d)",
 		getName(), roomp ? roomp->getName() : "nowhere", inRoom());
-	  reconcileDamage(this,::number(1,3),DAMAGE_DRAIN);
-	  die(DAMAGE_DRAIN);
-	  return DELETE_THIS;
+	  updatePos();
+	} 
+	if ((-3 > getHit()) && (getHit() > -6)) {
+	  vlogf(LOG_JESUS, "%s is incapacitated at %s (%d)",
+		getName(), roomp ? roomp->getName() : "nowhere", inRoom());
+	  updatePos();
 	}
-	if (0 > getHit()) {
-	  reconcileDamage(this,1,DAMAGE_DRAIN);
-	  sendTo("Your condition makes it impossible to gather lifeforce!\n\r");
-	  sendTo("Try and walk south a few times if you want to finish yourself off.\n\r");
+	if ((-6 > getHit()) && (getHit() > -10)) {
+	  vlogf(LOG_JESUS, "%s is mortally wounded at %s (%d)",
+		getName(), roomp ? roomp->getName() : "nowhere", inRoom());
+	  updatePos();
 	}
-	if (getHit() > 0) {
-	  reconcileDamage(this,::number(1,2),DAMAGE_DRAIN);
-	  sendTo("Your ancestors demand you gather lifeforce.\n\r");
+	if (-10 > getHit()) {
+	  vlogf(LOG_JESUS, "%s autokilled by excessive lifeforce drain at %s (%d)",
+		getName(), roomp ? roomp->getName() : "nowhere", inRoom());
+	  if (reconcileDamage(this, 1,DAMAGE_DRAIN) == -1)
+	    die(DAMAGE_DRAIN);
+	    return DELETE_THIS;
+	  doSave(SILENT_YES);
 	}
 	updatePos();
       } else {
