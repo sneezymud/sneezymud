@@ -355,6 +355,8 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
 		    cashCost, "regenerating");
+	    TShopOwned tso(shop_nr, me, ch);
+	    tso.doReserve();
 
             buf=fmt("$n waves $s hands, utters many magic phrases and regenerates $N's %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
