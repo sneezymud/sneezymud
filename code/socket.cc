@@ -1069,7 +1069,7 @@ int TSocket::gameLoop()
       if(!quickpulse){
 	if(!tmp_ch->roomp->isIndoorSector() && 
 	   !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
-	   sunIsUp()){
+	   (tmp_ch->inRoom() != ROOM_VOID) && sunIsUp()){
 	    
 	  if(tmp_ch->hasQuestBit(TOG_VAMPIRE)){
 	    act("<r>Exposure to sunlight causes your skin to ignite!<1>",
