@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_objs.cc,v $
+// Revision 1.3  1999/09/26 23:04:37  lapsos
+// Few bug/crash fixes.
+//
 // Revision 1.2  1999/09/26 22:54:53  lapsos
 // Modifications to the wicked proc.
 //
@@ -2226,7 +2229,7 @@ int wickedDagger(TBeing *vict, cmdTypeT cmd, const char *, TObj *me, TObj *ch_ob
   int dam = ::number(1,2);
   spellNumT wtype = me->getWtype();
 
-  if (::number(0,10) || vict->getHit() <= 0 ||
+  if (::number(0,10) || !ch_obj || !vict || vict->getHit() <= 0 ||
       (dynamic_cast<TBeing *>(dynamic_cast<TThing *>(ch_obj)))->getHit() <= 0)
     return FALSE;
 
