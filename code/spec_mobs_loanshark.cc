@@ -180,7 +180,6 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 	
       
       me->doTell(ch->getName(), fmt("With interest, you owe %i talens.") % amt);
-
     } else {
       me->doTell(ch->getName(), fmt("I can extend you a loan for %i talens.") % amt);
       me->doTell(ch->getName(), fmt("A yearly cumulative interest rate of %.2f%c will apply.") % 
@@ -189,7 +188,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       me->doTell(ch->getName(), "One mud year is about 2 weeks in real time.");
       me->doTell(ch->getName(), fmt("If you default on the loan, you will be charged an additional %.2f%c.") %
 		(getPenalty(shop_nr, ch->getName()) * 100) % '%');
-      me->doTell(ch->getName(), "Do \"buy loan\" to take out the loan.");
+      me->doTell(ch->getName(), "Do \"buy loan <amt>\" to take out the loan.");
     }
     return true;
   }
@@ -198,10 +197,27 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
   ////////////////////////////
   if(cmd==CMD_BUY){
-    if(sstring(arg) != "loan"){
-      me->doTell(ch->getName(), "If you want to take out the loan, do \"buy loan\".");
+    if(sstring(arg).word(0) != "loan"){
+      me->doTell(ch->getName(), "If you want to take out the loan, do \"buy loan <amount>\".");
       return true;
     }
+    
+    db.query("select 1 from shopownedloans where player_id=%i", 
+	     ch->getPlayerID());
+    if(db.fetchRow()){
+      me->doTell(ch->getName(), "You already have a loan!");
+      return true;
+    }
+
+    int loanamt=convertTo<int>(sstring(arg).word(1));
+    
+    if(loanamt > amt){
+      me->doTell(ch->getName(), fmt("You can't take out a loan for that much.  The most I can give you is %i.") % amt);
+      return true;
+    }
+
+    if(loanamt > 0 && loanamt <= amt)
+      amt=loanamt;
 
     if(amt > me->getMoney()){
       me->doTell(ch->getName(), "At the moment, I don't have the necessary capital to extend a loan to you.");
