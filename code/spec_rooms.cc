@@ -234,13 +234,17 @@ static int bankLimit(const TBeing *ch)
 {
   // we use to support only 10K per level, but lets make formula follow
   // NPC wealth and other money curves
+#if 0
   int num = ch->GetMaxLevel() * max((int) ch->GetMaxLevel(), 20) * 500;
   return num;
+#endif
+
+  return 2147483618;
 }
 
 int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
 {
-  const int MONK_BANK_LIMIT = 500;
+  //  const int MONK_BANK_LIMIT = 500;
 
   if (cmd >= MAX_CMD_LIST)  // we only trap player commands in this spec_proc 
     return FALSE;
@@ -261,11 +265,14 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
         money = ch->getMoney();
     }
 
+#if 0
     if (ch->hasClass(CLASS_MONK) && 
         ((ch->getBank() + money) > MONK_BANK_LIMIT)) {
       ch->sendTo("Your vows forbid you to retain personal wealth in excess of %d talens.\n\r", MONK_BANK_LIMIT);
       return TRUE;
     }
+#endif
+
 
     if (money > ch->getMoney()) {
       ch->sendTo("You don't have enough for that!\n\r");
