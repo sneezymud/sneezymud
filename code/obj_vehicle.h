@@ -10,6 +10,7 @@
 
 #include "obj_portal.h"
 
+
 class TVehicle : public TPortal {
  private:
   dirTypeT dir;
@@ -24,10 +25,13 @@ class TVehicle : public TPortal {
   virtual itemTypeT itemType() const { return ITEM_VEHICLE; }
   char getPortalNumCharges() const;
   void driveSpeed(TBeing *, string);
-  void driveExit(TBeing *);
-  void driveLook(TBeing *);
   void driveDir(TBeing *, dirTypeT);
-  
+  void vehiclePulse(int);
+  void driveStatus(TBeing *);
+  void driveExit(TBeing *);
+  void driveLook(TBeing *ch, bool silent=false);
+
+  void lookObj(TBeing *ch, int) const;
   
   TVehicle();
   TVehicle(const TVehicle &a);

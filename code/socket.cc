@@ -37,6 +37,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "socket.h"
 #include "weather.h"
 #include "obj_smoke.h"
+#include "obj_vehicle.h"
 
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown
@@ -334,6 +335,7 @@ int TSocket::gameLoop()
   int rc = 0;
   time_t lagtime_t = time(0);
   int count;
+  TVehicle *vehicle;
 
 #ifndef SOLARIS
   int mask;
@@ -607,6 +609,12 @@ int TSocket::gameLoop()
           // not be noticed.  Therefore, break out.
           break;
         }
+
+	// vehicle movement
+	if((vehicle=dynamic_cast<TVehicle *>(obj)))
+	  vehicle->vehiclePulse(pulse);
+	
+
         if (!combat) {
           rc = obj->detonateGrenade();
           if (IS_SET_DELETE(rc, DELETE_THIS)) {

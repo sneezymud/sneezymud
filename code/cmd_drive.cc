@@ -14,21 +14,6 @@ TVehicle *findVehicle(TBeing *ch)
   return NULL;
 }
 
-bool findKeys(TBeing *ch, TVehicle *vehicle)
-{
-  TThing *t;
-  TObj *o;
-
-  for(t=ch->getStuff();t;t=t->nextThing){
-    if((o=dynamic_cast<TObj *>(t)) && o->objVnum() == vehicle->getPortalKey())
-      return true;
-  }
-
-  ch->sendTo("You need the keys to drive this vehicle!\n\r");
-
-  return false;
-}
-
 // drive speed <fast|medium|slow|stop>
 // drive <north|south|etc>
 // drive exit
@@ -56,8 +41,10 @@ void TBeing::doDrive(string arg)
   // direction is entered we can fall through to non-keys commands
   for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){
     if(is_abbrev(buf, dirs[dir])){
-      if(!findKeys(this, vehicle))
+      if(!has_key(this, vehicle->getPortalKey())){
+	sendTo("You need the keys to drive this vehicle!\n\r");
 	return;
+      }
 
       vehicle->driveDir(this, dir);
       return;
@@ -74,12 +61,29 @@ void TBeing::doDrive(string arg)
     vehicle->driveLook(this);
     return;
   }
+
+  if(is_abbrev(buf, "status")){
+    vehicle->driveStatus(this);
+    return;
+  }
+
+  if(is_abbrev(buf, "close")){
+    vehicle->closeMe(this);
+    return;
+  }
+
+  if(is_abbrev(buf, "lock")){
+    vehicle->lockMe(this);
+    return;
+  }
 		   
   // authenticated commands
   if(is_abbrev(buf, "fast") || is_abbrev(buf, "medium") || 
      is_abbrev(buf, "slow") || is_abbrev(buf, "stop")){
-    if(!findKeys(this, vehicle))
+    if(!has_key(this, vehicle->getPortalKey())){
+      sendTo("You need the keys to drive this vehicle!\n\r");
       return;
+    }
 
     vehicle->driveSpeed(this, buf);
     return;
@@ -88,6 +92,6 @@ void TBeing::doDrive(string arg)
 
   sendTo("Syntax: drive <direction>\n\r");
   sendTo("        drive <fast|medium|slow|stop>\n\r");
-  sendTo("        drive <exit|look>\n\r");
+  sendTo("        drive <exit|look|close|lock>\n\r");
 }
 

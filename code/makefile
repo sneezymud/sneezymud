@@ -1503,6 +1503,56 @@ objs/cmd_doorbash.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/cmd_doorbash.o: person.h monster.h account.h extern.h handler.h
 objs/cmd_doorbash.o: obj_money.h rent.h spec_mobs.h materials.h combat.h
 objs/cmd_doorbash.o: disc_warrior.h
+objs/cmd_drive.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/cmd_drive.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/cmd_drive.o: /usr/include/gnu/stubs.h
+objs/cmd_drive.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/cmd_drive.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/cmd_drive.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/cmd_drive.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/cmd_drive.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/cmd_drive.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
+objs/cmd_drive.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_drive.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_drive.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
+objs/cmd_drive.o: /usr/include/ctype.h /usr/include/endian.h
+objs/cmd_drive.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
+objs/cmd_drive.o: /usr/include/assert.h /usr/include/g++-3/cstring
+objs/cmd_drive.o: /usr/include/string.h /usr/include/g++-3/cerrno
+objs/cmd_drive.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/cmd_drive.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/cmd_drive.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
+objs/cmd_drive.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
+objs/cmd_drive.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
+objs/cmd_drive.o: /usr/include/g++-3/stl_alloc.h
+objs/cmd_drive.o: /usr/include/g++-3/iostream.h
+objs/cmd_drive.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
+objs/cmd_drive.o: /usr/include/g++-3/stl_relops.h
+objs/cmd_drive.o: /usr/include/g++-3/stl_iterator.h
+objs/cmd_drive.o: /usr/include/g++-3/std/bastring.cc
+objs/cmd_drive.o: /usr/include/g++-3/vector /usr/include/g++-3/stl_algobase.h
+objs/cmd_drive.o: /usr/include/g++-3/stl_pair.h
+objs/cmd_drive.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/cmd_drive.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/cmd_drive.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/cmd_drive.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/cmd_drive.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/cmd_drive.o: /usr/include/g++-3/stl_construct.h
+objs/cmd_drive.o: /usr/include/g++-3/stl_uninitialized.h
+objs/cmd_drive.o: /usr/include/g++-3/stl_vector.h
+objs/cmd_drive.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
+objs/cmd_drive.o: /usr/include/g++-3/stl_tree.h
+objs/cmd_drive.o: /usr/include/g++-3/stl_function.h
+objs/cmd_drive.o: /usr/include/g++-3/stl_map.h
+objs/cmd_drive.o: /usr/include/g++-3/stl_multimap.h low.h enum.h spells.h
+objs/cmd_drive.o: structs.h immunity.h discipline.h spell2.h parse.h db.h
+objs/cmd_drive.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/cmd_drive.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/cmd_drive.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
+objs/cmd_drive.o: create.h thing.h room.h obj.h spec_objs.h connect.h
+objs/cmd_drive.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/cmd_drive.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/cmd_drive.o: materials.h obj_vehicle.h obj_portal.h obj_seethru.h
 objs/cmd_egotrip.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_egotrip.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_egotrip.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -14308,7 +14358,8 @@ objs/socket.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/socket.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/socket.o: statistics.h database.h /usr/include/postgresql/libpq-fe.h
 objs/socket.o: /usr/include/postgresql/postgres_ext.h spelltask.h
-objs/socket.o: systemtask.h socket.h obj_smoke.h
+objs/socket.o: systemtask.h socket.h obj_smoke.h obj_vehicle.h obj_portal.h
+objs/socket.o: obj_seethru.h
 objs/sound.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/sound.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/sound.o: /usr/include/gnu/stubs.h
