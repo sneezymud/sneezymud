@@ -730,6 +730,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 #endif
           total_player_kills++;
 
+#if 0
 	  if(this!=v && this->roomp && !this->roomp->isRoomFlag(ROOM_ARENA) &&
 	     !this->inPkZone()){
 	    affectedData aff;
@@ -737,6 +738,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	    aff.duration = 24 * UPDATES_PER_MUDHOUR;
 	    affectTo(&aff);
 	  }
+#endif
         }
 
         // create grave marker
