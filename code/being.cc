@@ -1221,42 +1221,42 @@ void TBeing::setMult(double mult)
   multAtt = mult;
 }
 
-// I took these numbers from banded mail (level 19)
+// I took these numbers from black leather (level 29)
 // this is a crummy way to do this, but the right way is too hard
 int getIronFleshArmor(wearSlotT slot){
   switch(slot){
     case WEAR_HEAD:
-      return -70;
+      return -86;
     case WEAR_NECK:
-      return -40;
+      return -49;
     case WEAR_BODY:
-      return -147;
+      return -184;
     case WEAR_BACK:
-      return -70;
+      return -86;
     case WEAR_ARM_R:
     case WEAR_ARM_L:
-      return -39;
+      return -49;
     case WEAR_WRIST_R:
     case WEAR_WRIST_L:
-      return -20;
+      return -24;
     case WEAR_HAND_R:
     case WEAR_HAND_L:
-      return -29;
+      return -37;
     case WEAR_FINGER_R:
     case WEAR_FINGER_L:
-      return -10;
+      return -12;
     case WEAR_WAISTE:
-      return -78;
+      return -98;
     case WEAR_EX_LEG_R:
     case WEAR_EX_LEG_L:
     case WEAR_LEGS_R:
     case WEAR_LEGS_L:
-      return -49;
+      return -61;
     case WEAR_FOOT_R:
     case WEAR_FOOT_L:
     case WEAR_EX_FOOT_R:
     case WEAR_EX_FOOT_L:
-      return -19;
+      return -24;
     case WEAR_NOWHERE:
     case HOLD_RIGHT:
     case HOLD_LEFT:
