@@ -2419,10 +2419,12 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	    vlogf(LOG_BUG, "Database error in shop_keeper");
 	  return FALSE;
 	}
-	if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf, atoi(buf2)))){
-	  if(rc==-1)
-	    vlogf(LOG_BUG, "Database error in shop_keeper");
-	  return FALSE;
+	if(atoi(buf2) != 0){
+	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf, atoi(buf2)))){
+	    if(rc==-1)
+	      vlogf(LOG_BUG, "Database error in shop_keeper");
+	    return FALSE;
+	  }
 	}
       } else {
 	if(*buf){
