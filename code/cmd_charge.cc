@@ -184,7 +184,7 @@ vict->getName());
     tb = dynamic_cast<TBeing *>(c);
     if (!tb)
       continue;
-    if (tb->fight() == vict) {
+    if ((tb->fight() == vict) && (tb != mount)) {
       // we have already validated that all attackers are in ch's group
       act("You scatter as $N charges!", FALSE, tb, 0, ch, TO_CHAR);
       act("$n scatters as you charge!", FALSE, tb, 0, ch, TO_VICT);
