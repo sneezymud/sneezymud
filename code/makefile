@@ -12370,7 +12370,8 @@ objs/obj_trash_pile.o: charfile.h being.h person.h monster.h paths.h
 objs/obj_trash_pile.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/obj_trash_pile.o: materials.h colorstring.h format.h obj_trash_pile.h
 objs/obj_trash_pile.o: obj_expandable_container.h obj_open_container.h
-objs/obj_trash_pile.o: obj_base_container.h
+objs/obj_trash_pile.o: obj_base_container.h pathfinder.h
+objs/obj_trash_pile.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/obj_treasure.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_treasure.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_treasure.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -13107,7 +13108,7 @@ objs/periodic.o: materials.h colorstring.h format.h combat.h mail.h
 objs/periodic.o: disc_monk.h obj_component.h obj_player_corpse.h
 objs/periodic.o: obj_base_corpse.h obj_base_container.h obj_opal.h
 objs/periodic.o: obj_seethru.h obj_plant.h obj_expandable_container.h
-objs/periodic.o: obj_open_container.h obj_egg.h obj_food.h
+objs/periodic.o: obj_open_container.h obj_egg.h obj_food.h obj_trash_pile.h
 objs/pets.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/pets.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/pets.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -14035,8 +14036,9 @@ objs/socket.o: colorstring.h format.h statistics.h database.h
 objs/socket.o: /usr/local/include/libpq-fe.h
 objs/socket.o: /usr/local/include/postgres_ext.h spelltask.h systemtask.h
 objs/socket.o: socket.h obj_smoke.h obj_vehicle.h obj_portal.h obj_seethru.h
-objs/socket.o: pathfinder.h /usr/include/g++/deque
-objs/socket.o: /usr/include/g++/stl_deque.h timing.h
+objs/socket.o: obj_trash_pile.h obj_expandable_container.h
+objs/socket.o: obj_open_container.h obj_base_container.h pathfinder.h
+objs/socket.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h timing.h
 objs/sound.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sound.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/sound.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -19758,7 +19760,9 @@ objs/weather.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/weather.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/weather.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/weather.o: account.h extern.h handler.h obj_money.h spec_mobs.h
-objs/weather.o: materials.h colorstring.h format.h
+objs/weather.o: materials.h colorstring.h format.h obj_trash_pile.h
+objs/weather.o: obj_expandable_container.h obj_open_container.h
+objs/weather.o: obj_base_container.h
 objs/wiz_data.o: /usr/include/unistd.h /usr/include/sys/cdefs.h
 objs/wiz_data.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
 objs/wiz_data.o: /usr/include/machine/ansi.h /usr/include/machine/types.h
