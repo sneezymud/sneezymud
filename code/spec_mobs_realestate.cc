@@ -6,7 +6,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
 {
   MYSQL_RES *res;
   MYSQL_ROW row;
-  char tellbuf[256], buf[256], buf2[256];
+  char tellbuf[1024], buf[1024], buf2[1024];
   int rc;
 
   if(cmd != CMD_LIST &&
