@@ -69,19 +69,19 @@ void corpListing(TBeing *ch, TMonster *me)
     me->doTell(ch->getName(), (*it).second);
 }
 
-void corpLogs(TBeing *ch, TMonster *me, sstring arg)
+void corpLogs(TBeing *ch, TMonster *me, sstring arg, sstring corp_arg)
 {
   TDatabase db(DB_SNEEZY);
   sstring buf, sb;
   int corp_id=0;
 
   if(ch->isImmortal()){
-    corp_id=convertTo<int>(arg);
+    corp_id=convertTo<int>(corp_arg);
   } else {
     db.query("select corp_id from corpaccess where lower(name)='%s'",
 	     sstring(ch->getName()).lower().c_str());
 
-    if(arg.empty()){
+    if(corp_arg.empty()){
       if(db.fetchRow())
 	corp_id=convertTo<int>(db["corp_id"]);
 
@@ -90,14 +90,14 @@ void corpLogs(TBeing *ch, TMonster *me, sstring arg)
 	return;
       }
     } else {
-      if(convertTo<int>(arg) == 0){
+      if(convertTo<int>(corp_arg) == 0){
 	me->doTell(ch->getName(), "You must specify the ID of the corporation you wish look at the logs of.");
 	return;
       }
 
       while(db.fetchRow()){
-	if(convertTo<int>(db["corp_id"]) == convertTo<int>(arg)){
-	  corp_id=convertTo<int>(arg);
+	if(convertTo<int>(db["corp_id"]) == convertTo<int>(corp_arg)){
+	  corp_id=convertTo<int>(corp_arg);
 	  break;
 	}
       }
@@ -108,15 +108,41 @@ void corpLogs(TBeing *ch, TMonster *me, sstring arg)
       return;
     }
   }
-  
 
-  db.query("select name, action, talens, corptalens, logtime from corplog where corp_id = %i order by logtime desc", corp_id);
-  
-  while(db.fetchRow()){
-    buf = fmt("%16.16s  %20.20s %10s %10s  Total: %s\n\r") %
-      db["logtime"] % db["name"] % db["action"] %
-      db["talens"] % db["corptalens"];
-    sb += buf;
+  if(arg == "daily"){
+    db.query("select name, action, sum(talens) as talens, round(avg(corptalens)) as corptalens, date_trunc('day', logtime) as logtime from corplog where  corp_id = %i group by date_trunc('day', logtime), name, action order by date_trunc('day', logtime) desc, talens desc", corp_id);
+
+    sstring last_date="", color_code="<r>";
+    int total=0;
+
+    while(db.fetchRow()){
+      if(last_date != db["logtime"]){
+	if(!last_date.empty()){
+	  color_code=(color_code=="<b>")?"<r>":"<b>";
+	  buf=fmt("%16.16s  %20.20s %10s %10i<1>\n\r") %
+	    "" % "Total" % "" % total;
+	  sb += buf;
+	}
+	total=0;
+	last_date=db["logtime"];
+      }
+      total+=convertTo<int>(db["talens"]);
+
+      buf = fmt("%s%16.16s  %20.20s %10s %10s  Total: %s<1>\n\r") %
+	color_code %
+	db["logtime"] % db["name"] % db["action"] %
+	db["talens"] % db["corptalens"];
+      sb += buf;
+    }
+  } else {
+    db.query("select name, action, talens, corptalens, logtime from corplog where corp_id = %i order by logtime desc", corp_id);
+    
+    while(db.fetchRow()){
+      buf = fmt("%16.16s  %20.20s %10s %10s  Total: %s\n\r") %
+	db["logtime"] % db["name"] % db["action"] %
+	db["talens"] % db["corptalens"];
+      sb += buf;
+    }
   }
   
   if (ch->desc)
@@ -415,7 +441,11 @@ int corporateAssistant(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster 
       // list short summary of all corporations
       corpListing(ch, me);
     } else if(arg.word(0) == "logs"){
-      corpLogs(ch, me, arg.word(1));
+      if(arg.word(1) == "daily"){
+	corpLogs(ch, me, arg.word(1), arg.word(2));
+      } else {
+	corpLogs(ch, me, "", arg.word(1));
+      }
     } else if(!arg.empty()){
       // list details of a specific corporation
       tmp=convertTo<int>(arg);
