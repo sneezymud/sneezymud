@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: other.cc,v $
+// Revision 1.3  1999/09/23 22:05:35  cosmo
+// Simple change of victim to target to avoid null pointer
+//
 // Revision 1.2  1999/09/14 23:22:20  cosmo
 // Fixed crash bug related to grouping npc's no victim->desc
 //
@@ -1899,7 +1902,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
         !IS_SET(discArray[spell]->targets, TAR_OBJ_INV | TAR_OBJ_EQUIP | TAR_OBJ_ROOM | TAR_OBJ_WORLD)) {
       // tried to invoke on being, not designed for that
       caster->sendTo(COLOR_BASIC, "You can not invoke '%s' on %s.\n\r",
-          discArray[spell]->name, victim->getName());
+          discArray[spell]->name, target->getName());
       return 0;
     }
   }
