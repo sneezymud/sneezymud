@@ -1220,7 +1220,7 @@ int rombler(TBeing *caster, int, byte bKnown)
 
 
   if (bSuccess(caster, bKnown, SPELL_ROMBLER)) {
-    if (msg.size() > 0) {
+    if (msg.size() < 0) {
       caster->sendTo("Drumming without spirits to send is moot.\n\r");
       caster->nothingHappens(SILENT_YES);
     } else {
