@@ -87,17 +87,6 @@ bool TBeing::canDisarm(TBeing *victim, silentTypeT silent)
       return FALSE;
     }
   }
-  TBaseClothing *shield = dynamic_cast<TBaseClothing *>(victim->heldInSecHand());
-  if (!victim->heldInPrimHand() && shield && shield->isShield()) {
-    if(!::number(0,2)) {
-      act("You catch the edge of $p's $N but fail to disarm it.",
-          FALSE, this, victim, victim->heldInSecHand(), TO_CHAR);
-      act("$n catches the edge of $p's $N but fails to disarm it.",
-          FALSE, this, victim, victim->heldInSecHand(), TO_ROOM);
-      return FALSE;
-    }
-  }
-
 #if 0
   if (!equipment[getPrimaryHold()]) {
     sendTo("Your primary hand must be FREE in order to attempt a disarm!\n\r");
@@ -202,7 +191,15 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
       obj = dynamic_cast<TObj *>(victim->heldInSecHand());
       isobjprim=FALSE;
     }
-    if (obj) {
+  
+    TBaseClothing *shield = dynamic_cast<TBaseClothing *>(obj);
+    if (!isobjprim && shield && shield->isShield() && !::number(0,2)) {
+      act("You catch the edge of $p's $N but fail to disarm it.",
+          FALSE, caster, victim, victim->heldInSecHand(), TO_CHAR);
+      act("$n catches the edge of $p's $N but fails to disarm it.",
+          FALSE, caster, victim, victim->heldInSecHand(), TO_ROOM);
+      caster->reconcileDamage(victim, 0, skill);;
+    } else if (obj) {
       act("You attempt to disarm $N.", TRUE, caster, 0, victim, TO_CHAR);
       if (caster->isHumanoid())
         act("$n makes an impressive fighting move.", TRUE, caster, 0, 0, TO_ROOM);

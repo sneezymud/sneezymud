@@ -3722,6 +3722,7 @@ int TMonster::mobileActivity(int pulse)
     // either no spec or decided against it
     // go into normal class-related attacks
 
+
     rc = classStuff(*tmp_ch);
 
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
