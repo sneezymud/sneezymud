@@ -14,8 +14,6 @@ static int quiveringPalm(TBeing *c, TBeing *v)
   int percent;
   int i;
 
-  int level = c->getSkillLevel(SKILL_QUIV_PALM);
-
   if (c->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
 
@@ -78,7 +76,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
 
   if (bSuccess(c, bKnown + percent, SKILL_QUIV_PALM) &&
       ((i = c->specialAttack(v, SKILL_QUIV_PALM)) || (i == GUARANTEED_SUCCESS))) {
-    int dam = 20 * level;
+    int dam = v->getHit()+100;
     if (c->willKill(v, dam, SKILL_QUIV_PALM, false)) {
       act("$N is killed instantly by the dreaded quivering palm.", 
             FALSE, c, NULL, v, TO_CHAR);
