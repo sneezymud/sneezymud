@@ -1,3 +1,18 @@
+01-20-00 - Bat
+- Found some whacky time-related code caused by the confusion over "ticks"
+  versus "mudhours".  I changed some things in comm.h so we have
+  SECS_PER_TICK and SECS_PER_MUDHOUR.  For affects, there is,
+  UPDATES_PER_TICK and UPDATES_PER_MUDHOUR
+  A "tick" is the time between regens (36 secs), a mudhour is what it says
+  it is, (4 ticks to the mudhour, ~2.5 real minutes per mudhour).
+- The former uses of UPDATES_PER_TICK have all been changed to
+  UPDATES_PER_MUDHOUR.  This agrees with how things were defined previously.
+- It looks like some of our code was thinking the "old U.P.TICK" was really 30
+  mud minutes.  I would see:
+      aff->duration = 2 * UPDATES_PER_TICK; // 1 hour
+  I fixed them as I found them, but wasn't too diligent about looking for them
+  In any event, there may be a bunch of stray *2 in some of the duration stuff
+  
 01-17-00 - Bat
 - New code is reporting numerous database problems and core dumping during
   boot.  I put sign up.
