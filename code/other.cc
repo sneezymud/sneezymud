@@ -1235,7 +1235,7 @@ void TBeing::sendSkillsList(discNumT which)
 void TBeing::doPracSkill(const char *argument, spellNumT skNum)
 {
   spellNumT skill = TYPE_UNDEFINED;
-  bool found = FALSE;
+  int found = 0;
   int wiz = FALSE;
   char buf[256];
   char how_long[256];

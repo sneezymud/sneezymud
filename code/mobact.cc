@@ -1443,7 +1443,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = SPELL_ICY_GRIP;
     if (!::number(0, 3) && 
            (cutoff < discArray[spell]->start) &&
-         ch.doesKnowSkill(spell) > 33 ) {
+         ch.getSkillValue(spell) > 33 ) {
       act("$n utters the words, 'Cold Shoulder!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
@@ -1803,7 +1803,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = SPELL_ICY_GRIP;
     if (!::number(0, 3) && 
            (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) > 33 ) {
+        ch.getSkillValue(spell) > 33 ) {
       act("$n utters the words, 'Cold Shoulder!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;

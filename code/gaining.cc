@@ -1888,7 +1888,8 @@ void TBeing::pracPath(TMonster *gm, classIndT Class)
   char buf[256];
   sstring tmp_buf, tmp_buf2;
   int combat = 0, basic = 0;
-  bool basicLearn = FALSE, combatMax = FALSE,  combatLearn = FALSE;
+  bool basicLearn = FALSE, combatLearn = FALSE;
+  int combatMax=0;
 
   if (!checkDoneBasic(this, Class, FALSE, FALSE)) {
     sprintf(buf, "Hmmm, looks like you are free to use your practices at any advanced %s trainer.", gm->getProfName().c_str());

@@ -5472,7 +5472,7 @@ double TBeing::deathSkillLoss()
       continue;
     }
 
-    amt-=(int)(5*sin((amt+5)/23)+5);
+    amt-=(int)(5*sin((double)(amt+5)/23)+5);
 
     loss += getRawNatSkillValue(i)-amt;
     count++;
