@@ -263,8 +263,8 @@ void TBeing::statRoom(TRoom *rmp)
   volume = 0;
   buf2="";
   for (t = rmp->getStuff(); t; t = t->nextThing) {
-    volume += t->getVolume();
     if (!dynamic_cast<TBeing *>(t)) {
+      volume += t->getVolume();
       counter++;
       if (counter > 20) {
         buf2 += "Too Many In Room to Stat More\n\r";
