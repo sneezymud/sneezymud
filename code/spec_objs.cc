@@ -5780,7 +5780,7 @@ int fragileArrow(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *)
 }
 
 
-int starfire(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *)
+int starfire(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
   TBeing *ch;
   int rc, dam = 1;
@@ -5854,17 +5854,18 @@ int starfiresheath(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 	act("<W>$N<W> suddenly materializes in $n's $o with a faint metallic sound.<1>",TRUE,ch,o,sword,TO_ROOM,NULL);
         act("<W>$N<W> suddenly materializes in your $o with a faint metallic sound.<1>",TRUE,ch,o,sword,TO_CHAR,NULL);
 	return TRUE;
+      }
     }
     return FALSE;
   }
-
+  
   if (!::number(0,9) && cmd == CMD_GENERIC_PULSE && o->getStructPoints() < o->getMaxStructPoints()) {
     if(::number(1,100) < (int)(100.0*((float)(o->getStructPoints()) / (float)(o->getMaxStructPoints()))))
       return FALSE;
-
+    
     act("<c>$n<c>'s $o slowly reconstructs itself, erasing signs of damage.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
     act("<c>Your $o slowly reconstructs itself, erasing signs of damage.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
-
+    
     o->addToStructPoints(::number(1,min(5, o->getMaxStructPoints() - o->getStructPoints())));
     return FALSE;
   }
