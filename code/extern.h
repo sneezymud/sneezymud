@@ -283,6 +283,7 @@ extern int setsockopt(int, int, int, const char *, int);
 extern int getsockopt(int, int, int, char *buf, int *);
 #endif
 
+int ssprintf(string &, const char *, ...);
 void   doGlobalRoomStuff(void);
 void  do_other_obj_stuff(void);
 extern const int spec_skill_array[50];

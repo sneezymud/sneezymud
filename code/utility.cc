@@ -44,6 +44,23 @@ extern long random(void);
 #include "database.h"
 #include "obj_seethru.h"
 
+
+// sprintf for string class
+// this should be safe to use, truncates at 1024 chars
+int ssprintf(string &s, const char *fmt, ...){
+  va_list ap;
+  char buf[1024];
+  int ret;
+
+  va_start(ap, fmt);
+  ret=vsnprintf(buf, 1024, fmt, ap);
+
+  s = buf;
+
+  return ret;
+}
+
+
 bool TBeing::canSeeWho(const TBeing *o) const
 {
   if (inRoom() < 0 || o->inRoom() < 0)
