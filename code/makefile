@@ -224,7 +224,7 @@ clean:
 
 GEN_HEADS    = structs.h obj.h thing.h being.h body.h room.h person.h \
                monster.h client.h low.h obj2.h trap.h mobAI.h weather.h \
-               extern.h parse.h faction.h handler.h spells.h \
+               extern.h parse.h faction.h handler.h spells.h disease.h \
                spell2.h response.h db.h connect.h comm.h rent.h spec_objs.h \
                stdsneezy.h account.h spec_mobs.h spec_rooms.h discipline.h \
                race.h ansi.h materials.h task.h charfile.h \
@@ -272,7 +272,6 @@ $(OBJDIR)blackjack.o: $(CASINO_HEADS)
 $(OBJDIR)board.o: board.h
 $(OBJDIR)bounty_hunter.o: shop.h
 $(OBJDIR)bow.o: range.h
-$(OBJDIR)breath.o: disease.h
 $(OBJDIR)cards.o: $(CASINO_HEADS)
 $(OBJDIR)client.o: statistics.h
 $(OBJDIR)cmd_bash.o: combat.h
@@ -292,7 +291,7 @@ $(OBJDIR)cmd_headbutt.o: combat.h
 $(OBJDIR)cmd_quivpalm.o: combat.h
 $(OBJDIR)cmd_sedit.o: combat.h dirsort.h
 $(OBJDIR)cmd_set.o: statistics.h
-$(OBJDIR)cmd_stab.o: combat.h disease.h
+$(OBJDIR)cmd_stab.o: combat.h
 $(OBJDIR)cmd_steal.o: disc_looting.h
 $(OBJDIR)cmd_stomp.o: combat.h
 $(OBJDIR)cmd_testfight.o: spelltask.h
@@ -311,77 +310,76 @@ $(OBJDIR)create_rooms.o: room.h
 $(OBJDIR)crit_combat.o: combat.h statistics.h
 $(OBJDIR)damage.o: combat.h statistics.h
 $(OBJDIR)db.o: components.h help.h board.h statistics.h mail.h loadset.h
-$(OBJDIR)disc_adventuring.o: disc_adventuring.h disease.h combat.h
-$(OBJDIR)disc_aegis.o: disc_aegis.h disease.h combat.h
-$(OBJDIR)disc_afflictions.o: disc_afflictions.h  disease.h combat.h
-$(OBJDIR)disc_air.o: disc_air.h spelltask.h  disease.h combat.h
-$(OBJDIR)disc_alchemy.o: disc_alchemy.h  disease.h components.h combat.h spelltask.h
-$(OBJDIR)disc_animal.o: disc_animal.h disease.h combat.h
-$(OBJDIR)disc_azruzi.o: disc_azruzi.h  disease.h combat.h
+$(OBJDIR)disc_adventuring.o: disc_adventuring.h combat.h
+$(OBJDIR)disc_aegis.o: disc_aegis.h combat.h
+$(OBJDIR)disc_afflictions.o: disc_afflictions.h combat.h
+$(OBJDIR)disc_air.o: disc_air.h spelltask.h combat.h
+$(OBJDIR)disc_alchemy.o: disc_alchemy.h components.h combat.h spelltask.h
+$(OBJDIR)disc_animal.o: disc_animal.h combat.h
+$(OBJDIR)disc_azruzi.o: disc_azruzi.h combat.h
 $(OBJDIR)disc_blunt.o: disc_blunt.h
 $(OBJDIR)disc_brawling.o: disc_brawling.h
 $(OBJDIR)disc_meditation.o: disc_meditation.h disc_combat.h
 $(OBJDIR)disc_cleric.o: disc_cleric.h
-$(OBJDIR)disc_combat.o: disc_combat.h components.h disease.h combat.h
-$(OBJDIR)disc_cure.o: disc_cures.h  disease.h combat.h spelltask.h
-$(OBJDIR)disc_deikhan.o: disc_deikhan.h  disease.h combat.h
-$(OBJDIR)disc_draining.o: disc_draining.h disease.h combat.h
-$(OBJDIR)disc_earth.o: disc_earth.h  disease.h combat.h spelltask.h
-$(OBJDIR)disc_fire.o: disc_fire.h spelltask.h  disease.h combat.h
-$(OBJDIR)disc_hand_of_god.o: disc_hand_of_god.h  disease.h combat.h
-$(OBJDIR)disc_hth.o: disc_hth.h range.h disease.h combat.h
+$(OBJDIR)disc_combat.o: disc_combat.h components.h combat.h
+$(OBJDIR)disc_cure.o: disc_cures.h combat.h spelltask.h
+$(OBJDIR)disc_deikhan.o: disc_deikhan.h combat.h
+$(OBJDIR)disc_draining.o: disc_draining.h combat.h
+$(OBJDIR)disc_earth.o: disc_earth.h combat.h spelltask.h
+$(OBJDIR)disc_fire.o: disc_fire.h spelltask.h combat.h
+$(OBJDIR)disc_hand_of_god.o: disc_hand_of_god.h combat.h
+$(OBJDIR)disc_hth.o: disc_hth.h range.h combat.h
 $(OBJDIR)disc_leverage.o: disc_leverage.h combat.h range.h
 $(OBJDIR)disc_fattacks.o: disc_fattacks.h combat.h
-$(OBJDIR)disc_looting.o: disc_looting.h  disease.h combat.h
+$(OBJDIR)disc_looting.o: disc_looting.h combat.h
 $(OBJDIR)disc_mage.o: disc_mage.h
 $(OBJDIR)disc_monk.o: disc_monk.h combat.h
 $(OBJDIR)disc_mounted.o: disc_mounted.h
-$(OBJDIR)disc_murder.o: disc_murder.h  disease.h combat.h spelltask.h
-$(OBJDIR)disc_nature.o: disc_nature.h disease.h combat.h spelltask.h
+$(OBJDIR)disc_murder.o: disc_murder.h combat.h spelltask.h
+$(OBJDIR)disc_nature.o: disc_nature.h combat.h spelltask.h
 $(OBJDIR)disc_physical.o: disc_pierce.h
 $(OBJDIR)disc_pierce.o: disc_pierce.h
 $(OBJDIR)disc_ranged.o: disc_ranged.h
-$(OBJDIR)disc_ranger.o: disc_ranger.h  disease.h combat.h
-$(OBJDIR)disc_shaman.o: disc_shaman.h disease.h combat.h
+$(OBJDIR)disc_ranger.o: disc_ranger.h combat.h
+$(OBJDIR)disc_shaman.o: disc_shaman.h combat.h
 $(OBJDIR)disc_slash.o: disc_slash.h
 $(OBJDIR)disc_smythe.o: disc_smythe.h
-$(OBJDIR)disc_sorcery.o: disc_sorcery.h  disease.h combat.h spelltask.h
-$(OBJDIR)disc_spirit.o: disc_spirit.h disease.h combat.h spelltask.h
-$(OBJDIR)disc_survival.o: disc_survival.h  disease.h combat.h components.h
+$(OBJDIR)disc_sorcery.o: disc_sorcery.h combat.h spelltask.h
+$(OBJDIR)disc_spirit.o: disc_spirit.h combat.h spelltask.h
+$(OBJDIR)disc_survival.o: disc_survival.h combat.h components.h
 $(OBJDIR)disc_mindbody.o: disc_mindbody.h combat.h
 $(OBJDIR)disc_theology.o: disc_theology.h
-$(OBJDIR)disc_thief.o: disc_thief.h $(CASINO_HEADS) disease.h combat.h
-$(OBJDIR)disc_warrior.o: disc_warrior.h  disease.h combat.h
-$(OBJDIR)disc_water.o: disc_water.h  disease.h combat.h spelltask.h
-$(OBJDIR)disc_wrath.o: disc_wrath.h disease.h combat.h
-$(OBJDIR)discipline.o: disease.h $(DISC_HEADS) components.h combat.h spelltask.h
-$(OBJDIR)disease.o: disease.h
+$(OBJDIR)disc_thief.o: disc_thief.h $(CASINO_HEADS) combat.h
+$(OBJDIR)disc_warrior.o: disc_warrior.h combat.h
+$(OBJDIR)disc_water.o: disc_water.h combat.h spelltask.h
+$(OBJDIR)disc_wrath.o: disc_wrath.h combat.h
+$(OBJDIR)discipline.o: $(DISC_HEADS) components.h combat.h spelltask.h
 $(OBJDIR)drawpoker.o: $(CASINO_HEADS)
 $(OBJDIR)edit.o: socket.h
-$(OBJDIR)egotrip.o: disc_fire.h disc_aegis.h disease.h
-$(OBJDIR)food.o: disease.h shop.h
+$(OBJDIR)egotrip.o: disc_fire.h disc_aegis.h
+$(OBJDIR)food.o: shop.h
 $(OBJDIR)gaining.o: statistics.h
 $(OBJDIR)gin.o: $(CASINO_HEADS)
-$(OBJDIR)handler.o: combat.h range.h connect.h disease.h shop.h
+$(OBJDIR)handler.o: combat.h range.h connect.h shop.h
 $(OBJDIR)hearts.o: $(CASINO_HEADS)
 $(OBJDIR)help.o: components.h help.h statistics.h
-$(OBJDIR)hospital.o: disease.h combat.h
-$(OBJDIR)immortal.o: disease.h statistics.h mail.h $(CASINO_HEADS) combat.h
+$(OBJDIR)hospital.o: combat.h
+$(OBJDIR)immortal.o: statistics.h mail.h $(CASINO_HEADS) combat.h
 $(OBJDIR)immortal.o: socket.h systemtask.h disc_nature.h shop.h
 $(OBJDIR)indexdata.o: statistics.h
-$(OBJDIR)info.o: statistics.h $(CASINO_HEADS) disease.h combat.h components.h
+$(OBJDIR)info.o: statistics.h $(CASINO_HEADS) combat.h components.h
 $(OBJDIR)info.o: skillsort.h
 $(OBJDIR)inventory.o: statistics.h disc_looting.h $(CASINO_HEADS)
 $(OBJDIR)limits.o: statistics.h games.h
 $(OBJDIR)loadset.o: loadset.h
 $(OBJDIR)low.o: statistics.h combat.h
 $(OBJDIR)magic_skills.o: combat.h
-$(OBJDIR)magicutils.o: components.h disease.h
+$(OBJDIR)magicutils.o: components.h
 $(OBJDIR)mail.o: mail.h
 $(OBJDIR)makecorpse.o: combat.h components.h
 $(OBJDIR)materials.o: statistics.h
 $(OBJDIR)mob_loader.o: components.h
-$(OBJDIR)mobact.o: range.h disease.h statistics.h
+$(OBJDIR)mobact.o: range.h statistics.h
 $(OBJDIR)money.o: statistics.h
 $(OBJDIR)monster.o: statistics.h
 $(OBJDIR)movement.o: combat.h $(CASINO_HEADS) disc_looting.h
@@ -389,11 +387,11 @@ $(OBJDIR)obj.o: shop.h
 $(OBJDIR)offense.o: $(CASINO_HEADS) combat.h
 $(OBJDIR)organic.o: shop.h
 $(OBJDIR)other.o: $(DISC_HEADS) mail.h range.h $(CASINO_HEADS) skillsort.h
-$(OBJDIR)other.o: disease.h combat.h statistics.h spelltask.h
+$(OBJDIR)other.o: combat.h statistics.h spelltask.h
 $(OBJDIR)parse.o: mail.h
-$(OBJDIR)periodic.o: disease.h mail.h combat.h components.h disc_meditation.h
+$(OBJDIR)periodic.o: mail.h combat.h components.h disc_meditation.h
 $(OBJDIR)physics.o: combat.h
-$(OBJDIR)player_data.o: mail.h statistics.h disease.h combat.h shop.h
+$(OBJDIR)player_data.o: mail.h statistics.h combat.h shop.h
 $(OBJDIR)posse.o: paths.h
 $(OBJDIR)prof_cl_th.o: profession.h prof_cleric.h prof_thief.h
 $(OBJDIR)prof_cl_th.o: prof_cl_th.h
@@ -429,14 +427,13 @@ $(OBJDIR)riding.o: combat.h
 $(OBJDIR)shop.o: shop.h statistics.h
 $(OBJDIR)show.o: disc_looting.h combat.h components.h
 $(OBJDIR)skill_dam.o: statistics.h
-$(OBJDIR)skills.o: $(DISC_HEADS) disease.h
+$(OBJDIR)skills.o: $(DISC_HEADS)
 $(OBJDIR)slots.o: $(CASINO_HEADS)
 $(OBJDIR)socket.o: socket.h systemtask.h statistics.h spelltask.h
 $(OBJDIR)socket.o: weather.h
-$(OBJDIR)spec_mobs.o: combat.h disease.h components.h paths.h
+$(OBJDIR)spec_mobs.o: combat.h components.h paths.h
 $(OBJDIR)spec_mobs.o: disc_sorcery.h disc_afflictions.h disc_aegis.h
 $(OBJDIR)spec_mobs.o: disc_alchemy.h disc_wrath.h disc_earth.h disc_water.h
-$(OBJDIR)spec_objs.o: disease.h
 $(OBJDIR)spec_rooms.o: statistics.h
 $(OBJDIR)spell_parser.o: $(DISC_HEADS)
 $(OBJDIR)spelltask.o: $(DISC_HEADS) combat.h spelltask.h
@@ -444,11 +441,10 @@ $(OBJDIR)statistics.o: statistics.h systemtask.h
 $(OBJDIR)structs.o: combat.h board.h statistics.h $(CASINO_HEADS)
 $(OBJDIR)symbol.o: shop.h
 $(OBJDIR)systemtask.o: systemtask.h
-$(OBJDIR)talk.o: disease.h
 $(OBJDIR)task.o: disc_alchemy.h
 $(OBJDIR)task.o: disc_looting.h disc_air.h
 $(OBJDIR)task_whittle.o: task_whittle.h
-$(OBJDIR)trap.o: disease.h disc_looting.h
+$(OBJDIR)trap.o: disc_looting.h
 $(OBJDIR)utility.o: statistics.h shop.h socket.h combat.h $(CASINO_HEADS)
 
 .SUFFIXES:     .cc 
