@@ -6141,11 +6141,11 @@ int fireArmor(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
       affectedData aff1;
 
       act("$n closes $s eyes and whispers, '<p>scorching redemption<1>'.",TRUE,ch,o,NULL,TO_ROOM,NULL);
-      act("<o>$p<o> becomes covered in searing flames, <R>complete engulfing<1><o> $n!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("<o>$p<o> becomes covered in searing flames, <R>completely engulfing<1><o> $n!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("The $o slowly stops burning, but $n remains wreathed in <r>flames<1>.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
 
       act("You close your eyes and whipser, '<p>scorching redemption<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
-      act("<o>$p<o> becomes covered in searing flames, <R>complete engulfing<1><o> you!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("<o>$p<o> becomes covered in searing flames, <R>completely engulfing<1><o> you!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
       act("The $o slowly stops burning, but you remain wreathed in <r>flames<1>.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
 
 
