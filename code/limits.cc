@@ -103,6 +103,8 @@ float classHpPerLevel(const TPerson *tp){
 }
 
 int ageHpMod(const TPerson *tp){
+  if (!tp)
+    return 0;
   return graf((tp->age()->year - tp->getBaseAge() + 15), 2, 4, 17, 14, 8, 4, 3);
 }
 
