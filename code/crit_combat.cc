@@ -964,10 +964,17 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 	      	      
 	TObj *corpse;
+	TCorpse *tooth;
 	
 	// 39 is generic tooth
 	corpse = read_object(39, VIRTUAL);
 	corpse->swapToStrung();
+
+	if((tooth=dynamic_cast<TCorpse *>(corpse))){
+	  tooth->setCorpseRace(v->getRace());
+	  tooth->setCorpseLevel(v->GetMaxLevel());
+	  tooth->setCorpseVnum(v->mobVnum());
+	}
 
 	buf = fmt("tooth %s [%d]") % v->name % v_vnum;
 
