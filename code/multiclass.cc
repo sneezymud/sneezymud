@@ -11,28 +11,8 @@ int NumClasses(int Class)
 {
   int tot = 0;
 
-  if (Class & CLASS_MAGE)
-      tot++;
-
-  if (Class & CLASS_WARRIOR)
-      tot++;
-
-  if (Class & CLASS_THIEF)
-      tot++;
-
-  if (Class & CLASS_CLERIC)
-      tot++;
-
-  if (Class & CLASS_DEIKHAN)
-      tot++;
-
-  if (Class & CLASS_RANGER)
-      tot++;
-
-  if (Class & CLASS_MONK)
-      tot++;
-
-  if (Class & CLASS_SHAMAN)
+  for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++)
+    if(Class & classInfo[i].class_num)
       tot++;
 
   return(tot);
@@ -136,7 +116,7 @@ int TBeing::getClassNum(const char *arg, exactTypeT exact)
   int which = 0;
 
   if (exact) {
-    for(int i=0;i<MAX_CLASSES;++i){
+    for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
       if(!strcmp(arg, classInfo[i].name.c_str())){
 	which=classInfo[i].class_num;
 	break;
@@ -146,7 +126,7 @@ int TBeing::getClassNum(const char *arg, exactTypeT exact)
     if(!which)
       return FALSE;
   } else {
-    for(int i=0;i<MAX_CLASSES;++i){
+    for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
       if(is_abbrev(arg, classInfo[i].name)){
 	which=classInfo[i].class_num;
 	break;
@@ -170,9 +150,9 @@ classIndT TBeing::getClassIndNum(const char *arg, exactTypeT exact)
   int which = getClassNum(arg, exact);
   classIndT res = MIN_CLASS_IND;
 
-  for(int i=0;i<MAX_CLASSES;++i){
+  for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
     if(classInfo[i].class_num==which){
-      res=classInfo[i].class_lev_num;
+      res=i;
       break;
     }
   }
@@ -189,9 +169,9 @@ classIndT TBeing::getClassIndNum(ush_int which, exactTypeT exact)
 {
   classIndT res = MIN_CLASS_IND;
 
-  for(int i=0;i<MAX_CLASSES;++i){
+  for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
     if(classInfo[i].class_num==which){
-      res=classInfo[i].class_lev_num;
+      res=i;
       break;
     }
   }
@@ -209,7 +189,7 @@ bool TBeing::hasClass(const char *arg, exactTypeT exact) const
   int which=0;
 
   if (exact) {
-    for(int i=0;i<MAX_CLASSES;++i){
+    for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
       if(!strcmp(arg, classInfo[i].name.c_str())){
 	which=classInfo[i].class_num;
 	break;
@@ -219,7 +199,7 @@ bool TBeing::hasClass(const char *arg, exactTypeT exact) const
     if(!which)
       return FALSE;
   } else {
-    for(int i=0;i<MAX_CLASSES;++i){
+    for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
       if(is_abbrev(arg, classInfo[i].name)){
 	which=classInfo[i].class_num;
 	break;
@@ -291,29 +271,10 @@ int TBeing::GetTotLevel() const
 
 void TPerson::startLevels()
 {
-  if (hasClass(CLASS_MAGE))
-    advanceLevel(MAGE_LEVEL_IND);
-
-  if (hasClass(CLASS_CLERIC))
-    advanceLevel(CLERIC_LEVEL_IND);
-  
-  if (hasClass(CLASS_WARRIOR))
-    advanceLevel(WARRIOR_LEVEL_IND);
- 
-  if (hasClass(CLASS_THIEF))
-    advanceLevel(THIEF_LEVEL_IND);
-   
-  if (hasClass(CLASS_RANGER))
-    advanceLevel(RANGER_LEVEL_IND);
-   
-  if (hasClass(CLASS_MONK))
-    advanceLevel(MONK_LEVEL_IND);
-   
-  if (hasClass(CLASS_DEIKHAN))
-    advanceLevel(DEIKHAN_LEVEL_IND);
-   
-  if (hasClass(CLASS_SHAMAN))
-    advanceLevel(SHAMAN_LEVEL_IND);
+  for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
+    if(hasClass(classInfo[i].class_num))
+      advanceLevel(i);
+  }
 
   // Partners
   if (!strcmp(name, "Batopr") ||
@@ -338,30 +299,6 @@ void TPerson::startLevels()
     setLevel(CLERIC_LEVEL_IND, MAX_IMMORT - 1);
     setLevel(THIEF_LEVEL_IND, MAX_IMMORT - 1);
     setLevel(WARRIOR_LEVEL_IND, MAX_IMMORT - 1);
-    setWizPowers(this,this,"allpowers");
-    remWizPower(POWER_IDLED);
-    calcMaxLevel();
-
-    // Minor Office Holders
-#ifdef NO58
-    // Currently there are nonex
-  } else if (!strcmp(name, "Omen") ||
-             !strcmp(name, "Sidartha")) {
-    setLevel(MAGE_LEVEL_IND, MAX_IMMORT - 2);
-    setLevel(CLERIC_LEVEL_IND, MAX_IMMORT - 2);
-    setLevel(THIEF_LEVEL_IND, MAX_IMMORT - 2);
-    setLevel(WARRIOR_LEVEL_IND, MAX_IMMORT - 2);
-    setWizPowers(this,this,"allpowers");
-    remWizPower(POWER_IDLED);
-    calcMaxLevel();
-#endif
-    // Other Mudadmin
-  } else if (!strcmp(name, "Dolgan") || 
-	     !strcmp(name, "Glint")) {
-    setLevel(MAGE_LEVEL_IND, MAX_IMMORT - 3);
-    setLevel(CLERIC_LEVEL_IND, MAX_IMMORT - 3);
-    setLevel(THIEF_LEVEL_IND, MAX_IMMORT - 3);
-    setLevel(WARRIOR_LEVEL_IND, MAX_IMMORT - 3);
     setWizPowers(this,this,"allpowers");
     remWizPower(POWER_IDLED);
     calcMaxLevel();
@@ -406,38 +343,17 @@ classIndT & operator++(classIndT &c, int)
 
 const char * const TBeing::getProfName() const
 {
-  if (hasClass(CLASS_MAGE | CLASS_WARRIOR | CLASS_THIEF, EXACT_YES))
-    return "Mage/Warrior/Thief";
-  else if (hasClass(CLASS_MAGE | CLASS_WARRIOR, EXACT_YES))
-    return "Mage/Warrior";
-  else if (hasClass(CLASS_MAGE | CLASS_THIEF, EXACT_YES))
-    return "Mage/Thief";
-  else if (hasClass(CLASS_MAGE, EXACT_YES))
-    return "Mage";
-  else if (hasClass(CLASS_CLERIC | CLASS_WARRIOR | CLASS_THIEF, EXACT_YES))
-    return "Cleric/Warrior/Thief";
-  else if (hasClass(CLASS_CLERIC | CLASS_WARRIOR, EXACT_YES))
-    return "Cleric/Warrior";
-  else if (hasClass(CLASS_CLERIC | CLASS_THIEF, EXACT_YES))
-    return "Cleric/Thief";
-  else if (hasClass(CLASS_CLERIC, EXACT_YES))
-    return "Cleric";
-  else if (hasClass(CLASS_WARRIOR | CLASS_THIEF, EXACT_YES))
-    return "Warrior/Thief";
-  else if (hasClass(CLASS_WARRIOR, EXACT_YES))
-    return "Warrior";
-  else if (hasClass(CLASS_THIEF, EXACT_YES))
-    return "Thief";
-  else if (hasClass(CLASS_DEIKHAN, EXACT_YES))
-    return "Deikhan";
-  else if (hasClass(CLASS_MONK, EXACT_YES))
-    return "Monk";
-  else if (hasClass(CLASS_SHAMAN, EXACT_YES))
-    return "Shaman";
-  else if (hasClass(CLASS_RANGER, EXACT_YES))
-    return "Ranger";
-  else
-    return "";
+  sstring buf;
+
+  for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
+    if(hasClass(classInfo[i].class_num)){
+      buf += classInfo[i].name.cap();
+      buf += "/";
+    }
+  }
+  buf.erase(1, buf.size()-1); // take off that trailing /
+
+  return buf.c_str();
 }
 
 const char * const TBeing::getProfAbbrevName() const

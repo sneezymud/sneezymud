@@ -1082,22 +1082,10 @@ bool TObj::shouldntBeShown(wearSlotT pos) const
 
 void TBeing::fixLevels(int lev)
 {
-  if (hasClass(CLASS_MAGE))
-    setLevel(MAGE_LEVEL_IND, lev);
-  if (hasClass(CLASS_CLERIC))
-    setLevel(CLERIC_LEVEL_IND, lev);
-  if (hasClass(CLASS_WARRIOR))
-    setLevel(WARRIOR_LEVEL_IND, lev);
-  if (hasClass(CLASS_THIEF))
-    setLevel(THIEF_LEVEL_IND, lev);
-  if (hasClass(CLASS_RANGER))
-    setLevel(RANGER_LEVEL_IND, lev);
-  if (hasClass(CLASS_MONK))
-    setLevel(MONK_LEVEL_IND, lev);
-  if (hasClass(CLASS_DEIKHAN))
-    setLevel(DEIKHAN_LEVEL_IND, lev);
-  if (hasClass(CLASS_SHAMAN))
-    setLevel(SHAMAN_LEVEL_IND, lev);
+  for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
+    if(hasClass(classInfo[i].class_num))
+      setLevel(i, lev);
+  }
 
   calcMaxLevel();
 }

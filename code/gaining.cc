@@ -1080,6 +1080,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
   }
   /* next, see if I only have one of the appropriate classes */
   var = (ch->getClass() & TrainerInfo[offset].accclass);
+
   if (var == CLASS_WARRIOR)
       accclass = WARRIOR_LEVEL_IND;
   else if (var == CLASS_THIEF)
@@ -1096,7 +1097,6 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
       accclass = MONK_LEVEL_IND;
   else if (var == CLASS_SHAMAN)
       accclass = SHAMAN_LEVEL_IND;
-
   else if (!*classbuf) {
     /* more than 1 class is appropriate, user needs to specify */
     sprintf(buf, "%s You need to specify a class.", fname(ch->name).c_str());
@@ -1393,108 +1393,23 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
     // No restrictions on these disciplines if prof maxxed see first checks
     return FALSE;
   } else {  // needs basic skills for class
-    switch (accclass) {
-      case MAGE_LEVEL_IND:
-        if ((discipline == DISC_MAGE)) {
-          if (combatLearn) {
-            return FALSE;
-          } else {
-            found = 1;
-            break;
-          }
-        } else {
-          found = 2;
-          break;
-        }
-        break;
-      case SHAMAN_LEVEL_IND:
-        if ((discipline == DISC_SHAMAN)) {
-          if (combatLearn) {
-            return FALSE;
-          } else {
-            found = 1;
-            break;
-          }
-        } else {
-          found = 2;
-        }
-        break;
-      case RANGER_LEVEL_IND:
-        if ((discipline == DISC_RANGER)) {
-          if (combatLearn) {
-            return FALSE;
-          } else {
-            found = 1;
-            break;
-          }
-        } else {
-          found = 2;
-        }
-        break;
-      case DEIKHAN_LEVEL_IND:
-        if ((discipline == DISC_DEIKHAN)) {
-          if (combatLearn) {
-            return FALSE;
-          } else {
-            found = 1;
-            break;
-          }
-        } else {
-          found = 2;
-        }
-        break;
-      case CLERIC_LEVEL_IND:
-        if ((discipline == DISC_CLERIC)) {
-          if (combatLearn) {
-            return FALSE;
-          } else {
-            found = 1;
-            break;
-          }
-        } else {
-          found = 2;
-        }
-        break;
-      case MONK_LEVEL_IND:
-        if ((discipline == DISC_MONK)) {
-          if (combatLearn) {
-            return FALSE;
-          } else {
-            found = 1;
-            break;
-          }
-        } else {
-          found = 2;
-        }
-        break;
-      case THIEF_LEVEL_IND:
-        if ((discipline == DISC_THIEF)) {
-          if (combatLearn) {
-            return FALSE;
-          } else {
-            found = 1;
-            break;
-          }
-        } else {
-          found = 2;
-        }
-        break;
-      case WARRIOR_LEVEL_IND:
-        if ((discipline == DISC_WARRIOR)) {
-          if (combatLearn) {
-            return FALSE;
-          } else {
-            found = 1;
-            break;
-          }
-        } else {
-          found = 2;
-        }
-        break;
-      default:
-        vlogf(LOG_BUG, "Bad case in gaining pre requisiites (%d) (%s)", accclass, ch->getName());
-        ch->sendTo("Bug that you got this at the gain trainer.");
-        return TRUE;
+    for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
+      if(accclass == i){
+	if(discipline == classInfo[i].base_disc){
+	  if(combatLearn)
+	    return FALSE;
+	  else
+	    found = 1;
+	} else {
+	  found = 2;
+	}
+      }
+    }
+    
+    if(!found){
+      vlogf(LOG_BUG, "Bad case in gaining pre requisites (%d) (%s)", accclass, ch->getName());
+      ch->sendTo("Bug that you got this at the gain trainer.");
+      return TRUE;
     }
   }
 
