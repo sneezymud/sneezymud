@@ -146,7 +146,7 @@ extern int handleMobileResponse(TBeing *, cmdTypeT, const sstring &);
 // returns DELETE_THIS if this should be nuked
 // returns DELETE_VICT if vict should be nuked
 // otherwise returns FALSE
-int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typedIn)
+int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool typedIn)
 {
   int rc = 0;
   TBeing *ch;
@@ -154,9 +154,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
   sstring newarg;
   sstring tStNewArg(""), buf, bufname;
   size_t tVar = 0;
-
-  for (; isspace(*argument); argument++);
-
+ 
   tStNewArg = argument;
 
   // The pray code is extremely messed up so this is really
@@ -197,7 +195,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
     }
 
     newarg=tStNewArg;
-  } else if (!strcasecmp(argument, "self") || !strcasecmp(argument, "me"))
+  } else if (argument.lower()=="self" || argument.lower()=="me")
     newarg=getNameNOC(this);
   else
     newarg=argument;
@@ -768,7 +766,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	doWiznews();
 	break;
       case CMD_NOSHOUT:
-	doNoshout(argument);
+	doNoshout(argument.c_str());
 	addToLifeforce(1);
 	break;
       case CMD_STEAL:
@@ -851,15 +849,15 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	addToLifeforce(1);
 	break;
       case CMD_SHOUT:
-	doShout(argument);
+	doShout(argument.c_str());
 	addToLifeforce(1);
 	break;
       case CMD_CLIENTMESSAGE:
-	doClientMessage(argument);
+	doClientMessage(argument.c_str());
 	addToLifeforce(1);
 	break;
       case CMD_GT:
-	doGrouptell(argument);
+	doGrouptell(argument.c_str());
 	addToLifeforce(1);
 	break;
       case CMD_SIGN:
@@ -1658,13 +1656,13 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	addToLifeforce(1);
 	break;
       case CMD_PTELL:
-	doPTell(argument, TRUE);
+	doPTell(argument.c_str(), TRUE);
 	break;
       case CMD_PSAY:
-	doPSay(argument);
+	doPSay(argument.c_str());
 	break;
       case CMD_PSHOUT:
-	doPShout(argument);
+	doPShout(argument.c_str());
 	break;
       case CMD_TELEVISION:
 	doTelevision(newarg.c_str());
@@ -1929,14 +1927,12 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
     }
   }
   // END LIFEFORCE
-#if 0
-  if (typedIn) {
-    return (doCommand(cmd, argument, NULL, TRUE));
-  }
-  return (doCommand(cmd, argument, NULL, FALSE));
-#else
-  return (doCommand(cmd, argument.c_str(), NULL, typedIn));
-#endif
+
+  // strip leading whitespace, if any
+  if(argument.find_first_not_of(whitespace) != sstring::npos)
+    argument=argument.substr(argument.find_first_not_of(whitespace));
+
+  return (doCommand(cmd, argument, NULL, typedIn));
 }
 
 // I tried it this way, but had a memory leak reported by insure from it

@@ -1145,7 +1145,7 @@ class TBeing : public TThing {
     void incorrectCommand() const;
     void doEgoTrip(const char *);
     void doComment(const char *);
-    int doCommand(cmdTypeT, const char *, TThing *, bool);
+    int doCommand(cmdTypeT, const sstring &, TThing *, bool);
     int doCharge(const char *, TBeing *);
     void doChargeStave(sstring);
     int doSmite(const char *, TBeing *);

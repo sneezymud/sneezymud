@@ -296,7 +296,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
         return rc;
       break;
     case CMD_JUNK:
-      rc = doCommand(cmd, arg.c_str(), NULL, FALSE);
+      rc = doCommand(cmd, arg, NULL, FALSE);
       break;
     case CMD_GIVE:
 #if 0
@@ -444,8 +444,8 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       break;
     default:
       mud_assert(cmd >= 0, "Unhandled special command in modifiedDoCommand array %d", cmd);
-//      rc = doCommand(cmd, arg.c_str(), (TThing *) mob, FALSE);
-      rc = doCommand(cmd, arg.c_str(), NULL, FALSE);
+//      rc = doCommand(cmd, arg, (TThing *) mob, FALSE);
+      rc = doCommand(cmd, arg, NULL, FALSE);
       break;
   }
   
