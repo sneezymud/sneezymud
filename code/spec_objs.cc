@@ -1285,176 +1285,7 @@ int JewelJudgment(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
 }
 
 
-int fountain(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
-{
-  int bits;
-  char buf[MAX_INPUT_LENGTH];
-  TBeing *tmp_char;
-  TObj *obj;
 
-  if (cmd == CMD_FILL) {
-    arg = one_argument(arg, buf);
-    bits = generic_find(buf, FIND_OBJ_INV | FIND_OBJ_ROOM | FIND_OBJ_EQUIP, 
-    ch, &tmp_char, &obj);
-    if (!bits) {
-      ch->sendTo("You must fill SOMETHING!!\n\r");
-      return TRUE;
-    }
-    if (!ch->canSee(me)) {
-      ch->sendTo("What do you expect to fill from?\n\r");
-      return TRUE;
-    }
-    obj->fillMe(ch, LIQ_WATER);
-    return TRUE;
-  } else if (cmd == CMD_DRINK) {        
-    only_argument(arg, buf);
-    if (!isname(buf, me->getName()))
-      return FALSE;
-
-    if (ch->riding) {
-      ch->sendTo("While mounted?\n\r");
-      return TRUE;
-    }
-    if (ch->fight()) {
-      ch->sendTo("You are too busy fending off your foes!\n\r");
-      return TRUE;
-    }
-    if (ch->hasDisease(DISEASE_FOODPOISON)) {
-      ch->sendTo("Uggh, your stomach is queasy and the thought of doing that is unappetizing.\n\r");
-      ch->sendTo("You decide to skip this drink until you feel better.\n\r");
-      return TRUE;
-    }
-    if (ch->getCond(THIRST) > 20 ||
-        ch->getCond(THIRST) < 0) {
-      act("Your stomach can't contain anymore!", FALSE, ch, 0, 0, TO_CHAR);
-      return TRUE;
-    }
-
-    act("You drink from $p.", FALSE, ch, me, 0, TO_CHAR);
-    act("$n drinks from $p.", FALSE, ch, me, 0, TO_ROOM);
-
-    if (ch->getCond(THIRST) >= 0)
-      ch->setCond(THIRST, 24);
-    act("You do not feel thirsty.", FALSE, ch, 0, 0, TO_CHAR);
-
-    return TRUE;
-  }
-  return FALSE;
-}
-
-int wine_fountain(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
-{
-  int bits;
-  char buf[MAX_INPUT_LENGTH];
-  TBeing *tmp_char;
-  TObj *obj;
-
-  if (cmd == CMD_FILL) {
-    arg = one_argument(arg, buf);
-    bits = generic_find(buf, FIND_OBJ_INV | FIND_OBJ_ROOM | FIND_OBJ_EQUIP,
-    ch, &tmp_char, &obj);
-    if (!bits) {
-      ch->sendTo("You must fill SOMETHING!!\n\r");
-      return TRUE;
-    }
-    if (!ch->canSee(me)) {
-      ch->sendTo("What do you expect to fill from?\n\r");
-      return TRUE;
-    }
-    obj->fillMe(ch, LIQ_RED_WINE);
-    return TRUE;
-  } else if (cmd == CMD_DRINK) {        
-    only_argument(arg, buf);
-    if (!isname(buf, me->getName()))
-      return FALSE;
-
-    if (ch->riding) {
-      ch->sendTo("While mounted?\n\r");
-      return TRUE;
-    }
-    if (ch->fight()) {
-      ch->sendTo("You are too busy fending off your foes!\n\r");
-      return TRUE;
-    }
-    if (ch->hasDisease(DISEASE_FOODPOISON)) {
-      ch->sendTo("Uggh, your stomach is queasy and the thought of doing that is unappetizing.\n\r");
-      ch->sendTo("You decide to skip this drink until you feel better.\n\r");
-      return TRUE;
-    }
-    if (ch->getCond(THIRST) > 20 ||
-        ch->getCond(THIRST) < 0) {
-      act("Your stomach can't contain anymore!", FALSE, ch, 0, 0, TO_CHAR);
-      return TRUE;
-    }
-
-    act("You drink from $p.", FALSE, ch, me, 0, TO_CHAR);
-    if (ch->getCond(THIRST) >= 0)
-      ch->setCond(THIRST, 24);
-    ch->gainCondition(DRUNK, ::number(1,5));
-    act("Yum, nice, full, fruity bouquet.", FALSE, ch, 0, 0, TO_CHAR);
-
-    return TRUE;
-  }
-  return FALSE;
-}
-
-int bless_fountain(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
-{
-  int bits;
-  char buf[MAX_INPUT_LENGTH];
-  TBeing *tmp_char;
-  TObj *obj;
-
-  // works like normal fountain, but if drunk from, does short term blessing
-
-  if (cmd == CMD_FILL) {
-    arg = one_argument(arg, buf);
-    bits = generic_find(buf, FIND_OBJ_INV | FIND_OBJ_ROOM | FIND_OBJ_EQUIP,
-    ch, &tmp_char, &obj);
-    if (!bits) {
-      ch->sendTo("You must fill SOMETHING!!\n\r");
-      return TRUE;
-    }
-    if (!ch->canSee(me)) {
-      ch->sendTo("What do you expect to fill from?\n\r");
-      return TRUE;
-    }
-    obj->fillMe(ch, LIQ_WATER);
-    return TRUE;
-  } else if (cmd == CMD_DRINK) {        
-    only_argument(arg, buf);
-    if (!isname(buf, me->getName()))
-      return FALSE;
-
-    if (ch->riding) {
-      ch->sendTo("While mounted?\n\r");
-      return TRUE;
-    }
-    if (ch->fight()) {
-      ch->sendTo("You are too busy fending off your foes!\n\r");
-      return TRUE;
-    }
-    if (ch->hasDisease(DISEASE_FOODPOISON)) {
-      ch->sendTo("Uggh, your stomach is queasy and the thought of doing that is unappetizing.\n\r");
-      ch->sendTo("You decide to skip this drink until you feel better.\n\r");
-      return TRUE;
-    }
-    if (ch->getCond(THIRST) > 20 ||
-        ch->getCond(THIRST) < 0) {
-      act("Your stomach can't contain anymore!", FALSE, ch, 0, 0, TO_CHAR);
-      return TRUE;
-    }
-
-    act("You drink from $p and fell divinely pure!", FALSE, ch, me, 0, TO_CHAR);
-    if (ch->getCond(THIRST) >= 0)
-      ch->setCond(THIRST, 24);
-
-    genericBless(ch, ch, 5, false);
-
-    return TRUE;
-  }
-  return FALSE;
-}
 
 int bowl_of_blood(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 {
@@ -7234,7 +7065,7 @@ extern int unholyCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, T
 TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
 {
   {TRUE, "BOGUS", bogusObjProc},  // 0
-  {TRUE, "fountain", fountain},
+  {TRUE, "BOGUS", bogusObjProc},
   {FALSE, "bulletin board", board},
   {TRUE, "note dispenser", dispenser},
   {TRUE, "statue of feeding", statue_of_feeding},
@@ -7248,7 +7079,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "Weapon: disruption", weaponDisruption},
   {TRUE, "Weapon: fumbler", weaponFumbler},
   {TRUE, "ladder", ladder},
-  {TRUE, "wine fountain", wine_fountain},      // 15
+  {TRUE, "BOGUS", bogusObjProc},      // 15
   {TRUE, "Weapon: bonebreaker", weaponBreaker},
   {FALSE, "Glowing Cutlass", glowCutlass},
   {TRUE, "poison whip", poisonWhip},
@@ -7272,7 +7103,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Bloodspike", bloodspike}, 
   {FALSE, "behir horn item", behirHornItem},
   {FALSE, "Newbie Helper", newbieHelperWProc},
-  {FALSE, "Bless Fountain", bless_fountain},
+  {FALSE, "BOGUS", bogusObjProc},
   {FALSE, "Blood Bowl", bowl_of_blood},  // 40
   {FALSE, "feather fall", featherFallItem},
   {FALSE, "wicked dagger", wickedDagger},  
