@@ -5746,7 +5746,7 @@ int corpseMuncher(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
 int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself, TObj *o)
 {
   sstring buf, arg=argument;
-  TThing *t;
+  //TThing *t;
   TDatabase db(DB_SNEEZY);
 
   if(!ch || !ch->awake() || ch->fight())
@@ -5795,6 +5795,9 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
       }
 
 
+      /*
+      -- 08/04/2004 -- Was causing crashes and corruption, changed to a standard 'return DELETE_ITEM' to fix. -Lapsos
+
       // heh why'd I do this instead of returning DELETE_ ??
       // beats me, I ain't gonna touch it now though
       for(t=myself->getStuff();t;t=t->nextThing){
@@ -5803,8 +5806,11 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
 	  break;
 	}
       }
+      */
 
       ch->doSave(SILENT_YES);
+
+      return DELETE_ITEM;
 
       break;
 
