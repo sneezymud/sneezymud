@@ -1619,6 +1619,9 @@ static bool okForJanitor(TMonster *myself, TObj *obj)
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
   if (corpse && corpse->isCorpseFlag(CORPSE_PC_SKINNING))
     return false;
+  // nor sacrificing
+  if (corpse && corpse->isCorpseFlag(CORPSE_SACRIFICE))
+    return false;
 
   // Dont let them loot pcorpses with stuff in it
   TPCorpse *tmpcorpse = dynamic_cast<TPCorpse *>(obj);

@@ -231,10 +231,9 @@ const unsigned int CORPSE_NO_DISSECT    = (1<<1);
 const unsigned int CORPSE_NO_SKIN       = (1<<2);
 const unsigned int CORPSE_HALF_SKIN     = (1<<3);
 const unsigned int CORPSE_PC_SKINNING   = (1<<4);
-const unsigned int CORPSE_NO_SACRIFICE  = (1<<5);
-const unsigned int CORPSE_SACRIFICE     = (1<<6);
+const unsigned int CORPSE_SACRIFICE     = (1<<5);
 
-const int MAX_CORPSE_FLAGS     = 7;  // move and change
+const int MAX_CORPSE_FLAGS     = 6;  // move and change
 
 /* for containers  - value[1] */
 

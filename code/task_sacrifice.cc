@@ -20,6 +20,8 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     act("You cease the ritual sacrifice of $p.", FALSE, ch, corpse, 0, TO_CHAR);
     act("$n stops trying to sacrifice $p.", TRUE, ch, corpse, 0, TO_ROOM);
     ch->stopTask();
+    if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
+      corpse->remCorpseFlag(CORPSE_SACRIFICE);
     return FALSE;
   }
 
@@ -33,6 +35,8 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       act("You can't find the object of the ritual! Wasn't there a corpse here?", FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops singing and looks confused.", TRUE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
+      if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
+	corpse->remCorpseFlag(CORPSE_SACRIFICE);
       return FALSE;
     }
   }
@@ -40,6 +44,8 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   if (!(t = get_thing_char_using(ch, "totem", 0, FALSE, FALSE)) || !(totem=dynamic_cast<TTool *>(t))) {
     ch->sendTo("You need to own a totem to perform the ritual.\n\r");
     ch->stopTask();
+    if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
+      corpse->remCorpseFlag(CORPSE_SACRIFICE);
     return FALSE;
   }
 
@@ -68,6 +74,8 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     act("You cease the ritual sacrifice of $p.", FALSE, ch, corpse, 0, TO_CHAR);
     act("$n stops chanting over the corpse of $p.", TRUE, ch, corpse, 0, TO_ROOM);
     ch->stopTask();
+    if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
+      corpse->remCorpseFlag(CORPSE_SACRIFICE);
     return FALSE;
   }
 
@@ -75,6 +83,8 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     act("You have completed the sacrifice of $p.", FALSE, ch, corpse, 0, TO_CHAR);
     act("$n has completed $s ritual sacrifice of $p.", FALSE, ch, corpse, 0, TO_ROOM);
     ch->stopTask();
+    if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
+      corpse->remCorpseFlag(CORPSE_SACRIFICE);
     return DELETE_ITEM;
   }
 
@@ -102,6 +112,8 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       act("$n looks pale as $s $o shatters.", FALSE, ch, totem, 0, TO_ROOM);
       ch->stopTask();
       delete totem;
+      if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
+	corpse->remCorpseFlag(CORPSE_SACRIFICE);
       return FALSE;
     }
     switch (ch->task->timeLeft) {
@@ -166,10 +178,14 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       act("You stop performing the ritual.", FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops singing.", TRUE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
+      if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
+	corpse->remCorpseFlag(CORPSE_SACRIFICE);
       break;
   case CMD_TASK_FIGHTING:
       ch->sendTo("You can't sacrifice a corpse while under attack.\n\r");
       ch->stopTask();
+      if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
+	corpse->remCorpseFlag(CORPSE_SACRIFICE);
       break;
   default:
       if (cmd < MAX_CMD_LIST)

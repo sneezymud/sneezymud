@@ -3697,9 +3697,6 @@ void TCorpse::describeObjectSpecifics(const TBeing *ch) const
   if (isCorpseFlag(CORPSE_NO_DISSECT))
     act("$p appears to have been dissected already.",
         FALSE, ch, this, 0, TO_CHAR);
-  if (isCorpseFlag(CORPSE_NO_SACRIFICE))
-    act("$p appears to have been sacrificed already.",
-        FALSE, ch, this, 0, TO_CHAR);
 }
 
 void TSymbol::describeObjectSpecifics(const TBeing *ch) const
