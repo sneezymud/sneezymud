@@ -1,6 +1,24 @@
 #4470
 Dolgan/Jesus - Grimhaven East Gate Settlement~
 4699 30 2 1
+
+O 0 631 1 4624 desk
+O 0 9018 1 4624 chair
+O 0 5637 4 4624 chairs
+O 0 4625 1 4624 trashcan
+
+O 0 24766 3 4470 candelbras
+O 0 7509 3 4470 wine racks
+O 0 4626 3 4470 chests
+O 0 4627 3 4470 coffins
+M 0 594 1 4470
+
+
+O 0 16214 1 4471 couch
+O 0 16222 1 4471 coffee table
+O 0 2851 1 4471 wet bar
+
+
 O 0 4600 1 4514       a small lamppost
 O 0 4600 1 4515       a small lamppost
 O 0 4600 1 4516       a small lamppost
