@@ -1027,7 +1027,6 @@ const char * const connected_types[MAX_CON_STATUS] =
   "Done Enter",
   "Stats rules",
   "Stats rules 2",
-  "Listserver choice",
   "Hometown : human",
   "Hometown : elf",
   "Hometown : dwarf",

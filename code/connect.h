@@ -71,7 +71,6 @@ enum connectStateT {
        CON_ENTER_DONE,
        CON_STATS_RULES,
        CON_STATS_RULES2,
-       CON_LISTSERV,
        CON_HOME_HUMAN,
        CON_HOME_ELF,
        CON_HOME_DWARF,

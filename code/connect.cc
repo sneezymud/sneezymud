@@ -2544,7 +2544,6 @@ int Descriptor::nanny(const char *arg)
     case CON_TIME:
     case CON_CHARDELCNF:
     case CON_WIZLOCKNEW:
-    case CON_LISTSERV:
     case MAX_CON_STATUS:
     case CON_REDITING:
     case CON_OEDITING:
@@ -2902,7 +2901,6 @@ void Descriptor::go_back_menu(connectStateT con_state)
     case CON_WIZLOCKNEW:
     case CON_STATS_RULES:
     case CON_STATS_RULES2:
-    case CON_LISTSERV:
     case MAX_CON_STATUS:
     case CON_REDITING:
     case CON_OEDITING:
@@ -5139,27 +5137,6 @@ int Descriptor::doAccountStuff(char *arg)
       }
       strcpy(account->email, arg);
 
-      sprintf(buf, "\n\r\n\r%s presently has email-listservers for discussion of %s\n\r", MUD_NAME, MUD_NAME);
-      writeToQ(buf);
-      writeToQ("information. Would you like to subscribe to these lists? Please\n\r");
-      writeToQ("do not attempt to subscribe if you entered a bogus email address.\n\r");
-      writeToQ("1. Yes I want to subscribe!\n\r2. No, but thanks anyway.\n\r-> ");
-      connected = CON_LISTSERV;
-      break;
-    case CON_LISTSERV:
-      switch(*arg) {
-        case '1':
-          writeToQ("OK, you will be subscribed to the listserver!\n\r\n\r");
-          sprintf(buf,  "/usr/lib/sendmail -f%s russrussell@icqmail.com < listserver.temp", account->email);
-          vsystem(buf);
-          break;
-        case '2':
-          writeToQ("OK, you will not be subscribed to the listserver.\n\r\n\r");
-          break;
-        default:
-          writeToQ("Invalid Response!\n\r1. Yes I want to subscribe!\n\r2. No, but thanks anyway.\n\r-> ");
-          return FALSE;
-      }
       sprintf(buf, "%s is presently based in California (Pacific Time)\n\r", MUD_NAME);
       writeToQ(buf);
       writeToQ("For purposes of keeping track of time, please enter the difference\n\r");

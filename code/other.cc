@@ -4130,7 +4130,6 @@ void Descriptor::send_bug(const char *type, const char *msg)
   char buf[MAX_STRING_LENGTH];
   char buf2[MAX_STRING_LENGTH];
   char buf3[MAX_STRING_LENGTH];
-  char cmd_buf[256];
   time_t ct;
   char *tmstr;
   FILE *fp;
@@ -4213,43 +4212,6 @@ void Descriptor::send_bug(const char *type, const char *msg)
   fputs(buf2, fp);
   fclose(fp);
 
-  if (!strcmp(type, "Idea")) {
-#if 1
-    // send ideas to the listserv
-    sprintf(cmd_buf,  "/usr/lib/sendmail -f%s %s < %s",
-// can't send from the user's email.  closed list = bounce if not subbed
-//         account->email,
-         "ideas@sneezy.stanford.edu",
-         "Sneezy_ideas@LIB01.ferris.edu",
-          BUG_TEMP_FILE);
-    vsystem(cmd_buf);
-#elif 0
-    // send ideas to the listserv moderator
-    sprintf(cmd_buf,  "/usr/lib/sendmail -f%s %s < %s",
-         "ideas@sneezy.stanford.edu",
-         "tunaboo@hotmail.com",
-          BUG_TEMP_FILE);
-    vsystem(cmd_buf);
-#else
-    // send ideas to the coders
-    // if they are going to the listserv, don't send it twice (bat & brut)
-    sprintf(cmd_buf,  "/usr/lib/sendmail -f%s russrussell@icqmail.com < %s",
-         account->email, BUG_TEMP_FILE);
-    vsystem(cmd_buf);
-#endif
-  }
-  if (!strcmp(type, "Bug")) {
-    // send bugs to the coders
-    sprintf(cmd_buf,  "/usr/lib/sendmail -f%s russrussell@icqmail.com < %s",
-         account->email, BUG_TEMP_FILE);
-    vsystem(cmd_buf);
-  }
-  if (!strcmp(type, "Typo")) {
-    // send typos to the lows
-    sprintf(cmd_buf, "/usr/lib/sendmail -f%s low < %s",
-            account->email, BUG_TEMP_FILE);
-    vsystem(cmd_buf);
-  }
 }
 
 void TBeing::doAfk()

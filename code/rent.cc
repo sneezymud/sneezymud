@@ -1309,7 +1309,6 @@ void emailStorageBag(sstring tStMessage, sstring tStSender, TThing * tStuff)
 {
   FILE * tFile;
   sstring tStMail("");
-  char   tString[256];
 
   if (gamePort != PROD_GAMEPORT)
     return;
@@ -1323,13 +1322,6 @@ void emailStorageBag(sstring tStMessage, sstring tStSender, TThing * tStuff)
   fprintf(tFile, "%s", tStMail.c_str());
 
   fclose(tFile);
-
-#if 0
-  sprintf(tString, "/usr/bin/sendmail -f%s %s < storage.temp",
-          LAP_EMAIL2, LAP_EMAIL1);
-#endif
-
-  vsystem(tString);
 }
 
 void TRoom::loadItems()

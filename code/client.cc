@@ -850,8 +850,6 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
 
       switch(*listserver) {
         case '1':
-          sprintf(buf,  "/usr/lib/sendmail -f%s russrussell@icqmail.com < listserver.temp", account->email);      
-          vsystem(buf);                                                                                           
           break;                                                                                                  
         case '2':                                                                                                 
           break;                                                                                                  
