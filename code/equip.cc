@@ -1931,7 +1931,7 @@ bool TObj::monkRestrictedItem(const TBeing *ch) const
 
 bool TObj::shamanRestrictedItem(const TBeing *ch) const
 {
-  if (ch && !ch->hasClass(CLASS_MONK))
+  if (ch && !ch->hasClass(CLASS_SHAMAN))
     return FALSE;
 
   if (objVnum() == OBJ_SLEEPTAG_STAFF)
