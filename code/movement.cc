@@ -816,6 +816,7 @@ int TBeing::rawMove(dirTypeT dir)
           return FALSE;
         }
       }
+#if 0
     // these cases are all from non-underwater to underwater bwlow here
     } else if (isLevitating() || isFlying()) {
       sendTo("The fact that you are flying prevents you from going underwater.\n\r");
@@ -823,6 +824,7 @@ int TBeing::rawMove(dirTypeT dir)
     } else if (has_boat) {
       sendTo("You can't go underwater while in a boat.\n\r");
       return FALSE;
+#endif
     } else if (riding) {
       TBeing *tbt = dynamic_cast<TBeing *>(riding);
       if (tbt && tbt->isAffected(AFF_SWIM)) {
