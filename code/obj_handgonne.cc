@@ -164,7 +164,7 @@ int THandgonne::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirType
     }    
 
     act("<Y>BANG!<1>  A loud blast sounds as $n ignites $p.",
-	FALSE, ch, 0, this, TO_ROOM);
+	FALSE, ch, this, bullet, TO_ROOM);
     sprintf(buf, "$n points $p %swards, and shoots $N out of it.",
 	    dirs[dir]);
     act(buf, FALSE, ch, this, bullet, TO_ROOM);
