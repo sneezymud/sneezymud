@@ -21,11 +21,6 @@ static int quiveringPalm(TBeing *c, TBeing *v)
 
   if (c->noHarmCheck(v))
     return FALSE;
-
-  if (c->attackers > 3) {
-    c->sendTo("There's no room to use that skill!\n\r");
-    return FALSE;
-  }
   if (!c->hasHands()) {
     c->sendTo("You need hands to successfully quiver someone!\n\r");
     return FALSE;
@@ -37,10 +32,6 @@ static int quiveringPalm(TBeing *c, TBeing *v)
   //  if (IS_SET(v->specials.act, ACT_IMMORTAL)) {
   if(v->isImmortal()){
     c->sendTo("You decide not to waste your concentration on an immortal.\n\r");
-    return FALSE;
-  }
-  if (v->attackers >= 3) {
-    c->sendTo("You can't get close enough.\n\r");
     return FALSE;
   }
   if (!v->isHumanoid()) {
