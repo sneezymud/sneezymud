@@ -140,13 +140,13 @@ void TBeing::stopCast(stopCastT messages)
     }  
   }
   switch (messages) {
-    case STOP_CAST_LOCATION: // xxx
+    case STOP_CAST_LOCATION: 
       if (caster_type == SPELL_CASTER) {
 	  colorAct(COLOR_SPELLS, "<R>Your change of location distracts you and you stop casting.<z>",FALSE, this, NULL, NULL, TO_CHAR);
 	  colorAct(COLOR_SPELLS, "<R>$n stops chanting and the magic dissipates.<z>", TRUE, this, NULL, NULL, TO_ROOM);
       } else if (caster_type == SPELL_DANCER) {
-	  colorAct(COLOR_SPELLS, "<o>Your change of location distracts you and you stop casting.<z>",FALSE, this, NULL, NULL, TO_CHAR);
-	  colorAct(COLOR_SPELLS, "<o>$n stops chanting and the magic dissipates.<z>", TRUE, this, NULL, NULL, TO_ROOM);
+	  colorAct(COLOR_SPELLS, "<o>Your change of location distracts you and you cease the ritual.<z>",FALSE, this, NULL, NULL, TO_CHAR);
+	  colorAct(COLOR_SPELLS, "<o>$n stops chanting and stops the ritual.<z>", TRUE, this, NULL, NULL, TO_ROOM);
       } else if (caster_type == SPELL_PRAYER) {
         colorAct(COLOR_SPELLS, "<R>Your change of location distracts you and you stop praying.<z>", FALSE, this, NULL, NULL, TO_CHAR);
         colorAct(COLOR_SPELLS, "<R>$n stops praying as $s holy symbol becomes inert.<z>", TRUE, this, NULL, NULL, TO_ROOM);
@@ -425,7 +425,7 @@ void cast_warn_busy(const TBeing *ch, spellNumT which)
     ch->sendTo("You are busy casting a spell.\n\r");
     ch->sendTo("You may type 'abort' or 'stop' to quit casting.\n\r");
   } else if (styp == SPELL_DANCER) {
-    ch->sendTo("You are busy dancing to your ancestors.\n\r");
+    ch->sendTo("You are busy invoking a ritual.\n\r");
     ch->sendTo("You may type 'abort' or 'stop' to cease the ritual.\n\r");
   }
 }
@@ -616,9 +616,9 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
                 TRUE, ch, NULL, NULL, TO_ROOM, ANSI_GREEN);
           } else if (typ == SPELL_DANCER) {
             act("Although distracted, you continue to call the ancestors.",
-                FALSE, ch, NULL, NULL, TO_CHAR, ANSI_GREEN);
+                FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE_BOLD);
             act("$n shakes $s distraction and continues to call upon $s ancestors.",
-                TRUE, ch, NULL, NULL, TO_ROOM, ANSI_GREEN);
+                TRUE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE_BOLD);
           }
           ch->spelltask->distracted = 0;
           ch->spelltask->rounds = ch->spelltask->rounds + max(1, distract);
@@ -635,9 +635,9 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
           colorAct(COLOR_SPELLS, "<g>$n shakes $s distraction off and continues to pray.<z>",
               TRUE, ch, NULL, NULL, TO_ROOM);
           } else if (typ == SPELL_DANCER) {
-            colorAct(COLOR_SPELLS, "<g>You are able to continue your ritual without feeling distracted.<z>",
+            colorAct(COLOR_SPELLS, "<P>You are able to continue your ritual without feeling distracted.<z>",
                 FALSE, ch, NULL, NULL, TO_CHAR);
-          colorAct(COLOR_SPELLS, "<g>$n shakes $s distraction off and continues dance $s ritual.<z>",
+          colorAct(COLOR_SPELLS, "<P>$n shakes $s distraction off and continues to dance $s ritual.<z>",
               TRUE, ch, NULL, NULL, TO_ROOM);
           }
           ch->spelltask->distracted = 0;
@@ -662,10 +662,10 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
               ch->stopCast(STOP_CAST_NONE);
               return FALSE;
             } else if (typ == SPELL_DANCER) {
-              colorAct(COLOR_SPELLS, "<y>You lose your concentration and stop your ritual dance.<z>",
+              colorAct(COLOR_SPELLS, "<R>You lose your concentration and stop your ritual dance.<z>",
                   FALSE, ch, NULL, NULL, TO_CHAR);
               colorAct(COLOR_SPELLS, "$n loses $s concentration and stops $s ritual dance.",
-                FALSE, ch, NULL, NULL, TO_ROOM, ANSI_YELLOW);
+                FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED_BOLD);
 
               ch->stopCast(STOP_CAST_NONE);
               return FALSE;
@@ -690,7 +690,7 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
           ch->spelltask->rounds++;
           rounds++;
         } else if (typ == SPELL_DANCER) {
-          colorAct(COLOR_SPELLS, "<c>You almost lose your focus but slowly you manage to continue the ritual.<z>",
+          colorAct(COLOR_SPELLS, "<B>You almost lose your focus but slowly you manage to continue the ritual.<z>",
               FALSE, ch, NULL, NULL, TO_CHAR);
 #if SPELLTASK_DEBUG
           vlogf(LOG_BUG,"Distracted(%d) distract= %d add 1 to rounds = %d", ch->spelltask->distracted, distract, ch->spelltask->rounds);
@@ -769,7 +769,7 @@ your prayer.", FALSE, ch, NULL, NULL, TO_CHAR);
           } else if (typ == SPELL_PRAYER) {
             usePiety(spell);
           } else if (typ == SPELL_DANCER) {
-            temp = useLifeforce(spell); // substitute later with life force
+            temp = useLifeforce(spell);
           }
 #endif
       switch (counter) {
@@ -781,7 +781,7 @@ your prayer.", FALSE, ch, NULL, NULL, TO_CHAR);
             act("You begin to feel your prayer being answered.",
             FALSE, ch, NULL, NULL, TO_CHAR);
           } else if (typ == SPELL_DANCER) {
-            act("You begin to feel like your ancestors are pleased.",
+            act("<Y>You feel your rada song is pleasing to the loa.<1>",
             FALSE, ch, NULL, NULL, TO_CHAR);
           }
           ch->sendCastingMessages(limbs, silence, rounds, typ, counter); 
@@ -905,7 +905,7 @@ your prayer.", FALSE, ch, NULL, NULL, TO_CHAR);
         act("You interrupt your spell to stand.",
             FALSE, ch, NULL, NULL, TO_CHAR);
       } else if (typ == SPELL_DANCER) {
-        act("You interrupt your ritual to stand.",
+        act("<B>You interrupt your ritual to stand.<1>",
             FALSE, ch, NULL, NULL, TO_CHAR);
       } else if (typ == SPELL_PRAYER) {
         act("You interupt your prayer to stand.",
@@ -927,7 +927,7 @@ your prayer.", FALSE, ch, NULL, NULL, TO_CHAR);
           act("You interrupt your spell to communicate.",
               FALSE, ch, NULL, NULL, TO_CHAR);
         } else if (typ == SPELL_DANCER) {
-          act("You interrupt your ritual dance to communicate.",
+          act("<B>You interrupt your ritual dance to communicate.<1>",
               FALSE, ch, NULL, NULL, TO_CHAR);
         } else if (typ == SPELL_PRAYER) {
           act("You interupt your prayer to communicate.",
@@ -2531,9 +2531,9 @@ void TBeing::sendFinalCastingMessages(bool limbs, bool silence, skillUseTypeT ty
               TRUE,this, NULL, NULL, TO_ROOM, ANSI_CYAN);
         } else if (typ == SPELL_DANCER) {
           act("You hold your hands up high and call upon your ancestors for power.",
-              FALSE, this, NULL, NULL, TO_CHAR, ANSI_RED);
+              FALSE, this, NULL, NULL, TO_CHAR, ANSI_YELLOW);
           act("$n holds $s hands up high and cries out to $s ancestors for power.",
-              TRUE, this, NULL, NULL, TO_ROOM, ANSI_RED);
+              TRUE, this, NULL, NULL, TO_ROOM, ANSI_YELLOW);
         } else if (typ == SPELL_PRAYER) {
           if (isPc()) {
             act("You raise your glowing symbol strongly to the heavens.",
@@ -2554,8 +2554,10 @@ void TBeing::sendFinalCastingMessages(bool limbs, bool silence, skillUseTypeT ty
       act("You focus one last time on casting your spell.",
           FALSE, this, NULL, NULL, TO_CHAR, ANSI_CYAN);
     } else if (typ == SPELL_DANCER) {
-      act("You sing out the last lyric of your rada.",
-          FALSE, this, NULL, NULL, TO_CHAR, ANSI_RED);
+      act("You sing out the last lyric of your rada song.",
+          FALSE, this, NULL, NULL, TO_CHAR, ANSI_YELLOW);
+      act("$n sings out the last lyric of $s rada song.",
+          FALSE, this, NULL, NULL, TO_ROOM, ANSI_YELLOW);
     } else if (typ == SPELL_PRAYER) {
       act("Your symbol glows brightly one last time.",
           FALSE, this, NULL, NULL, TO_CHAR, ANSI_GREEN);
@@ -2576,9 +2578,9 @@ void TBeing::sendFinalCastingMessages(bool limbs, bool silence, skillUseTypeT ty
               TRUE, this, NULL, NULL, TO_ROOM, ANSI_CYAN);
         } else if (typ == SPELL_DANCER) {
           act("$n cries out and is enveloped in a blood red mist.",
-              TRUE,this, NULL, NULL, TO_ROOM, ANSI_RED);
+              TRUE,this, NULL, NULL, TO_ROOM, ANSI_YELLOW);
           act("Crying out, you can feel the power of your ancestors flow.",
-              TRUE,this, NULL, NULL, TO_CHAR, ANSI_RED);
+              TRUE,this, NULL, NULL, TO_CHAR, ANSI_YELLOW);
         } else if (typ == SPELL_PRAYER) {
           act("You give thanks as you utter the final word of your prayer.",
               FALSE,this, NULL, NULL, TO_CHAR, ANSI_GREEN);
@@ -2594,6 +2596,8 @@ void TBeing::sendFinalCastingMessages(bool limbs, bool silence, skillUseTypeT ty
     } else if (typ == SPELL_DANCER) {
       act("You silently chant your rada song.",
           TRUE,this, NULL, NULL, TO_CHAR, ANSI_RED);
+      act("$n's eyes roll back into $s head.",
+          TRUE,this, NULL, NULL, TO_ROOM, ANSI_RED);
     } else if (typ == SPELL_PRAYER) {
       act("You dwell silently on the final words of the prayer.",
           TRUE,this, NULL, NULL, TO_CHAR, ANSI_GREEN);

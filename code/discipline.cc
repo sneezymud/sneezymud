@@ -77,39 +77,43 @@ static bool enforceVerbal(TBeing *ch, spellNumT spell)
     return TRUE;
 
   if (ch->isPc()) {
-
     if (!canDoVerbal(ch) ) {
-      if (ch->getWizardryLevel() >= WIZ_LEV_NO_MANTRA) {
-        act("Your skill at wizardry allows you to merely think the incantation.",TRUE,ch,0,0,TO_CHAR);
-        return TRUE;
+      if (ch->hasClass(CLASS_MAGE)) {
+	if (ch->getWizardryLevel() >= WIZ_LEV_NO_MANTRA) {
+	  act("Your skill at wizardry allows you to merely think the incantation.",TRUE,ch,0,0,TO_CHAR);
+	  return TRUE;
+	}
+      } else {
+	if (ch->getRitualismLevel() >= RIT_LEV_NO_MANTRA) {
+	  act("Your superior channel to the ancestors aids in the ritual.",TRUE,ch,0,0,TO_CHAR);
+	  return TRUE;
+	}
       }
-      if (ch->getRitualismLevel() >= RIT_LEV_NO_MANTRA) {
-        act("Your superior channel to the ancestors aids in the ritual.",TRUE,ch,0,0,TO_CHAR);
-        return TRUE;
-      }
-
       act("$n opens $s mouth as if to say something.", TRUE, ch, 0, 0, TO_ROOM);
       ch->sendTo("You are unable to chant the incantation!\n\r");
       return FALSE;
     }
-    if (ch->getRitualismLevel() >= RIT_LEV_NO_MANTRA) {
-      act("$n begins to dance and sing in an unfamiliar tongue.", TRUE, ch, 0, 0, TO_ROOM, ANSI_RED);
-      act("You begin the rada song in the ancient tongue.", TRUE, ch, 0, 0, TO_CHAR, ANSI_RED);
-      return TRUE;
+    if (ch->hasClass(CLASS_MAGE)) {
+      if (ch->getWizardryLevel() >= WIZ_LEV_NO_MANTRA) {
+	act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
+	act("Although you no longer need to, you begin an incantation to facilitate your spell.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
+	return TRUE;
+      } else {
+	act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
+	act("You begin to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
+	return TRUE;
+      } 
     } else {
-      act("$n begins to dance and sing in an unfamiliar tongue.", TRUE, ch, 0, 0, TO_ROOM, ANSI_RED);
-      act("You begin to dance and sing your rada in the ancient tongue.", TRUE, ch, 0, 0, TO_CHAR, ANSI_RED);
-      return TRUE;
+      if (ch->getRitualismLevel() >= RIT_LEV_NO_MANTRA) {
+	act("$n begins to dance and sing in an unfamiliar tongue.", TRUE, ch, 0, 0, TO_ROOM, ANSI_RED);
+	act("You begin the rada song in the ancient tongue.", TRUE, ch, 0, 0, TO_CHAR, ANSI_RED);
+	return TRUE;
+      } else {
+	act("$n begins to dance and sing in an unfamiliar tongue.", TRUE, ch, 0, 0, TO_ROOM, ANSI_RED);
+	act("You begin to dance and sing your rada in the ancient tongue.", TRUE, ch, 0, 0, TO_CHAR, ANSI_RED);
+	return TRUE;
+      }
     }
-    if (ch->getWizardryLevel() >= WIZ_LEV_NO_MANTRA) {
-      act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
-      act("Although you no longer need to, you begin an incantation to facilitate your spell.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
-      return TRUE;
-    } else {
-      act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
-      act("You begin to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
-      return TRUE;
-    } 
   } else 
     return TRUE;
 }
@@ -128,117 +132,180 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
   if (!IS_SET(discArray[spell]->comp_types, COMP_GESTURAL))
     return TRUE;
 
-  if (ch->getWizardryLevel() < WIZ_LEV_NO_GESTURES) {
-    // wizardry level still requries gestures, make generic checks
-    if (ch->isPc() && (!ch->hasHands() || ch->eitherArmHurt())) {
-      act("You cannot perform the ritual's gestures without arms and hands!", 
-                FALSE, ch, NULL, NULL, TO_CHAR);
-      act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
-      return FALSE;
+  if (ch->hasClass(CLASS_MAGE)) {
+    if (ch->getWizardryLevel() < WIZ_LEV_NO_GESTURES) {
+      //////////////////////////////////////////////////////////////
+      // wizardry level still requries gestures, make generic checks
+      //////////////////////////////////////////////////////////////
+      if (ch->isPc() && (!ch->hasHands() || ch->eitherArmHurt())) {
+	act("You cannot perform the ritual's gestures without arms and hands!", FALSE, ch, NULL, NULL, TO_CHAR);
+	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+	return FALSE;
+      }
+      ///////////////////////////////////////////////////////////////
+      // min position in discArray defines absolute minimum level
+      // however, check some positions to see if restricted movement 
+      // affects ability to make gestures
+      // higher nums are more likely to cause restriction
+      ///////////////////////////////////////////////////////////////
+      num = ::number(1,100);
+      ///////////////////////////////////////////////////////////
+      // sit, crawl use normal num.  raise it further for resting
+      ///////////////////////////////////////////////////////////
+      if (ch->getPosition() == POSITION_RESTING)
+	num += 4 * num / 10;
+      
+      if ((ch->getPosition() == POSITION_RESTING || ch->getPosition() == POSITION_SITTING || ch->getPosition() == POSITION_CRAWLING) && (num > ch->getSkillValue(SKILL_WIZARDRY))) {
+	////////////////////////////////////////////////////////////
+	// we know that wizradry is < 60 from getWizardryLevel check
+	////////////////////////////////////////////////////////////
+	ch->sendTo("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r", good_uncap(position_types[ch->getPosition()]).c_str());
+	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+	return FALSE;
+      }
     }
-    // min position in discArray defines absolute minimum level
-    // however, check some positions to see if restricted movement 
-    // affects ability to make gestures
-    // higher nums are more likely to cause restriction
-    num = ::number(1,100);
-
-    // sit, crawl use normal num.  raise it further for resting
-    if (ch->getPosition() == POSITION_RESTING)
-      num += 4 * num / 10;
-
-    if ((ch->getPosition() == POSITION_RESTING ||
-         ch->getPosition() == POSITION_SITTING ||
-         ch->getPosition() == POSITION_CRAWLING) &&
-           (num > ch->getSkillValue(SKILL_WIZARDRY))) {
-      // we know that wizradry is < 60 from getWizardryLevel check
-      ch->sendTo("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r", good_uncap(position_types[ch->getPosition()]).c_str());
-      act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
-      return FALSE;
-    }
-  }
-  if (ch->getRitualismLevel() < RIT_LEV_NO_GESTURES) {
-    if (ch->isPc() && (!ch->hasHands() || ch->eitherArmHurt())) {
-      act("You cannot perform the ritual's gestures without arms and hands!", 
-                FALSE, ch, NULL, NULL, TO_CHAR);
-      act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
-      return FALSE;
-    }
-    num = ::number(1,100);
-    if (ch->getPosition() == POSITION_RESTING)
-      num += 4 * num / 10;
-    if ((ch->getPosition() == POSITION_RESTING ||
-         ch->getPosition() == POSITION_SITTING ||
-         ch->getPosition() == POSITION_CRAWLING) &&
-           (num > ch->getSkillValue(SKILL_RITUALISM))) {
-      ch->sendTo("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r", good_uncap(position_types[ch->getPosition()]).c_str());
-      act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
-      return FALSE;
+  } else {
+    if (ch->getRitualismLevel() < RIT_LEV_NO_GESTURES) {
+      //////////////////////////////////////////////////////////////
+      // wizardry level still requries gestures, make generic checks
+      //////////////////////////////////////////////////////////////
+      if (ch->isPc() && (!ch->hasHands() || ch->eitherArmHurt())) {
+	act("You cannot invoke the ritual without arms and hands!",  FALSE, ch, NULL, NULL, TO_CHAR);
+	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+	return FALSE;
+      }
+      ///////////////////////////////////////////////////////////////
+      // min position in discArray defines absolute minimum level
+      // however, check some positions to see if restricted movement 
+      // affects ability to make gestures
+      // higher nums are more likely to cause restriction
+      ///////////////////////////////////////////////////////////////
+      num = ::number(1,100);
+      ///////////////////////////////////////////////////////////
+      // sit, crawl use normal num.  raise it further for resting
+      ///////////////////////////////////////////////////////////
+      if (ch->getPosition() == POSITION_RESTING)
+	num += 4 * num / 10;
+      
+      if ((ch->getPosition() == POSITION_RESTING || ch->getPosition() == POSITION_SITTING || ch->getPosition() == POSITION_CRAWLING) && (num > ch->getSkillValue(SKILL_RITUALISM))) {
+	////////////////////////////////////////////////////////////////
+	// we know that ritualism is < 60 from getRitualismLevel check
+	///////////////////////////////////////////////////////////////
+	ch->sendTo("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r", good_uncap(position_types[ch->getPosition()]).c_str());
+	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+	return FALSE;
+      }
     }
   }
   if (!ch->isPc()) {
-    if (ch->getWizardryLevel() >= WIZ_LEV_NO_GESTURES) {
-      act("You concentrate intently upon the magical task at hand...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
-      act("$n stares off into space, concentrating on something...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
-      return TRUE;
-    }
-    if (ch->getRitualismLevel() >= RIT_LEV_NO_GESTURES) {
-      act("You focus your thoughts upon the ancestors and their swift movements...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
-      act("$n concentrates deeply upon $s task...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
-      return TRUE;
-    }
-    if (ch->hasHands()) {
-      sprintf(msg, "$n performs ritualistic gestures with $s hands.");
-      act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
-      sprintf(msg, "You perform ritualistic gestures with both hands.");
-      act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
-      return TRUE;
+    if (ch->hasClass(CLASS_MAGE)) {
+      if (ch->getWizardryLevel() >= WIZ_LEV_NO_GESTURES) {
+	act("You concentrate intently upon the magical task at hand...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
+	act("$n stares off into space, concentrating on something...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
+	return TRUE;
+      }
     } else {
-      act("You hop and wiggle about while creating the magical runes in the air...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
-      act("$n hops and wiggles about while creating the magical runes in the air...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
-      return TRUE;
+      if (ch->getRitualismLevel() >= RIT_LEV_NO_GESTURES) {
+	act("You focus your thoughts upon the ancestors and their swift movements...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+	act("$n concentrates deeply upon $s task...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
+	return TRUE;
+      }
+    }
+    if (ch->hasClass(CLASS_MAGE)) {
+      if (ch->hasHands()) {
+	sprintf(msg, "$n performs magical gestures with both of $s hands.");
+	act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
+	sprintf(msg, "You perform magical gestures with both of your hands.");
+	act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
+	return TRUE;
+      } else {
+	act("You hop and wiggle about while creating the magical runes in the air...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
+	act("$n hops and wiggles about while creating the magical runes in the air...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
+	return TRUE;
+      }
+    } else {
+      if (ch->hasHands()) {
+	sprintf(msg, "$n performs ritualistic gestures with $s hands.");
+	act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
+	sprintf(msg, "You perform ritualistic gestures with both hands.");
+	act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+	return TRUE;
+      } else {
+	act("You hop and wiggle about while creating the magical runes in the air...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
+	act("$n hops and wiggles about while creating the magical runes in the air...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
+	return TRUE;
+      }
     }
     return TRUE;
   } else {
+    /////////
     // PCs
-
+    /////////
     sec_obj = ch->heldInSecHand();
     sec_usable = ch->canUseArm(HAND_SECONDARY);
     sec_okay = ((!sec_obj || sec_obj->allowsCast()) && sec_usable);
-
     prim_obj = ch->heldInPrimHand();
     prim_usable = ch->canUseArm(HAND_PRIMARY);
     prim_okay = ((!prim_obj || prim_obj->allowsCast()) && prim_usable);
 
-    if (ch->getWizardryLevel() >= WIZ_LEV_COMP_EITHER) {
-      if (sec_okay || prim_okay) {
-        if (sec_okay)
-          sprintf(buf, "%s", (ch->isRightHanded() ? "left" : "right"));
-        else
-        sprintf(buf, "%s", (ch->isRightHanded() ? "right" : "left"));
-
-	sprintf(msg, "$n traces a magical rune in the air with $s %s hand.", buf);
-	act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
-
-
-	if (ch->getWizardryLevel() >= WIZ_LEV_NO_GESTURES) {
-	  sprintf(msg, "While not absolutely necessary, you trace a rune with your %s hand to facilitate your spell in forming.", buf);
-	  act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
-	} else {
-	  sprintf(msg, "You trace a magical rune in the air with your %s hand.", buf);
-	  act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
-	}
-	return TRUE;
-      } else {
-        if (ch->getWizardryLevel() >= WIZ_LEV_NO_GESTURES) {
-	  act("You concentrate intently upon the magical task at hand...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
-	  act("$n stares off into space, concentrating on something...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
+    if (ch->hasClass(CLASS_MAGE)) {
+      if (ch->getWizardryLevel() >= WIZ_LEV_COMP_EITHER) {
+	if (sec_okay || prim_okay) {
+	  if (sec_okay)
+	    sprintf(buf, "%s", (ch->isRightHanded() ? "left" : "right"));
+	  else
+	    sprintf(buf, "%s", (ch->isRightHanded() ? "right" : "left"));
+	  sprintf(msg, "$n traces a magical rune in the air with $s %s hand.", buf);
+	  act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
+	  if (ch->getWizardryLevel() >= WIZ_LEV_NO_GESTURES) {
+	    sprintf(msg, "While not absolutely necessary, you trace a rune with your %s hand to facilitate your spell in forming.", buf);
+	    act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
+	  } else {
+	    sprintf(msg, "You trace a magical rune in the air with your %s hand.", buf);
+	    act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
+	  }
 	  return TRUE;
-        }
-        act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
-        act("You must have one hand free and usable to perform the ritual's gestures!", FALSE, ch, NULL, NULL, TO_CHAR);
-        return FALSE;
+	} else {
+	  if (ch->getWizardryLevel() >= WIZ_LEV_NO_GESTURES) {
+	    act("You concentrate intently upon the magical task at hand...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
+	    act("$n stares off into space, concentrating on something...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
+	    return TRUE;
+	  }
+	  act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+	  act("You must have one hand free and usable to perform the ritual's gestures!", FALSE, ch, NULL, NULL, TO_CHAR);
+	  return FALSE;
+	}
       }
     } else {
+      if (ch->getRitualismLevel() >= RIT_LEV_COMP_EITHER) {
+	if (sec_okay || prim_okay) {
+	  if (sec_okay)
+	    sprintf(buf, "%s", (ch->isRightHanded() ? "left" : "right"));
+	  else
+	    sprintf(buf, "%s", (ch->isRightHanded() ? "right" : "left"));
+	  sprintf(msg, "$n stretches $s %s arm skyward as $e asks for ritual blessing.", buf);
+	  act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
+	  if (ch->getRitualismLevel() >= RIT_LEV_NO_GESTURES) {
+	    sprintf(msg, "While not absolutely necessary, you stretch your %s arm to the sky for the blessings of the loa.", buf);
+	    act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+	  } else {
+	    sprintf(msg, "You thrust your %s arm skyward as a symbol of ritualistic power.", buf);
+	    act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+	  }
+	  return TRUE;
+	} else {
+	  if (ch->getRitualismLevel() >= RIT_LEV_NO_GESTURES) {
+	    act("You chant the ancient rada song offering precious lifeforce to the spirits.", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_YELLOW);
+	    act("$n groans as $s eyes roll back into $s head in deep concentration.", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_YELLOW);
+	    return TRUE;
+	  }
+	  act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+	  act("You must have one hand free and usable to perform the ritual's gestures!", FALSE, ch, NULL, NULL, TO_CHAR);
+	  return FALSE;
+	}
+      }
+    }
+    if (ch->hasClass(CLASS_MAGE)) {
       if (prim_okay && sec_okay) {
 	sprintf(msg, "$n traces a magical rune in the air with $s hands.");
 	act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
@@ -246,103 +313,75 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
 	act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
 	return TRUE;
       } else {
-        sprintf(buf, "%s",  (ch->isRightHanded() ? "right" : "left"));
-        sprintf(buf2, "%s", (ch->isRightHanded() ? "left" : "right"));
-        
-        act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
-        if (ch->getWizardryLevel() < WIZ_LEV_COMP_EITHER_OTHER_FREE) {
-          if (!(IS_SET(discArray[spell]->comp_types, COMP_MATERIAL))) {
-            sprintf(msg, "Both of your hands must be free and usable to perform the ritual's gestures!");
-          } else {
-            if (!prim_okay && !sec_okay) {
-              sprintf(msg, "Your component must be in your %s hand and your %s must be free and usable to perform the ritual's gestures!", buf, buf2);
-            } else if (!prim_okay) {
-              sprintf(msg, "Your component must be in your %s hand for you to be able to perform the ritual's gestures!", buf);
-            } else {
-              sprintf(msg, "Your %s hand must be free and usable to perform the ritual's gestures!", buf2);
-            }
-          }
-        } else {
-          if (!prim_okay && !sec_okay) {
-	    sprintf(msg, "Your %s hand must hold the component and your %s must be free to perform the ritual!", buf2, buf);
-          } else if (!prim_okay) {
-            sprintf(msg, "Your %s hand must be holding the component for you to properly perform this spell!", buf);
-          } else {
-            sprintf(msg, "Your %s hand must be free and usable to perform the ritual's gestures!", buf2);
-          }
-        }
-        act(msg, FALSE, ch, NULL, NULL, TO_CHAR);
-        return FALSE;
-      }
-    }
-    if (ch->getRitualismLevel() >= RIT_LEV_COMP_EITHER) {
-      if (sec_okay || prim_okay) {
-        if (sec_okay)
-          sprintf(buf, "%s", (ch->isRightHanded() ? "left" : "right"));
-        else
-        sprintf(buf, "%s", (ch->isRightHanded() ? "right" : "left"));
-
-	sprintf(msg, "$n beckons the ancestors judgement with $s %s hand.", buf);
-	act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
-	if (ch->getRitualismLevel() >= RIT_LEV_NO_GESTURES) {
-	  sprintf(msg, "While you are confident in the execution of the ritual you still perform the proper gesture with your %s hand.", buf);
-	  act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+	sprintf(buf, "%s",  (ch->isRightHanded() ? "right" : "left"));
+	sprintf(buf2, "%s", (ch->isRightHanded() ? "left" : "right"));
+	
+	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+	
+	if (ch->getWizardryLevel() < WIZ_LEV_COMP_EITHER_OTHER_FREE) {
+	  if (!(IS_SET(discArray[spell]->comp_types, COMP_MATERIAL))) {
+	    sprintf(msg, "Both of your hands must be free and usable to perform the ritual's gestures!");
+	  } else {
+	    if (!prim_okay && !sec_okay) {
+	      sprintf(msg, "Your component must be in your %s hand and your %s must be free and usable to perform the ritual's gestures!", buf, buf2);
+	    } else if (!prim_okay) {
+	      sprintf(msg, "Your component must be in your %s hand for you to be able to perform the ritual's gestures!", buf);
+	    } else {
+	      sprintf(msg, "Your %s hand must be free and usable to perform the ritual's gestures!", buf2);
+	    }
+	  }
 	} else {
-	  sprintf(msg, "You perform the proper gestures with your %s hand.", buf);
-	  act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+	  if (!prim_okay && !sec_okay) {
+	    sprintf(msg, "Your %s hand must hold the component and your %s must be free to perform the ritual!", buf2, buf);
+	  } else if (!prim_okay) {
+	    sprintf(msg, "Your %s hand must be holding the component for you to properly perform this spell!", buf);
+	  } else {
+	    sprintf(msg, "Your %s hand must be free and usable to perform the ritual's gestures!", buf2);
+	  }
 	}
-	return TRUE;
-      } else {
-        if (ch->getRitualismLevel() >= RIT_LEV_NO_GESTURES) {
-	  act("You concentrate intently upon the performance of the ritual.", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
-	  act("$n concentrates deeply as $e sings $s praise to $s ancestors.", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
-	  return TRUE;
-        }
-        act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
-        act("You must have one hand free and usable to perform the ritual's gestures!", FALSE, ch, NULL, NULL, TO_CHAR);
-        return FALSE;
+	act(msg, FALSE, ch, NULL, NULL, TO_CHAR);
+	return FALSE;
       }
     } else {
       if (prim_okay && sec_okay) {
-	sprintf(msg, "$n sings a haunting song in deep concentration.");
+	sprintf(msg, "$n stretches $s arms skyward as $e begs $s ancestors for a blessing.");
 	act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
-	sprintf(msg, "You sing your rada with good wishes for the petro.");
+	sprintf(msg, "You stretch your arms to the skies and beg the ancestors for a mighty blessing.");
 	act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
-        return TRUE;
+	return TRUE;
       } else {
-        sprintf(buf, "%s",  (ch->isRightHanded() ? "right" : "left"));
-        sprintf(buf2, "%s", (ch->isRightHanded() ? "left" : "right"));
-        
-        act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
-        if (ch->getRitualismLevel() < RIT_LEV_COMP_EITHER_OTHER_FREE) {
-          if (!(IS_SET(discArray[spell]->comp_types, COMP_MATERIAL))) {
-            sprintf(msg, "Both of your hands must be free and usable to perform the ritual's gestures!");
-          } else {
-            if (!prim_okay && !sec_okay) {
-              sprintf(msg, "Your component must be in your %s hand and your %s must be free and usable to perform the ritual's gestures!", buf, buf2);
-            } else if (!prim_okay) {
-              sprintf(msg, "Your component must be in your %s hand for you to be able to perform the ritual's gestures!", buf);
-            } else {
-              sprintf(msg, "Your %s hand must be free and usable to perform the ritual's gestures!", buf2);
-            }
-          }
-        } else {
-          if (!prim_okay && !sec_okay) {
+	sprintf(buf, "%s",  (ch->isRightHanded() ? "right" : "left"));
+	sprintf(buf2, "%s", (ch->isRightHanded() ? "left" : "right"));
+	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
+	
+	if (ch->getRitualismLevel() < RIT_LEV_COMP_EITHER_OTHER_FREE) {
+	  if (!(IS_SET(discArray[spell]->comp_types, COMP_MATERIAL))) {
+	    sprintf(msg, "Both of your hands must be free and usable to perform the ritual's gestures!");
+	  } else {
+	    if (!prim_okay && !sec_okay) {
+	      sprintf(msg, "Your component must be in your %s hand and your %s must be free and usable to perform the ritual's gestures!", buf, buf2);
+	    } else if (!prim_okay) {
+	      sprintf(msg, "Your component must be in your %s hand for you to be able to perform the ritual's gestures!", buf);
+	    } else {
+	      sprintf(msg, "Your %s hand must be free and usable to perform the ritual's gestures!", buf2);
+	    }
+	  }
+	} else {
+	  if (!prim_okay && !sec_okay) {
 	    sprintf(msg, "Your %s hand must hold the component and your %s must be free to perform the ritual!", buf2, buf);
-          } else if (!prim_okay) {
-            sprintf(msg, "Your %s hand must be holding the component for you to properly perform this spell!", buf);
-          } else {
-            sprintf(msg, "Your %s hand must be free and usable to perform the ritual's gestures!", buf2);
-          }
-        }
-        act(msg, FALSE, ch, NULL, NULL, TO_CHAR);
-        return FALSE;
+	  } else if (!prim_okay) {
+	    sprintf(msg, "Your %s hand must be holding the component for you to properly perform this spell!", buf);
+	  } else {
+	    sprintf(msg, "Your %s hand must be free and usable to perform the ritual's gestures!", buf2);
+	  }
+	}
+	act(msg, FALSE, ch, NULL, NULL, TO_CHAR);
+	return FALSE;
       }
     }
     return TRUE;
   }
 }
-
 
 bool bPassMageChecks(TBeing * caster, spellNumT spell, TThing *target)
 {
