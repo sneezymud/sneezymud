@@ -3287,7 +3287,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 {
   char buf[256];
   TRoom *rp;
-  int price;
+  int price, shop_nr=find_shop_nr(me->number);
   affectedData aff;
 
   if (cmd >= MAX_CMD_LIST)
@@ -3314,7 +3314,9 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     vlogf(LOG_PROC, "Pet keeper spec_proc called with no pet room!");
     return FALSE;
   }
-  if (cmd == CMD_LIST) {
+  if (cmd == CMD_WHISPER){
+    return shopWhisper(ch, me, shop_nr, arg);
+  } else if (cmd == CMD_LIST) {
     TWindow *tw = getFirstWindowInRoom(me);
 
     sstring tellBuf = "Look through the ";
@@ -3365,18 +3367,20 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       return TRUE;
     }
 
-    price = pet->petPrice();
+    price = (int)((float) pet->petPrice() * 
+		  shop_index[shop_nr].getProfitBuy(NULL, ch));
 
     if (ch->isPc() && ((ch->getMoney()) < price) && !ch->isImmortal()) {
       me->doTell(ch->name, "You don't have enough money for that pet!");
       return TRUE;
     }
-    if (!ch->isImmortal())
-      ch->addToMoney(-(price), GOLD_SHOP_PET);
-
     if (!(pet = read_mobile(pet->number, REAL))) {
       vlogf(LOG_PROC, "Whoa!  No pet in pet_keeper");
       return TRUE;
+    }
+    if (!ch->isImmortal()){
+      ch->giveMoney(me, price, GOLD_SHOP_PET);
+      shoplog(shop_nr, ch, me, pet->getName(), price, "buying");
     }
     pet->setExp(0);
     SET_BIT(pet->specials.affectedBy, AFF_CHARM);
@@ -3431,7 +3435,9 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     int petLevel = pet->GetMaxLevel();
     int pcLevel = ch->GetMaxLevel();
 
-    price = pet->petPrice();
+    price = (int)((float) pet->petPrice() * 
+		  shop_index[shop_nr].getProfitBuy(NULL, ch));
+
     me->doTell(ch->name, fmt("A pet %s will cost %d to purchase") % fname(pet->name) % price);
     me->doTell(ch->name, fmt("and %d to rent.") % (pet->petPrice() / 4));
     if (ch->isImmortal()) {
