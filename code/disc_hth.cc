@@ -212,7 +212,7 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
   if (!v->doesKnowSkill(SKILL_PARRY_WARRIOR))
     return FALSE;
   if (v->doesKnowSkill(SKILL_TRANCE_OF_BLADES) && (v->task) &&
-      (v->task->task = TASK_TRANCE_OF_BLADES) &&
+      (v->task->task == TASK_TRANCE_OF_BLADES) &&
       (vweap = dynamic_cast<TBaseWeapon *>(v->heldInPrimHand())))
     trance = TRUE;
   
