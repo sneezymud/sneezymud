@@ -3841,13 +3841,13 @@ void TBeing::doRestore(const char *argument)
       }
       if (!strcmp(name, victim->getName())) {
 	found = TRUE;
-	name2 = name;
+	strncpy(name2, name, sizeof(name));
 	pracs2 = pracs;
       } else {
 	fprintf(fp2,buf);
       }
     }
-    name = name2;
+    strncpy(name, name2, sizeof(name2));
     pracs = pracs2;
     fprintf(fp2,buf);
     fclose(fp);
