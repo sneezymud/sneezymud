@@ -313,6 +313,7 @@ void TShopOwned::showInfo()
   int count=0, value=0, tmp=0;
   unsigned int i=0;
   sstring buf;
+  TDatabase db(DB_SNEEZY);
   //  int volume=0;
 
   // if not owned, or owned and has "owner" or "info"
@@ -362,12 +363,32 @@ void TShopOwned::showInfo()
 
 
   // anyone can see profit_buy, profit_sell and trading types, anytime
-  keeper->doTell(ch->getName(),
-		 fmt("My profit_buy is %f and my profit_sell is %f.") %
-		 shop_index[shop_nr].profit_buy %
-		 shop_index[shop_nr].profit_sell);
-  keeper->doTell(ch->getName(),fmt("My maximum inventory per item is %i.") %
-		 getMaxNum(NULL));
+  if(keeper->spec==SPEC_LOAN_SHARK){
+    keeper->doTell(ch->getName(),
+		   fmt("My defaulting penalty is %f and my interest rate is %f.") %
+		   shop_index[shop_nr].profit_buy %
+		   shop_index[shop_nr].profit_sell);
+
+
+    db.query("select x, y, term from shopownedloanrate where shop_nr=%i",
+	     shop_nr);
+    if(db.fetchRow()){
+      keeper->doTell(ch->getName(), fmt("My offered term is %i years.") %
+		     convertTo<int>(db["term"]));
+      keeper->doTell(ch->getName(), fmt("My talens per level X value is %f and my max offering at level 50 is %f.") % 
+		     convertTo<double>(db["x"]) % 
+		     convertTo<double>(db["y"]));
+    }
+
+
+  } else {
+    keeper->doTell(ch->getName(),
+		   fmt("My profit_buy is %f and my profit_sell is %f.") %
+		   shop_index[shop_nr].profit_buy %
+		   shop_index[shop_nr].profit_sell);
+    keeper->doTell(ch->getName(),fmt("My maximum inventory per item is %i.") %
+		   getMaxNum(NULL));
+  }
 
 
   if(shop_index[shop_nr].type.size()<=1){

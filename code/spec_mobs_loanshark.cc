@@ -74,7 +74,7 @@ int getTerm(unsigned int shop_nr, const sstring &name)
 
 
 // granted = time_t value of real time that loan was granted
-// term = term in mud months
+// term = term in mud years
 // returns mud time that loan is due
 time_info_data whenDue(time_t granted, int term)
 {
@@ -83,14 +83,8 @@ time_info_data whenDue(time_t granted, int term)
   mudTimePassed(granted, BEGINNING_OF_TIME, &due);
 
   due.year += YEAR_ADJUST;
-
-  due.month+=term;
+  due.year += term;
   
-  while(due.month>12){
-    due.month-=12;
-    due.year++;
-  }
-
   return due;
 }
 
@@ -99,13 +93,12 @@ int calcInterest(int amt, time_t granted, int term, float rate, float def_charge
   time_info_data due;
 
   mudTimePassed(time(NULL), granted, &due);
-  
-  int months=(due.year*12)+due.month+1;
-  
-  if(months > term) // overdue!
+  due.year++;
+
+  if(due.year > term) // overdue!
     amt += (int)((float) amt * def_charge);
 
-  while(months--){
+  while(due.year--){
     amt += (int)((float) amt * rate);
   }
 
@@ -137,7 +130,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 	   shop_nr);
   if(!db.fetchRow()){
     vlogf(LOG_DB, fmt("couldn't find loanrate table for shop %i") % shop_nr);
-    me->doSay("Hm, I can't seem to find my paperwork!");
+    me->doTell(ch->getName(), "Hm, I can't seem to find my paperwork!");
     return false;
   }
 
@@ -175,7 +168,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       amt=convertTo<int>(db["amt"]);
       due=whenDue(convertTo<int>(db["granted_time"]), convertTo<int>(db["term"]));
 
-      me->doSay(fmt("You have a loan for %i talens, due on the %s day of %s, Year %d P.S.") %
+      me->doTell(ch->getName(), fmt("You have a loan for %i talens, due on the %s day of %s, Year %d P.S.") %
 		amt %
 		numberAsString(due.day) % 
 		month_name[due.month] %
@@ -186,16 +179,16 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 		  convertTo<float>(db["default_charge"]));
 	
       
-      me->doSay(fmt("With interest, you owe %i talens.") % amt);
+      me->doTell(ch->getName(), fmt("With interest, you owe %i talens.") % amt);
 
     } else {
-      me->doSay(fmt("I can extend you a loan for %i talens.") % amt);
-      me->doSay(fmt("A monthly cumulative interest rate of %.2f%c will apply.") % 
+      me->doTell(ch->getName(), fmt("I can extend you a loan for %i talens.") % amt);
+      me->doTell(ch->getName(), fmt("A yearly cumulative interest rate of %.2f%c will apply.") % 
 		(getRate(shop_nr, ch->getName()) * 100) % '%');
-      me->doSay(fmt("The term length I can offer is %i months.") % term);
-      me->doSay(fmt("If you default on the loan, you will be charged an additional %.2f%c.") %
+      me->doTell(ch->getName(), fmt("The term length I can offer is %i years.") % term);
+      me->doTell(ch->getName(), fmt("If you default on the loan, you will be charged an additional %.2f%c.") %
 		(getPenalty(shop_nr, ch->getName()) * 100) % '%');
-      me->doSay("Do \"buy loan\" to take out the loan.");
+      me->doTell(ch->getName(), "Do \"buy loan\" to take out the loan.");
     }
     return true;
   }
@@ -205,12 +198,12 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   ////////////////////////////
   if(cmd==CMD_BUY){
     if(sstring(arg) != "loan"){
-      me->doSay("If you want to take out the loan, do \"buy loan\".");
+      me->doTell(ch->getName(), "If you want to take out the loan, do \"buy loan\".");
       return true;
     }
 
     if(amt > me->getMoney()){
-      me->doSay("At the moment, I don't have the necessary capital to extend a loan to you.");
+      me->doTell(ch->getName(), "At the moment, I don't have the necessary capital to extend a loan to you.");
       return true;
     }
 
@@ -223,7 +216,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     me->addToMoney(-amt, GOLD_SHOP);
     ch->addToMoney(amt, GOLD_SHOP);
 
-    me->doSay(fmt("There you go.  Remember, I need the money back, plus interest, within %i months.") % term);
+    me->doTell(ch->getName(), fmt("There you go.  Remember, I need the money back, plus interest, within %i years.") % term);
     
     shoplog(shop_nr, ch, me, "talens", -amt, "loaning");
   }
@@ -243,23 +236,23 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 		       convertTo<float>(db["default_charge"]));
 
       if(coins>=amt){
-	me->doSay("Alright, everything appears to be in order here.  Consider your loan paid off!");
+	me->doTell(ch->getName(), "Alright, everything appears to be in order here.  Consider your loan paid off!");
 	db.query("delete from shopownedloans where player_id=%i", ch->getPlayerID());
-	shoplog(shop_nr, ch, me, "talens", -amt, "receiving");
+	shoplog(shop_nr, ch, me, "talens", coins, "receiving");
       } else {
 	// how much of the amount owed is the principle
 	float perc=(float)principle / (float)amt;
 	principle -= (int)(perc*coins);
-	
+
 	db.query("update shopownedloans set amt=%i where player_id=%i",
 		 principle, ch->getPlayerID());
 
-	me->doSay(fmt("Thanks for the payment.  You paid down the principle by %i talens, the rest went to interest.") % (int)(perc*coins));
+	me->doTell(ch->getName(), fmt("Thanks for the payment.  You paid down the principle by %i talens, the rest went to interest.") % (int)(perc*coins));
 
-	shoplog(shop_nr, ch, me, "talens", -amt, "receiving");
+	shoplog(shop_nr, ch, me, "talens", coins, "receiving");
       }
     } else {
-      me->doSay("Uhh... thanks!");
+      me->doTell(ch->getName(), "Uhh... thanks!");
     }
   }
 
