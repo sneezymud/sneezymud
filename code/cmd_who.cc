@@ -442,11 +442,11 @@ void TBeing::doWho(const char *argument)
 			  buf % p->getHit() % p->getPiety() % p->getMove() %
 			  p->getMoney() % p->getBank();
                       else if (p->hasClass(CLASS_SHAMAN))
-                        buf = fmt("Hit:[%-3d] LF:[%-4d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") %
+                        buf = fmt("%sHit:[%-3d] LF:[%-4d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") %
 			  buf % p->getHit() % p->getLifeforce() % 
 			  p->getMove() % p->getMoney() % p->getBank();
                       else
-			buf = fmt("Hit:[%-3d] Mana:[%-3d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") % 
+			buf = fmt("%sHit:[%-3d] Mana:[%-3d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") % 
 			  buf % p->getHit() % p->getMana() % p->getMove() %
 			  p->getMoney() % p->getBank();
                   }
