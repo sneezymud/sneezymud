@@ -290,7 +290,6 @@ void TPerson::startLevels()
     remWizPower(POWER_IDLED);
     calcMaxLevel();
   }
-#endif
 
 
   if (GetMaxLevel() > MAX_MORT) {
