@@ -10,6 +10,7 @@
 
 #include <csignal>
 #include <cstdarg>
+#include <cmath>
 
 extern "C" {
 #include <unistd.h>
