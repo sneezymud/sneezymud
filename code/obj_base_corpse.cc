@@ -162,179 +162,75 @@ void TBaseCorpse::peeOnMe(const TBeing *ch)
 
 int TBaseCorpse::dissectMe(TBeing *caster)
 {
-  if (gamePort != PROD_GAMEPORT) {
-    int          tValue,
-                 tWhich = 0;
-    TObj        *tObj;
-    dissectInfo *tDissect;
-
-    if (isCorpseFlag(CORPSE_NO_REGEN)) {
-      act("$p: I am afraid that cannot be dissected.",
-          FALSE, caster, this, 0, TO_CHAR);
-      return FALSE;
-    }
-
-    if (!tDissections) {
-      act("That has nothing of value anymore.",
-          FALSE, caster, this, 0, TO_CHAR);
-      return FALSE;
-    }
-
-    for (tDissect = tDissections; tDissect; tDissect = tDissect->tNext)
-      tWhich++;
-
-    vlogf(LOG_LAPSOS, "dissectMe: tWhich(%d)", tWhich);
-
-    tWhich = ::number(0, tWhich);
-
-    for (tDissect = tDissections; (tDissect && tWhich--); tDissect = tDissect->tNext);
-
-    if (!tDissect && !(tDissect = tDissections)) {
-      vlogf(LOG_LAPSOS, "dissectMe Error.  tDissect ended up NULL.");
-      return FALSE;
-    }
-
-    if (!(tValue = real_object(tDissect->loadItem))) {
-      act("That has nothing of value anymore.",
-          FALSE, caster, this, 0, TO_CHAR);
-      return FALSE;
-    }
-
-    act("You dissect $p.", FALSE, caster, this, 0, TO_CHAR);
-    act("$n dissects $p.", FALSE, caster, this, 0, TO_ROOM);
-
-    if (obj_index[tValue].number >= obj_index[tValue].max_exist) {
-      // item at max
-      act("You find nothing useful in $p.",
-            FALSE, caster, this, 0, TO_CHAR);
-      return TRUE;
-    }
-
-    if (!(tObj = read_object(tValue, REAL))) {
-      caster->sendTo("Serious problem in dissect.\n\r");
-      vlogf(LOG_OBJ, "Bad call to read_object in dissect, num %d", tValue);
-      return FALSE;
-    }
-
-    int bKnown = caster->getSkillValue(SKILL_DISSECT);
-
-    if (!bSuccess(caster, bKnown, SKILL_DISSECT) &&
-        !caster->hasQuestBit(TOG_STARTED_MONK_BLUE)) {
-      // dissection failed
-      act("You find nothing useful in $p.",
-            FALSE, caster, this, 0, TO_CHAR);
-      delete tObj;
-      tObj = NULL;
-      return TRUE;
-    } else {
-      if (::number(0,99) >= (signed) tDissect->amount) {
-        // failed to pass amount
-        CF(SKILL_DISSECT);
-        act("You find nothing useful in $p.",
-              FALSE, caster, this, 0, TO_CHAR);
-        delete tObj;
-        tObj = NULL;
-        return TRUE;
-      }
-
-      if (caster->hasQuestBit(TOG_STARTED_MONK_BLUE))
-        caster->setQuestBit(TOG_MONK_KILLED_SHARK);
-
-      *caster += *tObj;
-      act(tDissect->message_to_self.c_str(),
-          FALSE, caster, tObj, this, TO_CHAR);
-      act(tDissect->message_to_others.c_str(),
-          FALSE, caster, tObj, this, TO_ROOM);
-
-      if (--tDissect->count <= 0) {
-        if (tDissections == tDissect)
-          tDissections = tDissect->tNext;
-        else {
-          dissectInfo *tDissectNext;
-
-          for (tDissectNext = tDissections; tDissectNext->tNext != tDissect;
-               tDissectNext = tDissectNext->tNext);
-
-          tDissectNext->tNext = tDissect->tNext;
-        }
-
-        delete tDissect;
-        tDissect = NULL;
-      }
-
-      return TRUE;
-    }
+  int num = -1, rnum;
+  int amount = 100;
+  TObj *obj;
+  char msg[256], gl_msg[256];
+  
+  if (isCorpseFlag(CORPSE_NO_REGEN)) {
+    // a body part or something
+    act("$p: You aren't able to dissect that.",
+	FALSE, caster, this, 0, TO_CHAR);
+    return FALSE;
+  }
+  if (isCorpseFlag(CORPSE_NO_DISSECT)) {
+    // dissection already occurred
+    act("Nothing more of any use can be taken from $p.",
+	FALSE, caster, this, 0, TO_CHAR);
+    return FALSE;
+  }
+  num = determineDissectionItem(this, &amount, msg, gl_msg, caster);
+  if (num == -1 || !(rnum = real_object(num))) {
+    // no item
+    act("You aren't aware of any useful dissections that come from $p.",
+	FALSE, caster, this, 0, TO_CHAR);
+    return TRUE;
+  }
+  
+  act("You dissect $p.", FALSE, caster, this, 0, TO_CHAR);
+  act("$n dissects $p.", FALSE, caster, this, 0, TO_ROOM);
+  addCorpseFlag(CORPSE_NO_DISSECT);
+  
+  if (obj_index[rnum].number >= obj_index[rnum].max_exist) {
+    // item at max
+    act("You find nothing useful in $p.",
+	FALSE, caster, this, 0, TO_CHAR);
+    return TRUE;
+  }
+  if (!(obj = read_object(num, VIRTUAL))) {
+    caster->sendTo("Serious problem in dissect.\n\r");
+    vlogf(LOG_OBJ, "Bad call to read_object in dissect, num %d", num);
+    return FALSE;
+  }
+  int bKnown = caster->getSkillValue(SKILL_DISSECT);
+  
+  if (!bSuccess(caster, bKnown, SKILL_DISSECT) &&
+      !caster->hasQuestBit(TOG_STARTED_MONK_BLUE)) {
+    // dissection failed
+    act("You find nothing useful in $p.",
+	FALSE, caster, this, 0, TO_CHAR);
+    delete obj;
+    obj = NULL;
+    return TRUE;
   } else {
-    int num = -1, rnum;
-    int amount = 100;
-    TObj *obj;
-    char msg[256], gl_msg[256];
-
-    if (isCorpseFlag(CORPSE_NO_REGEN)) {
-      // a body part or something
-      act("$p: You aren't able to dissect that.",
-            FALSE, caster, this, 0, TO_CHAR);
-      return FALSE;
-    }
-    if (isCorpseFlag(CORPSE_NO_DISSECT)) {
-      // dissection already occurred
-      act("Nothing more of any use can be taken from $p.",
-            FALSE, caster, this, 0, TO_CHAR);
-      return FALSE;
-    }
-    num = determineDissectionItem(this, &amount, msg, gl_msg, caster);
-    if (num == -1 || !(rnum = real_object(num))) {
-      // no item
-      act("You aren't aware of any useful dissections that come from $p.",
-              FALSE, caster, this, 0, TO_CHAR);
-      return TRUE;
-    }
-
-    act("You dissect $p.", FALSE, caster, this, 0, TO_CHAR);
-    act("$n dissects $p.", FALSE, caster, this, 0, TO_ROOM);
-    addCorpseFlag(CORPSE_NO_DISSECT);
-
-    if (obj_index[rnum].number >= obj_index[rnum].max_exist) {
-      // item at max
+    if (::number(0,99) >= amount) {
+      // failed to pass amount
+      CF(SKILL_DISSECT);
       act("You find nothing useful in $p.",
-            FALSE, caster, this, 0, TO_CHAR);
-      return TRUE;
-    }
-    if (!(obj = read_object(num, VIRTUAL))) {
-      caster->sendTo("Serious problem in dissect.\n\r");
-      vlogf(LOG_OBJ, "Bad call to read_object in dissect, num %d", num);
-      return FALSE;
-    }
-    int bKnown = caster->getSkillValue(SKILL_DISSECT);
-
-    if (!bSuccess(caster, bKnown, SKILL_DISSECT) &&
-        !caster->hasQuestBit(TOG_STARTED_MONK_BLUE)) {
-      // dissection failed
-      act("You find nothing useful in $p.",
-            FALSE, caster, this, 0, TO_CHAR);
+	  FALSE, caster, this, 0, TO_CHAR);
       delete obj;
       obj = NULL;
       return TRUE;
-    } else {
-      if (::number(0,99) >= amount) {
-        // failed to pass amount
-        CF(SKILL_DISSECT);
-        act("You find nothing useful in $p.",
-              FALSE, caster, this, 0, TO_CHAR);
-        delete obj;
-        obj = NULL;
-        return TRUE;
-      }
-
-      if(caster->hasQuestBit(TOG_STARTED_MONK_BLUE)){
-        caster->setQuestBit(TOG_MONK_KILLED_SHARK);
-      }
-
-      *caster += *obj;
-      act(   msg, FALSE, caster, obj, this, TO_CHAR);
-      act(gl_msg, FALSE, caster, obj, this, TO_ROOM);
-      return TRUE;
     }
+    
+    if(caster->hasQuestBit(TOG_STARTED_MONK_BLUE)){
+      caster->setQuestBit(TOG_MONK_KILLED_SHARK);
+    }
+    
+    *caster += *obj;
+    act(   msg, FALSE, caster, obj, this, TO_CHAR);
+    act(gl_msg, FALSE, caster, obj, this, TO_ROOM);
+    return TRUE;
   }
 
   return TRUE;
