@@ -109,6 +109,18 @@ int ageHpMod(const TPerson *tp){
 }
 
 
+int affectHpBonus(const TPerson *tp){
+  affectedData *aff;
+  int total=0;
+
+  for (aff = tp->affected; aff; aff = aff->next) {
+    if(aff->location==APPLY_HIT)
+      total+=aff->modifier;
+  }
+  
+  return total;
+}
+
 short int TPerson::hitLimit() const
 {
 #if NEW_HP
@@ -125,6 +137,7 @@ short int TPerson::hitLimit() const
   newmax += (classHpPerLevel(this) * defense_amt);
   newmax *= getConHpModifier();
   newmax += eqHpBonus(this);
+  newmax += affectHpBonus(this);
 
   return (short int) newmax;
 
