@@ -275,9 +275,9 @@ int TEgg::chiMe(TBeing *tLunatic)
       FALSE, tLunatic, this, NULL, TO_CHAR);
   act("$n stares at $p, causing it to get warmer!",
       TRUE, tLunatic, this, NULL, TO_ROOM);
-  act("$p begins to wiggle from within.",
+  act("$p begins to wiggle a bit.",
       TRUE, tLunatic, this, NULL, TO_CHAR);
-  act("$p begins to wiggle from within.",
+  act("$p begins to wiggle a bit.",
       TRUE, tLunatic, this, NULL, TO_ROOM);
 
   obj_flags.decay_time += ::number(1, 3);
@@ -311,7 +311,7 @@ void TEgg::hatch(TRoom *rp)
   mob->oldRoom = inRoom();
   act("Suddenly, $p begins to move violently from within!",
     TRUE, mob, this, NULL, TO_ROOM);
-  act("With a final push, $n steps out from $p!",
+  act("With a final push, $n emerges from $p!",
     TRUE, mob, this, NULL, TO_ROOM);
 }
 
