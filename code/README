@@ -1,3 +1,7 @@
+01-17-00 - Bat
+- New code is reporting numerous database problems and core dumping during
+  boot.  I put sign up.
+
 01-06-00 - bat
 - We have a ton of places in code where we pass in a pointer to a class
   and immediately check for NULL.  In C++, it is generally preferred to pass 
