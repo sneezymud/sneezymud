@@ -2230,6 +2230,28 @@ int goofersDust(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
   return FALSE;
 }
 
+int learningPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
+{
+  int rc;
+  if (genericPotion(ch, me, cmd, arg, rc))
+    return rc;
+
+  act("$n imbibes $p.", TRUE, ch, me, 0, TO_ROOM);
+  act("You imbibe $p.", TRUE, ch, me, 0, TO_CHAR);
+
+
+  for (classIndT Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
+    if (ch->hasClass(1<<Class)){
+      ch->addPracs(1, Class);
+      break;
+    }
+  }
+
+  ch->sendTo("You feel ready to learn more.\n\r");
+
+  return DELETE_THIS;
+}
+
 int youthPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 {
   int rc;
@@ -7237,6 +7259,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "spawning object: open", mobSpawnOpen},
   {FALSE, "Energy Shield: generator", energyShieldGenerator}, //120
   {FALSE, "Energy Shield: shield", energyShield},
+  {FALSE, "potion of learning", learningPotion},
   {FALSE, "last proc", bogusObjProc}
 };
 

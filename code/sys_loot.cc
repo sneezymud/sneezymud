@@ -17,6 +17,7 @@ TLootStructure * tLoot;
 bool isLegalLoot(int tValue)
 {
   switch (tValue) {
+    case 29997: // Learning Potion
     case 29993: // Generic Potion
     case 29992: // Youth-Potion
     case 29991: // Stat-Potion
