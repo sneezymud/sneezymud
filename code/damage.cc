@@ -581,7 +581,11 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
         discArray[dmg_type]) {
       strcpy(buf2, discArray[dmg_type]->name);
     } else if (dmg_type >= TYPE_MIN_HIT && dmg_type <= TYPE_MAX_HIT) {
-      strcpy(buf2, attack_hit_text[(dmg_type - TYPE_MIN_HIT)].singular);
+      if (Twink == 1) {
+	strcpy(buf2, attack_hit_text_twink[(dmg_type - TYPE_MIN_HIT)].singular);
+      } else {
+	strcpy(buf2, attack_hit_text[(dmg_type - TYPE_MIN_HIT)].singular);
+      }
     } else {
       switch (dmg_type) {
         case DAMAGE_KICK_HEAD:

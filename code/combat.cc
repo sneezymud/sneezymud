@@ -43,8 +43,7 @@ TBeing *gCombatList = NULL;        // head of l-list of fighting chars
 // If you're still confused, trust me, we need it - Bat 9/1/98
 TBeing *gCombatNext = NULL;
 
-struct attack_hit_type attack_hit_text[TYPE_MAX_HIT - TYPE_MIN_HIT] =
-{
+struct attack_hit_type attack_hit_text[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
   {"pound", "pounds", "pounding"},        // 0
   {"bludgeon", "bludgeons", "bludgeoning"},
   {"whip", "whips","whipping"},
@@ -80,6 +79,44 @@ struct attack_hit_type attack_hit_text[TYPE_MAX_HIT - TYPE_MIN_HIT] =
   {"kick", "kicks", "kicking"},
   {"maul", "mauls", "mauling"},
   {"shoot", "shoots", "shooting"},
+};
+
+struct attack_hit_type attack_hit_text_twink[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
+  {"<B>POUND<1>", "<B>POUNDS<1>", "POUNDING"},        // 0
+  {"<B>BLUDGEON<1>", "<B>BLUDGEONS<1>", "BLUDGEONING"},
+  {"<G>WHIP<1>", "<G>WHIPS<1>","WHIPPING"},
+  {"<G>CRUSH<1>", "<G>CRUSHES<1>", "CRUSHING"},
+  {"<P>SMASH<1>", "<P>SMASHES<1>", "SMASHING"},
+  {"<P>SMITE<1>", "<P>SMITES<1>", "SMITING"},
+  {"<Y>PUMMEL<1>", "<Y>PUMMELS<1>", "PUMMELING"},
+  {"<Y>FLAIL<1>", "<Y>FLAILS<1>", "FLAILING"},
+  {"<R>BEAT<1>", "<R>BEATS<1>", "BEATING"},
+  {"<R>THRASH<1>", "<R>THRASHES<1>", "THRASHING"},
+  {"<W>THUMP<1>","<W>THUMPS<1>", "THUMPING"},
+  {"<W>WALLOP<1>", "<W>WALLOPS<1>", "WALLOPING"},
+  {"<o>BATTER<1> and <R>DEEP_FRY<1>","<o>BATTERS<1> and <R>DEEP-FRIES<1>", "<o>BATTERING<1> and <R>DEEP-FRYING<1>"},
+  {"<R>STRIKE<1>","<R>STRIKES<1>", "STRIKING"},
+  {"CLUBB","CLUBBZ", "CLUBBIN"},
+  {"<B>POUND<1>", "<B>POUNDS<1>", "POUNDING"},
+  {"PIERCE", "PIERCES", "PIERCING"},        
+  {"BITE", "BITES","BITING"},
+  {"STING", "STINGS", "STINGING"},
+  {"STAB", "STABS", "STABBING"},
+  {"THRUST", "THRUSTS", "THRUSTING"},
+  {"SPEAR", "SPEARS", "SPEARING"},
+  {"PECK", "PECKS", "PECKING"},
+  {"SLASH", "SLASHES","SLASHING"},
+  {"CLAW", "CLAWS", "CLAWING"},
+  {"CLEAVE", "CLEAVES", "CLEAVING"},
+  {"SLICE","SLICES", "SLICING"},
+  {"DUST", "DUSTS", "DUSTING"},
+  {"CRACK-ROCK", "CRACK-ROCKS", "CRACK-ROCKING"},
+  {"FLAME", "FLAMES", "FLAMING"},
+  {"DOUCHE", "DOUCHES", "DOUCHING"},
+  {"MAUL", "MAULZ", "MAULING"},  // TYPE_BEAR_CLAW
+  {"BOOT", "BOOTZ", "BOOTIN"},
+  {"MAUL", "MAULZ", "MAULING"},
+  {"SHOOT", "SHOOTS", "SHOOTING"},
 };
 
 // isTanking() checks to see if I am tanking.  Conditions are if someone in
@@ -2833,30 +2870,58 @@ const char *describe_dam(int dam, int dam_capacity, spellNumT wtype)
     return "pathetically";
 
   p = ((double) dam) / ((double) dam_capacity);
-  if ((p >= 1) || (dam_capacity < 0)) {
-    if ((wtype == TYPE_SLASH) || wtype == TYPE_SLICE) 
-      return "into shreds";
-    else
-      return "into a bloody pulp";
-  } else if (p > .64)
-    return "beyond all recognition";
-  else if (p > .32)
-    return "incredibly well";
-  else if (p > .16)
-    return "very severely";
-  else if (p > .08)
-    return "severely";
-  else if (p > .06)
-    return "very hard";
-  else if (p > .04)
-    return "hard";
-  else if (p > .02)
-    return "lightly";
-  else if (p > .01)
-    return "very lightly";
-  else if (p > .005)
-    return "only slightly";
-  return "pathetically";
+
+  if (Twink == 1) {
+    if ((p >= 1) || (dam_capacity < 0)) {
+      if ((wtype == TYPE_SLASH) || wtype == TYPE_SLICE) 
+	return "into <Y>-=><1><R>BLOODY GOREY SHREDS<1><Y><=-<1>";
+      else
+	return "into a <B>***<z><R>BLOODY<z> <P>PULP<z><B>***<z>";
+    } else if (p > .64)
+      return "<Y>-=><1><C>BEYOND<z> <R>ALL<z> <C>COMPREHENSION<z><Y><=-<1>";
+    else if (p > .32)
+      return "<G>:<Y>:<P>:<R>TOTALLY BRUTALLY<P>:<Y>:<G>:<z>";
+    else if (p > .16)
+      return "<p>+++<B>UBER-INSANELY<p>+++<z>";
+    else if (p > .08)
+      return "<p>---<B>INSANELY<p>---<z>";
+    else if (p > .06)
+      return "<c>-+-+<R>ULTRA-MONDO HARD<z><c>+-+-<1>";
+    else if (p > .04)
+      return "<p>-=-<1><r>ULTRA HARD<z><p>-=-<1>";
+    else if (p > .02)
+      return "<g>*+*<1><o>CRAPPILY<z><g>*+*<1>";
+    else if (p > .01)
+      return "<Y>-*-<1><o>SUPER CRAPPILY<z><Y>-*-<1>";
+    else if (p > .005)
+      return "<r>%%%<1><o>SUPER-DUPER CRAPPILY<z><r>%%%<1>";
+    return "<Y>-=><z><R>UBER<1>-<P>SUPER<1>-<C>DUPER<1>-<G>MONDO<1> <o>CRAPPILY<z><Y><=-<1>";
+  } else {
+    if ((p >= 1) || (dam_capacity < 0)) {
+      if ((wtype == TYPE_SLASH) || wtype == TYPE_SLICE) 
+	return "into shreds";
+      else
+	return "into a bloody pulp";
+    } else if (p > .64)
+      return "beyond all recognition";
+    else if (p > .32)
+      return "incredibly well";
+    else if (p > .16)
+      return "very severely";
+    else if (p > .08)
+      return "severely";
+    else if (p > .06)
+      return "very hard";
+    else if (p > .04)
+      return "hard";
+    else if (p > .02)
+      return "lightly";
+    else if (p > .01)
+      return "very lightly";
+    else if (p > .005)
+      return "only slightly";
+    return "pathetically";
+  }
 }
 
 static int REALNUM(TBeing *ch, wearSlotT part_hit)
@@ -2903,7 +2968,11 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
       strcpy(namebuf, other->pers(this)); 
       strcpy(victbuf, other->pers(v)); 
       strcpy(buf, good_cap(namebuf).c_str());
-      sprintf(buf + strlen(buf), " %s ", attack_hit_text[w_type].plural);
+      if (Twink == 1) {
+	sprintf(buf + strlen(buf), " %s ", attack_hit_text_twink[w_type].plural);
+      } else {
+	sprintf(buf + strlen(buf), " %s ", attack_hit_text[w_type].plural);
+      }
       sprintf(buf + strlen(buf), "%s's ", victbuf);
       sprintf(buf + strlen(buf), "%s ", v->describeBodySlot(part_hit).c_str());
       sprintf(buf + strlen(buf), "%s", describe_dam(dam, REALNUM(v, part_hit),
@@ -2926,14 +2995,25 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
     else
       strcpy(colorBuf, green());
 
-    sprintf(buf, "You %s%s%s $N's %s%s%s %s%s%s.", colorBuf, attack_hit_text[w_type].singular,
-          norm(),
-          colorBuf,
-          v->describeBodySlot(part_hit).c_str(),
-          norm(),
-          describe_dam(dam, REALNUM(v, part_hit), w_type),
-          (weapon) ? " with your " : "",
-          (weapon) ? objn(weapon).c_str() : "");
+    if (Twink == 1) {
+      sprintf(buf, "You %s%s%s $N's %s%s%s %s%s%s.", colorBuf, attack_hit_text_twink[w_type].singular,
+	      norm(),
+	      colorBuf,
+	      v->describeBodySlot(part_hit).c_str(),
+	      norm(),
+	      describe_dam(dam, REALNUM(v, part_hit), w_type),
+	      (weapon) ? " with your " : "",
+	      (weapon) ? objn(weapon).c_str() : "");
+    } else {
+      sprintf(buf, "You %s%s%s $N's %s%s%s %s%s%s.", colorBuf, attack_hit_text[w_type].singular,
+	      norm(),
+	      colorBuf,
+	      v->describeBodySlot(part_hit).c_str(),
+	      norm(),
+	      describe_dam(dam, REALNUM(v, part_hit), w_type),
+	      (weapon) ? " with your " : "",
+	      (weapon) ? objn(weapon).c_str() : "");
+    }
 
     act(buf, FALSE, this, 0, v, TO_CHAR);
     if (snd != MIN_SOUND_NUM)
@@ -2946,12 +3026,21 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
     else
       strcpy(colorBuf, v->red());
 
-    sprintf(buf, "$n %s%s%s your %s%s%s %s%s%s.",
-          colorBuf, attack_hit_text[w_type].plural, v->norm(),
-          colorBuf, v->describeBodySlot(part_hit).c_str(), v->norm(),
-          describe_dam(dam, REALNUM(v, part_hit), w_type),
-                 ((weapon) ? " with $s " : ""),
-          ((weapon) ? fname(weapon->name).c_str() : ""));
+    if (Twink == 1) {
+      sprintf(buf, "$n %s%s%s your %s%s%s %s%s%s.",
+	      colorBuf, attack_hit_text_twink[w_type].plural, v->norm(),
+	      colorBuf, v->describeBodySlot(part_hit).c_str(), v->norm(),
+	      describe_dam(dam, REALNUM(v, part_hit), w_type),
+	      ((weapon) ? " with $s " : ""),
+	      ((weapon) ? fname(weapon->name).c_str() : ""));
+    } else {
+      sprintf(buf, "$n %s%s%s your %s%s%s %s%s%s.",
+	      colorBuf, attack_hit_text[w_type].plural, v->norm(),
+	      colorBuf, v->describeBodySlot(part_hit).c_str(), v->norm(),
+	      describe_dam(dam, REALNUM(v, part_hit), w_type),
+	      ((weapon) ? " with $s " : ""),
+	      ((weapon) ? fname(weapon->name).c_str() : ""));
+    }
     act(buf, FALSE, this, 0, v, TO_VICT);
     if (snd != MIN_SOUND_NUM)
       v->playsound(snd, SOUND_TYPE_COMBAT, 100, 20, 1);

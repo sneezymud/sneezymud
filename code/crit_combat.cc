@@ -1537,40 +1537,81 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
         if (num <= 33) {
           // double damage 
           *dam <<= 1;
-          sprintf(buf, 
-    "You strike $N exceptionally well, %s $S %s with your %s!",
-                  attack_hit_text[new_wtype].hitting,
-                  v->describeBodySlot(*part_hit).c_str(),
-              limbStr.c_str());
+	  if (Twink == 1) {
+	    sprintf(buf, "You strike $N exceptionally well, %s $S %s with your %s!",
+		    attack_hit_text_twink[new_wtype].hitting,
+		    v->describeBodySlot(*part_hit).c_str(),
+		    limbStr.c_str());
+	  } else {
+	    sprintf(buf, "You strike $N exceptionally well, %s $S %s with your %s!",
+		    attack_hit_text[new_wtype].hitting,
+		    v->describeBodySlot(*part_hit).c_str(),
+		    limbStr.c_str());
+	  }
           act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-          sprintf(buf, "$n strikes you exceptionally well, %s your %s with $s %s.",
-                  attack_hit_text[new_wtype].hitting,
-                  v->describeBodySlot(*part_hit).c_str(),
-              limbStr.c_str());
+	  if (Twink == 1) {
+	    sprintf(buf, "$n strikes you exceptionally well, %s your %s with $s %s.",
+		    attack_hit_text_twink[new_wtype].hitting,
+		    v->describeBodySlot(*part_hit).c_str(),
+		    limbStr.c_str());
+	  } else {
+	    sprintf(buf, "$n strikes you exceptionally well, %s your %s with $s %s.",
+		    attack_hit_text[new_wtype].hitting,
+		    v->describeBodySlot(*part_hit).c_str(),
+		    limbStr.c_str());
+	  }
           act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-          sprintf(buf, "$n strikes $N exceptionally well, %s $S %s with $s %s.",
-                  attack_hit_text[new_wtype].hitting,
-                  v->describeBodySlot(*part_hit).c_str(), 
-              limbStr.c_str());
+	  if (Twink == 1) {
+	    sprintf(buf, "$n strikes $N exceptionally well, %s $S %s with $s %s.",
+		    attack_hit_text_twink[new_wtype].hitting,
+		    v->describeBodySlot(*part_hit).c_str(), 
+		    limbStr.c_str());
+	  } else {
+	    sprintf(buf, "$n strikes $N exceptionally well, %s $S %s with $s %s.",
+		    attack_hit_text[new_wtype].hitting,
+		    v->describeBodySlot(*part_hit).c_str(), 
+		    limbStr.c_str());
+	  }
           act(buf, TRUE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
           return (ONEHIT_MESS_CRIT_S);
         } else if (num <= 66) {
           // triple damage 
           *dam *= 3;
-          sprintf(buf, "You critically strike $N, %s $S %s with your %s!",
-                  attack_hit_text[new_wtype].hitting,
-                  v->describeBodySlot(*part_hit).c_str(),
-              limbStr.c_str());
+	  if (Twink == 1) {
+	    sprintf(buf, "You critically strike $N, %s $S %s with your %s!",
+		    attack_hit_text_twink[new_wtype].hitting,
+		    v->describeBodySlot(*part_hit).c_str(),
+		    limbStr.c_str());
+	  } else {
+	    sprintf(buf, "You critically strike $N, %s $S %s with your %s!",
+		    attack_hit_text[new_wtype].hitting,
+		    v->describeBodySlot(*part_hit).c_str(),
+		    limbStr.c_str());
+	  }
           act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-          sprintf(buf, "$n critically strikes you, %s your %s with $s %s.",
-                  attack_hit_text[new_wtype].hitting,
-                  v->describeBodySlot(*part_hit).c_str(),
-              limbStr.c_str());
+	  if (Twink == 1) {
+	    sprintf(buf, "$n critically strikes you, %s your %s with $s %s.",
+		    attack_hit_text_twink[new_wtype].hitting,
+		    v->describeBodySlot(*part_hit).c_str(),
+		    limbStr.c_str());
+	  } else {
+	    sprintf(buf, "$n critically strikes you, %s your %s with $s %s.",
+		    attack_hit_text[new_wtype].hitting,
+		    v->describeBodySlot(*part_hit).c_str(),
+		    limbStr.c_str());
+	  }
           act(buf, TRUE, this, 0, v, TO_VICT, ANSI_RED);
-          sprintf(buf, "$n critically strikes $N, %s $S %s with $s %s.",
-                  attack_hit_text[new_wtype].hitting,
-                  v->describeBodySlot(*part_hit).c_str(), 
-              limbStr.c_str());
+	  if (Twink == 1) {
+	    sprintf(buf, "$n critically strikes $N, %s $S %s with $s %s.",
+		    attack_hit_text_twink[new_wtype].hitting,
+		    v->describeBodySlot(*part_hit).c_str(), 
+		    limbStr.c_str());
+	  } else {
+	    sprintf(buf, "$n critically strikes $N, %s $S %s with $s %s.",
+		    attack_hit_text[new_wtype].hitting,
+		    v->describeBodySlot(*part_hit).c_str(), 
+		    limbStr.c_str());
+	  }
           act(buf, TRUE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
           return (ONEHIT_MESS_CRIT_S);
         } else {

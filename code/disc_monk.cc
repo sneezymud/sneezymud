@@ -353,20 +353,35 @@ int TBeing::monkDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlotT
 	break;
     }
 
-
-    sprintf(buf, "You %s $n's %s at your %s.", type,
-	    attack_hit_text[w_type].singular,
-	    v->describeBodySlot(part_hit).c_str());
+    if (Twink == 1) {
+      sprintf(buf, "You %s $n's %s at your %s.", type,
+	      attack_hit_text_twink[w_type].singular,
+	      v->describeBodySlot(part_hit).c_str());
+    } else {
+      sprintf(buf, "You %s $n's %s at your %s.", type,
+	      attack_hit_text[w_type].singular,
+	      v->describeBodySlot(part_hit).c_str());
+    }
     act(buf, FALSE, this, 0, v, TO_VICT, ANSI_CYAN);
-    
-    sprintf(buf, "$N %ss your %s at $S %s.", type,
-	    attack_hit_text[w_type].singular,
-	    v->describeBodySlot(part_hit).c_str());
+    if (Twink == 1) {    
+      sprintf(buf, "$N %ss your %s at $S %s.", type,
+	      attack_hit_text_twink[w_type].singular,
+	      v->describeBodySlot(part_hit).c_str());
+    } else {
+      sprintf(buf, "$N %ss your %s at $S %s.", type,
+	      attack_hit_text[w_type].singular,
+	      v->describeBodySlot(part_hit).c_str());
+    }
     act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_CYAN);
-    
-    sprintf(buf, "$N %ss $n's %s at $S %s.", type,
-	    attack_hit_text[w_type].singular,
-	    v->describeBodySlot(part_hit).c_str());
+    if (Twink == 1) {    
+      sprintf(buf, "$N %ss $n's %s at $S %s.", type,
+	      attack_hit_text_twink[w_type].singular,
+	      v->describeBodySlot(part_hit).c_str());
+    } else {
+      sprintf(buf, "$N %ss $n's %s at $S %s.", type,
+	      attack_hit_text[w_type].singular,
+	      v->describeBodySlot(part_hit).c_str());
+    }
     act(buf, TRUE, this, 0, v, TO_NOTVICT);
 
     return TRUE;

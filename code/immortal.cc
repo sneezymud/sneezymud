@@ -64,6 +64,7 @@ bool WizGoto = FALSE;
 bool AllowPcMobs = TRUE;    // PCs with same name as mob allowed?
 bool TurboMode = FALSE;      // bumps pulse-actions at 2x speed
 bool Lapspeak = FALSE; // Heh. 
+bool Twink = FALSE; // combat twink fun stuff
 bool timeQueries = false; // store db query speeds THIS IS SLOW
 
 int QuestVar1 = 0; // varibles for changing constants in the code in-game
@@ -306,6 +307,10 @@ void TPerson::doToggle(const char *arg)
     Lapspeak = ! Lapspeak;
     sendTo("Lapspeak is now %s.\n\r", Lapspeak ? "on" : "off");
     vlogf(LOG_MISC,"%s has turned Lapspeak %s.",getName(),Lapspeak ? "on" : "off");
+  } else if (is_abbrev(arg, "twink")) {
+    Twink = ! Twink;
+    sendTo("Twink combat mode is now %s.\n\r", Twink ? "on" : "off");
+    vlogf(LOG_MISC,"%s has turned Twink combat mode %s.",getName(),Twink ? "on" : "off");
   } else if (is_abbrev(arg, "invis")) {
     if (!isImmortal() || !hasWizPower(POWER_TOGGLE_INVISIBILITY)) {
       sendTo("Invisibility use has been restricted due to overuse.\n\r");
