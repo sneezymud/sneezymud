@@ -1414,7 +1414,7 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
       damtype = TYPE_SHOOT;
     else
       damtype = DAMAGE_ARROWS;
-  }else
+  } else
     damtype = getWtype();
 
   for (c = rp->getStuff(); c; c = c_next) {
@@ -1430,6 +1430,10 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
       range = cdist + 1;
     else
       range = cdist;
+
+    // if we didn't get a target specified, just hit the first thing we see
+    if(!*targ)
+      *targ=tb;
 
     // anyone we want to hit here?  (including innocents)
     // the ch->isImmortal() checks prevent gods from hitting innocents

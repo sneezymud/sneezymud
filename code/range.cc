@@ -705,6 +705,7 @@ int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int m
     if (hit_obstacle_in_room(rp, t, ch))
       return FALSE;
 
+
     // max_dist here is used to modify damage based on how far away they are.
     // use the absolute max it can go (max_dist) for this calculation
     rc = catch_or_smack(rp, targ, t, ch, iDist, max_dist);
@@ -1442,6 +1443,8 @@ int TBeing::doShoot(const char *arg)
   rc = sscanf(arg, "%s %s %d", arg2, arg1, &iDist);
   if (rc < 3) 
     iDist = 99;
+  if (rc < 2)
+    *arg1='\0';
   if (rc < 1 || rc > 3) {
     sendTo("Syntax : shoot <direction> <creature> <max-distance>\n\r");
     return FALSE;
