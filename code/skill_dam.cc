@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: skill_dam.cc,v $
+// Revision 1.5  1999/10/16 02:50:23  batopr
+// Added bonus for spells needing special weather-conditions
+//
 // Revision 1.4  1999/10/09 05:39:50  batopr
 // typo
 //
@@ -255,6 +258,13 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
   // multiplier for spells that must be used outdoors
   const double OUTDOOR_ONLY = 1.1;
 
+  // multiplier for spells that need weather condition
+  // since these mostly have the outdoor-only too, don't make these obscene
+  const double NEED_RAIN_SNOW_LIGHTNING = 1.05;
+  const double NEED_RAIN = 1.10;
+  const double NEED_NORAIN = 1.05;
+  const double NEED_RAIN_LIGHTNING = 1.075;
+
   switch (skill) {
     case SKILL_KICK:
     case SKILL_HEADBUTT:
@@ -334,7 +344,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       dam = (int) (dam * percModifier());
       break;
     case SPELL_CALL_LIGHTNING:
-      dam = genericDam(victim, skill, DISC_CLERIC, level, adv_learn, 1.667 * HAS_SAVING_THROW * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, skill, DISC_CLERIC, level, adv_learn, 1.667 * HAS_SAVING_THROW * OUTDOOR_ONLY * NEED_RAIN_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
       // additionally, do faction percent modification for clerics
       dam = (int) (dam * percModifier());
       break;
@@ -437,7 +447,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       break;
     case SPELL_STORMY_SKIES:
       // 4/3 factor added here due to save cutting into avg damage
-      dam =  genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529 * HAS_SAVING_THROW * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
+      dam =  genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529 * HAS_SAVING_THROW * OUTDOOR_ONLY * RAIN_SNOW_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SKILL_KICK_MONK:
     case SKILL_CHOP:
