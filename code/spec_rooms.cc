@@ -2592,6 +2592,7 @@ void assign_rooms(void)
     {23599, sleepTagControl},
     {24643, collapsingTunnel},
     {24674, collapsingTunnel},
+    {25487, oft_frequented_room},
     {27103, SecretDoors},
     {27104, SecretDoors},
     {27106, SecretDoors},
