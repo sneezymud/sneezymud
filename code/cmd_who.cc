@@ -237,7 +237,7 @@ void TBeing::doWho(const char *argument)
           sb += "[-] [d]linkdead [g]God [b]Builders [o]Mort [s]stats [f]action\n\r";
           sb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
           sb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
-	  sb += "[-] [x]Perma Death\n\r";
+	  sb += "[-] [x]Perma Death [c]ports\n\r";
 
           if (hasWizPower(POWER_WIZARD))
             sb += "[-] [a]ccount\n\r";
