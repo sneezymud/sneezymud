@@ -65,7 +65,7 @@ void TBeing::disturbMeditation(TBeing *vict) const
 }
 
 // Make drunk people garble their words!
-sstring TBeing::garble(const sstring &arg, int chance)
+sstring TBeing::garble(const sstring &arg, int chance) const
 {
   sstring obuf, buf, latin;
 
@@ -82,9 +82,18 @@ sstring TBeing::garble(const sstring &arg, int chance)
   buf=obuf=arg;
 
   // first, lets turn things into pig latin, word by word
+  unsigned int i=0;
   for(iter=args.begin();iter!=args.end();++iter){
-    ssprintf(latin, "%s%cay", (*iter).substr(1,(*iter).size()-1).c_str(),
-	     (*iter)[0]);
+    // skip color codes
+    i=0;
+    while(((*iter)[i]=='<' && (*iter).size()>i)){
+      i+=3;
+    }
+
+    ssprintf(latin, "%s%s%cay", 
+	     (*iter).substr(0, i).c_str(),
+	     (*iter).substr(i+1,(*iter).size()-1).c_str(),
+	     (*iter)[i]);
     
     // replace the original word in obuf with whitespace
     // replace the original word in buf with the new word
@@ -99,6 +108,11 @@ sstring TBeing::garble(const sstring &arg, int chance)
   
   // change some letters randomly
   for(unsigned int i=0;i<buf.size()-1;++i){
+    if(buf[i]=='<'){
+      i+=2;
+      continue;
+    }
+
     if (::number(0, chance + 3) >= 10) {
       switch (buf[i]) {
         case 'a':
