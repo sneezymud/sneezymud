@@ -2944,6 +2944,9 @@ void TPerson::doLoad(const char *argument)
 	case LEARNING_POTION:
 	  sendTo("Learning potions are unloadable.\n\r");
 	  return;
+	case MYSTERY_POTION:
+	  sendTo("Mystery potions are unloadable.\n\r");
+	  return;
         case CRAPS_DICE:
           sendTo("These dice are unloadable by anyone but Brutius. More than one pair in the game could wreck havok!\n\r");
           return;

@@ -2252,6 +2252,56 @@ int learningPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
   return DELETE_THIS;
 }
 
+int mysteryPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
+{
+  int rc;
+  int random = ::number(0,12);
+
+  if (genericPotion(ch, me, cmd, arg, rc))
+    return rc;
+
+  act("$n imbibes $p.", TRUE, ch, me, 0, TO_ROOM);
+  act("You imbibe $p.", TRUE, ch, me, 0, TO_CHAR);
+
+  switch (random) {
+    case 1:
+    case 2:
+    case 10:
+      ch->age_mod += 1;
+      ch->sendTo("You feel a tiny bit older.\n\r");
+      break;
+    case 3:
+      for (classIndT Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
+	if (ch->hasClass(1<<Class)) {
+	  ch->addPracs(1, Class);
+	  break;
+	}
+      }
+      ch->sendTo("You feel ready to learn more.\n\r");
+      break;
+    case 4:
+    case 5:
+    case 11:
+      ch->age_mod -= 5;
+      ch->sendTo("You feel a bit younger.\n\r");
+      break;
+    case 6:
+      ch->age_mod += 3;
+      ch->sendTo("You feel a bit older.\n\r");
+      break;
+    case 7:
+    case 8:
+    case 9:
+      ch->age_mod -= 3;
+      ch->sendTo("You feel a tiny bit younger.\n\r");
+      break;
+    default:
+      ch->sendTo("Nothing seems to have happened.\n\r");
+      break;
+  }
+  return DELETE_THIS;
+}
+
 int youthPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 {
   int rc;
@@ -7260,6 +7310,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Energy Shield: generator", energyShieldGenerator}, //120
   {FALSE, "Energy Shield: shield", energyShield},
   {FALSE, "potion of learning", learningPotion},
+  {FALSE, "mystery potion", mysteryPotion},
   {FALSE, "last proc", bogusObjProc}
 };
 

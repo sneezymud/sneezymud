@@ -1033,6 +1033,8 @@ void TMonster::buffMobLoader()
     case 15:
     case 16:
     case 17:
+      vnum = MYSTERY_POTION;
+      break;
     case 18:
       vnum = LEARNING_POTION;
       break;

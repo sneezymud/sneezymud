@@ -471,6 +471,7 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
 
 	if (obj->objVnum() == YOUTH_POTION ||
             obj->objVnum() == STATS_POTION ||
+            obj->objVnum() == MYSTERY_POTION ||
 	    obj->objVnum() == LEARNING_POTION ||
             obj->parent    == caster       ||
             (tMon && mob_index[tMon->getMobIndex()].spec == SPEC_SHOPKEEPER))
