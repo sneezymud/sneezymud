@@ -73,7 +73,7 @@ void TShopOwned::setReserve(sstring arg)
 {
   TDatabase db(DB_SNEEZY);
 
-  if(!hasAccess(SHOPACCESS_DIVIDEND)){
+  if(!hasAccess(SHOPACCESS_OWNER)){
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
     return;
   }
