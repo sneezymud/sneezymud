@@ -1,0 +1,58 @@
+Do 'svn update' periodically to keep your dev code in sync with the
+production code.  This will merge in other coders changes with your
+dev code.  You should try and do this pretty frequently.
+
+You can do 'svn status' to quickly see the status of your code changes
+without merging in new code yet.
+
+---
+
+When you are ready to move your changes into production, do 'svn
+commit'.  Also leave a comment about your code changes.  Try to be
+somewhat detailed.
+"Fixed bug." => bad
+"Fixed bug in doSomething()" => better
+"Fixed buffer overflow on name variable in doSomething()" => good
+
+---
+
+If you fucked up a file and want to discard your version, simply
+remove it and do 'svn update' to checkout the production version.
+
+---
+
+To compile your own dev code:
+rm file.mak ; make >& file.mak &
+
+To boot your dev mud:
+./sneezy.2 6969 >& file &
+
+I'll probably update bmake and alboot to work with the dev
+environments, right now you have to do it manually.  You may have to
+use another port if 6969 is being used.
+
+---
+
+To do a code move:
+cd /mud/build
+svn update
+./bmake.csh
+./mvcode.csh
+
+---
+
+Do not ever edit the code in /mud/build.  It is only a snapshot of the
+production code, for compiling.
+
+---
+
+The lib directory is linked to /mud/build/lib.  You don't have your own
+copy of lib, so be aware that cvs doesn't have any affect on those
+files EXCEPT for /mud/build/lib/zonefiles.
+
+---
+
+The zonefiles in /mud/build/lib/zonefiles are in SVN.  If you make
+changes to those files you must do a cvs commit from that directory to
+check in your changes.  The mvlow script automatically handles the
+transfer to prod, after your changes are checked into SVN.
