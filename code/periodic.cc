@@ -1222,6 +1222,7 @@ int TBeing::updateHalfTickStuff()
 
 void TPCorpse::decayMe()
 {
+#if 0
   int found = FALSE;
   TThing *tmp = NULL;
 
@@ -1241,6 +1242,8 @@ void TPCorpse::decayMe()
     }
     return;
   } 
+#endif
+
   if (inRoom() == ROOM_STORAGE) {
     return;
   }
