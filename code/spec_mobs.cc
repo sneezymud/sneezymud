@@ -6834,6 +6834,12 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       myself->doTell(buf);
       return TRUE;
     }
+
+    if(atof(row[1]) < 1){
+      sprintf(buf, "%s, Because of government regulations, I can't sell stock that is worth less than 1 talen per share.", fname(ch->name).c_str());
+      myself->doTell(buf);
+      return TRUE;
+    }
     
     ch->addToMoney(-((float)num * atof(row[1])), GOLD_GAMBLE);
     ch->addToMoney(-((float)num * atof(row[1]) * 0.10), GOLD_GAMBLE);
