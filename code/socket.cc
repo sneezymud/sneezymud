@@ -41,6 +41,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "obj_vehicle.h"
 #include "pathfinder.h"
 #include "stockmarket.h"
+#include "timing.h"
 
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown
@@ -468,13 +469,13 @@ struct timeval TMainSocket::handleTimeAndSockets()
   ////////////////////////////////////////////
   ////////////////////////////////////////////
 
-  return timespent;
+  return timeout;
 }
 
-void TMainSocket::characterPulse(TPulseList &pl)
+int TMainSocket::characterPulse(TPulseList &pl)
 {
   TBeing *temp;
-  int rc, count;
+  int rc, count, retcount;
 
 
   // note on this loop
@@ -489,7 +490,7 @@ void TMainSocket::characterPulse(TPulseList &pl)
   if(!tmp_ch)
     tmp_ch=character_list;
 
-  count=(int)((float)mobCount/11.5);
+  retcount=count=(int)((float)mobCount/11.5);
 
 
   for (; tmp_ch; tmp_ch = temp) {
@@ -795,15 +796,15 @@ void TMainSocket::characterPulse(TPulseList &pl)
     temp = tmp_ch->next;
   } // character_list
 
-
+  return retcount;
 }
 
 
-void TMainSocket::objectPulse(TPulseList &pl)
+int TMainSocket::objectPulse(TPulseList &pl)
 {
   TObj *next_thing;
   TVehicle *vehicle;
-  int rc, count;
+  int rc, count, retcount;
 
   // note on this loop
   // it is possible that next_thing gets deleted in one of the sub funcs
@@ -821,7 +822,7 @@ void TMainSocket::objectPulse(TPulseList &pl)
 
   // we want to go through 1/12th of the object list every pulse
   // obviously the object count will change, so this is approximate.
-  count=(int)((float)objCount/11.5);
+  retcount=count=(int)((float)objCount/11.5);
 
   for (; obj; obj = next_thing) {
     next_thing = obj->next;
@@ -929,6 +930,9 @@ void TMainSocket::objectPulse(TPulseList &pl)
     }
     next_thing = obj->next;
   } // object list
+
+
+  return retcount;
 }
 
 void pingData()
@@ -967,6 +971,7 @@ int TMainSocket::gameLoop()
   int count;
   struct timeval timespent;
   bool doneStockHistory=false;
+  TTiming t;
 
   avail_descs = 150;		
 
@@ -982,32 +987,11 @@ int TMainSocket::gameLoop()
     timespent=handleTimeAndSockets();
     
     if(TestCode1){
-      // this doesn't really work because of the staggered pulse for
-      // objectPulse and characterPulse but it's still helpful to see
-      // the timings etc
-      sstring str = "";
-      if(!pl.combat)
-	str += "combat        ";
-      if(!pl.update_stuff)
-	str += "update_stuff  ";
-      if(!pl.pulse_tick)
-	str += "pulse_tick    ";
-      if(!pl.teleport)
-	str += "teleport      ";
-      if(!pl.special_procs)
-	str += "special_procs ";
-      if(!pl.pulse_mudhour)
-	str += "pulse_mudhour ";
-      if(!pl.mobstuff)
-	str += "mobstuff      ";
-      if(!pl.drowning)
-	str += "drowning      ";
-      if(!pl.wayslowpulse)
-	str += "wayslowpulse  ";
-      
-      vlogf(LOG_MISC, fmt("%i %i) %s = %i") % 
-	    pulse % (pulse%12) % str %
-	    ((timespent.tv_sec*1000000)+timespent.tv_usec));
+      count=((timespent.tv_sec*1000000)+timespent.tv_usec);
+
+      vlogf(LOG_MISC, fmt("%i %i) gameLoop1: %i (sleep = %i)") %
+	    pulse % (pulse%12) % 
+	    (int)((t.getElapsedReset()*1000000)-count) % count);
     }
     
     // setup the pulse boolean flags
@@ -1034,9 +1018,10 @@ int TMainSocket::gameLoop()
       count=updateWholist();
       updateUsagelogs(count);
 
-      updateStocks();
+      //      updateStocks();
     }
 
+#if 0
     if(time_info.seconds==0 &&
        time_info.hours==0 &&
        time_info.minutes==0 &&
@@ -1047,6 +1032,7 @@ int TMainSocket::gameLoop()
     } else {
       doneStockHistory=false;
     }
+#endif
 
     if (!pl.combat){
       perform_violence(pulse);
@@ -1082,6 +1068,10 @@ int TMainSocket::gameLoop()
     call_room_specials();
 
 
+    if(TestCode1)
+      vlogf(LOG_MISC, fmt("%i %i) gameLoop2: %i") % 
+	    pulse % (pulse%12) % (int)(t.getElapsedReset()*1000000));
+
     // since we're operating on non-multiples of 12 pulses, we need to
     // temporarily put the pulse at the next multiple of 12
     // this is pretty klugey
@@ -1093,14 +1083,25 @@ int TMainSocket::gameLoop()
     pl.init(pulse);
 
     // handle pulse stuff for objects
-    objectPulse(pl);
+    count=objectPulse(pl);
+
+    if(TestCode1)
+      vlogf(LOG_MISC, fmt("%i %i) objectPulse: %i, %i objs") % 
+	    oldpulse % (oldpulse%12) % 
+	    (int)(t.getElapsedReset()*1000000) % count);
     
     // handle pulse stuff for mobs and players
-    characterPulse(pl);
+    count=characterPulse(pl);
+
+    if(TestCode1)
+      vlogf(LOG_MISC, fmt("%i %i) characterPulse: %i, %i chars") %
+	    oldpulse % (oldpulse%12) % 
+	    (int)(t.getElapsedReset()*1000000) % count);
 
     // reset the old values from the artifical pulse
     pulse=oldpulse;
     pl.init(pulse);
+
 
 
     // get some lag info

@@ -66,8 +66,8 @@ class TMainSocket {
   void closeAllSockets();
   void initSocket(int);
   int gameLoop();
-  void objectPulse(TPulseList &);
-  void characterPulse(TPulseList &);
+  int objectPulse(TPulseList &);
+  int characterPulse(TPulseList &);
 
   TMainSocket();
   ~TMainSocket();
