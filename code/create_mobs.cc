@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: create_mobs.cc,v $
+// Revision 1.2  1999/09/29 07:46:14  lapsos
+// Added code for the advanced user menus
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -77,42 +80,118 @@ static bool isBadForAffectFlags(int update)
   }
 }
 
-static void send_mob_menu(const TBeing *ch)
+static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
 {
-  const char *mob_edit_menu = " %s1)%s Name                         %s2)%s Short Description\n\r"
-" %s3)%s Long Description             %s4)%s Description\n\r"
-" %s5)%s Action flags                 %s6)%s Affect flags\n\r"
-" %s7)%s Faction                      %s8)%s Number of attacks\n\r"
-" %s9)%s Level                       %s10)%s Hitroll\n\r"
-"%s11)%s Armor Level                 %s12)%s HP Level\n\r"
-"%s13)%s Damage Level                %s14)%s Money constant\n\r"
-"%s15)%s unused                      %s16)%s Race\n\r"
-"%s17)%s Sex                         %s18)%s Max Exist\n\r"
-"%s19)%s Default Position            %s20)%s unused\n\r"
-"%s21)%s Immunities                  %s22)%s Skin type\n\r"
-"%s23)%s Class                       %s24)%s Characteristics\n\r"
-"%s25)%s Height                      %s26)%s Weight\n\r"
-"%s27)%s Special Procedure           %s28)%s Vision Bonus\n\r"
-"%s29)%s Can be seen                 %s30)%s Mobile sounds\n\r"
-"\n\r";
+  const char *mob_edit_menu_basic =
+ " %s1)%s Name                         %s2)%s Short Description\n\r"
+ " %s3)%s Long Description             %s4)%s Description\n\r"
+ " %s5)%s Action flags                 %s6)%s Affect flags\n\r"
+ " %s7)%s Faction                      %s8)%s Number of attacks\n\r"
+ " %s9)%s Level                       %s10)%s Hitroll\n\r"
+ "%s11)%s Armor Level                 %s12)%s HP Level\n\r"
+ "%s13)%s Damage Level                %s14)%s Money constant\n\r"
+ "%s15)%s unused                      %s16)%s Race\n\r"
+ "%s17)%s Sex                         %s18)%s Max Exist\n\r"
+ "%s19)%s Default Position            %s20)%s Mobile Strings\n\r"
+ "%s21)%s Immunities                  %s22)%s Skin type\n\r"
+ "%s23)%s Class                       %s24)%s Characteristics\n\r"
+ "%s25)%s Height                      %s26)%s Weight\n\r"
+ "%s27)%s Special Procedure           %s28)%s Vision Bonus\n\r"
+ "%s29)%s Can be seen                 %s30)%s Mobile sounds\n\r"
+ "\n\r";
+  const char *mob_edit_menu_advanced =
+ " %s1)%s %-20s  %s2)%s %s\n\r"
+ " %s3)%s %-20s  %s4)%s Description\n\r"
+ " %s5)%s Action Flags         %s6)%s Affect Flags\n\r"
+ " %s7)%s %-20s  %s8)%s HitRoll: %s\n\r"
+ " %s9)%s Lvl: %-15s %s10)%s HP-Lvl: %s\n\r"
+ "%s11)%s AC-Lvl: %-12s %s13)%s Money: %s\n\r"
+ "%s13)%s Dam-Lvl: %-11s %s14)%s %s\n\r"
+ "%s15)%s Unused               %s16)%s Max: %s\n\r"
+ "%s17)%s %-20s %s18)%s %s\n\r"
+ "%s19)%s %-20s %s20)%s Mobile Strings\n\r"
+ "%s21)%s Immunities           %s22)%s %s\n\r"
+ "%s23)%s %-20s %s24)%s Characteristics\n\r"
+ "%s25)%s Height: %-12s %s26)%s Weight: %s\n\r"
+ "%s27)%s %-20s %s28)%s VB: %s\n\r"
+ "%s29)%s CBS: %-15s %s30)%s Mobile Sounds\n\r"
+  "\n\r";
 
-  ch->sendTo(mob_edit_menu,
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
-        ch->cyan(), ch->norm());
+  if (IS_SET(ch->desc->autobits, AUTO_TIPS)) {
+    char tStringOut[21][256];
+
+    strcpy(tStringOut[0], (tMon->getName()        ? tMon->getName()        : "Unknown"));
+    strcpy(tStringOut[1], (tMon->shortDescr       ? tMon->shortDescr       : "Unknown"));
+    strcpy(tStringOut[2], (tMon->player.longDescr ? tMon->player.longDescr : "Unknown"));
+    sprintf(tStringOut[3], "%s %3.2f", FactionInfo[tMon->getFaction()].faction_name, tMon->getPerc());
+    sprintf(tStringOut[4], "%.1f", tMon->getMult());
+    sprintf(tStringOut[5], "%d", tMon->GetMaxLevel());
+    sprintf(tStringOut[6], "%d", tMon->getHitroll());
+    sprintf(tStringOut[7], "%.1f", tMon->getACLevel());
+    sprintf(tStringOut[8], "%.1f", tMon->getHPLevel());
+    sprintf(tStringOut[9], "%.1f+%d", tMon->getDamLevel(), tMon->getDamPrecision());
+    sprintf(tStringOut[10], "%d", tMon->moneyConst);
+    strcpy(tStringOut[11], tMon->getMyRace()->getSingularName().c_str());
+    sprintf(tStringOut[12], "%s", (!tMon->getSex() ? "Other" : (tMon->getSex() == 1 ? "Male" : "Female")));
+    sprintf(tStringOut[13], "%d", tMon->max_exist);
+    strcpy(tStringOut[14], position_types[tMon->default_pos]);
+    strcpy(tStringOut[15], material_nums[tMon->getMaterial()].mat_name);
+    strcpy(tStringOut[16], ((tMon->getClass() < MAX_CLASSES) ? classNames[tMon->getClass()].capName: "Confused..."));
+    int tHeight = (int)(tMon->getHeight() / 12);
+    sprintf(tStringOut[17], "%d\'%d\" (%d)", tHeight, (tMon->getHeight() - (tHeight * 12)), tMon->getHeight());
+    sprintf(tStringOut[18], "%d (lbs)", tMon->getWeight());
+    strcpy(tStringOut[19], ((tMon->spec < NUM_MOB_SPECIALS) ? (tMon->spec <= 0 ? "none" : mob_specials[GET_MOB_SPE_INDEX(tMon->spec)].name) : "Confused..."));
+    sprintf(tStringOut[19], "%d", tMon->visionBonus);
+    sprintf(tStringOut[20], "%d", tMon->canBeSeen);
+
+    ch->sendTo(mob_edit_menu_advanced,
+          ch->cyan()  , ch->norm(), tStringOut[0],
+          ch->purple(), ch->norm(), tStringOut[1],
+          ch->cyan()  , ch->norm(), tStringOut[2],
+          ch->purple(), ch->norm(),
+          ch->cyan()  , ch->norm(),
+          ch->purple(), ch->norm(),
+          ch->cyan()  , ch->norm(), tStringOut[3],
+          ch->purple(), ch->norm(), tStringOut[4],
+          ch->cyan()  , ch->norm(), tStringOut[5],
+          ch->purple(), ch->norm(), tStringOut[6],
+          ch->cyan()  , ch->norm(), tStringOut[7],
+          ch->purple(), ch->norm(), tStringOut[8],
+          ch->cyan()  , ch->norm(), tStringOut[9],
+          ch->purple(), ch->norm(), tStringOut[10],
+          ch->cyan()  , ch->norm(),
+          ch->purple(), ch->norm(), tStringOut[11],
+          ch->cyan()  , ch->norm(), tStringOut[12],
+          ch->purple(), ch->norm(), tStringOut[13],
+          ch->cyan()  , ch->norm(), tStringOut[14],
+          ch->purple(), ch->norm(),
+          ch->cyan()  , ch->norm(),
+          ch->purple(), ch->norm(), tStringOut[15],
+          ch->cyan()  , ch->norm(), tStringOut[16],
+          ch->purple(), ch->norm(),
+          ch->cyan()  , ch->norm(), tStringOut[17],
+          ch->purple(), ch->norm(), tStringOut[18],
+          ch->cyan()  , ch->norm(), tStringOut[19],
+          ch->purple(), ch->norm(), tStringOut[20],
+          ch->cyan()  , ch->norm(), tStringOut[21],
+          ch->purple(), ch->norm());
+  } else
+    ch->sendTo(mob_edit_menu_basic,
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+          ch->cyan(), ch->norm(), ch->purple(), ch->norm());
 }
 
 static void TBeingLoad(TBeing *ch, int vnum)
@@ -182,9 +261,13 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   int j, k;
 
   if (!mob->name || !mob->getDescr() || 
-      !mob->shortDescr || ! mob->player.longDescr) {
+      !mob->shortDescr || !mob->player.longDescr) {
     ch->sendTo("Your mob is missing one or more strings.\n\r");
-    ch->sendTo("Please update all names and descriptions before saving.\n\r");
+    ch->sendTo("Please update the follwing before saving:%s%s%s%s\n\r",
+               (mob->name             ? "" : " Name"),
+               (mob->getDescr()       ? "" : " Description"),
+               (mob->shortDescr       ? "" : " Short-Description"),
+               (mob->player.longDescr ? "" : " Long-Description"));
     return;
   }
 
@@ -192,7 +275,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   sprintf(buf, "immortals/%s/mobs", ch->getName());
   if (!(fp = fopen(buf, "r"))) {
     if (mkdir(buf, 0770)) {
-      ch->sendTo("Unable to create a mobs directory for you.  Bug Brutius.\n\r");
+      ch->sendTo("Unable to create a mobs directory for you.  Bug a coder.\n\r");
       return;
     } else
       ch->sendTo("Mobile directory created...\n\r");
@@ -271,6 +354,23 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   if (mob->sounds || mob->distantSnds)
     fprintf(fp, "%s~\n%s~\n", mob->sounds ? mob->sounds : "", mob->distantSnds ? mob->distantSnds : "");
 
+  extraDescription *tExDescr;
+
+  for (tExDescr = mob->ex_description; tExDescr; tExDescr = tExDescr->next) {
+    int tMarker = 0;
+
+    if (tExDescr->description) {
+      for (int tPos = 0; tPos <= strlen(tExDescr->description); tPos++)
+        if (tExDescr->description[tPos] != 13)
+          temp[tMarker++] = tExDescr->description[tPos];
+
+      temp[tMarker] = '\0';
+
+      fprintf(fp, "E\n%s~\n%s~\n", tExDescr->keyword, tExDescr->description);
+    }
+    // No else.  if we didn't have text then something went wrong.  We Do Not save this one.
+  }
+
   fclose(fp);
 }
 
@@ -318,7 +418,7 @@ static void update_mob_menu(TBeing *ch, TMonster *mob)
     (int) ((double) 0.5 + (double) mob->getRealLevel()));
   ch->sendTo(VT_CURSPOS, 5, 1);
   ch->sendTo("Editing Menu:\n\r");
-  send_mob_menu(ch);
+  send_mob_menu(ch, mob);
   ch->sendTo("--> ");
 }
 
@@ -2123,6 +2223,20 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
       distantSnds = NULL;
     }
 
+    extraDescription *tExDescr;
+    long tCurOffSet = ftell(fp);
+
+    // First condition should Always be true (!0).  We only do it so it's done every turn.
+    while (!fscanf(fp, "E\n") && !feof(fp) && tCurOffSet != ftell(fp)) {
+      tExDescr              = new extraDescription();
+      tExDescr->keyword     = fread_string(fp);
+      tExDescr->description = fread_string(fp);
+      tExDescr->next        = ex_description;
+      ex_description        = tExDescr;
+
+      tCurOffSet = ftell(fp);
+    }
+
     player.time.birth = time(0);
     player.time.played = 0;
     player.time.logon = time(0);
@@ -2613,23 +2727,130 @@ switch (field) {
   }
 }
 
+const char tMobStringShorts[][10] =
+  {"bamfin", "bamfout", "deathcry", "repop", "movein", "moveout"};
+
+static void change_mob_string_values(TBeing *ch, TMonster *tMob, const char *tString, editorEnterTypeT tEnterT)
+{
+  const char tMobStringValues[] =
+    "%s1%s) bamfin [diurnal/nocturnal enter world message\n\r%s<z>\n\r\n\r"
+    "%s2%s) bamfout [diurnal/nocturnal leave world message\n\r%s<z>\n\r\n\r"
+    "%s3%s) death cry [blood freezes message when mob dies]\n\r%s<z>\n\r\n\r"
+    "%s4%s) repop [when mob is added to the world initially]\n\r%s<z>\n\r\n\r"
+    "%s5%s) movein [message when mobile enters a room]\n\r%s<z>\n\r\n\r"
+    "%s6%s) moveout [message when mobile leaves a room]\n\r%s<z>\n\r\n\r";
+
+  int  tRow,
+       tUpdate;
+  char tBuffer[256];
+  bool tHas = (tMob->ex_description ? true : false);
+
+  if (tEnterT != ENTER_CHECK) {
+    if (!*tString || (*tString == '\n')) {
+      ch->specials.edit = MAIN_MENU;
+      update_mob_menu(ch, tMob);
+      return;
+    }
+
+    tUpdate = atoi(tString);
+    tUpdate--;
+
+    if (tUpdate < 0 || tUpdate > 5)
+      return;
+
+    ch->sendTo("Enter Message: %s\n\rEnter to complete entry\n\r` to delete entry\n\r--> ", tMobStringShorts[tUpdate]);
+    ch->specials.edit = editorChangeTypeT(CHANGE_MOB_STRINGS__BAMFIN + tUpdate);
+
+    return;
+  }
+
+  ch->sendTo(VT_HOMECLR);
+  ch->sendTo("Mobile affected by flags :\n\r\n\r");
+
+  ch->sendTo(COLOR_MOBS, tMobStringValues,
+             ch->cyan(), ch->norm(),
+             ((tHas && tMob->ex_description  && tMob->ex_description->findExtraDesc("bamfin")) ?
+              tMob->ex_description->findExtraDesc("bamfin")   : "Empty"),
+             ch->cyan(), ch->norm(),
+             ((tHas && tMob->ex_description  && tMob->ex_description->findExtraDesc("bamfout")) ?
+              tMob->ex_description->findExtraDesc("bamfout")  : "Empty"),
+             ch->cyan(), ch->norm(),
+             ((tHas && tMob->ex_description  && tMob->ex_description->findExtraDesc("deathcry")) ?
+              tMob->ex_description->findExtraDesc("deathcry") : "Empty"),
+             ch->cyan(), ch->norm(),
+             ((tHas && tMob->ex_description  && tMob->ex_description->findExtraDesc("repop")) ?
+              tMob->ex_description->findExtraDesc("repop")    : "Empty"),
+             ch->cyan(), ch->norm(),
+             ((tHas && tMob->ex_description  && tMob->ex_description->findExtraDesc("movein")) ?
+              tMob->ex_description->findExtraDesc("movein")   : "Empty"),
+             ch->cyan(), ch->norm(),
+             ((tHas && tMob->ex_description  && tMob->ex_description->findExtraDesc("moveout")) ?
+              tMob->ex_description->findExtraDesc("moveout")  : "Empty"));
+
+  ch->sendTo(VT_CURSPOS, 21, 1);
+  ch->sendTo("Select message type, <ENTER> to return to the main menu.\n\r--> ");
+}
+
+static void change_mob_string_enter(TBeing *ch, TMonster *tMob, const char *tString, int tType)
+{
+  if (tType < 0 || tType > 5 || !*tString || *tString == '\n')
+    return;
+
+  extraDescription *tExDesc,
+                   *tExLast = NULL;
+
+  for (tExDesc = tMob->ex_description; ; tExDesc = tExDesc->next) {
+    if (!tExDesc && *tString != '`') {
+      tExDesc = new extraDescription();
+      tExDesc->next = tMob->ex_description;
+      tMob->ex_description = tExDesc;
+      tExDesc->keyword = mud_str_dup(tMobStringShorts[tType]);
+      tExDesc->description = mud_str_dup(tString);
+      break;
+    } else if (tExDesc && !strcmp(tExDesc->keyword, tMobStringShorts[tType]))
+      if (*tString == '`') {
+        if (tExLast)
+          tExLast->next = tExDesc->next;
+        else
+          tMob->ex_description = tExDesc->next;
+
+        delete tExDesc;
+        tExDesc = NULL;
+        break;
+      } else {
+        delete [] tExDesc->description;
+        tExDesc->description = mud_str_dup(tString);
+        break;
+      }
+
+    tExLast = tExDesc;
+  }
+
+  ch->specials.edit = CHANGE_MOB_STRINGS;
+  change_mob_string_values(ch, tMob, "", ENTER_CHECK);
+}
+
 void mob_edit(TBeing *ch, const char *arg)
 {
   if (ch->specials.edit == MAIN_MENU) {
     if (!*arg || *arg == '\n') {
       ch->desc->connected = CON_PLYNG;
       act("$n has returned from mobile editing.", TRUE, ch, 0, 0, TO_ROOM);
+
       if (ch->desc->mob) {
         ch->desc->mob->next = character_list;
         character_list = ch->desc->mob;
         *ch->roomp += *ch->desc->mob;
         ch->desc->mob = NULL;
       }
+
       // reset the terminal bars
       if (ch->vt100() || ch->ansi())
         ch->doCls(false);
+
       return;
     }
+
     switch (atoi(arg)) {
       case 0:
         update_mob_menu(ch, ch->desc->mob);
@@ -2709,6 +2930,8 @@ void mob_edit(TBeing *ch, const char *arg)
         change_mob_def_pos(ch, ch->desc->mob, "", ENTER_CHECK);
         return;
       case 20:
+        ch->specials.edit = CHANGE_MOB_STRINGS;
+        change_mob_string_values(ch, ch->desc->mob, "", ENTER_CHECK);
         return;
       case 21:
         ch->specials.edit = CHANGE_MOB_IMMUNE;
@@ -2862,9 +3085,29 @@ void mob_edit(TBeing *ch, const char *arg)
     case CHANGE_SOUND_DIST:
       change_mob_sounds(ch, ch->desc->mob, arg, ENTER_REENTRANT);
       return;
+    case CHANGE_MOB_STRINGS:
+      change_mob_string_values(ch, ch->desc->mob, arg, ENTER_REENTRANT);
+      return;
+    case CHANGE_MOB_STRINGS__BAMFIN:
+      change_mob_string_enter(ch, ch->desc->mob, arg, 0);
+      return;
+    case CHANGE_MOB_STRINGS__BAMFOUT:
+      change_mob_string_enter(ch, ch->desc->mob, arg, 1);
+      return;
+    case CHANGE_MOB_STRINGS__DEATHCRY:
+      change_mob_string_enter(ch, ch->desc->mob, arg, 2);
+      return;
+    case CHANGE_MOB_STRINGS__REPOP:
+      change_mob_string_enter(ch, ch->desc->mob, arg, 3);
+      return;
+    case CHANGE_MOB_STRINGS__MOVEIN:
+      change_mob_string_enter(ch, ch->desc->mob, arg, 4);
+      return;
+    case CHANGE_MOB_STRINGS__MOVEOUT:
+      change_mob_string_enter(ch, ch->desc->mob, arg, 5);
+      return;
     default:
       vlogf(9, "Got to a bad spot in mob_edit");
       return;
   }
 }
-
