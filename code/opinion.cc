@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: opinion.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -69,11 +61,9 @@ bool TMonster::addHated(TBeing *hatee)
     list->name = mud_str_dup(hatee->name);
     list->next = hates.clist;
     hates.clist = list;
-    if (!IS_SET(specials.act, ACT_HATEFUL))
-      SET_BIT(specials.act, ACT_HATEFUL);
 
-    if (!IS_SET(hatefield, HATE_CHAR))
-      SET_BIT(hatefield, HATE_CHAR);
+    SET_BIT(specials.act, ACT_HATEFUL);
+    SET_BIT(hatefield, HATE_CHAR);
 
     if (hatee->isImmortal())
       hatee->sendTo("---Someone hates you.\n\r");
@@ -85,10 +75,9 @@ int TMonster::addHatred(zoneHateT parm_type, int parm)
 {
   switch (parm_type) {
     case OP_SEX:
-      if (!IS_SET(hatefield, HATE_SEX))
-	SET_BIT(hatefield, HATE_SEX);
+      SET_BIT(hatefield, HATE_SEX);
       if (parm != SEX_MALE && parm != SEX_FEMALE && parm != SEX_NEUTER) {
-        vlogf(8, "bad parm to adHatred-sex for %s : %d", getName(), parm);
+        vlogf(LOG_BUG, "bad parm to adHatred-sex for %s : %d", getName(), parm);
         parm = 0;
       }
       hates.sex = sexTypeT(parm);
@@ -97,7 +86,7 @@ int TMonster::addHatred(zoneHateT parm_type, int parm)
       if (!IS_SET(hatefield, HATE_RACE))
 	SET_BIT(hatefield, HATE_RACE);
       if (parm < RACE_NORACE || parm >= MAX_RACIAL_TYPES) {
-        vlogf(8, "Bad parm to addHatred-race for %s : %d", getName(), parm);
+        vlogf(LOG_BUG, "Bad parm to addHatred-race for %s : %d", getName(), parm);
         parm = 0;
       }
       hates.race = race_t(parm);
@@ -128,7 +117,7 @@ int TMonster::addHatred(zoneHateT parm_type, int parm)
     case OP_UNUSED2:
     case OP_CHAR:
     case MAX_HATE:
-      vlogf(LOW_ERROR, "Bad use of Hate flags on %s", getName());
+      vlogf(LOG_LOW, "Bad use of Hate flags on %s", getName());
       return TRUE;
   }
   if (!IS_SET(specials.act, ACT_HATEFUL)) {
@@ -156,8 +145,13 @@ bool TMonster::Hates(const TBeing *v, const char *n) const
 
   if (!v) 
     namebuf = n;
-  else
-    namebuf = v->getName();
+  else {
+    if(dynamic_cast<const TMonster *>(v)){
+      namebuf = v->name;
+    } else {
+      namebuf = v->getName();
+    }
+  }
 
   if (!namebuf)
     return FALSE;
@@ -339,7 +333,7 @@ int TMonster::addFears(zoneHateT parm_type, int parm)
       if (!IS_SET(fearfield, FEAR_SEX))
 	SET_BIT(fearfield, FEAR_SEX);
       if (parm != SEX_MALE && parm != SEX_FEMALE && parm != SEX_NEUTER) {
-        vlogf(8, "bad parm to addFears-sex for %s : %d", getName(), parm);
+        vlogf(LOG_BUG, "bad parm to addFears-sex for %s : %d", getName(), parm);
         parm = 0;
       }
       fears.sex = sexTypeT(parm);
@@ -348,7 +342,7 @@ int TMonster::addFears(zoneHateT parm_type, int parm)
       if (!IS_SET(fearfield, FEAR_RACE))
 	SET_BIT(fearfield, FEAR_RACE);
       if (parm < RACE_NORACE || parm >= MAX_RACIAL_TYPES) {
-        vlogf(8, "Bad parm to addFears-race for %s : %d", getName(), parm);
+        vlogf(LOG_BUG, "Bad parm to addFears-race for %s : %d", getName(), parm);
         parm = 0;
       }
       fears.race = race_t(parm);
@@ -379,7 +373,7 @@ int TMonster::addFears(zoneHateT parm_type, int parm)
     case OP_UNUSED2:
     case OP_CHAR:
     case MAX_HATE:
-      vlogf(LOW_ERROR, "Bad use of Fear flags on %s", getName());
+      vlogf(LOG_LOW, "Bad use of Fear flags on %s", getName());
       return TRUE;
   }
   SET_BIT(specials.act, ACT_AFRAID);
