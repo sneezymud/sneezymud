@@ -11,6 +11,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
   int percent = ::number(1, 100);
   int factor = ((::number(0,2)) * ch->getSkillValue(SKILL_SACRIFICE));
+  int factor2 = ((((::number(0,2)) * ch->getSkillValue(SKILL_SACRIFICE)) / 10) * 6);
  
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
@@ -68,7 +69,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     act("$p is being accepted by the loa.", FALSE, ch, corpse, 0, TO_CHAR);
     ch->addToLifeforce(factor);
   } else {
-    ch->addToLifeforce(-factor);
+    ch->addToLifeforce(-factor2);
     if (0 >= ch->getLifeforce()) {
       ch->setLifeforce(0);
       act("The loa demands you to pay for your disrespect!", FALSE, ch, 0, 0, TO_CHAR);
