@@ -20,6 +20,8 @@
 #define DAMAGE_DEBUG 0
 
 extern class TPeelPk peelPk;
+extern void dropSpentCasing(TRoom *, int);
+
 
 TBeing *gCombatList = NULL;        // head of l-list of fighting chars    
 
@@ -3317,6 +3319,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     if((ammo=dynamic_cast<TAmmo *>(gun->getAmmo()))
        && ammo->getRounds()>0){
       ammo->setRounds(ammo->getRounds()-1);
+      dropSpentCasing(roomp, ammo->getAmmoType());
     } else {
       act("Click.  $N is out of ammunition.", TRUE, this, NULL, gun, TO_CHAR);
       found=TRUE;

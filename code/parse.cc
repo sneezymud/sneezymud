@@ -2636,7 +2636,7 @@ void buildCommandArray(void)
   commandArray[CMD_CLEAR] = new commandInfo("clear", POSITION_DEAD, 0);
   commandArray[CMD_SHOOT] = new commandInfo("shoot", POSITION_CRAWLING, 0);
   commandArray[CMD_BLOAD] = new commandInfo("bload", POSITION_CRAWLING, 0);
-  commandArray[CMD_GLOAD] = new commandInfo("gload", POSITION_CRAWLING, 0);
+  commandArray[CMD_GLOAD] = new commandInfo("gload", POSITION_RESTING, 0);
   commandArray[CMD_MOUNT] = new commandInfo("mount", POSITION_ENGAGED, 0);
   commandArray[CMD_DISMOUNT]= new commandInfo("dismount", POSITION_ENGAGED, 0);
   commandArray[CMD_RIDE] = new commandInfo("ride", POSITION_ENGAGED, 0);
