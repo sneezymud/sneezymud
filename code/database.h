@@ -78,6 +78,13 @@
 // vnum=atoi(db.getColumn(0));
 // string short_desc = db.getColumn(1);
 //
+// char *getColumn(string) - works as getColumn(int) above, but you specify
+// the desired column by name rather than number.
+// Ex:
+// db.query("select vnum, short_desc from obj");
+// db.fetchRow();
+// string short_desc = db.getColumn("short_desc");
+//
 // bool isResults() - checks if there are results available
 // Returns: TRUE if results are there, FALSE if not
 
@@ -92,6 +99,7 @@ class TDatabase
   bool query(const char *,...);
   bool fetchRow();
   char *getColumn(int);
+  char *getColumn(string);
   bool isResults();
 
   TDatabase();

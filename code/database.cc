@@ -58,6 +58,7 @@ bool TDatabase::fetchRow(){
 }
 
 // get one of the results from the current row of the current query
+// specified by column number
 char *TDatabase::getColumn(int i){
   if(!res || row<0 || row >= PQntuples(res))
     return NULL;
@@ -69,7 +70,21 @@ char *TDatabase::getColumn(int i){
   }
 }
 
+// get one of the results from the current row of the current query
+// specified by column name
+char *TDatabase::getColumn(string s){
+  if(!res || row<0 || row >= PQntuples(res))
+    return NULL;
+  
+  int i=PQfnumber(res, s.c_str());
 
+  if(i < 0){
+    vlogf(LOG_DB, "getColumn(%s) - invalid column name", s.c_str());
+    return NULL;
+  } else {
+    return PQgetvalue(res, row, i);
+  }
+}
 
 
 // execute a query
