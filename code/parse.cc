@@ -1705,9 +1705,13 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_RESP_CHECKROOM:
 	case CMD_RESP_CHECKNROOM:
         case CMD_RESP_CHECKZONE:
+        case CMD_RESP_CHECKNOTZONE:
 	case CMD_RESP_MOVETO:
 	case CMD_RESP_DESTINATION:
 	case CMD_RESP_CHECKPERSON:
+	case CMD_RESP_RANDOM:
+	case CMD_RESP_RANDOPTION:
+	case CMD_RESP_DONERAND:
         case CMD_GENERIC_PULSE:
         case CMD_GENERIC_QUICK_PULSE:
         case CMD_GENERIC_CREATED:

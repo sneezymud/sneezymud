@@ -121,6 +121,7 @@ void healLight(TBeing *caster, TBeing *victim)
   taskDiffT diff = discArray[spell]->task;
 
   start_cast(caster, victim, NULL, caster->roomp, spell, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+
 }
 
 int castHealLight(TBeing *caster, TBeing *victim)
@@ -342,7 +343,7 @@ int castHealCritical(TBeing *caster, TBeing *victim)
   strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf,"%s",colorString(caster,caster->desc,nameBuf,NULL,COLOR_MOBS, TRUE).c_str());
 
-  spellNumT spell = caster->getSkillNum(caster->spelltask->spell);
+  spellNumT spell = caster->getSkillNum(caster->spelltask->spell); 
   int ret=healCritical(caster,victim, caster->getSkillLevel(spell), caster->getSkillValue(spell), spell, caster->getAdvLearning(spell));
  if (ret == SPELL_SUCCESS) {
     if (victim->getHit() >= victim->hitLimit()) {
@@ -597,6 +598,8 @@ int healCritSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
         continue;
       if ((targ->isImmortal()) && !caster->canSee(targ))
         continue;
+      if (!targ->inGroup(*caster))
+        continue;
       if (targ->getHit() < targ->hitLimit()) {
         caster->reconcileHelp(targ, discArray[SPELL_HEAL_CRITICAL_SPRAY]->alignMod);
       }
@@ -693,6 +696,8 @@ int healSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
         continue;
 
       if ((targ->isImmortal()) && !caster->canSee(targ))
+        continue;
+      if (!targ->inGroup(*caster))
         continue;
 
       if (targ->getHit() < targ->hitLimit()) 
@@ -794,6 +799,8 @@ int healFullSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
       if (!targ)
         continue;
       if ((targ->isImmortal()) && !caster->canSee(targ))
+        continue;
+      if (!targ->inGroup(*caster))
         continue;
       if (targ->getHit() < targ->hitLimit()) {
         caster->reconcileHelp(targ, discArray[SPELL_HEAL_FULL_SPRAY]->alignMod);

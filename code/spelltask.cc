@@ -453,7 +453,6 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
 
   pulse = rc = ret = 0;
   limbs = silence = false;
-
   if (!ch->spelltask) {
     vlogf(LOG_BUG,fmt("Somehow %s got to cast_spell with no spelltask structure,") %  ch->getName());
     act("Something went wrong here in spellcasting. Could you please place a bug or tell a coder the details" , FALSE, ch, NULL, NULL,TO_CHAR);
@@ -791,17 +790,17 @@ your prayer.", FALSE, ch, NULL, NULL, TO_CHAR);
           }
           ch->sendCastingMessages(limbs, silence, rounds, typ, counter); 
           if (typ == SPELL_CASTER) {
-            if (!(ch->applyCompCheck(spell, rounds, status))) {
+            if (ch->isPc() && !(ch->applyCompCheck(spell, rounds, status))) {
               ch->stopCast(STOP_CAST_NONE);
               return FALSE;
             }
           } else if (typ == SPELL_DANCER) {
-            if (!(ch->applyCompCheck(spell, rounds, status))) {
+            if (ch->isPc() && !(ch->applyCompCheck(spell, rounds, status))) {
               ch->stopCast(STOP_CAST_NONE);
               return FALSE;
             }
           } else if (typ == SPELL_PRAYER) {
-            if (!ch->checkHolySymbol(spell)) {
+            if (ch->isPc() && !ch->checkHolySymbol(spell)) {
               ch->stopCast(STOP_CAST_NONE);
               return FALSE;
             }
@@ -822,17 +821,17 @@ your prayer.", FALSE, ch, NULL, NULL, TO_CHAR);
         case 1:
           ch->sendCastingMessages(limbs, silence, rounds, typ, counter);
           if (typ == SPELL_CASTER) {
-            if (!(ch->applyCompCheck(spell, rounds, status))) {
+            if (ch->isPc() && !ch->applyCompCheck(spell, rounds, status)) {
               ch->stopCast(STOP_CAST_NONE);
               return FALSE;
             }
           } else if (typ == SPELL_DANCER) {
-            if (!(ch->applyCompCheck(spell, rounds, status))) {
+            if (ch->isPc() && !ch->applyCompCheck(spell, rounds, status)) {
               ch->stopCast(STOP_CAST_NONE);
               return FALSE;
             }
           } else if (typ == SPELL_PRAYER) {
-            if (!ch->checkHolySymbol(spell)) {
+            if (ch->isPc() && !ch->checkHolySymbol(spell)) {
               ch->stopCast(STOP_CAST_NONE);
               return FALSE;
             }
@@ -853,17 +852,17 @@ your prayer.", FALSE, ch, NULL, NULL, TO_CHAR);
         case 0:
           ch->sendFinalCastingMessages(limbs, silence, typ);
           if (typ == SPELL_CASTER) {
-            if (!(ch->applyCompCheck(spell, rounds, status))) {
+            if (ch->isPc() && !(ch->applyCompCheck(spell, rounds, status))) {
               ch->stopCast(STOP_CAST_NONE);
               return FALSE;
             }
           } else if (typ == SPELL_DANCER) {
-            if (!(ch->applyCompCheck(spell, rounds, status))) {
+            if (ch->isPc() && !(ch->applyCompCheck(spell, rounds, status))) {
               ch->stopCast(STOP_CAST_NONE);
               return FALSE;
             }
           } else if (typ == SPELL_PRAYER) {
-            if (!ch->checkHolySymbol(spell)) {
+            if (ch->isPc() && !ch->checkHolySymbol(spell)) {
               ch->stopCast(STOP_CAST_NONE);
               return FALSE;
             }
@@ -1379,6 +1378,7 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
   int retCode = FALSE;
   if (!caster->spelltask)
     return FALSE;
+
 
   orgArg = caster->spelltask->orig_arg;
 

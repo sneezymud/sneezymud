@@ -121,7 +121,7 @@ void appendPlayerName(TBeing *ch, TBeing *mob)
 
     delete [] mob->name;
     mob->name = mud_str_dup(tStNewNameList);
-  } else vlogf (LOG_MAROR, "Entered appendPlayerName with ch->name undefined");
+  } else vlogf (LOG_BUG, "Entered appendPlayerName with ch->name undefined");
 }
   
 void switchStat(statTypeT stat, TBeing *giver, TBeing *taker)
@@ -2058,7 +2058,7 @@ int lycanthropeTransform(TBeing *ch)
   mob->setWeight(ch->getWeight());
 
   mob->doAction("", CMD_HOWL);
-  mob->roomp->getZone()->sendTo(fmt("You hear a chilling wolf howl in the distance.\n\r") % mob->roomp->number);
+  mob->roomp->getZone()->sendTo(fmt("You hear a chilling wolf howl in the distance.\n\r"));
 
 
   return TRUE;

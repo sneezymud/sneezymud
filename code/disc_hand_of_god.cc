@@ -727,15 +727,17 @@ int heroesFeast(TBeing * caster, int, byte bKnown, spellNumT spell)
       if (!tch)
         continue;
       if (tch->inGroup(*caster) && (tch->getPosition() > POSITION_SLEEPING)) 
+      {
         tch->sendTo("You partake of a magnificent feast!\n\r");
       
-      if (tch->getCond(FULL) >= 0)
-        tch->gainCondition(FULL, 16);
-      if (tch->getCond(THIRST) >= 0)
-        tch->gainCondition(THIRST, 16);
-      if (tch->getHit() < tch->hitLimit())
-        tch->addToHit(1);
-      caster->reconcileHelp(tch, discArray[spell]->alignMod);
+        if (tch->getCond(FULL) >= 0)
+          tch->gainCondition(FULL, 16);
+        if (tch->getCond(THIRST) >= 0)
+          tch->gainCondition(THIRST, 16);
+        if (tch->getHit() < tch->hitLimit())
+          tch->addToHit(1);
+        caster->reconcileHelp(tch, discArray[spell]->alignMod);
+      }
     }
     return SPELL_SUCCESS;
   } else {
@@ -780,7 +782,7 @@ void heroesFeast(TBeing * caster)
   int ret=heroesFeast(caster,level,caster->getSkillValue(spell), spell);
   if (ret==SPELL_SUCCESS) {
   } else if (ret == SPELL_CRIT_FAIL) {
-    caster->sendTo("Something terrible seems to have happenned.\n\r");
+    caster->sendTo("Something terrible seems to have happened.\n\r");
   } else {
     act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);

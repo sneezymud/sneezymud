@@ -365,6 +365,15 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
         return RET_STOP_PARSING;
 
       break;
+    case CMD_RESP_CHECKNOTZONE:
+      value = convertTo<int>(arg);
+
+      tRoom = real_roomp(value);
+
+      if ((!roomp || !tRoom || tRoom->getZoneNum() == roomp->getZoneNum()) && !inImperia())
+        return RET_STOP_PARSING;
+
+      break;
     case CMD_RESP_MOVETO:
       value=0;
       for (rMem = resps->respMemory; rMem; rMem = rMem->next) {
@@ -421,18 +430,21 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
     case CMD_RESP_CHECKPERSON:
       TThing *tt;
       TBeing *tb;
-
       for(tt=roomp->getStuff();tt;tt=tt->nextThing){
-	if((tb=dynamic_cast<TBeing *>(tt)) &&
-	   isname(tb->getName(), arg)){
-	  return RET_STOP_PARSING;
-	}
+      	if((tb=dynamic_cast<TBeing *>(tt)) && isname(tb->getName(), arg))
+	        return FALSE;
       }
-
+      return RET_STOP_PARSING;
+      break;
+    case CMD_RESP_DONERAND:
+    case CMD_RESP_RANDOM:
+    case CMD_RESP_RANDOPTION:
+      return FALSE;
       break;
     default:
       mud_assert(cmd >= 0, "Unhandled special command in modifiedDoCommand array %d", cmd);
-      rc = doCommand(cmd, arg.c_str(), (TThing *) mob, FALSE);
+//      rc = doCommand(cmd, arg.c_str(), (TThing *) mob, FALSE);
+      rc = doCommand(cmd, arg.c_str(), NULL, FALSE);
       break;
   }
   
@@ -546,6 +558,39 @@ int TMonster::checkResponses(TBeing *tBeing, TThing *tThing, const sstring &tSai
   return nRc;
 }
 
+// return value is the random command number that will be executed
+// returns -1 for faulty syntax / failed run / wrong option (don't execute)
+// returns 0 for execute following commands / done with rand
+int doRandCmd(cmdTypeT cmd, int choice, sstring parsedArgs) {
+
+  int arg_int;
+  
+  switch(cmd) {
+    case CMD_RESP_RANDOM:
+      if(!(arg_int = convertTo<int>(parsedArgs))) {
+        vlogf(LOG_MOB_RS, fmt("Bad argument to doRandCmd."));
+        return 0;
+      }
+      arg_int = max(1,arg_int);
+      choice = ::number(1,arg_int);
+      return choice;
+    case CMD_RESP_RANDOPTION:
+      if((arg_int = convertTo<int>(parsedArgs))) {
+        if (arg_int != choice) { 
+          if (choice == 0) { return -1; }
+          else return choice;
+        }
+        else if (arg_int == choice) return 0;
+      }
+      return choice;
+    case CMD_RESP_DONERAND:
+      return 0;
+    default:
+      return choice;
+  }
+}      
+
+
 // returns DELETE_THIS if this has died as a result
 // returns DELETE_VICT if speaker has died
 // returns DELETE_ITEM (for give) if TARG should go away
@@ -566,6 +611,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
          tStBuffer(""),
          tStArg("");
   char   tString[256];
+  int skip = 0; // command lines within brackets will be skipped if this is non-zero
 
   if (desc)
     return FALSE;
@@ -589,13 +635,16 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
 
   for (respo=resps->respList; respo && !found; respo=respo->next) {
     if (respo->cmd == trig_cmd) {
-      switch(trig_cmd) {
-        case CMD_SAY:
+
+     switch(trig_cmd) {
+       case CMD_SAY:
         case CMD_WHISPER:
         case CMD_ASK:
           if (strcasestr(said.c_str(), respo->args)) {
             for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
               parsedArgs = parseResponse( speaker, cmd->args);
+              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+              if (skip != 0) continue;
               found = TRUE;
               rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
               if (IS_SET_DELETE(rc, DELETE_THIS) ||
@@ -621,6 +670,8 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
 
           for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
             parsedArgs = parseResponse( speaker, cmd->args);
+              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+              if (skip != 0) continue;
             found = TRUE;
             rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
             if (IS_SET_DELETE(rc, DELETE_THIS) ||
@@ -646,6 +697,8 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
 
           for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
             parsedArgs = parseResponse( speaker, cmd->args);
+              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+              if (skip != 0) continue;
             found = TRUE;
             rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
             if (IS_SET_DELETE(rc, DELETE_THIS) ||
@@ -669,6 +722,8 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
                 to->objVnum() == value) {
               for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
                 parsedArgs = parseResponse( speaker, cmd->args);
+              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+              if (skip != 0) continue;
                 found = TRUE;
                 rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
                 if (IS_SET_DELETE(rc, DELETE_THIS) ||
@@ -723,6 +778,8 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
             if ((storedCash + said_int) >= -value) {
               for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
                 parsedArgs = parseResponse( speaker, cmd->args);
+              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+              if (skip != 0) continue;
                 found = TRUE;
                 rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
                 if (IS_SET_DELETE(rc, DELETE_THIS) ||
@@ -755,6 +812,8 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
           if (strcasestr(said.c_str(), respo->args)) {
             for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
               parsedArgs = parseResponse(speaker, cmd->args);
+              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+              if (skip != 0) continue;
               found = TRUE;
               rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
               if (IS_SET_DELETE(rc, DELETE_THIS) ||
@@ -771,6 +830,8 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
         case CMD_RESP_PULSE:
           for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
             parsedArgs = parseResponse(speaker, cmd->args);
+              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+              if (skip != 0) continue;
             found = TRUE;
             rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
             if (IS_SET_DELETE(rc, DELETE_THIS) ||
@@ -806,6 +867,8 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
 
               for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
                 parsedArgs = parseResponse(speaker, cmd->args);
+              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+              if (skip != 0) continue;
                 found = TRUE;
                 rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
                 if (IS_SET_DELETE(rc, DELETE_THIS) ||
@@ -982,6 +1045,8 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstri
                        (resp_targ != speaker) && resp_targ)) {
             for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
               parsedArgs = parseResponse( speaker, cmd->args);
+              skip = doRandCmd(cmd->cmd, skip, parsedArgs);
+              if (skip != 0) continue;
               found = TRUE;
               rc = modifiedDoCommand( cmd->cmd, parsedArgs, speaker, respo);
               if (IS_SET_DELETE(rc, DELETE_THIS) ||
@@ -1264,6 +1329,12 @@ resp * TMonster::readCommand( FILE *fp)
       newCmd = new command( CMD_RESP_TOVICT, args);
     else if (is_abbrev(buf, "tonotvict"))
       newCmd = new command( CMD_RESP_TONOTVICT, args);
+    else if (is_abbrev(buf, "random"))
+      newCmd = new command( CMD_RESP_RANDOM, args);
+    else if (is_abbrev(buf, "randoption"))
+      newCmd = new command( CMD_RESP_RANDOPTION, args);
+    else if (is_abbrev(buf, "donerand"))
+      newCmd = new command( CMD_RESP_DONERAND, args);
     else if (is_abbrev(buf, "toroom")) {
       if (strstr(buf, "$N")) {
         vlogf(LOG_LOW, fmt("Found '$N' on toroom command inside response file for %s") %   responseFile);
@@ -1284,6 +1355,8 @@ resp * TMonster::readCommand( FILE *fp)
       newCmd = new command(CMD_RESP_CHECKNROOM, args);
     else if (is_abbrev(buf, "checkzone"))
       newCmd = new command(CMD_RESP_CHECKZONE, args);
+    else if (is_abbrev(buf, "checknotzone"))
+      newCmd = new command(CMD_RESP_CHECKNOTZONE, args);
     else if (is_abbrev(buf, "moveto"))
       newCmd = new command(CMD_RESP_MOVETO, args);
     else if (is_abbrev(buf, "destination"))

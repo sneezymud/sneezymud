@@ -637,9 +637,9 @@ int TBeing::doPray(const char *argument)
   int spaces = 0;
   char buf[80], buf2[80], buf3[80], argbak[256];
 
-
-  if (!isPc() && !desc)
-       return FALSE;
+// why can't mobs call this command?
+//  if (!isPc() && !desc)
+//       return FALSE;
 
   if (isPc() && GetMaxLevel() > MAX_MORT && !hasWizPower(POWER_NO_LIMITS)) {
     sendTo("You are currently not permitted to cast prayers, sorry.\n\r");
@@ -731,7 +731,6 @@ int TBeing::doPray(const char *argument)
     strcpy(argbak, arg);
     strcpy(arg, one_argument(arg, buf));  // buf == heal
     strcpy(arg, one_argument(arg, buf2));
-
     // pray heal <targ>
     // pray heal spray
     // pray heal light <targ>
@@ -1434,7 +1433,6 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     vlogf(LOG_BUG, fmt("doDiscipline called with null discArray[] (%d) (%s)") %  which % getName());
     return FALSE;
   }
-
   if (which <= TYPE_UNDEFINED) 
     return FALSE;
 
