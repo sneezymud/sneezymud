@@ -268,5 +268,9 @@ void TBeing::doTrophy(const sstring &arg)
 
 
 void TTrophy::wipe(){
-  db->query("delete from trophy where player_id=%i", parent->getPlayerID());
+  db->query("select id from player where name='%s'", getMyName());
+  
+  if(db.fetchRow())
+    db->query("delete from trophy where player_id=%i", convertTo<int>(db["id"]));
+
 }
