@@ -209,28 +209,39 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
         act("$n lunges at you!",
              TRUE, caster, 0, victim, TO_VICT);
       }
-      act("You send $p flying from $N's grasp.", FALSE, caster, obj, victim, TO_CHAR);
-      act("$p flies from your grasp.", FALSE, caster, obj, victim, TO_VICT, ANSI_RED);
-      act("$p flies from $N's grasp.", FALSE, caster, obj, victim, TO_NOTVICT);
-      if(!trytelekinesis(caster, victim, obj)){
-	if(isobjprim){
-	  victim->unequip(victim->getPrimaryHold());
-	} else {
-	  victim->unequip(victim->getSecondaryHold());
+      if (victim->doesKnowSkill(SKILL_TRANCE_OF_BLADES) && (victim->task) &&
+	  (victim->task->task == TASK_TRANCE_OF_BLADES)) {
+	int val = (int)(((float) victim->getSkillValue(SKILL_TRANCE_OF_BLADES) * 0.70) + 30);
+	if (bSuccess(victim,val, SKILL_TRANCE_OF_BLADES)) {
+	  act("You try to make it past $N's defensive trance, but get beaten back!", FALSE, caster, obj, victim, TO_CHAR);
+	  act("$n fails to make it past your defensive trance, and you beat $m back!", FALSE, caster, obj, victim, TO_VICT, ANSI_RED);
+	  act("$n fails to make it past $N's defensive trance, and gets beaten back!", FALSE, caster, obj, victim, TO_NOTVICT);
 	}
-
-	*victim->roomp += *obj;
-	victim->logItem(obj, CMD_DISARM);
-	victim->doSave(SILENT_YES);
+      } else {
+	act("You send $p flying from $N's grasp.", FALSE, caster, obj, victim, TO_CHAR);
+	act("$p flies from your grasp.", FALSE, caster, obj, victim, TO_VICT, ANSI_RED);
+	act("$p flies from $N's grasp.", FALSE, caster, obj, victim, TO_NOTVICT);
+	if(!trytelekinesis(caster, victim, obj)){
+	  if(isobjprim){
+	    victim->unequip(victim->getPrimaryHold());
+	  } else {
+	    victim->unequip(victim->getSecondaryHold());
+	  }
+	  
+	  *victim->roomp += *obj;
+	  victim->logItem(obj, CMD_DISARM);
+	  victim->doSave(SILENT_YES);
+	}
       }      
     } else {
       act("You try to disarm $N, but $E doesn't have a weapon.", TRUE, caster, 0, victim, TO_CHAR);
       act("$n makes an impressive fighting move, but does little more.", TRUE, caster, 0, 0, TO_ROOM);
     }
-    caster->reconcileDamage(victim, 0, skill);;
-
+    caster->reconcileDamage(victim, 0, skill);
+    
     victim->addToWait(combatRound(1));
     caster->reconcileHurt(victim, 0.01);
+    
   } else {
     act("You try to disarm $N, but fail miserably, falling down in the process.", TRUE, caster, 0, victim, TO_CHAR, ANSI_YELLOW);
     act("$n does a nifty fighting move, but then falls on $s butt.", TRUE, caster, 0, 0, TO_ROOM);
