@@ -523,7 +523,7 @@ int flameWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   } else {
     act("$p roars into a blaze of fire and scorches $n.", 
                   0, vict, o, 0, TO_ROOM, ANSI_ORANGE_BOLD);
-    act("$p roars into a blaze of fire and scorches you.", 
+   act("$p roars into a blaze of fire and scorches you.", 
                   0, vict, o, 0, TO_CHAR, ANSI_ORANGE_BOLD);
   }
 
@@ -3904,6 +3904,7 @@ int manaBurnRobe(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 
   } // end manaBurnRobe
 
+int healingHead ( Tbeing *vict, cmdTypeT cmd, const char arg, TObj *0, TObj * )
 int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch;
