@@ -3414,7 +3414,7 @@ void TBeing::makeOutputPaged()
   char buf[MAX_STRING_LENGTH];
 
   memset(buf, '\0', sizeof(buf));
-  while (desc->output.takeFromQ(buf)) {
+  while (desc->output.takeFromQ(buf, sizeof(buf))) {
     str += buf;
     memset(buf, '\0', sizeof(buf));
   }

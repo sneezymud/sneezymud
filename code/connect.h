@@ -149,7 +149,7 @@ class textQ
     textQ & operator=(const textQ &a);
     ~textQ();
 
-    bool takeFromQ(char *dest);
+    bool takeFromQ(char *dest, int destsize);
     void putInQ(const char *txt);
 };
 

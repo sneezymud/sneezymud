@@ -462,7 +462,7 @@ int Descriptor::outputProcessing()
   
   memset(i, '\0', sizeof(i));
   // Take everything from queued output
-  while (output.takeFromQ(i)) {
+  while (output.takeFromQ(i, sizeof(i))) {
     counter++;
 
     // I bumped this from 500 to 1000 - Batopr
@@ -717,15 +717,15 @@ void Descriptor::flushInput()
 {
   char dummy[MAX_STRING_LENGTH];
 
-  while (input.takeFromQ(dummy));
+  while (input.takeFromQ(dummy, sizeof(dummy)));
 }
 
 void Descriptor::flush()
 {
   char dummy[MAX_STRING_LENGTH];
 
-  while (output.takeFromQ(dummy));
-  while (input.takeFromQ(dummy));
+  while (output.takeFromQ(dummy, sizeof(dummy)));
+  while (input.takeFromQ(dummy, sizeof(dummy)));
 }
 
 void Descriptor::add_to_history_list(const char *arg)
@@ -5299,7 +5299,7 @@ void processAllInput()
     next_to_process = d->next;
 
     // this is where PC wait gets handled
-    if ((--(d->wait) <= 0) && (&d->input)->takeFromQ(comm)){
+    if ((--(d->wait) <= 0) && (&d->input)->takeFromQ(comm, sizeof(comm))){
       if (d->character && !d->connected && 
           d->character->specials.was_in_room != ROOM_NOWHERE) {
         --(*d->character);
@@ -6556,7 +6556,7 @@ void Descriptor::sendMotd(int wiz)
   }
 }
 
-bool textQ::takeFromQ(char *dest)
+bool textQ::takeFromQ(char *dest, int destsize)
 {
   commText *tmp = NULL;
 
@@ -6565,7 +6565,7 @@ bool textQ::takeFromQ(char *dest)
     return (0);
  
   if (begin->getText())
-    strcpy(dest, begin->getText());
+    strncpy(dest, begin->getText(), destsize-1);
   else {
     vlogf(LOG_BUG, "There was a begin with no text but a next");
     return (0);

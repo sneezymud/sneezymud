@@ -247,8 +247,9 @@ int Descriptor::read_client(char *str2)
         clientf("%d|You client is an old version. You can continue playing with the current version, but upgrade is recommended. The latest version is %d and can be received from http://sneezy.stanford.edu/client.|%d", CLIENT_ERROR, CURRENT_VERSION, 7); //ERR_CUR_VERSION);
         outputProcessing();
       }
+
       char dummy[MAX_STRING_LENGTH];
-      while ((&output)->takeFromQ(dummy));
+      while ((&output)->takeFromQ(dummy, sizeof(dummy)));
       if (account) {
         if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) 
           vlogf(LOG_PIO, "Client Connection from *****Masked*****");
