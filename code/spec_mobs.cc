@@ -7527,7 +7527,7 @@ int konastisGuard(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
 	obj=read_object(18606, VIRTUAL);
 	*me += *obj;
 	me->doGive(ch,obj,GIVE_FLAG_IGN_DEX_TEXT);
-	me->doSay("This stuff tastes foul.  Now vodka, there's a drink that goes down easy.");
+	me->doSay("This stuff tastes foul.  Now vodka grain alcohol, there's a drink that goes down easy.");
 	break;
       case LIQ_VODKA:
 	me->doEmote(buf.c_str());
