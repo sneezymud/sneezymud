@@ -233,6 +233,85 @@ void bootDb(void)
   bootWorld();
   bootPulse(NULL, true);
 
+
+#if 0
+  int it;
+  TRoom *temp;
+  
+  for(it=0;it<WORLD_SIZE;it++){
+    if(!(temp=real_roomp(it)))
+      continue;
+    
+    dirTypeT dir;
+    TRoom *ntemp;
+    for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
+      if (!temp->dir_option[dir])
+	continue;
+      
+      if(!(ntemp=real_roomp(temp->dir_option[dir]->to_room)))
+	continue;
+
+      switch(dir){
+	case 0: 
+          if((temp->getYCoord()+1) != ntemp->getYCoord()){
+	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 0",
+		  temp->number, ntemp->number);
+	  }
+	  break;
+	case 1:
+          if((temp->getXCoord()+1) != ntemp->getXCoord()){
+	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 1",
+		  temp->number, ntemp->number);
+	  }
+	  break;
+	case 2:
+          if((temp->getYCoord()-1) != ntemp->getYCoord()){
+	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 2",
+		  temp->number, ntemp->number);
+	  }
+	  break;
+	case 3:
+          if((temp->getXCoord()-1) != ntemp->getXCoord()){
+	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 3",
+		  temp->number, ntemp->number);
+	  }
+	  break;
+	case 4:
+          if((temp->getZCoord()+1) != ntemp->getZCoord()){
+	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 4",
+		  temp->number, ntemp->number);
+	  }
+	  break;
+	case 5:
+          if((temp->getZCoord()-1) != ntemp->getZCoord()){
+	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 5",
+		  temp->number, ntemp->number);
+	  }
+	  break;
+	case 6:
+	  //	  tdest->setXCoord(tdest->getXCoord()+1);
+	  //	  tdest->setYCoord(tdest->getYCoord()+1);
+	  break;
+	case 7:
+	  //	  tdest->setYCoord(tdest->getYCoord()+1);
+	  //	  tdest->setXCoord(tdest->getXCoord()-1);
+	  break;
+	case 8:
+	  //	  tdest->setYCoord(tdest->getYCoord()-1);
+	  //	  tdest->setXCoord(tdest->getXCoord()+1);
+	  break;
+	case 9:
+	  //	  tdest->setXCoord(tdest->getXCoord()-1);
+	  //	  tdest->setYCoord(tdest->getYCoord()-1);
+	  break;    
+	default:
+	  break;
+      }
+    }
+  }
+#endif
+
+
   bootPulse("Loading homes:", false);
   bootHomes();
   bootPulse(NULL, true);
@@ -424,79 +503,6 @@ void bootWorld(void)
     allocate_room(virtual_nr);
     rp = real_roomp(virtual_nr);
     rp->loadOne(room_f, true);
-
-#if 0    
-    dirTypeT dir;
-    TRoom *temp;
-    for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-      if (!rp->dir_option[dir])
-	continue;
-      
-      if(!(temp=real_roomp(rp->dir_option[dir]->to_room)))
-	continue;
-
-      switch(dir){
-	case 0: 
-	  tdest->setYCoord(tdest->getYCoord()+1); 
-	  break;
-	case 1:
-	  tdest->setXCoord(tdest->getXCoord()+1);
-	  break;
-	case 2:
-	  tdest->setYCoord(tdest->getYCoord()-1);
-	  break;
-	case 3:
-	  tdest->setXCoord(tdest->getXCoord()-1);
-	  break;
-	case 4:
-	  tdest->setZCoord(tdest->getZCoord()+1);
-	  break;
-	case 5:
-	  tdest->setZCoord(tdest->getZCoord()-1);
-	  break;
-	case 6:
-	  tdest->setXCoord(tdest->getXCoord()+1);
-	  tdest->setYCoord(tdest->getYCoord()+1);
-	  break;
-	case 7:
-	  tdest->setYCoord(tdest->getYCoord()+1);
-	  tdest->setXCoord(tdest->getXCoord()-1);
-	  break;
-	case 8:
-	  tdest->setYCoord(tdest->getYCoord()-1);
-	  tdest->setXCoord(tdest->getXCoord()+1);
-	  break;
-	case 9:
-	  tdest->setXCoord(tdest->getXCoord()-1);
-	  tdest->setYCoord(tdest->getYCoord()-1);
-	  break;    
-      }
-
-
-    }
-    
-#endif
-
-#if 0
-    int i;
-    TRoom *temp;
-    
-    for(i=0;i<WORLD_SIZE;i++){
-      if((temp=real_roomp(i)) &&
-    	 (rp->getXCoord() == temp->getXCoord()) &&
-    	 (rp->getYCoord() == temp->getYCoord()) &&
-    	 (rp->getZCoord() == temp->getZCoord()) &&
-    	 !((rp->getXCoord() == 0) &&
-    	   (rp->getYCoord() == 0) &&
-    	   (rp->getZCoord() == 0)) &&
-    	 temp->number != rp->number){	
-	vlogf(LOG_LOW, "%s room %d has duplicate coordinates with room %d (%d, %d, %d)",
-	      rp->name, rp->number, temp->number, 
-	      rp->getXCoord(), rp->getYCoord(), rp->getZCoord());
-	
-      }
-    }
-#endif    
 
 
 #if 0
