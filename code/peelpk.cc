@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: peelpk.cc,v $
+// Revision 5.4  2001/07/21 19:27:13  peel
+// modified peelpk a bit so it shows room and zone names as well as numbers
+// added the peelpk addzone command
+//
 // Revision 5.3  2001/07/05 21:25:54  peel
 // Trying to fix cvs
 // what a headache
@@ -116,8 +120,20 @@ void TBeing::doPeelPk(const char *argument)
       sendTo("Variables : zones, zone, respawns, respawn, announce, holding, settimer, respawnlag, default_respawn, cutdam\n\r");
       sendTo("Commands : addmember, remmember, echoscore, checktime, resetscore, resetteam, toholding, torespawn\n\r");
       sendTo("  # zones     =  %i\n\r", peelPk.zones);
-      sendTo("  zones       =  %i, %i, %i, %i\n\r", peelPk.zone[0],
-	     peelPk.zone[1], peelPk.zone[2], peelPk.zone[3]);
+
+      sendTo("  zones       =  %i, %s\n\r", peelPk.zone[0], 
+       (peelPk.zone[0]>0 && (unsigned int) peelPk.zone[0]<zone_table.size()) ?
+	                     zone_table[peelPk.zone[0]].name : "None");
+      sendTo("              =  %i, %s\n\r", peelPk.zone[1],
+       (peelPk.zone[1]>0 && (unsigned int) peelPk.zone[1]<zone_table.size()) ?
+        	             zone_table[peelPk.zone[1]].name : "None");
+      sendTo("              =  %i, %s\n\r", peelPk.zone[2],
+       (peelPk.zone[2]>0 && (unsigned int) peelPk.zone[2]<zone_table.size()) ?
+        	             zone_table[peelPk.zone[2]].name : "None");
+      sendTo("              =  %i, %s\n\r", peelPk.zone[3],
+       (peelPk.zone[3]>0 && (unsigned int) peelPk.zone[3]<zone_table.size()) ?
+        	             zone_table[peelPk.zone[3]].name : "None");
+
       sendTo("  announce    =  %i\n\r", peelPk.announce);
       sendTo("  def respawn =  %i\n\r", peelPk.default_respawn);
       sendTo("  cutdam      =  %s\n\r", (peelPk.cutdam)?"is ON, damage reduced by one half":"is OFF, no damage reduction");
@@ -130,10 +146,24 @@ void TBeing::doPeelPk(const char *argument)
       sendTo("  Team%i       =  %i members, %i score\n\r", 
 	     j, peelPk.teamnum[j], peelPk.teamscore[j]);
       if(hasWizPower(POWER_WIZARD)){
-	sendTo("  holding     =  %i\n\r  ", peelPk.holding[j]);
+	sendTo("  holding     =  %i, %s\n\r  ", peelPk.holding[j],
+	       real_roomp(peelPk.holding[j]) ?
+	       real_roomp(peelPk.holding[j])->getName() : "None");
+
 	sendTo("  # respawns  =  %i\n\r", peelPk.respawns[j]);
-	sendTo("  respawns    =  %i, %i, %i, %i\n\r", peelPk.respawn[j][0],
-	       peelPk.respawn[j][1], peelPk.respawn[j][2], peelPk.respawn[j][3]);
+
+	sendTo("  respawns    =  %i, %s\n\r", peelPk.respawn[j][0],
+	       real_roomp(peelPk.respawn[j][0]) ?
+               real_roomp(peelPk.respawn[j][0])->getName() : "None");
+	sendTo("              =  %i, %s\n\r", peelPk.respawn[j][1],
+	       real_roomp(peelPk.respawn[j][1]) ?
+               real_roomp(peelPk.respawn[j][1])->getName() : "None");
+	sendTo("              =  %i, %s\n\r", peelPk.respawn[j][2],
+	       real_roomp(peelPk.respawn[j][2]) ?
+               real_roomp(peelPk.respawn[j][2])->getName() : "None");
+	sendTo("              =  %i, %s\n\r", peelPk.respawn[j][3],
+	       real_roomp(peelPk.respawn[j][3]) ?
+               real_roomp(peelPk.respawn[j][3])->getName() : "None");
       }
       for(i=0;i<PEELPK_TEAMSIZE;++i){
 	if(peelPk.teammembers[j][i])
@@ -148,13 +178,21 @@ void TBeing::doPeelPk(const char *argument)
   }
   
   if(!strcmp(buf, "zones")){
-    peelPk.zones=atoi(buf2);
+    if(atoi(buf2) > 4)
+      sendTo("The number of zones has to be 4 or less\n\r");
+    else 
+      peelPk.zones=atoi(buf2);
   } else if(!strcmp(buf, "zone")){
     half_chop(buf2, buf, buf2);
-    if((num=atoi(buf))>=peelPk.zones || num<0){
+    if((num=atoi(buf))>=peelPk.zones || num<0)
       sendTo("The zone index must be from 0 to %i.\n\r", peelPk.zones-1);
-    } else
+    else
       peelPk.zone[num]=atoi(buf2);
+  } else if(!strcmp(buf, "addzone")){
+    if(peelPk.zones >= 4)
+      sendTo("The number of zones has to be 4 or less\n\r");
+    else
+      peelPk.zone[peelPk.zones++]=atoi(buf2);
   } else if(!strcmp(buf, "respawns")){
     half_chop(buf2, buf, buf2);
     peelPk.respawns[atoi(buf)]=atoi(buf2);
