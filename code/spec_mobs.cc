@@ -6262,7 +6262,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     }
     return FALSE;
   } else  if ((cmd != CMD_GENERIC_PULSE) ||
-	      !myself->awake() || myself->fight())
+	      !myself->awake() || myself->fight() || ::number(0,25))
     return FALSE;
 
   if (!myself->act_ptr) {
@@ -6531,6 +6531,53 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 }
 
 
+int bankGuard(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
+{
+  Descriptor *i;
+  int zone_nr=real_roomp(31750)->getZoneNum(), v=0;
+  TBeing *victims[10], *vict;
+  int saferooms[7]={31750, 31751, 31756, 31757, 31758, 31759, 31764};  
+
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  for (i = descriptor_list; i && v<=9; i = i->next){
+    if (!i->connected && i->character && i->character->roomp &&
+	i->character->roomp->getZoneNum() == zone_nr &&
+	i->character->in_room != saferooms[0] &&
+	i->character->in_room != saferooms[1] &&
+	i->character->in_room != saferooms[2] &&
+	i->character->in_room != saferooms[3] &&
+	i->character->in_room != saferooms[4] &&
+	i->character->in_room != saferooms[5] &&
+	i->character->in_room != saferooms[6]){
+      victims[v]=i->character;
+      ++v;
+    }
+  }
+
+  if(!v)
+    return FALSE;
+
+  if (!IS_SET(myself->specials.act, ACT_HUNTING)) {
+    vict=victims[::number(0,v-1)];
+    vlogf(LOG_PEEL, "bank guard hunting %s", vict->getName());
+    myself->setHunting(vict);
+    myself->addHated(vict);
+
+    for (followData *f = myself->followers; f; f = f->next) {
+      if(myself->inGroup(*f->follower)){
+	f->follower->addHated(vict);
+      }
+    }
+
+
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
 extern int grimhavenPosse(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 // Fields: display_under_medit, name_of_special, name_of_function_to_call
@@ -6691,5 +6738,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE,"Doppleganger/Mimic", doppleganger},
   {TRUE,"Tusker/Goring", tuskGoring},
   {FALSE,"Fish Tracker", fishTracker},
+  {FALSE, "Bank Guard", bankGuard},               // 155
 // replace non-zero, bogus_mob_procs above before adding
 };
+

@@ -3,6 +3,21 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.2  2001/06/18 04:31:00  peel
+// Added bankGuard proc
+//
+// Revision 5.1.1.4  2001/04/20 17:31:46  peel
+// added fishtracker proc stuff
+//
+// Revision 5.1.1.3  2001/02/01 22:17:13  jesus
+// shaman stuff
+//
+// Revision 5.1.1.2  1999/10/24 20:10:53  lapsos
+// Added new procs.
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -87,6 +102,7 @@ const int SPEC_TRAINER_SLASH    =82;
 const int SPEC_TRAINER_BLUNT    =83;
 const int SPEC_TRAINER_PIERCE   =84;
 const int SPEC_TRAINER_RANGED   =85;
+const int SPEC_QUAKETUNNELER    =86;
 const int SPEC_TRAINER_DEIKHAN  =87;
 const int SPEC_LAMPBOY          =96;
 const int SPEC_AIR_MAGI         =98;
@@ -99,7 +115,7 @@ const int SPEC_TRAINER_BRAWLING=104;
 const int SPEC_TRAINER_UNUSED5   =105;
 const int SPEC_TRAINER_MEDITATION_MONK    =106;
 const int SPEC_TRAINER_SURVIVAL=107;
-const int SPEC_TRAINER_NATURE  =108;
+const int SPEC_TRAINER_SHAMAN_ARMADILLO  =108;
 const int SPEC_TRAINER_ANIMAL  =109;
 const int SPEC_TRAINER_AEGIS   =110;
 const int SPEC_TRAINER_SHAMAN  =111;
@@ -125,11 +141,11 @@ const int SPEC_TRAINER_UNUSED8=132;
 const int SPEC_TRAINER_BAREHAND=133;
 const int SPEC_TRAINER_THIEF_FIGHT =134;
 const int SPEC_TRAINER_POISONS =135;
-const int SPEC_TRAINER_SHAMAN_FIGHT =136;
+const int SPEC_TRAINER_SHAMAN_FROG =136;
 const int SPEC_TRAINER_SHAMAN_ALCHEMY=137;
-const int SPEC_TRAINER_SHAMAN_HEALING =138;
-const int SPEC_TRAINER_UNDEAD=139;
-const int SPEC_TRAINER_DRAINING=140;
+const int SPEC_TRAINER_SHAMAN_SKUNK =138;
+const int SPEC_TRAINER_SHAMAN_SPIDER=139;
+const int SPEC_TRAINER_SHAMAN_CONTROL=140;
 const int SPEC_TRAINER_TOTEM=141;
 const int SPEC_TRAINER_RANGER_FIGHT=142;
 const int SPEC_GM_SHAMAN         =143;
@@ -140,7 +156,11 @@ const int SPEC_NEWBIE_EQUIPPER   =147;
 const int SPEC_TRAINER_LORE   =148;
 const int SPEC_TRAINER_THEOLOGY  =149;
 const int SPEC_ATTUNER  =150;
-const int NUM_MOB_SPECIALS     =151;
+const int SPEC_DOPPLEGANGER    =152;
+const int SPEC_TUSKGORE        =153;
+const int SPEC_FISHTRACKER     =154;
+const int SPEC_BANK_GUARD      =155;
+const int NUM_MOB_SPECIALS     =156;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
@@ -178,6 +198,11 @@ extern int CDGenericTrainer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *
 extern int bounty_hunter(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int DragonBreath(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int doNewbieEquipLoad(int, int, int);
+extern int doppleganger(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int tunnelerEarthquake(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int tuskGoring(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int fishTracker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int bankGuard(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 class attune_struct {
   public:
