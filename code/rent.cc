@@ -1212,7 +1212,7 @@ void TMonster::saveItems(const char *filepath)
   TObj *obj;
 
   if (!(fp = fopen(filepath, "w+b"))) {
-    vlogf(LOG_BUG, "Error saving mob [%s] items.", getName());
+    //    vlogf(LOG_BUG, "Error saving mob [%s] items.", getName());
     return;
   }
   memset(&st, 0, sizeof(rentHeader));

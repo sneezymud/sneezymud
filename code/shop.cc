@@ -2068,7 +2068,9 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  vlogf(LOG_BUG, "Database error in shop_keeper");
 	return FALSE;
       }
-      
+
+      myself->saveItems(buf);
+            
       sprintf(buf, "%s Congratulations, you now own this shop.",
 	      ch->getName());
       myself->doTell(buf);
