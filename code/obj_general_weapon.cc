@@ -109,7 +109,7 @@ void TGenWeapon::lowCheck()
              getName());
 
   if ((getVolume() <= 800) && (getWeight() < 3))
-    if (!canWear(ITEM_THROW))
+    if (!canWear(ITEM_THROW) && !dynamic_cast<TGun *>(this))
       vlogf(LOG_LOW,"weapon %s probably needs to be set throwable.",
               getName());
 
