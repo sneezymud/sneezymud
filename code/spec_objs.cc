@@ -66,6 +66,7 @@
 #include "shop.h"
 #include "obj_base_corpse.h"
 #include "obj_open_container.h"
+#include "obj_base_clothing.h"
 #include "obj_trap.h"
 #include "obj_portal.h"
 #include "obj_symbol.h"
@@ -6851,6 +6852,238 @@ int mobSpawnOpen(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   return FALSE;
 }
 
+int energyShield(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
+{
+
+  TBeing *ch;
+  TObj *generator = NULL;
+  char buf2[256];
+  char buf[256];
+
+  if (cmd != CMD_GENERIC_QUICK_PULSE)
+    return FALSE;
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy))) {
+
+    delete o;
+    return FALSE; 
+  }
+  if(!(generator = dynamic_cast<TObj *>(ch->equipment[WEAR_WAISTE]))) {
+    act("Your $o collapses.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+    act("$n's $o collapses.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+    delete o;
+    return FALSE;
+  }
+  if (obj_index[generator->getItemIndex()].virt != 18580) {
+    act("Your $o collapses.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+    act("$n's $o collapses.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+    delete o;
+    return FALSE;
+  }
+
+  
+  int isOn = 0; //0 is false, 1 is true
+  
+  int charge = 0;
+  sscanf(generator->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
+  int newcharge = charge;
+  
+  if (!isOn || charge < 1) {
+    act("Your $o collapses.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+    act("$n's $o collapses.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+    delete o;
+    return FALSE;
+  }
+  
+  newcharge = newcharge - max(0,::number(-8,1)); // upkeep.. basically .1 point/round/shield
+  
+  if(o->getStructPoints() < o->getMaxStructPoints()) {
+    o->addToStructPoints(1);
+    newcharge = newcharge - 1; // recharge
+  }
+  
+  if ((charge-1) / 100 != (newcharge-1) / 100 || (newcharge == 1000 && charge < 1000)) {
+    if (newcharge / 100 <= 3) sprintf(buf, "<r>red");
+    else if ( newcharge / 100 <= 6) sprintf(buf, "<Y>yellow");
+    else if ( newcharge / 100 <= 9) sprintf(buf, "<g>green");
+    else sprintf(buf, "<c>blue");
+    
+    sprintf(buf2, "The display panel on your $o glows %s<1> as it reads %d0%%.", buf, newcharge/100);
+    act(buf2,TRUE,ch,generator,NULL,TO_CHAR,NULL);
+    sprintf(buf2, "The display panel on $n's $o glows %s<1>.", buf);
+    act(buf2,TRUE,ch,generator,NULL, TO_ROOM,NULL);
+
+    
+  }
+  
+  
+  sprintf(generator->name, "generator shield belt [on=%d] [charge=%d]", isOn, newcharge);
+  
+  return FALSE;
+  
+}
+
+
+int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
+{
+  TBeing *ch = NULL;
+  //  TObj *shield = NULL;
+  char buf[256];
+  char buf2[256];
+  char arg1[256];
+  char arg2[256];
+
+  int charge;
+  int newcharge;
+  int isOn; //0 is false, 1 is true
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if (cmd == CMD_GENERIC_PULSE) {
+
+    sscanf(o->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
+    
+    newcharge = charge;
+
+    if (charge < 1000 && ch->outside() && is_daytime()) {
+
+      newcharge = min(1000,newcharge + ::number(10,30));
+    }
+
+    if (isOn) {
+      
+      
+      wearSlotT il;
+      
+      for (il = MIN_WEAR; il < MAX_WEAR; il++) {
+	if (il == HOLD_RIGHT || il == HOLD_LEFT)
+	  continue;
+	if (ch->slotChance(il) && !ch->equipment[il] && newcharge > 10) {
+	  TObj *shield = NULL;
+	  if(!(shield = read_object(18581, VIRTUAL))) {
+	    vlogf(LOG_PROC, "Shield generator couldn't load energy shield!");
+	    return TRUE;
+	  }
+	  
+	  int bit = (1<<14);
+	  
+	  if(il == WEAR_HEAD) bit = ITEM_WEAR_HEAD;
+	  if(il == WEAR_NECK) bit = ITEM_WEAR_NECK;
+	  if(il == WEAR_BACK) bit = ITEM_WEAR_BACK;
+	  if(il == WEAR_BODY) bit = ITEM_WEAR_BODY;
+	  if(il == WEAR_ARM_R) bit = ITEM_WEAR_ARMS;
+	  if(il == WEAR_ARM_L) bit = ITEM_WEAR_ARMS;
+	  if(il == WEAR_WRIST_R) bit = ITEM_WEAR_WRIST;
+	  if(il == WEAR_WRIST_L) bit = ITEM_WEAR_WRIST;
+	  if(il == WEAR_HAND_R) bit = ITEM_WEAR_HANDS;
+	  if(il == WEAR_HAND_L) bit = ITEM_WEAR_HANDS;
+	  if(il == WEAR_FINGER_R) bit = ITEM_WEAR_FINGER;
+	  if(il == WEAR_FINGER_L) bit = ITEM_WEAR_FINGER;
+	  if(il == WEAR_WAISTE) bit = ITEM_WEAR_WAISTE;
+	  if(il == WEAR_LEGS_R) bit = ITEM_WEAR_LEGS;
+	  if(il == WEAR_LEGS_L) bit = ITEM_WEAR_LEGS;
+	  if(il == WEAR_FOOT_R) bit = ITEM_WEAR_FEET;
+	  if(il == WEAR_FOOT_L) bit = ITEM_WEAR_FEET;
+	  if(il == WEAR_EX_LEG_R) bit = ITEM_WEAR_LEGS;
+	  if(il == WEAR_EX_LEG_L) bit = ITEM_WEAR_LEGS;
+	  if(il == WEAR_EX_FOOT_R) bit = ITEM_WEAR_FEET;
+	  if(il == WEAR_EX_FOOT_L) bit = ITEM_WEAR_FEET;
+	  
+	  shield->obj_flags.wear_flags = bit;
+	  TBaseClothing *armor = NULL;
+	  
+	  if ((armor = dynamic_cast<TBaseClothing *>(shield))) {
+	    armor->setDefArmorLevel(ch->GetMaxLevel());
+	    armor->setVolume((int) (((100. * (double) ch->getHeight()) / 70.) * race_vol_constants[mapSlotToFile(il)] / 100));
+	  }
+	  
+	  ch->equipChar(shield, il);
+	  
+	  sprintf(buf2, "Your %s is surrounded by a crackling blue aura.", ch->describeBodySlot((wearSlotT)il).c_str());
+	  
+	  act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+	  sprintf(buf2, "$n's %s is surrounded by a crackling blue aura.", ch->describeBodySlot((wearSlotT)il).c_str());
+	  
+	  act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+	  
+	  newcharge = newcharge - 10;
+	  
+	}
+      }
+
+    }
+    if ((charge-1) / 100 != (newcharge-1) / 100 || (newcharge == 1000 && charge < 1000)) {
+      if (newcharge / 100 <= 3) sprintf(buf, "<r>red");
+      else if ( newcharge / 100 <= 6) sprintf(buf, "<Y>yellow");
+      else if ( newcharge / 100 <= 9) sprintf(buf, "<g>green");
+      else sprintf(buf, "<c>blue");
+      
+      sprintf(buf2, "The display panel on your $o glows %s<1> as it reads %d0%%.", buf, newcharge/100);
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "The display panel on $n's $o glows %s<1>.", buf);
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+      
+    }
+    
+    sprintf(o->name, "generator shield belt [on=%d] [charge=%d]", isOn, newcharge);
+    return FALSE;
+
+  } else if ((cmd == CMD_PUSH || cmd == CMD_PRESS)) {
+    arg = one_argument(arg, arg1);
+    arg = one_argument(arg, arg2);
+    if (is_abbrev(arg1, "display") && is_abbrev(arg2, "button")) {
+     
+      sscanf(o->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
+      
+      if (charge / 100 <= 3) sprintf(buf, "<r>red");
+      else if (charge / 100 <= 6) sprintf(buf, "<Y>yellow");
+      else if (charge / 100 <= 9) sprintf(buf, "<g>green");
+      else sprintf(buf, "<c>blue");
+
+
+      act("You press the display button on $p.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("$n presses the display button on $p.",TRUE,ch,o,NULL, TO_ROOM,NULL);
+
+
+      sprintf(buf2, "The display panel on your $o glows %s<1> as it reads %d%%.", buf, charge/10);
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      sprintf(buf2, "The display panel on $n's $o glows %s<1>.", buf);
+      act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
+      sprintf(buf2, "The power LED on your $o is currently %s<1>.", (isOn ? "<g>on<1>" : "<r>off<1>"));
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+      
+      return TRUE;
+    } else if (is_abbrev(arg1, "power") && is_abbrev(arg2, "button")) {
+      int charge = 0;
+      sscanf(o->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
+      
+
+
+      act("You press the power button on $p.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("$n presses the power button on $p.",TRUE,ch,o,NULL, TO_ROOM,NULL);
+
+
+      if (isOn) {
+	isOn = 0;
+      } else {
+	isOn = 1;
+      }
+
+      sprintf(buf2, "The power LED on your $o turns %s<1>.", (isOn ? "<g>on<1>" : "<r>off<1>"));
+      act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+      sprintf(o->name, "generator shield belt [on=%d] [charge=%d]", isOn, charge);
+
+
+      return TRUE;
+
+    }
+  }       
+
+  return FALSE;
+}
 
 
 //MARKER: END OF SPEC PROCS
@@ -6991,6 +7224,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "Weapon: Unmaker", weaponUnmaker},
   {TRUE, "Chromatic Weapon", chromaticWeapon},
   {FALSE, "spawning object: open", mobSpawnOpen},
+  {FALSE, "Energy Shield: generator", energyShieldGenerator}, //120
+  {FALSE, "Energy Shield: shield", energyShield},
   {FALSE, "last proc", bogusObjProc}
 };
 
