@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disease.cc,v $
+// Revision 1.3  1999/10/12 00:06:40  lapsos
+// Prevented shopkeepers from getting diseases.
+//
 // Revision 1.2  1999/10/08 18:31:04  peel
 // Disease spreading no longer logged
 //
@@ -100,6 +103,7 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
 
     // guess who shouldn't get diseases...
     if (v->spec == SPEC_HORSE_PESTILENCE ||
+        v->spec == SPEC_SHOPKEEPER ||
         v->mobVnum() == APOC_PESTHORSE)
       continue;
 
