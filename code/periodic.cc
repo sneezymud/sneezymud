@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: periodic.cc,v $
+// Revision 1.8  1999/10/07 03:25:44  batopr
+// *** empty log message ***
+//
 // Revision 1.7  1999/09/29 07:46:14  lapsos
 // Added code for the Mobile Strings stuff.
 //
@@ -47,9 +50,9 @@
 // based on various condition
 void deityCheck(int)
 {
+  return;
   // deities are currently whacky, disable auto-load for time being.
   // Bat 9/9/98
-  return;
 #if 0
   TBeing *deity;
   int num_d = mob_index[real_mobile(MOB_DEITY_JUDGMENT)].number;
