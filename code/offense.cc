@@ -1243,7 +1243,7 @@ int TObj::burnObject(TBeing *ch, int perc)
     return FALSE;
   if (dynamic_cast<TSpellBag *>(this))
     return FALSE;
-  if (this->isObjStat(ITEM_BAG))
+  if (dynamic_cast<TBag *>(this))
     return FALSE;
 
   if (ch && (ch == equippedBy) &&
