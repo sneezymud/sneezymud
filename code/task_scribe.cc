@@ -56,14 +56,21 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 	    return FALSE;
 	  }
 	  scroll_obj->swapToStrung();
+
 	  delete scroll_obj->name;
 	  sprintf(buf, "scroll crumpled scribed %s", discArray[which]->name);
 	  scroll_obj->name=mud_str_dup(buf);
 
+	  delete scroll_obj->shortDescr;
+	  sprintf(buf, "<o>a crumpled %s scroll<1>", discArray[which]->name);
+	  scroll_obj->shortDescr=mud_str_dup(buf);
+	  
 	  scroll_obj->setSpell(0,which);
 	  scroll_obj->setSpell(1, TYPE_UNDEFINED);
 	  scroll_obj->setSpell(2, TYPE_UNDEFINED);
           scroll_obj->setMagicLevel(ch->getClassLevel(CLASS_MAGE));
+
+	  scroll_obj->obj_flags.cost = scroll_obj->suggestedPrice();
 
           if (bSuccess(ch, knowledge, SKILL_SCRIBE)) {
             ch->sendTo("You have successfully scribed your scroll%s.\n\r",
