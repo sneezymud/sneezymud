@@ -10,9 +10,9 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   int learning = ch->getSkillValue(SKILL_SACRIFICE);
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
   int percent = ::number(1, 100);
-  int factor = ((::number(0,2)) * ch->getSkillValue(SKILL_SACRIFICE));
-  int factor2 = ((((::number(0,2)) * ch->getSkillValue(SKILL_SACRIFICE)) / 10) * 6);
- 
+  int factor = ::number(1, ch->getSkillValue(SKILL_SACRIFICE));
+  int factor2 = ((::number(1, ch->getSkillValue(SKILL_SACRIFICE)) / 10) * 6);
+
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
 
@@ -50,7 +50,21 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       continue;
     if (!guard->isPolice() || !guard->canSee(ch) || !guard->awake())
       continue;
-    guard->doSay("Hey! Get the hell out of here! Damn Voodoo Witch!");
+    int saything = (::number(0,3));
+    switch (saything) {
+      case 0:
+	guard->doSay("Hey! Get the hell out of here! Damn Voodoo Witch!");
+	break;
+      case 1:
+	guard->doSay("Hey! Don't you have any respect for the dead?!? Get the hell out of here!");
+	break;
+      case 2:
+	guard->doSay("Damn Shaman! Take your voodoo crap and PISS OFF!!!");
+	break;
+      case 3:
+	guard->doSay("Hey witch!! Are you some sort of whacked out necrophiliac? Bugger off!!");
+	break;
+    }
     act("You cease the ritual sacrifice of $p.", FALSE, ch, corpse, 0, TO_CHAR);
     act("$n stops chanting over the corpse of $p.", TRUE, ch, corpse, 0, TO_ROOM);
     ch->stopTask();

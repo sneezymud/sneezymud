@@ -241,9 +241,11 @@ void TBeing::updatePos()
 
   if (isPc()) {
     if (hasClass(CLASS_SHAMAN) && (-11 >= getHit())) {
+      // reconcileDamage(this, 5, DAMAGE_NORMAL);
       act("$n is dead! R.I.P.", TRUE, this, 0, 0, TO_ROOM);
       sendTo(COLOR_BASIC, "<R>You are dead!  Sorry...<z>\n\r");
-    //    deathCry();
+      // stats.deaths[GetMaxLevel()][!isPc()] = stats.deaths[GetMaxLevel()][!isPc()] + 1;
+      // updateStatistics();
       setPosition(POSITION_DEAD);
       die(DAMAGE_NORMAL);
       doLook("", CMD_LOOK);
@@ -254,8 +256,10 @@ void TBeing::updatePos()
       sendTo(COLOR_BASIC, "<G>The shock on your body has caused you to panic!<z>\n\r");
       doFlee("");
       genericKillFix();
+      return;
     }
-    return;
+  } else {
+    // nothing here
   }
   // XXXXXX
 
