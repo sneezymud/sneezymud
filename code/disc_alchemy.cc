@@ -1744,6 +1744,10 @@ int materialize(TBeing *caster, const char * name)
 
 int castMaterialize(TBeing *caster, const char * name)
 {
+  caster->sendTo("Temporarily disabled.\n\r");
+  return FALSE;
+  
+
   if (caster->getMoney() < MATERIALIZE_PRICE) {
     caster->sendTo("You don't have the money for that!\n\r");
     return FALSE;
@@ -1846,6 +1850,11 @@ int castSpontaneousGeneration(TBeing *caster, const char * name)
 {
   TObj *obj;
   int level;
+
+  
+  caster->sendTo("Temporarily disabled.\n\r");
+  return FALSE;
+
 
   if (caster->getMoney() < SPONT_PRICE) {
     caster->sendTo("You don't have the money for that!\n\r");
