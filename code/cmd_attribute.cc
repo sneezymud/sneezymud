@@ -424,6 +424,17 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
 	    ch->cyan(), d->career.crit_genitalia_suff, ch->norm());
     str += buffer;
   }
+  if (d->career.crit_tooth){
+    sprintf(buffer, "COMBAT_CRIT: Teeth knocked out inflicted : %s %u%s\n\r",
+	    ch->cyan(), d->career.crit_tooth, ch->norm());
+    str += buffer;
+  }
+  if (d->career.crit_tooth_suff){
+    sprintf(buffer, "COMBAT_CRIT: Teeth knocked out suffered : %s %u%s\n\r",
+	    ch->cyan(), d->career.crit_tooth_suff, ch->norm());
+    str += buffer;
+  }
+
   ch->desc->page_string(str.c_str());
   return;
 }

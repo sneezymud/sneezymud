@@ -1971,26 +1971,62 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
             case 93:
             case 94:
             case 95:
+	      return FALSE;
             case 96:
             case 97:
-              return FALSE;
-            case 98:
-            case 99:
+	      sprintf(buf, "You swing your %s right into $N's face, sending a tooth flying.", limbStr.c_str());
+	      act(buf,FALSE,this,obj,v,TO_CHAR,ANSI_ORANGE);
+	      sprintf(buf, "$n's %s connects with your face, sending a tooth flying.", limbStr.c_str());
+	      act(buf,FALSE,this,obj,v,TO_VICT,ANSI_ORANGE);
+	      	      
+	      TCorpse *corpse;
+	      char buf[256];
+	      
+	      corpse = new TCorpse();
+	      corpse->name = mud_str_dup("tooth");
+	      
+	      sprintf(buf, "<W>a <1><r>bloody<1><W> tooth from %s<1>", v->getName());
+	      corpse->shortDescr = mud_str_dup(buf);
+	      
+	      sprintf(buf, "<W>A <1><r>bloody<1><W> tooth lies here, having been knocked out of %s's mouth.<1>", v->getName());
+	      corpse->setDescr(mud_str_dup(buf));
+	      
+	      corpse->setStuff(NULL);
+	      corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
+	      corpse->addCorpseFlag(CORPSE_NO_REGEN);
+	      corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
+	      corpse->setWeight(0.1);
+	      corpse->canBeSeen = v->canBeSeen;
+	      corpse->setVolume(1);
+	      corpse->setMaterial(MAT_BONE);
+	      
+	      act("$p goes flying through the air and bounces once before it rolls to a stop.",TRUE,v,corpse,0,TO_ROOM, ANSI_RED);
+	      *v->roomp += *corpse;
+
+	      if (desc)
+		desc->career.crit_tooth++;
+	      
+	      if (v->desc)
+		v->desc->career.crit_tooth_suff++;
+      
+	      return ONEHIT_MESS_CRIT_S;
+	    case 98:
+	    case 99:
 	    case 100:
-              // crush skull unless helmet
-              if (!v->hasPart(WEAR_HEAD))
-                return 0;
-              if ((obj = v->equipment[WEAR_HEAD])) {
-                sprintf(buf, 
-    "With a mighty blow, you crush $N's head with your %s. Unfortunately, $S $o saves $M.",
-             limbStr.c_str());
-                act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
-                sprintf(buf, 
-    "$n's %s strikes a mighty blow to your head crushing your $o!",
-             limbStr.c_str());
-                act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
+	      // crush skull unless helmet
+	      if (!v->hasPart(WEAR_HEAD))
+		return 0;
+	      if ((obj = v->equipment[WEAR_HEAD])) {
+		sprintf(buf, 
+			"With a mighty blow, you crush $N's head with your %s. Unfortunately, $S $o saves $M.",
+			limbStr.c_str());
+		act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
+		sprintf(buf, 
+			"$n's %s strikes a mighty blow to your head crushing your $o!",
+			limbStr.c_str());
+		act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
                 sprintf(buf, "$n's %s strikes a mighty blow to $N's head, crushing $S $o!",
-                  limbStr.c_str());
+			limbStr.c_str());
                 act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
                 if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA)) {
                   obj->makeScraps();
