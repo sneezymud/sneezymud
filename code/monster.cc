@@ -381,26 +381,12 @@ int TMonster::calculateGoldFromConstant()
       return FALSE;
     }
     
-    if((rc=dbquery(TRUE, &res, "sneezy", "calculateGoldFromQuery", "select * from shopownedaccess where shop_nr=%i", shop_nr))==-1){
-      vlogf(LOG_BUG, "Database error in shop_keeper");
-      return FALSE;
-    }
-    if((row=mysql_fetch_row(res))){
-      mysql_free_result(res);
-      if((rc=dbquery(TRUE, &res, "sneezy", "CalculateGoldFromQuery", "select gold from shopowned where shop_nr=%i", shop_nr))){
-	if(rc==-1){
-	  vlogf(LOG_BUG, "Database error in shop_keeper");
-	  return FALSE;
-	}
-      }
-      row=mysql_fetch_row(res);
-      
+    rc=dbquery(TRUE, &res, "sneezy", "calculategoldfromquery", "select gold from shop where shop_nr=%i", shop_nr);
+    
+    if(rc!=-1 && (row=mysql_fetch_row(res))){
       the_gold = atoi(row[0]);
-      
-      mysql_free_result(res);
     } else {
       the_gold = 1000000;
-
       saveGovMoney("shop load wealth", 1000000);
     }
   }

@@ -782,7 +782,6 @@ void TBeing::saveChar(sh_int load_room)
       unsigned int shop_nr;
       int rc;
       MYSQL_RES *res;
-      MYSQL_ROW row;
     
       for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);
     
@@ -790,22 +789,14 @@ void TBeing::saveChar(sh_int load_room)
 	vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", this->number);
 	return;
       }
-    
-      if((rc=dbquery(TRUE, &res, "sneezy", "saveItems", "select * from shopownedaccess where shop_nr=%i", shop_nr))==-1){
-	vlogf(LOG_BUG, "Database error in shop_keeper");
-	return;
-      }
-      if((row=mysql_fetch_row(res))){
-	mysql_free_result(res);
-	if((rc=dbquery(TRUE, &res, "sneezy", "saveItems", "update shopowned set gold=%i where shop_nr=%i", getMoney(), shop_nr))){
-	  if(rc==-1){
-	    vlogf(LOG_BUG, "Database error in shop_keeper");
-	    return;
-	  }
+      
+      if((rc=dbquery(TRUE, &res, "sneezy", "saveItems", "update shop set gold=%i where shop_nr=%i", getMoney(), shop_nr))){
+	if(rc==-1){
+	  vlogf(LOG_BUG, "Database error in shop_keeper");
+	  return;
 	}
-
-	mysql_free_result(res);
       }
+      mysql_free_result(res);
     }
 
 
