@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_set.cc,v $
+// Revision 1.4  1999/10/12 04:05:53  lapsos
+// gagged the granted/revoked lines on set wizpower.  Was something of a bitch point for some.
+//
 // Revision 1.3  1999/10/07 21:11:07  batopr
 // added statistics.h
 //
@@ -234,16 +237,20 @@ void TPerson::doSet(const char *argument)
       if (!mob->hasWizPower(wpt)) {
         sendTo("Wiz-Power Set: %s\n\r", getWizPowerName(wpt).c_str());
         mob->setWizPower(wpt);
+#if 0
         mob->sendTo("You have been granted the following Wiz-Power: %s\n\r",
                 getWizPowerName(wpt).c_str());
         vlogf(3, "%s given %s by %s", mob->getName(), getWizPowerName(wpt).c_str(), getName());
+#endif
         mob->doSave(SILENT_NO);
       } else {
         sendTo("Wiz-Power Unset: %s\n\r", getWizPowerName(wpt).c_str());
         mob->remWizPower(wpt);
+#if 0
         mob->sendTo("The following Wiz-Power has been revoked: %s\n\r",
                 getWizPowerName(wpt).c_str());
         vlogf(3, "%s had %s revoked by %s", mob->getName(), getWizPowerName(wpt).c_str(), getName());
+#endif
       }
     } else {
       sendTo("You can't toggle Wiz-Powers for non-immortals.\n\r");
