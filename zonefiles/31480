@@ -1,5 +1,49 @@
 #31480
-Unused Block (50 rooms)~
-31499 25 2 0
+Peel - Brightmoon Outpost~
+31499 25 2 1
+
+D 0 31480 2 1        Brightmoon Outpost -> Field Hospital
+D 0 31484 0 1        Equipment Room -> Barracks
+D 0 31484 3 1        Equipment Room -> Practice Field
+D 0 31485 1 1        Practice Field -> Equipment Room
+D 0 31489 2 1        Barracks -> Equipment Room
+D 0 31492 0 1        Field Hospital -> Brightmoon Outpost
+
+O 0 20 1 31480       a chair
+
+O 0 31484 4 31480    a chair
+
+O 0 31482 1 31480    a table
+O 0 31480 1 31480    a small iron fireplace
+O 0 31484 1 31482    a chair
+O 0 31485 2 31484    a weapon rack
+O 0 31486 3 31485    a training dummy
+O 0 31486 1 31486    an archery target
+O 0 31486 2 31488    a training dummy
+O 0 31481 5 31489    a simple military cot
+O 0 31482 1 31492    a table
+
+B 0 31483 3 31492    a bale of hay
+
+M 0 31480 3 31480       the captain of the Brightmoon Outpost
+M 0 31481 10 31480      a paladin soldier
+M 0 31481 10 31480      a paladin soldier
+M 0 31481 10 31480      a paladin soldier
+M 0 31481 10 31482      a paladin soldier
+M 0 31483 10 31483      a paladin soldier keeps a lookout
+M 0 31481 10 31485      a paladin soldier
+M 0 31481 10 31485      a paladin soldier
+M 0 31481 10 31486      a paladin soldier
+M 0 31482 3 31487       a paladin lieutenant
+M 0 31481 10 31487      a paladin soldier
+M 0 31481 10 31487      a paladin soldier
+M 0 31481 10 31488      a paladin soldier
+M 0 31481 10 31488      a paladin soldier
+M 0 31481 10 31488      a paladin soldier
+M 0 31481 10 31488      a paladin soldier
+M 0 31482 3 31488       a paladin lieutenant
+M 0 31481 10 31489      a paladin soldier
+M 0 31484 1 31492       a paladin field medic
 S
+
 
