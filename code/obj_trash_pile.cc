@@ -180,5 +180,8 @@ void TTrashPile::overFlow()
     sendrpf(COLOR_BASIC, rp, "An avalanch of trash cascades in from the %s.\n\r",
 	    dirs[rev_dir[dir]]);
 
+
+    roomp->saveItems("");
+    rp->saveItems("");
   }
 }
