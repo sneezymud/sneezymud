@@ -42,7 +42,7 @@ void updateStocks()
 {
   TDatabase db(DB_SNEEZY), stocks(DB_SNEEZY);
 
-  stocks.query("select ticker, shares, price, (((random() * volatility * 2) - volatility) / 100) as pricechange from stockinfo");
+  stocks.query("select ticker, shares, price, (((random() * volatility * 2) - volatility) / 1000) as pricechange from stockinfo");
 
   while(stocks.fetchRow()){
     float pricechange=convertTo<float>(stocks["pricechange"]);
