@@ -1070,11 +1070,6 @@ void TMonster::buffMobLoader()
 
   *this += *obj;
 
-  if (obj_lev != -1) {
-    TPotion *pot = dynamic_cast<TPotion *>(obj);
-    if (pot)
-      pot->setMagicLevel(obj_lev);
-  }
 
   return;
 }

@@ -3881,7 +3881,7 @@ void TThing::describeContains(const TBeing *ch) const
 void TBaseCup::describeContains(const TBeing *ch) const
 {
   if (getDrinkUnits())
-    ch->sendTo(COLOR_OBJECTS, "%s seems to have something in it...\n\r", good_cap(getName()).c_str());
+    ch->sendTo(COLOR_OBJECTS, "%s seems to have some %s liquid in it...\n\r", good_cap(getName()).c_str(), DrinkInfo[getDrinkType()]->color);
 }
 
 void TFood::describeCondition(const TBeing *ch) const
@@ -4762,46 +4762,6 @@ void TScroll::descMagicSpells(TBeing *ch) const
 
   spell = getSpell(2);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
-      ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
-    if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, "%s produces: %s.\n\r", cap(capbuf), 
-            discArray[spell]->name);
-    else
-       ch->sendTo(COLOR_OBJECTS, "%s produces: Something from the %s discipline.\n\r", cap(capbuf), disc_names[das]);
-  }
-
-  return;
-}
-
-void TPotion::descMagicSpells(TBeing *ch) const
-{
-  discNumT das = DISC_NONE;
-  spellNumT spell;
-  char capbuf[160];
-  strcpy(capbuf, ch->objs(this));
-
-  spell = getSpell(0);
-  if (spell >= 0 && discArray[spell] &&
-      ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
-    if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, "%s produces: %s.\n\r", cap(capbuf), 
-            discArray[spell]->name);
-    else
-      ch->sendTo(COLOR_OBJECTS, "%s produces: Something from the %s discipline.\n\r", cap(capbuf),  disc_names[das]);
-  }
-
-  spell = getSpell(1);
-  if (spell >= 0 && discArray[spell] &&
-      ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
-    if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, "%s produces: %s.\n\r", cap(capbuf), 
-            discArray[spell]->name);
-    else
-       ch->sendTo(COLOR_OBJECTS, "%s produces: Something from the %s discipline.\n\r", cap(capbuf), disc_names[das]);
-  }
-
-  spell = getSpell(2);
-  if (spell >= 0 && discArray[spell] &&
       ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
       ch->sendTo(COLOR_OBJECTS, "%s produces: %s.\n\r", cap(capbuf), 

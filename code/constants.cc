@@ -327,11 +327,6 @@ void assign_item_info()
      "Unused", 0, 0,
      "Unused", 0, 0,
      "Unused", 0, 0);
-  ItemInfo[ITEM_POTION] = new itemInfo("Potion","a potion",
-     "Level/learnedness of spells in potion", 0, 0,
-     "Which spell (-1 = NONE)", MAX_SKILL - 1, -1,
-     "Which spell (-1 = NONE)", MAX_SKILL - 1, -1,
-     "Which spell (-1 = NONE)", MAX_SKILL - 1, -1);
   ItemInfo[ITEM_WORN] = new itemInfo("Worn Object","a piece of clothing",
      "Unused", 0, 0,
      "Unused", 0, 0,
@@ -593,6 +588,11 @@ void assign_item_info()
      "Unused", 0, 0,
      "Unused", 0, 0,
      "Unused", 0, 0);
+  ItemInfo[ITEM_POTION] = new itemInfo("Potion","a potion container",
+     "Max drink units ", 2560, 0,
+     "Number of units left", 2560, 0,
+     "Liquid type - see help liquids", MAX_DRINK_TYPES - 1, 0,
+     "1 = Poisoned, 2 = Unlimited drinks, 4 = Spillable", 7, 0);
 };
 
 const char * const wear_bits[MAX_ITEM_WEARS] =

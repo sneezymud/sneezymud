@@ -1425,14 +1425,3 @@ string TScroll::getNameForShow(bool useColor, bool useName, const TBeing *ch) co
   return buf2;
 }
 
-string TPotion::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
-{
-  char buf2[256];
-  sprintf(buf2, "%s [%s/%s/%s]", 
-       useName ? name : (useColor ? getName() : getNameNOC(ch).c_str()),
-       (getSpell(0) >= 0 ? (discArray[getSpell(0)] ? discArray[getSpell(0)]->name : "Unknown") : "None"),
-       (getSpell(1) >= 0 ? (discArray[getSpell(1)] ? discArray[getSpell(1)]->name : "Unknown") : "None"),
-       (getSpell(2) >= 0 ? (discArray[getSpell(2)] ? discArray[getSpell(2)]->name : "Unknown") : "None"));
-
-  return buf2;
-}

@@ -10,6 +10,10 @@
 
 int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
+  ch->sendTo("brew is disabled temporarily.\n\r");
+  return FALSE;
+#if 0
+
   TPotion *potion_obj = NULL, *p2;
   TObj *obj;
   int w2;
@@ -144,4 +148,5 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
       break;                    // eat the command
   }
   return TRUE;
+#endif
 }

@@ -434,6 +434,7 @@ TObj::~TObj()
 
   delete [] owners;
   owners = NULL;
+
 }
 
 TRoom::TRoom(int r) :

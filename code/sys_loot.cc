@@ -243,7 +243,6 @@ bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
 bool hasSpellOnIt(TMagicItem * tObj, spellNumT tSpell)
 {
   TScroll * tScroll = dynamic_cast<TScroll *>(tObj);
-  TPotion * tPotion = dynamic_cast<TPotion *>(tObj);
   TWand   * tWand   = dynamic_cast<TWand   *>(tObj);
   TStaff  * tStaff  = dynamic_cast<TStaff  *>(tObj);
 
@@ -251,11 +250,6 @@ bool hasSpellOnIt(TMagicItem * tObj, spellNumT tSpell)
     if (tScroll->getSpell(0) == tSpell ||
         tScroll->getSpell(1) == tSpell ||
         tScroll->getSpell(2) == tSpell)
-      return true;
-  } else if (tPotion) {
-    if (tPotion->getSpell(0) == tSpell ||
-        tPotion->getSpell(1) == tSpell ||
-        tPotion->getSpell(2) == tSpell)
       return true;
   } else if (tWand) {
     if (tWand->getSpell() == tSpell)

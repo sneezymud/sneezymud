@@ -2295,76 +2295,6 @@ int TBeing::doQuaff(const char *argument)
   return FALSE;
 }
 
-int TPotion::quaffMe(TBeing *ch)
-{
-  int i;
-  int rc;
-
-  if (ch->fight()) {
-    if (equippedBy) {
-      if (!ch->isAgile(0)) {
-        act("$n is jolted and drops $p! It shatters!", TRUE, ch, this, 0, TO_ROOM);
-        act("You arm is jolted and $p flies from your hand, *SMASH*", TRUE, ch, this, 0, TO_CHAR);
-        if (equippedBy)
-          ch->unequip(eq_pos);
-        return DELETE_THIS;
-      }
-    } else {
-      if (!ch->isAgile(-35)) {
-        act("$n is jolted and drops $p!  It shatters!", TRUE, ch, this, 0, TO_ROOM);
-        act("You arm is jolted and $p flies from your hand, *SMASH*", TRUE, ch, this, 0, TO_CHAR);
-        return DELETE_THIS;
-      }
-    }
-  }
-
-#if 0
-  // semi annoying
-  if (ch->getCond(THIRST) > -1) {
-    if (ch->getCond(THIRST) > 20) {
-      act("Your stomach can't contain anymore!", FALSE, ch, 0, 0, TO_CHAR);
-      return FALSE;
-    } else {
-      ch->gainCondition(THIRST, 1);
-      add = TRUE;
-    }
-  }
-#endif
-
-  act("$n quaffs $p.", TRUE, ch, this, 0, TO_ROOM);
-  act("You quaff $p which dissolves.", FALSE, ch, this, 0, TO_CHAR);
-
-  ch->playsound(SOUND_WATER_GURGLE, SOUND_TYPE_NOISE);
-
-  for (i = 0; i <= 2; i++) {
-    spellNumT spellnum = getSpell(i);
-    if (spellnum >= 0) {
-      if (!discArray[spellnum]) {
-        vlogf(LOG_BUG,"doQuaff (%s) called spell (%d) that does not exist!", 
-            getName(), spellnum);
-        continue;
-      }
-      rc = doObjSpell(ch,ch,this,NULL,"", spellnum);
-      if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-        // uh, not possible right
-        vlogf(LOG_BUG, "whacked out potion return %s", getName());
-      }
-      if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT)) {
-        if (equippedBy)
-          ch->unequip(eq_pos);
-
-        return DELETE_VICT | DELETE_THIS;
-      }
-    }
-  }
-
-  if (equippedBy)
-    ch->unequip(eq_pos);
-
-  ch->addToWait(combatRound(1));
-  return DELETE_THIS;
-}
-
 
 int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
 {
@@ -2377,15 +2307,19 @@ int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
       curePoison(ch,ch,level,learn,SPELL_CURE_POISON);
       break;
     case LIQ_POT_HEAL_LIGHT:
+    case LIQ_POT_HEAL_LIGHT2:
       healLight(ch,ch,level,learn,SPELL_HEAL_LIGHT,0);
       break;
     case LIQ_POT_HEAL_CRIT:
       healCritical(ch,ch,level,learn,SPELL_HEAL_CRITICAL,0);
       break;
     case LIQ_POT_HEAL:
+    case LIQ_POT_HEAL2:
+      break;
       heal(ch,ch,level,learn,SPELL_HEAL,0);
       break;
     case LIQ_POT_SANCTUARY:
+    case LIQ_POT_SANCTUARY2:
       sanctuary(ch,ch,level,learn);
       break;
     case LIQ_POT_FLIGHT:
@@ -2411,6 +2345,220 @@ int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
       } else {
 	ch->nothingHappens();
       }
+      break;
+    case LIQ_POT_BIND:
+      bind(ch,ch,level,learn);
+      break;
+    case LIQ_POT_BLINDNESS:
+      blindness(ch,ch,level,learn);
+      break;
+    case LIQ_POT_ARMOR:
+      armor(ch,ch,level,learn,SPELL_ARMOR);
+      break;
+    case LIQ_POT_REFRESH:
+      refresh(ch,ch,level,learn,SPELL_REFRESH);
+      break;
+    case LIQ_POT_SECOND_WIND:
+    case LIQ_POT_SECOND_WIND2:
+      secondWind(ch,ch,level,learn);
+      break;
+    case LIQ_POT_CURSE:
+      curse(ch,ch,level,learn,SPELL_CURSE);
+      break;
+    case LIQ_POT_DETECT_INVIS:
+      detectInvisibility(ch,ch,level,learn);
+      break;
+    case LIQ_POT_BLESS:
+    case LIQ_POT_BLESS2:
+      bless(ch,ch,level,learn,SPELL_BLESS);
+      break;
+    case LIQ_POT_INVIS:
+      invisibility(ch,ch,level,learn);
+      break;
+    case LIQ_POT_HEAL_FULL:
+      healFull(ch,ch,level,learn,SPELL_HEAL_FULL);
+      break;
+    case LIQ_POT_SUFFOCATE:
+      suffocate(ch,ch,level,learn);
+      break;
+    case LIQ_POT_FEATHERY_DESCENT:
+    case LIQ_POT_FEATHERY_DESCENT2:
+      featheryDescent(ch,ch);
+      break;
+    case LIQ_POT_DETECT_MAGIC:
+      detectMagic(ch,ch,level,learn);
+      break;
+    case LIQ_POT_DISPEL_MAGIC:
+      dispelMagic(ch,ch,level,learn);
+      break;
+    case LIQ_POT_STONE_SKIN:
+    case LIQ_POT_STONE_SKIN2:
+      stoneSkin(ch,ch,level,learn);
+      break;
+    case LIQ_POT_TRAIL_SEEK:
+      trailSeek(ch,ch,level,learn);
+      break;
+    case LIQ_POT_FAERIE_FIRE:
+      faerieFire(ch,ch,level,learn);
+      break;
+    case LIQ_POT_FLAMING_FLESH:
+      flamingFlesh(ch,ch,level,learn);
+      break;
+    case LIQ_POT_CONJURE_ELE_EARTH:
+      conjureElemEarth(ch,level,learn);
+      break;
+    case LIQ_POT_SENSE_LIFE:
+      senseLife(ch,ch,level,learn);
+      break;
+    case LIQ_POT_STEALTH:
+      stealth(ch,ch,level,learn);
+      break;
+    case LIQ_POT_TRUE_SIGHT:
+      trueSight(ch,ch,level,learn);
+      break;
+    case LIQ_POT_ACCELERATE:
+      accelerate(ch,ch,level,learn);
+      break;
+    case LIQ_POT_INFRAVISION:
+    case LIQ_POT_INFRAVISION2:
+      infravision(ch,ch,level,learn);
+      break;
+    case LIQ_POT_SORC_GLOBE:
+      sorcerersGlobe(ch,ch,level,learn);
+      break;
+    case LIQ_POT_POISON:
+      poison(ch,ch,level,learn,SPELL_POISON);
+      break;
+    case LIQ_POT_BONE_BREAKER:
+      boneBreaker(ch,ch,level,learn,SPELL_BONE_BREAKER);
+      break;
+    case LIQ_POT_AQUALUNG:
+      aqualung(ch,ch,level,learn);
+      break;
+    case LIQ_POT_HASTE:
+      haste(ch,ch,level,learn);
+      break;
+    case LIQ_POT_TELEPORT:
+    case LIQ_POT_TELEPORT2:
+      teleport(ch,ch,level,learn);
+      break;
+    case LIQ_POT_GILLS_OF_FLESH:
+    case LIQ_POT_GILLS_OF_FLESH2:
+      gillsOfFlesh(ch,ch,level,learn);
+      break;
+    case LIQ_POT_CURE_BLINDNESS:
+      cureBlindness(ch,ch,level,learn);
+      break;
+    case LIQ_POT_CURE_DISEASE:
+      cureDisease(ch,ch,level,learn,SPELL_CURE_DISEASE);
+      break;
+    case LIQ_POT_SHIELD_OF_MISTS:
+      shieldOfMists(ch,ch,level,learn);
+      break;
+    case LIQ_POT_SENSE_PRESENCE:
+      senseLifeShaman(ch,ch,level,learn);
+      break;
+    case LIQ_POT_CHEVAL:
+      cheval(ch,ch,level,learn);
+      break;
+    case LIQ_POT_DJALLAS_PROTECTION:
+      djallasProtection(ch,ch,level,learn);
+      break;
+    case LIQ_POT_LEGBAS_GUIDANCE:
+      legbasGuidance(ch,ch,level,learn);
+      break;
+    case LIQ_POT_DETECT_SHADOW:
+      detectShadow(ch,ch,level,learn);
+      break;
+    case LIQ_POT_CELERITE:
+    case LIQ_POT_CELERITE2:
+    case LIQ_POT_CELERITE3:
+      celerite(ch,ch,level,learn);
+      break;
+    case LIQ_POT_CLARITY:
+      clarity(ch,ch,level,learn);
+      break;
+    case LIQ_POT_BOILING_BLOOD:
+      bloodBoil(ch,ch,level,learn,SPELL_BLOOD_BOIL);
+      break;
+    case LIQ_POT_STUPIDITY:
+      stupidity(ch,ch,level,learn);
+      break;
+    case LIQ_POT_SLUMBER:
+      slumber(ch,ch,level,learn);
+      break;
+    case LIQ_POT_MULTI1: // harm crit, infravision, armor
+      harmCritical(ch,ch,level,learn,SPELL_HARM_CRITICAL,0);
+      infravision(ch,ch,level,learn);
+      armor(ch,ch,level,learn,SPELL_ARMOR);
+      break;
+    case LIQ_POT_MULTI2: // heal, remove curse, cure poison
+      heal(ch,ch,level,learn,SPELL_HEAL,0);
+      ch->removeCurseBeing(ch,level,learn,SPELL_REMOVE_CURSE);
+      curePoison(ch,ch,level,learn,SPELL_CURE_POISON);
+      break;
+    case LIQ_POT_MULTI3: // sanc, bless
+      sanctuary(ch,ch,level,learn);
+      bless(ch,ch,level,learn,SPELL_BLESS);
+      break;
+    case LIQ_POT_MULTI4: // flight, gills of flesh
+      aff.type = SPELL_FLY;
+      aff.level = level;
+      aff.duration = 1 * UPDATES_PER_MUDHOUR * level;
+      aff.modifier = 0;
+      aff.location = APPLY_NONE;
+      aff.bitvector = AFF_FLYING;
+      
+      // correct for weight
+      weightCorrectDuration(ch, &aff);
+      
+      rc = fly(ch,ch,level,&aff,learn);
+      if (IS_SET(rc, SPELL_SUCCESS)) {
+	if (ch == ch) {
+	  ch->sendTo("You feel much \"lighter\"!\n\r");
+	  act("$n seems lighter on $s feet!", FALSE, ch, NULL, 0, TO_ROOM);
+	} else {
+	  ch->sendTo("You feel much \"lighter\"!\n\r");
+	  act("$n seems lighter on $s feet!", FALSE, ch, NULL, 0, TO_ROOM);
+	}
+      } else {
+	ch->nothingHappens();
+      }
+
+      gillsOfFlesh(ch,ch,level,learn);
+      break;
+    case LIQ_POT_MULTI5: // harm, stealth, invis
+      harm(ch,ch,level,learn,SPELL_HARM,0);
+      stealth(ch,ch,level,learn);
+      invisibility(ch,ch,level,learn);
+      break;
+    case LIQ_POT_MULTI6: // heal, salve, refresh
+      heal(ch,ch,level,learn,SPELL_HEAL,0);
+      salve(ch,ch,level,learn,SPELL_SALVE);
+      refresh(ch,ch,level,learn,SPELL_REFRESH);
+      break;
+    case LIQ_POT_MULTI7: // sanc, harm crit
+      sanctuary(ch,ch,level,learn);
+      harmCritical(ch,ch,level,learn,SPELL_HARM_CRITICAL,0);
+      break;
+    case LIQ_POT_MULTI8: // sanc, harm ser
+      sanctuary(ch,ch,level,learn);
+      harmSerious(ch,ch,level,learn,SPELL_HARM_SERIOUS,0);
+      break;
+    case LIQ_POT_MULTI9: // sanc, armor, bless
+      sanctuary(ch,ch,level,learn);
+      armor(ch,ch,level,learn,SPELL_ARMOR);
+      bless(ch,ch,level,learn,SPELL_BLESS);
+      break;
+    case LIQ_POT_MULTI10: // blind, sanc, stone skin
+      blindness(ch,ch,level,learn);
+      sanctuary(ch,ch,level,learn);
+      stoneSkin(ch,ch,level,learn);
+      break;
+    case LIQ_POT_MULTI11: // heal, second wind, sterilize
+      heal(ch,ch,level,learn,SPELL_HEAL,0);
+      secondWind(ch,ch,level,learn);
+      sterilize(ch,ch,level,learn,SPELL_STERILIZE);
       break;
     default:
       rc=0;

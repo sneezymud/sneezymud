@@ -829,7 +829,7 @@ void TObj::checkObjStats()
   }
 
   // TPool strings itself during constructor, so bypass this
-  if (isObjStat(ITEM_STRUNG) && !dynamic_cast<TPool *>(this) && !dynamic_cast<TSmoke *>(this)) {
+  if (isObjStat(ITEM_STRUNG) && !dynamic_cast<TPool *>(this) && !dynamic_cast<TSmoke *>(this) && !dynamic_cast<TBaseCup *>(this)) {
     vlogf(LOG_LOW, "Item %s has been set strung, fix! (%d)", getName(), objVnum());
     remObjStat(ITEM_STRUNG);
   }

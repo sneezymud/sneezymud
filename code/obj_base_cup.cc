@@ -18,6 +18,7 @@ TBaseCup::TBaseCup() :
   liquidType(MIN_DRINK_TYPES), 
   drinkFlags(0)
 {
+  updateDesc();
 }
 
 TBaseCup::TBaseCup(const TBaseCup &a) :
@@ -27,6 +28,7 @@ TBaseCup::TBaseCup(const TBaseCup &a) :
   liquidType(a.liquidType),
   drinkFlags(a.drinkFlags)
 {
+  updateDesc();
 }
 
 TBaseCup & TBaseCup::operator=(const TBaseCup &a)
@@ -37,6 +39,7 @@ TBaseCup & TBaseCup::operator=(const TBaseCup &a)
   curDrinks = a.curDrinks;
   liquidType = a.liquidType;
   drinkFlags = a.drinkFlags;
+  updateDesc();
   return *this;
 }
 
@@ -359,29 +362,29 @@ int TBaseCup::chiMe(TBeing *tLunatic)
 
 void TBaseCup::updateDesc()
 {
-  string name, short_desc, long_desc, liquid;
+  string newname, short_desc, long_desc, liquid;
   bool found=false;
 
   // get og desc
   // replace all $l
   // if $l found, set strung and move desc
   
-  name=obj_index[getItemIndex()].name;
+  newname=obj_index[getItemIndex()].name;
   short_desc=obj_index[getItemIndex()].short_desc;
   long_desc=obj_index[getItemIndex()].long_desc;
 
   if(getDrinkUnits()<=0){
     liquid="nothing";
   } else {
-    liquid=DrinkInfo[getDrinkType()]->name;
+    liquid=DrinkInfo[getDrinkType()]->color;
   }
 
-  while (name.find("$$l") != string::npos){
-    name.replace(name.find("$$l"), 3, liquid);
+  while (newname.find("$$l") != string::npos){
+    newname.replace(newname.find("$$l"), 3, liquid);
     found=true;
   }
-  while (name.find("$l") != string::npos){
-    name.replace(name.find("$l"), 3, liquid);
+  while (newname.find("$l") != string::npos){
+    newname.replace(newname.find("$l"), 2, liquid);
     found=true;
   }
   while (short_desc.find("$$l") != string::npos){
@@ -389,7 +392,7 @@ void TBaseCup::updateDesc()
     found=true;
   }
   while (short_desc.find("$l") != string::npos){
-    short_desc.replace(short_desc.find("$l"), 3, liquid);
+    short_desc.replace(short_desc.find("$l"), 2, liquid);
     found=true;
   }
   while (long_desc.find("$$l") != string::npos){
@@ -397,17 +400,49 @@ void TBaseCup::updateDesc()
     found=true;
   }
   while (long_desc.find("$l") != string::npos){
-    long_desc.replace(long_desc.find("$l"), 3, liquid);
+    long_desc.replace(long_desc.find("$l"), 2, liquid);
+    found=true;
+  }
+
+  if(getDrinkUnits()<=0){
+    liquid="An empty";
+  } else {
+    ssprintf(liquid, "A %s", DrinkInfo[getDrinkType()]->color);
+  }
+
+  while (newname.find("$$al") != string::npos){
+    newname.replace(newname.find("$$al"), 4, liquid);
+    found=true;
+  }
+  while (newname.find("$al") != string::npos){
+    newname.replace(newname.find("$al"), 3, liquid);
+    found=true;
+  }
+  while (short_desc.find("$$al") != string::npos){
+    short_desc.replace(short_desc.find("$$al"), 4, liquid);
+    found=true;
+  }
+  while (short_desc.find("$al") != string::npos){
+    short_desc.replace(short_desc.find("$al"), 3, liquid);
+    found=true;
+  }
+  while (long_desc.find("$$al") != string::npos){
+    long_desc.replace(long_desc.find("$$al"), 4, liquid);
+    found=true;
+  }
+  while (long_desc.find("$al") != string::npos){
+    long_desc.replace(long_desc.find("$al"), 3, liquid);
     found=true;
   }
 
 
+
+
   if(found){
     if (isObjStat(ITEM_STRUNG)) {
-      delete [] this->name;
+      delete [] name;
       delete [] shortDescr;
       delete [] descr;
-      
       extraDescription *exd;
       while ((exd = ex_description)) {
 	ex_description = exd->next;
@@ -423,25 +458,24 @@ void TBaseCup::updateDesc()
     }
 
     
-
     // strip out color codes omg ugliest code ever
     char buf[256];
     int j=0;
-    for(int i=0;name.c_str()[i];++i){
-      if(name.c_str()[i] == '<'){
+    for(int i=0;newname.c_str()[i];++i){
+      if(newname.c_str()[i] == '<'){
 	do {
 	  ++i;
-	} while(name.c_str()[i]!='>');
+	} while(newname.c_str()[i]!='>');
 	++i;
       }
 
-      buf[j]=name.c_str()[i];
+      buf[j]=newname.c_str()[i];
       ++j;
     }
     buf[j]='\0';
 
-    this->name=mud_str_dup(buf);
-    this->shortDescr=mud_str_dup(short_desc.c_str());
-    this->descr=mud_str_dup(long_desc.c_str());
+    name=mud_str_dup(buf);
+    shortDescr=mud_str_dup(short_desc.c_str());
+    setDescr(mud_str_dup(long_desc.c_str()));
   }
 }

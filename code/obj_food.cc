@@ -605,6 +605,10 @@ void TBaseCup::sipMe(TBeing *ch)
       ch->affectTo(&af);
     }
   }
+
+  if(DrinkInfo[liquidType]->potion)
+    doLiqSpell(ch, getDrinkType(), 1);
+
   if (!isDrinkConFlag(DRINK_PERM))
     addToDrinkUnits(-1);
 
