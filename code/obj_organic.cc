@@ -573,9 +573,9 @@ void TOrganic::describeObjectSpecifics(const TBeing *ch) const
 {
 }
 
-bool TOrganic::splitMe(TBeing *ch, const char *argument)
+bool TOrganic::splitMe(TBeing *ch, const sstring &argument)
 {
-  char Buf[256];
+  sstring Buf;
   int  num = 2,
        per_Cost,
        per_Weight,
@@ -587,8 +587,7 @@ bool TOrganic::splitMe(TBeing *ch, const char *argument)
   if (getUnits() <= 0)
     return false;
 
-  argument = one_argument(argument, Buf); // Ditch the item name.
-  argument = one_argument(argument, Buf); // Get the split count.
+  Buf=argument.word(1);
 
   if (is_number(Buf))
     num = convertTo<int>(Buf);
@@ -608,7 +607,7 @@ bool TOrganic::splitMe(TBeing *ch, const char *argument)
   }
   ch->sendTo(COLOR_OBJECTS, "You split %s into %d pieces.\n\r",
              shortDescr, num);
-  sprintf(Buf, "$n splits %s into %d pieces.",
+  ssprintf(Buf, "$n splits %s into %d pieces.",
           shortDescr, num);
   act(Buf, TRUE, ch, 0, 0, TO_ROOM);
 

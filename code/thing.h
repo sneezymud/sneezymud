@@ -140,7 +140,7 @@ class TThing {
     virtual void update(int) {}
 
     virtual int  pourWaterOnMe(TBeing *, TObj *) { return false; }
-    virtual bool splitMe(TBeing *, const char *) { return false; }
+    virtual bool splitMe(TBeing *, const sstring &) { return false; }
     virtual int dropSmoke(int);
 
     virtual sstring compareMeAgainst(TBeing *, TObj *);

@@ -538,7 +538,7 @@ TBeing *psiAttackChecks(TBeing *caster, spellNumT sk, const char *tString){
   TObj *tobj=NULL;
   TBeing *tVictim=NULL;
 
-  if (caster->checkBusy(NULL))
+  if (caster->checkBusy())
     return NULL;
 
   if (!caster->doesKnowSkill(sk)) {

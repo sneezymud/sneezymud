@@ -20,17 +20,15 @@
 
 int identify(TBeing *caster, TObj *obj, int, byte bKnown)
 {
-  char buf[256], buf2[256];
+  sstring buf, buf2;
   int x, y;
   double z;
 
   if (bSuccess(caster, bKnown, SPELL_IDENTIFY)) {
-    strcpy(buf2, ItemInfo[obj->itemType()]->name);
-    makeLower(buf2);
-    strcpy(buf, material_nums[obj->getMaterial()].mat_name);
-    makeLower(buf);
+    buf2=sstring(ItemInfo[obj->itemType()]->name).lower();
+    buf=sstring(material_nums[obj->getMaterial()].mat_name).lower();
 
-    caster->sendTo(COLOR_OBJECTS, "You feel informed about %s...\n\rIt appears to be a kind of %s %s.\n\r", obj->getName(), buf, buf2);
+    caster->sendTo(COLOR_OBJECTS, "You feel informed about %s...\n\rIt appears to be a kind of %s %s.\n\r", obj->getName(), buf.c_str(), buf2.c_str());
     caster->sendTo("You feel it will last ");
 
     if ((obj->obj_flags.decay_time == -1) || (obj->obj_flags.decay_time > 800))
@@ -2131,7 +2129,7 @@ void TBeing::doScribe(const char *arg)
     sendTo("You lack any knowledge of how to scribe scrolls.\n\r");
     return;
   }
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return;
   }
   if (isSwimming()) {

@@ -171,7 +171,7 @@ void TBeing::doConsider(const char *argument)
       learn = getSkillValue(SKILL_CONS_ANIMAL);
       sendTo(COLOR_MOBS, "Using your knowledge of animal lore, you determine that %s is %s %s.\n\r",
             namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
+	     tmon->getMyRace()->getSingularName().startsVowel() ? "an" : "a",
             tmon->getMyRace()->getSingularName().c_str());
     }
     if (tmon->isVeggie() && doesKnowSkill(SKILL_CONS_VEGGIE)) {
@@ -180,7 +180,7 @@ void TBeing::doConsider(const char *argument)
       learn = max(learn, (int) getSkillValue(SKILL_CONS_VEGGIE));
       sendTo(COLOR_MOBS, "Using your knowledge of vegetable lore, you determine that %s is %s %s.\n\r",
             namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
+            tmon->getMyRace()->getSingularName().startsVowel()? "an" : "a",
             tmon->getMyRace()->getSingularName().c_str());
     }
     if (tmon->isDiabolic() && doesKnowSkill(SKILL_CONS_DEMON)) {
@@ -189,7 +189,7 @@ void TBeing::doConsider(const char *argument)
       learn = max(learn, (int) getSkillValue(SKILL_CONS_DEMON));
       sendTo(COLOR_MOBS, "Using your knowledge of demon lore, you determine that %s is %s %s.\n\r",
             namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
+            tmon->getMyRace()->getSingularName().startsVowel() ? "an" : "a",
             tmon->getMyRace()->getSingularName().c_str());
     }
     if (tmon->isReptile() && doesKnowSkill(SKILL_CONS_REPTILE)) {
@@ -198,7 +198,7 @@ void TBeing::doConsider(const char *argument)
       learn = max(learn, (int) getSkillValue(SKILL_CONS_REPTILE));
       sendTo(COLOR_MOBS, "Using your knowledge of reptile lore, you determine that %s is %s %s.\n\r",
             namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
+            tmon->getMyRace()->getSingularName().startsVowel() ? "an" : "a",
             tmon->getMyRace()->getSingularName().c_str());
     }
     if (tmon->isUndead() && doesKnowSkill(SKILL_CONS_UNDEAD)) {
@@ -207,7 +207,7 @@ void TBeing::doConsider(const char *argument)
       learn = max(learn, (int) getSkillValue(SKILL_CONS_UNDEAD));
       sendTo(COLOR_MOBS, "Using your knowledge of the undead, you determine that %s is %s %s.\n\r",
             namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
+            tmon->getMyRace()->getSingularName().startsVowel() ? "an" : "a",
             tmon->getMyRace()->getSingularName().c_str());
     }
     if (tmon->isGiantish() && doesKnowSkill(SKILL_CONS_GIANT)) {
@@ -216,7 +216,7 @@ void TBeing::doConsider(const char *argument)
       learn = max(learn, (int) getSkillValue(SKILL_CONS_GIANT));
       sendTo(COLOR_MOBS, "Using your knowledge of giant lore, you determine that %s is %s %s.\n\r",
             namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
+            tmon->getMyRace()->getSingularName().startsVowel() ? "an" : "a",
             tmon->getMyRace()->getSingularName().c_str());
     }
     if (tmon->isPeople() && doesKnowSkill(SKILL_CONS_PEOPLE)) {
@@ -225,7 +225,7 @@ void TBeing::doConsider(const char *argument)
       learn = max(learn, (int) getSkillValue(SKILL_CONS_PEOPLE));
       sendTo(COLOR_MOBS, "Using your knowledge of human and demi-human lore, you determine that %s is %s %s.\n\r",
             namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
+            tmon->getMyRace()->getSingularName().startsVowel() ? "an" : "a",
             tmon->getMyRace()->getSingularName().c_str());
     }
     if (tmon->isOther() && doesKnowSkill(SKILL_CONS_OTHER)) {
@@ -234,7 +234,7 @@ void TBeing::doConsider(const char *argument)
       learn = max(learn, (int) getSkillValue(SKILL_CONS_OTHER));
       sendTo(COLOR_MOBS, "Using your knowledge of monster lore, you determine that %s is %s %s.\n\r",
             namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
+            tmon->getMyRace()->getSingularName().startsVowel() ? "an" : "a",
             tmon->getMyRace()->getSingularName().c_str());
     }
     if (learn > MAX_SKILL_LEARNEDNESS)

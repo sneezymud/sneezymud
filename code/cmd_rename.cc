@@ -163,7 +163,7 @@ void TBeing::doNameChange(const char *argument)
 
   strcpy(tmp_name, cap(tmp_name));
   delete [] vict->name;
-  vict->name = mud_str_dup(cap(tmp_name));
+  vict->name = mud_str_dup(tmp_name);
 
   wipePlayerFile(orig_name);
   wipeRentFile(orig_name);

@@ -11,7 +11,7 @@
 
 bool TBeing::canTrip(TBeing *victim, silentTypeT silent)
 {
-  if (checkBusy(NULL)) 
+  if (checkBusy()) 
     return FALSE;
   
   spellNumT skill = getSkillNum(SKILL_TRIP);

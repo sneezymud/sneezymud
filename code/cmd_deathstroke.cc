@@ -237,7 +237,7 @@ int TBeing::doDeathstroke(const char *argument, TBeing *vict)
   TBeing *victim;
   char v_name[MAX_INPUT_LENGTH];
   
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   if (!doesKnowSkill(SKILL_DEATHSTROKE)) {

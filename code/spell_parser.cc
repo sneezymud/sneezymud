@@ -674,7 +674,7 @@ int TBeing::doPray(const char *argument)
 
     }
   }
-  if (nomagic("Sorry, your deity refuses to contact you here.",""))
+  if (nomagic("Sorry, your deity refuses to contact you here."))
     return FALSE;
   
   // Eat spaces off the end and off the beginning
@@ -1157,7 +1157,7 @@ int TBeing::preCastCheck()
       return FALSE;
     }
   }
-  if (nomagic("Sorry, you can't do that in this area.",""))
+  if (nomagic("Sorry, you can't do that in this area."))
     return FALSE;
 
   if (cantHit > 0) {

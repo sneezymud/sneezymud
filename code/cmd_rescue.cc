@@ -124,7 +124,7 @@ int TBeing::doRescue(const char *argument)
 
   spellNumT skill = getSkillNum(SKILL_RESCUE);
 
-  if (checkBusy(NULL))
+  if (checkBusy())
     return FALSE;
 
   if (!doesKnowSkill(skill)) {

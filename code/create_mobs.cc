@@ -118,7 +118,7 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
     strcpy(tStringOut[11], tMon->getMyRace()->getSingularName().c_str());
     sprintf(tStringOut[12], "%s", (!tMon->getSex() ? "Other" : (tMon->getSex() == 1 ? "Male" : "Female")));
     sprintf(tStringOut[13], "%d", tMon->max_exist);
-    strcpy(tStringOut[14], position_types[tMon->default_pos]);
+    strcpy(tStringOut[14], position_types[tMon->default_pos].c_str());
     strcpy(tStringOut[15], material_nums[tMon->getMaterial()].mat_name);
     strcpy(tStringOut[16], tMon->getProfName());
     int tHeight = (int)(tMon->getHeight() / 12);
@@ -1344,7 +1344,7 @@ static void change_mob_def_pos(TBeing *ch, TMonster *mob, const char *arg, edito
     return;
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo("Current mob default position: %s", position_types[mob->default_pos]);
+  ch->sendTo("Current mob default position: %s", position_types[mob->default_pos].c_str());
   ch->sendTo(VT_CURSPOS, 4, 1);
   ch->sendTo("1) Standing\n\r2) Sitting\n\r3) Sleeping\n\r4) Resting\n\r");
   ch->sendTo("5) Crawling\n\r6) Flying\n\r");

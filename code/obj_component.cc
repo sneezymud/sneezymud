@@ -2681,7 +2681,7 @@ bool TComponent::fitInShop(const char *, const TBeing *ch) const
   return FALSE;
 }
 
-bool TComponent::splitMe(TBeing *ch, const char *tString)
+bool TComponent::splitMe(TBeing *ch, const sstring &tString)
 {
   if (false)
     return false;
@@ -2693,15 +2693,11 @@ bool TComponent::splitMe(TBeing *ch, const char *tString)
   sstring      tStString(""),
               tStBuffer("");
 
-  for (; isspace(*tString); tString++);
 
-  if (*tString){
-    tStString=sstring(tString).word(0);
-    tStBuffer=sstring(tString).word(1);
-  }
+  tStString=tString.word(0);
+  tStBuffer=tString.word(1);
 
-
-  if (!*tString || ((tCount = convertTo<int>(tStBuffer)) <= 0)) {
+  if (tString.empty() || ((tCount = convertTo<int>(tStBuffer)) <= 0)) {
     ch->sendTo("Syntax: split <component> <charges>\n\r");
     return true;
   }

@@ -223,7 +223,7 @@ int TBeing::doGrapple(const char *argument, TBeing *vict)
 
   spellNumT skill = getSkillNum(SKILL_GRAPPLE);
 
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   strcpy(name_buf, argument);

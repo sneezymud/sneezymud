@@ -187,7 +187,7 @@ void TBeing::doChargeStave(sstring tStString)
     return;
   }
 
-  if (nomagic("A force prevents this from occuring here.", ""))
+  if (nomagic("A force prevents this from occuring here."))
     return;
 
   if (cantHit > 0) {

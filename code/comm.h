@@ -27,7 +27,7 @@ void sendrpf(int, colorTypeT, TRoom *, const char *,...);
 void sendrpf(int, TRoom *, const char *,...);
 void sendrpf(colorTypeT, TRoom *, const char *,...);
 void sendrpf(TRoom *, const char *,...);
-void sendToOutdoor(colorTypeT, const char *, const char *);
+void sendToOutdoor(colorTypeT, const sstring &, const sstring &);
 void colorAct(colorTypeT, const sstring &, bool, const TThing *, const TThing *, const TThing *, actToParmT, const char * color = NULL, int = 0);
 void act(const sstring &, bool, const TThing *, const TThing *, const TThing *, actToParmT, const char * color = NULL, int = 0);
 void nukeMobs(int);

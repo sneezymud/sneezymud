@@ -12,7 +12,7 @@
 // Toggles
 
 typedef struct {
-  const char * name;
+  const sstring name;
   int togmob;
 } TOGINFO;
 

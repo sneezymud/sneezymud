@@ -294,7 +294,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
         return FALSE;
       }
     }
-    if (checkBusy(NULL)) {
+    if (checkBusy()) {
       return FALSE;
     }
     if (!isHumanoid()) {

@@ -135,7 +135,7 @@ vlogf(LOG_BUG, buf);
   
   strcpy(local_vict, vict);
 
-  if (isanumber(local_vict) && (sscanf(local_vict, "%d", &iDist) == 1))
+  if(sstring(local_vict).isNumber() && (sscanf(local_vict, "%d", &iDist) == 1))
     *local_vict = '\0';
   else
     iDist = min(50, (int) max_distance);

@@ -413,7 +413,7 @@ int TBeing::doChi(const char *tString, TThing *tSucker)
   TObj   *tObj    = NULL;
   TBeing *tVictim = NULL;
 
-  if (checkBusy(NULL))
+  if (checkBusy())
     return FALSE;
 
   if (!doesKnowSkill(SKILL_CHI)) {
@@ -491,7 +491,7 @@ int TBeing::doChi(const char *argument, TThing *target)
   TBeing *victim;
   char name_buf[256];
   
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   if (!doesKnowSkill(SKILL_CHI)) {

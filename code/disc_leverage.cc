@@ -9,7 +9,7 @@ int TBeing::doHurl(const char *argument, TBeing *vict)
   TBeing *victim;
   char name_buf[256], obje[100];
  
-  if (checkBusy(NULL)) { 
+  if (checkBusy()) { 
     return FALSE;
   }
   if (!doesKnowSkill(SKILL_HURL)) {
@@ -133,7 +133,7 @@ int TBeing::aiHurl(dirTypeT dr, TBeing *victim)
   int rc, i;
   int bKnown = getSkillValue(SKILL_HURL);
  
-  if (checkBusy(NULL)) { 
+  if (checkBusy()) { 
     return FALSE;
   }
 
@@ -310,7 +310,7 @@ int TBeing::doShoulderThrow(const char *argument, TBeing *vict)
   TBeing *victim;
   char name_buf[256];
     
-  if (checkBusy(NULL)) { 
+  if (checkBusy()) { 
     return FALSE;
   }
   if (!doesKnowSkill(SKILL_SHOULDER_THROW)) {

@@ -11,7 +11,7 @@
 #include "stdsneezy.h"
 
 // what stage is moon in?  (0 - 31) 
-unsigned char moontype;
+int moontype;
 
 // due to the calculations involved in sunrise/set formula
 // it becomes expensive to calculate this each time
@@ -27,7 +27,7 @@ int hourminTime()
   return time_info.hours*4 + (time_info.minutes/15);
 }
 
-const char * moonType()
+const sstring moonType()
 {
   if (moontype < 4)
     return "new";
@@ -100,7 +100,7 @@ void weatherAndTime(int mode)
   sunriseAndSunset();
 }
 
-const char *describeTime(void)
+const sstring describeTime(void)
 {
   if (time_info.hours < 5) 
     return "evening";
@@ -115,13 +115,13 @@ const char *describeTime(void)
 void fixSunlight()
 {
   int hmt = hourminTime();
-  char buf[256];
+  sstring buf;
 
   if (hmt == moonTime(MOON_TIME_SET)) {
    sendToOutdoor(COLOR_BASIC, "<b>The moon sets.<1>\n\r","<b>The moon sets.<1>\n\r");
   }
   if (hmt == moonTime(MOON_TIME_RISE)) {
-    sprintf(buf, "<b>The %s moon rises in the east.<1>\n\r", moonType());
+    ssprintf(buf, "<b>The %s moon rises in the east.<1>\n\r", moonType().c_str());
     sendToOutdoor(COLOR_BASIC, buf, buf);
   }
   if (hmt == sunTime(SUN_TIME_DAWN)) {
@@ -157,7 +157,7 @@ void fixSunlight()
 
 void anotherHour()
 {
-  char buf[100];
+  sstring buf;
 
   // we have 4 ticks per mud hour (this is called per tick)
   time_info.minutes += 15;
@@ -188,7 +188,7 @@ void anotherHour()
         if (time_info.month >= 12) {
           time_info.month = 0;
           time_info.year++;
-          sprintf(buf, "Happy New Year! It is now the Year %d P.S\n\r", time_info.year);
+          ssprintf(buf, "Happy New Year! It is now the Year %d P.S\n\r", time_info.year);
           descriptor_list->worldSend(buf, NULL);
         }
       }
@@ -225,7 +225,7 @@ static void sendWeatherMessage(weatherMessT num)
 {
   Descriptor *i;
   TBeing *ch;
-  char text[256];;
+  sstring text;
   soundNumT snd;
 
   for (i = descriptor_list; i; i = i->next) {
@@ -235,26 +235,26 @@ static void sendWeatherMessage(weatherMessT num)
 
         switch (num) {
           case WEATHER_MESS_CLOUDY:
-            sprintf(text, "<b>The sky is getting cloudy<1>.\n\r");
+            text="<b>The sky is getting cloudy<1>.\n\r";
             break;
           case WEATHER_MESS_RAIN_START:
             switch (ch->roomp->getSectorType()) {
               case SECT_DESERT:
-                sprintf(text, "<k>The clouds overhead darken and look more ominous.<1>\n\r");
+                text="<k>The clouds overhead darken and look more ominous.<1>\n\r";
                 break;
               default:
-                sprintf(text, "<B>It starts to rain.<1>\n\r");
+                text="<B>It starts to rain.<1>\n\r";
                 ch->playsound(SOUND_RAIN_START, SOUND_TYPE_NOISE);
             }
             break;
           case WEATHER_MESS_SNOW_START:
             switch (ch->roomp->getSectorType()) {
               case SECT_JUNGLE:
-                sprintf(text, "You are caught in a sudden jungle downpour.\n\r");
+                text="You are caught in a sudden jungle downpour.\n\r";
                 ch->playsound(SOUND_RAIN_START, SOUND_TYPE_NOISE);
                 break;
               case SECT_DESERT:
-                sprintf(text, "<B>The cooler temperatures and worsening weather allow a light desert rain to fall.<1>\n\r");
+                text="<B>The cooler temperatures and worsening weather allow a light desert rain to fall.<1>\n\r";
                 ch->playsound(SOUND_RAIN_START, SOUND_TYPE_NOISE);
                 break;
               case SECT_SAVANNAH:
@@ -276,24 +276,24 @@ static void sendWeatherMessage(weatherMessT num)
               case SECT_TROPICAL_CLIMBING:
               case SECT_RAINFOREST_ROAD:
                 ch->playsound(SOUND_RAIN_START, SOUND_TYPE_NOISE);
-                sprintf(text, "<B>It starts to rain.<1>\n\r");
+                text="<B>It starts to rain.<1>\n\r";
                 break;
               default:
-                sprintf(text, "<W>A light fluffy snow starts to fall.<1>\n\r");
+                text="<W>A light fluffy snow starts to fall.<1>\n\r";
             }
             break;
           case WEATHER_MESS_CLOUDS_AWAY:
-            sprintf(text, "<d>The clouds disappear.<1>\n\r");
+            text="<d>The clouds disappear.<1>\n\r";
             break;
           case WEATHER_MESS_LIGHTNING:
             snd = pickRandSound(SOUND_THUNDER_1, SOUND_THUNDER_4);
             switch (ch->roomp->getSectorType()) {
               case SECT_DESERT:
-                sprintf(text, "<k>The clouds overhead grow dark and thunder can be heard in the distance.<1>\n\rIt's not going to rain this time of year though.\n\r");
+                text="<k>The clouds overhead grow dark and thunder can be heard in the distance.<1>\n\rIt's not going to rain this time of year though.\n\r";
                 ch->playsound(snd, SOUND_TYPE_NOISE, 50);
                 break;
               default:
-                sprintf(text, "<W>You are caught in a lightning storm.<1>\n\r");
+                text="<W>You are caught in a lightning storm.<1>\n\r";
                 ch->playsound(snd, SOUND_TYPE_NOISE);
             }
             break;
@@ -301,12 +301,12 @@ static void sendWeatherMessage(weatherMessT num)
             switch (ch->roomp->getSectorType()) {
               case SECT_JUNGLE:
                 snd = pickRandSound(SOUND_THUNDER_1, SOUND_THUNDER_4);
-                sprintf(text, "The rains turn torrential!\n\r");
+                text="The rains turn torrential!\n\r";
                 ch->playsound(snd, SOUND_TYPE_NOISE);
                 break;
               case SECT_DESERT:
                 snd = pickRandSound(SOUND_THUNDER_1, SOUND_THUNDER_4);
-                sprintf(text, "<W>The desert rain intensifies and you are caught in a lightning storm.<1>\n\r");
+                text="<W>The desert rain intensifies and you are caught in a lightning storm.<1>\n\r";
                 ch->playsound(snd, SOUND_TYPE_NOISE);
                 break;
               case SECT_SAVANNAH:
@@ -327,30 +327,30 @@ static void sendWeatherMessage(weatherMessT num)
               case SECT_TROPICAL_ATMOSPHERE:
               case SECT_TROPICAL_CLIMBING:
               case SECT_RAINFOREST_ROAD:
-                sprintf(text, "<W>You are caught in a lightning storm.<1>\n\r");
+                text="<W>You are caught in a lightning storm.<1>\n\r";
                 snd = pickRandSound(SOUND_THUNDER_1, SOUND_THUNDER_4);
                 ch->playsound(snd, SOUND_TYPE_NOISE);
                 break;
               default:
-                sprintf(text, "<W>You are caught in a blizzard.<1>\n\r");
+                text="<W>You are caught in a blizzard.<1>\n\r";
             }
             break;
           case WEATHER_MESS_RAIN_AWAY:
             switch (ch->roomp->getSectorType()) {
               case SECT_DESERT:
-                sprintf(text, "<d>The clouds overhead thin and begin to clear.<1>\n\r");
+                text="<d>The clouds overhead thin and begin to clear.<1>\n\r";
                 break;
               default:
-                sprintf(text,"<B>The rain has stopped.<1>\n\r");
+                text="<B>The rain has stopped.<1>\n\r";
             }
             break;
           case WEATHER_MESS_SNOW_AWAY:
             switch (ch->roomp->getSectorType()) {
               case SECT_JUNGLE:
-                sprintf(text, "The jungle rain has stopped.\n\r");
+                text="The jungle rain has stopped.\n\r";
                 break;
               case SECT_DESERT:
-                sprintf(text, "<B>The desert rain has stopped.<1>\n\r");
+                text="<B>The desert rain has stopped.<1>\n\r";
                 break;
               case SECT_SAVANNAH:
               case SECT_VELDT:
@@ -370,28 +370,28 @@ static void sendWeatherMessage(weatherMessT num)
               case SECT_TROPICAL_ATMOSPHERE:
               case SECT_TROPICAL_CLIMBING:
               case SECT_RAINFOREST_ROAD:
-                sprintf(text,"<B>The rain has stopped.<1>\n\r");
+                text="<B>The rain has stopped.<1>\n\r";
                 break;
               default:
-                sprintf(text,"<W>The snow has stopped.<1>\n\r");
+		text="<W>The snow has stopped.<1>\n\r";
             }
             break;
           case WEATHER_MESS_LIGHTNING_AWAY:
             switch (ch->roomp->getSectorType()) {
               case SECT_DESERT:
-                sprintf(text, "<k>The dark clouds overhead begin to dissipate.<1>\n\r");
+                text="<k>The dark clouds overhead begin to dissipate.<1>\n\r";
                 break;
               default:
-                sprintf(text,"<B>The lightning has gone, but it is still raining.<1>\n\r");
+                text="<B>The lightning has gone, but it is still raining.<1>\n\r";
             }
             break;
           case WEATHER_MESS_BLIZZARD_AWAY:
             switch (ch->roomp->getSectorType()) {
               case SECT_JUNGLE:
-                sprintf(text, "<B>The lightning has gone, but a jungle rain continues to fall.<1>\n\r");
+                text="<B>The lightning has gone, but a jungle rain continues to fall.<1>\n\r";
                 break;
               case SECT_DESERT:
-                sprintf(text, "<B>The lightning has gone, but a light desert rain continues to fall.<1>\n\r");
+                text="<B>The lightning has gone, but a light desert rain continues to fall.<1>\n\r";
                 break;
               case SECT_SAVANNAH:
               case SECT_VELDT:
@@ -411,10 +411,10 @@ static void sendWeatherMessage(weatherMessT num)
               case SECT_TROPICAL_ATMOSPHERE:
               case SECT_TROPICAL_CLIMBING:
               case SECT_RAINFOREST_ROAD:
-                sprintf(text,"<B>The lightning has gone, but it is still raining.<1>\n\r");
+                text="<B>The lightning has gone, but it is still raining.<1>\n\r";
                 break;
               default:
-                sprintf(text,"<W>The blizzard is over, but it is still snowing.<1>\n\r");
+                text="<W>The blizzard is over, but it is still snowing.<1>\n\r";
             }
             break;
           default:
@@ -636,8 +636,8 @@ void GetMonth(int month)
       break;
   }
 
-  char buf[256];
-  sprintf(buf, "It is now the %s of %s.\n\r", numberAsString(time_info.day + 1).c_str(), month_name[month]);
+  sstring buf;
+  ssprintf(buf, "It is now the %s of %s.\n\r", numberAsString(time_info.day + 1).c_str(), month_name[month]);
   descriptor_list->worldSend(buf, NULL);
 }
 
@@ -983,14 +983,14 @@ void calcNewSunSet()
   si_sunSet = (18*4+0) + (int) (x*4 + 0.5);
 }
 
-// display time (given in hourminTime format) as a sstring
+// display time (given in hourminTime format) as a string
 sstring hmtAsString(int hmt)
 {
   int hour = hmt/4;
   int minute = hmt%4 * 15;
 
-  char buf[64];
-  sprintf(buf, "%d:%2.2d %s",
+  sstring buf;
+  ssprintf(buf, "%d:%2.2d %s",
      (!(hour % 12) ? 12 : hour%12),
      minute,
      (hour >= 12) ? "PM" : "AM");

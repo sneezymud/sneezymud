@@ -4278,13 +4278,13 @@ void TBeing::doWipe(const char *argument)
 
 // Command to access, view, and edit player files - Russ
 
-void TBeing::doAccess(const char *)
+void TBeing::doAccess(const sstring &)
 {
   sendTo("Mobs can't access players.\n\r");
   return;
 }
 
-void TPerson::doAccess(const char *arg)
+void TPerson::doAccess(const sstring &arg)
 {
   sstring arg1, arg2, arg3, buf, tmpbuf;
   char npasswd[128], pass[20];
@@ -4318,9 +4318,9 @@ void TPerson::doAccess(const char *arg)
   if (!isImmortal())
     return;
 
-  arg1=sstring(arg).word(0);
-  arg2=sstring(arg).word(1);
-  arg3=sstring(arg).word(2);
+  arg1=arg.word(0);
+  arg2=arg.word(1);
+  arg3=arg.word(2);
 
   if(arg1.empty()){
     sendTo("Syntax: access <player> (<changes>)\n\r");
@@ -4387,7 +4387,7 @@ void TPerson::doAccess(const char *arg)
         vlogf(LOG_MISC, "%s changed password on %s account", getName(), st.aname);
         return;
       case 5:
-        if (sscanf(arg, "%d %d", &lev, &Class) != 2) {
+        if (sscanf(arg.c_str(), "%d %d", &lev, &Class) != 2) {
           sendTo("Syntax : access <player> level <newlevel> <class number>.\n\r");
           return;
         }

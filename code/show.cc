@@ -677,7 +677,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     if (!ch->canSee(this)) {
       if (ch->canSee(this, INFRA_YES)) {
         sprintf(buffer,"A blob of heat is here in the shape of %s %s.\n\r",
-          startsVowel(getMyRace()->getSingularName().c_str()) ? "an" : "a",
+          getMyRace()->getSingularName().startsVowel() ? "an" : "a",
           getMyRace()->getSingularName().c_str());
         ch->sendTo(buffer);
       } else if (ch->isAffected(AFF_SENSE_LIFE) && (GetMaxLevel() < 51))
@@ -927,8 +927,8 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     describeSpellEffects(this, ch, TRUE);
 
     if (isPc() || (getRace() <= RACE_OGRE)) {
-      strcpy(capbuf, race->proper_name.c_str());
-      sprintf(buffer, "$n is of the %s race.", uncap(capbuf));
+      sprintf(buffer, "$n is of the %s race.",
+	      race->proper_name.uncap().c_str());
       sprintf(buffer,"%s",colorString(ch,ch->desc,buffer,NULL,COLOR_MOBS, TRUE).c_str());
       act(buffer, FALSE, this, 0, ch, TO_VICT);
     }
@@ -1159,7 +1159,7 @@ void TBeing::show_me_mult_to_char(TBeing *ch, showModeT, unsigned int num) const
     if (ch->canSee(this, INFRA_YES)) {
       if (num == 1)
         sprintf(buffer,"A blob of heat is here in the shape of %s %s.\n\r",
-          startsVowel(getMyRace()->getSingularName().c_str()) ? "an" : "a",
+          getMyRace()->getSingularName().startsVowel() ? "an" : "a",
           getMyRace()->getSingularName().c_str());
       else
         sprintf(buffer,"A few blobs of heat are here in the shape of %s.\n\r",

@@ -414,9 +414,9 @@ void TBeing::doHelp(const char *arg)
       for (comp = 0; (comp < CompInfo.size()) &&
                 (skill != CompInfo[comp].spell_num);comp++);
       if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) {
-        char capbuf[1024];
-        strcpy(capbuf, obj_index[real_object(CompInfo[comp].comp_num)].short_desc);
-        sprintf(buf2, "\n\r%sSpell Component  :%s %s\n\r",purple(), norm(), cap(capbuf));
+        sprintf(buf2, "\n\r%sSpell Component  :%s %s\n\r",
+		purple(), norm(), 
+		sstring(obj_index[real_object(CompInfo[comp].comp_num)].short_desc).cap().c_str());
         str += buf2;
       } else
         vlogf(LOG_BUG, "Problem in help file for skill=%d, comp=%d.  (component definition)", skill, comp);

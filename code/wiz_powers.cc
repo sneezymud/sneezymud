@@ -103,7 +103,7 @@ bool TBeing::isGenericMob(int vnum)
 }
 
 
-void setWizPowers(const TBeing *doer, TBeing *ch, const char *arg)
+void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
 {
   // this is intended to "package" powers into groupings.  Yes, it's sort
   // of like the old "levels" idea that we moved away from, but since there
@@ -250,7 +250,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const char *arg)
     ch->remWizPower(POWER_ACCESS);
     ch->remWizPower(POWER_USERS);
     ch->remWizPower(POWER_ACCOUNT);
-  } else if (!strcmp(arg, "god")) {
+  } else if (arg=="god") {
     ch->setWizPower(POWER_LOW);
     ch->setWizPower(POWER_GOD);
     ch->setWizPower(POWER_COMPARE);
@@ -268,7 +268,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const char *arg)
     ch->setWizPower(POWER_REPLACE);
     ch->setWizPower(POWER_RESIZE);
     ch->setWizPower(POWER_NO_LIMITS);
-  } else if (!strcmp(arg, "remgod")) {
+  } else if (arg=="remgod") {
     ch->remWizPower(POWER_LOW);
     ch->remWizPower(POWER_GOD);
     ch->remWizPower(POWER_COMPARE);
@@ -286,7 +286,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const char *arg)
     ch->remWizPower(POWER_REPLACE);
     ch->remWizPower(POWER_RESIZE);
     ch->remWizPower(POWER_NO_LIMITS);
-  } else if (!strcmp(arg, "allpowers")) {
+  } else if (arg=="allpowers") {
     wizPowerT wpt;
     for (wpt = MIN_POWER_INDEX; wpt < MAX_POWER_INDEX; wpt++)
       ch->setWizPower(wpt);
@@ -295,7 +295,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const char *arg)
     doer->sendTo("This gives them *ALL* powers, don't do it unless you really really mean to.\n\r");
     doer->sendTo("You have to type the whole word 'allpowers' to do it too.\n\r");
     return;
-  } else if (!strcmp(arg, "remall")) {
+  } else if (arg=="remall") {
     wizPowerT wpt;
     for (wpt = MIN_POWER_INDEX; wpt < MAX_POWER_INDEX; wpt++)
       ch->remWizPower(wpt);
@@ -374,16 +374,16 @@ void TPerson::saveWizPowers()
   if (GetMaxLevel() <= MAX_MORT)
     return;
 
-  char caFilebuf[128];
+  sstring caFilebuf;
   FILE *fp;
 
-  sprintf(caFilebuf, "player/%c/%s.wizpower", LOWER(name[0]), sstring(name).lower().c_str());
+  ssprintf(caFilebuf, "player/%c/%s.wizpower", LOWER(name[0]), sstring(name).lower().c_str());
 
 // REMOVED by Cosmo 7/15/01-- cant figure out a reason why this should be in here
 //  if (hasWizPower(POWER_IDLED))
 //    return;
 
-  if (!(fp = fopen(caFilebuf, "w")))
+  if (!(fp = fopen(caFilebuf.c_str(), "w")))
     return;
 
   unsigned int total = 0;
@@ -397,7 +397,7 @@ void TPerson::saveWizPowers()
   fclose(fp);
 
   if (!total)
-    unlink(caFilebuf);
+    unlink(caFilebuf.c_str());
 }
 
 void TPerson::loadWizPowers()
@@ -405,12 +405,12 @@ void TPerson::loadWizPowers()
   if (GetMaxLevel() <= MAX_MORT)
     return;
 
-  char caFilebuf[128];
+  sstring caFilebuf;
   FILE *fp;
 
-  sprintf(caFilebuf, "player/%c/%s.wizpower", LOWER(name[0]), sstring(name).lower().c_str());
+  ssprintf(caFilebuf, "player/%c/%s.wizpower", LOWER(name[0]), sstring(name).lower().c_str());
 
-  if (!(fp = fopen(caFilebuf, "r")))
+  if (!(fp = fopen(caFilebuf.c_str(), "r")))
     return;
 
   unsigned int num;
@@ -420,13 +420,13 @@ void TPerson::loadWizPowers()
   fclose(fp);
 }
 
-void TBeing::doPowers(const char *) const
+void TBeing::doPowers(const sstring &) const
 {
   sendTo("Mobs don't get powers, go away!");
   return;
 }
 
-void TPerson::doPowers(const char *argument) const
+void TPerson::doPowers(const sstring &argument) const
 {
   if (!hasWizPower(POWER_POWERS)) {
     incorrectCommand();
@@ -435,18 +435,15 @@ void TPerson::doPowers(const char *argument) const
   if (!desc)
     return;
 
-  sstring    tStName(""),
-            tStPower(""),
-            tStString("");
-  char      tString[MAX_INPUT_LENGTH];
+  sstring    tStName, tStPower, tStString, tString;
   const     TBeing *ch;
   wizPowerT tWizPower;
   bool      wizPowerList[MAX_POWER_INDEX];
 
   memset(&wizPowerList, 0, sizeof(wizPowerList));
 
-  tStName=sstring(argument).word(0);
-  tStPower=sstring(argument).word(1);
+  tStName=argument.word(0);
+  tStPower=argument.word(1);
 
   if (!tStName.empty()) {
     ch = get_pc_world(this, tStName.c_str(), EXACT_YES);
@@ -455,15 +452,15 @@ void TPerson::doPowers(const char *argument) const
       ch = get_pc_world(this, tStName.c_str(), EXACT_NO);
 
     if (!ch) {
-      char tStPath[256];
+      sstring tStPath;
       FILE *tFile;
       unsigned int tValue;
 
-      sprintf(tStPath, "player/%c/%s.wizpower",
+      ssprintf(tStPath, "player/%c/%s.wizpower",
               LOWER((tStName.c_str())[0]),
               tStName.lower().c_str());
 
-      if ((tFile = fopen(tStPath, "r"))) {
+      if ((tFile = fopen(tStPath.c_str(), "r"))) {
         sendTo("Player not logged in but file found.  Reading in...\n\r");
 
         while (fscanf(tFile, "%u ", &tValue) == 1)
@@ -485,19 +482,19 @@ void TPerson::doPowers(const char *argument) const
       wizPowerList[tWizPower] = ch->hasWizPower(tWizPower);
   }
 
-  sprintf(tString, "%s%s Wiz-Powers:\n\r",
+  ssprintf(tString, "%s%s Wiz-Powers:\n\r",
           (ch == this ? "Your" : (ch ? ch->getName() : tStName.c_str())),
           (ch == this ? "" : "'s"));
   tStString += tString;
 
   for (tWizPower = MIN_POWER_INDEX; tWizPower < MAX_POWER_INDEX; tWizPower++) {
-    strcpy(tString, tStPower.c_str());
+    tString = tStPower;
 
     if (tStPower.empty() ||
         (is_number(tString) && convertTo<int>(tStPower) == (tWizPower + 1)) ||
         (!is_number(tString) &&
          is_abbrev(tStPower, getWizPowerName(tWizPower)))) {
-      sprintf(tString, "%3d.) [%c] %-25.25s",
+      ssprintf(tString, "%3d.) [%c] %-25.25s",
               (tWizPower + 1),
               (wizPowerList[tWizPower] ? '*' : ' '),
               getWizPowerName(tWizPower).c_str());

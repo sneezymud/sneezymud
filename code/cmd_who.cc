@@ -203,16 +203,16 @@ void TBeing::doWho(const char *argument)
                 (p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2)) &&
               IS_SET(p->specials.act, ACT_POLYSELF)) {
             count++;
-            strcpy(tempbuf, pers(p));
-            ssprintf(buf, "%s (polymorphed)\n\r", cap(tempbuf));
+            ssprintf(buf, "%s (polymorphed)\n\r", 
+		     sstring(pers(p)).cap().c_str());
             sb += buf;
           } else if (canSeeWho(p) &&
                 (!*argument || 
                 (p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2)) &&
                      IS_SET(p->specials.act, ACT_DISGUISED)) {
             count++;
-            strcpy(tempbuf, pers(p));
-            ssprintf(buf, "%s (disguised thief)\n\r", cap(tempbuf));
+            ssprintf(buf, "%s (disguised thief)\n\r", 
+		     sstring(pers(p)).cap().c_str());
             sb += buf;
           }
         }

@@ -5549,9 +5549,9 @@ int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
     }
     if (targ->sameRoom(*myself)) {
       if (!strcmp(job->hunted_victim, "ambassador hobbit Grimhaven")) {
-        sprintf(buf,"Good %s, your excellency.",describeTime());
+        sprintf(buf,"Good %s, your excellency.",describeTime().c_str());
         myself->doSay(buf);
-        sprintf(buf,"Good %s.",describeTime());
+        sprintf(buf,"Good %s.",describeTime().c_str());
         targ->doSay(buf);
         myself->doSay("I have a message from his lordship.");
         sprintf(buf, "%s sweet nothings",fname(targ->name).c_str());
@@ -5566,9 +5566,9 @@ int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
         job->cur_path = 1;
         job->cur_pos = 0;
       } else if (!strcmp(job->hunted_victim, "king Grimhaven")) {
-        sprintf(buf,"Good %s, your lordship.",describeTime());
+        sprintf(buf,"Good %s, your lordship.",describeTime().c_str());
         myself->doSay(buf);
-        sprintf(buf,"Good %s.",describeTime());
+        sprintf(buf,"Good %s.",describeTime().c_str());
         targ->doSay(buf);
         myself->doSay("I have a message from his excellency.");
         sprintf(buf, "%s sweet nothings",fname(targ->name).c_str());

@@ -1862,7 +1862,7 @@ void TBeing::statBeing(TBeing *k)
   }
   for (i = 1; i < MAX_TOG_INDEX;i++) {
     if (k->hasQuestBit(i)) 
-      sprintf(buf + strlen(buf), "Toggle Set: (%d) %s\n\r", i, TogIndex[i].name);
+      sprintf(buf + strlen(buf), "Toggle Set: (%d) %s\n\r", i, TogIndex[i].name.c_str());
   }
 #if 0
   // spams too much, use "powers xxx" instead

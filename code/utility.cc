@@ -46,7 +46,7 @@ extern long random(void);
 
 
 // sprintf for sstring class
-// this should be safe to use, truncates at 1024 chars
+// this should be safe to use, truncates at MAX_STRING_LENGTH chars
 int ssprintf(sstring &s, const char *fmt, ...){
   va_list ap;
   char buf[MAX_STRING_LENGTH];
@@ -162,9 +162,9 @@ bool roll_chance(double fract){
 
 
 
-bool scan_number(const char *text, int *rval)
+bool scan_number(const sstring &text, int *rval)
 {
-  if (1 != sscanf(text, " %i ", rval))
+  if (1 != sscanf(text.c_str(), " %i ", rval))
     return 0;
 
   return 1;
@@ -510,16 +510,16 @@ void BatoprsResetCharFlags(TBeing *ch)
 #endif
 }
 
-bool TBeing::nomagic(const char *msg_ch, const char *msg_rm) const
+bool TBeing::nomagic(const sstring &msg_ch, const sstring &msg_rm="") const
 {
   if (isImmortal())
     return FALSE;
 
   if (roomp && roomp->isRoomFlag(ROOM_NO_MAGIC)) {
-    if (msg_ch)
+    if (!msg_ch.empty())
       act(msg_ch, FALSE, this, 0, 0, TO_CHAR);
 
-    if (msg_rm)
+    if (!msg_rm.empty())
       act(msg_rm, FALSE, this, 0, 0, TO_ROOM);
 
     return 1;
@@ -724,13 +724,13 @@ void vlogf(logTypeT tError, const char *errorMsg,...)
   }
 }
 
-void dirwalk(const char *dir, void (*fcn) (const char *))
+void dirwalk(const sstring &dir, void (*fcn) (const char *))
 {
   struct dirent *dp;
   DIR *dfd;
 
-  if (!dir || !(dfd = opendir(dir))) {
-    vlogf(LOG_BUG, "Unable to dirwalk directory %s", dir);
+  if (dir.empty() || !(dfd = opendir(dir.c_str()))) {
+    vlogf(LOG_BUG, "Unable to dirwalk directory %s", dir.c_str());
     return;
   }
   while ((dp = readdir(dfd))) {
@@ -977,21 +977,20 @@ bool can_see_char_other_room(const TBeing *ch, TBeing *victim, TRoom *)
 
 // disallow any bogus characters in automated system requests.
 //   this is intented to prevent 'hacking' 
-bool safe_to_be_in_system(const char *cp)
+bool safe_to_be_in_system(const sstring &cp)
 {
-  return (strpbrk(cp, "\"';`") == NULL);
+  return (cp.find_first_of("\"';`", 0) == sstring::npos);
 }
 
-bool safe_to_be_in_system_filepath(const char *cp)
+bool safe_to_be_in_system_filepath(const sstring &cp)
 {
-  const char *c;
-
-  if (!cp)
+  if (cp.empty())
     return FALSE;
 
-  for (c = cp; *c; c++)
-    if (!(isalnum(*c) || (*c == '*')))
+  for(unsigned int i=0;i<cp.size();++i){
+    if (!(isalnum(cp[i]) || (cp[i] == '*')))
       return FALSE;
+  }
 
   return TRUE;
 }
@@ -1160,9 +1159,6 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
     return false;
   }
 
-  char capbuf[256];
-  strcpy(capbuf, shortDescr);
-
   if (!ch->canSee(this)) 
     return FALSE;
 
@@ -1185,7 +1181,7 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
 
     if (rider) {
       if (!silent)
-        ch->sendTo(COLOR_OBJECTS, "%s : Occupied.\n\r", cap(capbuf));
+        ch->sendTo(COLOR_OBJECTS, "%s : Occupied.\n\r", sstring(shortDescr).cap().c_str());
       return FALSE;
     }
 
@@ -1223,7 +1219,7 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
     }
 
     if (!silent)
-      ch->sendTo(COLOR_OBJECTS, "%s : You can't take that.\n\r", cap(capbuf));
+      ch->sendTo(COLOR_OBJECTS, "%s : You can't take that.\n\r", sstring(shortDescr).cap().c_str());
 
     return FALSE;
   }
@@ -1241,7 +1237,7 @@ bool TThing::canGetMe(const TBeing *, silentTypeT) const
   return FALSE;
 }
 
-const char *TBeing::movementType(bool enter) const
+const sstring TBeing::movementType(bool enter) const
 {
   if (!roomp) {
     forceCrash("NULL roomp in MovementType()!");
@@ -1441,7 +1437,7 @@ bool TBeing::willBumpHeadDoor(roomDirData *exitp, int *height) const
 // returns DELETE_THIS
 int TBeing::bumpHeadDoor(roomDirData *exitp, int *height)
 {
-  char buf[160], doorbuf[80];
+  sstring buf, doorbuf;
   TThing *helm;
   int hardness, check;
 
@@ -1451,12 +1447,12 @@ int TBeing::bumpHeadDoor(roomDirData *exitp, int *height)
   if (!willBumpHeadDoor(exitp, height))
     return FALSE;
 
-  sprintf(doorbuf, exitp->getName().c_str());
+  ssprintf(doorbuf, exitp->getName().c_str());
   if (::number(1, 300) > plotStat(STAT_CURRENT, STAT_AGI, 30, 180, 110)) {
     sendTo("You bump your head as you go through the %s.  OUCH!\n\r",
-            uncap(doorbuf));
-    sprintf(buf, "$n bumps $s head on the %s.  That had to hurt.",
-            uncap(doorbuf));
+	   doorbuf.uncap().c_str());
+    ssprintf(buf, "$n bumps $s head on the %s.  That had to hurt.",
+	     doorbuf.uncap().c_str());
     act(buf,TRUE, this, 0,0,TO_ROOM);
     // Lets do some head-gear checks to see if gear can absorb or negate damage
     // Very simple to start - Brutius - 12-31-95
@@ -1474,7 +1470,8 @@ int TBeing::bumpHeadDoor(roomDirData *exitp, int *height)
         return DELETE_THIS;
     } 
   } else 
-    sendTo("You duck down as you go through the %s.\n\r", uncap(doorbuf));
+    sendTo("You duck down as you go through the %s.\n\r",
+	   doorbuf.uncap().c_str());
   
   return FALSE;
 }
@@ -1506,16 +1503,6 @@ bool TBeing::willBump(int height) const
   return TRUE;
 }
 
-bool hasDigit(char *s)
-{
-  char *c;
-
-  for (c = s; *c; c++) {
-    if (isdigit(*c))
-      return true;
-  }
-  return false;
-}
 
 bool TBeing::isNaked() const
 {
@@ -1894,7 +1881,7 @@ int combatRound(double n)
   return (int) (n * PULSE_COMBAT / (TurboMode ? 2 : 1));
 }
 
-bool TBeing::checkBusy(const char *buf)
+bool TBeing::checkBusy(const sstring &buf="")
 {
   // I added the max to avoid the 10Mill report
   // which happens if they have like 0.9 attacks a round.
@@ -1905,7 +1892,7 @@ bool TBeing::checkBusy(const char *buf)
   if (cantHit <= 0)
     return FALSE;
 
-  if (buf && *buf)
+  if (!buf.empty())
     sendTo(COLOR_BASIC, buf);
   else {
     // this intentionally has no "/n/r"
@@ -1948,46 +1935,37 @@ sstring secsToString(time_t num)
   unsigned int secs = num % 60;
 
   sstring timesstring = "";
-  char buf[256];
+  sstring buf;
+
 #if 0
   if (weeks) {
-    sprintf(buf, "%d week%s", weeks, weeks == 1 ? "" : "s");
+    ssprintf(buf, "%d week%s", weeks, weeks == 1 ? "" : "s");
     timesstring += buf;
   }
 #endif
   if (days) {
-    sprintf(buf, "%d day%s", days, days == 1 ? "" : "s");
+    ssprintf(buf, "%d day%s", days, days == 1 ? "" : "s");
     if (!timesstring.empty())
       timesstring += ", ";
     timesstring += buf;
   }
   if (hours) {
-    sprintf(buf, "%d hour%s", hours, hours == 1 ? "" : "s");
+    ssprintf(buf, "%d hour%s", hours, hours == 1 ? "" : "s");
     if (!timesstring.empty())
       timesstring += ", ";
     timesstring += buf;
   }
   if (mins) {
-    sprintf(buf, "%d minute%s", mins, mins == 1 ? "" : "s");
+    ssprintf(buf, "%d minute%s", mins, mins == 1 ? "" : "s");
     if (!timesstring.empty())
       timesstring += ", ";
     timesstring += buf;
   }
   if (secs) {
-    sprintf(buf, "%d second%s", secs, secs == 1 ? "" : "s");
+    ssprintf(buf, "%d second%s", secs, secs == 1 ? "" : "s");
     if (!timesstring.empty())
       timesstring += ", ";
     timesstring += buf;
   }
   return timesstring;
-}
-
-bool isanumber(const char *c)
-{
-  if (!c)
-    return FALSE;
-  for (; *c; c++)
-    if (!isdigit(*c))
-      return FALSE;
-  return TRUE;
 }

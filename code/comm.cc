@@ -187,12 +187,12 @@ void save_all()
   descriptor_list->saveAll();
 }
 
-void sendToOutdoor(colorTypeT lev, const char *text, const char *text_tropic)
+void sendToOutdoor(colorTypeT lev, const sstring &text, const sstring &text_tropic)
 {
   Descriptor *i;
   TBeing *ch;
 
-  if (text) {
+  if (!text.empty()) {
     for (i = descriptor_list; i; i = i->next) {
       if (!i->connected && (ch = i->character)) {
         if (ch->outside() && ch->awake() && ch->roomp  &&

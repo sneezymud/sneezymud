@@ -190,7 +190,7 @@ int TBeing::doSkySpirit(const char *argument)
   TBeing *victim = NULL;
   char    spirit[256];
   
-  if (checkBusy(NULL))
+  if (checkBusy())
     return FALSE;
 
 

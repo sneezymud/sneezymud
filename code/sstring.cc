@@ -132,3 +132,54 @@ const sstring sstring::word(int i) const
 
   return "";
 }
+
+// returns true if string has a digit in it
+const bool sstring::hasDigit() const
+{
+  for(unsigned int i=0;i<size();++i){
+    if (isdigit((*this)[i]))
+      return true;
+  }
+
+  return false;
+}
+
+
+// returns true if string has only digits in it
+const bool sstring::isNumber() const
+{
+  for(unsigned int i=0;i<size();++i){
+    if (!isdigit((*this)[i]))
+      return false;
+  }
+
+  return true;
+}
+
+
+
+const bool sstring::startsVowel() const
+{
+  for(unsigned int i=0;i<size();++i){
+    if(isspace((*this)[i]))
+      continue;
+    
+    switch ((*this)[i]) {
+      case 'A':
+      case 'E':
+      case 'I':
+      case 'O':
+      case 'U':
+      case 'a':
+      case 'e':
+      case 'i':
+      case 'o':
+      case 'u':
+	return true;
+      default:
+	return false;
+    }
+  }
+  return false;
+} 
+

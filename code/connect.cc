@@ -5101,7 +5101,7 @@ int Descriptor::doAccountStuff(char *arg)
         writeToQ("Password -> ");
         return FALSE;
       } 
-      if (!hasDigit(arg)) {
+      if(!sstring(arg).hasDigit()){
         writeToQ("Your password must contain at least one number.\n\r");
         writeToQ("Password -> ");
         return FALSE;
@@ -5529,7 +5529,7 @@ int Descriptor::doAccountStuff(char *arg)
         EchoOff();
         return FALSE;
       }
-      if (!hasDigit(arg)) {
+      if (!sstring(arg).hasDigit()) {
         writeToQ("Your password must contain at least one number.\n\r");
         writeToQ("Password -> ");
         EchoOff();

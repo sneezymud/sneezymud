@@ -139,7 +139,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
 {
   roomDirData *exitp, *back = NULL;
   TRoom *rp, *rp2;
-  char buf[256], doorbuf[80];
+  char buf[256];
   soundNumT snd = SOUND_OFF;
 
   if (!(rp = roomp))
@@ -168,8 +168,6 @@ void TBeing::rawOpenDoor(dirTypeT dir)
   if (IS_SET(exitp->condition, EX_TRAPPED))
     REMOVE_BIT(exitp->condition, EX_TRAPPED);
 
-  strcpy(doorbuf, exitp->getName().c_str());
-
   if (IS_SET(exitp->condition, EX_SECRET)) {
     act("$n reveals a hidden passage!", TRUE, this, 0, 0, TO_ROOM);
     act("You reveal a hidden passage!", TRUE, this, 0, 0, TO_CHAR);
@@ -178,109 +176,109 @@ void TBeing::rawOpenDoor(dirTypeT dir)
   switch (exitp->door_type) {
     case DOOR_DRAWBRIDGE:
       sprintf(buf, "$n causes the %s %s to lower.",
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       sendTo("You cause the %s %s to lower.\n\r",
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       break;
     case DOOR_PANEL:
     case DOOR_SCREEN:
       sprintf(buf, "$n slides the %s %s to one side and opens the way.",
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       sendTo("You slide the %s %s to one side and open the way.\n\r",
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       break;
     case DOOR_RUBBLE:
       sprintf(buf, "$n pushes the %s %s aside and clears the way.",
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       sendTo("You push the %s %s aside and clear the way.\n\r",
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       break;
     case DOOR_PORTCULLIS:
       if (riding) {
         sprintf(buf, "$n leans over and lifts the %s %s open.",
-                uncap(doorbuf), dirs_to_blank[dir]);
+                exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You lean over and lift the %s %s open.\n\r",
-               uncap(doorbuf), dirs_to_blank[dir]);
+               exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       } else {
         sprintf(buf, "$n squats down and lifts the %s %s open.",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You squat down and lift the %s %s open.\n\r",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       }
       break;
     case DOOR_GRATE:
       if (dir == DIR_UP) {
         sprintf(buf, "$n reaches up and pushes the %s open.",
-              uncap(doorbuf));
+              exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You reach up and push the %s open.\n\r",
-              uncap(doorbuf));
+              exitp->getName().uncap().c_str());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and lifts the %s open.",
-              uncap(doorbuf));
+              exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You reach down and lift the %s open.\n\r",
-              uncap(doorbuf));
+              exitp->getName().uncap().c_str());
       } else {
         sprintf(buf, "$n opens the %s %s.",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You open the %s %s.\n\r",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       }
       break;
     case DOOR_GATE:
       sprintf(buf, "$n unlatches the %s %s and swings it open.",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       sendTo("You unlatch the %s %s and swing it open.\n\r",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       break;
     case DOOR_TRAPDOOR:
       if (dir == DIR_UP) {
         sprintf(buf, "$n unlatches the %s in the ceiling and pulls it open.",
-                uncap(doorbuf));
+                exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You unlatch the %s in the ceiling and pull it open.\n\r",
-                uncap(doorbuf));
+                exitp->getName().uncap().c_str());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n unlatches the %s in the $g and pushes it open.",
-                uncap(doorbuf));
+                exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You unlatch the %s in the %s and push it open.\n\r",
-                uncap(doorbuf), roomp->describeGround().c_str());
+                exitp->getName().uncap().c_str(), roomp->describeGround().c_str());
       } else {
         sprintf(buf, "$n opens the %s %s.",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You open the %s %s.\n\r",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       }
       break;
     case DOOR_HATCH:
       if (dir == DIR_UP) {
         sprintf(buf, "$n reachs up and opens the %s in the ceiling.",
-                uncap(doorbuf));
+                exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You reach up and open the %s in the ceiling.\n\r",
-                uncap(doorbuf));
+                exitp->getName().uncap().c_str());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and opens the %s in the $g.",
-                uncap(doorbuf));
+                exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You reach down and open the %s in the %s.\n\r",
-                uncap(doorbuf), roomp->describeGround().c_str());
+                exitp->getName().uncap().c_str(), roomp->describeGround().c_str());
       } else {
         sprintf(buf, "$n opens the %s in the %s wall.",
-              uncap(doorbuf), dirs[dir]);
+              exitp->getName().uncap().c_str(), dirs[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You open the %s in the %s wall.\n\r",
-              uncap(doorbuf), dirs[dir]);
+              exitp->getName().uncap().c_str(), dirs[dir]);
       }
       break;
     case DOOR_DOOR:
@@ -289,10 +287,10 @@ void TBeing::rawOpenDoor(dirTypeT dir)
       roomp->playsound(snd, SOUND_TYPE_NOISE);
 
       sprintf(buf, "$n opens the %s %s.",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       sendTo("You open the %s %s.\n\r",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
   }
 
   // now for opening the OTHER side of the door! 
@@ -302,74 +300,73 @@ void TBeing::rawOpenDoor(dirTypeT dir)
     REMOVE_BIT(back->condition, EX_CLOSED);
     if (IS_SET(back->condition, EX_TRAPPED))
       REMOVE_BIT(back->condition, EX_TRAPPED);
-    strcpy(doorbuf, back->getName().c_str());
     strcpy(buf, getName());
     rp2 = real_roomp(exitp->to_room);
     switch (back->door_type) {
       case DOOR_DRAWBRIDGE:
-        sendrpf(rp2, "The %s %s lowers.\n\r", uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+        sendrpf(rp2, "The %s %s lowers.\n\r", back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_PANEL:
-        sendrpf(rp2, "The %s %s slides to one side.\n\r", uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+        sendrpf(rp2, "The %s %s slides to one side.\n\r", back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_SCREEN:  // can see thru
-        sendrpf(rp2, "Nearby, %s slides the %s %s to one side.\n\r", getName(), uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+        sendrpf(rp2, "Nearby, %s slides the %s %s to one side.\n\r", getName(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_RUBBLE:
         sendrpf(rp2,
           "The %s %s is pushed aside from somewhere nearby.\n\r",
-              uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_PORTCULLIS:
         sendrpf(rp2,
           "%s struggles a bit, but manages to lift the %s %s open.\n\r",
-              cap(buf), uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              cap(buf), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_GRATE:   // see thru these
         if (dir == DIR_UP) {
           sendrpf(rp2,
           "Below you, %s reaches up and opens the %s.\n\r",
-              getName(), uncap(doorbuf));
+              getName(), back->getName().uncap().c_str());
         } else if (dir == DIR_DOWN) {
           sendrpf(rp2,
           "Above you, %s reaches down and lifts the %s open.\n\r",
-              getName(), uncap(doorbuf));
+              getName(), back->getName().uncap().c_str());
         } else {
           sendrpf(rp2,
           "%s opens the %s %s from the other side.\n\r",
-              cap(buf), uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              cap(buf), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         }
         break;
       case DOOR_GATE:
         sendrpf(rp2,
           "The %s %s is swung open from the other side.\n\r",
-              uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_TRAPDOOR:
         if (dir == DIR_UP) {
           sendrpf(rp2,
           "The %s in the %s is unlatched and opened from the other side.\n\r",
-              uncap(doorbuf), rp->describeGround().c_str());          
+              back->getName().uncap().c_str(), rp->describeGround().c_str());          
         } else if (dir == DIR_DOWN) {
           sendrpf(rp2,
         "The %s in the ceiling is unlatched and opened from the other side.\n\r",
-              uncap(doorbuf));
+              back->getName().uncap().c_str());
         } else {
           sendrpf(rp2,
           "The %s %s is opened from the other side.\n\r",
-              uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         }
         break;
       case DOOR_HATCH:
         sendrpf(rp2,
           "The %s %s is swung open from the other side.\n\r",
-              uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_DOOR:
       default:
         sendrpf(rp2,
               "The %s %s is opened from the other side.\n\r",
-              uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         rp2->playsound(snd, SOUND_TYPE_NOISE);
 
     }
@@ -389,7 +386,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
 {
   roomDirData *exitp, *back = NULL;
   TRoom *rp, *rp2;
-  char buf[256], doorbuf[80];
+  char buf[256];
   soundNumT snd = SOUND_OFF;
  
   if (!(rp = roomp))
@@ -406,113 +403,112 @@ void TBeing::rawCloseDoor(dirTypeT dir)
     return;
   }
   SET_BIT(exitp->condition, EX_CLOSED);
-  strcpy(doorbuf, exitp->getName().c_str());
 
   switch (exitp->door_type) {
     case DOOR_DRAWBRIDGE:
       sprintf(buf, "$n raises the %s %s.",
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       sendTo("You raise the %s %s.\n\r",
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       break;
     case DOOR_PANEL:
     case DOOR_SCREEN:
       sprintf(buf, "$n slides the %s %s closed.", 
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       sendTo("You slide the %s %s closed.\n\r",
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       break;
     case DOOR_RUBBLE:
       sprintf(buf, "$n pushes the %s %s into the path and blocks the way.", 
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       sendTo("You push the %s %s into the path and block the way.\n\r",
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       break;
     case DOOR_PORTCULLIS:
       sprintf(buf, "$n reaches up and lowers the %s %s.",
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       sendTo("You reach up and lower the %s %s.\n\r",
-            uncap(doorbuf), dirs_to_blank[dir]);
+            exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       break;
     case DOOR_GRATE:
       if (dir == DIR_UP) {
         sprintf(buf, "$n reaches up and pushes the %s closed.",
-              uncap(doorbuf));
+              exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You reach up and push the %s close.\n\r",
-              uncap(doorbuf));
+              exitp->getName().uncap().c_str());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and closes the %s.",
-              uncap(doorbuf));
+              exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You reach down and close the %s.\n\r",
-              uncap(doorbuf));
+              exitp->getName().uncap().c_str());
       } else {
         sprintf(buf, "$n closes the %s %s.",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You close the %s %s.\n\r",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       }
       break;
     case DOOR_GATE:
       sprintf(buf, "$n swings the %s %s closed and latches it.",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       sendTo("You swing the %s %s closed and latch it.\n\r",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       break;
     case DOOR_TRAPDOOR:
       if (dir == DIR_UP) {
         sprintf(buf, "$n pushes the %s in the ceiling closed and latch it.",
-                uncap(doorbuf));
+                exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You push the %s in the ceiling closed and latch it.\n\r",
-                uncap(doorbuf));
+                exitp->getName().uncap().c_str());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n pull the %s in the $g closed and latch it.",
-                  uncap(doorbuf));
+                  exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You close the %s in the %s and latch it.\n\r",
-                uncap(doorbuf), roomp->describeGround().c_str());
+                exitp->getName().uncap().c_str(), roomp->describeGround().c_str());
       } else {
         sprintf(buf, "$n closes the %s %s.",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You close the %s %s.\n\r",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       }
       break;
     case DOOR_HATCH:
       if (dir == DIR_UP) {
         sprintf(buf, "$n reaches up and pushes the %s closed.",
-              uncap(doorbuf));
+              exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You reach up and push the %s closed.\n\r",
-              uncap(doorbuf));
+              exitp->getName().uncap().c_str());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and closes the %s.",
-              uncap(doorbuf));
+              exitp->getName().uncap().c_str());
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You reach down and close the %s.\n\r",
-              uncap(doorbuf));
+              exitp->getName().uncap().c_str());
       } else {
         sprintf(buf, "$n closes the %s %s.",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         sendTo("You close the %s %s.\n\r",
-              uncap(doorbuf), dirs_to_blank[dir]);
+              exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       }
       break;
     case DOOR_DOOR:
     default:
-      sprintf(buf, "$n closes the %s %s.", uncap(doorbuf), dirs_to_blank[dir]);
+      sprintf(buf, "$n closes the %s %s.", exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
-      sendTo("You close the %s %s.\n\r",uncap(doorbuf), dirs_to_blank[dir]);
+      sendTo("You close the %s %s.\n\r",exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
 
       snd = pickRandSound(SOUND_DOORCLOSE_01, SOUND_DOORCLOSE_04);
       roomp->playsound(snd, SOUND_TYPE_NOISE);
@@ -528,90 +524,89 @@ void TBeing::rawCloseDoor(dirTypeT dir)
       (back = rp->dir_option[rev_dir[dir]]) &&
       (back->to_room == in_room)) {
     SET_BIT(back->condition, EX_CLOSED);
-    strcpy(doorbuf, back->getName().c_str());
     strcpy(buf, getName());
     rp2 = real_roomp(exitp->to_room);
     switch (back->door_type) {
       case DOOR_DRAWBRIDGE:
         sendrpf(rp2,
           "The %s %s raises.\n\r",
-              uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_SCREEN:
         sendrpf(rp2,
           "Nearby, %s slides the %s %s closed.\n\r",
-              getName(), uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              getName(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_PANEL:
         sendrpf(rp2,
           "The %s %s slides closed.\n\r",
-              uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_RUBBLE:
         sendrpf(rp2,
           "The %s %s is pushed into the path from somewhere nearby.\n\r",
-              uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_PORTCULLIS:
         sendrpf(rp2,
           "%s lowers the %s %s, closing it.\n\r",
-              cap(buf), uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              cap(buf), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_GRATE:   // see thru these
         if (dir == DIR_UP) {
           sendrpf(rp2,
           "Below you, %s reaches up and closes the %s.\n\r",
-              getName(), uncap(doorbuf));
+              getName(), back->getName().uncap().c_str());
         } else if (dir == DIR_DOWN) {
           sendrpf(rp2,
           "Above you, %s reaches down and lowers the %s closed.\n\r",
-              getName(), uncap(doorbuf));
+              getName(), back->getName().uncap().c_str());
         } else {
           sendrpf(rp2,
           "%s closes the %s %s from the other side.\n\r",
-              cap(buf), uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              cap(buf), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         }
         break;
       case DOOR_GATE:
         sendrpf(rp2,
          "The %s %s is swung closed from the other side.\n\r",
-              uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_TRAPDOOR:
         if (dir == DIR_UP) {
           sendrpf(rp2,
           "The %s in the %s is closed and latched from the other side.\n\r",
-              uncap(doorbuf), rp2->describeGround().c_str());
+              back->getName().uncap().c_str(), rp2->describeGround().c_str());
         } else if (dir == DIR_DOWN) {
           sendrpf(rp2,
         "The %s in the ceiling is closed and latched from the other side.\n\r",
-              uncap(doorbuf));
+              back->getName().uncap().c_str());
         } else {
           sendrpf(rp2,
           "The %s %s is closed from the other side.\n\r",
-              uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         }
         break;
       case DOOR_HATCH:   
         if (dir == DIR_UP) {
           sendrpf(rp2,
           "Below you, %s reaches up and closes the %s.\n\r",
-              getName(), uncap(doorbuf));
+              getName(), back->getName().uncap().c_str());
         } else if (dir == DIR_DOWN) {
           sendrpf(rp2,
           "%s is closed from above by %s.\n\r",
-              uncap(doorbuf), getName());
+              back->getName().uncap().c_str(), getName());
         } else {
           sendrpf(rp2,
           "%s closes the %s %s from the other side.\n\r",
-              cap(buf), uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              cap(buf), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         }
         break;
       case DOOR_DOOR:
       default:
         sendrpf(rp2,
               "The %s %s is closed from the other side.\n\r",
-              uncap(doorbuf), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         rp2->playsound(snd, SOUND_TYPE_NOISE);
     }
     TThing *t;

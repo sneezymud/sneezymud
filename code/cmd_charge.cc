@@ -254,7 +254,7 @@ int TBeing::doCharge(const char *arg, TBeing *victim)
     return FALSE;
   }
 
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   if (!doesKnowSkill(SKILL_CHARGE)) {

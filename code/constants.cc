@@ -977,7 +977,7 @@ const char * const prompt_mesg[] =
 };
 
 
-const char * const position_types[] =
+const sstring position_types[] =
 {
   "Dead",
   "Mortally wounded",

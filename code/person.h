@@ -90,7 +90,7 @@ class TPerson : public TBeing {
     virtual void doRedit(const char *);
     virtual void doTrans(const char *);
     virtual int doAt(const char *, bool);
-    virtual void doAccess(const char *);
+    virtual void doAccess(const sstring &);
     virtual void doSet(const char *);
     virtual void doLow(const sstring &);
     virtual void doShutdow();
@@ -140,7 +140,7 @@ class TPerson : public TBeing {
     virtual immortalTypeT isImmortal(int level = GOD_LEVEL1) const;
     void dropItemsToRoom(safeTypeT, dropNukeT);
     virtual TThing& operator+= (TThing& t);
-    virtual void doPowers(const char *) const;
+    virtual void doPowers(const sstring &) const;
     void startLevels();
     void advanceLevel(classIndT, TMonster *);
     void doHPGainForLev(classIndT);

@@ -81,7 +81,7 @@ sstring TOpenContainer::statObjInfo() const
   sprintf(buf, "Max Weight :%.3f, Max Volume : %d\n\rTrap type :%s (%d), Trap damage :%d\n\r",
           carryWeightLimit(),
           carryVolumeLimit(),
-          trap_types[getContainerTrapType()],
+          trap_types[getContainerTrapType()].c_str(),
           getContainerTrapType(),
           getContainerTrapDam());
   sprintf(buf + strlen(buf), "Vnum of key that opens: %d",
@@ -584,7 +584,7 @@ int TOpenContainer::disarmMe(TBeing *thief)
     return TRUE;
   }
 
-  strcpy(trap_type_buf, trap_types[getContainerTrapType()]);
+  strcpy(trap_type_buf, trap_types[getContainerTrapType()].c_str());
   learnedness = min((int) MAX_SKILL_LEARNEDNESS, 3*bKnown/2);
   addContainerFlag(CONT_EMPTYTRAP);
 

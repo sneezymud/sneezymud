@@ -2176,7 +2176,7 @@ int TMonster::mageMove(TBeing &vict)
     return FALSE;
   if (eitherArmHurt())
     return FALSE;
-  if (checkSoundproof() || nomagic("No-magic room prevents spell cast", NULL))
+  if (checkSoundproof() || nomagic("No-magic room prevents spell cast."))
     return FALSE;
 
   // don't cast twice
@@ -2246,7 +2246,7 @@ int TMonster::shamanMove(TBeing &vict)
     return FALSE;
   if (eitherArmHurt())
     return FALSE;
-  if (checkSoundproof() || nomagic("No-magic room prevents spell cast", NULL))
+  if (checkSoundproof() || nomagic("No-magic room prevents spell cast."))
     return FALSE;
 
   // don't cast twice
@@ -2962,7 +2962,7 @@ int TMonster::clerMove(TBeing &vict)
     return FALSE;
 
   if (eitherArmHurt() ||
-      checkSoundproof() || nomagic("No-magic room prevents spell cast", NULL))
+      checkSoundproof() || nomagic("No-magic room prevents spell cast."))
     return FALSE;
 
   if(spelltask && spelltask->rounds==0 && (t=spelltask->victim) &&
@@ -4332,7 +4332,7 @@ int TMonster::defendOther(TBeing &targ)
   // standing, awake, !fight(), etc.  Don't bother to repeat them
 
   if (!awake() || isPc() || cantHit > 0 || !canSpeak() || eitherArmHurt() ||
-      checkSoundproof() || nomagic("No-magic room prevents spell cast", NULL))
+      checkSoundproof() || nomagic("No-magic room prevents spell cast."))
     return FALSE;
 
   // don't cast twice
@@ -4518,7 +4518,7 @@ int TMonster::defendSelf(int)
   if (eitherArmHurt())
     return FALSE;
 
-  if (checkSoundproof() || nomagic("No-magic room prevents spell cast", NULL))
+  if (checkSoundproof() || nomagic("No-magic room prevents spell cast."))
     return FALSE;
 
   // don't cast twice

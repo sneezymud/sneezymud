@@ -321,7 +321,7 @@ class TComponent : public TObj {
     virtual int getShopPrice(int *) const;
     virtual void recalcShopData(int, int);
     virtual int rentCost() const;
-    virtual bool splitMe(TBeing *, const char *);
+    virtual bool splitMe(TBeing *, const sstring &);
     virtual int putSomethingIntoContainer(TBeing *, TOpenContainer *);
     virtual int suggestedPrice() const;
     virtual void objMenu(const TBeing *) const;

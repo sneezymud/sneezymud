@@ -245,7 +245,7 @@ static bool getAllObjChecks(TBeing *ch)
 // might return DELETE_THIS (for traps)
 int TBeing::doGet(const char *argument)
 {
-  char arg1[160], arg2[160], capbuf[256], newarg[100];
+  char arg1[160], arg2[160], newarg[100];
   char *tmp_desc = NULL, *tptr;
   TObj *sub;
   TThing *t;
@@ -581,8 +581,8 @@ int TBeing::doGet(const char *argument)
           found = TRUE;
         }
       } else {
-        strcpy(capbuf, sub->getName());
-        sendTo(COLOR_OBJECTS, "%s does not contain the %s.\n\r", cap(capbuf), arg1);
+        sendTo(COLOR_OBJECTS, "%s does not contain the %s.\n\r",
+	       sstring(sub->getName()).cap().c_str(), arg1);
       }
       break;
   }

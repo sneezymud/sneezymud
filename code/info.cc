@@ -1788,7 +1788,8 @@ void TBeing::describeLimbDamage(const TBeing *ch) const
     if ((t = ch->getStuckIn(j))) {
       if (canSee(t)) {
         sprintf(buf, "<y>$p is sticking out of %s %s!<1>",
-                uncap(buf2), ch->describeBodySlot(j).c_str());
+		sstring(buf2).uncap().c_str(),
+		ch->describeBodySlot(j).c_str());
         act(buf, FALSE, this, t, NULL, TO_CHAR);
       }
     }
@@ -1859,7 +1860,7 @@ void TBeing::doTime(const char *argument)
 
   tmp2 = moonTime(MOON_TIME_RISE);
   ssprintf(buf, "The moon will rise today at:  %s    (%s).\n\r",
-       hmtAsString(tmp2).c_str(), moonType());
+       hmtAsString(tmp2).c_str(), moonType().c_str());
   sendTo(buf);
 
   tmp2 = moonTime(MOON_TIME_SET);
@@ -1928,7 +1929,7 @@ down");
          "your foot tells you bad weather is due"));
 
     if (moonIsUp()) {
-      sendTo("A %s moon hangs in the sky.\n\r", moonType());
+      sendTo("A %s moon hangs in the sky.\n\r", moonType().c_str());
     }
     describeRoomLight();
     return;
@@ -1988,7 +1989,7 @@ down");
         return;
       }
       moontype = num;
-      sendTo("The moon is now in stage %d (%s).\n\r", moontype, moonType());
+      sendTo("The moon is now in stage %d (%s).\n\r", moontype, moonType().c_str());
       return;
     } else {
       sendTo("Syntax: weather <\"worse\" | \"better\" | \"month\" | \"moon\">\n\r");
@@ -4040,7 +4041,8 @@ void TObj::describeMe(TBeing *ch) const
   strcpy(buf, material_nums[getMaterial()].mat_name);
   strcpy(buf2, ch->objs(this));
   ch->sendTo(COLOR_OBJECTS,"%s is %s made of %s.\n\r", cap(buf2),
-                 ItemInfo[itemType()]->common_name, uncap(buf));
+                 ItemInfo[itemType()]->common_name, 
+	     sstring(buf).uncap().c_str());
 
   if (ch->isImmortal() || canWear(ITEM_TAKE)) {
 
@@ -4690,11 +4692,8 @@ void TBeing::describeMagicLevel(const TMagicItem *obj, int learn) const
   int level = GetApprox(obj->getMagicLevel(), learn);
   level = max(level,0);
 
-  char capbuf[160];
-  strcpy(capbuf, objs(obj));
-
   sendTo(COLOR_OBJECTS, "Spells from %s seem to be cast at %s level.\n\r", 
-          uncap(capbuf),
+	 sstring(objs(obj)).uncap().c_str(),
           numberAsString(level).c_str());
 
 }
@@ -4725,18 +4724,13 @@ void TBeing::describeMagicLearnedness(const TMagicItem *obj, int learn) const
 
   int level = GetApprox(obj->getMagicLearnedness(), learn);
 
-  char capbuf[160];
-  strcpy(capbuf, objs(obj));
-
-  sendTo(COLOR_OBJECTS, "The learnedness of the spells in %s is: %s.\n\r", uncap(capbuf),
-                how_good(level));
+  sendTo(COLOR_OBJECTS, "The learnedness of the spells in %s is: %s.\n\r",
+	 sstring(objs(obj)).uncap().c_str(),
+	 how_good(level));
 }
 
 void TBeing::describeMagicSpell(const TMagicItem *obj, int learn)
 {
-  char capbuf[160];
-  strcpy(capbuf, objs(obj));
-
   if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
       !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN))
     return;
@@ -4744,7 +4738,8 @@ void TBeing::describeMagicSpell(const TMagicItem *obj, int learn)
   int level = GetApprox(getSkillLevel(SKILL_EVALUATE), learn);
 
   if (obj->getMagicLevel() > level) {
-    sendTo(COLOR_OBJECTS, "You can tell nothing about the spells %s produces.\n\r", uncap(capbuf));
+    sendTo(COLOR_OBJECTS, "You can tell nothing about the spells %s produces.\n\r", 
+	   sstring(objs(obj)).uncap().c_str());
     return;
   }
 
@@ -4908,12 +4903,10 @@ void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
 
 //  int level = GetApprox(getSkillLevel(SKILL_EVALUATE), learn);
 
-  char capbuf[160];
-  strcpy(capbuf, objs(obj));
-
 #if 0
   if (obj->getMagicLevel() > level) {
-    sendTo(COLOR_OBJECTS, "You can tell nothing about the spell %s is used for.\n\r", uncap(capbuf));
+    sendTo(COLOR_OBJECTS, "You can tell nothing about the spell %s is used for.\n\r", 
+	   sstring(objs(obj)).uncap().c_str());
     return;
   }
 #endif
@@ -4921,7 +4914,8 @@ void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
   int which = obj->getComponentSpell();
 
   if (which >= 0 && discArray[which])
-    sendTo(COLOR_OBJECTS, "%s is used for: %s.\n\r", cap(capbuf),
+    sendTo(COLOR_OBJECTS, "%s is used for: %s.\n\r", 
+	   sstring(objs(obj)).cap().c_str(),
           discArray[which]->name);
 
   return;
@@ -5148,8 +5142,8 @@ void TBeing::describeTrapDamType(const TTrap *obj, int) const
 
   sendTo(COLOR_OBJECTS, "You suspect %s is %s %s trap.\n\r", 
        sstring(objs(obj)).uncap().c_str(),
-       startsVowel(trap_types[obj->getTrapDamType()]) ? "an" : "a",
-       sstring(trap_types[obj->getTrapDamType()]).uncap().c_str());
+       trap_types[obj->getTrapDamType()].startsVowel() ? "an" : "a",
+       trap_types[obj->getTrapDamType()].uncap().c_str());
 }
 
 void TBeing::doSpells(const sstring &argument)

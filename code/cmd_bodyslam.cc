@@ -10,7 +10,7 @@
 
 bool TBeing::canBodyslam(TBeing *victim, silentTypeT silent)
 {
-  if (checkBusy(NULL))
+  if (checkBusy())
     return FALSE;
 
   if (!doesKnowSkill(SKILL_BODYSLAM)) {

@@ -164,7 +164,7 @@ int TTrap::disarmMe(TBeing *thief)
     return FALSE;
   }
 
-  strcpy(trap_type, trap_types[getTrapDamType()]);
+  strcpy(trap_type, trap_types[getTrapDamType()].c_str());
 
   if (bSuccess(thief, bKnown, SKILL_DISARM_TRAP)) {
     thief->sendTo("Click.  You disarm the %s trap.\n\r", trap_type);
@@ -210,7 +210,7 @@ int disarmTrapDoor(TBeing * thief, dirTypeT door)
 
   int bKnown = thief->getSkillValue(SKILL_DISARM_TRAP);
 
-  strcpy(trap_type, trap_types[exitp->trap_info]);
+  strcpy(trap_type, trap_types[exitp->trap_info].c_str());
   learnedness = min((int) MAX_SKILL_LEARNEDNESS, 2*bKnown);
 
   if (bSuccess(thief, learnedness, SKILL_DISARM_TRAP)) {

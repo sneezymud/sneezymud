@@ -1946,7 +1946,7 @@ int TBeing::hit(TBeing *target, int pulse)
   if (isAffected(AFF_ENGAGER)) {
     float hitNum = fx + fy;
     for(i = 1; i <= hitNum; i++) {
-      if (checkBusy(NULL)) {
+      if (checkBusy()) {
         cantHit--;
         if (cantHit > 0)
           cantHit--;
@@ -3122,7 +3122,6 @@ int TBeing::checkShield(TBeing *v, TThing *weapon, wearSlotT part_hit, spellNumT
   TBaseClothing *shield;
   TThing *t;
   TBeing *other;
-  char victbuf[256];
   char namebuf[256];
   int rc = 0;
   int retCode = 0;
@@ -3155,11 +3154,11 @@ int TBeing::checkShield(TBeing *v, TThing *weapon, wearSlotT part_hit, spellNumT
     if (!other->awake())
       continue;
     sprintf(namebuf, other->pers(this));
-    sprintf(victbuf, other->pers(v));
     sstring equipBuf = colorString(other, other->desc, shield->getName(), NULL, COLOR_OBJECTS, TRUE);
     if (!other->desc || !(other->desc->autobits & AUTO_NOSPAM))
       other->sendTo(COLOR_MOBS, "%s parries %s's blow with %s.\n\r",
-           cap(victbuf), namebuf, equipBuf.c_str()); 
+		    sstring(other->pers(v)).cap().c_str(),
+		    namebuf, equipBuf.c_str()); 
   }
 
   if (shield->spec){
@@ -3200,7 +3199,7 @@ bool TBeing::invalidTarget(const TBeing *target) const
 bool TBeing::canAttack(primaryTypeT isprimary)
 {
   // Am I lagged?
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     cantHit--;
     return FALSE;
   }

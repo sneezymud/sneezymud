@@ -12,7 +12,7 @@ bool TBeing::canKneestrike(TBeing *victim, silentTypeT silent)
 {
   int adv=getAdvLearning(SKILL_KNEESTRIKE);
 
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   if (affectedBySpell(AFFECT_TRANSFORMED_LEGS)) {

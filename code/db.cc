@@ -1733,7 +1733,6 @@ void zoneData::resetZone(bool bootTime)
   TThing *t;
   int count;
   wearSlotT realslot;
-  char doorbuf[80];
 
   struct armor_set_struct {
     int slots[MAX_WEAR];
@@ -2387,23 +2386,25 @@ void zoneData::resetZone(bool bootTime)
                !IS_SET(exitp->condition, EX_DESTROYED) &&
                !IS_SET(exitp->condition, EX_CAVED_IN)) {
               if (exitp->door_type != DOOR_NONE) {
-                strcpy(doorbuf, exitp->getName().c_str());
                 switch (rs.arg3) {
                   case 0:
                     if (IS_SET(exitp->condition, EX_CLOSED))
-                      sendrpf(rp, "The %s opens.\n\r", uncap(doorbuf));
+                      sendrpf(rp, "The %s opens.\n\r", 
+			      exitp->getName().uncap().c_str());
                     REMOVE_BIT(exitp->condition, EX_LOCKED);
                     REMOVE_BIT(exitp->condition, EX_CLOSED);
                     break;
                   case 1:
                     if (!IS_SET(exitp->condition, EX_CLOSED))
-                      sendrpf(rp, "The %s closes.\n\r", uncap(doorbuf));
+                      sendrpf(rp, "The %s closes.\n\r",
+			      exitp->getName().uncap().c_str());
                     SET_BIT(exitp->condition, EX_CLOSED);
                     REMOVE_BIT(exitp->condition, EX_LOCKED);
                     break;
                   case 2:
                     if (!IS_SET(exitp->condition, EX_CLOSED))
-                      sendrpf(rp, "The %s closes.\n\r", uncap(doorbuf));
+                      sendrpf(rp, "The %s closes.\n\r",
+			      exitp->getName().uncap().c_str());
                     SET_BIT(exitp->condition, EX_LOCKED);
                     SET_BIT(exitp->condition, EX_CLOSED);
                     break;

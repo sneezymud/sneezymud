@@ -964,7 +964,7 @@ int TBeing::doEarthmaw(const char *argument)
   TBeing *horsie = NULL;
 
 
-  if (checkBusy(NULL))
+  if (checkBusy())
     return FALSE;
 
 

@@ -19,7 +19,7 @@ int TBeing::doBerserk()
     sendTo("You lack the bloodlust.\n\r");
     return FALSE;
   }
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   if (affectedBySpell(SKILL_BERSERK)) {

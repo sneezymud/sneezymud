@@ -251,7 +251,7 @@ int TBeing::doDisarm(sstring argument, TThing *v)
   spellNumT skill = getSkillNum(SKILL_DISARM);
   
 
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   one_argument(argument, v_name);

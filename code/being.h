@@ -898,7 +898,7 @@ class TBeing : public TThing {
     int loseRoundWear(double, bool randomize = TRUE, bool check = FALSE);
     int loseRound(double, bool x = TRUE, bool check = FALSE);
     void blowCount(bool, float &, float &);
-    bool checkBusy(const char *);
+    bool checkBusy(const sstring &buf="");
     float lagAdjust(lag_t);
     void addSkillLag(spellNumT, int rc);
     virtual void addToWait(int) { return; }
@@ -1341,7 +1341,7 @@ class TBeing : public TThing {
     virtual void doRload(const char *);
     virtual void doRsave(const char *);
     virtual void doRedit(const char *);
-    virtual void doPowers(const char *) const;
+    virtual void doPowers(const sstring &) const;
     int getFactionAuthority(factionTypeT, int);
     void doMakeLeader(const char *);
     void doNewMember(const char *);
@@ -1596,7 +1596,7 @@ class TBeing : public TThing {
     bool canSwim(dirTypeT);
     int rawKill(spellNumT, TBeing * = NULL, float = 0);
     bool validMove(dirTypeT);
-    const char *movementType(bool) const;
+    const sstring movementType(bool) const;
     ubyte getMaxLimbHealth(wearSlotT) const;
     bool removeAllCasinoGames() const;
     bool checkHearts(bool = false) const;
@@ -1769,7 +1769,7 @@ class TBeing : public TThing {
     bool awake() const;
     virtual bool isFlying() const;
     virtual bool isLevitating() const;
-    bool nomagic(const char *, const char *) const;
+    bool nomagic(const sstring &, const sstring &msg_rm="") const;
     void dieFollower();
     int doDiscipline(spellNumT, const char *);
     int unloadBow(const char *);
@@ -1856,7 +1856,7 @@ class TBeing : public TThing {
     virtual void doCutlink(const char *);
     virtual void doInvis(const char *);
     virtual void doVisible(const char *, bool);
-    virtual void doAccess(const char *);
+    virtual void doAccess(const sstring &);
     void doWizlock(const char *);
     void doFlag(const char *);
     void doSystem(const char *);

@@ -1274,7 +1274,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
     vlogf(LOG_BUG, "NULL rp in displayMove!  (%s)(%d)", getName(), was_in);
     return FALSE;
   }
-  strcpy(how, movementType(FALSE));
+  strcpy(how, movementType(FALSE).c_str());
 
   if (total > 1)
     sprintf(tmp, "$n %s %s. [%d]", how, dirs[dir], total);
@@ -1322,7 +1322,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
   --(*this);
   *rp2 += *this;
 
-  strcpy(how, movementType(TRUE));
+  strcpy(how, movementType(TRUE).c_str());
 
   if ((dir < 4) || (dir > 5)) {
     if (total == 1) {
@@ -2847,7 +2847,7 @@ void TBeing::setPosition(positionTypeT pos)
   if (dynamic_cast<TBeing *>(riding) && 
       (pos != POSITION_FIGHTING) && (pos != POSITION_MOUNTED)) {
     // for debug
-    forceCrash("Mounted person (%s) set to new position (%s:%d).", getName(), position_types[pos], pos);
+    forceCrash("Mounted person (%s) set to new position (%s:%d).", getName(), position_types[pos].c_str(), pos);
     dismount(POSITION_STANDING);
   }
   if (!hasLegs()) {

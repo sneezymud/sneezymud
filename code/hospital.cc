@@ -329,7 +329,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       return TRUE;
     }
 
-    if (!isanumber(arg)) {
+    if(!sstring(arg).isNumber()){
       sprintf(buf, "%s To buy a cure, type \"buy <number>\". Try listing to see what ails you!", ch->getName());
       me->doTell(buf);
       return TRUE;

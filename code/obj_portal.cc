@@ -155,7 +155,8 @@ sstring TPortal::statObjInfo() const
   tStString += "Portal Flags: ";
   tStString += sprintbit(getPortalFlags(), exit_bits);;
   sprintf(tString, "\n\rKey: %d, Trap Type: %s, Trap Dam: %d",
-          getPortalKey(), trap_types[getPortalTrapType()], getPortalTrapDam());
+          getPortalKey(), trap_types[getPortalTrapType()].c_str(), 
+	  getPortalTrapDam());
   tStString += tString;
 
   return tStString;

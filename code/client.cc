@@ -822,7 +822,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
         account = NULL;
         return FALSE;
       }
-      if (!hasDigit(apassword)) {
+      if(!sstring(apassword).hasDigit()){
         clientf("%d|Password must contain at least 1 numerical digit.", CLIENT_ERROR);
         delete account;
         account = NULL;

@@ -3020,25 +3020,16 @@ sstring sprintbit(unsigned long vektor, const char * const names[])
   return result;
 }
 
-void sprinttype(int type, const char * const names[], char *result)
+void sprinttype(int type, const sstring names[], char *result)
 {
   int nr;
 
-  for (nr = 0; (*names[nr] != '\n'); nr++);
+  for (nr = 0; (names[nr] != "\n"); nr++);
+
   if (type < nr)
-    strcpy(result, names[type]);
+    strcpy(result, names[type].c_str());
   else
     strcpy(result, "UNDEFINED");
-}
-
-
-void makeLower(char *s)
-{
-  char *p;
-
-  for (p = s; *p; p++)
-    if (isupper(*p))
-      *p = tolower(*p);
 }
 
 #if (!defined SUN && !defined LINUX && !defined(SOLARIS))
@@ -3073,43 +3064,6 @@ void bisect_arg(const char *arg, int *field, char *sstring, const char * const a
   return;
 }
 
-char *uncap(char *s)
-{
-  char *letter;
-  int counter = 0;
-  int i;
-
-  if (!s) {
-    return s;
-  }
-
-  letter = s;
-
-  if (*letter != '<') {
-    if (s && isupper(*s)) {
-      *s = tolower(*s);
-    }
-    return s;
-  } else {
-// Accounting for Items with color sstrings and % as first character
-    for (i = 0; *letter; letter++, i++) {
-        if (*letter == '<')
-          counter = 0;
-        else
-          counter++;
-      if (counter == 3) {
-        if (letter && isupper(*letter)) {
-          *letter = tolower(*letter);
-        }
-        s[i] = *letter;
-        return s;
-      } else {
-        s[i] = *letter;
-      }
-    }
-    return s;
-  }
-}
 
 char *cap(char *s)
 {
@@ -3194,27 +3148,6 @@ void cleanCharBuf(char *buf)
   else 
     *to = '\000';
 }
-
-int startsVowel(const char *sstring)
-{
-  for (;*sstring && isspace(*sstring); sstring++);
-
-  switch (*sstring) {
-    case 'A':
-    case 'E':
-    case 'I':
-    case 'O':
-    case 'U':
-    case 'a':
-    case 'e':
-    case 'i':
-    case 'o':
-    case 'u':
-      return TRUE;
-    default:
-      return FALSE;
-  }
-} 
 
 void str_shiftleft(char *str, int n)
 {

@@ -335,7 +335,7 @@ sstring TTrap::statObjInfo() const
 
   ssprintf(buf, "Trap level: %d, damage type: %s (%d), charges: %d\n\r",
            getTrapLevel(),
-           trap_types[getTrapDamType()],
+           trap_types[getTrapDamType()].c_str(),
            getTrapDamType(),
            getTrapCharges());
   sbuf += buf;

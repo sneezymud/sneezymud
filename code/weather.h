@@ -53,14 +53,14 @@ extern void weatherChange();
 extern void GetMonth(int);
 extern void sunriseAndSunset();
 
-extern unsigned char moontype;
+extern int moontype;
 enum moonTimeT {
   MOON_TIME_SET,
   MOON_TIME_RISE,
 };
 
 extern int moonTime(moonTimeT);
-extern const char * moonType();
+extern const sstring moonType();
 extern bool moonIsUp();
 
 enum sunTimeT {

@@ -70,7 +70,7 @@ void TBeing::doBrew(const char *arg)
     sendTo("You lack any knowledge of how to brew potions.\n\r");
     return;
   }
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return;
   }
   if (isSwimming()) {

@@ -554,7 +554,7 @@ int TBeing::doStab(const char * argument, TBeing *vict)
     sendTo("You haven't learned how to stab yet.\n\r");
     return FALSE;
   }
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   strcpy(namebuf, argument);

@@ -10,9 +10,8 @@
 #include "disease.h"
 #include "obj_trap.h"
 #include "obj_portal.h"
-
-
 #include "obj_open_container.h"
+
 extern const char * const GRENADE_EX_DESC = "__grenade_puller";
 extern const char * const TRAP_EX_DESC = "__trap_setter";
 
@@ -36,7 +35,7 @@ const int trap_dam_type[] =
   DAMAGE_TRAP_BLUNT,   // pebble
 };
 
-const char *trap_types[] =
+const sstring trap_types[] =
 {
   "None",
   "Poison",
@@ -114,20 +113,18 @@ int TBeing::doSetTraps(const char *arg)
       }
       door = dirTypeT(dir - 1);
       exitp = exitDir(door);
-      char doorbuf[20];
       if (!exitp || (exitp->door_type == DOOR_NONE)) {
 	sendTo("There is no door there to trap.\n\r");
 	return FALSE;
       }
 
-      strcpy(doorbuf, exitp->getName().c_str());
-
       if (!IS_SET(exitp->condition, EX_CLOSED)) {
-        sendTo("You need to close the %s first.\n\r", uncap(doorbuf));
+        sendTo("You need to close the %s first.\n\r",
+	       exitp->getName().uncap().c_str());
         return FALSE;
       }
       if (IS_SET(exitp->condition, EX_TRAPPED)) {
-	sendTo("When you try to trap the %s, you set off the trap that is already there!\n\r", uncap(doorbuf));
+	sendTo("When you try to trap the %s, you set off the trap that is already there!\n\r", exitp->getName().uncap().c_str());
 	rc = triggerDoorTrap(door);
         if (IS_SET_DELETE(rc, DELETE_THIS))
 	  return DELETE_THIS;
@@ -173,7 +170,7 @@ int TBeing::doSetTraps(const char *arg)
       }
  
       sendTo("You start working on your trap.\n\r");
-      sprintf(buf, "$n starts fiddling with the %s.", uncap(doorbuf));
+      sprintf(buf, "$n starts fiddling with the %s.", exitp->getName().uncap().c_str());
       act(buf, TRUE, this, NULL, NULL, TO_ROOM);
       sprintf(task_arg, "%s %s", direct, trap_type);
       start_task(this, NULL, NULL, TASK_TRAP_DOOR, task_arg, 3, inRoom(), type, door, 5);

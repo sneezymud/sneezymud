@@ -10,7 +10,7 @@
 
 bool TBeing::canKick(TBeing *victim, silentTypeT silent)
 {
-  if (checkBusy(NULL))
+  if (checkBusy())
     return FALSE;
 
   if (affectedBySpell(AFFECT_TRANSFORMED_LEGS)) {

@@ -524,7 +524,7 @@ void TBeing::doAttribute(const char *arg)
     sendTo(buf);
 
     ssprintf(buf, "You grew up as %s %s and began adventuring at the age of %d.\n\r",
-      (startsVowel(home_terrains[player.hometerrain]) ? "an" : "a"),
+	     sstring(home_terrains[player.hometerrain]).startsVowel() ? "an" : "a",
       home_terrains[player.hometerrain], getBaseAge());
     sendTo(buf);
 

@@ -165,7 +165,7 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
     sendTo("You know nothing about backstabbing.\n\r");
     return FALSE;
   }
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   // *** Start of Test Tank-Target Backstab Code  -Lapsos
@@ -506,7 +506,7 @@ int TBeing::doThroatSlit(const char *argument, TBeing *vict)
     sendTo("You know nothing about murder.\n\r");
     return FALSE;
   }
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   // *** Start of Test Tank-Target Backstab Code  -Lapsos
@@ -717,7 +717,7 @@ int TBeing::doPoisonWeapon(sstring arg)
     sendTo("You know nothing about poisoning weapons.\n\r");
     return FALSE;
   }
-  if(checkBusy(NULL))
+  if(checkBusy())
     return FALSE;
   
   arg = one_argument(arg, namebuf);
@@ -985,7 +985,7 @@ int TBeing::doGarrotte(const char * argument, TBeing *vict)
     sendTo("You know nothing about garrotting.\n\r");
     return FALSE;
   }
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   strcpy(namebuf, argument);
@@ -1149,7 +1149,7 @@ int TBeing::doCudgel(const char * argument, TBeing *vict)
     return FALSE;
   }
 
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   strcpy(namebuf, argument);

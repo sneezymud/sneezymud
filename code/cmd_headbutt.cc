@@ -12,7 +12,7 @@
 
 bool TBeing::canHeadbutt(TBeing *victim, silentTypeT silent)
 {
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   if (!doesKnowSkill(SKILL_HEADBUTT)) {

@@ -215,7 +215,7 @@ int TBeing::doSmite(const char *arg, TBeing *victim)
   char tmp[80];
   int rc;
 
-  if (checkBusy(NULL)) {
+  if (checkBusy()) {
     return FALSE;
   }
   if (!doesKnowSkill(SKILL_SMITE)) {

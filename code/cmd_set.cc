@@ -225,10 +225,10 @@ void TPerson::doSet(const char *argument)
 
     if (mob->isPc()) {
       if (!mob->hasQuestBit(parm)) {
-        sendTo("Toggle Set: %s\n\r", TogIndex[parm].name);
+        sendTo("Toggle Set: %s\n\r", TogIndex[parm].name.c_str());
         mob->setQuestBit(parm);
       } else {
-        sendTo("Toggle Unset: %s\n\r", TogIndex[parm].name);
+        sendTo("Toggle Unset: %s\n\r", TogIndex[parm].name.c_str());
         mob->remQuestBit(parm);
       }
     } else {

@@ -2217,13 +2217,12 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
   char buf[256];
   char tmp_buf[40];
   char tmp2_buf[40];
-  char classbuf[80];
   int combat = 0, basic = 0;
   bool basicLearn = FALSE, combatMax = FALSE,  combatLearn = FALSE;
 
-  strcpy(classbuf, classNames[Class].name);
   sprintf(buf, "Here are %d %s practice%s.", pracs,
-       uncap(classbuf), (pracs == 1 ? "" : "s"));
+       sstring(classNames[Class].name).uncap().c_str(), 
+	  (pracs == 1 ? "" : "s"));
   gm->doSay(buf);
 
   if (!checkDoneBasic(this, Class, FALSE, FALSE)) {

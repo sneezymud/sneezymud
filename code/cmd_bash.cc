@@ -11,7 +11,7 @@
 
 bool TBeing::canBash(TBeing *victim, silentTypeT silent)
 {
-  if (checkBusy(NULL)) 
+  if (checkBusy()) 
     return FALSE;
   
   spellNumT skill = getSkillNum(SKILL_BASH);

@@ -2075,7 +2075,7 @@ void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorE
 	  row++;
 	ch->sendTo(buf);
 
-	ch->sendTo("%2d %s", i, trap_types[i]);
+	ch->sendTo("%2d %s", i, trap_types[i].c_str());
       }
       ch->sendTo(VT_CURSPOS, 21, 1);
       ch->sendTo("Select number to select.\n\r");
@@ -2310,7 +2310,7 @@ void change_portal_value3(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
             if ((i%2) == 1)
               row++;
             ch->sendTo(buf);
-            ch->sendTo("%2d %s", i, trap_types[i]);
+            ch->sendTo("%2d %s", i, trap_types[i].c_str());
           }
           ch->sendTo(VT_CURSPOS, 21, 1);
 	  ch->sendTo("Enter new portal trap type.\n\r--> ");
@@ -2365,7 +2365,7 @@ void change_portal_value3(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
   }
   ch->sendTo(VT_HOMECLR);
   ch->sendTo("1) Portal Trap Damage.   Current: %d\n\r", o->getPortalTrapDam());
-  ch->sendTo("2) Portal Trap Type.     Current: %s\n\r", trap_types[o->getPortalTrapType()]);
+  ch->sendTo("2) Portal Trap Type.     Current: %s\n\r", trap_types[o->getPortalTrapType()].c_str());
   ch->sendTo(VT_CURSPOS, 10, 1);
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
@@ -3085,7 +3085,7 @@ void TTrap::changeTrapValue3(TBeing *ch, const char *arg, editorEnterTypeT type)
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo("Trap Damage Type: %s", trap_types[getTrapDamType()]);
+  ch->sendTo("Trap Damage Type: %s", trap_types[getTrapDamType()].c_str());
  
   row = 0;
   for (i = 0; i < MAX_TRAP_TYPES; i++) {
@@ -3093,7 +3093,7 @@ void TTrap::changeTrapValue3(TBeing *ch, const char *arg, editorEnterTypeT type)
     if (!((i + 1) % 3))
       row++;
     ch->sendTo(buf);
-    sprintf(buf, "%2d %s", i + 1, trap_types[i]);
+    sprintf(buf, "%2d %s", i + 1, trap_types[i].c_str());
     ch->sendTo(buf);
   }
   ch->sendTo(VT_CURSPOS, 21, 1);
@@ -3132,7 +3132,7 @@ void TObj::describeTreasure(const char *arg,int num, int price)
 
   //  Remake the short description.  
   sprintf(buf,"%s %s of %s", 
-     (startsVowel(type) ? "an" : "a"),
+    sstring(type).startsVowel() ? "an" : "a",
      type, arg);
   if (!strcmp(type,"bullion"))
     sprintf(buf,"some %s %s",
