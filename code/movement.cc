@@ -3476,7 +3476,7 @@ int TBeing::doMortalGoto(const sstring & argument)
     }
     rp = real_roomp(targ_rm);
 
-    dir = choose_exit_global(in_room, targ_rm, -1000);
+    dir = choose_exit_global(in_room, targ_rm, 1000);
 
     if (dir < DIR_NORTH || dir > DIR_SOUTHWEST) {
       sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
@@ -3501,7 +3501,7 @@ int TBeing::doMortalGoto(const sstring & argument)
       return FALSE;
     }
 
-    dir = choose_exit_global(in_room, targ_rm, -1000);
+    dir = choose_exit_global(in_room, targ_rm, 1000);
     if (dir < DIR_NORTH || dir > DIR_SOUTHWEST) {
       // thieves guild is behind a secret door
       // if not with jennica track to jennica
