@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: materials.h,v $
+// Revision 1.2  1999/10/03 14:55:51  lapsos
+// Added materials elvenmail/elvensteel
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -122,8 +125,10 @@ const int    MAT_TIN             =171;
 const int    MAT_TUNGSTAN        =172;
 const int    MAT_ADMINTITE       =173;
 const int    MAT_TERBIUM         =174;
+const int    MAT_ELVENMAIL       =175;
+const int    MAT_ELVENSTEEL      =176;
 
-const int    MAX_MAT_METAL       =25;      //Move and change  (max+1 - 150)
+const int    MAX_MAT_METAL       =27;      //Move and change  (max+1 - 150)
 
 struct material_type_numbers
 {

@@ -6,6 +6,9 @@
 // "materials.cc" - Various functions related to materials.
 //
 // $Log: materials.cc,v $
+// Revision 1.4  1999/10/03 14:56:30  lapsos
+// Added materials elvenmail/elvensteel
+//
 // Revision 1.3  1999/09/30 17:28:52  batopr
 // removed gold_modifier[GOLD_REPAIR] from damcheck formula
 //
@@ -261,6 +264,8 @@ bool TThing::isMetal() const
     case MAT_ATHANOR:
     case MAT_TIN:
     case MAT_TERBIUM:
+    case MAT_ELVENMAIL:
+    case MAT_ELVENSTEEL:
       return TRUE;
     default:
       return FALSE;
