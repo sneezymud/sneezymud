@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_water.cc,v $
+// Revision 1.4  1999/09/16 04:49:41  peel
+// Fixed typo.
+//
 // Revision 1.3  1999/09/16 04:48:23  peel
 // Tsunami will create pools of water now.
 // Conjure water elemental requires water to be in the room (either water
@@ -822,7 +825,7 @@ int conjureElemWater(TBeing * caster)
 	 (tp->getDrinkType()==LIQ_WATER ||
 	  tp->getDrinkType()==LIQ_SALTWATER ||
 	  tp->getDrinkType()==LIQ_HOLYWATER)){
-	tp->setDrinkUnit(-100);
+	tp->setDrinkUnits(-100);
 	found=1;
 	break;
       }
