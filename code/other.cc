@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: other.cc,v $
+// Revision 1.6  1999/09/27 00:34:06  lapsos
+// *** empty log message ***
+//
 // Revision 1.5  1999/09/27 00:07:47  lapsos
 // Added atomize to doObjSpell function.
 //
@@ -2286,8 +2289,10 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       stormySkies(caster,victim,obj);
       break;
     case SPELL_ATMOZE:
+      /*
       atomize(caster,victim,obj);
       break;
+      */
     default:
       vlogf(5,"Object (%s) with uncoded spell (%d)!", obj->getName(), spell);
       break;

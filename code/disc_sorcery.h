@@ -3,8 +3,8 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_sorcery.h,v $
-// Revision 1.3  1999/09/27 00:37:54  lapsos
-// w
+// Revision 1.4  1999/09/27 00:38:17  lapsos
+// *** empty log message ***
 //
 // Revision 1.2  1999/09/27 00:08:28  lapsos
 // added atomize(TB, TB, TMagicItem) for doObjSpell code.
