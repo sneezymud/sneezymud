@@ -64,6 +64,8 @@
 #include "disease.h"
 #include "obj_base_corpse.h"
 #include "obj_open_container.h"
+#include "obj_trap.h"
+
 
 // CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye

@@ -12,8 +12,9 @@
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_alchemy.h"
-#include "components.h"
+#include "obj_component.h"
 #include "obj_opal.h"
+#include "obj_component.h"
 
 int identify(TBeing *caster, TObj *obj, int, byte bKnown)
 {

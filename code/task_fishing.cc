@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "obj_tool.h"
 
 void TBeing::doFish(const char *direction){
   TRoom *rp;

@@ -9,6 +9,7 @@
 #include "combat.h"
 #include "statistics.h"
 #include "shop.h"
+#include "obj_tool.h"
 
 TBaseWeapon::TBaseWeapon() :
   TObj(),

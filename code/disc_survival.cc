@@ -11,8 +11,9 @@
 #include "disease.h"
 #include "combat.h"
 #include "disc_survival.h"
-#include "components.h"
+#include "obj_component.h"
 #include "obj_base_corpse.h"
+#include "obj_tool.h"
 
 static const int FORAGE_BEGIN = 276;
 static const int FORAGE_END   = 281;

@@ -20,6 +20,7 @@ extern "C" {
 #include "obj_spellbag.h"
 #include "obj_bag.h"
 #include "obj_table.h"
+#include "obj_tool.h"
 
 // fname will look for the first non-alpha character
 // I added - and ' as valid fname chars since this allows us to do better things

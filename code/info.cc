@@ -16,13 +16,16 @@
 #include "disease.h"
 #include "combat.h"
 #include "statistics.h"
-#include "components.h"
+#include "obj_component.h"
+
 #include "skillsort.h"
 #include "obj_open_container.h"
 #include "obj_corpse.h"
 #include "obj_bow.h"
 #include "obj_symbol.h"
 #include "obj_food.h"
+#include "obj_tool.h"
+#include "obj_trap.h"
 
 string describeDuration(const TBeing *ch, int dur)
 {

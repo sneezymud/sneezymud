@@ -20,6 +20,9 @@
 #include "obj_base_container.h"
 #include "obj_table.h"
 #include "obj_money.h"
+#include "obj_key.h"
+#include "obj_trap.h"
+
 
 // watches rent in, rent out, dropped, etc
 #define VERBOSE_LOGS   1

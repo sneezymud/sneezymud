@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_tree.cc,v $
+// Revision 5.2  2002/01/10 00:45:49  peel
+// more splitting up of obj2.h
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -16,6 +22,8 @@
 // tree.cc
 
 #include "stdsneezy.h"
+#include "obj_tree.h"
+
 
 TTree::TTree() :
   TObj()

@@ -6,8 +6,8 @@
 
 
 #include "stdsneezy.h"
-#include "board.h"
-
+#include "obj_board.h"
+#include "obj_note.h"
 #define POST_IN_REVERSE 0
 
 boardStruct *board_list;

@@ -1,23 +1,8 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_bed.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // bed.cc
 
 #include "stdsneezy.h"
-#include "create.h"
 #include "games.h"
+#include "obj_bed.h"
 
 TBed::TBed() :
   TObj(),
@@ -186,7 +171,11 @@ void TBed::bedRegen(TBeing *ch, int *gain, silentTypeT silent) const
     *gain += max(1,getRegen() * *gain / 100);
   }
   if ((ch->getHeight() - 6)  > getMaxSize()) {
+    // reduce gain based on how uncomfy bed is
     *gain -= max(1,(ch->getHeight() - getMaxSize())/3);
+    // but don't let it kill you
+    *gain = max(*gain, 0);
+
     sprintf(buf, "The $o $q too small and uncomfortable for you.");
     if (!silent)
       act(buf,FALSE,ch,this,0,TO_CHAR);
@@ -199,8 +188,8 @@ void TBed::bedRegen(TBeing *ch, int *gain, silentTypeT silent) const
           ch->sendTo("You are much too uncomfortable to continue to sleep well.\n\r");
         // we are inside a task_xxx think, so do NOTHING that changes task
         // state.  i.e. don't set them resting or something
+        *gain = 0;
       }
-      *gain = 0;
       return;
     }
 
@@ -211,6 +200,15 @@ void TBed::bedRegen(TBeing *ch, int *gain, silentTypeT silent) const
       if (!silent)
         act(buf,FALSE,ch, this,0,TO_ROOM);
     }
+
+    return;
+  }
+
+  // the bed is comfy
+  if (ch->getHit() < ch->hitLimit()) {
+    // act() is suppressed if person is !awake(), use a sendTo
+    if (!silent)
+      ch->sendTo(COLOR_OBJECTS, "Your rest on %s rejuvenates you.\n\r", getName());
   }
 }
 
@@ -539,12 +537,12 @@ void TBed::lowCheck()
 {
   if (canWear(ITEM_TAKE) && getVolume() <= 3000 && getWeight() <= 10 &&
       getRegen() >= 3)
-    vlogf(LOW_ERROR, "Portable bed (%s) with excessive regen rates!",
+    vlogf(LOG_LOW, "Portable bed (%s) with excessive regen rates!",
              getName());
 
 #if 0
   if (canWear(ITEM_TAKE)) {
-    vlogf(LOW_ERROR, "Bed (%s) set to be portable.",
+    vlogf(LOG_LOW, "Bed (%s) set to be portable.",
                 getName());
   }
 #endif

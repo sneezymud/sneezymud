@@ -15,7 +15,7 @@ extern "C" {
 
 #include "stdsneezy.h"
 #include "systemtask.h"
-
+#include "obj_note.h"
 #if !defined(LINUX)
 extern pid_t vfork(void);
 #endif

@@ -11,6 +11,7 @@
 #include "obj_fuel.h"
 #include "obj_organic.h"
 #include "obj_trash.h"
+#include "obj_tool.h"
 
 TFFlame::TFFlame() :
   TBaseLight(),

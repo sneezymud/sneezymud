@@ -14,7 +14,8 @@
 #include "obj_bag.h"
 #include "obj_symbol.h"
 #include "obj_money.h"
-
+#include "obj_component.h"
+#include "obj_note.h"
 static const char ROOM_SAVE_PATH[] = "roomdata/saved";
 static const int NORMAL_SLOT   = -1;
 static const int CONTENTS_END  = -2;

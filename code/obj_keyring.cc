@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_keyring.cc,v $
+// Revision 5.3  2002/01/10 00:45:49  peel
+// more splitting up of obj2.h
+//
 // Revision 5.2  2002/01/08 21:05:12  peel
 // removed the TBaseContainer hierarchy from obj2.h
 // added header files for those objects
@@ -29,7 +32,7 @@
 
 #include "stdsneezy.h"
 #include "obj_keyring.h"
-
+#include "obj_key.h"
 TKeyring::TKeyring() :
   TExpandableContainer()
 {

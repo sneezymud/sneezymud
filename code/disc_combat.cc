@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_combat.cc,v $
+// Revision 5.2  2002/01/10 00:45:47  peel
+// more splitting up of obj2.h
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -16,8 +22,9 @@
 #include "stdsneezy.h"
 #include "disease.h"
 #include "combat.h"
-#include "components.h"
+#include "obj_component.h"
 #include "disc_combat.h"
+#include "obj_tool.h"
 
 void TBeing::doSharpen(const char *argument)
 {

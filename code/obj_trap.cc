@@ -8,6 +8,7 @@
 #include "stdsneezy.h"
 #include "disc_looting.h"
 #include "disease.h"
+#include "obj_trap.h"
 
 int TTrap::anyTrapCheck(TBeing *ch)
 {

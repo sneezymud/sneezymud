@@ -1,6 +1,6 @@
 #include "stdsneezy.h"
 #include "unistd.h"
-
+#include "obj_note.h"
 TNote::TNote() :
   TObj(),
   repairman(0),

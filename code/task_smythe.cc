@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.5  2002/01/10 00:45:49  peel
+// more splitting up of obj2.h
+//
 // Revision 5.4  2001/09/25 12:44:43  jesus
 // smythe fix
 //
@@ -42,6 +45,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "obj_tool.h"
 
 void TTool::findSmytheTools(TTool **forge, TTool **anvil)
 {

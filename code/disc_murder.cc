@@ -3,6 +3,7 @@
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_murder.h"
+#include "obj_tool.h"
 
 static void playBackstab(const TRoom *rp)
 {

@@ -12,8 +12,7 @@
 #include "statistics.h"
 #include "help.h"
 #include "mail.h"
-#include "components.h"
-#include "board.h"
+#include "obj_component.h"
 #include "stdsneezy.h"
 #include "loadset.h"
 #include "sys_loot.h"
@@ -44,6 +43,17 @@
 #include "obj_statue.h"
 #include "obj_trash.h"
 #include "obj_treasure.h"
+#include "obj_bandaid.h"
+#include "obj_bed.h"
+#include "obj_board.h"
+#include "obj_book.h"
+#include "obj_component.h"
+#include "obj_gemstone.h"
+#include "obj_key.h"
+#include "obj_note.h"
+#include "obj_tool.h"
+#include "obj_trap.h"
+#include "obj_tree.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 

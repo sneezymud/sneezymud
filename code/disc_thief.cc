@@ -12,6 +12,7 @@
 #include "disease.h"
 #include "combat.h"
 #include "disc_thief.h"
+#include "obj_tool.h"
 
 int TBeing::doSneak(const char *argument)
 {
@@ -645,9 +646,9 @@ int disguise(TBeing *caster, char * buffer)
   REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
 
   if (!awesom) {
-    if (caster->getName()) {
+    if (caster->name) {
       delete [] mob->name;
-      mob->setName(mud_str_dup(caster->name));
+      mob->name = mud_str_dup(caster->name);
     }
 
     delete [] mob->shortDescr;
@@ -655,7 +656,7 @@ int disguise(TBeing *caster, char * buffer)
       mob->shortDescr = mud_str_dup(caster->shortDescr);
     } else {
       // always true for caster = PC
-      mob->shortDescr = mud_str_dup(caster->getName());
+      mob->shortDescr = mud_str_dup(caster->name);
     }
 
     delete [] mob->player.longDescr;
@@ -663,20 +664,20 @@ int disguise(TBeing *caster, char * buffer)
       mob->player.longDescr = mud_str_dup(caster->getLongDesc());
     } else {
       // always true for caster = PC
-      sprintf(buf, "%s is here.", caster->getName());
+      sprintf(buf, "%s is here.", caster->name);
       mob->player.longDescr = mud_str_dup(cap(buf));
     }
-  } else if (caster->getName()) {
+  } else if (caster->name) {
     // Consider this immortal use.
 
-    string tStNewNameList(mob->getName());
+    string tStNewNameList(mob->name);
 
     tStNewNameList += " [";
     tStNewNameList += caster->getNameNOC(caster);
     tStNewNameList += "]";
 
     delete [] mob->name;
-    mob->setName(mud_str_dup(tStNewNameList.c_str()));
+    mob->name = mud_str_dup(tStNewNameList.c_str());
   }
 
   /*

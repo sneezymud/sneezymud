@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_gemstone.cc,v $
+// Revision 5.2  2002/01/10 00:45:49  peel
+// more splitting up of obj2.h
+//
 // Revision 5.1  2001/07/13 05:32:20  peel
 // renamed a bunch of source files
 //
@@ -22,6 +25,7 @@
 // gemstone.cc
 
 #include "stdsneezy.h"
+#include "obj_gemstone.h"
 
 TGemstone::TGemstone() :
   TObj()

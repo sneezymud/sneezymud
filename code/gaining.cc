@@ -2,7 +2,8 @@
 
 #include "stdsneezy.h"
 #include "statistics.h"
-#include "components.h"
+#include "obj_component.h"
+
 
 // if logic changes, please change some of the duplicate code in pracsBetween()
 void TBeing::setSpellEligibleToggle(TMonster *trainer, spellNumT spell, silentTypeT silent) 

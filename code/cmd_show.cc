@@ -11,10 +11,11 @@
 #include "stdsneezy.h"
 #include "disc_looting.h"
 #include "combat.h"
-#include "components.h"
+#include "obj_component.h"
 #include "cmd_dissect.h"
 #include "disc_alchemy.h"
 #include "obj_open_container.h"
+#include "obj_component.h"
 
 static void print_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
 {

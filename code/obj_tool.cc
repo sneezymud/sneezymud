@@ -1,21 +1,7 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_tool.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // tool.cc
 
 #include "stdsneezy.h"
+#include "obj_tool.h"
 
 TTool::TTool() :
   TObj(),
@@ -90,7 +76,7 @@ void TTool::addToToolMaxUses(int r)
 void TTool::assignFourValues(int x1, int x2, int x3, int)
 {
   if (x1 < MIN_TOOL_TYPE || x1 >= MAX_TOOL_TYPE) {
-    vlogf(LOW_ERROR, "Bad toolTypeT value %d on %s!", x1, getName());
+    vlogf(LOG_LOW, "Bad toolTypeT value %d on %s!", x1, getName());
     x1 = MIN_TOOL_TYPE;
   }
 

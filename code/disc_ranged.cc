@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_ranged.cc,v $
+// Revision 5.4  2002/01/10 00:45:47  peel
+// more splitting up of obj2.h
+//
 // Revision 5.3  2002/01/09 23:27:03  peel
 // More splitting up of obj2.h
 // renamed food.cc to obj_food.cc
@@ -27,6 +30,7 @@
 #include "stdsneezy.h"
 #include "disc_ranged.h"
 #include "obj_bow.h"
+#include "obj_tool.h"
 
 void TThing::stringMeBow(TBeing *ch, TThing *)
 {

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_component.h,v $
+// Revision 5.2  2002/01/10 00:45:49  peel
+// more splitting up of obj2.h
+//
 // Revision 5.1  2002/01/09 23:42:14  peel
 // renamed components.cc to obj_component.cc
 // and components.h to obj_component.h
@@ -415,67 +418,72 @@ extern vector<COMPINDEX>CompIndex;
 extern vector<compInfo>CompInfo;
 
 
+class TComponent : public TObj {
+  private:
+    int charges;
+    int max_charges;
+    spellNumT comp_spell;
+    unsigned int comp_type;
+  public:
+    virtual bool fitInShop(const char *, const TBeing *) const;
+    virtual void assignFourValues(int, int, int, int);
+    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual itemTypeT itemType() const { return ITEM_COMPONENT; }
+    virtual string statObjInfo() const;
+    virtual string getNameForShow(bool, bool, const TBeing *) const;
+    virtual const string shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
+
+    virtual void purchaseMe(TBeing *, TMonster *, int, int);
+    virtual void sellMeMoney(TBeing *, TMonster *, int, int);
+    virtual bool objectRepair(TBeing *, TMonster *, silentTypeT);
+    virtual void lowCheck();
+    virtual void evaluateMe(TBeing *) const;
+    virtual void changeObjValue4(TBeing *);
+    virtual void changeComponentValue4(TBeing *, const char *, editorEnterTypeT);
+    virtual void boottimeInit();
+    virtual void findSomeComponent(TComponent **, TComponent **, TComponent **, spellNumT, int);
+    virtual bool allowsCast() { return true; }
+    virtual void update(int);
+    virtual void describeObjectSpecifics(const TBeing *) const;
+    virtual int putMeInto(TBeing *, TOpenContainer *);
+    virtual void findComp(TComponent **, spellNumT);
+    virtual void decayMe();
+    virtual int objectSell(TBeing *, TMonster *);
+    virtual bool sellMeCheck(const TBeing *, TMonster *) const;
+    virtual int componentSell(TBeing *, TMonster *, int, TThing *);
+    virtual int componentValue(TBeing*, TMonster *, int, TThing *);
+    virtual int getShopPrice(int *) const;
+    virtual void recalcShopData(int, int);
+    virtual int rentCost() const;
+    virtual bool splitMe(TBeing *, const char *);
+    virtual int putSomethingIntoContainer(TBeing *, TOpenContainer *);
+    virtual int suggestedPrice() const;
+    virtual void objMenu(const TBeing *) const;
+    double priceMultiplier() const;
+    virtual int noteMeForRent(string &, TBeing *, TThing *, int *);
+    virtual void sellMe(TBeing *, TMonster *, int);
+    virtual void buyMe(TBeing *, TMonster *, int, int);
+
+    int getComponentCharges() const;
+    void setComponentCharges(int n);
+    void addToComponentCharges(int n);
+    int getComponentMaxCharges() const;
+    void setComponentMaxCharges(int n);
+    void addToComponentMaxCharges(int n);
+    spellNumT getComponentSpell() const;
+    void setComponentSpell(spellNumT n);
+    unsigned int getComponentType() const;
+    void setComponentType(unsigned int num);
+    void addComponentType(unsigned int num);
+    void remComponentType(unsigned int num);
+    bool isComponentType(unsigned int num) const;
+
+    TComponent();
+    TComponent(const TComponent &a);
+    TComponent & operator=(const TComponent &a);
+    virtual ~TComponent();
+    virtual TThing & operator-- ();
+};
+
+
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -3,7 +3,8 @@
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_alchemy.h"
-#include "components.h"
+#include "obj_component.h"
+
 
 
 #define BREW_DEBUG    1

@@ -3,7 +3,7 @@
 
 #include "stdsneezy.h"
 #include "statistics.h"
-
+#include "obj_note.h"
 int counter_done;  // Global variable used to count # of done items/repairman 
 int counter_work;  // Global variable used to count # of undone items/man 
 

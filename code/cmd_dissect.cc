@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
-#include "components.h"
+#include "obj_component.h"
 #include "disc_adventuring.h"
 #include "cmd_dissect.h"
 #include "obj_base_corpse.h"

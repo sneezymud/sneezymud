@@ -3,7 +3,7 @@
 #include "stdsneezy.h"
 #include "obj_open_container.h"
 #include "obj_keyring.h"
-
+#include "obj_key.h"
 TKey::TKey() :
   TObj()
 {

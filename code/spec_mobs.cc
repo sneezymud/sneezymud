@@ -43,7 +43,7 @@
 #include "disc_water.h"
 #include "disc_wrath.h"
 #include "disc_alchemy.h"
-#include "components.h"
+#include "obj_component.h"
 #include "paths.h"
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"

@@ -11,7 +11,7 @@
 #include "disease.h"
 #include "mail.h"
 #include "disc_monk.h"
-#include "components.h"
+#include "obj_component.h"
 #include "obj_drug.h"
 #include "obj_player_corpse.h"
 #include "obj_opal.h"

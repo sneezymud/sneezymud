@@ -31,21 +31,7 @@ class boardStruct {
     boardStruct(TObj *obj);
     ~boardStruct();
 };
- 
-int board_show_board(TBeing *ch, const char *arg, TBoard *, boardStruct *b);
-void board_fix_long_desc(boardStruct *b);
-int board(TBeing *ch, cmdTypeT cmd, const char *arg, TObj **me, TObj **ob2);
-int board_display_msg(TBeing *ch, const char *arg, TBoard *, boardStruct *b);
-void board_reset_board(boardStruct *b);
-void board_load_board(boardStruct *b);
-void post_note_on_board(TBeing *ch, const char *arg, boardStruct *b);
-boardStruct *FindBoardInRoom(int room, const char *arg);
-void OpenBoardFile(boardStruct *b);
-void InitABoard(TObj *obj);
-void DeleteABoard(TObj *obj);
-void InitBoards();
-extern int get_note_from_board(TBeing *, const char *, boardStruct *, TBoard *);
-extern boardStruct *board_list;
+
 
 class TBoard : public TObj {
   private:
@@ -67,6 +53,22 @@ class TBoard : public TObj {
     TBoard & operator=(const TBoard &a);
     virtual ~TBoard();
 };
+
+ 
+int board_show_board(TBeing *ch, const char *arg, TBoard *, boardStruct *b);
+void board_fix_long_desc(boardStruct *b);
+int board(TBeing *ch, cmdTypeT cmd, const char *arg, TObj **me, TObj **ob2);
+int board_display_msg(TBeing *ch, const char *arg, TBoard *, boardStruct *b);
+void board_reset_board(boardStruct *b);
+void board_load_board(boardStruct *b);
+void post_note_on_board(TBeing *ch, const char *arg, boardStruct *b);
+boardStruct *FindBoardInRoom(int room, const char *arg);
+void OpenBoardFile(boardStruct *b);
+void InitABoard(TObj *obj);
+void DeleteABoard(TObj *obj);
+void InitBoards();
+extern int get_note_from_board(TBeing *, const char *, boardStruct *, TBoard *);
+extern boardStruct *board_list;
 
 
 #endif

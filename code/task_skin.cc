@@ -9,6 +9,9 @@
 #include "stdsneezy.h"
 #include "obj_base_corpse.h"
 #include "obj_organic.h"
+#include "obj_component.h"
+#include "obj_tool.h"
+
 void stop_skin(TBeing *ch)
 {
   if (ch->getPosition() >= POSITION_RESTING) {

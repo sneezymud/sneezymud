@@ -31,7 +31,7 @@ extern "C" {
 #include "socket.h"
 #include "shop.h"
 #include "cmd_trophy.h"
-
+#include "obj_note.h"
 
 bool Silence = FALSE;
 bool Sleep = TRUE;

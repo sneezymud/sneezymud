@@ -9,6 +9,8 @@
 
 #include "stdsneezy.h"
 #include "obj_base_container.h"
+#include "obj_component.h"
+#include "obj_tool.h"
 
 const char * TThing::objs(const TThing *t) const
 {

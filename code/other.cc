@@ -21,12 +21,13 @@ extern "C" {
 #include "mail.h"
 #include "obj_drug.h"
 #include "skillsort.h"
-#include "board.h"
+#include "obj_board.h"
 #include "obj_spellbag.h"
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"
 #include "obj_drug_container.h"
-
+#include "obj_component.h"
+#include "obj_note.h"
 #include "disc_air.h"
 #include "disc_alchemy.h"
 #include "disc_animal.h"
@@ -47,6 +48,8 @@ extern "C" {
 #include "disc_shaman_skunk.h"
 #include "disc_shaman_spider.h"
 #include "disc_shaman_control.h"
+#include "obj_trap.h"
+
 
 #include "spelltask.h"
 

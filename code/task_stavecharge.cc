@@ -17,6 +17,7 @@
 ******************************************************************************/
 
 #include "stdsneezy.h"
+#include "obj_component.h"
 
 // How many charges per 'charge' does it cost.
 static const int STAVECHARGE_COMPMULTIPLIER = 5;

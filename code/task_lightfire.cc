@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_lightfire.cc,v $
+// Revision 5.3  2002/01/10 00:45:49  peel
+// more splitting up of obj2.h
+//
 // Revision 5.2  2001/09/07 07:07:35  peel
 // changed TThing->stuff to getStuff() and setStuff()
 //
@@ -30,6 +33,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "obj_tool.h"
 
 int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *obj)
 {

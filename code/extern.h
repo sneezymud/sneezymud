@@ -372,6 +372,7 @@ extern void pissOff(TMonster *irritated, TBeing *reason);
 extern int get_range_actual_damage(TBeing *ch, TBeing *victim, TObj *o, int dam, spellNumT attacktype);
 extern void generic_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr);
 extern TRoom *room_find_or_create(int);
+class TNote;
 extern TNote *createNote(char *);
 extern void forceCrash(const char *, ...);
 extern string secsToString(time_t num);

@@ -3,7 +3,7 @@
 #include <cmath>
 #include "stdsneezy.h"
 #include "disease.h"
-#include "components.h"
+#include "obj_component.h"
 #include "combat.h"
 #include "disc_mage.h"
 #include "disc_cleric.h"

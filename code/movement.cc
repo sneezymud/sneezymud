@@ -25,7 +25,7 @@
 #include "room.h"
 #include "obj_base_corpse.h"
 #include "obj_keyring.h"
-
+#include "obj_key.h"
 void TBeing::goThroughPortalMsg(const TPortal *o) const
 {
   char buf[256];

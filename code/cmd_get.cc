@@ -11,6 +11,7 @@
 #include "obj_player_corpse.h"
 #include "obj_base_corpse.h"
 #include "obj_base_container.h"
+#include "obj_trap.h"
 
 void TThing::getMeFrom(TBeing *ch, TThing *t)
 {

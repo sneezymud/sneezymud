@@ -8,7 +8,7 @@ extern "C" {
 }
  
 #include "help.h"
-#include "components.h"
+#include "obj_component.h"
 #include "statistics.h"
 #include "systemtask.h"
 

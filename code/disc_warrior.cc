@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_warrior.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -17,6 +9,7 @@
 #include "disease.h"
 #include "combat.h"
 #include "disc_warrior.h"
+#include "obj_tool.h"
 
 int TBeing::doBerserk() 
 {
@@ -33,6 +26,11 @@ int TBeing::doBerserk()
     sendTo("You are unable to work up the bloodlust at this time.\n\r");
     return FALSE;
   }
+  if (affectedBySpell(SKILL_DISGUISE)){
+    sendTo("You can't work up the bloodlust while pretending to be someone else.\n\r");
+    return FALSE;
+  }
+
   rc = berserk(this);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
@@ -93,7 +91,7 @@ int berserk(TBeing * caster)
 
     af.type = SKILL_BERSERK;
     af.level = level;
-    af.duration = 6 * UPDATES_PER_TICK;
+    af.duration = 6 * UPDATES_PER_MUDHOUR;
     af.location = APPLY_NONE;
     af.modifier = 0;
     af.bitvector = 0;
@@ -115,8 +113,8 @@ void TBeing::doRepair(const char *arg)
     return;
   }
 
-  if (!(obj = heldInPrimHand()) || !isname(v_name, obj->name)) {
-    sendTo("You'll have to be holding that in your primary hand to repair it.\n\r");
+  if (!(obj = heldInSecHand()) || !isname(v_name, obj->name)) {
+    sendTo("You'll have to be holding that in your secondary hand to repair it.\n\r");
     return;
   }
 
@@ -134,7 +132,7 @@ void TBeing::doRepair(const char *arg)
 
 void TThing::repairMeHammer(TBeing *caster, TObj *obj)
 {
-  act("You need to hold a hammer in your secondary hand in order to repair $p",
+  act("You need to hold a hammer in your primary hand in order to repair $p",
            TRUE, caster, obj, NULL, TO_CHAR);
   return;
 }
@@ -142,13 +140,13 @@ void TThing::repairMeHammer(TBeing *caster, TObj *obj)
 void TTool::repairMeHammer(TBeing *caster, TObj *obj)
 {
   if (getToolType() != TOOL_HAMMER) {
-   act("You need to hold a hammer in your secondary hand in order to repair $p",
+   act("You need to hold a hammer in your primary hand in order to repair $p",
            TRUE, caster, obj, NULL, TO_CHAR);
     return;
   }
 
-  if (obj->getMaxStructPoints() <= obj->getStructPoints()) {
-    caster->sendTo("But it looks as good as new!\n\r");
+  if (obj->getMaxStructPoints() <= obj->getStructPoints() - obj->getDepreciation()) {
+    caster->sendTo("But it looks as good as good as its going to get!\n\r");
     return;
   }
   if (caster->getMove() < 10) {
@@ -165,8 +163,8 @@ void repair(TBeing * caster, TObj *obj)
 {
   TThing *hammer;
 
-  if (!(hammer = caster->heldInSecHand())) {
-    act("You need to hold a hammer in your secondary hand in order to repair $p",
+  if (!(hammer = caster->heldInPrimHand())) {
+    act("You need to hold a hammer in your primary hand in order to repair $p",
            TRUE, caster, obj, NULL, TO_CHAR);
     return;
   }
@@ -181,8 +179,16 @@ int repairMetal(TBeing *ch, TObj *o)
   }
   act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
   act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+  o->addToDepreciation(2); // considering repairer prolly sucks compared to a pro, i think
+                           // this is fair. -dash, dec 2000, sometime before x-mas
 
   start_task(ch, NULL, NULL, TASK_SMYTHE, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
   return 0;
 }
+
+
+
+
+
+
 

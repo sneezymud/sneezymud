@@ -10,7 +10,6 @@
 #include "range.h"
 #include "disease.h"
 #include "statistics.h"
-#include "components.h"
 #include "shop.h"
 #include "being.h"
 #include "obj_spellbag.h"
@@ -19,6 +18,7 @@
 #include "obj_bow.h"
 #include "obj_money.h"
 #include "obj_treasure.h"
+#include "obj_component.h"
 
 // returns DELETE_THIS if this has to be deleted
 int TMonster::mobileGuardian()

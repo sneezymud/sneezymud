@@ -16,11 +16,13 @@ extern "C" {
 #include <algorithm>
 
 #include "stdsneezy.h"
-#include "components.h"
+#include "obj_component.h"
 #include "dirsort.h"
 #include "statistics.h"
 #include "obj_open_container.h"
 #include "obj_trash.h"
+#include "obj_book.h"
+#include "obj_trap.h"
 
 static void update_obj_menu(const TBeing *ch, const TObj *obj)
 {

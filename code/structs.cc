@@ -9,7 +9,7 @@
 
 #include "stdsneezy.h"
 #include "combat.h"
-#include "board.h"
+#include "obj_board.h"
 #include "statistics.h"
 #include "games.h"
 #include "obj_base_corpse.h"

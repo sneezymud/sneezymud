@@ -2,10 +2,10 @@
 
 #include "stdsneezy.h"
 #include "disease.h"
-#include "components.h"
 #include "obj_open_container.h"
 #include "obj_opal.h"
-
+#include "obj_component.h"
+#include "obj_key.h"
 void TMonster::balanceMakeNPCLikePC()
 {
   // This is predicated on balance ideas

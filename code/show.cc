@@ -11,10 +11,13 @@
 #include "stdsneezy.h"
 #include "disc_looting.h"
 #include "combat.h"
-#include "components.h"
+#include "obj_component.h"
 #include "cmd_dissect.h"
 #include "disc_alchemy.h"
 #include "obj_table.h"
+#include "obj_note.h"
+#include "obj_trap.h"
+
 
 void TThing::showMe(TBeing *ch) const
 {

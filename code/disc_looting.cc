@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_looting.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -17,6 +9,7 @@
 #include "disease.h"
 #include "combat.h"
 #include "disc_looting.h"
+#include "obj_trap.h"
 
 int TBeing::doSearch(const char *argument)
 {
@@ -129,7 +122,7 @@ int TBeing::disarmTrap(const char *arg, TObj *tp)
       trap = NULL;
     }
     if (rc)
-      addSkillLag(SKILL_DISARM_TRAP);
+      addSkillLag(SKILL_DISARM_TRAP, rc);
 
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -138,7 +131,7 @@ int TBeing::disarmTrap(const char *arg, TObj *tp)
   } else if ((door = findDoor(type, dir, DOOR_INTENT_OPEN, SILENT_YES)) >= 0) {
     rc = disarmTrapDoor(this, door);
     if (rc)
-      addSkillLag(SKILL_DISARM_TRAP);
+      addSkillLag(SKILL_DISARM_TRAP, rc);
 
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -157,39 +150,6 @@ int TObj::disarmMe(TBeing *thief)
 {
   thief->sendTo("I don't think that's a trap.\n\r");
   return FALSE;
-}
-
-int TRealContainer::disarmMe(TBeing *thief)
-{
-  int learnedness;
-  int rc;
-  char buf[256], trap_type_buf[80];
-  int bKnown = thief->getSkillValue(SKILL_DISARM_TRAP);
-
-  if (!isContainerFlag(CONT_TRAPPED)) {
-    act("$p is not trapped.", FALSE, thief, this, 0, TO_CHAR);
-    return TRUE;
-  }
-
-  strcpy(trap_type_buf, trap_types[getContainerTrapType()]);
-  learnedness = min((int) MAX_SKILL_LEARNEDNESS, 3*bKnown/2);
-
-  if (bSuccess(thief, learnedness, SKILL_DISARM_TRAP)) {
-    sprintf(buf, "Click.  You disarm the %s trap in the $o.", trap_type_buf);
-    act(buf, FALSE, thief, this, 0, TO_CHAR);
-    act("$n disarms $p.", FALSE, thief, this, 0, TO_ROOM);
-    remContainerFlag( CONT_TRAPPED);
-
-    return TRUE;
-  } else {
-    thief->sendTo("Click. (whoops)\n\r");
-    act("$n tries to disarm $p.", FALSE, thief, this, 0, TO_ROOM);
-    rc = thief->triggerContTrap(this);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      return DELETE_VICT;
-    }
-    return TRUE;
-  }
 }
 
 int TTrap::disarmMe(TBeing *thief)
@@ -277,23 +237,6 @@ int disarmTrapDoor(TBeing * thief, dirTypeT door)
 int TThing::detectMe(TBeing *thief) const
 {
   return FALSE;
-}
-
-int TRealContainer::detectMe(TBeing *thief) const
-{
-  int bKnown =  thief->getSkillValue(SKILL_DETECT_TRAP);
-
-  if (!isContainerFlag( CONT_TRAPPED))
-    return FALSE;
-
-  // opening a trapped item
-  if (bSuccess(thief, bKnown, SKILL_DETECT_TRAP)) {
-    CS(SKILL_DETECT_TRAP);
-    return TRUE;
-  } else {
-    CF(SKILL_DETECT_TRAP);
-    return FALSE;
-  }
 }
 
 int TPortal::detectMe(TBeing *thief) const

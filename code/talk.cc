@@ -9,7 +9,7 @@
 #include "stdsneezy.h"
 #include "disease.h"
 #include "obj_pen.h"
-
+#include "obj_note.h"
 // many of the talk features colorize the says/tells/etc for easier viewing
 // If I do "say this <r>color<z> is cool", I would expect to see color in
 // red, and "this ", " is cool" be the 'normal' say color.

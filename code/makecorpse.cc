@@ -8,7 +8,7 @@
 
 #include "stdsneezy.h"
 #include "combat.h"
-#include "components.h"
+#include "obj_component.h"
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"
 #include "obj_corpse.h"

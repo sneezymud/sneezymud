@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "obj_base_corpse.h"
+#include "obj_tool.h"
 
 void stop_butcher(TBeing *ch)
 {

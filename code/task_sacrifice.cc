@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "obj_base_corpse.h"
+#include "obj_tool.h"
 
 int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *obj)
 {
