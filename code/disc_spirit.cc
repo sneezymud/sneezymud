@@ -78,8 +78,8 @@ int knot(TBeing *caster, TBeing *victim, int, byte bKnown)
     --(*caster);
     *room += *caster;
 
-    act("$n <r>steps into <1><k>the knot<1><r>.", FALSE, caster, NULL, NULL, TO_ROOM);
-    act("<r>You step into <1><k>the knot<1><r>.", FALSE, caster, NULL, NULL, TO_CHAR);
+    act("$n <r>steps into <1><k>the knot<1><r>.<1>", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("<r>You step into <1><k>the knot<1><r>.<1>", FALSE, caster, NULL, NULL, TO_CHAR);
 
     TBeing *tbt = dynamic_cast<TBeing *>(caster);
     if (tbt) {
