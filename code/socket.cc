@@ -980,7 +980,7 @@ int TSocket::gameLoop()
         }
 	
 	// check for vampires in daylight
-	if(!quickpulse && !::number(0,4)){
+	if(!quickpulse){
 	  if(!tmp_ch->roomp->isIndoorSector() && 
 	     !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
 	     sunIsUp()){
@@ -1001,7 +1001,8 @@ int TSocket::gameLoop()
 		tmp_ch = NULL;
 		continue;
 	      }
-	    } else if(tmp_ch->hasQuestBit(TOG_BITTEN_BY_VAMPIRE)){
+	    } else if(tmp_ch->hasQuestBit(TOG_BITTEN_BY_VAMPIRE) &&
+		      !::number(0,4)){
 	      act("Exposure to sunlight makes your skin itch.",
 		  FALSE, tmp_ch, NULL, NULL, TO_CHAR);
 	    }
