@@ -113,7 +113,7 @@ enum classIndT {
      MAX_SAVED_CLASSES
 };
 // this affects charFile size
-const classIndT MAX_CLASSES = UNUSED2_LEVEL_IND;
+const classIndT MAX_CLASSES = UNUSED1_LEVEL_IND;
 const classIndT MIN_CLASS_IND = classIndT(0);
 extern classIndT & operator++(classIndT &, int);
 
