@@ -352,8 +352,8 @@ bool hitInnocent(const TBeing *ch, const TThing *thing, const TThing *vict)
     if (ch->isImmortal())
       return FALSE;
  
-    // presume anyone in group and near thrower, is safely out of the way
-    if (tbc && tbc->inGroup(*ch) && tbc->sameRoom(*ch)) 
+    // presume anyone near thrower is safely out of the way
+    if (tbc && tbc->sameRoom(*ch))
       return false;
   
     // protect the mounts of group members too
