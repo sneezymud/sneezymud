@@ -438,6 +438,7 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
   sstring newDescr = "";
   size_t swlen = 0, swlen_diff = 0, llen_diff = 0;
   bool was_word = false;
+  bool sent_end = false;
 
   if (regStr.empty()) {
     return newDescr;
@@ -477,46 +478,43 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
     // if the word is just a color code, just append it on the current line
     if (!swlen) {
       line += raw_word;
-    // if the word is too long to fit on the current line
-    } else if ((line.length() + 1 + raw_word.length()) > (79 + llen_diff)) {
-      // terminate this line
-      line += "\n\r";
-      newDescr += line;
-
-      // check if the stripped word ends with punctuation
-      if (wordHasPunctuation(stripped_word)) {
-        // and add an extra space to the end of the original word
-        raw_word += " ";
-      }
-
-      // then start a new line
-      line = raw_word;
-      // we just started a new line, so reset the line length difference
-      // to that of the word minus stripped word
-      llen_diff = swlen_diff;
-
-    // word fits ok on the current line
+      was_word = false;
     } else {
-      // if the length of the stripped word > 0
-      // and the previous word was a real word, then append a space to the
-      // line before appending the word.
-      if (swlen) {
+      // if the word is too long to fit on the current line
+      if ((line.length() + 1 + raw_word.length()) > (79 + llen_diff)) {
+        // terminate this line
+        line += "\n\r";
+        newDescr += line;
+
+        // then start a new line
+        line = raw_word;
+        // we just started a new line, so reset the line length difference
+        // to that of the word minus stripped word
+        llen_diff = swlen_diff;
+
+      // word fits ok on the current line
+      } else {
+        // add one extra space to the ends of sentences
+        if (sent_end) {
+          line += " ";
+        }
+
+        // and the previous word was a real word, then append a space to the
+        // line before appending the word.
         if (was_word) {
           line += " ";
         }
-        was_word = true;
-
-        // check if the stripped word ends with punctuation
-        if (wordHasPunctuation(stripped_word) &&
-            !garbled.word(i+1).empty()) {
-          // and add an extra space to the end of the original word
-          raw_word += " ";
-        }
-      } else {
-        was_word = false;
+        line += raw_word;
       }
+      was_word = true;
 
-      line += raw_word;
+      // check if the stripped word ends with punctuation
+      // and set the flag accordingly
+      if (wordHasPunctuation(stripped_word)) {
+        sent_end = true;
+      } else {
+        sent_end = false;
+      }
     }
   }
 
@@ -5846,14 +5844,3 @@ void TBeing::doPrayers(const sstring &argument)
   d->page_string(buffer);
   return;
 }
-
-
-
-
-
-
-
-
-
-
-
