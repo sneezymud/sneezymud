@@ -2,28 +2,19 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: race.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // race.h
 //
 // The basic design for the handling of Races is the Flyweight Pattern as
 // explained in Design Patterns: Elements of Reusable Object-Oriented Software
 // ISBN 0-201-63361-2
+//
+//////////////////////////////////////////////////////////////////////////
 
 #ifndef __RACE_H
 #define __RACE_H
 
 #ifndef __BODY_H
-#error Define body.h before Speef/race.h
+#include "body.h"
 #endif
 
 // forward declarations
@@ -50,10 +41,10 @@ enum race_t {
   RACE_VEGGIE,          /*  25 */       RACE_ELEMENT,   /*  26 */
   RACE_ANT,             /*  27 */       RACE_DEVIL,     /*  28 */
   RACE_FROGMAN,         /*  29 */       RACE_GOBLIN,    /*  30 */
-  RACE_TROLL,           /*  31 */       RACE_VEGMAN,    /*  32 */
+  RACE_TROLL,           /*  31 */       RACE_ANGEL,     /*  32 */
   RACE_MFLAYER,         /*  33 */       RACE_PRIMATE,   /*  34 */
   RACE_FAERIE,          /*  35 */       RACE_DROW,      /*  36 */
-  RACE_GOLEM,           /*  37 */       RACE_MYTHIC,    /*  38 */
+  RACE_GOLEM,           /*  37 */       RACE_BANSHEE,   /*  38 */
   RACE_PANTATH,         /*  39 */       RACE_MERMAID,   /*  40 */
   RACE_RODENT,          /*  41 */       RACE_FISHMAN,   /*  42 */
   RACE_TYTAN,           /*  43 */       RACE_WOODELF,   /*  44 */
@@ -96,7 +87,9 @@ enum race_t {
   RACE_MIMIC,           /* 117 */       RACE_MEDUSA,    /* 118 */
   RACE_PENGUIN,         /* 119 */       RACE_OSTRICH,   /* 120 */
   RACE_TROG,            /* 121 */       RACE_COATL,     /* 122 */
-  RACE_SIMAL,           /* 123 */  // see remove list in oldrace.cc before adding here
+  RACE_SIMAL,           /* 123 */       RACE_WYVELIN,   /* 124 */
+
+  // see remove list in oldrace.cc before adding here
 
   MAX_RACIAL_TYPES
 };

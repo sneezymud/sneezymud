@@ -2,7 +2,7 @@
 #define __STRUCTS_H
 
 #ifndef _TIME_H
-#error Please include <time.h> prior to STRUCTS.H
+#include <time.h>
 #endif
 
 // forward declarations

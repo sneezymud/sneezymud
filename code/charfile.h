@@ -2,19 +2,13 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: charfile.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
 #ifndef __CHARFILE_H
 #define __CHARFILE_H
+
+#include "being.h"
 
 class charFile {
   public:
@@ -58,7 +52,23 @@ class charFile {
    unsigned int best_rent_credit;
 
    sh_int stats[MAX_STATS];
-   pointData points;
+   // pointData data
+   sh_int mana;
+   sh_int maxMana;
+   double piety;
+   sh_int lifeforce;
+   sh_int hit;
+   sh_int maxHit;
+   sh_int move;
+   sh_int maxMove;
+   int money;
+   int bankmoney;
+   double exp;
+   sh_int spellHitroll;
+   sh_int hitroll;
+   sbyte damroll;
+   sh_int armor;   
+   // end of pointData data
    ubyte fatigue;
    int hero_num;
    saveAffectedData affected[MAX_AFFECT];
@@ -66,6 +76,12 @@ class charFile {
    double f_percx[ABS_MAX_FACTION];
    byte   f_type;
    unsigned int f_actions;
+   //new faction stuff
+   int whichfaction;
+   int align_ge;
+   int align_lc;
+   // end new faction
+
    aliasData alias[16];
    pracData practices;
 
@@ -79,6 +95,10 @@ class charFile {
    unsigned int plr_color;        /* Color Flags                    */
    colorSubT plr_colorSub;    /* color substitute */
    unsigned int plr_colorOff;   /* colors to substitute for */
+   int temp1;
+   int temp2;
+   int temp3;
+   int temp4;
 
   charFile();
   ~charFile();

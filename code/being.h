@@ -9,48 +9,49 @@
 #define __BEING_H
 
 #ifndef __DB_H
-#error DB.H not defined before BEING.H include
+#include "db.h"
 #endif
 
 #ifndef __THING_H
-#error THING.H not defined before BEING.H include
+#include "thing.h"
 #endif
 
-#ifndef __RESPONCE_H
-#error RESPONCE.H not defined before BEING.H include
+#ifndef __RESPONSE_H
+#include "response.h"
 #endif
 
 #ifndef __CONNECT_H
-#error CONNECT.H not defined before BEING.H include
+#include "connect.h"
 #endif
 
 #ifndef __FACTION_H
-#error FACTION.H not defined before BEING.H include
+#include "faction.h"
 #endif
 
 #ifndef __SPELLS_H
-#error SPELLS.H not defined before BEING.H include
+#include "spells.h"
 #endif
 
 #ifndef __CHARACTERISTICS_H
-#error CHARACTERISTICS.H not defined before BEING.H include
+#include "characteristics.h"
 #endif
 
 #ifndef __RACE_H
-#error RACE.H not defined before BEING.H include
+#include "race.h"
 #endif
 
 #ifndef __DISCIPLINE_H
-#error DISCIPLINE.H not defined before BEING.H include
+#include "discipline.h"
 #endif
 
 #ifndef __SKILLS_H
-#error SKILLS.H not defined before BEING.H include
+#include "skills.h"
 #endif
 
 #ifndef __STRUCTS_H
-#error STRUCTS.H not definte before BEING.H include
+#include "structs.h"
 #endif
+
 
 class objCost;
 extern TBeing *character_list;

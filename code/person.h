@@ -8,6 +8,8 @@
 #ifndef __PERSON_H
 #define __PERSON_H
 
+#include "being.h"
+
 extern Descriptor *descriptor_list;
 extern Descriptor *next_to_process;
 

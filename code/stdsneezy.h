@@ -68,7 +68,7 @@
 #include "room.h"
 #include "obj.h"
 #include "obj2.h"
-#include "being.h"
+//#include "being.h"
 #include "charfile.h"
 #include "person.h"
 #include "monster.h"

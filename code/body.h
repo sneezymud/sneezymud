@@ -2,12 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: body.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
 //
 //
 //////////////////////////////////////////////////////////////////////////
@@ -20,7 +14,7 @@
 #define __BODY_H
 
 #ifndef __LIMBS_H
-#error Please define limbs.h before body.h
+#include "limbs.h"
 #endif
 
 const int MAX_SHEATH = 3;
@@ -37,7 +31,7 @@ enum body_t {
    BODY_TURTLE, BODY_FOUR_HOOF, BODY_BAANTA, BODY_AMPHIBEAN, BODY_FROG,
    BODY_MIMIC, BODY_MEDUSA, BODY_FELINE, BODY_DINOSAUR, BODY_REPTILE,
    BODY_ELEPHANT, BODY_OTYUGH, BODY_OWLBEAR, BODY_MINOTAUR, BODY_GOLEM,
-   BODY_COATL, BODY_SIMAL, BODY_PEGASUS, BODY_ANT,
+   BODY_COATL, BODY_SIMAL, BODY_PEGASUS, BODY_ANT, BODY_WYVELIN,
 
    MAX_BODY_TYPES
 };

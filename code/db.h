@@ -14,7 +14,7 @@
 #define __DB_H
 
 #ifndef __STRUCTS_H
-#error Please include STRUCTS.H prior to DB.H
+#include "structs.h"
 #endif
 
 // Strings for the mud name

@@ -6,6 +6,7 @@
 
 
 #include "stdsneezy.h"
+#include "being.h"
 
 extern bool affectShouldApply(const TObj *obj, wearSlotT pos);
 

@@ -2,23 +2,13 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: monster.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
 #ifndef __MONSTER_H
 #define __MONSTER_H
 
-#ifndef __BEING_H
-#error BEING.H not defined before MONSTER.H include
-#endif
+#include "being.h"
 
 enum zoneHateT {
      OP_SEX      = 1,
@@ -90,6 +80,7 @@ class TMonster : public TBeing {
     opinionData fears;
     sh_int persist;
     sh_int oldRoom;
+    sh_int brtRoom;
     unsigned short hatefield;
     unsigned short fearfield;
     ubyte moneyConst;
@@ -229,11 +220,12 @@ class TMonster : public TBeing {
     void checkMobStats(tinyfileTypeT);
     int mobileActivity(int);
     int notFightingMove(int);
-    int defendOther(TBeing *);
+    int defendOther(TBeing &);
     int defendSelf(int);
     int pissed();
     int aggro();
     int aggroCheck(bool);
+    int factionAggroCheck();
     int fearCheck(const TBeing *, bool);
     int aiUglyMug(TBeing *);
     void aiTarget(TBeing *);
@@ -421,31 +413,31 @@ class TMonster : public TBeing {
     int aiShoveReact(TBeing *, bool, dirTypeT);
     int findABetterWeapon();
     bool isRetrainable();
-    bool isFriend(TBeing *);
+    bool isFriend(TBeing &);
     void mobAI();
     int standUp();
     void elementalFix(TBeing *, spellNumT, bool);
     void genericCharmFix();
     void genericPetFix();
     int findMyHorse();
-    int classStuff(TBeing *);
+    int classStuff(TBeing &);
     int hunt();
     int assistFriend();
     int mobileGuardian();
-    int takeFirstHit(TBeing *);
+    int takeFirstHit(TBeing &);
     int targetFound();
     int mobileWander(dirTypeT);
     int superScavenger();
     int remove();
     int senseWimps();
-    int monkMove(TBeing *);
-    int shamanMove(TBeing *);
-    int thiefMove(TBeing *);
-    int deikhanMove(TBeing *);
-    int mageMove(TBeing *);
-    int rangMove(TBeing *);
-    int clerMove(TBeing *);
-    int fighterMove(TBeing *);
+    int monkMove(TBeing &);
+    int shamanMove(TBeing &);
+    int thiefMove(TBeing &);
+    int deikhanMove(TBeing &);
+    int mageMove(TBeing &);
+    int rangMove(TBeing &);
+    int clerMove(TBeing &);
+    int fighterMove(TBeing &);
     int scavenge();
     int charmeeStuff();
     int protectionStuff();
@@ -499,10 +491,10 @@ class TMonster : public TBeing {
     void clericSymbolLoader();
     void clericHolyWaterLoader();
     void buffMobLoader();
-    void genericMobLoader(TRealContainer **);
+    void genericMobLoader(TOpenContainer **);
     virtual int hitGain();
     virtual int manaGain();
-    virtual int rawKill(int);
+    virtual int rawKill(spellNumT, TBeing * = NULL);
     virtual int doQuit2();
     virtual void wizFileSave();
     virtual bool isDragonRideable() const;
