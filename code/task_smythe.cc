@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.7  2002/03/14 15:30:38  jesus
+// *** empty log message ***
+//
 // Revision 5.6  2002/03/14 15:22:37  jesus
 // made move drain skill dependant
 //
@@ -102,6 +105,10 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
       (ch->getPosition() < POSITION_RESTING)) {
     smythe_stop(ch);
     return;
+  }
+
+  if (movebonus > movemod) {
+    movebonus = 0;
   }
 
   if (ch->getRace() == RACE_DWARF) {
