@@ -994,16 +994,16 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
       level = (int) (1.0 * level);
       break;
     case SPELL_ENTHRALL_SPECTRE:
-      level = (int) (0.7 * level);
+      level = (int) (0.5 * level);
       break;
     case SPELL_ENTHRALL_GHAST:
-      level = (int) (0.7 * level);
+      level = (int) (0.5 * level);
       break;
     case SPELL_ENTHRALL_GHOUL:
-      level = (int) (0.8 * level);
+      level = (int) (0.6 * level);
       break;
     case SPELL_ENTHRALL_DEMON:
-      level = (int) (0.8 * level);
+      level = (int) (0.6 * level);
       break;
     default:
       forceCrash("Bad spellNumT (%d) to elementalFix", spell);
@@ -1680,3 +1680,13 @@ string displayDifficulty(spellNumT skill)
   }
   return "BOGUS, tell a god";
 }
+
+
+
+
+
+
+
+
+
+
