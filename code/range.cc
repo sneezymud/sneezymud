@@ -1570,6 +1570,9 @@ void TBeing::doBload(const char *arg)
   }
 
   if(dynamic_cast<TGun *>(bow)){
+    sendTo("Use gload to load a gun.\n\r");
+    return;
+
     TGun *gun=dynamic_cast<TGun *>(bow);
     
     if(gun->getAmmo()){
