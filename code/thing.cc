@@ -112,11 +112,6 @@ float TThing::getCarriedWeight() const
 {
   TThing *t;
   float total=0;
-  const TOpenContainer *toc;
-
-  if((toc=dynamic_cast<const TOpenContainer *>(this)) &&
-     toc->isContainerFlag(CONT_WEIGHTLESS))
-    return getWeight();
 
   for(t=rider;t;t=t->nextRider){
     total+=t->getTotalWeight(true);
@@ -136,12 +131,6 @@ int TThing::getCarriedVolume() const
 {
   TThing *t;
   int total=0;
-  const TOpenContainer *toc;
-
-  if((toc=dynamic_cast<const TOpenContainer *>(this)) &&
-     toc->isContainerFlag(CONT_WEIGHTLESS))
-    return getVolume();
-
 
   for(t=rider;t;t=t->nextRider){
     total+=t->getTotalVolume();
@@ -256,7 +245,14 @@ int TThing::getTotalVolume() const
 
 float TThing::getTotalWeight(bool pweight) const
 {
-  float calc = getCarriedWeight();
+  const TOpenContainer *toc;
+  float calc=0;
+
+  if((toc=dynamic_cast<const TOpenContainer *>(this)) &&
+     toc->isContainerFlag(CONT_WEIGHTLESS))
+    calc = 0;
+  else
+    calc = getCarriedWeight();
 
   if (pweight)
     calc += getWeight();

@@ -61,7 +61,9 @@ string TExpandableContainer::statObjInfo() const
 int TExpandableContainer::getTotalVolume() const
 {
   int num = getVolume();
-  num += getCarriedVolume();
+
+  if(!isContainerFlag(CONT_WEIGHTLESS))
+    num += getCarriedVolume();
   return num;
 }
 
