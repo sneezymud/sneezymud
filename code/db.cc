@@ -239,9 +239,12 @@ void bootDb(void)
 #if 0
   int it;
   TRoom *temp;
-  
+
   for(it=0;it<WORLD_SIZE;it++){
     if(!(temp=real_roomp(it)))
+      continue;
+
+    if(!temp->getZone()->enabled)
       continue;
     
     dirTypeT dir;
@@ -249,6 +252,13 @@ void bootDb(void)
     for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
       if (!temp->dir_option[dir])
 	continue;
+
+      if( (temp->getXCoord() == 0) &&
+	  (temp->getYCoord() == 0) &&
+	  (temp->getZCoord() == 0) ){
+	vlogf(LOG_BUG, "Room with 0,0,0 coords: %d", temp->number);
+        continue;
+      }
       
       if(!(ntemp=real_roomp(temp->dir_option[dir]->to_room)))
 	continue;
@@ -258,53 +268,157 @@ void bootDb(void)
           if((temp->getYCoord()+1) != ntemp->getYCoord()){
 	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 0",
 		  temp->number, ntemp->number);
+
+	    if( (temp->getXCoord() != 0) && (temp->getYCoord() != 0) &&
+		(temp->getZCoord() != 0) ){
+	      vlogf(LOG_BUG, "Room coord for %d should be: %d %d %d",
+		    ntemp->number, temp->getXCoord(),
+		    temp->getYCoord()+1, temp->getZCoord());
+	      ntemp->setXCoord(temp->getXCoord());
+	      ntemp->setYCoord(temp->getYCoord()+1);
+	      ntemp->setZCoord(temp->getZCoord());
+	    }
+	    
 	  }
 	  break;
 	case 1:
           if((temp->getXCoord()+1) != ntemp->getXCoord()){
 	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 1",
 		  temp->number, ntemp->number);
+	    if( (temp->getXCoord() != 0) && (temp->getYCoord() != 0) &&
+		(temp->getZCoord() != 0) ){
+	      vlogf(LOG_BUG, "Room coord for %d should be: %d %d %d",
+		    ntemp->number, temp->getXCoord()+1,
+		    temp->getYCoord(), temp->getZCoord());
+	      ntemp->setXCoord(temp->getXCoord()+1);
+	      ntemp->setYCoord(temp->getYCoord());
+	      ntemp->setZCoord(temp->getZCoord());
+	    }
 	  }
 	  break;
 	case 2:
           if((temp->getYCoord()-1) != ntemp->getYCoord()){
 	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 2",
 		  temp->number, ntemp->number);
+	    if( (temp->getXCoord() != 0) && (temp->getYCoord() != 0) &&
+		(temp->getZCoord() != 0) ){
+	      vlogf(LOG_BUG, "Room coord for %d should be: %d %d %d",
+		    ntemp->number, temp->getXCoord(),
+		    temp->getYCoord()-1, temp->getZCoord());
+	      ntemp->setXCoord(temp->getXCoord());
+	      ntemp->setYCoord(temp->getYCoord()-1);
+	      ntemp->setZCoord(temp->getZCoord());
+	    }
 	  }
 	  break;
 	case 3:
           if((temp->getXCoord()-1) != ntemp->getXCoord()){
 	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 3",
 		  temp->number, ntemp->number);
+	    if( (temp->getXCoord() != 0) && (temp->getYCoord() != 0) &&
+		(temp->getZCoord() != 0) ){
+	      vlogf(LOG_BUG, "Room coord for %d should be: %d %d %d",
+		    ntemp->number, temp->getXCoord()-1,
+		    temp->getYCoord(), temp->getZCoord());
+	      ntemp->setXCoord(temp->getXCoord()-1);
+	      ntemp->setYCoord(temp->getYCoord());
+	      ntemp->setZCoord(temp->getZCoord());
+	    }
 	  }
 	  break;
 	case 4:
           if((temp->getZCoord()+1) != ntemp->getZCoord()){
 	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 4",
 		  temp->number, ntemp->number);
+	    if( (temp->getXCoord() != 0) && (temp->getYCoord() != 0) &&
+		(temp->getZCoord() != 0) ){
+	      vlogf(LOG_BUG, "Room coord for %d should be: %d %d %d",
+		    ntemp->number, temp->getXCoord(),
+		    temp->getYCoord(), temp->getZCoord()+1);
+	      ntemp->setXCoord(temp->getXCoord());
+	      ntemp->setYCoord(temp->getYCoord());
+	      ntemp->setZCoord(temp->getZCoord()+1);
+	    }
 	  }
 	  break;
 	case 5:
           if((temp->getZCoord()-1) != ntemp->getZCoord()){
 	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 5",
 		  temp->number, ntemp->number);
+	    if( (temp->getXCoord() != 0) && (temp->getYCoord() != 0) &&
+		(temp->getZCoord() != 0) ){
+	      vlogf(LOG_BUG, "Room coord for %d should be: %d %d %d",
+		    ntemp->number, temp->getXCoord(),
+		    temp->getYCoord(), temp->getZCoord()-1);
+	      ntemp->setXCoord(temp->getXCoord());
+	      ntemp->setYCoord(temp->getYCoord());
+	      ntemp->setZCoord(temp->getZCoord()-1);
+	    }
 	  }
 	  break;
 	case 6:
-	  //	  tdest->setXCoord(tdest->getXCoord()+1);
-	  //	  tdest->setYCoord(tdest->getYCoord()+1);
+	  if( ((temp->getXCoord()+1) != ntemp->getXCoord()) &&
+	      ((temp->getYCoord()+1) != ntemp->getYCoord())){
+	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 6",
+		  temp->number, ntemp->number);
+	    if( (temp->getXCoord() != 0) && (temp->getYCoord() != 0) &&
+		(temp->getZCoord() != 0) ){
+	      vlogf(LOG_BUG, "Room coord for %d should be: %d %d %d",
+		    ntemp->number, temp->getXCoord()-1,
+		    temp->getYCoord()-1, temp->getZCoord());
+	      ntemp->setXCoord(temp->getXCoord()+1);
+	      ntemp->setYCoord(temp->getYCoord()+1);
+	      ntemp->setZCoord(temp->getZCoord());
+	    }
+	  }
 	  break;
 	case 7:
-	  //	  tdest->setYCoord(tdest->getYCoord()+1);
-	  //	  tdest->setXCoord(tdest->getXCoord()-1);
+	  if( ((temp->getXCoord()-1) != ntemp->getXCoord()) &&
+	      ((temp->getYCoord()+1) != ntemp->getYCoord())){
+	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 7",
+		  temp->number, ntemp->number);
+	    if( (temp->getXCoord() != 0) && (temp->getYCoord() != 0) &&
+		(temp->getZCoord() != 0) ){
+	      vlogf(LOG_BUG, "Room coord for %d should be: %d %d %d",
+		    ntemp->number, temp->getXCoord()-1,
+		    temp->getYCoord()+1, temp->getZCoord());
+	      ntemp->setXCoord(temp->getXCoord()-1);
+	      ntemp->setYCoord(temp->getYCoord()+1);
+	      ntemp->setZCoord(temp->getZCoord());
+	    }
+	  }
 	  break;
 	case 8:
-	  //	  tdest->setYCoord(tdest->getYCoord()-1);
-	  //	  tdest->setXCoord(tdest->getXCoord()+1);
+	  if( ((temp->getXCoord()+1) != ntemp->getXCoord()) &&
+	      ((temp->getYCoord()-1) != ntemp->getYCoord())){
+	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 8",
+		  temp->number, ntemp->number);
+	    if( (temp->getXCoord() != 0) && (temp->getYCoord() != 0) &&
+		(temp->getZCoord() != 0) ){
+	      vlogf(LOG_BUG, "Room coord for %d should be: %d %d %d",
+		    ntemp->number, temp->getXCoord()+1,
+		    temp->getYCoord()-1, temp->getZCoord());
+	      ntemp->setXCoord(temp->getXCoord()+1);
+	      ntemp->setYCoord(temp->getYCoord()-1);
+	      ntemp->setZCoord(temp->getZCoord());
+	    }
+	  }
 	  break;
 	case 9:
-	  //	  tdest->setXCoord(tdest->getXCoord()-1);
-	  //	  tdest->setYCoord(tdest->getYCoord()-1);
+	  if( ((temp->getXCoord()-1) != ntemp->getXCoord()) &&
+	      ((temp->getYCoord()-1) != ntemp->getYCoord())){
+	    vlogf(LOG_BUG, "Room not linked properly: %d to %d, exit 9",
+		  temp->number, ntemp->number);
+	    if( (temp->getXCoord() != 0) && (temp->getYCoord() != 0) &&
+		(temp->getZCoord() != 0) ){
+	      vlogf(LOG_BUG, "Room coord for %d should be: %d %d %d",
+		    ntemp->number, temp->getXCoord()-1,
+		    temp->getYCoord()-1, temp->getZCoord());
+	      ntemp->setXCoord(temp->getXCoord()-1);
+	      ntemp->setYCoord(temp->getYCoord()-1);
+	      ntemp->setZCoord(temp->getZCoord());
+	    }
+	  }
 	  break;    
 	default:
 	  break;
