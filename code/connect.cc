@@ -37,6 +37,7 @@ extern "C" {
 #include "mail.h"
 #include "games.h"
 #include "cmd_trophy.h"
+#include "database.h"
 
 const int DONT_SEND = -1;
 const int FORCE_LOW_INVSTE = 1;
@@ -948,6 +949,7 @@ int Descriptor::nanny(const char *arg)
   int free_stat;
   TRoom *rp;
   string str;
+  TDatabase db("sneezy");
 
   switch (connected) {
     case CON_MULTIWARN:
@@ -1890,6 +1892,7 @@ int Descriptor::nanny(const char *arg)
       character->affectTotal();
       vlogf(LOG_PIO, "%s [%s] new player.", character->getName(), host);
       character->saveChar(ROOM_AUTO_RENT);
+      db.query("insert into player (name) values (lower('%s'))", character->getName());
       accStat.player_count++;
       character->cls();
       sendMotd(FALSE);
@@ -5053,6 +5056,7 @@ int Descriptor::doAccountStuff(char *arg)
   TBeing *ch;
   TTrophy *trophy;
   string from;
+  TDatabase db("sneezy");
 
   // apparently, crypt() has a mem leak in the lib function
   // By making this static, we limit the number of leaks to one
@@ -5434,6 +5438,8 @@ int Descriptor::doAccountStuff(char *arg)
       trophy=new TTrophy(delname);
       trophy->wipe();
       delete trophy;
+      db.query("delete from player where lower(name)=lower('%s')", delname);
+
       wipePlayerFile(delname);  // handles corpses too
       wipeRentFile(delname);
       wipeFollowersFile(delname);

@@ -34,6 +34,7 @@ extern "C" {
 #include "obj_note.h"
 #include "obj_portal.h"
 #include "obj_base_clothing.h"
+#include "database.h"
 
 bool Silence = FALSE;
 bool Sleep = TRUE;
@@ -4111,6 +4112,7 @@ void TBeing::doWipe(const char *argument)
   TBeing *victim;
   Descriptor *d = NULL;
   charFile st;
+  TDatabase db("sneezy");
 
   if (powerCheck(POWER_WIPE))
     return;
@@ -4165,6 +4167,8 @@ void TBeing::doWipe(const char *argument)
   TTrophy *trophy=new TTrophy(namebuf);
   trophy->wipe();
   delete trophy;
+
+  db.query("delete from player where lower(name)=lower('%s')", namebuf);
 
   sprintf(buf, "account/%c/%s/%s",
          LOWER(st.aname[0]), lower(st.aname).c_str(), lower(namebuf).c_str());
