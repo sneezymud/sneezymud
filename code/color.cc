@@ -1,21 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: color.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/10/04 18:27:34  lapsos
-// Added no-argument help to the prompt command.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //     SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
@@ -81,6 +63,7 @@ void TBeing::doPrompt(const char *arg)
     "builder_assistant",
     "exp_tolevel",
     "bar",
+    "lifeforce",
     "\n"
   };
 
@@ -115,6 +98,8 @@ void TBeing::doPrompt(const char *arg)
 
     if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
       sprintf(string, "Piety      : (%s): P:%.1f\n\r", (tPrompts[1] ? "yes" : " no"), getPiety());
+    else if (hasClass(CLASS_SHAMAN))
+      sprintf(string, "Lifeforce      : (%s): LF:%d\n\r", (tPrompts[1] ? "yes" : " no"), getLifeforce());
     else
       sprintf(string, "Mana       : (%s): M:%d\n\r", (tPrompts[1] ? "yes" : " no"), getMana());
 
@@ -158,7 +143,7 @@ void TBeing::doPrompt(const char *arg)
     tStString += string;
     tStString += "--------------------\n\r";
 
-    desc->page_string(tStString.c_str(), FALSE);
+    desc->page_string(tStString.c_str());
 
     return;
   }
@@ -176,10 +161,13 @@ void TBeing::doPrompt(const char *arg)
       }
       break;
     case 2:
+    case 18:
     case 14:
       if (IS_SET(desc->prompt_d.type, PROMPT_MANA)) {
         if (hasClass(CLASS_DEIKHAN) || hasClass(CLASS_CLERIC))
           sendTo("Taking piety out of prompt.\n\r");
+        else if (hasClass(CLASS_SHAMAN))
+          sendTo("Taking lifeforce out of prompt.\n\r");
         else
           sendTo("Taking mana out of prompt.\n\r");
 
@@ -187,6 +175,8 @@ void TBeing::doPrompt(const char *arg)
       } else {
         if (hasClass(CLASS_DEIKHAN) || hasClass(CLASS_CLERIC))
           sendTo("Adding piety to prompt.\n\r");
+        else if (hasClass(CLASS_SHAMAN))
+          sendTo("Adding lifeforce to prompt.\n\r");
         else
           sendTo("Adding mana points to prompt.\n\r");
 
@@ -296,6 +286,13 @@ void TBeing::doPrompt(const char *arg)
           return;
         } else
           setColor(SET_COL_FIELD_PIETY, kolor);
+      } else if (statnum == 18) {
+         // YES, MANA
+        if (!IS_SET(desc->prompt_d.type, PROMPT_MANA)) {
+          sendTo("You can't color lifeforce points, without them in your prompt.\n\r");
+          return;
+        } else
+          setColor(SET_COL_FIELD_LIFEFORCE, kolor);
       } else if (statnum == 3) {
         if (!IS_SET(desc->prompt_d.type, PROMPT_MOVE)) {
           sendTo("You can't color movement points, without them in your prompt.\n\r");
@@ -457,12 +454,12 @@ void TBeing::doTerminal(const char *argument)
     if (is_abbrev(term, "screensize")) {
       if (*screen) {
         if (isdigit(*screen)) {
-          desc->screen_size = min(48, atoi(screen));
+          desc->screen_size = min(128, atoi(screen));
           doCls(false);
           sendTo("Done.\n\r");
         } else {
           sendTo("Your current screensize is set to: %d\n\r", desc->screen_size);
-          sendTo("Screensize needs to be a number from 1-48.\n\r");
+          sendTo("Screensize needs to be a number from 1-128.\n\r");
           return;
         }
       } else {
@@ -601,11 +598,15 @@ void TBeing::doCls(bool tell)
     if (vt100()) {
       if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
         sprintf(buf + strlen(buf), "Hit Points:                     Piety:               Move Points:");
+      else if (hasClass(CLASS_SHAMAN))
+        sprintf(buf + strlen(buf), "Hit Points:                    Lifeforce:               Move Points:");
       else
         sprintf(buf + strlen(buf), "Hit Points:               Mana Points:               Move Points:");
     } else {
       if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
         sprintf(buf + strlen(buf), "Hits:                      Piety:                      Moves:");
+      else if (hasClass(CLASS_SHAMAN))
+        sprintf(buf + strlen(buf), "Hits:                    Lifeforce:                      Moves:");
       else
         sprintf(buf + strlen(buf), "Hits:                       Mana:                      Moves:");
     }
@@ -671,7 +672,7 @@ void TPerson::doColor(const char *buf)
   int toggle = TRUE;
 
   if (!desc) {
-    vlogf(5,"Something without a desc (%s) is trying to set a colorLevel", getName());
+    vlogf(LOG_BUG, "Something without a desc (%s) is trying to set a colorLevel", getName());
     return;
   }
   if (!isPc()) {
