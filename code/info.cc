@@ -3216,6 +3216,13 @@ void TBeing::doClear(const char *argument)
   if (!*argument) {
     sendTo("Clear which alias?\n\r");
     return;
+  } else if (is_abbrev(argument, "all")) {
+    for (i = 0; i < 16; i++) {
+      desc->alias[i].command[0] = '\0';
+      desc->alias[i].word[0] = '\0';
+    }
+    sendTo("Ok. All Aliases cleared\n\r");
+    return;
   } else
     i = atoi(argument) - 1;
 
