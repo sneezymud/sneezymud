@@ -464,7 +464,7 @@ int TSocket::gameLoop()
   int pulse = 0;
   int teleport=0, combat=0, drowning=0, special_procs=0, update_stuff=0;
   int pulse_tick=0, pulse_mudhour=0, mobstuff=0, wayslowpulse=0;
-  TBeing *tmp_ch, *temp;
+  TBeing *tmp_ch=NULL, *temp;
   TObj *obj=NULL, *next_thing;
   int rc = 0;
   time_t lagtime_t = time(0);
@@ -630,6 +630,40 @@ int TSocket::gameLoop()
     // room procs
     call_room_specials();
 
+
+
+    // since we're operating on non-multiples of 12 pulses, we need to
+    // temporarily put the pulse at the next multiple of 12
+    // this is pretty klugey
+
+    // save the old values
+    int oldpulse=pulse;
+    int old_teleport=teleport;
+    int old_combat=combat;
+    int old_drowning=drowning;
+    int old_special_procs=special_procs;
+    int old_update_stuff=update_stuff;
+    int old_pulse_mudhour=pulse_mudhour;
+    int old_mobstuff=mobstuff;
+    int old_pulse_tick=pulse_tick;
+    int old_wayslowpulse=wayslowpulse;
+
+    // advance the pulse to the next multiple of 12
+    while(pulse % 12)
+      ++pulse;
+
+    // reset the pulse flags
+    teleport = (pulse % PULSE_TELEPORT);
+    combat = (pulse % PULSE_COMBAT);
+    drowning = (pulse % PULSE_DROWNING);
+    special_procs = (pulse % PULSE_SPEC_PROCS);
+    update_stuff = (pulse % PULSE_NOISES);
+    pulse_mudhour = (pulse % PULSE_MUDHOUR);
+    mobstuff = (pulse % PULSE_MOBACT);
+    pulse_tick = (pulse % PULSE_UPDATE);
+    wayslowpulse = (pulse % (PULSE_MUDHOUR * 12));
+
+
     // note on this loop
     // it is possible that next_thing gets deleted in one of the sub funcs
     // we don't get acknowledgement of this in any way.
@@ -641,34 +675,13 @@ int TSocket::gameLoop()
     ++vehiclepulse;
       
     // we've already finished going through the object list, so start over
-    if(!obj){
-      vlogf(LOG_PEEL, "obj is null, starting list over");
+    if(!obj)
       obj=object_list;
-    }
 
     // we want to go through 1/12th of the object list every pulse
     // obviously the object count will change, so this is approximate.
-    count=objCount/12;
+    count=(int)((float)objCount/11.5);
 
-    // since we're operating on non-multiples of 12 pulses, we need to
-    // temporarily put the pulse at the next multiple of 12
-    // this is pretty klugey
-
-    // save the old values
-    int oldpulse=pulse;
-    int old_special_procs=special_procs;
-    int old_pulse_mudhour=pulse_mudhour;
-
-    // advance the pulse to the next multiple of 12
-    while(pulse % 12)
-      ++pulse;
-
-    // set the pulse flags that are used in the object loop
-    // if you use any of the other pulses in the object loop, you'll
-    // need to add them here
-    special_procs = (pulse % PULSE_SPEC_PROCS);
-    pulse_mudhour = (pulse % PULSE_MUDHOUR);
-           
     for (; obj; obj = next_thing) {
       next_thing = obj->next;
 
@@ -776,11 +789,6 @@ int TSocket::gameLoop()
       next_thing = obj->next;
     } // object list
 
-      // reset the old values from the artifical pulse
-    pulse=oldpulse;
-    special_procs=old_special_procs;
-    pulse_mudhour=old_pulse_mudhour;
-
 
     // note on this loop
     // it is possible that temp gets deleted in one of the sub funcs
@@ -789,8 +797,19 @@ int TSocket::gameLoop()
     // the end (eg, before any deletes, or before we come back around)
     // bottom line is that temp keeps getting set because it might be
     // bogus after the function call.
-    for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
+
+    // we've already finished going through the object list, so start over
+    if(!tmp_ch)
+      tmp_ch=character_list;
+
+    count=(int)((float)mobCount/11.5);
+
+
+    for (; tmp_ch; tmp_ch = temp) {
       temp = tmp_ch->next;  // just for safety
+
+      if(!count--)
+	break;
 
       if (tmp_ch->getPosition() == POSITION_DEAD) {
 	vlogf(LOG_BUG, fmt("Error: dead creature (%s at %d) in character_list, removing.") % 
@@ -1088,6 +1107,22 @@ int TSocket::gameLoop()
       }
       temp = tmp_ch->next;
     } // character_list
+
+
+    // reset the old values from the artifical pulse
+    pulse=oldpulse;
+    teleport=old_teleport;
+    combat=old_combat;
+    drowning=old_drowning;
+    special_procs=old_special_procs;
+    update_stuff=old_update_stuff;
+    pulse_mudhour=old_pulse_mudhour;
+    mobstuff=old_mobstuff;
+    pulse_tick=old_pulse_tick;
+    wayslowpulse=old_wayslowpulse;
+
+
+
 
     if (!(pulse % 2399))
       do_check_mail();
