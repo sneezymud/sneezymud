@@ -87,17 +87,15 @@ void TGun::loadMe(TBeing *ch, TAmmo *ammo)
 
 void TGun::unloadMe(TBeing *ch, TAmmo *ammo)
 {
-  TThing *arrow=dynamic_cast<TThing *>(ammo);
-
   if(ammo->getRounds() == 0){
     --(*ammo);
-    *roomp += *ammo;
+    *ch->roomp += *ammo;
     
     act("You unload $N and drop $p.", TRUE, ch, ammo, this, TO_CHAR);
     act("$n unloads $N and drops $p.", TRUE, ch, ammo, this, TO_ROOM);
   } else {
-    --(*arrow);
-    *this += *arrow;
+    --(*ammo);
+    *ch += *ammo;
     
     act("You unload $N.", TRUE, ch, ammo, this, TO_CHAR);
     act("$n unloads $N.", TRUE, ch, ammo, this, TO_ROOM);
