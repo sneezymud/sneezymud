@@ -8,6 +8,7 @@
 #include "obj_note.h"
 #include "shop.h"
 #include "database.h"
+#include "shopowned.h"
 
 int counter_done;  // Global variable used to count # of done items/repairman 
 int counter_work;  // Global variable used to count # of undone items/man 
@@ -355,6 +356,9 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
     vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  repair->number);
   }
   shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), fixed_obj->getName(), tmp_cost, "repairing");
+  TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(repair), buyer);
+  tso.doReserve();
+  
   
   // acknowledge the depreciation after all work is done
   // this way the price doesn't change during the process
