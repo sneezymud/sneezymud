@@ -1,4 +1,6 @@
 #include "stdsneezy.h"
+#include "statistics.h"
+
 #include "sys_loot.h"
 
 TLootStructure * tLoot;
@@ -57,6 +59,18 @@ bool isLegalLoot(itemTypeT tType)
   return false;
 }
 
+// Add to this list those 'per-entry' things.
+bool isSpecialLegalLoot(int tValue)
+{
+  switch (tValue) {
+
+    default:
+      return false;
+  }
+
+  return false;
+}
+
 // This goes through the object lists and makes a db of possible loot.
 bool sysLootBoot()
 {
@@ -68,9 +82,10 @@ bool sysLootBoot()
   tLoot = NULL;
 
   for (unsigned int tOIndex = 0; tOIndex < obj_index.size(); tOIndex++)
-    if (isLegalLoot(itemTypeT(obj_index[tOIndex].itemtype)) &&
-        isLegalLoot(obj_index[tOIndex].virt) &&
-        isLegalLoot(obj_index[tOIndex].name) &&
+    if (((isLegalLoot(itemTypeT(obj_index[tOIndex].itemtype)) &&
+          isLegalLoot(obj_index[tOIndex].virt) &&
+          isLegalLoot(obj_index[tOIndex].name)) ||
+          isSpecialLegalLoot(tOIndex)) &&
         obj_index[tOIndex].max_exist == 9999) {
       tObj = read_object(tOIndex, REAL);
 
@@ -117,7 +132,7 @@ bool sysLootBoot()
   return true;
 }
 
-bool sysLootLoad(resetCom rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
+bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
 {
   // L (if-flag) (level-min) (level-max) (help/harm) (mob/obj/room)
   // (mob/obj/room)
@@ -132,19 +147,20 @@ bool sysLootLoad(resetCom rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
   TRoom  * tRoom   = NULL;
   TThing * tThing  = NULL;
   int      tFound  = 0;
-  bool     tLoaded = false;
+  bool     tLoaded = false,
+           cashLoaded = false;
 
-  if (rs.arg3 == 0) {
+  if (rs.arg4 == 0) {
     if (!(tThing = tBeing)) {
       vlogf(LOG_LOW, "L used on Mobile failed: %d", rs.arg4);
       return false;
     }
-  } else if (rs.arg3 == 1) {
+  } else if (rs.arg4 == 1) {
     if (!(tThing = tObj)) {
       vlogf(LOG_LOW, "L used on Object failed: %d", rs.arg4);
       return false;
     }
-  } else if (!(tThing = (tRoom = real_roomp(rs.arg3)))) {
+  } else if (!(tThing = (tRoom = real_roomp(rs.arg4)))) {
     vlogf(LOG_LOW, "L used on Room failed: %d", rs.arg4);
     return false;
   }
@@ -153,11 +169,12 @@ bool sysLootLoad(resetCom rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
     if (in_range(tTLoot->tLevel, rs.arg1, rs.arg2))
       tFound++;
 
-  tFound = (rand() % tFound);
+  if (!isImmortal)
+    tFound = (rand() % (tFound + 2));
 
   for (TLootStructure * tTLoot = tLoot; tTLoot; tTLoot = tTLoot->tNext)
     if (in_range(tTLoot->tLevel, rs.arg1, rs.arg2) &&
-        (isImmortal || --tFound <= 0)) {
+        (isImmortal || --tFound == 0)) {
       TObj *tObj;
 
       if (obj_index[tTLoot->tRNum].number >=
@@ -174,10 +191,45 @@ bool sysLootLoad(resetCom rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
         return false;
       }
 
+      if (gamePort != PROD_GAMEPORT)
+        vlogf(LOG_LOW, "Loot Load: %s -> %s", tObj->getName(), tThing->getName());
+
       *tThing += *tObj;
 
       if (!isImmortal)
         return true;
+    } else if (!isImmortal && !cashLoaded && tFound <= 0) {
+      // We end up here if the object was maxed or we hit one of the bonus 2
+      // in this case we decide a talen amount and do that instead.
+
+      float tCashValue = (rs.arg1 + (rand() % (rs.arg2 - rs.arg1)));
+
+      /*
+       Level  1:    100
+       Level  2:    400
+       Level 10:  2,000
+       Level 50: 10,000
+       */
+
+      tCashValue *= 200.0;
+      tCashValue *= gold_modifier[GOLD_INCOME].getVal();
+      cashLoaded = true;
+
+      if (rs.arg4 == 0)
+        tBeing->setMoney((tBeing->getMoney() + (int) tCashValue));
+      else {
+        TMoney * tMoney;
+
+        if (!(tMoney = create_money((int) tCashValue))) {
+          vlogf(LOG_BUG, "Problem creating money");
+          return false;
+        }
+
+        *tThing += *tMoney;
+      }
+
+      if (gamePort != PROD_GAMEPORT)
+        vlogf(LOG_LOW, "Loot Load: %d talens -> %s", tCashValue, tThing->getName());
     }
 
   return tLoaded;
@@ -242,7 +294,9 @@ void TBeing::doLoot(const string & tStString)
   tStArg = one_argument(tStArg, tStCommand);
 
   if (is_abbrev(tStCommand, "list")) {
-    while (!(tStArg = one_argument(tStArg, tStBuffer)).empty()) {
+    tStArg = one_argument(tStArg, tStBuffer);
+
+    while (!tStBuffer.empty()) {
       strcpy(tString, tStBuffer.c_str());
 
       if (is_number(tString)) {
@@ -286,6 +340,8 @@ void TBeing::doLoot(const string & tStString)
         sendTo("Syntax Error.  See Help File.\n\r");
         return;
       }
+
+      tStArg = one_argument(tStArg, tStBuffer);
     }
 
     if (bType) {
@@ -325,36 +381,53 @@ void TBeing::doLoot(const string & tStString)
     tStOutput += tStLevelMax;
     tStOutput += "\n\r__________\n\r";
 
+    int tTotalCount = 0;
+
     for (TLootStructure * tNLoot = tLoot; tNLoot; tNLoot = tNLoot->tNext)
       if (in_range(tNLoot->tLevel, tLevelMin, tLevelMax))
         if ((tObj = read_object(tNLoot->tRNum, REAL))) {
           if (tType != ITEM_UNDEFINED &&
-              obj_index[tNLoot->tRNum].itemtype != tType)
+              obj_index[tNLoot->tRNum].itemtype != tType) {
+            delete tObj;
+            tObj = NULL;
             continue;
+          }
 
           TMagicItem *tMagicItem = dynamic_cast<TMagicItem *>(tObj);
 
           if (tSpell != TYPE_UNDEFINED &&
-              !hasSpellOnIt(tMagicItem, tSpell))
+              !hasSpellOnIt(tMagicItem, tSpell)) {
+            delete tObj;
+            tObj = NULL;
             continue;
+          }
 
           sprintf(tString, "%6d: %3d: %s\n\r",
                   obj_index[tNLoot->tRNum].virt,
                   tNLoot->tLevel,
                   tObj->getNameForShow(false, true, this).c_str());
 
+          tTotalCount++;
           tStOutput += tString;
           delete tObj;
           tObj = NULL;
         }
 
+    tStOutput += "__________\n\r";
+    tStOutput += "Total Count: ";
+    sprintf(tString, "%d\n\r", tTotalCount);
+    tStOutput += tString;
+
     desc->page_string(tStOutput.c_str());
     return;
   } else if (is_abbrev(tStCommand, "load")) {
+    tStArg = one_argument(tStArg, tStLevelMin);
+    tStArg = one_argument(tStArg, tStLevelMax);
+
     resetCom tRs;
     tRs.if_flag = 1;
-    tRs.arg1 = tLevelMin;
-    tRs.arg2 = tLevelMax;
+    tRs.arg1 = atoi(tStLevelMin.c_str());
+    tRs.arg2 = atoi(tStLevelMax.c_str());
     tRs.arg3 = 0;
     tRs.arg4 = 0;
 
@@ -368,5 +441,5 @@ void TBeing::doLoot(const string & tStString)
     return;
   }
 
-sendTo("Syntax Error.  See Help File.\n\r");
+  sendTo("Syntax Error.  See Help File.\n\r");
 }
