@@ -446,7 +446,6 @@ $(OBJDIR)skill_dam.o: statistics.h
 $(OBJDIR)skills.o: $(DISC_HEADS)
 $(OBJDIR)slots.o: $(CASINO_HEADS)
 $(OBJDIR)socket.o: socket.h systemtask.h statistics.h spelltask.h
-$(OBJDIR)socket.o: weather.h
 $(OBJDIR)spec_mobs.o: combat.h components.h paths.h
 $(OBJDIR)spec_mobs.o: disc_sorcery.h disc_afflictions.h disc_aegis.h
 $(OBJDIR)spec_mobs.o: disc_alchemy.h disc_wrath.h disc_earth.h disc_water.h
