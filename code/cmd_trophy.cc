@@ -62,8 +62,13 @@ void TBeing::doTrophy(const char *arg)
   for (; isspace(*arg); arg++);
   
   if(!strncmp(arg, "zone", 4)){
-    zonesearch=1;
-    for (; !isspace(*arg); arg++);
+    
+    if(arg[4]){
+      for (; !isspace(*arg); arg++);
+      zonesearch=-1;
+    } else {
+      zonesearch=roomp->getZoneNum();
+    }
   }
 
   rc=dbquery(&res, "sneezy", "doTrophy", "select mobvnum, count from trophy where name='%s' order by mobvnum", getName());
@@ -99,8 +104,11 @@ void TBeing::doTrophy(const char *arg)
 	continue;
       }
 
-      if(zonesearch){
+      if(zonesearch==-1){
 	if(*arg && !isname(arg, zd.name))
+	  continue;
+      } else if(zonesearch>0){
+	if(zonesearch!=zd.zone_nr)
 	  continue;
       } else {
 	if(*arg && !isname(arg, mob_index[rnum].name))
