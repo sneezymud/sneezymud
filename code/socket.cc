@@ -292,91 +292,6 @@ void updateAvgPlayers()
   }
 }
 
-// uh this shouldn't be in here but I'm lazy today
-int lycanthropeTransform(TBeing *ch)
-{
-  TMonster *mob;
-
-  if (!ch->isPc() || IS_SET(ch->specials.act, ACT_POLYSELF) ||
-      ch->polyed != POLY_TYPE_NONE){
-    act("You are already transformed into another shape.",
-	TRUE, ch, NULL, NULL, TO_CHAR);
-    return FALSE;
-  }
-  
-  if (!(mob = read_mobile(23204, VIRTUAL))) {
-    return FALSE;
-  }
-  thing_to_room(mob,ROOM_VOID);
-  mob->swapToStrung();
-
-  act("The presence of the full moon forces you into transformation!",
-      TRUE, ch, NULL, mob, TO_CHAR);
-  act("The presence of the full moon forces $n to transform into $N!",
-      TRUE, ch, NULL, mob, TO_ROOM);
-
-
-  DisguiseStuff(ch, mob);
-  
-  --(*mob);
-  *ch->roomp += *mob;
-  --(*ch);
-  thing_to_room(ch, ROOM_POLY_STORAGE);
-  
-  // stop following whoever you are following.
-  if (ch->master)
-    ch->stopFollower(TRUE);
-  
-  for(int tmpnum = 1; tmpnum < MAX_TOG_INDEX; tmpnum++) {
-    if (ch->hasQuestBit(tmpnum))
-      mob->setQuestBit(tmpnum);
-  }
-
-  mob->setQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
-  mob->specials.affectedBy = ch->specials.affectedBy;
-  
-  
-  // switch ch into mobile 
-  ch->desc->character = mob;
-  ch->desc->original = dynamic_cast<TPerson *>(ch);
-
-  mob->desc = ch->desc;
-  ch->desc = NULL;
-  ch->polyed = POLY_TYPE_DISGUISE;
-
-  SET_BIT(mob->specials.act, ACT_DISGUISED);
-  SET_BIT(mob->specials.act, ACT_POLYSELF);
-  SET_BIT(mob->specials.act, ACT_NICE_THIEF);
-  SET_BIT(mob->specials.act, ACT_SENTINEL);
-  SET_BIT(mob->specials.act, ACT_AGGRESSIVE);
-  REMOVE_BIT(mob->specials.act, ACT_SCAVENGER);
-  REMOVE_BIT(mob->specials.act, ACT_DIURNAL);
-  REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
-
-  sstring tStNewNameList(mob->name);
-  
-  tStNewNameList += " [";
-  tStNewNameList += ch->getNameNOC(ch);
-  tStNewNameList += "]";
-  
-  delete [] mob->name;
-  mob->name = mud_str_dup(tStNewNameList);
-  
-  mob->setSex(ch->getSex());
-  mob->setHeight(ch->getHeight());
-  mob->setWeight(ch->getWeight());
-
-  for (statTypeT tStat = MIN_STAT; tStat < MAX_STATS; tStat++) {
-    mob->setStat(STAT_CURRENT, tStat, ch->getStat(STAT_CURRENT, tStat));
-  }
-
-  mob->doAction("", CMD_HOWL);
-  mob->roomp->getZone()->sendTo(fmt("You hear a chilling wolf howl in the distance.\n\r") % mob->roomp->number);
-
-
-  return TRUE;
-}
-
 // used as a conditional to find_path
 static int find_closest_outdoor(int room, void *myself)
 {
@@ -387,7 +302,6 @@ static int find_closest_outdoor(int room, void *myself)
 
   return TRUE;
 }
-
 
 int TSocket::gameLoop()
 {
@@ -1077,7 +991,8 @@ int TSocket::gameLoop()
 	  delete tmp_ch;
 	  tmp_ch = NULL;
 	  continue;
-	}
+    // next line is for the case of doReturn in updateAffects
+	} else if (rc == ALREADY_DELETED) continue;
 
 	// this was in hit(), makes more sense here I think
 	if (tmp_ch->getMyRace()->hasTalent(TALENT_FAST_REGEN) &&
@@ -1132,8 +1047,10 @@ int TSocket::gameLoop()
 	  delete tmp_ch;
 	  tmp_ch = NULL;
 	  continue;
-	}
+        // Next line is for the case of doReturn in halfUpdateTickStuff
+	} else if (rc == ALREADY_DELETED)  continue;
       }
+      
       if (!pulse_mudhour) {
 	rc = tmp_ch->updateTickStuff();
 	if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -1179,16 +1096,20 @@ int TSocket::gameLoop()
       }
 
       // lycanthrope transformation
-#if 0
+#if 1
       if(!quickpulse){
 	if(tmp_ch->hasQuestBit(TOG_LYCANTHROPE) &&
-	   !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE) &&
-	   moonType() == "full" && !sunIsUp()){
+	   !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)
+           && !tmp_ch->isLinkdead() &&
+           
+	   moonType() == "full" && !sunIsUp()) {
 	  lycanthropeTransform(tmp_ch);
+          continue;
 	} else if(tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)){
 	  if(moonType() != "full" || sunIsUp()){
 	    tmp_ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
 	    tmp_ch->doReturn("", WEAR_NOWHERE, CMD_RETURN);
+            continue;
 	  } else if(!tmp_ch->fight() && tmp_ch->roomp && 
 		    !tmp_ch->roomp->isRoomFlag(ROOM_PEACEFUL) &&
 		    !::number(0,24)){

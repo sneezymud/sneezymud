@@ -12,7 +12,6 @@
 #include "disc_spirit.h"
 #include "obj_magic_item.h"
 
-
 int knot(TBeing *caster, TBeing *victim)
 {
   taskDiffT diff;
@@ -598,7 +597,7 @@ int cloudOfConcealment(TBeing *caster, int level, byte bKnown)
   if (bSuccess(caster, bKnown, SPELL_CLOUD_OF_CONCEALMENT)) {
     caster->sendTo("You focus your powers and cause a cloud to materialize around your group.\n\r");
     act("$n invokes some magic and produces huge volumes of vaporous smoke.",
-        TRUE,caster,0,0,TO_ROOM,ANSI_GRAY);
+        TRUE,caster,0,0,TO_ROOM,ANSI_GREEN);
 
     aff.type = SPELL_INVISIBILITY;
     aff.level = level;
@@ -617,8 +616,8 @@ int cloudOfConcealment(TBeing *caster, int level, byte bKnown)
             caster->reconcileHelp(tmp_victim,discArray[SPELL_CLOUD_OF_CONCEALMENT]->alignMod);
 #if 0
 // setting the affect sends similar text, so don't be redundant
-            act("$n dissolves out of sight!", TRUE, tmp_victim, NULL, NULL, TO_ROOM,ANSI_GRAY);
-            tmp_victim->sendTo(fmt("You vanish!\n\r") %ANSI_GRAY);
+            act("$n dissolves out of sight!", TRUE, tmp_victim, NULL, NULL, TO_ROOM,ANSI_GREEN);
+            tmp_victim->sendTo(fmt("You vanish!\n\r") %ANSI_GREEN);
 #endif
 
             tmp_victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
@@ -629,8 +628,8 @@ int cloudOfConcealment(TBeing *caster, int level, byte bKnown)
     }
     if (!caster->isAffected(AFF_INVISIBLE)) {
 #if 0
-      act("$n dissolves out of sight!", TRUE, caster, NULL, NULL, TO_ROOM, ANSI_GRAY);
-      caster->sendTo(fmt("You vanish!\n\r") %ANSI_GRAY);
+      act("$n dissolves out of sight!", TRUE, caster, NULL, NULL, TO_ROOM, ANSI_GREEN);
+      caster->sendTo(fmt("You vanish!\n\r") %ANSI_GREEN);
 #endif
       caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
       found = TRUE;
@@ -794,11 +793,12 @@ void dispelInvisible(TBeing *caster, TObj* obj)
 }
 
 static struct PolyType PolyList[] =
+//   name,    level, learning, vnum, discipline, race
 {
   {"orc"       ,  8,   1,   941, DISC_SPIRIT, RACE_NORACE}, // L  4
   {"frog"      ,  8,   1,   917, DISC_SPIRIT, RACE_NORACE}, // L  5
   {"cockatrice", 10,   1,   911, DISC_SPIRIT, RACE_NORACE}, // L  6
-  {"kamodo"    , 12,  30,  7501, DISC_SPIRIT, RACE_NORACE}, // L 25
+  {"komodo"    , 12,  30,  7501, DISC_SPIRIT, RACE_NORACE}, // L 25
   {"minotaur"  , 15,  40,   937, DISC_SPIRIT, RACE_NORACE}, // L  8
   {"lamia"     , 25,  50,   934, DISC_SPIRIT, RACE_NORACE}, // L 13
   {"reindeer"  , 25,  55, 10212, DISC_SPIRIT, RACE_NORACE}, // L 15
@@ -815,7 +815,7 @@ int polymorph(TBeing *caster, int level, byte bKnown)
   int i, ret = 0;
   bool nameFound = FALSE;
   bool found = FALSE;
-  TBeing *mob;
+  TMonster *mob;
   const char * buffer;
   affectedData aff;
   affectedData aff2;
@@ -833,14 +833,14 @@ int polymorph(TBeing *caster, int level, byte bKnown)
     } else {
       continue;
     }
-    if ((caster->getDiscipline(das)->getLearnedness() >= PolyList[i].learning) && (level > 25))
+    if ((caster->getSkillValue(SPELL_POLYMORPH) >= PolyList[i].learning) && (level > 25) && (level > PolyList[i].level))
       break;
   }
 
   if (*PolyList[i].name == '\n') {
     if (nameFound) {
       caster->sendTo("You are not powerful enough yet to change into such a creature.\n\r");
-    } else {
+    } else { // This case is already taken care of earlier
       caster->sendTo("Couldn't find any of those.\n\r");
     }
     return SPELL_FAIL;
@@ -850,47 +850,36 @@ int polymorph(TBeing *caster, int level, byte bKnown)
     return SPELL_FAIL;
   }
   thing_to_room(mob,ROOM_VOID);   // just so if extracted it isn't in NOWHERE 
-
-  // Check to make sure that there is no snooping going on. 
-  if (!caster->desc || caster->desc->snoop.snooping) {
-    caster->nothingHappens();
-    vlogf(LOG_BUG,"PC tried to poly while being snooped");
-    delete mob;
-    mob = NULL;
-    return SPELL_FAIL;
-  }
-  if (caster->desc->original) {
-    // implies they are switched, while already switched (as x switch)
-    caster->sendTo("You already seem to be switched.\n\r");
-    delete mob;
-    mob = NULL;
-    return SPELL_FAIL;
-  }
-  if (caster->desc->snoop.snoop_by)
-    caster->desc->snoop.snoop_by->doSnoop(caster->desc->snoop.snoop_by->name);
-
-  // first add the attempt -- used to regulate attempts
-  aff.type = AFFECT_SKILL_ATTEMPT;
-  aff.location = APPLY_NONE;
-  aff.duration = (1 + (level/15)) * UPDATES_PER_MUDHOUR;
-  aff.bitvector = 0;
-  aff.modifier = SPELL_POLYMORPH;
-  caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  mob->swapToStrung();
+  
+ int duration;
 
   if (bSuccess(caster, bKnown, SPELL_POLYMORPH)) {
     switch (critSuccess(caster, SPELL_POLYMORPH)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
+        duration = (2 + level / 5) * UPDATES_PER_MUDHOUR;
         CS(SPELL_POLYMORPH);
         ret = SPELL_CRIT_SUCCESS;
       case CRIT_S_NONE:
+      default:
+        duration = (1 + level / 10) * UPDATES_PER_MUDHOUR;
         break;
    }
+
+  // first add the attempt -- used to regulate attempts
+  aff.type = AFFECT_SKILL_ATTEMPT;
+  aff.location = APPLY_NONE;
+  aff.duration = duration + UPDATES_PER_MUDHOUR;
+  aff.bitvector = 0;
+  aff.modifier = SPELL_POLYMORPH;
+  caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
 
     --(*mob);
     *caster->roomp += *mob;
     SwitchStuff(caster, mob);
+    setCombatStats(caster, mob, PolyList[i], SPELL_POLYMORPH);
 
     act("$n's flesh melts and flows into the shape of $N.", TRUE, caster, NULL, mob, TO_NOTVICT);
     for (i=MIN_WEAR;i < MAX_WEAR;i++) {
@@ -912,13 +901,6 @@ int polymorph(TBeing *caster, int level, byte bKnown)
     --(*caster);
     thing_to_room(caster, ROOM_POLY_STORAGE);
 
-    for(int tmpnum = 1; tmpnum < MAX_TOG_INDEX; tmpnum++) {
-      if (caster->hasQuestBit(tmpnum))
-	mob->setQuestBit(tmpnum);
-    }
-
-    mob->specials.affectedBy = caster->specials.affectedBy;
-
     // stop following whoever you are following.. 
     if (caster->master)
       caster->stopFollower(TRUE);
@@ -927,10 +909,11 @@ int polymorph(TBeing *caster, int level, byte bKnown)
     caster->desc->character = mob;
     caster->desc->original = dynamic_cast<TPerson *>(caster);
 
-#if 0
-    aff2.type = AFFECT_SKILL_ATTEMPT;
+#if 1
+    // used to wear off
+    aff2.type = SPELL_POLYMORPH;
     aff2.location = APPLY_NONE;
-    aff2.duration = duration + ((2 + (level/5)) * UPDATES_PER_MUDHOUR);
+    aff2.duration = duration;
     aff2.bitvector = 0;
     aff2.modifier = SPELL_POLYMORPH;
     mob->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
@@ -948,7 +931,9 @@ int polymorph(TBeing *caster, int level, byte bKnown)
     REMOVE_BIT(mob->specials.act, ACT_DIURNAL);
     REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
 
-    mob->setMana(min((mob->getMana() - 15), 85));
+    // fix name so poly'd mage can be found
+    appendPlayerName(caster, mob);
+
     return SPELL_SUCCESS;
   } else {
     return SPELL_FAIL;
@@ -958,32 +943,18 @@ int polymorph(TBeing *caster, int level, byte bKnown)
 int polymorph(TBeing *caster, const char * buffer)
 {
   taskDiffT diff;
-  int level;
-  int i;
+//  int level;
+//  int i;
 
   if (!caster->isImmortal() && caster->checkForSkillAttempt(SPELL_POLYMORPH)) {
     act("You are not prepared to try to polymorph yourself again so soon.",
          FALSE, caster, NULL, NULL, TO_CHAR);
     return FALSE;
   }
-
-  level = caster->getSkillLevel(SPELL_POLYMORPH);
-  for (i = 0; *PolyList[i].name != '\n'; i++) {
-    if (level < PolyList[i].level)
-      continue;
-    if (is_abbrev(buffer,PolyList[i].name))
-      break;
-  }
-
-  if (*PolyList[i].name == '\n') {
-    caster->sendTo("Couldn't find any of those.\n\r");
-    return SPELL_FAIL;
-  }
-
-  // Check to make sure that there is no snooping going on.
+ // Check to make sure that there is no snooping going on.
   if (!caster->desc || caster->desc->snoop.snooping) {
     caster->nothingHappens();
-    vlogf(LOG_BUG,"PC tried to poly while being snooped");
+    vlogf(LOG_BUG,"Immort tried to shapeshift while snooping.");
     return SPELL_FAIL;
   }
 
@@ -1089,14 +1060,14 @@ int castStealth(TBeing *caster, TBeing *victim)
 
   ret=stealth(caster,victim,level,bKnown);
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("$N seems more stealthy!", FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_GRAY);
-    act("You feel much more stealthy!", FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GRAY);
+    act("$N seems more stealthy!", FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_GREEN);
+    act("You feel much more stealthy!", FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
     if (caster != victim)
       act("You have given $N the gift of stealth!", 
-              FALSE, caster, NULL, victim, TO_CHAR, ANSI_GRAY);
+              FALSE, caster, NULL, victim, TO_CHAR, ANSI_GREEN);
   } else {
     act("Your attempt to give $N the gift of stealth fails.", 
-                   FALSE, caster, NULL, victim, TO_CHAR, ANSI_GRAY);
+                   FALSE, caster, NULL, victim, TO_CHAR, ANSI_GREEN);
     caster->nothingHappens(SILENT_YES);
   }
   return TRUE;
@@ -1370,9 +1341,9 @@ int invisibility(TBeing *caster, TObj * obj, int, byte bKnown)
 
   if (bSuccess(caster, bKnown, SPELL_INVISIBILITY)) {
     act("$p vanishes into the thin ether!",
-                FALSE, caster, obj, NULL, TO_CHAR, ANSI_GRAY);
+                FALSE, caster, obj, NULL, TO_CHAR, ANSI_GREEN);
     act("$p vanishes into the thin ether!",
-                FALSE, caster, obj, NULL, TO_ROOM, ANSI_GRAY);
+                FALSE, caster, obj, NULL, TO_ROOM, ANSI_GREEN);
     obj->addObjStat(ITEM_INVISIBLE);
 
     return SPELL_SUCCESS;
@@ -1481,9 +1452,9 @@ void invisibility(TBeing *caster, TBeing *victim, TMagicItem * obj)
   if (ret == SPELL_SUCCESS) {
 #if 0
     act("$n vanishes into the thin ether!", FALSE, victim, NULL, NULL,
-                 TO_ROOM, ANSI_GRAY);
+                 TO_ROOM, ANSI_GREEN);
     act("You vanish into the thin ether!", FALSE, victim, NULL, NULL, TO_CHAR,
-                 ANSI_GRAY);
+                 ANSI_GREEN);
 #endif
   } else {
     caster->nothingHappens();
@@ -1521,8 +1492,8 @@ int castInvisibility(TBeing *caster, TBeing *victim)
   int ret=invisibility(caster,victim,level,bKnown);
   if (ret== SPELL_SUCCESS) {
 #if 0
-    act("$n vanishes into the thin ether!", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GRAY);
-    act("You vanish into the thin ether!", FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GRAY);
+    act("$n vanishes into the thin ether!", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
+    act("You vanish into the thin ether!", FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
 #endif
   } else {
     caster->nothingHappens();

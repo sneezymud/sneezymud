@@ -890,6 +890,22 @@ bool TBeing::affectedBySpell(spellNumT skill) const
   return FALSE;
 }
 
+// used with polymorph transfers of affects
+// transfer spells and 'oddball' stuff (drunk, disease, pkill...)
+int TBeing::polyAffectJoin(TBeing * recipient)
+{
+  affectedData *affp;
+  for (affp = affected; affp; affp = affp->next) {
+    if (!((affp->type > MIN_SPELL && affp->type < MAX_SKILL) ||
+          (affp->type > FIRST_ODDBALL_AFFECT && 
+           affp->type < LAST_ODDBALL_AFFECT) ||
+           affp->type == AFFECT_SKILL_ATTEMPT)) 
+        continue;
+    recipient->affectJoin(recipient, affp, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+  }
+  return TRUE;
+}
+
 // avg_dur FALSE : duration will be cumulative
 // avg_dur TRUE : the average of the existing and new affect dur wil be used
 // avg_mod FALSE : modifier will be cumulative

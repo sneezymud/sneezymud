@@ -39,9 +39,9 @@ int slingShot(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_
           CS(SPELL_SLING_SHOT);
           dam *= 2;
           act("You summon forth a huge rock that beans $N right between the eyes!",
-                FALSE, caster, NULL, victim, TO_CHAR, ANSI_GRAY);
+                FALSE, caster, NULL, victim, TO_CHAR, ANSI_GREEN);
           act("$n summons forth a huge rock that smacks you right between your eyes!",
-                FALSE, caster, NULL, victim, TO_VICT, ANSI_GRAY);
+                FALSE, caster, NULL, victim, TO_VICT, ANSI_GREEN);
           act("$n summons forth a huge rock that beans $N right between the eyes!!",
                 FALSE, caster, NULL, victim, TO_NOTVICT);      
           break;
@@ -65,7 +65,7 @@ int slingShot(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_
     if (critFail(caster, SPELL_SLING_SHOT) == CRIT_F_HITSELF) {
       CF(SPELL_SLING_SHOT);
       act("You cause a rock to leap out and hit yourself in the noggin!",
-           FALSE, caster, NULL, 0, TO_CHAR, ANSI_GRAY);
+           FALSE, caster, NULL, 0, TO_CHAR, ANSI_GREEN);
       act("$n causes a rock to leap out and hit $mself in the noggin!",
            FALSE, caster, NULL, 0, TO_ROOM);
       if (caster->reconcileDamage(caster, dam, SPELL_SLING_SHOT) == -1)

@@ -144,7 +144,7 @@ static int stompHit(TBeing *caster, TBeing *victim)
            FALSE, caster, 0, victim, TO_NOTVICT);
       act("You lift your leg high over $N's head, stomping $M hard on the head!",
            FALSE, caster, 0, victim, TO_CHAR);
-      act("You look upward just in time to see the bottom of $N's foot descending toward you!",
+      act("You look upward just in time to see the bottom of $n's foot descending toward you!",
            FALSE, caster, 0, victim, TO_VICT, ANSI_RED);
 
       TObj *item = dynamic_cast<TObj *>(victim->equipment[WEAR_HEAD]);

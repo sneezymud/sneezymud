@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
+
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
@@ -270,7 +270,7 @@ void TBeing::deathCry()
 	      tmons->UM(1);
 	      tmons->US(4);
 	    } else if (dynamic_cast<TBeing *>(i))
-              colorAct(COLOR_MOBS, 
+              colorAct(COLOR_MOBS,) 
 	  }
 	}
       }
@@ -374,7 +374,6 @@ void TBeing::updatePos()
 
 }
 
-// always returns DELETE_THIS
 int TMonster::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
 {
   TBeing *mob = NULL, *per = NULL;
@@ -389,6 +388,7 @@ int TMonster::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
     sendTo("You return to your original body.\n\r");
 
     if ((specials.act & ACT_POLYSELF)) {
+    vlogf(LOG_BUG, "poly'd pc going through TMonster::rawKill - this should not be happening - bug Maror");
       mob = this;
       per = desc->original;
 
@@ -427,14 +427,41 @@ void logPermaDeathDied(TBeing *ch, TBeing *killer)
   db.query("update permadeath set level=%i where name='%s'", ch->GetMaxLevel(), ch->name);
 }
 
-// always returns DELETE_THIS
 int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
 {
+  TBeing *per = NULL;
+  
   // using this to keep an eye on potential problem cropping up. bat - 12/26/99
-  Descriptor * tmpdesc = desc;
+/*  Descriptor * tmpdesc = desc;
   if (tmpdesc) {
   }
+  */
+  vlogf(LOG_MAROR, "1, getName %s", getName());
+  if(hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE) ||
+    (specials.act & ACT_POLYSELF) || 
+    (desc && desc->original && desc->original->polyed == POLY_TYPE_SWITCH)) 
+  {
+  vlogf(LOG_MAROR, "2");
+    per = desc->original;
 
+    if (per->polyed == POLY_TYPE_SWITCH) {  // switch
+      remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
+      doReturn("", WEAR_NOWHERE, CMD_RETURN, FALSE);
+      return rawKill(dmg_type, tKiller);
+    }
+  vlogf(LOG_MAROR, "3");
+    remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
+    doReturn("", WEAR_NOWHERE, CMD_RETURN);
+    
+    if ((per->rawKill(dmg_type, tKiller)) == DELETE_THIS) {
+      per->reformGroup();
+      delete per;
+      per = NULL;
+    }
+    return DELETE_THIS;
+  }
+
+  vlogf(LOG_MAROR, "4");
   if (fight())  {
     followData *f;
     for (f = fight()->followers;f;f = f->next) {
@@ -446,6 +473,7 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
     stopFighting();
   }
 
+  vlogf(LOG_MAROR, "5");
   if (isCombatMode(ATTACK_BERSERK))
     setCombatMode(ATTACK_NORMAL);
 
@@ -478,11 +506,11 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
     setStuff(NULL);
     setMoney(0);
   }
-
   makeCorpse(dmg_type, tKiller, exp_lost);
   deathCry();
   genericKillFix();
 
+  vlogf(LOG_MAROR, "6");
   if (isPc()) {
     reformGroup();
 
@@ -511,12 +539,12 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
       waste_shop_file(shop_nr);
     }
   }
-
+  vlogf(LOG_MAROR, "9");
   return DELETE_THIS;
 }
 
 
-// returns DELETE_THIS is this should die
+// returns DELETE_THIS if this should die
 // otherwise FALSE
 int TBeing::die(spellNumT dam_type, TBeing *tKiller = NULL)
 {
@@ -525,22 +553,29 @@ int TBeing::die(spellNumT dam_type, TBeing *tKiller = NULL)
   int polymorph = 0;
   float exp_lost = 0;
   rp = roomp;
-
+  TBeing *per = NULL;
   if (dynamic_cast<TMonster *>(this) && (desc || isPc())) {
     if (!(d = desc) || !d->original) {
       vlogf(LOG_COMBAT, "*BUG BRUTIUS BIG TIME* (die)");
       return FALSE;
     }
-    if ((polymorph = dieReturn("", dam_type, 1)) == DELETE_THIS) {
+    per = desc->original;
+    if (per->polyed == POLY_TYPE_SWITCH) {  // switch
+      doReturn("", WEAR_NOWHERE, CMD_RETURN, FALSE);
       rawKill(dam_type, tKiller);
       return DELETE_THIS;
-    } else if (polymorph == FALSE) 
+    } else if ((polymorph = dieReturn("", dam_type, 1)) == DELETE_THIS) {
+      if ( per->die(dam_type, tKiller) == DELETE_THIS ) {
+        per->reformGroup();
+        delete per;
+        per = NULL;
+      }
+      return DELETE_THIS;
+    } else if (polymorph == FALSE) { 
       return FALSE;
-    else if (polymorph == 1) {  // switch
-      rawKill(dam_type, tKiller);
-      return DELETE_THIS;
     }
   }
+  
   affectedData *aff;
   bool skip_death = false;
   for (aff = affected; aff; aff = aff->next) {
@@ -585,40 +620,14 @@ int TBeing::die(spellNumT dam_type, TBeing *tKiller = NULL)
 
 int TBeing::dieReturn(const char *, spellNumT dam_type, int cmd)
 {
-  TBeing *mob = NULL, *per = NULL;
 
   if (!desc || !desc->original) {
       vlogf(LOG_COMBAT, "*BUG CODERS BIG TIME* (dieReturn)");
     sendTo("There is a problem. Please contact a god and bug what you did?!\n\r");
     return FALSE;
   } else {
-    sendTo("You return to your original body.\n\r");
-
-    if ((specials.act & ACT_POLYSELF) && cmd) {
-      mob = this;
-      per = desc->original;
-
-      act("$n turns liquid, and reforms as $N.", TRUE, mob, 0, per, TO_ROOM);
-      --(*per);
-      *mob->roomp += *per;
-
-      SwitchStuff(mob, per);
-      per->affectFrom(SPELL_POLYMORPH);
-      per->affectFrom(SKILL_DISGUISE);
-      per->affectFrom(SPELL_SHAPESHIFT);
-    }
-
-    desc->original->polyed = POLY_TYPE_NONE;
-    desc->character = desc->original;
-    desc->original = NULL;
-
-    desc->character->desc = desc;
-    desc = NULL;
-  }
-  if (per && (per->die(dam_type)) == DELETE_THIS) {
-    per->reformGroup();
-    delete per;
-    per = NULL;
+    remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
+    doReturn("", WEAR_NOWHERE, CMD_RETURN, FALSE);
   }
   return DELETE_THIS;
 }
@@ -1659,14 +1668,14 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
   int wepDam = 0;
   const TMonster *tmon = dynamic_cast<const TMonster *>(this);
   if (!wielded) {
-    if (tmon)
+    if (tmon && !(polyed == POLY_TYPE_DISGUISE)) {
       wepDam += tmon->getMobDamage();
-    else if (doesKnowSkill(SKILL_KUBO))
+    } else if (doesKnowSkill(SKILL_KUBO))
       return getMonkWeaponDam(this, v, isprimary, rollDam);
     else
       wepDam += ::number(1, 3);        
   } else {                       // swinging some odd item 
-    if (tmon) {
+    if (tmon && !(polyed == POLY_TYPE_DISGUISE)) {
       // NPC wielding
       // mob damage is proper for NPC hitting a PC  (0.9 * level)
       // weapon damage is for PC hitting an NPC (1.75 * level)
@@ -1698,7 +1707,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
   if (v->getPosition() <= POSITION_DEAD)
     return (0);
 
-  if (!dynamic_cast<const TMonster *>(this)) {
+  if (!dynamic_cast<const TMonster *>(this) || (polyed == POLY_TYPE_DISGUISE)) {
     if (!wielded) {
       skill = SKILL_BAREHAND_PROF;
       // skill2 = SKILL_BAREHAND_SPEC;
@@ -2349,7 +2358,7 @@ int TBeing::defendRound(const TBeing * attacker) const
   // some classes have some situational effects here (mounted deikhans, etc)
   int armor = 1000 - getArmor();
 
-  if (isPc()) {
+  if (isPc() && !(specials.act & ACT_POLYSELF) ) {
     // PCS at L0 have 500 AC : return 0
     // PCs at L50 have 1750 AC : return 833
     // PCs at L60 have 2000 AC : return 1000
@@ -2438,7 +2447,8 @@ int TBeing::defendRound(const TBeing * attacker) const
 
   if (doesKnowSkill(SKILL_DEFENSE)) {
     int amt = my_lev;
-    amt *= max(10, (int) getSkillValue(SKILL_DEFENSE));
+    // this was max(10, ...) but that seemed silly - Maror
+    amt *= max(100, (int) getSkillValue(SKILL_DEFENSE));
     amt /= 100;
     bonus += amt;
   }
@@ -3786,10 +3796,12 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       }
     }
   }
+
   combatFatigue(weapon);
   updatePos();
   vict->updatePos();
-  return retCode;;
+  
+  return retCode;
 }
 
 bool TBeing::isHitableAggr(TBeing *vict)

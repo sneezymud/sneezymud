@@ -90,7 +90,7 @@ static bool enforceVerbal(TBeing *ch, spellNumT spell)
 	}
       } else {
 	if (ch->getRitualismLevel() >= RIT_LEV_NO_MANTRA) {
-	  act("Your superior channel to the ancestors aids in the ritual.",TRUE,ch,0,0,TO_CHAR);
+	  act("Your superior channel to the ancestors enables you to conduct the ritual in silence.",TRUE,ch,0,0,TO_CHAR);
 	  return TRUE;
 	}
       }

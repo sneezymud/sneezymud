@@ -26,7 +26,12 @@ TTrophy::TTrophy(TBeing *p) :
 
 sstring TTrophy::getMyName(){
   if(parent){
-    return parent->getName();
+  
+    if (parent->specials.act & ACT_POLYSELF) {
+      return parent->desc->original->getName();
+    } else { 
+      return parent->getName();
+    }
   } else {
     // name should be "" if we're uninitialized, so just return it either way
     return name;
@@ -112,7 +117,12 @@ void TBeing::doTrophy(const sstring &arg)
     return;
   }
 
-  TTrophy trophy(getName());
+  TBeing *per = NULL;
+  if (specials.act & ACT_POLYSELF)
+    per = desc->original;
+  else per = this;
+  
+  TTrophy trophy(per->getName());
 
   arg1=arg.word(0);
   arg2=arg.word(1);
@@ -129,7 +139,7 @@ void TBeing::doTrophy(const sstring &arg)
   }
 
   TDatabase db(DB_SNEEZY);
-  db.query("select mobvnum, count from trophy where name='%s' order by mobvnum", getName());
+  db.query("select mobvnum, count from trophy where name='%s' order by mobvnum", per->getName());
 
   for (zone = 0; zone < zone_table.size(); zone++) {
     zoneData &zd = zone_table[zone];
@@ -158,7 +168,7 @@ void TBeing::doTrophy(const sstring &arg)
       int rnum = real_mobile(convertTo<int>(db["mobvnum"]));
       if (rnum < 0) {
 	vlogf(LOG_BUG, "DoTrophy detected bad mobvnum=%d for name='%s'", 
-	      convertTo<int>(db["mobvnum"]), getName());
+	      convertTo<int>(db["mobvnum"]), per->getName());
 	continue;
       }
 
@@ -185,7 +195,7 @@ void TBeing::doTrophy(const sstring &arg)
 
       if(!summary){
 	buf = fmt("You will gain %s experience when fighting %s.\n\r") %
-		    trophy.getExpModDescr(count) % mob_index[rnum].short_desc;
+		trophy.getExpModDescr(count) % mob_index[rnum].short_desc;
 	sb += buf;
       }
 

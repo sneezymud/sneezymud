@@ -1325,15 +1325,15 @@ int plasmaMirror(TBeing *caster, int level, byte bKnown)
         CS(SPELL_PLASMA_MIRROR);
         aff.duration *= 2;
         act("Great swirls of plasma swirl FIERCELY about you!",
-            FALSE, caster, 0, 0, TO_CHAR, ANSI_GRAY);
+            FALSE, caster, 0, 0, TO_CHAR, ANSI_GREEN);
         act("Great swirls of plasma swirl FIERCELY about $n!",
-            FALSE, caster, 0, 0, TO_ROOM, ANSI_GRAY);
+            FALSE, caster, 0, 0, TO_ROOM, ANSI_GREEN);
         break;
       default:
         act("Great swirls of plasma swirl about you!",
-            FALSE, caster, 0, 0, TO_CHAR, ANSI_GRAY);
+            FALSE, caster, 0, 0, TO_CHAR, ANSI_GREEN);
         act("Great swirls of plasma swirl about $n!",
-            FALSE, caster, 0, 0, TO_ROOM, ANSI_GRAY);
+            FALSE, caster, 0, 0, TO_ROOM, ANSI_GREEN);
         break;
     }
     caster->affectTo(&aff, -1);

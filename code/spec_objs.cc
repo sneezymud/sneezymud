@@ -7513,19 +7513,21 @@ int lycanthropyCure(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
      !ch->hasQuestBit(TOG_LYCANTHROPE))
     return FALSE;
 
-
   ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
   ch->remQuestBit(TOG_LYCANTHROPE);
 
   if(ch->desc && ch->desc->original) {
+    TBeing *per = ch->desc->original;
     ch->doReturn("", WEAR_NOWHERE, CMD_RETURN);
-    ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
-    ch->remQuestBit(TOG_LYCANTHROPE);
+    act("A whispy wolf-like form detaches itself from your body and then dissipates.", TRUE, per, NULL, NULL, TO_CHAR, NULL);
+    act("A whispy wolf-like form detaches itself from $n's body and then dissipates.",
+      TRUE, per, NULL, NULL, TO_ROOM, NULL);
+  } else {
+
+    act("A whispy wolf-like form detaches itself from your body and then dissipates.", TRUE, ch, NULL, NULL, TO_CHAR, NULL);
+  act("A whispy wolf-like form detaches itself from $n's briefly and then dissipates.",
+      TRUE, ch, NULL, NULL, TO_ROOM, NULL);
   }
-
-
-  act("A whispy wolf-like form detaches itself from your body and dissipates.",
-      TRUE, ch, NULL, NULL, TO_CHAR, NULL);
 
   return TRUE;
 }

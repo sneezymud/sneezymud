@@ -244,11 +244,6 @@ void TBeing::doHighfive(const sstring &argument)
   }
 }
 
-void TBeing::doToggle(const char *)
-{
-  sendTo("Dumb monsters cannot toggle!\n\r");
-}
-
 const char *on_or_off(bool tog){
   if(tog)
     return "<G>on <1>";
@@ -256,9 +251,15 @@ const char *on_or_off(bool tog){
     return "<R>off<1>";
 }
 
-void TPerson::doToggle(const char *arg2)
+void TBeing::doToggle(const char *arg2)
 {
   char arg[256];
+
+  TPerson *ch = dynamic_cast<TPerson *>(this);
+  if (!(ch || (specials.act & ACT_POLYSELF))) {
+    sendTo("Dumb monsters cannot toggle!\n\r");
+    return;
+  }
 
   for (; isspace(*arg2); arg2++);
   arg2=one_argument(arg2, arg);
@@ -2224,6 +2225,7 @@ void TPerson::doSwitch(const char *argument)
         FALSE, this, NULL, NULL, TO_ROOM);
 
   sendTo("Ok.\n\r");
+
   polyed = POLY_TYPE_SWITCH;
 
   desc->character = tBeing;
@@ -2639,7 +2641,7 @@ void TBeing::transformLimbsBack(const char * buffer, wearSlotT limb, bool cmd)
   return;
 }
 
-void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell)
+void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell, bool deleteMob = TRUE)
 {
   TBeing *mob = NULL, *per;
   int X = LAST_TRANSFORM_LIMB, found = FALSE;
@@ -2696,37 +2698,28 @@ void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell)
         *rp += *per;
       }
 
-      for(int tmpnum = 1; tmpnum < MAX_TOG_INDEX; tmpnum++) {
-	if (mob->hasQuestBit(tmpnum) && !per->hasQuestBit(tmpnum))
-	  per->setQuestBit(tmpnum);
-	if (!mob->hasQuestBit(tmpnum) && per->hasQuestBit(tmpnum))
-          per->remQuestBit(tmpnum);
-
-      }
-// this line transfer affects that it should not
-      per->specials.affectedBy = mob->specials.affectedBy;
-// transfer spells
-//      per->affectJoin(per, mob->affected, AVG_DUR_NO, AVG_EFF_YES);
-
-
       SwitchStuff(mob, per);
       per->affectFrom(SPELL_POLYMORPH);
       per->affectFrom(SKILL_DISGUISE);
       per->affectFrom(SPELL_SHAPESHIFT);
     }
-    // Moved this down here, out of the upper if, so switched gods will be un-marked
-    // properly.
-    per->polyed = POLY_TYPE_NONE;
+
     desc->character = desc->original;
     desc->original = NULL;
 
     desc->character->desc = desc;
     desc = NULL;
     
-    if (IS_SET(specials.act, ACT_POLYSELF) && tell) {
+    if (IS_SET(specials.act, ACT_POLYSELF) && tell && deleteMob ) {
       delete mob;
       mob = NULL;
+    } else if (IS_SET(specials.act, ACT_POLYSELF)) { // move mob to room 72
+      --(*mob);
+      rp = real_roomp(ROOM_POLY_STORAGE);
+      *rp += *mob;
     }
+      
+    per->polyed = POLY_TYPE_NONE;
 
     // POLYSELF idetifies a TMonster as an isPc
     // It would be bad to have the "desc = NULL" and still have isPc
@@ -3299,6 +3292,7 @@ void TPerson::doPurge(const char *argument)
       if (dynamic_cast<TMonster *>(vict) && 
         (vict->desc || IS_SET(vict->specials.act, ACT_POLYSELF))) {
         sendTo("Sorry, you can't directly purge a poly'ed mob, you made them return.\n\r");
+         vict->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
          vict->doReturn("", WEAR_NOWHERE, CMD_RETURN);
          return;
         // delete vict;
@@ -6740,6 +6734,7 @@ int TBeing::doAs(const char *arg)
     vlogf(LOG_BUG, "doAs(): %s somehow killed self: %s",
             desc->original->getName(), arg);
     sendTo("Please don't do things that will cause your original character to be destroyed.\n\r");
+    remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
     doReturn("", WEAR_NOWHERE, CMD_RETURN);
     return FALSE;
   }

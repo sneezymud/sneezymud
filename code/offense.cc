@@ -1437,7 +1437,7 @@ int TObj::freezeObject(TBeing *ch, int perc)
       addToStructPoints(- ::number(1,12));
       if (getStructPoints() <= 0) {
         if (ch) {
-          act("..The mineral splits and $p $q destroyed.",TRUE,ch,this,0,TO_CHAR, ANSI_GRAY);
+          act("..The mineral splits and $p $q destroyed.",TRUE,ch,this,0,TO_CHAR, ANSI_GREEN);
         } else {
           act("   $n $r destroyed.",TRUE,this,0,0,TO_ROOM); 
         }

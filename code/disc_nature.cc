@@ -202,6 +202,7 @@ int transformLimb(TBeing * caster, const char * buffer, int level, byte bKnown)
 int vampireTransform(TBeing *ch)
 {
   TMonster *mob;
+  PolyType bat = {"bat", 50, 1, 13749, DISC_NONE, RACE_NORACE };
 
   if (!ch->isPc() || IS_SET(ch->specials.act, ACT_POLYSELF) ||
       ch->polyed != POLY_TYPE_NONE){
@@ -223,7 +224,8 @@ int vampireTransform(TBeing *ch)
   act("$n transforms into $N.",
        TRUE, ch, NULL, mob, TO_ROOM);
 
-  DisguiseStuff(ch, mob);
+  SwitchStuff(ch, mob);
+  setCombatStats(ch, mob, bat, SPELL_POLYMORPH);
   
   --(*mob);
   *ch->roomp += *mob;
@@ -234,21 +236,13 @@ int vampireTransform(TBeing *ch)
   if (ch->master)
     ch->stopFollower(TRUE);
   
-  for(int tmpnum = 1; tmpnum < MAX_TOG_INDEX; tmpnum++) {
-    if (ch->hasQuestBit(tmpnum))
-      mob->setQuestBit(tmpnum);
-  }
-  
-  mob->specials.affectedBy = ch->specials.affectedBy;
-  
-  
   // switch ch into mobile 
   ch->desc->character = mob;
   ch->desc->original = dynamic_cast<TPerson *>(ch);
 
   mob->desc = ch->desc;
   ch->desc = NULL;
-  ch->polyed = POLY_TYPE_DISGUISE;
+  ch->polyed = POLY_TYPE_POLYMORPH;
 
   SET_BIT(mob->specials.act, ACT_DISGUISED);
   SET_BIT(mob->specials.act, ACT_POLYSELF);
@@ -259,22 +253,10 @@ int vampireTransform(TBeing *ch)
   REMOVE_BIT(mob->specials.act, ACT_DIURNAL);
   REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
 
-  sstring tStNewNameList(mob->name);
+  appendPlayerName(ch, mob);
   
-  tStNewNameList += " [";
-  tStNewNameList += ch->getNameNOC(ch);
-  tStNewNameList += "]";
-  
-  delete [] mob->name;
-  mob->name = mud_str_dup(tStNewNameList);
-  
-  mob->setSex(ch->getSex());
-  mob->setHeight(ch->getHeight());
-  mob->setWeight(ch->getWeight());
-
-  for (statTypeT tStat = MIN_STAT; tStat < MAX_STATS; tStat++) {
-    mob->setStat(STAT_CURRENT, tStat, ch->getStat(STAT_CURRENT, tStat));
-  }
+  mob->setHeight(ch->getHeight()/5);
+  mob->setWeight(ch->getWeight()/10);
 
   return TRUE;
 }
@@ -288,8 +270,8 @@ int TBeing::doTransform(const char *argument)
   int rc = 0;
   char buffer[256];
 
-  sendTo("This is disabled due to a bug right now.\n\r");
-  return FALSE;
+//  sendTo("This is disabled due to a bug right now.\n\r");
+//  return FALSE;
 
   if (!doesKnowSkill(SKILL_TRANSFORM_LIMB)) {
     if(isVampire())

@@ -78,7 +78,6 @@ class TPerson : public TBeing {
     void loadRent();
 
     virtual void doUsers(const sstring &);
-    virtual void doToggle(const char *);
     virtual void doInvis(const char *);
     virtual void doVisible(const char *, bool);
     virtual void doMedit(const char *);

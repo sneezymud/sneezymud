@@ -538,6 +538,7 @@ Descriptor::~Descriptor()
   }
   if (character) {
     if (original)
+      character->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
       character->doReturn("", WEAR_NOWHERE, CMD_RETURN);
 
     if ((connected >= CON_REDITING) || !connected) {
@@ -662,7 +663,6 @@ Descriptor::~Descriptor()
   account = NULL;
 
   delete socket;
-
   // Was I editing something???
   // These are not in char_list or obj_list anymore, so don't leak them
   // we already did some MEDIT/OEDIT checks above for obvious handling

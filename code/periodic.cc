@@ -535,9 +535,8 @@ int TBeing::updateAffects()
     }
   }
   if (shouldReturn) {
-    rc = doWearOffReturn();
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    doReturn("", WEAR_NOWHERE, CMD_RETURN); 
+    return ALREADY_DELETED;
   }
   return 0;
 }
@@ -773,7 +772,7 @@ int TBeing::updateHalfTickStuff()
 
   updatePos();
 
-  if (hasClass(CLASS_SHAMAN) && !affectedBySpell(SPELL_SHAPESHIFT)) {
+  if (hasClass(CLASS_SHAMAN) && !(roomp->number == ROOM_POLY_STORAGE)) {
     if ((isPc()) && (GetMaxLevel() < 51)) {
       if (0 >= getLifeforce()) {
 	reconcileDamage(this,::number(0,2),DAMAGE_DRAIN);
@@ -1075,10 +1074,10 @@ int TBeing::updateHalfTickStuff()
       if (hasTransformedLimb()) 
         transformLimbsBack("", MAX_WEAR, FALSE);
       
-      if(desc && desc->original && !desc->original->isImmortal() && (desc->original->polyed == POLY_TYPE_SHAPESHIFT)) {
+      if(desc && desc->original && desc->original->polyed && !desc->original->isImmortal() && (desc->original->polyed == POLY_TYPE_SHAPESHIFT)) {
         sendTo("Your shape can not survive without a connection to nature.\n\r");
         doReturn("", WEAR_NOWHERE, CMD_RETURN); 
-        return FALSE;
+        return ALREADY_DELETED;
       }
     }
 

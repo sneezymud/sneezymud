@@ -640,7 +640,7 @@ mob->getName());
 
     if (parm2 < 0 || parm2 >= MAX_CLASSES) {
       sendTo("Syntax: @set level <char name> <level> <class number>\n\r");
-      sendTo(fmt("<class number> must be between 0 and %d.\n\r") % (MAX_CLASSES-1));
+      sendTo(fmt("<class number> must be between 0 and %d (you entered %d).\n\r") % (MAX_CLASSES-1) % parm2);
       return;
     }
 

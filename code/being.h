@@ -930,6 +930,7 @@ class TBeing : public TThing {
     bool hasDisease(diseaseTypeT) const;
     void diseaseFrom(diseaseTypeT);
     int affectJoin(TBeing *, affectedData *, avgDurT, avgEffT, bool text = TRUE);
+    int polyAffectJoin(TBeing *);
     void classSpecificStuff();
     virtual int hitGain() = 0;
     virtual int manaGain() = 0;
@@ -1874,7 +1875,7 @@ class TBeing : public TThing {
     void doDeathcheck(const sstring &);
     int doGive(TBeing *, TThing *, giveTypeT = GIVE_FLAG_DEF);
     int doGive(const sstring &, giveTypeT = GIVE_FLAG_DEF);
-    int doMount(const char *, cmdTypeT, TBeing *);
+    int doMount(const char *, cmdTypeT, TBeing *, silentTypeT silent = SILENT_NO);
     int doJunk(const char *, TObj *);
     int doNoJunk(const char *, TObj *);
     int doDonate(const char *);
@@ -1936,8 +1937,7 @@ class TBeing : public TThing {
     int doFlee(const char *);
     int doDisarm(sstring, TThing *);
     int dieReturn(const char *, spellNumT, int);
-    void doReturn(const char *, wearSlotT, bool);
-    int doWearOffReturn();
+    void doReturn(const char *, wearSlotT, bool, bool deleteMob = TRUE);
     int doHit(const sstring &, TBeing *);
     int doEngagedHit(const char *, TBeing *);
     int doKill(const char *, TBeing *);

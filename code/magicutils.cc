@@ -6,6 +6,8 @@
 #include "obj_opal.h"
 #include "obj_component.h"
 #include "obj_key.h"
+#include "being.h"
+
 void TMonster::balanceMakeNPCLikePC()
 {
   // This is predicated on balance ideas
@@ -37,12 +39,127 @@ void TMonster::balanceMakeNPCLikePC()
   // leave AC alone, should be OK
 }
 
-void SwitchStuff(TBeing *giver, TBeing *taker)
+// set AC, hp, damage, to hit adjustment for poly'd mages and shamans
+void setCombatStats(TBeing *ch, TBeing *mob, PolyType shape, spellNumT skill)
+{
+  TMonster *critter = dynamic_cast<TMonster *>(mob);
+  if (!critter)
+  {
+    vlogf(LOG_MAROR, "couldn't cast as TMonster, getting out!");
+    return;
+  }
+  
+  // get effective level = (skill_learn) * min(mob level, mage level)
+  int level = min(shape.level, (int) ch->GetMaxLevel());
+  int polySkill = ch->getSkillValue(skill);
+  level = level * polySkill / 100;
+  level = max(1, level);
+  // set AC
+  critter->setACLevel(level);
+  critter->setACFromACLevel();
+
+  // set max hp
+  float newHit = (float) ch->hitLimit();
+  newHit /= ch->getConHpModifier();
+  newHit *= critter->getConHpModifier();
+  critter->setMaxHit((int) newHit); 
+
+  // set number of attacks
+  critter->setMult(ch->getMult());
+
+  // set damage
+  float damagemod = 1.9 / critter->getMult(); // increase damage, since NPCs generally do 2-fold less
+  critter->setDamLevel(level * damagemod);
+  critter->setDamPrecision(20);
+  
+  // set hit adjustment
+  critter->setHitroll(0);
+
+}
+
+// set AC, hp, damage, to hit adjustment for disguised mobs (werewolves too)
+void setDisguiseCombatStats(TBeing *ch, TBeing *mob)
+{
+  TMonster *critter = dynamic_cast<TMonster *>(mob);
+  if (!critter)
+  {
+    vlogf(LOG_MAROR, "couldn't cast as TMonster, getting out!");
+    return;
+  }
+  
+  int level = 1;
+
+  // set AC
+  critter->setACLevel(level);
+  critter->setACFromACLevel();
+
+  // set max hp
+  critter->setMaxHit(ch->hitLimit()); 
+
+  // set number of attacks
+  critter->setMult(ch->getMult());
+
+  // set damage
+  float damagemod = 2 / critter->getMult(); // increase damage, since NPCs generally do 2-fold less
+  critter->setDamLevel(level * damagemod);
+  critter->setDamPrecision(20);
+  
+  // set hit adjustment
+  critter->setHitroll(0);
+
+}
+
+
+// adds player name to disguised / polyed creatures
+void appendPlayerName(TBeing *ch, TBeing *mob)
+{
+ if (ch->name) {
+    sstring tStNewNameList(mob->name);
+    tStNewNameList += " ";
+    tStNewNameList += ch->getNameNOC(ch);
+    tStNewNameList += " switched";
+
+    delete [] mob->name;
+    mob->name = mud_str_dup(tStNewNameList);
+  } else vlogf (LOG_MAROR, "Entered appendPlayerName with ch->name undefined");
+}
+  
+void switchStat(statTypeT stat, TBeing *giver, TBeing *taker)
+{
+// assumes mob age mod is zero
+  taker->setStat(STAT_CHOSEN, stat, 
+      giver->getStat(STAT_TERRITORY, stat) -
+      taker->getStat(STAT_TERRITORY, stat) +
+      giver->getStat(STAT_RACE, stat) -
+      taker->getStat(STAT_RACE, stat) +
+      giver->getStat(STAT_CHOSEN, stat) );
+  taker->setStat(STAT_CURRENT, stat, taker->getStat(STAT_NATURAL, stat));
+}
+
+void SwitchStuff(TBeing *giver, TBeing *taker, bool setStats = TRUE)
 {
   TThing *t, *next;
 
   mud_assert(giver != NULL, "Something bogus in SwitchStuff()");
   mud_assert(taker != NULL, "Something bogus in SwitchStuff()");
+
+  // transfer toggles - do this first to avoid issues with skill swaps
+  for(int tmpnum = 1; tmpnum < MAX_TOG_INDEX; tmpnum++) {
+    if (giver->hasQuestBit(tmpnum) && !taker->hasQuestBit(tmpnum))
+      taker->setQuestBit(tmpnum);
+    if (taker->hasQuestBit(tmpnum) && !giver->hasQuestBit(tmpnum))
+      taker->remQuestBit(tmpnum);
+  }
+  
+  // resolve riding
+  TBeing *tbr;
+  if ((tbr =  dynamic_cast<TBeing *>(giver->riding) )) {
+    giver->dismount(POSITION_STANDING);
+    // this must precede deletion of taker->discs, below
+    if (taker->isHumanoid()) {
+      taker->doMount("", CMD_MOUNT, tbr, SILENT_YES);
+    }
+  }
 
   wearSlotT ij;
   for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
@@ -62,7 +179,11 @@ void SwitchStuff(TBeing *giver, TBeing *taker)
     taker->setHit(giver->getHit());
 
   taker->setExp(giver->getExp());
+  taker->setMaxExp(giver->getMaxExp());
 
+ // this stuff is passed one way to the mob, shouldn't be stuff that doesn't
+ // change
+ // note that disciplines are included here - no learning while poly'd?
   if (dynamic_cast<TMonster *>(taker)) {
     taker->setClass(giver->getClass());
 
@@ -74,6 +195,36 @@ void SwitchStuff(TBeing *giver, TBeing *taker)
     // transfer skills and disciplines
     delete taker->discs;
     taker->discs = giver->discs;
+
+    // transfer a reasonable amount of max moves
+    taker->setMaxMove(giver->getMaxMove() / 2);
+    // note that the getMaxMove function is different for the mob
+    // and the pc
+    
+    taker->setMaxMana(giver->manaLimit());
+
+    if (setStats)
+    {
+      // can only change chosen... SO:
+     
+      // for physical (most) stats, keep chosens and territory adjustments
+      // charisma and perception are included here, rightly or wrongly
+      statTypeT iStat;
+      for (iStat=MIN_STAT;iStat<MAX_STATS;iStat++) {
+        if (iStat == STAT_INT || iStat == STAT_WIS || iStat == STAT_FOC ||
+            iStat == STAT_KAR ) continue; 
+        taker->setStat(STAT_CHOSEN, iStat, giver->getStat(STAT_CHOSEN, iStat) +
+          giver->getStat(STAT_TERRITORY, iStat) - 
+          taker->getStat(STAT_TERRITORY, iStat));
+        taker->setStat(STAT_CURRENT, iStat, STAT_NATURAL);
+      }
+
+      // for mentals and karma, keep the same race
+      switchStat(STAT_INT, giver, taker);
+      switchStat(STAT_WIS, giver, taker);
+      switchStat(STAT_FOC, giver, taker);
+      switchStat(STAT_KAR, giver, taker);
+    }
   }
   if (dynamic_cast<TMonster *>(giver))
     giver->discs = NULL;
@@ -82,15 +233,6 @@ void SwitchStuff(TBeing *giver, TBeing *taker)
   taker->setMana(giver->getMana());
   taker->setMove(giver->getMove());
   taker->setLifeforce(giver->getLifeforce());
-  // must cast getMaxMove to be sure to use the same function in
-  // both directions, otherwise the character will inherit a move
-  // bonus from polymorph
-  taker->setMaxMove(giver->TBeing::getMaxMove());   
-
-  statTypeT iStat;
-  for (iStat=MIN_STAT;iStat<MAX_STATS;iStat++) {
-    taker->setStat(STAT_CHOSEN, iStat, giver->getStat(STAT_CHOSEN, iStat));
-  }
 
   taker->setFaction(giver->getFaction());
 #if FACTIONS_IN_USE
@@ -106,78 +248,28 @@ void SwitchStuff(TBeing *giver, TBeing *taker)
   taker->age_mod = giver->age_mod;
   taker->desc = giver->desc;
   taker->player.time = giver->player.time;
+
+  taker->setSex(giver->getSex());
+
+  // transfer spells and skills and oddball effects (disease, drunk, ...)
+  giver->polyAffectJoin(taker);
+                        
 }
 
-int TBeing::doWearOffReturn()
-{
-  TBeing *mob = NULL, *per = NULL;
-  TRoom *rp = NULL;
-
-  if (!desc || !desc->original) {
-    sendTo("What are you trying to return from?!\n\r");
-    return FALSE;
-  } else {
-    sendTo("You return to your original body.\n\r");
-
-    if ((specials.act & ACT_POLYSELF)) {
-      mob = this;
-      per = desc->original;
-
-      act("$n turns liquid, and reforms as $N.", TRUE, mob, 0, per, TO_ROOM);
-
-      --(*per);
-      if (mob->roomp)
-        *mob->roomp += *per;
-      else {
-        rp = real_roomp(ROOM_CS);
-        *rp += *per;
-      }
-
-      SwitchStuff(mob, per);
-      per->polyed = POLY_TYPE_NONE;
-      per->affectFrom(SPELL_POLYMORPH);
-      per->affectFrom(SKILL_DISGUISE);
-      per->affectFrom(SPELL_SHAPESHIFT);
-    }
-    desc->character = desc->original;
-    desc->original = NULL;
-
-    desc->character->desc = desc;
-    desc = NULL;
-
-
-    if (IS_SET(specials.act, ACT_POLYSELF)) {
-      return DELETE_THIS;
-    }
-  }
-  return FALSE;
-}
 void DisguiseStuff(TBeing *giver, TBeing *taker)
 {
-  // do the generic polymorph stuff first */
-  SwitchStuff(giver, taker);
+  // do the generic polymorph stuff first, with setStats = FALSE
+  SwitchStuff(giver, taker, FALSE);
 
-  taker->setHit(giver->getHit());
-  taker->setMaxHit(giver->hitLimit());
-  taker->setMove(giver->getMove());
-  taker->setMaxMove(giver->getMaxMove());
-  taker->setMana(giver->getMana());
-  taker->setMaxMana(giver->manaLimit());
+  if (dynamic_cast<TMonster *>(taker)) {
+    statTypeT iStat;
+  // must cast moves, only transfer max moves to monster (NOT back again)
+    for (iStat=MIN_STAT;iStat<MAX_STATS;iStat++) {
+      switchStat(iStat, giver, taker);
+    }
+    setDisguiseCombatStats(giver, taker);
+  }
 }
-
-
-void ShapeshiftStuff(TBeing *giver, TBeing *taker)
-{
-  // do the generic polymorph stuff first */
-  SwitchStuff(giver, taker);
-
-  taker->setHit(giver->getHit());
-  taker->setMaxHit(giver->hitLimit());
-  taker->setMove(giver->getMove());
-  taker->setMaxMove(giver->getMaxMove());
-  taker->setLifeforce(giver->getLifeforce());
-}
-
 
 void TMonster::failCharm(TBeing *ch)
 {
@@ -1902,6 +1994,72 @@ sstring displayDifficulty(spellNumT skill)
   return "BOGUS, tell a god";
 }
 
+
+int lycanthropeTransform(TBeing *ch)
+{
+  TMonster *mob;
+
+
+  if (!ch->isPc() || IS_SET(ch->specials.act, ACT_POLYSELF) ||
+      ch->polyed != POLY_TYPE_NONE){
+    act("You are already transformed into another shape.",
+	TRUE, ch, NULL, NULL, TO_CHAR);
+    return FALSE;
+  }
+  
+  if (!(mob = read_mobile(23204, VIRTUAL))) {
+    return FALSE;
+  }
+  thing_to_room(mob,ROOM_VOID);
+  mob->swapToStrung();
+
+  act("The presence of the full moon forces you into transformation!",
+      TRUE, ch, NULL, mob, TO_CHAR);
+  act("The presence of the full moon forces $n to transform into $N!",
+      TRUE, ch, NULL, mob, TO_ROOM);
+
+
+  DisguiseStuff(ch, mob);
+  
+  --(*mob);
+  *ch->roomp += *mob;
+  --(*ch);
+  thing_to_room(ch, ROOM_POLY_STORAGE);
+  
+  // stop following whoever you are following.
+  if (ch->master)
+    ch->stopFollower(TRUE);
+
+  mob->setQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
+  
+  // switch ch into mobile 
+  ch->desc->character = mob;
+  ch->desc->original = dynamic_cast<TPerson *>(ch);
+
+  mob->desc = ch->desc;
+  ch->desc = NULL;
+  ch->polyed = POLY_TYPE_DISGUISE;
+
+  SET_BIT(mob->specials.act, ACT_DISGUISED);
+  SET_BIT(mob->specials.act, ACT_POLYSELF);
+  SET_BIT(mob->specials.act, ACT_NICE_THIEF);
+  SET_BIT(mob->specials.act, ACT_SENTINEL);
+  SET_BIT(mob->specials.act, ACT_AGGRESSIVE);
+  REMOVE_BIT(mob->specials.act, ACT_SCAVENGER);
+  REMOVE_BIT(mob->specials.act, ACT_DIURNAL);
+  REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
+
+  appendPlayerName(ch, mob);
+ 
+  mob->setHeight(ch->getHeight());
+  mob->setWeight(ch->getWeight());
+
+  mob->doAction("", CMD_HOWL);
+  mob->roomp->getZone()->sendTo(fmt("You hear a chilling wolf howl in the distance.\n\r") % mob->roomp->number);
+
+
+  return TRUE;
+}
 
 
 

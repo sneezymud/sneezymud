@@ -241,9 +241,9 @@ void shadowWalk(TBeing *caster, TBeing *victim, TMagicItem * obj)
   if (ret == SPELL_SUCCESS) {
 #if 0
     act("$n becomes darker and walks a little swifter!", FALSE, victim, NULL, NULL,
-                 TO_ROOM, ANSI_GRAY);
+                 TO_ROOM, ANSI_GREEN);
     act("You now walk among the shadows!", FALSE, victim, NULL, NULL, TO_CHAR,
-                 ANSI_GRAY);
+                 ANSI_GREEN);
 #endif
   } else {
     caster->nothingHappens();
@@ -283,9 +283,9 @@ int castShadowWalk(TBeing *caster, TBeing *victim)
   if (ret== SPELL_SUCCESS) {
 #if 0
     act("$n becomes dark and walks a little swifter!", FALSE, victim, NULL, NULL, 
-TO_ROOM, ANSI_GRAY);
+TO_ROOM, ANSI_GREEN);
     act("You now walk among the shadows!", FALSE, victim, NULL, NULL, TO_CHAR, 
-ANSI_GRAY);
+ANSI_GREEN);
 #endif
   } else {
     caster->nothingHappens();

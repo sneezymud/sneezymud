@@ -464,7 +464,6 @@ int disguise(TBeing *caster, char * buffer)
 {
   int i, duration, column=0;
   TMonster *mob;
-  char buf[256];
   affectedData aff;
   affectedData aff2;
   affectedData aff3;
@@ -599,12 +598,12 @@ int disguise(TBeing *caster, char * buffer)
        TRUE, caster, NULL, mob, TO_ROOM);
 
 // first add the attempt -- used to regulate attempts
-  aff.duration = duration + ((2 + (level/5)) * UPDATES_PER_MUDHOUR);
+  aff.duration = duration + (2 * UPDATES_PER_MUDHOUR);
   caster->affectTo(&aff, -1);
 
   aff3.type = AFFECT_SKILL_ATTEMPT;
   aff3.location = APPLY_NONE;
-  aff3.duration = duration + ((2 + (level/5)) * UPDATES_PER_MUDHOUR);
+  aff3.duration = duration + (2 * UPDATES_PER_MUDHOUR);
   aff3.bitvector = 0;
   aff3.modifier = SKILL_DISGUISE;
   mob->affectTo(&aff3, -1);
@@ -628,14 +627,6 @@ int disguise(TBeing *caster, char * buffer)
   if (caster->master)
     caster->stopFollower(TRUE);
 
-  for(int tmpnum = 1; tmpnum < MAX_TOG_INDEX; tmpnum++) {
-    if (caster->hasQuestBit(tmpnum))
-      mob->setQuestBit(tmpnum);
-  }
-
-  mob->specials.affectedBy = caster->specials.affectedBy;
-
-    
   // switch caster into mobile 
   caster->desc->character = mob;
   caster->desc->original = dynamic_cast<TPerson *>(caster);
@@ -653,55 +644,15 @@ int disguise(TBeing *caster, char * buffer)
   REMOVE_BIT(mob->specials.act, ACT_DIURNAL);
   REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
 
-  if (!awesom) {
-    if (caster->name) {
-      delete [] mob->name;
-      mob->name = mud_str_dup(caster->name);
-    }
-
-    delete [] mob->shortDescr;
-    if (caster->shortDescr) {
-      mob->shortDescr = mud_str_dup(caster->shortDescr);
-    } else {
-      // always true for caster = PC
-      mob->shortDescr = mud_str_dup(caster->name);
-    }
-
-    delete [] mob->player.longDescr;
-    if (caster->getLongDesc()) {
-      mob->player.longDescr = mud_str_dup(caster->getLongDesc());
-    } else {
-      // always true for caster = PC
-      sprintf(buf, "%s is here.", caster->name);
-      mob->player.longDescr = mud_str_dup(sstring(buf).cap().c_str());
-    }
-  } else if (caster->name) {
-    // Consider this immortal use.
-
-    sstring tStNewNameList(mob->name);
-
-    tStNewNameList += " [";
-    tStNewNameList += caster->getNameNOC(caster);
-    tStNewNameList += "]";
-
-    delete [] mob->name;
-    mob->name = mud_str_dup(tStNewNameList);
-  }
-
-  /*
+  appendPlayerName(caster, mob);
+  
+ /*
   It is critical to remember that some diguises are race/sex independent
   so they Must be set here else it'll not always fit.
    */
   mob->setRace(caster->getRace());
-  mob->setSex(caster->getSex());
   mob->setHeight(caster->getHeight());
   mob->setWeight(caster->getWeight());
-
-  for (statTypeT tStat = MIN_STAT; tStat < MAX_STATS; tStat++) {
-    //    mob->setStat(STAT_CHOSEN , tStat, caster->getStat(STAT_CHOSEN , tStat));
-    //    mob->setStat(STAT_NATURAL, tStat, caster->getStat(STAT_NATURAL, tStat));
-    mob->setStat(STAT_CURRENT, tStat, caster->getStat(STAT_CURRENT, tStat));
-  }
 
   return TRUE;
 }

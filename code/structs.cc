@@ -233,8 +233,10 @@ TBeing::~TBeing()
     dismount(POSITION_STANDING);
 
   if (desc) {
-    if (desc->original)
+    if (desc->original) {
+      remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
       doReturn("", WEAR_NOWHERE, CMD_RETURN);
+    }
   }
 
   // Must remove from room before removing the equipment!
@@ -1028,9 +1030,12 @@ TPerson::~TPerson()
   Descriptor *t_desc;
 
   if (!desc) {
-    for (t_desc = descriptor_list; t_desc; t_desc = t_desc->next)
-      if (t_desc->original == this)
+    for (t_desc = descriptor_list; t_desc; t_desc = t_desc->next) {
+      if (t_desc->original && t_desc->original == this) {
+        t_desc->character->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
         t_desc->character->doReturn("", WEAR_NOWHERE, CMD_RETURN);
+      }
+    }
   }
 
   setInvisLevel(MAX_IMMORT+1);
@@ -1087,7 +1092,6 @@ TThing::~TThing()
     shortDescr = NULL;
   }
   if (descr) {
-    //vlogf(LOG_SILENT, "Deleting descr : %s", descr);
     delete [] descr;
     // as silly as this may seem, we sometimes crash in the below line
     // I think this is a compiler/linker thing, as there is no good reason

@@ -14,7 +14,6 @@
 #include "disc_shaman_frog.h"
 #include "obj_magic_item.h"
 
-
 // STORMY SKIES
  
 int stormySkies(TBeing * caster, TBeing * victim, int level, byte bKnown)
@@ -302,25 +301,26 @@ int aquaticBlast(TBeing * caster, TBeing * victim, TMagicItem * obj)
 
 static const int LAST_SHAPED_MOB = 10;
 struct PolyType ShapeShiftList[LAST_SHAPED_MOB] =
+//   name,    level, learning, vnum, discipline, race
 {
-  {"chicken"   , 30,   1, 1213, DISC_SHAMAN_FROG, RACE_NORACE},
-  {"horsefly"     , 31,   1, 15420, DISC_SHAMAN_FROG, RACE_NORACE},
-  {"slug"     , 35,  10,  5126, DISC_SHAMAN_FROG, RACE_NORACE},
-  {"snake"    , 37,  20,  3412, DISC_SHAMAN_FROG, RACE_NORACE},
-  {"dolphin"  , 40,  45, 12432, DISC_SHAMAN_FROG, RACE_NORACE},
-  {"bear"     , 42,  75,  3403, DISC_SHAMAN_FROG, RACE_NORACE},
-  {"crow"     , 44,  70, 14350, DISC_SHAMAN_FROG, RACE_NORACE},
-  {"hawk"     , 48, 100, 14440, DISC_SHAMAN_FROG, RACE_NORACE},
-  {"spider"   , 49,  80,  7717, DISC_SHAMAN_FROG, RACE_NORACE},
-  {"\n"        , -1,  -1,    -1, DISC_SHAMAN_FROG, RACE_NORACE}
+  {"chicken"  , 25,   1, 1213, DISC_SHAMAN_FROG, RACE_NORACE},  // L 19
+  {"horsefly" , 25,  50, 15420, DISC_SHAMAN_FROG, RACE_NORACE}, // L 6
+  {"slug"     , 30,  20,  5126, DISC_SHAMAN_FROG, RACE_NORACE}, // L 7
+  {"snake"    , 35,  20,  3412, DISC_SHAMAN_FROG, RACE_NORACE}, // L 40
+  {"dolphin"  , 40,  70, 12432, DISC_SHAMAN_FROG, RACE_NORACE}, // L 14
+  {"bear"     , 45,  75,  3403, DISC_SHAMAN_FROG, RACE_NORACE}, // L 43
+  {"crow"     , 40,  50, 14350, DISC_SHAMAN_FROG, RACE_NORACE}, // L 7
+  {"hawk"     , 45,  80, 14440, DISC_SHAMAN_FROG, RACE_NORACE}, // L 27
+  {"spider"   , 49, 100,  7717, DISC_SHAMAN_FROG, RACE_NORACE}, // L 55
+  {"\n"       , -1,  -1,    -1, DISC_SHAMAN_FROG, RACE_NORACE}
 };
 
 int shapeShift(TBeing *caster, int level, byte bKnown)
 {
   int i, ret = 0;
-  bool nameFound = FALSE;
+//  bool nameFound = FALSE;
   bool found = FALSE;
-  TBeing *mob;
+  TMonster *mob;
   const char * buffer;
   affectedData aff;
   affectedData aff2;
@@ -332,21 +332,12 @@ int shapeShift(TBeing *caster, int level, byte bKnown)
     vlogf(LOG_BUG, "Bad disc for SPELL_SHAPESHIFT");
     return SPELL_FAIL;
   }
-  for (i = 0; *ShapeShiftList[i].name != '\n'; i++) {
-    if (is_abbrev(buffer, ShapeShiftList[i].name)) {
-      nameFound = TRUE;
-    } else {
-      continue;
-    }
-    if ((caster->getDiscipline(das)->getLearnedness() >= ShapeShiftList[i].learning) && (level > 25))
-      break;
-  }
-#if 1
+
   for (i = 0; (i < LAST_SHAPED_MOB); i++) {
     if ((signed) ShapeShiftList[i].tRace != RACE_NORACE &&
 	!caster->isImmortal() &&
 	caster->getRace() != (signed) ShapeShiftList[i].tRace)
-      continue;
+      continue; // ? never true, because race is RACE_NORACE in every case
 
     if (ShapeShiftList[i].level > caster->GetMaxLevel())
       continue;
@@ -359,71 +350,47 @@ int shapeShift(TBeing *caster, int level, byte bKnown)
 
     break;
   }
-#else
-  for (i = 0;
-       ((i < LAST_SHAPED_MOB) && (!is_abbrev(buffer,ShapeShiftList[i].name)));
-       i++);
-#endif
 
-  if (i >= LAST_SHAPED_MOB) {
+  if (i >= LAST_SHAPED_MOB) { // i > LAST_SHAPED_MOB cannot happen from above
     caster->sendTo("You haven't a clue where to start on that one.\n\r");
     return SPELL_FAIL;
   } 
-  if (*ShapeShiftList[i].name == '\n') {
-    if (nameFound) {
-      caster->sendTo("You are not powerful enough yet to change into such a creature.\n\r");
-    } else {
-      caster->sendTo("Couldn't find any of those.\n\r");
-    }
-    return SPELL_FAIL;
-  }
-  if (!(mob = read_mobile(ShapeShiftList[i].number, VIRTUAL))) {
+
+ if (!(mob = read_mobile(ShapeShiftList[i].number, VIRTUAL))) {
     caster->sendTo("You couldn't summon an image of that creature.\n\r");
     return SPELL_FAIL;
   }
   thing_to_room(mob,ROOM_VOID);   // just so if extracted it isn't in NOWHERE 
+  mob->swapToStrung();
 
-  // Check to make sure that there is no snooping going on. 
-  if (!caster->desc || caster->desc->snoop.snooping) {
-    caster->nothingHappens();
-    vlogf(LOG_BUG,"PC tried to shapeshift while being snooped");
-    delete mob;
-    mob = NULL;
-    return SPELL_FAIL;
-  }
-
-  if (caster->desc->original) {
-    // implies they are switched, while already switched (as x switch)
-    caster->sendTo("You already seem to be switched.\n\r");
-    delete mob;
-    mob = NULL;
-    return SPELL_FAIL;
-  }
-  if (caster->desc->snoop.snoop_by)
-    caster->desc->snoop.snoop_by->doSnoop(caster->desc->snoop.snoop_by->getName());
-
-  // first add the attempt -- used to regulate attempts
-  aff.type = AFFECT_SKILL_ATTEMPT;
-  aff.location = APPLY_NONE;
-  aff.duration = (1 + (level/15)) * UPDATES_PER_MUDHOUR;
-  aff.bitvector = 0;
-  aff.modifier = SPELL_SHAPESHIFT;
-  caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
-
+ int duration;
+  
   if (bSuccess(caster, bKnown, SPELL_SHAPESHIFT)) {
     switch (critSuccess(caster, SPELL_SHAPESHIFT)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
+        duration = (2 + level / 5) * UPDATES_PER_MUDHOUR;
         CS(SPELL_SHAPESHIFT);
         ret = SPELL_CRIT_SUCCESS;
       case CRIT_S_NONE:
+      default:
+        duration = (1 + level / 10) * UPDATES_PER_MUDHOUR;
         break;
    }
+
+  // first add the attempt -- used to regulate attempts
+  aff.type = AFFECT_SKILL_ATTEMPT;
+  aff.location = APPLY_NONE;
+  aff.duration = duration + UPDATES_PER_MUDHOUR;
+  aff.bitvector = 0;
+  aff.modifier = SPELL_SHAPESHIFT;
+  caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
 
     --(*mob);
     *caster->roomp += *mob;
     SwitchStuff(caster, mob);
+    setCombatStats(caster, mob, ShapeShiftList[i], SPELL_SHAPESHIFT);
 
     act("$n's flesh melts and flows into the shape of $N.", TRUE, caster, NULL, mob, TO_NOTVICT);
     for (i=MIN_WEAR;i < MAX_WEAR;i++) {
@@ -453,21 +420,23 @@ int shapeShift(TBeing *caster, int level, byte bKnown)
     caster->desc->character = mob;
     caster->desc->original = dynamic_cast<TPerson *>(caster);
 
-#if 0
-    aff2.type = AFFECT_SKILL_ATTEMPT;
+#if 1
+    // used to wear off
+    aff2.type = SPELL_SHAPESHIFT;
     aff2.location = APPLY_NONE;
-    aff2.duration = duration + ((2 + (level/5)) * UPDATES_PER_MUDHOUR);
+    aff2.duration = duration;
     aff2.bitvector = 0;
-    aff2.modifier = SPELL_SHAPESHIFT;
+    aff2.modifier = 0;
     mob->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
 #endif
 
     mob->desc = caster->desc;
     caster->desc = NULL;
-    caster->polyed = POLY_TYPE_POLYMORPH;
+    caster->polyed = POLY_TYPE_SHAPESHIFT;
+    
     
     // transfer spells - some bugs
-//    mob->affectJoin(caster, caster->affected, AVG_DUR_NO, AVG_EFF_YES);
+//    caster->spellAffectJoin(mob, caster->affected, AVG_DUR_NO, AVG_EFF_YES);
 
     SET_BIT(mob->specials.act, ACT_POLYSELF);
     SET_BIT(mob->specials.act, ACT_NICE_THIEF);
@@ -477,9 +446,9 @@ int shapeShift(TBeing *caster, int level, byte bKnown)
     REMOVE_BIT(mob->specials.act, ACT_DIURNAL);
     REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
 
-//  set caster lifeforce high to avoid death in polymorph room
-//  this should revert when the switch back occurs
-    caster->setLifeforce(100000);
+    // fix name so poly'd shaman can be found
+    appendPlayerName(caster, mob);
+        
 //    mob->setLifeforce(min((mob->getLifeforce() - 15), 85));
     return SPELL_SUCCESS;
   } else {
@@ -490,8 +459,6 @@ int shapeShift(TBeing *caster, int level, byte bKnown)
 int shapeShift(TBeing *caster, const char * buffer)
 {
   taskDiffT diff;
-  int level;
-  int i;
 
   if (!caster->isImmortal() && caster->checkForSkillAttempt(SPELL_SHAPESHIFT))
 {
@@ -500,23 +467,18 @@ int shapeShift(TBeing *caster, const char * buffer)
     return FALSE;
   }
 
-  level = caster->getSkillLevel(SPELL_SHAPESHIFT);
-  for (i = 0; *ShapeShiftList[i].name != '\n'; i++) {
-    if (level < ShapeShiftList[i].level)
-      continue;
-    if (is_abbrev(buffer, ShapeShiftList[i].name))
-      break;
+  if (caster->roomp && caster->roomp->isIndoorSector() &&
+      !(caster->roomp->isWaterSector() || caster->roomp->isUnderwaterSector()
+          || caster->isImmortal()) ) {
+    act("Only the outdoors affords the connection to nature required to shift your shape.",
+         FALSE, caster, NULL, NULL, TO_CHAR);
+    return FALSE;
   }
 
-  if (*ShapeShiftList[i].name == '\n') {
-    caster->sendTo("Couldn't find any of those.\n\r");
-    return SPELL_FAIL;
-  }
-
-  // Check to make sure that there is no snooping going on.
+ // Check to make sure that there is no snooping going on.
   if (!caster->desc || caster->desc->snoop.snooping) {
     caster->nothingHappens();
-    vlogf(LOG_BUG,"PC tried to shapeshift while being snooped");
+    vlogf(LOG_BUG,"Immort tried to shapeshift while snooping.");
     return SPELL_FAIL;
   }
 

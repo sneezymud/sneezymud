@@ -733,7 +733,7 @@ void TBeing::statBeing(TBeing *k)
       cyan(), norm(), k->getPiety(),
       cyan(), norm(), buf2, cyan(), norm(), buf3);
   else if (k->hasClass(CLASS_SHAMAN))
-    sprintf(buf + strlen(buf), "%sLifef.:%s [%4d]%s Hit    :%s %-10s  %sMove    :%s %-10s\n\r",
+    sprintf(buf + strlen(buf), "%sLifef.:%s[%6d]%sHit    :%s %-10s  %sMove    :%s %-10s\n\r",
       cyan(), norm(), k->getLifeforce(),
       cyan(), norm(), buf2, cyan(), norm(), buf3);
   else
@@ -781,7 +781,7 @@ void TBeing::statBeing(TBeing *k)
       cyan(), norm(), k->getProtection(),
       cyan(), norm(), buf2, cyan(), norm(), buf3);
 
-  if (km) {
+  if (km && !(polyed == POLY_TYPE_DISGUISE)) {
     sprintf(buf + strlen(buf), "Number of attacks : %.1f", km->getMult());
     sprintf(buf + strlen(buf), "        NPC Damage: %.1f+%d%%.\n\r",
         km->getDamLevel(), km->getDamPrecision());

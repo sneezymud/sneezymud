@@ -1292,12 +1292,6 @@ sh_int TBeing::getArmor() const
     }
     
   }
-    
-  // spell affects
-  for (af = affected; af; af = af->next) {
-    if(af->location == APPLY_ARMOR)
-      armor+=af->modifier;
-  }
 
   // mobs have a different base AC
   if((tm=dynamic_cast<const TMonster *>(this))){
@@ -1306,6 +1300,12 @@ sh_int TBeing::getArmor() const
     // mobs get either their default AC or their normal calculated AC,
     // whichever is better.
     armor=min(num, armor);
+  }
+  
+  // spell affects
+  for (af = affected; af; af = af->next) {
+    if(af->location == APPLY_ARMOR)
+      armor+=af->modifier;
   }
 
   return armor;

@@ -283,7 +283,8 @@ TThing * TThing::dismount(positionTypeT pos)
 }
 
 // returns DELETE_THIS
-int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
+// 'silent' mode cuts out success messages
+int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent = SILENT_NO)
 {
   char caName[112];
   int check = 0/*, rc = 0*/, fightCheck = 0, learn = 0;
@@ -428,11 +429,11 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
           return FALSE;
         } else {
           if (::number(-10, getSkillValue(SKILL_RIDE_WINGED)) > 0) {
-            act("You coax $N to land so you can mount.",
+            if (!silent) act("You coax $N to land so you can mount.",
                 TRUE, this, NULL, horse, TO_CHAR);
-            act("$n coaxes you into landing, you feel charmed and comply.",
+            if (!silent) act("$n coaxes you into landing, you feel charmed and comply.",
                 TRUE, this, NULL, horse, TO_VICT);
-            act("$n coaxes $N into landing.",
+            if (!silent) act("$n coaxes $N into landing.",
                 TRUE, this, NULL, horse, TO_NOTVICT);
             horse->doLand();
 
@@ -531,23 +532,24 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
     }
 #endif
     if (rideCheck(-check)) {
-      if (horse->hasSaddle()==1 && !horse->rider) {
-        act("You hop into the saddle and start riding $N.",
-                 FALSE, this, 0, horse, TO_CHAR);
-        act("$n hops into the saddle and starts riding $N.", 
-                 FALSE, this, 0, horse, TO_NOTVICT);
-        act("$n hops on your back!", FALSE, this, 0, horse, TO_VICT);
-      } else if (!horse->rider) {
-        act("You start riding $N.", FALSE, this, 0, horse, TO_CHAR);
-        act("$n starts riding $N.", FALSE, this, 0, horse, TO_NOTVICT);
-        act("$n hops on your back!", FALSE, this, 0, horse, TO_VICT);
-      } else {
-        act("You start riding $N's $o.", FALSE, this, horse, horse->horseMaster(), TO_CHAR);
-        act("$n starts riding $N's $o.", FALSE, this, horse, horse->horseMaster(), TO_NOTVICT);
-        act("$n hops on your $o's back!", FALSE, this, horse, horse->horseMaster(), TO_VICT);
-        act("$n hops on your back!", FALSE, this, 0, horse, TO_VICT);
+      if (!silent) {
+        if (horse->hasSaddle()==1 && !horse->rider) {
+          act("You hop into the saddle and start riding $N.",
+                   FALSE, this, 0, horse, TO_CHAR);
+          act("$n hops into the saddle and starts riding $N.", 
+                   FALSE, this, 0, horse, TO_NOTVICT);
+          act("$n hops on your back!", FALSE, this, 0, horse, TO_VICT);
+        } else if (!horse->rider) {
+          act("You start riding $N.", FALSE, this, 0, horse, TO_CHAR);
+          act("$n starts riding $N.", FALSE, this, 0, horse, TO_NOTVICT);
+          act("$n hops on your back!", FALSE, this, 0, horse, TO_VICT);
+        } else {
+          act("You start riding $N's $o.", FALSE, this, horse, horse->horseMaster(), TO_CHAR);
+          act("$n starts riding $N's $o.", FALSE, this, horse, horse->horseMaster(), TO_NOTVICT);
+          act("$n hops on your $o's back!", FALSE, this, horse, horse->horseMaster(), TO_VICT);
+          act("$n hops on your back!", FALSE, this, 0, horse, TO_VICT);
+        }
       }
-
       loseSneak();
 
       mount(horse);
@@ -604,15 +606,19 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
 
     if (roomp && roomp->isFlyingSector()) {
       dismount(POSITION_FLYING);
-      act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
-      act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
-      act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
-      sendTo("The magic in the air prevents you from falling.\n\r");
-    } else if (roomp->isAirSector() || roomp->isVertSector()) {
-      if (canFly()) {
+      if (!silent) {
         act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
         act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
         act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+        sendTo("The magic in the air prevents you from falling.\n\r");
+      }
+    } else if (roomp->isAirSector() || roomp->isVertSector()) {
+      if (canFly()) {
+        if (!silent) {
+          act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
+          act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
+          act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+        }
         dismount(POSITION_STANDING);
         doFly();
       } else {
@@ -621,9 +627,11 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
       } 
     } else if (horse->isFlying()) {
       if (canFly()) {
-        act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
-        act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
-        act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+        if (!silent) {
+          act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
+          act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
+          act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+        }
         dismount(POSITION_STANDING);
         doFly();
       } else {
@@ -631,9 +639,11 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
         return FALSE;
       }
     } else {
-      act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
-      act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
-      act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+      if (!silent) {
+        act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
+        act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
+        act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+      }
       dismount(POSITION_STANDING);
     }
     return TRUE;
