@@ -3656,10 +3656,10 @@ bool Descriptor::page_file(const char *the_input)
   if (*buffer) {
     if (*buffer == 'r' || *buffer == 'R') {
       cur_page -= 1;
-      cur_page = max((byte) 0, cur_page);
+      cur_page = max(0, cur_page);
     } else if (*buffer == 'b' || *buffer == 'B') {
       cur_page -= 2;
-      cur_page = max((byte) 0, cur_page);
+      cur_page = max(0, cur_page);
     } else if (isdigit(*buffer)) {
       cur_page = max(min((int) tot_pages, convertTo<int>(buffer)), 1) - 1;
     } else {
@@ -3767,10 +3767,10 @@ void Descriptor::show_string(const char *the_input, showNowT showNow, allowRepla
   if (*buf) {
     if (*buf == 'r' || *buf == 'R') {
       cur_page -= 1;
-      cur_page = max((byte) 0, cur_page);
+      cur_page = max(0, cur_page);
     } else if (*buf == 'b' || *buf == 'B') {
       cur_page -= 2;
-      cur_page = max((byte) 0, cur_page);
+      cur_page = max(0, cur_page);
     } else if (isdigit(*buf)) 
       cur_page = max(min((int) tot_pages, convertTo<int>(buf)), 1) - 1;
     else {

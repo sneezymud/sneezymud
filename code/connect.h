@@ -385,8 +385,8 @@ class Descriptor
     connectStateT connected;                // mode of 'connectedness'    
     int wait;                     // wait for how many loops    
     char *showstr_head;           // for paging through texts  
-    byte tot_pages;               // for tracking paged info
-    byte cur_page;                //       -
+    int tot_pages;               // for tracking paged info
+    int cur_page;                //       -
     char **str;                   // for the modify-str system
     int max_str;
     int prompt_mode;              // control of prompt-printing 
