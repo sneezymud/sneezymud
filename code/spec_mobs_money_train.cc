@@ -138,12 +138,15 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     STATE_TROLLEY_RET,    // wait for trolley, board, ride to gh, get off
     STATE_TO_BANK,        // cs to gh bank
     STATE_TO_AMBER_BANK,  // cs to amber bank
-    STATE_AMBER_TO_CS     // amber bank to cs
+    STATE_AMBER_TO_CS,    // amber bank to cs
+    STATE_TO_LOGRUS_BANK, // cs to logrus bank
+    STATE_LOGRUS_TO_CS    // logrus bank to cs
   };
 
   enum whichBankT {
     BANK_BM,
-    BANK_AMBER
+    BANK_AMBER,
+    BANK_LOGRUS
   };
 
   class hunt_struct {
@@ -157,7 +160,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
         cur_pos(0),
         cur_path(0),
         state(STATE_NONE),
-	which((whichBankT)::number(BANK_BM, BANK_AMBER))
+	which((whichBankT)::number(BANK_BM, BANK_LOGRUS))
       {
       }
       ~hunt_struct()
@@ -206,7 +209,6 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   if(::number(0,2))
     return FALSE;
 
-
   // now the actual actions
   switch(job->state){
     case STATE_NONE:
@@ -220,11 +222,34 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	  job->cur_path=1;
 	  job->cur_pos=0;
 	  job->state=STATE_TROLLEY_TO;
+	} else if(job->which == BANK_LOGRUS){
+	  job->cur_path=6;
+	  job->cur_pos=0;
+	  job->state=STATE_TO_LOGRUS_BANK;
 	} else {
 	  job->cur_path=4;
 	  job->cur_pos=0;
 	  job->state=STATE_TO_AMBER_BANK;
 	}	  
+      }
+      break;
+    case STATE_TO_LOGRUS_BANK:
+      if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
+	phat_lewt(myself);
+
+	act("$n receives several bags of valuables for delivery.",
+	    TRUE, myself, 0, 0, TO_ROOM);
+
+	job->cur_path=7;
+	job->cur_pos=0;
+	job->state=STATE_LOGRUS_TO_CS;
+      }
+      break;
+    case STATE_LOGRUS_TO_CS:
+      if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
+	job->cur_path=3;
+	job->cur_pos=0;
+	job->state=STATE_TO_BANK;
       }
       break;
     case STATE_TO_AMBER_BANK:
