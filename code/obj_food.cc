@@ -450,6 +450,11 @@ void TBaseCup::pourMeIntoDrink2(TBeing *ch, TBaseCup *from_obj)
 {
   int temp;
 
+  if(from_obj->getDrinkUnits() == 0){
+    act("$p is empty.", FALSE, ch, from_obj, 0, TO_CHAR);
+    return;
+  }
+
   if ((getDrinkUnits() != 0) &&
       (getDrinkType() != from_obj->getDrinkType())) {
     act("There is already another liquid in it!", FALSE, ch, 0, 0, TO_CHAR);
