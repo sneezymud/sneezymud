@@ -49,7 +49,7 @@ void TBeing::doFish(sstring direction){
 
 TObj *catch_a_fish(TRoom *rp){
   TObj *fish=NULL;
-  int nfresh=18, nmarine=25, nice=5;
+  int nfresh=23, nmarine=34, nice=7;
   int num=0;
   const int freshfishes[]={13800, 13801, 13802, 13803, 13804, 13805, 13806,
 			   13807, 13816, 13817, 13818, 13819, 13820, 13821,
