@@ -1252,6 +1252,10 @@ int TObj::burnObject(TBeing *ch, int perc)
       return DELETE_VICT;
     }
   }
+
+  if(material_nums[getMaterial()].flammability<=0)
+    return FALSE;
+
   TOpenContainer *trc = dynamic_cast<TOpenContainer *>(this);
   for (t = stuff; t; t = t2) {
     int perc2;
