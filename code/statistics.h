@@ -170,7 +170,46 @@ extern unsigned int total_player_kills;
 
 extern long gold_statistics[MAX_MONEY_TYPE][GOD_LEVEL10];
 extern long gold_positive[MAX_MONEY_TYPE][GOD_LEVEL10];
-extern float gold_modifier[MAX_MONEY_TYPE];
+
+class TGoldModifier {
+  private:
+    float tMin,
+          tMax,
+          tCurrent;
+
+  public:
+    float valAssign    (float tCheck) {
+      return (tCurrent = max(tMin, min(tMax, tCheck)));
+    }
+    float * operator & (            ) { return &tCurrent; }
+    float   operator  =(float tCheck) { return valAssign(tCurrent =  tCheck); }
+    float   operator +=(float tCheck) { return valAssign(tCurrent += tCheck); }
+    float   operator -=(float tCheck) { return valAssign(tCurrent -= tCheck); }
+    bool    operator ==(float tCheck) { return valAssign(tCurrent == tCheck); }
+    bool    operator > (float tCheck) { return (tCurrent >  tCheck); }
+    bool    operator >=(float tCheck) { return (tCurrent >= tCheck); }
+    bool    operator < (float tCheck) { return (tCurrent >  tCheck); }
+    bool    operator <=(float tCheck) { return (tCurrent >= tCheck); }
+
+    float   getVal() { return tCurrent; }
+    void    setMM(float tNMin, float tNMax) {
+      tMin = tNMin;
+      tMax = tNMax;
+    }
+
+    TGoldModifier() :
+      tMin(0.0),
+      tMax(100.0),
+      tCurrent(100.0)
+      {}
+
+    TGoldModifier(int tCheck, int tNMin, int tNMax) :
+      tMin(tNMin),
+      tMax(tNMax),
+      tCurrent(tCheck)
+      {}
+};
+extern TGoldModifier gold_modifier[MAX_MONEY_TYPE];
 
 #if 1
 extern int getNetGold(moneyTypeT);
