@@ -102,7 +102,7 @@ int postman(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     return false;
 
   // wander around the world randomly
-  if(::number(0,9)
+  if(::number(0,9))
      me->randomHunt();
 
   if(::number(0,24))
