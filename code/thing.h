@@ -338,7 +338,7 @@ class TThing {
     virtual int expelPrice(const TBeing *, int) const;
     virtual int wieldMe(TBeing *, char *);
     virtual void curseMe() {}
-    virtual int poisonWeaponWeapon(TBeing *);
+    virtual int poisonWeaponWeapon(TBeing *, TThing *);
     virtual int smiteWithMe(TBeing *, TBeing *);
     virtual int enhanceMe(TBeing *, int, byte);
     virtual void moneyMove(TBeing *);

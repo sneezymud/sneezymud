@@ -706,7 +706,7 @@ int throatSlit(TBeing *thief, TBeing * victim)
 
 int TBeing::doPoisonWeapon(const char * argument)
 {
-  TThing *obj;
+  TThing *obj, *poison;
   char namebuf[256];
   int rc;
 
@@ -717,23 +717,44 @@ int TBeing::doPoisonWeapon(const char * argument)
   if (checkBusy(NULL)) {
     return FALSE;
   }
-  only_argument(argument, namebuf);
+  argument = one_argument(argument, namebuf);
 
-  if (!(obj = searchLinkedListVis(this, argument, getStuff())))  {
-    if (!(obj = equipment[HOLD_RIGHT]) || !isname(argument, obj->name))  {
-      if (!(obj = equipment[HOLD_LEFT]) || !isname(argument, obj->name))  {
+  if (!(obj = searchLinkedListVis(this, namebuf, getStuff())))  {
+    if (!(obj = equipment[HOLD_RIGHT]) || !isname(namebuf, obj->name))  {
+      if (!(obj = equipment[HOLD_LEFT]) || !isname(namebuf, obj->name))  {
         sendTo("Poison what?\n\r");
         return FALSE;
       }
     }
   }
 
+  argument = one_argument(argument, namebuf);
+
+  if(*namebuf){
+    if ((!(poison=searchLinkedListVis(this, namebuf, getStuff()))) &&
+	(!(poison=equipment[HOLD_RIGHT]) || !isname(namebuf, poison->name)) &&
+	(!(poison=equipment[HOLD_LEFT]) || !isname(namebuf, poison->name))){
+      sendTo("You can't find that poison.\n\r");
+      return FALSE;
+    }
+  } else {
+    if ((!(poison=searchLinkedListVis(this, "poison", getStuff()))) &&
+	(!(poison=equipment[HOLD_RIGHT]) || !isname("poison", poison->name)) &&
+	(!(poison=equipment[HOLD_LEFT]) || !isname("poison", poison->name))){
+      sendTo("You can't find any poison.\n\r");
+      return FALSE;
+    }
+  }
+
+  vlogf(LOG_PEEL, "weapon=%s, poison=%s", obj->getName(), poison->getName());
+
+
   if (fight()) {
     sendTo("You're a little too busy at the moment to try that.\n\r");
     return FALSE;
   }
 
-  rc = poisonWeapon(this, obj);
+  rc = poisonWeapon(this, obj, poison);
   if (rc)
     addSkillLag(SKILL_POISON_WEAPON, rc);
   if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -932,12 +953,12 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
   return TRUE;
 }
 
-int poisonWeapon(TBeing *ch, TThing * weapon)
+int poisonWeapon(TBeing *ch, TThing * weapon, TThing *poison)
 {
-  return weapon->poisonWeaponWeapon(ch);
+  return weapon->poisonWeaponWeapon(ch, poison);
 }
 
-int TThing::poisonWeaponWeapon(TBeing *ch)
+int TThing::poisonWeaponWeapon(TBeing *ch, TThing *)
 {
   ch->sendTo("You can't poison that!  It's not a weapon!\n\r");
   return FALSE;

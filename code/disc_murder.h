@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_murder.h,v $
+// Revision 5.3  2002/11/20 17:36:59  peel
+// you can now specify a poison with poison weapon
+//
 // Revision 5.2  2002/01/21 03:04:11  jesus
 // added a throat slitting skill for thieves into the murder disc
 //
@@ -54,7 +57,7 @@ private:
 
     int backstab(TBeing *, TBeing *);
     int throatSlit(TBeing *, TBeing *);
-    int poisonWeapon(TBeing *, TThing *);
+    int poisonWeapon(TBeing *, TThing *, TThing *);
     int garrotte(TBeing *, TBeing *);
     int cudgel(TBeing *, TBeing *);
 

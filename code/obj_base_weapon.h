@@ -58,7 +58,7 @@ class TBaseWeapon : public TObj {
     virtual int expelPrice(const TBeing *, int) const;
     virtual int wieldMe(TBeing *, char *);
     virtual void curseMe();
-    virtual int poisonWeaponWeapon(TBeing *);
+    virtual int poisonWeaponWeapon(TBeing *, TThing *);
     virtual int galvanizeMe(TBeing *, byte);
     virtual int enhanceMe(TBeing *, int, byte);
     virtual int rentCost() const;

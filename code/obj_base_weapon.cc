@@ -1002,33 +1002,19 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
   return TRUE;
 }
 
-int TBaseWeapon::poisonWeaponWeapon(TBeing *ch)
+int TBaseWeapon::poisonWeaponWeapon(TBeing *ch, TThing *poison)
 {
   int rc;
-  int i;
-  TThing *poison;
 
   if (isBluntWeapon()) {
     ch->sendTo("Blunt weapons can't be poisoned effectively.\n\r");
     return FALSE;
   }
-  for (i=0;i < MAX_SWING_AFFECT;i++) {
-    if (oneSwing[i].bitvector == AFF_POISON) {
-      ch->sendTo("That is already poisoned!\n\r");
-      return FALSE;
-    }
-    if ((oneSwing[i].location == APPLY_NONE) &&
-        (oneSwing[i].bitvector == 0))
-      break;
-  }
-  if (i >= MAX_SWING_AFFECT) {
-    ch->sendTo("The weapon resists the poison!\n\r");
+  if(isPoisoned()){
+    ch->sendTo("That is already poisoned!\n\r");
     return FALSE;
   }
-  if (!(poison = get_thing_char_using(ch, "poison", 0, TRUE, FALSE))) {
-    ch->sendTo("You don't seem to have any poison.\n\r");
-    return FALSE;
-  }
+
   rc = poison->poisonMePoison(ch, this);
   return rc;
 }
