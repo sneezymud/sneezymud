@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_set.cc,v $
+// Revision 1.2  1999/10/07 21:08:23  batopr
+// Added @set gold_modifier
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -987,6 +990,26 @@ mob->getName());
     mob->setExp(0);
     SET_BIT(mob->specials.affectedBy, AFF_CHARM);
     act("$N is now charmed, force it to follow someone...", false, this, 0, mob, TO_CHAR);
+    return;
+  } else if (is_abbrev(field, "gold_modifier")) {
+    // this is undocumented, as it is an economy thing for batopr
+    if (sscanf(parmstr, "%d", &parm) != 1) {
+      sendTo("Syntax: @set gold_modifier <char name> <modifier> <new_value>.\n\r");
+      return;
+    }
+    if (parm < 0 || parm >= MAX_MONEY_TYPE) {
+      sendTo("Invalid value (%d) for modifier.\n\r", parm);
+      return;
+    }
+    argument = one_argument(argument, parmstr);
+    if (sscanf(parmstr, " %f ", &percent) != 1) {
+      sendTo("Syntax: @set gold_modifier <char name> <modifier> <new_value>.\n\r");
+      return;
+    }
+    
+    gold_modifier[parm] = percent;
+    sendTo("OK, gold_modifier set.\n\r");
+
     return;
   } else if (is_abbrev(field, "bodyflags")) {
     if (sscanf(parmstr, "%d", &parm) != 1) {
