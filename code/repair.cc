@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: repair.cc,v $
+// Revision 1.2  1999/09/30 17:27:24  batopr
+// *** empty log message ***
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -45,7 +48,10 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
   // pre assumes that it needs repairing.
   int discount = 100;
   int gsp = getShopPrice(&discount);
+
+ZZ
   int price = 6 * gsp / 10;
+
   price *= maxFix(repair, dep_done) - getStructPoints();
   price /= getMaxStructPoints();
 
