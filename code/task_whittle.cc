@@ -490,8 +490,6 @@ int task_whittleObject(TBeing *ch, string tStWood)
   if (process >= 0.00 && process <= 0.40) {
     act("You gently carve a part of $p.",
         FALSE, ch, ch->task->obj, NULL, TO_CHAR);
-    act("$n gently carves on $p.",
-        FALSE, ch, ch->task->obj, NULL, TO_ROOM);
   }
 
   if (process >= 0.41 && process <= 0.80) {
@@ -506,8 +504,6 @@ int task_whittleObject(TBeing *ch, string tStWood)
 
     act("You gently scrape the nodes off of $p.",
         FALSE, ch, ch->task->obj, NULL, TO_CHAR);
-    act("$n gently scrapes at $p.",
-        FALSE, ch, ch->task->obj, NULL, TO_ROOM);
   }
 
   if (process >= 0.81 && process <= 0.99) {
@@ -522,8 +518,6 @@ int task_whittleObject(TBeing *ch, string tStWood)
 
     act("You gently smooth $p.",
         FALSE, ch, ch->task->obj, NULL, TO_CHAR);
-    act("$n gently smoothes $p.",
-        FALSE, ch, ch->task->obj, NULL, TO_ROOM);
   }
 
   if (process >= 1.00) {
@@ -538,7 +532,7 @@ int task_whittleObject(TBeing *ch, string tStWood)
 
     act("You are done with $p.",
         FALSE, ch, ch->task->obj, NULL, TO_CHAR);
-    act("$n finishes with $p.",
+    act("$n finishes whittling $p.",
         FALSE, ch, ch->task->obj, NULL, TO_ROOM);
     TThing *tThing;
     tThing = ch->task->obj;

@@ -4168,7 +4168,7 @@ int healingNeckwear(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
   act("$p constricts about your throat!", 0, tmp, me, 0, TO_CHAR);
   act("$p constricts about $n's throat!", 0, tmp, me, 0, TO_ROOM);
   if (tmp->hasClass(CLASS_SHAMAN)) {
-    tmp->addToHit(::number(1,((tmp->GetMaxLevel() *2) / 3)));
+    tmp->addToHit(::number(1, (tmp->getHit() / 3)));
     act("The power of the loa enters your body through $p!", 0, tmp, me, 0, TO_CHAR);
     act("$p disappears in a puff of smoke!", 0, tmp, me, 0, TO_CHAR);
     act("In a puff of smoke, $p dissappears from $n's throat!", 0, tmp, me, 0, TO_ROOM);
