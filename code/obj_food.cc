@@ -14,6 +14,8 @@
 #include "shop.h"
 #include "obj_food.h"
 #include "obj_base_cup.h"
+#include "disc_aegis.h"
+#include "disc_shaman_armadillo.h"
 
 #define DRINK_DEBUG 0
 
@@ -158,6 +160,8 @@ int TBaseCup::drinkMe(TBeing *ch)
   if (getLiqDrunk() > 0) {
     amount = 10 * (25 - ch->getCond(THIRST)) / getLiqDrunk();
     amount = min(15, amount);
+  } else if(DrinkInfo[liquidType]->potion){
+    amount = 5;
   } else
     amount = ::number(6, 20);
 
@@ -248,6 +252,12 @@ int TBaseCup::drinkMe(TBeing *ch)
       act("$n chokes and utters some strange sounds.", TRUE, ch, 0, 0, TO_ROOM);
     }
   }
+
+  
+  if(DrinkInfo[liquidType]->potion)
+    doLiqSpell(ch, getDrinkType(), amount);
+  
+
   if (!isDrinkConFlag(DRINK_PERM))
     addToDrinkUnits(-amount);
 

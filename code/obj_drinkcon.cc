@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_drinkcon.cc,v $
+// Revision 5.5  2002/11/29 00:11:47  peel
+// added framework for true liquid potions
+//
 // Revision 5.4  2002/07/15 16:58:34  dash
 // fixed a crash bug
 //
@@ -130,10 +133,11 @@ void TDrinkCon::waterCreate(const TBeing *caster, int level)
   }
 }
 
-drinkInfo::drinkInfo(int d, int h, int t, const char *col, const char *n) :
+drinkInfo::drinkInfo(int d, int h, int t, bool p, const char *col, const char *n) :
   drunk(d),
   hunger(h),
   thirst(t),
+  potion(p),
   color(col),
   name(n)
 {
@@ -146,6 +150,7 @@ drinkInfo & drinkInfo::operator = (const drinkInfo &a)
   drunk = a.drunk;
   hunger = a.hunger;
   thirst = a.thirst;
+  potion = a.potion;
   color = a.color;
   name = a.name;
 
@@ -158,39 +163,40 @@ drinkInfo::~drinkInfo()
 
 void assign_drink_types()
 {
-  DrinkInfo[LIQ_WATER]                = new drinkInfo(0,  0, 10, "clear", "<c>water<1>");
-  DrinkInfo[LIQ_BEER]                 = new drinkInfo(5, -2,  7, "<o>brown<1>", "<o>beer<1>");
-  DrinkInfo[LIQ_WINE]                 = new drinkInfo(4, -1,  6, "clear", "<W>white wine<1>");
-  DrinkInfo[LIQ_ALE]                  = new drinkInfo(6, -3,  5, "<o>brown<1>", "<o>ale<1>");
-  DrinkInfo[LIQ_DARKALE]              = new drinkInfo(5, -1,  5, "<k>dark<1>", "<k>dark<1> <o>ale<1>");
-  DrinkInfo[LIQ_WHISKY]               = new drinkInfo(10,  0,  1, "<y>golden<1>", "<y>whiskey<1>");
-  DrinkInfo[LIQ_LEMONADE]             = new drinkInfo(0,  1,  8, "<y>golden<1>", "<y>lemonade<1>");
-  DrinkInfo[LIQ_FIREBRT]              = new drinkInfo(15,  0, -3, "<g>green<1>", "<g>firebreather<1>");
-  DrinkInfo[LIQ_LOCALSPC]             = new drinkInfo(8, -1,  2, "clear", "local special");
-  DrinkInfo[LIQ_SLIME]                = new drinkInfo(0,  1,  8, "<G>light green<1>", "<G>juice<1>");
-  DrinkInfo[LIQ_MILK]                 = new drinkInfo(0,  2,  6, "<W>white<1>", "<W>milk<1>");
-  DrinkInfo[LIQ_TEA]                  = new drinkInfo(-1, -1,  6, "<o>brown<1>", "<o>tea<1>");
-  DrinkInfo[LIQ_COFFEE]               = new drinkInfo(-2, -3,  5, "<k>black<1>", "<k>coffee<1>");
-  DrinkInfo[LIQ_BLOOD]                = new drinkInfo(0,  2, -1, "<r>red<1>", "<r>blood<1>");
-  DrinkInfo[LIQ_SALTWATER]            = new drinkInfo(0,  1, -5, "clear", "salt water");
-  DrinkInfo[LIQ_MEAD]                 = new drinkInfo(2,  2,  4, "<k>black<1>", "<k>mead<1>");
-  DrinkInfo[LIQ_VODKA]                = new drinkInfo(12, -3, -1, "clear", "vodka");
-  DrinkInfo[LIQ_RUM]                  = new drinkInfo(11, -3, -1, "clear", "rum");
-  DrinkInfo[LIQ_BRANDY]               = new drinkInfo(8,  1,  3, "<o>brown<1>", "<o>brandy<1>");
-  DrinkInfo[LIQ_RED_WINE]             = new drinkInfo(7, -1,  6, "<R>red<1>", "<R>red wine<1>");
-  DrinkInfo[LIQ_WARM_MEAD]            = new drinkInfo(2,  1,  5, "<k>black<1>", "<k>warm mead<1>");
-  DrinkInfo[LIQ_CHAMPAGNE]            = new drinkInfo(6, -2,  4, "bubbly, translucent", "champagne");
-  DrinkInfo[LIQ_HOLYWATER]            = new drinkInfo(0,  1, -5, "clear", "holy water");
-  DrinkInfo[LIQ_PORT]                 = new drinkInfo(8, -1,  5, "<R>red<1>", "<R>port<1>");
-  DrinkInfo[LIQ_MUSHROOM_ALE]         = new drinkInfo(7, -1,  5, "<g>green<1>", "<g>mushroom<1><o> ale<1>");
-  DrinkInfo[LIQ_VOMIT]                = new drinkInfo(8, -1,  5, "<G>light green<1>", "<G>v<o>o<G>m<o>i<G>t<1>");
-  DrinkInfo[LIQ_COLA]                 = new drinkInfo(-1, 2, 5, "<o>brown<1>", "<o>cola<1>");
-  DrinkInfo[LIQ_STRAWBERRY_MARGARITA] = new drinkInfo(-1, 2, 5, "<r>smooth, pink<1>", "<r>strawberry margarita<1>");
-  DrinkInfo[LIQ_BLUE_MARGARITA]       = new drinkInfo(-1, 2, 5, "<b>smooth, blue<1>", "<b>blue margarita<1>");
-  DrinkInfo[LIQ_GOLD_MARGARITA]       = new drinkInfo(-1, 2, 5, "<Y>smooth, golden<1>", "<Y>gold margarita<1>");
-  DrinkInfo[LIQ_STRAWBERRY_DAIQUIRI]  = new drinkInfo(-1, 2, 5, "<r>pink, frothy<1>", "<r>strawberry daiquiri<1>");
-  DrinkInfo[LIQ_BANANA_DAIQUIRI]      = new drinkInfo(-1, 2, 5, "<Y>yellow, frothy<1>", "<Y>banana daiquiri<1>");
-  DrinkInfo[LIQ_PINA_COLADA]          = new drinkInfo(-1, 2, 5, "<W>frothy, white<1>", "<W>pina colada<1>");
-  DrinkInfo[LIQ_TEQUILA_SUNRISE]      = new drinkInfo(-1, 2, 5, "<o>smooth, yellow<1>", "<o>teqiula sunrise<1>");
-  DrinkInfo[LIQ_ISLA_VERDE]           = new drinkInfo(-1, 2, 5, "<g>green, frothy<1>", "<g>isla verde<1>");
+  DrinkInfo[LIQ_WATER]                = new drinkInfo(0,  0, 10, false, "clear", "<c>water<1>");
+  DrinkInfo[LIQ_BEER]                 = new drinkInfo(5, -2,  7, false, "<o>brown<1>", "<o>beer<1>");
+  DrinkInfo[LIQ_WINE]                 = new drinkInfo(4, -1,  6, false, "clear", "<W>white wine<1>");
+  DrinkInfo[LIQ_ALE]                  = new drinkInfo(6, -3,  5, false, "<o>brown<1>", "<o>ale<1>");
+  DrinkInfo[LIQ_DARKALE]              = new drinkInfo(5, -1,  5, false, "<k>dark<1>", "<k>dark<1> <o>ale<1>");
+  DrinkInfo[LIQ_WHISKY]               = new drinkInfo(10,  0,  1, false, "<y>golden<1>", "<y>whiskey<1>");
+  DrinkInfo[LIQ_LEMONADE]             = new drinkInfo(0,  1,  8, false, "<y>golden<1>", "<y>lemonade<1>");
+  DrinkInfo[LIQ_FIREBRT]              = new drinkInfo(15,  0, -3, false, "<g>green<1>", "<g>firebreather<1>");
+  DrinkInfo[LIQ_LOCALSPC]             = new drinkInfo(8, -1,  2, false, "clear", "local special");
+  DrinkInfo[LIQ_SLIME]                = new drinkInfo(0,  1,  8, false, "<G>light green<1>", "<G>juice<1>");
+  DrinkInfo[LIQ_MILK]                 = new drinkInfo(0,  2,  6, false, "<W>white<1>", "<W>milk<1>");
+  DrinkInfo[LIQ_TEA]                  = new drinkInfo(-1, -1,  6, false, "<o>brown<1>", "<o>tea<1>");
+  DrinkInfo[LIQ_COFFEE]               = new drinkInfo(-2, -3,  5, false, "<k>black<1>", "<k>coffee<1>");
+  DrinkInfo[LIQ_BLOOD]                = new drinkInfo(0,  2, -1, false, "<r>red<1>", "<r>blood<1>");
+  DrinkInfo[LIQ_SALTWATER]            = new drinkInfo(0,  1, -5, false, "clear", "salt water");
+  DrinkInfo[LIQ_MEAD]                 = new drinkInfo(2,  2,  4, false, "<k>black<1>", "<k>mead<1>");
+  DrinkInfo[LIQ_VODKA]                = new drinkInfo(12, -3, -1, false, "clear", "vodka");
+  DrinkInfo[LIQ_RUM]                  = new drinkInfo(11, -3, -1, false, "clear", "rum");
+  DrinkInfo[LIQ_BRANDY]               = new drinkInfo(8,  1,  3, false, "<o>brown<1>", "<o>brandy<1>");
+  DrinkInfo[LIQ_RED_WINE]             = new drinkInfo(7, -1,  6, false, "<R>red<1>", "<R>red wine<1>");
+  DrinkInfo[LIQ_WARM_MEAD]            = new drinkInfo(2,  1,  5, false, "<k>black<1>", "<k>warm mead<1>");
+  DrinkInfo[LIQ_CHAMPAGNE]            = new drinkInfo(6, -2,  4, false, "bubbly, translucent", "champagne");
+  DrinkInfo[LIQ_HOLYWATER]            = new drinkInfo(0,  1, -5, false, "clear", "holy water");
+  DrinkInfo[LIQ_PORT]                 = new drinkInfo(8, -1,  5, false, "<R>red<1>", "<R>port<1>");
+  DrinkInfo[LIQ_MUSHROOM_ALE]         = new drinkInfo(7, -1,  5, false, "<g>green<1>", "<g>mushroom<1><o> ale<1>");
+  DrinkInfo[LIQ_VOMIT]                = new drinkInfo(8, -1,  5, false, "<G>light green<1>", "<G>v<o>o<G>m<o>i<G>t<1>");
+  DrinkInfo[LIQ_COLA]                 = new drinkInfo(-1, 2, 5, false, "<o>brown<1>", "<o>cola<1>");
+  DrinkInfo[LIQ_STRAWBERRY_MARGARITA] = new drinkInfo(-1, 2, 5, false, "<r>smooth, pink<1>", "<r>strawberry margarita<1>");
+  DrinkInfo[LIQ_BLUE_MARGARITA]       = new drinkInfo(-1, 2, 5, false, "<b>smooth, blue<1>", "<b>blue margarita<1>");
+  DrinkInfo[LIQ_GOLD_MARGARITA]       = new drinkInfo(-1, 2, 5, false, "<Y>smooth, golden<1>", "<Y>gold margarita<1>");
+  DrinkInfo[LIQ_STRAWBERRY_DAIQUIRI]  = new drinkInfo(-1, 2, 5, false, "<r>pink, frothy<1>", "<r>strawberry daiquiri<1>");
+  DrinkInfo[LIQ_BANANA_DAIQUIRI]      = new drinkInfo(-1, 2, 5, false, "<Y>yellow, frothy<1>", "<Y>banana daiquiri<1>");
+  DrinkInfo[LIQ_PINA_COLADA]          = new drinkInfo(-1, 2, 5, false, "<W>frothy, white<1>", "<W>pina colada<1>");
+  DrinkInfo[LIQ_TEQUILA_SUNRISE]      = new drinkInfo(-1, 2, 5, false, "<o>smooth, yellow<1>", "<o>teqiula sunrise<1>");
+  DrinkInfo[LIQ_ISLA_VERDE]           = new drinkInfo(-1, 2, 5, false, "<g>green, frothy<1>", "<g>isla verde<1>");
+  DrinkInfo[LIQ_POT_SANCTUARY]        = new drinkInfo(-1, -1, 1, true, "<c>glowing platinum<1>", "<c>glowing platinum liquid<1>");
 }

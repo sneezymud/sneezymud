@@ -2364,6 +2364,24 @@ int TPotion::quaffMe(TBeing *ch)
   return DELETE_THIS;
 }
 
+
+int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
+{
+  int rc=0;
+  int level=30, learn=max(100, amt*20);
+
+  switch(liq){
+    case LIQ_POT_SANCTUARY:
+      rc = sanctuary(ch,ch,level,learn);
+      break;
+    default:
+      rc=0;
+  }
+
+  return rc;
+}
+
+
 // DELETE_VICT: victim
 // DELETE_THIS: caster
 // DELETE_ITEM: target
