@@ -17,6 +17,7 @@
 #include "stdsneezy.h"
 #include "loadset.h"
 #include "sys_loot.h"
+#include "shop.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -3268,15 +3269,32 @@ int getGovMoney(int talens){
   return(talens-amount);
 }
 
+int find_shopnr(int number){
+  unsigned int shop_nr;
+
+  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != number); shop_nr++);
+  
+  if (shop_nr >= shop_index.size()) {
+    vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", number);
+    return FALSE;
+  }
+
+  return shop_nr;
+}
+
+
 void countMobWealth(){
   MYSQL_RES *res;
   int rc;
-  int wealth=0;
-
+  int wealth=0, shopwealth=0;
+      
   for (TBeing *tmp_ch = character_list; tmp_ch; tmp_ch = tmp_ch->next) {
-    if(dynamic_cast<TMonster *>(tmp_ch) && 
-       tmp_ch->spec != SPEC_SHOPKEEPER){
-      wealth+=tmp_ch->getMoney();
+    if(dynamic_cast<TMonster *>(tmp_ch)){
+      if(tmp_ch->spec != SPEC_SHOPKEEPER){
+	wealth+=tmp_ch->getMoney();
+      } else if(!shopOwned(find_shopnr(tmp_ch->number))){
+	shopwealth+=tmp_ch->getMoney();
+      }
     }
   }
 
@@ -3288,6 +3306,13 @@ void countMobWealth(){
   }
   mysql_free_result(res);
 
+  if((rc=dbquery(&res, "sneezy", "saveGovMoney", "replace govmoney values ('shop wealth', %i)", shopwealth))){
+    if(rc){
+      vlogf(LOG_BUG, "Database error in saveGovMoney");
+      return;
+    }
+  }
+  mysql_free_result(res);
 }  
 
 
@@ -3296,6 +3321,7 @@ void bootGovMoney(){
   MYSQL_ROW row;
   int rc;
   int mobLoadWealth, mobWealth;
+  int shopLoadWealth, shopWealth;
 
   if((rc=dbquery(&res, "sneezy", "bootGovMoney", "select talens from govmoney where type='mob load wealth' and 1=1"))){
     if(rc){
@@ -3326,6 +3352,38 @@ void bootGovMoney(){
       return;
     }
   }
+
+
+  if((rc=dbquery(&res, "sneezy", "bootGovMoney", "select talens from govmoney where type='shop load wealth' and 1=1"))){
+    if(rc){
+      vlogf(LOG_BUG, "Database error in saveGovMoney");
+      return;
+    }
+  }
+  row=mysql_fetch_row(res);
+  shopLoadWealth=atoi(row[0]);
+
+
+  if((rc=dbquery(&res, "sneezy", "bootGovMoney", "select talens from govmoney where type='shop wealth' and 1=1"))){
+    if(rc){
+      vlogf(LOG_BUG, "Database error in saveGovMoney");
+      return;
+    }
+  }
+  row=mysql_fetch_row(res);
+  shopWealth=atoi(row[0]);
+  
+
+  saveGovMoney("shop debt wealth", shopLoadWealth-shopWealth);
+
+
+  if((rc=dbquery(&res, "sneezy", "bootGovMoney", "update govmoney set talens=0 where type='shop load wealth' and 1=1"))){
+    if(rc){
+      vlogf(LOG_BUG, "Database error in saveGovMoney");
+      return;
+    }
+  }
+
 
 }
 

@@ -2059,7 +2059,10 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	return TRUE;
       }
       ch->setMoney(ch->getMoney()-value);
-      saveGovMoney("shop purchase", tax);
+
+      // we save the full value, because the government "owns" all 
+      // non-player owned shops
+      saveGovMoney("shop purchase", value);
       
 
       if((rc=dbquery(&res, "sneezy", "shop_keeper", "insert into shopowned (shop_nr, profit_buy, profit_sell) values (%i, %f, %f)", shop_nr, shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell))){
@@ -2107,6 +2110,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       }
       value+=myself->getMoney();
       ch->setMoney(ch->getMoney()+value);
+
+      saveGovMoney("shop purchase", -value);      
 
       shop_index[shop_nr].profit_buy=1.1;
       shop_index[shop_nr].profit_sell=0.9;

@@ -398,8 +398,11 @@ int TMonster::calculateGoldFromConstant()
       the_gold = atoi(row[0]);
       
       mysql_free_result(res);
-    } else
+    } else {
       the_gold = 1000000;
+
+      saveGovMoney("shop load wealth", 1000000);
+    }
   }
 
   setMoney((int) the_gold);

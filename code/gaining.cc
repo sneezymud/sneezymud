@@ -829,7 +829,7 @@ void TPerson::raiseLevel(classIndT Class, TMonster *gm)
         return;
       } else {
         addToMoney(-amount, GOLD_REPAIR);
-	saveGovMoney("repair", amount);
+	saveGovMoney("monk donation", amount);
 	
 
         sprintf(buf, "$n says, \"$N, the High Tabuda thanks you for your %d talen donation to the kwoon.\"", amount);
