@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: statistics.cc,v $
+// Revision 1.8  1999/10/12 17:06:21  batopr
+// Change gold to need 5M (from 2M) before shifting
+//
 // Revision 1.7  1999/10/12 01:12:45  batopr
 // Corrected shop stuff to exclude pets
 //
@@ -630,7 +633,7 @@ void checkGoldStats()
 {
   // insure we have enough data to take accurate reading
   unsigned int pos_gold = getPosGoldGlobal();
-  if (pos_gold < 2000000U)
+  if (pos_gold < 5000000U)
     return;
 
   int net_gold_shop_comp = getNetGold(GOLD_SHOP_COMPONENTS);
