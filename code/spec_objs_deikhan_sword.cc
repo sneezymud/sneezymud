@@ -10,7 +10,7 @@ const int DEVASTATOR=320;
 void doHeal(TBeing *ch, TObj *o){
   int hp;
 
-  act("$p's $o emanates a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>", 
+  act("$n's $o emanates a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>", 
       0, ch, o, 0, TO_ROOM);
   act("Your $o emanates a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>",
       0, ch, o, 0, TO_CHAR);
@@ -88,7 +88,7 @@ void doSanc(TBeing *ch, TObj *o)
   aff.bitvector = AFF_SANCTUARY;
 
 
-  act("$p's $o <W>flashes brightly<1>!", 
+  act("$n's $o <W>flashes brightly<1>!", 
       0, ch, o, 0, TO_ROOM);
   act("Your $o <W>flashes brightly<1>!", 
       0, ch, o, 0, TO_CHAR);
@@ -111,7 +111,7 @@ int doHarm(TBeing *ch, TBeing *vict, TObj *o)
   }
 
 
-  act("$p's $o projects righteous <Y>fury<1> into $N.", 
+  act("$n's $o projects righteous <Y>fury<1> into $N.", 
       0, ch, o, vict, TO_ROOM);
   act("Your $o projects righteous <Y>fury<1> into $N.", 
       0, ch, o, vict, TO_CHAR);
