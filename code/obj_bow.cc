@@ -295,7 +295,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     return FALSE;
 
   // treat fliers as being 1 room further away
-  if (targ && targ->isFlying() && ((count+1) > max_distance)) {
+  if (targ && targ->isFlying() && !ch->isFlying() && ((count+1) > max_distance)){
     act("Unfortunately, $N is flying and you can't quite reach that far.",
        FALSE, ch, 0, targ, TO_CHAR);
     return FALSE;
