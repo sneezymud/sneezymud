@@ -749,7 +749,18 @@ void TBeing::doFill(const char *arg)
     }
 
     obj2->pourMeIntoDrink1(this, obj1);
-  } else if(roomp->isWaterSector() || roomp->isUnderwaterSector()) {
+    return;
+  } else {
+    TBaseCup *tbc=NULL;
+    for(TThing *t=roomp->getStuff();t;t=t->nextThing){
+      if((tbc=dynamic_cast<TBaseCup *>(t)) && tbc->getDrinkUnits()>0){
+	tbc->pourMeIntoDrink1(this, obj1);
+	return;
+      }
+    }
+  }
+  
+  if(roomp->isWaterSector() || roomp->isUnderwaterSector()) {
     obj1->fillMe(this, roomp->isRiverSector() ? LIQ_WATER : LIQ_SALTWATER);
   } else 
     doNotHere();
