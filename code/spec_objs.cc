@@ -6414,7 +6414,7 @@ int ghostlyShiv(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch;
 
-  if(!(ch=genericWeaponProcCheck(vict, cmd, o, 0)))
+  if(!(ch=genericWeaponProcCheck(vict, cmd, o, 3)))
     return FALSE;
   
   act("<k>Ghosts of $n's former enemies announce their presence with a shriek.<1>",
