@@ -748,6 +748,16 @@ int TThing::poisonMePoison(TBeing *ch, TBaseWeapon *)
   return FALSE;
 }
 
+void addPoison(int poison, affectedData *aff, int level, int duration){
+  aff->type = SPELL_POISON;
+  aff->bitvector = AFF_POISON;
+  aff->location = APPLY_STR;
+  aff->modifier = -level;
+  aff->duration = duration;
+  aff->level = level;
+  aff->renew = -1;
+}
+
 int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
 {
   int j;
@@ -778,13 +788,7 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
       }
 
       if (weapon->oneSwing[j].type == TYPE_UNDEFINED) {
-        weapon->oneSwing[j].type = SPELL_POISON;
-        weapon->oneSwing[j].bitvector = AFF_POISON;
-        weapon->oneSwing[j].location = APPLY_STR;
-        weapon->oneSwing[j].modifier = -2;
-        weapon->oneSwing[j].duration = duration;
-        weapon->oneSwing[j].level = level;
-        weapon->oneSwing[j].renew = -1;
+	addPoison(-1, &weapon->oneSwing[j], level, duration);
         break;
       }
     }
@@ -807,8 +811,26 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
     act("You coat $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_CHAR);
     act("$n coats $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_ROOM);
   } else {
-    act("You coat $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_CHAR);
-    act("$n coats $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_ROOM);
+    if(critFail(ch, SKILL_POISON_WEAPON) != CRIT_F_NONE){
+      act("You slip up and cut yourself with $p!", 
+	  FALSE, ch, weapon, NULL, TO_CHAR);
+      act("$n slips up and cuts $mself with $p!",
+	  FALSE, ch, weapon, NULL, TO_ROOM);
+
+      act("There was something nasty on that $o!",
+	  FALSE, ch, weapon, ch, TO_VICT, ANSI_RED);
+      act("You inflict something nasty on yourself!",
+	  FALSE, ch, weapon, ch, TO_CHAR, ANSI_RED);
+      act("There was something nasty on that $o!",
+	  FALSE, ch, weapon, ch, TO_NOTVICT, ANSI_RED);
+
+      affectedData critfail;
+      addPoison(-1, &critfail, level, duration);
+      ch->affectTo(&(critfail), -1);
+    } else {
+      act("You coat $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_CHAR);
+      act("$n coats $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_ROOM);
+    }
   }
   return TRUE;
 }
