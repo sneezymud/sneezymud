@@ -3030,7 +3030,6 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
   int chance = (int) (10000 * exp(-levelDiff / halfLev ));
   if (chance < 0) chance = 10001; //roll over of integer
   int roll = ::number(1,10000);
-  vlogf(LOG_MAROR, fmt("levelDiff %f, chance %d, roll %d, halflev %f, startLev %f, bonus %f") % levelDiff % chance % roll % halfLev % startLev % bonus);
   if (levelDiff >= 0 && chance < roll) {
     if (!silent) {
       if(isname("Sephie", name)) {
