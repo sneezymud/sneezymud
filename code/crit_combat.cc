@@ -2,21 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: crit_combat.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
-//
 //      "crit_combat.cc" - All functions and routines related to combat
 //
 //////////////////////////////////////////////////////////////////////////
@@ -27,7 +12,7 @@
 #include "statistics.h"
 
 // returns DELETE_THIS
-// return SENT_MESS if oneHit should abort and no further oneHits should occur
+// return ONEHIT_MESS_CRIT_S if oneHit should abort and no further oneHits should occur
 int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
 {
   char buf[256];
@@ -84,7 +69,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
           act("You start to stumble, but catch yourself before you fall!", FALSE, this, NULL, NULL, TO_CHAR);
           act("$n starts to stumble but catches $mself before $e falls!", TRUE, this, NULL, NULL, TO_ROOM);
         }
-        return (SENT_MESS);
+        return (ONEHIT_MESS_CRIT_S);
       case 2:
         // Slip, dex check or fall and be stunned for some rounds. 
 	// Speef changed to Agility but probably use Speed for reaction mod.
@@ -102,7 +87,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
           act("You start to stumble, but catch yourself before you fall!", FALSE, this, NULL, NULL, TO_CHAR);
           act("$n starts to stumble but catches $mself before $e falls!", TRUE, this, NULL, NULL, TO_ROOM);
         }
-        return (SENT_MESS);
+        return (ONEHIT_MESS_CRIT_S);
       case 3:
         // Trip and fall. No dex check. Stunned for many rounds.   
         act("In your attempt to swing at $N, you trip and fall!", TRUE, this, NULL, v, TO_CHAR);
@@ -114,7 +99,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         if (riding)
           dismount(POSITION_SITTING);
 
-        return (SENT_MESS);
+        return (ONEHIT_MESS_CRIT_S);
       case 4:
         // Lose grip. Dex check or drop weapon!
         if (weapon) {
@@ -130,7 +115,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
             act("You start to fumble $p, but miraculously retrieve it before you drop it.", FALSE, this, weapon, NULL, TO_CHAR);
             act("$n starts to fumble $p, but miraculously retrieves it before $e drops it.", TRUE, this, weapon, NULL, TO_ROOM);
           }
-          return (SENT_MESS);
+          return (ONEHIT_MESS_CRIT_S);
         }
       case 5:
         // Lose grip and drop weapon with no dex check. 
@@ -140,7 +125,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
           act(buf, FALSE, this, weapon, NULL, TO_CHAR);
           act("$n seems to lose $s grip on $p and it falls out of $s grasp!", TRUE, this, weapon, NULL, TO_ROOM);
           *roomp += *unequip(weapon->eq_pos);
-          return (SENT_MESS);
+          return (ONEHIT_MESS_CRIT_S);
         }
       case 6:
       case 7:
@@ -148,7 +133,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         if (weapon) {
           act("$n gets clumsy, and nails $mself with $p.", TRUE, this, weapon, v, TO_ROOM);
           act("You become careless, and nail yourself with $p.", FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
-          int dam = getWeaponDam(this, weapon,(weapon == heldInPrimHand()));
+          int dam = getWeaponDam(this, weapon,(weapon == heldInPrimHand() ? HAND_PRIMARY : HAND_SECONDARY));
           dam = getActualDamage(this, weapon, dam, w_type);
           dam /= 4;
           rc = applyDamage(this, dam,w_type);
@@ -157,20 +142,20 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         } else {
           act("With stunning grace, $n has just struck $mself.", TRUE, this, NULL, v, TO_ROOM);
           act("You strike yourself in your carelessness.", FALSE, this, NULL, v, TO_CHAR, ANSI_ORANGE);
-          int dam = getWeaponDam(this, NULL,0);
+          int dam = getWeaponDam(this, NULL, HAND_SECONDARY);
           dam = getActualDamage(this, NULL, dam, w_type);
           dam /= 4;
           rc = applyDamage(this, dam,w_type);
           if (IS_SET_DELETE(rc, DELETE_VICT))
             return DELETE_THIS;
         }
-        return (SENT_MESS);
+        return (ONEHIT_MESS_CRIT_S);
       case 8:
         // Hit self (full damage) 
         if (weapon) {
           act("$n slips, and smacks $mself with $p.", TRUE, this, weapon, v, TO_ROOM);
           act("You become careless, and smack yourself with your $o.", FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
-          int dam = getWeaponDam(this, weapon,(weapon == heldInPrimHand()));
+          int dam = getWeaponDam(this, weapon,(weapon == heldInPrimHand() ? HAND_PRIMARY : HAND_SECONDARY));
           dam = getActualDamage(this, weapon, dam, w_type);
           dam /= 2;
           rc = applyDamage(this, dam,w_type);
@@ -179,14 +164,14 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         } else {
           act("With stunning grace, $n has just struck $mself.", TRUE, this, NULL, v, TO_ROOM);
           act("You strike yourself in your carelessness.", FALSE, this, NULL, v, TO_CHAR, ANSI_ORANGE);
-          int dam = getWeaponDam(this, NULL,0);
+          int dam = getWeaponDam(this, NULL, HAND_SECONDARY);
           dam = getActualDamage(this, NULL, dam, w_type);
           dam /= 2;
           rc = applyDamage(this, dam,w_type);
           if (IS_SET_DELETE(rc, DELETE_VICT))
              return DELETE_THIS;
         }
-        return (SENT_MESS);
+        return (ONEHIT_MESS_CRIT_S);
       case 9:
         // Hit friend (half damage) (if no friend hit self) 
         for (target = roomp->stuff; target; target = target->nextThing, tbt = NULL) {
@@ -195,7 +180,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
             continue;
 
           if (!tbt->isAffected(AFF_CHARM) && 
-               inGroup(tbt) && (tbt != this))
+               inGroup(*tbt) && (tbt != this))
             break;
         }
         if (!tbt) 
@@ -210,7 +195,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
             act("$n slips, and smacks $mself with $p.", TRUE, this, weapon, this, TO_ROOM);
             act("You become careless, and smack yourself with your $o.", FALSE, this, weapon, this, TO_CHAR, ANSI_ORANGE);
           }
-          int dam = getWeaponDam(tbt, weapon,(weapon == heldInPrimHand()));
+          int dam = getWeaponDam(tbt, weapon,(weapon == heldInPrimHand() ? HAND_PRIMARY : HAND_SECONDARY));
           dam = getActualDamage(tbt, weapon, dam, w_type);
           dam /=4;
           rc = applyDamage(tbt, dam,w_type);
@@ -242,7 +227,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
             act("$n slips, and smacks $mself.", TRUE, this, NULL, this, TO_ROOM);
             act("You become careless, and smack yourself.", FALSE,this, NULL, this, TO_CHAR, ANSI_ORANGE);
           }
-          int dam = getWeaponDam(tbt, NULL, false);
+          int dam = getWeaponDam(tbt, NULL,  HAND_SECONDARY);
           dam = getActualDamage(tbt, NULL, dam, w_type);
           dam /=4;
           rc = applyDamage(tbt, dam,w_type);
@@ -264,7 +249,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
               return DELETE_THIS;
           }
         }
-        return SENT_MESS;
+        return ONEHIT_MESS_CRIT_S;
       case 10:
         // Hit friend (full damage) (if no friend hit self) 
         for (target = roomp->stuff;target;target = target->nextThing, tbt = NULL) {
@@ -272,7 +257,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
           if (!tbt)
             continue;
           if (!tbt->isAffected(AFF_CHARM) &&
-               inGroup(tbt) && (tbt != this))
+               inGroup(*tbt) && (tbt != this))
             break;
         }
         if (!tbt)
@@ -286,7 +271,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
             act("$n slips, and smacks $mself with $p.", TRUE, this, weapon, this, TO_ROOM);
             act("You become careless, and smack yourself with your $o.", FALSE,this, weapon, this, TO_CHAR, ANSI_ORANGE);
           }
-          int dam = getWeaponDam(tbt, weapon,(weapon == heldInPrimHand()));
+          int dam = getWeaponDam(tbt, weapon,(weapon == heldInPrimHand() ? HAND_PRIMARY : HAND_SECONDARY));
           dam = getActualDamage(tbt, weapon, dam, w_type);
           dam /= 2;
           rc = applyDamage(tbt, dam,w_type);
@@ -316,20 +301,10 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
             act("$n slips, and smacks $mself.", TRUE, this, NULL, this, TO_ROOM);
             act("You become careless, and smack yourself.", FALSE,this, NULL, this, TO_CHAR, ANSI_ORANGE);
           }
-          int dam = getWeaponDam(tbt, NULL,0);
+          int dam = getWeaponDam(tbt, NULL, HAND_SECONDARY);
           dam = getActualDamage(tbt, NULL, dam, w_type);
           dam /= 2;
           rc = applyDamage(tbt, dam,w_type);
-          if (tbt != this) {
-            act("In the confusion, you and $N stop fighting.",
-                  FALSE, this, 0, tbt, TO_CHAR);
-            act("In the confusion, $n and you stop fighting.",
-                  FALSE, this, 0, tbt, TO_VICT);
-            act("In the confusion, $n and $N stop fighting.",
-                  FALSE, this, 0, tbt, TO_NOTVICT);
-            stopFighting();
-            tbt->stopFighting();
-          }
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
             if (tbt != this) {
               delete tbt;
@@ -337,8 +312,21 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
             } else
               return DELETE_THIS;
           }
+
+          // if nobody died from the hit, stop the fight
+          if (tbt && tbt != this) {
+            act("In the confusion, you and $N stop fighting.",
+                  FALSE, this, 0, tbt, TO_CHAR);
+            act("In the confusion, $n and you stop fighting.",
+                  FALSE, this, 0, tbt, TO_VICT);
+            act("In the confusion, $n and $N stop fighting.",
+                  FALSE, this, 0, tbt, TO_NOTVICT);
+            stopFighting();
+            if (tbt->fight())
+              tbt->stopFighting();
+          }
         }
-        return SENT_MESS;
+        return ONEHIT_MESS_CRIT_S;
       case 11:
         // Miss miserably and stick weapon in foot (with dex check). 
         if (::number(0, plotStat(STAT_NATURAL, STAT_AGI, -30, 60, 0)) >=
@@ -356,20 +344,21 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
           sprintf(buf, "$n miserably misses you, %sand sticks $p in $s foot%s!",
                   v->cyan(),v->norm());
           act(buf, TRUE, this, weapon, v, TO_VICT);
-          num2 = getWeaponDam(this,weapon,(weapon == heldInPrimHand()));
-          num2 /= 2;
+          num2 = getWeaponDam(this,weapon,(weapon == heldInPrimHand() ? HAND_PRIMARY : HAND_SECONDARY));
+          num2 /= 8;
+	  num2 += 1;
           rc = stickIn(unequip(weapon->eq_pos), WEAR_FOOT_R);
           if (desc)
             desc->career.stuck_in_foot++;
 
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;
-
-          rc = damageLimb(this,WEAR_FOOT_R,weapon,&num);
+	  num2 *= 4;
+          rc = damageLimb(this,WEAR_FOOT_R,weapon,&num2);
           if (IS_SET_DELETE(rc, DELETE_VICT))
             return DELETE_THIS;
 
-          return (SENT_MESS);
+          return (ONEHIT_MESS_CRIT_S);
         }
         // no weapon, blunt weapn, etc = fall through into next case
 
@@ -386,7 +375,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
                TRUE, this, 0, v, TO_VICT);
         setMove(getMove()/2);
 
-        return (SENT_MESS);
+        return (ONEHIT_MESS_CRIT_S);
       case 14:
       case 15:
       case 16:
@@ -398,7 +387,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         act("$n stumbles as $e tries pathetically to attack $N.", TRUE, this, 0, v, TO_NOTVICT);
         act("You stumble pathetically as you try to attack $N.", FALSE, this, 0, v, TO_CHAR);
         act("$n stumbles as $e tries pathetically to attack you.", TRUE, this, 0, v, TO_VICT);
-        return (SENT_MESS);
+        return (ONEHIT_MESS_CRIT_S);
     }
   }
   return FALSE;
@@ -426,7 +415,19 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 
   if ((mod == -1) && v->isImmune(getTypeImmunity(wtype), 0))
     return FALSE;
+#if 1
+  if (mod == -1 && v->affectedBySpell(AFFECT_DUMMY)) {
+    affectedData *an = NULL;
 
+
+    for (an = v->affected; an; an = an->next) {
+      if (an->type == AFFECT_DUMMY && an->level == 60) {
+	mod = an->modifier2;
+      }
+    }
+    v->affectFrom(AFFECT_DUMMY);
+  }
+#endif
   // get wtype back so it fits in array  
   new_wtype = wtype - TYPE_HIT;
 
@@ -442,11 +443,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 
   if(doesKnowSkill(SKILL_CRIT_HIT) && isPc()){
     dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_CRIT_HIT)*900)));
+  } else if(doesKnowSkill(SKILL_POWERMOVE) && isPc()){
+    dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_POWERMOVE)*900)));
   } else 
     dicenum = dice(1, 100000);    // This was 10k under 3.x - Bat
 
-  dexstat = plotStat(STAT_CURRENT, STAT_DEX, 10, 100, 63) - 2*getCond(DRUNK);
 
+  dexstat = plotStat(STAT_CURRENT, STAT_DEX, 10, 100, 63) - 2*getCond(DRUNK);
+  dexstat = (int)((double)(dexstat * plotStat(STAT_CURRENT, STAT_KAR, 80, 125, 100)) / 100.0);
   if (isImmortal())
     dicenum /= 10;
 
@@ -485,7 +489,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
              v->describeBodySlot(*part_hit).c_str(),
              (weapon ? "$o" : getMyRace()->getBodyLimbPierce().c_str()));
         act(buf, FALSE, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
-        return (SENT_MESS);
+        return (ONEHIT_MESS_CRIT_S);
       } else if (num <= 66) {
         // triple damage 
         sprintf(buf, 
@@ -503,7 +507,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
              (weapon ? "$o" : getMyRace()->getBodyLimbPierce().c_str()));
         act(buf, FALSE, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
         *dam *= 3;
-        return (SENT_MESS);
+        return (ONEHIT_MESS_CRIT_S);
       } else {
         // better stuff 
         limbStr =  (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbPierce());
@@ -518,7 +522,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               for (i=1;i<5;i++)
                 if (v->equipment[WEAR_NECK])
                   v->damageItem(this,WEAR_NECK,wtype,weapon,*dam);
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             }
             // intentional drop through
           case 68:
@@ -553,7 +557,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               desc->career.crit_voice++;
             if (v->desc)
               v->desc->career.crit_voice_suff++;
-            return SENT_MESS;
+            return ONEHIT_MESS_CRIT_S;
           case 69:
           case 70:
             // Struct in eye, blinded with new blind type 
@@ -587,7 +591,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               desc->career.crit_eye_pop++;
             if (v->desc)
               v->desc->career.crit_eye_pop_suff++;
-            return SENT_MESS;
+            return ONEHIT_MESS_CRIT_S;
           case 71:
             if (!v->hasPart(WEAR_LEGS_R))
               return 0;
@@ -600,7 +604,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                   if (v->equipment[WEAR_LEGS_R])
                     v->damageItem(this,WEAR_LEGS_R,wtype,weapon,*dam);
                 *part_hit = WEAR_LEGS_R;
-                return SENT_MESS;
+                return ONEHIT_MESS_CRIT_S;
               }
               // an intentional drop through
             case 72:
@@ -628,7 +632,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               rc = damageLimb(v,WEAR_LEGS_R,weapon,dam);
               if (IS_SET_DELETE(rc, DELETE_VICT))
                 return DELETE_VICT;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 73:
               if (!v->hasPart(WEAR_BACK))
                 return 0;
@@ -639,7 +643,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                   if (v->equipment[WEAR_BACK])
                     v->damageItem(this,WEAR_BACK,wtype,weapon,*dam);
                 *part_hit = WEAR_BACK;
-                return SENT_MESS;
+                return ONEHIT_MESS_CRIT_S;
               }
             case 74:
               // Side wound, vict stunned 6 rounds. 
@@ -665,7 +669,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               if (IS_SET_DELETE(rc, DELETE_VICT))
                 return DELETE_VICT;
               *part_hit = WEAR_BACK;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 75:
             case 76:
               // Strike in back of head. If no helm, vict dies. 
@@ -698,7 +702,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 rc = damageLimb(v,WEAR_HEAD,weapon,dam);
                 if (IS_SET_DELETE(rc, DELETE_VICT))
                   return DELETE_VICT;
-                return SENT_MESS;
+                return ONEHIT_MESS_CRIT_S;
               } else {
                 sprintf(buf, 
     "You thrust your %s into the back of $N's head causing an immediate death.",
@@ -753,7 +757,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               rc = damageLimb(v,new_slot,weapon,dam);
               if (IS_SET_DELETE(rc, DELETE_VICT))
                 return DELETE_VICT;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 79:
               new_slot = v->getPrimaryHand();
               if (!v->hasPart(new_slot))
@@ -764,7 +768,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 act("Your $o just saved you from losing your hand!",TRUE,v,obj,0,TO_CHAR, ANSI_PURPLE);
                 act("You nearly sever $N's hand, but $S $o saved $M!",TRUE,this,obj,v,TO_CHAR);
                 *part_hit = v->getPrimaryWrist();
-                return SENT_MESS;
+                return ONEHIT_MESS_CRIT_S;
               }
             case 80:
               // Sever weapon arm at hand 
@@ -791,7 +795,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 desc->career.crit_sev_limbs++;
               if (v->desc)
                 v->desc->career.crit_sev_limbs_suff++;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 81:
               if (!v->hasPart(WEAR_BODY))
                 return 0;
@@ -802,7 +806,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                   if (v->equipment[WEAR_BODY])
                     v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
                 *part_hit = WEAR_BODY;
-                return SENT_MESS;
+                return ONEHIT_MESS_CRIT_S;
               }
             case 82:
               // Punctured lungs. Can't breathe. Dies if not healed quickly 
@@ -834,7 +838,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 desc->career.crit_lung_punct++;
               if (v->desc)
                 v->desc->career.crit_lung_punct_suff++;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 83:
             case 84:
               if (!v->hasPart(WEAR_BODY))
@@ -846,7 +850,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                   if (v->equipment[WEAR_BODY])
                     v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
                 *part_hit = WEAR_BODY;
-                return SENT_MESS;
+                return ONEHIT_MESS_CRIT_S;
               }
             case 85:
              // punctured kidney causes infection
@@ -874,7 +878,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 return DELETE_VICT;
               v->rawInfect(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
               *part_hit = WEAR_BODY;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 86:
             case 87:
              // stomach wound.  causes death 5 mins later if not healed.
@@ -907,7 +911,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               if (v->desc)
                 v->desc->career.crit_eviscerate_suff++;
 
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 88:
             case 89:
               // abdominal wound
@@ -968,7 +972,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
              v->describeBodySlot(*part_hit).c_str(),
              limbStr.c_str());
           act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-          return (SENT_MESS);
+          return (ONEHIT_MESS_CRIT_S);
         } else if (num <= 66) {
           // triple damage
           sprintf(buf, 
@@ -986,7 +990,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
              limbStr.c_str());
           act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
           *dam *= 3;
-          return (SENT_MESS);
+          return (ONEHIT_MESS_CRIT_S);
         } else {
           // better stuff 
           if ((num == 83 || num == 84) && wtype == TYPE_CLEAVE)
@@ -1017,7 +1021,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 desc->career.crit_sev_limbs++;
               if (v->desc)
                 v->desc->career.crit_sev_limbs_suff++;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 68:
              // sever finger-l
               if (!v->hasPart(WEAR_FINGER_L))
@@ -1043,7 +1047,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 desc->career.crit_sev_limbs++;
               if (v->desc)
                 v->desc->career.crit_sev_limbs_suff++;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 69:
             case 70:
               if (!v->hasPart(WEAR_HAND_R))
@@ -1057,7 +1061,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                   if (v->equipment[WEAR_WRIST_R])
                     v->damageItem(this,WEAR_WRIST_R,wtype,weapon,*dam);
                 *part_hit = WEAR_HAND_R;
-                return SENT_MESS;
+                return ONEHIT_MESS_CRIT_S;
               }
             case 71:
              // sever hand-r at wrist
@@ -1087,7 +1091,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 desc->career.crit_sev_limbs++;
               if (v->desc)
                 v->desc->career.crit_sev_limbs_suff++;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 72:
             case 73:
               if (!v->hasPart(WEAR_WRIST_L))
@@ -1101,7 +1105,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                   if (v->equipment[WEAR_WRIST_L])
                     v->damageItem(this,WEAR_WRIST_L,wtype,weapon,*dam);
                 *part_hit = WEAR_WRIST_L;
-                return SENT_MESS;
+                return ONEHIT_MESS_CRIT_S;
               }
             case 74:
              // sever hand-l at wrist
@@ -1131,7 +1135,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 desc->career.crit_sev_limbs++;
               if (v->desc)
                 v->desc->career.crit_sev_limbs_suff++;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 75:
             case 76:
              // cleave arm at shoulder
@@ -1161,7 +1165,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 desc->career.crit_sev_limbs++;
               if (v->desc)
                 v->desc->career.crit_sev_limbs_suff++;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 77:
             case 78:
              // cleave l-arm at shoulder
@@ -1190,7 +1194,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 desc->career.crit_sev_limbs++;
               if (v->desc)
                 v->desc->career.crit_sev_limbs_suff++;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 79:
             case 80:
              // sever leg: foot missing, leg useless
@@ -1224,7 +1228,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                   desc->career.crit_sev_limbs++;
                 if (v->desc)
                   v->desc->career.crit_sev_limbs_suff++;
-                return SENT_MESS;
+                return ONEHIT_MESS_CRIT_S;
               }
             case 81:
             case 82:
@@ -1258,7 +1262,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                   desc->career.crit_sev_limbs++;
                 if (v->desc)
                   v->desc->career.crit_sev_limbs_suff++;
-                return SENT_MESS;
+                return ONEHIT_MESS_CRIT_S;
               }
             case 83:
             case 84:
@@ -1288,7 +1292,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               if (IS_SET_DELETE(rc, DELETE_VICT))
                 return DELETE_VICT;
               *part_hit = WEAR_BODY;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 85:
             case 86:
               if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
@@ -1312,7 +1316,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 rc = damageLimb(v,WEAR_WAISTE,weapon,dam);
                 if (IS_SET_DELETE(rc, DELETE_VICT))
                   return DELETE_VICT;
-                return SENT_MESS;
+                return ONEHIT_MESS_CRIT_S;
               }
               // if no girth, its going into next critSuccess...
             case 87:
@@ -1390,7 +1394,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                   delete obj;
                   obj = NULL;
                 }
-                applyDamage(v, 20 * v->hitLimit(),DAMAGE_DISEMBOWLED);
+                applyDamage(v, 20 * v->hitLimit(),DAMAGE_DISEMBOWLED_HR);
                 *part_hit = WEAR_BODY;
                 if (desc)
                   desc->career.crit_disembowel++;
@@ -1400,6 +1404,65 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               }
             case 91:
             case 92:
+	      if(v->getSex()==SEX_MALE && v->hasPart(WEAR_WAISTE) &&
+		 (!(obj = v->equipment[WEAR_WAISTE]) || !obj->isMetal())){
+		sprintf(buf, "With a deft swing of your %s, you sever $N's genitals.", limbStr.c_str());
+		act(buf,FALSE,this,obj,v,TO_CHAR,ANSI_ORANGE);
+		sprintf(buf, "$n deftly severs your genitals with $s %s!  OWWWWW!", limbStr.c_str());
+		act(buf,FALSE,this,obj,v,TO_VICT,ANSI_ORANGE);
+
+		if(obj){
+		  obj->makeScraps();
+		  delete obj;
+		  obj = NULL;
+		}
+
+		TCorpse *corpse;
+		char buf[256];
+		
+		corpse = new TCorpse();
+		corpse->name = mud_str_dup("genitalia");
+		
+		if (v->getMaterial() > MAT_GEN_MINERAL) {
+		  // made of mineral or metal
+		  sprintf(buf, "the mangled genitalia of %s", v->getName());
+		} else {
+		  sprintf(buf, "the bloody, mangled genitalia of %s", v->getName());
+		}
+		corpse->shortDescr = mud_str_dup(buf);
+		
+		if (v->getMaterial() > MAT_GEN_MINERAL) {
+		  // made of mineral or metal
+		  sprintf(buf, "The mangled, severed genitalia of %s is lying here.", v->getName());
+		} else {
+		  sprintf(buf, "The bloody, mangled, severed genitalia of %s is lying here.", v->getName());
+		}
+		corpse->setDescr(mud_str_dup(buf));
+		
+		corpse->stuff = NULL;
+		corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
+		corpse->addCorpseFlag(CORPSE_NO_REGEN);
+		corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
+		corpse->setWeight(v->getWeight() / 32.0);
+		corpse->canBeSeen = v->canBeSeen;
+		corpse->setVolume(v->getVolume() * 2/100);
+		corpse->setMaterial(v->getMaterial());
+		
+		act("$p goes flying through the air and bounces once before it rolls to a stop.",TRUE,v,corpse,0,TO_ROOM, ANSI_RED);
+		*v->roomp += *corpse;
+
+		v->setSex(SEX_NEUTER);
+		v->rawBleed(WEAR_WAISTE, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+
+		if (desc)
+		  desc->career.crit_genitalia++;
+		
+		if (v->desc)
+		  v->desc->career.crit_genitalia_suff++;
+		
+                return ONEHIT_MESS_CRIT_S;
+	      }
+	      break;
             case 93:
             case 94:
             case 95:
@@ -1430,7 +1493,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 rc = damageLimb(v,*part_hit,weapon,dam);
                 if (IS_SET_DELETE(rc, DELETE_VICT))
                   return DELETE_VICT;
-                return SENT_MESS;
+                return ONEHIT_MESS_CRIT_S;
               }
               // if no collar, its going into next critSuccess...
             case 100:
@@ -1481,7 +1544,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                   v->describeBodySlot(*part_hit).c_str(), 
               limbStr.c_str());
           act(buf, TRUE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-          return (SENT_MESS);
+          return (ONEHIT_MESS_CRIT_S);
         } else if (num <= 66) {
           // triple damage 
           *dam *= 3;
@@ -1500,7 +1563,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                   v->describeBodySlot(*part_hit).c_str(), 
               limbStr.c_str());
           act(buf, TRUE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-          return (SENT_MESS);
+          return (ONEHIT_MESS_CRIT_S);
         } else {
           // better stuff 
           switch (num) {
@@ -1542,7 +1605,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               rc = damageLimb(v,*part_hit,weapon,dam);
               if (IS_SET_DELETE(rc, DELETE_VICT))
                 return DELETE_VICT;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 69:
             case 70:
              //shatter bones in 1 hand
@@ -1579,7 +1642,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               rc = damageLimb(v,*part_hit,weapon,dam);
               if (IS_SET_DELETE(rc, DELETE_VICT))
                 return DELETE_VICT;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 71:
             case 72:
              // shatter bones other hand
@@ -1617,7 +1680,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               rc = damageLimb(v,*part_hit,weapon,dam);
               if (IS_SET_DELETE(rc, DELETE_VICT))
                 return DELETE_VICT;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 73:
             case 74:
              // break bones arm - broken
@@ -1651,7 +1714,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               rc = damageLimb(v,*part_hit,weapon,dam);
               if (IS_SET_DELETE(rc, DELETE_VICT))
                 return DELETE_VICT;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 75:
             case 76:
              // crush nerves arm - useless
@@ -1675,7 +1738,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 desc->career.crit_crushed_nerve++;
               if (v->desc)
                 v->desc->career.crit_crushed_nerve_suff++;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 77:
             case 78:
              // break bones leg
@@ -1709,7 +1772,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 v->desc->career.crit_broken_bones_suff++;
               if (IS_SET_DELETE(rc, DELETE_VICT))
                 return DELETE_VICT;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 79:
             case 80:
              // crush muscles in leg
@@ -1742,7 +1805,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 
               if (IS_SET_DELETE(rc, DELETE_VICT))
                 return DELETE_VICT;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 81:
             case 82:
              // head blow - stuns 10 rounds
@@ -1780,7 +1843,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               rc = damageLimb(v,*part_hit,weapon,dam);
               if (IS_SET_DELETE(rc, DELETE_VICT))
                 return DELETE_VICT;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 85:
             case 86:
              //  shatter rib
@@ -1808,7 +1871,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               for (i=1;i<7;i++)
                 if (v->equipment[WEAR_BODY])
                   v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 87:
             case 88:
              //  shatter rib - internal damage, death if not healed
@@ -1845,7 +1908,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 desc->career.crit_broken_bones++;
               if (v->desc)
                 v->desc->career.crit_broken_bones_suff++;
-              return SENT_MESS;
+              return ONEHIT_MESS_CRIT_S;
             case 89:
             case 90:
             case 91:
@@ -1882,7 +1945,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 rc = damageLimb(v,*part_hit,weapon,dam);
                 if (IS_SET_DELETE(rc, DELETE_VICT))
                   return DELETE_VICT;
-                return SENT_MESS;
+                return ONEHIT_MESS_CRIT_S;
               }
               // no helm goes into next case
             case 100:

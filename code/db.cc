@@ -14,13 +14,9 @@
 #include "mail.h"
 #include "components.h"
 #include "board.h"
-#include "create.h"
 #include "stdsneezy.h"
 #include "loadset.h"
-
-#if USE_SQL
-MYSQL *db;  
-#endif
+#include "sys_loot.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -88,11 +84,18 @@ void bootPulse(const char *str, bool end_str)
 
   Descriptor *d;
   string sc;
+  static string tLastRealMessage("");
+  bool tLRMN = false;
 
   if (str) {
     if (strcmp(str, ".")) {
-      sc = MUD_NAME;
+      sc = MUD_NAME_VERS;
       sc += " Boot Process: ";
+
+      // Set the last real output.
+      tLastRealMessage  = sc;
+      tLastRealMessage += str;
+      tLRMN = true;
     } else
       sc = "";
 
@@ -104,9 +107,10 @@ void bootPulse(const char *str, bool end_str)
     sc += "\n\r";
   }
 
-  gSocket->addNewDescriptorsDuringBoot();
+  gSocket->addNewDescriptorsDuringBoot((tLRMN ? "\n\r" : tLastRealMessage));
+
   for (d = descriptor_list; d; d = d->next) {
-    (&d->output)->putInQ(colorString(NULL, d, sc.c_str(), NULL, COLOR_BASIC, TRUE).c_str());
+    d->output.putInQ(colorString(NULL, d, sc.c_str(), NULL, COLOR_BASIC, TRUE).c_str());
     d->outputProcessing();
   }
 
@@ -152,17 +156,23 @@ void bootDb(void)
   bootPulse("Initializing Terrains.");
   assignTerrainInfo();
 
-
   bootPulse("Opening mobile file.");
   if (!(mob_f = fopen(MOB_FILE, "r"))) {
     perror("boot");
     exit(0);
   }
+  // mob_f and obj_f must be open prior to here.
+  bootPulse("Generating index tables for mobile file.");
+  generate_mob_index();
+
   bootPulse("Opening object file.");
   if (!(obj_f = fopen(OBJ_FILE, "r"))) {
     perror("boot");
     exit(0);
   }
+  bootPulse("Generating index tables for object file.");
+  generate_obj_index();
+
   bootPulse("Building help tables.");
   buildHelpIndex();
 
@@ -174,13 +184,6 @@ void bootDb(void)
   assign_drink_types();
   bootPulse("Loading drug-type information.");
   assign_drug_info();
-
-  // mob_f and obj_f must be open prior to here.
-  bootPulse("Generating index tables for mobile file.");
-  generate_mob_index();
-
-  bootPulse("Generating index tables for object file.");
-  generate_obj_index();
 
   unsigned int i;
 #if !USE_SQL
@@ -273,6 +276,7 @@ void bootDb(void)
   bootPulse("Processing corpse-save files.");
   processCorpseFiles();
 
+
   bootPulse("Booting mail system:", false);
   if (!scan_file(SILENT_NO)) {
     vlogf(LOG_MISC, "   Mail system error -- mail system disabled!");
@@ -283,6 +287,9 @@ void bootDb(void)
   bootPulse("Calculating number of items in rent.");
   vlogf(LOG_MISC, "Totals on limited items:");
   printLimitedInRent();
+
+  bootPulse("Creating Loot List.");
+  sysLootBoot();
 
   bootPulse("Resetting zones:", false);
   for (i = 0; i < zone_table.size(); i++) {
@@ -317,72 +324,14 @@ void reset_time(void)
   time_info.year += YEAR_ADJUST;
   moontype = time_info.day;
 
-  switch (time_info.hours) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-    case 7:
-    case 8:
-    case 9:
-      weather_info.sunlight = SUN_DARK;
-      break;
-    case 10:
-    case 11:
-    case 12:
-    case 13:
-      weather_info.sunlight = SUN_RISE;
-      break;
-    case 14:
-    case 15:
-    case 16:
-    case 17:
-    case 18:
-    case 19:
-    case 20:
-    case 21:
-    case 22:
-    case 23:
-    case 24:
-    case 25:
-    case 26:
-    case 27:
-    case 28:
-    case 29:
-    case 30:
-    case 31:
-    case 32:
-    case 33:
-    case 34:
-    case 35:
-      weather_info.sunlight = SUN_LIGHT;
-      break;
-    case 36:
-    case 37:
-    case 38:
-    case 39:
-      weather_info.sunlight = SUN_SET;
-      break;
-    case 40:
-    case 41:
-    case 42:
-    case 43:
-    case 44:
-    case 45:
-    case 46:
-    case 47:
-      weather_info.sunlight = SUN_DARK;
-      break;
+  calcNewSunRise();
+  calcNewSunSet();
 
-    default:
-      weather_info.sunlight = SUN_DARK;
-      break;
-  }
+  extern void fixSunlight();
+  fixSunlight();
 
-  vlogf(LOG_MISC, "   Current Gametime: %dH %dD %dM %dY.", time_info.hours, time_info.day, time_info.month, time_info.year);
+  vlogf(LOG_MISC, "   Current Gametime: %dm, %dH %dD %dM %dY.", 
+        time_info.minutes, time_info.hours, time_info.day, time_info.month, time_info.year);
 
   weather_info.pressure = 960;
   if ((time_info.month >= 7) && (time_info.month <= 12))
@@ -407,8 +356,6 @@ void reset_time(void)
   } else {
     weather_info.sky = SKY_CLOUDLESS;
   }
-  calcNewSunRise();
-  calcNewSunSet();
 }
 
 
@@ -432,6 +379,7 @@ void update_time(void)
   fprintf(f1, "#\n");
 
   fprintf(f1, "%ld\n", current_time);
+  fprintf(f1, "%d\n", time_info.minutes);
   fprintf(f1, "%d\n", time_info.hours);
   fprintf(f1, "%d\n", time_info.day);
   fprintf(f1, "%d\n", time_info.month);
@@ -465,6 +413,79 @@ void bootWorld(void)
     allocate_room(virtual_nr);
     rp = real_roomp(virtual_nr);
     rp->loadOne(room_f, true);
+
+#if 0    
+    dirTypeT dir;
+    TRoom *temp;
+    for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
+      if (!rp->dir_option[dir])
+	continue;
+      
+      if(!(temp=real_roomp(rp->dir_option[dir]->to_room)))
+	continue;
+
+      switch(dir){
+	case 0: 
+	  tdest->setYCoord(tdest->getYCoord()+1); 
+	  break;
+	case 1:
+	  tdest->setXCoord(tdest->getXCoord()+1);
+	  break;
+	case 2:
+	  tdest->setYCoord(tdest->getYCoord()-1);
+	  break;
+	case 3:
+	  tdest->setXCoord(tdest->getXCoord()-1);
+	  break;
+	case 4:
+	  tdest->setZCoord(tdest->getZCoord()+1);
+	  break;
+	case 5:
+	  tdest->setZCoord(tdest->getZCoord()-1);
+	  break;
+	case 6:
+	  tdest->setXCoord(tdest->getXCoord()+1);
+	  tdest->setYCoord(tdest->getYCoord()+1);
+	  break;
+	case 7:
+	  tdest->setYCoord(tdest->getYCoord()+1);
+	  tdest->setXCoord(tdest->getXCoord()-1);
+	  break;
+	case 8:
+	  tdest->setYCoord(tdest->getYCoord()-1);
+	  tdest->setXCoord(tdest->getXCoord()+1);
+	  break;
+	case 9:
+	  tdest->setXCoord(tdest->getXCoord()-1);
+	  tdest->setYCoord(tdest->getYCoord()-1);
+	  break;    
+      }
+
+
+    }
+    
+#endif
+    //    int i;
+    // TRoom *temp;
+    
+    //    for(i=0;i<WORLD_SIZE;i++){
+    //  if((temp=real_roomp(i)) &&
+    //	 (rp->getXCoord() == temp->getXCoord()) &&
+    //	 (rp->getYCoord() == temp->getYCoord()) &&
+    //	 (rp->getZCoord() == temp->getZCoord()) &&
+    //	 !((rp->getXCoord() == 0) &&
+    //	   (rp->getYCoord() == 0) &&
+    //	   (rp->getZCoord() == 0)) &&
+    //	 temp->number != rp->number){
+
+	//	vlogf(LOG_LOW, "%s room %d has duplicate coordinates with room %d (%d, %d, %d)",
+	//	      rp->name, rp->number, temp->number, 
+	//	      rp->getXCoord(), rp->getYCoord(), rp->getZCoord());
+
+    //      }
+    //    }
+
+
 #if 0
 // modified weather stuff, not used yet, BAT
     rp->initWeather();
@@ -508,7 +529,6 @@ void bootWorld(void)
       vlogf(LOG_LOW,"%s fall room %d set with limited height",
                 rp->name,rp->number);
 #endif
-
   }
   fclose(room_f);
 }
@@ -1093,7 +1113,8 @@ continue;
           rs.command == 'P' ||
           (rs.command == 'T' && !rs.if_flag) ||
           rs.command == 'R' ||
-          rs.command == 'D')
+          rs.command == 'D' ||
+          rs.command == 'L')
         if ((rc = fscanf(fl, " %d", &rs.arg3)) != 1)
           vlogf(LOG_LOW,"command %u ('%c') in %s missing arg3 (rc=%d)",
                zd.cmd.size(),
@@ -1110,6 +1131,11 @@ continue;
         if (fscanf(fl, " %d", &rs.arg4) != 1)
           vlogf(LOG_LOW,"command %u ('T') in %s missing arg4",
                zd.cmd.size(), zd.name);
+
+      if (rs.command == 'L')
+        if (fscanf(fl, " %d", &rs.arg4) != 1)
+          vlogf(LOG_LOW, "command %u ('L') in %s missing arg4",
+                zd.cmd.size(), zd.name);
 
       zd.cmd.push_back(rs);
 
@@ -1223,6 +1249,7 @@ TObj *read_object(int nr, readFileTypeT type)
   char chk[50];
 
   i = nr;
+  vlogf(LOG_FILE, "Checking object %d", nr);
   if (type == VIRTUAL)
     nr = real_object(nr);
 
@@ -1372,8 +1399,7 @@ TObj *read_object(int nr, readFileTypeT type)
 TObj *read_object(int nr, readFileTypeT type)
 {
   TObj *obj = NULL;
-  int i, rc;
-  char buf[256];
+  int i, rc, tmpcost;
   MYSQL_RES *res;
   MYSQL_ROW row;
 
@@ -1386,26 +1412,12 @@ TObj *read_object(int nr, readFileTypeT type)
     return NULL;
   }
 
-  if(!db){
-    vlogf(LOG_MISC, "read_object: Initializing database.");
-    db=mysql_init(NULL);
-
-    vlogf(LOG_MISC, "read_object: Connecting to database.");
-    if(!mysql_real_connect(db, NULL, "sneezy", NULL, 
-	  (gamePort==BETA_GAMEPORT ? "sneezybeta" : "sneezy"), 0, NULL, 0)){
-      vlogf(LOG_BUG, "Could not connect (1) to database 'sneezy'.");
-      exit(0);
-    }
+  if((rc=dbquery(&res, "sneezy", "read_object(1)", "select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt))){
+    if(rc==-1)
+      vlogf(LOG_BUG, "Database error in read_object");
+    return NULL;
   }
-
-  sprintf(buf, "select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from object where vnum=%i", obj_index[nr].virt);
-  if(mysql_query(db, buf)){
-    vlogf(LOG_BUG, "Database query failed (1): %s", mysql_error(db));
-    exit(0);
-  }
-  res=mysql_use_result(db);
   if(!(row=mysql_fetch_row(res))){
-    //    vlogf(LOG_BUG, "No such object in read_object: %i", nr);
     return NULL;
   }
 
@@ -1414,6 +1426,7 @@ TObj *read_object(int nr, readFileTypeT type)
   obj->name = obj_index[nr].name;
   obj->shortDescr = obj_index[nr].short_desc;
   obj->setDescr(obj_index[nr].long_desc);
+  obj->action_description = obj_index[nr].description;
   obj->setObjStat(atoi(row[1]));
   obj->obj_flags.wear_flags = atoi(row[2]);
   obj->assignFourValues(atoi(row[3]), atoi(row[4]), atoi(row[5]), atoi(row[6]));
@@ -1433,39 +1446,16 @@ TObj *read_object(int nr, readFileTypeT type)
 
   mysql_free_result(res);
 
-  sprintf(buf, "select type, mod1, mod2 from affect where vnum=%i", obj_index[nr].virt);
-  if(mysql_query(db, buf)){
-    vlogf(LOG_BUG, "Database query failed (2): %s\n", mysql_error(db));
-    exit(0);
-  }
-  res=mysql_use_result(db);
-  
-  i=0;
-  while((row=mysql_fetch_row(res))){
-    obj->affected[i].location = mapFileToApply(atoi(row[0]));
+  for(i=0;i<MAX_OBJ_AFFECT;++i){
+    obj->affected[i].location = obj_index[nr].affected[i].location;
+    obj->affected[i].modifier = obj_index[nr].affected[i].modifier;
+    obj->affected[i].modifier2 = obj_index[nr].affected[i].modifier2;
+    obj->affected[i].type = obj_index[nr].affected[i].type;
+    obj->affected[i].level = obj_index[nr].affected[i].level;
+    obj->affected[i].bitvector = obj_index[nr].affected[i].bitvector;
 
-    if (obj->affected[i].location == APPLY_SPELL)
-      obj->affected[i].modifier = mapFileToSpellnum(atoi(row[1]));
-    else
-      obj->affected[i].modifier = atoi(row[1]);
-
-    obj->affected[i].modifier2 = atoi(row[2]);
     if (obj->affected[i].location == APPLY_LIGHT)
       obj->addToLight(obj->affected[i].modifier);
-    obj->affected[i].type = TYPE_UNDEFINED;
-    obj->affected[i].level = 0;
-    obj->affected[i].bitvector = 0;
-    i++;
-  }
-
-  mysql_free_result(res);
-
-  for (; (i < MAX_OBJ_AFFECT); i++) {
-    obj->affected[i].location = APPLY_NONE;
-    obj->affected[i].modifier = 0;
-    obj->affected[i].type = TYPE_UNDEFINED;
-    obj->affected[i].level = 0;
-    obj->affected[i].bitvector = 0;
   }
 
   obj_index[nr].number++;
@@ -1478,6 +1468,14 @@ TObj *read_object(int nr, readFileTypeT type)
     obj = NULL;
     return NULL;
   }
+
+
+#if 1
+  // use suggested price if available, otherwise use the set price
+  if((tmpcost = obj->suggestedPrice())){
+    obj->obj_flags.cost = tmpcost;
+  }
+#endif
 
   obj->checkObjStats();
 
@@ -1894,6 +1892,7 @@ void reset_zone(int zone, bool bootTime)
               continue;
             }
             *rp += *mob;
+            mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
             mobRepop(mob, zone);
 
 #if 1
@@ -1959,6 +1958,7 @@ void reset_zone(int zone, bool bootTime)
               continue;
             }
             *rp += *mob;
+            mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
             mobRepop(mob, zone);
 
 #if 1
@@ -1977,8 +1977,10 @@ void reset_zone(int zone, bool bootTime)
           break;
         case '?':
           if (rs.character) {
-            if ((rs.character == 'M') || (rs.character == 'O') ||
+            if ((rs.character == 'M') ||
+                (rs.character == 'O') ||
                 (rs.character == 'B') ||
+                (rs.character == 'L') ||
                 (objload && (rs.character == 'P')) ||
                 (mobload && (rs.character != 'P'))) {
 
@@ -2078,6 +2080,7 @@ void reset_zone(int zone, bool bootTime)
               mob->addFollower(old_mob);
 
             // needs to be after we are set riding
+            mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
             mobRepop(mob, zone);
 
             last_cmd = 1;
@@ -2155,7 +2158,7 @@ void reset_zone(int zone, bool bootTime)
           if (obj_index[rs.arg1].number < obj_index[rs.arg1].max_exist) {
             obj = read_object(rs.arg1, REAL);
             obj_to = get_obj_num(rs.arg3);
-            if (obj_to && obj && dynamic_cast<TContainer *>(obj_to)) {
+            if (obj_to && obj && dynamic_cast<TBaseContainer *>(obj_to)) {
               *obj_to += *obj;
               obj->onObjLoad();
               last_cmd = 1;
@@ -2203,7 +2206,7 @@ void reset_zone(int zone, bool bootTime)
               rp->dir_option[rs.arg2]->trap_dam = rs.arg4;
             }
           } else {
-            TRealContainer *trc = dynamic_cast<TRealContainer *>(obj);
+            TOpenContainer *trc = dynamic_cast<TOpenContainer *>(obj);
             if (trc) {
               trc->addContainerFlag(CONT_TRAPPED);
               trc->setContainerTrapType(mapFileToDoorTrap(rs.arg1));
@@ -2406,6 +2409,12 @@ void reset_zone(int zone, bool bootTime)
             } // check for valid,legal exit
           }  // check for dest room
           break;
+        case 'L':
+          if (bootTime)
+            last_cmd = sysLootLoad(rs, mob, obj, false);
+          else
+            last_cmd = 0;
+          break;
         default:
           vlogf(LOG_BUG, "Undefd cmd in reset table; zone %d cmd %d.\n\r", zone, cmd_no);
           break;
@@ -2437,13 +2446,13 @@ void readStringNoAlloc(FILE *fp)
 
   *buf = 0;
   ptr = buf;
-  while( fgets( ptr, MAX_STRING_LENGTH, fp) ) {
+  while(fgets(ptr, MAX_STRING_LENGTH, fp)) {
     //  Check if we've hit the end of string marker. 
-    if ((marker=strchr( ptr, '~')) != 0) 
+    if ((marker=strchr(ptr, '~')) != 0) 
       break;
     //  Set the pointer to the end of the string. NOTE: This is better then
     // the strlen because we're not starting at the beggining every time. 
-    if ((ptr = strchr( ptr, '\000')) == 0) {
+    if ((ptr = strchr(ptr, '\000')) == 0) {
       vlogf(LOG_FILE, "fread_string(): read error.");
       return;
     }
@@ -2461,20 +2470,22 @@ char *fread_string(FILE *fp)
   *buf = 0;
   ptr = buf;
   unsigned int read_len = MAX_STRING_LENGTH;
-  while( fgets( ptr, read_len, fp) ) {
+  while(fgets(ptr, read_len, fp)) {
     //  Check if we've hit the end of string marker. 
-    if( (marker=strchr( ptr, '~')) != 0)
+    if((marker=strchr(ptr, '~')) != 0) {
       break;
+    }  
     //  Set the pointer to the end of the string. NOTE: This is better then the
     // strlen because we're not starting at the beggining every time. 
-    if( (ptr = strchr( ptr, '\000')) == 0) {
-      vlogf(LOG_FILE, "fread_string(): read error.");
+    if((ptr = strchr(ptr, '\000')) == 0) {
+      vlogf(LOG_FILE, "fread_string(): read error. ack!");
       return mud_str_dup("Empty");
     }
     //  Add the return char. 
     *ptr++ = '\r';
 
     if ((int) (ptr - buf) >= (int) sizeof(buf)) {
+    vlogf(LOG_MISC, "SHIT! buf overflow!");
       forceCrash("buf overflow");
     }
 
@@ -2482,13 +2493,18 @@ char *fread_string(FILE *fp)
   }
   if (marker)
     *marker = 0;   // Nuke the ~ 
-  if( *buf == 0)
-    return NULL;
-  return mud_str_dup( buf);
+    // if ((int) (ptr - buf) == 0) {
+      // vlogf(LOG_MISC, "(int) (ptr - buf) == 0");
+      // return NULL;
+      //    }
+    if (*buf == 0)
+      return NULL;
+    return mud_str_dup(buf);
+    vlogf(LOG_MISC, "mud_str_dup called");
 }
 
 // read contents of a text file, and place in buf 
-bool file_to_string(const char *name, string &buf, bool concat)
+bool file_to_string(const char *name, string &buf, concatT concat)
 {
   FILE *fl;
   char tmp[256];
@@ -2848,4 +2864,113 @@ extern void cleanUpMail();
   cleanUpMail();
 #endif
 }
+
+// -1=db error (malformed query, db down, etc)
+//  0=no error
+//  1=query successful, but it was a "select" and no results were returned
+int dbquery(MYSQL_RES **res, const char *dbname, const char *msg, const char *query,...)
+{
+  char buf[MAX_STRING_LENGTH+MAX_STRING_LENGTH];
+  char buf2[MAX_STRING_LENGTH+MAX_STRING_LENGTH];
+  int onstring=0, ptr2=0, ptr=0, tmp=0;
+  char tmpc;
+  va_list ap;
+  static MYSQL *sneezydb, *immodb;
+  MYSQL *db=NULL;
+
+  if(res) *res=NULL;
+
+  va_start(ap, query);
+  vsprintf(buf, query, ap);
+  va_end(ap);
+  
+  // try and process the query string a little bit, to find single quotes
+  // this is really messy.  too messy.
+  while(buf[ptr]){
+    if(buf[ptr]=='\''){
+      if(onstring){
+	if(buf[ptr+1]==',' || buf[ptr+1]=='\0' || buf[ptr+1]==' ')
+	  onstring=0;
+	else
+	  buf2[ptr2++]='\'';
+      } else {
+	if(buf[ptr-1]=='=' || !strncmp(&buf[ptr-5], "like", 4) || 
+	   (buf[ptr-1]==' ' && buf[ptr-2]==',') || buf[ptr-1]=='(')
+	  onstring=1;
+	else {
+	  // serious klugery
+	  // found a stray ', so assume we screwed up, backtrack and fix it
+	  tmp=ptr2;
+	  while(buf2[--ptr2]!='\'');
+	  tmpc=buf2[++ptr2];
+	  buf2[ptr2]='\'';
+	  while(++ptr2 && ptr2<tmp)
+	    buf2[ptr2]^=tmpc^=buf2[ptr2]^=tmpc;
+	  vlogf(LOG_BUG, "dbquery: Found stray ' in query parsing, cross your fingers");
+	}
+      }
+    }
+
+    buf2[ptr2++]=buf[ptr++];
+  }
+  buf2[ptr2]='\0';
+
+  if(!strcmp(dbname, "sneezy")){
+    if(!sneezydb){
+      const char * dbconnectstr = NULL;
+      if(gamePort == PROD_GAMEPORT){
+	dbconnectstr="sneezy";
+      } else if(gamePort == BUILDER_GAMEPORT){
+	dbconnectstr="sneezybuilder";
+      } else {
+	dbconnectstr="sneezybeta";
+      }
+
+      vlogf(LOG_MISC, "%s: Initializing database '%s'.", msg,
+	    dbconnectstr);
+      sneezydb=mysql_init(NULL);
+      
+      vlogf(LOG_MISC, "%s: Connecting to database.", msg);
+      if(!mysql_real_connect(sneezydb, NULL, "sneezy", NULL, 
+	  dbconnectstr, 0, NULL, 0)){
+	vlogf(LOG_BUG, "Could not connect to database '%s'.",
+	      dbconnectstr);
+	return -1;
+      }
+    }    
+
+    db=sneezydb;
+  } else if(!strcmp(dbname, "immortal")){
+    if(!immodb){
+      vlogf(LOG_MISC, "%s: Initializing database 'immortal'.", msg);
+      immodb=mysql_init(NULL);
+      
+      vlogf(LOG_MISC, "%s: Connecting to database.", msg);
+      if(!mysql_real_connect(immodb, NULL, "sneezy", NULL, 
+			     "immortal", 0, NULL, 0)){
+	vlogf(LOG_BUG, "Could not connect to database 'immortal'.");
+	return -1;
+      }
+    }    
+
+    db=immodb;
+  } else {
+    vlogf(LOG_BUG, "%s: Unknown database %s", msg, dbname);
+    return -1;
+  }
+
+  if(mysql_query(db, buf2)){
+    vlogf(LOG_BUG, "%s: Database query failed: %s", msg, mysql_error(db));
+    vlogf(LOG_BUG, "%s: %s", msg, buf2);
+    return 1;
+  }
+  if(res){
+    *res=mysql_store_result(db);
+    if(*res && !mysql_num_rows(*res) && mysql_field_count(db)) 
+      return 1;
+  }  
+
+  return 0;
+}
+
 
