@@ -239,6 +239,13 @@ void TBeing::updatePos()
 {
   positionTypeT newPos = POSITION_DEAD;
 
+  if (hasClass(CLASS_SHAMAN) && (-10 >= getHit())) {
+    sendTo("You have just died and are being regenerated at the location of your corpse.\n\r");
+    sendTo("This is a temporary fix to an annoying problem and will change.\n\r");
+    rawKill(DAMAGE_NORMAL);
+    return;
+  }
+  // XXXXXX
   if ((getHit() > 0) && (getPosition() > POSITION_STUNNED))
     return;
 
@@ -3568,6 +3575,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     }
     if (hasClass(CLASS_SHAMAN) && (dam == 0)) {
       addToLifeforce(1);
+      updatePos();
     }
     rc = damageWeapon(vict, part_hit, &weapon);
     if (IS_SET_ONLY(rc, DELETE_ITEM))
@@ -5261,6 +5269,7 @@ void TBeing::genericKillFix(void)
     if (hasClass(CLASS_SHAMAN)) {
       setHit(25);
       setLifeforce(25);
+      updatePos();
     } else {
       setHit(1);
     }

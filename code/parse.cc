@@ -1687,8 +1687,10 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
     if (0 >= getLifeforce()) {
       setLifeforce(0);
       addToHit(-1);
+      updatePos();
     } else {
       addToLifeforce(-1);
+      updatePos();
     }
   }
   // END LIFEFORCE

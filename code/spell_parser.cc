@@ -84,6 +84,7 @@ int TBeing::useLifeforce(spellNumT spl)
   } else {
     return arrayLifeforce;
   }
+  updatePos();
 }
 
 // END LIFEFORCE
@@ -370,6 +371,7 @@ void TBeing::saySpell(spellNumT si)
 
     }
   }
+  updatePos();
 }
 
 static int preflight_mana(TBeing *ch, spellNumT spl)
@@ -535,6 +537,7 @@ int TBeing::reconcileLifeforce(spellNumT spl, bool checking, int lifeforce)
       setLifeforce(0);
     }
   }
+  updatePos();
   return TRUE;
 }
 // END LIFEFORCE
@@ -2454,7 +2457,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       }
     }
   }
-
+  updatePos();
   return FALSE;
 }
 

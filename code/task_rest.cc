@@ -3,6 +3,15 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_rest.cc,v $
+// Revision 5.2  2001/06/03 07:58:14  jesus
+// temporary fix to an annoying -hp bug with shaman
+//
+// Revision 5.1.1.2  2001/04/01 07:03:27  jesus
+// shaman regen
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -38,22 +47,26 @@ int task_rest(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *, TOb
         if (!ch->roomp->isRoomFlag(ROOM_NO_HEAL)) {
           ch->addToMana(1);
           ch->addToPiety(.10);
+          ch->addToLifeforce(-4);
           ch->addToHit(1);
           if (ch->getMove() < ch->moveLimit())
             ch->addToMove(1);
           if (ch->desc && ch->ansi()) {
             ch->desc->updateScreenAnsi(CHANGED_HP);
             ch->desc->updateScreenAnsi(CHANGED_MANA);
+            ch->desc->updateScreenAnsi(CHANGED_LIFEFORCE);
             ch->desc->updateScreenAnsi(CHANGED_PIETY);
             ch->desc->updateScreenAnsi(CHANGED_MOVE);
           } else if (ch->desc && ch->vt100()) {
             ch->desc->updateScreenVt100(CHANGED_HP);
             ch->desc->updateScreenVt100(CHANGED_PIETY);
             ch->desc->updateScreenVt100(CHANGED_MANA);
+            ch->desc->updateScreenVt100(CHANGED_LIFEFORCE);
             ch->desc->updateScreenVt100(CHANGED_MOVE);
           }
         }
       }
+      ch->updatePos();
       ch->task->status = 0;
       break;
   case CMD_ABORT:

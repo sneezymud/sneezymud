@@ -926,6 +926,7 @@ int vampiricTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int ad
     caster->nothingHappens();
     return SPELL_FAIL;
   }
+  caster->updatePos();
 }
 
 int vampiricTouch(TBeing *caster, TBeing *victim)

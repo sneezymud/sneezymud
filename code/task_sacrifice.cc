@@ -68,12 +68,14 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   if (percent < ch->getSkillValue(SKILL_SACRIFICE)) {
     act("$p is being accepted by the loa.", FALSE, ch, corpse, 0, TO_CHAR);
     ch->addToLifeforce(factor);
+    ch->updatePos();
   } else {
     ch->addToLifeforce(-factor2);
     if (0 >= ch->getLifeforce()) {
       ch->setLifeforce(0);
       act("The loa demands you to pay for your disrespect!", FALSE, ch, 0, 0, TO_CHAR);
       ch->addToHit(num1);
+      ch->updatePos();
     }
   }
 

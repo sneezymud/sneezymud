@@ -117,6 +117,7 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
     act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
     act("You groan in pain as life is drawn from your body!", FALSE, caster, NULL, victim, TO_VICT);
     caster->addToLifeforce(lfmod);
+    caster->updatePos();
     TPerson *pers;
     switch (critSuccess(caster, SPELL_LICH_TOUCH)) {
       case CRIT_S_DOUBLE:
@@ -162,6 +163,7 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
                FALSE, caster, NULL, NULL, TO_CHAR);
         caster->addToMove(-vit);
         caster->addToLifeforce(0);
+	caster->updatePos();
         dam /= 3;
         if (caster->reconcileDamage(caster, dam, SPELL_LICH_TOUCH) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;

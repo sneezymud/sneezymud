@@ -753,9 +753,11 @@ int TBeing::updateHalfTickStuff()
 	sendTo("Your ancestors demand you gather lifeforce.\n\r");
       } else {
 	addToLifeforce(-1);
+	updatePos();
       }
     } else {
       setLifeforce(9000);
+      updatePos();
     }
   }
 
@@ -1099,6 +1101,7 @@ int TBeing::updateHalfTickStuff()
           mana_bump = ::number(1,3);
           if (!foodReject || (0 >= getLifeforce())) {
             addToHit(1);
+	    updatePos();
             sendTo("Your condition prevents your body's full recovery.\n\r");
           } else 
             sendTo("Your condition takes its toll on your body.\n\r"); 
