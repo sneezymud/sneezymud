@@ -99,8 +99,14 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
       if(convertTo<int>(arg)==0)
 	return false;
       hpi->chip=convertTo<int>(arg);
-      me->doSay("All your %s are belong to Gambler2000.",
-		obj_index[real_object(hpi->chip)].short_desc);
+
+      if(real_object(hpi->chip)==-1){
+	me->doSay("I can't find that chip.");
+	hpi->chip=CHIP_100;
+      } else {
+	me->doSay("All your %s are belong to Gambler2000.",
+		  obj_index[real_object(hpi->chip)].short_desc);
+      }
     } else if(arg=="freechips"){
       if(hpi->free_chips){
 	hpi->free_chips=false;
@@ -204,6 +210,7 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
     case STATE_FLOP:
       if(handval > 30 && ::number(0,1)){
 	gHoldem.raise(me, "");
+	gHoldem.call(me); // sometimes raise fails, if he's broke etc
 	return true;
       } else if(handval > 15 || !::number(0,3)){
 	gHoldem.call(me);
@@ -218,6 +225,7 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
     case STATE_RIVER:
       if(handval > 45){
 	gHoldem.raise(me, "");
+	gHoldem.call(me); // sometimes raise fails, if he's broke etc
       } else if(handval > 15){
 	gHoldem.call(me);
       } else {
