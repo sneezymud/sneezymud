@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_water.cc,v $
+// Revision 1.5  1999/09/19 20:42:10  peel
+// Can conjure water elemental in rain now.
+//
 // Revision 1.4  1999/09/16 04:49:41  peel
 // Fixed typo.
 //
@@ -817,7 +820,8 @@ int conjureElemWater(TBeing * caster)
   if (!bPassMageChecks(caster, SPELL_CONJURE_WATER, NULL))
     return FALSE;
 
-  if(caster->roomp->isWaterSector()){
+  if(caster->roomp->isWaterSector() ||
+     caster->roomp->getWeather() == WEATHER_RAINY){
     found=1;
   } else {
     for(t=caster->roomp->stuff;t;t=t->nextThing){
