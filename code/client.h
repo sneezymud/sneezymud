@@ -2,13 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: client.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -93,7 +86,7 @@ const int CLIENT_GROUPADD     = 172;
 const int CLIENT_GROUPDELETE  = 173;
 const int CLIENT_GROUP        = 174;
 const int CLIENT_GROUPDELETEALL = 175;
-
+const int CLIENT_ROMBLER      = 176;
 
 
 const int ERR_BAD_NAME       = 1;
@@ -115,3 +108,23 @@ extern bool is_client_string(char *str);
 extern bool Clients;
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

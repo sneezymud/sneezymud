@@ -1296,9 +1296,9 @@ int rombler(TBeing *caster, int, byte bKnown)
               (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
               !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
 	  if (i->character->hasClass(CLASS_SHAMAN)) {
-            i->character->sendTo(COLOR_SPELLS, "<B>%s<z> rombles, \"<Y>%s%s<z>\"\n\r", caster->getName(),  msg, i->character->norm());
+            i->character->sendTo(COLOR_SPELLS, "<P>%s<z> rombles, \"<c>%s%s\"\n\r", caster->getName(),  msg, i->character->norm());
           } else {
-            i->character->sendTo(COLOR_SPELLS, "<p>In the faint distance you hear savage drumming.<z>\n\r"); 
+            i->character->sendTo(COLOR_SPELLS, "<P>In the faint distance you hear savage drumming.<z>\n\r"); 
           } 
         }
       }
@@ -1336,4 +1336,9 @@ int ret,level;
   }
   return TRUE;
 }
+
+
+
+
+
 

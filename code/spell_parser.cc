@@ -1066,6 +1066,14 @@ spellNumT TBeing::parseSpellNum(char *arg)
     }
     return SPELL_TELEPATHY;
   }
+  if (isname(kludge, "romble")) {
+    strcpy(arg, one_argument(arg, kludge));
+    if (!doesKnowSkill(SPELL_ROMBLER)) {
+      sendTo("You don't know that spell!\n\r");
+      return TYPE_UNDEFINED;
+    }
+    return SPELL_ROMBLER;
+  }
   spellNumT which;
   if (((which = searchForSpellNum(arg, EXACT_YES)) > TYPE_UNDEFINED) ||
       ((which = searchForSpellNum(arg, EXACT_NO)) > TYPE_UNDEFINED)) {
