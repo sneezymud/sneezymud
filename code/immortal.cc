@@ -4661,9 +4661,13 @@ void TBeing::doInfo(const char *arg)
 	if(count[li]==-1)
 	  break;
 
-	sendTo("[%6i] %-17s\n\r", count[li], ItemInfo[li]->name);
+	ssprintf(buf,"%s[%6i] %-17s\n\r", 
+		 buf.c_str(),count[li], ItemInfo[li]->name);
 	count[li]=-1;
       }
+
+
+      desc->page_string(buf.c_str());
     }
 
 #if 1
