@@ -372,7 +372,7 @@ amap:	$(LIBS) objs/amap.o objs/lowtools.o
 	@/usr/bin/strip amap
 
 # make all low tools
-lowtools: sqladdobjs sqledobj amap
+lowtools: sqladdobjs sqledobj amap sqledwld
 	@/bin/cp -f sqladdobjs sqledobj /mud/low/bin
 	@echo Finished making lowtools
 
