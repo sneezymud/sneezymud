@@ -33,8 +33,9 @@ void calcBankInterest()
 	       shop_nr);
       if(in.fetchRow())
 	posttalens=convertTo<int>(in["talens"]);
-      
-      in.query("insert into shoplog values (%i, 'unknown', 'paying interest', 'all', %i, 0, 0, now(), 0)", shop_nr, posttalens-pretalens);
+
+      if((posttalens-pretalens) !=0)
+	in.query("insert into shoplog values (%i, 'unknown', 'paying interest', 'all', %i, 0, 0, now(), 0)", shop_nr, posttalens-pretalens);
 
     }
   }
