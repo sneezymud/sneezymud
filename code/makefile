@@ -300,7 +300,8 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_mobs_holdem_player.o	spec_mobs_postman.o		\
 	spec_mobs_corporate_assistant.o spec_mobs_fireman.o \
 	spec_objs_sweeps.o spec_mobs_archer.o \
-	spec_mobs_flaskPeddler.o spec_mobs_limbDispo.o
+	spec_mobs_flaskPeddler.o spec_mobs_limbDispo.o \
+	spec_mobs_statSurgeon.o
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
 # list of our local shared libs
@@ -1445,6 +1446,7 @@ objs/cmd_disarm.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/cmd_disarm.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/cmd_disarm.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/cmd_disarm.o: materials.h colorstring.h format.h combat.h
+objs/cmd_disarm.o: obj_base_clothing.h
 objs/cmd_dissect.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/cmd_dissect.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/cmd_dissect.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -13956,8 +13958,9 @@ objs/spec_mobs_limbDispo.o: sound.h create.h thing.h room.h obj.h spec_objs.h
 objs/spec_mobs_limbDispo.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/spec_mobs_limbDispo.o: monster.h account.h extern.h handler.h
 objs/spec_mobs_limbDispo.o: obj_money.h rent.h spec_mobs.h materials.h
-objs/spec_mobs_limbDispo.o: colorstring.h format.h obj_base_corpse.h
-objs/spec_mobs_limbDispo.o: obj_base_container.h
+objs/spec_mobs_limbDispo.o: colorstring.h format.h obj_corpse.h
+objs/spec_mobs_limbDispo.o: obj_base_corpse.h obj_base_container.h
+objs/spec_mobs_limbDispo.o: obj_drinkcon.h obj_base_cup.h obj_trash.h mail.h
 objs/spec_mobs_lottery_redeemer.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_lottery_redeemer.o: /usr/include/stdio.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/sys/cdefs.h
@@ -14197,6 +14200,66 @@ objs/spec_mobs_postman.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/spec_mobs_postman.o: person.h monster.h account.h extern.h handler.h
 objs/spec_mobs_postman.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/spec_mobs_postman.o: colorstring.h format.h
+objs/spec_mobs_statSurgeon.o: stdsneezy.h /usr/include/g++/cstdio
+objs/spec_mobs_statSurgeon.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/spec_mobs_statSurgeon.o: /usr/include/machine/ansi.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/ctime /usr/include/time.h
+objs/spec_mobs_statSurgeon.o: /usr/include/sys/_posix.h
+objs/spec_mobs_statSurgeon.o: /usr/include/sys/types.h
+objs/spec_mobs_statSurgeon.o: /usr/include/sys/inttypes.h
+objs/spec_mobs_statSurgeon.o: /usr/include/machine/types.h
+objs/spec_mobs_statSurgeon.o: /usr/include/machine/endian.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/spec_mobs_statSurgeon.o: /usr/include/runetype.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/cstring /usr/include/string.h
+objs/spec_mobs_statSurgeon.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/spec_mobs_statSurgeon.o: /usr/include/errno.h /usr/include/g++/string
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/std/bastring.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/std/straits.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/alloc.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_config.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_alloc.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/iostream.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/streambuf.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/libio.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/iterator
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_relops.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_iterator.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/std/bastring.cc
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/vector
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_algobase.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_pair.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/type_traits.h
+objs/spec_mobs_statSurgeon.o: /usr/include/limits.h
+objs/spec_mobs_statSurgeon.o: /usr/include/machine/limits.h
+objs/spec_mobs_statSurgeon.o: /usr/include/sys/syslimits.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/new.h /usr/include/g++/new
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/exception
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_construct.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_uninitialized.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_vector.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_bvector.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/map
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_tree.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_function.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_map.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/stl_multimap.h
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/iostream
+objs/spec_mobs_statSurgeon.o: /usr/include/g++/sstream sstring.h low.h enum.h
+objs/spec_mobs_statSurgeon.o: spells.h structs.h parse.h immunity.h
+objs/spec_mobs_statSurgeon.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/spec_mobs_statSurgeon.o: client.h response.h faction.h comm.h toggle.h
+objs/spec_mobs_statSurgeon.o: wiz_powers.h cmd_message.h stats.h limbs.h
+objs/spec_mobs_statSurgeon.o: body.h race.h skills.h disease.h trap.h task.h
+objs/spec_mobs_statSurgeon.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/spec_mobs_statSurgeon.o: spec_objs.h connect.h obj_drug.h charfile.h
+objs/spec_mobs_statSurgeon.o: being.h person.h monster.h account.h extern.h
+objs/spec_mobs_statSurgeon.o: handler.h obj_money.h rent.h spec_mobs.h
+objs/spec_mobs_statSurgeon.o: materials.h colorstring.h format.h
 objs/spec_mobs_tattoo_artist.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_tattoo_artist.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_tattoo_artist.o: /usr/include/machine/ansi.h

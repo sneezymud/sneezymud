@@ -700,8 +700,8 @@ void TPerson::doOEdit(const char *argument)
       break;
     case 10: // Max Structure Points
       if ((sscanf(sstring, "%d", &oValue)) != 1 ||
-          oValue < -1 || oValue > 100) {
-        sendTo("Incorrect Max Structure, Must be between -1 and 100.\n\r");
+          oValue < -1 || oValue > 32767) {
+        sendTo("Incorrect Max Structure, Must be between -1 and 32767.\n\r");
         return;
       }
       cObj->obj_flags.max_struct_points = oValue;
@@ -709,8 +709,8 @@ void TPerson::doOEdit(const char *argument)
       break;
     case 11: // Cur Structure Points
       if ((sscanf(sstring, "%d", &oValue)) != 1 ||
-          oValue < -1 || oValue > 100) {
-        sendTo("Incorrect Current Structure, Must be between -1 and 100.\n\r");
+          oValue < -1 || oValue > 32767) {
+        sendTo("Incorrect Current Structure, Must be between -1 and 32767.\n\r");
         return;
       }
       cObj->obj_flags.struct_points = oValue;
@@ -1301,8 +1301,8 @@ static void change_obj_max_struct_points(TBeing *ch, TObj *o, const char *arg, e
     }
     new_struct = convertTo<int>(arg);
 
-    if (new_struct < -1 || new_struct > 100) {
-      ch->sendTo("Please enter a number from 1-100.\n\r");
+    if (new_struct < -1 || new_struct > 32767) {
+      ch->sendTo("Please enter a number from 1-32767.\n\r");
       return;
     } else {
       o->obj_flags.max_struct_points = new_struct;
@@ -1524,8 +1524,8 @@ static void change_obj_struct_points(TBeing *ch, TObj *o, const char *arg, edito
     }
     new_struct = convertTo<int>(arg);
 
-    if (new_struct < -1 || new_struct > 100) {
-      ch->sendTo("Please enter a number from 1-100.\n\r");
+    if (new_struct < -1 || new_struct > 32767) {
+      ch->sendTo("Please enter a number from 1-32767.\n\r");
       return;
     } else {
       o->obj_flags.struct_points = new_struct;

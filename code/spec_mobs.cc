@@ -7463,6 +7463,7 @@ int chicken(TBeing *, cmdTypeT cmd, const char *, TMonster *chicken, TObj *)
 }
 
 
+extern int statSurgeon(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int fireman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int flaskPeddler(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int limbDispo(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7669,6 +7670,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE, "archer", archer},
   {FALSE, "peddler", flaskPeddler}, // 185
   {FALSE, "limb disposer", limbDispo},
+  {FALSE, "stat surgeon", statSurgeon},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

@@ -169,7 +169,8 @@ const int SPEC_MIMIC              =183;
 const int SPEC_ARCHER             =184;
 const int SPEC_FLASK_PEDDLER      =185;
 const int SPEC_LIMB_DISPO         =186;
-const int NUM_MOB_SPECIALS        =186;
+const int SPEC_STAT_SURG          =187;
+const int NUM_MOB_SPECIALS        =187;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
