@@ -42,13 +42,16 @@ void updateStocks()
 {
   TDatabase db(DB_SNEEZY), stocks(DB_SNEEZY);
 
-
   stocks.query("select ticker, shares, price, (((random() * volatility * 2) - volatility) / 100) as pricechange from stockinfo");
 
   while(stocks.fetchRow()){
     float pricechange=convertTo<float>(stocks["pricechange"]);
     float price=convertTo<float>(stocks["price"]);
     sstring ticker=stocks["ticker"];
+    int shares=convertTo<int>(stocks["shares"]);
+
+    if(shares<=0)
+      continue;
 
     if((price+pricechange) < 10.0){
       stockReverseSplit(ticker, pricechange);
@@ -88,19 +91,22 @@ int stockBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 
   ch->sendTo("You examine the board:\n\r");
   ch->sendTo("------------------------------------------------------------\n\r");
-  ch->sendTo("Ticker   Bid   Ask  Market Cap                                \n\r");
+  ch->sendTo("Ticker   Bid    Ask  Change  Market Cap                                \n\r");
   ch->sendTo("------------------------------------------------------------\n\r");
+  
+  db.query("select distinct si.ticker, si.price, sh.price as dayprice, si.shares from stockinfo si, stockhistory sh, (select ticker, max(n) as n from stockhistory group by ticker) sn where sh.n=sn.n and si.ticker=sh.ticker");
 
-  db.query("select ticker, price, shares from stockinfo order by ticker");
 
-  float price;
+  float price, pricediff;
   int shares;
   while(db.fetchRow()){
     price=convertTo<float>(db["price"]);
     shares=convertTo<int>(db["shares"]);
+    pricediff=price-convertTo<float>(db["dayprice"]);
 
-    ch->sendTo(fmt("%6s  %.2f  %.2f  %s\n\r") %
-	       db["ticker"] % (price*0.97) % (price * 1.03) %
+    ch->sendTo(COLOR_BASIC, fmt("%-6s  <Y>%.2f  %.2f<1>  %s%+.2f<1>   %s\n\r") %
+	       db["ticker"] % (price*0.97) % (price * 1.03) % 
+	       (pricediff>0?"<G>":"<R>") % pricediff %
 	       talenDisplay((int)(price*(float)shares)));
     
     
