@@ -1096,6 +1096,8 @@ void TBeing::doPractice(const char *argument)
     for (i=MIN_DISC; i < MAX_DISCS; i++) {
       if (!strcmp(disc_names[i], "unused")) 
         continue;
+      if (!strcmp(disc_names[i], "Psionic Abilities"))
+	continue;
       if (!(cd = getDiscipline(i))) {
         vlogf(LOG_BUG, "Somehow %s was not assigned a discipline (%d), used prac class (%d).",getName(), i, which);
       }
