@@ -618,7 +618,9 @@ int TMainSocket::gameLoop()
       updateStocks();
     }
 
-    if(time_info.seconds=time_info.hours=time_info.minutes=0){
+    if(time_info.seconds==0 &&
+       time_info.hours==0 &&
+       time_info.minutes==0){
       // once per mud day hopefully
       updateStockHistory();
     }
