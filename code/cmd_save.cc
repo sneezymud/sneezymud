@@ -117,7 +117,7 @@ void TBeing::doSave(silentTypeT silent, const char *tArg = NULL)
     }
   }
 
-  if (!silent)
+  if (isPlayerAction(PLR_SHOW_SAVES) || !silent)
     sendTo("Saving.\n\r");
 
   if (dynamic_cast<TMonster *>(this) && IS_SET(specials.act, ACT_POLYSELF)) {

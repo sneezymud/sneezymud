@@ -318,7 +318,8 @@ void TPerson::doToggle(const char *arg2)
 	   ((desc->account->term == TERM_VT100)?"vt100":"none "));
     sendTo(COLOR_BASIC, "Allow Pinging     : %s\n\r", on_or_off(isPlayerAction(PLR_PING)));
     sendTo(COLOR_BASIC, "Brief             : %s  | ", on_or_off(isPlayerAction(PLR_BRIEF)));
-    sendTo(COLOR_BASIC, "Compact           : %s\n\r", on_or_off(isPlayerAction(PLR_COMPACT)));
+    sendTo(COLOR_BASIC, "Compact           : %s  | ", on_or_off(isPlayerAction(PLR_COMPACT)));
+    sendTo(COLOR_BASIC, "Show Saves        : %s\n\r", on_or_off(isPlayerAction(PLR_SHOW_SAVES)));
 
     
     if(isImmortal() || GetMaxLevel() >= GOD_LEVEL1){
@@ -382,6 +383,14 @@ void TPerson::doToggle(const char *arg2)
     } else {
       sendTo("You are now in compact mode.\n\r");
       addPlayerAction(PLR_COMPACT);
+    }
+  } else if(is_abbrev(arg, "showsaves")){
+    if (isPlayerAction(PLR_SHOW_SAVES)) {
+      sendTo("You will now receive pfile save notification.\n\r");
+      remPlayerAction(PLR_SHOW_SAVES);
+    } else {
+      sendTo("You will no longer receive pfile save notification.\n\r");
+      addPlayerAction(PLR_SHOW_SAVES);
     }
   } else if(is_abbrev(arg, "brief")){
     if (isPlayerAction(PLR_BRIEF)) {
