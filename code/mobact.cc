@@ -3406,7 +3406,7 @@ int TMonster::mobileActivity(int pulse)
       return FALSE;
     }
     
-    if(shopOwned(shop_nr)){
+    if(0 && shopOwned(shop_nr)){
       MYSQL_RES *res;
       int rc;
 
