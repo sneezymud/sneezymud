@@ -1093,7 +1093,7 @@ float TBeing::getConHpModifier() const
   // the values and used our standards - Dash
   // (and its still following balance notes)
 
-  return plotStat(STAT_CURRENT, STAT_CON, (float) 4.0/5.0, (float) 5.0/4.0, (float) 1.0);
+  return plotStat(STAT_CURRENT, STAT_CON, (float) 4.0/5.0, (float) 5.0/4.0, (double) 1.0);
 }
 
 float TBeing::getDexMod() const
