@@ -429,8 +429,6 @@ int TSocket::gameLoop()
     }
 
 
-
-
     last_time.tv_sec = now.tv_sec + timeout.tv_sec;
     last_time.tv_usec = now.tv_usec + timeout.tv_usec;
     if (last_time.tv_usec >= 1000000) {
@@ -438,9 +436,8 @@ int TSocket::gameLoop()
       last_time.tv_sec++;
     }
 
-#ifndef SOLARIS
     sigsetmask(mask);
-#endif
+
 #ifdef LINUX
     // linux uses a nonstandard style of "timedout" (the last parm of select)
     // it gets hosed each select() so must be reinited here
@@ -459,9 +456,8 @@ int TSocket::gameLoop()
       perror("Error in select (sleep)");
     }
 
-#ifndef SOLARIS
     sigsetmask(0);
-#endif
+
     ////////////////////////////////////////////
     ////////////////////////////////////////////
 
@@ -545,7 +541,8 @@ int TSocket::gameLoop()
     
     pulse++;
 
-    // undocumented beavior requires all pulses to be multiples of 12
+    // this doesn't really work unfortunately, pulses need to be
+    // multiples of 12
 #if 0
     // quickpulse is ignored because it is too fast!
     quickpulse = (pulse % ONE_SECOND/5);           // 2
@@ -583,9 +580,9 @@ int TSocket::gameLoop()
     mudRecvMessage();
 
     // send out repo mobs
-    if(!wayslowpulse){
+    if(!wayslowpulse)
       checkForRepo();
-    }
+
 
     if (!pulse_tick) {
       // these are done per tick (15 mud minutes)
@@ -623,16 +620,14 @@ int TSocket::gameLoop()
       checkGoldStats();
     }
 
-    
-    if(!teleport){
+    if (!teleport){
+      // set zone emptiness flags
       for (unsigned int i = 0; i < zone_table.size(); i++)
 	zone_table[i].zone_value=zone_table[i].isEmpty()?1:-1;
 
+      // room procs
       call_room_specials();
-    }
 
-
-    if (!teleport){
       // note on this loop
       // it is possible that next_thing gets deleted in one of the sub funcs
       // we don't get acknowledgement of this in any way.
@@ -726,104 +721,13 @@ int TSocket::gameLoop()
             obj = NULL;
 	    continue;
           }
+
+	  // fun with smoke
 	  TSmoke *smoke=dynamic_cast<TSmoke *>(obj);
-	  
-	  // handle merging
-	  if(smoke){	    
-	    TSmoke *tsmoke;
-	    TThing *t, *t2;
-
-	    for(t=real_roomp(smoke->in_room)->getStuff();t;t=t2){
-	      t2=t->nextThing;
-
-	      if((tsmoke=dynamic_cast<TSmoke *>(t)) && tsmoke!=smoke){
-		// merge!
-		smoke->addToVolume(tsmoke->getVolume());
-		--(*tsmoke);
-		delete tsmoke;
-	      }
-	    }
-
-	  }
-
-
-	  // handle drifting
-	  if(smoke && smoke->roomp){
-	    roomDirData *exitp;
-	    TRoom *rp=smoke->roomp;
-	    TThing *t, *t2;
-	    TPortal *tp;
-	    
-	    // move up if possible
-	    if((exitp=smoke->roomp->exitDir(DIR_UP)) &&
-	       !IS_SET(exitp->condition, EX_CLOSED) &&
-	       (rp=real_roomp(exitp->to_room))){
-	      act("$n drifts upwards.",
-		  FALSE, smoke, 0, 0, TO_ROOM); 
-	      --(*smoke);
-	      *rp += *smoke;
-	      act("$n drifts in from below.",
-		  FALSE, smoke, 0, 0, TO_ROOM); 
-	    } else {
-	      dirTypeT dir;
-	      TPathFinder path;
-
-	      path.setUsePortals(true);
-	      path.setNoMob(false);
-	      path.setThruDoors(false);
-	      path.setRange(25);
-	      dir=path.findPath(smoke->inRoom(), findOutdoors());
-	      
-	      if(dir >= MAX_DIR){
-		dir=dirTypeT(dir-MAX_DIR+1);
-		int seen = 0;
-
-		for (t = smoke->roomp->getStuff(); t; t = t2) {
-		  t2 = t->nextThing;
-
-		  if ((tp=dynamic_cast<TPortal *>(t))){
-		    seen++;
-		    if (dir == seen) {
-		      if((rp=real_roomp(tp->getTarget()))){
-			act(fmt("$n drifts into %s.") % tp->getName(),
-			    FALSE, smoke, 0, 0, TO_ROOM); 
-			--(*smoke);
-			*rp += *smoke;
-			act(fmt("$n drifts in from %s.") % tp->getName(),
-			    FALSE, smoke, 0, 0, TO_ROOM); 
-		      }
-		    }
-		  }
-		}
-	      } else if (dir >= MIN_DIR && dir != DIR_DOWN && 
-		  (exitp=smoke->roomp->exitDir(dir)) &&
-		  (rp=real_roomp(exitp->to_room))){
-		act(fmt("$n drifts %s.") % dirs_to_blank[dir],
-		    FALSE, smoke, 0, 0, TO_ROOM); 
-
-		--(*smoke);
-		*rp += *smoke;		
-		act(fmt("$n drifts in from the %s.") % dirs[rev_dir[dir]],
-		    FALSE, smoke, 0, 0, TO_ROOM); 
-	      }
-	    }
-	  }
-	  
-	  // handle choking
-	  if(smoke && smoke->getSizeIndex()>=7){
-	    for(TThing *t=real_roomp(smoke->in_room)->getStuff();t;t=t->nextThing){
-	      TBeing *tb;
-	      if(!::number(0,4) && (tb=dynamic_cast<TBeing *>(t))){
-		tb->sendTo(COLOR_BASIC, "<r>The large amount of smoke in the room causes you to choke and cough!<1>\n\r");
-		rc=tb->reconcileDamage(tb, ::number(3,11), DAMAGE_SUFFOCATION);
-
-		if (IS_SET_DELETE(rc, DELETE_VICT)) {
-		  delete tb;
-		  continue;
-		}
-
-	      }
-	    }
+	  if(smoke){
+	    smoke->doMerge();
+	    smoke->doDrift();
+	    smoke->doChoke();
 	  }
 	}	
 	if (!pulse_mudhour) {

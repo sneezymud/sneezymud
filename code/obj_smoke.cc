@@ -1,5 +1,7 @@
 #include "stdsneezy.h"
 #include "obj_smoke.h"
+#include "pathfinder.h"
+#include "obj_portal.h"
 
 /* todo
 light reduction
@@ -7,6 +9,115 @@ drifting
 coughing etc
 rain put out fire
  */
+
+
+// choke players if there is a whole lot of smoke in the room
+void TSmoke::doChoke()
+{
+  if(!roomp || getSizeIndex() < 7)
+    return;
+
+  for(TThing *t=roomp->getStuff();t;t=t->nextThing){
+    TBeing *tb;
+    if(!::number(0,4) && (tb=dynamic_cast<TBeing *>(t))){
+      tb->sendTo(COLOR_BASIC, "<r>The large amount of smoke in the room causes you to choke and cough!<1>\n\r");
+      int rc=tb->reconcileDamage(tb, ::number(3,11), DAMAGE_SUFFOCATION);
+      
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+	delete tb;
+	continue;
+      }
+    }
+  }
+}
+
+
+// merge with other smoke clouds in the room
+void TSmoke::doMerge()
+{
+  TSmoke *tsmoke;
+  TThing *t, *t2;
+
+  if(!roomp)
+    return;
+  
+  for(t=roomp->getStuff();t;t=t2){
+    t2=t->nextThing;
+    
+    if((tsmoke=dynamic_cast<TSmoke *>(t)) && tsmoke!=this){
+      // merge!
+      addToVolume(tsmoke->getVolume());
+      --(*tsmoke);
+      delete tsmoke;
+    }
+  }
+}
+
+// drift upwards, or towards the closest outdoor room
+void TSmoke::doDrift()
+{
+  roomDirData *exitp;
+  TRoom *rp=roomp;
+  TThing *t, *t2;
+  TPortal *tp;
+
+  if(!roomp)
+    return;
+
+  // move up if possible
+  if((exitp=roomp->exitDir(DIR_UP)) &&
+     !IS_SET(exitp->condition, EX_CLOSED) &&
+     (rp=real_roomp(exitp->to_room))){
+    act("$n drifts upwards.",
+	FALSE, this, 0, 0, TO_ROOM); 
+    --(*this);
+    *rp += *this;
+    act("$n drifts in from below.",
+	FALSE, this, 0, 0, TO_ROOM); 
+  } else {
+    dirTypeT dir;
+    TPathFinder path;
+
+    path.setUsePortals(true);
+    path.setNoMob(false);
+    path.setThruDoors(false);
+    path.setRange(25);
+    dir=path.findPath(inRoom(), findOutdoors());
+	      
+    if(dir >= MAX_DIR){
+      dir=dirTypeT(dir-MAX_DIR+1);
+      int seen = 0;
+
+      for (t = roomp->getStuff(); t; t = t2) {
+	t2 = t->nextThing;
+
+	if ((tp=dynamic_cast<TPortal *>(t))){
+	  seen++;
+	  if (dir == seen) {
+	    if((rp=real_roomp(tp->getTarget()))){
+	      act(fmt("$n drifts into %s.") % tp->getName(),
+		  FALSE, this, 0, 0, TO_ROOM); 
+	      --(*this);
+	      *rp += *this;
+	      act(fmt("$n drifts in from %s.") % tp->getName(),
+		  FALSE, this, 0, 0, TO_ROOM); 
+	    }
+	  }
+	}
+      }
+    } else if (dir >= MIN_DIR && dir != DIR_DOWN && 
+	       (exitp=roomp->exitDir(dir)) &&
+	       (rp=real_roomp(exitp->to_room))){
+      act(fmt("$n drifts %s.") % dirs_to_blank[dir],
+	  FALSE, this, 0, 0, TO_ROOM); 
+
+      --(*this);
+      *rp += *this;		
+      act(fmt("$n drifts in from the %s.") % dirs[rev_dir[dir]],
+	  FALSE, this, 0, 0, TO_ROOM); 
+    }
+  }
+}
 
 
 TSmoke::TSmoke() :

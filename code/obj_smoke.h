@@ -24,6 +24,10 @@ class TSmoke : public TObj {
 
     int getSizeIndex() const;
 
+    void doDrift();
+    void doMerge();
+    void doChoke();
+
     TSmoke();
     TSmoke(const TSmoke &a);
     TSmoke & operator=(const TSmoke &a);
