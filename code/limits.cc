@@ -264,6 +264,9 @@ double TBeing::pietyGain(double modif)
     stats.piety_gained_attempts++;
     stats.piety_gained += gain;
   }
+  if (affectedBySpell(SPELL_ENLIVEN))
+    gain *= 2;
+
   // limit the gain so we don't go over max
   if ((getPiety() + gain) > 100.0)
     gain = 100. - getPiety();
