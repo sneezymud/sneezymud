@@ -2,33 +2,11 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: constants.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/10/03 15:04:04  lapsos
-// Added materials elvenmail/elvensteel
-//
-// Revision 1.2  1999/09/17 06:39:20  peel
-// Added a few more flammability values to material types
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//  SneezyMUD : constants.cc
-// 
 //  Constant integer and string arrays
 //
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
-#include "create.h"
 #include "drug.h"
 
 const dirTypeT rev_dir[MAX_DIR] =
@@ -330,8 +308,8 @@ void assign_item_info()
      "Damage Precision", 10, 0,
      "Weapon type.  See HELP WEAPON TYPES", TYPE_MAX_HIT - TYPE_MIN_HIT, 1);
   ItemInfo[ITEM_FUEL] = new itemInfo("Fuel","a flammable liquid",
-     "Amount of fuel", 75, 0,
-     "Max Amount of Fuel", 75, 0,
+     "Amount of fuel", 256, 0,
+     "Max Amount of Fuel", 256, 0,
      "", 0, 0,
      "", 0, 0);
   ItemInfo[ITEM_OPAL] = new itemInfo("Opal/Powerstone","an opal",
@@ -647,7 +625,7 @@ const char * const extra_bits[] =
   "Magic",
   "Nodrop",
   "Bless",
-  "Martial Weapon",
+  "Spiked",
   "Hover",
   "Rusty",
   "Anti-CLERIC",
@@ -663,12 +641,13 @@ const char * const extra_bits[] =
   "Float",
   "No purge",
   "Newbie",
-  "Only-Male",
-  "Only-Female",
-  "Only-Neuter",
+  "*Do Not Use*", // now unused
+  "*Do Not Use*", // now unused
+  "*Do Not Use*", // now unused
   "Item Attached",
   "Burning",
   "Charred",
+  "No Locate",
   "\n"
 };
 
@@ -717,6 +696,9 @@ const char * const chest_bits[] =
   "Closed",
   "Locked",
   "Trapped",
+  "Secret (No-See)",
+  "Detect-Trap/Empty-Trap",
+  "Detect-Trap/Ghost-Trap",
 };
 
 const char * const door_types[] =
@@ -1085,8 +1067,9 @@ const char * const editor_types_oedit[] =
   "extra",          // 16
   "can_be_seen",    // 17
   "max_exist",      // 18
-  "default_ac_str", // 19
+  "average",        // 19
   "replace",        // 20
+  "resave",         // 21
   "\n"
 };
 
@@ -1121,6 +1104,8 @@ const char * const editor_types_medit[] =
   "room_sound",     // 27
   "oroom_sound",    // 28
   "replace",        // 29
+  "resave",         // 30
+  "average",        // 31
   "\n"
 };
 
@@ -1172,26 +1157,26 @@ const struct material_type_numbers material_nums[200] =
   {100, 100, 100, 100, 50, 11, 11, 5,10, 1, 0, 0, 0, 0, 0, NULL, "Undefined"},
   {100,  20, 100, 100, 5, 209, 0, 5,-1,8, 0, 1000, 75, 0, 0, NULL,"Paper"},
   {90, 0, 100, 100, 1, 11, 0, 30, -3,8, 0, 750, 65, 0, 0, NULL,"Cloth"},
-  {50, 50, 95, 80, 7, 153, 105, 0,-2,1, 0, 0, 40, 0, 0, NULL,"Wax"},
+  {50, 50, 95, 80, 7, 153, 105, 0,-2,1, 0, 250, 40, 0, 0, NULL,"Wax"},
   {0, 100, 0, 50, 40, 0, 249, 0, 3,1, 0, 0, 5, 0, 0, NULL,"Glass"},
   {40, 30, 75, 50, 25, 42, 53, 255, 3,1, 0, 500, 25, 0, 0, NULL,"Wood"},
-  {90, 0, 50, 100, 7, 22, 0, 40, -2,6, 0, 0, 80, 0, 0, NULL,"Silk"},
+  {90, 0, 50, 100, 7, 22, 0, 40, -2,6, 0, 900, 80, 0, 0, NULL,"Silk"},
   {75, 75, 75, 100, 5, 35, 55, 30, 1,2, 0, 0, 95, 0, 0, NULL,"Foodstuff"},
-  {65, 65, 25, 100, 3, 0, 51, 0, -1,2, 0, 0, 50, 0, 0, NULL,"Plastic"},
+  {65, 25, 25, 100, 3, 0, 51, 0, -1,2, 0, 500, 50, 0, 0, NULL,"Plastic"},
   {75, 0, 0, 100, 10, 0, 0, 0, -2,1, 0, 0, 66, 0, 0, NULL,"Rubber"},
   {40, 20, 100, 100, 6, 209, 0, 10, 0,1, 0, 900, 80, 0, 0, NULL,"Cardboard"},
-  {40, 10, 75, 50, 2, 105, 0, 100, -1,2, 0, 0, 85, 0, 0, NULL,"String"},
-  {75, 75, 25, 50, 4, 59, 79, 2, 0,1, 0, 0, 25, 0, 0, NULL,"Plasma"},
+  {40, 10, 75, 50, 2, 105, 0, 100, -1,2, 0, 750, 85, 0, 0, NULL,"String"},
+  {75, 50, 25, 50, 4, 59, 79, 2, 0,1, 0, 0, 25, 0, 0, NULL,"Plasma"},
   {83, 0, 100, 95, 2, 11, 0, 25, -3,6, 0, 600, 60, 0, 0, NULL,"Toughened cloth"},
   {80, 100, 10, 40, 3, 0, 99, 20, 3, 1, 0, 0, 90, 0, 0, NULL,"Coral"},
-  {80, 3, 80, 10, 2, 101, 0, 100, -1, 3, 0, 0, 70, 0, 0, NULL,"Horsehair"},
-  {40, 10, 75, 50, 2, 105, 0, 100, -1, 2, 0, 0, 85, 0, 0, NULL,"Hair"},
+  {80, 3, 80, 10, 2, 101, 0, 100, -1, 3, 0, 750, 70, 0, 0, NULL,"Horsehair"},
+  {40, 10, 75, 50, 2, 105, 0, 100, -1, 2, 0, 750, 85, 0, 0, NULL,"Hair"},
   {90, 5,  2, 50, 2, 103, 11,  99, -1, 4, 0, 0, 30, 0, 0, NULL,"Ash/powder"},
-  {50, 0, 70, 25, 2,  92, 53, 100, -1, 1, 0, 0, 60, 0, 0, NULL, "Pumice"},
+  {50, 65, 70, 25, 2,  92, 53, 100, -1, 1, 0, 0, 60, 0, 0, NULL, "Pumice"},
 // slash susc, blunt susc, fire susc, pierce susc,
 // hardness, water susc, fall susc, float weight, noise, vol_mult, conduct
 // flammability, acid_susc, price, availability, repair proc, mat_name 
-  {50, 5, 4, 40, 12, 30, 36, 3, -1, 3, 0, 0, 25, 0, 0, NULL,"Laminate"},
+  {50, 25, 4, 40, 12, 30, 36, 3, -1, 3, 0, 0, 25, 0, 0, NULL,"Laminate"},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, NULL,""},
@@ -1223,33 +1208,33 @@ const struct material_type_numbers material_nums[200] =
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, NULL,""},
   {50, 50, 50, 50, 0, 11, 55, 5, 10, 1, 0, 0, 50, 0, 0, NULL,"Generic organic"},
-  {75, 5, 5, 70, 20, 55, 55, 3, -2, 4, 0, 0, 20, 0, 0, NULL,"Leather"},
-  {55, 5, 1, 50, 25, 35, 36, 3, -1, 3, 0, 0, 30, 0, 0, NULL,"Toughened leather"},
+  {75, 5, 5, 70, 20, 55, 55, 3, -2, 4, 0, 400, 20, 0, 0, NULL,"Leather"},
+  {55, 5, 1, 50, 25, 35, 36, 3, -1, 3, 0, 200, 30, 0, 0, NULL,"Toughened leather"},
   {10, 50, 10, 30, 50, 11, 0, 0, 5, 1, 0, 0, 10, 0, 0, NULL,"Dragon scale"},
-  {70, 0, 100, 75, 15, 33, 0, 50, -2, 4, 0, 0, 0,   0,   0, NULL,"Wool"},
-  {45, 25, 100, 60, 15, 33, 0, 50, -2, 4, 0, 0, 30,   0,   0, NULL,"Fur"},
-  {30, 60, 100, 45, 15, 0, 0, 60, -3, 1, 0, 0, 15,   0,   0, NULL,"Feathered"},
+  {70, 0, 100, 75, 15, 33, 0, 50, -2, 4, 0, 800, 0,   0,   0, NULL,"Wool"},
+  {45, 5, 100, 60, 15, 33, 0, 50, -2, 4, 0, 800, 30,   0,   0, NULL,"Fur"},
+  {30, 5, 100, 45, 15, 0, 0, 60, -3, 1, 0, 900, 15,   0,   0, NULL,"Feathered"},
   {0, 0, 0, 0, 4, 0, 0, 255, 3, 1, 0, 0, 3,   0,   0, NULL,"Water/liquid"},
-  {0, 50, 0, 0, 0, 249, 105, 0, 8, 1, 0, 0, 3,   0,   0, NULL,"Fire/flaming"},
-  {0, 60, 1, 0, 0, 0, 205, 0, 10, 1, 0, 0, 55,   0,   0, NULL,"Earth/stone"},
-  {25, 75, 100, 0, 0, 0, 205, 0, 10, 1, 0, 0, 35,   0,   0, NULL,"Generic elemental"},
-  {25, 25, 100, 25, 22, 205, 109, 255, 2, 1, 0, 0, 6,   0,   0, NULL,"Ice"},
-  {25, 25, 25, 25, 0, 249, 0, 0, 13, 1, 0, 0, 7,   0,   0, NULL,"Lightning"},
-  {0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 0, 0, 10,   0,   0, NULL,"Chaos"},
+  {0, 0, 0, 0, 0, 249, 105, 0, 8, 1, 0, 0, 3,   0,   0, NULL,"Fire/flaming"},
+  {0, 0, 0, 0, 0, 0, 205, 0, 10, 1, 0, 0, 55,   0,   0, NULL,"Earth/stone"},
+  {25, 25, 100, 25, 0, 0, 205, 0, 10, 1, 0, 0, 35,   0,   0, NULL,"Generic elemental"},
+  {25, 25, 25, 25, 22, 205, 109, 255, 2, 1, 0, 0, 6,   0,   0, NULL,"Ice"},
+  {0, 0, 0, 0, 0, 249, 0, 0, 13, 1, 0, 0, 7,   0,   0, NULL,"Lightning"},
+  {0, 0, 5, 0, 0, 0, 0, 0, 5, 1, 0, 0, 10,   0,   0, NULL,"Chaos"},
   {45, 25, 0, 50, 5, 101, 249, 0, 3, 1, 0, 0, 3,   0,   0, NULL,"Clay"},
   {0, 100, 50, 0, 30, 101, 249, 0, 10, 1, 0, 0, 2,   0,   0, NULL,"Porcelain"},
-  {50, 25, 100, 10, 10, 22, 0, 30, 2, 1, 0, 0, 77,   0,   0, NULL,"Straw"},
-  {5, 10, 10, 0, 40, 0, 39, 0, 10, 1, 0, 0, 66,   0,   0, NULL,"Pearl"},
-  {100, 10, 60, 100, 12, 11, 0, 10, 0, 1, 0, 0, 85,   0,   0, NULL,"Flesh"},
-  {55, 25, 63, 60, 15, 11, 0, 10, -1, 1, 0, 0, 72,   0,   0, NULL,"Cat fur"},
-  {45, 25, 60, 70, 15, 11, 0, 10, 1, 1, 0, 0, 66,   0,   0, NULL,"Dog fur"},
-  {65, 25, 60, 80, 13, 11, 0, 10, -2, 1, 0, 0, 68,   0,   0, NULL,"Rabbit fur"},
-  {45, 85, 10, 50, 1, 249, 0, 255, -5, 1, 0, 0, 5,   0,   0, NULL,"Ghostly"},
-  {43, 7, 5, 45, 24, 36, 36, 0, -1, 5, 0, 0, 25,   0,   0, NULL,"Dwarven leather"},
-  {83, 13,15, 75, 25, 56, 56, 9, -3, 6, 0, 0, 33,   0,   0, NULL,"Soft leather"},
+  {50, 10, 100, 10, 10, 22, 0, 30, 2, 1, 0, 1000, 77,   0,   0, NULL,"Straw"},
+  {5, 50, 10, 0, 40, 0, 39, 0, 10, 1, 0, 0, 66,   0,   0, NULL,"Pearl"},
+  {100, 10, 60, 100, 12, 11, 0, 10, 0, 1, 0, 150, 85,   0,   0, NULL,"Flesh"},
+  {55, 5, 63, 60, 15, 11, 0, 10, -1, 1, 0, 800, 72,   0,   0, NULL,"Cat fur"},
+  {45, 5, 60, 70, 15, 11, 0, 10, 1, 1, 0, 800, 66,   0,   0, NULL,"Dog fur"},
+  {65, 5, 60, 80, 13, 11, 0, 10, -2, 1, 0, 800, 68,   0,   0, NULL,"Rabbit fur"},
+  {45, 10, 10, 50, 1, 249, 0, 255, -5, 1, 0, 0, 5,   0,   0, NULL,"Ghostly"},
+  {43, 7, 5, 45, 24, 36, 36, 0, -1, 5, 0, 300, 25,   0,   0, NULL,"Dwarven leather"},
+  {83, 13,15, 75, 25, 56, 56, 9, -3, 6, 0, 400, 33,   0,   0, NULL,"Soft leather"},
   {53,57,45, 65, 30, 0, 12,30, 2, 2, 0, 0, 12,   0,   0, NULL,"Fishscale"},
-  {90, 15,20,95,33,12,11, 7, 1, 2, 0, 0, 10,   0,   0, NULL,"Ogre hide"},
-  {70, 0, 100, 75, 10, 33, 0, 50, -2, 4, 0, 0, 0,   0,   0, NULL,"Hemp"},
+  {90, 15,20,95,33,12,11, 7, 1, 2, 0, 200, 10,   0,   0, NULL,"Ogre hide"},
+  {70, 0, 100, 75, 10, 33, 0, 50, -2, 4, 0, 750, 0,   0,   0, NULL,"Hemp"},
 // slash susc, blunt susc, fire susc, pierce susc,
 // hardness, water susc, fall susc, float weight, noise, vol_mult, conduct
 // flammability, acid_susc, price, avail, repair proc, mat_name 
@@ -1353,8 +1338,9 @@ const struct material_type_numbers material_nums[200] =
   {0, 47, 0, 3, 47, 101, 101, 0, 35, 1, 1, 0, 70,   0,   0, repairMetal,"Tungstan"},
   {0, 50, 0, 20, 65, 101, 101, 0, 10, 1, 1, 0, 70,   0,   0, repairMetal,"Admintite"},
   {0, 25, 0,  0, 50,   0,  25, 0, 10, 1, 0, 0, 89,   0,   0, repairMetal, "Terbium"},
-  {0, 80, 5, 30, 43, 5, 5, 0, 34, 1, 1, 0, 70,   0,   0, NULL,"Elven Mail"},
-  {0, 65, 10, 40, 40, 5, 5, 0, 34, 1, 1, 0, 70,   0,   0, NULL,"Elven Steel"},
+  {0, 40, 0, 0,  65, 101, 101, 0, 23, 1, 1, 0, 50,   0,   0, repairMetal,"Mithril"},
+  {0, 45, 0, 0,  63, 101, 101, 0, 33, 1, 1, 0, 70,   0,   0, repairMetal,"Steel"},
+  //these previous two types are duplicates, of previous metals. Smile and nod.
   {0, 0, 0, 0, 55, 0, 0, 0, 0, 1, 0, 0, 0,   0,   0, NULL,""},
 // slash susc, blunt susc, fire susc, pierce susc,
 // hardness, water susc, fall susc, float weight, noise, vol_mult, conduct
@@ -1487,6 +1473,7 @@ const char * const immunity_names[MAX_IMMUNES] =
 // that is "*fuck" blocks "somefuck", "fucksome", and "sfucky"
 const char * const illegalnames[] = 
 {
+  // SWEAR WORDS
   "*fuk",
   "*fuck",
   "*shit",
@@ -1504,15 +1491,8 @@ const char * const illegalnames[] =
   "*penis",
   "*talen",
   "*crap",
-  "*shield",
-  "*some",  // someone, something, etc
   "ass",
-  "himself",
-  "itself",
-  "herself",
-  "the",
-  "an",
-  "and",
+  "jackmeoff",
   "piss",
   "pee",
   "urine",
@@ -1520,6 +1500,16 @@ const char * const illegalnames[] =
   "butt",
   "suck",
   "crotch",
+
+  // IMM NAME SIMILARITY
+  "brutus",
+  "fatopr",
+  "batoper",
+
+  // BASIC OBJECTS
+  "*shield",
+
+  // COLORS
   "gold",
   "silver",
   "bronze",
@@ -1530,20 +1520,47 @@ const char * const illegalnames[] =
   "red",
   "blue",
   "green",
+
+  // SILLY COMMON WORDS
+  "*some",  // someone, something, etc
+  "himself",
+  "itself",
+  "herself",
+  "the",
+  "an",
+  "and",
   "there",
+  "you",
+  "then",
+  "women",
+  "men",
+
+  // BLOCKED AS CAUSES CODE PROBLEMS
   "blob",     // needed for infravision 
   "blobs",    // needed for infravision 
   "link",     // needed for purging links 
   "links",    // needed for purging links 
-  "all",
-  "you",
-  "then",
+  "noone",   // needed for makeleader
+  "comment", // needed for comments
+  "all",      // "group all"
   "unknown",   // Log messages use this sometimes
   "share",   // group needs this
-  "logrus",               // major characters
+
+  // MAJOR CHARACTERS
+  "logrus",
   "galek",
   "anilstathis",
   "theoman",
+  "mezan", // deities
+  "luna", // deities
+  "icon", // deities
+  "elyon", // deities
+  "jevon", // deities
+  "omnon", // deities
+  "amana", // deities
+  "menanon", // deities
+
+  // DIRECTIONS that are abbrevs
   "nor",
   "nort",
   "north",
@@ -1573,21 +1590,8 @@ const char * const illegalnames[] =
   "southwe",
   "southwes",
   "southwest",
-  "women",
-  "men",
   "exit",
   "exits",
-  "brutus",
-  "noone",   // needed for makeleader
-  "comment", // needed for comments
-  "mezan", // deities
-  "luna", // deities
-  "icon", // deities
-  "elyon", // deities
-  "jevon", // deities
-  "omnon", // deities
-  "amana", // deities
-  "menanon", // deities
   "\n"
 };
 
@@ -1655,7 +1659,7 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_SMYTHE, CLASS_WARRIOR, "smythe"},
   {DISC_RANGER, CLASS_RANGER, "ranger abilities"},
   {DISC_RANGER_FIGHT, CLASS_RANGER, "fighting skills"},  //20
-  {DISC_NATURE, CLASS_SHAMAN, "nature"},
+  {DISC_SHAMAN_ARMADILLO, CLASS_SHAMAN, "armadillo abilities"},
   {DISC_ANIMAL, CLASS_RANGER, "animals"},
   {DISC_PLANTS, CLASS_RANGER, "plants"},
   {DISC_SURVIVAL, CLASS_RANGER, "survival skills"}, 
@@ -1679,11 +1683,11 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_STEALTH, CLASS_THIEF, "stealth"},               // 45
   {DISC_TRAPS, CLASS_THIEF, "traps"},
   {DISC_SHAMAN, CLASS_SHAMAN, "shaman abilities"},      
-  {DISC_SHAMAN_FIGHT, CLASS_SHAMAN, "fighting skills"},
+  {DISC_SHAMAN_FROG, CLASS_SHAMAN, "frog abilities"},
   {DISC_SHAMAN_ALCHEMY, CLASS_SHAMAN, "alchemy"},
-  {DISC_SHAMAN_HEALING, CLASS_SHAMAN, "healing"},       // 50
-  {DISC_UNDEAD, CLASS_SHAMAN, "undead"},
-  {DISC_DRAINING, CLASS_SHAMAN, "draining"},            
+  {DISC_SHAMAN_SKUNK, CLASS_SHAMAN, "skunk abilities"},       // 50
+  {DISC_SHAMAN_SPIDER, CLASS_SHAMAN, "spider abilities"},
+  {DISC_SHAMAN_CONTROL, CLASS_SHAMAN, "control"},            
   {DISC_TOTEM, CLASS_SHAMAN, "totemism"},
   {DISC_WIZARDRY, CLASS_MAGE | CLASS_SHAMAN, "wizardry"},
   {DISC_FAITH, CLASS_CLERIC | CLASS_DEIKHAN, "faith"},  // 55
@@ -1694,7 +1698,8 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_COMBAT, 0, "combat"},                           // 60
   {DISC_ADVENTURING, 0, "adventuring"},                  
   {DISC_THEOLOGY, CLASS_CLERIC | CLASS_DEIKHAN, "theology"},   
-  {DISC_LORE, CLASS_MAGE | CLASS_SHAMAN, "lore"} // 63 is last
+  {DISC_LORE, CLASS_MAGE, "lore"},
+  {DISC_NATURE, CLASS_RANGER, "nature"} // 64 is last
 
 };
 
@@ -1723,7 +1728,7 @@ const char * const disc_names[MAX_DISCS] =
   "Smythe Skills",
   "Ranger Abilities",
   "Fighting Skills",            // 20
-  "Nature Abilities",
+  "Armadillo Abilities",
   "Animal Abilities",
   "Plant Abilities",
   "Survival Skills",
@@ -1747,11 +1752,11 @@ const char * const disc_names[MAX_DISCS] =
   "Stealth",                     // 45
   "Traps",
   "Shaman Abilities",
-  "Fighting Skills",
+  "Frog Abilities",
   "Alchemy Abilities",
-  "Healing Abilities",           // 50
-  "Undead Control",
-  "Draining Abilities",
+  "Skunk Abilities",           // 50
+  "Spider Abilities",
+  "Control Abilities",
   "Totemism",
   "Wizardry",
   "Faith",                        // 55
@@ -1763,6 +1768,7 @@ const char * const disc_names[MAX_DISCS] =
   "Adventuring Skills",  
   "Theological Learning",
   "Magic Lore",
+  "Nature",
 };
 
 const char* const home_terrains[MAX_HOME_TERS] =
@@ -1855,6 +1861,7 @@ const char * const trap_effects[MAX_TRAP_EFF] =
 const int PROD_GAMEPORT = 7900;
 const int BETA_GAMEPORT = 5678;
 const int ALPHA_GAMEPORT = 6969;
+const int BUILDER_GAMEPORT = 8900;
 const int ITEM_DAMAGE_RATE = 1;
 const int RENT_CREDIT_VAL = 75;
 const bool RENT_SELL_TO_PAWN = false;

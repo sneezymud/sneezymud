@@ -380,7 +380,7 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
   int combat = 0;
   bool doneCombat = FALSE;
 
-  if (Class == MAGE_LEVEL_IND || Class == SHAMAN_LEVEL_IND) {
+  if (Class == MAGE_LEVEL_IND) {
     combat = getDiscipline(DISC_COMBAT)->getLearnedness() + getDiscipline(DISC_LORE)->getLearnedness();
   } else if (Class == CLERIC_LEVEL_IND || Class == DEIKHAN_LEVEL_IND) {
     combat = getDiscipline(DISC_COMBAT)->getLearnedness() + getDiscipline(DISC_THEOLOGY)->getLearnedness();
@@ -472,8 +472,9 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
       discs = 5.5;
       break;
     case SHAMAN_LEVEL_IND:
-      discs = 6.333;
-      break;
+      discs = 5.75;
+      break; // I lowered this because I dont want shaman to jump too far ahead
+             // I think this is a good start - Jesus
     case UNUSED1_LEVEL_IND:
     case UNUSED2_LEVEL_IND:
     case UNUSED3_LEVEL_IND:
@@ -624,8 +625,6 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
   if(isPc()) {
     vlogf(LOG_DASH, "%s gaining %d pracs roll = %d (%d + %4.2f) lev: %d, advancedlev: %5.2f", getName(),
 	  prac, roll, (int)temp, num, getLevel(Class), advancedlevel);
-    vlogf(LOG_JESUS, "%s gaining %d pracs roll = %d (%d + %4.2f) lev: %d, advancedlev: %5.2f", getName(),
-          prac, roll, (int)temp, num, getLevel(Class), advancedlevel);
 
   }
   return prac;
@@ -1375,11 +1374,6 @@ double TBeing::hpGainForLevel(classIndT Class) const
   vlogf(LOG_DASH,"%s gaining %5.2f + %5.2f hitpoints (%d)", getName(),hpgain,
 	hpgain*(double)getConHpModifier() - hpgain,
 	(int)(hpgain*(double)getConHpModifier()));
-  vlogf(LOG_JESUS,"%s gaining %5.2f + %5.2f hitpoints (%d)", getName(),hpgain,
-	hpgain*(double)getConHpModifier() - hpgain,
-	(int)(hpgain*(double)getConHpModifier()));
-  // added a log for myself out of curiosity
-  
 #endif
   double raw = hpgain;
   
@@ -1405,8 +1399,6 @@ double TBeing::hpGainForLevel(classIndT Class) const
   if(isPc()) {
     vlogf(LOG_DASH,"%s gaining %d + %4.2f hitpoints %d (%d > %d)", getName(),(int)raw,
           bonus, (int)hpgain, (int)(100.0*roundoff), roll);
-    vlogf(LOG_JESUS,"%s gaining %d + %4.2f hitpoints -> %4.2f (%d > %d)", getName(),(int)raw,
-          bonus, hpgain, (int)(100.0*roundoff), roll);
   }
 
 

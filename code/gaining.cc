@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: gaining.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include <cmath>
 
 #include "stdsneezy.h"
@@ -531,6 +516,24 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 
 	setQuestBit(TOG_MONK_GREEN_ELIGIBLE);
       }
+      if(hasQuestBit(TOG_MONK_GREEN_OWNED) &&
+	 !hasQuestBit(TOG_STARTED_MONK_RED) &&
+	 !hasQuestBit(TOG_FINISHED_MONK_RED) &&
+	 !hasQuestBit(TOG_HAS_MONK_RED) &&
+	 getLevel(Class)>=45){
+	if(!silent)
+	  gm->doSay("You are now eligible to quest for your red sash.  Say \"red sash\" for more information.");
+	setQuestBit(TOG_MONK_RED_ELIGIBLE);
+      }
+      if(hasQuestBit(TOG_HAS_MONK_RED) &&
+	 !hasQuestBit(TOG_MONK_BLACK_STARTED) &&
+	 !hasQuestBit(TOG_MONK_BLACK_FINISHED) &&
+	 !hasQuestBit(TOG_MONK_BLACK_OWNED) &&
+	 getLevel(Class)==50){
+	if(!silent)
+	  gm->doSay("You are now eligible to quest for your black sash.  Say \"black sash\" for more information.");
+	setQuestBit(TOG_MONK_BLACK_ELIGIBLE);
+      }
       break;
 
     case MAGE_LEVEL_IND:
@@ -612,6 +615,24 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	  gm->doSay("Ask him about the <W>hunter's belt<1>.");
 	}
 	setQuestBit(TOG_ELIGIBLE_RANGER_L14);
+      }
+      break;
+    case WARRIOR_LEVEL_IND:
+      if (getLevel(Class)>=40 && 
+          !hasQuestBit(TOG_FINISHED_WARRIOR_L41) &&
+          !hasQuestBit(TOG_KILL_SHAMAN) &&
+          !hasQuestBit(TOG_KILL_CHIEF) &&
+          !hasQuestBit(TOG_GAVE_HEAD_CHIEF) &&
+          !hasQuestBit(TOG_ELIGIBLE_WARRIOR_L41)) {
+	if(!silent){
+	  gm->doSay("Congratulations Warrior!.");
+	  gm->doSay("I believe you are ready to obtain your scabbard.");
+	  gm->doSay("This task will challenge your skills, but is well worth the risk.");
+	  gm->doSay("Only a true champion can wear the scabbard.");
+          gm->doSay("Are you the ready to face your greatest test?");
+          gm->doSay("Say 'I am ready' if you are ready to undertake this task.");
+	}
+	setQuestBit(TOG_ELIGIBLE_WARRIOR_L41);
       }
       break;
     default:
@@ -935,7 +956,7 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_BRAWLING, "brawling", "Brawling Moves", DISC_BRAWLING, CLASS_WARRIOR},
   {SPEC_TRAINER_MEDITATION_MONK, "meditation", "about Meditation", DISC_MEDITATION_MONK, CLASS_MONK},
   {SPEC_TRAINER_SURVIVAL, "survival", "How to Survive", DISC_SURVIVAL, CLASS_RANGER},
-  {SPEC_TRAINER_NATURE, "nature", "Natural Magic", DISC_NATURE, CLASS_SHAMAN},
+  {SPEC_TRAINER_SHAMAN_ARMADILLO, "armadillo", "about the Abilities of the Armadillo", DISC_SHAMAN_ARMADILLO, CLASS_SHAMAN},
   {SPEC_TRAINER_ANIMAL, "animal", "Animal Magic", DISC_ANIMAL, CLASS_RANGER},
   {SPEC_TRAINER_AEGIS, "aegis", "the Aegis of the Deities", DISC_AEGIS, CLASS_CLERIC},
   {SPEC_TRAINER_SHAMAN, "shaman", "The Ways of the Shaman", DISC_AEGIS, CLASS_SHAMAN},
@@ -961,12 +982,12 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_THIEF_FIGHT, "fighting", "Fighting Skills for Thieves", DISC_THIEF_FIGHT, CLASS_THIEF},
   {SPEC_TRAINER_POISONS, "poisons", "about Poisons", DISC_POISONS, CLASS_THIEF},
 
-  {SPEC_TRAINER_SHAMAN_FIGHT, "fighting", "Fighting Skills for Shamans", DISC_SHAMAN, CLASS_SHAMAN},
+  {SPEC_TRAINER_SHAMAN_FROG, "frog", "about the Abilities of the Frog", DISC_SHAMAN_FROG, CLASS_SHAMAN},
 
   {SPEC_TRAINER_SHAMAN_ALCHEMY, "alchemy", "Alchemy Spells for Shamans", DISC_SHAMAN_ALCHEMY, CLASS_SHAMAN},
-  {SPEC_TRAINER_SHAMAN_HEALING, "healing", "Healing Spells for Shamans", DISC_SHAMAN_HEALING, CLASS_SHAMAN},
-  {SPEC_TRAINER_UNDEAD, "undead", "about the Undead", DISC_UNDEAD, CLASS_SHAMAN},
-  {SPEC_TRAINER_DRAINING, "undead", "about the Undead", DISC_DRAINING, CLASS_SHAMAN},
+  {SPEC_TRAINER_SHAMAN_SKUNK, "skunk", "about the Abilities of the Skunk", DISC_SHAMAN_SKUNK, CLASS_SHAMAN},
+  {SPEC_TRAINER_SHAMAN_SPIDER, "spider", "about the Abilities of the Spider", DISC_SHAMAN_SPIDER, CLASS_SHAMAN},
+  {SPEC_TRAINER_SHAMAN_CONTROL, "control", "about Being Controling", DISC_SHAMAN_CONTROL, CLASS_SHAMAN},
   {SPEC_TRAINER_TOTEM, "totemism", "about Totemism", DISC_TOTEM, CLASS_SHAMAN},
 
   {SPEC_TRAINER_RANGER_FIGHT, "fighting", "Fighting Skills for Rangers", DISC_RANGER_FIGHT, CLASS_RANGER},
@@ -974,7 +995,7 @@ TRAININFO TrainerInfo[] =
 
   {SPEC_TRAINER_TRAPS, "traps", "about Locks and Traps", DISC_TRAPS, CLASS_THIEF},
 
-  {SPEC_TRAINER_LORE, "lore", "about Magic Lores", DISC_LORE, CLASS_MAGIC_USER | CLASS_SHAMAN},
+  {SPEC_TRAINER_LORE, "lore", "about Magic Lores", DISC_LORE, CLASS_MAGIC_USER},
 
  {SPEC_TRAINER_THEOLOGY, "theology", "about Theology", DISC_THEOLOGY, CLASS_CLERIC | CLASS_DEIKHAN},
 
@@ -1007,7 +1028,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
       break;
     }
     if (TrainerInfo[offset].spec == -1) {
-      vlogf(9, "TrainerMob lacked setup in TrainerInfo array (%s)", 
+      vlogf(LOG_BUG, "TrainerMob lacked setup in TrainerInfo array (%s)", 
              me->getName());
       return FALSE;
     }
@@ -1169,7 +1190,7 @@ int TBeing::checkDoneBasic(TBeing *ch, classIndT accclass, int guild, int amount
       bas = ch->getDiscipline(DISC_MAGE)->getNatLearnedness();
       break;
     case SHAMAN_LEVEL_IND:
-      combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness() + ch->getDiscipline(DISC_LORE)->getNatLearnedness();
+      combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
       bas = ch->getDiscipline(DISC_SHAMAN)->getNatLearnedness();
       break;
 
@@ -1203,7 +1224,7 @@ int TBeing::checkDoneBasic(TBeing *ch, classIndT accclass, int guild, int amount
       bas = ch->getDiscipline(DISC_THIEF)->getNatLearnedness();
       break;
     default:
-      vlogf(5,"Wierd case in checkDoneBasic %d", accclass);
+      vlogf(LOG_BUG,"Wierd case in checkDoneBasic %d", accclass);
   }
 
   if (amountCheck) {
@@ -1317,7 +1338,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
     }
   }
   if (discipline == DISC_RANGED) {
-    if (ch->getRawNatSkillValue(SKILL_BOW) < WEAPON_GAIN_LEARNEDNESS) {
+    if (ch->getRawNatSkillValue(SKILL_RANGED_PROF) < WEAPON_GAIN_LEARNEDNESS) {
       sprintf(buf, " %s You aren't proficient enough yet.", fname(ch->name).c_str());
       me->doTell(buf);
       return TRUE;
@@ -1338,11 +1359,11 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
       strcpy(tmp_buf, "Combat or Magic Lores");
       break;
    case SHAMAN_LEVEL_IND:
-     combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness() + ch->getDiscipline(DISC_LORE)->getNatLearnedness();
+     combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
      if ((combat >= 100) || (combat >= (((35*ch->getLevel(SHAMAN_LEVEL_IND)) /10) - 4))) {
        combatLearn = TRUE;
      }
-     strcpy(tmp_buf, "Combat or Magic Lores");
+     strcpy(tmp_buf, "Combat");
      break;
    case RANGER_LEVEL_IND:
      combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
@@ -1509,7 +1530,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
         }
         break;
       default:
-        vlogf(5, "Bad case in gaining pre requisiites (%d) (%s)", accclass, ch->getName());
+        vlogf(LOG_BUG, "Bad case in gaining pre requisiites (%d) (%s)", accclass, ch->getName());
         ch->sendTo("Bug that you got this at the gain trainer.");
         return TRUE;
     }
@@ -1542,6 +1563,9 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
   return FALSE;
 }
 
+extern struct PolyType DisguiseList[];
+static const int MaxDisguiseType = 18; // Non-Race Specific Ones
+
 int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset, int pracs) const
 {
   int j;
@@ -1550,10 +1574,10 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
   discNumT discipline = DISC_NONE;
   int final, initial;
   int value;
-
+  int tOldSL = ch->getDiscipline(getDisciplineNumber(SKILL_DISGUISE, FALSE))->getLearnedness();
 
   if (pracs <= 0) {
-    vlogf(3, "Bogus pracs used %s (%d)", ch->getName(), ch->in_room);
+    vlogf(LOG_BUG, "Bogus pracs used %s (%d)", ch->getName(), ch->in_room);
     return TRUE;
   }
 
@@ -1651,7 +1675,7 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
         }
       } else if (ch->doesKnowSkill(i)) {
         if ((discArray[i]->start <=final) && (ch->getRawSkillValue(i) < 0)) {
-          vlogf(5, "%s: ch->doesKnowSkill %s (%d) with no actual learning..could be array change or bug", ch->getName(), discArray[i]->name, i);
+          vlogf(LOG_BUG, "%s: ch->doesKnowSkill %s (%d) with no actual learning..could be array change or bug", ch->getName(), discArray[i]->name, i);
           ch->setNatSkillValue(i, 1);
           ch->setSkillValue(i, 1);
         }
@@ -1718,7 +1742,44 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
     else if (wiz <= DEV_LEV_SYMB_PRIM_OTHER_FREE)
       ch->sendTo("Symbols must be in your primary hand, and the other hand must be free.\n\r");
   }
+  if (TrainerInfo[offset].disc == DISC_STEALTH) {
+    if (ch->doesKnowSkill(SKILL_DISGUISE)) {
+      int tNewSL = ch->getDiscipline(getDisciplineNumber(SKILL_DISGUISE, FALSE))->getLearnedness();
 
+      for (int tType = 0; tType < MaxDisguiseType; tType++) {
+        // Can not use right now, regardless.
+        if (DisguiseList[tType].learning > tNewSL ||
+            DisguiseList[tType].level    > ch->GetMaxLevel())
+          continue;
+
+        // Already been told, so skip it.
+        if (DisguiseList[tType].learning < tOldSL &&
+            DisguiseList[tType].level    < (ch->GetMaxLevel() - 1))
+          continue;
+
+        // Shouldn't happen, but you never know.
+        // Thing is here we ONLY express the general disguises.
+        if ((signed) DisguiseList[tType].tRace != RACE_NORACE)
+          continue;
+
+        if ((isname("male", DisguiseList[tType].name) &&
+             ch->getSex() != SEX_MALE) ||
+            (isname("female", DisguiseList[tType].name) &&
+             ch->getSex() != SEX_FEMALE))
+          continue;
+
+        char tString[256];
+        string tStArg(DisguiseList[tType].name),
+               tStRes("");
+
+        one_argument(tStArg, tStRes);
+
+        sprintf(tString, "%s you can now use the '%s' disguise.",
+                ch->getNameNOC(ch).c_str(), tStRes.c_str());
+        me->doWhisper(tString);
+      }
+    }
+  }
   act ("$n smiles as $e removes $s hands from your head.",
             FALSE, me, 0, ch, TO_VICT);
   act ("$n removes $s hands from $N's head and smiles.", FALSE, me, 0, ch, TO_NOTVICT);
@@ -1823,7 +1884,7 @@ static int GenericGuildMaster(TBeing *ch, TMonster *me, cmdTypeT cmd, classIndT 
     switch (cit) {
       case MAGE_LEVEL_IND:
       case SHAMAN_LEVEL_IND:
-        act("$n growls, \"Go away, $N.  You know nothing of our art!\"", FALSE, me, 0, ch, TO_ROOM);
+        act("$n growls, \"Go away, $N.  You know nothing of spirits!\"", FALSE, me, 0, ch, TO_ROOM);
         break;
       case CLERIC_LEVEL_IND:
         act("$n growls, \"Go away, $N.  You're no cleric!\"", FALSE, me, 0, ch, TO_ROOM);
@@ -1853,8 +1914,11 @@ static int GenericGuildMaster(TBeing *ch, TMonster *me, cmdTypeT cmd, classIndT 
   }
   if (ch->getLevel(cit) < (me->GetMaxLevel()/2))
     dynamic_cast<TPerson *>(ch)->raiseLevel(cit, me);
-  else
+  else if (ch->getLevel(cit) < MAX_MORT)
     act("$n sighs, \"I cannot teach you, $N.  You MUST find your next guildmaster.\"", FALSE, me, 0, ch, TO_ROOM);
+  else
+    act("$n beams, \"No one can teach you anymore in this, $N\"",
+        FALSE, me, NULL, ch, TO_ROOM);
   return TRUE;
 }
 
@@ -2002,7 +2066,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
       strcpy(tmp2_buf, "Magic Lores");
       break;
     case SHAMAN_LEVEL_IND:
-      combat = getDiscipline(DISC_COMBAT)->getNatLearnedness() + getDiscipline(DISC_LORE)->getNatLearnedness();
+      combat = getDiscipline(DISC_COMBAT)->getNatLearnedness();
       basic = getDiscipline(DISC_SHAMAN)->getNatLearnedness();
       if (basic >= MAX_DISC_LEARNEDNESS) {
         basicLearn=TRUE;
@@ -2019,8 +2083,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
       if (combat >= (((35*getLevel(Class)) /10) - 4)) {
         combatLearn = TRUE;
       }
-      strcpy(tmp_buf, "Combat or Magic Lores");
-      strcpy(tmp2_buf, "Magic Lores");
+      strcpy(tmp_buf, "Combat");
       break;
     case RANGER_LEVEL_IND:
       combat = getDiscipline(DISC_COMBAT)->getNatLearnedness();
@@ -2177,7 +2240,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
       sprintf(buf, "You need to use these practices at your basic %s trainer or you could pursue a weapon specialization.", gm->getProfName());
     }
   } else {
-    vlogf(5, "Bad case in pracPath for %s", getName());
+    vlogf(LOG_BUG, "Bad case in pracPath for %s", getName());
     sendTo("Please bug that there is a bad place in guildmaster instructions.");
     return;
   }
@@ -2217,3 +2280,4 @@ double getExpClassLevel(classIndT Class, int level)
 
   return (int) exp_amt;
 }
+

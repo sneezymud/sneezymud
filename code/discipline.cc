@@ -2456,11 +2456,7 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_MEDITATION_MONK] = new CDMeditationMonk();
     discs->disc[DISC_LEVERAGE] = new CDLeverage();
     discs->disc[DISC_MINDBODY] = new CDMindBody();
-    //    discs->disc[DISC_JUDOKI] = new CDJudoki();
-    //    discs->disc[DISC_KUKSOKI] = new CDKuksoki();
     discs->disc[DISC_FOCUSED_ATTACKS] = new CDFAttacks();
-    //    discs->disc[DISC_NINJOKI] = new CDNinjoki();
-    //    discs->disc[DISC_SHOGOKI] = new CDShogoki();
 
     discs->disc[DISC_THIEF] = new CDThief();
     discs->disc[DISC_THIEF_FIGHT] = new CDThiefFight();
@@ -2673,30 +2669,28 @@ void TBeing::assignDisciplinesClass()
   if (hasClass(CLASS_SHAMAN)) {
     if (!isPc()) {
       discs->disc[DISC_SHAMAN] = new CDShaman();
-      discs->disc[DISC_SHAMAN_FROG] = new CDShamanFrog();
+      discs->disc[DISC_WIZARDRY] = new CDWizardry();
       discs->disc[DISC_SHAMAN_ALCHEMY] = new CDShamanAlchemy();
-      discs->disc[DISC_SHAMAN_SKUNK] = new CDShamanSkunk();
-      discs->disc[DISC_SHAMAN_SPIDER] = new CDShamanSpider();
       discs->disc[DISC_SHAMAN_ARMADILLO] = new CDShamanArmadillo();
       discs->disc[DISC_SHAMAN_CONTROL] = new CDShamanControl();
+      discs->disc[DISC_SHAMAN_FROG] = new CDShamanFrog();
+      discs->disc[DISC_SHAMAN_SKUNK] = new CDShamanSkunk();
+      discs->disc[DISC_SHAMAN_SPIDER] = new CDShamanSpider();
       discs->disc[DISC_TOTEM] = new CDTotem();
       discs->disc[DISC_BLUNT] = new CDBash();
       discs->disc[DISC_PIERCE] = new CDPierce();
-      discs->disc[DISC_WIZARDRY] = new CDWizardry();
-      discs->disc[DISC_LORE] = new CDLore();
     }
     getDiscipline(DISC_SHAMAN)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_SHAMAN_FROG)->ok_for_class |= CLASS_SHAMAN;
+    getDiscipline(DISC_WIZARDRY)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_SHAMAN_ALCHEMY)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_SHAMAN_SKUNK)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_SHAMAN_SPIDER)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_SHAMAN_ARMADILLO)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_SHAMAN_CONTROL)->ok_for_class |= CLASS_SHAMAN;
+    getDiscipline(DISC_SHAMAN_FROG)->ok_for_class |= CLASS_SHAMAN;
+    getDiscipline(DISC_SHAMAN_SKUNK)->ok_for_class |= CLASS_SHAMAN;
+    getDiscipline(DISC_SHAMAN_SPIDER)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_TOTEM)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_BLUNT)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_PIERCE)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_WIZARDRY)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_LORE)->ok_for_class |= CLASS_SHAMAN;
   }
   // fix the mobs learnednesses
   if (isPc())

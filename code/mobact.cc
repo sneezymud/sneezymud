@@ -3921,6 +3921,15 @@ int TMonster::defendOther(TBeing &targ)
       }
     }
     if (!found) {
+      spell = SPELL_CLARITY;
+      if (!targ.affectedBySpell(spell) && 
+           doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
+        act("$n sings the words, 'You got da look I wanna know bettah!'",
+                 TRUE, this, 0, 0, TO_ROOM);
+        found = TRUE;
+      }
+    }
+    if (!found) {
       spell = SPELL_SHADOW_WALK;
       if (!targ.affectedBySpell(spell) && 
            doesKnowSkill(spell) && (getSkillValue(spell) > 70)) {
