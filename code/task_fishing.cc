@@ -180,14 +180,14 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
           ch->task->timeLeft--;
           break;
 	case 0:
-	  baitchance=(int)(((float)((float)(bait->rentCost()*2)/(float)baitmax))*25);
-	  polechance=(int)(((float)((float)(pole->rentCost()*2)/(float)polemax))*25);
+	  baitchance=(int)(((float)((float)(bait->obj_flags.cost*2)/(float)baitmax))*25);
+	  polechance=(int)(((float)((float)(pole->obj_flags.cost*2)/(float)polemax))*25);
 	  catchchance=::number(1,100);
 	  
 
 #if 0
 	  vlogf(LOG_PEEL, "fishing: baitcost=%i, bait=%i, pole=%i, catch=%i",
-		bait->rentCost(), baitchance, polechance, catchchance);
+		bait->obj_flags.cost, baitchance, polechance, catchchance);
 #endif	
   
 	  if(bSuccess(ch, ch->getSkillValue(SKILL_FISHING), SKILL_FISHING) &&
