@@ -2,6 +2,24 @@
 Araxus - The Town of Brightmoon~
 1399 45 2 1
 
+O 0 18583 1 1393   trashcan
+O 0 18583 1 1303   trashcan
+O 0 18583 1 1333   trashcan
+O 0 18583 1 1363   trashcan
+O 0 18583 1 1362   trashcan
+O 0 18583 1 1346   trashcan
+O 0 18583 1 1293   trashcan
+O 0 18583 1 1365   trashcan
+O 0 18583 1 1200   trashcan
+O 0 18583 1 1218   trashcan
+
+M 0 1399 5 1385       trash collectors
+M 0 1399 5 1385       trash collectors
+M 0 1399 5 1385       trash collectors
+M 0 1399 5 1385       trash collectors
+M 0 1399 5 1385       trash collectors
+
+
 M 0 1389 1 1293        Fisherman (shark quest)
 M 0 1250 1 1352        medic
 O 0 1300 1 1366        flame of galek
