@@ -413,10 +413,10 @@ void assign_item_info()
      "Damage Precision", 10, 0,
      "Arrow Type  [SEE HELP ARROWS]", 7, 0);
   ItemInfo[ITEM_BAG] = new itemInfo("Bag","a portable container",
-     "Weight bag can hold", 500, 1,
+     "Weight bag can hold", 50000, 1,
      "Special - container flags", 0, 0,
      "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
-     "Volume bag can hold", 100000, 1);
+     "Volume bag can hold", 10000000, 1);
   ItemInfo[ITEM_CORPSE] = new itemInfo("Corpse","a dead body",
      "Flags", 1<<MAX_CORPSE_FLAGS - 1, 0,
      "Former Race", MAX_RACIAL_TYPES -1, 1,
@@ -725,6 +725,7 @@ const char * const chest_bits[] =
   "Secret (No-See)",
   "Detect-Trap/Empty-Trap",
   "Detect-Trap/Ghost-Trap",
+  "Weightless/Volumeless",
 };
 
 const char * const door_types[] =

@@ -16,7 +16,7 @@
 class TOpenContainer : public TBaseContainer {
   private:
     float max_weight;
-    unsigned char container_flags;
+    int container_flags;
     doorTrapT trap_type;
     char trap_dam;
     int key_num;
@@ -51,11 +51,11 @@ class TOpenContainer : public TBaseContainer {
 
     virtual float carryWeightLimit() const;
     void setCarryWeightLimit(float);
-    unsigned char getContainerFlags() const;
-    void setContainerFlags(unsigned char r);
-    void addContainerFlag(unsigned char r);
-    void remContainerFlag(unsigned char r);
-    bool isContainerFlag(unsigned char r) const;
+    int getContainerFlags() const;
+    void setContainerFlags(int r);
+    void addContainerFlag(int r);
+    void remContainerFlag(int r);
+    bool isContainerFlag(int r) const;
     doorTrapT getContainerTrapType() const;
     void setContainerTrapType(doorTrapT r);
     char getContainerTrapDam() const;
@@ -64,6 +64,21 @@ class TOpenContainer : public TBaseContainer {
     int getKeyNum() const;
     virtual int carryVolumeLimit() const;
     void setCarryVolumeLimit(int);
+
+
+    virtual float getTotalWeight(bool pweight) const {
+      if(isContainerFlag(CONT_WEIGHTLESS))
+	return getWeight();
+      return TThing::getTotalWeight(pweight);
+    }
+    virtual int getTotalVolume() const {
+      if(isContainerFlag(CONT_WEIGHTLESS))
+	return getVolume();
+      return TThing::getTotalVolume();
+    }
+
+
+
 
   protected:
     TOpenContainer();

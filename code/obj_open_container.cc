@@ -112,27 +112,27 @@ float TOpenContainer::carryWeightLimit() const
   return max_weight;
 }
 
-unsigned char TOpenContainer::getContainerFlags() const
+int TOpenContainer::getContainerFlags() const
 {
   return container_flags;
 }
 
-void TOpenContainer::setContainerFlags(unsigned char r)
+void TOpenContainer::setContainerFlags(int r)
 {
   container_flags = r;
 }
 
-void TOpenContainer::addContainerFlag(unsigned char r)
+void TOpenContainer::addContainerFlag(int r)
 {
   container_flags |= r;
 }
 
-void TOpenContainer::remContainerFlag(unsigned char r)
+void TOpenContainer::remContainerFlag(int r)
 {
   container_flags &= ~r;
 }
 
-bool TOpenContainer::isContainerFlag(unsigned char r) const
+bool TOpenContainer::isContainerFlag(int r) const
 {
   return ((container_flags & r) != 0);
 }
