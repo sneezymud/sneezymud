@@ -14,6 +14,7 @@ enum editorEnterTypeT {
 };
 
 extern void change_obj_values(TBeing *, TObj *, const char *, editorEnterTypeT);
+extern void change_arrow_value3(TBeing *, TArrow *, const char *, editorEnterTypeT);
 extern void change_arrow_value4(TBeing *, TArrow *, const char *, editorEnterTypeT);
 extern void change_component_value4(TBeing *, TObj *, const char *, editorEnterTypeT);
 extern void change_portal_value1(TBeing *, TPortal *, const char *, editorEnterTypeT);
@@ -188,9 +189,13 @@ enum editorChangeTypeT {
      CHANGE_BED_VALUE1,
      CHANGE_BED_MAXUSERS,
      CHANGE_BED_MINPOS,
+     CHANGE_ARROW_VALUE3,
      CHANGE_ARROW_VALUE4,
+     CHANGE_ARROW_TRAPTYPE,
+     CHANGE_ARROW_TRAPLVL,
      CHANGE_ARROW_HEAD,
      CHANGE_ARROW_TYPE,
+     CHANCE_ARROW_TRAP,
      CHANGE_MOB_ACT_FLAGS,
      CHANGE_MOB_AFF_FLAGS,
      CHANGE_MOB_FACTION,

@@ -173,6 +173,8 @@ void TArrow::assignFourValues(int x1, int x2, int x3, int x4)
   setArrowHead   (GET_BITS(x4,  7,  4));
   setArrowHeadMat(GET_BITS(x4, 16,  9));
   setArrowFlags  (GET_BITS(x4, 31, 15));
+  setTrapLevel   (GET_BITS(x3, 15,  16));
+  setTrapDamType ((doorTrapT)GET_BITS(x3, 31, 16));
 }
 
 void TArrow::getFourValues(int *x1, int *x2, int *x3, int *x4) const
@@ -185,6 +187,11 @@ void TArrow::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   SET_BITS(tValue, 16,  9, getArrowHeadMat());
   SET_BITS(tValue, 31, 15, getArrowFlags());
   *x4 = tValue;
+
+  int t2Value = *x3;
+  SET_BITS(t2Value,  15, 16, getTrapLevel());
+  SET_BITS(t2Value,  31, 16, getTrapDamType());
+  *x3 = t2Value;
 }
 
 sstring TArrow::displayFourValues()
@@ -198,8 +205,8 @@ sstring TArrow::displayFourValues()
   getFourValues(&x1, &x2, &x3, &x4);
   sprintf(tString, "Current values : %d %d %d %d\n\r", x1, x2, x3, x4);
   sprintf(tString + strlen(tString),
-          "Current values : %d %d %d Size: %d Arrow-Head: %d Head-Material: %d Flags: %d",
-          x1, x2, x3, getArrowType(), getArrowHead(), getArrowHeadMat(), getArrowFlags());
+          "Size: %d Arrow-Head: %d Head-Material: %d Flags: %d Trap-Type: %d Trap-Level %d\n\r",
+          getArrowType(), getArrowHead(), getArrowHeadMat(), getArrowFlags(), getTrapDamType(), getTrapLevel());
 
   return tString;
 }
@@ -288,9 +295,11 @@ spellNumT TArrow::getWtype() const
 
 void TArrow::evaluateMe(TBeing *ch) const
 {
-  int learn;
+  int learn, traptype;
 
   learn = ch->getSkillValue(SKILL_EVALUATE);
+  traptype = getTrapDamType();
+  
 
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
 
@@ -336,9 +345,11 @@ void TArrow::evaluateMe(TBeing *ch) const
   if (learn > 20)
     ch->describeMaxStructure(this, learn);
 
-  if (learn > 30)
+  if (learn > 30) {
     ch->describeArrowDamage(this, learn);
-
+    if(traptype != DOOR_TRAP_NONE)
+      ch->sendTo(COLOR_OBJECTS, fmt("%s is trapped with %s.\n\r") % getName() % trap_types[traptype].c_str());
+  }
   if (learn > 35)
     ch->describeWeaponDamage(this, learn);
 }
@@ -352,6 +363,12 @@ int TArrow::suggestedPrice() const
 {
   int amt = TBaseWeapon::suggestedPrice();
   return amt / 10;
+}
+
+void TArrow::changeObjValue3(TBeing *ch)
+{
+  ch->specials.edit = CHANGE_ARROW_VALUE3;
+  change_arrow_value3(ch, this, "", ENTER_CHECK);
 }
 
 void TArrow::changeObjValue4(TBeing *ch)

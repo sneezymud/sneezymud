@@ -409,7 +409,7 @@ void assign_item_info()
   ItemInfo[ITEM_ARROW] = new itemInfo("Arrow","an arrow",
      "Sharpness of arrow.", 100, 0,
      "Damage Level * 4", 240, 0,
-     "Damage Precision", 10, 0,
+     "Arrow Trap-Type / Trap-Level", 10, 0,
      "Arrow Type  [SEE HELP ARROWS]", 7, 0);
   ItemInfo[ITEM_BAG] = new itemInfo("Bag","a portable container",
      "Weight bag can hold", 50000, 1,

@@ -2450,7 +2450,119 @@ void change_portal_value4(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
   ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
+void change_arrow_value3(TBeing *ch, TArrow *o, const char *arg, editorEnterTypeT type)
+{
+  int loc_update;
 
+  if(type != ENTER_CHECK) {
+    if (!*arg || (*arg == '\n')) {
+      ch->specials.edit = CHANGE_OBJ_VALUES;
+      change_obj_values(ch, o, "", ENTER_CHECK);
+      return;
+    }
+  }
+
+  loc_update = convertTo<int>(arg);
+
+  switch (ch->specials.edit) {
+    case CHANGE_ARROW_VALUE3:
+      switch (loc_update) {
+	case 1:
+	  ch->sendTo(VT_HOMECLR);
+	  ch->sendTo("Enter Arrow Trap Type.\n\r");
+	  ch->sendTo("NOTE: DOOR_TRAP_TYPE does not correlate to the number of the menu choices below.  Eval the weapon after to ensure the proper trap has been set.\n\r");
+	  ch->sendTo(" 0) None\n\r");
+	  ch->sendTo(" 1) Fire\n\r");
+	  ch->sendTo(" 2) Explosive\n\r");
+	  ch->sendTo(" 3) Sleep\n\r");
+	  ch->sendTo(" 4) Acid\n\r");
+	  ch->sendTo(" 5) Spore\n\r");
+	  ch->sendTo(" 6) Frost\n\r");
+	  ch->sendTo(" 7) Spike\n\r");
+	  ch->sendTo(" 8) Pebble\n\r");
+	  ch->sendTo(" 9) Power\n\r");
+	  ch->sendTo("10) Teleport\n\r");
+	  ch->sendTo(" Your Selection [0-10]\n\r--> ");
+	  ch->specials.edit = CHANGE_ARROW_TRAPTYPE;
+	  return;
+	case 2:
+	  ch->sendTo(VT_HOMECLR);
+	  ch->sendTo("Enter Arrow Trap Level.  [0-65]\n\r--> ");
+	  ch->specials.edit = CHANGE_ARROW_TRAPLVL;
+	  return;
+      }
+      break;
+    case CHANGE_ARROW_TRAPTYPE:
+      if (type!= ENTER_CHECK) {
+	if((loc_update > 10) || (loc_update < 0)) {
+	  ch->sendTo("Invalid value.  Please enter a value between 0 and 10.\n\r");
+	  return;
+	}
+
+	switch(loc_update) {
+	  case 0:
+	    o->setTrapDamType(DOOR_TRAP_NONE);
+	    break;
+	  case 1:
+	    o->setTrapDamType(DOOR_TRAP_FIRE);
+	    break;
+	  case 2:
+	    o->setTrapDamType(DOOR_TRAP_TNT);
+	    break;
+	  case 3:
+	    o->setTrapDamType(DOOR_TRAP_SLEEP);
+	    break;
+	  case 4:
+	    o->setTrapDamType(DOOR_TRAP_ACID);
+	    break;
+	  case 5:
+	    o->setTrapDamType(DOOR_TRAP_DISEASE);
+	    break;
+	  case 6:
+	    o->setTrapDamType(DOOR_TRAP_FROST);
+	    break;
+	  case 7:
+	    o->setTrapDamType(DOOR_TRAP_SPIKE);
+	    break;
+	  case 8:
+	    o->setTrapDamType(DOOR_TRAP_PEBBLE);
+	    break;
+	  case 9:
+	    o->setTrapDamType(DOOR_TRAP_ENERGY);
+	    break;
+	  case 10:
+	    o->setTrapDamType(DOOR_TRAP_TELEPORT);
+	    break;
+	}
+	ch->specials.edit = CHANGE_ARROW_VALUE3;
+	change_arrow_value3(ch, o, "", ENTER_CHECK);
+	return;
+      }
+      break;
+    case CHANGE_ARROW_TRAPLVL:
+      if (type != ENTER_CHECK) {
+	if ((loc_update > 65) || (loc_update < 0)) {
+	  ch->sendTo("Invalid value.  Please enter a value between 0 and 65.\n\r");
+	  return;
+	}
+
+	o->setTrapLevel((unsigned char) loc_update);
+	ch->specials.edit = CHANGE_ARROW_VALUE3;
+	change_arrow_value3(ch, o, "", ENTER_CHECK);
+	return;
+      }
+      break;
+    default:
+      return;
+  }
+
+  ch->sendTo(VT_HOMECLR);
+  ch->sendTo("1) Arrow Trap Type\n\r");
+  ch->sendTo("2) Arrow Trap Level\n\r");
+  ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
+  ch->sendTo("Enter your choice.\n\r--> ");
+}
+	
 void change_arrow_value4(TBeing *ch, TArrow *o, const char *arg, editorEnterTypeT type)
 {
   int loc_update;
@@ -2760,6 +2872,11 @@ void obj_edit(TBeing *ch, const char *arg)
       return;
     case MAIN_MENU:
       return;
+    case CHANGE_ARROW_VALUE3:
+    case CHANGE_ARROW_TRAPLVL:
+    case CHANGE_ARROW_TRAPTYPE:
+      change_arrow_value3(ch, dynamic_cast<TArrow *>(ch->desc->obj), arg, ENTER_REENTRANT);
+      return;
     case CHANGE_ARROW_VALUE4:
     case CHANGE_ARROW_HEAD:
     case CHANGE_ARROW_TYPE:
@@ -2859,7 +2976,7 @@ sstring TObj::displayFourValues()
        x4;
 
   getFourValues(&x1, &x2, &x3, &x4);
-  sprintf(tString, "Current values : %d %d %d %d",
+  sprintf(tString, "Current values : %d %d %d %d\n\r",
           x1, x2, x3, x4);
 
   return tString;

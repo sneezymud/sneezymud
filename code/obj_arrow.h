@@ -17,7 +17,7 @@ class TArrow : public TBaseWeapon {
     unsigned char arrowHead;
     unsigned int  arrowHeadMat;
     unsigned int  arrowFlags;
-    int trap_level;
+    unsigned int trap_level;
     doorTrapT trap_dam_type;
   public:
     virtual void assignFourValues(int, int, int, int);
@@ -53,6 +53,7 @@ class TArrow : public TBaseWeapon {
     virtual int throwMe(TBeing *, dirTypeT, const char *);
     virtual int putMeInto(TBeing *, TOpenContainer *);
     virtual sstring compareMeAgainst(TBeing *, TObj *);
+    virtual void changeObjValue3(TBeing *);
     virtual void changeObjValue4(TBeing *);
     virtual sstring displayFourValues();
     virtual bool sellMeCheck(TBeing *, TMonster *, int) const;
