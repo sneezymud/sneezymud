@@ -2424,6 +2424,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_SENSE_LIFE:
       senseLife(caster,victim,obj);
       break;
+    case SPELL_SENSE_LIFE_SHAMAN:
+      senseLifeShaman(caster,victim,obj);
+      break;
     case SPELL_STEALTH:
       stealth(caster,victim,obj);
       break;
@@ -2446,6 +2449,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       break;
     case SPELL_DETECT_INVISIBLE:
       detectInvisibility(caster,victim,obj);
+      break;
+    case SPELL_DETECT_SHADOW:
+      detectShadow(caster,victim,obj);
       break;
     case SPELL_TRUE_SIGHT:
       trueSight(caster,victim,obj);

@@ -1079,6 +1079,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_FAERIE_FOG:
       case SPELL_TELEPORT:
       case SPELL_SENSE_LIFE:
+      case SPELL_SENSE_LIFE_SHAMAN: // shaman
       case SPELL_CALM:
       case SPELL_ACCELERATE:
       case SPELL_CHEVAL: // shaman
@@ -1099,6 +1100,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_ENHANCE_WEAPON:
       case SPELL_GALVANIZE:
       case SPELL_DETECT_INVISIBLE:
+      case SPELL_DETECT_SHADOW: // shaman
       case SPELL_DISPEL_INVISIBLE:
       case SPELL_FARLOOK:
       case SPELL_FALCON_WINGS:

@@ -415,6 +415,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_DISPEL_MAGIC:
     case SPELL_COPY:
     case SPELL_CHRISM:
+    case SPELL_DETECT_SHADOW:
     case SPELL_MATERIALIZE:
     case SPELL_SPONTANEOUS_GENERATION:
     case SPELL_GALVANIZE:
@@ -430,6 +431,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_FLARE:
     case SPELL_INFRAVISION:
     case SPELL_SENSE_LIFE:
+    case SPELL_SENSE_LIFE_SHAMAN:
     case SPELL_SILENCE:
     case SPELL_STEALTH:
     case SPELL_CALM:

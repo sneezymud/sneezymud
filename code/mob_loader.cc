@@ -387,6 +387,7 @@ void TMonster::mageComponentLoader(void)
         case COMP_FEAR:
         case COMP_CLOUD_OF_CONCEAL:
         case COMP_DETECT_INVIS:
+        case COMP_DETECT_SHADOW:
         case COMP_DISPEL_INVIS:
         case COMP_TELEPATHY:
 	case COMP_ROMBLER:

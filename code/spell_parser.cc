@@ -1714,6 +1714,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SPELL_SENSE_LIFE:
       senseLife(this, ch);
       break;
+    case SPELL_SENSE_LIFE_SHAMAN:
+      senseLifeShaman(this, ch);
+      break;
     case SPELL_SILENCE:
       silence(this, ch);
       break;
@@ -1743,6 +1746,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       break;
     case SPELL_DETECT_INVISIBLE:
       detectInvisibility(this, ch);
+      break;
+    case SPELL_DETECT_SHADOW:
+      detectShadow(this, ch);
       break;
     case SPELL_DISPEL_INVISIBLE:
       if (!o) 

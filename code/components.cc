@@ -1254,6 +1254,14 @@ void buildComponentArray()
     "$n touches $p to $s head.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_SENSE_LIFE_SHAMAN,
+    "You touch $p to $N's head.",
+    "$n touches $p to $N's head.",
+    "$n touches $p to your head.",                       
+    "You touch $p to your head.",
+    "$n touches $p to $s head.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_FARLOOK,
     "",                       
     "",
@@ -1324,6 +1332,14 @@ void buildComponentArray()
     "$n tosses $p at you.",                       
     "You toss $p on yourself.",
     "$n tosses $p on $mself.",
+    "",
+    ""));
+  CompInfo.push_back(compInfo(SPELL_DETECT_SHADOW,
+    "You sprinkle $p on $N.",
+    "$n sprinkles $p on $N.",
+    "$n sprinkles $p on you.",                       
+    "You sprinkle $p on yourself.",
+    "$n sprinkles $p on $mself.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_DISPEL_INVISIBLE,

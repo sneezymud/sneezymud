@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.17  2001/06/13 18:37:05  jesus
+// 2 new spells for shaman
+// sense presence which is a copy of sense life with a different component
+// and detect shadow which lets shaman see invisible and shadow walkers
+// also a fix for mortals being able to use who -h
+//
 // Revision 5.16  2001/06/13 03:50:03  jesus
 // raze spell and mob ai fix for shaman
 //
@@ -196,6 +202,8 @@ const int COMP_CHEVAL             =31325;
 const int COMP_ROMBLER            =31326;
 const int COMP_INTIMIDATE         =31327;
 const int COMP_RAZE               =31328;
+const int COMP_DETECT_SHADOW      =31329;
+const int COMP_SENSE_LIFE_SHAMAN  =31330;
 
 class compPlace
 {

@@ -513,6 +513,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SPELL_FAERIE_FOG:
       case SPELL_TELEPORT:
       case SPELL_SENSE_LIFE:
+      case SPELL_SENSE_LIFE_SHAMAN:
       case SPELL_CALM:
       case SPELL_ACCELERATE:
       case SPELL_CHEVAL:
@@ -567,6 +568,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SPELL_PLASMA_MIRROR:
       case SPELL_THORNFLESH:
       case SPELL_RAZE:
+      case SPELL_DETECT_SHADOW:
       case SPELL_ETHER_GATE:
       case SPELL_CLARITY:
       case SPELL_HEAL_LIGHT:

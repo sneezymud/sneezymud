@@ -1438,3 +1438,155 @@ int castIntimidate(TBeing *caster, TBeing *victim)
   return rc;
 }
 
+int senseLifeShaman(TBeing *caster, TBeing *victim, int level, byte bKnown)
+{
+  affectedData aff;
+
+  caster->reconcileHelp(victim, discArray[SPELL_SENSE_LIFE_SHAMAN]->alignMod);
+
+  if (bSuccess(caster, bKnown, SPELL_SENSE_LIFE_SHAMAN)) {
+    aff.type = SPELL_SENSE_LIFE_SHAMAN;
+    aff.duration = (((level*2)/3) * UPDATES_PER_MUDHOUR);
+    aff.modifier = 0;
+    aff.location = APPLY_NONE;
+    aff.bitvector = AFF_SENSE_LIFE;
+
+    switch (critSuccess(caster, SPELL_SENSE_LIFE_SHAMAN)) {
+      case CRIT_S_DOUBLE:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_KILL:
+        CS(SPELL_SENSE_LIFE_SHAMAN);
+        aff.duration *= 2;
+        break;
+      case CRIT_S_NONE:
+        break;
+    }
+    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
+      caster->nothingHappens();
+      return SPELL_FALSE;
+    }
+    return SPELL_SUCCESS;
+  } else {
+    return SPELL_FAIL;
+  }
+}
+
+void senseLifeShaman(TBeing *caster, TBeing *victim, TMagicItem * obj)
+{
+  int ret;
+
+  ret = senseLifeShaman(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+  if (ret == SPELL_SUCCESS) {
+    victim->sendTo("You feel more aware of the world about you.\n\r");
+    act("$n's eyes flicker a faint pale blue.", FALSE, victim, NULL, NULL, TO_ROOM, 
+ANSI_CYAN);
+  } else { 
+    caster->nothingHappens();
+  }
+}
+
+int senseLifeShaman(TBeing *caster, TBeing *victim)
+{
+  taskDiffT diff;
+
+    if (!bPassShamanChecks(caster, SPELL_SENSE_LIFE_SHAMAN, victim))
+       return FALSE;
+
+     lag_t rounds = discArray[SPELL_SENSE_LIFE_SHAMAN]->lag;
+     diff = discArray[SPELL_SENSE_LIFE_SHAMAN]->task;
+
+     start_cast(caster, victim, NULL, caster->roomp, SPELL_SENSE_LIFE_SHAMAN, diff, 1, "", 
+rounds, caster->in_room, 0, 0,TRUE, 0);
+       return TRUE;
+}
+
+int castSenseLifeShaman(TBeing *caster, TBeing *victim)
+{
+  int ret,level;
+
+  level = caster->getSkillLevel(SPELL_SENSE_LIFE_SHAMAN);
+  int bKnown = caster->getSkillValue(SPELL_SENSE_LIFE_SHAMAN);
+
+  ret = senseLifeShaman(caster,victim,level,bKnown);
+  if (ret == SPELL_SUCCESS) {
+    victim->sendTo("You feel more aware of the world about you.\n\r");
+    act("$n's eyes flicker a faint pale blue.", FALSE, victim, NULL, NULL, TO_ROOM, 
+ANSI_CYAN);
+  } else 
+    caster->nothingHappens();
+
+  return TRUE;
+}
+
+int detectShadow(TBeing *caster, TBeing *victim, int level, byte bKnown)
+{
+  affectedData aff;
+
+  caster->reconcileHelp(victim, discArray[SPELL_DETECT_SHADOW]->alignMod);
+
+  if (bSuccess(caster, bKnown, SPELL_DETECT_SHADOW)) {
+    aff.type = SPELL_DETECT_SHADOW;
+    aff.duration = (((level * 3)/2) * UPDATES_PER_MUDHOUR);
+    aff.modifier = 0;
+    aff.location = APPLY_NONE;
+    aff.bitvector = AFF_DETECT_INVISIBLE;
+ 
+    switch (critSuccess(caster, SPELL_DETECT_SHADOW)) {
+      case CRIT_S_DOUBLE:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_KILL:
+        CS(SPELL_DETECT_SHADOW);
+        aff.duration *= 2;
+        break;
+      case CRIT_S_NONE:
+        break;
+    }
+    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
+      caster->nothingHappens();
+      return SPELL_FALSE;
+    }
+
+    act("$n's eyes briefly glow red.", FALSE, victim, 0, 0, TO_ROOM, ANSI_RED_BOLD);
+    act("Your eyes sting.", FALSE, victim, 0, 0, TO_CHAR, ANSI_RED_BOLD);
+    return SPELL_SUCCESS;
+  } else {
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+
+void detectShadow(TBeing *caster, TBeing *victim, TMagicItem * obj)
+{
+  int ret;
+
+  ret=detectShadow(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+}
+
+int detectShadow(TBeing *caster, TBeing *victim)
+{
+  taskDiffT diff;
+
+  if (!bPassShamanChecks(caster, SPELL_DETECT_SHADOW, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_DETECT_SHADOW]->lag;
+  diff = discArray[SPELL_DETECT_SHADOW]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_DETECT_SHADOW, diff, 1, "", rounds, 
+caster->in_room, 0, 0,TRUE, 0);
+    return TRUE;
+}
+
+int castDetectShadow(TBeing *caster, TBeing *victim)
+{
+  int ret,level;
+
+  level = caster->getSkillLevel(SPELL_DETECT_SHADOW);
+  int bKnown = caster->getSkillValue(SPELL_DETECT_SHADOW);
+
+  ret=detectShadow(caster,victim,level,bKnown);
+
+  if (ret == SPELL_SUCCESS) {
+  }
+  return TRUE;
+}

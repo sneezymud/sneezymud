@@ -1189,7 +1189,9 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_HASTE:
     case SPELL_CALM:
     case SPELL_SENSE_LIFE:
+    case SPELL_SENSE_LIFE_SHAMAN: // shaman
     case SPELL_DETECT_INVISIBLE:
+    case SPELL_DETECT_SHADOW: // shaman
     case SPELL_TRUE_SIGHT:
     case SPELL_TELEPATHY:
     case SPELL_ROMBLER: // shaman
@@ -1943,8 +1945,14 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
      case SPELL_SENSE_LIFE:
         castSenseLife(this, victim);
         break;
+     case SPELL_SENSE_LIFE_SHAMAN:
+        castSenseLifeShaman(this, victim);
+        break;
      case SPELL_DETECT_INVISIBLE:
         castDetectInvisibility(this, victim);
+        break;
+     case SPELL_DETECT_SHADOW:
+        castDetectShadow(this, victim);
         break;
      case SPELL_TRUE_SIGHT:
         castTrueSight(this, victim);

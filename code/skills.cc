@@ -574,6 +574,10 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDShamanSpider *) cd)->skRaze;
     case SPELL_INTIMIDATE:
       return &((CDShaman *) cd)->skIntimidate;
+    case SPELL_SENSE_LIFE_SHAMAN:
+      return &((CDShaman *) cd)->skSenseLifeShaman;
+    case SPELL_DETECT_SHADOW:
+      return &((CDShaman *) cd)->skDetectShadow;
     case SPELL_ROMBLER:
       return &((CDShaman *) cd)->skRombler;
     case SPELL_CHEVAL:

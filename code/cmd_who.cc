@@ -541,7 +541,7 @@ void TBeing::doWho(const char *argument)
                       if (p->hasClass(CLASS_CLERIC)||p->hasClass(CLASS_DEIKHAN))
                         sprintf(buf + strlen(buf), "Hit:[%-3d] Pty:[%-.2f] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]",
                               p->getHit(), p->getPiety(), p->getMove(), p->getMoney(), p->getBank());
-                      if (p->hasClass(CLASS_SHAMAN))
+                      else if (p->hasClass(CLASS_SHAMAN))
                         sprintf(buf + strlen(buf), "Hit:[%-3d] LF:[%-4d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]",
                               p->getHit(), p->getLifeforce(), p->getMove(), p->getMoney(), p->getBank());
                       else

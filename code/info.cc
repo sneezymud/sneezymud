@@ -979,6 +979,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_FAERIE_FOG:
       case SPELL_TELEPORT:
       case SPELL_SENSE_LIFE:
+      case SPELL_SENSE_LIFE_SHAMAN: // shaman
       case SPELL_CALM:
       case SPELL_ACCELERATE:
       case SPELL_CHEVAL: // shaman
@@ -989,6 +990,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_AQUALUNG:
       case SPELL_TELEPATHY:
       case SPELL_ROMBLER: // shaman
+      case SPELL_DETECT_SHADOW: // shaman
       case SPELL_FEAR:
       case SPELL_INTIMIDATE: // shaman
       case SPELL_SLUMBER:

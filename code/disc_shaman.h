@@ -18,7 +18,10 @@ public:
     CSkill skRombler;
     CSkill skVampiricTouch;
     CSkill skLifeLeech;
+    CSkill skSenseLifeShaman;
+    CSkill skDetectShadow;
     CSkill skDancingBones;
+
     CDShaman()
       : CDiscipline(),
       skSacrifice(),
@@ -32,6 +35,8 @@ public:
       skRombler(),
       skVampiricTouch(),
       skLifeLeech(),
+      skSenseLifeShaman(),
+      skDetectShadow(),
       skDancingBones() { 
     }
     CDShaman(const CDShaman &a)
@@ -47,6 +52,8 @@ public:
       skRombler(a.skRombler),
       skVampiricTouch(a.skVampiricTouch),
       skLifeLeech(a.skLifeLeech),
+      skSenseLifeShaman(a.skSenseLifeShaman),
+      skDetectShadow(a.skDetectShadow),
       skDancingBones(a.skDancingBones) {
     }
     CDShaman & operator=(const CDShaman &a) {
@@ -63,6 +70,8 @@ public:
       skRombler = a.skRombler;
       skVampiricTouch = a.skVampiricTouch;
       skLifeLeech = a.skLifeLeech;
+      skSenseLifeShaman = a.skSenseLifeShaman;
+      skDetectShadow = a.skDetectShadow;
       skDancingBones = a.skDancingBones;
       return *this;
     }
@@ -124,6 +133,16 @@ private:
     int intimidate(TBeing *, TBeing *);
     int castIntimidate(TBeing *, TBeing *);
     int intimidate(TBeing *, TBeing *, int, byte);
+
+    int senseLifeShaman(TBeing *, TBeing *);
+    int castSenseLifeShaman(TBeing *, TBeing *);
+    void senseLifeShaman(TBeing *, TBeing *, TMagicItem *);
+    int senseLifeShaman(TBeing *, TBeing *, int, byte);
+
+    int detectShadow(TBeing *, TBeing *);
+    int castDetectShadow(TBeing *, TBeing *);
+    void detectShadow(TBeing *, TBeing *, TMagicItem *);
+    int detectShadow(TBeing *, TBeing *, int, byte);
 
 #endif
 
