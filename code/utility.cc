@@ -325,8 +325,8 @@ int getabunch(const char *name, char *newname)
     return FALSE;
   if (num < 1)
     return FALSE;
-  if (num > 99)
-    num = 99;
+  if (num > 1000)
+    num = 1000;
 
   while (*name != '*')
     name++;
