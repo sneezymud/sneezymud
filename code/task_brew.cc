@@ -87,8 +87,11 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
             // successful brew, set learnedness to knowledge in the skill
             ch->sendTo("You successfully create your potion%s.\n\r",
 		       (how_many == 1 ? "" : "s"));
-	    // potion_obj->setMagicLearnedness( ch->getSkillValue(which) );
-	    potion_obj->setMagicLearnedness(ch->getSkillValue(SKILL_BREW));
+	    if (ch->getSkillValue(which) > 0) {
+	      potion_obj->setMagicLearnedness(ch->getSkillValue(which));
+	    } else {
+	      potion_obj->setMagicLearnedness(ch->getSkillValue(SKILL_BREW));
+	    }
           } else {
             // failed brew, set learnedness to 0
             if (how_many > 1)

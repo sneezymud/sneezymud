@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.31  2001/07/07 02:47:00  jesus
+// added a couple brew spells
+//
 // Revision 5.30  2001/07/05 21:25:53  peel
 // Trying to fix cvs
 // what a headache
@@ -212,15 +215,6 @@ const int COMP_CREEPING_DOOM    =344;
 const int COMP_FERAL_WRATH      =345;
 const int COMP_SKY_SPIRIT       =346;
 #endif
-const int COMP_DISPEL_MAGIC_BREW=1405;
-const int COMP_TRAIL_SEEK_BREW  =1408;
-const int COMP_INFRAVISION_BREW =1411;
-const int COMP_SORCERERS_GLOBE_BREW  =1412;
-const int COMP_SENSE_LIFE_BREW   =1414;
-const int COMP_INFRAVISION2_BREW=1415;
-const int COMP_INVISIBILITY_BREW=1416;
-const int COMP_TRUE_SIGHT_BREW  =1418;
-const int COMP_GILLS_OF_FLESH_BREW   =1420;
 const int COMP_PLASMA_MIRROR      =1421;
 const int COMP_CREATE_WOOD_GOLEM  =1700;
 const int COMP_CREATE_ROCK_GOLEM  =1701;
@@ -261,6 +255,30 @@ const int COMP_STUPIDITY          =31338;
 const int COMP_CONTROL_UNDEAD     =31339;
 const int COMP_BLOOD_BOIL         =31340;
 const int COMP_FLATULENCE         =31341;
+////////////////////
+// BREW COMPONENTS
+////////////////////
+// shaman spells
+////////////////////
+const int COMP_SHIELD_OF_MISTS_BREW=31342;
+const int COMP_CELERITE_BREW      =31343;
+////////////////////
+// BREW COMPONENTS
+////////////////////
+// mage spells
+////////////////////
+const int COMP_DISPEL_MAGIC_BREW=1405;
+const int COMP_TRAIL_SEEK_BREW  =1408;
+const int COMP_INFRAVISION_BREW =1411;
+const int COMP_SORCERERS_GLOBE_BREW  =1412;
+const int COMP_SENSE_LIFE_BREW   =1414;
+const int COMP_INFRAVISION2_BREW=1415;
+const int COMP_INVISIBILITY_BREW=1416;
+const int COMP_TRUE_SIGHT_BREW  =1418;
+const int COMP_GILLS_OF_FLESH_BREW   =1420;
+/////////////////////////////
+// END ALL BREW COMPONENTS
+/////////////////////////////
 
 class compPlace
 {
