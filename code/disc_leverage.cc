@@ -32,8 +32,6 @@ int TBeing::doHurl(const char *argument, TBeing *vict)
   }
   rc = hurl(this,victim,obje);
 
-  addSkillLag(SKILL_HURL, rc);
-
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;
@@ -151,18 +149,21 @@ int TBeing::aiHurl(dirTypeT dr, TBeing *victim)
              (i != GUARANTEED_FAILURE) &&
              bSuccess(this, bKnown, SKILL_HURL)) {
     rc = hurlHit(this, victim, dr);
+    if (rc) {
+      addSkillLag(SKILL_HURL, rc);
+    }
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   } else {
     rc = hurlMiss(this, victim);
+    if (rc) {
+      addSkillLag(SKILL_HURL, rc);
+    }
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }
-
-  if (rc)
-    addSkillLag(SKILL_HURL, rc);
 
   /*
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
@@ -190,7 +191,7 @@ int hurl(TBeing *caster, TBeing *victim, char *direction)
     return FALSE;
  
   if (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) {
-    caster->sendTo("Your shoulder throw would not affect an immortal.\n\r");
+    caster->sendTo("Your hurl would not affect an immortal.\n\r");
     return FALSE;
   }
   if (caster->eitherArmHurt()) {
@@ -290,12 +291,20 @@ int hurl(TBeing *caster, TBeing *victim, char *direction)
              (i != GUARANTEED_FAILURE) &&
              bSuccess(caster, bKnown + percent, SKILL_HURL)) {
     rc = hurlHit(caster, victim, dr);
+    if (rc) {
+      caster->addSkillLag(SKILL_HURL, rc);
+    }
+
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   } else {
     rc = hurlMiss(caster, victim);
+    if (rc) {
+      caster->addSkillLag(SKILL_HURL, rc);
+    }
+
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }
