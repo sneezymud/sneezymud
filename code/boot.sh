@@ -1,15 +1,20 @@
 #!/usr/local/bin/bash
 
-if   [ $USER = "peel"   ]; then PORT=6968
-elif [ $USER = "sneezy" ]; then PORT=7900
-fi
+case $USER in
+  peel)
+    PORT=6968
+    ;;
+  angus)
+    PORT=6975
+    ;;
+esac
 
 if [ "$1" = "" ]
 then
   echo "Usage: $0 <start|stop>";
 elif [ "$1" = "start" ]
 then
-  pid=`pgrep -U peel -f "sneezy 6968"`
+  pid=$(pgrep -U $USER -f "sneezy $PORT")
   if [ "$pid" == "" ]
   then
     mv -f sneezy.2 sneezy >& /dev/null
@@ -21,7 +26,7 @@ then
   fi
 elif [ "$1" = "stop" ]
 then
-  pid=`pgrep -U peel -f "sneezy 6968"`
+  pid=$(pgrep -U $USER -f "sneezy $PORT")
   if [ "$pid" != "" ]
   then
     echo "Killing process $pid."
