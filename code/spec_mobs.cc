@@ -6771,6 +6771,118 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   return TRUE;
 }
 
+int trolleyBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
+{
+  const int trolleynum=15344;
+  static int timer;
+  TObj *trolley=NULL;
+  int *job=NULL;
+  int i;
+  TVehicle *vehicle=NULL;
+  TPathFinder path;
+  path.setUsePortals(false);
+  path.setThruDoors(true);
+
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  // find the trolley
+  for(trolley=object_list;trolley;trolley=trolley->next){
+    if(trolley->objVnum() == trolleynum)
+      break;
+  }
+  if(!trolley)
+    return FALSE;
+
+  if(!(vehicle=dynamic_cast<TVehicle *>(trolley))){
+    vlogf(LOG_BUG, "couldn't cast trolley to vehicle!");
+    return FALSE;
+  }
+
+  if(!has_key(myself, vehicle->getPortalKey())){
+    return FALSE;
+  }
+
+
+  if((--timer)>0)
+    return FALSE;
+
+  // ok, let's sail
+
+  // first, get out action pointer, which tells us which way to go
+  if (!myself->act_ptr) {
+    if (!(myself->act_ptr = new int)) {
+     perror("failed new of fishing trolley.");
+     exit(0);
+    }
+    job = static_cast<int *>(myself->act_ptr);
+    *job=1303;
+  } else {
+    job = static_cast<int *>(myself->act_ptr);
+  }
+
+  if(trolley->in_room == *job){
+    myself->doDrive("stop");
+
+    if(*job==100){
+      myself->doSay("Grimhaven stop, Grimhaven.  Trolley will be departing for Brightmoon shortly.");
+
+      *job=1303;
+    } else {
+      myself->doSay("Passengers, we have arrived in Brightmoon.");
+      myself->doSay("If you're not heading for Grimhaven, then you'd better get off now.");
+
+      *job=100;
+    }
+    timer=100;
+
+    return TRUE;
+  }
+  
+  int j;
+  for(j=0;trolley_path[j].cur_room!=trolley->in_room;++j){
+    if(trolley_path[j].cur_room==-1){
+      vlogf(LOG_BUG, "fishing trolley jumped the tracks!");
+      return FALSE;
+    }
+  }
+
+  if(*job==100){
+    i=rev_dir[trolley_path[j].direction];
+  } else {
+    i=trolley_path[j+1].direction;
+  }
+
+  switch(::number(0,80)){
+    case 0:
+      myself->doSay("Those damn cyclopses better stay off the tracks!");
+      break;
+    case 1:
+      myself->doSay("Keep your limbs inside the trolley please, unless you want to lose them.");
+      break;
+    case 2:
+      myself->doAction("", CMD_YAWN);
+      break;
+    case 3:
+      myself->doSay("Hold on a minute buddy, how many eyes do you have?");
+      myself->doAction("", CMD_PEER);
+      myself->doSay("Oh, ok.  You're fine.");
+      break;
+    case 4:
+      myself->doEmote("hums a sea shanty.");
+      break;
+  }
+	
+
+  if(vehicle->getDir() != i)
+    myself->doDrive(dirs[i]);
+
+  myself->doDrive("fast");
+
+  return TRUE;
+}
+
+
 
 int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
@@ -7715,7 +7827,8 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "limb disposer", limbDispo},
   {FALSE, "stat surgeon", statSurgeon},
   {FALSE, "shipping official", shippingOfficial},
-  {FALSE, "loan shark", loanShark}
+  {FALSE, "loan shark", loanShark},
+  {FALSE, "trolley driver", trolleyBoatCaptain}, // 190
 // replace non-zero, bogus_mob_procs above before adding
 };
 

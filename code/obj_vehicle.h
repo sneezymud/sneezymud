@@ -12,6 +12,7 @@
 
 const int VEHICLE_NONE = 0;
 const int VEHICLE_BOAT = 1;
+const int VEHICLE_TROLLEY=2;
 
 const int FAST_SPEED = 100;
 const int MED_SPEED = 50;

@@ -172,7 +172,8 @@ const int SPEC_LIMB_DISPO         =186;
 const int SPEC_STAT_SURG          =187;
 const int SPEC_SHIPPING_OFFICIAL  =188;
 const int SPEC_LOAN_SHARK         =189;
-const int NUM_MOB_SPECIALS        =189;
+const int SPEC_TROLLEY_DRIVER     =190;
+const int NUM_MOB_SPECIALS        =190;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
