@@ -574,7 +574,7 @@ void TBeing::doMindfocus(const char *){
 
     aff.type      = SKILL_MIND_FOCUS;
     aff.level     = bKnown;
-    aff.duration  = (bKnown / 2) * UPDATES_PER_MUDHOUR;
+    aff.duration  = 4 * UPDATES_PER_MUDHOUR;
     aff.location  = APPLY_NONE;
     affectTo(&aff, -1);
   } else {
