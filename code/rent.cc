@@ -3000,8 +3000,9 @@ void printLimitedInRent(void)
         sprintf(buf, "Item (%s:%d) is over max (%d).  Num: (%d).\n\r", 
             obj_index[i].name, obj_index[i].virt,
             obj_index[i].max_exist, obj_index[i].number);
-        autoMail(NULL, "Jesus", buf);
-        autoMail(NULL, "Damescena", buf);
+	// these have to be lower case
+        autoMail(NULL, "jesus", buf);
+        autoMail(NULL, "damescena", buf);
 
       }
     }
