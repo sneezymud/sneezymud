@@ -329,8 +329,8 @@ class TComponent : public TObj {
     virtual void sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1);
     virtual int buyMe(TBeing *, TMonster *, int, int);
     virtual void valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1);
-    virtual int shopPrice(int, int, float) const;
-    virtual int sellPrice(int, int, float);
+    virtual int shopPrice(int, int, float, const TBeing *) const;
+    virtual int sellPrice(int, int, float, const TBeing *);
 
     int getComponentCharges() const;
     void setComponentCharges(int n);

@@ -250,7 +250,7 @@ void TShopOwned::showInfo()
       volume+=o->getVolume();
       value+=o->obj_flags.cost;
       // shopPrice does db queries, it tends to be too slow here
-      //      price+=o->shopPrice(1, shop_nr, -1);
+      //      price+=o->shopPrice(1, shop_nr, -1, ch);
     }
     keeper->doTell(ch->getName(),
 		   fmt("I have %i talens and %i items worth %i talens and selling for approximately %i talens.") %
@@ -389,7 +389,7 @@ int TShopOwned::setRates(sstring arg)
     db.query("select obj_nr, profit_buy, profit_sell, max_num from shopownedratios where shop_nr=%i", shop_nr);
     
     while(db.fetchRow()){
-      keeper->doTell(ch->getName(), fmt("%f %f %i %s") %
+      keeper->doTell(ch->getName(), fmt("%f %f %i item %s") %
 		     convertTo<float>(db["profit_buy"]) % 
 		     convertTo<float>(db["profit_sell"]) % 
 		     convertTo<int>(db["max_num"]) %
@@ -399,12 +399,23 @@ int TShopOwned::setRates(sstring arg)
     db.query("select match, profit_buy, profit_sell, max_num from shopownedmatch where shop_nr=%i", shop_nr);
     
     while(db.fetchRow()){
-      keeper->doTell(ch->getName(),fmt( "%f %f %i %s") %
+      keeper->doTell(ch->getName(),fmt( "%f %f %i match %s") %
 		     convertTo<float>(db["profit_buy"]) % 
 		     convertTo<float>(db["profit_sell"]) % 
 		     convertTo<int>(db["max_num"]) %
 		     db["match"]);
     }    
+
+    db.query("select player, profit_buy, profit_sell, max_num from shopownedplayer where shop_nr=%i", shop_nr);
+    
+    while(db.fetchRow()){
+      keeper->doTell(ch->getName(),fmt( "%f %f %i player %s") %
+		     convertTo<float>(db["profit_buy"]) % 
+		     convertTo<float>(db["profit_sell"]) % 
+		     convertTo<int>(db["max_num"]) %
+		     db["player"]);
+    }    
+
     return TRUE;
   } else if(argc<4){
     keeper->doTell(ch->getName(), "I don't understand.");
@@ -435,6 +446,21 @@ int TShopOwned::setRates(sstring arg)
     }
     
     keeper->doTell(ch->getName(), fmt("Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i, all for keyword %s.") %
+		   profit_buy % profit_sell % max_num % buf);    
+  } else if(buf == "player"){ ////////////////////////////////////////////
+    arg = one_argument(arg, buf);
+
+    db.query("select 1 from shopownedplayer where shop_nr=%i and player='%s'",
+	     shop_nr, buf.c_str());
+    
+    if(!db.fetchRow()){
+      db.query("insert into shopownedplayer values (%i, '%s', %f, %f, %i)",
+	       shop_nr, buf.c_str(), profit_buy, profit_sell, max_num);
+    } else {
+      db.query("update shopownedplayer set profit_buy=%f, profit_sell=%f, max_num=%i where shop_nr=%i and player='%s'", profit_buy, profit_sell, max_num, shop_nr, buf.c_str());
+    }
+    
+    keeper->doTell(ch->getName(), fmt("Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i, all for player %s.") %
 		   profit_buy % profit_sell % max_num % buf);    
   } else { ////////////////////////////////////////////////////////////////
     // find item in inventory matching keywords in arg

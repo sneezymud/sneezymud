@@ -27,8 +27,8 @@ class TOrganic : public TObj {
     virtual void describeObjectSpecifics(const TBeing *) const;
     virtual bool splitMe(TBeing *, const sstring &);
     virtual void lightMe(TBeing *, silentTypeT);
-    virtual int  sellPrice(int, int, float);
-    virtual int  shopPrice(int, int, float) const;
+    virtual int  sellPrice(int, int, float, const TBeing *);
+    virtual int  shopPrice(int, int, float, const TBeing *) const;
     virtual int buyMe(TBeing *, TMonster *, int, int);
     virtual void sellMe(TBeing *ch, TMonster *, int, int);
     virtual void valueMe(TBeing *, TMonster *, int, int);

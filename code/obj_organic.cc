@@ -105,7 +105,7 @@ void TOrganic::lightMe(TBeing *ch, silentTypeT iSilent)
 }
 
 // Determine Sell[PC selling] value
-int TOrganic::sellPrice(int, int shop_nr, float)
+int TOrganic::sellPrice(int, int shop_nr, float, const TBeing *)
 {
 #if 1
   int price;
@@ -132,7 +132,7 @@ int TOrganic::sellPrice(int, int shop_nr, float)
 }
 
 // Determine Buy[Shop selling] value
-int TOrganic::shopPrice(int num, int shop_nr, float) const
+int TOrganic::shopPrice(int num, int shop_nr, float, const TBeing *) const
 {
 #if 1
   int price;
@@ -187,7 +187,7 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     }
   }
   // cost_per = pricePerUnit();
-  price = shopPrice(num, shop_nr, -1);
+  price = shopPrice(num, shop_nr, -1, ch);
   vnum = objVnum();
   if (ch->getMoney() < price) {
     keeper->doTell(ch->name, shop_index[shop_nr].missing_cash2);
@@ -314,10 +314,10 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   char Buf[256];
 
   if (getUnits() > 0)
-    price = min(shopPrice(max(1, getUnits()), shop_nr, -1),
-                sellPrice(1, shop_nr, -1));
+    price = min(shopPrice(max(1, getUnits()), shop_nr, -1, ch),
+                sellPrice(1, shop_nr, -1, ch));
   else
-    price = sellPrice(1, shop_nr, -1);
+    price = sellPrice(1, shop_nr, -1, ch);
 
   if (isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
@@ -433,10 +433,10 @@ void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   TOrganic *obj2 = NULL;
 
   if (getUnits() > 0)
-    price = min(shopPrice(max(1, getUnits()), shop_nr, -1),
-                sellPrice(1, shop_nr, -1));
+    price = min(shopPrice(max(1, getUnits()), shop_nr, -1, ch),
+                sellPrice(1, shop_nr, -1, ch));
   else
-    price = sellPrice(1, shop_nr, -1);
+    price = sellPrice(1, shop_nr, -1, ch);
 
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
@@ -468,7 +468,7 @@ const sstring TOrganic::shopList(const TBeing *ch, const sstring &arg,
 {
   sstring Buf[2], tString;
   bool usePlural = false;
-  int cost = shopPrice(num, shop_nr, -1);
+  int cost = shopPrice(num, shop_nr, -1, ch);
 
   Buf[1] = fmt("%s") % shortDescr;
 

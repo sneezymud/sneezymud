@@ -68,7 +68,7 @@ void TCommodity::lowCheck()
   TObj::lowCheck();
 }
 
-int TCommodity::sellPrice(int num, int shop_nr, float)
+int TCommodity::sellPrice(int num, int shop_nr, float, const TBeing *)
 {
   int cost_per;
   int price;
@@ -85,7 +85,7 @@ int TCommodity::sellPrice(int num, int shop_nr, float)
   return price;
 }
 
-int TCommodity::shopPrice(int num, int shop_nr, float) const
+int TCommodity::shopPrice(int num, int shop_nr, float, const TBeing *) const
 {
   int cost_per;
   int price;
@@ -117,7 +117,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     keeper->doTell(ch->getName(), fmt("I don't have that much %s.  Here's the %d that I do have.") % fname(name) % num);
   }
   cost_per = pricePerUnit();
-  price = shopPrice(num, shop_nr, -1);
+  price = shopPrice(num, shop_nr, -1, ch);
   vnum = objVnum();
 
   if (ch->getMoney() < price) {
@@ -176,7 +176,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
   char buf[256], buf2[80];
 
   strcpy(buf2, fname(name).c_str());
-  price = sellPrice(1, shop_nr, -1);
+  price = sellPrice(1, shop_nr, -1, ch);
 
   if (isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
@@ -274,7 +274,7 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
   char buf2[80];
 
   strcpy(buf2, fname(name).c_str());
-  price = sellPrice(1, shop_nr, -1);
+  price = sellPrice(1, shop_nr, -1, ch);
 
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);

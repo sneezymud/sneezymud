@@ -34,7 +34,7 @@ TPotion::~TPotion()
 
 
 
-int TPotion::sellPrice(int, int shop_nr, float)
+int TPotion::sellPrice(int, int shop_nr, float, const TBeing *)
 {
 //  int cost_per;
   int price;
@@ -52,7 +52,7 @@ int TPotion::sellPrice(int, int shop_nr, float)
   return price;
 }
 
-int TPotion::shopPrice(int num, int shop_nr, float) const
+int TPotion::shopPrice(int num, int shop_nr, float, const TBeing *) const
 {
 //  int cost_per;
   int price;

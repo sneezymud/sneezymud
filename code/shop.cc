@@ -21,6 +21,7 @@ vector<shopData>shop_index(0);
 int cached_shop_nr;
 map <int,float> ratios_cache;
 map <sstring,float> matches_cache;
+map <sstring,float> player_cache;
 
 const unsigned int SHOP_DUMP = 124;
 
@@ -49,7 +50,7 @@ bool shopData::isOwned(){
 
 
 // this is the price the shop will buy an item for
-int TObj::sellPrice(int, int shop_nr, float chr)
+int TObj::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
 {
   float profit_sell=shop_index[shop_nr].profit_sell;
 
@@ -73,6 +74,12 @@ int TObj::sellPrice(int, int shop_nr, float chr)
 	}
       }
     }
+
+    db.query("select profit_sell from shopownedplayer where shop_nr=%i and lower(player)=lower('%s')", shop_nr, ch->name);
+    
+    if(db.fetchRow())
+      profit_sell += (convertTo<float>(db["profit_sell"]) - 1.0);
+
   }
 
   // adjust cost based on structure
@@ -92,7 +99,7 @@ int TObj::sellPrice(int, int shop_nr, float chr)
 }
 
 // this is price shop will sell it at
-int TObj::shopPrice(int num, int shop_nr, float chr) const
+int TObj::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
 {
   float profit_buy=-1;
   map <sstring,float>::iterator iter;
@@ -108,6 +115,7 @@ int TObj::shopPrice(int num, int shop_nr, float chr) const
     cached_shop_nr=shop_nr;
     ratios_cache.clear();
     matches_cache.clear();
+    player_cache.clear();
 
     db.query("select obj_nr, profit_buy from shopownedratios where shop_nr=%i",
 	     shop_nr);
@@ -118,6 +126,12 @@ int TObj::shopPrice(int num, int shop_nr, float chr) const
 	     shop_nr);
     while(db.fetchRow())
       matches_cache[db["match"]]=convertTo<float>(db["profit_buy"]);
+
+    db.query("select player, profit_buy from shopownedplayer where shop_nr=%i",
+	     shop_nr);
+    while(db.fetchRow())
+      player_cache[db["player"]]=convertTo<float>(db["profit_buy"]);
+    
   }
 
 
@@ -158,6 +172,26 @@ int TObj::shopPrice(int num, int shop_nr, float chr) const
   // no custom price found, so use the normal shop pricing
   if(profit_buy == -1)
     profit_buy=shop_index[shop_nr].profit_buy;
+
+
+  // check for player specific modifiers
+  if(shop_index[shop_nr].isOwned()){
+    if(cached_shop_nr==shop_nr){
+      for(iter=player_cache.begin();iter!=player_cache.end();++iter){
+	if((*iter).first == (sstring) ch->name){
+	  profit_buy += ((*iter).second - 1.0);
+	  break;
+	}
+      }
+    } else {
+      db.query("select profit_buy from shopownedplayer where shop_nr=%i and lower(player)=lower('%s')", shop_nr, ch->name);
+      
+      if(db.fetchRow()){
+	profit_buy += (convertTo<float>(db["profit_buy"]) - 1.0);
+      }
+    }
+  }
+
     
   // adjust cost based on structure
   double cost = adjPrice();
@@ -382,7 +416,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
     chr = max((float)1.0,chr);
 
-    cost = shopPrice(1, shop_nr, chr);
+    cost = shopPrice(1, shop_nr, chr, ch);
 
     while (num-- > 0) {
       TObj *temp1;
@@ -442,7 +476,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
     chr = max((float)1.0,chr);
 
-    cost = shopPrice(1, shop_nr, chr);
+    cost = shopPrice(1, shop_nr, chr, ch);
 
     for (i = 0; i < tmp; i++) {
       TThing *t_temp1 = searchLinkedListVis(ch, argm, keeper->getStuff());
@@ -546,7 +580,7 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
     return TRUE;
   }
 
-  if(temp1->sellPrice(1, shop_nr, -1) < 0){
+  if(temp1->sellPrice(1, shop_nr, -1, ch) < 0){
     keeper->doTell(ch->getName(), "You'd have to pay me to buy that!");
     return TRUE;
   }
@@ -666,7 +700,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   
   chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   chr = max((float)1.0,chr);
-  cost = sellPrice(1, shop_nr, chr);
+  cost = sellPrice(1, shop_nr, chr, ch);
 
   if (getStructPoints() != getMaxStructPoints()) {
     cost *= 6;    /* base deduction of 60% */
@@ -1207,7 +1241,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   // do not adjust for swindle on valueing, give them worst case price
   chr = max((float)1.0,chr);
 
-  cost = sellPrice(1, shop_nr, chr);
+  cost = sellPrice(1, shop_nr, chr, ch);
 
   if (obj_index[getItemIndex()].max_exist <= 10) {
     keeper->doTell(ch->name, "Wow!  This is one of those limited items.");
@@ -1278,7 +1312,7 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
   // do not adjust for swindle on list, give them worst case price
   chr = max((float)1.0, chr);
 
-  cost = shopPrice(1, shop_nr, chr);
+  cost = shopPrice(1, shop_nr, chr, ch);
 
   wearSlotT slot;
   slot = slot_from_bit(obj_flags.wear_flags);

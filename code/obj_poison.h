@@ -14,8 +14,8 @@
 class TPoison : public TBaseCup {
   public:
     virtual itemTypeT itemType() const { return ITEM_POISON; }
-    virtual int shopPrice(int, int, float) const;
-    virtual int sellPrice(int, int, float);
+    virtual int shopPrice(int, int, float, const TBeing *) const;
+    virtual int sellPrice(int, int, float, const TBeing *);
     virtual int objectSell(TBeing *, TMonster *);
 
 

@@ -3046,7 +3046,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
   tChr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   tChr   = max((float)1.0, tChr);
-  tCost  = (int) shopPrice(tNum, tShop, tChr);
+  tCost  = (int) shopPrice(tNum, tShop, tChr, ch);
 
   if ((ch->getMoney() < tCost) && !ch->hasWizPower(POWER_GOD)) {
     tKeeper->doTell(ch->name, shop_index[tShop].missing_cash2);
@@ -3085,7 +3085,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     if (tNum > charges) {
       tKeeper->doTell(ch->getName(), fmt("I don't have %d charges of %s.  Here %s the %d I do have.") % tNum % getName() % ((charges > 2) ? "are" : "is") % charges);
       tNum  = charges;
-      tCost = shopPrice(tNum, tShop, tChr);
+      tCost = shopPrice(tNum, tShop, tChr, ch);
     }
 
     if (charges == tNum) {
@@ -3180,7 +3180,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
   num = min(num, getComponentCharges());
   tChr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   tChr   = max((float)1.0, tChr);
-  tCost  = max(1, sellPrice(num, tShop, tChr));
+  tCost  = max(1, sellPrice(num, tShop, tChr, ch));
 
   if (tKeeper->getMoney() < tCost) {
     tKeeper->doTell(ch->name, shop_index[tShop].missing_cash1);
@@ -3258,7 +3258,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
   ch->doSave(SILENT_YES);
 }
 
-int TComponent::sellPrice(int num, int shop_nr, float)
+int TComponent::sellPrice(int num, int shop_nr, float, const TBeing *)
 {
   int cost_per;
   int price;
@@ -3276,7 +3276,7 @@ int TComponent::sellPrice(int num, int shop_nr, float)
   return price;
 }
 
-int TComponent::shopPrice(int num, int shop_nr, float) const
+int TComponent::shopPrice(int num, int shop_nr, float, const TBeing *) const
 {
   int cost_per;
   int price;
@@ -3307,7 +3307,7 @@ void TComponent::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   int willbuy = 0;
 
   willbuy=!sellMeCheck(ch, keeper, num);
-  price = sellPrice(num, shop_nr, -1);
+  price = sellPrice(num, shop_nr, -1, ch);
 
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
