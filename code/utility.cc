@@ -57,7 +57,7 @@ int ssprintf(string &s, const char *fmt, ...){
 
   if(strlen(buf) == MAX_STRING_LENGTH - 1){
     vlogf(LOG_BUG, "ssprintf(): buffer reached MAX_STRING_LENGTH");
-    vlogf(LOG_BUG, "ssprintf(): buffer=%s", buf);
+    vlogf(LOG_BUG, "ssprintf(): buffer=%.70s...", buf);
   }
 
   s = buf;
