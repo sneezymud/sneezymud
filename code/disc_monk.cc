@@ -36,6 +36,11 @@ int TBeing::doLeap(const sstring &arg)
     return FALSE;
   }
 
+  if(getMove() < 15){
+    sendTo("You're too tired to be jumping around.\n\r");
+    return FALSE;
+  }
+
   dirTypeT dir=getDirFromChar(arg);
   if(!exitDir(dir)){
     sendTo("You can't go that way.\n\r");
