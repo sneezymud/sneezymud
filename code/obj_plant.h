@@ -10,6 +10,9 @@
 
 #include "obj_expandable_container.h"
 
+
+extern int seed_to_plant(int vnum);
+
 class TPlant : public TExpandableContainer {
   private:
   int planttype, plantage;

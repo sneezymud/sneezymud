@@ -1290,7 +1290,7 @@ const struct material_type_numbers material_nums[200] =
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, NULL,""},
-  {50, 50, 50, 50, 0, 11, 55, 5, 10, 1, 0, 0, 50, 0, 0, NULL,"generic organic"},
+  {50, 50, 50, 50, 0, 11, 55, 5, 10, 1, 0, 500, 50, 0, 0, NULL,"generic organic"},
   {75, 5, 5, 70, 20, 55, 55, 3, -2, 4, 0, 400, 20, 2, 0, repairHide,"leather"},
   {55, 5, 1, 50, 25, 35, 36, 3, -1, 3, 0, 200, 30, 3, 0, repairHide,"toughened leather"},
   {10, 50, 10, 30, 50, 11, 0, 0, 5, 1, 0, 0, 10, 13095, 0, repairOrganic,"dragon scale"},

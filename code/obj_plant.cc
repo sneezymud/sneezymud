@@ -63,6 +63,35 @@ sstring TPlant::statObjInfo() const
 }
 
 
+// the case numbers are the vnum of the seed tool object
+// the return value is the plant type index
+int seed_to_plant(int vnum)
+{
+  switch(vnum){
+    case 13880:
+      return 0;
+    case 13881:
+      return 1;
+    case 13882:
+      return 2;
+    case 13883:
+      return 3;
+    case 13884:
+      return 4;
+    case 13885:
+      return 5;
+    case 13886:
+      return 6;
+    case 34213:
+      return 7;
+  }
+  
+  return 0;
+}
+
+
+
+
 
 void TPlant::updateDesc()
 {
@@ -75,6 +104,7 @@ void TPlant::updateDesc()
     "sprout tiny",
     "plant small %s",
     "plant %s",
+    "plant withered %s"
   };
   
   const char *plantname [] =
@@ -82,7 +112,8 @@ void TPlant::updateDesc()
     "a small mound of <o>dirt<1>", 
     "a tiny sprout", 
     "a small %s", 
-    "a %s", 
+    "a %s",
+    "an old, withered %s"
   };
   
   const char *plantdesc [] =
@@ -91,6 +122,7 @@ void TPlant::updateDesc()
     "A tiny sprout is growing here.",
     "A small %s is here.",
     "A %s is here.",
+    "An old, withered %s is here."
   };
 
   const char *planttypes [] =
@@ -102,6 +134,7 @@ void TPlant::updateDesc()
     "<Y>yellow<1> rose bush",
     "<o>orange<1> tree",
     "<g>money<1> tree",
+    "<w>pipe<g>weed<1><o> bush<1>"
   };
   const char *planttypeskeywords [] =
   {
@@ -112,6 +145,7 @@ void TPlant::updateDesc()
     "yellow rose bush",
     "orange tree",
     "money tree",
+    "pipeweed bush"
   };
   int plantfruits [] =
   {
@@ -122,7 +156,15 @@ void TPlant::updateDesc()
     28919,
     432,
     13,
+    34212
   };
+
+
+  // really old plants should wither and die
+  if(getAge() > 300){
+    plantindex=4;
+    obj_flags.decay_time=10;
+  }
 
   if (isObjStat(ITEM_STRUNG)) {
     delete [] shortDescr;
@@ -178,12 +220,12 @@ void TPlant::updateDesc()
       *this += *t;
     }
   }
+
 }
 
 
 void TPlant::updateAge(){
   setAge(getAge()+::number(1,3));
-  setAge(min(30, getAge()));
   updateDesc();
 }
 
