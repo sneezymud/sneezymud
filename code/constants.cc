@@ -304,7 +304,7 @@ void assign_item_info()
      "Which spell (-1 = NONE)", MAX_SKILL - 1, -1);
   ItemInfo[ITEM_WEAPON] = new itemInfo("Weapon","some sort of weapon",
      "Special: sharpness", 0, 0,
-     "Damage Level * 4 and Damage Precision", 0, 0,
+     "Damage Level * 4 and Damage Precision", 240, 0,
      "Weapon types 1 and 2.  See HELP WEAPON TYPES", 2147483647, 0,
      "Weapon type 3. See HELP WEAPON TYPES", 2147483647, 0);
   ItemInfo[ITEM_FUEL] = new itemInfo("Fuel","a flammable liquid",
