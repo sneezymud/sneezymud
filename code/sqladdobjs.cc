@@ -56,27 +56,27 @@ int main(int argc, char **argv)
 		    db_immo["volume"].c_str(), db_immo["material"].c_str());
 
 
-    } else {
-      printf("Not found: %i\n", vnums[t]);
-    }
+      //// objaffect
+      db_beta.query("delete from objaffect where vnum=%i", vnums[t]);
 
-    //// objaffect
-    db_beta.query("delete from objaffect where vnum=%i", vnums[t]);
+      db_immo.query("select vnum, type, mod1, mod2 from objaffect where owner='%s' and vnum=%i", immortal.c_str(), vnums[t]);
 
-    db_immo.query("select vnum, type, mod1, mod2 from objaffect where owner='%s' and vnum=%i", immortal.c_str(), vnums[t]);
-
-    while(db_immo.fetchRow()){
-      db_beta.query("insert into objaffect values(%s, %s, %s, %s)", db_immo["vnum"].c_str(), db_immo["type"].c_str(), db_immo["mod1"].c_str(), db_immo["mod2"].c_str());
-    }      
+      while(db_immo.fetchRow()){
+	db_beta.query("insert into objaffect values(%s, %s, %s, %s)", db_immo["vnum"].c_str(), db_immo["type"].c_str(), db_immo["mod1"].c_str(), db_immo["mod2"].c_str());
+      }      
 
     
-    //// obj extra
-    db_beta.query("delete from objextra where vnum=%i", vnums[t]);
+      //// obj extra
+      db_beta.query("delete from objextra where vnum=%i", vnums[t]);
 
-    db_immo.query("select vnum, name, description from objextra where owner='%s' and vnum=%i", immortal.c_str(), vnums[t]);
+      db_immo.query("select vnum, name, description from objextra where owner='%s' and vnum=%i", immortal.c_str(), vnums[t]);
 
-    while(db_immo.fetchRow()){
-      db_beta.query("insert into objextra values(%s, '%s', '%s')", db_immo["vnum"].c_str(), db_immo["name"].c_str(), db_immo["description"].c_str());
+      while(db_immo.fetchRow()){
+	db_beta.query("insert into objextra values(%s, '%s', '%s')", db_immo["vnum"].c_str(), db_immo["name"].c_str(), db_immo["description"].c_str());
+      }
+
+    } else {
+      printf("Not found: %i\n", vnums[t]);
     }
 
   }
