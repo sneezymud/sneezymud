@@ -960,7 +960,7 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_DEIKHAN, "deikhan", "the Ways of the Deikhan", DISC_DEIKHAN, CLASS_DEIKHAN},
   {SPEC_TRAINER_BRAWLING, "brawling", "Brawling Moves", DISC_BRAWLING, CLASS_WARRIOR},
   {SPEC_TRAINER_MEDITATION_MONK, "meditation", "about Meditation", DISC_MEDITATION_MONK, CLASS_MONK},
-  {SPEC_TRAINER_SURVIVAL, "survival", "How to Survive", DISC_SURVIVAL, CLASS_RANGER},
+  {SPEC_TRAINER_SURVIVAL, "bogus", "bogus", DISC_BOGUS2, CLASS_RANGER},
   {SPEC_TRAINER_SHAMAN_ARMADILLO, "armadillo", "about the Abilities of the Armadillo", DISC_SHAMAN_ARMADILLO, CLASS_SHAMAN},
   {SPEC_TRAINER_ANIMAL, "animal", "Animal Magic", DISC_ANIMAL, CLASS_RANGER},
   {SPEC_TRAINER_AEGIS, "aegis", "the Aegis of the Deities", DISC_AEGIS, CLASS_CLERIC},
