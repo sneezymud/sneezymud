@@ -369,7 +369,11 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_RELEASE:
-          doRelease(tmpstring);
+	  if (!hasWizPower(POWER_WIZARD)) {
+	    sendTo("Prototype command.  You need to be a developer to use this.\n\r");
+	    break;
+	  }	  
+	  doRelease(tmpstring);
           break;
         case CMD_CRIT:
           rc = doCrit(newarg);
@@ -379,7 +383,11 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_CAPTURE:
-          doCapture(tmpstring);
+	  if (!hasWizPower(POWER_WIZARD)) {
+	    sendTo("Prototype command.  You need to be a developer to use this.\n\r");
+	    break;
+	  }
+	  doCapture(tmpstring);
 	  addToLifeforce(1);
           break;
         case CMD_HEAVEN:

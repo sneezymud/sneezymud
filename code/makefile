@@ -225,7 +225,7 @@ OBJ =	actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	spec_mobs_money_train.o spec_objs_deikhan_sword.o \
 	spec_objs_black_sun.o spec_objs_poison_cutlass.o \
 	spec_objs_unholy_cutlass.o spec_mobs_tudy.o obj_vehicle.o \
-	cmd_drive.o
+	cmd_drive.o spec_mobs_cityguard.o
 
 OBJ := $(sort $(addprefix $(OBJDIR), $(OBJ)))
 
