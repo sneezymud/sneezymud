@@ -721,8 +721,9 @@ void TBeing::doTip(const sstring &arg)
     act(fmt("$n tips $s %s.") % hat,  FALSE, this, NULL, NULL, TO_ROOM);
   } else {
     t=searchLinkedList(arg, roomp->getStuff(), TYPETHING);
-    
-    if(t==this){
+    if (!t)
+      sendTo(fmt("Tip your %s to whom?\n\r") % hat);
+    else if(t==this){
       act(fmt("You tip your %s to yourself - are you feeling alright?") % hat,
 	  FALSE, this, NULL, t, TO_CHAR);
       act(fmt("$n tips $s %s to $mself? Don't ask...") % hat,
