@@ -60,15 +60,35 @@ bool TCorporation::hasAccess(TBeing *ch, int perm){
 }
 
 
+int TCorporation::getBank()
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select bank from corporation where corp_id=%i", corp_id);
+
+  if(db.fetchRow())
+    return convertTo<int>(db["bank"]);
+  else
+    return 4; // default to GH bank
+}
+
+
+void TCorporation::setBank(int bank)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("update corporation set bank=%i where corp_id=%i", bank, corp_id);
+  
+}
 
 int TCorporation::getMoney()
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select gold from corporation where corp_id=%i", corp_id);
+  db.query("select talens from shopownedcorpbank b, corporation c where c.corp_id=%i and c.corp_id=b.corp_id and b.shop_nr=c.bank", corp_id);
 
   if(db.fetchRow())
-    return convertTo<int>(db["gold"]);
+    return convertTo<int>(db["talens"]);
   else
     return 0;
 }
@@ -78,7 +98,7 @@ void TCorporation::setMoney(int g)
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("update corporation set gold=%i where corp_id=%i", g, corp_id);
+  db.query("update shopownedcorpbank set talens=%i where corp_id=corporation.corp_id and corporation.corp_id=%i and shop_nr=corporation.bank", g, corp_id);
 }
 
 int TCorporation::getCorpID()

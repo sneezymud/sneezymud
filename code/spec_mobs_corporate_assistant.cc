@@ -1,6 +1,7 @@
 #include "stdsneezy.h"
 #include "database.h"
 #include "corporation.h"
+#include "shop.h"
 
 int getAssets(int corp_id)
 {
@@ -38,8 +39,8 @@ void corpListing(TBeing *ch, TMonster *me)
   int corp_id=0, val=0, gold=0, shopval=0;
   multimap <int, sstring, std::greater<int> > m;
   multimap <int, sstring, std::greater<int> >::iterator it;
-  
-  db.query("select c.corp_id, c.name, sum(s.gold)+c.gold as gold, count(so.shop_nr) as shopcount from corporation c, shopowned so, shop s where c.corp_id=so.corp_id and so.shop_nr=s.shop_nr group by c.corp_id, c.name, c.gold order by gold desc");
+
+  db.query("select c.corp_id, c.name, sum(b.talens)+b.talens as gold, count(so.shop_nr) as shopcount from shopowned so, shop s, corporation c left outer join shopownedcorpbank b on (b.corp_id=c.corp_id) where c.bank=b.shop_nr and c.corp_id=so.corp_id and so.shop_nr=s.shop_nr group by c.corp_id, c.name, b.talens order by gold desc");
   
   while(db.fetchRow()){
     corp_id=convertTo<int>(db["corp_id"]);
@@ -116,15 +117,18 @@ void corpLogs(TBeing *ch, TMonster *me, sstring arg)
 void corpSummary(TBeing *ch, TMonster *me, int corp_id)
 {
   TDatabase db(DB_SNEEZY);
-  int value=0, gold=0, shopcount=0, bank=0;
+  int value=0, gold=0, shopcount=0, banktalens=0, bank=4;
   sstring buf;
+  TRoom *tr=NULL;
+
 
   if(!corp_id){
     me->doTell(ch->getName(), "I don't have any information for that corporation.");
     return;
   }
   
-  db.query("select c.name, sum(s.gold) as gold, c.gold as bank, count(s.shop_nr) as shops from corporation c, shopowned so, shop s where c.corp_id=so.corp_id and c.corp_id=%i and so.shop_nr=s.shop_nr group by c.corp_id, c.name, c.gold order by c.corp_id", corp_id);
+
+  db.query("select c.name, sum(s.gold) as gold, b.talens as talens, count(s.shop_nr) as shops, bank from corporation c left outer join shopownedcorpbank b on (c.corp_id=b.corp_id), shopowned so, shop s where c.corp_id=so.corp_id and c.corp_id=%i and so.shop_nr=s.shop_nr group by c.corp_id, c.name, b.talens, c.bank order by c.corp_id", corp_id);
   
   if(!db.fetchRow()){
     me->doTell(ch->getName(), "I don't have any information for that corporation.");
@@ -135,12 +139,13 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
 	     corp_id % db["name"]);
 
   bank=convertTo<int>(db["bank"]);
+  banktalens=convertTo<int>(db["banktalens"]);
   gold=convertTo<int>(db["gold"]);
   value=getAssets(corp_id);
   shopcount=convertTo<int>(db["shops"]);
   
   me->doTell(ch->getName(), fmt("Bank Talens: %12s") %
-	     (fmt("%i") % bank).comify());
+	     (fmt("%i") % banktalens).comify());
   me->doTell(ch->getName(), fmt("Talens:      %12s") % 
 	     (fmt("%i") % gold).comify());
   me->doTell(ch->getName(), fmt("Assets:      %12s") % 
@@ -148,7 +153,7 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   me->doTell(ch->getName(), fmt("Shops (x1M): %12s") % 
 	     (fmt("%i") % (shopcount*1000000)).comify());
   me->doTell(ch->getName(), fmt("Total value: %12s") %
-	     (fmt("%i") % (bank+gold+value+(shopcount * 1000000))).comify());
+	     (fmt("%i") % (banktalens+gold+value+(shopcount * 1000000))).comify());
 
 
   // officers
@@ -161,14 +166,15 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   }
   me->doTell(ch->getName(), fmt("Corporate officers are:%s") % buf);
 
-
-
+  // bank
+  if((tr=real_roomp(shop_index[bank].in_room))){
+    me->doTell(ch->getName(), "Corporate bank is:");
+    me->doTell(ch->getName(), fmt("%-3i| %s") % bank % tr->getName());
+  }
 
   // shops    
   db.query("select s.shop_nr, s.in_room, s.gold from shop s, shopowned so where s.shop_nr=so.shop_nr and so.corp_id=%i order by s.gold desc", corp_id);
   
-  TRoom *tr=NULL;
-
   me->doTell(ch->getName(), "The following shops are owned by this corporation:");
   
   while(db.fetchRow()){

@@ -9,6 +9,8 @@ class TCorporation {
   int getAccess(TBeing *);
   int getMoney();
   void setMoney(int);
+  int getBank();
+  void setBank(int);
   int getCorpID();
   sstring getName();
 
