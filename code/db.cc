@@ -340,7 +340,7 @@ void bootDb(void)
   bootPulse(NULL, true);
 
   // after boot time object loading is minimal, so the cache isn't needed
-  obj_cache.clear();
+  //  obj_cache.clear();
 
   bootPulse("Performing playerfile maintenance and data extraction:",false);
   fixup_players();
@@ -1355,7 +1355,7 @@ TObj *read_object(int nr, readFileTypeT type)
     return NULL;
   }
 
-  if(bootTime && cache_object(nr)!=-1){
+  if(/*bootTime &&*/ cache_object(nr)!=-1){
     obj = makeNewObj(mapFileToItemType(convertTo<int>(obj_cache[cache_object(nr)]->s["type"])));
     obj->number=nr;
     if (!obj->isObjStat(ITEM_STRUNG)) {
@@ -1448,7 +1448,7 @@ TObj *read_object(int nr, readFileTypeT type)
 
   obj->checkObjStats();
 
-  if(bootTime && cache_object(nr)==-1){
+  if(/*bootTime &&*/ cache_object(nr)==-1){
     //    vlogf(LOG_PEEL, "caching object - %s", obj->shortDescr);
     cached_object *c=new cached_object;
     
