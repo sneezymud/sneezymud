@@ -1597,11 +1597,11 @@ static const string factionLeaderTitle(factionTypeT faction, int slot)
     if (slot == 0)
       mud_str_copy(buf, "Grand Master of the Way", 64);
     else if (slot == 1)
-      mud_str_copy(buf, "Tharchion (Lesser Master)", 64);
+      mud_str_copy(buf, "Mystic Superior", 64);
     else if (slot == 2)
-      mud_str_copy(buf, "Head of the Templar Guard (Lesser Master)", 64);
+      mud_str_copy(buf, "Unholy Protector", 64);
     else if (slot == 3)
-      mud_str_copy(buf, "Keeper of the Way (Lesser Master)", 64);
+      mud_str_copy(buf, "Master Assassin", 64);
   } else if (faction == FACT_BROTHERHOOD) {
     if (slot == 0)
       mud_str_copy(buf, "Chief Councillor of Three", 64);
