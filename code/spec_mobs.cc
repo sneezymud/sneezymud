@@ -6510,7 +6510,6 @@ extern int signMaker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int paladinPatrol(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int taxman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int banker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
-extern int stockBroker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int loanShark(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int statSurgeon(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int fireman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -6723,7 +6722,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "shipping official", shippingOfficial},
   {FALSE, "loan shark", loanShark},
   {FALSE, "trolley driver", trolleyBoatCaptain}, // 190
-  {FALSE, "stock broker", stockBroker},
+  {FALSE, "BOGUS", bogus_mob_proc},
   {FALSE, "banker", banker},
   {FALSE, "prison janitor", prisonJanitor},
   {TRUE, "cat", cat},
