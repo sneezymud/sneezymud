@@ -379,8 +379,10 @@ void TShopOwned::showInfo()
 		     convertTo<double>(db["x"]) % 
 		     convertTo<double>(db["y"]));
     }
-
-
+  } else if(keeper->spec==SPEC_BANKER){
+    keeper->doTell(ch->getName(),
+		   fmt("I pay out %f in yearly interest, compounded daily.") %
+		   (shop_index[shop_nr].profit_sell-1.0));
   } else {
     keeper->doTell(ch->getName(),
 		   fmt("My profit_buy is %f and my profit_sell is %f.") %

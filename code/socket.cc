@@ -970,7 +970,7 @@ int TMainSocket::gameLoop()
   sstring str;
   int count;
   struct timeval timespent;
-  bool doneStockHistory=false;
+  bool doneStockHistory=false, doneBankInterest=false;
   TTiming t;
 
   avail_descs = 150;		
@@ -1021,16 +1021,21 @@ int TMainSocket::gameLoop()
       updateStocks();
     }
 
-    if(time_info.seconds==0 &&
-       time_info.hours==0 &&
-       time_info.minutes==0){
+
+    // once per mud day
+    if(time_info.seconds==0 && time_info.hours==0 && time_info.minutes==0){
       if(!doneStockHistory){
-	// once per mud day hopefully
 	updateStockHistory();
 	doneStockHistory=true;
       }
+
+      if(!doneBankInterest){
+	calcBankInterest();
+	doneBankInterest=true;
+      }
     } else {
       doneStockHistory=false;
+      doneBankInterest=false;
     }
 
     if (pl.combat){

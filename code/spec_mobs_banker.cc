@@ -4,6 +4,26 @@
 #include "shopowned.h"
 
 
+void calcBankInterest()
+{
+  TDatabase db(DB_SNEEZY), in(DB_SNEEZY);
+  float profit_sell;
+
+  db.query("select shop_nr, keeper from shop");
+  
+  while(db.fetchRow()){
+    if(mob_index[real_mobile(convertTo<int>(db["keeper"]))].spec==SPEC_BANKER){
+      profit_sell=shop_index[convertTo<int>(db["shop_nr"])].profit_sell;
+      
+      in.query("update shopownedbank set talens=talens * %f", 
+	       1.0+(profit_sell/365.0));
+      in.query("update shopownedcorpbank set talens=talens * %f", 
+	       1.0+(profit_sell/365.0));
+    }
+  }
+}
+
+
 int bankWithdraw(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, int money)
 {
   TDatabase db(DB_SNEEZY);
@@ -184,7 +204,7 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 	talenDisplay(convertTo<int>(db["talens"]));
     }
 
-    db.query("select sb.c+sbc.c, sb.t+sbc.t from (select count(*) as c, sum(talens) as t from shopownedbank where shop_nr=%i) sb, (select count(*) as c, sum(talens) as t from shopownedcorpbank where shop_nr=%i) sbc", shop_nr, shop_nr);
+    db.query("select (sb.c+sbc.c) as c, (sb.t+sbc.t) as t from (select count(*) as c, sum(talens) as t from shopownedbank where shop_nr=%i) sb, (select count(*) as c, sum(talens) as t from shopownedcorpbank where shop_nr=%i) sbc", shop_nr, shop_nr);
 
 
     if(db.fetchRow()){
