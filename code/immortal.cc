@@ -1202,7 +1202,6 @@ void TBeing::doFlag(const char *argument)
 {
   char buf[MAX_INPUT_LENGTH], buf2[MAX_INPUT_LENGTH];
   TBeing *victim;
-  int rc;
 
   // sanity check
   if (!hasWizPower(POWER_FLAG) || !dynamic_cast<TPerson *>(this)) {
