@@ -5156,25 +5156,27 @@ void setPrompts(fd_set out)
                       (hasColor ? d->prompt_d.hpColor : ""),
                       ch->getHit(),
                       ch->norm());
-            if (IS_SET(d->prompt_d.type, PROMPT_MANA))
-              if (ch->hasClass(CLASS_CLERIC) || ch->hasClass(CLASS_DEIKHAN))
+            if (IS_SET(d->prompt_d.type, PROMPT_MANA)) {
+              if (ch->hasClass(CLASS_CLERIC) || ch->hasClass(CLASS_DEIKHAN)) {
                 sprintf(promptbuf + strlen(promptbuf),
                         StPrompts[2],
                         (hasColor ? d->prompt_d.manaColor : ""),
                         ch->getPiety(),
                         ch->norm());
-              else if (ch->hasClass(CLASS_SHAMAN))
+	      } else if (ch->hasClass(CLASS_SHAMAN)) {
                 sprintf(promptbuf + strlen(promptbuf),
                         StPrompts[12],
                         (hasColor ? d->prompt_d.manaColor : ""),
                         ch->getLifeforce(),
                         ch->norm());
-              else
+	      } else {
                 sprintf(promptbuf + strlen(promptbuf),
                         StPrompts[3],
                         (hasColor ? d->prompt_d.manaColor : ""),
                         ch->getMana(),
                         ch->norm());
+	      }
+	    }
             if (IS_SET(d->prompt_d.type, PROMPT_MOVE))
               sprintf(promptbuf + strlen(promptbuf),
                       StPrompts[4],
