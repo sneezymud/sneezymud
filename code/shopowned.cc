@@ -118,7 +118,10 @@ void TShopOwned::showInfo()
   keeper->doTell(ch->getName(),"My profit_buy is %f and my profit_sell is %f.",
 		 shop_index[shop_nr].profit_buy,
 		 shop_index[shop_nr].profit_sell);
-  
+  keeper->doTell(ch->getName(),"My maximum inventory per item is %i.",
+		 getMaxNum(NULL));
+
+
   if(shop_index[shop_nr].type.size()<=1){
     keeper->doTell(ch->getName(), 
 		   "I only sell things, I do not buy anything.");
@@ -621,20 +624,20 @@ int TShopOwned::getMaxNum(const TObj *o)
 {
   TDatabase db("sneezy");
   
-  if(!o)
-    return 0;
-
-  db.query("select match, max_num from shopownedmatch where shop_nr=%i", shop_nr);
-  
-  while(db.fetchRow()){
-    if(isname(db.getColumn(0), o->name))
-      return atoi_safe(db.getColumn(1));
+  if(o){
+    db.query("select match, max_num from shopownedmatch where shop_nr=%i", shop_nr);
+    
+    while(db.fetchRow()){
+      if(isname(db.getColumn(0), o->name))
+	return atoi_safe(db.getColumn(1));
+    }
+    
+    db.query("select max_num from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, o->objVnum());
+    
+    if(db.fetchRow())
+      return atoi_safe(db.getColumn(0));
   }
-  
-  db.query("select max_num from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, o->objVnum());
 
-  if(db.fetchRow())
-    return atoi_safe(db.getColumn(0));
 
   db.query("select max_num from shopowned where shop_nr=%i", shop_nr);
   
