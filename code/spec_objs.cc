@@ -6229,7 +6229,9 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
     // trophy
     //    db.query("select fm.level, count(*) from trophy t, factionmembers fm where t.name=fm.name and fm.faction='%s' group by fm.name, fm.level", factnames[i].c_str());
-    db.query("select fm.level, t.count from trophyplayer t, factionmembers fm where t.name=fm.name and fm.faction='%s' group by fm.level, t.count", factnames[i].c_str());
+    //    db.query("select fm.level, t.count from trophyplayer t, factionmembers fm where t.name=fm.name and fm.faction='%s' group by fm.level, t.count", factnames[i].c_str());
+    db.query("select fm.level, t.count from trophyplayer t, factionmembers fm, player p where p.name=fm.name and t.player_id=p.id and fm.faction='%s' group by fm.level, t.count", factnames[i].c_str());
+
     score=0;
 
     while(db.fetchRow()){
