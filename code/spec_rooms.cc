@@ -322,55 +322,6 @@ int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 }
 
 
-
-int Donation(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
-{
-  const char * pStArg = arg;
-  char check[256],
-       StContainer[256];
-  TThing *t, *t2;
-
-  if (cmd == CMD_GENERIC_PULSE && !::number(0, 75)) {
-    if (rp) {
-      for (t = rp->getStuff(); t; t = t2) {
-        t2 = t->nextThing;
-        TFood * tfd = dynamic_cast<TFood *>(t);
-        if (tfd && tfd->isFoodFlag(FOOD_SPOILED)) {
-          delete tfd;
-          tfd = NULL;
-        }
-      }
-    }
-  } else {
-    if (!ch)
-      return FALSE;
-
-    if ((cmd != CMD_GET) && (cmd != CMD_TAKE) && (cmd != CMD_JUNK))
-      return FALSE;
-
-    if (cmd == CMD_GET || cmd == CMD_TAKE) {
-      pStArg = one_argument(arg, check);
-      one_argument(pStArg, StContainer);
-  
-      if (*check) {
-        // prevent "get all", "get all.xxx", and "get 20*xxx"
-        // ...But do not prevent them from getting all out of their own posessions. -Lapsos (5/15/04)
-
-        if (!strncmp(check, "all", 3) || strchr(check, '*')) {
-	  if (!*StContainer || !generic_find_obj(StContainer, (FIND_OBJ_INV | FIND_OBJ_EQUIP), ch)) {
-            ch->sendTo("Now now, that would be greedy!\n\r");
-            return TRUE;
-	  }
-        }
-      }
-    } else if (cmd == CMD_JUNK) {
-      ch->sendTo("Wouldn't you rather just donate that?\n\r");
-      return TRUE;
-    }
-  }
-  return FALSE;
-}
-
 int pools_of_chaos_and_cleansing(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
 {
   int rc;
@@ -2165,7 +2116,6 @@ void assign_rooms(void)
     {451, SecretDoors},     // Adders Coffeehouse
     {553, oft_frequented_room},
     {556, oft_frequented_room},
-    {563, Donation},
     {600, grimhavenDump},
     {757, oft_frequented_room},
     {758, oft_frequented_room},
