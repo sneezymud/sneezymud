@@ -514,8 +514,8 @@ class TMonster : public TBeing {
     bool isTestmob() const;
     int wanderAround();
     void quickieDefend();
-    void saveItems(const char *);
-    void loadItems(const char *);
+    void saveItems(const string &);
+    void loadItems(const string &);
     bool isSmartMob(int) const;
     bool aiLoveNonHumanoid(TBeing *, aiTarg);
     double getRealLevel() const;

@@ -80,14 +80,14 @@ void TBeing::doGuard(const string &argument)
       sendTo("You snap to attention.\n\r");
     }
   } else {
-    if (!strcasecmp(argument.c_str(), "on")) {
+    if(lower(argument) == "on"){
       if (!IS_SET(specials.act, ACT_GUARDIAN)) {
         SET_BIT(specials.act, ACT_GUARDIAN);
         act("$n alertly watches you.", FALSE, this, 0, master, TO_VICT);
         act("$n alertly watches $N.", FALSE, this, 0, master, TO_NOTVICT);
         sendTo("You snap to attention.\n\r");
       }
-    } else if (!strcasecmp(argument.c_str(), "off")) {
+    } else if (lower(argument) == "off"){
       if (IS_SET(specials.act, ACT_GUARDIAN)) {
         act("$n relaxes.", FALSE, this, 0, 0, TO_ROOM);
         sendTo("You relax.\n\r");

@@ -234,8 +234,8 @@ void TBeing::doChargeStave(string tStString)
   if (tStString.empty())
     tSpell = tStaff->getSpell();
   else
-    if (((tSpell = searchForSpellNum(tStString.c_str(), EXACT_YES)) > TYPE_UNDEFINED) ||
-        ((tSpell = searchForSpellNum(tStString.c_str(), EXACT_NO )) > TYPE_UNDEFINED))
+    if (((tSpell = searchForSpellNum(tStString, EXACT_YES)) > TYPE_UNDEFINED) ||
+        ((tSpell = searchForSpellNum(tStString, EXACT_NO )) > TYPE_UNDEFINED))
       if (discArray[tSpell]->typ != SPELL_MAGE) {
         sendTo("That is not a mage spell.\n\r");
         return;

@@ -22,7 +22,7 @@ bool sameAccount(string buf, int shop_nr){
       continue;
 
     if(!strcmp(stthis.aname, st.aname)){
-      if(!strcmp(lower(buf).c_str(), lower(db.getColumn(0)).c_str()))
+      if(lower(buf) == lower(db.getColumn(0)))
 	return FALSE;
       else
 	return TRUE;
@@ -319,7 +319,7 @@ int TShopOwned::buyShop(){
   db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, ch->getName(),  SHOPACCESS_OWNER);
   
   ssprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
-  keeper->saveItems(buf.c_str());
+  keeper->saveItems(buf);
   
   keeper->doTell(ch->getName(), "Congratulations, you now own this shop.");
 

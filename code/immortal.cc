@@ -6736,7 +6736,7 @@ int TBeing::doAsOther(const string &tStString)
     return FALSE;
   }
 
-  if (!strcasecmp(getName(), tStNewName.c_str())) {
+  if(lower(getName()) == lower(tStNewName)){
     sendTo("If you want to do it that bad, just do it man!\n\r");
     return FALSE;
   }

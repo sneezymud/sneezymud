@@ -104,7 +104,7 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
       if (!job->speech_list.empty()) {
         unsigned int i;
         for (i = 0; i < job->speech_list.size(); i++) {
-          if (!strcmp(ch->name, job->speech_list[i].c_str())) {
+          if (ch->name == job->speech_list[i]){
             string tmpString = fname(ch->name);
             tmpString += " You are already in the speaker list.";
             myself->doTell(tmpString.c_str());
@@ -134,7 +134,7 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
       // otherwise, skip to next speaker.
       // immorts are also able to dump to next speaker
       if (!job->speech_list.empty()) {
-        if (strcmp(job->speech_list[0].c_str(), ch->name) &&
+	if(job->speech_list[0] != ch->name &&
             !ch->isImmortal())
           return false;
       } else {
@@ -199,7 +199,7 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
     if (job->logging &&
          (ch->isImmortal() ||
            (!job->speech_list.empty() &&
-            !strcmp(job->speech_list[0].c_str(), ch->name)))) {
+	    job->speech_list[0] == ch->name))){
       FILE *fp;
       fp = fopen("meeting.log", "a+");
       if (fp) {
@@ -358,7 +358,7 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
 
   // allow the speaker to do as they please
   if (!job->speech_list.empty()) {
-    if (!strcmp(job->speech_list[0].c_str(), ch->name)) {
+    if(job->speech_list[0] == ch->name){
       return FALSE;
     }
   }

@@ -9,7 +9,7 @@ int TBeing::slamIntoWall(roomDirData * exitp)
   char buf[256];
 
   if (exitp->keyword && *exitp->keyword) {
-    if (!strcmp(fname(exitp->keyword).c_str(), "secret") ||
+    if(fname(exitp->keyword) == "secret" ||
         IS_SET(exitp->condition, EX_SECRET)) {
       strcpy(doorname, "wall");
     } else

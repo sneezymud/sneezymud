@@ -93,7 +93,7 @@ bool is_exact_spellname(const string &str, const string &namelist)
 
   for (i = 0; i < argv.size(); i++) {
     for (j = 0; j < xargv.size(); j++) {
-      if(!xargv[j].empty() && !strcasecmp(argv[i].c_str(), xargv[j].c_str())){
+      if(!xargv[j].empty() && lower(argv[i]) == lower(xargv[j])){
         xargv[j] = "";
         break;
       }
@@ -114,7 +114,7 @@ bool is_exact_name(const string &str, const string &namelist)
 
   for (i = 0; i < argv.size(); i++) {
     for (j = 0; j < xargv.size(); j++) {
-      if(!xargv[j].empty() && !strcasecmp(argv[i].c_str(), xargv[j].c_str())){
+      if(!xargv[j].empty() && lower(argv[i]) == lower(xargv[j])){
         xargv[j] = "";
         break;
       }

@@ -229,7 +229,7 @@ class TRoom : public TThing {
     void initWeather();
     void updateWeather();
     void computeNewWeather();
-    void saveItems(const char *);
+    void saveItems(const string &);
     void loadItems();
     weatherT getWeather();
     int outdoorLight();

@@ -5419,7 +5419,8 @@ int Descriptor::doAccountStuff(char *arg)
 #if 1
       // it's possible that char is in game (link-dead), check for this
       for (ch = character_list; ch; ch = ch->next) {
-        if (!strcmp(lower(ch->name).c_str(), delname)) {
+	if(lower(ch->name) == delname){
+	  //        if (!strcmp(lower(ch->name).c_str(), delname)) {
           writeToQ("Character is still connected.  Disconnect before deleting.\n\r");
           writeToQ("Which do you want to do?\n\r");
           writeToQ("1) Delete your account\n\r");

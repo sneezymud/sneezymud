@@ -1277,14 +1277,14 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   return TRUE;
 }
 
-void TMonster::saveItems(const char *filepath)
+void TMonster::saveItems(const string &filepath)
 {
   FILE *fp;
   signed char i;
   rentHeader st;
   TObj *obj;
 
-  if (!(fp = fopen(filepath, "w+b"))) {
+  if (!(fp = fopen(filepath.c_str(), "w+b"))) {
     //    vlogf(LOG_BUG, "Error saving mob [%s] items.", getName());
     return;
   }
@@ -1323,16 +1323,16 @@ void TMonster::saveItems(const char *filepath)
   }
 }
 
-void TRoom::saveItems(const char *)
+void TRoom::saveItems(const string &)
 {
   FILE *fp;
-  char filepath[256];
+  string filepath;
   signed char i;
   rentHeader st;
 
-  sprintf(filepath, "%s/%d", ROOM_SAVE_PATH, number);
+  ssprintf(filepath, "%s/%d", ROOM_SAVE_PATH, number);
 
-  if (!(fp = fopen(filepath, "w+b"))) {
+  if (!(fp = fopen(filepath.c_str(), "w+b"))) {
     vlogf(LOG_BUG, "Error saving room [%d] items.", number);
     return;
   }
@@ -1376,14 +1376,14 @@ void emailStorageBag(string tStMessage, string tStSender, TThing * tStuff)
 
 void TRoom::loadItems()
 {
-  char filepath[256];
+  string filepath;
   int num_read;
   FILE *fp;
   int reset;
   unsigned char version;
 
-  sprintf(filepath, "%s/%d", ROOM_SAVE_PATH, number);
-  if (!(fp = fopen(filepath, "r+b"))) 
+  ssprintf(filepath, "%s/%d", ROOM_SAVE_PATH, number);
+  if (!(fp = fopen(filepath.c_str(), "r+b"))) 
     return;
   
   reset = isRoomFlag(ROOM_SAVE_ROOM);
@@ -1393,7 +1393,7 @@ void TRoom::loadItems()
     removeRoomFlagBit(ROOM_SAVE_ROOM);
 
   if (fread(&version, sizeof(version), 1, fp) != 1) {
-    vlogf(LOG_BUG, "Error while reading version from %s.", filepath);
+    vlogf(LOG_BUG, "Error while reading version from %s.", filepath.c_str());
     fclose(fp);
     if (reset)
       setRoomFlagBit(ROOM_SAVE_ROOM);
@@ -2054,17 +2054,17 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 }
 
 // this is used to load the items a shopkeeper has
-void TMonster::loadItems(const char *filepath)
+void TMonster::loadItems(const string &filepath)
 {
   FILE *fp;
   int num_read = 0;
   unsigned char version;
 
-  if (!(fp = fopen(filepath, "r+b")))
+  if (!(fp = fopen(filepath.c_str(), "r+b")))
     return;
 
   if (fread(&version, sizeof(unsigned char), 1, fp) != 1) {
-    vlogf(LOG_BUG, "Error while reading version from %s.", filepath);
+    vlogf(LOG_BUG, "Error while reading version from %s.", filepath.c_str());
     fclose(fp);
     return;
   }

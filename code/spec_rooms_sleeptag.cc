@@ -69,10 +69,10 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
     case CMD_SAY:
       argument_parser(tStOrig, tStString, tStBuffer);
 
-      if (strcasecmp(tStString.c_str(), "sleeptag"))
+      if(lower(tStString) != "sleeptag")
         return FALSE;
 
-      if (!strcasecmp(tStBuffer.c_str(), "start")) {
+      if(lower(tStBuffer) == "start"){
         if (!(tRoom->act_ptr = new SSTControl())) {
           vlogf(LOG_PROC, "Unable to allocate new SSTControl structure");
           return FALSE;
@@ -124,7 +124,7 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
         return TRUE;
       }
 
-      if (!strcasecmp(tStBuffer.c_str(), "help")) {
+      if(lower(tStBuffer) == "help"){
         tBeing->sendTo("Welcome to Automated SleepTag.\n\r");
         tBeing->sendTo("To start a game do:\n\rsay sleeptag start\n\r");
         tBeing->sendTo("Be warned that everyone in the room will be put into play.\n\r");

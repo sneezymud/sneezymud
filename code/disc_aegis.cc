@@ -27,8 +27,7 @@ void relive(TBeing *ch, TBeing *vict)
   // locate corpse
   for(t=ch->roomp->getStuff();t;t=t->nextThing){
     if((corpse=dynamic_cast<TPCorpse *>(t)) &&
-       !strcmp(lower(corpse->getOwner()).c_str(), 
-	       lower(vict->getName()).c_str()))
+       lower(corpse->getOwner()) == lower(vict->getName()))
 	break;
   }
 

@@ -1066,7 +1066,7 @@ void do_the_player_stuff(const char *name)
     for (i = 0; i < MAX_SAVED_CLASSES; i++)
       max_level = max(max_level, st.level[i]);
 
-    if (strcmp(lower(st.name).c_str(), name)) {
+    if (lower(st.name) != name){
       vlogf(LOG_BUG, "%s had a corrupt st.name (%s). Moving player file.", st.name, name);
       handleCorrupted(name, st.aname);
       return;
@@ -1553,7 +1553,7 @@ void TBeing::doReset(string arg)
       sendTo("You lack the power to reset.\n\r");
       return;
     }
-    if (strcmp(lower(buf).c_str(), "shops") != 0) {
+    if(lower(buf) != "shops"){
       sendTo("You must type out the whole word <r>shops<z> to use this.\n\r");
       return;
     }
@@ -1567,7 +1567,7 @@ void TBeing::doReset(string arg)
         }
         keeper->autoCreateShop(isi);
         ssprintf(buf, "%s/%d", SHOPFILE_PATH, isi);
-        keeper->saveItems(buf.c_str());
+        keeper->saveItems(buf);
       }
     }
     sendTo("Shops reset.\n\r");

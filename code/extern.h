@@ -303,7 +303,7 @@ int named_mob_on_ground(int room, void *c_data);
 int named_being_on_ground(int room, void *c_data);
 dirTypeT find_path(int, int (*predicate) (int, void *), void *, int, bool, int *answer = NULL);
 extern bool exit_ok(roomDirData *, TRoom **);
-extern spellNumT searchForSpellNum(const char *arg, exactTypeT exact);
+extern spellNumT searchForSpellNum(const string &arg, exactTypeT exact);
 extern bool thingsInRoomVis(TThing *, TRoom *);
 extern int get(TBeing *, TThing *, TThing *, getTypeT, bool);
 extern void portal_flag_change(TPortal *, unsigned int, const char *, setRemT); 

@@ -701,7 +701,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
                             *lMem = resps->respMemory;
                  rMem; rMem = rMem->next) {
               if (rMem->cmd == CMD_GIVE && rMem->name &&
-                  !strcmp(rMem->name, speaker->getNameNOC(speaker).c_str())) {
+		  (speaker->getNameNOC(speaker) == rMem->name)){
                 storedCash = convertTo<int>(rMem->args);
 
                 if (rMem == resps->respMemory)

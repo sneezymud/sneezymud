@@ -556,7 +556,7 @@ char *skip_spaces(char *string)
   return (string);
 }
 
-spellNumT searchForSpellNum(const char *arg, exactTypeT exact)
+spellNumT searchForSpellNum(const string &arg, exactTypeT exact)
 {
   spellNumT i = MIN_SPELL;
 
