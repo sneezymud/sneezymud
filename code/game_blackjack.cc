@@ -119,9 +119,9 @@ void BjGame::Bet(TBeing *ch, const char *arg)
 
     sstring buf;
     ssprintf(buf, "$n bets %s.", chip->getName());
-    act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+    act(buf, TRUE, ch, 0, 0, TO_ROOM);
     ssprintf(buf, "You bet %s.", chip->getName());
-    act(buf.c_str(), TRUE, ch, 0, 0, TO_CHAR);
+    act(buf, TRUE, ch, 0, 0, TO_CHAR);
 
     (*chip)--;
     delete chip;

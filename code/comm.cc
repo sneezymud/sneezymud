@@ -369,7 +369,7 @@ void TThing::sendTo(const char *, ...) const
 {
 }
 
-void colorAct(colorTypeT colorLevel, const char *str, bool hide, const TThing *t1, const TThing *obj, const TThing *t3, actToParmT type, const char *color, int tslevel)
+void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing *t1, const TThing *obj, const TThing *t3, actToParmT type, const char *color, int tslevel)
 {
   bool colorize = 0;
   const TThing *to;
@@ -377,12 +377,12 @@ void colorAct(colorTypeT colorLevel, const char *str, bool hide, const TThing *t
   char buf[256];
 
 
-  if (!str || !*str)
+  if(str.empty())
     return;
 
   if (!t1) {
     vlogf(LOG_MISC, "There is no char in coloract TOCHAR.");
-    vlogf(LOG_MISC, "%s", str);
+    vlogf(LOG_MISC, "%s", str.c_str());
     return;
   }
 
@@ -392,12 +392,12 @@ void colorAct(colorTypeT colorLevel, const char *str, bool hide, const TThing *t
   if (!t3) {
     if (type == TO_VICT) {
       vlogf(LOG_MISC, "There is no victim in coloract TOVICT %s is char.", t1->getName());
-      vlogf(LOG_MISC, "%s", str);
+      vlogf(LOG_MISC, "%s", str.c_str());
       return;
     } else if (type == TO_NOTVICT) {
       type = TO_ROOM;
       vlogf(LOG_MISC, "There is no victim in coloract TONOTVICT %s is char.", t1->getName());
-      vlogf(LOG_MISC, "%s", str);
+      vlogf(LOG_MISC, "%s", str.c_str());
     }
   }
 
@@ -487,9 +487,9 @@ void colorAct(colorTypeT colorLevel, const char *str, bool hide, const TThing *t
         break;
     }
     if (colorize) {
-      sprintf(buf, "%s", str);
+      sprintf(buf, "%s", str.c_str());
     } else {
-      sprintf(buf, "%s", colorString(dynamic_cast<const TBeing *>(to), to->desc, str, NULL, COLOR_NONE, TRUE).c_str());
+      sprintf(buf, "%s", colorString(dynamic_cast<const TBeing *>(to), to->desc, str.c_str(), NULL, COLOR_NONE, TRUE).c_str());
 
     }
     act(buf, hide, t1, obj, t3, type, color);
@@ -512,7 +512,7 @@ void colorAct(colorTypeT colorLevel, const char *str, bool hide, const TThing *t
   }
 }
 
-void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const TThing *t3, actToParmT type, const char *color, int tslevel)
+void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, const TThing *t3, actToParmT type, const char *color, int tslevel)
 {
   register const char *strp;
   register char *point;
@@ -529,12 +529,12 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
   const TObj *tobj = NULL;
   sstring catstr;
 
-  if (!str || !*str)
+  if(str.empty())
     return;
 
   if (!t1) {
     vlogf(LOG_MISC, "There is no char in act() TOCHAR.");
-    vlogf(LOG_MISC, "%s", str);
+    vlogf(LOG_MISC, "%s", str.c_str());
     return;
   }
   if (!t1->roomp) 
@@ -543,12 +543,12 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
   if (!t3) {
     if (type == TO_VICT) {
       vlogf(LOG_MISC, "There is no victim in act() TOVICT %s is char.", t1->getName());
-      vlogf(LOG_MISC, "%s", str);
+      vlogf(LOG_MISC, "%s", str.c_str());
       return;
     } else if (type == TO_NOTVICT) {
       type = TO_ROOM;
       vlogf(LOG_MISC, "There is no victim in act() TONOTVICT %s is char.", t1->getName());
-      vlogf(LOG_MISC, "%s", str);
+      vlogf(LOG_MISC, "%s", str.c_str());
     }
   }
   if (type == TO_VICT) 
@@ -572,7 +572,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
         (to->canSee(t1) || !hide) &&
 	to->awake() && (to->desc->connected < MAX_CON_STATUS) && 
         !(to->isPlayerAction(PLR_MAILING | PLR_BUGGING))) {
-      for (strp = str, point = buf;;) {
+      for (strp = str.c_str(), point = buf;;) {
         x = x + 1;
         codes = strp;
         if ((*codes == '<') && (*(++codes) != '<')) {
@@ -603,7 +603,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
 	    case 'P':
 	    case 'N':
               if (!t3) {
-                forceCrash("Bad act P or N. '%s'", str);
+                forceCrash("Bad act P or N. '%s'", str.c_str());
                 return;
               }
               tbtt = dynamic_cast<const TBeing *>(t3);
@@ -631,7 +631,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
                 if (!strncmp(strp+1,"'s ",3)) {
                   i = t1->hshr();
                   strp += 2;
-                } else if (strp != (str + 1)) {
+                } else if (strp != (str.c_str() + 1)) {
                   // "himself" if it isn't the first word in the sstring
                   char tmp_buffer[20];
                   sprintf(tmp_buffer, "%sself", t1->hmhr());
@@ -646,7 +646,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
               break;
 	    case 'G':
               if (!t3) {
-                forceCrash("Bad act G. '%s'", str);
+                forceCrash("Bad act G. '%s'", str.c_str());
                 return;
               }
               i = t3->roomp->describeGround().c_str();
@@ -658,7 +658,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
             
 	    case 'D':
               if (!t3) {
-                forceCrash("Bad act D. '%s'", str);
+                forceCrash("Bad act D. '%s'", str.c_str());
                 return;
               }
               i = t3->yourDeity(your_deity_val, ((to == t3) ? FIRST_PERSON : (strlen(buf) == 0 ? THIRD_PERSON : SECOND_PERSON))).c_str();
@@ -666,7 +666,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
             case 'q':
               // is/are based on plurality of $o, $p
               if (!obj) {
-                forceCrash("Bad act q. '%s'", str);
+                forceCrash("Bad act q. '%s'", str.c_str());
                 return;
               }
               tobj = dynamic_cast<const TObj *>(obj);
@@ -678,7 +678,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
             case 'Q':
               // a verb modifier so can do "$o look$Q happy" for plurality
               if (!obj) {
-                forceCrash("Bad act Q. '%s'", str);
+                forceCrash("Bad act Q. '%s'", str.c_str());
                 return;
               }
               tobj = dynamic_cast<const TObj *>(obj);
@@ -690,7 +690,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
             case 'r':
               // is/are based on plurality of $n
               if (!t1) {
-                forceCrash("Bad act r. '%s'", str);
+                forceCrash("Bad act r. '%s'", str.c_str());
                 return;
               }
               tobj = dynamic_cast<const TObj *>(t1);
@@ -702,7 +702,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
             case 'R':
               // a verb modifier so can do "$n look$Q happy" for plurality
               if (!t1) {
-                forceCrash("Bad act R. '%s'", str);
+                forceCrash("Bad act R. '%s'", str.c_str());
                 return;
               }
               tobj = dynamic_cast<const TObj *>(t1);
@@ -719,7 +719,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
 	      break;
 	    case 'M':
               if (!t3) {
-                forceCrash("Bad act M. '%s'", str);
+                forceCrash("Bad act M. '%s'", str.c_str());
                 return;
               }
               if ((type == TO_CHAR) && (t1 == t3)) 
@@ -737,7 +737,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
 	      break;
 	    case 'S':
               if (!t3) {
-                forceCrash("Bad act S. '%s'", str);
+                forceCrash("Bad act S. '%s'", str.c_str());
                 return;
               }
               if (to->canSee(t3))
@@ -753,7 +753,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
 	      break;
 	    case 'E':
               if (!t3) {
-                forceCrash("Bad act E. '%s'", str);
+                forceCrash("Bad act E. '%s'", str.c_str());
                 return;
               }
               if (to->canSee(t3))
@@ -763,21 +763,21 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
 	      break;
 	    case 'o':
               if (!obj) {
-                forceCrash("Bad act o. '%s'", str);
+                forceCrash("Bad act o. '%s'", str.c_str());
                 return;
               }
 	      i = dynamic_cast<const TBeing *>(obj) ? to->persfname(obj).c_str() : to->objn(obj).c_str();
 	      break;
 	    case 'O':
               if (!t3) {
-                forceCrash("Bad act O. '%s'", str);
+                forceCrash("Bad act O. '%s'", str.c_str());
                 return;
               }
 	      i = dynamic_cast<const TBeing *>(t3) ? to->persfname(t3).c_str() : to->objn(t3).c_str();
 	      break;
 	    case 'p':
               if (!obj) {
-                forceCrash("Bad act p. '%s'", str);
+                forceCrash("Bad act p. '%s'", str.c_str());
                 return;
               }
               tbtt = dynamic_cast<const TBeing *>(obj);
@@ -791,28 +791,28 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
 	      break;
 	    case 'a':
               if (!obj) {
-                forceCrash("Bad act a. '%s'", str);
+                forceCrash("Bad act a. '%s'", str.c_str());
                 return;
               }
 	      i = obj->sana();
 	      break;
 	    case 'A':
               if (!t3) {
-                forceCrash("Bad act A. '%s'", str);
+                forceCrash("Bad act A. '%s'", str.c_str());
                 return;
               }
 	      i = t3->sana();
 	      break;
 	    case 'T':
               if (!t3) {
-                forceCrash("Bad act T. '%s'", str);
+                forceCrash("Bad act T. '%s'", str.c_str());
                 return;
               }
 	      i = (const char *) t3;
 	      break;
 	    case 'F':
               if (!t3) {
-                forceCrash("Bad act F. '%s'", str);
+                forceCrash("Bad act F. '%s'", str.c_str());
                 return;
               }
 	      i = fname((const char *) t3).c_str();

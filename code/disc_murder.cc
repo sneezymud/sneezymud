@@ -928,10 +928,10 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
     
     ssprintf(s, "You coat $p with %s.",
 	     DrinkInfo[getDrinkType()]->name);
-    act(s.c_str(), FALSE, ch, weapon, NULL, TO_CHAR);
+    act(s, FALSE, ch, weapon, NULL, TO_CHAR);
     ssprintf(s, "$n coats $p with %s.",
 	     DrinkInfo[getDrinkType()]->name);
-    act(s.c_str(), FALSE, ch, weapon, NULL, TO_ROOM);
+    act(s, FALSE, ch, weapon, NULL, TO_ROOM);
   } else {
     if(critFail(ch, skill) != CRIT_F_NONE){
       act("You slip up and cut yourself with $p!", 
@@ -953,10 +953,10 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
       
       ssprintf(s, "You coat $p with %s.",
 	       DrinkInfo[getDrinkType()]->name);
-      act(s.c_str(), FALSE, ch, weapon, NULL, TO_CHAR);
+      act(s, FALSE, ch, weapon, NULL, TO_CHAR);
       ssprintf(s, "$n coats $p with %s.",
 	       DrinkInfo[getDrinkType()]->name);
-      act(s.c_str(), FALSE, ch, weapon, NULL, TO_ROOM);
+      act(s, FALSE, ch, weapon, NULL, TO_ROOM);
     }
   }
 

@@ -150,7 +150,7 @@ void TBeing::doBandage(const sstring &arg)
   }
   if (vict->isLimbFlags(slot, PART_BANDAGED)) {
     ssprintf(buf, "$N's %s is already bandaged!", vict->describeBodySlot(slot).c_str());
-    act(buf.c_str(), FALSE, this, NULL, vict, TO_CHAR);
+    act(buf, FALSE, this, NULL, vict, TO_CHAR);
     return;
   }
   switch (slot) {

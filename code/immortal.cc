@@ -1156,7 +1156,7 @@ int TBeing::doEmote(const char *argument)
   else {
     ssprintf(buf, "$n %s<z>", argument + i);
     ssprintf(tmpbuf, "%s", nameColorString(this, desc, buf.c_str(), NULL, COLOR_BASIC, FALSE).c_str());
-    act(tmpbuf.c_str(), TRUE, this, 0, 0, TO_CHAR);
+    act(tmpbuf, TRUE, this, 0, 0, TO_CHAR);
     for (t = roomp->getStuff(); t ; t = t2) {
       t2 = t->nextThing;
       TBeing *ch = dynamic_cast<TBeing *>(t);
@@ -1167,7 +1167,7 @@ int TBeing::doEmote(const char *argument)
                       (ch->desc->connected <= 20) && 
                       !(ch->isPlayerAction(PLR_MAILING | PLR_BUGGING))) {
         ssprintf(tmpbuf, "%s", nameColorString(ch, ch->desc, buf.c_str(), NULL, COLOR_COMM, FALSE).c_str());
-        act(tmpbuf.c_str(), TRUE, this, 0, ch, TO_VICT);
+        act(tmpbuf, TRUE, this, 0, ch, TO_VICT);
       }
 #if 0
 // Commented out..cosmo..we dont break it for say we shouldnt for emote
@@ -1881,7 +1881,7 @@ int TBeing::doGoto(const sstring & argument)
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
         sstring s = nameColorString(this, tbt->desc, msgVariables(MSG_BAMFOUT, (TThing *)NULL, (const char *)NULL, false).c_str(), NULL, COLOR_BASIC, false);
-        act(s.c_str(), TRUE, this, 0, tbt, TO_VICT);
+        act(s, TRUE, this, 0, tbt, TO_VICT);
       }
     }
   } else if ((rc = parseCommand((msgVariables(MSG_BAMFOUT).c_str()) + 1, FALSE)) == DELETE_THIS)
@@ -1897,7 +1897,7 @@ int TBeing::doGoto(const sstring & argument)
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
         sstring s = nameColorString(tbt, tbt->desc, desc->poof.poofout, NULL, COLOR_BASIC, TRUE);
-        act(s.c_str(), TRUE, this, 0, tbt, TO_VICT);
+        act(s, TRUE, this, 0, tbt, TO_VICT);
       }
     }
   } else {
@@ -1931,7 +1931,7 @@ int TBeing::doGoto(const sstring & argument)
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
         sstring s = nameColorString(this, tbt->desc, msgVariables(MSG_BAMFIN, (TThing *)NULL, (const char *)NULL, false).c_str(), NULL, COLOR_BASIC, false);
-        act(s.c_str(), TRUE, this, 0, tbt, TO_VICT);
+        act(s, TRUE, this, 0, tbt, TO_VICT);
       }
     }
   } else if ((rc = parseCommand((msgVariables(MSG_BAMFIN).c_str()) + 1, FALSE)) == DELETE_THIS)
@@ -1948,7 +1948,7 @@ int TBeing::doGoto(const sstring & argument)
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
         sstring s = nameColorString(tbt, tbt->desc, desc->poof.poofin, NULL, COLOR_BASIC, TRUE);
-        act(s.c_str(), TRUE, this, 0, tbt, TO_VICT);
+        act(s, TRUE, this, 0, tbt, TO_VICT);
       }
     }
   } else {
@@ -2236,7 +2236,7 @@ void TPerson::doSwitch(const char *argument)
   }
 
   if (doLoadCmd)
-    act(msgVariables(MSG_SWITCH_TARG, tBeing).c_str(),
+    act(msgVariables(MSG_SWITCH_TARG, tBeing),
         FALSE, this, NULL, NULL, TO_ROOM);
 
   sendTo("Ok.\n\r");
@@ -2922,7 +2922,7 @@ void TPerson::doLoad(const char *argument)
       mob->createWealth();
 
       act("$n makes a quaint, magical gesture with one hand.", TRUE, this, 0, 0, TO_ROOM);
-      act(msgVariables(MSG_LOAD_MOB, mob).c_str(), TRUE, this, 0, mob, TO_ROOM);
+      act(msgVariables(MSG_LOAD_MOB, mob), TRUE, this, 0, mob, TO_ROOM);
       act("You bring forth $N from the cosmic ether.", TRUE, this, 0, mob, TO_CHAR);
     }
   } else if (is_abbrev(type, "object")) {
@@ -2980,7 +2980,7 @@ void TPerson::doLoad(const char *argument)
       }
       *this += *obj;
       act("$n makes a strange magical gesture.", TRUE, this, 0, 0, TO_ROOM);
-      act(msgVariables(MSG_LOAD_OBJ, obj).c_str(), TRUE, this, obj, 0, TO_ROOM);
+      act(msgVariables(MSG_LOAD_OBJ, obj), TRUE, this, obj, 0, TO_ROOM);
       act("You now have $p.", TRUE, this, obj, 0, TO_CHAR);
       logItem(obj, CMD_LOAD);
 
@@ -3327,7 +3327,7 @@ void TPerson::doPurge(const char *argument)
         // delete vict;
         // vict = NULL;
       }
-      act(msgVariables(MSG_PURGE_TARG, vict).c_str(), TRUE, this, 0, vict, TO_NOTVICT);
+      act(msgVariables(MSG_PURGE_TARG, vict), TRUE, this, 0, vict, TO_NOTVICT);
       act("You disintegrate $N.", TRUE, this, 0, vict, TO_CHAR);
       if (vict->isLinkdead()) {
         // linkdead PC will have eq stored from last save.
@@ -3456,7 +3456,7 @@ void TPerson::doPurge(const char *argument)
     }
     sendTo("Ok.\n\r");
   } else {            // no argument. clean out the room 
-    act(msgVariables(MSG_PURGE, (TThing *)NULL).c_str(), TRUE, this, 0, 0, TO_ROOM);
+    act(msgVariables(MSG_PURGE, (TThing *)NULL), TRUE, this, 0, 0, TO_ROOM);
     sendToRoom("The World seems a little cleaner.\n\r", in_room);
 
     TThing *t, *n;

@@ -1302,7 +1302,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
     // ways to detect it:  be immortal, be able to see it, be able to hear it,
     if (ch->isImmortal() || ch->canSee(this, INFRA_YES) || makesNoise()) {
       if (isImmortal())
-        act(msgVariables(MSG_MOVE_IN, (TThing *)NULL, dirs[dir]).c_str(),
+        act(msgVariables(MSG_MOVE_IN, (TThing *)NULL, dirs[dir]),
             FALSE, this, riding, ch, TO_VICT);
       else {
 #if 1
@@ -1389,7 +1389,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
         else
           strcpy(dirText, "above");
 
-        act(msgVariables(MSG_MOVE_OUT, (TThing *)NULL, dirText).c_str(),
+        act(msgVariables(MSG_MOVE_OUT, (TThing *)NULL, dirText),
             FALSE, this, riding, tbt, TO_VICT);
       } else {
 #if 1

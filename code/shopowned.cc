@@ -393,7 +393,7 @@ int TShopOwned::giveMoney(sstring arg){
     
     ssprintf(buf, "$n gives you %d talen%s.\n\r", amount,
 	    (amount == 1) ? "" : "s");
-    act(buf.c_str(), TRUE, keeper, NULL, ch, TO_VICT);
+    act(buf, TRUE, keeper, NULL, ch, TO_VICT);
     act("$n gives some money to $N.", 1, keeper, 0, ch, TO_NOTVICT);
   } else {
     keeper->doTell(ch->getName(), "I don't have that many talens.");

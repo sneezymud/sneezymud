@@ -210,7 +210,7 @@ static void TBeingLoad(TBeing *ch, int vnum)
     return;
   }
 
-  act(ch->msgVariables(MSG_MEDIT, mob).c_str(), TRUE, ch, 0, 0, TO_ROOM);
+  act(ch->msgVariables(MSG_MEDIT, mob), TRUE, ch, 0, 0, TO_ROOM);
 
   if ((mob->getRace() == RACE_HORSE) || (mob->getRace() == RACE_DRAGON)) {
     mob->setMaxMove(mob->getMaxMove() + 150);

@@ -135,9 +135,9 @@ void TVehicle::driveDir(TBeing *ch, dirTypeT dir)
   setDir(dir);
 
   ssprintf(buf, "$n directs $p to the %s.", dirs[dir]);
-  act(buf.c_str(), 0, ch, this, 0, TO_ROOM);
+  act(buf, 0, ch, this, 0, TO_ROOM);
   ssprintf(buf, "You direct $p to the %s.", dirs[dir]);
-  act(buf.c_str(), 0, ch, this, 0, TO_CHAR);
+  act(buf, 0, ch, this, 0, TO_CHAR);
 }
 
 
@@ -317,7 +317,7 @@ void TVehicle::vehiclePulse(int pulse)
       tBeing.push_back(tb);
   
   for(unsigned int tBeingIndex=0;tBeingIndex<tBeing.size();tBeingIndex++){
-    act(buf.c_str(), 0, tBeing[tBeingIndex], this, 0, TO_CHAR);
+    act(buf, 0, tBeing[tBeingIndex], this, 0, TO_CHAR);
     driveLook(tBeing[tBeingIndex], true);
   }
 }
@@ -328,10 +328,10 @@ void TVehicle::driveStatus(TBeing *ch)
   sstring buf;
 
   ssprintf(buf, "$p is pointing to the %s.\n\r", dirs[getDir()]);
-  act(buf.c_str(), 0, ch, this, 0, TO_CHAR);
+  act(buf, 0, ch, this, 0, TO_CHAR);
   ssprintf(buf, "$p is traveling at a %i speed.\n\r",
 	   getSpeed());
-  act(buf.c_str(), 0, ch, this, 0, TO_CHAR);
+  act(buf, 0, ch, this, 0, TO_CHAR);
 }
 
 

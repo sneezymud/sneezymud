@@ -46,7 +46,7 @@ void HiLoGame::BetHi(TBeing *ch, int new_card)
 	       (int)((float)bet * (1.0 + win_perc)));
     ssprintf(buf, "$n wins!  $n's winnings are now at %i talens.",
 	       (int)((float)bet * (1.0 + win_perc)));
-    act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);    
+    act(buf, TRUE, ch, 0, 0, TO_ROOM);    
     observerReaction(ch, GAMBLER_HILO_BET);
 
     if(win_perc > 10){
@@ -73,7 +73,7 @@ void HiLoGame::BetLo(TBeing *ch, int new_card)
 	       (int)((float)bet * (1.0 + win_perc)));
     ssprintf(buf, "$n wins!  $n's winnings are now at %i talens.",
 	       (int)((float)bet * (1.0 + win_perc)));
-    act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);    
+    act(buf, TRUE, ch, 0, 0, TO_ROOM);    
     observerReaction(ch, GAMBLER_HILO_BET);
 
     if(win_perc > 10){
@@ -105,7 +105,7 @@ void HiLoGame::stay(TBeing *ch)
   sstring buf;
   ch->sendTo(COLOR_BASIC, "The next card was the %s.\n\r", pretty_card_printout(ch, next_card).c_str());
   ssprintf(buf, "The next card was the %s.", pretty_card_printout(ch, next_card).c_str());
-  act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+  act(buf, TRUE, ch, 0, 0, TO_ROOM);
 
   payout(ch, (int)((double)bet * (1.0 + win_perc)));
   bet = 0;
@@ -136,13 +136,13 @@ void HiLoGame::Bet(TBeing *ch, const sstring &arg)
 	new_card=deck[deck_inx++];
 	
 	ssprintf(buf, "$n bets %s.", arg.c_str());
-	act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+	act(buf, TRUE, ch, 0, 0, TO_ROOM);
 	
 	ssprintf(log_msg, "You are dealt:\n\r%s\n\r", pretty_card_printout(ch, new_card).c_str());
 	ch->sendTo(COLOR_BASIC, log_msg.c_str());
 	
 	ssprintf(log_msg, "$n is dealt:\n\r%s", pretty_card_printout(ch, new_card).c_str());
-	act(log_msg.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+	act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 	
 	if(arg=="hi"){
 	  BetHi(ch, new_card);
@@ -173,9 +173,9 @@ void HiLoGame::Bet(TBeing *ch, const sstring &arg)
 
     sstring buf;
     ssprintf(buf, "$n bets %s.", chip->getName());
-    act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+    act(buf, TRUE, ch, 0, 0, TO_ROOM);
     ssprintf(buf, "You bet %s.", chip->getName());
-    act(buf.c_str(), TRUE, ch, 0, 0, TO_CHAR);
+    act(buf, TRUE, ch, 0, 0, TO_CHAR);
 
     (*chip)--;
     delete chip;
@@ -191,7 +191,7 @@ void HiLoGame::Bet(TBeing *ch, const sstring &arg)
     ch->sendTo(COLOR_BASIC, log_msg.c_str());
 
     ssprintf(log_msg, "$n is dealt:\n\r%s\n\r", pretty_card_printout(ch, card).c_str());
-    act(log_msg.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+    act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 
     observerReaction(ch, GAMBLER_HILO_BET);
   }

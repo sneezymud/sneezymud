@@ -64,7 +64,7 @@ void PokerGame::stay(TBeing *ch)
     ch->sendTo(COLOR_BASIC, log_msg.c_str());
     
     ssprintf(log_msg, "%s",pretty_card_printout(ch, card[i]).c_str());
-    act(log_msg.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+    act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
   }
 
 
@@ -293,9 +293,9 @@ void PokerGame::Bet(TBeing *ch, const sstring &arg)
 
     sstring buf;
     ssprintf(buf, "$n bets %s.", chip->getName());
-    act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+    act(buf, TRUE, ch, 0, 0, TO_ROOM);
     ssprintf(buf, "You bet %s.", chip->getName());
-    act(buf.c_str(), TRUE, ch, 0, 0, TO_CHAR);
+    act(buf, TRUE, ch, 0, 0, TO_CHAR);
 
     (*chip)--;
     delete chip;
@@ -315,7 +315,7 @@ void PokerGame::Bet(TBeing *ch, const sstring &arg)
       
 
       ssprintf(log_msg, "%s",pretty_card_printout(ch, card[i]).c_str());
-      act(log_msg.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+      act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
     }    
 
     observerReaction(ch, GAMBLER_BET);
@@ -346,7 +346,7 @@ void PokerGame::discard(TBeing *ch, sstring arg)
 	       pretty_card_printout(ch, card[i]).c_str());
     ssprintf(buf, "$n discards %s.",
 	     pretty_card_printout(ch, card[i]).c_str());
-    act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+    act(buf, TRUE, ch, 0, 0, TO_ROOM);
 
     card[i]=0;
   }

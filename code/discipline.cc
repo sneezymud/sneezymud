@@ -563,7 +563,7 @@ bool enforceHolySym(const TBeing *ch, spellNumT spell, bool checkDamage)
         }
       
         holy->addToSymbolCurStrength(-sym_stress);
-        act(sb.c_str(), false, ch, holy, NULL, TO_CHAR);
+        act(sb, false, ch, holy, NULL, TO_CHAR);
         return TRUE;
       }
     } else {

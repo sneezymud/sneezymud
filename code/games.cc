@@ -28,9 +28,9 @@ void payout(TBeing *ch, int talens)
       chip=read_object(CHIP_100, VIRTUAL);
     else {
       ssprintf(buf, "You receive %i talens.", talens);
-      act(buf.c_str(), TRUE, ch, 0, 0, TO_CHAR);
+      act(buf, TRUE, ch, 0, 0, TO_CHAR);
       ssprintf(buf, "$n receives %i talens.", talens);
-      act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+      act(buf, TRUE, ch, 0, 0, TO_ROOM);
       ch->addToMoney(talens, GOLD_GAMBLE);
       return;
     }
@@ -43,9 +43,9 @@ void payout(TBeing *ch, int talens)
     talens -= chip->obj_flags.cost;
 
     ssprintf(buf, "You receive %s.", chip->getName());
-    act(buf.c_str(), TRUE, ch, 0, 0, TO_CHAR);
+    act(buf, TRUE, ch, 0, 0, TO_CHAR);
     ssprintf(buf, "$n receives %s.", chip->getName());
-    act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+    act(buf, TRUE, ch, 0, 0, TO_ROOM);
 
     *ch += *chip;
   }

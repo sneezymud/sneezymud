@@ -540,7 +540,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM); 
   else {
     ssprintf(buf, "$n buys %d %ss.", count, fname(name).c_str());
-    act(buf.c_str(), FALSE, ch, this, 0, TO_ROOM);
+    act(buf, FALSE, ch, this, 0, TO_ROOM);
   }
   ch->doSave(SILENT_YES);
   return cost;
@@ -1716,7 +1716,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
     str += temp1->getName();
   str += " sold by $N.";
 
-  act(str.c_str(), FALSE, ch, temp1, keeper, TO_CHAR);
+  act(str, FALSE, ch, temp1, keeper, TO_CHAR);
 
   tmp_desc = NULL;
   if ((tmp_desc = temp1->ex_description->findExtraDesc(fname(temp1->name).c_str()))) {

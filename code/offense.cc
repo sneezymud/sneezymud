@@ -479,9 +479,9 @@ int TBeing::doKill(const char *argument, TBeing *vict)
   else if (!noHarmCheck(v)) {
     if ((v->GetMaxLevel() < GetMaxLevel()) || !v->isPc()) {
       act("You chop $M to pieces! Ah! The blood!", 0, this, 0, v, TO_CHAR);
-      act(msgVariables(MSG_SLAY_TARG, (TThing *)NULL).c_str(),
+      act(msgVariables(MSG_SLAY_TARG, (TThing *)NULL),
           FALSE, v, 0, this, TO_CHAR);
-      act(msgVariables(MSG_SLAY, v).c_str(), 
+      act(msgVariables(MSG_SLAY, v), 
           FALSE, this, 0, v, TO_NOTVICT);
       v->rawKill(DAMAGE_NORMAL, this);
       if (vict)

@@ -252,7 +252,7 @@ void ObjLoad(TBeing *ch, int vnum)
     }
   }
   act("You just loaded $p.", TRUE, ch, o, 0, TO_CHAR);
-  act(ch->msgVariables(MSG_OEDIT, o).c_str(), TRUE, ch, 0, 0, TO_ROOM);
+  act(ch->msgVariables(MSG_OEDIT, o), TRUE, ch, 0, 0, TO_ROOM);
 
   *ch += *o;
 }

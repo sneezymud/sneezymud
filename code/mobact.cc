@@ -371,7 +371,7 @@ int TMonster::targetFound()
       screamBuf += pers(v);
       screamBuf += "!'";
       if(strcmp(pers(v),"someone"))
-	act(screamBuf.c_str(), FALSE, this, 0, 0, TO_ROOM);
+	act(screamBuf, FALSE, this, 0, 0, TO_ROOM);
       // hee hee -GR
     } else 
       doAction(fname(v->name),CMD_GROWL);

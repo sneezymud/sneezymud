@@ -454,7 +454,7 @@ void TBeing::doGrouptell(const char *arg)
     // a crash bug lies here....cut and paste from windows notepad
     // plays with the next few lines for some reason
     ssprintf(buf, "$n: %s%s%s", k->red(), colorString(this, k->desc, garbed.c_str(), NULL, COLOR_COMM, FALSE).c_str(), k->norm());
-    act(buf.c_str(), 0, this, 0, k, TO_VICT);
+    act(buf, 0, this, 0, k, TO_VICT);
   }
   for (f = k->followers; f; f = f->next) {
     if ((f->follower != this) && f->follower->isAffected(AFF_GROUP) && !f->follower->checkSoundproof()) {
@@ -463,7 +463,7 @@ void TBeing::doGrouptell(const char *arg)
           colorString(this, f->follower->desc, garbed.c_str(), NULL, COLOR_NONE, FALSE).c_str());
       }
       ssprintf(buf, "$n: %s%s%s", f->follower->red(), colorString(this, f->follower->desc, garbed.c_str(), NULL, COLOR_COMM, FALSE).c_str(), f->follower->norm());
-      act(buf.c_str(), 0, this, 0, f->follower, TO_VICT);
+      act(buf, 0, this, 0, f->follower, TO_VICT);
     }
   }
 }

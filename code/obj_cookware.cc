@@ -103,11 +103,11 @@ void TCookware::pourMeIntoDrink2(TBeing *ch, TBaseCup *from)
   sstring buf;
   ssprintf(buf, "You pour %s into %s.\n\r",
 	   DrinkInfo[from->getDrinkType()]->name, ch->objs(this));
-  act(buf.c_str(), FALSE, ch, 0, 0, TO_CHAR);
+  act(buf, FALSE, ch, 0, 0, TO_CHAR);
 
   ssprintf(buf, "$n pours %s into %s.\n\r",
 	   DrinkInfo[from->getDrinkType()]->name, ch->objs(this));
-  act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+  act(buf, TRUE, ch, 0, 0, TO_ROOM);
 
   
   // init the pool

@@ -114,9 +114,9 @@ void obj_act(const char *message, const TThing *ch, const TObj *o, const TBeing 
     return;
   }
   ssprintf(buffer, "$n's $o %s", message);
-  act(buffer.c_str(), TRUE, ch, o, ch2, TO_ROOM, color);
+  act(buffer, TRUE, ch, o, ch2, TO_ROOM, color);
   ssprintf(buffer, "Your $o %s",message);
-  act(buffer.c_str(), TRUE, ch, o, ch2, TO_CHAR, color);
+  act(buffer, TRUE, ch, o, ch2, TO_CHAR, color);
 }
 
 TBeing *genericWeaponProcCheck(TBeing *vict, cmdTypeT cmd, TObj *o, int chance)
@@ -663,18 +663,18 @@ int weaponBreaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   vict->addToLimbFlags(slot, PART_BROKEN);
   ssprintf(buf, "A muffled SNAP leaps from your %s as $n hits it with $s $p!", limb);
-  act(buf.c_str(), FALSE, ch, o, vict, TO_VICT, ANSI_ORANGE);
+  act(buf, FALSE, ch, o, vict, TO_VICT, ANSI_ORANGE);
   ssprintf(buf, "Extreme pain shoots through your %s!\n\rYour %s has been broken and is now useless!", limb, limb);
-  act(buf.c_str(), FALSE, vict, NULL, NULL, TO_CHAR, ANSI_ORANGE);
+  act(buf, FALSE, vict, NULL, NULL, TO_CHAR, ANSI_ORANGE);
 
   ssprintf(buf, "You hit $N's %s hard with your $p.", limb);
-  act(buf.c_str(), FALSE, ch, o, vict, TO_CHAR, ANSI_ORANGE);
+  act(buf, FALSE, ch, o, vict, TO_CHAR, ANSI_ORANGE);
   ssprintf(buf, "$n hits $N's %s hard with $s $p.", limb);
-  act(buf.c_str(), FALSE, ch, o, vict, TO_NOTVICT, ANSI_ORANGE);
+  act(buf, FALSE, ch, o, vict, TO_NOTVICT, ANSI_ORANGE);
 
   ssprintf(buf, "You hear a muffled SNAP as $n clutches $s %s in extreme pain!"
 , limb);
-  act(buf.c_str(), FALSE, vict, NULL, NULL, TO_ROOM, ANSI_ORANGE);
+  act(buf, FALSE, vict, NULL, NULL, TO_ROOM, ANSI_ORANGE);
 
   vict->dropWeapon(slot);
 
@@ -708,22 +708,22 @@ int weaponDisruption(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
             ch,o,vict, ANSI_ORANGE);
   ssprintf(buf,"$n's $p screams with power as $e swings it at your %s!",
      vict->describeBodySlot(part).c_str());
-  act(buf.c_str(),TRUE,ch,o,vict,TO_VICT,ANSI_RED);
+  act(buf,TRUE,ch,o,vict,TO_VICT,ANSI_RED);
   ssprintf(buf,"$n's $p screams with power as $e swings it at $N's %s!",
      vict->describeBodySlot(part).c_str());
-  act(buf.c_str(),TRUE,ch,o,vict,TO_NOTVICT,ANSI_ORANGE);
+  act(buf,TRUE,ch,o,vict,TO_NOTVICT,ANSI_ORANGE);
   ssprintf(buf,"Your $p screams with power as you swing it at $N's %s!",
      vict->describeBodySlot(part).c_str());
-  act(buf.c_str(),TRUE,ch,o,vict,TO_CHAR,ANSI_GREEN);
+  act(buf,TRUE,ch,o,vict,TO_CHAR,ANSI_GREEN);
 
   ssprintf(buf,
     "A soft WOMPF! is heard as $p releases a shock wave into $n's %s!",
        (obj ? obj->getName() : (vict->isHumanoid() ? "skin" : "hide")));
-  act(buf.c_str(), TRUE, vict,o,0,TO_ROOM,ANSI_ORANGE);
+  act(buf, TRUE, vict,o,0,TO_ROOM,ANSI_ORANGE);
   ssprintf(buf,
     "A soft WOMPF! is heard as $p releases a shock wave into your %s!",
        (obj ? obj->getName() : (vict->isHumanoid() ? "skin" : "hide")));
-  act(buf.c_str(), TRUE, vict,o,0,TO_CHAR,ANSI_RED);
+  act(buf, TRUE, vict,o,0,TO_CHAR,ANSI_RED);
   
   if (obj)
     vict->damageItem(ch,part,w_type,o,hardness);
@@ -1802,7 +1802,7 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     }
     ssprintf(buf, "With blinding speed, $n streaks out of the room %s.",
              dirs_to_blank[dir]);
-    act(buf.c_str(), TRUE, me, 0, 0, TO_ROOM);
+    act(buf, TRUE, me, 0, 0, TO_ROOM);
   
     if (!(rp = real_roomp(me->exitDir(dir)->to_room))) {
       return TRUE;
@@ -1812,7 +1812,7 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 
     ssprintf(buf, "With blinding speed, $n streaks into the room from the %s.",
              dirs[rev_dir[dir]]);
-    act(buf.c_str(), TRUE, me, 0, 0, TO_ROOM);
+    act(buf, TRUE, me, 0, 0, TO_ROOM);
   }
 
   dam = 0;  // double purpose
@@ -1831,11 +1831,11 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
   }
 
   ssprintf(buf, "$p impales itself into $n's %s.", target->describeBodySlot(phit).c_str());
-  act(buf.c_str(), TRUE, target, me, ch, TO_VICT);
+  act(buf, TRUE, target, me, ch, TO_VICT);
 //  act(buf, TRUE, target, me, NULL, TO_ROOM);
-  act(buf.c_str(), TRUE, target, me, ch, TO_NOTVICT);
+  act(buf, TRUE, target, me, ch, TO_NOTVICT);
   ssprintf(buf, "$p impales itself into your %s.", target->describeBodySlot(phit).c_str());
-  act(buf.c_str(), TRUE, target, me, NULL, TO_CHAR);
+  act(buf, TRUE, target, me, NULL, TO_CHAR);
 
   --(*me);
   rc = target->stickIn(me, phit);
@@ -1849,7 +1849,7 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     dam = (int)(tbw->baseDamage());
     rc = ch->applyDamage(target, dam, tbw->getWtype()); 
     ssprintf(buf, "You do %d damage to $M.", dam);
-    act(buf.c_str(), TRUE, ch, 0, target, TO_CHAR);
+    act(buf, TRUE, ch, 0, target, TO_CHAR);
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete target;
       target = NULL;
@@ -2015,7 +2015,7 @@ int caravan_wagon(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
       return FALSE;
     }
     ssprintf(buf, "$n rolls %s.", dirs[dir]);
-    act(buf.c_str(), TRUE, me, 0, 0, TO_ROOM);
+    act(buf, TRUE, me, 0, 0, TO_ROOM);
 
     rp2 = real_roomp(me->exitDir(dir)->to_room);
 
@@ -2023,7 +2023,7 @@ int caravan_wagon(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     *rp2 += *me;
 
     ssprintf(buf, "$n rolls in from the %s.", dirs[rev_dir[dir]]);
-    act(buf.c_str(), TRUE, me, 0, 0, TO_ROOM);
+    act(buf, TRUE, me, 0, 0, TO_ROOM);
 
     return TRUE;
   }
@@ -2070,9 +2070,9 @@ int goofersDust(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     }
     if (::number(0,3) == 0) {
       ssprintf(buf, "As you moved %sward, you somehow tripped and fell down.", dirs[dir]);
-      act(buf.c_str(), TRUE, ch, me, 0, TO_CHAR);
+      act(buf, TRUE, ch, me, 0, TO_CHAR);
       ssprintf(buf, "$n trips and falls as $e moves in from a %sward direction.", dirs[dir]);
-      act(buf.c_str(), TRUE, ch, me, 0, TO_ROOM);
+      act(buf, TRUE, ch, me, 0, TO_ROOM);
       ch->setPosition(POSITION_SITTING);
       delete me;
       return TRUE;
@@ -7101,14 +7101,14 @@ int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       return false;
 
     ssprintf(buf, "$n points $p at %s.", fish->shortDescr);
-    act(buf.c_str(),TRUE,ch,o,NULL, TO_ROOM,NULL);
+    act(buf,TRUE,ch,o,NULL, TO_ROOM,NULL);
     ssprintf(buf, "You point $p at %s.", fish->shortDescr);
-    act(buf.c_str(),TRUE,ch,o,NULL, TO_CHAR,NULL);
+    act(buf,TRUE,ch,o,NULL, TO_CHAR,NULL);
 
     ssprintf(buf, "$p makes panicked fishy noises as its lifeforce is absorbed by %s!", o->shortDescr);
-    act(buf.c_str(), TRUE,ch,fish,NULL,TO_ROOM,NULL);
+    act(buf, TRUE,ch,fish,NULL,TO_ROOM,NULL);
     ssprintf(buf, "$p makes panicked fishy noises as its lifeforce is absorbed by %s!", o->shortDescr);
-    act(buf.c_str(), TRUE,ch,fish,NULL,TO_CHAR,NULL);
+    act(buf, TRUE,ch,fish,NULL,TO_CHAR,NULL);
 
 
 
@@ -7226,9 +7226,9 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   *ch += *fortune;
 
   ssprintf(buf, "$n tears open $p and pulls out %s.", fortune->shortDescr);
-  act(buf.c_str(),TRUE,ch,cookie,NULL, TO_ROOM,NULL);
+  act(buf,TRUE,ch,cookie,NULL, TO_ROOM,NULL);
   ssprintf(buf, "You tear open $p and pull out %s.", fortune->shortDescr);
-  act(buf.c_str(),TRUE,ch,cookie,NULL, TO_CHAR,NULL);
+  act(buf,TRUE,ch,cookie,NULL, TO_CHAR,NULL);
 
   return DELETE_ITEM;
 }

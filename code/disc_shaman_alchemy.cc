@@ -87,26 +87,26 @@ void TBeing::doBrew(const char *arg)
 
   ssprintf(buf, "You begin to brew %d ounces of %s.", 
          how_many, discArray[which_spell]->name);
-  act(buf.c_str(), FALSE, this, 0, 0, TO_CHAR);
+  act(buf, FALSE, this, 0, 0, TO_CHAR);
   ssprintf(buf, "$n begins to brew a potion.");
-  act(buf.c_str(), FALSE, this, 0, 0, TO_ROOM);
+  act(buf, FALSE, this, 0, 0, TO_ROOM);
 
   comp_gen->setDrinkUnits(0);
 
   comp_brew->addToComponentCharges(-1);
   if(comp_brew->getComponentCharges() <= 0) {
     ssprintf(buf, "$p is consumed in the process.");
-    act(buf.c_str(), FALSE, this, comp_brew, 0, TO_CHAR);
+    act(buf, FALSE, this, comp_brew, 0, TO_CHAR);
     delete comp_brew;
     comp_brew = NULL;
   }
 
   ssprintf(buf, "You use up one charge of $p.");
-  act(buf.c_str(), FALSE, this, comp_spell, 0, TO_CHAR);
+  act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
   comp_spell->addToComponentCharges(-1);
   if (comp_spell->getComponentCharges() <= 0) {
     ssprintf(buf, "$p is consumed in the process.");
-    act(buf.c_str(), FALSE, this, comp_spell, 0, TO_CHAR);
+    act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
     delete comp_spell;
     comp_spell = NULL;
   }
