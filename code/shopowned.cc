@@ -759,7 +759,7 @@ int TShopOwned::giveMoney(sstring arg){
     ch->setMoney(ch->getMoney()+amount);
     ch->saveChar(ROOM_AUTO_RENT);
     
-    shoplog(shop_nr, ch, keeper, "talens", amount, "receiving");
+    shoplog(shop_nr, ch, keeper, "talens", -amount, "receiving");
     
     buf = fmt("$n gives you %d talen%s.") % amount %
       ((amount == 1) ? "" : "s");
@@ -911,20 +911,20 @@ int TShopOwned::doLogs(sstring arg)
     
     sb+="<r>Sales Balance<1>\n\r";
     
-    db.query("select sum(talens) as talens from shoplog where shop_nr=%i and talens > 0 and action != 'receiving' and action != 'giving'", shop_nr);
+    db.query("select sum(talens) as talens from shoplog where shop_nr=%i and talens > 0 and action='buying'", shop_nr);
     
     if(db.fetchRow())
       profit=convertTo<int>(db["talens"]);
     
-    buf = fmt("%-15.15s %i\n\r") % "Sales Profit" % profit;
+    buf = fmt("%-15.15s %i\n\r") % "Sales" % profit;
     sb += buf;
     
-    db.query("select sum(talens) as talens from shoplog where shop_nr=%i and talens < 0 and action != 'receiving' and action != 'giving'", shop_nr);
+    db.query("select sum(talens) as talens from shoplog where shop_nr=%i and talens < 0 and action='selling'", shop_nr);
     
     if(db.fetchRow())
       loss=convertTo<int>(db["talens"]);
     
-    buf = fmt("%-15.15s %i\n\r") % "Sales Loss" % loss;
+    buf = fmt("%-15.15s %i\n\r") % "Purchases" % loss;
     sb += buf;
     
     buf = fmt("%-15.15s %i\n\r") % "Sales Income" % (profit+loss);
@@ -941,7 +941,7 @@ int TShopOwned::doLogs(sstring arg)
     if(db.fetchRow())
       profit=convertTo<int>(db["talens"]);
     
-    buf = fmt("%-15.15s %i\n\r") % "Gross Profit" % profit;
+    buf = fmt("%-15.15s %i\n\r") % "Income" % profit;
     sb += buf;
     
     db.query("select sum(talens) as talens from shoplog where shop_nr=%i and talens < 0",
@@ -949,10 +949,10 @@ int TShopOwned::doLogs(sstring arg)
     if(db.fetchRow())
       loss=convertTo<int>(db["talens"]);
     
-    buf = fmt("%-15.15s %i\n\r") % "Gross Loss" % loss;
+    buf = fmt("%-15.15s %i\n\r") % "Expenditures" % loss;
     sb += buf;
     
-    buf = fmt("%-15.15s %i\n\r") % "Net Income" % (profit+loss);
+    buf = fmt("%-15.15s %i\n\r") % "Total" % (profit+loss);
     sb += buf;
     
     /////////
