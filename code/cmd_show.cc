@@ -630,15 +630,18 @@ void TPerson::doShow(const char *argument)
 	if (tmons && IS_SET(tmons->hatefield, HATE_CHAR) &&
 	    tmons->hates.clist){
 	  for (list = tmons->hates.clist; list; list = list->next) {
-	    if (list->name)
+	    if (list->name){
 	      haters+=list->name;
+	      haters+=" ";
+	    }
 	  }
 	}
 	
 	
 	if(!haters.empty()){
 	  sprintf(buf, "%-20.20s (room: %5d) Hates: %s", 
-		  tmons->getName(), tmons->inRoom(), haters.c_str());
+		  stripColorCodes(tmons->getName()).c_str(), 
+		  tmons->inRoom(), haters.c_str());
 	  sb += buf;
 	  sb += "\n\r";
 	}
