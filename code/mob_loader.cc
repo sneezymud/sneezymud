@@ -1,20 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: mob_loader.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
 //   SneezyMUD           (c) 1993 SneezyMUD Coding Team.   All Rights Reserved.
 //
 //   mob_loader.cc : loader functions for mobs
@@ -42,7 +27,7 @@ static void treasureCreate(int prob, int cost, int &wealth, int vnum, const char
 
 void TMonster::createWealth(void)
 {
-  TRealContainer *bag;
+  TOpenContainer *bag;
 
   if (isPc())
     return;
@@ -332,7 +317,8 @@ bool isMobComponentSeller(int comp, int mvn)
 void TMonster::mageComponentLoader(void)
 {
   int wealth = getMoney();
-  TObj *obj, *bag;
+  TObj *obj,
+       *bag = NULL;
   int num = -1, iters = 0;
   spellNumT spell;
   int comp = 0;
@@ -361,7 +347,7 @@ void TMonster::mageComponentLoader(void)
       iters++;
     
       if (spell < TYPE_UNDEFINED || spell >= MAX_SKILL) {
-        vlogf(5, "Component (%d) defined with bad spell (%d).  num=%d", comp, spell, num);
+        vlogf(LOG_BUG, "Component (%d) defined with bad spell (%d).  num=%d", comp, spell, num);
         continue;
       }
       if (spell != TYPE_UNDEFINED && hideThisSpell(spell)) {
@@ -448,7 +434,7 @@ void TMonster::mageComponentLoader(void)
         continue;
 
       if (comp == -1) {
-        vlogf(5, "Bogus component on spell %d (%s)",
+        vlogf(LOG_BUG, "Bogus component on spell %d (%s)",
                  spell, discArray[spell]->name);
         continue;
       }
@@ -554,7 +540,7 @@ void TMonster::rangerComponentLoader(void)
         continue;
 
       if (comp == -1) {
-        vlogf(5, "Bogus component on spell %d (%s)",
+        vlogf(LOG_BUG, "Bogus component on spell %d (%s)",
                  spell, discArray[spell]->name);
         continue;
       }
@@ -614,12 +600,12 @@ void TMonster::shamanComponentLoader(void)
 
   if (GetMaxLevel() >= 50  && wealth > 1000) {
     wealth -= 800;
-    bag_num = 323;
+    bag_num = 31319;
   } else if (GetMaxLevel() >= 17 && wealth > 500) {
     wealth -= 200;
-    bag_num = 322;
+    bag_num = 31318;
   } else 
-    bag_num = 321;
+    bag_num = 31317;
 
   if (!(bag = read_object(bag_num, VIRTUAL)))
     return;
@@ -635,7 +621,7 @@ void TMonster::shamanComponentLoader(void)
     
       // no ranger spell components
       if (spell < -1 || spell >= MAX_SKILL) {
-        vlogf(5, "Component (%d) defined with bad spell (%d).  num=%d", comp, spell, num);
+        vlogf(LOG_BUG, "Component (%d) defined with bad spell (%d).  num=%d", comp, spell, num);
         continue;
       }
       if(spell != -1 && discArray[spell] && 
@@ -658,7 +644,7 @@ void TMonster::shamanComponentLoader(void)
         continue;
 
       if (comp == -1) {
-        vlogf(5, "Bogus component on spell %d (%s)",
+        vlogf(LOG_BUG, "Bogus component on spell %d (%s)",
                  spell, discArray[spell]->name);
         continue;
       }
@@ -713,7 +699,7 @@ void TMonster::clericHolyWaterLoader(void)
       num = 163;  // small
 
     if (!(obj = read_object(num, VIRTUAL))) {
-      vlogf(5, "Error in cleric Holy Water Loader");
+      vlogf(LOG_BUG, "Error in cleric Holy Water Loader");
       return;
     }
     int value = obj->obj_flags.cost / 10;
@@ -790,7 +776,7 @@ void TMonster::clericSymbolLoader(void)
   } 
 
   if (!(obj = read_object(num, VIRTUAL))) {
-    vlogf(5, "Error in cleric Component Loader");
+    vlogf(LOG_BUG, "Error in cleric Component Loader");
     return;
   }
   value = obj->obj_flags.cost / div;
@@ -811,7 +797,10 @@ void TMonster::clericSymbolLoader(void)
 
 void TMonster::buffMobLoader()
 {
-  TObj *obj;
+  // no idea whats trying to be done
+  // bat changed down on line 906 so
+  // i commented out this declaration
+  //  TObj *obj;
   int num, vnum;
 
 #if 1
@@ -899,8 +888,22 @@ void TMonster::buffMobLoader()
       return;
   }
 
-  if (!(obj = read_object(vnum, VIRTUAL))) {
-    vlogf(5, "Error in buffMobLoader (%d)", vnum);
+#if 1
+// builder port uses stripped down database which was causing problems
+// hence this setup instead.
+  int robj = real_object(vnum);
+  if (robj < 0 || robj >= (signed int) obj_index.size()) {
+    vlogf(LOG_BUG, "buffMobLoader(): No object (%d) in database!", vnum);
+    return;
+  }
+
+  TObj * obj = read_object(robj, REAL);
+#else
+  TObj * obj = read_object(vnum, VIRTUAL);
+#endif
+
+  if (!obj) {
+    vlogf(LOG_BUG, "Error in buffMobLoader (%d)", vnum);
     return;
   }
 
@@ -915,7 +918,7 @@ void TMonster::buffMobLoader()
   return;
 }
 
-void TMonster::genericMobLoader(TRealContainer **bag)
+void TMonster::genericMobLoader(TOpenContainer **bag)
 {
   int wealth = getMoney();
   int amount;
@@ -936,7 +939,7 @@ void TMonster::genericMobLoader(TRealContainer **bag)
  
   TObj *obj;
   if (!(obj = read_object(GENERIC_MONEYPOUCH, VIRTUAL)) ||
-      !(*bag = dynamic_cast<TRealContainer *>(obj)))
+      !(*bag = dynamic_cast<TOpenContainer *>(obj)))
     return;
 
   amount = ::number(1, wealth);
@@ -949,4 +952,16 @@ void TMonster::genericMobLoader(TRealContainer **bag)
 
   return;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
