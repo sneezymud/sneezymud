@@ -165,6 +165,17 @@ int TBeing::doPTell(const char *arg, bool visible){
     return FALSE;
   }
 
+  if(getMana() < discArray[SKILL_PSITELEPATHY]->minMana){
+    sendTo("You don't have enough mana.\n\r");
+    return FALSE;
+  }
+
+  if(affectedBySpell(SKILL_MIND_FOCUS)){
+    sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
+    return FALSE;
+  }
+
+
   if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
     sendTo("What a dumb master you have, charmed mobiles can't tell.\n\r");
     return FALSE;
@@ -277,7 +288,9 @@ int TBeing::doPTell(const char *arg, bool visible){
   if (vict->desc && (vict->isPlayerAction(PLR_AFK) || (IS_SET(vict->desc->autobits, AUTO_AFK) && (vict->getTimer() >= 5)))) 
     act("$N appears to be away from $S terminal at the moment.", TRUE, this, 0, vict, TO_CHAR);
  
-  return FALSE;
+  reconcileMana(SKILL_PSITELEPATHY, FALSE);
+
+  return TRUE;
 }
 
 int TBeing::doPSay(const char *arg){
@@ -294,6 +307,16 @@ int TBeing::doPSay(const char *arg){
 
   if(!doesKnowSkill(SKILL_PSITELEPATHY)){
     sendTo("You are not telepathic!\n\r");
+    return FALSE;
+  }
+
+  if(getMana() < discArray[SKILL_PSITELEPATHY]->minMana){
+    sendTo("You don't have enough mana.\n\r");
+    return FALSE;
+  }
+
+  if(affectedBySpell(SKILL_MIND_FOCUS)){
+    sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
     return FALSE;
   }
 
@@ -394,7 +417,10 @@ int TBeing::doPSay(const char *arg){
       }
     }
   }
-  return FALSE;
+
+  reconcileMana(SKILL_PSITELEPATHY, FALSE);
+
+  return TRUE;
 }
 
 void TBeing::doPShout(const char *msg){
@@ -404,6 +430,16 @@ void TBeing::doPShout(const char *msg){
   
   if(!doesKnowSkill(SKILL_PSITELEPATHY)){
     sendTo("You are not telepathic!\n\r");
+    return;
+  }
+
+  if(getMana() < discArray[SKILL_PSITELEPATHY]->minMana){
+    sendTo("You don't have enough mana.\n\r");
+    return;
+  }
+
+  if(affectedBySpell(SKILL_MIND_FOCUS)){
+    sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
     return;
   }
   
@@ -432,6 +468,10 @@ void TBeing::doPShout(const char *msg){
       }
     }
   }
+
+
+  reconcileMana(SKILL_PSITELEPATHY, FALSE);
+
   return;
 }
 
@@ -446,6 +486,17 @@ void TBeing::doTelevision(const char *arg)
     sendTo("You have not yet mastered psionics well enough to do that.\n\r");
     return;
   }
+
+  if(getMana() < discArray[SKILL_TELE_VISION]->minMana){
+    sendTo("You don't have enough mana.\n\r");
+    return;
+  }
+
+  if(affectedBySpell(SKILL_MIND_FOCUS)){
+    sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
+    return;
+  }
+
 
   if (!*arg) {
     sendTo("Whom do you wish to television??\n\r");
@@ -480,6 +531,8 @@ void TBeing::doTelevision(const char *arg)
     return ;
   }
 
+  reconcileMana(SKILL_TELE_VISION, FALSE);
+
   if (bSuccess(this, getSkillValue(SKILL_TELE_VISION), SKILL_TELE_VISION)) {
     sprintf(buf1, "You peer through the eyes of %s and see...",
 	    vict->getName());
@@ -506,6 +559,13 @@ void TBeing::doMindfocus(const char *){
     return;
   }
 
+
+  if(getMana() < discArray[SKILL_MIND_FOCUS]->minMana){
+    sendTo("You don't have enough mana.\n\r");
+    return;
+  }
+
+
   int bKnown=getSkillValue(SKILL_MIND_FOCUS);
   affectedData aff;
 
@@ -522,6 +582,8 @@ void TBeing::doMindfocus(const char *){
 	TRUE, this, NULL, NULL, TO_CHAR);
   }
 
+  reconcileMana(SKILL_MIND_FOCUS, FALSE);
+
   return;
 }
 
@@ -536,6 +598,16 @@ TBeing *psiAttackChecks(TBeing *caster, spellNumT sk, const char *tString){
   if (!caster->doesKnowSkill(sk)) {
     caster->sendTo("You do not have the skill to use %s.\n\r", 
 		   discArray[sk]->name);
+    return NULL;
+  }
+
+  if(caster->getMana() < discArray[sk]->minMana){
+    caster->sendTo("You don't have enough mana.\n\r");
+    return NULL;
+  }
+
+  if(caster->affectedBySpell(SKILL_MIND_FOCUS)){
+    caster->sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
     return NULL;
   }
 
@@ -555,6 +627,9 @@ TBeing *psiAttackChecks(TBeing *caster, spellNumT sk, const char *tString){
   if (caster->checkPeaceful("You feel too peaceful to contemplate violence here.\n\r") 
       || tVictim->isImmortal() || tVictim->inGroup(*caster))
     return NULL;
+
+
+  caster->reconcileMana(sk, FALSE);
 
   return tVictim;
 }
