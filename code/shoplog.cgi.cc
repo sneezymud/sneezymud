@@ -52,7 +52,7 @@ int main(int argc, char **argv){
     cout << "<input type=submit>" << endl;
     cout << body() << html();
   } else {
-    db.query("select shop_nr, name, action, item, talens, shoptalens, shopvalue, logtime, itemcount from shoplog where shop_nr=%i order by logtime", convertTo<int>(**shop_nr));
+    db.query("select sl.shop_nr, sl.name, sl.action, sl.item, sl.talens, sl.shoptalens, sl.shopvalue, sl.logtime, sl.itemcount from shoplog sl, shopowned so where sl.shop_nr=so.shop_nr and so.password='%s' and sl.shop_nr=%i order by sl.logtime", (**pw).c_str(), convertTo<int>(**shop_nr));
     cout << "Content-type: text/plain\n\n";
     cout << "shop_nr, name, action, item, talens, shoptalens, shopvalue, logtime, itemcount\n";
 
