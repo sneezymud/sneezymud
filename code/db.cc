@@ -1349,7 +1349,7 @@ void bootZones(void)
     zoneData zd;
     if(zd.bootZone((*it).first)){
       zd.renumCmd();
-      vlogf(LOG_BUG, fmt("booting zone %d") % zon);
+      vlogf(LOG_LOW, fmt("booting zone %d") % zon);
       zd.zone_nr=zon++;
       zone_table.push_back(zd);
     }
