@@ -363,7 +363,7 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
       TObj *to = read_object(objVnum(), VIRTUAL);
       obj2 = dynamic_cast<TOrganic *>(to);
       obj2->setWeight(0.0);
-      obj2->setVolume(0.0);
+      obj2->setVolume(0);
       obj2->obj_flags.cost = 0;
     } else
       --(*obj2);

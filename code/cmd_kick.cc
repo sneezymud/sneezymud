@@ -284,7 +284,7 @@ static int kickHit(TBeing *caster, TBeing *victim, int score, int level, spellNu
       act("The spikes on $n's $o sink into $N.", FALSE, caster, item, victim, TO_NOTVICT);
       act("The spikes on $n's $o sink into you.", FALSE, caster, item, victim, TO_VICT);
 
-      if(caster->reconcileDamage(victim, dam*0.15, TYPE_STAB) == -1)
+      if(caster->reconcileDamage(victim, (int)(dam*0.15), TYPE_STAB) == -1)
 	return DELETE_VICT;
     }
 

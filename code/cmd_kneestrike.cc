@@ -131,7 +131,7 @@ static int kneestrikeMiss(TBeing *c, TBeing *v, int type)
 	act("The spikes on $n's $o sink into $N's side.", FALSE, v, item, c, TO_NOTVICT);
 	act("The spikes on $n's $o sink into your side, OW!", FALSE, v, item, c, TO_VICT);
 
-        if (v->reconcileDamage(c, dam*0.15, TYPE_STAB) == -1)
+        if (v->reconcileDamage(c, (int)(dam*0.15), TYPE_STAB) == -1)
           return DELETE_THIS;
       }
     if (v->reconcileDamage(c, dam, DAMAGE_KICK_HEAD) == -1)

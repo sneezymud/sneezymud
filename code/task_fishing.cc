@@ -106,7 +106,7 @@ TObj *catch_a_fish(TRoom *rp){
 
   if(adjustsize){
     fish->setWeight(fish->getWeight()*weightmod);
-    fish->setVolume(fish->getWeight()*200);
+    fish->setVolume((int)(fish->getWeight()*200));
   }
 
   rp->setFished(rp->getFished()+1);

@@ -90,7 +90,7 @@ int sticksToSnakes(TBeing * caster, TBeing * victim, int level, byte bKnown)
         return SPELL_SUCCESS + VICTIM_DEAD;
     }
 
-    snake->setLevel(WARRIOR_LEVEL_IND, lvl);
+    snake->setLevel(WARRIOR_LEVEL_IND, (byte)lvl);
     snake->setHPLevel(lvl);
     snake->setHPFromHPLevel();
     snake->setACLevel(lvl);
@@ -122,7 +122,7 @@ int sticksToSnakes(TBeing * caster, TBeing * victim, int level, byte bKnown)
     return SPELL_SUCCESS;
 
   } else {
-    snake->setLevel(WARRIOR_LEVEL_IND, lvl);
+    snake->setLevel(WARRIOR_LEVEL_IND, (byte)lvl);
     snake->setHPLevel(lvl);
     snake->setHPFromHPLevel();
     snake->setACLevel(lvl);
@@ -429,8 +429,7 @@ int hypnosis(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   if (victim->isAffected(AFF_CHARM)) {
     again = (victim->master == caster);
-    sprintf(buf, "You can't hypnotize $N%s while $E's busy following %s!", (again ? " 
-again" : ""), (again ? "you already" : "somebody else"));
+    sprintf(buf, "You can't hypnotize $N%s while $E's busy following %s!", (again ? " again" : ""), (again ? "you already" : "somebody else"));
     caster->nothingHappens(SILENT_YES);
     act(buf, FALSE, caster, NULL, victim, TO_CHAR);
     return SPELL_FAIL;

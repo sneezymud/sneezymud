@@ -186,10 +186,10 @@ void task_whittlePulse(TBeing *ch, TArrow *tArrow, whittlePulseT tWhitLevel)
       // max((getMaxStructPoints()-10), 0) * 2.0 / 3.0;
       tValue = (((tValue * 3.0) / 2.0) + 10);
 
-      tArrow->setMaxStructPoints(tValue);
+      tArrow->setMaxStructPoints((sh_int)tValue);
       tTemp  = (tValue * (tSkill / 100));
       tTemp += (double)::number(0, (int)((tValue - tTemp) / 2));
-      tArrow->setStructPoints(tTemp);
+      tArrow->setStructPoints((sh_int)tTemp);
       break;
     case WHITTLE_PULSE_SCRAPED: // Set Sharpness
       tValue = (tSkill / 100);
@@ -198,10 +198,10 @@ void task_whittlePulse(TBeing *ch, TArrow *tArrow, whittlePulseT tWhitLevel)
       // max((getMaxSharp()-10), 0) * 2.0 / 3.0
       tValue = (((tValue * 2.0) / 2.0) + 10);
 
-      tArrow->setMaxSharp(tValue);
+      tArrow->setMaxSharp((int)tValue);
       tTemp  = (tValue * (tSkill / 100));
       tTemp += (double)::number(0, (int)((tValue - tTemp) / 2));
-      tArrow->setCurSharp(tTemp);
+      tArrow->setCurSharp((int)tTemp);
       break;
     case WHITTLE_PULSE_SMOOTHED: // Set Damage&Damage Deviation
       tValue = (tSkill / 100);
@@ -210,10 +210,10 @@ void task_whittlePulse(TBeing *ch, TArrow *tArrow, whittlePulseT tWhitLevel)
       // getWeapDamLvl() / 4.0
       tValue = (tValue * 4.0);
 
-      tArrow->setWeapDamLvl(tValue);
+      tArrow->setWeapDamLvl((int)tValue);
       tTemp  = max(0.0, (tValue - (tSkill * (tSkill / 100))));
       tTemp -= max(0.0, (double)::number(0, (int)((tValue - tTemp) / 2)));
-      tArrow->setWeapDamDev(tTemp);
+      tArrow->setWeapDamDev((int)tTemp);
       break;
     default:
       vlogf(LOG_BUG, fmt("task_shittlePulse(TArrow) called with invalid tWhitLevel.  [%d]") % 
@@ -245,10 +245,10 @@ void task_whittlePulse(TBeing *ch, TBow *tBow, whittlePulseT tWhitLevel)
       // max((getMaxStructPoints()-10), 0) * 2.0 / 3.0;
       tValue = (((tValue * 3.0) / 2.0) + 10);
 
-      tBow->setMaxStructPoints(tValue);
+      tBow->setMaxStructPoints((int)tValue);
       tTemp  = (tValue * (tSkill / 100));
       tTemp += (double)::number(0, (int)((tValue - tTemp) / 2));
-      tBow->setStructPoints(tTemp);
+      tBow->setStructPoints((int)tTemp);
       break;
     case WHITTLE_PULSE_SCRAPED: // Set 1/2 Range
       tValue = (tSkill / 100);
@@ -256,7 +256,7 @@ void task_whittlePulse(TBeing *ch, TBow *tBow, whittlePulseT tWhitLevel)
 
       tValue = min(5.0, max(1.0, ((10 * (tValue / 50)) / 2)));
 
-      tBow->setMaxRange(tValue);
+      tBow->setMaxRange((int)tValue);
       break;
     case WHITTLE_PULSE_SMOOTHED: // Set 1/2 Range
       tValue = (tSkill / 100);
@@ -264,7 +264,7 @@ void task_whittlePulse(TBeing *ch, TBow *tBow, whittlePulseT tWhitLevel)
 
       tValue = min(5.0, max(1.0, ((10 * (tValue / 50)) / 2)));
 
-      tBow->setMaxRange((tValue + tBow->getMaxRange()));
+      tBow->setMaxRange((int)(tValue + tBow->getMaxRange()));
       break;
     default:
       vlogf(LOG_BUG, fmt("task_shittlePulse(TBow) called with invalid tWhitLevel.  [%d]") % 
@@ -320,7 +320,7 @@ void task_whittleSetupObject(TBeing *ch, TObj *tObj, TOrganic *tWood, int tIndex
     tObj->descr = mud_str_dup(tString);
 
     tObj->setWeight((whittleItems[tIndex].weiSize / 1.10));
-    tObj->setVolume((whittleItems[tIndex].volSize / 1.10));
+    tObj->setVolume((int)(whittleItems[tIndex].volSize / 1.10));
 
     if (tBow) {
       task_whittlePulse(ch, tBow, WHITTLE_PULSE_ZEROOUT);
@@ -403,7 +403,7 @@ bool task_whittleCreateNew(TBeing *ch, sstring tStWood, int tIndex)
             deleteOld = true;
         } else {
           tWood->setWeight(-(newWeight));
-          tWood->setVolume(-(newVolume));
+          tWood->setVolume((int)(-newVolume));
           act("You cut a chunk of wood off of $p to create the object.",
               FALSE, ch, tWood, NULL, TO_CHAR);
 

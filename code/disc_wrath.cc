@@ -89,7 +89,7 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, byte bKnown)
     if (!caster->fight()) {
     }
 
-    locusts->setLevel(WARRIOR_LEVEL_IND, lvl);
+    locusts->setLevel(WARRIOR_LEVEL_IND, (byte)lvl);
     locusts->setHPLevel(lvl);
     locusts->setHPFromHPLevel();
     locusts->setACLevel(lvl);
@@ -116,7 +116,7 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
     return SPELL_SUCCESS;
   } else {
-    locusts->setLevel(WARRIOR_LEVEL_IND, lvl);
+    locusts->setLevel(WARRIOR_LEVEL_IND, (byte)lvl);
     locusts->setHPLevel(lvl);
     locusts->setHPFromHPLevel();
     locusts->setACLevel(lvl);

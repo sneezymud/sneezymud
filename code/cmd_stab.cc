@@ -223,7 +223,7 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
           tLimb == WEAR_WAISTE)
         tNewDamage /= 10;
 
-      tRc = tSucker->hurtLimb(tNewDamage, tLimb);
+      tRc = tSucker->hurtLimb((unsigned int)tNewDamage, tLimb);
 
       if (IS_SET_DELETE(tRc, DELETE_THIS)) {
         tDamage = -1;

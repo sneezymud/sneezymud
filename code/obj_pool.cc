@@ -12,7 +12,7 @@ void TPool::setDrinkUnits(int n)
 {
   setMaxDrinkUnits(n);
   TBaseCup::setDrinkUnits(n);
-  setVolume(getVolume() + (getDrinkUnits() * SIP_VOLUME));
+  setVolume((int)(getVolume() + (getDrinkUnits() * SIP_VOLUME)));
   weightChangeObject(0);
   updateDesc();
   obj_flags.decay_time=getDrinkUnits();
@@ -22,7 +22,7 @@ void TPool::addToDrinkUnits(int n)
 {
   addToMaxDrinkUnits(n);
   TBaseCup::addToDrinkUnits(n);
-  setVolume(getVolume() + (getDrinkUnits() * SIP_VOLUME));
+  setVolume((int)(getVolume() + (getDrinkUnits() * SIP_VOLUME)));
   weightChangeObject(0);
   updateDesc();
   obj_flags.decay_time=getDrinkUnits();

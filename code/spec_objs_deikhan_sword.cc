@@ -55,7 +55,7 @@ void doBlind(TBeing *ch, TBeing *vict, TObj *o)
 
   if (vict->affectedBySpell(SPELL_BLINDNESS) ||
       vict->isAffected(AFF_TRUE_SIGHT) ||
-      ch->isNotPowerful(vict, tWeap->weaponLevel(), SPELL_BLINDNESS, SILENT_YES))
+      ch->isNotPowerful(vict, (int)tWeap->weaponLevel(), SPELL_BLINDNESS, SILENT_YES))
     return;
 
   if (!::number(0, max(10, (int)(tWeap->weaponLevel() +
@@ -71,7 +71,7 @@ void doBlind(TBeing *ch, TBeing *vict, TObj *o)
     int       tDuration = (int)(tWeap->weaponLevel() * UPDATES_PER_MUDHOUR);
     saveTypeT tSave     = SAVE_NO;
 
-    vict->rawBlind(tWeap->weaponLevel(), tDuration, tSave);
+    vict->rawBlind((int)tWeap->weaponLevel(), tDuration, tSave);
   }
 }
 

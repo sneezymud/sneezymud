@@ -47,7 +47,7 @@ int weaponBlinder(TBeing *tVictim, cmdTypeT tCmd, const char *, TObj *tObj, TObj
 
   if (tVictim->affectedBySpell(SPELL_BLINDNESS) ||
       tVictim->isAffected(AFF_TRUE_SIGHT) ||
-      ch->isNotPowerful(tVictim, tWeap->weaponLevel(), SPELL_BLINDNESS, SILENT_YES))
+      ch->isNotPowerful(tVictim, (int)tWeap->weaponLevel(), SPELL_BLINDNESS, SILENT_YES))
     return FALSE;
 
   if (!::number(0, max(10, (int)(tWeap->weaponLevel() +
@@ -63,7 +63,7 @@ int weaponBlinder(TBeing *tVictim, cmdTypeT tCmd, const char *, TObj *tObj, TObj
     int       tDuration = (int)(tWeap->weaponLevel() * UPDATES_PER_MUDHOUR);
     saveTypeT tSave     = SAVE_NO;
 
-    tVictim->rawBlind(tWeap->weaponLevel(), tDuration, tSave);
+    tVictim->rawBlind((int)tWeap->weaponLevel(), tDuration, tSave);
 
     return TRUE;
   }
