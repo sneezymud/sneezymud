@@ -3302,22 +3302,10 @@ void TObj::setBurning(TBeing *ch){
     return;
 
   if(!isObjStat(ITEM_BURNING)){
-    setObjStat(ITEM_BURNING);
+    addObjStat(ITEM_BURNING);
+
     if(isObjStat(ITEM_CHARRED))
       remObjStat(ITEM_CHARRED);
-
-
-#if 0
-    int lightamount=max(1, getVolume()/500);
-    addToLight(lightamount);
-
-    if(ch){
-      ch->roomp->addToLight(lightamount);
-      ch->addToLight(lightamount);
-    } else {
-      roomp->addToLight(lightamount);
-    }
-#endif
 
   }
 }
@@ -3327,18 +3315,7 @@ void TObj::remBurning(TBeing *ch){
     remObjStat(ITEM_BURNING);
     if(material_nums[getMaterial()].flammability &&
        !isObjStat(ITEM_CHARRED))
-      setObjStat(ITEM_CHARRED);
-#if 0
-    int lightamount=max(1, getVolume()/500);
-    addToLight(-lightamount);
-
-    if(ch){
-      ch->roomp->addToLight(-lightamount);
-      ch->addToLight(-lightamount);
-    } else {
-      roomp->addToLight(-lightamount);
-    }
-#endif
+      addObjStat(ITEM_CHARRED);
 
   }
 }
