@@ -5297,6 +5297,7 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
   return TRUE;
 }
 
+
 int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 {
   MYSQL_RES *res;
@@ -5345,6 +5346,169 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
     ++i;
   }
 
+
+  mysql_free_result(res);
+
+  return TRUE;
+}
+
+int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
+{
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+  int rc, found=0;
+  TThing *o;
+  TObj *to;
+
+  if(cmd != CMD_LOOK)
+    return FALSE;
+
+  for (o = ch->roomp->getStuff(); o; o = o->nextThing) {
+    to = dynamic_cast<TObj *>(o);
+    if (to && to->spec == SPEC_SHOPINFO_BOARD &&
+	isname(arg, to->name)){
+      found=1;
+      break;
+    }
+  }
+
+  if(!found)
+    return FALSE;
+
+  ch->sendTo("You examine the board:\n\r");
+  ch->sendTo("------------------------------------------------------------\n\r");
+  ch->sendTo("-  This financial information is provided free of charge   -\n\r");
+  ch->sendTo("-  by the Grimhaven Bank and the King of Grimhaven.        -\n\r");
+  ch->sendTo("------------------------------------------------------------\n\r");
+
+  
+  //////////////////////////////////////
+  // number of shops and owned status
+  //
+  if((rc=dbquery(TRUE, &res, "sneezy", "shopinfoBoard", "select count(*) from shop"))){
+    if(rc==-1)
+      vlogf(LOG_BUG, "Database error in shopinfoBoard");
+    else {
+      ch->sendTo("The board is empty.\n\r");
+      return TRUE;
+    }
+      
+    return FALSE;
+  }
+  row=mysql_fetch_row(res);
+  int nshops=atoi(row[0]);
+  mysql_free_result(res);
+
+  if((rc=dbquery(TRUE, &res, "sneezy", "shopinfoBoard", "select count(distinct shop_nr) from shopownedaccess"))){
+    if(rc==-1)
+      vlogf(LOG_BUG, "Database error in shopinfoBoard");
+    else {
+      ch->sendTo("The board is empty.\n\r");
+      return TRUE;
+    }
+      
+    return FALSE;
+  }
+  row=mysql_fetch_row(res);
+
+  ch->sendTo("There are %i shops, %s of which are privately owned.\n\r",
+	     nshops, row[0]);
+
+  mysql_free_result(res);
+
+  ////////////////////////////
+  // broke shops
+  if((rc=dbquery(TRUE, &res, "sneezy", "shopinfoBoard", "select count(*) from shop where gold<100000"))){
+    if(rc==-1)
+      vlogf(LOG_BUG, "Database error in shopinfoBoard");
+    else {
+      ch->sendTo("The board is empty.\n\r");
+      return TRUE;
+    }
+      
+    return FALSE;
+  }
+  row=mysql_fetch_row(res);
+
+  ch->sendTo("%s shops have less than 100000 talens.\n\r", row[0]);
+
+  mysql_free_result(res);
+
+  /////////////////////////////
+  // average talens
+  if((rc=dbquery(TRUE, &res, "sneezy", "shopinfoBoard", "select round(avg(gold)) from shop"))){
+    if(rc==-1)
+      vlogf(LOG_BUG, "Database error in shopinfoBoard");
+    else {
+      ch->sendTo("The board is empty.\n\r");
+      return TRUE;
+    }
+      
+    return FALSE;
+  }
+  row=mysql_fetch_row(res);
+
+  ch->sendTo("Average talens per shop is %s.\n\r", row[0]);
+
+  mysql_free_result(res);
+  
+  ////////////////////////////
+  // top ten shops
+  if((rc=dbquery(TRUE, &res, "sneezy", "shopinfoBoard", "select in_room, gold from shop order by gold desc limit 10"))){
+    if(rc==-1)
+      vlogf(LOG_BUG, "Database error in shopinfoBoard");
+    else {
+      ch->sendTo("The board is empty.\n\r");
+      return TRUE;
+    }
+      
+    return FALSE;
+  }
+
+  TRoom *tr=NULL;
+  int i=1;
+  ch->sendTo("\n\rThe ten wealthiest shops are:\n\r");
+  while((row=mysql_fetch_row(res))){
+    tr=real_roomp(atoi(row[0]));
+    ch->sendTo("%i) %s with %s talens.\n\r",
+	       i, tr->getName(), row[1]);
+    ++i;
+  }
+
+  mysql_free_result(res);
+
+
+  /////////////////////////////
+  // shop types
+  if((rc=dbquery(TRUE, &res, "sneezy", "shopinfoBoard", "select type, count(*) c from shoptype group by type order by c desc"))){
+    if(rc==-1)
+      vlogf(LOG_BUG, "Database error in shopinfoBoard");
+    else {
+      ch->sendTo("The board is empty.\n\r");
+      return TRUE;
+    }
+      
+    return FALSE;
+  }
+  
+  ch->sendTo("\n\rThe number of shops that deal in each commodity are:\n\r");
+  
+  while((row=mysql_fetch_row(res))){
+    ch->sendTo("[%2s] %-17s   ",
+	       row[1], ItemInfo[atoi(row[0])]->name);
+
+    if((row=mysql_fetch_row(res))){
+      ch->sendTo("[%2s] %-17s   ",
+		 row[1], ItemInfo[atoi(row[0])]->name);
+    }
+
+    if((row=mysql_fetch_row(res))){
+      ch->sendTo("[%2s] %-17s   ",
+		 row[1], ItemInfo[atoi(row[0])]->name);
+    }
+
+    ch->sendTo("\n\r");
+  }
 
   mysql_free_result(res);
 
@@ -5536,5 +5700,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Suffocation Glove", suffGlove},
   {FALSE, "Force", force},
   {FALSE, "trophy board", trophyBoard},
+  {FALSE, "shopinfo board", shopinfoBoard},
   {FALSE, "last proc", bogusObjProc}
 };
