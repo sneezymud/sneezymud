@@ -2743,9 +2743,21 @@ int TPerson::genericLoadPC()
           vlogf(LOG_LOW, fmt("Player (%s) had non-existant hometown (%d)") %  getName() % player.hometown);
           rp = real_roomp(ROOM_CS);
         }
+
+        if (!rp) {
+          vlogf(LOG_LOW, fmt("Was unable to read center square!  Player being disconnected!  (%s)") % getName());
+          return DELETE_THIS;
+        }
+
         *rp += *this;
       } else {
         rp = real_roomp(ROOM_CS);
+
+        if (!rp) {
+          vlogf(LOG_LOW, fmt("Was unable to read center square!  Player being disconnected!  (%s) [2]") % getName());
+          return DELETE_THIS;
+        }
+
         *rp += *this;
         player.hometown = ROOM_CS;
       }
@@ -2849,6 +2861,12 @@ int TPerson::genericLoadPC()
         vlogf(LOG_BUG, fmt("Attempting to place %s in room that does not exist.\n\r") %  name);
         rp = real_roomp(ROOM_VOID);
       }
+
+      if (!rp) {
+	vlogf(LOG_LOW, fmt("Was unable to read VOID!  Immortal being disconnected!  (%s) [3]") % getName());
+	return DELETE_THIS;
+      }
+
       in_room = ROOM_NOWHERE;  // change it so it doesn't error in +=
       *rp += *this;
       player.hometown = ROOM_IMPERIA;
@@ -2867,17 +2885,35 @@ int TPerson::genericLoadPC()
     if (!banished()) {
       if (in_room >= 0) {
         rp = real_roomp(in_room);
+
+        if (!rp) {
+          vlogf(LOG_LOW, fmt("Was unable to read room %d!  Player being disconnected!  (%s) [3]") % in_room % getName());
+          return DELETE_THIS;
+        }
+
         in_room = ROOM_NOWHERE;  // change it so it doesn't error in +=
         *rp += *this;
         player.hometown = in_room;
       } else {
         rp = real_roomp(ROOM_CS);
+
+        if (!rp) {
+          vlogf(LOG_LOW, fmt("Was unable to read center square!  Player being disconnected!  (%s) [4]") % getName());
+          return DELETE_THIS;
+        }
+
         in_room = ROOM_NOWHERE;  // change it so it doesn't error in +=
         *rp += *this;
         player.hometown = ROOM_CS;
       }
     } else {
       rp = real_roomp(ROOM_HELL);
+
+      if (!rp) {
+        vlogf(LOG_LOW, fmt("Was unable to read HELL!  Player being disconnected!  (%s) [5]") % getName());
+        return DELETE_THIS;
+      }
+
       in_room = ROOM_NOWHERE;  // change it so it doesn't error in +=
       *rp += *this;
       player.hometown = ROOM_HELL;
