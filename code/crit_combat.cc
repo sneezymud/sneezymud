@@ -1476,6 +1476,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               break;
             case 98:
             case 99:
+	    case 100:
               // decapitate if no neck armor
               if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
                   (obj = v->equipment[WEAR_NECK])) {
@@ -1498,29 +1499,29 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 if (IS_SET_DELETE(rc, DELETE_VICT))
                   return DELETE_VICT;
                 return ONEHIT_MESS_CRIT_S;
-              }
+              } else { // no collar
               // if no collar, its going into next critSuccess...
-            case 100:
-             // POW! He was deCAPITATED! 
-              act("$n strikes a fatal blow and cuts off $N's head!", FALSE, this, 0, v, TO_NOTVICT, ANSI_CYAN);
-              act("You strike a fatal blow and completely behead $N!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
-              act("$n strikes a fatal blow and completely beheads you!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
-                  (obj = v->equipment[WEAR_NECK])) {
-                obj->makeScraps();
-                delete obj;
-                obj = NULL;
-              }
-              v->makeBodyPart(WEAR_HEAD);
-              applyDamage(v, (20 * v->hitLimit()),DAMAGE_BEHEADED);
-              *part_hit = WEAR_NECK;
-              if (desc)
-                desc->career.crit_beheads++;
-
-              if (v->desc)
-                v->desc->career.crit_beheads_suff++;
-
-              return DELETE_VICT;
+		// POW! He was deCAPITATED! 
+		act("$n strikes a fatal blow and cuts off $N's head!", FALSE, this, 0, v, TO_NOTVICT, ANSI_CYAN);
+		act("You strike a fatal blow and completely behead $N!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
+		act("$n strikes a fatal blow and completely beheads you!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
+		if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
+		    (obj = v->equipment[WEAR_NECK])) {
+		  obj->makeScraps();
+		  delete obj;
+		  obj = NULL;
+		}
+		v->makeBodyPart(WEAR_HEAD);
+		applyDamage(v, (20 * v->hitLimit()),DAMAGE_BEHEADED);
+		*part_hit = WEAR_NECK;
+		if (desc)
+		  desc->career.crit_beheads++;
+		
+		if (v->desc)
+		  v->desc->career.crit_beheads_suff++;
+		
+		return DELETE_VICT;
+	      }
             default:
               return FALSE;
           }
@@ -1925,6 +1926,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               return FALSE;
             case 98:
             case 99:
+	    case 100:
               // crush skull unless helmet
               if (!v->hasPart(WEAR_HEAD))
                 return 0;
@@ -1950,35 +1952,34 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 if (IS_SET_DELETE(rc, DELETE_VICT))
                   return DELETE_VICT;
                 return ONEHIT_MESS_CRIT_S;
-              }
-              // no helm goes into next case
-            case 100:
-              // crush skull
-              if (!v->hasPart(WEAR_HEAD))
-                return 0;
-              sprintf(buf, 
-    "With your %s, you crush $N's skull, and $S brains ooze out!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s crushes your skull and The World goes dark!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s crushes $N's skull.  Brains ooze out as $E crumples!",
-                limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
-                  (obj = v->equipment[WEAR_HEAD])) {
-                obj->makeScraps();
-                delete obj;
-                obj = NULL;
-              }
-              if (desc)
-                desc->career.crit_crushed_skull++;
-              if (v->desc)
-                v->desc->career.crit_crushed_skull_suff++;
-              applyDamage(v, (20 * v->hitLimit()),DAMAGE_CAVED_SKULL);
-              return DELETE_VICT;
+              } else { // no head gear
+		// crush skull
+		if (!v->hasPart(WEAR_HEAD))
+		  return 0;
+		sprintf(buf, 
+			"With your %s, you crush $N's skull, and $S brains ooze out!",
+			limbStr.c_str());
+		act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+		sprintf(buf, 
+			"$n's %s crushes your skull and The World goes dark!",
+			limbStr.c_str());
+		act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+		sprintf(buf, "$n's %s crushes $N's skull.  Brains ooze out as $E crumples!",
+			limbStr.c_str());
+		act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+		if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
+		    (obj = v->equipment[WEAR_HEAD])) {
+		  obj->makeScraps();
+		  delete obj;
+		  obj = NULL;
+		}
+		if (desc)
+		  desc->career.crit_crushed_skull++;
+		if (v->desc)
+		  v->desc->career.crit_crushed_skull_suff++;
+		applyDamage(v, (20 * v->hitLimit()),DAMAGE_CAVED_SKULL);
+		return DELETE_VICT;
+	      }
             default:
               return FALSE;
               break;
