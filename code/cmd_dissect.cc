@@ -2,25 +2,12 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_dissect.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
+//    dissect.cc : procedures related to dissecting
 //
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+//    Copyright 1998, SneezyMUD Development Team
+//    All Rights Reserved.
 //
 //////////////////////////////////////////////////////////////////////////
-
-
-/* ***********************************************************
-
-    dissect.cc : procedures related to dissecting
-
-    Copyright 1998, SneezyMUD Development Team
-    All Rights Reserved.
-
-*********************************************************** */
 
 #include "stdsneezy.h"
 #include "components.h"
@@ -49,30 +36,10 @@ int determineDissectionItem(TBaseCorpse *corpse, int *amount, char *msg, char *g
           sprintf(gl_msg, "$n plucks $p from $N's wing.");
         }
         break;
-      case RACE_LAMMASU:
-        num = COMP_INVISIBILITY_BREW;
-        *amount = 50;
-        sprintf(msg, "You snip $p from $N.");
-        sprintf(gl_msg, "$n cuts $p from $N.");
-        break;
-      case RACE_DRAGON:
-        if(corpse->getCorpseVnum()==MOB_AQUATIC_DRAGON) break;
-        else if (::number(0,1)) {
-          num = COMP_SORCERERS_GLOBE_BREW;
-          *amount = 50;
-          sprintf(msg, "You tear $p off of $N.");
-          sprintf(gl_msg, "$n tears $p off of $N.");
-        } else {
-          num = COMP_TRUE_SIGHT_BREW;
-          *amount = 50;
-          sprintf(msg, "You pluck $p from $N.");
-          sprintf(gl_msg, "$n plucks $p from $N.");
-        }
-        break;
       case RACE_DEER:
         num = OBJ_VENISON;
-        sprintf(msg, "You carve a piece of $p from $N.");
-        sprintf(gl_msg, "$n carves a piece of $p from $N.");
+        sprintf(msg, "You carve $p from $N.");
+        sprintf(gl_msg, "$n carves $p from $N.");
         *amount = 50;
         break;
       default:
@@ -158,7 +125,7 @@ int TBeing::doDissect(const char *argument)
 
   rc = dissect(this, obj);
   if (rc)
-    addSkillLag(SKILL_DISSECT);
+    addSkillLag(SKILL_DISSECT, rc);
   if (IS_SET_DELETE(rc, DELETE_ITEM)) {
     delete obj;
     obj = NULL;
@@ -191,7 +158,7 @@ void readDissectionFile()
 
   fp = fopen(dissect_file, "r");
   if (!fp) {
-    vlogf(9, "Unable to open '%s' for reading", dissect_file);
+    vlogf(LOG_FILE, "Unable to open '%s' for reading", dissect_file);
     return;
   }
 

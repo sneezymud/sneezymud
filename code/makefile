@@ -215,7 +215,7 @@ OBJ2 = game_gin.o handler.o game_hearts.o hospital.o immortal.o immunity.o \
 	game_poker.o obj_pool.o obj_portal.o spec_mobs_posse.o obj_potion.o obj_quiver.o race.o range.o \
 	rent.o repair.o response.o riding.o room.o \
 	shop.o show.o signals.o skill_dam.o skills.o \
-	slots.o socket.o sound.o spec_mobs.o \
+	game_slots.o socket.o sound.o spec_mobs.o \
 	spec_mobs_doppleganger.o spec_mobs_earthquake_digger.o \
         spec_mobs_coroner.o spec_mobs_goring.o spec_mobs_realestate.o \
 	spec_objs.o spec_objs_jambiya.o \
@@ -467,7 +467,7 @@ $(OBJDIR)shop.o: shop.h statistics.h
 $(OBJDIR)show.o: disc_looting.h combat.h components.h
 $(OBJDIR)skill_dam.o: statistics.h
 $(OBJDIR)skills.o: $(DISC_HEADS)
-$(OBJDIR)slots.o: $(CASINO_HEADS)
+$(OBJDIR)game_slots.o: $(CASINO_HEADS)
 $(OBJDIR)socket.o: socket.h systemtask.h statistics.h spelltask.h
 $(OBJDIR)spec_mobs.o: combat.h components.h paths.h
 $(OBJDIR)spec_mobs.o: disc_sorcery.h disc_afflictions.h disc_aegis.h

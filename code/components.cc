@@ -2804,14 +2804,10 @@ bool isDissectComponent(int vnum)
 
     // hard coded dissects
     case COMP_FLAMING_SWORD:           // dissect loads
-    case COMP_INVISIBILITY_BREW:        // dissect loads
-    case COMP_SORCERERS_GLOBE_BREW:        // dissect loads
-    case COMP_TRUE_SIGHT_BREW:          // dissect loads
 
     // items in lib/objdata/dissect
     case COMP_FEATHERY_DESCENT:        // dissect loads
     // case COMP_FUMBLE:  // also a periodic load
-    case COMP_TRAIL_SEEK_BREW:          // dissect loads
     case COMP_SENSE_LIFE:        // dissect loads
     case COMP_SHATTER:          // dissect loads
     case COMP_FALCON_WINGS:          // dissect loads
@@ -2823,15 +2819,10 @@ bool isDissectComponent(int vnum)
     case COMP_GILLS_OF_FLESH:        // dissect loads
     case COMP_INFRAVISION:        // dissect loads
     case COMP_BREATH_SARAHAGE:        // dissect loads
-    case COMP_DISPEL_MAGIC_BREW:        // dissect loads
-    case COMP_SENSE_LIFE_BREW:          // dissect loads
-    case COMP_INFRAVISION2_BREW:          // dissect loads
-    case COMP_GILLS_OF_FLESH_BREW:        // dissect loads
     case COMP_HASTE:        // dissect loads
     case COMP_BIND:        // dissect loads
     case COMP_STUNNING_ARROW:               // dissect loads
     case COMP_ANTIGRAVITY:        // dissect loads
-    case COMP_INFRAVISION_BREW:        // dissect loads
 
     // skinning items
     case COMP_POLYMORPH:

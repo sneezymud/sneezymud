@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.32  2001/07/15 22:48:05  jesus
+// updated makefile to account for slots.cc name change to game_slots.cc
+// redefined brew components and removed mage brew comps
+// brew shaman only spells
+// added a chipped tooth proc for a builder...very generic eat proc
+//
 // Revision 5.31  2001/07/07 02:47:00  jesus
 // added a couple brew spells
 //
@@ -260,22 +266,18 @@ const int COMP_FLATULENCE         =31341;
 ////////////////////
 // shaman spells
 ////////////////////
-const int COMP_SHIELD_OF_MISTS_BREW=31342;
-const int COMP_CELERITE_BREW      =31343;
-////////////////////
-// BREW COMPONENTS
-////////////////////
-// mage spells
-////////////////////
-const int COMP_DISPEL_MAGIC_BREW=1405;
-const int COMP_TRAIL_SEEK_BREW  =1408;
-const int COMP_INFRAVISION_BREW =1411;
-const int COMP_SORCERERS_GLOBE_BREW  =1412;
-const int COMP_SENSE_LIFE_BREW   =1414;
-const int COMP_INFRAVISION2_BREW=1415;
-const int COMP_INVISIBILITY_BREW=1416;
-const int COMP_TRUE_SIGHT_BREW  =1418;
-const int COMP_GILLS_OF_FLESH_BREW   =1420;
+const int COMP_SHIELD_OF_MISTS_BREW    =1401;
+const int COMP_SENSE_PRESENCE_BREW     =1402;
+const int COMP_CHEVAL_BREW             =1403;
+const int COMP_DJALLAS_BREW            =1404;
+const int COMP_LEGBAS_BREW             =1405;
+const int COMP_DETECT_SHADOW_BREW      =1406;
+const int COMP_CELERITE_BREW           =1407;
+const int COMP_SHADOW_WALK_BREW        =1408;
+const int COMP_CLARITY_BREW            =1409;
+const int COMP_BOILING_BLOOD_BREW      =1410;
+const int COMP_STUPIDITY_BREW          =1411;
+const int COMP_AQUALUNG_BREW           =1412;
 /////////////////////////////
 // END ALL BREW COMPONENTS
 /////////////////////////////

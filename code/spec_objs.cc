@@ -4026,6 +4026,22 @@ int blessingHoldItem(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
   return TRUE;
 }
 
+int chippedTooth(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  int rc;
+
+  if (cmd != CMD_EAT)
+    return FALSE;
+
+  if (!ch->isPc())
+    return FALSE;
+
+  rc = ch->applyDamage(ch, ::number(1,5), DAMAGE_NORMAL);
+  act("OWWIE!! You feel like you've chipped a tooth on $p!", 0, ch, o, 0, TO_CHAR);
+  act("$n cringes in pain as $e bites into $p.", 0, ch, o, 0, TO_ROOM);
+  return TRUE;
+}
+
 int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch;
@@ -4840,6 +4856,14 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Mana Burn Robe", manaBurnRobe},
   {FALSE, "Chrism: minor heal", healingNeckwear},
   {FALSE, "Chrism: bless hold item", blessingHoldItem},
-  {FALSE, "Chrism: vitality restore", moveRestoreNeckwear}
+  {FALSE, "Chrism: vitality restore", moveRestoreNeckwear},
+  {FALSE, "Chipped Tooth Food Item", chippedTooth} // 80
 };
+
+
+
+
+
+
+
 
