@@ -2772,7 +2772,6 @@ void TBeing::doWhere(const char *argument)
       }
     }
   }
-  int skipped=0, cached=0, searched=0;
 
   if (GetMaxLevel() > MAX_MORT) {
     for (k = object_list; k; k = k->next) {
