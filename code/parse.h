@@ -563,6 +563,7 @@ enum cmdTypeT {
      CMD_COMBINE,
      CMD_CALL,
      CMD_FOLD,
+     CMD_BOOT,
      MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow

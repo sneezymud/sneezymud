@@ -139,7 +139,6 @@ class lag_data lag_info;
 // local procedures
 static void bootZones(void);
 static void bootWorld(void);
-static void renum_zone_table(void);
 static void reset_time(void);
 
 struct reset_q_type
@@ -265,10 +264,6 @@ void bootDb(void)
 
   bootPulse("Building suitset information.");
   suitSets.SetupLoadSetSuits();
-
-  // indices must be assigned before this gets called.
-  bootPulse("Renumbering zone table.");
-  renum_zone_table();
 
   vlogf(LOG_MISC, "Assigning function pointers:");
   vlogf(LOG_MISC, "   Shopkeepers.");
@@ -988,147 +983,313 @@ void zoneData::logError(char ch, const char *type, int cmd, int value)
       name % cmd % ch % type % value);
 }
 
-void renum_zone_table(void)
+void zoneData::renumCmd(void)
 {
   int comm;
   int value;
-  unsigned int zone;
 
-  for (zone = 0; zone < zone_table.size(); zone++) {
-    // init the zone_value array
-    if (nuke_inactive_mobs)
-      zone_table[zone].zone_value = ((zone <= 1) ? -1 : 0);
-    else
-      zone_table[zone].zone_value = -1;
-
-    for (comm = 0; zone_table[zone].cmd[comm].command != 'S'; comm++) {
-      resetCom &cmd = zone_table[zone].cmd[comm];
-      switch (cmd.command) {
-        case 'A':
-	  if (cmd.arg1 < 0 || cmd.arg1 >= WORLD_SIZE)
-            zone_table[zone].logError('A', "room 1",comm, cmd.arg1);
-          if (cmd.arg2 < 0 || cmd.arg2 >= WORLD_SIZE)
-            zone_table[zone].logError('A', "room 2",comm, cmd.arg2);
-          if (cmd.arg2 <= cmd.arg1)
-            zone_table[zone].logError('A', "no overlap",comm, cmd.arg2);
-          break;
-        case 'C':
-          cmd.arg1 = real_mobile(value = cmd.arg1);
-          if (cmd.arg1 < 0)
-            zone_table[zone].logError('C', "mobile",comm, value);
-          if (cmd.arg3 < 0 && cmd.arg3 != ZONE_ROOM_RANDOM)
-            zone_table[zone].logError('C', "room",comm, cmd.arg3);
-          break;
-        case 'K':
-          cmd.arg1 = real_mobile(value = cmd.arg1);
-          if (cmd.arg1 < 0)
-            zone_table[zone].logError('K', "mobile",comm, value);
-          if (cmd.arg3 < 0 && cmd.arg3 != ZONE_ROOM_RANDOM)
-            zone_table[zone].logError('K', "room",comm, cmd.arg3);
-          break;
-        case 'M':
-          cmd.arg1 = real_mobile(value = cmd.arg1);
-          if (cmd.arg1 < 0)
-            zone_table[zone].logError('M', "mobile",comm, value);
-          if (cmd.arg3 < 0 && cmd.arg3 != ZONE_ROOM_RANDOM)
-            zone_table[zone].logError('M', "room",comm, cmd.arg3);
-          break;
-        case 'R':
-          cmd.arg1 = real_mobile(value = cmd.arg1);
-          if (cmd.arg1 < 0)
-            zone_table[zone].logError('R', "mobile",comm, value);
-          if (cmd.arg3 < 0 && cmd.arg3 != ZONE_ROOM_RANDOM)
-            zone_table[zone].logError('R', "room",comm, cmd.arg3);
-          break;
-        case 'O':
-          cmd.arg1 = real_object(value = cmd.arg1);
-          if (cmd.arg1 < 0)
-            zone_table[zone].logError('O', "object",comm, value);
-          if (cmd.arg3 < 0 && cmd.arg3 != ZONE_ROOM_RANDOM)
-            zone_table[zone].logError('O', "room",comm, cmd.arg3);
-          break;
-        case 'G':
-          cmd.arg1 = real_object(value = cmd.arg1);
-          if (cmd.arg1 < 0)
-            zone_table[zone].logError('G', "object",comm, value);
-          break;
-	case 'X': // X <set num> <slot> <vnum>
-	  if (cmd.arg3 < 0 || cmd.arg3 > 15)
-	    zone_table[zone].logError('X', "macro",comm, cmd.arg2);
-          cmd.arg1 = mapFileToSlot(value = cmd.arg1); 
-          if (cmd.arg1 < MIN_WEAR || cmd.arg1 >= MAX_WEAR)
-            zone_table[zone].logError('X', "bogus slot",comm, value);
-	  break;
-	case 'Z': // Z <if flag> <set num> <perc chance>
-	  if (cmd.arg1 < 0 || cmd.arg1 > 15)
-	    zone_table[zone].logError('Z', "macro",comm, cmd.arg3);
-	  if (cmd.arg2 <= 0 || cmd.arg2 > 100)
-	    zone_table[zone].logError('Z', "percent",comm, cmd.arg2);
-	  break;
-// Add one for each suit load ..loadset
-        case 'Y':
-          if (cmd.arg1 <= 0 || cmd.arg1 > (signed) suitSets.suits.size())
-            zone_table[zone].logError('Y', "macro",comm, cmd.arg1);
-          if (cmd.arg2 <= 0 || cmd.arg2 > 100)
-            zone_table[zone].logError('Y', "percent",comm, cmd.arg2);
-          break;
-        case 'E':
-          cmd.arg1 = real_object(value = cmd.arg1);
-          if (cmd.arg1 < 0)
-            zone_table[zone].logError('E', "object",comm, value);
-          cmd.arg3 = mapFileToSlot(value = cmd.arg3); 
-          if (cmd.arg3 < MIN_WEAR || cmd.arg3 >= MAX_WEAR)
-            zone_table[zone].logError('E', "bogus slot",comm, value);
-          break;
-        case 'P':
-          cmd.arg1 = real_object(value = cmd.arg1);
-          if (cmd.arg1 < 0)
-            zone_table[zone].logError('P', "object",comm, value);
-          cmd.arg3 = real_object(cmd.arg3);
-          if (cmd.arg3 < 0)
-            zone_table[zone].logError('P', "container",comm, cmd.arg3);
-          break;
-        case 'D':
-          if (cmd.arg1 < 0)
-            zone_table[zone].logError('D', "room",comm, cmd.arg1);
-          break;
-        case 'B':
-          cmd.arg1 = real_object(value = cmd.arg1);
-          if (cmd.arg1 < 0)
-            zone_table[zone].logError('B', "object",comm, value);
-          if (cmd.arg3 < 0 && cmd.arg3 != ZONE_ROOM_RANDOM)
-            zone_table[zone].logError('B', "room",comm, cmd.arg3);
-          break;
-        case 'H':
-          if (cmd.arg1 < MIN_HATE || cmd.arg1 >= MAX_HATE) {
-            zone_table[zone].logError('H', "hate",comm, cmd.arg1);
-            cmd.arg1 = MIN_HATE;
-          }
-          break;
-        case 'F':
-          if (cmd.arg1 < MIN_HATE || cmd.arg1 >= MAX_HATE) {
-            zone_table[zone].logError('F', "fear",comm, cmd.arg1);
-            cmd.arg1 = MIN_HATE;
-          }
-          break;
-      }
+  // init the zone_value array
+  if (nuke_inactive_mobs)
+    zone_value = ((zone_nr <= 1) ? -1 : 0);
+  else
+    zone_value = -1;
+  
+  for (comm = 0; cmd[comm].command != 'S'; comm++) {
+    resetCom *rs = &cmd[comm];
+    switch (rs->command) {
+      case 'A':
+	if (rs->arg1 < 0 || rs->arg1 >= WORLD_SIZE)
+	  logError('A', "room 1",comm, rs->arg1);
+	if (rs->arg2 < 0 || rs->arg2 >= WORLD_SIZE)
+	  logError('A', "room 2",comm, rs->arg2);
+	if (rs->arg2 <= rs->arg1)
+	  logError('A', "no overlap",comm, rs->arg2);
+	break;
+      case 'C':
+	rs->arg1 = real_mobile(value = rs->arg1);
+	if (rs->arg1 < 0)
+	  logError('C', "mobile",comm, value);
+	if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+	  logError('C', "room",comm, rs->arg3);
+	break;
+      case 'K':
+	rs->arg1 = real_mobile(value = rs->arg1);
+	if (rs->arg1 < 0)
+	  logError('K', "mobile",comm, value);
+	if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+	  logError('K', "room",comm, rs->arg3);
+	break;
+      case 'M':
+	rs->arg1 = real_mobile(value = rs->arg1);
+	if (rs->arg1 < 0)
+	  logError('M', "mobile",comm, value);
+	if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+	  logError('M', "room",comm, rs->arg3);
+	break;
+      case 'R':
+	rs->arg1 = real_mobile(value = rs->arg1);
+	if (rs->arg1 < 0)
+	  logError('R', "mobile",comm, value);
+	if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+	  logError('R', "room",comm, rs->arg3);
+	break;
+      case 'O':
+	rs->arg1 = real_object(value = rs->arg1);
+	if (rs->arg1 < 0)
+	  logError('O', "object",comm, value);
+	if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+	  logError('O', "room",comm, rs->arg3);
+	break;
+      case 'G':
+	rs->arg1 = real_object(value = rs->arg1);
+	if (rs->arg1 < 0)
+	  logError('G', "object",comm, value);
+	break;
+      case 'X': // X <set num> <slot> <vnum>
+	if (rs->arg3 < 0 || rs->arg3 > 15)
+	  logError('X', "macro",comm, rs->arg2);
+	rs->arg1 = mapFileToSlot(value = rs->arg1); 
+	if (rs->arg1 < MIN_WEAR || rs->arg1 >= MAX_WEAR)
+	  logError('X', "bogus slot",comm, value);
+	break;
+      case 'Z': // Z <if flag> <set num> <perc chance>
+	if (rs->arg1 < 0 || rs->arg1 > 15)
+	  logError('Z', "macro",comm, rs->arg3);
+	if (rs->arg2 <= 0 || rs->arg2 > 100)
+	  logError('Z', "percent",comm, rs->arg2);
+	break;
+	// Add one for each suit load ..loadset
+      case 'Y':
+	if (rs->arg1 <= 0 || rs->arg1 > (signed) suitSets.suits.size())
+	  logError('Y', "macro",comm, rs->arg1);
+	if (rs->arg2 <= 0 || rs->arg2 > 100)
+	  logError('Y', "percent",comm, rs->arg2);
+	break;
+      case 'E':
+	rs->arg1 = real_object(value = rs->arg1);
+	if (rs->arg1 < 0)
+	  logError('E', "object",comm, value);
+	rs->arg3 = mapFileToSlot(value = rs->arg3); 
+	if (rs->arg3 < MIN_WEAR || rs->arg3 >= MAX_WEAR)
+	  logError('E', "bogus slot",comm, value);
+	break;
+      case 'P':
+	rs->arg1 = real_object(value = rs->arg1);
+	if (rs->arg1 < 0)
+	  logError('P', "object",comm, value);
+	rs->arg3 = real_object(rs->arg3);
+	if (rs->arg3 < 0)
+	  logError('P', "container",comm, rs->arg3);
+	break;
+      case 'D':
+	if (rs->arg1 < 0)
+	  logError('D', "room",comm, rs->arg1);
+	break;
+      case 'B':
+	rs->arg1 = real_object(value = rs->arg1);
+	if (rs->arg1 < 0)
+	  logError('B', "object",comm, value);
+	if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+	  logError('B', "room",comm, rs->arg3);
+	break;
+      case 'H':
+	if (rs->arg1 < MIN_HATE || rs->arg1 >= MAX_HATE) {
+	  logError('H', "hate",comm, rs->arg1);
+	  rs->arg1 = MIN_HATE;
+	}
+	break;
+      case 'F':
+	if (rs->arg1 < MIN_HATE || rs->arg1 >= MAX_HATE) {
+	  logError('F', "fear",comm, rs->arg1);
+	  rs->arg1 = MIN_HATE;
+	}
+	break;
     }
   }
 }
 
+void TBeing::doBoot(const sstring &arg)
+{
+  int z=0;
+  TThing *t, *t2;
+  TMonster *mob;
+  TObj *obj;
+
+  if(arg.word(0)=="zone")
+    z=convertTo<int>(arg.word(1));
+
+  if(!z){
+    sendTo("Usage: boot zone <zone_nr>\n\r");
+    return;
+  }
+
+  sendTo(fmt("Rebooting zone %s (%i) (rooms %i-%i)\n\r") %
+	 zone_table[z].name % z % zone_table[z].bottom % zone_table[z].top);
+
+  sendTo("Reloading zonefile.\n\r");
+  zone_table[z].bootZone(zone_table[z].bottom);
+  sendTo("Renumbering loads (vnum->rnum).\n\r");
+  zone_table[z].renumCmd();
+
+  sendTo("Purging mobs and objects in zone.\n\r");
+  for(int r=zone_table[z].bottom;r<=zone_table[z].top;++r){
+    if(real_roomp(r)){
+      for(t=real_roomp(r)->getStuff();t;t = t2){
+	t2 = t->nextThing;
+	
+	if((obj=dynamic_cast<TObj *>(t))){
+	  if(obj->objVnum() >= zone_table[z].bottom ||
+	     obj->objVnum() <= zone_table[z].top){
+	    delete obj;
+	  }
+	} else if((mob=dynamic_cast<TMonster *>(t))){
+	  if(mob->mobVnum() >= zone_table[z].bottom ||
+	     mob->mobVnum() <= zone_table[z].top){
+	    delete mob;
+	  }
+	}
+      }
+    }
+  }
+
+  sendTo("Boottime resetting zone.\n\r");
+  zone_table[z].resetZone(true);
+}
+
+
+
+
+
+bool zoneData::bootZone(int zone_nr)
+{
+  int tmp;
+  char *check, buf[256];
+  int i1 = 0, i2, i3, i4;;
+  int rc;
+  FILE *fl=fopen((fmt("zonefiles/%i") % zone_nr).c_str(), "r");
+
+  if (!fl) {
+    perror("bootZone");
+    return false;
+  }
+
+  fscanf(fl, " #%d\n", &bottom);
+  check = fread_string(fl);
+  
+  name = check;
+  rc = fscanf(fl, " %d %d %d %d", &i1, &i2, &i3, &i4);
+  if (rc == 4) {
+    top = i1;
+    lifespan = i2;
+    reset_mode = i3;
+    enabled = i4;
+    age = 0;
+  } else { 
+    vlogf(LOG_LOW, fmt("Bad zone format for zone %d (%s)") %
+	  zone_nr % check);
+    return false;
+  }
+
+  cmd.erase(cmd.begin(), cmd.end());
+
+  for (;;) {
+    resetCom rs;
+    
+    fscanf(fl, " ");                
+    fscanf(fl, "%c", &rs.command);
+    
+    if (rs.command == 'S') {
+      cmd.push_back(rs);
+      break;
+    }
+
+    if (rs.command == '*' || gamePort == GAMMA_GAMEPORT) {
+      fgets(buf, 255, fl);        
+      continue;
+    }
+
+
+    int numc = fscanf(fl, " %d %d %d", &tmp, &rs.arg1, &rs.arg2);
+    if (numc != 3)
+      vlogf(LOG_LOW,fmt("command %u ('%c') in %s missing some of first three args [%d : %d %d %d]") % 
+	    cmd.size() %
+	    rs.command %
+	    name %
+	    numc %
+	    (numc >= 1 ? tmp : -99) %
+	    (numc >= 2 ? rs.arg1 : -99) %
+	    (numc >= 3 ? rs.arg2 : -99));
+
+    if(rs.command=='X')
+      rs.arg3 = tmp;
+    else
+      rs.if_flag = tmp;
+      
+    switch (rs.command) {
+      case 'G':
+      case 'P':
+      case 'E':
+	if (!rs.if_flag) {
+	  vlogf(LOG_LOW,fmt("command %u in %s has bogus if_flag") % 
+		cmd.size() %name);
+	  continue;
+	}
+	break;
+      default:
+	break;
+    }
+
+    if (rs.command == 'M' ||
+	rs.command == 'O' ||
+	rs.command == 'B' ||
+	rs.command == 'C' ||
+	rs.command == 'K' ||
+	rs.command == 'E' ||
+	rs.command == 'P' ||
+	(rs.command == 'T' && !rs.if_flag) ||
+	rs.command == 'R' ||
+	rs.command == 'D' ||
+	rs.command == 'L')
+      if ((rc = fscanf(fl, " %d", &rs.arg3)) != 1)
+	vlogf(LOG_LOW,fmt("command %u ('%c') in %s missing arg3 (rc=%d)") % 
+	      cmd.size() %
+	      rs.command %
+	      name % rc);
+
+    if (rs.command == '?')
+      if (fscanf(fl, " %c", &rs.character) != 1)
+	vlogf(LOG_LOW,fmt("command %u ('?') in %s missing character") % 
+	      cmd.size() %name);
+
+    if (rs.command == 'T' &&
+	!rs.if_flag) 
+      if (fscanf(fl, " %d", &rs.arg4) != 1)
+	vlogf(LOG_LOW,fmt("command %u ('T') in %s missing arg4") % 
+	      cmd.size() % name);
+
+    if (rs.command == 'L')
+      if (fscanf(fl, " %d", &rs.arg4) != 1)
+	vlogf(LOG_LOW, fmt("command %u ('L') in %s missing arg4") % 
+	      cmd.size() % name);
+    
+    cmd.push_back(rs);
+
+    fgets(buf, 255, fl);        
+  }
+
+  fclose(fl);
+
+  return true;
+}
+
 void bootZones(void)
 {
-  FILE *fl;
-  int tmp, zon=0;
-  char *check, buf[256];
-  int rc;
-  int i1 = 0, i2, i3, i4;
-  struct dirent *dp;
   DIR *dfd;
+  struct dirent *dp;
+  int zon=0;
   multimap <int, sstring, std::less<int> > files;
   multimap <int, sstring, std::less<int> >::iterator it;
-  
-  
+    
   if(!(dfd=opendir("zonefiles"))){
     vlogf(LOG_BUG, "couldn't open zonefiles directory");
     perror("bootZones");
@@ -1143,137 +1304,13 @@ void bootZones(void)
     files.insert(pair<int,sstring>(convertTo<int>(dp->d_name), dp->d_name));
   }
 
-
   for(it=files.begin();it!=files.end();++it){
-    fl=fopen((fmt("zonefiles/%s") % (*it).second).c_str(), "r");
-    if (!fl) {
-      perror("bootZones");
-      exit(0);
-    }
-
     zoneData zd;
+    zd.bootZone((*it).first);
+    zd.renumCmd();
     zd.zone_nr=zon++;
-
-    fscanf(fl, " #%*d\n");
-    check = fread_string(fl);
-
-    if (*check == '$')
-      break;                        
-
-    zd.name = check;
-    rc = fscanf(fl, " %d %d %d %d", &i1, &i2, &i3, &i4);
-    if (rc == 4) {
-      zd.top = i1;
-      zd.lifespan = i2;
-      zd.reset_mode = i3;
-      zd.enabled = i4;
-      zd.age = 0;
-    } else { 
-      vlogf(LOG_LOW, fmt("Bad zone format for zone %d (%s)") %
-	    zd.zone_nr % check);
-      exit(0);
-    }
-    for (;;) {
-      
-      resetCom rs;
-
-      fscanf(fl, " ");                
-      fscanf(fl, "%c", &rs.command);
-
-      if (rs.command == 'S') {
-        zd.cmd.push_back(rs);
-        break;
-      }
-
-      if (rs.command == '*' || gamePort == GAMMA_GAMEPORT) {
-        fgets(buf, 255, fl);        
-        continue;
-      }
-
-#if 0
-// ZZ
-if (rs.command == 'X' || rs.command == 'Z') {
-fgets(buf, 255, fl);        
-continue;
-}
-#endif
-
-      int numc = fscanf(fl, " %d %d %d", &tmp, &rs.arg1, &rs.arg2);
-      if (numc != 3)
-        vlogf(LOG_LOW,fmt("command %u ('%c') in %s missing some of first three args [%d : %d %d %d]") % 
-               zd.cmd.size() %
-               rs.command %
-               zd.name %
-               numc %
-               (numc >= 1 ? tmp : -99) %
-               (numc >= 2 ? rs.arg1 : -99) %
-               (numc >= 3 ? rs.arg2 : -99));
-
-      if(rs.command=='X')
-	rs.arg3 = tmp;
-      else
-	rs.if_flag = tmp;
-      
-      switch (rs.command) {
-        case 'G':
-        case 'P':
-        case 'E':
-          if (!rs.if_flag) {
-            vlogf(LOG_LOW,fmt("command %u in %s has bogus if_flag") % 
-               zd.cmd.size() %zd.name);
-            continue;
-          }
-          break;
-        default:
-          break;
-      }
-
-      if (rs.command == 'M' ||
-          rs.command == 'O' ||
-          rs.command == 'B' ||
-          rs.command == 'C' ||
-          rs.command == 'K' ||
-          rs.command == 'E' ||
-          rs.command == 'P' ||
-          (rs.command == 'T' && !rs.if_flag) ||
-          rs.command == 'R' ||
-          rs.command == 'D' ||
-          rs.command == 'L')
-        if ((rc = fscanf(fl, " %d", &rs.arg3)) != 1)
-          vlogf(LOG_LOW,fmt("command %u ('%c') in %s missing arg3 (rc=%d)") % 
-               zd.cmd.size() %
-               rs.command %
-               zd.name % rc);
-
-      if (rs.command == '?')
-        if (fscanf(fl, " %c", &rs.character) != 1)
-          vlogf(LOG_LOW,fmt("command %u ('?') in %s missing character") % 
-               zd.cmd.size() %zd.name);
-
-      if (rs.command == 'T' &&
-          !rs.if_flag) 
-        if (fscanf(fl, " %d", &rs.arg4) != 1)
-          vlogf(LOG_LOW,fmt("command %u ('T') in %s missing arg4") % 
-               zd.cmd.size() % zd.name);
-
-      if (rs.command == 'L')
-        if (fscanf(fl, " %d", &rs.arg4) != 1)
-          vlogf(LOG_LOW, fmt("command %u ('L') in %s missing arg4") % 
-                zd.cmd.size() % zd.name);
-
-      zd.cmd.push_back(rs);
-
-      fgets(buf, 255, fl);        
-    }
     zone_table.push_back(zd);
-
-    fclose(fl);
   }
-
-  // the only way out of the above loop is when check = "$"
-  // delete this final line as not needed.
-  delete [] check;
-
 }
 
 TMonster *read_mobile(int nr, readFileTypeT type)
@@ -2866,6 +2903,7 @@ zoneData::zoneData() :
   zone_nr(0),
   lifespan(0),
   age(0),
+  bottom(0),
   top(0),
   reset_mode(0),
   enabled(false),
@@ -2882,6 +2920,7 @@ zoneData::zoneData(const zoneData &t) :
   zone_nr(t.zone_nr),
   lifespan(t.lifespan),
   age(t.age),
+  bottom(t.bottom),
   top(t.top),
   reset_mode(t.reset_mode),
   enabled(t.enabled),
@@ -2911,6 +2950,7 @@ zoneData & zoneData::operator= (const zoneData &t)
   zone_nr = t.zone_nr;
   lifespan = t.lifespan;
   age = t.age;
+  bottom = t.bottom;
   top = t.top;
   reset_mode = t.reset_mode;
   enabled = t.enabled;

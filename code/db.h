@@ -94,6 +94,7 @@ class zoneData
     int zone_nr;            // number of this zone
     int lifespan;           // how long between resets (minutes)  
     int age;                // current age of this zone (minutes) 
+    int bottom;
     int top;                // upper limit for rooms in this zone 
     int reset_mode;         // conditions for reset (see below)   
     bool enabled;           // whether zone is enabled
@@ -110,6 +111,8 @@ class zoneData
     void nukeMobs(void);
     void sendTo(sstring, int exclude_room=-1);
     bool doGenericReset(void);
+    bool bootZone(int);
+    void renumCmd(void);
 
     vector<resetCom>cmd;          // command table for reset
   

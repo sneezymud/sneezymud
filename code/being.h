@@ -1445,6 +1445,7 @@ class TBeing : public TThing {
     int doGrapple(const char *, TBeing *);
     int doRescue(const char *);
     void doReset(sstring);
+    void doBoot(const sstring &);
     void doResize(const char *);
     int doDeathstroke(const char *, TBeing *);
     void doBandage(const sstring &);

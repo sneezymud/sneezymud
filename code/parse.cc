@@ -338,6 +338,9 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doReset(stringarg);
 	  addToLifeforce(1);
           break;
+	case CMD_BOOT:
+	  doBoot(stringarg);
+	  break;
         case CMD_RELEASE:
 	  if (!hasWizPower(POWER_WIZARD)) {
 	    sendTo("Prototype command.  You need to be a developer to use this.\n\r");
@@ -2741,6 +2744,7 @@ void buildCommandArray(void)
   commandArray[CMD_FORAGE] = new commandInfo("forage", POSITION_CRAWLING, 0);
   commandArray[CMD_APPLY_HERBS] = new commandInfo("apply-herbs", POSITION_CRAWLING, 0);
   commandArray[CMD_RESET] = new commandInfo("reset", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_BOOT] = new commandInfo("boot", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_STOMP] = new commandInfo("stomp", POSITION_FIGHTING, 0);
   commandArray[CMD_EMAIL] = new commandInfo("email", POSITION_DEAD, 0);
   commandArray[CMD_CLIMB] = new commandInfo("climb", POSITION_STANDING, 0);
