@@ -856,15 +856,11 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
 
     if (!vict->isPc()) {
       // log if it's an owned shopkeeper
-      if(vict->spec &&
-	 !strcmp(mob_specials[GET_MOB_SPE_INDEX(vict->spec)].name, 
-		 "shop keeper")){
+      if(vict->spec && dynamic_cast<TMonster *>(vict)->isShopkeeper()){
 	unsigned int shop_nr;
 	for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (vict)->number); shop_nr++);
 	
-	if(shop_index[shop_nr].isOwned()){
-	  shoplog(shop_nr, this, dynamic_cast<TMonster *>(vict), "talens", amount, "giving");
-	}
+	shoplog(shop_nr, this, dynamic_cast<TMonster *>(vict), "talens", amount, "giving");
       }
       
       // check reponses
