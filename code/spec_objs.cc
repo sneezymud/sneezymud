@@ -63,7 +63,7 @@
 #include "stdsneezy.h"
 #include "disease.h"
 
-//CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
+// CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye
 // returns DELETE_ITEM if t2 goes bye bye
 int TObj::checkSpec(TBeing *t, cmdTypeT cmd, const char *arg, TThing *t2)
@@ -3914,19 +3914,17 @@ int healingHead ( Tbeing *vict, cmdTypeT cmd, const char arg, TObj *0, TObj * ) 
 
   for (int i = 1; i < 5; i++) {
   
-    ch->setHit(ch0>getHit() + 2);
-
+    ch->setHit(ch->getHit() + 2);
+    if (ch-> ! hasClass(CLASS_SHAMAN)) 
+      ch->setHit(ch->getHit()-2);
   }
 
-  o->destroy();
-
-  }
-  
-    
-    
-  }
-    
+  if (cmd == CMD_GENERIC_PULSE) 
+    return DELETE_THIS;
+   
 }
+
+
 int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch;
