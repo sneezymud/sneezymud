@@ -4967,28 +4967,31 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
     tmp_perc = 0;
   }
 
-  if(EXP_DEBUG)
-    vlogf(LOG_COMBAT, fmt("gainExpPerHit: exp_shares=%f, tmp_exp=%f, tmp_perc=%f") %
-	  exp_shares % tmp_exp % tmp_perc);
-
+  if(EXP_DEBUG){
+    vlogf(LOG_COMBAT, fmt("gainExpPerHit: exp_shares=%f, tmp_exp=%f") %
+	  exp_shares % tmp_exp);
+    vlogf(LOG_COMBAT, fmt("gainExpPerHit: percent=%.15f, tmp_perc=%.15f") %
+	  percent % tmp_perc);
+  }
     
   // Gain exp for master if in room with ch
   if (sameRoom(*real_master) && inGroup(*real_master)) {
     exp_received = (tmp_exp * real_master->getExpShare());
-    exp_received *= (FRACT(real_master, v) / 100);
+    exp_received *= (FRACT(real_master, v) / 100.0);
     gain_exp(real_master, exp_received, dam*10000/v->hitLimit());
-    if(EXP_DEBUG)
-      vlogf(LOG_COMBAT, fmt("gainExpPerHit: %s gained %f exp") %
+    if(EXP_DEBUG){
+      vlogf(LOG_COMBAT, fmt("gainExpPerHit: master %s gained %f exp") %
 	    real_master->getName() % exp_received);
+    }
   }
   // Gain exp for followers if in room with ch
   for (f = real_master->followers; f; f = f->next) {
     if (inGroup(*f->follower) && sameRoom(*f->follower)) {
       exp_received = (tmp_exp * f->follower->getExpShare());
-      exp_received *= (FRACT(f->follower, v) / 100);
+      exp_received *= (FRACT(f->follower, v) / 100.0);
       gain_exp(f->follower, exp_received, dam*10000/v->hitLimit());
       if(EXP_DEBUG)
-	vlogf(LOG_COMBAT, fmt("gainExpPerHit: %s gained %f exp") %
+	vlogf(LOG_COMBAT, fmt("gainExpPerHit: follower %s gained %f exp") %
 	      f->follower->getName() % exp_received);
     }
   }
