@@ -324,7 +324,11 @@ int disease_cold(TBeing *victim, int message, affectedData *)
 int disease_numbed(TBeing *victim, int message, affectedData *af)
 {
   wearSlotT slot = wearSlotT(af->level);
-  mud_assert(slot >= MIN_WEAR && slot < MAX_WEAR, "bad slot");
+
+  if(slot < MIN_WEAR || slot >= MAX_WEAR){
+    vlogf(LOG_BUG, fmt("disease_numbed called with bad slot: %i") % slot);
+    return FALSE;
+  }
 
   switch(message) {
     case DISEASE_BEGUN:
@@ -353,7 +357,13 @@ int disease_bleeding(TBeing *victim, int message, affectedData *af)
   char buf[256];
   // defines the limb that is bleeding
   wearSlotT i = wearSlotT(af->level);
-  mud_assert(i >= MIN_WEAR && i < MAX_WEAR, "bad slot");
+
+
+  if(i < MIN_WEAR || i >= MAX_WEAR){
+    vlogf(LOG_BUG, fmt("disease_bleeding called with bad slot: %i") % i);
+    return FALSE;
+  }
+
 
   if (victim->isPc() && !victim->desc)
     return FALSE;
@@ -424,7 +434,12 @@ int disease_infection(TBeing *victim, int message, affectedData * af)
 {
   char buf[256];
   wearSlotT slot = wearSlotT(af->level);
-  mud_assert(slot >= MIN_WEAR && slot < MAX_WEAR, "bad slot");
+
+  if(slot < MIN_WEAR || slot >= MAX_WEAR){
+    vlogf(LOG_BUG, fmt("disease_infection called with bad slot: %i") % slot);
+    return FALSE;
+  }
+
 
   if (victim->isPc() && !victim->desc)
     return FALSE;
@@ -961,7 +976,11 @@ void TBeing::bodySpread(int chance_to_spread, affectedData * af)
   wearSlotT part = wearSlotT(af->level);
 
   // note, taht we allow WEAR_NOWHERE since it's the starting point
-  mud_assert(part >= WEAR_NOWHERE && part < MAX_WEAR, "bad slot");
+  if(part < WEAR_NOWHERE || part >= MAX_WEAR){
+    vlogf(LOG_BUG, fmt("bodySpread called with bad slot: %i") % part);
+    return;
+  }
+
 
   if (::number(1, 50000) > chance_to_spread)
     return;
@@ -1147,8 +1166,12 @@ int disease_leprosy(TBeing *victim, int message, affectedData * af)
 {
   affectedData vaf;
   wearSlotT slot = wearSlotT(af->level);
-  // we sometimes contract "generally", so don't do this
-  //  mud_assert(slot >= MIN_WEAR && slot < MAX_WEAR, "bad slot");
+
+  if(slot < WEAR_NOWHERE || slot >= MAX_WEAR){
+    vlogf(LOG_BUG, fmt("disease_leprosy called with bad slot: %i") % slot);
+    return FALSE;
+  }
+
 
   switch (message) {
     case DISEASE_PULSE:
@@ -1192,8 +1215,12 @@ int disease_plague(TBeing *victim, int message, affectedData * af)
   int rc;
   affectedData vaf;
   wearSlotT slot = wearSlotT(af->level);
-  // we allow WEAR_NOWHERE since this represents a "generic" condition
-  mud_assert(slot >= WEAR_NOWHERE && slot < MAX_WEAR, "bad slot");
+
+  if(slot < WEAR_NOWHERE || slot >= MAX_WEAR){
+    vlogf(LOG_BUG, fmt("disease_plague called with bad slot: %i") % slot);
+    return FALSE;
+  }
+
 
   switch (message) {
     case DISEASE_PULSE:
