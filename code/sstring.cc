@@ -11,7 +11,7 @@ const sstring sstring::comify() const
 
   tString=fmt("%.0f") % convertTo<float>(*this);
   strCount = tString.length();
-  tString=*this;
+  tString="";
 
   for (; charIndex < strCount; charIndex++) {
     // put commas every 3rd char EXCEPT if next char is '-'
