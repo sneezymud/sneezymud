@@ -1939,6 +1939,7 @@ class TBeing : public TThing {
     void doBruttest(const char *);
     int doMove(cmdTypeT);
     int doMove(dirTypeT);
+    int doSay(const char *fmt, ...);
     int doSay(const sstring &);
     virtual void doForce(const char *);
     void doCommune(const char *);

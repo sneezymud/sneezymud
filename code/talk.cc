@@ -127,6 +127,20 @@ static sstring garble(const char *arg, int chance)
   return (temp);
 }
 
+// uses printf style arguments
+int TBeing::doSay(const char *fmt, ...)
+{
+  va_list ap;
+  char buf[MAX_STRING_LENGTH];
+
+  va_start(ap, fmt);
+  vsnprintf(buf, MAX_STRING_LENGTH, fmt, ap);
+
+  sstring sbuf=buf;
+
+  return doSay(sbuf);
+}
+
 
 // may return DELETE_THIS
 int TBeing::doSay(const sstring &arg)
