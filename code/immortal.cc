@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: immortal.cc,v $
+// Revision 1.10  1999/10/07 17:05:26  batopr
+// typo
+//
 // Revision 1.9  1999/10/07 17:04:20  batopr
 // typo fix
 //
@@ -4064,13 +4067,13 @@ void TBeing::doInfo(const char *arg)
       int net_gold_dump = getNetGold(GOLD_DUMP);
       int net_gold_repair = getNetGold(GOLD_REPAIR);
       int net_gold_hospital = getNetGold(GOLD_HOSPITAL);
-      int net_gold_shop_sym = getNetGold(GOLD_SHOP_SYM);
-      int net_gold_shop_weap = getNetGold(GOLD_SHOP_WEAP);
-      int net_gold_shop_arm = getNetGold(GOLD_SHOP_ARM);
+      int net_gold_shop_sym = getNetGold(GOLD_SHOP_SYMBOL);
+      int net_gold_shop_weap = getNetGold(GOLD_SHOP_WEAPON);
+      int net_gold_shop_arm = getNetGold(GOLD_SHOP_ARMOR);
       int net_gold_shop_pet = getNetGold(GOLD_SHOP_PET);
-      int net_gold_shop_comp = getNetGold(GOLD_SHOP_COMP);
+      int net_gold_shop_comp = getNetGold(GOLD_SHOP_COMPONENTS);
       int net_gold_shop_food = getNetGold(GOLD_SHOP_FOOD);
-      int net_gold_shop_resp = getNetGold(GOLD_SHOP_RESP);
+      int net_gold_shop_resp = getNetGold(GOLD_SHOP_RESPONSES);
       int net_gold_gamble = getNetGold(GOLD_GAMBLE);
       int net_gold_tithe = getNetGold(GOLD_TITHE);
       int net_gold_allshops = getNetGoldShops();
