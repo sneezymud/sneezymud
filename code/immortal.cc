@@ -47,7 +47,7 @@ bool TestCode3 = true;       // unfinished code
   // code3 in use, hiding new spell
 bool TestCode4 = true;       // unfinished code 
   // code4 in use, hiding new spell
-bool TestCode5 = true;
+bool TestCode5 = false;
   // code5 is to disable/enable certain aspects of the new faction code - dash 6/24/01
 bool TestCode6 = false;
   // not in use
