@@ -949,6 +949,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDShamanSkunk *) cd)->skTurnSkill;
     case SPELL_CARDIAC_STRESS:
       return &((CDShamanSkunk *) cd)->skCardiacStress;
+    case SPELL_CLEANSE: 
+      return &((CDShamanSkunk *) cd)->skCleanse;
 
       // frog abilities--------------------------
 

@@ -2022,6 +2022,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       case SPELL_CLARITY:
         clarity(this, ch);
         break;
+      case SPELL_CLEANSE:
+        cleanse(this, ch);
+        break;
       case SPELL_LICH_TOUCH:
         rc = lichTouch(this, ch);
         break;

@@ -1136,6 +1136,18 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
         }
       }
       return spell_num;
+    case SPELL_CLEANSE:
+      if (hasClass(CLASS_SHAMAN)) {
+        if (!has_class) {
+          spell_num = SPELL_CLEANSE;
+        }
+        if ((num2 = getSkillValue(SPELL_CLEANSE)) > num) {
+          spell_num = SPELL_CLEANSE;
+          num = num2;
+          has_class = TRUE;
+        }
+      }
+      return spell_num;
     case SPELL_CURE_POISON:
       if (hasClass(CLASS_CLERIC)) {
         if (!has_class) {

@@ -1250,6 +1250,14 @@ void buildComponentArray()
     "$n applies $p to $mself.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_CLEANSE,
+    "You wash $N's private area with $p! There HAS to be a better way!",
+    "ACK!! $n washes $N's privates with $p! YUCKO!!",
+    "$n washes your privates with $p. ACK!!!",                       
+    "You wash *cough* yourself with $p. Sheesh! How about some damn privacy!",
+    "$n washes $mself in a private area with $p for a DAMN LONG TIME!",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_FLARE,
     "",                       
     "",

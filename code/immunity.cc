@@ -501,6 +501,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_CURE_POISON:
     case SPELL_SALVE_DEIKHAN:
     case SPELL_SALVE:
+    case SPELL_CLEANSE:
     case SPELL_RESTORE_LIMB:
     case SPELL_KNIT_BONE:
     case SPELL_CURE_PARALYSIS:

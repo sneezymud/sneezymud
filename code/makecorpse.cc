@@ -603,6 +603,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SPELL_EXPEL:
       case SPELL_CURE_DISEASE:
       case SPELL_CURSE:
+      case SPELL_CLEANSE:
       case SPELL_REMOVE_CURSE:
       case SPELL_CURE_POISON:
       case SPELL_HEAL_CRITICAL:

@@ -11,6 +11,7 @@ public:
     CSkill skDeathMist;
     CSkill skBloodBoil;
     CSkill skCardiacStress;
+    CSkill skCleanse;
     CSkill skLichTouch;
 
     CDShamanSkunk()
@@ -19,6 +20,7 @@ public:
       skDeathMist(),
       skBloodBoil(),
       skCardiacStress(),
+      skCleanse(),
       skLichTouch() {
     }
     CDShamanSkunk(const CDShamanSkunk &a)
@@ -27,6 +29,7 @@ public:
       skDeathMist(a.skDeathMist),
       skBloodBoil(a.skBloodBoil),
       skCardiacStress(a.skCardiacStress),
+      skCleanse(a.skCleanse),
       skLichTouch(a.skLichTouch) {
     }
     CDShamanSkunk & operator=(const CDShamanSkunk &a) {
@@ -36,6 +39,7 @@ public:
       skDeathMist = a.skDeathMist;
       skBloodBoil = a.skBloodBoil;
       skCardiacStress = a.skCardiacStress;
+      skCleanse = a.skCleanse;
       skLichTouch = a.skLichTouch;
       return *this;
     }
@@ -52,6 +56,11 @@ private:
     int castLichTouch(TBeing *, TBeing *);
     int lichTouch(TBeing *, TBeing *, int, byte, int);
     int lichTouch(TBeing *, TBeing *, TMagicItem *);
+
+    int cleanse(TBeing *, TBeing *);
+    int castCleanse(TBeing *, TBeing *);
+    int cleanse(TBeing *, TBeing *, int, byte, spellNumT);
+    int cleanse(TBeing *, TBeing *, TMagicItem *);
 
     int cardiacStress(TBeing *, TBeing *);
     int castCardiacStress(TBeing *, TBeing *);

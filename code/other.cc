@@ -2781,6 +2781,10 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_CURE_POISON_DEIKHAN:
       curePoison(caster,victim,obj, spell);
       break;
+    case SPELL_CLEANSE:
+      //      cleanse(caster,victim,obj, spell);
+      cleanse(caster,victim,obj);
+      break;
     case SPELL_CURE_BLINDNESS:
       cureBlindness(caster,victim,obj);
       break;

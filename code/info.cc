@@ -1064,6 +1064,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_CURSE:
       case SPELL_REMOVE_CURSE:
       case SPELL_CURE_POISON:
+      case SPELL_CLEANSE:
       case SPELL_HEAL_CRITICAL:
       case SPELL_SALVE:
       case SPELL_REFRESH:

@@ -448,6 +448,7 @@ enum spellNumT {
      SPELL_VAMPIRIC_TOUCH,
      SPELL_LIFE_LEECH,
      SPELL_CHASE_SPIRIT,
+     SPELL_CLEANSE,
      SKILL_TURN,
   
      // end of shaman

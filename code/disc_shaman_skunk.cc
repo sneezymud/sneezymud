@@ -99,7 +99,97 @@ int ret,level;
   }
   return TRUE;
 }
-// END DEADTH MIST
+// END DEATH MIST
+
+int cleanse(TBeing *caster, TBeing * victim, int level, byte learn, spellNumT spell)
+{
+  char buf[256];
+  affectedData aff;
+
+  if (spell==SKILL_WOHLIN || bSuccess(caster, learn, caster->getPerc(), spell)) {
+    if (victim->isAffected(AFF_SYPHILIS) || victim->affectedBySpell(SPELL_DEATH_MIST) || 
+	victim->hasDisease(DISEASE_SYPHILIS)) {
+      sprintf(buf, "You succeed in curing the syphilis in %s body.", (caster == victim) ? "your" : "$N's");
+      act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+      if (caster != victim)
+        act("With a sigh of relief you feel that your syphilis has been removed.", FALSE, caster, NULL, victim, TO_VICT);
+      act("The syphilis in $N's body has been removed!", FALSE, caster, NULL, victim, TO_NOTVICT);
+      act("The syphilis in your body has been removed! What a relief!", FALSE, victim, NULL, NULL, TO_CHAR);
+      victim->affectFrom(SPELL_DEATH_MIST);
+      victim->diseaseFrom(DISEASE_SYPHILIS);
+      caster->reconcileHelp(victim,discArray[spell]->alignMod);
+    } else {
+      if(spell==SKILL_WOHLIN)
+	return FALSE;
+      act("Can't do this...noone here has syphilis.", FALSE, caster, NULL, NULL, TO_CHAR);
+      caster->nothingHappens(SILENT_YES);
+      return FALSE;
+    }
+    return SPELL_SUCCESS;
+  } else {
+    switch (critFail(caster, spell)) {
+      case CRIT_F_HITOTHER:
+      case CRIT_F_HITSELF:
+        CF(spell);
+        aff.type = SPELL_DEATH_MIST;
+        aff.level = level;
+        aff.duration = (aff.level << 1) * UPDATES_PER_MUDHOUR;
+        aff.modifier = -10;
+        aff.location = APPLY_STR;
+        aff.bitvector = AFF_SYPHILIS;
+        caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+        return SPELL_CRIT_FAIL;
+      default:
+        break;
+    }
+    return SPELL_FAIL;
+  }
+}
+
+int cleanse(TBeing *caster, TBeing *victim)
+{
+  if (!bPassShamanChecks(caster, SPELL_CLEANSE, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_CLEANSE]->lag;
+  taskDiffT diff = discArray[SPELL_CLEANSE]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_CLEANSE, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+
+  return TRUE; 
+}
+
+int castCleanse(TBeing *caster, TBeing *victim)
+{
+  int ret,level;
+
+  level = caster->getSkillLevel(SPELL_CLEANSE);
+  int bKnown = caster->getSkillValue(SPELL_CLEANSE);
+
+  if ((ret=cleanse(caster,victim,level,bKnown,SPELL_CLEANSE)) == SPELL_SUCCESS) {
+  } else {
+    caster->nothingHappens();
+  }
+  return TRUE;
+}
+
+int cleanse(TBeing *caster, TBeing *victim, TMagicItem *tMagItem)
+{
+  int tRc = FALSE; 
+  int tReturn;
+
+  //  tReturn = cleanse(caster, victim, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), 0);
+  tReturn = cleanse(caster, victim, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), SPELL_CLEANSE);
+
+  if (IS_SET(tReturn, VICTIM_DEAD))
+    ADD_DELETE(tRc, DELETE_VICT);
+
+  if (IS_SET(tReturn, CASTER_DEAD))
+    ADD_DELETE(tRc, DELETE_THIS);
+
+  return tRc;
+}
+
 // LICH TOUCH
 
 int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)

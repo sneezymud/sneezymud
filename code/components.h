@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.34  2001/10/16 11:28:31  jesus
+// cleanse spell for tye removal of syphilis
+//
 // Revision 5.33  2001/10/03 22:41:32  jesus
 // new shaman spell chase spirits
 // mock of dispel magic
@@ -266,6 +269,7 @@ const int COMP_CONTROL_UNDEAD     =31339;
 const int COMP_BLOOD_BOIL         =31340;
 const int COMP_FLATULENCE         =31341;
 const int COMP_CHASE_SPIRIT       =31345;
+const int COMP_CLEANSE            =31348;
 ////////////////////
 // BREW COMPONENTS
 ////////////////////

@@ -1301,6 +1301,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_RAZE: // shaman
     case SPELL_ANIMATE:
     case SPELL_BIND:
+    case SPELL_CLEANSE:
     case SPELL_TELEPORT:
     case SPELL_PROTECTION_FROM_ELEMENTS:
     case SPELL_STUNNING_ARROW:
@@ -2199,6 +2200,9 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         break;
       case SPELL_HYPNOSIS:
         castHypnosis(this, victim);
+        break;
+      case SPELL_CLEANSE:
+        castCleanse(this, victim);
         break;
      case SPELL_CHRISM:
         rc = castChrism(this, orgArg);
