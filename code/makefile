@@ -3255,6 +3255,8 @@ objs/cmd_who.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/cmd_who.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/cmd_who.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/cmd_who.o: statistics.h games.h game_crazyeights.h game_drawpoker.h
+objs/cmd_who.o: database.h /usr/include/postgresql/libpq-fe.h
+objs/cmd_who.o: /usr/include/postgresql/postgres_ext.h
 objs/cmd_zonefile.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_zonefile.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_zonefile.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -4279,6 +4281,7 @@ objs/disc_aegis.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/disc_aegis.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/disc_aegis.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/disc_aegis.o: materials.h combat.h disc_aegis.h obj_magic_item.h
+objs/disc_aegis.o: obj_player_corpse.h obj_base_corpse.h obj_base_container.h
 objs/disc_afflictions.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_afflictions.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_afflictions.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -7028,24 +7031,25 @@ objs/discipline.o: materials.h obj_component.h combat.h disc_mage.h
 objs/discipline.o: disc_cleric.h disc_physical.h disc_smythe.h
 objs/discipline.o: disc_deikhan_fight.h disc_deikhan_aegis.h
 objs/discipline.o: disc_deikhan_cures.h disc_deikhan_wrath.h disc_defense.h
-objs/discipline.o: disc_mounted.h disc_monk.h disc_meditation.h
-objs/discipline.o: disc_leverage.h disc_mindbody.h disc_fattacks.h
-objs/discipline.o: disc_plants.h disc_ranger_fight.h disc_shaman_alchemy.h
-objs/discipline.o: disc_shaman_frog.h disc_shaman_control.h
-objs/discipline.o: disc_shaman_spider.h disc_shaman_skunk.h
-objs/discipline.o: disc_shaman_armadillo.h disc_shaman_healing.h
-objs/discipline.o: disc_ritualism.h disc_thief.h disc_thief_fight.h
-objs/discipline.o: disc_poisons.h disc_traps.h disc_stealth.h disc_air.h
-objs/discipline.o: disc_alchemy.h disc_earth.h disc_fire.h disc_sorcery.h
-objs/discipline.o: disc_spirit.h disc_water.h disc_wrath.h disc_shaman.h
-objs/discipline.o: disc_aegis.h disc_afflictions.h disc_cures.h
-objs/discipline.o: disc_hand_of_god.h disc_ranger.h disc_deikhan.h
-objs/discipline.o: disc_looting.h disc_murder.h disc_hth.h disc_warrior.h
-objs/discipline.o: disc_brawling.h disc_adventuring.h disc_combat.h
-objs/discipline.o: disc_wizardry.h disc_lore.h disc_theology.h disc_faith.h
-objs/discipline.o: disc_slash.h disc_blunt.h disc_pierce.h disc_ranged.h
-objs/discipline.o: disc_barehand.h disc_survival.h disc_animal.h
-objs/discipline.o: disc_nature.h disc_psionics.h spelltask.h obj_symbol.h
+objs/discipline.o: disc_mounted.h disc_monk.h disc_iron_body.h
+objs/discipline.o: disc_meditation.h disc_leverage.h disc_mindbody.h
+objs/discipline.o: disc_fattacks.h disc_plants.h disc_ranger_fight.h
+objs/discipline.o: disc_shaman_alchemy.h disc_shaman_frog.h
+objs/discipline.o: disc_shaman_control.h disc_shaman_spider.h
+objs/discipline.o: disc_shaman_skunk.h disc_shaman_armadillo.h
+objs/discipline.o: disc_shaman_healing.h disc_ritualism.h disc_thief.h
+objs/discipline.o: disc_thief_fight.h disc_poisons.h disc_traps.h
+objs/discipline.o: disc_stealth.h disc_air.h disc_alchemy.h disc_earth.h
+objs/discipline.o: disc_fire.h disc_sorcery.h disc_spirit.h disc_water.h
+objs/discipline.o: disc_wrath.h disc_shaman.h disc_aegis.h disc_afflictions.h
+objs/discipline.o: disc_cures.h disc_hand_of_god.h disc_ranger.h
+objs/discipline.o: disc_deikhan.h disc_looting.h disc_murder.h disc_hth.h
+objs/discipline.o: disc_warrior.h disc_brawling.h disc_adventuring.h
+objs/discipline.o: disc_combat.h disc_wizardry.h disc_lore.h disc_theology.h
+objs/discipline.o: disc_faith.h disc_slash.h disc_blunt.h disc_pierce.h
+objs/discipline.o: disc_ranged.h disc_barehand.h disc_survival.h
+objs/discipline.o: disc_animal.h disc_nature.h disc_psionics.h spelltask.h
+objs/discipline.o: obj_symbol.h
 objs/disease.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disease.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disease.o: /usr/include/gnu/stubs.h
@@ -8669,7 +8673,9 @@ objs/mail.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
 objs/mail.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/mail.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/mail.o: being.h person.h monster.h account.h extern.h handler.h
-objs/mail.o: obj_money.h rent.h spec_mobs.h materials.h mail.h
+objs/mail.o: obj_money.h rent.h spec_mobs.h materials.h mail.h database.h
+objs/mail.o: /usr/include/postgresql/libpq-fe.h
+objs/mail.o: /usr/include/postgresql/postgres_ext.h
 objs/makecorpse.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/makecorpse.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/makecorpse.o: /usr/include/gnu/stubs.h
@@ -12932,7 +12938,7 @@ objs/offense.o: games.h game_crazyeights.h game_drawpoker.h combat.h
 objs/offense.o: obj_spellbag.h obj_expandable_container.h
 objs/offense.o: obj_open_container.h obj_base_container.h obj_base_weapon.h
 objs/offense.o: obj_gun.h obj_general_weapon.h obj_base_cup.h
-objs/offense.o: obj_base_clothing.h
+objs/offense.o: obj_base_clothing.h obj_bag.h
 objs/oldlimbs.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/oldlimbs.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/oldlimbs.o: /usr/include/gnu/stubs.h
@@ -14160,22 +14166,22 @@ objs/skills.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/skills.o: disc_mage.h disc_cleric.h disc_physical.h disc_smythe.h
 objs/skills.o: disc_deikhan_fight.h disc_deikhan_aegis.h disc_deikhan_cures.h
 objs/skills.o: disc_deikhan_wrath.h disc_defense.h disc_mounted.h disc_monk.h
-objs/skills.o: disc_meditation.h disc_leverage.h disc_mindbody.h
-objs/skills.o: disc_fattacks.h disc_plants.h disc_ranger_fight.h
-objs/skills.o: disc_shaman_frog.h disc_shaman_healing.h disc_shaman_alchemy.h
-objs/skills.o: disc_shaman_control.h disc_shaman_spider.h disc_shaman_skunk.h
-objs/skills.o: disc_ritualism.h disc_thief.h disc_thief_fight.h
-objs/skills.o: disc_poisons.h disc_traps.h disc_stealth.h disc_air.h
-objs/skills.o: disc_alchemy.h disc_earth.h disc_fire.h disc_sorcery.h
-objs/skills.o: disc_spirit.h disc_water.h disc_wrath.h disc_aegis.h
-objs/skills.o: disc_shaman.h disc_afflictions.h disc_cures.h
-objs/skills.o: disc_hand_of_god.h disc_deikhan.h disc_ranger.h disc_looting.h
-objs/skills.o: disc_murder.h disc_hth.h disc_combat.h disc_adventuring.h
-objs/skills.o: disc_wizardry.h disc_lore.h disc_theology.h disc_faith.h
-objs/skills.o: disc_slash.h disc_blunt.h disc_pierce.h disc_ranged.h
-objs/skills.o: disc_barehand.h disc_brawling.h disc_warrior.h disc_survival.h
-objs/skills.o: disc_animal.h disc_shaman_armadillo.h disc_nature.h
-objs/skills.o: disc_psionics.h
+objs/skills.o: disc_iron_body.h disc_meditation.h disc_leverage.h
+objs/skills.o: disc_mindbody.h disc_fattacks.h disc_plants.h
+objs/skills.o: disc_ranger_fight.h disc_shaman_frog.h disc_shaman_healing.h
+objs/skills.o: disc_shaman_alchemy.h disc_shaman_control.h
+objs/skills.o: disc_shaman_spider.h disc_shaman_skunk.h disc_ritualism.h
+objs/skills.o: disc_thief.h disc_thief_fight.h disc_poisons.h disc_traps.h
+objs/skills.o: disc_stealth.h disc_air.h disc_alchemy.h disc_earth.h
+objs/skills.o: disc_fire.h disc_sorcery.h disc_spirit.h disc_water.h
+objs/skills.o: disc_wrath.h disc_aegis.h disc_shaman.h disc_afflictions.h
+objs/skills.o: disc_cures.h disc_hand_of_god.h disc_deikhan.h disc_ranger.h
+objs/skills.o: disc_looting.h disc_murder.h disc_hth.h disc_combat.h
+objs/skills.o: disc_adventuring.h disc_wizardry.h disc_lore.h disc_theology.h
+objs/skills.o: disc_faith.h disc_slash.h disc_blunt.h disc_pierce.h
+objs/skills.o: disc_ranged.h disc_barehand.h disc_brawling.h disc_warrior.h
+objs/skills.o: disc_survival.h disc_animal.h disc_shaman_armadillo.h
+objs/skills.o: disc_nature.h disc_psionics.h
 objs/socket.o: /usr/include/g++-3/csignal /usr/include/signal.h
 objs/socket.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/socket.o: /usr/include/gnu/stubs.h /usr/include/bits/sigset.h
@@ -14683,6 +14689,71 @@ objs/spec_mobs_goring.o: thing.h room.h obj.h spec_objs.h connect.h
 objs/spec_mobs_goring.o: obj_drug.h charfile.h being.h person.h monster.h
 objs/spec_mobs_goring.o: account.h extern.h handler.h obj_money.h rent.h
 objs/spec_mobs_goring.o: spec_mobs.h materials.h
+objs/spec_mobs_money_train.o: stdsneezy.h /usr/include/g++-3/cstdio
+objs/spec_mobs_money_train.o: /usr/include/stdio.h /usr/include/features.h
+objs/spec_mobs_money_train.o: /usr/include/sys/cdefs.h
+objs/spec_mobs_money_train.o: /usr/include/gnu/stubs.h
+objs/spec_mobs_money_train.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/spec_mobs_money_train.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/spec_mobs_money_train.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/spec_mobs_money_train.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/spec_mobs_money_train.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/spec_mobs_money_train.o: /usr/include/bits/stdio_lim.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/cstdlib
+objs/spec_mobs_money_train.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/spec_mobs_money_train.o: /usr/include/time.h /usr/include/bits/time.h
+objs/spec_mobs_money_train.o: /usr/include/sys/types.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/spec_mobs_money_train.o: /usr/include/endian.h
+objs/spec_mobs_money_train.o: /usr/include/bits/endian.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/cassert
+objs/spec_mobs_money_train.o: /usr/include/assert.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/cstring
+objs/spec_mobs_money_train.o: /usr/include/string.h /usr/include/g++-3/cerrno
+objs/spec_mobs_money_train.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/spec_mobs_money_train.o: /usr/include/linux/errno.h
+objs/spec_mobs_money_train.o: /usr/include/asm/errno.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/string
+objs/spec_mobs_money_train.o: /usr/include/g++-3/std/bastring.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/cstddef
+objs/spec_mobs_money_train.o: /usr/include/g++-3/std/straits.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/alloc.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_config.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_alloc.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/iostream.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/streambuf.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/iterator
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_relops.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_iterator.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/std/bastring.cc
+objs/spec_mobs_money_train.o: /usr/include/g++-3/vector
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_algobase.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_pair.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/type_traits.h
+objs/spec_mobs_money_train.o: /usr/include/limits.h
+objs/spec_mobs_money_train.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/spec_mobs_money_train.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/spec_mobs_money_train.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/spec_mobs_money_train.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_construct.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_uninitialized.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_vector.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_bvector.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/map
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_tree.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_function.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_map.h
+objs/spec_mobs_money_train.o: /usr/include/g++-3/stl_multimap.h low.h enum.h
+objs/spec_mobs_money_train.o: spells.h structs.h immunity.h discipline.h
+objs/spec_mobs_money_train.o: spell2.h parse.h db.h ansi.h cmd_dissect.h
+objs/spec_mobs_money_train.o: client.h response.h faction.h comm.h toggle.h
+objs/spec_mobs_money_train.o: wiz_powers.h cmd_message.h stats.h limbs.h
+objs/spec_mobs_money_train.o: body.h race.h skills.h disease.h trap.h task.h
+objs/spec_mobs_money_train.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/spec_mobs_money_train.o: spec_objs.h connect.h obj_drug.h charfile.h
+objs/spec_mobs_money_train.o: being.h person.h monster.h account.h extern.h
+objs/spec_mobs_money_train.o: handler.h obj_money.h rent.h spec_mobs.h
+objs/spec_mobs_money_train.o: materials.h paths.h
 objs/spec_mobs_posse.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_mobs_posse.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_mobs_posse.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -14805,6 +14876,62 @@ objs/spec_mobs_realestate.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/spec_mobs_realestate.o: materials.h database.h
 objs/spec_mobs_realestate.o: /usr/include/postgresql/libpq-fe.h
 objs/spec_mobs_realestate.o: /usr/include/postgresql/postgres_ext.h
+objs/spec_mobs_tudy.o: stdsneezy.h /usr/include/g++-3/cstdio
+objs/spec_mobs_tudy.o: /usr/include/stdio.h /usr/include/features.h
+objs/spec_mobs_tudy.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+objs/spec_mobs_tudy.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/spec_mobs_tudy.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/spec_mobs_tudy.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/spec_mobs_tudy.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/spec_mobs_tudy.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/spec_mobs_tudy.o: /usr/include/bits/stdio_lim.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_mobs_tudy.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/spec_mobs_tudy.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/cstring /usr/include/string.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/cerrno /usr/include/errno.h
+objs/spec_mobs_tudy.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/spec_mobs_tudy.o: /usr/include/asm/errno.h /usr/include/g++-3/string
+objs/spec_mobs_tudy.o: /usr/include/g++-3/std/bastring.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/cstddef
+objs/spec_mobs_tudy.o: /usr/include/g++-3/std/straits.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/alloc.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/stl_config.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/stl_alloc.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/iostream.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/streambuf.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/iterator
+objs/spec_mobs_tudy.o: /usr/include/g++-3/stl_relops.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/stl_iterator.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/std/bastring.cc
+objs/spec_mobs_tudy.o: /usr/include/g++-3/vector
+objs/spec_mobs_tudy.o: /usr/include/g++-3/stl_algobase.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/stl_pair.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/spec_mobs_tudy.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/spec_mobs_tudy.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/spec_mobs_tudy.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/spec_mobs_tudy.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/spec_mobs_tudy.o: /usr/include/g++-3/stl_construct.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/stl_uninitialized.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/stl_vector.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/stl_bvector.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/map /usr/include/g++-3/stl_tree.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/stl_function.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/stl_map.h
+objs/spec_mobs_tudy.o: /usr/include/g++-3/stl_multimap.h low.h enum.h
+objs/spec_mobs_tudy.o: spells.h structs.h immunity.h discipline.h spell2.h
+objs/spec_mobs_tudy.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/spec_mobs_tudy.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/spec_mobs_tudy.o: stats.h limbs.h body.h race.h skills.h disease.h
+objs/spec_mobs_tudy.o: trap.h task.h weather.h sound.h create.h thing.h
+objs/spec_mobs_tudy.o: room.h obj.h spec_objs.h connect.h obj_drug.h
+objs/spec_mobs_tudy.o: charfile.h being.h person.h monster.h account.h
+objs/spec_mobs_tudy.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/spec_mobs_tudy.o: materials.h
 objs/spec_objs.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/spec_objs.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/spec_objs.o: /usr/include/gnu/stubs.h
@@ -14860,6 +14987,66 @@ objs/spec_objs.o: obj_base_corpse.h obj_base_container.h obj_open_container.h
 objs/spec_objs.o: obj_trap.h obj_portal.h obj_seethru.h obj_general_weapon.h
 objs/spec_objs.o: obj_base_weapon.h obj_drinkcon.h obj_base_cup.h
 objs/spec_objs.o: obj_potion.h obj_magic_item.h obj_staff.h obj_wand.h
+objs/spec_objs_black_sun.o: stdsneezy.h /usr/include/g++-3/cstdio
+objs/spec_objs_black_sun.o: /usr/include/stdio.h /usr/include/features.h
+objs/spec_objs_black_sun.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+objs/spec_objs_black_sun.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/spec_objs_black_sun.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/spec_objs_black_sun.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/spec_objs_black_sun.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/spec_objs_black_sun.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/spec_objs_black_sun.o: /usr/include/bits/stdio_lim.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_objs_black_sun.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/spec_objs_black_sun.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/cstring /usr/include/string.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/cerrno /usr/include/errno.h
+objs/spec_objs_black_sun.o: /usr/include/bits/errno.h
+objs/spec_objs_black_sun.o: /usr/include/linux/errno.h
+objs/spec_objs_black_sun.o: /usr/include/asm/errno.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/string
+objs/spec_objs_black_sun.o: /usr/include/g++-3/std/bastring.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/cstddef
+objs/spec_objs_black_sun.o: /usr/include/g++-3/std/straits.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/alloc.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_config.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_alloc.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/iostream.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/streambuf.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/iterator
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_relops.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_iterator.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/std/bastring.cc
+objs/spec_objs_black_sun.o: /usr/include/g++-3/vector
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_algobase.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_pair.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/type_traits.h
+objs/spec_objs_black_sun.o: /usr/include/limits.h
+objs/spec_objs_black_sun.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/spec_objs_black_sun.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/spec_objs_black_sun.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/spec_objs_black_sun.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_construct.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_uninitialized.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_vector.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_bvector.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/map
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_tree.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_function.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_map.h
+objs/spec_objs_black_sun.o: /usr/include/g++-3/stl_multimap.h low.h enum.h
+objs/spec_objs_black_sun.o: spells.h structs.h immunity.h discipline.h
+objs/spec_objs_black_sun.o: spell2.h parse.h db.h ansi.h cmd_dissect.h
+objs/spec_objs_black_sun.o: client.h response.h faction.h comm.h toggle.h
+objs/spec_objs_black_sun.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/spec_objs_black_sun.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/spec_objs_black_sun.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/spec_objs_black_sun.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/spec_objs_black_sun.o: monster.h account.h extern.h handler.h
+objs/spec_objs_black_sun.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/spec_objs_blind.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_objs_blind.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_objs_blind.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -14917,6 +15104,77 @@ objs/spec_objs_blind.o: room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/spec_objs_blind.o: charfile.h being.h person.h monster.h account.h
 objs/spec_objs_blind.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/spec_objs_blind.o: materials.h obj_base_weapon.h
+objs/spec_objs_deikhan_sword.o: stdsneezy.h /usr/include/g++-3/cstdio
+objs/spec_objs_deikhan_sword.o: /usr/include/stdio.h /usr/include/features.h
+objs/spec_objs_deikhan_sword.o: /usr/include/sys/cdefs.h
+objs/spec_objs_deikhan_sword.o: /usr/include/gnu/stubs.h
+objs/spec_objs_deikhan_sword.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/spec_objs_deikhan_sword.o: /usr/include/bits/types.h
+objs/spec_objs_deikhan_sword.o: /usr/include/libio.h /usr/include/_G_config.h
+objs/spec_objs_deikhan_sword.o: /usr/include/wchar.h
+objs/spec_objs_deikhan_sword.o: /usr/include/bits/wchar.h
+objs/spec_objs_deikhan_sword.o: /usr/include/gconv.h
+objs/spec_objs_deikhan_sword.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/spec_objs_deikhan_sword.o: /usr/include/bits/stdio_lim.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/cstdlib
+objs/spec_objs_deikhan_sword.o: /usr/include/stdlib.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_objs_deikhan_sword.o: /usr/include/bits/time.h
+objs/spec_objs_deikhan_sword.o: /usr/include/sys/types.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/cctype
+objs/spec_objs_deikhan_sword.o: /usr/include/ctype.h /usr/include/endian.h
+objs/spec_objs_deikhan_sword.o: /usr/include/bits/endian.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/cassert
+objs/spec_objs_deikhan_sword.o: /usr/include/assert.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/cstring
+objs/spec_objs_deikhan_sword.o: /usr/include/string.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/cerrno
+objs/spec_objs_deikhan_sword.o: /usr/include/errno.h
+objs/spec_objs_deikhan_sword.o: /usr/include/bits/errno.h
+objs/spec_objs_deikhan_sword.o: /usr/include/linux/errno.h
+objs/spec_objs_deikhan_sword.o: /usr/include/asm/errno.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/string
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/std/bastring.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/cstddef
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/std/straits.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/alloc.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_config.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_alloc.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/iostream.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/streambuf.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/iterator
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_relops.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_iterator.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/std/bastring.cc
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/vector
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_algobase.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_pair.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/type_traits.h
+objs/spec_objs_deikhan_sword.o: /usr/include/limits.h
+objs/spec_objs_deikhan_sword.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/spec_objs_deikhan_sword.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/spec_objs_deikhan_sword.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/spec_objs_deikhan_sword.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_construct.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_uninitialized.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_vector.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_bvector.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/map
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_tree.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_function.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_map.h
+objs/spec_objs_deikhan_sword.o: /usr/include/g++-3/stl_multimap.h low.h
+objs/spec_objs_deikhan_sword.o: enum.h spells.h structs.h immunity.h
+objs/spec_objs_deikhan_sword.o: discipline.h spell2.h parse.h db.h ansi.h
+objs/spec_objs_deikhan_sword.o: cmd_dissect.h client.h response.h faction.h
+objs/spec_objs_deikhan_sword.o: comm.h toggle.h wiz_powers.h cmd_message.h
+objs/spec_objs_deikhan_sword.o: stats.h limbs.h body.h race.h skills.h
+objs/spec_objs_deikhan_sword.o: disease.h trap.h task.h weather.h sound.h
+objs/spec_objs_deikhan_sword.o: create.h thing.h room.h obj.h spec_objs.h
+objs/spec_objs_deikhan_sword.o: connect.h obj_drug.h charfile.h being.h
+objs/spec_objs_deikhan_sword.o: person.h monster.h account.h extern.h
+objs/spec_objs_deikhan_sword.o: handler.h obj_money.h rent.h spec_mobs.h
+objs/spec_objs_deikhan_sword.o: materials.h obj_base_weapon.h
 objs/spec_objs_jambiya.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_objs_jambiya.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_objs_jambiya.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -15109,6 +15367,150 @@ objs/spec_objs_manadrain.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/spec_objs_manadrain.o: monster.h account.h extern.h handler.h
 objs/spec_objs_manadrain.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/spec_objs_manadrain.o: obj_base_weapon.h
+objs/spec_objs_poison_cutlass.o: stdsneezy.h /usr/include/g++-3/cstdio
+objs/spec_objs_poison_cutlass.o: /usr/include/stdio.h /usr/include/features.h
+objs/spec_objs_poison_cutlass.o: /usr/include/sys/cdefs.h
+objs/spec_objs_poison_cutlass.o: /usr/include/gnu/stubs.h
+objs/spec_objs_poison_cutlass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/spec_objs_poison_cutlass.o: /usr/include/bits/types.h
+objs/spec_objs_poison_cutlass.o: /usr/include/libio.h
+objs/spec_objs_poison_cutlass.o: /usr/include/_G_config.h
+objs/spec_objs_poison_cutlass.o: /usr/include/wchar.h
+objs/spec_objs_poison_cutlass.o: /usr/include/bits/wchar.h
+objs/spec_objs_poison_cutlass.o: /usr/include/gconv.h
+objs/spec_objs_poison_cutlass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/spec_objs_poison_cutlass.o: /usr/include/bits/stdio_lim.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/cstdlib
+objs/spec_objs_poison_cutlass.o: /usr/include/stdlib.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_objs_poison_cutlass.o: /usr/include/bits/time.h
+objs/spec_objs_poison_cutlass.o: /usr/include/sys/types.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/cctype
+objs/spec_objs_poison_cutlass.o: /usr/include/ctype.h /usr/include/endian.h
+objs/spec_objs_poison_cutlass.o: /usr/include/bits/endian.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/cassert
+objs/spec_objs_poison_cutlass.o: /usr/include/assert.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/cstring
+objs/spec_objs_poison_cutlass.o: /usr/include/string.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/cerrno
+objs/spec_objs_poison_cutlass.o: /usr/include/errno.h
+objs/spec_objs_poison_cutlass.o: /usr/include/bits/errno.h
+objs/spec_objs_poison_cutlass.o: /usr/include/linux/errno.h
+objs/spec_objs_poison_cutlass.o: /usr/include/asm/errno.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/string
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/std/bastring.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/cstddef
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/std/straits.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/alloc.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_config.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_alloc.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/iostream.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/streambuf.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/iterator
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_relops.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_iterator.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/std/bastring.cc
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/vector
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_algobase.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_pair.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/type_traits.h
+objs/spec_objs_poison_cutlass.o: /usr/include/limits.h
+objs/spec_objs_poison_cutlass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/spec_objs_poison_cutlass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/spec_objs_poison_cutlass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/spec_objs_poison_cutlass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_construct.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_uninitialized.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_vector.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_bvector.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/map
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_tree.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_function.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_map.h
+objs/spec_objs_poison_cutlass.o: /usr/include/g++-3/stl_multimap.h low.h
+objs/spec_objs_poison_cutlass.o: enum.h spells.h structs.h immunity.h
+objs/spec_objs_poison_cutlass.o: discipline.h spell2.h parse.h db.h ansi.h
+objs/spec_objs_poison_cutlass.o: cmd_dissect.h client.h response.h faction.h
+objs/spec_objs_poison_cutlass.o: comm.h toggle.h wiz_powers.h cmd_message.h
+objs/spec_objs_poison_cutlass.o: stats.h limbs.h body.h race.h skills.h
+objs/spec_objs_poison_cutlass.o: disease.h trap.h task.h weather.h sound.h
+objs/spec_objs_poison_cutlass.o: create.h thing.h room.h obj.h spec_objs.h
+objs/spec_objs_poison_cutlass.o: connect.h obj_drug.h charfile.h being.h
+objs/spec_objs_poison_cutlass.o: person.h monster.h account.h extern.h
+objs/spec_objs_poison_cutlass.o: handler.h obj_money.h rent.h spec_mobs.h
+objs/spec_objs_poison_cutlass.o: materials.h obj_base_weapon.h
+objs/spec_objs_unholy_cutlass.o: stdsneezy.h /usr/include/g++-3/cstdio
+objs/spec_objs_unholy_cutlass.o: /usr/include/stdio.h /usr/include/features.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/sys/cdefs.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/gnu/stubs.h
+objs/spec_objs_unholy_cutlass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/bits/types.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/libio.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/_G_config.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/wchar.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/bits/wchar.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/gconv.h
+objs/spec_objs_unholy_cutlass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/bits/stdio_lim.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/cstdlib
+objs/spec_objs_unholy_cutlass.o: /usr/include/stdlib.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/bits/time.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/sys/types.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/cctype
+objs/spec_objs_unholy_cutlass.o: /usr/include/ctype.h /usr/include/endian.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/bits/endian.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/cassert
+objs/spec_objs_unholy_cutlass.o: /usr/include/assert.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/cstring
+objs/spec_objs_unholy_cutlass.o: /usr/include/string.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/cerrno
+objs/spec_objs_unholy_cutlass.o: /usr/include/errno.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/bits/errno.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/linux/errno.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/asm/errno.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/string
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/std/bastring.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/cstddef
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/std/straits.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/alloc.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_config.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_alloc.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/iostream.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/streambuf.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/iterator
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_relops.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_iterator.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/std/bastring.cc
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/vector
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_algobase.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_pair.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/type_traits.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/limits.h
+objs/spec_objs_unholy_cutlass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/spec_objs_unholy_cutlass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/spec_objs_unholy_cutlass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/spec_objs_unholy_cutlass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_construct.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_uninitialized.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_vector.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_bvector.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/map
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_tree.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_function.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_map.h
+objs/spec_objs_unholy_cutlass.o: /usr/include/g++-3/stl_multimap.h low.h
+objs/spec_objs_unholy_cutlass.o: enum.h spells.h structs.h immunity.h
+objs/spec_objs_unholy_cutlass.o: discipline.h spell2.h parse.h db.h ansi.h
+objs/spec_objs_unholy_cutlass.o: cmd_dissect.h client.h response.h faction.h
+objs/spec_objs_unholy_cutlass.o: comm.h toggle.h wiz_powers.h cmd_message.h
+objs/spec_objs_unholy_cutlass.o: stats.h limbs.h body.h race.h skills.h
+objs/spec_objs_unholy_cutlass.o: disease.h trap.h task.h weather.h sound.h
+objs/spec_objs_unholy_cutlass.o: create.h thing.h room.h obj.h spec_objs.h
+objs/spec_objs_unholy_cutlass.o: connect.h obj_drug.h charfile.h being.h
+objs/spec_objs_unholy_cutlass.o: person.h monster.h account.h extern.h
+objs/spec_objs_unholy_cutlass.o: handler.h obj_money.h rent.h spec_mobs.h
+objs/spec_objs_unholy_cutlass.o: materials.h obj_base_weapon.h
 objs/spec_rooms.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/spec_rooms.o: /usr/include/bits/types.h /usr/include/features.h
 objs/spec_rooms.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
