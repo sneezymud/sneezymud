@@ -1,6 +1,8 @@
 #include "stdsneezy.h"
 #include "obj_trash_pile.h"
 
+const int MAX_TRASH_PILE_VOL=46656;
+
 TTrashPile::TTrashPile() :
   TExpandableContainer()
 {
@@ -46,6 +48,36 @@ bool TTrashPile::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
   return TRUE;
 }
 
+int TTrashPile::getSizeIndex()
+{
+  int vol=getTotalVolume();
+  int step=MAX_TRASH_PILE_VOL/9;
+  int index=0;
+
+  if(vol < step*1)
+    index=0;
+  else if(vol < step*2)
+    index=1;
+  else if(vol < step*3)
+    index=2;
+  else if(vol < step*4)
+    index=3;
+  else if(vol < step*5)
+    index=4;
+  else if(vol < step*6)
+    index=5;
+  else if(vol < step*7)
+    index=6;
+  else if(vol < step*8)
+    index=7;
+  else if(vol < step*9)
+    index=8;
+  else
+    index=9;
+
+  return index;
+}
+
 void TTrashPile::updateDesc()
 {
   const char *pilename [] =
@@ -76,32 +108,7 @@ void TTrashPile::updateDesc()
     "<o>A veritable sea of trash covers the area.<1>"
   };
 
-
-  int vol=getTotalVolume();
-  int step=46656/9;
-  int index=0;
-
-  if(vol < step*1)
-    index=0;
-  else if(vol < step*2)
-    index=1;
-  else if(vol < step*3)
-    index=2;
-  else if(vol < step*4)
-    index=3;
-  else if(vol < step*5)
-    index=4;
-  else if(vol < step*6)
-    index=5;
-  else if(vol < step*7)
-    index=6;
-  else if(vol < step*8)
-    index=7;
-  else if(vol < step*9)
-    index=8;
-  else
-    index=9;
-
+  int index=getSizeIndex();
 
   if (isObjStat(ITEM_STRUNG)) {
     delete [] shortDescr;
@@ -127,3 +134,51 @@ void TTrashPile::updateDesc()
 }
 
 
+
+
+void TTrashPile::overFlow()
+{
+  int index=getSizeIndex();
+  TRoom *rp=NULL;
+  int volume=0;
+  TThing *t2;
+  dirTypeT dir;
+
+  if(!roomp)
+    return;
+
+  if(index>=9){
+    // pick a random exit, not up
+    for (int i = 0; i < 20; i++) {
+      dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
+
+      if(exitDir(dir) && real_roomp(exitDir(dir)->to_room) &&
+	 !(exitDir(dir)->condition & EX_CLOSED) &&
+	 (rp = real_roomp(roomp->exitDir(dir)->to_room)))
+	break;
+    }
+
+    // couldn't find a room to overflow into
+    if(!rp)
+      return;
+    
+    // move some stuff
+    for(TThing *t=getStuff();t;t=t2){
+      t2=t->nextThing;
+
+      volume+=t->getVolume();
+      --(*t);
+      *rp += *t;
+
+      if(volume > MAX_TRASH_PILE_VOL/2)
+	break;
+    }
+
+    sendrpf(COLOR_BASIC, roomp, "%s collapses, sending trash avalanching %s.\n\r",
+	    sstring(getName()).cap().c_str(), dirs_to_blank[dir]);
+
+    sendrpf(COLOR_BASIC, rp, "An avalanch of trash cascades in from the %s.\n\r",
+	    dirs[rev_dir[dir]]);
+
+  }
+}

@@ -947,11 +947,13 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
       
       TTrashPile *pile=dynamic_cast<TTrashPile *>(obj);
       if(pile){
+	// delete empty piles
 	if(!pile->getStuff()){
 	  delete obj;
 	  obj = NULL;
 	  continue;
 	} else {
+	  pile->overFlow();
 	  pile->updateDesc();
 	}
       }

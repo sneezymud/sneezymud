@@ -7,6 +7,8 @@ class TTrashPile : public TExpandableContainer {
   private:
   public:
     void updateDesc();
+    void overFlow();
+    int getSizeIndex();
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual sstring statObjInfo() const;
