@@ -100,9 +100,6 @@ endif
 #CFLAGS +=-I/usr/include/postgresql
 CFLAGS +=-DUSE_SQL=1
 
-# new dynamic hp system
-CFLAGS +=-DNEW_HP=1
-
 
 
 ###############################################################################
@@ -146,6 +143,7 @@ endif
 # mysql database lib
 LDFLAGS +=-L/home/oldspasm/usr/lib
 LDFLAGS +=-lmysqlclient
+#LDFLAGS +=-lpq
 
 ###############################################################################
 ##                        Actual Compiling Starts Here                       ##

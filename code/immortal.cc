@@ -3087,9 +3087,6 @@ void TPerson::doStart()
     sendTo("***********************************************************************\n\r\n\r");
   }
 
-#if !NEW_HP
-  setMaxHit(21);
-#endif
   setMana(manaLimit());
   setPiety(pietyLimit());
   setMove(moveLimit());
@@ -3102,11 +3099,7 @@ void TPerson::doStart()
     if (getLevel(cit))
       doHPGainForLev(cit);
   }
-#if NEW_HP
   setHit(21);
-#else
-  setHit(hitLimit());
-#endif
 
   wearSlotT iw;
   for (iw = MIN_WEAR; iw < MAX_WEAR; iw++) {

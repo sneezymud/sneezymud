@@ -873,12 +873,6 @@ void TPerson::raiseLevel(classIndT Class, TMonster *gm)
     maxhit=points.maxHit;
     advanceLevel(Class, gm);
 
-    // may as well still give them the hp in case we want to switch back
-    // just don't announce it
-#if !NEW_HP
-    sendTo("You gain %i hitpoints!\n\r", points.maxHit-maxhit);
-#endif
-
     fixClientPlayerLists(FALSE);
     setTitle(false);
     setSelectToggles((TBeing *) gm, Class, SILENT_NO);

@@ -50,14 +50,10 @@ int graf(int age, int p0, int p1, int p2, int p3, int p4, int p5, int p6)
 
 void TPerson::setMaxHit(int newhit)
 {
-#if NEW_HP
   // TPerson hit points are dynamic now, so this shouldn't happen
   // unless an immortal uses @set
   vlogf(LOG_BUG, "TPerson::setMaxHit() got called on %s", getName());
   points.maxHit = newhit;  
-#else
-  points.maxHit = newhit;  
-#endif
 }
 
 int eqHpBonus(const TPerson *ch)
@@ -127,8 +123,6 @@ int affectHpBonus(const TPerson *tp){
 
 short int TPerson::hitLimit() const
 {
-#if NEW_HP
-
   if(isImmortal())
     return points.maxHit;
 
@@ -144,10 +138,6 @@ short int TPerson::hitLimit() const
   newmax += affectHpBonus(this);
 
   return (short int) newmax;
-
-#else
-  return points.maxHit + graf((age()->year - getBaseAge() + 15), 2, 4, 17, 14, 8, 4, 3);
-#endif
 }
 
 short int TPerson::manaLimit() const
