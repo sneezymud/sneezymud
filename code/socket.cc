@@ -386,8 +386,8 @@ int TSocket::gameLoop()
   char buf[256];
   Descriptor *point;
   int pulse = 0;
-  int teleport, combat, drowning, special_procs, update_stuff;
-  int pulse_tick, pulse_mudhour, mobstuff, quickpulse, wayslowpulse;
+  int teleport=0, combat=0, drowning=0, special_procs=0, update_stuff=0;
+  int pulse_tick=0, pulse_mudhour=0, mobstuff=0, quickpulse=0, wayslowpulse=0;
   TBeing *tmp_ch, *temp;
   TObj *obj, *next_thing;
   static int sent = 0;
@@ -481,6 +481,36 @@ int TSocket::gameLoop()
     timespent=timediff(&now, &last_time);
     timeout=timediff(&opt_time, &timespent);
 
+
+    if(TestCode1){
+      str = "";
+      if(!combat)
+	str += "combat        ";
+      if(!update_stuff)
+	str += "update_stuff  ";
+      if(!pulse_tick)
+	str += "pulse_tick    ";
+      if(!teleport)
+	str += "teleport      ";
+      if(!special_procs)
+	str += "special_procs ";
+      if(!pulse_mudhour)
+	str += "pulse_mudhour ";
+      if(!mobstuff)
+	str += "mobstuff      ";
+      if(!drowning)
+	str += "drowning      ";
+      if(!wayslowpulse)
+	str += "wayslowpulse  ";
+
+      vlogf(LOG_MISC, "%i %i) %s = %i",
+	    pulse, pulse%12, str.c_str(),
+	    (timespent.tv_sec*1000000)+timespent.tv_usec);
+    }
+
+
+
+
     last_time.tv_sec = now.tv_sec + timeout.tv_sec;
     last_time.tv_usec = now.tv_usec + timeout.tv_usec;
     if (last_time.tv_usec >= 1000000) {
@@ -567,17 +597,49 @@ int TSocket::gameLoop()
     ////////////////////////////////////////////
     // setup the pulse boolean flags
     ////////////////////////////////////////////
+    // we should spread out these pulses among out cycles
+    // since we work on multiples of 12, that gives us 12 pulse lines
+    // in order to do some load balanced along our cycles,
+    // I've sorted these into 3 groups of 3 -
+    // one group of fast pulses (12), one group of medium pulses (36,48)
+    // and one group of slow pulses (360, 1440, 17280)
+    // then reordered those groups in evenly mixed groups
+    // of 1 fast, 1 medium and 1 slow, then spread those out evenly
+    // along a 12 pulse cycle, like so:
+    // 0 - combat;
+    // 1 - drowning;
+    // 2 - pulsetick;
+    // 3 - <none>;
+    // 4 - teleport;
+    // 5 - specproc;
+    // 6 - pulsemudhour;
+    // 7 - <none>
+    // 8 - mobstuff;
+    // 9 - updatestuff;
+    // 10 - wayslow;
+    // 11 - <none>
+    // new pulses can be inserted into the <none> slots if needed
+    // additionally, medium and slow pulses can be offset by additional
+    // multiples of 12 to seperate themselves from the same 12 pulse cycle
+    // this takes a little bit of hand tuning I guess
+    
     pulse++;
-    teleport = (pulse % PULSE_TELEPORT);
-    combat = (pulse % PULSE_COMBAT);
-    drowning = (pulse % PULSE_DROWNING);
-    special_procs = (pulse % PULSE_SPEC_PROCS);
-    update_stuff = (pulse % PULSE_NOISES);
-    pulse_mudhour = (pulse % PULSE_MUDHOUR);
-    mobstuff = (pulse % PULSE_MOBACT);
-    pulse_tick = (pulse % PULSE_UPDATE);
-    quickpulse = (pulse % ONE_SECOND/5);
-    wayslowpulse = (pulse % (PULSE_MUDHOUR * 12));
+
+    // quickpulse is ignored because it is too fast!
+    quickpulse = (pulse % ONE_SECOND/5);           // 2
+
+    combat = ((pulse+0) % PULSE_COMBAT);               // 12
+    update_stuff = ((pulse+1) % PULSE_NOISES);         // 48
+    pulse_tick = ((pulse+2) % PULSE_UPDATE);           // 360
+    // 3 - empty
+    teleport = ((pulse+4) % PULSE_TELEPORT);           // 12
+    pulse_mudhour = ((pulse+5) % PULSE_MUDHOUR);       // 1440
+    special_procs = ((pulse+6+12) % PULSE_SPEC_PROCS); // 36
+    // 7 - empty
+    mobstuff = ((pulse+8) % PULSE_MOBACT);             // 12
+    drowning = ((pulse+9) % PULSE_DROWNING);           // 36
+    wayslowpulse = ((pulse+10) % (PULSE_MUDHOUR * 12)); // 17280
+    // 11 - empty
 
     ////////////////////////////////////////////
     ////////////////////////////////////////////

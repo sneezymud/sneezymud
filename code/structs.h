@@ -98,9 +98,6 @@ class lag_data
     time_t lagstart[10];
     time_t lagtime[10];
     unsigned long lagcount[10];
-    double laggroup[100][25];
-    double claggroup[100][25];
-    double mobprocs[10][250];
 
   lag_data() :
     high(0),
@@ -112,19 +109,6 @@ class lag_data
     memset(&lagstart, 0, sizeof(lagstart));
     memset(&lagtime, 0, sizeof(lagtime));
     memset(&lagcount, 0, sizeof(lagcount));
-
-    for(int i=0;i<250;++i){
-      for(int j=0;j<10;++j){
-	mobprocs[j][i]=0;
-      }
-    }
-
-    for(int i=0;i<100;++i){
-      for(int j=0;j<25;++j){
-	laggroup[i][j]=0;
-	claggroup[i][j]=0;
-      }
-    }
   }
 };
 extern lag_data lag_info;

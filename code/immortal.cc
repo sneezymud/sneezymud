@@ -39,8 +39,8 @@ bool Silence = FALSE;
 bool Sleep = TRUE;
 
 // please document what each testcode does if you use it!!!!!
-bool TestCode1 = TRUE;       // This code disabled shaman login if it is FALSE - dash 6/6/01
-  // code1 in use for tracking pulse/sec - batopr
+bool TestCode1 = false;
+// code1 vlogf's main loop pulse times
 bool TestCode2 = false;       // unfinished code 
   // code2 in use, lets players see level on items
 bool TestCode3 = true;       // unfinished code 
@@ -876,8 +876,8 @@ void TPerson::doToggle(const char *arg2)
     }
 #endif
     TestCode1 = ! TestCode1;
-    sendTo("TestCode #1 (Shaman use) is now %s.\n\r", TestCode1 ? "in use" : "off");
-    vlogf(LOG_MISC,"%s has %s TestCode #1 (shaman use).",getName(),TestCode1 ? "enabled" : "disabled");
+    sendTo("TestCode #1 (pulse timing) is now %s.\n\r", TestCode1 ? "in use" : "off");
+    vlogf(LOG_MISC,"%s has %s TestCode #1 (pulse timing).",getName(),TestCode1 ? "enabled" : "disabled");
   } else if (is_abbrev(arg, "testcode2") && hasWizPower(POWER_TOGGLE)) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
