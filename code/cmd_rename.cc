@@ -161,7 +161,7 @@ void TBeing::doNameChange(const char *argument)
     return;
   }
 
-  strcpy(tmp_name, cap(tmp_name));
+  strcpy(tmp_name, sstring(tmp_name).cap().c_str());
   delete [] vict->name;
   vict->name = mud_str_dup(tmp_name);
 
@@ -182,12 +182,12 @@ void TBeing::doNameChange(const char *argument)
     vlogf(LOG_FILE, "error in unlink (11) (%s) %d", tmpbuf.c_str(), errno);
   
   if (vict->GetMaxLevel() > MAX_MORT) {
-    tmpbuf=fmt("mv immortals/%s/ immortals/%s/") % orig_name % cap(tmp_name);
+    tmpbuf=fmt("mv immortals/%s/ immortals/%s/") % orig_name % sstring(tmp_name).cap();
     vsystem(tmpbuf);
   }
 
   vict->doSave(SILENT_NO);
-  tmpbuf=fmt("The World shall now know %s as %s.") % cap(orig_name) %
+  tmpbuf=fmt("The World shall now know %s as %s.") % sstring(orig_name).cap().c_str() %
     vict->getName();
   doSystem(tmpbuf);
   vict->fixClientPlayerLists(FALSE);

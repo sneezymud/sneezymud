@@ -4336,15 +4336,15 @@ void setPrompts(fd_set out)
       if ((ch = d->character) && ch->task) {
         if (ch->task->task == TASK_PENANCE) {
           sprintf(promptbuf, "\n\rPIETY : %5.2f > ", ch->getPiety());
-          d->output.putInQ(cap(promptbuf));
+          d->output.putInQ(sstring(promptbuf).cap().c_str());
         }
         if (ch->task->task == TASK_MEDITATE) {
           sprintf(promptbuf, "\n\rMANA : %d > ", ch->getMana());
-          d->output.putInQ(cap(promptbuf));
+          d->output.putInQ(sstring(promptbuf).cap().c_str());
         }
         if (ch->task->task == TASK_SACRIFICE) {
           sprintf(promptbuf, "\n\rLIFEFORCE : %d > ", ch->getLifeforce());
-          d->output.putInQ(cap(promptbuf));
+          d->output.putInQ(sstring(promptbuf).cap().c_str());
         }
         if ((ch->task->task == TASK_SHARPEN || 
              ch->task->task == TASK_DULL) && 

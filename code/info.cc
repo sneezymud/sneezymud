@@ -1789,11 +1789,9 @@ void TBeing::describeLimbDamage(const TBeing *ch) const
     if (ch->isLimbFlags(j, PART_TRANSFORMED)) {
       const sstring str = describe_part_wounds(ch, j);
       if (!str.empty()) {
-        sprintf(buf, "<y>%s %s %s %s<1>", cap(buf2), 
-               ch->describeBodySlot(j).c_str(),
-               ch->slotPlurality(j).c_str(), 
-               str.c_str());
-        act(buf, FALSE, this, NULL, NULL, TO_CHAR);
+        act(fmt("<y>%s %s %s %s<1>") % sstring(buf2).cap() %  
+	    ch->describeBodySlot(j) % ch->slotPlurality(j) % str, 
+	    FALSE, this, NULL, NULL, TO_CHAR);
       }
     }
     if ((t = ch->getStuckIn(j))) {
@@ -2585,7 +2583,7 @@ void TBeing::doEquipment(const char *argument)
     if ((t = getStuckIn(j))) {
       if (canSee(t)) {
         strcpy(capbuf, t->getName());
-        sendTo(COLOR_OBJECTS, fmt("%s is sticking out of your %s!\n\r") % cap(capbuf) % describeBodySlot(j));
+        sendTo(COLOR_OBJECTS, fmt("%s is sticking out of your %s!\n\r") % sstring(capbuf).cap() % describeBodySlot(j));
       }
     }
   }
@@ -3662,7 +3660,7 @@ void TBeing::doLimbs(const sstring & argument)
     sendTo("You evaluate your limbs and their health.\n\r");
   } else {
     strncpy(who, v->hshr(), 5);
-    cap(who);
+    strcpy(who, sstring(who).cap().c_str());
     sendTo(COLOR_BASIC, fmt("You evaluate %s's limbs and their health.\n\r") % v->getName());
   }
 
@@ -3726,7 +3724,7 @@ void TBeing::doLimbs(const sstring & argument)
       if (canSee(t)) {
         strcpy(buf, t->getName());
         sendTo(COLOR_OBJECTS, fmt("%s is sticking out of %s %s!\n\r") %
-        cap(buf) % v->hshr() % v->describeBodySlot(i));
+        sstring(buf).cap() % v->hshr() % v->describeBodySlot(i));
       }
     }
   }
@@ -3735,7 +3733,7 @@ void TBeing::doLimbs(const sstring & argument)
     strcpy(who, "You");
   else {
     strncpy(who, v->hssh(), 5);
-    cap(who);
+    strcpy(who, sstring(who).cap().c_str());
   }
     
   if (v->affected) {
@@ -4030,7 +4028,7 @@ void TObj::describeMe(TBeing *ch) const
 
   strcpy(buf, material_nums[getMaterial()].mat_name);
   strcpy(buf2, ch->objs(this));
-  ch->sendTo(COLOR_OBJECTS,fmt("%s is %s made of %s.\n\r") % cap(buf2) %
+  ch->sendTo(COLOR_OBJECTS,fmt("%s is %s made of %s.\n\r") % sstring(buf2).cap().c_str() %
                  ItemInfo[itemType()]->common_name % 
 	     sstring(buf).uncap());
 
@@ -4246,7 +4244,7 @@ void TBeing::describeMaxSharpness(const TBaseWeapon *obj, int learn) const
     strcpy(sharpbuf, "having a ragged edge");
 
   sendTo(COLOR_OBJECTS,fmt("%s seems to be capable of %s.\n\r") %
-           cap(capbuf) % sharpbuf);
+           sstring(capbuf).cap().c_str() % sharpbuf);
 }
 
 void TBeing::describeMaxPointiness(const TBaseWeapon *obj, int learn) const
@@ -4287,7 +4285,7 @@ void TBeing::describeMaxPointiness(const TBaseWeapon *obj, int learn) const
     strcpy(sharpbuf, "having a dull point");
 
   sendTo(COLOR_OBJECTS,fmt("%s seems to be capable of %s.\n\r") %
-           cap(capbuf) % sharpbuf);
+           sstring(capbuf).cap().c_str() % sharpbuf);
 }
 
 void TBeing::describeOtherFeatures(const TGenWeapon *obj, int learn) const
@@ -4303,13 +4301,13 @@ void TBeing::describeOtherFeatures(const TGenWeapon *obj, int learn) const
   if (hasClass(CLASS_THIEF) || isImmortal()) {
     if (obj->canCudgel())
       sendTo(COLOR_OBJECTS, fmt("%s seems small enough to be used for cudgeling.\n\r") %
-             cap(capbuf));
+             sstring(capbuf).cap().c_str());
     if (obj->canStab())
       sendTo(COLOR_OBJECTS, fmt("%s seems small enough to be used for stabbing.\n\r") %
-             cap(capbuf));
+             sstring(capbuf).cap().c_str());
     if (obj->canBackstab())
       sendTo(COLOR_OBJECTS, fmt("%s seems small enough to be used for backstabbing or throat slitting.\n\r") %
-             cap(capbuf));
+             sstring(capbuf).cap().c_str());
   }
 }
 
@@ -4350,7 +4348,7 @@ void TBeing::describeMaxBluntness(const TBaseWeapon *obj, int learn) const
     strcpy(sharpbuf, "having a sharp and ragged bluntness");
 
   sendTo(COLOR_OBJECTS,fmt("%s seems to be capable of %s.\n\r") %
-           cap(capbuf) % sharpbuf);
+           sstring(capbuf).cap().c_str() % sharpbuf);
 }
 
 void TBeing::describeMaxStructure(const TObj *obj, int learn) const
@@ -4588,7 +4586,7 @@ void TBeing::describeArrowSharpness(const TArrow *obj, int learn)
   else
     strcpy(sharpbuf, "extremely dull");
  
-  sendTo(COLOR_OBJECTS, fmt("%s has a tip that is %s.\n\r") % cap(capbuf) % sharpbuf);
+  sendTo(COLOR_OBJECTS, fmt("%s has a tip that is %s.\n\r") % sstring(capbuf).cap().c_str() % sharpbuf);
 
 }
 
@@ -4607,7 +4605,7 @@ void TBeing::describeNoise(const TObj *obj, int learn) const
   char capbuf[160];
   strcpy(capbuf, objs(obj));
 
-  sendTo(COLOR_OBJECTS, fmt("%s is %s.\n\r") % cap(capbuf) %
+  sendTo(COLOR_OBJECTS, fmt("%s is %s.\n\r") % sstring(capbuf).cap().c_str() %
           ((iNoise < -9) ? "beyond silent" :
           ((iNoise < -5) ? "extremely silent" :
           ((iNoise < -2) ? "very silent" :
@@ -4650,7 +4648,7 @@ void TBeing::describeBowRange(const TBow *obj, int learn)
   char capbuf[160];
   strcpy(capbuf, objs(obj));
 
-  sendTo(COLOR_OBJECTS, fmt("%s can %s.\n\r") % cap(capbuf) %
+  sendTo(COLOR_OBJECTS, fmt("%s can %s.\n\r") % sstring(capbuf).cap().c_str() %
           ((range < 1) ? "not shoot out of the immediate area" :
           ((range < 3) ? "barely shoot beyond arm's length" :
           ((range < 5) ? "shoot a short distance" :
@@ -4733,10 +4731,10 @@ void TWand::descMagicSpells(TBeing *ch) const
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
       ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(iSpell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % cap(capbuf) % 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap().c_str() % 
             discArray[iSpell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % cap(capbuf) %  disc_names[das]);
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap().c_str() %  disc_names[das]);
   }
 
   return;
@@ -4752,10 +4750,10 @@ void TStaff::descMagicSpells(TBeing *ch) const
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
       ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(iSpell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % cap(capbuf) % 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap().c_str() % 
             discArray[iSpell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % cap(capbuf) %  disc_names[das]);
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap().c_str() %  disc_names[das]);
   }
 
   return;
@@ -4772,30 +4770,30 @@ void TScroll::descMagicSpells(TBeing *ch) const
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
       ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % cap(capbuf) % 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap().c_str() % 
             discArray[spell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % cap(capbuf) %  disc_names[das]);
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap().c_str() %  disc_names[das]);
   }
 
   spell = getSpell(1);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
       ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % cap(capbuf) % 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap().c_str() % 
             discArray[spell]->name);
     else
-       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % cap(capbuf) % disc_names[das]);
+       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap().c_str() % disc_names[das]);
   }
 
   spell = getSpell(2);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
       ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % cap(capbuf) % 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap().c_str() % 
             discArray[spell]->name);
     else
-       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % cap(capbuf) % disc_names[das]);
+       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap().c_str() % disc_names[das]);
   }
 
   return;
@@ -4818,7 +4816,7 @@ void TBeing::describeSymbolOunces(const TSymbol *obj, int learn) const
   char capbuf[160];
   strcpy(capbuf, objs(obj));
 
-  sendTo(COLOR_OBJECTS, fmt("%s requires about %d ounce%s of holy water to attune.\n\r") % cap(capbuf) % amt % (amt == 1 ? "" : "s"));
+  sendTo(COLOR_OBJECTS, fmt("%s requires about %d ounce%s of holy water to attune.\n\r") % sstring(capbuf).cap().c_str() % amt % (amt == 1 ? "" : "s"));
 
   return;
 }
@@ -4829,11 +4827,11 @@ void TBeing::describeComponentUseage(const TComponent *obj, int) const
   strcpy(capbuf, objs(obj));
 
   if (IS_SET(obj->getComponentType(), COMP_SPELL))
-    sendTo(COLOR_OBJECTS, fmt("%s is a component used in creating magic.\n\r") % cap(capbuf));
+    sendTo(COLOR_OBJECTS, fmt("%s is a component used in creating magic.\n\r") % sstring(capbuf).cap().c_str());
   else if (IS_SET(obj->getComponentType(), COMP_POTION))
-    sendTo(COLOR_OBJECTS, fmt("%s is a component used to brew potions.\n\r") % cap(capbuf));
+    sendTo(COLOR_OBJECTS, fmt("%s is a component used to brew potions.\n\r") % sstring(capbuf).cap().c_str());
   else if (IS_SET(obj->getComponentType(), COMP_SCRIBE))
-    sendTo(COLOR_OBJECTS, fmt("%s is a component used during scribing.\n\r") % cap(capbuf));
+    sendTo(COLOR_OBJECTS, fmt("%s is a component used during scribing.\n\r") % sstring(capbuf).cap().c_str());
 
   return;
 }
@@ -4849,7 +4847,7 @@ void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
   char capbuf[160];
   strcpy(capbuf, objs(obj));
 
-  sendTo(COLOR_OBJECTS, fmt("%s will last ") % cap(capbuf));
+  sendTo(COLOR_OBJECTS, fmt("%s will last ") % sstring(capbuf).cap().c_str());
 
   if (!obj->isComponentType(COMP_DECAY)) {
     sendTo("well into the future.\n\r");

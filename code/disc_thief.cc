@@ -673,7 +673,7 @@ int disguise(TBeing *caster, char * buffer)
     } else {
       // always true for caster = PC
       sprintf(buf, "%s is here.", caster->name);
-      mob->player.longDescr = mud_str_dup(cap(buf));
+      mob->player.longDescr = mud_str_dup(sstring(buf).cap().c_str());
     }
   } else if (caster->name) {
     // Consider this immortal use.

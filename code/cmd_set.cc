@@ -322,7 +322,7 @@ void TPerson::doSet(const char *argument)
     argument = one_argument(argument, namebuf);
     argument = one_argument(argument, parmstr);
     parm = convertTo<int>(parmstr);
-    cap(namebuf);
+    strcpy(namebuf, sstring(namebuf).cap().c_str());
 
     if (strcmp("Noone", namebuf) && !load_char(namebuf, &st)) {
       sendTo("No such person exists.\n\r");

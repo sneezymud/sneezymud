@@ -44,7 +44,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
     *rp += *this;
   }
   sprintf(tmpbuf, "%s", getName());
-  strcpy(namebuf, cap(tmpbuf));
+  strcpy(namebuf, sstring(tmpbuf).cap().c_str());
 
   if ((desc || isPc()) && (GetMaxLevel() <= MAX_MORT)) {
     pcorpse = race->makePCorpse();

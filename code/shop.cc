@@ -1412,7 +1412,7 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
       strcpy(equipCond, equipColor + 3); 
       equipColor[3] = '\0';
       sprintf(buf, "%s[%2d] %-29s %s%-12s %-6d %-5s %s%s\n\r",
-             wcolor, k + 1, cap(capbuf),
+             wcolor, k + 1, sstring(capbuf).cap().c_str(),
              equipColor, equipCond, cost, 
              buf4, buf3, ch->norm());
       found = TRUE;
@@ -1426,7 +1426,7 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
     strcpy(equipCond, equipColor + 3);
     equipColor[3] = '\0';
     sprintf(buf, "%s[%2d] %-31s %s%-12s %-6d %-5s\n\r",
-            wcolor, k + 1, cap(capbuf), equipColor, equipCond, cost, buf4);
+            wcolor, k + 1, sstring(capbuf).cap().c_str(), equipColor, equipCond, cost, buf4);
   }
 
   // This is for quick listing, fast and simple.

@@ -571,7 +571,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
               i = tbtt ? to->pers(t1) : to->objs(t1);
               if (x == 1 || (x == 4 && *lastColor)) {
                 strcpy(namebuf, i);
-                cap(namebuf);
+                strcpy(namebuf, sstring(namebuf).cap().c_str());
                 i = namebuf;
               }
               i = colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str();
@@ -586,7 +586,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
               i = tbtt ? to->pers(t3) : to->objs(t3);
               if (x == 1 || (x == 4 && *lastColor)) {
                 strcpy(namebuf, i);
-                cap(namebuf);
+                strcpy(namebuf, sstring(namebuf).cap().c_str());
                 i = namebuf;
               }
               if ((type == TO_CHAR) && (t1 == t3)) {
@@ -760,7 +760,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
               i = tbtt ? to->pers(obj) : to->objs(obj);
               if (x == 1 || (x == 4 && *lastColor)) {
                 strcpy(namebuf, i);
-                cap(namebuf);
+                strcpy(namebuf, sstring(namebuf).cap().c_str());
                 i = namebuf;
               }
               i = colorString(to, to->desc, i, NULL, tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE).c_str();
@@ -826,14 +826,14 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
       }
 
       if (!color) {
-        to->desc->output.putInQ(cap(buf));
+        to->desc->output.putInQ(sstring(buf).cap().c_str());
       } else {
         sstring str = to->ansi_color(color);
         if (str.empty())
-          to->desc->output.putInQ(cap(buf));
+          to->desc->output.putInQ(sstring(buf).cap().c_str());
         else {
           to->desc->output.putInQ(str);
-          to->desc->output.putInQ(cap(buf));
+          to->desc->output.putInQ(sstring(buf).cap().c_str());
           to->desc->output.putInQ(to->norm());
         } 
       }

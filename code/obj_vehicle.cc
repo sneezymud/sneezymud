@@ -202,7 +202,7 @@ void TVehicle::vehiclePulse(int pulse)
     return;
 
   strcpy(shortdescr, shortDescr);
-  cap(shortdescr);
+  strcpy(shortdescr, sstring(shortdescr).cap().c_str());
 
   if(!troom->dir_option[getDir()]){
     // first count how many valid exits we have

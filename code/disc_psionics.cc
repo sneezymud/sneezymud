@@ -189,15 +189,15 @@ int TBeing::doPTell(const char *arg, bool visible){
   if (vict->hasColor()) {
     if (hasColorStrings(NULL, capbuf, 2)) {
       if (IS_SET(vict->desc->plr_color, PLR_COLOR_MOBS)) {
-        sprintf(nameBuf, "%s", colorString(vict, vict->desc, cap(capbuf), NULL, COLOR_MOBS, FALSE).c_str());
+        sprintf(nameBuf, "%s", colorString(vict, vict->desc, sstring(capbuf).cap().c_str(), NULL, COLOR_MOBS, FALSE).c_str());
       } else {
-        sprintf(nameBuf, "<p>%s<z>", colorString(vict, vict->desc, cap(capbuf), NULL, COLOR_NONE, FALSE).c_str());
+        sprintf(nameBuf, "<p>%s<z>", colorString(vict, vict->desc, sstring(capbuf).cap().c_str(), NULL, COLOR_NONE, FALSE).c_str());
       }
     } else {
-      sprintf(nameBuf, "<p>%s<z>", cap(capbuf));
+      sprintf(nameBuf, "<p>%s<z>", sstring(capbuf).cap().c_str());
     }
   } else {
-    sprintf(nameBuf, "%s", cap(capbuf));
+    sprintf(nameBuf, "%s", sstring(capbuf).cap().c_str());
   }
 
   sendTo(COLOR_COMM, fmt("<G>You telepath %s<z>, \"%s\"\n\r") % vict->getName() % colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE));
@@ -286,7 +286,7 @@ int TBeing::doPSay(const char *arg){
         continue;
 
       mud_str_copy(capbuf, mob->pers(this), 256);
-      cap(capbuf);
+      strcpy(capbuf, sstring(capbuf).cap().c_str());
       sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str()); 
 
       if (mob->isPc()) {

@@ -650,7 +650,6 @@ extern void half_chop(const char *sstring, char *arg1, char *arg2);
 extern bool _parse_name(const char *arg, char *name);
 extern bool is_abbrev(const char *, const char *, multipleTypeT multiple = MULTIPLE_NO, exactTypeT exact = EXACT_NO);
 extern bool is_abbrev(const sstring &, const sstring &, multipleTypeT multiple = MULTIPLE_NO, exactTypeT exact = EXACT_NO);
-extern char *cap(char *s);
 extern char *fread_string(FILE *);
 extern void trimString(sstring &);
 

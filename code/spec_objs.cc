@@ -1623,13 +1623,13 @@ int pager(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *ob2)
     strcpy(capbuf, tbob2->getName());
 
     if (t->hasColor())
-      t->sendTo(fmt("%s%s%s tells you %s\"%s\"%s % triggering your pager.\n\r") %             t->purple() % cap(capbuf) % t->norm() % t->cyan() % arg % t->norm());
+      t->sendTo(fmt("%s%s%s tells you %s\"%s\"%s % triggering your pager.\n\r") %             t->purple() % sstring(capbuf).cap().c_str() % t->norm() % t->cyan() % arg % t->norm());
     else if (t->vt100())
       t->sendTo(fmt("%s%s%s tells you \"%s\" % triggering your pager.\n\r") %
-             t->bold() % cap(capbuf) % t->norm() % arg);
+             t->bold() % sstring(capbuf).cap().c_str() % t->norm() % arg);
     else
       t->sendTo(fmt("%s tells you \"%s\" % triggering your pager.\n\r") %
-              cap(capbuf) % arg);
+              sstring(capbuf).cap() % arg);
 
     tbob2->sendTo(COLOR_MOBS, fmt("You tell %s \"%s\".\n\r") % t->getName() % arg);
 
@@ -3147,7 +3147,7 @@ int trolley(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
   }
 
   strcpy(shortdescr, myself->shortDescr);
-  cap(shortdescr);
+  strcpy(shortdescr, sstring(shortdescr).cap().c_str());
 
   if (!myself->act_ptr) {
     if (!(myself->act_ptr = new int)) {
@@ -3303,7 +3303,7 @@ int fishingBoat(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
   }
 
   strcpy(shortdescr, myself->shortDescr);
-  cap(shortdescr);
+  strcpy(shortdescr, sstring(shortdescr).cap().c_str());
 
   if (!myself->act_ptr) {
     if (!(myself->act_ptr = new int)) {

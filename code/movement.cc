@@ -98,7 +98,7 @@ void portal_flag_change(TPortal *o, unsigned int bit_to_change, const char *mess
     o2->remPortalFlag(bit_to_change);
 
   strcpy(capbuf, o2->shortDescr);
-  sprintf(buf, message, cap(capbuf));
+  sprintf(buf, message, sstring(capbuf).cap().c_str());
   sendToRoom(buf, o2->in_room);
 }
 

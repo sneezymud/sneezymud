@@ -3066,42 +3066,6 @@ void bisect_arg(const char *arg, int *field, char *sstring, const char * const a
 }
 
 
-char *cap(char *s)
-{
-  char *letter;
-  int counter = 0;
-  int i;
-
-  if (!s || !*s) {
-    return s;
-  }
-
-  letter = s; 
-
-  if ((*letter != '<') && (*letter != '\0')) {
-    if (s && islower(*s)) {
-      *s = toupper(*s);
-    }
-    return s;
-  } else {
-// Accounting for Items with color sstrings and % as first character
-    for (i = 0; *letter; letter++, i++) {
-        if (*letter == '<')
-          counter = 0;
-        else 
-          counter++;
-      if (counter == 3) {
-        if (letter && islower(*letter))
-          *letter = toupper(*letter);
-        
-        s[i] = *letter;
-        return s;
-      } else 
-        s[i] = *letter;       
-    }
-    return s;
-  }
-}
 
 char *fold(char *line)
 {

@@ -870,7 +870,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
         Strng.replace(Strng.find("$g"), 2,
                       (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
       strcpy(capbuf, Strng.c_str());
-      cap(capbuf);
+      strcpy(capbuf, sstring(capbuf).cap().c_str());
       strcat(buffer, capbuf);
    
       while ((buffer[strlen(buffer) - 1] == '\r') ||
@@ -919,7 +919,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
         cStrbuf.replace(cStrbuf.find("$g"), 2,
                         (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
       strcpy(capbuf, cStrbuf.c_str());
-      cap(capbuf);
+      strcpy(capbuf, sstring(capbuf).cap().c_str());
       ch->sendTo(COLOR_MOBS, fmt("%s") % capbuf);
     } else 
       act("You see nothing special about $m.", FALSE, this, 0, ch, TO_VICT);
@@ -1179,7 +1179,7 @@ void TBeing::show_me_mult_to_char(TBeing *ch, showModeT, unsigned int num) const
         (tm && tm->getPosition() != tm->default_pos)) {
     // A player char or a mobile without long descr, or not in default pos. 
     strcpy(buffer, getName());
-    cap(buffer);
+    strcpy(buffer, sstring(buffer).cap().c_str());
     if (isAffected(AFF_INVISIBLE))
       strcat(buffer, " (invisible)");
     if (isAffected(AFF_SHADOW_WALK))
@@ -1296,7 +1296,7 @@ void TBeing::show_me_mult_to_char(TBeing *ch, showModeT, unsigned int num) const
     }
     strcat(buffer, "\n\r");
 // COSMO MARKER -- test
-    ch->sendTo(COLOR_MOBS, cap(buffer));
+    ch->sendTo(COLOR_MOBS, sstring(buffer).cap().c_str());
   } else {  // npc with long 
     if (isAffected(AFF_INVISIBLE)) 
       strcpy(buffer, "*");
@@ -1312,7 +1312,7 @@ void TBeing::show_me_mult_to_char(TBeing *ch, showModeT, unsigned int num) const
       cStrbuf.replace(cStrbuf.find("$g"), 2,
                       (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
     strcpy(capbuf, cStrbuf.c_str());
-    cap(capbuf);
+    strcpy(capbuf, sstring(capbuf).cap().c_str());
     strcat(buffer, capbuf);
 
     if (num > 1) {

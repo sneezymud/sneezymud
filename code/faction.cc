@@ -1641,7 +1641,7 @@ void TBeing::doMakeLeader(const char *arg)
   }
   which = convertTo<int>(arg);
   /* Capitalize name and faction */
-  cap(namebuf);
+  strcpy(namebuf, sstring(namebuf).cap().c_str());
 
   if (!strcmp("Noone", namebuf) || !strcmp("noone", namebuf))
     doNoone = TRUE;

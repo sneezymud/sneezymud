@@ -86,7 +86,8 @@ int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
   mob->shortDescr = mud_str_dup(buf);
 
   strcpy(capbuf, mob->getName());
-  sprintf(buf, "%s is here, obediently following its master.\n\r", cap(capbuf));
+  sprintf(buf, "%s is here, obediently following its master.\n\r", 
+	  sstring(capbuf).cap().c_str());
   delete [] mob->player.longDescr;
   mob->player.longDescr = mud_str_dup(buf);
 
@@ -259,7 +260,8 @@ int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
   delete [] mob->shortDescr;
   mob->shortDescr = mud_str_dup(buf);
   strcpy(capbuf, mob->getName());
-  sprintf(buf, "%s is here, enthralled by it's master.\n\r", cap(capbuf));
+  sprintf(buf, "%s is here, enthralled by it's master.\n\r", 
+	  sstring(capbuf).cap().c_str());
   delete [] mob->player.longDescr;
   mob->player.longDescr = mud_str_dup(buf);
 

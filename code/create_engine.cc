@@ -423,20 +423,20 @@ int task_createEngine(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *
                 strcpy(nameBufs[1], ch->pers(asJob->tObjList[(curComp + 1)]));
 
                 sprintf(tString, "You add the %s and %s to the mixture.",
-                        cap(nameBufs[0]),
-                        cap(nameBufs[1]));
+                        sstring(nameBufs[0]).cap().c_str(),
+                        sstring(nameBufs[1]).cap().c_str());
                 act(tString, TRUE, ch, 0, 0, TO_CHAR);
               } else if (asJob->tObjList[curComp]) {
                 strcpy(nameBufs[0], ch->pers(asJob->tObjList[curComp]));
 
                 sprintf(tString, "You add the %s to the mixture.",
-                        cap(nameBufs[0]));
+                        sstring(nameBufs[0]).cap().c_str());
                 act(tString, TRUE, ch, 0, 0, TO_CHAR);
               } else if (asJob->tObjList[(curComp + 1)]) {
                 strcpy(nameBufs[0], ch->pers(asJob->tObjList[(curComp + 1)]));
 
                 sprintf(tString, "You add the %s to the mixture.",
-                        cap(nameBufs[0]));
+                        sstring(nameBufs[0]).cap().c_str());
                 act(tString, TRUE, ch, 0, 0, TO_CHAR);
               }
             } else

@@ -320,7 +320,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
       case DOOR_PORTCULLIS:
         sendrpf(rp2,
           "%s struggles a bit, but manages to lift the %s %s open.\n\r",
-              cap(buf), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_GRATE:   // see thru these
         if (dir == DIR_UP) {
@@ -334,7 +334,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
         } else {
           sendrpf(rp2,
           "%s opens the %s %s from the other side.\n\r",
-              cap(buf), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         }
         break;
       case DOOR_GATE:
@@ -550,7 +550,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
       case DOOR_PORTCULLIS:
         sendrpf(rp2,
           "%s lowers the %s %s, closing it.\n\r",
-              cap(buf), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         break;
       case DOOR_GRATE:   // see thru these
         if (dir == DIR_UP) {
@@ -564,7 +564,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
         } else {
           sendrpf(rp2,
           "%s closes the %s %s from the other side.\n\r",
-              cap(buf), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         }
         break;
       case DOOR_GATE:
@@ -599,7 +599,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
         } else {
           sendrpf(rp2,
           "%s closes the %s %s from the other side.\n\r",
-              cap(buf), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
         }
         break;
       case DOOR_DOOR:

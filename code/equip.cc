@@ -1291,7 +1291,7 @@ void TBeing::doWear(const char *argument)
         keyword = tobj->getWearKey();
         if (keyword != WEAR_KEY_NONE) {
           strcpy(buf, tobj->getName());
-          sendTo(COLOR_OBJECTS,fmt("%s: ") % cap(buf));
+          sendTo(COLOR_OBJECTS,fmt("%s: ") % sstring(buf).cap().c_str());
           rc = wear(tobj, keyword, this);
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
             delete tobj;
@@ -1314,7 +1314,7 @@ void TBeing::doWear(const char *argument)
               sendTo("\n\r");
           } else {
             strcpy(buf, o->shortDescr);
-            sendTo(COLOR_OBJECTS,fmt("%s: ") % cap(buf));
+            sendTo(COLOR_OBJECTS,fmt("%s: ") % sstring(buf).cap());
             keyword = wearKeyT(sbnum+1);
             rc = wear(o, keyword, this);
             if (IS_SET_DELETE(rc, DELETE_ITEM)) {
@@ -1326,7 +1326,7 @@ void TBeing::doWear(const char *argument)
           keyword = o->getWearKey();
 
           strcpy(buf, o->shortDescr);
-          sendTo(COLOR_OBJECTS,fmt("%s: ") % cap(buf));
+          sendTo(COLOR_OBJECTS,fmt("%s: ") % sstring(buf).cap().c_str());
           rc = wear(o, keyword, this);
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
             delete o;

@@ -1588,10 +1588,10 @@ void TBeing::doGroup(const char *argument)
           tmp_share = splitShares(this, k);
 
           if (k->hasClass(CLASS_CLERIC) || k->hasClass(CLASS_DEIKHAN)) {
-            sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %.1f%cp. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+            sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %.1f%cp. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap() % norm() % red() %
               (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) % '%' %
               k->getPiety() % '%' %
-              cap(namebuf) %
+              sstring(namebuf).cap().c_str() %
               (k != this ? "s" : "") %
               DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
               norm() % purple() %
@@ -1599,10 +1599,10 @@ void TBeing::doGroup(const char *argument)
 		   k->getExpSharePerc() % '%' %
               norm());
           } else if (k->hasClass(CLASS_SHAMAN)) {
-            sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+            sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap().c_str() % norm() % red() %
               (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) % '%' %
               k->getLifeforce() % 
-              cap(namebuf) %
+              sstring(namebuf).cap().c_str() %
               (k != this ? "s" : "") %
               DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
               norm() % purple() %
@@ -1610,10 +1610,10 @@ void TBeing::doGroup(const char *argument)
               k->getExpSharePerc() % '%' %
               norm());
           } else {
-            sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %.1f%cm. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+            sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %.1f%cm. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap().c_str() % norm() % red() %
               (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) % '%' %
               (((double) (k->getMana())) / ((double) k->manaLimit()) * 100) % '%' %
-              cap(namebuf) %
+              sstring(namebuf).cap().c_str() %
               (k != this ? "s" : "") %
               DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
               norm() % purple() %
@@ -1622,7 +1622,7 @@ void TBeing::doGroup(const char *argument)
               norm());
           }
         } else 
-          sendTo(fmt("%-15.15s [not around]\n\r") % cap(namebuf));
+          sendTo(fmt("%-15.15s [not around]\n\r") % sstring(namebuf).cap().c_str());
       }
       for (f = k->followers; f; f = f->next) {
         sprintf(namebuf, "%s", (f->follower != this ? f->follower->getNameNOC(this).c_str() : "You"));
@@ -1632,10 +1632,10 @@ void TBeing::doGroup(const char *argument)
           if (sameRoom(*f->follower)) { 
             if (f->follower->hasClass(CLASS_CLERIC) || 
                 f->follower->hasClass(CLASS_DEIKHAN))
-              sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %.1f%cp. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+              sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %.1f%cp. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap().c_str() % norm() % red() %
                 (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) % '%' %
                 f->follower->getPiety() % '%' %
-                cap(namebuf) %
+                sstring(namebuf).cap().c_str() %
                 (f->follower != this ? "s" : "") %
                 DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
                 norm() % purple() %
@@ -1643,10 +1643,10 @@ void TBeing::doGroup(const char *argument)
                 f->follower->getExpSharePerc() % '%' %
                 norm());
             else if (f->follower->hasClass(CLASS_SHAMAN))
-              sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+              sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap().c_str() % norm() % red() %
                 (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) % '%' %
                 f->follower->getLifeforce() %
-                cap(namebuf) %
+                sstring(namebuf).cap().c_str() %
                 (f->follower != this ? "s" : "") %
                 DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
                 norm() % purple() %
@@ -1655,10 +1655,10 @@ void TBeing::doGroup(const char *argument)
                 norm());
 
             else {
-              sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %.1f%cm. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() % 
+              sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %.1f%cm. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap().c_str() % norm() % red() % 
                 (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) % '%' %
                 (((double) (f->follower->getMana())) / ((double) f->follower->manaLimit()) * 100) % '%' %
-                cap(namebuf) %
+                sstring(namebuf).cap().c_str() %
                 (f->follower != this ? "s" : "") %
                 DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
                 norm() % purple() %
@@ -1667,7 +1667,7 @@ void TBeing::doGroup(const char *argument)
                 norm());
             }
           } else 
-            sendTo(fmt("%-15.15s [not around]\n\r") % cap(namebuf));
+            sendTo(fmt("%-15.15s [not around]\n\r") % sstring(namebuf).cap().c_str());
         }
       }
     }

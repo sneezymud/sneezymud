@@ -424,12 +424,12 @@ void Descriptor::sendShout(TBeing *ch, const char *arg)
         continue;
       }
       sstring argbuf = colorString(b, i, arg, NULL, COLOR_NONE, FALSE);
-      sprintf(namebuf, "<g>%s<z>", cap(capbuf));
+      sprintf(namebuf, "<g>%s<z>", sstring(capbuf).cap().c_str());
       sstring nameStr = colorString(b, i, namebuf, NULL, COLOR_NONE, FALSE);
       if(hasColorStrings(NULL, capbuf, 2)) {
         if (IS_SET(b->desc->plr_color, PLR_COLOR_MOBS)) {
-          sstring tmpbuf = colorString(b, i, cap(capbuf), NULL, COLOR_MOBS, FALSE);
-          sstring tmpbuf2 = colorString(b, i, cap(capbuf), NULL, COLOR_NONE, FALSE);
+          sstring tmpbuf = colorString(b, i, sstring(capbuf).cap().c_str(), NULL, COLOR_MOBS, FALSE);
+          sstring tmpbuf2 = colorString(b, i, sstring(capbuf).cap().c_str(), NULL, COLOR_NONE, FALSE);
 
           if (i->m_bIsClient)
             i->clientf("%d|%s|%s", CLIENT_SHOUT, tmpbuf2.c_str(), argbuf.c_str());
@@ -438,13 +438,13 @@ void Descriptor::sendShout(TBeing *ch, const char *arg)
           if (i->m_bIsClient)
             i->clientf("%d|%s|%s%s", CLIENT_SHOUT, nameStr.c_str(), argbuf.c_str());
 
-          b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % cap(capbuf) % (blah ? "whines" : "shouts") % arg);
+          b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap().c_str() % (blah ? "whines" : "shouts") % arg);
         }
       } else {
         if (i->m_bIsClient)
           i->clientf("%d|%s|%s", CLIENT_SHOUT, nameStr.c_str(), argbuf.c_str());
 
-        b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % cap(capbuf) % (blah ? "whines" : "shouts") % arg);
+        b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap().c_str() % (blah ? "whines" : "shouts") % arg);
       }
     }
   }

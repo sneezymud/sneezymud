@@ -135,7 +135,7 @@ sstring addNameToBuf(const TBeing *me, const Descriptor *ch, const TThing *ting,
         case 'M':
           strcpy(tmp, ting->getName());
           if ((s == 0) || (y && (s == 3))) {
-            cap(tmp);
+            strcpy(tmp, sstring(tmp).cap().c_str());
           }
           if (lev != COLOR_NONE) 
             buf += colorString(me, ch, tmp, NULL, lev, FALSE);

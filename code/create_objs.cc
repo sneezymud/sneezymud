@@ -3144,7 +3144,7 @@ void TObj::describeTreasure(const char *arg,int num, int price)
   //  Remake the long description.  
   sprintf(type,shortDescr);
   sprintf(buf,"%s has been left here.  What luck!", 
-              cap(type));
+              sstring(type).cap().c_str());
   delete [] getDescr();
   setDescr(mud_str_dup(buf));
   

@@ -143,7 +143,7 @@ static int warCry(TMonster *myself, TBeing *targ, TObj *temp_obj)
   char buf[256];
 
   sprintf(buf,"%s will be mine again!",temp_obj->shortDescr);
-  myself->doSay(cap(buf));
+  myself->doSay(sstring(buf).cap().c_str());
   return myself->takeFirstHit(*targ);
 }
 
