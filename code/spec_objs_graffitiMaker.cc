@@ -12,7 +12,7 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   sstring buf;
 //  buf = sstring(arg).word(0);
-  buf = sstring(arg);
+  buf = sstring(stripColorCodes(arg));
     
   if (!o || !ch)
     return FALSE;
