@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_track.cc,v $
+// Revision 1.2  1999/09/30 14:09:09  lapsos
+// Cleaned up some of the pre-emptive checks.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -40,6 +43,11 @@ void stop_tracking(TBeing *ch)
 
 int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRoom *, TObj *obj)
 {
+  // Do a hard return now if they have already been given their message.
+  if ((!ch || !ch->task || (ch->task->flags > 0 && ch->task->flags != 100)) &&
+      cmd == CMD_TASK_CONTINUE)
+    return FALSE;
+
   affectedData *aff;
   roomDirData *Eroom=NULL;
   TThing *t;
@@ -57,16 +65,20 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
     stop_tracking(ch);
     return FALSE;  // return FALSE lets the command be interpreted
   }
+
   if (ch->utilityTaskCommand(cmd) ||
       ch->nobrainerTaskCommand(cmd))
     return FALSE;
+
   if (!ch->specials.hunting && !isSW) {
     act("For some reason your quarry can no longer be found.",
         FALSE, ch, 0, 0, TO_CHAR);
     stop_tracking(ch);
     return FALSE;
   }
+
   skill = 0;
+
   if (ch->specials.hunting)
     for (aff = ch->specials.hunting->affected; aff; aff = aff->next)
       if (aff->type == SKILL_CONCEALMENT)
