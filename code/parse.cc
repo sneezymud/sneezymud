@@ -3262,18 +3262,18 @@ string nextToken(char delim, unsigned int maxSize, char *str)
 }
 
 // we use to restrict this to MAX_STRIN_LENGTH in size, we no longer do...
-char * mud_str_dup(const char *buf)
+char * mud_str_dup(const string buf)
 {
   char *tmp = NULL;
-  if (!buf)
+  if (buf.empty())
     return NULL;
 
   try {
-    tmp = new char[strlen(buf) + 1];
+    tmp = new char[buf.length() + 1];
   } catch (...) {
     mud_assert(0, "exception caught in mud_str_dup");
   }
-  strcpy(tmp, buf);
+  strcpy(tmp, buf.c_str());
   return tmp;
 }
 
