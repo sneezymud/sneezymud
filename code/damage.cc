@@ -905,7 +905,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 	} else if(tp->hasQuestBit(TOG_MONK_PURPLE_LEPER_KILLED1)) {
 	  tp->remQuestBit(TOG_MONK_PURPLE_LEPER_KILLED1);
 	  tp->setQuestBit(TOG_MONK_PURPLE_LEPER_KILLED2);
-	} else {
+	} else if(tp->hasQuestBit(TOG_MONK_PURPLE_STARTED)) {
 	  tp->setQuestBit(TOG_MONK_PURPLE_LEPER_KILLED1);
 	  tp->remQuestBit(TOG_MONK_PURPLE_STARTED);
 	}

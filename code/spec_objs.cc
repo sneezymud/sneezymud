@@ -7529,7 +7529,7 @@ int lycanthropyCure(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       TRUE, ch, NULL, NULL, TO_ROOM, NULL);
   }
 
-  return TRUE;
+  return FALSE;  // return false here so that the glop goes away
 }
 
 
