@@ -2457,8 +2457,8 @@ void TBeing::doSit(const string & argument)
     if (!riding) {
       TBeing *dummy;
       TObj *obj;
-      generic_find(str.c_str(), FIND_OBJ_ROOM, this, &dummy, &obj);
-      if (!obj) {
+      if(!generic_find(str.c_str(), FIND_OBJ_ROOM, this, &dummy, &obj) ||
+	 !obj){
         sendTo("You don't see that here.\n\r");
         return;
       }
