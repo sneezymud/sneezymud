@@ -3380,7 +3380,7 @@ int TPerson::learnFromDoingUnusual(learnUnusualTypeT type, spellNumT spell, int 
   spellNumT spell2 = TYPE_UNDEFINED;
   int value = 0;
 
-  if (isImmortal() || !desc)
+  if (isImmortal() || !desc || roomp->isRoomFlag(ROOM_ARENA))
     return FALSE;
 
 // for combat skills/armor wearing adventuring stuff that doesnt use bsuccess
@@ -3486,7 +3486,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
   char tString[256];
 
   discLearn = chance = chanceDisc = chanceAss = 0;
-  if (isImmortal() || !desc) {
+  if (isImmortal() || !desc || roomp->isRoomFlag(ROOM_ARENA)) {
     return FALSE;
   }
 
