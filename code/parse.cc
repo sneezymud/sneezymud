@@ -1791,17 +1791,18 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 // call this if command should be executed right now (no lag)
 // otherwise use addToCommandQue()
 // return DELETE_THIS if tbeing has been killed
-int TBeing::parseCommand(const char *orig_arg, bool typedIn)
+int TBeing::parseCommand(const sstring &orig_arg, bool typedIn)
 {
   int i;
   unsigned int pos;
-  char aliasbuf[1024], arg1[1024], arg2[1024];
-  sstring argument;
+  sstring argument, aliasbuf, arg1, arg2;
   sstring whitespace=" \f\n\r\t\v";
 
-  half_chop(orig_arg, arg1, arg2);
+  argument=orig_arg;
 
-  if (!*arg1)
+  arg2=one_argument(orig_arg, arg1);
+
+  if (arg1.empty())
     return FALSE;
 
   if (riding) {
@@ -1809,54 +1810,50 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
       dismount(POSITION_STANDING);
   }
 
-  argument=orig_arg;
-
-
+  // handle aliases
   if (desc) {
-    i = -1;
-    do {
-      i++;
+    for(i=0;i<=16;++i){
+      if(arg1==desc->alias[i].word)
+	break;
     }
-    while ((i < 16) && (strcmp(arg1, desc->alias[i].word)));
 
     if (i < 16) {
-      if ((arg2) && (*arg2))
-        sprintf(aliasbuf, "%s %s", desc->alias[i].command, arg2);
+      if (!arg2.empty())
+	aliasbuf=fmt("%s %s") % desc->alias[i].command % arg2;
       else
-        strcpy(aliasbuf, desc->alias[i].command);
+        aliasbuf=desc->alias[i].command;
 
       argument=aliasbuf;
-      half_chop(argument.c_str(), arg1, arg2);
+      arg2=one_argument(aliasbuf, arg1);
     }
   }
 
 
   // Let people use say and emote shortcuts with no spaces - Russ
   if ((argument[0] == '\'') || (argument[0] == ':') || (argument[0] == ',')) {
-    arg1[0] = argument[0];
-    arg1[1] = '\0';
+    arg1 = argument.substr(0,1);
     argument.erase(0,1); // remove first character
   } else {
     if (!argument.substr(0,3).compare("low") && !isImmortal()){
       // KLUDGE - for low and lower command
       // l and lo == look, so we need not check for them
-      strcpy(arg1, "lower");
+      arg1="lower";
     } else if (!argument.substr(0,4).compare("repl") && !isImmortal()){
       // KLUDGE - for reply and replace command
       // rep == report, so we need not check for shorter
-      strcpy(arg1, "reply");
+      arg1="reply";
     } else if (!argument.substr(0,3).compare("med") && !isImmortal()){
       // KLUDGE - for meditate and medit command
       // me == mend limb, so we need not check for shorter
-      strcpy(arg1, "meditate");
+      arg1="meditate";
     } else if (!(argument.lower().substr(0,6).compare("southe"))){
-      strcpy(arg1, "se");
+      arg1="se";
     } else if (!(argument.lower().substr(0,6).compare("northw"))){
-      strcpy(arg1, "nw");
+      arg1="nw";
     } else if (!(argument.lower().substr(0,6).compare("southw"))){
-      strcpy(arg1, "sw");
+      arg1="sw";
     } else if (!(argument.lower().substr(0,6).compare("northe"))){
-      strcpy(arg1, "ne");
+      arg1="ne";
     }
 
     // strip out first word
