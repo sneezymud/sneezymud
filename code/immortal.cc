@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: immortal.cc,v $
+// Revision 1.15  1999/10/14 03:54:48  batopr
+// removed #if 0 code
+//
 // Revision 1.14  1999/10/14 03:18:51  batopr
 // Modified display of info gold slightly
 //
@@ -4065,36 +4068,6 @@ void TBeing::doInfo(const char *arg)
 
       int tot_drain = tot_gold - net_gold;
 
-#if 0
-      sprintf(buf2, "Current Modifiers: income     : %.2f, comm       : %.2f, gamble     : %.2f\n\r",
-         gold_modifier[GOLD_INCOME],
-         gold_modifier[GOLD_COMM],
-         gold_modifier[GOLD_GAMBLE]);
-      buf += buf2;
-      sprintf(buf2, "                 : repair     : %.2f, shop       : %.2f, respon shop: %.2f\n\r",
-         gold_modifier[GOLD_REPAIR],
-         gold_modifier[GOLD_SHOP],
-         gold_modifier[GOLD_SHOP_RESPONSES]);
-      buf += buf2;
-      sprintf(buf2, "                 : armor shop : %.2f, weapon shop: %.2f, pet shop   : %.2f\n\r",
-         gold_modifier[GOLD_SHOP_ARMOR],
-         gold_modifier[GOLD_SHOP_WEAPON],
-         gold_modifier[GOLD_SHOP_PET]);
-      buf += buf2;
-      sprintf(buf2, "                 : symbol shop: %.2f, comp shop  : %.2f, food shop  : %.2f\n\r",
-         gold_modifier[GOLD_SHOP_SYMBOL],
-         gold_modifier[GOLD_SHOP_COMPONENTS],
-         gold_modifier[GOLD_SHOP_FOOD]);
-      buf += buf2;
-      sprintf(buf2, "                 : rent       : %.2f, hospital   : %.2f, tithe      : %.2f\n\r",
-         gold_modifier[GOLD_RENT],
-         gold_modifier[GOLD_HOSPITAL],
-         gold_modifier[GOLD_TITHE]);
-      buf += buf2;
-      sprintf(buf2, "                 : dump       : %.2f\n\r",
-         gold_modifier[GOLD_DUMP]);
-      buf += buf2;
-#else
       sprintf(buf2, "Shop  : modifier: %.2f        (factor  : %.2f%%)\n\r",
            gold_modifier[GOLD_SHOP],
            100.0 * (tot_gold_allshops - net_gold_allshops) / tot_gold_allshops);
@@ -4111,7 +4084,7 @@ void TBeing::doInfo(const char *arg)
             stats.equip,
             100.0 * (tot_gold_shop_weap + tot_gold_shop_arm) / tot_gold);
       buf += buf2;
-#endif
+      buf += "\n\r";
 
       sprintf(buf2, "TOTAL ECONOMY:     pos %u, net gold = %d, drain=%d\n\r", tot_gold, net_gold, tot_drain);
       buf += buf2;
