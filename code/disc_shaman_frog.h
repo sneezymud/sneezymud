@@ -1,6 +1,9 @@
 #ifndef __DISC_SHAMAN_FROG_H
 #define __DISC_SHAMAN_FROG_H
 
+const int LAST_TRANSFORM_LIMB = 6;
+extern struct TransformLimbType TransformLimbList[LAST_TRANSFORM_LIMB];
+
 
 class CDShamanFrog : public CDiscipline
 {
@@ -8,6 +11,8 @@ public:
     CSkill skStormySkies;
     CSkill skDeathWave;
     CSkill skAquaticBlast;
+    CSkill skTransformLimb;
+    CSkill skCreepingDoom;
     CSkill skShapeShift;
 
     CDShamanFrog() 
@@ -15,6 +20,8 @@ public:
       skStormySkies(),
       skDeathWave(),
       skAquaticBlast(),
+      skTransformLimb(),
+      skCreepingDoom(),
       skShapeShift() {
     }
     CDShamanFrog(const CDShamanFrog &a) 
@@ -22,6 +29,8 @@ public:
       skStormySkies(a.skStormySkies),
       skDeathWave(a.skDeathWave),
       skAquaticBlast(a.skAquaticBlast),
+      skTransformLimb(a.skTransformLimb),
+      skCreepingDoom(a.skCreepingDoom),
       skShapeShift(a.skShapeShift) {
     }
     CDShamanFrog & operator=(const CDShamanFrog &a)  {
@@ -31,6 +40,8 @@ public:
       skDeathWave = a.skDeathWave;
       skAquaticBlast = a.skAquaticBlast;
       skShapeShift = a.skShapeShift;
+      skTransformLimb = a.skTransformLimb;
+      skCreepingDoom = a.skCreepingDoom;
       return *this;
     }
     virtual ~CDShamanFrog() {}
@@ -55,6 +66,12 @@ private:
     int castDeathWave(TBeing *, TBeing *);
     int deathWave(TBeing *, TBeing *, TMagicItem *);
     int deathWave(TBeing *, TBeing *, int, byte, int);
+
+
+    int transformLimb(TBeing *, const char *);
+    int castTransformLimb(TBeing *);
+    int transformLimb(TBeing *, const char *, int, byte);
+
 
 #endif
 

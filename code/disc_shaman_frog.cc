@@ -14,6 +14,258 @@
 #include "disc_shaman_frog.h"
 #include "obj_magic_item.h"
 
+int vampireTransform(TBeing *ch)
+{
+  TMonster *mob;
+  PolyType bat = {"bat", 50, 1, 13749, DISC_NONE, RACE_NORACE };
+
+  if (!ch->isPc() || IS_SET(ch->specials.act, ACT_POLYSELF) ||
+      ch->polyed != POLY_TYPE_NONE){
+    act("You are already transformed into another shape.",
+	TRUE, ch, NULL, NULL, TO_CHAR);
+    return FALSE;
+  }
+  
+  if (!(mob = read_mobile(13749, VIRTUAL))) {
+    ch->sendTo("It didn't seem to work.\n\r");
+    return FALSE;
+  }
+  thing_to_room(mob,ROOM_VOID);
+  mob->swapToStrung();
+  
+
+  act("You use your dark powers to transform into $N.", 
+       TRUE, ch, NULL, mob, TO_CHAR);
+  act("$n transforms into $N.",
+       TRUE, ch, NULL, mob, TO_ROOM);
+
+  SwitchStuff(ch, mob);
+  setCombatStats(ch, mob, bat, SPELL_POLYMORPH);
+  
+  --(*mob);
+  *ch->roomp += *mob;
+  --(*ch);
+  thing_to_room(ch, ROOM_POLY_STORAGE);
+  
+  // stop following whoever you are following.
+  if (ch->master)
+    ch->stopFollower(TRUE);
+  
+  // switch ch into mobile 
+  ch->desc->character = mob;
+  ch->desc->original = dynamic_cast<TPerson *>(ch);
+
+  mob->desc = ch->desc;
+  ch->desc = NULL;
+  ch->polyed = POLY_TYPE_POLYMORPH;
+
+  SET_BIT(mob->specials.act, ACT_DISGUISED);
+  SET_BIT(mob->specials.act, ACT_POLYSELF);
+  SET_BIT(mob->specials.act, ACT_NICE_THIEF);
+  SET_BIT(mob->specials.act, ACT_SENTINEL);
+  REMOVE_BIT(mob->specials.act, ACT_AGGRESSIVE);
+  REMOVE_BIT(mob->specials.act, ACT_SCAVENGER);
+  REMOVE_BIT(mob->specials.act, ACT_DIURNAL);
+  REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
+
+  appendPlayerName(ch, mob);
+  
+  mob->setHeight(ch->getHeight()/5);
+  mob->setWeight(ch->getWeight()/10);
+
+  return TRUE;
+}
+
+
+
+struct TransformLimbType TransformLimbList[LAST_TRANSFORM_LIMB] =
+{
+  {"hands", 6, 20, "bear claws", WEAR_HAND_R, AFFECT_TRANSFORMED_HANDS, DISC_RANGER},
+  {"arms", 30, 75,"falcon wings", WEAR_ARM_R, AFFECT_TRANSFORMED_ARMS,
+DISC_ANIMAL},
+  {"legs", 20, 15, "a dolphin's tail", WEAR_LEGS_R, AFFECT_TRANSFORMED_LEGS, DISC_ANIMAL},
+  {"neck", 15, 40, "some fish gills", WEAR_NECK, AFFECT_TRANSFORMED_NECK, DISC_ANIMAL},
+  {"head", 12, 60, "an eagle's head", WEAR_HEAD, AFFECT_TRANSFORMED_HEAD, DISC_RANGER},
+  {"all", 1, 1, "all your limbs", MAX_WEAR, TYPE_UNDEFINED, DISC_RANGER}
+};
+
+int transformLimb(TBeing * caster, const char * buffer, int level, byte bKnown)
+{
+  int ret;
+  bool multi = TRUE;
+  wearSlotT limb = WEAR_NOWHERE;
+  affectedData aff;
+  affectedData aff2;
+  bool two_affects = FALSE;
+  int i;
+  char newl[20];
+  char old[20];
+  char buf[256];
+
+  if (caster->affectedBySpell(SPELL_POLYMORPH)) {
+    caster->sendTo("You can't transform while polymorphed.\n\r");
+    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    return FALSE;
+  }
+
+  // failure = scrapped item.  no item damage allowed in arena
+  // this is to block problem in doTransformDrop()
+  if (caster->roomp && caster->roomp->isRoomFlag(ROOM_ARENA)) {
+    act("A magic power prevents anything from happening here.",
+         FALSE, caster, 0, 0, TO_CHAR);
+    act("Nothing seems to happen.",
+         TRUE, caster, 0, 0, TO_ROOM);
+    return SPELL_FALSE;
+  }
+
+  for(i = 0; i < LAST_TRANSFORM_LIMB; i++) {
+    if (is_abbrev(buffer,TransformLimbList[i].name)) {
+      limb = TransformLimbList[i].limb;
+      if (TransformLimbList[i].level > level) {
+        return SPELL_SAVE;
+      }
+      // NOTE: this is DISC learning, not skill (intentional)
+      if (TransformLimbList[i].learning > caster->getDiscipline((TransformLimbList[i].discipline))->getLearnedness()) {
+        return SPELL_SAVE;
+      }
+      break;
+    }
+  }
+
+  if (i >= LAST_TRANSFORM_LIMB) {
+    caster->sendTo("Couldn't find any such limb to transform.\n\r");
+    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    return FALSE;
+  }
+  
+  if (limb == MAX_WEAR) {
+    caster->sendTo("You can't transform all of your limbs.\n\r");
+    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    return FALSE;
+  }
+
+  if (!caster->isTransformableLimb(limb, TRUE)) {
+    act("Something prevents your limb from being transformed.", FALSE, caster, NULL, NULL, TO_CHAR);
+    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    return FALSE;
+  }
+
+  aff.type = SKILL_TRANSFORM_LIMB;
+  aff.location = APPLY_NONE;
+  aff.duration = (combatRound((level / 5) + 2));
+  aff.bitvector = 0;
+  aff.modifier = 0; 
+
+  aff2.type = SKILL_TRANSFORM_LIMB;
+  aff2.location = APPLY_NONE;
+  aff2.duration = combatRound(((level / 5) + 2));
+  aff2.bitvector = 0;
+  aff2.modifier = 0;
+
+  switch (limb) {
+    case WEAR_NECK:
+      aff.type = AFFECT_TRANSFORMED_NECK;
+      aff.bitvector = AFF_WATERBREATH | AFF_SILENT;
+      multi = FALSE;
+      break;
+    case WEAR_HEAD:
+      aff.type = AFFECT_TRANSFORMED_HEAD;
+      aff.bitvector = AFF_SILENT | AFF_TRUE_SIGHT;
+      multi = FALSE;
+      break;
+    case WEAR_HAND_R:
+      aff.type = AFFECT_TRANSFORMED_HANDS;
+      aff.location = APPLY_DAMROLL;
+
+      // this prevents weapon use, so we want the effect to sort of make
+      // up for that fact.  But since NPCs don't use weapons, and their
+      // barehand dam is naturally high, lets not goose it for them too much
+      if (caster->isPc())
+        aff.modifier = 2 + (level / 4);
+      else
+        aff.modifier = 1 + (level/17);
+
+      aff2.type = AFFECT_TRANSFORMED_HANDS;
+      aff2.location = APPLY_SPELL;
+      aff2.modifier = SKILL_CLIMB;
+      aff2.modifier2 = 50;
+      two_affects = TRUE;
+      break;
+    case WEAR_ARM_R:
+      aff.type = AFFECT_TRANSFORMED_ARMS;
+      aff.bitvector = AFF_FLYING;
+      break;
+    case WEAR_LEGS_R:
+      aff.type = AFFECT_TRANSFORMED_LEGS;
+      aff.location = APPLY_SPELL;
+      aff.modifier = SKILL_SWIM;
+      aff.modifier2 = 50;
+      break;
+    default:
+      vlogf(LOG_BUG, "Bad limb case in TRANSFORM_LIMB");
+      caster->sendTo("Bug in your limbs, tell a god and put in bug file.\n\r");
+      return FALSE;
+  }
+
+  if (bSuccess(caster, bKnown, caster->getPerc(), SKILL_TRANSFORM_LIMB)) {
+    switch (critSuccess(caster, SKILL_TRANSFORM_LIMB)) {
+      case CRIT_S_KILL:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_DOUBLE:
+        CS(SKILL_TRANSFORM_LIMB);
+        aff.duration *= 2;
+        aff2.duration *= 2;
+        ret = SPELL_CRIT_SUCCESS;
+        sprintf(newl, "%s", TransformLimbList[i].newName);
+        sprintf(old, "%s", TransformLimbList[i].name);
+        if (multi)
+          sprintf(buf, "Your %s glow as they transform into %s!", old, newl);
+        else
+          sprintf(buf, "Your %s glows as it transforms into %s!", old, newl);
+        act(buf, FALSE, caster, 0, 0, TO_CHAR);
+        if (multi)
+          sprintf(buf, "$n's %s liquify and then transform into %s!", old, newl);
+        else
+          sprintf(buf, "$n's %s liquifies and then transforms into %s!", old, newl);
+        act(buf, FALSE, caster, 0, 0, TO_ROOM);
+        break;
+      default:
+        sprintf(newl, "%s", TransformLimbList[i].newName);
+        sprintf(old, "%s", TransformLimbList[i].name);
+        if (multi)
+          sprintf(buf, "Your %s tingle as they transform into %s!", old, newl); 
+        else 
+          sprintf(buf, "Your %s tingles as it transforms into %s!", old, newl);
+        act(buf, FALSE, caster, 0, 0, TO_CHAR);
+        if (multi)
+          sprintf(buf, "$n's %s liquify and then transform into %s!", old, newl);
+        else
+          sprintf(buf, "$n's %s liquifies and then transforms into %s!", old, newl);
+        act(buf, FALSE, caster, 0, 0, TO_ROOM);
+        ret = SPELL_SUCCESS;
+        break;
+    }
+    caster->affectTo(&aff);
+    if (two_affects)
+      caster->affectTo(&aff2);
+
+    caster->makeLimbTransformed(caster, limb, TRUE);
+    return ret;
+  } else {  
+    switch (critFail(caster, SKILL_TRANSFORM_LIMB)) {  
+      case CRIT_F_HITOTHER:
+        CF(SKILL_TRANSFORM_LIMB);
+        caster->rawBleed(limb, (level * 3) + 100, SILENT_NO, CHECK_IMMUNITY_YES);
+        return SPELL_CRIT_FAIL;
+      default:
+        return SPELL_FAIL;
+      caster->sendTo("Nothing seems to happen.\n\r");
+      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    }
+  }
+}
+
+
 // STORMY SKIES
  
 int stormySkies(TBeing * caster, TBeing * victim, int level, byte bKnown)
@@ -513,6 +765,185 @@ int castShapeShift(TBeing *caster)
     caster->nothingHappens();
   return TRUE;
 }
+
+int TBeing::doTransform(const char *argument) 
+{
+  int i = 0, bKnown = 0;
+  wearSlotT limb = WEAR_NOWHERE;
+  int level, ret = 0;
+  int rc = 0;
+  char buffer[256];
+
+//  sendTo("This is disabled due to a bug right now.\n\r");
+//  return FALSE;
+
+  if (!doesKnowSkill(SKILL_TRANSFORM_LIMB)) {
+    if(isVampire())
+      return vampireTransform(this);
+
+    sendTo("You know nothing about transforming your limbs.\n\r");
+    return FALSE;
+  }
+
+  strcpy(buffer, argument);
+
+  for(i = 0; i < LAST_TRANSFORM_LIMB; i++) {
+    if (is_abbrev(buffer,TransformLimbList[i].name)) {
+      limb = TransformLimbList[i].limb;
+      if (TransformLimbList[i].level > getSkillLevel(SKILL_TRANSFORM_LIMB)) {
+        sendTo("You can not transform that limb yet.");
+        return FALSE;
+      }
+      // NOTE: this is DISC learning, not skill (intentional)
+      if (TransformLimbList[i].learning > getDiscipline((TransformLimbList[i].discipline))->getLearnedness()) {
+        sendTo("You can not transform that limb yet.");
+        return FALSE;
+      }
+      break;
+    }
+  }
+  if (i >= LAST_TRANSFORM_LIMB) {
+    if(isVampire())
+      return vampireTransform(this);
+
+    sendTo("Couldn't find any such limb to transform.\n\r");
+    return FALSE;
+  }
+
+  if (limb == MAX_WEAR) {
+    sendTo("You can't transform all of your limbs.\n\r");
+    return FALSE;
+  }
+
+  if (!isTransformableLimb(limb, TRUE)) {
+    act("Something prevents your limb from being transformed.", FALSE, this, NULL, NULL, TO_CHAR);
+    return FALSE;
+  }
+
+  level = getSkillLevel(SKILL_TRANSFORM_LIMB);
+  bKnown = getSkillValue(SKILL_TRANSFORM_LIMB);
+
+  ret=transformLimb(this, buffer, level, bKnown);
+  if (ret==SPELL_SUCCESS) {
+  } else if (ret==SPELL_CRIT_SUCCESS) {
+  } else if (ret==SPELL_CRIT_FAIL) {
+      act("Something went wrong with the magic.",
+          FALSE, this, 0, NULL, TO_CHAR);
+      act("You feel your own limb open and your blood start to drain!",
+          FALSE, this, 0, NULL, TO_CHAR);
+      act("Something went wrong with $n's magic.",
+          FALSE, this, 0, NULL, TO_ROOM);
+      act("$n seems to have caused $s limbs to start bleeding!",
+          FALSE, this, 0, NULL, TO_ROOM);
+  } else if (ret==SPELL_SAVE) {
+      act("You are not powerful enough to transform that limb.", 
+          FALSE, this, NULL, NULL, TO_CHAR);
+      act("Nothing seems to happen.", 
+          FALSE, this, NULL, NULL, TO_ROOM);
+  } else if (ret==SPELL_FAIL) {
+      act("You fail to transform your limbs.", 
+          FALSE, this, NULL, NULL, TO_CHAR);
+      act("Nothing seems to happen.", 
+          FALSE, this, NULL, NULL, TO_ROOM);
+  } else {
+      act("Nothing seems to happen.", 
+          FALSE, this, NULL, NULL, TO_CHAR);
+      act("Nothing seems to happen.", 
+          FALSE, this, NULL, NULL, TO_ROOM);
+  }
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+
+}
+
+int transformLimb(TBeing * caster, const char * buffer)
+{
+  taskDiffT diff;
+  int i;
+  wearSlotT limb = WEAR_NOWHERE;
+
+  for(i = 0; i < LAST_TRANSFORM_LIMB; i++) {
+    if (is_abbrev(buffer,TransformLimbList[i].name)) {
+      limb = TransformLimbList[i].limb;
+      if (TransformLimbList[i].level > caster->getSkillLevel(SKILL_TRANSFORM_LIMB)) {
+        caster->sendTo("You can not transform that limb yet.");
+        return FALSE;
+      }
+      // NOTE: this is DISC learning, not skill (intentional)
+      if (TransformLimbList[i].learning > caster->getDiscipline((TransformLimbList[i].discipline))->getLearnedness()) {
+        caster->sendTo("You can not transform that limb yet.");
+        return FALSE;
+      }
+      break;
+    }
+  }
+  if (i >= LAST_TRANSFORM_LIMB) {
+    caster->sendTo("Couldn't find any such limb to transform.\n\r");
+    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    return FALSE;
+  }
+
+  if (limb == MAX_WEAR) {
+    caster->sendTo("You can't transform all of your limbs.\n\r");
+    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    return FALSE;
+  }
+
+  if (!caster->isTransformableLimb(limb, TRUE)) {
+    act("Something prevents your limb from being transformed.", FALSE, caster, NULL, NULL, TO_CHAR);
+    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    return FALSE;
+  }
+
+    if (!bPassMageChecks(caster, SKILL_TRANSFORM_LIMB, caster))
+      return FALSE;
+
+    lag_t rounds = discArray[SKILL_TRANSFORM_LIMB]->lag;
+    diff = discArray[SKILL_TRANSFORM_LIMB]->task;
+
+    
+    start_cast(caster, NULL, NULL, caster->roomp, SKILL_TRANSFORM_LIMB, diff, 1, buffer, rounds, caster->in_room, 0, 0,TRUE, 0);
+    return FALSE;
+}
+
+int castTransformLimb(TBeing * caster)
+{
+  int level, ret;
+  int rc = 0;
+
+  level = caster->getSkillLevel(SKILL_TRANSFORM_LIMB);
+  int bKnown = caster->getSkillValue(SKILL_TRANSFORM_LIMB);
+
+  ret=transformLimb(caster, caster->spelltask->orig_arg, level, bKnown);
+  if (ret==SPELL_SUCCESS) {
+  } else if (ret==SPELL_CRIT_SUCCESS) {
+  } else if (ret==SPELL_CRIT_FAIL) {
+      act("Something went wrong with your spell.",
+          FALSE, caster, 0, NULL, TO_CHAR);
+      act("You feel your own limb open and your blood start to drain!",
+          FALSE, caster, 0, NULL, TO_CHAR);
+      act("Something went wrong with $n's spell.",
+          FALSE, caster, 0, NULL, TO_ROOM);
+      act("$n seems to have caused $s limbs to start bleeding!",
+          FALSE, caster, 0, NULL, TO_ROOM);
+  } else if (ret==SPELL_SAVE) {
+      act("You are not powerful enough to transform that limb.", FALSE, caster, NULL, NULL, TO_CHAR);
+      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+  } else if (ret==SPELL_FAIL) {
+      act("You fail to transform your limbs.", FALSE, caster, NULL, NULL, TO_CHAR);
+      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+  } else {
+      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_CHAR);
+      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+  }
+
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
+
 
 // END SHAPESHIFT
 

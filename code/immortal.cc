@@ -23,7 +23,7 @@ extern "C" {
 #include "combat.h"
 #include "mail.h"
 #include "games.h"
-#include "disc_nature.h"
+#include "disc_shaman_frog.h"
 #include "disc_shaman_armadillo.h"
 #include "account.h"
 #include "systemtask.h"

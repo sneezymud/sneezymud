@@ -7887,7 +7887,7 @@ objs/immortal.o: games.h /usr/include/g++/algorithm
 objs/immortal.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
 objs/immortal.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
 objs/immortal.o: /usr/include/g++/stl_deque.h game_crazyeights.h
-objs/immortal.o: game_drawpoker.h disc_nature.h disc_shaman_armadillo.h
+objs/immortal.o: game_drawpoker.h disc_shaman_frog.h disc_shaman_armadillo.h
 objs/immortal.o: systemtask.h socket.h shop.h cmd_trophy.h obj_note.h
 objs/immortal.o: obj_portal.h obj_seethru.h obj_base_clothing.h database.h
 objs/immortal.o: /usr/local/include/libpq-fe.h

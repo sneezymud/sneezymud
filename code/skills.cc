@@ -553,8 +553,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
     case SKILL_KICK_RANGER:  //                334
       return &((CDRanger *) cd)->skKickRanger;
-    case SKILL_TRANSFORM_LIMB:  //             337
-      return &((CDRanger *) cd)->skTransformLimb;
     case SKILL_BEAST_SOOTHER:  //              338
       return &((CDRanger *) cd)->skBeastSoother;
     case SKILL_BASH_RANGER:  //                341
@@ -601,8 +599,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 #if 1
     case SPELL_EARTHMAW:
       return &((CDPlants *) cd)->skEarthmaw;
-    case SPELL_CREEPING_DOOM:
-      return &((CDPlants *) cd)->skCreepingDoom;
 #endif
 // disc_survival
 
@@ -1010,6 +1006,10 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDShamanFrog *) cd)->skAquaticBlast;
     case SPELL_DEATHWAVE: 
       return &((CDShamanFrog *) cd)->skDeathWave;
+    case SKILL_TRANSFORM_LIMB:  //             337
+      return &((CDShamanFrog *) cd)->skTransformLimb;
+    case SPELL_CREEPING_DOOM:
+      return &((CDShamanFrog *) cd)->skCreepingDoom;
 
       // armadillo abilities----------------------
 

@@ -2,38 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_ranger.h,v $
-// Revision 5.7  2004/08/25 00:10:21  peel
-// added advanced adventuring discipline
-//
-// Revision 5.6  2004/08/24 19:48:15  peel
-// move track to thief discipline
-//
-// Revision 5.5  2004/08/24 19:00:26  peel
-// moved concealment and track to thief and stealth discs, respectively
-//
-// Revision 5.4  2002/11/12 00:14:33  peel
-// added isBasic() and isFast() to CDiscipline
-// added isBasic() return true to each discipline that is a basic disc
-// added isFast() return true for fast discs, weapon specs etc
-//
-// Revision 5.3  2002/07/04 18:34:11  dash
-// added new repair skills
-//
-// Revision 5.2  2001/12/15 04:26:52  jesus
-// added in butcher skill under adventuring disc
-// will add more descs for races as time goes on 30 of about 125 races supported
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -53,7 +21,6 @@ public:
 // Level 7
 
 // Level 8
-    CSkill skTransformLimb;
     CSkill skBeastSoother;
 
 //Level 10
@@ -89,7 +56,6 @@ public:
     CDRanger()
       : CDiscipline(),
       skKickRanger(),
-      skTransformLimb(),
       skBeastSoother(),
       skBashRanger(),
       skRescueRanger(),
@@ -104,7 +70,6 @@ public:
     CDRanger(const CDRanger &a)
       : CDiscipline(a),
       skKickRanger(a.skKickRanger),
-      skTransformLimb(a.skTransformLimb),
       skBeastSoother(a.skBeastSoother),
       skBashRanger(a.skBashRanger),
       skRescueRanger(a.skRescueRanger),
@@ -120,7 +85,6 @@ public:
       if (this == &a) return *this;
       CDiscipline::operator=(a);
       skKickRanger = a.skKickRanger;
-      skTransformLimb = a.skTransformLimb;
       skBeastSoother = a.skBeastSoother;
       skBashRanger = a.skBashRanger;
       skRescueRanger = a.skRescueRanger;

@@ -51,17 +51,11 @@ private:
     int barkskin(TBeing *, TBeing *, TMagicItem *);
     int barkskin(TBeing *, TBeing *, int, byte);
 
-    int transformLimb(TBeing *, const char *);
-    int castTransformLimb(TBeing *);
-    int transformLimb(TBeing *, const char *, int, byte);
-
     int rootControl(TBeing *, TBeing *, int, int, byte);
     int rootControl(TBeing *, TBeing *, TMagicItem *);
     int rootControl(TBeing *, TBeing *);
 
 
-const int LAST_TRANSFORM_LIMB = 6;
-extern struct TransformLimbType TransformLimbList[LAST_TRANSFORM_LIMB];
 
 #endif
 
