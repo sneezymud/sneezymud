@@ -647,7 +647,7 @@ objs/ai_responses.o: sound.h create.h thing.h room.h obj.h spec_objs.h
 objs/ai_responses.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/ai_responses.o: monster.h account.h extern.h handler.h obj_money.h
 objs/ai_responses.o: rent.h spec_mobs.h materials.h colorstring.h format.h
-objs/ai_responses.o: combat.h obj_symbol.h
+objs/ai_responses.o: combat.h obj_symbol.h pathfinder.h
 objs/ai_utility.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/ai_utility.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/ai_utility.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -3270,6 +3270,7 @@ objs/combat.o: shop.h database.h /usr/local/include/libpq-fe.h
 objs/combat.o: /usr/local/include/postgres_ext.h obj_trash.h obj_arrow.h
 objs/combat.o: obj_base_weapon.h obj_general_weapon.h obj_gun.h
 objs/combat.o: obj_handgonne.h obj_base_clothing.h cmd_trophy.h
+objs/combat.o: obj_base_cup.h
 objs/comm.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/comm.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/comm.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -5339,7 +5340,7 @@ objs/disc_ranger.o: sound.h create.h thing.h room.h obj.h spec_objs.h
 objs/disc_ranger.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/disc_ranger.o: monster.h account.h extern.h handler.h obj_money.h rent.h
 objs/disc_ranger.o: spec_mobs.h materials.h colorstring.h format.h combat.h
-objs/disc_ranger.o: disc_ranger.h obj_portal.h obj_seethru.h
+objs/disc_ranger.o: disc_ranger.h obj_portal.h obj_seethru.h pathfinder.h
 objs/disc_shaman.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_shaman.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disc_shaman.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -6032,7 +6033,7 @@ objs/disc_survival.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/disc_survival.o: colorstring.h format.h combat.h disc_survival.h
 objs/disc_survival.o: obj_component.h obj_base_corpse.h obj_base_container.h
 objs/disc_survival.o: obj_tool.h obj_portal.h obj_seethru.h obj_drinkcon.h
-objs/disc_survival.o: obj_base_cup.h
+objs/disc_survival.o: obj_base_cup.h pathfinder.h
 objs/disc_theology.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_theology.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_theology.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -12118,7 +12119,8 @@ objs/pathfinder.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/pathfinder.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/pathfinder.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/pathfinder.o: materials.h colorstring.h format.h pathfinder.h
-objs/pathfinder.o: obj_portal.h obj_seethru.h
+objs/pathfinder.o: obj_portal.h obj_seethru.h obj_base_corpse.h
+objs/pathfinder.o: obj_base_container.h
 objs/peelpk.o: /usr/include/g++/ctime /usr/include/time.h
 objs/peelpk.o: /usr/include/machine/ansi.h /usr/include/sys/_posix.h
 objs/peelpk.o: /usr/include/sys/cdefs.h stdsneezy.h /usr/include/g++/cstdio
@@ -13079,6 +13081,7 @@ objs/socket.o: colorstring.h format.h statistics.h database.h
 objs/socket.o: /usr/local/include/libpq-fe.h
 objs/socket.o: /usr/local/include/postgres_ext.h spelltask.h systemtask.h
 objs/socket.o: socket.h obj_smoke.h obj_vehicle.h obj_portal.h obj_seethru.h
+objs/socket.o: pathfinder.h
 objs/sound.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sound.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/sound.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -13172,7 +13175,7 @@ objs/spec_mobs.o: games.h /usr/include/g++/algorithm
 objs/spec_mobs.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
 objs/spec_mobs.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
 objs/spec_mobs.o: /usr/include/g++/stl_deque.h game_crazyeights.h
-objs/spec_mobs.o: game_drawpoker.h corporation.h shopowned.h
+objs/spec_mobs.o: game_drawpoker.h corporation.h shopowned.h pathfinder.h
 objs/spec_mobs.o: /usr/include/g++/fstream.h
 objs/spec_mobs_bounty_hunter.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_bounty_hunter.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -13238,7 +13241,7 @@ objs/spec_mobs_bounty_hunter.o: connect.h obj_drug.h charfile.h being.h
 objs/spec_mobs_bounty_hunter.o: person.h monster.h account.h extern.h
 objs/spec_mobs_bounty_hunter.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/spec_mobs_bounty_hunter.o: materials.h colorstring.h format.h shop.h
-objs/spec_mobs_bounty_hunter.o: statistics.h
+objs/spec_mobs_bounty_hunter.o: statistics.h pathfinder.h
 objs/spec_mobs_cityguard.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_cityguard.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_cityguard.o: /usr/include/machine/ansi.h
@@ -13353,7 +13356,7 @@ objs/spec_mobs_coroner.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/spec_mobs_coroner.o: person.h monster.h account.h extern.h handler.h
 objs/spec_mobs_coroner.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/spec_mobs_coroner.o: colorstring.h format.h obj_base_corpse.h
-objs/spec_mobs_coroner.o: obj_base_container.h
+objs/spec_mobs_coroner.o: obj_base_container.h pathfinder.h
 objs/spec_mobs_corporate_assistant.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_corporate_assistant.o: /usr/include/stdio.h
 objs/spec_mobs_corporate_assistant.o: /usr/include/sys/cdefs.h
@@ -13619,7 +13622,7 @@ objs/spec_mobs_fireman.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/spec_mobs_fireman.o: person.h monster.h account.h extern.h handler.h
 objs/spec_mobs_fireman.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/spec_mobs_fireman.o: colorstring.h format.h obj_base_corpse.h
-objs/spec_mobs_fireman.o: obj_base_container.h
+objs/spec_mobs_fireman.o: obj_base_container.h pathfinder.h
 objs/spec_mobs_goring.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_goring.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_goring.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -14148,6 +14151,7 @@ objs/spec_objs.o: obj_base_clothing.h obj_trap.h obj_portal.h obj_seethru.h
 objs/spec_objs.o: obj_symbol.h obj_general_weapon.h obj_base_weapon.h
 objs/spec_objs.o: obj_drinkcon.h obj_base_cup.h obj_potion.h obj_staff.h
 objs/spec_objs.o: obj_magic_item.h obj_wand.h disc_fire.h obj_note.h
+objs/spec_objs.o: pathfinder.h
 objs/spec_objs_black_sun.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_objs_black_sun.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_objs_black_sun.o: /usr/include/machine/ansi.h
@@ -16745,7 +16749,7 @@ objs/task_track.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/task_track.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/task_track.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/task_track.o: materials.h colorstring.h format.h obj_portal.h
-objs/task_track.o: obj_seethru.h
+objs/task_track.o: obj_seethru.h pathfinder.h
 objs/task_trance_of_blades.o: stdsneezy.h /usr/include/g++/cstdio
 objs/task_trance_of_blades.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/task_trance_of_blades.o: /usr/include/machine/ansi.h
