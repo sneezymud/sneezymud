@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_trance_of_blades.cc,v $
+// Revision 5.3  2002/12/17 00:34:47  brat
+// Fixed a typo in the lose concentration message.
+//
 // Revision 5.2  2002/01/10 05:56:59  peel
 // even more splitting up of obj2.h
 //
@@ -122,7 +125,7 @@ int task_trance_of_blades(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
     if (!(ch->attackers)) chance *= 2;
     chance = (int)((float) chance * ch->plotStat(STAT_CURRENT, STAT_FOC, 1.25, 0.80, 1.00));
     if (chance > ::number(0,999)) {
-      act("Your concentraion has been lost, and you snap out of your defensive trance.",
+      act("Your concentration has been lost, and you snap out of your defensive trance.",
 	  FALSE, ch, 0, 0, TO_CHAR, ANSI_YELLOW);
       act("$n loses $s concentration and snaps out of $s defensive trance.",
 	  FALSE, ch, 0, 0, TO_ROOM, ANSI_YELLOW);
