@@ -881,17 +881,21 @@ void gain_exp(TBeing *ch, double gain, int dam)
 
 	      oldcap = newgain;
 
-	      double softmod = (1.0 - pow( 1.1 , -1*(gain/newgain))) + 1;     // this gives us a range of 1-2
+	      double softmod = (1.0 - pow( 1.1 , -1.0*(gain/newgain))) + 1.0;     // this gives us a range of 1-2
 	      
 	      newgain *= softmod;
 
-	      newgain = (newgain*0.95) +  (((float)::number(0,100))*newgain)/1000.0;
-	      
+	      //newgain = (newgain*0.95) +  (((float)::number(0,100))*newgain)/1000.0;
+	      // don't need this anymore since no hard cap - dash
 
-              vlogf(LOG_DASH, "%s(L%d) vs %s(L%d)  %3.1f>%3.1f*%3.1fs=%3.1fe   (%5.2fs <- %5.2fh)",
-                    ch->getName(), ch->getLevel(i), (ch->specials.fighting) ?  ch->specials.fighting->getName() : "n/a",
-                    (ch->specials.fighting) ?  ch->specials.fighting->GetMaxLevel() : -1, 
-		    gain, oldcap, softmod, newgain, (gain/newgain), (gain/oldcap));
+	      if (gain < newgain)
+		newgain = gain;
+
+              vlogf(LOG_DASH, "%s(L%d) vs %s(L%d)    (%5.2f soft <- %5.2f hard)",
+                    ch->getName(), ch->getLevel(i),(ch->specials.fighting) ?  ch->specials.fighting->getName() : "n/a",
+                    (ch->specials.fighting)?ch->specials.fighting->GetMaxLevel() : -1, (gain/newgain), (gain/oldcap));
+	      vlogf(LOG_DASH, "   gain: %6.2f   oldc: %6.2f   newc: %6.2f   softm: %6.2f",
+		    gain, oldcap, softmod, newgain);
 	      gain = newgain;
 
 
