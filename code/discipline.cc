@@ -28,6 +28,7 @@
 #include "disc_shaman_spider.h"
 #include "disc_shaman_skunk.h"
 #include "disc_shaman_armadillo.h"
+#include "disc_shaman_healing.h"
 #include "disc_ritualism.h"
 #include "disc_thief.h"
 #include "disc_thief_fight.h"
@@ -81,7 +82,7 @@ static bool enforceVerbal(TBeing *ch, spellNumT spell)
 
   if (ch->isPc()) {
     if (!canDoVerbal(ch) ) {
-      if (ch->hasClass(CLASS_MAGE | CLASS_MAGE_THIEF)) {
+      if (ch->hasClass(CLASS_MAGE)) {
 	if (ch->getWizardryLevel() >= WIZ_LEV_NO_MANTRA) {
 	  act("Your skill at wizardry allows you to merely think the incantation.",TRUE,ch,0,0,TO_CHAR);
 	  return TRUE;
@@ -96,7 +97,7 @@ static bool enforceVerbal(TBeing *ch, spellNumT spell)
       ch->sendTo("You are unable to chant the incantation!\n\r");
       return FALSE;
     }
-    if (ch->hasClass(CLASS_MAGE | CLASS_MAGE_THIEF)) {
+    if (ch->hasClass(CLASS_MAGE)) {
       if (ch->getWizardryLevel() >= WIZ_LEV_NO_MANTRA) {
 	act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
 	act("Although you no longer need to, you begin an incantation to facilitate your spell.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
@@ -135,7 +136,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
   if (!IS_SET(discArray[spell]->comp_types, COMP_GESTURAL))
     return TRUE;
 
-  if (ch->hasClass(CLASS_MAGE | CLASS_MAGE_THIEF)) {
+  if (ch->hasClass(CLASS_MAGE)) {
     if (ch->getWizardryLevel() < WIZ_LEV_NO_GESTURES) {
       //////////////////////////////////////////////////////////////
       // wizardry level still requries gestures, make generic checks
@@ -201,7 +202,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
     }
   }
   if (!ch->isPc()) {
-    if (ch->hasClass(CLASS_MAGE | CLASS_MAGE_THIEF)) {
+    if (ch->hasClass(CLASS_MAGE)) {
       if (ch->getWizardryLevel() >= WIZ_LEV_NO_GESTURES) {
 	act("You concentrate intently upon the magical task at hand...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
 	act("$n stares off into space, concentrating on something...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
@@ -214,7 +215,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
 	return TRUE;
       }
     }
-    if (ch->hasClass(CLASS_MAGE | CLASS_MAGE_THIEF)) {
+    if (ch->hasClass(CLASS_MAGE)) {
       if (ch->hasHands()) {
 	sprintf(msg, "$n performs magical gestures with both of $s hands.");
 	act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
@@ -251,7 +252,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
     prim_usable = ch->canUseArm(HAND_PRIMARY);
     prim_okay = ((!prim_obj || prim_obj->allowsCast()) && prim_usable);
 
-    if (ch->hasClass(CLASS_MAGE | CLASS_MAGE_THIEF)) {
+    if (ch->hasClass(CLASS_MAGE)) {
       if (ch->getWizardryLevel() >= WIZ_LEV_COMP_EITHER) {
 	if (sec_okay || prim_okay) {
 	  if (sec_okay)
@@ -308,7 +309,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
 	}
       }
     }
-    if (ch->hasClass(CLASS_MAGE | CLASS_MAGE_THIEF)) {
+    if (ch->hasClass(CLASS_MAGE)) {
       if (prim_okay && sec_okay) {
 	sprintf(msg, "$n traces a magical rune in the air with $s hands.");
 	act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
@@ -2590,6 +2591,7 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_SHAMAN_FROG] = new CDShamanFrog();
     discs->disc[DISC_SHAMAN_SKUNK] = new CDShamanSkunk();
     discs->disc[DISC_SHAMAN_SPIDER] = new CDShamanSpider();
+    discs->disc[DISC_SHAMAN_HEALING] = new CDShamanHealing();
     discs->disc[DISC_SHAMAN] = new CDShaman();
     discs->disc[DISC_RITUALISM] = new CDRitualism();
 
@@ -2803,6 +2805,7 @@ void TBeing::assignDisciplinesClass()
     if (!isPc()) {
       discs->disc[DISC_SHAMAN] = new CDShaman();
       discs->disc[DISC_RITUALISM] = new CDRitualism();
+      discs->disc[DISC_SHAMAN_HEALING] = new CDShamanHealing();
       discs->disc[DISC_SHAMAN_ALCHEMY] = new CDShamanAlchemy();
       discs->disc[DISC_SHAMAN_ARMADILLO] = new CDShamanArmadillo();
       discs->disc[DISC_SHAMAN_CONTROL] = new CDShamanControl();
@@ -2814,6 +2817,7 @@ void TBeing::assignDisciplinesClass()
     }
     getDiscipline(DISC_SHAMAN)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_RITUALISM)->ok_for_class |= CLASS_SHAMAN;
+    getDiscipline(DISC_SHAMAN_HEALING)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_SHAMAN_ALCHEMY)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_SHAMAN_ARMADILLO)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_SHAMAN_CONTROL)->ok_for_class |= CLASS_SHAMAN;
@@ -2852,7 +2856,7 @@ void TBeing::assignSkillsClass()
     cd->setLearnedness(value);
     freebies += value/3;
   }
-  if (hasClass(CLASS_MAGE | CLASS_MAGE_THIEF)) {
+  if (hasClass(CLASS_MAGE)) {
     if ((cd = getDiscipline(DISC_WIZARDRY))) {
       value = min((3*(GetMaxLevel())), 100);
       cd->setNatLearnedness(value);
@@ -3849,7 +3853,9 @@ void TBeing::assignSkillsClass()
         } else if ((cd = getDiscipline(DISC_SHAMAN_SPIDER)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS && (num == 3)) {
           raiseDiscOnce(DISC_SHAMAN_SPIDER);
-
+        } else if ((cd = getDiscipline(DISC_SHAMAN_HEALING)) &&
+                    cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
+          raiseDiscOnce(DISC_SHAMAN_HEALING);
         } else if ((cd = getDiscipline(DISC_SHAMAN_CONTROL)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
           raiseDiscOnce(DISC_SHAMAN_CONTROL);
@@ -3883,56 +3889,6 @@ void TBeing::assignSkillsClass()
       }
     }
   }  // class shaman
-
-  if (hasClass(CLASS_MAGE_THIEF)) {
-    while (getPracs(MAGE_THIEF_LEVEL_IND) > 0) {
-      addPracs(-1, MAGE_THIEF_LEVEL_IND);
-      found = FALSE;
-      if ((cd = getDiscipline(DISC_COMBAT)) && 
-          cd->getLearnedness() < 15) {
-        raiseDiscOnce(DISC_COMBAT);
-        continue;
-      } else if ((cd = getDiscipline(DISC_MAGE_THIEF)) &&
-              cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-        if ((cd = getDiscipline(DISC_COMBAT)) &&
-            cd->getLearnedness() >= MAX_DISC_LEARNEDNESS) {
-          raiseDiscOnce(DISC_MAGE_THIEF);
-          continue;
-        } else {
-          if (::number(0,1)) {
-            raiseDiscOnce(DISC_MAGE_THIEF);
-            continue;
-          } else {
-            raiseDiscOnce(DISC_COMBAT);
-            continue;
-          }
-        }
-      } else if ((cd = getDiscipline(DISC_COMBAT)) &&
-                 cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-        raiseDiscOnce(DISC_COMBAT);
-        continue;
-      } else {
-        switch ((::number(1,6))) {
-          case 1:
-          case 2:
-          case 3:
-          case 4:
-          case 5:
-          default:
-            break;
-        }
-        num = ::number(0,4);
-        if (found) {
-          continue;
-        } else if ((cd = getDiscipline(DISC_PIERCE)) &&
-                   cd->getLearnedness() < MAX_DISC_LEARNEDNESS && (num <= 0)) {
-          raiseDiscOnce(DISC_PIERCE);
-        } else {
-          break;
-        }
-      }
-    }
-  } 
 
   affectTotal();
   discNumT disc_num;
@@ -4074,7 +4030,6 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
   lev = level;
   switch (getDisciplineNumber(skill, FALSE)) {
     case DISC_MAGE:
-    case DISC_MAGE_THIEF:
     case DISC_PLANTS:
     case DISC_AIR:
     case DISC_EARTH:
@@ -4090,6 +4045,7 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
       if (cd && cd->getLearnedness() > 0)
         lev += 2 + (cd->getLearnedness() / 20);
       break;
+    case DISC_SHAMAN_HEALING:
     case DISC_SHAMAN_ARMADILLO:
     case DISC_SHAMAN:
     case DISC_RITUALISM:
@@ -4181,9 +4137,6 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_NATURE:
       lev = getClassLevel(CLASS_RANGER);
       break;
-    case DISC_MAGE_THIEF:
-      lev = getClassLevel(CLASS_MAGE_THIEF);
-      break;
     case DISC_WARRIOR:
     case DISC_HTH:
     case DISC_BRAWLING:
@@ -4222,24 +4175,15 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_SHAMAN_SKUNK:
     case DISC_SHAMAN_SPIDER:
     case DISC_SHAMAN_CONTROL:
+    case DISC_SHAMAN_HEALING:
     case DISC_RITUALISM:
       lev = getClassLevel(CLASS_SHAMAN);
       break;
     case DISC_WIZARDRY:
-      if (hasClass(CLASS_MAGIC_USER)) {
-	lev = getClassLevel(CLASS_MAGIC_USER);
-	break;
-      } else {
-        lev = getClassLevel(CLASS_MAGE_THIEF);
-      }
+      lev = getClassLevel(CLASS_MAGIC_USER);
       break;
     case DISC_LORE:
-      if (hasClass(CLASS_MAGIC_USER)) {
-	lev = getClassLevel(CLASS_MAGIC_USER);
-	break;
-      } else {
-        lev = getClassLevel(CLASS_MAGE_THIEF);
-      }
+      lev = getClassLevel(CLASS_MAGIC_USER);
       break;
     case DISC_THEOLOGY:
     case DISC_FAITH:

@@ -51,6 +51,7 @@
 #include "disc_alchemy.h"
 #include "disc_shaman_armadillo.h"
 #include "disc_shaman_frog.h"
+#include "disc_shaman_healing.h"
 #include "disc_shaman_spider.h"
 #include "disc_shaman_skunk.h"
 #include "disc_shaman_control.h"

@@ -4688,7 +4688,7 @@ static int FRACT(TBeing *ch, TBeing *v)
   else if (ch->hasClass(CLASS_RANGER) ||
            ch->hasClass(CLASS_THIEF))
     level_cut = 4;
-  else if (ch->hasClass(CLASS_CLERIC) || ch->hasClass(CLASS_MAGE_THIEF))
+  else if (ch->hasClass(CLASS_CLERIC))
     level_cut = 5;
   else if (ch->hasClass(CLASS_MAGE) || ch->hasClass(CLASS_SHAMAN))
     level_cut = 6;

@@ -164,8 +164,6 @@ bool TBeing::canUseEquipment(const TObj *o, silentTypeT silent) const
         mod = max(mod, 10.0);
       if (hasClass(CLASS_RANGER))
         mod = max(mod, 20.0/3);
-      if (hasClass(CLASS_MAGE_THIEF))
-        mod = max(mod, 7.5);
       
       if (al + mod > GetMaxLevel()) {
         if (!silent)

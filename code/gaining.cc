@@ -151,7 +151,6 @@ int TBeing::calcRaiseDisc(discNumT which, bool drop) const
   switch (which) {
     case DISC_COMBAT:
     case DISC_MAGE:
-    case DISC_MAGE_THIEF:
     case DISC_CLERIC:
     case DISC_THIEF:
     case DISC_WARRIOR:
@@ -697,7 +696,7 @@ void TPerson::advanceSelectDisciplines(TBeing *gm, classIndT Class, int numx, si
   int i, count, initial, final;
 
   for (i = 0; i < numx; i++) {
-    if ((Class == MAGE_LEVEL_IND) || (Class == MAGE_THIEF_LEVEL_IND)) {
+    if ((Class == MAGE_LEVEL_IND)) {
       CDiscipline *cd = getDiscipline(DISC_WIZARDRY);
       if (cd) {
         initial = cd->getNatLearnedness();
@@ -1045,14 +1044,14 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_LOOTING, "looting", "Looting and Plundering", DISC_LOOTING, CLASS_THIEF},
   {SPEC_TRAINER_MURDER, "murder", "about Deadly Murder", DISC_MURDER, CLASS_THIEF},
   {SPEC_TRAINER_HAND_TO_HAND, "hth", "Hand-to-Hand Combat", DISC_HTH, CLASS_WARRIOR},
-  {SPEC_TRAINER_ADVENTURING, "adventuring", "Adventurers' Lore", DISC_ADVENTURING, CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN | CLASS_MAGE_THIEF},
-  {SPEC_TRAINER_COMBAT, "combat", "Combat Skills", DISC_COMBAT, CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN | CLASS_MAGE_THIEF},
+  {SPEC_TRAINER_ADVENTURING, "adventuring", "Adventurers' Lore", DISC_ADVENTURING, CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN},
+  {SPEC_TRAINER_COMBAT, "combat", "Combat Skills", DISC_COMBAT, CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN},
   {SPEC_TRAINER_WARRIOR, "warrior", "the Ways of the Warrior", DISC_WARRIOR, CLASS_WARRIOR},
-  {SPEC_TRAINER_WIZARDRY, "wizardry", "Wizardry", DISC_WIZARDRY, CLASS_MAGIC_USER | CLASS_MAGE_THIEF},
+  {SPEC_TRAINER_WIZARDRY, "wizardry", "Wizardry", DISC_WIZARDRY, CLASS_MAGIC_USER},
   {SPEC_TRAINER_FAITH, "faith", "Faith", DISC_FAITH, CLASS_CLERIC | CLASS_DEIKHAN},
   {SPEC_TRAINER_SLASH, "slash", "Slash Specialization", DISC_SLASH, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN},
   {SPEC_TRAINER_BLUNT, "blunt", "Blunt Specialization", DISC_BLUNT, CLASS_WARRIOR | CLASS_CLERIC | CLASS_DEIKHAN | CLASS_SHAMAN},
-  {SPEC_TRAINER_PIERCE, "pierce", "Pierce Specialization", DISC_PIERCE, CLASS_WARRIOR | CLASS_THIEF | CLASS_MAGIC_USER | CLASS_RANGER | CLASS_MAGE_THIEF},
+  {SPEC_TRAINER_PIERCE, "pierce", "Pierce Specialization", DISC_PIERCE, CLASS_WARRIOR | CLASS_THIEF | CLASS_MAGIC_USER | CLASS_RANGER},
   {SPEC_TRAINER_RANGED, "ranged", "Ranged Specialization", DISC_RANGED, CLASS_RANGER},
   {SPEC_TRAINER_DEIKHAN, "deikhan", "the Ways of the Deikhan", DISC_DEIKHAN, CLASS_DEIKHAN},
   {SPEC_TRAINER_BRAWLING, "brawling", "Brawling Moves", DISC_BRAWLING, CLASS_WARRIOR},
@@ -1092,11 +1091,11 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_RANGER_FIGHT, "fighting", "Fighting Skills for Rangers", DISC_RANGER_FIGHT, CLASS_RANGER},
   {SPEC_TRAINER_STEALTH, "stealth", "about Stealthiness", DISC_STEALTH, CLASS_THIEF},
   {SPEC_TRAINER_TRAPS, "traps", "about Locks and Traps", DISC_TRAPS, CLASS_THIEF},
-  {SPEC_TRAINER_LORE, "lore", "about Magic Lores", DISC_LORE, CLASS_MAGIC_USER | CLASS_MAGE_THIEF},
+  {SPEC_TRAINER_LORE, "lore", "about Magic Lores", DISC_LORE, CLASS_MAGIC_USER},
  {SPEC_TRAINER_THEOLOGY, "theology", "about Theology", DISC_THEOLOGY, CLASS_CLERIC | CLASS_DEIKHAN},
   {SPEC_TRAINER_DEFENSE, "defense", "about Defense", DISC_DEFENSE, CLASS_WARRIOR | CLASS_RANGER | CLASS_DEIKHAN | CLASS_MONK},
-  {SPEC_TRAINER_PSIONICS, "psionics", "about psionics", DISC_PSIONICS, CLASS_WARRIOR | CLASS_RANGER | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_MAGE_THIEF | CLASS_THIEF | CLASS_SHAMAN},
-  {SPEC_TRAINER_MAGE_THIEF, "mt", "about mages and thieves", DISC_MAGE_THIEF, CLASS_MAGE_THIEF},
+  {SPEC_TRAINER_PSIONICS, "psionics", "about psionics", DISC_PSIONICS, CLASS_WARRIOR | CLASS_RANGER | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_THIEF | CLASS_SHAMAN},
+  {SPEC_TRAINER_SHAMAN_HEALING, "healing", "about healing abilities for shaman", DISC_SHAMAN_HEALING, CLASS_SHAMAN},
   {-1}          /* required terminator */
 };
 
@@ -1176,8 +1175,6 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
       accclass = CLERIC_LEVEL_IND;
   else if (var == CLASS_MAGIC_USER)
       accclass = MAGE_LEVEL_IND;
-  else if (var == CLASS_MAGE_THIEF)
-      accclass = MAGE_THIEF_LEVEL_IND;
   else if (var == CLASS_DEIKHAN)
       accclass = DEIKHAN_LEVEL_IND;
   else if (var == CLASS_RANGER)
@@ -1202,8 +1199,6 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
       accclass = MAGE_LEVEL_IND;
     else if ((is_abbrev(classbuf, "cleric")) && ch->hasClass(CLASS_CLERIC))
       accclass = CLERIC_LEVEL_IND;
-    else if ((is_abbrev(classbuf, "magethief")) && ch->hasClass(CLASS_MAGE_THIEF))
-      accclass = MAGE_THIEF_LEVEL_IND;
     else if ((is_abbrev(classbuf, "thief")) && ch->hasClass(CLASS_THIEF))
       accclass = THIEF_LEVEL_IND;
     else if ((is_abbrev(classbuf, "warrior") || (is_abbrev(classbuf, "fighter")))
@@ -1317,10 +1312,6 @@ int TBeing::checkDoneBasic(TBeing *ch, classIndT accclass, int guild, int amount
       combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
       bas = ch->getDiscipline(DISC_MONK)->getNatLearnedness();
       break;
-    case MAGE_THIEF_LEVEL_IND:
-      combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness() + ch->getDiscipline(DISC_LORE)->getNatLearnedness();
-      bas = ch->getDiscipline(DISC_MAGE_THIEF)->getNatLearnedness();
-      break;
     case THIEF_LEVEL_IND:
       combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
       bas = ch->getDiscipline(DISC_THIEF)->getNatLearnedness();
@@ -1366,7 +1357,6 @@ int TBeing::getTrainerPracs(const TBeing *ch, const TMonster *me, classIndT accc
       (discipline == DISC_THEOLOGY)) {
     bakpracs = trainLevel - discLearn;
   } else if (discipline == DISC_SHAMAN || discipline == DISC_MAGE || 
-	     discipline == DISC_MAGE_THIEF ||
              discipline == DISC_CLERIC || discipline == DISC_WARRIOR ||
              discipline == DISC_RANGER || discipline == DISC_DEIKHAN ||
              discipline == DISC_MONK || discipline == DISC_THIEF) {
@@ -1526,13 +1516,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
       }
       strcpy(tmp_buf, "Combat");
       break;
-    case MAGE_THIEF_LEVEL_IND:
-      combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness() + ch->getDiscipline(DISC_LORE)->getNatLearnedness();
-      if ((combat >= 100) || (combat >= (((35*ch->getLevel(MAGE_THIEF_LEVEL_IND)) /10) - 4))) {
-        combatLearn = TRUE;
-      }
-      strcpy(tmp_buf, "Combat or Magic Lores");
-      break;
+    case UNUSED1_LEVEL_IND:
     case UNUSED2_LEVEL_IND:
     case UNUSED3_LEVEL_IND:
     case MAX_SAVED_CLASSES:
@@ -1560,19 +1544,6 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
     switch (accclass) {
       case MAGE_LEVEL_IND:
         if ((discipline == DISC_MAGE)) {
-          if (combatLearn) {
-            return FALSE;
-          } else {
-            found = 1;
-            break;
-          }
-        } else {
-          found = 2;
-          break;
-        }
-        break;
-      case MAGE_THIEF_LEVEL_IND:
-        if ((discipline == DISC_MAGE_THIEF)) {
           if (combatLearn) {
             return FALSE;
           } else {
@@ -2105,9 +2076,7 @@ static int GenericGuildMaster(TBeing *ch, TMonster *me, cmdTypeT cmd, classIndT 
       case MONK_LEVEL_IND:
         act("$n growls, \"Go away, $N.  You are not part of our dojo!\"", FALSE, me, 0, ch, TO_ROOM);
         break;
-      case MAGE_THIEF_LEVEL_IND:
-        act("$n growls, \"Go away, $N.  You don't know jack about our kind!\"", FALSE, me, 0, ch, TO_ROOM);
-        break;
+      case UNUSED1_LEVEL_IND:
       case UNUSED2_LEVEL_IND:
       case UNUSED3_LEVEL_IND:
       case MAX_SAVED_CLASSES:
@@ -2133,11 +2102,6 @@ int ShamanGuildMaster(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj
 int MageGuildMaster(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
   return GenericGuildMaster(ch, me, cmd, MAGE_LEVEL_IND, CLASS_MAGIC_USER);
-}
-
-int MageThiefGuildMaster(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
-{
-  return GenericGuildMaster(ch, me, cmd, MAGE_THIEF_LEVEL_IND, CLASS_MAGE_THIEF);
 }
 
 int DeikhanGuildMaster(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
@@ -2305,26 +2269,6 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
       strcpy(tmp_buf, "Combat or Magic Lores");
       strcpy(tmp2_buf, "Magic Lores");
       break;
-    case MAGE_THIEF_LEVEL_IND:
-      combat = getDiscipline(DISC_COMBAT)->getNatLearnedness() + getDiscipline(DISC_LORE)->getNatLearnedness();
-      basic = getDiscipline(DISC_MAGE_THIEF)->getNatLearnedness();
-      if (basic >= MAX_DISC_LEARNEDNESS) {
-        basicLearn=TRUE;
-      }
-      if (combat >= getCombatPrereqNumber(Class)) {
-        combatLearn = TRUE;
-        combatMax = 1;
-      }
-      if (combat == 2* MAX_DISC_LEARNEDNESS) {
-         combatMax = 2;
-         combatLearn = TRUE;
-      }
-      if (combat >= (((35 * getLevel(Class)) /10) - 4)) {
-        combatLearn = TRUE;
-      }
-      strcpy(tmp_buf, "Combat or Magic Lores");
-      strcpy(tmp2_buf, "Magic Lores");
-      break;
     case SHAMAN_LEVEL_IND:
       combat = getDiscipline(DISC_COMBAT)->getNatLearnedness();
       basic = getDiscipline(DISC_WARRIOR)->getNatLearnedness();
@@ -2467,6 +2411,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
       }
       strcpy(tmp_buf, "Combat");
       break;
+    case UNUSED1_LEVEL_IND:
     case UNUSED2_LEVEL_IND:
     case UNUSED3_LEVEL_IND:
     case MAX_SAVED_CLASSES:

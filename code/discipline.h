@@ -114,7 +114,7 @@ enum discNumT {
      DISC_NATURE,
      DISC_DEFENSE,
      DISC_PSIONICS,
-     DISC_MAGE_THIEF,
+     DISC_SHAMAN_HEALING,
      MAX_DISCS,
      MAX_SAVED_DISCS = 90
 };

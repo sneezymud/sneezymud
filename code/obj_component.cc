@@ -2637,7 +2637,7 @@ void TComponent::evaluateMe(TBeing *ch) const
 
 bool TComponent::fitInShop(const char *, const TBeing *ch) const
 {
-  if (ch->hasClass(CLASS_MAGE_THIEF | CLASS_MAGE | CLASS_RANGER | CLASS_SHAMAN)) {
+  if (ch->hasClass(CLASS_MAGE | CLASS_RANGER | CLASS_SHAMAN)) {
     // skip brew and scribe comps
     if (!IS_SET(getComponentType(), COMP_SPELL))
       return false;

@@ -574,7 +574,6 @@ bool GuildProcs(int spec)
     case SPEC_GM_CLERIC:
     case SPEC_GM_THIEF:
     case SPEC_GM_MAGE:
-    case SPEC_GM_MAGE_THIEF:
     case SPEC_TRAINER_AIR:
     case SPEC_TRAINER_ALCHEMY:
     case SPEC_TRAINER_EARTH:
@@ -637,7 +636,7 @@ bool GuildProcs(int spec)
     case SPEC_TRAINER_LORE:
     case SPEC_TRAINER_THEOLOGY:
     case SPEC_TRAINER_DEFENSE:
-    case SPEC_TRAINER_MAGE_THIEF:
+    case SPEC_TRAINER_SHAMAN_HEALING:
       return TRUE;
     default:
       return FALSE;

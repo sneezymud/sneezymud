@@ -33,6 +33,7 @@
 #include "disc_plants.h"
 #include "disc_ranger_fight.h"
 #include "disc_shaman_frog.h"
+#include "disc_shaman_healing.h"
 #include "disc_shaman_alchemy.h"
 #include "disc_shaman_control.h"
 #include "disc_shaman_spider.h"

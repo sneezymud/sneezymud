@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.13  2002/02/20 20:33:42  jesus
+// Took out all the class_mage_thief stuff and added a shaman healing disc in its place
+//
 // Revision 5.12  2002/02/11 06:26:17  dash
 // *** empty log message ***
 //
@@ -156,7 +159,7 @@ const int SPEC_FIRE_MAGI       =101;
 const int SPEC_SORCERER        =102;
 const int SPEC_FACTION_FAERY   =103;
 const int SPEC_TRAINER_BRAWLING=104;
-const int SPEC_TRAINER_MAGE_THIEF   =105;
+const int SPEC_TRAINER_SHAMAN_HEALING   =105;
 const int SPEC_TRAINER_MEDITATION_MONK    =106;
 const int SPEC_TRAINER_SURVIVAL=107;
 const int SPEC_TRAINER_SHAMAN_ARMADILLO  =108;
@@ -212,7 +215,7 @@ const int SPEC_SCARED_KID         =160;
 const int SPEC_STOCK_BROKER       =161;
 const int SPEC_TRAINER_PSIONICS   =162;
 const int SPEC_DIVMAN             =163;
-const int SPEC_GM_MAGE_THIEF      =164;
+const int SPEC_GM_MAGE_THIEF      =164; // reuse this for something else
 const int SPEC_PLANTER            =165;
 const int SPEC_BMARCHER           =166;
 const int NUM_MOB_SPECIALS        =167;

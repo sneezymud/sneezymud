@@ -10,6 +10,7 @@
 #include "stdsneezy.h"
 
 #include "disc_shaman_armadillo.h"
+#include "disc_shaman_healing.h"
 #include "disc_air.h"
 #include "disc_alchemy.h"
 #include "disc_earth.h"

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: multiclass.cc,v $
+// Revision 5.3  2002/02/20 20:33:42  jesus
+// Took out all the class_mage_thief stuff and added a shaman healing disc in its place
+//
 // Revision 5.2  2001/11/25 00:56:55  jesus
 // beginning of mage thief as a single class
 //
@@ -61,9 +64,6 @@ int NumClasses(int Class)
       tot++;
 
   if (Class & CLASS_SHAMAN)
-      tot++;
-
-  if (Class & CLASS_MAGE_THIEF)
       tot++;
 
   return(tot);
@@ -169,8 +169,6 @@ int TBeing::getClassNum(const char *arg, exactTypeT exact)
   if (exact) {
     if (!strcmp(arg, "mage") || !strcmp(arg, "magicuser"))
       which = CLASS_MAGIC_USER;
-     else if (!strcmp(arg, "magethief"))
-       which = CLASS_MAGE_THIEF;
      else if (!strcmp(arg, "cleric"))
        which = CLASS_CLERIC;
      else if (!strcmp(arg, "warrior"))
@@ -191,8 +189,6 @@ int TBeing::getClassNum(const char *arg, exactTypeT exact)
   } else {
     if (is_abbrev(arg, "mage") || is_abbrev(arg, "magicuser"))
       which = CLASS_MAGIC_USER;
-    else if (is_abbrev(arg, "magethief"))
-      which = CLASS_MAGE_THIEF;
     else if (is_abbrev(arg, "cleric"))
       which = CLASS_CLERIC;
     else if (is_abbrev(arg, "warrior"))
@@ -221,8 +217,6 @@ classIndT TBeing::getClassIndNum(const char *arg, exactTypeT exact)
 
   if (which == CLASS_MAGE)
     res = MAGE_LEVEL_IND;
-  else if (which == CLASS_MAGE_THIEF)
-    res = MAGE_THIEF_LEVEL_IND;
   else if (which == CLASS_CLERIC)
     res = CLERIC_LEVEL_IND;
   else if (which == CLASS_WARRIOR)
@@ -251,8 +245,6 @@ bool TBeing::hasClass(const char *arg, exactTypeT exact) const
   if (exact) {
     if (!strcmp(arg, "mage") || !strcmp(arg, "magicuser"))
       which = CLASS_MAGIC_USER;
-     else if (!strcmp(arg, "magethief"))
-       which = CLASS_MAGE_THIEF;
      else if (!strcmp(arg, "cleric"))
        which = CLASS_CLERIC;
      else if (!strcmp(arg, "warrior"))
@@ -273,8 +265,6 @@ bool TBeing::hasClass(const char *arg, exactTypeT exact) const
   } else {
     if (is_abbrev(arg, "mage") || is_abbrev(arg, "magicuser"))
       which = CLASS_MAGIC_USER;
-    else if (is_abbrev(arg, "magethief"))
-      which = CLASS_MAGE_THIEF;
     else if (is_abbrev(arg, "cleric"))
       which = CLASS_CLERIC;
     else if (is_abbrev(arg, "warrior"))
@@ -355,9 +345,6 @@ void TPerson::startLevels()
   if (hasClass(CLASS_MAGIC_USER))
     advanceLevel(MAGE_LEVEL_IND, NULL);
 
-  if (hasClass(CLASS_MAGE_THIEF))
-    advanceLevel(MAGE_THIEF_LEVEL_IND, NULL);
-   
   if (hasClass(CLASS_CLERIC))
     advanceLevel(CLERIC_LEVEL_IND, NULL);
   
@@ -473,8 +460,7 @@ const char * const TBeing::getProfName() const
     return "Mage/Warrior/Thief";
   else if (hasClass(CLASS_MAGIC_USER | CLASS_WARRIOR, EXACT_YES))
     return "Mage/Warrior";
-  //  else if (hasClass(CLASS_MAGIC_USER | CLASS_THIEF, EXACT_YES))
-  else if (hasClass(CLASS_MAGE_THIEF, EXACT_YES))
+  else if (hasClass(CLASS_MAGIC_USER | CLASS_THIEF, EXACT_YES))
     return "Mage/Thief";
   else if (hasClass(CLASS_MAGIC_USER, EXACT_YES))
     return "Mage";
@@ -510,8 +496,7 @@ const char * const TBeing::getProfAbbrevName() const
     return "M/W/T";
   else if (hasClass(CLASS_MAGIC_USER | CLASS_WARRIOR, EXACT_YES))
     return "M/W";
-  //  else if (hasClass(CLASS_MAGIC_USER | CLASS_THIEF, EXACT_YES))
-  else if (hasClass(CLASS_MAGE_THIEF, EXACT_YES))
+  else if (hasClass(CLASS_MAGIC_USER | CLASS_THIEF, EXACT_YES))
     return "M/T";
   else if (hasClass(CLASS_MAGIC_USER, EXACT_YES))
     return "Mage";

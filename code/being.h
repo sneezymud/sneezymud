@@ -210,7 +210,6 @@ const ush_int CLASS_SHAMAN       = (1<<4);   // 16
 const ush_int CLASS_DEIKHAN      = (1<<5);   // 32
 const ush_int CLASS_MONK         = (1<<6);   // 64
 const ush_int CLASS_RANGER       = (1<<7);   // 128
-const ush_int CLASS_MAGE_THIEF   = (1<<8);   // 256
 
 /* Bitvector for 'affected_by' */
 const unsigned long AFF_BLIND             = (1<<0);        // 1
@@ -402,8 +401,7 @@ class pracData {
     sh_int ranger;
     sh_int monk;
     sh_int bard;
-    //    sh_int temp;
-    sh_int mageThief;
+    sh_int temp;
     sh_int temp2;
 
     pracData();

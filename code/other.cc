@@ -45,6 +45,7 @@ extern "C" {
 #include "disc_nature.h"
 #include "disc_shaman_armadillo.h"
 #include "disc_shaman_frog.h"
+#include "disc_shaman_healing.h"
 #include "disc_shaman_skunk.h"
 #include "disc_shaman_spider.h"
 #include "disc_shaman_control.h"
@@ -812,9 +813,6 @@ static const string describe_practices(const TBeing *ch)
   if (ch->hasClass(CLASS_SHAMAN) || ch->practices.shaman)
     sprintf(buf + strlen(buf), "You have %d shaman practice%s left.\n\r",
           ch->practices.shaman, ((ch->practices.shaman == 1) ? "" : "s"));
-  if (ch->hasClass(CLASS_MAGE_THIEF) || ch->practices.mageThief)
-    sprintf(buf + strlen(buf), "You have %d mage and thief practice%s left.\n\r",
-          ch->practices.mageThief, ((ch->practices.mageThief == 1) ? "" : "s"));
 
   return buf;
 }

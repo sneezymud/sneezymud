@@ -1982,16 +1982,6 @@ int Descriptor::nanny(const char *arg)
               connected = CON_QCLASS;
             }
             break;
-          case 'Z':
-            if (canChooseClass(CLASS_MAGE_THIEF)) {
-              character->setClass(CLASS_MAGE_THIEF);
-              go2next = TRUE;
-            } else {
-              writeToQ(badClassMessage(CLASS_MAGE_THIEF).c_str());
-              writeToQ("--> ");
-              connected = CON_QCLASS;
-            }
-            break;
           case '~':
             return DELETE_THIS;
           case '/':
@@ -3588,9 +3578,6 @@ bool Descriptor::canChooseClass(int Class, bool multi, bool triple)
     return TRUE;
   }
 
-  if (Class & CLASS_MAGE_THIEF) {
-    return TRUE;
-  }
 
   return FALSE;
 }
@@ -4125,8 +4112,6 @@ const string Descriptor::badClassMessage(int Class, bool multi, bool triple)
   if (Class & CLASS_WARRIOR) {
   }
   if (Class & CLASS_MAGIC_USER) {
-  }
-  if (Class & CLASS_MAGE_THIEF) {
   }
   if (Class & CLASS_CLERIC) {
   }
