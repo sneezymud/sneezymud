@@ -2418,8 +2418,10 @@ int wickedDagger(TBeing *vict, cmdTypeT cmd, const char *, TObj *me, TObj *ch_ob
       (dynamic_cast<TBeing *>(dynamic_cast<TThing *>(ch_obj)))->getHit() <= dam)
     return FALSE;
 
-  sendrpf(COLOR_OBJECTS, vict->roomp, "%s<k> sheds a light of iniquity.<z>\n\r",
-          (me->getName() ? good_cap(me->getName()).c_str() : "Bogus Object"));
+  if (cmd == CMD_GENERIC_PULSE && !::number(0,5) && vict->roomp) {
+    sendrpf(COLOR_OBJECTS, vict->roomp, "%s<k> sheds a light of iniquity.<z>\n\r",
+	    (me->getName() ? good_cap(me->getName()).c_str() : "Bogus Object"));
+  }
 
   if (cmd == CMD_OBJ_MISS) {
     // victim = vict
