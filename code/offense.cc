@@ -15,7 +15,7 @@
 #include "obj_gun.h"
 #include "obj_base_cup.h"
 #include "obj_base_clothing.h"
-
+#include "obj_bag.h"
 
 // DELETE_THIS implies this needs to be deleted
 int TBeing::doHit(const char *argument, TBeing *vict)
