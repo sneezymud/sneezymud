@@ -2,23 +2,10 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: hospital.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+//   "hospital.cc" - Special procedures for hospitals and doctors.
 //
 //////////////////////////////////////////////////////////////////////////
 
-
-/*************************************************************************
-
-      SneezyMUD - All rights reserved, SneezyMUD Coding Team
-      "hospital.cc" - Special procedures for hospitals and doctors.
-
-*************************************************************************/
 
 #include "stdsneezy.h"
 #include "combat.h"
@@ -52,12 +39,16 @@ int limb_heal_price(TBeing *ch, wearSlotT pos)
     case WEAR_HAND_L:
     case WEAR_FOOT_R:
     case WEAR_FOOT_L:
+    case WEAR_EX_FOOT_R:
+    case WEAR_EX_FOOT_L:
       return (basenum);
     case WEAR_ARM_R:
     case WEAR_ARM_L:
       return (basenum * 2);
     case WEAR_LEGS_R:
     case WEAR_LEGS_L:
+    case WEAR_EX_LEG_R:
+    case WEAR_EX_LEG_L:
       return (basenum * 3);
     case WEAR_NECK:
     case WEAR_HEAD:
@@ -67,10 +58,12 @@ int limb_heal_price(TBeing *ch, wearSlotT pos)
     case WEAR_WRIST_L:
     case WEAR_WAISTE:
       return (basenum * 4);
-    default:
-      forceCrash("Bad pos (%d) in limb_heal_price for %s!", pos, ch->getName());
-      return (basenum * 10);
+    case WEAR_NOWHERE:
+    case MAX_WEAR:
+      break;
   }
+  forceCrash("Bad pos (%d) in limb_heal_price for %s!", pos, ch->getName());
+  return (basenum * 10);
 }
 
 int limb_expel_price(TBeing *ch, wearSlotT pos)
@@ -78,7 +71,7 @@ int limb_expel_price(TBeing *ch, wearSlotT pos)
   TThing *stuck;
 
   if (!(stuck = ch->getStuckIn(pos))) {
-    vlogf(10, "VERY BAD! limb_expel_price called with pos(%d) char(%s) with no item stuck in!", pos, ch->getName());
+    vlogf(LOG_BUG, "VERY BAD! limb_expel_price called with pos(%d) char(%s) with no item stuck in!", pos, ch->getName());
     return (-1);
   }
   return stuck->expelPrice(ch, pos);
@@ -86,15 +79,13 @@ int limb_expel_price(TBeing *ch, wearSlotT pos)
 
 int TThing::expelPrice(const TBeing *ch, int pos) const
 {
-  vlogf(10, "Somehow %s got something besides a weapon/arrow stuck in them pos(%d)", ch->getName(), pos);
+  vlogf(LOG_BUG, "Somehow %s got something besides a weapon/arrow stuck in them pos(%d)", ch->getName(), pos);
   return (1000000);
 }
 
-int limb_wound_price(TBeing *ch, int pos, unsigned short int wound)
+int limb_wound_price(TBeing *ch, wearSlotT pos, unsigned short int wound)
 {
-  int price;
-
-  price = ch->GetMaxLevel() * ch->GetMaxLevel();
+  int price = ch->GetMaxLevel() * ch->GetMaxLevel();
 
   if (IS_SET(wound, PART_BLEEDING))
     price *= 3;
@@ -126,12 +117,16 @@ int limb_wound_price(TBeing *ch, int pos, unsigned short int wound)
     case WEAR_HAND_L:
     case WEAR_FOOT_R:
     case WEAR_FOOT_L:
+    case WEAR_EX_FOOT_R:
+    case WEAR_EX_FOOT_L:
       return (price * 1);
     case WEAR_ARM_R:
     case WEAR_ARM_L:
       return (price * 2);
     case WEAR_LEGS_R:
     case WEAR_LEGS_L:
+    case WEAR_EX_LEG_R:
+    case WEAR_EX_LEG_L:
       return (price * 3);
     case WEAR_NECK:
     case WEAR_HEAD:
@@ -141,19 +136,30 @@ int limb_wound_price(TBeing *ch, int pos, unsigned short int wound)
     case WEAR_WRIST_L:
     case WEAR_WAISTE:
       return (price * 4);
-    default:
-      vlogf(10, "Bad pos (%d) in limb_wound_price!", pos);
-      return (1000000);
+    case WEAR_NOWHERE:
+    case MAX_WEAR:
+    case HOLD_RIGHT:
+    case HOLD_LEFT:
+      break;
   }
+  vlogf(LOG_BUG, "Bad pos (%d) in limb_wound_price!", pos);
+  return (1000000);
 }
 
-int limb_regen_price(TBeing *ch, int pos)
+int spell_regen_price(TBeing *ch, spellNumT spell)
 {
-  int price;
+  int price = 1;
 
-  price = ch->GetMaxLevel() * ch->GetMaxLevel();
+  if (spell == SPELL_BLINDNESS) {
+    price = ch->GetMaxLevel() * max((int) ch->GetMaxLevel(), 20) * 1;
+  }
 
-  price *= 3;
+  return price;
+}
+
+int limb_regen_price(TBeing *ch, wearSlotT pos)
+{
+  int price = ch->GetMaxLevel() * max(20, (int) ch->GetMaxLevel()) * 3;
 
   switch (pos) {
     case WEAR_FINGER_R:
@@ -162,12 +168,16 @@ int limb_regen_price(TBeing *ch, int pos)
     case WEAR_HAND_L:
     case WEAR_FOOT_R:
     case WEAR_FOOT_L:
+    case WEAR_EX_FOOT_R:
+    case WEAR_EX_FOOT_L:
       return (price * 1);
     case WEAR_ARM_R:
     case WEAR_ARM_L:
       return (price * 2);
     case WEAR_LEGS_R:
     case WEAR_LEGS_L:
+    case WEAR_EX_LEG_R:
+    case WEAR_EX_LEG_L:
       return (price * 3);
     case WEAR_NECK:
     case WEAR_HEAD:
@@ -177,10 +187,14 @@ int limb_regen_price(TBeing *ch, int pos)
     case WEAR_WRIST_L:
     case WEAR_WAISTE:
       return (price * 4);
-    default:
-      vlogf(10, "Bad pos (%d) in limb_regen_price!", pos);
-      return (1000000);
+    case WEAR_NOWHERE:
+    case MAX_WEAR:
+    case HOLD_RIGHT:
+    case HOLD_LEFT:
+      break;
   }
+  vlogf(LOG_BUG, "Bad pos (%d) in limb_regen_price!", pos);
+  return (1000000);
 }
 
 int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
@@ -251,28 +265,36 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             if (ch->GetMaxLevel() < 3) {
               sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
                     ch->getName(), ++count,
-                    DiseaseInfo[DISEASE_INDEX(aff->modifier)].name,
+                    DiseaseInfo[affToDisease(*aff)].name,
                     DISEASE_PRICE_3);
             } else if (ch->GetMaxLevel() < 6) {
               sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
                     ch->getName(), ++count,
-                    DiseaseInfo[DISEASE_INDEX(aff->modifier)].name,
+                    DiseaseInfo[affToDisease(*aff)].name,
                     DISEASE_PRICE_6);
             } else if (ch->GetMaxLevel() < 12) {
               sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
                     ch->getName(), ++count,
-                    DiseaseInfo[DISEASE_INDEX(aff->modifier)].name,
+                    DiseaseInfo[affToDisease(*aff)].name,
                     DISEASE_PRICE_12);
             } else {
               sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
                     ch->getName(), ++count, 
-                    DiseaseInfo[DISEASE_INDEX(aff->modifier)].name,
-                    DiseaseInfo[DISEASE_INDEX(aff->modifier)].cure_cost);
+                    DiseaseInfo[affToDisease(*aff)].name,
+                    DiseaseInfo[affToDisease(*aff)].cure_cost);
             }
             me->doTell(buf);
           }
+        } else if (aff->type == SPELL_BLINDNESS) {
+          if (!aff->shouldGenerateText())
+            continue;
+          sprintf(buf, "%s %d) Affect: %s. (%d talens).\n\r",
+                    ch->getName(), ++count,
+                    discArray[aff->type]->name,
+                    spell_regen_price(ch, SPELL_BLINDNESS));
+          me->doTell(buf);
         }
-      }
+      }  // affects loop
     }
     if (!count) {
       sprintf(buf, "%s, I see nothing at all wrong with you!", ch->getName());
@@ -471,12 +493,12 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
               else if (ch->GetMaxLevel() < 12) 
                 cost = DISEASE_PRICE_12;
               else 
-                cost = DiseaseInfo[DISEASE_INDEX(aff->modifier)].cure_cost;
+                cost = DiseaseInfo[affToDisease(*aff)].cure_cost;
               
               if ((ch->getMoney() + ch->getBank()) < cost) {
                 sprintf(buf, "%s You don't have enough money to cure %s!",
                          fname(ch->name).c_str(),
-                         DiseaseInfo[DISEASE_INDEX(aff->modifier)].name);
+                         DiseaseInfo[affToDisease(*aff)].name);
                 me->doTell(buf);
                 return TRUE;
               } else {
@@ -499,6 +521,34 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
                 ch->doSave(SILENT_YES);
                 return TRUE;
               }
+            }
+          }
+        } else if (aff->type == SPELL_BLINDNESS) {
+          if (++count == bought) {
+            cost = spell_regen_price(ch, SPELL_BLINDNESS);
+
+            if ((ch->getMoney() + ch->getBank()) < cost) {
+              sprintf(buf, "%s You don't have enough money to cure %s!",
+                       fname(ch->name).c_str(),
+                       discArray[aff->type]->name);
+              me->doTell(buf);
+              return TRUE;
+            } else {
+              int cashCost = min(ch->getMoney(), cost);
+              ch->addToMoney(-cashCost, GOLD_HOSPITAL);
+
+              if (cashCost != cost) {
+                cashCost = (ch->getBank() - (cost - cashCost));
+                ch->setBank(cashCost);
+              }
+
+              act("$n waves $s hands, utters many magic phrases and touches $N!", TRUE, me, NULL, ch, TO_NOTVICT);
+              act("$n waves $s hands, utters many magic phrases and touches you!", TRUE, me, NULL, ch, TO_VICT);
+
+              ch->affectFrom(aff->type);
+
+              ch->doSave(SILENT_YES);
+              return TRUE;
             }
           }
         }
@@ -539,11 +589,6 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       num = 25 + number(1, healed->GetMaxLevel() / 2);
       num = min(num, (healed->hitLimit() - healed->getHit()));
 
-#if 0
-       // This is abnormally high, Im changing it Brutius 10/20/98
-      cost = num * healed->GetMaxLevel() * healed->GetMaxLevel() * 8 / 100;
-      cost += 1;
-#endif
       cost = num * healed->GetMaxLevel() * healed->GetMaxLevel() / 100;
       if (cost > healed->getMoney()) {
         healed->sendTo("The hospital doesn't accept any medicare or insurance plans.\n\r");
@@ -561,6 +606,8 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
             --(*healed);
             thing_to_room(healed, 3710);
             break;
+          default:
+            vlogf(LOG_PROC, "Undefined room %d in healing_room", healed->in_room);
         }
       } else {
         healed->sendTo("The hospital works wonders on your body.\n\r");
@@ -584,8 +631,9 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
 
   cost = 150 * ch->GetMaxLevel();
   if (cmd == CMD_LIST) {
-    ch->sendTo("1 - Healing of the Physical Self\n\r");
-    ch->sendTo("2 - Healing of the Mind\n\r");
+    ch->sendTo("1 - Healing of the Physical Self (HP Restore)\n\r");
+    ch->sendTo("2 - Healing of the Mind (Mana Restore)\n\r");
+    ch->sendTo("3 - Healing of the Spirit (Lifeforce Restore)\n\r");
     ch->sendTo("Any of these for %d talens.\n\r", cost);
     return TRUE;
   } else if (cmd == CMD_BUY) {        /* Buy */
@@ -599,7 +647,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
       ch->sendTo("The doctors can't work on you if you are fighting.\n\r");
       return TRUE;
     }
-    if ((opt >= 1) && (opt <= 2)) {
+    if ((opt >= 1) && (opt <= 3)) {
       ch->addToMoney(-cost, GOLD_HOSPITAL);
       switch (opt) {
         case 1:
@@ -623,6 +671,14 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
           // this was added due to fighting in/near the hospitals
           ch->addToWait(combatRound(6));
           break;
+        case 3:
+          ch->setLifeforce(500);
+          ch->sendTo("Your spirit has been lifted and your troubles have been crucified.\n\r");
+          ch->updatePos();
+
+          // this was added due to fighting in/near the hospitals
+          ch->addToWait(combatRound(6));
+          break;
         default:
           ch->sendTo("That's not available at THIS hospital!\n\r");
           return TRUE;
@@ -632,3 +688,4 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
   }
   return FALSE;
 }
+

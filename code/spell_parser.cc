@@ -73,7 +73,6 @@ int TBeing::useLifeforce(spellNumT spl)
     vlogf(LOG_BUG, "useLifeforce() with bad discipline for spell=%d", spl);
     return 0;
   }
-  // for arrayLifeforce im using minMana...should be replaced later on JESUS
   arrayLifeforce = getDiscipline(das)->useLifeforce(getSkillValue(spl),discArray[spl]->minLifeforce);
 
 // divide total LF/rounds for each spell if spell tasked

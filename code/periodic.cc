@@ -766,7 +766,6 @@ int TBeing::updateHalfTickStuff()
 	    return DELETE_THIS;
 	  doSave(SILENT_YES);
 	}
-	updatePos();
       } else {
 	addToLifeforce(-1);
 	updatePos();

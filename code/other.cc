@@ -566,6 +566,11 @@ void TBeing::doReport(const char *argument)
            red(), getPercHit(), getPiety(),
            DescMoves((((double) getMove()) / ((double) moveLimit()))),
            norm());
+  else if (hasClass(CLASS_SHAMAN))
+    sprintf(info, "$n reports '%s%.1f%% H, %-4d LF. I am %s%s'",
+           red(), getPercHit(), getLifeforce(),
+           DescMoves((((double) getMove()) / ((double) moveLimit()))),
+           norm());
   else
     sprintf(info, "$n reports '%s%.1f%% H, %.1f%% M. I am %s%s'", 
            red(), getPercHit(), getPercMana(), 
@@ -595,6 +600,11 @@ void TBeing::doReport(const char *argument)
     if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
       sprintf(info, "<G>$n directly reports to you  '%s%.1f%% H, %.2f%% P. I am %s%s'<1>",
            red(), getPercHit(), getPiety(),
+           DescMoves((((double) getMove()) / ((double) moveLimit()))),
+           norm());
+    else if (hasClass(CLASS_SHAMAN))
+      sprintf(info, "<G>$n directly reports to you  '%s%.1f%% H, %-4d LF. I am %s%s'<1>",
+           red(), getPercHit(), getLifeforce(),
            DescMoves((((double) getMove()) / ((double) moveLimit()))),
            norm());
     else
@@ -1719,6 +1729,17 @@ void TBeing::doGroup(const char *argument)
               tmp_share, ((tmp_share == 1) ? "" : "s"),
               k->getExpSharePerc(),
               norm());
+          } else if (k->hasClass(CLASS_SHAMAN)) {
+            sendTo("%s%-15.15s%s [%s%.1f%%hp %-4d% lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r", cyan(), cap(namebuf), norm(), red(),
+              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100),
+              k->getLifeforce(), 
+              cap(namebuf),
+              (k != this ? "s" : ""),
+              DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))),
+              norm(), purple(),
+              tmp_share, ((tmp_share == 1) ? "" : "s"),
+              k->getExpSharePerc(),
+              norm());
           } else {
             sendTo("%s%-15.15s%s [%s%.1f%%hp %.1f%%m. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r", cyan(), cap(namebuf), norm(), red(),
               (((double) (k->getHit())) / ((double) k->hitLimit()) * 100),
@@ -1752,6 +1773,18 @@ void TBeing::doGroup(const char *argument)
                 tmp_share, ((tmp_share == 1) ? "" : "s"), 
                 f->follower->getExpSharePerc(),
                 norm());
+            if (f->follower->hasClass(CLASS_SHAMAN))
+              sendTo("%s%-15.15s%s [%s%.1f%%hp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r", cyan(), cap(namebuf), norm(), red(),
+                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100),
+                f->follower->getLifeforce(),
+                cap(namebuf),
+                (f->follower != this ? "s" : ""),
+                DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))),
+                norm(), purple(),
+                tmp_share, ((tmp_share == 1) ? "" : "s"), 
+                f->follower->getExpSharePerc(),
+                norm());
+
             else {
               sendTo("%s%-15.15s%s [%s%.1f%%hp %.1f%%m. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r", cyan(), cap(namebuf), norm(), red(), 
                 (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100),
@@ -1888,9 +1921,13 @@ void TBeing::doGroup(const char *argument)
         sendTo("You group yourself.\n\r");
         act("$n groups $mself.",TRUE,this,0,0,TO_ROOM);
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
-        if (desc && desc->m_bIsClient) 
-          desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, getName(), getHit(), getMana(), attack_modes[getCombatMode()]);
-        
+	if (hasClass(CLASS_SHAMAN)) {
+          if (desc && desc->m_bIsClient) 
+	    desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, getName(), getHit(), getLifeforce(), attack_modes[getCombatMode()]);
+	} else { 
+          if (desc && desc->m_bIsClient) 
+	    desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, getName(), getHit(), getMana(), attack_modes[getCombatMode()]);
+	}       
         if (victim->desc)
           victim->desc->session.group_share = 1;
 
@@ -1901,9 +1938,13 @@ void TBeing::doGroup(const char *argument)
         act("$n adds $N to $s group.",TRUE,this,0,victim,TO_NOTVICT);
         victim->sendTo(COLOR_MOBS, "You are now a member of %s's group.\n\r",getName());
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
-        if (desc && desc->m_bIsClient) 
-          desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, victim->getName(), victim->getHit(), victim->getMana(), attack_modes[victim->getCombatMode()]);
-        
+	if (hasClass(CLASS_SHAMAN)) {
+	  if (desc && desc->m_bIsClient)
+	    desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, victim->getName(), victim->getHit(), victim->getLifeforce(), attack_modes[victim->getCombatMode()]);
+	} else {
+	  if (desc && desc->m_bIsClient)
+	    desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, victim->getName(), victim->getHit(), victim->getMana(), attack_modes[victim->getCombatMode()]);
+	}        
         for (f = followers; f; f = f->next) {
           TBeing *b = f->follower;
           if (victim->desc && victim->desc->m_bIsClient)  {
@@ -1911,14 +1952,24 @@ void TBeing::doGroup(const char *argument)
                        b->getName(), b->getHit(), b->getMana(), attack_modes[b->getCombatMode()]);
           } 
           if (b->desc && b->desc->m_bIsClient) {
-            b->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD,
-                             victim->getName(), victim->getHit(), victim->getMana(), attack_modes[victim->getCombatMode()]); 
+	    if (hasClass(CLASS_SHAMAN)) {
+	      b->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD,
+			       victim->getName(), victim->getHit(), victim->getLifeforce(), attack_modes[victim->getCombatMode()]);
+	    } else {
+	      b->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD,
+			       victim->getName(), victim->getHit(), victim->getMana(), attack_modes[victim->getCombatMode()]);
+	    }
           }
         }
         found = TRUE;
         if (victim->desc) {
-          victim->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, getName(), getHit(), getMana(), attack_modes[getCombatMode()]);
-          victim->desc->session.group_share = 1;
+	  if (hasClass(CLASS_SHAMAN)) {
+	    victim->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, getName(), getHit(), getLifeforce(), attack_modes[getCombatMode()]);
+	    victim->desc->session.group_share = 1;
+	  } else {
+	    victim->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, getName(), getHit(), getMana(), attack_modes[getCombatMode()]);
+	    victim->desc->session.group_share = 1;
+	  }
         }
         continue;
       }
@@ -2031,25 +2082,44 @@ void TBeing::doGroup(const char *argument)
         act("$n is now a member of $N's group.", FALSE, victim, 0, this, TO_ROOM);
         act("You are now a member of $N's group.", FALSE, victim, 0, this, TO_CHAR);
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
-        if (desc && desc->m_bIsClient) 
-          desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, victim->getName(), victim->getHit(), victim->getMana(), attack_modes[victim->getCombatMode()]);
-        
+	if (hasClass(CLASS_SHAMAN)) {
+	  if (desc && desc->m_bIsClient)
+	    desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, victim->getName(), victim->getHit(), victim->getLifeforce(), attack_modes[victim->getCombatMode()]);
+	} else {
+	  if (desc && desc->m_bIsClient)
+	    desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, victim->getName(), victim->getHit(), victim->getMana(), attack_modes[victim->getCombatMode()]);
+	}        
         if (victim != this) {
           for (f = followers; f; f = f->next) {
             TBeing *b = f->follower;
             if (victim->desc && victim->desc->m_bIsClient)  {
-              victim->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD,
-                         b->getName(), b->getHit(), b->getMana(), attack_modes[b->getCombatMode()]);
+	      if (hasClass(CLASS_SHAMAN)) {
+		victim->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD,
+				      b->getName(), b->getHit(), b->getLifeforce(), attack_modes[b->getCombatMode()]);
+	      } else {
+		victim->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD,
+				      b->getName(), b->getHit(), b->getMana(), attack_modes[b->getCombatMode()]);
+	      }
             }
             if (b->desc && b->desc->m_bIsClient) {
-              b->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD,
-                               victim->getName(), victim->getHit(), victim->getMana(), attack_modes[victim->getCombatMode()]);
+	      if (hasClass(CLASS_SHAMAN)) {
+		b->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD,
+				 victim->getName(), victim->getHit(), victim->getLifeforce(), attack_modes[victim->getCombatMode()]);
+	      } else {
+		b->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD,
+				 victim->getName(), victim->getHit(), victim->getMana(), attack_modes[victim->getCombatMode()]);
+	      }
             }
           }
         }
         if (victim->desc) {
-          victim->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, getName(), getHit(), getMana(), attack_modes[getCombatMode()]);
-          victim->desc->session.group_share = 1;
+	  if (hasClass(CLASS_SHAMAN)) {
+	    victim->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, getName(), getHit(), getLifeforce(), attack_modes[getCombatMode()]);
+	    victim->desc->session.group_share = 1;
+	  } else {
+	    victim->desc->clientf("%d|%s|%d|%d|%s", CLIENT_GROUPADD, getName(), getHit(), getMana(), attack_modes[getCombatMode()]);
+	    victim->desc->session.group_share = 1;
+	  }
         }
       }
     } else
@@ -3075,7 +3145,7 @@ void TBeing::doContinue(const char *argument)
       return;
     }
   } else if ((spellType == SPELL_DANCER)) {
-    if (!reconcileMana(spelltask->spell, TRUE)) { 
+    if (!reconcileLifeforce(spelltask->spell, TRUE)) { 
       // will need to change to lifeforce
       sendTo("You can not continue a invokation without enough lifeforce.\n\r");
       return;

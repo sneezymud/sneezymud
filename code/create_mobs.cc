@@ -2115,7 +2115,7 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
 
     setMana(10);
     setMaxMana(10);
-
+    setLifeforce(9000);
     setMaxMove(50 + 10*GetMaxLevel());
     setMove(moveLimit());
 

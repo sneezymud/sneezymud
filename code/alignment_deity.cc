@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: alignment_deity.cc,v $
-// Revision 5.1  1999/10/16 04:29:21  batopr
-// *** empty log message ***
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
@@ -30,7 +15,7 @@ int personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
   int rc;
 
   if (!(obj = read_object(virt, VIRTUAL))) {
-    vlogf(10, "Error loading obj for personalize_object()");
+    vlogf(LOG_LOW, "Error loading obj for personalize_object()");
     return FALSE;
   }
   obj->obj_flags.decay_time = decay;
@@ -76,7 +61,7 @@ int resize_personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
   int rc;
 
   if (!(obj = read_object(virt, VIRTUAL))) {
-    vlogf(10, "Error loading obj for resize_personalize_object()");
+    vlogf(LOG_LOW, "Error loading obj for resize_personalize_object()");
     return FALSE;
   }
   obj->obj_flags.decay_time = decay;
@@ -133,6 +118,9 @@ int resize_personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
 // returns DELETE_VICT if ch dies
 static int reward_or_punish(TBeing *deity, TBeing *ch)
 {
+  mud_assert(deity != NULL, "reward_or_punish(): no deity");
+  mud_assert(ch != NULL, "reward_or_punish(): no ch");
+
 #if FACTIONS_IN_USE
   int percent;
   char buf[128];
@@ -153,14 +141,15 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
   percent = (int) d_percent;
   percent = min(max(0, percent), 100);
 
-vlogf(5, "%s had a percent of %d", ch->getName(), percent);
+  vlogf(LOG_FACT, "%s had a percent of %d", ch->getName(), percent);
+
   if (number(10, 90) < percent) {
     sprintf(buf, "%s, you have faithfully practiced your beliefs.", ch->getName());
     deity->doSay(buf);
     deity->doSay("Here is your reward.");
     // default will always do a nice thing, top ten do something great 
     int num = ::number(percent, 100);
-vlogf(5, "reward loop val=%d", num);
+    vlogf(LOG_FACT, "reward loop val=%d", num);
     switch (num) {
       case 90:
         // Nice token that decays in 100 ticks. 
@@ -258,7 +247,7 @@ vlogf(5, "reward loop val=%d", num);
     deity->doSay(buf);
     deity->doSay("Here is your punishment");
     int num = number(0, percent);
-vlogf(5, "punishment loop val=%d", num);
+    vlogf(LOG_FACT, "punishment loop val=%d", num);
     switch (num) {
        // default sucks, but not as bad as the 10 lowest ones. 
       case 0:
@@ -281,6 +270,7 @@ vlogf(5, "punishment loop val=%d", num);
         act("You feel totally weakened.", FALSE, deity, NULL, ch, TO_VICT);
         ch->setHit(1);
         ch->setMana(1);
+	ch->setLifeforce(1);
         ch->setMove(1);
         deity->doSay("Let this be a lesson to you.");
         break;
@@ -458,7 +448,7 @@ int alignment_deity(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
         d2 = d->next;
         if ((tmp_ch = d->character) && !d->connected) {
           if (!number(0, 30)) {
-            vlogf(5, "%s in room %d reward/punishing %s",
+            vlogf(LOG_FACT, "%s in room %d reward/punishing %s",
                 me->getName(), room, tmp_ch->getName());
             simple_deity_poof(me, tmp_ch->inRoom());
 
@@ -468,7 +458,7 @@ int alignment_deity(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
               tmp_ch = NULL;
             }
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              vlogf(10, "Bad news in alignment_deity(). BUG BRUTIUS");
+              vlogf(LOG_BUG, "Bad news in alignment_deity(). BUG BRUTIUS");
               simple_deity_poof(me, room);
               return DELETE_THIS;
             }

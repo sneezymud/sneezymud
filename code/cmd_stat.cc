@@ -609,7 +609,7 @@ void TBeing::statBeing(TBeing *k)
       cyan(), norm(), k->getPiety(),
       cyan(), norm(), buf2, cyan(), norm(), buf3);
   else if (k->hasClass(CLASS_SHAMAN))
-    sprintf(buf + strlen(buf), "%sLifef.:%s [%4d]%sHit    :%s %-10s  %sMove    :%s %-10s\n\r",
+    sprintf(buf + strlen(buf), "%sLifef.:%s [%4d]%s Hit    :%s %-10s  %sMove    :%s %-10s\n\r",
       cyan(), norm(), k->getLifeforce(),
       cyan(), norm(), buf2, cyan(), norm(), buf3);
   else

@@ -51,6 +51,9 @@ void TBeing::doScore()
   if (hasClass(CLASS_DEIKHAN) || hasClass(CLASS_CLERIC))
     sprintf(Buf, "%s%.2f%% %spiety.\n\r",
             cyan(), getPiety(), norm());
+  else if (hasClass(CLASS_SHAMAN))
+    sprintf(Buf, "%s%d%slifeforce.\n\r",
+            red(), getLifeforce(), norm());
   else
     sprintf(Buf, "%s%d%s/%s%d%s mana.\n\r",
             orange(), getMana(), norm(),

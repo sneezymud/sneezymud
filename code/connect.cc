@@ -5005,6 +5005,10 @@ void setPrompts(fd_set out)
           sprintf(promptbuf, "\n\rMANA : %d > ", ch->getMana());
           d->output.putInQ(cap(promptbuf));
         }
+        if (ch->task->task == TASK_SACRIFICE) {
+          sprintf(promptbuf, "\n\rLIFEFORCE : %d > ", ch->getLifeforce());
+          d->output.putInQ(cap(promptbuf));
+        }
         if ((ch->task->task == TASK_SHARPEN || 
              ch->task->task == TASK_DULL) && 
             (obj = ch->heldInPrimHand())) {
@@ -6663,7 +6667,7 @@ int TBeing::applyRentBenefits(int secs)
   setMana(min((int) manaLimit(), getMana() + (local_tics * manaGain())));
   setMove(min((int) moveLimit(), getMove() + (local_tics * moveGain())));
   setPiety(min(pietyLimit(), getPiety() + (local_tics * pietyGain(0.0))));
-  setLifeforce(min(getLifeforce(), 50));
+  setLifeforce(max(getLifeforce(), 50));
   // THIS WILL NEED TO BE REVIEWED
  
   wearSlotT ij;

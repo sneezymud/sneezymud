@@ -76,6 +76,7 @@ void SwitchStuff(TBeing *giver, TBeing *taker)
   taker->setPiety(giver->getPiety());
   taker->setMana(giver->getMana());
   taker->setMove(giver->getMove());
+  taker->setLifeforce(giver->getLifeforce());
 //  taker->setMaxMove(giver->getMaxMove());   
 
   statTypeT iStat;
@@ -154,6 +155,7 @@ void DisguiseStuff(TBeing *giver, TBeing *taker)
   taker->setMaxMove(giver->getMaxMove());
   taker->setMana(giver->getMana());
   taker->setMaxMana(giver->manaLimit());
+  taker->setLifeforce(giver->getLifeforce());
 }
 
 void TMonster::failCharm(TBeing *ch)

@@ -276,6 +276,7 @@ int TBeing::dummyCold()
     case 18:
       sendTo("You have a massive, splitting headache.  Damn cold!\n\r");
       setMana(max((getMana() - 35), 0));
+      addToLifeforce(-2);
       break;
     default:
       break;
