@@ -289,9 +289,17 @@ void TVehicle::vehiclePulse(int pulse)
     }
   }
   
+  // update exits
+  TRoom *vehicleroom=real_roomp(getTarget());
+
+  for(int i=MIN_DIR;i<MAX_DIR;++i){
+    if(vehicleroom->dir_option[i])
+      vehicleroom->dir_option[i]->to_room=roomp->number;
+  }
+
+
   // send message to people in vehicle
   troom=real_roomp(getTarget());
-
 
   // the doAt in driveLook() would screw up the getStuff list
   // so we "pre-cache" it
