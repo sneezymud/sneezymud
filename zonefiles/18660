@@ -1,6 +1,6 @@
 #18660
 Peel - Gatlin Springs and Lodge~
-18724 25 2 1
+18724 25 2 0
 
 D 0 18660 7 1        Entrance -> The Reception Desk
 D 0 18662 8 1        The Reception Desk -> Entrance
@@ -42,25 +42,25 @@ O 0 18660 1 18660     a pinnacle of stone
 O 0 18661 1 18660     a weathered bench
 O 0 18662 1 18660     a well-worn bench
 O 0 18663 1 18660     a firepit
-M 0 18660    1 18660    a weary postman
-M 0 18661    1 18660    a tundra hiker
-M 0 18662    1 18660    a travelling warrior
+*M 0 18660    1 18660    a weary postman
+*M 0 18661    1 18660    a tundra hiker
+*M 0 18662    1 18660    a travelling warrior
 
 * stable
 O 0 18664 1 18661     a pile of stale hay
 O 0 18665 1 18661     some bags of feed
 O 0 18666 1 18661     a sturdy brass oil lamp
-M 0 18663    1 18661    a stable boy
-M 0 18664    1 18661    a white horse
-M 0 18665    1 18661    a docile moose
-M 0 18670    1 18661    a white draft horse
+*M 0 18663    1 18661    a stable boy
+*M 0 18664    1 18661    a white horse
+*M 0 18665    1 18661    a docile moose
+*M 0 18670    1 18661    a white draft horse
 
 * receptionist area
 O 0 18666 1 18662     a sturdy brass oil lamp
 O 0 18667 1 18662     a long receptionist's desk
 O 0 18668 1 18662     a gigantic moosehead
-M 0 18666    1 18662    an arrogant receptionist
-M 0 18667    1 18662    a lazy bellhop
+*M 0 18666    1 18662    an arrogant receptionist
+*M 0 18667    1 18662    a lazy bellhop
 
 * lobby
 O 0 18674 1 18663      a suit of frontier guard's platemail
@@ -70,12 +70,12 @@ O 0 18671 1 18663        an inlaid wood coffee table
 O 0 18672 1 18663     a painting
 O 0 18673 1 18663     a white marble fireplace
 O 0 18666 1 18663     a sturdy brass oil lamp
-M 0 18668    1 18663    a merchant from amber
-M 0 18669    1 18663    a retired frontier guard
-M 0 18671    1 18663    a vacationing dwarf (male)
-M 0 18672    1 18663    a vacationing dwarf (female)
-M 0 18673    1 18663    a vacationing dwarf (child)
-M 0 18673    1 18663    a vacationing dwarf (child)
+*M 0 18668    1 18663    a merchant from amber
+*M 0 18669    1 18663    a retired frontier guard
+*M 0 18671    1 18663    a vacationing dwarf (male)
+*M 0 18672    1 18663    a vacationing dwarf (female)
+*M 0 18673    1 18663    a vacationing dwarf (child)
+*M 0 18673    1 18663    a vacationing dwarf (child)
 
 
 * fireplace
