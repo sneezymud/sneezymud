@@ -68,7 +68,7 @@ int ssprintf(sstring &s, const char *fmt, ...){
 
 bool TBeing::canSeeWho(const TBeing *o) const
 {
-  if (inRoom() < 0 || o->inRoom() < 0)
+  if (inRoom() < 0 || o->inRoom() < 0 || !o || !o->roomp)
     return FALSE;
 
   int illum = o->roomp->getLight();
