@@ -3860,11 +3860,11 @@ int TBeing::weaponCheck(TBeing *vict, TThing *o, spellNumT type, int dam)
 
   if(total < 1){
     imm_num=vict->getImmunity(IMMUNE_NONMAGIC);
-  } else if (total == 1) {
+  } else if (total < 2) {
     imm_num=vict->getImmunity(IMMUNE_PLUS1);
-  } else if (total == 2) {
+  } else if (total < 3) {
     imm_num=vict->getImmunity(IMMUNE_PLUS2);
-  } else if (total >= 3) {
+  } else {
     imm_num=vict->getImmunity(IMMUNE_PLUS3);
   }
 
