@@ -2946,18 +2946,20 @@ void TPerson::doStart()
     obj = read_object(r_num, REAL);
     *this += *obj;    // newbie book 
   }
+#ifdef NOGUIDE
+  // Damescena wants this to NOT load
   if ((r_num = real_object(1459)) >= 0) {
     obj = read_object(r_num, REAL);
     *this += *obj;    // conversion book 
   }
-
+#endif
   // give a weapon
   if (hasClass(CLASS_WARRIOR) || hasClass(CLASS_RANGER) || hasClass(CLASS_DEIKHAN)) {
     if ((r_num = real_object(WEAPON_T_SWORD)) >= 0) {
       obj = read_object(r_num, REAL);
       *this += *obj;    // newbie sword
     }
-  } else if (!hasClass(CLASS_CLERIC) && !hasClass(CLASS_MONK)) {
+  } else if (!hasClass(CLASS_CLERIC) && !hasClass(CLASS_MONK) && !hasClass(CLASS_SHAMAN)) {
     if ((r_num = real_object(WEAPON_T_DAGGER)) >= 0) {
       obj = read_object(r_num, REAL);
       *this += *obj;    // newbie dagger
@@ -2977,6 +2979,7 @@ void TPerson::doStart()
 
   if (hasClass(CLASS_SHAMAN))
     personalize_object(NULL, this, 31317, -1);
+    personalize_object(NULL, this, 31395, -1);
 
   if (hasClass(CLASS_DEIKHAN))
     personalize_object(NULL, this, 500, -1);
@@ -2988,6 +2991,22 @@ void TPerson::doStart()
     sendTo("--> See %sHELP WEAR%s for more details.\n\r", cyan(), norm());
     sendTo("Be sure to read your %snewbie guide%s...\n\r", green(), norm());
     sendTo("If you are feeling lost, read HELP GOTO for some quick directions.\n\r");
+  }
+
+  if (hasClass(CLASS_SHAMAN)) {
+    sendTo("%s**%s\t*+*+*+*+*+*+*+*+*+ %sWARNING%s +*+*+*+*+*+*+*+*+*+*+*+\n\r", red(), norm(), red(), norm());
+    sendTo("%s**%s\tThe class you are about to play has been designed with\n\r", red(), norm());
+    sendTo("%s**%s\tthe most advanced of players in mind. The class is not\n\r", red(), norm());
+    sendTo("%s**%s\tan easy one to play in the least. Please be sure, if \n\r", red(), norm());
+    sendTo("%s**%s\tyou decide to dedicate time to a Shaman character, that\n\r", red(), norm());
+    sendTo("%s**%s\tyou can deal with playing an advanced class that would\n\r", red(), norm());
+    sendTo("%s**%s\tbe by most considered impossible or unplayable. Please\n\r", red(), norm());
+    sendTo("%s**%s\tfamiliarize yourself with the help files pertaining to\n\r", red(), norm());
+    sendTo("%s**%s\tthe Shaman class before undertaking this challenge.\n\r%s**%s\n\r", red(), norm(), red(), norm());
+    sendTo("%s**%s\tSee %sHELP LIFEFORCE%s for more details.\n\r", red(), norm(), cyan(), norm());
+    sendTo("%s**%s\tBe sure to read your %snewbie guide%s...\n\r", red(), norm(), green(), norm());
+    sendTo("%s**%s\tIf you have serious problems, by all means,\n\r", red(), norm());
+    sendTo("%s**%s\task a player with the %sNEWBIE HELPER%s flag.\n\r", red(), norm(), red(), norm());
   }
 
   setMaxHit(21);
