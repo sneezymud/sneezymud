@@ -423,7 +423,7 @@ int poisonViperBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return FALSE;
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;       // weapon not equipped (carried or on ground)
-  if (cmd != CMD_OBJ_HITTING)
+ if (cmd != CMD_OBJ_HITTING)
     return FALSE;
   if (vict->isImmune(IMMUNE_POISON, 20))
     return FALSE;
@@ -3099,6 +3099,28 @@ int randomizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   return TRUE;
 }
 
+int teleportRing(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
+  int rc;
+  TBeing *vict;
+
+  if (!(vict = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+ 
+  if(cmd!=CMD_GENERIC_PULSE || ::number(0,100))
+    return FALSE;
+
+  act("Your $o flares up brightly and you suddenly feel very dizzy and disoriented.", TRUE, vict, o, NULL, TO_CHAR);
+  act("$n's $o flares up brightly and $e disappears!", TRUE, vict, o, NULL, TO_ROOM);
+  
+  rc = vict->genericTeleport(SILENT_NO, FALSE);
+  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    delete vict;
+    vict = NULL;
+  }
+
+  return TRUE;
+}
+
 int trolley(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *){  
   int *job=NULL, where=0, i;
   int path[]={-1, 100, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185,
@@ -4897,7 +4919,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Chrism: bless hold item", blessingHoldItem},
   {FALSE, "Chrism: vitality restore", moveRestoreNeckwear},
   {FALSE, "Chipped Tooth Food Item", chippedTooth}, // 80
-  {FALSE, "Goofers Dust", goofersDust}
+  {FALSE, "Goofers Dust", goofersDust},
+  {FALSE, "teleport ring", teleportRing}
 };
 
 
