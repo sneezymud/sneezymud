@@ -1605,7 +1605,7 @@ int detectInvisibility(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   if (bSuccess(caster, bKnown, SPELL_DETECT_INVISIBLE)) {
     aff.type = SPELL_DETECT_INVISIBLE;
-    aff.duration = level * 3 * UPDATES_PER_MUDHOUR;
+    aff.duration = ((level * 3 * UPDATES_PER_MUDHOUR) / 2);
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_DETECT_INVISIBLE;
