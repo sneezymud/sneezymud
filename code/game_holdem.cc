@@ -267,6 +267,23 @@ void HoldemGame::linkPlayers()
       }
     }
   }
+
+  int count;
+  for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
+    count=0;
+
+    for(int j=0;j<MAX_HOLDEM_PLAYERS;++j){
+      if(players[i] && players[j] && players[i]->name == players[j]->name){
+	if((++count) > 1){
+	  // this entry is in here more than once!
+	  vlogf(LOG_PEEL, "duplicate entry, removing player %s", players[i]->name.c_str());
+	  delete players[i];
+
+	}
+      }
+    }
+  }
+
 }
 
 int HoldemGame::nextBetter(int b)
@@ -583,7 +600,6 @@ void HoldemGame::raise(TBeing *ch, const sstring &arg)
     int i=better, j=0;
 
     do {
-      vlogf(LOG_PEEL, "i=%i, j=%i", i, j);
       hp[j]=players[i];
       j++;
       i=(i+1)%MAX_HOLDEM_PLAYERS;
@@ -804,8 +820,10 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
   int i;
 
   if(ch->isImmortal() && arg=="reset"){
-    for(i=0;i<MAX_HOLDEM_PLAYERS;++i)
+    for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
       delete players[i];
+      players[i]=NULL;
+    }
     for(i=0;i<5;++i)
       community[i]=0;
     better=0;
