@@ -3365,7 +3365,7 @@ int fishingBoat(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
 	      shortdescr);
       break;
     case 1: 
-      sprintf(buf, "$n continues %s towards Brightmoon.",
+      sprintf(buf, "$n continues %s out to sea.",
 	      (i==MAX_DIR)?"on":dirs[i]);
       act(buf,FALSE, myself, 0, 0, TO_ROOM); 
       sendrpf(COLOR_OBJECTS, boatroom, "%s sails %s out to sea.\n\r",
