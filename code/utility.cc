@@ -1650,7 +1650,8 @@ void TBeing::addToMoney(int money, moneyTypeT type)
           gold_positive[GOLD_TITHE][(lev-1)] += max(amount, 0);
           reconcileHelp(NULL, amount * TITHE_FACTOR);
 
-	  sendTo("You tithe %i talens.\n\r", amount);
+	  if(amount>0)
+	    sendTo("You tithe %i talens.\n\r", amount);
         }
         break;
       case GOLD_TITHE:
