@@ -481,6 +481,35 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
     return;
   }
 
+  if (is_abbrev(arg, "all.damaged")) {
+    TThing * tListHead   = buyer->getStuff();
+    int      iCostForAll = 0;
+
+    while (tListHead) {
+      valued = dynamic_cast<TObj *>(tListHead);
+
+      if (valued)
+        if (!will_not_repair(buyer, repair, valued, SILENT_YES)) {
+          repair->doTell(fname(buyer->name),
+                         fmt("It'll cost you %d talens to repair %s to a status of %s.") %
+                         (valued->repairPrice(repair, buyer, DEPRECIATION_NO)) %
+                         valued->getName() %
+                         valued->equip_condition(valued->maxFix(repair, DEPRECIATION_NO)));
+
+          iCostForAll += valued->repairPrice(repair, buyer, DEPRECIATION_NO);
+        }
+
+      tListHead = tListHead->nextThing;
+    }
+
+    if (!iCostForAll)
+      repair->doTell(fname(buyer->name), fmt("%s, You don't have anything I can repair in your inventory...") % buyer->getName());
+    else
+      repair->doTell(fname(buyer->name), fmt("It will cost a total of %d talens to repair all the listed items.") % iCostForAll);
+
+    return;
+  }
+
   TThing *t_valued = searchLinkedListVis(buyer, arg, buyer->getStuff());
   valued = dynamic_cast<TObj *>(t_valued);
   if (!valued) {
