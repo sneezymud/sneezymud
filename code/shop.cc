@@ -13,6 +13,7 @@
 #include "obj_base_clothing.h"
 #include "obj_magic_item.h"
 #include "shopowned.h"
+#include "obj_casino_chip.h"
 
 vector<shopData>shop_index(0);
 int cached_shop_nr;
@@ -448,8 +449,10 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
       temp1->purchaseMe(ch, keeper, cost, shop_nr);
       // for unlimited items, charge the shopkeeper for production
-      keeper->addToMoney(-obj_flags.cost, GOLD_SHOP);
-      shoplog(shop_nr, ch, keeper, temp1->getName(), -obj_flags.cost, "producing");
+      if(!dynamic_cast<TCasinoChip *>(this)){
+	keeper->addToMoney(-obj_flags.cost, GOLD_SHOP);
+	shoplog(shop_nr, ch, keeper, temp1->getName(), -obj_flags.cost, "producing");
+      }
 
       ch->logItem(temp1, CMD_BUY);
       count++;

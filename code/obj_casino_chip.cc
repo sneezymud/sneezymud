@@ -8,6 +8,7 @@
 
 #include "stdsneezy.h"
 #include "obj_casino_chip.h"
+#include "shop.h"
 
 TCasinoChip::TCasinoChip() :
   TObj()
@@ -46,5 +47,17 @@ sstring TCasinoChip::statObjInfo() const
 {
   sstring a("");
   return a;
+}
+
+
+
+int TCasinoChip::sellPrice(int shop_nr, float, int *)
+{
+  return (int)(obj_flags.cost * shop_index[shop_nr].profit_sell);
+}
+
+int TCasinoChip::shopPrice(int num, int shop_nr, float, int *) const
+{
+  return (int)(obj_flags.cost * shop_index[shop_nr].profit_buy);
 }
 
