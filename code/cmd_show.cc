@@ -1093,7 +1093,7 @@ void TPerson::doShow(const char *argument)
   } else {
     sb += "Usage:\n\r";
     sb += "  show zones (<zonename> | \"disabled\")\n\r";
-    sb += "  show objects (zone#|name)\n\r";
+    sb += "  show objects (zone#|name|maxed)\n\r";
     sb += "  show mobiles (zone#|name|\"pets\"|\"hunters\"|\"bounty\"|\"response\")\n\r";
 
     sb += "  show free (mobiles|objects) (zone#/all) <zone#>\n\r";
