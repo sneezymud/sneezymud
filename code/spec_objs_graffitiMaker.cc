@@ -13,7 +13,10 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   sstring ccodes[ncolors]={"<W>", "<g>", "<b>", "<r>", "<Y>", "<p>"};
   int color=0;
 
-  if(cmd == CMD_GENERIC_CREATED && !o->isObjStat(ITEM_STRUNG)){
+  // we really should do this on created, but for some reason that isn't
+  // working.  it seems as though the item hasn't been strung yet at that
+  // point. using quick pulse should work fine.
+  if(cmd == CMD_GENERIC_QUICK_PULSE && !o->isObjStat(ITEM_STRUNG)){
     sstring buf;
     int c=::number(0,ncolors-1);
     o->swapToStrung();
