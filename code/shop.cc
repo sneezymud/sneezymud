@@ -2102,9 +2102,12 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  db.fetchRow();
 
 	  // create the entry if it doesn't exist, use default profit buy/sell
-	  db.query("insert ignore into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(db.getColumn(0)), atof(db.getColumn(1)));
-
-	  db.query("update shopownedratios set profit_buy=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum());
+	  db.query("select 1 from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, o->objVnum());
+	  if(!db.fetchRow()){
+	    db.query("insert into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(buf), atof(db.getColumn(1)));
+	  } else {
+	    db.query("update shopownedratios set profit_buy=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum());
+	  }
 
 	  sprintf(buf2, "%s Ok, my profit_buy is now %f for %s.", 
 		  ch->getName(), atof(buf), o->getName());
@@ -2159,9 +2162,12 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  db.fetchRow();
 	  
 	  // create the entry if it doesn't exist, use default profit buy/sell
-	  db.query("insert ignore into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(db.getColumn(0)), atof(db.getColumn(1)));
-	  
-	  db.query("update shopownedratios set profit_sell=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum());
+	  db.query("select 1 from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, o->objVnum());
+	  if(!db.fetchRow()){
+	    db.query("insert into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(db.getColumn(0)), atof(buf));
+	  } else {
+	    db.query("update shopownedratios set profit_sell=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum());
+	  }
 	  
 	  sprintf(buf2, "%s Ok, my profit_sell is now %f for %s.", 
 		  ch->getName(), atof(buf), o->getName());
@@ -2438,7 +2444,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
   
   TDatabase db("sneezy");
 
-  db.query("insert ignore into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch->getName(), action, name, cost, keeper->getMoney(), value, count);
+  db.query("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch->getName(), action, name, cost, keeper->getMoney(), value, count);
 
   if(!strcmp(action, "buying")){
     db.query("update stockinfo set talens=talens+%i where shop_nr=%i", (int)((float)cost*0.05), shop_nr);

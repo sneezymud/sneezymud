@@ -6188,8 +6188,13 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	return FALSE;
       }
 
-      db.query("insert ignore into fishkeeper values ('%s', 0)", ch->name);
-      db.query("update fishkeeper set weight=weight+%f where name='%s'", o->getWeight(), ch->name);
+      db.query("select 1 from fishkeeper where name='%s'", ch->name);
+      if(db.fetchRow()){
+	db.query("insert into fishkeeper values ('%s', %f)", 
+		 ch->name, o->getWeight());
+      } else {
+	db.query("update fishkeeper set weight=weight+%f where name='%s'", o->getWeight(), ch->name);
+      }
 
       // check for largest
       db.query("select weight, name from fishlargest where type='%s'", o->shortDescr);
@@ -6823,9 +6828,13 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
     db.query("update stockinfo set talens=talens+%i", (int)(modprice/1.01));
 
-    db.query("insert ignore into stockowners values ('%s', '%s', 0)", ch->getName(), db.getColumn(0));
-    
-    db.query("update stockowners set shares=shares+%i where owner='%s' and ticker='%s'", num, ch->getName(), db.getColumn(0));
+    db.query("select 1 from stockowners where owner='%s' and ticker='%s'",
+	     ch->getName(), db.getColumn(0));
+    if(db.fetchRow()){
+      db.query("insert into stockowners values ('%s', '%s', %i)", ch->getName(), db.getColumn(0), num);
+    } else {
+      db.query("update stockowners set shares=shares+%i where owner='%s' and ticker='%s'", num, ch->getName(), db.getColumn(0));
+    }
 
     sprintf(buf, "%s, Ok, you just purchased %i shares of %s, for a price of %f.",
 	    fname(ch->name).c_str(), num, db.getColumn(0), modprice);

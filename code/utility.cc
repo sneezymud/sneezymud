@@ -1662,8 +1662,12 @@ void TBeing::addToMoney(int money, moneyTypeT type)
         reconcileHelp(NULL, -money * TITHE_FACTOR);
         break;
       case GOLD_GAMBLE:
-	db.query("insert ignore into gamblers values ('%s', %i)", getName(), 0);
-	db.query("update gamblers set money=money+%i where name='%s'", money, getName());
+	db.query("select 1 from gamblers where name='%s'", getName());
+	if(db.fetchRow()){
+	  db.query("insert into gamblers values ('%s', %i)", getName(), money);
+	} else {
+	  db.query("update gamblers set money=money+%i where name='%s'", money, getName());
+	}
 	// fall through
       case GOLD_REPAIR:
       case GOLD_SHOP:
