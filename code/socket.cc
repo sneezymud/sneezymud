@@ -599,10 +599,8 @@ int TMainSocket::gameLoop()
     // interport communication
     mudRecvMessage();
 
-
     if(!wayslowpulse){
       checkForRepo();
-      updateStockHistory();
     }
 
     if (!pulse_tick) {
@@ -620,10 +618,14 @@ int TMainSocket::gameLoop()
       updateStocks();
     }
 
+    if(time_info.seconds=time_info.hours=time_info.minutes=0){
+      // once per mud day hopefully
+      updateStockHistory();
+    }
+
     if (!combat){
       perform_violence(pulse);
     }
-
 
 
     if (!pulse_mudhour) {
