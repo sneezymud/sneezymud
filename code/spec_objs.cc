@@ -2413,6 +2413,11 @@ int wickedDagger(TBeing *vict, cmdTypeT cmd, const char *, TObj *me, TObj *ch_ob
 {
   int dam = ::number(1,10);
   spellNumT wtype = me->getWtype();
+  
+  if (cmd != CMD_OBJ_MISS || cmd != CMD_OBJ_HIT || cmd != CMD_GENERIC_PULSE) {
+    return FALSE;
+  }
+
 
   if (::number(0,10) || !ch_obj || !vict || vict->getHit() <= dam ||
       (dynamic_cast<TBeing *>(dynamic_cast<TThing *>(ch_obj)))->getHit() <= dam)

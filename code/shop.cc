@@ -515,6 +515,8 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
         // PC can't afford item, so just leave it on the keeper
         break;
       }
+
+      if (!temp1 || !temp1) break;
       --(*temp1);
       *ch += *temp1;
 
