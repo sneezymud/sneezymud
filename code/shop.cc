@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: shop.cc,v $
+// Revision 1.2  1999/10/08 04:32:32  batopr
+// Made shops throw chars in random direction when entering shop badly
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1733,7 +1736,13 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     tbt = dynamic_cast<TBeing *>(ttt);
 
     for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-      if (exit_ok(exitp = myself->exitDir(dir), NULL)) {
+      if (exit_ok(myself->exitDir(dir), NULL)) {
+        // at least one valid dir exists
+        // select the true direction at random
+        do {
+          dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
+        } while (!exit_ok(myself->exitDir(dir), NULL));
+
         act("$n throws you from $s shop.",
                FALSE, myself, 0, ch, TO_VICT);
         act("$n throws $N from $s shop.",
