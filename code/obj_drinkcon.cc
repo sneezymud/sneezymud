@@ -252,6 +252,7 @@ void assign_drink_types()
   DrinkInfo[LIQ_POISON_INFANT] = new drinkInfo(-1,-1,1,true, "<r>dull red<1>", "<r>ichor of infant<1>", 150);
   DrinkInfo[LIQ_POISON_PEA_SEED] = new drinkInfo(-1,-1,1,true, "<g>dull green<1>", "<g>Sweet Pea Seed extract<1>", 50);
   DrinkInfo[LIQ_POISON_ACACIA] = new drinkInfo(-1,-1,1,true, "<o>dull yellow<1>", "<o>Acacia extract<1>", 150);
+  DrinkInfo[LIQ_LUBRICATION] = new drinkInfo(-1,-1,1,false, "<c>clear jelly<1>", "<c>lubricating jelly<1>", 100);
 
 }
 

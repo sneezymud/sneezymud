@@ -340,6 +340,7 @@ enum liqTypeT {
      LIQ_POISON_INFANT,
      LIQ_POISON_PEA_SEED,
      LIQ_POISON_ACACIA,
+     LIQ_LUBRICATION,
      MAX_DRINK_TYPES     // move and change
 };
 extern liqTypeT & operator++(liqTypeT &, int);
