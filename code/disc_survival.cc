@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_survival.cc,v $
+// Revision 1.2  1999/09/30 14:05:25  lapsos
+// Fixed a starting bug in seekwater(deduction of moves)
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -705,6 +708,9 @@ void TBeing::doSeekwater()
       sprintf(buf2, "enter %s", buf);
       addCommandToQue(buf2);
   }
+
+  addToWait(combatRound(1));
+  addToMove((int) min(10, (-2-((110-getSkillValue(SKILL_SEEKWATER))/6))));
 
   start_task(this, NULL, NULL, TASK_TRACKING, "", 1, in_room, 1, code+1, 40);
 }
