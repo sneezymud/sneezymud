@@ -1798,13 +1798,8 @@ int weaponFumbler(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   TBeing *ch;
   TThing *obj;
 
-  if (!o || !vict)
-    return FALSE;
-  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
-    return FALSE;       // weapon not equipped (carried or on ground)
-  if (::number(0,19))
-    return FALSE;
-  if (cmd != CMD_OBJ_HITTING)
+  ch = genericWeaponProcCheck(vict, cmd, o, 19);
+  if (!ch)
     return FALSE;
 
   act("You cleave $N's body hard with your $o.",TRUE,ch,o,vict,TO_CHAR, ANSI_ORANGE);
