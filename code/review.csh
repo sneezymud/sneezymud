@@ -24,7 +24,25 @@ endif
 echo "Reviewing for changes since: '$dateTime'"
 
 if ("`whoami`" == "batopr") then
-  set rlogOpts = "-wbrutius,cosmo,damescena,dolgan,gringar,hylidan,kriebly,lapsos,lothar,marsh,merc,mithros,moath,omen,peel,rixanne,satan,sidartha,sneezy,spawn,speef,stone"
+  # This routine figures our who is on the system, creates a list of
+  # everyone EXCEPT myself, and uses those names as the logins to review
+  # ergo, we will be reviewing changes for everyone except yourself
+  set rlogOpts =
+  set curDir = `pwd`
+  cd /home
+  foreach file (*)
+    if ("$file" != "`whoami`") then
+      if ("$rlogOpts" == "") then
+        set rlogOpts = "$file"
+      else
+        set rlogOpts = "$rlogOpts"",""$file"
+      endif
+    endif
+  end
+  if ("$rlogOpts" != "") then
+    set rlogOpts = "-w""$rlogOpts"
+  endif
+  cd $curDir
 else
   set rlogOpts =
 endif
