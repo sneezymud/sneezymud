@@ -791,7 +791,8 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
   TBeing *i = NULL;
   TMonster *mob = NULL;
-  
+  int objectLevel = 0;
+
   if (corpse || !ch || !obj)
     return;
 
@@ -803,11 +804,12 @@ void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
   if (obj->max_exist < 30)
     buffer = 10;
 
-  int dif = (int)obj->objLevel() - ch->GetMaxLevel(); 
+  objectLevel = (int) obj->objLevel();
+  int dif = objectLevel - ch->GetMaxLevel(); 
 
   if (dif > buffer) {
     // 1:500 chance for 10 lev lim diff, 1/20 chance for 50 lev lim diff
-    if ((100*dif)/buffer > ::number(0, 10000)) {
+    if (((100*dif)/buffer) > ::number(0, 10000)) {
       // well this is the meat of it.. now we need to randomly pick a mob roughly the level of the
       // object and send him after.
       
