@@ -149,7 +149,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
     if ((ch->getPosition() == POSITION_RESTING ||
          ch->getPosition() == POSITION_SITTING ||
          ch->getPosition() == POSITION_CRAWLING) &&
-           (num > ch->getSkillValue(SKILL_WIZARDRY)) || (num > ch->getSkillValue(SKILL_RITUALISM))) {
+           (num > ch->getSkillValue(SKILL_WIZARDRY))) {
       // we know that wizradry is < 60 from getWizardryLevel check
       ch->sendTo("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r", good_uncap(position_types[ch->getPosition()]).c_str());
       act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
@@ -169,7 +169,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
     if ((ch->getPosition() == POSITION_RESTING ||
          ch->getPosition() == POSITION_SITTING ||
          ch->getPosition() == POSITION_CRAWLING) &&
-           (num > ch->getSkillValue(SKILL_WIZARDRY)) || (num > ch->getSkillValue(SKILL_RITUALISM))) {
+           (num > ch->getSkillValue(SKILL_RITUALISM))) {
       ch->sendTo("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r", good_uncap(position_types[ch->getPosition()]).c_str());
       act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
       return FALSE;
@@ -186,31 +186,16 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
       act("$n concentrates deeply upon $s task...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
       return TRUE;
     }
-    if (ch->hasClass(CLASS_MAGE)) {
-      if (ch->hasHands()) {
-	sprintf(msg, "$n traces a magical rune in the air with $s hands.");
-	act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
-	sprintf(msg, "You trace a magical rune in the air with your hands.");
-	act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
-	return TRUE;
-      } else {
-	act("You hop and wiggle about while creating the magical runes in the air...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
-	act("$n hops and wiggles about while creating the magical runes in the air...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
-	return TRUE;
-      }
-    }
-    if (ch->hasClass(CLASS_SHAMAN)) {
-      if (ch->hasHands()) {
-	sprintf(msg, "$n hands glow with power as $e performs his ritual.");
-	act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
-	sprintf(msg, "Your hands glow with power as you perform the ritual.");
-	act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
-	return TRUE;
-      } else {
-	act("You move your arms hoping your invokation can generate enough ancestoral power...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
-	act("$n squirms and wiggles as $e performs $s ritual...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
-	return TRUE;
-      }
+    if (ch->hasHands()) {
+      sprintf(msg, "$n traces a magical rune in the air with $s hands.");
+      act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
+      sprintf(msg, "You trace a magical rune in the air with your hands.");
+      act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
+      return TRUE;
+    } else {
+      act("You hop and wiggle about while creating the magical runes in the air...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
+      act("$n hops and wiggles about while creating the magical runes in the air...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
+      return TRUE;
     }
     return TRUE;
   } else {
