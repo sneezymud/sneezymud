@@ -6227,6 +6227,8 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	}
       }
 
+      ch->doSave(SILENT_YES);
+
       break;
     case CMD_WHISPER:
       arg = one_argument(arg, buf);
