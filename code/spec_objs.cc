@@ -4433,8 +4433,13 @@ int telekinesisGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
     dam = ::number(10,40);
     rc = ch->applyDamage(vict, dam, SKILL_KINETIC_WAVE);
-    return TRUE;
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      vict->reformGroup();
+      delete vict;
+      vict = NULL;
+    }
 
+    return TRUE;
   } else if (vict && vict2 && vict2 != vict) {
     // throw vict into vict2
     act("You point at $N, and your glove begins to <G>glow<1>.",TRUE,ch,o,vict,TO_CHAR,NULL);
@@ -7410,9 +7415,3 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "Fireball Weapon", fireballWeapon},
   {FALSE, "last proc", bogusObjProc}
 };
-
-
-
-
-
-
