@@ -316,7 +316,8 @@ bool load_char(const sstring &name, charFile *char_element)
   if(db.fetchRow()){
     char_element->money=convertTo<int>(db["talens"]);
   } else {
-    vlogf(LOG_BUG, fmt("couldn't load talens for %s!") % name);
+    db.query("update player set talens=%i where lower(name)=lower('%s')",
+	     char_element->money, name.c_str());
   }
 
   if (rc == 1)
