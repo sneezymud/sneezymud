@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_rooms.cc,v $
+// Revision 1.2  1999/09/25 09:39:38  peel
+// Made the checks for monk green sash quest more lenient
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1565,6 +1568,7 @@ int monkQuestProcLand(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
   // We figure if they are riding an elephant when they started the fall
   // and if there is an elephant in the room when they land, must be the
   // same one.  And if not, no big deal, probably not abusable.
+#if 0
   for(t=rp->stuff;t;t=t->nextThing){
     if((tmon=dynamic_cast<TMonster *>(t)) &&
        tmon->mobVnum()==MOB_ELEPHANT){
@@ -1573,7 +1577,8 @@ int monkQuestProcLand(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
   }
   if(!t)
     return FALSE;
- 
+#endif 
+
   ch->remQuestBit(TOG_MONK_GREEN_FALLING);
   ch->setQuestBit(TOG_MONK_GREEN_FALLEN);
   act("<c>Having successfully witnessed the elephants fall, you are now prepared to return to your guildmaster.<1>", FALSE, ch, NULL, NULL, TO_CHAR);
