@@ -2057,6 +2057,14 @@ void buildComponentArray()
     "$n throws $p into the air and it disappears!",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_HEALING_GRASP,
+    "You apply $p to $N's eyes.",
+    "$n applies $p to $N's eyes.",
+    "$n applies $p to your eyes.",                       
+    "You apply $p to your eyes.",
+    "$n applies $p to $s eyes.",
+    "",
+    ""));
 
 
   COMPINDEX ci;

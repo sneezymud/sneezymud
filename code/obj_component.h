@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_component.h,v $
+// Revision 5.4  2002/02/21 02:11:05  jesus
+// added a comp for new shaman spell
+//
 // Revision 5.3  2002/02/11 06:26:17  dash
 // *** empty log message ***
 //
@@ -280,6 +283,7 @@ const int COMP_BLOOD_BOIL         =31340;
 const int COMP_FLATULENCE         =31341;
 const int COMP_CHASE_SPIRIT       =31345;
 const int COMP_CLEANSE            =31348;
+const int COMP_HEALING_GRASP      =31397;
 ////////////////////
 // BREW COMPONENTS
 ////////////////////
