@@ -213,6 +213,12 @@ int bankRoom(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     case 1295:
       tmp=1295;
       break;
+    case 3755:
+      tmp=3755;
+      break;
+    case 8756:
+      tmp=8756;
+      break;
   }
 
   // find the teller
@@ -233,6 +239,12 @@ int bankRoom(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       break;
     case 1295:
       tmp=1295;
+      break;
+    case 3755:
+      tmp=3755;
+      break;
+    case 8756:
+      tmp=8756;
       break;
   }
 

@@ -2264,7 +2264,7 @@ void assign_rooms(void)
     {2763, bank},
     {3700, dump},
     {3736, healing_room},
-    {3755, bank},
+    {3755, bankRoom},
     {4189, boulderRoom},
     {4284, boulderRoom},
     {5700, dayGateRoom},
@@ -2278,7 +2278,7 @@ void assign_rooms(void)
     {7228, SecretPortalDoors},
     {7266, SecretPortalDoors},
     {7268, SecretPortalDoors},
-    {8756, bank},
+    {8756, bankRoom},
     {9050, SecretDoors},      // GH Cathedral Expansion secret doors
     {9064, SecretDoors},
     {9390, SecretDoors},      // badlands brush
