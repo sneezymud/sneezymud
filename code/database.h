@@ -102,7 +102,7 @@ class TDatabase
 // maintain instances of sneezydb and immodb
 class TDatabaseConnection
 {
-  PGconn *sneezydb, *immodb, *sneezyglobaldb;
+  PGconn *sneezydb, *immodb, *sneezyglobaldb, *sneezybetadb;
 
  public:
   PGconn *getSneezyDB(){
@@ -130,6 +130,20 @@ class TDatabaseConnection
     }
       
     return sneezydb;
+  }
+
+  PGconn *getSneezyBetaDB(){
+    if(!sneezybetadb){
+      vlogf(LOG_DB, "Initializing database 'sneezybeta'.");
+      
+      vlogf(LOG_DB, "Connecting to database.");
+      if(!(sneezybetadb=PQconnectdb("dbname=sneezybeta"))){
+	vlogf(LOG_DB, "Could not connect to database 'sneezybeta'.");
+	return NULL;
+      }
+    }
+    
+    return sneezybetadb;
   }
 
 

@@ -30,6 +30,8 @@ TDatabase::~TDatabase(){
 void TDatabase::setDB(string tdb){
   if(tdb=="sneezy"){
     db=database_connection.getSneezyDB();
+  } else if(tdb=="sneezybeta"){
+    db=database_connection.getSneezyBetaDB();
   } else if(tdb=="immortal"){
     db=database_connection.getImmoDB();
   } else if(tdb=="sneezyglobal"){

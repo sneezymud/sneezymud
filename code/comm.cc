@@ -51,6 +51,8 @@ int gamePort;
 extern void save_all();
 extern int run_the_game();
 
+#ifndef LOWTOOLS
+
 int main(int argc, char *argv[])
 {
 #if 0
@@ -151,6 +153,8 @@ int main(int argc, char *argv[])
 
   return (0);
 }
+
+#endif
 
 // Init sockets, run game, and cleanup sockets 
 int run_the_game()

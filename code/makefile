@@ -251,6 +251,23 @@ $(NAME2) : $(OBJ)
 	@echo \*\*\* Insure Compile Process Complete
 	@echo "`date`"
 
+# object file with utility functions for the low tools
+lowlib: objs/lowtools.o $(OBJ)
+	@echo Making \"comm.cc\" for lowtools
+	@$(CC) -DLOWTOOLS -c comm.cc -o objs/comm.o
+	@touch comm.cc
+
+# low tool
+sqladdobjs: objs/sqladdobjs.o lowlib
+	@echo \*\*\* Making Final Link: sqladdobjs
+	@$(CC) -o sqladdobjs objs/sqladdobjs.o objs/lowtools.o $(OBJ) $(LDFLAGS)
+
+# make all low tools
+lowtools: sqladdobjs
+	@echo Finished making lowtools
+
+
+
 clean:
 	/bin/rm -f $(OBJDIR)*.o
 
