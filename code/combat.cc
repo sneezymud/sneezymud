@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: combat.cc,v $
+// Revision 1.4  1999/10/12 00:24:01  lapsos
+// Added vlogf for shopkeeper kills and inventory nuking.
+//
 // Revision 1.3  1999/09/30 01:07:10  lapsos
 // Added code for the new mobile strings.
 //
@@ -389,6 +392,21 @@ int TBeing::rawKill(int dmg_type)
   if (desc)
     desc->outputProcessing();
 
+  if (spec == SPEC_SHOPKEEPER) {
+    vlogf(10, "Shopkeeper inventory being removed.");
+
+    for (TThing *tThing = stuff; tThing; ) {
+      TThing *tThingB = tThing->nextThing;
+
+      delete tThing;
+      tThing = NULL;
+
+      tThing = tThingB;
+    }
+
+    stuff = NULL;
+  }
+
   makeCorpse(dmg_type);
   deathCry();
 
@@ -404,6 +422,8 @@ int TBeing::rawKill(int dmg_type)
   preKillCheck();
 
   if (spec == SPEC_SHOPKEEPER && number >= 0) {
+    vlogf(10, "Shopkeeper [%s] was just killed.  Find out how!", getName());
+
     unsigned int shop_nr;
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != number); shop_nr++);
 
