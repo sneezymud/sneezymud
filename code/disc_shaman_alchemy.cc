@@ -8,7 +8,7 @@
 
 void TBeing::doBrew(const char *arg)
 {
-  char buf[256];
+  string buf;
   TComponent *invalid=NULL, *comp_spell=NULL, *comp_brew=NULL;
   TPotion *comp_gen=NULL;
   TThing *t;
@@ -85,28 +85,28 @@ void TBeing::doBrew(const char *arg)
   // trash all items first
   int how_many = comp_gen->getDrinkUnits();
 
-  sprintf(buf, "You begin to brew %d ounces of %s.", 
+  ssprintf(buf, "You begin to brew %d ounces of %s.", 
          how_many, discArray[which_spell]->name);
-  act(buf, FALSE, this, 0, 0, TO_CHAR);
-  sprintf(buf, "$n begins to brew a potion.");
-  act(buf, FALSE, this, 0, 0, TO_ROOM);
+  act(buf.c_str(), FALSE, this, 0, 0, TO_CHAR);
+  ssprintf(buf, "$n begins to brew a potion.");
+  act(buf.c_str(), FALSE, this, 0, 0, TO_ROOM);
 
   comp_gen->setDrinkUnits(0);
 
   comp_brew->addToComponentCharges(-1);
   if(comp_brew->getComponentCharges() <= 0) {
-    sprintf(buf, "$p is consumed in the process.");
-    act(buf, FALSE, this, comp_brew, 0, TO_CHAR);
+    ssprintf(buf, "$p is consumed in the process.");
+    act(buf.c_str(), FALSE, this, comp_brew, 0, TO_CHAR);
     delete comp_brew;
     comp_brew = NULL;
   }
 
-  sprintf(buf, "You use up one charge of $p.");
-  act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
+  ssprintf(buf, "You use up one charge of $p.");
+  act(buf.c_str(), FALSE, this, comp_spell, 0, TO_CHAR);
   comp_spell->addToComponentCharges(-1);
   if (comp_spell->getComponentCharges() <= 0) {
-    sprintf(buf, "$p is consumed in the process.");
-    act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
+    ssprintf(buf, "$p is consumed in the process.");
+    act(buf.c_str(), FALSE, this, comp_spell, 0, TO_CHAR);
     delete comp_spell;
     comp_spell = NULL;
   }
