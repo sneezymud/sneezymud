@@ -8,6 +8,7 @@
 #include "stdsneezy.h"
 #include "being.h"
 #include "database.h"
+#include "obj_opal.h"
 
 extern bool affectShouldApply(const TObj *obj, wearSlotT pos);
 
@@ -853,7 +854,9 @@ void TBeing::setMaxMove(int move)
 
 int TBeing::getMana() const
 {
-  return points.mana;
+  TOpal *stone = find_biggest_charged_powerstone(this);
+
+  return (points.mana + (stone ? stone->psGetMana() : 0));
 }
 
 void TBeing::setMana(int mana)
