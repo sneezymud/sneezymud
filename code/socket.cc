@@ -1018,7 +1018,11 @@ int TMainSocket::gameLoop()
       count=updateWholist();
       updateUsagelogs(count);
 
-      updateStocks();
+      if (gamePort != BUILDER_GAMEPORT && gamePort != BETA_GAMEPORT &&
+          gamePort != ALPHA_GAMEPORT && gamePort != GAMMA_GAMEPORT)
+        // note:  BETA is the port used for walk-throughs and not your
+        // individual test instance
+        updateStocks();
     }
 
 
