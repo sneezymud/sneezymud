@@ -2174,6 +2174,27 @@ TObj *get_obj_vis_accessible(TBeing *ch, const char *name)
 // The routine returns a pointer to the next word in *arg (just like the  
 // one_argument routine).                                                 
 
+TObj *generic_find_obj(string arg, int bv, TBeing *ch)
+{
+  TBeing *tar_ch;
+  TObj *o;
+
+  generic_find(arg.c_str(), bv, ch, &tar_ch, &o);
+
+  return o;
+}
+
+TBeing *generic_find_being(string arg, int bv, TBeing *ch)
+{
+  TBeing *tar_ch;
+  TObj *o;
+
+  generic_find(arg.c_str(), bv, ch, &tar_ch, &o);
+
+  return tar_ch;
+}
+
+
 int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **obj)
 {
   const char *ignore[] =

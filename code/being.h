@@ -1987,7 +1987,7 @@ class TBeing : public TThing {
     void doNewbieEqLoad(race_t, ush_int, bool);
     virtual void doLoad(const char *);
     int doDisguise(const char *);
-    int doPoisonWeapon(const char *);
+    int doPoisonWeapon(string);
     int doGarrotte(const char *, TBeing *);
     int doStab(const char *, TBeing *);
     int doCudgel(const char *, TBeing *);

@@ -46,6 +46,8 @@ TBeing *get_char_vis(const TBeing *ch, const char *name, int *count, infraTypeT 
 TBeing *get_pc_world(const TBeing *ch, const char *name, exactTypeT exact, infraTypeT = INFRA_NO, bool visible = TRUE);
 TBeing * get_best_char_room(const TBeing *, const char *, visibleTypeT vis = VISIBLE_YES, infraTypeT inf = INFRA_NO);
 
+TObj *generic_find_obj(string, int, TBeing *);
+TBeing *generic_find_being(string, int, TBeing *);
 int generic_find(const char *, int, TBeing *, TBeing**, TObj**);
 
 const unsigned int FIND_CHAR_ROOM     =(1<<0);

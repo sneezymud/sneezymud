@@ -705,61 +705,37 @@ int throatSlit(TBeing *thief, TBeing * victim)
 
 //////////
 
-int TBeing::doPoisonWeapon(const char * argument)
+int TBeing::doPoisonWeapon(string arg)
 {
-  TThing *obj, *poison;
-  char namebuf[256];
+  TObj *obj, *poison;
+  string namebuf;
   int rc;
 
   if (!doesKnowSkill(SKILL_POISON_WEAPON)) {
     sendTo("You know nothing about poisoning weapons.\n\r");
     return FALSE;
   }
-  if (checkBusy(NULL)) {
+  if(checkBusy(NULL))
+    return FALSE;
+  
+  arg = one_argument(arg, namebuf);
+
+  if(!(obj=generic_find_obj(namebuf, FIND_OBJ_INV|FIND_OBJ_EQUIP, this))){
+    sendTo("Poison what?\n\r");
     return FALSE;
   }
-  argument = one_argument(argument, namebuf);
 
-  if (!(obj = searchLinkedListVis(this, namebuf, getStuff())))  {
-    if (!(obj = equipment[HOLD_RIGHT]) || !isname(namebuf, obj->name))  {
-      if (!(obj = equipment[HOLD_LEFT]) || !isname(namebuf, obj->name))  {
-        sendTo("Poison what?\n\r");
-        return FALSE;
-      }
-    }
-  }
+  arg = one_argument(arg, namebuf);
 
-  argument = one_argument(argument, namebuf);
-
-  if(*namebuf){
-    if ((!(poison=searchLinkedListVis(this, namebuf, getStuff())))){
-      for(int m=WEAR_NOWHERE+1;m<MAX_WEAR;++m){
-	if((poison=equipment[m]) && poison->name && 
-	   isname(namebuf, poison->name))
-	  break;
-	else
-	  poison=NULL;
-      }
-      
-      if(!poison){
-	sendTo("You can't find that poison.\n\r");
-	return FALSE;
-      }
+  if(!namebuf.empty()){
+    if(!(poison=generic_find_obj(namebuf, FIND_OBJ_INV|FIND_OBJ_EQUIP, this))){
+      sendTo("You can't find that poison.\n\r");
+      return FALSE;
     }
   } else {
-    if ((!(poison=searchLinkedListVis(this, "poison", getStuff())))){
-      for(int m=WEAR_NOWHERE+1;m<MAX_WEAR;++m){
-	if((poison=equipment[m]) && poison->name &&
-	   isname("poison", poison->name))
-	  break;
-	else
-	  poison=NULL;
-      }
-      
-      if(!poison){
-	sendTo("You can't find any poison.\n\r");
-	return FALSE;
-      }
+    if(!(poison=generic_find_obj("poison",FIND_OBJ_INV|FIND_OBJ_EQUIP, this))){
+      sendTo("You can't find any poison.\n\r");
+      return FALSE;
     }
   }
 
