@@ -471,11 +471,21 @@ struct timeval TMainSocket::handleTimeAndSockets()
   return timeout;
 }
 
+void pulseLog(sstring name, TTiming timer, int pulse)
+{
+  if(!gameLoopTiming)
+    return;
+
+  vlogf(LOG_MISC, fmt("%i %i) %s: %i") % 
+	pulse % (pulse%12) % name % (int)(timer.getElapsedReset()*1000000));
+}
+
+
 int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 {
   TBeing *temp;
   int rc, count, retcount;
-
+  TTiming t;
 
   // note on this loop
   // it is possible that temp gets deleted in one of the sub funcs
@@ -792,7 +802,19 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 	}
       }
     }
+
+    if(gameLoopTiming){
+      rc=(int)(t.getElapsedReset()*1000000);
+      
+      if(rc>0){
+	vlogf(LOG_MISC, fmt("%s: %i") % 
+	      tmp_ch->getName() % rc);
+      }
+    }
+
     temp = tmp_ch->next;
+
+
   } // character_list
 
   return retcount-count;
@@ -959,14 +981,6 @@ void pingData()
   fflush(p);
 }
 
-void pulseLog(sstring name, TTiming timer, int pulse)
-{
-  if(!gameLoopTiming)
-    return;
-
-  vlogf(LOG_MISC, fmt("%i %i) %s: %i") % 
-	pulse % (pulse%12) % name % (int)(timer.getElapsedReset()*1000000));
-}
 
 int TMainSocket::gameLoop()
 {
