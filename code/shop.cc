@@ -85,10 +85,6 @@ int TObj::sellPrice(int, int shop_nr, float chr)
   if (chr != -1 && chr!=0)
     cost /= chr;
 
-  // scale based on global settings for non-owned shops
-  if(!shop_index[shop_nr].isOwned())
-    cost *= gold_modifier[GOLD_SHOP].getVal();
-
   // make sure we don't have a negative cost
   cost = max(1.0, cost);
 
