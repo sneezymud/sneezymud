@@ -1957,7 +1957,7 @@ class TBeing : public TThing {
     void doUnlock(const char *);
     void doLock(const char *);
     void doScore();
-    void doTrophy(const char *);
+    void doTrophy(const string);
     void doWhozone();
     void doWho(const char *);
     void doTime(const char *);
@@ -1997,9 +1997,9 @@ class TBeing : public TThing {
     int doStab(const char *, TBeing *);
     int doCudgel(const char *, TBeing *);
     virtual int moneyMeBeing(TThing *mon, TThing *sub);
-    virtual byte getTimer() const = 0;
-    virtual void setTimer(byte) = 0;
-    virtual void addToTimer(byte) = 0;
+    virtual unsigned int getTimer() const = 0;
+    virtual void setTimer(unsigned int) = 0;
+    virtual void addToTimer(unsigned int) = 0;
     bool isStrong() const;
     bool isPerceptive() const;
     bool isAgile(int num) const;

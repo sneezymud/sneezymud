@@ -25,7 +25,7 @@ class TPerson : public TBeing {
     int last_rent;
     //    bool toggles[MAX_TOG_INDEX];
     bool wizPowers[MAX_POWER_INDEX];
-    byte timer;
+    unsigned int timer;
 
     TPerson(Descriptor *);
     TPerson(const TPerson &);
@@ -49,13 +49,13 @@ class TPerson : public TBeing {
       if (desc)
         desc->wait = num;
     }
-    virtual byte getTimer() const {
+    virtual unsigned int getTimer() const {
       return timer;
     }
-    virtual void setTimer(byte num) { 
+    virtual void setTimer(unsigned int num) { 
       timer = num;
     }
-    virtual void addToTimer(byte num) { 
+    virtual void addToTimer(unsigned int num) { 
       timer += num;
     }
 

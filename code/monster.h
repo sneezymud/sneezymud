@@ -503,9 +503,9 @@ class TMonster : public TBeing {
     virtual int learnFromDoingUnusual(learnUnusualTypeT, spellNumT, int);
     virtual int learnFromDoing(spellNumT, silentTypeT, unsigned int);
     int doHatefulStuff();
-    virtual byte getTimer() const;
-    virtual void setTimer(byte);
-    virtual void addToTimer(byte);
+    virtual unsigned int getTimer() const;
+    virtual void setTimer(unsigned int);
+    virtual void addToTimer(unsigned int);
     int petPrice() const;
     void aiGrowl(const TBeing *) const;
     void swapToStrung();

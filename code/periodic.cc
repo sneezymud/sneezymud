@@ -530,11 +530,9 @@ int TBeing::updateTickStuff()
 
   if (desc && isPc()) {
     updateCharObjects();
-    if (getTimer() < 127)
+    if (getTimer() < 999)
       addToTimer(1);
-    if (getTimer() > 4 && 
-        (hasWizPower(POWER_WIZARD) || inRoom() == ROOM_STORAGE))
-      setTimer(4);
+
     rc = checkIdling();
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       vlogf(LOG_SILENT, "updateTickStuff: %s (desc) caught idling", getName());

@@ -1126,7 +1126,7 @@ int TBeing::checkIdling()
   if (desc && desc->connected >= CON_REDITING)
     return FALSE;
 
-  if (isImmortal())
+  if (isImmortal() || inRoom() == ROOM_STORAGE)
     return FALSE;
 
   if (getTimer() == 10) {

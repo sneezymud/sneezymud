@@ -332,16 +332,16 @@ TMonster::~TMonster()
     *tRoom >> *this;
 }
 
-byte TMonster::getTimer() const
+unsigned int TMonster::getTimer() const
 {
   return 0;
 }
 
-void TMonster::setTimer(byte)
+void TMonster::setTimer(unsigned int)
 {
 }
 
-void TMonster::addToTimer(byte)
+void TMonster::addToTimer(unsigned int)
 {
 }
 
