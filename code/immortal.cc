@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: immortal.cc,v $
+// Revision 1.4  1999/10/02 23:40:47  lapsos
+// Removed auto-join/auto-pouch from the starting autos on new chars.
+//
 // Revision 1.3  1999/10/01 16:45:52  batopr
 // *** empty log message ***
 //
@@ -2907,8 +2910,8 @@ void TPerson::doStart()
 
   desc->autobits = 0;
   SET_BIT(desc->autobits, (unsigned int) (AUTO_EAT | AUTO_AFK |
-        AUTO_JOIN | AUTO_KILL | AUTO_LOOT_NOTMONEY | AUTO_SPLIT |
-        AUTO_POUCH | AUTO_DISSECT | AUTO_NOHARM | AUTO_TIPS));
+          AUTO_KILL | AUTO_LOOT_NOTMONEY | AUTO_SPLIT |
+          AUTO_DISSECT | AUTO_NOHARM | AUTO_TIPS));
 
   if ((GetMaxLevel() > MAX_MORT) && !isPlayerAction(PLR_IMMORTAL)) {
     addPlayerAction(PLR_IMMORTAL);
