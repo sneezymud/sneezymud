@@ -270,34 +270,35 @@ void TPerson::doToggle(const char *arg2)
     sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
     
     for (int i = 0;i < MAX_AUTO;i++) {
-      if (!isImmortal() && ((unsigned int) (1<<i) == AUTO_SUCCESS))
-        continue;
-      if (*auto_name[i]) {
+      if (((unsigned int) (1<<i) == AUTO_SUCCESS))
+	++i;
+      if (i<MAX_AUTO && *auto_name[i]) {
         sendTo(COLOR_BASIC, "%-17s : %s    |    ",
                (((unsigned int) (1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]),
                on_or_off(IS_SET(desc->autobits, (unsigned) (1<<i))));
       }
       ++i;
-      if (*auto_name[i]) {
+      if (((unsigned int) (1<<i) == AUTO_SUCCESS))
+	++i;
+      if (i<MAX_AUTO && *auto_name[i]) {
         sendTo(COLOR_BASIC, "%-17s : %s\n\r",
                (((unsigned int) (1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]),
                on_or_off(IS_SET(desc->autobits, (unsigned) (1<<i))));
-      } else
-
-	sendTo("\n\r");
+      }
     }
     
-    if(wimpy)
-      sendTo(COLOR_BASIC, "Wimpy             : <G>%-4i<1>   |    ", wimpy);
-    else
-      sendTo(COLOR_BASIC, "Wimpy             : <R>off <1>   |    ");
 
-    sendTo(COLOR_BASIC, "Newbie Helper     : %s\n\r", on_or_off(isPlayerAction(PLR_NEWBIEHELP)));
+    if(wimpy)
+      sendTo(COLOR_BASIC, "Wimpy             : <G>%-4i<1>\n\r", wimpy);
+    else
+      sendTo(COLOR_BASIC, "Wimpy             : <R>off <1>\n\r");
+
+    sendTo(COLOR_BASIC, "Newbie Helper     : %s    |    ", on_or_off(isPlayerAction(PLR_NEWBIEHELP)));
 
     sendTo(COLOR_BASIC, "Anonymous         : %s\n\r", on_or_off(isPlayerAction(PLR_ANONYMOUS)));
 
-    
-    
+
+
 
     sendTo(COLOR_BASIC, "\n\r<c>Terminal Toggles<1>\n\r");
     sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
@@ -329,9 +330,12 @@ void TPerson::doToggle(const char *arg2)
       sendTo(COLOR_BASIC, "Twinky Combat     : %s    |    ", on_or_off(Twink));
       sendTo(COLOR_BASIC, "Lapsos Speech     : %s\n\r",on_or_off(Lapspeak));
       if(getInvisLevel())
-	sendTo(COLOR_BASIC, "Invisibility      : <G>%-4i<1>\n\r", getInvisLevel());
+	sendTo(COLOR_BASIC, "Invisibility      : <G>%-4i<1>   |    ", getInvisLevel());
       else
-	sendTo(COLOR_BASIC, "Invisibility      : <R>off <1>\n\r");
+	sendTo(COLOR_BASIC, "Invisibility      : <R>off <1>   |    ");
+
+      sendTo(COLOR_BASIC, "Auto Success      : %s\n\r", on_or_off(IS_SET(desc->autobits, AUTO_SUCCESS)));
+
 
 
       sendTo(COLOR_BASIC, "\n\r<c>Test Code Toggles<1>\n\r");
