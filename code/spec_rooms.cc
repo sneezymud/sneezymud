@@ -21,6 +21,7 @@
 #include "obj_food.h"
 #include "obj_note.h"
 #include "obj_portal.h"
+#include "spec_rooms.h"
 
 
 int TRoom::checkSpec(TBeing *ch, cmdTypeT cmd, const char *arg, TThing *)

@@ -48,7 +48,7 @@
 #include "response.h"
 #include "faction.h"
 #include "comm.h"
-#include "spec_objs.h"
+// #include "spec_objs.h"
 #include "toggle.h"
 #include "wiz_powers.h"
 #include "cmd_message.h"
@@ -76,7 +76,7 @@
 #include "handler.h"
 #include "rent.h"
 #include "spec_mobs.h"
-#include "spec_rooms.h"
+//#include "spec_rooms.h"
 #include "materials.h"
 
 // defines the port of the running muds
