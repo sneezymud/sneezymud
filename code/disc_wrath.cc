@@ -520,9 +520,9 @@ int curse(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT sp
     // made it violent - Maror
 /*    if (!victim->isLucky(caster->spellLuckModifier(spell)) &&
         !victim->affectedBySpell(spell)) {
-
+*/
       genericCurse(caster, victim, level, spell);
-
+/*
       // this spell is non-violent, cause it to piss off mobs though
       if (!victim->isPc()) {
         TMonster *tmons = dynamic_cast<TMonster *>(victim);
