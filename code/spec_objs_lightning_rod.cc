@@ -61,19 +61,14 @@ int lightningRodFryPerson(TBaseWeapon *tObj, TBeing *tMaster, TBeing *tSucker)
   if (::number(0, 10))
     return FALSE;
 
-  /*
-  vlogf(10, "Lightning Rod: Fry Person");
-  sendrpf(tMaster->roomp, "Something is getting cooked!!!\n\r");
-  */
+  sendrpf(COLOR_OBJECTS, tMaster->roomp,
+          "%s<W> glows violently as sparks begin to leap from it.<z>\n\r",
+          (tObj->getName() ? good_cap(tObj->getName()).c_str() : "Bogus Object"));
+  tMaster->sendTo(COLOR_OBJECTS, "%s<W> is lit up like a lightbulb!<z>\n\r",
+                  (tSucker->getName() ? good_cap(tSucker->getName()).c_str() : "Bogus Mobile"));
+  tSucker->sendTo(COLOR_OBJECTS, "<W>You feel volts of electricty rush through your body!<z>\n\r");
 
-  act("$p glows violently as sparks begin to leap from it.",
-      TRUE, tMaster, tObj, tSucker, TO_ROOM);
-  act("You feel volts of elecriticy eminating from $p flood your body!",
-      TRUE, tMaster, tObj, tSucker, TO_VICT);
-  act("$N is lit up like a lightbulb as $p strikes them!",
-      TRUE, tMaster, tObj, tSucker, TO_NOTVICT);
-
-  int tDamage = (int) (tObj->getWeapDamLvl() / 8.0);
+  int tDamage = max(1, (int) (tObj->getWeapDamLvl() / 8.0));
 
   tDamage = ::number(1, tDamage);
 
@@ -89,19 +84,12 @@ int lightningRodGotHit(TBaseWeapon *tObj, TBeing *tMaster, TBeing *tSucker)
   if (::number(0, 10))
     return FALSE;
 
-  /*
-  vlogf(10, "Lightning Rod: Fry Hitter");
-  sendrpf(tMaster->roomp, "Something is getting cooked!!!\n\r");
-  */
+  sendrpf(COLOR_OBJECTS, tMaster->roomp,
+          "%s<W> glows violently in reaction to being struck!<z>\n\r",
+          (tObj->getName() ? good_cap(tObj->getName()).c_str() : "Bogus Object"));
+  tSucker->sendTo(COLOR_OBJECTS, "<W>Volts of electricty course through your body!<z>\n\r");
 
-  act("$p reacts violenty to being struck!",
-      FALSE, tMaster, tObj, tSucker, TO_ROOM);
-  act("Volts of electricty rise from $p and strike you in self defense!",
-      FALSE, tMaster, tObj, tSucker, TO_VICT);
-  act("$N is lit up like a lightbulb as $p counter attacks!",
-      FALSE, tMaster, tObj, tSucker, TO_NOTVICT);
-
-  int tDamage = (int) (tObj->getWeapDamLvl() / 8.0);
+  int tDamage = max(1, (int) (tObj->getWeapDamLvl() / 8.0));
 
   tDamage = ::number(1, tDamage);
 
@@ -117,30 +105,25 @@ int lightningRodFryRoom(TBaseWeapon *tObj, TRoom *tRoom)
   if (tRoom->getWeather() != WEATHER_LIGHTNING || tRoom->isRoomFlag(ROOM_INDOORS) || ::number(0, 100))
     return FALSE;
 
-  /*
-  vlogf(10, "Lightning Rod: Fry Anyone");
-  sendrpf(tRoom, "Something is getting cooked!!!\n\r");
-  */
-
-  act("A bolt of lightning streaks down and strikes $p!",
-      FALSE, NULL, tObj, NULL, TO_ROOM);
+  sendrpf(COLOR_OBJECTS, tRoom,
+          "<W>A bolt of lightning streaks down and strikes %s<W>!<z>\n\r",
+          (tObj->getName() ? good_uncap(tObj->getName()).c_str() : "Bogus Object"));
 
   TThing *tThing,
          *tThingNext;
   TBeing *tBeing;
 
   for (tThing = tRoom->stuff; tThing; tThing = tThingNext) {
-    tThingNext = tThing;
+    tThingNext = tThing->nextThing;
 
     if (!(tBeing = dynamic_cast<TBeing *>(tThing)) || !::number(0, 3))
       continue;
 
-    act("A stream of energy launches from $p, frying you!",
-        FALSE, tBeing, tObj, NULL, TO_CHAR);
-    act("A stream of energy launches from $p, frying $n!",
-        FALSE, tBeing, tObj, NULL, TO_ROOM);
 
-    int tDamage = (int) (tObj->getWeapDamLvl() / 4.0);
+    tBeing->sendTo(COLOR_OBJECTS, "<W>A stream of energy launches from %s<W>, frying you!<z>\n\r",
+                   (tObj->getName() ? good_uncap(tObj->getName()).c_str() : "Bogus Object"));
+
+    int tDamage = max(1, (int) (tObj->getWeapDamLvl() / 4.0));
 
     tDamage = ::number(1, tDamage);
 
@@ -157,20 +140,15 @@ int lightningRodFryRoom(TBaseWeapon *tObj, TRoom *tRoom)
 // Stuck in fry our current host.
 int lightningRodInternalFry(TBaseWeapon *tObj, TBeing *tSucker)
 {
-  if (::number(0, 10))
+  if (::number(0, 3))
     return FALSE;
 
-  /*
-  vlogf(10, "Lightning Rod: Fry Sucker");
-  sendrpf(tSucker->roomp, "Something is getting cooked!!!\n\r");
-  */
+  sendrpf(COLOR_OBJECTS, tSucker->roomp,
+          "%s<W> suddenly flares up violently!<z>\n\r",
+          (tObj->getName() ? good_cap(tObj->getName()).c_str() : "Bogus Object"));
+  tSucker->sendTo(COLOR_OBJECTS, "<W>Volts of energy course through your body!<z>\n\r");
 
-  act("$p suddenly flares up violently!",
-      FALSE, tSucker, tObj, tSucker, TO_ROOM);
-  act("$p sinks a little deeper and releases volts of energy!",
-      FALSE, tSucker, tObj, tSucker, TO_CHAR);
-
-  int tDamage = (int) (tObj->getWeapDamLvl() / 8.0);
+  int tDamage = max(1, (int) (tObj->getWeapDamLvl() / 8.0));
 
   tDamage = ::number(1, tDamage);
 
