@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_plants.h,v $
+// Revision 5.3  2001/07/05 21:25:54  peel
+// Trying to fix cvs
+// what a headache
+//
 // Revision 5.2  2001/04/26 22:23:57  peel
 // *** empty log message ***
 //

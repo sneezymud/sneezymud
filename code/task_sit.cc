@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_sit.cc,v $
+// Revision 5.5  2001/07/05 21:25:54  peel
+// Trying to fix cvs
+// what a headache
+//
 // Revision 5.4  2001/06/20 04:27:24  jesus
 // couple updates for lifeforce and farlook fix for stuff they shouldnt see
 // will need review

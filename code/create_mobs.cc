@@ -104,7 +104,7 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
   if (IS_SET(ch->desc->autobits, AUTO_TIPS)) {
     char tStringOut[22][256];
 
-    strcpy(tStringOut[0], (tMon->getName() ? tMon->getName() : "Unknown"));
+    strcpy(tStringOut[0], (tMon->name ? tMon->name : "Unknown"));
     strcpy(tStringOut[1], (tMon->shortDescr ? tMon->shortDescr : "Unknown"));
     strcpy(tStringOut[2], (tMon->getLongDesc() ? tMon->getLongDesc() : "Unknown"));
     sprintf(tStringOut[3], "%d %3.2f", tMon->getFaction(), tMon->getPerc());
@@ -191,7 +191,7 @@ static void TBeingLoad(TBeing *ch, int vnum)
   char buf[256];
   int rc, num;
 
-  sprintf(buf, "immortals/%s/mobs/%d", ch->getName(), vnum);
+  sprintf(buf, "immortals/%s/mobs/%d", ch->name, vnum);
   if (!(mob_f = fopen(buf, "r"))) {
     ch->sendTo("Couldn't open that file.\n\r");
     return;
@@ -252,11 +252,11 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   char buf[255], temp[4096];
   int j, k;
 
-  if (!mob->getName() || !mob->getDescr() || 
+  if (!mob->name || !mob->getDescr() || 
       !mob->shortDescr || !mob->getLongDesc()) {
     ch->sendTo("Your mob is missing one or more strings.\n\r");
     ch->sendTo("Please update the follwing before saving:%s%s%s%s\n\r",
-               (mob->getName()                 ? "" : " Name"),
+               (mob->name                 ? "" : " Name"),
                (mob->getDescr()           ? "" : " Description"),
                (mob->shortDescr           ? "" : " Short-Description"),
                (mob->getLongDesc() ? "" : " Long-Description"));
@@ -275,15 +275,15 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   if (fp)
     fclose(fp);
 
-  sprintf(buf, "immortals/%s/mobs/%d", ch->getName(), vnum);
+  sprintf(buf, "immortals/%s/mobs/%d", ch->name, vnum);
   if (!(fp = fopen(buf, "w"))) {
     ch->sendTo("Problem writing to disk. Maybe try again later.\n\r");
     return;
   }
   ch->sendTo("Saving.\n\r");
-  for (j = 0, k = 0; k <= (int) strlen(mob->getName()); k++) {
-    if (mob->getName()[k] != 13)
-      temp[j++] = mob->getName()[k];
+  for (j = 0, k = 0; k <= (int) strlen(mob->name); k++) {
+    if (mob->name[k] != 13)
+      temp[j++] = mob->name[k];
   }
   temp[j] = '\0';
   fprintf(fp, "#%d\n%s~\n", vnum, temp);
@@ -402,7 +402,7 @@ static void msave(TBeing *ch, char *argument)
 static void update_mob_menu(TBeing *ch, TMonster *mob)
 {
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo("%sMobile Name:%s %s", ch->cyan(), ch->norm(), mob->getName());
+  ch->sendTo("%sMobile Name:%s %s", ch->cyan(), ch->norm(), mob->name);
   ch->sendTo(VT_CURSPOS, 2, 1);
   ch->sendTo("%sCurrent level:%s %d", ch->purple(), ch->norm(), mob->GetMaxLevel());
   ch->sendTo(VT_CURSPOS, 3, 1);
@@ -555,14 +555,15 @@ static void change_mob_name(TBeing *ch, TMonster *mob, const char *arg, editorEn
     }
   if (type != ENTER_CHECK) {
     delete [] mob->name;
-    mob->setName(mud_str_dup(arg));
+    mob->name = NULL;
+    mob->name = mud_str_dup(arg);
     ch->specials.edit = MAIN_MENU;
     update_mob_menu(ch, mob);
     return;
   }
   ch->sendTo(VT_HOMECLR);
 
-  ch->sendTo("Current Mobile Name: %s", mob->getName());
+  ch->sendTo("Current Mobile Name: %s", mob->name);
   ch->sendTo("\n\r\n\rNew Mobile Name: ");
 
   return;
@@ -2430,15 +2431,15 @@ void TPerson::doMedit(const char *argument)
     case 6: // Name
       if (!*string) {
         sendTo("You need to give me a name.\n\r");
-        sendTo("Current name is: %s\n\r", cMob->getName());
+        sendTo("Current name is: %s\n\r", cMob->name);
         return;
       }
       cMob->swapToStrung();
-      if (cMob->getName()) {
+      if (cMob->name) {
         delete [] cMob->name;
         cMob->name = NULL;
       }
-      cMob->setName(mud_str_dup(string));
+      cMob->name = mud_str_dup(string);
       return;
       break;
     case 7: // Short Description

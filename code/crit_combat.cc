@@ -510,7 +510,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
         return (ONEHIT_MESS_CRIT_S);
       } else {
         // better stuff 
-        limbStr =  (weapon ? fname(weapon->getName()) : getMyRace()->getBodyLimbPierce());
+        limbStr =  (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbPierce());
         switch (num) {
           case 67:
             if (!v->hasPart(WEAR_NECK))
@@ -518,7 +518,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
             *part_hit = WEAR_NECK;
             if ((obj = v->equipment[WEAR_NECK])) {
               v->sendTo(COLOR_OBJECTS, "Your %s saves you from a punctured larynx!\n\r",
-                fname(obj->getName()).c_str());
+                fname(obj->name).c_str());
               for (i=1;i<5;i++)
                 if (v->equipment[WEAR_NECK])
                   v->damageItem(this,WEAR_NECK,wtype,weapon,*dam);
@@ -599,7 +599,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
               return 0;
               if ((obj = v->equipment[WEAR_LEGS_R])) {
                 v->sendTo(COLOR_OBJECTS, "Your %s saves you from losing a tendon!\n\r",
-                  fname(obj->getName()).c_str());
+                  fname(obj->name).c_str());
                 for (i=1;i<5;i++)
                   if (v->equipment[WEAR_LEGS_R])
                     v->damageItem(this,WEAR_LEGS_R,wtype,weapon,*dam);
@@ -638,7 +638,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 return 0;
               if ((obj = v->equipment[WEAR_BACK])) {
                 v->sendTo(COLOR_OBJECTS, "Your %s saves you from a gory wound!\n\r",
-                  fname(obj->getName()).c_str());
+                  fname(obj->name).c_str());
                 for (i=1;i<5;i++)
                   if (v->equipment[WEAR_BACK])
                     v->damageItem(this,WEAR_BACK,wtype,weapon,*dam);
@@ -801,7 +801,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 return 0;
               if ((obj = v->equipment[WEAR_BODY])) {
                 v->sendTo(COLOR_OBJECTS, "Your %s saves you from a punctured lung!\n\r",
-                  fname(obj->getName()).c_str());
+                  fname(obj->name).c_str());
                 for (i=1;i<9;i++)
                   if (v->equipment[WEAR_BODY])
                     v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
@@ -845,7 +845,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 return 0;
               if ((obj = v->equipment[WEAR_BODY])) {
                 v->sendTo(COLOR_OBJECTS, "Your %s saves you from a kidney wound!\n\r",
-                  fname(obj->getName()).c_str());
+                  fname(obj->name).c_str());
                 for (i=1;i<7;i++)
                   if (v->equipment[WEAR_BODY])
                     v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
@@ -954,7 +954,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
         }
     } else if (slashType(wtype)) {
         // Do slash crit
-        string limbStr = (weapon ? fname(weapon->getName()) : getMyRace()->getBodyLimbSlash());
+        string limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbSlash());
         if (num <= 33) {
              // double damage 
           *dam <<= 1;
@@ -1056,7 +1056,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 return 0;
               if ((obj = v->equipment[WEAR_WRIST_R])) {
                 v->sendTo(COLOR_OBJECTS, "Your %s saves you from losing your %s!\n\r",
-                  fname(obj->getName()).c_str(), v->describeBodySlot(WEAR_HAND_R).c_str());
+                  fname(obj->name).c_str(), v->describeBodySlot(WEAR_HAND_R).c_str());
                 for (i=1;i<5;i++)
                   if (v->equipment[WEAR_WRIST_R])
                     v->damageItem(this,WEAR_WRIST_R,wtype,weapon,*dam);
@@ -1100,7 +1100,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                 return 0;
               if ((obj = v->equipment[WEAR_WRIST_L])) {
                 v->sendTo(COLOR_OBJECTS, "Your %s saves you from losing a hand!\n\r",
-                  fname(obj->getName()).c_str());
+                  fname(obj->name).c_str());
                 for (i=1;i<5;i++)
                   if (v->equipment[WEAR_WRIST_L])
                     v->damageItem(this,WEAR_WRIST_L,wtype,weapon,*dam);
@@ -1421,7 +1421,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		char buf[256];
 		
 		corpse = new TCorpse();
-		corpse->setName(mud_str_dup("genitalia"));
+		corpse->name = mud_str_dup("genitalia");
 		
 		if (v->getMaterial() > MAT_GEN_MINERAL) {
 		  // made of mineral or metal
@@ -1523,7 +1523,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
         }
     } else if (bluntType(wtype)) {
         // Do crush crit 
-      string limbStr = (weapon ? fname(weapon->getName()) : getMyRace()->getBodyLimbBlunt());
+      string limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbBlunt());
     
         if (num <= 33) {
           // double damage 

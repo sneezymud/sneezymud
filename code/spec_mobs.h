@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.6  2001/07/05 21:25:54  peel
+// Trying to fix cvs
+// what a headache
+//
 // Revision 5.5  2001/07/04 00:31:39  peel
 // added coroner proc
 //

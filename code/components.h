@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.30  2001/07/05 21:25:53  peel
+// Trying to fix cvs
+// what a headache
+//
 // Revision 5.29  2001/06/28 02:18:02  jesus
 // flatulence spell
 //

@@ -138,8 +138,6 @@ class TThing {
     // END VIRTUAL FUNCTIONS
 
     // INLINE FUNCTIONS
-    void setName(char *s) { name = s; }
-
     const char * getDescr() const { return descr; }
     void setDescr(char *s) { descr = s; }
     int getHeight() const{ return height; }

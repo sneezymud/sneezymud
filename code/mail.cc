@@ -583,13 +583,13 @@ void TBeing::postmasterReceiveMail(TMonster *me)
 #endif
     note->swapToStrung();
     delete [] note->name;
-    note->setName(mud_str_dup("mail paper letter"));
+    note->name = mud_str_dup("mail paper letter");
     delete [] note->shortDescr;
     note->shortDescr = mud_str_dup("a piece of mail"); 
     delete [] note->getDescr();
     note->setDescr(mud_str_dup("Someone has left a piece of mail here."));
     delete [] note->action_description;
-    note->action_description = read_delete(recipient, name);
+    note->action_description = read_delete(recipient, getName());
     if (!note->action_description)
       note->action_description = mud_str_dup("Mail system buggy, please report!!  Error #8.\n\r");
 

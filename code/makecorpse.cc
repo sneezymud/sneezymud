@@ -68,28 +68,28 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
   if (getMyRace()->getBodyType() == BODY_ELEMENTAL) {
     if (isname("[fire]", name)) {
       sprintf(buf, "cinders pile %s",name);
-      gen_corpse->setName(mud_str_dup(buf));
+      gen_corpse->name = mud_str_dup(buf);
       gen_corpse->setDescr(mud_str_dup("A <r>smoldering pile of cinders<1> is here."));
       gen_corpse->shortDescr = mud_str_dup("a <r>smoldering pile of cinders<1>");
       gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
       gen_corpse->setMaterial(MAT_POWDER);
     } else if (isname("[water]", name)) {
       sprintf(buf, "water puddle %s",name);
-      gen_corpse->setName(mud_str_dup(buf));
+      gen_corpse->name = mud_str_dup(buf);
       gen_corpse->setDescr(mud_str_dup("A <b>stagnant puddle of water<1> is here."));
       gen_corpse->shortDescr = mud_str_dup("a <b>stagnant puddle of water<1>");
       gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
       gen_corpse->setMaterial(MAT_WATER);
     } else if (isname("[earth]", name)) {
       sprintf(buf, "pile dirt %s",name);
-      gen_corpse->setName(mud_str_dup(buf));
+      gen_corpse->name = mud_str_dup(buf);
       gen_corpse->setDescr(mud_str_dup("A lifeless pile of dirt is here."));
       gen_corpse->shortDescr = mud_str_dup("a lifeless pile of dirt");
       gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
       gen_corpse->setMaterial(MAT_POWDER);
     } else if (isname("[air]", name)) {
       sprintf(buf, "tornado natural small %s",name);
-      gen_corpse->setName(mud_str_dup(buf));
+      gen_corpse->name = mud_str_dup(buf);
       gen_corpse->setDescr(mud_str_dup("A small uncontrolled tornado is here."));
       gen_corpse->shortDescr = mud_str_dup("a small uncontrolled tornado");
       gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
@@ -97,7 +97,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
     } else {
       // non-standard elementals
       sprintf(buf, "corpse %s",name);
-      gen_corpse->setName(mud_str_dup(buf));
+      gen_corpse->name = mud_str_dup(buf);
       gen_corpse->setDescr(mud_str_dup("The corpse of some sort of elemental is here."));
       gen_corpse->shortDescr = mud_str_dup("the corpse of an elemental");
       gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
@@ -105,7 +105,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
     specialCorpse = TRUE;
   } else if (dmg_type == SPELL_RAZE) {
     sprintf(buf, "green powder pile strange %s",name);
-    gen_corpse->setName(mud_str_dup(buf));
+    gen_corpse->name = mud_str_dup(buf);
     gen_corpse->setDescr(mud_str_dup("A strange looking pile of green powder lies here."));
     gen_corpse->shortDescr = mud_str_dup("a pile of strange green powder");
     gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
@@ -113,7 +113,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
     specialCorpse = TRUE;
   } else if (isUndead() || (dmg_type == SKILL_TURN)) {
     sprintf(buf, "dust pile %s",name);
-    gen_corpse->setName(mud_str_dup(buf));
+    gen_corpse->name = mud_str_dup(buf);
     gen_corpse->setDescr(mud_str_dup("A pile of dust is here."));
     gen_corpse->shortDescr = mud_str_dup("a pile of dust");
     gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
@@ -121,7 +121,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
     specialCorpse = TRUE;
   } else if (dmg_type == SPELL_ATOMIZE) {
     sprintf(buf, "ash pile %s",name);
-    gen_corpse->setName(mud_str_dup(buf));
+    gen_corpse->name = mud_str_dup(buf);
     gen_corpse->setDescr(mud_str_dup("A pile of ash is here."));
     gen_corpse->shortDescr = mud_str_dup("a pile of ash");
     gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
@@ -129,7 +129,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
     specialCorpse = TRUE;
   } else {
     sprintf(buf, "corpse %s%s", name, pcorpse ? " pcorpse" : "");
-    gen_corpse->setName(mud_str_dup(buf));
+    gen_corpse->name = mud_str_dup(buf);
     // shortDescr and Desc are set below
     gen_corpse->setMaterial(getMaterial());
   }

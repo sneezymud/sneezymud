@@ -51,7 +51,7 @@ static void update_obj_menu(const TBeing *ch, const TObj *obj)
 
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(VT_CURSPOS, 1, 1);
-  ch->sendTo("%sObject Name:%s %s", ch->cyan(), ch->norm(), obj->getName());
+  ch->sendTo("%sObject Name:%s %s", ch->cyan(), ch->norm(), obj->name);
   ch->sendTo(VT_CURSPOS, 2, 1);
 
   itemTypeT itt = obj->itemType();
@@ -66,7 +66,7 @@ static void update_obj_menu(const TBeing *ch, const TObj *obj)
   if (IS_SET(ch->desc->autobits, AUTO_TIPS)) {
     char tStringOut[14][256];
 
-    strcpy(tStringOut[0], (obj->getName() ? obj->getName() : "Unknown"));
+    strcpy(tStringOut[0], (obj->name ? obj->name : "Unknown"));
     strcpy(tStringOut[1], (obj->shortDescr ? obj->shortDescr : "Unknown"));
     strcpy(tStringOut[2], ItemInfo[itt]->name);
     strcpy(tStringOut[3], (obj->descr ? obj->descr : "Unknown"));
@@ -271,7 +271,7 @@ void ObjLoad(TBeing *ch, int vnum)
   MYSQL_ROW row;
   MYSQL_RES *res;
 
-  if((rc=dbquery(&res, "immortal", "ObjLoad(1)", "select type, name, short_desc, long_desc, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist, action_desc from obj where vnum=%i and owner='%s'", vnum, ch->getName()))){
+  if((rc=dbquery(&res, "immortal", "ObjLoad(1)", "select type, name, short_desc, long_desc, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist, action_desc from obj where vnum=%i and owner='%s'", vnum, ch->name))){
     if(rc==1)
       ch->sendTo("Object not found\n\r");
     else if(rc==-1)
@@ -287,7 +287,7 @@ void ObjLoad(TBeing *ch, int vnum)
   o->snum   = vnum;
   o->number = -1;
 
-  o->setName(mud_str_dup(row[1]));
+  o->name = mud_str_dup(row[1]);
   o->shortDescr = mud_str_dup(row[2]);
   o->setDescr(mud_str_dup(row[3]));
 
@@ -314,7 +314,7 @@ void ObjLoad(TBeing *ch, int vnum)
   mysql_free_result(res);
 
 
-  if((dbquery(&res, "immortal", "ObjLoad(2)", "select name, description from objextra where vnum=%i and owner='%s'", vnum, ch->getName())==-1)){
+  if((dbquery(&res, "immortal", "ObjLoad(2)", "select name, description from objextra where vnum=%i and owner='%s'", vnum, ch->name)==-1)){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
@@ -332,7 +332,7 @@ void ObjLoad(TBeing *ch, int vnum)
   i=0;
 
 
-  if((dbquery(&res, "immortal", "ObjLoad(3)", "select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum, ch->getName())==-1)){
+  if((dbquery(&res, "immortal", "ObjLoad(3)", "select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum, ch->name)==-1)){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
@@ -419,12 +419,12 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
   o->getFourValues(&tmp1, &tmp2, &tmp3, &tmp4);
 
   if(dbquery(NULL, "immortal", "ObjSave(1)", "replace obj set vnum=%i, name='%s', short_desc='%s', long_desc='%s', type=%i, action_flag=%i, wear_flag=%i, val0=%i, val1=%i, val2=%i, val3=%i, weight=%f, price=%i, can_be_seen=%i, spec_proc=%i, max_exist=%i, cur_struct=%i, max_struct=%i, decay=%i, volume=%i, material=%i, owner='%s', action_desc='%s'", 
-	  vnum, o->getName(), o->shortDescr, o->getDescr(),o->itemType(), 
+	  vnum, o->name, o->shortDescr, o->getDescr(),o->itemType(), 
 	  o->getObjStat(), o->obj_flags.wear_flags, tmp1, tmp2, tmp3, tmp4, 
 	  o->getWeight(), o->obj_flags.cost, o->canBeSeen, o->spec, 
 	  o->max_exist, o->obj_flags.struct_points, 
 	  o->obj_flags.max_struct_points, o->obj_flags.decay_time, 
-		 o->getVolume(), o->getMaterial(), ch->getName(), 
+		 o->getVolume(), o->getMaterial(), ch->name, 
 	  o->action_description?o->action_description:"")){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
@@ -448,12 +448,12 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
       }
       temp[j] = '\0';
 
-      if(dbquery(NULL, "immortal", "ObjSave(3)", "replace objextra set name='%s', description='%s', owner='%s', vnum=%i", exdes->keyword, temp, ch->getName(), vnum)){
+      if(dbquery(NULL, "immortal", "ObjSave(3)", "replace objextra set name='%s', description='%s', owner='%s', vnum=%i", exdes->keyword, temp, ch->name, vnum)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return;
       }           
     } else {
-      if(dbquery(NULL, "immortal", "ObjSave(4)", "replace objextra set name='%s', description='', owner='%s'", exdes->keyword, ch->getName())){
+      if(dbquery(NULL, "immortal", "ObjSave(4)", "replace objextra set name='%s', description='', owner='%s'", exdes->keyword, ch->name)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return;
       }
@@ -473,7 +473,7 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
       if(dbquery(NULL, "immortal", "ObjSave(6)", "replace objaffect set type=%i, mod1=%ld, mod2=%ld, owner='%s', vnum=%i",
 		 mapApplyToFile(o->affected[i].location), 
 		 applyTypeShouldBeSpellnum(o->affected[i].location) ? mapSpellnumToFile(spellNumT(o->affected[i].modifier)) : o->affected[i].modifier,
-		 o->affected[i].modifier2, ch->getName(), vnum)){
+		 o->affected[i].modifier2, ch->name, vnum)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return;
       }
@@ -554,7 +554,7 @@ static void olist(TPerson *ch)
   MYSQL_RES *res;
   int rc;
 
-  if((rc=dbquery(&res, "immortal", "olist", "select vnum, name from obj where owner='%s' order by vnum", ch->getName()))){
+  if((rc=dbquery(&res, "immortal", "olist", "select vnum, name from obj where owner='%s' order by vnum", ch->name))){
     if(rc==-1)
       ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     else if(rc==1)
@@ -581,7 +581,7 @@ static void ocreate(TBeing *ch)
 
   tmp_obj = new TTrash();
 
-  tmp_obj->setName(mud_str_dup("dummy item"));
+  tmp_obj->name = mud_str_dup("dummy item");
   tmp_obj->shortDescr = mud_str_dup("a dummy item");
   tmp_obj->setDescr(mud_str_dup("A dummy item lies here."));
 
@@ -643,7 +643,7 @@ void oremove(TBeing *ch, int vnum)
 {
 #if USE_SQL
   MYSQL_RES *res;
-  if(dbquery(&res, "immortal", "oremove(0)", "select * from obj where vnum=%i and owner='%s'", vnum, ch->getName())==1){
+  if(dbquery(&res, "immortal", "oremove(0)", "select * from obj where vnum=%i and owner='%s'", vnum, ch->name)==1){
     ch->sendTo("Object not found.\n\r");
     mysql_free_result(res);
     return;
@@ -839,13 +839,13 @@ void TPerson::doOEdit(const char *argument)
     case 7: // Name
       if (!*string) {
         sendTo("You need to give me some keywords.\n\r");
-        sendTo("Current keywords: %s\n\r", cObj->getName());
+        sendTo("Current keywords: %s\n\r", cObj->name);
         return;
       }
       cObj->swapToStrung();
-      if (cObj->getName())
+      if (cObj->name)
         delete [] cObj->name;
-      cObj->setName(mud_str_dup(string));
+      cObj->name = mud_str_dup(string);
       return;
       break;
     case 8: // Long Description
@@ -938,7 +938,7 @@ void TPerson::doOEdit(const char *argument)
       cObj->swapToStrung();
       if (!*string) {
         sendTo("Assuming Object name for extra description.\n\r");
-        strcpy(string, cObj->getName());
+        strcpy(string, cObj->name);
       }
       for (ed = cObj->ex_description; ; ed = ed->next) {
         if (!ed) {
@@ -1103,11 +1103,11 @@ void TObj::writeAffects(int i, FILE *fp) const
 void raw_write_out_object(const TObj *o, FILE *fp, unsigned int vnum)
 {
   if (o->action_description)
-    fprintf(fp, "#%d\n%s~\n%s~\n%s~\n%s~\n", vnum, o->getName(),
+    fprintf(fp, "#%d\n%s~\n%s~\n%s~\n%s~\n", vnum, o->name,
 	  o->shortDescr, o->getDescr(), 
           o->action_description ? o->action_description : "");
   else 
-    fprintf(fp, "#%d\n%s~\n%s~\n%s~\n~\n", vnum, o->getName(), 
+    fprintf(fp, "#%d\n%s~\n%s~\n%s~\n~\n", vnum, o->name, 
            o->shortDescr, o->getDescr());
   fprintf(fp, "%d %d %d\n", mapItemTypeToFile(o->itemType()),
 	  o->getObjStat(), o->obj_flags.wear_flags);
@@ -1157,13 +1157,13 @@ static void change_obj_name(TBeing *ch, TObj *o, const char *arg, editorEnterTyp
     }
   if (type != ENTER_CHECK) {
     delete [] o->name;
-    o->setName(mud_str_dup(arg));
+    o->name = mud_str_dup(arg);
     ch->specials.edit = MAIN_MENU;
     update_obj_menu(ch, o);
     return;
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo("Current Object Name: %s", o->getName());
+  ch->sendTo("Current Object Name: %s", o->name);
   ch->sendTo("\n\r\n\rNew Object Name: ");
   return;
 }

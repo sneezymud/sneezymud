@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_penance.cc,v $
+// Revision 5.3  2001/07/05 21:25:54  peel
+// Trying to fix cvs
+// what a headache
+//
 // Revision 5.2  2001/06/29 19:37:57  jesus
 // piety speed regen tweak
 //

@@ -269,7 +269,7 @@ int TFFlame::objectDecay()
   delete [] fireAsh->descr;
   delete [] fireAsh->ex_description;
   delete [] fireAsh->action_description;
-  fireAsh->setName(mud_str_dup("ash soot debris pit fire"));
+  fireAsh->name = mud_str_dup("ash soot debris pit fire");
   fireAsh->shortDescr = mud_str_dup("<k>a pile of ashes<z>");
   fireAsh->descr = mud_str_dup("<k>A pile of soot and ash is here, <z><r>smoldering<k> away.<z>");
   setMaterial(MAT_POWDER);

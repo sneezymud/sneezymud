@@ -77,7 +77,7 @@ int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
   mob->swapToStrung();
   sprintf(buf, "zombie %s", mob_index[mob->getMobIndex()].name);
   delete [] mob->name;
-  mob->setName(mud_str_dup(buf));
+  mob->name = mud_str_dup(buf);
   sprintf(buf, "a zombie of %s", mob_index[mob->getMobIndex()].short_desc);
   delete [] mob->shortDescr;
   mob->shortDescr = mud_str_dup(buf);
@@ -252,7 +252,7 @@ int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
   mob->swapToStrung();
   sprintf(buf, "skeleton %s", mob_index[mob->getMobIndex()].name);
   delete [] mob->name;
-  mob->setName(mud_str_dup(buf));
+  mob->name = mud_str_dup(buf);
   sprintf(buf, "a skeleton of %s", mob_index[mob->getMobIndex()].short_desc);
   delete [] mob->shortDescr;
   mob->shortDescr = mud_str_dup(buf);

@@ -1119,7 +1119,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
 
   else if (!*classbuf) {
     /* more than 1 class is appropriate, user needs to specify */
-    sprintf(buf, "%s You need to specify a class.", fname(ch->getName()).c_str());
+    sprintf(buf, "%s You need to specify a class.", fname(ch->name).c_str());
     me->doTell(buf);
     sprintf(buf,
          "Type \"practice %s <number> <class>\" to learn this discipline.", 
@@ -1169,16 +1169,16 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
 
   if (ch->checkForPreReqs(ch, me, discipline, accclass, doneBas, min(practices, pracs))) {
     if (practices <= 0) {
-     sprintf(buf, "%s I also would not be able to train you further in this discipline.", fname(ch->getName()).c_str());
+     sprintf(buf, "%s I also would not be able to train you further in this discipline.", fname(ch->name).c_str());
       me->doTell(buf);
     }
     return TRUE;
   }
  
   if (practices <= 0) {
-    sprintf(buf, "%s You have come far.  I can train you no farther in this discipline.", fname(ch->getName()).c_str());
+    sprintf(buf, "%s You have come far.  I can train you no farther in this discipline.", fname(ch->name).c_str());
     me->doTell(buf);
-    sprintf(buf, "%s You must find another master who can further your training.", fname(ch->getName()).c_str());
+    sprintf(buf, "%s You must find another master who can further your training.", fname(ch->name).c_str());
     me->doTell(buf);
     return TRUE;
   }
@@ -1186,11 +1186,11 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
   // set the number they actually have as another limiting factor
   practices = min((int) ch->getPracs(accclass), practices);
   if (practices <= 0) {
-    sprintf(buf, "%s You have no more practices you can use here.", fname(ch->getName()).c_str());
+    sprintf(buf, "%s You have no more practices you can use here.", fname(ch->name).c_str());
     me->doTell(buf);
     return TRUE;
   } else if (practices < pracs) {
-     sprintf(buf, "%s I will only be able to use %d of your requested practices.", fname(ch->getName()).c_str(), practices);
+     sprintf(buf, "%s I will only be able to use %d of your requested practices.", fname(ch->name).c_str(), practices);
       me->doTell(buf);
   }
   if (ch->doTraining(ch, me, accclass, offset, min(practices, pracs))) 
@@ -1684,10 +1684,10 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
         if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) {
           TObj *obj = NULL;
           obj = read_object(CompInfo[comp].comp_num, VIRTUAL);
-          sprintf(buf, "%s personalized %s", obj->getName(), ch->getName());
+          sprintf(buf, "%s personalized %s", obj->name, ch->getName());
           obj->swapToStrung();
           delete [] obj->name;
-          obj->setName(mud_str_dup(buf));
+          obj->name = mud_str_dup(buf);
 
           obj->obj_flags.cost = 0;
           dynamic_cast<TComponent *>(obj)->setComponentCharges(10);
