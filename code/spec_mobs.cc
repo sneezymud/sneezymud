@@ -5387,7 +5387,6 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 int gardener(TBeing *, cmdTypeT cmd, const char *, TMonster *mob, TObj *)
 {
   TTool *tool=NULL;
-  //  static unsigned int pulse;
 
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
@@ -5398,9 +5397,8 @@ int gardener(TBeing *, cmdTypeT cmd, const char *, TMonster *mob, TObj *)
     return FALSE;
   else
     REMOVE_BIT(mob->specials.act, ACT_SENTINEL);
-  
-  ++pulse;
-  if(pulse%150)
+
+  if(::number(0,149))
     return FALSE;
 
   for(TThing *t=mob->getStuff();t;t=t->nextThing){
