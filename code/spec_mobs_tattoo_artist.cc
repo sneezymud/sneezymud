@@ -83,7 +83,6 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
 
     myself->doEmote("takes your money and carefully inks out the tattoo.");
 
-    vlogf(LOG_PEEL, "buf=%s, slot_i=%i, slot=%i", buf, slot_i, slot);
 
     db.query("insert into tattoos (name, tattoo, location) values ('%s', '%s', %i)", ch->getName(), tattoos[i-1], slot);
 
