@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: info.cc,v $
+// Revision 1.4  1999/10/03 09:47:28  lapsos
+// Added gag to failed sneak display.
+//
 // Revision 1.3  1999/10/02 06:37:44  lapsos
 // Fixed up who -y to ignore immortals.
 //
@@ -3040,7 +3043,7 @@ void TBeing::describeAffects(TBeing *ch)
     } else if (aff->type == AFFECT_SKILL_ATTEMPT) {
       if (isImmortal()) {
         sendTo("Skill Attempt:(%d) '%s'\t: Time Left : %s\n\r", aff->modifier, (discArray[aff->modifier] ? discArray[aff->modifier]->name : "Unknown"), describeDuration(this, aff->duration).c_str());
-      } else {
+      } else if (aff->modifier != getSkillNum(SKILL_SNEAK)) {
         sendTo("Skill Attempt: '%s'\t: Time Left : %s\n\r", (discArray[aff->modifier] ? discArray[aff->modifier]->name : "Unknown"), describeDuration(this, aff->duration).c_str());
       }
     } else if (aff->type == AFFECT_NEWBIE) {
