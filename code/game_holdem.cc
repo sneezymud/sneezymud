@@ -63,17 +63,9 @@ int HoldemGame::handValue(HoldemPlayer *hp){
       rank[community[i]->getSuit()][community[i]->getValAceHi()]=1;
   }
 
-  for(i=0;i<15;++i)
-    for(int j=0;j<4;++j)
-      vlogf(LOG_PEEL, "rank[%i][%i]=%i", j, i, rank[j][i]);
-  
-  
   for(i=0;i<15;++i){
-    vlogf(LOG_PEEL, "loop i: %i", i);
-
     if(!rank[0][i] && !rank[1][i] && !rank[2][i] && !rank[3][i]){
       straight=0;
-      vlogf(LOG_PEEL, "no cards, skipping loop");
       continue;
     }
     
@@ -81,18 +73,14 @@ int HoldemGame::handValue(HoldemPlayer *hp){
     for(int j=0;j<4;++j){
       // get highcard
       if(rank[j][i]){
-	vlogf(LOG_PEEL, "setting highcard to %i", i);
 	score[0]=i;
       }
 
       // check for flush
       if((flush[j]+=rank[j][i]) >= 5){
-	vlogf(LOG_PEEL, "setting flush to %i", i);
 	score[5]=i;
 	// flush
       }
-      vlogf(LOG_PEEL, "flush[%i]=%i", j, flush[j]);
-
     }
 
     tmp=rank[0][i]+rank[1][i]+rank[2][i]+rank[3][i];
@@ -141,13 +129,6 @@ int HoldemGame::handValue(HoldemPlayer *hp){
 	  }
 	}
       }
-    }
-
-    vlogf(LOG_PEEL, "straight=%i", straight);
-
-
-    for(int j=9;j>=0;--j){
-      vlogf(LOG_PEEL, "score[%i]=%i", j, score[j]);
     }
   }
 
@@ -594,9 +575,25 @@ void HoldemGame::raise(TBeing *ch, const sstring &arg)
   for(unsigned int i=0;i<chipl.size();++i)
     delete chipl[i];
 
-  
   ch->doSave(SILENT_YES);
   
+
+  if(better!=0){
+    HoldemPlayer *hp[MAX_HOLDEM_PLAYERS];
+    int i=better, j=0;
+
+    do {
+      vlogf(LOG_PEEL, "i=%i, j=%i", i, j);
+      hp[j]=players[i];
+      j++;
+      i=(i+1)%MAX_HOLDEM_PLAYERS;
+    } while((i != better) && (j<MAX_HOLDEM_PLAYERS));
+    for(i=0;i<MAX_HOLDEM_PLAYERS;++i)
+      players[i]=hp[i];
+    better=0;
+  }
+
+
   int tmp;
   if((tmp=nextBetter(better))!=-1){
     better=tmp;
