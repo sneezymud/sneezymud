@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: game_blackjack.cc,v $
+// Revision 5.2  2002/08/14 17:35:43  peel
+// fixed some color code problems with card display
+// added room echoes to show blackjack games
+//
 // Revision 5.1  2001/07/13 05:32:20  peel
 // renamed a bunch of source files
 //
@@ -110,6 +114,7 @@ void BjGame::Bet(TBeing *ch, const char *arg)
 {
   int inx, bet_amt, player;
   char coin_str[20], log_msg[2048];
+  string buf;
 
   if (ch->checkBlackjack()) {
     inx = index(ch);
@@ -141,8 +146,12 @@ void BjGame::Bet(TBeing *ch, const char *arg)
     }
     bet = bet_amt;
     ch->addToMoney(-bet_amt, GOLD_GAMBLE);
-
     ch->doSave(SILENT_YES);
+
+    string buf;
+    ssprintf(buf, "$n bets %i talens.", bet_amt);
+    act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+
     nd = 0;
     np = 0;
     for (player = 0; player < 12; hand[player] = 0, dealer[player] = 0, player++);
@@ -159,15 +168,23 @@ void BjGame::Bet(TBeing *ch, const char *arg)
     sprintf(log_msg + strlen(log_msg), "The dealer is showing:\n\r%s\n\r", pretty_card_printout(ch, dealer[1]).c_str());
     ch->sendTo(COLOR_BASIC, log_msg);
 
+    sprintf(log_msg, "$n is dealt:\n\r%s (down)\n\r", pretty_card_printout(ch, hand[0]).c_str());
+    sprintf(log_msg + strlen(log_msg), "%s\n\r\n\r", pretty_card_printout(ch, hand[1]).c_str());
+    sprintf(log_msg + strlen(log_msg), "The dealer is showing:\n\r%s", pretty_card_printout(ch, dealer[1]).c_str());
+    act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
+
+
     if (((CARD_NUM(hand[0]) == 1) && (CARD_NUM(hand[1]) >= 10)) ||
 	((CARD_NUM(hand[1]) == 1) && (CARD_NUM(hand[0]) >= 10))) {
       ch->sendTo("You get a blackjack!\n\r");
+      act("$n gets a blackjack!", TRUE, ch, 0, 0, TO_ROOM);
       ch->addToMoney((int) (bet * 2.5), GOLD_GAMBLE);
       bet = 0;
     }
     if (((CARD_NUM(dealer[0]) == 1) && (CARD_NUM(dealer[1]) >= 10)) ||
 	((CARD_NUM(dealer[1]) == 1) && (CARD_NUM(dealer[0]) >= 10))) {
       ch->sendTo("The dealer gets a blackjack!\n\r");
+      act("The dealer gets a blackjack!", TRUE, ch, 0, 0, TO_ROOM);
       bet = 0;
     }
   }
@@ -199,6 +216,7 @@ void BjGame::stay(TBeing *ch)
   sprintf(log_msg, "The dealer flips up his down card:\n\r%s\n\r", 
       pretty_card_printout(ch, dealer[0]).c_str());
   ch->sendTo(COLOR_BASIC, log_msg);
+  act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 
   player = best_dealer();
   while (player < 17) {
@@ -208,11 +226,15 @@ void BjGame::stay(TBeing *ch)
     add_suit(ch, log_msg, dealer[nd - 1]);
     strcat(log_msg, ".\n\r");
 
-    ch->sendTo(log_msg);
+    ch->sendTo(COLOR_BASIC, log_msg);
+    act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 
     player = best_dealer();
     if (player > 21) {
       ch->sendTo("The dealer busts with %d.\n\r", player);
+      sprintf(log_msg, "The dealer busts with %d.", player);
+      act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
+
       ch->addToMoney(bet * 2, GOLD_GAMBLE);
       bet = 0;
       break;
@@ -230,19 +252,37 @@ void BjGame::stay(TBeing *ch)
     add_suit(ch, log_msg, dealer[player]);
     strcat(log_msg, "\r\n");
   }
-  ch->sendTo(log_msg);
+  ch->sendTo(COLOR_BASIC, log_msg);
+
+  strcpy(log_msg, "$n's final hand:\n\r");
+  for (player = 0; player < np; player++) {
+    strcat(log_msg, card_names[hand[player] & 0x0F]);
+    add_suit(ch, log_msg, hand[player]);
+    strcat(log_msg, "\r\n");
+  }
+  strcat(log_msg, "\n\rThe dealer final hand:\n\r");
+  for (player = 0; player < nd; player++) {
+    strcat(log_msg, card_names[dealer[player] & 0x0F]);
+    add_suit(ch, log_msg, dealer[player]);
+    strcat(log_msg, "\r\n");
+  }
+  act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 
   pbest = best_score();
   dbest = best_dealer();
 
   if (pbest > dbest || dbest > 21) {
     ch->sendTo("You win.\n\r");
+    act("$n wins.", TRUE, ch, 0, 0, TO_ROOM);
     ch->addToMoney(bet * 2, GOLD_GAMBLE);
   } else if (pbest == dbest) {
     ch->sendTo("You push. You retain your original bid.\n\r");
+    act("$n pushes.", TRUE, ch, 0, 0, TO_ROOM);
     ch->addToMoney(bet, GOLD_GAMBLE);
-  } else
+  } else {
     ch->sendTo("You lose.\n\r");
+    act("$n loses.", TRUE, ch, 0, 0, TO_ROOM);
+  }
 
   bet = 0;
 }
@@ -272,7 +312,7 @@ void BjGame::peek(const TBeing *ch) const
   strcat(log_msg, card_names[dealer[1] & 0x0f]);
   add_suit(ch, log_msg, dealer[1]);
   strcat(log_msg, "\n\r");
-  ch->sendTo(log_msg);
+  ch->sendTo(COLOR_BASIC, log_msg);
 }
 
 void BjGame::Split(TBeing *ch, const char *, int)
@@ -301,10 +341,18 @@ void BjGame::Hit(const TBeing *ch)
   add_suit(ch, log_msg, hand[np - 1]);
   strcat(log_msg, ".\n\r");
 
-  ch->sendTo(log_msg);
+  ch->sendTo(COLOR_BASIC, log_msg);
+
+  sprintf(log_msg, "$n is dealt the ");
+  strcat(log_msg, card_names[hand[np - 1] & 0x0f]);
+  add_suit(ch, log_msg, hand[np - 1]);
+  strcat(log_msg, ".");
+  act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
+
 
   if (min_score() > 21) {
     ch->sendTo("You have busted!\n\r");
+    act("$n has busted!", TRUE, ch, 0, 0, TO_ROOM);
     bet = 0;
   }
 }

@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: game_cards.cc,v $
+// Revision 5.2  2002/08/14 17:35:43  peel
+// fixed some color code problems with card display
+// added room echoes to show blackjack games
+//
 // Revision 5.1  2001/07/13 05:32:20  peel
 // renamed a bunch of source files
 //
@@ -115,7 +119,7 @@ int CardGame::add_suit(const TBeing *ch, char *cat_msg, int card) const
     if (card & CARD_EARTH)
       sprintf(cat_msg + strlen(cat_msg), " of <g>Green Earth<z>");
     if (card & CARD_ETHER)
-      sprintf(cat_msg + strlen(cat_msg), " of <pPurple Ether><z>");
+      sprintf(cat_msg + strlen(cat_msg), " of <p>Purple Ether<z>");
     /*
     if (card & CARD_WATER)
       sprintf(cat_msg + strlen(cat_msg), " of %sBlue Water%s", ch->blue(), ch->norm());
