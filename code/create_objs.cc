@@ -2073,7 +2073,7 @@ void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorE
       }
       ch->sendTo(VT_HOMECLR);
       row = 0;
-      for (i = 0; i <= MAX_TRAP_TYPES; i++) {
+      for (i = 0; i < MAX_TRAP_TYPES; i++) {
 	sprintf(buf, VT_CURSPOS, row + 4, (((i%2) == 0) ? 5 : 45));
 	if ((i%2) == 1)
 	  row++;
@@ -2309,7 +2309,7 @@ void change_portal_value3(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
           ch->sendTo(VT_HOMECLR);
 	  ch->sendTo(fmt("Current portal trap type: %d\n\r") % o->getPortalTrapType());
           row = 0;
-          for (i = 0; i <= MAX_TRAP_TYPES; i++) {
+          for (i = 0; i < MAX_TRAP_TYPES; i++) {
             sprintf(buf, VT_CURSPOS, row + 4, (((i%2) == 0) ? 5 : 45));
             if ((i%2) == 1)
               row++;
@@ -3030,7 +3030,7 @@ void TTrap::changeTrapValue2(TBeing *ch, const char *arg, editorEnterTypeT type)
   loc_update--;
 
   if (type != ENTER_CHECK) {
-    if (loc_update < 0 || loc_update >= MAX_TRAP_EFF)
+    if (loc_update < 0 || loc_update > MAX_TRAP_EFF)
       return;
     i = 1 << loc_update;
 
