@@ -663,12 +663,15 @@ void TBeing::statBeing(TBeing *k)
     if (k->hasClass(1<<ijc))
       sprintf(buf2 + strlen(buf2), "%s ", classInfo[ijc].name.cap().c_str());
 
-  sprintf(buf + strlen(buf),"<c>Class :<z> %-28s", buf2);
-  sprintf(buf + strlen(buf),"<c>Level   :<z> [M%d C%d W%d T%d S%d D%d K%d R%d]\n\r",
-         k->getLevel(MAGE_LEVEL_IND), k->getLevel(CLERIC_LEVEL_IND),
-         k->getLevel(WARRIOR_LEVEL_IND), k->getLevel(THIEF_LEVEL_IND),
-         k->getLevel(SHAMAN_LEVEL_IND), k->getLevel(DEIKHAN_LEVEL_IND),
-         k->getLevel(MONK_LEVEL_IND), k->getLevel(RANGER_LEVEL_IND));
+  sprintf(buf + strlen(buf),"<c>Class :<z> %-28s\n\r", buf2);
+
+  sprintf(buf + strlen(buf), "<c>Level :<z> [");
+  for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
+    sprintf(buf + strlen(buf), "%c%c:%d ",
+	    classInfo[i].name.cap()[0], classInfo[i].name.cap()[1],
+	    k->getLevel(i));
+  }
+  strcat(buf, "]\n\r");
 
   strcat(buf, "<c>Race  :<z> ");
   strcat(buf, k->getMyRace()->getSingularName().c_str());
