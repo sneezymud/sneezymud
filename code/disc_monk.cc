@@ -55,7 +55,7 @@ int TBeing::doLeap(const sstring &arg)
   setPosition(POSITION_FLYING);
 
   act("You leap into the air!", FALSE, this, 0, 0, TO_CHAR);
-  act("$n takes a great leap into the air!.", FALSE, this, 0, 0, TO_ROOM);
+  act("$n takes a great leap into the air!", FALSE, this, 0, 0, TO_ROOM);
   addToMove(-15);
 
   if(!bSuccess(this, getSkillValue(SKILL_CATLEAP), SKILL_CATLEAP)){
