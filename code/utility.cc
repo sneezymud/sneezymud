@@ -669,6 +669,10 @@ void vlogf(logTypeT tError, const char *errorMsg,...)
       name = "Dash";
       ssprintf(buf, "%s: ", name.c_str());
       break;
+    case LOG_ANGUS:
+      name = "Angus: ";
+      ssprintf(buf, "%s: ", name.c_str());
+      break;
     case LOG_MAROR:
       name = "Maror";
       ssprintf(buf, "%s: ", name.c_str());

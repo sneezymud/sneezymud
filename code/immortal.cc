@@ -4699,6 +4699,12 @@ void TBeing::doSetsev(const char *arg)
 
       sendTo("Your Personal Log Messages are now %s\n\r",
              ((d->severity & (1 << LOG_MAROR)) ? "On" : "Off"));
+    } else if (is_abbrev(arg, "angus") && !strcmp(getName(), "Angus")) {
+      if ((d->severity & (1 << LOG_ANGUS))) d->severity &= ~(1 << LOG_ANGUS);
+      else d->severity |= (1 << LOG_ANGUS);
+
+      sendTo("Your Personal Log Messages are now %s\n\r",
+             ((d->severity & (1 << LOG_ANGUS)) ? "On" : "Off"));
     } else
       sendTo("Incorrect Log Type.\n\r");
   } else {
