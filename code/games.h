@@ -27,6 +27,11 @@ const int CHIP_500000 = 2357;
 const int CHIP_1000000= 2358;
 
 
+TObj *find_chip(TBeing *, const int &);
+TObj *find_chip(TBeing *, const sstring &);
+void payout(TBeing *, int);
+
+
 int cardnumComparAscend(const void *, const void *);
 int cardnumComparDescend(const void *, const void *);
 

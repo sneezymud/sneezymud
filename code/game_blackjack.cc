@@ -1,34 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: game_blackjack.cc,v $
-// Revision 5.3  2003/03/13 22:40:53  peel
-// added sstring class, same as string but takes NULL as an empty string
-// replaced all uses of string to sstring
-//
-// Revision 5.2  2002/08/14 17:35:43  peel
-// fixed some color code problems with card display
-// added room echoes to show blackjack games
-//
-// Revision 5.1  2001/07/13 05:32:20  peel
-// renamed a bunch of source files
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "blackjack.c" - All functions and routines related to blackjack
 //      
@@ -114,11 +85,13 @@ int BjGame::exitGame(const TBeing *ch)
   return TRUE;
 }
 
+
 void BjGame::Bet(TBeing *ch, const char *arg)
 {
-  int inx, bet_amt, player;
+  int inx, player;
   char coin_str[20], log_msg[2048];
   sstring buf;
+  TObj *chip;
 
   if (ch->checkBlackjack()) {
     inx = index(ch);
@@ -132,29 +105,26 @@ void BjGame::Bet(TBeing *ch, const char *arg)
     }
     only_argument(arg, coin_str);
     if (!*coin_str) {
-      ch->sendTo("Bet how much?\n\r");
+      ch->sendTo("Bet which chip?\n\r");
       return;
     }
-    sscanf(coin_str, "%d", &bet_amt);
-    if (ch->getMoney() < bet_amt) {
-      ch->sendTo("You don't have that much!\n\r");
+
+    if(!(chip=find_chip(ch, coin_str))){
+      ch->sendTo("You don't have that chip!\n\r");
       return;
     }
-    if (bet_amt <= 0) {
-      ch->sendTo("Your bets must be a positive numbers!\n\r");
-      return;
-    }
-    if (bet_amt > (ch->GetMaxLevel() * 100)) {
-      ch->sendTo("The maximum bet is your max level * 100 talens.\n\r");
-      return;
-    }
-    bet = bet_amt;
-    ch->addToMoney(-bet_amt, GOLD_GAMBLE);
+
+    bet = chip->obj_flags.cost;
     ch->doSave(SILENT_YES);
 
     sstring buf;
-    ssprintf(buf, "$n bets %i talens.", bet_amt);
+    ssprintf(buf, "$n bets %s.", chip->getName());
     act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+    ssprintf(buf, "You bet %s.", chip->getName());
+    act(buf.c_str(), TRUE, ch, 0, 0, TO_CHAR);
+
+    (*chip)--;
+    delete chip;
 
     nd = 0;
     np = 0;
@@ -182,7 +152,7 @@ void BjGame::Bet(TBeing *ch, const char *arg)
 	((CARD_NUM(hand[1]) == 1) && (CARD_NUM(hand[0]) >= 10))) {
       ch->sendTo("You get a blackjack!\n\r");
       act("$n gets a blackjack!", TRUE, ch, 0, 0, TO_ROOM);
-      ch->addToMoney((int) (bet * 2.5), GOLD_GAMBLE);
+      payout(ch, (int) (bet * 2.5));
       bet = 0;
     }
     if (((CARD_NUM(dealer[0]) == 1) && (CARD_NUM(dealer[1]) >= 10)) ||
@@ -238,9 +208,6 @@ void BjGame::stay(TBeing *ch)
       ch->sendTo("The dealer busts with %d.\n\r", player);
       sprintf(log_msg, "The dealer busts with %d.", player);
       act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
-
-      ch->addToMoney(bet * 2, GOLD_GAMBLE);
-      bet = 0;
       break;
     }
   }
@@ -278,11 +245,11 @@ void BjGame::stay(TBeing *ch)
   if (pbest > dbest || dbest > 21) {
     ch->sendTo("You win.\n\r");
     act("$n wins.", TRUE, ch, 0, 0, TO_ROOM);
-    ch->addToMoney(bet * 2, GOLD_GAMBLE);
+    payout(ch, (int) (bet * 2));
   } else if (pbest == dbest) {
     ch->sendTo("You push. You retain your original bid.\n\r");
     act("$n pushes.", TRUE, ch, 0, 0, TO_ROOM);
-    ch->addToMoney(bet, GOLD_GAMBLE);
+    payout(ch, (int) (bet));
   } else {
     ch->sendTo("You lose.\n\r");
     act("$n loses.", TRUE, ch, 0, 0, TO_ROOM);

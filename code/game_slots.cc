@@ -14,18 +14,6 @@
 
 void spin_slot(TBeing *ch);
 
-TObj *find_chip(TBeing *ch, const int chip)
-{
-  TObj *o;
-
-  for(TThing *tt=ch->getStuff();tt;tt=tt->nextThing)
-    if((o=dynamic_cast<TObj *>(tt)) && o->objVnum()==chip)
-      return o;
-  
-  return NULL;
-}
-
-
 static const char *ChooseFirstFruit()
 {
   int num;
