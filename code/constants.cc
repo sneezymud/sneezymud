@@ -1219,6 +1219,7 @@ const char * const attack_modes[] =
 extern int repairMetal(TBeing *,TObj *);
 extern int repairDead(TBeing *,TObj *);
 extern int repairOrganic(TBeing *,TObj *);
+extern int repairWood(TBeing *,TObj *);
 extern int repairMagical(TBeing *,TObj *);
 extern int repairRock(TBeing *,TObj *);
 extern int repairCrystal(TBeing *,TObj *);
@@ -1247,7 +1248,7 @@ const struct material_type_numbers material_nums[200] =
   {90, 0, 100, 100, 1, 11, 0, 30, -3,8, 0, 750, 65, 0, 0, repairGeneric,"cloth"},
   {50, 50, 95, 80, 7, 153, 105, 0,-2,1, 0, 250, 40, 3, 0, repairGeneric,"wax"},
   {0, 100, 0, 50, 40, 0, 249, 0, 3,1, 0, 0, 5, 0, 0, NULL,"glass"},
-  {40, 30, 75, 50, 25, 42, 53, 255, 3,1, 0, 500, 25, 1, 0, repairOrganic,"wood"},
+  {40, 30, 75, 50, 25, 42, 53, 255, 3,1, 0, 500, 25, 1, 0, repairWood,"wood"},
   {90, 0, 50, 100, 7, 22, 0, 40, -2,6, 0, 900, 80, 2, 0, repairGeneric,"silk"},
   {75, 75, 75, 100, 5, 35, 55, 30, 1,2, 0, 0, 95, 1, 0, repairSpiritual,"foodstuff"},
   {65, 25, 25, 100, 3, 0, 51, 0, -1,2, 0, 500, 50, 0, 0, repairGeneric,"plastic"},
@@ -1353,7 +1354,7 @@ const struct material_type_numbers material_nums[200] =
   {10, 60, 10, 24, 48, 0, 39, 0, 10, 1, 1, 0, 31,   3331,   0, repairMagical,"runed"},
   {25, 45, 0, 25, 60, 0, 39, 0, 13, 1, 0, 0, 31,   65,   0, repairCrystal,"crystal"},
   {1, 12, 0, 5, 100, 0, 0, 0, 14, 1, 0, 0, 21,   18182,   517, repairCrystal,"diamond"},
-  {10, 30, 0, 10, 50, 0, 39, 0, 10, 1, 0, 0, 24,   325,   0, repairOrganic,"ebony"},
+  {10, 30, 0, 10, 50, 0, 39, 0, 10, 1, 0, 0, 24,   325,   0, repairWood,"ebony"},
   {3, 15, 0, 3, 75, 0, 0, 0, 10, 1, 0, 0, 31,   4033,   516, repairCrystal,"emerald"},
   {21, 20, 0, 21, 50, 0, 39, 0, 10, 1, 0, 0, 31,   2016,   0, repairDead,"ivory"},
   {21, 20, 0, 21, 50, 0, 39, 0, 10, 1, 0, 0, 31,   392,   65, repairRock,"obsidian"},

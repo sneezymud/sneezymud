@@ -127,14 +127,19 @@ void loadRepairItems(TMonster *tmons)
       tool3 = 157;
       tool4 = 156;
     }
+    /*
     if(tmons->hasClass(CLASS_RANGER)) {
       tool = 568;
       tool2 = 570;
       tool3 = 574;
     }
+    */
     if(tmons->hasClass(CLASS_MONK)) {
       tool = 591;
       tool2 = 593;
+      tool3 = 568;
+      tool4 = 570;
+      tool5 = 574;
     }
     if(tmons->hasClass(CLASS_SHAMAN)) {
       tool = 564;
@@ -166,14 +171,19 @@ void loadRepairItems(TMonster *tmons)
       tool3 = 153;
       tool4 = 155;
     }
+    /*
     if(tmons->hasClass(CLASS_RANGER)) {
       tool = 567;
       tool2 = 569;
       tool3 = 573;
     }
+    */
     if(tmons->hasClass(CLASS_MONK)) {
       tool = 590;
       tool2 = 592;
+      tool3 = 567;
+      tool4 = 569;
+      tool5 = 573;
     }
     if(tmons->hasClass(CLASS_SHAMAN)) {
       tool = 563;

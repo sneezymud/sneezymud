@@ -174,6 +174,7 @@ TaskEntry tasks[NUM_TASKS] =
   {"smything", "You are too busy smything.\n\r", task_smythe},
   {"fixing something", "You are too busy fixing something.\n\r", task_repair_dead},
   {"regrowing something", "You are too busy regrowing something.\n\r", task_repair_organic},
+  {"regrowing something", "You are too busy regrowing something.\n\r", task_repair_wood},
   {"fixing something", "You are too busy fixing something.\n\r", task_repair_magical},
   {"fixing something", "You are too busy fixing something.\n\r", task_repair_rock},
   {"tinkering with something", "You are too busy tinkering with something.\n\r", task_smythe_advanced},

@@ -88,11 +88,8 @@ int TBeing::get_wood_tools(TTool **ladle, TTool **soil)
       *soil = tt;
   }
 
-
-
   if (!*ladle) sendTo("You need to have a ladle in your primary hand.\n\r");
-  if (!*soil) sendTo("You need to have some soil in your secondary hand.\n\r");
-
+  if (!*soil) sendTo("You need to have some fertilizer in your secondary hand.\n\r");
 
   return (*ladle && *soil);
 }
@@ -111,10 +108,8 @@ int TBeing::get_shell_tools(TTool **ladle, TTool **oils)
       *oils = tt;
   }
 
-
   if (!*ladle) sendTo("You need to have a ladle in your primary hand.\n\r");
   if (!*oils) sendTo("You need to have some oil in your secondary hand.\n\r");
-
 
   return (*ladle && *oils);
 }
@@ -141,14 +136,11 @@ int TBeing::get_magic_tools(TTool **pentagram, TTool **runes, TTool **energy)
       *energy = tt;
   }
 
-
   if (!*pentagram) sendTo("You need to have a magical pentagram in the room.\n\r");
   if (!*runes) sendTo("You need to have some runes in your primary hand.\n\r");
   if (!*energy) sendTo("You need to have some energy in your secondary hand.\n\r");
 
-
   return (*pentagram && *runes && *energy);
-
 }
 
 int TBeing::get_dead_tools(TTool **operatingtable, TTool **scalpel, TTool **forceps)
@@ -173,20 +165,15 @@ int TBeing::get_dead_tools(TTool **operatingtable, TTool **scalpel, TTool **forc
       *forceps = tt;
   }
 
-
   if (!*operatingtable) sendTo("You need to have an operating table in the room.\n\r");
   if (!*scalpel) sendTo("You need to have a scalpel in your primary hand.\n\r");
   if (!*forceps) sendTo("You need to have some forceps in your secondary hand.\n\r");
 
-
   return (*operatingtable && *scalpel && *forceps);
-
 }
-
 
 int TBeing::get_rock_tools(TTool **pentagram, TTool **chisel, TTool **silica)
 {
-
   TRoom *rp;
   TThing *t;
   TTool *tt;
@@ -207,11 +194,9 @@ int TBeing::get_rock_tools(TTool **pentagram, TTool **chisel, TTool **silica)
       *silica = tt;
   }
   
-
   if (!*pentagram) sendTo("You need to have a magical pentagram in the room.\n\r");
   if (!*chisel) sendTo("You need to have a chisel in your primary hand.\n\r");
   if (!*silica) sendTo("You need to have some silica in your secondary hand.\n\r");
-
 
   return (*pentagram && *silica && *chisel);
 }
@@ -242,14 +227,11 @@ int TBeing::get_gemmed_tools(TTool **workbench, TTool **loupe, TTool **pliers)
   if (!*loupe) sendTo("You need to have a loupe in your primary hand.\n\r");
   if (!*pliers) sendTo("You need to have some pliers in your secondary hand.\n\r");
 
-
   return (*workbench && *loupe && *pliers);
-
 }
 
 int TBeing::get_leather_tools(TTool **punch, TTool **cording)
 {
-
   TTool *tt;
 
   if ((tt = dynamic_cast<TTool *>(heldInPrimHand()))) {
@@ -261,17 +243,14 @@ int TBeing::get_leather_tools(TTool **punch, TTool **cording)
       *cording = tt;
   }
 
-
   if (!*punch) sendTo("You need to have a punch in your primary hand.\n\r");
   if (!*cording) sendTo("You need to have some cording in your secondary hand.\n\r");
-
 
   return (*punch && *cording);
 }
 
 int TBeing::get_paper_tools(TTool **tape)
 {
-
   TTool *tt;
 
   if ((tt = dynamic_cast<TTool *>(heldInPrimHand()))) {
@@ -286,7 +265,6 @@ int TBeing::get_paper_tools(TTool **tape)
 
 int TBeing::get_melt_tools(TTool **candle)
 {
-
   TTool *tt;
 
   if ((tt = dynamic_cast<TTool *>(heldInPrimHand()))) {
@@ -294,17 +272,13 @@ int TBeing::get_melt_tools(TTool **candle)
       *candle = tt;
   }
 
-
-  if (!*candle) sendTo("You need to have some tape in your primary hand.\n\r");
-
+  if (!*candle) sendTo("You need to have a candle in your primary hand.\n\r");
 
   return (int)(*candle);
-
 }
 
 int TBeing::get_weave_tools(TTool **needle)
 {
-
   TTool *tt;
 
   if ((tt = dynamic_cast<TTool *>(heldInPrimHand()))) {
@@ -314,13 +288,11 @@ int TBeing::get_weave_tools(TTool **needle)
 
   if (!*needle) sendTo("You need to have a needle in your primary hand.\n\r");
 
-
   return (int)(*needle);
 }
 
 int TBeing::get_sew_tools(TTool **needle, TTool **thread)
 {
-
   TTool *tt;
 
   if ((tt = dynamic_cast<TTool *>(heldInPrimHand()))) {
@@ -332,20 +304,14 @@ int TBeing::get_sew_tools(TTool **needle, TTool **thread)
       *thread = tt;
   }
 
-
   if (!*needle) sendTo("You need to have a needle in your primary hand.\n\r");
-
   if (!*thread) sendTo("You need to have some thread in your secondary hand.\n\r");
-
-
-
 
   return (*needle && *thread);
 }
 
 int TBeing::get_ceramic_tools(TTool **glue)
 {
-
   TTool *tt;
 
   if ((tt = dynamic_cast<TTool *>(heldInPrimHand()))) {
@@ -353,12 +319,9 @@ int TBeing::get_ceramic_tools(TTool **glue)
       *glue = tt;
   }
 
-
   if (!*glue) sendTo("You need to have some glue your primary hand.\n\r");
 
-
   return (int)(*glue);
-
 }
 
 int TBeing::get_spirit_tools(TTool **altar, TTool **brush, TTool **resin)
@@ -383,14 +346,11 @@ int TBeing::get_spirit_tools(TTool **altar, TTool **brush, TTool **resin)
       *resin = tt;
   }
 
-
   if (!*altar) sendTo("You need to have an altar in the room.\n\r");
   if (!*brush) sendTo("You need to have a brush in your primary hand.\n\r");
   if (!*resin) sendTo("You need to have some resin in your secondary hand.\n\r");
 
-
   return (*altar && *brush && *resin);
-
 }
 
 
@@ -798,6 +758,165 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 // repair organic: wood (5), ebony (105) 
 // tools: water (room), a ladle (primary), some rich soil (secondary)
 
+int task_repair_wood(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
+{
+  TThing *t;
+  TTool *ladle = NULL, *soil = NULL;
+  TObj *o = NULL;
+  int learning;
+  int percent;
+  bool didSucceed = FALSE;
+
+  for(t=ch->getStuff();t;t=t->nextThing){
+    if((o=dynamic_cast<TObj *>(t)) && isname(ch->task->orig_arg, o->name))
+      break;
+    o=NULL;
+  }
+
+  // sanity check
+  if (ch->isLinkdead() || (ch->in_room < 0) || !o || !isname(ch->task->orig_arg, o->name)) {
+    smythe_stop(ch);
+    return FALSE;  // returning FALSE lets command be interpreted
+  }
+  if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
+    return FALSE;
+
+  switch (cmd) {
+    case CMD_TASK_CONTINUE:
+      if (!ch->get_wood_tools(&ladle, &soil) || (ch->getPosition() < POSITION_RESTING)
+	  || !ch->roomp->isForestSector()) {
+	smythe_stop(ch);
+	return FALSE;
+      }
+
+      if (o->getMaxStructPoints() <= o->getStructPoints()) {
+	act("$n finishes regrowing $p and proudly smiles.", FALSE, ch, o, 0, TO_ROOM);
+	act("You finish regrowing $p and smile triumphantly.", FALSE, ch, o, 0, TO_CHAR);
+	act("You uncover $p.", FALSE, ch, o, 0, TO_CHAR);
+	act("$n uncovers $p.", FALSE, ch, o, 0, TO_ROOM);
+	ch->stopTask();
+	return FALSE;
+      }
+
+      learning = ch->getSkillValue(SKILL_REPAIR_MONK);
+      didSucceed = bSuccess(ch, learning, SKILL_REPAIR_MONK);
+      ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
+      if (ch->task->status && didSucceed || !ch->task->status) {
+	
+	if (ch->getRace() == RACE_ELVEN) {
+	  ch->addToMove(min(-1, ::number(-5,-15) + ::number(1,((ch->getSkillValue(SKILL_REPAIR_MONK) / 20))) + 2));
+	} else {
+	  ch->addToMove(min(-1, ::number(-5,-15) + ::number(1,((ch->getSkillValue(SKILL_REPAIR_MONK) / 20)))));
+	}
+	if (ch->getMove() < 10) {
+	  act("You are much too tired to continue regrowing $p.", FALSE, ch, o, 0, TO_CHAR);
+	  act("$n stops regrowing $p, and wipes sweat from $s brow.", FALSE, ch, o, 0, TO_ROOM);
+	  ch->stopTask();
+	  return FALSE;
+	}
+	if (ch->getMana() < 10) {
+	  act("You are too low on mana to continue regrowing $p.", FALSE, ch, o, 0, TO_CHAR);
+	  act("$n looks faint, and stops regrowing $p.", FALSE, ch, o, 0, TO_ROOM);
+	  ch->stopTask();
+	  return FALSE;
+	}
+
+	if (!ch->task->status) {
+	  act("$n makes a clearing on the ground large enough to hold $p.", FALSE, ch, o, 0, TO_ROOM);
+	  act("You make a clearing on the ground large enough to hold $p.", FALSE, ch, o, 0, TO_CHAR);
+	  ch->task->status++;
+	} else if (ch->task->status == 1) {
+	  act("$n places $p in the clearing.", FALSE, ch, o, 0, TO_ROOM);
+	  act("You place $p in the clearing.", FALSE, ch, o, 0, TO_CHAR);
+	  ch->task->status++;
+	} else if (::number(0,1)) {
+	  if (::number(0,1)) {
+	    act("$n scoops some soil with $P and pours it on $p.", FALSE, ch, o, ladle, TO_ROOM);
+	    act("You scoop some soil with $P and pour it on $p.", FALSE, ch, o, ladle, TO_CHAR);
+	    ladle->addToToolUses(-1);
+	    if (ladle->getToolUses() <= 0) {
+	      act("Your $O breaks from overuse!", FALSE, ch, o, ladle, TO_CHAR);
+	      act("$n's $O breaks from overuse!", FALSE, ch, o, ladle, TO_ROOM);
+	      ladle->makeScraps();
+	      ch->stopTask();
+	      delete ladle;
+	      return FALSE;
+	    }
+	  } else {
+	    
+	    act("$n stirs manure from $P into the soil covering $p.", FALSE, ch, o, soil, TO_ROOM);
+	    act("You stir manure from $P into the soil covering $p.", FALSE, ch, o, soil, TO_CHAR);
+	    soil->addToToolUses(-1);
+	    if (soil->getToolUses() <= 0) {
+	      act("Your $P is all used up, and you discard it.", FALSE, ch, o, soil, TO_CHAR);
+	      act("$n's $P is all used up, and $e discards it.", FALSE, ch, o, soil, TO_ROOM);
+	      
+	      ch->stopTask();
+	      delete soil;
+	      return FALSE;
+	    }
+	  }
+	  ch->task->status++;
+	} else {
+	  act("$n places a hand over $p and concentrates, regrowing it.", FALSE, ch, o, 0, TO_ROOM);
+	  act("You place a hand over $p and concentrate, regrowing it.", FALSE, ch, o, 0, TO_CHAR);
+	  ch->addToMana(::number(-3,-8));
+	  if (ch->getMana() < 10) {
+	    act("You are too low on mana to continue regrowing $p.", FALSE, ch, o, 0, TO_CHAR);
+	    act("$n looks faint, and stops regrowing $p.", FALSE, ch, o, 0, TO_ROOM);
+	    ch->stopTask();
+	    return FALSE;
+	  }
+	}
+	
+	if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
+	  percent -= ch->getDexReaction() * 3;
+	
+	if (percent < ch->getSkillValue(SKILL_REPAIR_MONK))
+	  o->addToStructPoints(1);
+	else
+	  o->addToStructPoints(-1);
+	
+	if (o->getStructPoints() < 1) {
+	  act("$n screws up regrowing $p and utterly destroys it.", FALSE, ch, o, 0, TO_ROOM);
+	  act("You screw up regrowing $p and utterly destroy it.", FALSE, ch, o, 0, TO_CHAR);
+	  o->makeScraps();
+	  ch->stopTask();
+	  delete o;
+	  return FALSE;
+	}
+	// task can continue forever, so don't bother decrementing the timer
+      }
+      
+      if (::number(0,1)) {
+	act("$n examines $p carefully.", FALSE, ch, o, 0, TO_ROOM);
+	act("You carefully examine $p.", FALSE, ch, o, 0, TO_CHAR);
+      }
+      return FALSE;
+      break;
+    case CMD_ABORT:
+    case CMD_STOP:
+      act("You stop trying to regrowing $p.", FALSE, ch, o, 0, TO_CHAR);
+      ch->sendTo("Isn't there a druid around here somewhere?\n\r");
+      act("$n stops regrowing $p.", FALSE, ch, o, 0, TO_ROOM);
+      if (ch->task->status > 0) {
+	act("You uncover $p.", FALSE, ch, o, 0, TO_CHAR);
+	act("$n uncovers $p.", FALSE, ch, o, 0, TO_ROOM);
+      }
+      ch->stopTask();
+      break;
+    case CMD_TASK_FIGHTING:
+      ch->sendTo("You are unable to continue regrowing while under attack!\n\r");
+      ch->stopTask();
+      break;
+    default:
+      if (cmd < MAX_CMD_LIST)
+	warn_busy(ch);
+      break;                    // eat the command
+  }
+  return TRUE;
+}
+
 // repair organic: coral (14), dragon scale (53), fish scale (75)
 // tools: water (room), a ladle (primary), a vial of plant oils (secondary)
 
@@ -961,8 +1080,6 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
       break;                    // eat the command
   }
   return TRUE;
-  
-  
 }
 
 // repair magical: plasma (12), water (57), fire (58), earth (59), elemental (60), ice (61), lightning (62),

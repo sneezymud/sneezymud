@@ -1080,6 +1080,19 @@ int repairOrganic(TBeing *ch, TObj *o)
   return 0;
 }
 
+int repairWood(TBeing *ch, TObj *o)
+{
+  if (!ch->doesKnowSkill(SKILL_REPAIR_MONK)) {
+    ch->sendTo("You really don't know enough about repairing wood.\n\r");
+    return FALSE;
+  }
+  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+
+  start_task(ch, NULL, NULL, TASK_REPAIR_WOOD, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  return 0;
+}
+
 int repairMagical(TBeing *ch, TObj *o)
 {
   if (!ch->doesKnowSkill(SKILL_REPAIR_MAGE)) {

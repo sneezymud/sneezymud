@@ -27,6 +27,7 @@ extern int task_sharpening    (TBeing *, cmdTypeT, const char *, int, TRoom *, T
 extern int task_smythe        (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_dead   (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_organic(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_repair_wood   (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_magical(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_rock   (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_smythe_advanced(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
@@ -83,6 +84,7 @@ enum taskTypeT {
      TASK_SMYTHE,
      TASK_REPAIR_DEAD,
      TASK_REPAIR_ORGANIC,
+     TASK_REPAIR_WOOD,
      TASK_REPAIR_MAGICAL,
      TASK_REPAIR_ROCK,
      TASK_SMYTHE_ADVANCED,
