@@ -174,7 +174,8 @@ const int SPEC_SHIPPING_OFFICIAL  =188;
 const int SPEC_LOAN_SHARK         =189;
 const int SPEC_TROLLEY_DRIVER     =190;
 const int SPEC_STOCK_BROKER       =191;
-const int NUM_MOB_SPECIALS        =191;
+const int SPEC_BANKER             =192;
+const int NUM_MOB_SPECIALS        =192;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

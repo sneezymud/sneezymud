@@ -304,7 +304,8 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_mobs_flaskPeddler.o	spec_mobs_limbDispo.o 		\
 	spec_mobs_statSurgeon.o		spec_objs_graffitiObj.o 	\
 	spec_objs_graffitiMaker.o	spec_mobs_loanshark.o		\
-	spec_objs_weapons.o             spec_mobs_stockbroker.o
+	spec_objs_weapons.o             spec_mobs_stockbroker.o		\
+	spec_mobs_banker.o
 
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
@@ -13812,6 +13813,63 @@ objs/spec_mobs_archer.o: colorstring.h format.h obj_bow.h obj_arrow.h
 objs/spec_mobs_archer.o: obj_base_weapon.h obj_quiver.h
 objs/spec_mobs_archer.o: obj_expandable_container.h obj_open_container.h
 objs/spec_mobs_archer.o: obj_base_container.h
+objs/spec_mobs_banker.o: stdsneezy.h /usr/include/g++/cstdio
+objs/spec_mobs_banker.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/spec_mobs_banker.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
+objs/spec_mobs_banker.o: /usr/include/stdlib.h /usr/include/g++/ctime
+objs/spec_mobs_banker.o: /usr/include/time.h /usr/include/sys/_posix.h
+objs/spec_mobs_banker.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
+objs/spec_mobs_banker.o: /usr/include/machine/types.h
+objs/spec_mobs_banker.o: /usr/include/machine/endian.h
+objs/spec_mobs_banker.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/spec_mobs_banker.o: /usr/include/runetype.h /usr/include/g++/cassert
+objs/spec_mobs_banker.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/spec_mobs_banker.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_banker.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/spec_mobs_banker.o: /usr/include/stddef.h /usr/include/math.h
+objs/spec_mobs_banker.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_mobs_banker.o: /usr/include/g++/string
+objs/spec_mobs_banker.o: /usr/include/g++/std/bastring.h
+objs/spec_mobs_banker.o: /usr/include/g++/cstddef
+objs/spec_mobs_banker.o: /usr/include/g++/std/straits.h
+objs/spec_mobs_banker.o: /usr/include/g++/alloc.h
+objs/spec_mobs_banker.o: /usr/include/g++/stl_config.h
+objs/spec_mobs_banker.o: /usr/include/g++/stl_alloc.h
+objs/spec_mobs_banker.o: /usr/include/g++/iostream.h
+objs/spec_mobs_banker.o: /usr/include/g++/streambuf.h
+objs/spec_mobs_banker.o: /usr/include/g++/libio.h /usr/include/g++/iterator
+objs/spec_mobs_banker.o: /usr/include/g++/stl_relops.h
+objs/spec_mobs_banker.o: /usr/include/g++/stl_iterator.h
+objs/spec_mobs_banker.o: /usr/include/g++/std/bastring.cc
+objs/spec_mobs_banker.o: /usr/include/g++/vector
+objs/spec_mobs_banker.o: /usr/include/g++/stl_algobase.h
+objs/spec_mobs_banker.o: /usr/include/g++/stl_pair.h
+objs/spec_mobs_banker.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/spec_mobs_banker.o: /usr/include/machine/limits.h
+objs/spec_mobs_banker.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/spec_mobs_banker.o: /usr/include/g++/new /usr/include/g++/exception
+objs/spec_mobs_banker.o: /usr/include/g++/stl_construct.h
+objs/spec_mobs_banker.o: /usr/include/g++/stl_uninitialized.h
+objs/spec_mobs_banker.o: /usr/include/g++/stl_vector.h
+objs/spec_mobs_banker.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/spec_mobs_banker.o: /usr/include/g++/stl_tree.h
+objs/spec_mobs_banker.o: /usr/include/g++/stl_function.h
+objs/spec_mobs_banker.o: /usr/include/g++/stl_map.h
+objs/spec_mobs_banker.o: /usr/include/g++/stl_multimap.h
+objs/spec_mobs_banker.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_mobs_banker.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
+objs/spec_mobs_banker.o: sstring.h low.h enum.h spells.h structs.h parse.h
+objs/spec_mobs_banker.o: immunity.h discipline.h spell2.h db.h ansi.h
+objs/spec_mobs_banker.o: cmd_dissect.h client.h response.h faction.h comm.h
+objs/spec_mobs_banker.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/spec_mobs_banker.o: body.h race.h skills.h disease.h trap.h task.h
+objs/spec_mobs_banker.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/spec_mobs_banker.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/spec_mobs_banker.o: person.h monster.h account.h extern.h handler.h
+objs/spec_mobs_banker.o: obj_money.h rent.h spec_mobs.h materials.h
+objs/spec_mobs_banker.o: colorstring.h format.h database.h
+objs/spec_mobs_banker.o: /usr/local/include/libpq-fe.h
+objs/spec_mobs_banker.o: /usr/local/include/postgres_ext.h shop.h
 objs/spec_mobs_bounty_hunter.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_bounty_hunter.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/machine/ansi.h
