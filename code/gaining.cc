@@ -97,7 +97,8 @@ void TBeing::setSpellEligibleToggle(TMonster *trainer, spellNumT spell, silentTy
 
     default:
       return;
-  }  
+  }
+
   return;
 }
 
@@ -295,14 +296,21 @@ void give_avenger(TBeing *gm, TBeing *ch)
 
 void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 {
+  bool bHasQuestAvailable = false;
   char buf[256];
 
   if (getLevel(Class) >= 8 &&
       !hasQuestBit(TOG_FACTIONS_ELIGIBLE) &&
       isUnaff()) {
-    gm->doSay("Your advanced level makes you eligible to join a faction if you so choose.");
-    gm->doSay("The mayors of Brightmoon, Logrus and Amber can provide details on their respective faction.");
-    setQuestBit(TOG_FACTIONS_ELIGIBLE);
+    if (!silent) {
+      gm->doSay("Your advanced level makes you eligible to join a faction if you so choose.");
+      gm->doSay("The mayors of Brightmoon, Logrus and Amber can provide details on their respective faction.");
+    }
+
+    if (gm)
+      setQuestBit(TOG_FACTIONS_ELIGIBLE);
+    else if (getLevel(Class) == 8)
+      bHasQuestAvailable = true;
   }
 
   switch (Class) {
@@ -323,7 +331,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
           gm->doSay("Your achievements have earned you the right to quest for a holy avenger.");
           gm->doSay("Seek out the Bishop of Brightmoon and ask him about an avenger quest.");
         }
-        setQuestBit(TOG_AVENGER_ELIGIBLE);
+
+        if (gm)
+          setQuestBit(TOG_AVENGER_ELIGIBLE);
+        else if (getLevel(Class) == 15)
+          bHasQuestAvailable = true;
       }
 
       if (getLevel(Class) >= 28 && hasQuestBit(TOG_AVENGER_RECEIVED) &&
@@ -353,7 +365,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
           gm->doSay("You do not have to quest now. You can wait until you have more power.");
           gm->doSay("When you are ready, seek out Fistandantilus the Blacksmith and ask him about getting a holy vindicator made.");
         }
-       setQuestBit(TOG_VINDICATOR_ELIGIBLE);
+
+        if (gm)
+          setQuestBit(TOG_VINDICATOR_ELIGIBLE);
+        else if (getLevel(Class) == 28)
+          bHasQuestAvailable = true;
       }
       if (getLevel(Class) >= 45 && hasQuestBit(TOG_VINDICATOR_COMPLETE) &&
           !hasQuestBit(TOG_DEVASTATOR_FIND_BEN) &&
@@ -397,7 +413,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
           gm->doSay("You do not have to quest now. You can wait until you have more power.");
           gm->doSay("When you are ready, seek out Creed and ask him about getting a holy devastator made.");
         }
-       setQuestBit(TOG_DEVESTATOR_ELIGIBLE);
+
+        if (gm)
+          setQuestBit(TOG_DEVESTATOR_ELIGIBLE);
+        else if (getLevel(Class) == 45)
+          bHasQuestAvailable = true;
       }
       break;
 
@@ -409,7 +429,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	 getLevel(Class)>=2){
 	if(!silent)
 	  gm->doSay("You are now eligible to quest for your white belt.  Say \"white belt\" for more information.");
-	setQuestBit(TOG_ELIGIBLE_MONK_WHITE);
+
+        if (gm)
+	  setQuestBit(TOG_ELIGIBLE_MONK_WHITE);
+        else if (getLevel(Class) == 2)
+          bHasQuestAvailable = true;
       }
       if(hasQuestBit(TOG_HAS_MONK_WHITE) &&
 	 !hasQuestBit(TOG_HAS_MONK_YELLOW) &&
@@ -418,7 +442,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	 getLevel(Class)>=5){
 	if(!silent)
 	  gm->doSay("You are now eligible to quest for your yellow sash.  Say \"yellow sash\" for more information.");
-	setQuestBit(TOG_ELIGIBLE_MONK_YELLOW);
+
+        if (gm)
+	  setQuestBit(TOG_ELIGIBLE_MONK_YELLOW);
+        else if (getLevel(Class) == 5)
+          bHasQuestAvailable = true;
       }
       if(hasQuestBit(TOG_HAS_MONK_YELLOW) &&
 	 !hasQuestBit(TOG_MONK_PURPLE_ELIGIBLE) &&
@@ -432,7 +460,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	 getLevel(Class)>=15){
 	if(!silent)
 	  gm->doSay("You are now eligible to quest for your purple sash.  Say \"purple sash\" for more information.");
-	setQuestBit(TOG_MONK_PURPLE_ELIGIBLE);
+
+        if (gm)
+	  setQuestBit(TOG_MONK_PURPLE_ELIGIBLE);
+        else if (getLevel(Class) == 15)
+          bHasQuestAvailable = true;
       }
       if(hasQuestBit(TOG_MONK_PURPLE_OWNED) &&
 	 !hasQuestBit(TOG_HAS_MONK_BLUE) &&
@@ -443,7 +475,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	 getLevel(Class)>=25){
 	if(!silent)
 	  gm->doSay("You are now eligible to quest for your blue sash.  Say \"blue sash\" for more information.");
-	setQuestBit(TOG_ELIGIBLE_MONK_BLUE);
+
+        if (gm)
+	  setQuestBit(TOG_ELIGIBLE_MONK_BLUE);
+        else if (getLevel(Class) == 25)
+          bHasQuestAvailable = true;
       }
       if(hasQuestBit(TOG_HAS_MONK_BLUE) &&
 	 !hasQuestBit(TOG_MONK_GREEN_ELIGIBLE) &&
@@ -455,7 +491,10 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	if(!silent)
 	  gm->doSay("You are now eligible to quest for your green sash.  Say \"green sash\" for more information.");
 
-	setQuestBit(TOG_MONK_GREEN_ELIGIBLE);
+        if (gm)
+	  setQuestBit(TOG_MONK_GREEN_ELIGIBLE);
+        else if (getLevel(Class) == 35)
+          bHasQuestAvailable = true;
       }
       if(hasQuestBit(TOG_MONK_GREEN_OWNED) &&
 	 !hasQuestBit(TOG_STARTED_MONK_RED) &&
@@ -464,7 +503,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	 getLevel(Class)>=45){
 	if(!silent)
 	  gm->doSay("You are now eligible to quest for your red sash.  Say \"red sash\" for more information.");
-	setQuestBit(TOG_MONK_RED_ELIGIBLE);
+
+        if (gm)
+	  setQuestBit(TOG_MONK_RED_ELIGIBLE);
+        else if (getLevel(Class) == 45)
+          bHasQuestAvailable = true;
       }
       if(hasQuestBit(TOG_HAS_MONK_RED) &&
 	 !hasQuestBit(TOG_MONK_BLACK_STARTED) &&
@@ -473,7 +516,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	 getLevel(Class)==50){
 	if(!silent)
 	  gm->doSay("You are now eligible to quest for your black sash.  Say \"black sash\" for more information.");
-	setQuestBit(TOG_MONK_BLACK_ELIGIBLE);
+
+        if (gm)
+	  setQuestBit(TOG_MONK_BLACK_ELIGIBLE);
+        else if (getLevel(Class) == 50)
+          bHasQuestAvailable = true;
       }
       break;
     case SHAMAN_LEVEL_IND:
@@ -483,6 +530,7 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	  gm->doSay("<B>You will now be subject to penalty if you let<1>");
 	  gm->doSay("<B>your lifeforce fall to 0.<1>");
 	}
+        bHasQuestAvailable = true;
       }
       if (getLevel(Class)>=15 &&
             !hasQuestBit(TOG_ELIGIBLE_JUJU) &&
@@ -497,7 +545,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	  gm->doSay("It will aid in your communications with the loa as well as store components.");
 	  gm->doSay("Say 'juju bag' if you want more information on this quest.");
 	}
-	setQuestBit(TOG_ELIGIBLE_JUJU);
+
+        if (gm)
+	  setQuestBit(TOG_ELIGIBLE_JUJU);
+        else if (getLevel(Class) == 15)
+          bHasQuestAvailable = true;
       }
       if (getLevel(Class)>=30 &&
             !hasQuestBit(TOG_TOTEM_MASK_ELIGIBLE) &&
@@ -530,7 +582,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	  gm->doSay("It is believed that Gandolfo lives in a small hut in Brazzed-Dum.");
 	  gm->doSay("I wish I knew more to help you.");
 	}
-	setQuestBit(TOG_TOTEM_MASK_ELIGIBLE);
+
+        if (gm)
+	  setQuestBit(TOG_TOTEM_MASK_ELIGIBLE);
+        else if (getLevel(Class) == 30)
+          bHasQuestAvailable = true;
       }
       break;
     case MAGE_LEVEL_IND:
@@ -548,7 +604,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	  gm->doSay("want to attempt it.");
 	  gm->doSay("Say 'magician's belt' if you want more information on this quest.");
 	}
-	setQuestBit(TOG_MAGE_BELT_ELIGIBLE);
+
+        if (gm)
+	  setQuestBit(TOG_MAGE_BELT_ELIGIBLE);
+        else if (getLevel(Class) == 10)
+          bHasQuestAvailable = true;
       }
       if (getLevel(Class)>=25 && 
             !hasQuestBit(TOG_ELIGIBLE_MAGE_ROBE) &&
@@ -565,7 +625,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
           gm->doSay("If you wish to undertake this task...");
           gm->doSay("Go see the Spellcrafter in the Mage Academy.");
         }
-        setQuestBit(TOG_ELIGIBLE_MAGE_ROBE);
+
+        if (gm)
+          setQuestBit(TOG_ELIGIBLE_MAGE_ROBE);
+        else if (getLevel(Class) == 25)
+          bHasQuestAvailable = true;
       }
       break;
 
@@ -589,7 +653,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	  gm->doSay("I wish for you to go and speak with him, he has a task for you.");
 	  gm->doSay("He can be found observing the mallards nest.  Ask him about the <w>ranger's first quest<1>.");
 	}
-	setQuestBit(TOG_RANGER_FIRST_ELIGIBLE);
+
+        if (gm)
+	  setQuestBit(TOG_RANGER_FIRST_ELIGIBLE);
+        else if (getLevel(Class) == 7);
+          bHasQuestAvailable = true;
       }
       if (getLevel(Class) >= 14 &&
          hasQuestBit(TOG_RANGER_FIRST_FINISHED) &&
@@ -611,7 +679,11 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	  gm->doSay("Seek out Jed the Hermit within the valley that is southwest of Grimhaven.");
 	  gm->doSay("Ask him about the <W>hunter's belt<1>.");
 	}
-	setQuestBit(TOG_ELIGIBLE_RANGER_L14);
+
+        if (gm)
+	  setQuestBit(TOG_ELIGIBLE_RANGER_L14);
+        else if (getLevel(Class) == 14)
+          bHasQuestAvailable = true;
       }
       break;
     case WARRIOR_LEVEL_IND:
@@ -629,12 +701,20 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
           gm->doSay("Are you the ready to face your greatest test?");
           gm->doSay("Say 'I am ready' if you are ready to undertake this task.");
 	}
-	setQuestBit(TOG_ELIGIBLE_WARRIOR_L41);
+
+        if (gm)
+	  setQuestBit(TOG_ELIGIBLE_WARRIOR_L41);
+        else if (getLevel(Class) == 40)
+          bHasQuestAvailable = true;
       }
       break;
     default:
       break;
   }
+
+  if (bHasQuestAvailable)
+    sendTo("You have a sinking feeling you need to see your guildmaster over something important...\n\r");
+
   doSave(SILENT_YES);
 }
 

@@ -904,8 +904,13 @@ void gain_exp(TBeing *ch, double gain, int dam)
     // do this last, so as not to mess up predefined values
     if ((ch->getExp() >= peak) &&
 	(ch->GetMaxLevel() < MAX_MORT)) {
+      TPerson * tPerson = dynamic_cast<TPerson *>(ch);
+
       ch->raiseLevel(Class);
       ch->sendTo(COLOR_BASIC, "<W>You advance a level!<1>\n\r");
+
+      if (tPerson)
+        tPerson->setSelectToggles(NULL, Class, SILENT_YES);
 
       if(ch->hasClass(CLASS_MONK))
 	ch->remQuestBit(TOG_MONK_PAID_TABUDA);
