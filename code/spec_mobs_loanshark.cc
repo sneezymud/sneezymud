@@ -148,7 +148,8 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       while(db.fetchRow()){
 	due=whenDue(convertTo<int>(db["granted_time"]), convertTo<int>(db["term"]));
 	
-	amt=calcInterest(amt, convertTo<int>(db["granted_time"]),
+	amt=calcInterest(convertTo<int>(db["amt"]), 
+			 convertTo<int>(db["granted_time"]),
 			 convertTo<int>(db["term"]), 
 			 convertTo<float>(db["rate"]),
 			 convertTo<float>(db["default_charge"]));
