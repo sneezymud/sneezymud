@@ -9,7 +9,7 @@
 ###############################################################################
 NAME = sneezy.2
 VERSION_FILE = lib/txt/version.new
-
+NAME2 = sneezy.insure
 
 ###############################################################################
 #                                Type-Defines                                 #
@@ -51,13 +51,17 @@ CFLAGS +=-g             # debugger
 CFLAGS +=-DLINUX        # compiling on Linux
 # CFLAGS +=-DSLOW       # compiling on a slow processor machine
 CFLAGS +=-DFAST         # compiling on a fast processor machine
+CFLAGS +=-DSNEEZY2000   # activation of sneezy version 5.2
 
 ifdef BATOPR
 #  CFLAGS +=-O4            # optimize code
   OBJDIR = bat_objs/
 else
   ifdef USEINSURE
-    CFLAGS +=-O4            # optimize code
+#    CFLAGS +=-O4            # optimize code
+#  with the current .psrc file the O4 flag is ignored
+#  see the Parasoft Manual for details
+
     OBJDIR = insure_objs/
   else
     CFLAGS +=-O4            # optimize code
@@ -108,8 +112,8 @@ LDFLAGS +=-L/usr/lib # specify this directory to look in
 # LDFLAGS +=-Bdynamic -lg++
 # LDFLAGS +=-bstatic -lg++
 # LDFLAGS +=-lg++
-# LDFLAGS +=/usr/pubsw/lib/libg++.a # enable for insight
-# LDFLAGS +=/usr/lib/libg++.a # enable for insight
+# LDFLAGS +=/usr/pubsw/lib/libg++.a # enable for insight -j
+# LDFLAGS +=/usr/lib/libg++.a # enable for insight -j
 LDFLAGS +=-lstdc++
 # LDFLAGS +=/usr/lib/libstdc++.so.2.8
 # LDFLAGS +=-bstatic -lstdc++
@@ -143,74 +147,94 @@ LDFLAGS +=-lmysqlclient
 ###############################################################################
 
 OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
-	alignment_deity.o ansi.o appliedsub.o armor.o armor_wand.o arrow.o \
-	attribute.o audio.o bag.o bandaid.o base_clothing.o base_corpse.o \
-	base_cup.o base_light.o base_weapon.o bed.o being.o blackjack.o \
-	board.o boat.o body.o book.o bounty_hunter.o bow.o breath.o cards.o \
-	chest.o client.o cmd_bash.o cmd_bodyslam.o cmd_charge.o cmd_chop.o \
+	alignment_deity.o ansi.o \
+	being.o blackjack.o body.o \
+	bounty_hunter.o breath.o \
+	cards.o client.o \
+	cmd_attribute.o cmd_show.o \
+	cmd_bash.o cmd_bodyslam.o cmd_charge.o cmd_chop.o \
 	cmd_compare.o cmd_consider.o \
 	cmd_deathstroke.o cmd_disarm.o cmd_dissect.o \
-	cmd_doorbash.o cmd_feigndeath.o cmd_grapple.o cmd_headbutt.o \
-	cmd_jump.o \
+	cmd_doorbash.o cmd_egotrip.o \
+	cmd_feigndeath.o cmd_get.o cmd_grapple.o cmd_headbutt.o \
+	cmd_help.o cmd_jump.o \
 	cmd_kick.o cmd_kneestrike.o cmd_look.o cmd_low.o \
 	cmd_mend_limb.o cmd_message.o \
 	cmd_news.o \
 	cmd_quest.o cmd_quivpalm.o cmd_rename.o cmd_rescue.o cmd_save.o \
-	cmd_score.o cmd_sedit.o cmd_set.o cmd_stab.o cmd_stat.o cmd_steal.o \
-	cmd_stomp.o cmd_testcode.o cmd_testfight.o \
+	cmd_score.o cmd_sedit.o cmd_set.o cmd_spin.o cmd_stab.o cmd_stat.o cmd_steal.o \
+	cmd_stomp.o cmd_testcode.o cmd_testfight.o cmd_trophy.o\
 	cmd_visible.o cmd_who.o \
 	cmd_zonefile.o \
 	cmd_zones.o color.o colorstring.o \
 	combat.o comm.o commodity.o components.o connect.o constants.o \
-	container.o corpse.o craps.o crazyeights.o create_engine.o \
+	craps.o crazyeights.o create_engine.o \
 	create_mobs.o create_objs.o create_rooms.o crit_combat.o damage.o \
 	db.o disc_adventuring.o disc_aegis.o disc_afflictions.o disc_air.o \
 	disc_alchemy.o disc_animal.o disc_blunt.o disc_brawling.o \
 	disc_cleric.o disc_combat.o disc_cure.o disc_deikhan.o \
-	disc_draining.o disc_earth.o disc_fattacks.o disc_fire.o \
+	disc_earth.o disc_fattacks.o disc_fire.o \
 	disc_hand_of_god.o disc_hth.o disc_leverage.o disc_looting.o \
 	disc_mage.o disc_meditation.o disc_mindbody.o disc_monk.o \
-	disc_mounted.o disc_murder.o disc_nature.o disc_physical.o \
-	disc_pierce.o disc_ranged.o disc_ranger.o disc_shaman.o \
+	disc_mounted.o disc_murder.o disc_physical.o disc_nature.o \
+	disc_pierce.o disc_ranged.o disc_ranger.o disc_shaman.o disc_shaman_armadillo.o \
+	disc_shaman_frog.o disc_shaman_spider.o disc_shaman_control.o \
 	disc_slash.o disc_smythe.o disc_sorcery.o disc_spirit.o \
 	disc_survival.o disc_theology.o disc_thief.o disc_warrior.o \
 	disc_water.o disc_wrath.o discipline.o disease.o doors.o drawpoker.o \
-	drinkcon.o drug_container.o drug.o edit.o egotrip.o enum.o equip.o \
+	drinkcon.o drug_container.o drug.o edit.o enum.o equip.o \
 	expandable_container.o faction.o flame.o food.o fuel.o gaining.o \
 	gemstone.o general_weapon.o 
 
-OBJ2 = gin.o handler.o hearts.o help.o hospital.o immortal.o immunity.o \
+OBJ2 = gin.o handler.o hearts.o hospital.o immortal.o immunity.o \
 	indexdata.o info.o inventory.o jewelry.o key.o keyring.o light.o \
 	limbs.o limits.o loadset.o luck.o magic_item.o magic_off.o \
 	magic_skills.o magicutils.o mail.o makecorpse.o materials.o \
 	meeting.o mob_loader.o mobact.o money.o monster.o movement.o \
-	multiclass.o newbie.o note.o obj.o offense.o oldlimbs.o oldrace.o \
+	multiclass.o newbie.o note.o obj.o \
+	obj_armor.o obj_armor_wand.o obj_arrow.o obj_appliedsub.o \
+	obj_audio.o \
+	obj_bag.o obj_bandaid.o obj_base_clothing.o \
+	obj_base_container.o obj_base_corpse.o \
+	obj_base_cup.o obj_base_light.o obj_base_weapon.o obj_bed.o \
+	obj_board.o obj_boat.o obj_book.o obj_bow.o \
+	obj_chest.o obj_corpse.o \
+	obj_open_container.o \
+	obj_scroll.o obj_seethru.o obj_smoke.o obj_spellbag.o \
+	obj_staff.o obj_statue.o obj_symbol.o \
+	obj_table.o obj_tool.o obj_trap.o \
+	obj_trash.o obj_treasure.o obj_tree.o \
+	obj_vial.o \
+	obj_wand.o obj_window.o obj_worn.o \
+	offense.o oldlimbs.o oldrace.o \
 	opal.o opinion.o organic.o other.o other_obj.o parse.o peelpk.o \
 	pen.o periodic.o pets.o physics.o player_corpse.o player_data.o \
 	poker.o pool.o portal.o posse.o potion.o quiver.o race.o range.o \
-	real_container.o rent.o repair.o response.o riding.o room.o \
-	scroll.o see_thru.o shop.o show.o signals.o skill_dam.o skills.o \
-	slots.o smoke.o socket.o sound.o spec_mobs.o \
+	rent.o repair.o response.o riding.o room.o \
+	shop.o show.o signals.o skill_dam.o skills.o \
+	slots.o socket.o sound.o spec_mobs.o \
 	spec_mobs_doppleganger.o spec_mobs_earthquake_digger.o \
         spec_mobs_goring.o \
-	spec_objs.o \
+	spec_objs.o spec_objs_jambiya.o \
 	spec_objs_lightning_rod.o \
 	spec_objs_blind.o spec_objs_manadrain.o \
 	spec_rooms.o \
         spec_rooms_sleeptag.o \
 	spell_info.o \
-	spell_num.o spell_parser.o spellbag.o \
+	spell_num.o spell_parser.o \
 	spellstore.o \
-	spelltask.o staff.o \
-	statistics.o stats.o statue.o structs.o symbol.o systemtask.o \
-	table.o talk.o task.o task_attune.o task_lightfire.o task_scribe.o \
+	spelltask.o \
+	statistics.o stats.o structs.o systemtask.o \
+	talk.o task.o task_attune.o task_lightfire.o task_fishing.o task_sacrifice.o task_scribe.o \
+	task_extinguish_my_ass.cc \
 	task_skin.o task_trap.o task_brew.o task_meditate.o task_search.o \
 	task_sleep.o task_charge.o task_penance.o task_seekwater.o \
 	task_smythe.o task_dull.o task_picklock.o task_sharpen.o \
 	task_spell_friends.o task_get.o task_rest.o task_sit.o task_track.o \
-	task_whittle.o task_stavecharge.o thing.o toggle.o tool.o trap.o \
-	trash.o treasure.o tree.o utility.o vial.o wand.o weather.o \
-	window.o wiz_data.o wiz_powers.o worn.o
+	task_whittle.o task_stavecharge.o thing.o toggle.o trap.o \
+	task_trance_of_blades.o \
+	utility.o weather.o sys_loot.o \
+	wiz_data.o wiz_powers.o
 
 #	rewrite_obj_file.o \
 
@@ -218,8 +242,10 @@ OBJ := $(sort $(addprefix $(OBJDIR), $(OBJ)))
 OBJ2 := $(sort $(addprefix $(OBJDIR), $(OBJ2)))
 
 ifdef USEINSURE
-all: insure.o
-	$(CC) -o jjb insure.o $(LDFLAGS)
+all: $(NAME2)
+#insure.o
+#(CC) -o jjb insure.o $(LDFLAGS)
+
 else
 all: $(NAME)
 endif
@@ -232,6 +258,14 @@ $(NAME) : $(OBJ) $(OBJ2)
 	@rm -f $(VERSION_FILE)
 	@echo "`date`" > $(VERSION_FILE)
 	@echo \*\*\* Make Process Complete
+	@echo "`date`"
+
+$(NAME2) : $(OBJ) $(OBJ2)
+	@echo \*\*\* Making Final Link: $(NAME2)
+	@$(CC) -o $(NAME2) $(OBJ) $(OBJ2) $(LDFLAGS)
+	@rm -f $(VERSION_FILE)
+	@echo "`date`" > $(VERSION_FILE)
+	@echo \*\*\* Insure Compile Process Complete
 	@echo "`date`"
 
 clean:
@@ -253,19 +287,20 @@ DISC_HEADS   = disc_adventuring.h disc_aegis.h disc_afflictions.h \
                disc_brawling.h disc_meditation.h disc_combat.h disc_cleric.h \
                disc_cures.h disc_deikhan.h disc_deikhan_aegis.h \
                disc_deikhan_cures.h disc_deikhan_fight.h disc_mounted.h \
-               disc_deikhan_wrath.h disc_draining.h disc_earth.h  \
+               disc_deikhan_wrath.h disc_earth.h  \
                disc_fire.h disc_hand_of_god.h disc_hth.h  \
                disc_leverage.h disc_fattacks.h disc_looting.h disc_lore.h  \
-               disc_mage.h disc_monk.h disc_murder.h disc_nature.h  \
+               disc_mage.h disc_monk.h disc_murder.h  \
                disc_pierce.h disc_plants.h disc_physical.h \
-               disc_poisons.h disc_ranged.h disc_ranger.h \
-               disc_ranger_fight.h disc_shaman.h  \
-               disc_shaman_alchemy.h disc_shaman_fight.h  \
-               disc_shaman_healing.h disc_smythe.h disc_sorcery.h \
+               disc_poisons.h disc_ranged.h disc_ranger.h disc_nature.h \
+               disc_ranger_fight.h disc_shaman.h disc_shaman_armadillo.h \
+	       disc_shaman_frog.h disc_shaman_skunk.h disc_shaman_spider.h \
+               disc_shaman_alchemy.h disc_shaman_control.h \
+               disc_smythe.h disc_sorcery.h \
                disc_spirit.h disc_stealth.h disc_survival.h   \
                disc_mindbody.h disc_theology.h disc_thief.h  \
                disc_thief_fight.h disc_totem.h disc_traps.h  \
-               disc_undead.h disc_warrior.h disc_water.h disc_wrath.h
+               disc_warrior.h disc_water.h disc_wrath.h
 
 $(OBJDIR)%.o : %.cc $(GEN_HEADS)
 	@echo Making \"$<\"
@@ -279,14 +314,8 @@ $(OBJDIR)ai_commands.o: combat.h
 $(OBJDIR)ai_reactions.o: combat.h
 $(OBJDIR)ai_responses.o: combat.h parse.h
 $(OBJDIR)ai_utility.o: combat.h
-$(OBJDIR)appliedsub.o: create_engine.h
-$(OBJDIR)base_clothing.o: shop.h
-$(OBJDIR)base_weapon.o: combat.h statistics.h shop.h
-$(OBJDIR)bed.o: $(CASINO_HEADS)
 $(OBJDIR)blackjack.o: $(CASINO_HEADS)
-$(OBJDIR)board.o: board.h
 $(OBJDIR)bounty_hunter.o: shop.h
-$(OBJDIR)bow.o: range.h
 $(OBJDIR)cards.o: $(CASINO_HEADS)
 $(OBJDIR)client.o: statistics.h
 $(OBJDIR)cmd_bash.o: combat.h
@@ -298,17 +327,21 @@ $(OBJDIR)cmd_deathstroke.o: combat.h
 $(OBJDIR)cmd_disarm.o: combat.h
 $(OBJDIR)cmd_dissect.o: components.h disc_adventuring.h
 $(OBJDIR)cmd_doorbash.o: disc_warrior.h combat.h
+$(OBJDIR)cmd_egotrip.o: disc_fire.h disc_aegis.h
+$(OBJDIR)cmd_get.o: games.h
 $(OBJDIR)cmd_kick.o: combat.h
 $(OBJDIR)cmd_kneestrike.o: combat.h
 $(OBJDIR)cmd_feigndeath.o: combat.h
 $(OBJDIR)cmd_grapple.o: combat.h
 $(OBJDIR)cmd_headbutt.o: combat.h
+$(OBJDIR)cmd_help.o: components.h help.h statistics.h
 $(OBJDIR)cmd_look.o: games.h
 $(OBJDIR)cmd_low.o: statistics.h combat.h
 $(OBJDIR)cmd_news.o: statistics.h
 $(OBJDIR)cmd_quivpalm.o: combat.h
 $(OBJDIR)cmd_sedit.o: combat.h dirsort.h
 $(OBJDIR)cmd_set.o: statistics.h
+$(OBJDIR)cmd_spin.o: combat.h
 $(OBJDIR)cmd_stab.o: combat.h
 $(OBJDIR)cmd_steal.o: disc_looting.h
 $(OBJDIR)cmd_stomp.o: combat.h
@@ -324,11 +357,12 @@ $(OBJDIR)craps.o: $(CASINO_HEADS)
 $(OBJDIR)crazyeights.o: $(CASINO_HEADS)
 $(OBJDIR)create_mobs.o: mail.h statistics.h combat.h
 $(OBJDIR)create_engine.o: create_engine.h
-$(OBJDIR)create_objs.o: dirsort.h components.h
+$(OBJDIR)create_objs.o: dirsort.h components.h statistics.h
 $(OBJDIR)create_rooms.o: room.h
 $(OBJDIR)crit_combat.o: combat.h statistics.h
 $(OBJDIR)damage.o: combat.h statistics.h
-$(OBJDIR)db.o: components.h help.h board.h statistics.h mail.h loadset.h makefile
+$(OBJDIR)db.o: components.h help.h board.h statistics.h mail.h loadset.h
+$(OBJDIR)db.o: sys_loot.h
 $(OBJDIR)disc_adventuring.o: disc_adventuring.h combat.h
 $(OBJDIR)disc_aegis.o: disc_aegis.h combat.h
 $(OBJDIR)disc_afflictions.o: disc_afflictions.h combat.h
@@ -343,7 +377,6 @@ $(OBJDIR)disc_cleric.o: disc_cleric.h
 $(OBJDIR)disc_combat.o: disc_combat.h components.h combat.h
 $(OBJDIR)disc_cure.o: disc_cures.h combat.h spelltask.h
 $(OBJDIR)disc_deikhan.o: disc_deikhan.h combat.h
-$(OBJDIR)disc_draining.o: disc_draining.h combat.h
 $(OBJDIR)disc_earth.o: disc_earth.h combat.h spelltask.h
 $(OBJDIR)disc_fire.o: disc_fire.h spelltask.h combat.h
 $(OBJDIR)disc_hand_of_god.o: disc_hand_of_god.h combat.h
@@ -356,6 +389,10 @@ $(OBJDIR)disc_monk.o: disc_monk.h combat.h
 $(OBJDIR)disc_mounted.o: disc_mounted.h
 $(OBJDIR)disc_murder.o: disc_murder.h combat.h spelltask.h
 $(OBJDIR)disc_nature.o: disc_nature.h combat.h spelltask.h
+$(OBJDIR)disc_shaman_armadillo.o: disc_shaman_armadillo.h combat.h spelltask.h
+$(OBJDIR)disc_shaman_frog.o: disc_shaman_frog.h combat.h spelltask.h
+$(OBJDIR)disc_shaman_spider.o: disc_shaman_spider.h combat.h spelltask.h
+$(OBJDIR)disc_shaman_control.o: disc_shaman_control.h combat.h spelltask.h
 $(OBJDIR)disc_physical.o: disc_pierce.h
 $(OBJDIR)disc_pierce.o: disc_pierce.h
 $(OBJDIR)disc_ranged.o: disc_ranged.h
@@ -375,17 +412,15 @@ $(OBJDIR)disc_wrath.o: disc_wrath.h combat.h
 $(OBJDIR)discipline.o: $(DISC_HEADS) components.h combat.h spelltask.h
 $(OBJDIR)drawpoker.o: $(CASINO_HEADS)
 $(OBJDIR)edit.o: socket.h
-$(OBJDIR)egotrip.o: disc_fire.h disc_aegis.h
 $(OBJDIR)food.o: shop.h
 $(OBJDIR)gaining.o: statistics.h
 $(OBJDIR)gin.o: $(CASINO_HEADS)
 $(OBJDIR)handler.o: combat.h range.h connect.h shop.h
 $(OBJDIR)hearts.o: $(CASINO_HEADS)
-$(OBJDIR)help.o: components.h help.h statistics.h
 $(OBJDIR)hospital.o: combat.h
 $(OBJDIR)immortal.o: statistics.h mail.h $(CASINO_HEADS) combat.h
-$(OBJDIR)immortal.o: socket.h systemtask.h disc_nature.h shop.h
-$(OBJDIR)indexdata.o: statistics.h makefile
+$(OBJDIR)immortal.o: socket.h systemtask.h disc_shaman_armadillo.h disc_nature.h shop.h
+$(OBJDIR)indexdata.o: statistics.h
 $(OBJDIR)info.o: statistics.h $(CASINO_HEADS) combat.h components.h
 $(OBJDIR)info.o: skillsort.h
 $(OBJDIR)inventory.o: statistics.h disc_looting.h $(CASINO_HEADS)
@@ -402,6 +437,14 @@ $(OBJDIR)money.o: statistics.h
 $(OBJDIR)monster.o: statistics.h
 $(OBJDIR)movement.o: combat.h $(CASINO_HEADS) disc_looting.h
 $(OBJDIR)obj.o: shop.h
+$(OBJDIR)obj_appliedsub.o: create_engine.h
+$(OBJDIR)obj_base_clothing.o: shop.h
+$(OBJDIR)obj_base_weapon.o: combat.h statistics.h shop.h
+$(OBJDIR)obj_bed.o: $(CASINO_HEADS)
+$(OBJDIR)obj_board.o: board.h
+$(OBJDIR)obj_bow.o: range.h
+$(OBJDIR)obj_open_container.o: disc_looting.h
+$(OBJDIR)obj_symbol.o: shop.h
 $(OBJDIR)offense.o: $(CASINO_HEADS) combat.h
 $(OBJDIR)organic.o: shop.h
 $(OBJDIR)other.o: $(DISC_HEADS) mail.h range.h $(CASINO_HEADS) skillsort.h
@@ -456,7 +499,7 @@ $(OBJDIR)spell_parser.o: $(DISC_HEADS)
 $(OBJDIR)spelltask.o: $(DISC_HEADS) combat.h spelltask.h
 $(OBJDIR)statistics.o: statistics.h systemtask.h
 $(OBJDIR)structs.o: combat.h board.h statistics.h $(CASINO_HEADS)
-$(OBJDIR)symbol.o: shop.h
+$(OBJDIR)sys_loot.o: sys_loot.h
 $(OBJDIR)systemtask.o: systemtask.h
 $(OBJDIR)task.o: disc_alchemy.h
 $(OBJDIR)task.o: disc_looting.h disc_air.h
