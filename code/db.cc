@@ -236,8 +236,6 @@ void bootDb(void)
   bootPulse("Generating index tables for mobile file.");
   generate_mob_index();
 
-  vlogf(LOG_PEEL, "got here");
-
   bootPulse("Opening object file.");
   if (!(obj_f = fopen(OBJ_FILE, "r"))) {
     perror("boot");
