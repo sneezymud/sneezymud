@@ -4715,7 +4715,7 @@ void TBeing::doInfo(const char *arg)
       sendTo(fmt("  Idea file accessed %d times.\n\r") % idea_used_num);
     } else if (is_abbrev(arg1, "objects")) {
       TObj *o;
-      int count[MAX_OBJ_TYPES], i=0, li=0;
+      int count[MAX_OBJ_TYPES], i=0, li=0, total=0;
       
       for(i=0;i<MAX_OBJ_TYPES;++i)
 	count[i]=0;
@@ -4735,9 +4735,12 @@ void TBeing::doInfo(const char *arg)
 
 	buf = fmt("%s[%6i] %-17s\n\r") %
 		buf % count[li] % ItemInfo[li]->name;
+	total += count[li];
 	count[li]=-1;
       }
 
+      buf = fmt("%s[%6i] %-17s\n\r") %
+	buf % total % "Total";
 
       desc->page_string(buf);
     }
