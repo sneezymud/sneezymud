@@ -409,9 +409,41 @@ void check_rooms(int MAXROOMS){
   }
 }
 
+map <int,int> makeroomcount(FILE *log, int &max){
+  sstring buf;
+  unsigned int s, e;
+  map <int,int> roomcount;
+  char sbuf[1024];
+
+  while(!feof(log)){
+    fscanf(log, "%[^\n]", sbuf);
+    fscanf(log, "\n");
+    buf=sbuf;
+
+    if((s=buf.find_first_of("::", 0))==sstring::npos)
+      continue;
+
+    if((s=buf.find_first_of("(", s))==sstring::npos)
+      continue;
+
+    if((e=buf.find_first_of("):", s))==sstring::npos)
+      continue;
+
+    if(convertTo<int>(buf.substr(s+1,e-s+1))==0)
+      continue;
+
+    roomcount[convertTo<int>(buf.substr(s+1,e-s+1))]++;
+
+    if(roomcount[convertTo<int>(buf.substr(s+1,e-s+1))] > max)
+      max=roomcount[convertTo<int>(buf.substr(s+1,e-s+1))];
+
+  }
+
+  return roomcount;
+}
 
 
-void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool sideways)
+void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool sideways, FILE *logf)
 {
   NODE *t;
   int minx=0, maxx=0, miny=0, maxy=0, mapsize=0, mapwidth, mapheight, loc;
@@ -420,6 +452,10 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
   int i=0, j, k, l, tmp;
   FILE *out=fopen("imageout.raw", "wb");
   const int CELLSIZE=3;
+  map <int,int> roomcount;
+  int max=0;
+
+  roomcount=makeroomcount(logf, max);
 
   if(sideways){
     for(t=head;t;t=t->next){
@@ -428,7 +464,6 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
       t->z=tmp;
     }
   }
-
 
   for(t=head;t;t=t->next){
     if(t->z<MINLEVEL || t->z>MAXLEVEL) continue;
@@ -466,6 +501,40 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
     mapdata[loc*3]=sector_colors[t->sector][0];
     mapdata[(loc*3)+1]=sector_colors[t->sector][1];
     mapdata[(loc*3)+2]=sector_colors[t->sector][2];
+    
+    // color by popularity
+    if(logf){
+      float perc =  log(roomcount[t->num]) / log(max);
+      perc=1.0-perc;
+      float red, green, blue;
+      
+      if (perc < 0.5 && perc >= 0.25)
+	red = min(255.0, 255  * ((0.25 - (perc - 0.25)) / 0.25));
+      else if (perc < 0.25)
+	red = 255 ;
+      else
+	red = 0;
+      
+      if (perc > 0.5 && perc <= 0.75)
+	blue = min(255.0, 255 * ((perc - 0.50) / 0.25));
+      else if (perc > 0.75)
+	blue = 255;
+      else
+	blue = 0;
+      
+      if (perc < 0.25)
+	green = min(255.0, 255 * (1 - ((0.25 - perc) / 0.25)));
+      else if (perc > 0.75)
+	green = min(255.0, 255 * (1 - ((perc - 0.75) / 0.25)));
+      else
+	green = 255;
+      
+      
+      mapdata[loc*3]=(int)red;
+      mapdata[(loc*3)+1]=(int)green;
+      mapdata[(loc*3)+2]=(int)blue;
+    }
+
 
     // color the exits
     //0=n, 1=e, 2=s, 3=w, 4=u, 5=d 6=ne 7=nw 8=se 9=sw
@@ -515,7 +584,7 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
 
   fwrite(newmap, mapsize, 1, out);
   fclose(out);
-  sprintf(buff, "/usr/local/bin/rawtoppm -rgb %i %i imageout.raw | /usr/local/bin/pnmflip -tb | /usr/local/bin/ppmtogif > %s", mapwidth, mapheight, outputfile.c_str());
+  sprintf(buff, "/usr/local/bin/rawtoppm -rgb %i %i imageout.raw | /usr/local/bin/pnmflip -tb | /usr/local/bin/ppmtojpeg > %s", mapwidth, mapheight, outputfile.c_str());
   printf("%s\n", buff);
   system(buff);
   system("rm -f imageout.raw");
@@ -551,6 +620,8 @@ void makezonelist(FILE *zone){
   }
 }
 
+
+
 void usage(){
   printf("Syntax: amap <options>\n");
   printf("  -f <tinyfile>   - any room file will work.  the default is to\n");
@@ -566,6 +637,9 @@ void usage(){
   printf("  -z <z range>    - specify the z range to map, default -10,20\n");
   printf("  -o <file>       - specify the image output file default is\n");
   printf("                    imageout.gif in the current directory\n");
+  printf("  -p              - color code rooms by popularity instead of sector\n");
+  printf("  -l <file>       - specify a log file to use for popularity parsing\n");
+  printf("                    defaults to /mud/prod/lib/logs/logcurrent\n");
   printf("  -r <room range> - a list of room numbers to map, in the same\n");
   printf("                    format as the other tools.\n");
   printf("                    MUST BE THE LAST ARGUMENT\n");
@@ -581,17 +655,19 @@ void usage(){
 
 int main(int argc, char **argv)
 {
-  FILE *tiny;
+  FILE *tiny, *logf=NULL;
   FILE *zone=fopen("/mud/code/lib/tinyworld.zon", "rt");
   NODE *last=NULL, *t;
   int SCALEBY=2, rcount, ch, zmax=20, zmin=-10, tmp;
   vector <int> roomrange_t;
   map <int, bool> roomrange;
   bool use_range=false, checkrooms_p=false, quiet=false, sideways=false;
+  bool popularity=false;
   int headroom=100;
   sstring infile="/mud/code/lib/tinyworld.wld", buf, outputfile="imageout.gif";
+  sstring logfile="/mud/prod/lib/logs/logcurrent";
 
-  while ((ch = getopt(argc, argv, "r:f:s:ch:qz:o:x")) != -1){
+  while ((ch = getopt(argc, argv, "r:f:s:ch:qz:o:xl:p")) != -1){
     switch (ch) {
       case 'r':
 	parse_num_args(argc-optind+1, argv+optind-1, roomrange_t);
@@ -632,12 +708,24 @@ int main(int argc, char **argv)
       case 'x':
 	sideways=true;
 	break;
+      case 'p':
+	popularity=true;
+	break;
+      case 'l':
+	logfile=optarg;
+	break;
       case '?':
       default:
 	usage();
 	exit(0);
     }
   }
+
+  if(popularity){
+    logf=fopen(logfile.c_str(), "rt");
+    printf("Coloring by popularity using %s\n", logfile.c_str());
+  }
+
 
   printf("Using '%s' as room file.\n", infile.c_str());
   tiny=fopen(infile.c_str(), "rt");
@@ -703,7 +791,7 @@ int main(int argc, char **argv)
   if(checkrooms_p)
     check_rooms(rcount);
     
-  createmap(zmin, zmax, SCALEBY, outputfile, sideways);
+  createmap(zmin, zmax, SCALEBY, outputfile, sideways, logf);
 
   t=head;
   while(t){
