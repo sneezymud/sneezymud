@@ -5493,7 +5493,7 @@ int Descriptor::sendLogin(const char *arg)
       // strip off the terminating newline char
       buf[strlen(buf) - 1] = '\0';
 
-      sprintf(buf2 + strlen(buf2), "\n\r\n\rWelcome to %s (a.k.a. SneezyMUD):\n\r%s :\n\r", MUD_NAME_VERS, buf);
+      sprintf(buf2 + strlen(buf2), "\n\r\n\rWelcome to %s:\n\r%s :\n\r", MUD_NAME_VERS, buf);
       fclose(fp);
     }
     sprintf(buf2 + strlen(buf2), "Celebrating nine years of quality mudding (est. 5-1-1992)\n\r\n\r");
