@@ -447,22 +447,14 @@ void TMonster::mageComponentLoader(void)
     if (!(obj = read_object(comp,VIRTUAL)))
       continue;
 
-    // make brew comps not load as much
-    TComponent *tcom =dynamic_cast<TComponent *>(obj);
-    if (tcom && tcom->isComponentType(COMP_POTION) &&
-       ::number(0,2)) {
-      num = -1;
-      delete tcom;
-      continue;
-    }
-    // skip comps that are "disabled"
+
     if (tcom && tcom->isComponentType(COMP_SPELL) && spell == TYPE_UNDEFINED) {
       num = -1;
       delete tcom;
       continue;
     }
-    // skip scribe/brew comps
-    if (tcom->isComponentType(COMP_POTION | COMP_SCRIBE)) {
+    // skip scribe comps
+    if (tcom->isComponentType(COMP_SCRIBE | COMP_POTION)) {
       num = -1;
       delete tcom;
       continue;
@@ -561,8 +553,8 @@ void TMonster::rangerComponentLoader(void)
       delete tcom;
       continue;
     }
-    // skip scribe/brew comps
-    if (tcom->isComponentType(COMP_POTION | COMP_SCRIBE)) {
+    // skip scribe comps
+    if (tcom->isComponentType(COMP_SCRIBE | COMP_POTION)) {
       num = -1;
       delete tcom;
       continue;
@@ -657,6 +649,13 @@ void TMonster::shamanComponentLoader(void)
           if (::number(0,9) < 5)
             num = -1;
           break;
+	case COMP_GILLS_OF_FLESH_BREW:
+	case COMP_DISPEL_MAGIC_BREW:
+	case COMP_TRAIL_SEEK_BREW:
+	case COMP_INFRAVISION_BREW:
+	case COMP_SORCERERS_GLOBE_BREW:
+	case COMP_SENSE_LIFE_BREW:
+	case COMP_INFRAVISION2_BREW:
 	case COMP_CELERITE:
         case COMP_RAZE:
         case COMP_CARDIAC_STRESS:
@@ -666,15 +665,8 @@ void TMonster::shamanComponentLoader(void)
           if (::number(0,19))
             num = -1;
           break;
-	case COMP_DISPEL_MAGIC_BREW:
-	case COMP_TRAIL_SEEK_BREW:
-	case COMP_INFRAVISION_BREW:
-	case COMP_SORCERERS_GLOBE_BREW:
-	case COMP_SENSE_LIFE_BREW:
-	case COMP_INFRAVISION2_BREW:
 	case COMP_INVISIBILITY_BREW:
 	case COMP_TRUE_SIGHT_BREW:
-	case COMP_GILLS_OF_FLESH_BREW:
           // keep VERY rare
           if (::number(0,29))
             num = -1;
