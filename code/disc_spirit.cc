@@ -51,6 +51,16 @@ int knot(TBeing *caster, TBeing *victim, int, byte bKnown)
   TThing *t;
 
   if (bSuccess(caster,bKnown,SPELL_KNOT)) {
+  // I added this to prevent pkillers from seeking refuge in the 
+  // knot...jesus
+    if (caster->affectedBySpell(AFFECT_PLAYERKILL) ||
+        victim->affectedBySpell(AFFECT_PLAYERKILL)){
+      act("$d will not provide refuge to a murderer.",
+          TRUE, caster, NULL, NULL, TO_CHAR);
+      act("Nothing seems to happen.",
+          FALSE, caster, NULL, NULL, TO_ROOM);
+      return SPELL_FAIL;
+    }
     if (caster->roomp->isRoomFlag(ROOM_NO_PORTAL)) {
       caster->sendTo("The defenses of this area are too strong.\n\r");
       caster->nothingHappens(SILENT_YES);
