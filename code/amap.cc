@@ -9,6 +9,7 @@
 #include"stdsneezy.h"
 #include"lowtools.h"
 #include"parse.h"
+#include"database.h"
 
 // this code is totally janky, but it gets the job done - peel
 
@@ -159,6 +160,45 @@ bool isEnabled(int num)
   }
 
   return enabled;
+}
+
+NODE *read_room(TDatabase *db, TDatabase *dbexits)
+{
+  NODE *tmp=new NODE;
+
+  if(!tmp) {
+    fprintf(stderr, "read_room(): unable to allocate new NODE (tmp==NULL)\n");
+    return NULL;
+  }
+
+  do {
+    if(!db->fetchRow()){
+	fprintf(stderr, "read_room(): couldn't find a room\n");
+	return NULL;      
+    }
+
+    tmp->num=convertTo<int>((*db)["vnum"]);
+
+  } while(!isEnabled(tmp->num));
+
+  
+  strcpy(tmp->name, (*db)["name"]);
+
+  // parse sector type
+  tmp->sector=convertTo<int>((*db)["sector"]);
+
+  do{
+    if(convertTo<int>((*dbexits)["vnum"]) < tmp->num){
+      continue;
+    } else if(convertTo<int>((*dbexits)["vnum"]) > tmp->num){
+      break;
+    }
+
+    tmp->idirs[convertTo<int>((*dbexits)["direction"])]=convertTo<int>((*dbexits)["destination"]);
+  } while((*dbexits).fetchRow());
+
+
+  return tmp; 
 }
 
 
@@ -656,7 +696,7 @@ void usage(){
 
 int main(int argc, char **argv)
 {
-  FILE *tiny, *logf=NULL;
+  FILE *tiny=NULL, *logf=NULL;
   FILE *zone=fopen("/mud/code/lib/tinyworld.zon", "rt");
   NODE *last=NULL, *t;
   int SCALEBY=2, rcount, ch, zmax=20, zmin=-10, tmp;
@@ -665,8 +705,9 @@ int main(int argc, char **argv)
   bool use_range=false, checkrooms_p=false, quiet=false, sideways=false;
   bool popularity=false;
   int headroom=100;
-  sstring infile="/mud/code/lib/tinyworld.wld", buf, outputfile="imageout.jpg";
+  sstring infile, buf, outputfile="imageout.jpg";
   sstring logfile="/mud/prod/lib/logs/logcurrent";
+  TDatabase db(DB_SNEEZYBETA), dbexits(DB_SNEEZYBETA);
 
   while ((ch = getopt(argc, argv, "r:f:s:ch:qz:o:xl:p")) != -1){
     switch (ch) {
@@ -728,25 +769,43 @@ int main(int argc, char **argv)
   }
 
 
-  printf("Using '%s' as room file.\n", infile.c_str());
-  tiny=fopen(infile.c_str(), "rt");
-
-  if(!tiny){
-    printf("Unable to open tiny file.\n");
-    usage();
-    exit(0);
+  if(!infile.empty()){
+    printf("Using '%s' as room file.\n", infile.c_str());
+    tiny=fopen(infile.c_str(), "rt");
+    
+    if(!tiny){
+      printf("Unable to open tiny file.\n");
+      usage();
+      exit(0);
+    }
+  } else {
+    printf("Using sneezybeta database for room data.\n");
+    db.query("select * from room order by vnum");
+    dbexits.query("select * from roomexit order by vnum");
+    dbexits.fetchRow();
   }
 
-  printf("Making zone list.");
+  printf("Making zone list.\n");
   makezonelist(zone);
 
+  if(tiny){
+    head=read_room(tiny);
+  } else {
+    head=read_room(&db, &dbexits);
+  }
 
-  head=read_room(tiny);
   nodes[head->num]=head;
 
-  for(rcount=1; !feof(tiny); ++rcount){
-    if(!(t=read_room(tiny)))
-      break;
+
+  for(rcount=1; (!tiny || !feof(tiny)); ++rcount){
+    if(tiny){
+      if(!(t=read_room(tiny)))
+	break;
+    } else {
+      if(!(t=read_room(&db, &dbexits)))
+	break;
+    }      
+
 
     if(use_range && roomrange.count(t->num)==0)
       continue;
