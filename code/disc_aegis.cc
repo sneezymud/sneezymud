@@ -7,7 +7,7 @@
 
 void relive(TBeing *ch, TBeing *vict)
 {
-
+  affectedData aff;
   TThing *t;
   TPCorpse *corpse=NULL;
   sstring s;
@@ -50,13 +50,17 @@ void relive(TBeing *ch, TBeing *vict)
     int exp_perc=::number(1,25);  // 1-25% random chance  
     exp_perc += ch->getSkillValue(SPELL_RELIVE)/4;  // 1-25% based on skill
     vict->addToExp((corpse->getExpLost() * exp_perc)/100);
-    
-    // 25% chance of having 1-3 years age added
-    if(!::number(0,3)){
-      act("The ordeal has left you feeling aged.",
-	  FALSE, ch, NULL, vict, TO_VICT);
-      vict->age_mod += ::number(1,3);
-    }
+
+
+    aff.type = SPELL_RELIVE;
+    aff.duration = 7 * 24 * UPDATES_PER_MUDHOUR;
+    aff.modifier = 100;
+    aff.location = APPLY_AGE;
+    vict->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES);
+
+    act("The ordeal has left you feeling aged.",
+	FALSE, ch, NULL, vict, TO_VICT);
+
     corpse->objectDecay();
     delete corpse;
   } else {
