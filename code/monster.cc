@@ -545,7 +545,7 @@ int TMonster::lookForEngaged(const TBeing *ch)
 
 bool TMonster::isShopkeeper() const {
   if(spec==SPEC_SHOPKEEPER || spec==SPEC_REPAIRMAN ||
-     spec==SPEC_LOAN_SHARK)
+     spec==SPEC_LOAN_SHARK || spec==SPEC_BANKER)
     return true;
 
   return false;
