@@ -39,7 +39,7 @@ void PokerGame::poker_shuffle(const TBeing *ch)
   deck_inx = 0;
 }
 
-bool TBeing::checkPoker(bool inGame = false) const
+bool TBeing::checkPoker(bool inGame) const
 {
   if (in_room == ROOM_POKER && (inGame || (gPoker.index(this) > -1)))
     return true;

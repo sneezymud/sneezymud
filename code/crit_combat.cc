@@ -423,7 +423,7 @@ void TBeing::critHitEqDamage(TBeing *v, TThing *obj, int eqdam)
 // This will just be a big ass case statement based on random diceroll 
 // returns DELETE_VICT if v dead
 // mod is -1 from generic combat, mod == crit desired from immortal command.
-int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, spellNumT wtype, int *dam, int mod=-1)
+int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, spellNumT wtype, int *dam, int mod)
 {
   int crit_num, dicenum, crit_chance, new_wtype;
 

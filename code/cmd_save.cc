@@ -90,7 +90,7 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
   }
 }
 
-void TBeing::doSave(silentTypeT silent, const char *tArg = NULL)
+void TBeing::doSave(silentTypeT silent, const char *tArg)
 {
   objCost  tCost;
 

@@ -211,7 +211,7 @@ int HeartsGame::move_card(TBeing *ch, const char *arg)
   return TRUE;
 }
 
-bool TBeing::checkHearts(bool inGame = false) const
+bool TBeing::checkHearts(bool inGame) const
 {
   if (in_room == ROOM_HEARTS && (inGame || (gHearts.index(this) > -1)))
     return TRUE;

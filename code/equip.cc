@@ -110,7 +110,7 @@ bool TBeing::isWieldingWeapon()
   return FALSE;
 }
 
-bool TBeing::canUseEquipment(const TObj *o, silentTypeT silent, wearKeyT key=WEAR_KEY_NONE) const
+bool TBeing::canUseEquipment(const TObj *o, silentTypeT silent, wearKeyT key) const
 {
   bool held=false;
 

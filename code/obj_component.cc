@@ -3122,7 +3122,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   return tCost;
 }
 
-void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
+void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
 {
   if (false) {
     TObj::sellMe(ch, tKeeper, tShop, 1);
@@ -3290,7 +3290,7 @@ int TComponent::pricePerUnit() const
   return price;
 }
 
-void TComponent::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
+void TComponent::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num)
 {
   int price;
   sstring buf;

@@ -924,7 +924,7 @@ void allocate_room(int room_number)
 }
 
 
-void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom = NULL)
+void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom)
 {
   int tmp;
   TRoom *rp;
@@ -2572,7 +2572,7 @@ bool zoneData::doGenericReset(void)
 
 
 // echos a sstring to every room in the zone except exclude_room
-void zoneData::sendTo(sstring s, int exclude_room=-1)
+void zoneData::sendTo(sstring s, int exclude_room)
 {
   TBeing *tmp_victim, *temp;
   

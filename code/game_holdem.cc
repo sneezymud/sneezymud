@@ -7,7 +7,7 @@
 
 HoldemGame gHoldem;
 
-bool TBeing::checkHoldem(bool inGame = false) const
+bool TBeing::checkHoldem(bool inGame) const
 {
   gHoldem.linkPlayers();
 

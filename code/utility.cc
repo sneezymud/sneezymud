@@ -481,7 +481,7 @@ void BatoprsResetCharFlags(TBeing *ch)
 #endif
 }
 
-bool TBeing::nomagic(const sstring &msg_ch, const sstring &msg_rm="") const
+bool TBeing::nomagic(const sstring &msg_ch, const sstring &msg_rm) const
 {
   if (isImmortal())
     return FALSE;
@@ -1823,7 +1823,7 @@ int combatRound(double n)
   return (int) (n * PULSE_COMBAT);
 }
 
-bool TBeing::checkBusy(const sstring &buf="")
+bool TBeing::checkBusy(const sstring &buf)
 {
   // I added the max to avoid the 10Mill report
   // which happens if they have like 0.9 attacks a round.

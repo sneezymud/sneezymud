@@ -2,7 +2,7 @@
 #include "games.h"
 #include "obj_casino_chip.h"
 
-void payout(TBeing *ch, int talens, int chip_vnum=0)
+void payout(TBeing *ch, int talens, int chip_vnum)
 {
   TObj *chip;
   sstring buf;

@@ -19,7 +19,7 @@ bool HiLoGame::enter(const TBeing *ch)
   return true;
 }
 
-bool TBeing::checkHiLo(bool inGame = false) const
+bool TBeing::checkHiLo(bool inGame) const
 {
   if (in_room == ROOM_HILO && (inGame || (gHiLo.index(this) > -1)))
     return true;

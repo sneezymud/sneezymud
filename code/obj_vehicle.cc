@@ -150,7 +150,7 @@ void TVehicle::driveExit(TBeing *ch)
   *roomp+=*ch;
 }
 
-void TVehicle::driveLook(TBeing *ch, bool silent=false)
+void TVehicle::driveLook(TBeing *ch, bool silent)
 {
   sstring buf;
 

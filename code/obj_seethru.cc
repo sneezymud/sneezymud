@@ -49,7 +49,7 @@ void TSeeThru::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-int TSeeThru::getTarget(int *isRandom = NULL) const
+int TSeeThru::getTarget(int *isRandom) const
 {
   int tValue = target_room;
 

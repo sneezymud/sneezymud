@@ -49,7 +49,7 @@ static void adjustHealHp2(const TBeing *caster, int &hp, int durat)
   }
 }
 
-int healingGrasp(TBeing *caster, TBeing * victim, int level, byte bKnown, spellNumT spell, int adv_learn=0)
+int healingGrasp(TBeing *caster, TBeing * victim, int level, byte bKnown, spellNumT spell, int adv_learn)
 {
   int hp = caster->getSkillDam(victim, SPELL_HEALING_GRASP, level, adv_learn);
   adjustHealHp2(caster, hp, discArray[spell]->lag);

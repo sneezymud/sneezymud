@@ -2664,7 +2664,7 @@ void TBeing::transformLimbsBack(const char * buffer, wearSlotT limb, bool cmd)
   return;
 }
 
-void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell, bool deleteMob = TRUE)
+void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell, bool deleteMob)
 {
   TBeing *mob = NULL, *per;
   int X = LAST_TRANSFORM_LIMB, found = FALSE;

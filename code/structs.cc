@@ -530,7 +530,7 @@ TThing& TObj::operator += (TThing& t)
 
 // if tPreserve is set true we don't vlogf nor do we add to the 'owners'
 // list.  This is primarly used to catch portal cheaters.
-bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve = false)
+bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve)
 {
 #if 0
   // this is only practical if NO multiplay is allowed ever

@@ -16,7 +16,7 @@ const unsigned short MAX_BLACKJACK = 1;
 
 BjGame gBj;
 
-bool TBeing::checkBlackjack(bool inGame = false) const
+bool TBeing::checkBlackjack(bool inGame) const
 {
   if (in_room == ROOM_BLACKJACK && (inGame || (gBj.index(this) > -1)))
     return true;

@@ -27,7 +27,7 @@ void BaccaratGame::baccarat_shuffle(const TBeing *ch)
   deck_inx = 0;
 }
 
-bool TBeing::checkBaccarat(bool inGame = false) const
+bool TBeing::checkBaccarat(bool inGame) const
 {
   if (in_room == ROOM_BACCARAT && (inGame || (gBaccarat.index(this) > -1)))
     return true;

@@ -429,7 +429,7 @@ int DrawPokerGame::move_card(TBeing *ch, const char *tArg)
   return TRUE;
 }
 
-bool TBeing::checkDrawPoker(bool inGame = false) const
+bool TBeing::checkDrawPoker(bool inGame) const
 {
   if (in_room == ROOM_DRAWPOKER && (inGame || (gDrawPoker.index(this) > -1)))
     return true;

@@ -69,7 +69,7 @@ void TGenWeapon::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4=x;
 }
 
-weaponT TGenWeapon::getWeaponType(int which=-1) const
+weaponT TGenWeapon::getWeaponType(int which) const
 {
   if(which>=0 && which<=3){
     return weapon_type[which];
@@ -91,12 +91,12 @@ int TGenWeapon::getWeaponFreq(int which) const
   return wtype_frequency[which];
 }
 
-void TGenWeapon::setWeaponType(weaponT n, int which=0)
+void TGenWeapon::setWeaponType(weaponT n, int which)
 {
   weapon_type[which] = n;
 }
 
-void TGenWeapon::setWeaponFreq(int n, int which=0)
+void TGenWeapon::setWeaponFreq(int n, int which)
 {
   wtype_frequency[which] = n;
 }

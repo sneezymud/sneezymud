@@ -420,9 +420,9 @@ void findAndReplace(sstring & tStOrig, sstring tStArg, sstring tStNew)
 }
 
 sstring TMessages::operator()(messageTypeT tValue,
-                             TThing *tThing = NULL,
-                             const char * tString = NULL,
-                             bool sendFiltered = true)
+                             TThing *tThing,
+                             const char * tString,
+                             bool sendFiltered)
 {
   sstring  tMessage("");
   TBeing *tBeing = dynamic_cast<TBeing *>(tThing);

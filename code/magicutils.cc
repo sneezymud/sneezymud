@@ -136,7 +136,7 @@ void switchStat(statTypeT stat, TBeing *giver, TBeing *taker)
   taker->setStat(STAT_CURRENT, stat, taker->getStat(STAT_NATURAL, stat));
 }
 
-void SwitchStuff(TBeing *giver, TBeing *taker, bool setStats = TRUE)
+void SwitchStuff(TBeing *giver, TBeing *taker, bool setStats)
 {
   TThing *t, *next;
 
@@ -1094,7 +1094,7 @@ void TBeing::addAffects(const TObj *o)
 }
 
 // returns DELETE_THIS
-int TThing::genericTeleport(silentTypeT silent, bool keepZone, bool unsafe=false)
+int TThing::genericTeleport(silentTypeT silent, bool keepZone, bool unsafe)
 {
   int to_room;
   TRoom *rp;

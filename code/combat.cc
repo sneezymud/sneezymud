@@ -375,7 +375,7 @@ void TBeing::updatePos()
 
 }
 
-int TMonster::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
+int TMonster::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
 {
   TBeing *mob = NULL, *per = NULL;
 
@@ -428,7 +428,7 @@ void logPermaDeathDied(TBeing *ch, TBeing *killer)
   db.query("update permadeath set level=%i where name='%s'", ch->GetMaxLevel(), ch->name);
 }
 
-int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
+int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
 {
   TBeing *per = NULL;
   
@@ -540,7 +540,7 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
 
 // returns DELETE_THIS if this should die
 // otherwise FALSE
-int TBeing::die(spellNumT dam_type, TBeing *tKiller = NULL)
+int TBeing::die(spellNumT dam_type, TBeing *tKiller)
 {
   Descriptor *d;
   TRoom *rp;

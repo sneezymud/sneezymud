@@ -466,8 +466,8 @@ void seditReadUntil(sstring & tStOrig, sstring & tStStore, char tChar)
 }
 
 // Makes sure the tree exists
-FILE * seditVerifyDirTree(TBeing *ch, char *tArg = NULL,
-                          bool tWrite = false, bool isSilent = false)
+FILE * seditVerifyDirTree(TBeing *ch, char *tArg,
+                          bool tWrite, bool isSilent)
 {
   FILE *tFile;
   sstring tPath;
@@ -513,7 +513,7 @@ FILE * seditVerifyDirTree(TBeing *ch, char *tArg = NULL,
   return (FILE *)NULL;
 }
 
-void seditSave(TBeing *ch, TMonster *tMonster, bool isSilent = false)
+void seditSave(TBeing *ch, TMonster *tMonster, bool isSilent)
 {
   FILE *tFile;
   char  tValue[256];
@@ -571,7 +571,7 @@ void seditSave(TBeing *ch, TMonster *tMonster, bool isSilent = false)
   }
 }
 
-void seditLoad(TBeing *ch, TMonster *tMonster, sstring tStArg, bool isSilent = false)
+void seditLoad(TBeing *ch, TMonster *tMonster, sstring tStArg, bool isSilent)
 {
   FILE *tFile;
   char  tValue[256];
@@ -739,7 +739,7 @@ sstring seditExtraWords(cmdTypeT tCmd)
 //   false : {name} {conditions} {contents}
 void seditDisplayResponse(TBeing *ch, resp *respIndex,
                           bool tForm, int tValue,
-                          bool isSilent = false, sstring *tStString = NULL)
+                          bool isSilent, sstring *tStString)
 {
   char tString[256] = "",
        tBuffer[256];
@@ -928,7 +928,7 @@ long int seditCountTriggers(TMonster *tMonster, int tCmd = -1)
   return tCount;
 }
 
-void update_sedit_menu(TBeing *ch, TMonster *tMonster, bool useBar = false)
+void update_sedit_menu(TBeing *ch, TMonster *tMonster, bool useBar)
 {
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(fmt("%sMobile Name:%s %s") %             ch->cyan() % ch->norm() % tMonster->name);
@@ -1207,7 +1207,7 @@ const char * sedit_display_menu =
 "%s3)%s [%2d] roomenter\n\r"
 "%s4)%s [%2d] other\n\r";
 
-resp * seditFindResponse(resp *tResp, sstring tStArg, bool *tForm, int tCount = -1)
+resp * seditFindResponse(resp *tResp, sstring tStArg, bool *tForm, int tCount)
 {
   exactTypeT tExact = exactTypeT(*tForm);
   sstring tStString(tStArg);

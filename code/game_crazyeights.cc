@@ -240,7 +240,7 @@ int CrazyEightsGame::move_card(TBeing *ch, const char *tArg)
   return TRUE;
 }
 
-bool TBeing::checkCrazyEights(bool inGame = false) const
+bool TBeing::checkCrazyEights(bool inGame) const
 {
   if (in_room == ROOM_CRAZYEIGHTS && (inGame || (gEights.index(this) > -1)))
     return true;

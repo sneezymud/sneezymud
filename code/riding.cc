@@ -284,7 +284,7 @@ TThing * TThing::dismount(positionTypeT pos)
 
 // returns DELETE_THIS
 // 'silent' mode cuts out success messages
-int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent = SILENT_NO)
+int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent)
 {
   char caName[112];
   int check = 0/*, rc = 0*/, fightCheck = 0, learn = 0;

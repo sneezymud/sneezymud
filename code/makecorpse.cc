@@ -14,7 +14,7 @@
 #include "obj_corpse.h"
 #include "obj_money.h"
 
-TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float exp_lost=0)
+TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost)
 {
   TMoney *money;
   TThing *o, *next_o;
