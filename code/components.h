@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.12  2001/06/09 21:10:33  jesus
+// hypnosis spell
+//
 // Revision 5.11  2001/06/08 00:06:27  jesus
 // dancing bones update for shaman
 //
@@ -176,6 +179,7 @@ const int COMP_LIFE_LEECH         =31320;
 const int COMP_VOODOO             =31321;
 const int COMP_RESURRECTION       =31322;
 const int COMP_DANCING_BONES      =31323;
+const int COMP_HYPNOSIS           =31324;
 
 class compPlace
 {

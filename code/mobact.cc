@@ -1730,6 +1730,22 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     // AREA AFFECT HERE
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
     }
+    spell = SPELL_VAMPIRIC_TOUCH;
+    if (!::number(0, 1) && 
+           (cutoff < discArray[spell]->start) &&
+        ch.doesKnowSkill(spell)) {
+      act("$n utters the invokation, 'I vant to DDDreenk youddrrr BLUUD!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
+    spell = SPELL_LIFE_LEECH;
+    if (!::number(0, 1) && 
+           (cutoff < discArray[spell]->start) &&
+        ch.doesKnowSkill(spell)) {
+      act("$n utters the invokation, 'Shrivel and Die!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
 
     // STANDARD OFFENSE
     // hit um with the long-term effect ones first

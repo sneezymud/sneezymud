@@ -6663,7 +6663,7 @@ int TBeing::applyRentBenefits(int secs)
   setMana(min((int) manaLimit(), getMana() + (local_tics * manaGain())));
   setMove(min((int) moveLimit(), getMove() + (local_tics * moveGain())));
   setPiety(min(pietyLimit(), getPiety() + (local_tics * pietyGain(0.0))));
-  setLifeforce(max(50, getLifeforce()));
+  setLifeforce(min(getLifeforce(), 50));
   // THIS WILL NEED TO BE REVIEWED
  
   wearSlotT ij;

@@ -238,7 +238,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
   }
 
   if (hasClass(CLASS_SHAMAN)) {
-    updatePos();
     if (isPc()) {
       if (-10 > getHit()) {
 	vlogf(LOG_MISC, "Half-tick force updated for %s (Shaman).", getName());

@@ -2604,6 +2604,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_VAMPIRIC_TOUCH:
       rc = vampiricTouch(caster,victim,obj);
       break;
+    case SPELL_HYPNOSIS:
+      hypnosis(caster,victim,obj);
+      break;
     case SPELL_CLARITY:
       clarity(caster,victim,obj);
       break;

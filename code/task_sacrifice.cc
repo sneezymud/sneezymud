@@ -181,12 +181,12 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       act("You stop performing the ritual.", FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops singing.", TRUE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
-      if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
-	corpse->remCorpseFlag(CORPSE_SACRIFICE);
+      delete corpse;
       break;
   case CMD_TASK_FIGHTING:
       ch->sendTo("You can't sacrifice a corpse while under attack.\n\r");
       ch->stopTask();
+      delete corpse;
       break;
   default:
       if (cmd < MAX_CMD_LIST)

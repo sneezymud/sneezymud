@@ -598,6 +598,12 @@ static void describeSpellEffects(const TBeing *me, const TBeing *ch, bool verbos
     tStSpell += displayShowApprox(me, ch, SPELL_THORNFLESH, 2.0);
     ++totspell;
   }
+  if (me->affectedBySpell(SPELL_SHIELD_OF_MISTS)) {
+    sprintf(bufspell, ".....$n is enveloped by a thick green mist.\n\r");
+    tStSpell += bufspell;
+    tStSpell += displayShowApprox(me, ch, SPELL_THORNFLESH, 2.0);
+    ++totspell;
+  }
 
   strcpy(bufspell, tStSpell.c_str());
   strcpy(bufpray, tStPray.c_str());

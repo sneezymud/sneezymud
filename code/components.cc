@@ -1518,6 +1518,14 @@ void buildComponentArray()
     "$n squeezes $p.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_HYPNOSIS,
+    "You shake $p in $N's face.",
+    "$n shakes $p.",
+    "$n shakes $p.",                       
+    "You shake $p in your own face.",
+    "$n shakes $p.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_CLARITY,
     "",
     "",

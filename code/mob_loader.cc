@@ -392,6 +392,7 @@ void TMonster::mageComponentLoader(void)
         case COMP_POLYMORPH:
         case COMP_GILLS_OF_FLESH:
         case COMP_BREATH_SARAHAGE:
+	case COMP_HYPNOSIS:
         case COMP_INFRAVISION:
         case COMP_FLIGHT:
           // we'll make utility comps more rare so that relatively speaking

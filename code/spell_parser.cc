@@ -163,6 +163,8 @@ void TBeing::stopFollower(bool remove, stopFollowerT textLimits) // default argu
     }
     if (affectedBySpell(SPELL_ENSORCER) && remove)
       affectFrom(SPELL_ENSORCER);
+    if (affectedBySpell(SPELL_HYPNOSIS) && remove)
+      affectFrom(SPELL_HYPNOSIS);
   } else {
     int levelLimit = (isPlayerAction(PLR_STEALTH) ? MAX_MORT : 0);
 
@@ -1954,6 +1956,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
         break;
       case SPELL_LIFE_LEECH:
         rc = lifeLeech(this, ch);
+        break;
+      case SPELL_HYPNOSIS:
+        rc = hypnosis(this, ch);
         break;
       case SPELL_THORNFLESH:
         rc = thornflesh(this);

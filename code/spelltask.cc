@@ -1208,6 +1208,37 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
         return TRUE;
       }
       return FALSE;
+   case SPELL_HYPNOSIS:
+      if (victim == caster) {
+        sprintf(buf, "You refuse...and for obvious reasons...");
+        act(buf, FALSE, caster, NULL, NULL, TO_CHAR);
+	act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+       return TRUE;
+      }
+      if (caster->isAffected(AFF_CHARM)) {
+        sprintf(buf, "You can't hypnotize $N while you're under the same affects!");
+        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+       return TRUE;
+      }
+      if (victim->isAffected(AFF_CHARM)) {
+        again = (victim->master == caster);
+        sprintf(buf, "You can't hypnotize $N%s while $E's busy following %s!", (again ? " again" : ""), (again ? "you already" : "somebody else"));
+        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+       return TRUE;
+      }
+      if (caster->tooManyFollowers(victim, FOL_CHARM)) {
+        act("$N refuses to enter a group the size of yours!", TRUE, caster, NULL, victim, TO_CHAR, ANSI_RED_BOLD);
+        act("$N refuses to enter $ group the size of $n's!", TRUE, caster, NULL, victim, TO_ROOM, ANSI_RED_BOLD);
+       return TRUE;
+      }
+      if (victim->circleFollow(caster)) {
+        caster->sendTo("Umm, you probably don't want to follow each other around in circles.\n\r");
+        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+       return TRUE;
+      }
+      return FALSE;
     case SPELL_SHADOW_WALK: // shaman
     case SPELL_INVISIBILITY:
     case SPELL_POWERSTONE:
@@ -2022,6 +2053,9 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
           rc = castLichTouch(this, victim);
         } else
           vlogf(LOG_BUG, "SPELL_LICH_TOUCH called with null obj");
+        break;
+      case SPELL_HYPNOSIS:
+        castHypnosis(this, victim);
         break;
       case SPELL_VAMPIRIC_TOUCH:
         if (!o) {

@@ -242,6 +242,7 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe)
     act(discArray[s]->fadeAwayRoom, TRUE, this, 0, 0, TO_ROOM);
 
   if (s == SPELL_ENSORCER ||
+      s == SPELL_HYPNOSIS ||
       s == SPELL_CONJURE_AIR ||
       s == SPELL_CONJURE_EARTH ||
       s == SPELL_CONJURE_FIRE ||

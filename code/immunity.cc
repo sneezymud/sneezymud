@@ -329,6 +329,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
       bit = IMMUNE_PARALYSIS;
       break;
     case SPELL_ENSORCER:
+    case SPELL_HYPNOSIS:
     case SPELL_CACAODEMON:
     case SPELL_CONTROL_UNDEAD:
     case SPELL_CREATE_GOLEM:

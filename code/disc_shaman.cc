@@ -796,15 +796,26 @@ int vampiricTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int ad
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
-  int num = ::number(1,50);
-  int num2 = ::number(1,35);
+  if (1 > victim->getHit()) {
+    act("That creature has nothing left for you!",
+             FALSE, caster, NULL, victim, TO_CHAR);
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
+  int num = ::number(1,(caster->hitLimit() / 10));
+  int num2 = ::number(1,(caster->hitLimit() / 15));
   int num3 = ::number(1,50);
 
   if (bSuccess(caster, bKnown,SPELL_VAMPIRIC_TOUCH)) {
     act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
     act("You groan in pain as life is drawn from your body!", FALSE, caster, NULL, victim, TO_VICT);
-    victim->addToHit(-num);
+    if (victim->getHit() > num) {
+      victim->addToHit(-num);
+    } else {
+      victim->setHit(0);
+      victim->updatePos();
+    }
     caster->addToHit(num2);
     caster->addToLifeforce(num3);
     return SPELL_SUCCESS;
@@ -818,7 +829,12 @@ int vampiricTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int ad
         act("You sang the invokation incorrectly! The ancestors are EXTREMELY pissed!", 
                FALSE, caster, NULL, NULL, TO_CHAR);
         victim->addToHit(num);
-        caster->addToHit(-num);
+	if (caster->getHit() > num) {
+	  caster->addToHit(-num);
+	} else {
+	  caster->setHit(0);
+	  caster->updatePos();
+	}
         return SPELL_CRIT_FAIL;
       case CRIT_F_NONE:
         break;
@@ -890,15 +906,26 @@ int lifeLeech(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
-  int num = ::number(1,20);
-  int num2 = ::number(1,16);
+  if (1 > victim->getHit()) {
+    act("That creature has nothing left for you!",
+             FALSE, caster, NULL, victim, TO_CHAR);
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
+  int num = ::number(1,(caster->hitLimit() / 20));
+  int num2 = ::number(1,(caster->hitLimit() / 30));
   int num3 = ::number(1,20);
 
   if (bSuccess(caster, bKnown,SPELL_LIFE_LEECH)) {
     act("$N buckles in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$N buckles in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
     act("You buckle in pain as life is drawn from your body!", FALSE, caster, NULL, victim, TO_VICT);
-    victim->addToHit(-num);
+    if (victim->getHit() > num) {
+      victim->addToHit(-num);
+    } else {
+      victim->setHit(0);
+      victim->updatePos();
+    }
     caster->addToHit(num2);
     caster->addToLifeforce(num3);
     return SPELL_SUCCESS;
@@ -911,8 +938,13 @@ int lifeLeech(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
                FALSE, caster, NULL, NULL, TO_ROOM);
         act("<r>You sang the invokation incorrectly! The ancestors are<z> <R>EXTREMELY<z> <r>pissed!<z>", 
                FALSE, caster, NULL, NULL, TO_CHAR);
+	if (caster->getHit() > num) {
+	  caster->addToHit(-num);
+	} else {
+	  caster->setHit(0);
+	  caster->updatePos();
+	}
         victim->addToHit(num);
-        caster->addToHit(-num);
         return SPELL_CRIT_FAIL;
       case CRIT_F_NONE:
         break;
@@ -975,6 +1007,9 @@ int lifeLeech(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
 
   return tRc;
 }
+
+
+
 
 
 

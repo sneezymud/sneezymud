@@ -758,6 +758,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SKILL_DULL:
       case SKILL_ATTUNE:
       case SKILL_STAVECHARGE:
+      case SPELL_HYPNOSIS:
       case SPELL_SHIELD_OF_MISTS:
       case MAX_SKILL:
       case TYPE_MAX_HIT:
