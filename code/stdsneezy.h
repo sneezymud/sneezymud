@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: stdsneezy.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -37,6 +29,8 @@
 #include <vector>
 #include <map>
 
+#include </home/oldspasm/usr/include/mysql/mysql.h>
+
 #include "low.h"
 #include "mobAI.h"
 #include "enum.h"
@@ -49,7 +43,6 @@
 #include "parse.h"
 #include "db.h"
 #include "ansi.h"
-#include "drug.h"
 #include "cmd_dissect.h"
 #include "connect.h"
 #include "client.h"
@@ -65,6 +58,7 @@
 #include "body.h"
 #include "race.h"
 #include "skills.h"
+#include "disease.h"
 #include "trap.h"
 #include "task.h"
 #include "weather.h"
@@ -90,6 +84,7 @@
 extern const int PROD_GAMEPORT;
 extern const int BETA_GAMEPORT;
 extern const int ALPHA_GAMEPORT;
+extern const int BUILDER_GAMEPORT;
 
 // causes player/rent files to be automatically purged if inactive for
 // more then a few weeks.  Conserves disk space and speeds up the boot
@@ -130,6 +125,11 @@ extern bool nuke_inactive_mobs;
 // We can eliminate this by turning this on.  Any item not perfect will get
 // deleted.
 #define NO_DAMAGED_ITEMS_SHOP    0
+
+
+// hard coded limits on builder powers, toggled on/off using with wizpower #111
+
+#define LIMITPOWERS 1
 
 // ********************************************************************
 // ECONOMIC BALANCE
