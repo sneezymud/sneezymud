@@ -3682,7 +3682,7 @@ void TBeing::doLimbs(const sstring & argument)
     }
     if (v->isLimbFlags(i, PART_LEPROSED)) {
       sendTo(COLOR_BASIC, fmt("Leprosy has set into %s %s%s%s!\n\r") %
-          v->hshr() % red() %v->describeBodySlot(i) %norm());
+          who % red() %v->describeBodySlot(i) %norm());
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_TRANSFORMED)) {
@@ -3694,7 +3694,7 @@ void TBeing::doLimbs(const sstring & argument)
       if (canSee(t)) {
         strcpy(buf, t->getName());
         sendTo(COLOR_OBJECTS, fmt("%s is sticking out of %s %s!\n\r") %
-        sstring(buf).cap() % v->hshr() % v->describeBodySlot(i));
+        sstring(buf).cap() % who % v->describeBodySlot(i));
       }
     }
   }
@@ -3718,8 +3718,9 @@ void TBeing::doLimbs(const sstring & argument)
       }
     }
   }
+
   if (!found)
-    sendTo(fmt("All %s limbs are perfectly healthy!\n\r") % ((v==this)?"your":v->hshr()));
+    sendTo(fmt("All %s limbs are perfectly healthy!\n\r") % who);
 }
 
 void TBeing::genericEvaluateItem(const TThing *obj)
