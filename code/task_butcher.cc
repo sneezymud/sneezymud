@@ -2,6 +2,7 @@
 #include "obj_base_corpse.h"
 #include "obj_tool.h"
 #include "obj_base_weapon.h"
+#include "obj_player_corpse.h"
 
 void stop_butcher(TBeing *ch)
 {
@@ -178,21 +179,29 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
 			 "filet mignon steak"};
     int nmeats=13;
     int whichmeat=::number(0,nmeats-1);
+    TPCorpse *tpc=dynamic_cast<TPCorpse *>(corpse);
+    char namebuf[256];
 
+    if(tpc){
+      strcpy(namebuf, tpc->getOwner().c_str());
+      namebuf[0]=toupper(namebuf[0]);
+    }
+    
 
-    // this is how you should do it... not a bunch of if's - peel
     sprintf(buf, "meat %s %s",
-	    Races[corpse->getCorpseRace()]->getSingularName().c_str(),
+	    tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName().c_str(),
 	    meats[whichmeat]);
     delete [] steak->name;
     steak->name = mud_str_dup(buf);
-    sprintf(buf, "a %s of %s meat", meats[whichmeat], 
-	    Races[corpse->getCorpseRace()]->getSingularName().c_str());
+    sprintf(buf, "a %s of %s meat", 
+	    meats[whichmeat], 
+	    tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName().c_str());
     delete [] steak->shortDescr;
     steak->shortDescr = mud_str_dup(buf);
 
-    sprintf(buf, "A %s of %s meat lies here.", meats[whichmeat],
-	    Races[corpse->getCorpseRace()]->getSingularName().c_str());
+    sprintf(buf, "A %s of %s meat lies here.", 
+	    meats[whichmeat],
+	    tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName().c_str());
     delete [] steak->descr;
     steak->setDescr(mud_str_dup(buf));
     
