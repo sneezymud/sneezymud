@@ -115,7 +115,7 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
 int TBeing::doRescue(const char *argument)
 {
   int rc;
-  TBeing *victim;
+  TBeing *victim = NULL;
   char name_buf[240];
 
   spellNumT skill = getSkillNum(SKILL_RESCUE);
@@ -134,38 +134,41 @@ int TBeing::doRescue(const char *argument)
     TBeing     * tRescueMe = NULL,
                * tMaybeMe  = NULL;
 
-    for (; tFData; tFData = tFData->next)
-      if (tFData->follower && tFData->follower->isAffected(AFF_GROUP) && canSee(tFData->follower) && tFData->follower->fight() && (tFData->follower->fight()->fight() == tFData->follower) && (tFData->follower != this)) {
-        if (tFData->follower->isPc()) {
-          tRescueMe = tFData->follower;
-          break;
-        } else if (!tMaybeMe)
-          tMaybeMe = tFData->follower;
-      }
+    if (master && master->isAffected(AFF_GROUP) && sameRoom(*master) && canSee(master) && master->fight() && (master->fight()->fight() == master))
+      tRescueMe = master;
+    else
+      for (; tFData; tFData = tFData->next)
+        if (tFData->follower && tFData->follower->isAffected(AFF_GROUP) && canSee(tFData->follower) && tFData->follower->fight() && (tFData->follower->fight()->fight() == tFData->follower) && (tFData->follower != this) && sameRoom(*tFData->follower)) {
+          if (tFData->follower->isPc()) {
+            tRescueMe = tFData->follower;
+            break;
+          } else if (!tMaybeMe)
+            tMaybeMe = tFData->follower;
+        }
 
     if (!tRescueMe && tMaybeMe)
       tRescueMe = tMaybeMe;
 
-    if (tRescueMe) {
-      strcpy(name_buf, tRescueMe->name);
-
-      while (strchr(name_buf, ' '))
-        *strchr(name_buf, ' ') = '-';
-    }
+    victim = tRescueMe; // Since this is NULL'ed above we are safe doing this without a check.
   } else
     strcpy(name_buf, argument);
 
-  if (!(victim = get_char_room_vis(this, name_buf))) {
-    sendTo("Whom do you want to rescue?\n\r");
-    return FALSE;
-  }
+  if (!victim)
+    if (!(victim = get_char_room_vis(this, name_buf))) {
+      sendTo("Whom do you want to rescue?\n\r");
+      return FALSE;
+    }
+
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
+
   rc = rescue(this, victim, skill);
+
   if (rc)
     addSkillLag(skill, rc);
+
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
 
