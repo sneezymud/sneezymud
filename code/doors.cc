@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: doors.cc,v $
+// Revision 1.2  1999/09/29 01:05:34  lapsos
+// Modified to allow for mounted opening of doors.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -163,11 +166,11 @@ void TBeing::rawOpenDoor(dirTypeT dir)
        exitp->getName().c_str());
     return;
   }
-  if (exitp->door_type == DOOR_PORTCULLIS && riding) {
+  if (exitp->door_type == DOOR_PORTCULLIS && riding && getSkillValue(SKILL_RIDE) < 30) {
     sendTo("You are unable to raise that while mounted.\n\r");
     return;
   }
-  if (dir == DIR_DOWN && riding) {
+  if (dir == DIR_DOWN && riding && getSkillValue(SKILL_RIDE) < 30) {
     sendTo("Seeing that you are mounted, you can't quite reach that.\n\r");
     return;
   }

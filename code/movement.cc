@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: movement.cc,v $
+// Revision 1.2  1999/09/29 01:05:49  lapsos
+// Modified to allow for mounted opening of doors.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1612,7 +1615,14 @@ int TBeing::doOpen(const char *argument)
       sendTo("You should use raise or lower to manipulate that exit.\n\r");
       return FALSE;
     }
-    if (exitp->weight > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
+    // Manipulation Examples:
+    //    0 Ride: 1.50
+    //   10 Ride: 1.45
+    //   50 Ride: 1.25
+    //  100 Ride: 1.00
+    float tRidingManip = ((getPosition() == POSITION_MOUNTED) ?
+                          (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
+    if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
       sendTo("The %s is too large and heavy for you to budge it.\n\r",
          exitp->getName().c_str());
       sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
@@ -1678,7 +1688,14 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
       sendTo("You should use open or close to manipulate that exit.\n\r");
       return FALSE;
     }
-    if (exitp->weight > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
+    // Manipulation Examples:
+    //    0 Ride: 1.50
+    //   10 Ride: 1.45
+    //   50 Ride: 1.25
+    //  100 Ride: 1.00
+    float tRidingManip = ((getPosition() == POSITION_MOUNTED) ?
+                          (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
+    if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
       sendTo("The %s is too large and heavy for you to budge it.\n\r",
          exitp->getName().c_str());
       sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
@@ -1762,7 +1779,14 @@ void TBeing::doClose(const char *argument)
       sendTo("You should use raise or lower to manipulate that exit.\n\r");
       return;
     }
-    if (exitp->weight > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
+    // Manipulation Examples:
+    //    0 Ride: 1.50
+    //   10 Ride: 1.45
+    //   50 Ride: 1.25
+    //  100 Ride: 1.00
+    float tRidingManip = ((getPosition() == POSITION_MOUNTED) ?
+                          (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
+    if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
       sendTo("The %s is too large and heavy for you to budge it.\n\r",
          exitp->getName().c_str());
       sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
@@ -1812,7 +1836,14 @@ int TBeing::doLower(const char *argument)
       sendTo("You should use open or close to manipulate that exit.\n\r");
       return FALSE;
     }
-    if (exitp->weight > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
+    // Manipulation Examples:
+    //    0 Ride: 1.50
+    //   10 Ride: 1.45
+    //   50 Ride: 1.25
+    //  100 Ride: 1.00
+    float tRidingManip = ((getPosition() == POSITION_MOUNTED) ?
+                          (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
+    if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
       sendTo("The %s is too large and heavy for you to budge it.\n\r",
          exitp->getName().c_str());
       sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
@@ -2825,7 +2856,14 @@ int TBeing::goDirection(dirTypeT dir)
     } else if (isHumanoid() && !IS_SET(exitp->condition, EX_SECRET) &&
         !IS_SET(exitp->condition, EX_LOCKED)) {
 
-      if (exitp->weight > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
+      // Manipulation Examples:
+      //    0 Ride: 1.50
+      //   10 Ride: 1.45
+      //   50 Ride: 1.25
+      //  100 Ride: 1.00
+      float tRidingManip = ((getPosition() == POSITION_MOUNTED) ?
+                            (1.5 - (((float)getSkillValue(SKILL_RIDE) / 2) / 100)) : 1.0);
+      if ((exitp->weight * tRidingManip) > maxWieldWeight(NULL, HAND_TYPE_PRIM)) {
         sendTo("The %s is too large and heavy for you to budge it.\n\r",
            exitp->getName().c_str());
         sprintf(buf, "$n throws $mself at a %s, but $e can't budge it.",
