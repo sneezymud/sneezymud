@@ -841,9 +841,9 @@ void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom = NULL)
 
   if (IS_SET(rp->dir_option[dir]->condition, EX_SECRET) && 
       canSeeThruDoor(rp->dir_option[dir])) {
-    if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED))
-      vlogf(LOG_LOW, "See thru door set secret. (%d, %d)", room, dir);
-    else
+    if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED)){
+      //      vlogf(LOG_LOW, "See thru door set secret. (%d, %d)", room, dir);
+    } else
       vlogf(LOG_LOW, "Secret door saved as open. (%d, %d)", room, dir);
   }
 }
