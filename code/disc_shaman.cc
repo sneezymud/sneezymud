@@ -155,7 +155,7 @@ int voodoo(TBeing * caster, TObj * corpse)
 {
   int ret,level;
 
-  if (!bPassClericChecks(caster,SPELL_VOODOO))
+  if (!bPassShamanChecks(caster, SPELL_VOODOO, corpse))
     return FALSE;
 
   level = caster->getSkillLevel(SPELL_VOODOO);

@@ -1,22 +1,6 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: discipline.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // discipline.cc
 
 #include <cmath>
-
 #include "stdsneezy.h"
 #include "disease.h"
 #include "components.h"
@@ -38,10 +22,11 @@
 #include "disc_plants.h"
 #include "disc_ranger_fight.h"
 #include "disc_shaman_alchemy.h"
-#include "disc_shaman_fight.h"
-#include "disc_draining.h"
-#include "disc_undead.h"
-#include "disc_shaman_healing.h"
+#include "disc_shaman_frog.h"
+#include "disc_shaman_control.h"
+#include "disc_shaman_spider.h"
+#include "disc_shaman_skunk.h"
+#include "disc_shaman_armadillo.h"
 #include "disc_totem.h"
 #include "disc_thief.h"
 #include "disc_thief_fight.h"
@@ -103,14 +88,27 @@ static bool enforceVerbal(TBeing *ch, spellNumT spell)
       ch->sendTo("You are unable to chant the incantation!\n\r");
       return FALSE;
     }
-    if (ch->getWizardryLevel() >= WIZ_LEV_NO_MANTRA) {
-      act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
-      act("Although you no longer need to, you begin an incantation to facilitate your spell.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
+    if (ch->hasClass(CLASS_MAGE)) {
+      if (ch->getWizardryLevel() >= WIZ_LEV_NO_MANTRA) {
+	act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
+	act("Although you no longer need to, you begin an incantation to facilitate your spell.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
+	return TRUE;
+      } else {
+	act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
+	act("You begin to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
+	return TRUE;
+      } 
     } else {
-      act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
-      act("You begin to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
+      if (ch->getWizardryLevel() >= WIZ_LEV_NO_MANTRA) {
+	act("$n begins to dance and sing in an unfamiliar tongue.", TRUE, ch, 0, 0, TO_ROOM, ANSI_RED);
+	act("You begin the rada song in the ancient tongue.", TRUE, ch, 0, 0, TO_CHAR, ANSI_RED);
+	return TRUE;
+      } else {
+	act("$n begins to dance and sing in an unfamiliar tongue.", TRUE, ch, 0, 0, TO_ROOM, ANSI_RED);
+	act("You begin to dance and sing your rada in the ancient tongue.", TRUE, ch, 0, 0, TO_CHAR, ANSI_RED);
+	return TRUE;
+      }
     }
-    return TRUE;
   } else 
     return TRUE;
 }
@@ -159,34 +157,54 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
   }
 
   if (!ch->isPc()) {
-    if (ch->getWizardryLevel() >= WIZ_LEV_NO_GESTURES) {
-      act("You concentrate intently upon the magical task at hand...", 
-            FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
-      act("$n stares off into space, concentrating on something...", 
-            FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
+    if (ch->hasClass(CLASS_MAGE)) {
+      if (ch->getWizardryLevel() >= WIZ_LEV_NO_GESTURES) {
+        act("You concentrate intently upon the magical task at hand...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
+	act("$n stares off into space, concentrating on something...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
       return TRUE;
+      }
+      if (ch->hasClass(CLASS_SHAMAN)) {
+        act("You focus your thoughts upon the ancestors and thier swift movements...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+	act("$n concentrates deeply upon $s task...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
+      return TRUE;
+      }
     }
-    if (ch->hasHands()) {
-      sprintf(msg, "$n traces a magical rune in the air with $s hands.");
-      act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
-      sprintf(msg, "You trace a magical rune in the air with your hands.");
-      act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
-    } else {
-      act("You hop and wiggle about while creating the magical runes in the air...",
-            FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
-      act("$n hops and wiggles about while creating the magical runes in the air...",
-            FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
+    if (ch->hasClass(CLASS_MAGE)) {
+      if (ch->hasHands()) {
+	sprintf(msg, "$n traces a magical rune in the air with $s hands.");
+	act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
+	sprintf(msg, "You trace a magical rune in the air with your hands.");
+	act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
+	return TRUE;
+      } else {
+	act("You hop and wiggle about while creating the magical runes in the air...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
+	act("$n hops and wiggles about while creating the magical runes in the air...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
+	return TRUE;
+      }
+    }
+    if (ch->hasClass(CLASS_SHAMAN)) {
+      if (ch->hasHands()) {
+	sprintf(msg, "$n hands glow with power as $e performs his ritual.");
+	act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
+	sprintf(msg, "Your hands glow with power as you perform the ritual.");
+	act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+	return TRUE;
+      } else {
+	act("You move your arms hoping your invokation can generate enough ancestoral power...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+	act("$n squirms and wiggles as $e performs $s ritual...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
+	return TRUE;
+      }
     }
     return TRUE;
   } else {
     // PCs
 
     sec_obj = ch->heldInSecHand();
-    sec_usable = ch->canUseArm(FALSE);
+    sec_usable = ch->canUseArm(HAND_SECONDARY);
     sec_okay = ((!sec_obj || sec_obj->allowsCast()) && sec_usable);
 
     prim_obj = ch->heldInPrimHand();
-    prim_usable = ch->canUseArm(TRUE);
+    prim_usable = ch->canUseArm(HAND_PRIMARY);
     prim_okay = ((!prim_obj || prim_obj->allowsCast()) && prim_usable);
 
     if (ch->getWizardryLevel() >= WIZ_LEV_COMP_EITHER) {
@@ -196,24 +214,44 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
         else
         sprintf(buf, "%s", (ch->isRightHanded() ? "right" : "left"));
 
-        sprintf(msg, "$n traces a magical rune in the air with $s %s hand.", buf);
-        act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
+	if (ch->hasClass(CLASS_MAGE)) {
+	  sprintf(msg, "$n traces a magical rune in the air with $s %s hand.", buf);
+	  act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
+	} else if (ch->hasClass(CLASS_SHAMAN)) {
+	  sprintf(msg, "$n beckons the ancestors judgement with $s %s hand.", buf);
+	  act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
+	}
 
+	if (ch->hasClass(CLASS_MAGE)) {
+	  if (ch->getWizardryLevel() >= WIZ_LEV_NO_GESTURES) {
+	    sprintf(msg, "While not absolutely necessary, you trace a rune with your %s hand to facilitate your spell in forming.", buf);
+	    act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
+	  } else {
+	    sprintf(msg, "You trace a magical rune in the air with your %s hand.", buf);
+	    act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
+	  }
+	  return TRUE;
+	}
 
-        if (ch->getWizardryLevel() >= WIZ_LEV_NO_GESTURES) {
-          sprintf(msg, "While not absolutely neccessary, you trace a rune with your %s hand to facilitate your spell in forming.", buf);
-          act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
-        } else {
-          sprintf(msg, "You trace a magical rune in the air with your %s hand.", buf);
-          act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
-        }
-        return TRUE;
+	if (ch->hasClass(CLASS_SHAMAN)) {
+	  if (ch->getWizardryLevel() >= WIZ_LEV_NO_GESTURES) {
+	    sprintf(msg, "While you are confident in the execution of the ritual you still perform the proper gesture with your %s hand.", buf);
+	    act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+	  } else {
+	    sprintf(msg, "You perform the proper gestures with your %s hand.", buf);
+	    act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+	  }
+	  return TRUE;
+	}
       } else {
         if (ch->getWizardryLevel() >= WIZ_LEV_NO_GESTURES) {
-          act("You concentrate intently upon the magical task at hand...",
-              FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
-          act("$n stares off into space, concentrating on something...",
-              FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
+	  if (ch->hasClass(CLASS_MAGE)) {
+	    act("You concentrate intently upon the magical task at hand...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
+	    act("$n stares off into space, concentrating on something...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_CYAN);
+	  } else if (ch->hasClass(CLASS_SHAMAN)) {
+	    act("You concentrate intently upon the performance of the ritual.", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+	    act("$n concentrates deeply as $e sings $s praise to $s ancestors.", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
+	  }
           return TRUE;
         }
         act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
@@ -222,10 +260,17 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
       }
     } else {
       if (prim_okay && sec_okay) {
-        sprintf(msg, "$n traces a magical rune in the air with $s hands.");
-        act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
-        sprintf(msg, "You trace a magical rune in the air with your hands.");
-        act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
+	if (ch->hasClass(CLASS_MAGE)) {
+	  sprintf(msg, "$n traces a magical rune in the air with $s hands.");
+	  act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
+	  sprintf(msg, "You trace a magical rune in the air with your hands.");
+	  act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
+	} else if (ch->hasClass(CLASS_SHAMAN)) {
+	  sprintf(msg, "$n sings a haunting song in deep concentration.");
+	  act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
+	  sprintf(msg, "You sing your rada with good wishes for the petro.");
+	  act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+	}
         return TRUE;
       } else {
         sprintf(buf, "%s",  (ch->isRightHanded() ? "right" : "left"));
@@ -261,7 +306,38 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
   }
 }
 
+
 bool bPassMageChecks(TBeing * caster, spellNumT spell, TThing *target)
+{
+  if (!caster->getSkillLevel(spell)) {
+    // probably an immort with improper class
+    caster->sendTo("You need to have the appropriate level AND class for this to work.\n\r");
+    return FALSE;
+  }
+
+  if (caster->isImmortal() && caster->isPlayerAction(PLR_NOHASSLE))
+    return TRUE;
+
+  if (!enforceVerbal(caster, spell))
+    return FALSE;
+
+  if (!enforceGestural(caster, spell))
+    return FALSE;
+
+  // if spell uses component, check for it
+  if (IS_SET(discArray[spell]->comp_types, COMP_MATERIAL)) {
+    TBeing * vict = dynamic_cast<TBeing *>(target);
+    TObj * obj = dynamic_cast<TObj *>(target);
+    if (vict && !caster->useComponent(caster->findComponent(spell), vict, CHECK_ONLY_YES))
+      return FALSE;
+    if (obj && !caster->useComponentObj(caster->findComponent(spell), obj, CHECK_ONLY_YES))
+      return FALSE;
+  }
+
+  return TRUE;
+}
+
+bool bPassShamanChecks(TBeing * caster, spellNumT spell, TThing *target)
 {
   if (!caster->getSkillLevel(spell)) {
     // probably an immort with improper class
@@ -458,7 +534,7 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
   int num2 = 0;
 
   if ((spell_num < MIN_SPELL) || (spell_num >= MAX_SKILL)) {
-    vlogf(5, "Something is passing a bad skill number (%d) to getSkillNum for %s", spell_num, getName());
+    vlogf(LOG_BUG, "Something is passing a bad skill number (%d) to getSkillNum for %s", spell_num, getName());
     return TYPE_UNDEFINED;
   }
 
@@ -1414,6 +1490,16 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
           has_class = TRUE;
         }
       }
+      if (hasClass(CLASS_WARRIOR)) {
+        if (!has_class) {
+          spell_num = SKILL_DUAL_WIELD_WARRIOR;
+        }
+        if ((num2 = getSkillValue(SKILL_DUAL_WIELD_WARRIOR)) > num) {
+          spell_num = SKILL_DUAL_WIELD_WARRIOR;
+          num = num2;
+          has_class = TRUE;
+        }
+      }
       if (hasClass(CLASS_THIEF)) {
         if (!has_class) {
           spell_num = SKILL_DUAL_WIELD_THIEF;
@@ -1637,7 +1723,7 @@ static void logSkillSuccess(const TBeing *caster, spellNumT spell, skillSuccessT
   // however, it can be called directly if appropriate
 
   if (!caster) {
-    vlogf(5,"Something went into logSkillSuccess with no caster");
+    vlogf(LOG_BUG, "Something went into logSkillSuccess with no caster");
     return;
   }
 
@@ -1688,12 +1774,12 @@ static void logSkillFail(const TBeing *caster, spellNumT spell, logSkillFailT ty
   // however, it can be called directly if appropriate
 
   if (!caster) {
-    vlogf(5,"Something went into logSkillFail with no caster");
+    vlogf(LOG_BUG,"Something went into logSkillFail with no caster");
     return;
   }
 
 #if DISC_DEBUG
-  vlogf(2, "%s Fail Spell %s (%d) ubComp < 0", caster->getName(), discArray[spell]->name, spell);
+  vlogf(LOG_BUG, "%s Fail Spell %s (%d) ubComp < 0", caster->getName(), discArray[spell]->name, spell);
 #endif
 
   if ((caster->GetMaxLevel() > MAX_MORT) && caster->desc) {
@@ -1748,7 +1834,7 @@ static bool bSucCounter(TBeing *caster, skillUseClassT skillType, spellNumT spel
           logSkillFail(caster, spell, FAIL_ENGAGE);
 #if DISC_DEBUG
           if (caster->desc && caster->isPc()) {
-            vlogf(2, "%s Fail Spell %s (%d) EngFail: boost (%d) num (%d) , roll (%d) ubComp (%d)", caster->getName(), discArray[spell]->name, spell, boost, num, roll, ubCompetence);
+            vlogf(LOG_BUG, "%s Fail Spell %s (%d) EngFail: boost (%d) num (%d) , roll (%d) ubComp (%d)", caster->getName(), discArray[spell]->name, spell, boost, num, roll, ubCompetence);
           }
 #endif
           switch (getSpellType(discArray[spell]->typ)) {
@@ -1759,7 +1845,7 @@ static bool bSucCounter(TBeing *caster, skillUseClassT skillType, spellNumT spel
               caster->sendTo(COLOR_SPELLS, "<c>Your fighting distracts you from your prayer.<1>\n\r");
               break;
             default:
-              vlogf(9, "bad spot in distract (1).");
+              vlogf(LOG_BUG, "bad spot in distract (1).");
               break;
           }
           return FALSE;
@@ -1841,7 +1927,7 @@ static void logLearnFail(TBeing *caster, spellNumT spell, int type)
   // learnFromDoing and learnFromDoingUnusual
 
   if (!caster) {
-    vlogf(5,"Something went into logLearnFail with no caster (%d)", spell);
+    vlogf(LOG_BUG,"Something went into logLearnFail with no caster (%d)", spell);
     return;
   }
 
@@ -1850,12 +1936,12 @@ static void logLearnFail(TBeing *caster, spellNumT spell, int type)
   } 
 
   if (!caster->desc) {
-    vlogf(5,"Something went into logLearnFail with no desc (%d)", spell);
+    vlogf(LOG_BUG,"Something went into logLearnFail with no desc (%d)", spell);
     return;
   }
 
 #if DISC_DEBUG
-  vlogf(2, "%s Fail Spell %s (%d) ubComp < 0", caster->getName(), discArray[spell]->name, spell); 
+  vlogf(LOG_BUG, "%s Fail Spell %s (%d) ubComp < 0", caster->getName(), discArray[spell]->name, spell); 
 #endif
 
   if (type) {
@@ -1898,7 +1984,7 @@ bool bSuccess(TBeing * caster, int ubCompetence, spellNumT spell)
     logSkillFail(caster, spell, FAIL_GENERAL);
 #if DISC_DEBUG
     if (caster->desc && caster->isPc()) {
-      vlogf(2, "%s Fail Spell %s (%d) ubComp < 0", caster->getName(), discArray[spell]->name, spell);
+      vlogf(LOG_BUG, "%s Fail Spell %s (%d) ubComp < 0", caster->getName(), discArray[spell]->name, spell);
     }
 #endif
     return FALSE;
@@ -1907,7 +1993,6 @@ bool bSuccess(TBeing * caster, int ubCompetence, spellNumT spell)
 // force into range
   ubCompetence = min(max(ubCompetence, 0), (int) MAX_SKILL_LEARNEDNESS);
 
-#if 1
   // Here's the basis of this stuff:
   // At max learning, we desire the following results:
   // trivial    = 100%
@@ -1944,116 +2029,6 @@ bool bSuccess(TBeing * caster, int ubCompetence, spellNumT spell)
     logSkillFail(caster, spell, FAIL_GENERAL);
     return false;
   }
-#else
-// old formula
-  int boost = 0, num = 0; 
-  skillUseClassTyp skillType;
-  int focus;
-
-// a LOW roll means success
-// DO NOT DELETE-- COSMO
-// A low roll is better
-  roll = ::number(1,100);
-  skillType = discArray[spell]->typ;
-
-// if (roll > 98) {
-  if (roll > 99) {
-    // fail counter
-    logSkillFail(caster, spell, FAIL_GENERAL);
-#if DISC_DEBUG
-    if (caster->desc && caster->isPc()) {
-      vlogf(2, "%s Fail Spell %s (%d) roll > 98.", caster->getName(), discArray[spell]->name, spell);
-    }
-#endif
-    return FALSE;
-  } else if (roll <= 5) {
-    // success counter
-    if ((caster->inPraying || caster->spelltask) && (skillType == SPELL_CLERIC || skillType == SPELL_DEIKHAN)) {
-      if (!enforceHolySym(caster, spell, TRUE)) {
-        logSkillAttempts(caster, spell, ATTEMPT_REM_NORM);
-        return FALSE;
-      }
-    }
-    logSkillSuccess(caster, spell, SKILL_SUCCESS_NORMAL);
-    return TRUE;
-  }
-
-
-//if (discArray[spell]->task >= 0) { // skills set this to -1, ignore difficul ty
-//    roll += (discArray[spell]->task* 5);
-
-    // increase difficulty if limited position
-//  if (!(spell == SPELL_PENANCE) && !(spell == SKILL_ATTUNE) &&
-//      !(spell == SKILL_MEDITATE) &&
-//      !(IS_SET(discArray[spell]->comp_types, SPELL_IGNORE_POSITION))) {
-  if (!(IS_SET(discArray[spell]->comp_types, SPELL_IGNORE_POSITION))) {
-    boost = caster->plotStat(STAT_CURRENT, STAT_FOC, 1, 45, 25);
-    if (caster->getPosition() == POSITION_RESTING) {
-      roll += max(0, (50 - boost));
-    } else if (caster->getPosition() == POSITION_SITTING) {
-      roll += max(0,( 35 - boost));
-    } else if (caster->getPosition() == POSITION_CRAWLING) {
-       roll += max(0, (20 - boost));
-    }
-  }
-#if FACTIONS_IN_USE
-  // a penalty based on low getPerc()
-  if (caster->desc) {
-    int pietyNum;
-    if ((skillType == SPELL_CLERIC) || (skillType == SPELL_DEIKHAN) ||
-        (skillType == SKILL_CLERIC) || (skillType == SKILL_DEIKHAN)) {
-      pietyNum = min(95, (3 * caster->GetMaxLevel()));
-    } else {
-      pietyNum = min(75, (2 * caster->GetMaxLevel()));
-    }
-    pietyNum = min(0, (((int) caster->getPerc()) - pietyNum));
-    pietyNum = max(-64, pietyNum);
-    pietyNum /= -4;
-    roll += pietyNum;
-  }
-#endif
-
-  if (roll > ubCompetence) {
-    logSkillFail(caster, spell, FAIL_GENERAL);
-#if DISC_DEBUG
-    if (caster->desc && caster->isPc()) {
-      vlogf(2, "%s Fail Spell %s (%d) GenFail: roll (%d) ubComp (%d)", caster->getName(), discArray[spell]->name, spell, roll, ubCompetence);
-    }
-#endif
-    return FALSE;
-  } else {
-// FIRST FOCUS
-
-   if (discArray[spell]->task == TASK_IGNORE_DIFF) {
-      num = ::number(1, 100);
-      boost = 100;
-    } else if (discArray[spell]->task >= 0) { // skills set this to -1, ignore difficu
-      num = ::number(1, (85 + ((1 + discArray[spell]->task) * 4)));
-      boost = caster->plotStat(STAT_CURRENT, STAT_FOC, 60, 95, 85, 1);
-    } else {
-      num = ::number(1, 90);
-      boost = caster->plotStat(STAT_CURRENT, STAT_FOC, 80, 95, 88, 1);
-    }
-
-    if (caster->desc && dynamic_cast<const TPerson *> (caster)) {
-      focus = caster->plotStat(STAT_CHOSEN, STAT_FOC, -25, 25, 0, 1);
-//      focus = caster->chosenStats.values[STAT_FOC] / 2;
-      boost = min(99, (boost + focus));
-    }
-    if ((num > boost)) {
-      logSkillFail(caster, spell, FAIL_FOCUS);
-#if DISC_DEBUG
-      if (caster->desc && caster->isPc()) {
-        vlogf(2, "%s Fail Spell %s (%d) focFail: boost (%d) num (%d) , roll (%d)ubComp (%d)", caster->getName(), discArray[spell]->name, spell, boost, num, roll, ubCompetence);
-      }
-#endif
-      return FALSE;
-    }
-
-    // success counter
-    return bSucCounter(caster, skillType, spell, roll, ubCompetence);
-  }
-#endif
 }
 
 byte defaultProficiency(byte uLearned, byte uStart, byte uLearn)
@@ -2072,7 +2047,7 @@ critSuccT critSuccess(TBeing *caster, spellNumT spell)
   CDiscipline *cd;
 
   if (das == DISC_NONE) {
-    vlogf(5, "bad disc for skill %d", spell);
+    vlogf(LOG_BUG, "bad disc for skill %d", spell);
     return CRIT_S_NONE;
   }
   if (!(cd = caster->getDiscipline(das)))
@@ -2148,7 +2123,7 @@ critFailT critFail(TBeing *caster, spellNumT spell)
   }
   discNumT das = getDisciplineNumber(spell, FALSE);
   if (das == DISC_NONE) {
-    vlogf(5, "bad disc for spell %d", spell);
+    vlogf(LOG_BUG, "bad disc for spell %d", spell);
     return CRIT_F_NONE; 
   } 
 // adjust for learnedness of caster
@@ -2191,6 +2166,13 @@ int CDiscipline::useMana(byte ubCompetence, byte ubDifficulty)
   return(max((int) ubDifficulty,(100-((int) ubCompetence))/2));
 }
 
+// LIFEFORCE
+int CDiscipline::useLifeforce(byte ubCompetence, byte ubDifficulty)
+{
+  return(max((int) ubDifficulty,(100-((int) ubCompetence))/2));
+}
+// END LIFEFORCE
+
 double CDiscipline::usePerc(byte ubCompetence, double fDifficulty)
 {
   return(fDifficulty+((fDifficulty*((double)(100-ubCompetence)))/100));
@@ -2205,6 +2187,18 @@ int checkMana(TBeing * caster, int mana)
   } else   
     return FALSE;
 }
+
+// LIFEFORCE
+int checkLifeforce(TBeing * caster, int lifeforce)
+{
+  if (caster->noLifeforce(lifeforce)) {
+    act("You don't seem to have enough lifeforce...", FALSE, caster, 0, 0, TO_CHAR, ANSI_ORANGE);
+    act("$n's eyes glow fire red and then quickly fade back to normal.", FALSE, caster, NULL, NULL, TO_ROOM, ANSI_RED);
+    return TRUE;
+  } else   
+    return FALSE;
+}
+// END LIFEFORCE
 
 #if FACTIONS_IN_USE
 bool checkPerc(const TBeing * caster, double align)
@@ -2387,6 +2381,8 @@ void checkFactionHelp(TBeing *caster, TBeing *victim)
 {
   int dec_amt;
 
+  return;
+
   if (caster->isOppositeFaction(victim)) {
     dec_amt = (int) (caster->getMove() / 4);
     caster->addToMove(-dec_amt);
@@ -2435,6 +2431,7 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_RANGER_FIGHT] = new CDRangerFight();
     discs->disc[DISC_ANIMAL] = new CDAnimal();
     discs->disc[DISC_PLANTS] = new CDPlants();
+    discs->disc[DISC_NATURE] = new CDNature();
     discs->disc[DISC_SURVIVAL] = new CDSurvival();
 
     discs->disc[DISC_DEIKHAN] = new CDDeikhan();
@@ -2463,12 +2460,12 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_TRAPS] = new CDTraps();
 
     discs->disc[DISC_SHAMAN] = new CDShaman();
-    discs->disc[DISC_SHAMAN_FIGHT] = new CDShamanFight();
+    discs->disc[DISC_SHAMAN_FROG] = new CDShamanFrog();
     discs->disc[DISC_SHAMAN_ALCHEMY] = new CDShamanAlchemy();
-    discs->disc[DISC_SHAMAN_HEALING] = new CDShamanHealing();
-    discs->disc[DISC_NATURE] = new CDNature();
-    discs->disc[DISC_UNDEAD] = new CDUndead();
-    discs->disc[DISC_DRAINING] = new CDDraining();
+    discs->disc[DISC_SHAMAN_SKUNK] = new CDShamanSkunk();
+    discs->disc[DISC_SHAMAN_ARMADILLO] = new CDShamanArmadillo();
+    discs->disc[DISC_SHAMAN_SPIDER] = new CDShamanSpider();
+    discs->disc[DISC_SHAMAN_CONTROL] = new CDShamanControl();
     discs->disc[DISC_TOTEM] = new CDTotem();
 
     discs->disc[DISC_WIZARDRY] = new CDWizardry();
@@ -2497,7 +2494,7 @@ void TBeing::assignDisciplinesClass()
 
 
   if (!player.Class) {
-    vlogf(10,"call to assignDisciplinesClass without a valid Class (%s)", getName());
+    vlogf(LOG_BUG,"call to assignDisciplinesClass without a valid Class (%s)", getName());
     return;
   }
 
@@ -2581,10 +2578,12 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_PLANTS] = new CDPlants();
       discs->disc[DISC_SURVIVAL] = new CDSurvival();
       discs->disc[DISC_SLASH] = new CDSlash();
+      discs->disc[DISC_NATURE] = new CDNature();
       discs->disc[DISC_RANGED] = new CDRanged();
       discs->disc[DISC_PIERCE] = new CDPierce();
     }
     getDiscipline(DISC_RANGER)->ok_for_class |= CLASS_RANGER;
+    getDiscipline(DISC_NATURE)->ok_for_class |= CLASS_RANGER;
     getDiscipline(DISC_RANGER_FIGHT)->ok_for_class |= CLASS_RANGER;
     getDiscipline(DISC_ANIMAL)->ok_for_class |= CLASS_RANGER;
     getDiscipline(DISC_PLANTS)->ok_for_class |= CLASS_RANGER;
@@ -2663,12 +2662,12 @@ void TBeing::assignDisciplinesClass()
   if (hasClass(CLASS_SHAMAN)) {
     if (!isPc()) {
       discs->disc[DISC_SHAMAN] = new CDShaman();
-      discs->disc[DISC_SHAMAN_FIGHT] = new CDShamanFight();
+      discs->disc[DISC_SHAMAN_FROG] = new CDShamanFrog();
       discs->disc[DISC_SHAMAN_ALCHEMY] = new CDShamanAlchemy();
-      discs->disc[DISC_SHAMAN_HEALING] = new CDShamanHealing();
-      discs->disc[DISC_UNDEAD] = new CDUndead();
-      discs->disc[DISC_NATURE] = new CDNature();
-      discs->disc[DISC_DRAINING] = new CDDraining();
+      discs->disc[DISC_SHAMAN_SKUNK] = new CDShamanSkunk();
+      discs->disc[DISC_SHAMAN_SPIDER] = new CDShamanSpider();
+      discs->disc[DISC_SHAMAN_ARMADILLO] = new CDShamanArmadillo();
+      discs->disc[DISC_SHAMAN_CONTROL] = new CDShamanControl();
       discs->disc[DISC_TOTEM] = new CDTotem();
       discs->disc[DISC_BLUNT] = new CDBash();
       discs->disc[DISC_PIERCE] = new CDPierce();
@@ -2676,12 +2675,12 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_LORE] = new CDLore();
     }
     getDiscipline(DISC_SHAMAN)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_SHAMAN_FIGHT)->ok_for_class |= CLASS_SHAMAN;
+    getDiscipline(DISC_SHAMAN_FROG)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_SHAMAN_ALCHEMY)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_SHAMAN_HEALING)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_UNDEAD)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_NATURE)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_DRAINING)->ok_for_class |= CLASS_SHAMAN;
+    getDiscipline(DISC_SHAMAN_SKUNK)->ok_for_class |= CLASS_SHAMAN;
+    getDiscipline(DISC_SHAMAN_SPIDER)->ok_for_class |= CLASS_SHAMAN;
+    getDiscipline(DISC_SHAMAN_ARMADILLO)->ok_for_class |= CLASS_SHAMAN;
+    getDiscipline(DISC_SHAMAN_CONTROL)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_TOTEM)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_BLUNT)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_PIERCE)->ok_for_class |= CLASS_SHAMAN;
@@ -2888,7 +2887,7 @@ void TBeing::assignSkillsClass()
         } else {
         // what disc is left?
 // this logs a lot for high level mobs
-//          vlogf(5, "Mob (%s) has maxxed all mage disciplines (assignDisc", getName());
+//          vlogf(LOG_BUG, "Mob (%s) has maxxed all mage disciplines (assignDisc", getName());
           break;
         }
       }
@@ -3006,7 +3005,7 @@ void TBeing::assignSkillsClass()
         } else {
         // what disc is left?
 // this logs a lot for high level mobs
-//          vlogf(5, "Mob (%s) has maxxed all cleric disciplines (assignDisc", getName());
+//          vlogf(LOG_BUG, "Mob (%s) has maxxed all cleric disciplines (assignDisc", getName());
           break;
         }
       }
@@ -3132,7 +3131,7 @@ void TBeing::assignSkillsClass()
         } else {
         // what disc is left?
 // this logs a lot for high level mobs
-//          vlogf(5, "Mob (%s) has maxxed all warrior disciplines (assignDisc", getName()); 
+//          vlogf(LOG_BUG, "Mob (%s) has maxxed all warrior disciplines (assignDisc", getName()); 
           break;
         }
       }
@@ -3245,7 +3244,7 @@ void TBeing::assignSkillsClass()
         } else {
         // what disc is left?
 // this logs a lot for high level mobs
-//          vlogf(5, "Mob (%s) has maxxed all thief disciplines (assignDisc", getName());
+//          vlogf(LOG_BUG, "Mob (%s) has maxxed all thief disciplines (assignDisc", getName());
           break;
         }
       }
@@ -3368,7 +3367,7 @@ void TBeing::assignSkillsClass()
         } else {
         // what disc is left?
 // this logs a lot for high level mobs
-//          vlogf(5, "Mob (%s) has maxxed all deikhan disciplines (assignDisc", getName());
+//          vlogf(LOG_BUG, "Mob (%s) has maxxed all deikhan disciplines (assignDisc", getName());
           break;
         }
       }
@@ -3475,7 +3474,7 @@ void TBeing::assignSkillsClass()
         } else {
         // what disc is left?
 // this logs a lot for high level mobs
-//          vlogf(5, "Mob (%s) has maxxed all monk disciplines (assignDisc", getName());
+//          vlogf(LOG_BUG, "Mob (%s) has maxxed all monk disciplines (assignDisc", getName());
           break;
         }
       }
@@ -3555,6 +3554,9 @@ void TBeing::assignSkillsClass()
         } else if ((cd = getDiscipline(DISC_SLASH)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS && (num <= 3)) {
           raiseDiscOnce(DISC_SLASH);
+        } else if ((cd = getDiscipline(DISC_NATURE)) &&
+                    cd->getLearnedness() < MAX_DISC_LEARNEDNESS && (num <= 3)) {
+          raiseDiscOnce(DISC_NATURE);
         } else if ((cd = getDiscipline(DISC_RANGED)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS && (num == 2)) {
           raiseDiscOnce(DISC_RANGED);
@@ -3589,7 +3591,7 @@ void TBeing::assignSkillsClass()
         } else {
         // what disc is left?
 // this logs a lot for high level mobs
-//          vlogf(5, "Mob (%s) has maxxed all ranger disciplines (assignDisc", getName());
+//          vlogf(LOG_BUG, "Mob (%s) has maxxed all ranger disciplines (assignDisc", getName());
           break;
         }
       }
@@ -3651,30 +3653,30 @@ void TBeing::assignSkillsClass()
 //    Note that if a disc is maxxed it will drop to the next one
         switch ((::number(1,6))) {
           case 1:
-            if ((cd = getDiscipline(DISC_DRAINING)) &&
+            if ((cd = getDiscipline(DISC_SHAMAN_CONTROL)) &&
                  cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-              raiseDiscOnce(DISC_DRAINING);
+              raiseDiscOnce(DISC_SHAMAN_CONTROL);
               found = TRUE;
               break;
             }
           case 2:
-            if ((cd = getDiscipline(DISC_NATURE)) &&
-                 cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-              raiseDiscOnce(DISC_NATURE);
+	    if ((cd = getDiscipline(DISC_SHAMAN_ARMADILLO)) &&
+                cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
+              raiseDiscOnce(DISC_SHAMAN_ARMADILLO);
               found = TRUE;
               break;
-            }
+	    }
           case 3:
-            if ((cd = getDiscipline(DISC_SHAMAN_FIGHT)) &&
+            if ((cd = getDiscipline(DISC_SHAMAN_FROG)) &&
                  cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-              raiseDiscOnce(DISC_SHAMAN_FIGHT);
+              raiseDiscOnce(DISC_SHAMAN_FROG);
               found = TRUE;
               break;
             }
          case 4:
-           if ((cd = getDiscipline(DISC_UNDEAD)) &&
+           if ((cd = getDiscipline(DISC_SHAMAN_SPIDER)) &&
                 cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-              raiseDiscOnce(DISC_UNDEAD);
+              raiseDiscOnce(DISC_SHAMAN_SPIDER);
               found = TRUE;
               break;
             }
@@ -3692,41 +3694,41 @@ void TBeing::assignSkillsClass()
         } else if ((cd = getDiscipline(DISC_TOTEM)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS && (num == 2)) {
           raiseDiscOnce(DISC_TOTEM);
-        } else if ((cd = getDiscipline(DISC_UNDEAD)) &&
+        } else if ((cd = getDiscipline(DISC_SHAMAN_SPIDER)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS && (num == 3)) {
-          raiseDiscOnce(DISC_UNDEAD);
+          raiseDiscOnce(DISC_SHAMAN_SPIDER);
 
-        } else if ((cd = getDiscipline(DISC_DRAINING)) &&
+        } else if ((cd = getDiscipline(DISC_SHAMAN_CONTROL)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-          raiseDiscOnce(DISC_DRAINING);
-        } else if ((cd = getDiscipline(DISC_SHAMAN_FIGHT)) &&
+          raiseDiscOnce(DISC_SHAMAN_CONTROL);
+        } else if ((cd = getDiscipline(DISC_SHAMAN_FROG)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-          raiseDiscOnce(DISC_SHAMAN_FIGHT);
-        } else if ((cd = getDiscipline(DISC_NATURE)) &&
-                    cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-          raiseDiscOnce(DISC_NATURE);
+          raiseDiscOnce(DISC_SHAMAN_FROG);
+	} else if ((cd = getDiscipline(DISC_SHAMAN_ARMADILLO)) &&
+	        cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
+	  raiseDiscOnce(DISC_SHAMAN_ARMADILLO);
         } else if ((cd = getDiscipline(DISC_BLUNT)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
           raiseDiscOnce(DISC_BLUNT);
         } else if ((cd = getDiscipline(DISC_TOTEM)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
           raiseDiscOnce(DISC_TOTEM);
-        } else if ((cd = getDiscipline(DISC_UNDEAD)) &&
+        } else if ((cd = getDiscipline(DISC_SHAMAN_SPIDER)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-          raiseDiscOnce(DISC_UNDEAD);
+          raiseDiscOnce(DISC_SHAMAN_SPIDER);
         } else if ((cd = getDiscipline(DISC_PIERCE)) &&
                    cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
           raiseDiscOnce(DISC_PIERCE);
-        } else if ((cd = getDiscipline(DISC_SHAMAN_HEALING)) &&
+        } else if ((cd = getDiscipline(DISC_SHAMAN_SKUNK)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-          raiseDiscOnce(DISC_SHAMAN_HEALING);
+          raiseDiscOnce(DISC_SHAMAN_SKUNK);
         } else if ((cd = getDiscipline(DISC_SHAMAN_ALCHEMY)) &&
                     cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
           raiseDiscOnce(DISC_SHAMAN_ALCHEMY);
         } else {
         // what disc is left?
 // this logs a lot for high level mobs
-//          vlogf(5, "Mob (%s) has maxxed all shaman disciplines (assignDisc", getName());
+//          vlogf(LOG_BUG, "Mob (%s) has maxxed all shaman disciplines (assignDisc", getName());
           break;
         }
       }
@@ -3802,12 +3804,14 @@ void TBeing::initSkillsBasedOnDiscLearning(discNumT disc_num)
         }
         setNatSkillValue(i, value);
         setSkillValue(i,value);
-        if (i ==  SKILL_TACTICS)
+        if (i ==  SKILL_TACTICS){
           setNatSkillValue(SKILL_TACTICS,min(100, (GetMaxLevel() * 12)));
           setSkillValue(SKILL_TACTICS,min(100, (GetMaxLevel() * 12)));
-        if (i == SKILL_RIDE)
+	}
+        if (i == SKILL_RIDE){
           setNatSkillValue(SKILL_RIDE,min(100,5 + GetMaxLevel() * 2));
           setSkillValue(SKILL_RIDE,min(100,5 + GetMaxLevel() * 2)); 
+	}
       }
     }
   }
@@ -3878,14 +3882,15 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
     case DISC_SPIRIT:
     case DISC_SORCERY:
     case DISC_ALCHEMY:
-    case DISC_NATURE:
+    case DISC_SHAMAN_ARMADILLO:
     case DISC_ANIMAL:
+    case DISC_NATURE:
     case DISC_SURVIVAL:
     case DISC_SHAMAN:
     case DISC_TOTEM:
-    case DISC_DRAINING:
-    case DISC_UNDEAD:
-    case DISC_SHAMAN_HEALING:
+    case DISC_SHAMAN_CONTROL:
+    case DISC_SHAMAN_SPIDER:
+    case DISC_SHAMAN_SKUNK:
       cd = getDiscipline(DISC_WIZARDRY);
       if (cd && cd->getLearnedness() > 0)
         lev += 2 + (cd->getLearnedness() / 20);
@@ -3967,6 +3972,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_PLANTS:
     case DISC_ANIMAL:
     case DISC_SURVIVAL:
+    case DISC_NATURE:
       lev = getClassLevel(CLASS_RANGER);
       break;
     case DISC_WARRIOR:
@@ -4001,12 +4007,12 @@ int TBeing::getSkillLevel(spellNumT skill) const
       lev = getClassLevel(CLASS_MONK);
       break;
     case DISC_SHAMAN:
-    case DISC_SHAMAN_FIGHT:
+    case DISC_SHAMAN_FROG:
     case DISC_SHAMAN_ALCHEMY:
-    case DISC_NATURE:
-    case DISC_SHAMAN_HEALING:
-    case DISC_UNDEAD:
-    case DISC_DRAINING:
+    case DISC_SHAMAN_ARMADILLO:
+    case DISC_SHAMAN_SKUNK:
+    case DISC_SHAMAN_SPIDER:
+    case DISC_SHAMAN_CONTROL:
     case DISC_TOTEM:
       lev = getClassLevel(CLASS_SHAMAN);
       break;
@@ -4041,7 +4047,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case MAX_DISCS:
     case DISC_NONE:
     case MAX_SAVED_DISCS:
-      vlogf(5, "bad disc (%d, %d) in getSkillLevel (%s).",
+      vlogf(LOG_BUG, "bad disc (%d, %d) in getSkillLevel (%s).",
                disc_num, skill, getName());
       lev = 0;
       break;
@@ -4054,7 +4060,7 @@ byte TBeing::getMaxSkillValue(spellNumT skill) const
   int tmp2;
   discNumT dn = getDisciplineNumber(skill, FALSE);
   if (dn == DISC_NONE) {
-    vlogf(5, "bad disc for skill %d", skill);
+    vlogf(LOG_BUG, "bad disc for skill %d", skill);
     return SKILL_MIN;
   }
   CDiscipline * cdisc = getDiscipline(dn);
@@ -4075,7 +4081,14 @@ byte TBeing::getMaxSkillValue(spellNumT skill) const
 
 CDiscipline * TBeing::getDiscipline(discNumT n) const
 {
-  return discs->disc[n];
+  if (discs)
+    return discs->disc[n];
+  else {
+    mud_assert(0,
+    "TBeing had no CMasterDiscipline. '%s'", getName() ? getName() : "NoName");
+
+    return NULL;
+  }
 }
 
 void CS(const TBeing *caster, spellNumT spell)
@@ -4218,7 +4231,7 @@ static void logLearnSuccess(TBeing *caster, spellNumT spell, logLearnSuccessT ty
   // learnFromDoing and learnFromDoingUnusual
 
   if (!caster) {
-    vlogf(5,"Something went into logLearnSuccess with no caster (%d)", spell);
+    vlogf(LOG_BUG,"Something went into logLearnSuccess with no caster (%d)", spell);
     return;
   }
 
@@ -4227,7 +4240,7 @@ static void logLearnSuccess(TBeing *caster, spellNumT spell, logLearnSuccessT ty
   }
 
   if (!caster->desc) {
-    vlogf(5,"Something went into logLearnSuccess with no desc (%d)", spell);
+    vlogf(LOG_BUG,"Something went into logLearnSuccess with no desc (%d)", spell);
     return;
   }
 
@@ -4278,7 +4291,7 @@ int TPerson::learnFromDoingUnusual(learnUnusualTypeT type, spellNumT spell, int 
         spell = SKILL_PIERCE_PROF;
         spell2 = SKILL_PIERCE_SPEC;
       } else {
-        vlogf(5, "Wierd case in learnFromDoingUnusual %s, %d", getName(), w_type);
+        vlogf(LOG_BUG, "Wierd case in learnFromDoingUnusual %s, %d", getName(), w_type);
         return FALSE;
       }
       if (amt && ::number(0,amt)) {
@@ -4343,7 +4356,7 @@ int TPerson::learnFromDoingUnusual(learnUnusualTypeT type, spellNumT spell, int 
       }
       break;
     case LEARN_UNUSUAL_NONE:
-      vlogf(5, "Wierd case in learnFromDoingUnusual %s, type %d spell %d", getName(), type, spell);
+      vlogf(LOG_BUG, "Wierd case in learnFromDoingUnusual %s, type %d spell %d", getName(), type, spell);
       return FALSE;
   }
   return FALSE;
@@ -4361,6 +4374,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
   CSkill *sk;
   CDiscipline *assDiscipline, *discipline;
   int discLearn, chance, chanceDisc, chanceAss;
+  char tString[256];
 
   discLearn = chance = chanceDisc = chanceAss = 0;
   if (isImmortal() || !desc) {
@@ -4438,7 +4452,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
   //   do skill's disc learning here COSMO MARKER
     if (!(discipline = getDiscipline(discArray[sknum]->disc))) {
 #if DISC_DEBUG
-      vlogf(-1, "(%s) has a skill (%d) but doesnt have the discipline", getName(), sknum);
+      vlogf(LOG_SILENT, "(%s) has a skill (%d) but doesnt have the discipline", getName(), sknum);
 #endif
       return FALSE;
     } 
@@ -4448,14 +4462,14 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     if (discLearn < 100) {
       discipline->setDoLearnedness(discLearn);
 #if DISC_DEBUG
-      vlogf(-1, "%s just learned something in %s, Learn = %d.", getName(), disc_names[(discArray[sknum]->assDisc)], discLearn); 
+      vlogf(LOG_SILENT, "%s just learned something in %s, Learn = %d.", getName(), disc_names[(discArray[sknum]->assDisc)], discLearn); 
 #endif
     }
   }
   if (!chanceAss) {
     if (!(assDiscipline = getDiscipline(discArray[sknum]->assDisc))) {
 #if DISC_DEBUG
-      vlogf(-1, "(%s) has a skill (%d) but doesnt have the assDisc", getName(), sknum);
+      vlogf(LOG_SILENT, "(%s) has a skill (%d) but doesnt have the assDisc", getName(), sknum);
 #endif
       return FALSE;
     }
@@ -4465,7 +4479,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     if (discLearn < 100) {
       assDiscipline->setDoLearnedness(discLearn);
 #if DISC_DEBUG
-      vlogf(-1, "%s just learned something in %s, Learn = %d.", getName(), disc_names[(discArray[sknum]->assDisc)], discLearn); 
+      vlogf(LOG_SILENT, "%s just learned something in %s, Learn = %d.", getName(), disc_names[(discArray[sknum]->assDisc)], discLearn); 
 #endif
     }
   }
@@ -4482,7 +4496,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     const int max_amt = MAX_SKILL_LEARNEDNESS;
     float amount = ((float) max_amt - (float) actual) / ((float) max_amt);
 #if DISC_DEBUG
-    vlogf(-1, "learnFromDoing (%s) amt(%f) max(%d) actual(%d)", discArray[sknum]->name, amount, max_amt, actual);
+    vlogf(LOG_SILENT, "learnFromDoing (%s) amt(%f) max(%d) actual(%d)", discArray[sknum]->name, amount, max_amt, actual);
 #endif
 
   // some basic background on how this was formulated.
@@ -4514,8 +4528,6 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
 
 #if 1
   if (!silent) {
-    char tString[256];
-
     if ((discArray[sknum]->comp_types & COMP_MATERIAL))
       strcpy(tString, "feel you have more control over the powers of");
     else if (discArray[sknum]->holyStrength) {
@@ -4543,29 +4555,79 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
       boost = 90 - actual;
   }
 #if DISC_DEBUG
-  vlogf(-1, "learnFromDoing (%s)(%d): actual (%d), boost (%d)", discArray[sknum]->name, sknum, actual, boost);
+  vlogf(LOG_SILENT, "learnFromDoing (%s)(%d): actual (%d), boost (%d)", discArray[sknum]->name, sknum, actual, boost);
 #endif
   setSkillValue(sknum, getSkillValue(sknum) + boost);
   setNatSkillValue(sknum, actual + boost);
+
+  if(hasQuestBit(TOG_STARTED_MONK_RED) && !hasQuestBit(TOG_FINISHED_MONK_RED)){
+    if(getNatSkillValue(SKILL_SLASH_PROF) >= 20 &&
+       getNatSkillValue(SKILL_BLUNT_PROF) >= 20 &&
+       getNatSkillValue(SKILL_PIERCE_PROF) >= 20 &&
+       getNatSkillValue(SKILL_RANGED_PROF) >= 20){
+      sendTo(COLOR_BASIC, "<c>You are now proficient enough with weapons to earn your red sash.<z>");
+      setQuestBit(TOG_FINISHED_MONK_RED);
+    } else if(getNatSkillValue(sknum) >= 20 &&
+	      (sknum == SKILL_SLASH_PROF || sknum == SKILL_BLUNT_PROF ||
+	       sknum == SKILL_PIERCE_PROF || sknum == SKILL_RANGED_PROF)){
+      sendTo(COLOR_BASIC, "<c>You feel that you have enough knowledge of %s to please your guildmaster.<z>", discArray[sknum]->name);
+    }
+  }
   
   sk->lastUsed = time(0);
   learnSuccessLog(this, sknum, boost);
 
-  if(hasClass(CLASS_MONK) && sknum == SKILL_KICK_MONK &&
-     getSkillValue(sknum) == 100){
-    setQuestBit(TOG_ELIGIBLE_ADVANCED_KICKING);
+  if (getNatSkillValue(sknum) == 100) {
+    if ((discArray[sknum]->comp_types & COMP_MATERIAL))
+      strcpy(tString, "feel you have total control over the powers of");
+    else if (discArray[sknum]->holyStrength) {
+      string tStDeity("");
 
-    act("<c>You feel that you have <g>mastered<c> the skill of <p>kicking<c>.<1>\n<c>Perhaps your guildmaster could help you with <p>advanced kicking<c>.<1>",
-	FALSE, this, NULL, NULL, TO_CHAR);
+      tStDeity = yourDeity(sknum, FIRST_PERSON);
+      sprintf(tString, "feel %s has blessed you fully with the powers of", tStDeity.c_str());
+    } else
+      strcpy(tString, "feel you have total mastery over");
+
+    if (!silent)
+      sendTo(COLOR_BASIC, "<c>You %s %s.<z>\n\r", tString, discArray[sknum]->name);
+
+    if (hasClass(CLASS_MONK) && sknum == SKILL_KICK_MONK) {
+      setQuestBit(TOG_ELIGIBLE_ADVANCED_KICKING);
+
+      sendTo(COLOR_BASIC, "<c>Perhaps your guildmaster could help you with <p>advanced kicking<c> now.<1>");
+    }
+  } else if (getNatSkillValue(sknum) == getMaxSkillValue(sknum)) {
+    if ((discArray[sknum]->comp_types & COMP_MATERIAL))
+      strcpy(tString, "feel you have all the control you can currently obtain of");
+    else if (discArray[sknum]->holyStrength) {
+      string tStDeity("");
+
+      tStDeity = yourDeity(sknum, FIRST_PERSON);
+      sprintf(tString, "feel %s refuses to bless you more, for now, in respects to", tStDeity.c_str());
+    } else
+      strcpy(tString, "feel you have all the control you can currently have over");
+
+    if (!silent)
+      sendTo(COLOR_BASIC, "<c>You %s %s.<z>\n\r", tString, discArray[sknum]->name);
   }
 
   return TRUE;
 }
 
-void TBeing::addSkillLag(spellNumT skill)
+void TBeing::addSkillLag(spellNumT skill, int rc)
 {
+  // rc is just a playerfavorable way to end lag when fight is over
+  // We do this already in places. This makes it general.
+  // If there is any issue just use 0 for rc and it will put in regular lag
   lag_t lag_num = discArray[skill]->lag;
-  float f_lag = lagAdjust(lag_num);
+  float f_lag  = lagAdjust(lag_num),
+        f_base = 1.0;
+#if 1 
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    f_lag = min(f_base, f_lag);
+#else
+    f_base = 2;
+#endif
   f_lag *= combatRound(1);
   int i_lag = static_cast<int>(f_lag);
 
