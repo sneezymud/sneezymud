@@ -754,17 +754,10 @@ int TBeing::updateHalfTickStuff()
 	  die(DAMAGE_DRAIN);
 	  return DELETE_THIS;
 	}
-	if (-7 > getHit()) {
-	  vlogf(LOG_MISC, "%s drain-killed by lifeforce code at %s (%d)",
-		getName(), roomp ? roomp->getName() : "nowhere", inRoom());
-	  sendTo("The loa have reclaimed your soul!\n\r");
-	  reconcileDamage(this,10,DAMAGE_DRAIN);
-	  die(DAMAGE_DRAIN);
-	  return DELETE_THIS;
-	}
 	if (0 > getHit()) {
 	  reconcileDamage(this,1,DAMAGE_DRAIN);
 	  sendTo("Your condition makes it impossible to gather lifeforce!\n\r");
+	  sendTo("Try and walk south a few times if you want to finish yourself off.\n\r");
 	}
 	if (getHit() > 0) {
 	  reconcileDamage(this,::number(1,2),DAMAGE_DRAIN);
