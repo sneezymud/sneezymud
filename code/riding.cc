@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: riding.cc,v $
+// Revision 1.2  1999/09/18 06:10:42  brutius
+// Fixed typo in mount 
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -488,7 +491,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
         default:
           act("You attempt to mount $N who turns and knocks you down.",
                 FALSE, this, 0, horse, TO_CHAR);
-          act("$n attempts to mount $N who turns and knocks them down.",
+          act("$n attempts to mount $N who turns and knocks $m down.",
                 FALSE, this, 0, horse, TO_NOTVICT);
           break;
       }
