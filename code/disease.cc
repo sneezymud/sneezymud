@@ -75,6 +75,10 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
   if (ch->inRoom() == ROOM_NOCTURNAL_STORAGE)
     return;
 
+  // Do not spread disease in peacful zones, this can become real hairy.
+  if (ch->roomp && ch->roomp->isRoomFlag(ROOM_PEACEFUL))
+    return;
+
   for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
     TBeing *v = dynamic_cast<TBeing *>(t);
     if (!v || v == ch)
