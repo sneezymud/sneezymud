@@ -244,7 +244,7 @@ void TBow::bloadArrowBow(TBeing *ch, TArrow *the_arrow)
   --(*this);
   ch->equipChar(this, ch->getPrimaryHold());
 
-  ch->addToWait(combatRound(1));
+  ch->addToWait(combatRound(1.5));
 }
 
 int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir, int shoot_dist)
@@ -387,6 +387,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
 
     if (bSuccess(ch, ch->getSkillValue(SKILL_FAST_LOAD), SKILL_FAST_LOAD)) {
       ch->doBload(buf);
+      ch->addToWait(combatRound(-1));
     } else {
       ch->sendTo("You fumble your %s which hampers your reload attempt.\n\r", buf);
       //      ch->sendTo("Oops!  You miscock your %s, and screw up your rhythm.\n\r", buf);

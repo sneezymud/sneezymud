@@ -241,6 +241,14 @@ enum liqTypeT {
      LIQ_MUSHROOM_ALE,
      LIQ_VOMIT,
      LIQ_COLA,
+     LIQ_STRAWBERRY_MARGARITA,
+     LIQ_BLUE_MARGARITA,
+     LIQ_GOLD_MARGARITA,
+     LIQ_STRAWBERRY_DAIQUIRI,
+     LIQ_BANANA_DAIQUIRI,
+     LIQ_PINA_COLADA,
+     LIQ_TEQUILA_SUNRISE,
+     LIQ_ISLA_VERDE,
      MAX_DRINK_TYPES     // move and change
 };
 extern liqTypeT & operator++(liqTypeT &, int);
