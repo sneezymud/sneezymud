@@ -968,7 +968,14 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
   players[0]=players[i];
   players[i]=tmp;
   better=0;
-  button=players[1]->ch->name;
+
+  for(int i=1;i<MAX_HOLDEM_PLAYERS;++i){
+    if(players[i] && players[i]->ch && players[i]->ch->isPc()){
+      button=players[i]->ch->name;
+      vlogf(LOG_PEEL, "setting button to %s", button.c_str());
+    }
+  }
+
   
   // deal cards to everyone
   for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){    
