@@ -159,9 +159,15 @@ void TBeing::doConsider(const char *argument)
   if(db.fetchRow())
     count=atof(db.getColumn(1));
 
-  sendTo(COLOR_BASIC, "You will gain %s experience when fighting %s.\n\r", 
-	 describe_trophy_exp(count),
-	 namebuf);
+  if(count>0){
+    sendTo(COLOR_BASIC, "You will gain %s experience when fighting %s.\n\r", 
+	   describe_trophy_exp(count),
+	   namebuf);
+  } else {
+    sendTo(COLOR_BASIC, "You have never fought %s and will gain %s experience.\n\r",
+	   namebuf,
+	   describe_trophy_exp(count));
+  }
 
   if (getDiscipline(DISC_ADVENTURING)) {
     int learn = 0;
