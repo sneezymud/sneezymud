@@ -3,6 +3,9 @@
 ## SneezyMUD - All rights reserved, SneezyMUD Coding Team
 ##
 ## $Log: makefile,v $
+## Revision 1.4  1999/10/07 14:30:47  batopr
+## Added statistics.h for spec_rooms.o
+##
 ## Revision 1.3  1999/09/30 17:37:43  batopr
 ## added statistics.h for repair.o
 ##
@@ -439,6 +442,7 @@ $(OBJDIR)spec_mobs.o: combat.h disease.h components.h paths.h
 $(OBJDIR)spec_mobs.o: disc_sorcery.h disc_afflictions.h disc_aegis.h
 $(OBJDIR)spec_mobs.o: disc_alchemy.h disc_wrath.h disc_earth.h disc_water.h
 $(OBJDIR)spec_objs.o: disease.h
+$(OBJDIR)spec_rooms.o: statistics.h
 $(OBJDIR)spell_parser.o: $(DISC_HEADS)
 $(OBJDIR)spelltask.o: $(DISC_HEADS) combat.h spelltask.h
 $(OBJDIR)statistics.o: statistics.h systemtask.h
