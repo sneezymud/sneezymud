@@ -1854,6 +1854,7 @@ void TBeing::statBeing(TBeing *k)
       case TYPE_SHOOT:
       case TYPE_UNDEFINED:
       case TYPE_MAX_HIT:
+      case ABSOLUTE_MAX_SKILL:
         vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  aff->type % k->getName());
         k->affectRemove(aff);
         break;

@@ -1134,6 +1134,7 @@ int mapSpellnumToFile(spellNumT stt)
     case TYPE_SHOOT:
     case TYPE_MAX_HIT:
     case LAST_ODDBALL_AFFECT:
+    case ABSOLUTE_MAX_SKILL:
       break;
   }
   vlogf(LOG_BUG, fmt("Bogus value (%d) in mapSpellNumToFile") %  stt);
