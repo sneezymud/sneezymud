@@ -7085,6 +7085,9 @@ int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       return false;
     }
 
+    if(!isname("caughtfish", fish->name))
+      return false;
+
     ssprintf(buf, "$n points $p at %s.", fish->shortDescr);
     act(buf.c_str(),TRUE,ch,o,NULL, TO_ROOM,NULL);
     ssprintf(buf, "You point $p at %s.", fish->shortDescr);
