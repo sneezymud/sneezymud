@@ -468,8 +468,12 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
     dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_CRIT_HIT)*950)));
   } else if(doesKnowSkill(SKILL_POWERMOVE) && isPc()){
     dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_POWERMOVE)*900)));
-  } else 
+  } else if(dynamic_cast<TMonster *>(this)){
+    // less crits for mobs
+    dicenum = dice(1, 1000000);
+  } else {
     dicenum = dice(1, 100000);    // This was 10k under 3.x - Bat
+  }
 
   if (isImmortal())
     dicenum /= 10;
