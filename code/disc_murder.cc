@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_murder.cc,v $
+// Revision 1.2  1999/10/09 04:23:03  batopr
+// Removed addHated from cudgel
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -684,18 +687,16 @@ int cudgel(TBeing *thief, TBeing *victim)
       if (victim->spelltask) {
 	victim->stopCast(STOP_CAST_NONE);
       }
-      victim->addHated(thief);
-#if 0
-      victim->addToWait(combatRound(1.0));
-      victim->cantHit += victim->loseRound(1.0);
-#else
+
+      // erm, they snuck up on them, so no idea who did it
+      // victim->addHated(thief);
+
       affectedData aff;
       aff.type = SKILL_CUDGEL;
       aff.duration = UPDATES_PER_TICK / 3;
       aff.bitvector = AFF_STUNNED;
 
       victim->affectTo(&aff, -1);
-#endif
       return TRUE;
     }
   }
