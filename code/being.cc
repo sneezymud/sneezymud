@@ -797,6 +797,22 @@ wearSlotT TBeing::getSecondaryLeg() const
   return (isRightHanded() ? WEAR_LEGS_L : WEAR_LEGS_R);
 }
 
+int TBeing::maxWimpy()
+{
+  int hl = hitLimit();
+  return (hl / 2 + hl % 2);
+}
+
+int TBeing::getWimpy()
+{
+  return wimpy;
+}
+
+void TBeing::setWimpy(int w)
+{
+  wimpy=w;
+}
+
 short int TBeing::hitLimit() const
 {
   return points.maxHit;

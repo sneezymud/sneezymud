@@ -244,8 +244,9 @@ void TBeing::doScore()
 
   sendTo(fmt("You are in %s%s%s attack mode.\n\r") %         cyan() % attack_modes[getCombatMode()] % norm());
 
-  if (wimpy)
-    sendTo(fmt("You are in wimpy mode, and will flee at %d hit points.\n\r") % wimpy);
+  if (getWimpy())
+    sendTo(fmt("You are in wimpy mode, and will flee at %d hit points.\n\r") %
+	   getWimpy());
 
   describeLimbDamage(this);
   sendTo(COLOR_BASIC, describeAffects(this, SHOW_ME));

@@ -79,6 +79,7 @@ enum connectStateT {
        CON_HOME_HOBBIT,
        CON_PERMA_DEATH,
        CON_MULTIWARN,
+       CON_TRAITS,
 // if adding more here, update connected_types array as well
        MAX_CON_STATUS,
 // these are intentionally higher than MAX_CON
@@ -376,6 +377,19 @@ class promptData
     ~promptData();
 };
 
+class bonusStatPoints {
+ public:
+  int total;
+  int combat;
+  int combat2;
+  int learn;
+  int util;
+
+  bonusStatPoints();
+};
+
+
+
 // Descriptor class
 class Descriptor
 {
@@ -397,6 +411,7 @@ class Descriptor
     textQ input;                  // q of unprocessed input  
     sessionData session;          // data for this session
     careerData career;            // data for career
+    bonusStatPoints bonus_points;
     drugData drugs[MAX_DRUG];
     unsigned int autobits;
     unsigned int best_rent_credit;
@@ -462,6 +477,7 @@ class Descriptor
     void saveAccount();
     int doAccountMenu(const char *);
     void add_to_history_list(const char *);
+    int getFreeStat();
     int nanny(const char *);
     void sendMotd(int);
     void go_back_menu(connectStateT);
@@ -475,6 +491,7 @@ class Descriptor
     void sendStatRules(int);
     void sendRaceList();
     void sendClassList(int);
+    void sendTraitsList();
     bool start_page_file(const char *, const char *);
     bool canChooseClass(int, bool multi = FALSE, bool triple = FALSE);
     int client_nanny(char *);

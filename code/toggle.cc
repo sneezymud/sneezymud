@@ -290,6 +290,8 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"BlahBlah Shouts", MOB_NONE},
   {"Monk: Paid Tabuda", MOB_NONE},
   {"Has Skill: Catleap", MOB_NONE},
+  {"Trait: Coward", MOB_NONE},
+  {"Trait: Blind", MOB_NONE},
   {"", MOB_NONE}, 
 };
 

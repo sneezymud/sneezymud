@@ -385,7 +385,10 @@ const int TOG_MONK_PAID_TABUDA                 = 276;
 
 const int TOG_HAS_CATLEAP                      = 277;
 
-const int MAX_TOG_INDEX       = 278;  // move and change
+const int TOG_IS_COWARD                        = 278;
+const int TOG_IS_BLIND                         = 279;
+
+const int MAX_TOG_INDEX       = 280;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 

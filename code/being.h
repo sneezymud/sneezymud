@@ -653,6 +653,9 @@ class TBeing : public TThing {
     virtual int mobVnum() const { return 0; }
     virtual short int manaLimit() const;
     virtual int getMaxMove() const;
+    virtual int maxWimpy();
+    virtual int getWimpy();
+    virtual void setWimpy(int);
     virtual short int hitLimit() const;
     virtual int fallOffMount(TThing *, positionTypeT, bool death = FALSE);
     virtual bool hasQuestBit(int) const;

@@ -4300,7 +4300,7 @@ int TBeing::tellStatus(int dam, bool same, bool flying)
       }
     }
     if (dynamic_cast<TPerson *>(this)) {
-      if (!same && wimpy && (getHit() <= wimpy)) {
+      if (!same && getWimpy() && (getHit() <= getWimpy())) {
         // avoid fleeing from things like starve/bleed : fight()
         // prevent berserk from making them flee
         // if the room denies fleeing, make it skip too

@@ -874,8 +874,8 @@ void TBeing::doAttribute(const char *arg)
     sendTo(fmt("You are in %s%s%s attack mode.\n\r") %
           cyan() % attack_modes[getCombatMode()] % norm());
 
-    if (wimpy)
-      sendTo(fmt("You are in wimpy mode, and will flee at %d hit points.\n\r") % wimpy);
+    if (getWimpy())
+      sendTo(fmt("You are in wimpy mode, and will flee at %d hit points.\n\r") % getWimpy());
     if (IS_SET(desc->account->flags, ACCOUNT_BOSS))
       sendTo("Your account is in boss-mode.\n\r");
     if (IS_SET(desc->account->flags, ACCOUNT_MSP))

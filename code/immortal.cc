@@ -297,8 +297,9 @@ void TBeing::doToggle(const char *arg2)
     }
     
 
-    if(wimpy)
-      sendTo(COLOR_BASIC, fmt("Wimpy             : <G>%-4i<1>\n\r") % wimpy);
+    if(getWimpy())
+      sendTo(COLOR_BASIC, fmt("Wimpy             : <G>%-4i<1>\n\r") %
+	     getWimpy());
     else
       sendTo(COLOR_BASIC, "Wimpy             : <R>off <1>\n\r");
 
@@ -514,12 +515,17 @@ void TBeing::doToggle(const char *arg2)
     int hl = hitLimit();
     int wimplimit = hl / 2 + hl % 2;
     int num=0;
-    
-    if (is_abbrev(arg2, "max")) {
-      sendTo(fmt("Setting Wimpy to Max(%d).\n\r") % (wimplimit - 1));
+
+    if (is_abbrev(arg2, "max") || hasQuestBit(TOG_IS_COWARD)) {
+      if(hasQuestBit(TOG_IS_COWARD)){
+	sendTo("You can't change your wimpy setting, you're a coward!\n\r");
+      } else {
+	sendTo(fmt("Setting Wimpy to Max(%d).\n\r") % (wimplimit - 1));
+      }
       num = wimplimit - 1;
     } else if (is_abbrev(arg2, "off") || (num = convertTo<int>(arg2)) <= 0) {
       sendTo("Turning wimpy mode off.\n\r");
+      setWimpy(0);
       wimpy = 0;
       return;
     }
@@ -531,7 +537,7 @@ void TBeing::doToggle(const char *arg2)
     
     sendTo("You are now a wimp!!\n\r");
     sendTo(fmt("You will now flee at %d hit points!\n\r") % num);
-    wimpy = num;
+    setWimpy(num);
   } else if (is_abbrev(arg, "boss")) {
     if (!IS_SET(desc->account->flags, ACCOUNT_BOSS)) {
       SET_BIT(desc->account->flags, ACCOUNT_BOSS);

@@ -2404,10 +2404,12 @@ static spellNumT get_cleric_heal_spell(TMonster &ch, TBeing &targ)
 
   if(((targ.getHit()*100)/targ.hitLimit())<=75){
     for(i=0;i<count;++i){
-      if (ch.doesKnowSkill(heals[i]) && (ch.getSkillValue(heals[i]) > 33))
+      if (ch.doesKnowSkill(heals[i]) && (ch.getSkillValue(heals[i]) > 33)){
 	return heals[i];
+      }
     }
   }
+
 
 #if 1
   // check for limbs that need to be restored

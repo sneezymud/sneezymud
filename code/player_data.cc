@@ -93,6 +93,15 @@ void TPerson::resetChar()
     if (!isAffected(AFF_INFRAVISION))
       SET_BIT(specials.affectedBy, AFF_INFRAVISION);
   }
+
+  if(hasQuestBit(TOG_IS_BLIND)){
+    SET_BIT(specials.affectedBy, AFF_BLIND);
+  }
+
+  if(hasQuestBit(TOG_IS_COWARD)){
+    wimpy=maxWimpy();
+  }
+
   if ((getRace() == RACE_HOBBIT) && getNatSkillValue(SKILL_STEAL) < 23) {
     setNatSkillValue(SKILL_STEAL,23);
     setSkillValue(SKILL_STEAL,23);
