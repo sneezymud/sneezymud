@@ -4127,7 +4127,7 @@ int TMonster::defendSelf(int)
 	  break;
 	}
       }
-      if ((thrall) == 0) {
+      if ((thrall) != 1) {
 	switch (random) {
 	  case 0:
 	    spell = SPELL_ENTHRALL_SPECTRE;
