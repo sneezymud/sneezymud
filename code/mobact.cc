@@ -3198,6 +3198,11 @@ int TMonster::notFightingMove(int pulse)
       return TRUE;
   }
 
+  // if I'm in a group and I've been seperated from my leader, track them
+  if(isAffected(AFF_GROUP) && master && !master->isPc() &&
+     roomp->number!=master->roomp->number)
+    setHunting(master);
+
   if (!IS_SET(specials.act, ACT_SENTINEL)) {
     // this is examined every pulse (no pulse check), i.e. once every 3 secs
     
