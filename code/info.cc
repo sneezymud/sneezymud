@@ -230,130 +230,143 @@ void TBeing::listExits(const TRoom *rp) const
   // The following for loop is to figure out which room is the last
   // legal exit, so the word "and" can be put in front of it to make
   // the sentence sent to the player grammatically correct.        
-
   for (door = MIN_DIR; door < MAX_DIR; door++) {
-    exitdata = rp->exitDir(door);
-    if (exitdata) {
-      if (exitdata->to_room != ROOM_NOWHERE &&
-          (canSeeThruDoor(exitdata) ||
-           isImmortal())) {
-        num = door;
-        count++;
-      }
-      if (IS_SET(exitdata->condition, EX_DESTROYED)) {
-        if (!exitdata->keyword) {
-          vlogf(LOG_LOW,"Destroyed door with no name!  Room %d", in_room);
-        } else if (door == 4) 
-          sendTo(fmt("%sThe %s in the ceiling has been destroyed.%s\n\r") %
-              blue() % fname(exitdata->keyword) % norm());
-        else if (door == 5)
-          sendTo(fmt("%sThe %s in the %s has been destroyed.%s\n\r") %
-              blue() % fname(exitdata->keyword) % roomp->describeGround() % norm());
-        else
-          sendTo(fmt("%sThe %s %s has been destroyed.%s\n\r") %
-              blue() % fname(exitdata->keyword) % dirs_to_leading[door] % norm());
-      }
-      if (IS_SET(exitdata->condition, EX_CAVED_IN)) {
-        sendTo(fmt("%sA cave in blocks the way %s.%s\n\r") %
-            blue() % dirs[door] % norm());
-      }
-      // chance to detect secret - bat
-      // the || case is a chance at a false-positive   :)
-      if ((IS_SET(exitdata->condition, EX_SECRET) &&
-          IS_SET(exitdata->condition, EX_CLOSED)) ||
-          (!::number(0,100) && !isPerceptive())) {
-        int chance = max(0, (int) getSkillValue(SKILL_SEARCH));
+    if(!(exitdata = rp->exitDir(door)))
+      continue;
 
-        if (getRace() == RACE_ELVEN)
-          chance += 25;
-        if (getRace() == RACE_GNOME)
-          chance += plotStat(STAT_CURRENT, STAT_PER, 3, 18, 13) +
-                    GetMaxLevel()/2;
-        if (getRace() == RACE_DWARF && rp->isIndoorSector())
-          chance += GetMaxLevel()/2 + 10;
+    bool secret=IS_SET(exitdata->condition, EX_SECRET);
+    bool open=!IS_SET(exitdata->condition, EX_CLOSED);
+    bool see_thru=canSeeThruDoor(exitdata);
 
-        if ((::number(1,1000) < chance) && !isImmortal())
-          sendTo(fmt("%sYou suspect something out of the ordinary here.%s\n\r") %
-              blue() % norm());
-      }
+    if (exitdata->to_room != ROOM_NOWHERE &&
+	((!secret || open) || (!secret && see_thru)) ||
+	isImmortal()){
+      num = door;
+      count++;
+    }
+
+    if (IS_SET(exitdata->condition, EX_DESTROYED)) {
+      if (!exitdata->keyword) {
+	vlogf(LOG_LOW,"Destroyed door with no name!  Room %d", in_room);
+      } else if (door == 4) 
+	sendTo(fmt("%sThe %s in the ceiling has been destroyed.%s\n\r") %
+	       blue() % fname(exitdata->keyword) % norm());
+      else if (door == 5)
+	sendTo(fmt("%sThe %s in the %s has been destroyed.%s\n\r") %
+	       blue() % fname(exitdata->keyword) % roomp->describeGround() % norm());
+      else
+	sendTo(fmt("%sThe %s %s has been destroyed.%s\n\r") %
+	       blue() % fname(exitdata->keyword) % dirs_to_leading[door] % norm());
+    }
+
+    if (IS_SET(exitdata->condition, EX_CAVED_IN)) {
+      sendTo(fmt("%sA cave in blocks the way %s.%s\n\r") %
+	     blue() % dirs[door] % norm());
+    }
+
+    // chance to detect secret - bat
+    // the || case is a chance at a false-positive   :)
+    if ((IS_SET(exitdata->condition, EX_SECRET) &&
+	 IS_SET(exitdata->condition, EX_CLOSED)) ||
+	(!::number(0,100) && !isPerceptive())) {
+      int chance = max(0, (int) getSkillValue(SKILL_SEARCH));
+      
+      if (getRace() == RACE_ELVEN)
+	chance += 25;
+      if (getRace() == RACE_GNOME)
+	chance += plotStat(STAT_CURRENT, STAT_PER, 3, 18, 13) +
+	  GetMaxLevel()/2;
+      if (getRace() == RACE_DWARF && rp->isIndoorSector())
+	chance += GetMaxLevel()/2 + 10;
+      
+      if ((::number(1,1000) < chance) && !isImmortal())
+	sendTo(fmt("%sYou suspect something out of the ordinary here.%s\n\r") %
+	       blue() % norm());
     }
   }
 
+  
   for (door = MIN_DIR; door < MAX_DIR; door++) {
-    exitdata = rp->exitDir(door);
-    if (exitdata && (exitdata->to_room != ROOM_NOWHERE)) {
-      if (isImmortal()) {
-// Red if closed, Blue if an open exit has a type, purple if normal
-        if (IS_SET(exitdata->condition, EX_CLOSED)) {
-          if (count == 1)
-            sprintf(buf + strlen(buf), "%s%s%s.\n\r", red(), dirs[door], norm());
-          else if (door != num)
-            sprintf(buf + strlen(buf), "%s%s%s, ", red(), dirs[door], norm());
-          else
-            sprintf(buf + strlen(buf), "and %s%s%s.\n\r", red(), dirs[door],norm());
-        } else if (exitdata->door_type != DOOR_NONE) {
-          if (count == 1)
-            sprintf(buf + strlen(buf), "%s%s%s.\n\r", blue(), dirs[door], norm());
-          else if (door != num)
-            sprintf(buf + strlen(buf), "%s%s%s, ", blue(), dirs[door], norm());
-          else
-            sprintf(buf + strlen(buf), "and %s%s%s.\n\r", blue(), dirs[door], norm());
-        } else {  
-          if (count == 1)
-            sprintf(buf + strlen(buf), "%s%s%s.\n\r", purple(), dirs[door], norm());
-          else if (door != num)
-            sprintf(buf + strlen(buf), "%s%s%s, ", purple(), dirs[door], norm());
-          else
-            sprintf(buf + strlen(buf), "and %s%s%s.\n\r", purple(), dirs[door], norm());
-        }
-      } else /*if (canSeeThruDoor(exitdata))*/ {
-        TRoom *exitp = real_roomp(exitdata->to_room);
+    if(!(exitdata = rp->exitDir(door)))
+      continue;
 
-        if (exitp) {
-#if 1
-          if (exitdata->door_type != DOOR_NONE &&
-              ((tCS && !IS_SET(exitdata->condition, EX_SECRET)) ||
-               !IS_SET(exitdata->condition, EX_CLOSED))) {
-#else
-          if (exitdata->door_type != DOOR_NONE &&
-              !IS_SET(exitdata->condition, EX_CLOSED)) {
-#endif
-            if (IS_SET(exitdata->condition, EX_CLOSED))
-              sprintf(buf + strlen(buf), "%s%s*%s%s%s",
-                ((count != 1 && door == num) ? "and " : ""),
-                (exitp->getSectorType() == SECT_FIRE ? red() :
-                (exitp->isAirSector() ? cyan() :
-                (exitp->isWaterSector() ? blue() :
-                purple()))),
-                dirs[door],
-                norm(),
-                (count == 1 || door == num ? ".\n\r" : ", "));
-            else
-              sprintf(buf + strlen(buf), "%s%s%s%s%s",
-                ((count != 1 && door == num) ? "and " : ""),
-                (exitp->getSectorType() == SECT_FIRE ? redBold() :
-                (exitp->isAirSector() ? cyanBold() :
-                (exitp->isWaterSector() ? blueBold() :
-                purpleBold()))),
-                dirs[door],
-                norm(),
-                (count == 1 || door == num ? ".\n\r" : ", "));
-          } else if (exitdata->door_type == DOOR_NONE) {
-            sprintf(buf + strlen(buf), "%s%s%s%s%s",
-              ((count != 1 && door == num) ? "and " : ""),
-              (exitp->getSectorType() == SECT_FIRE ? red() :
-              (exitp->isAirSector() ? cyan() :
-              (exitp->isWaterSector() ? blue() :
-              purple()))),
-              dirs[door],
-              norm(),
-              (count == 1 || door == num ? ".\n\r" : ", "));
-          }
-        } else
-          vlogf(LOG_LOW, "Problem with door in room %d", inRoom());
+    if(exitdata->to_room == ROOM_NOWHERE)
+      continue;
+
+    if (isImmortal()) {
+      // Red if closed, Blue if an open exit has a type, purple if normal
+      if (IS_SET(exitdata->condition, EX_CLOSED)) {
+	if (count == 1)
+	  sprintf(buf + strlen(buf), "%s%s%s.\n\r", red(), dirs[door], norm());
+	else if (door != num)
+	  sprintf(buf + strlen(buf), "%s%s%s, ", red(), dirs[door], norm());
+	else
+	  sprintf(buf + strlen(buf), "and %s%s%s.\n\r", red(), dirs[door],norm());
+      } else if (exitdata->door_type != DOOR_NONE) {
+	if (count == 1)
+	  sprintf(buf + strlen(buf), "%s%s%s.\n\r", blue(), dirs[door], norm());
+	else if (door != num)
+	  sprintf(buf + strlen(buf), "%s%s%s, ", blue(), dirs[door], norm());
+	else
+	  sprintf(buf + strlen(buf), "and %s%s%s.\n\r", blue(), dirs[door], norm());
+      } else {  
+	if (count == 1)
+	  sprintf(buf + strlen(buf), "%s%s%s.\n\r", purple(), dirs[door], norm());
+	else if (door != num)
+	  sprintf(buf + strlen(buf), "%s%s%s, ", purple(), dirs[door], norm());
+	else
+	  sprintf(buf + strlen(buf), "and %s%s%s.\n\r", purple(), dirs[door], norm());
       }
+    } else {
+      TRoom *exitp = real_roomp(exitdata->to_room);
+
+      if (exitp) {
+	bool secret=IS_SET(exitdata->condition, EX_SECRET);
+	bool open=!IS_SET(exitdata->condition, EX_CLOSED);
+	bool see_thru=canSeeThruDoor(exitdata);
+
+	if (exitdata->door_type != DOOR_NONE &&
+	    ((!secret || open) || (!secret && see_thru))){
+	  if (IS_SET(exitdata->condition, EX_CLOSED)){
+	    sprintf(buf + strlen(buf), "%s%s*%s%s%s",
+		    ((count != 1 && door == num) ? "and " : ""),
+
+		    (exitp->getSectorType() == SECT_FIRE ? red() :
+		     (exitp->isAirSector() ? cyan() :
+		      (exitp->isWaterSector() ? blue() :
+		       purple()))),
+
+		    dirs[door],
+
+		    norm(),
+
+		    (count == 1 || door == num ? ".\n\r" : ", "));
+	  } else
+	    sprintf(buf + strlen(buf), "%s%s%s%s%s",
+		    ((count != 1 && door == num) ? "and " : ""),
+		    (exitp->getSectorType() == SECT_FIRE ? redBold() :
+		     (exitp->isAirSector() ? cyanBold() :
+		      (exitp->isWaterSector() ? blueBold() :
+		       purpleBold()))),
+		    dirs[door],
+		    norm(),
+		    (count == 1 || door == num ? ".\n\r" : ", "));
+	} else if (exitdata->door_type == DOOR_NONE) {
+	  sprintf(buf + strlen(buf), "%s%s%s%s%s",
+		  ((count != 1 && door == num) ? "and " : ""),
+		  (exitp->getSectorType() == SECT_FIRE ? red() :
+		   (exitp->isAirSector() ? cyan() :
+		    (exitp->isWaterSector() ? blue() :
+		     purple()))),
+		  dirs[door],
+		  norm(),
+		  (count == 1 || door == num ? ".\n\r" : ", "));
+	}
+      } else
+	vlogf(LOG_LOW, "Problem with door in room %d", inRoom());
     }
   }
+
 
   if (*buf) {
     if (count == 1) 
@@ -362,8 +375,9 @@ void TBeing::listExits(const TRoom *rp) const
       sendTo(fmt("You can see exits to the %s") % buf);
   } else
     sendTo("You see no obvious exits.\n\r");
-}
 
+}
+  
 
 void list_char_in_room(TThing *list, TBeing *ch)
 {
@@ -4028,7 +4042,7 @@ void TObj::describeMe(TBeing *ch) const
 
   strcpy(buf, material_nums[getMaterial()].mat_name);
   strcpy(buf2, ch->objs(this));
-  ch->sendTo(COLOR_OBJECTS,fmt("%s is %s made of %s.\n\r") % sstring(buf2).cap().c_str() %
+  ch->sendTo(COLOR_OBJECTS,fmt("%s is %s made of %s.\n\r") % sstring(buf2).cap() %
                  ItemInfo[itemType()]->common_name % 
 	     sstring(buf).uncap());
 
@@ -4586,7 +4600,7 @@ void TBeing::describeArrowSharpness(const TArrow *obj, int learn)
   else
     strcpy(sharpbuf, "extremely dull");
  
-  sendTo(COLOR_OBJECTS, fmt("%s has a tip that is %s.\n\r") % sstring(capbuf).cap().c_str() % sharpbuf);
+  sendTo(COLOR_OBJECTS, fmt("%s has a tip that is %s.\n\r") % sstring(capbuf).cap() % sharpbuf);
 
 }
 
@@ -4605,7 +4619,7 @@ void TBeing::describeNoise(const TObj *obj, int learn) const
   char capbuf[160];
   strcpy(capbuf, objs(obj));
 
-  sendTo(COLOR_OBJECTS, fmt("%s is %s.\n\r") % sstring(capbuf).cap().c_str() %
+  sendTo(COLOR_OBJECTS, fmt("%s is %s.\n\r") % sstring(capbuf).cap() %
           ((iNoise < -9) ? "beyond silent" :
           ((iNoise < -5) ? "extremely silent" :
           ((iNoise < -2) ? "very silent" :
@@ -4648,7 +4662,7 @@ void TBeing::describeBowRange(const TBow *obj, int learn)
   char capbuf[160];
   strcpy(capbuf, objs(obj));
 
-  sendTo(COLOR_OBJECTS, fmt("%s can %s.\n\r") % sstring(capbuf).cap().c_str() %
+  sendTo(COLOR_OBJECTS, fmt("%s can %s.\n\r") % sstring(capbuf).cap() %
           ((range < 1) ? "not shoot out of the immediate area" :
           ((range < 3) ? "barely shoot beyond arm's length" :
           ((range < 5) ? "shoot a short distance" :
@@ -4731,10 +4745,10 @@ void TWand::descMagicSpells(TBeing *ch) const
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
       ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(iSpell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap().c_str() % 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[iSpell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap().c_str() %  disc_names[das]);
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  disc_names[das]);
   }
 
   return;
@@ -4750,10 +4764,10 @@ void TStaff::descMagicSpells(TBeing *ch) const
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
       ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(iSpell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap().c_str() % 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[iSpell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap().c_str() %  disc_names[das]);
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  disc_names[das]);
   }
 
   return;
@@ -4770,30 +4784,30 @@ void TScroll::descMagicSpells(TBeing *ch) const
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
       ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap().c_str() % 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[spell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap().c_str() %  disc_names[das]);
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() %  disc_names[das]);
   }
 
   spell = getSpell(1);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
       ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap().c_str() % 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[spell]->name);
     else
-       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap().c_str() % disc_names[das]);
+       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() % disc_names[das]);
   }
 
   spell = getSpell(2);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
       ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap().c_str() % 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % sstring(capbuf).cap() % 
             discArray[spell]->name);
     else
-       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap().c_str() % disc_names[das]);
+       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % sstring(capbuf).cap() % disc_names[das]);
   }
 
   return;
@@ -4816,7 +4830,7 @@ void TBeing::describeSymbolOunces(const TSymbol *obj, int learn) const
   char capbuf[160];
   strcpy(capbuf, objs(obj));
 
-  sendTo(COLOR_OBJECTS, fmt("%s requires about %d ounce%s of holy water to attune.\n\r") % sstring(capbuf).cap().c_str() % amt % (amt == 1 ? "" : "s"));
+  sendTo(COLOR_OBJECTS, fmt("%s requires about %d ounce%s of holy water to attune.\n\r") % sstring(capbuf).cap() % amt % (amt == 1 ? "" : "s"));
 
   return;
 }
@@ -4827,11 +4841,11 @@ void TBeing::describeComponentUseage(const TComponent *obj, int) const
   strcpy(capbuf, objs(obj));
 
   if (IS_SET(obj->getComponentType(), COMP_SPELL))
-    sendTo(COLOR_OBJECTS, fmt("%s is a component used in creating magic.\n\r") % sstring(capbuf).cap().c_str());
+    sendTo(COLOR_OBJECTS, fmt("%s is a component used in creating magic.\n\r") % sstring(capbuf).cap());
   else if (IS_SET(obj->getComponentType(), COMP_POTION))
-    sendTo(COLOR_OBJECTS, fmt("%s is a component used to brew potions.\n\r") % sstring(capbuf).cap().c_str());
+    sendTo(COLOR_OBJECTS, fmt("%s is a component used to brew potions.\n\r") % sstring(capbuf).cap());
   else if (IS_SET(obj->getComponentType(), COMP_SCRIBE))
-    sendTo(COLOR_OBJECTS, fmt("%s is a component used during scribing.\n\r") % sstring(capbuf).cap().c_str());
+    sendTo(COLOR_OBJECTS, fmt("%s is a component used during scribing.\n\r") % sstring(capbuf).cap());
 
   return;
 }
@@ -4847,7 +4861,7 @@ void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
   char capbuf[160];
   strcpy(capbuf, objs(obj));
 
-  sendTo(COLOR_OBJECTS, fmt("%s will last ") % sstring(capbuf).cap().c_str());
+  sendTo(COLOR_OBJECTS, fmt("%s will last ") % sstring(capbuf).cap());
 
   if (!obj->isComponentType(COMP_DECAY)) {
     sendTo("well into the future.\n\r");
