@@ -355,12 +355,15 @@ M 0 9121 1 9121		Jolly King
 M 0 33961 1 449       Kenth [Blackridge Travellers' Lodge] * short int
 M 0 3872 1 3872       Shaggy Butler
 M 0 3871 1 3871       Jay Butler
-M 0 594 1 582         * butler
+M 0 597 1 582         * butler
 M 0 35432 1 35460     Frank, the innkeeper
 M 0 35450 1 9723      Tattoo the inkeeper mage
 M 0 18726 1 18730     lazy
 M 0 4470 1 4626       prostitute
 M 0 595 1 637         butler
+M 0 594 1 4470        butler
+M 0 598 1 619         butler
+M 0 599 1 1177        butler
 
 
 *O 0 0 1 13	END INNKEEPER LOADS
