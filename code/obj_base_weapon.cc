@@ -1502,13 +1502,11 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
         }
 
         int d = (int) damageLevel();
-	vlogf(LOG_PEEL, "damageLevel=%i", d);
 
         // d *= mdist - range + 1;  // modify for point blank range - bat
 	// worst idea ever - peel
 
         d = get_range_actual_damage(ch, tb, this, d, damtype);
-	vlogf(LOG_PEEL, "actual=%i", d);
 
         if (c->roomp && !c->roomp->isRoomFlag(ROOM_ARENA)) {
           if (::number(1, d) <= getStructPoints()) {
