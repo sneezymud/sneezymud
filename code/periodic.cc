@@ -1242,15 +1242,6 @@ void TPCorpse::decayMe()
   int found = FALSE;
   TThing *tmp = NULL;
 
-  if (!getStuff()) {
-    obj_flags.decay_time = min(obj_flags.decay_time, (short int) MAX_PC_CORPSE_EMPTY_TIME);
-    obj_flags.decay_time--;
-    if (checkOnLists()) {
-      removeCorpseFromList();
-    }
-    return;
-  }
-
   for(tmp = getStuff(); tmp; tmp = tmp->nextThing) {
     TObj *obj = dynamic_cast<TObj *>(tmp);
     if (!obj)
@@ -1272,10 +1263,6 @@ void TPCorpse::decayMe()
   }
 
 // valid corpse, see if we have a dead mud
-  if (!descriptor_list && checkOnLists()) {
-    obj_flags.decay_time = max(obj_flags.decay_time, (short int) MAX_PC_CORPSE_EQUIPPED_TIME);
-    return;
-  }
   obj_flags.decay_time--;
   return;
 }
