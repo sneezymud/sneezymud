@@ -372,6 +372,7 @@ void TBeing::doBet(const char *arg)
 	sendTo("Wrong option.\n\r");
 	return;
       }
+      observerReaction(this, GAMBLER_BET);
     }
   }
 }
@@ -425,11 +426,13 @@ int Craps::checkCraps(int diceroll)
 	loseDice();
         newRoll = TRUE;
       }
+      observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_LOST);
     }
     if (IS_SET(d->bet_opt.crapsOptions, CRAP_OUT)) {
       t->sendTo("Craps....You Win your bet (%d)!\n\r", d->bet.crap);
       REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
       payout(dynamic_cast<TBeing *>(t), 2 * d->bet.crap);
+      observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_WON);
 
       d->bet.crap = 0;
       if (t == m_ch) {
@@ -472,6 +475,7 @@ int Craps::checkSeven(int diceroll)
       if (IS_SET(d->bet_opt.crapsOptions, COME_OUT)) {
 	tbt->sendTo("Seven! You win your come out bet (%d)!\n\r", d->bet.come);
 	payout(tbt, 2 * d->bet.come);
+	observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_WON);
 	REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
 	d->bet.come = 0;
       }
@@ -479,6 +483,8 @@ int Craps::checkSeven(int diceroll)
 	tbt->sendTo("Seven! You lose your crap out bet (%d)!\n\r", d->bet.crap);
 	REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
 	d->bet.crap = 0;
+	observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_LOST);
+      
 #if 0
 // unless we want them to start with a crapout and get the dice
 	if (tbt == m_ch) {
@@ -491,6 +497,7 @@ int Craps::checkSeven(int diceroll)
       if (IS_SET(d->bet_opt.crapsOptions, COME_OUT)) {
 	tbt->sendTo("Seven! You lose your come out bet (%d)!\n\r", d->bet.come);
 	REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
+	observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_LOST);
 	d->bet.come = 0;
 	if (tbt == m_ch) {
 	  loseDice();
@@ -500,6 +507,8 @@ int Craps::checkSeven(int diceroll)
       if (IS_SET(d->bet_opt.crapsOptions, CRAP_OUT)) {
 	tbt->sendTo("Seven! You win your crap out bet (%d)!\n\r", d->bet.crap);
 	payout(tbt, 2 * d->bet.crap);
+	observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_WON);
+
 	REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
 	d->bet.crap = 0;
         if (tbt == m_ch) {
@@ -535,12 +544,15 @@ int Craps::checkEleven(int diceroll)
     if (IS_SET(d->bet_opt.crapsOptions, COME_OUT)) {
       tbt->sendTo("Seven come ELEVEN! You hit your come out bet!\n\r");
       payout(tbt, 2 * d->bet.come);
+      observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_WON);
+
       REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
       d->bet.come = 0;
     }
     if (IS_SET(d->bet_opt.crapsOptions, CRAP_OUT)) {
       tbt->sendTo("Seven come ELEVEN! You hit the come out bet. You lose!\n\r");
       REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
+      observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_LOST);
       d->bet.crap = 0;
     }
   }
@@ -575,8 +587,11 @@ void Craps::checkOnerollSeven(int diceroll, TBeing *ch)
   if (diceroll == 7) {
     ch->sendTo("You win your oneroll seven bet (%d)!\n\r", (3 * d->bet.seven));
     payout(ch, 4 * d->bet.seven);
-  } else
+    observerReaction(ch, GAMBLER_WON);
+  } else {
     ch->sendTo("You lose your oneroll seven bet (%d).\n\r", d->bet.seven);
+    observerReaction(ch, GAMBLER_LOST);  
+  }
 
   REMOVE_BIT(d->bet_opt.oneRoll, SEVEN);
   d->bet.seven = 0;
@@ -590,15 +605,18 @@ void Craps::checkHorn(int diceroll, TBeing *ch)
     vlogf(LOG_BUG, "No better desc in checkHorn()");
     return;
   }
-  if ((diceroll > 3) || (diceroll < 11))
+  if ((diceroll > 3) || (diceroll < 11)){
     ch->sendTo("You lose your horn bet (%d).\n\r", d->bet.horn_bet);
-  else {
+    observerReaction(ch, GAMBLER_LOST);
+  } else {
     if ((diceroll == 2) || (diceroll == 12)) {
       ch->sendTo("The roll is a [%d]. You win your horn bet (%d)!\n\r", diceroll, (6 * d->bet.horn_bet));
       payout(ch, 7 * d->bet.horn_bet);
+      observerReaction(ch, GAMBLER_WON);
     } else {
       ch->sendTo("The roll is a [%d]. You win your horn bet (%d)!\n\r", diceroll, (((int) (3.5 * d->bet.horn_bet)) - d->bet.horn_bet));
       payout(ch, (int)(3.5 * d->bet.horn_bet));
+      observerReaction(ch, GAMBLER_WON);
     }
   }
   REMOVE_BIT(d->bet_opt.oneRoll, HORN_BET);
@@ -622,14 +640,17 @@ void Craps::checkField(int diceroll, TBeing *ch)
     if (crap_man) {
       sprintf(buf, "%s The roll is %d. You lose your bet on the field (%d).", ch->getName(), diceroll, d->bet.field_bet);
       crap_man->doTell(buf);
+      observerReaction(ch, GAMBLER_LOST);
     }
   } else {
     if ((diceroll < 12) && (diceroll > 2)) {
       sprintf(buf, "%s The roll is %d. You win your bet on the field (%d)!", ch->getName(), diceroll, d->bet.field_bet);
       payout(ch, 2 * d->bet.field_bet);
+      observerReaction(ch, GAMBLER_WON);
     } else {
       sprintf(buf, "%s The roll is %d. You get your field bet back (%d)!", ch->getName(), diceroll, d->bet.field_bet);
       payout(ch, d->bet.field_bet);
+      observerReaction(ch, GAMBLER_WON);
     }
     if (crap_man) {
       crap_man->doTell(buf);
@@ -674,12 +695,14 @@ void Craps::checkTwo(int diceroll, TBeing *ch)
     ch->sendTo("Two hit!  Nice bet! You Win your bet (%d)!\n\r", (30 *
 d->bet.two));
     payout(ch, 31 * d->bet.two);
+    observerReaction(ch, GAMBLER_WON);
     REMOVE_BIT(d->bet_opt.oneRoll, TWO2);
     d->bet.two = 0;
   } else {
     ch->sendTo("No two....You lose your two bet (%d)!\n\r", d->bet.two);
     REMOVE_BIT(d->bet_opt.oneRoll, TWO2);
     d->bet.two = 0;
+    observerReaction(ch, GAMBLER_LOST);
   }
 }
 
@@ -695,12 +718,14 @@ void Craps::checkThree(int diceroll, TBeing *ch)
     ch->sendTo("Three hit! Nice bet! You win your bet (%d)\n\r", (15 *
 d->bet.three));
     payout(ch, 16 * d->bet.three);
+    observerReaction(ch, GAMBLER_WON);
     REMOVE_BIT(d->bet_opt.oneRoll, THREE3);
     d->bet.three = 0;
   } else {
     ch->sendTo("No three....You lose your three bet (%d)!\n\r", d->bet.three);
     REMOVE_BIT(d->bet_opt.oneRoll, THREE3);
     d->bet.three = 0;
+    observerReaction(ch, GAMBLER_LOST);
   }
 }
 
@@ -716,12 +741,14 @@ void Craps::checkOnerollEleven(int diceroll, TBeing *ch)
     ch->sendTo("Eleven hit! Nice bet! You win your bet (%d)!\n\r", (15 *
 d->bet.eleven));
     payout(ch, 16 * d->bet.eleven);
+    observerReaction(ch, GAMBLER_WON);
     REMOVE_BIT(d->bet_opt.oneRoll, ELEVEN);
     d->bet.eleven = 0;
   } else {
     ch->sendTo("No eleven....You lose your eleven bet (%d)!\n\r", d->bet.eleven);
     REMOVE_BIT(d->bet_opt.oneRoll, ELEVEN);
     d->bet.eleven = 0;
+    observerReaction(ch, GAMBLER_LOST);
   }
 }
 
@@ -736,8 +763,11 @@ void Craps::checkTwelve(int diceroll, TBeing *ch)
   if (diceroll == 12) {
     ch->sendTo("Twelve hit! Nice bet You win your twelve bet (%d)!\n\r", (30 * d->bet.twelve));
     payout(ch, 31 * d->bet.twelve);
-  } else
+    observerReaction(ch, GAMBLER_WON);
+  } else{
     ch->sendTo("No twelve....You lose your twelve bet (%d)!\n\r", d->bet.twelve);
+    observerReaction(ch, GAMBLER_LOST);
+  }
 
   REMOVE_BIT(d->bet_opt.oneRoll, TWELVE);
   d->bet.twelve = 0;
@@ -755,17 +785,21 @@ void Craps::checkOnerollCraps(int diceroll, TBeing *ch)
     ch->sendTo("Three hit! Your bet on craps hit! You win (%d)!\n\r", (6 * d->bet.one_craps));
     REMOVE_BIT(d->bet_opt.oneRoll, CRAPS);
     payout(ch, 7 * d->bet.one_craps);
+    observerReaction(ch, GAMBLER_WON);
   } else if (diceroll == 2) {
     ch->sendTo("Two hit! Your bet on craps hit! You win (%d)!\n\r", (6 * d->bet.one_craps));
     REMOVE_BIT(d->bet_opt.oneRoll, CRAPS);
     payout(ch, 7 * d->bet.one_craps);
+    observerReaction(ch, GAMBLER_WON);
   } else if (diceroll == 12) {
     ch->sendTo("Twelve hit. Your bet on craps hit! You win (%d)!\n\r", (6 * d->bet.one_craps));
     REMOVE_BIT(d->bet_opt.oneRoll, CRAPS);
     payout(ch, 7 * d->bet.one_craps);
+    observerReaction(ch, GAMBLER_WON);
   } else {
     ch->sendTo("No craps....You lose your bet on craps (%d)!\n\r", d->bet.one_craps);
     REMOVE_BIT(d->bet_opt.oneRoll, CRAPS);
+    observerReaction(ch, GAMBLER_LOST);
   }
   d->bet.one_craps = 0;
 }
@@ -820,11 +854,13 @@ void WinLoseCraps(TBeing *ch, int diceroll)
     if (IS_SET(d->bet_opt.crapsOptions, COME_OUT)) {
       tbt->sendTo("The point [%d] was hit. You win your bet (%d)!\n\r", diceroll, d->bet.come);
       payout(tbt, 2 * d->bet.come);
+      observerReaction(ch, GAMBLER_WON);
       REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
       d->bet.come = 0;
     }
     if (IS_SET(d->bet_opt.crapsOptions, CRAP_OUT)) {
       tbt->sendTo("The point [%d] was hit. You lose your bet (%d).\n\r", diceroll, d->bet.crap);
+      observerReaction(ch, GAMBLER_LOST);
       REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
       d->bet.crap = 0;
       if (tbt == ch)

@@ -25,11 +25,17 @@ const int CHIP_100000 = 2356;
 const int CHIP_500000 = 2357;
 const int CHIP_1000000= 2358;
 
+// these are just for observer reactions
+const int GAMBLER_WON           = 0;
+const int GAMBLER_LOST          = 1;
+const int GAMBLER_BET           = 2;
+const int GAMBLER_HILO_BET      = 3;
+const int GAMBLER_BLACKJACK_BET = 4;
 
 TObj *find_chip(TBeing *, const int &);
 TObj *find_chip(TBeing *, const sstring &);
 void payout(TBeing *, int);
-
+void observerReaction(TBeing *, int);
 
 int cardnumComparAscend(const void *, const void *);
 int cardnumComparDescend(const void *, const void *);

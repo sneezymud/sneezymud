@@ -154,13 +154,18 @@ void BjGame::Bet(TBeing *ch, const char *arg)
       act("$n gets a blackjack!", TRUE, ch, 0, 0, TO_ROOM);
       payout(ch, (int) (bet * 2.5));
       bet = 0;
+      observerReaction(ch, GAMBLER_WON);
     }
     if (((CARD_NUM(dealer[0]) == 1) && (CARD_NUM(dealer[1]) >= 10)) ||
 	((CARD_NUM(dealer[1]) == 1) && (CARD_NUM(dealer[0]) >= 10))) {
       ch->sendTo("The dealer gets a blackjack!\n\r");
       act("The dealer gets a blackjack!", TRUE, ch, 0, 0, TO_ROOM);
       bet = 0;
+      observerReaction(ch, GAMBLER_LOST);
     }
+
+    if(bet>0)
+      observerReaction(ch, GAMBLER_BLACKJACK_BET);
   }
 }
 
@@ -257,6 +262,7 @@ void BjGame::stay(TBeing *ch)
     ch->sendTo("You win.\n\r");
     act("$n wins.", TRUE, ch, 0, 0, TO_ROOM);
     payout(ch, (int) (bet * 2));
+    observerReaction(ch, GAMBLER_WON);
   } else if (pbest == dbest) {
     ch->sendTo("You push. You retain your original bid.\n\r");
     act("$n pushes.", TRUE, ch, 0, 0, TO_ROOM);
@@ -264,6 +270,7 @@ void BjGame::stay(TBeing *ch)
   } else {
     ch->sendTo("You lose.\n\r");
     act("$n loses.", TRUE, ch, 0, 0, TO_ROOM);
+    observerReaction(ch, GAMBLER_LOST);
   }
 
   bet = 0;

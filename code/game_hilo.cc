@@ -48,9 +48,11 @@ void HiLoGame::BetHi(TBeing *ch, int new_card)
     ssprintf(buf, "$n wins!  $n's winnings are now at %i talens.",
 	       (int)((float)bet * (1.0 + win_perc)));
     act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);    
+    observerReaction(ch, GAMBLER_HILO_BET);
   } else {
     ch->sendTo("You lose!\n\r");
     act("$n loses!", TRUE, ch, 0, 0, TO_ROOM);
+    observerReaction(ch, GAMBLER_LOST);
     bet = 0;
     card = 0;
   }
@@ -67,9 +69,11 @@ void HiLoGame::BetLo(TBeing *ch, int new_card)
     ssprintf(buf, "$n wins!  $n's winnings are now at %i talens.",
 	       (int)((float)bet * (1.0 + win_perc)));
     act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);    
+    observerReaction(ch, GAMBLER_HILO_BET);
   } else {
     ch->sendTo("You lose!\n\r");
     act("$n loses!", TRUE, ch, 0, 0, TO_ROOM);
+    observerReaction(ch, GAMBLER_LOST);
     bet = 0;
     card = 0;
   }
@@ -86,10 +90,10 @@ void HiLoGame::stay(TBeing *ch)
   act("$n gives up and cashes out $s winnings.",
       TRUE, ch, 0, 0, TO_ROOM);
 
-
   payout(ch, (int)((double)bet * (1.0 + win_perc)));
   bet = 0;
   card = 0;
+  observerReaction(ch, GAMBLER_WON);
 }
 
 
@@ -172,6 +176,7 @@ void HiLoGame::Bet(TBeing *ch, const sstring &arg)
     ssprintf(log_msg, "$n is dealt:\n\r%s\n\r", pretty_card_printout(ch, card).c_str());
     act(log_msg.c_str(), TRUE, ch, 0, 0, TO_ROOM);
 
+    observerReaction(ch, GAMBLER_HILO_BET);
   }
 }
 
