@@ -45,7 +45,7 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return TRUE;
   }
 
-  sstring newName = fmt("%s message [graffiti]") % buf;
+  sstring newName = fmt("%s message [graffiti] [%s]") % buf % ch->name;
   sstring newShort = fmt("the message '<W>%s<z>'") % buf;
   sstring newLong = fmt("Some vandal has left a message: '<W>%s<z>'.") % buf;
   gfti->swapToStrung();
