@@ -9,8 +9,8 @@
 void TBeing::doBrew(const char *arg)
 {
   char buf[256];
-  TComponent *invalid, *comp_spell, *comp_brew;
-  TPotion *comp_gen;
+  TComponent *invalid=NULL, *comp_spell=NULL, *comp_brew=NULL;
+  TPotion *comp_gen=NULL;
   TThing *t;
   spellNumT which_spell = TYPE_UNDEFINED;
   liqTypeT which_liq = LIQ_WATER;
@@ -32,30 +32,25 @@ void TBeing::doBrew(const char *arg)
 
 
   // find the 3 necessary pieces
-    // generic component (spell == -1, type = brew)
-    comp_gen = NULL;
-    // spell comp (spell = which, type = spell)
-    comp_spell = NULL;
-    // brew comp (spell = which, type = brew)
-    comp_brew = NULL;
-    invalid=NULL;
-
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if ((t = equipment[i])) {
+      // find the two spell comps, one for spell and one for brew spell
       t->findSomeComponent(&invalid, &comp_spell, &comp_brew, which_spell, 1);
-
-      if((comp_gen=dynamic_cast<TPotion *>(t)) && 
-	 comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR){
-	comp_gen=NULL;
+      
+      if(!comp_gen){
+	if((comp_gen=dynamic_cast<TPotion *>(t)) && 
+	   comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR)
+	  comp_gen=NULL;
       }
     }
   }
   for (t = getStuff(); t; t = t->nextThing) {
     t->findSomeComponent(&invalid, &comp_spell, &comp_brew, which_spell, 1);
-    
-    if((comp_gen=dynamic_cast<TPotion *>(t)) && 
-       comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR){
-      comp_gen=NULL;
+
+    if(!comp_gen){
+      if((comp_gen=dynamic_cast<TPotion *>(t)) && 
+	 comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR)
+	comp_gen=NULL;
     }
   }
 
