@@ -3595,7 +3595,12 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
 
     sprintf(buf, "Thanks for the donation.  I'll take your %d talen%s tithe in advance!", cost, (cost > 1) ? "s" : "");
     me->doSay(buf);
-    ch->addToMoney(-cost, GOLD_SHOP_SYMBOL);
+    ch->giveMoney(me, cost, GOLD_SHOP_SYMBOL);
+    shoplog(find_shop_nr(me->number), ch, me, getName(), 
+	    cost, "attuning");
+    me->saveChar(ROOM_AUTO_RENT);
+    ch->saveChar(ROOM_AUTO_RENT);
+
 
     job->cost = cost;
     job->hasJob = TRUE;
@@ -3638,7 +3643,9 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
   attune_struct *job;
 
-  if (cmd == CMD_GENERIC_DESTROYED) {
+  if(cmd == CMD_WHISPER){
+    return shopWhisper(ch, me, find_shop_nr(me->number), arg);    
+  } else if (cmd == CMD_GENERIC_DESTROYED) {
     delete (attune_struct *) me->act_ptr;
     me->act_ptr = NULL;
     return FALSE;
@@ -3915,6 +3922,8 @@ int sharpener(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   sharp_struct *job;
 
   switch (cmd) {
+    case CMD_WHISPER:
+      return shopWhisper(ch, me, find_shop_nr(me->number), arg);
     case CMD_GENERIC_DESTROYED:
       delete (sharp_struct *) me->act_ptr;
       me->act_ptr = NULL;
@@ -4604,6 +4613,8 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   static reg_struct *job;
 
   switch (cmd) {
+    case CMD_WHISPER:
+      return shopWhisper(ch, me, find_shop_nr(me->number), arg);
     case CMD_GENERIC_DESTROYED:
       delete (reg_struct *) me->act_ptr;
       me->act_ptr = NULL;
@@ -4897,7 +4908,10 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         job->wait = max(1, (int) (item->obj_flags.max_struct_points)/7);
         sprintf(buf, "Thanks for your business, I'll take your %d talens payment in advance!", cost);
         me->doSay(buf);
-        ch->addToMoney(-cost, GOLD_HOSPITAL);
+	ch->giveMoney(me, cost, GOLD_SHOP);
+	shoplog(find_shop_nr(me->number), ch, me, item->getName(), 
+		cost, "engraving");
+
         job->cost = cost;
         job->char_name = new char[strlen(ch->getName()) + 1];
         strcpy(job->char_name, ch->getName());
@@ -4905,6 +4919,10 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         strcpy(job->obj_name, fname(item->name).c_str());
         --(*item);
         *me += *item; 
+
+	me->saveChar(ROOM_AUTO_RENT);
+	ch->saveChar(ROOM_AUTO_RENT);
+
         return TRUE;
       } else {
         sprintf(buf, "Sorry, %s, but you'll have to wait while I engrave %s's item.", ch->getName(), job->char_name);
