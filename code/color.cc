@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: color.cc,v $
+// Revision 1.2  1999/10/04 18:27:34  lapsos
+// Added no-argument help to the prompt command.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -22,8 +25,9 @@
 
 void TBeing::doPrompt(const char *arg)
 {
+  string tStString("");
   char string[512];
-  char caColor[50], caStat[20];
+  char caColor[50], caStat[200];
   int field, statnum;
   int kolor2;
   setColorKolorT kolor;
@@ -79,6 +83,82 @@ void TBeing::doPrompt(const char *arg)
 
   if (!desc)
     return;
+
+  if (!arg || !*arg || *arg == '\n') {
+    bool tPrompts[] =
+    {
+      IS_SET(desc->prompt_d.type, PROMPT_HIT),
+      IS_SET(desc->prompt_d.type, PROMPT_MANA),
+      IS_SET(desc->prompt_d.type, PROMPT_MOVE),
+      IS_SET(desc->prompt_d.type, PROMPT_GOLD),
+      IS_SET(desc->prompt_d.type, PROMPT_EXP),
+      IS_SET(desc->prompt_d.type, PROMPT_NAME),
+      IS_SET(desc->prompt_d.type, PROMPT_OPPONENT),
+      IS_SET(desc->prompt_d.type, PROMPT_CONDITION),
+      IS_SET(desc->prompt_d.type, PROMPT_COND_LDR),
+      IS_SET(desc->prompt_d.type, PROMPT_ROOM),
+      IS_SET(desc->prompt_d.type, PROMPT_COLOR),
+      IS_SET(desc->prompt_d.type, PROMPT_TANK),
+      IS_SET(desc->prompt_d.type, PROMPT_TANK_OTHER),
+      IS_SET(desc->prompt_d.type, PROMPT_BUILDER_ASSISTANT),
+      IS_SET(desc->prompt_d.type, PROMPT_EXPTONEXT_LEVEL),
+      IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR)
+    };
+
+    tStString += "Prompt Line Options:\n\r--------------------\n\r";
+
+    sprintf(string, "Hit        : (%s): H:%d\n\r", (tPrompts[0] ? "yes" : " no"), getHit());
+    tStString += string;
+
+    if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
+      sprintf(string, "Piety      : (%s): P:%.1f\n\r", (tPrompts[1] ? "yes" : " no"), getPiety());
+    else
+      sprintf(string, "Mana       : (%s): M:%d\n\r", (tPrompts[1] ? "yes" : " no"), getMana());
+
+    tStString += string;
+    sprintf(string, "Movement   : (%s): V:%d\n\r", (tPrompts[2] ? "yes" : " no"), getMove());
+    tStString += string;
+    sprintf(string, "Talens     : (%s): T:%d\n\r", (tPrompts[3] ? "yes" : " no"), getMoney());
+    tStString += string;
+    strcpy(caStat, displayExp().c_str());
+    comify(caStat);
+    sprintf(string, "Exp        : (%s): E:%s\n\r", (tPrompts[4] ? "yes" : " no"), caStat);
+    tStString += string;
+
+    for (classIndT tClassIndex = MAGE_LEVEL_IND; tClassIndex < MAX_CLASSES; tClassIndex++)
+      if (getLevel(tClassIndex) && getLevel(tClassIndex) < MAX_MORT) {
+        if (getExp() > desc->prompt_d.xptnl)
+          desc->prompt_d.xptnl = getExpClassLevel(tClassIndex, getLevel(tClassIndex) + 1);
+
+        double tNeed = desc->prompt_d.xptnl - getExp();
+
+        sprintf(caStat, "%.0f", tNeed);
+        comify(caStat);
+        sprintf(string, "Exp_tolevel: (%s): N:%s\n\r", (tPrompts[14] ? "yes" : " no"), caStat);
+        tStString += string;
+      }
+
+    if (isImmortal()) {
+      sprintf(string, "Room       : (%s): R:%d\n\r", (tPrompts[9] ? "yes" : " no"), roomp->number);
+      tStString += string;
+    }
+
+    tStString += "--------------------\n\r";
+    sprintf(string, "Opponent  : (%s): Current target when in battle.\n\r",
+            (tPrompts[6] ? "yes" : " no"));
+    tStString += string;
+    sprintf(string, "Tank      : (%s): Current tank when in battle, including self.\n\r",
+            (tPrompts[11] ? "yes" : " no"));
+    tStString += string;
+    sprintf(string, "Tank-other: (%s): Current tank when in battle, excluding self.\n\r",
+            (tPrompts[12] ? "yes" : " no"));
+    tStString += string;
+    tStString += "--------------------\n\r";
+
+    desc->page_string(tStString.c_str(), FALSE);
+
+    return;
+  }
 
   bisect_arg(arg, &field, string, stat_fields);
 
