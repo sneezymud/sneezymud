@@ -138,8 +138,8 @@ class indexData {
   float weight;
   
   void addToNumber(const short int n){
-    vlogf(LOG_PEEL, "adding %i to number %i for object %i",
-	  n, number, virt);
+    //    vlogf(LOG_PEEL, "adding %i to number %i for object %i",
+    //	  n, number, virt);
     number+=n;
   }
 
