@@ -1681,23 +1681,19 @@ void TBeing::doPracDisc(const char *arg, int classNum)
 }
 
 
-void TBeing::doIdea(const char *)
+void TBeing::doIdea(const sstring &)
 {
   sendTo("Monsters can't have ideas - Go away.\n\r");
   return;
 }
 
-void TPerson::doIdea(const char *arg)
+void TPerson::doIdea(const sstring &arg)
 {
-  char buf[256];
- 
-  one_argument(arg, buf);
-
   if (fight())  {
     sendTo("You cannot perform that action while fighting!\n\r");
     return;
   }
-  if (hasWizPower(POWER_SEE_COMMENTARY) && isImmortal() && *buf) {
+  if (hasWizPower(POWER_SEE_COMMENTARY) && isImmortal() && !arg.empty()) {
     desc->start_page_file(IDEA_FILE, "Players aint saying nothin\'.\n\r");
     return;
   }
@@ -1717,23 +1713,19 @@ void TPerson::doIdea(const char *arg)
   desc->clientf("%d", CLIENT_IDEA);
 }
 
-void TBeing::doTypo(const char *)
+void TBeing::doTypo(const sstring &)
 {
   sendTo("Monsters can't spell - leave me alone.\n\r");
   return;
 }
 
-void TPerson::doTypo(const char *arg)
+void TPerson::doTypo(const sstring &arg)
 {
-  char buf[256];
- 
-  one_argument(arg, buf);
-
   if (fight())  {
     sendTo("You cannot perform that action while fighting!\n\r");
     return;
   }
-  if (hasWizPower(POWER_SEE_COMMENTARY) && isImmortal() && *buf) {
+  if (hasWizPower(POWER_SEE_COMMENTARY) && isImmortal() && !arg.empty()) {
     desc->start_page_file(TYPO_FILE, "Players can't spell worth nothin\'.\n\r");
     return;
   }
@@ -1754,23 +1746,19 @@ void TPerson::doTypo(const char *arg)
   desc->clientf("%d", CLIENT_TYPO);
 }
 
-void TBeing::doBug(const char *)
+void TBeing::doBug(const sstring &)
 {
   sendTo("You are a monster! Bug off!\n\r");
   return;
 }
 
-void TPerson::doBug(const char *arg)
+void TPerson::doBug(const sstring &arg)
 {
-  char buf[256];
-
-  one_argument(arg, buf);
-
   if (fight())  {
     sendTo("You cannot perform that action while fighting!\n\r");
     return;
   }
-  if (hasWizPower(POWER_SEE_COMMENTARY) && isImmortal() && *buf) {
+  if (hasWizPower(POWER_SEE_COMMENTARY) && isImmortal() && !arg.empty()) {
     desc->start_page_file(BUG_FILE, "Players aren't saying anything.\n\r");
     return;
   }

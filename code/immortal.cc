@@ -208,31 +208,29 @@ char * dsearch(const char *sstring)
   }
 }
 
-void TBeing::doHighfive(const char *argument)
+void TBeing::doHighfive(const sstring &argument)
 {
-  char buf[80];
-  char mess[120];
+  sstring mess;
   TBeing *tch;
 
-  if (argument) {
-    only_argument(argument, buf);
-    if ((tch = get_char_room_vis(this, buf)) != 0) {
+  if (!argument.empty()) {
+    if ((tch = get_char_room_vis(this, argument)) != 0) {
       if (tch->isImmortal() && isImmortal()) {
         switch(::number(1,3)) {
           case 1:
-            sprintf(mess, "Time stops for a moment as %s and %s high five.\n\r",
+            ssprintf(mess, "Time stops for a moment as %s and %s high five.\n\r",
         name, tch->name);
             break;
           case 2:
-            sprintf(mess, "Thunder booms and lightning streaks across the heavens as %s and %s high five.\n\r",
+            ssprintf(mess, "Thunder booms and lightning streaks across the heavens as %s and %s high five.\n\r",
         name, tch->name);
             break;
           case 3:
-            sprintf(mess, "The world shakes as %s and %s high five.\n\r",
+            ssprintf(mess, "The world shakes as %s and %s high five.\n\r",
         name, tch->name);
             break;
           default:
-            sprintf(mess, "Time stops for a moment as %s and %s high five.\n\r",
+            ssprintf(mess, "Time stops for a moment as %s and %s high five.\n\r",
         name, tch->name);
             break;
         }
@@ -3991,15 +3989,12 @@ void TBeing::doRestore(const char *argument)
 }
 
 
-void TBeing::doNoshout(const char *argument)
+void TBeing::doNoshout(const sstring &argument)
 {
   TBeing *vict;
   TObj *dummy;
-  char buf[256];
 
-  only_argument(argument, buf);
-
-  if (!*buf) {
+  if (argument.empty()) {
     if (desc) {
       if (IS_SET(desc->autobits, AUTO_NOSHOUT)) {
         sendTo("You can now hear shouts again.\n\r");
@@ -4012,7 +4007,7 @@ void TBeing::doNoshout(const char *argument)
       sendTo("Go away.  Bad mob.\n\r");
     }
   } else if (isImmortal()) {
-    if (!generic_find(argument, FIND_CHAR_WORLD, this, &vict, &dummy))
+    if (!generic_find(argument.c_str(), FIND_CHAR_WORLD, this, &vict, &dummy))
       sendTo("Couldn't find any such creature.\n\r");
     else if (dynamic_cast<TMonster *>(vict))
       sendTo("Can't do that to a beast.\n\r");
@@ -4036,7 +4031,7 @@ void TBeing::doNoshout(const char *argument)
   }
 }
 
-void TBeing::doDeathcheck(const char *arg)
+void TBeing::doDeathcheck(const sstring &arg)
 {
   char file[256], playerx[256], buf[256];
   char *p;
@@ -4047,7 +4042,7 @@ void TBeing::doDeathcheck(const char *arg)
   if (!isImmortal())
     return;
 
-  if (sscanf(arg, "%s %s", playerx, file) == EOF) {
+  if (sscanf(arg.c_str(), "%s %s", playerx, file) == EOF) {
     sendTo("Syntax:  deathcheck playername logfile\n\r");
     return;
   }
@@ -6078,7 +6073,7 @@ void TBeing::doSysMid()
   systask->AddTask(this, SYSTEM_MAIL_IMMORT_DIR, NULL);
 }
 
-void TBeing::doSysTraceroute(const char *arg) 
+void TBeing::doSysTraceroute(const sstring &arg) 
 {
   if (powerCheck(POWER_TRACEROUTE))
     return;
@@ -6086,21 +6081,19 @@ void TBeing::doSysTraceroute(const char *arg)
   if (!isImmortal())
      return;
 
-  for (; isspace(*arg); arg++);    // pass all those spaces 
-  if (!*arg) {
+  if (arg.empty()) {
     sendTo("Syntax: traceroute <host>\n\r");
     return;
   }
 
-  systask->AddTask(this, SYSTEM_TRACEROUTE, arg);
+  systask->AddTask(this, SYSTEM_TRACEROUTE, arg.c_str());
 }
 
-void TBeing::doSysTasks(const char *arg) 
+void TBeing::doSysTasks(const sstring &arg) 
 {
   if (!isImmortal())
     return;
 
-  for (; isspace(*arg); arg++);    // pass all those spaces 
 #if 0
   if (!*arg) {
     sendTo("Syntax: tasks {enabled | disabled}\n\r");
@@ -6109,7 +6102,7 @@ void TBeing::doSysTasks(const char *arg)
 #endif
 
   char argument[256];
-  strcpy(argument, arg);
+  strcpy(argument, arg.c_str());
   cleanCharBuf(argument);
   sstring lst = systask->Tasks(this, argument);
   desc->page_string(lst);
@@ -6128,7 +6121,7 @@ void TBeing::doSysLoglist()
   systask->AddTask(this, SYSTEM_LOGLIST, NULL);
 }
 
-void TBeing::doSysChecklog(const char *arg)
+void TBeing::doSysChecklog(const sstring &arg)
 {
   char *tMarkerS, // Start
        *tMarkerE, // End
@@ -6145,19 +6138,17 @@ void TBeing::doSysChecklog(const char *arg)
   if (!isImmortal())
     return;
 
-  for (; isspace(*arg); arg++);
-
-  if (!*arg) {
-    sendTo("Syntax: checklog \"sstring\" logfile\n\rSee loglist for list of logfiles.\n\r");
+  if (arg.empty()) {
+    sendTo("Syntax: checklog \"string\" logfile\n\rSee loglist for list of logfiles.\n\r");
     return;
   }
 
-  strcpy(tString, arg);
+  strcpy(tString, arg.c_str());
   cleanCharBuf(tString);
 
   if (!(tMarkerS = strchr(tString, '"')) ||
       !(tMarkerE = strchr((tMarkerS + 1), '"'))) {
-    sendTo("Syntax: checklog \"sstring\" logfile\n\rSee loglist for list of logfiles.\n\r");
+    sendTo("Syntax: checklog \"string\" logfile\n\rSee loglist for list of logfiles.\n\r");
     return;
   }
 
@@ -6169,7 +6160,7 @@ void TBeing::doSysChecklog(const char *arg)
   strcpy(tLog, tMarkerE);
 
   if (!tLog[0]) {
-    sendTo("Syntax: checklog \"sstring\" logfile\n\rSee loglist for list of logfiles.\n\r");
+    sendTo("Syntax: checklog \"string\" logfile\n\rSee loglist for list of logfiles.\n\r");
     return;
   }
 

@@ -73,13 +73,13 @@ struct tJumpCmdInformation
 
 #include "stdsneezy.h"
 
-int TBeing::doJump(const char *tArg)
+int TBeing::doJump(const sstring &tArg)
 {
   // Ignore invalid or errored locations.
   if (!roomp || !roomp->number)
     return FALSE;
 
-  if (tArg && *tArg)
+  if (!tArg.empty())
     for (unsigned int tJumpIndex = 0;
          tJumpIndex < (sizeof(tJumpData) / sizeof(tJumpCmdInformation));
          tJumpIndex++)

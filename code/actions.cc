@@ -567,7 +567,7 @@ void TPlant::peeOnMe(const TBeing *ch)
   updateAge();
 }
 
-void TBeing::doPee(sstring argument)
+void TBeing::doPee(const sstring &argument)
 {
   TThing *t;
   TObj *o;
@@ -605,7 +605,7 @@ void TBeing::doPee(sstring argument)
   }
 }
 
-void TBeing::doPoke(const char *arg)
+void TBeing::doPoke(const sstring &arg)
 {
   TThing *t = NULL;
   TThing *hold = NULL;
@@ -617,14 +617,12 @@ void TBeing::doPoke(const char *arg)
   if (!roomp)
     return;
 
-  for (;isspace(*arg);arg++);
-
   if ((hold = equipment[getPrimaryHold()])) 
     strcpy(buf, fname(hold->name).c_str());
   else
     strcpy(buf, "finger");
 
-  if (!*arg) {
+  if (arg.empty()) {
     sprintf(holdBuf, "You point your %s around threateningly.", buf);
     act(holdBuf, FALSE, this, NULL, this, TO_CHAR);
     sprintf(holdBuf, "$n points $s %s around threateningly.", buf);
@@ -661,7 +659,7 @@ void TBeing::doPoke(const char *arg)
   sendTo("You look for something to poke, but come up disappointed.\n\r");
 }
 
-void TBeing::doPoint(const char *arg)
+void TBeing::doPoint(const sstring &arg)
 {
   TThing *t = NULL;
   TThing *hold = NULL;
@@ -673,14 +671,13 @@ void TBeing::doPoint(const char *arg)
   if (!roomp)
     return;
 
-  for (;isspace(*arg);arg++);
 
   if ((hold = equipment[getPrimaryHold()])) 
     strcpy(buf, fname(hold->name).c_str());
   else
     strcpy(buf, "finger");
 
-  if (!*arg) {
+  if (arg.empty()) {
     sprintf(holdBuf, "You point your %s around randomly.", buf);
     act(holdBuf, FALSE, this, NULL, this, TO_CHAR);
     sprintf(holdBuf, "$n points $s %s around randomly.", buf);

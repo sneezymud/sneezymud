@@ -110,9 +110,9 @@ class TPerson : public TBeing {
     virtual void doTitle(const char *);
     virtual void parseTitle(char *, Descriptor *);
     virtual void addToWait(int);
-    virtual void doBug(const char *);
-    virtual void doIdea(const char *);
-    virtual void doTypo(const char *);
+    virtual void doBug(const sstring &);
+    virtual void doIdea(const sstring &);
+    virtual void doTypo(const sstring &);
     virtual bool hasQuestBit(int) const;
     virtual void setQuestBit(int);
     virtual void remQuestBit(int);

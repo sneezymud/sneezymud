@@ -4740,13 +4740,13 @@ void Descriptor::saveAll()
   }
 }
 
-void Descriptor::worldSend(const char *text, TBeing *ch)
+void Descriptor::worldSend(const sstring &text, TBeing *ch)
 {
   Descriptor *d;
 
   for (d = descriptor_list; d; d = d->next) {
     if (!d->connected)
-      d->output.putInQ(colorString(ch, d, text, NULL, COLOR_BASIC, TRUE));
+      d->output.putInQ(colorString(ch, d, text.c_str(), NULL, COLOR_BASIC, TRUE));
   }
 }
 

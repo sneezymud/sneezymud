@@ -494,7 +494,7 @@ class Descriptor
     void sstring_add(char *);
     void fdSocketClose(int);
     void saveAll();
-    void worldSend(const char *, TBeing *);
+    void worldSend(const sstring &, TBeing *);
     void sendShout(TBeing *, const char *);
     void updateScreenAnsi(unsigned int update);
     void updateScreenVt100(unsigned int update);

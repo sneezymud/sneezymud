@@ -367,7 +367,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doHeaven(stringarg);
           break;
         case CMD_REFUEL:
-          doRefuel(newarg);
+          doRefuel(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_REPLY:
@@ -379,10 +379,10 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_DRAG:
-          doDrag(newarg);
+          doDrag(stringarg);
           break;
         case CMD_MOVE:
-          doRoll(newarg);
+          doRoll(stringarg);
           break;
         case CMD_DISSECT:
           rc = doDissect(stringarg);
@@ -416,15 +416,15 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_BUG:
-          doBug(newarg);
+          doBug(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_IDEA:
-          doIdea(newarg);
+          doIdea(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_TYPO:
-          doTypo(newarg);
+          doTypo(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_NORTH:
@@ -440,7 +440,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           rc = doMove(cmd);
           break;
         case CMD_TRACEROUTE:
-          doSysTraceroute(newarg);
+          doSysTraceroute(stringarg);
           break;
         case CMD_MID:
           doSysMid();
@@ -449,7 +449,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doSysViewoutput();
           break;
         case CMD_TASKS:
-          doSysTasks(newarg);
+          doSysTasks(stringarg);
           break;
         case CMD_SAY:
         case CMD_SAY2:
@@ -510,7 +510,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_MEND_LIMB:
-          rc = doMendLimb(newarg);
+          rc = doMendLimb(stringarg);
           break;
         case CMD_TITHE:
           rc = doTithe();
@@ -676,14 +676,15 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_JUMP:
-          rc = doJump(newarg);
+          rc = doJump(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_POKE:
-	  doPoke(newarg);
+	  doPoke(stringarg);
+	  addToLifeforce(1);
 	  break;
         case CMD_POINT:
-          doPoint(newarg);
+          doPoint(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_BITE:
@@ -714,10 +715,10 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_DEATHCHECK:
-          doDeathcheck(newarg);
+          doDeathcheck(stringarg);
           break;
         case CMD_CHECKLOG:
-          doSysChecklog(newarg);
+          doSysChecklog(stringarg);
           break;
         case CMD_RECITE:
           rc = doRecite(newarg);
@@ -738,7 +739,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doShow(newarg);
           break;
         case CMD_HIGHFIVE:
-          doHighfive(newarg);
+          doHighfive(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_TOGGLE:

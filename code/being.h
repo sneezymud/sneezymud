@@ -1370,11 +1370,11 @@ class TBeing : public TThing {
     void doAccount(const char *);
     virtual void doOEdit(const char *);
     void doScratch(const char *);
-    void doPee(sstring);
-    void doPoint(const char *);
-    void doPoke(const char *);
+    void doPee(const sstring &);
+    void doPoint(const sstring &);
+    void doPoke(const sstring &);
     int doBite(const sstring &);
-    int doJump(const char *);
+    int doJump(const sstring &);
     int doPick(const char *);
     int doSearch(const char *);
     int doSpy();
@@ -1427,7 +1427,7 @@ class TBeing : public TThing {
     void setDefected();
 
 
-    int doMendLimb(const char *);
+    int doMendLimb(const sstring &);
     void doYoginsa();
     void doMeditate();
     void doPenance();
@@ -1757,10 +1757,10 @@ class TBeing : public TThing {
     void doSysMid();
     void doFindEmail(const char *);
     void doNameChange(const char *);
-    void doSysTraceroute(const char *);
+    void doSysTraceroute(const sstring &);
     void doSysLoglist();
-    void doSysTasks(const char *);
-    void doSysChecklog(const char *);
+    void doSysTasks(const sstring &);
+    void doSysChecklog(const sstring &);
     void doSysViewoutput();
     int doSubterfuge(const char *);
     int doBackstab(const char *, TBeing *);
@@ -1790,9 +1790,9 @@ class TBeing : public TThing {
     void doPrayers(const sstring &);
     void sendSkillsList(discNumT);
     void doPractice(const char *);
-    virtual void doIdea(const char *);
-    virtual void doBug(const char *);
-    virtual void doTypo(const char *);
+    virtual void doIdea(const sstring &);
+    virtual void doBug(const sstring &);
+    virtual void doTypo(const sstring &);
     virtual void doColor(const char *);
     void setColor(setColorFieldT, setColorKolorT);
     int doQuaff(sstring);
@@ -1827,7 +1827,7 @@ class TBeing : public TThing {
     void doRoll(TObj *, dirTypeT);
     void doRoll(const sstring &);
     void doEcho(const char *);
-    void doHighfive(const char *);
+    void doHighfive(const sstring &);
     virtual void doToggle(const char *);
     virtual void doTrans(const char *);
     virtual void doSwitch(const char *);
@@ -1839,7 +1839,7 @@ class TBeing : public TThing {
     void doFlag(const char *);
     void doSystem(const char *);
     void doWiznews();
-    void doNoshout(const char *);
+    void doNoshout(const sstring &);
     int doHide();
     int doSneak(const char *);
     void doLoglist(const char *, int);
@@ -1853,7 +1853,7 @@ class TBeing : public TThing {
     void doHostlog(const char *);
     virtual void doShow(const char *);
     void doChecklog(const char *, int);
-    void doDeathcheck(const char *);
+    void doDeathcheck(const sstring &);
     int doGive(TBeing *, TThing *, giveTypeT = GIVE_FLAG_DEF);
     int doGive(const char *, giveTypeT = GIVE_FLAG_DEF);
     int doMount(const char *, cmdTypeT, TBeing *);
