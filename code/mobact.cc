@@ -820,6 +820,10 @@ int TMonster::senseWimps()
     if (tmp_victim->isImmortal() || !tmp_victim->awake())
       continue;
 
+    // Don't brawl in guard proc mobiles, both annoying and exploitable.
+    if (tmp_victim->spec == SPEC_CITYGUARD)
+      continue;
+
     // protect recently dead PCs
     if ((tmp_victim->getHit() < 15) && tmp_victim->isPc())
       continue; 
