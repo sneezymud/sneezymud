@@ -7431,7 +7431,9 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   *ch += *cookie;
   *ch += *fortune;
-  *ch += *o; // have to put it back to return delete properly
+  //  *ch += *o; // have to put it back to return delete properly
+  delete o; // this doesn't actually delete it for some reason
+  // memory leak
 
   ssprintf(buf, "$n tears open $p and pulls out %s.", fortune->shortDescr);
   act(buf,TRUE,ch,cookie,NULL, TO_ROOM,NULL);
@@ -7440,7 +7442,6 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   return DELETE_ITEM;
 }
-
 
 
 //MARKER: END OF SPEC PROCS
@@ -7455,6 +7456,7 @@ extern int deikhanSword(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TO
 extern int blackSun(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int poisonCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int unholyCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int lotteryTicket(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 
 
 // assign special procedures to objects
@@ -7590,5 +7592,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Fire Shield", fireArmor},
   {FALSE, "Finns Gaff", finnsGaff},
   {FALSE, "stim pack", stimPack},
+  {FALSE, "lottery ticket", lotteryTicket},
   {FALSE, "last proc", bogusObjProc}
 };

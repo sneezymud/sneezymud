@@ -156,7 +156,8 @@ const int SPEC_KAVOD_BARMAID      =171;
 const int SPEC_TATTOO_ARTIST      =172;
 const int SPEC_ELEVATOR_OP        =173;
 const int SPEC_ELEVATOR_GUARD     =174;
-const int NUM_MOB_SPECIALS        =175;
+const int SPEC_LOTTERY_REDEEMER   =175;
+const int NUM_MOB_SPECIALS        =176;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

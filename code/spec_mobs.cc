@@ -7469,6 +7469,7 @@ extern int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *
 extern int factionRegistrar(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int grimhavenPosse(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int coroner(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int lotteryRedeemer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 
 // Fields: display_under_medit, name_of_special, name_of_function_to_call
@@ -7650,6 +7651,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "casino elevator operator", casinoElevatorOperator},
   {FALSE, "casino elevator guard", casinoElevatorGuard},
   {FALSE, "commodity maker", commodMaker}, // 175
+  {FALSE, "lottery redeemer", lotteryRedeemer},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
