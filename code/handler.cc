@@ -114,7 +114,7 @@ bool is_exact_name(const sstring &str, const sstring &namelist)
 
   for (i = 0; i < argv.size(); i++) {
     for (j = 0; j < xargv.size(); j++) {
-      if(!xargv[j].empty() && lower(argv[i]) == lower(xargv[j])){
+      if(lower(argv[i]) == lower(xargv[j])){
         xargv[j] = "";
         break;
       }
