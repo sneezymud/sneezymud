@@ -146,7 +146,7 @@ bool isEnabled(int num)
   map<int,bool>::iterator iter;
   
   for(iter=zone_enabled.begin();iter!=zone_enabled.end();++iter){
-    if((*iter).first>num){
+    if((*iter).first>=num){
       enabled=(*iter).second;
       break;
     }
