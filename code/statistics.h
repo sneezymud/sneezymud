@@ -174,7 +174,7 @@ extern long gold_statistics[MAX_MONEY_TYPE][GOD_LEVEL10];
 extern long gold_positive[MAX_MONEY_TYPE][GOD_LEVEL10];
 extern float gold_modifier[MAX_MONEY_TYPE];
 
-#if 0
+#if 1
 extern int getNetGold(moneyTypeT);
 extern unsigned int getPosGold(moneyTypeT);
 
