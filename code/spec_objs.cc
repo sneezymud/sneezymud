@@ -5795,9 +5795,10 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   int i=1;
   ch->sendTo("\n\rThe ten wealthiest shops are:\n\r");
   while(db.fetchRow()){
-    tr=real_roomp(atoi_safe(db.getColumn(0)));
-    ch->sendTo("%i) %s with %s talens.\n\r",
-	       i, tr->getName(), db.getColumn(1));
+    if((tr=real_roomp(atoi_safe(db.getColumn(0))))){
+      ch->sendTo("%i) %s with %s talens.\n\r",
+		 i, tr->getName(), db.getColumn(1));
+    }
     ++i;
   }
 
