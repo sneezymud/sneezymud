@@ -1,21 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: signals.cc,v $
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #if defined LINUX
 // Linux systems will reset the signal after it gets raised
 // According to the man page, we can get around this by using different include
@@ -81,21 +63,21 @@ void shutdownAndPurgeRequest(int num)
 
 void purgeRequest(int)
 {
-  vlogf(10, "Received USR1 or USR2 signal - request to purge linkdeads");
+  vlogf(LOG_MISC, "Received USR1 or USR2 signal - request to purge linkdeads");
 
   genericPurgeLdead(NULL);
 }
 
 void shutdownRequest(int)
 {
-  vlogf(10, "Received USR2 or QUIT - shutdown request");
+  vlogf(LOG_MISC, "Received USR2 or QUIT - shutdown request");
   char buf[2000];
 
   int num = 5;
   if (!timeTill)
     timeTill = time(0) + (num * SECS_PER_REAL_MIN);
   else if (timeTill < (time(0) + (num * SECS_PER_REAL_MIN))) {
-    vlogf(10, "Shutdown in progress overrides request.");
+    vlogf(LOG_MISC, "Shutdown in progress overrides request.");
     return;
   } else {
     timeTill = time(0) + (num * SECS_PER_REAL_MIN);
@@ -109,18 +91,18 @@ void shutdownRequest(int)
 
 void hupsig(int)
 {
-  vlogf(10, "Received SIGHUP, SIGINT, or SIGTERM. Shutting down");
+  vlogf(LOG_MISC, "Received SIGHUP, SIGINT, or SIGTERM. Shutting down");
   exit(0); /* something more elegant should perhaps be substituted */
 }
 
 void logsig(int)
 {
-  vlogf(10, "Signal received. Ignoring.");
+  vlogf(LOG_MISC, "Signal received. Ignoring.");
 }
 
 void profsig(int)
 {
 // prof signals come in if prof/gprof is enabled
 // we have to process these sigs, but ignore them
-  vlogf(10, "SIGPROF caught.  Ignoring.");
+  vlogf(LOG_MISC, "SIGPROF caught.  Ignoring.");
 }
