@@ -68,6 +68,7 @@ bool AllowPcMobs = TRUE;    // PCs with same name as mob allowed?
 bool Lapspeak = FALSE; // Heh. 
 bool Twink = FALSE; // combat twink fun stuff
 bool timeQueries = false; // store db query speeds THIS IS SLOW
+bool gameLoopTiming = false; // spit out game loop info, very spammy
 
 int QuestVar1 = 0; // varibles for changing constants in the code in-game
 int QuestVar2 = 0;
@@ -356,6 +357,8 @@ void TBeing::doToggle(const char *arg2)
       sendTo(COLOR_BASIC, fmt("Time DB Queries   : %s  | ") %on_or_off(timeQueries));
       sendTo(COLOR_BASIC, fmt("Twinky Combat     : %s  | ") % on_or_off(Twink));
       sendTo(COLOR_BASIC, fmt("Lapsos Speech     : %s\n\r") %on_or_off(Lapspeak));
+      sendTo(COLOR_BASIC, fmt("Game Loop Timing  : %s\n\r") % on_or_off(gameLoopTiming));
+
 
       sendTo(COLOR_BASIC, "\n\r<c>Test Code Toggles<1>\n\r");
       sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
@@ -877,6 +880,11 @@ void TBeing::doToggle(const char *arg2)
 	    (NewbiePK ? "enabled" : "disabled"));
       if (NewbiePK)
         vlogf(LOG_MISC,"Newbies can now be killed by anyone.");
+  } else if (is_abbrev(arg, "gamelooptiming") && hasWizPower(POWER_TOGGLE)) {
+    gameLoopTiming = ! gameLoopTiming;
+    sendTo(fmt("game loop timing is now %s.\n\r") % (gameLoopTiming ? "in use" : "off"));
+    vlogf(LOG_MISC,fmt("%s has %s game loop timing.") % getName() %
+	  (gameLoopTiming ? "enabled" : "disabled"));    
   } else if (is_abbrev(arg, "testcode1") && hasWizPower(POWER_TOGGLE)) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
@@ -886,8 +894,8 @@ void TBeing::doToggle(const char *arg2)
     }
 #endif
     TestCode1 = ! TestCode1;
-    sendTo(fmt("TestCode #1 (pulse timing) is now %s.\n\r") % (TestCode1 ? "in use" : "off"));
-    vlogf(LOG_MISC,fmt("%s has %s TestCode #1 (pulse timing).") % getName() %
+    sendTo(fmt("TestCode #1 is now %s.\n\r") % (TestCode1 ? "in use" : "off"));
+    vlogf(LOG_MISC,fmt("%s has %s TestCode #1.") % getName() %
 	  (TestCode1 ? "enabled" : "disabled"));
   } else if (is_abbrev(arg, "testcode2") && hasWizPower(POWER_TOGGLE)) {
 #if 0

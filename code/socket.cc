@@ -514,7 +514,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       tmp_ch->setPosition(POSITION_STANDING);
     }
 
-    if (!pl.special_procs) {
+    if (pl.special_procs) {
       if (tmp_ch->spec) {
 	rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_PULSE, "", NULL);
 	if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -528,7 +528,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       }
     }
 
-    if (!pl.drowning) {
+    if (pl.drowning) {
       rc = tmp_ch->checkDrowning();
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	temp = tmp_ch->next;
@@ -547,7 +547,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 
     }
 
-    if (!pl.mobstuff) {
+    if (pl.mobstuff) {
       if (Gravity) {
 	tmp_ch->checkSinking(tmp_ch->in_room);
 
@@ -596,7 +596,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       }
     }
 
-    if (!pl.combat) {
+    if (pl.combat) {
 
       if (tmp_ch->isPc() && tmp_ch->desc && tmp_ch->GetMaxLevel() > MAX_MORT &&
 	  !tmp_ch->limitPowerCheck(CMD_GOTO, tmp_ch->roomp->number)
@@ -654,7 +654,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       if ((tmp_ch->cantHit > 0) && !tmp_ch->fight())
 	tmp_ch->cantHit--;
     }
-    if (!pl.teleport) {
+    if (pl.teleport) {
       rc = tmp_ch->riverFlow(realpulse);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	temp = tmp_ch->next;
@@ -671,7 +671,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       }
     }
     TMonster *tmon = dynamic_cast<TMonster *>(tmp_ch);
-    if (!pl.update_stuff) {
+    if (pl.update_stuff) {
       if (!number(0, 3) && !tmp_ch->isPc() && tmon)
 	tmon->makeNoise();
     }
@@ -683,7 +683,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
     }
 
 
-    if (!pl.pulse_tick) {
+    if (pl.pulse_tick) {
       rc = tmp_ch->updateHalfTickStuff();
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	if (!tmp_ch)
@@ -697,7 +697,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
       } else if (rc == ALREADY_DELETED)  continue;
     }
       
-    if (!pl.pulse_mudhour) {
+    if (pl.pulse_mudhour) {
       rc = tmp_ch->updateTickStuff();
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	temp = tmp_ch->next;
@@ -712,7 +712,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
     }
 	
     // check for vampires in daylight
-    if(!pl.teleport){
+    if(pl.teleport){
       if(!tmp_ch->roomp->isIndoorSector() && 
 	 !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
 	 (tmp_ch->inRoom() != ROOM_VOID) && sunIsUp()){
@@ -742,7 +742,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
     }
 
     // lycanthrope transformation
-    if(!pl.teleport){
+    if(pl.teleport){
       if(tmp_ch->hasQuestBit(TOG_LYCANTHROPE) &&
 	 !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)
 	 && !tmp_ch->isLinkdead() &&
@@ -765,7 +765,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
     }
 
 
-    if (!pl.teleport) {
+    if (pl.teleport) {
       if (tmp_ch->spec) {
 	rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_QUICK_PULSE, "", NULL);
 	if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -884,7 +884,7 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
     }
     // end 12 pulse
 
-    if (!pl.special_procs) { // 36
+    if (pl.special_procs) { // 36
       check_sinking_obj(obj, obj->in_room);
       if (obj->spec) {
 	rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
@@ -919,7 +919,7 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 
     }
 
-    if (!pl.pulse_mudhour) { // 1440
+    if (pl.pulse_mudhour) { // 1440
       rc = obj->objectTickUpdate(realpulse);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	next_thing = obj->next;
@@ -986,10 +986,10 @@ int TMainSocket::gameLoop()
   while (!handleShutdown()) {
     timespent=handleTimeAndSockets();
     
-    if(TestCode1){
+    if(gameLoopTiming){
       count=((timespent.tv_sec*1000000)+timespent.tv_usec);
 
-      vlogf(LOG_MISC, fmt("%i %i) gameLoop1: %i (sleep = %i)") %
+      vlogf(LOG_MISC, fmt("%i %i) gameLoop2: %i (sleep = %i)") %
 	    pulse % (pulse%12) % 
 	    (int)((t.getElapsedReset()*1000000)-count) % count);
     }
@@ -1001,12 +1001,12 @@ int TMainSocket::gameLoop()
     // interport communication
     mudRecvMessage();
 
-    if(!pl.wayslowpulse){
+    if(pl.wayslowpulse){
       checkForRepo();
       do_check_mail();
     }
 
-    if (!pl.pulse_tick) {
+    if (pl.pulse_tick) {
       // these are done per tick (15 mud minutes)
       doGlobalRoomStuff();
       deityCheck(FALSE);
@@ -1034,12 +1034,12 @@ int TMainSocket::gameLoop()
     }
 #endif
 
-    if (!pl.combat){
+    if (pl.combat){
       perform_violence(pulse);
     }
 
 
-    if (!pl.pulse_mudhour) {
+    if (pl.pulse_mudhour) {
       // these are done per mud hour
       recalcFactionPower();
 
@@ -1067,10 +1067,9 @@ int TMainSocket::gameLoop()
     // room procs
     call_room_specials();
 
-
-    if(TestCode1)
-      vlogf(LOG_MISC, fmt("%i %i) gameLoop2: %i") % 
-	    pulse % (pulse%12) % (int)(t.getElapsedReset()*1000000));
+    if(gameLoopTiming)
+      vlogf(LOG_MISC, fmt("%i %i) normal pulses: %s") % 
+	    pulse % (pulse%12) % pl.showPulses());
 
     // since we're operating on non-multiples of 12 pulses, we need to
     // temporarily put the pulse at the next multiple of 12
@@ -1082,10 +1081,18 @@ int TMainSocket::gameLoop()
     // reset the pulse flags
     pl.init(pulse);
 
+    if(gameLoopTiming){
+      vlogf(LOG_MISC, fmt("%i %i) split pulses: %s") % 
+	    oldpulse % (oldpulse%12) % pl.showPulses());
+
+      vlogf(LOG_MISC, fmt("%i %i) gameLoop1: %i") % 
+	    oldpulse % (oldpulse%12) % (int)(t.getElapsedReset()*1000000));
+    }
+
     // handle pulse stuff for objects
     count=objectPulse(pl, oldpulse);
 
-    if(TestCode1)
+    if(gameLoopTiming)
       vlogf(LOG_MISC, fmt("%i %i) objectPulse: %i, %i objs") % 
 	    oldpulse % (oldpulse%12) % 
 	    (int)(t.getElapsedReset()*1000000) % count);
@@ -1093,7 +1100,7 @@ int TMainSocket::gameLoop()
     // handle pulse stuff for mobs and players
     count=characterPulse(pl, oldpulse);
 
-    if(TestCode1)
+    if(gameLoopTiming)
       vlogf(LOG_MISC, fmt("%i %i) characterPulse: %i, %i chars") %
 	    oldpulse % (oldpulse%12) % 
 	    (int)(t.getElapsedReset()*1000000) % count);
