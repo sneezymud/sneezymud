@@ -6293,18 +6293,6 @@ void TBeing::doResize(const char *arg)
     obj->name = mud_str_dup(buf);
   }
 
-#if 0
-  //  Remake the short description.  
-  strcpy(buf,obj->shortDescr);
-  char *obj_type[32];
-  int buflen = split_string(buf," ",obj_type);
-  char buf2[160];
-  sprintf(buf2,"%s's", targ->getName());
-  for (int i=1;i<buflen;i++)
-    sprintf(buf2,"%s %s",buf2,obj_type[i]);
-  delete [] obj->shortDescr;
-  obj->shortDescr = mud_str_dup(buf2);
-#endif  
 
   // Personalize it
   if(!race){
@@ -6319,16 +6307,16 @@ void TBeing::doResize(const char *arg)
   }
 }
 
-void TBeing::doHeaven(const char *arg)
+void TBeing::doHeaven(string arg)
 {
   int num;
-  char buf[80];
+  string buf;
 
   if (powerCheck(POWER_HEAVEN))
     return;
 
   one_argument(arg, buf); 
-  if (!*buf || !(num = atoi_safe(buf))) {
+  if (buf.empty() || !(num = atoi_safe(buf))) {
     sendTo("Syntax: heaven <hours>\n\r");
     return;
   }
@@ -6557,13 +6545,13 @@ void TBeing::doClients()
 
 // returns DELETE_THIS if this should be toasted.
 // returns TRUE if tbeing given by arg has already been toasted
-int TBeing::doCrit(const char *arg)
+int TBeing::doCrit(string arg)
 {
   TThing *weap;
   int dam, rc, mod;
   wearSlotT part;
   TBeing *vict;
-  char name_buf[80];
+  string name_buf;
   spellNumT wtype;
 
   // sometimes, to be really mean in a quest, we set this command to L1
@@ -6582,7 +6570,7 @@ int TBeing::doCrit(const char *arg)
   }
 
   arg = one_argument(arg, name_buf);
-  if (!(vict = get_char_room_vis(this, name_buf))) {
+  if (!(vict = get_char_room_vis(this, name_buf.c_str()))) {
     if (!(vict = fight())) {
       sendTo("Syntax: crit {victim} <crit #>\n\r");
       return FALSE;
@@ -6592,7 +6580,7 @@ int TBeing::doCrit(const char *arg)
     mod = atoi_safe(arg);
 
   if (vict->isImmortal() && (vict->GetMaxLevel() >= GetMaxLevel()) &&
-      strcmp(name_buf, "Batopr")) {
+      name_buf != "Batopr"){
     sendTo("You may not crit gods of equal or greater level!\n\r");
     return FALSE;
   }

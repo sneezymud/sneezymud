@@ -541,25 +541,25 @@ dirTypeT getDirFromCmd(cmdTypeT cmd)
   }
 }
 
-dirTypeT getDirFromChar(const char * direction)
+dirTypeT getDirFromChar(const string direction)
 {
-  char dirbuf[256];
+  string dirbuf;
 
   one_argument(direction, dirbuf);
-  if (!*dirbuf)
+  if (dirbuf.empty())
     return DIR_NONE;
 
   // KLUDGE for abbreviated directions - bat
-  if (!strcasecmp(dirbuf, "northeast"))
-    strcpy(dirbuf, "ne");
-  else if (!strcasecmp(dirbuf, "northwest"))
-    strcpy(dirbuf, "nw");
-  else if (!strcasecmp(dirbuf, "southeast"))
-    strcpy(dirbuf, "se");
-  else if (!strcasecmp(dirbuf, "southwest"))
-    strcpy(dirbuf, "sw");
+  if(lower(dirbuf) == "northeast")
+    dirbuf = "ne";
+  else if (lower(dirbuf) == "northwest")
+    dirbuf = "nw";
+  else if (lower(dirbuf) == "southeast")
+    dirbuf = "se";
+  else if (lower(dirbuf) == "southwest")
+    dirbuf = "sw";
 
-  int dr = search_block(dirbuf, scandirs, false);
+  int dr = search_block(dirbuf.c_str(), scandirs, false);
   if (dr == -1)
     return DIR_NONE;
 

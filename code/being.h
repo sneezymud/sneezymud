@@ -1127,7 +1127,7 @@ class TBeing : public TThing {
     void doList(const char *);
     void doFactions(const char *);
     void doClients();
-    int doCrit(const char *);
+    int doCrit(string);
     void incorrectCommand() const;
     void doEgoTrip(const char *);
     void doComment(const char *);
@@ -1136,7 +1136,7 @@ class TBeing : public TThing {
     void doChargeStave(string);
     int doSmite(const char *, TBeing *);
     void doDescription();
-    int doDissect(const char *);
+    int doDissect(string);
     int socialLimbBad(TBeing *, cmdTypeT);
     int doPray(const char *);
     int preCastCheck();
@@ -1478,7 +1478,7 @@ class TBeing : public TThing {
     bool hasPart(wearSlotT) const;
     void doResetMargins();
     void doWeather(const char *);
-    void doHeaven(const char *);
+    void doHeaven(const string);
     void wearNTear(void);
     void doPrompt(const char *);
     virtual void doPurge(const char *);
@@ -1760,9 +1760,9 @@ class TBeing : public TThing {
     int doSubterfuge(const char *);
     int doBackstab(const char *, TBeing *);
     int doThroatSlit(const char *, TBeing *);
-    void doGuard(const char *);
+    void doGuard(const string);
     void doSplit(const char *, bool);
-    void doReply(const char *);
+    void doReply(const string);
     void doReport(const char *);
     virtual void doTitle(const char *);
     int doTithe();
@@ -1790,11 +1790,11 @@ class TBeing : public TThing {
     virtual void doTypo(const char *);
     virtual void doColor(const char *);
     void setColor(setColorFieldT, setColorKolorT);
-    int doQuaff(const char *);
+    int doQuaff(string);
     void reformGroup();
     void doGroup(const char *);
     int doRecite(const char *);
-    int doUse(const char *);
+    int doUse(const string);
     int doUnsaddle(string);
     int doSaddle(string);
     int doChop(const char *, TBeing *);
@@ -1910,7 +1910,7 @@ class TBeing : public TThing {
     void doLoot(const string &);
     void saveChar(short int);
     int doFlee(const char *);
-    int doDisarm(const char *, TThing *);
+    int doDisarm(string, TThing *);
     int dieReturn(const char *, spellNumT, int);
     void doReturn(const char *, wearSlotT, bool);
     int doWearOffReturn();

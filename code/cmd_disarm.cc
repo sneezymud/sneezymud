@@ -241,9 +241,9 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
   return TRUE;
 }
 
-int TBeing::doDisarm(const char *argument, TThing *v) 
+int TBeing::doDisarm(string argument, TThing *v) 
 {
-  char v_name[MAX_INPUT_LENGTH];
+  string v_name;
   TBeing * victim = NULL;
   int rc;
 
@@ -253,15 +253,15 @@ int TBeing::doDisarm(const char *argument, TThing *v)
   if (checkBusy(NULL)) {
     return FALSE;
   }
-  only_argument(argument, v_name);
+  one_argument(argument, v_name);
   if (!v) {
-    if (!(victim = get_char_room_vis(this, v_name))) {
+    if (!(victim = get_char_room_vis(this, v_name.c_str()))) {
       if (!(victim = fight())) {
-        if (!*argument) {
+        if (argument.empty()) {
           sendTo("Syntax: disarm <person | item>\n\r");
           return FALSE;
         } else {
-          rc = disarmTrap(argument, NULL);
+          rc = disarmTrap(argument.c_str(), NULL);
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;
           return FALSE;
@@ -275,7 +275,7 @@ int TBeing::doDisarm(const char *argument, TThing *v)
     if (!victim) {
       TObj *to = dynamic_cast<TObj *>(v);
       if (to) {
-        rc = disarmTrap(argument, to);
+        rc = disarmTrap(argument.c_str(), to);
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
         return FALSE;

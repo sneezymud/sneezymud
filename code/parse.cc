@@ -358,7 +358,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  doRelease(stringarg);
           break;
         case CMD_CRIT:
-          rc = doCrit(newarg);
+          rc = doCrit(stringarg);
           break;
         case CMD_CLIENTS:
           doClients();
@@ -373,18 +373,18 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_HEAVEN:
-          doHeaven(newarg);
+          doHeaven(stringarg);
           break;
         case CMD_REFUEL:
           doRefuel(newarg);
 	  addToLifeforce(1);
           break;
         case CMD_REPLY:
-          doReply(newarg);
+          doReply(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_USE:
-          rc = doUse(newarg);
+          rc = doUse(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_DRAG:
@@ -394,22 +394,22 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doRoll(newarg);
           break;
         case CMD_DISSECT:
-          rc = doDissect(newarg);
+          rc = doDissect(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_DISARM:
-          rc = doDisarm(newarg, vict);
+          rc = doDisarm(stringarg, vict);
           break;
         case CMD_EXEC:
           rc = doExec();
           break;
         case CMD_QUAFF:
-          rc = doQuaff(newarg);
+          rc = doQuaff(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_GUARD:
         case CMD_PROTECT:
-          doGuard(newarg);
+          doGuard(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_ORDER:
@@ -2093,21 +2093,18 @@ bool is_abbrev(const string &arg1, const string &arg2, multipleTypeT multiple, e
         return false;
     }
 
-    char *splitbuf1[32];
-    char *splitbuf2[32];
-    char tmpbuf1[256],
-         tmpbuf2[256];
-    // Tmp bufs are incase strtok screws up constant strings like man page says it does
-    strcpy(tmpbuf1, carg1.c_str());
-    strcpy(tmpbuf2, carg2.c_str());
+    // may have converted the following code incorrectly
+    // I wasn't entirely certain what it was doing - peel
+    vector <string> buf1, buf2;
 
-    int num = split_string(tmpbuf1, " ", splitbuf1);
-              split_string(tmpbuf2, " ", splitbuf2);
-    for (int i = 0; i < num; i++) {
-      for (; *splitbuf1[i]; splitbuf1[i]++, splitbuf2[i]++)
-        if (LOWER(*splitbuf1[i]) != LOWER(*splitbuf2[i]))
-          return false;
+    split_string(carg1, " ", buf1);
+    split_string(carg2, " ", buf2);
+
+    for(unsigned int i=0;i<buf1.size();++i){
+      if(lower(buf1[i]) != lower(buf2[i].substr(0,buf1[i].size())))
+	return false;
     }
+
     return true;
   }
   // Even if multiple, if we got here, just try to look for
@@ -3387,18 +3384,18 @@ int stringncmp(const string str1, const string str2, unsigned int len)
   return string(str1, 0, len).compare(string(str2, 0, len));
 }
 
-int atoi_safe(const char *arg){
-  if(!arg)
+int atoi_safe(const string arg){
+  if(arg.empty())
     return 0;
   
-  return atoi(arg);
+  return atoi(arg.c_str());
 }
 
-double atof_safe(const char *arg){
-  if(!arg)
+double atof_safe(const string arg){
+  if(arg.empty())
     return 0;
 
-  return atof(arg);
+  return atof(arg.c_str());
 }
 
 int atoi(const string &num)

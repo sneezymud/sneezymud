@@ -92,6 +92,8 @@ int TVial::suggestedPrice() const
   if (getDrinkType() != LIQ_HOLYWATER)
     return TBaseCup::suggestedPrice();
 
+  vlogf(LOG_PEEL, "suggest_price=%f", (133.34 * (float) getMaxDrinkUnits() + 0.5));
+
   return (int) (133.34 * (float) getMaxDrinkUnits() + 0.5);
 }
 

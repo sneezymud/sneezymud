@@ -61,15 +61,14 @@ extern "C" {
 #include "database.h"
 #include "disc_cures.h"
 
-void TBeing::doGuard(const char *argument)
+void TBeing::doGuard(const string argument)
 {
   if (isPc()) {
     sendTo("Sorry, you can't just put your brain on autopilot!\n\r");
     return;
   }
-  for (; isspace(*argument); argument++);
 
-  if (!*argument) {
+  if (argument.empty()) {
     if (IS_SET(specials.act, ACT_GUARDIAN)) {
       act("$n relaxes.", FALSE, this, 0, 0, TO_ROOM);
       sendTo("You relax.\n\r");
@@ -81,14 +80,14 @@ void TBeing::doGuard(const char *argument)
       sendTo("You snap to attention.\n\r");
     }
   } else {
-    if (!strcasecmp(argument, "on")) {
+    if (!strcasecmp(argument.c_str(), "on")) {
       if (!IS_SET(specials.act, ACT_GUARDIAN)) {
         SET_BIT(specials.act, ACT_GUARDIAN);
         act("$n alertly watches you.", FALSE, this, 0, master, TO_VICT);
         act("$n alertly watches $N.", FALSE, this, 0, master, TO_NOTVICT);
         sendTo("You snap to attention.\n\r");
       }
-    } else if (!strcasecmp(argument, "off")) {
+    } else if (!strcasecmp(argument.c_str(), "off")) {
       if (IS_SET(specials.act, ACT_GUARDIAN)) {
         act("$n relaxes.", FALSE, this, 0, 0, TO_ROOM);
         sendTo("You relax.\n\r");
@@ -2271,17 +2270,17 @@ int TThing::quaffMe(TBeing *ch)
 }
 
 // return DELETE_THIS
-int TBeing::doQuaff(const char *argument)
+int TBeing::doQuaff(string argument)
 {
-  char buf[100];
+  string buf;
   TThing *t;
   int rc = 0;
 
-  only_argument(argument, buf);
+  one_argument(argument, buf);
 
   if (!(t = searchLinkedListVis(this, buf, getStuff()))) {
     t = equipment[HOLD_RIGHT];
-    if (!t || !isname(buf, t->name)) {
+    if (!t || !isname(buf.c_str(), t->name)) {
       act("You do not have that item.", FALSE, this, 0, 0, TO_CHAR);
       return FALSE;
     }
@@ -3313,9 +3312,9 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
 }
 
 // returns DELETE_THIS if this should be toasted.
-int TBeing::doUse(const char *argument)
+int TBeing::doUse(string argument)
 {
-  char buf[256];
+  string buf;
   int rc;
 
   argument = one_argument(argument, buf);
@@ -3323,12 +3322,12 @@ int TBeing::doUse(const char *argument)
   TThing *t = NULL;
   if (!t) {
     t = heldInPrimHand();
-    if (t && !isname(buf, t->name))
+    if (t && !isname(buf.c_str(), t->name))
       t = NULL;
   }
   if (!t) {
     t = heldInSecHand();
-    if (t && !isname(buf, t->name))
+    if (t && !isname(buf.c_str(), t->name))
       t = NULL;
   }
   if (!t) {
@@ -3337,7 +3336,7 @@ int TBeing::doUse(const char *argument)
       t = equipment[wst];
       if (!t)
         continue;
-      if (!isname(buf, t->name))
+      if (!isname(buf.c_str(), t->name))
         continue;
       TArmorWand * taw = dynamic_cast<TArmorWand *>(t);
       if (!taw)
@@ -3354,7 +3353,7 @@ int TBeing::doUse(const char *argument)
     return FALSE;
   }
   setQuaffUse(TRUE); // just tells bSuccess its a staff
-  rc = t->useMe(this, argument);
+  rc = t->useMe(this, argument.c_str());
   setQuaffUse(FALSE);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete t;

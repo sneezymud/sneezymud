@@ -1086,6 +1086,17 @@ int TBeing::updateHalfTickStuff()
 	  if(hours_first>((30*24)+hours_last))
 	    hours_first=(30*24)+hours_last;
 
+	  // how often we smoke (hours_first, total_consumed)
+	  // how far into withdrawal are we (hours_last)
+	  // problem is, I shouldn't be less addictive, just because I had
+          // 1 cigarette 10 years ago - hours_first doesn't work for this
+	  //
+	  // could make everyone equally addicted once they start
+	  // then just use hours_last as indicator of addiction
+	  // then after 30 days or whatever, addiction is gone
+	  // maybe need new value, consumed in addiction period (30 prior days)
+	  // so if you consumed more than X in prior 30 days, you're addicted
+
 	  if(hours_last && hours_first){
 	    // this should be average amount of the drug in their body since
 	    // they first used it.  We give them 24 extra hours, so you don't

@@ -78,15 +78,15 @@ int determineDissectionItem(TBaseCorpse *corpse, int *amount, char *msg, char *g
   return num;
 }
 
-int TBeing::doDissect(const char *argument)
+int TBeing::doDissect(string argument)
 {
-  char namebuf[256];
+  string namebuf;
   TObj *obj;
   int rc;
 
-  only_argument(argument, namebuf);
+  one_argument(argument, namebuf);
 
-  if (!*namebuf) {
+  if (namebuf.empty()) {
     sendTo("What do you want to dissect?\n\r");
     return FALSE;
   }
@@ -108,7 +108,7 @@ int TBeing::doDissect(const char *argument)
 
   if (!(obj = dynamic_cast<TObj *> (searchLinkedListVis(this, namebuf, getStuff())))) {
     if (!(obj = dynamic_cast<TObj *> (searchLinkedListVis(this, namebuf, roomp->getStuff())))) {
-      sendTo("There doesn't seem to be any '%s' here to dissect.\n\r", namebuf);
+      sendTo("There doesn't seem to be any '%s' here to dissect.\n\r", namebuf.c_str());
       return FALSE;
     }
   }

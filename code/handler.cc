@@ -41,142 +41,85 @@ const string fname(const char *namelist)
   return (holder);
 }
 
-int split_string(char *str, const char *sep, char **argv)
+// split up "str", using delimiters "sep" and place resulting strings in "argv"
+int split_string(const string str, const string sep, vector<string> &argv)
 {
-  char *s;
-  int argc = 0;
+  unsigned int pos=0, last=0;
 
-  if ((s = strtok(str, sep)))
-    argv[argc++] = s;
-  else {
-    *argv = str;
-    return 1;
+  while((pos=str.find_first_of(sep,last)) != string::npos){
+    argv.push_back(str.substr(last,pos-last));
+    last=pos+1;
   }
-  while ((s = strtok(NULL, sep)))
-    argv[argc++] = s;
 
-  return argc;
+  argv.push_back(str.substr(last,str.length()-last));
+
+  return argv.size();
 }
 
-bool isname(const char *str, const char *namelist)
+bool isname(const string str, const string namelist)
 {
-  char *argv[100], *xargv[100];
-  int argc, xargc, i, j;
-  bool exact;
-  char buf[MAX_INPUT_LENGTH], names[MAX_INPUT_LENGTH], *s;
+  vector <string> argv, xargv;
+  unsigned int i, j;
 
-  if (!namelist)
+  if (namelist.empty())
     return false;
 
-  strcpy(buf, str);
-  argc = split_string(buf, "- \t\n\r,", argv);
+  split_string(str, "- \t\n\r,", argv);
+  split_string(namelist, "- \t\n\r,", xargv);
 
-  strcpy(names, namelist);
-  xargc = split_string(names, "- \t\n\r,", xargv);
-
-  s = argv[argc - 1];
-  s += strlen(s);
-  if (*(--s) == '.') {
-    exact = TRUE;
-    *s = 0;
-  } else
-    exact = FALSE;
-
-  if (exact && argc != xargc)
-    return FALSE;
-
-  for (i = 0; i < argc; i++) {
-    for (j = 0; j < xargc; j++) {
-      if (xargv[j] && is_abbrev(argv[i], xargv[j])) {
-        xargv[j] = NULL;
+  for(i=0;i < argv.size();i++) {
+    for(j=0;j < xargv.size();j++) {
+      if (!xargv[j].empty() && is_abbrev(argv[i], xargv[j])) {
+        xargv[j] = "";
         break;
       }
     }
-    if (j >= xargc)
+    if (j >= xargv.size())
       return FALSE;
   }
   return TRUE;
 }
 
-bool is_exact_spellname(const char *str, const char *namelist)
+bool is_exact_spellname(const string str, const string namelist)
 {
-  char *argv[100], *xargv[100];
-  int argc, xargc, i, j;
-  bool exact;
-  char buf[MAX_INPUT_LENGTH], names[MAX_INPUT_LENGTH], *s;
+  vector <string> argv, xargv;
+  unsigned int i, j;
 
-  memset(argv, 0, sizeof(argv));
-  memset(xargv, 0, sizeof(xargv));
+  split_string(str, "- \t\n\r,", argv);
+  split_string(namelist, "- \t\n\r,", xargv);
 
-  strcpy(buf, str);
-  argc = split_string(buf, "- \t\n\r,", argv);
-
-  strcpy(names, namelist);
-  xargc = split_string(names, "- \t\n\r,", xargv);
-
-  s = argv[argc - 1];
-  s += strlen(s);
-  if (*(--s) == '.') {
-    exact = TRUE;
-    *s = 0;
-  } else
-    exact = FALSE;
-
-  if (exact && argc != xargc)
+  if(!is_abbrev(argv[0], xargv[0]))
     return FALSE;
 
-  if (argv[0] && xargv[0] && (!is_abbrev(argv[0],xargv[0]))) {
-    return FALSE;
-  }
-
-  for (i = 0; i < argc; i++) {
-    for (j = 0; j < xargc; j++) {
-      if (xargv[j] && !strcasecmp(argv[i], xargv[j])) {
-        xargv[j] = NULL;
+  for (i = 0; i < argv.size(); i++) {
+    for (j = 0; j < xargv.size(); j++) {
+      if(!xargv[j].empty() && !strcasecmp(argv[i].c_str(), xargv[j].c_str())){
+        xargv[j] = "";
         break;
       }
     }
-    if (j >= xargc)
+    if (j >= xargv.size())
       return FALSE;
   }
   return TRUE;
 }
 
-bool is_exact_name(const char *str, const char *namelist)
+bool is_exact_name(const string str, const string namelist)
 {
-  char *argv[100], *xargv[100];
-  int argc, xargc, i, j;
-  bool exact;
-  char buf[MAX_INPUT_LENGTH], names[MAX_INPUT_LENGTH], *s;
+  vector <string> argv, xargv;
+  unsigned int i, j;
 
-  memset(argv, 0, sizeof(argv));
-  memset(xargv, 0, sizeof(xargv));
+  split_string(str, "- \t\n\r,", argv);
+  split_string(namelist, "- \t\n\r,", xargv);
 
-  strcpy(buf, str);
-  argc = split_string(buf, "- \t\n\r,", argv);
-
-  strcpy(names, namelist);
-  xargc = split_string(names, "- \t\n\r,", xargv);
-
-  s = argv[argc - 1];
-  s += strlen(s);
-  if (*(--s) == '.') {
-    exact = TRUE;
-    *s = 0;
-  } else
-    exact = FALSE;
-
-  if (exact && argc != xargc)
-    return FALSE;
-
-  for (i = 0; i < argc; i++) {
-    for (j = 0; j < xargc; j++) {
-      if (xargv[j] && !strcasecmp(argv[i], xargv[j])) {
-        xargv[j] = NULL;
+  for (i = 0; i < argv.size(); i++) {
+    for (j = 0; j < xargv.size(); j++) {
+      if(!xargv[j].empty() && !strcasecmp(argv[i].c_str(), xargv[j].c_str())){
+        xargv[j] = "";
         break;
       }
     }
-    if (j >= xargc)
+    if (j >= xargv.size())
       return FALSE;
   }
   return TRUE;

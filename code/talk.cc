@@ -1086,16 +1086,16 @@ void TBeing::doWrite(const char *arg)
   pen->writeMePen(this, paper);
 }
 
-void TBeing::doReply(const char *arg)
+void TBeing::doReply(const string arg)
 {
-  char buf[256];
+  string buf;
 
   if (!desc || !*desc->last_teller) {
     sendTo("No one seems to have spoken to you lately.\n\r");
     return;
   }
-  sprintf(buf, "%s %s", desc->last_teller, arg);
-  doTell(buf, FALSE);
+  ssprintf(buf, "%s %s", desc->last_teller, arg.c_str());
+  doTell(buf.c_str(), FALSE);
 }
 
 bool TBeing::canSpeak()

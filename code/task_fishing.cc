@@ -6,7 +6,7 @@ void TBeing::doFish(string direction){
   roomDirData *exitp;
   const int ROOM_FISHING_SHACK=31818;
 
-  if(!(exitp=exitDir(getDirFromChar(direction.c_str()))) || direction.empty()){
+  if(!(exitp=exitDir(getDirFromChar(direction))) || direction.empty()){
     rp=roomp;
   } else {
     if(!exitp->to_room || !(rp = real_roomp(exitp->to_room))){

@@ -2102,8 +2102,8 @@ void TPerson::doStat(const char *argument)
     }
 
     if (is_number(arg1)) {
-      TObj         *tObj;
-      TMonster     *tMonster;
+      TObj         *tObj=NULL;
+      TMonster     *tMonster=NULL;
       unsigned int  tValue;
 
       if (hasWizPower(POWER_STAT_OBJECT) &&

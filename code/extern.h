@@ -20,13 +20,13 @@ extern int min_stat(race_t, statTypeT);
 #endif
 extern wearSlotT slot_from_bit(int);
 extern void cleanCharBuf(char *);
-extern int split_string(char *, const char *, char **);
+extern int split_string(const string str, const string sep, vector<string> &argv);
 extern void sendrp_exceptf(TRoom *, TBeing *, const char *,...);
 extern const char *how_good(int);
 extern void sprintbit(unsigned long, const char * const [], char *);
 extern const char *strcasestr(const char *, const char *);
-extern bool is_exact_spellname(const char *, const char *);
-extern bool is_exact_name(const char *, const char *);
+extern bool is_exact_spellname(const string, const string);
+extern bool is_exact_name(const string, const string);
 extern int get_number(char **);
 extern void printLimitedInRent(void);
 extern void updateRentFiles(void);
@@ -402,7 +402,7 @@ extern void getSkillLevelRange(spellNumT, int &, int &, int);
 extern int getSpellCost(spellNumT spell, int lev, int learn);
 extern int getSpellCasttime(spellNumT spell);
 extern void nukeLdead(TBeing *);
-extern dirTypeT getDirFromChar(const char *);
+extern dirTypeT getDirFromChar(const string);
 extern dirTypeT getDirFromCmd(cmdTypeT);
 extern dirTypeT mapFileToDir(int);
 extern int mapDirToFile(dirTypeT);
@@ -458,8 +458,8 @@ extern void mudRecvMessage();
 // these needs C++ linkage to avoid conflict with functions in stdlib
 extern int remove(TBeing *, TThing *);
 extern int atoi(const string &);
-extern int atoi_safe(const char *);
-extern double atof_safe(const char *);
+extern int atoi_safe(const string);
+extern double atof_safe(const string);
 extern int GetApprox(int, int);
 extern double GetApprox(double, int);
 
