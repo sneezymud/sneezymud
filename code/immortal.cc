@@ -306,9 +306,9 @@ void TPerson::doToggle(const char *arg2)
 	   ansi()?"ansi":(vt100()?"vt100":"none"));
     sendTo(COLOR_BASIC, "Boss Mode         : %s    |    ", on_or_off(IS_SET(desc->account->flags, ACCOUNT_BOSS)));
     sendTo(COLOR_BASIC, "MSP Sound         : %s\n\r", on_or_off(IS_SET(desc->account->flags, ACCOUNT_MSP)));
-    sendTo(COLOR_BASIC, "Account Terminal  : <G>%-5s<1>    |    ", 
-	   (desc->account->term == TERM_ANSI)?"ansi":
-	   ((desc->account->term == TERM_VT100)?"vt100":"none"));
+    sendTo(COLOR_BASIC, "Account Terminal  : <G>%-5s<1>  |    ", 
+	   (desc->account->term == TERM_ANSI)?"ansi ":
+	   ((desc->account->term == TERM_VT100)?"vt100":"none "));
     sendTo(COLOR_BASIC, "Allow Pinging     : %s\n\r", on_or_off(isPlayerAction(PLR_PING)));
 
 
