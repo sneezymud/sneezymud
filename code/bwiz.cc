@@ -104,7 +104,7 @@ void recvTextHandler(const char *str)
     och = d->original ? d->original : d->character;
     if (!och)
       continue;
-    if (och->hasWizPower(POWER_WIZNET) || !d->isEditing()) {
+    if (och->hasWizPower(POWER_WIZNET)) {
       och->sendTo(buf);
     } else {
       // do nothing
