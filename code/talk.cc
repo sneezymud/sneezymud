@@ -708,6 +708,21 @@ void TBeing::doSign(const char *arg)
     sendTo("You're not sure you got it completely right.\n\r");
 }
 
+// uses printf style arguments
+int TBeing::doTell(const char *name, const char *fmt, ...)
+{
+  va_list ap;
+  char buf[MAX_STRING_LENGTH];
+
+  va_start(ap, fmt);
+  vsnprintf(buf, MAX_STRING_LENGTH, fmt, ap);
+
+  string sbuf;
+  ssprintf(sbuf, "%s %s", name, buf);
+  
+  return doTell(sbuf.c_str());
+}
+
 // returns DELETE_THIS on death of this
 // triggerSpecOnPerson prevents this from being constant
 int TBeing::doTell(const char *arg, bool visible)

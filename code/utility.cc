@@ -49,11 +49,11 @@ extern long random(void);
 // this should be safe to use, truncates at 1024 chars
 int ssprintf(string &s, const char *fmt, ...){
   va_list ap;
-  char buf[1024];
+  char buf[MAX_STRING_LENGTH];
   int ret;
 
   va_start(ap, fmt);
-  ret=vsnprintf(buf, 1024, fmt, ap);
+  ret=vsnprintf(buf, MAX_STRING_LENGTH, fmt, ap);
 
   s = buf;
 

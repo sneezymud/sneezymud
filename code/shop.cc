@@ -1736,6 +1736,32 @@ void waste_shop_file(int shop_nr)
 }
 
 
+int getShopAccess(int shop_nr, TBeing *ch){
+  int access=0;
+  TDatabase db("sneezy");
+
+  db.query("select access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, ch->getName());
+  
+  if(db.fetchRow())
+    access=atoi(db.getColumn(0));
+  
+  if(sameAccount(ch->getName(), shop_nr) && !ch->isImmortal() && access){
+    ch->sendTo("Another character in your account has permissions at this shop, so this character can not use the ownership functions.\n\r");
+    access=0;
+  }
+  
+  if(ch->isImmortal())
+    access=SHOPACCESS_OWNER;
+  
+  return access;
+}
+
+
+int getShopPurchasePrice(int talens, int value){
+  return (int)(((talens+value)*1.15)+1000000);
+}
+
+
 int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
 {
   int rc;
@@ -1958,8 +1984,9 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
   if(cmd == CMD_WHISPER /*&& ch->isImmortal()*/ ){
     char buf[256], buf2[256];
+    string sbuf;
     TThing *tt;
-    int count=0, value=0, price=0, discount=100, tax=0;
+    int count=0, value=0, price=0, discount=100;
     unsigned int access=0;
     bool owned=shop_index[shop_nr].isOwned();
     unsigned int i, tmp;
@@ -1970,38 +1997,11 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     if(!isname(buf, myself->name))
       return FALSE;
 
-    //    if(!is_abbrev(buf, myself->getName()))
-    //      return FALSE;
-
-
-    db.query("select access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, ch->getName());
-
-    if(db.fetchRow()){
-      access=atoi(db.getColumn(0));
-    }
-    
-
-    if(sameAccount(ch->getName(), shop_nr) && !ch->isImmortal() && access){
-      ch->sendTo("Another character in your account has permissions at this shop, so this character can not use the ownership functions.\n\r");
-      access=0;
-    }
-
-
-    if(ch->isImmortal())
-      access=SHOPACCESS_OWNER;
+    access=getShopAccess(shop_nr, ch);
 
     arg = one_argument(arg, buf);
     
     if(!strcmp(buf, "info")){ /////////////////////////////////////////
-#if 0
-      if(owned && !(access & SHOPACCESS_OWNER) && !(access & SHOPACCESS_INFO)){
-	sprintf(buf, "%s Sorry, you don't have access to do that.", ch->getName());
-	myself->doTell(buf);
-	return FALSE;
-      }
-#endif
-
-
       // if not owned, or owned and has "owner" or "info"
       if(!owned || ((access & SHOPACCESS_OWNER)||(access & SHOPACCESS_INFO))){
 	for(tt=myself->getStuff();tt;tt=tt->nextThing){
@@ -2010,31 +2010,26 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  value+=o->obj_flags.cost;
 	  price+=o->shopPrice(1, shop_nr, -1, &discount);
 	}
-	sprintf(buf, "%s I have %i talens and %i items worth %i talens and selling for %i talens.", ch->getName(), myself->getMoney(), count, value, price);
-	myself->doTell(buf);
-	sprintf(buf, "%s That puts my total value at %i talens.",
-		ch->getName(), myself->getMoney()+value);
-	myself->doTell(buf);
+	myself->doTell(ch->getName(), "I have %i talens and %i items worth %i talens and selling for %i talens.", myself->getMoney(), count, value, price);
+
+	myself->doTell(ch->getName(), "That puts my total value at %i talens.",
+		myself->getMoney()+value);
 	
 	if(!owned){
-	  sprintf(buf, "%s This shop is for sale, however the King charges a sales tax and an ownership fee.", ch->getName());
-	  myself->doTell(buf);
-	  sprintf(buf, "%s That puts the sale price at %i.", ch->getName(),
-		  (int)((myself->getMoney()+value)*1.15)+1000000);
-	  myself->doTell(buf);
+	  myself->doTell(ch->getName(), "This shop is for sale, however the King charges a sales tax and an ownership fee.");
+
+	  myself->doTell(ch->getName(), "That puts the sale price at %i.",
+	    getShopPurchasePrice(myself->getMoney(), value));
 	} 
       }
       // anyone can see profit_buy, profit_sell and trading types, anytime
 
-      sprintf(buf, "%s My profit_buy is %f and my profit_sell is %f.",
-	      ch->getName(), shop_index[shop_nr].profit_buy,
+      myself->doTell(ch->getName(), "My profit_buy is %f and my profit_sell is %f.",
+	      shop_index[shop_nr].profit_buy,
 	      shop_index[shop_nr].profit_sell);
-      myself->doTell(buf);
 
       if(shop_index[shop_nr].type.size()<=1){
-	sprintf(buf, "%s I only sell things, I do not buy anything.",
-		ch->getName());
-	myself->doTell(buf);
+	myself->doTell(ch->getName(), "%s I only sell things, I do not buy anything.");
       } else {
 	sprintf(buf, "%s I deal in", ch->getName());
 	for(i=0;i<shop_index[shop_nr].type.size();++i){
@@ -2046,11 +2041,9 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	buf[strlen(buf)-1]='\0';
 	myself->doTell(buf);
       }
-
     } else if(!strcmp(buf, "set")){ //////////////////////////////////
       if(!(access & SHOPACCESS_OWNER) && !(access & SHOPACCESS_PROFITS)){
-	sprintf(buf, "%s Sorry, you don't have access to do that.", ch->getName());
-	myself->doTell(buf);
+	myself->doTell(ch->getName(), "Sorry, you don't have access to do that.");
 	return FALSE;
       }
       arg = one_argument(arg, buf);
@@ -2062,23 +2055,19 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  db.query("select obj_nr, profit_buy, profit_sell from shopownedratios where shop_nr=%i", shop_nr);
 
 	  while(db.fetchRow()){
-	    sprintf(buf2, "%s %f %f %s", ch->getName(), atof(db.getColumn(1)), 
+	    myself->doTell(ch->getName(), "%f %f %s", atof(db.getColumn(1)), 
 		    atof(db.getColumn(2)), obj_index[real_object(atoi(db.getColumn(0)))].short_desc);
-	    myself->doTell(buf2);
 	  }
 	  
 	  return TRUE;
 	} else if(!strcmp(buf, "clear")){
 	  db.query("delete from shopownedratios where shop_nr=%i", shop_nr);
-	  
-	  sprintf(buf2, "%s Ok, I cleared all of the individual profit ratios.", ch->getName());
-	  myself->doTell(buf2);
+	  myself->doTell(ch->getName(), "Ok, I cleared all of the individual profit ratios.");
 	  return TRUE;
 	}
 
 	if(atof(buf)>5){
-	  sprintf(buf2, "%s Because of fraud regulations, I can't set the profit_buy higher than 5!", ch->getName());
-	  myself->doTell(buf2);
+	  myself->doTell(ch->getName(), "Because of fraud regulations, I can't set the profit_buy higher than 5!");
 	  return FALSE;
 	}
 
@@ -2089,8 +2078,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  TThing *tt = searchLinkedListVis(ch, arg, myself->getStuff());
 	  
 	  if(!tt){
-	    sprintf(buf2, "%s I don't have that item.", ch->getName());
-	    myself->doTell(buf2);
+	    myself->doTell(ch->getName(), "I don't have that item.");
 	    return FALSE;
 	  }
 
@@ -2098,6 +2086,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
 	  // create the entry if it doesn't exist, use default profit buy/sell
 	  db.query("select 1 from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, o->objVnum());
+
 	  if(!db.fetchRow()){
 	    // get the default profit buy/sell
 	    db.query("select profit_buy, profit_sell from shop where shop_nr=%i", shop_nr);
@@ -2107,17 +2096,15 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	    db.query("update shopownedratios set profit_buy=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum());
 	  }
 
-	  sprintf(buf2, "%s Ok, my profit_buy is now %f for %s.", 
-		  ch->getName(), atof(buf), o->getName());
-	  myself->doTell(buf2);
+	  myself->doTell(ch->getName(), "Ok, my profit_buy is now %f for %s.", 
+	       atof(buf), o->getName());
 	} else { //////////////////////////////
 	  shop_index[shop_nr].profit_buy=atof(buf);
 	  
 	  db.query("update shopowned set profit_buy=%f where shop_nr=%i", shop_index[shop_nr].profit_buy, shop_nr);
 	  
-	  sprintf(buf2, "%s Ok, my profit_buy is now %f", 
-		  ch->getName(), shop_index[shop_nr].profit_buy);
-	  myself->doTell(buf2);
+	  myself->doTell(ch->getName(), "Ok, my profit_buy is now %f", 
+		shop_index[shop_nr].profit_buy);
 	}
 	///////////////////// end profit buy
       } else if(!strcmp(buf, "profit_sell")){ 
@@ -2127,18 +2114,16 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  db.query("select obj_nr, profit_buy, profit_sell from shopownedratios where shop_nr=%i", shop_nr);
 
 	  while(db.fetchRow()){
-	    sprintf(buf2, "%s %f %f %s", ch->getName(), atof(db.getColumn(1)), 
-		    atof(db.getColumn(2)), obj_index[real_object(atoi(db.getColumn(0)))].short_desc);
-	    myself->doTell(buf2);
+	    myself->doTell(ch->getName(), "%f %f %s", atof(db.getColumn(1)), 
+	       atof(db.getColumn(2)), 
+	       obj_index[real_object(atoi(db.getColumn(0)))].short_desc);
 	  }
-	  
 	  
 	  return TRUE;
 	} else if(!strcmp(buf, "clear")){
 	  db.query("delete from shop ownedratios where shop_nr=%i", shop_nr);
 	  
-	  sprintf(buf2, "%s Ok, I cleared all of the individual profit ratios.", ch->getName());
-	  myself->doTell(buf2);
+	  myself->doTell(ch->getName(), "Ok, I cleared all of the individual profit ratios.");
 	  return TRUE;
 	}
 
@@ -2148,8 +2133,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  TThing *tt = searchLinkedListVis(ch, arg, myself->getStuff());
 	  
 	  if(!tt){
-	    sprintf(buf2, "%s I don't have that item.", ch->getName());
-	    myself->doTell(buf2);
+	    myself->doTell(ch->getName(), "I don't have that item.");
 	    return FALSE;
 	  }
 
@@ -2168,36 +2152,29 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	    db.query("update shopownedratios set profit_sell=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum());
 	  }
 	  
-	  sprintf(buf2, "%s Ok, my profit_sell is now %f for %s.", 
-		  ch->getName(), atof(buf), o->getName());
-
-	  myself->doTell(buf2);
-
+	  myself->doTell(ch->getName(), "Ok, my profit_sell is now %f for %s.",
+			 atof(buf), o->getName());
 	} else {
 	  shop_index[shop_nr].profit_sell=atof(buf);
 
 	  db.query("update shopowned set profit_sell=%f where shop_nr=%i", shop_index[shop_nr].profit_sell, shop_nr);
 	  	  
-	  sprintf(buf, "%s Ok, my profit_sell is now %f", 
-		  ch->getName(), shop_index[shop_nr].profit_sell);
-	  myself->doTell(buf);
+	  myself->doTell(ch->getName(), "Ok, my profit_sell is now %f", 
+			 shop_index[shop_nr].profit_sell);
 	}
       } else {
-	sprintf(buf, "%s Sorry, I don't understand.  You can set either my profit_buy or profit_sell values.", ch->getName());
-	myself->doTell(buf);
+	myself->doTell(ch->getName(), "Sorry, I don't understand.  You can set either my profit_buy or profit_sell values.");
       }
     } else if(!strcmp(buf, "buy")){ /////////////////////////////////
 #if 0
       if(!ch->isImmortal()){
-	sprintf(buf, "%s Shop ownership is in beta testing right now, you can not purchase this shop.", ch->getName());
-	myself->doTell(buf);
+	myself->doTell(ch->getName(), "Shop ownership is in beta testing right now, you can not purchase this shop.");
 	return TRUE;
       }
 #endif
 
       if(owned){
-	sprintf(buf, "%s Sorry, this shop isn't for sale.", ch->getName());
-	myself->doTell(buf);
+	myself->doTell(ch->getName(), "Sorry, this shop isn't for sale.");
 	return TRUE;
       }
       
@@ -2205,13 +2182,10 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	o=dynamic_cast<TObj *>(tt);
 	value+=o->obj_flags.cost;
       }
-      value+=myself->getMoney();
-      tax=(int)(value*0.15)+1000000;
-      value=value+tax;
+      value=getShopPurchasePrice(myself->getMoney(), value);
+
       if(ch->getMoney()<value){
-	sprintf(buf, "%s Sorry, you can't afford this shop.  The price is %i.",
-		ch->getName(), value);
-	myself->doTell(buf);
+	myself->doTell(ch->getName(), "Sorry, you can't afford this shop.  The price is %i.", value);
 	return TRUE;
       }
       ch->setMoney(ch->getMoney()-value);
@@ -2223,18 +2197,13 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
       myself->saveItems(buf);
             
-      sprintf(buf, "%s Congratulations, you now own this shop.",
-	      ch->getName());
-      myself->doTell(buf);
+      myself->doTell(ch->getName(), "Congratulations, you now own this shop.");
     } else if(!strcmp(buf, "sell")){ //////////////////////////////////
       // don't let the shop owner do it by default, to prevent accidental sells
       if(/* !(access & SHOPACCESS_OWNER) && */ !(access & SHOPACCESS_SELL)){
-	sprintf(buf, "%s Sorry, you don't have access to do that.", ch->getName());
-	myself->doTell(buf);
-	sprintf(buf, "%s And remember, when you do sell this shop, I won't pay you for the inventory.", ch->getName());
-	myself->doTell(buf);
-	sprintf(buf, "%s I'll just give you the money I have on me, but nothing for the inventory.", ch->getName());
-	myself->doTell(buf);	
+	myself->doTell(ch->getName(), "Sorry, you don't have access to do that.");
+	myself->doTell(ch->getName(), "And remember, when you do sell this shop, I won't pay you for the inventory.");
+	myself->doTell(ch->getName(), "I'll just give you the money I have on me, but nothing for the inventory.");
 	return FALSE;
       }
 
@@ -2258,12 +2227,10 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       shop_index[shop_nr].profit_buy=1.1;
       shop_index[shop_nr].profit_sell=0.9;
 
-      sprintf(buf, "%s Ok, you no longer own this shop.", ch->getName());
-      myself->doTell(buf);
+      myself->doTell(ch->getName(), "Ok, you no longer own this shop.");
     } else if(!strcmp(buf, "give")){ /////////////////////////////
       if(!(access & SHOPACCESS_OWNER) && !(access & SHOPACCESS_GIVE)){
-	sprintf(buf, "%s Sorry, you don't have access to do that.", ch->getName());
-	myself->doTell(buf);
+	myself->doTell(ch->getName(), "Sorry, you don't have access to do that.");
 	return FALSE;
       }
 
@@ -2283,15 +2250,12 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	act(buf, TRUE, myself, NULL, ch, TO_VICT);
 	act("$n gives some money to $N.", 1, myself, 0, ch, TO_NOTVICT);
       } else {
-	sprintf(buf, "%s I don't have that many talens.", ch->getName());
-	myself->doTell(buf);
-	sprintf(buf, "%s I have %i talens.", ch->getName(),myself->getMoney());
-	myself->doTell(buf);
+	myself->doTell(ch->getName(), "I don't have that many talens.");
+	myself->doTell(ch->getName(), "I have %i talens.",myself->getMoney());
       }
     } else if(!strcmp(buf, "access")){ ////////////////////////////
       if(!(access & SHOPACCESS_OWNER) && !(access & SHOPACCESS_ACCESS)){
-	sprintf(buf, "%s Sorry, you don't have access to do that.", ch->getName());
-	myself->doTell(buf);
+	myself->doTell(ch->getName(), "Sorry, you don't have access to do that.");
 	return FALSE;
       }
 
@@ -2352,8 +2316,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       }
     } else if(!strcmp(buf, "logs")){ /////////////////////////////////////////
       if(!(access & SHOPACCESS_OWNER) && !(access & SHOPACCESS_LOGS)){
-	sprintf(buf, "%s Sorry, you don't have access to do that.", ch->getName());
-	myself->doTell(buf);
+	myself->doTell(ch->getName(), "Sorry, you don't have access to do that.");
 	return FALSE;
       }
       string sb;
