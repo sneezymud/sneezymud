@@ -396,10 +396,12 @@ class bonusStatPoints {
 // Descriptor class
 class Descriptor
 {
+  private:
+    bool host_resolved;           // hostname has been resolved by DNS
   public:
     TSocket *socket;
     editStuff edit;
-    char host[100];                // hostname                   
+    sstring host;                 // hostname
     char pwd[12];                 // password                   
     connectStateT connected;                // mode of 'connectedness'    
     int wait;                     // wait for how many loops    
@@ -525,6 +527,8 @@ class Descriptor
     void send_bug(const char *, const char *);
     void add_comment(const char *, const char *);
     void cleanUpStr();
+    bool getHostResolved();
+    void setHostResolved(bool, const sstring &);
     void beep() {
       writeToQ("");
     }

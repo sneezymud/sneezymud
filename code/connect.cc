@@ -91,6 +91,7 @@ Descriptor::Descriptor() :
 }
 
 Descriptor::Descriptor(TSocket *s) :
+  host_resolved(false),
   socket(s),
   edit(),
   connected(CON_NME),
@@ -149,6 +150,7 @@ Descriptor::Descriptor(TSocket *s) :
 }
 
 Descriptor::Descriptor(const Descriptor &a) :
+  host_resolved(a.host_resolved),
   socket(a.socket),
   edit(a.edit),
   connected(a.connected),
@@ -222,6 +224,7 @@ Descriptor & Descriptor::operator=(const Descriptor &a)
   // str is most likely also screwy
   vlogf(LOG_BUG, "Inform Batopr immediately that Descriptor operator= was called.");
 
+  host_resolved = a.host_resolved;
   socket = a.socket;
   edit = a.edit;
   connected = a.connected;
@@ -1001,7 +1004,7 @@ int Descriptor::getFreeStat(){
 int Descriptor::nanny(const char *arg)
 {
   char buf[256];
-  char wizbuf[256];
+  //char wizbuf[256];
   int count = 0, local_stats = 0;
   charFile st;
   TBeing *tmp_ch;
@@ -1386,10 +1389,12 @@ int Descriptor::nanny(const char *arg)
             character->recepOffer(NULL, &cost);
             dynamic_cast<TPerson *>(character)->saveRent(&cost, FALSE, 1);
           }
+          /*
 	  if (character->isImmortal()) {
 	    sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
 	    character->mudMessage(character, 16, wizbuf);
 	  }
+          */
           act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
           tmp_ch->loadCareerStats();
 	  tmp_ch->loadDrugStats();
@@ -1534,10 +1539,12 @@ int Descriptor::nanny(const char *arg)
                 dynamic_cast<TPerson *>(tmp_ch)->saveRent(&cost, FALSE, 1);
               }
               act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
+              /*
 	      if (tmp_ch->isImmortal()) {
 		sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", tmp_ch->cyan(), tmp_ch->norm(), tmp_ch->getName(), gamePort);
 		tmp_ch->mudMessage(tmp_ch, 16, wizbuf);
 	      }
+              */
               tmp_ch->loadCareerStats();
               tmp_ch->loadDrugStats();
 	      tmp_ch->loadFactionStats();
@@ -5080,6 +5087,17 @@ void Descriptor::worldSend(const sstring &text, TBeing *ch)
   }
 }
 
+bool Descriptor::getHostResolved()
+{
+  return host_resolved;
+}
+
+void Descriptor::setHostResolved(bool flag, const sstring &h)
+{
+  host = h;
+  host_resolved = flag;
+}
+
 void processAllInput()
 {
   Descriptor *d;
@@ -5091,6 +5109,10 @@ void processAllInput()
     next_to_process = d->next;
 
     // this is where PC wait gets handled
+    if (!d->getHostResolved()) {
+      d->output.putInQ("Waiting for DNS resolution...");
+      continue;
+    }
     if ((--(d->wait) <= 0) && (&d->input)->takeFromQ(comm, sizeof(comm))){
       if (d->character && !d->connected && 
           d->character->specials.was_in_room != ROOM_NOWHERE) {
@@ -6480,63 +6502,62 @@ int TBeing::applyRentBenefits(int secs)
 
 bool illegalEmail(char *buf, Descriptor *desc, silentTypeT silent)
 {
-  char arg[81];
-  char username[20], host[80];
-  char *s;
+  sstring arg, username, host;
+  unsigned int str_length = 0;
 
-  strcpy(arg, buf);
+  arg = buf;
 
-  if (!*arg) {
+  if (arg.length() == 0) {
     if (desc && !silent)
       desc->writeToQ("You must enter an email address.\n\r");
     return TRUE;
   }
-  if (strlen(arg) > 60) {
+  if (arg.length() > 60) {
     if (desc && !silent)
       desc->writeToQ("Email addresses may not exceed 60 characters.\n\r");
     return TRUE;
   }
-  if (!(s = strchr(arg, '@'))) {
+  if (arg.find("@") == sstring::npos) {
     if (desc && !silent)
       desc->writeToQ("Email addresses must be of the form <user>@<host>.\n\r");
     return TRUE;
   }
-  s = strtok(arg, "@");
-  if (!s) {
+  str_length = arg.find_first_of("@");
+  if (str_length == sstring::npos) {
     if (desc && !silent)
       desc->writeToQ("You must enter a username.\n\r");
     return TRUE;
   }
-  strcpy(username, s);
+  username = arg.substr(0, str_length);
  
-  s = strtok(NULL, "@");
-  if (!s) {
+  str_length = arg.find_first_not_of("@", str_length);
+  if (str_length == sstring::npos) {
     if (desc && !silent)
       desc->writeToQ("You must enter a host.\n\r");
     return TRUE;
   }
-  strcpy(host, s);
+  host = arg.substr(str_length);
 
-  if ((s = strchr(username, ' '))) {
+  if (username.find_first_of(" ") != sstring::npos) {
     if (desc && !silent) {
       desc->writeToQ("User names can not have spaces in them.\n\r");
     }
     return TRUE;
   }
 
-  if ((s = strchr(host, ' '))) {
-    if (desc && !silent)
+  if (host.find_first_of(" ") != sstring::npos) {
+    if (desc && !silent) {
       desc->writeToQ("Host names can not have spaces in them.\n\r");
-
+    }
     return TRUE;
   }
 
-  strcpy(host, sstring(host).lower().c_str());
+  host = host.lower();
 
-  if (strstr(host, "localhost") || strstr(host, "127.0.0.1")) {
+  if ((host.find("localhost") != sstring::npos) ||
+      (host.find("127.0.0.1") != sstring::npos)) {
     if (desc && !silent)
       desc->writeToQ("Apologies, but due to abuse, that host is disallowed.\n\r");
-
     return TRUE;
   }
 

@@ -237,7 +237,7 @@ void TPerson::resetChar()
   // Now that we sent the character where they last logged in from
   // reset the lastHost to the current hostname 
 
-  strncpy(lastHost, desc->host, 38);
+  strncpy(lastHost, desc->host.c_str(), 38);
   lastHost[39] = '\0';
 
   if (desc && desc->bad_login)

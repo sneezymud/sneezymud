@@ -54,7 +54,7 @@ void TThing::lookAtObj(TBeing *ch, const char *, showModeT x) const
 
 void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
 {
-  char buffer[256], *tmp;
+  char *tmp;
   const char *tmp_desc;
   char arg1[MAX_INPUT_LENGTH], arg2[MAX_INPUT_LENGTH];
   int keyword_no, res, j, found, totalFound = 0, iNum = 0;
@@ -84,6 +84,8 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
     "\n"
   };
 
+  printf("[%s]\n", argument);
+  //sendrpf(COLOR_BASIC, roomp, "[%s]\n\r", argument);
   if (!desc || !roomp)
     return;
 
@@ -172,8 +174,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
           return;
         } else {
           sendTo(fmt("You look %swards.\n\r") % dirs[keyword_no]);
-          sprintf(buffer, "$n looks %swards.", dirs[keyword_no]);
-          act(buffer, TRUE, this, 0, 0, TO_ROOM);
+          act(fmt("$n looks %swards.") % dirs[keyword_no], TRUE, this, 0, 0, TO_ROOM);
 
           if (canSeeThruDoor(exitp)) {
             if (exitp->description)

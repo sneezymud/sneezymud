@@ -2254,12 +2254,13 @@ void TPerson::doUsers(const sstring &argument)
       } else {
 	TDatabase db(DB_SNEEZY);
 
-	db.query("select pingtime from pings where host='%s'", d->host);
+	db.query("select pingtime from pings where host='%s'", d->host.c_str());
 
+        sstring tmp_host = !(d->host.empty()) ? d->host : "????";
 	if(db.fetchRow()){
-	  buf2=fmt("[%s](%s)") % (d->host ? d->host : "????") % db["pingtime"];
+	  buf2=fmt("[%s](%s)") % tmp_host % db["pingtime"];
 	} else {
-	  buf2=fmt("[%s](??\?)") % (d->host ? d->host : "????");
+	  buf2=fmt("[%s](??\?)") % tmp_host;
 	}
 
         buf3=fmt("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
@@ -2284,7 +2285,7 @@ void TPerson::doUsers(const sstring &argument)
       sendTo(fmt("\n\rPlayers online from %s:\n\r\n\r") % arg2);
       sendTo(USERS_HEADER);
       for (d = descriptor_list; d; d = d->next) {
-        if (d->host && strcasestr(d->host, arg2.c_str())) {
+        if (d->host.lower().find(arg2.lower(), 0) != sstring::npos) {
           if (d->character && d->character->getName()) {
             if (!d->connected && !canSeeWho(d->character))
               continue;
@@ -2301,7 +2302,7 @@ void TPerson::doUsers(const sstring &argument)
                 !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
             line += "*** Information Concealed ***\n\r";
           } else {
-            buf2=fmt("[%s]") % (d->host ? d->host : "????");
+            buf2=fmt("[%s]") % (!(d->host.empty()) ? d->host : "????");
             buf3=fmt("[%s]") % ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing");
             buf4=fmt("[%s]") % ((d->account && d->account->name) ? d->account->name : "UNDEFINED");
             line += fmt("%-34.34s %-10.10s %s\n\r") % buf2 % buf3 % buf4;
@@ -2323,7 +2324,7 @@ void TPerson::doUsers(const sstring &argument)
             !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
         sendTo(COLOR_MOBS, fmt("\n\r%-16.16s : *******Information Concealed*******\n\r") % k->getName());
       } else {
-        buf2=fmt("[%s]") % (k->desc->host ? k->desc->host : "????");
+        buf2=fmt("[%s]") % (!(k->desc->host.empty()) ? k->desc->host : "????");
         buf3=fmt("[%s]") % ((k->desc->connected < MAX_CON_STATUS && k->desc->connected >= 0) ? connected_types[k->desc->connected] : "Editing");
         buf4=fmt("[%s]") % (k->desc->account->name);
         sendTo(COLOR_MOBS, fmt("\n\r%-16.16s : %-34.34s %-15.15s %-10.10s\n\r") % k->getName() % buf2 % buf3 % buf4);
@@ -3145,7 +3146,7 @@ void TBeing::doWorld()
 
   TDatabase db(DB_SNEEZY);
 
-  db.query("select pingtime from pings where host='%s'", desc->host);
+  db.query("select pingtime from pings where host='%s'", desc->host.c_str());
 
   if(db.fetchRow()){
     buf=fmt("%sNetwork Lag: Yours/Avg/High/Low      %s") %

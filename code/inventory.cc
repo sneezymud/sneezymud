@@ -1201,7 +1201,7 @@ int CheckStorageChar (TBeing *ch, TBeing *other)
 
   if (other && ch) {
     if (ch->desc && other->desc) {
-      if (!strcmp(ch->desc->host, other->desc->host)) {
+      if (ch->desc->host == other->desc->host) {
         if ((ch->getStat(STAT_CHOSEN, STAT_CHA) <= -10) &&
             (other->getStat(STAT_CHOSEN, STAT_CHA) > 10)) {
           if ((ch->player.time.played * 4) < other->player.time.played) {

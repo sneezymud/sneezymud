@@ -13,8 +13,10 @@
 
 extern "C" {
 #include <unistd.h>
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <sys/wait.h>
 #include <sys/time.h>
 #include <netdb.h>
@@ -22,6 +24,7 @@ extern "C" {
 #include <sys/resource.h>
 #include <sys/syscall.h>
 #include <sys/param.h>
+#include <ares.h>
 
 #ifdef SOLARIS
 #include <sys/file.h>
@@ -48,6 +51,9 @@ bool Shutdown = 0;               // clean shutdown
 int tics = 0;
 TMainSocket *gSocket;
 long timeTill = 0;
+ares_channel channel;
+struct in_addr ares_addr;
+int ares_status, nfds;
 Descriptor *descriptor_list = NULL, *next_to_process; 
 
 struct timeval timediff(struct timeval *a, struct timeval *b)
@@ -163,6 +169,20 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
         point = NULL;
       }
     }
+  }
+  ////////////////////////////////////////////
+  // process async dns queries
+  ////////////////////////////////////////////
+  fd_set read_fds, write_fds;
+  struct timeval *tvp, tv;
+
+  FD_ZERO(&read_fds);
+  FD_ZERO(&write_fds);
+  nfds = ares_fds(channel, &read_fds, &write_fds);
+  if (nfds > 0) {
+    tvp = ares_timeout(channel, NULL, &tv);
+    select(nfds, &read_fds, &write_fds, NULL, tvp);
+    ares_process(channel, &read_fds, &write_fds);
   }
 }
 
@@ -439,6 +459,23 @@ struct timeval TMainSocket::handleTimeAndSockets()
 
   ////////////////////////////////////////////
   // close any connections with an exceptional condition pending 
+  // process async dns queries
+  ////////////////////////////////////////////
+  fd_set read_fds, write_fds;
+  struct timeval *tvp, tv;
+
+  FD_ZERO(&read_fds);
+  FD_ZERO(&write_fds);
+  nfds = ares_fds(channel, &read_fds, &write_fds);
+  if (nfds > 0) {
+    tvp = ares_timeout(channel, NULL, &tv);
+    select(nfds, &read_fds, &write_fds, NULL, tvp);
+    ares_process(channel, &read_fds, &write_fds);
+  }
+  ////////////////////////////////////////////
+  ////////////////////////////////////////////
+
+  ////////////////////////////////////////////
   ////////////////////////////////////////////
   for (point = descriptor_list; point; point = next_to_process) {
     next_to_process = point->next;
@@ -994,8 +1031,8 @@ void pingData()
   
   
   for (d = descriptor_list; d; d = d->next) {
-    if (d->host && d->character && d->character->isPlayerAction(PLR_PING)){
-      fprintf(p, "%s\n", d->host);
+    if (!(d->host.empty()) && d->character && d->character->isPlayerAction(PLR_PING)){
+      fprintf(p, "%s\n", d->host.c_str());
     }
   }
   fprintf(p, "EOM\n");
@@ -1041,8 +1078,8 @@ int TMainSocket::gameLoop()
     pl.init(pulse);
 
     // interport communication
-    mudRecvMessage();
-    pulseLog("mudRecvMessage", t, pulse);
+    //mudRecvMessage();
+    //pulseLog("mudRecvMessage", t, pulse);
 
     if(pl.wayslowpulse){
       checkForRepo();
@@ -1218,6 +1255,7 @@ int TMainSocket::gameLoop()
     tics++;			// tics since last checkpoint signal 
     pulseLog("CheckTask", t, pulse);
   }
+  ares_destroy(channel);
   return TRUE;
 }
 
@@ -1246,27 +1284,67 @@ TSocket *TMainSocket::newConnection(int t_sock)
   return (s);
 }
 
-static const sstring IP_String(sockaddr_in &_a)
+static const sstring IP_String(in_addr &_a)
 {
-  char buf[256];
+  sstring buf;
 #if (defined SUN)
   sprintf( buf, "%d.%d.%d.%d", 
-          _a.sin_addr.S_un.S_un_b.s_b1, 
-          _a.sin_addr.S_un.S_un_b.s_b2,
-          _a.sin_addr.S_un.S_un_b.s_b3,
-          _a.sin_addr.S_un.S_un_b.s_b4);
+          _a.S_un.S_un_b.s_b1,
+          _a.S_un.S_un_b.s_b2,
+          _a.S_un.S_un_b.s_b3,
+          _a.S_un.S_un_b.s_b4);
 #else
   int n1, n2, n3, n4; 
-  n1 = _a.sin_addr.s_addr >> 24; 
-  n2 = (_a.sin_addr.s_addr >> 16) - (n1 * 256); 
-  n3 = (_a.sin_addr.s_addr >> 8) - (n1 * 65536) - (n2 * 256); 
-  n4 = (_a.sin_addr.s_addr) % 256; 
-  sprintf(buf, "%d.%d.%d.%d", n4, n3, n2, n1); 
+  n1 = _a.s_addr >> 24;
+  n2 = (_a.s_addr >> 16) - (n1 * 256);
+  n3 = (_a.s_addr >> 8) - (n1 * 65536) - (n2 * 256);
+  n4 = (_a.s_addr) % 256;
+  buf = fmt("%d.%d.%d.%d") % n4 % n3 % n2 % n1;
 #endif
   return buf;
 }
 
 void sig_alrm(int){return;}
+
+void gethostbyaddr_cb(void *arg, int status, struct hostent *host_ent)
+{
+  Descriptor *d;
+  sstring ip_string, pend_ip_string;
+
+  ip_string = (char *)arg;
+  pend_ip_string = ip_string + "...";
+
+  if (status != ARES_SUCCESS) {
+    char *ares_errmem;
+
+    vlogf(LOG_MISC, fmt("gethostbyaddr_cb: %s: %s") % ip_string % ares_strerror(status, &ares_errmem));
+    ares_free_errmem(ares_errmem);
+
+    for (d = descriptor_list; d; d = d->next) {
+      if (!d->getHostResolved() && d->host == pend_ip_string) {
+        d->setHostResolved(true, ip_string);
+      }
+    }
+  } else {
+    char **p;
+    struct in_addr addr;
+    sstring resolved_name;
+
+    p = host_ent->h_addr_list;
+    memcpy(&addr, *p, sizeof(struct in_addr));
+    resolved_name = sstring(host_ent->h_name).lower();
+
+    vlogf(LOG_MISC, fmt("gethostbyaddr_cb: %s resolved to %-32s") % ip_string % resolved_name);
+
+    for (d = descriptor_list; d; d = d->next) {
+      if (!d->getHostResolved() && d->host == pend_ip_string) {
+        d->setHostResolved(true, resolved_name);
+      }
+    }
+  }
+
+  delete (char *)arg;
+}      
 
 int TMainSocket::newDescriptor(int t_sock)
 {
@@ -1278,9 +1356,10 @@ int TMainSocket::newDescriptor(int t_sock)
 #endif
   Descriptor *newd;
   struct sockaddr_in saiSock;
-  struct hostent *he;
-  char temphostaddr[255];
+  //struct hostent *he;
+  sstring temphostaddr;
   TSocket *s = NULL;
+  char *ip_cstr;
 
   if (!(s = newConnection(t_sock))) 
     return 0;
@@ -1300,24 +1379,36 @@ int TMainSocket::newDescriptor(int t_sock)
   size = sizeof(saiSock);
   if (getpeername(s->m_sock, (struct sockaddr *) &saiSock, &size) < 0) {
     perror("getpeername");
-    *newd->host = '\0';
+    newd->host = "";
   } else {
     // we sometimes hang here, so lets log any suspicious events
     // I _think_ the problem is caused by a site that has changed its DNS
     // entry, but the mud's site has not updated the new list yet.
     signal(SIGALRM, sig_alrm);
+    /*
     time_t init_time = time(0);
     he = gethostbyaddr((const char *) &saiSock.sin_addr, sizeof(struct in_addr), AF_INET);
     time_t fin_time = time(0);
 
     if (he) {
       if (he->h_name) 
-        strcpy(newd->host, he->h_name);
+        newd->host = he->h_name;
       else 
-        strcpy(newd->host, IP_String(saiSock).c_str());
+        newd->host = IP_String(saiSock.sin_addr);
     } else 
-      strcpy(newd->host, IP_String(saiSock).c_str());
-    strcpy(temphostaddr, IP_String(saiSock).c_str());
+    */
+    
+    newd->setHostResolved(false, IP_String(saiSock.sin_addr) + "...");
+
+    ip_cstr = mud_str_dup(IP_String(saiSock.sin_addr));
+    memcpy(&ares_addr, &saiSock.sin_addr, sizeof(struct in_addr));
+    vlogf(LOG_MISC, "Calling ares_gethostbyaddr");
+    time_t init_time = time(0);
+    ares_gethostbyaddr(channel, &ares_addr, sizeof(ares_addr), AF_INET, gethostbyaddr_cb, ip_cstr);
+    time_t fin_time = time(0);
+    vlogf(LOG_MISC, "Called ares_gethostbyaddr");
+
+    temphostaddr = IP_String(saiSock.sin_addr);
 
     if (fin_time - init_time >= 10)
       vlogf(LOG_BUG, fmt("DEBUG: gethostbyaddr (1) took %d secs to complete for host %s") % (fin_time-init_time) % temphostaddr);
@@ -1325,7 +1416,8 @@ int TMainSocket::newDescriptor(int t_sock)
     if (numberhosts) {
       for (a = 0; a <= numberhosts - 1; a++) {
 	if (isdigit(hostlist[a][0])) {
-	  if (strstr(temphostaddr, hostlist[a])) {
+          // if (strstr(temphostaddr, hostlist[a])) {
+          if (temphostaddr.find(hostlist[a], 0) != sstring::npos) {
 	    s->writeToSocket("Sorry, your site is banned.\n\r");
 	    s->writeToSocket("Questions regarding this may be addressed to: ");
             s->writeToSocket(MUDADMIN_EMAIL);
@@ -1338,7 +1430,8 @@ int TMainSocket::newDescriptor(int t_sock)
 	    return 0;
 	  }
 	} else {
-	  if (strcasestr(newd->host, hostlist[a])) {
+          if (newd->host.lower().find(sstring(hostlist[a]).lower(), 0) != sstring::npos) {
+          // if (strcasestr(newd->host, hostlist[a])) {
 	    s->writeToSocket("Sorry, your site is banned.\n\r");
 	    s->writeToSocket("Questions regarding this may be addressed to: ");
             s->writeToSocket(MUDADMIN_EMAIL);

@@ -658,7 +658,8 @@ void TBeing::doGrouptell(const sstring &arg)
 
 void TBeing::doCommune(const sstring &arg)
 {
-  sstring buf, buf2, wizbuf;
+  //sstring buf, buf2, wizbuf;
+  sstring buf, buf2;
   Descriptor *i;
   TBeing *critter;
   int levnum = 0;
@@ -693,9 +694,11 @@ void TBeing::doCommune(const sstring &arg)
   if (!levnum) {
     sendTo(fmt("You tell the gods: %s") %
          colorString(this, desc, arg, NULL, COLOR_BASIC, TRUE, TRUE));
+    /*
     wizbuf = fmt("[%sPort:%d%s] %s%s:%s %s%s%s\n\r") % red() % gamePort % norm()
       % purple() % getName() % norm() % cyan() % arg % norm();
     mudMessage(this, 16, wizbuf.c_str());
+    */
   } else {
     if (levnum <= MAX_MORT) {
       sendTo(fmt("Hey dummy, all the gods are at least level %d.\n\r") %

@@ -2305,7 +2305,7 @@ void TPerson::doCutlink(const char *argument)
     for (d = descriptor_list; d; d = d->next) {
       if (!d->character || !d->character->name) {
         sendTo(fmt("You cut a link from host %s\n\r") %
-               (d->host ? d->host : "Host Unknown"));
+               (!(d->host.empty()) ? d->host : "Host Unknown"));
 
         delete d;
       }
@@ -5739,22 +5739,20 @@ void TBeing::doClients()
   if (powerCheck(POWER_CLIENTS))
     return;
 
-  sstring tStString("");
-  char   tString[1024];
+  sstring tString("");
 
   for (Descriptor *tDesc = descriptor_list; tDesc; tDesc = tDesc->next)
     if (tDesc->m_bIsClient) {
-      sprintf(tString, "%-16s %-34s\n\r",
+      tString += fmt("%-16s %-34s\n\r") %
               ((tDesc->character && tDesc->character->name) ?
-               tDesc->character->name : "UNDEFINED"),
-              (tDesc->host ? tDesc->host : "Host Unknown"));
-      tStString += tString;
+               tDesc->character->name : "UNDEFINED") %
+              (!(tDesc->host.empty()) ? tDesc->host : "Host Unknown");
     }
 
-  if (tStString.empty()) 
+  if (tString.empty()) 
     sendTo("Noone currently logged in with a client.\n\r");
   else
-    sendTo(tStString);
+    sendTo(tString);
 }
 
 // returns DELETE_THIS if this should be toasted.

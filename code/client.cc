@@ -236,7 +236,8 @@ int Descriptor::read_client(char *str2)
   TBeing *ch, *person;
   charFile st;
   int type, notify;
-  char buf[20000], tmp_name[40], wizbuf[256];
+  //char buf[20000], tmp_name[40], wizbuf[256];
+  char buf[20000], tmp_name[40];
   TRoom *rp;
   int vers = 0;
 
@@ -613,10 +614,12 @@ int Descriptor::read_client(char *str2)
             dynamic_cast<TPerson *>(ch)->saveRent(&cost, FALSE, 1);
           }
           act("$n has reconnected.", TRUE, ch, 0, 0, TO_ROOM);
+          /*
 	  if (ch->isImmortal()) {
             sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", ch->cyan(), ch->norm(), ch->getName(), gamePort);
 	    ch->mudMessage(ch, 16, wizbuf); 
 	  }
+          */
           ch->loadCareerStats();
           ch->loadDrugStats();
 	  ch->loadFactionStats();
@@ -954,7 +957,8 @@ int Descriptor::client_nanny(char *arg)
 {
   TBeing *tmp_ch;
   Descriptor *k;
-  char login[20], passwd[40], charname[20], buf[512], tmp_name[40], wizbuf[256];
+  //char login[20], passwd[40], charname[20], buf[512], tmp_name[40], wizbuf[256];
+  char login[20], passwd[40], charname[20], buf[512], tmp_name[40];
   FILE *fp;
   accountFile afp;
   charFile st;
@@ -1252,10 +1256,12 @@ int Descriptor::client_nanny(char *arg)
       vlogf(LOG_PIO, fmt("%s[%s] has connected (client)  (account: %s).") % 
                  character->getName() % host % account->name);
     }
+    /*
     if (character->isImmortal()) {
       sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
       character->mudMessage(character, 16, wizbuf); 
     }
+    */
   }
   sendMotd(character->GetMaxLevel() > MAX_MORT);
   if (character->hasClass(CLASS_CLERIC) || character->hasClass(CLASS_DEIKHAN))
@@ -1430,7 +1436,8 @@ sstring(account->name).lower());
 int Descriptor::clientCreateChar(char *arg)
 {
   char dummy[1024];
-  char tmp_name[256], wizbuf[256];
+  //char tmp_name[256], wizbuf[256];
+  char tmp_name[256];
 
   TPerson *ch;
   strcpy(dummy, nextToken('|', 20, arg).c_str());
@@ -1652,8 +1659,10 @@ int Descriptor::clientCreateChar(char *arg)
   ch->affectTotal();
   vlogf(LOG_PIO, fmt("%s [%s] new player.") %  ch->getName() % host);
   clientf(fmt("%d") % CLIENT_NEWCHAR);
+  /*
   sprintf(wizbuf, "[%sINTERPORT INFO%s] New player %s just created on port %d.\n\r", ch->cyan(), ch->norm(), ch->getName(), gamePort);
   ch->mudMessage(ch, 16, wizbuf); 
+  */
 
   enum connectStateT oldconnected = connected;
   connected = CON_PLYNG;

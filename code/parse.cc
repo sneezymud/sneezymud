@@ -317,7 +317,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       vlogf(LOG_SILENT, fmt("%s %s%s") %  name % commandArray[cmd]->name % newarg);
     else if (numberLogHosts && desc) {
       for (int a = 0; a < numberLogHosts; a++) {
-	if (strcasestr(desc->host, hostLogList[a]))
+        if (desc->host.lower() == sstring(hostLogList[a]).lower())
 	  vlogf(LOG_SILENT, fmt("%s %s%s") %  name % commandArray[cmd]->name % newarg);
       }
     }
