@@ -176,6 +176,7 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	combat.o comm.o obj_commodity.o obj_component.o connect.o constants.o \
 	game_craps.o game_crazyeights.o create_engine.o \
 	create_mobs.o create_objs.o create_rooms.o crit_combat.o damage.o \
+	database.o \
 	db.o disc_adventuring.o disc_aegis.o disc_afflictions.o disc_air.o \
 	disc_alchemy.o disc_animal.o disc_blunt.o disc_brawling.o \
 	disc_cleric.o disc_combat.o disc_cure.o disc_deikhan.o \
@@ -4328,6 +4329,58 @@ objs/damage.o: connect.h obj_drug.h charfile.h being.h person.h monster.h
 objs/damage.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/damage.o: spec_rooms.h materials.h combat.h statistics.h
 objs/damage.o: obj_base_corpse.h obj_base_container.h
+objs/database.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/database.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/database.o: /usr/include/gnu/stubs.h
+objs/database.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/database.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/database.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/database.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/database.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/database.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
+objs/database.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/database.o: /usr/include/time.h /usr/include/bits/time.h
+objs/database.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
+objs/database.o: /usr/include/ctype.h /usr/include/endian.h
+objs/database.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
+objs/database.o: /usr/include/assert.h /usr/include/g++-3/cstring
+objs/database.o: /usr/include/string.h /usr/include/g++-3/cerrno
+objs/database.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/database.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/database.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
+objs/database.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
+objs/database.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
+objs/database.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iostream.h
+objs/database.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
+objs/database.o: /usr/include/g++-3/stl_relops.h
+objs/database.o: /usr/include/g++-3/stl_iterator.h
+objs/database.o: /usr/include/g++-3/std/bastring.cc /usr/include/g++-3/vector
+objs/database.o: /usr/include/g++-3/stl_algobase.h
+objs/database.o: /usr/include/g++-3/stl_pair.h
+objs/database.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/database.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/database.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/database.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/database.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/database.o: /usr/include/g++-3/stl_construct.h
+objs/database.o: /usr/include/g++-3/stl_uninitialized.h
+objs/database.o: /usr/include/g++-3/stl_vector.h
+objs/database.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
+objs/database.o: /usr/include/g++-3/stl_tree.h
+objs/database.o: /usr/include/g++-3/stl_function.h
+objs/database.o: /usr/include/g++-3/stl_map.h
+objs/database.o: /usr/include/g++-3/stl_multimap.h
+objs/database.o: /home/oldspasm/usr/include/mysql/mysql.h
+objs/database.o: /home/oldspasm/usr/include/mysql/mysql_com.h
+objs/database.o: /home/oldspasm/usr/include/mysql/mysql_version.h low.h
+objs/database.o: mobAI.h enum.h spells.h structs.h immunity.h discipline.h
+objs/database.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
+objs/database.o: response.h faction.h comm.h spec_objs.h toggle.h
+objs/database.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
+objs/database.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
+objs/database.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h being.h
+objs/database.o: person.h monster.h account.h extern.h handler.h obj_money.h
+objs/database.o: rent.h spec_mobs.h spec_rooms.h materials.h database.h
 objs/db.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/db.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/db.o: /usr/include/gnu/stubs.h

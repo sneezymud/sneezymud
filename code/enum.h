@@ -538,6 +538,7 @@ enum logTypeT
   LOG_COMBAT  =  8, // Various errors associated with the combat code.
   LOG_CHEAT   =  9, // Various logs associated with the cheating code.
   LOG_FACT    = 10, // Various Faction Stuff
+  LOG_DB      = 11, // Database stuff
 
   LOG_MOB     = 15, // Errors in Mobiles not yet defined below
   LOG_MOB_AI  = 16, // Errors in Mobile Logic

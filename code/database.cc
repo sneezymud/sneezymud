@@ -1,0 +1,120 @@
+#include "stdsneezy.h"
+#include "database.h"
+
+static TDatabaseConnection database_connection;
+
+
+TDatabase::TDatabase() : 
+  res(NULL), 
+  row(NULL),
+  db(NULL)
+{
+  vlogf(LOG_DB, "constructor");
+}
+
+TDatabase::TDatabase(string tdb) :
+  res(NULL),
+  row(NULL),
+  db(NULL)
+{
+  setDB(tdb);
+  vlogf(LOG_DB, "constructor setDB");
+}
+
+TDatabase::~TDatabase(){
+  mysql_free_result(res);
+  vlogf(LOG_DB, "query results freed");
+}
+
+void TDatabase::setDB(string tdb){
+  if(tdb=="sneezy"){
+    db=database_connection.getSneezyDB();
+  } else if(tdb=="immortal"){
+    db=database_connection.getImmoDB();
+  } else {
+    vlogf(LOG_DB, "Unknown database %s", tdb.c_str());
+    db=NULL;
+  }
+}
+
+// advance to the next row of the current query
+bool TDatabase::fetchRow(){
+  if(!res)
+    return FALSE;
+  
+  if(!(row=mysql_fetch_row(res)))
+    return FALSE;
+  
+  return TRUE;
+}
+
+// get one of the results from the current row of the current query
+char *TDatabase::getColumn(unsigned int i){
+  if(i > (mysql_num_fields(res)-1) || i < 0){
+    return NULL;
+  } else {
+    return row[i];
+  }
+}
+
+// execute a query
+bool TDatabase::query(const char *query,...){
+  va_list ap;
+  string buf;
+  int fromlen=0, tolen=(512*2)+1;
+  char *from=NULL, to[tolen], lastch=0, numbuf[32];
+  
+  // no db set yet
+  if(!db)
+    return FALSE;
+  
+  va_start(ap, query);
+  do {
+    if(*query=='%' && lastch!='\\'){
+      query++;
+      switch(*query){
+	case 's':
+	  from=va_arg(ap, char *);
+	  fromlen=strlen(from);
+	  
+	  // mysql_escape_string needs a buffer that is 
+	  // (string * 2) + 1 in size to avoid overruns
+	  if(((fromlen*2)+1) > tolen){
+	    vlogf(LOG_DB, "query - buffer overrun on %s");
+	    return FALSE;
+	  }
+	  
+	  mysql_escape_string(to, from, strlen(from));
+	  buf += to;
+	  break;
+	case 'i':
+	  snprintf(numbuf, strlen(numbuf)-1, "%i", va_arg(ap, int));
+	  buf += numbuf;
+	  break;
+	case 'f':
+	  snprintf(numbuf, strlen(numbuf)-1, "%f", va_arg(ap, double));
+	  buf += numbuf;
+	  break;
+	default:
+	  vlogf(LOG_DB, "query - bad format specifier");
+	  return FALSE;
+      }
+    } else {
+      buf += *query;
+    }
+    lastch=*query;
+  } while(*query++);
+  va_end(ap);
+  
+  if(mysql_query(db, buf.c_str())){
+    vlogf(LOG_DB, "query failed: %s", mysql_error(db));
+    vlogf(LOG_DB, "%s", buf.c_str());
+    return FALSE;
+  }
+  res=mysql_store_result(db);
+  
+  if(res)
+    vlogf(LOG_DB, "New query results stored.");
+  
+  return TRUE;
+}
