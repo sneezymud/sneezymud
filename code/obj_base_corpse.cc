@@ -325,7 +325,7 @@ int TBaseCorpse::chiMe(TBeing *tLunatic)
 {
   int     tMana  = ::number(10, 30),
           bKnown = tLunatic->getSkillLevel(SKILL_CHI);
-  TThing *tThing;
+  //  TThing *tThing;
 
   if (tLunatic->getMana() < tMana) {
     tLunatic->sendTo("You lack the chi to do this.\n\r");
@@ -347,26 +347,8 @@ int TBaseCorpse::chiMe(TBeing *tLunatic)
       TRUE, tLunatic, this, NULL, TO_ROOM);
 
   if(material_nums[getMaterial()].flammability){
-    setBurning(tLunatic);
+    setBurning(tLunatic);}
 
     return true;
-
-    /*
-  while ((tThing = getStuff())) {
-    --(*tThing);
-
-    if (roomp)
-      *roomp += *tThing;
-    else if (parent)
-      *parent += *tThing;
-    else {
-      vlogf(LOG_BUG, "Neither roomp nor parent in chiMe corpse.  Destorying %s",
-            tThing->getName());
-      delete tThing;
-      tThing = NULL;
-    }
-  }
-
-  return DELETE_VICT;
-    */
+   
 }

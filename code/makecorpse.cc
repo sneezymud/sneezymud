@@ -909,6 +909,8 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
   gen_corpse->setWeight(specialCorpse ? 1.0 : getWeight());
   gen_corpse->obj_flags.wear_flags = ITEM_TAKE;
   gen_corpse->setVolume(getVolume());
+  gen_corpse->setMaxStructPoints(50);
+  gen_corpse->setStructPoints(50);
 
   // whacky problems from shadowy/glowing EQ and such
   // No reason to set the cbs based on creature.
