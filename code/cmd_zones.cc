@@ -2,13 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_zones.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+//  cmd_zones.cc : The "zones" command
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -76,13 +70,13 @@ void TBeing::doZonesSingle(string tStString)
   if (tZone >= 0 && tZone < zone_table.size()) {
     sprintf(tString, "zoneHelp/%d", (tZone > 0 ? (zone_table[tZone - 1].top + 1) : 0));
 
-    if (file_to_string(tString, tStTemp, true)) {
+    if (file_to_string(tString, tStTemp)) {
       tStBuffer += "\n\r";
       tStBuffer += tStTemp;
     }
   }
 
-  desc->page_string(tStBuffer.c_str(), 0);
+  desc->page_string(tStBuffer.c_str());
 }
 
 void TBeing::doZones(string tStString)
@@ -129,14 +123,24 @@ void TBeing::doZones(string tStString)
     char buf[256], buf2[256];
     strcpy(buf, zd.name);
 
-    // strip up the zone creator info
-    char *s = strrchr(buf, '-');
-    if (s)
-      *s = '\0';
+    char *s = strchr(buf, '-');
+    char *n = buf;
+    if (s){
+      --s; // get the space before the -
+      *s = '\0'; // after builder name
+      s+=2; // get the space after the -
+      *s = '\0'; // after zone name
+      ++s;
+    } else {
+      s=buf;
+      n=NULL;
+    }
+    // buf is now the builder name, s is the zone name
+
 
     float avg = (zd.num_mobs ? zd.mob_levels/zd.num_mobs : 0);
-    sprintf(buf2, "%-30.30s : Level: avg: %3.0f, min: %3.0f, max %3.0f\n\r",
-         buf, avg,
+    sprintf(buf2, "%-25.25s : %-10.10s : Level: avg: %i, min: %3.0f, max %3.0f\n\r",
+         s, n?n:"", (int)avg,
          zd.min_mob_level, zd.max_mob_level);
 
     sortZoneVec.push_back(zoneSorter(avg, buf2));
@@ -146,14 +150,19 @@ void TBeing::doZones(string tStString)
   sort(sortZoneVec.begin(), sortZoneVec.end(), zoneSorter());
 
   // list is sorted by avg level, cat it all together now
+  int lastavg=-1;
   for (zone = 0; zone < sortZoneVec.size(); zone++) {
     char tString[256];
+
+    if((int)(sortZoneVec[zone].avgLevel) != lastavg){
+      if (++cIndex == 8)
+	cIndex = 0;
+      lastavg=(int)(sortZoneVec[zone].avgLevel);
+    }
+    
     sprintf(tString, "%s%s<z>", colorStrings[cIndex], sortZoneVec[zone].zoneName.c_str());
     str += tString;
-
-    if (++cIndex == 8)
-      cIndex = 0;
   }
 
-  desc->page_string(str.c_str(), 0);
+  desc->page_string(str.c_str());
 }
