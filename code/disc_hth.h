@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_hth.h,v $
+// Revision 5.1.1.3  2000/12/27 08:27:35  dash
+// added code for 'defensive trance' warrior skill
+//
 // Revision 5.1.1.2  2000/09/29 15:45:27  jesus
 // added warrior parry skill
 //
@@ -30,18 +33,21 @@ public:
     CSkill skShove;
     CSkill skRetreat;
     CSkill skParryWarrior;
+    CSkill skTranceOfBlades;
 
     CDHTH()
       : CDiscipline(),
       skShove(),
       skRetreat(),
-      skParryWarrior() {
+      skParryWarrior(),
+      skTranceOfBlades() {
     }      
     CDHTH(const CDHTH &a)
       : CDiscipline(a),
       skShove(a.skShove),
       skRetreat(a.skRetreat),
-      skParryWarrior(a.skParryWarrior) {
+      skParryWarrior(a.skParryWarrior),
+      skTranceOfBlades(a.skTranceOfBlades) {
     }
     CDHTH & operator=(const CDHTH &a) {
       if (this == &a) return *this;
@@ -49,6 +55,7 @@ public:
       skShove = a.skShove;
       skRetreat = a.skRetreat;
       skParryWarrior = a.skParryWarrior;
+      skTranceOfBlades = a.skTranceOfBlades;
       return *this;
     } 
     //    CDHTH();
@@ -62,4 +69,6 @@ private:
     int shove(TBeing *, TBeing *, char *, spellNumT);
 
 #endif
+
+
 
