@@ -94,6 +94,11 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       }
       value = atoi(arg);
 
+      if(value<0){
+	setMoney(getMoney()+(-value));
+	return TRUE;
+      }
+
       if (value <= 0 || 
           ((rc = real_object(value)) <= 0)) {
         vlogf(LOG_MOB_RS, "Problem in script (1).  Trying to load %d on %s",value,getName());
