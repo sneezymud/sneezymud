@@ -77,6 +77,7 @@
 #include "obj_staff.h"
 #include "obj_wand.h"
 #include "disc_fire.h"
+#include "obj_note.h"
 
 // CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye
@@ -7115,6 +7116,92 @@ int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 }
 
 
+int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  if(!ch || !o || cmd != CMD_OBJ_OPENED)
+    return false;
+
+  vector <string> fortunes;
+  fortunes.push_back("This paper is better than you in every way, because it can achieve Zen.  You, on the other hand, cannot.  And thus you must resume your misguided existence and continue on forever envious of this little bit of bleached wood pulp.\n\r");
+  fortunes.push_back("The greatest danger could be your stupidity.\n\r");
+  fortunes.push_back("Our first and last love is... self love.\n\r");
+  fortunes.push_back("You have an unusual equipment for success, use it properly.\n\r");
+  fortunes.push_back("Because of your melodic nature, the moonlight never misses an appoinment.\n\r");
+  fortunes.push_back("Never wear your best pants, when you go to fight for freedom.\n\r");
+  fortunes.push_back("A starship ride has been promised to you by the galactic wizzard.\n\r");
+  fortunes.push_back("What you left behind is more mellow than wine.\n\r");
+  fortunes.push_back("Suppose you can get what you want...\n\r");
+  fortunes.push_back("Alas!  The onion you are eating is someone else's water lily.\n\r");
+  fortunes.push_back("Buy many dream boxes.  Ask a friend to select one.\n\r");
+  fortunes.push_back("You will receive a fortune. (cookie)\n\r");
+  fortunes.push_back("Don't behave with cold manners.\n\r");
+  fortunes.push_back("Don't forget, you are always on our minds.\n\r");
+  fortunes.push_back("Rest is a good thing, but boredom is its brother.\n\r");
+  fortunes.push_back("You are filled with life's most precious treasure... hope!\n\r");
+  fortunes.push_back("Don't ask, don't say.  Everything lies in silence.\n\r");
+  fortunes.push_back("Trust your intuition.  The universe is your guiding light.\n\r");
+  fortunes.push_back("This is a really lovely day.  Congratulations!\n\r");
+  fortunes.push_back("Everything is not yet lost.\n\r");
+  fortunes.push_back("Let there be magic in your smile and firmness in your handshake.\n\r");
+  fortunes.push_back("You will enjoy the pleasures of life to the highest degree.\n\r");
+  fortunes.push_back("Wealth and renown, a beautiful person and a happy marriage.\n\r");
+  fortunes.push_back("Everything will come your way now.\n\r");
+  fortunes.push_back("You will enjoy good health, you will be surrounded by luxury.\n\r");
+  fortunes.push_back("Patience is the best remedy for every trouble.\n\r");
+  fortunes.push_back("Including others in your life will bring you great happiness.\n\r");
+  fortunes.push_back("You will win success in whatever calling you adopt.\n\r");
+  fortunes.push_back("Your love life will be happy and harmonious.\n\r");
+  fortunes.push_back("Let the world be filled with tranquility and good will.\n\r");
+  fortunes.push_back("You will have a fine capacity for the enjoyment of life.\n\r");
+  fortunes.push_back("Success in everything.\n\r");
+  fortunes.push_back("Some think you handsome, others not.\n\r");
+  fortunes.push_back("Among the lucky, you are the chosen one.\n\r");
+  fortunes.push_back("A librarian will be the key to your success. \n\r");
+  fortunes.push_back("We know where you live.\n\r");
+  fortunes.push_back("You will need good reading material in approximately 15 minutes.\n\r");
+  fortunes.push_back("Everyone's meal today is on you!\n\r");
+  fortunes.push_back("A recent prison escapee that is sitting near by wants to love you long time.\n\r");
+  fortunes.push_back("If you do something right once, someone will ask you to do it again.\n\r");
+  fortunes.push_back("Nothing makes a person more productive than the last minute.\n\r");
+  fortunes.push_back("The only thing we learn from history is that we learn nothing from history.\n\r");
+  fortunes.push_back("The other line moves faster.\n\r");
+  fortunes.push_back("He who steps on others to get to the top has good balance.\n\r");
+  fortunes.push_back("Lots of folks confuse bad management with destiny.\n\r");
+  fortunes.push_back("Show me a man who is a good loser and I'll show you a man who is playing golf with his boss.\n\r");
+  fortunes.push_back("If we could sell our experiences for what they cost us we would all be millionaires.\n\r");
+  fortunes.push_back("Our policy is: When in doubt, do the right thing.\n\r");
+  fortunes.push_back("Even if you win the rat race, you're still a rat.\n\r");
+  fortunes.push_back("No problem is so formidable that you can't just walk away from it.\n\r");
+  fortunes.push_back("If ignorance is bliss, why aren't there more happy people?\n\r");
+  fortunes.push_back("The cost of living hasn't affected its popularity.\n\r");
+
+  string buf=fortunes[::number(0,fortunes.size()-1)];
+
+  // create fortune
+  TNote *fortune = createNote(mud_str_dup(buf));
+  delete [] fortune->name;
+  fortune->name = mud_str_dup("fortune paper strip small");
+  delete [] fortune->shortDescr;
+  fortune->shortDescr = mud_str_dup("<W>a fortune<1>"); 
+  delete [] fortune->getDescr();
+  fortune->setDescr(mud_str_dup("<W>A small strip of paper lies here.<1>"));
+  *ch += *fortune;
+  
+  // convert cookie to food
+  TObj *cookie = makeNewObj(ITEM_FOOD);  // new food object
+  --(*o);  // remove from owner
+  *cookie = *o;  // TObj assignment, copy values
+  delete o; // remove old object
+  cookie->assignFourValues(3,0,0,0); // 3 food value, no flags
+  *ch += *cookie;  // give back to owner
+
+  ch->sendTo(COLOR_OBJECTS, "You tear open %s and pull out %s.\n\r",
+	     cookie->shortDescr, fortune->shortDescr);
+
+  return true;
+}
+
+
 
 //MARKER: END OF SPEC PROCS
 
@@ -7258,7 +7345,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Energy Shield: shield", energyShield},
   {FALSE, "BOGUS", bogusObjProc},
   {FALSE, "mystery potion", mysteryPotion},
-  {FALSE, "BOGUS", bogusObjProc},
+  {FALSE, "fortune cookie", fortuneCookie},
   {TRUE, "Fireball Weapon", fireballWeapon}, //125
   {FALSE, "Fire Shield", fireArmor},
   {FALSE, "Finns Gaff", finnsGaff},
