@@ -813,9 +813,10 @@ void HoldemGame::fold(TBeing *ch)
   } else if(players[better]->name!=players[lastPlayer()]->name){
     players[better]->hand[0]=NULL;
     players[better]->hand[1]=NULL;
-    better=nextBetter(better);
-    act("The bet moves to $n.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
-    players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
+    if((better=nextBetter(better))!=-1){
+      act("The bet moves to $n.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
+      players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
+    }
   } else {
     players[better]->hand[0]=NULL;
     players[better]->hand[1]=NULL;
