@@ -64,5 +64,15 @@ M 0 1167 1 -99          Random load of escaped large thief near prison
 Y 0 104 3                 black cloth set
 ? 0 5 0 E
 E 1 9311 20 19            stone dagger
+
+* treehouse in clearing
+D 0 1177 5 2
+D 0 33349 4 2
+
+O 0 1178 1 1177
+O 0 1179 1 1177
+M 0 594 1 1177
+
+
 S
 
