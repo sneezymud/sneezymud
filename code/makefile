@@ -380,9 +380,19 @@ amap:	$(LIBS) objs/amap.o objs/lowtools.o
 	@$(CC) -o amap objs/amap.o objs/lowtools.o $(LIBS) $(LDFLAGS)
 	@/usr/bin/strip amap
 
+sqladdobjs_builder: $(LIBS) objs/sqladdobjs_builder.o objs/lowtools.o
+	@echo \*\*\* Making Final Link: sqladdobjs_builder
+	@$(CC) -o sqladdobjs_builder objs/sqladdobjs_builder.o objs/lowtools.o $(LIBS) $(LDFLAGS)
+	@/usr/bin/strip sqladdobjs_builder
+
+sqledobj_builder: $(LIBS) objs/sqledobj_builder.o objs/lowtools.o
+	@echo \*\*\* Making Final Link: sqledobj_builder
+	@$(CC) -o sqledobj_builder objs/sqledobj_builder.o objs/lowtools.o $(LIBS) $(LDFLAGS)
+	@/usr/bin/strip sqledobj_builder
+
 # make all low tools
-lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld
-	@/bin/cp -f sqladdobjs sqledobj sqledimmobj /mud/low/bin
+lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledobj_builder sqladdobjs_builder
+	@/bin/cp -f sqladdobjs sqledobj sqledimmobj sqladdobjs_builder sqledobj_builder /mud/low/bin
 	@echo Finished making lowtools
 
 # this links against prod libs for cgi execution
@@ -3846,8 +3856,9 @@ objs/db.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/db.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/db.o: being.h person.h monster.h account.h extern.h handler.h
 objs/db.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h format.h
-objs/db.o: socket.h statistics.h help.h mail.h obj_component.h loadset.h
-objs/db.o: sys_loot.h shop.h database.h /usr/local/include/libpq-fe.h
+objs/db.o: /usr/include/dirent.h /usr/include/sys/dirent.h socket.h
+objs/db.o: statistics.h help.h mail.h obj_component.h loadset.h sys_loot.h
+objs/db.o: shop.h database.h /usr/local/include/libpq-fe.h
 objs/db.o: /usr/local/include/postgres_ext.h obj_spellbag.h
 objs/db.o: obj_expandable_container.h obj_open_container.h
 objs/db.o: obj_base_container.h obj_player_corpse.h obj_base_corpse.h
@@ -15156,6 +15167,65 @@ objs/sqladdobjs.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/sqladdobjs.o: materials.h colorstring.h format.h database.h
 objs/sqladdobjs.o: /usr/local/include/libpq-fe.h
 objs/sqladdobjs.o: /usr/local/include/postgres_ext.h lowtools.h
+objs/sqladdobjs_builder.o: stdsneezy.h /usr/include/g++/cstdio
+objs/sqladdobjs_builder.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/sqladdobjs_builder.o: /usr/include/machine/ansi.h
+objs/sqladdobjs_builder.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/sqladdobjs_builder.o: /usr/include/g++/ctime /usr/include/time.h
+objs/sqladdobjs_builder.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/sqladdobjs_builder.o: /usr/include/sys/inttypes.h
+objs/sqladdobjs_builder.o: /usr/include/machine/types.h
+objs/sqladdobjs_builder.o: /usr/include/machine/endian.h
+objs/sqladdobjs_builder.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/sqladdobjs_builder.o: /usr/include/runetype.h /usr/include/g++/cassert
+objs/sqladdobjs_builder.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/sqladdobjs_builder.o: /usr/include/string.h /usr/include/stdarg.h
+objs/sqladdobjs_builder.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/sqladdobjs_builder.o: /usr/include/g++/string
+objs/sqladdobjs_builder.o: /usr/include/g++/std/bastring.h
+objs/sqladdobjs_builder.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/sqladdobjs_builder.o: /usr/include/g++/std/straits.h
+objs/sqladdobjs_builder.o: /usr/include/g++/alloc.h
+objs/sqladdobjs_builder.o: /usr/include/g++/stl_config.h
+objs/sqladdobjs_builder.o: /usr/include/g++/stl_alloc.h
+objs/sqladdobjs_builder.o: /usr/include/g++/iostream.h
+objs/sqladdobjs_builder.o: /usr/include/g++/streambuf.h
+objs/sqladdobjs_builder.o: /usr/include/g++/libio.h
+objs/sqladdobjs_builder.o: /usr/include/g++/_G_config.h
+objs/sqladdobjs_builder.o: /usr/include/g++/iterator
+objs/sqladdobjs_builder.o: /usr/include/g++/stl_relops.h
+objs/sqladdobjs_builder.o: /usr/include/g++/stl_iterator.h
+objs/sqladdobjs_builder.o: /usr/include/g++/std/bastring.cc
+objs/sqladdobjs_builder.o: /usr/include/g++/vector
+objs/sqladdobjs_builder.o: /usr/include/g++/stl_algobase.h
+objs/sqladdobjs_builder.o: /usr/include/g++/stl_pair.h
+objs/sqladdobjs_builder.o: /usr/include/g++/type_traits.h
+objs/sqladdobjs_builder.o: /usr/include/limits.h
+objs/sqladdobjs_builder.o: /usr/include/machine/limits.h
+objs/sqladdobjs_builder.o: /usr/include/sys/syslimits.h
+objs/sqladdobjs_builder.o: /usr/include/g++/new.h /usr/include/g++/new
+objs/sqladdobjs_builder.o: /usr/include/g++/exception
+objs/sqladdobjs_builder.o: /usr/include/g++/stl_construct.h
+objs/sqladdobjs_builder.o: /usr/include/g++/stl_uninitialized.h
+objs/sqladdobjs_builder.o: /usr/include/g++/stl_vector.h
+objs/sqladdobjs_builder.o: /usr/include/g++/stl_bvector.h
+objs/sqladdobjs_builder.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
+objs/sqladdobjs_builder.o: /usr/include/g++/stl_function.h
+objs/sqladdobjs_builder.o: /usr/include/g++/stl_map.h
+objs/sqladdobjs_builder.o: /usr/include/g++/stl_multimap.h
+objs/sqladdobjs_builder.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/sqladdobjs_builder.o: sstring.h low.h enum.h spells.h structs.h parse.h
+objs/sqladdobjs_builder.o: immunity.h discipline.h spell2.h db.h ansi.h
+objs/sqladdobjs_builder.o: cmd_dissect.h client.h response.h faction.h comm.h
+objs/sqladdobjs_builder.o: toggle.h wiz_powers.h cmd_message.h stats.h
+objs/sqladdobjs_builder.o: limbs.h body.h race.h skills.h disease.h trap.h
+objs/sqladdobjs_builder.o: task.h weather.h sound.h create.h thing.h room.h
+objs/sqladdobjs_builder.o: obj.h spec_objs.h connect.h obj_drug.h charfile.h
+objs/sqladdobjs_builder.o: being.h person.h monster.h account.h extern.h
+objs/sqladdobjs_builder.o: handler.h obj_money.h rent.h spec_mobs.h
+objs/sqladdobjs_builder.o: materials.h colorstring.h format.h database.h
+objs/sqladdobjs_builder.o: /usr/local/include/libpq-fe.h
+objs/sqladdobjs_builder.o: /usr/local/include/postgres_ext.h lowtools.h
 objs/sqledimmobj.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sqledimmobj.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/sqledimmobj.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -15246,6 +15316,63 @@ objs/sqledobj.o: materials.h colorstring.h format.h database.h
 objs/sqledobj.o: /usr/local/include/libpq-fe.h
 objs/sqledobj.o: /usr/local/include/postgres_ext.h lowtools.h
 objs/sqledobj.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/sqledobj_builder.o: stdsneezy.h /usr/include/g++/cstdio
+objs/sqledobj_builder.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/sqledobj_builder.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
+objs/sqledobj_builder.o: /usr/include/stdlib.h /usr/include/g++/ctime
+objs/sqledobj_builder.o: /usr/include/time.h /usr/include/sys/_posix.h
+objs/sqledobj_builder.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
+objs/sqledobj_builder.o: /usr/include/machine/types.h
+objs/sqledobj_builder.o: /usr/include/machine/endian.h
+objs/sqledobj_builder.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/sqledobj_builder.o: /usr/include/runetype.h /usr/include/g++/cassert
+objs/sqledobj_builder.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/sqledobj_builder.o: /usr/include/string.h /usr/include/stdarg.h
+objs/sqledobj_builder.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/sqledobj_builder.o: /usr/include/g++/string
+objs/sqledobj_builder.o: /usr/include/g++/std/bastring.h
+objs/sqledobj_builder.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/sqledobj_builder.o: /usr/include/g++/std/straits.h
+objs/sqledobj_builder.o: /usr/include/g++/alloc.h
+objs/sqledobj_builder.o: /usr/include/g++/stl_config.h
+objs/sqledobj_builder.o: /usr/include/g++/stl_alloc.h
+objs/sqledobj_builder.o: /usr/include/g++/iostream.h
+objs/sqledobj_builder.o: /usr/include/g++/streambuf.h
+objs/sqledobj_builder.o: /usr/include/g++/libio.h
+objs/sqledobj_builder.o: /usr/include/g++/_G_config.h
+objs/sqledobj_builder.o: /usr/include/g++/iterator
+objs/sqledobj_builder.o: /usr/include/g++/stl_relops.h
+objs/sqledobj_builder.o: /usr/include/g++/stl_iterator.h
+objs/sqledobj_builder.o: /usr/include/g++/std/bastring.cc
+objs/sqledobj_builder.o: /usr/include/g++/vector
+objs/sqledobj_builder.o: /usr/include/g++/stl_algobase.h
+objs/sqledobj_builder.o: /usr/include/g++/stl_pair.h
+objs/sqledobj_builder.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/sqledobj_builder.o: /usr/include/machine/limits.h
+objs/sqledobj_builder.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/sqledobj_builder.o: /usr/include/g++/new /usr/include/g++/exception
+objs/sqledobj_builder.o: /usr/include/g++/stl_construct.h
+objs/sqledobj_builder.o: /usr/include/g++/stl_uninitialized.h
+objs/sqledobj_builder.o: /usr/include/g++/stl_vector.h
+objs/sqledobj_builder.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/sqledobj_builder.o: /usr/include/g++/stl_tree.h
+objs/sqledobj_builder.o: /usr/include/g++/stl_function.h
+objs/sqledobj_builder.o: /usr/include/g++/stl_map.h
+objs/sqledobj_builder.o: /usr/include/g++/stl_multimap.h
+objs/sqledobj_builder.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/sqledobj_builder.o: sstring.h low.h enum.h spells.h structs.h parse.h
+objs/sqledobj_builder.o: immunity.h discipline.h spell2.h db.h ansi.h
+objs/sqledobj_builder.o: cmd_dissect.h client.h response.h faction.h comm.h
+objs/sqledobj_builder.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/sqledobj_builder.o: body.h race.h skills.h disease.h trap.h task.h
+objs/sqledobj_builder.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/sqledobj_builder.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/sqledobj_builder.o: person.h monster.h account.h extern.h handler.h
+objs/sqledobj_builder.o: obj_money.h rent.h spec_mobs.h materials.h
+objs/sqledobj_builder.o: colorstring.h format.h database.h
+objs/sqledobj_builder.o: /usr/local/include/libpq-fe.h
+objs/sqledobj_builder.o: /usr/local/include/postgres_ext.h lowtools.h
+objs/sqledobj_builder.o: /usr/include/unistd.h /usr/include/sys/unistd.h
 objs/sqledwld.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sqledwld.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/sqledwld.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
