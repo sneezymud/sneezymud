@@ -996,6 +996,14 @@ void buildComponentArray()
     "$n presses $p between $s hands.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_DEATH_MIST,
+    "",
+    "",
+    "",
+    "You eat $p and begin to choke on them.",
+    "$n eats $p and begins to choke on them.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_STONE_SKIN,
     "You rub $p upon $N.",
     "$n rubs $p on $N.",

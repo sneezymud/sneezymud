@@ -1692,7 +1692,21 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
 
   // PANIC spells
   // two varieties of teleport:
-
+  spell = SPELL_DEATH_MIST;
+  if (ch.doesKnowSkill(spell) && 
+      (ch.getSkillValue(spell) > 33)) {
+    // tree walk myself as a "flee"
+    if (!::number(0,30) &&
+        !ch.pissed() && 
+        (ch.getHit() < ch.hitLimit()/8) &&
+        // don't let test fight mobs teleport
+        !ch.affectedBySpell(AFFECT_TEST_FIGHT_MOB)) {
+      act("$n utters the invokation, 'CHOWE KONDIZ!'",
+            FALSE, &ch, 0, 0, TO_ROOM);
+      on_me = TRUE;
+      return spell;
+    }
+  }
 #ifdef JEEZ
   spell = SPELL_TREE_WALK;
   if (ch.doesKnowSkill(spell) && 

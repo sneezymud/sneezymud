@@ -1946,6 +1946,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       case SPELL_THORNFLESH:
         rc = thornflesh(this);
 	break;
+      case SPELL_DEATH_MIST:
+	rc = deathMist(this);
+	break;
       case SPELL_SHIELD_OF_MISTS:
         shieldOfMists(this, ch);
         break;

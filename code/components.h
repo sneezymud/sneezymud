@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.5  2001/04/30 04:42:29  jesus
+// added death mist shaman spell
+//
 // Revision 5.4  2001/04/28 19:10:39  jesus
 // added a shaman spell
 //
@@ -147,6 +150,7 @@ const int COMP_AQUALUNG           =31306;
 const int COMP_AQUATIC_BLAST      =31307;
 const int COMP_CLARITY            =31309;
 const int COMP_SHADOW_WALK        =31310;
+const int COMP_DEATH_MIST         =31311;
 
 class compPlace
 {

@@ -1084,6 +1084,7 @@ int TBeing::checkBadSpellCondition(TBeing *caster, int which)
     case SPELL_PEBBLE_SPRAY:
     case SPELL_SAND_BLAST:
     case SPELL_LAVA_STREAM:
+    case SPELL_DEATH_MIST: // shaman
     case SPELL_TRAIL_SEEK:
     case SPELL_CONJURE_EARTH:
     case SPELL_PROTECTION_FROM_EARTH:
@@ -2026,6 +2027,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
           rc = castTeleport(this, victim);
         } else
           vlogf(LOG_BUG, "SPELL_TELEPORT called with null obj");
+        break;
+      case SPELL_DEATH_MIST:
+        if (!o) {
+          rc = castDeathMist(this);
+        } else
+          vlogf(LOG_BUG, "SPELL_DEATH_MIST called with null obj");
         break;
       case SPELL_PROTECTION_FROM_ELEMENTS:
         if (!o) 

@@ -194,6 +194,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
         break;
       case SPELL_POISON_DEIKHAN:
       case SPELL_POISON:
+      case SPELL_DEATH_MIST:
       case DAMAGE_TRAP_POISON:
         sprintf(buf, "The sickly, green poisoned corpse of %s is here.",getName());
         break;
