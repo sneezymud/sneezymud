@@ -1892,7 +1892,7 @@ int Descriptor::nanny(const char *arg)
       character->affectTotal();
       vlogf(LOG_PIO, "%s [%s] new player.", character->getName(), host);
       character->saveChar(ROOM_AUTO_RENT);
-      db.query("insert into player (name) values (lower('%s'))", character->getName());
+      db.query("insert into player (name) values ('%s')", character->getName());
       accStat.player_count++;
       character->cls();
       sendMotd(FALSE);

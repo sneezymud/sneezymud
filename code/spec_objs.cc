@@ -5412,7 +5412,7 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
 
   TDatabase db("sneezy");
 
-  db.query("select name, money from gamblers where money > 0 order by money desc limit 10");
+  db.query("select getPlayerName(player_id), money from gamblers where money > 0 order by money desc limit 10");
 
   ch->sendTo("You examine the board:\n\r");
   ch->sendTo("------------------------------------------------------------\n\r");
@@ -5426,7 +5426,7 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
     ++i;
   }
 
-  db.query("select name, money from gamblers where money < 0 order by money limit 10");
+  db.query("select getPlayerName(player_id), money from gamblers where money < 0 order by money limit 10");
   
   ch->sendTo(COLOR_BASIC, "\n\r");
 
