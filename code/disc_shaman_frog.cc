@@ -170,7 +170,7 @@ int aquaticBlast(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
 
   int dam = caster->getSkillDam(victim, SPELL_AQUATIC_BLAST, level, adv_learn);
 
-  if (victim->isImmune(IMMUNE_WATER, level)) {
+  if (victim->getImmunity(IMMUNE_WATER) >= 100) {
     act("$N is immune to water damage!", FALSE, caster, NULL, victim, TO_CHAR);
     act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
@@ -527,7 +527,7 @@ int deathWave(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
   int beams = (dam / 3) + ::number(0, (caster->GetMaxLevel() / 10));
   beams = max(beams, 1);
 
-  if (victim->isImmune(IMMUNE_ENERGY, level)) {
+  if (victim->getImmunity(IMMUNE_ENERGY) >= 100) {
     act("$N is immune to energy and thaumaturgy!", FALSE, caster, NULL, victim, TO_CHAR);
     act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);

@@ -399,7 +399,7 @@ int poisonWhip(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return FALSE;       // weapon not equipped (carried or on ground)
   if (cmd != CMD_OBJ_HITTING)
     return FALSE;
-  if (vict->isImmune(IMMUNE_POISON, 20))
+  if (vict->isImmune(IMMUNE_POISON))
     return FALSE;
   if (vict->affectedBySpell(SPELL_POISON))
     return FALSE;
@@ -441,7 +441,7 @@ int poisonViperBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return FALSE;       // weapon not equipped (carried or on ground)
  if (cmd != CMD_OBJ_HITTING)
     return FALSE;
-  if (vict->isImmune(IMMUNE_POISON, 20))
+  if (vict->isImmune(IMMUNE_POISON))
     return FALSE;
   if (vict->affectedBySpell(SPELL_POISON))
     return FALSE;
@@ -489,7 +489,7 @@ int poisonSap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return FALSE;       // weapon not equipped (carried or on ground)
   if (cmd != CMD_OBJ_HITTING)
     return FALSE;
-  if (vict->isImmune(IMMUNE_POISON, 20))
+  if (vict->isImmune(IMMUNE_POISON))
     return FALSE;
   if (vict->affectedBySpell(SPELL_POISON))
     return FALSE;
@@ -642,7 +642,7 @@ int weaponBreaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return FALSE;
   if (cmd != CMD_OBJ_HITTING)
     return FALSE;
-  if (vict->isImmune(IMMUNE_BONE_COND, 0) || vict->raceHasNoBones()) {
+  if (vict->isImmune(IMMUNE_BONE_COND) || vict->raceHasNoBones()) {
     return FALSE;
   }
 
@@ -1242,7 +1242,7 @@ int magicGills(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
   if (tmp->roomp->isWaterSector() || tmp->roomp->isUnderwaterSector())
     return FALSE;
 
-  if (tmp->isImmune(IMMUNE_SUFFOCATION, 50))
+  if (tmp->isImmune(IMMUNE_SUFFOCATION))
     return FALSE;
 
   if (!tmp->isPc())
@@ -1313,7 +1313,7 @@ int bowl_of_blood(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     ch->sendTo("It tastes as horrible as it looks!\n\r");
 
     int level = 5;
-    if (ch->isImmune(IMMUNE_DISEASE, level)) {
+    if (ch->isImmune(IMMUNE_DISEASE)) {
       act("$n shakes off the effects as if immune.",
           FALSE, ch, 0, 0, TO_ROOM);
       act("You shake off the effects of that disease-spewing $o.",
@@ -2196,7 +2196,7 @@ int bleedChair(TBeing *ch, cmdTypeT cmd, const char *, TObj *me, TObj *)
   if (cmd != CMD_SIT)
     return FALSE;
 
-  if (ch->isImmune(IMMUNE_BLEED, 0))
+  if (ch->isImmune(IMMUNE_BLEED))
     return FALSE;
 
   ch->doSit(me->getName());
@@ -2642,7 +2642,7 @@ int bloodspike(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   vict->stickIn(obj, wearSlotT(slot));
 
-  if(!vict->isImmune(IMMUNE_BLEED, 50)){
+  if(!vict->isImmune(IMMUNE_BLEED)){
     vict->rawBleed(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
     vict->rawInfect(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
 
@@ -2687,7 +2687,7 @@ int splinteredClub(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   vict->stickIn(obj, wearSlotT(slot));
 
-  if(!vict->isImmune(IMMUNE_BLEED, 50)){
+  if(!vict->isImmune(IMMUNE_BLEED)){
     vict->rawBleed(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
     vict->rawInfect(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
 

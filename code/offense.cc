@@ -1659,7 +1659,7 @@ int TBeing::chlorineEngulfed()
   af.location = APPLY_STR;
   af.bitvector = AFF_POISON;
 
-  if (isImmune(IMMUNE_POISON, 33)) {
+  if (isImmune(IMMUNE_POISON)) {
   } else {
     affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
   }

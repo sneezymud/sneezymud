@@ -247,7 +247,7 @@ int slumber(TBeing *caster, TBeing *victim, int level, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (victim->isImmune(IMMUNE_SLEEP,level) && !caster->isImmortal())  {
+  if (victim->isImmune(IMMUNE_SLEEP) && !caster->isImmortal())  {
     victim->sendTo("You are able to fend off the sleepy cosmic powers!\n\r");
     victim->failSleep(caster);
     return SPELL_FAIL;
@@ -279,7 +279,7 @@ int slumber(TBeing *caster, TBeing *victim, int level, byte bKnown)
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
         CF(SPELL_SLUMBER);
-        if (victim->isImmune(IMMUNE_CHARM,level))  {
+        if (victim->isImmune(IMMUNE_CHARM))  {
           caster->nothingHappens();
           return SPELL_CRIT_FAIL;
         } else {
@@ -417,7 +417,7 @@ int ensorcer(TBeing *caster, TBeing *victim, int level, byte bKnown)
     return SPELL_FAIL;
   }
 #endif
-  if (victim->isImmune(IMMUNE_CHARM, level) || victim->GetMaxLevel() > caster->GetMaxLevel() ||
+  if (victim->isImmune(IMMUNE_CHARM) || victim->GetMaxLevel() > caster->GetMaxLevel() ||
       (!victim->isPc() && dynamic_cast<TMonster *>(victim)->Hates(caster, NULL)) ||
       caster->isNotPowerful(victim, level, SPELL_ENSORCER, SILENT_YES) ||
       (victim->isLucky(caster->spellLuckModifier(SPELL_ENSORCER)))) {
@@ -1799,7 +1799,7 @@ int fear(TBeing *caster, TBeing *victim, int level, byte bKnown)
   caster->reconcileHurt(victim, discArray[SPELL_FEAR]->alignMod);
 
   if (bSuccess(caster, bKnown, SPELL_FEAR)) {
-    if (victim->isLucky(caster->spellLuckModifier(SPELL_FEAR)) || victim->isImmune(IMMUNE_FEAR, level)) {
+    if (victim->isLucky(caster->spellLuckModifier(SPELL_FEAR)) || victim->isImmune(IMMUNE_FEAR)) {
       SV(SPELL_FEAR);
       act("Hmmm...nothing seems to happen.", FALSE, caster, NULL, NULL, TO_CHAR);
       act("You feel afraid for a second, but the effect fades.", FALSE, caster, NULL, victim, TO_VICT, ANSI_WHITE_BOLD);

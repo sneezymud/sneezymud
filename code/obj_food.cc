@@ -209,7 +209,7 @@ int TBaseCup::drinkMe(TBeing *ch)
     act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
 
   if (isDrinkConFlag(DRINK_POISON)) {
-    if (ch->isImmune(IMMUNE_POISON, 75)) {
+    if (ch->isImmune(IMMUNE_POISON)) {
       act("Oops, it tasted rather strange, but you don't think it had any ill-effect.",
             FALSE, ch, 0, 0, TO_CHAR);
     } else {
@@ -336,7 +336,7 @@ void foodPoisoned(TFood *food, TBeing *ch, int dur)
 
   if (food->isFoodFlag(FOOD_POISON) && 
       !ch->isAffected(AFF_POISON)) {
-    if (ch->isImmune(IMMUNE_POISON, (dur * 10 + 20))) {
+    if (ch->isImmune(IMMUNE_POISON)) {
       act("That tasted rather strange, but you don't think it had any ill-effect!!", FALSE, ch, 0, 0, TO_CHAR);
     } else {
       act("That tasted rather strange !!", FALSE, ch, 0, 0, TO_CHAR);
@@ -356,7 +356,7 @@ void foodSpoiled(TFood *food, TBeing *ch, int dur)
   affectedData af;
 
   if (food->isFoodFlag(FOOD_SPOILED)) {
-    if (ch->isImmune(IMMUNE_POISON, (dur * 10 + 5))) {
+    if (ch->isImmune(IMMUNE_POISON)) {
       ch->sendTo("BLAH!  That was some rotten food.  Hopefully you won't have any ill-effect.\n\r");
     } else {
       af.type = AFFECT_DISEASE;
@@ -609,7 +609,7 @@ void TBaseCup::sipMe(TBeing *ch)
     act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
 
   if (isDrinkConFlag(DRINK_POISON) && !ch->isAffected(AFF_POISON)) {
-    if (ch->isImmune(IMMUNE_POISON, 35)) 
+    if (ch->isImmune(IMMUNE_POISON)) 
       act("But it also had a strange aftertaste!", FALSE, ch, 0, 0, TO_CHAR);
     else {
       act("But it also had a strange aftertaste!", FALSE, ch, 0, 0, TO_CHAR);

@@ -592,7 +592,7 @@ int energyDrain(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
   bool save = victim->isLucky(caster->spellLuckModifier(SPELL_ENERGY_DRAIN));
   int vit = dice(number(1,level),4);
 
-  if (victim->isImmune(IMMUNE_DRAIN, 0)) {
+  if (victim->getImmunity(IMMUNE_DRAIN) >= 100) {
     act("$N appears to be immune!", FALSE, caster, 0, victim, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FALSE;

@@ -1442,8 +1442,7 @@ int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent, checkImmun
 
   // not sure what this is for???
   if (immcheck) {
-    if (isImmune(IMMUNE_BLEED,
-        duration == PERMANENT_DURATION ? 100 : (duration - 100)/6))
+    if (isImmune(IMMUNE_BLEED))
       return FALSE;
   }
 
@@ -1481,8 +1480,7 @@ int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent, checkImmu
   char buf[256];
 
   if (immcheck) {
-    if (isImmune(IMMUNE_DISEASE,
-        duration == PERMANENT_DURATION ? 100 : (duration - 100)/6))
+    if (isImmune(IMMUNE_DISEASE))
       return FALSE;
   }
 

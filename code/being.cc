@@ -1578,11 +1578,11 @@ sstring TBeing::thirdPerson(const int pos)
   if (pos == POS_OBJECT) {
     switch (getSex()) {
       case SEX_MALE:
-        return "his";
+        return "him";
       case SEX_FEMALE:
         return "her";
       default:
-        return "its";
+        return "it";
     }
   } else if (pos == POS_SUBJECT) {
     switch (getSex()) {
@@ -1592,6 +1592,15 @@ sstring TBeing::thirdPerson(const int pos)
         return "she";
       default:
         return "it";
+    }
+  } else if (pos == POS_POSSESS) {
+    switch (getSex()) {
+      case SEX_MALE:
+        return "his";
+      case SEX_FEMALE:
+        return "her";
+      default:
+        return "its";
     }
   }
   vlogf(LOG_BUG, fmt("thirdPerson called on %s in strange circumstance") % name);

@@ -240,7 +240,7 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
 	if(tWeapon->isPoisoned()){
           if (!tSucker->isLimbFlags(tLimb, PART_BLEEDING) &&
               !tSucker->isAffected(AFF_POISON)) {
-            if (!tSucker->isImmune(IMMUNE_POISON, tThief->GetMaxLevel()) && !::number(0, 9)) {
+            if (!tSucker->isImmune(IMMUNE_POISON) && !::number(0, 9)) {
 	      tWeapon->applyPoison(tSucker);
 	      
 

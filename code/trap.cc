@@ -1554,7 +1554,7 @@ int TBeing::trapSleep(int amt)
 {
   int rc = FALSE;
 
-  if (isImmune(IMMUNE_SLEEP, amt)) {
+  if (isImmune(IMMUNE_SLEEP)) {
     sendTo("You yawn, but are otherwise immune to the sleep trap.\n\r");
     return FALSE;
   }
@@ -1580,21 +1580,21 @@ void TBeing::trapDisease(int amt)
   aff.duration = 4 * UPDATES_PER_MUDHOUR;
 
   if (isImmortal() ||
-      isImmune(IMMUNE_DISEASE, amt)) {
+      isImmune(IMMUNE_DISEASE)) {
     act("Hmmm, lucky you, it doesn't seem to have had any effect.",
             FALSE, this, 0, 0, TO_CHAR);
     return;
-  } else if (isImmune(IMMUNE_DISEASE, amt - 20)) {
+  } else if (isLucky(amt) && isTough()) {
     act("You are able to shake off most of the effects, but you still feel somewhat sick.", FALSE, this, 0, 0, TO_CHAR);
     act("$n doesn't look so hot.", TRUE, this, 0, 0, TO_ROOM);
-  } else if (isImmune(IMMUNE_DISEASE, amt - 40)) {
-    aff.duration *= 2;
-    act("$n doesn't look so hot.", TRUE, this, 0, 0, TO_ROOM);
-    act("You feel sick.", TRUE, this, 0, 0, TO_CHAR);
-  } else {
+  } else if (!isLucky(amt) && !isTough()) {
     aff.duration *= 4;
     act("You feel VERY sick.", FALSE, this, 0, 0, TO_CHAR);
     act("$n doesn't look so hot.", TRUE, this, 0, 0, TO_ROOM);
+  } else {
+    aff.duration *= 2;
+    act("$n doesn't look so hot.", TRUE, this, 0, 0, TO_ROOM);
+    act("You feel sick.", TRUE, this, 0, 0, TO_CHAR);
   }
   affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_NO);
   disease_start(this, &aff);
@@ -1621,15 +1621,15 @@ void TBeing::trapPoison(int amt)
   // check immunity, each successive check is easier then last
   // each failure makes time longer
   if (isImmortal() ||
-      isImmune(IMMUNE_POISON, amt)) {
+      isImmune(IMMUNE_POISON)) {
     act("Hmmm, lucky you, it doesn't seem to have had any effect.", FALSE, this, 0, 0, TO_CHAR);
-  } else if (isImmune(IMMUNE_POISON, amt - 20)) {
+  } else if (isImmune(IMMUNE_POISON)) {
     affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
     affectTo(&af2);
     act("You are able to shake off most of the effects, but you still feel somewhat sick.", FALSE, this, 0, 0, TO_CHAR);
     act("$n doesn't look so hot.", TRUE, this, 0, 0, TO_ROOM);
     disease_start(this, &af2);
-  } else if (isImmune(IMMUNE_POISON, amt - 40)) {
+  } else if (isImmune(IMMUNE_POISON)) {
     af.duration *= 2;
     affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
     affectTo(&af2);

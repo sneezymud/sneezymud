@@ -81,7 +81,7 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
       continue;
     if (v->isImmortal())
       continue;
-    if (v->isImmune(IMMUNE_DISEASE, 0))
+    if (v->isImmune(IMMUNE_DISEASE))
       continue;
     if (number(1,50000) >= chance_to_spread)
       continue;

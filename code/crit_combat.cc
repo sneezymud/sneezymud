@@ -437,7 +437,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
   if (dynamic_cast<TGun *>(weapon))
     return FALSE;
 
-  if ((mod == -1) && v->isImmune(getTypeImmunity(wtype), 0))
+  if ((mod == -1) && v->isImmune(getTypeImmunity(wtype)))
     return FALSE;
 
   if(mod>100){
@@ -615,7 +615,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
-	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	if (v->isImmune(IMMUNE_BONE_COND))
 	  return 0;
 	buf = fmt("With your %s, you crush $N's %s!") %
 	  limbStr %
@@ -648,7 +648,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	//shatter bones in 1 hand
 	if (!v->hasPart(WEAR_HAND_R))
 	  return 0;
-	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	if (v->isImmune(IMMUNE_BONE_COND))
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
@@ -683,7 +683,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	// shatter bones other hand
 	if (!v->hasPart(WEAR_HAND_L))
 	  return 0;
-	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	if (v->isImmune(IMMUNE_BONE_COND))
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
@@ -719,7 +719,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	// break bones arm - broken
 	if (!v->hasPart(v->getPrimaryArm()))
 	  return 0;
-	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	if (v->isImmune(IMMUNE_BONE_COND))
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
@@ -773,7 +773,7 @@ buf=fmt("$n's %s crushes the nerves in $N's shoulder!") %
 	// break bones leg
 	if (!v->hasPart(WEAR_LEGS_L))
 	  return 0;
-	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	if (v->isImmune(IMMUNE_BONE_COND))
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
@@ -870,7 +870,7 @@ buf=fmt("$n's %s slams into $N's head, stunning $M completely!") %
       case 85:
       case 86:
 	//  shatter rib
-	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	if (v->isImmune(IMMUNE_BONE_COND))
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;
@@ -896,7 +896,7 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
       case 87:
       case 88:
 	//  shatter rib - internal damage, death if not healed
-	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	if (v->isImmune(IMMUNE_BONE_COND))
 	  return 0;
 	if (v->race->hasNoBones())
 	  return 0;

@@ -901,7 +901,7 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
                 % thirdPerson(POS_SUBJECT),
                 TRUE, this, NULL, vict, TO_CHAR);
             act(fmt("$n leaves to make use of %s new found cash.")
-                % thirdPerson(POS_OBJECT),
+                % thirdPerson(POS_POSSESS),
                 TRUE, vict, NULL, NULL, TO_ROOM);
 
             ADD_DELETE(rc, DELETE_THIS);

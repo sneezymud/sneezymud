@@ -643,7 +643,7 @@ int raze(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
   caster->reconcileHurt(victim, discArray[SPELL_RAZE]->alignMod);
 
 
-  if (victim->isImmune(IMMUNE_ENERGY, level)) {
+  if (victim->getImmunity(IMMUNE_ENERGY) >= 100) {
     act("$N is immune to energy rituals!", FALSE, caster, NULL, victim, TO_CHAR);
     act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);

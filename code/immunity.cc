@@ -203,32 +203,20 @@ void TBeing::addToImmunity(immuneTypeT type, byte amt)
 
 bool TBeing::isImmune(immuneTypeT bit, int modifier) const
 {
-#if 1
-  // this is used to flat out deny some things, so lets not have
-  // if too easy to pass true
-  // the higher modifier is, the HARDER it ought to be to succeed
+  // 'modifier' is not required and defaults to 0
+  // 'modifier' is subtracted from any resistance less than 100%
+  // this function history subtracted (modifier + 50) from the resistance
+  //   this made absolutely no sense
+  //   - Maror 02/2004
   int gi = getImmunity(bit);
   if (gi >= 100)
    return TRUE;
   if (gi <= -100)
     return FALSE;
 
-  return gi > (modifier+50);
-#else
-  if (getImmunity(bit) >= 100)
-   return TRUE;
-  if (getImmunity(bit) <= -100)
-    return FALSE;
-
-  int level = GetMaxLevel() - modifier;
-  if (level < 0)
-    level *= 3;
-
-  int num = ::number(-100,100);
-
-  return ((num - level) < getImmunity(bit));
-#endif
+  return (gi - modifier) > ::number(1,100);
 }
+
 
 immuneTypeT getTypeImmunity(spellNumT type)
 {

@@ -209,7 +209,7 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
   int lfmod = ::number(20,(level*5));
   int hpgain = ::number(30,(level*2));
 
-  if (victim->isImmune(IMMUNE_DRAIN, level)) {
+  if (victim->getImmunity(IMMUNE_DRAIN) >= 100) {
     act("$N is immune to draining!", FALSE, caster, NULL, victim, TO_CHAR);
     act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);

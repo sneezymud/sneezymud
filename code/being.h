@@ -287,6 +287,7 @@ const int MAX_NAME_LENGTH = 80;
 // parts of speech
 const int POS_OBJECT            = 1;
 const int POS_SUBJECT           = 2;
+const int POS_POSSESS           = 3;
 
 class playerData
 {
@@ -911,7 +912,7 @@ class TBeing : public TThing {
     virtual byte getImmunity(immuneTypeT type) const;
     virtual void setImmunity(immuneTypeT type, byte amt);
     virtual void addToImmunity(immuneTypeT type, byte amt);
-    bool isImmune(immuneTypeT, int) const;
+    bool isImmune(immuneTypeT, int modifier = 0) const;
     bool isLucky(int) const;
     int spellLuckModifier(spellNumT);
     void spellMessUp(spellNumT);

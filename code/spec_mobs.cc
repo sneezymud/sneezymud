@@ -996,7 +996,7 @@ int poisonHit(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return FALSE;
   if (!vict->sameRoom(*myself))
     return FALSE;
-  if (vict->isImmune(IMMUNE_POISON, 20))
+  if (vict->isImmune(IMMUNE_POISON))
     return FALSE;
   if (vict->affectedBySpell(SPELL_POISON))
     return FALSE;
@@ -1031,7 +1031,7 @@ int poisonBite(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return FALSE;
   if (!vict->sameRoom(*myself))
     return FALSE;
-  if (vict->isImmune(IMMUNE_POISON, 20))
+  if (vict->isImmune(IMMUNE_POISON))
     return FALSE;
   if (vict->affectedBySpell(SPELL_POISON))
     return FALSE;
@@ -1207,7 +1207,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
         continue;
       if (vict->isImmortal() ||
           (vict->getSex() != SEX_MALE) ||
-          vict->isImmune(IMMUNE_CHARM, myself->GetMaxLevel())) {
+          vict->isImmune(IMMUNE_CHARM)) {
         vict->sendTo("You hear a siren song in the distance but are able to resist its allure...\n\r");
         continue;
       }
@@ -1250,7 +1250,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       continue;
       }
     }
-    if (vict->isImmune(IMMUNE_CHARM, myself->GetMaxLevel()) ||
+    if (vict->isImmune(IMMUNE_CHARM) ||
         (vict->getSex() != SEX_MALE)) {
       act("You are just barely able to resist being charmed by $N's song.",
           FALSE, vict, 0, myself, TO_CHAR);
@@ -1347,7 +1347,7 @@ int paralyzeBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
   act("$n spits out some noxious fumes at you!", TRUE, myself, NULL, v, TO_VICT);
   act("You spit some noxious fumes out at $N.", TRUE, myself, NULL, v, TO_CHAR);
 
-  if (v->isImmune(IMMUNE_PARALYSIS, myself->GetMaxLevel())) {
+  if (v->isImmune(IMMUNE_PARALYSIS)) {
     act("Your immunity saves you.", false, v, 0, 0, TO_CHAR);
     act("$n's immunity saves $m.", false, v, 0, 0, TO_ROOM);
     return FALSE;
@@ -1400,7 +1400,7 @@ int paralyzeBite(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   act("$n bites you!", 1, myself, 0, v, TO_VICT);
   act("$n bites $N!", 1, myself, 0, v, TO_NOTVICT);
 
-  if (v->isImmune(IMMUNE_PARALYSIS, myself->GetMaxLevel())) {
+  if (v->isImmune(IMMUNE_PARALYSIS)) {
     act("Your immunity saves you.", false, v, 0, 0, TO_CHAR);
     act("$n's immunity saves $m.", false, v, 0, 0, TO_ROOM);
     return FALSE;
@@ -5176,7 +5176,7 @@ int Paralyzer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     return FALSE;
 
   if (v->isAffected(AFF_PARALYSIS) || 
-      v->isImmune(IMMUNE_PARALYSIS, me->GetMaxLevel())) {
+      v->isImmune(IMMUNE_PARALYSIS)) {
     return FALSE;
   }
 
@@ -5474,7 +5474,7 @@ int paralyzeGaze(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return FALSE;
 
   if (v->isAffected(AFF_PARALYSIS) || 
-      v->isImmune(IMMUNE_PARALYSIS, myself->GetMaxLevel())) {
+      v->isImmune(IMMUNE_PARALYSIS)) {
     return FALSE;
   }
 

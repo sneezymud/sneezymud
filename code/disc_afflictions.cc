@@ -235,7 +235,7 @@ int poison(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
 {
   affectedData aff, aff2;
 
-  if (victim->isImmune(IMMUNE_POISON, level)) {
+  if (victim->isImmune(IMMUNE_POISON)) {
     act("Your prayer seems to have no affect on $N!", 
         FALSE, caster, NULL, victim, TO_CHAR);
     act("$n just tried to poison you. Luckily you are immune.", 
@@ -954,7 +954,7 @@ int paralyze(TBeing * caster, TBeing * victim, int level, byte bKnown)
     return SPELL_FALSE;
   }
 
-  if (victim->isImmune(IMMUNE_PARALYSIS, level)) {
+  if (victim->isImmune(IMMUNE_PARALYSIS)) {
     act("Your prayer seems to have no effect on $N!",
         FALSE, caster, NULL, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
@@ -980,7 +980,7 @@ int paralyze(TBeing * caster, TBeing * victim, int level, byte bKnown)
     return SPELL_FALSE;
   }
 
-  if (victim->isImmune(IMMUNE_PARALYSIS, level)) {
+  if (victim->isImmune(IMMUNE_PARALYSIS)) {
     act("Your prayer seems to have little or no effect on $N!",
         FALSE, caster, NULL, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
@@ -1043,7 +1043,7 @@ int paralyze(TBeing * caster, TBeing * victim, int level, byte bKnown)
       case CRIT_F_HITOTHER:
       case CRIT_F_HITSELF:
         CF(SPELL_PARALYZE);
-        if (!caster->isImmune(IMMUNE_PARALYSIS, level)) {
+        if (!caster->isImmune(IMMUNE_PARALYSIS)) {
           // we've made raw immunity check, but allow it to reduce effects too
           aff.duration *= (100 - caster->getImmunity(IMMUNE_PARALYSIS));
           aff.duration /= 100;
@@ -1294,7 +1294,7 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
     return SPELL_FALSE;
   }
 
-  if (victim->isImmune(IMMUNE_BONE_COND, level)) {
+  if (victim->isImmune(IMMUNE_BONE_COND)) {
     act("You see a glow around $N's limbs but it has no effect.", 
            FALSE, caster, NULL, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
@@ -1338,7 +1338,7 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
       case CRIT_S_DOUBLE:
         CS(SPELL_BONE_BREAKER);
           dam *= 2;
-        if (!victim->isImmune(IMMUNE_PARALYSIS,level)) {
+        if (!victim->isImmune(IMMUNE_PARALYSIS)) {
           victim->addToLimbFlags(slot, PART_PARALYZED);
           sprintf(buf, "In fact, you can't even move your %s! You fear it may be paralyzed!", limb);
           act(buf, FALSE, caster, NULL, victim, TO_VICT);
@@ -1364,7 +1364,7 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
       case CRIT_F_HITOTHER:
       case CRIT_F_HITSELF:
         CF(SPELL_BONE_BREAKER);
-        if (!caster->isImmune(IMMUNE_BONE_COND, level)) {
+        if (!caster->isImmune(IMMUNE_BONE_COND)) {
           for (slot = pickRandomLimb();; slot = pickRandomLimb()) {
             if (notBreakSlot(slot, false))
               continue;
@@ -1475,7 +1475,7 @@ int bleed(TBeing * caster, TBeing * victim, int level, byte bKnown)
     caster->deityIgnore(SILENT_YES);
     return FALSE;
   }
-  if (victim->isImmune(IMMUNE_BLEED, level)) {
+  if (victim->isImmune(IMMUNE_BLEED)) {
     act("Your prayer seems to have no effect on $N!",
         FALSE, caster, NULL, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
@@ -1848,7 +1848,7 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
   if (caster->isNotPowerful(victim, level, SPELL_PARALYZE_LIMB, SILENT_NO)) 
     return SPELL_FAIL;
 
-  if (victim->isImmune(IMMUNE_PARALYSIS,level)) {
+  if (victim->isImmune(IMMUNE_PARALYSIS)) {
     caster->deityIgnore();
     return SPELL_FAIL;
   }
@@ -1952,7 +1952,7 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
     return SPELL_FAIL;
   }
 
-  if (victim->isImmune(IMMUNE_PARALYSIS, level)) {
+  if (victim->isImmune(IMMUNE_PARALYSIS)) {
     caster->deityIgnore();
     return SPELL_FAIL;
   }
@@ -2086,7 +2086,7 @@ int numb(TBeing *caster, TBeing *victim)
 
 int disease(TBeing * caster, TBeing * victim, int level, byte bKnown)
 {
-  if (victim->isImmune(IMMUNE_DISEASE, level)) {
+  if (victim->isImmune(IMMUNE_DISEASE)) {
     act("$N shakes off the effects as if immune.",
         FALSE, caster, 0, victim, TO_CHAR);
     act("You shake off the effects of that disease-spewing $n.",

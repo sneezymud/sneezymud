@@ -1131,7 +1131,7 @@ TThing *TBeing::pulloutObj(wearSlotT numx, bool safe, int *res)
       *res = -1;
       return o;
     } else {
-      if (dice(1, 100) < tbw->getCurSharp() && !isImmune(IMMUNE_BLEED, 0)) {
+      if (dice(1, 100) < tbw->getCurSharp() && !isImmune(IMMUNE_BLEED)) {
         char buf[256];
         sprintf(buf, "$n's %s starts bleeding as $p is taken out of it.", 
                  describeBodySlot(numx).c_str());

@@ -923,7 +923,7 @@ int lifeLeech(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
   int num2 = ::number(1,((caster->getSkillValue(SPELL_LIFE_LEECH) / 9) *3));
   int num3 = ::number(20,70);
 
-  if (victim->isImmune(IMMUNE_DRAIN, 0)) {
+  if (victim->getImmunity(IMMUNE_DRAIN) >= 100) {
     act("$N is immune to draining!", FALSE, caster, NULL, victim, TO_CHAR);
     act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
@@ -1296,7 +1296,7 @@ int intimidate(TBeing *caster, TBeing *victim, int level, byte bKnown)
   caster->reconcileHurt(victim, discArray[SPELL_INTIMIDATE]->alignMod);
 
   if (bSuccess(caster, bKnown, SPELL_INTIMIDATE)) {
-    if (victim->isLucky(caster->spellLuckModifier(SPELL_INTIMIDATE)) || victim->isImmune(IMMUNE_FEAR, level)) {
+    if (victim->isLucky(caster->spellLuckModifier(SPELL_INTIMIDATE)) || victim->isImmune(IMMUNE_FEAR)) {
       SV(SPELL_INTIMIDATE);
       act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_CHAR);
       act("You feel intimidated briefly.", FALSE, caster, NULL, victim, 
@@ -1826,7 +1826,7 @@ int squish(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_lea
 
   int dam = caster->getSkillDam(victim, SPELL_SQUISH, level, adv_learn);
 
-  if (victim->isImmune(IMMUNE_BONE_COND, level)) { 
+  if (victim->getImmunity(IMMUNE_BONE_COND) >= 100) { 
     act("$N is immune to bone ailments!", FALSE, caster, NULL, victim, TO_CHAR);
     act("$N ignores $n's weak grasp!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
@@ -1935,7 +1935,7 @@ int distort(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
 
   caster->reconcileHurt(victim, discArray[SPELL_DISTORT]->alignMod);
 
-  if (victim->isImmune(IMMUNE_ENERGY, level)) { 
+  if (victim->getImmunity(IMMUNE_ENERGY) >= 100) { 
     act("$N is immune to energy and thaumaturgy!", FALSE, caster, NULL, victim, TO_CHAR);
     act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
@@ -2095,7 +2095,7 @@ int soulTwist(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
-  if (victim->isImmune(IMMUNE_DRAIN, level)) { 
+  if (victim->getImmunity(IMMUNE_DRAIN) >= 100) { 
     act("$N is immune to draining!", FALSE, caster, NULL, victim, TO_CHAR);
     act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
@@ -2599,7 +2599,7 @@ int flatulence(TBeing * caster, int level, byte bKnown, int adv_learn)
       if (!vict)
         continue;
 
-      if (!caster->inGroup(*vict) && !vict->isImmortal() && !vict->isImmune(IMMUNE_SUFFOCATION, level)) {
+      if (!caster->inGroup(*vict) && !vict->isImmortal() && !(vict->getImmunity(IMMUNE_SUFFOCATION)) >= 100) {
         caster->reconcileHurt(vict, discArray[SPELL_FLATULENCE]->alignMod);
         act("$n is choked by the natural gasses!", FALSE, vict, NULL, NULL, TO_ROOM);
         act("You are choked by the natural gasses!", FALSE, vict, NULL, NULL, TO_CHAR);
