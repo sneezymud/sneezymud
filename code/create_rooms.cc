@@ -3039,12 +3039,20 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
   int tmp;
   extraDescription *new_descr;
 
-  fscanf(fl, "%d ", &tmp);
-  x=tmp;
-  fscanf(fl, "%d ", &tmp);
-  y=tmp;
-  fscanf(fl, "%d\n", &tmp);
-  z=tmp;
+  if(fscanf(fl, "%d ", &tmp))
+    x=tmp;
+  else 
+    x=0;
+
+  if(fscanf(fl, "%d ", &tmp))
+    y=tmp;
+  else
+    y=0;
+
+  if(fscanf(fl, "%d\n", &tmp))
+    z=tmp;
+  else 
+    z=0;
 
   name = fread_string(fl);
 

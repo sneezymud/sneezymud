@@ -476,25 +476,27 @@ void bootWorld(void)
     }
     
 #endif
-    //    int i;
-    // TRoom *temp;
+
+#if 0
+    int i;
+    TRoom *temp;
     
-    //    for(i=0;i<WORLD_SIZE;i++){
-    //  if((temp=real_roomp(i)) &&
-    //	 (rp->getXCoord() == temp->getXCoord()) &&
-    //	 (rp->getYCoord() == temp->getYCoord()) &&
-    //	 (rp->getZCoord() == temp->getZCoord()) &&
-    //	 !((rp->getXCoord() == 0) &&
-    //	   (rp->getYCoord() == 0) &&
-    //	   (rp->getZCoord() == 0)) &&
-    //	 temp->number != rp->number){
-
-	//	vlogf(LOG_LOW, "%s room %d has duplicate coordinates with room %d (%d, %d, %d)",
-	//	      rp->name, rp->number, temp->number, 
-	//	      rp->getXCoord(), rp->getYCoord(), rp->getZCoord());
-
-    //      }
-    //    }
+    for(i=0;i<WORLD_SIZE;i++){
+      if((temp=real_roomp(i)) &&
+    	 (rp->getXCoord() == temp->getXCoord()) &&
+    	 (rp->getYCoord() == temp->getYCoord()) &&
+    	 (rp->getZCoord() == temp->getZCoord()) &&
+    	 !((rp->getXCoord() == 0) &&
+    	   (rp->getYCoord() == 0) &&
+    	   (rp->getZCoord() == 0)) &&
+    	 temp->number != rp->number){	
+	vlogf(LOG_LOW, "%s room %d has duplicate coordinates with room %d (%d, %d, %d)",
+	      rp->name, rp->number, temp->number, 
+	      rp->getXCoord(), rp->getYCoord(), rp->getZCoord());
+	
+      }
+    }
+#endif    
 
 
 #if 0

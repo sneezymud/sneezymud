@@ -2535,7 +2535,10 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     }
   }
   updatePos();
-  return FALSE;
+  // this SHOULD return TRUE - in theory
+  // hope I'm not fucking everything up by making it 'correct'
+  return TRUE;
+  //  return FALSE;
 }
 
 void buildWeatherDamMap()

@@ -218,6 +218,9 @@ void TBeing::stopCast(stopCastT messages)
   delete spelltask;
   spelltask = NULL;
   next_caster = NULL;
+  spellstore.storing=FALSE;
+  delete spellstore.spelltask;
+
 }
 
 skillUseTypeT getSpellType(skillUseClassT typ) 
@@ -1400,6 +1403,8 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
     spellstore.spelltask=spelltask;
     spelltask=NULL;
     spellstore.storing=false;
+    act("Your spell has been successfully stored.",
+	TRUE,this, NULL, NULL, TO_CHAR, ANSI_BLUE);    
     return TRUE;
   }
 
