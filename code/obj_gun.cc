@@ -216,8 +216,10 @@ void TBeing::doGload(const char *arg)
       act("You unload $N and drop $p.", TRUE, this, ammo, gun, TO_CHAR);
       act("$n unloads $N and drops $p.", TRUE, this, ammo, gun, TO_ROOM);
     } else {
-      arrow->nextThing=getStuff();
-      setStuff(arrow);
+      --(*arrow);
+      *this += *arrow;
+      //      arrow->nextThing=getStuff();
+      //      setStuff(arrow);
       
       act("You unload $N.", TRUE, this, ammo, gun, TO_CHAR);
       act("$n unloads $N.", TRUE, this, ammo, gun, TO_ROOM);
