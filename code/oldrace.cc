@@ -75,6 +75,7 @@ void TBeing::setRacialStuff()
     case RACE_BAT:
     case RACE_VAMPIREBAT:
     case RACE_INSECT:
+    case RACE_FLYINSECT:
     case RACE_ANT:
     case RACE_ARACHNID:
       SET_BIT(specials.affectedBy, AFF_INFRAVISION);
@@ -3749,6 +3750,7 @@ spellNumT TBeing::getFormType() const
       else
         return (TYPE_CLAW);
     case RACE_INSECT:
+    case RACE_FLYINSECT:
     case RACE_ANT:
     case RACE_ARACHNID:
       if (num <= 50)

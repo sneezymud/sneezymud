@@ -82,7 +82,10 @@ void SwitchStuff(TBeing *giver, TBeing *taker)
   taker->setMana(giver->getMana());
   taker->setMove(giver->getMove());
   taker->setLifeforce(giver->getLifeforce());
-  taker->setMaxMove(giver->getMaxMove());   
+  // must cast getMaxMove to be sure to use the same function in
+  // both directions, otherwise the character will inherit a move
+  // bonus from polymorph
+  taker->setMaxMove(giver->TBeing::getMaxMove());   
 
   statTypeT iStat;
   for (iStat=MIN_STAT;iStat<MAX_STATS;iStat++) {

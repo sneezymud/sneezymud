@@ -366,7 +366,7 @@ int shapeShift(TBeing *caster, int level, byte bKnown)
 #endif
 
   if (i >= LAST_SHAPED_MOB) {
-    caster->sendTo("You havn't a clue where to start on that one.\n\r");
+    caster->sendTo("You haven't a clue where to start on that one.\n\r");
     return SPELL_FAIL;
   } 
   if (*ShapeShiftList[i].name == '\n') {
@@ -465,6 +465,9 @@ int shapeShift(TBeing *caster, int level, byte bKnown)
     mob->desc = caster->desc;
     caster->desc = NULL;
     caster->polyed = POLY_TYPE_POLYMORPH;
+    
+    // transfer spells - some bugs
+//    mob->affectJoin(caster, caster->affected, AVG_DUR_NO, AVG_EFF_YES);
 
     SET_BIT(mob->specials.act, ACT_POLYSELF);
     SET_BIT(mob->specials.act, ACT_NICE_THIEF);
@@ -474,7 +477,10 @@ int shapeShift(TBeing *caster, int level, byte bKnown)
     REMOVE_BIT(mob->specials.act, ACT_DIURNAL);
     REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
 
-    mob->setLifeforce(min((mob->getLifeforce() - 15), 85));
+//  set caster lifeforce high to avoid death in polymorph room
+//  this should revert when the switch back occurs
+    caster->setLifeforce(100000);
+//    mob->setLifeforce(min((mob->getLifeforce() - 15), 85));
     return SPELL_SUCCESS;
   } else {
     return SPELL_FAIL;

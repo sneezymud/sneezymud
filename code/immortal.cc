@@ -2716,9 +2716,10 @@ void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell)
           per->remQuestBit(tmpnum);
 
       }
-
+// this line transfer affects that it should not
       per->specials.affectedBy = mob->specials.affectedBy;
-
+// transfer spells
+//      per->affectJoin(per, mob->affected, AVG_DUR_NO, AVG_EFF_YES);
 
 
       SwitchStuff(mob, per);
