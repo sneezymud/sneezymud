@@ -318,19 +318,15 @@ bool load_char(const char *name, charFile *char_element)
 
     switch(c){
       case CLASS_MAGE:
-	char_element->practices.mage+=lev-30;
 	break;
       case CLASS_CLERIC:
-	char_element->practices.cleric+=lev-30;
 	break;
       case CLASS_WARRIOR:
 	char_element->practices.warrior+=lev-30;
 	break;
       case CLASS_THIEF:
-	char_element->practices.thief+=lev-30;
 	break;
       case CLASS_SHAMAN:
-	char_element->practices.shaman+=lev-30;
 	break;
       case CLASS_DEIKHAN:
 	char_element->practices.deikhan+=lev-30;
