@@ -4425,6 +4425,7 @@ void TBeing::doClone(const sstring &arg)
   mob->setSex(sexTypeT(st1.sex));
   mob->setHeight(st1.height);
   mob->setWeight(st1.weight);
+  mob->setRace(race_t(st1.race));
   
   
   // open player rent file
@@ -4450,25 +4451,42 @@ void TBeing::doClone(const sstring &arg)
   fclose(fp);
 
 
-  // reverse object order
-  TThing *tmp2 = mob->getStuff();
-  TThing *t2;
-  mob->setStuff(NULL);
+  // add NO RENT to the objects, don't want them falling into PC hands permanently
+  wearSlotT ij;
   TObj *o;
-  while (tmp2) {
-    if ((o = dynamic_cast<TObj *>(tmp2)))
+  for (ij = MIN_WEAR; ij < MAX_WEAR; ij++)
+  {
+    if((o = dynamic_cast<TObj *>(mob->equipment[ij])))
     {
       o->addObjStat(ITEM_NORENT);
-    } else vlogf(LOG_BUG, "did not add no-rent flag to %s when cloning", 
+    } else vlogf(LOG_BUG, "did not add no-rent flag to item in slot %d when cloning", (int) ij);
+  }
+  
+  TThing *tmp2 = mob->getStuff();
+  TThing *t2;
+//  TThing *b1, *next;
+  mob->setStuff(NULL);
+  while (tmp2) {
+    if ((o = dynamic_cast<TObj *>(tmp2))) {
+      o->addObjStat(ITEM_NORENT);
+    } else vlogf(LOG_BUG, "did not add no-rent flag to %s when cloning",
         tmp2->name);
+/*    if ((dynamic_cast<TBag *>(tmp2))) {
+      for (b1 = tmp2->getStuff(); b1; next) 
+      {
+        if ((o = dynamic_cast<TObj *>(b1))) 
+        {
+          o->addObjStat(ITEM_NORENT);
+        }
+        next = b1->nextThing;
+      }
+    }*/
     t2 = tmp2->nextThing;
     tmp2->nextThing = mob->getStuff();
     mob->setStuff(tmp2);
     tmp2 = t2;
   }
-
-  // add NO RENT to the objects, don't want them falling into PC hands permanently
-
+  
   sendTo("Your clone appears before you.\n\r");
   return;
 }
