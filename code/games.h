@@ -363,10 +363,12 @@ class HoldemPlayer {
   sstring name;
   TBeing *ch;
   const Card *hand[2];
+  bool allin;
 
   HoldemPlayer(const TBeing *ch){
     name=ch->name;
     hand[0]=hand[1]=NULL;
+    allin=false;
   }
 };
 
@@ -390,6 +392,7 @@ class HoldemGame : public CardGame {
 
   int handValue(HoldemPlayer *);
   void nextRound(TBeing *ch);
+  int nextBetter(int);
   int nextPlayer(int);
   int lastPlayer();
   int firstPlayer();
@@ -402,6 +405,7 @@ class HoldemGame : public CardGame {
   bool isPlaying(const TBeing *) const;
   HoldemPlayer *getPlayer(const sstring &name) const;
   void Bet(TBeing *ch, const sstring &arg);
+  void allIn(TBeing *ch);
   void call(TBeing *ch);
   void raise(TBeing *ch);
   void fold(TBeing *ch);

@@ -4,7 +4,6 @@
 HoldemGame gHoldem;
 
 
-
 bool TBeing::checkHoldem(bool inGame = false) const
 {
   gHoldem.linkPlayers();
@@ -14,6 +13,7 @@ bool TBeing::checkHoldem(bool inGame = false) const
   else
     return false;
 }
+
 
 void HoldemGame::nextRound(TBeing *ch)
 {
@@ -163,6 +163,7 @@ void HoldemGame::showdown(TBeing *ch)
 	ssprintf(buf, "%s\n\r", players[i]->hand[1]->getName());
 	act(buf.c_str(), TRUE, players[i]->ch, 0, 0, TO_ROOM);
 
+	players[i]->allin=false;
       }
     }
     for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
@@ -251,6 +252,19 @@ void HoldemGame::linkPlayers()
     }
   }
 }
+
+int HoldemGame::nextBetter(int b)
+{
+  // find the next better that isn't all in
+  for(int i=b+1;i<MAX_HOLDEM_PLAYERS;++i){
+    if(players[i] && players[i]->hand[0] && !players[i]->allin){
+      return i;
+    }
+  }
+  return -1;
+}
+
+
 
 int HoldemGame::nextPlayer(int b)
 {
@@ -383,10 +397,12 @@ void HoldemGame::peek(const TBeing *ch) const
 
   HoldemPlayer *tmp = getPlayer(ch->name);
 
-  ch->sendTo(COLOR_BASIC, "You peek at your hand:\n\r");
-  ch->sendTo(COLOR_BASIC, "%s\n\r", tmp->hand[0]->getName());
-  ch->sendTo(COLOR_BASIC, "%s\n\r", tmp->hand[1]->getName());
-  
+  if(!tmp->hand[0] || !tmp->hand[1]){
+    ch->sendTo(COLOR_BASIC, "You peek at your hand:\n\r");
+    ch->sendTo(COLOR_BASIC, "%s\n\r", tmp->hand[0]->getName());
+    ch->sendTo(COLOR_BASIC, "%s\n\r", tmp->hand[1]->getName());
+  }  
+
   if(community[0]){
     ch->sendTo(COLOR_BASIC, "\n\rYou peek at the community cards:\n\r");
 
@@ -427,10 +443,6 @@ void HoldemGame::call(TBeing *ch)
     return;
   }
   
-  if(!(chip=find_chip(ch, last_bet))){
-    ch->sendTo("You don't have the required chip!\n\r");
-    return;
-  }
 
   for(int i=0;i<nraises;++i){
     if(!(chip=find_chip(ch, last_bet))){
@@ -457,11 +469,12 @@ void HoldemGame::call(TBeing *ch)
     delete chipl[i];
 
   ch->doSave(SILENT_YES);
-   
-  if(players[better]->name!=players[lastPlayer()]->name){
-    better=nextPlayer(better);
+  
+  int tmp;
+  if((tmp=nextBetter(better))!=-1){
+    better=tmp;
     act("The bet moves to $n.", TRUE, players[better]->ch, 0, 0, TO_ROOM);
-    players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, or <c>call<1>.\n\r");
+    players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, <c>call<1> or <c>bet all<1>.\n\r");
   } else {
     nextRound(players[better]->ch);
   }
@@ -524,10 +537,11 @@ void HoldemGame::raise(TBeing *ch)
   
   ch->doSave(SILENT_YES);
   
-  if(players[better]->name!=players[lastPlayer()]->name){
-    better=nextPlayer(better);
+  int tmp;
+  if((tmp=nextBetter(better))!=-1){
+    better=tmp;
     act("The bet moves to $n.", TRUE, players[better]->ch, 0, 0, TO_ROOM);
-    players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, or <c>call<1>.\n\r");
+    players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, <c>call<1> or <c>bet all<1>.\n\r");
   } else {
     nextRound(players[better]->ch);
   }
@@ -560,11 +574,11 @@ void HoldemGame::flop(TBeing *ch)
   act(buf, TRUE, ch, 0, 0, TO_ROOM);
   act(buf, TRUE, ch, 0, 0, TO_CHAR);
   
-  better=firstPlayer();
+  better=nextBetter(-1);
 
   act("The bet moves to $n.",
       TRUE, players[better]->ch, 0, 0, TO_ROOM);
-  players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, or <c>call<1>.\n\r");
+  players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, <c>call<1> or <c>bet all<1>.\n\r");
   
   state=STATE_FLOP;
 }
@@ -583,12 +597,12 @@ void HoldemGame::turn(TBeing *ch)
   ssprintf(buf, "%s", community[3]->getName());
   act(buf, TRUE, ch, 0, 0, TO_ROOM);
   act(buf, TRUE, ch, 0, 0, TO_CHAR);
-  
-  better=firstPlayer();
+
+  better=nextBetter(-1);
 
   act("The bet moves to $n.",
       TRUE, players[better]->ch, 0, 0, TO_ROOM);
-  players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, or <c>call<1>.\n\r");
+  players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, <c>call<1> or <c>bet all<1>.\n\r");
   
   state=STATE_TURN;
 }
@@ -608,11 +622,11 @@ void HoldemGame::river(TBeing *ch)
   act(buf, TRUE, ch, 0, 0, TO_ROOM);
   act(buf, TRUE, ch, 0, 0, TO_CHAR);
   
-  better=firstPlayer();
+  better=nextBetter(-1);
 
   act("The bet moves to $n.",
       TRUE, players[better]->ch, 0, 0, TO_ROOM);
-  players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, or <c>call<1>.\n\r");
+  players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, <c>call<1> or <c>bet all<1>.\n\r");
   
   state=STATE_RIVER;
 }
@@ -652,12 +666,76 @@ void HoldemGame::fold(TBeing *ch)
   } else if(players[better]->name!=players[lastPlayer()]->name){
     players[better]->hand[0]=NULL;
     players[better]->hand[1]=NULL;
-    better=nextPlayer(better);
+    better=nextBetter(better);
     act("The bet moves to $n.", TRUE, players[better]->ch, 0, 0, TO_ROOM);
-    players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, or <c>call<1>.\n\r");
+    players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, <c>call<1> or <c>bet all<1>.\n\r");
   } else {
     players[better]->hand[0]=NULL;
     players[better]->hand[1]=NULL;
+    nextRound(players[better]->ch);
+  }
+}
+
+void HoldemGame::allIn(TBeing *ch)
+{
+  vector <TObj *> chipl;
+  TObj *chip;
+  sstring buf;
+
+  if (!ch->checkHoldem())
+    return;
+
+  if (!isPlaying(ch)) {
+    ch->sendTo("You are not sitting at the table yet.\n\r");
+    return;
+  }
+  if(state==STATE_NONE){
+    ch->sendTo("Betting hasn't started.\n\r");
+    return;
+  }
+
+  if(playerCount() < 2){
+    ch->sendTo("You need at least two players.\n\r");
+    return;
+  }
+
+  if(ch->name != players[better]->name){
+    ch->sendTo("It's not your turn.\n\r");
+    return;
+  }
+
+  while((chip=find_chip(ch, last_bet))){
+    chipl.push_back(chip);
+    (*chip)--;
+  }
+
+  ssprintf(buf, "$n goes all in with %s. [%i]", 
+	   chipl[0]->getName(), chipl.size());
+  act(buf, TRUE, ch, 0, 0, TO_ROOM);
+  ssprintf(buf, "You goes all in with %s. [%i]", 
+	   chipl[0]->getName(), chipl.size());
+  act(buf, TRUE, ch, 0, 0, TO_CHAR);
+  bet += chipl[0]->obj_flags.cost * chipl.size();
+
+  players[better]->allin=true;
+
+  if(chipl.size() > (unsigned) nraises)
+    nraises=chipl.size();
+
+
+  for(unsigned int i=0;i<chipl.size();++i){
+    (*chipl[i])--;
+    delete chipl[i];
+  }
+
+  ch->doSave(SILENT_YES);
+   
+  int tmp;
+  if((tmp=nextBetter(better))!=-1){
+    better=tmp;
+    act("The bet moves to $n.", TRUE, players[better]->ch, 0, 0, TO_ROOM);
+    players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, <c>call<1> or <c>bet all<1>.\n\r");
+  } else {
     nextRound(players[better]->ch);
   }
 }
@@ -676,15 +754,21 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
     ch->sendTo("You are not sitting at the table.\n\r");
     return;
   }
-  if(state!=STATE_NONE){
-    ch->sendTo("Betting has already started.\n\r");
-    return;
-  }
-
   if(playerCount() < 2){
     ch->sendTo("You need at least two players.\n\r");
     return;
   }
+  if(state!=STATE_NONE){
+#if 0
+    if(arg == "all")
+      allIn(ch);
+    else
+#endif
+      ch->sendTo("Betting has already started.\n\r");
+
+    return;
+  }
+
   
   argument_parser(arg, coin_str);
   if (coin_str.empty()){
@@ -746,9 +830,9 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
   }
     
   // move the bet to the next person
-  better=nextPlayer(better);
+  better=nextBetter(better);
   act("The bet moves to $n.", TRUE, players[better]->ch, 0, 0, TO_ROOM);
-  players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, or <c>call<1>.\n\r");
+  players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1>, <c>call<1> or <c>bet all<1>.\n\r");
   
   state=STATE_DEAL;
 }
