@@ -1,8 +1,25 @@
-12-24-99 - Lapsos
+12-24-99 / 12-26-99 / 12-27-99 - Lapsos
 - Modified the 'damage output' on evaluate <weapon> and the AC output on
   evaluate <armor> to display according to PC lvl VS obj level.  Figured if
   we are going to be harsh in this area we really do need to give them an
   idea of what this stuff is compared to them.
+- Fixed crash bug in chiMe corpse when corpse is held.
+- Fixed crash bug, more of a string overload, in 'kill blob-<race>'.
+- Redid a number of things and added a few more.  All mobiles now contain
+  a brtRoom(Birth Room) variable and rooms contain a tBornInsideMe and
+  thing now contains a nextBorn.  What this does is when a mob is repoped
+  into a room the room is stored as brtRoom and it is added to tBornInsideMe
+  which is then checked for the M (max in room) check to make the check
+  based on what is still alive VS what is really in the room.  This is
+  controlled through the >> << operators now added to TRoom to add/remove
+  from the list.  This will prevent some of the various over counts due to
+  old mobs combined with the wander code.
+- oedit and medit have a new field.  'resave'.  This is somewhat like my
+  'edit save <object> resave' code but is mostly designed for builders.  Old
+  method is still reseved for backwards compatibility.
+- The advanced menu is now in place for OEdit.
+- Changed 'oedit default_ac_str' to 'oedit average' and added 'medit average'
+  which allows 'averge leveling' of weapons, armor and mobiles now.
 
 12-21-99 - Peel
 - I've been working on some mage stuff, 'store' and 'trigger' commands,
