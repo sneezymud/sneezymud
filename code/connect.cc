@@ -42,7 +42,7 @@ const int FORCE_LOW_INVSTE = 1;
 // character traits are things that players pick at character creation,
 // such as cowardice and blindness.  each trait gives the player a few
 // bonus points that can be spent on stats.
-const int ALLOW_TRAITS = 1;
+const int ALLOW_TRAITS = 0;
 
 static const char * const WIZLOCK_PASSWORD           = "motelvi";
 const char * const MUD_NAME      = "SneezyMUD";
