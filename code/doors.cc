@@ -2134,6 +2134,48 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         return TRUE;
       }
       break;
+    case 33679:
+      if ((cmd != CMD_PULL) && (cmd != CMD_PUSH))
+        return FALSE;
+      if (!strcasecmp(buf, "brambles")) {
+        act("You pull on the brambles.",
+            TRUE,ch,0,0,TO_CHAR);
+        act("$n pulls on some brambles.",
+            TRUE,ch,0,0,TO_ROOM);
+        ch->openUniqueDoor(DIR_SOUTHWEST, DOOR_UNIQUE_DEF,
+            "",
+            "",
+            "You reveal a side trail to the southwest.",
+            "$n's action reveals a side trail to the southwest.",
+            "Something causes an opening in the brambles to the southwest to appear, revealing a side trail.",
+            "You conceal the side trail to the southwest.",
+            "$n's action causes the side trail to the southwest to be concealed.",
+            "Something causes an opening in the brambles to the southwest to close, concealing a side trail."
+        );
+        return TRUE;
+      }
+      break;
+    case 33690:
+      if ((cmd != CMD_PULL) && (cmd != CMD_PUSH))
+        return FALSE;
+      if (!strcasecmp(buf, "brambles")) {
+        act("You pull on the brambles.",
+            TRUE,ch,0,0,TO_CHAR);
+        act("$n pulls on some brambles.",
+            TRUE,ch,0,0,TO_ROOM);
+        ch->openUniqueDoor(DIR_NORTHEAST, DOOR_UNIQUE_DEF,
+            "",
+            "",
+            "You reveal an opening to the northeast.",
+            "$n's action reveals an opening to the northeast.",
+            "Something pushes aside the brambles to the northeast, revealing a opening.",
+            "You conceal the opening to the northeast.",
+            "$n's action causes the opening to the northeast to be concealed.",
+            "Something pulls some brambles to the northeast closed, concealing an opening."
+        );
+        return TRUE;
+      }
+      break;
     default:
       vlogf(LOG_LOW, "Unsupported room (%d) in secretDoors", rp->number);
       return FALSE;
