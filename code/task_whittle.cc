@@ -386,7 +386,7 @@ bool task_whittleCreateNew(TBeing *ch, string tStWood, int tIndex)
           newVolume -= tWood->getVolume();
 
         if (newWeight > -1 || newVolume > -1) {
-          act("The $p is pretty much used up so you scrap what's left.",
+          act("$p is pretty much used up so you scrap what's left.",
               FALSE, ch, tWood, NULL, TO_CHAR);
           totalUsed++;
 

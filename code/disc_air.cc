@@ -410,12 +410,12 @@ void suffocate(TBeing * caster, TBeing *victim,  TMagicItem * obj)
     if (caster == victim) {
       act("<W>Don't you feel stupid. You begin to choke!<z>", 
           FALSE, caster, NULL, NULL, TO_CHAR);
-      act("<W>The air around $N disappates!<z>", 
+      act("<W>The air around $N dissipates!<z>", 
           FALSE, caster, NULL, caster, TO_NOTVICT);
     } else {
       act("<W>You remove the air from around $N!<z>", 
             FALSE, caster, NULL, victim, TO_CHAR);
-      act("<W>The air around $N disappates!<z>", 
+      act("<W>The air around $N dissipates!<z>", 
             FALSE, caster, NULL, victim, TO_NOTVICT);
       act("<W>You gasp for air as $n removes the air around you!<z>", 
             FALSE, caster, NULL, victim, TO_VICT);
@@ -424,7 +424,7 @@ void suffocate(TBeing * caster, TBeing *victim,  TMagicItem * obj)
     if (ret==SPELL_CRIT_FAIL) {
       act("<W>Woooops! You remove the air from around yourself!<z>", 
           FALSE, caster, NULL, victim, TO_CHAR);
-      act("<W>Oopsies! The air around $n disappates!<z>", 
+      act("<W>Oopsies! The air around $n dissipates!<z>", 
           FALSE, caster, NULL, victim, TO_NOTVICT);
       act("<W>$n just tried to suffocate you!<z>", 
           FALSE, caster, NULL, victim, TO_VICT);
@@ -465,13 +465,13 @@ int castSuffocate(TBeing * caster, TBeing * victim)
   int ret=suffocate(caster, victim, level, caster->getSkillValue(SPELL_SUFFOCATE));
   if (ret==SPELL_SUCCESS) {
     act("<W>You remove the air from around $N!<z>", FALSE, caster, NULL, victim, TO_CHAR);
-    act("<W>The air around $N disappates!<z>", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("<W>The air around $N dissipates!<z>", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("<W>You gasp for air as $n removes the air around you!<z>", FALSE, caster, NULL, victim, TO_VICT);
     return TRUE;
     } else {
     if (ret==SPELL_CRIT_FAIL) {
       act("<W>Woooops! You remove the air from around yourself!<z>", FALSE, caster, NULL, victim, TO_CHAR);
-      act("<W>Oopsies! The air around $n disappates!<z>", FALSE, caster, NULL, victim, TO_NOTVICT);
+      act("<W>Oopsies! The air around $n dissipates!<z>", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("<W>$n just tried to suffocate you!<z>", FALSE, caster, NULL, victim, TO_VICT);
     }
     return TRUE;
