@@ -1,5 +1,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 #include "stdsneezy.h"
 #include "statistics.h"
@@ -12,10 +14,6 @@ static int global_repair = 0;
 int TObj::maxFix(const TBeing *repair, depreciationTypeT dep_done) const
 {
   int amount = getMaxStructPoints() - getDepreciation();
-#if 0
-  if (!dep_done)
-    amount--;   // fudge depreciation for "value"
-#endif
 
   if (repair) {
     amount *= max(95, (int) repair->GetMaxLevel());
@@ -74,25 +72,6 @@ static int repair_time(const TObj *o)
   // max repair time * % damage to object
 #endif
 
-  // i took the following out, it kind of sucks. 
-#if 0
-  // price is based on struct (armor/weapons) so no real need to
-  // take both into account
-  // let's just make time based on level of the gear
-  iTime = (int) (o->objLevel() * 1);
-  // #else
-  // Let's make the time be proportional to cost, and total damage - Russ 
-  iTime = ((structs * 800) + (2 * o->obj_flags.cost));
-
-  // Check to see how many items the repairman has, and 
-  // adjust time accordingly - Russ                     
-  //  iTime += wait_for_items_already_here() 
-
-  iTime *= max(11, 10 + o->obj_flags.cost/10000);
-  iTime /= 10;
- 
-  iTime /= 500;  // Kludge since it is taking too long
-#endif
   iTime = max(1.0,iTime);
 
   return (int)(iTime);
@@ -106,6 +85,7 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
   int cost;
   unsigned char version;
 
+  // check for valid args
   if (!repair || !buyer) {
     vlogf(LOG_BUG, "save_repairman_file() called with NULL ch!");
     return;
@@ -114,28 +94,35 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
     vlogf(LOG_BUG, "Non-PC got into save_repairman_file() somehow!!! BUG BRUTIUS!!", buyer->getName());
     return;
   }
-  then = (long) iTime;
-  cost = o->repairPrice(repair, buyer, DEPRECIATION_YES);
 
+  // open the file we will write to
   sprintf(buf, "mobdata/repairs/%d/%d", repair->mobVnum(), repair_number);
   if (!(fp = fopen(buf, "w"))) {
     sprintf(buf2, "mobdata/repairs/%d", repair->mobVnum());
     if (mkdir(buf2, 0770)) {
-      vlogf(LOG_BUG, "Unable to create a repair directory for %s.", repair->getName());
+      vlogf(LOG_BUG, "Unable to create a repair directory for %s.",
+	    repair->getName());
       return;
-    } else
+    } else {
       vlogf(LOG_BUG, "Created a repair directory for %s", repair->getName());
-
+    }
+    
     if (!(fp = fopen(buf, "w"))) {
-      vlogf(LOG_BUG, "Major problems trying to save %s repair file.", repair->getName());
+      vlogf(LOG_BUG, "Major problems trying to save %s repair file.", 
+	    repair->getName());
       return;
     }
   }
+
+  // write the header data
+  then = (long) iTime;
   if (fwrite(&then, sizeof(then), 1, fp) != 1) {
     vlogf(LOG_BUG, "Error writing time for repairman_file!");
     fclose(fp);
     return;
   }
+
+  cost = o->repairPrice(repair, buyer, DEPRECIATION_YES);
   if (fwrite(&cost, sizeof(cost), 1, fp) != 1) {
     vlogf(LOG_BUG, "Error writing cost for repairman_file!");
     fclose(fp);
@@ -148,6 +135,7 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
     return;
   }
 
+  // write the object
   raw_write_item(fp, o, version);
   fclose(fp);
 
@@ -155,44 +143,75 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
   save_game_stats();
 }
 
-static int check_time_and_gold(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
+TObj *loadRepairItem(TBeing *repair, int ticket, 
+		     long &time, int &cost, unsigned char &version)
 {
   FILE *fp;
-  char buf[80], buf2[256];
+  TObj *obj;
+
+  // open the repair file for this ticket
+  sstring filename=fmt("mobdata/repairs/%d/%d") % repair->mobVnum() % ticket;
+
+  if (!(fp = fopen(filename.c_str(), "r"))) {
+    repair->doSay(fmt("I don't seem to have an item for ticket number %d")
+		  % ticket);
+    return NULL;
+  }
+
+  // read the repair data
+  if (fread(&time, sizeof(time), 1, fp) != 1) {
+    vlogf(LOG_BUG, "No timer on item number %d for repairman %s", 
+	  ticket, repair->getName());
+    repair->doSay("Something is majorly wrong(Timer). Talk to a god");
+    fclose(fp);
+    return NULL;
+  }
+  if (fread(&cost, sizeof(cost), 1, fp) != 1) {
+    vlogf(LOG_BUG, "No cost on item number %d for repairman %s", 
+	  ticket, repair->getName());
+    repair->doSay("Something is majorly wrong(Cost). Talk to a god");
+    fclose(fp);
+    return NULL;
+  }
+  if (fread(&version, sizeof(version), 1, fp) != 1) {
+    vlogf(LOG_BUG, "No version on item number %d for repairman %s", 
+	  ticket, repair->getName());
+    repair->doSay("Something is majorly wrong(version). Talk to a god");
+    fclose(fp);
+    return NULL;
+  }
+  
+  // read the object data
+  obj=raw_read_item(fp, version);
+  fclose(fp);
+
+  return obj;
+}
+
+static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
+{
+  char buf[80];
   long tmp, cur_time;
   int tmp_cost, diff, hours, minutes, seconds;
   TObj *fixed_obj;
   unsigned char version;
 
+  // check for valid args
   if (!repair || !buyer) {
     vlogf(LOG_BUG, "check_time called with NULL character! BUG BRUTIUS!");
     return FALSE;
   }
-  sprintf(buf, "mobdata/repairs/%d/%d", repair->mobVnum(), ticket);
-  if (!(fp = fopen(buf, "r"))) {
-    sprintf(buf2, "I don't seem to have an item for ticket number %d", ticket);
-    repair->doSay(buf2);
-    return FALSE;
+
+  // load the item
+  if(!(fixed_obj=loadRepairItem(repair, ticket, tmp, tmp_cost, version))){
+    repair->doSay("Whoa, serious problems, tell a god.");
+    vlogf(LOG_BUG, "Bogus load of repair item problem!!!!!!");
+    return TRUE;
   }
-  if (fread(&tmp, sizeof(tmp), 1, fp) != 1) {
-    vlogf(LOG_BUG, "No timer on item number %d for repairman %s", ticket, repair->getName());
-    repair->doSay("Something is majorly wrong(Timer). Talk to a god");
-    fclose(fp);
-    return FALSE;
-  }
-  if (fread(&tmp_cost, sizeof(tmp_cost), 1, fp) != 1) {
-    vlogf(LOG_BUG, "No cost on item number %d for repairman %s", ticket, repair->getName());
-    repair->doSay("Something is majorly wrong(Cost). Talk to a god");
-    fclose(fp);
-    return FALSE;
-  }
-  if (fread(&version, sizeof(version), 1, fp) != 1) {
-    vlogf(LOG_BUG, "No version on item number %d for repairman %s", ticket, repair->getName());
-    repair->doSay("Something is majorly wrong(version). Talk to a god");
-    fclose(fp);
-    return FALSE;
-  }
+
   cur_time = time(0) + 3600 * obj->getTimeAdj();
+
+  // check if the item is ready yet
   if (cur_time < tmp) {
     diff = tmp - cur_time;
     hours = diff/3600;
@@ -201,48 +220,41 @@ static int check_time_and_gold(TBeing *repair, TBeing *buyer, int ticket, TNote 
 
     repair->doTell(fname(buyer->name), "Your item isn't ready yet.");
     repair->doTell(fname(buyer->getName()),  fmt("It will be ready in %d hours, %d minutes and %d seconds.") % hours % minutes % seconds);
-    fclose(fp);
     return FALSE;
-  } else if (tmp_cost > buyer->getMoney()) {
+  }
+  
+  // check if the player has enough money to pay for it
+  if (tmp_cost > buyer->getMoney()) {
     sprintf(buf, "%s I don't repair items for free! No money, no item!", buyer->getName());
     repair->doSay(buf);
     sprintf(buf, "Remember the price is %d.", tmp_cost);
     repair->doSay(buf);
-    fclose(fp);
     return FALSE;
-  } else {
-    if ((fixed_obj = raw_read_item(fp, version))) {
-      obj_index[fixed_obj->getItemIndex()].addToNumber(-1);
-      repair->doTell(fname(buyer->name), fmt("Ah yes, %s, here is %s.") % buyer->getName() % fixed_obj->shortDescr);
-      repair->doSay("Thank you for your business!");
-      fixed_obj->setStructPoints(fixed_obj->maxFix(repair, DEPRECIATION_YES));
-      buyer->addToMoney(-tmp_cost, GOLD_REPAIR);
-      // I think this is just for gold stats, the repair guy doesn't use it
-      repair->addToMoney(tmp_cost, GOLD_REPAIR); 
-
-      *buyer += *fixed_obj;
-      fclose(fp);
-      sprintf(buf, "mobdata/repairs/%d/%d", repair->mobVnum(), ticket);
-      unlink(buf);
-      buyer->doSave(SILENT_YES);
-      buyer->logItem(fixed_obj, CMD_NORTH);   // cmd indicates repair-retrieval
-
-      // acknowledge the depreciation after all work is done
-      // this way the price doesn't change during the process
-      // and also makes the first repair "depreciation free"
-
-      fixed_obj->addToDepreciation(1);
-      if (fixed_obj->isObjStat(ITEM_CHARRED))
-	fixed_obj->addToDepreciation(2); // we want charred objects to deteriorate much faster
-
-      return TRUE;
-    } else {
-      repair->doSay("Whoa, serious problems, tell a god.");
-      vlogf(LOG_BUG, "Bogus load of repair item problem!!!!!!");
-      fclose(fp);
-      return TRUE;
-    }
   }
+
+  unlink((fmt("mobdata/repairs/%d/%d") % repair->mobVnum() % ticket).c_str());
+
+  repair->doTell(fname(buyer->name), fmt("Ah yes, %s, here is %s.") %
+		 buyer->getName() % fixed_obj->shortDescr);
+  repair->doSay("Thank you for your business!");
+
+
+  obj_index[fixed_obj->getItemIndex()].addToNumber(-1);
+  fixed_obj->setStructPoints(fixed_obj->maxFix(repair, DEPRECIATION_YES));
+  buyer->addToMoney(-tmp_cost, GOLD_REPAIR);
+  repair->addToMoney(tmp_cost, GOLD_REPAIR); 
+  
+  *buyer += *fixed_obj;
+  buyer->doSave(SILENT_YES);
+  buyer->logItem(fixed_obj, CMD_NORTH);   // cmd indicates repair-retrieval
+  
+  // acknowledge the depreciation after all work is done
+  // this way the price doesn't change during the process
+  // and also makes the first repair "depreciation free"
+  
+  fixed_obj->addToDepreciation(1);
+  
+  return TRUE;
 }
 
 static bool will_not_repair(TBeing *ch, TMonster *repair, TObj *obj, silentTypeT silent)
@@ -252,20 +264,23 @@ static bool will_not_repair(TBeing *ch, TMonster *repair, TObj *obj, silentTypeT
 
   if (!obj->isRentable()) {
     if (!silent) {
-      repair->doTell(fname(ch->name), "I'm sorry, but that item is unrepairable.");
+      repair->doTell(fname(ch->name), 
+		     "I'm sorry, but that item is unrepairable.");
     }
     return TRUE;
   }
   if (obj->getStructPoints() == obj->getMaxStructPoints()) {
     if (!silent) {
-      repair->doTell(fname(ch->name), "It doesn't look like that item needs any repairing.");
+      repair->doTell(fname(ch->name), 
+		     "It doesn't look like that item needs any repairing.");
     }
     return TRUE;
   } 
   if (obj->getStructPoints() >= obj->maxFix(NULL, DEPRECIATION_NO)) {
     // check depreciation alone
     if (!silent) {
-      repair->doTell(fname(ch->name), "That item's damage isn't something that can be repaired.");
+      repair->doTell(fname(ch->name), 
+		 "That item's damage isn't something that can be repaired.");
     }
     return TRUE;
   } 
@@ -279,13 +294,16 @@ static bool will_not_repair(TBeing *ch, TMonster *repair, TObj *obj, silentTypeT
   if (!repair_time(obj)) {
     // probably superfluous
     if (!silent) {
-      repair->doTell(fname(ch->name), fmt("%s looks fine to me.") % obj->getName());
+      repair->doTell(fname(ch->name), fmt("%s looks fine to me.") % 
+		     obj->getName());
     }
     return TRUE;
   }
   if (obj->objVnum() == -1) {
     if (!silent) {
-      repair->doTell(fname(ch->name), fmt("I can't take temporary items like %s.") % obj->getName());
+      repair->doTell(fname(ch->name), 
+		     fmt("I can't take temporary items like %s.") % 
+		     obj->getName());
     }
     return TRUE;
   }
@@ -344,10 +362,13 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
     repair->doTell(fname(buyer->name), "Can you be a little more specific about what you want to value....\n\r");
     return;
   }
+
   TThing *t_valued = searchLinkedListVis(buyer, arg, buyer->getStuff());
   valued = dynamic_cast<TObj *>(t_valued);
   if (!valued) {
-    repair->doTell(fname(buyer->name), fmt("%s, You don't have that item.\n\r") % buyer->getName());
+    repair->doTell(fname(buyer->name), 
+		   fmt("%s, You don't have that item.\n\r") % 
+		   buyer->getName());
     return;
   }
   if (will_not_repair(buyer, repair, valued, SILENT_NO))
@@ -552,13 +573,46 @@ void TNote::giveToRepairNote(TMonster *repair, TBeing *buyer, int *found)
   if (sscanf(buf, "a small ticket marked number %d", &iNumber) != 1) {
     repair->doTell(fname(buyer->name), "That ticket isn't from THIS shop!");
   } else {
-    if (check_time_and_gold(repair, buyer, iNumber, this)) {
+    if (getRepairItem(repair, buyer, iNumber, this)) {
       *found = DELETE_THIS;
       buyer->doSave(SILENT_NO);
       return;
     }
   }
 }
+
+
+sstring repairList(TMonster *repair)
+{
+  struct dirent *dp;
+  DIR *dfd;
+  sstring buf;
+  long time;
+  int cost, ticket;
+  unsigned char version;
+  TObj *o;
+
+  if(!(dfd=opendir((fmt("mobdata/repairs/%d") % repair->mobVnum()).c_str()))){
+    vlogf(LOG_BUG, "Unable to dirwalk directory in repairList for %i",
+	  repair->mobVnum());
+    return "Unable to dirwalk directory";
+  }
+  while ((dp = readdir(dfd))) {
+    if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
+      continue;
+    
+    ticket=convertTo<int>(dp->d_name);
+
+    if((o=loadRepairItem(repair, ticket, time, cost, version))){
+      buf+=fmt("%i) %s - %i talens\n\r") % ticket %
+	o->getName() % cost;
+    }
+  }
+  closedir(dfd);
+
+  return buf;
+}
+
 
 // may return DELETE_THIS (buyer dead)
 int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TObj *o)
@@ -685,6 +739,12 @@ int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TO
         }
         act("$n stops using $s damaged equipment.", TRUE, buyer, o, 0, TO_ROOM);
         return TRUE;
+      }
+      return FALSE;
+    case CMD_LIST:
+      if(buyer->isImmortal()){
+	buyer->sendTo(COLOR_BASIC, repairList(repair));
+	return TRUE;
       }
       return FALSE;
     default:
