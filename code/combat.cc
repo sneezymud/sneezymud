@@ -25,6 +25,7 @@
 #include "obj_handgonne.h"
 #include "obj_base_clothing.h"
 #include "cmd_trophy.h"
+#include "obj_base_cup.h"
 
 #define DAMAGE_DEBUG 0
 
@@ -1023,6 +1024,16 @@ void TObj::makeScraps()
   TThing *x = NULL, *tmp = NULL, *ch = NULL;
   char buf[256];
   char buf2[256];
+  TBaseCup *tbc=dynamic_cast<TBaseCup *>(this);
+  TBeing *cht;
+
+  // if it's a liquid container, drop the liquid in the room
+  if(tbc){
+    if((ch = parent) && (cht=dynamic_cast<TBeing *>(parent))){
+      cht->dropPool(tbc->getDrinkUnits(), tbc->getDrinkType());
+    }
+  }
+
 
   if (getStuff()) {
     if ((ch = parent)) {
