@@ -149,7 +149,8 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
       victim->addToMove(-vit);
     if (caster->reconcileDamage(victim, dam, SPELL_LICH_TOUCH) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
-    vlogf(LOG_JESUS, "Lich Touch damage: %d", dam);
+    vlogf(LOG_JESUS, "Lich Touch damage: %d LFmod: %d caster: %s victim: %s", dam, lfmod, 
+caster->getName(), victim->getName());
     return SPELL_SUCCESS;
   } else {
     switch (critFail(caster, SPELL_LICH_TOUCH)) {
@@ -281,7 +282,8 @@ int cardiacStress(TBeing * caster, TBeing * victim, int level, byte bKnown, int 
     }
     if (caster->reconcileDamage(victim, dam, SPELL_CARDIAC_STRESS) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
-    vlogf(LOG_JESUS, "Coronary damgae: %d", dam);
+    vlogf(LOG_JESUS, "Coronary damgae: %d caster: %s victim: %s", dam, caster->getName(), 
+victim->getName());
     return SPELL_SUCCESS;
   } else {
     caster->setCharFighting(victim);
@@ -410,7 +412,8 @@ int bloodBoil(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
     }
     if (caster->reconcileDamage(victim, dam, SPELL_BLOOD_BOIL) == -1)
       return SPELL_FAIL + VICTIM_DEAD;
-    vlogf(LOG_JESUS, "Boiling Blood damage: %d", dam);
+    vlogf(LOG_JESUS, "Boiling Blood damage: %d caster: %s victim: %s", dam, 
+caster->getName(), victim->getName());
     return SPELL_FAIL;
   } else {
     switch(critFail(caster, SPELL_BLOOD_BOIL)) {
