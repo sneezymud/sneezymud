@@ -147,15 +147,21 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       
       while(db.fetchRow()){
 	due=whenDue(convertTo<int>(db["granted_time"]), convertTo<int>(db["term"]));
-;
-	me->doTell(ch->getName(),
-		   fmt("%s for %i talens at %.2f%c, due %s of %s, %d P.S") %
-		   db["name"] %
-		   convertTo<int>(db["amt"]) %
+	
+	amt=calcInterest(amt, convertTo<int>(db["granted_time"]),
+			 convertTo<int>(db["term"]), 
+			 convertTo<float>(db["rate"]),
+			 convertTo<float>(db["default_charge"]));
+
+	me->doTell(ch->getName(), 
+		   fmt("%s for %i talens at %.2f%c due %s of %s, %d P.S") %
+		   db["name"] % convertTo<int>(db["amt"]) % 
 		   (convertTo<float>(db["rate"]) * 100) % '%' %
-		   numberAsString(due.day) %
-		   month_name[due.month] %
+		   numberAsString(due.day) % month_name[due.month] %
 		   due.year);
+	me->doTell(ch->getName(),
+		   fmt("%s currently owes %i talens.") %
+		   db["name"] % amt);
       }
     } else if(sstring(arg)=="repo" && tso.hasAccess(SHOPACCESS_INFO)){
       me->doTell(ch->getName(), 
