@@ -198,6 +198,38 @@ void bootPulse(const char *str, bool end_str)
     vlogf(LOG_MISC, fmt("%s") %  str);
 }
 
+void object_stats()
+{
+  int count[MAX_OBJ_TYPES], i=0, li=0, total=0;
+
+  for(i=0;i<MAX_OBJ_TYPES;++i)
+    count[i]=0;
+  
+  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter)
+    count[(*iter)->itemType()]++;
+  
+  // BUBBLESORT IS L33T!!!
+  while(1){
+    for(i=0;i<MAX_OBJ_TYPES;++i){
+      if(count[i]>count[li])
+	li=i;
+    }
+    
+    if(count[li]==-1)
+      break;
+    
+    vlogf(LOG_MISC, fmt("[%6i] %-17s") %
+	  count[li] % ItemInfo[li]->name);
+    total += count[li];
+    count[li]=-1;
+  }
+  
+  vlogf(LOG_MISC, fmt("[%6i] %-17s") %
+	total % "Total");
+}
+
+
+
 void bootDb(void)
 {
   bootTime=true;
@@ -351,7 +383,8 @@ void bootDb(void)
     }
   }
 
-
+  bootPulse("Collecting object count statistics.");
+  object_stats();
 
   // after boot time object loading is minimal, so the cache isn't needed
   //  obj_cache.clear();
