@@ -1022,7 +1022,7 @@ void bootZones(void)
   FILE *fl;
   int zon = 0, tmp;
   char *check, buf[256];
-  int rc, zone_nr;
+  int rc, zone_nr = 0;
   int i1 = 0, i2, i3, i4;
 
   if (!(fl = fopen(ZONE_FILE, "r"))) {
@@ -1030,7 +1030,7 @@ void bootZones(void)
     exit(0);
   }
   for (;;) {
-    fscanf(fl, " #%d\n", &zone_nr);
+    fscanf(fl, " #%*d\n");
     check = fread_string(fl);
 
     if (*check == '$')
@@ -1038,7 +1038,7 @@ void bootZones(void)
 
     zoneData zd;
     zd.name = check;
-    zd.zone_nr=zone_nr;
+    zd.zone_nr=zone_nr++;
     rc = fscanf(fl, " %d %d %d %d", &i1, &i2, &i3, &i4);
     if (rc == 4) {
       zd.top = i1;
@@ -1142,6 +1142,7 @@ continue;
 
       fgets(buf, 255, fl);        
     }
+
     zone_table.push_back(zd);
   }
 
@@ -2752,6 +2753,7 @@ resetCom & resetCom::operator =(const resetCom &t)
 
 zoneData::zoneData() :
   name(NULL),
+  zone_nr(0),
   lifespan(0),
   age(0),
   top(0),
@@ -2767,6 +2769,7 @@ zoneData::zoneData() :
 }
 
 zoneData::zoneData(const zoneData &t) :
+  zone_nr(t.zone_nr),
   lifespan(t.lifespan),
   age(t.age),
   top(t.top),
@@ -2795,6 +2798,7 @@ zoneData & zoneData::operator= (const zoneData &t)
   delete [] name;
   name = mud_str_dup(t.name);
 
+  zone_nr = t.zone_nr;
   lifespan = t.lifespan;
   age = t.age;
   top = t.top;

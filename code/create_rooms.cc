@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: create_rooms.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 /*****************************************************************************
  **                                                                         **
  ** SneezyMUD  - All rights reserved, SneezyMUD Coding Team.                **
@@ -26,8 +11,6 @@
  *****************************************************************************/
 
 #include "stdsneezy.h"
-#include "create.h"
-#include "room.h"
 
 const char *room_fields[] =
 {
@@ -45,6 +28,7 @@ const char *room_fields[] =
   "teleport",     // 12
   "copy",         // 13
   "replace",      // 14
+  "list",         // 15
   "\n"
 };
 
@@ -80,14 +64,70 @@ int room_length[] =
   50,
 };
 
+void make_room_coords(TRoom *rorig, TRoom *tdest, int dir){
+  tdest->setXCoord(rorig->getXCoord());
+  tdest->setYCoord(rorig->getYCoord());
+  tdest->setZCoord(rorig->getZCoord());
+
+  switch(dir){
+    case 0:
+      tdest->setYCoord(tdest->getYCoord()+1);
+      break;
+    case 1:
+      tdest->setXCoord(tdest->getXCoord()+1);
+      break;
+    case 2:
+      tdest->setYCoord(tdest->getYCoord()-1);
+      break;
+    case 3:
+      tdest->setXCoord(tdest->getXCoord()-1);
+      break;
+    case 4:
+      tdest->setZCoord(tdest->getZCoord()+1);
+      break;
+    case 5:
+      tdest->setZCoord(tdest->getZCoord()-1);
+      break;
+    case 6:
+      tdest->setXCoord(tdest->getXCoord()+1);
+      tdest->setYCoord(tdest->getYCoord()+1);
+      break;
+    case 7:
+      tdest->setYCoord(tdest->getYCoord()+1);
+      tdest->setXCoord(tdest->getXCoord()-1);
+      break;
+    case 8:
+      tdest->setYCoord(tdest->getYCoord()-1);
+      tdest->setXCoord(tdest->getXCoord()+1);
+      break;
+    case 9:
+      tdest->setXCoord(tdest->getXCoord()-1);
+      tdest->setYCoord(tdest->getYCoord()-1);
+      break;    
+  }
+}
+
+
 static void update_room_menu(const TBeing *ch)
 {
-  const char *edit_menu = "    1) Name                       2) Description\n\r"
-"    3) Flags                      4) Sector Type\n\r"
-"    5) Exits                      6) Extra Description\n\r"
-"    7) Maximum Capacity           8) Room Height\n\r"
-"    9) Delete an exit            10) Delete all extra descs\n\r"
-"\n\r";
+  const char *edit_menu_basic =
+ "    1) Name                       2) Description\n\r"
+ "    3) Flags                      4) Sector Type\n\r"
+ "    5) Exits                      6) Extra Description\n\r"
+ "    7) Maximum Capacity           8) Room Height\n\r"
+ "    9) Delete an exit            10) Delete all extra descs\n\r"
+ "\n\r";
+  const char *edit_menu_advanced =
+ "%s 1)%s %s\n\r"
+ "%s 2)%s %sDescription%s\n\r"
+ "%s 3)%s %sFlags%s\n\r"
+ "%s 4)%s %s\n\r"
+ "%s 5)%s %sExits%s:%s\n\r"
+ "%s 6)%s %sExtra Description(s)%s\n\r"
+ "%s 7)%s %sMax Capacity%s: %d\n\r"
+ "%s 8)%s %sRoom Height%s: %d\n\r"
+ "%s 9)%s %sDelete an Exit%s\n\r"
+ "%s10)%s %sDelete All Extra Descriptions%s\n\r";
 
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(VT_CURSPOS, 1, 1);
@@ -98,7 +138,43 @@ static void update_room_menu(const TBeing *ch)
   ch->sendTo("Sector Type: %s", TerrainInfo[ch->roomp->getSectorType()]->name);
   ch->sendTo(VT_CURSPOS, 5, 1);
   ch->sendTo("Menu:\n\r");
-  ch->sendTo(edit_menu);
+
+  if (IS_SET(ch->desc->autobits, AUTO_TIPS)) {
+    dirTypeT     tExit;
+    roomDirData *tData;
+    string       tStString("");
+
+    const char *exDirs[] =
+    {
+      "N", "E", "S", "W", "U",
+      "D", "NE", "NW", "SE", "SW"
+    };
+
+    for (tExit = MIN_DIR; tExit < MAX_DIR; tExit++)
+      if ((tData = ch->roomp->exitDir(tExit)) && tData->to_room != ROOM_NOWHERE) {
+        tStString += " ";
+        tStString += exDirs[tExit];
+      }
+
+    if (tStString.empty()) {
+      tStString += " ";
+      tStString += "NONE";
+    }
+
+    ch->sendTo(edit_menu_advanced,
+               ch->cyan(), ch->norm(), ch->roomp->name,
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm(), TerrainInfo[ch->roomp->getSectorType()]->name,
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(), tStString.c_str(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(), ch->roomp->getMoblim(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(), ch->roomp->getRoomHeight(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
+               ch->cyan(), ch->norm(), ch->purple(), ch->norm());
+  } else
+    ch->sendTo(edit_menu_basic);
+
   ch->sendTo("--> ");
 }
 
@@ -120,6 +196,7 @@ void TPerson::doEdit(const char *arg)
   sectorTypeT sectype;
   string tStr;
   long r_flags;
+  string tStString("");
   char string[512],
        Buf[256],
        tString[256],
@@ -128,11 +205,13 @@ void TPerson::doEdit(const char *arg)
   extraDescription *ed,
                    *prev;
   TRoom *newrp, *newrpTo;
+  FILE  *tFile;
 
   if (!hasWizPower(POWER_EDIT)) {
     incorrectCommand();
     return;
   }
+
   if (!isImmortal())
     return;
 
@@ -140,6 +219,19 @@ void TPerson::doEdit(const char *arg)
   // calls to the desc, and if it doesn't exist....*crash*
   if (!desc)
     return;
+
+  if (!in_range(roomp->number, desc->blockastart, desc->blockaend) &&
+      !in_range(roomp->number, desc->blockbstart, desc->blockbend) &&
+      roomp->number != desc->office && !hasWizPower(POWER_REDIT_ENABLED)) {
+    sendTo("This room is not yours...Sorry\n\r");
+    return;
+  }
+
+  if (!limitPowerCheck(CMD_EDIT, roomp->number)) {
+    sendTo("You are not allowed to edit this room, sorry.\n\r");
+    return;
+  }
+
 
   bisect_arg(arg, &field, string, room_fields);
 
@@ -151,7 +243,7 @@ void TPerson::doEdit(const char *arg)
    *                              -Lapsos        *
    ***********************************************/
 
-  if (!field || field > 14) {
+  if (!field || field > 15) {
     tStr = "\0";
     tStr += "Supported Fields:\n\r";
     tStr += "  description             Will prompt for text.\n\r";
@@ -170,10 +262,12 @@ void TPerson::doEdit(const char *arg)
     tStr += "    <dir> = 0=n, 1=e, 2=s, 3=w, 4=u, 5=d, 6=ne, 7=nw, 8=se, 9=sw\n\r";
     tStr += "  copy <field> <room(s)>  Will copy <field> into room(s) specified.\n\r";
     tStr += "  replace <desc/extra> <\"extra\"/\"text\"> <\"text\"> <\"text\">";
+    tStr += "  list <2>                Will list all rooms in the rooms file.\n\r";
     tStr += "Please see HELP EDIT for more information.\n\r";
     sendTo(tStr.c_str());
     return;
   }
+
   r_flags = -1;
   s_type  = -1;
 
@@ -181,8 +275,12 @@ void TPerson::doEdit(const char *arg)
     case  1: // Description
       desc->str = &roomp->descr;
       desc->max_str = MAX_STRING_LENGTH;
-      if (desc->client)
+#if 0
+// as is, this will cause it to send the descr as a "bug"
+      if (desc->m_bIsClient) {
         desc->clientf("%d", CLIENT_STARTEDIT, 4000);
+      }
+#endif
       break;
     case  2: // Exdscr
       if (sscanf(string, "%d", &rdir) != 1) {
@@ -245,6 +343,12 @@ void TPerson::doEdit(const char *arg)
             return;
           }
 
+	  if (!limitPowerCheck(CMD_EDIT, toRoom)) {
+	    sendTo("You are not allowed to make an exit out to that room, sorry.\n\r");
+	    return;
+	  }
+
+
           CreateOneRoom(toRoom);
 
           if (!(newrpTo = real_roomp(toRoom))) {
@@ -296,6 +400,12 @@ void TPerson::doEdit(const char *arg)
                      (WORLD_SIZE - 1));
               return;
             }
+
+	    if (!limitPowerCheck(CMD_EDIT, rdir)) {
+	      sendTo("You are not allowed to make an exit out to that room, sorry.\n\r");
+	      return;
+	    }
+
 
             CreateOneRoom(rdir);
 
@@ -390,6 +500,12 @@ void TPerson::doEdit(const char *arg)
           return;
         }
       }
+
+      if (!limitPowerCheck(CMD_EDIT, exroom)) {
+	sendTo("You are not allowed to make an exit out to that room, sorry.\n\r");
+	return;
+      }
+
       if (!real_roomp(exroom)) {
         if ((exroom > -1) && (exroom < WORLD_SIZE)) {
           sendTo("Exit room does not exist. Creating room....");
@@ -404,7 +520,8 @@ void TPerson::doEdit(const char *arg)
           // our current room.  Flags, Sector, and Room Height.
           newrp->setRoomFlags(roomp->getRoomFlags());
           newrp->setSectorType(roomp->getSectorType());
-          newrp->setRoomHeight(roomp->getRoomHeight());
+          newrp->setRoomHeight(roomp->getRoomHeight());	
+	  make_room_coords(roomp, newrp, rdir);  
         } else {
           sendTo("Rooms need to be positive numbers less than %d.\n\r", WORLD_SIZE-1);
           return;
@@ -781,6 +898,17 @@ void TPerson::doEdit(const char *arg)
       return;
       break;
     case  9: // Name
+      tStString = string;
+      stSpaceOut(tStString);
+
+      if (!tStString.empty()) {
+        delete [] roomp->name;
+        sendTo("New Room Title: %s\n\r", tStString.c_str());
+        roomp->name = mud_str_dup(tStString.c_str());
+
+        return;
+      }
+
       desc->str = &roomp->name;
       break;
     case 10: // River
@@ -1047,6 +1175,43 @@ void TPerson::doEdit(const char *arg)
       }
       return;
       break;
+    case 15: // edit list <2>
+      sprintf(tString, "immortals/%s/rooms%s",
+              good_cap(getNameNOC(this).c_str()).c_str(),
+              (*string ? "_2" : ""));
+
+      if (!(tFile = fopen(tString, "r"))) {
+        sendTo("You don't have a %srooms file.\n\r",
+               (*string ? "2nd " : ""));
+      } else {
+        tStr = "Room List:\n\r";
+
+        while (!feof(tFile)) {
+          if (fscanf(tFile, "#%d\n\r", &cRoom) != 1) {
+            fgets(tString, 256, tFile);
+            continue;
+          }
+
+          sprintf(tString, "%6d: ", cRoom);
+          tStr += tString;
+          tBuf = fread_string(tFile);
+
+          if (tBuf && *tBuf) {
+            tStr += tBuf;
+            tStr += "\n\r";
+          } else
+            tStr += "Unknown\n\r";
+
+          if (tBuf) {
+            delete [] tBuf;
+            tBuf = NULL;
+          }
+	}
+
+        desc->page_string(tStr.c_str());
+      }
+      return;
+      break;
     default:
       sendTo("I'm so confused :-)\n\r");
       return;
@@ -1080,6 +1245,82 @@ void TBeing::doRload(const char *)
 
 void TPerson::doRload(const char *argument)
 {
+#if 1
+  int    tStart = 0,
+         tEnd = 0;
+  bool   tSec = false;
+  char   tString[256];
+  string tStArg(argument),
+         tStString(""),
+         tStBuffer("");
+
+  if (!hasWizPower(POWER_RLOAD)) {
+    incorrectCommand();
+    return;
+  }
+
+  if (!desc || !isImmortal())
+    return;
+
+  stSpaceOut(tStArg);
+  tStArg = two_arg(tStArg, tStString, tStBuffer);
+
+  if (tStString.empty() || tStString[0] == '1') {
+    tStart = desc->blockastart;
+    tEnd   = desc->blockaend;
+  } else if (tStString[0] == '2') {
+    tStart = desc->blockbstart;
+    tEnd   = desc->blockbend;
+    tSec   = true;
+  } else if (is_abbrev(tStString.c_str(), "backup")) {
+    string tStExtra(""),
+           tStStandard("");
+    bool   tStandard = false;
+
+    two_arg(tStBuffer, tStExtra, tStStandard);
+
+    if (!tStExtra.empty()) {
+      if (tStExtra[0] == '1') {
+        if (!tStStandard.empty() && is_abbrev(tStStandard.c_str(), "standard"))
+          tStandard = true;
+      } else if (tStExtra[0] == '2') {
+        tSec = true;
+
+        if (!tStStandard.empty() && is_abbrev(tStStandard.c_str(), "standard"))
+          tStandard = true;
+      } else if (is_abbrev(tStExtra.c_str(), "standard"))
+        tStandard = true;
+      else {
+        sendTo("Syntax: redit load backup <\"1\"/\"2\"/\"standard\"> <\"standard\">\n\r");
+        return;
+      }
+    }
+
+    if (!tSec)
+      sprintf(tString, "cp immortals/%s/rooms.bak%s immortals/%s/rooms",
+              getName(), (!tStandard ? "2" : ""), getName());
+    else
+      sprintf(tString, "cp immortals/%s/rooms_2.bak%s immortals/%s/rooms_2",
+              getName(), (!tStandard ? "2" : ""), getName());
+
+    sendTo("Restoring Backup2 File.\n\r");
+    vsystem(tString);
+    return;
+  } else {
+    sendTo("Syntax: redit load <\"1\"/\"2\">\n\r");
+    return;
+  }
+
+  if (tStart <= 0 || tEnd <= 0) {
+    sendTo("You have no rooms assigned in that block...Sorry.\n\r");
+    return;
+  }
+
+  if (tStart > tEnd)
+    sendTo("Your room block is messed up.  Talk with Head Low immediatly!\n\r");
+  else
+    RoomLoad(this, tStart, tEnd, tSec);
+#else
   string stRoom(""),
          enRoom(""),
          tString("");
@@ -1139,6 +1380,7 @@ void TPerson::doRload(const char *argument)
     RoomLoad(this, start, end, useSecond);
   else
     sendTo("Syntax: rload <first-room> <last-room>\n\r");
+#endif
 }
 
 void TBeing::doRsave(const char *)
@@ -1283,8 +1525,22 @@ void TPerson::doRedit(const char *argument)
     incorrectCommand();
     return;
   }
-  if (!desc || (!isImmortal()))
+  if (!desc || (!isImmortal()) || !roomp)
     return;
+
+  if (!in_range(roomp->number, desc->blockastart, desc->blockaend) &&
+      !in_range(roomp->number, desc->blockbstart, desc->blockbend) &&
+      roomp->number != desc->office && !hasWizPower(POWER_REDIT_ENABLED)) {
+    sendTo("This room is not yours...Sorry\n\r");
+    return;
+  }
+
+  if (!limitPowerCheck(CMD_REDIT, roomp->number)) {
+    sendTo("You are not allowed to redit this room, sorry.\n\r");
+    return;
+  }
+
+
 
   for (; isspace(*argument); argument++);
   if (*argument) {
@@ -1422,7 +1678,7 @@ static void finishRoom(TRoom *rp, TBeing *ch, dirTypeT dir)
 
   if (!(exitp = rp->dir_option[dir])) {
     ch->sendTo("Blah!\n\r");
-    vlogf(9, "Bad stuff in finishRoom!  No dir_option!");
+    vlogf(LOG_EDIT, "Bad stuff in finishRoom!  No dir_option!");
     return;
   }
   if (!(newrp = real_roomp(exitp->to_room))) {
@@ -1430,7 +1686,7 @@ static void finishRoom(TRoom *rp, TBeing *ch, dirTypeT dir)
     CreateOneRoom(exitp->to_room);
     ch->sendTo("Copying flags, sector type and room height to new room.\n\r");
     if (!(newrp = real_roomp(exitp->to_room))) {
-      vlogf(9, "BOGUSNESS in finishRoom()::medit()");
+      vlogf(LOG_EDIT, "BOGUSNESS in finishRoom()::medit()");
       ch->sendTo("Error occured!!!!\n\r");
       ch->specials.edit = MAIN_MENU;
       update_room_menu(ch);
@@ -1439,6 +1695,7 @@ static void finishRoom(TRoom *rp, TBeing *ch, dirTypeT dir)
     newrp->setRoomFlags(rp->getRoomFlags());
     newrp->setSectorType(rp->getSectorType());
     newrp->setRoomHeight(rp->getRoomHeight());
+    make_room_coords(rp, newrp, dir);
     newrp->removeRoomFlagBit(ROOM_BEING_EDITTED);
     ch->sendTo("Done.\n\r");
   }
@@ -1875,7 +2132,7 @@ static void ChangeExitKeyword(TRoom *rp, TBeing *ch, const char *arg, editorEnte
     }
     if (!rp->dir_option[dir]) {
       ChangeExitKeyword(rp, ch, "", ENTER_CHECK);
-      vlogf(5, "Bad event in ChangeExitKeyword");
+      vlogf(LOG_EDIT, "Bad event in ChangeExitKeyword");
       return;
     }
 
@@ -2289,13 +2546,20 @@ static void ChangeExitNumber(TRoom *rp, TBeing *ch, const char *arg, editorEnter
 
   update = atoi(arg);
 
-  if (update < 0 || update > 29000) {
-    ch->sendTo("\n\rRoom number must be between 0 and 29000.\n\r");
+  if (update < 0 || update > 39000) {
+    ch->sendTo("\n\rRoom number must be between 0 and 39000.\n\r");
     ch->sendTo("\n\rExit to Room: ");
     return;
   }
+
+  if (!ch->limitPowerCheck(CMD_REDIT, update)) {
+    ch->sendTo("\n\rYou are not allowed to make an exit out to that room, sorry.\n\r");
+    ch->sendTo("\n\rExit to Room: ");
+    return;
+  }
+
   if (!rp->dir_option[dir]) {
-    vlogf(10, "Bad news in redit!  no dir where it should be!");
+    vlogf(LOG_EDIT, "Bad news in redit!  no dir where it should be!");
     ch->specials.edit = MAIN_MENU;
     update_room_menu(ch);
   }
@@ -2423,11 +2687,13 @@ static void DeleteExit(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT 
       update_room_menu(ch);
       return;
     }
-  }
-  update = atoi(arg);
-  update--;
 
-  if (type != ENTER_CHECK) {
+    update = atoi(arg);
+    update--;
+
+    if (update < MIN_DIR || update >= MAX_DIR)
+      return; 
+
     if (rp->dir_option[update]) {
       rp->dir_option[update] = 0;
       delete rp->dir_option[update];
@@ -2440,12 +2706,35 @@ static void DeleteExit(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT 
       ch->sendTo("Enter another direction, or press <ENTER> to exit.\n\r");
       return;
     }
+
+    return;
   }
   ch->sendTo(VT_HOMECLR);
   ch->describeWeather(ch->in_room);
   ch->listExits(ch->roomp);
   ch->sendTo("\n\r");
+
+#if 1
+  dirTypeT     tExit;
+  roomDirData *tData;
+
+  for (tExit = MIN_DIR; tExit < MAX_DIR; tExit++)
+    if ((tData = rp->exitDir(tExit)) && tData->to_room != ROOM_NOWHERE) {
+      ch->sendTo("  %2d) %-9s     ", (tExit + 1), dirs[tExit]);
+
+      if ((tExit % 2))
+        ch->sendTo("\n\r");
+    } else if (!(tExit % 2))
+      ch->sendTo("                    ");
+    else
+      ch->sendTo("\n\r");
+
+  if (!(tExit % 2))
+    ch->sendTo("\n\r");
+#else
   ch->sendTo(exit_menu);
+#endif
+
   ch->sendTo("Choose exit to delete.\n\r--> ");
   return;
 }
@@ -2728,7 +3017,7 @@ void CreateOneRoom(int loc_nr)
     for (z = 0; rp->number > zone_table[z].top && z < zone_table.size(); z++);
 
     if (z >= zone_table.size()) {
-      vlogf(10, "Room %d is outside of any zone.\n", rp->number);
+      vlogf(LOG_EDIT, "Room %d is outside of any zone.\n", rp->number);
       z--;
     }
     rp->setZone(z);
@@ -2750,6 +3039,13 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
   int tmp;
   extraDescription *new_descr;
 
+  fscanf(fl, "%d ", &tmp);
+  x=tmp;
+  fscanf(fl, "%d ", &tmp);
+  y=tmp;
+  fscanf(fl, "%d\n", &tmp);
+  z=tmp;
+
   name = fread_string(fl);
 
   if (tinyfile == true)
@@ -2765,10 +3061,10 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
     for (z = 0; number > zone_table[z].top && z < zone_table.size(); z++);
 
     if (z >= zone_table.size()) {
-      vlogf(0, "Room %d is outside of any zone.\n", number);
+      vlogf(LOG_EDIT, "Room %d is outside of any zone.\n", number);
       exit(0);
     }
-    zone = z;
+    zone = &zone_table[z];
   }
   fscanf(fl, " %d ", &tmp);
   roomFlags = tmp;
@@ -2817,11 +3113,11 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
         new_descr = new extraDescription();
         new_descr->keyword = fread_string(fl);
         if (!new_descr->keyword || !*new_descr->keyword)
-          vlogf(0, "No keyword in room %d\n", number);
+          vlogf(LOG_EDIT, "No keyword in room %d\n", number);
 
         new_descr->description = fread_string(fl);
         if (!new_descr->description || !*new_descr->description)
-          vlogf(LOW_ERROR, "No desc in room %d\n", number);
+          vlogf(LOG_LOW, "No desc in room %d\n", number);
 
         new_descr->next = ex_description;
         ex_description = new_descr;
@@ -2830,7 +3126,7 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
         roomCount++;
         return;
       default:
-        vlogf(10, "Unknown auxiliary code `%s' in room load of #%d", chk, number);
+        vlogf(LOG_EDIT, "Unknown auxiliary code `%s' in room load of #%d", chk, number);
         break;
     }
   }
@@ -2857,7 +3153,7 @@ void TRoom::initLight()
         found = TRUE;
     }
     if (!found) {
-      vlogf(9, "Room (%s:%d) missing expected window.  Resetting.", name, number);
+      vlogf(LOG_EDIT, "Room (%s:%d) missing expected window.  Resetting.", name, number);
       setHasWindow(FALSE);
     }
     setLight(best);
@@ -3162,13 +3458,74 @@ void room_edit(TBeing *ch, const char *arg)
       ChangeExitSlopedStatus(rp, ch, arg, ENTER_REENTRANT);
       return;
     default:
-      vlogf(9, "Got to bad spot in room_edit (Error: %d)",ch->specials.edit);
+      vlogf(LOG_EDIT, "Got to bad spot in room_edit (Error: %d)",ch->specials.edit);
       return;
   }
 }
 
 void TPerson::doRsave(const char *argument)
 {
+#if 1
+  int    tStart = 0,
+         tEnd   = 0;
+  bool   tSec   = false;
+  char   tString[256];
+  string tStArg(argument),
+         tStString(""),
+         tStBuffer("");
+
+  if (!hasWizPower(POWER_RSAVE)) {
+    incorrectCommand();
+    return;
+  }
+
+  if (!desc || !isImmortal())
+    return;
+
+  stSpaceOut(tStArg);
+  tStArg = two_arg(tStArg, tStString, tStBuffer);
+
+  if (tStString.empty() || tStString[0] == '1') {
+    tStart = desc->blockastart;
+    tEnd   = desc->blockaend;
+  } else if (tStString[0] == '2') {
+    tStart = desc->blockbstart;
+    tEnd   = desc->blockbend;
+    tSec   = true;
+  } else if (is_abbrev(tStString.c_str(), "backup")) {
+    if (tStBuffer.empty() || tStBuffer[0] == '1')
+      sprintf(tString, "cp immortals/%s/rooms immortals/%s/rooms.bak2",
+              getName(), getName());
+    else if (tStBuffer[0] == '2')
+      sprintf(tString, "cp immortals/%s/rooms_2 immortals/%s/rooms_2.bak2",
+              getName(), getName());
+    else {
+      sendTo("Syntax: redit save backup <\"1\"/\"2\">\n\r");
+      return;
+    }
+
+    sendTo("Creating Backup2 File.\n\r");
+    vsystem(tString);
+    return;
+  } else {
+    sendTo("Syntax: redit save <\"1\"1/\"2\">\n\r");
+    return;
+  }
+
+  if (tStart <= 0 || tEnd <= 0) {
+    sendTo("You have no rooms assigned in that block...Sorry.\n\r");
+    return;
+  }
+
+  if (tStart > tEnd)
+    sendTo("Your room block is messed up.  Talk with Head Low immediatly!\n\r");
+  else {
+    sprintf(tString, "mv immortals/%s/rooms%s immortals/%s/rooms%s.bak",
+            getName(), (tSec ? "_2" : ""), getName(), (tSec ? "_2" : ""));
+    vsystem(tString);
+    RoomSave(this, tStart, tEnd, tSec);
+  }
+#else
   string stRoom(""),
          enRoom(""),
          tString("");
@@ -3181,6 +3538,7 @@ void TPerson::doRsave(const char *argument)
     incorrectCommand();
     return;
   }
+
   if (!isImmortal())
     return;
 
@@ -3224,5 +3582,5 @@ void TPerson::doRsave(const char *argument)
     RoomSave(this, start, end, useSecond);
   } else
     sendTo("Syntax: rsave <first-room> <last-room>\n\r");
+#endif
 }
-

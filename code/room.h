@@ -11,6 +11,7 @@
 extern TRoom *room_db[];
 extern TRoom *real_roomp(int);
 extern int top_of_world;
+extern vector<zoneData>zone_table;
 
 // this array is used for cycling through room specials
 // cycling through all the rooms takes too long so just store which rooms
@@ -185,7 +186,7 @@ class TRoom : public TThing {
     byte riverSpeed;        // River flows with this speed
     byte hasWindow;         // whether or not room has a window   
     byte teleLook;          // do a do_look or not when teleported 
-    sh_int zone;            // Room zone (for resetting)          
+    zoneData *zone;            // Room zone (for resetting)          
     sh_int teleTime;        // time to a teleport                
     sh_int teleTarg;        // target room of a teleport       
     ubyte moblim;           // # of mobs allowed in room.       
@@ -270,10 +271,10 @@ class TRoom : public TThing {
       roomHeight = r_height;
     }
     void setZone(int z) {
-      zone = z;
+      zone = &zone_table[z];
     }
     int getZone() const {
-      return zone;
+      return zone?zone->zone_nr:-1;
     }
     ubyte getMoblim() const {
       return moblim;

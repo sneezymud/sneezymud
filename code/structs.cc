@@ -433,7 +433,7 @@ TRoom::TRoom(int r) :
   riverSpeed(0),
   hasWindow(FALSE), 
   teleLook(0),
-  zone(0),
+  zone(NULL),
   teleTime(0),
   teleTarg(0),
   moblim(0),
