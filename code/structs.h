@@ -61,6 +61,7 @@ typedef signed char byte;
 extern void vlogf(const char *, ...);
 extern void vlogf(logTypeT, const char *, ...);
 extern char * mud_str_dup(const string buf);
+extern char * mud_str_dup(const char *buf);
 extern char * mud_str_copy(char *dest, const char *src, size_t n);
 
 class time_info_data

@@ -3261,6 +3261,14 @@ string nextToken(char delim, unsigned int maxSize, char *str)
   return retbuf;
 }
 
+// we need this version of mud_str_dup, as the string version will
+// crash if we pass a NULL
+char *mud_str_dup(const char *buf)
+{
+  // call string version, pass "" if buf is NULL
+  return mud_str_dup((string) (buf?buf:""));
+}
+
 // we use to restrict this to MAX_STRIN_LENGTH in size, we no longer do...
 char * mud_str_dup(const string buf)
 {
