@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_bag.cc,v $
+// Revision 5.4  2002/08/09 16:13:00  peel
+// changed junk to drop in auto pouch code
+//
 // Revision 5.3  2002/01/16 05:40:29  peel
 // added plants
 //
@@ -90,7 +93,7 @@ int TBag::getMe(TBeing *ch, TThing *sub)
       ch->addCommandToQue(buf);
       sprintf(buf, "get all moneypouch");
       ch->addCommandToQue(buf);
-      sprintf(buf, "junk moneypouch");
+      sprintf(buf, "drop moneypouch");
       ch->addCommandToQue(buf);
     }
   }
