@@ -1080,10 +1080,19 @@ void TBeing::gainCondition(condTypeT condition, int value)
       if (!(t = equipment[i]))
         continue;
       t->findSomeDrink(&last_good, &last_cont, NULL);
+
+      if (last_good)
+        break;
     }
-    for (t = getStuff(); t; t = t->nextThing) 
-      t->findSomeDrink(&last_good, &last_cont, NULL);
-    
+
+    if (!last_good)
+      for (t = getStuff(); t; t = t->nextThing) {
+        t->findSomeDrink(&last_good, &last_cont, NULL);
+
+	if (last_good)
+	  break;
+      }
+
     if (last_good && !last_cont) {
       sprintf(buf, "%s", fname(last_good->name).c_str());
       doDrink(buf);

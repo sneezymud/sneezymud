@@ -285,8 +285,12 @@ void TBaseContainer::findSomeDrink(TDrinkCon **last_good, TBaseContainer **last_
 {
   TThing *t;
 
-  for (t = getStuff(); t; t = t->nextThing)
+  for (t = getStuff(); t; t = t->nextThing) {
     t->findSomeDrink(last_good, last_cont, this);
+
+    if (last_good)
+      break;
+  }
 }
 
 void TBaseContainer::findSomeFood(TFood **last_good, TBaseContainer **last_cont, TBaseContainer *)
