@@ -1096,7 +1096,7 @@ void TPerson::doLow(const sstring &arg)
 
     while(db.fetchRow()){
       ssprintf(buf, "%5s %5s %5s %10s %10s", db["count"],
-	       db["min"], db["avg"], db["max"], db["sum"]);
+	       db["max"], db["nin"], db["avg"], db["sum"]);
 
       switch(mapFileToApply(convertTo<int>(db["type"]))){
 	case APPLY_STR:
