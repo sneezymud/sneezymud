@@ -2,6 +2,7 @@
 #include "mail.h"
 #include "database.h"
 #include "shop.h"
+#include "shopowned.h"
 
 // may not exceed NAME_SIZE (15) chars
 static const char * const SNEEZY_ADMIN = "SneezyMUD Administration";
@@ -156,10 +157,8 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
   act("$n starts to write some mail.", TRUE, this, 0, 0, TO_ROOM);
   if (!imm) {
     me->doTell(fname(name), fmt("I'll take %d talens for the stamp.") % amt);
-    giveMoney(me, amt, GOLD_SHOP);
-    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-    shoplog(shop_nr, this, me, recipient, amt, "mailing");
-
+    TShopOwned tso(shop_nr, me, this);
+    tso.doBuyTransaction(amt, recipient, "mailing");
   } else if (isImmortal()) {
     me->doTell(fname(name), "Since you're high and mighty, I'll waive the fee.");
   } else {

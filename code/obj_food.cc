@@ -1024,18 +1024,8 @@ void TFood::nukeFood()
 
 void TFood::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
-  ch->giveMoney(keeper, cost, GOLD_SHOP_FOOD);
-
-  shoplog(shop_nr, ch, keeper, getName(), cost, "buying");
-
-  if(shop_index[shop_nr].isOwned()){
-    TShopOwned tso(shop_nr, keeper, ch);
-
-    tso.doDividend(this, cost);
-    tso.doReserve();
-    tso.chargeTax(this, cost);
-  }
-
+  TShopOwned tso(shop_nr, keeper, ch);
+  tso.doBuyTransaction(cost, getName(), "buying", this);
 }
 
 void TFood::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)

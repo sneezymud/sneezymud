@@ -153,12 +153,8 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 		   num % buf2);
     act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
 
-    ch->giveMoney(keeper, price, GOLD_COMM);
-    shoplog(shop_nr, ch, keeper, obj2->getName(), price, "buying");
-
     TShopOwned tso(shop_nr, keeper, ch);
-    tso.doReserve();
-
+    tso.doBuyTransaction(price, getName(), "buying", obj2);
 
   } else {
     // this happens with sub zero weight components

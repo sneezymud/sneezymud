@@ -1643,18 +1643,8 @@ sstring TBaseWeapon::getNameForShow(bool useColor, bool useName, const TBeing *c
 
 void TBaseWeapon::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
-  ch->giveMoney(keeper, cost, GOLD_SHOP_WEAPON);
-
-  shoplog(shop_nr, ch, keeper, getName(), cost, "buying");
-
-  if(shop_index[shop_nr].isOwned()){
-    TShopOwned tso(shop_nr, keeper, ch);
-    
-    tso.doDividend(this, cost);
-    tso.doReserve();
-    tso.chargeTax(this, cost);
-  }
-
+  TShopOwned tso(shop_nr, keeper, ch);
+  tso.doBuyTransaction(cost, getName(), "buying", this);
 }
 
 void TBaseWeapon::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)

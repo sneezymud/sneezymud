@@ -32,6 +32,72 @@ bool sameAccount(sstring buf, int shop_nr){
   return FALSE;
 }
 
+// obj is optional
+void TShopOwned::doBuyTransaction(int cashCost, const sstring &name, 
+			       const sstring &action, TObj *obj)
+{
+  // buyer gives money to seller
+  ch->giveMoney(keeper, cashCost, GOLD_SHOP);
+
+  // log the sale
+  shoplog(shop_nr, ch, keeper, name, cashCost, action);
+
+  // take the expense cut out
+  //  doExpenses(cashCost, profit_buy);
+
+  if(owned){
+    doDividend(cashCost, name);
+    doReserve();
+    chargeTax(cashCost, name, obj);
+  }
+  
+  // save
+  keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+  ch->doSave(SILENT_YES);
+}
+
+#if 0
+void TShopOwned::doExpenses(int cashCost, double profit_buy)
+{
+  double ratio=profit_buy-getExpenseRatio();
+  double profit_buy=shop_index[shop_nr].getProfitBuy(o, ch));
+
+  int shop_nr=160;
+  TMonster *sba;
+  TBeing *t;
+
+  for(t=character_list;t;t=t->next){
+    if(t->number==shop_index[shop_nr].keeper)
+      break;
+  }
+
+  if(t && (sba=dynamic_cast<TMonster *>(t))){
+    
+
+    sba->addToMoney(value, GOLD_SHOP);
+    shoplog(shop_nr, speaker, sba, tm->getName(), 
+	    value, "giving");
+    sba->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+  }
+
+
+}
+
+
+double TShopOwned getExpenseRatio()
+{
+  double ratio;
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select expense_ratio from shopowned where shop_nr=%i", shop_nr);
+  
+  if(db.fetchRow())
+    ratio=convertTo<double>(db["expense_ratio"]);
+
+}
+#endif
+
+
 int TShopOwned::getPurchasePrice(int talens, int value){
   return (int)(((talens+value)*1.15)+1000000);
 }
@@ -70,7 +136,7 @@ TShopOwned::TShopOwned(int shop_nr, TMonster *keeper, TBeing *ch) :
   access=getShopAccess(shop_nr, ch);
 }
 
-void TShopOwned::chargeTax(TObj *o, int cost)
+void TShopOwned::chargeTax(int cost, const sstring &name, TObj *o)
 {
   int tax_office;
   TDatabase db(DB_SNEEZY);
@@ -107,10 +173,10 @@ void TShopOwned::chargeTax(TObj *o, int cost)
   dynamic_cast<TMonster *>(taxman)->saveItems(fmt("%s/%d") % 
 					      SHOPFILE_PATH % tax_office);
   
-  shoplog(shop_nr, keeper, keeper, o->getName(), 
+  shoplog(shop_nr, keeper, keeper, name, 
 	  -cost, "paying tax");
   shoplog(tax_office, keeper, dynamic_cast<TMonster *>(taxman),
-	  o->getName(), cost, "tax");
+	  name, cost, "tax");
 
   TShopOwned tso(tax_office, dynamic_cast<TMonster *>(taxman), keeper);
   tso.doReserve();
@@ -298,7 +364,7 @@ void TShopOwned::setSpeed(sstring arg)
 
 
 
-void TShopOwned::doDividend(TObj *o, int cost)
+void TShopOwned::doDividend(int cost, const sstring &name)
 {
   if(getDividend()){
     int div=(int)((double)cost * getDividend());
@@ -321,7 +387,7 @@ void TShopOwned::doDividend(TObj *o, int cost)
     shoplog(bank_nr, keeper,  dynamic_cast<TMonster *>(banker), "talens", div, "dividend");
 
     keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-    shoplog(shop_nr, ch, keeper, o->getName(), -div, "dividend");
+    shoplog(shop_nr, ch, keeper, name, -div, "dividend");
     
 
     corp.setMoney(corp.getMoney() + div);

@@ -14,15 +14,17 @@ class TShopOwned {
   int getPurchasePrice(int, int);
   int getCorpID();
 
+  void doBuyTransaction(int, const sstring &, const sstring &, TObj *obj=NULL);
+
   void setDividend(sstring);
   double getDividend();
-  void doDividend(TObj *, int);
+  void doDividend(int, const sstring &);
 
   void setReserve(sstring);
   int getMinReserve();
   int getMaxReserve();
   void doReserve();
-  void chargeTax(TObj *, int);
+  void chargeTax(int, const sstring &, TObj *);
 
   // repair specific
   double getQuality();
