@@ -1769,7 +1769,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_MOB_COMBAT:
         case CMD_TASK_FIGHTING:
         case CMD_TASK_CONTINUE:
-
+	case CMD_OBJ_OWNER_HIT:
           incorrectCommand();
           return FALSE;
       }

@@ -5902,6 +5902,33 @@ int starfiresheath(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 
 
+int teleportRescue(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TRoom *room;
+  
+  if(cmd != CMD_OBJ_OWNER_HIT)
+    return FALSE;
+
+  if(ch->getHit() < (ch->hitLimit()*0.15)){
+    act("<W>Your $o glows brightly and then shatters into hundreds of pieces!<1>", TRUE,ch,o,NULL,TO_CHAR,NULL);
+    act("<W>$n's $o glows brightly and then shatters into hundreds of pieces!<1>", TRUE,ch,o,NULL,TO_ROOM,NULL);
+
+    --*ch;
+    room=real_roomp(100);
+    *room += *ch;
+
+    delete o;
+
+    act("A sense of nausea comes over you and you find youself in another place.", TRUE,ch,NULL,NULL,TO_CHAR,NULL);
+    act("$n appears in the room, looking confused.", TRUE,ch,NULL,NULL,TO_ROOM,NULL);
+
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+
 //MARKER: END OF SPEC PROCS
 
 
@@ -6016,6 +6043,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "fragile arrow", fragileArrow},
   {FALSE, "Weapon: Starfire", starfire},
   {FALSE, "Sheath: Starfire", starfiresheath}, // 100
+  {FALSE, "Teleport Rescue Item", teleportRescue},
   {FALSE, "last proc", bogusObjProc}
 };
 
