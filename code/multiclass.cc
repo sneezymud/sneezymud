@@ -276,10 +276,15 @@ void TPerson::startLevels()
       advanceLevel(i);
   }
 
+  // there really isn't much need to be hardcoding people here, as we don't
+  // do pwipes or setup new muds very often (or ever, really)
+  // it just ends up causing problems
+
   // Partners
   if (!strcmp(name, "Batopr") ||
       !strcmp(name, "Brutius") ||
       !strcmp(name, "Cosmo")) {
+#if 0
     setLevel(MAGE_LEVEL_IND, MAX_IMMORT);
     setLevel(CLERIC_LEVEL_IND, MAX_IMMORT);
     setLevel(THIEF_LEVEL_IND, MAX_IMMORT);
@@ -288,13 +293,9 @@ void TPerson::startLevels()
     setWizPowers(this,this,"allpowers");
     remWizPower(POWER_IDLED);
     calcMaxLevel();
-
+#endif
     // Major Office Holders
-  } else if (!strcmp(name, "Damescena") ||
-             !strcmp(name, "Kriebly") ||
-             !strcmp(name, "Peel") ||
-             !strcmp(name, "Jesus") ||
-	     !strcmp(name, "Dash")) {
+  } else if (!strcmp(name, "Peel")){
     setLevel(MAGE_LEVEL_IND, MAX_IMMORT - 1);
     setLevel(CLERIC_LEVEL_IND, MAX_IMMORT - 1);
     setLevel(THIEF_LEVEL_IND, MAX_IMMORT - 1);
