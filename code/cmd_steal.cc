@@ -302,7 +302,6 @@ static int steal(TBeing * thief, TBeing * victim, char * obj_name)
   }
 
 
-#ifdef SNEEZY2000
   if (victim->awake()) {
     if (!thief->isImmortal() && eq_pos != WEAR_NOWHERE) {
       if ((eq_pos != WEAR_NECK && eq_pos != WEAR_FINGER_R && eq_pos != WEAR_FINGER_L &&
@@ -316,8 +315,7 @@ static int steal(TBeing * thief, TBeing * victim, char * obj_name)
     }
   }
   // The above was added to make steal a bit more realistic at Peel's request --jh
-
-#endif
+  // oh sure, blame me - peel
 
 
   if (!is_imp && obj->isObjStat(ITEM_NODROP)) {

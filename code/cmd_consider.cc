@@ -151,7 +151,6 @@ void TBeing::doConsider(const char *argument)
   else
     sendTo("There are better ways to suicide.\n\r");
 
-#ifdef SNEEZY2000
   float count=0.0;
   TDatabase db("sneezy");
 
@@ -163,7 +162,6 @@ void TBeing::doConsider(const char *argument)
   sendTo(COLOR_BASIC, "You will gain %s experience when fighting %s.\n\r", 
 	 describe_trophy_exp(count),
 	 namebuf);
-#endif
 
   if (getDiscipline(DISC_ADVENTURING)) {
     int learn = 0;

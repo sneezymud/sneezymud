@@ -51,7 +51,6 @@ CFLAGS +=-g             # debugger
 CFLAGS +=-DLINUX        # compiling on Linux
 # CFLAGS +=-DSLOW       # compiling on a slow processor machine
 CFLAGS +=-DFAST         # compiling on a fast processor machine
-CFLAGS +=-DSNEEZY2000   # activation of sneezy version 5.2
 
 ifdef BATOPR
 #  CFLAGS +=-O4            # optimize code

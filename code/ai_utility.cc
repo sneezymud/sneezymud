@@ -50,10 +50,8 @@ int TMonster::aggro(void)
       return TRUE;
   }
 
-#ifdef SNEEZY2000
   if(IS_SET(specials.act, ACT_AGGRESSIVE))
     return TRUE;
-#endif
 
   return FALSE;
 }

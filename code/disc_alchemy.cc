@@ -89,7 +89,7 @@ int identify(TBeing *caster, TObj *obj, int, byte bKnown)
 
     if ((x <= 0) && (y <= 0 || obj->max_exist > 10))
       caster->sendTo("You'd judge it to be completely worthless.\n\r");
-#ifndef SNEEZY2000
+#if 0
     else if (x <= 0)
       caster->sendTo("Although it looks worthless, you'd guess they'll charge you %d talen%s to rent it.\n\r", y, (y != 1) ? "s" : "");
     else if (y <= 0)

@@ -4728,9 +4728,7 @@ static int FRACT(TBeing *ch, TBeing *v)
 	return fract;
       }
     } else if((row=mysql_fetch_row(res))){
-#ifdef SNEEZY2000
       fract=(int)(fract*trophy_exp_mod(atof(row[1])));
-#endif
     }
 
     mysql_free_result(res);

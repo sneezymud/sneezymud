@@ -3917,7 +3917,7 @@ void TObj::describeMe(const TBeing *ch) const
 
     }
 #endif
-#ifndef SNEEZY2000
+#if 0
     if (isRentable()) {
       int temp = max(0, rentCost());
   

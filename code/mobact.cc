@@ -3859,19 +3859,9 @@ int TMonster::aggroCheck(bool mobpulse)
 	numtargets++;
 	if(numtargets != whichtarget && whichtarget != -1) continue;
 	stats.aggro_attempts++;
-	// WTF is all this - dash
-#ifndef SNEEZY2000
-        // randomize who gets hit some
-	//        if ((mobpulse || ::number(0,9) < 7))
-	//          continue;
-#else
-	// make roomenter aggro not happen sometimes
-	//	if(!mobpulse && (::number(0,3) <= 1))
-	//	  continue;
-#endif
 
-	if (mobpulse && !::number(0,4)) continue;
-	//
+	if (mobpulse && !::number(0,4))
+	  continue;
 
         if (checkPeaceful("You can't seem to exercise your violent tendencies.\n\r")) {
           if (!::number(0, 4)) {
@@ -3879,14 +3869,9 @@ int TMonster::aggroCheck(bool mobpulse)
           }
           return TRUE;
         }
-#ifdef SNEEZY2000
         if (((tmp_ch->plotStat(STAT_CURRENT, STAT_KAR, 0, 100, 50)) <=
 	     (plotStat(STAT_CURRENT, STAT_INT, 0, 200, 100) + anger())) ||
 	    IS_SET(specials.act, ACT_AGGRESSIVE)){
-#else
-        if (((tmp_ch->plotStat(STAT_CURRENT, STAT_KAR, 0, 100, 50)) <=
-	     (plotStat(STAT_CURRENT, STAT_INT, 0, 200, 100) + anger()))){
-#endif
 
           if (!isDumbAnimal() && ::number(0,9)) {
             // This should basically prevent mobs from attacking when they
