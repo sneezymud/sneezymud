@@ -148,7 +148,7 @@ void TBeing::doWho(const char *argument)
   string sb;
   int which1 = 0;
   int which2 = 0;
-  TDatabase db("sneezyglobal");
+
   string stmp;
   unsigned int pos;
 		  
@@ -256,10 +256,16 @@ void TBeing::doWho(const char *argument)
       }
 
       if(strchr(arg, 'c') && isImmortal()){
-	db.query("select title, port, name from wholist order by port");
 	
 	ssprintf(buf, "%sList may not be accurate for ports that are not currently running.\n\r", buf.c_str());
-	
+	ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
+        ssprintf(buf, "%sProduction (Port 7900)\n\r", buf.c_str());
+        ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
+
+
+	TDatabase db("sneezyprod");
+        db.query("select title, port, name from wholist order by port");
+
 	while(db.fetchRow()){
 	  stmp=db.getColumn(0);
 	  
@@ -273,6 +279,50 @@ void TBeing::doWho(const char *argument)
 	  ssprintf(buf, "%s[%s] %s<1>\n\r", buf.c_str(),
 		   db.getColumn(1), stmp.c_str());
 	}
+	
+        ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
+        ssprintf(buf, "%sBuilder (Port 8900)\n\r", buf.c_str());
+        ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
+
+        TDatabase db2("sneezybuilder");
+        db2.query("select title, port, name from wholist order by port");
+
+        while(db2.fetchRow()){
+          stmp=db2.getColumn(0);
+
+          if((pos=stmp.find("<n>")) != string::npos)
+            stmp.replace(pos,3,db2.getColumn(2));
+
+          if((pos=stmp.find("<N>")) != string::npos)
+            stmp.replace(pos,3,db2.getColumn(2));
+
+
+          ssprintf(buf, "%s[%s] %s<1>\n\r", buf.c_str(),
+                   db2.getColumn(1), stmp.c_str());
+        }
+	
+        ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
+        ssprintf(buf, "%sTesting (Other Ports)\n\r", buf.c_str());
+        ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
+
+	vlogf(LOG_DASH, "checkpoint 1");
+        TDatabase db3("sneezybeta");
+        db3.query("select title, port, name from wholist order by port");
+	vlogf(LOG_DASH, "checkpoint 2");
+        while(db3.fetchRow()){
+          stmp=db3.getColumn(0);
+	  vlogf(LOG_DASH, "checkpoint 3");
+          if((pos=stmp.find("<n>")) != string::npos)
+            stmp.replace(pos,3,db3.getColumn(2));
+
+          if((pos=stmp.find("<N>")) != string::npos)
+            stmp.replace(pos,3,db3.getColumn(2));
+
+
+          ssprintf(buf, "%s[%s] %s<1>\n\r", buf.c_str(),
+                   db3.getColumn(1), stmp.c_str());
+        }
+	vlogf(LOG_DASH, "checkpoint 4");
 
 	sb += buf;
 	

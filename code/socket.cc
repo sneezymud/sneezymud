@@ -1,3 +1,4 @@
+
 //////////////////////////////////////////////////////////////////////////
 //
 //   SneezyMUD - All rights reserved, SneezyMUD Coding Team
@@ -215,18 +216,15 @@ int updateWholist()
   TBeing *p;
   TPerson *p2;
   int count = 0;
-  TDatabase db;
+
+
   // every 10 RL seconds
-  if (gamePort == PROD_GAMEPORT)
-    TDatabase db("sneezy");
-  else if (gamePort == BUILDER_GAMEPORT)
-    TDatabase db("sneezybuilder");  
-  else 
-    TDatabase db("sneezybeta");
+  TDatabase db("sneezy");
+
 
   db.query("delete from wholist where port=%i", gamePort);
   
-  //      vlogf(LOG_DASH, "Updating who table for port %d", gamePort);
+  vlogf(LOG_DASH, "Updating who table for port %d", gamePort);
   for (p = character_list; p; p = p->next) {
     if (p->isPc() && !p->isLinkdead() && p->polyed == POLY_TYPE_NONE) {
       if ((p2 = dynamic_cast<TPerson *>(p))) {
@@ -245,16 +243,12 @@ void updateUsagelogs(int count)
   time_t ct=time(0);
   static time_t logtime;
   static time_t lastlog;
-  TDatabase db;
+
   int TIME_BETWEEN_LOGS = 300;
   
   // every 10 RL seconds
-  if (gamePort == PROD_GAMEPORT)
-    TDatabase db("sneezy");
-  else if (gamePort == BUILDER_GAMEPORT)
-    TDatabase db("sneezybuilder");
-  else
-    TDatabase db("sneezybeta");
+  TDatabase db("sneezy");
+
 
 
 
@@ -548,14 +542,14 @@ int TSocket::gameLoop()
 
     // this is causing tons of lag for some reason
     // ok i tried to fix this, switched the databases to one for each port. - dash 12/02
-#if 1
+
     int count;
     // update statistics in the database
     if(!(pulse % (ONE_SECOND*5))) {
       count=updateWholist();
       updateUsagelogs(count);
     }
-#endif
+
 
     // send out repo mobs
     if(!wayslowpulse){
