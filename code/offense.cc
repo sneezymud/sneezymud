@@ -1283,6 +1283,7 @@ int TObj::burnObject(TBeing *ch, int perc)
   int burndam = ::number(0,(int)((double)orig * 1.00 * 
 				 ((double)(material_nums[getMaterial()].flammability))/1000.0) +1);
   burndam/=5;
+  if(burndam<=0) burndam=1;
 
   if(material_nums[getMaterial()].flammability &&
      burndam > getStructPoints()){
