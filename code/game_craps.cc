@@ -169,6 +169,10 @@ void TBeing::doBet(const char *arg)
 
   half_chop(arg, amount, craps);
 
+  if (checkHoldem()) {
+    gHoldem.Bet(this, arg);
+    return;
+  }
   if (checkBlackjack()) {
     gBj.Bet(this, arg);
     return;

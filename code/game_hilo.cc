@@ -4,6 +4,7 @@
 HiLoGame gHiLo;
 
 const float WIN_INIT=0.05;
+
 bool HiLoGame::enter(const TBeing *ch)
 {
   if(inuse){

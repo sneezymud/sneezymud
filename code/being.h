@@ -1368,6 +1368,8 @@ class TBeing : public TThing {
     int doAsOther(const sstring &);
     void doAttack(const char *);
     void doBet(const char *);
+    void doCall(const sstring &);
+    void doFold(const sstring &);
     void doBreak(const char *, int);
     void doAccount(const char *);
     virtual void doOEdit(const char *);
@@ -1586,6 +1588,7 @@ class TBeing : public TThing {
     bool checkDrawPoker(bool = false) const;
     bool checkBlackjack(bool = false) const;
     bool checkHiLo(bool = false) const;
+    bool checkHoldem(bool = false) const;
     bool checkPoker(bool = false) const;
     bool checkBaccarat(bool = false) const;
     bool checkSlots() const;

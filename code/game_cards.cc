@@ -232,6 +232,24 @@ const sstring CardGame::suit(const TBeing *ch, int card) const
   return "";
 }
 
+
+void TBeing::doCall(const sstring &)
+{
+  if (checkHoldem())
+    gHoldem.call(this);
+  else
+    sendTo("Call is used for casino games.\n\r");
+}
+
+void TBeing::doFold(const sstring &)
+{
+  if (checkHoldem())
+    gHoldem.fold(this);
+  else
+    sendTo("Fold is used for casino games.\n\r");
+}
+
+
 void TBeing::doPeek() const
 {
   if (checkBlackjack())
@@ -248,6 +266,8 @@ void TBeing::doPeek() const
     gPoker.peek(this);
   else if (checkBaccarat())
     gBaccarat.peek(this);
+  else if (checkHoldem())
+    gHoldem.peek(this);
   else
     sendTo("So you think you are at a card table?\n\r");
 }

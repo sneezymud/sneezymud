@@ -348,12 +348,72 @@ class BaccaratGame : public CardGame {
 };
 
 
+enum holdemStateT {
+  STATE_NONE,
+  STATE_DEAL,
+  STATE_FLOP,
+  STATE_TURN,
+  STATE_RIVER
+};
+
+class HoldemPlayer {
+ public:
+  sstring name;
+  TBeing *ch;
+  const Card *hand[2];
+
+  HoldemPlayer(const TBeing *ch){
+    name=ch->name;
+    hand[0]=hand[1]=NULL;
+  }
+};
+
+
+const int MAX_HOLDEM_PLAYERS=5;
+
+class HoldemGame : public CardGame {
+ private:
+  CardDeck deck;
+  const Card *community[5];
+  HoldemPlayer *players[MAX_HOLDEM_PLAYERS];
+  int better;
+  
+  holdemStateT state;
+  sstring last_bet;
+  int nraises;
+ public:
+  HoldemGame(){
+    state=STATE_NONE;
+  }
+
+  void nextRound(TBeing *ch);
+  int nextPlayer(int);
+  int lastPlayer();
+  int firstPlayer();
+  void linkPlayers();
+  int playerCount();
+  bool enter(const TBeing *ch);
+  int exitGame(const TBeing *ch);
+  virtual void peek(const TBeing *) const;
+  bool isPlaying(const TBeing *) const;
+  HoldemPlayer *getPlayer(const sstring &name) const;
+  void Bet(TBeing *ch, const sstring &arg);
+  void call(TBeing *ch);
+  void raise(TBeing *ch);
+  void fold(TBeing *ch);
+  void flop(TBeing *ch);
+  void river(TBeing *ch);
+  void turn(TBeing *ch);
+  void showdown(TBeing *ch);
+};
+
 extern GinGame gGin;
 extern HeartsGame gHearts;
 extern BjGame gBj;
 extern HiLoGame gHiLo;
 extern PokerGame gPoker;
 extern BaccaratGame gBaccarat;
+extern HoldemGame gHoldem;
 
 /* craps_options */
 

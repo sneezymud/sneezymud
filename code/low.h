@@ -40,6 +40,7 @@ const short int ROOM_POKER             = 2358;
 const short int ROOM_HILO              = 2359;
 const short int ROOM_BLACKJACK         = 2360;
 const short int ROOM_BACCARAT          = 2361;
+const short int ROOM_HOLDEM            = 2367;
 const short int ROOM_HEARTS            = 8417;
 const short int ROOM_WARD_1            = 13142;
 const short int ROOM_WARD_2            = 9734;

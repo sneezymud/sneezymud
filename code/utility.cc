@@ -372,6 +372,8 @@ int TMonster::standUp()
 
     if (checkBlackjack())
       gBj.exitGame(this);
+    if (checkHoldem())
+      gHoldem.exitGame(this);
     if (checkHiLo())
       gHiLo.exitGame(this);
     if (checkPoker())

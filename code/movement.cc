@@ -1749,6 +1749,11 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
   char buf[256], *tmpdesc;
   roomDirData *exitp;
   argument_interpreter(argument, type, dir);
+
+  if (checkHoldem()) {
+    gHoldem.raise(this);
+    return true;
+  }
  
   if (isDumbAnimal()) {
     sendTo("You are a dumb animal, you don't understand things like this!\n\r");
@@ -2354,6 +2359,10 @@ static bool sitCasinoEnter(const TBeing *ch)
   }
   if (ch->checkBlackjack(true)) {
     if (!gBj.enter(ch))
+      return true;
+  }
+  if (ch->checkHoldem(true)) {
+    if (!gHoldem.enter(ch))
       return true;
   }
   if (ch->checkHiLo(true)) {
@@ -3557,6 +3566,10 @@ bool TBeing::removeAllCasinoGames() const
   if (checkBlackjack())
     if (gBj.index(this) >= 0)
       gBj.exitGame(this);
+
+  if (checkHoldem())
+    if (gHoldem.index(this) >= 0)
+      gHoldem.exitGame(this);
 
   if (checkHiLo())
     if (gHiLo.index(this) >= 0)

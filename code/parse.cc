@@ -1318,6 +1318,12 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doBet(newarg);
 	  addToLifeforce(1);
           break;
+	case CMD_CALL:
+	  doCall(stringarg);
+	  break;
+	case CMD_FOLD:
+	  doFold(stringarg);
+	  break;
         case CMD_OEDIT:
           doOEdit(newarg);
           break;
@@ -2552,6 +2558,8 @@ void buildCommandArray(void)
   commandArray[CMD_PILEDRIVE]=new commandInfo("piledrive",POSITION_STANDING, 0);
   commandArray[CMD_TAP] = new commandInfo("tap", POSITION_CRAWLING, 0);
   commandArray[CMD_BET] = new commandInfo("bet", POSITION_RESTING, 0);
+  commandArray[CMD_CALL] = new commandInfo("call", POSITION_RESTING, 0);
+  commandArray[CMD_FOLD] = new commandInfo("fold", POSITION_RESTING, 0);
   commandArray[CMD_STAY] = new commandInfo("stay", POSITION_RESTING, 0);
   commandArray[CMD_PEEK] = new commandInfo("peek", POSITION_RESTING, 0);
   commandArray[CMD_COLOR] = new commandInfo("color", POSITION_SLEEPING, 0);
