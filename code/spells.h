@@ -295,6 +295,7 @@ enum spellNumT {
   SPELL_FERAL_WRATH,
   SPELL_SKY_SPIRIT,
   SKILL_REPAIR_RANGER,
+  SKILL_POISON_ARROW,
      // end of ranger
      // start of deikhan
 
@@ -419,7 +420,8 @@ enum spellNumT {
      SKILL_DUAL_WIELD_THIEF,
      SKILL_DISARM_THIEF,
      SKILL_COUNTER_STEAL,
-  SKILL_REPAIR_THIEF,
+     SKILL_REPAIR_THIEF,
+     SKILL_PLANT,
 
      // end of thief
      // start of shaman

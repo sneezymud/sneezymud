@@ -1537,6 +1537,8 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_IRON_MUSCLES:
       case SKILL_IRON_LEGS:
       case SKILL_IRON_WILL:
+      case SKILL_PLANT:
+      case SKILL_POISON_ARROW:
 #if 1
       case SPELL_EARTHMAW:
       case SPELL_CREEPING_DOOM:

@@ -7,6 +7,7 @@
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_base_cup.h"
+#include "obj_arrow.h"
 
 
 static void playBackstab(const TRoom *rp)
@@ -711,7 +712,8 @@ int TBeing::doPoisonWeapon(string arg)
   string namebuf;
   int rc;
 
-  if (!doesKnowSkill(SKILL_POISON_WEAPON)) {
+  if (!doesKnowSkill(SKILL_POISON_WEAPON) &&
+      !doesKnowSkill(SKILL_POISON_ARROW)) {
     sendTo("You know nothing about poisoning weapons.\n\r");
     return FALSE;
   }
@@ -724,6 +726,14 @@ int TBeing::doPoisonWeapon(string arg)
     sendTo("Poison what?\n\r");
     return FALSE;
   }
+
+  if(!doesKnowSkill(SKILL_POISON_WEAPON) &&
+     !(dynamic_cast<TArrow *>(obj))){
+
+    sendTo("You are only skilled at poisoning arrows.\n\r");
+    return FALSE;
+  }
+
 
   arg = one_argument(arg, namebuf);
 

@@ -3,6 +3,13 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_survival.h,v $
+// Revision 5.2  2003/01/16 23:35:07  peel
+// Added poison arrow skill for rangers
+// Added template for plant skill for thieves
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -23,22 +30,26 @@ class CDSurvival : public CDiscipline
 public:
     CSkill skDivination;
     CSkill skEncamp;
-
+    CSkill skPoisonArrows;
+  
     CDSurvival() :
       CDiscipline(),
       skDivination(),
-      skEncamp() {
+      skEncamp(),
+      skPoisonArrows(){
     }
     CDSurvival(const CDSurvival &a) :
       CDiscipline(a),
       skDivination(a.skDivination),
-      skEncamp(a.skEncamp) {
+      skEncamp(a.skEncamp),
+      skPoisonArrows(a.skPoisonArrows){
     }
     CDSurvival & operator=(const CDSurvival &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
       skDivination = a.skDivination;
       skEncamp = a.skEncamp;
+      skPoisonArrows = a.skPoisonArrows;
       return *this;
     }
     virtual ~CDSurvival() {}

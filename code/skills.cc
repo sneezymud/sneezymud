@@ -623,6 +623,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDSurvival *) cd)->skDivination;
     case SKILL_ENCAMP:  //                    393
       return &((CDSurvival *) cd)->skEncamp;
+    case SKILL_POISON_ARROW:
+      return &((CDSurvival *) cd)->skPoisonArrows;
 
 // DEIKHAN CLASS
 
@@ -886,6 +888,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 // disc_looting
     case SKILL_COUNTER_STEAL:
       return &((CDLooting *) cd)->skCounterSteal;
+    case SKILL_PLANT:
+      return &((CDLooting *) cd)->skPlant;
 
 // disc_murder
 
