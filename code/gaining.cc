@@ -751,6 +751,32 @@ void clearPermaDeathLevel(TBeing *ch){
 }
 
 
+void TBeing::raiseLevel(classIndT)
+{
+}
+
+void TMonster::raiseLevel(classIndT Class)
+{
+  if (getExp() < getExpClassLevel(Class, getLevel(Class) + 1)){
+    vlogf(LOG_BUG, fmt("raiseLevel() called on %s when exp too low") %
+	  getName());
+    return;
+  }
+
+  // set the level
+  setLevel(Class, (int) getLevel(Class)+1);
+  
+  // set the hit and damage levels
+  setHPLevel(getHPLevel()+1);
+  setHPFromHPLevel();
+  setDamLevel(getDamLevel()+1);
+  setACLevel(getACLevel()+1);
+  setACFromACLevel();
+
+  assignSkillsClass();
+}
+
+
 void TPerson::raiseLevel(classIndT Class)
 {
   int maxhit;

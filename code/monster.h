@@ -204,6 +204,7 @@ class TMonster : public TBeing {
 
     void setACFromACLevel();
     void setHPFromHPLevel();
+    virtual void raiseLevel(classIndT);
 
     float getACLevel() const;
     void setACLevel(float);

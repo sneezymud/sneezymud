@@ -71,12 +71,12 @@ class TPerson : public TBeing {
     void rentAffectTo(saveAffectedData *);
     void setSelectToggles(TBeing *, classIndT, silentTypeT);
     void advanceSelectDisciplines(classIndT, int, silentTypeT);
-    void raiseLevel(classIndT);
     void doLevelSkillsLearn(discNumT, int, int);
     void setBaseAge();   // sets new base-age
     void saveRent(objCost *, bool, int);
     void loadRent();
 
+    virtual void raiseLevel(classIndT);
     virtual void doUsers(const sstring &);
     virtual void doInvis(const char *);
     virtual void doVisible(const char *, bool);

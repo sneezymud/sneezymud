@@ -2004,6 +2004,7 @@ class TBeing : public TThing {
     void doWho(const char *);
     void doTime(const char *);
     void doWizhelp();
+    virtual void raiseLevel(classIndT);
     virtual void doUsers(const sstring &);
     void doInventory(const char *);
     void doEquipment(const sstring &);
