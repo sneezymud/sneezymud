@@ -824,17 +824,19 @@ void TThing::sacrificeMe(TBeing *ch, const char *arg)
     ch->sendTo(COLOR_OBJECTS, "You cannot sacrifice %s.\n\r", obj->getName());
     return;
   }
+  if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
+    act("Someone must be sacrificing $p currently.",
+          FALSE, ch, corpse, 0, TO_CHAR);    
+    return;
+  }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
     // a body part or something
     act("You aren't able to sacrifice that $p.",
           FALSE, ch, corpse, 0, TO_CHAR);    
     return;
   }
-  if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
-    // a body part or something
-    act("Someone must be sacrificing $p currently.",
-          FALSE, ch, corpse, 0, TO_CHAR);    
-    return;
+  if (!corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
+    corpse->addCorpseFlag(CORPSE_SACRIFICE);
   }
   ch->sendTo("You start sacrificing a corpse.\n\r");
   act("$n begins to chant over a corpse.", FALSE, ch, NULL, 0, TO_ROOM);
@@ -862,11 +864,19 @@ void TTool::sacrificeMe(TBeing *ch, const char *arg)
     ch->sendTo(COLOR_OBJECTS, "You cannot sacrifice %s.\n\r", obj->getName());
     return;
   }
+  if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
+    act("Someone must be sacrificing $p currently.",
+          FALSE, ch, corpse, 0, TO_CHAR);    
+    return;
+  }
+
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
     act("You aren't able to sacrifice $p.",
           FALSE, ch, corpse, 0, TO_CHAR);    return;
   }
-  corpse->addCorpseFlag(CORPSE_SACRIFICE);
+  if (!corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
+    corpse->addCorpseFlag(CORPSE_SACRIFICE);
+  }
   ch->sendTo("You start the sacrificial ritual.\n\r");
   act("$n begins to chant over a corpse.", FALSE, ch, NULL, 0, TO_ROOM);
   start_task(ch, corpse, 0, TASK_SACRIFICE, "", 2, ch->inRoom(), 0, 0, 5);
