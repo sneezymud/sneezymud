@@ -32,6 +32,7 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
     act("$n becomes a blur and instantly butchers $p.",
         FALSE, ch, corpse, 0, TO_ROOM);
     ch->task->flags = (int)(maxUnitsP/Ceffect);
+    ch->dropPool(100, LIQ_BLOOD);
   }
   Tobj = ch->heldInPrimHand();
   tobj = dynamic_cast<TBaseWeapon *>(Tobj);
@@ -45,6 +46,8 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
     act("$n slices the steak from $p very carefully.",
         FALSE, ch, corpse, NULL, TO_ROOM);
     ch->task->timeLeft--;
+
+    ch->dropPool(20, LIQ_BLOOD);
 
     if (!bSuccess(ch, learning, SKILL_BUTCHER)) {
       CF(SKILL_BUTCHER);
@@ -168,18 +171,27 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
     steak->swapToStrung();
     steak->canBeSeen = 1;
 
+    const char *meats[]={"rib-eye steak", "chuck-eye steak", "skirt steak",
+			 "flank steak", "t-bone steak", "porterhouse steak",
+			 "tenderloin steak", "sirloin steak", "tri-tip steak",
+			 "chuck steak", "set of ribs", "short loin steak",
+			 "filet mignon steak"};
+    int nmeats=13;
+    int whichmeat=::number(0,nmeats-1);
+
 
     // this is how you should do it... not a bunch of if's - peel
-    sprintf(buf, "steak %s",
-	    Races[corpse->getCorpseRace()]->getSingularName().c_str());
+    sprintf(buf, "meat %s %s",
+	    Races[corpse->getCorpseRace()]->getSingularName().c_str(),
+	    meats[whichmeat]);
     delete [] steak->name;
     steak->name = mud_str_dup(buf);
-    sprintf(buf, "a steak of %s meat", 
+    sprintf(buf, "a %s of %s meat", meats[whichmeat], 
 	    Races[corpse->getCorpseRace()]->getSingularName().c_str());
     delete [] steak->shortDescr;
     steak->shortDescr = mud_str_dup(buf);
 
-    sprintf(buf, "A steak of %s meat lies here.",
+    sprintf(buf, "A %s of %s meat lies here.", meats[whichmeat],
 	    Races[corpse->getCorpseRace()]->getSingularName().c_str());
     delete [] steak->descr;
     steak->setDescr(mud_str_dup(buf));
