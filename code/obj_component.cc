@@ -3033,7 +3033,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     }
 
     tObj->purchaseMe(ch, tKeeper, tCost, tShop);
-    tKeeper->doTell(ch->name, shop_index[tShop].message_buy, tCost);
+    tKeeper->doTell(ch->name, fmt(shop_index[tShop].message_buy) % tCost);
 
     ch->sendTo(COLOR_OBJECTS, fmt("You now have %s (*%d charges).\n\r") %
             sstring(getName()).uncap() % tNum);
@@ -3076,7 +3076,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     }
 
     tObj->purchaseMe(ch, tKeeper, tCost, tShop);
-    tKeeper->doTell(ch->name, shop_index[tShop].message_buy, tCost);
+    tKeeper->doTell(ch->name, fmt(shop_index[tShop].message_buy) % tCost);
 
     ch->sendTo(COLOR_OBJECTS, fmt("You now have %s (*%d charges).\n\r") %
             sstring(getName()).uncap() % tNum);
@@ -3166,7 +3166,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
 
   act("$n sells $p.", FALSE, ch, this, 0, TO_ROOM);
 
-  tKeeper->doTell(ch->getName(), shop_index[tShop].message_sell,tCost);
+  tKeeper->doTell(ch->getName(), fmt(shop_index[tShop].message_sell) % tCost);
 
   ch->sendTo(COLOR_OBJECTS, fmt("The shopkeeper now has %s.\n\r") % sstring(getName()).uncap());
   ch->logItem(this, CMD_SELL);
