@@ -2764,6 +2764,10 @@ int vorpal(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     return DELETE_VICT;
   }
+
+  if(o->getStructPoints()<=0)
+    return DELETE_ITEM;
+
   return FALSE;
 }
 
