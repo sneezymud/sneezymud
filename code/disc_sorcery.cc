@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_sorcery.cc,v $
+// Revision 1.2  1999/09/18 06:03:56  brutius
+// Fixed typo in energy drain
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -562,8 +565,8 @@ int energyDrain(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
   }
 
   if (bSuccess(caster, bKnown,SPELL_ENERGY_DRAIN)) {
-    act("$N screams in agony as energy pours from $s body!", FALSE, caster, NULL, victim, TO_NOTVICT);
-    act("$N screams in agony as energy pours from $s body!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$N screams in agony as energy pours from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("$N screams in agony as energy pours from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
     act("You scream in agony as energy pours from your body!", FALSE, caster, NULL, victim, TO_VICT);
     TPerson *pers;
     switch (critSuccess(caster, SPELL_ENERGY_DRAIN)) {
