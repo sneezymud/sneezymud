@@ -1114,6 +1114,7 @@ void TBeing::doBoot(const sstring &arg)
   TThing *t, *t2;
   TMonster *mob;
   TObj *obj;
+  bool found=true;
 
   if (!hasWizPower(POWER_RESET)) {
     sendTo("You lack the power to reset.\n\r");
@@ -1137,20 +1138,25 @@ void TBeing::doBoot(const sstring &arg)
   zone_table[z].renumCmd();
 
   sendTo("Purging mobs and objects in zone.\n\r");
-  for(int r=zone_table[z].bottom;r<=zone_table[z].top;++r){
-    if(real_roomp(r)){
-      for(t=real_roomp(r)->getStuff();t;t = t2){
-	t2 = t->nextThing;
-	
-	if((obj=dynamic_cast<TObj *>(t))){
-	  if(obj->objVnum() >= zone_table[z].bottom ||
-	     obj->objVnum() <= zone_table[z].top){
-	    delete obj;
-	  }
-	} else if((mob=dynamic_cast<TMonster *>(t))){
-	  if(mob->mobVnum() >= zone_table[z].bottom ||
-	     mob->mobVnum() <= zone_table[z].top){
-	    delete mob;
+  while(found){
+    found=false;
+    for(int r=zone_table[z].bottom;r<=zone_table[z].top;++r){
+      if(real_roomp(r)){
+	for(t=real_roomp(r)->getStuff();t;t = t2){
+	  t2 = t->nextThing;
+	  
+	  if((obj=dynamic_cast<TObj *>(t))){
+	    if(obj->objVnum() >= zone_table[z].bottom ||
+	       obj->objVnum() <= zone_table[z].top){
+	      found=true;
+	      delete obj;
+	    }
+	  } else if((mob=dynamic_cast<TMonster *>(t))){
+	    if(mob->mobVnum() >= zone_table[z].bottom ||
+	       mob->mobVnum() <= zone_table[z].top){
+	      found=true;
+	      delete mob;
+	    }
 	  }
 	}
       }
