@@ -318,7 +318,7 @@ int TShopOwned::sellShop(){
   TDatabase db("sneezy");
   int value=0;
 
-  if(hasAccess(SHOPACCESS_SELL)){
+  if(!hasAccess(SHOPACCESS_SELL)){
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
     keeper->doTell(ch->getName(), "And remember, when you do sell this shop, I won't pay you for the inventory.");
     keeper->doTell(ch->getName(), "I'll just give you the money I have on me, but nothing for the inventory.");
