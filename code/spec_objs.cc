@@ -263,7 +263,7 @@ int warMaker(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
       }
     } else if (o->parent && dynamic_cast<TObj *>(o->parent)) {
       buf = fmt("Something grumbles 'Damnit, I'm %s.  Let me out of here.  It's dark.'\n\r") % o->shortDescr;
-      sendToRoom(buf.c_str(), roomOfObject(o));
+      sendToRoom(COLOR_BASIC, buf.c_str(), roomOfObject(o));
     } else if (o->parent) {
       act("$n's $o begs $m to wield it.", 1, o->parent, o, NULL, TO_ROOM);
       act("Your $o begs you to wield it.", 1, o->parent, o, NULL, TO_CHAR);
