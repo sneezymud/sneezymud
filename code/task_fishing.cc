@@ -48,7 +48,8 @@ void TBeing::doFish(const char *direction){
 
 TObj *catch_a_fish(TRoom *rp){
   TObj *fish=NULL;
-  int nfresh=17, nmarine=24;
+  int nfresh=17, nmarine=24, nice=5;
+  int num=0;
   const int freshfishes[]={13800, 13801, 13802, 13803, 13804, 13805, 13806,
 			   13807, 13816, 13817, 13818, 13819, 13820, 13821,
 			   13822, 13823, 13824};
@@ -56,6 +57,7 @@ TObj *catch_a_fish(TRoom *rp){
 			    13815, 13825, 13826, 13827, 13828, 13829, 13830,
 			    13831, 13832, 13833, 13834, 13835, 13836, 13837,
 			    13838, 13839, 13840};
+  const int icefishes[]={13875, 13876, 13877, 13878, 13879};
   float weightmod=(((float)(::number(0,100))-50.0)/100.0)+1.0;  // plus or minus 30%
 
   //  vlogf(LOG_PEEL, "weightmod=%f", weightmod);
@@ -80,10 +82,15 @@ TObj *catch_a_fish(TRoom *rp){
     }
   }
 
-  
 
-  if(rp->isOceanSector()){
-    if(!::number(0,24)){
+  if(rp->getSectorType() == SECT_ICEFLOW){
+    num=::number(0,nmarine+nice-1);
+    if(num<nice)
+      fish=read_object(icefishes[num], VIRTUAL);
+    else
+      fish=read_object(marinefishes[num-nice], VIRTUAL);
+  } else if(rp->isOceanSector()){
+    if(!::number(0,nmarine)){
       fish=read_object(12445, VIRTUAL); // some random crap item
     } else {
       fish=read_object(marinefishes[::number(0,nmarine-1)], VIRTUAL);
