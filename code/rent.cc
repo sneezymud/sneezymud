@@ -1024,7 +1024,8 @@ void ItemSave::objsToStore(signed char slot, TObj *o,
     return;
 
   // ignore beings
-  if (dynamic_cast<TBeing *>(o)) {
+  TThing *ttt = o;
+  if (dynamic_cast<TBeing *>(ttt)) {
     // TRoom::saveItems  calls this, we don't want to save beings that might
     // be hanging out in the room
     objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse);
