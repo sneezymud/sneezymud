@@ -4,7 +4,6 @@
 #include "disc_shaman.h"
 #include "spelltask.h"
 
-
 // returns VICTIM_DEAD if corpse should be fried
 int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
 {
@@ -506,6 +505,10 @@ int enthrallSpectre(TBeing * caster, int level, byte bKnown)
     } else
       caster->addFollower(victim);
 
+    if (!caster->isPc()) {
+      SET_BIT(caster->specials.affectedBy, AFF_GROUP);
+      SET_BIT(victim->specials.affectedBy, AFF_GROUP);
+    }
     return SPELL_SUCCESS;
   } else {
     *caster->roomp += *victim;
@@ -621,6 +624,11 @@ int enthrallGhast(TBeing * caster, int level, byte bKnown)
       victim->affectFrom(AFFECT_THRALL);
     } else
       caster->addFollower(victim);
+
+    if (!caster->isPc()) {
+      SET_BIT(caster->specials.affectedBy, AFF_GROUP);
+      SET_BIT(victim->specials.affectedBy, AFF_GROUP);
+    }
 
     return SPELL_SUCCESS;
   } else {
@@ -2121,6 +2129,11 @@ int enthrallGhoul(TBeing * caster, int level, byte bKnown)
       victim->affectFrom(AFFECT_THRALL);
     } else
       caster->addFollower(victim);
+
+    if (!caster->isPc()) {
+      SET_BIT(caster->specials.affectedBy, AFF_GROUP);
+      SET_BIT(victim->specials.affectedBy, AFF_GROUP);
+    }
 
     return SPELL_SUCCESS;
   } else {

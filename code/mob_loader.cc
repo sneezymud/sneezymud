@@ -447,6 +447,8 @@ void TMonster::mageComponentLoader(void)
     if (!(obj = read_object(comp,VIRTUAL)))
       continue;
 
+    TComponent *tcom =dynamic_cast<TComponent *>(obj);
+    spell = CompIndex[num].spell_num;
 
     if (tcom && tcom->isComponentType(COMP_SPELL) && spell == TYPE_UNDEFINED) {
       num = -1;

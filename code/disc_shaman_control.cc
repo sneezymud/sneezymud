@@ -219,7 +219,10 @@ int enthrallDemon(TBeing * caster, int level, byte bKnown)
       victim->affectFrom(AFFECT_THRALL);
     } else
       caster->addFollower(victim);
-
+    if (!caster->isPc()) {
+      SET_BIT(caster->specials.affectedBy, AFF_GROUP);
+      SET_BIT(victim->specials.affectedBy, AFF_GROUP);
+    }
     return SPELL_SUCCESS;
   } else {
     *caster->roomp += *victim;
@@ -344,6 +347,10 @@ int createWoodGolem(TBeing * caster, int level, byte bKnown)
       victim->affectFrom(AFFECT_THRALL);
     } else
       caster->addFollower(victim);
+    if (!caster->isPc()) {
+      SET_BIT(caster->specials.affectedBy, AFF_GROUP);
+      SET_BIT(victim->specials.affectedBy, AFF_GROUP);
+    }
 
     return SPELL_SUCCESS;
   } else {
@@ -461,6 +468,10 @@ int createRockGolem(TBeing * caster, int level, byte bKnown)
       victim->affectFrom(AFFECT_THRALL);
     } else
       caster->addFollower(victim);
+    if (!caster->isPc()) {
+      SET_BIT(caster->specials.affectedBy, AFF_GROUP);
+      SET_BIT(victim->specials.affectedBy, AFF_GROUP);
+    }
 
     return SPELL_SUCCESS;
   } else {
@@ -580,7 +591,10 @@ int createIronGolem(TBeing * caster, int level, byte bKnown)
       victim->affectFrom(AFFECT_THRALL);
     } else
       caster->addFollower(victim);
-
+    if (!caster->isPc()) {
+      SET_BIT(caster->specials.affectedBy, AFF_GROUP);
+      SET_BIT(victim->specials.affectedBy, AFF_GROUP);
+    }
     return SPELL_SUCCESS;
   } else {
     *caster->roomp += *victim;
@@ -699,7 +713,10 @@ int createDiamondGolem(TBeing * caster, int level, byte bKnown)
       victim->affectFrom(AFFECT_THRALL);
     } else
       caster->addFollower(victim);
-
+    if (!caster->isPc()) {
+      SET_BIT(caster->specials.affectedBy, AFF_GROUP);
+      SET_BIT(victim->specials.affectedBy, AFF_GROUP);
+    }
     return SPELL_SUCCESS;
   } else {
     *caster->roomp += *victim;

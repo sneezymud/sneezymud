@@ -12,6 +12,7 @@
 #include "statistics.h"
 #include "components.h"
 #include "shop.h"
+#include "being.h"
 
 // returns DELETE_THIS if this has to be deleted
 int TMonster::mobileGuardian()
@@ -4373,6 +4374,96 @@ int TMonster::defendSelf(int)
         found = TRUE;
       }
     }
+    //////// enthralls
+    if (!found) {
+      int foundmental=0;
+      followData *k, *k2;
+      TBeing *ch=NULL;
+
+      for (k = followers;k; k = k2) {
+	k2 = k->next;
+	if (!(ch = k->follower) || !dynamic_cast<TBeing *>(ch)) {
+	  vlogf(LOG_BUG, "Non-TBeing in followers of %s", getName());
+	  break;
+	}
+	if (ch->isAffected(AFF_CHARM) && sameRoom(*ch)) {
+	  foundmental=1;
+	  break;
+	}
+      }
+      if(!foundmental) {
+	int spellnum = ::number(1,8);
+	switch(spellnum) {
+	  case 1:
+	    spell = SPELL_ENTHRALL_SPECTRE;
+	    if (doesKnowSkill(spell) && (getSkillValue(spell) > 35)) {
+	      act("$n sings the rada, 'Xebec Kamala!'",
+		  TRUE, this, 0, 0, TO_ROOM);
+	      found = TRUE;
+	    }
+	    break;
+	  case 2:
+	    spell = SPELL_ENTHRALL_GHAST;
+	    if (doesKnowSkill(spell) && (getSkillValue(spell) > 40)) {
+	      act("$n sings the rada, 'Xebec Romula!'",
+		  TRUE, this, 0, 0, TO_ROOM);
+	      found = TRUE;
+	    }
+	    break;
+	  case 3:
+	    spell = SPELL_ENTHRALL_GHOUL;
+	    if (doesKnowSkill(spell) && (getSkillValue(spell) > 45)) {
+	      act("$n sings the rada, 'Xebec Pumula!'",
+		  TRUE, this, 0, 0, TO_ROOM);
+	      found = TRUE;
+	    }
+	    break;
+	  case 4:
+	    spell = SPELL_ENTHRALL_DEMON;
+	    if (doesKnowSkill(spell) && (getSkillValue(spell) > 50)) {
+	      act("$n sings the rada, 'Xebec Tamala!'",
+		  TRUE, this, 0, 0, TO_ROOM);
+	      found = TRUE;
+	    }
+	    break;
+	  case 5:
+	    spell = SPELL_CREATE_WOOD_GOLEM;
+	    if (doesKnowSkill(spell) && (getSkillValue(spell) > 55)) {
+	      act("$n sings the rada, 'Xebec Oakala!'",
+		  TRUE, this, 0, 0, TO_ROOM);
+	      found = TRUE;
+	    }
+	    break;
+	  case 6:
+	    spell = SPELL_CREATE_ROCK_GOLEM;
+	    if (doesKnowSkill(spell) && (getSkillValue(spell) > 60)) {
+	      act("$n sings the rada, 'Xebec Rokala!'",
+		  TRUE, this, 0, 0, TO_ROOM);
+	      found = TRUE;
+	    }
+	    break;
+	  case 7:
+	    spell = SPELL_CREATE_IRON_GOLEM;
+	    if (doesKnowSkill(spell) && (getSkillValue(spell) > 65)) {
+	      act("$n sings the rada, 'Xebec Metala!'",
+		  TRUE, this, 0, 0, TO_ROOM);
+	      found = TRUE;
+	    }
+	    break;
+	  case 8:
+	  default:
+	    spell = SPELL_CREATE_DIAMOND_GOLEM;
+	    if (doesKnowSkill(spell) && (getSkillValue(spell) > 70)) {
+	      act("$n sings the rada, 'Xebec Diala!'",
+		  TRUE, this, 0, 0, TO_ROOM);
+	      found = TRUE;
+	    }
+	    break;
+	}
+	usecomp=0;  // too easy to farm comps with this one
+      }
+    }
+    //////// end enthralls
     if (!found) {
       spell = SPELL_CHEVAL;
       if (!affectedBySpell(spell) && 
