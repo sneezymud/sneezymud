@@ -1965,7 +1965,8 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   int i=0;
   bool found=false;
   Descriptor *d;
-  int saferooms[]={31750, 31751, 31756, 31757, 31758, 31759, 31764, 31788,-1};
+  int saferooms[]={31750, 31751, 31756, 31757, 31758, 31759, 31764, 31788,
+  31789,31790,31791,31792,31793,31794,31795,31796,31797,31798,31799,-1};  
 
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
@@ -2026,6 +2027,8 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   if(found){
     vlogf(LOG_PEEL, "Bank: here comes the wrecking crew");
 //QUEST - commented lines are for easier versions of mobs
+    rp=real_roomp(31784);
+
     boss = read_mobile(31759, VIRTUAL);
 //    boss = read_mobile(29218, VIRTUAL);
     *rp += *boss;
