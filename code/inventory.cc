@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: inventory.cc,v $
+// Revision 1.2  1999/09/12 19:55:04  peel
+// Removed the volume penalty for having held items.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1708,11 +1711,14 @@ int TBeing::carryVolumeLimit() const
 
   vol = min(max(vol, 5000), 1000000);
 
+#if 0
   if (equipment[HOLD_LEFT] && equipment[HOLD_RIGHT])
     return vol/3;
   else if (equipment[HOLD_LEFT] || equipment[HOLD_RIGHT])
     return vol/2;
   else
+#endif
+
     return vol;
 }
 
