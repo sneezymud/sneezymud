@@ -8,7 +8,7 @@
 #include "stdsneezy.h"
 
 enum ammoTypeT {
-  AMMO_NONE,                    // 0
+  AMMO_NONE = 0,                // 0
   AMMO_10MM_PISTOL,             // 1
   AMMO_9MM_PARABELLEM_PISTOL,   // 2
   AMMO_45CAL_ACP_PISTOL,        // 3
@@ -28,40 +28,40 @@ enum ammoTypeT {
 
 const char *shelldesc [] =
 {
-  "None",
-  "10mm pistol",
-  "9mm Parabellem pistol",
-  ".45cal ACP pistol",
-  ".50cal Action Express",
-  ".44cal Magnum",
-  ".32cal ACP",
-  ".50cal BMG",
-  "5.56mm NATO pistol",
-  "SS190",
-  "9mm Parabellem rifle",
-  ".45cal ACP rifle",  
-  "5.56mm rifle",
-  "7.62mm rifle",
-  "30cal rifle",
+  "None",                       // 0
+  "10mm pistol",                // 1
+  "9mm Parabellem pistol",      // 2
+  ".45cal ACP pistol",          // 3
+  ".50cal Action Express",      // 4
+  ".44cal Magnum",              // 5
+  ".32cal ACP",                 // 6
+  ".50cal BMG",                 // 7
+  "5.56mm NATO pistol",         // 8
+  "SS190",                      // 9
+  "9mm Parabellem rifle",       // 10
+  ".45cal ACP rifle",           // 11
+  "5.56mm rifle",               // 12
+  "7.62mm rifle",               // 13
+  "30cal rifle",                // 14
 };
 
 const char *shellkeyword [] = 
 {
-  "None",
-  "10mmPistol",
-  "9mmPistol",
-  "45calPistol",
-  "50calAE",
-  "44calMag",
-  "32calACP",
-  "50calBMG",
-  "556mmPistol"
-  "SS190",
-  "9mmRifle",
-  "45calRifle",
-  "556mmRifle",
-  "762mmRifle",
-  "30calRifle"
+  "None",                       // 0
+  "10mmPistol",                 // 1
+  "9mmPistol",                  // 2
+  "45calPistol",                // 3
+  "50calAE",                    // 4
+  "44calMag",                   // 5
+  "32calACP",                   // 6
+  "50calBMG",                   // 7
+  "556mmPistol",                 // 8
+  "SS190",                      // 9
+  "9mmRifle",                   // 10
+  "45calRifle",                 // 11
+  "556mmRifle",                 // 12
+  "762mmRifle",                 // 13
+  "30calRifle"                  // 14
 };
 
 
@@ -119,16 +119,6 @@ void dropSpentCasing(TRoom *roomp, int ammo){
 
 
 
-// ammo types
-// 0 - none
-// 1 - 10mm
-// 2 - 9mm
-// 3 - .22
-// 4 - .45
-// 5 - .50
-// 6 - .357
-
-
 void gload_usage(TBeing *tb){
   tb->sendTo("Syntax : (loading)   gload <gun> <ammo>\n\r");
   tb->sendTo("Syntax : (unloading) gload unload <gun>\n\r");
@@ -163,6 +153,8 @@ void TBeing::doGload(const char *arg)
     }
 
     if(nargs==1){
+      vlogf(LOG_PEEL, "ammo type: %i, %s",
+	    gun->getAmmoType(), getAmmoKeyword(gun->getAmmoType()));
       strcpy(arg2, getAmmoKeyword(gun->getAmmoType()));
     } 
 
