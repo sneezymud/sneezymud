@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: repair.cc,v $
+// Revision 1.5  1999/10/09 04:10:16  batopr
+// Removed 0.6 factor from repair_price, handled by gold_mod
+//
 // Revision 1.4  1999/09/30 17:36:49  batopr
 // added statistics.h
 //
@@ -56,7 +59,8 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
   int discount = 100;
   int gsp = getShopPrice(&discount);
 
-  int price = (int) (0.6 * gsp * gold_modifier[GOLD_REPAIR]);
+  // ideally, this price will be < gsp, but gold_mod should handle that for us
+  int price = (int) (gsp * gold_modifier[GOLD_REPAIR]);
 
   price *= maxFix(repair, dep_done) - getStructPoints();
   price /= getMaxStructPoints();
