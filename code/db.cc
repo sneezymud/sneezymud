@@ -2279,20 +2279,38 @@ void zoneData::resetZone(bool bootTime)
               continue;
             }
 
-            obj = read_object(rs.arg1, REAL);
-            if (obj != NULL) {
-              *rp += *obj;
-              obj->onObjLoad();
-              last_cmd = 1;
-              objload = TRUE;
-            } else {
-              objload = FALSE;
+	    count=0;
+	    for(t=rp->getStuff();t;t=t->nextThing){
+	      TObj *o = dynamic_cast<TObj *>(t);
+	      if(o && o->objVnum() == obj_index[rs.arg1].virt)
+		count++;
+	    }
+
+            if (count >= rs.arg2) {
               last_cmd = 0;
+              objload = 0;
+              continue;
             }
-          } else {
-            objload = FALSE;
-            last_cmd = 0;
-          }
+
+	    for(;count<rs.arg2;++count){
+	      if(obj_index[rs.arg1].getNumber() < 
+		 obj_index[rs.arg1].max_exist){
+		obj = read_object(rs.arg1, REAL);
+		if (obj != NULL) {
+		  *rp += *obj;
+		  obj->onObjLoad();
+		  last_cmd = 1;
+		  objload = TRUE;
+		} else {
+		  objload = FALSE;
+		  last_cmd = 0;
+		}
+	      }
+	    }
+	  } else {
+	    objload = FALSE;
+	    last_cmd = 0;
+	  }
           break;
         case 'P':                
           if (obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) {
