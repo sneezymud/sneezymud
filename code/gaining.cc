@@ -1120,7 +1120,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
     me->doTell(fname(ch->name), "You have no more practices you can use here.");
     return TRUE;
   } else if (practices < pracs) {
-      me->doTell(fname(ch->name), "I will only be able to use %d of your requested practices.", practices);
+      me->doTell(fname(ch->name), fmt("I will only be able to use %d of your requested practices.") % practices);
   }
   if (ch->doTraining(ch, me, accclass, offset, min(practices, pracs))) 
     return TRUE;
