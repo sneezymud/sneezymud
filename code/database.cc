@@ -36,6 +36,10 @@ void TDatabase::setDB(string tdb){
     db=database_connection.getImmoDB();
   } else if(tdb=="sneezyglobal"){
     db=database_connection.getSneezyGlobalDB();
+  } else if(tdb=="sneezybuilder"){
+    db=database_connection.getSneezyBuilderDB();
+  } else if(tdb=="sneezyprod"){
+    db=database_connection.getSneezyProdDB();    
   } else {
     vlogf(LOG_DB, "Unknown database %s", tdb.c_str());
     db=NULL;
@@ -111,9 +115,9 @@ bool TDatabase::query(const char *query,...)
 	case 's':
 	  from=va_arg(ap, char *);
 	  
-	  // escape ' and %
+	  // escape ', % and backslash
 	  while(*from){
-	    if(*from == '\'' || *from == '%'){
+	    if(*from == '\'' || *from == '%' || *from == '\\'){
 	      buf += "\\";
 	    }
 	    buf += *from++;
