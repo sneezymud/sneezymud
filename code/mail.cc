@@ -1,25 +1,10 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: mail.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "mail.h"
 
 static const char * const MAIL_FILE = "mobdata/mail";
 // may not exceed NAME_SIZE (15) chars
-static const char * const SNEEZY_ADMIN = "Grimhaven Admin";
-static const char * const DEAD_LETTER_GOD = "Batopr";
+static const char * const SNEEZY_ADMIN = "SneezyMUD Administration";
+static const char * const DEAD_LETTER_GOD = "Jesus";
 
 mail_index_type *mail_index = 0;        /* list of recs in the mail file  */
 position_list_type *free_list = 0;      /* list of free positions in file */
@@ -54,7 +39,7 @@ mail_index_type *find_char_in_index(const char *searchee)
   mail_index_type *temp_rec;
 
   if (!*searchee) {
-    vlogf(8, "Mail system -- non fatal error #1.");
+    vlogf(LOG_BUG, "Mail system -- non fatal error #1.");
     return 0;
   }
   for (temp_rec = mail_index;
@@ -74,7 +59,7 @@ void write_to_file(void *buf, int size, long filepos)
   mail_file = fopen(MAIL_FILE, "r+b");
 
   if (filepos % BLOCK_SIZE) {
-    vlogf(8, "Mail system -- fatal error #2!!!");
+    vlogf(LOG_BUG, "Mail system -- fatal error #2!!!");
     no_mail = 1;
     if (mail_file)
       fclose(mail_file);
@@ -100,7 +85,7 @@ void read_from_file(void *buf, int size, long filepos)
   mail_file = fopen(MAIL_FILE, "r+b");
 
   if (filepos % BLOCK_SIZE) {
-    vlogf(8, "Mail system -- fatal error #3!!!");
+    vlogf(LOG_BUG, "Mail system -- fatal error #3!!!");
     no_mail = 1;
     if (mail_file)
       fclose(mail_file);
@@ -121,7 +106,7 @@ void index_mail(const char *raw_name_to_index, long pos)
   int i;
 
   if (!raw_name_to_index || !*raw_name_to_index) {
-    vlogf(8, "Mail system -- non-fatal error #4.");
+    vlogf(LOG_BUG, "Mail system -- non-fatal error #4.");
     return;
   }
   for (src = raw_name_to_index, i = 0; *src;)
@@ -158,7 +143,7 @@ bool scan_file(silentTypeT silent)
   int total_messages = 0, block_num = 0;
 
   if (!(mail_file = fopen(MAIL_FILE, "r"))) {
-    vlogf(0, "Mail file non-existant... creating new file.");
+    vlogf(LOG_MISC, "Mail file non-existant... creating new file.");
     mail_file = fopen(MAIL_FILE, "w");
     fclose(mail_file);
     return 1;
@@ -180,17 +165,17 @@ bool scan_file(silentTypeT silent)
   fclose(mail_file);
 
   if (!silent)
-    vlogf(0, "   %ld bytes read.", file_end_pos);
+    vlogf(LOG_MISC, "   %ld bytes read.", file_end_pos);
 
   if (file_end_pos % BLOCK_SIZE) {
-    vlogf(0, "Error booting mail system -- Mail file corrupt!");
-    vlogf(0, "Mail disabled!");
+    vlogf(LOG_BUG, "Error booting mail system -- Mail file corrupt!");
+    vlogf(LOG_BUG, "Mail disabled!");
     return 0;
   }
   bootPulse(NULL, true);
 
   if (!silent)
-    vlogf(0, "   Mail file read -- %d messages.", total_messages);
+    vlogf(LOG_MISC, "   Mail file read -- %d messages.", total_messages);
 
   mail_index_type *temp_rec;
   temp_rec = mail_index;
@@ -219,7 +204,7 @@ bool scan_file(silentTypeT silent)
       }
       if (del_me) {
         char *tmp;
-        vlogf(5, "Dead mail message exists to %s, removing",
+        vlogf(LOG_BUG, "Dead mail message exists to %s, removing",
                temp_rec->recipient);
 #if 0
   // I don't want to receive this shit anymore !!!
@@ -271,7 +256,7 @@ void store_mail(const char *to, const char *from, const char *message_pointer)
         "store_mail: point 2");
 
   if (!*from || !*to || !*message_pointer) {
-    vlogf(0, "Mail system -- non-fatal error #5.");
+    vlogf(LOG_BUG, "Mail system -- non-fatal error #5.");
     return;
   }
   memset((char *) &header, 0, sizeof(header));   /* clear the record */
@@ -338,15 +323,15 @@ char *read_delete(const char *recipient, const char *recipient_formatted)
   size_t string_size;
 
   if (!*recipient || !*recipient_formatted) {
-    vlogf(0, "Mail system -- non-fatal error #6.");
+    vlogf(LOG_BUG, "Mail system -- non-fatal error #6.");
     return NULL;
   }
   if (!(mail_pointer = find_char_in_index(recipient))) {
-    vlogf(0, "Stupid post-office-spec_proc-error");
+    vlogf(LOG_PROC, "Stupid post-office-spec_proc-error");
     return NULL;
   }
   if (!(position_pointer = mail_pointer->list_start)) {
-    vlogf(0, "Stupid Rasmussen error!");
+    vlogf(LOG_BUG, "Stupid Rasmussen error!");
     return NULL;
   }
   if (!(position_pointer->next)) {      /* just 1 entry in list. */
@@ -373,9 +358,9 @@ char *read_delete(const char *recipient, const char *recipient_formatted)
   read_from_file(&header, BLOCK_SIZE, mail_address);
 
   if (header.block_type != HEADER_BLOCK) {
-    vlogf(0, "Oh dear.  btype %ld/%ld", header.block_type, HEADER_BLOCK);
+    vlogf(LOG_BUG, "Oh dear.  btype %ld/%ld", header.block_type, HEADER_BLOCK);
     no_mail = 1;
-    vlogf(0, "Mail system disabled!");
+    vlogf(LOG_BUG, "Mail system disabled!");
     return NULL;
   }
   tmstr = asctime(localtime(&header.mail_time));
@@ -516,7 +501,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
          fname(name).c_str());
     me->doTell(buf);
   }
-  if (!desc->client) {
+  if (!desc->m_bIsClient) {
     sprintf(buf, "%s Write your message, use ~ when done, or ` to cancel.", fname(name).c_str());
     me->doTell(buf);
     addPlayerAction(PLR_MAILING);
@@ -528,7 +513,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     *(*desc->str) = '\0';
     desc->max_str = MAX_MAIL_SIZE;
   }
-  if (desc->client)
+  if (desc->m_bIsClient)
     desc->clientf("%d|%s", CLIENT_MAIL, recipient);
 }
 
@@ -576,10 +561,26 @@ void TBeing::postmasterReceiveMail(TMonster *me)
     return;
   }
   while (has_mail(recipient)) {
-    if (!(note = read_object(GENERIC_NOTE, VIRTUAL))) {
-      vlogf(10, "Couldn't make a note removed from board!");
+#if 1
+// builder port uses stripped down database which was causing problems
+// hence this setup instead.
+    int robj = real_object(GENERIC_NOTE);
+    if (robj < 0 || robj >= (signed int) obj_index.size()) {
+      vlogf(LOG_BUG, "postmasterReceiveMail(): No object (%d) in database!", 
+            GENERIC_NOTE);
       return;
     }
+
+    if (!(note = read_object(robj, REAL))) {
+      vlogf(LOG_BUG, "Couldn't make a note removed from board!");
+      return;
+    }
+#else
+    if (!(note = read_object(GENERIC_NOTE, VIRTUAL))) {
+      vlogf(LOG_BUG, "Couldn't make a note removed from board!");
+      return;
+    }
+#endif
     note->swapToStrung();
     delete [] note->name;
     note->name = mud_str_dup("mail paper letter");
@@ -594,7 +595,25 @@ void TBeing::postmasterReceiveMail(TMonster *me)
 
     *this += *note;
 
-    act("$n gives you a piece of mail.", FALSE, me, 0, this, TO_VICT);
+    // parse the action_desc and get the "from"
+    char namebuf[24];
+    *namebuf = '\0';
+    char *c = strstr(note->action_description, "From: ");
+    if (c) {
+      c += 6;
+      char *d = strchr(c, '\n');
+      if (d) {
+        int len = d - c;
+        strncpy(namebuf, c, len);
+        namebuf[len] = '\0';
+      }
+    }
+
+    sprintf(buf, "$n gives you a piece of mail%s%s%s.", 
+        *namebuf ? " (from " : "",
+        *namebuf ? namebuf : "",
+        *namebuf ? ")" : "");
+    act(buf, FALSE, me, 0, this, TO_VICT);
     act("$N gives $n a piece of mail.", FALSE, this, 0, me, TO_ROOM);
   }
 }
@@ -608,7 +627,7 @@ void autoMail(TBeing *ch, const char *targ, const char *msg)
   else if (targ)
     store_mail(targ, SNEEZY_ADMIN, msg);
   else
-    vlogf(5, "Error in autoMail");
+    vlogf(LOG_BUG, "Error in autoMail");
 
   return;
 }
