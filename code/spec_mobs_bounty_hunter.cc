@@ -85,6 +85,8 @@ bounty_hunt_struct::~bounty_hunt_struct()
 
 void bounty_hunt_struct::reset()
 {
+
+  vlogf(LOG_DASH, "hunter being reset with vict: %s", (hunted_victim ? hunted_victim : "NULL"));
   delete [] hunted_item;
   hunted_item = NULL;
   delete [] hunted_victim;
@@ -154,7 +156,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
     return FALSE;
   }
 
-  vlogf(LOG_DASH, "hunter being called - proc = %d, generic pulse? %s", cmd, (cmd==CMD_GENERIC_PULSE ? "yes" : "no"));
+  //  vlogf(LOG_DASH, "hunter being called - proc = %d, generic pulse? %s", cmd, (cmd==CMD_GENERIC_PULSE ? "yes" : "no"));
 
   if ((cmd != CMD_GENERIC_PULSE)) {
     if ((cmd == CMD_RENT) || (cmd == CMD_DROP) || (cmd == CMD_GIVE)) {
@@ -406,7 +408,9 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
     return FALSE;
 
   job = static_cast<bounty_hunt_struct *>(myself->act_ptr);
-
+  vlogf(LOG_DASH, "Bounty hunter %s, generic pulse, item = %s, victim = %s, singletarg = %s.", myself->getName(),
+	(job->hunted_item ? job->hunted_item : "NULL"), (job->hunted_victim ? job->hunted_victim : "NULL"),
+	(job->singletarg ? "TRUE" : "FALSE"));
   if (job->hunted_item) {
     if (job->singletarg)
       temp_obj = findHuntedItem(myself, job->hunted_item, job->noneBeyond, job->hunted_victim);
@@ -515,7 +519,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 	}
         return TRUE;
       }
-      if (job->hunted_victim) {
+      if (job->hunted_victim && !job->singletarg) {
         if (strcasecmp(job->hunted_victim, targ->name)) {
           // hunt target does not = who has the item, swap and reinit
 
@@ -530,7 +534,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
             job->num_chances = -99;
           job->warned = FALSE;
         }
-      } else {
+      } else if (job->singletarg) {
         // I don't seem to be hunting anyone, init
         delete [] job->hunted_victim;
         job->hunted_victim = mud_str_dup(targ->name);

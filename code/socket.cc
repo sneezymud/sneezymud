@@ -211,6 +211,8 @@ int TSocket::gameLoop()
   fd_set input_set, output_set, exc_set;
   struct timeval last_time, now, timespent, timeout, null_time;
   static struct timeval opt_time;
+  static time_t logtime;
+  static time_t lastlog;
   char buf[256];
   Descriptor *point;
   int pulse = 0;
@@ -381,7 +383,12 @@ int TSocket::gameLoop()
       wayslowpulse = (pulse % (PULSE_MUDHOUR * 24));
     }
 
-    if(!(pulse % (ONE_SECOND*10))) {
+    if(!(pulse % (ONE_SECOND*5))) {
+      time_t ct;
+      ct = time(0);
+      
+      int TIME_BETWEEN_LOGS = 300;
+
       // every 10 RL seconds
       TDatabase db("sneezyglobal");
       db.query("delete from wholist where port=%i", gamePort);
@@ -389,16 +396,30 @@ int TSocket::gameLoop()
       TPerson *p2;
       
       //      vlogf(LOG_DASH, "Updating who table for port %d", gamePort);
-      
+      int count = 0;
       for (p = character_list; p; p = p->next) {
 	if (p->isPc() && p->polyed == POLY_TYPE_NONE && !(p->getInvisLevel() > MAX_MORT)) {
 	  if ((p2 = dynamic_cast<TPerson *>(p))) {
 	    db.query("insert into wholist (name, title, port) VALUES('%s', '%s', %i)", p2->getName(), p2->title,  gamePort);
-	    
+	    count++;
 	  }
 	}
       }
 
+      if(logtime/TIME_BETWEEN_LOGS < ct/TIME_BETWEEN_LOGS) {
+	vlogf(LOG_DASH, "Webstuff: collecting game usage data - %d seconds since last log", ct-lastlog);
+        vlogf(LOG_DASH, "Webstuff:  logtime = %d,  ct = %d, players = %d", logtime, ct, count);
+
+
+        if (logtime != 0) logtime += TIME_BETWEEN_LOGS;
+        else logtime = ct;
+	lastlog = ct;
+
+	db.query("insert into usagelogs (time, players, port) VALUES(%i, %i, %i)", logtime, count, gamePort);
+
+      }
+
+	
     }
     if(!wayslowpulse) {
       for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
