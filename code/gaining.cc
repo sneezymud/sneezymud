@@ -1308,7 +1308,7 @@ int TBeing::checkTrainDeny(const TBeing *ch, TMonster *me, discNumT discipline, 
 int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline, classIndT accclass, int prereqs, int pracs) const
 {
   char buf[256];
-  char tmp_buf[40];
+  sstring tmp_buf;
   bool found = FALSE;
   int combat = 0;
   bool combatLearn = FALSE;
@@ -1366,75 +1366,24 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
 
   }
 
-
-  if (!prereqs) {
-  // no prereqs
+  if (!prereqs)
     return FALSE;
-  } 
 
-  switch (accclass) {
-    case MAGE_LEVEL_IND:
-      combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness() + ch->getDiscipline(DISC_LORE)->getNatLearnedness();
-      if ((combat >= 100) || (combat >= (((35*ch->getLevel(MAGE_LEVEL_IND)) /10) - 4))) {
-        combatLearn = TRUE;
-      }
-      strcpy(tmp_buf, "Combat or Magic Lores");
-      break;
-   case SHAMAN_LEVEL_IND:
-     combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
-     if ((combat >= 100) || (combat >= (((35*ch->getLevel(SHAMAN_LEVEL_IND)) /10) - 4))) {
-       combatLearn = TRUE;
-     }
-     strcpy(tmp_buf, "Combat");
-     break;
-   case RANGER_LEVEL_IND:
-     combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
-     if ((combat >= 100) || (combat >= (((35*ch->getLevel(RANGER_LEVEL_IND)) /10) - 4))) {
-       combatLearn = TRUE;
-     }
-     strcpy(tmp_buf, "Combat");
-     break;
-   case CLERIC_LEVEL_IND:
-     combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness() + ch->getDiscipline(DISC_THEOLOGY)->getNatLearnedness();
-     if ((combat >= 100) || (combat >= (((35*ch->getLevel(CLERIC_LEVEL_IND)) /10) - 4))) {
-       combatLearn = TRUE;
-     }
-     strcpy(tmp_buf, "Combat or Theology");
-     break;
-   case DEIKHAN_LEVEL_IND:
-     combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness() + ch->getDiscipline(DISC_THEOLOGY)->getNatLearnedness();
-     if ((combat >= 100) || (combat >= (((35*ch->getLevel(DEIKHAN_LEVEL_IND)) /10) - 4))) {
-       combatLearn = TRUE;
-     }
-     strcpy(tmp_buf, "Combat or Theology");
-     break;
-   case WARRIOR_LEVEL_IND:
-     combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
-     if ((combat >= 100) || (combat >= (((35*ch->getLevel(WARRIOR_LEVEL_IND)) /10) - 4))) {
-       combatLearn = TRUE;
-     }
-     strcpy(tmp_buf, "Combat");
-     break;
-   case THIEF_LEVEL_IND:
-     combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
-     if ((combat >= 100) || (combat >= (((35*ch->getLevel(THIEF_LEVEL_IND)) /10) - 4))) {
-       combatLearn = TRUE;
-     }
-     strcpy(tmp_buf, "Combat");
-     break;
-   case MONK_LEVEL_IND:
-     combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
-     if ((combat >= 100) || (combat >= (((35*ch->getLevel(MONK_LEVEL_IND)) /10) - 4))) {
-        combatLearn = TRUE;
-      }
-      strcpy(tmp_buf, "Combat");
-      break;
-    case UNUSED1_LEVEL_IND:
-    case UNUSED2_LEVEL_IND:
-    case UNUSED3_LEVEL_IND:
-    case MAX_SAVED_CLASSES:
-      break;
-  } 
+  // all classes uses combat as a base requirement
+  combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
+  tmp_buf = sstring(discNames[DISC_COMBAT].practice).cap();
+  
+  if(classInfo[accclass].sec_disc != DISC_NONE){
+    combat+=getDiscipline(classInfo[accclass].sec_disc)->getNatLearnedness();
+    tmp_buf += " or ";
+    tmp_buf += sstring(discNames[classInfo[accclass].sec_disc].practice).cap();
+  }
+
+
+  if ((combat >= 100) || 
+      (combat >= (((35*ch->getLevel(accclass)) /10) - 4))) {
+    combatLearn = TRUE;
+  }
 
 
   if (discipline == DISC_COMBAT || 
@@ -1568,7 +1517,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
       } else if (!combatLearn) {
         sprintf(buf, " %s Tsk! Tsk! You have not kept up with your basic training and you expect advanced learning.", fname(ch->name).c_str());
         me->doTell(buf);
-        sprintf(buf, " %s Hmmm. I think you should learn more from the %s trainer.", fname(ch->name).c_str(), tmp_buf);
+        sprintf(buf, " %s Hmmm. I think you should learn more from the %s trainer.", fname(ch->name).c_str(), tmp_buf.c_str());
       } else {
         sprintf(buf, " %s Tsk! Tsk! You have not finished any of your basic training and you expect advanced learning.", fname(ch->name).c_str());
         me->doTell(buf);
@@ -1579,7 +1528,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
     case 1:
       sprintf(buf, " %s Tsk! Tsk! You have not kept up with your general training and you expect me to teach you more.", fname(ch->name).c_str());
       me->doTell(buf);
-      sprintf(buf, " %s Go learn more about %s before you come back to me.", fname(ch->name).c_str(), tmp_buf);
+      sprintf(buf, " %s Go learn more about %s before you come back to me.", fname(ch->name).c_str(), tmp_buf.c_str());
       me->doTell(buf);
       return TRUE;
   }
@@ -1644,7 +1593,7 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
     } else {
       ch->addPracs(-1, accclass);
       ch->sendTo("You have %d %s practices left.\n\r", 
-      ch->getPracs(accclass), classNames[accclass].name);
+      ch->getPracs(accclass), classInfo[accclass].name.c_str());
     }
 
     initial = (ch->getDiscipline(TrainerInfo[offset].disc))->getNatLearnedness();
@@ -1962,35 +1911,12 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
   sstring argument=arg;
 
   if (!ch->hasClass(Class)) {
-    switch (cit) {
-      case MAGE_LEVEL_IND:
-      case SHAMAN_LEVEL_IND:
-        act("$n growls, \"Go away, $N.  You know nothing of spirits!\"", FALSE, me, 0, ch, TO_ROOM);
-        break;
-      case CLERIC_LEVEL_IND:
-        act("$n growls, \"Go away, $N.  You're no cleric!\"", FALSE, me, 0, ch, TO_ROOM);
-        break;
-      case THIEF_LEVEL_IND:
-        act("$n growls, \"Go away, $N.  You're no thief!\"", FALSE, me, 0, ch, TO_ROOM);
-        break;
-      case DEIKHAN_LEVEL_IND:
-        act("$n growls, \"Go away, $N.  You know nothing of our order!\"", FALSE, me, 0, ch, TO_ROOM);
-        break;
-      case RANGER_LEVEL_IND:
-        act("$n growls, \"Go away, $N.  You're no ranger!\"", FALSE, me, 0, ch, TO_ROOM);
-        break;
-      case WARRIOR_LEVEL_IND:
-        act("$n growls, \"Go away, $N.  You're no warrior!\"", FALSE, me, 0, ch, TO_ROOM);
-        break;
-      case MONK_LEVEL_IND:
-        act("$n growls, \"Go away, $N.  You are not part of our dojo!\"", FALSE, me, 0, ch, TO_ROOM);
-        break;
-      case UNUSED1_LEVEL_IND:
-      case UNUSED2_LEVEL_IND:
-      case UNUSED3_LEVEL_IND:
-      case MAX_SAVED_CLASSES:
-        break;
-    }
+    sstring buf;
+
+    ssprintf(buf, "$n growls, \"Go away, $N.  You're no %s!\"",
+	     classInfo[cit].name.c_str());
+    act(buf, FALSE, me, 0, ch, TO_ROOM);
+
     return TRUE;
   }
     
@@ -2117,8 +2043,7 @@ devotionLevelT TBeing::getDevotionLevel() const
 void TBeing::pracPath(TMonster *gm, classIndT Class)
 {
   char buf[256];
-  char tmp_buf[40];
-  char tmp2_buf[40];
+  sstring tmp_buf, tmp_buf2;
   int combat = 0, basic = 0;
   bool basicLearn = FALSE, combatMax = FALSE,  combatLearn = FALSE;
 
@@ -2130,198 +2055,54 @@ void TBeing::pracPath(TMonster *gm, classIndT Class)
 
   int combatReq=(((35*getLevel(Class)) /10) - 4);
 
-  switch (Class) {
-    case MAGE_LEVEL_IND:
-      combat = getDiscipline(DISC_COMBAT)->getNatLearnedness() + getDiscipline(DISC_LORE)->getNatLearnedness();
-      basic = getDiscipline(DISC_MAGE)->getNatLearnedness();
-      if (basic >= MAX_DISC_LEARNEDNESS) {
-        basicLearn=TRUE;
-      }
-      if (combat >= getCombatPrereqNumber(Class)) {
-        combatLearn = TRUE;
-        combatMax = 1;
-      }
-      if (combat == 2* MAX_DISC_LEARNEDNESS) {
-         combatMax = 2;
-         combatLearn = TRUE;
-      }
-      if (combat >= combatReq) {
-        combatLearn = TRUE;
-      }
-      strcpy(tmp_buf, "Combat or Magic Lores");
-      strcpy(tmp2_buf, "Magic Lores");
-      break;
-    case SHAMAN_LEVEL_IND:
-      combat = getDiscipline(DISC_COMBAT)->getNatLearnedness();
-      basic = getDiscipline(DISC_WARRIOR)->getNatLearnedness();
-      if (basic >= MAX_DISC_LEARNEDNESS) {
-        basicLearn=TRUE;
-      }
-      if (combat >= getCombatPrereqNumber(Class)) {
-        combatLearn = TRUE;
-        combatMax = 1;
-      }
-      if (combat == MAX_DISC_LEARNEDNESS) {
-         combatMax = 2;
-         combatLearn = TRUE;
-      }
+  combat = getDiscipline(DISC_COMBAT)->getNatLearnedness();
+  tmp_buf=sstring(discNames[DISC_COMBAT].practice).cap();
+  
+  if(classInfo[Class].sec_disc != DISC_NONE){
+    combat+=getDiscipline(classInfo[Class].sec_disc)->getNatLearnedness();
+    tmp_buf += " or ";
+    tmp_buf += sstring(discNames[classInfo[Class].sec_disc].practice).cap();
+    tmp_buf2 = sstring(discNames[classInfo[Class].sec_disc].practice).cap();
+  }
 
-      if (combat >= combatReq) {
-        combatLearn = TRUE;
-      }
-      strcpy(tmp_buf, "Combat");
-      break;
-    case RANGER_LEVEL_IND:
-      combat = getDiscipline(DISC_COMBAT)->getNatLearnedness();
-      basic = getDiscipline(DISC_RANGER)->getNatLearnedness();
-      if (basic >= MAX_DISC_LEARNEDNESS) {
-        basicLearn = TRUE; 
-      }
-      if (combat >= getCombatPrereqNumber(Class)) {
-        combatLearn = TRUE;
-        combatMax = 1;
-      }
-      if (combat == MAX_DISC_LEARNEDNESS) {
-         combatMax = 2;
-         combatLearn = TRUE;
-      }
+  basic = getDiscipline(classInfo[Class].base_disc)->getNatLearnedness();
 
-      if (combat >= combatReq) {
-        combatLearn = TRUE;
-      }
-      strcpy(tmp_buf, "Combat");
-      break;
-   case CLERIC_LEVEL_IND:  
-      combat = getDiscipline(DISC_COMBAT)->getNatLearnedness() + getDiscipline(DISC_THEOLOGY)->getNatLearnedness();
-      basic = getDiscipline(DISC_CLERIC)->getNatLearnedness();
-      if (basic >= MAX_DISC_LEARNEDNESS) {
-        basicLearn=TRUE;
-      }
-      if (combat >= getCombatPrereqNumber(Class)) {
-        combatLearn = TRUE;
-        combatMax = 1;
-      }
-      if (combat == 2* MAX_DISC_LEARNEDNESS) {
-         combatMax = 2;
-         combatLearn = TRUE;
-      }
-
-      if (combat >= combatReq) {
-        combatLearn = TRUE;
-      }
-      strcpy(tmp_buf, "Combat or Theology");
-      strcpy(tmp2_buf, "Theology");
-       break;
-   case DEIKHAN_LEVEL_IND:
-      combat = getDiscipline(DISC_COMBAT)->getNatLearnedness() + getDiscipline(DISC_THEOLOGY)->getNatLearnedness();
-      basic = getDiscipline(DISC_DEIKHAN)->getNatLearnedness();
-      if (basic >= MAX_DISC_LEARNEDNESS) {
-        basicLearn = TRUE;
-      }
-      if (combat >= getCombatPrereqNumber(Class)) {
-        combatLearn = TRUE;
-        combatMax = 1;
-      }
-      if (combat == 2* MAX_DISC_LEARNEDNESS) {
-         combatMax = 2;
-         combatLearn = TRUE;
-      }
-
-      if (combat >= combatReq) {
-        combatLearn = TRUE;
-      }
-      strcpy(tmp_buf, "Combat or Theology");
-      strcpy(tmp2_buf, "Theology");
-      break;
-    case WARRIOR_LEVEL_IND:
-      combat = getDiscipline(DISC_COMBAT)->getNatLearnedness();
-      basic = getDiscipline(DISC_WARRIOR)->getNatLearnedness();
-      if (basic >= MAX_DISC_LEARNEDNESS) {
-        basicLearn=TRUE;
-      }
-      if (combat >= getCombatPrereqNumber(Class)) {
-        combatLearn = TRUE;
-        combatMax = 1;
-      }
-      if (combat == MAX_DISC_LEARNEDNESS) {
-         combatMax = 2;
-         combatLearn = TRUE;
-      }
-
-      if (combat >= combatReq) {
-        combatLearn = TRUE;
-      }
-      strcpy(tmp_buf, "Combat");
-      break;
-    case MONK_LEVEL_IND:
-      combat = getDiscipline(DISC_COMBAT)->getNatLearnedness();
-      basic = getDiscipline(DISC_MONK)->getNatLearnedness();
-      if (basic >= MAX_DISC_LEARNEDNESS) {
-        basicLearn=TRUE;
-      }
-      if (combat >= getCombatPrereqNumber(Class)) {
-        combatLearn = TRUE;
-        combatMax = 1;
-      }
-
-      if (combat == MAX_DISC_LEARNEDNESS) {
-         combatMax = 2;
-         combatLearn = TRUE;
-      }
-
-      if (combat >= combatReq) {
-        combatLearn = TRUE;
-      }
-      strcpy(tmp_buf, "Combat");
-      break;
-    case THIEF_LEVEL_IND:
-      combat = getDiscipline(DISC_COMBAT)->getNatLearnedness();
-      basic = getDiscipline(DISC_THIEF)->getNatLearnedness();
-      if (basic >= MAX_DISC_LEARNEDNESS) {
-        basicLearn=TRUE;
-      }
-      if (combat >= getCombatPrereqNumber(Class)) {
-        combatLearn = TRUE;
-        combatMax = 1;
-      }
-      if (combat == MAX_DISC_LEARNEDNESS) {
-         combatMax = 2;
-         combatLearn = TRUE;
-      }
-      if (combat >= combatReq) {
-        combatLearn = TRUE;
-      }
-      strcpy(tmp_buf, "Combat");
-      break;
-    case UNUSED1_LEVEL_IND:
-    case UNUSED2_LEVEL_IND:
-    case UNUSED3_LEVEL_IND:
-    case MAX_SAVED_CLASSES:
-      forceCrash("bad spot in pracPath");
-      return;
+  if (basic >= MAX_DISC_LEARNEDNESS) {
+    basicLearn=TRUE;
+  }
+  if (combat >= getCombatPrereqNumber(Class)) {
+    combatLearn = TRUE;
+    combatMax = 1;
+  }
+  if (combat == MAX_DISC_LEARNEDNESS) {
+    combatMax = 2;
+    combatLearn = TRUE;
+  }
+  if (combat >= combatReq) {
+    combatLearn = TRUE;
   }
 
 
   if (combatMax && basicLearn) {
     sprintf(buf, "Hmmm, looks like you are free to use these practices at any advanced %s trainer.", gm->getProfName());
   } else if (!combatLearn) {
-      sprintf(buf, "I think you need to first use %i practices at your %s trainer.", (int)((combatReq-combat)+0.5), tmp_buf);
+      sprintf(buf, "I think you need to first use %i practices at your %s trainer.", (int)((combatReq-combat)+0.5), tmp_buf.c_str());
   } else if (!combatMax && !basicLearn) {
     if (getDiscipline(DISC_COMBAT)->getNatLearnedness() >= MAX_DISC_LEARNEDNESS)
-      sprintf(buf, "You could train in a weapon speciality or continue to use these practices at your %s or %s trainer.", gm->getProfName(),tmp2_buf);
+      sprintf(buf, "You could train in a weapon speciality or continue to use these practices at your %s or %s trainer.", gm->getProfName(),tmp_buf2.c_str());
     else
-      sprintf(buf, "You can use these practices at your %s trainer or you could always continue to train in %s.", gm->getProfName(), tmp_buf);
+      sprintf(buf, "You can use these practices at your %s trainer or you could always continue to train in %s.", gm->getProfName(), tmp_buf.c_str());
 
   } else if (!combatMax && basicLearn) {
     if (getDiscipline(DISC_COMBAT)->getNatLearnedness() >= MAX_DISC_LEARNEDNESS)
-      sprintf(buf, "You could train in a weapon speciality or continue to use these practices at your %s trainer.", tmp2_buf);
+      sprintf(buf, "You could train in a weapon speciality or continue to use these practices at your %s trainer.", tmp_buf.c_str());
     else
-      sprintf(buf, "You need to use these practices to finish your basic training at your %s trainer.", tmp_buf); 
+      sprintf(buf, "You need to use these practices to finish your basic training at your %s trainer.", tmp_buf.c_str()); 
   } else if (combatMax && !basicLearn) {
     if (getDiscipline(DISC_COMBAT)->getNatLearnedness() >= MAX_DISC_LEARNEDNESS) {
      sprintf(buf, "You should use these practices at your basic %s trainer or you can pursue a weapon specialization.", gm->getProfName());
     } else if (combatMax == 1) {
-      sprintf(buf, "You can use these practices at your basic %s trainer or you could always continue to train in %s.", gm->getProfName(), tmp_buf);
+      sprintf(buf, "You can use these practices at your basic %s trainer or you could always continue to train in %s.", gm->getProfName(), tmp_buf.c_str());
     } else if (combatMax == 2) {
       sprintf(buf, "You need to use these practices at your basic %s trainer or you could pursue a weapon specialization.", gm->getProfName());
     }

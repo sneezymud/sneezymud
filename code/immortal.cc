@@ -4401,7 +4401,7 @@ void TPerson::doAccess(const sstring &arg)
         }
         if (Class <= RANGER_LEVEL_IND) {
           st.level[Class] = lev;
-          sendTo("Setting level %d in Class %s\n\r", lev,classNames[Class].name);
+          sendTo("Setting level %d in Class %s\n\r", lev,classInfo[Class].name.c_str());
         } else {
           sendTo("Class must be between 0 and 7.\n\r");
           return;

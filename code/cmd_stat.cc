@@ -661,7 +661,7 @@ void TBeing::statBeing(TBeing *k)
   *buf2 = '\0';
   for (classIndT ijc = MIN_CLASS_IND; ijc < MAX_CLASSES; ijc++)
     if (k->hasClass(1<<ijc))
-      sprintf(buf2 + strlen(buf2), "%s ", classNames[ijc].capName);
+      sprintf(buf2 + strlen(buf2), "%s ", classInfo[ijc].name.cap().c_str());
 
   sprintf(buf + strlen(buf),"<c>Class :<z> %-28s", buf2);
   sprintf(buf + strlen(buf),"<c>Level   :<z> [M%d C%d W%d T%d S%d D%d K%d R%d]\n\r",
@@ -2079,7 +2079,7 @@ void TPerson::doStat(const char *argument)
       }
     }
     for (count = 0; count < MAX_CLASSES; count++) {
-      sendTo("%-25.25s  :  %d\n\r", classNames[count].capName, k->player.doneBasic[count]);
+      sendTo("%-25.25s  :  %d\n\r", classInfo[count].name.cap().c_str(), k->player.doneBasic[count]);
     }
     return;
   } else if (!strcmp("room", arg1)) {

@@ -3056,7 +3056,7 @@ void TBeing::doLevels(const char *argument)
   //RaceMax = RacialMax[race->getRace()][Class];
 
   sprintf(buf, "Experience needed for level in class %s:\n\r\n\r",
-      classNames[Class].capName);
+      classInfo[Class].name.cap().c_str());
   sb += buf;
 
   ubyte cLvl = getLevel(Class);

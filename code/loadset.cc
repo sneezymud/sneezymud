@@ -276,8 +276,8 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
 
             if (!hasMatch)
               for (int classIndex = MIN_CLASS_IND; classIndex < MAX_CLASSES; classIndex++)
-                if (is_abbrev(tArg, classNames[classIndex].name)) {
-                  tClass = ((classNames[classIndex].capName[0] == *tArg) ?
+                if (is_abbrev(tArg, classInfo[classIndex].name.c_str())) {
+                  tClass = ((classInfo[classIndex].name.cap().c_str()[0] == *tArg) ?
                             (classIndex | (1 << 31)) : classIndex);
                   hasMatch = true;
                   break;
@@ -306,9 +306,9 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
         StString += "[";
 
         if (tClass & (1 << 31))
-          StString += classNames[(tClass & ~(1 << 31))].capName;
+          StString += classInfo[(tClass & ~(1 << 31))].name.cap().c_str();
         else
-          StString += classNames[tClass].name;
+          StString += classInfo[tClass].name.c_str();
 
         StString += "] ";
       }

@@ -161,7 +161,7 @@ void TBeing::doScore()
       if (getLevel(i)) {
         sendTo("%s%s lev %2d", 
              shownFirst ? ", " : "",
-             classNames[i].capName, getLevel(i));
+	       classInfo[i].name.cap().c_str(), getLevel(i));
         shownFirst = true;
       }
     }
@@ -187,7 +187,7 @@ void TBeing::doScore()
         // leveled in one class, but not another, show each class as own line
         sendTo("You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r",
              purple(), tString, norm(), purple(), getLevel(i)+1,
-             classNames[i].capName, norm());
+             classInfo[i].name.cap().c_str(), norm());
       }
     }
   }

@@ -974,7 +974,7 @@ static void change_mob_class(TBeing *ch, TMonster *mob, const char *arg, editorE
     if (ij % 2 == 1)
       row++;
     ch->sendTo(buf);
-    ch->sendTo("%2d [%s] %s", ij + 1, ((mob->getClass() & (1 << ij)) ? "X" : " "), classNames[ij].capName);
+    ch->sendTo("%2d [%s] %s", ij + 1, ((mob->getClass() & (1 << ij)) ? "X" : " "), classInfo[ij].name.cap().c_str());
   }
   ch->sendTo(VT_CURSPOS, 21, 1);
   ch->sendTo("Select number to toggle, <ENTER> to return to the main menu.\n\r--> ");

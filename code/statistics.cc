@@ -491,7 +491,7 @@ void TBeing::doGamestats(const sstring &arg)
             factor = SECS_PER_REAL_MIN * stats.time_levels[i][lev-1] / stats.levels[i][lev-1];
 
           sendTo("Class: %-10.10s :    number %3d,  avg. time: %s\n\r",
-            classNames[i].name, stats.levels[i][lev-1],
+            classInfo[i].name.c_str(), stats.levels[i][lev-1],
             secsToString(factor).c_str());
         }
       }

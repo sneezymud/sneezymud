@@ -3194,7 +3194,7 @@ int TBeing::editAverageMe(TBeing *tBeing, const char *tString)
   if (tStBuffer.empty()) {
     for (tClass = MIN_CLASS_IND; tClass < MAX_CLASSES; tClass++)
       if (hasClass((1 << tClass))) {
-        tBeing->sendTo("Setting class to current: %s\n\r", classNames[tClass].capName);
+        tBeing->sendTo("Setting class to current: %s\n\r", classInfo[tClass].name.cap().c_str());
         break;
       }
 

@@ -188,5 +188,14 @@ struct pc_class_names_data
   const char * const name;
   const char * const capName;
 };
+
+struct class_info
+{
+  classIndT class_lev_num;
+  int class_num;
+  sstring name;
+  discNumT base_disc;
+  discNumT sec_disc;
+};
       
 #endif

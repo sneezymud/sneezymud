@@ -3208,6 +3208,11 @@ byte TBeing::getMaxSkillValue(spellNumT skill) const
 
 CDiscipline * TBeing::getDiscipline(discNumT n) const
 {
+  if(n < 0 || n > MAX_DISCS){
+    vlogf(LOG_BUG, "getDiscipline called out of range: n=%i", n);
+    return NULL;
+  }
+
   if (discs)
     return discs->disc[n];
   else {

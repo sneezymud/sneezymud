@@ -1528,7 +1528,7 @@ void TBeing::doReset(sstring arg)
         else 
           pracs += calcNewPracs(Class, false);
       }
-      sendTo("Class: %s: %d practices reset.\n\r", classNames[Class].capName, pracs);
+      sendTo("Class: %s: %d practices reset.\n\r", classInfo[Class].name.cap().c_str(), pracs);
       setPracs(pracs, Class);
     }
     resetEffectsChar();

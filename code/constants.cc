@@ -848,17 +848,19 @@ APP_type apply_types[MAX_APPLY_TYPES] =
 };
 
 
-const struct pc_class_names_data classNames[MAX_CLASSES] =
+
+const struct class_info classInfo[MAX_CLASSES] =
 {
-  {MAGE_LEVEL_IND, CLASS_MAGE, "mage", "Mage"},
-  {CLERIC_LEVEL_IND, CLASS_CLERIC, "cleric", "Cleric"},
-  {WARRIOR_LEVEL_IND, CLASS_WARRIOR, "warrior", "Warrior"},
-  {THIEF_LEVEL_IND, CLASS_THIEF, "thief", "Thief"},
-  {SHAMAN_LEVEL_IND, CLASS_SHAMAN, "shaman", "Shaman"},
-  {DEIKHAN_LEVEL_IND, CLASS_DEIKHAN, "deikhan", "Deikhan"},
-  {MONK_LEVEL_IND, CLASS_MONK, "monk", "Monk"},
-  {RANGER_LEVEL_IND, CLASS_RANGER, "ranger","Ranger"}
+  {MAGE_LEVEL_IND, CLASS_MAGE, "mage", DISC_MAGE, DISC_LORE},
+  {CLERIC_LEVEL_IND, CLASS_CLERIC, "cleric", DISC_CLERIC, DISC_THEOLOGY},
+  {WARRIOR_LEVEL_IND, CLASS_WARRIOR, "warrior", DISC_WARRIOR, DISC_NONE},
+  {THIEF_LEVEL_IND, CLASS_THIEF, "thief", DISC_THIEF, DISC_NONE},
+  {SHAMAN_LEVEL_IND, CLASS_SHAMAN, "shaman", DISC_SHAMAN, DISC_NONE},
+  {DEIKHAN_LEVEL_IND, CLASS_DEIKHAN, "deikhan", DISC_DEIKHAN, DISC_THEOLOGY},
+  {MONK_LEVEL_IND, CLASS_MONK, "monk", DISC_MONK, DISC_NONE},
+  {RANGER_LEVEL_IND, CLASS_RANGER, "ranger", DISC_RANGER, DISC_NONE}
 };
+
 
 const char * const action_bits[] =
 {

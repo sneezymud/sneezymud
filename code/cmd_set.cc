@@ -647,7 +647,7 @@ mob->getName());
         sendTo("Invalid class number.\n\r");
         return;
     }
-    sendTo(COLOR_MOBS, "Setting %s's %s practices to %d.\n\r", mob->getName(), classNames[parm2].name, parm);
+    sendTo(COLOR_MOBS, "Setting %s's %s practices to %d.\n\r", mob->getName(), classInfo[parm2].name.c_str(), parm);
   } else if (is_abbrev(field, "level")) {
     if (sscanf(parmstr, "%d", &parm) != 1) {
       sendTo("Syntax: @set level <char name> <level> <class number>\n\r");
@@ -678,7 +678,7 @@ mob->getName());
       }
       mob->setLevel(classIndT(parm2), parm);
       mob->calcMaxLevel();
-      sendTo(COLOR_MOBS, "Setting mob %s to level %d in class %s.\n\r", mob->getName(), parm, classNames[parm2].name);
+      sendTo(COLOR_MOBS, "Setting mob %s to level %d in class %s.\n\r", mob->getName(), parm, classInfo[parm2].name.c_str());
       return;
     }
     if (parm < 0) {
@@ -691,7 +691,7 @@ mob->getName());
         if (parm2 >= MIN_CLASS_IND && parm2 < MAX_CLASSES) {
           mob->setLevel(classIndT(parm2), parm);
           mob->calcMaxLevel();
-          sendTo(COLOR_MOBS, "Setting char %s to level %d in class %s.\n\r", mob->getName(), parm, classNames[parm2].name);
+          sendTo(COLOR_MOBS, "Setting char %s to level %d in class %s.\n\r", mob->getName(), parm, classInfo[parm2].name.c_str());
         }
       } else {
         if (parm > MAX_MORT) {
@@ -701,7 +701,7 @@ mob->getName());
         if (parm2 >= MIN_CLASS_IND && parm2 < MAX_CLASSES) {
           mob->setLevel(classIndT(parm2), parm);
           mob->calcMaxLevel();
-          sendTo(COLOR_MOBS, "Setting char %s to level %d in class %s.\n\r", mob->getName(), parm, classNames[parm2].name);
+          sendTo(COLOR_MOBS, "Setting char %s to level %d in class %s.\n\r", mob->getName(), parm, classInfo[parm2].name.c_str());
         }
       }
     } else {
@@ -753,7 +753,7 @@ mob->getName());
       return;
     }
     mob->player.doneBasic[parm2] = parm;
-    sendTo(COLOR_MOBS, "You just set %s's %s class doneBasic to %d.", mob->getName(), classNames[parm2].name, parm);
+    sendTo(COLOR_MOBS, "You just set %s's %s class doneBasic to %d.", mob->getName(), classInfo[parm2].name.c_str(), parm);
     return;
   } else if (is_abbrev(field, "race")) {
     if (is_number(parmstr)) {

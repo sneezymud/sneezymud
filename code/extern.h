@@ -343,7 +343,7 @@ extern int mapItemTypeToFile(itemTypeT);
 extern bool notBreakSlot(wearSlotT, bool);
 extern bool notBleedSlot(wearSlotT);
 extern bool illegalEmail(char *, Descriptor *, silentTypeT);
-extern const struct pc_class_names_data classNames[MAX_CLASSES];
+extern const struct class_info classInfo[MAX_CLASSES];
 extern const struct disc_names_data discNames[MAX_DISCS];
 extern const struct racial_health_type racial_health[MAX_RACIAL_TYPES];
 extern const ubyte slot_chance[MAX_BODY_TYPES][MAX_WEAR];

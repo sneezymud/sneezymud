@@ -22,10 +22,10 @@ static const sstring ClassTitles(const TBeing *ch)
     if (ch->getLevel(i)) {
       if ((++count) > 1)
         sprintf(buf + strlen(buf), "/Level %d %s", 
-                ch->getLevel(i), classNames[i].capName);
+                ch->getLevel(i), classInfo[i].name.cap().c_str());
       else
         sprintf(buf, "Level %d %s",
-                ch->getLevel(i), classNames[i].capName);
+                ch->getLevel(i), classInfo[i].name.cap().c_str());
     }
   }
   return (buf);

@@ -911,7 +911,7 @@ void TBeing::doPractice(const char *argument)
 
     if (!tStName.empty())
       for (tClass = MIN_CLASSES; tClass < MAX_CLASSES; tClass++)
-        if (is_abbrev(tStName, classNames[tClass].name))
+        if (is_abbrev(tStName, classInfo[tClass].name.c_str()))
           break;
 
     if (tClass >= MAX_CLASSES) {
