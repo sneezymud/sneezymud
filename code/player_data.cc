@@ -487,6 +487,8 @@ void TPerson::storeToSt(charFile *st)
   strcpy(st->roomColor, desc->prompt_d.roomColor);
   strcpy(st->oppColor, desc->prompt_d.oppColor);
   strcpy(st->tankColor, desc->prompt_d.tankColor);
+  strcpy(st->pietyColor, desc->prompt_d.pietyColor);
+  strcpy(st->lifeforceColor, desc->prompt_d.lifeforceColor);
 
   st->plr_act = desc->plr_act;
   st->plr_color = desc->plr_color;
@@ -707,6 +709,8 @@ void TPerson::loadFromSt(charFile *st)
   strcpy(desc->prompt_d.roomColor, st->roomColor);
   strcpy(desc->prompt_d.oppColor, st->oppColor);
   strcpy(desc->prompt_d.tankColor, st->tankColor);
+  strcpy(desc->prompt_d.pietyColor, st->pietyColor);
+  strcpy(desc->prompt_d.lifeforceColor, st->lifeforceColor);
 
 
   desc->plr_act = st->plr_act;
@@ -1061,6 +1065,14 @@ void do_the_player_stuff(const char *name)
       return;
     } else if (strlen(st.tankColor) > 20) {
       vlogf(LOG_BUG, "%s had a corrupt st.tankColor. Moving player file.", name);
+      handleCorrupted(name, st.aname);
+      return;
+    } else if (strlen(st.pietyColor) > 20) {
+      vlogf(LOG_BUG, "%s had a corrupt st.pietyColor. Moving player file.", name);
+      handleCorrupted(name, st.aname);
+      return;
+    } else if (strlen(st.lifeforceColor) > 20) {
+      vlogf(LOG_BUG, "%s had a corrupt st.lifeforceColor. Moving player file.", name);
       handleCorrupted(name, st.aname);
       return;
     } else if ((max_level <= MAX_MORT) && ((st.money < 0) || (st.money > 25000000))) {

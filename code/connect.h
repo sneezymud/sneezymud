@@ -3,22 +3,24 @@
 
 #include "obj_drug.h"
 
-const unsigned short int PROMPT_HIT               = (1<<0);
-const unsigned short int PROMPT_MANA              = (1<<1);
-const unsigned short int PROMPT_MOVE              = (1<<2);
-const unsigned short int PROMPT_GOLD              = (1<<3);
-const unsigned short int PROMPT_EXP               = (1<<4);
-const unsigned short int PROMPT_NAME              = (1<<5);
-const unsigned short int PROMPT_OPPONENT          = (1<<6);
-const unsigned short int PROMPT_CONDITION         = (1<<7);
-const unsigned short int PROMPT_COND_LDR          = (1<<8);
-const unsigned short int PROMPT_ROOM              = (1<<9);
-const unsigned short int PROMPT_COLOR             = (1<<10);
-const unsigned short int PROMPT_TANK              = (1<<11);
-const unsigned short int PROMPT_TANK_OTHER        = (1<<12);
-const unsigned short int PROMPT_BUILDER_ASSISTANT = (1<<13);
-const unsigned short int PROMPT_EXPTONEXT_LEVEL   = (1<<14);
-const unsigned short int PROMPT_VTANSI_BAR        = (1<<15);
+const unsigned int PROMPT_HIT               = (1<<0);
+const unsigned int PROMPT_MANA              = (1<<1);
+const unsigned int PROMPT_MOVE              = (1<<2);
+const unsigned int PROMPT_GOLD              = (1<<3);
+const unsigned int PROMPT_EXP               = (1<<4);
+const unsigned int PROMPT_NAME              = (1<<5);
+const unsigned int PROMPT_OPPONENT          = (1<<6);
+const unsigned int PROMPT_CONDITION         = (1<<7);
+const unsigned int PROMPT_COND_LDR          = (1<<8);
+const unsigned int PROMPT_ROOM              = (1<<9);
+const unsigned int PROMPT_COLOR             = (1<<10);
+const unsigned int PROMPT_TANK              = (1<<11);
+const unsigned int PROMPT_TANK_OTHER        = (1<<12);
+const unsigned int PROMPT_BUILDER_ASSISTANT = (1<<13);
+const unsigned int PROMPT_EXPTONEXT_LEVEL   = (1<<14);
+const unsigned int PROMPT_VTANSI_BAR        = (1<<15);
+const unsigned int PROMPT_PIETY             = (1<<16);
+const unsigned int PROMPT_LIFEFORCE         = (1<<17);
 
 enum termTypeT {
      TERM_NONE,  //         = 0;
@@ -348,7 +350,7 @@ class sessionData
 class promptData
 {
   public:
-    unsigned short int type;
+    unsigned int type;
     char hpColor[20];
     char manaColor[20];
     char moveColor[20];
@@ -357,6 +359,8 @@ class promptData
     char oppColor[20];
     char roomColor[20];
     char tankColor[20];
+    char pietyColor[20];
+    char lifeforceColor[20];
     char *prompt;
 //    double xptnl[MAX_CLASSES];  getExpClassLevel is same for all classes
     double xptnl;

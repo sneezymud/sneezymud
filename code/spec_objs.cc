@@ -5706,6 +5706,9 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     ch->sendTo(COLOR_BASIC, "<g>[<1>%3i<g>]<1> average trophy percentage\n\r", score);
     totalscore+=score;
 
+
+
+
     // shops
     db.query("select count(distinct soa.shop_nr) from shopownedaccess soa, factionmembers fm where soa.access & %i and fm.name = soa.name and fm.faction='%s'", SHOPACCESS_OWNER, factnames[i]);
     score=0;

@@ -39,6 +39,7 @@ class charFile {
    char moneyColor[20], expColor[20];
    char roomColor[20], oppColor[20];
    char tankColor[20];
+   char pietyColor[20], lifeforceColor[20];
    sh_int hometown;
    ubyte hometerrain;
    sh_int load_room;            /* Which room to place char in  */

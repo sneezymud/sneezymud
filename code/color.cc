@@ -88,7 +88,9 @@ void TBeing::doPrompt(const char *arg)
       IS_SET(desc->prompt_d.type, PROMPT_TANK_OTHER),
       IS_SET(desc->prompt_d.type, PROMPT_BUILDER_ASSISTANT),
       IS_SET(desc->prompt_d.type, PROMPT_EXPTONEXT_LEVEL),
-      IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR)
+      IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR),
+      IS_SET(desc->prompt_d.type, PROMPT_PIETY),
+      IS_SET(desc->prompt_d.type, PROMPT_LIFEFORCE)
     };
 
     tStString += "Prompt Line Options:\n\r--------------------\n\r";
@@ -96,20 +98,24 @@ void TBeing::doPrompt(const char *arg)
     sprintf(string, "Hit        : (%s): H:%d\n\r", (tPrompts[0] ? "yes" : " no"), getHit());
     tStString += string;
 
-    if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
-      sprintf(string, "Piety      : (%s): P:%.1f\n\r", (tPrompts[1] ? "yes" : " no"), getPiety());
-    else if (hasClass(CLASS_SHAMAN))
-      sprintf(string, "Lifeforce      : (%s): LF:%d\n\r", (tPrompts[1] ? "yes" : " no"), getLifeforce());
-    else
-      sprintf(string, "Mana       : (%s): M:%d\n\r", (tPrompts[1] ? "yes" : " no"), getMana());
-
+    sprintf(string, "Piety      : (%s): P:%.1f\n\r", (tPrompts[1] ? "yes" : " no"), getPiety());
     tStString += string;
+
+    sprintf(string, "Lifeforce  : (%s): LF:%d\n\r", (tPrompts[1] ? "yes" : " no"), getLifeforce());
+    tStString += string;
+
+    sprintf(string, "Mana       : (%s): M:%d\n\r", (tPrompts[1] ? "yes" : " no"), getMana());
+    tStString += string;
+
     sprintf(string, "Movement   : (%s): V:%d\n\r", (tPrompts[2] ? "yes" : " no"), getMove());
     tStString += string;
+
     sprintf(string, "Talens     : (%s): T:%d\n\r", (tPrompts[3] ? "yes" : " no"), getMoney());
     tStString += string;
+
     strcpy(caStat, displayExp().c_str());
     comify(caStat);
+
     sprintf(string, "Exp        : (%s): E:%s\n\r", (tPrompts[4] ? "yes" : " no"), caStat);
     tStString += string;
 
@@ -161,26 +167,30 @@ void TBeing::doPrompt(const char *arg)
       }
       break;
     case 2:
-    case 18:
-    case 14:
       if (IS_SET(desc->prompt_d.type, PROMPT_MANA)) {
-        if (hasClass(CLASS_DEIKHAN) || hasClass(CLASS_CLERIC))
-          sendTo("Taking piety out of prompt.\n\r");
-        else if (hasClass(CLASS_SHAMAN))
-          sendTo("Taking lifeforce out of prompt.\n\r");
-        else
-          sendTo("Taking mana out of prompt.\n\r");
-
+	sendTo("Taking mana out of prompt.\n\r");
         REMOVE_BIT(desc->prompt_d.type, PROMPT_MANA);
       } else {
-        if (hasClass(CLASS_DEIKHAN) || hasClass(CLASS_CLERIC))
-          sendTo("Adding piety to prompt.\n\r");
-        else if (hasClass(CLASS_SHAMAN))
-          sendTo("Adding lifeforce to prompt.\n\r");
-        else
-          sendTo("Adding mana points to prompt.\n\r");
-
+	sendTo("Adding mana points to prompt.\n\r");
         SET_BIT(desc->prompt_d.type, PROMPT_MANA);
+      }
+      break;
+    case 18:
+      if (IS_SET(desc->prompt_d.type, PROMPT_LIFEFORCE)) {
+	sendTo("Taking lifeforce out of prompt.\n\r");
+        REMOVE_BIT(desc->prompt_d.type, PROMPT_LIFEFORCE);
+      } else {
+	sendTo("Adding lifeforce points to prompt.\n\r");
+        SET_BIT(desc->prompt_d.type, PROMPT_LIFEFORCE);
+      }
+      break;
+    case 14:
+      if (IS_SET(desc->prompt_d.type, PROMPT_PIETY)) {
+	sendTo("Taking piety out of prompt.\n\r");
+        REMOVE_BIT(desc->prompt_d.type, PROMPT_PIETY);
+      } else {
+	sendTo("Adding piety to prompt.\n\r");
+        SET_BIT(desc->prompt_d.type, PROMPT_PIETY);
       }
       break;
     case 3:
@@ -232,6 +242,8 @@ void TBeing::doPrompt(const char *arg)
         *desc->prompt_d.roomColor = '\0';
         *desc->prompt_d.oppColor = '\0';
         *desc->prompt_d.tankColor = '\0';
+        *desc->prompt_d.pietyColor = '\0';
+        *desc->prompt_d.lifeforceColor = '\0';
         return;
       }
       statnum = old_search_block(caStat, 0, strlen(caStat), stat_fields, 0);
@@ -281,14 +293,14 @@ void TBeing::doPrompt(const char *arg)
           setColor(SET_COL_FIELD_MANA, kolor);
       } else if (statnum == 14) {
          // YES, MANA
-        if (!IS_SET(desc->prompt_d.type, PROMPT_MANA)) {
+        if (!IS_SET(desc->prompt_d.type, PROMPT_PIETY)) {
           sendTo("You can't color piety points, without them in your prompt.\n\r");
           return;
         } else
           setColor(SET_COL_FIELD_PIETY, kolor);
       } else if (statnum == 18) {
          // YES, MANA
-        if (!IS_SET(desc->prompt_d.type, PROMPT_MANA)) {
+        if (!IS_SET(desc->prompt_d.type, PROMPT_LIFEFORCE)) {
           sendTo("You can't color lifeforce points, without them in your prompt.\n\r");
           return;
         } else
@@ -366,6 +378,7 @@ void TBeing::doPrompt(const char *arg)
       desc->prompt_d.type = PROMPT_HIT | PROMPT_MOVE | PROMPT_MANA |
                     PROMPT_GOLD | PROMPT_EXP | PROMPT_OPPONENT |
                     PROMPT_TANK_OTHER | PROMPT_EXPTONEXT_LEVEL |
+	            PROMPT_PIETY | PROMPT_LIFEFORCE |
                     (isImmortal() ? PROMPT_ROOM : 0);
       break;
     case 11:

@@ -571,6 +571,8 @@ charFile::charFile() :
   memset(roomColor, '\0', sizeof(roomColor));
   memset(oppColor, '\0', sizeof(oppColor));
   memset(tankColor, '\0', sizeof(tankColor));
+  memset(pietyColor, '\0', sizeof(pietyColor));
+  memset(lifeforceColor, '\0', sizeof(lifeforceColor));
 
   statTypeT ij;
   for (ij=MIN_STAT;ij<MAX_STATS;ij++) {

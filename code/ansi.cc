@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: ansi.cc,v $
-// Revision 5.1  1999/10/16 04:29:21  batopr
-// *** empty log message ***
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 //
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "ansi.cc" - Various color functions.
@@ -138,7 +123,10 @@ void TBeing::setColor(setColorFieldT num, setColorKolorT col)
       strcpy(desc->prompt_d.tankColor, buf.c_str());
       break;
     case SET_COL_FIELD_PIETY:
-      strcpy(desc->prompt_d.manaColor, buf.c_str());
+      strcpy(desc->prompt_d.pietyColor, buf.c_str());
+      break;
+    case SET_COL_FIELD_LIFEFORCE:
+      strcpy(desc->prompt_d.lifeforceColor, buf.c_str());
       break;
   }
 }
@@ -231,7 +219,7 @@ const string TBeing::doColorSub() const
             break;
           default:
             return "";
-            vlogf(5,"Problem in color substituting (%s)", getName());
+            vlogf(LOG_BUG, "Problem in color substituting (%s)", getName());
             break;
         }
         return buf;
@@ -615,7 +603,7 @@ const string Descriptor::doColorSub() const
             break;
           default:
             return "";
-            vlogf(5,"Problem in color substituting/desc");
+            vlogf(LOG_BUG, "Problem in color substituting/desc");
             break;
         }
         return buf;

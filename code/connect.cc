@@ -4600,25 +4600,25 @@ void setPrompts(fd_set out)
                       ch->getHit(),
                       ch->norm());
             if (IS_SET(d->prompt_d.type, PROMPT_MANA)) {
-              if (ch->hasClass(CLASS_CLERIC) || ch->hasClass(CLASS_DEIKHAN)) {
-                sprintf(promptbuf + strlen(promptbuf),
-                        StPrompts[2],
-                        (hasColor ? d->prompt_d.manaColor : ""),
-                        ch->getPiety(),
-                        ch->norm());
-	      } else if (ch->hasClass(CLASS_SHAMAN)) {
-                sprintf(promptbuf + strlen(promptbuf),
-                        StPrompts[12],
-                        (hasColor ? d->prompt_d.manaColor : ""),
-                        ch->getLifeforce(),
-                        ch->norm());
-	      } else {
                 sprintf(promptbuf + strlen(promptbuf),
                         StPrompts[3],
                         (hasColor ? d->prompt_d.manaColor : ""),
                         ch->getMana(),
                         ch->norm());
-	      }
+	    }
+            if (IS_SET(d->prompt_d.type, PROMPT_PIETY)) {	    
+                sprintf(promptbuf + strlen(promptbuf),
+                        StPrompts[2],
+                        (hasColor ? d->prompt_d.pietyColor : ""),
+                        ch->getPiety(),
+                        ch->norm());
+	    }
+            if (IS_SET(d->prompt_d.type, PROMPT_LIFEFORCE)) {	    
+                sprintf(promptbuf + strlen(promptbuf),
+                        StPrompts[12],
+                        (hasColor ? d->prompt_d.lifeforceColor : ""),
+                        ch->getLifeforce(),
+                        ch->norm());
 	    }
             if (IS_SET(d->prompt_d.type, PROMPT_MOVE))
               sprintf(promptbuf + strlen(promptbuf),
@@ -6394,6 +6394,7 @@ promptData::promptData() :
 {
   *hpColor = *moneyColor = *manaColor = *moveColor = *expColor = '\0';
   *roomColor = *oppColor = *tankColor = '\0';
+  *pietyColor = *lifeforceColor = '\0';
 
 //  for (classIndT i = MIN_CLASS_IND; i < MAX_CLASSES; i++)
 //    xptnl[i] = 0.0;
