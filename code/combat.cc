@@ -1630,7 +1630,7 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
   dam = (int) (dam * stats.damage_modifier);
 
 #if DAMAGE_DEBUG
-  vlogf(LOG_COMBAT, "MONK %s (%d %s) barehand dam = %d , wep = %d roll = %d, stats = %.2f", ch->getName(), ch->GetMaxLevel(), ch->getProfName(), dam, wepDam, rollDam, statDam);
+  vlogf(LOG_COMBAT, "MONK %s (%d %s) barehand dam = %d , wep = %d roll = %d, stats = %.2f", ch->getName(), ch->GetMaxLevel(), ch->getProfName().c_str(), dam, wepDam, rollDam, statDam);
 #endif
 
   return (dam);
@@ -1799,7 +1799,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     dam = max(1, dam);
 
 #if DAMAGE_DEBUG
-    vlogf(LOG_COMBAT, "PLAYER %s (%d %s) %s dam = %d , wep = %d bon = %d roll = %d, stats = %.2f skill = %d", getName(), GetMaxLevel(), getProfName(), buf, dam, wepDam, bonusDam, rollDam, statDam, wepLearn);
+    vlogf(LOG_COMBAT, "PLAYER %s (%d %s) %s dam = %d , wep = %d bon = %d roll = %d, stats = %.2f skill = %d", getName(), GetMaxLevel(), getProfName().c_str(), buf, dam, wepDam, bonusDam, rollDam, statDam, wepLearn);
 #endif
 
   } else {
@@ -1811,7 +1811,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     wepDam = max(wepDam, 1);
     dam = wepDam + bonusDam + rollDam;
 #if DAMAGE_DEBUG
-    vlogf(LOG_COMBAT, "MOB %s (%d %s) dam = %d , wep = %d bon = %d roll = %d.", getName(), GetMaxLevel(), getProfName(), dam, wepDam, bonusDam, rollDam);
+    vlogf(LOG_COMBAT, "MOB %s (%d %s) dam = %d , wep = %d bon = %d roll = %d.", getName(), GetMaxLevel(), getProfName().c_str(), dam, wepDam, bonusDam, rollDam);
 #endif
 
   }

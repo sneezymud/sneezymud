@@ -680,7 +680,7 @@ class TBeing : public TThing {
 
     ubyte GetMaxLevel() const;
     void setMaxLevel(ubyte num);
-    const char * const getProfName() const;
+    sstring const getProfName() const;
     const char * const getProfAbbrevName() const;
     void deityIgnore(silentTypeT = SILENT_NO) const;
     void nothingHappens(silentTypeT = SILENT_NO) const;

@@ -1418,7 +1418,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
       if (combat >= MAX_DISC_LEARNEDNESS) {
         sprintf(buf, " %s Tsk! Tsk! You have not kept up with your basic training and you expect advanced learning.", fname(ch->name).c_str());
         me->doTell(buf);
-        sprintf(buf, " %s Hmmm. I think you should learn more from your %s trainer.", fname(ch->name).c_str(), me->getProfName());
+        sprintf(buf, " %s Hmmm. I think you should learn more from your %s trainer.", fname(ch->name).c_str(), me->getProfName().c_str());
       } else if (!combatLearn) {
         sprintf(buf, " %s Tsk! Tsk! You have not kept up with your basic training and you expect advanced learning.", fname(ch->name).c_str());
         me->doTell(buf);
@@ -1951,7 +1951,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class)
   bool basicLearn = FALSE, combatMax = FALSE,  combatLearn = FALSE;
 
   if (!checkDoneBasic(this, Class, FALSE, FALSE)) {
-    sprintf(buf, "Hmmm, looks like you are free to use your practices at any advanced %s trainer.", gm->getProfName());
+    sprintf(buf, "Hmmm, looks like you are free to use your practices at any advanced %s trainer.", gm->getProfName().c_str());
     gm->doSay(buf);
     return;
   }
@@ -1987,14 +1987,14 @@ void TBeing::pracPath(TMonster *gm, classIndT Class)
 
 
   if (combatMax && basicLearn) {
-    sprintf(buf, "Hmmm, looks like you are free to use these practices at any advanced %s trainer.", gm->getProfName());
+    sprintf(buf, "Hmmm, looks like you are free to use these practices at any advanced %s trainer.", gm->getProfName().c_str());
   } else if (!combatLearn) {
       sprintf(buf, "I think you need to first use %i practices at your %s trainer.", (int)((combatReq-combat)+0.5), tmp_buf.c_str());
   } else if (!combatMax && !basicLearn) {
     if (getDiscipline(DISC_COMBAT)->getNatLearnedness() >= MAX_DISC_LEARNEDNESS)
-      sprintf(buf, "You could train in a weapon speciality or continue to use these practices at your %s or %s trainer.", gm->getProfName(),tmp_buf2.c_str());
+      sprintf(buf, "You could train in a weapon speciality or continue to use these practices at your %s or %s trainer.", gm->getProfName().c_str(),tmp_buf2.c_str());
     else
-      sprintf(buf, "You can use these practices at your %s trainer or you could always continue to train in %s.", gm->getProfName(), tmp_buf.c_str());
+      sprintf(buf, "You can use these practices at your %s trainer or you could always continue to train in %s.", gm->getProfName().c_str(), tmp_buf.c_str());
 
   } else if (!combatMax && basicLearn) {
     if (getDiscipline(DISC_COMBAT)->getNatLearnedness() >= MAX_DISC_LEARNEDNESS)
@@ -2003,11 +2003,11 @@ void TBeing::pracPath(TMonster *gm, classIndT Class)
       sprintf(buf, "You need to use these practices to finish your basic training at your %s trainer.", tmp_buf.c_str()); 
   } else if (combatMax && !basicLearn) {
     if (getDiscipline(DISC_COMBAT)->getNatLearnedness() >= MAX_DISC_LEARNEDNESS) {
-     sprintf(buf, "You should use these practices at your basic %s trainer or you can pursue a weapon specialization.", gm->getProfName());
+     sprintf(buf, "You should use these practices at your basic %s trainer or you can pursue a weapon specialization.", gm->getProfName().c_str());
     } else if (combatMax == 1) {
-      sprintf(buf, "You can use these practices at your basic %s trainer or you could always continue to train in %s.", gm->getProfName(), tmp_buf.c_str());
+      sprintf(buf, "You can use these practices at your basic %s trainer or you could always continue to train in %s.", gm->getProfName().c_str(), tmp_buf.c_str());
     } else if (combatMax == 2) {
-      sprintf(buf, "You need to use these practices at your basic %s trainer or you could pursue a weapon specialization.", gm->getProfName());
+      sprintf(buf, "You need to use these practices at your basic %s trainer or you could pursue a weapon specialization.", gm->getProfName().c_str());
     }
   } else {
     vlogf(LOG_BUG, "Bad case in pracPath for %s", getName());

@@ -120,7 +120,7 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
     sprintf(tStringOut[13], "%d", tMon->max_exist);
     strcpy(tStringOut[14], position_types[tMon->default_pos].c_str());
     strcpy(tStringOut[15], material_nums[tMon->getMaterial()].mat_name);
-    strcpy(tStringOut[16], tMon->getProfName());
+    strcpy(tStringOut[16], tMon->getProfName().c_str());
     int tHeight = (int)(tMon->getHeight() / 12);
     sprintf(tStringOut[17], "%d\'%d\" (%d)", tHeight, (tMon->getHeight() - (tHeight * 12)), tMon->getHeight());
     sprintf(tStringOut[18], "%.0f (lbs)", tMon->getWeight());

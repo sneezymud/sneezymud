@@ -341,7 +341,7 @@ classIndT & operator++(classIndT &c, int)
   return c = (c == MAX_SAVED_CLASSES) ? MIN_CLASS_IND : classIndT(c+1);
 }
 
-const char * const TBeing::getProfName() const
+sstring const TBeing::getProfName() const
 {
   sstring buf;
 
@@ -353,7 +353,7 @@ const char * const TBeing::getProfName() const
   }
   buf.erase(buf.size()-1, buf.size()); // take off that trailing /
 
-  return buf.c_str();
+  return buf;
 }
 
 const char * const TBeing::getProfAbbrevName() const
