@@ -451,6 +451,21 @@ enum spellNumT {
      SKILL_TURN,
   
      // end of shaman
+  
+     // start of psionics
+     SKILL_PSITELEPATHY,
+     SKILL_TELE_SIGHT,
+     SKILL_TELE_VISION,
+     SKILL_MIND_FOCUS,
+     SKILL_PSI_BLAST,
+     SKILL_MIND_THRUST,
+     SKILL_PSYCHIC_CRUSH, 
+     SKILL_KINETIC_WAVE,
+     SKILL_MIND_PRESERVATION,
+     SKILL_TELEKINESIS,
+
+     // end of psionics
+
      // start of generic
 
      SKILL_SIGN,

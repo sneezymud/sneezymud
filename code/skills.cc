@@ -85,6 +85,7 @@
 #include "disc_animal.h"
 #include "disc_shaman_armadillo.h"
 #include "disc_nature.h"
+#include "disc_psionics.h"
 
 static bool doesKnow(byte know)
 {
@@ -1091,6 +1092,29 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 // disc_defense
     case SKILL_ADVANCED_DEFENSE: // 674
       return &((CDDefense *) cd)->skAdvancedDefense;
+
+// disc_psionics
+    case SKILL_PSITELEPATHY:
+      return &((CDPsionics *) cd)->skTelepathy;
+    case SKILL_TELE_SIGHT:
+      return &((CDPsionics *) cd)->skTeleSight;
+    case SKILL_TELE_VISION:
+      return &((CDPsionics *) cd)->skTeleVision;
+    case SKILL_MIND_FOCUS:
+      return &((CDPsionics *) cd)->skMindFocus;
+    case SKILL_PSI_BLAST:
+      return &((CDPsionics *) cd)->skPsiBlast;
+    case SKILL_MIND_THRUST:
+      return &((CDPsionics *) cd)->skMindThrust;
+    case SKILL_PSYCHIC_CRUSH:
+      return &((CDPsionics *) cd)->skPsyCrush;
+    case SKILL_KINETIC_WAVE:
+      return &((CDPsionics *) cd)->skKineticWave;
+    case SKILL_MIND_PRESERVATION:
+      return &((CDPsionics *) cd)->skMindPreservation;
+    case SKILL_TELEKINESIS:
+      return &((CDPsionics *) cd)->skTelekinesis;
+
 
 
   // disc_combat

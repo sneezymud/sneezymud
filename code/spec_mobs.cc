@@ -7085,6 +7085,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Trainer: defense", CDGenericTrainer},
   {FALSE, "Scared Kid", scaredKid},
   {FALSE, "stock broker", stockBroker},
+  {FALSE,"Trainer: psionics", CDGenericTrainer},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

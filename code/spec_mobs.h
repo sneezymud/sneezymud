@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.9  2001/10/15 22:51:11  peel
+// Added psionics
+// not finished yet
+//
 // Revision 5.8  2001/09/18 22:19:03  peel
 // Added grimhaven stock exchange
 // modified dbquery slightly, to allow specification of escaping or not
@@ -195,7 +199,8 @@ const int SPEC_FACTON_REGISTRAR=158;
 const int SPEC_TRAINER_DEFENSE=159;
 const int SPEC_SCARED_KID=160;
 const int SPEC_STOCK_BROKER=161;
-const int NUM_MOB_SPECIALS     =162;
+const int SPEC_TRAINER_PSIONICS =162;
+const int NUM_MOB_SPECIALS     =163;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

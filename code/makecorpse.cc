@@ -828,6 +828,16 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SKILL_ALCOHOLISM:
       case SKILL_FISHING:
       case SKILL_ADVANCED_DEFENSE:
+      case SKILL_PSITELEPATHY:
+      case SKILL_TELE_SIGHT:
+      case SKILL_TELE_VISION:
+      case SKILL_MIND_FOCUS:
+      case SKILL_PSI_BLAST:
+      case SKILL_MIND_THRUST:
+      case SKILL_PSYCHIC_CRUSH:
+      case SKILL_KINETIC_WAVE:
+      case SKILL_MIND_PRESERVATION:
+      case SKILL_TELEKINESIS:
         break;
     }
   }

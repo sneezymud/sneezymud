@@ -113,6 +113,7 @@ enum discNumT {
      DISC_LORE,//60
      DISC_NATURE,
      DISC_DEFENSE,
+     DISC_PSIONICS,
      MAX_DISCS,
      MAX_SAVED_DISCS = 90
 };

@@ -348,7 +348,9 @@ const int TOG_TOTEM_MASK_FINISHED              = 246;
 
 const int TOG_PERMA_DEATH_CHAR                 = 247;
 
-const int MAX_TOG_INDEX       = 248;  // move and change
+const int TOG_PSIONICIST                       = 248;
+
+const int MAX_TOG_INDEX       = 249;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 

@@ -260,6 +260,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Shaman Totem Mask: Killed Father's Spirit", MOB_PTOK}, // 245
   {"Shaman Totem Mask: Finished", MOB_GANDOLFO},
   {"Perma Death Character", MOB_NONE},
+  {"Psionicist", MOB_NONE},
   {"", MOB_NONE}, 
 };
 

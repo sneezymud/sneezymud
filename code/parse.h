@@ -552,6 +552,16 @@ enum cmdTypeT {
      CMD_TROPHY,
      CMD_FISH,
      CMD_GLOAD,
+     CMD_PTELL,
+     CMD_PSAY,
+     CMD_PSHOUT,
+     CMD_TELEVISION,
+     CMD_MINDFOCUS,
+     CMD_PSIBLAST,
+     CMD_MINDTHRUST,
+     CMD_PSYCRUSH,
+     CMD_KWAVE,
+     CMD_TELELKINESIS,
     MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow

@@ -164,6 +164,7 @@ int TBeing::calcRaiseDisc(discNumT which, bool drop) const
     case DISC_PIERCE:
     case DISC_BAREHAND:
     case DISC_DEFENSE:
+    case DISC_PSIONICS:
       return min(5, (MAX_DISC_LEARNEDNESS - L));
     default:
       break;
@@ -1099,6 +1100,8 @@ TRAININFO TrainerInfo[] =
 
   {SPEC_TRAINER_DEFENSE, "defense", "about Defense", DISC_DEFENSE, CLASS_WARRIOR | CLASS_RANGER | CLASS_DEIKHAN | CLASS_MONK},
 
+  {SPEC_TRAINER_PSIONICS, "psionics", "about psionics", DISC_PSIONICS, CLASS_WARRIOR | CLASS_RANGER | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_THIEF | CLASS_SHAMAN},
+
   {-1}          /* required terminator */
 };
 
@@ -1366,7 +1369,8 @@ int TBeing::getTrainerPracs(const TBeing *ch, const TMonster *me, classIndT accc
     bakpracs = trainLevel - discLearn;
   } else if (((discipline == DISC_SLASH) || (discipline == DISC_PIERCE) ||
               (discipline == DISC_BLUNT) || (discipline == DISC_RANGED) ||
-	      (discipline == DISC_BAREHAND)|| (discipline == DISC_DEFENSE)) &&
+	      (discipline == DISC_BAREHAND)|| (discipline == DISC_DEFENSE) ||
+	      (discipline == DISC_PSIONICS)) &&
               (ch->getDiscipline(DISC_COMBAT)->getNatLearnedness() < MAX_DISC_LEARNEDNESS)) {
     if (trainLevel == discLearn) 
       bakpracs = 0;
@@ -1445,6 +1449,14 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
       me->doTell(buf);
       return TRUE;
     }
+  }
+  if (discipline == DISC_PSIONICS) {
+    if (!ch->hasQuestBit(TOG_PSIONICIST)){
+      sprintf(buf, " %s You do not have the ability to learn psionics.", fname(ch->name).c_str());
+      me->doTell(buf);
+      return TRUE;
+    }
+
   }
 
 
@@ -1530,7 +1542,8 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
                   discipline == DISC_PIERCE || 
                   discipline == DISC_RANGED ||
                   discipline == DISC_BAREHAND ||
-                  discipline == DISC_DEFENSE) {
+                  discipline == DISC_DEFENSE ||
+                  discipline == DISC_PSIONICS) {
     // No restrictions on these disciplines if prof maxxed see first checks
     return FALSE;
   } else {  // needs basic skills for class

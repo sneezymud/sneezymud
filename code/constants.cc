@@ -1713,7 +1713,8 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_THEOLOGY, CLASS_CLERIC | CLASS_DEIKHAN, "theology"},   
   {DISC_LORE, CLASS_MAGE, "lore"},
   {DISC_NATURE, CLASS_RANGER, "nature"},
-  {DISC_DEFENSE, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER | CLASS_MONK, "defense"}
+  {DISC_DEFENSE, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER | CLASS_MONK, "defense"},
+  {DISC_PSIONICS, CLASS_WARRIOR | CLASS_DEIKHAN | CLASS_RANGER | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_THIEF | CLASS_SHAMAN, "psionics"}
 };
 
 const char * const disc_names[MAX_DISCS] =
@@ -1783,6 +1784,7 @@ const char * const disc_names[MAX_DISCS] =
   "Magic Lore",
   "Nature",
   "Defensive Abilities",
+  "Psionic Abilities"
 };
 
 const char* const home_terrains[MAX_HOME_TERS] =

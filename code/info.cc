@@ -1254,6 +1254,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_DULL:
       case SKILL_ATTUNE:
       case SKILL_STAVECHARGE:
+
 #if 1
       case SPELL_EARTHMAW:
       case SPELL_CREEPING_DOOM:
@@ -1569,6 +1570,16 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case TYPE_MAX_HIT:
       case SKILL_ALCOHOLISM:
       case SKILL_FISHING:
+      case SKILL_PSITELEPATHY:
+      case SKILL_TELE_SIGHT:
+      case SKILL_TELE_VISION:
+      case SKILL_MIND_FOCUS:
+      case SKILL_PSI_BLAST:
+      case SKILL_MIND_THRUST:
+      case SKILL_PSYCHIC_CRUSH:
+      case SKILL_KINETIC_WAVE:
+      case SKILL_MIND_PRESERVATION:
+      case SKILL_TELEKINESIS:
         forceCrash("BOGUS AFFECT (%d) on %s.", aff->type, ch->getName());
         ch->affectRemove(aff);
         break;

@@ -186,7 +186,7 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	disc_pierce.o disc_ranged.o disc_ranger.o disc_shaman.o \
 	disc_shaman_alchemy.o disc_shaman_armadillo.o \
 	disc_shaman_frog.o disc_shaman_spider.o disc_shaman_control.o \
-	disc_shaman_skunk.o disc_defense.o\
+	disc_shaman_skunk.o disc_defense.o disc_psionics.o\
 	disc_slash.o disc_smythe.o disc_sorcery.o disc_spirit.o \
 	disc_survival.o disc_theology.o disc_thief.o disc_warrior.o \
 	disc_water.o disc_wrath.o discipline.o disease.o doors.o game_drawpoker.o \
@@ -308,7 +308,7 @@ DISC_HEADS   = disc_adventuring.h disc_aegis.h disc_afflictions.h \
                disc_spirit.h disc_stealth.h disc_survival.h   \
                disc_mindbody.h disc_theology.h disc_thief.h  \
                disc_thief_fight.h disc_traps.h  \
-               disc_warrior.h disc_water.h disc_wrath.h
+               disc_warrior.h disc_water.h disc_wrath.h disc_psionics.h
 
 $(OBJDIR)%.o : %.cc $(GEN_HEADS)
 	@echo Making \"$<\"
@@ -418,6 +418,7 @@ $(OBJDIR)disc_thief.o: disc_thief.h $(CASINO_HEADS) combat.h
 $(OBJDIR)disc_warrior.o: disc_warrior.h combat.h
 $(OBJDIR)disc_water.o: disc_water.h combat.h spelltask.h
 $(OBJDIR)disc_wrath.o: disc_wrath.h combat.h
+$(OBJDIR)disc_psionics.o: disc_psionics.h
 $(OBJDIR)discipline.o: $(DISC_HEADS) components.h combat.h spelltask.h
 $(OBJDIR)game_drawpoker.o: $(CASINO_HEADS)
 $(OBJDIR)edit.o: socket.h

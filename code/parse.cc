@@ -1649,6 +1649,36 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  doTrophy(newarg);
 	  addToLifeforce(1);
 	  break;
+	case CMD_PTELL:
+	  doPTell(argument, TRUE);
+	  break;
+	case CMD_PSAY:
+	  doPSay(argument);
+	  break;
+	case CMD_PSHOUT:
+	  doPShout(argument);
+	  break;
+	case CMD_TELEVISION:
+	  doTelevision(newarg);
+	  break;
+	case CMD_MINDFOCUS:
+	  doMindfocus(newarg);
+	  break;
+	case CMD_PSIBLAST:
+	  doPsiblast(newarg);
+	  break;
+	case CMD_MINDTHRUST:
+	  doMindthrust(newarg);
+	  break;
+	case CMD_PSYCRUSH:
+	  doPsycrush(newarg);
+	  break;
+	case CMD_KWAVE:
+	  doKwave(newarg);
+	  break;
+	case CMD_TELELKINESIS:
+	  doTelekinesis(newarg);
+	  break;
         case MAX_CMD_LIST:
         case CMD_RESP_TOGGLE:
         case CMD_RESP_UNTOGGLE:
@@ -2818,6 +2848,9 @@ void buildCommandArray(void)
   commandArray[CMD_STORE] = new commandInfo("store", POSITION_STANDING, GOD_LEVEL1);
   commandArray[CMD_ZONEFILE] = new commandInfo("zonefile", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_LOOT] = new commandInfo("loot", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_PSAY] = new commandInfo("psay", POSITION_RESTING, 0);
+  commandArray[CMD_PTELL] = new commandInfo("ptell", POSITION_RESTING, 0);
+  commandArray[CMD_PSHOUT] = new commandInfo("pshout", POSITION_RESTING, 0);
 }
 
 bool _parse_name(const char *arg, char *name)

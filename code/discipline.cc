@@ -68,6 +68,7 @@
 #include "disc_survival.h"
 #include "disc_animal.h"
 #include "disc_nature.h"
+#include "disc_psionics.h"
 #include "spelltask.h"
 
 #define DISC_DEBUG  0
@@ -2569,6 +2570,12 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_COMBAT] = new CDCombat();
     discs->disc[DISC_ADVENTURING] = new CDAdventuring();
     discs->disc[DISC_DEFENSE] = new CDDefense();
+ 
+    discs->disc[DISC_PSIONICS] = new CDPsionics();
+
+    // only players get psionics
+    if(hasQuestBit(TOG_PSIONICIST) || isImmortal())
+      getDiscipline(DISC_PSIONICS)->ok_for_class |= getClass();
   }
   // assign these to every class
   if (!isPc()) {
@@ -2579,7 +2586,7 @@ void TBeing::assignDisciplinesClass()
   getDiscipline(DISC_ADVENTURING)->ok_for_class = (1<<MAX_CLASSES) - 1;
   getDiscipline(DISC_COMBAT)->ok_for_class = (1<<MAX_CLASSES) - 1;
 
-
+    
   if (!player.Class) {
     vlogf(LOG_BUG,"call to assignDisciplinesClass without a valid Class (%s)", getName());
     return;
@@ -4150,6 +4157,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_RANGED:
     case DISC_BAREHAND:
     case DISC_DEFENSE:
+    case DISC_PSIONICS:
       lev = GetMaxLevel();
       break;
     case MAX_DISCS:

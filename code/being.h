@@ -1829,6 +1829,19 @@ class TBeing : public TThing {
     void doNotHere() const;
     void doTerminal(const char *);
     void doWield(const char *);
+    // psionics
+    int doPTell(const char *, bool);
+    int doPSay(const char *);
+    void doPShout(const char *);
+    void doTelevision(const char *);
+    void doMindfocus(const char *);
+    void doPsiblast(const char *);
+    void doMindthrust(const char *);
+    void doPsycrush(const char *);
+    void doKwave(const char *);
+    void doTelekinesis(const char *);
+
+
     // Monk Skills
     int doQuiveringPalm(const char *, TBeing *);
     int doSpringleap(const char *, bool, TBeing *);

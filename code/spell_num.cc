@@ -891,6 +891,29 @@ int mapSpellnumToFile(spellNumT stt)
 #endif
     case SKILL_ADVANCED_DEFENSE:
       return 674;
+
+    case SKILL_PSITELEPATHY:
+      return 675;
+    case SKILL_TELE_SIGHT:
+      return 676;
+    case SKILL_TELE_VISION:
+      return 677;
+    case SKILL_MIND_FOCUS:
+      return 678;
+    case SKILL_PSI_BLAST:
+      return 679;
+    case SKILL_MIND_THRUST:
+      return 680;
+    case SKILL_PSYCHIC_CRUSH:
+      return 681;
+    case SKILL_KINETIC_WAVE:
+      return 682;
+    case SKILL_MIND_PRESERVATION:
+      return 683;
+    case SKILL_TELEKINESIS:
+      return 684;
+
+
     case AFFECT_DISEASE:
       return 2500;
     case AFFECT_COMBAT:
@@ -1829,6 +1852,26 @@ spellNumT mapFileToSpellnum(int stt)
 #endif
     case 674:
       return SKILL_ADVANCED_DEFENSE;
+    case 675:
+      return SKILL_PSITELEPATHY;
+    case 676:
+      return SKILL_TELE_SIGHT;
+    case 677:
+      return SKILL_TELE_VISION;
+    case 678:
+      return SKILL_MIND_FOCUS;
+    case 679:
+      return SKILL_PSI_BLAST;
+    case 680:
+      return SKILL_MIND_THRUST;
+    case 681:
+      return SKILL_PSYCHIC_CRUSH;
+    case 682:
+      return SKILL_KINETIC_WAVE;
+    case 683:
+      return SKILL_MIND_PRESERVATION;
+    case 684:
+      return SKILL_TELEKINESIS;
 
 
     case 2500:
