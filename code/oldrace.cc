@@ -12,7 +12,6 @@
 #include <fstream.h>
 
 /* remove these races
-    case RACE_UNIDENT:
     case RACE_UNCERT:
 */
 
@@ -74,6 +73,7 @@ void TBeing::setRacialStuff()
     case RACE_HOBGOBLIN:
     case RACE_GNOLL:
     case RACE_BAT:
+    case RACE_VAMPIREBAT:
     case RACE_INSECT:
     case RACE_ANT:
     case RACE_ARACHNID:
@@ -131,7 +131,6 @@ void TBeing::setRacialStuff()
       setMaxMove(getMaxMove() + 150);
       setMove(moveLimit());
       break;
-    case RACE_UNIDENT:
     case RACE_UNCERT:
     case RACE_NORACE:
       vlogf(LOG_LOW, "%s had race %s (%d)", getName(),
@@ -262,7 +261,8 @@ bool TBeing::isVampire() const
 {
   if(hasQuestBit(TOG_VAMPIRE))
     return TRUE;
-  if(getRace() == RACE_VAMPIRE)
+  if(getRace() == RACE_VAMPIRE ||
+     getRace() == RACE_VAMPIREBAT)
     return TRUE;
   return FALSE;
 }
@@ -3735,6 +3735,7 @@ spellNumT TBeing::getFormType() const
     case RACE_LEOPARD:
     case RACE_COUGAR:
     case RACE_BAT:
+    case RACE_VAMPIREBAT:
     case RACE_KUOTOA:
     case RACE_BAANTA:
     case RACE_WYVELIN:
@@ -3934,7 +3935,6 @@ spellNumT TBeing::getFormType() const
     case RACE_MERMAID:
     case RACE_FISHMAN:
     case RACE_UNCERT:
-    case RACE_UNIDENT:
     case RACE_BUGBEAR:
     case RACE_KOBOLD:
     case RACE_GNOLL:
