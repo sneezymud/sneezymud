@@ -4,16 +4,42 @@
 const unsigned int GRAFFITI_MAX = 50;
 const int GRAFFITI_OBJ = 33315;
 
+const int ncolors=6;
+
 // this proc is meant for tools only, designed with chalk in mind
 int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
+  sstring colors[ncolors]={"white", "green", "blue", "red", "yellow","purple"};
+  sstring ccodes[ncolors]={"<W>", "<g>", "<b>", "<r>", "<Y>", "<p>"};
+  int color=0;
+
+  if(cmd == CMD_GENERIC_CREATED){
+    sstring buf;
+    int c=::number(0,ncolors-1);
+    o->swapToStrung();
+
+    buf=o->name;
+    delete o->name;
+    o->name=mud_str_dup(fmt("%s %s") % buf % colors[c]);
+
+    buf=o->shortDescr;
+    delete o->shortDescr;
+    o->shortDescr=mud_str_dup(fmt("%s%s<1>") % ccodes[c] % buf);
+    
+    buf=o->descr;
+    delete o->descr;
+    o->descr=mud_str_dup(fmt("%s%s<1>") % ccodes[c] % buf);
+    return FALSE;
+  }
+  
+
   if (cmd != CMD_WRITE)
     return FALSE;
 
   sstring buf;
 //  buf = sstring(arg).word(0);
   buf = sstring(stripColorCodes(arg));
-    
+
   if (!o || !ch)
     return FALSE;
 
@@ -45,9 +71,19 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return TRUE;
   }
 
+  for(int i=0;i<ncolors;++i){
+    if(sstring(o->name).find(colors[i], 0) != sstring::npos){
+      color=i;
+      break;
+    }
+  }
+
+
+
   sstring newName = fmt("%s message [graffiti] [%s]") % buf % ch->name;
-  sstring newShort = fmt("the message '<W>%s<z>'") % buf;
-  sstring newLong = fmt("Some vandal has left a message: '<W>%s<z>'.") % buf;
+  sstring newShort = fmt("the message '%s%s<z>'") % ccodes[color] % buf;
+  sstring newLong = fmt("Some vandal has left a message: '%s%s<z>'.") % 
+    ccodes[color] % buf;
   gfti->swapToStrung();
   gfti->name = mud_str_dup(newName);
   gfti->shortDescr = mud_str_dup(newShort);
