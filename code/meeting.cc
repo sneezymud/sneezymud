@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: meeting.cc,v $
+// Revision 5.2  2001/09/07 07:07:35  peel
+// changed TThing->stuff to getStuff() and setStuff()
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -255,7 +261,7 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
   if (cmd == CMD_GENERIC_PULSE) {
     // make sure no one goes hungry
     TThing *t;
-    for (t = myself->roomp->stuff; t; t = t->nextThing) {
+    for (t = myself->roomp->getStuff(); t; t = t->nextThing) {
       if (t == myself)
         continue;
       TBeing *pers = dynamic_cast<TBeing *>(t);

@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_adventuring.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 /* *******************************************************************
     disc_adventuring.cc : all procedures related to the adventuring discipline
 
@@ -35,8 +20,8 @@ int findBandages(TThing *t)
 
   for (; t; t = t->nextThing) {
     t->findBandage(&count);
-    if (t->stuff)
-      count += findBandages(t->stuff);
+    if (t->getStuff())
+      count += findBandages(t->getStuff());
   }
   return(count);
 }
@@ -48,8 +33,8 @@ int destroy_bandages(TThing *t, int band)
 
   for (; t && (count < band); t = t2) {
     t2 = t->nextThing;
-    if (t->stuff) {
-      count += destroy_bandages(t->stuff, band-count);
+    if (t->getStuff()) {
+      count += destroy_bandages(t->getStuff(), band-count);
     }
     if (count >= band)
       break;
@@ -65,18 +50,18 @@ void TBeing::bandage(TBeing *victim,wearSlotT slot)
   int r_num;
 
   if (!victim) {
-    vlogf(5,"Null critters passed into bandage_victim");
+    vlogf(LOG_BUG, "Null critters passed into bandage_victim");
     return;
   }
   if ((r_num = real_object(OBJ_BANDAGE)) >= 0) {
     bandaid = read_object(r_num, REAL);
   } else {
-    vlogf(5,"bogus bandaid!");
+    vlogf(LOG_BUG, "bogus bandaid!");
     return;
   }
 #if 0
   if (!(bandaid = read_object(OBJ_BANDAGE, VIRTUAL))) {
-    vlogf(5,"bogus bandaid!");
+    vlogf(LOG_BUG, "bogus bandaid!");
     return;
   }
 #endif
@@ -207,10 +192,10 @@ void TBeing::doBandage(const char *arg)
   // adjust for race
   band_num = max(1,(int) (band_num * ((double) getHeight()/(double) 70)));
 
-  count = findBandages(stuff);
+  count = findBandages(getStuff());
   if (count >= band_num) {
-    if (band_num != destroy_bandages(stuff, band_num)) {
-      vlogf(6, "error in destroy bandage routine!");
+    if (band_num != destroy_bandages(getStuff(), band_num)) {
+      vlogf(LOG_BUG, "error in destroy bandage routine!");
       sendTo("code error - tell a god\n\r");
       return;
     } else {
@@ -224,7 +209,7 @@ void TBeing::doBandage(const char *arg)
         sendTo("Your lack of skill causes you to screw up the bandage.\n\r");
         sendTo("The bandage must be thrown out as it is worthless now.\n\r");
       }
-      addSkillLag(SKILL_BANDAGE);
+      addSkillLag(SKILL_BANDAGE, 0);
     }
   } else
     sendTo("You need %d total bandages to cover that area.  You have %d.\n\r", band_num, count);

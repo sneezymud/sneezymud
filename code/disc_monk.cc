@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_monk.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -18,6 +10,9 @@
 #include "disc_monk.h"
 #include "disc_cures.h"
 #include "disc_aegis.h"
+#include "statistics.h"
+
+
 
 int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
@@ -51,10 +46,15 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
           wohlin_learn = ch->getSkillValue(SKILL_WOHLIN);
 	  monk_level = ch->getLevel(MONK_LEVEL_IND);
 
-          if (bSuccess(ch, learn, SKILL_YOGINSA)) {
+          if (bSuccess(ch, learn, SKILL_YOGINSA) && (::number(1,100)<70)) {
+	    // this artifical roll to check for a success is so we can slowly
+	    // phase out the speed of hp recover without causing a ruckus.
+	    // lower the .85 lower down and raise the 80 above, keeping the
+	    // product of the two close to .65 (or whatever stats.damage_modifier is)
             ch->sendTo("%sMeditating refreshes your inner harmonies!%s\n\r",
                      ch->green(), ch->norm());
-            ch->setHit(min(ch->getHit() + ch->hitGain(), (int) ch->hitLimit()));
+            ch->setHit(min(ch->getHit() + 
+			   max(2,(int)(((double)ch->hitGain())*(.80))), (int) ch->hitLimit()));
             ch->setMove(min(ch->getMove() + ch->moveGain()/2, (int) ch->moveLimit()));
             ch->setMana(min(ch->getMana() + ch->manaGain()/2, (int) ch->manaLimit()));
 
@@ -171,13 +171,13 @@ int TBeing::doSpringleap(const char *argument, bool should_lag, TBeing *vict)
       return FALSE;
     }
   }
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
   rc = springleap(this,victim, should_lag);
   if (rc && should_lag) // auto springleap doesn't lag
-    addSkillLag(SKILL_SPRINGLEAP);
+    addSkillLag(SKILL_SPRINGLEAP, rc);
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
@@ -327,10 +327,11 @@ int TBeing::monkDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlotT
   // So technically, we should be blocking 12/90 = 13.3% of damage
   w_type -= TYPE_HIT;
 
+  // monks becoming better tanks than warriors, so lowering this to 10% (3-14-01)
   // base amount, modified for difficulty
   // the higher amt is, the more things get blocked
   //  :: Modifer was SKILL_DODGE.  Jirin was created to replace it.
-  int amt = (int) (133 * 100 / getSkillDiffModifier(SKILL_JIRIN));
+  int amt = (int) (100 * 100 / getSkillDiffModifier(SKILL_JIRIN));
 
   if (::number(0, 999) >= amt)
     return FALSE;
@@ -373,6 +374,98 @@ int TBeing::monkDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlotT
   return FALSE;
 }
 
+static void chiLag(TBeing *ch, int tRc)
+{
+  if (tRc == FALSE ||
+      IS_SET_DELETE(tRc, RET_STOP_PARSING))
+    return;
+
+  ch->addSkillLag(SKILL_CHI, tRc);
+}
+
+int TBeing::doChi(const char *tString, TThing *tSucker)
+{
+  // Require 25 in SKILL_CHI for 'chi self'
+  // Require 50 in SKILL_CHI and 10 in:  -- for 'chi <person>'
+  //   getDiscipline(DISC_MEDITATION_MONK)->getLearnedness() < 25) {
+  // Require 100 in SKILL_CHI and 50 in <upper> for 'chi all'
+
+  int     tRc = 0;
+  char    tTarget[256];
+  TObj   *tObj    = NULL;
+  TBeing *tVictim = NULL;
+
+  if (checkBusy(NULL))
+    return FALSE;
+
+  if (!doesKnowSkill(SKILL_CHI)) {
+    sendTo("You lack the ability to chi.\n\r");
+    return FALSE;
+  }
+
+  if (getMana() < 0) {
+    sendTo("You lack the chi.\n\r");
+    return FALSE;
+  }
+
+  if (tString && *tString)
+    only_argument(tString, tTarget);
+  else {
+    if (!fight()) {
+#if 1
+      sendTo("Chi what or whom?\n\r");
+      return FALSE;
+#else
+      tVictim = this;
+#endif
+    } else
+      tVictim = fight();
+  }
+
+  if (is_abbrev(tTarget, getName()))
+    tRc = chiMe(this);
+  else if (!strcmp(tTarget, "all"))
+    tRc = roomp->chiMe(this);
+  else if (tVictim)
+    tRc = tVictim->chiMe(this);
+  else {
+    generic_find(tTarget, FIND_CHAR_ROOM | FIND_OBJ_ROOM | FIND_OBJ_EQUIP, this, &tVictim, &tObj);
+
+    if (tObj)
+      tRc = tObj->chiMe(this);
+    else if (tVictim)
+      tRc = tVictim->chiMe(this);
+    else {
+      sendTo("Yes, good.  Use chi...on what or whom?\n\r");
+      return FALSE;
+    }
+  }
+
+  chiLag(this, tRc);
+
+  if (IS_SET_DELETE(tRc, RET_STOP_PARSING))
+    REM_DELETE(tRc, RET_STOP_PARSING);
+
+  if (IS_SET_DELETE(tRc, DELETE_VICT)) {
+    //    vlogf(LOG_BUG, "Passive Delete: %s/%s", (tVictim ? "tVictim" : "-"), (tObj ? "tObj" : "-"));
+
+    if (tVictim) {
+      delete tVictim;
+      tVictim = NULL;
+    } else if (tObj) {
+      delete tObj;
+      tObj = NULL;
+    }
+
+    REM_DELETE(tRc, DELETE_VICT);
+  } 
+  if (IS_SET_DELETE(tRc, DELETE_THIS))
+    return DELETE_THIS;
+
+  return tRc;
+}
+
+/*
 int TBeing::doChi(const char *argument, TThing *target)
 {
   int rc = 0, bits = 0;
@@ -387,52 +480,57 @@ int TBeing::doChi(const char *argument, TThing *target)
     sendTo("You know nothing about chi.\n\r");
     return FALSE;
   }
-  if(getMana()<=0){
+  if (getMana() <= 0) {
     sendTo("You lack the chi.\n\r");
     return FALSE;
   }
 
   only_argument(argument, name_buf);
 
-  if(!strcmp(argument, "all")){
-    if(getDiscipline(DISC_MEDITATION_MONK)->getLearnedness()<25){
+  if (!strcmp(argument, "all")) {
+    if (getDiscipline(DISC_MEDITATION_MONK)->getLearnedness() < 25) {
       sendTo("You lack the ability to project chi on others at your current training.\n\r");
       return FALSE;
     }
-    rc=chi(this, (TBeing *) NULL);
-    addSkillLag(SKILL_CHI);
+
+    rc = chiMe(this);
+
+    chiLag(this, tRc);
+
     // DELETE_THIS will fall through
   } else {
     bits = generic_find(argument, FIND_CHAR_ROOM | FIND_OBJ_ROOM | FIND_OBJ_EQUIP, this, &victim, &obj);
 
     if (!bits) {
-      if (!fight() || !sameRoom(fight())) {
+      if (!fight() || !sameRoom(*fight())) {
 	sendTo("Use your chi on what?\n\r");
 	return FALSE;
       }
       victim = fight();
-      bits=FIND_CHAR_ROOM;
+      bits = FIND_CHAR_ROOM;
     }
 
-    if(this==victim){
-      if(getSkillValue(SKILL_CHI)<25){
+    if (this==victim) {
+      if (getSkillValue(SKILL_CHI) < 25) {
         sendTo("You lack the ability to project chi on yourself at your current training.\n\r");
 	return FALSE;
       }
-      chiMe(this);
-      addSkillLag(SKILL_CHI);
+
+      rc = chiMe(this);
+      chiLag(this, tRc);
       return TRUE;
     }
 
-    switch(bits){
+    switch (bits) {
       case FIND_CHAR_ROOM:
-	if(getSkillValue(SKILL_CHI)<50 ||
-	   getDiscipline(DISC_MEDITATION_MONK)->getLearnedness()<10){
+	if (getSkillValue(SKILL_CHI) < 50 ||
+	    getDiscipline(DISC_MEDITATION_MONK)->getLearnedness() < 10){
           sendTo("You lack the ability to project chi on others at your current training.\n\r");
 	  break;
 	}
-	rc=chi(this, victim);
-	addSkillLag(SKILL_CHI);
+
+	rc = victim->chiMe(this);
+        chiLag(this, tRc);
 	
 	if (IS_SET_DELETE(rc, DELETE_VICT)) {
 	  delete victim;
@@ -440,11 +538,12 @@ int TBeing::doChi(const char *argument, TThing *target)
 	  REM_DELETE(rc, DELETE_VICT);
 	} else if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
+
 	break;
       case FIND_OBJ_ROOM:
       case FIND_OBJ_EQUIP:
-	rc=chi(this, obj);
-	addSkillLag(SKILL_CHI);
+	rc = obj->chiMe(this);
+        chiLag(this, tRc);
 	break;
 #if 0
     // generic_find looks inv first, so if not goingto do anything with it, ignore it
@@ -496,7 +595,7 @@ int chi(TBeing *c, TObj *o)
   return FALSE;
 }
 
-void chiMe(TBeing *c)
+int chiMe(TBeing *c)
 {
   int bKnown=c->getSkillValue(SKILL_CHI);
   int mana=100-::number(1, c->getSkillValue(SKILL_CHI)/2);
@@ -505,7 +604,7 @@ void chiMe(TBeing *c)
 
   if(c->affectedBySpell(SKILL_CHI)){
     c->sendTo("You are already projecting your chi upon yourself.\n\r");
-    return;
+    return false;
   }
 
   if (bSuccess(c, bKnown, SKILL_CHI)) {
@@ -516,7 +615,7 @@ void chiMe(TBeing *c)
     
     aff.type = SKILL_CHI;
     aff.level = level;
-    aff.duration = (3 + (level / 2)) * UPDATES_PER_TICK;
+    aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
     aff.location = APPLY_IMMUNITY;
     aff.modifier = IMMUNE_COLD;
     aff.modifier2 = ((level * 2) / 3);
@@ -527,6 +626,7 @@ void chiMe(TBeing *c)
     if(c->getMana()>=0)
       c->reconcileMana(TYPE_UNDEFINED, 0, mana/2);
   }
+  return true;
 }
 
 int chi(TBeing *c, TBeing *v)
@@ -549,10 +649,10 @@ int chi(TBeing *c, TBeing *v)
 
       dam/=2;
 
-      for(t = c->roomp->stuff; t; t=tnext){
+      for(t = c->roomp->getStuff(); t; t=tnext){
 	tnext=t->nextThing;
 	tmp=dynamic_cast<TBeing *>(t);
-	if (tmp && c != tmp && !tmp->isImmortal() && !c->inGroup(tmp)) {
+	if (tmp && c != tmp && !tmp->isImmortal() && !c->inGroup(*tmp)) {
 	  if(c->getMana()>0)
 	    c->reconcileMana(TYPE_UNDEFINED, 0, mana);
 	  else {
@@ -634,4 +734,4 @@ int chi(TBeing *c, TBeing *v)
 
   return TRUE;
 }
-
+*/

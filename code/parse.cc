@@ -2220,7 +2220,7 @@ int TBeing::triggerSpecialOnPerson(TThing *ch, cmdTypeT cmd, const char *arg)
     }
   }
   // special in inventory?
-  for (t = stuff; t; t = t2) {
+  for (t = getStuff(); t; t = t2) {
     t2 = t->nextThing;
     if (t->spec) {
       rc = t->checkSpec(this, cmd, arg, ch);
@@ -2282,7 +2282,7 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
 
   if (roomp) {
     // special in mobile/object present? 
-    for (t = roomp->stuff; t; t = t2) {
+    for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
 
       // note this is virtual function call

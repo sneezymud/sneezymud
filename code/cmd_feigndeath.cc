@@ -3,6 +3,15 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_feigndeath.cc,v $
+// Revision 5.2  2001/09/07 07:07:34  peel
+// changed TThing->stuff to getStuff() and setStuff()
+//
+// Revision 5.1.1.2  1999/10/29 05:26:15  cosmo
+// *** empty log message ***
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -51,7 +60,7 @@ static int feignDeath(TBeing * caster)
     caster->stopFighting();
     caster->setPosition(POSITION_SLEEPING);
 
-    for (t = rp->stuff; t; t = t->nextThing) {
+    for (t = rp->getStuff(); t; t = t->nextThing) {
       TBeing *tc = dynamic_cast<TBeing *>(t);
       if (!tc) continue;
       if (tc->fight() == caster) {
@@ -93,7 +102,7 @@ int TBeing::doFeignDeath()
 
   rc = feignDeath(this);
   if (rc)
-    addSkillLag(SKILL_FEIGN_DEATH);
+    addSkillLag(SKILL_FEIGN_DEATH, rc);
 
   return rc;
 }

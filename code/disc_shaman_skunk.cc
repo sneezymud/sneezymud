@@ -37,7 +37,7 @@ int deathMist(TBeing *caster, int level, byte bKnown)
     aff2.location = APPLY_NONE;
     aff2.bitvector = AFF_POISON;
 
-    for (t = caster->roomp->stuff; t; t = t2) {
+    for (t = caster->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)

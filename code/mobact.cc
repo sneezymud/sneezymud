@@ -65,7 +65,7 @@ int TMonster::protectionStuff()
   if (GuildProcs(spec) || UtilProcs(spec))
     return FALSE;
 
-  for (t = roomp->stuff; t; t = t2) {
+  for (t = roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (!tbt || (this == tbt))
@@ -99,7 +99,7 @@ int TMonster::protectionStuff()
     }
   }
   if (found && IS_SET(specials.act, ACT_PROTECTOR)) {
-    for (t = roomp->stuff; t; t = t2) {
+    for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (!tbt || (this == tbt))
@@ -125,7 +125,7 @@ int TMonster::protectionStuff()
     }
 
     if (found) {
-      for (t = roomp->stuff; t; t = t2) {
+      for (t = roomp->getStuff(); t; t = t2) {
         t2 = t->nextThing;
         TBeing *tbt = dynamic_cast<TBeing *>(t);
         if (!tbt || (this == tbt))
@@ -579,7 +579,7 @@ int TMonster::superScavenger()
   if (UtilMobProc(this))
     return FALSE;
 
-  for (t = stuff; t; t = t->nextThing) {
+  for (t = getStuff(); t; t = t->nextThing) {
     TBaseClothing *o = NULL;
     if (!(o = dynamic_cast<TBaseClothing *>(t)))
       continue;
@@ -619,7 +619,7 @@ int TMonster::superScavenger()
       if (t && t->parent && t->nextThing) {
         stuff = t->nextThing;
         t->nextThing = NULL;
-        for (t2 = stuff; t2->nextThing; t2 = t2->nextThing);
+        for (t2 = getStuff(); t2->nextThing; t2 = t2->nextThing);
         t2->nextThing = t;
       }
 #endif
@@ -643,7 +643,7 @@ int TMonster::superScavenger()
     }
   }
   // best_o = NULL here, check room for goodies
-  for (t = roomp->stuff;t; t = t->nextThing) {
+  for (t = roomp->getStuff();t; t = t->nextThing) {
     rc = t->scavengeMe(this, &best_o);
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_THIS;
@@ -741,7 +741,7 @@ int TMonster::senseWimps()
   if (!::number(0,4) && ::number(0,attackers)) {
 
     /* randomly consider folks */
-    for (t = roomp->stuff; t; t = t->nextThing) {
+    for (t = roomp->getStuff(); t; t = t->nextThing) {
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;
@@ -753,7 +753,7 @@ int TMonster::senseWimps()
       return TRUE; 
     }
   }
-  for (t = roomp->stuff; t; t = t2) {
+  for (t = roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     tmp_victim = dynamic_cast<TBeing *>(t);
     if (!tmp_victim)
@@ -2023,7 +2023,7 @@ int TMonster::dynamicComponentLoader(spellNumT spell, int loadrate)
     return FALSE;
 
   if(!(tcomp = findComponent(spell))){
-    for(t = stuff;t && !dynamic_cast<TSpellBag *>(t); t = t->nextThing);
+    for(t = getStuff();t && !dynamic_cast<TSpellBag *>(t); t = t->nextThing);
     if(t && (::number(1,100)<=loadrate)) {
       tcomp = dynamic_cast<TComponent *>(read_object(CompInfo[comp].comp_num, VIRTUAL));
       if (!tcomp)
@@ -2999,16 +2999,16 @@ int TMonster::scavenge()
   if (!hasHands() && !isHumanoid())
     return FALSE;
 
-  if (roomp->stuff && !::number(0, 5)) {
+  if (roomp->getStuff() && !::number(0, 5)) {
     TThing *t;
     best_obj = NULL;
-    for (iMax = 1, t = roomp->stuff; t; t = t->nextThing) {
+    for (iMax = 1, t = roomp->getStuff(); t; t = t->nextThing) {
       if (!(obj = dynamic_cast<TObj *>(t)))
         continue;
       if (obj->canWear(ITEM_TAKE) && canCarry(obj, SILENT_YES) &&
           canSee(obj) && 
           !obj->action_description &&   // checks for personalized
-          (!dynamic_cast<TBaseCorpse *>(obj) || !obj->stuff)) {
+          (!dynamic_cast<TBaseCorpse *>(obj) || !obj->getStuff())) {
         if (obj->obj_flags.cost > iMax) {
           best_obj = obj;
           iMax = obj->obj_flags.cost;
@@ -3055,7 +3055,7 @@ int TMonster::notFightingMove(int pulse)
     else if (rc)
       return TRUE;
 
-    for (t = roomp->stuff; t; t = t2) {
+    for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       if(t == this || !(tmp_ch = dynamic_cast<TBeing *>(t)))
 	continue;
@@ -3110,7 +3110,7 @@ int TMonster::notFightingMove(int pulse)
     }
   }
   if (hasClass(CLASS_THIEF) && !(pulse%(13*PULSE_MOBACT))) {
-    for (t = roomp->stuff;t;t = t->nextThing) {
+    for (t = roomp->getStuff();t;t = t->nextThing) {
       cons = dynamic_cast<TPerson *>(t);
       if (!cons)
         continue;
@@ -3157,7 +3157,7 @@ int TMonster::notFightingMove(int pulse)
     } else if (rc)
       return TRUE;
 
-    for (t = roomp->stuff; t; t = t2) {
+    for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       tmp_ch = dynamic_cast<TBeing *>(t);
       
@@ -3329,7 +3329,7 @@ int TMonster::mobileActivity(int pulse)
         (getHit() >= hitLimit()) &&
         !isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
       // anything more comfortable around?
-      for (t = roomp->stuff; t; t = t->nextThing) {
+      for (t = roomp->getStuff(); t; t = t->nextThing) {
         if (t->mobPulseBed(this))
           return TRUE;
       }
@@ -3608,7 +3608,7 @@ int TMonster::fearCheck(const TBeing *ch, bool mobpulse)
     if (!ch) {
       // see if anyone nearby is someone I fear
       TThing *t;
-      for (t = roomp->stuff; t; t = t->nextThing) {
+      for (t = roomp->getStuff(); t; t = t->nextThing) {
         if (t == this)
           continue;
         TBeing *tmpch = dynamic_cast<TBeing *>(t);
@@ -3663,7 +3663,7 @@ int TMonster::factionAggroCheck()
 
     // Scroll through stuff list to get count of valid things to hit, 
 
-  for (t = roomp->stuff; t; t = t2) {
+  for (t = roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     // cast to Person, rather than isPc(), so poly'd chars are safe 
     tmp_ch = dynamic_cast<TPerson *>(t);
@@ -3803,7 +3803,7 @@ int TMonster::aggroCheck(bool mobpulse)
   if ((aggro() && (getHit() >= (hitLimit()/2)))){
     // Scroll through stuff list to get count of valid things to hit, 
 
-    for (t = roomp->stuff; t; t = t2) {
+    for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       // cast to Person, rather than isPc(), so poly'd chars are safe 
       tmp_ch = dynamic_cast<TPerson *>(t);
@@ -3823,7 +3823,7 @@ int TMonster::aggroCheck(bool mobpulse)
     // randomly choose one of the targets we found
     numtargets = 0;
     if(!mobpulse) whichtarget = -1;  // no randomization since we're attacking on roomenter
-    for (t = roomp->stuff; t; t = t2) {
+    for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       // cast to Person, rather than isPc(), so poly'd chars are safe
       tmp_ch = dynamic_cast<TPerson *>(t);
@@ -3950,7 +3950,7 @@ int TMonster::assistFriend()
     return FALSE;
   }
   TThing *t, *t2;
-  for (t = roomp->stuff; t; t = t2) {
+  for (t = roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     if (t == this)
       continue;
@@ -3982,7 +3982,7 @@ int TMonster::assistFriend()
 
             TThing *toto;
             // stop all fights
-            for (toto = roomp->stuff; toto; toto = toto->nextThing) {
+            for (toto = roomp->getStuff(); toto; toto = toto->nextThing) {
               TBeing *tbto = dynamic_cast<TBeing *>(toto);
               if (!tbto)
                 continue;
@@ -4044,7 +4044,7 @@ int TMonster::findABetterWeapon()
   if (UtilMobProc(this))
     return FALSE;
 
-  for (t = roomp->stuff; t; t = t->nextThing) {
+  for (t = roomp->getStuff(); t; t = t->nextThing) {
     if (!(o = dynamic_cast<TObj *>(t)))
       continue;
     if (dynamic_cast<TBow *>(o) || dynamic_cast<TArrow *>(o))
@@ -4058,7 +4058,7 @@ int TMonster::findABetterWeapon()
     if ((!best || (o->baseDamage() >= best->baseDamage()))) 
       best = o;
   }
-  for (t = stuff; t; t = t->nextThing) {
+  for (t = getStuff(); t; t = t->nextThing) {
     if (!(o = dynamic_cast<TObj *>(t)))
       continue;
     if (dynamic_cast<TBow *>(o) || dynamic_cast<TArrow *>(o))
@@ -4824,7 +4824,7 @@ int TMonster::doHatefulStuff()
           else
             act("$n points and motions to the nearest exit.", TRUE, this, 0, tmp_ch, TO_ROOM);
           TThing *t, *t2;
-          for (t = roomp->stuff;t;t = t2) {
+          for (t = roomp->getStuff();t;t = t2) {
             t2 = t->nextThing;
             TBeing *tbt = dynamic_cast<TBeing *>(t);
             if (!tbt || tbt == this || tbt == tmp_ch)

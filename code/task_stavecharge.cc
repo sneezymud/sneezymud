@@ -146,7 +146,7 @@ int task_staveChargingCompLookup(TBeing *ch, bool tDestroy, int tSpell, int tCou
   if ((tThing = ch->equipment[WEAR_WAISTE]) && tCost > 0)
     tValue += task_staveChargingCompSkim(ch, tThing, tDestroy, tSpell, tCost, tIteration);
 
-  if ((tThing = ch->stuff) && tCost > 0)
+  if ((tThing = ch->getStuff()) && tCost > 0)
     tValue += task_staveChargingCompSkim(ch, tThing, tDestroy, tSpell, tCost, tIteration);
 
   if (tDestroy)

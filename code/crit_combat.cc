@@ -174,7 +174,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         return (ONEHIT_MESS_CRIT_S);
       case 9:
         // Hit friend (half damage) (if no friend hit self) 
-        for (target = roomp->stuff; target; target = target->nextThing, tbt = NULL) {
+        for (target = roomp->getStuff(); target; target = target->nextThing, tbt = NULL) {
           tbt = dynamic_cast<TBeing *>(target);
           if (!tbt)
             continue;
@@ -252,7 +252,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         return ONEHIT_MESS_CRIT_S;
       case 10:
         // Hit friend (full damage) (if no friend hit self) 
-        for (target = roomp->stuff;target;target = target->nextThing, tbt = NULL) {
+        for (target = roomp->getStuff();target;target = target->nextThing, tbt = NULL) {
           tbt = dynamic_cast<TBeing *>(target);
           if (!tbt)
             continue;
@@ -1443,7 +1443,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		}
 		corpse->setDescr(mud_str_dup(buf));
 		
-		corpse->stuff = NULL;
+		corpse->setStuff(NULL);
 		corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
 		corpse->addCorpseFlag(CORPSE_NO_REGEN);
 		corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);

@@ -1006,7 +1006,7 @@ mob->getName());
       sendTo("Syntax : @set stuck <playername> <object> <body part>\n\r");
       return;
     }
-    TThing *t_obj = searchLinkedListVis(this, obj_name, stuff);
+    TThing *t_obj = searchLinkedListVis(this, obj_name, getStuff());
     obj = dynamic_cast<TObj *>(t_obj);
     if (!obj) {
       sendTo("Syntax : @set stuck <playername> <object> <body part>\n\r");

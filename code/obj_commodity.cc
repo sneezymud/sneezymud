@@ -204,7 +204,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
     keeper->doTell(buf);
     return;
   }
-  for (t = keeper->stuff; t; t = t->nextThing) {
+  for (t = keeper->getStuff(); t; t = t->nextThing) {
     obj2 = dynamic_cast<TCommodity *>(t);
     if (!obj2)
       continue;

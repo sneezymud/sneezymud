@@ -87,7 +87,7 @@ static void test_fight_start(bool same_time)
       return;
     }
     // just to be safe
-    rp->setName(mud_str_dup("A test fighting room"));
+    rp->name = mud_str_dup("A test fighting room");
     rp->setDescr(mud_str_dup("A room for testing fights.\n\r"));
     rp->setRoomFlagBit(ROOM_INDOORS | ROOM_ALWAYS_LIT);
     rp->setSectorType(SECT_TEMPERATE_BUILDING);
@@ -213,7 +213,7 @@ void test_fight_death(TBeing *ch, TBeing *v, int mod)
   // so do this first..
   TRoom *rp2 = real_roomp(ROOM_VOID);
   TThing *t, *t2;
-  for (t = rp2->stuff; t; t = t2) {
+  for (t = rp2->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     t->purgeMe(NULL);
   }
@@ -261,7 +261,7 @@ void test_fight_death(TBeing *ch, TBeing *v, int mod)
   --(*ch);
   thing_to_room(ch, ROOM_VOID);
 
-  while ((t = rp->stuff)) {
+  while ((t = rp->getStuff())) {
     --(*t);
     thing_to_room(t, ROOM_VOID);
   }

@@ -27,7 +27,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   }
 
   if ((obj != ch->heldInPrimHand()) && (obj != ch->heldInSecHand())) {
-    for (t = ch->roomp->stuff; t; t = t2) {
+    for (t = ch->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       if (obj == dynamic_cast<TObj *>(t))
         found = 1;
@@ -48,7 +48,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     return FALSE;
   }
 
-  for (t = ch->roomp->stuff; t; t = t2) {
+  for (t = ch->roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     guard = dynamic_cast<TMonster *>(t);
     if (!guard)

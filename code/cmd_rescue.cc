@@ -2,13 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_rescue.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+// cmd_rescue.cc
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -41,7 +35,7 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
          victim->getName(), victim->riding->getName());
     return FALSE;
   }
-  if (!victim->isPc() && !victim->isPet()) {
+  if (!victim->isPc() && !victim->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
     caster->sendTo("You can only rescue PCs or pets.\n\r");
     return FALSE;
   }
@@ -55,7 +49,7 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
     return FALSE;
   }
 #if 0
-  if (!caster->inGroup(victim)) {
+  if (!caster->inGroup(*victim)) {
     act("You need to be a part of $S group to rescue $N.", 
              FALSE, caster, 0, victim, TO_CHAR);
     return FALSE;
@@ -63,7 +57,7 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
 #endif
   
   TThing *t;
-  for (t = victim->roomp->stuff; t; t = t->nextThing, tmp_ch = NULL) {
+  for (t = victim->roomp->getStuff(); t; t = t->nextThing, tmp_ch = NULL) {
     tmp_ch = dynamic_cast<TBeing *>(t);
     if (!tmp_ch)
       continue;
@@ -143,13 +137,13 @@ int TBeing::doRescue(const char *argument)
     sendTo("Whom do you want to rescue?\n\r");
     return FALSE;
   }
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
   rc = rescue(this, victim, skill);
   if (rc)
-    addSkillLag(skill);
+    addSkillLag(skill, rc);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
 

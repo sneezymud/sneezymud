@@ -143,10 +143,10 @@ TBeing::~TBeing()
     desc->snoop.snooping = desc->snoop.snoop_by = 0;
   }
   wearSlotT j;
-  if (stuff) {
+  if (getStuff()) {
     // non-immortal pcs have a separate handling for this in ~TPerson
     sendTo("Here, you dropped some stuff, let me help you get rid of that.\n\r");
-    while ((i = stuff)) {
+    while ((i = getStuff())) {
       --(*i);
       delete i;
       i = NULL;
@@ -336,8 +336,8 @@ TObj::~TObj()
   }
 
   // corpses have had items removed from them in ~TBaseCorpse()
-  for (; stuff; ) {
-    t = stuff;
+  for (; getStuff(); ) {
+    t = getStuff();
     --(*t);
     if (t) {
       delete t;
@@ -457,7 +457,7 @@ TRoom::~TRoom()
       tMonster->brtRoom = ROOM_NOWHERE;
   }
 
-  for (t = stuff; t; t = t2) {
+  for (t = getStuff(); t; t = t2) {
     t2 = t->nextThing;
     if (t->isPc()) {
       vlogf(LOG_BUG, "~TRoom() with room occupied by PC()");
@@ -502,8 +502,8 @@ TThing& TObj::operator += (TThing& t)
   TThing::operator += (t);
 
   // Thing being put in is a TObj
-  t.nextThing = stuff;
-  stuff = &t;
+  t.nextThing = getStuff();
+  setStuff(&t);
   t.parent = this;
 
   return *this;
@@ -615,7 +615,7 @@ bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve = false)
 
   // check contents too
   TThing *t;
-  for (t = stuff; t; t = t->nextThing) {
+  for (t = getStuff(); t; t = t->nextThing) {
     TObj * obj = dynamic_cast<TObj *>(t);
     if (obj)
       obj->checkOwnersList(ch, tPreserve);
@@ -649,8 +649,8 @@ TThing& TBeing::operator += (TThing& t)
   }
 #endif
 
-  t.nextThing = stuff;
-  stuff = &t;
+  t.nextThing = getStuff();
+  setStuff(&t);
   t.parent = this;
 
   if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
@@ -700,8 +700,8 @@ TThing& TRoom::operator += (TThing& t)
 
   // obj to room
   // char to room
-  t.nextThing = stuff;
-  stuff = &t; 
+  t.nextThing = getStuff();
+  setStuff(&t);
   t.in_room = in_room;
   t.roomp = this;
     
@@ -711,7 +711,7 @@ TThing& TRoom::operator += (TThing& t)
   if (tst && tst->givesOutsideLight()) {
     int best=0, curr = 0;
     TThing *i;
-    for (i = stuff; i; i = i->nextThing) {
+    for (i = getStuff(); i; i = i->nextThing) {
       TSeeThru *tst2 = dynamic_cast<TSeeThru *>(i);
       if (tst2 && (tst2 != tst) && tst2->givesOutsideLight()) {
         curr = tst2->getLightFromOutside();
@@ -760,7 +760,7 @@ TThing& TRoom::operator += (TThing& t)
             if (!tObjTemp)
               continue;
 
-            for (tObj = tObjTemp->stuff; tObj; tObj = tObjNext) {
+            for (tObj = tObjTemp->getStuff(); tObj; tObj = tObjNext) {
               tObjNext = tObj->nextThing;
 
               if ((tObjTemp = dynamic_cast<TObj *>(tObj)) &&
@@ -772,7 +772,7 @@ TThing& TRoom::operator += (TThing& t)
             }
           }
 
-      for (tObj = t.stuff; tObj; tObj = tObjNext) {
+      for (tObj = t.getStuff(); tObj; tObj = tObjNext) {
         tObjNext = tObj->nextThing;
 
         if ((tObjTemp = dynamic_cast<TObj *>(tObj)) &&
@@ -785,7 +785,7 @@ TThing& TRoom::operator += (TThing& t)
         if (!tObjTemp)
           continue;
 
-        for (tThing = tObjTemp->stuff; tThing; tThing = tObjNext) {
+        for (tThing = tObjTemp->getStuff(); tThing; tThing = tObjNext) {
           tObjNext = tThing->nextThing;
 
           if ((tObjTemp = dynamic_cast<TObj *>(tThing)) &&
@@ -827,16 +827,16 @@ TThing& TThing::operator -- ()
   if ((t_in = parent)) {
     // obj from char
     // obj from obj
-    mud_assert(t_in->stuff != NULL, "TThing -- : parent had no stuff");
+    mud_assert(t_in->getStuff() != NULL, "TThing -- : parent had no stuff");
     mud_assert(roomp == NULL, "TThing -- : had roomp and parent simultaneously");
     mud_assert(inRoom() == ROOM_NOWHERE || inRoom() == ROOM_AUTO_RENT, 
             "TThing -- : had parent and in room simultaneously");
 
-    if (t_in->stuff == this)       
-      t_in->stuff = nextThing;
+    if (t_in->getStuff() == this)       
+      t_in->setStuff(nextThing);
     else {
       // locate previous  
-      for (tmp = t_in->stuff; tmp && (tmp->nextThing != this); tmp = tmp->nextThing); 
+      for (tmp = t_in->getStuff(); tmp && (tmp->nextThing != this); tmp = tmp->nextThing); 
       mud_assert(tmp != NULL, "TThing-- : couldn't locate previous TThing in stuff list");
       tmp->nextThing = nextThing;
     }
@@ -856,10 +856,10 @@ TThing& TThing::operator -- ()
     // obj from room
     // char from room
 
-    if (this == rp->stuff)   // head of list 
-      rp->stuff = nextThing;
+    if (this == rp->getStuff())   // head of list 
+      rp->setStuff(nextThing);
     else {
-      for (tmp = rp->stuff; tmp && (tmp->nextThing != this); tmp = tmp->nextThing);
+      for (tmp = rp->getStuff(); tmp && (tmp->nextThing != this); tmp = tmp->nextThing);
       mud_assert(tmp != NULL, "TThing-- : couldn't locate previous TThing in stuff list (2)");
       tmp->nextThing = nextThing;
     }
@@ -873,7 +873,7 @@ TThing& TThing::operator -- ()
     TSeeThru *tst = dynamic_cast<TSeeThru *>(this);
     if (tst && tst->givesOutsideLight()) {
       int best=0, curr = 0;
-      for (tmp = rp->stuff; tmp; tmp = tmp->nextThing) {
+      for (tmp = rp->getStuff(); tmp; tmp = tmp->nextThing) {
         TSeeThru *tst2 = dynamic_cast<TSeeThru *>(tmp);
         if (tst2 && tst2->givesOutsideLight()) {
           curr = tst2->getLightFromOutside();
@@ -1052,6 +1052,7 @@ TThing::TThing() :
   carried_weight(0.0),
   carried_volume(0), 
   the_caster(NULL),
+  stuff(NULL),
   descr(NULL),
   stuckIn(NULL),
   equippedBy(NULL),
@@ -1068,7 +1069,6 @@ TThing::TThing() :
   name(NULL),
   shortDescr(NULL),
   parent(NULL),
-  stuff(NULL),
   nextThing(NULL),
   nextBorn(NULL),
   roomp(NULL),
@@ -1407,6 +1407,7 @@ TThing::TThing(const TThing &a) :
   weight(a.weight), light(a.light), material_type(a.material_type),
     carried_weight(a.carried_weight), carried_volume(a.carried_volume),
     the_caster(a.the_caster),
+  stuff(a.stuff),
     descr(a.descr),
     stuckIn(a.stuckIn),
     equippedBy(a.equippedBy),
@@ -1415,7 +1416,7 @@ TThing::TThing(const TThing &a) :
     max_exist(a.max_exist), in_room(a.in_room), spec(a.spec),
     number(a.number), height(a.height),
     canBeSeen(a.canBeSeen), name(a.name), shortDescr(a.shortDescr),
-    parent(a.parent), stuff(a.stuff), nextThing(a.nextThing),
+    parent(a.parent), nextThing(a.nextThing),
     nextBorn(a.nextBorn),
     roomp(a.roomp), desc(a.desc), 
     ex_description(a.ex_description),

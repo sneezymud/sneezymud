@@ -899,7 +899,7 @@ int farlook(TBeing *caster, TBeing * victim, int level, byte bKnown)
     act("$n conjures up a large cloud which shimmers slightly before revealing...",
               FALSE, caster, 0, 0, TO_ROOM);
 
-    for (t = caster->roomp->stuff; t; t = t->nextThing)
+    for (t = caster->roomp->getStuff(); t; t = t->nextThing)
       if ((ch = dynamic_cast<TBeing *>(t)) && ch->isPc() && ch->desc)
         tBeing.push_back(ch);
 
@@ -2054,7 +2054,7 @@ void TBeing::doScribe(const char *arg)
       t->findSomeComponent(&comp_gen, &comp_spell, &comp_scribe, which, 2);
     }
   }
-  for (t = stuff; t; t = t->nextThing) {
+  for (t = getStuff(); t; t = t->nextThing) {
     t->findSomeComponent(&comp_gen, &comp_spell, &comp_scribe, which, 2);
   }
 

@@ -2,23 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_spirit.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.4  1999/09/23 22:35:10  cosmo
-// *** empty log message ***
-//
-// Revision 1.3  1999/09/23 22:28:54  cosmo
-// Just made a crash fix.
-//
-// Revision 1.2  1999/09/13 01:51:51  cosmo
-// Fixed Crash Bug in Polylist--missing comma--Cos .
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -34,7 +17,7 @@ int silence(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   if (caster->isNotPowerful(victim, level, SPELL_SILENCE, SILENT_YES) ||
       (victim->isLucky(caster->spellLuckModifier(SPELL_SILENCE)))) {
-    act("Sorry but $N is much too experienced to let you silence $M.",
+    act("$N resists your attempts to silence $M.",
           FALSE, caster, NULL, victim, TO_CHAR);
     act("That dumbass $n just tried to silence you!",
           FALSE, caster, NULL, victim, TO_VICT);
@@ -44,7 +27,7 @@ int silence(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   aff.type = SPELL_SILENCE;
   aff.level = level;
-  aff.duration =  aff.level * UPDATES_PER_TICK;
+  aff.duration =  aff.level * UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_SILENT;
@@ -123,7 +106,8 @@ int ret,level;
 
 int slumber(TBeing *caster, TBeing *victim, int level, byte bKnown)
 {
-  int ret= FALSE, found = FALSE, rc = FALSE;
+  int ret= FALSE, rc = FALSE;
+  bool found = false;
   int crit = 1;
   saveTypeT save = SAVE_NO;
   TObj *primary = dynamic_cast<TObj *>(caster->heldInPrimHand());
@@ -140,10 +124,9 @@ int slumber(TBeing *caster, TBeing *victim, int level, byte bKnown)
         caster->sendTo("You can not use that staff here.\n\r");
         return SPELL_FAIL;
       }
-      vlogf(5, "Sleep Tag Staff: %s just got slept by %s",
+      vlogf(LOG_MISC, "Sleep Tag Staff: %s just got slept by %s",
                victim->getName(), caster->getName());
-      rc = victim->rawSleep(level, (4 + level/2) * UPDATES_PER_TICK, crit, save);
-//      if (IS_SET(rc, DELETE_THIS)) {
+      rc = victim->rawSleep(level, (4 + level/2) * UPDATES_PER_MUDHOUR, crit, save);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         return SPELL_SUCCESS | VICTIM_DEAD;
       }
@@ -160,7 +143,7 @@ int slumber(TBeing *caster, TBeing *victim, int level, byte bKnown)
       caster->isNotPowerful(victim, level, SPELL_SLUMBER, SILENT_YES) ||
       (!caster->isImmortal() &&
       (victim->isLucky(caster->spellLuckModifier(SPELL_SLUMBER))))) {
-    act("Sorry but $N is much too experienced to let you sleep $M.",
+    act("$N resists your attempts to sleep $M.",
               FALSE, caster, NULL, victim, TO_CHAR);
     act("That nitwit $n just tried to sleep you!",
               FALSE, caster, NULL, victim, TO_VICT, ANSI_WHITE_BOLD);
@@ -211,8 +194,7 @@ int slumber(TBeing *caster, TBeing *victim, int level, byte bKnown)
         return SPELL_FAIL;
     }
   }
-  rc = victim->rawSleep(level, (4 + level/2) * UPDATES_PER_TICK, crit, save);
-//  if (IS_SET(rc, DELETE_THIS)) {
+  rc = victim->rawSleep(level, (4 + level/2) * UPDATES_PER_MUDHOUR, crit, save);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     if (victim == caster)
       ret |= CASTER_DEAD;
@@ -338,7 +320,7 @@ int ensorcer(TBeing *caster, TBeing *victim, int level, byte bKnown)
     return SPELL_FAIL;
   }
 #endif
-  if (victim->isImmune(IMMUNE_CHARM, level) ||
+  if (victim->isImmune(IMMUNE_CHARM, level) || victim->GetMaxLevel() > caster->GetMaxLevel() ||
       (!victim->isPc() && dynamic_cast<TMonster *>(victim)->Hates(caster, NULL)) ||
       caster->isNotPowerful(victim, level, SPELL_ENSORCER, SILENT_YES) ||
       (victim->isLucky(caster->spellLuckModifier(SPELL_ENSORCER)))) {
@@ -363,12 +345,11 @@ int ensorcer(TBeing *caster, TBeing *victim, int level, byte bKnown)
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_CHARM;
-    aff.duration  =  3 * level * UPDATES_PER_TICK;
+    aff.duration  =  3 * level * UPDATES_PER_MUDHOUR;
 
-    if (victim->getImmunity(IMMUNE_CHARM)) {
-      aff.duration *= 100 - victim->getImmunity(IMMUNE_CHARM);
-      aff.duration /= 100;
-    }
+    // we've made raw immunity check, but allow it to reduce effects too
+    aff.duration *= (100 - victim->getImmunity(IMMUNE_CHARM));
+    aff.duration /= 100;
 
     switch (critSuccess(caster, SPELL_ENSORCER)) {
       case CRIT_S_DOUBLE:
@@ -393,12 +374,17 @@ int ensorcer(TBeing *caster, TBeing *victim, int level, byte bKnown)
       return SPELL_FALSE;
     }
 
+    aff.type = AFFECT_CHARM;
+    aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
+    victim->affectTo(&aff);
+
     if (!victim->isPc())
       dynamic_cast<TMonster *>(victim)->genericCharmFix();
 
     // don't hurt the one you love
-    if (victim->fight() == caster)
+    if (victim->fight() == caster && caster->fight())
       caster->stopFighting();
+
     // and don't let the charm hurt anyone that we didn't order them to hurt
     if (victim->fight())
       victim->stopFighting();
@@ -518,17 +504,17 @@ int cloudOfConcealment(TBeing *caster, int level, byte bKnown)
 
     aff.type = SPELL_INVISIBILITY;
     aff.level = level;
-    aff.duration = 24 * UPDATES_PER_TICK;
+    aff.duration = 24 * UPDATES_PER_MUDHOUR;
     aff.modifier = -40;
     aff.location = APPLY_ARMOR;
     aff.bitvector = AFF_INVISIBLE;
-    for (t = caster->roomp->stuff; t; t = t2) {
+    for (t = caster->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;
       if (caster != tmp_victim && !tmp_victim->isImmortal()) {
-        if (caster->inGroup(tmp_victim)) {
+        if (caster->inGroup(*tmp_victim)) {
           if (!tmp_victim->isAffected(AFF_INVISIBLE)) {
             caster->reconcileHelp(tmp_victim,discArray[SPELL_CLOUD_OF_CONCEALMENT]->alignMod);
 #if 0
@@ -711,24 +697,26 @@ void dispelInvisible(TBeing *caster, TObj* obj)
 
 static struct PolyType PolyList[] =
 {
-  {"orc"       ,  8,   1,   941, DISC_SPIRIT}, // L  4
-  {"frog"      ,  8,   1,   917, DISC_SPIRIT}, // L  5
-  {"cockatrice", 10,   1,   911, DISC_SPIRIT}, // L  6
-  {"kamodo"    , 12,  30,  7501, DISC_SPIRIT}, // L 25
-  {"minotaur"  , 15,  40,   937, DISC_SPIRIT}, // L  8
-  {"lamia"     , 25,  50,   934, DISC_SPIRIT}, // L 13
-  {"reindeer"  , 25,  55, 10212, DISC_SPIRIT}, // L 15
-  {"chimera"   , 30,  60,   910, DISC_SPIRIT}, // L 15
-  {"dragonne"  , 35,  70,   915, DISC_SPIRIT}, // L 21
-  {"tiger"     , 40,  85, 23630, DISC_SPIRIT}, // L 24
-  {"ettin"     , 45, 100,   916, DISC_SPIRIT}, // L 27
-  {"arch"      , 60, 100, 28813, DISC_SPIRIT},  // L 70 (*god only*)
-  {"\n"        , -1,  -1,    -1, DISC_SPIRIT}
+  {"orc"       ,  8,   1,   941, DISC_SPIRIT, RACE_NORACE}, // L  4
+  {"frog"      ,  8,   1,   917, DISC_SPIRIT, RACE_NORACE}, // L  5
+  {"cockatrice", 10,   1,   911, DISC_SPIRIT, RACE_NORACE}, // L  6
+  {"kamodo"    , 12,  30,  7501, DISC_SPIRIT, RACE_NORACE}, // L 25
+  {"minotaur"  , 15,  40,   937, DISC_SPIRIT, RACE_NORACE}, // L  8
+  {"lamia"     , 25,  50,   934, DISC_SPIRIT, RACE_NORACE}, // L 13
+  {"reindeer"  , 25,  55, 10212, DISC_SPIRIT, RACE_NORACE}, // L 15
+  {"chimera"   , 30,  60,   910, DISC_SPIRIT, RACE_NORACE}, // L 15
+  {"dragonne"  , 35,  70,   915, DISC_SPIRIT, RACE_NORACE}, // L 21
+  {"tiger"     , 40,  85, 23630, DISC_SPIRIT, RACE_NORACE}, // L 24
+  {"ettin"     , 45, 100,   916, DISC_SPIRIT, RACE_NORACE}, // L 27
+  {"arch"      , 60, 100, 28813, DISC_SPIRIT, RACE_NORACE}, // L 70 (god only)
+  {"\n"        , -1,  -1,    -1, DISC_SPIRIT, RACE_NORACE}
 };
 
 int polymorph(TBeing *caster, int level, byte bKnown)
 {
-  int i, ret = 0, duration = 0, nameFound = FALSE, found = FALSE;
+  int i, ret = 0;
+  bool nameFound = FALSE;
+  bool found = FALSE;
   TBeing *mob;
   const char * buffer;
   affectedData aff;
@@ -738,7 +726,7 @@ int polymorph(TBeing *caster, int level, byte bKnown)
  
   discNumT das = getDisciplineNumber(SPELL_POLYMORPH, FALSE);
   if (das == DISC_NONE) {
-    vlogf(5, "Bad disc for SPELL_POLYMORPH");
+    vlogf(LOG_BUG, "Bad disc for SPELL_POLYMORPH");
     return SPELL_FAIL;
   }
   for (i = 0; *PolyList[i].name != '\n'; i++) {
@@ -768,7 +756,7 @@ int polymorph(TBeing *caster, int level, byte bKnown)
   // Check to make sure that there is no snooping going on. 
   if (!caster->desc || caster->desc->snoop.snooping) {
     caster->nothingHappens();
-    vlogf(5,"PC tried to poly while being snooped");
+    vlogf(LOG_BUG,"PC tried to poly while being snooped");
     delete mob;
     mob = NULL;
     return SPELL_FAIL;
@@ -782,11 +770,14 @@ int polymorph(TBeing *caster, int level, byte bKnown)
   }
   if (caster->desc->snoop.snoop_by)
     caster->desc->snoop.snoop_by->doSnoop(caster->desc->snoop.snoop_by->name);
+
+  // first add the attempt -- used to regulate attempts
   aff.type = AFFECT_SKILL_ATTEMPT;
   aff.location = APPLY_NONE;
-  aff.duration = (2 + (level/5)) * UPDATES_PER_TICK;
+  aff.duration = (1 + (level/15)) * UPDATES_PER_MUDHOUR;
   aff.bitvector = 0;
   aff.modifier = SPELL_POLYMORPH;
+  caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
 
   if (bSuccess(caster, bKnown, SPELL_POLYMORPH)) {
     switch (critSuccess(caster, SPELL_POLYMORPH)) {
@@ -803,10 +794,6 @@ int polymorph(TBeing *caster, int level, byte bKnown)
     *caster->roomp += *mob;
     SwitchStuff(caster, mob);
 
-#if 0
-    if (caster->isPlayerAction(PLR_ANSI | PLR_VT100))
-      caster->doTerminal("none");
-#endif
     act("$n's flesh melts and flows into the shape of $N.", TRUE, caster, NULL, mob, TO_NOTVICT);
     for (i=MIN_WEAR;i < MAX_WEAR;i++) {
       if (caster->equipment[i]) {
@@ -835,16 +822,14 @@ int polymorph(TBeing *caster, int level, byte bKnown)
     caster->desc->character = mob;
     caster->desc->original = dynamic_cast<TPerson *>(caster);
 
- // first add the attempt -- used to regulate attempts
-    aff.duration = duration + ((2 + (level/5)) * UPDATES_PER_TICK);
-    caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
-
+#if 0
     aff2.type = AFFECT_SKILL_ATTEMPT;
     aff2.location = APPLY_NONE;
-    aff2.duration = duration + ((2 + (level/5)) * UPDATES_PER_TICK);
+    aff2.duration = duration + ((2 + (level/5)) * UPDATES_PER_MUDHOUR);
     aff2.bitvector = 0;
     aff2.modifier = SPELL_POLYMORPH;
     mob->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
+#endif
 
     mob->desc = caster->desc;
     caster->desc = NULL;
@@ -861,7 +846,6 @@ int polymorph(TBeing *caster, int level, byte bKnown)
     mob->setMana(min((mob->getMana() - 15), 85));
     return SPELL_SUCCESS;
   } else {
-    caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
     return SPELL_FAIL;
   }
 }
@@ -894,7 +878,7 @@ int polymorph(TBeing *caster, const char * buffer)
   // Check to make sure that there is no snooping going on.
   if (!caster->desc || caster->desc->snoop.snooping) {
     caster->nothingHappens();
-    vlogf(5,"PC tried to poly while being snooped");
+    vlogf(LOG_BUG,"PC tried to poly while being snooped");
     return SPELL_FAIL;
   }
 
@@ -938,7 +922,7 @@ int stealth(TBeing *caster, TBeing *victim, int level, byte bKnown)
   if (bSuccess(caster, bKnown, SPELL_STEALTH)) {
     aff.type = SPELL_STEALTH;
     aff.level = level;
-    aff.duration = (aff.level / 3) * UPDATES_PER_TICK;
+    aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
     aff.modifier = - aff.level;
     aff.location = APPLY_NOISE;
     aff.bitvector = 0;
@@ -1022,7 +1006,7 @@ int accelerate(TBeing *caster, TBeing *victim, int level, byte bKnown)
   if (bSuccess(caster, bKnown, SPELL_ACCELERATE)) {
     aff.type = SPELL_ACCELERATE;
     aff.level = level;
-    aff.duration = (aff.level / 3) * UPDATES_PER_TICK;
+    aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
@@ -1100,7 +1084,7 @@ int haste(TBeing *caster, TBeing *victim, int level, byte bKnown)
   if (bSuccess(caster, bKnown, SPELL_HASTE)) {
     aff.type = SPELL_HASTE;
     aff.level = level;
-    aff.duration = (aff.level / 3) * UPDATES_PER_TICK;
+    aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
@@ -1194,7 +1178,7 @@ int calm(TBeing *caster, TBeing *victim, int, byte bKnown)
 
     aff.type = SPELL_CALM;
     aff.level = caster->getSkillLevel(SPELL_CALM);
-    aff.duration =  aff.level * UPDATES_PER_TICK / 3;
+    aff.duration =  aff.level * UPDATES_PER_MUDHOUR / 3;
     aff.modifier = 0;
     aff.location = APPLY_NONE;
 
@@ -1359,7 +1343,7 @@ int invisibility(TBeing *caster, TBeing *victim, int level, byte bKnown)
   if (bSuccess(caster, bKnown, SPELL_INVISIBILITY)) {
     aff.type = SPELL_INVISIBILITY;
     aff.level = level;
-    aff.duration = 24 * UPDATES_PER_TICK;
+    aff.duration = 24 * UPDATES_PER_MUDHOUR;
     aff.modifier = -40;
     aff.location = APPLY_ARMOR;
     aff.bitvector = AFF_INVISIBLE;
@@ -1369,7 +1353,7 @@ int invisibility(TBeing *caster, TBeing *victim, int level, byte bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_INVISIBILITY);
-        aff.duration = 36 * UPDATES_PER_TICK;
+        aff.duration = 36 * UPDATES_PER_MUDHOUR;
         aff.modifier = -60;
         break;
       case CRIT_S_NONE:
@@ -1449,7 +1433,7 @@ int senseLife(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   if (bSuccess(caster, bKnown, SPELL_SENSE_LIFE)) {
     aff.type = SPELL_SENSE_LIFE;
-    aff.duration = level * UPDATES_PER_TICK;
+    aff.duration = level * UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_SENSE_LIFE;
@@ -1480,7 +1464,7 @@ void senseLife(TBeing *caster, TBeing *victim, TMagicItem * obj)
 
   ret = senseLife(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
   if (ret == SPELL_SUCCESS) {
-    victim->sendTo("You feel more aware of The World about you.\n\r");
+    victim->sendTo("You feel more aware of the world about you.\n\r");
     act("$n's eyes flicker a faint aqua blue.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_CYAN);
   } else { 
     caster->nothingHappens();
@@ -1510,7 +1494,7 @@ int castSenseLife(TBeing *caster, TBeing *victim)
 
   ret = senseLife(caster,victim,level,bKnown);
   if (ret == SPELL_SUCCESS) {
-    victim->sendTo("You feel more aware of The World about you.\n\r");
+    victim->sendTo("You feel more aware of the world about you.\n\r");
     act("$n's eyes flicker a faint aqua blue.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_CYAN);
   } else 
     caster->nothingHappens();
@@ -1526,7 +1510,7 @@ int detectInvisibility(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   if (bSuccess(caster, bKnown, SPELL_DETECT_INVISIBLE)) {
     aff.type = SPELL_DETECT_INVISIBLE;
-    aff.duration = level * 3 * UPDATES_PER_TICK;
+    aff.duration = level * 3 * UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_DETECT_INVISIBLE;
@@ -1598,7 +1582,7 @@ int trueSight(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   if (bSuccess(caster, bKnown, SPELL_TRUE_SIGHT)) {
     aff.type = SPELL_TRUE_SIGHT;
-    aff.duration = level / 2 * UPDATES_PER_TICK;
+    aff.duration = level / 2 * UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_TRUE_SIGHT;
@@ -1760,8 +1744,12 @@ int fear(TBeing *caster, TBeing *victim, int level, byte bKnown)
       // we need a way to make the fear last a little while....
       affectedData aff;
       aff.type = SPELL_FEAR;
-      aff.duration = level * UPDATES_PER_TICK / 2;
+      aff.duration = level * UPDATES_PER_MUDHOUR / 2;
       aff.renew = aff.duration;  // renewable immediately
+
+    // we've made raw immunity check, but allow it to reduce effects too
+    aff.duration *= (100 - victim->getImmunity(IMMUNE_FEAR));
+    aff.duration /= 100;
 
       victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
     }
@@ -1928,10 +1916,20 @@ int castFumble(TBeing *caster, TBeing *victim)
   int bKnown = caster->getSkillValue(SPELL_FUMBLE);
 
   ret=fumble(caster,victim,level,bKnown);
+
+#if 1
+  if (ret == SPELL_SUCCESS || ret == SPELL_CRIT_FAIL)
+    if ((ret = victim->hit(caster)))
+      return ret;
+    else
+      victim->setVictFighting(caster);
+#else
   if (ret == SPELL_SUCCESS) {
   } else {
     if (ret==SPELL_CRIT_FAIL) {
     }
   }
+#endif
+
   return TRUE;
 }

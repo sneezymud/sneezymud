@@ -290,7 +290,7 @@ int DragonBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   myself->addToWait(combatRound(1) * dragons[i].lag);
 
   TThing *t1, *t2;
-  for (t1 = myself->roomp->stuff;t1; t1 = t2) {
+  for (t1 = myself->roomp->getStuff();t1; t1 = t2) {
     t2 = t1->nextThing;
     tmp = dynamic_cast<TBeing *>(t1);
     if (!tmp)

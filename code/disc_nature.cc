@@ -768,7 +768,7 @@ int treeWalk(TBeing * caster, const char * arg, int, byte bKnown)
       return SPELL_SUCCESS;
     }
 
-    for (t = caster->roomp->stuff; t; t = t2) {
+    for (t = caster->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (!tbt)

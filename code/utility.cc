@@ -244,7 +244,7 @@ unsigned int TBeing::numberInGroupInRoom() const
   TThing *t;
   unsigned int count = 0;
 
-  for (t = roomp->stuff; t; t = t->nextThing) {
+  for (t = roomp->getStuff(); t; t = t->nextThing) {
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (tbt && inGroup(*tbt))
       count++;
@@ -374,7 +374,7 @@ bool TThing::hasObject(int ob_num)
   if (found > 0)
     return TRUE;
 
-  for (t = stuff; t; t = t->nextThing)
+  for (t = getStuff(); t; t = t->nextThing)
     found += RecCompObjNum(t, ob_num);
 
   if (found > 0)
@@ -427,7 +427,7 @@ int RecCompObjNum(const TObj *o, int obj_num)
   if (obj_index[o->getItemIndex()].virt == obj_num)
     total = 1;
 
-  for (i = o->stuff; i; i = i->nextThing) {
+  for (i = o->getStuff(); i; i = i->nextThing) {
     TObj *to = dynamic_cast<TObj *>(i);
     if (to)
       total += RecCompObjNum(to, obj_num);
@@ -1082,7 +1082,7 @@ bool thingsInRoomVis(TThing *ch, TRoom *rp)
     vlogf(LOG_BUG, "thingsInRoomVis() called with NULL ch, or room!");
     return FALSE;
   }
-  for (o = rp->stuff; o; o = o->nextThing) {
+  for (o = rp->getStuff(); o; o = o->nextThing) {
     if (ch->canSee(o))
       return TRUE;
   }
@@ -1575,7 +1575,7 @@ bool TRoom::roomIsEmpty(bool ignore_imms) const
   TThing *t;
   TBeing *vict;
 
-  for (t = stuff; t; t = t->nextThing) {
+  for (t = getStuff(); t; t = t->nextThing) {
     vict = dynamic_cast<TBeing *>(t);
     if (!vict)
       continue;

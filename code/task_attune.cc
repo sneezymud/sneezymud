@@ -1,20 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: task_attune.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "task.cc" - All functions related to tasks that keep mobs/PCs busy
 //
@@ -56,7 +41,7 @@ bool checkAttuneUsage(TBeing *ch, int * uses, int * reqUses, TVial **water, TSym
   TThing *tmp = NULL;
 
   *uses = 0;
-  for (tmp = ch->stuff; tmp; tmp = tmp->nextThing) {
+  for (tmp = ch->getStuff(); tmp; tmp = tmp->nextThing) {
     tmp->findVialAttune(water, uses);
   }
 
@@ -122,7 +107,7 @@ void TSymbol::attunePulse(TBeing *ch)
     uses = max(1, uses - ch->task->flags);
 
     TThing *tmp;
-    for (tmp = ch->stuff; tmp; tmp = tmp->nextThing) {
+    for (tmp = ch->getStuff(); tmp; tmp = tmp->nextThing) {
       water = NULL;
       num = 0;
       tmp->findVialAttune(&water, &num);
@@ -164,7 +149,7 @@ int task_attuning(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
     return FALSE;  // returning FALSE lets command be interpreted
   }
   if (!ch->task) {
-    vlogf(10, "Got to bad spot in attune, tell Cosmo");
+    vlogf(LOG_BUG, "Got to bad spot in attune, tell Cosmo");
     ch->stopTask();
     return FALSE;
   }

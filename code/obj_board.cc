@@ -207,7 +207,7 @@ boardStruct *FindBoardInRoom(int room, const char *arg)
   if (!(rp = real_roomp(room)))
     return NULL;
 
-  for (o = rp->stuff; o; o = o->nextThing) {
+  for (o = rp->getStuff(); o; o = o->nextThing) {
     TObj *to = dynamic_cast<TObj *>(o);
     //    if (to && to->spec == SPEC_BOARD && isname(boardname, to->name)) {
     if (to && to->spec == SPEC_BOARD) {
@@ -557,7 +557,7 @@ void post_note_on_board(TBeing *ch, const char *argument, boardStruct *b)
 
   half_chop(argument, arg1, arg2);
 
-  if (!(note = searchLinkedListVis(ch, arg1, ch->stuff))) {
+  if (!(note = searchLinkedListVis(ch, arg1, ch->getStuff()))) {
     ch->sendTo("You don't have anything like that!\n\r");
     return;
   }

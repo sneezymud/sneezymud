@@ -105,8 +105,8 @@ int TBeing::doDissect(const char *argument)
     return FALSE;
   }
 
-  if (!(obj = dynamic_cast<TObj *> (searchLinkedListVis(this, namebuf, stuff)))) {
-    if (!(obj = dynamic_cast<TObj *> (searchLinkedListVis(this, namebuf, roomp->stuff)))) {
+  if (!(obj = dynamic_cast<TObj *> (searchLinkedListVis(this, namebuf, getStuff())))) {
+    if (!(obj = dynamic_cast<TObj *> (searchLinkedListVis(this, namebuf, roomp->getStuff())))) {
       sendTo("There doesn't seem to be any '%s' here to dissect.\n\r", namebuf);
       return FALSE;
     }

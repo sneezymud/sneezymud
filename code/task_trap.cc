@@ -2,25 +2,43 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: task_trap.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD 4.0 - All rights reserved, SneezyMUD Coding Team
 //      "task.cc" - All functions related to tasks that keep mobs/PCs busy
 //
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+
+// returns DELETE_THIS for ch
+// returns true if guard disrupts trap pulse
+static int trapGuardCheck(TBeing *ch)
+{
+  TThing *t, *t2;
+  for (t = ch->roomp->getStuff(); t; t = t2) {
+    t2 = t->nextThing;
+    TMonster *guard = dynamic_cast<TMonster *>(t);
+    if (!guard)
+      continue;
+    if (!guard->isPolice() || 
+        !guard->canSee(ch) ||
+        !guard->awake())
+      continue;
+    guard->doSay("Hey!  We don't allow any of that nonsense here!");
+
+    int rc = guard->takeFirstHit(*ch);
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_THIS;
+    else if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete guard;
+      guard = NULL;
+    }
+
+    // force the trap to be disrupted.
+    ch->stopTask();
+
+    return true;
+  }
+  return false;
+}
 
 int task_trap_door(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
@@ -29,8 +47,6 @@ int task_trap_door(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   TRoom *rp2;
   roomDirData *back = NULL, *exitp = NULL;
   int rc; 
-  TThing *t, *t2;
-  TMonster *guard;
 
   half_chop(ch->task->orig_arg, buf1, buf2);
 
@@ -55,24 +71,11 @@ int task_trap_door(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     return FALSE;
 
   // check for guards that prevent
-  for (t = ch->roomp->stuff; t; t = t2) {
-    t2 = t->nextThing;
-    guard = dynamic_cast<TMonster *>(t);
-    if (!guard)
-      continue;
-    if (!guard->isPolice() || !guard->canSee(ch) ||
-         !guard->awake())
-      continue;
-    guard->doSay("Hey!  We don't allow any of that nonsense here!");
-
-    if ((rc = guard->takeFirstHit(ch)) == DELETE_VICT)
-      return DELETE_THIS;
-    else if (rc == DELETE_THIS) {
-      delete guard;
-      guard = NULL;
-    }
+  rc = trapGuardCheck(ch);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+  else if (rc)
     return FALSE;
-  }
 
   if (ch->task->timeLeft < 0)  {
     // Made it to end, set trap 
@@ -80,7 +83,7 @@ int task_trap_door(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     exitp->trap_info = ch->task->status;
 
     // this is number of 8-sided die to use for damage
-    int trapdamage = ch->getDoorTrapDam((trap_t) ch->task->status);
+    int trapdamage = ch->getDoorTrapDam(doorTrapT(ch->task->status));
     exitp->trap_dam = trapdamage;
 
     // and now for other side 
@@ -98,7 +101,7 @@ int task_trap_door(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getDoorTrapLearn((trap_t) ch->task->status);
+      learning = ch->getDoorTrapLearn(doorTrapT(ch->task->status));
       ch->task->calcNextUpdate(pulse, 
                  PULSE_MOBACT * (5 + ((100 - learning)/3)));
 
@@ -122,15 +125,18 @@ int task_trap_door(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       }
 
       // test for failure
-      if (!ch->doesKnowSkill(SKILL_SET_TRAP) ||
-          !bSuccess(ch, learning, SKILL_SET_TRAP)) {
-        // trigger trap
-
-        rc = ch->goofUpTrap((trap_t) ch->task->status, TRAP_TARG_DOOR);
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
-        ch->stopTask();
-        return FALSE;
+      // let's not test multiple times, check at end
+      if (ch->task->timeLeft < 0 ||
+          !ch->doesKnowSkill(SKILL_SET_TRAP_DOOR)) {
+        if (!bSuccess(ch, learning, SKILL_SET_TRAP_DOOR)) {
+          // trigger trap
+  
+          rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_DOOR);
+          if (IS_SET_DELETE(rc, DELETE_THIS))
+            return DELETE_THIS;
+          ch->stopTask();
+          return FALSE;
+        }
       }
       break;
     case CMD_ABORT:
@@ -155,14 +161,12 @@ int task_trap_container(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 {
   int learning;
   int rc; 
-  TThing *t, *t2;
-  TMonster *guard;
-  TRealContainer *cont = NULL;
+  TOpenContainer *cont = NULL;
 
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
       !ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_CONT, 0) ||
       !obj ||
-      !(cont = dynamic_cast<TRealContainer *>(obj)) ||
+      !(cont = dynamic_cast<TOpenContainer *>(obj)) ||
       !cont->isClosed() ||
       (ch->getPosition() <= POSITION_SITTING) ||
       !ch->getDiscipline(DISC_LOOTING)) {
@@ -181,32 +185,19 @@ int task_trap_container(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
     return FALSE;
 
   // check for guards that prevent
-  for (t = ch->roomp->stuff; t; t = t2) {
-    t2 = t->nextThing;
-    guard = dynamic_cast<TMonster *>(t);
-    if (!guard)
-      continue;
-    if (!guard->isPolice() || !guard->canSee(ch) ||
-         !guard->awake())
-      continue;
-    guard->doSay("Hey!  We don't allow any of that nonsense here!");
-
-    if ((rc = guard->takeFirstHit(ch)) == DELETE_VICT)
-      return DELETE_THIS;
-    else if (rc == DELETE_THIS) {
-      delete guard;
-      guard = NULL;
-    }
+  rc = trapGuardCheck(ch);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+  else if (rc)
     return FALSE;
-  }
 
   if (ch->task->timeLeft < 0)  {
     // Made it to end, set trap 
     cont->addContainerFlag(CONT_TRAPPED);
-    cont->setContainerTrapType(ch->task->status);
+    cont->setContainerTrapType(doorTrapT(ch->task->status));
 
     // this is number of 8-sided die to use for damage
-    int trapdamage = ch->getContainerTrapDam((trap_t) ch->task->status);
+    int trapdamage = ch->getContainerTrapDam(doorTrapT(ch->task->status));
     cont->setContainerTrapDam(trapdamage);
 
     ch->sendTo("The trap has been successfully set!\n\r");
@@ -216,7 +207,7 @@ int task_trap_container(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getContainerTrapLearn((trap_t) ch->task->status);
+      learning = ch->getContainerTrapLearn(doorTrapT(ch->task->status));
       ch->task->calcNextUpdate(pulse, 
                  PULSE_MOBACT * (5 + ((100 - learning)/3)));
 
@@ -240,19 +231,22 @@ int task_trap_container(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
       }
 
       // test for failure
-      if (!ch->doesKnowSkill(SKILL_SET_TRAP) ||
-          !bSuccess(ch, learning, SKILL_SET_TRAP)) {
-        // trigger trap
-        rc = ch->goofUpTrap((trap_t) ch->task->status, TRAP_TARG_CONT);
-        if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-          delete cont;
-          cont = NULL;
-        }
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
+      // let's not test multiple times, check at end
+      if (ch->task->timeLeft < 0 ||
+          !ch->doesKnowSkill(SKILL_SET_TRAP_CONT)) {
+        if (!bSuccess(ch, learning, SKILL_SET_TRAP_CONT)) {
+          // trigger trap
+          rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_CONT);
+          if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+            delete cont;
+            cont = NULL;
+          }
+          if (IS_SET_DELETE(rc, DELETE_THIS))
+            return DELETE_THIS;
 
-        ch->stopTask();
-        return FALSE;
+          ch->stopTask();
+          return FALSE;
+        }
       }
       break;
     case CMD_ABORT:
@@ -273,7 +267,7 @@ int task_trap_container(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
   return TRUE;
 }
 
-void TTrap::makeTrapLand(TBeing *ch, trap_t status, const char *args)
+void TTrap::makeTrapLand(TBeing *ch, doorTrapT status, const char *args)
 {
   // this should be a number between 1-50
   int trapdamage = ch->getMineTrapDam(status);
@@ -293,8 +287,13 @@ void TTrap::makeTrapLand(TBeing *ch, trap_t status, const char *args)
   setTrapEffectType(stdflags);
 
   ch->sendTo("You have successfully constructed a land mine!\n\r");
-  ch->hasTrapComps(args, TRAP_TARG_MINE, -1);
+
+  int price;
+  ch->hasTrapComps(args, TRAP_TARG_MINE, -1, &price);
   ch->stopTask();
+
+  // set price on the mine to that of the components
+  obj_flags.cost = price;
 
   *ch += *this;
 }
@@ -303,8 +302,6 @@ int task_trap_mine(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 {
   int learning;
   int rc; 
-  TThing *t, *t2;
-  TMonster *guard;
   TObj *obj;
 
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
@@ -326,40 +323,27 @@ int task_trap_mine(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     return FALSE;
 
   // check for guards that prevent
-  for (t = ch->roomp->stuff; t; t = t2) {
-    t2 = t->nextThing;
-    guard = dynamic_cast<TMonster *>(t);
-    if (!guard)
-      continue;
-    if (!guard->isPolice() || !guard->canSee(ch) ||
-         !guard->awake())
-      continue;
-    guard->doSay("Hey!  We don't allow any of that nonsense here!");
-
-    if ((rc = guard->takeFirstHit(ch)) == DELETE_VICT)
-      return DELETE_THIS;
-    else if (rc == DELETE_THIS) {
-      delete guard;
-      guard = NULL;
-    }
+  rc = trapGuardCheck(ch);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+  else if (rc)
     return FALSE;
-  }
 
   if (ch->task->timeLeft < 0)  {
     // Made it to end, set trap 
     if (!(obj = read_object(ST_LANDMINE, VIRTUAL))) {
-      vlogf(9, "Unable to load mine for mine creation");
+      vlogf(LOG_BUG, "Unable to load mine for mine creation");
       ch->sendTo("Serious problem, contact a god.\n\r");
       ch->stopTask();
       return FALSE;
     }
 
-    obj->makeTrapLand(ch, (trap_t) ch->task->status, ch->task->orig_arg);
+    obj->makeTrapLand(ch, doorTrapT(ch->task->status), ch->task->orig_arg);
     return FALSE;
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getMineTrapLearn((trap_t) ch->task->status);
+      learning = ch->getMineTrapLearn(doorTrapT(ch->task->status));
       ch->task->calcNextUpdate(pulse, 
                  PULSE_MOBACT * (5 + ((100 - learning)/3)));
 
@@ -383,15 +367,18 @@ int task_trap_mine(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       }
 
       // test for failure
-      if (!ch->doesKnowSkill(SKILL_SET_TRAP) ||
-          !bSuccess(ch, learning, SKILL_SET_TRAP)) {
-        // trigger trap
-        rc = ch->goofUpTrap((trap_t) ch->task->status, TRAP_TARG_MINE);
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
-
-        ch->stopTask();
-        return FALSE;
+      // let's not test multiple times, check at end
+      if (ch->task->timeLeft < 0 ||
+          !ch->doesKnowSkill(SKILL_SET_TRAP_MINE)) {
+        if (!bSuccess(ch, learning, SKILL_SET_TRAP_MINE)) {
+          // trigger trap
+          rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_MINE);
+          if (IS_SET_DELETE(rc, DELETE_THIS))
+            return DELETE_THIS;
+  
+          ch->stopTask();
+          return FALSE;
+        }
       }
       break;
     case CMD_ABORT:
@@ -412,7 +399,7 @@ int task_trap_mine(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   return TRUE;
 }
 
-void TTrap::makeTrapGrenade(TBeing *ch, trap_t status, const char *args)
+void TTrap::makeTrapGrenade(TBeing *ch, doorTrapT status, const char *args)
 {
   // this should be a number between 1-50
   int trapdamage = ch->getGrenadeTrapDam(status);
@@ -425,7 +412,12 @@ void TTrap::makeTrapGrenade(TBeing *ch, trap_t status, const char *args)
   setTrapEffectType(TRAP_EFF_THROW);
 
   ch->sendTo("You have successfully constructed a grenade!\n\r");
-  ch->hasTrapComps(args, TRAP_TARG_GRENADE, -1);
+  int price;
+  ch->hasTrapComps(args, TRAP_TARG_GRENADE, -1, &price);
+
+  // set price on the trap to that of the components
+  obj_flags.cost = price;
+
   ch->stopTask();
 
   *ch += *this;
@@ -435,8 +427,6 @@ int task_trap_grenade(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *
 {
   int learning;
   int rc; 
-  TThing *t, *t2;
-  TMonster *guard;
   TObj *obj;
 
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
@@ -458,41 +448,28 @@ int task_trap_grenade(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *
     return FALSE;
 
   // check for guards that prevent
-  for (t = ch->roomp->stuff; t; t = t2) {
-    t2 = t->nextThing;
-    guard = dynamic_cast<TMonster *>(t);
-    if (!guard)
-      continue;
-    if (!guard->isPolice() || !guard->canSee(ch) ||
-         !guard->awake())
-      continue;
-    guard->doSay("Hey!  We don't allow any of that nonsense here!");
-
-    if ((rc = guard->takeFirstHit(ch)) == DELETE_VICT)
-      return DELETE_THIS;
-    else if (rc == DELETE_THIS) {
-      delete guard;
-      guard = NULL;
-    }
+  rc = trapGuardCheck(ch);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+  else if (rc)
     return FALSE;
-  }
 
   if (ch->task->timeLeft < 0)  {
     // Made it to end, set trap 
     if (!(obj = read_object(ST_GRENADE, VIRTUAL))) {
-      vlogf(9, "Unable to load grenade for grenade creation");
+      vlogf(LOG_BUG, "Unable to load grenade for grenade creation");
       ch->sendTo("Serious problem, contact a god.\n\r");
       ch->stopTask();
       return FALSE;
     }
 
-    obj->makeTrapGrenade(ch, (trap_t) ch->task->status, ch->task->orig_arg);
+    obj->makeTrapGrenade(ch, doorTrapT(ch->task->status), ch->task->orig_arg);
 
     return FALSE;
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getGrenadeTrapLearn((trap_t) ch->task->status);
+      learning = ch->getGrenadeTrapLearn(doorTrapT(ch->task->status));
       ch->task->calcNextUpdate(pulse, 
                  PULSE_MOBACT * (5 + ((100 - learning)/3)));
 
@@ -516,15 +493,18 @@ int task_trap_grenade(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *
       }
 
       // test for failure
-      if (!ch->doesKnowSkill(SKILL_SET_TRAP) ||
-          !bSuccess(ch, learning, SKILL_SET_TRAP)) {
-        // trigger trap
-        rc = ch->goofUpTrap((trap_t) ch->task->status, TRAP_TARG_GRENADE);
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
-
-        ch->stopTask();
-        return FALSE;
+      // let's not test multiple times, check at end
+      if (ch->task->timeLeft < 0 ||
+          !ch->doesKnowSkill(SKILL_SET_TRAP_GREN)) {
+        if (!bSuccess(ch, learning, SKILL_SET_TRAP_GREN)) {
+          // trigger trap
+          rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_GRENADE);
+          if (IS_SET_DELETE(rc, DELETE_THIS))
+            return DELETE_THIS;
+  
+          ch->stopTask();
+          return FALSE;
+        }
       }
       break;
     case CMD_ABORT:

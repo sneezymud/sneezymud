@@ -1,21 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: riding.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/09/18 06:10:42  brutius
-// Fixed typo in mount 
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "combat.h"
 
@@ -37,6 +19,7 @@ spellNumT TBeing::mountSkillType() const
     case RACE_FELINE: case RACE_BASILISK: case RACE_CENTAUR: case RACE_CHIMERA:
     case RACE_FROG:   case RACE_LAMIA:    case RACE_MANTICORE: 
     case RACE_TURTLE: case RACE_LION: case RACE_LEOPARD: case RACE_COUGAR:
+    case RACE_WYVELIN:
       return SKILL_RIDE_EXOTIC;
     default:
       return SKILL_RIDE_EXOTIC;
@@ -105,10 +88,12 @@ bool TBeing::hasSaddle() const
   if (!(obj = equipment[WEAR_BACK]))
     return FALSE;
   TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
-  if (!tbc || !tbc->isSaddle())
-    return FALSE;
-
-  return TRUE;
+  TBaseContainer *tbc2 = dynamic_cast<TBaseContainer *>(obj);
+  if (tbc && tbc->isSaddle())
+    return 1;
+  if (tbc2 && tbc2->isSaddle())
+    return (tbc2->isSaddle());
+  return FALSE;
 }
 
 // returns DELETE_THIS
@@ -178,7 +163,7 @@ int TMonster::lookForHorse()
   if (getPosition() < POSITION_STANDING)
     return FALSE;
 
-  for (t = roomp->stuff; t; t = t->nextThing) {
+  for (t = roomp->getStuff(); t; t = t->nextThing) {
     horse = dynamic_cast<TBeing *>(t);
     if (!horse)
       continue;
@@ -186,11 +171,20 @@ int TMonster::lookForHorse()
       continue;
     if (!canSee(horse) || horse->fight())
       continue;
-    if (horse->isPet() || horse->isCharm() || horse->isZombie())
+
+    if (horse->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL))
       continue;
+
+    // only choose healthy horses
     if (horse->getHit() < horse->hitLimit())
       continue;
+
+    // let's not suicide ourselves on powerful mounts
     if ((horse->GetMaxLevel() + 4) > GetMaxLevel())
+      continue;
+
+    // don't be a horse thief
+    if (horse->affectedBySpell(AFFECT_HORSEOWNED))
       continue;
 
     // technically, should do an addCommandToQue here
@@ -220,7 +214,7 @@ TThing * TThing::dismount(positionTypeT pos)
     // find previous
     for (t = riding->rider; t && t->nextRider != this; t = t->nextRider);
     if (!t) {
-      vlogf(9, "Illegal rider structure!");
+      vlogf(LOG_BUG, "Illegal rider structure!");
       return NULL;
     }
     t->nextRider = nextRider;
@@ -228,9 +222,20 @@ TThing * TThing::dismount(positionTypeT pos)
   TBeing *tbt = dynamic_cast<TBeing *>(riding);
   TMonster *tmons = dynamic_cast<TMonster *>(riding);
   TBeing *ch = dynamic_cast<TBeing *>(this);
+
+  // If a PC hops off a mount, "save" the mount momentarily to avoid
+  // complaints about mobs grabbing the mount
+  if (isPc() && tmons) {
+    affectedData aff;
+    aff.type = AFFECT_HORSEOWNED;
+    aff.duration = 1 * UPDATES_PER_MUDHOUR;
+
+    tmons->affectTo(&aff);
+  }
+
   if (tbt && tbt->master == this) {
     // stop follower unless they are following for other reasons
-    if (!tbt->isPet() && !tbt->isZombie() && !tbt->isCharm()) {
+    if (!tbt->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
 
       // skill based check to let mount continue to follow, even when dismounted
       if (!ch->doesKnowSkill(SKILL_TRAIN_MOUNT) || 
@@ -243,7 +248,7 @@ TThing * TThing::dismount(positionTypeT pos)
         TBeing *tb3 = dynamic_cast<TBeing *>(t);
         if (tb3) {
           tb3->addFollower(tbt);
-          if (tbt->hasSaddle()) {
+          if (tbt->hasSaddle() == 1) {
             act("You hop up into the now vacant saddle.", TRUE, tb3, 0, 0, TO_CHAR);
             act("$n hops up into the now vacant saddle.", TRUE, tb3, 0, 0, TO_ROOM);
           }
@@ -282,7 +287,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
   if (cmd == CMD_RIDE || cmd == CMD_MOUNT) {
     if (!(horse = h)) {
       only_argument(arg, caName);
-      if (!(horse = get_char_room_vis(this, caName))) {
+      if (!(horse = get_char_room_vis(this, caName, NULL, EXACT_NO, INFRA_YES))) {
         sendTo("Mount what?\n\r");
         return FALSE;
       }
@@ -302,11 +307,18 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
       sendTo("Your berserker rage scares the mount.\n\r");
       return FALSE;
     }
+    if (horse->hasSaddle()){
+      TBaseContainer *tbc3 = dynamic_cast<TBaseContainer *>(horse->equipment[WEAR_BACK]);
+      if (tbc3 && tbc3->isSaddle() == 2) {
+      	act("You cannot ride $N when it is saddled with a pack.", FALSE,this, 0,horse, TO_CHAR);
+      	return FALSE;     
+      }
+    }
     if (!isImmortal() && (horse->isTanking() || (horse->fight() && !hasClass(CLASS_DEIKHAN)))) {
       sendTo("You do not have the skill to mount something that is fighting!\n\r");
       return FALSE;
     }
-    if (horse->isPet() && horse->master != this) {
+    if (horse->isPet(PETTYPE_PET) && horse->master != this) {
       act("You can't ride someone else's pet.", FALSE, this, 0, 0, TO_CHAR);
       return FALSE;
     }
@@ -332,12 +344,17 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
            TRUE, this, 0, horse, TO_NOTVICT);
       return FALSE;
     }
-    if (isPlayerAction(PLR_SOLOQUEST) && 
-	!(hasQuestBit(TOG_MONK_GREEN_STARTED) && 
-	  horse->mobVnum()==MOB_ELEPHANT)){
-      sendTo("You are on a solo-quest!  No use of mounts allowed!\n\r");
-      return FALSE;
-    }
+
+    //    if (isPlayerAction(PLR_SOLOQUEST) && 
+    // !(hasQuestBit(TOG_MONK_GREEN_STARTED) && 
+    //  horse->mobVnum()==MOB_ELEPHANT)){
+    //  sendTo("You are on a solo-quest!  No use of mounts allowed!\n\r");
+    //  return FALSE;
+    // }
+
+    // I commented out the above to allow use of mounts on solo quests.
+    // Deikhan skills depend on mounts and whats fair is fair for all classes --jh
+
     // keep these two checks identical to whats in canRide
     if(!(horse->mobVnum()==MOB_ELEPHANT &&
 	 hasQuestBit(TOG_MONK_GREEN_STARTED))){
@@ -349,9 +366,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
 	act("$N is too large for you to ride.", FALSE, this, 0, horse, TO_CHAR);
 	return FALSE;
       }
-    }
-
-    
+    }    
     if (!isImmortal() && (fight() || horse->fight())) {
       learn = getSkillValue(SKILL_RIDE) + 
 	advancedRidingBonus(dynamic_cast<TMonster *>(horse));
@@ -509,7 +524,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
     }
 #endif
     if (rideCheck(-check)) {
-      if (horse->hasSaddle() && !horse->rider) {
+      if (horse->hasSaddle()==1 && !horse->rider) {
         act("You hop into the saddle and start riding $N.",
                  FALSE, this, 0, horse, TO_CHAR);
         act("$n hops into the saddle and starts riding $N.", 
@@ -574,7 +589,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
       return FALSE;
     }
     if (roomp->getMoblim() && !isImmortal() &&
-        (MobCountInRoom(roomp->stuff) >= roomp->getMoblim())) {
+        (MobCountInRoom(roomp->getStuff()) >= roomp->getMoblim())) {
       // movement treats horse + all riders as 1 "thing" in room
       sendTo("There isn't enough room in here to dismount.\n\r");
       return FALSE;
@@ -616,7 +631,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
     }
     return TRUE;
   }
-  vlogf(3, "Undefined call to doMount.  cmd = %d", cmd);
+  vlogf(LOG_BUG, "Undefined call to doMount.  cmd = %d", cmd);
   return TRUE;
 }
 

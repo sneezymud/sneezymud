@@ -2,21 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: damage.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
-//
 //      "damage.cc" - functions for doing damage
 //
 //////////////////////////////////////////////////////////////////////////
@@ -107,14 +92,68 @@ int TBeing::reconcileDamage(TBeing *v, int dam, spellNumT how)
   if (how2 >= MIN_SPELL && how2 < MAX_SKILL && this != v) 
     LogDam(this, how2, dam2);
 
+  if (!v->isPc()) {
+    TMonster *tmons = dynamic_cast<TMonster *>(v);
+    if (!tmons->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
+      tmons->developHatred(this);
+
+      // if we are fighting an NPC pet, develop hatred toward the master
+      // however, only do this is the pet was the aggressor (PC ordere pet
+      // to attack), to avoid guards "get thee back to.." from hating
+      // elemental's owner.  Only hate if the pet was the aggressor, or
+      // if the pet's owner is also fighting
+      if (!isPc() && isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
+        if (master && (master->isPc() || master->desc)) {
+          if (isAffected(AFF_AGGRESSOR) ||
+              master->fight() == tmons) {
+            tmons->developHatred(master);
+          }
+        }
+      }
+    }
+  }
+
+
   rc = applyDamage(v, dam, how);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    if (desc);
+//    if (desc);
+//    this doesnt look right 10/99 cos
+    if (v->desc)
       v->reformGroup();
+// TESTing getting rid of pc lag after person dies.
+    if (desc && getWait()) {
+      setWait(combatRound(1));
+    }
     return -1;
   }
   return rc;
 }
+
+
+void update_trophy(const char *name, int vnum, double add){
+  int rc;
+  char buf[256];
+  MYSQL_RES *res;
+
+  if(vnum==-1 || vnum==0 || !name){ return; }
+  
+  if((rc=dbquery(&res, "sneezy", "update_trophy(1)", "insert ignore into trophy values ('%s', %i, 0)", name, vnum))){
+    if(rc==-1){
+      vlogf(LOG_BUG, "Database error in update_trophy");
+    }
+  }
+  mysql_free_result(res);
+
+  sprintf(buf, "update trophy set count=count+%f where name='%s' and mobvnum=%i", add, name, vnum);
+  if((rc=dbquery(&res, "sneezy", "update_trophy(2)", buf))){
+    if(rc==-1)
+      vlogf(LOG_BUG, "Database error in update_trophy");
+  }
+
+  mysql_free_result(res);
+}
+
+
 
 // returns DELETE_VICT if v died
 int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
@@ -127,7 +166,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 
   // ranged damage comes through here via reconcileDamage
   // lets not set them fighting unless we need to
-  if (sameRoom(v)) {
+  if (sameRoom(*v)) {
     if (setCharFighting(v, 0) == -1)    // immortal being attacked
       return 0;
 
@@ -141,7 +180,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 
   if (this != v) {
     if (v->getHit() <= -11) {
-      vlogf(10,"Uh Oh, %s had %d hp and wasn't dead.  Was fighting %s",v->getName(),v->getHit(),getName());
+      vlogf(LOG_BUG, "Uh Oh, %s had %d hp and wasn't dead.  Was fighting %s",v->getName(),v->getHit(),getName());
       stopFighting();
       act("Something bogus about this fight.  Tell a god!", TRUE, this, 0, v, TO_CHAR);
       return 0;
@@ -157,6 +196,8 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
       case MOB_TREE_SPIRIT:
       case MOB_JOHN_RUSTLER:
       case MOB_ORC_MAGI:
+      case MOB_CLERIC_VOLCANO:
+      case MOB_CLERIC_ARDEN:
         found = TRUE;
         break;
       default:
@@ -172,7 +213,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
           TBeing *tbt = dynamic_cast<TBeing *>(af->be);
           if (tbt && tbt != this) {
             // Receiving help
-//            vlogf(3, "%s received help from %s killing %s", tbt->getName(), getName(), v->getName());
+//            vlogf(LOG_BUG, "%s received help from %s killing %s", tbt->getName(), getName(), v->getName());
             switch (questmob) {
               case MOB_TROLL_GIANT:
                 tbt->setQuestBit(TOG_AVENGER_CHEAT);
@@ -193,10 +234,18 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 		sendTo("<c>You realize you did not follow the guidelines of your quest, so this fight will be for naught.<1>\n\r");
 		tbt->setQuestBit(TOG_FAILED_TO_KILL_MAGI);
 		break;
+       	      case MOB_CLERIC_VOLCANO:
+	        sendTo("<c>You realize you did not follow the guidelines of your quest, so this fight will be for naught.<1>\n\r");
+	        tbt->setQuestBit(TOG_FAILED_CLERIC_V);
+	        break;
+	      case MOB_CLERIC_ARDEN:
+	        sendTo("<c>You realize you did not follow the guidelines of your quest, so this fight will be for naught.<1>\n\r");
+	        tbt->setQuestBit(TOG_FAILED_CLERIC_A);
+	        break;
               default:
                 break;
             }
-//            vlogf(3, "Removing combat bit (%d) from: %s", af->level, v->getName());
+//            vlogf(LOG_BUG, "Removing combat bit (%d) from: %s", af->level, v->getName());
             v->affectRemove(af);
           }
         }
@@ -211,12 +260,37 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
     if (!v->isPc() && (v->getHit() <= -2))
       dam = 11 + v->getHit();
 
+    if(this->isPc() && !v->isPc()){
+      followData *f;
+      int groupcount=1;
+      double trophyperc;
+
+      for (f = followers; f; f = f->next) {
+	if (inGroup(*f->follower) && sameRoom(*f->follower)) {
+	  groupcount++;
+	}
+      }
+
+      trophyperc=(double)(((double)dam/(double)(v->hitLimit()+11))/groupcount);
+
+      update_trophy(getName(), v->mobVnum(), trophyperc);
+
+      for (f = followers; f; f = f->next) {
+	if (f->follower->isPc() && inGroup(*f->follower) && 
+	    sameRoom(*f->follower)) {
+	  update_trophy(f->follower->getName(), v->mobVnum(), trophyperc);
+	}
+      }      
+
+    }
+
+
     percent = ((double) dam / (double) (v->getHit() + 11));
 
     if (percent < 0)
-      vlogf(9, "Error: %% < 0 in applyDamage() : %s fighting %s.", getName(),v->getName());
+      vlogf(LOG_BUG, "Error: %% < 0 in applyDamage() : %s fighting %s.", getName(),v->getName());
     else 
-      gainExpPerHit(v, percent);
+      gainExpPerHit(v, percent, dam);
   } else {
     // this == v
 
@@ -245,14 +319,14 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
       desc->session.skill_dam_done[getCombatMode()] += dam;
   }
 #if DAMAGE_DEBUG
-  vlogf(5,"DAMAGE APPLIED (%d) %s (victim = %s) Damage Type = %d .", dam, getName(), v->getName(), dmg_type);
+  vlogf(LOG_BUG, "DAMAGE APPLIED (%d) %s (victim = %s) Damage Type = %d .", dam, getName(), v->getName(), dmg_type);
 #endif
 
   v->doDamage(dam, dmg_type);
 
   // award leftover xp from any roundoff problems
   if ((v->getPosition() == POSITION_DEAD) && !v->isPc())
-    gain_exp(this, v->getExp());
+    gain_exp(this, v->getExp(), dam*10000/v->hitLimit());
 
   if (v->getPosition() == POSITION_DEAD && isPc() && (v->GetMaxLevel() >= GetMaxLevel())) {
     if (v->isAnimal() && doesKnowSkill(SKILL_CONS_ANIMAL)) {
@@ -320,11 +394,11 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 }
 
 // DELETE_VICT or FALSE
-int TBeing::damageEpilog(TBeing *v, int dmg_type)
+int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 {
   char buf[256], buf2[256];
   int rc, questmob;
-  TBeing *k, *ThTank=v->fight();
+  TBeing *k=NULL;
   followData *f;
   TThing *t, *t2;
   affectedData *af, *af2;
@@ -399,8 +473,8 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
     if (af->type == AFFECT_COMBAT && af->modifier == COMBAT_SOLO_KILL) {
       if (af->be == this && v->getPosition() == POSITION_DEAD) {
         // successfully solo killed
-        vlogf(3, "%s successfully killed %s", getName(), v->getName());
-        vlogf(3, "Removing combat bit (%d) from: %s", af->level, v->getName());
+        vlogf(LOG_MISC, "%s successfully killed %s", getName(), v->getName());
+        vlogf(LOG_MISC, "Removing combat bit (%d) from: %s", af->level, v->getName());
         v->affectRemove(af);
         switch (questmob) {
           case MOB_TROLL_GIANT:
@@ -424,6 +498,14 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
 	    setQuestBit(TOG_KILLED_ORC_MAGI);
 	    remQuestBit(TOG_SEEKING_ORC_MAGI);
 	    break;
+	  case MOB_CLERIC_VOLCANO:
+	    setQuestBit(TOG_KILLED_CLERIC_V);
+	    remQuestBit(TOG_STARTED_RANGER_L21);
+	    break;
+	  case MOB_CLERIC_ARDEN:
+	    setQuestBit(TOG_KILLED_CLERIC_A);
+	    remQuestBit(TOG_SEEKING_CLERIC_A);
+  	    break;
           default:
             break;
         }
@@ -437,7 +519,7 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
     switch (questmob) {
       case MOB_TROLL_GIANT:
         if (v->hasQuestBit(TOG_AVENGER_HUNTING)) {
-          vlogf(4, "%s died in quest and flags being reset/removed", v->getName());
+          vlogf(LOG_MISC, "%s died in quest and flags being reset/removed", v->getName());
           v->remQuestBit(TOG_AVENGER_HUNTING);
           v->setQuestBit(TOG_AVENGER_RULES);
           v->sendTo("You have failed in your quest.\n\r");
@@ -447,7 +529,7 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
         break;
       case MOB_CAPTAIN_RYOKEN:
         if (v->hasQuestBit(TOG_VINDICATOR_HUNTING_1)) {
-          vlogf(4, "%s died in quest and flags being reset/removed", v->getName());
+          vlogf(LOG_MISC, "%s died in quest and flags being reset/removed", v->getName());
           v->remQuestBit(TOG_VINDICATOR_HUNTING_1);
           v->setQuestBit(TOG_VINDICATOR_FOUND_BLACKSMITH);
           v->sendTo("You have failed in your quest.\n\r");
@@ -457,7 +539,7 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
         break;
       case MOB_TREE_SPIRIT:
         if (v->hasQuestBit(TOG_VINDICATOR_HUNTING_2)) {
-          vlogf(4, "%s died in quest and flags being reset/removed", v->getName());
+          vlogf(LOG_MISC, "%s died in quest and flags being reset/removed", v->getName());
           v->remQuestBit(TOG_VINDICATOR_HUNTING_2);
           v->setQuestBit(TOG_VINDICATOR_RULES_2);
           v->sendTo("You have failed in your quest.\n\r");
@@ -473,6 +555,22 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
 	  setQuestBit(TOG_FAILED_TO_KILL_MAGI);
 	}
 	break;
+      case MOB_CLERIC_VOLCANO:
+        if (hasQuestBit(TOG_STARTED_RANGER_L21) &&
+	    !hasQuestBit(TOG_FAILED_CLERIC_V) &&
+	    !hasQuestBit(TOG_PENANCE_R21_1)){
+	  sendTo("<c>You realize you did not follow the guidelines of your quest, so this fight will be for naught.<1>\n\r");
+  	  setQuestBit(TOG_FAILED_CLERIC_V);
+        }
+        break;
+      case MOB_CLERIC_ARDEN:
+        if (hasQuestBit(TOG_SEEKING_CLERIC_A) &&
+	    !hasQuestBit(TOG_FAILED_CLERIC_A) &&
+	    !hasQuestBit(TOG_PENANCE_R21_2)){
+	  sendTo("<c>You realize you did not follow the guidelines of your quest, so this fight will be for naught.<1>\n\r");
+ 	  setQuestBit(TOG_FAILED_CLERIC_A);
+        }
+        break;
       default:
         break;
     }
@@ -490,7 +588,8 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
 
     reconcileHurt(v, 0.03);
 
-    if (dmg_type >= 0 && (dmg_type < MAX_SKILL) && discArray[dmg_type]) {
+    if (dmg_type >= MIN_SPELL && (dmg_type < MAX_SKILL) && 
+        discArray[dmg_type]) {
       strcpy(buf2, discArray[dmg_type]->name);
     } else if (dmg_type >= TYPE_MIN_HIT && dmg_type <= TYPE_MAX_HIT) {
       strcpy(buf2, attack_hit_text[(dmg_type - TYPE_MIN_HIT)].singular);
@@ -554,6 +653,9 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
         case SPELL_LIGHTNING_BREATH:
           strcpy(buf2, "lightning breath");
           break;
+        case SPELL_DUST_BREATH:
+          strcpy(buf2, "dust breath");
+          break;
         default:
           sprintf(buf2, "damage type: %d", dmg_type);
           break;
@@ -565,30 +667,65 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
           // killed by a mob
           // for sanity, check if the killer mob was a pet, etc
           if (master)
-            vlogf(5, "%s killed by %s at %s (%d).  Method: %s -- master was %s", 
-                 v->getName(), getName(), v->roomp->name, v->in_room, buf2, master->getName());
+            vlogf(LOG_MISC, "%s killed by %s at %s (%d).  Method: %s -- master was %s", 
+                 v->getName(), getName(), v->roomp->name, v->inRoom(), buf2, master->getName());
           else if (rider)
-            vlogf(5, "%s killed by %s at %s (%d).  Method: %s -- rider was %s", 
-                 v->getName(), getName(), v->roomp->name, v->in_room, buf2, rider->getName());
+            vlogf(LOG_MISC, "%s killed by %s at %s (%d).  Method: %s -- rider was %s", 
+                 v->getName(), getName(), v->roomp->name, v->inRoom(), buf2, rider->getName());
           else
-            vlogf(5, "%s killed by %s at %s (%d).  Method: %s", 
-                 v->getName(), getName(), v->roomp->name, v->in_room, buf2);
+            vlogf(LOG_MISC, "%s killed by %s at %s (%d).  Method: %s", 
+                 v->getName(), getName(), v->roomp->name, v->inRoom(), buf2);
           
         } else {
-          vlogf(5, "%s killed by %s at %s (%d) Method: %s -- <%sPlayer kill>",
-                v->getName(), getName(), v->roomp->name, v->in_room,
+#if 1
+          if (v == this && isPc())
+            vlogf(LOG_COMBAT, "%s killed %sself at %s (%d) Method: %s -- <%sSuicide>",
+                  getName(), hmhr(), roomp->name, inRoom(), buf2,
+                  ((GetMaxLevel() <= 5) ? "NEWBIE " : ""));
+          else if (GetMaxLevel() > MAX_MORT && isPc() && v->isPc()) {
+            if (v->GetMaxLevel() > MAX_MORT)
+              vlogf(LOG_COMBAT, "%s killed by %s at %s (%d) Method: %s -- <God VS God>",
+                    v->getName(), getName(), v->roomp->name, v->inRoom(), buf2);
+            else
+              vlogf(LOG_COMBAT, "%s killed by %s at %s (%d) Method: %s -- <Immortal Kill>",
+                    v->getName(), getName(), v->roomp->name, v->inRoom(), buf2);
+          } else
+            vlogf(LOG_COMBAT, "%s killed by %s at %s (%d) Method: %s -- <%sPlayer kill>",
+                  v->getName(), getName(), v->roomp->name, v->inRoom(), buf2,
+                  ((v->GetMaxLevel() <= 5) ? "NEWBIE " : ""));
+
+#else
+          vlogf(LOG_MISC, "%s killed by %s at %s (%d) Method: %s -- <%sPlayer kill>",
+                v->getName(), getName(), v->roomp->name, v->inRoom(),
                 buf2,
                 ((v->GetMaxLevel() <= 5 && v != this) ? "NEWBIE " : ""));
+#endif
           total_player_kills++;
 
-          affectedData aff;
-          aff.type = AFFECT_PLAYERKILL;
-          aff.duration = 10 * ONE_SECOND * SECS_PER_REAL_MIN;
+	  if(this!=v && this->roomp && !this->roomp->isRoomFlag(ROOM_ARENA) &&
+	     !this->inPkZone()){
+	    affectedData aff;
+	    aff.type = AFFECT_PLAYERKILL;
+	    aff.duration = 24 * UPDATES_PER_MUDHOUR;
+	    affectTo(&aff);
+	  }
         }
 
         // create grave marker
-        if (!v->inGrimhaven()) {
+        if (!v->inGrimhaven() && !inPkZone()) {
+#if 1
+// builder port uses stripped down database which was causing problems
+// hence this setup instead.
+          int robj = real_object(OBJ_GENERIC_GRAVE);
+          if (robj < 0 || robj >= (signed int) obj_index.size()) {
+            vlogf(LOG_BUG, "damageEpilog(): No object (%d) in database!", OBJ_GENERIC_GRAVE);
+            return false;
+          }
+
+          TObj * grave = read_object(robj, REAL);
+#else
           TObj * grave = read_object(OBJ_GENERIC_GRAVE, VIRTUAL);
+#endif
           if (grave) {
             string graveDesc = "Here lies ";
             graveDesc += v->getName();
@@ -615,11 +752,11 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
           }
         }
       } else 
-        vlogf(5, "%s killed by %s at Nowhere  Method: %s.", v->getName(), getName(), buf2);
+        vlogf(LOG_MISC, "%s killed by %s at Nowhere  Method: %s.", v->getName(), getName(), buf2);
     }
     // Mark an actual kill for the person giving the final blow
     if (desc) {
-      if (roomp->isRoomFlag(ROOM_ARENA)) 
+      if (roomp->isRoomFlag(ROOM_ARENA) || inPkZone()) 
         desc->career.arena_victs++;
       else {
         desc->session.kills++;
@@ -628,7 +765,7 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
     }
     // track the death for the victim
     if (v->desc) {
-      if (roomp->isRoomFlag(ROOM_ARENA)) {
+      if (roomp->isRoomFlag(ROOM_ARENA) || inPkZone()) {
         v->desc->career.arena_loss++;
       } else {
         v->desc->career.deaths++;
@@ -637,6 +774,7 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
 
     // Mark a groupKill for all in the group
 
+    int ngroup=1;
     if (isAffected(AFF_GROUP) && (master || followers)) {
       if (master)
         k = master;
@@ -644,7 +782,7 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
         k = this;
 
       if (k->isAffected(AFF_GROUP)) {
-        if (sameRoom(k)) {
+        if (sameRoom(*k)) {
           if (k->desc) {
             k->desc->session.groupKills++;
             k->desc->career.group_kills++;
@@ -653,8 +791,9 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
       }
       for (f = k->followers; f; f = f->next) {
         if (f->follower->isAffected(AFF_GROUP) && canSee(f->follower)) {
-          if (sameRoom(f->follower)) { 
+          if (sameRoom(*f->follower)) { 
             if (f->follower->desc) {
+	      ngroup++;
               f->follower->desc->session.groupKills++;
               f->follower->desc->career.group_kills++;
             }
@@ -662,6 +801,8 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
         }
       }
     }
+
+
     strcpy(buf2, v->name);
     add_bars(buf2);
 
@@ -676,11 +817,11 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
     if (rc)
       return FALSE;
 
-    rc = v->die(dmg_type);
+    rc = v->die(dmg_type, this);
     if (!IS_SET_DELETE(rc, DELETE_THIS))
       return FALSE;
 
-    for (t = roomp->stuff; t; t = t2) {
+    for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (!tbt || tbt == this || tbt == v)
@@ -693,24 +834,24 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
         }
         if (IS_SET_DELETE(rc, DELETE_ITEM)) {
           // of course v is dead, duh!
-          vlogf(10, "this return should probably not be invoked (1)");
+          vlogf(LOG_BUG, "this return should probably not be invoked (1)");
           return DELETE_VICT;
         }
         if (IS_SET_DELETE(rc, DELETE_VICT)) {
           // we're not set up to handle this return from damageEpilog
-          vlogf(10, "this return should probably not be invoked (2)");
+          vlogf(LOG_BUG, "this return should probably not be invoked (2)");
           return DELETE_THIS;
         }
       }
     }
-    if (sameRoom(v)) {
+    if (sameRoom(*v)) {
       // use auto-bit settings to do appropriate looting
       // let masters loot the kills of a follower
       if (desc && (desc->autobits & AUTO_LOOT_MONEY) && 
           !(desc->autobits & AUTO_LOOT_NOTMONEY)) {
         sprintf(buf, "get all.talen %s-autoloot", buf2);
         addCommandToQue(buf);
-      } else if ((dynamic_cast<TMonster *>(this) && !v->isPc() && this==ThTank)|| 
+      } else if ((dynamic_cast<TMonster *>(this) && !v->isPc())|| 
 		 (desc && (desc->autobits & AUTO_LOOT_NOTMONEY))) {
         sprintf(buf, "get all %s-autoloot", buf2);
         addCommandToQue(buf);
@@ -743,7 +884,7 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
         int comp, amt;
         TBaseCorpse *corpse = NULL;
 
-        if ((t2 = searchLinkedListVis(this, buf2, roomp->stuff)) &&
+        if ((t2 = searchLinkedListVis(this, buf2, roomp->getStuff())) &&
             (corpse = dynamic_cast<TBaseCorpse *>(t2))) {
           if (doesKnowSkill(SKILL_DISSECT)) {
             comp = determineDissectionItem(corpse, &amt, msg, gl, this);
@@ -757,7 +898,19 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
             if (comp != -1) {
               // skin is tasked and requires tools, just inform, don't do
               TObj *obj;
+#if 1
+// builder port uses stripped down database which was causing problems
+// hence this setup instead.
+              int robj = real_object(comp);
+              if (robj < 0 || robj >= (signed int) obj_index.size()) {
+                vlogf(LOG_BUG, "damageEpilog(): No object (%d) in database!", comp);
+                return false;
+              }
+
+              obj = read_object(robj, REAL);
+#else
               obj = read_object(comp, VIRTUAL);
+#endif
               act("You should be able to skin $p from $N.", FALSE, this, obj, corpse, TO_CHAR);
               delete obj;
             }
@@ -770,7 +923,7 @@ int TBeing::damageEpilog(TBeing *v, int dmg_type)
     return FALSE;
 }
 
-void TBeing::doDamage(int dam, int dmg_type)
+void TBeing::doDamage(int dam, spellNumT dmg_type)
 {
 //  dam = modifyForProtections(dam);
   points.hit -= dam;
@@ -807,16 +960,15 @@ int TBeing::getActualDamage(TBeing *v, TThing *o, int dam, spellNumT attacktype)
   return dam;
 }
 
-int TBeing::damageEm(int dam, string log, int dmg_type)
+int TBeing::damageEm(int dam, string log, spellNumT dmg_type)
 {
   int rc;
-  int flying;
 
   if (isImmortal())
     return FALSE;
 
   // doDamage erases flight, needed later to do crash landings by tellStatus
-  flying = isFlying();
+  bool flying = isFlying();
   doDamage(dam, dmg_type);
 
   rc = tellStatus(dam, TRUE, flying);
@@ -825,7 +977,7 @@ int TBeing::damageEm(int dam, string log, int dmg_type)
 
   if (getPosition() == POSITION_DEAD) {
     if (!log.empty())
-      vlogf(5, "[%s] - %s", getName(), log.c_str());
+      vlogf(LOG_MISC, "[%s] - %s", getName(), log.c_str());
     if (specials.fighting)
       stopFighting();
 
@@ -833,3 +985,6 @@ int TBeing::damageEm(int dam, string log, int dmg_type)
   }
   return FALSE;
 }
+
+
+

@@ -268,7 +268,7 @@ void TBeing::makeBodyPart(wearSlotT pos)
 
   corpse = new TCorpse();
   sprintf(buf, "%s", describeBodySlot(pos).c_str());
-  corpse->setName(mud_str_dup(buf));
+  corpse->name = mud_str_dup(buf);
   
   if (getMaterial() > MAT_GEN_MINERAL) {
     // made of mineral or metal
@@ -290,7 +290,7 @@ void TBeing::makeBodyPart(wearSlotT pos)
   }
   corpse->setDescr(mud_str_dup(buf));
 
-  corpse->stuff = NULL;
+  corpse->setStuff(NULL);
   corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
   corpse->addCorpseFlag(CORPSE_NO_REGEN);
   corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
@@ -309,14 +309,14 @@ void TBeing::makeOtherPart(const char *single, const char *part)
   char buf[128];
 
   corpse = new TCorpse();
-  corpse->setName(mud_str_dup(single ? single : part));
+  corpse->name = mud_str_dup(single ? single : part);
   sprintf(buf, "%s's bloody %s", getName(),single ? single : part);
   corpse->shortDescr = mud_str_dup(buf);
 
   sprintf(buf, "%s's bloody and ichor coated %s %s here.",
           getName(), part ? part : single, part ? "lay" : "lies");
   corpse->setDescr(mud_str_dup(buf));
-  corpse->stuff = NULL;
+  corpse->setStuff(NULL);
   corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
   corpse->addCorpseFlag(CORPSE_NO_REGEN);
   corpse->setVolume(getHeight() * 122 / 100);
@@ -334,7 +334,7 @@ void TBeing::makeDiseasedPart(wearSlotT pos)
  
   corpse = new TCorpse();
   sprintf(buf, "%s", describeBodySlot(pos).c_str());
-  corpse->setName(mud_str_dup(buf));
+  corpse->name = mud_str_dup(buf);
   sprintf(buf, "the diseased %s of %s", describeBodySlot(pos).c_str(), getName())
 ;
   corpse->shortDescr = mud_str_dup(buf);

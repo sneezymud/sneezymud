@@ -208,7 +208,7 @@ void zoneData::nukeMobs()
         t_obj = NULL;
       }
     }
-    for (t = mob->stuff; t; t = t2) {
+    for (t = mob->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       delete t;
     }
@@ -245,7 +245,7 @@ void TRoom::sendTo(colorTypeT lev, const char *text, ...) const
   vsprintf(buf, text, ap);
   va_end(ap);
 
-  for (i = stuff; i; i = i->nextThing) {
+  for (i = getStuff(); i; i = i->nextThing) {
     TBeing *tbt = dynamic_cast<TBeing *>(i);
     if (tbt && tbt->desc && !tbt->desc->connected) {
       if ((lev == COLOR_NEVER) || (lev == COLOR_NONE)) {
@@ -334,7 +334,7 @@ void sendToRoom(colorTypeT color, const char *text, int room)
     return;
   }
   if (text) {
-    for (i = real_roomp(room)->stuff; i; i = i->nextThing) {
+    for (i = real_roomp(room)->getStuff(); i; i = i->nextThing) {
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake()) {
         string buf = colorString(tbt, tbt->desc, text, NULL, color, FALSE);
@@ -353,7 +353,7 @@ void sendToRoom(const char *text, int room)
     return;
   }
   if (text) {
-    for (i = real_roomp(room)->stuff; i; i = i->nextThing) {
+    for (i = real_roomp(room)->getStuff(); i; i = i->nextThing) {
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (!tbt)
         continue;
@@ -387,7 +387,7 @@ void sendrpf(int tslevel, colorTypeT color, TRoom *rp, const char *msg,...)
     va_start(ap, msg);
     vsprintf(messageBuffer, msg, ap);
     va_end(ap);
-    for (i = rp->stuff; i; i = i->nextThing) {
+    for (i = rp->getStuff(); i; i = i->nextThing) {
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake() &&
           tbt->GetMaxLevel() > tslevel)
@@ -420,7 +420,7 @@ void sendrpf(int tslevel, TRoom *rp, const char *msg,...)
     va_start(ap, msg);
     vsprintf(messageBuffer, msg, ap);
     va_end(ap);
-    for (i = rp->stuff; i; i = i->nextThing) {
+    for (i = rp->getStuff(); i; i = i->nextThing) {
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake() &&
           tbt->GetMaxLevel() > tslevel)
@@ -441,7 +441,7 @@ void sendrp_exceptf(TRoom *rp, TBeing *ch, const char *msg,...)
     va_start(ap, msg);
     vsprintf(messageBuffer, msg, ap);
     va_end(ap);
-    for (i = rp->stuff; i; i = i->nextThing) {
+    for (i = rp->getStuff(); i; i = i->nextThing) {
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && (tbt != ch) && tbt->awake())
         tbt->desc->output.putInQ(messageBuffer);
@@ -459,7 +459,7 @@ void TRoom::sendTo(const char *text, ...) const
   vsprintf(messageBuffer, text, ap);
   va_end(ap);
 
-  for (i = stuff; i; i = i->nextThing) {
+  for (i = getStuff(); i; i = i->nextThing) {
     if (i->desc && !i->desc->connected)
       i->desc->output.putInQ(messageBuffer);
   }
@@ -509,7 +509,7 @@ void colorAct(colorTypeT colorLevel, const char *str, bool hide, const TThing *t
     which = TRUE;
   } else {
     which = FALSE;
-    to = t1->roomp->stuff;
+    to = t1->roomp->getStuff();
   }
 
   if (!to->desc && ((type == TO_VICT) || (type == TO_CHAR))) 
@@ -659,7 +659,7 @@ void act(const char *str, bool hide, const TThing *t1, const TThing *obj, const 
     if (!t1->roomp)
       return;
 
-    ttto = t1->roomp->stuff;
+    ttto = t1->roomp->getStuff();
   }
   memset(&buf, '\0', sizeof(buf));
   memset(lastColor, '\0', sizeof(lastColor));

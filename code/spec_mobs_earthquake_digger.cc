@@ -43,7 +43,7 @@ int tunnelerEarthquake(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tM
     act("$n rises into the air then slams into the ground, vanishing.",
         FALSE, tMyself, NULL, NULL, TO_ROOM);
 
-    for (tThing = tMyself->roomp->stuff; tThing; tThing = tThingB) {
+    for (tThing = tMyself->roomp->getStuff(); tThing; tThing = tThingB) {
       tThingB = tThing->nextThing;
 
       if ((tBeing = dynamic_cast<TBeing *>(tThing)))
@@ -83,7 +83,7 @@ int tunnelerEarthquake(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tM
 
     tFighters = ::number(1, tFighters);
 
-    for (tThing = tMyself->roomp->stuff; tThing; tThing = tThing->nextThing)
+    for (tThing = tMyself->roomp->getStuff(); tThing; tThing = tThing->nextThing)
       if ((tBeing = dynamic_cast<TBeing *>(tThing)) &&
           tBeing->fight() == tMyself && !(--tFighters)) {
         tMyself->stopFighting();

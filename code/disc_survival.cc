@@ -2,16 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_survival.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/09/30 14:05:25  lapsos
-// Fixed a starting bug in seekwater(deduction of moves)
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+//  disc_survival.cc : The survival discipline
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -53,7 +44,7 @@ int forage(TBeing *caster, byte bKnown)
    }
 
   if (caster->affectedBySpell(SKILL_FORAGE)) {
-    act("You can only forage once per half-day.", FALSE, caster, NULL, NULL, TO_CHAR);
+    act("You must wait before foraging again.", FALSE, caster, NULL, NULL, TO_CHAR);
     return SPELL_FAIL;
   }
   int forage_move = ::number(5,15);
@@ -69,13 +60,13 @@ int forage(TBeing *caster, byte bKnown)
 
     if (!obj) {
       caster->sendTo("Something went wrong, bug Cosmo.\n\r");
-      vlogf(5,"Forage tried to load a NULL object");
+      vlogf(LOG_BUG,"Forage tried to load a NULL object");
       return SPELL_FAIL;
     }
 
     aff.type = SKILL_FORAGE;
     aff.location = APPLY_NONE;
-    aff.duration = 24 * UPDATES_PER_TICK;
+    aff.duration = 4 * UPDATES_PER_MUDHOUR;
     aff.bitvector = 0;
     aff.modifier = 0;
     caster->affectTo(&aff, -1);
@@ -86,7 +77,7 @@ int forage(TBeing *caster, byte bKnown)
   } else {
     aff.type = AFFECT_SKILL_ATTEMPT;
     aff.location = APPLY_NONE;
-    aff.duration = 4 * UPDATES_PER_TICK;
+    aff.duration = 2 * UPDATES_PER_MUDHOUR;
     aff.bitvector = 0;
     aff.modifier = SKILL_FORAGE;
 
@@ -125,6 +116,26 @@ int determineSkinningItem(TBaseCorpse * corpse, int * amount, char * msg, char *
   if (num == -1) {
     // base on specific vnum here if needed
     switch(corpse->getCorpseVnum()) {
+      case 7032:  // othora
+      case 20611:
+      case 20612:
+      case 20613:
+      case 20621:
+      case 20622:
+      case 20623:
+        num = 20643;
+        break;
+      case 20625:  // kelk
+      case 20626:
+      case 20627:
+        num = 20644;
+        break;
+      case 20628:  // ganthi
+        num = 20645;
+        break;
+      case 20629:  // prarie digger
+        num = 20646;
+        break;
       case 122:  // fuzzy mouse
         num = 2400;
         break;
@@ -327,6 +338,9 @@ int determineSkinningItem(TBaseCorpse * corpse, int * amount, char * msg, char *
   if (num == -1) {
     // generic switch based on race
     switch(corpse->getCorpseRace()) {
+      case RACE_SIMAL:
+        num = 20642;
+        break;
       case RACE_SQUIRREL:
         num = 2401;
         break;
@@ -562,7 +576,7 @@ void TBeing::doSkin(const char *arg)
 
   for (; isspace(*arg); arg++);
 
-  if (!hasClass(CLASS_RANGER)) {
+  if (!doesKnowSkill(SKILL_SKIN)) {
     sendTo("You are not wise in the ways of the woods.\n\r");
     return;
   }
@@ -668,7 +682,7 @@ void TBeing::doSeekwater()
                dirs_to_blank[code], norm());
       else {
         int count = code - 9, seen = 0;
-        for (t = roomp->stuff; t; t = t->nextThing) {
+        for (t = roomp->getStuff(); t; t = t->nextThing) {
           TPortal *tp = dynamic_cast<TPortal *>(t);
           if (tp) {
             seen++;
@@ -681,7 +695,7 @@ void TBeing::doSeekwater()
         }
         if (!t) {
           sendTo("Error finding path target!  Tell a god.\n\r");
-          vlogf(8, "Error finding path (doSeekwater)");
+          vlogf(LOG_BUG, "Error finding path (doSeekwater)");
           return;
         }
       }
@@ -696,7 +710,7 @@ void TBeing::doSeekwater()
   aff.duration = PERMANENT_DURATION;
   affectTo(&aff);
 
-  if (desc && desc->client)
+  if (desc && desc->m_bIsClient)
     desc->clientf("%d|%d", CLIENT_TRACKING, 1 << code);
 
   if (code <= 9) {
@@ -736,11 +750,11 @@ int TBeing::inCamp() const
   if (!isAffected(AFF_GROUP))
     return FALSE;
 
-  for (t = roomp->stuff; t; t = t->nextThing) {
+  for (t = roomp->getStuff(); t; t = t->nextThing) {
     ch = dynamic_cast<TBeing *>(t);
     if (!ch)
       continue;
-    if (inGroup(ch)) {
+    if (inGroup(*ch)) {
       for (aff = ch->affected; aff; aff = aff->next) {
         if (aff->type == SKILL_ENCAMP)
           // make sure to return no0n-zero here
@@ -762,12 +776,17 @@ int TBeing::doEncamp()
   
   rc = encamp(this);
   if (rc)
-    addSkillLag(SKILL_ENCAMP);
+    addSkillLag(SKILL_ENCAMP, rc);
   return rc;
 }
 
 int encamp(TBeing * caster)
 {
+  if (!caster || !caster->isPc()) {
+    vlogf(LOG_BUG, "Non-PC in encamp() call.  %s", caster->getName());
+    return FALSE;
+  }
+
   affectedData aff;
   int level = caster->getSkillLevel(SKILL_ENCAMP);
   int bKnown = caster->getSkillValue(SKILL_ENCAMP);
@@ -835,13 +854,13 @@ int TDrinkCon::divineMe(TBeing *caster, int, byte bKnown)
   }
 
   if (caster->affectedBySpell(SKILL_DIVINATION)) {
-    act("You can only divine once per half-day.", FALSE, caster, NULL, NULL, TO_CHAR);
+    act("You are not ready to divine again so soon.", FALSE, caster, NULL, NULL, TO_CHAR);
     return SPELL_FAIL;
   }
 
   aff.type = SKILL_DIVINATION;
   aff.location = APPLY_NONE;
-  aff.duration = 24 * UPDATES_PER_TICK;
+  aff.duration = 12 * UPDATES_PER_MUDHOUR;
   aff.bitvector = 0;
   aff.modifier = 0;
 

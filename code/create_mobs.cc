@@ -2298,7 +2298,7 @@ void TPerson::doMedit(const char *argument)
     case 30:
       if (!*string)
         sendTo("Syntax: med resave <mobile>\n\r");
-      else if (!(cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, string, roomp->stuff))))
+      else if (!(cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, string, roomp->getStuff()))))
         sendTo("Unable to find %s...Sorry...\n\r", string);
       else if (cMob->getSnum() == cMob->mobVnum() && !hasWizPower(POWER_MEDIT_IMP_POWER))
         sendTo("Unknown value on this mobile.  resave only usable on med loaded mobiles...\n\r");
@@ -2323,7 +2323,7 @@ void TPerson::doMedit(const char *argument)
         if (is_abbrev(tStBuffer, "resave")) {
           if (!hasWizPower(POWER_MEDIT_IMP_POWER))
             sendTo("Syntax: med save <mobile> <vnum>\n\r");
-          else if (!(cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, tStString.c_str(), roomp->stuff))))
+          else if (!(cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, tStString.c_str(), roomp->getStuff()))))
             sendTo("Unable to find %s...Sorry...\n\r", tStString.c_str());
           else if (cMob->getSnum() <= 0)
             sendTo("That mobile has a bad snum.  Sorry.  Can not resave.\n\r");
@@ -2350,7 +2350,7 @@ void TPerson::doMedit(const char *argument)
       // Basically for doing large db changes online.
       if ((zGot = sscanf(string, "%s %d", mobile, &vnum)) != 2) {
         if (zGot == 1) {
-          cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, mobile, roomp->stuff));
+          cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, mobile, roomp->getStuff()));
           tString = one_argument(string, mobile);
           if (*tString) tString++;
         }
@@ -2412,7 +2412,7 @@ void TPerson::doMedit(const char *argument)
   tString = string;
   half_chop(tString, mobile, string);
 
-  if (!(cMob = dynamic_cast<TMonster *>(searchLinkedList(mobile, roomp->stuff)))) {
+  if (!(cMob = dynamic_cast<TMonster *>(searchLinkedList(mobile, roomp->getStuff())))) {
     sendTo("Try a mobile next time, it works better.\n\r");
     return;
   }

@@ -575,9 +575,9 @@ Descriptor::~Descriptor()
       // the first save will recreate the followers...
       character->removeFollowers();
 
-      for (th = character->stuff; th; th = th->nextThing) {
+      for (th = character->getStuff(); th; th = th->nextThing) {
         if (th) {
-          for (th2 = th->stuff; th2; th2 = th2->nextThing)
+          for (th2 = th->getStuff(); th2; th2 = th2->nextThing)
             num++;
           num++;
         }        
@@ -585,7 +585,7 @@ Descriptor::~Descriptor()
 
       for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
         if ((th = character->equipment[i])) {
-          for (th2 = th->stuff; th2; th2 = th2->nextThing)
+          for (th2 = th->getStuff(); th2; th2 = th2->nextThing)
             num++;
 
           num++;

@@ -759,11 +759,11 @@ void do_components(int situ)
         // first, send message to all rooms
         if (*component_placement[i].glo_msg) {
           for (t_room = component_placement[i].room1; t_room <= component_placement[i].room2; t_room++) {
-            if ((rp = real_roomp(t_room)) && rp->stuff) {
+            if ((rp = real_roomp(t_room)) && rp->getStuff()) {
               act(component_placement[i].glo_msg,
-                    TRUE, rp->stuff, NULL, NULL, TO_CHAR);
+                    TRUE, rp->getStuff(), NULL, NULL, TO_CHAR);
               act(component_placement[i].glo_msg, 
-                    TRUE, rp->stuff, NULL, NULL, TO_ROOM);
+                    TRUE, rp->getStuff(), NULL, NULL, TO_ROOM);
             }
           }
           rp = real_roomp(l_room);  // reset rp pointer
@@ -780,13 +780,13 @@ void do_components(int situ)
             found = FALSE;
             if (component_placement[i].mob) {
               // limit to 1 on any 1 mob in room
-              for (m = rp->stuff; m && !found; m = m->nextThing) {
+              for (m = rp->getStuff(); m && !found; m = m->nextThing) {
                 TMonster *tmon = dynamic_cast<TMonster *>(m);
                 if (!tmon)
                   continue;
                 if (!tmon->isPc() && 
                     (tmon->mobVnum() == component_placement[i].mob)) {
-                  for (t = tmon->stuff; t; t = t->nextThing) {
+                  for (t = tmon->getStuff(); t; t = t->nextThing) {
                     TObj *tobj = dynamic_cast<TObj *>(t);
                     if (!tobj)
                       continue;
@@ -801,7 +801,7 @@ void do_components(int situ)
                 continue;
             } else {
               // limit to 1 in the room
-              for (t = rp->stuff; t; t = t->nextThing) {
+              for (t = rp->getStuff(); t; t = t->nextThing) {
                 TObj *tobj = dynamic_cast<TObj *>(t);
                 if (!tobj)
                   continue;
@@ -820,7 +820,7 @@ void do_components(int situ)
           placed = FALSE;
           // if mob ALSO specified, place it on mob in room
           if (component_placement[i].mob) {
-            for (m = rp->stuff; m; m = m->nextThing) {
+            for (m = rp->getStuff(); m; m = m->nextThing) {
               TMonster *tmon = dynamic_cast<TMonster *>(m);
               if (!tmon)
                 continue;
@@ -842,9 +842,9 @@ void do_components(int situ)
             placed = TRUE;
           }
         }
-        if (placed && *component_placement[i].message && rp->stuff) {
-          act(component_placement[i].message, TRUE, rp->stuff, obj, m, TO_CHAR);
-          act(component_placement[i].message, TRUE, rp->stuff, obj, m, TO_ROOM);
+        if (placed && *component_placement[i].message && rp->getStuff()) {
+          act(component_placement[i].message, TRUE, rp->getStuff(), obj, m, TO_CHAR);
+          act(component_placement[i].message, TRUE, rp->getStuff(), obj, m, TO_ROOM);
 
           if (component_placement[i].sound != SOUND_OFF)
             rp->playsound(component_placement[i].sound, SOUND_TYPE_NOISE, 100, 5, component_placement[i].sound_loop);
@@ -862,44 +862,44 @@ void do_components(int situ)
           placed = FALSE;
           if ((rp = real_roomp(t_room))) {
             if (component_placement[i].mob) {
-              for (m = rp->stuff; m; m = m->nextThing) {
+              for (m = rp->getStuff(); m; m = m->nextThing) {
                 TMonster *tmon = dynamic_cast<TMonster *>(m);
                 if (!tmon)
                   continue;
                 if (!tmon->isPc() &&
                      tmon->mobVnum() == component_placement[i].mob) {
-                  for (t = tmon->stuff; t; t = t2) {
+                  for (t = tmon->getStuff(); t; t = t2) {
                     t2 = t->nextThing;
                     TObj * tobj = dynamic_cast<TObj *>(t);
                     if (!tobj)
                       continue;
                     if (tobj->objVnum() == component_placement[i].number) {
-                      if (!placed && *component_placement[i].message && rp->stuff) {
+                      if (!placed && *component_placement[i].message && rp->getStuff()) {
                         act(component_placement[i].message,
-                                TRUE, rp->stuff, tobj, tmon, TO_CHAR);
+                                TRUE, rp->getStuff(), tobj, tmon, TO_CHAR);
                         act(component_placement[i].message,
-                                TRUE, rp->stuff, tobj, tmon, TO_ROOM);
+                                TRUE, rp->getStuff(), tobj, tmon, TO_ROOM);
                       }
                       placed = TRUE;
                       found++;
                       delete tobj;
-                      t2 = tmon->stuff;
+                      t2 = tmon->getStuff();
                       continue;
                     }
                   }
                 }
               }
             } else {
-              for (o = rp->stuff; o; o = temp) {
+              for (o = rp->getStuff(); o; o = temp) {
                 temp = o->nextThing;
                 TObj *to = dynamic_cast<TObj *>(o);
                 if (to) {
                   if (to->objVnum() == component_placement[i].number) {
-                    if (!placed && *component_placement[i].message && rp->stuff) {
+                    if (!placed && *component_placement[i].message && rp->getStuff()) {
                       act(component_placement[i].message,
-                             TRUE, rp->stuff, to, NULL, TO_CHAR);
+                             TRUE, rp->getStuff(), to, NULL, TO_CHAR);
                       act(component_placement[i].message,
-                             TRUE, rp->stuff, to, NULL, TO_ROOM);
+                             TRUE, rp->getStuff(), to, NULL, TO_ROOM);
                     }
                     delete to;
                     placed = TRUE;
@@ -2195,7 +2195,7 @@ bool TComponent::sellMeCheck(const TBeing *ch, TMonster *keeper) const
   char buf[256];
 
   if (gamePort != PROD_GAMEPORT) {
-    for (t = keeper->stuff; t; t = t->nextThing) {
+    for (t = keeper->getStuff(); t; t = t->nextThing) {
       if ((t->number == number) &&
           (t->getName() && getName() && !strcmp(t->getName(), getName())) &&
           (tComp = dynamic_cast<TComponent *>(t))) {
@@ -2209,7 +2209,7 @@ bool TComponent::sellMeCheck(const TBeing *ch, TMonster *keeper) const
       }
     }
   } else {
-    for (t = keeper->stuff; t; t = t->nextThing) {
+    for (t = keeper->getStuff(); t; t = t->nextThing) {
       if ((t->number == number) &&
           (t->getName() && getName() &&
            !strcmp(t->getName(), getName()))) {
@@ -2550,8 +2550,8 @@ void TComponent::update(int use)
       obj_flags.decay_time -= use;
   }
 
-  if (stuff)
-    stuff->update(use);
+  if (getStuff())
+    getStuff()->update(use);
 
   if (nextThing) {
     if (nextThing != this)
@@ -2709,7 +2709,7 @@ int TComponent::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
     TThing *t;
     TComponent *tComp;
 
-    for (t = cont->stuff; t; t = t->nextThing) {
+    for (t = cont->getStuff(); t; t = t->nextThing) {
       // Basically find another component of the same type that is:
       // Same VNum.
       // Has a cost greater than 0 (ignore comps from leveling)
@@ -2925,7 +2925,7 @@ const string TComponent::shopList(const TBeing *ch, const char *tArg,
     strcat(tStObj, "...");
   }
 
-  for (tThing = real_roomp(shop_index[shop_nr].in_room)->stuff;
+  for (tThing = real_roomp(shop_index[shop_nr].in_room)->getStuff();
        tThing; tThing = tThing->nextThing)
     if ((tKeeper = dynamic_cast<TBeing *>(tThing)) &&
         shop_index[shop_nr].keeper == tKeeper->mobVnum() &&
@@ -2937,7 +2937,7 @@ const string TComponent::shopList(const TBeing *ch, const char *tArg,
     return "";
   }
 
-  for (tThing = tKeeper->stuff; tThing; tThing = tThing->nextThing)
+  for (tThing = tKeeper->getStuff(); tThing; tThing = tThing->nextThing)
     if ((tComp = dynamic_cast<TComponent *>(tThing)) &&
         tComp->objVnum() == objVnum())
       tCharges += tComp->getComponentCharges();
@@ -3049,7 +3049,7 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     TThing     *tThing;
     TComponent *tComp;
 
-    for (tThing = tKeeper->stuff; tThing; tThing = tThing->nextThing) {
+    for (tThing = tKeeper->getStuff(); tThing; tThing = tThing->nextThing) {
       // Basically find another component of the same type that is:
       // Same VNum.
       // Has a cost greater than 0 (ignore comps from leveling)

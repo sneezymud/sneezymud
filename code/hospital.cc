@@ -579,7 +579,7 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  for (t = rp->stuff; t; t = t->nextThing) {
+  for (t = rp->getStuff(); t; t = t->nextThing) {
     healed = dynamic_cast<TBeing *>(t);
     if (!healed)
       continue;

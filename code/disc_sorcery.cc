@@ -454,7 +454,7 @@ int colorSpray(TBeing *caster, int level, byte bKnown, int adv_learn)
       case CRIT_S_NONE:
         break;
     }
-    for (t = caster->roomp->stuff; t; t = t2) {
+    for (t = caster->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim || (tmp_victim->isPc() && !tmp_victim->desc))
@@ -538,7 +538,7 @@ int colorSpray(TBeing *caster)
 
   start_cast(caster, NULL, NULL, caster->roomp, SPELL_COLOR_SPRAY, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
 
-  for (t = caster->roomp->stuff; t; t = t2) {
+  for (t = caster->roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     victim = dynamic_cast<TBeing *>(t);
     if (!victim || (victim->isPc() && !victim->desc))
@@ -723,7 +723,7 @@ int acidBlast(TBeing *caster, int level, byte bKnown, int adv_learn)
       case CRIT_S_NONE:
         break;
     }
-    for (t = caster->roomp->stuff; t; t = temp) {
+    for (t = caster->roomp->getStuff(); t; t = temp) {
       temp = t->nextThing;
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (tbt && (caster != tbt) && !tbt->isImmortal()) {
@@ -759,7 +759,7 @@ int acidBlast(TBeing *caster, int level, byte bKnown, int adv_learn)
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
         CF(SPELL_ACID_BLAST);
-          for (t = caster->roomp->stuff; t; t = temp) {
+          for (t = caster->roomp->getStuff(); t; t = temp) {
             temp = t->nextThing;
             b = dynamic_cast<TBeing *>(t);
             if (b && (caster != b) && (!b->isImmortal())) {
@@ -944,7 +944,7 @@ int animate(TBeing *caster, int level, byte bKnown)
     // you need:  helm, jacket, 2 leggings, 2 sleeves, 2 gloves, 2 boots 
 
     TThing *obj;
-    for (obj = caster->roomp->stuff; obj; obj = obj->nextThing) {
+    for (obj = caster->roomp->getStuff(); obj; obj = obj->nextThing) {
       o = dynamic_cast<TObj *>(obj);
       if (!o)
         continue;

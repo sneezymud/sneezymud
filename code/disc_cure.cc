@@ -1,23 +1,9 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_cure.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "disease.h"
 #include "combat.h"
 #include "disc_cures.h"
 #include "spelltask.h"
+#include "statistics.h"
 
 static void repHealing(TBeing *caster, TBeing *victim)
 {
@@ -40,6 +26,12 @@ static void adjustHealHp(const TBeing *caster, int &hp, int durat)
   // rest over life of cast
   // divide damage over durat round so that last round gets 50% and
   // other rounds get equal shares of remainder
+
+  // ok we have a nice damage modifer, but if we don't modify hp from heal as well,
+  // then clerics can heal tanks too fast.
+  // the mud is semi balanced as far as heal to 5.1, where our damage constant was .75
+  // as of 5.2 the damage constant is .65 so i'm gonna make the heal constant .75
+  hp = (int)((double)(hp)*(stats.damage_modifier * 1.15));
  
   // imms have had an adjustment to rounds made in start_cast
   // so adjust for that
@@ -59,8 +51,7 @@ static void adjustHealHp(const TBeing *caster, int &hp, int durat)
   } else if (caster->spelltask) {
     // on other rounds, divy up the other half equally
     if (durat <= 1) {
-      vlogf(5, "Problem with hitpoint/rounds formula in heal spells, caster is
-%s", caster->getName());
+      vlogf(LOG_BUG, "Problem with hitpoint/rounds formula in heal spells, caster is %s", caster->getName());
      durat = 2;
     }
     hp /= (durat-1)*2;
@@ -570,8 +561,8 @@ int castHealFull(TBeing *caster, TBeing *victim)
 int healCritSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 {
   int hp_tmp;
-  bool healed_evil = FALSE;
-  int decrem;
+  //  bool healed_evil = FALSE;
+  //  // int decrem;
   int hp = caster->getSkillDam(NULL, SPELL_HEAL_CRITICAL_SPRAY, level, adv_learn);
   TThing *t;
   TBeing *targ;
@@ -599,7 +590,7 @@ int healCritSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
         break;
     } 
 
-    for (t = caster->roomp->stuff; t; t = t->nextThing) {
+    for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
       targ = dynamic_cast<TBeing *>(t);
       if (!targ)
         continue;
@@ -614,24 +605,26 @@ int healCritSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
                 FALSE, targ, NULL, NULL, TO_CHAR);
 
       hp_tmp = hp;
-      hp_tmp /= (caster->isSameFaction(targ) ? 1 : 2);
+      //      hp_tmp /= (caster->isSameFaction(targ) ? 1 : 2);
       targ->addToHit(hp_tmp);
       targ->updatePos();
+#if 0
       if (caster->isOppositeFaction(targ)) {
         decrem = (int) (caster->getMove() / 4);
         caster->addToMove(-decrem);
         healed_evil = TRUE;
       }
+#endif
     }
-    if (healed_evil) {
 #if 0
+    if (healed_evil) {
       caster->sendTo("%s frowns upon the healing of minions of the enemy.\n\r",
             good_cap(caster->yourDeity(SPELL_HEAL_CRITICAL_SPRAY, FIRST_PERSON)).c_str());
       caster->sendTo("You are exhausted from the effort of doing so.\n\r");
       act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
       caster->updatePos();
-#endif
     }
+#endif
     return SPELL_SUCCESS;
   } else {
     caster->deityIgnore();
@@ -668,8 +661,8 @@ int healSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 {
   int hp = caster->getSkillDam(NULL, SPELL_HEAL_SPRAY, level, adv_learn);
   int hp_tmp;
-  bool healed_evil= FALSE;
-  int decrem;
+  // bool healed_evil= FALSE;
+  // int decrem;
   TThing *t;
   TBeing *targ = NULL;
 
@@ -693,7 +686,7 @@ int healSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
         break;
     } 
 
-    for (t = caster->roomp->stuff; t; t = t->nextThing) {
+    for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
       targ = dynamic_cast<TBeing *>(t);
       if (!targ)
         continue;
@@ -708,15 +701,18 @@ int healSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
       act("You revel in the healing bath!\n\rYou feel revived!", FALSE, targ, NULL, NULL, TO_CHAR);
 
       hp_tmp = hp;
-      hp_tmp /= (caster->isSameFaction(targ) ? 1 : 2);
+      //      hp_tmp /= (caster->isSameFaction(targ) ? 1 : 2);
       targ->addToHit(hp_tmp);
       targ->updatePos();
+#if 0
       if (caster->isOppositeFaction(targ)) {
         decrem = (int) (caster->getMove() / 4);
         caster->addToMove(-decrem);
         healed_evil = TRUE;
       }
+#endif
     }
+#if 0
     if (healed_evil) {
       caster->sendTo("%s frowns upon the healing of minions of the enemy.\n\r",
           good_cap(caster->yourDeity(SPELL_HEAL_SPRAY, FIRST_PERSON)).c_str());
@@ -724,6 +720,7 @@ int healSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
       act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
       caster->updatePos();
     }
+#endif
     return SPELL_SUCCESS;
   } else {
     caster->deityIgnore();
@@ -762,8 +759,8 @@ int healFullSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 {
   int hp = caster->getSkillDam(NULL, SPELL_HEAL_FULL_SPRAY, level, adv_learn);
   int hp_tmp;
-  bool healed_evil = FALSE;
-  int decrem;
+  // bool healed_evil = FALSE;
+  // int decrem;
   TBeing *targ = NULL;
   TThing *t;
 
@@ -791,7 +788,7 @@ int healFullSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
           break;
     } 
 
-    for (t = caster->roomp->stuff; t; t = t->nextThing) {
+    for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
       targ = dynamic_cast<TBeing *>(t);
       if (!targ)
         continue;
@@ -805,15 +802,18 @@ int healFullSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
       act("You revel in the healing colors!\n\rYou feel revived!",
              FALSE, targ, NULL, NULL, TO_CHAR);
       hp_tmp = hp;
-      hp_tmp /= (caster->isSameFaction(targ) ? 1 : 2);
+      //      hp_tmp /= (caster->isSameFaction(targ) ? 1 : 2);
       targ->addToHit(hp_tmp);
       targ->updatePos();
+#if 0
       if (caster->isOppositeFaction(targ)) {
         decrem = (int) (caster->getMove() / 4);
         caster->addToMove(-decrem);
         healed_evil = TRUE;
       }
+#endif
     }
+#if 0
     if (healed_evil) {
       caster->sendTo("%s frowns upon the healing of minions of the enemy.\n\r",
             good_cap(caster->yourDeity(SPELL_HEAL_FULL_SPRAY, FIRST_PERSON)).c_str());
@@ -821,6 +821,7 @@ int healFullSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
       act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
       caster->updatePos();
     }
+#endif
     return SPELL_SUCCESS;
   } else {
     caster->deityIgnore();

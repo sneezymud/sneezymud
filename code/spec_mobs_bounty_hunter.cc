@@ -163,7 +163,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
               // cmd == CMD_DROP
               sscanf(arg, " %s ", buf);
               if (isname(buf, temp_obj->name) &&
-                   searchLinkedListVis(ch, buf, ch->stuff)) {
+                   searchLinkedListVis(ch, buf, ch->getStuff())) {
                 rc = ch->doDrop("", temp_obj);
                 if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                   delete temp_obj;
@@ -378,7 +378,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
           act("$n has no time for this right now.", false, myself, 0, 0, TO_ROOM);
           TThing *toto;
           // stop all fights
-          for (toto = myself->roomp->stuff; toto; toto = toto->nextThing) {
+          for (toto = myself->roomp->getStuff(); toto; toto = toto->nextThing) {
             TBeing *tbto = dynamic_cast<TBeing *>(toto);
             if (!tbto)
               continue;

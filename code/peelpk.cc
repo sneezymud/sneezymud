@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: peelpk.cc,v $
+// Revision 5.6  2001/09/07 07:07:35  peel
+// changed TThing->stuff to getStuff() and setStuff()
+//
 // Revision 5.5  2001/08/02 01:05:05  peel
 // drop all guns and ammo when die in peelpk
 // show (empty) for empty guns and ammo
@@ -365,8 +368,8 @@ void dropAllGunsAndAmmo(TBeing *ch, TThing *stuff){
     return;
 
   for(tt=stuff;tt;tt=tt->nextThing){
-    if(tt->stuff)
-      dropAllGunsAndAmmo(ch, tt->stuff);
+    if(tt->getStuff())
+      dropAllGunsAndAmmo(ch, tt->getStuff());
 
     if(dynamic_cast<TGun *>(tt) ||
        dynamic_cast<TAmmo *>(tt)){
@@ -374,7 +377,7 @@ void dropAllGunsAndAmmo(TBeing *ch, TThing *stuff){
       (*tt)--;
       *ch->roomp += *tt;
 
-      dropAllGunsAndAmmo(ch, ch->stuff);
+      dropAllGunsAndAmmo(ch, ch->getStuff());
       break;
     }
   }
@@ -495,7 +498,7 @@ int TBeing::peelPkRespawn(TBeing *killer, spellNumT dmg_type)
   deathCry();
   makeCorpse(dmg_type);
 
-  dropAllGunsAndAmmo(this, stuff);
+  dropAllGunsAndAmmo(this, getStuff());
 
 
 

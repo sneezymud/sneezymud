@@ -138,7 +138,7 @@ void doSaveZoneFile(TBeing *ch, const string & tArg)
     TThing *tThing;
     TObj   *tObj;
 
-    for (tThing = tRoom->stuff; tThing; tThing = tThing->nextThing) {
+    for (tThing = tRoom->getStuff(); tThing; tThing = tThing->nextThing) {
       if (!(tObj = dynamic_cast<TObj *>(tThing)) ||
           (tObj->getSnum() < 0) ||
           tObj->canWear(ITEM_TAKE))
@@ -150,11 +150,11 @@ void doSaveZoneFile(TBeing *ch, const string & tArg)
               (tObj->getNameNOC(ch).c_str() ? tObj->getNameNOC(ch).c_str() : "Unknown"));
       fputs(tBuffer, tFile);
 
-      if (tObj->stuff) {
+      if (tObj->getStuff()) {
         TThing *sThing;
         TObj   *sObj;
 
-        for (sThing = tObj->stuff; sThing; sThing = sThing->nextThing) {
+        for (sThing = tObj->getStuff(); sThing; sThing = sThing->nextThing) {
           if (!(sObj = dynamic_cast<TObj *>(sThing)) ||
               sObj->getSnum() < 0)
             continue;
@@ -180,7 +180,7 @@ void doSaveZoneFile(TBeing *ch, const string & tArg)
     TThing *tThing;
     TObj   *tObj;
 
-    for (tThing = tRoom->stuff; tThing; tThing = tThing->nextThing) {
+    for (tThing = tRoom->getStuff(); tThing; tThing = tThing->nextThing) {
       if (!(tObj = dynamic_cast<TObj *>(tThing)) ||
           (tObj->getSnum() < 0) ||
           !tObj->canWear(ITEM_TAKE))
@@ -192,11 +192,11 @@ void doSaveZoneFile(TBeing *ch, const string & tArg)
               (tObj->getNameNOC(ch).c_str() ? tObj->getNameNOC(ch).c_str() : "Unknown"));
       fputs(tBuffer, tFile);
 
-      if (tObj->stuff) {
+      if (tObj->getStuff()) {
         TThing *sThing;
         TObj   *sObj;
 
-        for (sThing = tObj->stuff; sThing; sThing = sThing->nextThing) {
+        for (sThing = tObj->getStuff(); sThing; sThing = sThing->nextThing) {
           if (!(sObj = dynamic_cast<TObj *>(sThing)) ||
               sObj->getSnum() < 0)
             continue;
@@ -222,7 +222,7 @@ void doSaveZoneFile(TBeing *ch, const string & tArg)
     TThing   *tThing;
     TMonster *tMob;
 
-    for (tThing = tRoom->stuff; tThing; tThing = tThing->nextThing) {
+    for (tThing = tRoom->getStuff(); tThing; tThing = tThing->nextThing) {
       if (!(tMob = dynamic_cast<TMonster *>(tThing)) ||
           tMob->getSnum() < 0)
         continue;
@@ -233,11 +233,11 @@ void doSaveZoneFile(TBeing *ch, const string & tArg)
               (tMob->getNameNOC(ch).c_str() ? tMob->getNameNOC(ch).c_str() : "Unknown"));
       fputs(tBuffer, tFile);
 
-      if (tMob->stuff) {
+      if (tMob->getStuff()) {
         TThing *sThing;
         TObj   *sObj;
 
-        for (sThing = tMob->stuff; sThing; sThing = sThing->nextThing) {
+        for (sThing = tMob->getStuff(); sThing; sThing = sThing->nextThing) {
           if (!(sObj = dynamic_cast<TObj *>(sThing)) ||
               sObj->getSnum() < 0)
             continue;
@@ -342,7 +342,7 @@ void doLoadZoneFile(TBeing * tBeing, const string & tArg)
 
     TThing * tThing = NULL;
 
-    while ((tThing = tRoom->stuff)) {
+    while ((tThing = tRoom->getStuff())) {
       --(*tThing);
       delete tThing;
       tThing = NULL;
@@ -422,7 +422,7 @@ void doLoadZoneFile(TBeing * tBeing, const string & tArg)
     TThing *tThing;
     TObj   *tObj;
 
-    for (tThing = tRoom->stuff; tThing; tThing = tThing->nextThing) {
+    for (tThing = tRoom->getStuff(); tThing; tThing = tThing->nextThing) {
       if (!(tObj = dynamic_cast<TObj *>(tThing)) ||
           (tObj->getSnum() < 0) ||
           tObj->canWear(ITEM_TAKE))
@@ -434,11 +434,11 @@ void doLoadZoneFile(TBeing * tBeing, const string & tArg)
               (tObj->getNameNOC(ch).c_str() ? tObj->getNameNOC(ch).c_str() : "Unknown"));
       fputs(tBuffer, tFile);
 
-      if (tObj->stuff) {
+      if (tObj->getStuff()) {
         TThing *sThing;
         TObj   *sObj;
 
-        for (sThing = tObj->stuff; sThing; sThing = sThing->nextThing) {
+        for (sThing = tObj->getStuff(); sThing; sThing = sThing->nextThing) {
           if (!(sObj = dynamic_cast<TObj *>(sThing)) ||
               sObj->getSnum() < 0)
             continue;
@@ -464,7 +464,7 @@ void doLoadZoneFile(TBeing * tBeing, const string & tArg)
     TThing *tThing;
     TObj   *tObj;
 
-    for (tThing = tRoom->stuff; tThing; tThing = tThing->nextThing) {
+    for (tThing = tRoom->getStuff(); tThing; tThing = tThing->nextThing) {
       if (!(tObj = dynamic_cast<TObj *>(tThing)) ||
           (tObj->getSnum() < 0) ||
           !tObj->canWear(ITEM_TAKE))
@@ -476,11 +476,11 @@ void doLoadZoneFile(TBeing * tBeing, const string & tArg)
               (tObj->getNameNOC(ch).c_str() ? tObj->getNameNOC(ch).c_str() : "Unknown"));
       fputs(tBuffer, tFile);
 
-      if (tObj->stuff) {
+      if (tObj->getStuff()) {
         TThing *sThing;
         TObj   *sObj;
 
-        for (sThing = tObj->stuff; sThing; sThing = sThing->nextThing) {
+        for (sThing = tObj->getStuff(); sThing; sThing = sThing->nextThing) {
           if (!(sObj = dynamic_cast<TObj *>(sThing)) ||
               sObj->getSnum() < 0)
             continue;
@@ -506,7 +506,7 @@ void doLoadZoneFile(TBeing * tBeing, const string & tArg)
     TThing   *tThing;
     TMonster *tMob;
 
-    for (tThing = tRoom->stuff; tThing; tThing = tThing->nextThing) {
+    for (tThing = tRoom->getStuff(); tThing; tThing = tThing->nextThing) {
       if (!(tMob = dynamic_cast<TMonster *>(tThing)) ||
           tMob->getSnum() < 0)
         continue;
@@ -517,11 +517,11 @@ void doLoadZoneFile(TBeing * tBeing, const string & tArg)
               (tMob->getNameNOC(ch).c_str() ? tMob->getNameNOC(ch).c_str() : "Unknown"));
       fputs(tBuffer, tFile);
 
-      if (tMob->stuff) {
+      if (tMob->getStuff()) {
         TThing *sThing;
         TObj   *sObj;
 
-        for (sThing = tMob->stuff; sThing; sThing = sThing->nextThing) {
+        for (sThing = tMob->getStuff(); sThing; sThing = sThing->nextThing) {
           if (!(sObj = dynamic_cast<TObj *>(sThing)) ||
               sObj->getSnum() < 0)
             continue;

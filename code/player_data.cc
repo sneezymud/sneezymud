@@ -1533,7 +1533,7 @@ void TBeing::doReset(const char *arg)
     for (isi = 0; isi < shop_index.size(); isi++) {
       num = shop_index[isi].keeper;
       if ((keeper = dynamic_cast<TMonster *>(get_char_num(num)))) {
-        while ((tmp = keeper->stuff)) {
+        while ((tmp = keeper->getStuff())) {
           delete tmp;
         }
         keeper->autoCreateShop(isi);

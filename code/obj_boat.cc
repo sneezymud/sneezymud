@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_boat.cc,v $
+// Revision 5.2  2001/09/07 07:07:35  peel
+// changed TThing->stuff to getStuff() and setStuff()
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -69,7 +75,7 @@ int TBoat::putSomethingInto(TBeing *ch, TThing *tThing)
     return 2;
   }
 
-  if (stuff) {
+  if (getStuff()) {
     ch->sendTo("There is already something attached to this.\n\r");
     return 2;
   }
@@ -97,7 +103,7 @@ int TBoat::putSomethingInto(TBeing *ch, TThing *tThing)
 
 int TBoat::getObjFrom(TBeing *ch, const char *tString, const char *)
 {
-  if (!stuff) {
+  if (!getStuff()) {
     ch->sendTo("There is nothing in there.\n\r");
     return TRUE;
   }
@@ -107,8 +113,8 @@ int TBoat::getObjFrom(TBeing *ch, const char *tString, const char *)
     return TRUE;
   }
 
-  if (isname(tString, stuff->getName())) {
-    TThing *tThing = stuff;
+  if (isname(tString, getStuff()->getName())) {
+    TThing *tThing = getStuff();
     --(*tThing);
     *ch += *tThing;
 
@@ -136,5 +142,5 @@ int TBoat::getObjFrom(TBeing *ch, const char *tString, const char *)
 
 int TBoat::getLight() const
 {
-  return (TThing::getLight() + (stuff ? stuff->getLight() : 0));
+  return (TThing::getLight() + (getStuff() ? getStuff()->getLight() : 0));
 }

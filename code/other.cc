@@ -170,7 +170,7 @@ int TBeing::doNoJunk(const char *argument, TObj *obj)
     o = obj;
     TThing *t_o = NULL;
     if (!o) {
-      t_o = searchLinkedListVis(this, arg, stuff);
+      t_o = searchLinkedListVis(this, arg, getStuff());
       o = dynamic_cast<TObj *>(t_o);
     }
     if (o) {
@@ -227,7 +227,7 @@ int TBeing::doJunk(const char *argument, TObj *obj)
     o = obj;
     TThing *t_o = NULL;
     if (!o) {
-      t_o = searchLinkedListVis(this, arg, stuff);
+      t_o = searchLinkedListVis(this, arg, getStuff());
       o = dynamic_cast<TObj *>(t_o);
     }
     if (o) {
@@ -243,11 +243,11 @@ int TBeing::doJunk(const char *argument, TObj *obj)
         sendTo("Monogrammed items can't be junked.\n\r");
         return FALSE;
       }
-      if (o->stuff && desc && (desc->autobits & AUTO_POUCH)) {
+      if (o->getStuff() && desc && (desc->autobits & AUTO_POUCH)) {
         sendTo("There is still stuff in there, you choose not to junk it.\n\r");
         return FALSE;
       }
-      for (t = o->stuff; t; t = t->nextThing) {
+      for (t = o->getStuff(); t; t = t->nextThing) {
         TObj *tobj = dynamic_cast<TObj *>(t);
         if (!tobj)
           continue;
@@ -263,7 +263,7 @@ int TBeing::doJunk(const char *argument, TObj *obj)
       o->junkMe(this);
       
       logItem(o, CMD_JUNK);
-      for (t = o->stuff; t; t = t->nextThing) 
+      for (t = o->getStuff(); t; t = t->nextThing) 
         logItem(t, CMD_JUNK);
 
       --(*o);
@@ -531,8 +531,8 @@ void TBeing::doSplit(const char *argument, bool tell)
   } else {
     int count = 0;
     TThing *obj2;
-    if ((!(obj2 = searchLinkedListVis(this, buf, stuff, &count)) &&
-         !(obj2 = searchLinkedListVis(this, buf, roomp->stuff, &count))) ||
+    if ((!(obj2 = searchLinkedListVis(this, buf, getStuff(), &count)) &&
+         !(obj2 = searchLinkedListVis(this, buf, roomp->getStuff(), &count))) ||
          !obj2->splitMe(this, argument)) {
       sendTo("Pardon? Split WHAT?\n\r");
       return;
@@ -578,7 +578,7 @@ void TBeing::doReport(const char *argument)
            norm());
 
 
-  for (t = roomp->stuff; t; t = t2) {
+  for (t = roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     TBeing *tb = dynamic_cast<TBeing *>(t);
     if (!tb) continue;
@@ -737,10 +737,10 @@ void TBeing::verifyWeightVolume()
   float rw = 0.0, bw;
   int rv = 0, bv;
   TThing *t, *t2;
-  for (t = stuff; t; t = t->nextThing) {
+  for (t = getStuff(); t; t = t->nextThing) {
     bv = 0;
     bw = 0.0;
-    for (t2 = t->stuff; t2; t2 = t2->nextThing) {
+    for (t2 = t->getStuff(); t2; t2 = t2->nextThing) {
       // bypass comps in spellbag
       if (dynamic_cast<TComponent *>(t2) &&
           dynamic_cast<TSpellBag *>(t))
@@ -1964,7 +1964,7 @@ void TBeing::doGroup(const char *argument)
       sendTo("You can't group others without being the leader of the group.\n\r");
       return;
     }
-    for (t = roomp->stuff;t;t = t->nextThing) {
+    for (t = roomp->getStuff();t;t = t->nextThing) {
       victim = dynamic_cast<TBeing *>(t);
       if (!victim)
         continue;
@@ -2224,7 +2224,7 @@ int TBeing::doQuaff(const char *argument)
   }
 #endif
 
-  if (!(t = searchLinkedListVis(this, buf, stuff))) {
+  if (!(t = searchLinkedListVis(this, buf, getStuff()))) {
     t = equipment[HOLD_RIGHT];
     if (!t || !isname(buf, t->name)) {
       act("You do not have that item.", FALSE, this, 0, 0, TO_CHAR);
@@ -2840,7 +2840,7 @@ int TBeing::doRecite(const char *argument)
     return FALSE;
   }
 
-  if (!(t = searchLinkedListVis(this, buf, stuff))) {
+  if (!(t = searchLinkedListVis(this, buf, getStuff()))) {
     t = heldInPrimHand();
     if (!t || !isname(buf, t->name)) {
       act("You do not have that item.", FALSE, this, 0, 0, TO_CHAR);
@@ -3012,7 +3012,7 @@ void TBeing::doLight(const string & argument)
       return;
 
     // searchLinkedList not searchLinkedListVis so newbies can light lampposts
-    if (heldOnly || !(t = searchLinkedList(arg1, roomp->stuff))) {
+    if (heldOnly || !(t = searchLinkedList(arg1, roomp->getStuff()))) {
       if (roomOnly || (!(t = heldInPrimHand())) ||
           !isname(tmp, t->name) || (num == 2)) {
         if (roomOnly || (!(t = heldInSecHand())) ||
@@ -3116,7 +3116,7 @@ void TBeing::doExtinguish(const string & argument)
       return;
 
     // searchLinkedList not searchLinkedListVis so newbies can light lampposts
-    if (heldOnly || !(t = searchLinkedList(arg1, roomp->stuff))) {
+    if (heldOnly || !(t = searchLinkedList(arg1, roomp->getStuff()))) {
       if (roomOnly || (!(t = heldInPrimHand())) ||
           !isname(tmp, t->name) || (num == 2)) {
         if (roomOnly || (!(t = heldInSecHand())) ||
@@ -3180,7 +3180,7 @@ void TBeing::doRefuel(const char *argument)
   if (roomOnly || 
       !(t = get_thing_char_using(this, arg, 0, FALSE, FALSE))) {
     if (heldOnly ||
-        !(t = searchLinkedListVis(this, arg, roomp->stuff))) {
+        !(t = searchLinkedListVis(this, arg, roomp->getStuff()))) {
       sendTo("You can only refuel an object in the room, or held.\n\r");
       sendTo("Syntax: refuel <light> <fuel> {\"room\" | \"held\"}\n\r");
       return;

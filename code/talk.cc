@@ -2,30 +2,41 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: talk.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/10/10 20:50:52  batopr
-// Added mud_assert in disturbMeditation to avoid crash bug
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//  
-//      SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//      
 //      "talk.cc" - All functions related to player communications
 //  
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
 #include "disease.h"
+
+// many of the talk features colorize the says/tells/etc for easier viewing
+// If I do "say this <r>color<z> is cool", I would expect to see color in
+// red, and "this ", " is cool" be the 'normal' say color.
+// unfortunately, turning off red (<z>) makes everything go back to
+// normal, and we lose the 'normal' color.
+// To get around this, we parse the say statement, and convert any <z>, <Z>,
+// or <1> to a 'replacement' color string and then send it out.
+// unfortunately, we also need to "unbold", so we need to send both the
+// normal <z> as well as the replacement
+static void convertStringColor(const string replacement, string & str)
+{
+  // we use <tmpi> to represent a dummy placeholder which we convert to
+  // <z> at the end
+  string repl = "<tmpi>";
+  repl += replacement;
+ 
+  while (str.find("<z>") != string::npos)  
+    str.replace(str.find("<z>"), 3, repl);
+
+  while (str.find("<Z>") != string::npos)  
+    str.replace(str.find("<Z>"), 3, repl);
+
+  while (str.find("<1>") != string::npos)  
+    str.replace(str.find("<1>"), 3, repl);
+
+  while (str.find("<tmpi>") != string::npos)  
+    str.replace(str.find("<tmpi>"), 6, "<z>");
+}
 
 void TBeing::disturbMeditation(TBeing *vict) const
 {
@@ -34,11 +45,17 @@ void TBeing::disturbMeditation(TBeing *vict) const
   if (vict->task && !isImmortal()) {
     if (vict->task->task == TASK_PENANCE) {
       act("$n disturbs your penance!", FALSE, this, NULL, vict, TO_VICT);
-      act("You disturb $S penance!", TRUE, this, NULL, vict, TO_CHAR);
+
+      if (sameRoom(*vict))
+        act("You disturb $S penance!", TRUE, this, NULL, vict, TO_CHAR);
+
       vict->stopTask();
     } else if (vict->task->task == TASK_MEDITATE) {
       act("$n disturbs your meditation!", FALSE, this, NULL, vict, TO_VICT);
-      act("You disturb $S meditation!", TRUE, this, NULL, vict, TO_CHAR);
+
+      if (sameRoom(*vict))
+        act("You disturb $S meditation!", TRUE, this, NULL, vict, TO_CHAR);
+ 
       vict->stopTask();
     }
   }
@@ -140,15 +157,15 @@ int TBeing::doSay(const char *arg)
   if (!*arg)
     sendTo("Yes, but WHAT do you want to say?\n\r");
   else {
-    strcpy(garbed, garble(arg, getCond(DRUNK)).c_str());
+    mud_str_copy(garbed, garble(arg, getCond(DRUNK)).c_str(), 256);
 
     if (hasDisease(DISEASE_DROWNING)) 
-      strcpy(garbed, "Glub glub glub.");
+      mud_str_copy(garbed, "Glub glub glub.", 256);
 
     sendTo(COLOR_COMM, "<g>You say, <z>\"%s%s\"\n\r", 
             colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE).c_str(), norm());
     // show everyone in room the say.
-    for (tmp = roomp->stuff; tmp; tmp = tmp2) {
+    for (tmp = roomp->getStuff(); tmp; tmp = tmp2) {
       tmp2 = tmp->nextThing;
           
       if (!(mob = dynamic_cast<TBeing *>(tmp)))
@@ -157,7 +174,7 @@ int TBeing::doSay(const char *arg)
       if (!(d = mob->desc) || mob == this || (mob->getPosition() <= POSITION_SLEEPING))
         continue;
 
-      strcpy(capbuf, mob->pers(this));
+      mud_str_copy(capbuf, mob->pers(this), 256);
       cap(capbuf);
       sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str()); 
 
@@ -166,14 +183,14 @@ int TBeing::doSay(const char *arg)
           if (IS_SET(mob->desc->plr_color, PLR_COLOR_MOBS)) {
             sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str());
             mob->sendTo(COLOR_COMM, "%s says, \"%s%s\"\n\r", tmpbuf, garbed, mob->norm());
-            if (d->client) {
+            if (d->m_bIsClient) {
               sprintf(garbedBuf, "%s", 
                 colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
               d->clientf("%d|%s|%s", CLIENT_SAY, tmpbuf, garbedBuf);
             }
           } else {
             mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"%s\"\n\r", tmpbuf, garbed);
-            if (d->client) {
+            if (d->m_bIsClient) {
               sprintf(nameBuf, "<c>%s<z>", tmpbuf);
               sprintf(garbedBuf, "%s", 
                 colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
@@ -184,7 +201,7 @@ int TBeing::doSay(const char *arg)
           }
         } else {
           mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"%s\"\n\r", tmpbuf, garbed);
-          if (d->client) {
+          if (d->m_bIsClient) {
             sprintf(nameBuf, "<c>%s<z>", tmpbuf);
             sprintf(garbedBuf, "%s",
             colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
@@ -196,7 +213,7 @@ int TBeing::doSay(const char *arg)
       } else {
         mob->sendTo(COLOR_COMM, "%s says, \"%s\"\n\r", good_cap(getName()).c_str(), 
             colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE).c_str());
-        if (d->client) {
+        if (d->m_bIsClient) {
           d->clientf("%d|%s|%s", CLIENT_SAY, good_cap(getName()).c_str(),
             colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
         }
@@ -204,7 +221,7 @@ int TBeing::doSay(const char *arg)
     }
 
     // everyone needs to see the say before the response gets triggered
-    for (tmp = roomp->stuff; tmp; tmp = tmp2) {
+    for (tmp = roomp->getStuff(); tmp; tmp = tmp2) {
       tmp2 = tmp->nextThing;
       mob = dynamic_cast<TBeing *>(tmp);
       if (!mob)
@@ -229,6 +246,67 @@ int TBeing::doSay(const char *arg)
   return FALSE;
 }
 
+void Descriptor::sendShout(TBeing *ch, const char *arg)
+{
+  Descriptor *i;
+  char capbuf[256];
+  char namebuf[100];
+
+  for (i = descriptor_list; i; i = i->next) {
+    if (i->connected != CON_PLYNG)
+      continue;
+
+    TBeing *b = i->character;
+    if (!b)
+      continue;
+    if (b == ch)
+      continue;
+    if (b->checkSoundproof())
+      continue;
+    if (b->isPlayerAction(PLR_MAILING | PLR_BUGGING))
+      continue;
+
+    // don't use awake(), paralyzed should hear, asleep should not
+    if (b->getPosition() <= POSITION_SLEEPING)
+      continue;
+
+    // polys and switched always hear everything
+    // if it's a god shouting (and I am mortal), hear it
+    // if i'm not set noshout, hear it
+    if (dynamic_cast<TMonster *>(b) ||
+        (!b->isImmortal() && ch->isImmortal()) ||
+        (b->desc && !IS_SET(i->autobits, AUTO_NOSHOUT))) {
+      mud_str_copy(capbuf, b->pers(ch), 256);
+      if (!capbuf) {
+        forceCrash("No capbuf in sendShout!");
+        continue;
+      }
+      string argbuf = colorString(b, i, arg, NULL, COLOR_NONE, FALSE);
+      sprintf(namebuf, "<g>%s<z>", cap(capbuf));
+      string nameStr = colorString(b, i, namebuf, NULL, COLOR_NONE, FALSE);
+      if(hasColorStrings(NULL, capbuf, 2)) {
+        if (IS_SET(b->desc->plr_color, PLR_COLOR_MOBS)) {
+          string tmpbuf = colorString(b, i, cap(capbuf), NULL, COLOR_MOBS, FALSE);
+          string tmpbuf2 = colorString(b, i, cap(capbuf), NULL, COLOR_NONE, FALSE);
+
+          if (i->m_bIsClient)
+            i->clientf("%d|%s|%s", CLIENT_SHOUT, tmpbuf2.c_str(), argbuf.c_str());
+          b->sendTo(COLOR_SHOUTS, "%s shouts, \"%s<1>\"\n\r",tmpbuf.c_str(), arg);
+        } else {
+          if (i->m_bIsClient)
+            i->clientf("%d|%s|%s%s", CLIENT_SHOUT, nameStr.c_str(), argbuf.c_str());
+
+          b->sendTo(COLOR_SHOUTS, "<g>%s<z> shouts, \"%s<1>\"\n\r", cap(capbuf), arg);
+        }
+      } else {
+        if (i->m_bIsClient)
+          i->clientf("%d|%s|%s", CLIENT_SHOUT, nameStr.c_str(), argbuf.c_str());
+
+        b->sendTo(COLOR_SHOUTS, "<g>%s<z> shouts, \"%s<1>\"\n\r", cap(capbuf), arg);
+      }
+    }
+  }
+}
 void TBeing::doShout(const char *arg)
 {
   char garbed[256];
@@ -240,12 +318,6 @@ void TBeing::doShout(const char *arg)
     sendTo("Sorry, you must be of higher level to shout.\n\r");
     return;
   }
-#if 0
-  if (GetMaxLevel() > MAX_MORT) {
-    sendTo("Please use the system command for global communications.\n\r");
-    return;
-  }
-#endif
 
   if (isAffected(AFF_SILENT)) {
     sendTo("You can't make a sound!\n\r");
@@ -297,12 +369,9 @@ void TBeing::doShout(const char *arg)
   }
   if ((roomp->isUnderwaterSector() || hasDisease(DISEASE_DROWNING)) &&
        !isImmortal())
-    strcpy(garbed, "Glub glub glub.");
+    mud_str_copy(garbed, "Glub glub glub.", 256);
   else
-    strcpy(garbed, garble(arg, getCond(DRUNK)).c_str());
-
-//   if (QuestCode)
-//     strcpy(garbed, garble(arg, 10));
+    mud_str_copy(garbed, garble(arg, getCond(DRUNK)).c_str(), 256);
 
   sendTo(COLOR_COMM, "<g>You shout<Z>, \"%s%s\"\n\r", colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE).c_str(), norm());
   act("$n rears back $s head and shouts loudly.", FALSE, this, 0, 0, TO_ROOM);
@@ -316,11 +385,10 @@ void TBeing::doShout(const char *arg)
   descriptor_list->sendShout(this, garbed);
 }
 
-
-
 void TBeing::doGrouptell(const char *arg)
 {
-  char buf[256], garbed[256];
+  char buf[MAX_INPUT_LENGTH + 40]; // was buf[256]
+  string garbed;
   followData *f;
   TBeing *k;
 
@@ -343,7 +411,7 @@ void TBeing::doGrouptell(const char *arg)
     sendTo("You don't seem to have a group.\n\r");
     return;
   }
-  *buf = *garbed = '\0';
+  *buf = '\0';
 
   if (!(k = master))
     k = this;
@@ -354,25 +422,29 @@ void TBeing::doGrouptell(const char *arg)
     sendTo("Grouptell is a good command, but you need to tell your group SOMEthing!\n\r");
     return;
   } else {
-    strcpy(garbed, garble(arg, getCond(DRUNK)).c_str());
+    garbed = garble(arg, getCond(DRUNK));
 
-    sendTo("You tell your group: %s%s%s\n\r", red(), colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE).c_str(), norm());
+    convertStringColor("<r>", garbed);
+
+    sendTo("You tell your group: %s%s%s\n\r", red(), colorString(this, desc, garbed.c_str(), NULL, COLOR_BASIC, FALSE).c_str(), norm());
   }
   if (k->isAffected(AFF_GROUP) && !k->checkSoundproof()) {
-    if (k->desc && k->desc->client && (k != this)) {
+    if (k->desc && k->desc->m_bIsClient && (k != this)) {
       k->desc->clientf("%d|%s|%s", CLIENT_GROUPTELL, getName(), 
-        colorString(this, k->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
+        colorString(this, k->desc, garbed.c_str(), NULL, COLOR_NONE, FALSE).c_str());
     }
-    sprintf(buf, "$n: %s%s%s", k->red(), colorString(this, k->desc, garbed, NULL, COLOR_COMM, FALSE).c_str(), k->norm());
+    // a crash bug lies here....cut and paste from windows notepad
+    // plays with the next few lines for some reason
+    sprintf(buf, "$n: %s%s%s", k->red(), colorString(this, k->desc, garbed.c_str(), NULL, COLOR_COMM, FALSE).c_str(), k->norm());
     act(buf, 0, this, 0, k, TO_VICT);
   }
   for (f = k->followers; f; f = f->next) {
     if ((f->follower != this) && f->follower->isAffected(AFF_GROUP) && !f->follower->checkSoundproof()) {
-      if (f->follower->desc && f->follower->desc->client) {
+      if (f->follower->desc && f->follower->desc->m_bIsClient) {
         f->follower->desc->clientf("%d|%s|%s", CLIENT_GROUPTELL, getName(), 
-          colorString(this, f->follower->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
+          colorString(this, f->follower->desc, garbed.c_str(), NULL, COLOR_NONE, FALSE).c_str());
       }
-      sprintf(buf, "$n: %s%s%s", f->follower->red(), colorString(this, f->follower->desc, garbed, NULL, COLOR_COMM, FALSE).c_str(), f->follower->norm());
+      sprintf(buf, "$n: %s%s%s", f->follower->red(), colorString(this, f->follower->desc, garbed.c_str(), NULL, COLOR_COMM, FALSE).c_str(), f->follower->norm());
       act(buf, 0, this, 0, f->follower, TO_VICT);
     }
   }
@@ -403,7 +475,7 @@ void TBeing::doCommune(const char *arg)
   }
   if (*arg == '@') {
     one_argument(arg, buf2);
-    strcpy(buf2, &buf2[1]);  // skip the @
+    mud_str_copy(buf2, &buf2[1],256);  // skip the @
     levnum = atoi(buf2);
     if (levnum > 0) {
       // only a properly formatted string should be changed
@@ -441,16 +513,19 @@ void TBeing::doCommune(const char *arg)
       } else
         critter = i->character;
 
+      string str = colorString(this, i, arg, NULL, COLOR_COMM, FALSE);
+      convertStringColor("<c>", str);
+
       if (!levnum) {
         if (critter->GetMaxLevel() >= GOD_LEVEL1 && WizBuild) {
           sprintf(buf, "%s$n: %s%s%s",
                  i->purple(), i->cyan(),
-                 colorString(this, i, arg, NULL, COLOR_COMM, FALSE).c_str(), i->norm());
+                 str.c_str(), i->norm());
           act(buf, 0, this, 0, i->character, TO_VICT);
         } else if (critter->hasWizPower(POWER_WIZNET_ALWAYS)) {
           sprintf(buf, "[nobuilders] %s$n: %s%s%s",
                  i->purple(), i->cyan(),
-                 colorString(this, i, arg, NULL, COLOR_COMM, FALSE).c_str(), i->norm());
+                 str.c_str(), i->norm());
           act(buf, 0, this, 0, i->character, TO_VICT);
         }
       } else {
@@ -458,13 +533,13 @@ void TBeing::doCommune(const char *arg)
             critter->GetMaxLevel() >= levnum) {
           sprintf(buf, "%s[builders] (level: %d) $n: %s%s%s",
                  i->purple(), levnum, i->cyan(),
-                 colorString(this, i, arg, NULL, COLOR_COMM, FALSE).c_str(), i->norm());
+                 str.c_str(), i->norm());
           act(buf, 0, this, 0, i->character, TO_VICT);
         } else if (critter->hasWizPower(POWER_WIZNET_ALWAYS) &&
                    critter->GetMaxLevel() >= levnum) {
           sprintf(buf, "%s(level: %d) $n: %s%s%s", 
                  i->purple(), levnum, i->cyan(),
-                 colorString(this, i, arg, NULL, COLOR_COMM, FALSE).c_str(), i->norm());
+                 str.c_str(), i->norm());
           act(buf, 0, this, 0, i->character, TO_VICT);
         }
       }
@@ -568,7 +643,7 @@ void TBeing::doSign(const char *arg)
     sendTo("You can't sign while fighting.\n\r");
     return;
   }
-  strcpy(buf, arg + i);
+  mud_str_copy(buf, arg + i, MAX_INPUT_LENGTH + 40);
   buf2[0] = '\0';
   // work through the arg, word by word.  if you fail your
   //  skill roll, the word comes out garbled. */
@@ -591,7 +666,7 @@ void TBeing::doSign(const char *arg)
   }
   sprintf(buf, "$n signs, \"%s\"", buf2);
 
-  for (t = roomp->stuff; t; t = t->nextThing) {
+  for (t = roomp->getStuff(); t; t = t->nextThing) {
     TBeing *ch = dynamic_cast<TBeing *>(t);
     if (!ch)
       continue;
@@ -618,7 +693,6 @@ int TBeing::doTell(const char *arg, bool visible)
 {
   TBeing *vict;
   char name[100], capbuf[256], message[MAX_INPUT_LENGTH + 40];
-  char garbed[256];
   int rc;
 
   if (isAffected(AFF_SILENT)) {
@@ -633,7 +707,7 @@ int TBeing::doTell(const char *arg, bool visible)
     sendTo("You are a dumb animal; you can't talk!\n\r");
     return FALSE;
   }
-  if (isPet() || isCharm() || isZombie()) {
+  if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
     sendTo("What a dumb master you have, charmed mobiles can't tell.\n\r");
     return FALSE;
   }
@@ -646,7 +720,7 @@ int TBeing::doTell(const char *arg, bool visible)
     if (!(vict = get_pc_world(this, name, EXACT_NO, INFRA_NO, visible))) {
       if (!(vict = get_char_vis_world(this, name, NULL, EXACT_YES))) {
         if (!(vict = get_char_vis_world(this, name, NULL, EXACT_NO))) {
-          sendTo("No-one by that name here...\n\r");
+          sendTo("You fail to tell to '%s'\n\r", name);
           return FALSE;
         }
       }
@@ -695,9 +769,10 @@ int TBeing::doTell(const char *arg, bool visible)
   }
 
   int drunkNum = getCond(DRUNK);
-  strcpy(garbed, garble(message, drunkNum).c_str());
+  string garbed;
+  garbed = garble(message, drunkNum);
 
-  rc = vict->triggerSpecialOnPerson(this, CMD_OBJ_TOLD_TO_PLAYER, garbed);
+  rc = vict->triggerSpecialOnPerson(this, CMD_OBJ_TOLD_TO_PLAYER, garbed.c_str());
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete vict;
     vict = NULL;
@@ -710,63 +785,48 @@ int TBeing::doTell(const char *arg, bool visible)
 
   if ((roomp->isUnderwaterSector() || hasDisease(DISEASE_DROWNING)) &&
        !isImmortal() && !vict->isImmortal())
-    strcpy(garbed, "Glub glub glub.");
+    garbed = "Glub glub glub.";
 
-  strcpy(capbuf, vict->pers(this));  // Use Someone for tells (invis gods, etc)
+  mud_str_copy(capbuf, vict->pers(this), 256);  // Use Someone for tells (invis gods, etc)
 
-  Descriptor *d = vict->desc;
   char garbedBuf[256];
   char nameBuf[256];
   if (vict->hasColor()) {
     if (hasColorStrings(NULL, capbuf, 2)) {
       if (IS_SET(vict->desc->plr_color, PLR_COLOR_MOBS)) {
-        vict->sendTo(COLOR_COMM, "%s tells you, \"<c>%s<z>\"\n\r",
-            (colorString(vict, vict->desc, cap(capbuf), NULL, COLOR_MOBS, FALSE).c_str()), garbed);
-
-        if (d->client) {
-          sprintf(garbedBuf, "<c>%s<z>", garbed);
-          d->clientf("%d|%s|%s", CLIENT_TELL,
-            colorString(vict, vict->desc, cap(capbuf), NULL, COLOR_NONE, FALSE).c_str(),
-            colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE).c_str());
-        }
+        sprintf(nameBuf, "%s", colorString(vict, vict->desc, cap(capbuf), NULL, COLOR_MOBS, FALSE).c_str());
       } else {
-        vict->sendTo(COLOR_COMM, "<p>%s<z> tells you, \"<c>%s<z>\"\n\r",
-            (colorString(vict, vict->desc, cap(capbuf), NULL, COLOR_MOBS, FALSE).c_str()), garbed);
-        if (d->client) {
-          sprintf(garbedBuf, "<c>%s<z>", garbed);
-          sprintf(nameBuf, "<p>%s<z>", colorString(vict, vict->desc, cap(capbuf), NULL, COLOR_NONE, FALSE).c_str());
-          d->clientf("%d|%s|%s", CLIENT_TELL,
-            colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
-            colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE).c_str());
-        }
+        sprintf(nameBuf, "<p>%s<z>", colorString(vict, vict->desc, cap(capbuf), NULL, COLOR_NONE, FALSE).c_str());
       }
     } else {
-      vict->sendTo(COLOR_COMM, "<p>%s<z> tells you, \"<c>%s<z>\"\n\r", cap(capbuf), garbed);
-      if (d->client) {
-        sprintf(garbedBuf, "<c>%s<z>", garbed);
-        sprintf(nameBuf, "<p>%s<z>", cap(capbuf));
-        d->clientf("%d|%s|%s", CLIENT_TELL,
-          colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
-          colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE).c_str());
-      }
+      sprintf(nameBuf, "<p>%s<z>", cap(capbuf));
     }
   } else {
-    vict->sendTo("%s tells you, \"%s\"\n\r", cap(capbuf), 
-          colorString(vict, vict->desc, garbed, NULL, COLOR_COMM, FALSE).c_str());
-    if (d->client) {
-      d->clientf("%d|%s|%s", CLIENT_TELL, 
-        colorString(vict, vict->desc, cap(capbuf), NULL, COLOR_NONE, FALSE).c_str(),
-        colorString(vict, vict->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-    }
+    sprintf(nameBuf, "%s", cap(capbuf));
   }
-  sendTo(COLOR_COMM, "<G>You tell %s<z>, \"%s\"\n\r", vict->getName(), colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE).c_str());
+
+  sendTo(COLOR_COMM, "<G>You tell %s<z>, \"%s\"\n\r", vict->getName(), colorString(this, desc, garbed.c_str(), NULL, COLOR_BASIC, FALSE).c_str());
+
+  // we only color the string to the victim, so leave this AFTER
+  // the stuff we send to the teller.
+  convertStringColor("<c>", garbed);
+  vict->sendTo(COLOR_COMM, "%s tells you, \"<c>%s<z>\"\n\r",
+            nameBuf, garbed.c_str());
+
+  Descriptor *d = vict->desc;
+  if (d->m_bIsClient) {
+    sprintf(garbedBuf, "<c>%s<z>", garbed.c_str());
+    d->clientf("%d|%s|%s", CLIENT_TELL,
+        colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
+        colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE).c_str());
+  }
 
   // set up last teller for reply's use
   // If it becomes a "someone tells you", ignore
   if (vict->desc && isPc() && vict->canSee(this, INFRA_YES))
     strcpy(vict->desc->last_teller, getName());
 
-  if (desc && inGroup(vict))
+  if (desc && inGroup(*vict))
     desc->talkCount = time(0);
 
   if (vict->desc && (vict->isPlayerAction(PLR_AFK) || (IS_SET(vict->desc->autobits, AUTO_AFK) && (vict->getTimer() >= 5)))) 
@@ -783,7 +843,6 @@ int TBeing::doWhisper(const char *arg)
   TBeing *vict, *bOther = NULL;
   TThing *bThing;
   char name[100], message[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH];
-  char garbed[256];
   int rc;
 
   if (isAffected(AFF_SILENT)) {
@@ -799,49 +858,56 @@ int TBeing::doWhisper(const char *arg)
   }
   half_chop(arg, name, message);
 
-  if (!*name || !*message)
+  if (!*name || !*message) {
     sendTo("Whom do you want to whisper to.. and what??\n\r");
-  else if (!(vict = get_char_room_vis(this, name)))
+    return FALSE;
+  }
+  if (!(vict = get_char_room_vis(this, name))) {
     sendTo("No-one by that name here..\n\r");
-  else if (vict == this) {
+    return FALSE;
+  }
+  if (vict == this) {
     act("$n whispers quietly to $mself.", TRUE, this, 0, 0, TO_ROOM);
     sendTo("You can't seem to get your mouth close enough to your ear...\n\r");
-  } else {
-    strcpy(garbed, garble(message, getCond(DRUNK)).c_str());
+    return FALSE;
+  }
 
-    sprintf(buf, "$n whispers to you, \"%s\"", colorString(this, vict->desc, garbed, NULL, COLOR_COMM, TRUE).c_str());
+  char garbed[256];
+  mud_str_copy(garbed, garble(message, getCond(DRUNK)).c_str(), 256);
 
-    act(buf, TRUE, this, 0, vict, TO_VICT);
-    sendTo(COLOR_MOBS, "You whisper to %s, \"%s\"\n\r", vict->getName(), colorString(this, desc,garbed, NULL, COLOR_BASIC, FALSE).c_str());
-    act("$n whispers something to $N.", TRUE, this, 0, vict, TO_NOTVICT);
+  sprintf(buf, "$n whispers to you, \"%s\"", colorString(this, vict->desc, garbed, NULL, COLOR_COMM, TRUE).c_str());
 
-    // Lets check the room for any thives we might have using spy.
-    // If it's a pc with spy, then they must be equal/greater than the speaker
-    // level or they don't get the message.  And messages to/from immorts are
-    // not overheard and immortals won't overhear messages either.
-    for (bThing = roomp->stuff; bThing; bThing = bThing->nextThing)
-      if ((bOther = dynamic_cast<TPerson *>(bThing)) &&
-          bOther->desc && bOther->isPc() &&
-          bOther->affectedBySpell(SKILL_SPY) &&
-          bOther->GetMaxLevel() >= GetMaxLevel() &&
-          bOther != this && bOther != vict &&
-          !bOther->isImmortal() && !isImmortal() && !vict->isImmortal()) {
-        sprintf(buf, "$n whispers to %s, \"%s\"",
-                vict->getName(),
-                colorString(this, bOther->desc, garbed, NULL, COLOR_COMM, TRUE).c_str());
-        act(buf, TRUE, this, 0, bOther, TO_VICT);
-      }
+  act(buf, TRUE, this, 0, vict, TO_VICT);
+  sendTo(COLOR_MOBS, "You whisper to %s, \"%s\"\n\r", vict->getName(), colorString(this, desc,garbed, NULL, COLOR_BASIC, FALSE).c_str());
+  act("$n whispers something to $N.", TRUE, this, 0, vict, TO_NOTVICT);
 
-    disturbMeditation(vict);
+  // Lets check the room for any thives we might have using spy.
+  // If it's a pc with spy, then they must be equal/greater than the speaker
+  // level or they don't get the message.  And messages to/from immorts are
+  // not overheard and immortals won't overhear messages either.
+  for (bThing = roomp->getStuff(); bThing; bThing = bThing->nextThing) {
+    if ((bOther = dynamic_cast<TPerson *>(bThing)) &&
+        bOther->desc && bOther->isPc() &&
+        bOther->affectedBySpell(SKILL_SPY) &&
+        bOther->GetMaxLevel() >= GetMaxLevel() &&
+        bOther != this && bOther != vict &&
+        !bOther->isImmortal() && !isImmortal() && !vict->isImmortal()) {
+      sprintf(buf, "$n whispers to %s, \"%s\"",
+              vict->getName(),
+              colorString(this, bOther->desc, garbed, NULL, COLOR_COMM, TRUE).c_str());
+      act(buf, TRUE, this, 0, bOther, TO_VICT);
+    }
+  }
 
-    if (!vict->isPc()) {
-      rc = dynamic_cast<TMonster *>(vict)->checkResponses( this, NULL, garbed, CMD_WHISPER);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete vict;
-        vict = NULL;
-      } else if (IS_SET_DELETE(rc, DELETE_VICT)) {
-        return DELETE_THIS;
-      }
+  disturbMeditation(vict);
+
+  if (!vict->isPc()) {
+    rc = dynamic_cast<TMonster *>(vict)->checkResponses( this, NULL, garbed, CMD_WHISPER);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete vict;
+      vict = NULL;
+    } else if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      return DELETE_THIS;
     }
   }
   return FALSE;
@@ -877,7 +943,7 @@ int TBeing::doAsk(const char *arg)
     act("$n quietly asks $mself a question.", TRUE, this, 0, 0, TO_ROOM);
     sendTo("You think about it for a while...\n\r");
   } else {
-    strcpy(garbled, garble(message, getCond(DRUNK)).c_str());
+    mud_str_copy(garbled, garble(message, getCond(DRUNK)).c_str(), 256);
 
     sprintf(buf, "$n asks you, \"%s\"", garbled);
     act(buf, TRUE, this, 0, vict, TO_VICT);
@@ -924,7 +990,7 @@ void TNote::writeMeNote(TBeing *ch, TPen *)
     }
     act("$n begins to jot down a note.", TRUE, ch, 0, 0, TO_ROOM);
 #if 0
-    if (ch->desc->client)
+    if (ch->desc->m_bIsClient)
       ch->desc->clientf("%d|%d", CLIENT_STARTEDIT, MAX_NOTE_LENGTH);
 #endif
 
@@ -948,15 +1014,26 @@ void TBeing::doWrite(const char *arg)
     sendTo("You can't write when you can't see!!\n\r");
     return;
   }
-  if (!*papername || !*penname) {       // nothing was delivered
-    sendTo("write (on) papername (with) penname.\n\r");
-    return;
+  if(!*papername){
+    for(paper=getStuff();paper && !dynamic_cast<TNote *>(paper);paper=paper->nextThing);
+    if(!paper){
+      sendTo("write (on) papername (with) penname.\n\r");
+      return;
+    }
   }
-  if (!(paper = searchLinkedListVis(this, papername, stuff))) {
+  if(!*penname){
+    for(pen=getStuff();pen && !dynamic_cast<TPen *>(pen);pen=pen->nextThing);
+    if(!pen){
+      sendTo("write (on) papername (with) penname.\n\r");
+      return;
+    }
+  }
+
+  if (!paper && !(paper = searchLinkedListVis(this, papername, getStuff()))) {
     sendTo("You have no %s.\n\r", papername);
     return;
   }
-  if (!(pen = searchLinkedListVis(this, penname, stuff))) {
+  if (!pen && !(pen = searchLinkedListVis(this, penname, getStuff()))) {
     sendTo("You have no %s.\n\r", penname);
     return;
   }

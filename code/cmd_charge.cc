@@ -66,7 +66,7 @@ static int charge(TBeing *ch, TBeing *vict)
     return FALSE;
   }
   // otherwise, allow the charge provided all the attackers are working together
-  for (c = vict->roomp->stuff; c; c = c->nextThing) {
+  for (c = vict->roomp->getStuff(); c; c = c->nextThing) {
     TBeing *tbt = dynamic_cast<TBeing *>(c);
     if (!tbt)
       continue;
@@ -111,7 +111,7 @@ vict->getName());
     act("$n and $s mount charge down upon $N.\n\rBut $E was able to dodge them.",
           TRUE, ch, 0, vict, TO_NOTVICT);
 
-    for (c = vict->roomp->stuff; c; c = c->nextThing) {
+    for (c = vict->roomp->getStuff(); c; c = c->nextThing) {
       if (c == vict || c == ch)
         continue;
 
@@ -176,7 +176,7 @@ vict->getName());
   act("$n and $s mount charge down upon $N.",
          TRUE, ch, 0, vict, TO_NOTVICT);
 
-  for (c = vict->roomp->stuff; c; c = c->nextThing) {
+  for (c = vict->roomp->getStuff(); c; c = c->nextThing) {
     if (c == vict || c == ch)
       continue;
 

@@ -213,7 +213,7 @@ void TPCorpse::dropMe(TBeing *ch, showMeT showme, showRoomT showroom)
   if (ch->roomp && ch->roomp->isRoomFlag(ROOM_SAVE_ROOM))
     return;
 
-  if (stuff){
+  if (getStuff()){
     removeGlobalNext(); // this one may not be necessary
     setRoomNum(in_room);// corpse should be in right room
     addCorpseToLists();
@@ -317,13 +317,13 @@ int TBeing::doDrop(const char *argument, TThing *tng, bool forcedDrop)
     return FALSE;
   }
   if (!tng && !strcasecmp(arg, "all")) {
-    for (t = stuff; t; t = n) {
+    for (t = getStuff(); t; t = n) {
       n = t->nextThing;
       if (t->canDrop()) {
         t->dropMe(this, SHOW_ME, SHOW_ROOM);
         logItem(t, CMD_DROP);
         TObj *tobj = dynamic_cast<TObj *>(t);
-        if (tobj && tobj->isObjStat(ITEM_NEWBIE) && !tobj->stuff &&
+        if (tobj && tobj->isObjStat(ITEM_NEWBIE) && !tobj->getStuff() &&
               (in_room > 80) && (in_room != ROOM_DONATION)) {
           sendrpf(roomp, "The %s explodes in a flash of white light!\n\r", fname(tobj->name).c_str());
           delete tobj;
@@ -362,9 +362,9 @@ int TBeing::doDrop(const char *argument, TThing *tng, bool forcedDrop)
     numx = get_number(&buf2);
     while (num != 0) {
       if (forcedDrop == TRUE) 
-        temp = searchLinkedList(arg, stuff);
+        temp = searchLinkedList(arg, getStuff());
       else 
-        temp = searchLinkedListVis(this, arg, stuff, &count);
+        temp = searchLinkedListVis(this, arg, getStuff(), &count);
       
       // force it to be obj we passed in
       tmp = tng;
@@ -426,7 +426,7 @@ int TBeing::doDrop(const char *argument, TThing *tng, bool forcedDrop)
         test = TRUE;
         logItem(tmp, CMD_DROP);
 
-        if (tobj && tobj->isObjStat(ITEM_NEWBIE) && !tobj->stuff &&
+        if (tobj && tobj->isObjStat(ITEM_NEWBIE) && !tobj->getStuff() &&
               (in_room > 80) && (in_room != ROOM_DONATION)) {
           sendrpf(roomp, "The %s explodes in a flash of white light!\n\r", fname(tobj->name).c_str());
           if (tobj == tng)
@@ -609,7 +609,7 @@ int TBeing::doPut(const char *argument)
 
         if (sub) {
 
-          for (t = stuff, i = 0; t; t = t2) {
+          for (t = getStuff(), i = 0; t; t = t2) {
             t2 = t->nextThing;
             if (t == sub || !canSee(t)) {
               continue;
@@ -653,7 +653,7 @@ int TBeing::doPut(const char *argument)
           return FALSE;
         }
 	bool firsttimeround=TRUE;
-        for (t = stuff, i = 0, j = 1; t && i < num; t = t2) {
+        for (t = getStuff(), i = 0, j = 1; t && i < num; t = t2) {
           t2 = t->nextThing;
           obj = dynamic_cast<TObj *>(t);
           if (obj && isname(tmp, obj->name)) {
@@ -956,7 +956,7 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
     TThing *last_given = NULL;
     while (num != 0) {
       if (flags == GIVE_FLAG_DEF) {
-        TThing *t_obj = searchLinkedListVis(this, obj_name, stuff);
+        TThing *t_obj = searchLinkedListVis(this, obj_name, getStuff());
         obj = dynamic_cast<TObj *>(t_obj);
         if (!obj) {
           if (num >= -1)
@@ -965,7 +965,7 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
         }
       } else {
         // for other flags, lets also ignore visibility...
-        TThing *t_obj = searchLinkedList(obj_name, stuff);
+        TThing *t_obj = searchLinkedList(obj_name, getStuff());
         obj = dynamic_cast<TObj *>(t_obj);
         if (!obj) {
           if (num >= -1)
@@ -1368,7 +1368,7 @@ int TTable::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     sprintf(capbuf, "%s %s", newarg, arg2);
     act("You start getting items off $p.", TRUE, ch, this, NULL, TO_CHAR);
     act("$n starts getting items off $p.", TRUE, ch, this, NULL, TO_ROOM);
-    start_task(ch, ch->roomp->stuff, ch->roomp, TASK_GET_ALL,capbuf,350, ch->in_room,1,0, 0);
+    start_task(ch, ch->roomp->getStuff(), ch->roomp, TASK_GET_ALL,capbuf,350, ch->in_room,1,0, 0);
     // this is a kludge, task_get still has a tiny delay on it
     // this dumps around it and goes right to the guts
     rc = (*(tasks[TASK_GET_ALL].taskf))
@@ -1399,7 +1399,7 @@ int TTable::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     sprintf(capbuf, "%s %s", newarg, arg2);
     act("You start getting items off $p.", TRUE, ch, this, NULL, TO_CHAR);
     act("$n starts getting items off $p.", TRUE, ch, this, NULL, TO_ROOM);
-    start_task(ch, ch->roomp->stuff, ch->roomp,TASK_GET_ALL,capbuf,350, ch->in_room,0,p+1,0);
+    start_task(ch, ch->roomp->getStuff(), ch->roomp,TASK_GET_ALL,capbuf,350, ch->in_room,0,p+1,0);
     // this is a kludge, task_get still has a tiny delay on it
     // this dumps around it and goes right to the guts
     rc = (*(tasks[TASK_GET_ALL].taskf))
@@ -1685,11 +1685,11 @@ void TPerson::dropItemsToRoom(safeTypeT ok, dropNukeT actually_nuke)
         *this += *unequip(wst);
     }
 
-    while (stuff) {
-      TThing *i = stuff;
+    while (getStuff()) {
+      TThing *i = getStuff();
       --(*i);
       TObj *tobj = dynamic_cast<TObj *>(i);
-      if (tobj && tobj->isObjStat(ITEM_NEWBIE) && !tobj->stuff &&
+      if (tobj && tobj->isObjStat(ITEM_NEWBIE) && !tobj->getStuff() &&
           (in_room > 80) && (in_room != ROOM_DONATION)) {
         delete tobj;
         tobj = NULL;
@@ -1752,7 +1752,7 @@ int TBeing::doDonate(const char *argument)
 
   int count = 0;
   while (num != 0) {
-    TThing *t_o = searchLinkedListVis(this, arg, stuff);
+    TThing *t_o = searchLinkedListVis(this, arg, getStuff());
 
     // while modeled on junk, thought it would be cooler to let people donate
     // beings they had picked up too.
@@ -1770,13 +1770,13 @@ int TBeing::doDonate(const char *argument)
         sendTo("Monogrammed items can't be donated.\n\r");
         return FALSE;
       }
-      if (o->stuff && desc && (desc->autobits & AUTO_POUCH)) {
+      if (o->getStuff() && desc && (desc->autobits & AUTO_POUCH)) {
         sendTo("There is still stuff in there, you choose not to donate it.\n\r");
         return FALSE;
       }
     }
     TThing *t;
-    for (t = t_o->stuff; t; t = t->nextThing) {
+    for (t = t_o->getStuff(); t; t = t->nextThing) {
       TObj *tobj = dynamic_cast<TObj *>(t);
       if (!tobj)
         continue;
@@ -1799,7 +1799,7 @@ int TBeing::doDonate(const char *argument)
       act("$n donates $p.", false, this, t_o, NULL, TO_ROOM);
 
       logItem(t_o, CMD_DONATE);
-      for (t = t_o->stuff; t; t = t->nextThing)
+      for (t = t_o->getStuff(); t; t = t->nextThing)
         logItem(t, CMD_DONATE);
 
       --(*t_o);

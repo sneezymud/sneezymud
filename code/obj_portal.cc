@@ -269,7 +269,7 @@ void TPortal::unlockMe(TBeing *ch)
 
 int TPortal::objectDecay()
 {
-  if (roomp && roomp->stuff) {
+  if (roomp && roomp->getStuff()) {
 #if 0
     sendrpf(COLOR_OBJECTS, roomp, "%s flickers out of view.\n\r", good_cap(getName()).c_str());
 #else
@@ -319,7 +319,7 @@ int TPortal::enterMe(TBeing *ch)
     return FALSE;
   }
   if (rp->getMoblim() &&
-      (MobCountInRoom(rp->stuff) >= rp->getMoblim()) && !ch->isImmortal()) {
+      (MobCountInRoom(rp->getStuff()) >= rp->getMoblim()) && !ch->isImmortal()) {
     act("You attempt to enter $p, but it's like an invisible wall bars your entry.", FALSE, ch, this, NULL, TO_CHAR);
     return FALSE;
   }
@@ -450,7 +450,7 @@ TPortal * TPortal::findMatchingPortal() const
     return NULL;
 
   TThing *t;
-  for (t = rp->stuff; t; t = t->nextThing) {
+  for (t = rp->getStuff(); t; t = t->nextThing) {
     TPortal *tp = dynamic_cast<TPortal *>(t);
     if (!tp)
       continue;

@@ -260,7 +260,7 @@ int TStaff::useMe(TBeing *ch, const char * argument)
       } else {
         if ((discArray[the_spell]->targets & TAR_VIOLENT))
           isViolent = TRUE;
-        for (t = ch->roomp->stuff; t; t = t2) {
+        for (t = ch->roomp->getStuff(); t; t = t2) {
           t2 = t->nextThing;
           tmp_char = dynamic_cast<TBeing *>(t);
           if (!tmp_char)

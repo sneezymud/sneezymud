@@ -3,6 +3,15 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_lightfire.cc,v $
+// Revision 5.2  2001/09/07 07:07:35  peel
+// changed TThing->stuff to getStuff() and setStuff()
+//
+// Revision 5.1.1.2  2000/10/18 18:20:38  dash
+// fixed some typos in the lightfire messages.
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -46,13 +55,13 @@ int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 
   // make sure the thing we're trying to burn is still around
   if((obj != ch->heldInPrimHand()) && (obj != ch->heldInSecHand())){
-    for (t = ch->roomp->stuff; t; t = t2) {
+    for (t = ch->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       if(obj==dynamic_cast<TObj *>(t))
         found=1;
     }
     if(!found){
-      act("You can't find $o and stop trying to light it on fire.",
+      act("You can't find $p and stop trying to light it on fire.",
           FALSE, ch, obj, 0, TO_CHAR);
       act("$n stops trying to start a fire.",
           TRUE, ch, obj, 0, TO_ROOM);
@@ -70,7 +79,7 @@ int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   }
 
   // check for guards that prevent
-  for (t = ch->roomp->stuff; t; t = t2) {
+  for (t = ch->roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     guard = dynamic_cast<TMonster *>(t);
     if (!guard)
@@ -91,12 +100,12 @@ int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     if(material_nums[obj->getMaterial()].flammability){
       obj->setBurning(ch);
 
-      act("You set $o on fire.",
+      act("You set $p on fire.",
           FALSE, ch, obj, 0, TO_CHAR);
-      act("$n sets $o on fire.",
+      act("$n sets $p on fire.",
           TRUE, ch, obj, 0, TO_ROOM);
     } else {
-      act("$o doesn't seem to be flammable.",
+      act("That $o doesn't seem to be flammable.",
           FALSE, ch, obj, 0, TO_CHAR);
       act("$n stops trying to start a fire.",
           TRUE, ch, 0, 0, TO_ROOM);
@@ -114,7 +123,7 @@ int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       if (flintsteel->getToolUses() <= 0) {
         act("Oops, your $o has been used up.",
             FALSE, ch, flintsteel, 0, TO_CHAR);
-        act("$n looks startled as $e realizes that $o has been used up.",
+        act("$n looks startled as $e realizes that his $o has been used up.",
             FALSE, ch, flintsteel, 0, TO_ROOM);
         ch->stopTask();
         delete flintsteel;
@@ -123,23 +132,23 @@ int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 
       switch (ch->task->timeLeft) {
       case 2:
-          act("You lay some thin <o>wood shavings<1> around $o.",
+          act("You lay some thin <o>wood shavings<1> around the $o.",
               FALSE, ch, obj, 0, TO_CHAR);
-          act("$n lays some thin <o>wood shavings<1> around $o.",
+          act("$n lays some thin <o>wood shavings<1> around the $o.",
               TRUE, ch, obj, 0, TO_ROOM);
           ch->task->timeLeft--;
           break;
       case 1:
           act("You strike your $o, sending <Y>sparks<1> into the <o>wood shavings<1>.",
               FALSE, ch, flintsteel, 0, TO_CHAR);
-          act("$n strikes $e $o, sending <Y>sparks<1> into the <o>wood shavings<1>.",
+          act("$n strikes $s $o, sending <Y>sparks<1> into the <o>wood shavings<1>.",
               TRUE, ch, flintsteel, 0, TO_ROOM);
           ch->task->timeLeft--;
           break;
       case 0:
-          act("You carefully fan the <r>flames<1> towards $o.",
+          act("You carefully fan the <r>flames<1> towards $p.",
               FALSE, ch, obj, 0, TO_CHAR);
-          act("$n carefully fans the <r>flames<1> towards $o.",
+          act("$n carefully fans the <r>flames<1> towards $p.",
               TRUE, ch, obj, 0, TO_ROOM);
           ch->task->timeLeft--;
           break;

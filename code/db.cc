@@ -829,7 +829,7 @@ bool bootHome(int plan_i, int plot_start, int plot_end,
       
       // copy objects now
       if(copy_objs){
-	for(TThing *t=src->stuff;t;t=t->nextThing){
+	for(TThing *t=src->getStuff();t;t=t->nextThing){
 	  TObj *obj=read_object(t->number, REAL);
 	  *dest+=*obj;
 	}
@@ -2142,7 +2142,7 @@ void zoneData::resetZone(bool bootTime)
                 count++;
             }
 #else
-            for (t = rp->stuff; t; t = t->nextThing) {
+            for (t = rp->getStuff(); t; t = t->nextThing) {
               TMonster * tmon = dynamic_cast<TMonster *>(t);
 
               if (tmon && tmon->mobVnum() == mob_index[rs.arg1].virt)
@@ -2219,7 +2219,7 @@ void zoneData::resetZone(bool bootTime)
                 count++;
             }
 #else
-            for (t = rp->stuff; t; t = t->nextThing) {
+            for (t = rp->getStuff(); t; t = t->nextThing) {
               TMonster * tmon = dynamic_cast<TMonster *>(t);
               if (tmon && tmon->mobVnum() == mob_index[rs.arg1].virt)
                 count++;
@@ -2289,7 +2289,7 @@ void zoneData::resetZone(bool bootTime)
                 count++;
             }
 #else
-            for (t = rp->stuff; t; t = t->nextThing) {
+            for (t = rp->getStuff(); t; t = t->nextThing) {
               TMonster * tmon = dynamic_cast<TMonster *>(t);
               if (tmon && tmon->mobVnum() == mob_index[rs.arg1].virt)
                 count++;
@@ -2376,7 +2376,7 @@ void zoneData::resetZone(bool bootTime)
                 count++;
             }
 #else
-            for (t = rp->stuff; t; t = t->nextThing) {
+            for (t = rp->getStuff(); t; t = t->nextThing) {
               TMonster * tmon = dynamic_cast<TMonster *>(t);
               if (tmon && tmon->mobVnum() == mob_index[rs.arg1].virt)
                 count++;
@@ -2618,7 +2618,7 @@ void zoneData::resetZone(bool bootTime)
               TThing    *tThing;
 
               // Find Held Spellbag
-              for (tThing = mob->stuff; tThing; tThing = tThing->nextThing)
+              for (tThing = mob->getStuff(); tThing; tThing = tThing->nextThing)
                 if ((tBagA = dynamic_cast<TSpellBag *>(tThing)))
                   break;
 
@@ -2629,7 +2629,7 @@ void zoneData::resetZone(bool bootTime)
                   break;
 
               if (tBagA && tBagB) {
-                while ((tThing = tBagA->stuff)) {
+                while ((tThing = tBagA->getStuff())) {
                   --(*tThing);
                   *tBagB += *tThing;
                 }

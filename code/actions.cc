@@ -372,7 +372,7 @@ int TBeing::doAction(const string & argument, cmdTypeT cmd) return rc(0)
     sendTo("\n\r");
     act(action.others_no_arg, action.hide, this, 0, 0, TO_ROOM);
 
-    for (t = roomp->stuff; t; t = t2) {
+    for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       tmp = dynamic_cast<TMonster *>(t);
       if (!tmp)
@@ -405,7 +405,7 @@ int TBeing::doAction(const string & argument, cmdTypeT cmd) return rc(0)
     sendTo("\n\r");
     act(action.others_auto, action.hide, this, 0, 0, TO_ROOM);
 
-    for (t = roomp->stuff; t; t = t2) {
+    for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       tmp = dynamic_cast<TMonster *>(t);
 
@@ -433,7 +433,7 @@ int TBeing::doAction(const string & argument, cmdTypeT cmd) return rc(0)
       act(action.others_found, action.hide, this, 0, vict, TO_NOTVICT);
       act(action.vict_found, action.hide, this, 0, vict, TO_VICT);
 
-      for (t = roomp->stuff; t; t = t2) {
+      for (t = roomp->getStuff(); t; t = t2) {
         t2 = t->nextThing;
         tmp = dynamic_cast<TMonster *>(t);
 
@@ -588,7 +588,7 @@ void TBeing::doPee(const char *argument)
 
       if (arg2 && generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_ROOM, this, &tmp_char, &o)) 
        	o->peeMe(this);	
-    } else if ((t = searchLinkedListVis(this, arg, roomp->stuff))) 
+    } else if ((t = searchLinkedListVis(this, arg, roomp->getStuff()))) 
       t->peeOnMe(this);
   } else {
     act("$n quietly relieves $mself.  You are not amused.", TRUE, this, NULL, NULL, TO_ROOM);
@@ -642,7 +642,7 @@ void TBeing::doPoint(const char *arg)
   }
 
   // point at someone
-  for (t = roomp->stuff; t; t = t->nextThing) {
+  for (t = roomp->getStuff(); t; t = t->nextThing) {
     if (isname(arg, t->name)) {
       obj = dynamic_cast<TObj *>(t);
       if (obj) {

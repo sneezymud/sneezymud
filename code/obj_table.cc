@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_table.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // table.cc
 //
 
@@ -56,7 +41,7 @@ TTable::~TTable()
     else if (roomp)
       *roomp += *t;
     else {
-      vlogf(5,"Table Delete %s: Not in room not in parent", getName());
+      vlogf(LOG_BUG,"Table Delete %s: Not in room not in parent", getName());
       delete t;
       t = NULL;
       continue;
@@ -88,7 +73,7 @@ void TTable::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 void TTable::lowCheck()
 {
   if (canWear(ITEM_TAKE)) {
-    vlogf(LOW_ERROR, "Table (%s) set to be takeable.", getName());
+    vlogf(LOG_LOW, "Table (%s) set to be takeable.", getName());
   }
 
 // we are explicitely NOT doing the TObj part of lowCheck since we
@@ -152,7 +137,7 @@ int TTable::getAllFrom(TBeing *ch, const char *argument)
 
   act("You start getting items off $p.", TRUE, ch, this, NULL, TO_CHAR);
   act("$n starts getting items off $p.", TRUE, ch, this, NULL, TO_ROOM);
-  start_task(ch, ch->roomp->stuff, ch->roomp, TASK_GET_ALL, argument, 350, ch->in_room, 0,0,0);
+  start_task(ch, ch->roomp->getStuff(), ch->roomp, TASK_GET_ALL, argument, 350, ch->in_room, 0,0,0);
   // this is a kludge, task_get still has a tiny delay on it
   // this dumps around it and goes right to the guts
   rc = (*(tasks[TASK_GET_ALL].taskf))

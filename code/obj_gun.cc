@@ -156,7 +156,7 @@ void TBeing::doGload(const char *arg)
       strcpy(arg2, getAmmoKeyword(gun->getAmmoType()));
     } 
 
-    if(!(arrow = searchLinkedListVis(this, arg2, stuff)) ||
+    if(!(arrow = searchLinkedListVis(this, arg2, getStuff())) ||
        !(ammo=dynamic_cast<TAmmo *>(arrow))){
       gload_usage(this);
       return;
@@ -203,8 +203,8 @@ void TBeing::doGload(const char *arg)
       act("You unload $N and drop $p.", TRUE, this, ammo, gun, TO_CHAR);
       act("$n unloads $N and drops $p.", TRUE, this, ammo, gun, TO_ROOM);
     } else {
-      arrow->nextThing=stuff;
-      stuff=arrow;
+      arrow->nextThing=getStuff();
+      setStuff(arrow);
       arrow->parent=this;
       
       act("You unload $N.", TRUE, this, ammo, gun, TO_CHAR);

@@ -464,7 +464,7 @@ int TBeing::doPour(const char *argument)
     act("What do you want to pour from?", FALSE, this, 0, 0, TO_CHAR);
     return FALSE;
   }
-  TThing *t_from_obj = searchLinkedListVis(this, arg1, stuff);
+  TThing *t_from_obj = searchLinkedListVis(this, arg1, getStuff());
   from_obj = dynamic_cast<TObj *>(t_from_obj);
   if (!from_obj) {
     act("You can't find it!", FALSE, this, 0, 0, TO_CHAR);
@@ -478,9 +478,9 @@ int TBeing::doPour(const char *argument)
     from_obj->pourMeOut(this);
     return FALSE;
   }
-  TThing *t_to_obj = searchLinkedListVis(this, arg2, stuff);
+  TThing *t_to_obj = searchLinkedListVis(this, arg2, getStuff());
   if (!t_to_obj)
-    t_to_obj = searchLinkedListVis(this, arg2, roomp->stuff);
+    t_to_obj = searchLinkedListVis(this, arg2, roomp->getStuff());
   if (t_to_obj && (rc = t_to_obj->pourWaterOnMe(this, from_obj)) != 0) {
     if (rc == -1 && dynamic_cast<TBeing *>(t_to_obj)) {
       dynamic_cast<TBeing *>(t_to_obj)->reformGroup();
@@ -491,7 +491,7 @@ int TBeing::doPour(const char *argument)
   }
   to_obj = dynamic_cast<TObj *>(t_to_obj);
   if (!to_obj) {
-    t_to_obj = searchLinkedListVis(this, arg2, roomp->stuff);
+    t_to_obj = searchLinkedListVis(this, arg2, roomp->getStuff());
     to_obj = dynamic_cast<TObj *>(t_to_obj);
   }
   if (!to_obj) {
@@ -727,14 +727,14 @@ void TBeing::checkForSpills() const
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if ((t = equipment[i])) {
       t->spill(this);
-      for (t2 = t->stuff; t2; t2 = t2->nextThing) {
+      for (t2 = t->getStuff(); t2; t2 = t2->nextThing) {
         t2->spill(this);
       }
     }
   }
-  for (t = stuff; t; t = t->nextThing) {
+  for (t = getStuff(); t; t = t->nextThing) {
     t->spill(this);
-    for (t2 = t->stuff; t2; t2 = t2->nextThing) {
+    for (t2 = t->getStuff(); t2; t2 = t2->nextThing) {
       t2->spill(this);
     }
   }

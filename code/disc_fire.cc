@@ -864,7 +864,7 @@ int hellfire(TBeing *caster, int level, byte bKnown, int adv_learn)
 
     caster->roomp->playsound(SOUND_SPELL_HELLFIRE, SOUND_TYPE_MAGIC);
 
-    for (t = caster->roomp->stuff; t; t = t2) {
+    for (t = caster->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       vict = dynamic_cast<TBeing *>(t);
       if (!vict)
@@ -896,7 +896,7 @@ int hellfire(TBeing *caster, int level, byte bKnown, int adv_learn)
       act("$n needs to play spin the bottle more, $e's pointing the wrong way!", FALSE, caster, NULL, NULL, TO_ROOM);
       act("You need to break out a compass, you're pointing the wrong way!", FALSE, caster, NULL, NULL, TO_CHAR);
       act("You hate the smell of brimstone in the morning!", FALSE, caster, NULL, NULL, TO_CHAR);
-      for (t = caster->roomp->stuff; t; t = t2) {
+      for (t = caster->roomp->getStuff(); t; t = t2) {
         t2 = t->nextThing;
         vict = dynamic_cast<TBeing *>(t);
         if (!vict)
@@ -1330,7 +1330,7 @@ int conjureElemFire(TBeing *caster)
   if (!bPassMageChecks(caster, SPELL_CONJURE_FIRE, NULL))
     return FALSE;
 
-  for(t=caster->roomp->stuff;t;t=t->nextThing){
+  for(t=caster->roomp->getStuff();t;t=t->nextThing){
     if((tl=dynamic_cast<TLight *>(t)) &&
        tl->isLit()){
       tl->putLightOut();
@@ -1374,7 +1374,7 @@ int flare(TBeing *caster, int level, byte bKnown)
     return SPELL_FAIL;
   }
 
-  for (t = caster->roomp->stuff;t;t = t->nextThing) {
+  for (t = caster->roomp->getStuff();t;t = t->nextThing) {
     o = dynamic_cast<TObj *>(t);
     if (!o)
       continue;
@@ -1416,7 +1416,7 @@ int flare(TBeing *caster, int level, byte bKnown)
       act("                ----<<<<<****  KA BOOM!!!  ****>>>>>----",TRUE,caster,0,0,TO_ROOM, ANSI_RED);
       act("                ----<<<<<****  KA BOOM!!!  ****>>>>>----",TRUE,caster,0,0,TO_CHAR, ANSI_RED);
 
-      for (t = caster->roomp->stuff; t; t = t2) {
+      for (t = caster->roomp->getStuff(); t; t = t2) {
         t2 = t->nextThing;
         tmp_victim = dynamic_cast<TBeing *>(t);
         if (!tmp_victim)
@@ -1489,7 +1489,7 @@ int flare(TBeing *caster)
   TThing *t, *t2;
 
   // look to see if there is already a flare here
-  for (t = caster->roomp->stuff;t;t = t->nextThing) {
+  for (t = caster->roomp->getStuff();t;t = t->nextThing) {
     o = dynamic_cast<TObj *>(t);
     if (!o)
       continue;
@@ -1517,7 +1517,7 @@ int flare(TBeing *caster)
   start_cast(caster, NULL, NULL, caster->roomp, SPELL_FLARE, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
   return FALSE;
 
-  for (t = caster->roomp->stuff; t; t = t2) {
+  for (t = caster->roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     tmp_victim = dynamic_cast<TBeing *>(t);
     if (!tmp_victim)
@@ -1561,7 +1561,7 @@ int flare(TBeing *caster, TMagicItem * obj)
     return FALSE;
   }
   // look to see if there is already a flare here
-  for (t = caster->roomp->stuff;t;t = t->nextThing) {
+  for (t = caster->roomp->getStuff();t;t = t->nextThing) {
     o = dynamic_cast<TObj *>(t);
     if (!o)
       continue;

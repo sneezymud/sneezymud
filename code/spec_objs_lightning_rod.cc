@@ -140,7 +140,7 @@ int lightningRodFryRoom(TBaseWeapon *tObj, TRoom *tRoom)
          *tThingNext;
   TBeing *tBeing;
 
-  for (tThing = tRoom->stuff; tThing; tThing = tThingNext) {
+  for (tThing = tRoom->getStuff(); tThing; tThing = tThingNext) {
     tThingNext = tThing->nextThing;
 
     if (!(tBeing = dynamic_cast<TBeing *>(tThing)) || !::number(0, 3))

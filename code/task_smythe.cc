@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.3  2001/09/07 07:07:35  peel
+// changed TThing->stuff to getStuff() and setStuff()
+//
 // Revision 5.2  2001/07/23 00:33:30  jesus
 // added goofers dust
 //
@@ -53,7 +56,7 @@ int smythe_tools_in_room(int room, TTool **forge, TTool **anvil)
   if (!(rp = real_roomp(room)))
     return FALSE;
 
-  for (t = rp->stuff; t; t = t->nextThing) {
+  for (t = rp->getStuff(); t; t = t->nextThing) {
     t->findSmytheTools(forge, anvil);
   }
   return (*forge && *anvil);

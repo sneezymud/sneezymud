@@ -176,7 +176,7 @@ static int steal(TBeing * thief, TBeing * victim)
       act("You discover that $n has $s hands in your moneypouch.", 
            FALSE, thief, 0, victim, TO_VICT);
 
-    for (t = thief->roomp->stuff; t; t = t2) {
+    for (t = thief->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       if (!(guard = dynamic_cast<TMonster *>(t)))
         continue;
@@ -269,7 +269,7 @@ static int steal(TBeing * thief, TBeing * victim, char * obj_name)
     modifier -= dynamic_cast<TMonster *>(victim)->susp()/2;
 
 
-  TThing *tt = searchLinkedListVis(thief, obj_name, victim->stuff);
+  TThing *tt = searchLinkedListVis(thief, obj_name, victim->getStuff());
   TObj *obj = dynamic_cast<TObj *>(tt);
   if (!obj) {
     for (eq_pos = MIN_WEAR; (eq_pos < MAX_WEAR); eq_pos++) {
@@ -396,7 +396,7 @@ static int steal(TBeing * thief, TBeing * victim, char * obj_name)
     } else
       act("$n just tried to steal your $o!!",FALSE,thief,obj,victim,TO_VICT);
 
-    for (t = thief->roomp->stuff; t; t = t2) {
+    for (t = thief->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       if (!(guard = dynamic_cast<TMonster *>(t)))
         continue;

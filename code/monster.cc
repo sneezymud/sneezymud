@@ -531,7 +531,7 @@ int TMonster::lookForEngaged(const TBeing *ch)
     return FALSE;
 
   TThing * t, *t2;
-  for (t = roomp->stuff; t; t = t2) {
+  for (t = roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     if (t == this || (ch && dynamic_cast<const TBeing *>(t) == ch))
       continue;

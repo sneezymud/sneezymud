@@ -364,7 +364,7 @@ void TBeing::saySpell(spellNumT si)
     sprintf(buf, "$n utters the holy words, '%s'", discArray[si]->name);
   }
 
-  for (t = roomp->stuff; t; t = t->nextThing) {
+  for (t = roomp->getStuff(); t; t = t->nextThing) {
     temp_char = dynamic_cast<TBeing *>(t);
     if (!temp_char)
       continue;
@@ -1274,12 +1274,12 @@ int TBeing::parseTarget(spellNumT which, char *n, TThing **ret)
     }
     int dummy = 0;
     if (!ok && (discArray[which]->targets & TAR_OBJ_INV)) {
-      if ((o = dynamic_cast<TObj *>(searchLinkedListVis(this, n, stuff, &dummy, TYPEOBJ)))) {
+      if ((o = dynamic_cast<TObj *>(searchLinkedListVis(this, n, getStuff(), &dummy, TYPEOBJ)))) {
         ok = TRUE;
       }
     }
     if (!ok && (discArray[which]->targets & TAR_OBJ_ROOM)) {
-      if ((o = dynamic_cast<TObj *>(searchLinkedListVis(this, n, roomp->stuff, &dummy, TYPEOBJ)))) 
+      if ((o = dynamic_cast<TObj *>(searchLinkedListVis(this, n, roomp->getStuff(), &dummy, TYPEOBJ)))) 
         ok = TRUE;
     }
     if (!ok && (discArray[which]->targets & TAR_OBJ_WORLD)) {
@@ -2513,7 +2513,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
 
     if (discArray[which]->targets & TAR_AREA) {
       bool found = false;
-      for (t = roomp->stuff; t; t = t->nextThing) {
+      for (t = roomp->getStuff(); t; t = t->nextThing) {
         TBeing * victim = dynamic_cast<TBeing *>(t);
         if (!victim)
           continue;

@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: cmd_save.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 /*****************************************************************************
 
   SneezyMUD++ - All rights reserved, SneezyMUD Coding Team.
@@ -25,243 +10,6 @@
 ******************************************************************************/
 
 #include "stdsneezy.h"
-
-const char SAVEZONEFILE_REPLYTO[] = "mithros@spasm.stanford.edu";
-
-void doSaveZoneFile(TBeing *ch, const char *tArg)
-{
-  unsigned int  zValue,
-                roomIndex,
-                roomStart;
-  FILE         *tFile;
-  char          tString[256],
-                tBuffer[256];
-  TRoom        *tRoom;
-  string        tStString("");
-
-  if (!ch->isImmortal() || !ch->desc || !ch->isPc())
-    return;
-
-  if (!ch->hasWizPower(POWER_ZONEFILE_UTILITY)) {
-    ch->sendTo("You have not been given this power yet.\n\r");
-    return;
-  }
-
-  if ((zValue = ch->roomp->getZone()) > zone_table.size()) {
-    vlogf(7, "Immortal in invalid zone [%s]", ch->getName());
-    ch->sendTo("You are in an invalid zone, how did you get there?!?\n\r");
-    return;
-  }
-
-  if (zone_table[zValue].enabled) {
-    ch->sendTo("I'm sorry, this zone is enabled so you cannot do this for it.\n\r");
-    return;
-  }
-
-  sprintf(tString, "immortals/%s/zonefile", ch->getName());
-
-  if (!(tFile = fopen(tString, "w"))) {
-    ch->sendTo("Something went wrong, tell a coder what you did.\n\r");
-    vlogf(7, "Unable to create file for zonefile writing.  [%s]", tString);
-    return;
-  }
-
-  roomStart = (zValue <= 0 ? 0 : (zone_table[zValue - 1].top + 1));
-
-  tStString += "Saving Header.\n\r";
-
-  sprintf(tString, "#%d\n", roomStart);
-  fputs(tString, tFile);
-  sprintf(tString, "%s~\n", zone_table[zValue].name);
-  fputs(tString, tFile);
-  sprintf(tString, "%d %d %d %d\n", zone_table[zValue].top, 30, 2, 0);
-  fputs(tString, tFile);
-
-  tStString += "Saving Door Status:"; // 'D' Command
-
-  for (roomIndex = roomStart; roomIndex < (unsigned) (zone_table[zValue].top + 1); roomIndex++) {
-    if (!(tRoom = real_roomp(roomIndex)))
-      continue;
-
-    roomDirData *tExit;
-    TRoom *tERoom;
-
-    for (int exitIndex = 0; exitIndex < MAX_DIR; exitIndex++) {
-      if (!(tExit = tRoom->dir_option[exitIndex]) ||
-          tExit->door_type <= DOOR_NONE ||
-          !(tExit->condition & EX_CLOSED))
-        continue;
-
-      sprintf(tString, "D 0 %d %d %d",
-              roomIndex, exitIndex,
-              ((tExit->condition & EX_LOCKED) ? 2 : 1));
-      sprintf(tBuffer, "%-30s %s -> %s\n", tString,
-              tRoom->getNameNOC(ch).c_str(),
-              ((tERoom = real_roomp(tExit->to_room)) ?
-               tERoom->getNameNOC(ch).c_str() : "Unknown"));
-      fputs(tBuffer, tFile);
-    }
-
-    tStString += '.';
-  }
-
-  tStString += "\n\rSaving Object Status:"; // 'O' Command & 'P' Command
-
-  for (roomIndex = roomStart; roomIndex < (unsigned) (zone_table[zValue].top + 1); roomIndex++) {
-    if (!(tRoom = real_roomp(roomIndex)))
-      continue;
-
-    TThing *tThing;
-    TObj   *tObj;
-
-    for (tThing = tRoom->stuff; tThing; tThing = tThing->nextThing) {
-      if (!(tObj = dynamic_cast<TObj *>(tThing)) ||
-          (tObj->getSnum() < 0) ||
-          tObj->canWear(ITEM_TAKE))
-        continue;
-
-      sprintf(tString, "O 0 %d %d %d",
-              tObj->getSnum(), tObj->max_exist, roomIndex);
-      sprintf(tBuffer, "%-30s %s\n", tString,
-              (tObj->getNameNOC(ch).c_str() ? tObj->getNameNOC(ch).c_str() : "Unknown"));
-      fputs(tBuffer, tFile);
-
-      if (tObj->stuff) {
-        TThing *sThing;
-        TObj   *sObj;
-
-        for (sThing = tObj->stuff; sThing; sThing = sThing->nextThing) {
-          if (!(sObj = dynamic_cast<TObj *>(sThing)) ||
-              sObj->getSnum() < 0)
-            continue;
-
-          sprintf(tString, "P 1 %d %d %d",
-                  sObj->getSnum(), sObj->max_exist, tObj->getSnum());
-          sprintf(tBuffer, "%-35s %s inside %s\n", tString,
-                  (sObj->getNameNOC(ch).c_str() ? sObj->getNameNOC(ch).c_str() : "Unknown"),
-                  (tObj->getNameNOC(ch).c_str() ? tObj->getNameNOC(ch).c_str() : "Unknown"));
-          fputs(tBuffer, tFile);
-        }
-      }
-    }
-
-    tStString += '.';
-  }
-
-  tStString += "\n\rSaving Booty Status:"; // 'B' Command & 'P' Command
-
-  for (roomIndex = roomStart; roomIndex < (unsigned) (zone_table[zValue].top + 1); roomIndex++) {
-    if (!(tRoom = real_roomp(roomIndex)))
-      continue;
-
-    TThing *tThing;
-    TObj   *tObj;
-
-    for (tThing = tRoom->stuff; tThing; tThing = tThing->nextThing) {
-      if (!(tObj = dynamic_cast<TObj *>(tThing)) ||
-          (tObj->getSnum() < 0) ||
-          !tObj->canWear(ITEM_TAKE))
-        continue;
-
-      sprintf(tString, "B 0 %d %d %d",
-              tObj->getSnum(), tObj->max_exist, roomIndex);
-      sprintf(tBuffer, "%-30s %s\n", tString,
-              (tObj->getNameNOC(ch).c_str() ? tObj->getNameNOC(ch).c_str() : "Unknown"));
-      fputs(tBuffer, tFile);
-
-      if (tObj->stuff) {
-        TThing *sThing;
-        TObj   *sObj;
-
-        for (sThing = tObj->stuff; sThing; sThing = sThing->nextThing) {
-          if (!(sObj = dynamic_cast<TObj *>(sThing)) ||
-              sObj->getSnum() < 0)
-            continue;
-
-          sprintf(tString, "P 1 %d %d %d",
-                  sObj->getSnum(), sObj->max_exist, tObj->getSnum());
-          sprintf(tBuffer, "%-35s %s inside %s\n", tString,
-                  (sObj->getNameNOC(ch).c_str() ? sObj->getNameNOC(ch).c_str() : "Unknown"),
-                  (tObj->getNameNOC(ch).c_str() ? tObj->getNameNOC(ch).c_str() : "Unknown"));
-          fputs(tBuffer, tFile);
-        }
-      }
-    }
-
-    tStString += '.';
-  }
-
-  tStString += "\n\rSaving Mobile Status:"; // 'M' Command & 'G' Command & 'E' Command
-
-  for (roomIndex = roomStart; roomIndex < (unsigned) (zone_table[zValue].top + 1); roomIndex++) {
-    if (!(tRoom = real_roomp(roomIndex)))
-      continue;
-
-    TThing   *tThing;
-    TMonster *tMob;
-
-    for (tThing = tRoom->stuff; tThing; tThing = tThing->nextThing) {
-      if (!(tMob = dynamic_cast<TMonster *>(tThing)) ||
-          tMob->getSnum() < 0)
-        continue;
-
-      sprintf(tString, "M 0 %d %d %d",
-              tMob->getSnum(), tMob->max_exist, roomIndex);
-      sprintf(tBuffer, "%-30s %s\n", tString,
-              (tMob->getNameNOC(ch).c_str() ? tMob->getNameNOC(ch).c_str() : "Unknown"));
-      fputs(tBuffer, tFile);
-
-      if (tMob->stuff) {
-        TThing *sThing;
-        TObj   *sObj;
-
-        for (sThing = tMob->stuff; sThing; sThing = sThing->nextThing) {
-          if (!(sObj = dynamic_cast<TObj *>(sThing)) ||
-              sObj->getSnum() < 0)
-            continue;
-
-          sprintf(tString, "G 1 %d %d",
-                  sObj->getSnum(), sObj->max_exist);
-          sprintf(tBuffer, "%-32s %s given to %s\n", tString,
-                  (sObj->getNameNOC(ch).c_str() ? sObj->getNameNOC(ch).c_str() : "Unknown"),
-                  (tMob->getNameNOC(ch).c_str() ? tMob->getNameNOC(ch).c_str() : "Unknown"));
-          fputs(tBuffer, tFile);
-        }
-      }
-
-      TObj *sObj;;
-
-      for (wearSlotT wearIndex = MIN_WEAR; wearIndex < MAX_WEAR; wearIndex++) {
-        if (!(sObj = dynamic_cast<TObj *>(tMob->equipment[wearIndex])) ||
-            sObj->getSnum() < 0)
-          continue;
-
-        sprintf(tString, "E 1 %d %d %d",
-                sObj->getSnum(), sObj->max_exist, wearIndex);
-        sprintf(tBuffer, "%-34s %s equipped by %s [%s]\n", tString,
-                (sObj->getNameNOC(ch).c_str() ? sObj->getNameNOC(ch).c_str() : "Unknown"),
-                (tMob->getNameNOC(ch).c_str() ? tMob->getNameNOC(ch).c_str() : "Unknown"),
-                bodyParts[wearIndex]);
-        fputs(tBuffer, tFile);
-      }
-    }
-    tStString += '.';
-  }
-
-  tStString += '\n';
-  fputs("S\n", tFile);
-  fclose(tFile);
-
-  sprintf(tString, "/usr/lib/sendmail -f%s %s < immortals/%s/zonefile",
-          SAVEZONEFILE_REPLYTO,
-          ch->desc->account->email, ch->getNameNOC(ch).c_str());
-  vsystem(tString);
-  sprintf(tString, "cp -f immortals/%s/zonefile tmp/%s.output",
-          ch->getNameNOC(ch).c_str(), ch->getNameNOC(ch).c_str());
-  vsystem(tString);
-  tStString += "A copy of your zonefile is in your output.  Use 'viewoutput' to see it.\n\r";
-  ch->sendTo(tStString.c_str());
-}
 
 void doSaveMOEdit(TBeing *ch, const char *tArg)
 {
@@ -278,11 +26,6 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
   if (!ch->isImmortal() || !ch->desc || !ch->isPc())
     return;
 
-  if (is_abbrev(tStThing.c_str(), "zonefile")) {
-    doSaveZoneFile(ch, tArg);
-    return;
-  }
-
   if (!ch->hasWizPower(POWER_MEDIT) &&
       !ch->hasWizPower(POWER_OEDIT)) {
     ch->sendTo("You cannot use this, go away little one.\n\r");
@@ -290,12 +33,12 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
   }
 
   if (!ch->roomp) {
-    vlogf(7, "Player doing save without a room!  [%s]", ch->getName());
+    vlogf(LOG_BUG, "Player doing save without a room!  [%s]", ch->getName());
     return;
   }
 
-  if (!(tThing = searchLinkedList(tStThing, ch->roomp->stuff)) &&
-      !(tThing = searchLinkedList(tStThing, ch->stuff))) {
+  if (!(tThing = searchLinkedList(tStThing, ch->roomp->getStuff())) &&
+      !(tThing = searchLinkedList(tStThing, ch->getStuff()))) {
     ch->sendTo("I don't see that here, do you?\n\r");
     return;
   }
@@ -348,11 +91,6 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
 void TBeing::doSave(silentTypeT silent, const char *tArg = NULL)
 {
   objCost  tCost;
-  TPerson *tPerson;
-  TThing  *tThing,
-          *tEq[MAX_WEAR],
-          *tObj;
-  wearSlotT wearIndex;
 
   verifyWeightVolume();
 
@@ -360,7 +98,7 @@ void TBeing::doSave(silentTypeT silent, const char *tArg = NULL)
     return;
 
   if (!desc) {
-    vlogf(10, "%s tried to doSave while link dead.", getName());
+    vlogf(LOG_BUG, "%s tried to doSave while link dead.", getName());
     return;
   }
 
@@ -383,64 +121,64 @@ void TBeing::doSave(silentTypeT silent, const char *tArg = NULL)
     sendTo("Saving.\n\r");
 
   if (dynamic_cast<TMonster *>(this) && IS_SET(specials.act, ACT_POLYSELF)) {
-    if (!(tPerson = desc->original)) {
-      vlogf(8, "BAD SAVE OF POLY!");
+    TPerson *tPerson = desc->original;
+    if (!tPerson) {
+      vlogf(LOG_BUG, "BAD SAVE OF POLY!");
       return;
     }
 
-    tThing         = tPerson->stuff;
-    tPerson->stuff = stuff;
-
-    for (wearIndex = MIN_WEAR; wearIndex < MAX_WEAR; wearIndex++) {
-      tEq[wearIndex]                = tPerson->equipment[wearIndex];
-      tPerson->equipment[wearIndex] = equipment[wearIndex];
+    // copy the descriptor so that both can see it
+    // we need stuff on descriptor to properly evaluate handedness for eq-swap
+    tPerson->desc = desc;
+    
+    // for a poly, we want to swap all the gear that is on the poly back
+    // to the original char, save the person in that state, and then swap
+    // it all back.  Fortunately, the original person shouldn't have anything
+    // on them, so we can pretty much blindly dump back and forth.
+    TThing * t;
+    while ((t = getStuff())) {
+      --(*t);
+      *tPerson += *t;
     }
+
+    wearSlotT wearIndex;
+    for (wearIndex = MIN_WEAR; wearIndex < MAX_WEAR; wearIndex++) {
+      if (equipment[wearIndex]) {
+        TThing * obj = unequip(wearIndex);
+        tPerson->equipChar(obj, wearIndex, SILENT_YES);
+      }
+    }
+
     tPerson->setExp(getExp());
     tPerson->setMoney(getMoney());
     tPerson->classSpecificStuff();
     tPerson->recepOffer(NULL, &tCost);
     tPerson->saveRent(&tCost, FALSE, 0);
 
-    // Lets try something diffrent
-    // save the room they are in so they come back there.
-    // check the room for HAVE_TO_WALK and don't save them there as this implies
-    // beyond locked door
-#if 1
     saveChar(ROOM_AUTO_RENT);
-#else
-    if (roomp->isRoomFlag(HAVE_TO_WALK))
-      saveChar(ROOM_AUTO_RENT);
-    else
-      saveChar(in_room);
-#endif
 
-    tPerson->stuff = tThing;
+    // now that we've saved, put all equipment back on the poly
+    while ((t = tPerson->getStuff())) {
+      --(*t);
+      *this += *t;
+    }
+
     for (wearIndex = MIN_WEAR; wearIndex < MAX_WEAR; wearIndex++) {
-      tPerson->equipment[wearIndex] = tEq[wearIndex];
-      if (equipment[wearIndex] && equipment[wearIndex]->in_room != -1) {
-        tObj = equipment[wearIndex];
-        equipment[wearIndex] = 0;
-        --(*tObj);
-        equipChar(tObj, wearIndex, SILENT_YES);        // equip the correct slot
+      if (tPerson->equipment[wearIndex]) {
+        TThing * obj = tPerson->unequip(wearIndex);
+        equipChar(obj, wearIndex, SILENT_YES);
       }
     }
+
+    // the original char should not know about the desc (by default)
+    tPerson->desc = NULL;
+
     return;
   } else {
     classSpecificStuff();
     recepOffer(NULL, &tCost);
     dynamic_cast<TPerson *>(this)->saveRent(&tCost, FALSE, 0);
 
-    // Lets try something diffrent
-    // save the room they are in so they come back there.
-    // check the room for HAVE_TO_WALK and don't save them there as this implies
-    // beyond locked door
-#if 1
     saveChar(ROOM_AUTO_RENT);
-#else
-    if (roomp->isRoomFlag(HAVE_TO_WALK))
-      saveChar(ROOM_AUTO_RENT);
-    else
-      saveChar(in_room);
-#endif
   }
 }

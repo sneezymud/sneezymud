@@ -369,8 +369,8 @@ void list_in_heap(const TThing *list, TBeing *ch, bool show_all, int perc)
         cond_tot.push_back(1);
       }
     }
-    if (show_all && i->stuff)
-      list_in_heap(i->stuff, ch, true, 100);
+    if (show_all && i->getStuff())
+      list_in_heap(i->getStuff(), ch, true, 100);
   } // for loop
 
   if (cond_ptr.empty())
@@ -1093,7 +1093,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
       int skill = ch->getSkillValue(SKILL_SPY);
       ch->sendTo("\n\rYou attempt to peek at the inventory:\n\r");
       if (ch->isAffected(AFF_SCRYING)) {
-        list_in_heap(stuff, ch, FALSE, skill);
+        list_in_heap(getStuff(), ch, FALSE, skill);
       }
 
       // randomize wealth report
@@ -1107,7 +1107,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     } else if (ch->isImmortal()) {
       ch->sendTo("Inventory:\n\r");
 
-      for (t = stuff; t; t = t->nextThing) {
+      for (t = getStuff(); t; t = t->nextThing) {
         ch->showTo(t, SHOW_MODE_SHORT_PLUS);
         found = TRUE;
       }
@@ -1116,7 +1116,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     }
   } else if (mode == SHOW_MODE_SHORT_PLUS_INV) {
     act("$N is carrying:", FALSE, ch, 0, this, TO_CHAR);
-    list_in_heap(stuff, ch, false, 100);
+    list_in_heap(getStuff(), ch, false, 100);
   }
 }
 

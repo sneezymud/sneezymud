@@ -1,24 +1,6 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: task_track.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/09/30 14:09:09  lapsos
-// Cleaned up some of the pre-emptive checks.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD 4.0 - All rights reserved, SneezyMUD Coding Team
+//      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "task.cc" - All functions related to tasks that keep mobs/PCs busy
 //
 //////////////////////////////////////////////////////////////////////////
@@ -193,7 +175,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
         if (ch->task->flags == 100)
           ch->task->flags = 0;
         if (!ch->specials.hunting && !isSW) {
-          vlogf(6, "problem in task_track()");
+          vlogf(LOG_BUG, "problem in task_track()");
           stop_tracking(ch);
           return TRUE;
         }
@@ -202,7 +184,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
           if (isSW)
             code = find_path(ch->in_room, find_closest_water, NULL, ch->hunt_dist, 0, &targetRm);
           else {
-            vlogf(6, "problem in task_track()");
+            vlogf(LOG_BUG, "problem in task_track()");
             stop_tracking(ch);
             return TRUE;
           }
@@ -210,22 +192,22 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
           // Guess we have a hunt target, lets find them.
           if (ch->isImmortal())
             code = choose_exit_global(ch->in_room, ch->specials.hunting->in_room, -ch->hunt_dist);
-          else if ((ch->GetMaxLevel() < MIN_GLOB_TRACK_LEV) ||
-                   ch->affectedBySpell(SPELL_TRAIL_SEEK))
-            code = choose_exit_in_zone(ch->in_room, ch->specials.hunting->in_room, ch->hunt_dist);
-          else
+          else if ((ch->GetMaxLevel() >= MIN_GLOB_TRACK_LEV) || ch->affectedBySpell(SPELL_TRAIL_SEEK)
+		   || !ch->isPc())
             code = choose_exit_global(ch->in_room, ch->specials.hunting->in_room, ch->hunt_dist);
+          else
+            code = choose_exit_in_zone(ch->in_room, ch->specials.hunting->in_room, ch->hunt_dist);
         }
         // This is actually checked in track(), which should have been called before
         // us.  But you never know, bad things Do happen.
         // An example in this case.  We start to track, fail, mob were tracking moves into
         // our room, we Don't do a look to trigger track(), and the task pulse hits causeing
         // this bit of code to become active.
-        if ((ch->specials.hunting && ch->sameRoom(ch->specials.hunting)) ||
+        if ((ch->specials.hunting && ch->sameRoom(*ch->specials.hunting)) ||
             (targetRm != -1 && targetRm == ch->inRoom())) {
           ch->sendTo("%s###You have found %s!%s\n\r", ch->orange(),
                      (isSW ? "some water" : "your target"), ch->norm());
-          if (ch->desc && ch->desc->client)
+          if (ch->desc && ch->desc->m_bIsClient)
             ch->desc->clientf("%d", CLIENT_TRACKOFF);
           ch->stopTask();
           ch->remPlayerAction(PLR_HUNTING);
@@ -252,7 +234,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
 		       (isSW ? "some water" : "your target"),
                    dirs_to_blank[code], ch->norm());
             // Client check
-            if (ch->desc && ch->desc->client)
+            if (ch->desc && ch->desc->m_bIsClient)
               ch->desc->clientf("%d|%d", CLIENT_TRACKING, 1 << code);
             if (ch->desc && (ch->desc->autobits & AUTO_HUNT)) {
               strcpy(buf, dirs[code]);
@@ -262,7 +244,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
             // It's above 9, so it's a special exit.  Portal or something.
             int count = code - 9,
                 seen  = 0;
-            for (t = ch->roomp->stuff; t; t = t->nextThing) {
+            for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
               TPortal *tp = dynamic_cast<TPortal *>(t);
               if (tp) {
                 seen++;
@@ -276,12 +258,12 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
             // Bad, our special exit is Gone...even tho it was there a second ago.
             if (!t) {
               ch->sendTo("Error finding path target!  Tell a god.\n\r");
-              vlogf(8, "Error finding path (task_tracking).");
+              vlogf(LOG_BUG, "Error finding path (task_tracking).");
               stop_tracking(ch);
               return TRUE;
             }
             // Client check.
-            if (ch->desc && ch->desc->client)
+            if (ch->desc && ch->desc->m_bIsClient)
               ch->desc->clientf("%d|%d", CLIENT_TRACKING, 1 << code);
             if (ch->desc && (ch->desc->autobits & AUTO_HUNT)) {
               strcpy(buf, t->name);

@@ -155,7 +155,7 @@ int TThing::dropSmoke(int amt)
     return FALSE;
 
   // look for preexisting smoke
-  for(t=roomp->stuff;t;t=t->nextThing){
+  for(t=roomp->getStuff();t;t=t->nextThing){
     if((smoke = dynamic_cast<TSmoke *>(t)))
       break;
   }

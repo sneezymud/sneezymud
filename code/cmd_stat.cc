@@ -226,7 +226,7 @@ void TBeing::statRoom(TRoom *rmp)
   }
   str += "------- Chars present -------\n\r";
   counter = 0;
-  for (t = rmp->stuff; t; t = t->nextThing) {
+  for (t = rmp->getStuff(); t; t = t->nextThing) {
     // canSee prevents seeing invis gods of higher level
     if (dynamic_cast<TBeing *>(t) && canSee(t)) {
       counter++;
@@ -259,7 +259,7 @@ void TBeing::statRoom(TRoom *rmp)
   }
   str += "--------- Contents ---------\n\r";
   counter = 0;
-  for (t = rmp->stuff; t; t = t->nextThing) {
+  for (t = rmp->getStuff(); t; t = t->nextThing) {
     if (!dynamic_cast<TBeing *>(t)) {
       counter++;
       if (counter > 20) {
@@ -429,11 +429,11 @@ void TBeing::statObj(const TObj *j)
   sprintf(buf, "\n\rSpecial procedure : %s   ", j->spec ? objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name : "none");;
   str += buf;
 
-  if (!j->stuff)
+  if (!j->getStuff())
     str += "Contains : Nothing\n\r";
   else {
     str += "Contains :\n\r";
-    for (t = j->stuff; t; t = t->nextThing) {
+    for (t = j->getStuff(); t; t = t->nextThing) {
       str += fname(t->name);
       str += "\n\r";
     }

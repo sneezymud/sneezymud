@@ -225,7 +225,7 @@ bool TBeing::validMove(dirTypeT cmd)
 
   rp = real_roomp(exitp->to_room);
   if (rp->getMoblim() && !isImmortal() &&
-      (MobCountInRoom(rp->stuff) >= rp->getMoblim())) {
+      (MobCountInRoom(rp->getStuff()) >= rp->getMoblim())) {
     sendTo("Sorry, there is no room to get in there.\n\r");
     return FALSE;
   }
@@ -243,7 +243,7 @@ bool TBeing::validMove(dirTypeT cmd)
   }
 
   if (rp->isRoomFlag(ROOM_PRIVATE)) {
-    if (MobCountInRoom(rp->stuff) > 2) {
+    if (MobCountInRoom(rp->getStuff()) > 2) {
       sendTo("Sorry, that room is private.\n\r");
       return FALSE;
     }
@@ -1287,7 +1287,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
   // temporarily put him back so canSee works properly
   --(*this);
   *rp1 += *this;
-  for (t = rp1->stuff; t; t = t->nextThing) {
+  for (t = rp1->getStuff(); t; t = t->nextThing) {
     TBeing *ch = dynamic_cast<TBeing *>(t);
     if (!ch)
       continue;
@@ -1361,7 +1361,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
   if (total > 1)
     sprintf(tmp + strlen(tmp), " [%d]", total);
 
-  for (t = rp2->stuff; t; t = t->nextThing) {
+  for (t = rp2->getStuff(); t; t = t->nextThing) {
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (!tbt)
       continue;
@@ -1417,7 +1417,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
   }
 
   // check for items we want to drag with us...
-  for (t = rp1->stuff; t; t = t2) {
+  for (t = rp1->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     
     TObj *obj = dynamic_cast<TObj *>(t);
@@ -1453,13 +1453,13 @@ int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in,
   int groupcount=0;// used to make mobs not go superaggro on groups - dash
 
   
-  for (t3 = roomp->stuff; t3; t3 = t3->nextThing) {
+  for (t3 = roomp->getStuff(); t3; t3 = t3->nextThing) {
     TBeing *tbt = dynamic_cast<TBeing *>(t3);
     if (tbt && inGroup(*tbt))
       groupcount++;
   }
   if (was_in != -1) {
-    for (t3 = real_roomp(was_in)->stuff; t3; t3 = t3->nextThing) {
+    for (t3 = real_roomp(was_in)->getStuff(); t3; t3 = t3->nextThing) {
       TBeing *tbt = dynamic_cast<TBeing *>(t3);
       if (tbt && inGroup(*tbt))
 	groupcount++;
@@ -1488,7 +1488,7 @@ int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in,
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
  
-  for (t = rp->stuff; t; t = t2) {
+  for (t = rp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     TMonster *tmons = dynamic_cast<TMonster *>(t);
     if (!tmons)
@@ -1990,7 +1990,7 @@ bool has_key(TBeing *ch, int key)
   TThing *t, *t2;
   TKeyring *ring;
 
-  for (t = ch->stuff; t; t = t->nextThing) {
+  for (t = ch->getStuff(); t; t = t->nextThing) {
     o = dynamic_cast<TObj *>(t);
     if (!o)
       continue;
@@ -2000,7 +2000,7 @@ bool has_key(TBeing *ch, int key)
     ring = dynamic_cast<TKeyring *>(t);
     if (!ring)
       continue;
-    for (t2 = ring->stuff; t2; t2 = t2->nextThing) {
+    for (t2 = ring->getStuff(); t2; t2 = t2->nextThing) {
       o = dynamic_cast<TObj *>(t2);
       if (!o)
 	continue;
@@ -2166,7 +2166,7 @@ int TBeing::doEnter(const char *argument, TPortal *por)
   one_argument(argument, buf);
 
   if (*buf) {
-    TThing *tto = searchLinkedListVis(this, buf, roomp->stuff, &dummy, TYPEOBJ);
+    TThing *tto = searchLinkedListVis(this, buf, roomp->getStuff(), &dummy, TYPEOBJ);
     o = dynamic_cast<TObj *>(tto);
     if (!o) {
       sendTo("Enter what?\n\r");
@@ -2216,7 +2216,7 @@ int TBeing::portalLeaveCheck(char *argum, cmdTypeT cmd)
   char arg[80];
 
   one_argument(argum, arg);
-  for (t = roomp->stuff; t; t = t->nextThing) {
+  for (t = roomp->getStuff(); t; t = t->nextThing) {
     o = dynamic_cast<TPortal *>(t);
     if (o &&
            (((cmd == CMD_LEAVE) && (!arg || !*arg || isname(arg,o->name))) || 
@@ -3003,7 +3003,7 @@ int TBeing::goDirection(dirTypeT dir)
 
     dirTypeT count = dirTypeT(dir-MAX_DIR+1);
     int seen = 0;
-    for (t = roomp->stuff; t; t = t2) {
+    for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       TPortal *tp = dynamic_cast<TPortal *>(t);
       if (tp) {

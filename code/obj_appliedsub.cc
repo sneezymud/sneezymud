@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_appliedsub.cc,v $
-// Revision 5.1  1999/10/16 04:29:21  batopr
-// *** empty log message ***
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // organic.cc
 
 #include "stdsneezy.h"
@@ -115,13 +100,13 @@ int TBeing::doApplyHerbs(const char *tArg)
   if (!*tStVict || !strcmp(tStVict, "self"))
     vict = this;
   else if (!(vict = get_char_room_vis(this, tStVict))) {
-    if (!(tArrow = searchLinkedListVis(this, tStVict, stuff))) {
+    if (!(tArrow = searchLinkedListVis(this, tStVict, getStuff()))) {
       sendTo("You do not see that here, perhaps you were seeing things?\n\r");
       return FALSE;
     }
   }
 
-  if (!(asHerb = dynamic_cast<TASubstance *>(searchLinkedListVis(this, tStHerb, stuff)))) {
+  if (!(asHerb = dynamic_cast<TASubstance *>(searchLinkedListVis(this, tStHerb, getStuff())))) {
     sendTo("You can not seem to find that herb.\n\r");
     return FALSE;
   }
@@ -257,7 +242,7 @@ bool appliedSubstanceCheckList(TBeing *ch, const char *tArg,
     if (!newChList[curCount[0]])
       continue;
 
-    tObj = ch->stuff;
+    tObj = ch->getStuff();
 
     alRdHsMatch = true;
     while (alRdHsMatch && tObj && tObj->nextThing &&
@@ -299,13 +284,13 @@ bool appliedSubstanceCheckList(TBeing *ch, const char *tArg,
     if (tObjList[curCount[0]] || !newChList[curCount[0]])
       continue;
 
-    tObj = ch->stuff;
+    tObj = ch->getStuff();
 
     for (; tObj; tObj = tObj->nextThing) {
       if (!(tCntObj = dynamic_cast<TExpandableContainer *>(tObj)))
         continue;
 
-      tStObj = tCntObj->stuff;
+      tStObj = tCntObj->getStuff();
       alRdHsMatch = true;
       while (alRdHsMatch && tStObj && tStObj->nextThing &&
              (tStObj = searchLinkedListVis(ch, newChList[curCount[0]], tStObj->nextThing)))
@@ -334,7 +319,7 @@ bool appliedSubstanceCheckList(TBeing *ch, const char *tArg,
       if (!tObj || !ch->canSee(tObj) || !(tCntObj = dynamic_cast<TExpandableContainer *>(tObj)))
         continue;
 
-      tStObj = tCntObj->stuff;
+      tStObj = tCntObj->getStuff();
       alRdHsMatch = true;
       while (alRdHsMatch && tStObj && tStObj->nextThing &&
              (tStObj = searchLinkedListVis(ch, newChList[curCount[0]], tStObj->nextThing))) {
@@ -379,7 +364,7 @@ bool appliedSubstanceFindMatch(TThing **tObjList, int ceLevel, int LsSize, int s
     if (skClassAs == CLASS_RANGER)
       tCompListOrig[Runner] = AppliedCreate[ceLevel]->CompList[Runner];
     else {
-      vlogf(7, "Person got to SubstanceFindMatch with wrong skClassAs value [%d]", skClassAs);
+      vlogf(LOG_BUG, "Person got to SubstanceFindMatch with wrong skClassAs value [%d]", skClassAs);
       return false;
     }
   }
@@ -411,7 +396,7 @@ bool appliedSubstanceCheckFire(TBeing *ch)
 {
   TThing *tThing;
 
-  for (tThing = ch->roomp->stuff; tThing; tThing = tThing->nextThing)
+  for (tThing = ch->roomp->getStuff(); tThing; tThing = tThing->nextThing)
     if (dynamic_cast<TFFlame *>(tThing))
       return true;
 
@@ -423,7 +408,7 @@ bool appliedSubstanceHasInvItem(TBeing *ch, int tVNum)
   TThing *tThing;
   TObj   *tObj;
 
-  for (tThing = ch->stuff; tThing; tThing = tThing->nextThing) {
+  for (tThing = ch->getStuff(); tThing; tThing = tThing->nextThing) {
     if (!(tObj = dynamic_cast<TObj *>(tThing)))
       continue;
 

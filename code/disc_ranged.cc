@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_ranged.cc,v $
+// Revision 5.2  2001/09/07 07:07:34  peel
+// changed TThing->stuff to getStuff() and setStuff()
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -63,7 +69,7 @@ void TBeing::doRestring(const char *argument)
   }
 #if 1
   TThing *t;
-  for (t = stuff; t && !(bow && bstr); t = t->nextThing) {
+  for (t = getStuff(); t && !(bow && bstr); t = t->nextThing) {
     if (!bow) {
       bow = dynamic_cast<TBow *>(t);
       if (bow && !isname(arg1, bow->name))
@@ -87,12 +93,12 @@ void TBeing::doRestring(const char *argument)
   }
 #else
   // works, but gets confused since "bow" is an abbrev for "bowstring"
-  if (!(bow = searchLinkedListVis(this, arg1, stuff))) {
+  if (!(bow = searchLinkedListVis(this, arg1, getStuff()))) {
     sendTo("You don't seem to have '%s' in your inventory.\n\r", arg1);
     sendTo("Syntax : restring <bow> <string>\n\r");
     return;
   }
-  if (!(bstr = searchLinkedListVis(this, arg2, stuff))) {
+  if (!(bstr = searchLinkedListVis(this, arg2, getStuff()))) {
     sendTo("You don't seem to have '%s' in your inventory.\n\r", arg2);
     sendTo("Syntax : restring <bow> <string>\n\r");
     return;

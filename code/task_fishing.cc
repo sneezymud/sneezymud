@@ -95,7 +95,7 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
   }
 
   // find our bait here
-  for(t=ch->stuff;t;t=t->nextThing){
+  for(t=ch->getStuff();t;t=t->nextThing){
     bait=dynamic_cast<TTool *>(t);
 
     if(bait){

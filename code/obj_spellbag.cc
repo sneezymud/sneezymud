@@ -96,7 +96,7 @@ void TSpellBag::findSomeComponent(TComponent **comp_gen, TComponent **comp_spell
 {
   TThing *t;
 
-  for (t = stuff; t; t = t->nextThing)
+  for (t = getStuff(); t; t = t->nextThing)
     t->findSomeComponent(comp_gen, comp_spell, comp_brew, which, type);
 }
 

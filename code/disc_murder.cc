@@ -366,7 +366,7 @@ int TBeing::doPoisonWeapon(const char * argument)
   }
   only_argument(argument, namebuf);
 
-  if (!(obj = searchLinkedListVis(this, argument, stuff)))  {
+  if (!(obj = searchLinkedListVis(this, argument, getStuff())))  {
     if (!(obj = equipment[HOLD_RIGHT]) || !isname(argument, obj->name))  {
       if (!(obj = equipment[HOLD_LEFT]) || !isname(argument, obj->name))  {
         sendTo("Poison what?\n\r");

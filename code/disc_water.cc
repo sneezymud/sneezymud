@@ -17,7 +17,7 @@ int faerieFog(TBeing * caster, int, byte bKnown)
   TThing *t, *t2;
 
   if (bSuccess(caster, bKnown, SPELL_FAERIE_FOG)) {
-    for (t = caster->roomp->stuff; t; t = t2) {
+    for (t = caster->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
@@ -64,7 +64,7 @@ int faerieFog(TBeing * caster)
 
     start_cast(caster, NULL, NULL, caster->roomp, SPELL_FAERIE_FOG, diff, 1, "" , rounds, caster->in_room, 0, 0,TRUE, 0);
 
-  for (t = caster->roomp->stuff; t; t = t2) {
+  for (t = caster->roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     victim = dynamic_cast<TBeing *>(t);
     if (!victim)
@@ -331,7 +331,7 @@ int arcticBlast(TBeing * caster, int level, byte bKnown, int adv_learn)
         break;
     }
 
-    for (t = caster->roomp->stuff; t; t = t2) {
+    for (t = caster->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
@@ -481,7 +481,7 @@ int iceStorm(TBeing * caster, int level, byte bKnown, int adv_learn)
         break;
     }
     caster->freezeRoom();
-    for (t = caster->roomp->stuff; t; t = t2) {
+    for (t = caster->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
@@ -606,7 +606,7 @@ int tsunami(TBeing * caster, int level, byte bKnown, int adv_learn)
     act("You beckon forth a tidal wave!", 
          FALSE, caster, NULL, NULL, TO_CHAR, ANSI_BLUE);
     caster->dropPool(100, LIQ_WATER);
-    for (t = caster->roomp->stuff; t; t = t2) {
+    for (t = caster->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
@@ -807,7 +807,7 @@ int conjureElemWater(TBeing * caster)
      caster->roomp->getWeather() == WEATHER_RAINY){
     found=1;
   } else {
-    for(t = caster->roomp->stuff; t; t = t->nextThing) {
+    for(t = caster->roomp->getStuff(); t; t = t->nextThing) {
       if ((tp = dynamic_cast<TPool *>(t)) && tp->getDrinkUnits() >= 100 &&
 	  (tp->getDrinkType() == LIQ_WATER ||
 	   tp->getDrinkType() == LIQ_SALTWATER ||
@@ -967,7 +967,7 @@ int breathOfSarahage(TBeing * caster, int level, byte bKnown)
     aff.bitvector = AFF_WATERBREATH;
     TThing *t;
     int found = FALSE;
-    for (t = caster->roomp->stuff; t; t = t->nextThing) {
+    for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
       tmp_victim = dynamic_cast<TBeing *>(t);
       if (!tmp_victim)
         continue;

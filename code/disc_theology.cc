@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_theology.cc,v $
+// Revision 5.2  2001/09/07 07:07:34  peel
+// changed TThing->stuff to getStuff() and setStuff()
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -97,7 +103,7 @@ void attune(TBeing * caster, TThing * sym)
     return;
   }
   
-  for (obj = caster->stuff; obj; obj = obj->nextThing) {
+  for (obj = caster->getStuff(); obj; obj = obj->nextThing) {
     obj->getBestVial(&best);
   }
   if (!best) {

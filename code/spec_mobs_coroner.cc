@@ -32,7 +32,7 @@ int goToMorgue(TBeing *myself)
     // chance to purge the room of objects
     if (myself->roomp->roomIsEmpty(FALSE) && !::number(0,34)) {
       TThing *t, *t2;
-      for (t = myself->roomp->stuff; t; t = t2) {
+      for (t = myself->roomp->getStuff(); t; t = t2) {
         t2 = t->nextThing;
         if (!dynamic_cast<TObj *> (t)) 
           continue;
@@ -59,7 +59,7 @@ static int find_closest_corpse(int room, void *myself)
     return FALSE;
 
   TThing *t;
-  for (t = rp->stuff; t; t = t->nextThing) {
+  for (t = rp->getStuff(); t; t = t->nextThing) {
     if (!dynamic_cast<TBaseCorpse *>(t))
       continue;
     return TRUE;
@@ -105,7 +105,7 @@ int coroner(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   if(myself->inRoom() != ROOM_MORGUE){
 
     // look for a corpse
-    for (t = myself->roomp->stuff; t; t = t2) {
+    for (t = myself->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       
       obj = dynamic_cast<TObj *>(t);
@@ -116,7 +116,7 @@ int coroner(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	sprintf(buf, "$n gets $p and prepares it for delivery to the morgue.");
 	act(buf, FALSE, myself, obj, 0, TO_ROOM);
 	TThing *t;
-	while ((t = obj->stuff)) {
+	while ((t = obj->getStuff())) {
 	  (*t)--;
 	  *myself += *t;
 	}
@@ -129,9 +129,9 @@ int coroner(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   bool found=FALSE;
   
   // check if we have any corpses
-  if (myself->stuff) {
+  if (myself->getStuff()) {
     TThing *t;
-    for(t=myself->stuff;t;t=t->nextThing){
+    for(t=myself->getStuff();t;t=t->nextThing){
       if(dynamic_cast<TBaseCorpse *>(t))
 	found=TRUE;
     }

@@ -1318,7 +1318,7 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
   else
     damtype = getWtype();
 
-  for (c = rp->stuff; c; c = c_next) {
+  for (c = rp->getStuff(); c; c = c_next) {
     c_next = c->nextThing;
     if (c == ch)
       continue;

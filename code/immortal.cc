@@ -534,7 +534,7 @@ void TBeing::doWizlock(const char *argument)
 
     return;
   } else if (is_abbrev(buf, "message")) {
-    TThing *t_note = searchLinkedListVis(this, "note", stuff);
+    TThing *t_note = searchLinkedListVis(this, "note", getStuff());
     note = dynamic_cast<TObj *>(t_note);
     if (note) {
       if (!note->action_description) {
@@ -592,7 +592,7 @@ int TBeing::doEmote(const char *argument)
     sprintf(buf, "$n %s<z>", argument + i);
     sprintf(tmpbuf, "%s", nameColorString(this, desc, buf, NULL, COLOR_BASIC, FALSE).c_str());
     act(tmpbuf, TRUE, this, 0, 0, TO_CHAR);
-    for (t = roomp->stuff; t ; t = t2) {
+    for (t = roomp->getStuff(); t ; t = t2) {
       t2 = t->nextThing;
       TBeing *ch = dynamic_cast<TBeing *>(t);
       if (!ch || ch == this)
@@ -1326,7 +1326,7 @@ int TBeing::doGoto(const string & argument)
   }
   if (!hasWizPower(POWER_GOTO_IMP_POWER) &&
       real_roomp(location)->isRoomFlag(ROOM_PRIVATE)) {
-    for (i = 0, t = real_roomp(location)->stuff; t; t = t->nextThing)
+    for (i = 0, t = real_roomp(location)->getStuff(); t; t = t->nextThing)
       if (dynamic_cast<TBeing *>(t))
         i++;
 
@@ -1339,7 +1339,7 @@ int TBeing::doGoto(const string & argument)
   bool hasStealth = (desc ? isPlayerAction(PLR_STEALTH) : false);
 
   if (msgVariables(MSG_BAMFOUT)[0] != '!') {
-    for (t = roomp->stuff; t; t = t->nextThing) {
+    for (t = roomp->getStuff(); t; t = t->nextThing) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
@@ -1355,7 +1355,7 @@ int TBeing::doGoto(const string & argument)
     act("$n disappears in a cloud of mushrooms.",
         TRUE, this, NULL, NULL, TO_ROOM, NULL,  (hasStealth ? MAX_MORT : 0));
   else if (*desc->poof.poofout != '!') {
-    for (t = roomp->stuff; t; t = t->nextThing) {
+    for (t = roomp->getStuff(); t; t = t->nextThing) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
@@ -1389,7 +1389,7 @@ int TBeing::doGoto(const string & argument)
   hasStealth = (desc ? isPlayerAction(PLR_STEALTH) : false);
 
   if (msgVariables(MSG_BAMFIN)[0] != '!') {
-    for (t = roomp->stuff; t; t = t->nextThing) {
+    for (t = roomp->getStuff(); t; t = t->nextThing) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
@@ -1406,7 +1406,7 @@ int TBeing::doGoto(const string & argument)
         TRUE, this, 0, v, TO_ROOM, NULL, (hasStealth ? MAX_MORT : 0));
     *roomp += *read_object(OBJ_ROSEPETAL, VIRTUAL);
   } else if (*desc->poof.poofin != '!') {
-    for (t = roomp->stuff; t; t = t->nextThing) {
+    for (t = roomp->getStuff(); t; t = t->nextThing) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
@@ -2267,7 +2267,7 @@ void TPerson::doForce(const char *argument)
     }
     sendTo("Ok.\n\r");
   } else if (!strcmp(name_buf, "room")) {
-    for (t = roomp->stuff; t; t = t2) {
+    for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (tbt) {
@@ -2286,7 +2286,7 @@ void TPerson::doForce(const char *argument)
     }
     sendTo("Ok.\n\r");
   } else if (!strcmp(name_buf, "mobs")) {
-    for (t = roomp->stuff; t; t = t2) {
+    for (t = roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       TMonster *tbt = dynamic_cast<TMonster *>(t);
       if (tbt) {
@@ -2472,7 +2472,7 @@ static void purge_one_room(int rnum, TRoom *rp, int *range)
   if (!rnum || (rnum < range[0]) || (rnum > range[1]))
     return;
 
-  for (t = rp->stuff; t; t = rp->stuff) {
+  for (t = rp->getStuff(); t; t = rp->getStuff()) {
     --(*t);
     thing_to_room(t, ROOM_VOID);
 
@@ -2580,7 +2580,7 @@ void nukeLdead(TBeing *vict)
     if (obj) {
       vict->unequip(ij);
 
-      for (t = obj->stuff; t; t = t2) {
+      for (t = obj->getStuff(); t; t = t2) {
         t2 = t->nextThing;
 
         vict->logItem(t, CMD_NE);  // purge ldead
@@ -2605,14 +2605,14 @@ void nukeLdead(TBeing *vict)
       obj = NULL;
     }
   }
-  for (t = vict->stuff; t; t = t2) {
+  for (t = vict->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     TObj * obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
 
     TThing *t3, *t4;
-    for (t3 = obj->stuff; t3; t3 = t4) {
+    for (t3 = obj->getStuff(); t3; t3 = t4) {
       t4 = t3->nextThing;
 
       vict->logItem(t3, CMD_NE);  // purge ldead
@@ -2795,7 +2795,7 @@ void TPerson::doPurge(const char *argument)
           }
         }
         TThing *t, *t2;
-        for (t = vict->stuff; t; t = t2) {
+        for (t = vict->getStuff(); t; t = t2) {
           t2 = t->nextThing;
           obj = dynamic_cast<TObj *>(t);
 
@@ -2817,7 +2817,7 @@ void TPerson::doPurge(const char *argument)
       }
       delete vict;
       vict = NULL;
-    } else if ((t_obj = searchLinkedListVis(this, name_buf, roomp->stuff))) {
+    } else if ((t_obj = searchLinkedListVis(this, name_buf, roomp->getStuff()))) {
       // since we already did a get_char loop above, this is really just doing
       // objs, despite the fact that it is a TThing
       act("$n destroys $p.", TRUE, this, t_obj, 0, TO_ROOM);
@@ -2843,7 +2843,7 @@ void TPerson::doPurge(const char *argument)
           }
         }
         TThing *t, *t2;
-        for (t = vict->stuff; t; t = t2) {
+        for (t = vict->getStuff(); t; t = t2) {
           t2 = t->nextThing;
           obj = dynamic_cast<TObj *>(t);
 
@@ -2905,7 +2905,7 @@ void TPerson::doPurge(const char *argument)
     sendToRoom("The World seems a little cleaner.\n\r", in_room);
 
     TThing *t, *n;
-    for (t = roomp->stuff; t; t = n) {
+    for (t = roomp->getStuff(); t; t = n) {
       n = t->nextThing;
       t->purgeMe(this);
       // t may be invalid here
@@ -3723,7 +3723,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
   }
 
 // check for portals and add it if one is enterable
-  for (t = roomp->stuff; t; t = t->nextThing) {
+  for (t = roomp->getStuff(); t; t = t->nextThing) {
     TPortal *tp = dynamic_cast<TPortal *>(t);  
     if (!tp)
       continue;
@@ -5664,7 +5664,7 @@ int TBeing::doExec()
   if (!isImmortal())
     return FALSE;
 
-  TThing *t_script = searchLinkedListVis(this, "exec script", stuff);
+  TThing *t_script = searchLinkedListVis(this, "exec script", getStuff());
   script = dynamic_cast<TObj *>(t_script);
   if (!script) {
     sendTo("You don't have an executable script.\n\r");
@@ -5747,7 +5747,7 @@ void TBeing::doResize(const char *arg)
     }
   }
 
-  TThing *t_obj = searchLinkedList(objbuf, stuff);
+  TThing *t_obj = searchLinkedList(objbuf, getStuff());
   obj = dynamic_cast<TObj *>(t_obj);
   if (!obj) {
     sendTo("Sorry, You don't seem to have the %s.\n\r",objbuf);

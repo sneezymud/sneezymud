@@ -109,9 +109,9 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
     sendTo("It is very dark in here...\n\r");
 
     // this already handles stuff like infravision, and glowing mobs
-    list_char_in_room(roomp->stuff, this);
+    list_char_in_room(roomp->getStuff(), this);
 
-    for (t = roomp->stuff; t; t = t->nextThing) {
+    for (t = roomp->getStuff(); t; t = t->nextThing) {
       if (dynamic_cast<TObj *>(t) && canSee(t))   // glowing objects
         showTo(t, SHOW_MODE_DESC_PLUS);
     }
@@ -207,7 +207,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                   sendRoomDesc(rp);
 
                 listExits(rp);
-                list_thing_in_room(rp->stuff, this);
+                list_thing_in_room(rp->getStuff(), this);
               }
             }
           } else if (!(exitp->condition & EX_SECRET))
@@ -244,7 +244,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
           if (is_abbrev(arg2, "all.corpse") &&
               strlen(arg2) > 6) {
             TThing *t;
-            for (t = roomp->stuff; t; t = t->nextThing) {
+            for (t = roomp->getStuff(); t; t = t->nextThing) {
               TBaseCorpse * tbc = dynamic_cast<TBaseCorpse *>(t);
               if (tbc) {
                 // because some corpses are dust piles, we make no name check
@@ -297,7 +297,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                   }
                   if (!bits) {
                     TThing * tempThing = NULL;
-                    for (tempThing = stuff; tempThing; tempThing = tempThing->nextThing) {
+                    for (tempThing = getStuff(); tempThing; tempThing = tempThing->nextThing) {
                       if (!dynamic_cast<TBook *> (tempThing)) {
                         continue;
                       } else {
@@ -338,7 +338,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
               } else if (tmpBeing != this && !tmpBeing->isImmortal()) {
                 // Thieves in the room will be able to detect spying looks.
                 TBeing *bOther;
-                for (t = roomp->stuff; t; t = t->nextThing)
+                for (t = roomp->getStuff(); t; t = t->nextThing)
                   if ((bOther = dynamic_cast<TBeing *>(t)) &&
                       (bOther->affectedBySpell(SKILL_SPY) ||
                        bOther->isAffected(AFF_SCRYING)) &&
@@ -389,7 +389,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
               } else if (tmp_char != this && !tmp_char->isImmortal()) {
                 // Thieves in the room will be able to detect spying looks.
                 TBeing *bOther;
-                for (t = roomp->stuff; t; t = t->nextThing)
+                for (t = roomp->getStuff(); t; t = t->nextThing)
                   if ((bOther = dynamic_cast<TBeing *>(t)) &&
                       (bOther->affectedBySpell(SKILL_SPY) ||
                        bOther->isAffected(AFF_SCRYING)) &&
@@ -414,7 +414,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
               return;
             }
             if (!found) {
-              for (t = roomp->stuff; t && !found; t = t->nextThing) {
+              for (t = roomp->getStuff(); t && !found; t = t->nextThing) {
                 if (!dynamic_cast<TBeing *>(t))
                   continue;
                 if (!canSee(t))
@@ -426,7 +426,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
             }
             // In inventory
             if (!found) {
-              for (t = stuff; t && !found; t = t->nextThing) {
+              for (t = getStuff(); t && !found; t = t->nextThing) {
                 if (!canSee(t))
                   continue;
                 if (t->ex_description) {
@@ -509,7 +509,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
             }
             // room objects
             if (!found) {
-              for (t = roomp->stuff; t && !found; t = t->nextThing) {
+              for (t = roomp->getStuff(); t && !found; t = t->nextThing) {
                 if (dynamic_cast<TBeing *>(t))
                   continue;
                 if (!canSee(t))
@@ -655,7 +655,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
             }
           }
         }
-        list_thing_in_room(roomp->stuff, this);
+        list_thing_in_room(roomp->getStuff(), this);
         break;
       case -1:
         // wrong arg     
@@ -715,7 +715,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
             }
           }
         }
-        list_thing_in_room(roomp->stuff, this);
+        list_thing_in_room(roomp->getStuff(), this);
       }
       break;
     }

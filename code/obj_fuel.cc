@@ -214,7 +214,7 @@ int TFuel::chiMe(TBeing *tLunatic)
 
   tDamage = max(1, (::number((getCurFuel() / 2), getCurFuel()) / 10));
 
-  for (tThing = roomp->stuff; tThing; tThing = tNextThing) {
+  for (tThing = roomp->getStuff(); tThing; tThing = tNextThing) {
     tNextThing = tThing->nextThing;
 
     if (!(tBeing = dynamic_cast<TBeing *>(tThing)) || tBeing->isImmortal())

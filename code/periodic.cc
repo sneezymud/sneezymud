@@ -584,7 +584,7 @@ int TBeing::updateTickStuff()
            dynamic_cast<TMonster *>(this)->hates.clist)) {
         shouldGo = FALSE;
       }
-      if (shouldGo && !stuff) {
+      if (shouldGo && !getStuff()) {
         for (j = MIN_WEAR; j < MAX_WEAR; j++) {
           if (equipment[j]) {
             shouldGo = FALSE;
@@ -1190,7 +1190,7 @@ void TPCorpse::decayMe()
   int found = FALSE;
   TThing *tmp = NULL;
 
-  if (!stuff) {
+  if (!getStuff()) {
     obj_flags.decay_time = min(obj_flags.decay_time, (short int) MAX_PC_CORPSE_EMPTY_TIME);
     obj_flags.decay_time--;
     if (checkOnLists()) {
@@ -1199,7 +1199,7 @@ void TPCorpse::decayMe()
     return;
   }
 
-  for(tmp = stuff; tmp; tmp = tmp->nextThing) {
+  for(tmp = getStuff(); tmp; tmp = tmp->nextThing) {
     TObj *obj = dynamic_cast<TObj *>(tmp);
     if (!obj)
       continue;
@@ -1313,20 +1313,20 @@ int TObj::objectTickUpdate(int pulse)
         if (equippedBy)        {
           // Worn in equipment 
           act("$p decay$Q into nothing.", FALSE, equippedBy, this, 0, TO_CHAR);
-          while ((t = stuff)) {
+          while ((t = getStuff())) {
             (*t)--;
             *equippedBy += *t;
           }
         } else if (parent) {
           act("$p disintegrate$Q in your hands.", FALSE, parent, this, 0, TO_CHAR);
-          while ((t = stuff)) {
+          while ((t = getStuff())) {
             (*t)--;
             *parent += *t;
           }
         } else if (roomp) {  // in room
           act("$n fade$R into insignificance.",
                  TRUE, this, 0, 0, TO_ROOM);
-          while ((t = stuff)) {
+          while ((t = getStuff())) {
             (*t)--;
             *roomp += *t;
           }
@@ -1473,8 +1473,8 @@ int TObj::updateBurning(void)
     // spread to other items
     TRoom *tr=real_roomp(this->in_room);
     
-    if(tr && tr->stuff){
-      for(TThing *tt=tr->stuff;tt;tt=tt->nextThing){
+    if(tr && tr->getStuff()){
+      for(TThing *tt=tr->getStuff();tt;tt=tt->nextThing){
 	int cf=40; // chance factor: flammability/cf = percent chance
 	int chance=(int)(material_nums[tt->getMaterial()].flammability/cf);
 	TObj *to=dynamic_cast<TObj *>(tt);
@@ -1534,7 +1534,7 @@ int TBeing::terrainSpecial()
       return reconcileDamage(this,dam,SPELL_FIREBALL);
     case SECT_DESERT:
       // drain water
-      for (t = stuff; t; t = t->nextThing) {
+      for (t = getStuff(); t; t = t->nextThing) {
         evaporate(this, SILENT_NO);
       }
       return FALSE;

@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: organic.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -176,7 +168,7 @@ void TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   nCost   = (int) obj_flags.cost;
 
   if (parent != keeper) {
-    vlogf(8, "Error: buyMe():organic.cc  obj not on keeper");
+    vlogf(LOG_BUG, "Error: buyMe():organic.cc  obj not on keeper");
     return;
   }
   // Make sure it's an item we buy.
@@ -270,7 +262,7 @@ void TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       keeper->addToMoney(price, GOLD_COMM);
   } else {
     // this happens with sub zero weight components
-    vlogf(5, "Bogus num %d in buyMe component at %d.  wgt=%.2f", num, ch->in_room, getWeight());
+    vlogf(LOG_BUG, "Bogus num %d in buyMe component at %d.  wgt=%.2f", num, ch->in_room, getWeight());
   }
 
   sprintf(Buf[0], "%s/%d", SHOPFILE_PATH, shop_nr);
@@ -288,7 +280,7 @@ int TOrganic::sellHidenSkin(TBeing *ch, TMonster *keeper, int shop_nr, TThing *o
     *ch += *ch->unequip(eq_pos);
 
   if (obj) {
-    rc = get(ch, this, obj);
+    rc = get(ch, this, obj, GETNULL, true);
     if (IS_SET_DELETE(rc, DELETE_ITEM))
       return DELETE_THIS;
 
@@ -366,7 +358,7 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   }
   // See if the shop keeper already has one of these items.
   // This is mainly for 'unit' code.
-  for (t = keeper->stuff; t; t = t->nextThing) {
+  for (t = keeper->getStuff(); t; t = t->nextThing) {
     TOrganic *obj3 = dynamic_cast<TOrganic *>(t);
     if (!obj3)
       continue;
@@ -471,7 +463,7 @@ void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
     return;
   }
 
-  for (t = keeper->stuff; t; t = t->nextThing) {
+  for (t = keeper->getStuff(); t; t = t->nextThing) {
     obj2 = dynamic_cast<TOrganic *>(t);
     if (!obj2)
       continue;
@@ -700,4 +692,35 @@ void TOrganic::setAEffect(int x4)
 int TOrganic::getAEffect() const
 {
   return TAEffect;
+}
+
+int TOrganic::chiMe(TBeing *tLunatic)
+{
+  return TThing::chiMe(tLunatic);
+
+  // Enhanced disabled for now.
+#if 0
+  int tMana  = ::number(10, 30),
+      bKnown = tLunatic->getSkillLevel(SKILL_CHI);
+
+  if (tLunatic->getMana() < tMana) {
+    tLunatic->sendTo("You lack the chi to do this!\n\r");
+    return RET_STOP_PARSING;
+  } else
+    tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
+
+  if (!bSuccess(tLunatic, bKnown, SKILL_CHI) || !getOType() == ORGANIC_WOOD) {
+    act("You fail to affect $p in any way.",
+        FALSE, tLunatic, this, NULL, TO_CHAR);
+    return true;
+  }
+
+  act("You focus upon $p, causing it to burst into flames!",
+      FALSE, tLunatic, this, NULL, TO_CHAR);
+  act("$n concentrates upon $p, causing it to burst into flames!",
+      TRUE, tLunatic, this, NULL, TO_ROOM);
+  lightMe(tLunatic, SILENT_YES);
+
+  return DELETE_VICT;
+#endif
 }

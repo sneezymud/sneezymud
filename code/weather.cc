@@ -762,7 +762,7 @@ void doGlobalRoomStuff(void)
         TThing *in_room;
 
         soundNumT snd = pickRandSound(SOUND_THUNDER_1, SOUND_THUNDER_4);
-        for (in_room = rp->stuff; in_room; in_room = in_room->nextThing) {
+        for (in_room = rp->getStuff(); in_room; in_room = in_room->nextThing) {
           TBeing *ch = dynamic_cast<TBeing *>(in_room);
           if (!ch || !ch->desc)
             continue;

@@ -109,7 +109,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
               obj->getName(), obj->objVnum());
       }
       TThing *t;
-      for (t = stuff; t; t = t->nextThing) {
+      for (t = getStuff(); t; t = t->nextThing) {
         TObj *tob = dynamic_cast<TObj *>(t);
         if (!tob)
           continue;
@@ -319,7 +319,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       // FALSE if it failed, soooo... i'm gonna throw in a little hack -dash
       tStArgument = two_arg(tStArgument, tStObj, tStSucker);
       if (!rc) {
-	TThing *tThing = searchLinkedList(tStObj, stuff, TYPEOBJ);
+	TThing *tThing = searchLinkedList(tStObj, getStuff(), TYPEOBJ);
 	if (tThing && tThing->parent == this && roomp) {
 	  doSay("Well I guess I'll just drop it here...");
 	  --(*tThing);
@@ -415,7 +415,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       TThing *tt;
       TBeing *tb;
 
-      for(tt=roomp->stuff;tt;tt=tt->nextThing){
+      for(tt=roomp->getStuff();tt;tt=tt->nextThing){
 	if((tb=dynamic_cast<TBeing *>(tt)) &&
 	   isname(tb->getName(), arg)){
 	  return RET_STOP_PARSING;
@@ -472,7 +472,7 @@ int handleMobileResponse(TBeing *tBeing, cmdTypeT tCmd, const char *tString)
   TMonster *tMonster;
   int       nRc;
 
-  for (tThing = tBeing->roomp->stuff; tThing; tThing = tThing->nextThing)
+  for (tThing = tBeing->roomp->getStuff(); tThing; tThing = tThing->nextThing)
     if ((tMonster = dynamic_cast<TMonster *>(tThing)) &&
         !tMonster->isPc() && !tMonster->orig) {
       nRc = tMonster->checkResponses(tBeing, NULL, tString, tCmd);

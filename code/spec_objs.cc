@@ -903,7 +903,7 @@ int TStaff::foodItemUsed(TBeing *ch, const char *)
     return FALSE;
   }
   addToCurCharges(-1);
-  for (t = ch->roomp->stuff; t; t = t->nextThing) {
+  for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
     vict = dynamic_cast<TBeing *>(t);
     if (!vict)
       continue;
@@ -969,7 +969,7 @@ int orbOfDestruction(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
         act("You trigger $p, causing it to explode in a fiery blast of light!", 1, ch, o, NULL, TO_CHAR);
         act("$n's $o explodes in a fiery blast of light!", 1, ch, o, NULL, TO_ROOM);
-        for (t = ch->roomp->stuff; t; t = t2) {
+        for (t = ch->roomp->getStuff(); t; t = t2) {
           t2 = t->nextThing;
           vict = dynamic_cast<TBeing *>(t);
           if (!vict)
@@ -1035,7 +1035,7 @@ int orbOfTeleportation(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj 
              1, ch, o, NULL, TO_CHAR);
         act("$n's $o makes a loud, throbbing noise!", 
              1, ch, o, NULL, TO_ROOM);
-        for (t = ch->roomp->stuff; t; t = t2) {
+        for (t = ch->roomp->getStuff(); t; t = t2) {
           t2 = t->nextThing;
           vict = dynamic_cast<TBeing *>(t);
           if (!vict)
@@ -1475,7 +1475,7 @@ void explode(TObj *obj, int room, int dam)
     return;
   }
 
-  for (t = rm->stuff; t; t = t2) {
+  for (t = rm->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     v = dynamic_cast<TBeing *>(t);
     if (!v)
@@ -4313,7 +4313,7 @@ int minecart(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
 	break;
       }
       if (status == 1) {
-	if (!(switchtrack =dynamic_cast<TObj *>( searchLinkedList("switchtrack", myself->roomp->stuff, TYPEOBJ)))) {
+	if (!(switchtrack =dynamic_cast<TObj *>( searchLinkedList("switchtrack", myself->roomp->getStuff(), TYPEOBJ)))) {
 	  vlogf(LOG_PROC, "Minecart looking for switchtrack that wasn't there. Dash sucks.");
 	  return FALSE;
 	} else {
@@ -4974,7 +4974,7 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
   if(cmd != CMD_LOOK)
     return FALSE;
 
-  for (o = ch->roomp->stuff; o; o = o->nextThing) {
+  for (o = ch->roomp->getStuff(); o; o = o->nextThing) {
     to = dynamic_cast<TObj *>(o);
     if (to && to->spec == SPEC_PERMA_DEATH &&
 	isname(arg, to->name)){

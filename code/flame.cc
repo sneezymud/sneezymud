@@ -454,7 +454,7 @@ int TFFlame::igniteMessage(TBeing *ch) const
   if (!sFound) {
     TThing *cThing;
     TTool *cTool = NULL;
-    for (cThing = ch->stuff;
+    for (cThing = ch->getStuff();
          cThing && (!(cTool=dynamic_cast<TTool *>(cThing)) ||
                     !cTool->getToolType() != TOOL_FLINTSTEEL);
          cThing = cThing->nextThing);
@@ -496,8 +496,8 @@ void TFFlame::addFlameToMe(TBeing *ch, const char *argument, TThing *fObj, bool 
       if (isFirst) delete this;
       return;
     }
-    if (!(woodItem = searchLinkedListVis(ch, argument, ch->stuff, &count)) &&
-        !(woodItem = searchLinkedListVis(ch, argument, ch->roomp->stuff, &count))) {
+    if (!(woodItem = searchLinkedListVis(ch, argument, ch->getStuff(), &count)) &&
+        !(woodItem = searchLinkedListVis(ch, argument, ch->roomp->getStuff(), &count))) {
       ch->sendTo(COLOR_OBJECTS, "You can not seem to find the '%s'.\n\r", argument);
       if (isFirst) delete this;
       return;
@@ -577,7 +577,7 @@ void TBeing::igniteObject(const char *argument, TThing *fObj)
     return;
   }
   // See if were doing a new flame or adding to an existing one.
-  for (tStuff = roomp->stuff;
+  for (tStuff = roomp->getStuff();
        tStuff && !(newFlame = dynamic_cast<TFFlame *>(tStuff));
        tStuff = tStuff->nextThing);
   if (newFlame) {

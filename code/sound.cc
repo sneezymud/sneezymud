@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: sound.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -40,7 +32,7 @@ void MakeRoomNoise(TMonster *mob, int room, const char *local_snd, const char *d
   char buf[256];
 
   if ((rp = real_roomp(room)) && local_snd && *local_snd) {
-    for (t = rp->stuff; t; t = t->nextThing) {
+    for (t = rp->getStuff(); t; t = t->nextThing) {
       ch = dynamic_cast<TBeing *>(t);
       if (!ch || !ch->desc) {
         continue;
@@ -55,7 +47,7 @@ void MakeRoomNoise(TMonster *mob, int room, const char *local_snd, const char *d
   if (rp && distant_snd) {
     for (door = MIN_DIR; door < MAX_DIR; door++) {
       if (rp->dir_option[door] && (orp = real_roomp(rp->dir_option[door]->to_room))) {
-        for (t = orp->stuff; t; t = t->nextThing) {
+        for (t = orp->getStuff(); t; t = t->nextThing) {
           ch = dynamic_cast<TBeing *>(t);
           if (!ch) {
             continue;
@@ -79,7 +71,7 @@ void MakeNoise(int room, char *local_snd, char *distant_snd)
   TThing *t = NULL;
 
   if ((rp = real_roomp(room))) {
-    for (t = rp->stuff; t; t = t->nextThing) {
+    for (t = rp->getStuff(); t; t = t->nextThing) {
       ch = dynamic_cast<TBeing *>(t);
       if (!ch) {
         continue;
@@ -90,12 +82,12 @@ void MakeNoise(int room, char *local_snd, char *distant_snd)
     }
   }
   if (!rp) {
-    vlogf(5, "Testing log: No rp in MakeNoise for %s", ((ch->name) ? ch->name : "null"));
+    vlogf(LOG_MISC, "Testing log: No rp in MakeNoise for %s", ((ch->name) ? ch->name : "null"));
     return;
   }
   for (door = MIN_DIR; door < MAX_DIR; door++) {
     if (rp->dir_option[door] && (orp = real_roomp(rp->dir_option[door]->to_room))) {
-      for (t = orp->stuff; t; t = t->nextThing) {
+      for (t = orp->getStuff(); t; t = t->nextThing) {
         ch = dynamic_cast<TBeing *>(t);
         if (!ch) {
           continue;
@@ -162,7 +154,7 @@ int noise(const TBeing *ch)
 
 int TBeing::applySoundproof() const
 {
-  if (checkSoundproof()) {
+  if (checkSoundproof() && !isImmortal()) {
     sendTo("You are in a silence zone, you can't make a sound!\n\r");
     return TRUE;		/* for shouts, emotes, etc */
   }
@@ -177,7 +169,7 @@ int TThing::checkSoundproof() const
 void TRoom::playsound(soundNumT sound, const string &type, int vol, int prior, int loop) const
 {
   TThing *ch;
-  for (ch = stuff; ch; ch = ch->nextThing) {
+  for (ch = getStuff(); ch; ch = ch->nextThing) {
     TBeing * chb = dynamic_cast<TBeing *>(ch);
     if (chb)
       chb->playsound(sound, type, vol, prior, loop);
@@ -187,7 +179,7 @@ void TRoom::playsound(soundNumT sound, const string &type, int vol, int prior, i
 void TRoom::stopsound() const
 {
   TThing *ch;
-  for (ch = stuff; ch; ch = ch->nextThing) {
+  for (ch = getStuff(); ch; ch = ch->nextThing) {
     TBeing * chb = dynamic_cast<TBeing *>(ch);
     if (chb)
       chb->stopsound();
@@ -197,7 +189,7 @@ void TRoom::stopsound() const
 void TBeing::stopmusic()
 {
   if (desc) {
-    if (IS_SET(desc->account->flags, ACCOUNT_MSP) || desc->client) {
+    if (IS_SET(desc->account->flags, ACCOUNT_MSP) || desc->m_bIsClient) {
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
@@ -221,7 +213,7 @@ void TBeing::playmusic(musicNumT music, const string &type, int vol, int cont, i
   };
 
   if (desc) {
-    if ((IS_SET(desc->account->flags, ACCOUNT_MSP) || desc->client) &&
+    if ((IS_SET(desc->account->flags, ACCOUNT_MSP) || desc->m_bIsClient) &&
         music >= MIN_MUSIC_NUM && music < MAX_MUSIC_NUM) {
       // please note, we do NOT send the U= command intentionally.
       // According to Zugg (of zMud), the U is meant to set a default
@@ -253,7 +245,7 @@ void TBeing::playmusic(musicNumT music, const string &type, int vol, int cont, i
 void TBeing::stopsound()
 {
   if (desc) {
-    if (IS_SET(desc->account->flags, ACCOUNT_MSP) || desc->client) {
+    if (IS_SET(desc->account->flags, ACCOUNT_MSP) || desc->m_bIsClient) {
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
@@ -460,7 +452,7 @@ void TBeing::playsound(soundNumT sound, const string &type, int vol, int prior, 
   };
 
   if (desc) {
-    if ((IS_SET(desc->account->flags, ACCOUNT_MSP) || desc->client) &&
+    if ((desc->account && IS_SET(desc->account->flags, ACCOUNT_MSP) || desc->m_bIsClient) &&
         sound >= MIN_SOUND_NUM && sound < MAX_SOUND_NUM) {
       // please note, we do NOT send the U= command intentionally.
       // According to Zugg (of zMud), the U is meant to set a default

@@ -877,7 +877,7 @@ void objsToStore(signed char slot, TObj *o, rentHeader * st, TBeing *ch, bool d,
     if (!raw_write_item(fp, tmpcorpse, st->version))
       vlogf(LOG_BUG, "Rent error in %s's file", tmpcorpse->getName());
 
-    objsToStore(NORMAL_SLOT, dynamic_cast<TObj *>(tmpcorpse->stuff), st, ch, d, fp, FALSE);
+    objsToStore(NORMAL_SLOT, dynamic_cast<TObj *>(tmpcorpse->getStuff()), st, ch, d, fp, FALSE);
     slot = CONTENTS_END;
     if (fwrite(&slot, sizeof(signed char), 1, fp) != 1) {
       vlogf(LOG_BUG, "Error saving %s's objects -- slot write.",
@@ -887,7 +887,7 @@ void objsToStore(signed char slot, TObj *o, rentHeader * st, TBeing *ch, bool d,
     if (tmpcorpse->getNext()) 
       objsToStore(NORMAL_SLOT, tmpcorpse->getNext(), st, ch, d, fp, corpse);
   } else if (!o->isRentable()) {
-    objsToStore(NORMAL_SLOT, (TObj *) o->stuff, st, ch, d, fp, corpse);
+    objsToStore(NORMAL_SLOT, (TObj *) o->getStuff(), st, ch, d, fp, corpse);
     objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, st, ch, d, fp, corpse);
   } else {
     if (fwrite(&slot, sizeof(signed char), 1, fp) != 1) {
@@ -909,7 +909,7 @@ if (ch && !strcmp(ch->name, "Iradel"))
 vlogf(LOG_SILENT, "IRADEL:          obj write  %d", o->objVnum());
 #endif
 
-    objsToStore(NORMAL_SLOT, (TObj *) o->stuff, st, ch, d, fp, corpse);
+    objsToStore(NORMAL_SLOT, (TObj *) o->getStuff(), st, ch, d, fp, corpse);
     slot = CONTENTS_END;
     if (fwrite(&slot, sizeof(signed char), 1, fp) != 1) {
       vlogf(LOG_BUG, "Error saving %s's objects -- slot write (2).", 
@@ -1004,7 +1004,7 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, string &str)
     }
     cost->ok = FALSE;
   }
-  addObjCost(re, (TObj *) (obj->stuff), cost, str);
+  addObjCost(re, (TObj *) (obj->getStuff()), cost, str);
   addObjCost(re, (TObj *) (obj->nextThing), cost, str);
 }
 
@@ -1027,7 +1027,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   cost->no_carried = 0;
 
   // add up cost for the player
-  addObjCost(recep, (TObj *) stuff, cost, str);
+  addObjCost(recep, (TObj *) getStuff(), cost, str);
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     obj = dynamic_cast<TObj *>(equipment[i]);
@@ -1078,7 +1078,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
     cost->total_cost += actual_cost;
 
     // mob's inventory
-    addObjCost(recep, (TObj *) (ch->stuff), cost, str);
+    addObjCost(recep, (TObj *) (ch->getStuff()), cost, str);
 
     // mob's equipment
     for (i = MIN_WEAR; i < MAX_WEAR; i++) {
@@ -1265,7 +1265,7 @@ void TMonster::saveItems(const char *filepath)
       objsToStore(mapSlotToFile(ij), obj, &st, this, FALSE, fp);
     }
   }
-  objsToStore(NORMAL_SLOT, (TObj *) stuff, &st, this, FALSE, fp);
+  objsToStore(NORMAL_SLOT, (TObj *) getStuff(), &st, this, FALSE, fp);
   i = CONTENTS_END;
   fwrite(&i, sizeof(i), 1, fp);
   fclose(fp);
@@ -1318,7 +1318,7 @@ void TRoom::saveItems(const char *)
   st.version = CURRENT_RENT_VERSION;
   fwrite(&st.version, sizeof(st.version), 1, fp);
 
-  objsToStore(NORMAL_SLOT, (TObj *) stuff, &st, NULL, FALSE, fp);
+  objsToStore(NORMAL_SLOT, (TObj *) getStuff(), &st, NULL, FALSE, fp);
   i = CONTENTS_END;
   fwrite(&i, sizeof(i), 1, fp);
   fclose(fp);
@@ -1406,7 +1406,7 @@ void TRoom::loadItems()
       return;
     }
 
-    for (tThing = stuff; tThing; tThing = tThingNext) {
+    for (tThing = getStuff(); tThing; tThing = tThingNext) {
       tThingNext = tThing->nextThing;
 
       // Remove various things.
@@ -1420,8 +1420,8 @@ void TRoom::loadItems()
       // Remove old junk bags.
       if (sscanf(tThing->name, "linkbag %[A-Za-z]", tString) != 1) {
         vlogf(LOG_LOW, "Storage: Moving Old Junk Bag");
-        while ((tThing->stuff)) {
-          TThing * tTemp = tThing->stuff;
+        while ((tThing->getStuff())) {
+          TThing * tTemp = tThing->getStuff();
           --(*tTemp);
           *tBag += *tTemp;
         }
@@ -1447,7 +1447,7 @@ void TRoom::loadItems()
       vlogf(LOG_LOW, "Storage: Processing Linkbag: %s", tString);
 
       // If we got here, the bag is a linkbag and the player is around.
-      for (tCont = tThing->stuff; tCont; tCont = tCont->nextThing) {
+      for (tCont = tThing->getStuff(); tCont; tCont = tCont->nextThing) {
         TNote * tNote = dynamic_cast<TNote *>(tCont);
 
         if (!tNote)
@@ -1569,8 +1569,8 @@ void TRoom::loadItems()
 
           vlogf(LOG_LOW, "Storage: Expired: %s", tString);
 
-          while ((tThing->stuff)) {
-            TThing * tTemp = tThing->stuff;
+          while ((tThing->getStuff())) {
+            TThing * tTemp = tThing->getStuff();
             --(*tTemp);
             *tBag += *tTemp;
           }
@@ -1586,7 +1586,7 @@ void TRoom::loadItems()
         vlogf(LOG_LOW, "Storage: Unable to find rent note for: %s", tString);
     }
 
-    if (!tBag->stuff)
+    if (!tBag->getStuff())
       delete tBag;
     else {
       string tStString("");
@@ -1725,7 +1725,7 @@ void TPCorpse::addCorpseToLists()
   TPCorpse * tmpCorpse = NULL;
   int numCorpsesInRoom = 1;
   bool found = FALSE;
-  if (!stuff)
+  if (!getStuff())
     return;
 
   if (checkOnLists())
@@ -1832,7 +1832,7 @@ void TBeing::assignCorpsesToRooms()
     rp->setRoomFlagBit(ROOM_SAVE_ROOM);
   fclose(fp);
 
-  for (tmp = rp->stuff; tmp;) {
+  for (tmp = rp->getStuff(); tmp;) {
     corpse = dynamic_cast<TPCorpse *>(tmp);
 // tmp has to be here
     tmp = tmp->nextThing;
@@ -2000,13 +2000,13 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
       }
     }
   }
-  objsToStore(NORMAL_SLOT, (TObj *) stuff, &st, this, d, fp);
+  objsToStore(NORMAL_SLOT, (TObj *) getStuff(), &st, this, d, fp);
 
   i = CONTENTS_END;
   fwrite(&i, sizeof(signed char), 1, fp);
 
   if (d)
-    stuff = 0;
+    setStuff(NULL);
 
 #if 0
   // a nice idea, but no longer works since "cost" is tracking mobs +
@@ -2064,7 +2064,7 @@ TObj *TBeing::findMostExpensiveItem()
         o = obj;
         high = obj->rentCost();
       }
-      for (t2 = obj->stuff; t2; t2 = t2->nextThing) {
+      for (t2 = obj->getStuff(); t2; t2 = t2->nextThing) {
         obj = dynamic_cast<TObj *>(t2);
         if (!obj)
           continue;
@@ -2075,7 +2075,7 @@ TObj *TBeing::findMostExpensiveItem()
       }
     }
   }
-  for (t = stuff; t; t = t->nextThing) {
+  for (t = getStuff(); t; t = t->nextThing) {
     TObj *obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
@@ -2083,7 +2083,7 @@ TObj *TBeing::findMostExpensiveItem()
       o = obj;
       high = obj->rentCost();
     }
-    for (t2 = t->stuff; t2; t2 = t2->nextThing) {
+    for (t2 = t->getStuff(); t2; t2 = t2->nextThing) {
       obj = dynamic_cast<TObj *>(t2);
       if (!obj)
         continue;
@@ -2099,7 +2099,7 @@ TObj *TBeing::findMostExpensiveItem()
 void TThing::moneyMove(TBeing *ch)
 {
   TThing *t, *t2;
-  for (t = stuff; t; t = t2) {
+  for (t = getStuff(); t; t = t2) {
     t2 = t->nextThing;
     t->moneyMove(ch);
   }
@@ -2129,7 +2129,7 @@ void TBeing::moneyCheck()
       t->moneyMove(this);
     }
   }
-  for (t = stuff; t; t = t2) {
+  for (t = getStuff(); t; t = t2) {
     t2 = t->nextThing;
     t->moneyMove(this);
   }
@@ -2274,7 +2274,7 @@ void TPerson::loadRent()
 
           vlogf(LOG_PIO, "%s had item '%s' taken by rent.", getName(), i->getName());
           TThing *t;
-          while ((t = i->stuff)) {
+          while ((t = i->getStuff())) {
             (*t)--;
             *this += *t;
           }
@@ -2321,13 +2321,13 @@ void TPerson::loadRent()
   // because of the way the "stuff" list is saved, it essentially reverses
   // its order every reload
   // let's flip the order back...
-  TThing *tmp2 = stuff;
+  TThing *tmp2 = getStuff();
   TThing *t2;
-  stuff = NULL;
+  setStuff(NULL);
   while (tmp2) {
     t2 = tmp2->nextThing;
-    tmp2->nextThing = stuff;
-    stuff = tmp2;
+    tmp2->nextThing = getStuff();
+    setStuff(tmp2);
     tmp2 = t2;
   }
 
@@ -2476,17 +2476,17 @@ void TBeing::makeRentNote(TBeing *recip)
 
   cost.total_cost = 0;
 
-  for (t = stuff; t; t = t->nextThing)  {
+  for (t = getStuff(); t; t = t->nextThing)  {
     if (!(obj = dynamic_cast<TObj *>(t)))
       continue;
 
-    cost.total_cost += obj->noteMeForRent(longBuf, this, stuff, &num);
+    cost.total_cost += obj->noteMeForRent(longBuf, this, getStuff(), &num);
 
-    for (t2 = obj->stuff; t2; t2 = t2->nextThing) {
+    for (t2 = obj->getStuff(); t2; t2 = t2->nextThing) {
       if (!(tObj = dynamic_cast<TObj *>(t2)))
         continue;
 
-      cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->stuff, &num);
+      cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->getStuff(), &num);
     }
   }
 
@@ -2499,11 +2499,11 @@ void TBeing::makeRentNote(TBeing *recip)
           ((i == HOLD_LEFT) && obj->isPaired()))) {
       cost.total_cost += obj->noteMeForRent(longBuf, this, obj, &num);
 
-      for (t = obj->stuff; t; t = t->nextThing) {
+      for (t = obj->getStuff(); t; t = t->nextThing) {
         if (!(tObj = dynamic_cast<TObj *>(t)))
           continue;
 
-        cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->stuff, &num);
+        cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->getStuff(), &num);
       }
     }
   }
@@ -2542,26 +2542,26 @@ void TBeing::makeRentNote(TBeing *recip)
           ((i == HOLD_LEFT) && obj->isPaired()))) {
         cost.total_cost += obj->noteMeForRent(longBuf, this, obj, &num);
 
-        for (t = obj->stuff; t; t = t->nextThing) {
+        for (t = obj->getStuff(); t; t = t->nextThing) {
           if (!(tObj = dynamic_cast<TObj *>(t)))
             continue;
 
-          cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->stuff, &num);
+          cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->getStuff(), &num);
         }
       }
     }
 
-    for (t = ch->stuff; t; t = t->nextThing)  {
+    for (t = ch->getStuff(); t; t = t->nextThing)  {
       if (!(obj = dynamic_cast<TObj *>(t)))
         continue;
   
-      cost.total_cost += obj->noteMeForRent(longBuf, this, stuff, &num);
+      cost.total_cost += obj->noteMeForRent(longBuf, this, getStuff(), &num);
   
-      for (t2 = obj->stuff; t2; t2 = t2->nextThing) {
+      for (t2 = obj->getStuff(); t2; t2 = t2->nextThing) {
         if (!(tObj = dynamic_cast<TObj *>(t2)))
           continue;
   
-        cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->stuff, &num);
+        cost.total_cost += tObj->noteMeForRent(longBuf, this, obj->getStuff(), &num);
       }
     }
   }
@@ -2650,7 +2650,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
     TBeing *tbt;
     
     // Toss out idlers
-    for (t = recep->roomp->stuff; t; t = t->nextThing) {
+    for (t = recep->roomp->getStuff(); t; t = t->nextThing) {
       if ((tbt = dynamic_cast<TBeing *>(t)) &&
 	  tbt->getTimer() > 1 && 
           !tbt->isImmortal()) {
@@ -4001,7 +4001,7 @@ bool TBeing::saveFollowers(bool rent_time)
         }
       }
     }
-    for (t = mob->stuff; t ; t = t2) {
+    for (t = mob->getStuff(); t ; t = t2) {
       t2 = t->nextThing;
       obj = dynamic_cast<TObj *>(t);
       if (!obj)

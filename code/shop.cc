@@ -184,7 +184,7 @@ static void load_shop_file(TMonster *ch, int shop_nr)
   TThing *t;
   TObj *obj;
   int discount = 100, price;
-  for (t = ch->stuff; t; t = t->nextThing) {
+  for (t = ch->getStuff(); t; t = t->nextThing) {
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
@@ -278,9 +278,9 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   if (!num)
     num = 1;
 
-  tt = searchLinkedListVis(ch, argm, keeper->stuff);
+  tt = searchLinkedListVis(ch, argm, keeper->getStuff());
   if (!tt || !(temp1 = dynamic_cast<TObj *>(tt))) {
-    if (!(temp1 = get_num_obj_in_list(ch, atoi(argm), keeper->stuff, shop_nr))) {
+    if (!(temp1 = get_num_obj_in_list(ch, atoi(argm), keeper->getStuff(), shop_nr))) {
       sprintf(buf, shop_index[shop_nr].no_such_item1, ch->name);
       keeper->doTell(buf);
       return;
@@ -385,7 +385,7 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     }
     keeper->saveItems(buf);
   } else {
-    tmp = number_objects_in_list(this, (TObj *) keeper->stuff);
+    tmp = number_objects_in_list(this, (TObj *) keeper->getStuff());
     if (num > tmp) {
       sprintf(buf, "%s I don't have %d of that item. Here %s the %d I do have.",
                 ch->name, num , (tmp > 1) ? "are" : "is", tmp);
@@ -409,7 +409,7 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     cost = shopPrice(1, shop_nr, chr, &discount);
 
     for (i = 0; i < tmp; i++) {
-      TThing *t_temp1 = searchLinkedListVis(ch, argm, keeper->stuff);
+      TThing *t_temp1 = searchLinkedListVis(ch, argm, keeper->getStuff());
       TObj *temp1 = dynamic_cast<TObj *>(t_temp1);
 
 #if !(NO_DAMAGED_ITEMS_SHOP)
@@ -492,7 +492,7 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int)
     return TRUE;
   }
 #endif
-  if (temp1->stuff) {
+  if (temp1->getStuff()) {
     sprintf(buf, "%s Sorry, I don't buy items that contain other items.", ch->getName());
     keeper->doTell(buf);
     return TRUE;
@@ -674,7 +674,7 @@ TThing *)
   if (isClosed()) 
     return TRUE;
   
-  for (t = stuff; t; t = t2) {
+  for (t = getStuff(); t; t = t2) {
     t2 = t->nextThing;
     rc = t->componentValue(ch, keeper, shop_nr, this);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -701,7 +701,7 @@ int TSpellBag::componentSell(TBeing *ch, TMonster *keeper, int shop_nr, TThing *
     // ignore closed spellbags
     return TRUE;
   }
-  for (t = stuff; t; t = t2) {
+  for (t = getStuff(); t; t = t2) {
     t2 = t->nextThing;
     rc = t->componentSell(ch, keeper, shop_nr, this);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -865,7 +865,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
           //generic_sell(ch, tKeeper, tObj, tShop);
       }
 
-    for (tThing = ch->stuff; tThing; tThing = tThingTemp) {
+    for (tThing = ch->getStuff(); tThing; tThing = tThingTemp) {
       tThingTemp = tThing->nextThing;
 
       if (!ch->sameRoom(*tKeeper) || !ch->awake())
@@ -903,7 +903,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
           return DELETE_THIS;
         }
       }
-      for (t = ch->stuff; t; t = t2) {
+      for (t = ch->getStuff(); t; t = t2) {
         t2 = t->nextThing;
         if (!ch->sameRoom(*tKeeper))
           break;
@@ -939,7 +939,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
         if (IS_SET_DELETE(rc, DELETE_VICT)) 
           return DELETE_THIS;
       }
-      for (t = ch->stuff; t; t = t2) {
+      for (t = ch->getStuff(); t; t = t2) {
         t2 = t->nextThing;
         if (!ch->sameRoom(*tKeeper))
           break;
@@ -974,7 +974,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_THIS;
       }
-      for (t = ch->stuff; t; t = t2) {
+      for (t = ch->getStuff(); t; t = t2) {
         t2 = t->nextThing;
         if (!ch->sameRoom(*tKeeper))
           break;
@@ -993,7 +993,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
       return FALSE;
     }
   }
-  TThing *t_temp1 = searchLinkedListVis(ch, argm, ch->stuff);
+  TThing *t_temp1 = searchLinkedListVis(ch, argm, ch->getStuff());
   temp1 = dynamic_cast<TObj *>(t_temp1);
   if (!temp1) {
     sprintf(buf, shop_index[shop_nr].no_such_item2, ch->getName());
@@ -1028,7 +1028,7 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
 
       t->componentValue(ch, keeper, shop_nr, NULL);
     }
-    for (t = ch->stuff; t; t = t2) {
+    for (t = ch->getStuff(); t; t = t2) {
       t2 = t->nextThing;
 
       t->componentValue(ch, keeper, shop_nr, NULL);
@@ -1036,7 +1036,7 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     return;
   }
 
-  TThing *t_temp1 = searchLinkedListVis(ch, argm, ch->stuff);
+  TThing *t_temp1 = searchLinkedListVis(ch, argm, ch->getStuff());
   temp1 = dynamic_cast<TObj *>(t_temp1);
   if (!temp1) {
     sprintf(buf, shop_index[shop_nr].no_such_item2, ch->name);
@@ -1472,7 +1472,7 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
   found_obj = FALSE;
 
   TThing *t, *t2;
-  for (t = keeper->stuff; t; t = t2) {
+  for (t = keeper->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     i = dynamic_cast<TObj *>(t);
     if (!i)
@@ -1564,7 +1564,7 @@ void TMonster::autoCreateShop(int shop_nr)
   if (shop_index[shop_nr].producing[0] == -1)
     return;
 
-  if (stuff)  // just can't see the shopkeepers inventory so lists nada?
+  if (getStuff())  // just can't see the shopkeepers inventory so lists nada?
     return;
 
   vlogf(LOG_MISC,"Creating a new shopfile for %s (shop #%d)",getName(),shop_nr);
@@ -1599,7 +1599,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
   if (!(is_ok(keeper, ch, shop_nr)) || !ch->desc)
     return FALSE;
 
-  TThing *t_temp1 = searchLinkedListVis(ch, arg, keeper->stuff);
+  TThing *t_temp1 = searchLinkedListVis(ch, arg, keeper->getStuff());
   temp1 = dynamic_cast<TObj *>(t_temp1);
   if (!temp1) {
     // check for 4.xxx syntax, we already know anything like that is NOT
@@ -1608,7 +1608,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
       return FALSE;
     value = atoi(arg);
     if (!value || 
-    !(temp1 = get_num_obj_in_list(ch, value, keeper->stuff, shop_nr))) {
+    !(temp1 = get_num_obj_in_list(ch, value, keeper->getStuff(), shop_nr))) {
       // it's not one of my objects so see if the look thing is in room
       return FALSE;
     }
@@ -1653,10 +1653,10 @@ static bool shopping_evaluate(const char *arg, TBeing *ch, TMonster *keeper, int
   if (!num)
     num = 1;
 
-  TThing *t_temp1 = searchLinkedListVis(ch, newarg, keeper->stuff);
+  TThing *t_temp1 = searchLinkedListVis(ch, newarg, keeper->getStuff());
   temp1 = dynamic_cast<TObj *>(t_temp1);
   if (!temp1) {
-    if (!(temp1 = get_num_obj_in_list(ch, atoi(newarg), keeper->stuff, shop_nr))) {
+    if (!(temp1 = get_num_obj_in_list(ch, atoi(newarg), keeper->getStuff(), shop_nr))) {
       // it's not one of my objects so see if the look thing is in room
       return FALSE;
     }
@@ -1707,7 +1707,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     TBeing *tbt;
 
     // Toss out idlers
-    for(t=myself->roomp->stuff;t;t=t->nextThing){
+    for(t=myself->roomp->getStuff();t;t=t->nextThing){
       if((tbt=dynamic_cast<TBeing *>(t)) && 
 	 tbt->getTimer()>1 && !tbt->isImmortal()){
         if ((tbt->master) && tbt->master->inRoom() == tbt->inRoom()) {
@@ -1822,7 +1822,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     TThing *t, *t2;
     if (::number(0,10))
       return FALSE;
-    for (t = myself->stuff; t; t = t2) {
+    for (t = myself->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       TObj * obj = dynamic_cast<TObj *>(t);
       if (!obj)
@@ -1951,7 +1951,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	return FALSE;
       }
 
-      for(tt=myself->stuff;tt;tt=tt->nextThing){
+      for(tt=myself->getStuff();tt;tt=tt->nextThing){
 	o=dynamic_cast<TObj *>(tt);
 	++count;
 	value+=o->obj_flags.cost;
@@ -2045,7 +2045,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	return TRUE;
       }
       
-      for(tt=myself->stuff;tt;tt=tt->nextThing){
+      for(tt=myself->getStuff();tt;tt=tt->nextThing){
 	o=dynamic_cast<TObj *>(tt);
 	value+=o->obj_flags.cost;
       }
@@ -2104,7 +2104,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	}
       }
 
-      for(tt=myself->stuff;tt;tt=tt->nextThing){
+      for(tt=myself->getStuff();tt;tt=tt->nextThing){
 	o=dynamic_cast<TObj *>(tt);
 	value+=o->obj_flags.cost;
       }
@@ -2301,7 +2301,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
     return;
   }
 
-  for(tt=keeper->stuff;tt;tt=tt->nextThing){
+  for(tt=keeper->getStuff();tt;tt=tt->nextThing){
     ++count;
     o=dynamic_cast<TObj *>(tt);
     value+=o->obj_flags.cost;

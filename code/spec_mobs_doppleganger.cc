@@ -80,14 +80,14 @@ TBeing * dopplegangerFindTarget(TRoom *tRoom)
   TThing *tObj;
   TRoom  *tNewRoom;
 
-  for (tObj = tRoom->stuff; tObj; tObj = tObj->nextThing)
+  for (tObj = tRoom->getStuff(); tObj; tObj = tObj->nextThing)
     if ((tSucker = dynamic_cast<TBeing *>(tObj)))
       tBestSucker = dopplegangerFindBetter(tSucker, tBestSucker);
 
   for (dirTypeT tDir = MIN_DIR; tDir < MAX_DIR; tDir++)
     if (tRoom->dir_option[tDir] &&
         (tNewRoom = real_roomp(tRoom->dir_option[tDir]->to_room)))
-      for (tObj = tNewRoom->stuff; tObj; tObj = tObj->nextThing)
+      for (tObj = tNewRoom->getStuff(); tObj; tObj = tObj->nextThing)
         if ((tSucker = dynamic_cast<TBeing *>(tObj)))
           tBestSucker = dopplegangerFindBetter(tSucker, tBestSucker);
 
@@ -172,7 +172,7 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
             tMyself->swapToStrung();
 
             delete [] tMyself->name;
-            tMyself->setName(mud_str_dup(tSucker->name));
+            tMyself->name = mud_str_dup(tSucker->name);
 
             delete [] tMyself->shortDescr;
             tMyself->shortDescr = mud_str_dup(tSucker->shortDescr);

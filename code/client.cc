@@ -57,7 +57,7 @@ void TRoom::clientf(const char *msg, ...)
     va_end(ap);
     sprintf(tmp, "\200%s\n", messageBuffer);
   }
-  for (t = stuff; t; t = t->nextThing) {
+  for (t = getStuff(); t; t = t->nextThing) {
     if (t->isPc() && t->desc && t->desc->m_bIsClient)
       t->sendTo(tmp);
   } 
@@ -76,7 +76,7 @@ void Descriptor::send_client_inventory()
   if (!(ch = character))
     return;
 
-  for (t = ch->stuff; t; t = t->nextThing) {
+  for (t = ch->getStuff(); t; t = t->nextThing) {
     TObj * tobj = dynamic_cast<TObj *>(t);
     if (!tobj)
       continue;
@@ -93,7 +93,7 @@ void Descriptor::send_client_room_people()
   if (!(ch = character))
     return;
 
-  for (folx = ch->roomp->stuff; folx; folx = folx->nextThing)
+  for (folx = ch->roomp->getStuff(); folx; folx = folx->nextThing)
     clientf("%d|%d|%s", CLIENT_ROOMFOLX, ADD, folx->getName());
 }
 
@@ -105,7 +105,7 @@ void Descriptor::send_client_room_objects()
   if (!(ch = character))
     return;
 
-  for (t = ch->roomp->stuff; t; t = t->nextThing)
+  for (t = ch->roomp->getStuff(); t; t = t->nextThing)
     clientf("%d|%d|%s", CLIENT_ROOMOBJS, ADD, t->getName());
 }
 
@@ -1751,7 +1751,7 @@ void Descriptor::clientShoppingList(const char *argument, TMonster *keeper, int 
   found_obj = FALSE;
 
   TThing *t, *t2;
-  for (t = keeper->stuff; t; t = t2) {
+  for (t = keeper->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     i = dynamic_cast<TObj *>(t);
     if (!i)

@@ -155,7 +155,7 @@ void TBeing::doTestCode(const char *arg)
 #if 0
   cmdTypeT i;
   TThing *note = NULL;
-  note = searchLinkedListVis(this, "exec script",  stuff);
+  note = searchLinkedListVis(this, "exec script",  getStuff());
 
   for (i = MIN_CMD; i < MAX_CMD_LIST;i++) {
     if ((i == CMD_QUIT2) || (i == CMD_TESTCODE) || (i == CMD_SHUTDOWN) ||
@@ -195,7 +195,7 @@ void TBeing::doTestCode(const char *arg)
   return;
 
   one_argument(arg, tmpbuf);
-  if (!(obj = searchLinkedListVis(this, tmpbuf, stuff)))
+  if (!(obj = searchLinkedListVis(this, tmpbuf, getStuff())))
     return;
   TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
   if (!tbc) return;

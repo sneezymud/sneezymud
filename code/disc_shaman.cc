@@ -62,7 +62,7 @@ int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
   mob->setSex(SEX_NEUTER);
 
   // take all from corpse, and give to zombie 
-  for (t = corpse->stuff; t; t = n) {
+  for (t = corpse->getStuff(); t; t = n) {
     n = t->nextThing;
     --(*t);
     *mob += *t;
@@ -236,7 +236,7 @@ int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
   mob->setCarriedVolume(0);
 
   // take all from corpse, and give to mob
-  for (t = corpse->stuff; t; t = n) {
+  for (t = corpse->getStuff(); t; t = n) {
     n = t->nextThing;
     --(*t);
     *mob += *t;
@@ -2442,7 +2442,7 @@ int flatulence(TBeing * caster, int level, byte bKnown, int adv_learn)
   if (bSuccess(caster, bKnown, SPELL_FLATULENCE)) {
     act("<o>You turn around quickly and pass gas!<1>", FALSE, caster, NULL, NULL, TO_CHAR);
     act("<o>$n turns around quickly and passes gas!<1>", FALSE, caster, NULL, NULL, TO_ROOM);
-    for (t = caster->roomp->stuff; t; t = t2) {
+    for (t = caster->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       vict = dynamic_cast<TBeing *>(t);
       if (!vict)

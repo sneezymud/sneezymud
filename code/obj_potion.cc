@@ -179,7 +179,7 @@ bool TPotion::sellMeCheck(const TBeing *ch, TMonster *keeper) const
   TThing *t;
   char buf[256];
 
-  for (t = keeper->stuff; t; t = t->nextThing) {
+  for (t = keeper->getStuff(); t; t = t->nextThing) {
     if ((t->number == number) &&
         (t->getName() && getName() &&
          !strcmp(t->getName(), getName()))) {

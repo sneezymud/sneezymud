@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_window.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // window.cc
 //
 
@@ -101,7 +86,7 @@ void TBeing::windowLook(const TWindow *w)
   act("$n peers through $p.", FALSE, this, w, NULL, TO_ROOM);
   if (!(target = real_roomp(w->getTarget(&isRandom)))) {
     sendTo("You see only an empty void.\n\r");
-    vlogf(10, "%s [%d] points to non existant room %d", w->shortDescr,
+    vlogf(LOG_BUG, "%s [%d] points to non existant room %d", w->shortDescr,
           obj_index[w->getItemIndex()].virt, w->getTarget());
     return;
   }
@@ -112,6 +97,6 @@ void TBeing::windowLook(const TWindow *w)
     act("You peer through $p...", FALSE, this, w, NULL, TO_CHAR);
   sendRoomName(target);
   sendRoomDesc(target);
-  list_thing_in_room(target->stuff, this);
+  list_thing_in_room(target->getStuff(), this);
 }
 

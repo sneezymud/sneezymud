@@ -2,26 +2,8 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: ai_utility.cc,v $
-// Revision 5.1  1999/10/16 04:29:21  batopr
-// *** empty log message ***
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//
-//      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "ai_utility.cc" - handles utility routines needed by the mob AI
 //        code.
-//
-//      The SneezyMUD mob AI was coded by Jeff Bennett, August 1994.
-//      Last revision, December 24th, 1994.
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -60,13 +42,19 @@ int TMonster::aggro(void)
   if (GuildProcs(spec))
     return FALSE;
 
-  if(isAffected(AFF_CHARM))
+  if(isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL))
     return FALSE;
 
   if (isAngry() && isMalice()) {
     if ((4*anger() + 5*malice()) >=450 )
       return TRUE;
   }
+
+#ifdef SNEEZY2000
+  if(IS_SET(specials.act, ACT_AGGRESSIVE))
+    return TRUE;
+#endif
+
   return FALSE;
 }
 
@@ -117,7 +105,8 @@ int TMonster::aiUglyMug(TBeing *tmp_ch)
 
 void TMonster::aiTarget(TBeing *vict)
 {
-  if (!canSee(vict) || !awake() || UtilMobProc(this))
+  if (!canSee(vict) || !awake() || UtilMobProc(this) ||
+      !sameRoom(*vict))
     return;
 
   if (vict->isPc())
@@ -128,14 +117,12 @@ void TMonster::aiTarget(TBeing *vict)
     else  // mob acting on its own 
       setTarg(NULL);
   }
-  if (!targ())
+  TBeing * targy = targ();
+  if (!targy)
     return;
-  if (!sameRoom(targ())) {
-    setTarg(NULL);
-    return;
-  }
-  if (!targ()->isPc()) {
-    vlogf(5,"Bug in aiTarget()");
+
+  if (!targy->isPc()) {
+    vlogf(LOG_MOB_AI, "Bug in aiTarget()");
     setTarg(NULL);
   }
 }
@@ -401,7 +388,7 @@ void TMonster::mobAI()
   // turn off targets if set by mistake 
   if (targ()) 
     if (!targ()->isPc()) {
-      vlogf(3, "Ooops, target for %s got set to a mob: %s.",getName(), targ()->getName());
+      vlogf(LOG_MOB_AI, "Ooops, target for %s got set to a mob: %s.",getName(), targ()->getName());
       setTarg(NULL);
     }
   
@@ -454,7 +441,7 @@ void TMonster::mobAI()
   // OK, if we don't have a target, lets see who's in the room 
   // set it to a random PC in the room that we can see 
   if (!targ()) {
-    for (t = roomp->stuff; t; t = t->nextThing) {
+    for (t = roomp->getStuff(); t; t = t->nextThing) {
       if (t->isPc() && canSee(t) && (t != this)) {
         aiTarget(dynamic_cast<TBeing *>(t));
         break;
@@ -1002,7 +989,7 @@ int TMonster::aiSocialSwitch (TBeing *doer,TBeing *other, cmdTypeT cmd, aiTarg c
       rc = aiGrimace(doer,other,cond);
       break;
     default:
-      vlogf(8,"doAction mob_AI loop called with cmd of %d and type %d",cmd,cond);
+      vlogf(LOG_MOB_AI, "doAction mob_AI loop called with cmd of %d and type %d",cmd,cond);
       US(1);
       aiStrangeThings(doer);
       break;

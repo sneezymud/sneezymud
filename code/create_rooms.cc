@@ -2960,7 +2960,7 @@ void RoomLoad(TBeing *ch, int start, int end, bool useSecond)
 
         sendrpf(rp, tStString.c_str());
 
-        while ((t = rp->stuff)) {
+        while ((t = rp->getStuff())) {
           --(*t);
           *rp2 += *t;
         }
@@ -3149,7 +3149,7 @@ void TRoom::initLight()
     setLight(outdoorLight());
   else if (getHasWindow()) {
     int best = 0, curr = 0;
-    for (ch = stuff;ch;ch = ch->nextThing) {
+    for (ch = getStuff();ch;ch = ch->nextThing) {
       TSeeThru *obj = dynamic_cast<TSeeThru *>(ch);
       if (!obj) continue;
       if (obj->givesOutsideLight()) {
@@ -3168,7 +3168,7 @@ void TRoom::initLight()
   } else
     setLight(0);
 
-  for (ch = stuff; ch; ch = ch->nextThing) {
+  for (ch = getStuff(); ch; ch = ch->nextThing) {
     addToLight(ch->getLight());
 
     // things on tables also count toward room light

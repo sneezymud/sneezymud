@@ -224,7 +224,7 @@ int TObj::personalizedCheck(TBeing *ch)
 
       vlogf(LOG_MISC, "We got an illegal personalized item (%s) off of %s (was %s's item).", getName(), ch->getName(), namebuf);
 
-      t = ch->roomp->stuff;
+      t = ch->roomp->getStuff();
       while (t) {
         TMonster *tmons = dynamic_cast<TMonster *>(t);
         if (tmons && tmons->canSee(ch) && (tmons != ch) && tmons->isHumanoid() && (tmons->getPosition() > POSITION_SLEEPING)) {
@@ -1303,7 +1303,7 @@ void TBeing::doWear(const char *argument)
 
   if (*arg1) {
     if (!strcmp(arg1, "all")) {
-      for (t = stuff; t; t = temp) {
+      for (t = getStuff(); t; t = temp) {
         temp = t->nextThing;
         TObj *tobj = dynamic_cast<TObj *>(t);
         if (!tobj)
@@ -1321,7 +1321,7 @@ void TBeing::doWear(const char *argument)
         }
       }
     } else {
-      TThing *tto = searchLinkedListVis(this, arg1, stuff);
+      TThing *tto = searchLinkedListVis(this, arg1, getStuff());
       o = dynamic_cast<TObj *>(tto);
       if (o) {
         if (*arg2) {
@@ -1380,7 +1380,7 @@ void TBeing::doWield(const char *argument)
   half_chop(argument, arg1, arg2);
 
   if (*arg1) {
-    if (!(o = searchLinkedList(arg1, stuff))) {
+    if (!(o = searchLinkedList(arg1, getStuff()))) {
       sendTo("You do not seem to have the '%s'.\n\r", arg1);
       return;
     }
@@ -1405,7 +1405,7 @@ void TBeing::doGrab(const char *argument)
   half_chop(argument, arg1, arg2);
 
   if (*arg1) {
-    TThing *tto = searchLinkedList(arg1, stuff);
+    TThing *tto = searchLinkedList(arg1, getStuff());
     TObj *o = dynamic_cast<TObj *>(tto);
     if (!o) {
       sendTo("You do not seem to have the '%s'.\n\r", arg1);
@@ -2083,7 +2083,7 @@ int TBeing::doSaddle(const char *arg)
     return FALSE;
   }
 
-  if (!(t = searchLinkedListVis(this, arg2, stuff))) {
+  if (!(t = searchLinkedListVis(this, arg2, getStuff()))) {
     sendTo("You don't seem to have the '%s'.\n\r", arg2);
     return FALSE;
   }

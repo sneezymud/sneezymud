@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: cmd_rename.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 /*************************************************************************
 
       SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
@@ -39,7 +24,7 @@ static void renamePersonalizeFix(TThing *t, const char * orig_name, const char *
     if ((sscanf(buf, "This is the personalized object of %s.", persbuf)) == 1) {
       if (!strcmp(persbuf, orig_name)) {
         // we are personalized already, so not bothering to swap to strung again
-        vlogf(5, "Personalized object (%s) on %s, being restrung.",
+        vlogf(LOG_MISC, "Personalized object (%s) on %s, being restrung.",
            obj->getName(), new_name);
         sprintf(buf, "This is the personalized object of %s", new_name);
         delete [] obj->action_description;
@@ -48,7 +33,7 @@ static void renamePersonalizeFix(TThing *t, const char * orig_name, const char *
     }
   }
 
-  renamePersonalizeFix(t->stuff, orig_name, new_name);
+  renamePersonalizeFix(t->getStuff(), orig_name, new_name);
   renamePersonalizeFix(t->nextThing, orig_name, new_name);
 }
 
@@ -100,7 +85,7 @@ void TBeing::doNameChange(const char *argument)
       return;
     }
     if (!isImmortal()) {
-      if (!mons->isPet() || mons->master != this) {
+      if (!mons->isPet(PETTYPE_PET | PETTYPE_THRALL) || mons->master != this) {
         act("$N is not your pet.", FALSE, this, 0, mons, TO_CHAR);
         return;
       }
@@ -185,7 +170,7 @@ void TBeing::doNameChange(const char *argument)
                   lower(vict->desc->account->name).c_str());
   sprintf(tmpbuf + strlen(tmpbuf), "/%s", lower(orig_name).c_str());
   if (unlink(tmpbuf) != 0)
-    vlogf(9, "error in unlink (11) (%s) %d", tmpbuf, errno);
+    vlogf(LOG_FILE, "error in unlink (11) (%s) %d", tmpbuf, errno);
   
   if (vict->GetMaxLevel() > MAX_MORT) {
     sprintf(tmpbuf, "mv immortals/%s/ immortals/%s/",
@@ -206,7 +191,7 @@ void TBeing::doNameChange(const char *argument)
     renamePersonalizeFix(vict->equipment[slot], orig_name, tmp_name);
   }
   // and again for inventory
-  renamePersonalizeFix(vict->stuff, orig_name, tmp_name);
+  renamePersonalizeFix(vict->getStuff(), orig_name, tmp_name);
 
   return;
 }
@@ -225,7 +210,7 @@ void TBeing::doDescription()
     return;
   }
 #if 0 
-  if (desc->client) {
+  if (desc->m_bIsClient) {
     // it winds up sending their desc as a bug report...
 
     sendTo("Sorry, descriptions can not be editted through the client.\n\r");
@@ -242,7 +227,7 @@ void TBeing::doDescription()
   desc->str = &descr;
   desc->max_str = 500;
 #if 0
-  if (desc->client)
+  if (desc->m_bIsClient)
     desc->clientf("%d|%d", CLIENT_STARTEDIT, 500);
 #endif
 }

@@ -1,24 +1,5 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_bow.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/09/27 10:27:34  lapsos
-// message change in fast load.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "range.h"
-#include "create.h"
 
 TBow::TBow() :
   TObj(),
@@ -87,7 +68,7 @@ void TBow::remBowFlags(unsigned int r)
 
 void TBow::describeObjectSpecifics(const TBeing *ch) const
 {
-  if (stuff)
+  if (getStuff())
     ch->sendTo(COLOR_OBJECTS, "%s is loaded with an arrow.\n\r", good_cap(getName()).c_str());
   else
     ch->sendTo(COLOR_OBJECTS, "%s has no arrow ready.\n\r", good_cap(getName()).c_str());
@@ -122,7 +103,7 @@ string TBow::statObjInfo() const
   char    buf[256];
   TArrow *tArrow;
 
-  tArrow = dynamic_cast<TArrow *>(stuff);
+  tArrow = dynamic_cast<TArrow *>(getStuff());
 
   sprintf(buf, "Arrow: %d, flags: %d, type: %d", (tArrow ? tArrow->objVnum() : 0), getBowFlags(), getArrowType());
 
@@ -148,6 +129,7 @@ void TBow::setMaxRange(unsigned int r)
 void TBow::evaluateMe(TBeing *ch) const
 {
   int learn = ch->getSkillValue(SKILL_EVALUATE);
+
   if (learn <= 0) {
     ch->sendTo("You are not sufficiently knowledgeable about evaluation.\n\r");
     return;
@@ -159,6 +141,37 @@ void TBow::evaluateMe(TBeing *ch) const
              getName());
   ch->describeObject(this);
   ch->describeNoise(this, learn);
+
+  if (learn > 10)
+    switch (arrowType) {
+      case 0:
+        ch->sendTo(COLOR_OBJECTS, "%s can hold hunting type arrows.\n\r", getName());
+        break;
+      case 1:
+        ch->sendTo(COLOR_OBJECTS, "%s can hold fighting type arrows.\n\r", getName());
+        break;
+      case 2:
+        ch->sendTo(COLOR_OBJECTS, "%s can hold squabble type quarrels.\n\r", getName());
+        break;
+      case 3:
+        ch->sendTo(COLOR_OBJECTS, "%s can hold common type quarrels.\n\r", getName());
+        break;
+      case 4:
+        ch->sendTo(COLOR_OBJECTS, "%s can hold sniper type blowdarts.\n\r", getName());
+        break;
+      case 5:
+        ch->sendTo(COLOR_OBJECTS, "%s can hold common type blowdarts.\n\r", getName());
+        break;
+      case 6:
+        ch->sendTo(COLOR_OBJECTS, "%s can hold heavy type sling ammo.\n\r", getName());
+        break;
+      case 7:
+        ch->sendTo(COLOR_OBJECTS, "%s can hold common type sling ammo.\n\r", getName());
+        break;
+      default:
+        ch->sendTo(COLOR_OBJECTS, "%s seems to have a messy arrow size.\r", getName());
+        break;
+    }
 
   if (learn > 20)
     ch->describeMaxStructure(this, learn);
@@ -178,7 +191,7 @@ bool TBow::sellMeCheck(const TBeing *ch, TMonster *keeper) const
   TThing *t;
   char buf[256];
 
-  for (t = keeper->stuff; t; t = t->nextThing) {
+  for (t = keeper->getStuff(); t; t = t->nextThing) {
     if ((t->number == number) &&
         (t->getName() && getName() &&
          !strcmp(t->getName(), getName()))) {
@@ -200,10 +213,11 @@ void TBow::bloadArrowBow(TBeing *ch, TArrow *the_arrow)
     return;
   }
 
-  if (stuff) {
+  if (getStuff()) {
     ch->sendTo("That bow has already been loaded, so you hold it.\n\r");
-    //--(*this);
-    //ch->equipChar(this, ch->getPrimaryHold());
+    --(*this);
+    ch->equipChar(this, ch->getPrimaryHold());
+    ch->addToWait(combatRound(1));
     return;
   }
 
@@ -214,7 +228,7 @@ void TBow::bloadArrowBow(TBeing *ch, TArrow *the_arrow)
 
   if (getArrowType() != the_arrow->getArrowType()) {
     ch->sendTo("That arrow is just too %s to fit properly.\n\r",
-               ((getArrowType() > the_arrow->getArrowType()) ? "small" : "big"));
+               ((getArrowType() < the_arrow->getArrowType()) ? "small" : "big"));
 
     return;
   }
@@ -237,12 +251,12 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
   int   str_test, rc;
   char  buf[256];
 
-  if (!stuff || !dynamic_cast<TArrow *>(stuff)) {
+  if (!getStuff() || !dynamic_cast<TArrow *>(getStuff())) {
     act("$p isn't loaded with an arrow!", FALSE, ch, this, 0, TO_CHAR);
 
-    if (stuff && !dynamic_cast<TArrow *>(stuff)) {
-      vlogf(7, "Bow loaded with something not an arrow. [%s]", ch->getName());
-      TThing *tThing = stuff;
+    if (getStuff() && !dynamic_cast<TArrow *>(getStuff())) {
+      vlogf(LOG_BUG, "Bow loaded with something not an arrow. [%s]", ch->getName());
+      TThing *tThing = getStuff();
       --(*tThing);
       delete tThing;
       tThing = NULL;
@@ -272,12 +286,12 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     return FALSE;
   }
 
-  the_arrow = dynamic_cast<TObj *>(stuff);
+  the_arrow = dynamic_cast<TObj *>(getStuff());
 
-  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_BOW, 2);
+  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_RANGED_PROF, 2);
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_RANGED_SPEC, 40);
 
-  if (ch->getSkillValue(SKILL_BOW) < 10) {
+  if (ch->getSkillValue(SKILL_RANGED_PROF) < 10) {
     ch->sendTo("You can't even get the arrow out of the bow properly!\n\r");
     ch->sendTo("You realize you don't know much about shooting...get more training.\n\r");
     act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL, TO_CHAR);
@@ -285,7 +299,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     --(*the_arrow);
     *ch->roomp += *the_arrow;
     return FALSE;
-  } else if (ch->getSkillValue(SKILL_BOW) < (::number(0, 30))) {
+  } else if (ch->getSkillValue(SKILL_RANGED_PROF) < (::number(0, 30))) {
     ch->sendTo("You have a hard time getting the arrow out of the bow properly!\n\r");
     ch->sendTo("You realize you should get more training and practice more.\n\r");
     act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL, TO_CHAR);
@@ -340,8 +354,13 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
   ch->addToWait(combatRound(1));
 
   // construct reload buf, do it here since arrow might go bye-bye
+  // as sanity check, verify that person has an arrow to reload at this
+  // point too.
   sprintf(buf, "%s ", fname(name).c_str());
   strcat(buf, fname(the_arrow->name).c_str());
+  bool hasAnotherArrow = false;
+  if (ch->findArrow(the_arrow->name, SILENT_YES))
+    hasAnotherArrow = true;
 
   rc = throwThing(the_arrow, dir, ch->in_room, &targ, shoot_dist, max_distance, ch);
   if (IS_SET_DELETE(rc, DELETE_ITEM)) {
@@ -353,7 +372,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     targ = NULL;
   }
 
-  if (ch->doesKnowSkill(SKILL_FAST_LOAD)) {
+  if (ch->doesKnowSkill(SKILL_FAST_LOAD) && hasAnotherArrow) {
     ch->sendTo("You quickly try to reload.\n\r");
 
     rc = ch->doRemove("", this);
@@ -373,15 +392,27 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
   return FALSE;
 }
 
-string TBow::showModifier(showModeT, const TBeing *) const
+string TBow::showModifier(showModeT mode, const TBeing *ch) const
 {
   string a;
 
-  if (stuff)
+  if (getStuff())
     a = " (loaded)";
   else
     a = " (unloaded)";
 
+  if (mode == SHOW_MODE_SHORT_PLUS ||
+       mode == SHOW_MODE_SHORT_PLUS_INV ||
+       mode == SHOW_MODE_SHORT) {
+    a = " (";
+    a += equip_condition(-1);
+    a += ")";
+    if (ch->hasWizPower(POWER_IMM_EVAL) || TestCode2) {
+      char buf[256];
+      sprintf(buf, " (L%d)", (int) (objLevel() + 0.5));
+      a += buf;
+    }
+  }
   return a;
 }
 
@@ -392,8 +423,8 @@ void TBow::dropMe(TBeing *ch, showMeT showme, showRoomT showroom)
 
   // dislodge arrow
   // the text of the drop (above) should be before the dislodge
-  if (stuff) {
-    TThing *t = stuff;
+  if (getStuff()) {
+    TThing *t = getStuff();
     (*t)--;
     *ch->roomp += *t;
     act("$n falls from $p.", false, t, this, 0, TO_ROOM);

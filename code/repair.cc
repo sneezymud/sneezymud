@@ -337,7 +337,7 @@ static bool will_not_repair(TBeing *ch, TMonster *repair, TObj *obj, silentTypeT
     return TRUE;
   }
 
-  if (obj->stuff) {
+  if (obj->getStuff()) {
     // probably a mage-belt with components in it....
     if (!silent) {
       sprintf(buf, "%s Sorry, you'll have to empty it out before I can do any work on it.", fname(ch->name).c_str());
@@ -367,7 +367,7 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
     repair->doTell(buf);
     return;
   }
-  TThing *t_valued = searchLinkedListVis(buyer, arg, buyer->stuff);
+  TThing *t_valued = searchLinkedListVis(buyer, arg, buyer->getStuff());
   valued = dynamic_cast<TObj *>(t_valued);
   if (!valued) {
     sprintf(buf, "%s %s, You don't have that item.\n\r", fname(buyer->name).c_str(), buyer->getName());
@@ -427,7 +427,7 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
   if (is_abbrev(obj_name, "all.damaged")) {
     int total = 0;
     bool found = false;
-    for (t = buyer->stuff;t; t = t2) {
+    for (t = buyer->getStuff();t; t = t2) {
       t2 = t->nextThing;
       TObj *tobj = dynamic_cast<TObj *>(t);
       if (!tobj)
@@ -454,7 +454,7 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
   }
   if (is_abbrev(obj_name, "all.ticket")) {
     bool found = false;
-    for (t = buyer->stuff;t; t = t2) {
+    for (t = buyer->getStuff();t; t = t2) {
       t2 = t->nextThing;
       if (!isname("ticket", t->name))
         continue;
@@ -471,7 +471,7 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
 
     return FALSE;
   }
-  t = searchLinkedListVis(buyer, obj_name, buyer->stuff);
+  t = searchLinkedListVis(buyer, obj_name, buyer->getStuff());
   TObj *tobj = dynamic_cast<TObj *>(t);
   if (!tobj) {
     sprintf(buf, "%s You don't have that item.", fname(buyer->name).c_str());

@@ -1147,7 +1147,7 @@ void TBeing::gainCondition(condTypeT condition, int value)
 
       t->findSomeFood(&last_good, &last_cont, NULL); 
     }
-    for (t = stuff; t; t = t->nextThing) 
+    for (t = getStuff(); t; t = t->nextThing) 
       t->findSomeFood(&last_good, &last_cont, NULL);
             
     if (last_good && !last_cont) {
@@ -1168,7 +1168,7 @@ void TBeing::gainCondition(condTypeT condition, int value)
       (!task || task->task == TASK_SIT || task->task == TASK_REST)) {
     // Check to see if fountain is in room and drink from that before
     // anything else - Russ 01/06/95
-    for (t = roomp->stuff; t; t = t->nextThing) {
+    for (t = roomp->getStuff(); t; t = t->nextThing) {
       if (dynamic_cast<TObj *>(t) && (t->spec == SPEC_FOUNTAIN)) {
         char drinkbuf[256];
 	sprintf(drinkbuf, "drink %s", t->name);
@@ -1183,7 +1183,7 @@ void TBeing::gainCondition(condTypeT condition, int value)
         continue;
       t->findSomeDrink(&last_good, &last_cont, NULL);
     }
-    for (t = stuff; t; t = t->nextThing) 
+    for (t = getStuff(); t; t = t->nextThing) 
       t->findSomeDrink(&last_good, &last_cont, NULL);
     
     if (last_good && !last_cont) {
@@ -1313,12 +1313,12 @@ int ObjFromCorpse(TObj *c)
   TThing *t, *t2, *t3;
   int rc;
 
-  for (t = c->stuff; t; t = t2) {
+  for (t = c->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     --(*t);
 
     TObj *tobj = dynamic_cast<TObj *>(t);
-    if (tobj && tobj->isObjStat(ITEM_NEWBIE) && !tobj->stuff &&
+    if (tobj && tobj->isObjStat(ITEM_NEWBIE) && !tobj->getStuff() &&
           (c->in_room > 80) && (c->in_room != ROOM_DONATION)) {
       sendrpf(c->roomp, "The %s explodes in a flash of white light!\n\r", fname(tobj->name).c_str());
       delete tobj;

@@ -2,18 +2,74 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: pets.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
 #include "stdsneezy.h"
+
+/* **********************************************************************
+Every mob that follows a PC should be classified as one of the following:
+
+A Mount: obvious.  Handled elsewhere and distinguished by having
+  non-NULL "this->rider"
+
+A Thrall: Basically, a mob that owes its life force to the master.  Will
+  do the masters bidding without question or hesitation.  Has no sense
+  of self-preservation.  e.g. zombies, automatons, golems, etc.
+        AFF_CHARM: yes
+        affect->type: AFFECT_THRALL
+
+A Charm: A mob beguiled by the master into following orders, most likely,
+  against the mob's will.  The charmed mob is "fighting" against the
+  master, so obviously destructive commands can be ignored, but otherwise
+  will do master's bidding.
+        AFF_CHARM: yes
+        affect->type: SPELL_ENSORCER
+
+A Pet: A faithful companion that will generally assist its master.  Pets are
+  not compelled to follow orders, but may do simple actions.  Pets have an
+  unhindered sense of self-preservation.
+        AFF_CHARM: yes
+        affect->type: AFFECT_PET
+
+Pets and Thralls may be "orphaned" if master dies.
+
+The effects of being a thrall trump the effects of being a charm, and in turn
+a pet.  That is, if I charm a pet, its a charm (not a pet).
+
+********************************************************************** */
+
+// bv is one of: the PETTYPES constants
+bool TBeing::isPet(const unsigned int bv) const
+{
+  if (isPc() || !master)
+    return false;
+
+  // if not taking orders, don't consider me any of the above
+  if (!isAffected(AFF_CHARM))
+    return false;
+
+  // check special case first (for speed)
+  // if considering ANY of the valid types, all I really need to look
+  // for is the AFF_CHARM bit, if we got here we have it, therefore...
+  if (bv == (PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL))
+    return true;
+
+  if (IS_SET(bv, PETTYPE_PET)) {
+    if (affectedBySpell(AFFECT_PET) &&
+        !affectedBySpell(AFFECT_CHARM))
+      return true;
+  }
+  if (IS_SET(bv, PETTYPE_CHARM)) {
+    if (affectedBySpell(AFFECT_CHARM))
+      return true;
+  }
+  if (IS_SET(bv, PETTYPE_THRALL)) {
+    if (affectedBySpell(AFFECT_THRALL))
+      return true;
+  }
+  return false;
+}
 
 #if 0
   bool TMonster::reloadNPCAsNew()
@@ -23,32 +79,32 @@
   rc = mobVnum();
 
   if (mobVnum() < 0) {
-    vlogf(9, "Attempt to reload a prototype in ReloadNPCAsNew.  Trying to reload %s.",getName ());
+    vlogf(LOG_BUG, "Attempt to reload a prototype in ReloadNPCAsNew.  Trying to reload %s.",getName ());
     return FALSE;
   }
 
 
   if (rc <= 0 || ((numx = real_mobile(rc)) <= 0)) {
-    vlogf(9, "Problem in ReloadNPCAsNew (ERR 1).  Trying to reload %s.",getName ());
+    vlogf(LOG_BUG, "Problem in ReloadNPCAsNew (ERR 1).  Trying to reload %s.",getName ());
     return FALSE;
   }
 
   if (numx < 0 || numx >= (signed int) mob_index.size()) {
-    vlogf(9, "Problem in ReloadNPCAsNew (ERR 2).  Trying to reload %s.",getName ());
+    vlogf(LOG_BUG, "Problem in ReloadNPCAsNew (ERR 2).  Trying to reload %s.",getName ());
     return FALSE;
   }
 
   if (!(newMob = read_mobile(rc, REAL))) {
-    vlogf(9, "Problem in ReloadNPCAsNew (ERR 3).  Trying to reload %s.",getName ());
+    vlogf(LOG_BUG, "Problem in ReloadNPCAsNew (ERR 3).  Trying to reload %s.",getName ());
     return FALSE;
   }
   if (mob_index[rc].spec == SPEC_SHOPKEEPER) {
-    vlogf(9, "Problem in ReloadNPCAsNew (ERR 4).  Trying to reload shopkeepere-%s.",getName ());
+    vlogf(LOG_BUG, "Problem in ReloadNPCAsNew (ERR 4).  Trying to reload shopkeepere-%s.",getName ());
     delete newMob;
     return FALSE;
   }
   if (mob_index[rc].spec == SPEC_NEWBIE_EQUIPPER) {
-    vlogf(9, "Problem in ReloadNPCAsNew (ERR 5).  Trying to reload newbieHelper -%s.",getName ());
+    vlogf(LOG_BUG, "Problem in ReloadNPCAsNew (ERR 5).  Trying to reload newbieHelper -%s.",getName ());
     delete newMob;
     return FALSE;
   }
@@ -76,7 +132,7 @@ int TBeing::getAffectedDataFromType(spellNumT whichAff, double whichField)
     return 0;
 
   if (numAffs > 1) {
-    vlogf(5, "Somehow %s has 2 affectedDatas with same type (%d)",
+    vlogf(LOG_BUG, "Somehow %s has 2 affectedDatas with same type (%d)",
           getName(), whichAff);
   }
 
@@ -143,7 +199,7 @@ bool TBeing::doRetrainPet(const char *argument, TBeing *vict)
 
 // no room
   if (!(rp = roomp)) {
-    vlogf(5, "%s was in doRetrainPet without a roomp", getName());
+    vlogf(LOG_BUG, "%s was in doRetrainPet without a roomp", getName());
     return FALSE;
   }
 
@@ -160,7 +216,7 @@ bool TBeing::doRetrainPet(const char *argument, TBeing *vict)
 
   if (!(v = dynamic_cast<TMonster *>(mob))) {
     act("You cant retrain $N.",
-        FALSE, this, NULL, v, TO_CHAR);
+        FALSE, this, NULL, mob, TO_CHAR);
     return FALSE;
   }
 
@@ -258,6 +314,10 @@ bool TMonster::restorePetToPc(TBeing *ch)
   if (!aff || !aff->be) {
     act("$N has never been a pet and can not be retrained.",
         FALSE, ch, NULL, this, TO_CHAR);
+    if (affectedBySpell(AFFECT_ORPHAN_PET)) {
+      affectFrom(AFFECT_ORPHAN_PET); 
+      vlogf(LOG_BUG, "A non pet with AFFECT_ORPHAN_PET (%s).", getName());
+    }
     return FALSE;
   }
   // **semicolon added to end of line**
@@ -265,7 +325,7 @@ bool TMonster::restorePetToPc(TBeing *ch)
   affName = (char *) aff->be;
   rp = roomp;
 
-  for (t = roomp->stuff; t; t = t->nextThing) {
+  for (t = roomp->getStuff(); t; t = t->nextThing) {
     if (!(pc = dynamic_cast<TBeing *>(t)))
       continue;
     if (is_exact_name(affName, pc->getName())) {

@@ -1,21 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_ranger.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/09/30 14:03:13  lapsos
-// Fixed a starting bug in track(deduction of moves)
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "disease.h"
 #include "combat.h"
@@ -164,7 +146,7 @@ void TBeing::doTrack(const char *argument)
                dirs_to_blank[code], norm());
       else {
         int count = code - 9, seen = 0;
-        for (t = roomp->stuff; t; t = t->nextThing) {
+        for (t = roomp->getStuff(); t; t = t->nextThing) {
           TPortal *tp = dynamic_cast<TPortal *>(t);
           if (tp) {
             seen++;
@@ -177,7 +159,7 @@ void TBeing::doTrack(const char *argument)
         }
         if (!t) {
           sendTo("Error finding path target!  Tell a god.\n\r");
-          vlogf(8, "Error finding path (doTrack)");
+          vlogf(LOG_BUG, "Error finding path (doTrack)");
           return;
         }
       }
@@ -192,7 +174,7 @@ void TBeing::doTrack(const char *argument)
   aff.duration = PERMANENT_DURATION;
   affectTo(&aff);
 
-  if (desc && desc->client)
+  if (desc && desc->m_bIsClient)
     desc->clientf("%d|%d", CLIENT_TRACKING, 1 << code);
 
   if (code <= 9) {
@@ -228,7 +210,7 @@ int TBeing::track(TBeing *vict)
   char buf2[256];
 
   if (!vict && !isSW) {
-    vlogf(5, "Problem in track() %s", getName());
+    vlogf(LOG_BUG, "Problem in track() %s", getName());
     return TRUE;
   }
   if (roomp && !isImmortal() && 
@@ -241,7 +223,7 @@ int TBeing::track(TBeing *vict)
     if (isSW)
       code = find_path(in_room, find_closest_water, NULL, hunt_dist, 0, &targetRm);
     else {
-      vlogf(6, "problem in track()");
+      vlogf(LOG_BUG, "problem in track()");
       stopTask();
       return FALSE;
     }
@@ -254,12 +236,12 @@ int TBeing::track(TBeing *vict)
     else
       code = choose_exit_global(in_room, vict->in_room, hunt_dist);
   }
-  if ((vict && sameRoom(vict)) ||
+  if ((vict && sameRoom(*vict)) ||
       (targetRm != -1 && targetRm == inRoom())) {
     sendTo("%s###You have found %s!%s\n\r", orange(), isSW ? "some water" :
            "your quarry", norm());
     addToWait(combatRound(1));
-    if (desc && desc->client)
+    if (desc && desc->m_bIsClient)
       desc->clientf("%d", CLIENT_TRACKOFF);
     stopTask();
     addToWait(combatRound(1));
@@ -280,7 +262,7 @@ int TBeing::track(TBeing *vict)
       }
     } else {
       int count = code - 9, seen = 0;
-      for (t = roomp->stuff; t; t = t->nextThing) {
+      for (t = roomp->getStuff(); t; t = t->nextThing) {
         TPortal *tp = dynamic_cast<TPortal *>(t);
         if (tp) {
           seen++;
@@ -329,7 +311,7 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
           act("You have successfully concealed your path from $N.",
                     FALSE, vict, 0, this, TO_CHAR, ANSI_GREEN);
           return DIR_NONE;
-        } else if (vict->sameRoom(aff->be)) {
+        } else if (vict->sameRoom(*aff->be)) {
           act("$N has successfully concealed your path from $P.",
                     FALSE, vict, this, aff->be, TO_CHAR, ANSI_GREEN);
           act("You have successfully concealed $n's path from $P.",
@@ -340,14 +322,14 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
     }
   }
 
-  if ((GetMaxLevel() >= MIN_GLOB_TRACK_LEV) ||
-      affectedBySpell(SPELL_TRAIL_SEEK)) {
+  if ((GetMaxLevel() >= MIN_GLOB_TRACK_LEV) || affectedBySpell(SPELL_TRAIL_SEEK)
+      || IS_SET(specials.act, ACT_HUNTING)) {
     code = choose_exit_global(in_room, vict->in_room, hunt_dist);
   } else
     code = choose_exit_in_zone(in_room, vict->in_room, hunt_dist);
 
   if (code == DIR_NONE) {
-    if (sameRoom(vict))
+    if (sameRoom(*vict))
       sendTo("%s##You have found your target!%s\n\r", orange(), norm());
     else
       sendTo("%s##You have lost the trail.%s\n\r", orange(), norm());
@@ -359,7 +341,7 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
     return code;
   } else {
     int count = code - 9, seen = 0;
-    for (t = roomp->stuff; t; t = t->nextThing) {
+    for (t = roomp->getStuff(); t; t = t->nextThing) {
       TPortal *tp = dynamic_cast<TPortal*>(t);
       if (tp) {
          seen++;
@@ -372,7 +354,7 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
     }
     if (!t) {
       sendTo("Error finding path target!  Tell a god.\n\r");
-      vlogf(8, "Error finding path (dirTrack)");
+      vlogf(LOG_BUG, "Error finding path (dirTrack)");
     }
     return code;
   }
@@ -446,7 +428,7 @@ void TBeing::doConceal(const char *argument)
   }
   rc = conceal(this, vict);
   if (rc)
-    addSkillLag(SKILL_CONCEALMENT);
+    addSkillLag(SKILL_CONCEALMENT, rc);
 
   return;
 }
@@ -505,7 +487,7 @@ int conceal(TBeing *caster, TBeing *vict)
   }
 
   aff.type = SKILL_CONCEALMENT;
-  aff.duration = (level/2 + 1) * UPDATES_PER_TICK;
+  aff.duration = (level/2 + 1) * UPDATES_PER_MUDHOUR;
   aff.be = caster;
 
   if (bSuccess(caster, lnd, SKILL_CONCEALMENT)) {

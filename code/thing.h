@@ -45,6 +45,7 @@ class TThing {
     float carried_weight;
     int carried_volume;
     TBeing * the_caster;
+    TThing *stuff;           // The stuff inside me
   public:
     char *descr;             // Description of thing
     TBeing *stuckIn;
@@ -52,6 +53,9 @@ class TThing {
     wearSlotT eq_pos;                 // what is the equip. pos?
     wearSlotT eq_stuck;
     void *act_ptr;
+
+    TThing *getStuff() const { return stuff; }
+    void setStuff(TThing *t){ stuff=t; }
 
 
     int max_exist;
@@ -64,7 +68,6 @@ class TThing {
     char *name;              // Name of thing
     char *shortDescr;
     TThing *parent;          // Room, Obj, Being etc. that I am inside of.
-    TThing *stuff;           // The stuff inside me
     TThing *nextThing;       // The next thing in the list I am inside of
     TThing *nextBorn;        // The next thing born in my room(mobiles)
     TRoom *roomp;

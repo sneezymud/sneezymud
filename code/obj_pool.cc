@@ -156,7 +156,7 @@ int TBeing::dropPool(int amt, liqTypeT liq)
     return FALSE;
 
   /* look for preexisting pool */
-  for(t=roomp->stuff;t;t=t->nextThing){
+  for(t=roomp->getStuff();t;t=t->nextThing){
     TPool *tp = dynamic_cast<TPool *>(t);
     if (tp && (tp->getDrinkType() == liq)){
       pool=tp;

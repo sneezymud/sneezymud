@@ -2,24 +2,15 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: obj_base_corpse.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+// base_corpse.cc
 //
 //////////////////////////////////////////////////////////////////////////
 
 
-// base_corpse.cc
-//
-
 #include "stdsneezy.h"
 
 TBaseCorpse::TBaseCorpse() :
-  TContainer(),
+  TBaseContainer(),
   corpse_flags(0),
   corpse_race(RACE_NORACE),
   corpse_level(0),
@@ -29,7 +20,7 @@ TBaseCorpse::TBaseCorpse() :
 }
 
 TBaseCorpse::TBaseCorpse(const TBaseCorpse &a) :
-  TContainer(a),
+  TBaseContainer(a),
   corpse_flags(a.corpse_flags),
   corpse_race(a.corpse_race),
   corpse_level(a.corpse_level),
@@ -41,7 +32,7 @@ TBaseCorpse::TBaseCorpse(const TBaseCorpse &a) :
 TBaseCorpse & TBaseCorpse::operator=(const TBaseCorpse &a)
 {
   if (this == &a) return *this;
-  TContainer::operator=(a);
+  TBaseContainer::operator=(a);
   corpse_flags = a.corpse_flags;
   corpse_race = a.corpse_race;
   corpse_level = a.corpse_level;
@@ -52,10 +43,10 @@ TBaseCorpse & TBaseCorpse::operator=(const TBaseCorpse &a)
 
 TBaseCorpse::~TBaseCorpse()
 {
-  for (; stuff; ) {
+  for (; getStuff(); ) {
     // assumption that corpse is not in another container
     // assumption that corpse is also not stuck in someone, or equipped
-    TThing * t = stuff;
+    TThing * t = getStuff();
     --(*t);
     if (parent)
       *parent += *t;
@@ -173,7 +164,7 @@ int TBaseCorpse::dissectMe(TBeing *caster)
     dissectInfo *tDissect;
 
     if (isCorpseFlag(CORPSE_NO_REGEN)) {
-      act("$p: I am afraid that can not be dissected.",
+      act("$p: I am afraid that cannot be dissected.",
           FALSE, caster, this, 0, TO_CHAR);
       return FALSE;
     }
@@ -187,14 +178,14 @@ int TBaseCorpse::dissectMe(TBeing *caster)
     for (tDissect = tDissections; tDissect; tDissect = tDissect->tNext)
       tWhich++;
 
-    vlogf(1, "dissectMe: tWhich(%d)", tWhich);
+    vlogf(LOG_LAPSOS, "dissectMe: tWhich(%d)", tWhich);
 
     tWhich = ::number(0, tWhich);
 
     for (tDissect = tDissections; (tDissect && tWhich--); tDissect = tDissect->tNext);
 
     if (!tDissect && !(tDissect = tDissections)) {
-      vlogf(1, "dissectMe Error.  tDissect ended up NULL.");
+      vlogf(LOG_LAPSOS, "dissectMe Error.  tDissect ended up NULL.");
       return FALSE;
     }
 
@@ -216,7 +207,7 @@ int TBaseCorpse::dissectMe(TBeing *caster)
 
     if (!(tObj = read_object(tValue, REAL))) {
       caster->sendTo("Serious problem in dissect.\n\r");
-      vlogf(8, "Bad call to read_object in dissect, num %d", tValue);
+      vlogf(LOG_OBJ, "Bad call to read_object in dissect, num %d", tValue);
       return FALSE;
     }
 
@@ -306,7 +297,7 @@ int TBaseCorpse::dissectMe(TBeing *caster)
     }
     if (!(obj = read_object(num, VIRTUAL))) {
       caster->sendTo("Serious problem in dissect.\n\r");
-      vlogf(8, "Bad call to read_object in dissect, num %d", num);
+      vlogf(LOG_OBJ, "Bad call to read_object in dissect, num %d", num);
       return FALSE;
     }
     int bKnown = caster->getSkillValue(SKILL_DISSECT);
@@ -346,8 +337,8 @@ int TBaseCorpse::dissectMe(TBeing *caster)
 
 void TBaseCorpse::update(int use)
 {
-  if (stuff)
-    stuff->update(use);
+  if (getStuff())
+    getStuff()->update(use);
 
   if (nextThing) {
     if (nextThing != this)
@@ -358,7 +349,7 @@ void TBaseCorpse::update(int use)
 void TBaseCorpse::lookObj(TBeing *ch, int) const
 {
   act("$p contains:",TRUE, ch, this, 0, TO_CHAR);
-  list_in_heap(stuff, ch, 0, 100);
+  list_in_heap(getStuff(), ch, 0, 100);
   return;
 }
 
@@ -378,9 +369,9 @@ int TBaseCorpse::scavengeMe(TBeing *ch, TObj **)
   char buf[256], buf2[256], buf3[256];
   int rc;
 
-  if (!::number(0, 5) && stuff) {
-    for (t = stuff; t; t = t->nextThing) {
-      if (!t->stuff && (obj = dynamic_cast<TObj *>(t))) {
+  if (!::number(0, 5) && getStuff()) {
+    for (t = getStuff(); t; t = t->nextThing) {
+      if (!t->getStuff() && (obj = dynamic_cast<TObj *>(t))) {
         sl = slot_from_bit(obj->obj_flags.wear_flags);
         if (dynamic_cast<TBaseClothing *>(obj)) {
           TObj *tobj = dynamic_cast<TObj *>(ch->equipment[sl]);
@@ -414,8 +405,8 @@ void TBaseCorpse::decayMe()
 int TBaseCorpse::objectDecay()
 {
   if (parent)
-    act("$p biodegrades in your hands.", FALSE, parent, this, 0, TO_CHAR);
-  else if (roomp && roomp->stuff) {
+    act("$p disintegrates in your hands.", FALSE, parent, this, 0, TO_CHAR);
+  else if (roomp && roomp->getStuff()) {
     if (getMaterial() == MAT_POWDER) {
       sendrpf(COLOR_OBJECTS, roomp, "A gust of wind scatters %s.\n\r",
 getName());
@@ -429,3 +420,45 @@ getName());
   return DELETE_THIS;
 }
 
+int TBaseCorpse::chiMe(TBeing *tLunatic)
+{
+  int     tMana  = ::number(10, 30),
+          bKnown = tLunatic->getSkillLevel(SKILL_CHI);
+  TThing *tThing;
+
+  if (tLunatic->getMana() < tMana) {
+    tLunatic->sendTo("You lack the chi to do this.\n\r");
+    return RET_STOP_PARSING;
+  } else
+    tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
+
+  if (dynamic_cast<TPCorpse *>(this) ||
+      !bSuccess(tLunatic, bKnown, SKILL_CHI) ||
+      getCorpseLevel() > tLunatic->GetMaxLevel()) {
+    act("You attempt to nuke $p, but it resists you.",
+        FALSE, tLunatic, this, NULL, TO_CHAR);
+    return true;
+  }
+
+  act("You focus your chi and set $p ablaze!",
+      FALSE, tLunatic, this, NULL, TO_CHAR);
+  act("$n stares at $p which suddenly bursts into flames!",
+      TRUE, tLunatic, this, NULL, TO_ROOM);
+
+  while ((tThing = getStuff())) {
+    --(*tThing);
+
+    if (roomp)
+      *roomp += *tThing;
+    else if (parent)
+      *parent += *tThing;
+    else {
+      vlogf(LOG_BUG, "Neither roomp nor parent in chiMe corpse.  Destorying %s",
+            tThing->getName());
+      delete tThing;
+      tThing = NULL;
+    }
+  }
+
+  return DELETE_VICT;
+}

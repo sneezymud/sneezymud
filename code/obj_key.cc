@@ -76,7 +76,7 @@ int TKey::putMeInto(TBeing *ch, TOpenContainer *container)
   TThing *t;
   char buf[256];
   
-  for(t=container->stuff; t; t=t->nextThing){
+  for(t=container->getStuff(); t; t=t->nextThing){
     o = dynamic_cast<TObj *>(t);
 
     if (!o)

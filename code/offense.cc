@@ -693,7 +693,7 @@ static bool canFleeThisWay(TBeing *ch, dirTypeT dir)
       !(rp2->isWaterSector() || rp2->isUnderwaterSector()))
     return false;
 
-  if (rp2->getMoblim() && MobCountInRoom(rp2->stuff) >= rp2->getMoblim())
+  if (rp2->getMoblim() && MobCountInRoom(rp2->getStuff()) >= rp2->getMoblim())
     return false;
 
   if (rp2->isVertSector())
@@ -988,7 +988,7 @@ int TBeing::doFlee(const char *arg)
           stopFighting();
 
         TThing *t2;
-        for (t = rp->stuff; t; t = t2) {
+        for (t = rp->getStuff(); t; t = t2) {
           t2 = t->nextThing;
           TBeing *tbt = dynamic_cast<TBeing *>(t);
           if (!tbt)
@@ -1257,7 +1257,7 @@ int TObj::burnObject(TBeing *ch, int perc)
     return FALSE;
 
   TOpenContainer *trc = dynamic_cast<TOpenContainer *>(this);
-  for (t = stuff; t; t = t2) {
+  for (t = getStuff(); t; t = t2) {
     int perc2;
     t2 = t->nextThing;
     if (trc) {
@@ -1303,7 +1303,7 @@ int TObj::burnObject(TBeing *ch, int perc)
     }
     // since bag went poof, lets (re)check contents 
     // with an even higher percentage, and empty bag into owner
-    while ((t = stuff)) {
+    while ((t = getStuff())) {
       (*t)--;
       if (parent)
 	*parent += *t;
@@ -1371,7 +1371,7 @@ int TBeing::flameEngulfed()
     if (IS_SET_DELETE(res, DELETE_VICT))
       return DELETE_THIS;
   }
-  for (t = stuff; t; t = t2) {
+  for (t = getStuff(); t; t = t2) {
     t2 = t->nextThing;
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
@@ -1418,7 +1418,7 @@ int TObj::freezeObject(TBeing *ch, int perc)
       return DELETE_VICT;
   }
   TOpenContainer *trc = dynamic_cast<TOpenContainer *>(this);
-  for (t = stuff; t; t = t2) {
+  for (t = getStuff(); t; t = t2) {
     int perc2;
     t2 = t->nextThing;
     if (trc) {
@@ -1531,7 +1531,7 @@ int TBeing::frostEngulfed()
     if (IS_SET_DELETE(res, DELETE_VICT))
       return DELETE_THIS;
   }
-  for (t = stuff; t; t = t2) {
+  for (t = getStuff(); t; t = t2) {
     t2 = t->nextThing;
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
@@ -1563,7 +1563,7 @@ int TObj::meltObject(TBeing *ch, int perc)
     return FALSE;
 
   TOpenContainer *trc = dynamic_cast<TOpenContainer *>(this);
-  for (t = stuff; t; t = t2) {
+  for (t = getStuff(); t; t = t2) {
     int perc2;
     t2 = t->nextThing;
     if (trc) {
@@ -1626,7 +1626,7 @@ int TBeing::acidEngulfed()
       obj = NULL;
     }
   }
-  for (t = stuff; t; t = t2) {
+  for (t = getStuff(); t; t = t2) {
     t2 = t->nextThing;
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
@@ -1699,7 +1699,7 @@ int TBeing::chlorineEngulfed()
     } else if (t)
       t->poisonObject();
   }
-  for (t = stuff; t; t = t->nextThing) 
+  for (t = getStuff(); t; t = t->nextThing) 
     t->poisonObject();
   
   return TRUE;
@@ -1711,7 +1711,7 @@ void TBeing::flameRoom()
   int rc;
 
   TThing *t, *t2;
-  for (t = roomp->stuff; t; t = t2) {
+  for (t = roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
@@ -1732,7 +1732,7 @@ void TBeing::freezeRoom()
   TObj *obj = NULL;
   int rc;
 
-  for (t = roomp->stuff; t; t = t2) {
+  for (t = roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     obj = dynamic_cast<TObj *>(t);
     if (!obj || !obj->canWear(ITEM_TAKE))
@@ -1753,7 +1753,7 @@ void TBeing::acidRoom()
   TObj *obj = NULL;
   int rc;
 
-  for (t = roomp->stuff; t; t = t2) {
+  for (t = roomp->getStuff(); t; t = t2) {
     t2 = t->nextThing;
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
@@ -1773,7 +1773,7 @@ void TBeing::chlorineRoom()
 {
   TThing *t;
 
-  for (t = roomp->stuff; t; t = t->nextThing) {
+  for (t = roomp->getStuff(); t; t = t->nextThing) {
     t->poisonObject();
   }
   return;

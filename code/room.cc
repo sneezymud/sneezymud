@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: room.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -307,7 +299,7 @@ byte TRoom::getRiverSpeed() const
 
 void TRoom::setDescr(char *tDescription)
 {
-  vlogf(7, "Defunct call to old Room setDescr.");
+  vlogf(LOG_BUG, "Defunct call to old Room setDescr.");
   setDescr(-1, tDescription);
 }
 
@@ -330,17 +322,17 @@ const char * TRoom::getDescr()
   if (descr || descPos == -1 || gamePort == PROD_GAMEPORT || gamePort == ALPHA_GAMEPORT)
     return descr;
 
-  //  vlogf(7, "Reading Room Description from World File.");
+  //  vlogf(LOG_LAPSOS, "Reading Room Description from World File.");
 
   FILE *tFileRoomDB;
 
   if (!(tFileRoomDB = fopen(FPOS_WORLD_FILE, "r"))) {
-    vlogf(0, "World file not found.");
+    vlogf(LOG_FILE, "World file not found.");
     return ("Really Big Error Occured.\n\r");
   }
 
   if (fseek(tFileRoomDB, descPos, SEEK_SET) == -1) {
-    vlogf(0, "Error seeking location in World file to get description.");
+    vlogf(LOG_FILE, "Error seeking location in World file to get description.");
     fclose(tFileRoomDB);
     return ("Really Big Error Occured.\n\r");
   }
@@ -360,3 +352,116 @@ bool TRoom::putInDb(int vnum)
   return TRUE;
 }
 
+int TRoom::chiMe(TBeing *tLunatic)
+{
+  TBeing *tSucker;
+  int     tRc = 0;
+  TThing *tThing,
+         *tNextThing;
+
+  if (tLunatic->getSkillValue(SKILL_CHI) < 100 ||
+      tLunatic->getDiscipline(DISC_MEDITATION_MONK)->getLearnedness() < 25) {
+    tLunatic->sendTo("I'm afraid you don't have the training to do this.\n\r");
+    return FALSE;
+  }
+
+  if (tLunatic->checkPeaceful("You feel too peaceful to contemplate violence here.\n\r"))
+    return FALSE;
+
+  act("You focus your <c>mind<z> and unleash a <r>blast of chi<z> upon your foes!",
+      FALSE, tLunatic, NULL, NULL, TO_CHAR);
+  act("$n suddenly <r>radiates with power<z> and brings harm to $n enemies!",
+      TRUE, tLunatic, NULL, NULL, TO_ROOM);
+
+  for (tThing = getStuff(); tThing; tThing = tNextThing) {
+    tNextThing = tThing->nextThing;
+
+    if (!(tSucker = dynamic_cast<TBeing *>(tThing)) || tSucker == tLunatic)
+      continue;
+
+    tRc = tSucker->chiMe(tLunatic);
+
+    if (IS_SET_DELETE(tRc, RET_STOP_PARSING)) {
+      tLunatic->sendTo("You are forced to stop.\n\r");
+      return true;
+    }
+
+    if (IS_SET_DELETE(tRc, DELETE_THIS))
+      return (DELETE_THIS | RET_STOP_PARSING);
+
+    if (IS_SET_DELETE(tRc, DELETE_VICT)) {
+      delete tThing;
+      tThing = NULL;
+    }
+  }
+
+  return true;
+}
+
+void TRoom::operator << (TThing &tThing)
+{
+  // assign birthRoom
+  TMonster * tmon = dynamic_cast<TMonster *>(&tThing);
+  if (tmon)
+    tmon->brtRoom = this->number;
+
+  if (!tBornInsideMe) {
+    tBornInsideMe = &tThing;
+    tThing.nextBorn = NULL;
+    return;
+  }
+
+  TThing *tList;
+
+  // creates forward-linked list
+  for (tList = tBornInsideMe; tList->nextBorn; tList = tList->nextBorn) {
+    if (&tThing == tList) {
+      vlogf(LOG_BUG, "Mob already in born list being added again. [%s]", tThing.getName());
+      return;
+    }
+  }
+
+  tList->nextBorn = &tThing;
+  tThing.nextBorn = NULL;
+}
+
+bool TRoom::operator |= (const TThing &tThing)
+{
+  TThing *tList;
+
+  for (tList = tBornInsideMe; tList; tList = tList->nextBorn)
+    if (tList == &tThing)
+      return true;
+
+  return false;
+}
+
+void TRoom::operator >> (const TThing &tThing)
+{
+  TThing *tList,
+         *tLast = NULL;
+
+  for (tList = tBornInsideMe; tList; tList = tList->nextBorn) {
+    if (&tThing == tList) {
+      if (tLast)
+        tLast->nextBorn = tList->nextBorn;
+      else
+	tBornInsideMe = tList->nextBorn;
+
+      tList->nextBorn = NULL;
+
+      return;
+    }
+
+    tLast = tList;
+  }
+
+  vlogf(LOG_BUG, "Attempt to remove mob from born list that isn't in born list! [%s]", tThing.getName());
+}
+
+
+int TRoom::getLight()
+{
+  return ((isRoomFlag(ROOM_ALWAYS_LIT)) ? 18 : TThing::getLight());
+
+}

@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_charge.cc,v $
+// Revision 5.2  2001/09/07 07:07:35  peel
+// changed TThing->stuff to getStuff() and setStuff()
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -168,7 +174,7 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
       return DELETE_THIS;
 
     if (nRc == TRUE || !to_room || to_here->isRoomFlag(ROOM_PEACEFUL) ||
-        (to_here->getMoblim() && (MobCountInRoom(to_here->stuff) >= to_here->getMoblim()))) {
+        (to_here->getMoblim() && (MobCountInRoom(to_here->getStuff()) >= to_here->getMoblim()))) {
       ch->sendTo("Your mount refuses to continue in your charge so you decide to stop.\n\r");
       stop_charge(ch);
 
@@ -532,7 +538,7 @@ int TBeing::ChargePulse(TBeing *ch)
   char         nString[256];
   int          nRc = TRUE;
 
-  for (tMonster = ch->roomp->stuff; tMonster; tMonster = tMonster->nextThing) {
+  for (tMonster = ch->roomp->getStuff(); tMonster; tMonster = tMonster->nextThing) {
     if (!dynamic_cast<TMonster *>(tMonster))
       continue;
 
@@ -569,7 +575,7 @@ int TBeing::ChargePulse(TBeing *ch)
     nRc = ChargeRoom(ch);
   } else {
     // Either hit 0 or were doing an inf run-until-hit thing.
-    for (tMonster = ch->roomp->stuff; tMonster; tMonster = tMonster->nextThing) {
+    for (tMonster = ch->roomp->getStuff(); tMonster; tMonster = tMonster->nextThing) {
       if (!dynamic_cast<TMonster *>(tMonster))
         continue;
 

@@ -329,8 +329,8 @@ bool task_whittleCreateNew(TBeing *ch, string tStWood, int tIndex)
 {
   TOrganic *tWood        = NULL,
            *tOldWood     = NULL;
-  TThing   *tObjTemp     = (ch ? ch->stuff : NULL),
-           *tObjTempNext = (ch ? ch->stuff : NULL);
+  TThing   *tObjTemp     = (ch ? ch->getStuff() : NULL),
+           *tObjTempNext = (ch ? ch->getStuff() : NULL);
   bool      realCreate   = (ch->task ? true : false),
             deleteOld    = false;
   double    totalWood[2] = {0, 0};
@@ -360,7 +360,7 @@ bool task_whittleCreateNew(TBeing *ch, string tStWood, int tIndex)
     if (!realCreate)
       return true;
 
-    tObjTemp = ch->stuff;
+    tObjTemp = ch->getStuff();
 
     while ((tObjTemp = searchLinkedListVis(ch, tStWood.c_str(), tObjTempNext))) {
       tObjTempNext = tObjTemp->nextThing;
@@ -617,7 +617,7 @@ void TBeing::doWhittle(const char *tArg)
   }
 
   if (tStWood.empty()) {
-    if (!(tObj = searchLinkedListVis(this, tStObject.c_str(), stuff))) {
+    if (!(tObj = searchLinkedListVis(this, tStObject.c_str(), getStuff()))) {
       sendTo("Do you have that item?  No, so you cannot whittle on it.\n\r");
       return;
     }

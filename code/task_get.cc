@@ -1,23 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: task_get.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/09/29 22:12:20  batopr
-// *** empty log message ***
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
 //      SneezyMUD 4.0 - All rights reserved, SneezyMUD Coding Team
 //      "task.cc" - All functions related to tasks that keep mobs/PCs busy
 //
@@ -36,7 +18,7 @@ bool TBeing::anythingGetable(const TObj *sub, const char *name) const
   TThing *o, *n;
 
   if (!sub) {
-    for (o = roomp->stuff; o; o = n) {
+    for (o = roomp->getStuff(); o; o = n) {
       n = o->nextThing;
       if (!dynamic_cast<TObj *>(o))
         continue;
@@ -48,7 +30,7 @@ bool TBeing::anythingGetable(const TObj *sub, const char *name) const
     }
   } else {
     if (!dynamic_cast<const TTable *>(sub)) {
-      for (o = sub->stuff; o; o = n) {
+      for (o = sub->getStuff(); o; o = n) {
         n = o->nextThing;
         if (!dynamic_cast<TObj *>(o))
           continue;
@@ -78,7 +60,7 @@ static void getTaskStop(TObj *sub)
   if (sub) {
     TPCorpse * tmpcorpse = dynamic_cast<TPCorpse *>(sub);
     if (tmpcorpse) {
-      if (!tmpcorpse->stuff)
+      if (!tmpcorpse->getStuff())
         tmpcorpse->removeCorpseFromList();
       else
         tmpcorpse->saveCorpseToFile();
@@ -123,7 +105,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
         }
         if (!*ch->task->orig_arg && !ch->task->flags) {
           //    get all
-          for (t = rp->stuff; t; t = t2) {
+          for (t = rp->getStuff(); t; t = t2) {
             t2 = t->nextThing;   // t2 needed since coins get destroyed
             o = dynamic_cast<TObj *>(t);
             if (!o)
@@ -172,7 +154,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               continue;
             else {
               ch->task->calcNextUpdate(pulse, 1);
-              rc = get(ch, t, NULL);
+              rc = get(ch, t, NULL, GETNULL, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
                 t = NULL;
@@ -192,8 +174,8 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
           }
         } else if (!ch->task->flags) {
           // This is something like get all.sword
-          while ((t = get_thing_in_list_getable(ch, ch->task->orig_arg, rp->stuff))) {
-            rc = get(ch, t, NULL);
+          while ((t = get_thing_in_list_getable(ch, ch->task->orig_arg, rp->getStuff()))) {
+            rc = get(ch, t, NULL, GETNULL, true);
 	    if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
                 t = NULL;
@@ -215,9 +197,9 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
           return FALSE;
         } else {
           // get 6*item   ?
-          while ((t = get_thing_in_list_getable(ch, ch->task->orig_arg, rp->stuff))) {
+          while ((t = get_thing_in_list_getable(ch, ch->task->orig_arg, rp->getStuff()))) {
             if (--(ch->task->flags) > 0) {
-              rc = get(ch, t, NULL);
+              rc = get(ch, t, NULL, GETNULL, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
                 t = NULL;
@@ -252,12 +234,25 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
         return TRUE;
       } else {
         // get all bag
-        if (!(sub = get_obj_vis_accessible(ch, buf2))) {
-          ch->sendTo("The %s is no longer accessible.\n\r", buf2);
-          ch->stopTask();
-          ch->doSave(SILENT_YES);
-          return FALSE;
-        }
+        sub = get_obj_vis_accessible(ch, buf2);
+	if (!sub) {
+	  TBeing *horse;
+	  TObj *tmpobj;
+      	  int bits = generic_find(buf2, FIND_CHAR_ROOM, ch, &horse, &tmpobj);
+	  if (bits)
+	    if (horse->isRideable() && horse->equipment[WEAR_BACK]) {
+	      TBaseContainer *saddlebag = dynamic_cast<TBaseContainer *>(horse->equipment[WEAR_BACK]);
+	      if (saddlebag->isSaddle())
+		sub = dynamic_cast<TObj *>(saddlebag);
+	    }
+	}
+	if (!sub) {
+	  ch->sendTo("The %s is no longer accessible.\n\r", buf2);
+	  ch->stopTask();
+	  ch->doSave(SILENT_YES);
+	  return FALSE;
+	}
+        
         if (ch->task->flags) {
           if (!ch->anythingGetable(sub, buf1)) {
             act("You can get no more from $p", TRUE, ch, sub, NULL, TO_CHAR);
@@ -266,9 +261,9 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
             ch->doSave(SILENT_YES);
             return FALSE;
           }
-          while ((t = get_thing_in_list_getable(ch, buf1, sub->stuff))) {
+          while ((t = get_thing_in_list_getable(ch, buf1, sub->getStuff()))) {
             if (--(ch->task->flags) > 0) {
-              rc = get(ch, t, sub);
+              rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
                 t = NULL;
@@ -301,7 +296,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
           }
           while ((t = get_thing_on_list_getable(ch, buf1, sub->rider))) {
             if (--(ch->task->flags) > 0) {
-              rc = get(ch, t, sub);
+              rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
                 t = NULL;
@@ -339,8 +334,8 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
           }
         } else {
           if (ch->task->status) {
-            while ((t = get_thing_in_list_getable(ch, buf1, sub->stuff))) {
-              rc = get(ch, t, sub);
+            while ((t = get_thing_in_list_getable(ch, buf1, sub->getStuff()))) {
+              rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
                 t = NULL;
@@ -366,7 +361,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
             }
 
             while ((t = get_thing_on_list_getable(ch, buf1, sub->rider))) {
-              rc = get(ch, t, sub);
+              rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
                 t = NULL;
@@ -400,7 +395,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               ch->doSave(SILENT_YES);
               return FALSE;
             }
-            for (t = sub->stuff; t; t = t2) {
+            for (t = sub->getStuff(); t; t = t2) {
               t2 = t->nextThing;
               rc = ch->checkForInsideTrap(sub);
               if (IS_SET_ONLY(rc, DELETE_THIS)) {
@@ -420,7 +415,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
                 if (!ch->task) // how does this happen????
                   return FALSE;
                 ch->task->calcNextUpdate(pulse, 1);
-                rc = get(ch, t, sub);
+                rc = get(ch, t, sub, GETOBJOBJ, true);
                 if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                   delete t;
                   t = NULL;
@@ -461,7 +456,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
                 continue;
               else {
                 ch->task->calcNextUpdate(pulse, 1);
-                rc = get(ch, t, sub);
+                rc = get(ch, t, sub, GETOBJOBJ, true);
                 if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                   delete t;
                   t = NULL;

@@ -40,7 +40,7 @@ void TBeing::doBrew(const char *arg)
       t->findSomeComponent(&comp_gen, &comp_spell, &comp_brew, which, 1);
     }
   }
-  for (t = stuff; t; t = t->nextThing) {
+  for (t = getStuff(); t; t = t->nextThing) {
     t->findSomeComponent(&comp_gen, &comp_spell, &comp_brew, which, 1);
   }
 
