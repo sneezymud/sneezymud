@@ -67,7 +67,7 @@ void TBeing::disturbMeditation(TBeing *vict) const
 // Make drunk people garble their words!
 sstring TBeing::garble(const sstring &arg, int chance) const
 {
-  sstring obuf, buf, latin;
+  sstring obuf, buf, latin, origword;
 
   if (arg.empty())
     return "";
@@ -76,44 +76,71 @@ sstring TBeing::garble(const sstring &arg, int chance) const
     return arg;
 
   vector <sstring> args;
-  vector <sstring>::iterator iter;
   unsigned int loc;
   argument_parser(arg, args);
   buf=obuf=arg;
 
   // first, lets turn things into pig latin, word by word
-  unsigned int i=0;
-  for(iter=args.begin();iter!=args.end();++iter){
-    // skip color codes
-    i=0;
-    while(((*iter)[i]=='<' && (*iter).size()>i)){
-      i+=3;
+  for(unsigned int i=0;i<args.size()-1;++i){
+    // remove color codes at the beginning
+    while(args[i].length()>2 && args[i][0]=='<' && args[i][2]=='>'){
+      args[i].erase(0, 3);
     }
 
-    ssprintf(latin, "%s%s%cay", 
-	     (*iter).substr(0, i).c_str(),
-	     (*iter).substr(i+1,(*iter).size()-1).c_str(),
-	     (*iter)[i]);
-    
+    // make sure we have something left to play with
+    if(args[i].length()<2)
+      continue;
+
+    // find punctuation at the end of the word and remove
+    for(loc=args[i].length()-1;loc>=0;--loc){
+      if(isalpha(args[i][loc]) || args[i][loc]=='>')
+	break;
+      args[i].erase(loc, 1);
+    }
+
+    // make sure we have something left to play with
+    if(args[i].length()<2)
+      continue;
+
+    // swap out with a random word sometimes
+    if (::number(0, chance) >= 14){
+      latin=RandomWord();
+    } else {
+      latin=args[i];
+    }
+
+    // pig latinize sometimes
+    if (::number(0, chance) >= 10){
+      if(isupper(args[i][0]))
+	latin[0]=tolower(args[i][0]);
+
+      ssprintf(latin, "%s%cay", 
+	       latin.substr(1,latin.length()-1).c_str(),
+	       latin[0]);
+    }
+
+    if(isupper(args[i][0]))
+      latin[0]=toupper(latin[0]);
+
+
     // replace the original word in obuf with whitespace
     // replace the original word in buf with the new word
-    loc=obuf.find((*iter), 0);
+    loc=obuf.find(args[i], 0);
     if(loc != sstring::npos){
-      obuf.erase(loc, (*iter).size());
-      obuf.insert(loc, latin.size(), ' ');
-      buf.erase(loc, (*iter).size());
+      obuf.erase(loc, args[i].length());
+      obuf.insert(loc, latin.length(), ' ');
+      buf.erase(loc, args[i].length());
       buf.insert(loc, latin);
     }
   }
   
   // change some letters randomly
-  for(unsigned int i=0;i<buf.size()-1;++i){
-    if(buf[i]=='<'){
-      i+=2;
+  for(unsigned int i=0;i<buf.length()-1;++i){
+    // skip color codes
+    if(buf[i-1]=='<' && buf[i+1]=='>')
       continue;
-    }
 
-    if (::number(0, chance + 3) >= 10) {
+    if (::number(0, chance) >= 18) {
       switch (buf[i]) {
         case 'a':
         case 'e':
