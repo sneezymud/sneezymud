@@ -2837,8 +2837,10 @@ int sonicBlast(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   if (!ch)
     return FALSE;
 
-  act("\a\a$p <G>sends an earpiercing blast of sound at<z> $n<G>.<z>", false, vict, o, NULL, TO_ROOM);
-  act("\a\a$p <G>blasts your eardrums with an intense sound!<z>", false, vict, o, NULL, TO_CHAR);
+  act("\a$p <G>sends an earpiercing blast of sound at<z> $n<G>.<z>", false, vict, o, NULL, TO_ROOM);
+  act("\a$p <G>blasts your eardrums with an intense sound!<z>", false, vict, o, NULL, TO_CHAR);
+  // how handy to have an annoying sound file to do this with
+  vict->roomp->playsound(SOUND_SPELL_ARMOR, SOUND_TYPE_MAGIC);
 
   int dam = ::number(5,8);
   rc = ch->reconcileDamage(vict, dam, DAMAGE_NORMAL);
