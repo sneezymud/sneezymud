@@ -17,10 +17,9 @@ int search_block(const char *arg, const char * const *, bool);
 int old_search_block(char *, int, int, const char * const *, bool);
 void argument_interpreter(const char *, char *, char *);
 void argument_interpreter(string, string &, string &);
-void only_argument(const char *,char *);
 extern const char *one_argument(const char *argument, char *first_arg);
 extern string one_argument(string argument, string & first_arg);
-const char *three_arg(const char *, char *a, char *b, char *c);
+void only_argument(const char *argument, char *dest);
 
 class commandInfo {
   public:
