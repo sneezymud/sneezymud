@@ -7473,6 +7473,36 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 }
 
 
+int lycanthropyCure(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  if (cmd != CMD_EAT || !ch)
+    return FALSE;
+
+  if(!isname(arg, o->name))
+    return FALSE;
+
+  if(!ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE) &&
+     !ch->hasQuestBit(TOG_LYCANTHROPE))
+    return FALSE;
+
+
+  ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
+  ch->remQuestBit(TOG_LYCANTHROPE);
+
+  if(ch->desc && ch->desc->original) {
+    ch->doReturn("", WEAR_NOWHERE, CMD_RETURN);
+    ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
+    ch->remQuestBit(TOG_LYCANTHROPE);
+  }
+
+
+  act("A whispy wolf-like form detaches itself from your body and dissipates.",
+      TRUE, ch, NULL, NULL, TO_CHAR, NULL);
+
+  return TRUE;
+}
+
+
 //MARKER: END OF SPEC PROCS
 
 
@@ -7622,5 +7652,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Finns Gaff", finnsGaff},
   {FALSE, "stim pack", stimPack},
   {FALSE, "lottery ticket", lotteryTicket},
+  {FALSE, "lycanthropy cure", lycanthropyCure}, // 130
   {FALSE, "last proc", bogusObjProc}
 };
