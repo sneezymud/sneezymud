@@ -2707,8 +2707,8 @@ void TBeing::doWhere(const char *argument)
   TBeing *i, *ch;
   TObj *k;
   Descriptor *d;
-  int iNum, count, tcount=1;
-  sstring sb, tmp_sb, last_sb;
+  int iNum, count, tcount=0;
+  sstring sb, tmp_sb, last_sb="";
   bool dash = FALSE, gods = FALSE, found=false;
   unsigned int tot_found = 0;
   sstring tStString(argument),
@@ -2924,13 +2924,19 @@ void TBeing::doWhere(const char *argument)
           }
 	  found=true;
 
+	  //; get description of where this thing is
 	  tmp_sb="";
           do_where_thing(this, k, iNum != 0, tmp_sb);
+
+	  // last_sb is "", so this is the first item we've seen, init
 	  if(last_sb=="")
 	    last_sb=tmp_sb;
+
+	  // not the same as the last item, so print out last item
 	  if(tmp_sb != last_sb){
 	    sb += buf;
-	    sb += fmt("(%i) ") % tcount;
+	    if(tcount>1)
+	      sb += fmt("(%i) ") % tcount;
 	    sb += last_sb;
 	    last_sb=tmp_sb;
 	    tcount=1;
@@ -2951,6 +2957,12 @@ void TBeing::doWhere(const char *argument)
       else
 	found=false;
     }
+    
+    sprintf(buf, "[%2d] ", ++count);
+    sb += buf;
+    if(tcount>1)
+      sb += fmt("(%i) ") % tcount;
+    sb += last_sb;
   }
 
   if (sb.empty())
