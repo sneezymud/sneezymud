@@ -1684,6 +1684,23 @@ bool TBeing::isSimilar(const TThing *t) const
   return FALSE;
 }
 
+// same as isSimilar, but uses some more stuff for shops
+// eg structure
+bool TObj::isShopSimilar(const TThing *t) const
+{
+  if(!isSimilar(t))
+    return false;
+
+  const TObj *obj = dynamic_cast<const TObj *>(t);
+  if (!obj)
+    return FALSE;
+  
+  if (getStructPoints() != obj->getStructPoints())
+    return false;
+
+  return true;
+}
+
 bool TObj::isSimilar(const TThing *t) const
 {
   const TObj *obj = dynamic_cast<const TObj *>(t);
@@ -1697,8 +1714,6 @@ bool TObj::isSimilar(const TThing *t) const
     return false;
   if (!name || !obj->name ||
        !is_exact_name(name, obj->name))
-    return false;
-  if (getStructPoints() != obj->getStructPoints())
     return false;
 
   // requires the effects be in same order (as well as identical)

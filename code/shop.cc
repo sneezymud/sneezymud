@@ -497,7 +497,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       TObj *temp1 = dynamic_cast<TObj *>(t_temp1);
 
 #if !(NO_DAMAGED_ITEMS_SHOP)
-      while (!temp1->isSimilar(this)) {
+      while (!temp1->isShopSimilar(this)) {
         // it's the same item, but in a different condition
         // keep scrolling through list
         if (temp1->nextThing) {
@@ -1644,7 +1644,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
         found = FALSE;
         for (k = 0; (k < cond_obj_vec.size() && !found); k++) {
           if (cond_obj_vec.size() > 0) {
-            if (i->isSimilar(cond_obj_vec[k])) {
+            if (i->isShopSimilar(cond_obj_vec[k])) {
 	      cond_tot_vec[k] += 1;
 	      found = TRUE;
             }

@@ -498,6 +498,7 @@ class TObj : public TThing {
     virtual roomDirData *exitDir(dirTypeT door) const;
     virtual bool shouldntBeShown(wearSlotT) const;
     virtual int putSomethingIntoContainer(TBeing *, TOpenContainer *);
+    virtual bool isShopSimilar(const TThing *) const;
     virtual bool isSimilar(const TThing *) const;
     virtual bool isLevitating() const;
     virtual bool fitInShop(const char *, const TBeing *) const;

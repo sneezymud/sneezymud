@@ -1454,7 +1454,7 @@ TObj *get_num_obj_in_list(TBeing *ch, int num, TThing *list, int shop_nr)
         found = FALSE;
         for (k = 0; (k < cond_obj_vec.size() && !found); k++) {
           if (cond_obj_vec.size() > 0) {
-            if (to->isSimilar(cond_obj_vec[k])) {
+            if (to->isShopSimilar(cond_obj_vec[k])) {
               cond_tot_vec[k] += 1;
               found = TRUE;
             }

@@ -1754,7 +1754,7 @@ void Descriptor::clientShoppingList(const char *argument, TMonster *keeper, int 
         found = FALSE;
         for (k = 0; (k < cond_obj_vec.size() && !found); k++) {
           if (cond_obj_vec.size() > 0) {
-            if (i->isSimilar(cond_obj_vec[k])) {
+            if (i->isShopSimilar(cond_obj_vec[k])) {
               if (!shop_index[shop_nr].isProducing(cond_obj_vec[k])) {
                 cond_tot_vec[k] += 1;
                 found = TRUE;
