@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_penance.cc,v $
+// Revision 5.4  2001/09/25 13:28:55  jesus
+// *** empty log message ***
+//
 // Revision 5.3  2001/07/05 21:25:54  peel
 // Trying to fix cvs
 // what a headache
@@ -93,7 +96,7 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
             // penance task pulse is about 3* longer than resting pulse 
             // but resting also gives HP, MV and we want penancing to beat
             // resting in general
-            amt = (::number(4,6));
+            amt = (::number(6,8));
             amt /= 10;
             your_deity_val = SKILL_PENANCE;
             act("Your repentance has been partially accepted by $d.",
@@ -134,3 +137,7 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
   }
   return TRUE;
 }
+
+
+
+

@@ -55,6 +55,8 @@ void initWhittle()
                     CLASS_RANGER, 30, 168, true, WHITTLE_TIMECONSUMING);
   whittleItems[i++]("common-quarrel quarrel short",
                     CLASS_RANGER, 30, 169, true, WHITTLE_TIMECONSUMING);
+  whittleItems[i++]("totem small wooden",
+                    CLASS_SHAMAN, 1, 31395, true, WHITTLE_TIMECONSUMING);
 
   // Bows
   whittleItems[i++]("hunting-bow bow long",
