@@ -60,6 +60,7 @@ extern "C" {
 #include "obj_scroll.h"
 #include "database.h"
 #include "disc_cures.h"
+#include "format.h"
 
 void TBeing::doGuard(const sstring &argument)
 {
@@ -198,6 +199,8 @@ int TBeing::doNoJunk(const char *argument, TObj *obj)
       count++;
       if (num > 0)
 	num--;
+      else if(num==-1)
+	break;
 
     } else 
       break;
@@ -1898,7 +1901,7 @@ void TBeing::doGroup(const char *argument)
       sendTo("Only the group leader may set the group name.\n\r");
       return;
     }
-    ssprintf(desc->session.groupName, "%.60s<1>", argument);
+    desc->session.groupName=fmt("%.60s<1>") % argument;
 
     sprintf(buf, "I have just set the group name to %s.", argument);
     doGrouptell(buf);
