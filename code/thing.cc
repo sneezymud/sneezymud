@@ -148,7 +148,10 @@ int TThing::getCarriedVolume() const
   }
 
   for(t=getStuff();t;t=t->nextThing){
-    total+=t->getTotalVolume();
+    if(dynamic_cast<TComponent *>(t))
+      total+=(int)(t->getTotalVolume()*0.10);
+    else
+      total+=t->getTotalVolume();
   }
 
   return total;
