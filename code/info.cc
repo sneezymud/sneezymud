@@ -2279,29 +2279,31 @@ void TBeing::doInventory(const char *argument)
 
   one_argument(argument, arg);
 
-  if (!*argument || !isImmortal()) {
-    if (isAffected(AFF_BLIND)) {
-      sendTo("It's pretty hard to take inventory when you can't see.\n\r");
-      return;
-    }
-    sendTo("You are carrying:\n\r");
-    list_in_heap(getStuff(), this, 0, 100);
-
-    if (GetMaxLevel() > 10) {
-      sendTo("\n\r%3.f%% volume, %3.f%% weight.\n\r",
-             ((float) getCarriedVolume() / (float) carryVolumeLimit()) * 100.0,
-             ((float) getCarriedWeight() / (float) carryWeightLimit()) * 100.0);
-    }
-  } else {
-    victim = get_char_vis_world(this, arg, NULL, EXACT_YES);
-    if (!victim)
+  if (isImmortal() && *argument) {
+    if (!(victim = get_char_vis_world(this, arg, NULL, EXACT_YES))) {
       victim = get_char_vis_world(this, arg, NULL, EXACT_NO);
-
+    }
     if (victim) {
       act("$N is carrying:", FALSE, this, NULL, victim, TO_CHAR);
       list_in_heap(victim->getStuff(), this, 1, 100);
+    } else {
+      sendTo("No such being exists.\n\r");
+    }
+  } else {
+    if (isAffected(AFF_TRUE_SIGHT) || !isAffected(AFF_BLIND)) {
+      sendTo("You are carrying:\n\r");
+      list_in_heap(getStuff(), this, 0, 100);
+
+      if (GetMaxLevel() > 10) {
+        sendTo("\n\r%3.f%% volume, %3.f%% weight.\n\r",
+               ((float)getCarriedVolume() / (float)carryVolumeLimit()) * 100.0,
+               ((float)getCarriedWeight() / (float)carryWeightLimit()) * 100.0);
+      }
+    } else {
+      sendTo("It's pretty hard to take inventory when you can't see.\n\r");
     }
   }
+  return;
 }
 
 void TBeing::doEquipment(const char *argument)
