@@ -7292,7 +7292,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "stock broker", stockBroker},
   {FALSE,"Trainer: psionics", CDGenericTrainer},
   {TRUE, "Divination Man", divman},
-  {FALSE,"Trainer: mage/thief", CDGenericTrainer},           // 164
+  {FALSE,"Trainer: healing abilities", CDGenericTrainer},           // 164
   {FALSE, "Gardener", gardener}, // 165
   {FALSE, "Brightmoon Archer", bmarcher},
   {FALSE, "Money Train", moneyTrain},
