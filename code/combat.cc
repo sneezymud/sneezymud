@@ -3288,6 +3288,23 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     if (rc)
       return retCode;
   }
+
+  for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
+    if(vict->equipment[i]){
+      rc = vict->equipment[i]->checkSpec(vict, CMD_OBJ_OWNER_HIT, NULL, NULL);
+      if (IS_SET_ONLY(rc, DELETE_THIS))
+	retCode |= DELETE_ITEM;
+      if (IS_SET_ONLY(rc, DELETE_VICT)) {
+	retCode |= DELETE_VICT;
+	return retCode;
+      }
+      if (rc)
+	return retCode;
+    }
+  }
+  
+  
+
   // Handle faction affiliation
   reconcileHurt(vict, 0.005);
 
