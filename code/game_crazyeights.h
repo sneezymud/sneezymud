@@ -3,6 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: game_crazyeights.h,v $
+// Revision 5.3  2003/09/16 00:08:45  peel
+// removed const from peek()
+// added undraw to CardDeck
+// additional additional debug info to peek
+//
 // Revision 5.2  2003/03/13 22:40:53  peel
 // added sstring class, same as string but takes NULL as an empty string
 // replaced all uses of string to sstring
@@ -44,7 +49,7 @@ class CrazyEightsGame : public CardGame {
     const sstring score();
     bool  getPlayers(const TBeing *, TBeing **, TBeing **, TBeing **);
     void  deal(TBeing *);
-    void  peek(const TBeing *) const;
+    void  peek(const TBeing *);
     int   move_card(TBeing *, const char *);
     int   enter(const TBeing *);
     int   exitGame(const TBeing *);

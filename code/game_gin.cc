@@ -72,7 +72,7 @@ void GinGame::deal(TBeing *ch)
   peek(ch2);
 }
 
-void GinGame::peek(const TBeing *ch) const
+void GinGame::peek(const TBeing *ch)
 {
   int i, which;
 

@@ -146,7 +146,7 @@ void HeartsGame::deal(TBeing *ch)
   across->sendTo("The pass for this hand is %s.\n\r", which_pass[ipass]);
 }
 
-void HeartsGame::peek(const TBeing *ch) const
+void HeartsGame::peek(const TBeing *ch)
 {
   int i, which;
 

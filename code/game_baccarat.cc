@@ -333,7 +333,7 @@ void BaccaratGame::Bet(TBeing *ch, const sstring &arg)
 }
 
 
-void BaccaratGame::peek(const TBeing *ch) const
+void BaccaratGame::peek(const TBeing *ch)
 {
   sstring log_msg;
 

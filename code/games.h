@@ -137,6 +137,7 @@ class CardDeck {
 
   void shuffle();
   const Card *draw();
+  const Card *undraw();
 
 };
 
@@ -149,7 +150,7 @@ class CardGame {
     CardGame();
     virtual ~CardGame() {}
 
-    virtual void peek(const TBeing *) const = 0;
+    virtual void peek(const TBeing *) = 0;
 
     void take_card_from_hand(int *, int, int);
     void setup_deck();
@@ -185,7 +186,7 @@ class GinGame : public CardGame {
     virtual int index(const TBeing *) const;
     void play(TBeing *, const char *);
     bool check(const TBeing *ch) const;
-    virtual void peek(const TBeing *) const;
+    virtual void peek(const TBeing *);
     int move_card(TBeing *ch, const char *arg);
     int enter(const TBeing *ch);
     int exitGame(const TBeing *ch);
@@ -217,7 +218,7 @@ class BjGame : public CardGame {
     virtual int index(const TBeing *) const;
     void Split(TBeing *, const char *, int);
     void Bet(TBeing *ch, const char *arg);
-    virtual void peek(const TBeing *ch) const;
+    virtual void peek(const TBeing *ch);
     void stay(TBeing *ch);
     void bj_shuffle(int inx, const TBeing *ch);
     int exitGame(const TBeing *);
@@ -258,7 +259,7 @@ class HeartsGame : public CardGame {
     const sstring hearts_score();
     void deal(TBeing *);
     void play(TBeing *, const char *);
-    virtual void peek(const TBeing *) const;
+    virtual void peek(const TBeing *);
     virtual int index(const TBeing *) const;
     bool get_other_players(const TBeing *, TBeing **, TBeing **, TBeing **);
     int enter(const TBeing *ch);
@@ -286,7 +287,7 @@ class HiLoGame : public CardGame {
   CardDeck deck;
  public:
   bool enter(const TBeing *ch);
-  virtual void peek(const TBeing *) const;
+  virtual void peek(const TBeing *);
   void BetHi(TBeing *, const Card *);
   void BetLo(TBeing *, const Card *);
   void Bet(TBeing *ch, const sstring &arg);
@@ -306,7 +307,7 @@ class PokerGame : public CardGame {
   sstring name;
  public:
   bool enter(const TBeing *ch);
-  virtual void peek(const TBeing *) const;
+  virtual void peek(const TBeing *);
   void Bet(TBeing *ch, const sstring &arg);
   void poker_shuffle(const TBeing *ch);
   void stay(TBeing *ch);
@@ -337,7 +338,7 @@ class BaccaratGame : public CardGame {
   int bet_type;
  public:
   bool enter(const TBeing *ch);
-  virtual void peek(const TBeing *) const;
+  virtual void peek(const TBeing *);
   void Bet(TBeing *ch, const sstring &arg);
   void baccarat_shuffle(const TBeing *ch);
   void stay(TBeing *ch);
@@ -406,7 +407,7 @@ class HoldemGame : public CardGame {
   int playerHandCount();
   bool enter(const TBeing *ch);
   int exitGame(const TBeing *ch);
-  virtual void peek(const TBeing *) const;
+  virtual void peek(const TBeing *);
   bool isPlaying(const TBeing *) const;
   HoldemPlayer *getPlayer(const sstring &name) const;
   void Bet(TBeing *ch, const sstring &arg);

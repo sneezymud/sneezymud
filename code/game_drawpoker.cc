@@ -329,7 +329,7 @@ int DrawPokerGame::averagePlayerLevel() const
   return ((int)((wholeLevel / playerCount)));
 }
 
-void DrawPokerGame::peek(const TBeing *ch) const
+void DrawPokerGame::peek(const TBeing *ch)
 {
   int    playerNum;
   char   tArg[256];

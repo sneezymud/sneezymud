@@ -355,7 +355,7 @@ void PokerGame::discard(TBeing *ch, sstring arg)
 
 
 
-void PokerGame::peek(const TBeing *ch) const
+void PokerGame::peek(const TBeing *ch)
 {
   sstring log_msg;
 

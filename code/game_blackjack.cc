@@ -302,7 +302,7 @@ void BjGame::stay(TBeing *ch)
   bet = 0;
 }
 
-void BjGame::peek(const TBeing *ch) const
+void BjGame::peek(const TBeing *ch)
 {
   int inx, player;
   char log_msg[2048];

@@ -190,7 +190,7 @@ void HiLoGame::Bet(TBeing *ch, const sstring &arg)
 }
 
 
-void HiLoGame::peek(const TBeing *ch) const
+void HiLoGame::peek(const TBeing *ch)
 {
   sstring log_msg;
 

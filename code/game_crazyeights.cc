@@ -150,7 +150,7 @@ void CrazyEightsGame::deal(TBeing *ch)
               good_cap(ch->getName()).c_str(), tString);
 }
 
-void CrazyEightsGame::peek(const TBeing *ch) const
+void CrazyEightsGame::peek(const TBeing *ch)
 {
   int    playerNum;
   char   tArg[256];

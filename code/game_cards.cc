@@ -54,7 +54,6 @@ Card::Card(cardSuitT suit, int value)
 }
 
 
-
 const Card *CardDeck::draw()
 {
   Card *tmp;
@@ -64,6 +63,17 @@ const Card *CardDeck::draw()
 
   return tmp;
 }
+
+const Card *CardDeck::undraw()
+{
+  Card *tmp;
+  tmp=deck.back();
+  deck.pop_back();
+  deck.push_front(tmp);
+
+  return tmp;
+}
+
 
 void CardDeck::shuffle()
 {

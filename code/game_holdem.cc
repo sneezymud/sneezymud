@@ -475,7 +475,7 @@ HoldemPlayer *HoldemGame::getPlayer(const sstring &name) const
 }
 
 
-void HoldemGame::peek(const TBeing *ch) const
+void HoldemGame::peek(const TBeing *ch)
 {
   sstring log_msg;
   HoldemPlayer *tmp;
@@ -491,6 +491,14 @@ void HoldemGame::peek(const TBeing *ch) const
 
 
   if(ch->isImmortal() && !strcmp(ch->getName(), "Peel") && !ch->checkHoldem()){
+    const Card *tc[5];
+
+    for(int i=0;i<5;++i){
+      tc[i]=community[i];
+      if(!community[i])
+	community[i]=deck.draw();
+    }
+
     for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
       if(players[i] && players[i]->hand[0] &&
 	 players[i]->hand[1] && players[i]->name != ch->name){
@@ -498,7 +506,15 @@ void HoldemGame::peek(const TBeing *ch) const
 		   players[i]->name.c_str());
 	ch->sendTo(COLOR_BASIC, "%s\n\r", players[i]->hand[0]->getName());
 	ch->sendTo(COLOR_BASIC, "%s\n\r", players[i]->hand[1]->getName());
+	ch->sendTo(COLOR_BASIC, "%s has %s.\n\r", players[i]->name.c_str(),
+		   handValToStr(handValue(players[i])).c_str());
       }
+    }
+
+    for(int i=0;i<5;++i){
+      community[i]=tc[i];
+      if(!tc[i])
+	deck.undraw();
     }
   }
 

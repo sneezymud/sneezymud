@@ -3,6 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: game_drawpoker.h,v $
+// Revision 5.4  2003/09/16 00:08:46  peel
+// removed const from peek()
+// added undraw to CardDeck
+// additional additional debug info to peek
+//
 // Revision 5.3  2003/04/28 02:04:39  peel
 // added poker game (video poker)
 //
@@ -59,7 +64,7 @@ class DrawPokerGame : public CardGame {
                      TBeing **, TBeing **, TBeing **) const;
     void  deal(TBeing *, const char *);
     int   averagePlayerLevel() const;
-    void  peek(const TBeing *) const;
+    void  peek(const TBeing *);
     int   move_card(TBeing *, const char *);
     int   enter(const TBeing *);
     int   exitGame(const TBeing *);
