@@ -1658,6 +1658,11 @@ int telepathy(TBeing *caster, int, byte bKnown)
     return SPELL_FAIL;
   }
 
+  if (!strcmp(caster->name, "Frobozz")) {
+    caster->sendTo("The God of Magic has decreed that you may not cast that spell, you annoying bastard.");
+    return SPELL_FAIL;
+  }  // -dash
+
 
   if (bSuccess(caster, bKnown, SPELL_TELEPATHY)) {
     if (!*msg) {
