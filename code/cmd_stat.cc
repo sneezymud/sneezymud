@@ -802,6 +802,20 @@ void TBeing::statBeing(TBeing *k)
     k->blowCount(false, fx, fy);
     sprintf(buf + strlen(buf), "Prim attacks: %.2f, Off attacks: %.2f\n\r",
           fx, fy);
+
+    int dam=0;
+    for(i=0;i<100;++i)
+      dam+=k->getWeaponDam(this, k->heldInPrimHand(), HAND_PRIMARY);
+    dam/=100;
+    sprintf(buf + strlen(buf),"Averaged prim damage: %i\n\r", dam);
+
+    dam=0;
+    for(i=0;i<100;++i)
+      dam+=k->getWeaponDam(this, k->heldInSecHand(), HAND_SECONDARY);
+    dam/=100;
+    sprintf(buf + strlen(buf),"Averaged sec damage: %i\n\r", dam);
+
+
   }
   if (TestCode5 && k->newfaction()) {
     if(k->isPc()) {
