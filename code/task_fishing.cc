@@ -113,7 +113,13 @@ TThing *findBait(TThing *stuff){
   TThing *tt, *ret;
   TTool *bait;
 
+  if(!stuff) 
+    return NULL;
+
   for(tt=stuff;tt;tt=tt->nextThing){
+    if(!tt)
+      return NULL;
+
     if(tt->getStuff() && (ret=findBait(tt->getStuff())))
       return ret;
 

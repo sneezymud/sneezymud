@@ -6701,7 +6701,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 {
   MYSQL_RES *res;
   MYSQL_ROW row;
-  int rc, num;
+  int rc, num, count=0;
   char buf2[1024], buf[1024];
 
   if(cmd != CMD_LIST &&
@@ -6729,11 +6729,16 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
 	while((row=mysql_fetch_row(res))){
 	  if(atoi(row[1])>0){
+	    count+=(int)(atof(row[2])*atoi(row[1]));
 	    sprintf(buf, "%s, You own %s shares of %s, worth %f",
 		    fname(ch->name).c_str(), row[1], row[0], atof(row[2])*atoi(row[1]));
 	    myself->doTell(buf);
 	  }
 	}
+	sprintf(buf, "%s, Your portfolio is worth %i talens right now.",
+		fname(ch->name).c_str(), count);
+	myself->doTell(buf);
+
       } else {
 	if((rc=dbquery(FALSE, &res, "sneezy", "stockBroker(1)", "select ticker, price, description from stockinfo where upper('%s')=ticker", buf2))){
 	  if(rc==-1)
@@ -6769,6 +6774,10 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       myself->doTell(buf);
 
       sprintf(buf, "%s, You can 'list portfolio' to see your portfolio.",
+	      fname(ch->name).c_str());
+      myself->doTell(buf);      
+
+      sprintf(buf, "%s, Stock graphs can be seen at http://sneezy.stanford.edu/peel/stocks",
 	      fname(ch->name).c_str());
       myself->doTell(buf);      
 
