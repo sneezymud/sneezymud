@@ -1765,29 +1765,33 @@ int TBeing::shieldAbsorbDamage(int dam)
     slot = HOLD_RIGHT;
   }
   if (!shield)
-    return FALSE;
+    return dam;
+
+  // shield will absorb 10 to 20 percent of its structure
+  int shielddam=(int)((shield->getMaxStructPoints()/100.0) * ::number(10,20));
+  dam=max(0, dam-(shielddam*5)); // each structure point = 5 hp
 
   act("You hold your $o up to block the blast.",TRUE,this,shield,0,TO_CHAR);
   act("$n holds $s $o up to block the blast.",TRUE,this,shield,0,TO_ROOM);
   
-  if (dam >= shield->getStructPoints()) {
-    act("$p blocks the blast but is utterly destroyed at the same time.",TRUE,
+  if (shielddam >= shield->getStructPoints()) {
+    act("$p partially blocks the blast but is utterly destroyed at the same time.",TRUE,
          this,shield, 0,TO_CHAR);
-    act("$p blocks the blast but is utterly destroyed at the same time.",TRUE,
+    act("$p partially blocks the blast but is utterly destroyed at the same time.",TRUE,
          this,shield, 0,TO_ROOM);
     unequip(slot);
     delete shield;
     shield = NULL;
   } else {
-    act("$p blocks the blast but is seriously damaged at the same time.",TRUE,
+    act("$p partially blocks the blast but is seriously damaged at the same time.",TRUE,
          this,shield, 0,TO_CHAR);
-    act("$p blocks the blast but is seriously damaged at the same time.",TRUE,
+    act("$p partially blocks the blast but is seriously damaged at the same time.",TRUE,
          this,shield, 0,TO_ROOM);
 
     if (!roomp || !roomp->isRoomFlag(ROOM_ARENA))
-      shield->addToStructPoints(-dam);
+      shield->addToStructPoints(-shielddam);
   }
-  return TRUE;
+  return dam;
 }
 
 bool TBeing::noHarmCheck(TBeing *vict)

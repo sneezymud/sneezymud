@@ -61,12 +61,17 @@ static int spell_fire_breath(byte level, TBeing *ch, TBeing *victim, int lag)
   act("$n blows an immense breath of fire towards $N!", FALSE, ch, NULL, victim, TO_NOTVICT);
   act("You blow an immense breath of fire towards $N!", FALSE, ch, NULL, victim, TO_CHAR);
   act("$n blows an immense breath of fire towards you! <R>FIRE!!!<z>\a", FALSE, ch, NULL, victim, TO_VICT);
-  if (victim->shieldAbsorbDamage(dam)) {
-    return 1;
-  } else if (victim->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
+  if(!(dam=victim->shieldAbsorbDamage(dam))){
+    act("You dodge out of the way, thankfully, avoiding all of the damage.",TRUE,ch, 0, victim, TO_VICT);
+  }
+
+#if 0
+  if (victim->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
     act("You dodge out of the way, thankfully, avoiding most of the damage.",TRUE,ch, 0, victim, TO_VICT);
     dam >>= 1;
   }
+#endif
+
   ch->reconcileHurt(victim, 0.1);
   rc = victim->flameEngulfed();
   if (IS_SET_DELETE(rc, DELETE_THIS))
