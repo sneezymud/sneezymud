@@ -25,6 +25,8 @@ bool TBeing::limitPowerCheck(cmdTypeT cmd, int vnum) {
   be = desc->blockbend;
   o = desc->office;
 
+
+
   switch(cmd) {
     case CMD_FORCE:
     case CMD_TRANSFER:
@@ -65,7 +67,7 @@ bool TBeing::limitPowerCheck(cmdTypeT cmd, int vnum) {
       break;
     case CMD_MEDIT:
       if ((vnum >= as && vnum <= ae) || (vnum >= bs && vnum <= be) ||
-          isGenericMob(vnum) || isGenericObj(vnum))
+          isGenericMob(vnum))
         return TRUE;
       break;
     default:
@@ -94,7 +96,7 @@ bool TBeing::isGenericObj(int vnum)
 bool TBeing::isGenericMob(int vnum)
 {
   if ((vnum >= 1701 && vnum <= 1750) // testmobs
-      || (vnum < 0)
+      || (vnum <= 0)
       ) // add other generics here
     return TRUE;
   return FALSE;
