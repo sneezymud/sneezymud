@@ -1596,8 +1596,12 @@ bool okForJanitor(TMonster *myself, TObj *obj)
   if (!myself->canSee(obj) || (obj->in_room == ROOM_DONATION))
     return false;
 
-  // Don't let them try and get corpses that are being skinned.
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
+  // Don't let them try corpses in gh at all - there are other mobs for that
+  if ((myself->mobVnum() == MOB_SWEEPER || myself->mobVnum() == MOB_SWEEPER2)
+    && corpse)
+    return false;
+  // Don't let them try and get corpses that are being skinned.
   if (corpse && corpse->isCorpseFlag(CORPSE_PC_SKINNING))
     return false;
   // nor sacrificing
@@ -1720,7 +1724,7 @@ int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
     if (!okForJanitor(myself, obj))
       continue;
-
+    
     if (dynamic_cast<TPool *>(obj)){
       sprintf(buf, "$n mops up $p.");
       act(buf, FALSE, myself, obj, 0, TO_ROOM);
