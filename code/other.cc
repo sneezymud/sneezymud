@@ -3242,9 +3242,6 @@ int TBeing::doRecite(const char *argument)
     return DELETE_THIS;
   }
 
-  // add some lag.  Prevents multiple recites per round
-  addToWait(combatRound(1));
-
   return FALSE;
 }
 
@@ -3281,6 +3278,9 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
   act("You recite $p which is consumed by the powers it unleashes.",
        FALSE, ch, this, 0, TO_CHAR);
 
+  
+  lag_t max_lag=LAG_0;
+
   for (i = 0; i < 3; i++)  {
     spellNumT the_spell = getSpell(i);
     if (the_spell >= MIN_SPELL) {
@@ -3291,6 +3291,10 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
       if ((discArray[the_spell]->targets & TAR_VIOLENT) &&
           ch->checkPeaceful("Impolite magic is banned here.\n\r"))
         continue;
+
+      if(max_lag<discArray[the_spell]->lag)
+	max_lag=discArray[the_spell]->lag;
+      
 
       rc=doObjSpell(ch,victim,this,obj,argument,the_spell);
       if (IS_SET_DELETE(rc, DELETE_VICT) && victim != ch) {
@@ -3314,6 +3318,8 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
   }
   if (equippedBy)
     ch->unequip(ch->getPrimaryHold());
+
+  ch->addToWait(combatRound(max_lag+2));
 
   return DELETE_THIS;
 }
