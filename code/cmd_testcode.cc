@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_testcode.cc,v $
+// Revision 1.3  1999/09/14 02:24:58  batopr
+// *** empty log message ***
+//
 // Revision 1.2  1999/09/13 14:27:25  batopr
 // *** empty log message ***
 //
@@ -99,7 +102,7 @@ void TBeing::doTestCode(const char *arg)
   sendTo("2: '%s'\n\r", str2.c_str());
   sendTo("ret: '%s'\n\r", strret.c_str());
 #endif
-#if 1
+#if 0
   extern void rewrite_obj_file();
   rewrite_obj_file();
   return;
