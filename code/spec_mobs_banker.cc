@@ -214,7 +214,7 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
       return FALSE;
     }
 
-    db.query("select p.name, b.talens from player p, shopownedbank b where b.shop_nr=%i and b.player_id=p.id union select c.name, b.talens from corporation c, shopownedcorpbank b where b.shop_nr=c.bank and b.corp_id=c.corp_id order by talens desc", shop_nr);
+    db.query("select p.name, b.talens from player p, shopownedbank b where b.shop_nr=%i and b.player_id=p.id union select c.name, b.talens from corporation c, shopownedcorpbank b where b.shop_nr=c.bank and b.shop_nr=%i and b.corp_id=c.corp_id order by talens desc", shop_nr, shop_nr);
 
     sstring buf;
     while(db.fetchRow()){
