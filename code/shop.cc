@@ -580,10 +580,15 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
   }
 
   if (shop_index[shop_nr].isOwned() && temp1->isObjStat(ITEM_NORENT)){
-    keeper->doTell("This shop is privately owned and we don't purchase non-rentable items.");
+    keeper->doTell(ch->getName(), "This shop is privately owned and we don't purchase non-rentable items.");
     return TRUE;
   }
 
+  int discount=100;
+  if(temp1->sellPrice(shop_nr, -1, &discount) < 0){
+    keeper->doTell(ch->getName(), "You'd have to pay me to buy that!");
+    return TRUE;
+  }
 
   return FALSE;
 }
