@@ -111,7 +111,7 @@ void corpLogs(TBeing *ch, TMonster *me, sstring arg)
   db.query("select name, action, talens, corptalens, logtime from corplog where corp_id = %i order by logtime desc", corp_id);
   
   while(db.fetchRow()){
-    buf = fmt("%19.19s  %12s %10s %10s  Total: %s\n\r") %
+    buf = fmt("%16.16s  %20.20s %10s %10s  Total: %s\n\r") %
       db["logtime"] % db["name"] % db["action"] %
       db["talens"] % db["corptalens"];
     sb += buf;
