@@ -2658,8 +2658,9 @@ void TPerson::doPurge(const char *argument)
       if (is_abbrev(argument, "all")) {
         int oldnum = mobCount;
         for (zone = 1; zone < zone_table.size(); zone++) {
-          if (zone_table[zone].zone_value > 0 && isEmpty(zone)) {
-            nukeMobsInZone(zone);
+          if (zone_table[zone].zone_value > 0 && 
+	      zone_table[zone].isEmpty()) {
+            zone_table[zone].nukeMobs();
             zone_table[zone].zone_value = 0;
           }
         }
@@ -2674,7 +2675,7 @@ void TPerson::doPurge(const char *argument)
         return;
       }
 
-      nukeMobsInZone(zone);
+      zone_table[zone].nukeMobs();
       sendTo("Mobs nuked.\n\r");
       zone_table[zone].zone_value = 0;
       return;

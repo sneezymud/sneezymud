@@ -2,21 +2,12 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: db.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+// db.h , Database module.
+// Usage: Loading/Saving chars booting world.
 //
 //////////////////////////////////////////////////////////////////////////
 
 
-/* ************************************************************************
-*  file: db.h , Database module.                          Part of DIKUMUD *
-*  Usage: Loading/Saving chars booting world.                             *
-************************************************************************* */
 
 
 #ifndef __DB_H
@@ -31,6 +22,10 @@
 // also: SNEEZY_ADMIN
 extern const char * const MUD_NAME;
 extern const char * const MUD_NAME_VERS;
+
+const int MAX_OBJ_AFFECT = 5;
+
+const char * const SIGN_MESS = "/mud/sign/currentMess";
 
 const char * const DFLT_DIR  ="lib";           /* default data directory     */
 
@@ -99,6 +94,7 @@ class zoneData
 {
   public:
     char *name;             // name of this zone                  
+    int zone_nr;            // number of this zone
     int lifespan;           // how long between resets (minutes)  
     int age;                // current age of this zone (minutes) 
     int top;                // upper limit for rooms in this zone 
@@ -109,6 +105,13 @@ class zoneData
     double mob_levels;
     double min_mob_level;
     double max_mob_level;
+
+    bool isEmpty(void);
+    void resetZone(bool);
+    void closeDoors(void);
+    void logError(char, const char *, int, int);
+    void nukeMobs(void);
+
 
     vector<resetCom>cmd;          // command table for reset
   
@@ -144,6 +147,7 @@ class objIndexData : public indexData
 {
   public:
     extraDescription *ex_description;  // extra descriptions
+    objAffData affected[MAX_OBJ_AFFECT];
     byte max_struct;
     sh_int armor;
     unsigned int where_worn;

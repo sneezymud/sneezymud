@@ -1556,13 +1556,13 @@ void TBeing::doReset(const char *arg)
     unsigned int i;
     if (is_abbrev(buf, "all")) {
       for (i= 0; i < zone_table.size(); i++) {
-        reset_zone(i, FALSE);
+        zone_table[i].resetZone(FALSE);
       }
       sendTo("Zone 0-%d reset.\n\r", i-1);
       return;
     }
     zone = atoi(buf);
-    reset_zone(zone, FALSE);
+    zone_table[zone].resetZone(FALSE);
     sendTo("Zone %d reset.\n\r", zone);
     return;
   } else if (is_abbrev(buf, "levels") && isImmortal()) {

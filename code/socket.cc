@@ -363,10 +363,10 @@ int TSocket::gameLoop()
         // g_zone_value == -1 always for !nuke_inactive_mobs
         unsigned int i;
         for (i = 0; i < zone_table.size(); i++) {
-          if (!isEmpty(i))
+          if (!zone_table[i].isEmpty())
             continue;
           if (zone_table[i].zone_value == 1)
-            nukeMobsInZone(i);
+            zone_table[i].nukeMobs();
           if (zone_table[i].zone_value > 0) {
             zone_table[i].zone_value -= 1;
           }
@@ -498,7 +498,7 @@ int TSocket::gameLoop()
     if (!combat || !mobstuff || !teleport || !drowning || !update_stuff || !pulse_tick) {
       unsigned int i;
       for (i = 0; i < zone_table.size(); i++) {
-	if (isEmpty(i))
+	if (zone_table[i].isEmpty())
 	  zone_table[i].zone_value=1;
 	else{
 	  zone_table[i].zone_value=-1;

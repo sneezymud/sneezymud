@@ -1,25 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: structs.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/10/07 02:04:21  batopr
-// *** empty log message ***
-//
-// Revision 1.2  1999/09/28 19:06:03  lapsos
-// Owners will now ignore, totally, creators.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "structs.cc" - Various class destructors, constructors and operators
 //
@@ -41,12 +21,12 @@ TBeing::TBeing() :
   chosenStats(), 
   curStats(),
   multAtt(1.0),
-  faction(),
   heroNum(0),
   m_craps(NULL),
   invisLevel(0),
   my_protection(0),
   combatMode(ATTACK_NORMAL),
+  faction(),
   discs(NULL),
   inPraying(0), 
   inQuaffUse(0),
@@ -101,7 +81,7 @@ TBeing::~TBeing()
       if (eq_stuck > WEAR_NOWHERE) {
         stuckIn->setStuckIn(eq_stuck, NULL);
       } else {
-        vlogf(10, "Extract on stuck in items %s in slot -1 on %s", name, 
+        vlogf(LOG_BUG, "Extract on stuck in items %s in slot -1 on %s", name, 
                stuckIn->name);
         return;
       }
@@ -109,7 +89,7 @@ TBeing::~TBeing()
       if (eq_pos > WEAR_NOWHERE) {
         dynamic_cast<TBeing *>(equippedBy)->unequip(eq_pos);
       } else {
-        vlogf(10, "Extract on equipped item %s in slot -1 on %s", name, 
+        vlogf(LOG_BUG, "Extract on equipped item %s in slot -1 on %s", name, 
                 equippedBy->name);
         return;
       }
@@ -279,7 +259,7 @@ TBeing::~TBeing()
   } else { // has to have both a desc and a desc->connected
     for (k = character_list; (k); k = k->next) {
       if (k == this)
-        vlogf(5, "%s (being) deleted without removal from character_list connected = (%d)", getName(), desc->connected);
+        vlogf(LOG_BUG, "%s (being) deleted without removal from character_list connected = (%d)", getName(), desc->connected);
     }
   }
   setArmor(1000);
@@ -307,7 +287,7 @@ TBeing::~TBeing()
   if (rp)
     rp->initLight();
   else
-    vlogf(10, "NULL rp in TBeing destructor at initLight call.");
+    vlogf(LOG_BUG, "NULL rp in TBeing destructor at initLight call.");
 
   // get rid of discipline stuff
   delete discs;
@@ -375,7 +355,7 @@ TObj::~TObj()
     if (eq_stuck > WEAR_NOWHERE) {
       stuckIn->setStuckIn(eq_stuck, NULL);
     } else {
-      vlogf(10, "Extract on stuck in items %s in slot -1 on %s", name, 
+      vlogf(LOG_BUG, "Extract on stuck in items %s in slot -1 on %s", name, 
              stuckIn->name);
       return;
     }
@@ -383,7 +363,7 @@ TObj::~TObj()
     if (eq_pos > WEAR_NOWHERE) {
       dynamic_cast<TBeing *>(equippedBy)->unequip(eq_pos);
     } else {
-      vlogf(10, "Extract on equipped item %s in slot -1 on %s", name, 
+      vlogf(LOG_BUG, "Extract on equipped item %s in slot -1 on %s", name, 
               equippedBy->name);
       return;
     }
@@ -411,8 +391,8 @@ TObj::~TObj()
     if (temp1)
       temp1->next = next;
     else {
-      vlogf(10, "Couldn't find object in object list.");
-      vlogf(10, "Object name : %s", getName());
+      vlogf(LOG_BUG, "Couldn't find object in object list.");
+      vlogf(LOG_BUG, "Object name : %s", getName());
     }
   }
 
@@ -459,7 +439,8 @@ TRoom::TRoom(int r) :
   moblim(0),
   roomHeight(-1),
   roomFlags(0),
-  descPos(-1)
+  descPos(-1),
+  tBornInsideMe(NULL)
 {
   funct = NULL;
   number = in_room = r;
@@ -472,10 +453,18 @@ TRoom::~TRoom()
 {
   TThing *t, *t2;
 
+  // Burn the born list.
+  for (t = tBornInsideMe; t; t = t->nextBorn) {
+    TMonster *tMonster = dynamic_cast<TMonster *>(t);
+
+    if (tMonster)
+      tMonster->brtRoom = ROOM_NOWHERE;
+  }
+
   for (t = stuff; t; t = t2) {
     t2 = t->nextThing;
     if (t->isPc()) {
-      vlogf(10, "~TRoom() with room occupied by PC()");
+      vlogf(LOG_BUG, "~TRoom() with room occupied by PC()");
       continue;
     }
     delete t;
@@ -524,20 +513,25 @@ TThing& TObj::operator += (TThing& t)
   return *this;
 }
 
-void TObj::checkOwnersList(const TPerson *ch)
+// if tPreserve is set true we don't vlogf nor do we add to the 'owners'
+// list.  This is primarly used to catch portal cheaters.
+bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve = false)
 {
 #if 0
   // this is only practical if NO multiplay is allowed ever
   // otherwise it simply triggers way too often.
-  return;
+  return = false;
 #endif
 
+  /*
   if (gamePort != PROD_GAMEPORT)
-    return;
+    return false;
+  */
 
   const char * tmpbuf = owners;
   char indiv[256];
-  bool iHaveOwned = false;
+  bool iHaveOwned = false,
+       isCheat = false;
 
   if (!ch->hasWizPower(POWER_WIZARD))
     while (tmpbuf && *tmpbuf) {
@@ -556,17 +550,61 @@ void TObj::checkOwnersList(const TPerson *ch)
         continue;
 
       if (ch->desc && ch->desc->account && !strcmp(ch->desc->account->name, st.aname)) {
-        // transferred betwen 2 chars in same account!
-        vlogf(2, "CHEATING!  Item (%s:%d) transferred to %s when previously owned by %s.   owners=[%s %s]", getName(), objVnum(), ch->getName(), indiv, owners, ch->getName());
+        TMoney *tTalens;
+        isCheat = true;
 
-        // because of where this gets called (operator+=), deleting would be
-        // bad due to requirements to check for it occuring all over the place.
-        // lets set the decay instead and let ticktimer handle it...
-        obj_flags.decay_time = 0;  // decay next pulse
+        // Don't nuke these.  Is usually a 'special case' scenario.
+        if (tPreserve)
+          continue;
+
+        if ((tTalens = dynamic_cast<TMoney *>(this))) {
+          // This is basic 'drop -- talens'|'get -- talens'
+          TBeing *tPerson = (ch->desc ? ch->desc->character : NULL);
+
+          // Here is where we nail them to the wall.
+          // We strike them for the total value of the talens 2x over.
+          // This sets the pile of money value to 0 and
+          // Removes the same amount from them (on-person/bank).
+
+          if (!tPerson) // Seriously bad
+            break;
+
+          int tLose = tTalens->getMoney(),
+              tLost,
+              tHave;
+
+          tLost = tHave = min(ch->getMoney(), tLose);
+          tPerson->setMoney(ch->getMoney() - tHave);
+          tLose -= tHave;
+
+          if (tLose > 0) {
+            tHave = min(ch->getBank(), tLose);
+            tPerson->setBank(ch->getBank() - tHave);
+            tLost += tHave;
+          }
+
+          vlogf(LOG_CHEAT, "CHEATING!  Money (%d) being picked up by %s when dropped by %s.  Lost:%d",
+                tTalens->getMoney(), ch->getName(), indiv, tLost);
+
+          tTalens->setMoney(0);
+        } else {
+          // transferred betwen 2 chars in same account!
+
+          // don't spam us with silly "quill transferred!" logs
+          // Let's also ditch the "lantern" and key logs  -Lapsos
+          if (obj_flags.cost > 100 || isRentable())
+            vlogf(LOG_CHEAT, "CHEATING!  Item (%s:%d) transferred to %s when previously owned by %s.   owners=[%s %s]", getName(), objVnum(), ch->getName(), indiv, owners, ch->getName());
+
+          // because of where this gets called (operator+=), deleting would be
+          // bad due to requirements to check for it occuring all over the place.
+          // lets set the decay instead and let ticktimer handle it...
+
+          obj_flags.decay_time = 0;  // decay next pulse
+        }
       }
     }
 
-  if (!iHaveOwned && !ch->hasWizPower(POWER_WIZARD)) {
+  if (!tPreserve && !iHaveOwned && !ch->hasWizPower(POWER_WIZARD)) {
     string tmp("");
 
     if (owners) {
@@ -584,8 +622,10 @@ void TObj::checkOwnersList(const TPerson *ch)
   for (t = stuff; t; t = t->nextThing) {
     TObj * obj = dynamic_cast<TObj *>(t);
     if (obj)
-      obj->checkOwnersList(ch);
+      obj->checkOwnersList(ch, tPreserve);
   }
+
+  return isCheat;
 }
 
 TThing& TPerson::operator += (TThing& t) 
@@ -609,13 +649,21 @@ TThing& TBeing::operator += (TThing& t)
   // Thing being put into is a TBeing
   if (dynamic_cast<TBeing *>(&t)) {
     // Thing being put in is a TBeing - Russ 07/01/96
-    vlogf(10, "warning, Being put into Being :%s into %s.", t.getName(), getName());
+    vlogf(LOG_BUG, "warning, Being put into Being :%s into %s.", t.getName(), getName());
   }
 #endif
 
   t.nextThing = stuff;
   stuff = &t;
   t.parent = this;
+
+  if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
+    TObj *obj = dynamic_cast<TObj *>(&t);
+    TPerson *tP;
+
+    if (obj && (tP = dynamic_cast<TPerson *>(master)))
+      obj->checkOwnersList(tP);
+  }
 
   return *this;
 }
@@ -691,7 +739,7 @@ TThing& TRoom::operator += (TThing& t)
          zd.enabled) {
       zd.zone_value = ZONE_MAX_TIME;
       // init to non-zero before resetting so mobs load
-      reset_zone(getZone(), FALSE);
+      zone_table[getZone()].resetZone(FALSE);
     }
     if (zd.zone_value >= 0)
       zd.zone_value = ZONE_MAX_TIME;
@@ -870,6 +918,7 @@ TThing& TThing::operator -- ()
 TPerson::TPerson(Descriptor *thedesc) :
   TBeing(),
   base_age(0),
+  tLogFile(NULL),
   title(NULL), 
   last_rent(0),
   timer(0)
@@ -890,13 +939,14 @@ TPerson::TPerson(Descriptor *thedesc) :
   desc->session.setToZero();
   desc->prompt_d.xptnl = 0;
 
-  player_num++;
-  max_player_since_reboot = max(max_player_since_reboot, player_num);
+  accStat.player_num++;
+  accStat.max_player_since_reboot = max(accStat.max_player_since_reboot, accStat.player_num);
 }
 
 TPerson::TPerson(const TPerson &a) :
   TBeing(a),
   base_age(a.base_age),
+  tLogFile(a.tLogFile),
   last_rent(a.last_rent), 
   timer(a.timer)
 {
@@ -905,8 +955,8 @@ TPerson::TPerson(const TPerson &a) :
   memcpy(toggles, a.toggles, sizeof(toggles));
   memcpy(wizPowers, a.wizPowers, sizeof(wizPowers));
 
-  player_num++;
-  max_player_since_reboot = max(max_player_since_reboot, player_num);
+  accStat.player_num++;
+  accStat.max_player_since_reboot = max(accStat.max_player_since_reboot, accStat.player_num);
 }
 
 TPerson & TPerson::operator=(const TPerson &a)
@@ -946,10 +996,16 @@ TPerson::~TPerson()
   // getting here as an error.
   dropItemsToRoom(SAFE_NO, DROP_IN_ROOM);
 
-  player_num--;
+  accStat.player_num--;
 
   delete [] title;
   title = NULL;
+
+  if (tLogFile) {
+    logf("Logging out...");
+    fclose(tLogFile);
+    tLogFile = NULL;
+  }
 }
 
 TThing::~TThing() 
@@ -984,7 +1040,7 @@ TThing::~TThing()
     shortDescr = NULL;
   }
   if (descr) {
-    //vlogf(-1, "Deleting descr : %s", descr);
+    //vlogf(LOG_SILENT, "Deleting descr : %s", descr);
     delete [] descr;
     // as silly as this may seem, we sometimes crash in the below line
     // I think this is a compiler/linker thing, as there is no good reason
@@ -1018,6 +1074,7 @@ TThing::TThing() :
   parent(NULL),
   stuff(NULL),
   nextThing(NULL),
+  nextBorn(NULL),
   roomp(NULL),
   desc(NULL), 
   ex_description(NULL),
@@ -1131,7 +1188,7 @@ specialData::~specialData()
 void TThing::mount(TThing *ch)
 {
   if (riding) {
-    vlogf(8, "%s already riding in call to mount()", getName());
+    vlogf(LOG_BUG, "%s already riding in call to mount()", getName());
     return;
   }
   // update linked list info
@@ -1147,7 +1204,12 @@ void TThing::mount(TThing *ch)
   if (ttab) {
     if (ttab->roomp)
       ttab->roomp->addToLight(getLight());
-    else 
+    else if (ttab->parent && dynamic_cast<TBeing *>(ttab->parent)) {
+      // damn gods screwing around!
+      // light on a table held by a person.  Do nothing for this case
+      vlogf(LOG_BUG, "Possible lighting error due to table being mounted in bad state.  (Room=%d, heldBy=%s)", 
+              ttab->parent->inRoom(), ttab->parent->getName());
+    } else 
       forceCrash("Potential lighting screw up involving tables.");
   }
 }
@@ -1160,12 +1222,12 @@ TBeing::TBeing(const TBeing &a) :
   chosenStats(a.chosenStats), 
   curStats(a.curStats),
   multAtt(a.multAtt),
-  faction(a.faction),
   heroNum(a.heroNum),
   m_craps(a.m_craps),
   invisLevel(a.invisLevel),
   my_protection(a.my_protection),
   combatMode(a.combatMode),
+  faction(a.faction),
   inPraying(a.inPraying),
   inQuaffUse(a.inQuaffUse),
   attackers(a.attackers),
@@ -1233,7 +1295,7 @@ TBeing::TBeing(const TBeing &a) :
   if (IS_SET(a.specials.act,ACT_STRINGS_CHANGED)) {
     name = mud_str_dup(a.name);
     shortDescr = mud_str_dup(a.shortDescr);
-    player.longDescr = mud_str_dup(a.player.longDescr);
+    player.longDescr = mud_str_dup(a.getLongDesc());
     setDescr(mud_str_dup(a.getDescr()));
 
     if (ex_description)
@@ -1358,6 +1420,7 @@ TThing::TThing(const TThing &a) :
     number(a.number), height(a.height),
     canBeSeen(a.canBeSeen), name(a.name), shortDescr(a.shortDescr),
     parent(a.parent), stuff(a.stuff), nextThing(a.nextThing),
+    nextBorn(a.nextBorn),
     roomp(a.roomp), desc(a.desc), 
     ex_description(a.ex_description),
     rider(a.rider), riding(a.riding),
@@ -1391,6 +1454,7 @@ TThing & TThing::operator=(const TThing &a)
   stuckIn = a.stuckIn;
   equippedBy = a.equippedBy;
   nextThing = a.nextThing;
+  nextBorn = a.nextBorn;
   stuff = a.stuff;
   parent = a.parent;
   desc = a.desc;
@@ -1742,40 +1806,6 @@ lastChangeData::~lastChangeData()
 {
 }
 
-poofinData::poofinData()
-  : poofin(NULL), poofout(NULL), 
-    ldesc(NULL), pmask(0)
-{
-}
-
-poofinData::poofinData(const poofinData &a)
-  : pmask(a.pmask)
-{
-  poofin = mud_str_dup(a.poofin);
-  poofout = mud_str_dup(a.poofout);
-  ldesc = mud_str_dup(a.ldesc);
-}
-
-poofinData & poofinData::operator=(const poofinData &a)
-{
-  if (this == &a) return *this;
-  delete [] poofin;
-  poofin = mud_str_dup(a.poofin);
-  delete [] poofout;
-  poofout = mud_str_dup(a.poofout);
-  delete [] ldesc;
-  ldesc = mud_str_dup(a.ldesc);
-  pmask = a.pmask;
-  return *this;
-}
-
-poofinData::~poofinData()
-{
-  delete [] poofin;
-  delete [] poofout;
-  delete [] ldesc;
-}
-
 objAffData::objAffData() : 
   type(TYPE_UNDEFINED),
   level(0),
@@ -1954,7 +1984,10 @@ affectedData::affectedData(const affectedData &a) :
   else
     next = NULL;
 
-  if ((type == AFFECT_PET) || (type == AFFECT_ORPHAN_PET)) {
+  if ((type == AFFECT_PET) || 
+      (type == AFFECT_CHARM) ||
+      (type == AFFECT_THRALL) ||
+      (type == AFFECT_ORPHAN_PET)) {
     // this affect has reinterpreted "be" to be a char *
     // and has allocated memory to it.  Member copying is
     // inappropriate for this cast, so...
@@ -1983,6 +2016,7 @@ affectedData::affectedData(const saveAffectedData &a) :
   // for AFFECT_PET types, TThing * be should get the owner as a string
   // but we didn't save that info, and we lack the info here, we will
   // have to recreate this info elsewhere (pet rentin)
+  // Ditto, AFFECT_ORPHAN_PET, AFFECT_CHARM and AFFECT_THRALL
 }
 
 affectedData & affectedData::operator=(const affectedData &a)
@@ -2003,7 +2037,10 @@ affectedData & affectedData::operator=(const affectedData &a)
   else
     next = NULL;
 
-  if ((type == AFFECT_PET) || (type == AFFECT_ORPHAN_PET)) {
+  if ((type == AFFECT_PET) || 
+      (type == AFFECT_CHARM) ||
+      (type == AFFECT_THRALL) ||
+      (type == AFFECT_ORPHAN_PET)) {
     // this affect has reinterpreted "be" to be a char *
     // and has allocated memory to it.  Member copying is
     // inappropriate for this cast, so...
@@ -2017,7 +2054,10 @@ affectedData::~affectedData()
 {
   // we redefined "TThing * be" to be a "char *" for AFFECT_PET
   // clean up our memory we allocated when we did this
-  if ((type == AFFECT_PET) || (type == AFFECT_ORPHAN_PET)) {
+  if ((type == AFFECT_PET) || 
+      (type == AFFECT_CHARM) ||
+      (type == AFFECT_THRALL) ||
+      (type == AFFECT_ORPHAN_PET)) {
     char * tmp = (char *) be;
     be = NULL;
     delete [] tmp;

@@ -1719,7 +1719,7 @@ int BankTeleporter(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   if(pulse%150)
     return FALSE;
   
-  if(!isEmpty(225)){
+  if(!zone_table[rp->getZone()].isEmpty()){
     vlogf(LOG_PEEL, "Bank: here comes the wrecking crew");
 
     boss = read_mobile(31753, VIRTUAL);

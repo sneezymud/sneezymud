@@ -176,7 +176,7 @@ int run_the_game()
   return FALSE;
 }
 
-void nukeMobsInZone(int zone)
+void zoneData::nukeMobs()
 {
   TThing *t, *t2;
   TBeing *mob, *mob2;
@@ -189,7 +189,7 @@ void nukeMobsInZone(int zone)
     mob2 = mob->next;
     if (mob->isPc())
       continue;
-    if (mob->specials.zone != zone)
+    if (mob->specials.zone != zone_nr)
       continue;
 
     // preserve charms, mounts, etc
