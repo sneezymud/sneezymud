@@ -6176,7 +6176,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	return FALSE;
       }
 
-      if((rc=dbquery(&res, "sneezy", "fishkeeper(1)", "insert ignore into fishkeeper values ('%s', 0)", ch->name))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "fishkeeper(1)", "insert ignore into fishkeeper values ('%s', 0)", ch->name))){
 	if(rc==-1){
 	  vlogf(LOG_BUG, "Database error in fishkeeper");
 	}
@@ -6184,7 +6184,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       mysql_free_result(res);
 
       sprintf(buf, "update fishkeeper set weight=weight+%f where name='%s'", o->getWeight(), ch->name);
-      if((rc=dbquery(&res, "sneezy", "fishkeeper(2)", buf))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "fishkeeper(2)", buf))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in fishkeeper");
       }
@@ -6192,7 +6192,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       mysql_free_result(res);
 
       // check for largest
-      if((rc=dbquery(&res, "sneezy", "fishkeeper(large1)", "select weight, name from fishlargest where type='%s'", o->shortDescr))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "fishkeeper(large1)", "select weight, name from fishlargest where type='%s'", o->shortDescr))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in fishkeeper");	
       }
@@ -6200,7 +6200,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       mysql_free_result(res);
 
       if(o->getWeight() > atoi(row[0])){
-	if((rc=dbquery(&res, "sneezy", "fishkeeper(large2)", "update fishlargest set name='%s', weight=%f where type='%s'", ch->getName(), o->getWeight(), o->shortDescr))){
+	if((rc=dbquery(TRUE, &res, "sneezy", "fishkeeper(large2)", "update fishlargest set name='%s', weight=%f where type='%s'", ch->getName(), o->getWeight(), o->shortDescr))){
 	  if(rc==-1)
 	    vlogf(LOG_BUG, "Database error in fishkeeper");		  
 	}
@@ -6237,7 +6237,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       arg = one_argument(arg, buf);
 
       if(!strcmp(buf, "records")){
-	rc=dbquery(&res, "sneezy", "fishKeeper", "select name, type, weight from fishlargest order by weight desc");
+	rc=dbquery(TRUE, &res, "sneezy", "fishKeeper", "select name, type, weight from fishlargest order by weight desc");
 
 	while((row=mysql_fetch_row(res))){
 	  sprintf(buf, "%s caught %s weighing in at %f.",
@@ -6246,14 +6246,14 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	}      
       } else {
 	if(!strcmp(buf, "topten")){
-	  rc=dbquery(&res, "sneezy", "fishKeeper", "select name, weight from fishkeeper order by weight desc limit 10");
+	  rc=dbquery(TRUE, &res, "sneezy", "fishKeeper", "select o.name, o.weight, count(l.name) from fishkeeper o, fishlargest l where o.name=l.name group by o.name, o.weight order by weight desc limit 10");
 	} else {
-	  rc=dbquery(&res, "sneezy", "fishKeeper", "select name, weight from fishkeeper where name='%s'", buf);
+	  rc=dbquery(TRUE, &res, "sneezy", "fishKeeper", "select o.name, o.weight, count(l.name) from fishkeeper o, fishlargest l where name='%s' and o.name=l.name group by o.name, o.weight order by weight desc limit 10", buf);
 	}
 	
 	while((row=mysql_fetch_row(res))){
-	  sprintf(buf, "%s has caught fish weighing in at a total of %f.",
-		  row[0], atof(row[1]));
+	  sprintf(buf, "%s has %f pounds of fish and %i records.",
+		  row[0], atof(row[1]), atoi(row[2]));
 	  myself->doSay(buf);
 	}      
       }
@@ -6694,6 +6694,209 @@ int scaredKid(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
   return TRUE;
 }
 
+
+int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
+{
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+  int rc, num;
+  char buf2[1024], buf[1024];
+
+  if(cmd != CMD_LIST &&
+     cmd != CMD_BUY &&
+     cmd != CMD_SELL)
+    return FALSE;
+
+  arg = one_argument(arg, buf2);
+  
+  if(cmd == CMD_LIST){
+    if(*buf2){
+      // list details
+      
+      // list their portfolio
+      if(is_abbrev(buf2, "portfolio")){
+	if((rc=dbquery(FALSE, &res, "sneezy", "stockBroker(0)", "select o.ticker, o.shares, i.price from stockowners o, stockinfo i where owner='%s' and o.ticker=i.ticker", ch->getName()))){
+	  if(rc==-1)
+	    vlogf(LOG_BUG, "Database error in stockBroker");
+	  return FALSE;
+	}
+	
+	sprintf(buf, "%s, Here are the stocks you own:", 
+		fname(ch->name).c_str());
+	myself->doTell(buf);
+
+	while((row=mysql_fetch_row(res))){
+	  if(atoi(row[1])>0){
+	    sprintf(buf, "%s, You own %s shares of %s, worth %f",
+		    fname(ch->name).c_str(), row[1], row[0], atof(row[2])*atoi(row[1]));
+	    myself->doTell(buf);
+	  }
+	}
+      } else {
+	if((rc=dbquery(FALSE, &res, "sneezy", "stockBroker(1)", "select ticker, price, description from stockinfo where upper('%s')=ticker", buf2))){
+	  if(rc==-1)
+	    vlogf(LOG_BUG, "Database error in stockBroker");
+	  return FALSE;
+	}
+	
+	if(!(row=mysql_fetch_row(res))){
+	  return FALSE;
+	}
+	
+	
+	sprintf(buf, "%s, %s - %s talens per share.",
+		fname(ch->name).c_str(), row[0], row[1]);
+	myself->doTell(buf);
+	sprintf(buf, "%s, %s", fname(ch->name).c_str(), row[2]);
+	myself->doTell(buf);
+      }
+    } else {
+      // generic list
+      if((rc=dbquery(TRUE, &res, "sneezy", "stockBroker(1)", "select ticker, price from stockinfo"))){
+	if(rc==-1)
+	  vlogf(LOG_BUG, "Database error in stockBroker");
+	return FALSE;
+      }
+    
+      sprintf(buf, "%s, I charge a 10%% commission on all transactions.",
+	      fname(ch->name).c_str());
+      myself->doTell(buf);
+
+      sprintf(buf, "%s, You can 'list <stock name>' to see details.",
+	      fname(ch->name).c_str());
+      myself->doTell(buf);
+
+      sprintf(buf, "%s, You can 'list portfolio' to see your portfolio.",
+	      fname(ch->name).c_str());
+      myself->doTell(buf);      
+
+
+      while((row=mysql_fetch_row(res))){
+	sprintf(buf, "%s, %s - %s talens per share.", 
+		fname(ch->name).c_str(), row[0], row[1]);
+	myself->doTell(buf);
+      }
+    }
+    return TRUE;
+  } else if(cmd == CMD_BUY){
+    if(!ch->isImmortal()){
+      myself->doSay("Buying is disabled right now.");
+      return TRUE;
+    }
+    
+
+    char tmpname[80] = "\0";
+    char *bptr=buf2;
+    
+    sscanf(bptr, "%d*%s", &num, tmpname);
+    if (tmpname[0] == '\0')
+      return FALSE;
+    if (num < 1)
+      num=0;
+
+    while (*bptr != '*')
+      bptr++;
+    
+    bptr++;
+
+    if(num)
+      strcpy(buf2, bptr);
+    else 
+      return FALSE;
+
+    if((rc=dbquery(FALSE, &res, "sneezy", "stockBroker(2)", "select ticker, price from stockinfo where upper('%s')=ticker", buf2))){
+      if(rc==-1)
+	vlogf(LOG_BUG, "Database error in stockBroker");
+      return FALSE;
+    }
+    
+    if(!(row=mysql_fetch_row(res))){
+      return FALSE;
+    }
+    
+    // row[0] ticker
+    // row[1] price
+    // num amount to buy
+
+    if(ch->getMoney() < ((float)num*atof(row[1]))){
+      sprintf(buf, "%s, You can't afford that.", fname(ch->name).c_str());
+      myself->doTell(buf);
+      return TRUE;
+    }
+    
+    ch->addToMoney(-((float)num * atof(row[1])), GOLD_GAMBLE);
+    ch->addToMoney(-((float)num * atof(row[1]) * 0.10), GOLD_GAMBLE);
+
+    if((rc=dbquery(FALSE, &res, "sneezy", "stockBroker(2)", "select 1 from stockowners where owner='%s' and ticker='%s'", ch->getName(), row[0]))){
+      if(rc==-1 || !mysql_fetch_row(res)){
+	dbquery(TRUE, &res, "sneezy", "stockBroker(3)", "insert into stockowners values ('%s', '%s', 0)", ch->getName(), row[0]);
+      }
+    }
+    
+    dbquery(TRUE, &res, "sneezy", "stockBroker(4)", "update stockowners set shares=shares+%i where owner='%s' and ticker='%s'", num, ch->getName(), row[0]);
+
+    sprintf(buf, "%s, Ok, you just purchased %i shares of %s, for a price of %f, plus my 10%% commission of %f.",
+	    fname(ch->name).c_str(), num, row[0], (float)num * atof(row[1]),
+	    (float)num * atof(row[1]) * 0.10);
+    myself->doTell(buf);
+
+    return TRUE;
+  } else if(cmd == CMD_SELL){
+    char tmpname[80] = "\0";
+    char *bptr=buf2;
+    
+    sscanf(bptr, "%d*%s", &num, tmpname);
+    if (tmpname[0] == '\0')
+      return FALSE;
+    if (num < 1)
+      num=0;
+
+    while (*bptr != '*')
+      bptr++;
+    
+    bptr++;
+
+    if(num)
+      strcpy(buf2, bptr);
+    else 
+      return FALSE;
+
+    if((rc=dbquery(FALSE, &res, "sneezy", "stockBroker(2)", "select i.ticker, i.price, o.shares from stockinfo i, stockowners o where o.owner='%s' and i.ticker='%s' and i.ticker=o.ticker", ch->getName(), buf2))){
+      if(rc==-1)
+	vlogf(LOG_BUG, "Database error in stockBroker");
+      return FALSE;
+    }
+    
+    if(!(row=mysql_fetch_row(res))){
+      return FALSE;
+    }
+    
+    if(atoi(row[2]) < num){
+      sprintf(buf, "%s, You don't own enough shares of that stock.",
+	      fname(ch->name).c_str());
+      myself->doTell(buf);
+      return TRUE;
+    }
+
+    ch->addToMoney(((float)num * atof(row[1])), GOLD_GAMBLE);
+    ch->addToMoney(-((float)num * atof(row[1]) * 0.10), GOLD_GAMBLE);
+    
+    dbquery(FALSE, &res, "sneezy", "stockBroker(6)", "update stockowners set shares=shares-%i where owner='%s' and ticker='%s'",
+	    num, ch->getName(), row[0]);
+
+    sprintf(buf, "%s, Ok, you just sold %i shares of %s, for a price of %f, minus my 10%% commission of %f.",
+	    fname(ch->name).c_str(), num, row[0], (float)num * atof(row[1]),
+	    (float)num * atof(row[1]) * 0.10);
+    myself->doTell(buf);
+    
+    
+    
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
 extern int factionRegistrar(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int realEstateAgent(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int grimhavenPosse(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -6864,6 +7067,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Faction Registrar", factionRegistrar},
   {FALSE, "Trainer: defense", CDGenericTrainer},
   {FALSE, "Scared Kid", scaredKid},
+  {FALSE, "stock broker", stockBroker},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

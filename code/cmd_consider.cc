@@ -6,7 +6,10 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <cmath>
+
 #include "stdsneezy.h"
+#include "cmd_trophy.h"
 
 void TBeing::doConsider(const char *argument)
 {
@@ -15,6 +18,9 @@ void TBeing::doConsider(const char *argument)
   int diff=0;
 
   only_argument(argument, namebuf);
+
+  if (is_abbrev(namebuf, "self"))
+    strcpy(namebuf, getNameNOC(this).c_str());
 
   if (!(victim = get_char_room_vis(this, namebuf))) {
     if (!isImmortal() || !hasWizPower(POWER_IMM_EVAL)) {
@@ -35,11 +41,10 @@ void TBeing::doConsider(const char *argument)
     strcpy(namebuf, victim->getName());
   }
   if (victim == this) {
-    if (!isImmortal()) {
-      sendTo("You consider your equipment...\n\r");
+      sendTo("You consider yourself...\n\r");
       int armor = 1000 - getArmor();
-      sh_int suggest = suggestArmor();
-      diff = (int) (suggest - armor);
+      int suggest = suggestArmor();
+      diff = suggest - armor;
       sendTo("Your equipment would seem %s for your class and level.\n\r",
              (diff >=  210 ? "laughably pathetic" :
              (diff >=  160 ? "horrid" :
@@ -54,11 +59,30 @@ void TBeing::doConsider(const char *argument)
              (diff >= - 80 ? "great" :
              (diff >= -150 ? "fantastic" :
              (diff >= -200 ? "superb" : "incredibly good"))))))))))))));
+
+      int vis=visibility();
+      sendTo("You are %s.\n\r",
+	     (vis >= 50 ? "only a shadow to the eyes of most mortals" :
+	      (vis >= 40 ? "barely visible at all" :
+	       (vis >= 30 ? "very well hidden" :
+		(vis >= 20 ? "well hidden" :
+		 (vis >= 10 ? "fairly well hidden" :
+		  (vis >= 5  ? "slightly hidden" :
+		   (vis >= 0 ? "not especially hidden or visible" :
+		    "as visible as a christmas tree"))))))));
+      
+      int n=noise(this);
+      sendTo("You are %s.\n\r",
+	     (n >= 500 ? "too noisy to sneak up on a deaf man" :
+	      (n >= 300 ? "making more noise than a herd of stampeding elephants" :
+	       (n >= 200  ? "making a lot of noise" :
+		(n >= 100 ? "making some noise" :
+		 (n >= 50 ? "making a little noise" :
+		 (n >= 25 ? "somewhat quiet" :
+		 (n >= 0 ? "quiet" :
+		  (n >= -25 ? "very quiet" :
+		   "walking in silence, like a shadow")))))))));
       return;
-    } else {
-      sendTo("You're funny...  You're a god, what do you need armor for??\n\r");
-      return;
-    }
   }
   if (victim->isPc() && victim->isImmortal()) {
     sendTo("You must sure have a big ego to contemplate fighting gods.\n\r");
@@ -125,6 +149,35 @@ void TBeing::doConsider(const char *argument)
     act("You'll win if $E never hits you.", TRUE, this, 0, tmon, TO_CHAR);
   else
     sendTo("There are better ways to suicide.\n\r");
+
+#ifdef SNEEZY2000
+  MYSQL_ROW row;
+  MYSQL_RES *res;
+  int rc;
+  float count;
+
+  if((rc=dbquery(TRUE, &res, "sneezy", "consider/trophy", "select mobvnum, count from trophy where name='%s' and mobvnum=%i", getName(), tmon->mobVnum()))){
+    if(rc!=1){
+      sendTo("Database error!  Talk to a coder ASAP.\n\r");
+      return;
+    }
+  } else if((row=mysql_fetch_row(res))){
+    count=atof(row[1]);
+    sendTo(COLOR_BASIC, "You will gain %s experience when fighting %s.\n\r", 
+	   describe_trophy_exp(count),
+	    namebuf);
+  } else {
+    sendTo(COLOR_BASIC, "You will gain %s experience when fighting %s.\n\r",
+	   describe_trophy_exp(0.0),
+	   namebuf);
+  }
+
+
+  mysql_free_result(res);
+#endif
+
+
+
 
   if (getDiscipline(DISC_ADVENTURING)) {
     int learn = 0;

@@ -355,10 +355,10 @@ void logPermaDeathDied(TBeing *ch, TBeing *killer)
 {
   MYSQL_RES *res;
 
-  dbquery(&res, "sneezy", "permadeath", "update permadeath set died=1 where name='%s'", ch->name);
+  dbquery(TRUE, &res, "sneezy", "permadeath", "update permadeath set died=1 where name='%s'", ch->name);
 
   if(killer)
-    dbquery(&res, "sneezy", "permadeath", "update permadeath set killer='%s' where name='%s'", killer->getName(), ch->name);
+    dbquery(TRUE, &res, "sneezy", "permadeath", "update permadeath set killer='%s' where name='%s'", killer->getName(), ch->name);
 
   mysql_free_result(res);
 }
@@ -4709,7 +4709,7 @@ static int FRACT(TBeing *ch, TBeing *v)
 
   // modify for trophy now
   if(ch->isPc() && !v->isPc()){
-    if((rc=dbquery(&res, "sneezy", "consider/trophy", "select mobvnum, count from trophy where name='%s' and mobvnum=%i", ch->getName(), v->mobVnum()))){
+    if((rc=dbquery(TRUE, &res, "sneezy", "consider/trophy", "select mobvnum, count from trophy where name='%s' and mobvnum=%i", ch->getName(), v->mobVnum()))){
       if(rc!=1){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return fract;

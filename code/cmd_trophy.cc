@@ -72,7 +72,7 @@ void TBeing::doTrophy(const char *arg)
     summary=1;
   }
 
-  rc=dbquery(&res, "sneezy", "doTrophy", "select mobvnum, count from trophy where name='%s' order by mobvnum", getName());
+  rc=dbquery(TRUE, &res, "sneezy", "doTrophy", "select mobvnum, count from trophy where name='%s' order by mobvnum", getName());
 
   for (zone = 0; zone < zone_table.size(); zone++) {
     zoneData &zd = zone_table[zone];
@@ -183,5 +183,5 @@ void TBeing::doTrophy(const char *arg)
 
 
 void wipeTrophy(const char *name){
-  dbquery(NULL, "sneezy", "wipeTrophy", "delete from trophy where name='%s'", name);
+  dbquery(TRUE, NULL, "sneezy", "wipeTrophy", "delete from trophy where name='%s'", name);
 }

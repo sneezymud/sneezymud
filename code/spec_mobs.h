@@ -3,6 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.8  2001/09/18 22:19:03  peel
+// Added grimhaven stock exchange
+// modified dbquery slightly, to allow specification of escaping or not
+// modified fishtracker topten output slightly
+//
 // Revision 5.7  2001/07/17 03:30:09  peel
 // switched to new hp system
 // also, temp practice adjustment code in, must boot once then remove
@@ -188,7 +193,9 @@ const int SPEC_REAL_ESTATE_AGENT=156;
 const int SPEC_CORONER         =157;
 const int SPEC_FACTON_REGISTRAR=158;
 const int SPEC_TRAINER_DEFENSE=159;
-const int NUM_MOB_SPECIALS     =160;
+const int SPEC_SCARED_KID=160;
+const int SPEC_STOCK_BROKER=161;
+const int NUM_MOB_SPECIALS     =162;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

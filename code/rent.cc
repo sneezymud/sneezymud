@@ -1283,13 +1283,13 @@ void TMonster::saveItems(const char *filepath)
       return;
     }
     
-    if((rc=dbquery(&res, "sneezy", "saveItems", "select * from shopownedaccess where shop_nr=%i", shop_nr))==-1){
+    if((rc=dbquery(TRUE, &res, "sneezy", "saveItems", "select * from shopownedaccess where shop_nr=%i", shop_nr))==-1){
       vlogf(LOG_BUG, "Database error in shop_keeper");
       return;
     }
     if((row=mysql_fetch_row(res))){
       mysql_free_result(res);
-      if((rc=dbquery(&res, "sneezy", "saveItems", "update shopowned set gold=%i where shop_nr=%i", getMoney(), shop_nr))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "saveItems", "update shopowned set gold=%i where shop_nr=%i", getMoney(), shop_nr))){
 	if(rc==-1){
 	  vlogf(LOG_BUG, "Database error in shop_keeper");
 	  return;

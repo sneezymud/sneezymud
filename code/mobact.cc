@@ -3417,7 +3417,7 @@ int TMonster::mobileActivity(int pulse)
 
       if(getMoney()<0){
 
-	if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopowned where shop_nr=%i", shop_nr))){
+	if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopowned where shop_nr=%i", shop_nr))){
 	  if(rc){
 	    vlogf(LOG_BUG, "Database error in shop_keeper");
 	    return FALSE;
@@ -3425,7 +3425,7 @@ int TMonster::mobileActivity(int pulse)
 	}
 	mysql_free_result(res);
 
-	if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopownedaccess where shop_nr=%i", shop_nr))){
+	if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopownedaccess where shop_nr=%i", shop_nr))){
 	  if(rc){
 	    vlogf(LOG_BUG, "Database error in shop_keeper");
 	    return FALSE;

@@ -5144,7 +5144,7 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
     return FALSE;
 
 
-  if((rc=dbquery(&res, "sneezy", "permaDeathMonument", "select name, level, died, killer from permadeath order by level desc limit 10"))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "permaDeathMonument", "select name, level, died, killer from permadeath order by level desc limit 10"))){
     if(rc==-1)
       vlogf(LOG_BUG, "Database error in permaDeathMonument");
     else {

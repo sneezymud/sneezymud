@@ -2104,7 +2104,7 @@ void TPerson::doUsers(const char *argument)
 	MYSQL_RES *res;
 	MYSQL_ROW row;
 	
-	dbquery(&res, "sneezy", "doUser", "select pingtime from pings where host='%s'", d->host);
+	dbquery(TRUE, &res, "sneezy", "doUser", "select pingtime from pings where host='%s'", d->host);
 	if((row=mysql_fetch_row(res))){
 	  sprintf(buf2, "[%s](%s)", (d->host ? d->host : "????"), row[0]);
 	} else {
@@ -2955,13 +2955,13 @@ void TBeing::doWorld()
 	  lag_info.low, norm());
   str += buf;
 
-  dbquery(&res, "sneezy", "doWorld(1)", 
+  dbquery(TRUE, &res, "sneezy", "doWorld(1)", 
 	  "select pingtime from pings where host='%s'", desc->host);
   if((row=mysql_fetch_row(res))){
     sprintf(buf, "%sNetwork Lag: Yours/Avg/High/Low      %s",
 	    blue(), row[0]);
     str += buf;
-    dbquery(&res, "sneezy", "doWorld(2)", 
+    dbquery(TRUE, &res, "sneezy", "doWorld(2)", 
 	    "select avg(pingtime), max(pingtime), min(pingtime) from pings");
     if((row=mysql_fetch_row(res))){
       sprintf(buf, "/%s/%s/%s%s\n\r", row[0], row[1], row[2], norm());

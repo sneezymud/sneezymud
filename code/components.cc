@@ -2047,7 +2047,7 @@ void buildComponentArray()
   MYSQL_RES *res;
   MYSQL_ROW row;
 
-  int retdb = dbquery(&res, "sneezy", "buildComponentArray", "select vnum, val2, val3 from obj where type=%d", mapFileToItemType(ITEM_COMPONENT));
+  int retdb = dbquery(TRUE, &res, "sneezy", "buildComponentArray", "select vnum, val2, val3 from obj where type=%d", mapFileToItemType(ITEM_COMPONENT));
   if (retdb) {
     vlogf(LOG_BUG, "Terminal database error (buildComponentArray)!  ret=%d", retdb);
     exit(0);

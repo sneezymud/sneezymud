@@ -736,7 +736,7 @@ bool bootHome(int plan_i, int plot_start, int plot_end,
   MYSQL_ROW row2;
 
 
-    if((rc=dbquery(&res2, "sneezy", "bootHome(1)", "select template_start, template_end from homeplans where plan=%i", plan_i))){
+    if((rc=dbquery(TRUE, &res2, "sneezy", "bootHome(1)", "select template_start, template_end from homeplans where plan=%i", plan_i))){
       if(rc==-1)
 	vlogf(LOG_BUG, "Database error in bootHome");
       return FALSE;
@@ -850,7 +850,7 @@ void bootHomes(void)
   MYSQL_RES *res;
   MYSQL_ROW row;
 
-  if((rc=dbquery(&res, "sneezy", "bootHomes(1)", "select plan, plot_start, plot_end, keynum, flip, rotate from homeplots where homeowner is not null"))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "bootHomes(1)", "select plan, plot_start, plot_end, keynum, flip, rotate from homeplots where homeowner is not null"))){
     if(rc==-1)
       vlogf(LOG_BUG, "Database error in bootHomes");
     return;
@@ -1753,7 +1753,7 @@ TObj *read_object(int nr, readFileTypeT type)
     return NULL;
   }
 
-  if((rc=dbquery(&res, "sneezy", "read_object(1)", "select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "read_object(1)", "select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt))){
     if(rc==-1)
       vlogf(LOG_BUG, "Database error in read_object");
     return NULL;
@@ -3230,7 +3230,7 @@ extern void cleanUpMail();
 // -1=db error (malformed query, db down, etc)
 //  0=no error
 //  1=query successful, but it was a "select" and no results were returned
-int dbquery(MYSQL_RES **res, const char *dbname, const char *msg, const char *query,...)
+int dbquery(bool escape, MYSQL_RES **res, const char *dbname, const char *msg, const char *query,...)
 {
   char buf[MAX_STRING_LENGTH+MAX_STRING_LENGTH];
   char buf2[MAX_STRING_LENGTH+MAX_STRING_LENGTH];
@@ -3245,37 +3245,41 @@ int dbquery(MYSQL_RES **res, const char *dbname, const char *msg, const char *qu
   va_start(ap, query);
   vsprintf(buf, query, ap);
   va_end(ap);
-  
-  // try and process the query string a little bit, to find single quotes
-  // this is really messy.  too messy.
-  while(buf[ptr]){
-    if(buf[ptr]=='\''){
-      if(onstring){
-	if(buf[ptr+1]==',' || buf[ptr+1]=='\0' || buf[ptr+1]==' ')
-	  onstring=0;
-	else
-	  buf2[ptr2++]='\'';
-      } else {
-	if(buf[ptr-1]=='=' || !strncmp(&buf[ptr-5], "like", 4) || 
-	   (buf[ptr-1]==' ' && buf[ptr-2]==',') || buf[ptr-1]=='(')
-	  onstring=1;
-	else {
-	  // serious klugery
-	  // found a stray ', so assume we screwed up, backtrack and fix it
-	  tmp=ptr2;
-	  while(buf2[--ptr2]!='\'');
-	  tmpc=buf2[++ptr2];
-	  buf2[ptr2]='\'';
-	  while(++ptr2 && ptr2<tmp)
-	    buf2[ptr2]^=tmpc^=buf2[ptr2]^=tmpc;
-	  vlogf(LOG_BUG, "dbquery: Found stray ' in query parsing, cross your fingers");
+
+  if(escape){
+    // try and process the query string a little bit, to find single quotes
+    // this is really messy.  too messy.
+    while(buf[ptr]){
+      if(buf[ptr]=='\''){
+	if(onstring){
+	  if(buf[ptr+1]==',' || buf[ptr+1]=='\0' || buf[ptr+1]==' ')
+	    onstring=0;
+	  else
+	    buf2[ptr2++]='\'';
+	} else {
+	  if(buf[ptr-1]=='=' || !strncmp(&buf[ptr-5], "like", 4) || 
+	     (buf[ptr-1]==' ' && buf[ptr-2]==',') || buf[ptr-1]=='(')
+	    onstring=1;
+	  else {
+	    // serious klugery
+	    // found a stray ', so assume we screwed up, backtrack and fix it
+	    tmp=ptr2;
+	    while(buf2[--ptr2]!='\'');
+	    tmpc=buf2[++ptr2];
+	    buf2[ptr2]='\'';
+	    while(++ptr2 && ptr2<tmp)
+	      buf2[ptr2]^=tmpc^=buf2[ptr2]^=tmpc;
+	    vlogf(LOG_BUG, "dbquery: Found stray ' in query parsing, cross your fingers");
+	  }
 	}
       }
+      
+      buf2[ptr2++]=buf[ptr++];
     }
-
-    buf2[ptr2++]=buf[ptr++];
+    buf2[ptr2]='\0';
+  } else {
+    strcpy(buf2, buf);
   }
-  buf2[ptr2]='\0';
 
   if(!strcmp(dbname, "sneezy")){
     if(!sneezydb){
@@ -3340,7 +3344,7 @@ void saveGovMoney(const char *what, int talens){
   MYSQL_RES *res;
   int rc;
 
-  if((rc=dbquery(&res, "sneezy", "saveGovMoney", "update govmoney set talens=talens+%i where type='%s'", talens, what))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "saveGovMoney", "update govmoney set talens=talens+%i where type='%s'", talens, what))){
     if(rc){
       vlogf(LOG_BUG, "Database error in saveGovMoney");
       return;
@@ -3354,7 +3358,7 @@ int getGovMoney(int talens){
   MYSQL_ROW row;
   int rc, amount=talens, transaction=0;
   
-  if((rc=dbquery(&res1, "sneezy", "getGovMoney", "select type, talens from govmoney where talens>0"))){
+  if((rc=dbquery(TRUE, &res1, "sneezy", "getGovMoney", "select type, talens from govmoney where talens>0"))){
     if(rc){
       vlogf(LOG_BUG, "Database error in getGovMoney");
       return 0;
@@ -3368,7 +3372,7 @@ int getGovMoney(int talens){
       transaction=amount;
     }
 
-    if((rc=dbquery(&res2, "sneezy", "getGovMoney", "update govmoney set talens=talens-%i where type='%s'", transaction, row[0]))){
+    if((rc=dbquery(TRUE, &res2, "sneezy", "getGovMoney", "update govmoney set talens=talens-%i where type='%s'", transaction, row[0]))){
       if(rc){
 	vlogf(LOG_BUG, "Database error in getGovMoney");
 	return 0;
@@ -3412,7 +3416,7 @@ void countMobWealth(){
     }
   }
 
-  if((rc=dbquery(&res, "sneezy", "saveGovMoney", "replace govmoney values ('mob wealth', %i)", wealth))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "saveGovMoney", "replace govmoney values ('mob wealth', %i)", wealth))){
     if(rc){
       vlogf(LOG_BUG, "Database error in saveGovMoney");
       return;
@@ -3420,7 +3424,7 @@ void countMobWealth(){
   }
   mysql_free_result(res);
 
-  if((rc=dbquery(&res, "sneezy", "saveGovMoney", "replace govmoney values ('shop wealth', %i)", shopwealth))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "saveGovMoney", "replace govmoney values ('shop wealth', %i)", shopwealth))){
     if(rc){
       vlogf(LOG_BUG, "Database error in saveGovMoney");
       return;
@@ -3437,7 +3441,7 @@ void bootGovMoney(){
   int mobLoadWealth, mobWealth;
   int shopLoadWealth, shopWealth;
 
-  if((rc=dbquery(&res, "sneezy", "bootGovMoney", "select talens from govmoney where type='mob load wealth' and 1=1"))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "bootGovMoney", "select talens from govmoney where type='mob load wealth' and 1=1"))){
     if(rc){
       vlogf(LOG_BUG, "Database error in saveGovMoney");
       return;
@@ -3447,7 +3451,7 @@ void bootGovMoney(){
   mobLoadWealth=atoi(row[0]);
 
 
-  if((rc=dbquery(&res, "sneezy", "bootGovMoney", "select talens from govmoney where type='mob wealth' and 1=1"))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "bootGovMoney", "select talens from govmoney where type='mob wealth' and 1=1"))){
     if(rc){
       vlogf(LOG_BUG, "Database error in saveGovMoney");
       return;
@@ -3460,7 +3464,7 @@ void bootGovMoney(){
   saveGovMoney("mob debt wealth", mobLoadWealth-mobWealth);
 
 
-  if((rc=dbquery(&res, "sneezy", "bootGovMoney", "update govmoney set talens=0 where type='mob load wealth' and 1=1"))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "bootGovMoney", "update govmoney set talens=0 where type='mob load wealth' and 1=1"))){
     if(rc){
       vlogf(LOG_BUG, "Database error in saveGovMoney");
       return;
@@ -3468,7 +3472,7 @@ void bootGovMoney(){
   }
 
 
-  if((rc=dbquery(&res, "sneezy", "bootGovMoney", "select talens from govmoney where type='shop load wealth' and 1=1"))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "bootGovMoney", "select talens from govmoney where type='shop load wealth' and 1=1"))){
     if(rc){
       vlogf(LOG_BUG, "Database error in saveGovMoney");
       return;
@@ -3478,7 +3482,7 @@ void bootGovMoney(){
   shopLoadWealth=atoi(row[0]);
 
 
-  if((rc=dbquery(&res, "sneezy", "bootGovMoney", "select talens from govmoney where type='shop wealth' and 1=1"))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "bootGovMoney", "select talens from govmoney where type='shop wealth' and 1=1"))){
     if(rc){
       vlogf(LOG_BUG, "Database error in saveGovMoney");
       return;
@@ -3491,7 +3495,7 @@ void bootGovMoney(){
   saveGovMoney("shop debt wealth", shopLoadWealth-shopWealth);
 
 
-  if((rc=dbquery(&res, "sneezy", "bootGovMoney", "update govmoney set talens=0 where type='shop load wealth' and 1=1"))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "bootGovMoney", "update govmoney set talens=0 where type='shop load wealth' and 1=1"))){
     if(rc){
       vlogf(LOG_BUG, "Database error in saveGovMoney");
       return;

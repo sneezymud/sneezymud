@@ -137,7 +137,7 @@ void update_trophy(const char *name, int vnum, double add){
 
   if(vnum==-1 || vnum==0 || !name){ return; }
   
-  if((rc=dbquery(&res, "sneezy", "update_trophy(1)", "insert ignore into trophy values ('%s', %i, 0)", name, vnum))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "update_trophy(1)", "insert ignore into trophy values ('%s', %i, 0)", name, vnum))){
     if(rc==-1){
       vlogf(LOG_BUG, "Database error in update_trophy");
     }
@@ -145,7 +145,7 @@ void update_trophy(const char *name, int vnum, double add){
   mysql_free_result(res);
 
   sprintf(buf, "update trophy set count=count+%f where name='%s' and mobvnum=%i", add, name, vnum);
-  if((rc=dbquery(&res, "sneezy", "update_trophy(2)", buf))){
+  if((rc=dbquery(TRUE, &res, "sneezy", "update_trophy(2)", buf))){
     if(rc==-1)
       vlogf(LOG_BUG, "Database error in update_trophy");
   }

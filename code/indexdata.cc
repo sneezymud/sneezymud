@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: indexdata.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -147,6 +139,11 @@ objIndexData & objIndexData::operator= (const objIndexData &a)
   itemtype = a.itemtype;
   value = a.value;
 
+  int i;
+  for(i=0;i<MAX_OBJ_AFFECT;++i){
+    affected[i]=a.affected[i];
+  }
+
   return *this;
 }
 
@@ -163,6 +160,11 @@ objIndexData::objIndexData(const objIndexData &a) :
     ex_description = new extraDescription(*a.ex_description);
   else
     ex_description = NULL;
+
+  int i;
+  for(i=0;i<MAX_OBJ_AFFECT;++i){
+    affected[i]=a.affected[i];
+  }
 }
 
 objIndexData::~objIndexData()
@@ -174,6 +176,7 @@ objIndexData::~objIndexData()
   }
 }
 
+#if !USE_SQL
 // generate index table for object
 void generate_obj_index()
 {
@@ -231,13 +234,140 @@ void generate_obj_index()
         tmpi->ex_description = new_descr;
       }
     } else {
-      vlogf(0, "generate indices (last bc: %d)", bc);
+      vlogf(LOG_BUG, "generate indices (last bc: %d)", bc);
       exit(0);
     }
   }
 
   return;
 }
+#else
+// generate index table for object
+void generate_obj_index()
+{
+  objIndexData *tmpi = NULL;
+  MYSQL_RES *res, *extra_res, *affect_res;
+  MYSQL_ROW row, extra_row, affect_row;
+  MYSQL *extra_db, *affect_db;
+  extraDescription *new_descr;
+  int i=0;
+
+  // to prevent constant resizing (slows boot), declare an appropriate initial
+  // size.  Should be smallest power of 2 that will hold everything
+  obj_index.reserve(8192);
+
+  /****** extra ******/
+  extra_db=mysql_init(NULL);
+  if(!mysql_real_connect(extra_db, NULL, "sneezy", NULL, 
+	  (gamePort!=PROD_GAMEPORT ? "sneezybeta" : "sneezy"), 0, NULL, 0)){
+    vlogf(LOG_BUG, "Could not connect (1) to database 'sneezy'.");
+    exit(0);
+  }
+
+  if(mysql_query(extra_db, "select vnum, name, description from objextra order by vnum")){
+    vlogf(LOG_BUG, "Database query failed: %s\n", mysql_error(extra_db));
+    exit(0);
+  }
+  extra_res=mysql_use_result(extra_db);
+  extra_row=mysql_fetch_row(extra_res);
+
+  /****** affect ******/
+  affect_db=mysql_init(NULL);
+  if(!mysql_real_connect(affect_db, NULL, "sneezy", NULL, 
+	  (gamePort!=PROD_GAMEPORT ? "sneezybeta" : "sneezy"), 0, NULL, 0)){
+    vlogf(LOG_BUG, "Could not connect (1) to database 'sneezy'.");
+    exit(0);
+  }
+
+  if(mysql_query(affect_db, "select vnum, type, mod1, mod2 from objaffect order by vnum")){
+    vlogf(LOG_BUG, "Database query failed: %s\n", mysql_error(affect_db));
+    exit(0);
+  }
+  affect_res=mysql_use_result(affect_db);
+  affect_row=mysql_fetch_row(affect_res);
+  /********************/
+
+
+  if(dbquery(TRUE, &res, "sneezy", "generate_obj_index", "select vnum, name, short_desc, long_desc, max_exist, spec_proc, weight, max_struct, wear_flag, type, price, action_desc from obj order by vnum")){
+    vlogf(LOG_BUG, "Database error: generate_obj_index");
+    exit(0);
+  }
+
+  while((row=mysql_fetch_row(res))){
+    tmpi = new objIndexData();
+    if (!tmpi) {
+      perror("indexData");
+      exit(0);
+    }
+    
+    tmpi->virt=atoi(row[0]);
+    tmpi->name=mud_str_dup(row[1]);
+    tmpi->short_desc=mud_str_dup(row[2]);
+    tmpi->long_desc=mud_str_dup(row[3]);
+    tmpi->max_exist=atoi(row[4]);
+
+    // use 327 so we don't go over 32765 in calculation
+    if (tmpi->max_exist < 327) {
+      tmpi->max_exist *= (sh_int) (stats.max_exist * 100);
+      tmpi->max_exist /= 100;
+    }
+    if (tmpi->max_exist)
+      tmpi->max_exist = max(tmpi->max_exist, (short int) (gamePort == BETA_GAMEPORT ? 9999 : 1));
+    
+
+    tmpi->spec=atoi(row[5]);
+    tmpi->weight=atof(row[6]);
+    tmpi->max_struct=atoi(row[7]);
+    tmpi->where_worn=atoi(row[8]);
+    tmpi->itemtype=atoi(row[9]);
+    tmpi->value=atoi(row[10]);
+    if(strcmp(row[11], "")) tmpi->description=mud_str_dup(row[11]);
+    else tmpi->description=NULL;
+
+    while(extra_row && atoi(extra_row[0])==tmpi->virt){
+      new_descr = new extraDescription();
+      new_descr->keyword = mud_str_dup(extra_row[1]);
+      new_descr->description = mud_str_dup(extra_row[2]);
+      new_descr->next = tmpi->ex_description;
+      tmpi->ex_description = new_descr;
+
+      extra_row=mysql_fetch_row(extra_res);
+    }
+
+    i=0;
+    while(affect_row && atoi(affect_row[0])==tmpi->virt){
+      tmpi->affected[i].location = mapFileToApply(atoi(affect_row[1]));
+
+      if (tmpi->affected[i].location == APPLY_SPELL)
+	tmpi->affected[i].modifier = mapFileToSpellnum(atoi(affect_row[2]));
+      else
+	tmpi->affected[i].modifier = atoi(affect_row[2]);
+      
+      tmpi->affected[i].modifier2 = atoi(affect_row[3]);
+      tmpi->affected[i].type = TYPE_UNDEFINED;
+      tmpi->affected[i].level = 0;
+      tmpi->affected[i].bitvector = 0;      
+
+      affect_row=mysql_fetch_row(affect_res);
+      i++;
+    }
+
+    obj_index.push_back(*tmpi);
+    delete tmpi;
+  }
+
+  mysql_free_result(res);
+
+  mysql_free_result(extra_res);
+  mysql_close(extra_db);
+  mysql_free_result(affect_res);
+  mysql_close(affect_db);
+
+  return;
+}
+#endif
+
+
 
 // generate index table for monster file 
 void generate_mob_index()
@@ -293,7 +423,7 @@ void generate_mob_index()
       rc = fscanf(mob_f, "%ld %ld %ld %f %c %f\n",
          &spac, &spaf, &fac, &facp, &let, &mult);
       if (rc != 6) {
-        vlogf(9, "Error during mobIndexSetup(1) %d", bc);
+        vlogf(LOG_BUG, "Error during mobIndexSetup(1) %d", bc);
         exit(0);
       }
 
@@ -309,7 +439,7 @@ void generate_mob_index()
       rc = fscanf(mob_f, "%ld %ld %ld %f %f %f+%d \n",
           &Class, &lev, &hitr, &arm, &hp, &daml, &damp);
       if (rc != 7) {
-        vlogf(9, "Error during mobIndexSetup(2) %d (rc=%d)", bc, rc);
+        vlogf(LOG_BUG, "Error during mobIndexSetup(2) %d (rc=%d)", bc, rc);
         exit(0);
       }
 
@@ -323,7 +453,7 @@ void generate_mob_index()
       rc = fscanf(mob_f, "%ld %ld %ld %ld \n",
           &mon, &race, &wgt, &hgt);
       if (rc != 4) {
-        vlogf(9, "Error during mobIndexSetup(3) %d", bc);
+        vlogf(LOG_BUG, "Error during mobIndexSetup(3) %d", bc);
         exit(0);
       }
 
@@ -342,7 +472,7 @@ void generate_mob_index()
       rc = fscanf(mob_f, "%ld %ld %ld %ld \n",
           &mpos, &dpos, &sex, &spec);
       if (rc != 4) {
-        vlogf(9, "Error during mobIndexSetup(4) %d", bc);
+        vlogf(LOG_BUG, "Error during mobIndexSetup(4) %d", bc);
         exit(0);
       }
 
@@ -360,7 +490,7 @@ void generate_mob_index()
       rc = fscanf(mob_f, "%ld %ld %ld %ld \n",
           &mat, &cbs, &vis, &maxe);
       if (rc != 4) {
-        vlogf(9, "Error during mobIndexSetup(5) %d", bc);
+        vlogf(LOG_BUG, "Error during mobIndexSetup(5) %d", bc);
         exit(0);
       }
 
@@ -405,7 +535,7 @@ void generate_mob_index()
 
       // setup for next critter
     if (fgets(buf, sizeof(buf)-1, mob_f) == NULL) {
-      vlogf(9, "Error during mobIndexSetup(6) %d", bc);
+      vlogf(LOG_BUG, "Error during mobIndexSetup(6) %d", bc);
       exit(0);
     }
   }

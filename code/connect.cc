@@ -5905,7 +5905,7 @@ int Descriptor::doAccountStuff(char *arg)
       // remove trophy entries so they do not carry over if the character is recreated
       wipeTrophy(delname);
 
-      //if((rc=dbquery(NULL, "sneezy", "doTrophy", "delete * from trophy where name='%s'", ch->name))==-1) {
+      //if((rc=dbquery(TRUE, NULL, "sneezy", "doTrophy", "delete * from trophy where name='%s'", ch->name))==-1) {
       //vlogf(LOG_BUG, "Database error for trophy character delete");
       //}
     

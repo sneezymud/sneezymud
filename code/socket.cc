@@ -167,6 +167,47 @@ void TSocket::addNewDescriptorsDuringBoot(string tStString)
   }
 }
 
+
+void doStocks(){
+  MYSQL_RES *stockinfo_res;
+  MYSQL_ROW stockinfo_row;
+  int rc;
+  float price, prevprice, volatility, uptrend, downtrend, range;
+
+  if((rc=dbquery(TRUE, &stockinfo_res, "sneezy", "doStocks", "select ticker, price, prevprice, volatility, uptrend, downtrend from stockinfo"))){
+    if(rc==-1)
+      vlogf(LOG_BUG, "Database error in doStocks");
+    return;
+  }
+
+  while((stockinfo_row=mysql_fetch_row(stockinfo_res))){
+    price=atof(stockinfo_row[1]);
+    prevprice=atof(stockinfo_row[2]);
+    volatility=atof(stockinfo_row[3]);
+    uptrend=atof(stockinfo_row[4]);
+    downtrend=atof(stockinfo_row[5]);
+
+    range=(::number(-100000, 100000))/100000.0; // -1 to 1, 5 digit precision
+    range *= volatility;
+
+    if(prevprice<price && range>0){
+      range *= uptrend;
+    } else if(prevprice>price && range<0){
+      range *= downtrend;
+    }
+
+    prevprice=price;
+    price+=range;
+
+    dbquery(TRUE, NULL, "sneezy", "doStocks2", "insert into stockhistory (ticker, price) values ('%s', %f)", stockinfo_row[0], price);
+    dbquery(TRUE, NULL, "sneezy", "doStocks3", "update stockinfo set price=%f, prevprice=%f where ticker='%s'", price, prevprice, stockinfo_row[0]);
+
+    //    vlogf(LOG_PEEL, "%s: %f -> %f (%f)", stockinfo_row[0], prevprice, price, range);
+  }
+
+}
+
+
 int TSocket::gameLoop()
 {
   fd_set input_set, output_set, exc_set;
@@ -349,6 +390,8 @@ int TSocket::gameLoop()
       save_newfactions();
 
       weatherAndTime(1);
+
+      doStocks();
     }
 
     if (!combat)

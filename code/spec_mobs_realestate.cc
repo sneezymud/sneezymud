@@ -19,7 +19,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
     if(!strcmp(buf2, "plan")){
       arg = one_argument(arg, buf2);
       
-      if((rc=dbquery(&res, "sneezy", "realEstateAgent(1)", "select plan, cost, description from homeplans where plan='%s'", buf2))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "realEstateAgent(1)", "select plan, cost, description from homeplans where plan='%s'", buf2))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in realEstateAgent");
 	return FALSE;
@@ -40,7 +40,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
       
       mysql_free_result(res);
     } else if(!*buf2){
-      if((rc=dbquery(&res, "sneezy", "realEstateAgent(1)", "select plottype, plotnum from homeplots where homeowner is null order by plottype, plotnum"))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "realEstateAgent(1)", "select plottype, plotnum from homeplots where homeowner is null order by plottype, plotnum"))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in realEstateAgent");
 	return FALSE;
@@ -63,7 +63,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
       
       mysql_free_result(res);
     } else {
-      if((rc=dbquery(&res, "sneezy", "realEstateAgent(2)", "select plottype, plotnum, (plot_end-plot_start)+1 nrooms, cost, description from homeplots where concat(plottype,plotnum)='%s'", buf2))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "realEstateAgent(2)", "select plottype, plotnum, (plot_end-plot_start)+1 nrooms, cost, description from homeplots where concat(plottype,plotnum)='%s'", buf2))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in realEstateAgent");
 	return FALSE;
@@ -95,7 +95,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
       mysql_free_result(res);
       
       
-      if((rc=dbquery(&res, "sneezy", "realEstateAgent(3)", "select plan from homeplans where plottype='%s'", row[0]))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "realEstateAgent(3)", "select plan from homeplans where plottype='%s'", row[0]))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in realEstateAgent");
 	return TRUE;
@@ -129,7 +129,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
     if(!strcmp(buf2, "key")){
       // buy key <plot>
 
-      if((rc=dbquery(&res, "sneezy", "realEstateAgent", "select count(*) from homeplots where homeowner='%s' and concat(plottype,plotnum)='%s'", ch->getName(), buf))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "realEstateAgent", "select count(*) from homeplots where homeowner='%s' and concat(plottype,plotnum)='%s'", ch->getName(), buf))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in realEstateAgent");
 	return FALSE;
@@ -151,7 +151,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
 
 
       // load and give the key
-      if((rc=dbquery(&res, "sneezy", "realEstateAgent", "select keynum from homeplots where concat(plottype,plotnum)='%s'", buf))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "realEstateAgent", "select keynum from homeplots where concat(plottype,plotnum)='%s'", buf))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in realEstateAgent");
 	return FALSE;
@@ -173,7 +173,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
       mysql_free_result(res);
     } else {
       // check that plot is available
-      if((rc=dbquery(&res, "sneezy", "realEstateAgent", "select count(*) from homeplots plots, homeplans plans where plots.plottype=plans.plottype and concat(plots.plottype, plots.plotnum)='%s' and plans.plan='%s' and plots.homeowner is null", buf2, buf))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "realEstateAgent", "select count(*) from homeplots plots, homeplans plans where plots.plottype=plans.plottype and concat(plots.plottype, plots.plotnum)='%s' and plans.plan='%s' and plots.homeowner is null", buf2, buf))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in realEstateAgent");
 	return FALSE;
@@ -194,14 +194,14 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
       mysql_free_result(res);
       
       // update homeplots
-      if((rc=dbquery(NULL, "sneezy", "realEstateAgent", "update homeplots set homeowner='%s', plan=%s where concat(plottype,plotnum)='%s'", ch->getName(), buf, buf2))){
+      if((rc=dbquery(TRUE, NULL, "sneezy", "realEstateAgent", "update homeplots set homeowner='%s', plan=%s where concat(plottype,plotnum)='%s'", ch->getName(), buf, buf2))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in realEstateAgent");
 	return FALSE;
       }
       
       // load and give the key
-      if((rc=dbquery(&res, "sneezy", "realEstateAgent", "select keynum from homeplots where concat(plottype,plotnum)='%s'", buf2))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "realEstateAgent", "select keynum from homeplots where concat(plottype,plotnum)='%s'", buf2))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in realEstateAgent");
 	return FALSE;
@@ -225,7 +225,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
       act("$n gives you $p.", FALSE, myself, obj, ch, TO_VICT);
       
       int plot_start=0, plot_end=0, plan_i=0, keynum=0, flip, rotate;      
-      if((rc=dbquery(&res, "sneezy", "bootHomes(1)", "select plan, plot_start, plot_end, keynum, flip, rotate from homeplots where concat(plottype,plotnum)='%s'", buf2))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "bootHomes(1)", "select plan, plot_start, plot_end, keynum, flip, rotate from homeplots where concat(plottype,plotnum)='%s'", buf2))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in realEstateAgent");
 	return TRUE;

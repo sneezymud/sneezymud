@@ -1071,7 +1071,7 @@ void TPerson::doLow(const char *arg)
     MYSQL_RES *res;
     MYSQL_ROW row;
 
-    if((rc=dbquery(&res, "sneezy", "low statbonus", "select type, count(*), max(mod1), min(mod1), avg(mod1), sum(mod1) from objaffect group by type"))){
+    if((rc=dbquery(TRUE, &res, "sneezy", "low statbonus", "select type, count(*), max(mod1), min(mod1), avg(mod1), sum(mod1) from objaffect group by type"))){
       if(rc==-1){
 	vlogf(LOG_BUG, "Database error in doLow");
 	return;

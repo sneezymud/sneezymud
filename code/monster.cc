@@ -381,13 +381,13 @@ int TMonster::calculateGoldFromConstant()
       return FALSE;
     }
     
-    if((rc=dbquery(&res, "sneezy", "calculateGoldFromQuery", "select * from shopownedaccess where shop_nr=%i", shop_nr))==-1){
+    if((rc=dbquery(TRUE, &res, "sneezy", "calculateGoldFromQuery", "select * from shopownedaccess where shop_nr=%i", shop_nr))==-1){
       vlogf(LOG_BUG, "Database error in shop_keeper");
       return FALSE;
     }
     if((row=mysql_fetch_row(res))){
       mysql_free_result(res);
-      if((rc=dbquery(&res, "sneezy", "CalculateGoldFromQuery", "select gold from shopowned where shop_nr=%i", shop_nr))){
+      if((rc=dbquery(TRUE, &res, "sneezy", "CalculateGoldFromQuery", "select gold from shopowned where shop_nr=%i", shop_nr))){
 	if(rc==-1){
 	  vlogf(LOG_BUG, "Database error in shop_keeper");
 	  return FALSE;

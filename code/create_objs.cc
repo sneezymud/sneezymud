@@ -271,7 +271,7 @@ void ObjLoad(TBeing *ch, int vnum)
   MYSQL_ROW row;
   MYSQL_RES *res;
 
-  if((rc=dbquery(&res, "immortal", "ObjLoad(1)", "select type, name, short_desc, long_desc, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist, action_desc from obj where vnum=%i and owner='%s'", vnum, ch->name))){
+  if((rc=dbquery(TRUE, &res, "immortal", "ObjLoad(1)", "select type, name, short_desc, long_desc, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist, action_desc from obj where vnum=%i and owner='%s'", vnum, ch->name))){
     if(rc==1)
       ch->sendTo("Object not found\n\r");
     else if(rc==-1)
@@ -314,7 +314,7 @@ void ObjLoad(TBeing *ch, int vnum)
   mysql_free_result(res);
 
 
-  if((dbquery(&res, "immortal", "ObjLoad(2)", "select name, description from objextra where vnum=%i and owner='%s'", vnum, ch->name)==-1)){
+  if((dbquery(TRUE, &res, "immortal", "ObjLoad(2)", "select name, description from objextra where vnum=%i and owner='%s'", vnum, ch->name)==-1)){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
@@ -332,7 +332,7 @@ void ObjLoad(TBeing *ch, int vnum)
   i=0;
 
 
-  if((dbquery(&res, "immortal", "ObjLoad(3)", "select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum, ch->name)==-1)){
+  if((dbquery(TRUE, &res, "immortal", "ObjLoad(3)", "select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum, ch->name)==-1)){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
@@ -418,7 +418,7 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
   int tmp1, tmp2, tmp3, tmp4;
   o->getFourValues(&tmp1, &tmp2, &tmp3, &tmp4);
 
-  if(dbquery(NULL, "immortal", "ObjSave(1)", "replace obj set vnum=%i, name='%s', short_desc='%s', long_desc='%s', type=%i, action_flag=%i, wear_flag=%i, val0=%i, val1=%i, val2=%i, val3=%i, weight=%f, price=%i, can_be_seen=%i, spec_proc=%i, max_exist=%i, cur_struct=%i, max_struct=%i, decay=%i, volume=%i, material=%i, owner='%s', action_desc='%s'", 
+  if(dbquery(TRUE, NULL, "immortal", "ObjSave(1)", "replace obj set vnum=%i, name='%s', short_desc='%s', long_desc='%s', type=%i, action_flag=%i, wear_flag=%i, val0=%i, val1=%i, val2=%i, val3=%i, weight=%f, price=%i, can_be_seen=%i, spec_proc=%i, max_exist=%i, cur_struct=%i, max_struct=%i, decay=%i, volume=%i, material=%i, owner='%s', action_desc='%s'", 
 	  vnum, o->name, o->shortDescr, o->getDescr(),o->itemType(), 
 	  o->getObjStat(), o->obj_flags.wear_flags, tmp1, tmp2, tmp3, tmp4, 
 	  o->getWeight(), o->obj_flags.cost, o->canBeSeen, o->spec, 
@@ -430,7 +430,7 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
     return;
   }
 
-  if(dbquery(NULL, "immortal", "ObjSave(2)", "delete from objextra where vnum=%i and owner='%s'", vnum, ch->name)){
+  if(dbquery(TRUE, NULL, "immortal", "ObjSave(2)", "delete from objextra where vnum=%i and owner='%s'", vnum, ch->name)){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
@@ -448,19 +448,19 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
       }
       temp[j] = '\0';
 
-      if(dbquery(NULL, "immortal", "ObjSave(3)", "replace objextra set name='%s', description='%s', owner='%s', vnum=%i", exdes->keyword, temp, ch->name, vnum)){
+      if(dbquery(TRUE, NULL, "immortal", "ObjSave(3)", "replace objextra set name='%s', description='%s', owner='%s', vnum=%i", exdes->keyword, temp, ch->name, vnum)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return;
       }           
     } else {
-      if(dbquery(NULL, "immortal", "ObjSave(4)", "replace objextra set name='%s', description='', owner='%s'", exdes->keyword, ch->name)){
+      if(dbquery(TRUE, NULL, "immortal", "ObjSave(4)", "replace objextra set name='%s', description='', owner='%s'", exdes->keyword, ch->name)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return;
       }
     }
   }
 
-  if(dbquery(NULL, "immortal", "ObjSave(5)", "delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name)){
+  if(dbquery(TRUE, NULL, "immortal", "ObjSave(5)", "delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name)){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
@@ -470,7 +470,7 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
       continue;
     
     if (o->affected[i].location != APPLY_NONE) {
-      if(dbquery(NULL, "immortal", "ObjSave(6)", "replace objaffect set type=%i, mod1=%ld, mod2=%ld, owner='%s', vnum=%i",
+      if(dbquery(TRUE, NULL, "immortal", "ObjSave(6)", "replace objaffect set type=%i, mod1=%ld, mod2=%ld, owner='%s', vnum=%i",
 		 mapApplyToFile(o->affected[i].location), 
 		 applyTypeShouldBeSpellnum(o->affected[i].location) ? mapSpellnumToFile(spellNumT(o->affected[i].modifier)) : o->affected[i].modifier,
 		 o->affected[i].modifier2, ch->name, vnum)){
@@ -554,7 +554,7 @@ static void olist(TPerson *ch)
   MYSQL_RES *res;
   int rc;
 
-  if((rc=dbquery(&res, "immortal", "olist", "select vnum, name from obj where owner='%s' order by vnum", ch->name))){
+  if((rc=dbquery(TRUE, &res, "immortal", "olist", "select vnum, name from obj where owner='%s' order by vnum", ch->name))){
     if(rc==-1)
       ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     else if(rc==1)
@@ -643,15 +643,15 @@ void oremove(TBeing *ch, int vnum)
 {
 #if USE_SQL
   MYSQL_RES *res;
-  if(dbquery(&res, "immortal", "oremove(0)", "select * from obj where vnum=%i and owner='%s'", vnum, ch->name)==1){
+  if(dbquery(TRUE, &res, "immortal", "oremove(0)", "select * from obj where vnum=%i and owner='%s'", vnum, ch->name)==1){
     ch->sendTo("Object not found.\n\r");
     mysql_free_result(res);
     return;
   }
     
-  if(dbquery(NULL, "immortal", "oremove(1)", "delete from obj where vnum=%i and owner='%s'", vnum, ch->name) ||
-     dbquery(NULL, "immortal", "oremove(2)", "delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name) ||
-     dbquery(NULL, "immortal", "oremove(3)", "delete from objextra where vnum=%i and owner='%s'", vnum, ch->name)){
+  if(dbquery(TRUE, NULL, "immortal", "oremove(1)", "delete from obj where vnum=%i and owner='%s'", vnum, ch->name) ||
+     dbquery(TRUE, NULL, "immortal", "oremove(2)", "delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name) ||
+     dbquery(TRUE, NULL, "immortal", "oremove(3)", "delete from objextra where vnum=%i and owner='%s'", vnum, ch->name)){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   } else
@@ -784,7 +784,7 @@ void TPerson::doOEdit(const char *argument)
 	MYSQL_ROW row;
 	int rc;
 
-	if((rc=dbquery(&res, "immortal", "oed load", "select vnum, name from obj where owner='%s'", getName()))){
+	if((rc=dbquery(TRUE, &res, "immortal", "oed load", "select vnum, name from obj where owner='%s'", getName()))){
 	  if(rc==-1)
 	    vlogf(LOG_BUG, "Database error in oed load");
 	  return;
