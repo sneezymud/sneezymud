@@ -88,11 +88,11 @@ sstring TBeing::blahblah(const sstring &arg) const
       continue;
 
     // find punctuation at the end of the word and remove
-    for(loc=args[i].length()-1;loc>=0;--loc){
+    for(loc=args[i].length()-1;loc>0;--loc){
       if(isalpha(args[i][loc]) || args[i][loc]=='>')
 	break;
-      args[i].erase(loc, 1);
     }
+    args[i].erase(loc, args[i].length()-loc);
 
     // make sure we have something left to play with
     if(args[i].length()<2)
@@ -149,11 +149,11 @@ sstring TBeing::garble(const sstring &arg, int chance) const
       continue;
 
     // find punctuation at the end of the word and remove
-    for(loc=args[i].length()-1;loc>=0;--loc){
+    for(loc=args[i].length()-1;loc>0;--loc){
       if(isalpha(args[i][loc]) || args[i][loc]=='>')
 	break;
-      args[i].erase(loc, 1);
     }
+    args[i].erase(loc, args[i].length()-loc);
 
     // make sure we have something left to play with
     if(args[i].length()<2)
