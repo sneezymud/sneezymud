@@ -599,6 +599,7 @@ enum spellNumT {
      AFFECT_WARY,
      AFFECT_DEFECTED,
      AFFECT_OFFER,
+  AFFECT_OBJECT_USED,
      LAST_ODDBALL_AFFECT
 };
 const spellNumT MIN_SPELL = spellNumT(TYPE_UNDEFINED+1);

@@ -912,6 +912,8 @@ class TBeing : public TThing {
     void affectChange(unsigned long, silentTypeT);
     void affectRemove(affectedData *, silentTypeT = SILENT_NO);
     void affectFrom(spellNumT);
+    void addObjUsed(TObj *, int);
+    bool checkObjUsed(TObj *);
     void transformLimbsBack(const char *, wearSlotT, bool);
     bool hasDisease(diseaseTypeT) const;
     void diseaseFrom(diseaseTypeT);

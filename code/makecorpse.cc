@@ -826,6 +826,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case AFFECT_WARY:
       case AFFECT_DEFECTED:
       case AFFECT_OFFER:
+      case AFFECT_OBJECT_USED:
       case LAST_ODDBALL_AFFECT:
       case SKILL_ALCOHOLISM:
       case SKILL_FISHING:

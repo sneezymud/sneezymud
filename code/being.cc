@@ -1455,3 +1455,32 @@ int TBeing::chiMe(TBeing *tLunatic)
 
   return true;
 }
+
+void TBeing::addObjUsed(TObj *obj, int duration) {
+  
+  affectedData aff;
+
+  aff.type = AFFECT_OBJECT_USED;
+  aff.duration = duration;
+  aff.modifier = obj->number;
+
+  affectTo(&aff);
+
+}
+
+bool TBeing::checkObjUsed(TObj *obj) {
+
+  affectedData *hjp;
+
+  if (!affected)
+    return FALSE;
+
+  for (hjp = affected; hjp; hjp = hjp->next) {
+    if (hjp->type == AFFECT_OBJECT_USED) {
+      if (hjp->modifier == obj->number)
+        return TRUE;
+    }
+  }
+  return FALSE;
+
+}

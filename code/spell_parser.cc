@@ -2470,6 +2470,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case AFFECT_WARY:
     case AFFECT_DEFECTED:
     case AFFECT_OFFER:
+    case AFFECT_OBJECT_USED:
     case LAST_ODDBALL_AFFECT:
     case SKILL_ALCOHOLISM:
     case SKILL_FISHING:

@@ -331,5 +331,5 @@ void TBeing::doScore()
     sendTo("You are in wimpy mode, and will flee at %d hit points.\n\r", wimpy);
 
   describeLimbDamage(this);
-  sendTo(describeAffects(this, SHOW_ME).c_str());
+  sendTo(COLOR_BASIC, describeAffects(this, SHOW_ME).c_str());
 }

@@ -611,13 +611,14 @@ void TBeing::statBeing(TBeing *k)
   char buf3[256];
   TBeing *x1;
   TFaction *f = NULL;
-  const TMonster *km = dynamic_cast<const TMonster *>(k);
+   const TMonster *km = dynamic_cast<const TMonster *>(k);
   char *birth, *logon;
   char birth_buf[40], logon_buf[40];
   resp *respy;
   followData *fol;
   charList *list;
   struct time_info_data playing_time;
+  int objused;
   int i;
 
   if (!limitPowerCheck(CMD_MEDIT, k->number)) {
@@ -1697,6 +1698,15 @@ void TBeing::statBeing(TBeing *k)
 	sprintf(buf + strlen(buf), "Received offer to join %s (%d).\n\r",f->getName(), f->ID);
 	sprintf(buf + strlen(buf), "     Expires in %6d updates.\n\r", aff->duration);
 	break;
+	
+      case AFFECT_OBJECT_USED:
+        objused = aff->modifier;
+
+	sprintf(buf + strlen(buf), "Used magical object: %s\n\r", obj_index[objused].short_desc);
+        sprintf(buf + strlen(buf), "     Expires in %6d updates.\n\r", aff->duration);
+        break;
+
+
 	
 		
 

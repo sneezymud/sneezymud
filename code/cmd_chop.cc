@@ -2,18 +2,10 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_chop.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+// chop.cc
 //
 //////////////////////////////////////////////////////////////////////////
 
-
-// chop.cc
 
 #include "stdsneezy.h"
 #include "combat.h"
@@ -142,9 +134,15 @@ static int chopHit(TBeing *c, TBeing *v, int score)
 
   item = dynamic_cast<TObj *>(c->equipment[c->getPrimaryHand()]);
   if (item)
-    if (item->isSpiked())
+    if (item->isSpiked() || item->isObjStat(ITEM_SPIKED)) {
+
+      act("The spikes on your $o sink into $N.", FALSE, c, item, v, TO_CHAR);
+      act("The spikes on $n's $o sink into $N.", FALSE, c, item, v, TO_NOTVICT);
+      act("The spikes on $n's $o sink into you.", FALSE, c, item, v, TO_VICT);
+
       if (c->reconcileDamage(v, dam*0.15, TYPE_STAB) == -1)
 	return DELETE_VICT;
+    }
 
   if (c->reconcileDamage(v, dam, SKILL_CHOP) == -1)
     return DELETE_VICT;
@@ -156,7 +154,7 @@ static int chop(TBeing *c, TBeing *v)
 {
   int rc;
   int percent;
-  int i,level;
+  int i;//level;
   const int CHOP_MOVE = 9;
 
   if (c->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
@@ -194,8 +192,8 @@ v->getName(), v->riding->getName());
     return FALSE;
   }
 
-  if (v->isFlying()) {
-    c->sendTo("You can't chop at them while they are flying!\n\r");
+  if (v->isFlying() && !c->isFlying()) {
+    c->sendTo("You can't chop at them while they are flying unless you are flying as well!\n\r");
     return FALSE;
   }
   if (c->isSwimming()) {
@@ -208,7 +206,7 @@ v->getName(), v->riding->getName());
     return FALSE;
   }
   percent = 0;
-  level = c->getSkillLevel(SKILL_CHOP);
+  //  level = c->getSkillLevel(SKILL_CHOP);
   int bKnown = c->getSkillValue(SKILL_CHOP);
 
   if (!c->isImmortal())
@@ -251,13 +249,13 @@ int TBeing::doChop(const char *arg, TBeing *vict)
       }
     }
   }
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
   rc = chop(this, victim);
   if (rc)
-    addSkillLag(SKILL_CHOP);
+    addSkillLag(SKILL_CHOP, rc);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;

@@ -1743,11 +1743,11 @@ int pager(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *ob2)
       ch->sendTo("You must have it equipped to use it!\n\r");
     else if (job->isOn) {
       act("$n discretely turns off $s $o.", TRUE, ch, o, 0, TO_ROOM);
-      ch->sendTo("You turn off your %s, trying to be very discrete about it.\n\r", fname(o->getName()).c_str());
+      ch->sendTo("You turn off your $o, trying to be very discrete about it.\n\r", fname(o->getName()).c_str());
       job->isOn = FALSE;
     } else {
       act("$n turns on $s $o, causing it to beep obnoxiously.", FALSE, ch, o, 0, TO_ROOM);
-      ch->sendTo("You turn on your %s, producing a series of annoying beeps.\n\r", fname(o->getName()).c_str());
+      ch->sendTo("You turn on your $o, producing a series of annoying beeps.\n\r", fname(o->getName()).c_str());
       job->isOn = TRUE;
     }
     return TRUE;
@@ -4903,7 +4903,10 @@ int berserkerWeap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 int travelGear(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
   // this is a custom proc for the Wanderlust/Cloak of the Traveler combo - Dash
-
+  // i really like this proc :) 
+  // ok here is what it does - the procs only work when the player has BOTH objects - the hammer and the cloak
+  // the hammer restores moves fairly rapidly, when ever the player is low
+  // the cloak projects a force shield around the wearer whenever it is hit, shield lasts for 2 rounds then goes away again
 
   TBeing *ch;
   TObj *cloak;
@@ -5287,6 +5290,83 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
   return TRUE;
 }
 
+// Dash stuff - dec 2001
+
+int force(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+
+  TBeing *ch;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
+    char buf[256];
+    one_argument(arg, buf);
+    if(!strcmp(buf, "force")) {
+      if(ch->checkObjUsed(o)) {
+        act("You cannot use $p's powers again this soon.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return FALSE;
+      }
+
+      ch->addObjUsed(o, UPDATES_PER_MUDHOUR * 24);
+
+      act("$n holds $p aloft, shouting a <p>word of power<1>.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("<c>The air around <1>$n<c> seems to waver and suddenly solidifies, expanding in a wave of force!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+
+
+      act("You hold $p aloft, shouting the word '<p>force<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("<c>The air around you seems to waver and suddenly solidifies, expanding in a wave of force!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+      TThing *t;
+      TBeing *vict = NULL;
+   
+
+
+
+
+      for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
+	vict = dynamic_cast<TBeing *>(t);
+	if (!vict)
+	  continue;
+	if (vict->fight() != ch)
+	  continue;
+	
+	if (vict->riding) {
+	  act("The wave of force knocks $N from $S mount!",
+	      TRUE,ch,o,vict,TO_CHAR,NULL);
+	  act("The wave of force knocks $N from $S mount!",
+	      TRUE,ch,o,vict,TO_NOTVICT,NULL);
+	  act("<o>The wave of force knocks you from your mount!<1>",
+	      TRUE,ch,o,vict,TO_VICT,NULL);
+	  vict->dismount(POSITION_RESTING);
+
+	}	  
+	act("The wave of force from your $o slams $N into the $g, stunning $M!",
+	    TRUE,ch,o,vict,TO_CHAR,NULL);
+	act("The wave of force from $n's $o slams $N into the $g, stunning $M!",
+	    TRUE,ch,o,vict,TO_NOTVICT,NULL);
+	act("The wave of force from $n's $o slams you into the $g, stunning you!",
+	    TRUE,ch,o,vict,TO_VICT,NULL);
+
+	affectedData aff;
+
+	aff.type = SKILL_DOORBASH;
+	aff.duration = ONE_SECOND;
+	aff.bitvector = AFF_STUNNED;
+	vict->affectTo(&aff, -1);
+	if (vict->fight())
+	  vict->stopFighting();
+      }
+      if (ch->fight())
+	ch->stopFighting();
+      return TRUE;
+    }
+  }
+  return FALSE;
+
+}
+
+
 //MARKER: END OF SPEC PROCS
 
 
@@ -5392,6 +5472,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "fishing boat", fishingBoat},
   {FALSE, "Splintered Club", splinteredClub}, // 90 
   {FALSE, "Suffocation Glove", suffGlove},
+  {FALSE, "Force", force},
   {FALSE, "last proc", bogusObjProc}
 };
 

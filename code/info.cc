@@ -843,6 +843,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
   affectedData *aff, *af2;
   char buf[256];
   string str;
+  int objused;
 
   // limit what others can see.  Magic should reveal truth, but in general
   // keep some stuff concealed
@@ -1419,9 +1420,22 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
 	  sprintf(buf, "You received an offer to join %s. (Good for %s.)\n\r",
 		  f->getName(), describeDuration(this, aff->duration).c_str());
 	} else
-	  sprintf(buf, "Received and offer to join a faction.\n\r");
+	  sprintf(buf, "Received an offer to join a faction.\n\r");
 	str += buf;
 	break;
+      case AFFECT_OBJECT_USED:
+        objused = aff->modifier;
+	if (show) {
+	  sprintf(buf, "Used magical object: %s\n\r", obj_index[objused].short_desc);
+	  str +=buf;
+	  sprintf(buf, "     Object is reusable in %s.\n\r", describeDuration(this, aff->duration).c_str());
+        } else {
+          sprintf(buf, "Used a magical object effect.");
+        }
+	str += buf;
+	break;
+
+
       case AFFECT_COMBAT:
         // no display
         break;
