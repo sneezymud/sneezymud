@@ -157,7 +157,7 @@ bool TSymbol::sellMeCheck(TBeing *ch, TMonster *keeper) const
   }
   
   TShopOwned tso(shop_nr, keeper, ch);
-  int max_num=10;
+  int max_num=50;
 
   if(tso.isOwned())
     max_num=tso.getMaxNum(this);
