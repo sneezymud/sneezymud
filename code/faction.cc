@@ -13,6 +13,7 @@ extern "C" {
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "database.h"
 
 TFactionInfo FactionInfo[MAX_FACTIONS];
 
@@ -2097,7 +2098,7 @@ void TBeing::doFactions(const char *arg)
   factionTypeT which;
   char buf[16000];
   struct stat timestat;
-  char fileBuf[256], timebuf[256];
+  char timebuf[256];
 
   if (!desc)
     return;
@@ -2191,27 +2192,31 @@ void TBeing::doFactions(const char *arg)
     sprintf(buf + strlen(buf), "%-50.50s:        %-20.20s\n\r",
           factionLeaderTitle(which, 3).c_str(), FactionInfo[which].leader[3]);
 
+    char factname[8];
+
     if (which == FACT_BROTHERHOOD)
-      mud_str_copy(fileBuf, FACT_LIST_BROTHER, 256);
+      strncpy(factname, "brother", 8);
     else if (which == FACT_CULT)
-      mud_str_copy(fileBuf, FACT_LIST_CULT, 256);
+      strncpy(factname, "cult", 8);
     else if (which == FACT_SNAKE)
-      mud_str_copy(fileBuf, FACT_LIST_SNAKE, 256);
+      strncpy(factname, "snake", 8);
 
     // reveal membership only to leaders, otherwise someone can cross reference
     if ((getFactionAuthority(which,FACT_LEADER_SLOTS - 1) > 0) ||
         isImmortal()) {
-      if (stat(fileBuf, &timestat)) {
-        vlogf(LOG_BUG,"bad call to list faction function %s", fileBuf);
-        return;
-      }
       mud_str_copy(timebuf, ctime(&(timestat.st_mtime)), 256);
       timebuf[strlen(timebuf) - 1] = '\0';
 
       sprintf(buf + strlen(buf), "\n\rMembership as of last rollcall (%s):\n\r", timebuf);
-      string str;
-      file_to_string(fileBuf, str);
-      strcat(buf, str.c_str());
+      
+      TDatabase db("sneezy");
+      db.query("select name, level from factionmembers where faction='%s'",
+	       factname);
+
+      while(db.fetchRow()){
+	sprintf(buf+strlen(buf), "      %-10.10s    Level: %s\n\r",
+		db.getColumn(0), db.getColumn(1));
+      }
     }
   }
   desc->page_string(buf);

@@ -1072,24 +1072,23 @@ void do_the_player_stuff(const char *name)
       handleCorrupted(name, st.aname);
       return;
     }
-    if (max_level <= MAX_MORT) {
-      if (st.f_type == FACT_NONE) {
-      } else if ((st.f_type == FACT_BROTHERHOOD) && 
-          (fp = fopen(FACT_LIST_BROTHER, "a+")) == NULL) {
-          vlogf(LOG_BUG, "Error updating %s", FACT_LIST_BROTHER);
-      } else if ((st.f_type == FACT_CULT) && 
-                 (fp = fopen(FACT_LIST_CULT, "a+")) == NULL) {
-          vlogf(LOG_BUG, "Error updating %s", FACT_LIST_CULT);
-      } else if ((st.f_type == FACT_SNAKE) && 
-                 (fp = fopen(FACT_LIST_SNAKE, "a+")) == NULL) {
-          vlogf(LOG_BUG, "Error updating %s", FACT_LIST_SNAKE);
-      } else {
-        // I am affiliated and the fp is open ok
-        sprintf(buf, "   %-10.10s    Level: %d\n\r", st.name, max_level);
-        fputs(buf, fp);
-        fclose(fp);
+    if(max_level <= MAX_MORT && st.f_type != FACT_NONE) {
+      char factname[8];
+
+      if(st.f_type == FACT_BROTHERHOOD){
+	strncpy(factname, "brother", 8);
+      } else if (st.f_type == FACT_CULT){
+	strncpy(factname, "cult", 8);
+      } else if (st.f_type == FACT_SNAKE){
+	strncpy(factname, "snake", 8);
+      } else { // jic
+	strncpy(factname, "error", 8);
       }
-    } 
+
+      TDatabase db("sneezy");
+      db.query("insert into factionmembers values ('%s', '%s', %i)",
+	       st.name, factname, max_level);
+    }
 
     // count active
     if ((time(0) - st.last_logon) <= (7 * SECS_PER_REAL_DAY))
@@ -1161,18 +1160,9 @@ void fixup_players(void)
 
   wiz = new wizListInfo();
 
-  if ((fp = fopen(FACT_LIST_BROTHER, "w")) == NULL) {
-    vlogf(LOG_FILE, "Error clearing %s", FACT_LIST_BROTHER);
-  }
-  fclose(fp);
-  if ((fp = fopen(FACT_LIST_CULT, "w")) == NULL) {
-    vlogf(LOG_FILE, "Error clearing %s", FACT_LIST_CULT);
-  }
-  fclose(fp);
-  if ((fp = fopen(FACT_LIST_SNAKE, "w")) == NULL) {
-    vlogf(LOG_FILE, "Error clearing %s", FACT_LIST_SNAKE);
-  }
-  fclose(fp);
+  TDatabase db("sneezy");
+  db.query("truncate factionmembers");
+
  
   dirwalk("player/a", do_the_player_stuff);
   bootPulse(".", false);
