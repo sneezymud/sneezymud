@@ -2112,10 +2112,12 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
       }
     }
 
+#if 0
     tmp = (int)((getHPLevel() + getACLevel() + getDamLevel())/3);
     fixLevels(tmp);
     
     lvl = tmp;
+#endif
 
     setMana(10);
     setMaxMana(10);
