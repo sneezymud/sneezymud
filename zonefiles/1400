@@ -2,6 +2,12 @@
 Batopr - Versilard's Highway~
 1599 25 2 1
 
+O 0 8880 1 1514  board
+O 0 8882 1 1514  desk
+P 1 8881 1 8882 book
+M 0 10550 1 1514 construction worker
+M 0 8876 1 1514 secretary
+
 M 0 1460 1 1460		Logrus Scout
 M 0 1461 1 1464		Highwayman
 M 0 1461 1 1492
