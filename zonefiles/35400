@@ -254,8 +254,8 @@ M 0 35419 1 35472       Frit
 M 0 35420 1 35473       Greta
 M 0 35413 1 35474       Elayda
 M 0 35428 1 35475       the captain of the guard
+? 0 2 0 E
 E 1 35413 4 18            a topaz warhammer [hold-right]
-E 1 35413 4 19            a topaz warhammer [hold-left]
 M 0 35424 1 35493       Father Crin
 M 0 35429 1 35498       the jailor
 G 1 35497 1         a key to the cell
