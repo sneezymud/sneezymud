@@ -50,6 +50,7 @@ void relive(TBeing *ch, TBeing *vict)
     int exp_perc=::number(1,25);  // 1-25% random chance  
     exp_perc += ch->getSkillValue(SPELL_RELIVE)/4;  // 1-25% based on skill
     vict->addToExp((corpse->getExpLost() * exp_perc)/100);
+    vict->doSave(SILENT_YES);
 
 
     aff.type = SPELL_RELIVE;
