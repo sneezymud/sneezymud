@@ -188,7 +188,7 @@ LIBSYS := $(sort $(addprefix $(OBJDIR), $(LIBSYS)))
 LIBGAME=game_blackjack.o  game_crazyeights.o  game_hearts.o	\
 	game_cards.o      game_drawpoker.o    game_poker.o	\
 	game_craps.o      game_gin.o          game_slots.o	\
-	game_hilo.o	  games.o
+	game_hilo.o	  game_baccarat.o     games.o
 
 LIBGAME := $(sort $(addprefix $(OBJDIR), $(LIBGAME)))
 
@@ -6526,6 +6526,56 @@ objs/gaining.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/gaining.o: colorstring.h statistics.h obj_component.h database.h
 objs/gaining.o: /usr/local/include/libpq-fe.h
 objs/gaining.o: /usr/local/include/postgres_ext.h
+objs/game_baccarat.o: stdsneezy.h /usr/include/g++/cstdio
+objs/game_baccarat.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/game_baccarat.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
+objs/game_baccarat.o: /usr/include/stdlib.h /usr/include/g++/ctime
+objs/game_baccarat.o: /usr/include/time.h /usr/include/sys/_posix.h
+objs/game_baccarat.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
+objs/game_baccarat.o: /usr/include/machine/types.h
+objs/game_baccarat.o: /usr/include/machine/endian.h /usr/include/g++/cctype
+objs/game_baccarat.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/game_baccarat.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/game_baccarat.o: /usr/include/g++/cstring /usr/include/string.h
+objs/game_baccarat.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_baccarat.o: /usr/include/errno.h /usr/include/g++/string
+objs/game_baccarat.o: /usr/include/g++/std/bastring.h
+objs/game_baccarat.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/game_baccarat.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/game_baccarat.o: /usr/include/g++/stl_config.h
+objs/game_baccarat.o: /usr/include/g++/stl_alloc.h
+objs/game_baccarat.o: /usr/include/g++/iostream.h
+objs/game_baccarat.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
+objs/game_baccarat.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/game_baccarat.o: /usr/include/g++/stl_relops.h
+objs/game_baccarat.o: /usr/include/g++/stl_iterator.h
+objs/game_baccarat.o: /usr/include/g++/std/bastring.cc
+objs/game_baccarat.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
+objs/game_baccarat.o: /usr/include/g++/stl_pair.h
+objs/game_baccarat.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/game_baccarat.o: /usr/include/machine/limits.h
+objs/game_baccarat.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/game_baccarat.o: /usr/include/g++/new /usr/include/g++/exception
+objs/game_baccarat.o: /usr/include/g++/stl_construct.h
+objs/game_baccarat.o: /usr/include/g++/stl_uninitialized.h
+objs/game_baccarat.o: /usr/include/g++/stl_vector.h
+objs/game_baccarat.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/game_baccarat.o: /usr/include/g++/stl_tree.h
+objs/game_baccarat.o: /usr/include/g++/stl_function.h
+objs/game_baccarat.o: /usr/include/g++/stl_map.h
+objs/game_baccarat.o: /usr/include/g++/stl_multimap.h
+objs/game_baccarat.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/game_baccarat.o: low.h enum.h spells.h structs.h parse.h immunity.h
+objs/game_baccarat.o: discipline.h spell2.h argument.h db.h ansi.h
+objs/game_baccarat.o: cmd_dissect.h client.h response.h faction.h comm.h
+objs/game_baccarat.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/game_baccarat.o: body.h race.h skills.h disease.h trap.h task.h
+objs/game_baccarat.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/game_baccarat.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/game_baccarat.o: person.h monster.h account.h extern.h handler.h
+objs/game_baccarat.o: obj_money.h rent.h spec_mobs.h materials.h
+objs/game_baccarat.o: colorstring.h games.h game_crazyeights.h
+objs/game_baccarat.o: game_drawpoker.h
 objs/game_blackjack.o: stdsneezy.h /usr/include/g++/cstdio
 objs/game_blackjack.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/game_blackjack.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -6896,6 +6946,49 @@ objs/game_hilo.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/game_hilo.o: being.h person.h monster.h account.h extern.h handler.h
 objs/game_hilo.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
 objs/game_hilo.o: games.h game_crazyeights.h game_drawpoker.h
+objs/game_poker.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
+objs/game_poker.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
+objs/game_poker.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/game_poker.o: /usr/include/g++/ctime /usr/include/time.h
+objs/game_poker.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/game_poker.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
+objs/game_poker.o: /usr/include/machine/endian.h /usr/include/g++/cctype
+objs/game_poker.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/game_poker.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/game_poker.o: /usr/include/g++/cstring /usr/include/string.h
+objs/game_poker.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_poker.o: /usr/include/errno.h /usr/include/g++/string
+objs/game_poker.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
+objs/game_poker.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/game_poker.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/game_poker.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/game_poker.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
+objs/game_poker.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/game_poker.o: /usr/include/g++/stl_relops.h
+objs/game_poker.o: /usr/include/g++/stl_iterator.h
+objs/game_poker.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
+objs/game_poker.o: /usr/include/g++/stl_algobase.h
+objs/game_poker.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/game_poker.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/game_poker.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/game_poker.o: /usr/include/g++/new /usr/include/g++/exception
+objs/game_poker.o: /usr/include/g++/stl_construct.h
+objs/game_poker.o: /usr/include/g++/stl_uninitialized.h
+objs/game_poker.o: /usr/include/g++/stl_vector.h
+objs/game_poker.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/game_poker.o: /usr/include/g++/stl_tree.h
+objs/game_poker.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
+objs/game_poker.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
+objs/game_poker.o: /usr/include/g++/sstream low.h enum.h spells.h structs.h
+objs/game_poker.o: parse.h immunity.h discipline.h spell2.h argument.h db.h
+objs/game_poker.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/game_poker.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/game_poker.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
+objs/game_poker.o: create.h thing.h room.h obj.h spec_objs.h connect.h
+objs/game_poker.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/game_poker.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/game_poker.o: materials.h colorstring.h games.h game_crazyeights.h
+objs/game_poker.o: game_drawpoker.h
 objs/game_slots.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/game_slots.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/game_slots.o: /usr/include/g++/cstdlib /usr/include/stdlib.h

@@ -31,6 +31,10 @@ int TBeing::doHit(const sstring &argument, TBeing *vict)
     gBj.Hit(this);
     return FALSE;
   }
+  if (checkBaccarat()){
+    gBaccarat.Hit(this);
+    return FALSE;
+  }
   if (getPosition() <= POSITION_SITTING) {
     sendTo("Try standing up first.\n\r");
     return FALSE;

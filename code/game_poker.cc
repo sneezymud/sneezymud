@@ -390,7 +390,6 @@ int PokerGame::exitGame(const TBeing *ch)
   bet = 0;
   for(int i=0;i<5;++i)
     card[i]=0;
-  win_perc=0;
   setup_deck();
   ch->sendTo("You leave the poker table.\n\r");
   return TRUE;

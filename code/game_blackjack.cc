@@ -205,6 +205,17 @@ void TBeing::doStay()
       return;
     }
     gPoker.stay(this);
+  } else if(checkBaccarat()){
+    if ((inx = gBaccarat.index(this)) < 0){
+      sendTo("You are not sitting at the table yet.\n\r");
+      return;
+    }
+    
+    if(!gBaccarat.check_for_bet()) {
+      sendTo("You are not playing a game.\n\r");
+      return;
+    }
+    gBaccarat.stay(this);    
   } else
     sendTo("So you think you are in a casino?\n\r");
 }

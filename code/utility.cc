@@ -382,6 +382,8 @@ int TMonster::standUp()
       gEights.exitGame(this);
     if (checkDrawPoker())
       gDrawPoker.exitGame(this);
+    if (checkBaccarat())
+      gBaccarat.exitGame(this);
 
     if (riding) {
       dismount(POSITION_STANDING);

@@ -258,7 +258,6 @@ class PokerGame : public CardGame {
   int card[5];
   bool inuse;
   int deck_inx;
-  float win_perc;
   sstring name;
  public:
   bool enter(const TBeing *ch);
@@ -284,11 +283,34 @@ class PokerGame : public CardGame {
 };
 
 
+class BaccaratGame : public CardGame {
+ private:
+  int player[3], dealer[3];
+  bool inuse;
+  int deck_inx;
+  sstring name;
+  int bet_type;
+ public:
+  bool enter(const TBeing *ch);
+  virtual void peek(const TBeing *) const;
+  void Bet(TBeing *ch, const sstring &arg);
+  void baccarat_shuffle(const TBeing *ch);
+  void stay(TBeing *ch);
+  void Hit(TBeing *);
+  int check_for_bet() {
+    return bet;
+  }
+  int exitGame(const TBeing *ch);
+  virtual int index(const TBeing *) const;
+};
+
+
 extern GinGame gGin;
 extern HeartsGame gHearts;
 extern BjGame gBj;
 extern HiLoGame gHiLo;
 extern PokerGame gPoker;
+extern BaccaratGame gBaccarat;
 
 /* craps_options */
 

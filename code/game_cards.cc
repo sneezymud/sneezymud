@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: game_cards.cc,v $
+// Revision 5.5  2003/04/28 17:48:15  peel
+// added baccarat game
+//
 // Revision 5.4  2003/04/28 02:04:39  peel
 // added poker game (video poker)
 //
@@ -205,6 +208,8 @@ void TBeing::doPeek() const
     gDrawPoker.peek(this);
   else if (checkPoker())
     gPoker.peek(this);
+  else if (checkBaccarat())
+    gBaccarat.peek(this);
   else
     sendTo("So you think you are at a card table?\n\r");
 }

@@ -2376,6 +2376,10 @@ static bool sitCasinoEnter(const TBeing *ch)
     if (!gDrawPoker.enter(ch))
       return true;
   }
+  if (ch->checkBaccarat(true)){
+    if (!gBaccarat.enter(ch))
+      return true;
+  }
   if (ch->checkSlots()) {
     if (ch->checkSlotPlayer()) {
       ch->sendTo("Someone is already at this machine.\n\r");
@@ -3562,6 +3566,9 @@ bool TBeing::removeAllCasinoGames() const
     if (gPoker.index(this) >= 0)
       gPoker.exitGame(this);
 
+  if (checkBaccarat())
+    if (gBaccarat.index(this) >= 0)
+      gBaccarat.exitGame(this);
 
   if (gGin.check(this))
     if (gGin.index(this) >= 0)

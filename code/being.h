@@ -1582,6 +1582,7 @@ class TBeing : public TThing {
     bool checkBlackjack(bool = false) const;
     bool checkHiLo(bool = false) const;
     bool checkPoker(bool = false) const;
+    bool checkBaccarat(bool = false) const;
     bool checkSlots() const;
     bool checkSlotPlayer() const;
     bool isSwimming() const;
