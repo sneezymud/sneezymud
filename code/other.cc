@@ -3537,7 +3537,7 @@ void TBeing::doDrag(TBeing *v, dirTypeT tdir)
   int i, heap_top, heap_tot[50], result;
   followData *k, *n;
   char buf[256];
-  int or, oldroom;
+  int oldr, oldroom;
   TRoom *rp;
 
   
@@ -3581,8 +3581,8 @@ void TBeing::doDrag(TBeing *v, dirTypeT tdir)
   sprintf(buf, "$n drags $N %s.", dirs[tdir]);
   act(buf, TRUE, this, NULL, v, TO_ROOM);
   oldroom = v->in_room;
-  or = v->roomp->dir_option[tdir]->to_room;
-  rp = real_roomp(or);
+  oldr = v->roomp->dir_option[tdir]->to_room;
+  rp = real_roomp(oldr);
   --(*v);
   --(*this);
   *rp += *this;
@@ -3678,7 +3678,7 @@ void TBeing::doDrag(TObj *o, dirTypeT tdir)
   int i, heap_top, heap_tot[50], result;
   followData *k, *n;
   char buf[256];
-  int oldroom, or, rc;
+  int oldroom, oldr, rc;
   TRoom *rp;
 
   if(!o) return;
@@ -3718,8 +3718,8 @@ void TBeing::doDrag(TObj *o, dirTypeT tdir)
   sprintf(buf, "$n drags $N %s.", dirs[tdir]);
   act(buf, TRUE, this, NULL, o, TO_ROOM);
   oldroom = o->in_room;
-  or = o->roomp->dir_option[tdir]->to_room;
-  rp = real_roomp(or);
+  oldr = o->roomp->dir_option[tdir]->to_room;
+  rp = real_roomp(oldr);
   --(*o);
   --(*this);
   *rp += *this;
@@ -3727,7 +3727,7 @@ void TBeing::doDrag(TObj *o, dirTypeT tdir)
   act("$n enters the room dragging $N!", TRUE, this, NULL, o, TO_ROOM);
   TPCorpse *tmpcorpse = dynamic_cast<TPCorpse *>(o);
   if (tmpcorpse) {
-    tmpcorpse->setRoomNum(or);
+    tmpcorpse->setRoomNum(oldr);
     tmpcorpse->saveCorpseToFile();
   }
   if (followers) {
@@ -4074,7 +4074,7 @@ void TBeing::doRoll(TBeing *v, dirTypeT tdir)
   int i, heap_top, heap_tot[50], result;
   followData *k, *n;
   char buf[256];
-  int or, oldroom;
+  int oldr, oldroom;
   TRoom *rp;
 
   
@@ -4118,8 +4118,8 @@ void TBeing::doRoll(TBeing *v, dirTypeT tdir)
   sprintf(buf, "$n rolls $N %s.", dirs[tdir]);
   act(buf, TRUE, this, NULL, v, TO_ROOM);
   oldroom = v->in_room;
-  or = v->roomp->dir_option[tdir]->to_room;
-  rp = real_roomp(or);
+  oldr = v->roomp->dir_option[tdir]->to_room;
+  rp = real_roomp(oldr);
   --(*v);
   --(*this);
   *rp += *this;
@@ -4214,7 +4214,7 @@ void TBeing::doRoll(TObj *o, dirTypeT tdir)
   int i, heap_top, heap_tot[50], result;
   followData *k, *n;
   char buf[256];
-  int oldroom, or, rc;
+  int oldroom, oldr, rc;
   TRoom *rp;
 
   if(!o) return;
@@ -4253,8 +4253,8 @@ void TBeing::doRoll(TObj *o, dirTypeT tdir)
   sprintf(buf, "$n rolls $N %s.", dirs[tdir]);
   act(buf, TRUE, this, NULL, o, TO_ROOM);
   oldroom = o->in_room;
-  or = o->roomp->dir_option[tdir]->to_room;
-  rp = real_roomp(or);
+  oldr = o->roomp->dir_option[tdir]->to_room;
+  rp = real_roomp(oldr);
   --(*o);
   --(*this);
   *rp += *this;
@@ -4262,7 +4262,7 @@ void TBeing::doRoll(TObj *o, dirTypeT tdir)
   act("$n enters the room rolling $N!", TRUE, this, NULL, o, TO_ROOM);
   TPCorpse *tmpcorpse = dynamic_cast<TPCorpse *>(o);
   if (tmpcorpse) {
-    tmpcorpse->setRoomNum(or);
+    tmpcorpse->setRoomNum(oldr);
     tmpcorpse->saveCorpseToFile();
   }
   if (followers) {
