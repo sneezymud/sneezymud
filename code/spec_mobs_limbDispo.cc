@@ -6,7 +6,7 @@
 
 const int CART_VNUM = 33313;
 const int CONTENTS_VNUM = 33314;
-const int FEE = 5;
+const int FEE = 1;
 
 int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
 {
@@ -119,25 +119,30 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
     mob->doSay("Whoa, now!  I'll have none of those dodgy goods!");
     return TRUE;
   }
-  
+/*  
   if (ch->getMoney() < FEE) {
     act("$n quickly covers over the cart.", TRUE, mob, NULL, 0, TO_ROOM);
     mob->doSay("If you can't afford my services, then you can carry it to the dump yourself.");
     return TRUE;
   }
-  
-  act("You put $p into $N's cart.", TRUE, ch, mob, bodypart, TO_CHAR);
-  act("$n puts $p into $N's cart.", TRUE, ch, mob, bodypart, TO_ROOM); 
-  sstring stmp = fmt("That'll be %d talens for clearing up your filth.") % FEE;
+*/  
+  act("You put $N into $p's cart.", TRUE, ch, mob, bodypart, TO_CHAR);
+  act("$n puts $N into $p's cart.", TRUE, ch, mob, bodypart, TO_ROOM); 
+  sstring stmp = fmt("There's your %d talen, compliments of our most generous and sanitary King.") % FEE;
   mob->doSay(stmp);
   
-  ch->addToMoney(-FEE, GOLD_SHOP_RESPONSES);
+  ch->addToMoney(FEE, GOLD_SHOP_RESPONSES);
   
-  time_t lt = time(0);
-  sstring buf = fmt("%s deposited by %s at %s") % bodypart->getName()
-    % ch->getName() % asctime(localtime(&lt));
-  autoMail(NULL, "bump", buf.c_str());
-  vlogf(LOG_MAROR, fmt("%s") % buf);
+  sstring partname = bodypart->getName();
+  if (partname.find("diseased") == sstring::npos &&
+      partname.find("corpse of a") == sstring::npos &&
+      partname.find("pile of dust") == sstring::npos ){
+    time_t lt = time(0);
+    sstring buf = fmt("%s deposited by %s at %s") % bodypart->getName()
+      % ch->getName() % asctime(localtime(&lt));
+    autoMail(NULL, "bump", buf.c_str());
+    vlogf(LOG_MAROR, fmt("%s") % buf);
+  }
   
   delete bodypart;
   bodypart=NULL;
@@ -148,7 +153,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
     case 2:
     case 3:
     case 4:
-      resp = "Thanks.";
+      resp = "Thanks for helping to keep Grimhaven clean.";
       break;
     case 5:
       resp = "Trying to hide the evidence, eh?  Don't worry, your secret is safe with me.";
