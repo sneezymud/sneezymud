@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <string.h>
 #include "stdsneezy.h"
+#include "connect.h"
 
 #define WIZ_KEY_FILE "/mud/prod/lib/IPC_Wiznet"
 #define MAIN_PORT 7900
@@ -103,7 +104,7 @@ void recvTextHandler(const char *str)
     och = d->original ? d->original : d->character;
     if (!och)
       continue;
-    if (och->hasWizPower(POWER_WIZNET)) {
+    if (och->hasWizPower(POWER_WIZNET) || !d->isEditing()) {
       och->sendTo(buf);
     } else {
       // do nothing
