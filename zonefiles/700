@@ -2,6 +2,10 @@
 Second Ring of Roads~
 749 30 2 1
 
+O 0 1309 1 711   sign
+O 0 1308 1 709   sign
+
+
 M 0 700 1 700               Large Thief
 Y 0 104 3                     black cloth set
 M 0 700 1 707               Large Thief
@@ -30,5 +34,12 @@ M 0 139 1 714       cyclops
 M 0 139 1 715       cyclops
 M 0 139 1 720       cyclops
 M 0 139 1 722       cyclops
+M 0 139 1 708       cyclops
+M 0 139 1 710       cyclops
+M 0 139 1 714       cyclops
+M 0 139 1 715       cyclops
+M 0 139 1 720       cyclops
+M 0 139 1 722       cyclops
+
 S
 
