@@ -131,7 +131,7 @@ const int WAIT_SEC     = 4;
 const int WAIT_ROUND   = 4;
 
 const unsigned int MAX_STRING_LENGTH   = 32000;
-const int MAX_INPUT_LENGTH    = 160;
+const int MAX_INPUT_LENGTH    = 1024;
 const int MAX_MESSAGES        =  60;
 const int MAX_ITEMS           = 15;
 
