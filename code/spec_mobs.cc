@@ -7781,6 +7781,7 @@ extern int factionRegistrar(TBeing *, cmdTypeT, const char *, TMonster *, TObj *
 extern int grimhavenPosse(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int coroner(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int lotteryRedeemer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *);
 
 
 // Fields: display_under_medit, name_of_special, name_of_function_to_call
@@ -7815,13 +7816,13 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE, "postmaster", postmaster},
   {TRUE, "receptionist", receptionist},
   {FALSE, "rock worm", rock_worm},        
-  {FALSE, "mage guildmaster", MageGuildMaster},
-  {FALSE, "deikhan guildmaster", DeikhanGuildMaster},        // 30 
-  {FALSE, "monk guildmaster", MonkGuildMaster},
-  {FALSE, "warrior guildmaster", WarriorGuildMaster},
-  {FALSE, "thief guildmaster", ThiefGuildMaster},
-  {FALSE, "cleric guildmaster", ClericGuildMaster},
-  {FALSE, "ranger guildmaster", RangerGuildMaster},        // 35 
+  {FALSE, "mage guildmaster", GenericGuildMaster},
+  {FALSE, "deikhan guildmaster", GenericGuildMaster},        // 30 
+  {FALSE, "monk guildmaster", GenericGuildMaster},
+  {FALSE, "warrior guildmaster", GenericGuildMaster},
+  {FALSE, "thief guildmaster", GenericGuildMaster},
+  {FALSE, "cleric guildmaster", GenericGuildMaster},
+  {FALSE, "ranger guildmaster", GenericGuildMaster},        // 35 
   {FALSE, "hobbit emissary", hobbitEmissary},
   {FALSE, "Trainer: alchemy", CDGenericTrainer},
   {FALSE, "Trainer: earth", CDGenericTrainer},
@@ -7929,7 +7930,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE,"Trainer: control", CDGenericTrainer},       // 140 
   {FALSE,"Trainer: ritualism", CDGenericTrainer},
   {FALSE,"Trainer: ranger fight", CDGenericTrainer},
-  {FALSE,"shaman guildmaster", ShamanGuildMaster},
+  {FALSE,"shaman guildmaster", GenericGuildMaster},
   {FALSE,"Trainer: combat", CDGenericTrainer},
   {FALSE,"Trainer: stealth", CDGenericTrainer},     // 145 
   {FALSE,"Trainer: traps", CDGenericTrainer},       

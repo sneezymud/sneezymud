@@ -124,12 +124,12 @@ void TPerson::doSet(const char *argument)
          }
        }
        tper->fixClientPlayerLists(TRUE);
-       tper->advanceLevel(p2ci, NULL);
+       tper->advanceLevel(p2ci);
        tper->fixClientPlayerLists(FALSE);
        tper->setTitle(false);
        tper->setSelectToggles(this, p2ci, SILENT_YES);
      }
-     tper->advanceSelectDisciplines(this, p2ci, (parm - initial), SILENT_YES);
+     tper->advanceSelectDisciplines(p2ci, (parm - initial), SILENT_YES);
      if (parm3) {
      }
 #if 0

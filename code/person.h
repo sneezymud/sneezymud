@@ -70,9 +70,9 @@ class TPerson : public TBeing {
     void setTitle(bool);
     void rentAffectTo(saveAffectedData *);
     void setSelectToggles(TBeing *, classIndT, silentTypeT);
-    void advanceSelectDisciplines(TBeing *, classIndT, int, silentTypeT);
-    void raiseLevel(classIndT, TMonster *);
-    void doLevelSkillsLearn(TBeing *, discNumT, int, int);
+    void advanceSelectDisciplines(classIndT, int, silentTypeT);
+    void raiseLevel(classIndT);
+    void doLevelSkillsLearn(discNumT, int, int);
     void setBaseAge();   // sets new base-age
     void saveRent(objCost *, bool, int);
     void loadRent();
@@ -142,7 +142,7 @@ class TPerson : public TBeing {
     virtual TThing& operator+= (TThing& t);
     virtual void doPowers(const sstring &) const;
     void startLevels();
-    void advanceLevel(classIndT, TMonster *);
+    void advanceLevel(classIndT);
     void doHPGainForLev(classIndT);
 };
 

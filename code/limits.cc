@@ -679,7 +679,7 @@ void TBeing::addPracs(sh_int pracs, classIndT Class)
 /* a 3 wis/int and a 10 wis/int, and therefore people just lowered those  */
 /* all the way to 3, and had 19 or 18 in other stats because of it.       */
 
-void TPerson::advanceLevel(classIndT Class, TMonster *gm)
+void TPerson::advanceLevel(classIndT Class)
 {
   setLevel(Class, getLevel(Class) + 1);
   calcMaxLevel();
@@ -702,16 +702,6 @@ void TPerson::advanceLevel(classIndT Class, TMonster *gm)
     }
 #endif
   }
-
-#if 0
-  sh_int prac = 0;
-
-  prac = calcNewPracs(Class, FALSE);
-  addPracs(prac, Class);
-
-  if (gm)
-    pracPath(gm, Class, (ubyte) prac);
-#endif
 
   doHPGainForLev(Class);
 
@@ -833,7 +823,8 @@ void gain_exp(TBeing *ch, double gain, int dam)
   double newgain = 0;
   double oldcap = 0;
   bool been_here = false;
-
+  TPerson *tp;
+  
   if (!ch->isPc() && ch->isAffected(AFF_CHARM)) {
     // do_nothing so they get no extra exp
     return;
@@ -860,14 +851,14 @@ void gain_exp(TBeing *ch, double gain, int dam)
   gain /= ch->howManyClasses();
   if (ch->isPc()) {
     for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
+      if(!ch->getLevel(Class))
+	continue;
+
       const double peak2 = getExpClassLevel(Class,ch->getLevel(Class) + 2);
       const double peak = getExpClassLevel(Class,ch->getLevel(Class) + 1);
       const double curr = getExpClassLevel(Class,ch->getLevel(Class));
       const double gainmod = ((1.15*ch->getLevel(Class)) );
       
-      if(!ch->getLevel(Class))
-	continue;
-
       // calculate exp gain
       if (!been_here && gain > ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000))+2.0 && dam > 0) {
 	been_here = TRUE; // don't show multiple logs for multiclasses
@@ -890,32 +881,15 @@ void gain_exp(TBeing *ch, double gain, int dam)
       }
       
 
-      // check for level gain
-      if ((ch->getExp() >= peak2) && (ch->GetMaxLevel() < MAX_MORT)) {
-	ch->sendTo(COLOR_BASIC, "<R>You must gain at a guild or your exp will max 1 short of next level.<1>\n\r");
-	ch->setExp(peak2);
-	return;
-      } else if (ch->getExp() >= peak) {
-	// do nothing..this rules! Tell Brutius Hey, I didnt get any exp? 
-      } else if ((ch->getExp() + gain >= peak) &&
-		 (ch->GetMaxLevel() < MAX_MORT)) {
-	ch->sendTo(COLOR_BASIC, "<G>You have gained enough to be a Level %d %s.<1>\n\r", 
-		   ch->getLevel(Class)+1, classNames[Class].capName);
-	ch->sendTo(COLOR_BASIC, "<R>You must gain at a guild or your exp will max 1 short of next level.<1>\n\r");
-	if (ch->getExp() + gain >= peak2) {
-	  ch->setExp(peak2- 1);
-	  return;
-	}
-      }
-      
-      // reset 50th levelers to 1bil exp if their Max Exp is unset (0) : should never happen except for 1time conversion
-      // this also verifies first timers get the practices they deserve - dash oct 2003
+      // reset 50th levelers to 1bil exp if their Max Exp is unset (0)
+      // : should never happen except for 1time conversion this also
+      // verifies first timers get the practices they deserve - dash
+      // oct 2003
       if (ch->getMaxExp() == 0) {
 	vlogf(LOG_DASH, "%s getting exp checked: MaxExp %.2f, Exp %.2f, Current Level Exp %.2f", ch->getMaxExp(), ch->getExp(), getExpClassLevel(Class,50), curr);
 	ch->setExp(min(ch->getExp(), getExpClassLevel(Class,50)));
 	ch->setMaxExp(curr);
       }
-
 
 
       // check for prac gain
@@ -983,29 +957,29 @@ void gain_exp(TBeing *ch, double gain, int dam)
 	  }
 	}
       }
+
+
+      // check for level gain
+      // do this last, so as not to mess up predefined values
+      if ((ch->getExp() >= peak) &&
+	  (ch->GetMaxLevel() < MAX_MORT)) {
+	if((tp=dynamic_cast<TPerson *>(ch))){
+	  tp->raiseLevel(Class);
+	  ch->sendTo(COLOR_BASIC, "<W>You advance a level!<1>\n\r");
+
+	  if(ch->hasClass(CLASS_MONK))
+	    ch->remQuestBit(TOG_MONK_PAID_TABUDA);
+	}
+      }
     }
   }
 
   ch->addToExp(gain);
 
-#if 0
-  // we check mortal level here...
-  // an imm can go mort to test xp gain (theoretically)
-  // for level > 50, the peak would have flipped over, which is bad
-  if (ch->isPc() && ch->GetMaxLevel() <= MAX_MORT) {
-    for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
-      double peak2 = getExpClassLevel(Class,ch->getLevel(Class) + 2);
-      if (ch->getLevel(Class)) {
-	if (ch->getExp() > peak2)
-	  ch->setExp(peak2 - 1);
-      }
-    }
-  }
-#endif
-
   // update max exp
   if(ch->getExp() > ch->getMaxExp())
     ch->setMaxExp(ch->getExp());
+
 }
 
 void TFood::findSomeFood(TFood **last_good, TBaseContainer **last_cont, TBaseContainer *cont) 

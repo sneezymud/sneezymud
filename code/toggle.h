@@ -381,7 +381,9 @@ const int TOG_LYCANTHROPE_YURNO_HEMLOCK        = 274;
 
 const int TOG_BLAHBLAH                         = 275;
 
-const int MAX_TOG_INDEX       = 276;  // move and change
+const int TOG_MONK_PAID_TABUDA                 = 276;
+
+const int MAX_TOG_INDEX       = 277;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 

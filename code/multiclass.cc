@@ -315,28 +315,28 @@ int TBeing::GetTotLevel() const
 void TPerson::startLevels()
 {
   if (hasClass(CLASS_MAGIC_USER))
-    advanceLevel(MAGE_LEVEL_IND, NULL);
+    advanceLevel(MAGE_LEVEL_IND);
 
   if (hasClass(CLASS_CLERIC))
-    advanceLevel(CLERIC_LEVEL_IND, NULL);
+    advanceLevel(CLERIC_LEVEL_IND);
   
   if (hasClass(CLASS_WARRIOR))
-    advanceLevel(WARRIOR_LEVEL_IND, NULL);
+    advanceLevel(WARRIOR_LEVEL_IND);
  
   if (hasClass(CLASS_THIEF))
-    advanceLevel(THIEF_LEVEL_IND, NULL);
+    advanceLevel(THIEF_LEVEL_IND);
    
   if (hasClass(CLASS_RANGER))
-    advanceLevel(RANGER_LEVEL_IND, NULL);
+    advanceLevel(RANGER_LEVEL_IND);
    
   if (hasClass(CLASS_MONK))
-    advanceLevel(MONK_LEVEL_IND, NULL);
+    advanceLevel(MONK_LEVEL_IND);
    
   if (hasClass(CLASS_DEIKHAN))
-    advanceLevel(DEIKHAN_LEVEL_IND, NULL);
+    advanceLevel(DEIKHAN_LEVEL_IND);
    
   if (hasClass(CLASS_SHAMAN))
-    advanceLevel(SHAMAN_LEVEL_IND, NULL);
+    advanceLevel(SHAMAN_LEVEL_IND);
 
   // Partners
   if (!strcmp(name, "Batopr") ||

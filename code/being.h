@@ -1268,7 +1268,7 @@ class TBeing : public TThing {
     bool sectorSafe();
 
     // this can't be const due to checkDoneBasic
-    void pracPath(TMonster *, classIndT, ubyte);
+    void pracPath(TMonster *, classIndT);
 
     void dropLevel(classIndT);
     virtual int trapSleep(int);

@@ -673,7 +673,7 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
   doSave(SILENT_YES);
 }
 
-void TPerson::advanceSelectDisciplines(TBeing *gm, classIndT Class, int numx, silentTypeT silent)
+void TPerson::advanceSelectDisciplines(classIndT Class, int numx, silentTypeT silent)
 {
   int learnAdd = 0;
   int i, count, initial, final;
@@ -696,7 +696,7 @@ void TPerson::advanceSelectDisciplines(TBeing *gm, classIndT Class, int numx, si
           if (!silent) 
             sendTo("You feel your natural wizardry increase.\n\r");
 
-          doLevelSkillsLearn(gm, DISC_WIZARDRY, initial, final);
+          doLevelSkillsLearn(DISC_WIZARDRY, initial, final);
         }
       }
     }
@@ -717,7 +717,7 @@ void TPerson::advanceSelectDisciplines(TBeing *gm, classIndT Class, int numx, si
           if (!silent) 
             sendTo("Your channel to the ancestors grows within you.\n\r");
 
-          doLevelSkillsLearn(gm, DISC_RITUALISM, initial, final);
+          doLevelSkillsLearn(DISC_RITUALISM, initial, final);
         }
       }
     }
@@ -738,7 +738,7 @@ void TPerson::advanceSelectDisciplines(TBeing *gm, classIndT Class, int numx, si
           if (!silent) 
             sendTo("You feel your natural faith increase.\n\r");
 
-          doLevelSkillsLearn(gm, DISC_FAITH, initial, final);
+          doLevelSkillsLearn(DISC_FAITH, initial, final);
         }
       }
     }
@@ -766,7 +766,7 @@ void TPerson::advanceSelectDisciplines(TBeing *gm, classIndT Class, int numx, si
           if (!silent)
             sendTo("You feel that you have learned more about adventuring.\n\r");
 
-          doLevelSkillsLearn(gm, DISC_ADVENTURING, initial, final);
+          doLevelSkillsLearn(DISC_ADVENTURING, initial, final);
         }
       }
     }
@@ -786,120 +786,60 @@ void clearPermaDeathLevel(TBeing *ch){
 }
 
 
-void TPerson::raiseLevel(classIndT Class, TMonster *gm)
+void TPerson::raiseLevel(classIndT Class)
 {
-  char buf[160];
-  int amount, maxhit;
-//  int count, learnAdd = 0;
-//  int initial, final;
+  int maxhit;
 
-  if (getExp() >= getExpClassLevel(Class, getLevel(Class) + 1)) {
-#if FACTIONS_IN_USE
-    if (percLess(1.5 * ((float) getLevel(Class) + 1))) {
-      act("$n scowls at $N and says, \"But I cannot support your actions!\"", 
-            FALSE, gm, 0, this, TO_NOTVICT);
-      act("$n scowls at you and says, \"But I cannot support your actions!\"", 
-            FALSE, gm, 0, this, TO_VICT);
-      sprintf(buf, "%s Come back when you have remained more true to your beliefs...", fname(name).c_str());
-      gm->doTell(buf);
-      return;
-    }
-#endif
+  if (getExp() < getExpClassLevel(Class, getLevel(Class) + 1)){
+    vlogf(LOG_BUG, "raiseLevel() called on %s when exp too low", getName());
+    return;
+  }
 
-    if (Class == MONK_LEVEL_IND && (getClassLevel(CLASS_MONK) >= 5)) {
-      amount = 20 * getClassLevel(CLASS_MONK) * getClassLevel(CLASS_MONK);
-      if ((getMoney() < amount)) {
-        sprintf(buf, "$n says, \"Sorry $N, the High Tabuda demands %d talens before I can teach you.\"", amount);
-        act(buf, FALSE, gm, 0, this, TO_VICT);
-        return;
-      } else {
-        addToMoney(-amount, GOLD_REPAIR);
 
-        sprintf(buf, "$n says, \"$N, the High Tabuda thanks you for your %d talen donation to the kwoon.\"", amount);
-        act(buf, FALSE, gm, 0, this, TO_VICT);
+  // Advance them in a few select disciplines
+  advanceSelectDisciplines(Class, 1, SILENT_NO);
 
-	act("$n says, \"Here, have a fortune cookie.\"",
-	    FALSE, gm, 0, this, TO_VICT);
-	TObj *o=read_object(606, VIRTUAL);
-	*this += *o;
-	act("$n gives you $p.", 0, gm, o, this, TO_VICT);
-      }
-    }
-    act("$n smiles, \"Yes...it is time for you to advance.\"", 
-         FALSE, gm, 0, this, TO_NOTVICT);
-    act("$n rests $s hand on $N's head.", FALSE, gm, 0, this, TO_NOTVICT);
-    act("$n warns, \"Your journeys will be more difficult.\"", 
-         FALSE, gm, 0, this, TO_NOTVICT);
-    act("$n continues, \"I grant thee my blessing.\"", 
-         FALSE, gm, 0, this, TO_NOTVICT);
-    act("$N glows with pride as $n raises $s hand from $S head.", 
-          FALSE, gm, 0, this, TO_NOTVICT);
-    act("$n smiles, \"Yes... It is time for you to advance.\"", 
-          FALSE, gm, 0, this, TO_VICT);
-    act("$n rests $s hand on your head.", FALSE, gm, 0, this, TO_VICT);
-    act("$n warns, \"Your journeys will be more difficult.\"", 
-          FALSE, gm, 0, this, TO_VICT);
-    act("$n continues, \"I grant thee my blessing.\"", 
-          FALSE, gm, 0, this, TO_VICT);
-    act("You glow with pride as $n raises $s hand from your head.", 
-          FALSE, gm, 0, this, TO_VICT);
+  //The fix statement below set the client who window with correct level
+  fixClientPlayerLists(TRUE);
 
-// setting basic before the level is raised
+  maxhit=points.maxHit;
+  advanceLevel(Class);
 
-    int doneBas = checkDoneBasic(this, Class, TRUE, FALSE);
-    if (doneBas == 4) {
-      sprintf(buf, "%s Let me add my further congratulations for finishing basic training.", fname(name).c_str());
-      gm->doTell(buf);
-    }
-         
-// Advance them in a few select disciplines
-    advanceSelectDisciplines(gm, Class, 1, SILENT_NO);
-
-    //The fix statement below set the client who window with correct level
-    fixClientPlayerLists(TRUE);
-
-    maxhit=points.maxHit;
-    advanceLevel(Class, gm);
-
-    fixClientPlayerLists(FALSE);
-    setTitle(false);
-    setSelectToggles((TBeing *) gm, Class, SILENT_NO);
+  fixClientPlayerLists(FALSE);
+  setTitle(false);
     
-    if(hasQuestBit(TOG_PERMA_DEATH_CHAR)){
-      logPermaDeathLevel(this);
+  if(hasQuestBit(TOG_PERMA_DEATH_CHAR)){
+    logPermaDeathLevel(this);
+  } else {
+    clearPermaDeathLevel(this);
+  }
+
+
+  // keep track of how long it took
+  // note, we use "50" instead of a macro due to how the array is declared
+  if (getLevel(Class) -1 < 50) {
+    long mins;
+    struct time_info_data playing_time;
+
+    realTimePassed((time(0) - player.time.logon) +
+		   player.time.played, 0, &playing_time);
+
+    mins = playing_time.minutes + 
+      (playing_time.hours * 60) +
+      (playing_time.day * 24 * 60);
+
+    if (mins < 60 && getLevel(Class) > 10) {
+      // ignore if being quick-leveled by an imm
     } else {
-      clearPermaDeathLevel(this);
+      stats.time_levels[Class][getLevel(Class) -1] += mins;
+      stats.levels[Class][getLevel(Class) -1] += 1;
+      save_game_stats();
     }
-
-
-    // keep track of how long it took
-    // note, we use "50" instead of a macro due to how the array is declared
-    if (getLevel(Class) -1 < 50) {
-      long mins;
-      struct time_info_data playing_time;
-
-      realTimePassed((time(0) - player.time.logon) +
-                                  player.time.played, 0, &playing_time);
-
-      mins = playing_time.minutes + 
-             (playing_time.hours * 60) +
-             (playing_time.day * 24 * 60);
-
-      if (mins < 60 && getLevel(Class) > 10) {
-        // ignore if being quick-leveled by an imm
-      } else {
-        stats.time_levels[Class][getLevel(Class) -1] += mins;
-        stats.levels[Class][getLevel(Class) -1] += 1;
-        save_game_stats();
-      }
-    }
-    doSave(SILENT_YES);
-  } else 
-    act("$n cautions, \"You are not ready to advance, $N.\"", FALSE, gm, 0,
-this, TO_ROOM);
+  }
+  doSave(SILENT_YES);
 }
 
-void TPerson::doLevelSkillsLearn(TBeing *gm, discNumT discipline, int initial, int final)
+void TPerson::doLevelSkillsLearn(discNumT discipline, int initial, int final)
 {
   spellNumT i;
   int value, discLearn = 0;
@@ -916,16 +856,6 @@ void TPerson::doLevelSkillsLearn(TBeing *gm, discNumT discipline, int initial, i
 
     if ( (initial < discArray[i]->start) &&
          (final >= discArray[i]->start)) {
-      if (discArray[i]->toggle && !hasQuestBit(discArray[i]->toggle)) {
-        sprintf(buf,"%s You now have the training to learn %s!",
-        fname(name).c_str(), discArray[i]->name);
-        gm->doTell(buf);
-        sprintf(buf,"%s Alas, I do not have the knowledge to train you in this.", fname(name).c_str());
-        gm->doTell(buf);
-        sprintf(buf,"%s To learn it, you will have to find another teacher.", fname(name).c_str());
-        gm->doTell(buf);
-        continue;
-      }
       if (discArray[i]->startLearnDo > 0) { // learned by doing with a bump
         value = min((int) discArray[i]->startLearnDo, discArray[i]->learn);
         value = max(value, 1);
@@ -1022,31 +952,31 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_AFFLICTIONS, "afflictions", "the Art of Afflictions", DISC_AFFLICTIONS, CLASS_CLERIC},
   {SPEC_TRAINER_CURE, "cures", "the Healing Arts", DISC_CURES, CLASS_CLERIC},
   {SPEC_TRAINER_HAND_OF_GOD, "hand", "the Hand of the Deities", DISC_HAND_OF_GOD, CLASS_CLERIC},
-  {SPEC_TRAINER_RANGER, "ranger", "the Ways of the Ranger", DISC_RANGER, CLASS_RANGER},
+  {SPEC_GM_RANGER, "ranger", "the Ways of the Ranger", DISC_RANGER, CLASS_RANGER},
   {SPEC_TRAINER_LOOTING, "looting", "Looting and Plundering", DISC_LOOTING, CLASS_THIEF},
   {SPEC_TRAINER_MURDER, "murder", "about Deadly Murder", DISC_MURDER, CLASS_THIEF},
   {SPEC_TRAINER_HAND_TO_HAND, "hth", "Hand-to-Hand Combat", DISC_HTH, CLASS_WARRIOR},
   {SPEC_TRAINER_ADVENTURING, "adventuring", "Adventurers' Lore", DISC_ADVENTURING, CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN},
   {SPEC_TRAINER_COMBAT, "combat", "Combat Skills", DISC_COMBAT, CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN},
-  {SPEC_TRAINER_WARRIOR, "warrior", "the Ways of the Warrior", DISC_WARRIOR, CLASS_WARRIOR},
+  {SPEC_GM_WARRIOR, "warrior", "the Ways of the Warrior", DISC_WARRIOR, CLASS_WARRIOR},
   {SPEC_TRAINER_WIZARDRY, "wizardry", "Wizardry", DISC_WIZARDRY, CLASS_MAGIC_USER},
   {SPEC_TRAINER_FAITH, "faith", "Faith", DISC_FAITH, CLASS_CLERIC | CLASS_DEIKHAN},
   {SPEC_TRAINER_SLASH, "slash", "Slash Specialization", DISC_SLASH, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN},
   {SPEC_TRAINER_BLUNT, "blunt", "Blunt Specialization", DISC_BLUNT, CLASS_WARRIOR | CLASS_CLERIC | CLASS_DEIKHAN | CLASS_SHAMAN},
   {SPEC_TRAINER_PIERCE, "pierce", "Pierce Specialization", DISC_PIERCE, CLASS_WARRIOR | CLASS_THIEF | CLASS_MAGIC_USER | CLASS_RANGER | CLASS_SHAMAN},
   {SPEC_TRAINER_RANGED, "ranged", "Ranged Specialization", DISC_RANGED, CLASS_RANGER},
-  {SPEC_TRAINER_DEIKHAN, "deikhan", "the Ways of the Deikhan", DISC_DEIKHAN, CLASS_DEIKHAN},
+  {SPEC_GM_DEIKHAN, "deikhan", "the Ways of the Deikhan", DISC_DEIKHAN, CLASS_DEIKHAN},
   {SPEC_TRAINER_BRAWLING, "brawling", "Brawling Moves", DISC_BRAWLING, CLASS_WARRIOR},
   {SPEC_TRAINER_MEDITATION_MONK, "meditation", "about Meditation", DISC_MEDITATION_MONK, CLASS_MONK},
   {SPEC_TRAINER_SURVIVAL, "survival", "How to Survive", DISC_SURVIVAL, CLASS_RANGER},
   {SPEC_TRAINER_SHAMAN_ARMADILLO, "armadillo", "about the Abilities of the Armadillo", DISC_SHAMAN_ARMADILLO, CLASS_SHAMAN},
   {SPEC_TRAINER_ANIMAL, "animal", "Animal Magic", DISC_ANIMAL, CLASS_RANGER},
   {SPEC_TRAINER_AEGIS, "aegis", "the Aegis of the Deities", DISC_AEGIS, CLASS_CLERIC},
-  {SPEC_TRAINER_SHAMAN, "shaman", "The Ways of the Shaman", DISC_SHAMAN, CLASS_SHAMAN},
-  {SPEC_TRAINER_MAGE, "mage", "the arts of Magic", DISC_MAGE, CLASS_MAGE},
-  {SPEC_TRAINER_MONK, "monk", "the ways of the Monk", DISC_MONK, CLASS_MONK},
-  {SPEC_TRAINER_CLERIC, "cleric", "the Ways of the Cleric", DISC_CLERIC, CLASS_CLERIC},
-  {SPEC_TRAINER_THIEF, "thief", "the Ways of the Thief", DISC_THIEF, CLASS_THIEF},
+  {SPEC_GM_SHAMAN, "shaman", "The Ways of the Shaman", DISC_SHAMAN, CLASS_SHAMAN},
+  {SPEC_GM_MAGE, "mage", "the arts of Magic", DISC_MAGE, CLASS_MAGE},
+  {SPEC_GM_MONK, "monk", "the ways of the Monk", DISC_MONK, CLASS_MONK},
+  {SPEC_GM_CLERIC, "cleric", "the Ways of the Cleric", DISC_CLERIC, CLASS_CLERIC},
+  {SPEC_GM_THIEF, "thief", "the Ways of the Thief", DISC_THIEF, CLASS_THIEF},
   {SPEC_TRAINER_PLANTS, "plants", "about Plants and Herbs", DISC_PLANTS, CLASS_RANGER},
   {SPEC_TRAINER_PHYSICAL, "physical", "Physical Prowess", DISC_PHYSICAL, CLASS_WARRIOR},
   {SPEC_TRAINER_SMYTHE, "smythe", "Smythe Skills", DISC_SMYTHE, CLASS_WARRIOR},
@@ -2015,25 +1945,21 @@ int TBeing::initiateSkillsLearning(discNumT discipline, int initial, int final)
   return TRUE;
 }
 
-static int GenericGuildMaster(TBeing *ch, TMonster *me, cmdTypeT cmd, classIndT cit, ush_int Class)
+
+int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)  
 {
   if (cmd == CMD_GENERIC_PULSE)
     me->aiMaintainCalm();
 
-  if (cmd == CMD_PRACTICE) {
-    act("$n says, \"Sorry, you must visit a trainer to practice something.\"",
-         FALSE, me, 0, ch, TO_VICT);
-    return TRUE;
-  }
+  if(cmd != CMD_PRACTICE && cmd!=CMD_GAIN && cmd!=CMD_SAY && cmd!=CMD_SAY2)
+    return false;
 
-  if (cmd != CMD_GAIN)
-    return FALSE;
+  if(!ch || !me)
+    return false;
 
-  if (ch->isImmortal() || !me)
-    return FALSE;
-
-  if (generic_trainer_stuff(me, ch))
-    return TRUE;
+  classIndT cit=me->bestClass();
+  ush_int Class=me->getClass();
+  sstring argument=arg;
 
   if (!ch->hasClass(Class)) {
     switch (cit) {
@@ -2067,54 +1993,80 @@ static int GenericGuildMaster(TBeing *ch, TMonster *me, cmdTypeT cmd, classIndT 
     }
     return TRUE;
   }
-  if (ch->getLevel(cit) < (me->GetMaxLevel()/2))
-    dynamic_cast<TPerson *>(ch)->raiseLevel(cit, me);
-  else if (ch->getLevel(cit) < MAX_MORT)
+  
+
+  if(cmd==CMD_SAY || cmd==CMD_SAY2){
+    if(argument.lower()=="hello"){
+      me->doSay("Hello, I am your guildmaster.");
+      me->doSay("You can <c>practice<1> with me to learn more about your class discipline.");
+      me->doSay("You can also <c>gain<1> with me to learn more about quests and training.");
+      return TRUE;
+    } else if(argument.lower()=="practice"){
+      cmd=CMD_PRACTICE;
+    } else if(argument.lower()=="gain"){
+      cmd=CMD_GAIN;
+    }
+  }
+
+
+  if(cmd==CMD_PRACTICE || cmd==CMD_GAIN){
+    if (ch->getClassLevel(CLASS_MONK) >= 5 && 
+	!ch->hasQuestBit(TOG_MONK_PAID_TABUDA)) {
+      sstring buf;
+      int amount = 20 * ch->getClassLevel(CLASS_MONK) * ch->getClassLevel(CLASS_MONK);
+      if ((ch->getMoney() < amount)) {
+	ssprintf(buf, "$n says, \"Sorry $N, the High Tabuda demands %d talens before I can teach you.\"", amount);
+	act(buf, FALSE, me, 0, ch, TO_VICT);
+	return TRUE;
+      } else {
+	ch->addToMoney(-amount, GOLD_REPAIR);
+	ch->setQuestBit(TOG_MONK_PAID_TABUDA);
+	
+	ssprintf(buf, "$n says, \"$N, the High Tabuda thanks you for your %d talen donation to the kwoon.\"", amount);
+	act(buf, FALSE, me, 0, ch, TO_VICT);
+	
+	act("$n says, \"Here, have a fortune cookie.\"",
+	    FALSE, me, 0, ch, TO_VICT);
+	TObj *o=read_object(606, VIRTUAL);
+	*ch += *o;
+	act("$n gives you $p.", 0, me, o, ch, TO_VICT);
+	return TRUE;
+      }
+    }
+  }
+
+  
+  if(cmd==CMD_PRACTICE){
+    CDGenericTrainer(ch, cmd, arg, me, NULL);
+    return TRUE;
+  }
+
+  if (cmd != CMD_GAIN)
+    return FALSE;
+
+  if (ch->isImmortal() || !me)
+    return FALSE;
+
+  if (generic_trainer_stuff(me, ch))
+    return TRUE;
+
+
+  if (ch->getLevel(cit) < (me->GetMaxLevel()/2)){
+    TPerson *tp;
+
+    if((tp=dynamic_cast<TPerson *>(ch)))
+      tp->setSelectToggles(me, cit, SILENT_NO);
+
+    me->doSay("Let me give you a little advice...");
+    ch->pracPath(me, cit);
+
+  } else if (ch->getLevel(cit) < MAX_MORT)
     act("$n sighs, \"I cannot teach you, $N.  You MUST find your next guildmaster.\"", FALSE, me, 0, ch, TO_ROOM);
   else
     act("$n beams, \"No one can teach you anymore in this, $N\"",
         FALSE, me, NULL, ch, TO_ROOM);
+
   return TRUE;
-}
-
-int ShamanGuildMaster(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
-{
-  return GenericGuildMaster(ch, me, cmd, SHAMAN_LEVEL_IND, CLASS_SHAMAN);
-}
-
-int MageGuildMaster(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
-{
-  return GenericGuildMaster(ch, me, cmd, MAGE_LEVEL_IND, CLASS_MAGIC_USER);
-}
-
-int DeikhanGuildMaster(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
-{
-  return GenericGuildMaster(ch, me, cmd, DEIKHAN_LEVEL_IND, CLASS_DEIKHAN);
-}
-
-int RangerGuildMaster(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
-{
-  return GenericGuildMaster(ch, me, cmd, RANGER_LEVEL_IND, CLASS_RANGER);
-}
-
-int ClericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
-{
-  return GenericGuildMaster(ch, me, cmd, CLERIC_LEVEL_IND, CLASS_CLERIC);
-}
-
-int ThiefGuildMaster(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
-{
-  return GenericGuildMaster(ch, me, cmd, THIEF_LEVEL_IND, CLASS_THIEF);
-}
-
-int WarriorGuildMaster(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
-{
-  return GenericGuildMaster(ch, me, cmd, WARRIOR_LEVEL_IND, CLASS_WARRIOR);
-}
-
-int MonkGuildMaster(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
-{
-  return GenericGuildMaster(ch, me, cmd, MONK_LEVEL_IND, CLASS_MONK);
 }
 
 TMonster *FindMobInRoomWithProcNum(int room, int num)
@@ -2212,7 +2164,7 @@ devotionLevelT TBeing::getDevotionLevel() const
     return DEV_LEV_MAXED;
 }
 
-void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
+void TBeing::pracPath(TMonster *gm, classIndT Class)
 {
   char buf[256];
   char tmp_buf[40];
@@ -2220,13 +2172,8 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
   int combat = 0, basic = 0;
   bool basicLearn = FALSE, combatMax = FALSE,  combatLearn = FALSE;
 
-  sprintf(buf, "Here are %d %s practice%s.", pracs,
-       sstring(classNames[Class].name).uncap().c_str(), 
-	  (pracs == 1 ? "" : "s"));
-  gm->doSay(buf);
-
   if (!checkDoneBasic(this, Class, FALSE, FALSE)) {
-    sprintf(buf, "Hmmm, looks like you are free to use these practices at any advanced %s trainer.", gm->getProfName());
+    sprintf(buf, "Hmmm, looks like you are free to use your practices at any advanced %s trainer.", gm->getProfName());
     gm->doSay(buf);
     return;
   }
