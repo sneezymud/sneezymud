@@ -259,18 +259,15 @@ bool TBeing::utilityTaskCommand(cmdTypeT cmd)
     case CMD_ATTRIBUTE:
     case CMD_WORLD:
     case CMD_CLS:
-    case CMD_TERMINAL:
     case CMD_PROMPT:
     case CMD_ALIAS:
     case CMD_CLEAR:
-    case CMD_AUTO:
     case CMD_HISTORY:
     case CMD_COLOR:
     case CMD_MOTD:
     case CMD_TITLE:
     case CMD_PRACTICE:
     case CMD_NOSHOUT:
-    case CMD_WIMPY:
     case CMD_DESCRIPTION:
     case CMD_BRIEF:
     case CMD_LIST:  // for list faction

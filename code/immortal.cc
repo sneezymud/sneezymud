@@ -249,69 +249,496 @@ void TBeing::doToggle(const char *)
   sendTo("Dumb monsters cannot toggle!\n\r");
 }
 
-void TPerson::doToggle(const char *arg)
-{
-  if (powerCheck(POWER_TOGGLE))
-    return;
+const char *on_or_off(bool tog){
+  if(tog)
+    return "<G>on <1>";
+  else
+    return "<R>off<1>";
+}
 
-  for (; isspace(*arg); arg++);
+void TPerson::doToggle(const char *arg2)
+{
+  char arg[256];
+
+  for (; isspace(*arg2); arg2++);
+  arg2=one_argument(arg2, arg);
+  for (; isspace(*arg2); arg2++);
+
 
   if (!*arg) {
-    sendTo("Shouting          : %s\n\r", Silence ? "disallowed" : "allowed");
-    sendTo("Clients           : %s\n\r", Clients ? "allowed" : "disallowed");
-    sendTo("PCs w/mob names   : %s\n\r", AllowPcMobs ? "allowed" : "disallowed");
-    sendTo("Sleep             : %s\n\r", Sleep ? "offensive" : "sleep-tag");
-    sendTo("Turbo mode        : %s\n\r", TurboMode ? "on" : "off");
-    sendTo("Wiznet            : %s\n\r", WizBuild ? "builders can hear" : "builders can't hear");
-    sendTo("Wiz-shout         : %s\n\r", WizShout ? "immortals can shout" : "immortals can not shout");
-    sendTo("Wiz-goto          : %s\n\r", WizGoto ? "immortals can goto enabled areas" : "immortals can not goto enabled areas");
-    sendTo("Gravity           : %s\n\r", Gravity ? "on" : "off");
-    sendTo("Wiz-Invis         : %s\n\r", WizInvis ? "on" : "off");
-    sendTo("Nuke Inactive     : %s\n\r", nuke_inactive_mobs ? "True" : "False");
-    sendTo("NewbiePK          : %s\n\r", NewbiePK ? "killable" : "protected");
-    sendTo("Test code #1      : %s\n\r", TestCode1 ? "in-use" : "deactivated");
-    sendTo("Test code #2      : %s\n\r", TestCode2 ? "in-use" : "deactivated");
-    sendTo("Test code #3      : %s\n\r", TestCode3 ? "in-use" : "deactivated");
-    sendTo("Test code #4      : %s\n\r", TestCode4 ? "in-use" : "deactivated");
-    sendTo("Test code #5      : %s\n\r", TestCode5 ? "in-use" : "deactivated");
-    sendTo("Test code #6      : %s\n\r", TestCode6 ? "in-use" : "deactivated");
-    sendTo("Quest code        : %s\n\r", QuestCode ? "active" : "deactivated");
-    sendTo("Quest code 2      : %s\n\r", QuestCode2 ? "active" : "deactivated");
-    sendTo("Time DB Queries   : %s\n\r", timeQueries ? "active" : "deactivated");
+    sendTo(COLOR_BASIC, "\n\r<c>Player Toggles<1>\n\r");
+    sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
+    
+    for (int i = 0;i < MAX_AUTO;i++) {
+      if (!isImmortal() && ((unsigned int) (1<<i) == AUTO_SUCCESS))
+        continue;
+      if (*auto_name[i]) {
+        sendTo(COLOR_BASIC, "%-17s : %s    |    ",
+               (((unsigned int) (1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]),
+               on_or_off(IS_SET(desc->autobits, (unsigned) (1<<i))));
+      }
+      ++i;
+      if (*auto_name[i]) {
+        sendTo(COLOR_BASIC, "%-17s : %s\n\r",
+               (((unsigned int) (1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]),
+               on_or_off(IS_SET(desc->autobits, (unsigned) (1<<i))));
+      } else
+
+	sendTo("\n\r");
+    }
+    
+    if(wimpy)
+      sendTo(COLOR_BASIC, "Wimpy             : <G>%-4i<1>   |    ", wimpy);
+    else
+      sendTo(COLOR_BASIC, "Wimpy             : <R>off <1>   |    ");
+
+    sendTo(COLOR_BASIC, "Newbie Helper     : %s\n\r", on_or_off(isPlayerAction(PLR_NEWBIEHELP)));
+
+    sendTo(COLOR_BASIC, "Anonymous         : %s\n\r", on_or_off(isPlayerAction(PLR_ANONYMOUS)));
+
+    
+    
+
+    sendTo(COLOR_BASIC, "\n\r<c>Terminal Toggles<1>\n\r");
+    sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
+    sendTo(COLOR_BASIC, "Screensize        : <G>%-3i<1>    |    ", desc->screen_size);
+    sendTo(COLOR_BASIC, "Terminal          : <G>%-5s<1>\n\r",
+	   ansi()?"ansi":(vt100()?"vt100":"none"));
+    sendTo(COLOR_BASIC, "Boss Mode         : %s    |    ", on_or_off(IS_SET(desc->account->flags, ACCOUNT_BOSS)));
+    sendTo(COLOR_BASIC, "MSP Sound         : %s\n\r", on_or_off(IS_SET(desc->account->flags, ACCOUNT_MSP)));
+    sendTo(COLOR_BASIC, "Account Terminal  : <G>%-5s<1>\n\r", 
+	   (desc->account->term == TERM_ANSI)?"ansi":
+	   ((desc->account->term == TERM_VT100)?"vt100":"none"));
+    
+
+
+    if (hasWizPower(POWER_TOGGLE)){
+      sendTo(COLOR_BASIC, "\n\r<c>Immortal Toggles<1>\n\r");
+      sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
+
+      sendTo(COLOR_BASIC, "Shouting          : %s    |    ", on_or_off(!Silence));
+      sendTo(COLOR_BASIC, "Clients           : %s\n\r", on_or_off(Clients));
+      sendTo(COLOR_BASIC, "PCs w/mob names   : %s    |    ",on_or_off(AllowPcMobs));
+      sendTo(COLOR_BASIC, "Sleep offensive   : %s\n\r", on_or_off(Sleep));
+      sendTo(COLOR_BASIC, "Turbo mode        : %s    |    ", on_or_off(TurboMode));
+      sendTo(COLOR_BASIC, "Gravity           : %s\n\r", on_or_off(Gravity));
+      sendTo(COLOR_BASIC, "Allow Wiz-Invis   : %s    |    ", on_or_off(WizInvis));
+      sendTo(COLOR_BASIC, "Nuke Inactive     : %s\n\r", on_or_off(nuke_inactive_mobs));
+      sendTo(COLOR_BASIC, "NewbiePK          : %s    |    ", on_or_off(NewbiePK));
+      sendTo(COLOR_BASIC, "Time DB Queries   : %s\n\r",on_or_off(timeQueries));
+      sendTo(COLOR_BASIC, "Twinky Combat     : %s    |    ", on_or_off(Twink));
+      sendTo(COLOR_BASIC, "Lapsos Speech     : %s\n\r",on_or_off(Lapspeak));
+      if(getInvisLevel())
+	sendTo(COLOR_BASIC, "Invisibility      : <G>%-4i<1>\n\r", getInvisLevel());
+      else
+	sendTo(COLOR_BASIC, "Invisibility      : <R>off <1>\n\r");
+
+
+      sendTo(COLOR_BASIC, "\n\r<c>Test Code Toggles<1>\n\r");
+      sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
+
+      sendTo(COLOR_BASIC, "Test code #1      : %s    |    ",on_or_off(TestCode1));
+      sendTo(COLOR_BASIC, "Test code #5      : %s\n\r", on_or_off(TestCode5));
+      sendTo(COLOR_BASIC, "Test code #2      : %s    |    ", on_or_off(TestCode2));
+      sendTo(COLOR_BASIC, "Test code #6      : %s\n\r", on_or_off(TestCode6));
+      sendTo(COLOR_BASIC, "Test code #3      : %s    |    ", on_or_off(TestCode3));
+      sendTo(COLOR_BASIC, "Quest code        : %s\n\r", on_or_off(QuestCode));
+      sendTo(COLOR_BASIC, "Test code #4      : %s    |    ", on_or_off(TestCode4));
+      sendTo(COLOR_BASIC, "Quest code 2      : %s\n\r", on_or_off(QuestCode2));
+    }
     return;
-  } else if (is_abbrev(arg, "silence")) {
+    
+  } else if (is_abbrev(arg, "newbiehelper") ||
+	     is_abbrev(arg, "helper")) {
+    if (isPlayerAction(PLR_NEWBIEHELP)) {
+      remPlayerAction(PLR_NEWBIEHELP);
+      act("You just removed your newbie-helper flag",
+	  FALSE, this, 0, 0, TO_CHAR);
+    } else {
+      addPlayerAction(PLR_NEWBIEHELP);
+      act("You just set your newbie-helper flag.",
+	  FALSE, this, 0, 0, TO_CHAR);
+    }
+  } else if (is_abbrev(arg, "anonymous")){
+    if(GetMaxLevel()<5){
+      sendTo("You must be at least level 5 to go anonymous.\n\r");
+      return;
+    }
+    if (isPlayerAction(PLR_ANONYMOUS)){
+      remPlayerAction(PLR_ANONYMOUS);
+      act("You are no longer anonymous.",
+	  FALSE, this, 0, 0, TO_CHAR);
+    } else {
+      addPlayerAction(PLR_ANONYMOUS);
+      act("You are now anonymous.",
+	  FALSE, this, 0, 0, TO_CHAR);
+    }
+  } else if (is_abbrev(arg, "invisibility")){
+    int level;
+
+    if (!WizInvis && !hasWizPower(POWER_TOGGLE_INVISIBILITY)) {
+      sendTo("The invis command has been disabled due to overuse.\n\r");
+      sendTo("Talk to a more powerful god if you need this power enabled temporarily.\n\r");
+      return;
+    }
+    if (scan_number(arg2, &level)) {
+      if (level < 0)
+	level = 0;
+      else if (level > GetMaxLevel())
+	level = GetMaxLevel();
+      setInvisLevel(level);
+      sendTo("Invis level set to %d.\n\r", level);
+      fixClientPlayerLists(TRUE);
+    } else {
+      if (getInvisLevel() > 0) {
+	setInvisLevel(0);
+	sendTo("You are now totally visible.\n\r");
+	fixClientPlayerLists(FALSE);
+      } else {
+	setInvisLevel(GOD_LEVEL1);
+	sendTo("You are now invisible to all but gods.\n\r");
+	fixClientPlayerLists(TRUE);
+      }
+    }
+  } else if (is_abbrev(arg, "wimpy")) {
+    int hl = hitLimit();
+    int wimplimit = hl / 2 + hl % 2;
+    int num=0;
+    
+    if (is_abbrev(arg2, "max")) {
+      sendTo("Setting Wimpy to Max(%d).\n\r", wimplimit - 1);
+      num = wimplimit - 1;
+    } else if (is_abbrev(arg2, "off") || (num = atoi_safe(arg2)) <= 0) {
+      sendTo("Turning wimpy mode off.\n\r");
+      wimpy = 0;
+      return;
+    }
+    
+    if ((num < 0) || (wimplimit <= num)) {
+      sendTo("Please enter a number between 0-%d.\n\r", wimplimit-1);
+      return;
+    }
+    
+    sendTo("You are now a wimp!!\n\r");
+    sendTo("You will now flee at %d hit points!\n\r", num);
+    wimpy = num;
+  } else if (is_abbrev(arg, "boss")) {
+    if (!IS_SET(desc->account->flags, ACCOUNT_BOSS)) {
+      SET_BIT(desc->account->flags, ACCOUNT_BOSS);
+      sendTo("You are now in boss mode.\n\r");
+    } else {
+      REMOVE_BIT(desc->account->flags, ACCOUNT_BOSS);
+      sendTo("You are no longer in boss mode.\n\r");
+    }
+    desc->saveAccount();
+  } else if (is_abbrev(arg, "msp")) {
+    if (!IS_SET(desc->account->flags, ACCOUNT_MSP)) {
+      SET_BIT(desc->account->flags, ACCOUNT_MSP);
+      sendTo("MUD Sound Protocol enabled.\n\r");
+      // we need to set the default download directory, so do that by doing
+      // a stopsound which will transmit the MSP U= command
+      stopsound();
+    } else {
+      REMOVE_BIT(desc->account->flags, ACCOUNT_MSP);
+      sendTo("MUD Sound Protocol disabled.\n\r");
+    }
+    desc->saveAccount();
+  } else if (is_abbrev(arg, "account")){
+    if (*arg2) {
+      if (is_abbrev(arg2, "ansi")) {
+	desc->account->term = TERM_ANSI;
+	sendTo("Account is now set to ansi.\n\r");
+	desc->saveAccount();
+      } else if (is_abbrev(arg2, "vt100")) {
+	desc->account->term = TERM_VT100;
+	sendTo("Account is now set to vt100.\n\r");
+	desc->saveAccount();
+      } else if (is_abbrev(arg2, "none")) {
+	desc->account->term = TERM_NONE;
+	sendTo("Account is now set to none.\n\r");
+	desc->saveAccount();
+      } else {
+	sendTo("Syntax: tog account <ansi | vt100 | none>\n\r");
+      }
+    }
+  } else if (is_abbrev(arg, "terminal")){
+    if (*arg2){
+      if(is_abbrev(arg2, "ansi")){
+        if (!IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR))
+          SET_BIT(desc->prompt_d.type, PROMPT_VTANSI_BAR);
+        cls();
+        sendTo(VT_MARGSET, 1, (getScreen() - 3));
+        addPlayerAction(PLR_ANSI);
+        if (vt100())
+          remPlayerAction(PLR_VT100);
+        doCls(false);
+        sendTo("Setting term type to Ansi...\n\r");	
+      } else if(is_abbrev(arg2, "vt100")){
+        if (!IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR))
+          SET_BIT(desc->prompt_d.type, PROMPT_VTANSI_BAR);
+        sendTo(VT_MARGSET, 1, (getScreen() - 3));
+        addPlayerAction(PLR_VT100);
+        if (ansi())
+          remPlayerAction(PLR_ANSI);
+
+        doCls(false);
+        sendTo("Setting term type to vt100...\n\r");
+      } else if(is_abbrev(arg2, "none")){
+        cls();
+        fullscreen();
+        if (ansi())
+          remPlayerAction(PLR_ANSI);
+
+        if (vt100())
+          remPlayerAction(PLR_VT100);
+
+        doCls(false);
+        sendTo("Setting term type to NONE...\n\r");
+      }
+    } else {
+      sendTo("Syntax: tog terminal <ansi|vt100|none>\n\r");
+    }
+  } else if (is_abbrev(arg, "screensize")) {
+    if (*arg2) {
+      if (isdigit(*arg2)) {
+	desc->screen_size = min(128, atoi_safe(arg2));
+	doCls(false);
+	sendTo("Your screensize has been set to: %d\n\r", desc->screen_size);
+      } else {
+	sendTo("Your current screensize is set to: %d\n\r", desc->screen_size);
+          sendTo("Screensize needs to be a number from 1-128.\n\r");
+      }
+    } else {
+      sendTo("Your current screensize is set to: %d\n\r", desc->screen_size);
+    }
+  } else if (is_abbrev(arg, "autokill") || is_abbrev(arg, "kill")) {
+    if (IS_SET(desc->autobits, AUTO_KILL)) {
+      sendTo("You will stop attacking stunned creatures.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_KILL);
+    } else {
+      sendTo("You will continue attacking stunned (and no chance to recover) creatures.\n\r");
+      SET_BIT(desc->autobits, AUTO_KILL);
+    }
+  } else if (is_abbrev(arg, "noshout") || is_abbrev(arg, "shout")) {
+    if (IS_SET(desc->autobits, AUTO_NOSHOUT)) {
+      sendTo("You can now hear shouts again.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_NOSHOUT);
+    } else {
+      sendTo("From now on, you won't hear shouts.\n\r");
+      SET_BIT(desc->autobits, AUTO_NOSHOUT);
+    }
+  } else if (is_abbrev(arg, "noharm") || is_abbrev(arg, "harm")) {
+    if (IS_SET(desc->autobits, AUTO_NOHARM) && (GetMaxLevel() >= 5)) {
+      sendTo("You may now attack other players.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_NOHARM);
+    } else if (GetMaxLevel() >= 5) {
+      sendTo("You will no longer INTENTIONALLY attack other players.\n\r");
+      SET_BIT(desc->autobits, AUTO_NOHARM);
+    } else {
+      sendTo("You cannot toggle your nokill flag until level 5.\n\r");
+      return;
+    }
+  } else if (is_abbrev(arg, "nospam") || is_abbrev(arg, "spam")) {
+    if (IS_SET(desc->autobits, AUTO_NOSPAM)) {
+      sendTo("You will now see combat misses and other \"spam\".\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_NOSPAM);
+    } else {
+      sendTo("You will no longer see combat misses and other \"spam\".\n\r");
+      SET_BIT(desc->autobits, AUTO_NOSPAM);
+    }
+  } else if (is_abbrev(arg, "nospells") || is_abbrev(arg, "spells")) {
+    if (IS_SET(desc->autobits, AUTO_NOSPELL)) {
+      sendTo("You will now see all spell messages.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_NOSPELL);
+    } else {
+      if (IS_SET(desc->autobits, AUTO_HALFSPELL)) {
+         sendTo("You can not set no spell messages if you have halfspells set.\n\r");
+      } else {
+        sendTo("You will now only see the first and last spell message.\n\r");
+        SET_BIT(desc->autobits, AUTO_NOSPELL);
+      }
+    }
+  } else if (is_abbrev(arg, "halfspells") || is_abbrev(arg, "halfspells")) {
+    if (IS_SET(desc->autobits, AUTO_HALFSPELL)) {
+      sendTo("You will now see all spell messages.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_HALFSPELL);
+    } else {
+      if (IS_SET(desc->autobits, AUTO_NOSPELL)) {
+        sendTo("You can not set half spell messages if you have nospells set.\n\r");
+      } else {
+        sendTo("You will now only see half the spell messages randomly.\n\r");
+        SET_BIT(desc->autobits, AUTO_HALFSPELL);
+      }
+    }
+  } else if (is_abbrev(arg, "autoeat") || is_abbrev(arg, "eat")) {
+    if (IS_SET(desc->autobits, AUTO_EAT)) {
+      sendTo("You will now have to eat and drink manually.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_EAT);
+    } else {
+      sendTo("You will automatically eat and drink now.\n\r");
+      SET_BIT(desc->autobits, AUTO_EAT);
+    }
+  } else if (is_abbrev(arg, "limbs")) {
+    if (IS_SET(desc->autobits, AUTO_LIMBS)) {
+      sendTo("You will no longer see tank limb status after every fight\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_LIMBS);
+    } else {
+      sendTo("You will now see tank limb status after every fight\n\r");
+      SET_BIT(desc->autobits, AUTO_LIMBS);
+    }
+  } else if (is_abbrev(arg, "money") || is_abbrev(arg, "loot-money")) {
+    if (IS_SET(desc->autobits, AUTO_LOOT_MONEY)) {
+      sendTo("You will no longer get talens from corpses.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_LOOT_MONEY);
+    } else if (IS_SET(desc->autobits, AUTO_LOOT_NOTMONEY)) {
+      sendTo("You are already looting everything from corpses.\n\r");
+    } else {
+      sendTo("You will now get talens from any corpse you slay.\n\r");
+      SET_BIT(desc->autobits, AUTO_LOOT_MONEY);
+    }
+  } else if (is_abbrev(arg, "loot-all") || is_abbrev(arg, "notmoney") || 
+             is_abbrev(arg, "all") ) {
+    if (IS_SET(desc->autobits, AUTO_LOOT_NOTMONEY)) {
+      sendTo("You will no longer get everything from corpses.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_LOOT_NOTMONEY);
+    } else {
+      sendTo("You will now get all from any corpse you slay.\n\r");
+      SET_BIT(desc->autobits, AUTO_LOOT_NOTMONEY);
+    }
+  } else if (is_abbrev(arg, "afk") ) {
+    if (IS_SET(desc->autobits, AUTO_AFK)) {
+      sendTo("You will no longer send afk messages when inactive.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_AFK);
+    } else {
+      sendTo("You will now send an afk message when inactive.\n\r");
+      SET_BIT(desc->autobits, AUTO_AFK);
+    }
+  } else if (is_abbrev(arg, "split") ) {
+    if (IS_SET(desc->autobits, AUTO_SPLIT)) {
+      sendTo("You will no longer split gold automatically.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_SPLIT);
+    } else {
+      sendTo("You will now split gold automatically.\n\r");
+      SET_BIT(desc->autobits, AUTO_SPLIT);
+    }
+  } else if (is_abbrev(arg, "success") && isImmortal() ) {
+    if (IS_SET(desc->autobits, AUTO_SUCCESS)) {
+      sendTo("You will no longer have automatic skill success/failure.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_SUCCESS);
+    } else {
+      sendTo("You will now have automatic skill success/failure.\n\r");
+      SET_BIT(desc->autobits, AUTO_SUCCESS);
+    }
+  } else if (is_abbrev(arg, "pouch") ) {
+    if (IS_SET(desc->autobits, AUTO_POUCH)) {
+      sendTo("You will no longer open moneypouches automatically.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_POUCH);
+    } else {
+      sendTo("You will now open moneypouches automatically.\n\r");
+      SET_BIT(desc->autobits, AUTO_POUCH);
+    }
+  } else if (is_abbrev(arg, "tips")) {
+    if (IS_SET(desc->autobits, AUTO_TIPS)) {
+      if (isImmortal())
+        sendTo("You will now see the basic menus in the editors.\n\r");
+      else
+        sendTo("You will no longer see periodic tips.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_TIPS);
+    } else {
+      if (isImmortal())
+        sendTo("You will now see the advanced menus in the editors.\n\r");
+      else
+        sendTo("You will now see periodic tips.\n\r");
+      SET_BIT(desc->autobits, AUTO_TIPS);
+    }
+  } else if (is_abbrev(arg, "join") ) {
+    if (IS_SET(desc->autobits, AUTO_JOIN)) {
+      sendTo("You can not be admitted to any faction now.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_JOIN);
+    } else {
+      sendTo("You make yourself available for admission to factions.\n\r");
+      SET_BIT(desc->autobits, AUTO_JOIN);
+    }
+  } else if (is_abbrev(arg, "dissect") ) {
+    if (IS_SET(desc->autobits, AUTO_DISSECT)) {
+      sendTo("You will no longer dissect corpses automatically.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_DISSECT);
+    } else {
+      sendTo("You will now dissect corpses for additional booty when appropriate.\n\r");
+      SET_BIT(desc->autobits, AUTO_DISSECT);
+    }
+  } else if (is_abbrev(arg, "engage") ) {
+    if (IS_SET(desc->autobits, AUTO_ENGAGE)) {
+      sendTo("You will now default to fighting back if attacked or if casting.\n\r");
+      sendTo("You are still free to engage rather than fight by using the engage command.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_ENGAGE);
+    } else {
+      if (IS_SET(desc->autobits, AUTO_ENGAGE_ALWAYS)) {
+        sendTo("You can not both auto engage and engage-all.\n\r");
+
+      } else {
+
+        sendTo("You will now engage if you start a fight by casting or praying.\n\r");
+        SET_BIT(desc->autobits, AUTO_ENGAGE);
+      }
+    }
+  } else if (is_abbrev(arg, "engage-all") || is_abbrev(arg, "no-fight") || is_abbrev(arg, "engage-always") ) {
+    if (IS_SET(desc->autobits, AUTO_ENGAGE_ALWAYS)) {
+      sendTo("You will now default to fighting back if attacked and when you cast.\n
+\r");
+      sendTo("You are still free to engage rather than fight by using the engage
+ command.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_ENGAGE_ALWAYS);
+    } else {
+      if (IS_SET(desc->autobits, AUTO_ENGAGE)) {
+        sendTo("You can not both auto engage and engage-all.\n\r");
+      } else {
+        sendTo("You will now default to engaging if attacked and when you cast to start a fight.\n\r");
+        sendTo("You are free to fight rather than engage by using the hit command in battle.\n\r");
+        SET_BIT(desc->autobits, AUTO_ENGAGE_ALWAYS);
+      }
+    }
+  } else if (is_abbrev(arg, "hunt") ) {
+    if (IS_SET(desc->autobits, AUTO_HUNT)) {
+      sendTo("You will no longer head toward things you are hunting.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_HUNT);
+    } else {
+      sendTo("You will now head automatically toward things you are hunting.\n\r");
+      SET_BIT(desc->autobits, AUTO_HUNT);
+    }
+  } else if (is_abbrev(arg, "silence") && hasWizPower(POWER_TOGGLE)) {
     Silence = !Silence;
     sendTo("You have now %s shouting.\n\r", Silence ? "disallowed" : "allowed");
     vlogf(LOG_MISC, "%s has turned player shouting %s.", getName(), Silence ? "off" : "on");
-  } else if (is_abbrev(arg, "gravity")) {
+  } else if (is_abbrev(arg, "gravity") && hasWizPower(POWER_TOGGLE)) {
     Gravity = !Gravity;
     sendTo("You have now turned gravity %s.\n\r", !Gravity ? "off" : "on");
     vlogf(LOG_MISC, "%s has turned gravity %s.", getName(), !Gravity ? "off" : "on");
-  } else if (is_abbrev(arg, "sleep")) {
+  } else if (is_abbrev(arg, "sleep") && hasWizPower(POWER_TOGGLE)) {
     Sleep = !Sleep;
     sendTo("You have now turned offensive sleep %s.\n\r", !Sleep ? "off": "on");
     vlogf(LOG_MISC, "%s has turned offensive sleep %s.", getName(), !Sleep ? "off"   : "on");
-  } else if (is_abbrev(arg, "wiznet")) {
+  } else if (is_abbrev(arg, "wiznet") && hasWizPower(POWER_TOGGLE)) {
     WizBuild = ! WizBuild;
     sendTo("Builders can now %s the wiznet.\n\r", WizBuild ? "hear" : "not hear");
     vlogf(LOG_MISC,"%s has turned wiznet %s for builders.",getName(),WizBuild ? "on" : "off");
-  } else if (is_abbrev(arg, "wizgoto")) {
+  } else if (is_abbrev(arg, "wizgoto") && hasWizPower(POWER_TOGGLE)) {
     WizGoto = ! WizGoto;
     sendTo("Immortals can now %s the enabled zones.\n\r", WizGoto ? "goto" : "not goto");
     vlogf(LOG_MISC,"%s has turned goto %s for immortals.",getName(),WizGoto ? "on" : "off");
-  } else if (is_abbrev(arg, "wizshout")) {
+  } else if (is_abbrev(arg, "wizshout") && hasWizPower(POWER_TOGGLE)) {
     WizShout = ! WizShout;
     sendTo("Immortals can now %s.\n\r", WizShout ? "shout" : "not shout");
     vlogf(LOG_MISC,"%s has turned shout %s for immortals.",getName(),WizShout ? "on" : "off");
-  } else if (is_abbrev(arg, "lapspeak")) {
+  } else if (is_abbrev(arg, "lapspeak") && hasWizPower(POWER_TOGGLE)) {
     Lapspeak = ! Lapspeak;
     sendTo("Lapspeak is now %s.\n\r", Lapspeak ? "on" : "off");
     vlogf(LOG_MISC,"%s has turned Lapspeak %s.",getName(),Lapspeak ? "on" : "off");
-  } else if (is_abbrev(arg, "twink")) {
+  } else if (is_abbrev(arg, "twink") && hasWizPower(POWER_TOGGLE)) {
     Twink = ! Twink;
     sendTo("Twink combat mode is now %s.\n\r", Twink ? "on" : "off");
     vlogf(LOG_MISC,"%s has turned Twink combat mode %s.",getName(),Twink ? "on" : "off");
-  } else if (is_abbrev(arg, "invis")) {
+  } else if (is_abbrev(arg, "wizinvis") && hasWizPower(POWER_TOGGLE)) {
     if (!isImmortal() || !hasWizPower(POWER_TOGGLE_INVISIBILITY)) {
       sendTo("Invisibility use has been restricted due to overuse.\n\r");
       return;
@@ -319,13 +746,13 @@ void TPerson::doToggle(const char *arg)
     WizInvis = ! WizInvis;
     sendTo("Immortals can now %s invisible.\n\r", WizInvis ? "go" : "not go");
     vlogf(LOG_MISC,"%s has turned invisibility %s.",getName(),WizInvis? "on" : "off");
-    } else if (is_abbrev(arg, "newbiePK") || is_abbrev(arg, "newbiepk")) {
+  } else if (is_abbrev(arg, "newbiePK") || is_abbrev(arg, "newbiepk")  && hasWizPower(POWER_TOGGLE)) {
       NewbiePK = ! NewbiePK;
       sendTo("Newbie Pk toggle is now %s.\n\r", NewbiePK ? "in use" : "off");
       vlogf(LOG_MISC,"%s has now %s newbie pk.",getName(),NewbiePK ? "enabled" : "disabled");
       if (NewbiePK)
         vlogf(LOG_MISC,"Newbies can now be killed by anyone.");
-  } else if (is_abbrev(arg, "testcode1")) {
+  } else if (is_abbrev(arg, "testcode1") && hasWizPower(POWER_TOGGLE)) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
     if (strcmp(name, "Batopr")) {
@@ -336,7 +763,7 @@ void TPerson::doToggle(const char *arg)
     TestCode1 = ! TestCode1;
     sendTo("TestCode #1 (Shaman use) is now %s.\n\r", TestCode1 ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s TestCode #1 (shaman use).",getName(),TestCode1 ? "enabled" : "disabled");
-  } else if (is_abbrev(arg, "testcode2")) {
+  } else if (is_abbrev(arg, "testcode2") && hasWizPower(POWER_TOGGLE)) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
     if (strcmp(name, "Batopr")) {
@@ -347,7 +774,7 @@ void TPerson::doToggle(const char *arg)
     TestCode2 = ! TestCode2;
     sendTo("TestCode #2 is now %s.\n\r", TestCode2 ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s TestCode #2.",getName(),TestCode2 ? "enabled" : "disabled");
-  } else if (is_abbrev(arg, "testcode3")) {
+  } else if (is_abbrev(arg, "testcode3") && hasWizPower(POWER_TOGGLE)) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
     if (strcmp(name, "Batopr")) {
@@ -358,7 +785,7 @@ void TPerson::doToggle(const char *arg)
     TestCode3 = ! TestCode3;
     sendTo("TestCode #3 is now %s.\n\r", TestCode3 ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s TestCode #3.",getName(),TestCode3 ? "enabled" : "disabled");
-  } else if (is_abbrev(arg, "testcode4")) {
+  } else if (is_abbrev(arg, "testcode4") && hasWizPower(POWER_TOGGLE)) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
     if (strcmp(name, "Batopr")) {
@@ -369,7 +796,7 @@ void TPerson::doToggle(const char *arg)
     TestCode4 = ! TestCode4;
     sendTo("TestCode #4 is now %s.\n\r", TestCode4 ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s TestCode #5.",getName(),TestCode4 ? "enabled" : "disabled");
-  } else if (is_abbrev(arg, "testcode5")) {
+  } else if (is_abbrev(arg, "testcode5") && hasWizPower(POWER_TOGGLE)) {
 #if 1
     // if you are using testcode, change this so we don't collide usages
     if (strcmp(name, "Dash")) {
@@ -380,7 +807,7 @@ void TPerson::doToggle(const char *arg)
     TestCode5 = ! TestCode5;
     sendTo("TestCode #5 is now %s.\n\r", TestCode5 ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s TestCode #5.",getName(),TestCode5 ? "enabled" : "disabled");
-  } else if (is_abbrev(arg, "testcode6")) {
+  } else if (is_abbrev(arg, "testcode6") && hasWizPower(POWER_TOGGLE)) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
     if (strcmp(name, "Batopr")) {
@@ -391,25 +818,25 @@ void TPerson::doToggle(const char *arg)
     TestCode6 = ! TestCode6;
     sendTo("TestCode #6 is now %s.\n\r", TestCode6 ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s TestCode #6.",getName(),TestCode6 ? "enabled" : "disabled");
-  } else if (is_abbrev(arg, "questcode")) {
+  } else if (is_abbrev(arg, "questcode") && hasWizPower(POWER_TOGGLE)) {
     QuestCode = !QuestCode;
     sendTo("Questcode is now %s.\n\r", QuestCode ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s questcode.",getName(),QuestCode ? "enabled" : "disabled");
-  } else if (is_abbrev(arg, "questcode2") || is_abbrev(arg, "quest2")) {
+  } else if (is_abbrev(arg, "questcode2") || is_abbrev(arg, "quest2") && hasWizPower(POWER_TOGGLE)) {
     QuestCode2 = !QuestCode2;
     sendTo("Questcode 2 is now %s.\n\r", QuestCode2 ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s questcode 2.",getName(),QuestCode2 ? "enabled" : "disabled");
-  } else if(is_abbrev(arg, "timequeries")){
+  } else if(is_abbrev(arg, "timequeries") && hasWizPower(POWER_TOGGLE)){
     timeQueries = !timeQueries;
     sendTo("DB query timing is now %s.\n\r", timeQueries ? "activated" : "deactivated");
     vlogf(LOG_MISC,"%s has %s DB query timing.",getName(),timeQueries ? "enabled" : "disabled");
-  } else if (is_abbrev(arg, "pcmobs")) {
+  } else if (is_abbrev(arg, "pcmobs") && hasWizPower(POWER_TOGGLE)) {
     AllowPcMobs = !AllowPcMobs;
     sendTo("You have now %s mob-named pcs.\n\r",
               AllowPcMobs ? "allowed" : "disallowed");
     vlogf(LOG_MISC, "%s has turned mob/pcs mode %s.", getName(), 
               AllowPcMobs ? "on" : "off");
-  } else if (is_abbrev(arg, "clients")) {
+  } else if (is_abbrev(arg, "clients") && hasWizPower(POWER_TOGGLE)) {
     Clients = !Clients;
     sendTo("You have now %s clients.\n\r", Clients ? "allowed" : "disallowed");
     vlogf(LOG_MISC, "%s has turned client mode %s.", getName(), Clients ? "on" : "off");
@@ -427,7 +854,7 @@ void TPerson::doToggle(const char *arg)
       }
     }
   
-  } else if (is_abbrev(arg, "nuke")) {
+  } else if (is_abbrev(arg, "nuke") && hasWizPower(POWER_TOGGLE)) {
     nuke_inactive_mobs = !nuke_inactive_mobs;
     sendTo("Mobs in inactive zones are now %s.\n\r", 
            nuke_inactive_mobs ? "nuked" : "preserved");
@@ -438,7 +865,7 @@ void TPerson::doToggle(const char *arg)
       zone_table[zone].zone_value = (nuke_inactive_mobs ? 1 : -1);
     }
 
-  } else if (is_abbrev(arg, "turbomode")) {
+  } else if (is_abbrev(arg, "turbomode") && hasWizPower(POWER_TOGGLE)) {
     if (strcmp(getName(), "Batopr") && strcmp(getName(), "Dash")) {
       sendTo("Please contact a coder if the game speed is not correct.\n\r");
       return;
@@ -657,45 +1084,6 @@ void TBeing::doFlag(const char *argument)
   TBeing *victim;
   int rc;
 
-  if (!isImmortal()) {
-    const char * const errorMsg = "Syntax: flag <newbiehelper | anonymous>\n\r";
-    one_argument(argument, buf);
-    if (!*buf) {
-      sendTo(errorMsg);
-      return;
-    } else if (is_abbrev(buf, "newbiehelper") ||
-        is_abbrev(buf, "helper")) {
-      if (isPlayerAction(PLR_NEWBIEHELP)) {
-        remPlayerAction(PLR_NEWBIEHELP);
-        act("You just removed your newbie-helper flag",
-                   FALSE, this, 0, 0, TO_CHAR);
-      } else {
-        addPlayerAction(PLR_NEWBIEHELP);
-        act("You just set your newbie-helper flag.",
-                FALSE, this, 0, 0, TO_CHAR);
-      }
-      return;
-    } else if (is_abbrev(buf, "anonymous")){
-      if(GetMaxLevel()<5){
-	sendTo("You must be at least level 5 to go anonymous.\n\r");
-	return;
-      }
-      if (isPlayerAction(PLR_ANONYMOUS)){
-	remPlayerAction(PLR_ANONYMOUS);
-	act("You are no longer anonymous.",
-	    FALSE, this, 0, 0, TO_CHAR);
-      } else {
-	addPlayerAction(PLR_ANONYMOUS);
-	act("You are now anonymous.",
-	    FALSE, this, 0, 0, TO_CHAR);
-      }
-      return;
-    } else {
-      sendTo(errorMsg);
-      return;
-    }
-    return;
-  }
   // sanity check
   if (!hasWizPower(POWER_FLAG) || !dynamic_cast<TPerson *>(this)) {
     incorrectCommand();
@@ -2977,7 +3365,7 @@ void TPerson::doStart()
   char buf[256];
 
   if (desc->account->term == TERM_ANSI) {
-    doTerminal("none");
+    doToggle("term none");
     doCls(false);
     // I'm leaving rooms off this list intentionally - bat
     // I'm using = here (rather than set_bit) since I want to know
@@ -3002,7 +3390,7 @@ void TPerson::doStart()
   setBaseAge(race->generateAge());
 
   if (desc->account->term == TERM_VT100) 
-    doTerminal("vt100");
+    doToggle("term vt100");
   
   if (desc && !desc->m_bIsClient && !ansi() && !vt100()) 
     doPrompt("all");
@@ -3559,49 +3947,6 @@ void TPerson::doStealth(const char *argument)
       desc->clientf("%d|%d", CLIENT_STEALTH, TRUE);
   }
 }
-
-void TBeing::doInvis(const char *)
-{
-  sendTo("Dumb monsters can't change their invisibility.\n\r");
-}
-
-void TPerson::doInvis(const char *argument)
-{
-  char buf[256];
-  int level;
-
-  if (!isImmortal()) {
-    doMortalInvis(argument);
-    return;
-  }
-
-  if (!WizInvis && !hasWizPower(POWER_TOGGLE_INVISIBILITY)) {
-    sendTo("The invis command has been disabled due to overuse.\n\r");
-    sendTo("Talk to a more powerful god if you need this power enabled temporarily.\n\r");
-    return;
-  }
-  if (scan_number(argument, &level)) {
-    if (level < 0)
-      level = 0;
-    else if (level > GetMaxLevel())
-      level = GetMaxLevel();
-    setInvisLevel(level);
-    sprintf(buf, "Invis level set to %d.\n\r", level);
-    sendTo(buf);
-    fixClientPlayerLists(TRUE);
-  } else {
-    if (getInvisLevel() > 0) {
-      setInvisLevel(0);
-      sendTo("You are now totally visible.\n\r");
-      fixClientPlayerLists(FALSE);
-    } else {
-      setInvisLevel(GOD_LEVEL1);
-      sendTo("You are now invisible to all but gods.\n\r");
-      fixClientPlayerLists(TRUE);
-    }
-  }
-}
-
 
 void TBeing::doDeathcheck(const char *arg)
 {

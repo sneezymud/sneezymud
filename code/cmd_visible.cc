@@ -78,12 +78,12 @@ void TPerson::doVisible(const char *, bool tSilent)
   }
 }
 
-void TBeing::doMortalInvis(const char *)
+void TBeing::doInvis(const char *)
 {
   sendTo("Silly monster.  You can not control this.\n\r");
 }
 
-void TPerson::doMortalInvis(const char *)
+void TPerson::doInvis(const char *)
 {
   if (task || spelltask || fight()) {
     sendTo("You are a little busy to be doing this.\n\r");

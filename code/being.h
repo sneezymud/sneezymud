@@ -1353,7 +1353,6 @@ class TBeing : public TThing {
     void doEmail(const char *);
     void doDeal(const char *);
     void doPass(const char *);
-    void doAuto(const char *);
     int doAs(const char *);
     int doAsOther(const string);
     void doAttack(const char *);
@@ -1815,7 +1814,6 @@ class TBeing : public TThing {
     void doRoll(TBeing *, dirTypeT);
     void doRoll(TObj *, dirTypeT);
     void doRoll(const char *);
-    void doWimpy(const char *);
     void doEcho(const char *);
     void doHighfive(const char *);
     virtual void doToggle(const char *);
@@ -1823,7 +1821,6 @@ class TBeing : public TThing {
     virtual void doSwitch(const char *);
     virtual void doCutlink(const char *);
     virtual void doInvis(const char *);
-    virtual void doMortalInvis(const char *);
     virtual void doVisible(const char *, bool);
     virtual void doStealth(const char *);
     virtual void doAccess(const char *);
@@ -1859,7 +1856,6 @@ class TBeing : public TThing {
     int stickIn(TThing *o, wearSlotT pos, silentTypeT silent = SILENT_NO);
     int doEmote(const char *);
     void doNotHere() const;
-    void doTerminal(const char *);
     void doWield(const char *);
     // psionics
     int doPTell(const char *, bool);

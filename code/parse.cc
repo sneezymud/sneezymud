@@ -121,19 +121,16 @@ bool willBreakHide(cmdTypeT tCmd, bool isPre)
     case CMD_SNEAK:
     case CMD_QUEST:
     case CMD_LEVELS:
-    case CMD_AUTO:
     case CMD_BRIEF:
     case CMD_WIZLIST:
     case CMD_CONSIDER:
     case CMD_CREDITS:
     case CMD_COMPACT:
-    case CMD_WIMPY:
     case CMD_TITLE:
     case CMD_ATTRIBUTE:
     case CMD_WORLD:
     case CMD_SPY:
     case CMD_CLS:
-    case CMD_TERMINAL:
     case CMD_PROMPT:
     case CMD_ALIAS:
     case CMD_CLEAR:
@@ -786,10 +783,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_WIZNEWS:
           doWiznews();
           break;
-        case CMD_AUTO:
-          doAuto(newarg);
-	  addToLifeforce(1);
-          break;
         case CMD_NOSHOUT:
           doNoshout(argument);
 	  addToLifeforce(1);
@@ -845,10 +838,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           break;
         case CMD_ASSIST:
           rc = doAssist(newarg, dynamic_cast<TBeing *>(vict));
-	  addToLifeforce(1);
-          break;
-        case CMD_WIMPY:
-          doWimpy(newarg);
 	  addToLifeforce(1);
           break;
         case CMD_WHO:
@@ -1433,10 +1422,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           break;
         case CMD_FORCE:
           doForce(newarg);
-          break;
-        case CMD_TERMINAL:
-          doTerminal(newarg);
-	  addToLifeforce(1);
           break;
         case CMD_COLOR:
           doColor(newarg);
@@ -2543,7 +2528,6 @@ void buildCommandArray(void)
   commandArray[CMD_USE] = new commandInfo("use", POSITION_SITTING, 0);
   commandArray[CMD_WHERE] = new commandInfo("where", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_LEVELS] = new commandInfo("levels", POSITION_DEAD, 0);
-  commandArray[CMD_AUTO] = new commandInfo("auto", POSITION_SLEEPING, 0);
   commandArray[CMD_PEE] = new commandInfo("pee", POSITION_STANDING, GOD_LEVEL1);
   commandArray[CMD_EMOTE3] = new commandInfo(",", POSITION_RESTING, 0);
   commandArray[CMD_BEG] = new commandInfo("beg", POSITION_RESTING, 0);
@@ -2585,7 +2569,6 @@ void buildCommandArray(void)
   commandArray[CMD_EMOTE2] = new commandInfo(":", POSITION_RESTING, 0);
   commandArray[CMD_EXTINGUISH]=new commandInfo("extinguish",POSITION_RESTING,0);
   commandArray[CMD_SLAY] = new commandInfo("slay", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_WIMPY] = new commandInfo("wimpy", POSITION_DEAD, 0);
   commandArray[CMD_JUNK] = new commandInfo("junk", POSITION_RESTING, 0);
   commandArray[CMD_NOJUNK] = new commandInfo("nojunk", POSITION_RESTING, 0);
   commandArray[CMD_DEPOSIT] = new commandInfo("deposit", POSITION_RESTING, 0);
@@ -2622,7 +2605,7 @@ void buildCommandArray(void)
   commandArray[CMD_FILL] = new commandInfo("fill", POSITION_RESTING, 0);
   commandArray[CMD_SHOVE] = new commandInfo("shove", POSITION_STANDING, 0);
   commandArray[CMD_SCAN] = new commandInfo("scan", POSITION_CRAWLING, 0);
-  commandArray[CMD_TOGGLE] = new commandInfo("toggle", POSITION_SLEEPING, GOD_LEVEL1);
+  commandArray[CMD_TOGGLE] = new commandInfo("toggle", POSITION_DEAD, 0);
   commandArray[CMD_BREATH] = new commandInfo("breathe", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_GT] = new commandInfo("gtell", POSITION_RESTING, 0);
   commandArray[CMD_WHAP] = new commandInfo("whap", POSITION_RESTING, 0);
@@ -2666,7 +2649,7 @@ void buildCommandArray(void)
   commandArray[CMD_SPY] = new commandInfo("spy", POSITION_CRAWLING, 0);
   commandArray[CMD_DOORBASH]= new commandInfo("doorbash", POSITION_STANDING, 0);
   commandArray[CMD_PLAY] = new commandInfo("play", POSITION_DEAD, 0);
-  commandArray[CMD_FLAG] = new commandInfo("flag", POSITION_SLEEPING, 0);
+  commandArray[CMD_FLAG] = new commandInfo("flag", POSITION_SLEEPING, GOD_LEVEL1);
   commandArray[CMD_QUIVPALM] = new commandInfo("quivering palm", POSITION_FIGHTING, 0);
   commandArray[CMD_FEIGNDEATH] = new commandInfo("feign death", POSITION_RESTING, 0);
   commandArray[CMD_SPRINGLEAP] = new commandInfo("springleap", POSITION_RESTING, 0);
@@ -2682,7 +2665,6 @@ void buildCommandArray(void)
   commandArray[CMD_CLS] = new commandInfo("cls", POSITION_DEAD, 0);
   commandArray[CMD_REPAIR] = new commandInfo("repair", POSITION_CRAWLING, 0);
   commandArray[CMD_SACRIFICE] = new commandInfo("sacrifice", POSITION_CRAWLING, 0);
-  commandArray[CMD_TERMINAL] = new commandInfo("terminal", POSITION_DEAD, 0);
   commandArray[CMD_PROMPT] = new commandInfo("prompt", POSITION_DEAD, 0);
   commandArray[CMD_GLANCE] = new commandInfo("glance", POSITION_RESTING, 0);
   commandArray[CMD_CHECKLOG] = new commandInfo("checklog", POSITION_DEAD, GOD_LEVEL1);

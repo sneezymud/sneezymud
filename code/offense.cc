@@ -1181,48 +1181,6 @@ int TBeing::doAssist(const char *argument, TBeing *vict, bool flags)
   return rc;
 }
 
-void TBeing::doWimpy(const char *arg)
-{
-  char buf[256];
-  int num;
-
-  if (!isPc())
-    return;
-
-  one_argument(arg, buf);
-
-  if (!*buf || !buf || (*buf == '?')) {
-    if (!wimpy) {
-      sendTo("Your wimpy mode is not on.\n\r");
-      return;
-    } else {
-       sendTo("Your wimpy mode is set to %d hit points.\n\r", wimpy);
-       return;
-    }
-  }
-
-  int hl = hitLimit();
-  int wimplimit = hl / 2 + hl % 2;
-
-  if (is_abbrev(buf, "max")) {
-    sendTo("Setting Wimpy to Max(%d).\n\r", wimplimit - 1);
-    num = wimplimit - 1;
-  } else if (is_abbrev(buf, "off") || (num = atoi_safe(buf)) <= 0) {
-    sendTo("Turning wimpy mode off.\n\r");
-    wimpy = 0;
-    return;
-  }
-
-  if ((num < 0) || (wimplimit <= num)) {
-    sendTo("Please enter a number between 0-%d.\n\r", wimplimit-1);
-    return;
-  }
-
-  sendTo("You are now a wimp!!\n\r");
-  sendTo("You will now flee at %d hit points!\n\r", num);
-  wimpy = num;
-}
-
 // return DELETE_THIS
 // return FALSE if item avoided flame, true otherwise
 // return DELETE_VICT if ch should be deleted

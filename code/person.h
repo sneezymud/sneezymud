@@ -80,7 +80,6 @@ class TPerson : public TBeing {
     virtual void doUsers(const char *);
     virtual void doToggle(const char *);
     virtual void doInvis(const char *);
-    virtual void doMortalInvis(const char *);
     virtual void doVisible(const char *, bool);
     virtual void doMedit(const char *);
     virtual void doSEdit(const char *);

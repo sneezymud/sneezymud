@@ -619,11 +619,6 @@ int disguise(TBeing *caster, char * buffer)
   --(*caster);
   thing_to_room(caster, ROOM_POLY_STORAGE);
 
-#if 0
-  if (caster->isPlayerAction(PLR_ANSI | PLR_VT100))
-    caster->doTerminal("none");
-#endif
-
   // stop following whoever you are following.
   if (caster->master)
     caster->stopFollower(TRUE);

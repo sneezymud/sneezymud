@@ -212,7 +212,6 @@ enum cmdTypeT {
      CMD_USE,
      CMD_WHERE,
      CMD_LEVELS,
-     CMD_AUTO,
      CMD_PEE,
      CMD_EMOTE3,// ,
      CMD_BEG,
@@ -254,7 +253,6 @@ enum cmdTypeT {
      CMD_EMOTE2,// :
      CMD_EXTINGUISH,
      CMD_SLAY,
-     CMD_WIMPY,
      CMD_DEPOSIT,
      CMD_WITHDRAW,
      CMD_BALANCE,
@@ -348,7 +346,6 @@ enum cmdTypeT {
      CMD_CLS,
      CMD_REPAIR,
      CMD_SACRIFICE,
-     CMD_TERMINAL,
      CMD_PROMPT,
      CMD_GLANCE,
      CMD_CHECKLOG,
