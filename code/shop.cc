@@ -14,6 +14,7 @@
 #include "obj_magic_item.h"
 #include "shopowned.h"
 #include "obj_casino_chip.h"
+#include "spec_objs_lottery_ticket.h"
 
 vector<shopData>shop_index(0);
 int cached_shop_nr;
@@ -449,7 +450,8 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
       temp1->purchaseMe(ch, keeper, cost, shop_nr);
       // for unlimited items, charge the shopkeeper for production
-      if(!dynamic_cast<TCasinoChip *>(this)){
+      if(!dynamic_cast<TCasinoChip *>(this) &&
+	 objVnum() != OBJ_LOTTERY_TICKET){
 	keeper->addToMoney(-obj_flags.cost, GOLD_SHOP);
 	shoplog(shop_nr, ch, keeper, temp1->getName(), -obj_flags.cost, "producing");
       }
@@ -727,7 +729,8 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
 
   if (shop_index[shop_nr].isProducing(this)){
     // unlimited item, so we just get the value of the item in talens
-    if(!dynamic_cast<TCasinoChip *>(this)){
+    if(!dynamic_cast<TCasinoChip *>(this) &&
+       objVnum() != OBJ_LOTTERY_TICKET){
       keeper->addToMoney(this->obj_flags.cost, GOLD_SHOP);
       shoplog(shop_nr, ch, keeper, getName(), this->obj_flags.cost, "wholesale");
     }
