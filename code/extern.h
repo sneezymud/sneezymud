@@ -20,7 +20,7 @@ extern int min_stat(race_t, statTypeT);
 #endif
 extern wearSlotT slot_from_bit(int);
 extern void cleanCharBuf(char *);
-extern int split_sstring(const sstring &str, const sstring &sep, vector<sstring> &argv);
+extern int split_string(const sstring &str, const sstring &sep, vector<sstring> &argv);
 extern void sendrp_exceptf(TRoom *, TBeing *, const char *,...);
 extern const char *how_good(int);
 extern void sprintbit(unsigned long, const char * const [], char *);

@@ -2094,8 +2094,8 @@ bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple,
     // I wasn't entirely certain what it was doing - peel
     vector <sstring> buf1, buf2;
 
-    split_sstring(carg1, " ", buf1);
-    split_sstring(carg2, " ", buf2);
+    split_string(carg1, " ", buf1);
+    split_string(carg2, " ", buf2);
 
     for(unsigned int i=0;i<buf1.size();++i){
       if(lower(buf1[i]) != lower(buf2[i].substr(0,buf1[i].size())))

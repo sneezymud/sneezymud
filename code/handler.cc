@@ -42,7 +42,7 @@ const sstring fname(const char *namelist)
 }
 
 // split up "str", using delimiters "sep" and place resulting sstrings in "argv"
-int split_sstring(const sstring &str, const sstring &sep, vector<sstring> &argv)
+int split_string(const sstring &str, const sstring &sep, vector<sstring> &argv)
 {
   unsigned int pos=0, last=0;
 
@@ -64,8 +64,8 @@ bool isname(const sstring &str, const sstring &namelist)
   if (namelist.empty())
     return false;
 
-  split_sstring(str, "- \t\n\r,", argv);
-  split_sstring(namelist, "- \t\n\r,", xargv);
+  split_string(str, "- \t\n\r,", argv);
+  split_string(namelist, "- \t\n\r,", xargv);
 
   for(i=0;i < argv.size();i++) {
     for(j=0;j < xargv.size();j++) {
@@ -85,8 +85,8 @@ bool is_exact_spellname(const sstring &str, const sstring &namelist)
   vector <sstring> argv, xargv;
   unsigned int i, j;
 
-  split_sstring(str, "- \t\n\r,", argv);
-  split_sstring(namelist, "- \t\n\r,", xargv);
+  split_string(str, "- \t\n\r,", argv);
+  split_string(namelist, "- \t\n\r,", xargv);
 
   if(!is_abbrev(argv[0], xargv[0]))
     return FALSE;
@@ -109,8 +109,8 @@ bool is_exact_name(const sstring &str, const sstring &namelist)
   vector <sstring> argv, xargv;
   unsigned int i, j;
 
-  split_sstring(str, "- \t\n\r,", argv);
-  split_sstring(namelist, "- \t\n\r,", xargv);
+  split_string(str, "- \t\n\r,", argv);
+  split_string(namelist, "- \t\n\r,", xargv);
 
   for (i = 0; i < argv.size(); i++) {
     for (j = 0; j < xargv.size(); j++) {
