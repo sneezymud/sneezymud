@@ -34,6 +34,13 @@ void calcBankInterest()
       if(in.fetchRow())
 	posttalens=convertTo<int>(in["talens"]);
 
+      in.query("select sum(talens) as talens from shopownedcorpbank where shop_nr=%i",
+	       shop_nr);
+      if(in.fetchRow())
+	posttalens+==convertTo<int>(in["talens"]);
+
+
+
       if((posttalens-pretalens) !=0)
 	in.query("insert into shoplog values (%i, 'unknown', 'paying interest', 'all', %i, 0, 0, now(), 0)", shop_nr, posttalens-pretalens);
 
