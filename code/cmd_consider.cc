@@ -9,8 +9,6 @@
 #include <cmath>
 
 #include "stdsneezy.h"
-#include "cmd_trophy.h"
-#include "database.h"
 
 void TBeing::doConsider(const char *argument)
 {
@@ -151,22 +149,14 @@ void TBeing::doConsider(const char *argument)
   else
     sendTo("There are better ways to suicide.\n\r");
 
-  float count=0.0;
-  TDatabase db("sneezy");
-
-  db.query("select mobvnum, count from trophy where name='%s' and mobvnum=%i", getName(), tmon->mobVnum());
-
-  if(db.fetchRow())
-    count=atof(db.getColumn(1));
-
-  if(count>0){
+  if(trophy->getExpModVal(tmon->mobVnum()) > 0){
     sendTo(COLOR_BASIC, "You will gain %s experience when fighting %s.\n\r", 
-	   describe_trophy_exp(count),
+	   trophy->getExpModDescr(tmon->mobVnum()),
 	   namebuf);
   } else {
     sendTo(COLOR_BASIC, "You have never fought %s and will gain %s experience.\n\r",
 	   namebuf,
-	   describe_trophy_exp(count));
+	   trophy->getExpModDescr(tmon->mobVnum()));
   }
 
   if (getDiscipline(DISC_ADVENTURING)) {

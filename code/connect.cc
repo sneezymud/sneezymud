@@ -5066,6 +5066,7 @@ int Descriptor::doAccountStuff(char *arg)
   int rc;
   int tss = screen_size;
   TBeing *ch;
+  TTrophy *trophy;
 
   // apparently, crypt() has a mem leak in the lib function
   // By making this static, we limit the number of leaks to one
@@ -5444,7 +5445,9 @@ int Descriptor::doAccountStuff(char *arg)
       DeleteHatreds(NULL, delname);
       autobits = 0;
       // remove trophy entries so they do not carry over if the character is recreated
-      wipeTrophy(delname);
+      trophy=new TTrophy(delname);
+      trophy->wipe();
+      delete trophy;
       wipePlayerFile(delname);  // handles corpses too
       wipeRentFile(delname);
       wipeFollowersFile(delname);

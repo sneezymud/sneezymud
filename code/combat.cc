@@ -16,7 +16,6 @@
 #include "mail.h"
 #include "shop.h"
 #include "database.h"
-#include "cmd_trophy.h"
 #include "obj_money.h"
 #include "obj_trash.h"
 #include "obj_arrow.h"
@@ -4718,14 +4717,7 @@ static int FRACT(TBeing *ch, TBeing *v)
 
   // modify for trophy now
   if(ch->isPc() && !v->isPc()){
-    TDatabase db("sneezy");
-
-    if(!db.query("select mobvnum, count from trophy where name='%s' and mobvnum=%i", ch->getName(), v->mobVnum())){
-      ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
-    }
-
-    if(db.fetchRow())
-      fract=(int)(fract*trophy_exp_mod(atof(db.getColumn(1))));
+    fract=(int)(fract*ch->trophy->getExpModVal(v->mobVnum()));
   }
 
 

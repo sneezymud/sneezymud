@@ -55,13 +55,15 @@ TBeing::TBeing() :
   followers(NULL),
   spelltask(NULL),
   task(NULL),
-  skillApplys(NULL)
+  skillApplys(NULL),
+  trophy(NULL)
 {
   // change the default value here
   number = -1;
 
   mobCount++;
   setRace(RACE_NORACE);
+  trophy = new TTrophy(this);
 }
 
 TBeing::~TBeing() 
@@ -310,6 +312,8 @@ TBeing::~TBeing()
   skillApplys = NULL;
 
   setRace(RACE_NORACE);
+
+  delete trophy;
 }
 
 TObj::TObj() :
@@ -1304,6 +1308,8 @@ TBeing::TBeing(const TBeing &a) :
       ex_description = NULL;
   }
   mobCount++;
+
+  trophy = new TTrophy(this);
 }
 
 TBeing & TBeing::operator=(const TBeing &a)

@@ -3810,7 +3810,9 @@ void TBeing::doWipe(const char *argument)
   wipePlayerFile(namebuf);
   wipeRentFile(namebuf);
   wipeFollowersFile(namebuf);
-  wipeTrophy(namebuf);
+  TTrophy *trophy=new TTrophy(namebuf);
+  trophy->wipe();
+  delete trophy;
 
   sprintf(buf, "account/%c/%s/%s",
          LOWER(st.aname[0]), lower(st.aname).c_str(), lower(namebuf).c_str());

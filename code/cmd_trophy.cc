@@ -9,8 +9,61 @@
 #include "cmd_trophy.h"
 #include "database.h"
 
-float trophy_exp_mod(float count)
+
+TTrophy::TTrophy(string n) :
+  db(new TDatabase("sneezy")),
+  parent(NULL),
+  name(n)
 {
+}
+
+TTrophy::TTrophy(TBeing *p) :
+  db(new TDatabase("sneezy")),
+  parent(p),
+  name("")
+{
+}
+
+string TTrophy::getMyName(){
+  if(parent){
+    return parent->getName();
+  } else {
+    // name should be "" if we're uninitialized, so just return it either way
+    return name;
+  }
+}
+
+void TTrophy::setName(string n){
+  parent=NULL;
+  name=n;
+}
+
+void TTrophy::addToCount(int vnum, double add){
+  if(vnum==-1 || vnum==0 || getMyName()==""){ return; }
+
+  db->query("insert ignore into trophy values ('%s', %i, 0)",
+	    getMyName().c_str(), vnum);
+  db->query("update trophy set count=count+%f where name='%s' and mobvnum=%i",
+	    add, getMyName().c_str(), vnum);
+}
+
+
+float TTrophy::getCount(int vnum)
+{
+  db->query("select count from trophy where name='%s' and mobvnum=%i",
+	   getMyName().c_str(), vnum);
+  if(db->fetchRow())
+    return atof(db->getColumn(0));
+  else 
+    return 0.0;
+}
+
+
+float TTrophy::getExpModVal(int vnum)
+{
+  float count=getCount(vnum);
+
+
   float min_mod=0.3;
   float max_mod=1.0; // shouldn't ever be above 1.0
   float free_kills=8; // how many kills you get before trophy kicks in
@@ -33,15 +86,17 @@ float trophy_exp_mod(float count)
 
 
 
-const char *describe_trophy_exp(float count)
+const char *TTrophy::getExpModDescr(int vnum)
 {
-  float f=trophy_exp_mod(count);
+  float f=getExpModVal(vnum);
 
   return((f == 1.0) ? "<Y>full<1>" :
 	 ((f >= 0.90) ? "<o>much<1>" :
 	  ((f >= 0.80) ? "a fair amount" :
 	   ((f >= 0.70) ? "<w>some<1>" : "<k>little<1>"))));
 }
+
+
 
 // this function is a little messy, I apologize
 void TBeing::doTrophy(const char *arg)
@@ -57,6 +112,9 @@ void TBeing::doTrophy(const char *arg)
     sendTo("Mobs can't use this command!\n\r");
     return;
   }
+
+  TTrophy trophy(getName());
+
 
   for (; isspace(*arg); arg++);
 
@@ -128,7 +186,7 @@ void TBeing::doTrophy(const char *arg)
 
       if(!summary){
 	sprintf(buf, "You will gain %s experience when fighting %s.\n\r", 
-		describe_trophy_exp(count),
+		trophy.getExpModDescr(vnum),
 		mob_index[rnum].short_desc);
 	sb += buf;
       }
@@ -180,7 +238,6 @@ void TBeing::doTrophy(const char *arg)
 
 
 
-void wipeTrophy(const char *name){
-  TDatabase db("sneezy");
-  db.query("delete from trophy where name='%s'", name);
+void TTrophy::wipe(){
+  db->query("delete from trophy where name='%s'", name.c_str());
 }

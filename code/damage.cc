@@ -132,16 +132,6 @@ int TBeing::reconcileDamage(TBeing *v, int dam, spellNumT how)
 }
 
 
-void update_trophy(const char *name, int vnum, double add){
-  TDatabase db("sneezy");
-
-  if(vnum==-1 || vnum==0 || !name){ return; }
-
-  db.query("insert ignore into trophy values ('%s', %i, 0)", name, vnum);
-  db.query("update trophy set count=count+%f where name='%s' and mobvnum=%i", add, name, vnum);
-}
-
-
 
 // returns DELETE_VICT if v died
 int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
@@ -262,12 +252,12 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
       trophyperc=(double)(((double)dam/(double)(v->hitLimit()+11))/groupcount);
 
       if(!isImmortal())
-	update_trophy(getName(), v->mobVnum(), trophyperc);
+	trophy->addToCount(v->mobVnum(), trophyperc);
 
       for (f = followers; f; f = f->next) {
 	if (f->follower->isPc() && inGroup(*f->follower) && 
 	    sameRoom(*f->follower)) {
-	  update_trophy(f->follower->getName(), v->mobVnum(), trophyperc);
+	  f->follower->trophy->addToCount(v->mobVnum(), trophyperc);
 	}
       }      
 

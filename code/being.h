@@ -52,6 +52,8 @@
 #include "structs.h"
 #endif
 
+#include "cmd_trophy.h"
+
 class TWindow;
 class TGenWeapon;
 class TBaseClothing;
@@ -619,6 +621,7 @@ class TBeing : public TThing {
     spellStoreData spellstore;
     taskData *task;      
     skillApplyData *skillApplys;
+    TTrophy *trophy;
 
     TMessages msgVariables;
     // Constructor and Destructor
