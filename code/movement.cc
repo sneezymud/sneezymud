@@ -2198,10 +2198,6 @@ int TBeing::doEnter(const char *argument, TPortal *por)
       sendTo("Enter what?\n\r");
       return FALSE;
     }
-    if (dynamic_cast<TBeing *>(o)) {
-      sendTo(COLOR_OBJECTS, fmt("You can't enter %s.  Maybe you need to be more specific.\n\r") %o->getName());
-      return FALSE;
-    }
     if (getPosition() <= POSITION_SITTING) {
       sendTo("You need to be mobile to do that.\n\r");
       return FALSE;
