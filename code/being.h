@@ -61,6 +61,7 @@ extern TMonster *read_mobile(int nr, readFileTypeT type);
 // these functions are used in methods
 extern int number(int from, int to);
 extern int dice(int, int);
+extern bool roll_chance(double);
 
 const unsigned long ACT_STRINGS_CHANGED    = (1<<0); //1
 const unsigned long ACT_SENTINEL   = (1<<1);// 2
@@ -1879,7 +1880,8 @@ class TBeing : public TThing {
     string displayExp() const;
     int hurtLimb(unsigned int, wearSlotT);
     int flightCheck();
-    double hpGainForLevel(classIndT) const;
+    int hpGainForLevel(classIndT) const;
+    int hpGainForClass(classIndT) const;
     unsigned int numberInGroupInRoom() const;
     double getExpShare() const;
     double getExpSharePerc() const;

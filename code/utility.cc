@@ -121,6 +121,21 @@ int dice(int number, int size)
   return (sum);
 }
 
+// takes a percent (expressed as a fraction of 1) and returns true if
+// a random roll is greater equal to it.  ie, fract*100 percent chance of true.
+// this is useful when we want a whole number, so we give a chance of
+// +1 if there is a fraction
+bool roll_chance(double fract){
+  fract*=100.0;
+
+  if(fract >= ::number(0,100)){
+    return TRUE;
+  }
+  return FALSE;
+}
+
+
+
 bool scan_number(const char *text, int *rval)
 {
   if (1 != sscanf(text, " %i ", rval))

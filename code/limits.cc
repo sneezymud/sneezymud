@@ -751,18 +751,7 @@ void TPerson::advanceLevel(classIndT Class, TMonster *gm)
 
 void TPerson::doHPGainForLev(classIndT Class)
 {
-  double add_hp = hpGainForLevel(Class);
-
-  int tmp;
-  tmp = (int) add_hp;   // tmp is holding the rounded off portion of hp
-
-  // chance of an extra hp
-  add_hp -= (double) tmp;
-  add_hp *= 100;
-  if (((int) add_hp) > (::number(0,99)))
-    tmp++;
-
-  points.maxHit += max(1, tmp);
+  points.maxHit += hpGainForLevel(Class);
 }
 
 void TBeing::dropLevel(classIndT Class)
@@ -1304,15 +1293,6 @@ void TBeing::classSpecificStuff()
 
     setMult(value);
   }
-  // going to set this stuff in getImmunity instead, messes stuff up here
-#if 0
-  if (hasClass(CLASS_MONK) && doesKnowSkill(SKILL_DUFALI)) {
-    amount = getSkillValue(SKILL_DUFALI);
-    addToImmunity(IMMUNE_PARALYSIS, amount/3);
-    addToImmunity(IMMUNE_CHARM, amount);
-    addToImmunity(IMMUNE_POISON, amount/2);
-  }
-#endif
 }
 
 // computes the time it takes to get back 1 point of hp,mana and move
@@ -1339,77 +1319,52 @@ int TBeing::regenTime()
   return iTime;
 }
 
-double TBeing::hpGainForLevel(classIndT Class) const
+int TBeing::hpGainForClass(classIndT Class) const
 {
-  double hpgain = 0;
+  int hpgain = 0;
 
   // add for classes first
   if (hasClass(CLASS_MAGIC_USER) && Class == MAGE_LEVEL_IND)
-    hpgain += (double) ::number(2,8);
+    hpgain += ::number(3,7); // old 2,8
 
   if (hasClass(CLASS_CLERIC) && Class == CLERIC_LEVEL_IND)
-    hpgain += (double) ::number(4,8);
+    hpgain += ::number(5,7); // old 4,8
 
   if (hasClass(CLASS_WARRIOR) && Class == WARRIOR_LEVEL_IND)
-    hpgain += (double) ::number(5,12);
+    hpgain += ::number(6,11); // old 5,12
 
   if (hasClass(CLASS_THIEF) && Class == THIEF_LEVEL_IND)
-    hpgain += (double) ::number(3,9);
+    hpgain += ::number(4,8); // old 3,9
 
   if (hasClass(CLASS_DEIKHAN) && Class == DEIKHAN_LEVEL_IND)
-    hpgain += (double) ::number(5,10);
+    hpgain += ::number(6,9); // old 5,10
 
   if (hasClass(CLASS_MONK) && Class == MONK_LEVEL_IND)
-    hpgain += (double) ::number(3,8);
+    hpgain += ::number(4,7); // old 3,8
 
   if (hasClass(CLASS_RANGER) && Class == RANGER_LEVEL_IND)
-    hpgain += (double) ::number(5,9);
+    hpgain += ::number(6,8); // old 5,9
 
   if (hasClass(CLASS_SHAMAN) && Class == SHAMAN_LEVEL_IND)
-    hpgain += (double) ::number(2,8);
-  
-  
-
-#if 0
-  vlogf(LOG_DASH,"%s gaining %5.2f + %5.2f hitpoints (%d)", getName(),hpgain,
-	hpgain*(double)getConHpModifier() - hpgain,
-	(int)(hpgain*(double)getConHpModifier()));
-#endif
-  double raw = hpgain;
-  
-  // tack on CON modifier
-  hpgain *= (double) getConHpModifier();
-  
-  
-  hpgain /= (double) howManyClasses();
-  
-  double bonus = hpgain - raw;
-  
-  double roundoff = hpgain - (int)(hpgain);
-  hpgain = (int)hpgain;
-  
-  int roll;
-  roll = ::number(1,99);
-  
-  if(100.0*roundoff >= roll) {
-    hpgain += 1.0;
-  }
-  
-
-  if(isPc()) {
-    vlogf(LOG_DASH,"%s gaining %d + %4.2f hitpoints %d (%d > %d)", getName(),(int)raw,
-          bonus, (int)hpgain, (int)(100.0*roundoff), roll);
-  }
-
+    hpgain += ::number(3,7); // old 2,8
 
   return hpgain;
 }
 
 
+int TBeing::hpGainForLevel(classIndT Class) const
+{
+  double hpgain = 0;
 
+  hpgain = (double) hpGainForClass(Class);  
 
+  hpgain *= (double) getConHpModifier();
 
+  hpgain /= (double) howManyClasses();
 
+  if(roll_chance(hpgain - (int) hpgain)){
+    hpgain += 1.0;
+  }
 
-
-
+  return max(1, (int)hpgain);
+}

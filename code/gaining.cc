@@ -723,7 +723,7 @@ void TPerson::advanceSelectDisciplines(TBeing *gm, classIndT Class, int numx, si
 void TPerson::raiseLevel(classIndT Class, TMonster *gm)
 {
   char buf[160];
-  int amount;
+  int amount, maxhit;
 //  int count, learnAdd = 0;
 //  int initial, final;
 
@@ -784,7 +784,11 @@ void TPerson::raiseLevel(classIndT Class, TMonster *gm)
 
     //The fix statement below set the client who window with correct level
     fixClientPlayerLists(TRUE);
+
+    maxhit=points.maxHit;
     advanceLevel(Class, gm);
+    sendTo("You gain %i hitpoints!\n\r", points.maxHit-maxhit);
+
     fixClientPlayerLists(FALSE);
     setTitle(false);
     setSelectToggles((TBeing *) gm, Class, SILENT_NO);
