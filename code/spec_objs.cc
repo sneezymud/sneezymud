@@ -5007,9 +5007,9 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
   int i=1;
   while((row=mysql_fetch_row(res))){
     if(atoi(row[2])==1){
-      ch->sendTo("%i) %s perished bravely at level %s, killed by %s.\n\r", i, row[0], row[1], row[3]);
+      ch->sendTo(COLOR_BASIC, "%i) %s perished bravely at level %s, killed by %s.\n\r", i, row[0], row[1], row[3]);
     } else {
-      ch->sendTo("%i) %s lives on at level %s\n\r", i, row[0], row[1]);
+      ch->sendTo(COLOR_BASIC, "%i) %s lives on at level %s\n\r", i, row[0], row[1]);
     }
     ++i;
   }
