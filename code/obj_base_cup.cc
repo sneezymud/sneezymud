@@ -405,9 +405,9 @@ void TBaseCup::updateDesc()
   }
 
   if(getDrinkUnits()<=0){
-    liquid="An empty";
+    liquid="an empty";
   } else {
-    ssprintf(liquid, "A %s", DrinkInfo[getDrinkType()]->color);
+    ssprintf(liquid, "a %s", DrinkInfo[getDrinkType()]->color);
   }
 
   while (newname.find("$$al") != string::npos){
