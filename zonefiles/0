@@ -251,6 +251,13 @@ M 0 35423 1 35491       Greb				(shop 178)
 M 0 35425 1 35495       Tigg				(shop 179)
 M 0 35426 1 35494       Tanni				(shop 180)
 M 0 35433 1 35496       Willy				(shop 181)
+G 1 35482 1           a small cyan candle
+G 1 35481 1           a small blue candle
+G 1 35480 1           a small golden candle
+G 1 35479 1           a small white candle
+G 1 35478 1           a small grey candle
+G 1 35477 1           a small green candle
+
 
 **
 * Fishing Shop
