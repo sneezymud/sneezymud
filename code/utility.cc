@@ -1677,7 +1677,7 @@ bool TBeing::isSimilar(const TThing *t) const
      !affected && !tb->affected &&
      (tb->fight() == fight())) {
      
-     if (tb->getName() && getName()) {
+     if (tb->name && name) {
        if (is_exact_name(tb->name, name)) {
           return TRUE;
        }
@@ -1697,7 +1697,7 @@ bool TObj::isSimilar(const TThing *t) const
   if (!getDescr() || !obj->getDescr() ||
       strcmp(getDescr(), obj->getDescr()))
     return false;
-  if (!getName() || !obj->getName() ||
+  if (!name || !obj->name ||
        !is_exact_name(name, obj->name))
     return false;
   if (getStructPoints() != obj->getStructPoints())
