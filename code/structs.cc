@@ -736,8 +736,13 @@ TThing& TThing::operator += (TThing& t)
         sstring str = sstring(c->shortDescr);
         sendrpf(COLOR_BASIC, rp, "%s glows brightly and merges with %s.\n\r", str.cap().c_str(), str.c_str());
       }
+      // Compute the decay value of the to-be merged component by performing
+      // a weighted average based on charges
+      int c_decay = (c->obj_flags.decay_time * c->getComponentCharges() +
+        tComp->obj_flags.decay_time * tComp->getComponentCharges()) / (c->getComponentCharges() + tComp->getComponentCharges());
       c->addToComponentCharges(tComp->getComponentCharges());
       c->obj_flags.cost += tComp->obj_flags.cost;
+      c->obj_flags.decay_time = c_decay;
       --(*tComp);
       delete tComp;
     }
