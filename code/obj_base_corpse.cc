@@ -12,7 +12,7 @@
 #include "obj_player_corpse.h"
 #include "obj_base_corpse.h"
 #include "obj_base_clothing.h"
-
+#include "obj_tooth_necklace.h"
 
 TBaseCorpse::TBaseCorpse() :
   TBaseContainer(),
@@ -80,6 +80,30 @@ TBaseCorpse::~TBaseCorpse()
     tDissections = NULL;
   }
 }
+
+int TBaseCorpse::putMeInto(TBeing *ch, TOpenContainer *container)
+{
+  TObj *o;
+  TThing *t;
+  
+  for(t=container->getStuff(); t; t=t->nextThing){
+    o = dynamic_cast<TObj *>(t);
+
+    if (!o)
+      continue;
+
+    if (dynamic_cast<TToothNecklace *>(container) &&
+	dynamic_cast<TBaseCorpse *>(o) &&
+	getCorpseVnum() == dynamic_cast<TBaseCorpse *>(o)->getCorpseVnum()){
+      ch->sendTo(fmt("You already have one of those teeth in your %s.\n\r") %
+		 fname(container->name).c_str());
+      return TRUE;
+    }
+  }
+  return FALSE;
+
+}
+
 
 void TBaseCorpse::assignFourValues(int x1, int x2, int x3, int x4)
 {

@@ -56,6 +56,7 @@ const int OBJ_BANDAGE          = 9;
 const int OBJ_ROSEPETAL        = 10;
 const int GENERIC_TALEN        = 13;
 const int OBJ_BATS_JACUZZI     = 31;
+const int GENERIC_TOOTH        = 39;
 const int TREASURE_GOLD        = 50;
 const int TREASURE_SILVER      = 51;
 const int TREASURE_COPPER      = 52;

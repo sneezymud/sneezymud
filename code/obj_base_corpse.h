@@ -33,6 +33,7 @@ class TBaseCorpse : public TBaseContainer {
     virtual void decayMe();
     virtual int objectDecay();
     virtual int putSomethingInto(TBeing *, TThing *);
+    virtual int putMeInto(TBeing *, TOpenContainer *);
     virtual void describeObjectSpecifics(const TBeing *) const {}
 
     void setCorpseFlags(unsigned int);

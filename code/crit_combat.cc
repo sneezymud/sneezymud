@@ -966,8 +966,7 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	TObj *corpse;
 	TCorpse *tooth;
 	
-	// 39 is generic tooth
-	corpse = read_object(39, VIRTUAL);
+	corpse = read_object(GENERIC_TOOTH, VIRTUAL);
 	corpse->swapToStrung();
 
 	if((tooth=dynamic_cast<TCorpse *>(corpse))){

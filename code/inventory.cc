@@ -24,7 +24,7 @@
 #include "obj_trap.h"
 #include "obj_portal.h"
 #include "obj_arrow.h"
-
+#include "obj_tooth_necklace.h"
 
 // watches rent in, rent out, dropped, etc
 #define VERBOSE_LOGS   1
@@ -477,6 +477,11 @@ int TThing::putMeInto(TBeing *ch, TOpenContainer *sub)
   if (dynamic_cast<TSpellBag *>(sub)) {
     act("Sorry, $p can only hold spell components.",
              FALSE, ch, sub, this, TO_CHAR);
+    return TRUE;
+  }
+  if (dynamic_cast<TToothNecklace *>(sub)){
+    act("Sorry, $p can only hold teeth.",
+	FALSE, ch, sub, this, TO_CHAR);
     return TRUE;
   }
   if (dynamic_cast<TKeyring *>(sub)) {
@@ -1523,7 +1528,15 @@ int TThing::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
   if (rc)
     return TRUE;
 
-  if (dynamic_cast<TKeyring *>(cont) &&
+  if(dynamic_cast<TToothNecklace *>(cont) &&
+     dynamic_cast<TObj *>(this) &&
+     dynamic_cast<TObj *>(this)->objVnum()==GENERIC_TOOTH){
+    act("You attach $p to $P.",
+	TRUE, ch, this, cont, TO_CHAR);
+    act("$n attaches $p to $P.",
+	TRUE, ch, this, cont, TO_ROOM); 
+    dynamic_cast<TToothNecklace *>(cont)->updateDesc();
+  } else if (dynamic_cast<TKeyring *>(cont) &&
      dynamic_cast<TKey *>(this)) {
     act("You attach $p to $P.",
 	TRUE, ch, this, cont, TO_CHAR);
@@ -1646,6 +1659,11 @@ void TObj::putMoneyInto(TBeing *ch, int)
 }
 
 void TSpellBag::putMoneyInto(TBeing *ch, int amount)
+{
+  ch->sendTo("You can't put money into that.\n\r");
+}
+
+void TToothNecklace::putMoneyInto(TBeing *ch, int amount)
 {
   ch->sendTo("You can't put money into that.\n\r");
 }

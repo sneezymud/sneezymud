@@ -617,7 +617,11 @@ void assign_item_info()
 				    "Damage Level * 4 and Damage Precision", 10000, 0,
 				    "Bit flags", 2147483647, 0,
 				    "Ammo type", AMMO_CANNON_BALL, AMMO_CANNON_BALL);
-  
+  ItemInfo[ITEM_TOOTH_NECKLACE] = new itemInfo("Tooth necklace","a necklace of teeth",
+     "Weight necklace can hold", 500, 1,
+     "Special - container flags", 0, 0,
+     "Unused", 0, 0,
+     "Volume necklace can hold", 100000, 1);
 };
 
 const char * const wear_bits[MAX_ITEM_WEARS] =

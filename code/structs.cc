@@ -19,6 +19,7 @@
 #include "cmd_trophy.h"
 #include "obj_open_container.h"
 #include "obj_component.h"
+#include "obj_tooth_necklace.h"
 
 TBeing::TBeing() :
   TThing(),
@@ -904,7 +905,9 @@ TThing& TThing::operator -- ()
       tmp->addToLight(-light_mod);
     }
 
-
+    if(dynamic_cast<TToothNecklace *>(t_in)){
+      dynamic_cast<TToothNecklace *>(t_in)->updateDesc();
+    }
   } else if ((rp = dynamic_cast<TRoom *> (roomp))) {
     // obj from room
     // char from room

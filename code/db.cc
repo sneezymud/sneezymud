@@ -88,6 +88,7 @@
 #include "obj_handgonne.h"
 #include "obj_egg.h"
 #include "obj_cannon.h"
+#include "obj_tooth_necklace.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -2940,6 +2941,8 @@ TObj * makeNewObj(itemTypeT tmp)
       return new TEgg();
     case ITEM_CANNON:
       return new TCannon();
+    case ITEM_TOOTH_NECKLACE:
+      return new TToothNecklace();
     case ITEM_UNDEFINED:
     case ITEM_MARTIAL_WEAPON:
     case MAX_OBJ_TYPES:
