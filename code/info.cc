@@ -2984,6 +2984,8 @@ void TBeing::doWorld()
       str += buf;
     }
   }
+  mysql_free_result(res);
+
 
 
   sprintf(buf, "Total number of rooms in world:               %ld\n\r", 
@@ -3034,6 +3036,20 @@ void TBeing::doWorld()
   sprintf(buf, "Total number of distinct mobiles in world:%s    %d%s\n\r",
         red(), mob_index.size(), norm());
   str += buf;
+
+  int unkmobcount=0;
+
+  dbquery(TRUE, &res, "sneezy", "doWorld", "select count(distinct mobvnum) from trophy");
+  row=mysql_fetch_row(res);
+  unkmobcount=atoi(row[0]);
+  mysql_free_result(res);
+
+  sprintf(buf, "Percent of distinct mobiles never killed: %s    %d%% (%i)%s\n\r",
+	  red(), (int)(((float)unkmobcount/(float)mob_index.size())*100), 
+	  unkmobcount,
+	  norm());
+  str += buf;
+
 
   if (GetMaxLevel() >= GOD_LEVEL1) {
     sprintf(buf, "%sDistinct Mobs by level:%s\n\r",
