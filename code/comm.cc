@@ -927,6 +927,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
         char StTemp[2048];
 	int ratio = min(10, max(0, ((f->getHit() * 9) / f->hitLimit())));
 
+        memset(&StTemp, 0, sizeof(StTemp));
         sprintf(StTemp, "%s<%s=%s>%s", ch->purple(), fname(f->name).c_str(), prompt_mesg[ratio], ch->norm());
 
         for (int iRunner = strlen(StTemp); iRunner < 38; iRunner++)
@@ -939,10 +940,8 @@ void Descriptor::updateScreenVt100(unsigned int update)
 	last.fighting = TRUE;
       }
     } else {
-      if (last.fighting) {
-	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 40);
-	sprintf(buf + strlen(buf), "                                      ");
-      }
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 40);
+      sprintf(buf + strlen(buf), "                                      ");
     }
 #endif
   }
@@ -987,10 +986,21 @@ void Descriptor::updateScreenVt100(unsigned int update)
         if (ch->getLevel(iClass) >= MAX_MORT)
           strcat(buf + strlen(buf), "0");
         else {
+          char StTemp[2048];
+
+          memset(&StTemp, 0, sizeof(StTemp));
+
           if (ch->getExp() < 100)
-            sprintf(buf + strlen(buf), "%.3f", iNeed);
+            sprintf(StTemp, "%.3f", iNeed);
           else
-            sprintf(buf + strlen(buf), "%.0f", iNeed);
+            sprintf(StTemp, "%.0f", iNeed);
+
+          for (int iRunner = strlen(StTemp); iRunner < 11; iRunner++)
+            StTemp[iRunner] = ' ';
+
+          StTemp[11] = '\0';
+
+          strcat(buf + strlen(buf), StTemp);
 	}
 
         break;
@@ -1004,6 +1014,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
       int maxh = max(1, (int) f->hitLimit());
       int ratio = min(10, max(0, ((f->getHit() * 9) / maxh)));
 
+      memset(&StTemp, 0, sizeof(StTemp));
       sprintf(StTemp, "%s<%s=%s>%s", ch->purple(), fname(f->name).c_str(), prompt_mesg[ratio], ch->norm());
 
       for (int iRunner = strlen(StTemp); iRunner < 38; iRunner++)
@@ -1160,6 +1171,7 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 	char StTemp[2048];
 	int ratio = min(10, max(0, ((f->getHit() * 9) / f->hitLimit())));
 
+        memset(&StTemp, 0, sizeof(StTemp));
 	sprintf(StTemp, "%s<%s=%s>%s", ch->purple(), fname(f->name).c_str(), prompt_mesg[ratio], ch->norm());
 
 	for (int iRunner = strlen(StTemp); iRunner < 38; iRunner++)
@@ -1172,10 +1184,8 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 	last.fighting = TRUE;
       }
     } else {
-      if (last.fighting) {
-	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 40);
-	sprintf(buf + strlen(buf), "                                      ");
-      }
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 40);
+      sprintf(buf + strlen(buf), "                                      ");
     }
 #endif
   }
@@ -1220,11 +1230,22 @@ void Descriptor::updateScreenAnsi(unsigned int update)
         if (ch->getLevel(iClass) >= MAX_MORT)
           strcat(buf + strlen(buf), "0");
         else {
+          char StTemp[2048];
+
+          memset(&StTemp, 0, sizeof(StTemp));
+
           if (ch->getExp() < 100)
-            sprintf(buf + strlen(buf), "%.3f", iNeed);
+            sprintf(StTemp, "%.3f", iNeed);
           else
-            sprintf(buf + strlen(buf), "%.0f", iNeed);
-	}
+            sprintf(StTemp, "%.0f", iNeed);
+
+          for (int iRunner = strlen(StTemp); iRunner < 11; iRunner++)
+            StTemp[iRunner] = ' ';
+
+          StTemp[11] = '\0';
+
+          strcat(buf + strlen(buf), StTemp);
+        }
 
         break;
       }
@@ -1236,6 +1257,7 @@ void Descriptor::updateScreenAnsi(unsigned int update)
       char StTemp[2048];
       int ratio = min(10, max(0, ((f->getHit() * 9) / f->hitLimit())));
 
+      memset(&StTemp, 0, sizeof(StTemp));
       sprintf(StTemp, "%s<%s=%s>%s", ch->purple(), fname(f->name).c_str(), prompt_mesg[ratio], ch->norm());
 
       for (int iRunner = strlen(StTemp); iRunner < 38; iRunner++)
