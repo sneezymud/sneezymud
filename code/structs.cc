@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: structs.cc,v $
+// Revision 1.2  1999/09/28 19:06:03  lapsos
+// Owners will now ignore, totally, creators.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -530,33 +533,34 @@ void TObj::checkOwnersList(const TPerson *ch)
   char indiv[256];
   bool iHaveOwned = false;
 
-  while (tmpbuf && *tmpbuf) {
-    tmpbuf = one_argument(tmpbuf, indiv);
-    if (!indiv || !*indiv)
-      continue;
+  if (!ch->hasWizPower(POWER_WIZARD))
+    while (tmpbuf && *tmpbuf) {
+      tmpbuf = one_argument(tmpbuf, indiv);
+      if (!indiv || !*indiv)
+        continue;
 
-    // don't bother to check if it got given to myself
-    if (!strcmp(indiv, ch->getName())) {
-      iHaveOwned = true;
-      continue;
+      // don't bother to check if it got given to myself
+      if (!strcmp(indiv, ch->getName())) {
+        iHaveOwned = true;
+        continue;
+      }
+
+      charFile st;
+      if (!load_char(indiv, &st))
+        continue;
+
+      if (ch->desc && ch->desc->account && !strcmp(ch->desc->account->name, st.aname)) {
+        // transferred betwen 2 chars in same account!
+        vlogf(2, "CHEATING!  Item (%s:%d) transferred to %s when previously owned by %s.   owners=[%s %s]", getName(), objVnum(), ch->getName(), indiv, owners, ch->getName());
+
+        // because of where this gets called (operator+=), deleting would be
+        // bad due to requirements to check for it occuring all over the place.
+        // lets set the decay instead and let ticktimer handle it...
+        obj_flags.decay_time = 0;  // decay next pulse
+      }
     }
 
-    charFile st;
-    if (!load_char(indiv, &st))
-      continue;
-
-    if (ch->desc && ch->desc->account && !strcmp(ch->desc->account->name, st.aname)) {
-      // transferred betwen 2 chars in same account!
-      vlogf(2, "CHEATING!  Item (%s:%d) transferred to %s when previously owned by %s.   owners=[%s %s]", getName(), objVnum(), ch->getName(), indiv, owners, ch->getName());
-
-      // because of where this gets called (operator+=), deleting would be
-      // bad due to requirements to check for it occuring all over the place.
-      // lets set the decay instead and let ticktimer handle it...
-      obj_flags.decay_time = 0;  // decay next pulse
-    }
-  }
-
-  if (!iHaveOwned) {
+  if (!iHaveOwned && !ch->hasWizPower(POWER_WIZARD)) {
     string tmp("");
 
     if (owners) {
