@@ -2582,8 +2582,6 @@ int TBeing::hits(TBeing *v, int mod)
 
   int roll = ::number(0,999);
 
-  sendTo("roll=%i\n\r", roll);
-  
   if (roll < 50)
     return GUARANTEED_SUCCESS;
   else if (roll >= 950)
