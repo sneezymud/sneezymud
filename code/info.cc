@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: info.cc,v $
+// Revision 1.5  1999/10/07 17:20:21  batopr
+// Changed check on aff->renew in describeAffects
+//
 // Revision 1.4  1999/10/03 09:47:28  lapsos
 // Added gag to failed sneak display.
 //
@@ -3105,7 +3108,7 @@ void TBeing::describeAffects(TBeing *ch)
         continue;
       else if (discArray[aff->type]) {
         if ((ch == this) && strcmp(discArray[aff->type]->name, "sneak")) {
-          if (aff->renew == -1) {
+          if (aff->renew >= 0) {
             sendTo("Affected : '%s'\t: Approx. Duration : %s\n\r",
                  discArray[aff->type]->name,
                  describeDuration(this, aff->duration).c_str());
