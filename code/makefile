@@ -166,8 +166,7 @@ LIBSYS=	ansi.o         database.o   socket.o		\
 	color.o        edit.o       systemtask.o	\
 	colorstring.o  handler.o    timing.o		\
 	comm.o         indexdata.o			\
-	connect.o      signals.o    sstring.o		\
-	format.o
+	connect.o      signals.o    sstring.o
 
 LIBSYS := $(sort $(addprefix $(OBJDIR), $(LIBSYS)))
 
@@ -6502,45 +6501,6 @@ objs/faction.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/faction.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/faction.o: colorstring.h database.h /usr/local/include/libpq-fe.h
 objs/faction.o: /usr/local/include/postgres_ext.h
-objs/format.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
-objs/format.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
-objs/format.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
-objs/format.o: /usr/include/g++/ctime /usr/include/time.h
-objs/format.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
-objs/format.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
-objs/format.o: /usr/include/machine/endian.h /usr/include/g++/cctype
-objs/format.o: /usr/include/ctype.h /usr/include/runetype.h
-objs/format.o: /usr/include/g++/cassert /usr/include/assert.h
-objs/format.o: /usr/include/g++/cstring /usr/include/string.h
-objs/format.o: /usr/include/stdarg.h /usr/include/g++/cerrno
-objs/format.o: /usr/include/errno.h /usr/include/g++/string
-objs/format.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/format.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
-objs/format.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/format.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/format.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/format.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
-objs/format.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
-objs/format.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/format.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
-objs/format.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/format.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
-objs/format.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/format.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
-objs/format.o: /usr/include/g++/stl_uninitialized.h
-objs/format.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
-objs/format.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
-objs/format.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
-objs/format.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
-objs/format.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
-objs/format.o: structs.h parse.h immunity.h discipline.h spell2.h db.h ansi.h
-objs/format.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
-objs/format.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
-objs/format.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
-objs/format.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
-objs/format.o: charfile.h being.h person.h monster.h account.h extern.h
-objs/format.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/format.o: colorstring.h format.h
 objs/gaining.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
 objs/gaining.o: /usr/include/stddef.h /usr/include/machine/ansi.h
 objs/gaining.o: /usr/include/math.h /usr/include/sys/cdefs.h stdsneezy.h

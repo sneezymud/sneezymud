@@ -18,13 +18,22 @@ class fmt : public sstring {
 
 template <class T> sstring fmt::doFormat(const sstring &fmt, const T &x)
 {
-  sstring buf;
+  char buf[MAX_STRING_LENGTH];
 
-  ssprintf(buf, fmt.c_str(), x);
+  snprintf(buf, MAX_STRING_LENGTH, fmt.c_str(), x);
 
-  return buf;
+  if(strlen(buf) == MAX_STRING_LENGTH - 1){
+    vlogf(LOG_BUG, "fmt::doFormat(): buffer reached MAX_STRING_LENGTH");
+    vlogf(LOG_BUG, "fmt::doFormat(): buffer=%.70s...", buf);
+  }
+
+  return (sstring) buf;
 }
 
+sstring fmt::doFormat(const sstring &fmt, const sstring &x)
+{
+  return doFormat(fmt, x.c_str());
+}
 
 
 template <class T> fmt & fmt::operator %(const T &x)
