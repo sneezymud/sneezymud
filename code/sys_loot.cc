@@ -200,9 +200,6 @@ bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
         return false;
       }
 
-      if (gamePort != PROD_GAMEPORT)
-        vlogf(LOG_LOW, "Loot Load: %s -> %s", tObj->getName(), tThing->getName());
-
       *tThing += *tObj;
 
       if (!isImmortal)
@@ -237,8 +234,6 @@ bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
         *tThing += *tMoney;
       }
 
-      if (gamePort != PROD_GAMEPORT)
-        vlogf(LOG_LOW, "Loot Load: %.0f talens -> %s", tCashValue, tThing->getName());
     }
 
   return tLoaded;
