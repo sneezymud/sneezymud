@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_rooms.cc,v $
+// Revision 1.5  1999/10/07 17:46:13  batopr
+// dump now records money as GOLD_DUMP
+//
 // Revision 1.4  1999/10/07 14:29:13  batopr
 // Added statistics.cch
 //
@@ -225,7 +228,7 @@ int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       // take the global income modifier into account, in times of drought, we
       // don't want folks resorting to using the dump to get their money
       value = (int) (value * gold_modifier[GOLD_INCOME]);
-      ch->addToMoney(value, GOLD_INCOME);
+      ch->addToMoney(value, GOLD_DUMP);
     }
   }
   return TRUE;
