@@ -281,9 +281,7 @@ void HoldemGame::showdown(TBeing *ch)
 
 
   // move button
-  vlogf(LOG_PEEL, "pre button: %i", button);
   button=nextButton();
-  vlogf(LOG_PEEL, "post button: %i", button);
 
   act("The button moves to $n.",
       FALSE, players[button]->ch, 0, 0, TO_ROOM);
