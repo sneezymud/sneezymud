@@ -1091,6 +1091,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_CALM:
       case SPELL_ACCELERATE:
       case SPELL_CHEVAL: // shaman
+      case SPELL_CELERITE:
       case SPELL_LEVITATE:
       case SPELL_FEATHERY_DESCENT:
       case SPELL_STEALTH:

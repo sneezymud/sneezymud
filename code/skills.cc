@@ -913,6 +913,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDShaman *) cd)->skDancingBones;
     case SPELL_VOODOO: // 405
       return &((CDShaman *) cd)->skVoodoo;
+    case SPELL_ENTHRALL_GHOUL:
+      return &((CDShaman *) cd)->skEnthrallGhoul;
 
       // spider abilities----------------------
 
@@ -951,6 +953,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
       // armadillo abilities----------------------
 
+    case SPELL_CELERITE:
+      return &((CDShamanArmadillo *) cd)->skCelerite;
     case SPELL_SHADOW_WALK:  // 545
       return &((CDShamanArmadillo *) cd)->skShadowWalk;
     case SPELL_AQUALUNG: 
@@ -960,8 +964,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
       // control abilities--------------------------
 
-    case SPELL_ENTHRALL_GHOUL:
-      return &((CDShamanControl *) cd)->skEnthrallGhoul;
     case SPELL_ENTHRALL_DEMON:
       return &((CDShamanControl *) cd)->skEnthrallDemon;
     case SPELL_CREATE_WOOD_GOLEM:

@@ -2486,6 +2486,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_CHEVAL: // shaman
       cheval(caster,victim,obj);
       break;
+    case SPELL_CELERITE: // shaman
+      celerite(caster,victim,obj);
+      break;
     case SPELL_HASTE:
       haste(caster,victim,obj);
       break;

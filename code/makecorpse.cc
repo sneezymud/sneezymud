@@ -526,6 +526,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SPELL_CALM:
       case SPELL_ACCELERATE:
       case SPELL_CHEVAL:
+      case SPELL_CELERITE:
       case SPELL_LEVITATE:
       case SPELL_FEATHERY_DESCENT:
       case SPELL_STEALTH:

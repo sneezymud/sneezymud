@@ -523,7 +523,7 @@ int TBeing::rawMove(dirTypeT dir)
     if (isLevitating())
       need_movement = min(5, need_movement/4);
 
-    if (affectedBySpell(SPELL_HASTE) || affectedBySpell(SPELL_ACCELERATE) || affectedBySpell(SPELL_CHEVAL))
+    if (affectedBySpell(SPELL_HASTE) || affectedBySpell(SPELL_ACCELERATE) || affectedBySpell(SPELL_CHEVAL) || affectedBySpell(SPELL_CELERITE))
       need_movement = max(0, need_movement/2);
 
     if (inLethargica()) {
@@ -668,7 +668,7 @@ int TBeing::rawMove(dirTypeT dir)
         need_movement++;
     }
  
-    if (affectedBySpell(SPELL_HASTE) || affectedBySpell(SPELL_ACCELERATE) || affectedBySpell(SPELL_CHEVAL))
+    if (affectedBySpell(SPELL_HASTE) || affectedBySpell(SPELL_ACCELERATE) || affectedBySpell(SPELL_CHEVAL) || affectedBySpell(SPELL_CELERITE))
       need_movement = max(0, need_movement/2);
 
     if ((getMove() < need_movement) && !isImmortal()) {

@@ -6,7 +6,6 @@
 class CDShamanControl : public CDiscipline
 {
 public:
-    CSkill skEnthrallGhoul;
     CSkill skEnthrallDemon;
     CSkill skCreateWoodGolem;
     CSkill skCreateRockGolem;
@@ -16,7 +15,6 @@ public:
 
     CDShamanControl()
       : CDiscipline(),
-      skEnthrallGhoul(),
       skEnthrallDemon(),
       skCreateWoodGolem(),
       skCreateRockGolem(),
@@ -26,7 +24,6 @@ public:
     }
     CDShamanControl(const CDShamanControl &a)
       : CDiscipline(a),
-      skEnthrallGhoul(a.skEnthrallGhoul),
       skEnthrallDemon(a.skEnthrallDemon),
       skCreateWoodGolem(a.skCreateWoodGolem),
       skCreateRockGolem(a.skCreateRockGolem),
@@ -37,7 +34,6 @@ public:
     CDShamanControl & operator=(const CDShamanControl &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skEnthrallGhoul = a.skEnthrallGhoul;
       skEnthrallDemon = a.skEnthrallDemon;
       skCreateWoodGolem = a.skCreateWoodGolem;
       skCreateRockGolem = a.skCreateRockGolem;
@@ -50,10 +46,6 @@ public:
     virtual CDShamanControl * cloneMe() { return new CDShamanControl(*this); }
 private:
 };
-    int enthrallGhoul(TBeing * caster, int level, byte bKnown);
-    int enthrallGhoul(TBeing * caster);
-    int castEnthrallGhoul(TBeing * caster);
-
     int enthrallDemon(TBeing * caster, int level, byte bKnown);
     int enthrallDemon(TBeing * caster);
     int castEnthrallDemon(TBeing * caster);

@@ -1598,6 +1598,14 @@ void buildComponentArray()
     "$n swallows $p.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_CELERITE,
+    "",                       
+    "",
+    "",
+    "You eat $p.",
+    "$n eats $p.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_CLARITY,
     "",
     "",

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.25  2001/06/19 20:48:29  jesus
+// added spell fotr shaman and adjusted some learn rates on shaman
+//
 // Revision 5.24  2001/06/19 06:29:03  jesus
 // skills on shaman
 //
@@ -237,6 +240,7 @@ const int COMP_CARDIAC_STRESS     =31333;
 const int COMP_SQUISH             =31334;
 const int COMP_SOUL_TWIST         =31335;
 const int COMP_DEATHWAVE          =31336;
+const int COMP_CELERITE           =31337;
 
 class compPlace
 {

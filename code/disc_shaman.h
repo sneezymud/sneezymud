@@ -11,6 +11,7 @@ public:
     CSkill skShieldOfMists;
     CSkill skEnthrallSpectre;
     CSkill skEnthrallGhast;
+    CSkill skEnthrallGhoul;
     CSkill skVoodoo;
     CSkill skSoulTwist;
     CSkill skDistort;
@@ -33,6 +34,7 @@ public:
       skShieldOfMists(),
       skEnthrallSpectre(),
       skEnthrallGhast(),
+      skEnthrallGhoul(),
       skVoodoo(),
       skSoulTwist(),
       skDistort(),
@@ -55,6 +57,7 @@ public:
       skShieldOfMists(a.skShieldOfMists),
       skEnthrallSpectre(a.skEnthrallSpectre),
       skEnthrallGhast(a.skEnthrallGhast),
+      skEnthrallGhoul(a.skEnthrallGhoul),
       skVoodoo(a.skVoodoo),
       skSoulTwist(a.skSoulTwist),
       skDistort(a.skDistort),
@@ -78,6 +81,7 @@ public:
       skShieldOfMists = a.skShieldOfMists;
       skEnthrallSpectre = a.skEnthrallSpectre;
       skEnthrallGhast = a.skEnthrallGhast;
+      skEnthrallGhoul = a.skEnthrallGhoul;
       skVoodoo = a.skVoodoo;
       skSoulTwist = a.skSoulTwist;
       skDistort = a.skDistort;
@@ -117,6 +121,10 @@ private:
     int enthrallGhast(TBeing * caster, int level, byte bKnown);
     int enthrallGhast(TBeing * caster);
     int castEnthrallGhast(TBeing * caster);
+
+    int enthrallGhoul(TBeing * caster, int level, byte bKnown);
+    int enthrallGhoul(TBeing * caster);
+    int castEnthrallGhoul(TBeing * caster);
 
     int vampiricTouch(TBeing *, TBeing *);
     int castVampiricTouch(TBeing *, TBeing *);

@@ -21,7 +21,7 @@ int thornflesh(TBeing *caster)
     caster->nothingHappens();
     return SPELL_FAIL;
   }
-  if (!bPassMageChecks(caster, SPELL_THORNFLESH, NULL))
+  if (!bPassShamanChecks(caster, SPELL_THORNFLESH, NULL))
     return FALSE;
 
   lag_t rounds = discArray[SPELL_THORNFLESH]->lag;
@@ -163,7 +163,7 @@ int aqualung(TBeing * caster, TBeing * victim)
   if (canBeLunged(caster, victim))
     return FALSE;
 
-  if (!bPassMageChecks(caster, SPELL_AQUALUNG, victim))
+  if (!bPassShamanChecks(caster, SPELL_AQUALUNG, victim))
     return FALSE;
 
   lag_t rounds = discArray[SPELL_AQUALUNG]->lag;
@@ -293,3 +293,80 @@ ANSI_GRAY);
 }
 
 // END SHADOW WALK
+
+int celerite(TBeing *caster, TBeing *victim, int level, byte bKnown)
+{
+  affectedData aff;
+
+  caster->reconcileHelp(victim, discArray[SPELL_CELERITE]->alignMod);
+
+  if (bSuccess(caster, bKnown, SPELL_CELERITE)) {
+    aff.type = SPELL_CELERITE;
+    aff.level = level;
+    aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
+    aff.modifier = -100;
+    aff.location = APPLY_ARMOR;
+    aff.bitvector = 0;
+    switch (critSuccess(caster, SPELL_CELERITE)) {
+      case CRIT_S_DOUBLE:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_KILL:
+        CS(SPELL_CELERITE);
+        aff.duration *= 2;
+        break;
+      case CRIT_S_NONE:
+        break;
+    }
+
+    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
+      caster->nothingHappens();
+      return SPELL_FALSE;
+    }
+
+    act("$N moves more easily.",
+        FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_YELLOW_BOLD);
+    act("The power of the loa takes dominion inside of you!", 
+        FALSE, victim, NULL, NULL, TO_CHAR, ANSI_YELLOW_BOLD);
+    return SPELL_SUCCESS;
+  } else {
+    act("The loa ignore your unfaithful request!",
+        FALSE, caster, NULL, victim, TO_CHAR, ANSI_YELLOW);
+    caster->addToLifeforce(-10);
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
+}
+
+int celerite(TBeing *caster, TBeing *victim)
+{
+  taskDiffT diff;
+
+    if (!bPassShamanChecks(caster, SPELL_CELERITE, victim))
+       return FALSE;
+
+     lag_t rounds = discArray[SPELL_CELERITE]->lag;
+     diff = discArray[SPELL_CELERITE]->task;
+
+     start_cast(caster, victim, NULL, caster->roomp, SPELL_CELERITE, diff, 1, "", 
+rounds, caster->in_room, 0, 0,TRUE, 0);
+       return TRUE;
+}
+
+void celerite(TBeing *caster, TBeing *victim, TMagicItem * obj)
+{
+  celerite(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+}
+
+int castCelerite(TBeing *caster, TBeing *victim)
+{
+int ret,level;
+
+  level = caster->getSkillLevel(SPELL_CELERITE);
+  int bKnown = caster->getSkillValue(SPELL_CELERITE);
+
+  if ((ret=celerite(caster,victim,level,bKnown)) == SPELL_SUCCESS) {
+  } else {
+  }
+  return TRUE;
+}
+

@@ -1487,6 +1487,8 @@ void TPerson::addToWait(int orig_amt)
     mod = 75;
   if (affectedBySpell(SPELL_HASTE))
     mod = 60;
+  if (affectedBySpell(SPELL_CELERITE))
+    mod = 60;
 
   int amt = orig_amt * mod / 100;
 

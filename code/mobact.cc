@@ -4324,6 +4324,15 @@ int TMonster::defendSelf(int)
       }
     }
     if (!found) {
+      spell = SPELL_CELERITE;
+      if (!affectedBySpell(spell) && 
+           doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
+        act("$n sings the words, 'Kick up your heels! Stick out your toosh!'",
+                 TRUE, this, 0, 0, TO_ROOM);
+        found = TRUE;
+      }
+    }
+    if (!found) {
       spell = SPELL_THORNFLESH;
       if (!affectedBySpell(spell) && 
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
@@ -4332,7 +4341,6 @@ int TMonster::defendSelf(int)
         found = TRUE;
       }
     }
-#ifdef GEEPERS
     if (!found) {
       spell = SPELL_SHADOW_WALK;
       if (!affectedBySpell(spell) && 
@@ -4342,7 +4350,6 @@ int TMonster::defendSelf(int)
         found = TRUE;
       }
     }
-#endif
     if (!found) {
       spell = SPELL_CLARITY;
       if (!affectedBySpell(spell) && 

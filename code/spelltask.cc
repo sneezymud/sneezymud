@@ -1193,6 +1193,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_STEALTH:
     case SPELL_ACCELERATE:
     case SPELL_CHEVAL: // shaman
+    case SPELL_CELERITE:
     case SPELL_HASTE:
     case SPELL_CALM:
     case SPELL_SENSE_LIFE:
@@ -1990,6 +1991,9 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         break;
      case SPELL_CHEVAL:
         castCheval(this, victim);
+        break;
+     case SPELL_CELERITE:
+        castCelerite(this, victim);
         break;
      case SPELL_HASTE:
         castHaste(this, victim);

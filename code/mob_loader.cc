@@ -657,6 +657,7 @@ void TMonster::shamanComponentLoader(void)
           if (::number(0,9) < 5)
             num = -1;
           break;
+	case COMP_CELERITE:
         case COMP_RAZE:
         case COMP_CARDIAC_STRESS:
         case COMP_AQUATIC_BLAST:

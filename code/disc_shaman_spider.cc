@@ -605,7 +605,7 @@ int hypnosis(TBeing *caster, TBeing *victim)
     return SPELL_FAIL;
   }
 
-  if (!bPassMageChecks(caster, SPELL_HYPNOSIS, NULL))
+  if (!bPassShamanChecks(caster, SPELL_HYPNOSIS, NULL))
     return FALSE;
 
   lag_t rounds = discArray[SPELL_HYPNOSIS]->lag;
