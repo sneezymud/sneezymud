@@ -2122,7 +2122,7 @@ int collapsingTunnel(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 
   act("<k>Rubble<1> collapses <k>behind you, blocking the way you came.<1>", FALSE, ch, NULL, NULL, TO_CHAR);
   int dam = ::number(21,40);
-  if(::number(0,100) > ch->plotStat(STAT_CURRENT, STAT_DEX, 0, 50, 100)) {
+  if(::number(0,100) > ch->plotStat(STAT_CURRENT, STAT_DEX, 0, 100, 50)) {
     act("<k>You're hit by the falling rocks!  Ouch!<1>", FALSE, ch, NULL, NULL, TO_CHAR);
   } else {
     act("<k>You manage to dodge most of the falling rocks!  Whew.<1>", FALSE, ch, NULL, NULL, TO_CHAR);
