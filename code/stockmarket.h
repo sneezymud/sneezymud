@@ -3,5 +3,7 @@
 
 void updateStockHistory();
 void updateStocks();
+float getBidPrice(float);
+float getAskPrice(float);
 
 #endif
