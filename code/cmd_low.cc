@@ -1070,6 +1070,9 @@ void TPerson::doLow(const char *arg)
     lowWeaps(arg);
 #endif
     return;
+  } else if (is_abbrev(buf, "tasks")) {
+    lowTasks(arg);
+    return;
   } else if (is_abbrev(buf, "mobs")) {
     lowMobs(arg);
     return;
@@ -1280,6 +1283,167 @@ void TBeing::lowRace(const char *arg)
   str += "\n\r";
 
   desc->page_string(str.c_str());
+}
+
+void TBeing::lowTasks(const char *arg)
+{
+  // this works a database of tasks that need doing for the low team
+  // low tasks list [<name>]
+  // low tasks add <priority> <task>
+  // low tasks assign <task ID> <name>
+  // low tasks priority <task ID> <priority>
+  // low tasks status <task ID> <status>
+  // low tasks delete <task ID>
+  TDatabase db("sneezy");
+
+  char buf[256], buf2[256], temp[512];
+  string str;
+  int id, priority;
+
+  arg = one_argument(arg, buf);
+  if (!*buf) {
+    sendTo("Syntax: low  tasks <list | add | assign | priority | delete> ...\n\r");
+    return;
+  } else if (is_abbrev(buf, "list")) {
+    arg = one_argument(arg, buf);
+    if (!*buf) {
+      
+      sprintf(temp, "select id, priority, assigned_to, task, status from lowtasks order by priority");
+      vlogf(LOG_DASH, "lowtask: %s", temp);
+      db.query(temp);
+    
+    } else {
+      
+      sprintf(temp, "select id, priority, assigned_to, task, status from lowtasks where assign_to='%s' order by priority", buf);
+      vlogf(LOG_DASH, "lowtask: %s", temp);
+      db.query(temp);
+
+    }
+
+    str =  "ID  | P |  Assigned To  |  Task Description (Status)\n\r";
+    str += "---------------------------------------------------------\n\r";
+
+    while(1){
+      if(!db.fetchRow()){
+	break;
+      }
+      id = atoi(db.getColumn(0));
+      priority = atoi(db.getColumn(2));
+      sprintf(buf, "%-4d| %d |  %-13s| %s (%s)\n\r", id, priority, db.getColumn(2), db.getColumn(3), db.getColumn(4));      
+      str += buf;
+    }
+
+    if (desc)
+      desc->page_string(str.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+
+
+    return;
+  } else if (is_abbrev(buf, "add")) {
+    arg = one_argument(arg, buf);
+    arg = one_argument(arg, buf2);
+    if (!*buf || !*buf2) {
+      sendTo("Syntax: low tasks add <priority> <task>\n\r");
+      return;
+    } else {
+      priority = atoi(buf);
+      if (priority < 0 || priority > 9) {
+	sendTo("Priority must be between 0 (highest) and 9 (lowest).\n\r");
+	return;
+      } else {
+	sprintf(temp, "select id from lowtasks order by id desc");
+	vlogf(LOG_DASH, "lowtask: %s", temp);
+	db.query(temp);
+
+	if(!db.fetchRow()) {
+	  id = 0;
+	} else {
+	  id = atoi(db.getColumn(0)) + 1;
+	}
+        sprintf(temp, "insert into lowtasks (id, priority, assigned_to, task, status) values(%d, %d, '%s', '%s', '')", id, priority, getName(), buf2);
+        vlogf(LOG_DASH, "lowtask: %s", temp);
+        db.query(temp);
+
+	sendTo("New task inserted into list.\n\r");
+	return;
+      }
+    }
+    return;
+  } else if (is_abbrev(buf, "assign")) {
+    arg = one_argument(arg, buf);
+    arg = one_argument(arg, buf2);
+    if (!*buf || !*buf2) {
+      sendTo("Syntax: low tasks assign <task ID> <name>\n\r");
+      return;
+    } else {
+      id = atoi(buf);
+      sprintf(temp, "update lowtasks set assigned_to='%s' where id=%d", buf2, id);
+      vlogf(LOG_DASH, "lowtask: %s", temp);
+      db.query(temp);
+
+      sendTo("Task assignment updated.\n\r");
+      return;
+    }
+    return;
+  } else if (is_abbrev(buf, "priority")) {
+    arg = one_argument(arg, buf);
+    arg = one_argument(arg, buf2);
+    if (!*buf || !*buf2) {
+      sendTo("Syntax: low tasks status <task ID> <status>\n\r");
+      return;
+    } else {
+      id = atoi(buf);
+      sprintf(temp, "update lowtasks set status='%s' where id=%d", buf2, id);
+      vlogf(LOG_DASH, "lowtask: %s", temp);
+      db.query(temp);
+      
+      sendTo("Task status updated.\n\r");
+      return;
+    }
+    return;
+  } else if (is_abbrev(buf, "priority")) {
+    arg = one_argument(arg, buf);
+    arg = one_argument(arg, buf2);
+    if (!*buf || !*buf2) {
+      sendTo("Syntax: low tasks priority <task ID> <priority>\n\r");
+      return;
+    } else {
+      id = atoi(buf);
+      priority = atoi(buf2);
+      if (priority < 0 || priority > 9) {
+        sendTo("Priority must be between 0 (highest) and 9 (lowest).\n\r");
+        return;
+      } else {
+	sprintf(temp, "update lowtasks set priority=%d where id=%d", priority, id);
+	vlogf(LOG_DASH, "lowtask: %s", temp);
+	db.query(temp);
+
+	sendTo("Task priority updated.\n\r");
+	return;
+      }
+    }
+    return;
+  } else if (is_abbrev(buf, "delete")) {
+    arg = one_argument(arg, buf);
+    if (!*buf) {
+      sendTo("Syntax: low tasks delete <task ID>\n\r");
+      return;
+    } else {
+      id = atoi(buf);
+      
+
+      sprintf(temp, "delete from lowtasks where id=%d", id);
+      vlogf(LOG_DASH, "lowtask: %s", temp);
+      db.query(temp);
+
+      sendTo("Task deleted.\n\r");
+      return;
+    }
+ 
+    return;
+  }
+
+  return;
+
 }
 
 void TBeing::lowMobs(const char *arg)
