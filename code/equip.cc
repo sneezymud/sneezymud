@@ -110,8 +110,13 @@ bool TBeing::isWieldingWeapon()
   return FALSE;
 }
 
-bool TBeing::canUseEquipment(const TObj *o, silentTypeT silent) const
+bool TBeing::canUseEquipment(const TObj *o, silentTypeT silent, wearKeyT key=WEAR_KEY_NONE) const
 {
+  bool held=false;
+
+  if(key==WEAR_KEY_HOLD || key==WEAR_KEY_HOLD_R || key==WEAR_KEY_HOLD_L)
+    held=true;
+
   if (!isImmortal()) {
     if (IsRestricted(GetItemClassRestrictions(o), getClass())) {
       if (!silent)
@@ -133,7 +138,7 @@ bool TBeing::canUseEquipment(const TObj *o, silentTypeT silent) const
         sendTo("Rangers shun the use of metal armor.\n\r");
       return FALSE;
     }
-    if (getRace() == RACE_HOBBIT && o->canWear(ITEM_WEAR_FEET)) {
+    if (getRace() == RACE_HOBBIT && o->canWear(ITEM_WEAR_FEET) && !held) {
       if (!silent)
         sendTo("Cover up your beautiful, furry feet?!?  No way!\n\r");
       return FALSE;
@@ -293,7 +298,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
   int primary = 0, rc = 0;
   spellNumT skill = TYPE_UNDEFINED;
 
-  if (!canUseEquipment(o, SILENT_NO))
+  if (!canUseEquipment(o, SILENT_NO, keyword))
     return FALSE;
 
   if (!isImmortal() && desc && (isTanking() || 

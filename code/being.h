@@ -1572,7 +1572,7 @@ class TBeing : public TThing {
     bool bothArmsHurt() const;
     bool bothHandsHurt() const;
     bool eitherArmHurt() const;
-    bool canUseEquipment(const TObj *, silentTypeT) const;
+    bool canUseEquipment(const TObj *, silentTypeT, wearKeyT=WEAR_KEY_NONE) const;
     bool canUseLimb(wearSlotT) const;
     bool canUseHand(bool) const;
     bool canUseArm(primaryTypeT) const;
