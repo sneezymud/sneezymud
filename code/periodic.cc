@@ -246,7 +246,7 @@ bool TObj::joinTrash()
       break;
   }
   if(!pile){
-    o=read_object(648, VIRTUAL);
+    o=read_object(GENERIC_TRASH_PILE, VIRTUAL);
     if(!(pile=dynamic_cast<TTrashPile *>(o))){
       vlogf(LOG_BUG, "generic trash pile wasn't a trash pile!");
       delete o;

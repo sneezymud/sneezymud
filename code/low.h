@@ -97,6 +97,7 @@ const int WEAPON_AVENGER3      = 326;
 const int OBJ_CARAVAN          = 519;
 const int OBJ_TRADE_GOOD       = 520;
 const int GENERIC_MONEYPOUCH   = 604;
+const int GENERIC_TRASH_PILE   = 648;
 // vnums for various set-trap items
 const int ST_FLINT      = 900;
 const int ST_SULPHUR    = 901;
