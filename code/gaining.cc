@@ -952,31 +952,31 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_AFFLICTIONS, "afflictions", "the Art of Afflictions", DISC_AFFLICTIONS, CLASS_CLERIC},
   {SPEC_TRAINER_CURE, "cures", "the Healing Arts", DISC_CURES, CLASS_CLERIC},
   {SPEC_TRAINER_HAND_OF_GOD, "hand", "the Hand of the Deities", DISC_HAND_OF_GOD, CLASS_CLERIC},
-  {SPEC_GM_RANGER, "ranger", "the Ways of the Ranger", DISC_RANGER, CLASS_RANGER},
+  {SPEC_TRAINER_RANGER, "ranger", "the Ways of the Ranger", DISC_RANGER, CLASS_RANGER},
   {SPEC_TRAINER_LOOTING, "looting", "Looting and Plundering", DISC_LOOTING, CLASS_THIEF},
   {SPEC_TRAINER_MURDER, "murder", "about Deadly Murder", DISC_MURDER, CLASS_THIEF},
   {SPEC_TRAINER_HAND_TO_HAND, "hth", "Hand-to-Hand Combat", DISC_HTH, CLASS_WARRIOR},
   {SPEC_TRAINER_ADVENTURING, "adventuring", "Adventurers' Lore", DISC_ADVENTURING, CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN},
   {SPEC_TRAINER_COMBAT, "combat", "Combat Skills", DISC_COMBAT, CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN},
-  {SPEC_GM_WARRIOR, "warrior", "the Ways of the Warrior", DISC_WARRIOR, CLASS_WARRIOR},
+  {SPEC_TRAINER_WARRIOR, "warrior", "the Ways of the Warrior", DISC_WARRIOR, CLASS_WARRIOR},
   {SPEC_TRAINER_WIZARDRY, "wizardry", "Wizardry", DISC_WIZARDRY, CLASS_MAGIC_USER},
   {SPEC_TRAINER_FAITH, "faith", "Faith", DISC_FAITH, CLASS_CLERIC | CLASS_DEIKHAN},
   {SPEC_TRAINER_SLASH, "slash", "Slash Specialization", DISC_SLASH, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN},
   {SPEC_TRAINER_BLUNT, "blunt", "Blunt Specialization", DISC_BLUNT, CLASS_WARRIOR | CLASS_CLERIC | CLASS_DEIKHAN | CLASS_SHAMAN},
   {SPEC_TRAINER_PIERCE, "pierce", "Pierce Specialization", DISC_PIERCE, CLASS_WARRIOR | CLASS_THIEF | CLASS_MAGIC_USER | CLASS_RANGER | CLASS_SHAMAN},
   {SPEC_TRAINER_RANGED, "ranged", "Ranged Specialization", DISC_RANGED, CLASS_RANGER},
-  {SPEC_GM_DEIKHAN, "deikhan", "the Ways of the Deikhan", DISC_DEIKHAN, CLASS_DEIKHAN},
+  {SPEC_TRAINER_DEIKHAN, "deikhan", "the Ways of the Deikhan", DISC_DEIKHAN, CLASS_DEIKHAN},
   {SPEC_TRAINER_BRAWLING, "brawling", "Brawling Moves", DISC_BRAWLING, CLASS_WARRIOR},
   {SPEC_TRAINER_MEDITATION_MONK, "meditation", "about Meditation", DISC_MEDITATION_MONK, CLASS_MONK},
   {SPEC_TRAINER_SURVIVAL, "survival", "How to Survive", DISC_SURVIVAL, CLASS_RANGER},
   {SPEC_TRAINER_SHAMAN_ARMADILLO, "armadillo", "about the Abilities of the Armadillo", DISC_SHAMAN_ARMADILLO, CLASS_SHAMAN},
   {SPEC_TRAINER_ANIMAL, "animal", "Animal Magic", DISC_ANIMAL, CLASS_RANGER},
   {SPEC_TRAINER_AEGIS, "aegis", "the Aegis of the Deities", DISC_AEGIS, CLASS_CLERIC},
-  {SPEC_GM_SHAMAN, "shaman", "The Ways of the Shaman", DISC_SHAMAN, CLASS_SHAMAN},
-  {SPEC_GM_MAGE, "mage", "the arts of Magic", DISC_MAGE, CLASS_MAGE},
-  {SPEC_GM_MONK, "monk", "the ways of the Monk", DISC_MONK, CLASS_MONK},
-  {SPEC_GM_CLERIC, "cleric", "the Ways of the Cleric", DISC_CLERIC, CLASS_CLERIC},
-  {SPEC_GM_THIEF, "thief", "the Ways of the Thief", DISC_THIEF, CLASS_THIEF},
+  {SPEC_TRAINER_SHAMAN, "shaman", "The Ways of the Shaman", DISC_SHAMAN, CLASS_SHAMAN},
+  {SPEC_TRAINER_MAGE, "mage", "the arts of Magic", DISC_MAGE, CLASS_MAGE},
+  {SPEC_TRAINER_MONK, "monk", "the ways of the Monk", DISC_MONK, CLASS_MONK},
+  {SPEC_TRAINER_CLERIC, "cleric", "the Ways of the Cleric", DISC_CLERIC, CLASS_CLERIC},
+  {SPEC_TRAINER_THIEF, "thief", "the Ways of the Thief", DISC_THIEF, CLASS_THIEF},
   {SPEC_TRAINER_PLANTS, "plants", "about Plants and Herbs", DISC_PLANTS, CLASS_RANGER},
   {SPEC_TRAINER_PHYSICAL, "physical", "Physical Prowess", DISC_PHYSICAL, CLASS_WARRIOR},
   {SPEC_TRAINER_SMYTHE, "smythe", "Smythe Skills", DISC_SMYTHE, CLASS_WARRIOR},
@@ -1951,7 +1951,7 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
   if (cmd == CMD_GENERIC_PULSE)
     me->aiMaintainCalm();
 
-  if(cmd != CMD_PRACTICE && cmd!=CMD_GAIN && cmd!=CMD_SAY && cmd!=CMD_SAY2)
+  if(cmd!=CMD_GAIN)
     return false;
 
   if(!ch || !me)
@@ -1993,57 +1993,7 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
     }
     return TRUE;
   }
-  
-
-  if(cmd==CMD_SAY || cmd==CMD_SAY2){
-    if(argument.lower()=="hello"){
-      me->doSay("Hello, I am your guildmaster.");
-      me->doSay("You can <c>practice<1> with me to learn more about your class discipline.");
-      me->doSay("You can also <c>gain<1> with me to learn more about quests and training.");
-      return TRUE;
-    } else if(argument.lower()=="practice"){
-      cmd=CMD_PRACTICE;
-    } else if(argument.lower()=="gain"){
-      cmd=CMD_GAIN;
-    }
-  }
-
-
-  if(cmd==CMD_PRACTICE || cmd==CMD_GAIN){
-    if (ch->getClassLevel(CLASS_MONK) >= 5 && 
-	!ch->hasQuestBit(TOG_MONK_PAID_TABUDA)) {
-      sstring buf;
-      int amount = 20 * ch->getClassLevel(CLASS_MONK) * ch->getClassLevel(CLASS_MONK);
-      if ((ch->getMoney() < amount)) {
-	ssprintf(buf, "$n says, \"Sorry $N, the High Tabuda demands %d talens before I can teach you.\"", amount);
-	act(buf, FALSE, me, 0, ch, TO_VICT);
-	return TRUE;
-      } else {
-	ch->addToMoney(-amount, GOLD_REPAIR);
-	ch->setQuestBit(TOG_MONK_PAID_TABUDA);
-	
-	ssprintf(buf, "$n says, \"$N, the High Tabuda thanks you for your %d talen donation to the kwoon.\"", amount);
-	act(buf, FALSE, me, 0, ch, TO_VICT);
-	
-	act("$n says, \"Here, have a fortune cookie.\"",
-	    FALSE, me, 0, ch, TO_VICT);
-	TObj *o=read_object(606, VIRTUAL);
-	*ch += *o;
-	act("$n gives you $p.", 0, me, o, ch, TO_VICT);
-	return TRUE;
-      }
-    }
-  }
-
-  
-  if(cmd==CMD_PRACTICE){
-    CDGenericTrainer(ch, cmd, arg, me, NULL);
-    return TRUE;
-  }
-
-  if (cmd != CMD_GAIN)
-    return FALSE;
-
+    
   if (ch->isImmortal() || !me)
     return FALSE;
 
