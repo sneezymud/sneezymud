@@ -456,40 +456,42 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
     indent = false;
   }
 
-  for(int i=0;!garbled.word(i).empty();++i){
-    sstring word, stripped_word;
-
-    word = garbled.word(i);
+  sstring raw_word = garbled.word(0);
+  for(int i=0;!raw_word.empty();raw_word = garbled.word(++i)){
 
     // count the number of unprintable characters in each word
-    stripped_word = stripColorCodes(word);
+    sstring stripped_word = stripColorCodes(raw_word);
     swlen = stripped_word.length();
 
     // add the length difference to the total difference for the current line
-    llen_diff += word.length() - swlen;
+    llen_diff += raw_word.length() - swlen;
 
     // if the word is too long to fit on the current line
-    if ((line.length() + 1) + (word.length() + 1) >= (79 + llen_diff)) {
-      line += "\n\r";
+    if ((line.length() + 1) + (raw_word.length() + 1) >= (79 + llen_diff)) {
+      if (!garbled.word(i+1).empty()) {
+        line += "\n\r";
+      }
 
       // then start a new line
       newDescr += line;
 
       // check if the stripped word ends with punctuation
       if (wordHasPunctuation(stripped_word)) {
-        word += " "; // and add an extra space to the end of the original word
+        // and add an extra space to the end of the original word
+        raw_word += " ";
       }
 
-      line = word;
+      line = raw_word;
       // we just started a new line, so reset the line length difference
       // to that of the word minus stripped word
-      llen_diff = word.length() - swlen;
+      llen_diff = raw_word.length() - swlen;
 
-    } else { // word fits ok on the current line
-
+    // word fits ok on the current line
+    } else {
       // check if the stripped word ends with punctuation
       if (wordHasPunctuation(stripped_word)) {
-        word += " "; // and add an extra space to the end of the original word
+        // and add an extra space to the end of the original word
+        raw_word += " ";
       }
 
       // if the length of the stripped word > 0
@@ -503,7 +505,7 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
       } else {
         was_word = false;
       }
-      line += word;
+      line += raw_word;
     }
   }
 
@@ -5097,7 +5099,7 @@ void TBeing::sendRoomDesc(TRoom *rp) const
       sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), tmp.toCRLF().c_str(), norm());
       // sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), autoFormatDesc(rp->getDescr(), true, true).c_str(), norm());
     } else {
-      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), autoFormatDesc(tmp.toCRLF().c_str(), true).c_str(), norm());
+      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), autoFormatDesc(tmp, true).c_str(), norm());
     }
   }
 }
