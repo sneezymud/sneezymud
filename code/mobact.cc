@@ -3481,7 +3481,7 @@ int TMonster::mobileActivity(int pulse)
 
       TDatabase db("sneezy");
 
-      db.query("update stockinfo set talens=talens-%i where shop_nr=%i", 10, shop_nr);
+      //      db.query("update stockinfo set talens=talens-%i where shop_nr=%i", 10, shop_nr);
 
 #if 0
       setMoney(getMoney()-100);
