@@ -408,8 +408,7 @@ void TBeing::doShout(const char *arg)
 
 void TBeing::doGrouptell(const char *arg)
 {
-  char buf[MAX_INPUT_LENGTH + 40]; // was buf[256]
-  string garbed;
+  string buf, garbed;
   followData *f;
   TBeing *k;
 
@@ -432,7 +431,6 @@ void TBeing::doGrouptell(const char *arg)
     sendTo("You don't seem to have a group.\n\r");
     return;
   }
-  *buf = '\0';
 
   if (!(k = master))
     k = this;
@@ -456,8 +454,8 @@ void TBeing::doGrouptell(const char *arg)
     }
     // a crash bug lies here....cut and paste from windows notepad
     // plays with the next few lines for some reason
-    sprintf(buf, "$n: %s%s%s", k->red(), colorString(this, k->desc, garbed.c_str(), NULL, COLOR_COMM, FALSE).c_str(), k->norm());
-    act(buf, 0, this, 0, k, TO_VICT);
+    ssprintf(buf, "$n: %s%s%s", k->red(), colorString(this, k->desc, garbed.c_str(), NULL, COLOR_COMM, FALSE).c_str(), k->norm());
+    act(buf.c_str(), 0, this, 0, k, TO_VICT);
   }
   for (f = k->followers; f; f = f->next) {
     if ((f->follower != this) && f->follower->isAffected(AFF_GROUP) && !f->follower->checkSoundproof()) {
@@ -465,8 +463,8 @@ void TBeing::doGrouptell(const char *arg)
         f->follower->desc->clientf("%d|%s|%s", CLIENT_GROUPTELL, getName(), 
           colorString(this, f->follower->desc, garbed.c_str(), NULL, COLOR_NONE, FALSE).c_str());
       }
-      sprintf(buf, "$n: %s%s%s", f->follower->red(), colorString(this, f->follower->desc, garbed.c_str(), NULL, COLOR_COMM, FALSE).c_str(), f->follower->norm());
-      act(buf, 0, this, 0, f->follower, TO_VICT);
+      ssprintf(buf, "$n: %s%s%s", f->follower->red(), colorString(this, f->follower->desc, garbed.c_str(), NULL, COLOR_COMM, FALSE).c_str(), f->follower->norm());
+      act(buf.c_str(), 0, this, 0, f->follower, TO_VICT);
     }
   }
 }
