@@ -2250,6 +2250,7 @@ int youthPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 int statPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 {
   int rc;
+
   if (genericPotion(ch, me, cmd, arg, rc))
     return rc;
 
@@ -2304,6 +2305,8 @@ int statPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     case STAT_LUC:
     case STAT_EXT:
     case MAX_STATS:
+      ch->age_mod -= 1;
+      ch->sendTo("You feel younger.\n\r");
       break;
   }
 
