@@ -80,6 +80,11 @@ void TShopOwned::setDividend(sstring arg)
 
   double f=convertTo<double>(arg);
 
+  if(f > 1.0 || f < 0.0){
+    keeper->doTell(ch->getName(), "The dividend percentage must be less than or equal to 1.0 and greater than or equal to 0.0.");
+    return;
+  }
+
   db.query("update shopowned set dividend=%f where shop_nr=%i", f, shop_nr);
 
   keeper->doTell(ch->getName(), fmt("Ok, the dividend percentage has been set to %f.") % f);
