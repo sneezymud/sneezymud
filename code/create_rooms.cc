@@ -13,6 +13,7 @@
 #include "stdsneezy.h"
 #include "obj_table.h"
 #include "obj_seethru.h"
+#include "database.h"
 
 const char *room_fields[] =
 {

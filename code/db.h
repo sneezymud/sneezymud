@@ -29,7 +29,6 @@ const char * const SIGN_MESS = "/mud/sign/currentMess";
 
 const char * const DFLT_DIR  ="lib";           /* default data directory     */
 
-const char * const WORLD_FILE       ="tinyworld.wld"; /* room definitions*/
 const char * const MOB_FILE         ="tinymob.use"; /* monster prototypes*/
 const char * const ZONE_FILE ="tinyworld.zon"; /* zone defs & command tables */
 

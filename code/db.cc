@@ -427,20 +427,24 @@ void update_time(void)
 
 void bootWorld(void)
 {
-  int virtual_nr;
-  TRoom *rp;
-  int num = 0;
-  FILE *room_f;       // room file
+  int virtual_nr, num=0, tmp;
+  TRoom *rp=NULL;
+  TDatabase db(DB_SNEEZY), db_extras(DB_SNEEZY), db_exits(DB_SNEEZY);
+  extraDescription *new_descr;
 
   memset((char *) room_db, 0, sizeof(TRoom *) * WORLD_SIZE);
   character_list = NULL;
   object_list = NULL;
 
-  if (!(room_f = fopen(WORLD_FILE, "r"))) {
-    vlogf(LOG_FILE, "World file not found");
-    exit(0);
-  }
-  while (fscanf(room_f, " #%d\n", &virtual_nr) == 1) {
+  db.query("select * from room order by vnum asc");
+  db_exits.query("select * from roomexit order by vnum asc");
+  db_exits.fetchRow();
+  db_extras.query("select * from roomextra order by vnum asc");  
+  db_extras.fetchRow();
+
+  while(db.fetchRow()){
+    virtual_nr=convertTo<int>(db["vnum"]);
+
     if (virtual_nr/1000 > num) {
       num = virtual_nr/1000;
       vlogf(LOG_MISC, "Room %ld allocated", num*1000);
@@ -448,7 +452,127 @@ void bootWorld(void)
     } 
     allocate_room(virtual_nr);
     rp = real_roomp(virtual_nr);
-    rp->loadOne(room_f, true);
+
+    rp->setXCoord(convertTo<int>(db["x"]));
+    rp->setYCoord(convertTo<int>(db["y"]));
+    rp->setZCoord(convertTo<int>(db["z"]));
+    rp->name=mud_str_dup(db["name"]);
+    rp->setDescr(mud_str_dup(db["description"]));
+
+    if (!zone_table.empty()) {
+      //      fscanf(fl, " %*d ");  // this is the "zone" value - unused?
+      unsigned int z;
+      for (z = 0; rp->number>zone_table[z].top && z<zone_table.size(); z++);
+
+      if (z >= zone_table.size()) {
+	vlogf(LOG_EDIT, "Room %d is outside of any zone.\n", number);
+	exit(0);
+      }
+      rp->setZoneNum(z);
+    }
+    rp->setRoomFlags(convertTo<int>(db["room_flag"]));
+
+    rp->setSectorType(mapFileToSector(convertTo<int>(db["sector"])));
+
+    rp->setTeleTime(convertTo<int>(db["teleTime"]));
+    rp->setTeleTarg(convertTo<int>(db["teleTarg"]));
+    rp->setTeleLook(convertTo<int>(db["teleLook"]));
+    
+    rp->setRiverSpeed(convertTo<int>(db["river_speed"]));
+    rp->setRiverDir(mapFileToDir(convertTo<int>(db["river_dir"])));
+    rp->setMoblim(convertTo<int>(db["capacity"]));
+
+    rp->setRoomHeight(convertTo<int>(db["height"]));
+
+    rp->funct = 0;
+    rp->setLight(0);
+    rp->setHasWindow(0);
+
+    rp->ex_description = NULL;
+
+    // in case there are extras with no associated room, we need this
+    while(convertTo<int>(db_extras["vnum"]) < rp->number)
+      if(!db_extras.fetchRow())
+	break;
+
+
+    while(convertTo<int>(db_extras["vnum"]) == rp->number){
+      new_descr = new extraDescription();
+      new_descr->keyword = mud_str_dup(db_extras["name"]);
+      if (!new_descr->keyword || !*new_descr->keyword)
+	vlogf(LOG_EDIT, "No keyword in room %d\n", rp->number);
+      
+      new_descr->description = mud_str_dup(db_extras["description"]);
+      if (!new_descr->description || !*new_descr->description)
+	vlogf(LOG_LOW, "No desc in room %d\n", rp->number);
+      
+      new_descr->next = rp->ex_description;
+      rp->ex_description = new_descr;
+
+      if(!db_extras.fetchRow())
+	break;
+    }
+
+    dirTypeT dir;
+    for (dir = MIN_DIR; dir < MAX_DIR; dir++)
+      rp->dir_option[dir] = 0;
+
+    // in case there are exits with no associated room, we need this
+    while(convertTo<int>(db_exits["vnum"]) < rp->number)
+      if(!db_exits.fetchRow())
+	break;
+
+
+    while(convertTo<int>(db_exits["vnum"]) == rp->number){
+      dir=mapFileToDir(convertTo<int>(db_exits["direction"]));
+
+      rp->dir_option[dir] = new roomDirData();
+
+      if(*db_exits["name"])
+	rp->dir_option[dir]->keyword = mud_str_dup(db_exits["name"]);
+      else
+	rp->dir_option[dir]->keyword = NULL;
+
+      if(*db_exits["description"])
+	rp->dir_option[dir]->description = mud_str_dup(db_exits["description"]);
+      else
+	rp->dir_option[dir]->description = NULL;
+
+      tmp=convertTo<int>(db_exits["type"]);
+      if (tmp < 0 || tmp >= MAX_DOOR_TYPES) {
+	vlogf(LOG_LOW,"bogus door type (%d) in room (%d) dir %d.",
+	      tmp, rp->number, dir);
+	return;
+      }
+      rp->dir_option[dir]->door_type = doorTypeT(tmp);
+      if ((tmp == DOOR_NONE) && (rp->dir_option[dir]->keyword)){
+	if (strcmp(rp->dir_option[dir]->keyword, "_unique_door_"))
+	  vlogf(LOG_LOW,"non-door with name in room %d",rp->number);
+      }
+      if ((tmp != DOOR_NONE) && !(rp->dir_option[dir]->keyword)){
+	vlogf(LOG_LOW,"door with no name in room %d",rp->number);
+      }
+
+      rp->dir_option[dir]->condition = convertTo<int>(db_exits["condition_flag"]);
+      rp->dir_option[dir]->lock_difficulty= convertTo<int>(db_exits["lock_difficulty"]);;
+      rp->dir_option[dir]->weight= convertTo<int>(db_exits["weight"]);
+      rp->dir_option[dir]->key = convertTo<int>(db_exits["key_num"]);
+
+      rp->dir_option[dir]->to_room = convertTo<int>(db_exits["destination"]);
+
+      if (IS_SET(rp->dir_option[dir]->condition, EX_SECRET) && 
+	  canSeeThruDoor(rp->dir_option[dir])) {
+	if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED)){
+	  //vlogf(LOG_LOW, "See thru door set secret. (%d, %d)", room, dir);
+	} else
+	  vlogf(LOG_LOW, "Secret door saved as open. (%d, %d)",
+		rp->number, dir);
+      }
+      if(!db_exits.fetchRow())
+	break;
+    }
+    
+    roomCount++;
 
 #if 0
 // modified weather stuff, not used yet, BAT
@@ -494,7 +618,6 @@ void bootWorld(void)
                 rp->name,rp->number);
 #endif
   }
-  fclose(room_f);
 }
 
 
