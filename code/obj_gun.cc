@@ -213,6 +213,9 @@ TGun::TGun() :
   ammotype(1),
   ammo(NULL)
 {
+  setMaxSharp(100);
+  setCurSharp(100);
+
 }
 
 TGun::TGun(const TGun &a) :
