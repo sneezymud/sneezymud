@@ -651,29 +651,14 @@ int TBeing::doPray(const char *argument)
     sendTo("Sorry, you don't have the right form for that.\n\r");
     return FALSE;
   }
-  if (!isImmortal() && 
-         (!hasClass(CLASS_CLERIC) && !hasClass(CLASS_DEIKHAN))) {
-    if (hasClass(CLASS_MAGE)) {
-      sendTo("Mages can't pray for spells, they cast!\n\r");
-      return FALSE;
-    } else if (hasClass(CLASS_WARRIOR)) {
-      sendTo("Warriors can't pray!\n\r");
-      return FALSE;
-    } else if (hasClass(CLASS_THIEF)) {
-      sendTo("Thieves can't pray!\n\r");
-      return FALSE;
-    } else if (hasClass(CLASS_MONK)) {
-      sendTo("Monks can't pray!\n\r");
-      return FALSE;
-    } else if (hasClass(CLASS_RANGER)) {
-      sendTo("Rangers can't pray!\n\r");
-      return FALSE;
-    } else if (hasClass(CLASS_SHAMAN)) {
-      sendTo("Shaman can't pray!\n\r");
-      return FALSE;
 
-    }
+  if(!doesKnowSkill(SKILL_DEVOTION) && 
+     !hasClass(CLASS_CLERIC) && !hasClass(CLASS_DEIKHAN)){
+    sendTo("You do not have the faith required to pray.\n\r");
+    return FALSE;
   }
+
+
   if (nomagic("Sorry, your deity refuses to contact you here."))
     return FALSE;
   
