@@ -28,7 +28,7 @@ static TObj * findHuntedItem(const TBeing *ch, const char *arg, const TObj *stop
     return NULL;
 
   TObj *obj, *last;
-  //  vlogf(LOG_DASH, "findHuntedItem(ch = %s, char = %s, targ = %s)", ch->getName(), arg, (targ ? targ : "NULL"));
+  //vlogf(LOG_DASH, "findHuntedItem(ch = %s, char = %s, targ = %s)", ch->getName(), arg, (targ ? targ : "NULL"));
 
   for (obj = object_list, last = NULL; obj; obj = obj->next) {
     if (isname(arg, obj->name)) {
@@ -167,7 +167,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
       for (; *arg == ' '; arg++);
       if (myself->act_ptr) {
         job = static_cast<bounty_hunt_struct *>(myself->act_ptr);
-        if (job->hunted_item != NULL) {
+	if (job->hunted_item != NULL) {
           if (job->singletarg)
 	    temp_obj = findHuntedItem(myself, job->hunted_item, job->noneBeyond, job->hunted_victim);
 	  else
@@ -182,7 +182,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
             } else if (cmd == CMD_GIVE) {
               if (((sscanf(arg, " %s %s", buf, buf2) == 2) && (isname(buf, temp_obj->name))) || 
                   ((sscanf(arg, " %s to %s", buf, buf2) == 2) && (isname(buf, temp_obj->name)))) {
-                if (isname(buf2, myself->getName())) {
+                if (isname(buf2, myself->name)) {
                   if (ch->doGive(arg) == DELETE_THIS)
                     return DELETE_VICT;
                   // double check that the give succeeded
@@ -193,8 +193,8 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
                     myself->doSay("I will leave you alone now that I have my bounty. Goodbye!!");
 		    //                    return DELETE_THIS;
 		    // curious what they do if i take this line out, heh. - dash
-		    if (job->singletarg) 
-		      job->missionaccomplished = true;
+		    //if (job->singletarg) 
+		    //  job->missionaccomplished = true;
 		    
 		    return TRUE;
                   }
@@ -345,7 +345,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
         if (ch)
           act(buf2, FALSE, myself, 0, ch, TO_VICT);
 
-	vlogf(LOG_DASH, "repo mob (%s) being sent after %s on %s by %s.", myself->getName(), buf, buf3, (ch ? ch->getName() : "the code"));
+	vlogf(LOG_PROC, "repo mob (%s) being sent after %s on %s by %s.", myself->getName(), buf, buf3, (ch ? ch->getName() : "the code"));
 
         job->reset();
         job->hunted_item = mud_str_dup(buf);
@@ -410,6 +410,17 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
     return FALSE;
 
   job = static_cast<bounty_hunt_struct *>(myself->act_ptr);
+
+  if (myself->oldRoom == myself->inRoom() && job->missionaccomplished) {
+    myself->spec = 0;
+
+    vlogf(LOG_PROC, "%s finished repoing  %s of %s, deactivating.", myself->getName(),
+	  job->hunted_victim, job->hunted_item);
+    delete job;
+    return TRUE;
+  }
+
+
   //  vlogf(LOG_DASH, "Bounty hunter %s, generic pulse, item = %s, victim = %s, singletarg = %s.", myself->getName(),
   //	(job->hunted_item ? job->hunted_item : "NULL"), (job->hunted_victim ? job->hunted_victim : "NULL"),
   //	(job->singletarg ? "TRUE" : "FALSE"));
@@ -419,12 +430,22 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
     else
       temp_obj = findHuntedItem(myself, job->hunted_item, job->noneBeyond);
 
-    if (!temp_obj || job->missionaccomplished) {
+
+    if (job->singletarg && !temp_obj) {
+      strcpy(buf,myself->name);
+      add_bars(buf);
+
+      temp_obj = findHuntedItem(myself, job->hunted_item, job->noneBeyond, buf);
+      // we'll see what happens now.
+    }
+
+
+    if (!temp_obj) {
 
       if (myself->fight())
         return FALSE;
-
-      job->hunted_victim = NULL;
+      if (!job->singletarg || job->missionaccomplished)
+	job->hunted_victim = NULL;
 #if 0
 // the canSee check in findHuntedItem makes this flawed
 // we are able to walk entire list fairly fast, so this is not heavily needed
@@ -458,7 +479,9 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 // we are able to walk entire list fairly fast, so this is not heavily needed
     job->noneBeyond = temp_obj;
 #endif
+
     targ = dynamic_cast<TBeing *>(temp_obj->thingHolding());
+
     if (targ) {
       TBeing *tmpch = myself->fight();
       if (tmpch) {
@@ -516,7 +539,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 
         cleanUpHunter(myself);
 	if (job->singletarg) {
-	  vlogf(LOG_DASH, "hunter %s mission complete.", myself->getName());
+	  vlogf(LOG_PROC, "hunter %s mission complete.", myself->getName());
 	  job->missionaccomplished = true;
 	}
         return TRUE;
@@ -536,7 +559,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
             job->num_chances = -99;
           job->warned = FALSE;
         }
-      } else if (job->singletarg) {
+      } else if (!job->singletarg) {
         // I don't seem to be hunting anyone, init
         delete [] job->hunted_victim;
         job->hunted_victim = mud_str_dup(targ->name);
@@ -978,7 +1001,7 @@ void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
 	  char buf[160],buf2[160], buf3[160];
 	  strcpy(buf,obj->name);
 	  add_bars(buf);
-	  strcpy(buf3,i->name);
+	  strcpy(buf3,ch->name);
 	  add_bars(buf3);
 	  sprintf(buf2,"Hunter, repo %s from %s",buf,buf3);
 	  vlogf(LOG_PROC,"%s rent-repoing: '%s' from %s : plev: %d, olev: %d.",
