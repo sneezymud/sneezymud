@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_rooms.cc,v $
+// Revision 1.4  1999/10/07 14:29:13  batopr
+// Added statistics.cch
+//
 // Revision 1.3  1999/10/07 14:26:27  batopr
 // Made dump take global money modifiers into account
 //
@@ -35,6 +38,7 @@
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "statistics.h"
 
 int TRoom::checkSpec(TBeing *ch, cmdTypeT cmd, const char *arg, TThing *)
 {
