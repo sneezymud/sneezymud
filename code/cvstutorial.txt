@@ -5,7 +5,11 @@ dev code.  You should try and do this pretty frequently.
 ---
 
 When you are ready to move your changes into production, do 'cvs
-commit'.
+commit'.  Also leave a comment about your code changes.  Try to be
+somewhat detailed.
+"Fixed bug." => bad
+"Fixed bug in doSomething()" => better
+"Fixed buffer overflow on name variable in doSomething()" => good
 
 ---
 
@@ -29,10 +33,8 @@ use another port if 6969 is being used.
 To do a code move:
 cd /mud/code
 cvs update
-bmake
-sneezymode
-mvcode
-exit
+./bmake.csh
+./mvcode.csh
 
 ---
 
