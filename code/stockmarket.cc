@@ -100,7 +100,7 @@ int stockBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
     
     ch->sendTo(COLOR_BASIC, fmt("Market: <Y>%.2f  %s%+.2f<1>\n\r") %
 	       price % (pricediff>0?"<G>":"<R>") %
-	       (convertTo<float>(db["dayprice"]) - price));
+	       (price - convertTo<float>(db["dayprice"])));
   }
 			
 
