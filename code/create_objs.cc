@@ -779,9 +779,31 @@ void TPerson::doOEdit(const char *argument)
       break;
     case 2:			// load 
       if (sscanf(string, "%d", &vnum) != 1) {
-	sendTo("Syntax : oed load <vnum>\n\r");
-	return;
+	// assume that string is an object name
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	int rc;
+
+	if((rc=dbquery(&res, "immortal", "oed load", "select vnum, name from obj where owner='%s'", getName()))){
+	  if(rc==-1)
+	    vlogf(LOG_BUG, "Database error in oed load");
+	  return;
+	}
+  
+	vnum=-1;
+	while((row=mysql_fetch_row(res))){
+	  if(isname(string, row[1])){
+	    vnum=atoi(row[0]);
+	    break;
+	  }
+	}
+	mysql_free_result(res);
+	if(vnum==-1){
+	  sendTo("Syntax : oed load <vnum>\n\r");
+	  return;
+	}
       }
+
       ObjLoad(this, vnum);
       return;
       break;
