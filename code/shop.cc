@@ -68,6 +68,7 @@ int TObj::sellPrice(int shop_nr, int chr, int *discount)
     }
     if((row=mysql_fetch_row(res)))
       profit_sell=atof(row[0]);
+    mysql_free_result(res);
   }
 
   if (chr != -1)
@@ -103,6 +104,7 @@ int TObj::shopPrice(int num, int shop_nr, int chr, int *discount) const
     }
     if((row=mysql_fetch_row(res)))
       profit_buy=atof(row[0]);
+    mysql_free_result(res);
   }
 
 
