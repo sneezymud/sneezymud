@@ -809,6 +809,9 @@ int TBeing::doTell(const char *arg, bool visible)
   string garbed;
   garbed = garble(message, drunkNum);
 
+  if(vict->isImmortal() && drunkNum>0)
+    garbed=message;
+
   rc = vict->triggerSpecialOnPerson(this, CMD_OBJ_TOLD_TO_PLAYER, garbed.c_str());
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete vict;
@@ -844,11 +847,18 @@ int TBeing::doTell(const char *arg, bool visible)
 
   sendTo(COLOR_COMM, "<G>You tell %s<z>, \"%s\"\n\r", vict->getName(), colorString(this, desc, garbed.c_str(), NULL, COLOR_BASIC, FALSE).c_str());
 
+
   // we only color the string to the victim, so leave this AFTER
   // the stuff we send to the teller.
   convertStringColor("<c>", garbed);
-  vict->sendTo(COLOR_COMM, "%s tells you, \"<c>%s<z>\"\n\r",
-            nameBuf, garbed.c_str());
+
+  if(vict->isImmortal() && drunkNum>0){
+    vict->sendTo(COLOR_COMM, "%s drunkenly tells you, \"<c>%s<z>\"\n\r",
+		 nameBuf, garbed.c_str());
+  } else {
+    vict->sendTo(COLOR_COMM, "%s tells you, \"<c>%s<z>\"\n\r",
+		 nameBuf, garbed.c_str());
+  }
 
   TDatabase db("sneezy");
   db.query("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())", cap(capbuf), vict->getName(), garbed.c_str());
