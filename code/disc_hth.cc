@@ -161,7 +161,7 @@ int shove(TBeing *caster, TBeing * victim, char * direction, spellNumT skill)
   }
   if (bSuccess(caster, bKnown+ percent, skill)) {
     if (victim->doesKnowSkill(SKILL_COUNTER_MOVE)) {
-      if (min(victim->GetMaxLevel(),100) > percent) {
+      if (min((int)victim->GetMaxLevel(),100) > percent) {
         act("$N deftly resists your shove attempt.", 
             FALSE, caster, 0, victim, TO_CHAR);
         act("$N deftly resists $n's shove attempt.", 
