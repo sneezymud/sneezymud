@@ -63,6 +63,7 @@
 #include "stdsneezy.h"
 #include "disease.h"
 #include "database.h"
+#include "shop.h"
 #include "obj_base_corpse.h"
 #include "obj_open_container.h"
 #include "obj_trap.h"
@@ -5607,6 +5608,128 @@ int force(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 }
 
+int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
+{
+  int found=0;
+  TThing *o;
+  TObj *to;
+
+  if(cmd != CMD_LOOK)
+    return FALSE;
+
+  for (o = ch->roomp->getStuff(); o; o = o->nextThing) {
+    to = dynamic_cast<TObj *>(o);
+    if (to && to->spec == SPEC_FACTIONSCORE_BOARD &&
+	isname(arg, to->name)){
+      found=1;
+      break;
+    }
+  }
+
+  if(!found)
+    return FALSE;
+
+  ch->sendTo("You examine the board:\n\r");
+  ch->sendTo("------------------------------------------------------------\n\r");
+  ch->sendTo(" Concerning the relative power of the 3 main factions:\n\r");
+  ch->sendTo("------------------------------------------------------------\n\r\n\r");
+
+  const char *factnames[]={"cult", "snake", "brother"};
+  TDatabase db("sneezy");
+  int totalscore=0;
+  int score=0;
+
+  for(int i=0;i<=2;++i){
+    // faction header
+    ch->sendTo("%s\n\r", FactionInfo[factionNumber(factnames[i])].faction_name);
+
+    // get the number of members, we use this in a few places
+    db.query("select count(*) from factionmembers where faction='%s'", factnames[i]);
+    db.fetchRow();
+    int nmembers=atoi(db.getColumn(0));
+    totalscore=0;
+
+    // number of members and total levels
+    db.query("select count(*), sum(level) from factionmembers where faction='%s'", factnames[i]);
+    score=0;
+    if(db.fetchRow()){
+      // this should reward high member count AND high average level, adjust
+      int nlevels=0;
+
+      if(db.getColumn(1) && nmembers){
+	nlevels=atoi(db.getColumn(1));
+	score=(int)((float)nlevels/(float)nmembers);
+      }
+
+      ch->sendTo(COLOR_BASIC, "<g>[<1>%3i<g>]<1> number of members and average level\n\r", score);
+      totalscore+=score;
+    }
+
+    // fishing
+    db.query("select sum(fk.weight) from fishkeeper fk, factionmembers fm where fk.name=fm.name and fm.faction='%s'", factnames[i]);
+    score=0;
+    if(db.fetchRow()){
+      float pounds=0.0;
+
+      if(db.getColumn(0)){
+	pounds=atof(db.getColumn(0));
+	score=(int)(pounds/10000.0);
+      }
+    }
+
+    db.query("select count(*) from fishlargest fl, factionmembers fm where  fl.name=fm.name and fm.faction='%s'", factnames[i]);
+    if(db.fetchRow()){
+      score+=atoi(db.getColumn(0));
+    }
+
+    
+    ch->sendTo(COLOR_BASIC, "<g>[<1>%3i<g>]<1> pounds of fish caught and number of records\n\r", score);
+    totalscore+=score;
+
+
+    // trophy
+    db.query("select count(*) from trophy t, factionmembers fm where t.name=fm.name and fm.faction='%s'", factnames[i]);
+    score=0;
+    if(db.fetchRow()){
+      // should scale this based on level
+
+      if(nmembers){
+	score=(int)(atof(db.getColumn(0)) / nmembers);
+	score = (int)(((float)score/(float)mob_index.size())*100.0);
+      }
+
+      ch->sendTo(COLOR_BASIC, "<g>[<1>%3i<g>]<1> average trophy percentage\n\r", score);
+      totalscore+=score;
+    }
+
+    // shops
+    db.query("select count(distinct soa.shop_nr) from shopownedaccess soa, factionmembers fm where soa.access & %i and fm.name = soa.name and fm.faction='%s'", SHOPACCESS_OWNER, factnames[i]);
+    score=0;
+    if(db.fetchRow()){
+      score=atoi(db.getColumn(0))*10;
+
+      ch->sendTo(COLOR_BASIC, "<g>[<1>%3i<g>]<1> shops owned by faction members\n\r", 
+		 score, db.getColumn(0));
+      totalscore+=score;
+    }
+
+    // faction bank account
+    score=(int)(FactionInfo[factionNumber(factnames[i])].faction_wealth/100000.0);
+    ch->sendTo(COLOR_BASIC, "<g>[<1>%3i<g>]<1> faction wealth\n\r", score);
+    totalscore+=score;
+
+
+
+    // total score
+    ch->sendTo(COLOR_BASIC, "<g>[<R>%3i<1><g>]<1> total score\n\r", totalscore);
+
+    // end of faction
+    ch->sendTo("\n\r\n\r");
+
+  }
+
+  return TRUE;
+}
 
 //MARKER: END OF SPEC PROCS
 
@@ -5718,6 +5841,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "shopinfo board", shopinfoBoard},
   {FALSE, "Sonic Blast", sonicBlast},  // 95
   {FALSE, "highrollers board", highrollersBoard},
+  {FALSE, "faction score board", factionScoreBoard},
   {FALSE, "last proc", bogusObjProc}
 };
 
