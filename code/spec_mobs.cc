@@ -7434,6 +7434,57 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   return TRUE;
 }
 
+int adventurer(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
+{
+  bool fighting=false;
+  TThing *t;
+  TMonster *tmons;
+  int rc;
+
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  // if fighting return false
+  if(myself->fight()){
+    fighting=true;
+  } else {
+    for (followData *f = myself->followers; f; f = f->next){
+      if(myself->inGroup(*f->follower) && f->follower->fight()){
+	fighting=true;
+      }
+    }
+
+  }
+
+  if(fighting)
+    return FALSE;
+
+  // if mob in room that isn't in my group
+  //   if within my level range (my level + 10 or lower?)
+  //     attack
+  for(t=myself->roomp->getStuff();t;t=t->nextThing){
+    if((tmons=dynamic_cast<TMonster *>(t)) &&
+       !tmons->inGroup(*myself)){
+      rc = myself->takeFirstHit(*tmons);
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+	delete tmons;
+	tmons = NULL;
+      }
+      if (IS_SET_DELETE(rc, DELETE_THIS)) 
+	return DELETE_VICT;
+    }
+  }
+
+
+
+  // else
+  //   wander randomly
+  myself->wanderAround();
+
+
+  return TRUE;
+}
+
 
 extern int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
 extern int factionRegistrar(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7613,6 +7664,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Gardener", gardener}, // 165
   {FALSE, "Brightmoon Archer", bmarcher},
   {FALSE, "Money Train", moneyTrain},
+  {FALSE, "Adventurer", adventurer},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.17  2002/04/08 22:52:52  peel
+// added adventurer proc
+//
 // Revision 5.16  2002/03/17 00:00:15  peel
 // added the money train
 //
@@ -229,7 +232,8 @@ const int SPEC_GM_MAGE_THIEF      =164; // reuse this for something else
 const int SPEC_PLANTER            =165;
 const int SPEC_BMARCHER           =166;
 const int SPEC_MONEY_TRAIN        =167;
-const int NUM_MOB_SPECIALS        =168;
+const int SPEC_ADVENTURER         =168;
+const int NUM_MOB_SPECIALS        =169;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
