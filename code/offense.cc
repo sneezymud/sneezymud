@@ -782,7 +782,7 @@ int TBeing::doFlee(const char *arg)
     return FALSE;
 
   if (isCombatMode(ATTACK_BERSERK)) {
-    sendTo("You are berserking! There is no way to flee!\n\r");
+    sendTo("You are berserking!  There is no way to flee!\n\r");
     return FALSE;
   }
   if (bothLegsHurt() && !isFlying()) {
@@ -806,7 +806,7 @@ int TBeing::doFlee(const char *arg)
   if (isAffected(AFF_CHARM) && master && sameRoom(*master)) {
     if (!::number(0, 5))
       act("$n bursts into tears.", TRUE, this, 0, 0, TO_ROOM);
-    act("You burst into tears at  the thought of leaving $N.", 
+    act("You burst into tears at the thought of leaving $N.", 
             FALSE, this, 0, master, TO_CHAR);
     return FALSE;
   }
