@@ -646,7 +646,7 @@ int TBeing::rawMove(dirTypeT dir)
   } else { 
   // this is basically the case where they are flying
     if (getCond(DRUNK) > 9) {
-      sendTo("Your druken flight pattern is fairly erratic.\n\r");
+      sendTo("Your drunken flight pattern is fairly erratic.\n\r");
       need_movement++;
       if (!::number(0,4)) {
         sendTo("Oops, you must have crashed into one of those purple elephants you keep seeing.\n\r");
