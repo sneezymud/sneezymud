@@ -1821,19 +1821,19 @@ static void change_mob_stats(TBeing *ch, TMonster *mob, const char *arg, editorE
   }
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(fmt("Current stats :\n\r1) str : %d\n\r2) dex : %d\n\r3) con : %d\n\r4) bra : %d\n\r5) agi : %d\n\r6) int : %d\n\r7) foc : %d\n\r8) wis : %d\n\r9) spe : %d\n\r10) per : %d\n\r11) kar : %d\n\r12) chr : %d\n\r") %
-        mob->getStat(STAT_CHOSEN, STAT_STR) %
-        mob->getStat(STAT_CHOSEN, STAT_DEX) %
-        mob->getStat(STAT_CHOSEN, STAT_CON) %
-        mob->getStat(STAT_CHOSEN, STAT_BRA) %
-        mob->getStat(STAT_CHOSEN, STAT_AGI) %
-        mob->getStat(STAT_CHOSEN, STAT_INT) %
-        mob->getStat(STAT_CHOSEN, STAT_FOC) %
-        mob->getStat(STAT_CHOSEN, STAT_WIS) %
-        mob->getStat(STAT_CHOSEN, STAT_SPE) %
-        mob->getStat(STAT_CHOSEN, STAT_PER) %
-        mob->getStat(STAT_CHOSEN, STAT_KAR) %
-        mob->getStat(STAT_CHOSEN, STAT_CHA) %
-        mob->getStat(STAT_CHOSEN, STAT_LUC));
+	     mob->getStat(STAT_CHOSEN, STAT_STR) %
+	     mob->getStat(STAT_CHOSEN, STAT_DEX) %
+	     mob->getStat(STAT_CHOSEN, STAT_CON) %
+	     mob->getStat(STAT_CHOSEN, STAT_BRA) %
+	     mob->getStat(STAT_CHOSEN, STAT_AGI) %
+	     mob->getStat(STAT_CHOSEN, STAT_INT) %
+	     mob->getStat(STAT_CHOSEN, STAT_FOC) %
+	     mob->getStat(STAT_CHOSEN, STAT_WIS) %
+	     mob->getStat(STAT_CHOSEN, STAT_SPE) %
+	     mob->getStat(STAT_CHOSEN, STAT_PER) %
+	     mob->getStat(STAT_CHOSEN, STAT_KAR) %
+	     mob->getStat(STAT_CHOSEN, STAT_CHA));
+
   ch->sendTo("\n\r");
   ch->sendTo(fmt("Physical sum (must be 0 or less) : %d\n\r") %	     (mob->getStat(STAT_CHOSEN, STAT_STR) +
 	      mob->getStat(STAT_CHOSEN, STAT_BRA) +
