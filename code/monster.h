@@ -466,7 +466,7 @@ class TMonster : public TBeing {
     virtual bool isDiurnal() const;
     virtual bool isPolice() const;
     virtual bool isShopkeeper() const;
-    int walk_path(const path_struct *, int &);
+    walkPathT walk_path(const path_struct *, int &);
 
     virtual int getWait() const {
       return wait;

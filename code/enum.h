@@ -572,4 +572,11 @@ enum checkFallingT
   CHECK_FALL_YES
 };
 
+enum walkPathT
+{
+  WALK_PATH_END = 0,
+  WALK_PATH_MOVED,
+  WALK_PATH_LOST
+};
+
 #endif  // __ENUM_H inclusion sandwich

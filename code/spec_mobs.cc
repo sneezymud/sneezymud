@@ -93,44 +93,41 @@ int TMonster::checkSpec(TBeing *t, cmdTypeT cmd, const char *arg, TThing *t2)
   return FALSE;
 }
 
-// returns true if reached end of path
-int TMonster::walk_path(const path_struct *p, int &pos)
+walkPathT TMonster::walk_path(const path_struct *p, int &pos)
 {
-  int rc;
-
   if (p[(pos + 1)].direction == -1){
-    return TRUE;
+    return WALK_PATH_END;
   } else if (p[pos].cur_room != in_room){
+    // we're off the path
     dirTypeT dir;
+
+    // check surrounding rooms
     for (dir=MIN_DIR; dir < MAX_DIR;dir++) {
       if (canGo(dir) && 
 	  roomp->dir_option[dir]->to_room ==
 	  p[pos].cur_room){
-	rc = goDirection(dir);
-	if (IS_SET_DELETE(rc, DELETE_THIS))
-	  return DELETE_THIS;
-	return FALSE;
+	goDirection(dir);
+	return WALK_PATH_MOVED;
       }
     }
     
-    // trace along entire route and see if I can correct
+    // check the entire path
     pos = -1;
     do {
       pos += 1;
       if (p[pos].cur_room == in_room)
-	return FALSE;
+	return WALK_PATH_MOVED;
     } while (p[pos].cur_room != -1);
+    return WALK_PATH_LOST;
   } else if (getPosition() < POSITION_STANDING) {
     doStand();
   } else {
-    rc=goDirection(p[pos + 1].direction);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      return DELETE_THIS;
-    } else if(rc){
+    if(goDirection(p[pos + 1].direction)){
       pos++;
     }
   }
-  return 0;
+
+  return WALK_PATH_MOVED;
 }
 
 
@@ -4298,14 +4295,13 @@ int TicketGuy(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
   return TRUE;
 }
 
+
 int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
-  int rc;
-
   class hunt_struct {
     public:
-    byte cur_pos;
-    byte cur_path;
+    int cur_pos;
+    int cur_path;
     char *hunted_victim;
 
     hunt_struct() {
@@ -4344,112 +4340,89 @@ int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
     job->cur_pos = 0;
     job->cur_path = 0;
   }
+
   if (!(job = static_cast<hunt_struct *>(myself->act_ptr))) {
     vlogf(LOG_PROC, "Unable to allocate memory for hobbit emissary!  This is bad!");
     return TRUE;
   }
-  if (job->hunted_victim != NULL) {
-    if (!(targ = get_char(job->hunted_victim, EXACT_YES))) {
-      return FALSE;
+
+  if(job->hunted_victim == NULL){
+    delete [] job->hunted_victim;
+    job->hunted_victim = mud_str_dup("ambassador hobbit Grimhaven");
+  }
+
+  targ = get_char_room(job->hunted_victim, EXACT_YES);
+
+  // found target
+  if (targ) {
+    if (!strcmp(job->hunted_victim, "ambassador hobbit Grimhaven")) {
+      myself->doSay(fmt("Good %s, your excellency.") % describeTime());
+      targ->doSay(fmt("Good %s.") % describeTime());
+      myself->doSay("I have a message from his lordship.");
+      myself->doWhisper(fmt("%s sweet nothings") % fname(targ->name));
+      targ->doSay("Hmm, that is useful news.  Relay this message back for me.");
+      targ->doWhisper(fmt("%s sweet nothings") % fname(myself->name));
+      targ->doSay("Hurry off with that and report back soonest.");
+      act("$n salutes the ambassador.",0, myself, 0, 0, TO_ROOM);
+      
+      delete [] job->hunted_victim;
+      job->hunted_victim = mud_str_dup("king Grimhaven");
+      job->cur_path = 1;
+      job->cur_pos = 0;
+    } else if (!strcmp(job->hunted_victim, "king Grimhaven")) {
+      myself->doSay(fmt("Good %s, your lordship.") % describeTime());
+      targ->doSay(fmt("Good %s.") % describeTime());
+      myself->doSay("I have a message from his excellency.");
+      myself->doWhisper(fmt("%s sweet nothings") % fname(targ->name));
+      targ->doSay("Hmm, that is useful news.  Relay this message back for me.");
+      targ->doWhisper(fmt("%s sweet nothings") % fname(myself->name));
+      targ->doSay("Hurry off with that and tell me his response.");
+      act("$n salutes the King.",0, myself, 0, 0, TO_ROOM);
+      
+      delete [] job->hunted_victim;
+      job->hunted_victim = mud_str_dup("ambassador hobbit Grimhaven");
+      job->cur_path = 0;
+      job->cur_pos = 0;
+    } else {
+      vlogf(LOG_PROC,fmt("Error: hobbit emissary hunted undefined target. (%s)") % 
+	    job->hunted_victim);
+      delete [] job->hunted_victim;
+      job->hunted_victim = NULL;
     }
-    if (targ->sameRoom(*myself)) {
-      if (!strcmp(job->hunted_victim, "ambassador hobbit Grimhaven")) {
-        myself->doSay(fmt("Good %s, your excellency.") % describeTime());
-        targ->doSay(fmt("Good %s.") % describeTime());
-        myself->doSay("I have a message from his lordship.");
-        myself->doWhisper(fmt("%s sweet nothings") % fname(targ->name));
-        targ->doSay("Hmm, that is useful news.  Relay this message back for me.");
-        targ->doWhisper(fmt("%s sweet nothings") % fname(myself->name));
-        targ->doSay("Hurry off with that and report back soonest.");
-        act("$n salutes the ambassador.",0, myself, 0, 0, TO_ROOM);
+    return TRUE;
+  }
 
-        delete [] job->hunted_victim;
-        job->hunted_victim = mud_str_dup("king Grimhaven");
-        job->cur_path = 1;
-        job->cur_pos = 0;
-      } else if (!strcmp(job->hunted_victim, "king Grimhaven")) {
-        myself->doSay(fmt("Good %s, your lordship.") % describeTime());
-        targ->doSay(fmt("Good %s.") % describeTime());
-        myself->doSay("I have a message from his excellency.");
-        myself->doWhisper(fmt("%s sweet nothings") % fname(targ->name));
-        targ->doSay("Hmm, that is useful news.  Relay this message back for me.");
-        targ->doWhisper(fmt("%s sweet nothings") % fname(myself->name));
-        targ->doSay("Hurry off with that and tell me his response.");
-        act("$n salutes the King.",0, myself, 0, 0, TO_ROOM);
-
-        delete [] job->hunted_victim;
-        job->hunted_victim = mud_str_dup("ambassador hobbit Grimhaven");
-        job->cur_path = 0;
-        job->cur_pos = 0;
-      } else {
-        vlogf(LOG_PROC,fmt("Error: hobbit emissary hunted undefined target. (%s)") % 
-          job->hunted_victim);
-        delete [] job->hunted_victim;
-        job->hunted_victim = NULL;
-      }
-      return TRUE;
-    } else if (hobbit_path_pos[job->cur_path][(job->cur_pos + 1)].direction == -1) {
-      // end of path
+  switch(myself->walk_path(hobbit_path_pos[job->cur_path], job->cur_pos)){
+    case WALK_PATH_END:
       if (job->cur_path == 0) {
-        job->cur_path = 1;
-        job->cur_pos = 0;
-        delete [] job->hunted_victim;
-        job->hunted_victim = mud_str_dup("ambassador hobbit Grimhaven");
+	job->cur_path = 1;
+	job->cur_pos = 0;
+	delete [] job->hunted_victim;
+	job->hunted_victim = mud_str_dup("ambassador hobbit Grimhaven");
       } else {
-        job->cur_path = 0;
-        job->cur_pos = 0;
-        delete [] job->hunted_victim;
-        job->hunted_victim = mud_str_dup("king Grimhaven");
+	job->cur_path = 0;
+	job->cur_pos = 0;
+	delete [] job->hunted_victim;
+	job->hunted_victim = mud_str_dup("king Grimhaven");
       }
       return TRUE;
-    } else if (hobbit_path_pos[job->cur_path][job->cur_pos].cur_room != myself->in_room) {
-      // Not in correct room
-
-      // check surrounding rooms, I probably fled
-      dirTypeT door;
-      for (door = MIN_DIR; door < MAX_DIR; door++) {
-        if (myself->canGo(door)) {
-          if (myself->roomp->dir_option[door]->to_room ==
-                  hobbit_path_pos[job->cur_path][job->cur_pos].cur_room) {
-            rc = myself->goDirection(door);
-            if (IS_SET_DELETE(rc, DELETE_THIS))
-              return DELETE_THIS;
-            return TRUE;
-          }
-        }
-      }
-
-      // trace along entire route and see if I can correct
-      do {
-        job->cur_pos += 1;
-        if (hobbit_path_pos[job->cur_path][job->cur_pos].cur_room == myself->in_room)
-          return TRUE;
-      } while (hobbit_path_pos[job->cur_path][job->cur_pos].cur_room != -1);
-
-      act("$n seems to have gotten a little bit lost.",0, myself, 0, 0, TO_ROOM);
-      act("$n goes to ask directions.", 0, myself, 0, 0, TO_ROOM);
-      //vlogf(LOG_PROC, fmt("Hobbit got lost: path: %d, pos: %d") %  job->cur_path % myself->in_room);
+      break;
+    case WALK_PATH_LOST:
+      act("$n seems to have gotten a little bit lost.",
+	  0, myself, 0, 0, TO_ROOM);
+      act("$n goes to ask directions.", 
+	  0, myself, 0, 0, TO_ROOM);
       if (myself->riding)
-        myself->dismount(POSITION_STANDING);
+	myself->dismount(POSITION_STANDING);
       --(*myself);
       thing_to_room(myself, hobbit_path_pos[job->cur_path][0].cur_room);
       act("$n has arrived.", 0, myself, 0, 0, TO_ROOM);
       return TRUE;
-    } else if (myself->getPosition() < POSITION_STANDING) {
-      myself->doStand();
-    } else {
-      rc = myself->goDirection(hobbit_path_pos[job->cur_path][(job->cur_pos + 1)].direction);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        return DELETE_THIS;
-      } else if (rc) {
-        // if go_dir == 0, then it either can't go that way or is opening a door
-        job->cur_pos += 1;
-      }
-    }
-  } else {
-    delete [] job->hunted_victim;
-    job->hunted_victim = mud_str_dup("ambassador hobbit Grimhaven");
+      break;
+    case WALK_PATH_MOVED:
+      break;
   }
+
   return 0;
 }
 
