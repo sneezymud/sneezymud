@@ -13,6 +13,7 @@
 #include "obj_corpse.h"
 #include "obj_gun.h"
 #include "obj_trash.h"
+#include "obj_drinkcon.h"
 
 
 // returns DELETE_THIS
@@ -991,56 +992,117 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
       case 98:
       case 99:
       case 100:
-	// crush skull unless helmet
-	if (!v->hasPart(WEAR_HEAD))
-	  return 0;
-	if ((obj = v->equipment[WEAR_HEAD])) {
-	  ssprintf(buf, 
-		  "With a mighty blow, you crush $N's head with your %s. Unfortunately, $S $o saves $M.",
-		  limbStr.c_str());
-	  act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
-	  ssprintf(buf, 
-		  "$n's %s strikes a mighty blow to your head crushing your $o!",
-		  limbStr.c_str());
-	  act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
-	  ssprintf(buf, "$n's %s strikes a mighty blow to $N's head, crushing $S $o!",
-		  limbStr.c_str());
-	  act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
-	  if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA))
-	    critHitEqDamage(v, obj, (::number(-55,-40)));
+	if(doesKnowSkill(SKILL_CRIT_HIT) && !v->equipment[WEAR_BODY] &&
+	   v->hasPart(WEAR_BODY) && !weapon && 
+       	   bSuccess(this, getSkillValue(SKILL_CRIT_HIT), SKILL_CRIT_HIT)){
+	  // rip out heart instead of head crush whee fancy
+	    ssprintf(buf, 
+		     "With your %s, you reach into $N's chest and rip out $S heart!",
+		     limbStr.c_str());
+	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	    ssprintf(buf, 
+		     "You hold the still beating heart above your head in triumph, as blood runs down your arm!",
+		     limbStr.c_str());
+	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_RED);
+	    ssprintf(buf, 
+		     "$n reaches into your chest and rips out your heart!",
+		     limbStr.c_str());
+	    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	    ssprintf(buf, "$n reaches into $N's heart and rips out $S heart!",
+		     limbStr.c_str());
+	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
-	  *part_hit = WEAR_HEAD;
-	  rc = damageLimb(v,*part_hit,weapon,dam);
-	  if (IS_SET_DELETE(rc, DELETE_VICT))
+
+	    TDrinkCon *corpse;
+	    
+	    corpse = new TDrinkCon();
+	    corpse->name = mud_str_dup("heart");
+	    
+	    ssprintf(buf, "the lifeless <r>heart<1> of %s", v->getName());
+	    corpse->shortDescr = mud_str_dup(buf);
+	    
+	    ssprintf(buf, "The lifeless <r>heart<1> of %s lies here.", v->getName());
+	    corpse->setDescr(mud_str_dup(buf));
+	    
+	    corpse->setStuff(NULL);
+	    corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
+	    //	    corpse->addCorpseFlag(CORPSE_NO_REGEN);
+	    corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
+	    corpse->setWeight(0.1);
+	    corpse->canBeSeen = v->canBeSeen;
+	    corpse->setVolume(25);
+	    corpse->setMaterial(v->getMaterial());
+	    
+	    corpse->setDrinkConFlags(0);
+	    corpse->setMaxDrinkUnits(5);
+	    corpse->setDrinkUnits(5);
+	    corpse->setDrinkType(LIQ_BLOOD);
+	    
+
+
+	    *this += *corpse;
+	    dropPool(9, LIQ_BLOOD);
+	    
+	    if (desc)
+	      desc->career.crit_ripped_out_heart++;
+	    
+	    if (v->desc)
+	      v->desc->career.crit_ripped_out_heart_suff++;
+	    
+	    applyDamage(v, (20 * v->hitLimit()),DAMAGE_RIPPED_OUT_HEART);
 	    return DELETE_VICT;
-	  return ONEHIT_MESS_CRIT_S;
-	} else { // no head gear
-	  // crush skull
+	} else {
+	  // crush skull unless helmet
 	  if (!v->hasPart(WEAR_HEAD))
 	    return 0;
-	  ssprintf(buf, 
-		  "With your %s, you crush $N's skull, and $S brains ooze out!",
-		  limbStr.c_str());
-	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-	  ssprintf(buf, 
-		  "$n's %s crushes your skull and The World goes dark!",
-		  limbStr.c_str());
-	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	  ssprintf(buf, "$n's %s crushes $N's skull.  Brains ooze out as $E crumples!",
-		  limbStr.c_str());
-	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	  if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
-	      (obj = v->equipment[WEAR_HEAD]))
-	    critHitEqDamage(v, obj, (::number(-55,-40)));
-
-	  if (desc)
-	    desc->career.crit_crushed_skull++;
-
-	  if (v->desc)
-	    v->desc->career.crit_crushed_skull_suff++;
-
-	  applyDamage(v, (20 * v->hitLimit()),DAMAGE_CAVED_SKULL);
-	  return DELETE_VICT;
+	  if ((obj = v->equipment[WEAR_HEAD])) {
+	    ssprintf(buf, 
+		     "With a mighty blow, you crush $N's head with your %s. Unfortunately, $S $o saves $M.",
+		     limbStr.c_str());
+	    act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
+	    ssprintf(buf, 
+		     "$n's %s strikes a mighty blow to your head crushing your $o!",
+		     limbStr.c_str());
+	    act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
+	    ssprintf(buf, "$n's %s strikes a mighty blow to $N's head, crushing $S $o!",
+		     limbStr.c_str());
+	    act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+	    if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA))
+	      critHitEqDamage(v, obj, (::number(-55,-40)));
+	    
+	    *part_hit = WEAR_HEAD;
+	    rc = damageLimb(v,*part_hit,weapon,dam);
+	    if (IS_SET_DELETE(rc, DELETE_VICT))
+	      return DELETE_VICT;
+	    return ONEHIT_MESS_CRIT_S;
+	  } else { // no head gear
+	    // crush skull
+	    if (!v->hasPart(WEAR_HEAD))
+	      return 0;
+	    ssprintf(buf, 
+		     "With your %s, you crush $N's skull, and $S brains ooze out!",
+		     limbStr.c_str());
+	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	    ssprintf(buf, 
+		     "$n's %s crushes your skull and The World goes dark!",
+		     limbStr.c_str());
+	    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	    ssprintf(buf, "$n's %s crushes $N's skull.  Brains ooze out as $E crumples!",
+		     limbStr.c_str());
+	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	    if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
+		(obj = v->equipment[WEAR_HEAD]))
+	      critHitEqDamage(v, obj, (::number(-55,-40)));
+	    
+	    if (desc)
+	      desc->career.crit_crushed_skull++;
+	    
+	    if (v->desc)
+	      v->desc->career.crit_crushed_skull_suff++;
+	    
+	    applyDamage(v, (20 * v->hitLimit()),DAMAGE_CAVED_SKULL);
+	    return DELETE_VICT;
+	  }
 	}
       default:
 	vlogf(LOG_BUG, "crit_num=%i in critBlunt switch, shouldn't happen",

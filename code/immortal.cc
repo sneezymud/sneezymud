@@ -6619,17 +6619,13 @@ int TBeing::doCrit(sstring arg)
     mod = convertTo<int>(arg);
 
   if (vict->isImmortal() && (vict->GetMaxLevel() >= GetMaxLevel()) &&
-      name_buf != "Batopr"){
+      vict != this){
     sendTo("You may not crit gods of equal or greater level!\n\r");
     return FALSE;
   }
   if (mod < 1 || mod > 100) {
     sendTo("Syntax: crit {victim} <crit #>\n\r");
     sendTo("<crit #> in range 1-100.\n\r");
-    return FALSE;
-  }
-  if (vict == this) {
-    sendTo("You can't crit hit yourself.\n\r");
     return FALSE;
   }
   weap = heldInPrimHand();

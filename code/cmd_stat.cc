@@ -1803,6 +1803,7 @@ void TBeing::statBeing(TBeing *k)
       case DAMAGE_HEADBUTT_JAW:
       case DAMAGE_KNEESTRIKE_FACE:
       case DAMAGE_CAVED_SKULL:
+      case DAMAGE_RIPPED_OUT_HEART:
       case DAMAGE_HEADBUTT_SKULL:
       case DAMAGE_STARVATION:
       case DAMAGE_STOMACH_WOUND:

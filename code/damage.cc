@@ -660,6 +660,9 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
         case DAMAGE_CAVED_SKULL:
           strcpy(buf2, "caved-in skull");
           break;
+	case DAMAGE_RIPPED_OUT_HEART:
+	  strcpy(buf2, "ripped out heart");
+	  break;
         case DAMAGE_BEHEADED:
           strcpy(buf2, "behead");
           break;

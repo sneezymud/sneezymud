@@ -216,6 +216,8 @@ class careerData
     unsigned int crit_genitalia_suff;
     unsigned int crit_tooth;
     unsigned int crit_tooth_suff;
+    unsigned int crit_ripped_out_heart;
+    unsigned int crit_ripped_out_heart_suff;
     unsigned int skill_success_attempts;
     unsigned int skill_success_pass;
     unsigned int spell_success_attempts;

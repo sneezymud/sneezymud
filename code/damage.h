@@ -1,25 +1,10 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: damage.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #ifndef __DAMAGE_H
 #define __DAMAGE_H
 
 const int DAMAGE_NORMAL             = -2;
 const int DAMAGE_CAVED_SKULL        = -3;
 const int DAMAGE_BEHEADED           = -4;
-const int DAMAGE_DISEMBOWLED        = -5;
+const int DAMAGE_DISEMBOWLED_HR     = -5;
 const int DAMAGE_STOMACH_WOUND      = -6;
 const int DAMAGE_HACKED             = -7;
 const int DAMAGE_IMPALE             = -8;
@@ -71,6 +56,8 @@ const int DAMAGE_KNEESTRIKE_SOLAR   = -53;
 const int DAMAGE_KNEESTRIKE_CHIN    = -54;
 const int DAMAGE_KNEESTRIKE_FACE    = -55;
 const int DAMAGE_KICK_SIDE          = -56;
+const int DAMAGE_DISEMBOWLED_VR     = -57;
+const int DAMAGE_RIPPED_OUT_HEART   = -58;
 
 #endif
 

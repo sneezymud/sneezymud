@@ -1838,7 +1838,7 @@ void TBeing::saveCareerStats()
 {
   FILE *fp;
   char buf[160];
-  int current_version = 18;
+  int current_version = 19;
 // version 9  : 7/3/98
 // version 10 : 8/17/98
 // version 11 : 10/06/98
@@ -1849,6 +1849,7 @@ void TBeing::saveCareerStats()
 // version 16 : 12/13/98
 // version 17 : 02/15/00
   // version 18 : opening of game version 5.2
+  // version 19: 11/04/03
   int i;
 
   if (!isPc() || !desc)
@@ -1944,6 +1945,9 @@ void TBeing::saveCareerStats()
   fprintf(fp, "%u %u\n",
       desc->career.crit_tooth,
       desc->career.crit_tooth_suff);
+  fprintf(fp, "%u %u\n",
+	  desc->career.crit_ripped_out_heart,
+	  desc->career.crit_ripped_out_heart_suff);
 
   if (fclose(fp)) 
       vlogf(LOG_BUG, "Problem closing %s's saveCareerStats", name);
@@ -2214,6 +2218,16 @@ if (current_version < 13) {
    }
    desc->career.crit_tooth=num1;
    desc->career.crit_tooth_suff=num2;
+ }
+
+ if(current_version >= 19){
+   if(fscanf(fp, "%u %u\n", &num1, &num2) != 2){
+     vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+     fclose(fp);
+     return;
+   }
+   desc->career.crit_ripped_out_heart=num1;
+   desc->career.crit_ripped_out_heart_suff=num2;
  }
 
   fclose(fp);

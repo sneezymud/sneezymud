@@ -1692,6 +1692,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case DAMAGE_KNEESTRIKE_CHIN:
       case DAMAGE_HEADBUTT_JAW:
       case DAMAGE_KNEESTRIKE_FACE:
+      case DAMAGE_RIPPED_OUT_HEART:
       case DAMAGE_CAVED_SKULL:
       case DAMAGE_HEADBUTT_SKULL:
       case DAMAGE_STARVATION:

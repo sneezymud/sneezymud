@@ -483,6 +483,9 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
       case DAMAGE_HEADBUTT_SKULL:
         sprintf(buf,"Brains ooze out of the crushed skull of %s's corpse.",getName());
         break;
+      case DAMAGE_RIPPED_OUT_HEART:
+	sprintf(buf,"%s's corpse has a gaping bloody hole where the heart once was.",getName());
+	break;
       case SKILL_STOMP:
         sprintf(buf,"Stomped to death, %s's corpse is here.",getName());
         break;

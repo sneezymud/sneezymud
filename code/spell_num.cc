@@ -1039,6 +1039,7 @@ int mapSpellnumToFile(spellNumT stt)
     case LAST_BREATH_WEAPON:
     case MAX_SKILL:
     case DAMAGE_NORMAL:
+    case DAMAGE_RIPPED_OUT_HEART:
     case DAMAGE_CAVED_SKULL:
     case DAMAGE_BEHEADED:
     case DAMAGE_DISEMBOWLED_HR:

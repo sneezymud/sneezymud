@@ -2204,6 +2204,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case DAMAGE_BEHEADED:
     case DAMAGE_RAMMED:
     case DAMAGE_HACKED:
+    case DAMAGE_RIPPED_OUT_HEART:
     case DAMAGE_CAVED_SKULL:
     case DAMAGE_HEADBUTT_SKULL:
     case DAMAGE_KNEESTRIKE_FOOT:

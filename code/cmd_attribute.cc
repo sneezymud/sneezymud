@@ -434,6 +434,18 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
 	    ch->cyan(), d->career.crit_tooth_suff, ch->norm());
     str += buffer;
   }
+  if (d->career.crit_ripped_out_heart){
+    sprintf(buffer, "COMBAT_CRIT: Hearts ripped out inflicted : %s %u%s\n\r",
+	    ch->cyan(), d->career.crit_ripped_out_heart, ch->norm());
+    str += buffer;
+  }
+  if (d->career.crit_ripped_out_heart_suff){
+    sprintf(buffer, "COMBAT_CRIT: Hearts ripped out suffered : %s %u%s\n\r",
+	    ch->cyan(), d->career.crit_ripped_out_heart_suff, ch->norm());
+    str += buffer;
+  }
+
+
 
   ch->desc->page_string(str);
   return;
