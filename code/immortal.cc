@@ -2974,10 +2974,10 @@ void TPerson::doLoad(const char *argument)
 	sendTo("WARNING!  This item is in excess of the defined max_exist.\n\r");
 	sendTo("Please don't let this item fall into mortal hands.\n\r");
       }
-      *this += *obj;
       act("$n makes a strange magical gesture.", TRUE, this, 0, 0, TO_ROOM);
       act(msgVariables(MSG_LOAD_OBJ, obj), TRUE, this, obj, 0, TO_ROOM);
       act("You now have $p.", TRUE, this, obj, 0, TO_CHAR);
+      *this += *obj;
       logItem(obj, CMD_LOAD);
 
       // let builder load a real obj, but make it proto

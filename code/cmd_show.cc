@@ -1090,10 +1090,9 @@ void TPerson::doShow(const char *argument)
             else
               strcat(tBuffer, " ");
 
-            sprintf(tString, "%25s [%2d][%s] %s\n\r",
+            sprintf(tString, "%25s [%s] %s\n\r",
                     (!tError ? "Undefined" : (tError == -1 ? "UNKNOWN/BOGUS" :
                      discArray[tComponent->getComponentSpell()]->name)),
-                    tComponent->getComponentMaxCharges(),
                     tBuffer, tComponent->getName());
             sb += tString;
 

@@ -2148,7 +2148,7 @@ int TMonster::dynamicComponentLoader(spellNumT spell, int loadrate)
       tcomp = dynamic_cast<TComponent *>(read_object(CompInfo[comp].comp_num, VIRTUAL));
       if (!tcomp)
         return FALSE;
-      tcomp->setComponentCharges(::number(0, tcomp->getComponentMaxCharges() - 1));
+      tcomp->setComponentCharges(::number(0, tcomp->getComponentCharges() - 1));
       *t += *tcomp;
     } else
       return FALSE;

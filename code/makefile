@@ -3650,7 +3650,8 @@ objs/crit_combat.o: monster.h account.h extern.h handler.h obj_money.h rent.h
 objs/crit_combat.o: spec_mobs.h materials.h colorstring.h combat.h
 objs/crit_combat.o: statistics.h obj_corpse.h obj_base_corpse.h
 objs/crit_combat.o: obj_base_container.h obj_gun.h obj_general_weapon.h
-objs/crit_combat.o: obj_base_weapon.h
+objs/crit_combat.o: obj_base_weapon.h obj_trash.h obj_drinkcon.h
+objs/crit_combat.o: obj_base_cup.h
 objs/damage.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/damage.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/damage.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -5318,7 +5319,6 @@ objs/disc_shaman.o: monster.h account.h extern.h handler.h obj_money.h rent.h
 objs/disc_shaman.o: spec_mobs.h materials.h colorstring.h combat.h
 objs/disc_shaman.o: disc_shaman.h spelltask.h obj_base_corpse.h
 objs/disc_shaman.o: obj_base_container.h obj_tool.h obj_magic_item.h
-objs/disc_shaman.o: obj_corpse.h
 objs/disc_shaman_alchemy.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_shaman_alchemy.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_shaman_alchemy.o: /usr/include/machine/ansi.h
@@ -7447,8 +7447,7 @@ objs/info.o: obj_open_container.h obj_base_container.h obj_corpse.h
 objs/info.o: obj_base_corpse.h obj_bow.h obj_symbol.h obj_food.h obj_tool.h
 objs/info.o: obj_trap.h obj_arrow.h obj_base_weapon.h obj_general_weapon.h
 objs/info.o: obj_base_cup.h obj_base_clothing.h obj_magic_item.h obj_potion.h
-objs/info.o: obj_scroll.h obj_staff.h obj_wand.h timing.h
-objs/info.o: /usr/include/sys/time.h
+objs/info.o: obj_scroll.h obj_staff.h obj_wand.h
 objs/inventory.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/inventory.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/inventory.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -10238,66 +10237,6 @@ objs/obj_light.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/obj_light.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_light.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
 objs/obj_light.o: obj_light.h obj_base_light.h
-objs/obj_liquid_component.o: stdsneezy.h /usr/include/g++/cstdio
-objs/obj_liquid_component.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
-objs/obj_liquid_component.o: /usr/include/machine/ansi.h
-objs/obj_liquid_component.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
-objs/obj_liquid_component.o: /usr/include/g++/ctime /usr/include/time.h
-objs/obj_liquid_component.o: /usr/include/sys/_posix.h
-objs/obj_liquid_component.o: /usr/include/sys/types.h
-objs/obj_liquid_component.o: /usr/include/sys/inttypes.h
-objs/obj_liquid_component.o: /usr/include/machine/types.h
-objs/obj_liquid_component.o: /usr/include/machine/endian.h
-objs/obj_liquid_component.o: /usr/include/g++/cctype /usr/include/ctype.h
-objs/obj_liquid_component.o: /usr/include/runetype.h /usr/include/g++/cassert
-objs/obj_liquid_component.o: /usr/include/assert.h /usr/include/g++/cstring
-objs/obj_liquid_component.o: /usr/include/string.h /usr/include/stdarg.h
-objs/obj_liquid_component.o: /usr/include/g++/cerrno /usr/include/errno.h
-objs/obj_liquid_component.o: /usr/include/g++/string
-objs/obj_liquid_component.o: /usr/include/g++/std/bastring.h
-objs/obj_liquid_component.o: /usr/include/g++/cstddef /usr/include/stddef.h
-objs/obj_liquid_component.o: /usr/include/g++/std/straits.h
-objs/obj_liquid_component.o: /usr/include/g++/alloc.h
-objs/obj_liquid_component.o: /usr/include/g++/stl_config.h
-objs/obj_liquid_component.o: /usr/include/g++/stl_alloc.h
-objs/obj_liquid_component.o: /usr/include/g++/iostream.h
-objs/obj_liquid_component.o: /usr/include/g++/streambuf.h
-objs/obj_liquid_component.o: /usr/include/g++/libio.h
-objs/obj_liquid_component.o: /usr/include/g++/_G_config.h
-objs/obj_liquid_component.o: /usr/include/g++/iterator
-objs/obj_liquid_component.o: /usr/include/g++/stl_relops.h
-objs/obj_liquid_component.o: /usr/include/g++/stl_iterator.h
-objs/obj_liquid_component.o: /usr/include/g++/std/bastring.cc
-objs/obj_liquid_component.o: /usr/include/g++/vector
-objs/obj_liquid_component.o: /usr/include/g++/stl_algobase.h
-objs/obj_liquid_component.o: /usr/include/g++/stl_pair.h
-objs/obj_liquid_component.o: /usr/include/g++/type_traits.h
-objs/obj_liquid_component.o: /usr/include/limits.h
-objs/obj_liquid_component.o: /usr/include/machine/limits.h
-objs/obj_liquid_component.o: /usr/include/sys/syslimits.h
-objs/obj_liquid_component.o: /usr/include/g++/new.h /usr/include/g++/new
-objs/obj_liquid_component.o: /usr/include/g++/exception
-objs/obj_liquid_component.o: /usr/include/g++/stl_construct.h
-objs/obj_liquid_component.o: /usr/include/g++/stl_uninitialized.h
-objs/obj_liquid_component.o: /usr/include/g++/stl_vector.h
-objs/obj_liquid_component.o: /usr/include/g++/stl_bvector.h
-objs/obj_liquid_component.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
-objs/obj_liquid_component.o: /usr/include/g++/stl_function.h
-objs/obj_liquid_component.o: /usr/include/g++/stl_map.h
-objs/obj_liquid_component.o: /usr/include/g++/stl_multimap.h
-objs/obj_liquid_component.o: /usr/include/g++/iostream
-objs/obj_liquid_component.o: /usr/include/g++/sstream sstring.h low.h enum.h
-objs/obj_liquid_component.o: spells.h structs.h parse.h immunity.h
-objs/obj_liquid_component.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
-objs/obj_liquid_component.o: client.h response.h faction.h comm.h toggle.h
-objs/obj_liquid_component.o: wiz_powers.h cmd_message.h stats.h limbs.h
-objs/obj_liquid_component.o: body.h race.h skills.h disease.h trap.h task.h
-objs/obj_liquid_component.o: weather.h sound.h create.h thing.h room.h obj.h
-objs/obj_liquid_component.o: spec_objs.h connect.h obj_drug.h charfile.h
-objs/obj_liquid_component.o: being.h person.h monster.h account.h extern.h
-objs/obj_liquid_component.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/obj_liquid_component.o: materials.h colorstring.h obj_liquid_component.h
-objs/obj_liquid_component.o: obj_base_cup.h obj_component.h
 objs/obj_magic_item.o: stdsneezy.h /usr/include/g++/cstdio
 objs/obj_magic_item.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/obj_magic_item.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -12942,7 +12881,6 @@ objs/socket.o: colorstring.h statistics.h database.h
 objs/socket.o: /usr/local/include/libpq-fe.h
 objs/socket.o: /usr/local/include/postgres_ext.h spelltask.h systemtask.h
 objs/socket.o: socket.h obj_smoke.h obj_vehicle.h obj_portal.h obj_seethru.h
-objs/socket.o: timing.h
 objs/sound.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sound.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/sound.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -13101,7 +13039,6 @@ objs/spec_mobs_bounty_hunter.o: connect.h obj_drug.h charfile.h being.h
 objs/spec_mobs_bounty_hunter.o: person.h monster.h account.h extern.h
 objs/spec_mobs_bounty_hunter.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/spec_mobs_bounty_hunter.o: materials.h colorstring.h shop.h statistics.h
-objs/spec_mobs_bounty_hunter.o: timing.h /usr/include/sys/time.h
 objs/spec_mobs_cityguard.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_cityguard.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_cityguard.o: /usr/include/machine/ansi.h
@@ -15054,7 +14991,7 @@ objs/structs.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
 objs/structs.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/structs.o: game_crazyeights.h game_drawpoker.h obj_base_corpse.h
 objs/structs.o: obj_base_container.h obj_table.h obj_seethru.h cmd_trophy.h
-objs/structs.o: obj_open_container.h
+objs/structs.o: obj_open_container.h obj_component.h
 objs/sys_loot.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sys_loot.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/sys_loot.o: /usr/include/g++/cstdlib /usr/include/stdlib.h

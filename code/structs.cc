@@ -18,6 +18,7 @@
 #include "obj_seethru.h"
 #include "cmd_trophy.h"
 #include "obj_open_container.h"
+#include "obj_component.h"
 
 TBeing::TBeing() :
   TThing(),
@@ -702,6 +703,42 @@ TThing& TThing::operator += (TThing& t)
               (t.inRoom() == ROOM_AUTO_RENT)),
       "TThing += with t.inRoom()");
 
+  TComponent *c = dynamic_cast<TComponent *>(&t);
+  if (c) {
+    TThing *i;
+    for (i = getStuff(); i; i = i->nextThing) {
+      TComponent *tComp;
+      // Basically find another component of the same type that is:
+      // Same VNum.
+      // Has a cost greater than 0 (ignore comps from leveling)
+      if (i == c || !(tComp = dynamic_cast<TComponent *>(i)) ||
+          (tComp->objVnum() != c->objVnum()) || tComp->obj_flags.cost <= 0 ||
+          c->obj_flags.cost <= 0) {
+        continue;
+      }
+
+      TRoom *rp = NULL;
+
+      if (!(rp = roomp)) {
+        if (parent) {
+          if (!(rp = parent->roomp)) {
+            rp = parent->parent->roomp;
+          }
+        } else {
+          rp = tComp->roomp;
+        }
+      }
+      vlogf(LOG_ANGUS, "TThing::operator+= found component to merge!");
+      if (rp) {
+        sstring str = sstring(c->shortDescr);
+        sendrpf(COLOR_BASIC, rp, "%s glows brightly and merges with %s.\n\r", str.cap().c_str(), str.c_str());
+      }
+      c->addToComponentCharges(tComp->getComponentCharges());
+      c->obj_flags.cost += tComp->obj_flags.cost;
+      --(*tComp);
+      delete tComp;
+    }
+  }
   return *this;
 }
 

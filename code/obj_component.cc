@@ -1360,18 +1360,18 @@ void buildComponentArray()
     ""));
   CompInfo.push_back(compInfo(SPELL_ATOMIZE,
     "You blow $p at $N.",
-    "$n blow $p at $N.",
+    "$n blows $p at $N.",
     "$n blows $p at you.",                       
     "You blow $p at yourself.",
-    "$n blow $p at $mself.",
+    "$n blows $p at $mself.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_DEATHWAVE,
     "You blow $p at $N.",
-    "$n blow $p at $N.",
+    "$n blows $p at $N.",
     "$n blows $p at you.",                       
     "You blow $p at yourself.",
-    "$n blow $p at $mself.",
+    "$n blows $p at $mself.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_COLOR_SPRAY,
@@ -2122,7 +2122,6 @@ void buildComponentArray()
 TComponent::TComponent() :
   TObj(),
   charges(0),
-  max_charges(0),
   comp_spell(TYPE_UNDEFINED),
   comp_type(0)
 {
@@ -2131,7 +2130,6 @@ TComponent::TComponent() :
 TComponent::TComponent(const TComponent &a) :
   TObj(a),
   charges(a.charges),
-  max_charges(a.max_charges),
   comp_spell(a.comp_spell), 
   comp_type(a.comp_type)
 {
@@ -2142,7 +2140,6 @@ TComponent & TComponent::operator=(const TComponent &a)
   if (this == &a) return *this;
   TObj::operator=(a);
   charges = a.charges;
-  max_charges = a.max_charges;
   comp_spell = a.comp_spell;
   comp_type = a.comp_type;
   return *this;
@@ -2169,21 +2166,6 @@ void TComponent::setComponentCharges(int n)
 void TComponent::addToComponentCharges(int n)
 {
   charges += n;
-}
-
-int TComponent::getComponentMaxCharges() const
-{
-  return max_charges;
-}
-
-void TComponent::setComponentMaxCharges(int n)
-{
-  max_charges = n;
-}
-
-void TComponent::addToComponentMaxCharges(int n)
-{
-  max_charges += n;
 }
 
 spellNumT TComponent::getComponentSpell() const
@@ -2423,7 +2405,6 @@ int TComponent::rentCost() const
   int num = TObj::rentCost();
 
   num *= getComponentCharges();
-  num /= max(1, getComponentMaxCharges());
 
   num = (int) (num / priceMultiplier());
 
@@ -2457,7 +2438,6 @@ void TComponent::decayMe()
 void TComponent::assignFourValues(int x1, int x2, int x3, int x4)
 {
   setComponentCharges(x1);
-  setComponentMaxCharges(x2);
   setComponentSpell(mapFileToSpellnum(x3));
   setComponentType(x4);
 }
@@ -2465,7 +2445,6 @@ void TComponent::assignFourValues(int x1, int x2, int x3, int x4)
 void TComponent::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 {
   *x1 = getComponentCharges();
-  *x2 = getComponentMaxCharges();
   *x3 = mapSpellnumToFile(getComponentSpell());
   *x4 = getComponentType();
 }
@@ -2494,9 +2473,8 @@ sstring TComponent::statObjInfo() const
   if (isComponentType(COMP_SCRIBE))
     buf += "Component is for scribing.\n\r";
 
-  ssprintf(sbuf, "Current Uses : %d, Max Uses : %d",
-      getComponentCharges(),
-      getComponentMaxCharges());
+  ssprintf(sbuf, "Charges left : %d",
+      getComponentCharges());
   buf+=sbuf;
 
   sstring a(buf);
@@ -2585,10 +2563,6 @@ int TComponent::putMeInto(TBeing *, TOpenContainer *)
 
 void TComponent::describeObjectSpecifics(const TBeing *ch) const
 {
-  if (getComponentCharges() != getComponentMaxCharges())
-    ch->sendTo(COLOR_OBJECTS,"%s has been partially used.\n\r",
-        sstring(getName()).cap().c_str());
-
   ch->sendTo(COLOR_OBJECTS,"%s has about %d uses left.\n\r",
         sstring(getName()).cap().c_str(), getComponentCharges());
 }
@@ -2719,18 +2693,21 @@ bool TComponent::splitMe(TBeing *ch, const sstring &tString)
     return true;
   }
 
-  tCost = ((double) tCount / (double) getComponentCharges());
+  act("You split $N into two pieces.",
+      FALSE, ch, this, tComponent, TO_CHAR);
+  act("$n splits $N into two pieces.",
+      FALSE, ch, this, tComponent, TO_ROOM);
+  tCost = ((double) (getComponentCharges() - tCount) / (double) getComponentCharges());
 
-  tComponent->obj_flags.cost = (int) ((double) obj_flags.cost * tCost);
-  obj_flags.cost -= tComponent->obj_flags.cost;
+  tComponent->obj_flags.cost = 0;
 
-  tComponent->setComponentCharges(tCount);
-  tComponent->setComponentMaxCharges(tCount);
-  addToComponentCharges(-tCount);
-  addToComponentMaxCharges(-tCount);
+  tComponent->setComponentCharges(getComponentCharges() - tCount);
+  setComponentCharges(tCount);
 
   *ch += *tComponent;
 
+  tComponent->obj_flags.cost = (int) ((double) obj_flags.cost * tCost);
+  obj_flags.cost -= tComponent->obj_flags.cost;
   return true;
 }
 
@@ -2744,7 +2721,7 @@ int TComponent::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
   mud_assert(parent == cont, "Bizarre situation in putSomethig int (%d)", rc);
 
   // Enable for !prod for re-introduction.
-  if (false) {
+  if (true) {
     TThing *t;
     TComponent *tComp;
 
@@ -2761,7 +2738,6 @@ int TComponent::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
       act("$p glows brightly and merges with $N.",
           FALSE, ch, this, tComp, TO_CHAR);
       addToComponentCharges(tComp->getComponentCharges());
-      addToComponentMaxCharges(tComp->getComponentMaxCharges());
       obj_flags.cost += tComp->obj_flags.cost;
       --(*tComp);
       delete tComp;
@@ -2810,7 +2786,6 @@ int TComponent::suggestedPrice() const
     // for level, we'll assign a value of 100% arbitrarily
     value = getSpellCost(curspell, 1, 100);
     value *= getComponentCharges();
-    //    value *= getComponentMaxCharges();
   }
 
   value = (int) (value * priceMultiplier());
@@ -2948,7 +2923,7 @@ TThing & TComponent::operator -- ()
 
 int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 {
-  if (true) {
+  if (false) {
     TObj::buyMe(ch, tKeeper, tNum, tShop);
     return -1;
   }
@@ -3019,7 +2994,6 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
       // We have more than one of the same comp, let's merge them.
       addToComponentCharges(tComp->getComponentCharges());
-      addToComponentMaxCharges(tComp->getComponentMaxCharges());
       obj_flags.cost += tComp->obj_flags.cost;
       --(*tComp);
       delete tComp;
@@ -3047,11 +3021,9 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
       if ((tComponent = dynamic_cast<TComponent *>(tObj))) {
         tComponent->setComponentCharges(tNum);
-        tComponent->setComponentMaxCharges(tNum);
       }
 
       addToComponentCharges(-tNum);
-      addToComponentMaxCharges(-tNum);
       tObj->obj_flags.cost = tCost;
       obj_flags.cost -= tCost;
     }
@@ -3083,7 +3055,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
 void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop)
 {
-  if (true) {
+  if (false) {
     TObj::sellMe(ch, tKeeper, tShop);
     return;
   }

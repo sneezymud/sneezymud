@@ -2331,7 +2331,6 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, TThing *tList, int
     if (isSimilar(tObj) && rentCost() == tObj->rentCost() &&
         isRentable() == tObj->isRentable() &&
         getComponentCharges()    == tObj->getComponentCharges() &&
-        getComponentMaxCharges() == tObj->getComponentMaxCharges() &&
         getComponentSpell()      == tObj->getComponentSpell()) {
       hasPrior = true;
       break;
@@ -2348,7 +2347,6 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, TThing *tList, int
     if (isSimilar(tObj) && rentCost() == tObj->rentCost() &&
         isRentable() == tObj->isRentable() &&
         getComponentCharges()    == tObj->getComponentCharges() &&
-        getComponentMaxCharges() == tObj->getComponentMaxCharges() &&
         getComponentSpell()      == tObj->getComponentSpell()) {
       *tCount = *tCount + 1;
       lCount++;

@@ -1062,20 +1062,20 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
       }  // IGN_DEX
 // FIRST force give with text or not bad give
       if ((flags != GIVE_FLAG_IGN_DEX_NOTEXT) && !badWeight && !badVol) {
-        --(*obj);
-        *vict += *obj;
-        logItem(obj, CMD_GIVE);
-        vict->logItem(obj, CMD_EAST);    // kludge to acknowledge receive
 	if(flags != GIVE_FLAG_SILENT_VICT){
 	  act("$n gives $p to $N.", 1, this, obj, vict, TO_NOTVICT);
 	  act("$n gives you $p.", 0, this, obj, vict, TO_VICT);
 	}
         act("You give $p to $N.", 0, this, obj, vict, TO_CHAR);
-      } else if (flags == GIVE_FLAG_IGN_DEX_NOTEXT)  {
+        vict->logItem(obj, CMD_EAST);    // kludge to acknowledge receive
         --(*obj);
         *vict += *obj;
         logItem(obj, CMD_GIVE);
+      } else if (flags == GIVE_FLAG_IGN_DEX_NOTEXT)  {
         vict->logItem(obj, CMD_EAST);    // kludge to acknowledge receive
+        --(*obj);
+        *vict += *obj;
+        logItem(obj, CMD_GIVE);
       } else if (flags != GIVE_FLAG_DEF) {   // drop
         if (badWeight && badVol) {
           if (flags == GIVE_FLAG_DROP_ON_FAIL) {
@@ -1527,9 +1527,6 @@ int TThing::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
   if (rc)
     return TRUE;
 
-  --(*this);
-  *cont += *this;
-
   if (dynamic_cast<TKeyring *>(cont) &&
      dynamic_cast<TKey *>(this)) {
     act("You attach $p to $P.",
@@ -1587,6 +1584,9 @@ int TThing::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
 	break;
     }
   }
+  --(*this);
+  *cont += *this;
+
   rc = ch->genericItemCheck(this);
   if (IS_SET_DELETE(rc, DELETE_ITEM)) {
     return DELETE_THIS;

@@ -1548,7 +1548,6 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
 
           obj->obj_flags.cost = 0;
           dynamic_cast<TComponent *>(obj)->setComponentCharges(10);
-          dynamic_cast<TComponent *>(obj)->setComponentMaxCharges(15); 
           obj->obj_flags.decay_time = -1;
           *ch += *obj;
           sprintf(buf, "%s Here is %s for you to help in your learning of %s.", fname(ch->getName()).c_str(), obj->getName(), discArray[i]->name);

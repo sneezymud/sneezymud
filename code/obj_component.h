@@ -289,7 +289,6 @@ extern vector<compInfo>CompInfo;
 class TComponent : public TObj {
   private:
     int charges;
-    int max_charges;
     spellNumT comp_spell;
     unsigned int comp_type;
   public:
@@ -333,9 +332,6 @@ class TComponent : public TObj {
     int getComponentCharges() const;
     void setComponentCharges(int n);
     void addToComponentCharges(int n);
-    int getComponentMaxCharges() const;
-    void setComponentMaxCharges(int n);
-    void addToComponentMaxCharges(int n);
     spellNumT getComponentSpell() const;
     void setComponentSpell(spellNumT n);
     unsigned int getComponentType() const;
@@ -350,6 +346,5 @@ class TComponent : public TObj {
     virtual ~TComponent();
     virtual TThing & operator-- ();
 };
-
 
 #endif
