@@ -7626,11 +7626,11 @@ int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   if(gHoldem.getLastBet()){
     if(gHoldem.getLastBet() != 2350){
       me->doSay("Sorry, I only play with 100 talen chips right now.");
-      me->doFold("");
+      gHoldem.fold(me);
       return false;
     }
 
-    for(int i=0;i<gHoldem.getNRaises();++i){
+    for(int i=0;i<gHoldem.getNRaises()+1;++i){
       chip=read_object(gHoldem.getLastBet(), VIRTUAL);
       *me += *chip;
       chipl.push_back(chip);
@@ -7644,7 +7644,7 @@ int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
       break;
     case STATE_DEAL:
       if(handval > 15 && ::number(0,1)){
-	me->doRaise("",CMD_RAISE);
+	gHoldem.raise(me);
 	return true;
       } else if((hp->hand[0]->getValAceHi() >= 10) &&
 		(hp->hand[1]->getValAceHi() >= 10)){
@@ -7652,29 +7652,29 @@ int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 	  me->doStay();
 	  return true;
 	} else {
-	  me->doRaise("",CMD_RAISE);
+	  gHoldem.raise(me);
 	  return true;
 	}
       } else if(::number(0,2)){
-	me->doCall("");
+	gHoldem.call(me);
 	return true;
       }
       break;
     case STATE_FLOP:
       if(handval > 30 && ::number(0,1)){
-	me->doRaise("", CMD_RAISE);
+	gHoldem.raise(me);
 	return true;
       } else if(handval > 15 || !::number(0,4)){
-	me->doCall("");
+	gHoldem.call(me);
 	return true;
       }
       break;
     case STATE_TURN:
     case STATE_RIVER:
       if(handval > 45 && ::number(0,1))
-	me->doRaise("",CMD_RAISE);
+	gHoldem.raise(me);
       else if(handval > 15 || !::number(0,4))
-	me->doCall("");
+	gHoldem.call(me);
       deleteChips(me);
       return true;
       break;
@@ -7685,7 +7685,7 @@ int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     delete chipl[i];
   }
   
-  me->doFold("");
+  gHoldem.fold(me);
   return true;
 }
 

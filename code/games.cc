@@ -35,7 +35,7 @@ void payout(TBeing *ch, int talens, int chip_vnum=0)
 	ssprintf(buf, "$n receives %i talens.", talens);
 	act(buf, TRUE, ch, 0, 0, TO_ROOM);
 	ch->addToMoney(talens, GOLD_GAMBLE);
-	return;
+	break;
       }
     } else {
       chip=read_object(chip_vnum, VIRTUAL);
