@@ -327,6 +327,15 @@ void TBeing::statObj(const TObj *j)
 
   str += ItemInfo[j->itemType()]->name;
   str += "\n\r";
+
+  for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
+    if(obj_index[j->getItemIndex()].virt <= zone_table[zone].top){
+      sprintf(buf, "Zone: %s\n\r", zone_table[zone].name);
+      break;
+    }    
+  }
+  str += buf;
+
   sprintf(buf, "Short description: %s\n\rLong description:\n\r%s\n\r",
         ((j->shortDescr) ? j->shortDescr : "None"),
         ((j->getDescr()) ? j->getDescr() : "None"));
