@@ -12,7 +12,6 @@
 #include <fstream.h>
 
 /* remove these races
-    case RACE_MAMMAL:
     case RACE_UNIDENT:
     case RACE_UNCERT:
 */
@@ -47,7 +46,7 @@ void TBeing::setRacialStuff()
   if (IS_SET(specials.act, ACT_SKELETON)) {
     setImmunity(IMMUNE_BONE_COND, -100);
   }
-  if(hasQuestBit(TOG_VAMPIRE)){
+  if(isVampire()){
       SET_BIT(specials.affectedBy, AFF_TRUE_SIGHT);
   }
   if (isUndead()) {
@@ -132,7 +131,6 @@ void TBeing::setRacialStuff()
       setMaxMove(getMaxMove() + 150);
       setMove(moveLimit());
       break;
-    case RACE_MAMMAL:
     case RACE_UNIDENT:
     case RACE_UNCERT:
     case RACE_NORACE:
@@ -144,6 +142,7 @@ void TBeing::setRacialStuff()
     case RACE_OGRE:
     case RACE_LYCANTH:
     case RACE_BIRDMAN:
+    case RACE_VAMPIRE:
     case RACE_UNDEAD:
     case RACE_DINOSAUR:
     case RACE_BIRD:
@@ -259,10 +258,17 @@ bool TBeing::isAnimal() const
   return getMyRace()->isAnimal() ? TRUE : FALSE;
 }
 
-bool TBeing::isUndead() const
+bool TBeing::isVampire() const
 {
   if(hasQuestBit(TOG_VAMPIRE))
     return TRUE;
+  if(getRace() == RACE_VAMPIRE)
+    return TRUE;
+  return FALSE;
+}
+
+bool TBeing::isUndead() const
+{
   if (IS_SET(specials.act, ACT_SKELETON))
     return TRUE;
   if (IS_SET(specials.act, ACT_ZOMBIE))
@@ -3801,7 +3807,6 @@ spellNumT TBeing::getFormType() const
       else
         return (TYPE_STING);
     case RACE_PRIMATE:
-    case RACE_MAMMAL:
     case RACE_AMPHIB:
     case RACE_BEAR:
     case RACE_DRAGONNE:
@@ -3934,6 +3939,7 @@ spellNumT TBeing::getFormType() const
     case RACE_KOBOLD:
     case RACE_GNOLL:
     case RACE_HOBGOBLIN:
+    case RACE_VAMPIRE:
     case MAX_RACIAL_TYPES:
       return TYPE_HIT;
   }

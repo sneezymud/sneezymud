@@ -440,7 +440,6 @@ int determineSkinningItem(TBaseCorpse * corpse, int * amount, char * msg, char *
       case RACE_FISHMAN:
       case RACE_FELINE:
       case RACE_CANINE:
-      case RACE_MAMMAL:
       case RACE_REPTILE:
       case RACE_GOAT:
       case RACE_SHEEP:

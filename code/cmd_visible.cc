@@ -45,7 +45,7 @@ void TPerson::doVisible(const char *, bool tSilent)
     return;
   }
 
-  if (!hasQuestBit(TOG_VAMPIRE) &&
+  if (!isVampire() &&
       (!doesKnowSkill(SPELL_INVISIBILITY) && ::number(0, 10))) {
     sendTo("You fail to control the magic and lose the power of invisibility.\n\r");
     act("$n quickly becomes visible.",
@@ -99,7 +99,7 @@ void TPerson::doInvis(const char *)
     return;
   }
 
-  if (!affectedBySpell(SPELL_INVISIBILITY) && !hasQuestBit(TOG_VAMPIRE)) {
+  if (!affectedBySpell(SPELL_INVISIBILITY) && !isVampire()) {
     sendTo("I'm afraid you can not do this.\n\r");
     return;
   }

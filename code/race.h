@@ -50,7 +50,7 @@ enum race_t {
   RACE_TYTAN,           /*  43 */       RACE_WOODELF,   /*  44 */
   RACE_FELINE,          /*  45 */       RACE_CANINE,    /*  46 */
   RACE_HORSE,           /*  47 */       RACE_AMPHIB,    /*  48 */
-  RACE_MAMMAL,          /*  49 */       RACE_REPTILE,   /*  50 */
+  RACE_VAMPIRE,         /*  49 */       RACE_REPTILE,   /*  50 */
   RACE_UNCERT,          /*  51 */       RACE_UNIDENT,   /*  52 */
   RACE_OCTOPUS,         /*  53 */       RACE_CRUSTACEAN,/*  54 */
   RACE_MOSS,            /*  55 */       RACE_BOVINE,    /*  56 */

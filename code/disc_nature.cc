@@ -289,7 +289,7 @@ int TBeing::doTransform(const char *argument)
   char buffer[256];
 
   if (!doesKnowSkill(SKILL_TRANSFORM_LIMB)) {
-    if(hasQuestBit(TOG_VAMPIRE))
+    if(isVampire())
       return vampireTransform(this);
 
     sendTo("You know nothing about transforming your limbs.\n\r");
@@ -314,7 +314,7 @@ int TBeing::doTransform(const char *argument)
     }
   }
   if (i >= LAST_TRANSFORM_LIMB) {
-    if(hasQuestBit(TOG_VAMPIRE))
+    if(isVampire())
       return vampireTransform(this);
 
     sendTo("Couldn't find any such limb to transform.\n\r");

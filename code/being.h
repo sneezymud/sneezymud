@@ -953,6 +953,7 @@ class TBeing : public TThing {
     int updateBodyParts();
     int updateHalfTickStuff();
     int terrainSpecial();
+    bool isVampire() const;
     bool isAnimal() const;
     bool isVeggie() const;
     bool isDiabolic() const;

@@ -800,6 +800,7 @@ void TBeing::doPoint(const sstring &arg)
 }
 
 
+
 int TBeing::doBite(const sstring &arg)
 {
   TThing *t = NULL;
@@ -816,7 +817,7 @@ int TBeing::doBite(const sstring &arg)
   }
 
 
-  if(!hasQuestBit(TOG_VAMPIRE)){
+  if(!isVampire()){
     for (t = roomp->getStuff(); t; t = t->nextThing) {
       if (isname(arg, t->name)) {
 	if((b=dynamic_cast<TBeing *>(t)) && b==this){
@@ -899,7 +900,7 @@ int TBeing::doBite(const sstring &arg)
 	stopFighting();
 
       if(b->isPc() && !b->hasQuestBit(TOG_VAMPIRE) &&
-	 !b->hasQuestBit(TOG_BITTEN_BY_VAMPIRE)){
+	 !b->hasQuestBit(TOG_BITTEN_BY_VAMPIRE) && !isVampire()){
 	affectedData aff;
 	aff.type = AFFECT_BITTEN_BY_VAMPIRE;
 	aff.location = APPLY_NONE;

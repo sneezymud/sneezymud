@@ -181,7 +181,7 @@ int TBaseCup::drinkMe(TBeing *ch)
       bSuccess(ch, ch->getSkillValue(SKILL_ALCOHOLISM), SKILL_ALCOHOLISM);
   }
 
-  if(ch->hasQuestBit(TOG_VAMPIRE)){
+  if(ch->isVampire()){
     ch->sendTo("You drink the mortal food, but it has no affect on you.\n\r");
   } else {
     if (ch->getCond(FULL) >= 0) {
@@ -393,7 +393,7 @@ void TFood::eatMe(TBeing *ch)
   act("$n eats $p.", TRUE, ch, this, 0, TO_ROOM);
   act("You eat the $o.", FALSE, ch, this, 0, TO_CHAR);
 
-  if(ch->hasQuestBit(TOG_VAMPIRE)){
+  if(ch->isVampire()){
     ch->sendTo("You eat the mortal food, but it has no affect on you.\n\r");
   } else {
     if (ch->getCond(FULL) > -1)
@@ -577,7 +577,7 @@ void TBaseCup::sipMe(TBeing *ch)
   act("$n sips from the $o.", TRUE, ch, this, 0, TO_ROOM);
   ch->sendTo(COLOR_OBJECTS, "It tastes like %s.\n\r", DrinkInfo[getDrinkType()]->name);
 
-  if(ch->hasQuestBit(TOG_VAMPIRE)){
+  if(ch->isVampire()){
     ch->sendTo("You drink the mortal food, but it has no affect on you.\n\r");
   } else {
     if (getLiqDrunk()) {
@@ -670,7 +670,7 @@ void TFood::tasteMe(TBeing *ch)
   act("$n tastes the $o.", FALSE, ch, this, 0, TO_ROOM);
   act("You taste the $o.", FALSE, ch, this, 0, TO_CHAR);
 
-  if(ch->hasQuestBit(TOG_VAMPIRE)){
+  if(ch->isVampire()){
     ch->sendTo("You eat the mortal food, but it has no affect on you.\n\r");
   } else {
     ch->gainCondition(FULL, 1);
