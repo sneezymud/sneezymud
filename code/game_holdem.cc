@@ -335,6 +335,16 @@ int HoldemGame::firstPlayer()
 }
 
 
+int HoldemGame::betterCount()
+{
+  int count=0;
+  
+  for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
+    if(players[i] && players[i]->hand[0] && !players[i]->allin)
+      ++count;
+  }
+  return count;
+}
 
 int HoldemGame::playerCount()
 {
@@ -495,24 +505,41 @@ void HoldemGame::call(TBeing *ch)
 
   for(int i=0;i<nraises;++i){
     if(!(chip=find_chip(ch, last_bet))){
-      ch->sendTo("You don't have the required chip!\n\r");
-      for(unsigned int i=0;i<chipl.size();++i){
-	*ch += *chipl[i];
-      }
-      return;
+      players[better]->allin=true;
+      break;
     }
 
     (*chip)--;
     chipl.push_back(chip);
   }
 
-  ssprintf(buf, "$n calls with %s. [%i]", 
-	   chipl[0]->getName(), chipl.size());
-  act(buf, FALSE, ch, 0, 0, TO_ROOM);
-  ssprintf(buf, "You call with %s. [%i]", 
-	   chipl[0]->getName(), chipl.size());
-  act(buf, FALSE, ch, 0, 0, TO_CHAR);
-  bet += chip->obj_flags.cost * chipl.size();
+  if(players[better]->allin){
+    if(chipl.size()==0){
+      act("$n goes all in!", FALSE, ch, 0, 0, TO_ROOM);
+      act("You go all in!", FALSE, ch, 0, 0, TO_CHAR);
+    } else {
+      ssprintf(buf, "$n goes all in %s! [%i]", 
+	       chipl[0]->getName(), chipl.size());
+      act(buf, FALSE, ch, 0, 0, TO_ROOM);
+      ssprintf(buf, "You go all in %s! [%i]", 
+	       chipl[0]->getName(), chipl.size());
+      act(buf, FALSE, ch, 0, 0, TO_CHAR);
+      bet += chipl[0]->obj_flags.cost * chipl.size();
+    }
+
+    if(betterCount() == 1){
+      return showdown(players[better]->ch);
+    }
+
+  } else {
+    ssprintf(buf, "$n calls with %s. [%i]", 
+	     chipl[0]->getName(), chipl.size());
+    act(buf, FALSE, ch, 0, 0, TO_ROOM);
+    ssprintf(buf, "You call with %s. [%i]", 
+	     chipl[0]->getName(), chipl.size());
+    act(buf, FALSE, ch, 0, 0, TO_CHAR);
+    bet += chipl[0]->obj_flags.cost * chipl.size();
+  }    
 
   for(unsigned int i=0;i<chipl.size();++i)
     delete chipl[i];

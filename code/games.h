@@ -393,6 +393,7 @@ class HoldemGame : public CardGame {
 
   sstring handValToStr(int);
   HoldemPlayer *getBetter(){return players[better];}
+  int betterCount();
   int getNRaises(){ return nraises;}
   int getLastBet(){return last_bet;}
   holdemStateT getState(){return state;}
