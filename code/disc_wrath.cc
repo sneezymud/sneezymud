@@ -715,17 +715,17 @@ int callLightning(TBeing *caster, TBeing *victim, int level, byte bKnown, spellN
 {
   int rc;
 
-  if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) {
-    return SPELL_FAIL;
-  }
+  //if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) {
+  //  return SPELL_FAIL;
+  //}
 
   if (!((victim->roomp->getWeather() == WEATHER_RAINY) ||
       (victim->roomp->getWeather() == WEATHER_LIGHTNING))) {
     caster->sendTo("You fail to call upon the lightning from the sky!\n\r");
     if (!victim->outside())
       caster->sendTo("There is no sky here...you're not outdoors!\n\r");
-    else if (victim->roomp->getWeather() == WEATHER_SNOWY)
-      caster->sendTo("It's too cold to produce lightning.\n\r");
+    //    else if (victim->roomp->getWeather() == WEATHER_SNOWY)
+    //      caster->sendTo("It's too cold to produce lightning.\n\r");
     else
       caster->sendTo("There is no lightning here...it's not storming!\n\r");
     return SPELL_FAIL;
@@ -825,9 +825,9 @@ int spontaneousCombust(TBeing *caster, TBeing *victim, int level, byte bKnown, i
 {
   int rc;
 
-  if (caster->isNotPowerful(victim, level, SPELL_SPONTANEOUS_COMBUST, SILENT_NO)) {
-    return SPELL_FAIL;
-  }
+  //  if (caster->isNotPowerful(victim, level, SPELL_SPONTANEOUS_COMBUST, SILENT_NO)) {
+  //    return SPELL_FAIL;
+  //  }
 
   if (victim->roomp->isUnderwaterSector()) {
     caster->sendTo("Your attempt fizzels and sputters in the water!\n\r");
@@ -843,39 +843,74 @@ int spontaneousCombust(TBeing *caster, TBeing *victim, int level, byte bKnown, i
   int dam = caster->getSkillDam(victim, SPELL_SPONTANEOUS_COMBUST, level, adv_learn);
 
   if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_SPONTANEOUS_COMBUST)) {
-    if (victim->isLucky(caster->spellLuckModifier(SPELL_SPONTANEOUS_COMBUST))) {
-      SV(SPELL_SPONTANEOUS_COMBUST);
-      dam /= 2;		// half damage 
-    }
 
     if (critSuccess(caster, SPELL_SPONTANEOUS_COMBUST)) {
       CS(SPELL_SPONTANEOUS_COMBUST);
       dam *= 2;
+      act("<R>$N is immolated in an enourmous burst of fire!<1>",
+          FALSE, caster, NULL, victim, TO_NOTVICT);
+      if (caster != victim) {
+	act("<R>$N is immolated in an enourmous burst of fire!<1>",
+	    FALSE, caster, NULL, victim, TO_CHAR);
+	act("<R>You are immolated in an enourmous burst of fire!<1>",
+	    FALSE, caster, NULL, victim, TO_VICT);
+      } else {
+	act("<R>You are immolated in an enourmous burst of fire!<1>",
+	    FALSE, caster, NULL, victim, TO_VICT);
+      }
+      
+    } else if (victim->isLucky(caster->spellLuckModifier(SPELL_SPONTANEOUS_COMBUST))) {
+      SV(SPELL_SPONTANEOUS_COMBUST);
+      dam /= 2;		// half damage 
+      act("<r>$N is immolated in a <Y>rather pitiful<1><r> burst of fire!<1>",
+          FALSE, caster, NULL, victim, TO_NOTVICT);
+      if (caster != victim) {
+        act("<r>$N is immolated in a <Y>rather pitiful<1><r> of fire!<1>",
+            FALSE, caster, NULL, victim, TO_CHAR);
+        act("<r>You are immolated in a <Y>rather pitiful<1><r> of fire!<1>",
+            FALSE, caster, NULL, victim, TO_VICT);
+      } else {
+        act("<r>You are immolated in a <Y>rather pitiful<1><r> of fire!<1>",
+            FALSE, caster, NULL, victim, TO_VICT);
+      }
+      
+    } else {
+      act("<r>$N is immolated in a burst of fire!<1>",
+          FALSE, caster, NULL, victim, TO_NOTVICT);
+      if (caster != victim) {
+        act("<r>$N is immolated in a burst of fire!<1>",
+            FALSE, caster, NULL, victim, TO_CHAR);
+        act("<r>You are immolated in a burst of fire!<1>",
+            FALSE, caster, NULL, victim, TO_VICT);
+      } else {
+        act("<r>You are immolated in a burst of fire!<1>",
+            FALSE, caster, NULL, victim, TO_VICT);
+	
+      }
     }
-
-    victim->roomp->playsound(SOUND_SPELL_SPONTANEOUS_COMBUST, SOUND_TYPE_MAGIC);
-
-    act("$N suddenly errupts in a tower of flames!", 
+      victim->roomp->playsound(SOUND_SPELL_SPONTANEOUS_COMBUST, SOUND_TYPE_MAGIC);
+      
+    act("$N howls in pain!", 
           FALSE, caster, NULL, victim, TO_NOTVICT);
     if (caster != victim) {
-      act("$N suddenly errupts in a tower of flames!", 
+      act("$N howls in pain!", 
           FALSE, caster, NULL, victim, TO_CHAR);
-      act("You suddenly errupt in a tower of flames! <R>FIRE!!!<1>", 
+      act("You howl in pain!<1>", 
           FALSE, caster, NULL, victim, TO_VICT);
     } else {
-      act("You suddenly errupt in a tower of flames! <R>FIRE!!!<1>", 
+      act("You howl in pain!<1>", 
           FALSE, caster, NULL, victim, TO_VICT);
     }
-
+    
     if (caster->reconcileDamage(victim, dam, SPELL_SPONTANEOUS_COMBUST) == -1)
       return SPELL_SUCCESS | VICTIM_DEAD;
-
+    
     rc = victim->flameEngulfed();
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return SPELL_SUCCESS | VICTIM_DEAD;
     
     return SPELL_SUCCESS;
-  } else {
+    } else {
     switch (critFail(caster, SPELL_SPONTANEOUS_COMBUST)) {
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:

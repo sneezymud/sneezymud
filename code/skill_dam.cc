@@ -327,6 +327,9 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_PILLAR_SALT:
     case SPELL_RAIN_BRIMSTONE:
     case SPELL_EARTHQUAKE:
+      dam = genericDam(victim, skill, DISC_CLERIC, level, adv_learn, 1.667, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = (int) (dam * percModifier());
+      break;
     case SPELL_SPONTANEOUS_COMBUST:
     case SPELL_FLAMESTRIKE:
       dam = genericDam(victim, skill, DISC_CLERIC, level, adv_learn, 1.667 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
@@ -335,7 +338,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       dam = (int) (dam * percModifier());
       break;
     case SPELL_CALL_LIGHTNING:
-      dam = genericDam(victim, skill, DISC_CLERIC, level, adv_learn, 1.667 * HAS_SAVING_THROW * OUTDOOR_ONLY * NEED_RAIN_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, skill, DISC_CLERIC, level, adv_learn, 1.888 * HAS_SAVING_THROW * OUTDOOR_ONLY * NEED_RAIN_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
       // additionally, do faction percent modification for clerics
       dam = (int) (dam * percModifier());
       break;

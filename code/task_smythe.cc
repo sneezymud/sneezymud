@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.15  2002/07/14 04:46:41  dash
+// changes to cleric wrath spells
+//
 // Revision 5.14  2002/07/12 07:56:29  dash
 // fixed smythe
 //
@@ -648,8 +651,8 @@ int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 	  }
 	  ch->task->status++;
 	} else {
-	  act("$n pounds $p on an anvil with $s $o.", FALSE, ch, o, hammer, TO_ROOM);
-	  act("You pound $p on an anvil with your $o.", FALSE, ch, o, hammer, TO_CHAR);
+	  act("$n pounds $p on an anvil with $s $O.", FALSE, ch, o, hammer, TO_ROOM);
+	  act("You pound $p on an anvil with your $O.", FALSE, ch, o, hammer, TO_CHAR);
 	  hammer->addToToolUses(-1);
 	  if (hammer->getToolUses() <= 0) {
 	    act("Your $o breaks due to overuse.", FALSE, ch, o, hammer, TO_CHAR);
