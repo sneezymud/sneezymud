@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: rent.h,v $
+// Revision 5.3  2002/06/13 05:00:59  peel
+// updated rent file version, woops
+//
 // Revision 5.2  2002/06/04 19:57:23  peel
 // rent file version change
 //
@@ -22,7 +25,7 @@
 #ifndef __RENT_H
 #define __RENT_H
 
-const int CURRENT_RENT_VERSION     =8;
+const int CURRENT_RENT_VERSION     =9;
 // 0        3.x - initial version
 // 1        4.1 rev 61  - changed weight from int to float
 // 2        pre 4.5 - added depreciation to rentObject structure
