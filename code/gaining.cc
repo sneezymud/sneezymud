@@ -568,8 +568,8 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	  gm->doSay("the dead and can help you in your quest.");
 	  gm->doSay("You may of course wait until a time that you feel more confident in your");
           gm->doSay("powers as a practitioner, however it is to your advantage to seek a more");
-          gm->doSay("higher power with the aid of Gondolfo.");
-	  gm->doSay("It is believed that Gondolfo lives in a small hut in Brazzed-Dum.");
+          gm->doSay("higher power with the aid of Gandolfo.");
+	  gm->doSay("It is believed that Gandolfo lives in a small hut in Brazzed-Dum.");
 	  gm->doSay("I wish I knew more to help you.");
 	}
 	setQuestBit(TOG_TOTEM_MASK_ELIGABLE);
