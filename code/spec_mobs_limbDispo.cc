@@ -154,7 +154,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
     sstring buf = fmt("%s chopped by %s, deposited by %s at %s") 
       % bodypart->getName() % chopper
       % ch->getName() % asctime(localtime(&lt));
-    autoMail(NULL, "bump", buf.c_str());
+ //   autoMail(NULL, "bump", buf.c_str());
     vlogf(LOG_MAROR, fmt("%s") % buf);
   }
   delete bodypart;
