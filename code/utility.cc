@@ -1664,7 +1664,7 @@ void TBeing::addToMoney(int money, moneyTypeT type)
         break;
       case GOLD_GAMBLE:
 	db.query("select 1 from gamblers where name='%s'", getName());
-	if(db.fetchRow()){
+	if(!db.fetchRow()){
 	  db.query("insert into gamblers values ('%s', %i)", getName(), money);
 	} else {
 	  db.query("update gamblers set money=money+%i where name='%s'", money, getName());

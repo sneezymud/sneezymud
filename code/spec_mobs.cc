@@ -6830,7 +6830,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
     db.query("select 1 from stockowners where owner='%s' and ticker='%s'",
 	     ch->getName(), db.getColumn(0));
-    if(db.fetchRow()){
+    if(!db.fetchRow()){
       db.query("insert into stockowners values ('%s', '%s', %i)", ch->getName(), db.getColumn(0), num);
     } else {
       db.query("update stockowners set shares=shares+%i where owner='%s' and ticker='%s'", num, ch->getName(), db.getColumn(0));
