@@ -285,7 +285,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       }  // affects loop
     }
     if (!count) {
-      me->doSay(ch->getName(), " I see nothing at all wrong with you!");
+      me->doTell(ch->getName(), "I see nothing at all wrong with you!");
     }
     return TRUE;
    /* Allow them to buy cures for their ailments. */
@@ -527,7 +527,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       }
     }
     if (!count) {
-      me->doSay(ch->getName(), " I see nothing at all wrong with you!");
+      me->doTell(ch->getName(), " I see nothing at all wrong with you!");
     }
     ch->doSave(SILENT_YES);
     return TRUE;
