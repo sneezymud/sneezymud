@@ -463,7 +463,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     v->sendTo(COLOR_BASIC, "<r>The blood in your veins runs hot, hot as the sun.<r>\n\r");
     v->sendTo(COLOR_BASIC, "<r>Your body spasms and contracts, causing you to jerk around like an out of control marionette.<r>\n\r");
     v->sendTo(COLOR_BASIC, "<r>You try to scream as your entire existence comes to an end, but your lifeless body does not obey your command.<r>\n\r");
-    v->sendTo(COLOR_BASIC, "<W>You lie still as a millenia comes and goes.<1>\n\r");
+    v->sendTo(COLOR_BASIC, "<W>You lie still as a millennia comes and goes.<1>\n\r");
     v->sendTo(COLOR_BASIC, "<W>You begin to wonder if this endless nothingness will ever pass.<1>\n\r");
     v->sendTo(COLOR_BASIC, "<k>Finally, a dark power comes over you.  Your body jerks to life.<1>\n\r");
     v->sendTo(COLOR_BASIC, "<k>You rise slowly, as your old familiar world returns to you, in a different light.<1>\n\r");
