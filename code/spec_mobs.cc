@@ -857,7 +857,7 @@ int TMonster::randomHunt()
 
     if (in_room != room) {
       dir = find_path(in_room, is_target_room_p, (void *) room, trackRange(), 0);
-      if (!exitDir(dir) || !real_roomp(exitDir(dir)) || dir < MIN_DIR) {
+      if (!exitDir(dir) || !real_roomp(exitDir(dir)->to_room) || dir < MIN_DIR) {
         // unable to find a path 
 	if(spec==SPEC_HORSE_FAMINE ||
 	   spec==SPEC_HORSE_WAR ||
