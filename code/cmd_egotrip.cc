@@ -169,7 +169,7 @@ void TBeing::doEgoTrip(const char *arg)
             FALSE, ch, 0, this, TO_CHAR);
 #else
       ch->sendTo(fmt("%s has given you sanctuary.\n\r") %
-            sstring(ch->pers(this)).cap() % hshr());
+            sstring(ch->pers(this)).cap());
 #endif
       sanctuary(this, ch);
     }
