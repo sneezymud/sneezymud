@@ -789,6 +789,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 566;
     case SPELL_CREATE_ROCK_GOLEM:
       return 567;
+    case SPELL_CHASE_SPIRIT:
+      return 568;
     case SKILL_SIGN:
       return 576;
     case SKILL_SWIM:
@@ -1725,6 +1727,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_CREATE_WOOD_GOLEM;
     case 567:
       return SPELL_CREATE_ROCK_GOLEM;
+    case 568:
+      return SPELL_CHASE_SPIRIT;
     case 576:
       return SKILL_SIGN;
     case 577:

@@ -1369,6 +1369,24 @@ int generic_dispel_magic(TBeing *caster, TBeing *victim, int, immortalTypeT immo
     { SPELL_CURSE, false, false, true },
     { SPELL_CURSE_DEIKHAN, false, false, true },
 
+    { SPELL_STUPIDITY, true, true, false },
+    { SPELL_CELERITE, true, true, false },
+    { SPELL_LEGBA, true, true, false },
+    { SPELL_DJALLA, true, true, false },
+    { SPELL_SENSE_LIFE_SHAMAN, true, true, false },
+    { SPELL_DETECT_SHADOW, true, true, false },
+    { SPELL_INTIMIDATE, true, true, false },
+    { SPELL_CHEVAL, true, true, false },
+    { SPELL_HYPNOSIS, true, true, false },
+    { SPELL_CLARITY, true, true, false },
+    { SPELL_AQUALUNG, true, true, false },
+    { SPELL_THORNFLESH, true, true, false },
+    { SPELL_SHIELD_OF_MISTS, true, true, false },
+    { SPELL_CONTROL_UNDEAD, true, true, false },
+    { SPELL_RESURRECTION, true, true, false },
+    { SPELL_DANCING_BONES, true, true, false },
+    { SPELL_VOODOO, true, true, false },
+
 #if 0
     // these effects are on mobs
     // death-time-only is silly to check for

@@ -418,6 +418,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_ILLUMINATE:
     case SPELL_DETECT_MAGIC:
     case SPELL_DISPEL_MAGIC:
+    case SPELL_CHASE_SPIRIT:
     case SPELL_CARDIAC_STRESS:
     case SPELL_COPY:
     case SPELL_CHRISM:

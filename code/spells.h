@@ -447,6 +447,7 @@ enum spellNumT {
      SKILL_BREW,
      SPELL_VAMPIRIC_TOUCH,
      SPELL_LIFE_LEECH,
+     SPELL_CHASE_SPIRIT,
      SKILL_TURN,
   
      // end of shaman

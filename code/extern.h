@@ -249,6 +249,7 @@ extern bool pierceType(spellNumT);
 extern bool bluntType(spellNumT);
 extern bool slashType(spellNumT);
 extern int generic_dispel_magic(TBeing *, TBeing *, int, immortalTypeT, safeTypeT = SAFE_NO);
+extern int genericChaseSpirits(TBeing *, TBeing *, int, immortalTypeT, safeTypeT = SAFE_NO);
 extern bool file_to_string(const char *name, string &buf, concatT concat = CONCAT_NO);
 extern const char *skill_diff(byte);
 extern immuneTypeT getTypeImmunity(spellNumT type);

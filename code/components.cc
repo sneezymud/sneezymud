@@ -1050,6 +1050,14 @@ void buildComponentArray()
     "$n squeezes $p.",
     "You squeeze $p tightly.",
     "$n squeezes $p."));
+  CompInfo.push_back(compInfo(SPELL_CHASE_SPIRIT,
+    "",
+    "",
+    "",
+    "You swallow $p.",
+    "$n swallows $p.",
+    "You swallow $p.",
+    "$n swallows $p."));
   CompInfo.push_back(compInfo(SPELL_COPY,
     "",                       
     "",

@@ -20,6 +20,7 @@ public:
     CSkill skSquish;
     CSkill skIntimidate;
     CSkill skCheval;
+    CSkill skChaseSpirits;
     CSkill skChrism;
     CSkill skRombler;
     CSkill skVampiricTouch;
@@ -45,6 +46,7 @@ public:
       skSquish(),
       skIntimidate(),
       skCheval(),
+      skChaseSpirits(),
       skChrism(),
       skRombler(),
       skVampiricTouch(),
@@ -70,6 +72,7 @@ public:
       skSquish(a.skSquish),
       skIntimidate(a.skIntimidate),
       skCheval(a.skCheval),
+      skChaseSpirits(a.skChaseSpirits),
       skChrism(a.skChrism),
       skRombler(a.skRombler),
       skVampiricTouch(a.skVampiricTouch),
@@ -96,6 +99,7 @@ public:
       skSquish = a.skSquish;
       skIntimidate = a.skIntimidate;
       skCheval = a.skCheval;
+      skChaseSpirits = a.skChaseSpirits;
       skChrism = a.skChrism;
       skRombler = a.skRombler;
       skVampiricTouch = a.skVampiricTouch;
@@ -133,6 +137,15 @@ private:
     int enthrallGhoul(TBeing * caster, int level, byte bKnown);
     int enthrallGhoul(TBeing * caster);
     int castEnthrallGhoul(TBeing * caster);
+
+    int chaseSpirits(TBeing *, TObj *);
+    int castChaseSpirits(TBeing *, TObj *);  
+    void chaseSpirits(TBeing *, TObj *, TMagicItem *);  
+    int chaseSpirits(TBeing *, TObj *, int, byte);  
+    int chaseSpirits(TBeing *, TBeing *);  
+    int castChaseSpirits(TBeing *, TBeing *);
+    int chaseSpirits(TBeing *, TBeing *, TMagicItem *);
+    int chaseSpirits(TBeing *, TBeing *, int, byte);
 
     int vampiricTouch(TBeing *, TBeing *);
     int castVampiricTouch(TBeing *, TBeing *);

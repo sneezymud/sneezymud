@@ -5286,7 +5286,13 @@ void TBeing::genericKillFix(void)
   // But, because of the spellWearOff, we could die "again"
   // one example would be slay a charm mob.
   int rc = generic_dispel_magic(NULL, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
+  int rc2 = genericChaseSpirits(NULL, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
+    forceCrash("Multiple deaths (%s in room %d) occurred!",
+         getName(), inRoom());
+  }
+
+  if (IS_SET_DELETE(rc2, DELETE_VICT)) {
     forceCrash("Multiple deaths (%s in room %d) occurred!",
          getName(), inRoom());
   }

@@ -1264,6 +1264,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_SHATTER:
     case SPELL_DETECT_MAGIC:
     case SPELL_DISPEL_MAGIC:
+    case SPELL_CHASE_SPIRIT: // shaman
     case SPELL_ENHANCE_WEAPON:
     case SPELL_MATERIALIZE:
     case SPELL_SPONTANEOUS_GENERATION:
@@ -2135,6 +2136,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
           rc = castDistort(this, victim);
         else
           vlogf(LOG_BUG, "SPELL_DISTORT called with null obj");
+        break;
+      case SPELL_CHASE_SPIRIT:
+        if (o) {
+          rc = castChaseSpirits(this, o);
+        } else
+          rc = castChaseSpirits(this, victim);
         break;
       case SPELL_DEATHWAVE:
         if (!o) 

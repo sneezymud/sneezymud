@@ -3411,6 +3411,14 @@ void TBeing::doRestore(const char *argument)
       return;
     }
   }
+  if (partial == RESTORE_FULL) {
+    rc = genericChaseSpirits(this, victim, GetMaxLevel(), isImmortal());
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      delete victim;
+      victim = NULL;
+      return;
+    }
+  }
 
   if (dynamic_cast<TMonster *>(victim)) {
     sendTo("You restore the pitiful creature.\n\r");

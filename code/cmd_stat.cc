@@ -1140,6 +1140,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_CONJURE_FIRE:
       case SPELL_CONJURE_WATER:
       case SPELL_DISPEL_MAGIC:
+      case SPELL_CHASE_SPIRIT: // shaman
       case SPELL_ENHANCE_WEAPON:
       case SPELL_GALVANIZE:
       case SPELL_DETECT_INVISIBLE:

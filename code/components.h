@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.33  2001/10/03 22:41:32  jesus
+// new shaman spell chase spirits
+// mock of dispel magic
+//
 // Revision 5.32  2001/07/15 22:48:05  jesus
 // updated makefile to account for slots.cc name change to game_slots.cc
 // redefined brew components and removed mage brew comps
@@ -261,6 +265,7 @@ const int COMP_STUPIDITY          =31338;
 const int COMP_CONTROL_UNDEAD     =31339;
 const int COMP_BLOOD_BOIL         =31340;
 const int COMP_FLATULENCE         =31341;
+const int COMP_CHASE_SPIRIT       =31345;
 ////////////////////
 // BREW COMPONENTS
 ////////////////////

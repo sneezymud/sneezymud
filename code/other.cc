@@ -2439,6 +2439,12 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_PROTECTION_FROM_AIR:
       protectionFromAir(caster,victim,obj);
       break;
+    case SPELL_CHASE_SPIRIT:
+      if (target) 
+        chaseSpirits(caster,target,obj);
+      else
+        rc = chaseSpirits(caster,victim,obj);
+      break;
     case SPELL_DJALLA:
       djallasProtection(caster,victim,obj);
       break;
