@@ -164,6 +164,9 @@ void TBeing::doBet(const char *arg)
   char amount[15], craps[256];
   int num;
 
+  sendTo("The Grimhaven Casino has been bankrupted and is no longer offering games besides slots.\n\r");
+  return;
+
   if (!(d = desc))
     return;
 
