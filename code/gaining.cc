@@ -792,7 +792,7 @@ void logPermaDeathLevel(TBeing *ch){
   MYSQL_RES *res;
   int rc;
   
-  if((rc=dbquery(&res, "sneezy", "permadeath", "replace into permadeath values ('%s', %i, 0)", ch->name, ch->GetMaxLevel()))){
+  if((rc=dbquery(&res, "sneezy", "permadeath", "replace into permadeath (name, level, killer, died) values ('%s', %i, 'no one', 0)", ch->name, ch->GetMaxLevel()))){
     if(rc==-1){
       vlogf(LOG_BUG, "Database error in logPermaDeathLevel");
     }

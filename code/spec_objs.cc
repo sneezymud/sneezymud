@@ -4987,7 +4987,7 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
     return FALSE;
 
 
-  if((rc=dbquery(&res, "sneezy", "permaDeathMonument", "select name, level, died from permadeath order by level desc limit 10"))){
+  if((rc=dbquery(&res, "sneezy", "permaDeathMonument", "select name, level, died, killer from permadeath order by level desc limit 10"))){
     if(rc==-1)
       vlogf(LOG_BUG, "Database error in permaDeathMonument");
     else {
@@ -5007,7 +5007,7 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
   int i=1;
   while((row=mysql_fetch_row(res))){
     if(atoi(row[2])==1){
-      ch->sendTo("%i) %s perished bravely at level %s\n\r", i, row[0], row[1]);
+      ch->sendTo("%i) %s perished bravely at level %s, killed by %s.\n\r", i, row[0], row[1], row[3]);
     } else {
       ch->sendTo("%i) %s lives on at level %s\n\r", i, row[0], row[1]);
     }
