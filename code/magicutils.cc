@@ -384,108 +384,137 @@ TComponent *TBeing::findComponent(spellNumT spell) const
   item = NULL;
 
 // Let rangers have components anywhere if not fighting
-  if (hasClass(CLASS_SHAMAN)) {
-    ritlevel = getRitualismLevel();
-  } else if (hasClass(CLASS_RANGER)) {
+  if (hasClass(CLASS_RANGER)) {
     if (fight())
       wizlevel = WIZ_LEV_COMP_EITHER;
     else 
       wizlevel = WIZ_LEV_COMP_BELT;
   } else {
-    wizlevel = getWizardryLevel();
-  }
-  if (isPc()) {
-    if (wizlevel <= WIZ_LEV_COMP_PRIM_OTHER_FREE) {
-      if (primary)
-	return comp_from_object(primary, spell);
-      else
-	return NULL;
-    }
-    if (ritlevel <= RIT_LEV_COMP_PRIM_OTHER_FREE) {
-      if (primary)
-	return comp_from_object(primary, spell);
-      else
-	return NULL;
-    }
-    if (wizlevel <= WIZ_LEV_COMP_EITHER) {
-      if (primary || secondary) {
-        if (primary)
-	  item = comp_from_object(primary, spell);
-        if (!item && secondary)
-          item = comp_from_object(secondary, spell);
-        return item;
-      } else
-	return NULL;
-    }
-    if (ritlevel <= RIT_LEV_COMP_EITHER) {
-      if (primary || secondary) {
-        if (primary)
-	  item = comp_from_object(primary, spell);
-        if (!item && secondary)
-          item = comp_from_object(secondary, spell);
-        return item;
-      } else
-	return NULL;
-    }
-    if (wizlevel <= WIZ_LEV_NO_MANTRA) {
-      if (primary || secondary || inventory) {
-	if (primary)
-	  item = comp_from_object(primary, spell);
-	if (!item && secondary)
-	  item = comp_from_object(secondary, spell);
-        if (!item && inventory) {
-          TThing *t;
-          for (t = stuff; t && !item; t = t->nextThing) {
-            inventory = dynamic_cast<TObj *>(t);
-            if (inventory)
-              item = comp_from_object(inventory, spell);
-          }
-        }
-	return item;
-      } else
-	return NULL;
-    }
-    if (ritlevel <= RIT_LEV_NO_MANTRA) {
-      if (primary || secondary || inventory) {
-	if (primary)
-	  item = comp_from_object(primary, spell);
-	if (!item && secondary)
-	  item = comp_from_object(secondary, spell);
-        if (!item && inventory) {
-          TThing *t;
-          for (t = stuff; t && !item; t = t->nextThing) {
-            inventory = dynamic_cast<TObj *>(t);
-            if (inventory)
-              item = comp_from_object(inventory, spell);
-          }
-        }
-	return item;
-      } else
-	return NULL;
+    if (hasClass(CLASS_SHAMAN)) {
+      ritlevel = getRitualismLevel();
+    } else {
+      wizlevel = getWizardryLevel();
     }
   }
-  if (primary || secondary || belt || juju || wristpouch || inventory) {
-    if (primary)
-      item = comp_from_object(primary, spell);
-    if (!item && secondary)
-      item = comp_from_object(secondary, spell);
-    if (!item && belt)
-      item = comp_from_object(belt, spell);
-    if (!item && juju)
-      item = comp_from_object(juju, spell);
-    if (!item && wristpouch)
-      item = comp_from_object(wristpouch, spell);
-    if (!item && inventory) {
-      TThing *t;
-      for (t = stuff; t && !item; t = t->nextThing) {
-        inventory = dynamic_cast<TObj *>(t);
-        if (inventory)
-          item = comp_from_object(inventory, spell);
+  if (hasClass(CLASS_SHAMAN)) {
+    if (isPc()) {
+      if (ritlevel <= RIT_LEV_COMP_PRIM_OTHER_FREE) {
+	if (primary)
+	  return comp_from_object(primary, spell);
+	else
+	  return NULL;
+      }
+      if (ritlevel <= RIT_LEV_COMP_EITHER) {
+	if (primary || secondary) {
+	  if (primary)
+	    item = comp_from_object(primary, spell);
+	  if (!item && secondary)
+	    item = comp_from_object(secondary, spell);
+	  return item;
+	} else
+	  return NULL;
+      }
+      if (ritlevel <= RIT_LEV_NO_MANTRA) {
+	if (primary || secondary || inventory) {
+	  if (primary)
+	    item = comp_from_object(primary, spell);
+	  if (!item && secondary)
+	    item = comp_from_object(secondary, spell);
+	  if (!item && inventory) {
+	    TThing *t;
+	    for (t = stuff; t && !item; t = t->nextThing) {
+	      inventory = dynamic_cast<TObj *>(t);
+	      if (inventory)
+		item = comp_from_object(inventory, spell);
+	    }
+	  }
+	  return item;
+	} else
+	  return NULL;
       }
     }
-    return item;
-  } else
-    return NULL;
+    if (primary || secondary || belt || juju || wristpouch || inventory) {
+      if (primary)
+	item = comp_from_object(primary, spell);
+      if (!item && secondary)
+	item = comp_from_object(secondary, spell);
+      if (!item && belt)
+	item = comp_from_object(belt, spell);
+      if (!item && juju)
+	item = comp_from_object(juju, spell);
+      if (!item && wristpouch)
+	item = comp_from_object(wristpouch, spell);
+      if (!item && inventory) {
+	TThing *t;
+	for (t = stuff; t && !item; t = t->nextThing) {
+	  inventory = dynamic_cast<TObj *>(t);
+	  if (inventory)
+	    item = comp_from_object(inventory, spell);
+	}
+      }
+      return item;
+    } else
+      return NULL;
+  } else {
+    if (isPc()) {
+      if (wizlevel <= WIZ_LEV_COMP_PRIM_OTHER_FREE) {
+	if (primary)
+	  return comp_from_object(primary, spell);
+	else
+	  return NULL;
+      }
+      if (wizlevel <= WIZ_LEV_COMP_EITHER) {
+	if (primary || secondary) {
+	  if (primary)
+	    item = comp_from_object(primary, spell);
+	  if (!item && secondary)
+	    item = comp_from_object(secondary, spell);
+	  return item;
+	} else
+	  return NULL;
+      }
+      if (wizlevel <= WIZ_LEV_NO_MANTRA) {
+	if (primary || secondary || inventory) {
+	  if (primary)
+	    item = comp_from_object(primary, spell);
+	  if (!item && secondary)
+	    item = comp_from_object(secondary, spell);
+	  if (!item && inventory) {
+	    TThing *t;
+	    for (t = stuff; t && !item; t = t->nextThing) {
+	      inventory = dynamic_cast<TObj *>(t);
+	      if (inventory)
+		item = comp_from_object(inventory, spell);
+	    }
+	  }
+	  return item;
+	} else
+	  return NULL;
+      }
+    }
+    if (primary || secondary || belt || juju || wristpouch || inventory) {
+      if (primary)
+	item = comp_from_object(primary, spell);
+      if (!item && secondary)
+	item = comp_from_object(secondary, spell);
+      if (!item && belt)
+	item = comp_from_object(belt, spell);
+      if (!item && juju)
+	item = comp_from_object(juju, spell);
+      if (!item && wristpouch)
+	item = comp_from_object(wristpouch, spell);
+      if (!item && inventory) {
+	TThing *t;
+	for (t = stuff; t && !item; t = t->nextThing) {
+	  inventory = dynamic_cast<TObj *>(t);
+	  if (inventory)
+	    item = comp_from_object(inventory, spell);
+	}
+      }
+      return item;
+    } else
+      return NULL;
+  }
 }
 
 static void missingComponent(const TBeing * ch)
