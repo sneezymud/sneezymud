@@ -1335,7 +1335,7 @@ int TObj::burnObject(TBeing *ch, int perc)
     // modifier
     // and give flammable objects only a 0-75% chance of burning, it should be good
 
-    if(::number(0,100) < (int)(7.5*(double)material_nums[getMaterial()].flammability) &&
+    if(::number(0,100) < (int)(0.075*(double)material_nums[getMaterial()].flammability) &&
        !isObjStat(ITEM_BURNING) && !isObjStat(ITEM_PAIRED)){
       setBurning(ch);
       sprintf(buf, "Your $o start$Q to burn!\a");
