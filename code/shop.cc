@@ -2100,7 +2100,7 @@ void bootTheShops()
 
   /****** is owned ******/
   TDatabase isowned_db("sneezy");
-  isowned_db.query("select shop_nr from shopownedaccess where (access & 1)!=0 order by shop_nr");
+  isowned_db.query("select distinct shop_nr from shopownedaccess where (access & 1)!=0 order by shop_nr");
   isowned_db.fetchRow();
 
   
