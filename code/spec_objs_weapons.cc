@@ -2126,7 +2126,7 @@ int Gwarthir(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch, *tmp_victim, *temp;
-  int dmg;
+  int dmg  = 0;
   if (!cmd || !o)
     return FALSE;
   if (cmd != CMD_OBJ_HIT && cmd != CMD_GENERIC_PULSE)
@@ -2182,7 +2182,6 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
           false, ch, o, vict, TO_NOTVICT, ANSI_RED);
       
       dmg = ::number(1,max(1,int(ch->getWeaponDam(vict, o, hand) / 10)));
-     vlogf(LOG_MAROR, fmt("8 prick dam %d") % dmg); 
       if (ch->reconcileDamage(vict, dmg, DAMAGE_NORMAL) == -1) {
         return DELETE_VICT;
       }
@@ -2205,7 +2204,6 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
 
           
         dmg = ::number(1,max(1,ch->getWeaponDam(vict, o, hand)));
-       vlogf(LOG_MAROR, fmt("i1 flesh tenderize dmg is %d") % dmg); 
        if (ch->reconcileDamage(vict, dmg, DAMAGE_NORMAL) == -1) {
           return DELETE_VICT;
         }
@@ -2223,8 +2221,6 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
         if (ch->sameRoom(*tmp_victim) && (ch != tmp_victim) &&
             (!tmp_victim->isImmortal())) {
           dmg = ::number(1,max(1,ch->getWeaponDam(tmp_victim, o, hand)));
-        vlogf(LOG_MAROR, fmt("going to do %d damage to %s") % 
-            ch->getWeaponDam(tmp_victim, o, hand) % tmp_victim->getName());
           if (ch->inGroup(*tmp_victim)) {
             // protect group members
             act("You feel a deep silence descend around you.",
@@ -2250,7 +2246,6 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
             tmp_victim->sendTo("*BRRAAACK* You hear a loud percussive noise coming from nearby.\n\r");
         }
       }
-      // take care of the sword holder now
       act("The deep silence lifts from around you.",
           false, ch, o, vict, TO_CHAR, ANSI_CYAN);
       for (tmp_victim = character_list; tmp_victim; tmp_victim = temp) {
@@ -2269,15 +2264,6 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
       o->remObjStat(ITEM_HUM);
       act("$p's glow fades away.", false, ch, o, NULL, TO_CHAR, ANSI_ORANGE);
       act("$n's $o's glow fades away.", false, ch, o, NULL, TO_ROOM, ANSI_ORANGE);
-      
-
-      if (ch->reconcileDamage(ch, dmg, DAMAGE_NORMAL) == -1) {
-        ch->reformGroup();
-        delete ch;
-        ch = NULL;
-        return TRUE;
-      } // end area effect
-
       
     return TRUE;
     }
