@@ -210,6 +210,7 @@ void TBeing::doGload(const char *arg)
     arrow=dynamic_cast<TThing *>(ammo);
 
     if(ammo->getRounds() == 0){
+      --(*ammo);
       *roomp += *ammo;
 
       act("You unload $N and drop $p.", TRUE, this, ammo, gun, TO_CHAR);
@@ -222,7 +223,6 @@ void TBeing::doGload(const char *arg)
       act("$n unloads $N.", TRUE, this, ammo, gun, TO_ROOM);
     }
 
-    gun->setAmmo(NULL);
     addToWait(combatRound(1));    
   }
 }
@@ -246,6 +246,7 @@ string TGun::statObjInfo() const
 
   TGenWeapon::statObjInfo();
 
+  TAmmo *ammo=getAmmo();
   sprintf(buf, "Rate of Fire: %i, Ammo Type: %s, Ammo: %i, Ammo Loaded: %s",
 	  getROF(), getAmmoDescr(getAmmoType()), (ammo?ammo->getRounds():0),
 	  (ammo?ammo->getName():"None"));
@@ -306,8 +307,7 @@ void TGun::getFourValues(int *x1, int *x2, int *x3, int *x4) const {
 TGun::TGun() :
   TGenWeapon(),
   rof(1),
-  ammotype(1),
-  ammo(NULL)
+  ammotype(1)
 {
   setMaxSharp(100);
   setCurSharp(100);
@@ -317,8 +317,7 @@ TGun::TGun() :
 TGun::TGun(const TGun &a) :
   TGenWeapon(a),
   rof(a.rof),
-  ammotype(a.ammotype),
-  ammo(NULL)
+  ammotype(a.ammotype)
 {
 }
 
@@ -331,7 +330,6 @@ TGun & TGun::operator=(const TGun &a)
 
 TGun::~TGun()
 {
-  delete ammo;
 }
 
 
@@ -510,8 +508,8 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
 void TGun::setRounds(int r){
   if(getAmmo()){
     if(r<=0 && isClipless()){
+      TAmmo *ammo=getAmmo();
       delete ammo;
-      ammo=NULL;
     } else
       getAmmo()->setRounds(r);
   }
@@ -522,4 +520,9 @@ int TGun::getRounds() const {
     return getAmmo()->getRounds();
   else 
     return 0;
+}
+
+void TGun::describeContains(const TBeing *ch) const
+{
+  // just to avoid the "something in it" message
 }

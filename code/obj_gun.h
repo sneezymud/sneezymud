@@ -48,18 +48,15 @@ class TGun : public TGenWeapon {
     int ammotype;
     int flags;
 
-    TAmmo *ammo;
   public:    
     void setROF(int r) { rof=r; }
     int getROF() const { return rof; }
     void setAmmoType(int a) { ammotype=a; }
     int getAmmoType() const { return ammotype; }
     void setAmmo(TAmmo *a) { 
-      ammo=a; 
-      if(ammo)
-	ammo->parent=this;
+      *this += *a;
     }
-    TAmmo *getAmmo() const { return ammo; }
+    TAmmo *getAmmo() const { return dynamic_cast<TAmmo *>(getStuff()); }
     void setRounds(int);
     int getRounds() const;
     void setFlags(int f) { flags=f; }
@@ -81,6 +78,8 @@ class TGun : public TGenWeapon {
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual void TGun::changeBaseWeaponValue1(TBeing *, const char *, editorEnterTypeT);
     virtual void describeObjectSpecifics(const TBeing *) const;
+    virtual void describeContains(const TBeing *) const;
+
     virtual string showModifier(showModeT , const TBeing *) const;
     virtual string statObjInfo() const;
     TGun();
