@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_get.cc,v $
+// Revision 1.2  1999/09/29 22:12:20  batopr
+// *** empty log message ***
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -119,7 +122,8 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
           //    get all
           for (t = rp->stuff; t; t = t2) {
             t2 = t->nextThing;   // t2 needed since coins get destroyed
-            if (!(o = dynamic_cast<TObj *>(t)))
+            o = dynamic_cast<TObj *>(t);
+            if (!o)
               continue;
 
             // canGet normally handles this, but immortals grab lampposts
