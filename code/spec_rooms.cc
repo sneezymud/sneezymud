@@ -419,13 +419,6 @@ int Donation(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         // ...But do not prevent them from getting all out of their own posessions. -Lapsos (5/15/04)
 
         if (!strncmp(check, "all", 3) || strchr(check, '*')) {
-
-if (*StContainer)
-  ch->sendTo(StContainer);
-else
-  ch->sendTo("Major Problems Here!");
-
-
 	  if (!*StContainer || !generic_find_obj(StContainer, (FIND_OBJ_INV | FIND_OBJ_EQUIP), ch)) {
             ch->sendTo("Now now, that would be greedy!\n\r");
             return TRUE;
