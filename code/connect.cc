@@ -2683,6 +2683,7 @@ int TPerson::genericLoadPC()
 
   act("$n steps in from another world.", TRUE, this, 0, 0, TO_ROOM);
   desc->connected = CON_PLYNG;
+  desc->playerID=0;
 
   // must be after char is placed in valid room
   loadFollowers();
