@@ -31,6 +31,7 @@ const char *room_fields[] =
   "copy",         // 13
   "replace",      // 14
   "list",         // 15
+  "autoformat",   // 16
   "\n"
 };
 
@@ -196,7 +197,7 @@ void TPerson::doEdit(const char *arg)
   int exroom;
   doorTypeT doortype;
   sectorTypeT sectype;
-  string tStr;
+  string tStr, whitespace, punctuation, newDescr, word, line, a2;
   long r_flags;
   string tStString("");
   char string[512],
@@ -245,7 +246,7 @@ void TPerson::doEdit(const char *arg)
    *                              -Lapsos        *
    ***********************************************/
 
-  if (!field || field > 15) {
+  if (!field || field > 16) {
     tStr = "\0";
     tStr += "Supported Fields:\n\r";
     tStr += "  description             Will prompt for text.\n\r";
@@ -265,6 +266,7 @@ void TPerson::doEdit(const char *arg)
     tStr += "  copy <field> <room(s)>  Will copy <field> into room(s) specified.\n\r";
     tStr += "  replace <desc/extra> <\"extra\"/\"text\"> <\"text\"> <\"text\">";
     tStr += "  list <2>                Will list all rooms in the rooms file.\n\r";
+    tStr += "  autoformat              Will automatically format room to standards.\n\r";
     tStr += "Please see HELP EDIT for more information.\n\r";
     sendTo(tStr.c_str());
     return;
@@ -1212,6 +1214,76 @@ void TPerson::doEdit(const char *arg)
 
         desc->page_string(tStr.c_str());
       }
+      return;
+      break;
+    case 16:
+      //dash marker
+      if (!roomp->descr) {
+	sendTo("Room doesn't have a description, cannot use autoformatter.\n\r");
+	return;
+      }
+
+      tStr = roomp->descr;
+
+      // Ok what do we want here:
+      // A) Description should start with two spaces
+      // B) There should be two spaces and only two spaces after each sentence end
+      // C) Lines should be no longer than 80 characters, and should not break in the
+      //    middle of a word.
+      
+
+      whitespace = " \n\r";
+
+      punctuation = ".!?;:"; 
+      size_t bgin, look_at;
+
+      line = " "; // intial extra spaces
+      while (tStr != "") {
+
+
+	bgin = 0;
+
+	bgin = tStr.find_first_not_of(whitespace);
+	look_at = tStr.find_first_of(whitespace, bgin);
+	
+	if (look_at != string::npos) {
+	  // normal, return the part between
+	  word = tStr.substr(bgin, look_at - bgin);
+	  a2 = tStr.substr(look_at);
+	  tStr = a2;
+	} else if (bgin != string::npos) {
+	  // string had no terminator
+	  word = tStr.substr(bgin);
+	  tStr = "";
+	} else {
+	  // whole string was whitespace
+	  word = "";
+	  tStr = "";
+	}
+
+	if (word.find_first_of(punctuation) != string::npos) { // word has punctuation
+	  word += " "; // so add extra spaces to the end.
+	  // note: this is sort of a hack, because words like sjdgh:jdsgh will trigger it...
+	  // but if they want to put crap like that in they can format it themselves, damnit.
+	}
+	if (line.length() + word.length() > 78) {// word is too long, end line and start on next
+	  line += "\n\r";
+	  newDescr += line;
+	  line = word;
+	} else { // word fits ok on line
+	  line += " ";
+	  line += word;
+	}
+      }
+      newDescr += line;
+      newDescr += "\n\r";
+     
+
+      delete [] roomp->descr;
+      roomp->descr = mud_str_dup(newDescr.c_str());
+
+      sendTo("Room has been formatted.\n\r");
+
       return;
       break;
     default:

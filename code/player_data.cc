@@ -965,6 +965,8 @@ void do_the_player_stuff(const char *name)
 
       charFile tChar;
 
+#if 0
+      //disabled this stupid thing - dash
       if (!tPowers[POWER_WIZARD] && load_char(longbuf, &tChar)) {
         double tMIdle = (SECS_PER_REAL_DAY * 30.0);
         int tCount = 0;
@@ -988,6 +990,7 @@ void do_the_player_stuff(const char *name)
             vlogf(LOG_FILE, "Unable to re-open [%s] for wizlist.", name);
         }
       }
+#endif
 
       if (tLevel == 1) {
         // vlogf(LOG_MISC, "Adding Creator: %s", longbuf);

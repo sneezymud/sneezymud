@@ -701,6 +701,8 @@ int TPerson::doQuit2()
   int rc;
   char wizbuf[256];
 
+  doSave(SILENT_YES);
+
   if (!desc || isAffected(AFF_CHARM))
     return FALSE;
 
