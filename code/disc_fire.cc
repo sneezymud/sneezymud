@@ -1319,6 +1319,7 @@ int conjureElemFire(TBeing *caster)
   TThing *t;
   int found=0;
   TLight *tl;
+  TObj *o;
 
   if (caster->roomp->isUnderwaterSector()) {
     caster->sendTo("You cannot cast that under these wet conditions!\n\r");
@@ -1336,6 +1337,11 @@ int conjureElemFire(TBeing *caster)
     if((tl=dynamic_cast<TLight *>(t)) &&
        tl->isLit()){
       tl->putLightOut();
+      found=1;
+      break;
+    }
+    if((o=dynamic_cast<TObj *>(t)) && o->isObjStat(ITEM_BURNING)){
+      o->remBurning(caster);
       found=1;
       break;
     }
