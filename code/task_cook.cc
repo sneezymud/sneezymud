@@ -75,7 +75,7 @@ int find_recipe(sstring recipearg){
 
   // find which recipe
   for(int i=0;recipes[i].recipe>=0;++i){
-    if(isname(recipearg.c_str(), recipes[i].keywords))
+    if(isname(recipearg, recipes[i].keywords))
       recipe=recipes[i].recipe;
   }
   

@@ -132,7 +132,7 @@ void TBeing::sendTo(colorTypeT lev, const char *msg,...) const
   va_end(ap);
 
   sstring messageBuffer = colorString(this, desc, buf, NULL, lev, FALSE);
-  desc->output.putInQ(messageBuffer.c_str());
+  desc->output.putInQ(messageBuffer);
 }
 
 void TRoom::sendTo(colorTypeT lev, const char *text, ...) const
@@ -151,7 +151,7 @@ void TRoom::sendTo(colorTypeT lev, const char *text, ...) const
       if ((lev == COLOR_NEVER) || (lev == COLOR_NONE)) {
       } else {
         sstring messageBuffer = colorString(tbt, i->desc, buf, NULL, lev, TRUE);
-        tbt->desc->output.putInQ(messageBuffer.c_str());
+        tbt->desc->output.putInQ(messageBuffer);
       }
     }
   }
@@ -206,7 +206,7 @@ void sendToOutdoor(colorTypeT lev, const char *text, const char *text_tropic)
             } else {
               buf = colorString(ch, i, text, NULL, lev, FALSE);
             }
-            i->output.putInQ(buf.c_str());
+            i->output.putInQ(buf);
           }
         }
       }
@@ -238,7 +238,7 @@ void sendToRoom(colorTypeT color, const char *text, int room)
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake()) {
         sstring buf = colorString(tbt, tbt->desc, text, NULL, color, FALSE);
-        tbt->desc->output.putInQ(buf.c_str());
+        tbt->desc->output.putInQ(buf);
       }
     }
   }
@@ -291,7 +291,7 @@ void sendrpf(int tslevel, colorTypeT color, TRoom *rp, const char *msg,...)
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake() &&
           tbt->GetMaxLevel() > tslevel)
-        tbt->desc->output.putInQ(colorString(tbt, tbt->desc, messageBuffer, NULL, color, TRUE).c_str());
+        tbt->desc->output.putInQ(colorString(tbt, tbt->desc, messageBuffer, NULL, color, TRUE));
     }
   }
 }
@@ -324,7 +324,7 @@ void sendrpf(int tslevel, TRoom *rp, const char *msg,...)
       TBeing *tbt = dynamic_cast<TBeing *>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake() &&
           tbt->GetMaxLevel() > tslevel)
-        tbt->desc->output.putInQ(colorString(tbt, tbt->desc, messageBuffer, NULL, COLOR_NONE, TRUE).c_str());
+        tbt->desc->output.putInQ(colorString(tbt, tbt->desc, messageBuffer, NULL, COLOR_NONE, TRUE));
 
     }
   }
@@ -856,7 +856,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
         if (str.empty())
           to->desc->output.putInQ(cap(buf));
         else {
-          to->desc->output.putInQ(str.c_str());
+          to->desc->output.putInQ(str);
           to->desc->output.putInQ(cap(buf));
           to->desc->output.putInQ(to->norm());
         } 

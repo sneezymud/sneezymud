@@ -258,7 +258,7 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
         return FALSE;
 
       sstring nameStr = job->speech_list.front();
-      ch = get_char_room(nameStr.c_str(), myself->in_room);
+      ch = get_char_room(nameStr, myself->in_room);
       if (!ch) {
         sstring tmpstr = "The current speaker, ";
         tmpstr += nameStr;

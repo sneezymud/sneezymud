@@ -345,7 +345,7 @@ void TBeing::doLoot(const sstring & tStString)
 
     if (bType) {
       for (tType = MIN_OBJ_TYPE; tType < MAX_OBJ_TYPES; tType++)
-        if (ItemInfo[tType] && isname(ItemInfo[tType]->name, tStType.c_str()))
+        if (ItemInfo[tType] && isname(ItemInfo[tType]->name, tStType))
           break;
 
       if (tType == MAX_OBJ_TYPES) {
@@ -357,7 +357,7 @@ void TBeing::doLoot(const sstring & tStString)
     if (bSpell) {
       for (tSpell = MIN_SPELL; tSpell < MAX_SKILL; tSpell++)
         if (discArray[tSpell] &&
-            isname(discArray[tSpell]->name, tStSpell.c_str()) &&
+            isname(discArray[tSpell]->name, tStSpell) &&
             (discArray[tSpell]->typ == SPELL_MAGE   ||
              discArray[tSpell]->typ == SPELL_CLERIC))
           break;

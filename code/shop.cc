@@ -850,7 +850,7 @@ tObjectManipT ObjectManipType(sstring tStString, sstring & tStBuffer, itemTypeT 
       return OBJMAN_NOFIT;
 
     for (itemTypeT tItemType = MIN_OBJ_TYPE; tItemType < MAX_OBJ_TYPES; tItemType++)
-      if (isname(tStPassed.c_str(), ItemInfo[tItemType]->name)) {
+      if (isname(tStPassed, ItemInfo[tItemType]->name)) {
         tItem = tItemType;
         return OBJMAN_TYPE;
       }
@@ -868,7 +868,7 @@ bool TObj::fitsSellType(tObjectManipT tObjectManip,
 {
   switch (tObjectManip) {
     case OBJMAN_NONE: // sell <object>
-      if (isname(tStString.c_str(), name) && tCount < 1) {
+      if (isname(tStString, name) && tCount < 1) {
         tCount++;
         return true;
       }
@@ -880,7 +880,7 @@ bool TObj::fitsSellType(tObjectManipT tObjectManip,
       }
       break;
     case OBJMAN_ALLT: // sell all.<object>
-      if (isname(tStString.c_str(), name)) {
+      if (isname(tStString, name)) {
         tCount++;
         return true;
       }

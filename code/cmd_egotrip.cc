@@ -165,7 +165,7 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Syntax: egotrip crit <target> <crit>\n\r");
       return;
     }
-    TBeing *ch = get_char_vis_world(this, target.c_str(), NULL, EXACT_NO);
+    TBeing *ch = get_char_vis_world(this, target, NULL, EXACT_NO);
     if (!ch) {
       sendTo("Could not locate character.\n\r");
       sendTo("Syntax: egotrip crit <target> <crit>\n\r");
@@ -204,7 +204,7 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Syntax: egotrip blast <target>\n\r");
       return;
     }
-    TBeing *ch = get_char_vis_world(this, target.c_str(), NULL, EXACT_NO);
+    TBeing *ch = get_char_vis_world(this, target, NULL, EXACT_NO);
     if (!ch) {
       sendTo("Could not locate character.\n\r");
       sendTo("Syntax: egotrip blast <target>\n\r");
@@ -255,7 +255,7 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Syntax: egotrip damn <target>\n\r");
       return;
     }
-    TBeing *ch = get_char_vis_world(this, target.c_str(), NULL, EXACT_NO);
+    TBeing *ch = get_char_vis_world(this, target, NULL, EXACT_NO);
     if (!ch) {
       sendTo("Could not locate character.\n\r");
       sendTo("Syntax: egotrip damn <target>\n\r");
@@ -291,7 +291,7 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Syntax: egotrip hate <target>\n\r");
       return;
     }
-    TBeing *ch = get_char_vis_world(this, target.c_str(), NULL, EXACT_NO);
+    TBeing *ch = get_char_vis_world(this, target, NULL, EXACT_NO);
     if (!ch) {
       sendTo("Could not locate character.\n\r");
       sendTo("Syntax: egotrip hate <target>\n\r");

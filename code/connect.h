@@ -152,7 +152,7 @@ class textQ
     ~textQ();
 
     bool takeFromQ(char *dest, int destsize);
-    void putInQ(const char *txt);
+    void putInQ(const sstring &txt);
 };
 
 class editStuff

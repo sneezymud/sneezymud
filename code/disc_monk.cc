@@ -162,7 +162,7 @@ int TBeing::doSpringleap(sstring argument, bool should_lag, TBeing *vict)
   one_argument(argument, name_buf);
 
   if (!(victim = vict)) {
-    if (!(victim = get_char_room_vis(this, name_buf.c_str()))) {
+    if (!(victim = get_char_room_vis(this, name_buf))) {
       if (!(victim = fight())) {
         sendTo("Springleap at whom?\n\r");
         return FALSE;

@@ -791,7 +791,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
 
           if ((is_number(tString) ?
                convertTo<int>(said) == convertTo<int>(tStBuffer) :
-               isname(said, tStArg.c_str()))) {
+               isname(said, tStArg))) {
             value = convertTo<int>(tStString);
 
             if (speaker->getMoney() < value) {

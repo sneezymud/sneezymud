@@ -1501,14 +1501,14 @@ TObj *get_obj_num(int nr)
 }
 
 // search a room for a char, and return a pointer if found.. 
-TBeing *get_char_room(const char *name, int room, int *count)
+TBeing *get_char_room(const sstring &name, int room, int *count)
 {
   TThing *i;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH];
   char *tmp;
 
-  strcpy(tmpname, name);
+  strcpy(tmpname, name.c_str());
   tmp = tmpname;
   if (!(numx = get_number(&tmp)))
     return (0);
@@ -1627,7 +1627,7 @@ void extract_edit_char(TMonster *ch)
 // Here follows high-level versions of some earlier routines, ie functions
 // which incorporate the actual player-data.                              
 
-TBeing *get_char_room_vis(const TBeing *ch, const char *name, int *count, exactTypeT exact, infraTypeT infra)
+TBeing *get_char_room_vis(const TBeing *ch, const sstring &name, int *count, exactTypeT exact, infraTypeT infra)
 {
   TThing *i;
   TBeing *mob = NULL;
@@ -1640,10 +1640,10 @@ TBeing *get_char_room_vis(const TBeing *ch, const char *name, int *count, exactT
     vlogf(LOG_BUG, "NULL ch in get_char_room_vis");
     return NULL;
   }
-  if (!*name || !ch->roomp)
+  if (name.empty() || !ch->roomp)
     return NULL;
 
-  strcpy(tmpname, name);
+  strcpy(tmpname, name.c_str());
   tmp = tmpname;
 
   if (!(numx = get_number(&tmp)))
@@ -1669,7 +1669,7 @@ TBeing *get_char_room_vis(const TBeing *ch, const char *name, int *count, exactT
     tStName += mob->getMyRace()->getSingularName();
 
 #if 1
-    if (isname(tmp, tStName.c_str())) {
+    if (isname(tmp, tStName)) {
 #else
     if (is_abbrev(tmp, "blobs")) {
 #endif
@@ -1777,16 +1777,16 @@ TBeing *get_pc_world(const TBeing *ch, const char *name, exactTypeT exact, infra
 
 // get a character from anywhere in the world, doesn't care much about
 // being in the same room... 
-TBeing *get_char_vis_world(const TBeing *ch, const char *name, int *count, exactTypeT exact, infraTypeT infra)
+TBeing *get_char_vis_world(const TBeing *ch, const sstring &name, int *count, exactTypeT exact, infraTypeT infra)
 {
   TBeing *i;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
 
-  if (!*name)
+  if (name.empty())
     return NULL;
 
-  strcpy(tmpname, name);
+  strcpy(tmpname, name.c_str());
   tmp = tmpname;
   if (!(numx = get_number(&tmp)))
     return (0);
@@ -1813,7 +1813,7 @@ TBeing *get_char_vis_world(const TBeing *ch, const char *name, int *count, exact
   return 0;
 }
 
-TBeing *get_char_vis(const TBeing *ch, const sstring name, int *count, infraTypeT infra)
+TBeing *get_char_vis(const TBeing *ch, const sstring &name, int *count, infraTypeT infra)
 {
   TBeing *i;
 
@@ -1822,16 +1822,16 @@ TBeing *get_char_vis(const TBeing *ch, const sstring name, int *count, infraType
   // potential problem is finds local abbreviation, before global exact
   // but this is probably what we want to do
 
-  if ((i = get_char_room_vis(ch, name.c_str(), count, EXACT_YES, infra)))
+  if ((i = get_char_room_vis(ch, name, count, EXACT_YES, infra)))
     return (i);
 
-  if ((i = get_char_room_vis(ch, name.c_str(), count, EXACT_NO, infra)))
+  if ((i = get_char_room_vis(ch, name, count, EXACT_NO, infra)))
     return (i);
 
-  if ((i = get_char_vis_world(ch, name.c_str(), count, EXACT_YES, infra)))
+  if ((i = get_char_vis_world(ch, name, count, EXACT_YES, infra)))
     return i;
 
-  return get_char_vis_world(ch, name.c_str(), count, EXACT_NO, infra);
+  return get_char_vis_world(ch, name, count, EXACT_NO, infra);
 }
 
 TThing *get_thing_in_list_getable(TBeing *ch, const char *name, TThing *list)

@@ -864,7 +864,7 @@ void TBeing::edit_faction(const char * args) {
       strcpy(dname, values);
     int i;
     for(i = 0; i < MAX_DEITIES; i++) {
-      if(isname(lower(dname).c_str(), lower(deities[i]).c_str())) {
+      if(isname(lower(dname), lower(deities[i]))) {
         f->patron = deityTypeT(i);
         sprintf(buf, "The patron deity for %s<1> has been set to %s.\n\r", f->getName(), deities[i]);
 	sendTo(COLOR_BASIC, buf);
@@ -2002,7 +2002,7 @@ void TBeing::doRelease(const sstring & arg)
     
     return;
   }
-  if (!(targ = get_char_room_vis(this, buf.c_str()))) {
+  if (!(targ = get_char_room_vis(this, buf))) {
     sendTo("Release whom?\n\r");
     return;
   }
@@ -2040,7 +2040,7 @@ void TBeing::doCapture(const sstring & arg)
     }
     return;
   }
-  if (!(targ = get_char_room_vis(this, buf.c_str()))) {
+  if (!(targ = get_char_room_vis(this, buf))) {
     sendTo("Capture whom?\n\r");
     return;
   }

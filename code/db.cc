@@ -178,7 +178,7 @@ void bootPulse(const char *str, bool end_str)
   gSocket->addNewDescriptorsDuringBoot((tLRMN ? "\n\r" : tLastRealMessage));
 
   for (d = descriptor_list; d; d = d->next) {
-    d->output.putInQ(colorString(NULL, d, sc.c_str(), NULL, COLOR_BASIC, TRUE).c_str());
+    d->output.putInQ(colorString(NULL, d, sc.c_str(), NULL, COLOR_BASIC, TRUE));
     d->outputProcessing();
   }
 

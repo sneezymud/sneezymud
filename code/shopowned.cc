@@ -11,7 +11,7 @@
 bool sameAccount(sstring buf, int shop_nr){
   charFile st, stthis;
 
-  load_char(buf.c_str(), &stthis);
+  load_char(buf, &stthis);
 
   TDatabase db("sneezy");
 

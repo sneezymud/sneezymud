@@ -103,7 +103,7 @@ int TBeing::doApplyHerbs(const sstring &tArg)
 
   if(tStVict.empty() || tStVict=="self"){
     vict = this;
-  } else if (!(vict = get_char_room_vis(this, tStVict.c_str()))) {
+  } else if (!(vict = get_char_room_vis(this, tStVict))) {
     if (!(tArrow = searchLinkedListVis(this, tStVict, getStuff()))) {
       sendTo("You do not see that here, perhaps you were seeing things?\n\r");
       return FALSE;

@@ -35,14 +35,14 @@ TObj *get_obj_vis_accessible(TBeing *ch, const char *name);
 
 /* ******* characters ********* */
 
-TBeing *get_char_room(const char *name, int room, int *count = NULL);
+TBeing *get_char_room(const sstring &name, int room, int *count = NULL);
 TBeing *get_char_num(int nr);
 TBeing *get_char(const char *name, exactTypeT exact);
 
 /* find if character can see */
-TBeing *get_char_room_vis(const TBeing *ch, const char *name, int *count = NULL, exactTypeT exact = EXACT_NO, infraTypeT = INFRA_NO);
-TBeing *get_char_vis_world(const TBeing *ch, const char *name, int *count, exactTypeT exact, infraTypeT = INFRA_NO);
-TBeing *get_char_vis(const TBeing *ch, const sstring name, int *count, infraTypeT = INFRA_NO);
+TBeing *get_char_room_vis(const TBeing *ch, const sstring &name, int *count = NULL, exactTypeT exact = EXACT_NO, infraTypeT = INFRA_NO);
+TBeing *get_char_vis_world(const TBeing *ch, const sstring &name, int *count, exactTypeT exact, infraTypeT = INFRA_NO);
+TBeing *get_char_vis(const TBeing *ch, const sstring &name, int *count, infraTypeT = INFRA_NO);
 TBeing *get_pc_world(const TBeing *ch, const char *name, exactTypeT exact, infraTypeT = INFRA_NO, bool visible = TRUE);
 TBeing * get_best_char_room(const TBeing *, const char *, visibleTypeT vis = VISIBLE_YES, infraTypeT inf = INFRA_NO);
 

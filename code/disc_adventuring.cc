@@ -113,7 +113,7 @@ void TBeing::doBandage(const sstring &arg)
   // Auto-Target the bandager.
   if(buf.empty()){
     vict = this;
-  } else if (!(vict = get_char_room_vis(this, buf.c_str()))) {
+  } else if (!(vict = get_char_room_vis(this, buf))) {
     sendTo("Syntax : Bandage <person> <location>\n\r");
     return;
   }

@@ -1816,7 +1816,7 @@ int TBeing::doGoto(const sstring & argument)
     location = loc_nr;
   } else if ((target_mob = get_pc_world(this, buf.c_str(), EXACT_NO)) != NULL) {
     location = target_mob->in_room;
-  } else if ((target_mob = get_char_vis_world(this, buf.c_str(), NULL, EXACT_NO)))
+  } else if ((target_mob = get_char_vis_world(this, buf, NULL, EXACT_NO)))
     location = target_mob->in_room;
   else if ((target_obj = get_obj_vis_world(this, buf.c_str(), NULL, EXACT_YES)) ||
            (target_obj = get_obj_vis_world(this, buf.c_str(), NULL, EXACT_NO))) {
@@ -2158,7 +2158,7 @@ void TPerson::doSwitch(const char *argument)
 
   if (doLoadCmd) {
     for (mobileIndex = 0; mobileIndex < (signed int) mob_index.size(); mobileIndex++)
-      if (isname(tStBuffer.c_str(), mob_index[mobileIndex].name))
+      if (isname(tStBuffer, mob_index[mobileIndex].name))
         break;
 
     if (mobileIndex >= (signed int) mob_index.size()) {
@@ -2193,7 +2193,7 @@ void TPerson::doSwitch(const char *argument)
     tStMobile = tStBuffer;
   }
 
-  if (!(tBeing = get_char_room(tStMobile.c_str(), in_room))) {
+  if (!(tBeing = get_char_room(tStMobile, in_room))) {
     sendTo("No one in room with that name......searching world.\n\r");
     if (!(tBeing = get_char(tStMobile.c_str(), EXACT_YES)) &&
         !(tBeing = get_char(tStMobile.c_str(), EXACT_NO))) {
@@ -4238,7 +4238,7 @@ void TBeing::doWipe(const char *argument)
   } else 
     sendTo("Player not online.  Hope you know what you are doing...\n\r");
 
-  if (!load_char(lower(namebuf).c_str(), &st)) {
+  if (!load_char(lower(namebuf), &st)) {
     sendTo("No such player exists.\n\r");
     return;
   }
@@ -4309,7 +4309,7 @@ void TPerson::doAccess(const char *arg)
     sendTo("Syntax: access <player> (<changes>)\n\r");
     return;
   }
-  if (!load_char(arg1.c_str(), &st)) {
+  if (!load_char(arg1, &st)) {
     sendTo("Can't find that player file.\n\r");
     return;
   }
@@ -4554,7 +4554,7 @@ void TBeing::doReplace(const sstring &argument)
     // not, saves will be inconsistent - Russ 04-19-96
     if (dontMove) {
       sendTo("Removing and relinking player files...\n\r");
-      if (!load_char(arg1.c_str(), &st)) {
+      if (!load_char(arg1, &st)) {
          sendTo("Can't find that player file.\n\r");
          return;
       }
@@ -6639,7 +6639,7 @@ int TBeing::doCrit(sstring arg)
   }
 
   arg = one_argument(arg, name_buf);
-  if (!(vict = get_char_room_vis(this, name_buf.c_str()))) {
+  if (!(vict = get_char_room_vis(this, name_buf))) {
     if (!(vict = fight())) {
       sendTo("Syntax: crit {victim} <crit #>\n\r");
       return FALSE;

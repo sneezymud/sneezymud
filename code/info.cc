@@ -2517,7 +2517,7 @@ static int whichNumberMobile(const TThing *mob)
 
   name = fname(mob->getName());
   for (i = character_list, iNum = 0; i; i = i->next) {
-    if (isname(name.c_str(), i->getName()) && i->in_room != ROOM_NOWHERE) {
+    if (isname(name, i->getName()) && i->in_room != ROOM_NOWHERE) {
       iNum++;
       if (i == mob)
         return iNum;

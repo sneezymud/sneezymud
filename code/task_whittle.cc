@@ -777,7 +777,7 @@ int task_whittle(TBeing *ch, cmdTypeT cmd, const char *tArg, int pulse, TRoom *,
 
 bool taskWhittleEntry::operator==(sstring tString)
 {
-  return (valid && isname(tString.c_str(), name.c_str()));
+  return (valid && isname(tString, name));
 }
 
 sstring taskWhittleEntry::getName(bool showSecond)

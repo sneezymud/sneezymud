@@ -229,7 +229,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
     ch->addToMoney(amount, GOLD_INCOME);
 
   // don't split coins from my own corpse
-  if (!sub || !isname(fname(ch->name).c_str(), sub->name)) {
+  if (!sub || !isname(fname(ch->name), sub->name)) {
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
         IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
         (ch->master || ch->followers)){

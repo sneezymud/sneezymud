@@ -255,7 +255,7 @@ int TBeing::doDisarm(sstring argument, TThing *v)
   }
   one_argument(argument, v_name);
   if (!v) {
-    if (!(victim = get_char_room_vis(this, v_name.c_str()))) {
+    if (!(victim = get_char_room_vis(this, v_name))) {
       if (!(victim = fight())) {
         if (argument.empty()) {
           sendTo("Syntax: disarm <person | item>\n\r");

@@ -1228,7 +1228,7 @@ resp * seditFindResponse(resp *tResp, sstring tStArg, bool *tForm, int tCount = 
       *tForm = false;
 
     // Find command {command} {args} match
-    } else if ((tStArg.c_str())[0] == '-') {
+    } else if (tStArg[0] == '-') {
       if ((respIndex->cmd < MAX_CMD_LIST &&
            isname(&(tStString.c_str())[1], commandArray[respIndex->cmd]->name))) {
         foundMatch = true;
@@ -1252,7 +1252,7 @@ resp * seditFindResponse(resp *tResp, sstring tStArg, bool *tForm, int tCount = 
 
     // Find args {command} {args} match
     } else {
-      if (isname(tStString.c_str(), respIndex->args)) {
+      if (isname(tStString, respIndex->args)) {
         foundMatch = true;
         *tForm = true;
       }

@@ -1699,7 +1699,7 @@ int TBeing::doRemove(const sstring &argument, TThing *obj)
         }
       }
     } else {
-      if (!(ch = get_char_room_vis(this, buf.c_str()))) {
+      if (!(ch = get_char_room_vis(this, buf))) {
         sendTo("You don't see '%s' here.\n\r", buf.c_str());
         return FALSE;
       }
@@ -2047,7 +2047,7 @@ int TBeing::doUnsaddle(sstring arg)
     sendTo("Syntax: unsaddle <horse>\n\r");
     return FALSE;
   }
-  if (!(horse = get_char_room_vis(this, arg.c_str()))) {
+  if (!(horse = get_char_room_vis(this, arg))) {
     sendTo("You don't see '%s' here.\n\r", arg.c_str());
     return FALSE;
   }
@@ -2111,7 +2111,7 @@ int TBeing::doSaddle(sstring arg)
     sendTo("Syntax: saddle <horse> <saddle>\n\r");
     return FALSE;
   }
-  if (!(horse = get_char_room_vis(this, arg1.c_str()))) {
+  if (!(horse = get_char_room_vis(this, arg1))) {
     sendTo("You don't see '%s' here.\n\r", arg1.c_str());
     return FALSE;
   }
@@ -2254,7 +2254,7 @@ void TBeing::doOutfit(const sstring &arg)
     sendTo("Syntax: outfit <thing> <person>\n\r");
     return;
   }
-  if (!(mob = get_char_room_vis(this, buf2.c_str()))) {
+  if (!(mob = get_char_room_vis(this, buf2))) {
     sendTo("%s: No one by that name here.\n\r", buf.c_str());
     sendTo("Syntax: outfit <thing> <person>\n\r");
     return;

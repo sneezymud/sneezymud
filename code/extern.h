@@ -129,7 +129,7 @@ extern bool safe_to_save_shop_stuff(TMonster *);
 extern bool safe_to_be_in_system(const char *cp);
 extern void sprinttype(int type, const char * const names[], char *result);
 extern int vsystem(char *);
-extern bool load_char(const char *name, charFile *);
+extern bool load_char(const sstring &name, charFile *);
 extern int game_loop(int s);
 extern bool safe_to_be_in_system_filepath(const char *);
 extern bool scan_number(const char *text, int *rval);

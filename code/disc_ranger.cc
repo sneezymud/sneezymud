@@ -387,7 +387,7 @@ void TBeing::doConceal(sstring argument)
 	is_abbrev(name_buf, "stop")) {
       one_argument(argument, name_buf);
       if (!name_buf.empty()) {
-        vict = get_char_room_vis(this, name_buf.c_str());
+        vict = get_char_room_vis(this, name_buf);
         if (!vict) {
            sendTo("No such person present.\n\r");
            sendTo("Syntax: conceal off <person>\n\r");
@@ -420,7 +420,7 @@ void TBeing::doConceal(sstring argument)
         return;
       }
     } else {
-      vict = get_char_room_vis(this, name_buf.c_str());
+      vict = get_char_room_vis(this, name_buf);
       if (!vict) {
         sendTo("No such person present.\n\r");
         sendTo("Syntax: conceal <person>\n\r");

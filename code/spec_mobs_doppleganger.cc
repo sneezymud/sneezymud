@@ -141,7 +141,7 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
       break;
     case CMD_MOB_MOVED_INTO_ROOM:
       if (tMyself->act_ptr && !tJob->tAssumed.empty() &&
-          (tSucker = get_char_room_vis(tMyself, tJob->tAssumed.c_str(), NULL, EXACT_YES)) &&
+          (tSucker = get_char_room_vis(tMyself, tJob->tAssumed, NULL, EXACT_YES)) &&
           tSucker->isPc() && !tSucker->isImmortal()) {
         if (tSucker->master && tSucker->master->isPc() && !tSucker->isAffected(AFF_CHARM)) {
           tSucker->sendTo("Looking upon yourself you lose your focus...\n\r");

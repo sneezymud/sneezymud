@@ -4746,7 +4746,7 @@ void Descriptor::worldSend(const char *text, TBeing *ch)
 
   for (d = descriptor_list; d; d = d->next) {
     if (!d->connected)
-      d->output.putInQ(colorString(ch, d, text, NULL, COLOR_BASIC, TRUE).c_str());
+      d->output.putInQ(colorString(ch, d, text, NULL, COLOR_BASIC, TRUE));
   }
 }
 
@@ -6051,7 +6051,7 @@ bool textQ::takeFromQ(char *dest, int destsize)
   return (1);
 }
 
-void textQ::putInQ(const char *txt)
+void textQ::putInQ(const sstring &txt)
 {
   commText *n;
  

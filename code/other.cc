@@ -854,7 +854,7 @@ void TBeing::doPractice(const char *argument)
     stSpaceOut(tStTemp);
     stSpaceOut(tStName);
 
-    if ((tC = get_char_room(tStName.c_str(), in_room)) ||
+    if ((tC = get_char_room(tStName, in_room)) ||
         (tC = get_char_world(this, tStName.c_str(), EXACT_YES))
         (tC = get_char_world(this, tStName.c_str(), EXACT_NO))) {
       d = tC->desc;
@@ -2280,7 +2280,7 @@ int TBeing::doQuaff(sstring argument)
 
   if (!(t = searchLinkedListVis(this, buf, getStuff()))) {
     t = equipment[HOLD_RIGHT];
-    if (!t || !isname(buf.c_str(), t->name)) {
+    if (!t || !isname(buf, t->name)) {
       act("You do not have that item.", FALSE, this, 0, 0, TO_CHAR);
       return FALSE;
     }
@@ -3334,12 +3334,12 @@ int TBeing::doUse(sstring argument)
   TThing *t = NULL;
   if (!t) {
     t = heldInPrimHand();
-    if (t && !isname(buf.c_str(), t->name))
+    if (t && !isname(buf, t->name))
       t = NULL;
   }
   if (!t) {
     t = heldInSecHand();
-    if (t && !isname(buf.c_str(), t->name))
+    if (t && !isname(buf, t->name))
       t = NULL;
   }
   if (!t) {
@@ -3348,7 +3348,7 @@ int TBeing::doUse(sstring argument)
       t = equipment[wst];
       if (!t)
         continue;
-      if (!isname(buf.c_str(), t->name))
+      if (!isname(buf, t->name))
         continue;
       TArmorWand * taw = dynamic_cast<TArmorWand *>(t);
       if (!taw)

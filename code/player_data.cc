@@ -293,7 +293,7 @@ bool raw_save_char(const char *name, charFile *char_element)
 }
 
 // Load a char, TRUE if loaded, FALSE if not
-bool load_char(const char *name, charFile *char_element)
+bool load_char(const sstring &name, charFile *char_element)
 {
   FILE *fl;
   char buf[256];
