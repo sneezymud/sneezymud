@@ -249,7 +249,8 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 		bait->obj_flags.cost, baitchance, polechance, catchchance);
 #endif	
   
-	  if(bSuccess(ch, ch->getSkillValue(SKILL_FISHING), SKILL_FISHING) &&
+	  if((bSuccess(ch, ch->getSkillValue(SKILL_FISHING), SKILL_FISHING) ||
+	      (!ch->doesKnowSkill(SKILL_FISHING) && !::number(0,99))) &&
 	     (catchchance<(baitchance+polechance)) &&
 	     (fish=catch_a_fish(rp)) &&
 	     (::number(5,10) > rp->getFished())){
