@@ -239,9 +239,20 @@ int TMonster::charmeeStuff()
 
 static bool legalMobMovement(TMonster * mob, dirTypeT door)
 {
-  roomDirData *exitp = mob->exitDir(door);
+  roomDirData *exitp;
   TRoom *rp = NULL;
   int iHeight;
+
+  if(door <= DIR_NONE)
+    return false;
+
+  // this means it's a portal, so it will work ok for goDirection
+  // not sure exactly what to do here, so we'll take the lazy way out
+  // and just allow it
+  if(door >= MAX_DIR)
+    return true;
+
+  exitp=mob->exitDir(door);
 
   if (!exit_ok(exitp, &rp) ||
       rp->isRoomFlag(ROOM_DEATH) ||
