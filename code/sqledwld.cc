@@ -3,6 +3,16 @@
 #include "lowtools.h"
 #include <unistd.h>
 
+int txt2dir(sstring txt)
+{
+  for(int i=0;strcmp(dirs[i], "\n");++i){
+    if(txt==dirs[i]){
+      return i;
+    }
+  }
+  return convertTo<int>(txt);
+}
+
 int main(int argc, char **argv)
 {
   TDatabase db(DB_SNEEZYBETA);
@@ -61,7 +71,8 @@ int main(int argc, char **argv)
     while(db.fetchRow()){
       buf = fmt("- roomexit\n"); sbuf+=buf;
       buf = fmt("vnum:      %s\n") % db["vnum"];  sbuf+=buf;
-      buf = fmt("direction: %s\n") % db["direction"];  sbuf+=buf;
+      buf = fmt("direction: %s\n") % dirs[convertTo<int>(db["direction"])];
+      sbuf+=buf;
       buf = fmt("name:      %s\n") % db["name"];  sbuf+=buf;
       buf = fmt("description~:\n%s~\n") % db["description"];  sbuf+=buf;
       buf = fmt("type:      %s\n") % db["type"];  sbuf+=buf;
@@ -131,8 +142,8 @@ int main(int argc, char **argv)
     } else if(val["DATATYPE"]=="roomexit"){
       printf("replacing roomexit %s\n", val["vnum"].c_str());
       
-      db.query("insert into roomexit (vnum,direction,name,description,type,condition_flag,lock_difficulty,weight,key_num,destination) values (%s,%s,'%s','%s',%s,%s,%s,%s,%s,%s)", 
-	       val["vnum"].c_str(),val["direction"].c_str(),val["name"].c_str(),val["description"].c_str(),val["type"].c_str(),val["condition_flag"].c_str(),val["lock_difficulty"].c_str(),val["weight"].c_str(),val["key_num"].c_str(),val["destination"].c_str());
+      db.query("insert into roomexit (vnum,direction,name,description,type,condition_flag,lock_difficulty,weight,key_num,destination) values (%s,%i,'%s','%s',%s,%s,%s,%s,%s,%s)", 
+	       val["vnum"].c_str(),txt2dir(val["direction"]),val["name"].c_str(),val["description"].c_str(),val["type"].c_str(),val["condition_flag"].c_str(),val["lock_difficulty"].c_str(),val["weight"].c_str(),val["key_num"].c_str(),val["destination"].c_str());
     }
     printf("\n");
 
