@@ -128,7 +128,6 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   followData *f, *n;
   TBeing *vict;
 
-
   enum hunt_stateT {
     STATE_NONE,
     STATE_TO_CS,          // gh bank to cs
@@ -204,6 +203,27 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   // allow us to abort it.
   if (myself->inRoom() == ROOM_HELL)
     return FALSE;
+
+  // if we hate someone, the other guards hate them too
+  for (t = myself->roomp->getStuff(); t; t = t->nextThing) {
+    vict = dynamic_cast<TBeing *>(t);
+    if (!vict)
+      continue;
+    if (myself->Hates(vict, NULL)){
+      for (f = myself->followers; f; f = f->next) {
+	f->follower->addHated(vict);
+      }
+    }
+  }
+
+  // if my guards get lost, have them track to me
+  for (f = myself->followers; f; f = f->next) {
+    if(f->follower->roomp->number != myself->roomp->number &&
+       f->follower->isAffected(AFF_GROUP)){
+      f->follower->setHunting(myself);
+    }
+  }  
+
 
   // speed
   if(::number(0,2))
