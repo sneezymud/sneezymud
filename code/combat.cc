@@ -2228,17 +2228,9 @@ int TBeing::attackRound(const TBeing * target) const
     bonus += amt;
   }
 
-  // this seems unfair but since we were doing it before, do it again...
-  if (hasClass(CLASS_MONK))
-    bonus += my_lev/10;
-
-  //  Add CINTAI's benefit
-  if (doesKnowSkill(SKILL_CINTAI)) {
-    int amt = my_lev/6;
-    amt *= max(10, (int) getSkillValue(SKILL_CINTAI));
-    amt /= 100;
-    bonus += max(1, amt);
-  }
+  //  Add CINTAI's benefit, 0-15
+  if (doesKnowSkill(SKILL_CINTAI)) 
+    bonus += (int)(((float) getSkillValue(SKILL_CINTAI) / 20.0) * 3.0);
 
   // offense skill should play decent role
   // mobs get combat (not offense)
