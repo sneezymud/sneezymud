@@ -230,6 +230,11 @@ string TOpenContainer::showModifier(showModeT tMode, const TBeing *tBeing) const
     tString += " (";                                          
     tString += isClosed() ? "closed" : "opened";
     tString += ")";                                           
+
+    if(!isClosed() && !getStuff()){
+      tString += " (empty)";
+    }
+
   }                                                           
                                                               
   return tString;                                             
