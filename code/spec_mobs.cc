@@ -7438,6 +7438,31 @@ int mimic(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mimic, TObj *)
 
 }  
 
+
+int chicken(TBeing *, cmdTypeT cmd, const char *, TMonster *chicken, TObj *)
+{
+
+  if(cmd != CMD_GENERIC_PULSE || !chicken || !chicken->roomp)
+    return FALSE;
+
+  if(::number(0,499))
+    return FALSE;
+
+  TObj *egg=read_object(2376, VIRTUAL);
+
+  if(!egg){
+    vlogf(LOG_BUG, "problem loading chicken egg in chicken spec proc");
+    return FALSE;
+  }
+
+  *chicken->roomp += *egg;
+  
+  act("$n lays an egg.", TRUE, chicken, NULL, NULL, TO_ROOM);
+
+  return FALSE;
+}
+
+
 extern int fireman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int flaskPeddler(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int corporateAssistant(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7464,7 +7489,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE, "janitor", janitor},        // 5 
   {FALSE, "tormentor", tormentor},
   {FALSE, "Trainer: air", CDGenericTrainer},
-  {TRUE, "BOGUS", bogus_mob_proc},
+  {TRUE, "chicken", chicken},
   {TRUE, "thrower mob", ThrowerMob},
   {TRUE, "swallower", Tyrannosaurus_swallower},                // 10 
   {TRUE, "bounty hunter", bounty_hunter},
