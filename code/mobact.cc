@@ -2880,7 +2880,8 @@ int TMonster::clerMove(TBeing &vict)
     return FALSE;
 
   // do some healing
-  if((tank=vict.fight()) && tank != this && isFriend(*tank)){
+  // modified this 3/25/02 so charms only heal thier master - dash
+  if(!isAffected(AFF_CHARM) && (tank=vict.fight()) && tank != this && isFriend(*tank)){
     spell = get_cleric_heal_spell(*this, *(t=tank));
     if (spell == TYPE_UNDEFINED) {
       // tank is in ok shape, let's see if other group members need help
@@ -2897,7 +2898,14 @@ int TMonster::clerMove(TBeing &vict)
       //      vlogf(LOG_MISC, "%s HEALING %s, spell %i", name, t->name, spell);
       return doDiscipline(spell, t->name);
     }
+  } else if (isAffected(AFF_CHARM) && (tank=vict.fight()) && tank != this && tank == master) {
+    spell = get_cleric_heal_spell(*this, *(t=tank));
+    if (spell != TYPE_UNDEFINED && t) {
+      //      vlogf(LOG_MISC, "%s HEALING %s, spell %i", name, t->name, spell);
+      return doDiscipline(spell, t->name);
+    }
   }
+
 
   spell = get_cleric_spell(*this, vict, on_me);
   if (spell == TYPE_UNDEFINED)

@@ -85,7 +85,7 @@ bool TBeing::isGenericObj(int vnum)
       || (vnum >= 300 && vnum <= 342) // generic weapons
       || (vnum >= 400 && vnum <= 417) // generic food
       || (vnum >= 420 && vnum <= 443) // generic drink
-      || (vnum == 1) // oed loaded object
+      || (vnum == -1) // oed loaded object
       ) // add other generics here
     return TRUE;
   return FALSE;
@@ -94,6 +94,7 @@ bool TBeing::isGenericObj(int vnum)
 bool TBeing::isGenericMob(int vnum)
 {
   if ((vnum >= 1701 && vnum <= 1750) // testmobs
+      || (vnum == -1)
       ) // add other generics here
     return TRUE;
   return FALSE;
