@@ -730,7 +730,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
       } else if (fight()) {
         strcat(buffer, " is here, fighting ");
         if (fight() == ch)
-          strcat(buffer, " YOU!");
+          strcat(buffer, "YOU!");
         else {
           if (sameRoom(*fight())) {
             strcat(buffer, ch->pers(fight()));
