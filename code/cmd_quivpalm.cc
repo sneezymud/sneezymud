@@ -94,7 +94,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     }
 
     aff.type = SKILL_QUIV_PALM;
-    aff.duration = 84 * UPDATES_PER_MUDHOUR;
+    aff.duration = 21 * UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
