@@ -827,7 +827,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
             break;
           case POSITION_SLEEPING:
             if(roomp->isWaterSector())
-              strcat(buffer, "is sleeping here in the water.");
+              strcat(buffer, " is sleeping here in the water.");
             else if (riding) {
               strcat(buffer, " is sleeping on ");
               if (riding->getName())
