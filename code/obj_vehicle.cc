@@ -233,18 +233,27 @@ void TVehicle::vehiclePulse(int pulse)
   strcpy(shortdescr, shortDescr);
   strcpy(shortdescr, sstring(shortdescr).cap().c_str());
 
-  if(!troom->dir_option[getDir()]){
+  if(!troom->dir_option[getDir()] ||
+     !isAllowedPath(troom->dir_option[getDir()]->to_room)){
     // first count how many valid exits we have
     int dcount=0;
     for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){
-      if(troom->dir_option[dir] && dir != rev_dir[getDir()])
+      if(troom->dir_option[dir] && dir != rev_dir[getDir()] &&
+	 isAllowedPath(troom->dir_option[dir]->to_room)){
+	vlogf(LOG_PEEL, fmt("allowed=%s") % 
+	      (isAllowedPath(troom->dir_option[dir]->to_room)?"true":"false"));
+
 	++dcount;
+      }
     }
+
+    vlogf(LOG_PEEL, fmt("dcount=%i") % dcount);
     
     // if there's only one that isn't the way we came, change direction
     if(dcount == 1){
       for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){
-	if(troom->dir_option[dir] && dir != rev_dir[getDir()]){
+	if(troom->dir_option[dir] && dir != rev_dir[getDir()] &&
+	   isAllowedPath(troom->dir_option[dir]->to_room)){
 	  setDir(dir);
 
 	  sendrpf(COLOR_OBJECTS, roomp, "%s changes direction to the %s and keeps moving.\n\r", shortdescr, dirs[getDir()]);
