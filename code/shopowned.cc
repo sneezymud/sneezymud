@@ -13,7 +13,7 @@ bool sameAccount(sstring buf, int shop_nr){
 
   load_char(buf, &stthis);
 
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   db.query("select name from shopownedaccess where shop_nr=%i", shop_nr);
 
@@ -39,7 +39,7 @@ int TShopOwned::getPurchasePrice(int talens, int value){
 
 int getShopAccess(int shop_nr, TBeing *ch){
   int access=0;
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   db.query("select access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, ch->getName());
   
@@ -143,7 +143,7 @@ void TShopOwned::showInfo()
 
 int TShopOwned::setRates(sstring arg)
 {
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   sstring buf;
   float profit_buy, profit_sell;
   int max_num, argc=0;
@@ -294,7 +294,7 @@ int TShopOwned::setRates(sstring arg)
 
 int TShopOwned::buyShop(){
   int value=0;
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   sstring buf;
   TThing *tt;
   TObj *o;
@@ -334,7 +334,7 @@ int TShopOwned::buyShop(){
 
 
 int TShopOwned::sellShop(){
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   int value=0;
 
   if(!hasAccess(SHOPACCESS_SELL)){
@@ -406,7 +406,7 @@ int TShopOwned::giveMoney(sstring arg){
 int TShopOwned::setAccess(sstring arg)
 {
   sstring buf, buf2;
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   unsigned int access;
 
   if(!hasAccess(SHOPACCESS_ACCESS)){
@@ -486,7 +486,7 @@ int TShopOwned::setAccess(sstring arg)
 
 int TShopOwned::doLogs(sstring arg)
 {
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   sstring buf;
 
   if(!hasAccess(SHOPACCESS_LOGS)){
@@ -624,7 +624,7 @@ int TShopOwned::doLogs(sstring arg)
 
 int TShopOwned::getMaxNum(const TObj *o)
 {
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   
   if(o){
     db.query("select match, max_num from shopownedmatch where shop_nr=%i", shop_nr);

@@ -189,18 +189,18 @@ void generate_obj_index()
   obj_index.reserve(8192);
 
   /****** extra ******/
-  TDatabase extra_db("sneezy");
+  TDatabase extra_db(DB_SNEEZY);
   extra_db.query("select vnum, name, description from objextra order by vnum");
   extra_db.fetchRow();
 
   /****** affect ******/
-  TDatabase affect_db("sneezy");
+  TDatabase affect_db(DB_SNEEZY);
   affect_db.query("select vnum, type, mod1, mod2 from objaffect order by vnum");
   affect_db.fetchRow();
 
   /********************/
 
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   db.query("select vnum, name, short_desc, long_desc, max_exist, spec_proc, weight, max_struct, wear_flag, type, price, action_desc from obj order by vnum");
 
   while(db.fetchRow()){

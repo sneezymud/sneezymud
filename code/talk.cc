@@ -870,7 +870,7 @@ int TBeing::doTell(const sstring &arg, bool visible)
 		 nameBuf, garbed.c_str());
   }
 
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   db.query("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())", cap(capbuf), vict->getName(), garbed.c_str());
 
   // this is probably too slow, cron job or something would be better

@@ -263,7 +263,7 @@ void TBeing::doWho(const char *argument)
         ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
 
 
-	TDatabase db("sneezyprod");
+	TDatabase db(DB_SNEEZYPROD);
         db.query("select title, port, name from wholist order by port");
 
 	while(db.fetchRow()){
@@ -284,7 +284,7 @@ void TBeing::doWho(const char *argument)
         ssprintf(buf, "%sBuilder (Port 8900)\n\r", buf.c_str());
         ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
 
-        TDatabase db2("sneezybuilder");
+        TDatabase db2(DB_SNEEZYBUILDER);
         db2.query("select title, port, name from wholist order by port");
 
         while(db2.fetchRow()){
@@ -306,7 +306,7 @@ void TBeing::doWho(const char *argument)
         ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
 
 
-        TDatabase db3("sneezybeta");
+        TDatabase db3(DB_SNEEZYBETA);
         db3.query("select title, port, name from wholist order by port");
 
         while(db3.fetchRow()){

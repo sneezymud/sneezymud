@@ -1276,7 +1276,7 @@ void TMonster::saveItems(const sstring &filepath)
       return;
     }
 
-    TDatabase db("sneezy");
+    TDatabase db(DB_SNEEZY);
     db.query("update shop set gold=%i where shop_nr=%i", getMoney(), shop_nr);
   }
 }

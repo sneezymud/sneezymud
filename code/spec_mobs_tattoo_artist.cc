@@ -64,7 +64,7 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
       return FALSE;
     }
     
-    TDatabase db("sneezy");
+    TDatabase db(DB_SNEEZY);
     db.query("select 1 from tattoos where name='%s' and location=%i",
 	     ch->getName(), slot);
 

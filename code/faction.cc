@@ -2219,7 +2219,7 @@ void TBeing::doFactions(const sstring &arg)
       ssprintf(buf, "\n\rMembership as of last rollcall (%s):\n\r", timebuf);
       sbuf += buf;
 
-      TDatabase db("sneezy");
+      TDatabase db(DB_SNEEZY);
       db.query("select name, level from factionmembers where faction='%s'",
 	       factname);
 

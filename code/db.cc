@@ -1221,7 +1221,7 @@ TObj *read_object(int nr, readFileTypeT type)
 {
   TObj *obj = NULL;
   int i, rc, tmpcost;
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   i = nr;
   if (type == VIRTUAL)

@@ -1652,7 +1652,7 @@ void TBeing::addToMoney(int money, moneyTypeT type)
 {
   int lev = 0;
   int amount;
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   points.money += money;
  

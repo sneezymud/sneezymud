@@ -3530,7 +3530,7 @@ int TMonster::mobileActivity(int pulse)
     
     if(shop_index[shop_nr].isOwned()){
 
-      TDatabase db("sneezy");
+      TDatabase db(DB_SNEEZY);
 
       //      db.query("update stockinfo set talens=talens-%i where shop_nr=%i", 10, shop_nr);
 
@@ -3541,7 +3541,7 @@ int TMonster::mobileActivity(int pulse)
 #endif
 
       if(getMoney()<0){
-	TDatabase db("sneezy");
+	TDatabase db(DB_SNEEZY);
 
 	db.query("delete from shopowned where shop_nr=%i", shop_nr);
 	db.query("delete from shopownedaccess where shop_nr=%i", shop_nr);

@@ -5746,7 +5746,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 {
   char buf[256];
   TThing *t;
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   if(!ch || !ch->awake() || ch->fight())
     return FALSE;
@@ -6310,7 +6310,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 {
   int num, count=0;
   char buf2[1024], buf[1024];
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   if(cmd != CMD_LIST &&
      cmd != CMD_BUY &&

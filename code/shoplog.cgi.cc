@@ -15,7 +15,7 @@ using namespace cgicc;
 
 int main(int argc, char **argv){
   Cgicc cgi;
-  TDatabase db("sneezyprod");
+  TDatabase db(DB_SNEEZYPROD);
   sstring buf;
 
   form_iterator name = cgi.getElement("name");

@@ -2088,7 +2088,7 @@ void buildComponentArray()
   unsigned int j;
   int vnum, usage;
   spellNumT spell;
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   if(!db.query("select vnum, val2, val3 from obj where type=%i", mapFileToItemType(ITEM_COMPONENT))){
     vlogf(LOG_BUG, "Terminal database error (buildComponentArray)!");

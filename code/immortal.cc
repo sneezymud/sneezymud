@@ -4203,7 +4203,7 @@ void TBeing::doWipe(const char *argument)
   TBeing *victim;
   Descriptor *d = NULL;
   charFile st;
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   if (powerCheck(POWER_WIPE))
     return;

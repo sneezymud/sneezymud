@@ -8,7 +8,7 @@ static const char * const SNEEZY_ADMIN = "SneezyMUD Administration";
 
 bool has_mail(const char *recipient)
 {
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   db.query("select count(*) from mail where lower(mailto)=lower('%s')", recipient);
 
@@ -20,7 +20,7 @@ bool has_mail(const char *recipient)
 
 void store_mail(const char *to, const char *from, const char *message_pointer)
 {
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   time_t mail_time;
   char *tmstr;
 
@@ -30,7 +30,7 @@ void store_mail(const char *to, const char *from, const char *message_pointer)
 
 
   if(!strcmp(to, "faction")){
-    TDatabase fm("sneezy");
+    TDatabase fm(DB_SNEEZY);
     fm.query("select name from factionmembers where faction=(select faction from factionmembers where name='%s')", from);
     
     while(fm.fetchRow()){
@@ -43,7 +43,7 @@ void store_mail(const char *to, const char *from, const char *message_pointer)
 
 sstring read_delete(const char *recipient, const char *recipient_formatted, sstring &from)
 {
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   sstring buf;
 
   db.query("select mailfrom, timesent, content, mailid from mail where port=%i and lower(mailto)=lower('%s')", gamePort, recipient);

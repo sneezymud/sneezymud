@@ -160,8 +160,8 @@ void TSocket::addNewDescriptorsDuringBoot(sstring tStString)
 void updateStocks(){
   int shop_nr, talens, shares;
   float price, prevprice, amt;
-  TDatabase db("sneezy");
-  TDatabase dbupdate("sneezy");
+  TDatabase db(DB_SNEEZY);
+  TDatabase dbupdate(DB_SNEEZY);
 
   db.query("select si.shop_nr, si.talens, si.price, sum(so.shares) from stockinfo si left join stockowners so on si.ticker=so.ticker group by si.shop_nr, si.talens, si.price");
 
@@ -218,7 +218,7 @@ int updateWholist()
 
   if (wholist != wholist_last) {
     // every 10 RL seconds
-    TDatabase db("sneezy");
+    TDatabase db(DB_SNEEZY);
     
     
     db.query("delete from wholist where port=%i", gamePort);
@@ -252,7 +252,7 @@ void updateUsagelogs(int count)
   int TIME_BETWEEN_LOGS = 300;
   
   // every 10 RL seconds
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
 
 

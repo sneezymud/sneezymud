@@ -5339,7 +5339,7 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
   if(!found)
     return FALSE;
 
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   db.query("select name, level, died, killer from permadeath order by level desc limit 10");
 
@@ -5390,7 +5390,7 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   if(!found)
     return FALSE;
 
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   //  db.query("select name, count(*) from trophy group by name order by count(*) desc limit 10");
   db.query("select name, count from trophyplayer order by count desc limit 10");
@@ -5453,7 +5453,7 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
   if(!found)
     return FALSE;
 
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   db.query("select getPlayerName(player_id), money from gamblers where money > 0 order by money desc limit 10");
 
@@ -5512,7 +5512,7 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   ch->sendTo("------------------------------------------------------------\n\r");
 
   
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   //////////////////////////////////////
   // number of shops and owned status
@@ -6160,7 +6160,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
   ch->sendTo("------------------------------------------------------------\n\r\n\r");
 
   const sstring factnames[]={"cult", "snake", "brother"};
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   int totalscore=0;
   int score=0;
 

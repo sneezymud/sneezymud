@@ -2184,7 +2184,7 @@ void TPerson::doUsers(const sstring &argument)
             !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
         sprintf(line + strlen(line), "*** Information Concealed ***\n\r");
       } else {
-	TDatabase db("sneezy");
+	TDatabase db(DB_SNEEZY);
 
 	db.query("select pingtime from pings where host='%s'", d->host);
 
@@ -2335,7 +2335,7 @@ void TBeing::doEquipment(const char *argument)
       }
     }
   } else if (!*argument || !isImmortal()) {
-    TDatabase db("sneezy");
+    TDatabase db(DB_SNEEZY);
     sstring tattoos[MAX_WEAR];
 
     db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
@@ -2367,7 +2367,7 @@ void TBeing::doEquipment(const char *argument)
       }
     }
   } else {
-    TDatabase db("sneezy");
+    TDatabase db(DB_SNEEZY);
     sstring tattoos[MAX_WEAR];
 
     // allow immortals to get eq of players
@@ -3083,7 +3083,7 @@ void TBeing::doWorld()
 	  lag_info.low, norm());
   str += buf;
 
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   db.query("select pingtime from pings where host='%s'", desc->host);
 

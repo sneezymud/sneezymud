@@ -800,7 +800,7 @@ void TBeing::saveChar(sh_int load_room)
 	return;
       }
       
-      TDatabase db("sneezy");
+      TDatabase db(DB_SNEEZY);
       db.query("update shop set gold=%i where shop_nr=%i",
 	       getMoney(), shop_nr);
     }
@@ -1142,7 +1142,7 @@ void do_the_player_stuff(const char *name)
 	strncpy(factname, "error", 8);
       }
 
-      TDatabase db("sneezy");
+      TDatabase db(DB_SNEEZY);
       db.query("insert into factionmembers values ('%s', '%s', %i)",
 	       st.name, factname, max_level);
     }
@@ -1207,7 +1207,7 @@ void fixup_players(void)
 
   wiz = new wizListInfo();
 
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   db.query("truncate factionmembers");
 
  

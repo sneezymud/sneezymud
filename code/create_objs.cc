@@ -155,7 +155,7 @@ void ObjLoad(TBeing *ch, int vnum)
   TBaseClothing *tbc;
   int i;
   extraDescription *new_descr;
-  TDatabase db("immortal");
+  TDatabase db(DB_IMMORTAL);
 
   db.query("select type, name, short_desc, long_desc, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist, action_desc from obj where vnum=%i and owner='%s'", vnum, ch->name);
 
@@ -263,7 +263,7 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
   int tmp1, tmp2, tmp3, tmp4;
   o->getFourValues(&tmp1, &tmp2, &tmp3, &tmp4);
 
-  TDatabase db("immortal");
+  TDatabase db(DB_IMMORTAL);
 
   db.query("delete from obj where vnum=%i", vnum);
   if(!db.query("insert into obj (vnum, name, short_desc, long_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, cur_struct, max_struct, decay, volume, material, owner, action_desc) values (%i, '%s', '%s', '%s', %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')", 
@@ -356,7 +356,7 @@ static void osave(TBeing *ch, const char *argument)
 static void olist(TPerson *ch, bool zone=false)
 {
   sstring longstr;
-  TDatabase db("immortal");
+  TDatabase db(DB_IMMORTAL);
 
   if(zone){
     db.query("select vnum, name from obj where owner='%s' and vnum>%i and vnum<=%i order by vnum", ch->name, zone_table[ch->roomp->getZone()->zone_nr-1].top, ch->roomp->getZone()->top);
@@ -448,7 +448,7 @@ static void oedit(TBeing *ch, const char *arg)
 
 void oremove(TBeing *ch, int vnum)
 {
-  TDatabase db("immortal");
+  TDatabase db(DB_IMMORTAL);
   
   db.query("select * from obj where vnum=%i and owner='%s'", vnum, ch->name);
 
@@ -579,7 +579,7 @@ void TPerson::doOEdit(const char *argument)
     case 2:			// load 
       if (sscanf(sstring, "%d", &vnum) != 1) {
 	// assume that sstring is an object name
-	TDatabase db("immortal");
+	TDatabase db(DB_IMMORTAL);
 
 	db.query("select vnum, name from obj where owner='%s'", getName());
   

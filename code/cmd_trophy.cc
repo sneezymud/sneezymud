@@ -11,14 +11,14 @@
 
 
 TTrophy::TTrophy(sstring n) :
-  db(new TDatabase("sneezy")),
+  db(new TDatabase(DB_SNEEZY)),
   parent(NULL),
   name(n)
 {
 }
 
 TTrophy::TTrophy(TBeing *p) :
-  db(new TDatabase("sneezy")),
+  db(new TDatabase(DB_SNEEZY)),
   parent(p),
   name("")
 {
@@ -127,7 +127,7 @@ void TBeing::doTrophy(const sstring &arg)
     summary=true;
   }
 
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   db.query("select mobvnum, count from trophy where name='%s' order by mobvnum", getName());
 
   for (zone = 0; zone < zone_table.size(); zone++) {

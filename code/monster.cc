@@ -379,7 +379,7 @@ int TMonster::calculateGoldFromConstant()
       return FALSE;
     }
 
-    TDatabase db("sneezy");
+    TDatabase db(DB_SNEEZY);
     db.query("select gold from shop where shop_nr=%i", shop_nr);
     
     if(db.fetchRow()){

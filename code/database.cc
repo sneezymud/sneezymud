@@ -13,7 +13,7 @@ TDatabase::TDatabase() :
   //  vlogf(LOG_DB, "constructor");
 }
 
-TDatabase::TDatabase(sstring tdb) :
+TDatabase::TDatabase(dbTypeT tdb) :
   res(NULL),
   row(-1),
   db(NULL)
@@ -27,22 +27,29 @@ TDatabase::~TDatabase(){
   //    vlogf(LOG_DB, "query results freed");
 }
 
-void TDatabase::setDB(sstring tdb){
-  if(tdb=="sneezy"){
-    db=database_connection.getSneezyDB();
-  } else if(tdb=="sneezybeta"){
-    db=database_connection.getSneezyBetaDB();
-  } else if(tdb=="immortal"){
-    db=database_connection.getImmoDB();
-  } else if(tdb=="sneezyglobal"){
-    db=database_connection.getSneezyGlobalDB();
-  } else if(tdb=="sneezybuilder"){
-    db=database_connection.getSneezyBuilderDB();
-  } else if(tdb=="sneezyprod"){
-    db=database_connection.getSneezyProdDB();    
-  } else {
-    vlogf(LOG_DB, "Unknown database %s", tdb.c_str());
-    db=NULL;
+void TDatabase::setDB(dbTypeT tdb){
+  switch(tdb){
+    case DB_SNEEZY:
+      db=database_connection.getSneezyDB();
+      break;
+    case DB_SNEEZYBETA:
+      db=database_connection.getSneezyBetaDB();
+      break;
+    case DB_IMMORTAL:
+      db=database_connection.getImmoDB();
+      break;
+    case DB_SNEEZYGLOBAL:
+      db=database_connection.getSneezyGlobalDB();
+      break;
+    case DB_SNEEZYBUILDER:
+      db=database_connection.getSneezyBuilderDB();
+      break;
+    case DB_SNEEZYPROD:
+      db=database_connection.getSneezyProdDB();
+      break;
+    default:
+      vlogf(LOG_DB, "Unknown database dbTypeT %i", tdb);
+      db=NULL;
   }
 }
 
@@ -76,7 +83,7 @@ char *TDatabase::getColumn(int i){
 
 // get one of the results from the current row of the current query
 // specified by column name
-char *TDatabase::getColumn(sstring s){
+char *TDatabase::getColumn(const sstring &s){
   if(!res || row<0 || row >= PQntuples(res))
     return NULL;
   

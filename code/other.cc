@@ -3699,7 +3699,7 @@ void TBeing::doHistory()
   for (i = 0; i < 10; i++)
     sendTo("[%d] %s\n\r", i, d->history[i]);
 
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
   sendTo("\n\rYour tell history :\n\r\n\r");
   db.query("select tellfrom, tell from tellhistory where tellto='%s' order by telltime desc", getName());
   for(i=0;i<25 && db.fetchRow();i++){

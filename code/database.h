@@ -88,6 +88,16 @@
 // bool isResults() - checks if there are results available
 // Returns: TRUE if results are there, FALSE if not
 
+enum dbTypeT {
+  DB_SNEEZY,
+  DB_SNEEZYBETA,
+  DB_IMMORTAL,
+  DB_SNEEZYGLOBAL,
+  DB_SNEEZYBUILDER,
+  DB_SNEEZYPROD,
+};
+
+
 class TDatabase
 {
   PGresult *res;
@@ -95,15 +105,15 @@ class TDatabase
   PGconn *db;
   
  public:
-  void setDB(sstring);
+  void setDB(dbTypeT);
   bool query(const char *,...);
   bool fetchRow();
   char *getColumn(int);
-  char *getColumn(sstring);
+  char *getColumn(const sstring &);
   bool isResults();
 
   TDatabase();
-  TDatabase(sstring);
+  TDatabase(dbTypeT);
   ~TDatabase();
 };
 

@@ -948,7 +948,7 @@ int Descriptor::nanny(const char *arg)
   int free_stat;
   TRoom *rp;
   sstring str;
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   switch (connected) {
     case CON_MULTIWARN:
@@ -5059,7 +5059,7 @@ int Descriptor::doAccountStuff(char *arg)
   TBeing *ch;
   TTrophy *trophy;
   sstring from;
-  TDatabase db("sneezy");
+  TDatabase db(DB_SNEEZY);
 
   // apparently, crypt() has a mem leak in the lib function
   // By making this static, we limit the number of leaks to one
