@@ -1406,9 +1406,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_QUIVPALM:
           rc = doQuiveringPalm(newarg, dynamic_cast<TBeing *>(vict));
           break;
-        case CMD_IMMORTAL:
-          doImmortal();
-          break;
         case CMD_RIDE:
         case CMD_MOUNT:
         case CMD_DISMOUNT:
@@ -2728,7 +2725,6 @@ void buildCommandArray(void)
   commandArray[CMD_TASKS] = new commandInfo("tasks", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_VIEWOUTPUT] = new commandInfo("viewoutput", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_EVALUATE] = new commandInfo("evaluate", POSITION_RESTING, 0);
-  commandArray[CMD_IMMORTAL] = new commandInfo("immortal", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_EXEC] = new commandInfo("exec", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_LOW] = new commandInfo("low", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_PUSH] = new commandInfo("push",POSITION_RESTING,0);

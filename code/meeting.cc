@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: meeting.cc,v $
+// Revision 5.4  2002/06/30 04:55:43  peel
+// added immortal to toggle
+//
 // Revision 5.3  2002/03/06 04:07:50  peel
 // added atoi_safe and atof_safe to check for NULL values
 // converted all the atoi and atof to the safe versions
@@ -366,7 +369,6 @@ int meeting_organizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mysel
       cmd == CMD_TELL || // well, it's quiet
       cmd == CMD_GT || // well, it's quiet
       cmd == CMD_LOOK ||
-      cmd == CMD_IMMORTAL ||
       cmd == CMD_WORLD ||
       cmd == CMD_TIME ||
       cmd == CMD_ATTRIBUTE ||

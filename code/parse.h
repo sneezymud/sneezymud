@@ -414,7 +414,6 @@ enum cmdTypeT {
      CMD_TASKS,
      CMD_VIEWOUTPUT,
      CMD_EVALUATE,
-     CMD_IMMORTAL,
      CMD_EXEC,
      CMD_LOW,
      CMD_KNEESTRIKE,

@@ -2715,7 +2715,7 @@ int TPerson::genericLoadPC()
       *rp += *this;
       player.hometown = ROOM_IMPERIA;
       if (!isImmortal())   // they turned it off
-        doImmortal();
+	doToggle("immortal");
 
       if (FORCE_LOW_INVSTE && !hasWizPower(POWER_VISIBLE)) {
         if (!isPlayerAction(PLR_STEALTH))

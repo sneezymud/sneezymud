@@ -710,7 +710,7 @@ mob->getName());
     }
     if (!mob->isImmortal() && (parm > MAX_MORT) && mob->isPc()) {
       sendTo("Making them immortal and adjusting hunger/thirsts.\n\r");
-      mob->doImmortal();
+      mob->doToggle("immortal");
       mob->setCond(FULL, -1);
       mob->setCond(THIRST, -1);
     }

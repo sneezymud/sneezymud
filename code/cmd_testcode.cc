@@ -167,7 +167,7 @@ void TBeing::doTestCode(const char *arg)
         (i == CMD_NEWS) || (i == CMD_WIZNEWS) || (i == CMD_CREDITS) ||
         (i == CMD_SIT) || (i == CMD_REST) || (i == CMD_SLEEP) || 
         (i == CMD_CRAWL) || (i == CMD_WIZLIST) || (i == CMD_MEDITATE) ||
-        (i == CMD_PENANCE) || (i == CMD_IMMORTAL) || (i == CMD_TRACEROUTE) ||
+        (i == CMD_PENANCE) || (i == CMD_TRACEROUTE) ||
         (i == CMD_MID) || (i == CMD_LOGLIST) || (i == CMD_BRUTTEST))
       continue;
     vlogf(LOG_MISC, "%s : con %d", commandArray[i]->name, desc->connected);

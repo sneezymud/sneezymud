@@ -324,6 +324,10 @@ void TPerson::doToggle(const char *arg2)
 
     sendTo(COLOR_BASIC, "No Hassle         : %s\n\r", on_or_off(isPlayerAction(PLR_NOHASSLE)));
 
+    sendTo(COLOR_BASIC, "Immortality       : %s\n\r", on_or_off(isPlayerAction(PLR_IMMORTAL)));
+
+    
+
 
     if (hasWizPower(POWER_TOGGLE)){
       sendTo(COLOR_BASIC, "\n\r<c>Global Toggles<1>\n\r");
@@ -357,9 +361,22 @@ void TPerson::doToggle(const char *arg2)
 
     return;
 
-
-
-  } else if(is_abbrev(arg, "nohassle")){
+  } else if(is_abbrev(arg, "immortal") && GetMaxLevel() >= GOD_LEVEL1){
+    if (GetMaxLevel() <= MAX_MORT)
+      return;
+    if (isPlayerAction(PLR_IMMORTAL)) {
+      remPlayerAction(PLR_IMMORTAL);
+      setMoney(0);
+    } else {
+      addPlayerAction(PLR_IMMORTAL);
+      setMoney(100000);
+    }
+    doCls(false);
+    if (isImmortal())
+      sendTo("You are now immortal.\n\r");
+    else
+      sendTo("Playing as a mortal now.\n\r");
+  } else if(is_abbrev(arg, "nohassle") && hasWizPower(POWER_TOGGLE)){
     TBeing *vict;
     TObj *dummy;
 
@@ -379,7 +396,7 @@ void TPerson::doToggle(const char *arg2)
       act("$E might object to that.. better not.", 0, this, 0, vict, TO_CHAR);
     } else
       sendTo("The implementor won't let you set this on mortals...\n\r");
-  } else if(is_abbrev(arg, "stealth")){
+  } else if(is_abbrev(arg, "stealth") && hasWizPower(POWER_TOGGLE)){
     if (isPlayerAction(PLR_STEALTH)) {
       sendTo("STEALTH mode OFF.\n\r");
       remPlayerAction(PLR_STEALTH);
@@ -416,7 +433,7 @@ void TPerson::doToggle(const char *arg2)
       act("You are now anonymous.",
 	  FALSE, this, 0, 0, TO_CHAR);
     }
-  } else if (is_abbrev(arg, "invisibility")){
+  } else if (is_abbrev(arg, "invisibility") && isImmortal()){
     int level;
 
     if (!WizInvis && !hasWizPower(POWER_TOGGLE_INVISIBILITY)) {
@@ -6008,24 +6025,6 @@ void TBeing::doSysViewoutput()
     sendTo("%s", sb.c_str());  
     desc->clientf("%d", CLIENT_NOTE_END);
   }
-}
-
-void TBeing::doImmortal()
-{
-  if (GetMaxLevel() <= MAX_MORT)
-    return;
-  if (isPlayerAction(PLR_IMMORTAL)) {
-    remPlayerAction(PLR_IMMORTAL);
-    setMoney(0);
-  } else {
-    addPlayerAction(PLR_IMMORTAL);
-    setMoney(100000);
-  }
-  doCls(false);
-  if (isImmortal())
-    sendTo("You are now immortal.\n\r");
-  else
-    sendTo("Playing as a mortal now.\n\r");
 }
 
 // dead this: DELETE_THIS

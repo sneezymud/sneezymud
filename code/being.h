@@ -1778,7 +1778,6 @@ class TBeing : public TThing {
     virtual void doBug(const char *);
     virtual void doTypo(const char *);
     void doBrief();
-    void doImmortal();
     virtual void doColor(const char *);
     void setColor(setColorFieldT, setColorKolorT);
     void doCompact();
