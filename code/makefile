@@ -365,6 +365,11 @@ sqledobj: $(LIBS) objs/sqledobj.o objs/lowtools.o
 	@$(CC) -o sqledobj objs/sqledobj.o objs/lowtools.o $(LIBS) $(LDFLAGS)
 	@/usr/bin/strip sqledobj
 
+sqledimmobj: $(LIBS) objs/sqledimmobj.o objs/lowtools.o
+	@echo \*\*\* Making Final Link: sqledimmobj
+	@$(CC) -o sqledimmobj objs/sqledimmobj.o objs/lowtools.o $(LIBS) $(LDFLAGS)
+	@/usr/bin/strip sqledimmobj
+
 sqledwld: $(LIBS) objs/sqledwld.o objs/lowtools.o
 	@echo \*\*\* Making Final Link: sqledwld
 	@$(CC) -o sqledwld objs/sqledwld.o objs/lowtools.o $(LIBS) $(LDFLAGS)
@@ -376,8 +381,8 @@ amap:	$(LIBS) objs/amap.o objs/lowtools.o
 	@/usr/bin/strip amap
 
 # make all low tools
-lowtools: sqladdobjs sqledobj amap sqledwld
-	@/bin/cp -f sqladdobjs sqledobj /mud/low/bin
+lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld
+	@/bin/cp -f sqladdobjs sqledobj sqledimmobj /mud/low/bin
 	@echo Finished making lowtools
 
 # this links against prod libs for cgi execution
@@ -15151,6 +15156,53 @@ objs/sqladdobjs.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/sqladdobjs.o: materials.h colorstring.h format.h database.h
 objs/sqladdobjs.o: /usr/local/include/libpq-fe.h
 objs/sqladdobjs.o: /usr/local/include/postgres_ext.h lowtools.h
+objs/sqledimmobj.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
+objs/sqledimmobj.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
+objs/sqledimmobj.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/sqledimmobj.o: /usr/include/g++/ctime /usr/include/time.h
+objs/sqledimmobj.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/sqledimmobj.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
+objs/sqledimmobj.o: /usr/include/machine/endian.h /usr/include/g++/cctype
+objs/sqledimmobj.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/sqledimmobj.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/sqledimmobj.o: /usr/include/g++/cstring /usr/include/string.h
+objs/sqledimmobj.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/sqledimmobj.o: /usr/include/errno.h /usr/include/g++/string
+objs/sqledimmobj.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
+objs/sqledimmobj.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/sqledimmobj.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/sqledimmobj.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/sqledimmobj.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
+objs/sqledimmobj.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/sqledimmobj.o: /usr/include/g++/stl_relops.h
+objs/sqledimmobj.o: /usr/include/g++/stl_iterator.h
+objs/sqledimmobj.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
+objs/sqledimmobj.o: /usr/include/g++/stl_algobase.h
+objs/sqledimmobj.o: /usr/include/g++/stl_pair.h
+objs/sqledimmobj.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/sqledimmobj.o: /usr/include/machine/limits.h
+objs/sqledimmobj.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/sqledimmobj.o: /usr/include/g++/new /usr/include/g++/exception
+objs/sqledimmobj.o: /usr/include/g++/stl_construct.h
+objs/sqledimmobj.o: /usr/include/g++/stl_uninitialized.h
+objs/sqledimmobj.o: /usr/include/g++/stl_vector.h
+objs/sqledimmobj.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/sqledimmobj.o: /usr/include/g++/stl_tree.h
+objs/sqledimmobj.o: /usr/include/g++/stl_function.h
+objs/sqledimmobj.o: /usr/include/g++/stl_map.h
+objs/sqledimmobj.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
+objs/sqledimmobj.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/sqledimmobj.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
+objs/sqledimmobj.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/sqledimmobj.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/sqledimmobj.o: body.h race.h skills.h disease.h trap.h task.h weather.h
+objs/sqledimmobj.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/sqledimmobj.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/sqledimmobj.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/sqledimmobj.o: spec_mobs.h materials.h colorstring.h format.h database.h
+objs/sqledimmobj.o: /usr/local/include/libpq-fe.h
+objs/sqledimmobj.o: /usr/local/include/postgres_ext.h lowtools.h
+objs/sqledimmobj.o: /usr/include/unistd.h /usr/include/sys/unistd.h
 objs/sqledobj.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sqledobj.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/sqledobj.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
