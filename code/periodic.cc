@@ -1082,6 +1082,12 @@ int TBeing::updateHalfTickStuff()
 	     ((time_info.month - desc->drugs[i].last_use.month) * 28 * 24) +
 	     ((time_info.day - desc->drugs[i].last_use.day) * 24) +
 	     time_info.hours - desc->drugs[i].last_use.hours);
+	  
+	  if(hours_first>((30*24)+hours_last))
+	    hours_first=(30*24)+hours_last;
+
+	  vlogf(LOG_PEEL, "first=%i last=%i", hours_first, hours_last);
+
 	  if(hours_last && hours_first){
 	    // this should be average amount of the drug in their body since
 	    // they first used it.  We give them 24 extra hours, so you don't
@@ -1090,8 +1096,8 @@ int TBeing::updateHalfTickStuff()
 	    severity=(desc->drugs[i].total_consumed / 
 		      (max(hours_last-hours_first, (unsigned int) 24*7)+24)) * 10;
 
-	    // old formula, not sure why I did this?
-	    //	    severity=(desc->drugs[i].total_consumed / hours_first) * hours_last;
+	    vlogf(LOG_PEEL, "severity=%i", severity);
+
 	    if(severity>0)
 	      applyAddictionAffects(this, (drugTypeT) i, severity);
 	  }
