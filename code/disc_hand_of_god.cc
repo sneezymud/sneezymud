@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_hand_of_god.cc,v $
+// Revision 1.2  1999/10/06 00:54:43  batopr
+// Added new case statement for astral-walk success
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -68,10 +71,20 @@ int astralWalk(TBeing * caster, TBeing * victim, int level, byte bKnown)
   if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_ASTRAL_WALK)) {
     ret=SPELL_SUCCESS;
 
-    act("$d opens a door to another dimension and you step through.", 
-            FALSE, caster, NULL, NULL, TO_CHAR);
-    act("$d opens a door to another dimension and $n steps through!", 
-            FALSE, caster, NULL, NULL, TO_ROOM);
+    switch (::number(1,2)) {
+      case 1:
+        act("$d opens a door to another dimension and you step through.", 
+                FALSE, caster, NULL, NULL, TO_CHAR);
+        act("$d opens a door to another dimension and $n steps through!", 
+                FALSE, caster, NULL, NULL, TO_ROOM);
+        break;
+      case 2:
+        act("$d opens a door to another dimension and guides you through.", 
+                FALSE, caster, NULL, NULL, TO_CHAR);
+        act("$d opens a door to another dimension and guides $n through!", 
+                FALSE, caster, NULL, NULL, TO_ROOM);
+        break;
+    }
 
     caster->roomp->playsound(SOUND_SPELL_ASTRAL_WALK, SOUND_TYPE_MAGIC);
 
