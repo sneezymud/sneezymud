@@ -2257,7 +2257,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
 	mysql_free_result(res);
       } else {
-	rc=dbquery(&res, "sneezy", "shop_keeper logs", "select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i order by logtime desc, shoptalens+shopvalue desc", shop_nr);
+	rc=dbquery(&res, "sneezy", "shop_keeper logs", "select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' order by logtime desc, shoptalens+shopvalue desc", shop_nr);
 	
 	while((row=mysql_fetch_row(res))){
 	  sprintf(buf, "%s  Talens: %8i  Value: %8i  Total: %8i\n\r", row[6], atoi(row[4]), atoi(row[5]), atoi(row[4])+atoi(row[5]));
