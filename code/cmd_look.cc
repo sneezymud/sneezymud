@@ -337,7 +337,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                                       !tmpBeing->isImmortal()) {
                 act("$n looks at you.", TRUE, this, 0, tmpBeing, TO_VICT);
                 act("$n looks at $N.", TRUE, this, 0, tmpBeing, TO_NOTVICT);
-                if (!tmpBeing->isPc())
+                if (!tmpBeing->isPc() && !isname("[clone]", tmpBeing->name))
                   dynamic_cast<TMonster *>(tmpBeing)->aiLook(this);
               } else if (tmpBeing != this && !tmpBeing->isImmortal()) {
                 // Thieves in the room will be able to detect spying looks.
@@ -351,7 +351,8 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                     sprintf(arg1, "You detect $n looking at %s with spying eyes.",
                             (bOther == tmpBeing ? "you" : tmpBeing->getName()));
                     act(arg1, TRUE, this, 0, bOther, TO_VICT);
-                    if (bOther == tmpBeing && !tmpBeing->isPc())
+                    if (bOther == tmpBeing && !tmpBeing->isPc()
+                         && !isname("[clone]", tmpBeing->name))
                       dynamic_cast<TMonster *>(tmpBeing)->aiLook(this);
                   }
               }
@@ -389,7 +390,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                                    !tmp_char->isImmortal()) {
                 act("$n looks at you.", TRUE, this, 0, tmp_char, TO_VICT);
                 act("$n looks at $N.", TRUE, this, 0, tmp_char, TO_NOTVICT);
-                if (!tmp_char->isPc())
+                if (!tmp_char->isPc() && !isname("[clone]", tmp_char->name))
                   dynamic_cast<TMonster *>(tmp_char)->aiLook(this);
               } else if (tmp_char != this && !tmp_char->isImmortal()) {
                 // Thieves in the room will be able to detect spying looks.
@@ -403,7 +404,8 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                     sprintf(arg1, "You detect $n looking at %s with spying eyes.",
                             (bOther == tmp_char ? "you" : tmp_char->getName()));
                     act(arg1, TRUE, this, 0, bOther, TO_VICT);
-                    if (bOther == tmp_char && !tmp_char->isPc())
+                    if (bOther == tmp_char && !tmp_char->isPc() 
+                          && !isname("[clone]", tmp_char->name))
                       dynamic_cast<TMonster *>(tmp_char)->aiLook(this);
                   }
               }

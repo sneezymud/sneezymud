@@ -4422,7 +4422,7 @@ void TBeing::doClone(const sstring &arg)
   mob->shortDescr = mud_str_dup(st1.name);
 
   delete [] mob->player.longDescr;
-  mob->player.longDescr = mud_str_dup(fmt("%s is standing here") % st1.name);
+  mob->player.longDescr = mud_str_dup(fmt("<c>%s<1> is standing here.") % st1.name);
 
   delete [] mob->getDescr();
   if(*st1.description)
