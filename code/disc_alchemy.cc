@@ -1907,6 +1907,16 @@ int copy(TBeing *caster, TObj *obj, int, byte bKnown)
 int TScroll::copyMe(TBeing *caster, byte bKnown)
 {
   TObj *new_obj;
+  int x, spell1, spell2, spell3;
+
+  getFourValues(&x, &spell1, &spell2, &spell3);
+
+  if((spell1!=-1 && !caster->doesKnowSkill((spellNumT)spell1)) || 
+     (spell2!=-1 && !caster->doesKnowSkill((spellNumT)spell2)) ||
+     (spell3!=-1 && !caster->doesKnowSkill((spellNumT)spell3))){
+    caster->sendTo("You can only copy scrolls of spells that you know.\n\r");
+    return SPELL_FAIL;
+  }
 
   if (bSuccess(caster, bKnown, SPELL_COPY)) {
     new_obj = read_object(objVnum(),VIRTUAL);
