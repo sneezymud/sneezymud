@@ -463,7 +463,7 @@ int TSocket::gameLoop()
   Descriptor *point;
   int pulse = 0;
   int teleport=0, combat=0, drowning=0, special_procs=0, update_stuff=0;
-  int pulse_tick=0, pulse_mudhour=0, mobstuff=0, quickpulse=0, wayslowpulse=0;
+  int pulse_tick=0, pulse_mudhour=0, mobstuff=0, wayslowpulse=0;
   TBeing *tmp_ch, *temp;
   TObj *obj, *next_thing;
   int rc = 0;
@@ -491,8 +491,6 @@ int TSocket::gameLoop()
     
     if(TestCode1){
       sstring str = "";
-      if(!quickpulse)
-	str += "quickpulse    ";
       if(!combat)
 	str += "combat        ";
       if(!update_stuff)
@@ -553,9 +551,6 @@ int TSocket::gameLoop()
     // this doesn't really work unfortunately, pulses need to be
     // multiples of 12
 #if 0
-    // quickpulse is ignored because it is too fast!
-    quickpulse = (pulse % ONE_SECOND/5);           // 2
-
     combat = ((pulse+0) % PULSE_COMBAT);               // 12
     update_stuff = ((pulse+1) % PULSE_NOISES);         // 48
     pulse_tick = ((pulse+2) % PULSE_UPDATE);           // 360
@@ -578,7 +573,6 @@ int TSocket::gameLoop()
     pulse_mudhour = (pulse % PULSE_MUDHOUR);
     mobstuff = (pulse % PULSE_MOBACT);
     pulse_tick = (pulse % PULSE_UPDATE);
-    quickpulse = (pulse % ONE_SECOND/5);
     wayslowpulse = (pulse % (PULSE_MUDHOUR * 12));
 
     ////////////////////////////////////////////
@@ -691,11 +685,8 @@ int TSocket::gameLoop()
             obj = NULL;
             continue;
           }
-	}
-	if (!special_procs) { // 36
-	  check_sinking_obj(obj, obj->in_room);
           if (obj->spec) {
-            rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
+            rc = obj->checkSpec(NULL, CMD_GENERIC_QUICK_PULSE, "", NULL);
             if (IS_SET_DELETE(rc, DELETE_ITEM)) {
               next_thing = obj->next;
               delete obj;
@@ -707,10 +698,13 @@ int TSocket::gameLoop()
               continue;
             }
           }
+
 	}
-	if (!quickpulse) { // 2
+
+	if (!special_procs) { // 36
+	  check_sinking_obj(obj, obj->in_room);
           if (obj->spec) {
-            rc = obj->checkSpec(NULL, CMD_GENERIC_QUICK_PULSE, "", NULL);
+            rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
             if (IS_SET_DELETE(rc, DELETE_ITEM)) {
               next_thing = obj->next;
               delete obj;
@@ -738,7 +732,10 @@ int TSocket::gameLoop()
 	    smoke->doDrift();
 	    smoke->doChoke();
 	  }
-	}	
+
+
+	}
+
 	if (!pulse_mudhour) { // 1440
 	  rc = obj->objectTickUpdate(pulse);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -976,7 +973,7 @@ int TSocket::gameLoop()
       }
 	
       // check for vampires in daylight
-      if(!quickpulse){
+      if(!teleport){
 	if(!tmp_ch->roomp->isIndoorSector() && 
 	   !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
 	   (tmp_ch->inRoom() != ROOM_VOID) && sunIsUp()){
@@ -1006,8 +1003,7 @@ int TSocket::gameLoop()
       }
 
       // lycanthrope transformation
-#if 1
-      if(!quickpulse){
+      if(!teleport){
 	if(tmp_ch->hasQuestBit(TOG_LYCANTHROPE) &&
 	   !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)
            && !tmp_ch->isLinkdead() &&
@@ -1028,10 +1024,9 @@ int TSocket::gameLoop()
 	  }
 	}
       }
-#endif
 
 
-      if (!quickpulse) {
+      if (!teleport) {
 	if (tmp_ch->spec) {
 	  rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_QUICK_PULSE, "", NULL);
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
