@@ -2,6 +2,7 @@
 Dolgan/Jesus - Grimhaven East Gate Settlement~
 4699 30 2 1
 
+* vampire house
 O 0 631 1 4624 desk
 O 0 9018 1 4624 chair
 O 0 5637 4 4624 chairs
@@ -20,6 +21,14 @@ O 0 16214 1 4471 couch
 O 0 16222 1 4471 coffee table
 O 0 2851 1 4471 wet bar
 
+* dirty hovel
+O 0 4470 1 4626  shelf
+O 0 4471 1 4626  debris
+O 0 4472 1 4472  broken mirror
+O 0 4473 1 4472  toilet
+
+M 0 122 4 4473 * mouse
+M 0 4470 1 4626 prostitute
 
 O 0 4600 1 4514       a small lamppost
 O 0 4600 1 4515       a small lamppost
