@@ -2898,7 +2898,7 @@ void TBeing::doWhere(const char *argument)
 
   if (GetMaxLevel() > MAX_MORT) {
     for (k = object_list; k; k = k->next) {
-      if (vnums_notmatch[k->objVnum()])
+      if (k->objVnum()!=-1 && vnums_notmatch[k->objVnum()])
 	continue;
 
       if (!k->getName()) {
@@ -2924,7 +2924,7 @@ void TBeing::doWhere(const char *argument)
         }
       }
 
-      if(!found)
+      if(!found && k->objVnum()!=-1)
 	vnums_notmatch[k->objVnum()]=true;
       else
 	found=false;
