@@ -6250,7 +6250,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	if(!strcmp(buf, "topten")){
 	  rc=dbquery(TRUE, &res, "sneezy", "fishKeeper", "select o.name, o.weight, count(l.name) from fishkeeper o, fishlargest l where o.name=l.name group by o.name, o.weight order by weight desc limit 10");
 	} else {
-	  rc=dbquery(TRUE, &res, "sneezy", "fishKeeper", "select o.name, o.weight, count(l.name) from fishkeeper o, fishlargest l where name='%s' and o.name=l.name group by o.name, o.weight order by weight desc limit 10", buf);
+	  rc=dbquery(TRUE, &res, "sneezy", "fishKeeper", "select o.name, o.weight, count(l.name) from fishkeeper o, fishlargest l where o.name='%s' and o.name=l.name group by o.name, o.weight order by weight desc limit 10", buf);
 	}
 	
 	while((row=mysql_fetch_row(res))){
