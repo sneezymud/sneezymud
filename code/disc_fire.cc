@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_fire.cc,v $
+// Revision 1.3  1999/09/16 05:04:16  peel
+// Conjure fire elemental now extinguishes the fire source.
+//
 // Revision 1.2  1999/09/16 05:01:10  peel
 // Conjure fire elemental requires a lit light in the room to work.
 //
@@ -1335,6 +1338,7 @@ int conjureElemFire(TBeing *caster)
   for(t=caster->roomp->stuff;t;t=t->nextStuff){
     if((tl=dynamic_cast<TLight *>(t)) &&
        tl->isLit()){
+      t->putLightOut();
       found=1;
       break;
     }
@@ -1343,6 +1347,7 @@ int conjureElemFire(TBeing *caster)
     caster->sendTo("There doesn't seem to be enough fire around to conjure a fire elemental.\n\r");
     return FALSE;
   }
+  
 
 
   lag_t rounds = discArray[SPELL_CONJURE_FIRE]->lag;
