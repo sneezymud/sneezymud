@@ -1058,7 +1058,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_WIZNET:
-          doCommune(newarg);
+          doCommune(stringarg);
           break;
         case CMD_WIELD:
           doWield(newarg);
