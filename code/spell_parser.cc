@@ -1679,6 +1679,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SPELL_CONJURE_FIRE:
       rc = conjureElemFire(this);
       break;
+    case SPELL_STUPIDITY:
+      stupidity(this, ch);
+      break;
     case SPELL_FLARE:
       rc = flare(this);
       break;

@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "disc_shaman.h"
 #include "disc_fire.h"
 #include "disc_wrath.h"
 #include "disc_aegis.h"
@@ -22,7 +23,7 @@ void TBeing::doEgoTrip(const char *arg)
     return;
   }
 
-  string badsyn = "Syntax: egotrip <\"deity\" | \"bless\" | \"blast\" | \"damn\" | \"hate\" | \"cleanse\" | \"wander\">\n\r";
+  string badsyn = "Syntax: egotrip <\"deity\" | \"bless\" | \"blast\" | \"damn\" | \"hate\" | \"cleanse\" | \"wander\" | \"stupidity\" >\n\r";
 
 //  char argument[256];
   string argument, sarg = arg, restarg;
@@ -81,6 +82,28 @@ void TBeing::doEgoTrip(const char *arg)
             good_cap(ch->pers(this)).c_str(), hshr());
 #endif
       bless(this, ch);
+    }
+    return;
+  } else if (is_abbrev(argument, "stupidity")) {
+    if (!isImmortal() || !desc || !IS_SET(desc->autobits, AUTO_SUCCESS)) {
+      sendTo("You must be immortal, and have auto-success enabled first.\n\r");
+      return;
+    }
+
+    vlogf(LOG_MISC, "%s is egotrippin and now everyone is stupid", getName());
+    Descriptor *d;
+    for (d = descriptor_list; d; d = d->next) {
+      if (d->connected != CON_PLYNG)
+        continue;
+
+      TBeing *ch = d->character;
+
+      // Try and ditch some of the un-needed spam/waste.
+      if (!ch || ch->GetMaxLevel() > MAX_MORT)
+        continue;
+      ch->sendTo("%s has reconfirmed %s suspicions.\n\r",
+            good_cap(ch->pers(this)).c_str(), hshr());
+      castStupidity(this, ch);
     }
     return;
   } else if (is_abbrev(argument, "crit")) {

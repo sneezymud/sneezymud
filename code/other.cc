@@ -2415,6 +2415,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_STICKS_TO_SNAKES:
       sticksToSnakes(caster,victim,obj);
       break;
+    case SPELL_STUPIDITY:
+      stupidity(caster,victim,obj);
+      break;
     case SPELL_DISTORT:
       rc = distort(caster,victim,obj);
       break;

@@ -969,6 +969,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_GARMULS_TAIL:
       case SPELL_SORCERERS_GLOBE:
       case SPELL_FAERIE_FIRE:
+      case SPELL_STUPIDITY:
       case SPELL_ILLUMINATE:
       case SPELL_DETECT_MAGIC:
       case SPELL_MATERIALIZE:

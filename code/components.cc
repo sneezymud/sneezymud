@@ -1068,6 +1068,14 @@ void buildComponentArray()
     "$n holds $p between two fingers and closes $s eyes.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_STUPIDITY,
+    "You repeat $p and look at $N.",
+    "$n repeats $p and looks at $N.",
+    "$n repeats $p while looking at you.",
+    "You repeat $p and close your eyes.",
+    "$n repeats $p and closes $s eyes.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_FLAMING_SWORD,
     "You grip $p, slashing at the air before $N.",
     "$n grips $p, slashing at the air before $N.",

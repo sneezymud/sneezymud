@@ -536,6 +536,13 @@ static void describeSpellEffects(const TBeing *me, const TBeing *ch, bool verbos
     ++totspell;
   }
 
+  if (me->affectedBySpell(SPELL_STUPIDITY)) {
+    sprintf(bufspell, ".....$n is surrounded by a fog of stupidity!\n\r");
+    tStSpell += bufspell;
+    tStSpell += displayShowApprox(me, ch, SPELL_STUPIDITY, 1.0);
+    ++totspell;
+  }
+
   if (me->affectedBySpell(SPELL_FLAMING_FLESH)) {
     sprintf(bufspell, ".....$n has a ring of fire about $m!\n\r");
     tStSpell += bufspell;

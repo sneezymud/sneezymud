@@ -877,6 +877,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
     case SPELL_SQUISH:
       return &((CDShaman *) cd)->skSquish;
+    case SPELL_STUPIDITY:
+      return &((CDShaman *) cd)->skStupidity;
     case SPELL_DISTORT:
       return &((CDShaman *) cd)->skDistort;
     case SPELL_SOUL_TWIST:

@@ -404,6 +404,7 @@ enum spellNumT {
   
      // end of thief
      // start of shaman
+     SPELL_STUPIDITY,
      SPELL_CELERITE,
      SPELL_CREATE_WOOD_GOLEM,
      SPELL_CREATE_ROCK_GOLEM,

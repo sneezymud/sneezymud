@@ -1320,6 +1320,13 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
         return TRUE;
       }
       return FALSE;
+    case SPELL_STUPIDITY:
+      if (victim->affectedBySpell(SPELL_STUPIDITY)) {
+        act("You sense that $N is already stupid!",
+            FALSE, this, NULL, victim, TO_CHAR);
+        return TRUE;
+      }
+      return FALSE;
     case SPELL_FLAMING_SWORD:
     case SPELL_INFERNO:
     case SPELL_HELLFIRE:
@@ -2325,6 +2332,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         } else
           vlogf(LOG_BUG, "SPELL_INFRAVISION called with null obj");
         break; 
+    case SPELL_STUPIDITY:
+      if (!o) {
+	rc = castStupidity(this, victim);
+      } else
+          vlogf(LOG_BUG, "SPELL_STUPIDITY called with null obj");
+        break;
     case SPELL_PROTECTION_FROM_FIRE:
         if (!o) {
           rc = castProtectionFromFire(this, victim);

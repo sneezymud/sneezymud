@@ -76,8 +76,8 @@ void SwitchStuff(TBeing *giver, TBeing *taker)
   taker->setPiety(giver->getPiety());
   taker->setMana(giver->getMana());
   taker->setMove(giver->getMove());
-  taker->setLifeforce(giver->getLifeforce());
-//  taker->setMaxMove(giver->getMaxMove());   
+  //  taker->setLifeforce(giver->getLifeforce());
+  taker->setMaxMove(giver->getMaxMove());   
 
   statTypeT iStat;
   for (iStat=MIN_STAT;iStat<MAX_STATS;iStat++) {

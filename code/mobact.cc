@@ -1651,6 +1651,17 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
   return TYPE_UNDEFINED;
 }
 
+static bool stupidityCheck(TBeing &ch, TBeing &vict, spellNumT spell)
+{
+  if (!vict.affectedBySpell(spell) && !::number(0, 6) &&
+       ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+    act("$n utters the words, 'DUUHHHHHHHHHHH!!!!!!!!!'",
+             TRUE, &ch, 0, 0, TO_ROOM);
+    return true;
+  }
+  return false;
+}
+
 // SHAMAN
 static bool deathMistCheck(TBeing &ch, TBeing &vict, spellNumT spell)
 {
@@ -1715,6 +1726,9 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     // STANDARD OFFENSE
     // hit um with the long-term effect ones first
     // just plain damage spells here on
+    spell = SPELL_STUPIDITY;
+    if (stupidityCheck(ch, vict, spell))
+      return spell;
     spell = SPELL_DISTORT;
     if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&

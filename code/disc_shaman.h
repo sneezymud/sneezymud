@@ -13,6 +13,7 @@ public:
     CSkill skEnthrallGhast;
     CSkill skEnthrallGhoul;
     CSkill skVoodoo;
+    CSkill skStupidity;
     CSkill skSoulTwist;
     CSkill skDistort;
     CSkill skSquish;
@@ -36,6 +37,7 @@ public:
       skEnthrallGhast(),
       skEnthrallGhoul(),
       skVoodoo(),
+      skStupidity(),
       skSoulTwist(),
       skDistort(),
       skSquish(),
@@ -59,6 +61,7 @@ public:
       skEnthrallGhast(a.skEnthrallGhast),
       skEnthrallGhoul(a.skEnthrallGhoul),
       skVoodoo(a.skVoodoo),
+      skStupidity(a.skStupidity),
       skSoulTwist(a.skSoulTwist),
       skDistort(a.skDistort),
       skSquish(a.skSquish),
@@ -83,6 +86,7 @@ public:
       skEnthrallGhast = a.skEnthrallGhast;
       skEnthrallGhoul = a.skEnthrallGhoul;
       skVoodoo = a.skVoodoo;
+      skStupidity = a.skStupidity;
       skSoulTwist = a.skSoulTwist;
       skDistort = a.skDistort;
       skSquish = a.skSquish;
@@ -196,6 +200,10 @@ private:
     int soulTwist(TBeing *, TBeing *, TMagicItem *);
     int soulTwist(TBeing *, TBeing *, int, byte, int);
 
+    void stupidity(TBeing *, TBeing *);
+    void stupidity(TBeing *, TBeing *, TMagicItem *);
+    int castStupidity(TBeing *, TBeing *);
+    int stupidity(TBeing *, TBeing *, int, byte);
 
 #endif
 
