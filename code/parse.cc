@@ -1698,6 +1698,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_OBJ_WAGON_INIT:
         case CMD_OBJ_WAGON_UNINIT:
         case CMD_OBJ_MOVEMENT:
+        case CMD_OBJ_MOVE_IN:
         case CMD_OBJ_SATON:
         case CMD_OBJ_EXPELLED:
         case CMD_OBJ_START_TO_FALL:

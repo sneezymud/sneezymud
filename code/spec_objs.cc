@@ -2186,6 +2186,35 @@ bool genericPotion(TBeing *ch, TObj *me, cmdTypeT cmd, const char *arg, int &rc)
   return false;
 }
 
+int goofersDust(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
+{
+  dirTypeT dir;
+  char buf[256];
+  int dum = (int) arg;
+
+  if (cmd == CMD_OBJ_MOVEMENT) {
+    dir = dirTypeT(dum);
+    act("$n stumbles on $p.", TRUE, ch, me, 0, TO_ROOM);
+    act("You stumble on $p.", TRUE, ch, me, 0, TO_CHAR);
+    if (dir < MIN_DIR || dir >= MAX_DIR) {
+      vlogf(LOG_PROC, "Problematic direction in CMD_OBJ_MOVEMENT for Goofers");
+      return FALSE;
+    }
+    if (::number(0,3) == 0) {
+      sprintf(buf, "As you moved %sward, you somehow tripped and fell down.", dirs[dir]);
+      act(buf, TRUE, ch, me, 0, TO_CHAR);
+      sprintf(buf, "$n trips and falls as $e moves in from a %sward direction.", dirs[dir]);
+      act(buf, TRUE, ch, me, 0, TO_ROOM);
+      ch->setPosition(POSITION_SITTING);
+      delete me;
+      return TRUE;
+    } else {
+      return FALSE;
+    }
+  }
+  return FALSE;
+}
+
 int youthPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 {
   int rc;
@@ -4867,7 +4896,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Chrism: minor heal", healingNeckwear},
   {FALSE, "Chrism: bless hold item", blessingHoldItem},
   {FALSE, "Chrism: vitality restore", moveRestoreNeckwear},
-  {FALSE, "Chipped Tooth Food Item", chippedTooth} // 80
+  {FALSE, "Chipped Tooth Food Item", chippedTooth}, // 80
+  {FALSE, "Goofers Dust", goofersDust}
 };
 
 

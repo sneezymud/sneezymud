@@ -606,6 +606,7 @@ enum cmdTypeT {
        CMD_OBJ_WAGON_INIT,
        CMD_OBJ_WAGON_UNINIT,
        CMD_OBJ_MOVEMENT,
+       CMD_OBJ_MOVE_IN,
        CMD_OBJ_SATON,
        CMD_OBJ_EXPELLED,
        CMD_OBJ_START_TO_FALL,

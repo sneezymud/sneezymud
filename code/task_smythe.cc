@@ -3,6 +3,21 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.2  2001/07/23 00:33:30  jesus
+// added goofers dust
+//
+// Revision 5.1.1.4  2000/12/21 20:15:35  jesus
+// *** empty log message ***
+//
+// Revision 5.1.1.3  2000/11/19 22:20:48  jesus
+// smythe update
+//
+// Revision 5.1.1.2  2000/11/19 13:44:19  jesus
+// smythe fixed
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -46,7 +61,7 @@ int smythe_tools_in_room(int room, TTool **forge, TTool **anvil)
 
 void smythe_stop(TBeing *ch)
 {
-  if (ch->getPosition() >= POSITION_RESTING) {
+  if (ch->getPosition() < POSITION_SITTING) {
     act("You stop smything, and look about confused.  Are you missing something?",
          FALSE, ch, 0, 0, TO_CHAR);
     act("$n stops smything, and looks about confused and embarrassed.",
@@ -73,8 +88,11 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
     smythe_stop(ch);
     return;
   }
-
-  ch->addToMove(-20);
+  if (ch->getRace() == RACE_DWARF) {
+    ch->addToMove(-16);
+  } else {
+    ch->addToMove(-20);
+  }
   if (ch->getMove() < 10) {
     act("You are much too tired to continue repairing $p.", FALSE, ch, o, this, TO_CHAR);
     act("$n stops repairing, and wipes sweat from $s brow.", FALSE, ch, o, this, TO_ROOM);
@@ -95,10 +113,10 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
     act("You remove $p from $P, as it glows red hot.", FALSE, ch, o, forge, TO_CHAR);
     ch->task->status++;
   } else {
-    act("$n pounds $N on an anvil with $s $o.",
-            FALSE, ch, this, 0, TO_ROOM);
-    act("You pound $N on an anvil with your $o.",
-            FALSE, ch, this, 0, TO_CHAR);
+    act("$n pounds $p on an anvil with $s hammer.",
+            FALSE, ch, o, 0, TO_ROOM);
+    act("You pound $p on an anvil with your hammer.",
+            FALSE, ch, o, 0, TO_CHAR);
     addToToolUses(-1);
     if (getToolUses() <= 0) {
       ch->sendTo("Your %s breaks due to overuse.\n\r", fname(name).c_str());
@@ -108,8 +126,8 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
       delete this;
       return;
     }
-    if (o->getMaxStructPoints() <= o->getStructPoints()) {
-      act("$n finishes repairing $p and smiles triumphantly.", FALSE, ch, o, forge, TO_ROOM);
+    if (o->getMaxStructPoints() <= o->getStructPoints() - o->getDepreciation()) {
+      act("$n finishes repairing $p and proudly smiles.", FALSE, ch, o, forge, TO_ROOM);
       act("You finish repairing $p and smile triumphantly.", FALSE, ch, o, forge, TO_CHAR);
       act("You let $p cool down.", FALSE, ch, o, 0, TO_CHAR);
       act("$n lets $p cool down.", FALSE, ch, o, 0, TO_ROOM);
@@ -129,7 +147,7 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
       act("You screw up repairing $p and utterly destroy it.", FALSE, ch, o, forge, TO_CHAR);
       makeScraps();
       ch->stopTask();
-      delete this;
+      delete o;
       return;
     }
     // task can continue forever, so don't bother decrementing the timer
@@ -139,7 +157,8 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
 int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
   TThing *w = NULL;
-  TObj *o = dynamic_cast<TObj *>(ch->heldInPrimHand());
+  TObj *o = dynamic_cast<TObj *>(ch->heldInSecHand());
+  int learning;
 
   // sanity check
   if (ch->isLinkdead() || (ch->in_room < 0) ||
@@ -152,14 +171,25 @@ int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
     return FALSE;
   switch (cmd) {
   case CMD_TASK_CONTINUE:
-    if (!(w = ch->heldInSecHand())) {
+    if (!(w = ch->heldInPrimHand())) {
         smythe_stop(ch);
         return FALSE;  // returning FALSE lets command be interpreted
     }
-      ch->task->calcNextUpdate(pulse, PULSE_MOBACT);
+    if (ch->task->status) {
+      learning = ch->getSkillValue(SKILL_SMYTHE);
+      ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
+      if (bSuccess(ch, learning, SKILL_SMYTHE)) {
+	w->smythePulse(ch, o);
+      } else if (!(::number(0,1)))
+      act("$n examines $p carefully.", FALSE, ch, o, 0, TO_ROOM);
+      act("You carefully examine $p.", FALSE, ch, o, 0, TO_CHAR);
+      return FALSE;
+    } else {
+      ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
       w->smythePulse(ch, o);
       // w may be invalid here
       return FALSE;
+    }
   case CMD_ABORT:
   case CMD_STOP:
       act("You stop trying to repair $p.", FALSE, ch, o, 0, TO_CHAR);
