@@ -69,6 +69,67 @@ TShopOwned::TShopOwned(int shop_nr, TMonster *keeper, TBeing *ch) :
 }
 
 
+void TShopOwned::setReserve(sstring arg)
+{
+  TDatabase db(DB_SNEEZY);
+
+  if(!hasAccess(SHOPACCESS_DIVIDEND)){
+    keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
+    return;
+  }
+
+  int min=convertTo<int>(arg.word(0));
+  int max=convertTo<int>(arg.word(1));
+
+  if(min > max || (max-min) < 100000){
+    keeper->doTell(ch->getName(), "The minimum reserve must be less than the maximum reserve.");
+    keeper->doTell(ch->getName(), "The two reserve values must be at least 100k apart.");
+    return;
+  }
+
+  db.query("update shopowned set reserve_min=%i, reserve_max=%i where shop_nr=%i", min, max, shop_nr);
+
+  keeper->doTell(ch->getName(), fmt("Ok, the minimum reserve is now %i and the maximum reserve is %i.") % min % max);
+}
+
+int TShopOwned::getMinReserve()
+{
+  TDatabase db(DB_SNEEZY);
+  db.query("select reserve_min from shopowned where shop_nr=%i", shop_nr);
+
+  if(db.fetchRow())
+    return convertTo<int>(db["reserve_min"]);
+  
+  return 0;  
+}
+
+int TShopOwned::getMaxReserve()
+{
+  TDatabase db(DB_SNEEZY);
+  db.query("select reserve_max from shopowned where shop_nr=%i", shop_nr);
+
+  if(db.fetchRow())
+    return convertTo<int>(db["reserve_max"]);
+  
+  return 0;  
+}
+
+
+void TShopOwned::doDividend(TObj *o, int cost)
+{
+  if(getDividend()){
+    int div=(int)((double)cost * getDividend());
+    div=max(0, min(div,cost));
+    
+    keeper->addToMoney(-div, GOLD_SHOP);
+    shoplog(shop_nr, ch, keeper, o->getName(), -div, "dividend");
+    
+    TCorporation corp(getCorpID());
+    corp.setMoney(corp.getMoney() + div);
+  }
+}
+
+
 void TShopOwned::setDividend(sstring arg)
 {
   TDatabase db(DB_SNEEZY);

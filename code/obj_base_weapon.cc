@@ -1638,16 +1638,7 @@ void TBaseWeapon::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr
   if(shop_index[shop_nr].isOwned()){
     TShopOwned tso(shop_nr, keeper, ch);
     
-    if(tso.getDividend()){
-      int div=(int)((double)cost * tso.getDividend());
-      div=max(0, min(div,cost));
-      
-      keeper->addToMoney(-div, GOLD_SHOP_WEAPON);
-      shoplog(shop_nr, ch, keeper, getName(), -div, "dividend");
-      
-      TCorporation corp(tso.getCorpID());
-      corp.setMoney(corp.getMoney() + div);
-    }
+    tso.doDividend(this, cost);
   }
 
 }

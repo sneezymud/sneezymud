@@ -13,8 +13,14 @@ class TShopOwned {
   bool hasAccess(int);
   int getPurchasePrice(int, int);
   int getCorpID();
+
   void setDividend(sstring);
   double getDividend();
+  void doDividend(TObj *, int);
+
+  void setReserve(sstring);
+  int getMinReserve();
+  int getMaxReserve();
   int getMaxNum(const TObj *);
   void showInfo();
   int setRates(sstring);
