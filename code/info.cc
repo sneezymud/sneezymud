@@ -1593,7 +1593,7 @@ void TBeing::describeLimbDamage(const TBeing *ch) const
       continue;
     if (!ch->slotChance(j))
       continue;
-    if (ch->isLimbFlags(j, ~PART_TRANSFORMED)) {
+    if (ch->isLimbFlags(j, PART_TRANSFORMED)) {
       const string str = describe_part_wounds(ch, j);
       if (!str.empty()) {
         sprintf(buf, "<y>%s %s %s %s<1>", cap(buf2), 
