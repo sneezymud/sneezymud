@@ -987,7 +987,7 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, string &str)
       }
 
         str += buf;
-    } else if (!silent) {
+    } else if (!silent && re) {
         if (!FreeRent) 
 	  sendTo(COLOR_OBJECTS, "%-30s : %d talens/day\n\r", obj->getName(), temp);
 	else
