@@ -690,7 +690,7 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
   }
   if ((s = strchr(name, '['))) {
     for (s++;*s != ']';s++) {
-      if (isalnum(*s) || *s == '_')
+      if (isalnum(*s) || *s == '_' || *s == '/')
         continue;
       vlogf(LOG_LOW, "%s (%d) lacked contiguity in braces (%c)",
             getName(), mobVnum(), *s);
@@ -811,7 +811,7 @@ void TObj::checkObjStats()
   }
   if ((s = strchr(name, '['))) {
     for (s++;*s != ']';s++) {
-      if (isalnum(*s) || *s == '_')
+      if (isalnum(*s) || *s == '_' || *s == '/')
         continue;
       vlogf(LOG_LOW, "%s (%d) lacked contiguity in braces (%c)",
             getName(), objVnum(), *s);
