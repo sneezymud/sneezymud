@@ -682,7 +682,6 @@ TThing& TThing::operator += (TThing& t)
       "TThing += with t.inRoom()");
 
   TThing *i;
-  TRoom *rp;
 
   TMoney *m=dynamic_cast<TMoney *>(&t);
   if(m){
