@@ -6380,6 +6380,17 @@ int starfiresheath(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 	  }
 	}
 
+	if(sword->stuckIn){
+	  ch2 = dynamic_cast<TBeing *>(sword->stuckIn);
+	  ch2->setStuckIn(sword->eq_stuck, NULL);
+	  sword->equippedBy = NULL;
+	  sword->stuckIn = NULL;
+	  sword->eq_pos = WEAR_NOWHERE;
+	  sword->eq_stuck = WEAR_NOWHERE;
+	  *ch2->roomp += *sword;
+	}
+
+
 	if(!(ch2 = dynamic_cast<TBeing *>(sword->parent))) {
 	  
 	  act("<c>The sapphires on $n'<c>s hilt suddenly emit a bright burst of light!<1>",TRUE,sword,NULL,NULL,TO_ROOM,NULL);
