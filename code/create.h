@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: create.h,v $
+// Revision 1.2  1999/09/28 22:14:10  lapsos
+// Added code for mobile strings.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -235,6 +238,13 @@ enum editorChangeTypeT {
      CHANGE_MOB_LUC,
      CHANGE_MOB_EXT,
      CHANGE_MOB_ADD,
+     CHANGE_MOB_STRINGS,
+     CHANGE_MOB_STRINGS__BAMFIN,
+     CHANGE_MOB_STRINGS__BAMFOUT,
+     CHANGE_MOB_STRINGS__DEATHCRY,
+     CHANGE_MOB_STRINGS__REPOP,
+     CHANGE_MOB_STRINGS__MOVEIN,
+     CHANGE_MOB_STRINGS__MOVEOUT,
      SEDIT_ADD,
      SEDIT_DELETE,
      SEDIT_MODIFY,
