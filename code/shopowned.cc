@@ -2,7 +2,7 @@
 #include "shopowned.h"
 #include "database.h"
 #include "shop.h"
-
+#include "corporation.h"
 
 // this function relies on the fact that the db will return rows in the order
 // that they were created, chronologically.  I'm not sure if this is defined
@@ -69,6 +69,19 @@ TShopOwned::TShopOwned(int shop_nr, TMonster *keeper, TBeing *ch) :
 }
 
 
+int TShopOwned::getCorpID()
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select corp_id from shopowned where shop_nr=%i", shop_nr);
+
+  if(db.fetchRow()){
+    return convertTo<int>(db["corp_id"]);
+  }
+  return 0;
+}
+
+
 TShopOwned::~TShopOwned(){
 }
 
@@ -77,6 +90,11 @@ bool TShopOwned::isOwned(){
 }
 
 bool TShopOwned::hasAccess(int perm){
+  if(getCorpID()){
+    TCorporation corp(getCorpID());
+    access = access | corp.getAccess(ch);
+  }    
+
   if(access & SHOPACCESS_OWNER &&
      !(perm & SHOPACCESS_SELL)) // must have explicit sell permission
     return true;
@@ -112,13 +130,18 @@ void TShopOwned::showInfo()
     
     keeper->doTell(ch->getName(), fmt("That puts my total value at %i talens.") %
 		   (keeper->getMoney()+value));
+  }    
+
+  if(!isOwned()){
+    keeper->doTell(ch->getName(), "This shop is for sale, however the King charges a sales tax and an ownership fee.");
     
-    if(!owned){
-      keeper->doTell(ch->getName(), "This shop is for sale, however the King charges a sales tax and an ownership fee.");
-      
-      keeper->doTell(ch->getName(), fmt("That puts the sale price at %i.") %
-		     getPurchasePrice(keeper->getMoney(), value));
-    } 
+    keeper->doTell(ch->getName(), fmt("That puts the sale price at %i.") %
+		   getPurchasePrice(keeper->getMoney(), value));
+  } else if(getCorpID()){
+    TCorporation corp(getCorpID());
+    keeper->doTell(ch->getName(), fmt("This shop is owned by %s.") %
+		   corp.getName());
+
   }
 
   // anyone can see profit_buy, profit_sell and trading types, anytime

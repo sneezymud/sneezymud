@@ -12,6 +12,7 @@ class TShopOwned {
   bool isOwned();
   bool hasAccess(int);
   int getPurchasePrice(int, int);
+  int getCorpID();
 
   int getMaxNum(const TObj *);
   void showInfo();

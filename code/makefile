@@ -157,7 +157,7 @@ LIBMISC=actions.o		ai_commands.o 		ai_reactions.o     \
 	talk.o 			task.o 			thing.o            \
 	toggle.o 		trap.o  		utility.o          \
 	weather.o 		sys_loot.o 		wiz_data.o         \
-	wiz_powers.o 		shopowned.o
+	wiz_powers.o 		shopowned.o		corporation.o
 
 LIBMISC := $(sort $(addprefix $(OBJDIR), $(LIBMISC)))
 
@@ -297,7 +297,8 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_mobs_tudy.o		spec_rooms_sleeptag.o           \
 	spec_mobs_tattoo_artist.o	spec_rooms.o			\
 	spec_objs_lottery_ticket.o	spec_mobs_lottery_redeemer.o	\
-	spec_mobs_holdem_player.o	spec_mobs_postman.o
+	spec_mobs_holdem_player.o	spec_mobs_postman.o		\
+	spec_mobs_corporate_assistant.o
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
 # list of our local shared libs
@@ -12787,7 +12788,7 @@ objs/shopowned.o: being.h person.h monster.h account.h extern.h handler.h
 objs/shopowned.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
 objs/shopowned.o: format.h shopowned.h database.h
 objs/shopowned.o: /usr/local/include/libpq-fe.h
-objs/shopowned.o: /usr/local/include/postgres_ext.h shop.h
+objs/shopowned.o: /usr/local/include/postgres_ext.h shop.h corporation.h
 objs/show.o: /usr/include/dirent.h /usr/include/sys/dirent.h
 objs/show.o: /usr/include/machine/ansi.h /usr/include/sys/cdefs.h stdsneezy.h
 objs/show.o: /usr/include/g++/cstdio /usr/include/stdio.h
@@ -13120,7 +13121,7 @@ objs/spec_mobs.o: games.h /usr/include/g++/algorithm
 objs/spec_mobs.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
 objs/spec_mobs.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
 objs/spec_mobs.o: /usr/include/g++/stl_deque.h game_crazyeights.h
-objs/spec_mobs.o: game_drawpoker.h /usr/include/g++/fstream.h
+objs/spec_mobs.o: game_drawpoker.h corporation.h /usr/include/g++/fstream.h
 objs/spec_mobs_bounty_hunter.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_bounty_hunter.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/machine/ansi.h
@@ -13301,6 +13302,79 @@ objs/spec_mobs_coroner.o: person.h monster.h account.h extern.h handler.h
 objs/spec_mobs_coroner.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/spec_mobs_coroner.o: colorstring.h format.h obj_base_corpse.h
 objs/spec_mobs_coroner.o: obj_base_container.h
+objs/spec_mobs_corporate_assistant.o: stdsneezy.h /usr/include/g++/cstdio
+objs/spec_mobs_corporate_assistant.o: /usr/include/stdio.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/sys/cdefs.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/machine/ansi.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/cstdlib
+objs/spec_mobs_corporate_assistant.o: /usr/include/stdlib.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/ctime
+objs/spec_mobs_corporate_assistant.o: /usr/include/time.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/sys/_posix.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/sys/types.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/sys/inttypes.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/machine/types.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/machine/endian.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/cctype
+objs/spec_mobs_corporate_assistant.o: /usr/include/ctype.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/runetype.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/cassert
+objs/spec_mobs_corporate_assistant.o: /usr/include/assert.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/cstring
+objs/spec_mobs_corporate_assistant.o: /usr/include/string.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/stdarg.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/cerrno
+objs/spec_mobs_corporate_assistant.o: /usr/include/errno.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/string
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/std/bastring.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/cstddef
+objs/spec_mobs_corporate_assistant.o: /usr/include/stddef.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/std/straits.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/alloc.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_config.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_alloc.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/iostream.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/streambuf.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/libio.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/iterator
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_relops.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_iterator.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/std/bastring.cc
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/vector
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_algobase.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_pair.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/type_traits.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/limits.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/machine/limits.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/sys/syslimits.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/new.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/new
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/exception
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_construct.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_uninitialized.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_vector.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_bvector.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/map
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_tree.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_function.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_map.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/stl_multimap.h
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/iostream
+objs/spec_mobs_corporate_assistant.o: /usr/include/g++/sstream sstring.h
+objs/spec_mobs_corporate_assistant.o: low.h enum.h spells.h structs.h parse.h
+objs/spec_mobs_corporate_assistant.o: immunity.h discipline.h spell2.h db.h
+objs/spec_mobs_corporate_assistant.o: ansi.h cmd_dissect.h client.h
+objs/spec_mobs_corporate_assistant.o: response.h faction.h comm.h toggle.h
+objs/spec_mobs_corporate_assistant.o: wiz_powers.h cmd_message.h stats.h
+objs/spec_mobs_corporate_assistant.o: limbs.h body.h race.h skills.h
+objs/spec_mobs_corporate_assistant.o: disease.h trap.h task.h weather.h
+objs/spec_mobs_corporate_assistant.o: sound.h create.h thing.h room.h obj.h
+objs/spec_mobs_corporate_assistant.o: spec_objs.h connect.h obj_drug.h
+objs/spec_mobs_corporate_assistant.o: charfile.h being.h person.h monster.h
+objs/spec_mobs_corporate_assistant.o: account.h extern.h handler.h
+objs/spec_mobs_corporate_assistant.o: obj_money.h rent.h spec_mobs.h
+objs/spec_mobs_corporate_assistant.o: materials.h colorstring.h format.h
 objs/spec_mobs_doppleganger.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_doppleganger.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_doppleganger.o: /usr/include/machine/ansi.h
