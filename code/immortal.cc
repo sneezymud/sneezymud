@@ -47,7 +47,7 @@ bool TestCode3 = true;       // unfinished code
   // code3 in use, hiding new spell
 bool TestCode4 = true;       // unfinished code 
   // code4 in use, hiding new spell
-bool TestCode5 = false;
+bool TestCode5 = true;
   // code5 is to disable/enable certain aspects of the new faction code - dash 6/24/01
 bool TestCode6 = false;
   // not in use
@@ -3562,6 +3562,22 @@ void TPerson::doStart()
   }
   setExp(1);
   setTitle(true);
+
+  classIndT Class;
+  for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
+    
+    if(!getLevel(Class))
+      continue;
+    
+    float pracs = pracsPerLevel(Class, false);
+    int prac_gain = (int)pracs;
+    if (::number(0,100) < (int)(((float)pracs - prac_gain) * 100))
+      prac_gain++;
+    
+    addPracs(prac_gain, Class);
+    // we need to do first level pracs this way even with the new system - dash
+  }
+  
 
   if ((r_num = real_object(1458)) >= 0) {
     obj = read_object(r_num, REAL);
