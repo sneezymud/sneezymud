@@ -1576,6 +1576,9 @@ void do_check_mail()
 {
   Descriptor *d;
 
+  if (gamePort == BUILDER_GAMEPORT)
+    return;
+  
   for (d = descriptor_list; d; d = d->next) {
     TBeing *ch = d->character;
     if (!no_mail && !d->connected && ch) {
@@ -1585,7 +1588,7 @@ void do_check_mail()
       for (tmp = recipient; *tmp; tmp++)
         if (isupper(*tmp))
           *tmp = tolower(*tmp);
-      if (has_mail(recipient) && gamePort != BUILDER_GAMEPORT)
+      if (has_mail(recipient))
         ch->sendTo(fmt("You have %sMAIL!%s\n\r") % ch->cyan() % ch->norm());
     }
     // d->checkForMultiplay();
