@@ -364,7 +364,8 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
               }
               if (tmpObj->ex_description) {
                 if ((tmp_desc = tmpObj->ex_description->findExtraDesc(tmp))) {
-                  desc->page_string(tmp_desc);
+                  sstring tmp_desc_str = tmp_desc;
+                  desc->page_string(tmp_desc_str.convertToCRLF());
                   found = TRUE;
                   describeObject(tmpObj);
                   if (tmpObj->riding)
@@ -435,20 +436,21 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                   continue;
                 if (t->ex_description) {
                   if ((tmp_desc = t->ex_description->findExtraDesc(tmp))) {
+                    sstring tmp_desc_str = tmp_desc;
                     totalFound++;
                     if (iNum != totalFound)
                       continue;
                     if (o2 == t) {
                       // look at XX where XX is the item's name and extradesc
-                      desc->page_string(tmp_desc);
+                      desc->page_string(tmp_desc_str.convertToCRLF());
                       found = TRUE;
                       describeObject(t);
                       o2 = dynamic_cast<TObj *>(t);  // for showTo(o2,6) later on
                     } else {
                       // look at XX where XX is some random desc on the obj
-                        desc->page_string(tmp_desc);
-                        found = TRUE;
-                        return;
+                      desc->page_string(tmp_desc_str.convertToCRLF());
+                      found = TRUE;
+                      return;
                     }
                   }
                 }
@@ -482,18 +484,19 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                     continue;
                   if (t->ex_description) {
                     if ((tmp_desc = t->ex_description->findExtraDesc(tmp))) {
+                      sstring tmp_desc_str = tmp_desc;
                       totalFound++;
                       if (iNum != totalFound)
                         continue;
                       if (o2 == t) {
                         // look at XX where XX is the item's name and extradesc
-                        desc->page_string(tmp_desc);
+                        desc->page_string(tmp_desc_str.convertToCRLF());
                         found = TRUE;
                         describeObject(t);
                         o2 = dynamic_cast<TObj *>(t);  // for showTo(o2,6) later on
                       } else {
                         // look at XX where XX is some random desc on the obj
-                        desc->page_string(tmp_desc);
+                        desc->page_string(tmp_desc_str.convertToCRLF());
                         found = TRUE;
                         return;
                       }
@@ -520,17 +523,26 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                   continue;
                 if (t->ex_description) {
                   if ((tmp_desc = t->ex_description->findExtraDesc(tmp))) {
+                    sstring tmp_desc_str = tmp_desc;
                     totalFound++;
                     if (iNum != totalFound)
                       continue;
                     if (o2 == (TObj *) t) {
-                      desc->page_string(tmp_desc);
+                      if (roomp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
+                        desc->page_string(tmp_desc_str.convertToCRLF());
+                      } else {
+                        desc->page_string(autoFormatDesc(tmp_desc_str, false));
+                      }
                       found = TRUE;
                       describeObject(t);
                       return;
                     } else {
                       // look at XX where XX is some random desc on the obj
-                      desc->page_string(tmp_desc);
+                      if (roomp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
+                        desc->page_string(tmp_desc_str.convertToCRLF());
+                      } else {
+                        desc->page_string(autoFormatDesc(tmp_desc_str, false));
+                      }
                       found = TRUE;
                       return;
                     }
@@ -581,11 +593,12 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
               if ((tmp_desc = roomp->ex_description->findExtraDesc(tmp))) {
                 totalFound++;
                 if (totalFound == iNum) {
+                  sstring tmp_desc_str = tmp_desc;
+
                   if (roomp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
-                    // desc->page_string(tmp_desc);
-                    desc->page_string(autoFormatDesc(tmp_desc, false, true));
+                    desc->page_string(tmp_desc_str.convertToCRLF());
                   } else {
-                    desc->page_string(autoFormatDesc(tmp_desc, false, false));
+                    desc->page_string(autoFormatDesc(tmp_desc_str, false));
                   }
                   return;
                 }

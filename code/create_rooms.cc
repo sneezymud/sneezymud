@@ -1761,6 +1761,10 @@ static void ChangeRoomName(TRoom *rp, TBeing *ch, const char *arg, editorEnterTy
 
 static void ChangeRoomDesc(TRoom *rp, TBeing *ch, const char *, editorEnterTypeT type)
 {
+  sstring descr_str;
+
+  descr_str = rp->getDescr();
+  descr_str = descr_str.convertToCRLF();
 
   if (type != ENTER_CHECK) {
     ch->specials.edit = MAIN_MENU;
@@ -1770,7 +1774,7 @@ static void ChangeRoomDesc(TRoom *rp, TBeing *ch, const char *, editorEnterTypeT
   ch->sendTo(VT_HOMECLR);
 
   ch->sendTo("Current Room Description:\n\r");
-  ch->sendTo(rp->getDescr());
+  ch->sendTo(descr_str.c_str());
   ch->sendTo("\n\r\n\rNew Room Description:\n\r");
   ch->sendTo("(Terminate with a ~ on a NEW LINE. Press <C/R> again to continue)\n\r");
   delete [] rp->getDescr();

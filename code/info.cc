@@ -432,8 +432,7 @@ bool wordHasPunctuation(const sstring &s)
   return (t.find_first_of(punctuation, last_char) != t.npos);
 }
 
-sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent,
-          bool verbatim) const
+sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
 {
   sstring line, garbled;
 
@@ -443,11 +442,6 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent,
 
   if (regStr.empty()) {
     return newDescr;
-  }
-
-  if (verbatim) {
-    newDescr = regStr;
-    return newDescr.convertToCRLF();
   }
 
   garbled = garble(regStr, getCond(DRUNK));
@@ -5131,19 +5125,22 @@ void TBeing::sendRoomName(TRoom *rp) const
 
 void TBeing::sendRoomDesc(TRoom *rp) const
 {
-  if (hasColorStrings(this, rp->getDescr(), 2)) {
+  sstring tmp;
+
+  tmp = rp->getDescr();
+
+  if (hasColorStrings(this, tmp.c_str(), 2)) {
     if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
-      // sendTo(COLOR_ROOMS, "%s%s", dynColorRoom(rp, 2, TRUE).c_str(), norm());
-      sendTo(COLOR_ROOMS, "%s%s", autoFormatDesc(dynColorRoom(rp, 2, TRUE), true, true).c_str(), norm());
+      sendTo(COLOR_ROOMS, "%s%s", dynColorRoom(rp, 2, TRUE).convertToCRLF().c_str(), norm());
     } else {
-      sendTo(COLOR_ROOMS, "%s%s\n\r", autoFormatDesc(dynColorRoom(rp, 2, TRUE), true, false).c_str(), norm());
+      sendTo(COLOR_ROOMS, "%s%s\n\r", autoFormatDesc(dynColorRoom(rp, 2, TRUE), true).c_str(), norm());
     }
   } else {
     if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
-      // sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), rp->getDescr(), norm());
-      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), autoFormatDesc(rp->getDescr(), true, true).c_str(), norm());
+      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), tmp.convertToCRLF().c_str(), norm());
+      // sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), autoFormatDesc(rp->getDescr(), true, true).c_str(), norm());
     } else {
-      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), autoFormatDesc(rp->getDescr(), true, false).c_str(), norm());
+      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), autoFormatDesc(tmp.convertToCRLF().c_str(), true).c_str(), norm());
     }
   }
 }
