@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: utility.cc,v $
+// Revision 1.3  1999/10/15 21:37:06  batopr
+// Added crash protection sanity check to TObj::canGetMe
+//
 // Revision 1.2  1999/10/07 15:27:27  batopr
 // Added case for GOLD_DUMP to addMoney
 //
@@ -1005,9 +1008,15 @@ bool TBeing::canGet(const TThing *t, silentTypeT silent) const
 
 bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
 {
-  char capbuf[256];
+  // sanity check
+  if (!shortDescr) {
+    forceCrash("!shortDescr for obj in canGetMe");
+    return false;
+  }
 
+  char capbuf[256];
   strcpy(capbuf, shortDescr);
+
   if (!ch->canSee(this)) 
     return FALSE;
 
