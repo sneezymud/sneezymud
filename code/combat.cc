@@ -1731,18 +1731,21 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
       // skill2 = SKILL_PIERCE_SPEC;
       strcpy(buf, "Pierce");
       statDam = getStrDamModifier();
-      //      statDam = getStrDamModifier() + (2 * getDexDamModifier());
-      // this divide is to balance out the modifier above
-      // dash forgot to remove the divide as well, so pierce and slash
-      // started doing much less damage
-      //      statDam /= 3;
+
+      // pierce weapons only get 1/3 of the strength modifier
+      statDam -= 1;
+      statDam /= 3;
+      statDam += 1;
     } else if (wielded->isSlashWeapon()) {
       skill = SKILL_SLASH_PROF;
       // skill2 = SKILL_SLASH_SPEC;
       strcpy(buf, "Slash");
       statDam = getStrDamModifier();
-      //      statDam = getStrDamModifier() + getDexDamModifier();
-      //      statDam /= 2;
+
+      // slash weapons only get 1/2 of the strength modifier
+      statDam -= 1;
+      statDam /= 2;
+      statDam += 1;
     }
     wepLearn = max((GetMaxLevel() *2), (int) getSkillValue(skill));
     wepLearn = min(100, wepLearn);
