@@ -19,25 +19,6 @@ else
   echo "Using today's date"
   set monthTime = `date +"%h"`
   set dayTime = `date +"%d"`
-  if ("$dayTime" == "01") then
-    set dayTime = " 1"
-  else if ("$dayTime" == "02") then
-    set dayTime = " 2"
-  else if ("$dayTime" == "03") then
-    set dayTime = " 3"
-  else if ("$dayTime" == "04") then
-    set dayTime = " 4"
-  else if ("$dayTime" == "05") then
-    set dayTime = " 5"
-  else if ("$dayTime" == "06") then
-    set dayTime = " 6"
-  else if ("$dayTime" == "07") then
-    set dayTime = " 7"
-  else if ("$dayTime" == "08") then
-    set dayTime = " 8"
-  else if ("$dayTime" == "09") then
-    set dayTime = " 9"
-  endif
   set dateTime = "$monthTime $dayTime"
 endif
 echo "Reviewing for changes since: '$dateTime'"
