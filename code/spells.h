@@ -375,8 +375,7 @@ enum spellNumT {
      SKILL_BARKSKIN,
      SKILL_BEAST_CHARM,
      SKILL_APPLY_HERBS,
-  SKILL_REPAIR_RANGER,
-  SKILL_POISON_ARROW,
+     SKILL_REPAIR_RANGER,
      // end of ranger
      // start of deikhan
 

@@ -1723,7 +1723,6 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_IRON_LEGS:
       case SKILL_IRON_WILL:
       case SKILL_PLANT:
-      case SKILL_POISON_ARROW:
       case ABSOLUTE_MAX_SKILL:
         vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s.") %
 	      aff->type % ch->getName());

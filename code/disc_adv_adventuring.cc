@@ -2,7 +2,6 @@
 #include "disc_adv_adventuring.h"
 #include "disease.h"
 #include "combat.h"
-#include "disc_survival.h"
 #include "obj_component.h"
 #include "obj_base_corpse.h"
 #include "obj_tool.h"

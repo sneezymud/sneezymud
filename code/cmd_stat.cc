@@ -1553,7 +1553,6 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_IRON_LEGS:
       case SKILL_IRON_WILL:
       case SKILL_PLANT:
-      case SKILL_POISON_ARROW:
       case SPELL_EMBALM:
 #if 1
       case SPELL_EARTHMAW:

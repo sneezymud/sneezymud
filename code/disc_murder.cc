@@ -726,8 +726,7 @@ int TBeing::doPoisonWeapon(sstring arg)
   sstring namebuf;
   int rc;
 
-  if (!doesKnowSkill(SKILL_POISON_WEAPON) &&
-      !doesKnowSkill(SKILL_POISON_ARROW)) {
+  if (!doesKnowSkill(SKILL_POISON_WEAPON)){
     sendTo("You know nothing about poisoning weapons.\n\r");
     return FALSE;
   }
@@ -916,10 +915,7 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
   int level;
   int duration;
   sstring s;
-  spellNumT skill=SKILL_POISON_ARROW;
-
-  if(ch->doesKnowSkill(SKILL_POISON_WEAPON))
-    skill=SKILL_POISON_WEAPON;
+  spellNumT skill=SKILL_POISON_WEAPON;
     
   if (getDrinkUnits() <= 0) {
     act("$p seems not to have anything in it.",

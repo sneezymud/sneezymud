@@ -27,7 +27,6 @@
 //#include "disc_azroki.h"
 #include "disc_deikhan.h"
 //#include "disc_ranger.h"
-#include "disc_survival.h"
 #include "disc_animal.h"
 #include "disc_nature.h"
 //#include "disc_kararki.h"
@@ -2487,7 +2486,6 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SKILL_IRON_LEGS:
     case SKILL_IRON_WILL:
     case SKILL_PLANT:
-    case SKILL_POISON_ARROW:
     case ABSOLUTE_MAX_SKILL:
         sendTo("Spell or discipline not yet implemented!\n\r");
         return FALSE;

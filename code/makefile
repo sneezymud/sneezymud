@@ -4159,11 +4159,10 @@ objs/disc_adv_adventuring.o: spec_objs.h connect.h obj_drug.h charfile.h
 objs/disc_adv_adventuring.o: being.h person.h monster.h account.h extern.h
 objs/disc_adv_adventuring.o: handler.h obj_money.h spec_mobs.h materials.h
 objs/disc_adv_adventuring.o: colorstring.h format.h disc_adv_adventuring.h
-objs/disc_adv_adventuring.o: combat.h disc_survival.h obj_component.h
-objs/disc_adv_adventuring.o: obj_base_corpse.h obj_base_container.h
-objs/disc_adv_adventuring.o: obj_tool.h obj_portal.h obj_seethru.h
-objs/disc_adv_adventuring.o: obj_drinkcon.h obj_base_cup.h pathfinder.h
-objs/disc_adv_adventuring.o: /usr/include/g++/deque
+objs/disc_adv_adventuring.o: combat.h obj_component.h obj_base_corpse.h
+objs/disc_adv_adventuring.o: obj_base_container.h obj_tool.h obj_portal.h
+objs/disc_adv_adventuring.o: obj_seethru.h obj_drinkcon.h obj_base_cup.h
+objs/disc_adv_adventuring.o: pathfinder.h /usr/include/g++/deque
 objs/disc_adv_adventuring.o: /usr/include/g++/stl_deque.h
 objs/disc_adventuring.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_adventuring.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -4220,11 +4219,10 @@ objs/disc_adventuring.o: weather.h sound.h create.h thing.h room.h obj.h
 objs/disc_adventuring.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/disc_adventuring.o: person.h monster.h account.h extern.h handler.h
 objs/disc_adventuring.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/disc_adventuring.o: format.h combat.h disc_adventuring.h disc_survival.h
-objs/disc_adventuring.o: obj_component.h obj_base_corpse.h
-objs/disc_adventuring.o: obj_base_container.h obj_tool.h obj_portal.h
-objs/disc_adventuring.o: obj_seethru.h obj_drinkcon.h obj_base_cup.h
-objs/disc_adventuring.o: pathfinder.h /usr/include/g++/deque
+objs/disc_adventuring.o: format.h combat.h disc_adventuring.h obj_component.h
+objs/disc_adventuring.o: obj_base_corpse.h obj_base_container.h obj_tool.h
+objs/disc_adventuring.o: obj_portal.h obj_seethru.h obj_drinkcon.h
+objs/disc_adventuring.o: obj_base_cup.h pathfinder.h /usr/include/g++/deque
 objs/disc_adventuring.o: /usr/include/g++/stl_deque.h
 objs/disc_aegis.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_aegis.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
@@ -6718,9 +6716,9 @@ objs/discipline.o: disc_looting.h disc_murder.h disc_hth.h disc_warrior.h
 objs/discipline.o: disc_brawling.h disc_adventuring.h disc_combat.h
 objs/discipline.o: disc_wizardry.h disc_lore.h disc_theology.h disc_faith.h
 objs/discipline.o: disc_slash.h disc_blunt.h disc_pierce.h disc_ranged.h
-objs/discipline.o: disc_barehand.h disc_survival.h disc_animal.h
-objs/discipline.o: disc_nature.h disc_psionics.h disc_adv_adventuring.h
-objs/discipline.o: spelltask.h obj_symbol.h
+objs/discipline.o: disc_barehand.h disc_animal.h disc_nature.h
+objs/discipline.o: disc_psionics.h disc_adv_adventuring.h spelltask.h
+objs/discipline.o: obj_symbol.h
 objs/disease.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disease.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disease.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -13881,8 +13879,8 @@ objs/skills.o: disc_murder.h disc_hth.h disc_combat.h disc_adventuring.h
 objs/skills.o: disc_adv_adventuring.h disc_wizardry.h disc_lore.h
 objs/skills.o: disc_theology.h disc_faith.h disc_slash.h disc_blunt.h
 objs/skills.o: disc_pierce.h disc_ranged.h disc_barehand.h disc_brawling.h
-objs/skills.o: disc_warrior.h disc_survival.h disc_animal.h
-objs/skills.o: disc_shaman_armadillo.h disc_nature.h disc_psionics.h
+objs/skills.o: disc_warrior.h disc_animal.h disc_shaman_armadillo.h
+objs/skills.o: disc_nature.h disc_psionics.h
 objs/socket.o: /usr/include/g++/csignal /usr/include/signal.h
 objs/socket.o: /usr/include/sys/cdefs.h /usr/include/sys/_posix.h
 objs/socket.o: /usr/include/machine/ansi.h /usr/include/sys/signal.h
@@ -16675,8 +16673,8 @@ objs/spell_parser.o: disc_air.h disc_alchemy.h disc_earth.h disc_fire.h
 objs/spell_parser.o: disc_sorcery.h disc_spirit.h disc_water.h disc_aegis.h
 objs/spell_parser.o: disc_wrath.h disc_shaman.h disc_afflictions.h
 objs/spell_parser.o: disc_cures.h disc_hand_of_god.h disc_deikhan.h
-objs/spell_parser.o: disc_survival.h disc_animal.h disc_nature.h
-objs/spell_parser.o: disc_ranged.h disc_adventuring.h disc_shaman_frog.h
+objs/spell_parser.o: disc_animal.h disc_nature.h disc_ranged.h
+objs/spell_parser.o: disc_adventuring.h disc_shaman_frog.h
 objs/spell_parser.o: disc_shaman_spider.h disc_shaman_skunk.h
 objs/spell_parser.o: disc_shaman_control.h obj_opal.h
 objs/spellstore.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
@@ -16774,8 +16772,8 @@ objs/spelltask.o: disc_shaman_skunk.h disc_shaman_control.h disc_nature.h
 objs/spelltask.o: disc_cures.h disc_earth.h disc_fire.h disc_sorcery.h
 objs/spelltask.o: disc_spirit.h disc_water.h disc_aegis.h disc_wrath.h
 objs/spelltask.o: disc_shaman.h disc_afflictions.h disc_hand_of_god.h
-objs/spelltask.o: disc_deikhan.h disc_ranger.h disc_survival.h disc_animal.h
-objs/spelltask.o: disc_leverage.h disc_ranged.h combat.h obj_symbol.h
+objs/spelltask.o: disc_deikhan.h disc_ranger.h disc_animal.h disc_leverage.h
+objs/spelltask.o: disc_ranged.h combat.h obj_symbol.h
 objs/sqladdobjs.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sqladdobjs.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/sqladdobjs.o: /usr/include/g++/cstdlib /usr/include/stdlib.h

@@ -71,7 +71,6 @@
 #include "disc_shaman_control.h"
 #include "disc_deikhan.h"
 #include "disc_ranger.h"
-#include "disc_survival.h"
 #include "disc_animal.h"
 #include "disc_shaman_armadillo.h"
 #include "disc_leverage.h"

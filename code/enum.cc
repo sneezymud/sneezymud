@@ -259,7 +259,7 @@ int mapDiscToFile(discNumT dn)
       return 22;
     case DISC_PLANTS:
       return 23;
-    case DISC_SURVIVAL:
+    case DISC_BOGUS2:
       return 24;
     case DISC_DEIKHAN:
       return 25;
@@ -406,7 +406,7 @@ discNumT mapFileToDisc(int num)
     case 23:
       return DISC_PLANTS;
     case 24:
-      return DISC_SURVIVAL;
+      return DISC_BOGUS2;
     case 25:
       return DISC_DEIKHAN;
     case 26:

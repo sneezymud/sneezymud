@@ -66,7 +66,6 @@
 #include "disc_pierce.h"
 #include "disc_ranged.h"
 #include "disc_barehand.h"
-#include "disc_survival.h"
 #include "disc_animal.h"
 #include "disc_nature.h"
 #include "disc_psionics.h"
@@ -2526,7 +2525,6 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_ANIMAL] = new CDAnimal();
     discs->disc[DISC_PLANTS] = new CDPlants();
     discs->disc[DISC_NATURE] = new CDNature();
-    discs->disc[DISC_SURVIVAL] = new CDSurvival();
 
     discs->disc[DISC_DEIKHAN] = new CDDeikhan();
     discs->disc[DISC_DEIKHAN_FIGHT] = new CDDeikhanFight();
@@ -2650,7 +2648,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_RANGER] = new CDRanger();
       discs->disc[DISC_ANIMAL] = new CDAnimal();
       discs->disc[DISC_PLANTS] = new CDPlants();
-      discs->disc[DISC_SURVIVAL] = new CDSurvival();
       discs->disc[DISC_NATURE] = new CDNature();
       discs->disc[DISC_DEFENSE] = new CDDefense();
     }
@@ -2866,7 +2863,6 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
     case DISC_ALCHEMY:
     case DISC_ANIMAL:
     case DISC_NATURE:
-    case DISC_SURVIVAL:
       cd = getDiscipline(DISC_WIZARDRY);
       if (cd && cd->getLearnedness() > 0)
         lev += 2 + (cd->getLearnedness() / 34);
@@ -3008,7 +3004,6 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_RANGER: 
     case DISC_PLANTS:
     case DISC_ANIMAL:
-    case DISC_SURVIVAL:
     case DISC_NATURE:
       lev = getClassLevel(CLASS_RANGER);
       break;
@@ -3081,6 +3076,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_DEFENSE:
     case DISC_PSIONICS:
     case DISC_BOGUS1:
+    case DISC_BOGUS2:
       lev = GetMaxLevel();
       break;
     case MAX_DISCS:

@@ -83,7 +83,6 @@
 #include "disc_barehand.h"
 #include "disc_brawling.h"
 #include "disc_warrior.h"
-#include "disc_survival.h"
 #include "disc_animal.h"
 #include "disc_shaman_armadillo.h"
 #include "disc_nature.h"
@@ -580,12 +579,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
     case SKILL_APPLY_HERBS:  //                382
       return &((CDPlants *) cd)->skApplyHerbs;
-#if 1
-#endif
-// disc_survival
 
-    case SKILL_POISON_ARROW:
-      return &((CDSurvival *) cd)->skPoisonArrows;
 
 // DEIKHAN CLASS
 
