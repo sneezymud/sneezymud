@@ -2187,6 +2187,7 @@ int TComponent::objectSell(TBeing *ch, TMonster *keeper)
   if (gamePort != PROD_GAMEPORT)
     return FALSE;
 
+#if 0
   char buf[256];
 
   if ((getComponentCharges() != getComponentMaxCharges())) {
@@ -2194,6 +2195,7 @@ int TComponent::objectSell(TBeing *ch, TMonster *keeper)
     keeper->doTell(buf);
     return TRUE;
   }
+#endif
   return FALSE;
 }
 
@@ -2466,7 +2468,8 @@ int TComponent::suggestedPrice() const
     // pass it L1 and let SpellCost fix it for us
     // for level, we'll assign a value of 100% arbitrarily
     value = getSpellCost(curspell, 1, 100);
-    value *= getComponentMaxCharges();
+    value *= getComponentCharges();
+    //    value *= getComponentMaxCharges();
   }
 
   value = (int) (value * priceMultiplier());

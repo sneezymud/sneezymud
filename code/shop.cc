@@ -1935,12 +1935,12 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       return FALSE;
     }
     if((row=mysql_fetch_row(res))){
-      if(ch->isImmortal())
-	access=SHOPACCESS_OWNER;
-      else
-	access=atoi(row[0]);
+      access=atoi(row[0]);
     }
     mysql_free_result(res);
+
+    if(ch->isImmortal())
+      access=SHOPACCESS_OWNER;
 
     arg = one_argument(arg, buf);
     

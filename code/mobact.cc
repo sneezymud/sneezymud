@@ -3168,9 +3168,9 @@ int TMonster::mobileActivity(int pulse)
     }
     
     if(shopOwned(shop_nr)){
-      setMoney(getMoney()-25);
+      setMoney(getMoney()-100);
       
-      shoplog(shop_nr, this, this, "talens", 25, "paying tax");
+      shoplog(shop_nr, this, this, "talens", 100, "paying tax");
 
       if(getMoney()<0){
 	MYSQL_RES *res;
