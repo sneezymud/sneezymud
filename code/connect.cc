@@ -6567,11 +6567,23 @@ int TBeing::applyRentBenefits(int secs)
   setMana(min((int) manaLimit(), getMana() + (local_tics * manaGain())));
   setMove(min((int) moveLimit(), getMove() + (local_tics * moveGain())));
   setPiety(min(pietyLimit(), getPiety() + (local_tics * pietyGain(0.0))));
-  setLifeforce(min(getLifeforce(), getLifeforce() + (local_tics * lfmod)));
+  /////////////////
+  // LIFEFORCE
+  /////////////////
+  int X = getLifeforce();
+  if (X < 50) {
+    setLifeforce(X);
+  } else {
+    X = getLifeforce() - (secs * lfmod);
+    setLifeforce(max(50,X));
+  }
+
+  /////////////////////////
+  //  setLifeforce(min(getLifeforce(), getLifeforce() + (local_tics * lfmod)));
   //  if ((getLifeforce() + (local_tics * lfmod)) < 50)
   //  setLifeforce(50);
   // THIS WILL NEED TO BE REVIEWED
-
+  ////////////////////////
  
   wearSlotT ij;
   for (ij=MIN_WEAR;ij < MAX_WEAR; ij++) {
