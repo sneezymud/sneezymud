@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_alchemy.cc,v $
+// Revision 1.2  1999/09/26 23:06:41  lapsos
+// Enabled divination for 'wizards'(creators).
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -294,7 +297,7 @@ int divinationObj(TBeing *caster, TObj *obj)
 
 int castDivinationObj(TBeing *caster, const TObj *obj)
 {
-  if (caster->GetMaxLevel() > MAX_MORT) {
+  if (caster->GetMaxLevel() > MAX_MORT && !caster->hasWizPower(POWER_WIZARD)) {
     caster->sendTo("Shame, Shame.  You shouldn't do this...\n\r");
     vlogf(9, "%s used Divination Object on: %s",
           caster->getName(), obj->getName());
