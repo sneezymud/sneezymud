@@ -1,3 +1,9 @@
+12-7 - Peel
+- added code to deal with player killing better
+  specifically, player killers get an affect added, that prevents them from
+  renting, entering peaceful rooms and causes them to remain visible and
+  vulnerable if they drop link.  The affect is temporary.
+
 12-7 - bat
 - Enhanced the review.csh script so that you can do like:
   "review Dec 2" and see all the changes since the 2nd
