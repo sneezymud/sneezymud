@@ -514,7 +514,7 @@ void TBeing::doMindfocus(const char *){
 
     aff.type      = SKILL_MIND_FOCUS;
     aff.level     = bKnown;
-    aff.duration  = (3 + (bKnown / 2)) * UPDATES_PER_MUDHOUR;
+    aff.duration  = (bKnown / 10) * UPDATES_PER_MUDHOUR;
     aff.location  = APPLY_NONE;
     affectTo(&aff, -1);
   } else {
@@ -580,11 +580,11 @@ int TBeing::doPsiblast(const char *tString){
     act("You send a blast of psionic power towards $N!",
         FALSE, this, NULL, tVictim, TO_CHAR);
     
-    act("...$N screws up $S face in agony.",
+    act("A look of shocked pain appears on $N's face.",
 	TRUE, this, NULL, tVictim, TO_CHAR);
     act("$n sends a blast of psionic power into your mind.",
 	TRUE, this, NULL, tVictim, TO_VICT);
-    act("A look of shocked pain appear on $N's face as $n glares at $M.",
+    act("A look of shocked pain appears on $N's face as $n glares at $M.",
 	TRUE, this, NULL, tVictim, TO_NOTVICT);
 
     if (!tVictim->affectedBySpell(SKILL_PSI_BLAST)) {
@@ -596,9 +596,9 @@ int TBeing::doPsiblast(const char *tString){
       if (bSuccess(this, bKnown, SKILL_PSI_BLAST)) {
 	aff.type      = SKILL_PSI_BLAST;
 	aff.level     = bKnown;
-	aff.duration  = (3 + (bKnown / 2)) * UPDATES_PER_MUDHOUR;
+	aff.duration  = (bKnown / 10) * UPDATES_PER_MUDHOUR;
 	aff.location  = APPLY_INT;
-	aff.modifier   = -10;
+	aff.modifier   = -(::number(bKnown/3, bKnown/2));
 	tVictim->affectTo(&aff, -1);
 	++count;
       }
@@ -606,9 +606,9 @@ int TBeing::doPsiblast(const char *tString){
       if (bSuccess(this, bKnown, SKILL_PSI_BLAST)) {
 	aff.type      = SKILL_PSI_BLAST;
 	aff.level     = bKnown;
-	aff.duration  = (3 + (bKnown / 2)) * UPDATES_PER_MUDHOUR;
+	aff.duration  = (bKnown / 10) * UPDATES_PER_MUDHOUR;
 	aff.location  = APPLY_WIS;
-	aff.modifier   = -10;
+	aff.modifier   = -(::number(bKnown/3, bKnown/2));
 	tVictim->affectTo(&aff, -1);
 	++count;
       }
@@ -616,9 +616,9 @@ int TBeing::doPsiblast(const char *tString){
       if (bSuccess(this, bKnown, SKILL_PSI_BLAST)) {
 	aff.type      = SKILL_PSI_BLAST;
 	aff.level     = bKnown;
-	aff.duration  = (3 + (bKnown / 2)) * UPDATES_PER_MUDHOUR;
+	aff.duration  = (bKnown / 10) * UPDATES_PER_MUDHOUR;
 	aff.location  = APPLY_FOC;
-	aff.modifier   = -10;
+	aff.modifier   = -(::number(bKnown/3, bKnown/2));
 	tVictim->affectTo(&aff, -1);
 	++count;
       }
@@ -656,8 +656,8 @@ int TBeing::doPsiblast(const char *tString){
   return TRUE;
 }
 
+
 int TBeing::doMindthrust(const char *tString){
-  // drains mana
   TBeing *tVictim=NULL;
 
   if(!(tVictim=psiAttackChecks(this, SKILL_MIND_THRUST, tString)))
@@ -670,15 +670,19 @@ int TBeing::doMindthrust(const char *tString){
     act("You use your psionic powers to stab at $N's mind!",
         FALSE, this, NULL, tVictim, TO_CHAR);
     
-    act("...$N screws up $S face in agony.",
+    act("$N winces in pain.",
 	TRUE, this, NULL, tVictim, TO_CHAR);
-    act("$n exerts $s <r>chi force<1> on you, causing extreme pain.",
+    act("$n squints at you, causing a sharp stabbing pain in your mind.",
 	TRUE, this, NULL, tVictim, TO_VICT);
-    act("$N screws up $S face in agony.",
+    act("$n squints at $N causing $M to wince suddenly.",
 	TRUE, this, NULL, tVictim, TO_NOTVICT);
     tDamage = getSkillDam(tVictim, SKILL_MIND_THRUST,
                           getSkillLevel(SKILL_MIND_THRUST),
                           getAdvLearning(SKILL_MIND_THRUST));
+
+    
+    if(bSuccess(this, bKnown/4, SKILL_MIND_THRUST) && tVictim->spelltask)
+      tVictim->addToDistracted(::number(1,2), FALSE);
   } else {
     psiAttackFailMsg(this, tVictim);
   }
@@ -718,7 +722,7 @@ int TBeing::doPsycrush(const char *tString){
 				     
       act("$N's eyes open wide in shock.",
 	  TRUE, this, NULL, tVictim, TO_CHAR);
-      act("$n' psychic crush is too much for you to bear and your vision goes blank.",
+      act("$n's psychic crush is too much for you to bear and your vision goes blank.",
 	  TRUE, this, NULL, tVictim, TO_VICT);
       act("$N's eyes open wide in shock as $n glares at $m.",
 	  TRUE, this, NULL, tVictim, TO_NOTVICT);
@@ -760,8 +764,11 @@ int TBeing::doPsycrush(const char *tString){
     REM_DELETE(rc, DELETE_VICT);
   }
   
-  if(doflee && tVictim)
+  if(doflee && tVictim){
+      act("An overwhelming sense of panic causes you to flee.",
+	  TRUE, this, NULL, tVictim, TO_VICT);
     tVictim->doFlee("");
+  }
 
 
   return TRUE;
@@ -796,7 +803,7 @@ int TBeing::doKwave(const char *tString){
       act("$n sends $N sprawling with a kinetic force wave!",
 	  FALSE, this, 0, tVictim, TO_NOTVICT);
       act("You send $N sprawling.", FALSE, this, 0, tVictim, TO_CHAR);
-      act("You tumble as $n knocks you over",
+      act("You tumble as $n knocks you over with a kinetic wave.",
 	  FALSE, this, 0, tVictim, TO_VICT, ANSI_BLUE);
 
       int rc = tVictim->crashLanding(POSITION_SITTING);

@@ -480,7 +480,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SKILL_MIND_THRUST:
     case SKILL_PSYCHIC_CRUSH:
     case SKILL_KINETIC_WAVE:
-      dam = genericDam(victim, skill, DISC_PSIONICS, level, adv_learn, 0.233, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, skill, DISC_PSIONICS, level, adv_learn, 0.639, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_SKY_SPIRIT:
     case SPELL_EARTHMAW:
