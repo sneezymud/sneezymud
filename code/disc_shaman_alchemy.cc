@@ -30,6 +30,10 @@ void TBeing::doBrew(const char *arg)
     return;
   }
 
+  if (getLifeforce() < 50) {
+    sendTo("You need more life force to brew potions.\n\r");
+    return;
+  }
 
   // find the 3 necessary pieces
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
