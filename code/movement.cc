@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: movement.cc,v $
+// Revision 1.5  1999/10/09 05:42:11  batopr
+// Fixed dismount when not mounted call
+//
 // Revision 1.4  1999/09/29 07:46:14  lapsos
 // Added code for the Mobile Strings stuff.
 //
@@ -1036,7 +1039,8 @@ int TBeing::moveGroup(dirTypeT dir)
               }
               // if this moveGroupFailed (movement points or something)
               // then horse and horsemaster moved, but I did not...
-              if (!rc) {
+              // it is possible I was already dismounted, in which case we can skip
+              if (!rc && tb->riding) {
                 positionTypeT post = tb->getPosition();
                 tb->dismount(post <= POSITION_STANDING ? post : POSITION_STANDING);
               }
