@@ -35,9 +35,9 @@ static int spell_frost_breath(byte level, TBeing *ch, TBeing *victim, int lag)
   act("You deep-freeze $N.",TRUE,ch,0,victim,TO_CHAR,ANSI_WHITE_BOLD);
   act("$n's breath is FREEZING!!!",TRUE,ch,0,victim,TO_VICT,ANSI_WHITE_BOLD);
 
-  if (victim->shieldAbsorbDamage(dam)) {
-    return 1;
-  } else if (victim->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
+  dam=victim->shieldAbsorbDamage(dam);
+  
+  if (victim->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
     act("You dodge out of the way, thankfully, avoiding most of the damage.",TRUE,ch, 0, victim, TO_VICT, ANSI_WHITE_BOLD);
     dam >>= 1;
   }
@@ -90,13 +90,14 @@ static int spell_acid_breath(byte level, TBeing *ch, TBeing *victim, int lag)
   int rc;
   int dam = dragonBreathDam(level, lag);
 
+
   act("$N is coated in noxious acidic fumes from $n's breath.",TRUE,ch,0,victim,TO_NOTVICT);
   act("You do a litmus test on $N.",TRUE,ch,0,victim,TO_CHAR);
   act("Noxious acidic fumes from $n's breath surround you!!!",TRUE,ch,0,victim,TO_VICT);
 
-  if (victim->shieldAbsorbDamage(dam)) {
-    return 1;
-  } else if (victim->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
+  dam=victim->shieldAbsorbDamage(dam);
+
+  if (victim->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
     act("You dodge out of the way, thankfully, avoiding most of the damage.",TRUE,ch, 0, victim, TO_VICT);
     dam >>= 1;
   }
@@ -120,9 +121,9 @@ static int spell_chlorine_breath(byte level, TBeing *ch, TBeing *victim, int lag
   act("$N is immersed in a cloud of chlorine gas from $n's breath.",TRUE,ch,0,victim,TO_NOTVICT);
   act("You burp a smelly one at $N.",TRUE,ch,0,victim,TO_CHAR);
   act("$n's breath is TOXIC!!!",TRUE,ch,0,victim,TO_VICT);
-  if (victim->shieldAbsorbDamage(dam)) {
-    return 1;
-  } else if (victim->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
+  dam=victim->shieldAbsorbDamage(dam);
+
+  if (victim->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
     act("You dodge out of the way, thankfully, avoiding most of the gas.",TRUE,ch, 0, victim, TO_VICT);
     dam >>= 1;
   }
@@ -145,9 +146,10 @@ static int spell_lightning_breath(byte level, TBeing *ch, TBeing *victim, int la
   act("$N is struck by $n's electric breath.",TRUE,ch,0,victim,TO_NOTVICT);
   act("You electrify $N.",TRUE,ch,0,victim,TO_CHAR);
   act("$n's breath is SHOCKING!!!",TRUE,ch,0,victim,TO_VICT);
-  if (victim->shieldAbsorbDamage(dam)) {
-    return 1;
-  } else if (victim->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
+
+  dam=victim->shieldAbsorbDamage(dam);
+  
+  if (victim->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
     act("You dodge out of the way, thankfully, avoiding most of the damage.",TRUE,ch, 0, victim, TO_VICT);
     dam >>= 1;
   }
@@ -176,9 +178,9 @@ static int spell_cloud_breath(byte level, TBeing *ch, TBeing *vict)
   act("The vortex of cloud stones quickly evaporate.",
       TRUE, ch, 0, 0, TO_ROOM);
 
-  if (vict->shieldAbsorbDamage(dam)) {
-    return 1;
-  } else if (vict->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
+  dam=victim->shieldAbsorbDamage(dam);
+
+  if (vict->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
     act("You dodge out of the way, thankfully, avoiding most of the damage.",
         TRUE, ch, 0, vict, TO_VICT);
     dam >>= 1;
@@ -208,9 +210,9 @@ static int spell_dust_breath(byte level, TBeing *ch, TBeing *victim, int lag)
   act("You almost feel like a pincushion as $N's breath showers you in dust.",
       TRUE, ch, NULL, victim, TO_VICT);
 
-  if (victim->shieldAbsorbDamage(dam)) {
-    return 1;
-  } else if (victim->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
+  dam=victim->shieldAbsorbDamage(dam);
+
+  if (victim->isLucky(levelLuckModifier(ch->GetMaxLevel()))) {
     act("You dodge out of the way, thankfully, avoiding most of the dust.",
         TRUE, ch, NULL, victim, TO_VICT);
     dam >>= 1;
@@ -303,38 +305,35 @@ int DragonBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       continue;
     if (tmp == myself)
       continue;
-    if (tmp->isImmortal() && tmp->isPc()) {
-      act("$n Breathes...coughs and sputters...", 1, myself, NULL, NULL, TO_ROOM);
-    } else {
-      switch (dragons[i].dam_type) {
-        case SPELL_FROST_BREATH:
-          rc = spell_frost_breath(myself->GetMaxLevel(),myself,tmp, dragons[i].lag);
-          break;
-        case SPELL_FIRE_BREATH:
-          rc = spell_fire_breath(myself->GetMaxLevel(),myself,tmp, dragons[i].lag);
-          break;
-        case SPELL_ACID_BREATH:
-          rc = spell_acid_breath(myself->GetMaxLevel(),myself,tmp, dragons[i].lag);
-          break;
-        case SPELL_LIGHTNING_BREATH:
-          rc = spell_lightning_breath(myself->GetMaxLevel(),myself,tmp, dragons[i].lag);
-          break;
-        case SPELL_CHLORINE_BREATH:
-          rc = spell_chlorine_breath(myself->GetMaxLevel(),myself,tmp, dragons[i].lag);
-          break;
-        case SPELL_DUST_BREATH:
-          rc = spell_dust_breath(myself->GetMaxLevel(), myself, tmp, dragons[i].lag);
-          break;
-        default:
-          vlogf(LOG_BUG, "Bad breath for %s, buy it some Binaca",myself->getName());
-          break;
-      }
-      if (IS_SET_DELETE(rc, DELETE_VICT)) {
-        delete tmp;
-        tmp = NULL;
-      }
+    switch (dragons[i].dam_type) {
+      case SPELL_FROST_BREATH:
+	rc = spell_frost_breath(myself->GetMaxLevel(),myself,tmp, dragons[i].lag);
+	break;
+      case SPELL_FIRE_BREATH:
+	rc = spell_fire_breath(myself->GetMaxLevel(),myself,tmp, dragons[i].lag);
+	break;
+      case SPELL_ACID_BREATH:
+	rc = spell_acid_breath(myself->GetMaxLevel(),myself,tmp, dragons[i].lag);
+	break;
+      case SPELL_LIGHTNING_BREATH:
+	rc = spell_lightning_breath(myself->GetMaxLevel(),myself,tmp, dragons[i].lag);
+	break;
+      case SPELL_CHLORINE_BREATH:
+	rc = spell_chlorine_breath(myself->GetMaxLevel(),myself,tmp, dragons[i].lag);
+	break;
+      case SPELL_DUST_BREATH:
+	rc = spell_dust_breath(myself->GetMaxLevel(), myself, tmp, dragons[i].lag);
+	break;
+      default:
+	vlogf(LOG_BUG, "Bad breath for %s, buy it some Binaca",myself->getName());
+	break;
+    }
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      delete tmp;
+      tmp = NULL;
     }
   }
+
   switch (dragons[i].dam_type) {
     case SPELL_FROST_BREATH:
       myself->freezeRoom();
