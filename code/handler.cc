@@ -1813,7 +1813,7 @@ TBeing *get_char_vis_world(const TBeing *ch, const char *name, int *count, exact
   return 0;
 }
 
-TBeing *get_char_vis(const TBeing *ch, const char *name, int *count, infraTypeT infra)
+TBeing *get_char_vis(const TBeing *ch, const string name, int *count, infraTypeT infra)
 {
   TBeing *i;
 
@@ -1822,16 +1822,16 @@ TBeing *get_char_vis(const TBeing *ch, const char *name, int *count, infraTypeT 
   // potential problem is finds local abbreviation, before global exact
   // but this is probably what we want to do
 
-  if ((i = get_char_room_vis(ch, name, count, EXACT_YES, infra)))
+  if ((i = get_char_room_vis(ch, name.c_str(), count, EXACT_YES, infra)))
     return (i);
 
-  if ((i = get_char_room_vis(ch, name, count, EXACT_NO, infra)))
+  if ((i = get_char_room_vis(ch, name.c_str(), count, EXACT_NO, infra)))
     return (i);
 
-  if ((i = get_char_vis_world(ch, name, count, EXACT_YES, infra)))
+  if ((i = get_char_vis_world(ch, name.c_str(), count, EXACT_YES, infra)))
     return i;
 
-  return get_char_vis_world(ch, name, count, EXACT_NO, infra);
+  return get_char_vis_world(ch, name.c_str(), count, EXACT_NO, infra);
 }
 
 TThing *get_thing_in_list_getable(TBeing *ch, const char *name, TThing *list)

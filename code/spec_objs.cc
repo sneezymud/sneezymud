@@ -1772,7 +1772,7 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
        FALSE, ch, me, 0, TO_CHAR);
   act("With a mighty heave, $n tosses $p straight up.",
        FALSE, ch, me, 0, TO_ROOM);
-  if (!(target = get_char_vis(ch, targbuf.c_str(), NULL))) {
+  if (!(target = get_char_vis(ch, targbuf, NULL))) {
     *(ch->roomp) += *me;
     act("$n falls to the $g.", TRUE, me, 0, 0, TO_ROOM);
     return TRUE;
@@ -7083,7 +7083,7 @@ int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if(cmd == CMD_POINT && o->getMaxStructPoints()<100){
     one_argument((string)arg,target);
 
-    if(!(fish=generic_find_obj(target.c_str(),FIND_OBJ_INV|FIND_OBJ_ROOM, ch))){
+    if(!(fish=generic_find_obj(target,FIND_OBJ_INV|FIND_OBJ_ROOM, ch))){
       act("You don't see that anywhere!", TRUE,ch,o,NULL,TO_CHAR,NULL);
       return false;
     }
