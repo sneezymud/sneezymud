@@ -157,9 +157,9 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	cmd_quest.o cmd_quivpalm.o cmd_rename.o cmd_rescue.o cmd_save.o \
 	cmd_score.o cmd_sedit.o cmd_set.o cmd_stab.o cmd_stat.o cmd_steal.o \
 	cmd_stomp.o cmd_testcode.o cmd_testfight.o \
-	cmd_visible.o \
+	cmd_visible.o cmd_who.o \
 	cmd_zonefile.o \
-	cmd_zones.o color.o \
+	cmd_zones.o color.o colorstring.o \
 	combat.o comm.o commodity.o components.o connect.o constants.o \
 	container.o corpse.o craps.o crazyeights.o create_engine.o \
 	create_mobs.o create_objs.o create_rooms.o crit_combat.o damage.o \
@@ -310,6 +310,7 @@ $(OBJDIR)cmd_stab.o: combat.h
 $(OBJDIR)cmd_steal.o: disc_looting.h
 $(OBJDIR)cmd_stomp.o: combat.h
 $(OBJDIR)cmd_testfight.o: spelltask.h
+$(OBJDIR)cmd_who.o: statistics.h games.h
 $(OBJDIR)combat.o: combat.h statistics.h range.h mail.h spelltask.h shop.h
 $(OBJDIR)comm.o: task.h socket.h sneezy_signals.h systemtask.h
 $(OBJDIR)insure.o: task.h socket.h sneezy_signals.h systemtask.h
