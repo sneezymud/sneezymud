@@ -77,3 +77,19 @@ int TPotion::objectSell(TBeing *ch, TMonster *keeper)
 
   return FALSE;
 }
+
+
+
+// return the liquid associated with the shaman spell
+// or LIQ_WATER if it is not an allowed potion to brew
+liqTypeT spell_to_liq(spellNumT which)
+{
+  switch(which){
+    case SPELL_CELERITE:
+      return LIQ_POT_CELERITE;
+    default:
+      return LIQ_WATER;
+  }
+
+  return LIQ_WATER;
+}

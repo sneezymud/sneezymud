@@ -26,4 +26,6 @@ class TPotion : public TBaseCup {
 };
 
 
+liqTypeT spell_to_liq(spellNumT which);
+
 #endif

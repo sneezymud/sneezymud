@@ -4,19 +4,18 @@
 #include "spelltask.h"
 #include "disc_alchemy.h"
 #include "obj_component.h"
-
-
+#include "obj_potion.h"
 
 void TBeing::doBrew(const char *arg)
 {
   char buf[256];
-  TComponent *comp_gen, *comp_spell, *comp_brew;
+  TComponent *invalid, *comp_spell, *comp_brew;
+  TPotion *comp_gen;
   TThing *t;
-  spellNumT which = TYPE_UNDEFINED;
+  spellNumT which_spell = TYPE_UNDEFINED;
+  liqTypeT which_liq = LIQ_WATER;
   int i;
 
-  sendTo("Brew is temporarily disabled.\n\r");
-  return;
 
   for (;arg && *arg && isspace(*arg); arg++);
 
@@ -24,11 +23,13 @@ void TBeing::doBrew(const char *arg)
     sendTo("You need to specify a potion type to brew!\n\r");
     return;
   }
-  if (((which = searchForSpellNum(arg, EXACT_YES)) < MIN_SPELL) &&
-      ((which = searchForSpellNum(arg, EXACT_NO)) < MIN_SPELL)) {
+  if (((which_spell = searchForSpellNum(arg, EXACT_YES)) < MIN_SPELL) &&
+      ((which_spell = searchForSpellNum(arg, EXACT_NO)) < MIN_SPELL) &&
+      ((which_liq = spell_to_liq(which_spell)) != LIQ_WATER)) {
     sendTo("You can't mix a potion of that type.\n\r");
     return;
   }
+
 
   // find the 3 necessary pieces
     // generic component (spell == -1, type = brew)
@@ -37,14 +38,25 @@ void TBeing::doBrew(const char *arg)
     comp_spell = NULL;
     // brew comp (spell = which, type = brew)
     comp_brew = NULL;
+    invalid=NULL;
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if ((t = equipment[i])) {
-      t->findSomeComponent(&comp_gen, &comp_spell, &comp_brew, which, 1);
+      t->findSomeComponent(&invalid, &comp_spell, &comp_brew, which_spell, 1);
+
+      if((comp_gen=dynamic_cast<TPotion *>(t)) && 
+	 comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR){
+	comp_gen=NULL;
+      }
     }
   }
   for (t = getStuff(); t; t = t->nextThing) {
-    t->findSomeComponent(&comp_gen, &comp_spell, &comp_brew, which, 1);
+    t->findSomeComponent(&invalid, &comp_spell, &comp_brew, which_spell, 1);
+    
+    if((comp_gen=dynamic_cast<TPotion *>(t)) && 
+       comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR){
+      comp_gen=NULL;
+    }
   }
 
   if (!comp_gen) {
@@ -76,22 +88,24 @@ void TBeing::doBrew(const char *arg)
   }
 
   // trash all items first
-  int how_many = comp_brew->getComponentCharges();
+  int how_many = comp_gen->getDrinkUnits();
 
-  sprintf(buf, "You begin to brew %d potions of %s.", 
-         how_many, discArray[which]->name);
+  sprintf(buf, "You begin to brew %d ounces of %s.", 
+         how_many, discArray[which_spell]->name);
   act(buf, FALSE, this, 0, 0, TO_CHAR);
   sprintf(buf, "$n begins to brew a potion.");
   act(buf, FALSE, this, 0, 0, TO_ROOM);
 
-  delete comp_gen;
-  comp_gen = NULL;
+  comp_gen->setDrinkUnits(0);
 
-  sprintf(buf, "$p is consumed in the process.");
-  act(buf, FALSE, this, comp_brew, 0, TO_CHAR);
-  delete comp_brew;
-  comp_brew = NULL;
-  
+  comp_brew->addToComponentCharges(-1);
+  if(comp_brew->getComponentCharges() <= 0) {
+    sprintf(buf, "$p is consumed in the process.");
+    act(buf, FALSE, this, comp_brew, 0, TO_CHAR);
+    delete comp_brew;
+    comp_brew = NULL;
+  }
+
   sprintf(buf, "You use up one charge of $p.");
   act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
   comp_spell->addToComponentCharges(-1);
@@ -102,7 +116,7 @@ void TBeing::doBrew(const char *arg)
     comp_spell = NULL;
   }
 
-  start_task(this, NULL, NULL, TASK_BREWING, "", 0, in_room, how_many, which, 0);
+  start_task(this, NULL, NULL, TASK_BREWING, "", 0, in_room, how_many, which_spell, 0);
 
   return;
 }
