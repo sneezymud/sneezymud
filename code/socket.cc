@@ -1089,7 +1089,7 @@ int TMainSocket::gameLoop()
     }
 
     // handle pulse stuff for objects
-    count=objectPulse(pl, oldpulse);
+    count=objectPulse(pl, pulse);
 
     if(gameLoopTiming)
       vlogf(LOG_MISC, fmt("%i %i) objectPulse: %i, %i objs") % 
@@ -1097,7 +1097,7 @@ int TMainSocket::gameLoop()
 	    (int)(t.getElapsedReset()*1000000) % count);
     
     // handle pulse stuff for mobs and players
-    count=characterPulse(pl, oldpulse);
+    count=characterPulse(pl, pulse);
 
     if(gameLoopTiming)
       vlogf(LOG_MISC, fmt("%i %i) characterPulse: %i, %i chars") %
