@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: doors.cc,v $
+// Revision 1.4  1999/10/06 00:42:36  batopr
+// rawOpenDoor denies mounts
+//
 // Revision 1.3  1999/09/29 01:37:15  lapsos
 // Modified to allow for mounted opening of doors.
 //
@@ -168,6 +171,10 @@ void TBeing::rawOpenDoor(dirTypeT dir)
   }
   if (exitp->door_type == DOOR_PORTCULLIS && riding && getSkillValue(SKILL_RIDE) < 30) {
     sendTo("You are unable to raise that while mounted.\n\r");
+    return;
+  }
+  if (rider) {
+    sendTo("You can't seem to do that while being ridden.\n\r");
     return;
   }
   if (dir == DIR_DOWN && riding && getSkillValue(SKILL_RIDE) < 30) {
