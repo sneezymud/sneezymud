@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_testcode.cc,v $
+// Revision 1.4  1999/10/08 19:26:54  batopr
+// Added stuff for calculating money equilibrium
+//
 // Revision 1.3  1999/09/14 02:24:58  batopr
 // *** empty log message ***
 //
@@ -17,6 +20,7 @@
 
 
 #include "stdsneezy.h"
+#include "statistics.h"
 
 void TBeing::doTestCode(const char *arg)
 {
@@ -27,6 +31,55 @@ void TBeing::doTestCode(const char *arg)
 
   act("test code", FALSE, this, 0, 0, TO_CHAR, "\033[1;30m");
 
+#if 1
+  unsigned int shopPos = getPosGoldShops();
+  int shopNet = getNetGoldShops();
+  int shopDrain = shopPos - shopNet;
+
+  float old_shop_mod = gold_modifier[GOLD_SHOP];
+
+  // target shop is to drain 1.05 * what it provides
+  float new_shop_mod = old_shop_mod * shopDrain / shopPos / 1.05;
+
+  sendTo("Theoretical shop equilibrium modifier:   %.2f\n\r", new_shop_mod);
+
+  // calculate the "budget" portion of the shop values
+  unsigned int shopPosBudg = shopPos - getPosGold(GOLD_SHOP_PET);
+  int shopNetBudg = shopNet - getNetGold(GOLD_SHOP_PET);
+  int shopDrainBudg = shopPosBudg - shopNetBudg;
+  
+  // tweak the budget values for a "corrected" shop system
+  // the drain would be the same, but the pos would only be:
+  int shopPosNew = (int) (shopDrainBudg / 1.05);
+  int shopDrainNew = shopDrainBudg;
+  int shopNetNew = shopPosNew - shopDrainNew;
+
+  unsigned int budgPosTrue = getPosGoldBudget();
+  int budgNetTrue = getNetGoldBudget();
+  int budgDrainTrue = budgPosTrue - budgNetTrue;
+
+  int budgPosNew = budgPosTrue - shopPosBudg + shopPosNew;
+  int budgDrainNew = budgDrainTrue - shopDrainBudg + shopDrainNew;
+  int budgNetNew = budgPosNew - budgDrainNew;
+
+  // repair
+  int drainRepAct = getPosGold(GOLD_REPAIR) - getNetGold(GOLD_REPAIR);
+  int drainNoRep = budgDrainNew - drainRepAct;
+  int drainDes = (int) (budgPosNew * 0.90);
+  int drainRepDes = drainDes - drainNoRep;
+  float old_repair_factor = gold_modifier[GOLD_REPAIR];
+  float new_repair_factor = drainRepDes / drainRepAct * old_repair_factor;
+  sendTo("Theoretical repair equilibrium modifier:   %.2f\n\r", new_repair_factor);
+
+  // income
+  int posIncAct = getPosGold(GOLD_INCOME);
+  int posNoInc = budgPosNew - posIncAct;
+  int posDes = (int) (budgDrainNew * 1.02);
+  int posIncDes = posDes - posNoInc;
+  float old_inc_factor = gold_modifier[GOLD_INCOME]
+  float new_inc_factor = posIncDes / posIncAct * old_inc_factor;
+  sendTo("Theoretical income quilibrium modifier: %.2f\n\r", new_inc_factor);
+#endif
 #if 0
   char arg1[256];
   arg = one_argument(arg, arg1);
