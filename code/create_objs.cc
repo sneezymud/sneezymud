@@ -551,12 +551,16 @@ static void olist(TPerson *ch)
 #endif
 }
 #else
-static void olist(TPerson *ch)
+static void olist(TPerson *ch, bool zone=false)
 {
   string longstr;
   TDatabase db("immortal");
 
-  db.query("select vnum, name from obj where owner='%s' order by vnum", ch->name);
+  if(zone){
+    db.query("select vnum, name from obj where owner='%s' and vnum>%i and vnum<=%i order by vnum", ch->name, zone_table[ch->roomp->getZone()->zone_nr-1].top, ch->roomp->getZone()->top);
+  } else {
+    db.query("select vnum, name from obj where owner='%s' order by vnum", ch->name);
+  }
 
 
   if(!db.isResults()){
@@ -813,7 +817,11 @@ void TPerson::doOEdit(const char *argument)
       return;
       break;
     case 4:			// list 
-      olist(this);
+      sscanf(string, "%s", object);
+      if(!strcmp(object, "zone"))
+	olist(this, true);
+      else
+	olist(this, false);
       return;
       break;
     case 5:			// remove 
