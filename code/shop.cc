@@ -2042,11 +2042,13 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	myself->doTell(buf);
       }
     } else if(!strcmp(buf, "buy")){ /////////////////////////////////
-      if(strcmp(ch->getName(), "Fitz") && !ch->isImmortal()){
+#if 0
+      if(!ch->isImmortal()){
 	sprintf(buf, "%s Shop ownership is in beta testing right now, you can not purchase this shop.", ch->getName());
 	myself->doTell(buf);
 	return TRUE;
       }
+#endif
 
       if(owned){
 	sprintf(buf, "%s Sorry, this shop isn't for sale.", ch->getName());
@@ -2085,7 +2087,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	      ch->getName());
       myself->doTell(buf);
     } else if(!strcmp(buf, "sell")){ //////////////////////////////////
-      if(!(access & SHOPACCESS_OWNER) && !(access & SHOPACCESS_SELL)){
+      // don't let the shop owner do it by default, to prevent accidental sells
+      if(/* !(access & SHOPACCESS_OWNER) && */ !(access & SHOPACCESS_SELL)){
 	sprintf(buf, "%s Sorry, you don't have access to do that.", ch->getName());
 	myself->doTell(buf);
 	return FALSE;
