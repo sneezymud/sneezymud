@@ -226,7 +226,7 @@ OBJ2 = gin.o handler.o hearts.o hospital.o immortal.o immunity.o \
 	spelltask.o \
 	statistics.o stats.o structs.o systemtask.o \
 	talk.o task.o task_attune.o task_lightfire.o task_fishing.o task_sacrifice.o task_scribe.o \
-	task_extinguish_my_ass.cc \
+	task_extinguish_my_ass.o \
 	task_skin.o task_trap.o task_brew.o task_meditate.o task_search.o \
 	task_sleep.o task_charge.o task_penance.o task_seekwater.o \
 	task_smythe.o task_dull.o task_picklock.o task_sharpen.o \
