@@ -1214,6 +1214,9 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_PEE:
           doPee(newarg);
           break;
+        case CMD_POOP:
+          doPoop();
+          break;
         case CMD_EDIT:
           doEdit(newarg);
           break;
@@ -2801,6 +2804,7 @@ void buildCommandArray(void)
   commandArray[CMD_KWAVE] = new commandInfo("kwave", POSITION_RESTING, 0);
   commandArray[CMD_PSIDRAIN] = new commandInfo("psidrain", POSITION_RESTING, 0);
   commandArray[CMD_TRIP] = new commandInfo("trip", POSITION_FIGHTING, 0);
+  commandArray[CMD_POOP] = new commandInfo("poop", POSITION_STANDING, 0);
 }
 
 bool _parse_name(const char *arg, char *name)

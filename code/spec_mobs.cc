@@ -3200,17 +3200,10 @@ int horse(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
   TBeing *vict;
   int rc;
-  TObj *obj=NULL;
 
   if (cmd == CMD_GENERIC_PULSE){
-    if (!::number(0,500) && me->roomp && gamePort == PROD_GAMEPORT) {
-      obj = read_object(OBJ_PILE_OFFAL, VIRTUAL);
-
-      if (obj) {
-        *me->roomp += *obj;
-        act("$n <o>defecates<z> on the $g.",
-             TRUE, me, NULL, NULL, TO_ROOM);
-      }
+    if (!::number(0,500) && gamePort == PROD_GAMEPORT) {
+      me->doPoop();
     }
   }
 
@@ -7411,6 +7404,63 @@ int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself
 }
 
 
+int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
+{
+  float value;
+  char buf[256];
+  TObj *v = NULL;
+  TObj *commod=NULL;
+
+  if(cmd == CMD_VALUE){
+    TThing *ts = NULL;
+    if (!(ts = searchLinkedListVis(ch, arg, ch->getStuff())) ||
+	!(v = dynamic_cast<TObj *>(ts))) {
+      sprintf(buf, "%s You don't have that item.", ch->getName());
+      me->doTell(buf);
+      return TRUE;
+    }
+
+    if(material_nums[v->getMaterial()].price <= 0){
+      me->doSay("That isn't a valuable commodity - I can't convert that.");
+      return TRUE;
+    }
+
+    value = v->getWeight() * 0.75;
+    value *= (float) material_nums[v->getMaterial()].price;
+
+    sprintf(buf, "I can turn that into %i pounds of %s, worth %i talens.",
+	    (int)v->getWeight(), material_nums[v->getMaterial()].mat_name,
+	    (int)value);
+    me->doSay(buf);
+    return TRUE;
+  } else if(cmd == CMD_MOB_GIVEN_ITEM){
+    v=o;
+
+    if(material_nums[v->getMaterial()].price <= 0 ||
+       material_nums[v->getMaterial()].availability == 0){
+      me->doSay("That isn't a valuable commodity - I can't convert that.");
+      --(*v);
+      *ch+=*v;
+      return TRUE;
+    }
+
+    commod=read_object(material_nums[v->getMaterial()].availability, VIRTUAL);
+
+    commod->describeTreasure(material_nums[v->getMaterial()].mat_name,
+		      v->obj_flags.cost/material_nums[v->getMaterial()].price,
+			     material_nums[v->getMaterial()].price);
+
+    me->doSay("Alright, here you go!");
+
+    delete v;
+    *ch += *commod;
+  }
+
+
+  return FALSE;
+}
+
+
 
 
 extern int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
@@ -7599,6 +7649,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "tattoo artist", tattooArtist},
   {FALSE, "casino elevator operator", casinoElevatorOperator},
   {FALSE, "casino elevator guard", casinoElevatorGuard},
+  {FALSE, "commodity maker", commodMaker}, // 175
 // replace non-zero, bogus_mob_procs above before adding
 };
 
