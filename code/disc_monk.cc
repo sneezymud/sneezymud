@@ -54,7 +54,6 @@ int TBeing::doLeap(const sstring &arg)
   addToMove(-15);
 
   if(!bSuccess(this, getSkillValue(SKILL_CATLEAP), SKILL_CATLEAP)){
-    sendTo("You don't make it very far.\n\r");
     act("You don't make it very far.", FALSE, this, 0, 0, TO_CHAR);
     act("$n doesn't make it very far.", FALSE, this, 0, 0, TO_ROOM);
     rc=crashLanding(POSITION_SITTING);
