@@ -19,6 +19,7 @@
 #include "obj_pool.h"
 #include "obj_base_clothing.h"
 #include "obj_worn.h"
+#include "pathfinder.h"
 
 double balanceCorrectionForLevel(double level)
 {
@@ -1250,18 +1251,19 @@ void TBeing::lowPath(const sstring &arg)
   sstring buf;
   int here=in_room;
   int target=convertTo<int>(arg.word(0));
+  TPathFinder path;
 
   // trace a path there and spit out room nums
 
-  while((dir=find_path(here,is_target_room_p,(void *)target,-5000,false))>=0){
+  while((dir=path.findPath(here, findTargetRoom(target))) >= 0){
     if(lastdir==DIR_NONE)
       buf="NONE";
     else
       buf=dirs[lastdir];
 
     sendTo(fmt("{DIR_%s, %i},\n\r") % buf.upper() % here);
-
     here=real_roomp(here)->dir_option[dir]->to_room;
+
     lastdir=dir;
   }
 

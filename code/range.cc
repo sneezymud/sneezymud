@@ -18,8 +18,7 @@
 #include "obj_portal.h"
 #include "obj_arrow.h"
 #include "obj_gun.h"
-
-
+#include "pathfinder.h"
 
 #define RANGE_DEBUG 0
 
@@ -1182,21 +1181,6 @@ int go_ok_smarter(roomDirData *exitp)
   return (!IS_SET(exitp->condition, EX_LOCKED | EX_SECRET) &&
           (exitp->to_room != ROOM_NOWHERE));
 }
-#if 0
-static void donothing(void *);
-static void donothing(void *)
-{
-  return;
-}
-#endif
-
-class pathData {
-  public:
-    dirTypeT direct;
-    int source;
-    bool checked;
-    pathData() : direct(DIR_NONE), source(0), checked(false) {}
-};
 
 // returns DIR_NONE1 indicating a problem or can't find a path
 // returns 0-9 indicating a direction to travel

@@ -161,13 +161,13 @@ LIBMISC=actions.o		ai_commands.o 		ai_reactions.o     \
 
 LIBMISC := $(sort $(addprefix $(OBJDIR), $(LIBMISC)))
 
-LIBSYS=	ansi.o         database.o   socket.o		\
-	client.o       db.o         sound.o		\
-	color.o        edit.o       systemtask.o	\
-	colorstring.o  handler.o    timing.o		\
-	comm.o         indexdata.o			\
-	connect.o      signals.o    sstring.o		\
-	format.o
+LIBSYS=	ansi.o		database.o   	socket.o		\
+	client.o       	db.o         	sound.o			\
+	color.o        	edit.o       	systemtask.o		\
+	colorstring.o  	handler.o    	timing.o		\
+	comm.o         	indexdata.o				\
+	connect.o      	signals.o    	sstring.o		\
+	format.o	pathfinder.o
 
 LIBSYS := $(sort $(addprefix $(OBJDIR), $(LIBSYS)))
 
@@ -2057,7 +2057,7 @@ objs/cmd_low.o: /usr/local/include/libpq-fe.h
 objs/cmd_low.o: /usr/local/include/postgres_ext.h obj_player_corpse.h
 objs/cmd_low.o: obj_base_corpse.h obj_base_container.h obj_smoke.h
 objs/cmd_low.o: obj_arrow.h obj_base_weapon.h obj_pool.h obj_base_cup.h
-objs/cmd_low.o: obj_base_clothing.h obj_worn.h
+objs/cmd_low.o: obj_base_clothing.h obj_worn.h pathfinder.h
 objs/cmd_mend_limb.o: stdsneezy.h /usr/include/g++/cstdio
 objs/cmd_mend_limb.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/cmd_mend_limb.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -12076,6 +12076,49 @@ objs/parse.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/parse.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/parse.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/parse.o: colorstring.h format.h mail.h
+objs/pathfinder.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
+objs/pathfinder.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
+objs/pathfinder.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/pathfinder.o: /usr/include/g++/ctime /usr/include/time.h
+objs/pathfinder.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/pathfinder.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
+objs/pathfinder.o: /usr/include/machine/endian.h /usr/include/g++/cctype
+objs/pathfinder.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/pathfinder.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/pathfinder.o: /usr/include/g++/cstring /usr/include/string.h
+objs/pathfinder.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/pathfinder.o: /usr/include/errno.h /usr/include/g++/string
+objs/pathfinder.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
+objs/pathfinder.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/pathfinder.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/pathfinder.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/pathfinder.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
+objs/pathfinder.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/pathfinder.o: /usr/include/g++/stl_relops.h
+objs/pathfinder.o: /usr/include/g++/stl_iterator.h
+objs/pathfinder.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
+objs/pathfinder.o: /usr/include/g++/stl_algobase.h
+objs/pathfinder.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/pathfinder.o: /usr/include/limits.h /usr/include/machine/limits.h
+objs/pathfinder.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/pathfinder.o: /usr/include/g++/new /usr/include/g++/exception
+objs/pathfinder.o: /usr/include/g++/stl_construct.h
+objs/pathfinder.o: /usr/include/g++/stl_uninitialized.h
+objs/pathfinder.o: /usr/include/g++/stl_vector.h
+objs/pathfinder.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/pathfinder.o: /usr/include/g++/stl_tree.h
+objs/pathfinder.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
+objs/pathfinder.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
+objs/pathfinder.o: /usr/include/g++/sstream sstring.h low.h enum.h spells.h
+objs/pathfinder.o: structs.h parse.h immunity.h discipline.h spell2.h db.h
+objs/pathfinder.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/pathfinder.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/pathfinder.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
+objs/pathfinder.o: create.h thing.h room.h obj.h spec_objs.h connect.h
+objs/pathfinder.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/pathfinder.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/pathfinder.o: materials.h colorstring.h format.h pathfinder.h
+objs/pathfinder.o: obj_portal.h obj_seethru.h
 objs/peelpk.o: /usr/include/g++/ctime /usr/include/time.h
 objs/peelpk.o: /usr/include/machine/ansi.h /usr/include/sys/_posix.h
 objs/peelpk.o: /usr/include/sys/cdefs.h stdsneezy.h /usr/include/g++/cstdio
@@ -12372,6 +12415,7 @@ objs/range.o: materials.h colorstring.h format.h range.h combat.h
 objs/range.o: obj_quiver.h obj_expandable_container.h obj_open_container.h
 objs/range.o: obj_base_container.h obj_bow.h obj_portal.h obj_seethru.h
 objs/range.o: obj_arrow.h obj_base_weapon.h obj_gun.h obj_general_weapon.h
+objs/range.o: pathfinder.h
 objs/rent.o: /usr/include/unistd.h /usr/include/sys/cdefs.h
 objs/rent.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
 objs/rent.o: /usr/include/machine/ansi.h /usr/include/machine/types.h
