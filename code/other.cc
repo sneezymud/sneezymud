@@ -3964,7 +3964,7 @@ void Descriptor::send_bug(const char *type, const char *msg)
 
   sprintf(buf3, "****** %s from %s in room %d %s%son %s:\n",
        type,
-       IS_SET(account->flags, ACCOUNT_IMMORTAL) ? "(immortal)" : character->getName(),
+       character->getName(),
        character->inRoom(), 
        (gamePort == PROD_GAMEPORT ? "" : (gamePort == 7901 ? "(gamma) " : "(beta) ")), 
        (!m_bIsClient ? "" : "(client) "), 
