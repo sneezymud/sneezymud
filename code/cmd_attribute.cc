@@ -460,7 +460,7 @@ const char *statBonusDescr(int percent)
     return "very good";
   else if (percent <= 122)
     return "extremely good";
-  else if (percent >= 125)
+  else if (percent >= 123)
     return "superb";
   else
     return "unknown";
