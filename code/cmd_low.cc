@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_low.cc,v $
+// Revision 1.2  1999/09/26 23:41:28  lapsos
+// added TSmoke to the TPool check to ignore strung status.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -827,7 +830,7 @@ void TObj::checkObjStats()
   }
 
   // TPool strings itself during constructor, so bypass this
-  if (isObjStat(ITEM_STRUNG) && !dynamic_cast<TPool *>(this)) {
+  if (isObjStat(ITEM_STRUNG) && !dynamic_cast<TPool *>(this) && !dynamic_cast<TSmoke *>(this)) {
     vlogf(LOW_ERROR, "Item %s has been set strung, fix! (%d)", getName(), objVnum());
     remObjStat(ITEM_STRUNG);
   }
