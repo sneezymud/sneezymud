@@ -332,9 +332,14 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
             }
             if (dynamic_cast<TBeing *> (specific)) {
               TBeing *tmpBeing = dynamic_cast<TBeing *> (specific);
+              bool   bIsSpying = (isAffected(AFF_SCRYING) ? !::number(0, (getSkillValue(SKILL_SPY) * 10)) : false);
+
               showTo(tmpBeing, SHOW_MODE_SHORT_PLUS);
-              if (this != tmpBeing && !affectedBySpell(SKILL_SPY) &&
-                                      !tmpBeing->isImmortal()) {
+
+              if (bIsSpying) // Let thieves have a chance of learning spy when looking at someone.
+                bSuccess(this, getSkillValue(SKILL_SPY), SKILL_SPY);
+
+              if (this != tmpBeing && !affectedBySpell(SKILL_SPY) && !tmpBeing->isImmortal()) {
                 act("$n looks at you.", TRUE, this, 0, tmpBeing, TO_VICT);
                 act("$n looks at $N.", TRUE, this, 0, tmpBeing, TO_NOTVICT);
                 if (!tmpBeing->isPc() && !isname("[clone]", tmpBeing->name))
