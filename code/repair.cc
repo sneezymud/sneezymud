@@ -784,23 +784,47 @@ int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TO
       return FALSE;
     case CMD_MOB_MOVED_INTO_ROOM:
       if (dynamic_cast<TBeing *>(buyer->riding)) {
-        sprintf(buf, "Hey, get that damn %s out of my shop!",
-            fname(buyer->riding->name).c_str());
+        sprintf(buf, "Hey, get that damn %s out of my shop!", fname(buyer->riding->name).c_str());
         repair->doSay(buf);
-        act("You throw $N out.", FALSE, repair, 0, buyer, TO_CHAR);
-        act("$n throws you out of $s shop.", FALSE, buyer, 0, buyer, TO_VICT);
-        act("$n throws $N out of $s shop.", FALSE, buyer, 0, buyer, TO_NOTVICT);
-        --(*buyer->riding);
-        thing_to_room(buyer->riding, (int) o);
-        --(*buyer);
-        thing_to_room(buyer, (int) o);
+
+        if (!dynamic_cast<TMonster *>(buyer)) {
+          act("You throw $N out.", FALSE, repair, 0, buyer, TO_CHAR);
+          act("$n throws you out of $s shop.", FALSE, buyer, 0, buyer, TO_VICT);
+          act("$n throws $N out of $s shop.", FALSE, buyer, 0, buyer, TO_NOTVICT);
+          --(*buyer->riding);
+          thing_to_room(buyer->riding, (int) o);
+          --(*buyer);
+          thing_to_room(buyer, (int) o);
+	} else {
+	  // Just kick out the mount, not the mobile. -Lapsos
+          TThing *tMount = buyer->riding;
+
+          act("You throw $N out.", FALSE, repair, 0, buyer, TO_CHAR);
+          act("$n throws your mount out of $s shop.", FALSE, repair, 0, buyer, TO_VICT);
+          act("$n throws $N out of $s shop.", FALSE, repair, 0, buyer->riding, TO_NOTVICT);
+
+	  buyer->dismount(POSITION_STANDING);
+
+          --(*tMount);
+          thing_to_room(tMount, (int)o);
+	}
+
         return TRUE;
       } else if (dynamic_cast<TBeing *>(buyer->rider)) {
-        --(*buyer->rider);
-        thing_to_room(buyer->rider, (int) o);
-        --(*buyer);
-        thing_to_room(buyer, (int) o);
-        return TRUE;
+        if (!dynamic_cast<TMonster *>(buyer->rider)) {
+          --(*buyer->rider);
+          thing_to_room(buyer->rider, (int) o);
+          --(*buyer);
+          thing_to_room(buyer, (int) o);
+	} else {
+	  // Just kick out the mount, not the mobile. -Lapsos
+	  buyer->rider->dismount(POSITION_STANDING);
+
+	  --(*buyer);
+	  thing_to_room(buyer, (int)o);
+	}
+
+	return TRUE;
       }
       return FALSE;
     case CMD_MOB_VIOLENCE_PEACEFUL:

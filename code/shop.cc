@@ -1955,28 +1955,52 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       }
     }
     return TRUE;
-  } else if (cmd == CMD_MOB_MOVED_INTO_ROOM && 
-         (myself->in_room == shop_index[shop_nr].in_room)) {
+  } else if (cmd == CMD_MOB_MOVED_INTO_ROOM &&  (myself->in_room == shop_index[shop_nr].in_room)) {
     if (dynamic_cast<TBeing *>(ch->riding)) {
       sstring buf;
-      buf = fmt("Hey, get that damn %s out of my shop!") %
-          fname(ch->riding->name);
+      buf = fmt("Hey, get that damn %s out of my shop!") % fname(ch->riding->name);
       myself->doSay(buf);
-      act("You throw $N out.", FALSE, myself, 0, ch, TO_CHAR);
-      act("$n throws you out of $s shop.", FALSE, myself, 0, ch, TO_VICT);
-      act("$n throws $N out of $s shop.", FALSE, myself, 0, ch, TO_NOTVICT);
-      --(*ch->riding);
-      thing_to_room(ch->riding, (int) o);
-      --(*ch);
-      thing_to_room(ch, (int) o);
+
+      if (!dynamic_cast<TMonster *>(ch)) {
+        act("You throw $N out.", FALSE, myself, 0, ch, TO_CHAR);
+        act("$n throws you out of $s shop.", FALSE, myself, 0, ch, TO_VICT);
+        act("$n throws $N out of $s shop.", FALSE, myself, 0, ch, TO_NOTVICT);
+        --(*ch->riding);
+        thing_to_room(ch->riding, (int) o);
+        --(*ch);
+        thing_to_room(ch, (int) o);
+      } else {
+	// Just kick out the mount, not the mobile. -Lapsos
+	TThing *tMount = ch->riding;
+
+	act("You throw $N out.", FALSE, myself, 0, ch, TO_CHAR);
+	act("$n throws your mount out of $s shop.", FALSE, myself, 0, ch, TO_VICT);
+	act("$n throws $N out of $s shop.", FALSE, myself, 0, ch->riding, TO_NOTVICT);
+
+	ch->dismount(POSITION_STANDING);
+
+	--(*tMount);
+	thing_to_room(tMount, (int)o);
+      }
+
       return TRUE;
     } else if (dynamic_cast<TBeing *>(ch->rider)) {
-      --(*ch->rider);
-      thing_to_room(ch->rider, (int) o);
-      --(*ch);
-      thing_to_room(ch, (int) o);
+      if (!dynamic_cast<TMonster *>(ch->rider)) {
+	--(*ch->rider);
+	thing_to_room(ch->rider, (int) o);
+	--(*ch);
+	thing_to_room(ch, (int) o);
+      } else {
+	// Just kick out the mount, not the mobile. -Lapsos
+	ch->rider->dismount(POSITION_STANDING);
+
+	--(*ch);
+	thing_to_room(ch, (int) o);
+      }
+
       return TRUE;
     }
+
     return FALSE;
   } else if (cmd == CMD_MOB_ALIGN_PULSE) {
     // called on a long period....
