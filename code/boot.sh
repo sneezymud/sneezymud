@@ -19,7 +19,7 @@ then
   then
     mv -f sneezy.2 sneezy >& /dev/null
     rm -f file
-    echo "Booting."
+    echo "Booting ./sneezy $PORT."
     ./sneezy $PORT >& file &
   else
     echo "Sneezy already running on port $PORT."
