@@ -2,24 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_stat.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/10/01 16:57:58  batopr
-// Changed so monks will show prim/second hand attack breakdown too
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////// 
-//
-//      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
-//
 //      "stat_command.cc" - The stat command
 //  
 //////////////////////////////////////////////////////////////////////////
@@ -30,8 +12,8 @@
 void TBeing::statZone(const char *zoneNumber)
 {
   int zNum,
-    cnDesc[2]  = {0, 0},
-    cnTitle[2] = {0, 0},
+    cnDesc[3]  = {0, 0, 0},
+    cnTitle[3] = {0, 0, 0},
     cnExtra[2] = {0, 0},
     cnFlags[7] = {0, 0, 0, 0, 0, 0, 0},
     rzCount    = 0;
@@ -43,7 +25,7 @@ void TBeing::statZone(const char *zoneNumber)
 
   if (!zoneNumber || !*zoneNumber) {
     if (!roomp) {
-      vlogf(7, "statZone called by being with no current room.");
+      vlogf(LOG_BUG, "statZone called by being with no current room.");
       return;
     }
 
@@ -70,14 +52,22 @@ void TBeing::statZone(const char *zoneNumber)
     if ((curRoomCntr = real_roomp(Runner))) {
       rzCount++;
 
-      if (curRoomCntr->getDescr())// Count Descriptions
+      if (curRoomCntr->getDescr()) {// Count Descriptions
         cnDesc[0]++;
-      else
+
+        if (!strncmp(curRoomCntr->getDescr(), "Empty", 5))
+          cnDesc[2]++;
+      } else
         cnDesc[1]++;
 
-      if (curRoomCntr->name)// Count Titles
+      if (curRoomCntr->name) {// Count Titles
         cnTitle[0]++;
-      else
+
+        sprintf(tString, "%d", curRoomCntr->number);
+
+        if (strstr(curRoomCntr->name, tString))
+          cnTitle[2]++;
+      } else
         cnTitle[1]++;
 
       if (curRoomCntr->ex_description)// Count Rooms with extra descriptions
@@ -106,14 +96,15 @@ void TBeing::statZone(const char *zoneNumber)
           rNums[0], rNums[1], (rNums[1] - rNums[0] + 1), rzCount);
   sb += tString;
   sb += "Key Information:\n\r--------------------\n\r";
-  sprintf(tString, "DescrCount: %3d     NoDescr: %3d\n\r",
-          cnDesc[0], cnDesc[1]);
+  sprintf(tString, "DescrCount: %3d     NoDescr: %3d     InDescr: %3d\n\r",
+          cnDesc[0], cnDesc[1], cnDesc[2]);
   sb += tString;
-  sprintf(tString, "TitleCount: %3d     NoTitle: %3d\n\r",
-          cnTitle[0], cnTitle[1]);
+  sprintf(tString, "TitleCount: %3d     NoTitle: %3d     InTitle: %3d\n\r",
+          cnTitle[0], cnTitle[1], cnTitle[2]);
   sb += tString;
   sprintf(tString, "ExtraCount: %3d     NoExtra: %3d     (Room Counts)\n\r",
           cnExtra[0], cnExtra[1]);
+  sb += tString;
   sb += "Key Flags:\n\r--------------------\n\r";
   if (cnFlags[0]) {
     sprintf(tString, "Death-Rooms: %3d\n\r", cnFlags[0]);
@@ -144,7 +135,7 @@ void TBeing::statZone(const char *zoneNumber)
     sb += tString;
   }
 
-  desc->page_string(sb.c_str(), 0, TRUE);
+  desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
 }
 
 void TBeing::statRoom(TRoom *rmp)
@@ -156,9 +147,19 @@ void TBeing::statRoom(TRoom *rmp)
   TThing *t;
   int counter = 0;
 
+  if (!limitPowerCheck(CMD_EDIT, rmp->number)) {
+    sendTo("You are not allowed to stat this room, sorry.\n\r");
+    return;
+  }
+
+
   sprintf(buf2,"Room name: %s, Of zone : %d. V-Number : %d, R-number : %d\n\r",
         rmp->name, rmp->getZone(), rmp->number, in_room);
   str = buf2;
+
+  sprintf(buf2, "Room Coords: %d, %d, %d\n\r",
+	  rmp->getXCoord(), rmp->getYCoord(), rmp->getZCoord());
+  str += buf2;
 
   sprintf(buf2,"Sector type : %s ", TerrainInfo[rmp->getSectorType()]->name);
   str += buf2;
@@ -225,9 +226,27 @@ void TBeing::statRoom(TRoom *rmp)
       counter++;
       if (counter > 15) {
          str += "Too Many In Room to Stat More\n\r";
+         break;
       } else {
         sprintf(buf2, "%s%s   (%s)\n\r", 
            t->getName(), (dynamic_cast<TPerson *>(t) ? "(PC)" : "(NPC)"), t->name);
+        str += buf2;
+      }
+    }
+  }
+  str += "--------- Born Here ---------\n\r";
+  counter = 0;
+  for (t = rmp->tBornInsideMe; t; t = t->nextBorn) {
+    TMonster *tMonster;
+
+    if ((tMonster = dynamic_cast<TMonster *>(t))) {
+      counter++;
+
+      if (counter > 5) {
+        str += "Too Many Creators Born In Room To Show More\n\r";
+        break;
+      } else {
+        sprintf(buf2, "[%6d] %s\n\r", tMonster->mobVnum(), tMonster->getName());
         str += buf2;
       }
     }
@@ -239,6 +258,7 @@ void TBeing::statRoom(TRoom *rmp)
       counter++;
       if (counter > 20) {
         str += "Too Many In Room to Stat More\n\r";
+        break;
       } else {
         sprintf(buf2, "%s   (%s)\n\r", t->getName(), t->name);
         str += buf2;
@@ -283,7 +303,7 @@ void TBeing::statRoom(TRoom *rmp)
         str += "UNDEFINED\n\r";
     }
   }
-  desc->page_string(str.c_str(), 0);
+  desc->page_string(str.c_str());
   return;
 }
 
@@ -294,6 +314,12 @@ void TBeing::statObj(const TObj *j)
   TThing *t;
   int i;
   string str;
+
+  if (!limitPowerCheck(CMD_OEDIT, j->getSnum())) {
+    sendTo("You are not allowed to stat that object, sorry.\n\r");
+    return;
+  }
+
   
   sprintf(buf, "Object name: [%s], R-number: [%d], V-number: [%d] Item type: ",
        j->name, j->number, obj_index[j->getItemIndex()].virt);
@@ -307,8 +333,9 @@ void TBeing::statObj(const TObj *j)
   str += buf;
 
   if (j->action_description) {
-    sprintf(buf, "Action Description: %s\n\r", j->action_description);
-    str += buf;
+    str += "Action Description: ";
+    str += j->action_description;
+    str += "\n\r";
   }
 
   sprintf(buf, "Action pointer: %s\n\r", (j->act_ptr ? "YES" : "no") );
@@ -407,7 +434,7 @@ void TBeing::statObj(const TObj *j)
             j->affected[i].modifier2);
         str += buf;
       } else
-        vlogf(10, "BOGUS AFFECT (%d) on %s", j->affected[i].modifier, 
+        vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", j->affected[i].modifier, 
               j->getName());
     } else if (j->affected[i].location == APPLY_DISCIPLINE) {
      if (discNames[j->affected[i].modifier].disc_num) {
@@ -417,7 +444,7 @@ void TBeing::statObj(const TObj *j)
             j->affected[i].modifier2);
         str += buf;
       } else
-        vlogf(10, "BOGUS AFFECT (%d) on %s", j->affected[i].modifier,
+        vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", j->affected[i].modifier,
               j->getName());
     } else if (j->affected[i].location == APPLY_IMMUNITY) {
       sprintf(buf, "   Affects:  %s: %s by %ld\n\r",apply_types[j->affected[i].location].name,
@@ -440,7 +467,7 @@ void TBeing::statObj(const TObj *j)
       str += buf;
     }
   }
-  desc->page_string(str.c_str(), 0);
+  desc->page_string(str.c_str());
   return;
 }
 
@@ -451,6 +478,7 @@ void TBeing::statBeing(TBeing *k)
   char buf2[256];
   char buf3[256];
   TBeing *x1;
+  const TMonster *km = dynamic_cast<const TMonster *>(k);
   char *birth, *logon;
   char birth_buf[40], logon_buf[40];
   resp *respy;
@@ -459,7 +487,12 @@ void TBeing::statBeing(TBeing *k)
   struct time_info_data playing_time;
   int i;
 
-  
+  if (!limitPowerCheck(CMD_MEDIT, k->number)) {
+    sendTo("You are not allowed to stat this being, sorry.\n\r");
+    return;
+  }
+
+
   *buf = *buf2 = *buf3 = *birth_buf = *logon_buf = '\0';
 
   switch (k->player.sex) {
@@ -473,65 +506,45 @@ void TBeing::statBeing(TBeing *k)
       sprintf(buf + strlen(buf),"<c>FEMALE<z> ");
       break;
   }
-  sprintf(buf + strlen(buf)," %s - Name : %s [R-Number%d], In room [%d]\n\r",
-         (dynamic_cast<const TPerson *>(k) ? "PC" : "NPC"), k->name, k->number, k->in_room);
+
+  if (km)
+    sprintf(buf + strlen(buf), "%s - Name : %s [M-Num: %d]\n\r     In-Room[%d] Old-Room[%d] Birth-Room[%d] V-Number[%d]\n\r",
+            (dynamic_cast<const TPerson *>(k) ? "PC" : "NPC"),
+            k->name, k->number, k->in_room, km->oldRoom, km->brtRoom,
+            k->number >= 0 ? mob_index[km->getMobIndex()].virt : -1);
+  else
+    sprintf(buf + strlen(buf), "%s - Name : %s [M-Num: %d] Room[%d]\n\r",
+            (dynamic_cast<const TPerson *>(k) ? "PC" : "NPC"),
+            k->name, k->number, k->in_room);
+
   sprintf(buf + strlen(buf),"-----------------------------------------------------------------------------\n\r");
-  const TMonster *km = dynamic_cast<const TMonster *>(k);
   if (km) {
-    sprintf(buf + strlen(buf),"V-Number [%d]\n\r", mob_index[km->getMobIndex()].virt);
     sprintf(buf + strlen(buf),"Short description: %s\n\r",
 	   (km->shortDescr ? km->shortDescr : "None"));
     sprintf(buf + strlen(buf),"Long description: %s",
     	   (km->player.longDescr ? km->player.longDescr : "None"));
 
-    if (km->resps && km->resps->respList) {
-      sprintf(buf + strlen(buf),"Response(s):\n\r----------\n\r");
-      for (respy = km->resps->respList; respy; respy = respy->next) {
-        if (respy->cmd < MAX_CMD_LIST) {
-          sprintf(buf + strlen(buf),"%s %s\n\r", commandArray[respy->cmd]->name, respy->args);
-        } else if (respy->cmd == CMD_RESP_ROOM_ENTER) {
-          sprintf(buf + strlen(buf),"roomenter\n\r");
-        } else if (respy->cmd == CMD_RESP_PACKAGE) {
-          sprintf(buf + strlen(buf),"dummy %s\n\r", respy->args);
-        } else {
-          sprintf(buf + strlen(buf),"%d %s\n\r", respy->cmd, respy->args);
-        }
-      }
-      sprintf(buf + strlen(buf),"----------\n\r");
+  } else {
+    Descriptor *d = k->desc;
 
-      if (km->resps->respMemory) {
-        sprintf(buf + strlen(buf), "Response Memory:\n\r----------\n\r");
+    if (d && k->isPc() && k->GetMaxLevel() > MAX_MORT) {
+      sprintf(buf + strlen(buf), "IMM: Office: %d\n\r", d->office);
 
-        for (RespMemory *rMem = km->resps->respMemory; rMem; rMem = rMem->next)
-          if (rMem->cmd < MAX_CMD_LIST) {
-            sprintf(buf + strlen(buf), "%s %s %s\n\r",
-                    (rMem->name ? rMem->name : "Unknown"),
-                    commandArray[rMem->cmd]->name,
-                    (rMem->args ? rMem->args : ""));
-	  } else if (rMem->cmd == CMD_RESP_ROOM_ENTER) {
-            sprintf(buf + strlen(buf), "%s %s %s\n\r",
-                    (rMem->name ? rMem->name : "Unknown"),
-                    "roomenter",
-                    (rMem->args ? rMem->args : ""));
-          } else {
-            sprintf(buf + strlen(buf), "%s %d %s\n\r",
-                    (rMem->name ? rMem->name : "Unknown"),
-                    rMem->cmd,
-                    (rMem->args ? rMem->args : ""));
-          }
+      if (d->blockastart)
+        sprintf(buf + strlen(buf), "IMM: BlockA: %d - %d\n\r", d->blockastart, d->blockaend);
 
-        sprintf(buf + strlen(buf),"----------\n\r");
-      }
-    } else
-      sendTo(buf + strlen(buf),"Response(s): None.\n\r");
+      if (d->blockbstart)
+        sprintf(buf + strlen(buf), "IMM: BlockB: %d - %d\n\r", d->blockbstart, d->blockbend);
+    }
   }
+
   *buf2 = '\0';
   for (classIndT ijc = MIN_CLASS_IND; ijc < MAX_CLASSES; ijc++)
     if (k->hasClass(1<<ijc))
       sprintf(buf2 + strlen(buf2), "%s ", classNames[ijc].capName);
 
   sprintf(buf + strlen(buf),"<c>Class :<z> %-28s", buf2);
-  sprintf(buf + strlen(buf),"<c>Level   :<z> [M%d C%d W%d T%d A%d D%d K%d R%d]\n\r",
+  sprintf(buf + strlen(buf),"<c>Level   :<z> [M%d C%d W%d T%d S%d D%d K%d R%d]\n\r",
          k->getLevel(MAGE_LEVEL_IND), k->getLevel(CLERIC_LEVEL_IND),
          k->getLevel(WARRIOR_LEVEL_IND), k->getLevel(THIEF_LEVEL_IND),
          k->getLevel(SHAMAN_LEVEL_IND), k->getLevel(DEIKHAN_LEVEL_IND),
@@ -564,9 +577,9 @@ void TBeing::statBeing(TBeing *k)
                     k->player.time.played, 0, &playing_time);
     sprintf(buf + strlen(buf), "%sBirth :%s %s    %sLogon   :%s %s\n\r",
        cyan(), norm(), birth_buf, cyan(), norm(), logon_buf);
-    sprintf(buf + strlen(buf), "%sPlaying time :%s %d days, %d hours.     <c>Base age:<z> %d\n\r",
+    sprintf(buf + strlen(buf), "%sPlaying time :%s %d days, %d hours.     <c>Base age:<z> %d    Age Mod: %d\n\r",
         cyan(), norm(), playing_time.day, playing_time.hours,
-                k->getBaseAge());
+                k->getBaseAge(), k->age_mod);
     if (!k->desc)
       sprintf(buf + strlen(buf), "%sWARNING%s, player is offline, age will not be accurate.\n\r", red(), norm());
 
@@ -592,8 +605,12 @@ void TBeing::statBeing(TBeing *k)
   sprintf(buf2, "[%d]", k->getHit());
   sprintf(buf3, "[%d]", k->getMove());
   if (k->hasClass(CLASS_CLERIC) || k->hasClass(CLASS_DEIKHAN))
-    sprintf(buf + strlen(buf), "%sPiety :%s [%4.1f]%sHit    :%s %-10s  %sMove    :%s %-10s\n\r",
+    sprintf(buf + strlen(buf), "%sPiety :%s [%5.1f]%sHit    :%s %-10s  %sMove    :%s %-10s\n\r",
       cyan(), norm(), k->getPiety(),
+      cyan(), norm(), buf2, cyan(), norm(), buf3);
+  else if (k->hasClass(CLASS_SHAMAN))
+    sprintf(buf + strlen(buf), "%sLifef.:%s [%4d]%sHit    :%s %-10s  %sMove    :%s %-10s\n\r",
+      cyan(), norm(), k->getLifeforce(),
       cyan(), norm(), buf2, cyan(), norm(), buf3);
   else
     sprintf(buf + strlen(buf), "%sMana  :%s [%3d]  %sHit    :%s %-10s  %sMove    :%s %-10s\n\r",
@@ -625,74 +642,6 @@ void TBeing::statBeing(TBeing *k)
       cyan(), norm(), k->getProtection(),
       cyan(), norm(), buf2, cyan(), norm(), buf3);
 
-  sprintf(buf + strlen(buf), "%sFaction :%s %s,   %sFaction Percent :%s %.4f\n\r",
-    cyan(), norm(), FactionInfo[k->getFaction()].faction_name,
-    cyan(), norm(), k->getPerc());
-#if FACTIONS_IN_USE
-  sprintf(buf + strlen(buf), "%sPerc_0 :%s %.4f   %sPerc_1 :%s %.4f   %sPerc_2 :%s %.4f   %sPerc_3 :%s %.4f\n\r",
-    cyan(), norm(), k->getPercX(FACT_NONE),
-    cyan(), norm(), k->getPercX(FACT_BROTHERHOOD),
-    cyan(), norm(), k->getPercX(FACT_CULT),
-    cyan(), norm(), k->getPercX(FACT_SNAKE));
-#endif
-//  sprintf(buf + strlen(buf), "%sFaction :%s %s\n\r",
-//    cyan(), norm(), FactionInfo[k->getFaction()].faction_name);
-
-  sprintf(buf + strlen(buf),"Stats  :");
-  sprintf(buf + strlen(buf),k->chosenStats.printStatHeader().c_str());
-  sprintf(buf + strlen(buf),"Chosen:");
-  sprintf(buf + strlen(buf),k->chosenStats.printRawStats(this).c_str());
-  sprintf(buf + strlen(buf),"Natural:");
-  statTypeT ik;
-  for(ik=MIN_STAT; ik<MAX_STATS_USED; ik++) {
-    sprintf(buf + strlen(buf), " %3d ", k->getStat(STAT_NATURAL, ik));
-  }
-  strcat(buf, "\n\r");
-
-  sprintf(buf + strlen(buf),"Current:");
-  sprintf(buf + strlen(buf),k->curStats.printRawStats(this).c_str());
-
-  sprintf(buf + strlen(buf), "%sCaptive Of:%s %s         %sCaptives :%s ",
-     cyan(), norm(),
-     (k->getCaptiveOf() ? k->getCaptiveOf()->getName() : "NO ONE"),
-     cyan(), norm());
-  if (!k->getCaptive())
-    strcat(buf, "NONE\n\r");
-  else {
-    for (x1 = k->getCaptive(); x1; x1 = x1->getNextCaptive()) {
-      strcat(buf, x1->getName());
-      strcat(buf, " ");
-    }
-    strcat(buf, "\n\r");
-  }
-  if (km) {
-    strcat(buf, "NPC flags: ");
-    if (km->specials.act) {
-      sprintbit(km->specials.act, action_bits, buf2);
-      strcat(buf, buf2);
-      strcat(buf, "\n\r");
-    } else {
-      strcat(buf, "None\n\r");
-    }
-    sprinttype(km->getPosition(), position_types, buf2);
-    sprinttype((km->default_pos), position_types, buf3);
-    sprintf(buf + strlen(buf), "%sPosition:%s %s, %sFighting:%s %s, %sDefault Position :%s %s\n\r",
-          cyan(), norm(), buf2, cyan(), norm(),
-          (km->fight() ? km->fight()->getName() : "Nobody"),
-          cyan(), norm(), buf3);
-  } else {
-    sprinttype(k->getPosition(), position_types, buf2);
-    sprintf(buf + strlen(buf), "%sPosition:%s %s, %sFighting:%s %s\n\r",
-          cyan(), norm(), buf2, cyan(), norm(),
-          (k->fight() ? k->fight()->getName() : "Nobody"));
-  } 
-  if (k->desc) {
-    strcat(buf, "\n\rFlags (Specials Act): ");
-    sprintbit(k->desc->plr_act, player_bits, buf2);
-  }
-  strcat(buf, buf2);
-  strcat(buf, "\n\r");
-
   if (km) {
     sprintf(buf + strlen(buf), "Number of attacks : %.1f", km->getMult());
     sprintf(buf + strlen(buf), "        NPC Damage: %.1f+%d%%.\n\r",
@@ -712,15 +661,117 @@ void TBeing::statBeing(TBeing *k)
           fx, fy);
   }
 
-  sprintf(buf + strlen(buf), "Carried weight: %.1f   Carried volume: %d\n\r",
-          k->getCarriedWeight(), k->getCarriedVolume());
+  sprintf(buf + strlen(buf), "%sFaction :%s %s,   %sFaction Percent :%s %.4f\n\r",
+    cyan(), norm(), FactionInfo[k->getFaction()].faction_name,
+    cyan(), norm(), k->getPerc());
+#if FACTIONS_IN_USE
+  sprintf(buf + strlen(buf), "%sPerc_0 :%s %.4f   %sPerc_1 :%s %.4f   %sPerc_2 :%s %.4f   %sPerc_3 :%s %.4f\n\r",
+    cyan(), norm(), k->getPercX(FACT_NONE),
+    cyan(), norm(), k->getPercX(FACT_BROTHERHOOD),
+    cyan(), norm(), k->getPercX(FACT_CULT),
+    cyan(), norm(), k->getPercX(FACT_SNAKE));
+#endif
+//  sprintf(buf + strlen(buf), "%sFaction :%s %s\n\r",
+//    cyan(), norm(), FactionInfo[k->getFaction()].faction_name);
 
+  sprintf(buf + strlen(buf),"Stats    :");
+  sprintf(buf + strlen(buf),k->chosenStats.printStatHeader().c_str());
+
+    statTypeT ik;
+
+    sprintf(buf + strlen(buf),"Race     :");
+    for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+      sprintf(buf + strlen(buf), " %3d ", k->getStat(STAT_RACE, ik));
+    }
+    strcat(buf, "\n\r");
+
+    sprintf(buf + strlen(buf),"Chosen   :");
+    for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+      sprintf(buf + strlen(buf), " %3d ", k->getStat(STAT_CHOSEN, ik));
+    }
+    strcat(buf, "\n\r");
+
+    sprintf(buf + strlen(buf),"Age      :");
+    for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+      sprintf(buf + strlen(buf), " %3d ", k->getStat(STAT_AGE, ik));
+    }
+    strcat(buf, "\n\r");
+
+    sprintf(buf + strlen(buf),"Territory:");
+    for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+      sprintf(buf + strlen(buf), " %3d ", k->getStat(STAT_TERRITORY, ik));
+    }
+    strcat(buf, "\n\r");
+
+    sprintf(buf + strlen(buf),"Natural  :");
+
+    for(ik=MIN_STAT; ik<MAX_STATS_USED; ik++) {
+      sprintf(buf + strlen(buf), " %3d ", k->getStat(STAT_NATURAL, ik));
+    }
+    strcat(buf, "\n\r");
+    
+    sprintf(buf + strlen(buf),"Current  :");
+    for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+      sprintf(buf + strlen(buf), " %3d ", k->getStat(STAT_CURRENT, ik));
+    }
+    strcat(buf, "\n\r");
+
+
+  // only show captive info when needed
+  if (k->getCaptiveOf() || k->getCaptive()) {
+    sprintf(buf + strlen(buf), "%sCaptive Of:%s %s         %sCaptives :%s ",
+       cyan(), norm(),
+       (k->getCaptiveOf() ? k->getCaptiveOf()->getName() : "NO ONE"),
+       cyan(), norm());
+    if (!k->getCaptive())
+      strcat(buf, "NONE\n\r");
+    else {
+      for (x1 = k->getCaptive(); x1; x1 = x1->getNextCaptive()) {
+        strcat(buf, x1->getName());
+        strcat(buf, " ");
+      }
+      strcat(buf, "\n\r");
+    }
+  }
   sprintf(buf + strlen(buf), "Master is '%s'",
           ((k->master) ? k->master->getName() : "NOBODY"));
   strcat(buf, "           Followers are:");
   for (fol = k->followers; fol; fol = fol->next)
     strcat(buf, fol->follower->getName());
   strcat(buf,"\n\r");
+
+  if (km) {
+    sprinttype(km->getPosition(), position_types, buf2);
+    sprinttype((km->default_pos), position_types, buf3);
+    sprintf(buf + strlen(buf), "%sPosition:%s %s, %sFighting:%s %s, %sDefault Position :%s %s\n\r",
+          cyan(), norm(), buf2, cyan(), norm(),
+          (km->fight() ? km->fight()->getName() : "Nobody"),
+          cyan(), norm(), buf3);
+
+    strcat(buf, "NPC flags: ");
+    if (km->specials.act) {
+      sprintbit(km->specials.act, action_bits, buf2);
+      strcat(buf, buf2);
+      strcat(buf, "\n\r");
+    } else {
+      strcat(buf, "None\n\r");
+    }
+  } else {
+    sprinttype(k->getPosition(), position_types, buf2);
+    sprintf(buf + strlen(buf), "%sPosition:%s %s, %sFighting:%s %s\n\r",
+          cyan(), norm(), buf2, cyan(), norm(),
+          (k->fight() ? k->fight()->getName() : "Nobody"));
+  } 
+  if (k->desc) {
+    strcat(buf, "\n\rFlags (Specials Act): ");
+    sprintbit(k->desc->plr_act, player_bits, buf2);
+    strcat(buf, buf2);
+    strcat(buf, "\n\r");
+  }
+
+  sprintf(buf + strlen(buf), "Carried weight: %.1f   Carried volume: %d\n\r",
+          k->getCarriedWeight(), k->getCarriedVolume());
+
   immuneTypeT ij;
   for (ij = MIN_IMMUNE;ij < MAX_IMMUNES; ij++) {
     if (k->getImmunity(ij) == 0 || !*immunity_names[ij])
@@ -847,8 +898,8 @@ void TBeing::statBeing(TBeing *k)
 
   sprintbit(k->specials.affectedBy, affected_bits, buf2);
   strcat(buf, "Affected by: ");
-  strcat(buf2, "\n\r");
   strcat(buf, buf2);
+  strcat(buf, "\n\r");
 
   strcat(buf, "\n\rBody part          Hth Max Flgs StuckIn\n\r");
   strcat(buf, "-----------------------------------\n\r");
@@ -867,92 +918,429 @@ void TBeing::statBeing(TBeing *k)
     }
   }
 
+  if (km) {
+    if (km->resps && km->resps->respList) {
+      sprintf(buf + strlen(buf),"Response(s):\n\r----------\n\r");
+      for (respy = km->resps->respList; respy; respy = respy->next) {
+        if (respy->cmd < MAX_CMD_LIST) {
+          sprintf(buf + strlen(buf),"%s %s\n\r", commandArray[respy->cmd]->name, respy->args);
+        } else if (respy->cmd == CMD_RESP_ROOM_ENTER) {
+          sprintf(buf + strlen(buf),"roomenter\n\r");
+        } else if (respy->cmd == CMD_RESP_PACKAGE) {
+          sprintf(buf + strlen(buf),"package %s\n\r", respy->args);
+        } else {
+          sprintf(buf + strlen(buf),"%d %s\n\r", respy->cmd, respy->args);
+        }
+      }
+      sprintf(buf + strlen(buf),"----------\n\r");
+
+      if (km->resps->respMemory) {
+        sprintf(buf + strlen(buf), "Response Memory:\n\r----------\n\r");
+
+        for (RespMemory *rMem = km->resps->respMemory; rMem; rMem = rMem->next)
+          if (rMem->cmd < MAX_CMD_LIST) {
+            sprintf(buf + strlen(buf), "%s %s %s\n\r",
+                    (rMem->name ? rMem->name : "Unknown"),
+                    commandArray[rMem->cmd]->name,
+                    (rMem->args ? rMem->args : ""));
+	  } else if (rMem->cmd == CMD_RESP_ROOM_ENTER) {
+            sprintf(buf + strlen(buf), "%s %s %s\n\r",
+                    (rMem->name ? rMem->name : "Unknown"),
+                    "roomenter",
+                    (rMem->args ? rMem->args : ""));
+          } else {
+            sprintf(buf + strlen(buf), "%s %d %s\n\r",
+                    (rMem->name ? rMem->name : "Unknown"),
+                    rMem->cmd,
+                    (rMem->args ? rMem->args : ""));
+          }
+
+        sprintf(buf + strlen(buf),"----------\n\r");
+      }
+    } else
+      sendTo(buf + strlen(buf),"Response(s): None.\n\r");
+  }
+
   strcat(buf, "\n\rAffecting Spells:\n\r--------------\n\r");
   for (aff = k->affected; aff; aff = af2) {
     // technically, shouldn't need to save next, but apparently
     // some operations below "might" cause aff to be deleted
     // not sure which ones though - Bat 4/28/98
     af2 = aff->next;
-    if (aff->type == AFFECT_DISEASE) {
-      sprintf(buf + strlen(buf), "Disease: '%s'\n\r",
-                DiseaseInfo[DISEASE_INDEX(aff->modifier)].name);
-      sprintf(buf + strlen(buf), 
-                "     Expires in %d updates.  Status = %d.\n\r",
-          aff->duration , aff->level);
-    } else if (aff->type == AFFECT_PET) {
-      sprintf(buf + strlen(buf), "pet of: '%s'\n\r", ((char *) aff->be));
-      sprintf(buf + strlen(buf), 
-                "     Expires in %d updates.  Status = %d.\n\r",
-          aff->duration , aff->level);
-    } else if (aff->type == AFFECT_ORPHAN_PET) {
-      sprintf(buf + strlen(buf), "orphan pet of: '%s'\n\r", ((char *) aff->be));
-      sprintf(buf + strlen(buf),
-                "     Expires in %d updates.  Status = %d.\n\r",
-          aff->duration , aff->level);
 
-    } else if (aff->type == AFFECT_FREE_DEATHS) {
-      sprintf(buf + strlen(buf), "Free Deaths: \n\r");
-      sprintf(buf + strlen(buf), 
-                "     Remaining %ld.  Status = %d.\n\r",
-          aff->modifier, aff->level);
-    } else if (aff->type == AFFECT_TEST_FIGHT_MOB) {
-      sprintf(buf + strlen(buf), "Test Fight Mob: \n\r");
-      sprintf(buf + strlen(buf), 
-                "     Remaining %ld.  Status = %d.\n\r",
-          aff->modifier, aff->level);
-    } else if (aff->type == AFFECT_DUMMY) {
-      sprintf(buf + strlen(buf), "Dummy Affect: \n\r");
-      sprintf(buf + strlen(buf), 
-                "     Expires in %d updates.  Status = %d.\n\r",
-          aff->duration , aff->level);
-    } else if (aff->type == AFFECT_SKILL_ATTEMPT) {
-      sprintf(buf + strlen(buf), "Skill Attempt: \n\r");
-      sprintf(buf + strlen(buf),
-                "     Expires in %d updates.  Skill = %d.\n\r",
-           aff->duration , (int) aff->bitvector); 
-    } else if (aff->type == AFFECT_NEWBIE) {
-      sprintf(buf + strlen(buf), "Got Newbie Equipment: \n\r");
-      sprintf(buf + strlen(buf),
-                "     Expires in %d updates.  Status = %d.\n\r",
-          aff->duration , aff->level);
-    } else if (aff->type == AFFECT_PLAYERKILL) {
-      sprintf(buf + strlen(buf), "Player-Killer: \n\r");
-      sprintf(buf + strlen(buf),
-                "     Expires in %d updates.\n\r",
-          aff->duration);
-    } else if (aff->type == AFFECT_DRUNK) {
-      sprintf(buf + strlen(buf), "Drunken slumber: \n\r");
-      sprintf(buf + strlen(buf), 
-                "     Expires in %d updates.  Status = %d.\n\r",
-          aff->duration , aff->level);
-    } else if (aff->type == AFFECT_DRUG) {
-      sprintf(buf + strlen(buf), "%s: \n\r", drugTypes[aff->modifier2].name);
-      sprintf(buf + strlen(buf), "     Modifies %s by %ld points\n\r",
-      	apply_types[aff->location].name, aff->modifier);
-      sprintf(buf + strlen(buf),
-                "     Expires in %d updates.  Status = %d.\n\r",
-      	aff->duration, aff->level);
-      sprintf(buf + strlen(buf), "renew %i\n\r", aff->renew);
-    } else if (aff->type == AFFECT_COMBAT) {
-      sprintf(buf + strlen(buf), "Combat: '%s'\n\r", aff->be->getName());
-      sprintf(buf + strlen(buf), 
-                "     Expires in %d updates.  Status = %d.\n\r",
-          aff->duration , aff->level);
-    } else if (aff->type == AFFECT_TRANSFORMED_ARMS ||
-                   aff->type == AFFECT_TRANSFORMED_HANDS ||
-                   aff->type == AFFECT_TRANSFORMED_LEGS ||
-                   aff->type == AFFECT_TRANSFORMED_HEAD ||
-                   aff->type == AFFECT_TRANSFORMED_NECK) {
-      sprintf(buf + strlen(buf), "Spell : 'Transformed Limb'\n\r");
-      sprintf(buf + strlen(buf), "     Modifies %s by %ld points\n\r",
-                  apply_types[aff->location].name, aff->modifier);
-      sprintf(buf + strlen(buf), "     Expires in %6d updates, Bits set ",
-                  aff->duration);
-      sprintbit(aff->bitvector, affected_bits, buf2);
-      strcat(buf2, "\n\r");
-      strcat(buf, buf2);
-    } else if (aff->type >= MIN_SPELL && aff->type < MAX_SKILL) {
-      if (discArray[aff->type]) {
+    switch (aff->type) {
+      case SKILL_TRACK:
+      case SKILL_SEEKWATER:
+      case SPELL_GUST:
+      case SPELL_DUST_STORM:
+      case SPELL_TORNADO:
+      case SKILL_QUIV_PALM:
+      case SKILL_SHOULDER_THROW:
+      case SPELL_CALL_LIGHTNING_DEIKHAN:
+      case SPELL_CALL_LIGHTNING:
+      case SPELL_LIGHTNING_BREATH:
+      case SPELL_GUSHER:
+      case SPELL_AQUALUNG:
+      case SPELL_AQUATIC_BLAST:
+      case SPELL_ICY_GRIP:
+      case SPELL_ARCTIC_BLAST:
+      case SPELL_ICE_STORM:
+      case SPELL_FROST_BREATH:
+      case SPELL_WATERY_GRAVE:
+      case SPELL_TSUNAMI:
+      case SPELL_CHLORINE_BREATH:
+      case SPELL_DUST_BREATH:
+      case SPELL_POISON_DEIKHAN:
+      case SPELL_POISON:
+      case SPELL_ACID_BREATH:
+      case SPELL_ACID_BLAST:
+      case SKILL_BODYSLAM:
+      case SKILL_SPIN:
+      case SKILL_CHARGE:
+      case SKILL_SMITE:
+      case SPELL_METEOR_SWARM:
+      case SPELL_EARTHQUAKE_DEIKHAN:
+      case SPELL_EARTHQUAKE:
+      case SPELL_PILLAR_SALT:
+      case SPELL_FIREBALL:
+      case SPELL_HANDS_OF_FLAME:
+      case SPELL_INFERNO:
+      case SPELL_HELLFIRE:
+      case SPELL_RAIN_BRIMSTONE_DEIKHAN:
+      case SPELL_RAIN_BRIMSTONE:
+      case SPELL_FLAMESTRIKE:
+      case SPELL_FIRE_BREATH:
+      case SPELL_SPONTANEOUS_COMBUST:
+      case SPELL_FLAMING_SWORD:
+      case SPELL_FLARE:
+      case SPELL_MYSTIC_DARTS:
+      case SPELL_STUNNING_ARROW:
+      case SPELL_COLOR_SPRAY:
+      case SPELL_SAND_BLAST:
+      case SPELL_PEBBLE_SPRAY:
+      case SPELL_LAVA_STREAM:
+      case SPELL_SLING_SHOT:
+      case SPELL_GRANITE_FISTS:
+      case SPELL_ENERGY_DRAIN:
+      case SPELL_SYNOSTODWEOMER:
+      case SPELL_HARM_DEIKHAN:
+      case SPELL_HARM:
+      case SPELL_HARM_LIGHT_DEIKHAN:
+      case SPELL_HARM_SERIOUS_DEIKHAN:
+      case SPELL_HARM_CRITICAL_DEIKHAN:
+      case SPELL_HARM_LIGHT:
+      case SPELL_HARM_SERIOUS:
+      case SPELL_HARM_CRITICAL:
+      case SPELL_WITHER_LIMB:
+      case SPELL_BLEED:
+      case SKILL_KICK_DEIKHAN:
+      case SKILL_KICK_THIEF:
+      case SKILL_KICK_MONK:
+      case SKILL_KICK_RANGER:
+      case SKILL_KICK:
+      case SKILL_SPRINGLEAP:
+      case SKILL_DEATHSTROKE:
+      case SKILL_BASH_DEIKHAN:
+      case SKILL_BASH_RANGER:
+      case SKILL_BASH:
+      case SPELL_BONE_BREAKER:
+      case SPELL_PARALYZE:
+      case SPELL_PARALYZE_LIMB:
+      case SPELL_INFECT_DEIKHAN:
+      case SPELL_INFECT:
+      case SKILL_CHOP:
+      case SPELL_DISEASE:
+      case SPELL_SUFFOCATE:
+      case SKILL_GARROTTE:
+      case SKILL_STABBING:
+      case SKILL_BACKSTAB:
+      case SKILL_HEADBUTT:
+      case SKILL_STOMP:
+      case SPELL_BLAST_OF_FURY:
+      case SKILL_CHI:
+      case SPELL_FUMBLE:
+      case SPELL_BLINDNESS:
+      case SPELL_GARMULS_TAIL:
+      case SPELL_SORCERERS_GLOBE:
+      case SPELL_FAERIE_FIRE:
+      case SPELL_ILLUMINATE:
+      case SPELL_DETECT_MAGIC:
+      case SPELL_MATERIALIZE:
+      case SPELL_PROTECTION_FROM_EARTH:
+      case SPELL_PROTECTION_FROM_AIR:
+      case SPELL_PROTECTION_FROM_FIRE:
+      case SPELL_PROTECTION_FROM_WATER:
+      case SPELL_PROTECTION_FROM_ELEMENTS:
+      case SPELL_INFRAVISION:
+      case SPELL_IDENTIFY:
+      case SPELL_POWERSTONE:
+      case SPELL_FAERIE_FOG:
+      case SPELL_TELEPORT:
+      case SPELL_SENSE_LIFE:
+      case SPELL_CALM:
+      case SPELL_ACCELERATE:
+      case SPELL_LEVITATE:
+      case SPELL_FEATHERY_DESCENT:
+      case SPELL_STEALTH:
+      case SPELL_GILLS_OF_FLESH:
+      case SPELL_TELEPATHY:
+      case SPELL_FEAR:
+      case SPELL_SLUMBER:
+      case SPELL_CONJURE_EARTH:
+      case SPELL_CONJURE_AIR:
+      case SPELL_CONJURE_FIRE:
+      case SPELL_CONJURE_WATER:
+      case SPELL_DISPEL_MAGIC:
+      case SPELL_ENHANCE_WEAPON:
+      case SPELL_GALVANIZE:
+      case SPELL_DETECT_INVISIBLE:
+      case SPELL_DISPEL_INVISIBLE:
+      case SPELL_FARLOOK:
+      case SPELL_FALCON_WINGS:
+      case SPELL_INVISIBILITY:
+      case SPELL_ENSORCER:
+      case SPELL_EYES_OF_FERTUMAN:
+      case SPELL_COPY:
+      case SPELL_HASTE:
+      case SPELL_IMMOBILIZE:
+      case SPELL_FLY:
+      case SPELL_ANTIGRAVITY:
+      case SPELL_DIVINATION:
+      case SPELL_SHATTER:
+      case SKILL_SCRIBE:
+      case SPELL_SPONTANEOUS_GENERATION:
+      case SPELL_STONE_SKIN:
+      case SPELL_TRAIL_SEEK:
+      case SPELL_FLAMING_FLESH:
+      case SPELL_ATOMIZE:
+      case SPELL_ANIMATE:
+      case SPELL_BIND:
+      case SPELL_TRUE_SIGHT:
+      case SPELL_CLOUD_OF_CONCEALMENT:
+      case SPELL_POLYMORPH:
+      case SPELL_SILENCE:
+      case SPELL_BREATH_OF_SARAHAGE:
+      case SPELL_PLASMA_MIRROR:
+      case SPELL_THORNFLESH:
+      case SPELL_ETHER_GATE:
+      case SPELL_HEAL_LIGHT:
+      case SPELL_CREATE_FOOD:
+      case SPELL_CREATE_WATER:
+      case SPELL_ARMOR:
+      case SPELL_BLESS:
+      case SPELL_CLOT:
+      case SPELL_HEAL_SERIOUS:
+      case SPELL_STERILIZE:
+      case SPELL_EXPEL:
+      case SPELL_CURE_DISEASE:
+      case SPELL_CURSE:
+      case SPELL_REMOVE_CURSE:
+      case SPELL_CURE_POISON:
+      case SPELL_HEAL_CRITICAL:
+      case SPELL_SALVE:
+      case SPELL_REFRESH:
+      case SPELL_NUMB:
+      case SPELL_PLAGUE_LOCUSTS:
+      case SPELL_CURE_BLINDNESS:
+      case SPELL_SUMMON:
+      case SPELL_HEAL:
+      case SPELL_WORD_OF_RECALL:
+      case SPELL_SANCTUARY:
+      case SPELL_CURE_PARALYSIS:
+      case SPELL_SECOND_WIND:
+      case SPELL_HEROES_FEAST:
+      case SPELL_ASTRAL_WALK:
+      case SPELL_PORTAL:
+      case SPELL_HEAL_FULL:
+      case SPELL_HEAL_CRITICAL_SPRAY:
+      case SPELL_HEAL_SPRAY:
+      case SPELL_HEAL_FULL_SPRAY:
+      case SPELL_RESTORE_LIMB:
+      case SPELL_KNIT_BONE:
+      case SKILL_RESCUE:
+      case SKILL_SMYTHE:
+      case SKILL_DISARM:
+      case SKILL_DUAL_WIELD_WARRIOR:
+      case SKILL_POWERMOVE:
+      case SKILL_PARRY_WARRIOR:
+      case SKILL_BERSERK:
+      case SKILL_SWITCH_OPP:
+      case SKILL_KNEESTRIKE:
+      case SKILL_SHOVE:
+      case SKILL_RETREAT:
+      case SKILL_GRAPPLE:
+      case SKILL_DOORBASH:
+      case SKILL_TRANCE_OF_BLADES:
+      case SKILL_HIKING:
+      case SKILL_FORAGE:
+      case SKILL_TRANSFORM_LIMB:
+      case SKILL_BEAST_SOOTHER:
+      case SPELL_ROOT_CONTROL:
+      case SKILL_RESCUE_RANGER:
+      case SKILL_BEFRIEND_BEAST:
+      case SKILL_TRANSFIX:
+      case SKILL_SKIN:
+      case SKILL_DUAL_WIELD:
+      case SPELL_LIVING_VINES:
+      case SKILL_BEAST_SUMMON:
+      case SKILL_BARKSKIN:
+      case SKILL_SWITCH_RANGER:
+      case SKILL_RETREAT_RANGER:
+      case SPELL_STICKS_TO_SNAKES:
+      case SPELL_ENTHRALL_SPECTRE:
+      case SPELL_ENTHRALL_GHAST:
+      case SPELL_ENTHRALL_GHOUL:
+      case SPELL_ENTHRALL_DEMON:
+      case SPELL_STORMY_SKIES:
+      case SPELL_TREE_WALK:
+      case SKILL_BEAST_CHARM:
+      case SPELL_SHAPESHIFT:
+      case SKILL_CONCEALMENT:
+      case SKILL_APPLY_HERBS:
+      case SKILL_DIVINATION:
+      case SKILL_ENCAMP:
+      case SPELL_HEAL_LIGHT_DEIKHAN:
+      case SKILL_CHIVALRY:
+      case SPELL_ARMOR_DEIKHAN:
+      case SPELL_BLESS_DEIKHAN:
+      case SPELL_EXPEL_DEIKHAN:
+      case SPELL_CLOT_DEIKHAN:
+      case SPELL_STERILIZE_DEIKHAN:
+      case SPELL_REMOVE_CURSE_DEIKHAN:
+      case SPELL_CURSE_DEIKHAN:
+      case SKILL_RESCUE_DEIKHAN:
+      case SPELL_CURE_DISEASE_DEIKHAN:
+      case SPELL_CREATE_FOOD_DEIKHAN:
+      case SPELL_HEAL_SERIOUS_DEIKHAN:
+      case SPELL_CURE_POISON_DEIKHAN:
+      case SKILL_DISARM_DEIKHAN:
+      case SPELL_HEAL_CRITICAL_DEIKHAN:
+      case SKILL_SWITCH_DEIKHAN:
+      case SKILL_RETREAT_DEIKHAN:
+      case SKILL_SHOVE_DEIKHAN:
+      case SKILL_RIDE:
+      case SKILL_ALCOHOLISM:
+      case SKILL_FISHING:
+      case SKILL_CALM_MOUNT:
+      case SKILL_TRAIN_MOUNT:
+      case SKILL_ADVANCED_RIDING:
+      case SKILL_RIDE_DOMESTIC:
+      case SKILL_RIDE_NONDOMESTIC:
+      case SKILL_RIDE_WINGED:
+      case SPELL_CREATE_WATER_DEIKHAN:
+      case SKILL_RIDE_EXOTIC:
+      case SPELL_HEROES_FEAST_DEIKHAN:
+      case SPELL_REFRESH_DEIKHAN:
+      case SPELL_SALVE_DEIKHAN:
+      case SKILL_LAY_HANDS:
+      case SPELL_NUMB_DEIKHAN:
+      case SKILL_YOGINSA:
+      case SKILL_CINTAI:
+      case SKILL_OOMLAT:
+      case SKILL_ADVANCED_KICKING:
+      case SKILL_DISARM_MONK:
+      case SKILL_GROUNDFIGHTING:
+      case SKILL_DUFALI:
+      case SKILL_RETREAT_MONK:
+      case SKILL_SNOFALTE:
+      case SKILL_COUNTER_MOVE:
+      case SKILL_SWITCH_MONK:
+      case SKILL_JIRIN:
+      case SKILL_KUBO:
+      case SKILL_CATFALL:
+      case SKILL_WOHLIN:
+      case SKILL_VOPLAT:
+      case SKILL_BLINDFIGHTING:
+      case SKILL_CRIT_HIT:
+      case SKILL_FEIGN_DEATH:
+      case SKILL_BLUR:
+      case SKILL_HURL:
+      case SKILL_SWINDLE:
+      case SKILL_SNEAK:
+      case SKILL_RETREAT_THIEF:
+      case SKILL_PICK_LOCK:
+      case SKILL_SEARCH:
+      case SKILL_SPY:
+      case SKILL_SWITCH_THIEF:
+      case SKILL_STEAL:
+      case SKILL_DETECT_TRAP:
+      case SKILL_SUBTERFUGE:
+      case SKILL_DISARM_TRAP:
+      case SKILL_CUDGEL:
+      case SKILL_HIDE:
+      case SKILL_POISON_WEAPON:
+      case SKILL_DISGUISE:
+      case SKILL_DODGE_THIEF:
+      case SKILL_SET_TRAP_CONT:
+      case SKILL_SET_TRAP_DOOR:
+      case SKILL_SET_TRAP_MINE:
+      case SKILL_SET_TRAP_GREN:
+      case SKILL_DUAL_WIELD_THIEF:
+      case SKILL_DISARM_THIEF:
+      case SKILL_COUNTER_STEAL:
+      case SPELL_CACAODEMON:
+      case SPELL_CREATE_GOLEM:
+      case SPELL_DANCING_BONES:
+      case SPELL_CONTROL_UNDEAD:
+      case SPELL_RESURRECTION:
+      case SPELL_VOODOO:
+      case SKILL_BREW:
+      case SPELL_VAMPIRIC_TOUCH:
+      case SPELL_LIFE_LEECH:
+      case SKILL_TURN:
+      case SKILL_SIGN:
+      case SKILL_SWIM:
+      case SKILL_CONS_UNDEAD:
+      case SKILL_CONS_VEGGIE:
+      case SKILL_CONS_DEMON:
+      case SKILL_CONS_ANIMAL:
+      case SKILL_CONS_REPTILE:
+      case SKILL_CONS_PEOPLE:
+      case SKILL_CONS_GIANT:
+      case SKILL_CONS_OTHER:
+      case SKILL_READ_MAGIC:
+      case SKILL_BANDAGE:
+      case SKILL_CLIMB:
+      case SKILL_FAST_HEAL:
+      case SKILL_EVALUATE:
+      case SKILL_TACTICS:
+      case SKILL_DISSECT:
+      case SKILL_DEFENSE:
+      case SKILL_OFFENSE:
+      case SKILL_WHITTLE:
+      case SKILL_WIZARDRY:
+      case SKILL_MEDITATE:
+      case SKILL_DEVOTION:
+      case SKILL_PENANCE:
+      case SKILL_SLASH_PROF:
+      case SKILL_PIERCE_PROF:
+      case SKILL_BLUNT_PROF:
+      case SKILL_BAREHAND_PROF:
+      case SKILL_SLASH_SPEC:
+      case SKILL_BLUNT_SPEC:
+      case SKILL_PIERCE_SPEC:
+      case SKILL_BAREHAND_SPEC:
+      case SKILL_RANGED_SPEC:
+      case SKILL_RANGED_PROF:
+      case SKILL_FAST_LOAD:
+      case SKILL_SHARPEN:
+      case SKILL_DULL:
+      case SKILL_ATTUNE:
+      case SKILL_STAVECHARGE:
+      case SKILL_SACRIFICE:
+      case SPELL_SHIELD_OF_MISTS:
+#if 1
+      case SPELL_EARTHMAW:
+      case SPELL_CREEPING_DOOM:
+      case SPELL_FERAL_WRATH:
+      case SPELL_SKY_SPIRIT:
+#endif
+        if (!discArray[aff->type]) {
+          vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", aff->type, k->getName());
+          k->affectRemove(aff);
+          break;
+        }
+
         sprintf(buf + strlen(buf), "Spell : '%s'\n\r", 
                     discArray[aff->type]->name);
         if (aff->location == APPLY_IMMUNITY)
@@ -972,13 +1360,233 @@ void TBeing::statBeing(TBeing *k)
         strcat(buf2, "\n\r");
         strcat(buf, buf2);
 
-      } else {
-        vlogf(10, "BOGUS AFFECT (%d) on %s", aff->type, k->getName());
+        break;
+      case AFFECT_DISEASE:
+        sprintf(buf + strlen(buf), "Disease: '%s'\n\r",
+                DiseaseInfo[affToDisease(*aff)].name);
+        sprintf(buf + strlen(buf), 
+                  "     Expires in %d updates.  Status = %d.\n\r",
+            aff->duration , aff->level);
+        break;
+      case AFFECT_DUMMY:
+        sprintf(buf + strlen(buf), "Dummy Affect: \n\r");
+        sprintf(buf + strlen(buf), 
+                  "     Expires in %d updates.  Status = %d.\n\r",
+            aff->duration , aff->level);
+        break;
+      case AFFECT_FREE_DEATHS:
+        sprintf(buf + strlen(buf), "Free Deaths: \n\r");
+        sprintf(buf + strlen(buf), 
+                  "     Remaining %ld.  Status = %d.\n\r",
+            aff->modifier, aff->level);
+        break;
+      case AFFECT_HORSEOWNED:
+        sprintf(buf + strlen(buf), "Horse-owned: \n\r");
+        sprintf(buf + strlen(buf),
+                  "     Expires in %d updates.\n\r",
+            aff->duration);
+        break;
+      case AFFECT_PLAYERKILL:
+        sprintf(buf + strlen(buf), "Player-Killer: \n\r");
+        sprintf(buf + strlen(buf),
+                  "     Expires in %d updates.\n\r",
+            aff->duration);
+        break;
+      case AFFECT_PLAYERLOOT:
+        sprintf(buf + strlen(buf), "Player-Looter: \n\r");
+        sprintf(buf + strlen(buf),
+                  "     Expires in %d updates.\n\r",
+                aff->duration);
+        break;
+      case AFFECT_TEST_FIGHT_MOB:
+        sprintf(buf + strlen(buf), "Test Fight Mob: \n\r");
+        sprintf(buf + strlen(buf), 
+                  "     Remaining %ld.  Status = %d.\n\r",
+            aff->modifier, aff->level);
+        break;
+      case AFFECT_SKILL_ATTEMPT:
+        sprintf(buf + strlen(buf), "Skill Attempt: \n\r");
+        sprintf(buf + strlen(buf),
+                  "     Expires in %d updates.  Skill = %d.\n\r",
+             aff->duration , (int) aff->bitvector); 
+        break;
+      case AFFECT_NEWBIE:
+        sprintf(buf + strlen(buf), "Got Newbie Equipment: \n\r");
+        sprintf(buf + strlen(buf),
+                  "     Expires in %d updates.  Status = %d.\n\r",
+            aff->duration , aff->level);
+        break;
+      case AFFECT_DRUNK:
+        sprintf(buf + strlen(buf), "Drunken slumber: \n\r");
+        sprintf(buf + strlen(buf), 
+                  "     Expires in %d updates.  Status = %d.\n\r",
+            aff->duration , aff->level);
+        break;
+      case AFFECT_DRUG:
+        sprintf(buf + strlen(buf), "%s: \n\r", drugTypes[aff->modifier2].name);
+        sprintf(buf + strlen(buf), "     Modifies %s by %ld points\n\r",
+        	apply_types[aff->location].name, aff->modifier);
+        sprintf(buf + strlen(buf),
+                  "     Expires in %d updates.  Status = %d.\n\r",
+        	aff->duration, aff->level);
+        sprintf(buf + strlen(buf), "renew %i\n\r", aff->renew);
+        break;
+      case AFFECT_COMBAT:
+        sprintf(buf + strlen(buf), "Combat: '%s'\n\r", 
+            aff->be ? aff->be->getName() : "No aff->be!");
+        sprintf(buf + strlen(buf), 
+                  "     Expires in %d updates.  Status = %d.\n\r",
+            aff->duration , aff->level);
+        break;
+      case AFFECT_PET:
+        sprintf(buf + strlen(buf), "pet of: '%s'\n\r", ((char *) aff->be));
+        sprintf(buf + strlen(buf), 
+                  "     Expires in %d updates.  Status = %d.\n\r",
+            aff->duration , aff->level);
+        break;
+      case AFFECT_CHARM:
+        sprintf(buf + strlen(buf), "charm of: '%s'\n\r", ((char *) aff->be));
+        sprintf(buf + strlen(buf), 
+                  "     Expires in %d updates.  Status = %d.\n\r",
+            aff->duration , aff->level);
+        break;
+      case AFFECT_THRALL:
+        sprintf(buf + strlen(buf), "thrall of: '%s'\n\r", ((char *) aff->be));
+        sprintf(buf + strlen(buf), 
+                  "     Expires in %d updates.  Status = %d.\n\r",
+            aff->duration , aff->level);
+        break;
+      case AFFECT_ORPHAN_PET:
+        sprintf(buf + strlen(buf), "orphan pet of: '%s'\n\r", ((char *) aff->be));
+        sprintf(buf + strlen(buf),
+                  "     Expires in %d updates.  Status = %d.\n\r",
+            aff->duration , aff->level);
+        break;
+      case AFFECT_TRANSFORMED_ARMS:
+      case AFFECT_TRANSFORMED_HANDS:
+      case AFFECT_TRANSFORMED_LEGS:
+      case AFFECT_TRANSFORMED_HEAD:
+      case AFFECT_TRANSFORMED_NECK:
+        sprintf(buf + strlen(buf), "Spell : 'Transformed Limb'\n\r");
+        sprintf(buf + strlen(buf), "     Modifies %s by %ld points\n\r",
+                    apply_types[aff->location].name, aff->modifier);
+        sprintf(buf + strlen(buf), "     Expires in %6d updates, Bits set ",
+                    aff->duration);
+        sprintbit(aff->bitvector, affected_bits, buf2);
+        strcat(buf2, "\n\r");
+        strcat(buf, buf2);
+        break;
+
+      case AFFECT_GROWTH_POTION:
+        sprintf(buf + strlen(buf), "Spell : 'Growth'\n\r");
+        sprintf(buf + strlen(buf), "     Modifies %s by %ld points\n\r",
+                apply_types[aff->location].name, aff->modifier);
+        sprintf(buf + strlen(buf), "     Expires in %6d updates, Bits set ",
+                aff->duration);
+        sprintbit(aff->bitvector, affected_bits, buf2);
+        strcat(buf2, "\n\r");
+        strcat(buf, buf2);
+        break;
+
+      case LAST_ODDBALL_AFFECT:
+      case LAST_TRANSFORMED_LIMB:
+      case LAST_BREATH_WEAPON:
+      case DAMAGE_GUST:
+      case DAMAGE_TRAP_TNT:
+      case DAMAGE_ELECTRIC:
+      case DAMAGE_TRAP_FROST:
+      case DAMAGE_FROST:
+      case DAMAGE_DROWN:
+      case DAMAGE_WHIRLPOOL:
+      case DAMAGE_HEMORRAGE:
+      case DAMAGE_IMPALE:
+      case DAMAGE_TRAP_POISON:
+      case DAMAGE_ACID:
+      case DAMAGE_TRAP_ACID:
+      case DAMAGE_COLLISION:
+      case DAMAGE_FALL:
+      case DAMAGE_TRAP_BLUNT:
+      case DAMAGE_TRAP_FIRE:
+      case DAMAGE_FIRE:
+      case DAMAGE_DISRUPTION:
+      case DAMAGE_DRAIN:
+      case DAMAGE_TRAP_ENERGY:
+      case DAMAGE_KICK_HEAD:
+      case DAMAGE_KICK_SHIN:
+      case DAMAGE_KICK_SIDE:
+      case DAMAGE_KICK_SOLAR:
+      case DAMAGE_TRAP_DISEASE:
+      case DAMAGE_SUFFOCATION:
+      case DAMAGE_TRAP_SLASH:
+      case DAMAGE_ARROWS:
+      case DAMAGE_TRAP_PIERCE:
+      case DAMAGE_DISEMBOWLED_HR:
+      case DAMAGE_DISEMBOWLED_VR:
+      case DAMAGE_EATTEN:
+      case DAMAGE_HACKED:
+      case DAMAGE_KNEESTRIKE_FOOT:
+      case DAMAGE_HEADBUTT_FOOT:
+      case DAMAGE_KNEESTRIKE_SHIN:
+      case DAMAGE_KNEESTRIKE_KNEE:
+      case DAMAGE_KNEESTRIKE_THIGH:
+      case DAMAGE_HEADBUTT_LEG:
+      case DAMAGE_KNEESTRIKE_SOLAR:
+      case DAMAGE_HEADBUTT_BODY:
+      case DAMAGE_KNEESTRIKE_CROTCH:      
+      case DAMAGE_HEADBUTT_CROTCH:
+      case DAMAGE_HEADBUTT_THROAT:
+      case DAMAGE_KNEESTRIKE_CHIN:
+      case DAMAGE_HEADBUTT_JAW:
+      case DAMAGE_KNEESTRIKE_FACE:
+      case DAMAGE_CAVED_SKULL:
+      case DAMAGE_HEADBUTT_SKULL:
+      case DAMAGE_STARVATION:
+      case DAMAGE_STOMACH_WOUND:
+      case DAMAGE_RAMMED:
+      case DAMAGE_BEHEADED:
+      case DAMAGE_NORMAL:
+      case DAMAGE_TRAP_SLEEP:
+      case DAMAGE_TRAP_TELEPORT:
+      case MAX_SKILL:
+      case TYPE_WATER:
+      case TYPE_AIR:
+      case TYPE_EARTH:
+      case TYPE_FIRE:
+      case TYPE_KICK:
+      case TYPE_CLAW:
+      case TYPE_SLASH:
+      case TYPE_CLEAVE:
+      case TYPE_SLICE:
+      case TYPE_BEAR_CLAW:
+      case TYPE_MAUL:
+      case TYPE_SMASH:
+      case TYPE_WHIP:
+      case TYPE_CRUSH:
+      case TYPE_BLUDGEON:
+      case TYPE_SMITE:
+      case TYPE_HIT:
+      case TYPE_FLAIL:
+      case TYPE_PUMMEL:
+      case TYPE_THRASH:
+      case TYPE_THUMP:
+      case TYPE_WALLOP:
+      case TYPE_BATTER:
+      case TYPE_BEAT:
+      case TYPE_STRIKE:
+      case TYPE_POUND:
+      case TYPE_CLUB:
+      case TYPE_PIERCE:
+      case TYPE_STAB:
+      case TYPE_STING:
+      case TYPE_THRUST:
+      case TYPE_SPEAR:
+      case TYPE_BEAK:
+      case TYPE_BITE:
+      case TYPE_UNDEFINED:
+      case TYPE_MAX_HIT:
+        vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", aff->type, k->getName());
         k->affectRemove(aff);
-      }
-    } else {
-      vlogf(10, "BOGUS AFFECT (%d) on %s", aff->type, k->getName());
-      k->affectRemove(aff);
+        break;
     }
   }
   if (k->task) {
@@ -1001,7 +1609,7 @@ void TBeing::statBeing(TBeing *k)
   }
 #endif
   if (k->desc)
-    sprintf(buf + strlen(buf), "Client : %s\n\r", k->desc->client ? "Yes" : "No");
+    sprintf(buf + strlen(buf), "Client : %s\n\r", k->desc->m_bIsClient ? "Yes" : "No");
   
   if (km) {
     if (km->sounds)
@@ -1009,7 +1617,7 @@ void TBeing::statBeing(TBeing *k)
     if (km->distantSnds)
       sprintf(buf + strlen(buf), "Distant Sound:\n\r%s", km->distantSnds);
   }
-  desc->page_string(buf, 0);
+  desc->page_string(buf);
   return;
 }
 
@@ -1017,6 +1625,7 @@ void TBeing::doStat(const char *)
 {
   return;
 }
+
 
 void TPerson::doStat(const char *argument)
 {
@@ -1227,6 +1836,7 @@ void TPerson::doStat(const char *argument)
       statObj(j);
       return;
     }
+
     if ((k = get_char_room(arg1, in_room)) || 
         (k = get_char_vis_world(this, arg1, &count, EXACT_NO))) {
       if (!hasWizPower(POWER_STAT_MOBILES)) {
@@ -1235,7 +1845,38 @@ void TPerson::doStat(const char *argument)
       }
       statBeing(k);
       return;
-    } else
-      sendTo("No mobile or object by that name in The World.\n\r");
+    }
+
+    if (is_number(arg1)) {
+      TObj         *tObj;
+      TMonster     *tMonster;
+      unsigned int  tValue;
+
+      if (hasWizPower(POWER_STAT_OBJECT) &&
+          ((tValue = real_object(atoi(arg1))) < obj_index.size()) &&
+          tValue >= 0 && (tObj = read_object(tValue, REAL))) {
+        statObj(tObj);
+        delete tObj;
+        tObj = NULL;
+
+        return;
+      }
+
+      if (hasWizPower(POWER_STAT_MOBILES) &&
+          ((tValue = real_mobile(atoi(arg1))) < mob_index.size()) &&
+          tValue >= 0 && (tMonster = read_mobile(tValue, REAL))) {
+        statBeing(tMonster);
+        delete tMonster;
+        tMonster = NULL;
+
+        return;
+      }
+    }
+
+    sendTo("No mobile or object by that name in The World.\n\r");
   }
 }
+
+
+
+

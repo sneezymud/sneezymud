@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: skills.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #if 0
  Some quickie Documentation on the different functions.
  CSkill holds two values, natural and actual.  Natural reflects a straight-up
@@ -46,12 +31,11 @@
 #include "disc_fattacks.h"
 #include "disc_plants.h"
 #include "disc_ranger_fight.h"
+#include "disc_shaman_frog.h"
 #include "disc_shaman_alchemy.h"
-#include "disc_shaman_fight.h"
-#include "disc_shaman_alchemy.h"
-#include "disc_draining.h"
-#include "disc_undead.h"
-#include "disc_shaman_healing.h"
+#include "disc_shaman_control.h"
+#include "disc_shaman_spider.h"
+#include "disc_shaman_skunk.h"
 #include "disc_totem.h"
 #include "disc_thief.h"
 #include "disc_thief_fight.h"
@@ -98,6 +82,7 @@
 #include "disc_warrior.h"
 #include "disc_survival.h"
 #include "disc_animal.h"
+#include "disc_shaman_armadillo.h"
 #include "disc_nature.h"
 
 static bool doesKnow(byte know)
@@ -513,7 +498,10 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDHTH *) cd)->skShove;
     case SKILL_RETREAT:
       return &((CDHTH *) cd)->skRetreat;
-
+    case SKILL_PARRY_WARRIOR:  //            664
+      return &((CDHTH *) cd)->skParryWarrior;
+    case SKILL_TRANCE_OF_BLADES:
+      return &((CDHTH *) cd)->skTranceOfBlades;
 //disc_brawling
 
     case SKILL_GRAPPLE:
@@ -522,14 +510,20 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDBrawling *) cd)->skStomp;
     case SKILL_BODYSLAM:
       return &((CDBrawling *) cd)->skBodyslam;
+    case SKILL_SPIN:
+      return &((CDBrawling *) cd)->skSpin;
 
 
 // disc_physical
 
+    case SKILL_DUAL_WIELD_WARRIOR:  // needs to be moved   666
+      return &((CDPhysical *) cd)->skDualWieldWarrior;
     case SKILL_DOORBASH:
       return &((CDPhysical *) cd)->skDoorbash;
     case SKILL_DEATHSTROKE:
       return &((CDPhysical *) cd)->skDeathstroke;
+    case SKILL_POWERMOVE:
+      return &((CDPhysical *) cd)->skPowerMove;
 
 // disc_smythe
 // No skills currently
@@ -575,29 +569,39 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SKILL_RETREAT_RANGER:  //             352
       return &((CDRangerFight *) cd)->skRetreatRanger;
 
-// disc_nature
+// disc_armadillo
 
     case SPELL_STICKS_TO_SNAKES:  //           361
-      return &((CDNature *) cd)->skSticksToSnakes;
+      return &((CDShamanSpider *) cd)->skSticksToSnakes;
     case SPELL_STORMY_SKIES:  //               362
-      return &((CDNature *) cd)->skStormySkies;
-    case SPELL_TREE_WALK:  //                  363
+      return &((CDShamanFrog *) cd)->skStormySkies;
+    case SPELL_TREE_WALK:
       return &((CDNature *) cd)->skTreeWalk;
     case SPELL_SHAPESHIFT:  //                 372
-      return &((CDNature *) cd)->skShapeShift;
+      return &((CDShamanFrog *) cd)->skShapeShift;
 
 // disc_animal
 
     case SKILL_BEAST_CHARM:  //                371
       return &((CDAnimal *) cd)->skBeastCharm;
-
+#if 1
+    case SPELL_FERAL_WRATH:
+      return &((CDAnimal *) cd)->skFeralWrath;
+    case SPELL_SKY_SPIRIT:
+      return &((CDAnimal *) cd)->skSkySpirit;
+#endif
 // disc_plants
 
     case SKILL_CONCEALMENT:  //                381
       return &((CDPlants *) cd)->skConcealment;
     case SKILL_APPLY_HERBS:  //                382
       return &((CDPlants *) cd)->skApplyHerbs;
-
+#if 1
+    case SPELL_EARTHMAW:
+      return &((CDPlants *) cd)->skEarthmaw;
+    case SPELL_CREEPING_DOOM:
+      return &((CDPlants *) cd)->skCreepingDoom;
+#endif
 // disc_survival
 
     case SKILL_DIVINATION:  //                391
@@ -859,8 +863,14 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDStealth *) cd)->skDisguise;
 
 // disc_traps
-    case SKILL_SET_TRAP:
-      return &((CDTraps *) cd)->skSetTraps;
+    case SKILL_SET_TRAP_CONT:
+      return &((CDTraps *) cd)->skSetTrapsCont;
+    case SKILL_SET_TRAP_DOOR:
+      return &((CDTraps *) cd)->skSetTrapsDoor;
+    case SKILL_SET_TRAP_MINE:
+      return &((CDTraps *) cd)->skSetTrapsMine;
+    case SKILL_SET_TRAP_GREN:
+      return &((CDTraps *) cd)->skSetTrapsGren;
 
 
 
@@ -870,32 +880,50 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // disc_shaman
 
+    case SPELL_AQUATIC_BLAST: 
+      return &((CDShamanFrog *) cd)->skAquaticBlast;
+    case SPELL_AQUALUNG: 
+      return &((CDShamanArmadillo *) cd)->skAqualung;
+    case SPELL_SHIELD_OF_MISTS: 
+      return &((CDShaman *) cd)->skShieldOfMists;
+    case SKILL_SACRIFICE: 
+      return &((CDShaman *) cd)->skSacrifice;
     case SPELL_ROOT_CONTROL:  //               340
-      return &((CDShaman *) cd)->skRootControl;
+      return &((CDNature *) cd)->skRootControl;
     case SPELL_LIVING_VINES:  //               348
-      return &((CDShaman *) cd)->skLivingVines;
+      return &((CDNature *) cd)->skLivingVines;
+    case SPELL_ENTHRALL_SPECTRE:
+      return &((CDShaman *) cd)->skEnthrallSpectre;
+    case SPELL_ENTHRALL_GHAST:
+      return &((CDShaman *) cd)->skEnthrallGhast;
+    case SPELL_ENTHRALL_GHOUL:
+      return &((CDShamanControl *) cd)->skEnthrallGhoul;
+    case SPELL_ENTHRALL_DEMON:
+      return &((CDShamanControl *) cd)->skEnthrallDemon;
     case SPELL_CACAODEMON: // 400
-      return &((CDShaman *) cd)->skCacaodemon;
+      return &((CDShamanControl *) cd)->skCacaodemon;
     case SPELL_DANCING_BONES: // 402
       return &((CDShaman *) cd)->skDancingBones;
     case SPELL_CONTROL_UNDEAD: // 403
-      return &((CDShaman *) cd)->skControlUndead;
+      return &((CDShamanSpider *) cd)->skControlUndead;
     case SPELL_RESURRECTION: // 404
       return &((CDShaman *) cd)->skResurrection;
     case SPELL_VOODOO: // 405
       return &((CDShaman *) cd)->skVoodoo;
+    case SPELL_THORNFLESH:
+      return &((CDShamanArmadillo *) cd)->skThornflesh;
 
-// disc_shaman_fight
+// disc_shaman_frog
 
-    case SKILL_TURN: // 1002
-      return &((CDShamanFight *) cd)->skTurnSkill;
+      case SKILL_TURN:
+        return &((CDShamanSkunk *) cd)->skTurnSkill;
 
 
 
 // disc_undead
 
     case SPELL_CREATE_GOLEM: // 401
-      return &((CDUndead *) cd)->skCreateGolem;
+      return &((CDShamanControl *) cd)->skCreateGolem;
 
 // disc_shaman_alchemy
 
@@ -907,16 +935,20 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 // disc_alchemy_shaman
 // disc_draining
 
-    case SPELL_VAMPIRIC_TOUCH: // 480
-      return &((CDDraining *) cd)->skVampiricTouch;
-    case SPELL_LIFE_LEECH: // 481
-      return &((CDDraining *) cd)->skLifeLeech;
+      case SPELL_VAMPIRIC_TOUCH: // 480
+        return &((CDShaman *) cd)->skVampricTouch;
+      case SPELL_LIFE_LEECH: // 481
+        return &((CDShaman *) cd)->skLifeLeech;
 
 // disc_totemism
 // disc_healing
 
 // GENERAL DISCIPLINES
 
+    case SKILL_ALCOHOLISM:// 668
+      return &((CDAdventuring *) cd)->skAlcoholism;
+    case SKILL_FISHING: // 669
+      return &((CDAdventuring *) cd)->skFishing;
     case SKILL_RIDE: // 760
       return &((CDAdventuring *) cd)->skRide;
     case SKILL_SIGN: // 761
@@ -1004,7 +1036,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
   // disc_combat
     case SKILL_SLASH_PROF: // 1521
       return &((CDCombat *) cd)->skSlash;
-    case SKILL_BOW: // 1522
+    case SKILL_RANGED_PROF: // 1522
       return &((CDCombat *) cd)->skBow;
     case SKILL_PIERCE_PROF: // 1523
       return &((CDCombat *) cd)->skPierce;
@@ -1021,7 +1053,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case DAMAGE_NORMAL:
     case DAMAGE_CAVED_SKULL:
     case DAMAGE_BEHEADED:
-    case DAMAGE_DISEMBOWLED:
+    case DAMAGE_DISEMBOWLED_HR:
+    case DAMAGE_DISEMBOWLED_VR:
     case DAMAGE_STOMACH_WOUND:
     case DAMAGE_HACKED:
     case DAMAGE_IMPALE:
@@ -1110,7 +1143,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case TYPE_MAX_HIT:
     case AFFECT_DISEASE:
     case AFFECT_COMBAT:
-    case AFFECT_PET:
     case AFFECT_TRANSFORMED_HANDS:
     case AFFECT_TRANSFORMED_ARMS:
     case AFFECT_TRANSFORMED_LEGS:
@@ -1129,19 +1161,26 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SPELL_FROST_BREATH:
     case SPELL_ACID_BREATH:
     case SPELL_LIGHTNING_BREATH:
+    case SPELL_DUST_BREATH:
     case LAST_BREATH_WEAPON:
+    case AFFECT_PET:
+    case AFFECT_CHARM:
+    case AFFECT_THRALL:
     case AFFECT_ORPHAN_PET:
     case AFFECT_PLAYERKILL:
+    case AFFECT_PLAYERLOOT:
+    case AFFECT_HORSEOWNED:
+    case AFFECT_GROWTH_POTION:
     case LAST_ODDBALL_AFFECT:
       break;
   }
 
 
   if (discArray[skill] == NULL) {
-    vlogf(4,"Bad skill number: %d in getSkill (NADA)",skill);
+    vlogf(LOG_BUG,"Bad skill number: %d in getSkill (NADA)",skill);
   } else if (*discArray[skill]->name) {
     if (strcmp(discArray[skill]->name,"\n"))
-      vlogf(4,"Bad skill number: %d in getSkill (%s)",skill, discArray[skill]->name);
+      vlogf(LOG_BUG,"Bad skill number: %d in getSkill (%s)",skill, discArray[skill]->name);
   }
   return (NULL);
 }
@@ -1152,11 +1191,7 @@ bool TBeing::doesKnowSkill(spellNumT skill) const
   if (!(sk = getSkill(skill)))
     return FALSE;
 
-#if 0
-  return doesKnow(sk->getLearnedness());
-#else
   return doesKnow(getMaxSkillValue(skill));
-#endif
 }
 
 byte TBeing::getRawSkillValue(spellNumT skill) const
@@ -1201,7 +1236,6 @@ byte TBeing::getSkillValue(spellNumT skill) const
 #endif
   value = max(value, 0);
   return value;
-//  return (max(0,min(sk->getLearnedness(), getMaxSkillValue(skill))));
 }
 
 void TBeing::setSkillValue(spellNumT skill, int lValue)
@@ -1248,7 +1282,7 @@ int TBeing::getAdvDoLearning(spellNumT skill) const
       ret = assDisc->getDoLearnedness();
       return ret;
     } else {
-      vlogf(5, "Someone (%s) doesnt have a valid associated discipline for skill (%d)", getName(), skill);
+      vlogf(LOG_BUG, "Someone (%s) doesnt have a valid associated discipline for skill (%d)", getName(), skill);
       return 0;
     }
   }
@@ -1272,7 +1306,7 @@ int TBeing::getAdvLearning(spellNumT skill) const
       ret = assDisc->getLearnedness();
       return ret;
     } else {
-      vlogf(5,"Someone (%s) doesnt have a valid associated discipline for skill (%d)", getName(), skill);
+      vlogf(LOG_BUG,"Someone (%s) doesnt have a valid associated discipline for skill (%d)", getName(), skill);
       return 0;
     }
   }
@@ -1297,7 +1331,7 @@ byte TBeing::getNatSkillValue(spellNumT skill) const
   if (value < 0) {
     return SKILL_MIN;
   } else if (value == 0) {
-    vlogf(5, "%s showed up with 0 learning in a skill (%d)", getName(), skill);
+    vlogf(LOG_BUG, "%s showed up with 0 learning in a skill (%d)", getName(), skill);
     return SKILL_MIN;
   } else {
     value = min((int) MAX_SKILL_LEARNEDNESS, value);

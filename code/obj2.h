@@ -2,27 +2,16 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: obj2.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/10/04 03:01:31  batopr
-// *** empty log message ***
-//
-// Revision 1.2  1999/09/16 05:42:19  peel
-// Added setVolume and addToVolume to TSmoke
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
 #ifndef __OBJ2_H
 #define __OBJ2_H
 
-class TContainer : public TObj {
+#include "drug.h"
+
+// Things can be in a base container (but people can't put things into it)
+class TBaseContainer : public TObj {
   private:
   public:
     virtual void assignFourValues(int, int, int, int) = 0;
@@ -36,29 +25,36 @@ class TContainer : public TObj {
     virtual int getAllFrom(TBeing *, const char *);
     virtual int getObjFrom(TBeing *, const char *, const char *);
     virtual int putSomethingInto(TBeing *, TThing *) = 0;
-    virtual int putSomethingIntoContainer(TBeing *, TRealContainer *);
-    virtual void findSomeDrink(TDrinkCon **, TContainer **, TContainer *);
-    virtual void findSomeFood(TFood **, TContainer **, TContainer *);
+    virtual int putSomethingIntoContainer(TBeing *, TOpenContainer *);
+    virtual void findSomeDrink(TDrinkCon **, TBaseContainer **, TBaseContainer *);
+    virtual void findSomeFood(TFood **, TBaseContainer **, TBaseContainer *);
     virtual bool engraveMe(TBeing *, TMonster *, bool);
     virtual int getReducedVolume(const TThing *) const;
     virtual void powerstoneCheck(TOpal **);
     virtual void powerstoneCheckCharged(TOpal **);
     virtual void powerstoneMostMana(int *);
     virtual bool fitsSellType(tObjectManipT, TBeing *, TMonster *, string, itemTypeT, int &, int);
+    virtual string showModifier(showModeT, const TBeing *) const;
+    virtual void purchaseMe(TBeing *, TMonster *, int, int);
+
+    int isSaddle() const;
 
   protected:
-    TContainer();
+    TBaseContainer();
   public:
-    TContainer(const TContainer &a);
-    TContainer & operator=(const TContainer &a);
-    virtual ~TContainer();
+    TBaseContainer(const TBaseContainer &a);
+    TBaseContainer & operator=(const TBaseContainer &a);
+    virtual ~TBaseContainer();
 };
 
-class TRealContainer : public TContainer {
+// a base-container that can be opened and closed
+// permits things to be put into it by players
+// volume remains constant as contents are added
+class TOpenContainer : public TBaseContainer {
   private:
     float max_weight;
     unsigned char container_flags;
-    unsigned char trap_type;
+    doorTrapT trap_type;
     char trap_dam;
     int key_num;
     int max_volume;
@@ -84,6 +80,8 @@ class TRealContainer : public TContainer {
     virtual int sellCommod(TBeing *, TMonster *, int, TThing *);
     virtual int putSomethingInto(TBeing *, TThing *);
     virtual string compareMeAgainst(TBeing *, TObj *);
+    virtual void purchaseMe(TBeing *, TMonster *, int, int);
+    virtual string showModifier(showModeT, const TBeing *) const;
 
     bool isCloseable() const;
     bool isClosed() const;
@@ -95,8 +93,8 @@ class TRealContainer : public TContainer {
     void addContainerFlag(unsigned char r);
     void remContainerFlag(unsigned char r);
     bool isContainerFlag(unsigned char r) const;
-    unsigned char getContainerTrapType() const;
-    void setContainerTrapType(unsigned char r);
+    doorTrapT getContainerTrapType() const;
+    void setContainerTrapType(doorTrapT r);
     char getContainerTrapDam() const;
     void setContainerTrapDam(char r);
     void setKeyNum(int);
@@ -105,14 +103,15 @@ class TRealContainer : public TContainer {
     void setCarryVolumeLimit(int);
 
   protected:
-    TRealContainer();
+    TOpenContainer();
   public:
-    TRealContainer(const TRealContainer &a);
-    TRealContainer & operator=(const TRealContainer &a);
-    virtual ~TRealContainer();
+    TOpenContainer(const TOpenContainer &a);
+    TOpenContainer & operator=(const TOpenContainer &a);
+    virtual ~TOpenContainer();
 };
 
-class TExpandableContainer : public TRealContainer {
+// an openable container that changes in volume based on contents
+class TExpandableContainer : public TOpenContainer {
   private:
   public:
     virtual void assignFourValues(int, int, int, int);
@@ -130,6 +129,7 @@ class TExpandableContainer : public TRealContainer {
     virtual ~TExpandableContainer();
 };
 
+// The actual item
 class TBag : public TExpandableContainer {
   private:
   public:
@@ -147,6 +147,7 @@ class TBag : public TExpandableContainer {
     virtual ~TBag();
 };
 
+// The actual item
 class TSpellBag : public TExpandableContainer {
   private:
   public:
@@ -162,6 +163,7 @@ class TSpellBag : public TExpandableContainer {
     virtual int componentSell(TBeing *, TMonster *, int, TThing *);
     virtual int componentValue(TBeing *, TMonster *, int, TThing *);
     virtual bool lowCheckSlots(silentTypeT);
+    virtual void getObjFromMeText(TBeing *, TThing *, getTypeT, bool);
 
     TSpellBag();
     TSpellBag(const TSpellBag &a);
@@ -170,13 +172,15 @@ class TSpellBag : public TExpandableContainer {
     virtual TThing & operator+= (TThing & t);
 };
 
-class TChest : public TRealContainer {
+// The actual item
+class TChest : public TOpenContainer {
   private:
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual string statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_CHEST; }
+    virtual void lowCheck();
 
     virtual bool objectRepair(TBeing *, TMonster *, silentTypeT);
 
@@ -186,6 +190,7 @@ class TChest : public TRealContainer {
     virtual ~TChest();
 };
 
+// The actual item
 class TKeyring : public TExpandableContainer {
   private:
   public:
@@ -202,7 +207,8 @@ class TKeyring : public TExpandableContainer {
     virtual ~TKeyring();
 };
 
-class TBaseCorpse : public TContainer {
+// an abstract corpse
+class TBaseCorpse : public TBaseContainer {
   private:
     unsigned int corpse_flags;
     race_t corpse_race;
@@ -215,6 +221,7 @@ class TBaseCorpse : public TContainer {
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual string statObjInfo() const = 0;
 
+    virtual int chiMe(TBeing *);
     virtual void peeOnMe(const TBeing *);
     virtual int dissectMe(TBeing *);
     virtual void update(int);
@@ -247,6 +254,7 @@ class TBaseCorpse : public TContainer {
     virtual ~TBaseCorpse();
 };
 
+// corpses for non-PCs
 class TCorpse : public TBaseCorpse {
   private:
   public:
@@ -258,6 +266,56 @@ class TCorpse : public TBaseCorpse {
     TCorpse(const TCorpse &a);
     TCorpse & operator=(const TCorpse &a);
     virtual ~TCorpse();
+};
+
+// corpses for PCs
+class TPCorpse : public TBaseCorpse {
+  private:
+    int on_lists;
+    int corpse_in_room;
+    int num_corpses_in_room;
+    string fileName;
+    TPCorpse *nextGlobalCorpse;
+    TPCorpse *nextCorpse;
+    TPCorpse *previousCorpse;
+  public:
+    virtual void assignFourValues(int, int, int, int);
+    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual string statObjInfo() const;
+    virtual void decayMe();
+    virtual int getMe(TBeing *, TThing *);
+    virtual void getMeFrom(TBeing *, TThing *);
+    virtual void dropMe(TBeing *, showMeT, showRoomT);
+    virtual itemTypeT itemType() const { return ITEM_PCORPSE; }
+    void removeCorpseFromList(bool updateFile = TRUE);
+    void addCorpseToLists();
+    void saveCorpseToFile();
+//    void assignCorpsesToRooms();
+    int checkOnLists();
+    void togOnCorpseListsOn();
+    void togOnCorpseListsOff();
+    void setRoomNum(int n);
+    int getRoomNum() const;
+    void setNumInRoom(int n);
+    int getNumInRoom() const;
+    void addToNumInRoom(int n);
+    void setOwner(const string Name);
+    const string & getOwner() const;
+    void clearOwner();
+    void setNext(TPCorpse *n);
+    void removeNext();
+    TPCorpse *getNext() const;
+    void setPrevious(TPCorpse *n);
+    void removePrevious();
+    TPCorpse *getPrevious() const;
+    void setNextGlobal(TPCorpse *n);
+    void removeGlobalNext();
+    virtual void describeObjectSpecifics(const TBeing *) const {};
+    TPCorpse *getGlobalNext() const;
+    TPCorpse();
+    TPCorpse(const TPCorpse &a);
+    TPCorpse & operator=(const TPCorpse &a);
+    virtual ~TPCorpse();
 };
 
 class TTable : public TObj {
@@ -277,7 +335,7 @@ class TTable : public TObj {
     virtual int getObjFrom(TBeing *, const char *, const char *);
     virtual int putSomethingInto(TBeing *, TThing *);
     virtual int putSomethingIntoTable(TBeing *, TTable *);
-    virtual void getObjFromMeText(TBeing *, TThing *);
+    virtual void getObjFromMeText(TBeing *, TThing *, getTypeT, bool);
     virtual bool isSimilar(const TThing *t) const;
 
     TTable();
@@ -326,6 +384,7 @@ class TPortal : public TSeeThru {
     virtual string statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_PORTAL; }
 
+    virtual int chiMe(TBeing *);
     virtual void changeObjValue1(TBeing *);
     virtual void changeObjValue3(TBeing *);
     virtual void changeObjValue4(TBeing *);
@@ -433,6 +492,7 @@ class TBaseClothing : public virtual TObj
     virtual void getFourValues(int *, int *, int *, int *) const = 0;
     virtual string statObjInfo() const = 0;
 
+    virtual int editAverageMe(TBeing *, const char *);
     virtual string showModifier(showModeT, const TBeing *) const;
     virtual void objMenu(const TBeing *) const;
     virtual int rentCost() const;
@@ -529,6 +589,7 @@ class TBaseWeapon : public TObj {
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual string statObjInfo() const = 0;
 
+    virtual int editAverageMe(TBeing *, const char *);
     virtual double baseDamage() const;
     virtual int swungObjectDamage(const TBeing *, const TBeing *) const;
     virtual void lowCheck();
@@ -628,7 +689,7 @@ class TArrow : public TBaseWeapon {
     virtual bool engraveMe(TBeing *, TMonster *, bool);
     virtual void bloadBowArrow(TBeing *, TThing *);
     virtual int throwMe(TBeing *, dirTypeT, const char *);
-    virtual int putMeInto(TBeing *, TRealContainer *);
+    virtual int putMeInto(TBeing *, TOpenContainer *);
     virtual string compareMeAgainst(TBeing *, TObj *);
     virtual void changeObjValue4(TBeing *);
     virtual string displayFourValues();
@@ -702,55 +763,6 @@ class TMagicItem : public virtual TObj
     TMagicItem(const TMagicItem &a);
     TMagicItem & operator=(const TMagicItem &a);
     virtual ~TMagicItem();
-};
-
-class TPCorpse : public TBaseCorpse {
-  private:
-    int on_lists;
-    int corpse_in_room;
-    int num_corpses_in_room;
-    string fileName;
-    TPCorpse *nextGlobalCorpse;
-    TPCorpse *nextCorpse;
-    TPCorpse *previousCorpse;
-  public:
-    virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual string statObjInfo() const;
-    virtual void decayMe();
-    virtual int getMe(TBeing *, TThing *);
-    virtual void getMeFrom(TBeing *, TThing *);
-    virtual void dropMe(TBeing *, showMeT, showRoomT);
-    virtual itemTypeT itemType() const { return ITEM_PCORPSE; }
-    void removeCorpseFromList(bool updateFile = TRUE);
-    void addCorpseToLists();
-    void saveCorpseToFile();
-//    void assignCorpsesToRooms();
-    int checkOnLists();
-    void togOnCorpseListsOn();
-    void togOnCorpseListsOff();
-    void setRoomNum(int n);
-    int getRoomNum() const;
-    void setNumInRoom(int n);
-    int getNumInRoom() const;
-    void addToNumInRoom(int n);
-    void setOwner(const string Name);
-    const string & getOwner() const;
-    void clearOwner();
-    void setNext(TPCorpse *n);
-    void removeNext();
-    TPCorpse *getNext() const;
-    void setPrevious(TPCorpse *n);
-    void removePrevious();
-    TPCorpse *getPrevious() const;
-    void setNextGlobal(TPCorpse *n);
-    void removeGlobalNext();
-    virtual void describeObjectSpecifics(const TBeing *) const {};
-    TPCorpse *getGlobalNext() const;
-    TPCorpse();
-    TPCorpse(const TPCorpse &a);
-    TPCorpse & operator=(const TPCorpse &a);
-    virtual ~TPCorpse();
 };
 
 class TWand : public virtual TMagicItem {
@@ -933,7 +945,8 @@ class TSymbol : public TObj {
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual string statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_HOLY_SYM; }
-    
+
+    virtual int chiMe(TBeing *);
     virtual bool lowCheckSlots(silentTypeT);
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
     virtual void sellMeMoney(TBeing *, TMonster *, int, int);
@@ -992,6 +1005,7 @@ class TTool : public TObj {
     virtual int garotteMe(TBeing *, TBeing *);
     virtual void stringMeString(TBeing *, TBow *);
     virtual void skinMe(TBeing *, const char *);
+    virtual void sacrificeMe(TBeing *, const char *);
     virtual int pickWithMe(TBeing *, const char *, const char *, const char *);
     virtual void repairMeHammer(TBeing *, TObj *);
     virtual int garottePulse(TBeing *, affectedData *);
@@ -1173,7 +1187,7 @@ class TComponent : public TObj {
     virtual bool allowsCast() { return true; }
     virtual void update(int);
     virtual void describeObjectSpecifics(const TBeing *) const;
-    virtual int putMeInto(TBeing *, TRealContainer *);
+    virtual int putMeInto(TBeing *, TOpenContainer *);
     virtual void findComp(TComponent **, spellNumT);
     virtual void decayMe();
     virtual int objectSell(TBeing *, TMonster *);
@@ -1184,7 +1198,7 @@ class TComponent : public TObj {
     virtual void recalcShopData(int, int);
     virtual int rentCost() const;
     virtual bool splitMe(TBeing *, const char *);
-    virtual int putSomethingIntoContainer(TBeing *, TRealContainer *);
+    virtual int putSomethingIntoContainer(TBeing *, TOpenContainer *);
     virtual int suggestedPrice() const;
     virtual void objMenu(const TBeing *) const;
     double priceMultiplier() const;
@@ -1241,7 +1255,7 @@ class TKey : public TObj {
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual string statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_KEY; }
-    virtual int putMeInto(TBeing *, TRealContainer *);
+    virtual int putMeInto(TBeing *, TOpenContainer *);
 
     virtual void lowCheck();
     virtual bool objectRepair(TBeing *, TMonster *, silentTypeT);
@@ -1257,7 +1271,7 @@ class TTrap : public TObj {
   private:
     int trap_level;
     int trap_effect;
-    trap_t trap_dam_type;
+    doorTrapT trap_dam_type;
     int trap_charges;
   public:
     virtual void assignFourValues(int, int, int, int);
@@ -1284,8 +1298,8 @@ class TTrap : public TObj {
     virtual void dropMe(TBeing *, showMeT, showRoomT);
     virtual int throwMe(TBeing *, dirTypeT, const char *);
     virtual int detonateGrenade();
-    virtual void makeTrapLand(TBeing *, trap_t, const char *);
-    virtual void makeTrapGrenade(TBeing *, trap_t, const char *);
+    virtual void makeTrapLand(TBeing *, doorTrapT, const char *);
+    virtual void makeTrapGrenade(TBeing *, doorTrapT, const char *);
     virtual bool canDrop() const;
 
     void armGrenade(TBeing *);
@@ -1296,8 +1310,8 @@ class TTrap : public TObj {
     bool isTrapEffectType(unsigned int r);
     void remTrapEffectType(unsigned int r);
     void addTrapEffectType(unsigned int r);
-    trap_t getTrapDamType() const;
-    void setTrapDamType(trap_t r);
+    doorTrapT getTrapDamType() const;
+    void setTrapDamType(doorTrapT r);
     int getTrapCharges() const;
     void setTrapCharges(int r);
     int getTrapDamAmount() const;
@@ -1381,6 +1395,7 @@ class TMoney : public TObj {
     virtual bool canCarryMe(const TBeing *, silentTypeT) const;
     virtual bool isPluralItem() const;
     virtual void onObjLoad();
+    virtual string getNameForShow(bool, bool, const TBeing *) const;
 
     int getMoney() const;
     void setMoney(int n);
@@ -1473,6 +1488,7 @@ class TOrganic : public TObj {
     virtual string statObjInfo() const;
     virtual itemTypeT itemType() const {return ITEM_RAW_ORGANIC; }
 
+    virtual int  chiMe(TBeing *);
     virtual int  objectSell(TBeing *, TMonster *);
     virtual void describeObjectSpecifics(const TBeing *) const;
     virtual bool splitMe(TBeing *, const char *);
@@ -1535,6 +1551,7 @@ class TOpal : public TObj {
     int psMana;
     int psFails;
   public:
+    virtual int chiMe(TBeing *);
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual int objectSell(TBeing *, TMonster *);
@@ -1591,6 +1608,7 @@ class TFuel : public TObj {
     int curFuel;
     int maxFuel;
   public:
+    virtual int chiMe(TBeing *);
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual void lowCheck();
@@ -1659,6 +1677,7 @@ class TLight : public TBaseLight {
     virtual string statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_LIGHT; }
 
+    virtual int chiMe(TBeing *);
     virtual int illuminateMe(TBeing *, int, byte);
     virtual void refuelMeLight(TBeing *, TThing*);
     virtual int objectDecay();
@@ -1778,6 +1797,7 @@ class TFFlame : public TBaseLight {
     virtual string statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_FLAME; }
 
+    virtual int    chiMe(TBeing *);
     virtual void   addFlameToMe(TBeing *, const char *, TThing *, bool);
     virtual void   peeOnMe(const TBeing *);
     virtual void   updateFlameInfo();
@@ -1785,16 +1805,16 @@ class TFFlame : public TBaseLight {
     virtual void   decayMe();
     virtual int    objectDecay();
     virtual int    getMe(TBeing *, TThing *);
-    virtual void lightMe(TBeing *, silentTypeT);
+    virtual void   lightMe(TBeing *, silentTypeT);
     virtual void   extinguishMe(TBeing *);
     virtual int    pourWaterOnMe(TBeing *, TObj *);
     virtual string showModifier(showModeT, const TBeing *) const;
     virtual void   refuelMeLight(TBeing *, TThing *);
     virtual void   describeObjectSpecifics(const TBeing *) const;
     virtual void   assignFourValues(int, int, int, int);
-    virtual bool isLit() const;
+    virtual bool   isLit() const;
     virtual void   getFourValues(int *, int *, int *, int *) const;
-    virtual void putLightOut();
+    virtual void   putLightOut();
 
     int  igniteMessage(TBeing *) const;
     void setMagBV(int);
@@ -1834,6 +1854,7 @@ class TFood : public TObj {
     unsigned int foodFlags;
     int foodFill;
   public:
+    virtual int chiMe(TBeing *);
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual int objectSell(TBeing *, TMonster *);
@@ -1849,7 +1870,7 @@ class TFood : public TObj {
 
     virtual bool poisonObject();
     virtual void nukeFood();
-    virtual void findSomeFood(TFood **, TContainer **, TContainer *);
+    virtual void findSomeFood(TFood **, TBaseContainer **, TBaseContainer *);
     virtual void eatMe(TBeing *);
     virtual void tasteMe(TBeing *);
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
@@ -1886,6 +1907,7 @@ class TBaseCup : public TObj {
     virtual bool waterSource();
     virtual string statObjInfo() const;
 
+    virtual int chiMe(TBeing *);
     virtual bool poisonObject();
     virtual int freezeObject(TBeing *, int);
     virtual void nukeFood();
@@ -1899,7 +1921,7 @@ class TBaseCup : public TObj {
     virtual void spill(const TBeing *);
     virtual void fillMe(const TBeing *, liqTypeT);
     virtual void weightCorrection();
-    virtual void evaporate(TBeing *);
+    virtual void evaporate(TBeing *, silentTypeT);
     virtual void weightChangeObject(float);
     virtual void setEmpty();
     virtual void lookObj(TBeing *, int) const;
@@ -1934,7 +1956,7 @@ class TBaseCup : public TObj {
 class TDrinkCon : public TBaseCup {
   public:
     virtual itemTypeT itemType() const { return ITEM_DRINKCON; }
-    virtual void findSomeDrink(TDrinkCon **, TContainer **, TContainer *);
+    virtual void findSomeDrink(TDrinkCon **, TBaseContainer **, TBaseContainer *);
     virtual void waterCreate(const TBeing *, int);
     virtual int divineMe(TBeing *, int, byte);
 

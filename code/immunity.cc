@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: immunity.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // Immunities.cc
 //
 // Class for Immunity Data.
@@ -88,7 +73,7 @@ immuneTypeT Immunities::convert(const string & immunity) const
   if (!immunity.compare("IMMUNE_UNUSED2"))
     return IMMUNE_UNUSED2;
 
-  vlogf(5, "Unknown immunity '%s', in convert()", immunity.c_str());
+  vlogf(LOG_BUG, "Unknown immunity '%s', in convert()", immunity.c_str());
   return IMMUNE_NONE;
 }
 
@@ -173,4 +158,545 @@ bool TBeing::isImmune(immuneTypeT bit, int modifier) const
 
   return ((num - level) < getImmunity(bit));
 #endif
+}
+
+immuneTypeT getTypeImmunity(spellNumT type)
+{
+  immuneTypeT bit = IMMUNE_NONE;
+
+  switch (type) {
+    case DAMAGE_FIRE:
+    case SPELL_FIREBALL:
+    case SPELL_HANDS_OF_FLAME:
+    case SPELL_FLAMESTRIKE:
+    case SPELL_FIRE_BREATH:
+    case SPELL_RAIN_BRIMSTONE:
+    case SPELL_RAIN_BRIMSTONE_DEIKHAN:
+    case SPELL_INFERNO:
+    case SPELL_HELLFIRE:
+    case SPELL_FLAMING_SWORD:
+    case SPELL_SPONTANEOUS_COMBUST:
+    case DAMAGE_TRAP_FIRE:
+    case DAMAGE_TRAP_TNT:
+    case TYPE_FIRE:
+      bit = IMMUNE_HEAT;
+      break;
+//    case SPELL_LIGHTNING_BOLT:
+    case SPELL_CALL_LIGHTNING_DEIKHAN:
+    case SPELL_CALL_LIGHTNING:
+    case SPELL_LIGHTNING_BREATH:
+    case DAMAGE_ELECTRIC:
+      bit = IMMUNE_ELECTRICITY;
+      break;
+    case DAMAGE_FROST:
+    case SPELL_ICY_GRIP:
+    case SPELL_ARCTIC_BLAST:
+    case SPELL_ICE_STORM:
+    case SPELL_FROST_BREATH:
+    case DAMAGE_TRAP_FROST:
+      bit = IMMUNE_COLD;
+      break;
+    case SKILL_CHI:
+    case DAMAGE_DISRUPTION:
+    case SPELL_MYSTIC_DARTS:
+    case SPELL_STUNNING_ARROW:
+    case SPELL_COLOR_SPRAY:
+    case SPELL_BLAST_OF_FURY:
+    case SPELL_ATOMIZE:
+    case DAMAGE_TRAP_ENERGY:
+      bit = IMMUNE_ENERGY;
+      break;
+    case SPELL_METEOR_SWARM:
+    case SPELL_EARTHQUAKE_DEIKHAN:
+    case SPELL_EARTHQUAKE:
+    case SPELL_PEBBLE_SPRAY:
+    case SPELL_SAND_BLAST:
+    case SPELL_LAVA_STREAM:
+    case SPELL_SLING_SHOT:
+    case SPELL_GRANITE_FISTS:
+    case SPELL_PILLAR_SALT:
+    case DAMAGE_COLLISION:
+    case DAMAGE_FALL:
+    case TYPE_EARTH:
+      bit = IMMUNE_EARTH;
+      break;
+    case DAMAGE_GUST:
+    case SPELL_GUST:
+    case SPELL_DUST_STORM:
+    case SPELL_TORNADO:
+    case TYPE_AIR:
+    case SPELL_DUST_BREATH:
+      bit = IMMUNE_AIR;
+      break;
+    case SPELL_ENERGY_DRAIN:
+    case DAMAGE_DRAIN:
+    case SPELL_HARM_DEIKHAN:
+    case SPELL_HARM:
+    case SPELL_HARM_LIGHT_DEIKHAN:
+    case SPELL_HARM_SERIOUS_DEIKHAN:
+    case SPELL_HARM_CRITICAL_DEIKHAN:
+    case SPELL_HARM_LIGHT:
+    case SPELL_HARM_SERIOUS:
+    case SPELL_HARM_CRITICAL:
+    case SPELL_WITHER_LIMB:
+      bit = IMMUNE_DRAIN;
+      break;
+    case DAMAGE_ACID:
+    case SPELL_ACID_BREATH:
+    case SPELL_ACID_BLAST:
+    case DAMAGE_TRAP_ACID:
+      bit = IMMUNE_ACID;
+      break;
+    case SKILL_BACKSTAB:
+    case SKILL_STABBING:
+    case TYPE_PIERCE:
+    case TYPE_STING:
+    case TYPE_STAB:
+    case TYPE_THRUST:
+    case TYPE_SPEAR:
+    case TYPE_BEAK:
+    case DAMAGE_TRAP_PIERCE:
+    case DAMAGE_ARROWS:
+      bit = IMMUNE_PIERCE;
+      break;
+    case TYPE_SLASH:
+    case TYPE_SLICE:
+    case TYPE_CLEAVE:
+    case TYPE_CLAW:
+    case TYPE_BEAR_CLAW:
+    case DAMAGE_TRAP_SLASH:
+      bit = IMMUNE_SLASH;
+      break;
+    case TYPE_BLUDGEON:
+    case TYPE_WHIP:
+    case SKILL_CUDGEL:
+    case SKILL_DOORBASH:
+    case SKILL_SHOVE_DEIKHAN:
+    case SKILL_SHOVE:
+    case TYPE_HIT:
+    case DAMAGE_KICK_HEAD:
+    case DAMAGE_KICK_SIDE:
+    case DAMAGE_KICK_SHIN:
+    case DAMAGE_KICK_SOLAR:
+    case SKILL_KICK_DEIKHAN:
+    case SKILL_KICK_THIEF:
+    case SKILL_KICK_MONK:
+    case SKILL_KICK_RANGER:
+    case SKILL_KICK:
+    case TYPE_KICK:
+    case SKILL_CHOP:
+    case TYPE_CRUSH:
+    case TYPE_BITE:
+    case TYPE_SMASH:
+    case TYPE_FLAIL:
+    case TYPE_PUMMEL:
+    case TYPE_POUND:
+    case TYPE_THRASH:
+    case TYPE_THUMP:
+    case TYPE_WALLOP:
+    case TYPE_BATTER:
+    case TYPE_BEAT:
+    case TYPE_STRIKE:
+    case TYPE_CLUB:
+    case TYPE_SMITE:
+    case TYPE_MAUL:
+    case SKILL_BASH_DEIKHAN:
+    case SKILL_BASH_RANGER:
+    case SKILL_BASH:
+    case SKILL_BODYSLAM:
+    case SKILL_SPIN:
+    case DAMAGE_TRAP_BLUNT:
+      bit = IMMUNE_BLUNT;
+      break;
+    case SPELL_POISON_DEIKHAN:
+    case SPELL_POISON:
+    case SPELL_CHLORINE_BREATH:
+    case DAMAGE_TRAP_POISON:
+      bit = IMMUNE_POISON;
+      break;
+    case SPELL_SLUMBER:
+    case DAMAGE_TRAP_SLEEP:
+      bit = IMMUNE_SLEEP;
+      break;
+    case SPELL_PARALYZE:
+    case SPELL_PARALYZE_LIMB:
+    case SPELL_BIND:
+    case SPELL_IMMOBILIZE:
+    case SPELL_NUMB_DEIKHAN:
+    case SPELL_NUMB:
+      bit = IMMUNE_PARALYSIS;
+      break;
+    case SPELL_ENSORCER:
+    case SPELL_CACAODEMON:
+    case SPELL_CONTROL_UNDEAD:
+    case SPELL_CREATE_GOLEM:
+    case SPELL_ANIMATE:
+    case SPELL_VOODOO:
+    case SPELL_DANCING_BONES:
+    case SPELL_CONJURE_AIR:
+    case SPELL_CONJURE_EARTH:
+    case SPELL_CONJURE_WATER:
+    case SPELL_CONJURE_FIRE:
+    case SKILL_BEAST_SUMMON:
+    case SKILL_BEAST_SOOTHER:
+    case SKILL_TRANSFIX:
+      bit = IMMUNE_CHARM;
+      break;
+    case DAMAGE_SUFFOCATION:
+    case DAMAGE_DROWN:
+    case SPELL_SUFFOCATE:
+    case SKILL_GARROTTE:
+      bit = IMMUNE_SUFFOCATION;
+      break;
+    case SPELL_BONE_BREAKER:
+      bit = IMMUNE_BONE_COND;
+      break;
+    case SPELL_BLEED:
+    case DAMAGE_HEMORRAGE:
+      bit = IMMUNE_BLEED;
+      break;
+    case SPELL_TSUNAMI:
+    case SPELL_WATERY_GRAVE:
+    case DAMAGE_WHIRLPOOL:
+    case SPELL_GUSHER:
+    case SPELL_AQUATIC_BLAST:
+    case TYPE_WATER:
+      bit = IMMUNE_WATER;
+      break;
+    case SPELL_FEAR:
+      bit = IMMUNE_FEAR;
+      break; 
+    case SPELL_DISEASE:
+    case SPELL_INFECT_DEIKHAN:
+    case SPELL_INFECT:
+    case DAMAGE_TRAP_DISEASE:
+      bit = IMMUNE_DISEASE;
+      break;
+    case -1:
+      bit = IMMUNE_SKIN_COND;
+      break;
+    case SKILL_POWERMOVE:
+    case SKILL_PARRY_WARRIOR:
+    case SKILL_QUIV_PALM:
+    case SKILL_SPRINGLEAP:
+    case SKILL_SMITE:
+    case SPELL_FUMBLE:
+    case SKILL_HEADBUTT:
+    case SKILL_KNEESTRIKE:
+    case SKILL_STOMP:
+    case SPELL_BLINDNESS:
+    case SPELL_CURSE_DEIKHAN:
+    case SPELL_CURSE:
+    case SPELL_PORTAL:
+    case SPELL_RESURRECTION:
+    case SPELL_ENHANCE_WEAPON:
+    case SPELL_TELEPORT:
+    case DAMAGE_TRAP_TELEPORT:
+    case SPELL_FEATHERY_DESCENT:
+    case SPELL_FLY:
+    case SPELL_ANTIGRAVITY:
+    case SPELL_FALCON_WINGS:
+    case SPELL_LEVITATE:
+    case SPELL_IDENTIFY:
+    case SPELL_DIVINATION:
+    case SPELL_POWERSTONE:
+    case SPELL_SHATTER:
+    case SPELL_EYES_OF_FERTUMAN:
+    case SPELL_FARLOOK:
+    case SPELL_ILLUMINATE:
+    case SPELL_DETECT_MAGIC:
+    case SPELL_DISPEL_MAGIC:
+    case SPELL_COPY:
+    case SPELL_MATERIALIZE:
+    case SPELL_SPONTANEOUS_GENERATION:
+    case SPELL_GALVANIZE:
+    case SPELL_STONE_SKIN:
+    case SPELL_TRAIL_SEEK:
+    case SPELL_FAERIE_FIRE:
+    case SPELL_FLAMING_FLESH:
+    case SPELL_PROTECTION_FROM_FIRE:
+    case SPELL_PROTECTION_FROM_ELEMENTS:
+    case SPELL_PROTECTION_FROM_EARTH:
+    case SPELL_PROTECTION_FROM_AIR:
+    case SPELL_PROTECTION_FROM_WATER:  
+    case SPELL_FLARE:
+    case SPELL_INFRAVISION:
+    case SPELL_SENSE_LIFE:
+    case SPELL_SILENCE:
+    case SPELL_STEALTH:
+    case SPELL_CALM:
+    case SPELL_CLOUD_OF_CONCEALMENT:
+    case SPELL_DETECT_INVISIBLE:
+    case SPELL_DISPEL_INVISIBLE:
+    case SPELL_TELEPATHY:
+//    case SPELL_FREE_ACTION:
+    case SPELL_TRUE_SIGHT:
+    case SPELL_POLYMORPH:
+    case SPELL_ACCELERATE:
+    case SPELL_HASTE:
+    case SPELL_FAERIE_FOG:
+    case SPELL_GILLS_OF_FLESH:
+    case SPELL_AQUALUNG:
+    case SPELL_BREATH_OF_SARAHAGE:
+    case SPELL_CREATE_FOOD_DEIKHAN:
+    case SPELL_CREATE_WATER_DEIKHAN:
+    case SPELL_CREATE_FOOD:
+    case SPELL_CREATE_WATER:
+    case SPELL_BLESS_DEIKHAN:
+    case SPELL_BLESS:
+    case SPELL_HEROES_FEAST_DEIKHAN:
+    case SPELL_HEROES_FEAST:
+    case SPELL_ARMOR_DEIKHAN:
+    case SPELL_ARMOR:
+    case SPELL_ASTRAL_WALK:
+    case SPELL_SANCTUARY:
+    case SPELL_WORD_OF_RECALL:
+    case SPELL_SUMMON:
+    case SPELL_REMOVE_CURSE_DEIKHAN:
+    case SPELL_REMOVE_CURSE:
+    case SKILL_BEFRIEND_BEAST:
+    case SKILL_BEAST_CHARM:
+    case SPELL_SHAPESHIFT:
+    case SPELL_PLAGUE_LOCUSTS:
+    case SPELL_ROOT_CONTROL:
+    case SPELL_STICKS_TO_SNAKES:
+    case SPELL_LIVING_VINES:
+    case SPELL_STORMY_SKIES:
+    case SPELL_TREE_WALK:
+    case SKILL_BARKSKIN:
+    case SPELL_HEAL_LIGHT_DEIKHAN:
+    case SPELL_HEAL_SERIOUS_DEIKHAN:
+    case SPELL_HEAL_CRITICAL_DEIKHAN:
+    case SPELL_HEAL_LIGHT:
+    case SPELL_HEAL_SERIOUS:
+    case SPELL_HEAL_CRITICAL:
+    case SPELL_HEAL_CRITICAL_SPRAY:
+    case SPELL_HEAL:
+    case SPELL_HEAL_SPRAY:
+    case SPELL_HEAL_FULL:
+    case SPELL_HEAL_FULL_SPRAY:
+    case SPELL_CURE_POISON_DEIKHAN:
+    case SPELL_CURE_POISON:
+    case SPELL_SALVE_DEIKHAN:
+    case SPELL_SALVE:
+    case SPELL_RESTORE_LIMB:
+    case SPELL_KNIT_BONE:
+    case SPELL_CURE_PARALYSIS:
+    case SPELL_CLOT_DEIKHAN:
+    case SPELL_CLOT:
+    case SPELL_STERILIZE_DEIKHAN:
+    case SPELL_REFRESH_DEIKHAN:
+    case SPELL_STERILIZE:
+    case SPELL_CURE_BLINDNESS:
+    case SPELL_REFRESH:
+    case SPELL_SECOND_WIND:
+    case SPELL_EXPEL_DEIKHAN:
+    case SPELL_EXPEL:
+    case SKILL_DEATHSTROKE:
+    case SPELL_SORCERERS_GLOBE:
+    case SKILL_CHARGE:
+    case SPELL_SYNOSTODWEOMER:
+    case SPELL_INVISIBILITY:
+    case SKILL_BERSERK:
+    case SKILL_SHOULDER_THROW:
+    case SKILL_DISARM_DEIKHAN:
+    case SKILL_DISARM_THIEF:
+    case SKILL_DISARM_MONK:
+    case SKILL_DISARM:
+    case SKILL_TRANSFORM_LIMB:
+    case SPELL_CURE_DISEASE:
+    case SPELL_CURE_DISEASE_DEIKHAN:
+    case SPELL_PLASMA_MIRROR:
+    case SPELL_THORNFLESH:
+    case SPELL_GARMULS_TAIL:
+    case SPELL_ETHER_GATE:
+    case SPELL_VAMPIRIC_TOUCH:
+    case SPELL_LIFE_LEECH:
+    case SKILL_SKIN:
+    case SKILL_WHITTLE:
+    case SKILL_STAVECHARGE:
+    case SKILL_RANGED_PROF: // was skill_bow... wierd error
+    case SKILL_PIERCE_PROF:
+    case SKILL_BLUNT_PROF:
+    case SKILL_SHARPEN:
+    case SKILL_DULL:
+    case SKILL_BAREHAND_PROF:
+    case SKILL_ATTUNE:
+    case SKILL_RANGED_SPEC:
+    case SKILL_FAST_LOAD:
+    case SKILL_SLASH_PROF:
+    case SKILL_PIERCE_SPEC:
+    case SKILL_SLASH_SPEC:
+    case SKILL_SCRIBE:
+    case SKILL_RESCUE:
+    case SKILL_SMYTHE:
+    case SKILL_SACRIFICE:
+    case SKILL_SWITCH_OPP:
+    case SKILL_RETREAT:
+    case SKILL_GRAPPLE:
+    case SKILL_TRANCE_OF_BLADES:
+    case SKILL_HIKING:
+    case SKILL_FORAGE:
+    case SKILL_SEEKWATER:
+    case SKILL_TRACK:
+    case SKILL_RESCUE_RANGER:
+    case SKILL_DUAL_WIELD:
+    case SKILL_SWITCH_RANGER:
+    case SKILL_RETREAT_RANGER:
+    case SKILL_CONCEALMENT:
+    case SKILL_DIVINATION:
+    case SKILL_APPLY_HERBS:
+    case SKILL_ENCAMP:
+    case SKILL_CHIVALRY:
+    case SKILL_RESCUE_DEIKHAN:
+    case SKILL_SWITCH_DEIKHAN:
+    case SKILL_RETREAT_DEIKHAN:
+    case SKILL_RIDE:
+    case SKILL_CALM_MOUNT:
+    case SKILL_TRAIN_MOUNT:
+    case SKILL_ADVANCED_RIDING:
+    case SKILL_RIDE_DOMESTIC:
+    case SKILL_RIDE_NONDOMESTIC:
+    case SKILL_RIDE_WINGED:
+    case SKILL_RIDE_EXOTIC:
+    case SKILL_LAY_HANDS:
+    case SKILL_YOGINSA:
+    case SKILL_CINTAI:
+    case SKILL_OOMLAT:
+    case SKILL_ADVANCED_KICKING:
+    case SKILL_GROUNDFIGHTING:
+    case SKILL_DUFALI:
+    case SKILL_RETREAT_MONK:
+    case SKILL_SNOFALTE:
+    case SKILL_COUNTER_MOVE:
+    case SKILL_SWITCH_MONK:
+    case SKILL_JIRIN:
+    case SKILL_KUBO:
+    case SKILL_CATFALL:
+    case SKILL_WOHLIN:
+    case SKILL_VOPLAT:
+    case SKILL_BLINDFIGHTING:
+    case SKILL_CRIT_HIT:
+    case SKILL_FEIGN_DEATH:
+    case SKILL_BLUR:
+    case SKILL_HURL:
+    case SKILL_SWINDLE:
+    case SKILL_SNEAK:
+    case SKILL_RETREAT_THIEF:
+    case SKILL_PICK_LOCK:
+    case SKILL_SEARCH:
+    case SKILL_SPY:
+    case SKILL_SWITCH_THIEF:
+    case SKILL_STEAL:
+    case SKILL_DETECT_TRAP:
+    case SKILL_SUBTERFUGE:
+    case SKILL_DISARM_TRAP:
+    case SKILL_HIDE:
+    case SKILL_POISON_WEAPON:
+    case SKILL_DISGUISE:
+    case SKILL_DODGE_THIEF:
+    case SKILL_SET_TRAP_CONT:
+    case SKILL_SET_TRAP_DOOR:
+    case SKILL_SET_TRAP_MINE:
+    case SKILL_SET_TRAP_GREN:
+    case SKILL_DUAL_WIELD_THIEF:
+    case SKILL_COUNTER_STEAL:
+    case SKILL_BREW:
+    case SKILL_TURN:
+    case SKILL_SIGN:
+    case SKILL_SWIM:
+    case SKILL_CONS_UNDEAD:
+    case SKILL_CONS_VEGGIE:
+    case SKILL_CONS_DEMON:
+    case SKILL_CONS_ANIMAL:
+    case SKILL_CONS_REPTILE:
+    case SKILL_CONS_PEOPLE:
+    case SKILL_CONS_GIANT:
+    case SKILL_CONS_OTHER:
+    case SKILL_READ_MAGIC:
+    case SKILL_BANDAGE:
+    case SKILL_CLIMB:
+    case SKILL_FAST_HEAL:
+    case SKILL_EVALUATE:
+    case SKILL_TACTICS:
+    case SKILL_DISSECT:
+    case SKILL_DEFENSE:
+    case SKILL_OFFENSE:
+    case SKILL_WIZARDRY:
+    case SKILL_MEDITATE:
+    case SKILL_DEVOTION:
+    case SKILL_PENANCE:
+    case SKILL_BLUNT_SPEC:
+    case SKILL_BAREHAND_SPEC:
+    case SKILL_DUAL_WIELD_WARRIOR:
+    case SPELL_SHIELD_OF_MISTS:
+    case SPELL_ENTHRALL_SPECTRE:
+    case SPELL_ENTHRALL_GHAST:
+    case SPELL_ENTHRALL_GHOUL:
+    case SPELL_ENTHRALL_DEMON:
+    case DAMAGE_NORMAL:
+    case DAMAGE_BEHEADED:
+    case DAMAGE_RAMMED:
+    case DAMAGE_HACKED:
+    case DAMAGE_CAVED_SKULL:
+    case DAMAGE_HEADBUTT_SKULL:
+    case DAMAGE_KNEESTRIKE_FOOT:
+    case DAMAGE_KNEESTRIKE_SHIN:
+    case DAMAGE_KNEESTRIKE_KNEE:
+    case DAMAGE_KNEESTRIKE_THIGH:
+    case DAMAGE_KNEESTRIKE_CROTCH:
+    case DAMAGE_KNEESTRIKE_SOLAR:
+    case DAMAGE_KNEESTRIKE_CHIN:
+    case DAMAGE_KNEESTRIKE_FACE:
+    case DAMAGE_HEADBUTT_JAW:
+    case DAMAGE_HEADBUTT_THROAT:
+    case DAMAGE_HEADBUTT_BODY:
+    case DAMAGE_HEADBUTT_CROTCH:
+    case DAMAGE_HEADBUTT_LEG:
+    case DAMAGE_HEADBUTT_FOOT:
+    case DAMAGE_DISEMBOWLED_HR:
+    case DAMAGE_DISEMBOWLED_VR:
+    case DAMAGE_STOMACH_WOUND:
+    case DAMAGE_IMPALE:
+    case DAMAGE_STARVATION:
+    case DAMAGE_EATTEN:
+    case TYPE_MAX_HIT:
+    case MAX_SKILL:
+    case AFFECT_TRANSFORMED_HANDS:
+    case AFFECT_TRANSFORMED_ARMS:
+    case AFFECT_TRANSFORMED_LEGS:
+    case AFFECT_TRANSFORMED_HEAD:
+    case AFFECT_TRANSFORMED_NECK:
+    case LAST_TRANSFORMED_LIMB:
+    case LAST_BREATH_WEAPON:
+    case AFFECT_DUMMY:
+    case AFFECT_DRUNK:
+    case AFFECT_NEWBIE:
+    case AFFECT_SKILL_ATTEMPT:
+    case AFFECT_FREE_DEATHS:
+    case AFFECT_TEST_FIGHT_MOB:
+    case AFFECT_DRUG:
+    case AFFECT_ORPHAN_PET:
+    case AFFECT_DISEASE:
+    case AFFECT_COMBAT:
+    case AFFECT_PET:
+    case AFFECT_CHARM:
+    case AFFECT_THRALL:
+    case AFFECT_PLAYERKILL:
+    case AFFECT_PLAYERLOOT:
+    case AFFECT_HORSEOWNED:
+    case AFFECT_GROWTH_POTION:
+    case LAST_ODDBALL_AFFECT:
+    case SKILL_ALCOHOLISM:
+    case SKILL_FISHING:
+#if 1
+    case SPELL_EARTHMAW:
+    case SPELL_CREEPING_DOOM:
+    case SPELL_FERAL_WRATH:
+    case SPELL_SKY_SPIRIT:
+#endif
+      bit = IMMUNE_NONE;
+      break;
+  }
+  return bit;
 }

@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: obj_board.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -84,7 +76,7 @@ void OpenBoardFile(boardStruct *b)
   }
   if (!b->file) {
     perror("OpenBoardFile(fopen)");
-    vlogf(10, "Fatal, since could not open \"%s\"", b->filename);
+    vlogf(LOG_FILE, "Fatal, since could not open \"%s\"", b->filename);
     exit(0);
   }
 }
@@ -147,7 +139,7 @@ void board_load_board(boardStruct *b)
   b->num_loaded++;
 
   if (b->msg_num < 1 || b->msg_num > MAX_MSGS) {
-    vlogf(10, "Board-message file corrupt or nonexistent.");
+    vlogf(LOG_FILE, "Board-message file corrupt or nonexistent.");
     fclose(b->file);
     return;
   }
@@ -156,7 +148,7 @@ void board_load_board(boardStruct *b)
     fread(buf, sizeof(char), len, b->file);
     b->head[ind] = mud_str_dup(buf);
     if (!b->head[ind]) {
-      vlogf(10, "new for board header failed.\n\r");
+      vlogf(LOG_FILE, "new for board header failed.\n\r");
       board_reset_board(b);
       fclose(b->file);
       return;
@@ -165,7 +157,7 @@ void board_load_board(boardStruct *b)
     fread(buf, sizeof(char), len, b->file);
     b->writer[ind] = mud_str_dup(buf);
     if (!b->writer[ind]) {
-      vlogf(10, "new for board writer failed.\n\r");
+      vlogf(LOG_FILE, "new for board writer failed.\n\r");
       board_reset_board(b);
       fclose(b->file);
       return;
@@ -174,7 +166,7 @@ void board_load_board(boardStruct *b)
     fread(buf, sizeof(char), len, b->file);
     b->msgs[ind] = mud_str_dup(buf);
     if (!b->msgs[ind]) {
-      vlogf(10, "new for board msg failed..\n\r");
+      vlogf(LOG_FILE, "new for board msg failed..\n\r");
       board_reset_board(b);
       fclose(b->file);
       return;
@@ -201,23 +193,29 @@ void board_reset_board(boardStruct *b)
   return;
 }
 
-boardStruct *FindBoardInRoom(int room)
+boardStruct *FindBoardInRoom(int room, const char *arg)
 {
+  char boardname[MAX_INPUT_LENGTH];
+  char newarg[256];  
   TThing *o;
   boardStruct *nb;
   TRoom *rp;
+
+  strcpy(newarg,arg);
+  one_argument(newarg, boardname);
 
   if (!(rp = real_roomp(room)))
     return NULL;
 
   for (o = rp->stuff; o; o = o->nextThing) {
     TObj *to = dynamic_cast<TObj *>(o);
+    //    if (to && to->spec == SPEC_BOARD && isname(boardname, to->name)) {
     if (to && to->spec == SPEC_BOARD) {
       for (nb = board_list; nb; nb = nb->next) {
         if (nb->Rnum == o->number)
           return (nb);
       }
-      vlogf(8, "Uh oh! Board with proc, but not in board list in room %d", room);
+      vlogf(LOG_PROC, "Uh oh! Board with proc, but not in board list in room %d", room);
       return NULL;
     }
   }
@@ -232,7 +230,7 @@ int board(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 int TObj::boardHandler(TBeing *, cmdTypeT cmd, const char *)
 {
   if (cmd != CMD_GENERIC_DESTROYED) {
-    vlogf(10, "board handler with non-board (%s) cmd=%d", getName(), cmd);
+    vlogf(LOG_PROC, "board handler with non-board (%s) cmd=%d", getName(), cmd);
   } else {
     // this msg comes in ~TObj() so we will never be a TBoard when we get it.
     DeleteABoard(this);
@@ -252,7 +250,7 @@ int TBoard::boardHandler(TBeing *ch, cmdTypeT cmd, const char *arg)
   if (!ch || (cmd >= MAX_CMD_LIST))
     return FALSE;
 
-  if (!(nb = FindBoardInRoom(ch->in_room)))
+  if (!(nb = FindBoardInRoom(ch->in_room, arg)))
     return FALSE;
 
   if (!ch->desc)
@@ -262,7 +260,7 @@ int TBoard::boardHandler(TBeing *ch, cmdTypeT cmd, const char *arg)
     case CMD_LOOK:		
       return (board_show_board(ch, arg, this, nb));
     case CMD_GET:			
-      return (get_note_from_board(ch, arg, nb));
+      return (get_note_from_board(ch, arg, nb, this));
     case CMD_READ:	
       return (board_display_msg(ch, arg, this, nb));
     case CMD_POST:
@@ -298,6 +296,16 @@ int board_display_msg(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
     ch->sendTo("The board is empty!\n\r");
     return TRUE;
   }
+  if (!ch->isImmortal() && me->objVnum()==FACT_BOARD_BROTHER && 
+      ch->getFaction()!=FACT_BROTHERHOOD){
+    ch->sendTo("This board is for the Brotherhood of Galek only.\n\r");
+    return TRUE;
+  }
+  if (!ch->isImmortal() && me->objVnum()==FACT_BOARD_SERPENT && 
+      ch->getFaction()!=FACT_SNAKE){
+    ch->sendTo("This board is for the Order of Serpents only.\n\r");
+    return TRUE;
+  }
   if (me->getBoardLevel() > ch->GetMaxLevel()) {
     ch->sendTo("Your eyes are too lowly to look at this board.\n\r");
     return TRUE;
@@ -308,7 +316,7 @@ int board_display_msg(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
   }
 
   if (ch->desc) {
-    if (ch->desc->client) {
+    if (ch->desc->m_bIsClient) {
       sprintf(buffer, "Message %d : %s\n\r\n\r%s\n\rEnd of message %d.\n\r",
                       msg, b->head[msg - 1], b->msgs[msg - 1], msg);
      
@@ -326,7 +334,7 @@ int board_display_msg(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
       sprintf(buffer, "%sEnd of message %d.\n\r",ch->norm(), msg);
       sb += buffer;
       if (ch->desc)
-        ch->desc->page_string(sb.c_str(), 0, FALSE);
+        ch->desc->page_string(sb.c_str());
 
       return TRUE;
     }
@@ -343,6 +351,7 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
   arg = one_argument(arg, boardname);
 
   if (!*boardname || !isname(boardname, "board bulletin"))
+  //  if (!*boardname || !isname(boardname, me->name)) 
     return FALSE;
 
   bool reverse = false;
@@ -350,6 +359,16 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
   if (*flagsbuf && is_abbrev(flagsbuf, "reverse"))
     reverse = true;
 
+  if (!ch->isImmortal() && me->objVnum()==FACT_BOARD_BROTHER && 
+      ch->getFaction()!=FACT_BROTHERHOOD){
+    ch->sendTo("This board is for the Brotherhood of Galek only.\n\r");
+    return TRUE;
+  }
+  if (!ch->isImmortal() && me->objVnum()==FACT_BOARD_SERPENT && 
+      ch->getFaction()!=FACT_SNAKE){
+    ch->sendTo("This board is for the Order of Serpents only.\n\r");
+    return TRUE;
+  }
   if (me->getBoardLevel() > ch->GetMaxLevel()) {
     ch->sendTo("Your eyes are too lowly to look at this board.\n\r");
     return TRUE;
@@ -378,7 +397,7 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
       strcpy(date_string, b->head[i]);
       char *tmp = strchr(date_string, ']');
       if (!tmp) {
-        vlogf(9, "Serious error in show_board (1).");
+        vlogf(LOG_PROC, "Serious error in show_board (1).");
         b->msg_num = i;
         continue;
       }
@@ -387,7 +406,7 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
       strcpy(head_string, &tmp[2]);
       tmp = strrchr(head_string, '(');
       if (!tmp) {
-        vlogf(9, "Serious error in show_board (2).");
+        vlogf(LOG_PROC, "Serious error in show_board (2).");
         b->msg_num = i;
         continue;
       }
@@ -421,7 +440,7 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
   }
 
   if (ch->desc)
-    ch->desc->page_string(buf, FALSE);
+    ch->desc->page_string(buf);
 
   return TRUE;
 }
@@ -502,7 +521,7 @@ void TNote::postMe(TBeing *ch, const char *arg2, boardStruct *b)
 #if !POST_IN_REVERSE
   b->head[b->msg_num] = mud_str_dup(arg3);
   if (!b->head[b->msg_num]) {
-    vlogf(10, "new for board header failed.\n\r");
+    vlogf(LOG_PROC, "new for board header failed.\n\r");
     ch->sendTo("The board is screwed up sorry.\n\r");
     return;
   }
@@ -515,7 +534,7 @@ void TNote::postMe(TBeing *ch, const char *arg2, boardStruct *b)
 #else
   b->head[0] = mud_str_dup(arg3);
   if (!b->head[0]) {
-    vlogf(10, "new for board header failed.\n\r");
+    vlogf(LOG_PROC, "new for board header failed.\n\r");
     ch->sendTo("The board is screwed up sorry.\n\r");
     return;
   }
@@ -550,7 +569,7 @@ void post_note_on_board(TBeing *ch, const char *argument, boardStruct *b)
   // note is possibly invalid here
 }
 
-int get_note_from_board(TBeing *ch, const char *arg, boardStruct *b)
+int get_note_from_board(TBeing *ch, const char *arg, boardStruct *b, TBoard *tb)
 {
   unsigned int ind;
   int msg;
@@ -575,17 +594,20 @@ int get_note_from_board(TBeing *ch, const char *arg, boardStruct *b)
   }
   ind = msg - 1;
 
-  if (strcmp(b->writer[ind], ch->name)) {
-    if (!ch->hasWizPower(POWER_BOARD_POLICE)) {
+  if (strcmp(b->writer[ind], ch->name) &&
+      !ch->hasWizPower(POWER_BOARD_POLICE) &&
+       !(tb->objVnum()==FACT_BOARD_SERPENT && 
+	 ch->getFactionAuthority(FACT_SNAKE, 0)) &&
+      !(tb->objVnum()==FACT_BOARD_BROTHER && 
+	ch->getFactionAuthority(FACT_BROTHERHOOD, 0))){
       ch->sendTo("You didn't write that note!\n\r");
       return TRUE;
-    }
   }
   // copy over stuff from note on board, and put it on a new note  
   // and give that note to the player who removed the note - Russ 
 
   if (!(note = read_object(GENERIC_NOTE, VIRTUAL))) {
-    vlogf(10, "Couldn't make a note removed from board!");
+    vlogf(LOG_PROC, "Couldn't make a note removed from board!");
     return TRUE;
   }
   note->swapToStrung();
@@ -700,8 +722,14 @@ boardStruct::~boardStruct()
   unsigned int i;
   for (i = 0; i < MAX_MSGS; i++) {
     delete [] writer[i];
+    writer[i] = NULL;
+
     delete [] msgs[i];
+    msgs[i] = NULL;
+
     delete [] head[i];
+    head[i] = NULL;
   }
   delete [] filename;
+  filename = NULL;
 }

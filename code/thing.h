@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: thing.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -61,6 +53,7 @@ class TThing {
     wearSlotT eq_stuck;
     void *act_ptr;
 
+
     int max_exist;
     int in_room;
     int spec;
@@ -73,6 +66,7 @@ class TThing {
     TThing *parent;          // Room, Obj, Being etc. that I am inside of.
     TThing *stuff;           // The stuff inside me
     TThing *nextThing;       // The next thing in the list I am inside of
+    TThing *nextBorn;        // The next thing born in my room(mobiles)
     TRoom *roomp;
     Descriptor *desc;
     extraDescription *ex_description;  // extra descriptions 
@@ -96,6 +90,8 @@ class TThing {
     }
     
     // VIRTUAL FUNCTIONS
+    virtual int editAverageMe(TBeing *, const char *);
+    virtual int chiMe(TBeing *);
     virtual void eatMe(TBeing *);
     virtual const char *hshr() const { return "its"; }
     virtual const char *hssh() const { return "it"; }
@@ -181,9 +177,12 @@ class TThing {
     const string persfname(const TThing *t) const;
     TThing * dismount(positionTypeT);
     void mount(TThing *);
-    bool sameRoom(const TThing *ch) const;
+    bool sameRoom(const TThing &ch) const;
     bool inImperia() const;
     bool inGrimhaven() const;
+    bool inLogrus() const;
+    bool inAmber() const;
+    bool inBrightmoon() const;
     bool inLethargica() const;
     int getDrechels(int) const;
     int checkSoundproof() const;
@@ -197,7 +196,8 @@ class TThing {
     virtual int bumpHeadDoor(roomDirData *, int *) {return FALSE; }
     TThing *thingHolding() const;
     virtual bool isRideable() const { return FALSE; }
-    virtual int genericMovedIntoRoom(TRoom *, sh_int) {return FALSE; }
+    virtual int genericMovedIntoRoom(TRoom *, sh_int, checkFallingT = CHECK_FALL_YES)
+    { return FALSE; }
     int genericTeleport(silentTypeT, bool keepZone = FALSE);
     virtual bool isFlying() const { return FALSE; }
     virtual bool isLevitating() const { return FALSE; }
@@ -216,12 +216,12 @@ class TThing {
     virtual bool hasHands() const { return FALSE; }
 
     virtual bool poisonObject() { return FALSE; }
-    virtual void findSomeFood(TFood **, TContainer **, TContainer *) {}
-    virtual void findSomeDrink(TDrinkCon **, TContainer **, TContainer *) {}
+    virtual void findSomeFood(TFood **, TBaseContainer **, TBaseContainer *) {}
+    virtual void findSomeDrink(TDrinkCon **, TBaseContainer **, TBaseContainer *) {}
     virtual void describeContains(const TBeing *) const;
     virtual void describeObjectSpecifics(const TBeing *) const {}
     virtual void nukeFood();
-    virtual void evaporate(TBeing *) {}
+    virtual void evaporate(TBeing *, silentTypeT) {}
     virtual int quaffMe(TBeing *);
     virtual bool waterSource() { return FALSE; }
     virtual void spill(const TBeing *) {}
@@ -275,7 +275,7 @@ class TThing {
     virtual void evaluateMe(TBeing *) const;
     virtual void findSomeComponent(TComponent **, TComponent **, TComponent **, spellNumT, int) {}
     virtual bool allowsCast() { return false; }
-    virtual int putMeInto(TBeing *, TRealContainer *);
+    virtual int putMeInto(TBeing *, TOpenContainer *);
     virtual void findComp(TComponent **, spellNumT);
     virtual int componentSell(TBeing *, TMonster *, int, TThing *);
     virtual int componentValue(TBeing *, TMonster *, int, TThing *);
@@ -295,6 +295,7 @@ class TThing {
     virtual void stringMeBow(TBeing *, TThing *);
     virtual void stringMeString(TBeing *, TBow *);
     virtual void skinMe(TBeing *, const char *);
+    virtual void sacrificeMe(TBeing *, const char *);
     virtual int pickWithMe(TBeing *, const char *, const char *, const char *);
     virtual void repairMeHammer(TBeing *, TObj *);
     virtual int garottePulse(TBeing *, affectedData *);
@@ -344,12 +345,12 @@ class TThing {
     virtual int openMe(TBeing *);
     virtual int putSomethingInto(TBeing *, TThing *);
     virtual int putSomethingIntoTable(TBeing *, TTable *);
-    virtual int putSomethingIntoContainer(TBeing *, TRealContainer *);
+    virtual int putSomethingIntoContainer(TBeing *, TOpenContainer *);
     virtual void peeOnMe(const TBeing *);
     virtual bool listThingRoomMe(const TBeing *) const;
     virtual bool canSeeMe(const TBeing *, infraTypeT) const;
     virtual bool getObjFromMeCheck(TBeing *);
-    virtual void getObjFromMeText(TBeing *, TThing *);
+    virtual void getObjFromMeText(TBeing *, TThing *, getTypeT, bool);
 
     // ch can not be const, due to showMe
     virtual void show_me_mult_to_char(TBeing *, showModeT, unsigned int) const {}

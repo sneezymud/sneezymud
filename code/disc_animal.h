@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_animal.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #ifndef __DISC_ANIMAL_H
 #define __DISC_ANIMAL_H
 
@@ -22,19 +7,27 @@ class CDAnimal : public CDiscipline
 {
 public:
     CSkill skBeastCharm;
+    CSkill skFeralWrath;
+    CSkill skSkySpirit;
 
     CDAnimal()
       : CDiscipline(),
-        skBeastCharm() {
+        skBeastCharm(),
+        skFeralWrath(),
+        skSkySpirit() {
     }
     CDAnimal(const CDAnimal &a)
       : CDiscipline(a),
-        skBeastCharm(a.skBeastCharm) {
+        skBeastCharm(a.skBeastCharm),
+        skFeralWrath(a.skFeralWrath),
+        skSkySpirit(a.skSkySpirit) {
     }
     CDAnimal & operator=(const CDAnimal &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
       skBeastCharm = a.skBeastCharm;
+      skFeralWrath = a.skFeralWrath;
+      skSkySpirit = a.skSkySpirit;
       return *this;
     }
     virtual ~CDAnimal() {}
@@ -43,6 +36,7 @@ private:
 };
 
     int beastSoother(TBeing *, TBeing *);
+    int beastSoother(TBeing *, TBeing *, TMagicItem *);
     int beastSoother(TBeing *, TBeing *, int, byte);
  
     int transfix(TBeing *, TBeing *);
@@ -51,7 +45,5 @@ private:
     int beastSummon(TBeing *, const char *);
     int beastSummon(TBeing *, const char *, int, byte);
 
-    void shapeShift(TBeing *, const char *);
-    int shapeShift(TBeing *, const char *, int, byte);
 
 #endif

@@ -2,36 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: info.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.6  1999/10/12 03:00:08  batopr
-// Fixed renew display prob in describeAffect
-//
-// Revision 1.5  1999/10/07 17:20:21  batopr
-// Changed check on aff->renew in describeAffects
-//
-// Revision 1.4  1999/10/03 09:47:28  lapsos
-// Added gag to failed sneak display.
-//
-// Revision 1.3  1999/10/02 06:37:44  lapsos
-// Fixed up who -y to ignore immortals.
-//
-// Revision 1.2  1999/09/29 03:28:27  lapsos
-// Added who -y flag.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////
-//                                                                      //
-//    SneezyMUD++ - All rights reserved, SneezyMUD Coding Team      //
-//                                                                      //
 //    "info.cc" - All informative functions and routines                //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
@@ -40,11 +10,10 @@
 
 #include <algorithm>
 #include <iostream.h>
-#include <cmath>
 
 #include "account.h"
-#include "disease.h"
 #include "games.h"
+#include "disease.h"
 #include "combat.h"
 #include "statistics.h"
 #include "components.h"
@@ -74,11 +43,12 @@ string describeDuration(const TBeing *ch, int dur)
     dur /= 1000;
     dur = max(1, dur);
   }
-  // aff->dur decrements once per PULSE_COMBAT
-  // 1 tick = 30 mud mins = 1 PULSE_TICKS
 
-  hours = dur * PULSE_COMBAT/ PULSE_TICKS / 2;
-  mins = dur * 30 * PULSE_COMBAT/ PULSE_TICKS % 60;
+  // aff->dur decrements once per PULSE_COMBAT
+  // total duration (in pulses) it lasts is dur*COMBAT
+
+  hours = dur * PULSE_COMBAT / PULSE_MUDHOUR;
+  mins = ((dur * PULSE_COMBAT) % PULSE_MUDHOUR) * 60 / PULSE_MUDHOUR;
 
   if (hours >= 24) {
     days = hours/24;
@@ -128,1446 +98,6 @@ void argument_split_2(const char *argument, char *first_arg, char *second_arg)
   begin += look_at;
 }
 
-bool hasColorStrings(const TBeing *mob, const char *arg, int field)
-{
-  const char *s = NULL;
-  int found = 0;
-
-  if (!arg || !*arg)
-    return FALSE;
-
-  mud_assert(field >=1 && field <= 2, "Bad args");
-
-  switch (field) {
-    case 1:
-      s = mob->getName();
-      break;
-    case 2:
-      s = arg;
-      break;
-  }
-  for (; *s; s++) {
-
-    if ((*s == '<') && ((*(s + 2)) == '>')) {
-      switch (*(s + 1)) {
-        case 'b':
-        case 'c':
-        case 'g':
-        case 'k':
-        case 'o':
-        case 'p':
-        case 'r':
-        case 'w':
-        case 'y':
-        case 'B':
-        case 'C':
-        case 'G':
-        case 'K':
-        case 'O':
-        case 'P':
-        case 'R':
-        case 'W':
-        case 'Y':
-        case 'a':
-        case 'A':
-        case 'd':
-        case 'D':
-        case 'f':
-        case 'F':
-        case 'i':
-        case 'I':
-        case 'e':
-        case 'E':
-        case 'j':
-        case 'J':
-        case 'l':
-        case 'L':
-        case 'q':
-        case 'Q':
-        case 't':
-        case 'T':
-        case 'u':
-        case 'U':
-        case 'v':
-        case 'V':
-        case 'x':
-        case 'X':
-        case 'z':
-        case 'Z':
-        case '1':
-          found = 1;
-          break;
-        case 'h':
-        case 'H':
-        case 'n':
-        case 'N':
-        default:
-          break;
-      }
-    }
-  }
-  if (found)
-    return TRUE;
-  else
-    return FALSE;
-
-}
-
-// takes the string given by arg, replaces any <m> or <M> in it with
-// ting's name.  Colorizes as appropriate for me/ch.  Undoes any color
-// changes that were made by insertion of ting's name string also.
-string addNameToBuf(const TBeing *me, const Descriptor *ch, const TThing *ting, const char *arg, colorTypeT lev) 
-{
-  unsigned int s;
-  unsigned int len;
-  string buf;
-  char tmp[256];
-  bool y = FALSE;
-  int x = 0;
-
-  if (!ch)
-    return arg;
-
-  len = strlen(arg);
-  buf = "";
-
-  for(s = 0;len > 2 && s<(len-2);s++) {
-    if ((arg[s] == '<') && (arg[s + 2] == '>')) {
-      // two sequential << chars treat this as desiring to write "<"
-      // we already wrote the first, so just skip this char
-      if (s > 0 && arg[s-1] == '<') 
-        continue;
-      
-      switch (arg[(s+1)]) {
-        case 'm':
-        case 'M':
-          strcpy(tmp, ting->getName());
-          if ((s == 0) || (y && (s == 3))) {
-            cap(tmp);
-          }
-          if (lev != COLOR_NONE) 
-            buf += colorString(me, ch, tmp, NULL, lev, FALSE);
-          else 
-            buf += tmp;
-          
-          if (y) {
-            // Adding back in last colorString
-            buf += arg[x];
-            buf += arg[x + 1];
-            buf += arg[x + 2];
-          }
-          s += 2;
-          break;
-        case 'R':
-        case 'r':
-        case 'b':
-        case 'B':
-        case 'g':
-        case 'G':
-        case 'c':
-        case 'C':
-        case 'p':
-        case 'P':
-        case 'o':
-        case 'y':
-        case 'O':
-        case 'Y':
-        case 'w':
-        case 'W':
-        case 'k':
-        case 'K':
-        case 'a':
-        case 'A':
-        case 'd':
-        case 'D':
-        case 'f':
-        case 'F':
-        case 'i':
-        case 'I':
-        case 'e':
-        case 'E':
-        case 'j':
-        case 'J':
-        case 'l':
-        case 'L':
-        case 'q':
-        case 'Q':
-        case 't':
-        case 'T':
-        case 'u':
-        case 'U':
-        case 'v':
-        case 'V':
-        case 'x':
-        case 'X':
-        case 'z':
-        case 'Z':
-        case '1':
-        case 'h':
-        case 'H':
-          // if there is a color string, it will pick it up after <m>
-          y = TRUE;
-          x = s; 
-        // pass through
-        default:
-          buf += arg[s];
-          break;
-      }
-    } else 
-      buf += arg[s];
-  }
-  while(s < len) 
-    buf += arg[s++];
-  
-  return buf;
-}
-
-string nameColorString(TBeing *me, Descriptor *ch, const char *arg, int *flag, colorTypeT, bool noret)
-{
-  unsigned int len, s;
-  string buf;
-  char tmp[256];
-
-  if (!ch)
-    return arg;
-          
-  len = strlen(arg);
-  buf = "";
-
-  for(s = 0;len > 2 && s < (len-2); s++) {
-    if ((arg[s] == '<') && (arg[s + 2] == '>')) {
-      if (s > 0 && arg[s-1] == '<') {
-        // two sequential << chars treat this as desiring to write "<"
-        // we already wrote the first, so just skip this char
-        continue;
-      }
-      switch (arg[(s+1)]) {
-        case 'n':
-        case 'N':
-          if (me) {
-            strcpy(tmp, me->getName());
-            buf += cap(tmp);
-            if (flag)
-              *flag = TRUE;
-            s += 2;
-          } else 
-            buf += arg[s];
-          
-          break;
-        default:
-          buf += arg[s];
-          break;
-      }   
-    } else 
-      buf += arg[s];
-  }
-  while(s < len) 
-    buf += arg[s++];
-  
-    // force a nice termination
-  buf += "<z>";
-
-  if (noret) 
-    buf += "\n\r";
-
-  return buf;
-}
-
-const string colorString(const TBeing *me, const Descriptor *ch, const char *arg, int *flag, colorTypeT lev, bool end, bool noret)
-{
-// (me = who to, ch is the desc, arg = arg, flag = ?, int lev = desired color
-//  level, end = whether to send terminator at end of string..false if in
-//  middle of senstence (color a mob or something).. used in act() 
-//  noret is overloaded to add a \n\r to the end of the buf, it defaults
-//  to no so if you dont pass anything, it will not return -Cos
-  int len, s;
-  string buf;
-  char tmp[80];
-  bool colorize = TRUE;
-  bool addNorm = FALSE;
-
-  if (!arg)
-    return ("");
-
-  if (!ch && lev != COLOR_NONE && lev != COLOR_NEVER)
-    return arg;
-
-  if (ch && IS_SET(ch->plr_color, PLR_COLOR_CODES)) {
-    return arg;
-  }
-  switch (lev) {
-    case COLOR_ALWAYS:
-    case COLOR_BASIC:   //allows for basic ansi
-      colorize = TRUE; 
-      break;
-    case COLOR_NONE:
-    case COLOR_NEVER:
-      colorize = FALSE;
-      break;
-    case COLOR_COMM:
-      if (!(IS_SET(ch->plr_color, PLR_COLOR_COMM))) 
-         colorize = FALSE;
-      else 
-        colorize = TRUE;
-      
-      break;
-    case COLOR_OBJECTS:
-      if (!(IS_SET(ch->plr_color, PLR_COLOR_OBJECTS))) 
-         colorize = FALSE;
-      else 
-        colorize = TRUE; 
-      
-      break;
-    case COLOR_MOBS:
-      if (!(IS_SET(ch->plr_color, PLR_COLOR_MOBS))) 
-         colorize = FALSE;
-      else 
-        colorize = TRUE;
-      
-      break;
-    case COLOR_ROOMS:
-      if (!(IS_SET(ch->plr_color, PLR_COLOR_ROOMS))) 
-         colorize = FALSE;
-      else { 
-        addNorm = TRUE;
-        colorize = TRUE;
-      }
-      break;
-    case COLOR_ROOM_NAME:
-      if (!(IS_SET(ch->plr_color, PLR_COLOR_ROOM_NAME))) 
-         colorize = FALSE;
-      else {
-        addNorm = TRUE;
-        colorize = TRUE;
-      }
-      break;
-    case COLOR_SHOUTS:
-      if (!(IS_SET(ch->plr_color, PLR_COLOR_SHOUTS))) 
-         colorize = FALSE;
-      else 
-        colorize = TRUE;
-      
-      break;
-    case COLOR_SPELLS:
-      if (!(IS_SET(ch->plr_color, PLR_COLOR_SPELLS))) 
-         colorize = FALSE;
-      else 
-        colorize = TRUE;
-      
-      break;
-    case COLOR_LOGS:
-      if (!(IS_SET(ch->plr_color, PLR_COLOR_LOGS))) 
-         colorize = FALSE;
-      else 
-        colorize = TRUE;
-      
-      break;
-    default:
-      vlogf(5,"Colorstring with a default COLOR setting");
-      colorize = TRUE;
-      break;
-  }
-  len = strlen(arg);
-
-  buf = "";
-  if (colorize) {
-    for(s = 0; s < (len - 2); s++){
-      if ((arg[s] == '<') && (arg[s + 2] == '>')) {
-        if (s > 0 && arg[s - 1] == '<') {
-          // two sequential << chars treat this as desiring to write "<"
-          // we already wrote the first, so just skip this char
-          continue;
-        }
-        switch (arg[(s+1)]) {
-          case 'h':
-            buf += MUD_NAME;
-            s += 2;
-            break;
-          case 'H':
-            buf += MUD_NAME_VERS;
-            s += 2;
-            break;
-          case 'R':
-            buf += ch->redBold();
-            s += 2;
-            break;
-          case 'r':
-            if (addNorm) 
-              buf += ch->norm();
-            
-            buf += ch->red();
-            s += 2;
-            break; 
-          case 'G':
-            buf += ch->greenBold();
-            s += 2;
-            break;
-          case 'g':
-            if (addNorm) 
-              buf += ch->norm();
-            
-            buf += ch->green();
-            s += 2;
-            break;
-          case 'y':
-          case 'Y':
-            // yellow 
-            buf += ch->orangeBold();
-            s += 2;
-            break;
-          case 'O':
-          case 'o':
-            if (addNorm) 
-              buf += ch->norm();
-            
-            buf += ch->orange();
-            s += 2;
-            break;
-          case 'B':
-            buf += ch->blueBold();
-            s += 2;
-            break;
-          case 'b':
-            if (addNorm) 
-              buf += ch->norm();
-            
-            buf += ch->blue();
-            s += 2;
-            break;
-          case 'P':
-            buf += ch->purpleBold();
-            s += 2;
-            break;
-          case 'p':
-            if (addNorm) 
-              buf += ch->norm();
-            
-            buf += ch->purple();
-            s += 2;
-            break;
-          case 'C':
-            buf += ch->cyanBold();
-            s += 2;
-            break;
-          case 'c':
-            if (addNorm) 
-              buf += ch->norm();
-            
-            buf += ch->cyan();
-            s += 2;
-            break;
-          case 'W':
-            buf += ch->whiteBold();
-            s += 2;
-            break;
-          case 'w':
-            if (addNorm) 
-              buf += ch->norm();
-            
-            buf += ch->white();
-            s += 2;
-            break;
-          case 'k':
-            // NOTE this is the bold will be charcoal
-            buf += ch->blackBold();
-            s += 2;
-            break;
-          case 'K':
-            if (addNorm) 
-              buf += ch->norm();
-            
-            buf += ch->black();
-            s += 2;
-            break;
-          case 'A':
-            buf += ch->underBold();
-            s += 2;
-            break;
-          case 'a':
-            buf += ch->under();
-            s += 2;
-            break;
-          case 'D':
-          case 'd':
-            buf += ch->bold();
-            s += 2;
-            break;
-          case 'f':
-          case 'F':
-            if (me && me->isImmortal()) {
-              buf += ch->flash();
-              s += 2;
-            } else 
-              buf += arg[s];
-            
-            break;
-          case 'i':
-          case 'I':
-            buf += ch->invert();
-            s += 2;
-            break;
-          case 'e':
-          case 'E':
-            if (me && me->isImmortal()) {
-              buf += ch->BlackOnWhite();
-              s += 2;
-            } else 
-              buf += arg[s];
-            
-            break;
-          case 'j':
-          case 'J':
-            if (me && me->isImmortal()) {
-              buf += ch->BlackOnBlack();
-              s += 2;
-            } else 
-              buf += arg[s];
-            
-            break;
-          case 'l':
-          case 'L':
-            if (me && me->isImmortal()) {
-              buf += ch->WhiteOnRed();
-              s += 2;
-            } else 
-              buf += arg[s];
-            
-            break;
-          case 'q':
-          case 'Q':
-            if (me && me->isImmortal()) {
-              buf += ch->WhiteOnGreen();
-              s += 2;
-            } else 
-              buf += arg[s];
-            
-            break;
-          case 't':
-          case 'T':
-            if (me && me->isImmortal()) {
-              buf += ch->WhiteOnOrange();
-              s += 2;
-            } else 
-              buf += arg[s];
-            
-            break;
-          case 'u':
-          case 'U':
-            if (me && me->isImmortal()) {
-              buf += ch->WhiteOnBlue();
-              s += 2;
-            } else 
-              buf += arg[s];
-            
-            break;
-          case 'v':
-          case 'V':
-            if (me && me->isImmortal()) {
-              buf += ch->WhiteOnPurple();
-              s += 2;
-            } else 
-              buf += arg[s];
-            
-            break;
-          case 'x':
-          case 'X':
-            if (me && me->isImmortal()) {
-              buf += ch->WhiteOnCyan();
-              s += 2;
-            } else 
-              buf += arg[s];
-            
-            break;
-          case 'z':
-          case 'Z':
-          case '1':
-            buf += ch->norm();
-            s += 2;
-            break;
-          default:
-            buf += arg[s];
-            break;
-        }
-      } else 
-        buf += arg[s];
-    }   
-    // copy the last 1 or 2 characters into buf.
-    while(s < len) {
-      // strip terminations, added again below if requested
-      if (arg[s]) 
-        buf += arg[s];
-      
-      s++;
-    }
-  } else {
-    // colorize is off
-
-    for (s = 0; s < (len-2); s++) {
-      if ((arg[s] == '<') && (arg[s+2] == '>')) {
-        if (s > 0 && arg[s-1] == '<') {
-          // two sequential << chars treat this as desiring to write "<"
-          // we already wrote the first, so just skip this char
-          continue;
-        }
-        switch (arg[(s+1)]) {
-          case 'n':
-          case 'N':
-            if (me) {
-              strcpy(tmp, me->getName());
-              buf += cap(tmp);
-              if (flag)
-                *flag = TRUE;
-              s += 2;
-            } else 
-              buf += arg[s];
-            
-            break;
-          case 'R':
-          case 'r':
-          case 'b':
-          case 'B':
-          case 'g':
-          case 'G':
-          case 'c':
-          case 'C':
-          case 'p':
-          case 'P':
-          case 'o':
-          case 'y':
-          case 'O':
-          case 'Y':
-          case 'w':
-          case 'W':
-          case 'k':
-          case 'K':
-          case 'a':
-          case 'A':
-          case 'd':
-          case 'D':
-          case 'f':
-          case 'F':
-          case 'i':
-          case 'I':
-          case 'e':
-          case 'E':
-          case 'j':
-          case 'J':
-          case 'l':
-          case 'L':
-          case 'q':
-          case 'Q':
-          case 't':
-          case 'T':
-          case 'u':
-          case 'U':
-          case 'v':
-          case 'V':
-          case 'x':
-          case 'X':
-          case 'z':
-          case 'Z':
-          case 'h':
-          case 'H':
-          case '1':
-            s += 2;
-            break;
-          default:
-            buf += arg[s];
-            break;
-        }
-      } else 
-        buf += arg[s];
-    }
-    // copy the last 1 or 2 characters into buf.
-    while(s < len) {
-      if (arg[s]) 
-        buf += arg[s];
-      
-      s ++;
-    }
-  }
-
-
-  // force a nice termination
-  if (colorize) {
-    if (end) 
-      buf += ch->norm();
-  }
-
-  if (noret) 
-    buf += "\n\r";
-
-  return buf;
-}
-
-void TBeing::parseTitle(char *arg, Descriptor *)
-{
-  strcpy(arg, getName());
-  return;
-}
-
-void TPerson::parseTitle(char *arg, Descriptor *user)
-{
-  int flag = FALSE;
-  if (!title) {
-    strcpy(arg, getName());
-    return;
-  }
-
-  strcpy(arg, nameColorString(this, user, title, &flag, COLOR_BASIC, FALSE).c_str());
-  if (!flag &&
-      colorString(this, user, title, NULL, COLOR_NONE, TRUE).find(getNameNOC(this).c_str()) ==
-      string::npos)
-    strcpy(arg, getName());  // did not specify a <n>
-
-  // explicitely terminate it since players are sloppy
-  strcat(arg, "<1>");
-
-  return;
-}
-
-void TBeing::doWhozone()
-{
-  Descriptor *d;
-  TRoom *rp = NULL;
-  char buf[256];
-  TBeing *person = NULL;
-  int count = 0;
-
-  sendTo("Players:\n\r--------\n\r");
-  for (d = descriptor_list; d; d = d->next) {
-    if (!d->connected && canSee(d->character) &&
-        (rp = real_roomp((person = (d->original ? d->original : d->character))->in_room)) &&
-        (rp->getZone() == roomp->getZone())) {
-      sprintf(buf, "%-25s - %s ", person->getName(), rp->name);
-      if (GetMaxLevel() > MAX_MORT)
-        sprintf(buf + strlen(buf), "[%d]", person->in_room);
-      strcat(buf, "\n\r");
-      sendTo(COLOR_BASIC, buf);
-      count++;
-    }
-  }
-  sendTo("\n\rTotal visible players: %d\n\r", count);
-}
-
-void Descriptor::menuWho() 
-{
-  TBeing *person;
-  char buf[256];
-  char buf2[256];
-  char send[4096] = "\0";
-
-  strcpy(send, "\n\r");
-
-  for (person = character_list; person; person = person->next) {
-    if (person->isPc() && person->polyed == POLY_TYPE_NONE) {
-      if (dynamic_cast<TPerson *>(person) &&
-          (person->getInvisLevel() < GOD_LEVEL1)) {
-        person->parseTitle(buf, this);
-
-        sprintf(buf2, "%s", colorString(person, this, buf, NULL, COLOR_BASIC, FALSE).c_str());
-        strcat(buf2, "\n\r");
-        strcat(send, buf2);
-      }
-    }
-  }
-  strcat(send, "\n\r");
-  writeToQ(send);
-  writeToQ("[Press return to continue]\n\r");
-}
-
-static const string getWizDescriptLev(const TBeing *ch)
-{
-  if (ch->hasWizPower(POWER_WIZARD))
-    return "creator";
-  else if (ch->hasWizPower(POWER_GOD))
-    return "  god  ";
-  else if (ch->hasWizPower(POWER_BUILDER))
-    return "demigod";
-  else
-    return "BUG ME!";
-}
-
-static const string getWhoLevel(const TBeing *ch, TBeing *p)
-{
-  char tempbuf[256];
-  char colorBuf[256] = "\0";
-
-  if (p->hasWizPower(POWER_WIZARD))
-    strcpy(colorBuf, ch->purple());
-  else if (p->hasWizPower(POWER_GOD))
-    strcpy(colorBuf, ch->red());
-  else if (p->hasWizPower(POWER_BUILDER))
-    strcpy(colorBuf, ch->cyan());
-
-  if (p->msgVariables == MSG_IMM_TITLE &&
-      !p->msgVariables(MSG_IMM_TITLE, (TThing *)NULL).empty())
-    sprintf(tempbuf, "%sLevel:[%-14s%s][%s] %s",
-            colorBuf, p->msgVariables(MSG_IMM_TITLE, (TThing *)NULL).c_str(),
-            colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (!strcmp(p->getName(), "Brutius"))
-    sprintf(tempbuf, "%sLevel:[ Grand Poobah ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (!strcmp(p->getName(), "Marsh"))
-    sprintf(tempbuf, "%sLevel:[Grand Poobette][%s] %s",
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (!strcmp(p->getName(), "Batopr"))
-    sprintf(tempbuf, "%sLevel:[  Mr. Fix-It  ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (!strcmp(p->getName(), "Cosmo"))
-    sprintf(tempbuf, "%sLevel:[The Obfuscation Elminator][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (!strcmp(p->getName(), "Dolgan"))
-    sprintf(tempbuf, "%sLevel:[Chief Surveyor][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (!strcmp(p->getName(), "Spawn"))
-    sprintf(tempbuf, "%sLevel:[Shmack Talker ][%s] %s",
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (!strcmp(p->getName(), "Messiah"))
-    sprintf(tempbuf, "%sLevel:[  The  Maker  ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (!strcmp(p->getName(), "Speef"))
-    sprintf(tempbuf, "%sLevel:[ The Idea Man ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-#if 0
-  else if (!strcmp(p->getName(), "Gringar"))
-    sprintf(tempbuf, "%sLevel:[Faction Lackey][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-#endif
-  else if (!strcmp(p->getName(), "Peel"))
-    sprintf(tempbuf, "%sLevel:[The Freshmaker][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (!strcmp(p->getName(), "Mithros"))
-    sprintf(tempbuf, "%sLevel:[Head Architect][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (!strcmp(p->getName(), "Lapsos"))
-    sprintf(tempbuf, "%sLevel:[Jack of Trades][%s] %s",
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (!strcmp(p->getName(), "Omen"))
-    sprintf(tempbuf, "%sLevel:[   Bad Omen   ][%s] %s",
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (!strcmp(p->getName(), "Sidartha"))
-    sprintf(tempbuf, "%sLevel:[Lord of Worlds][%s] %s",
-            colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (!strcmp(p->getName(), "Damescena"))
-    sprintf(tempbuf, "%sLevel:[ All Business ][%s] %s",
-            colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  //  else if (!strcmp(p->getName(), "Phenohol"))
-  // sprintf(tempbuf, "%sLevel:[ He's Special ][%s] %s", 
-  //        colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-
- 
-// generic cases
-  else if (p->GetMaxLevel() == GOD_LEVEL10)
-    sprintf(tempbuf, "%sLevel:[ Implementor  ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (p->GetMaxLevel() == GOD_LEVEL9)
-    sprintf(tempbuf, "%sLevel:[ Grand Wizard ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (p->GetMaxLevel() == GOD_LEVEL8)
-    sprintf(tempbuf, "%sLevel:[ Senior Lord  ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (p->GetMaxLevel() == GOD_LEVEL7)
-    sprintf(tempbuf, "%sLevel:[ Junior Lord  ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (p->GetMaxLevel() == GOD_LEVEL6)
-    sprintf(tempbuf, "%sLevel:[    Eternal   ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (p->GetMaxLevel() == GOD_LEVEL5) {
-    if (p->getSex() == SEX_FEMALE)
-      sprintf(tempbuf, "%sLevel:[   Goddess    ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-    else
-      sprintf(tempbuf, "%sLevel:[     God      ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  } else if (p->GetMaxLevel() == GOD_LEVEL4) {
-    if (p->getSex() == SEX_FEMALE)
-      sprintf(tempbuf, "%sLevel:[ Demi-Goddess ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-    else
-      sprintf(tempbuf, "%sLevel:[   Demi-God   ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  } else if (p->GetMaxLevel() == GOD_LEVEL3)
-    sprintf(tempbuf, "%sLevel:[     Saint    ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  else if (p->GetMaxLevel() == GOD_LEVEL2) {
-    if (p->getSex() == SEX_FEMALE)
-      sprintf(tempbuf, "%sLevel:[    Heroine   ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-    else
-      sprintf(tempbuf, "%sLevel:[     Hero     ][%s] %s", 
-           colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-  } else if (p->GetMaxLevel() == GOD_LEVEL1)
-    sprintf(tempbuf, "%sLevel:[Area Designer ][%s] %s",
-            colorBuf, getWizDescriptLev(p).c_str(), ch->norm());
-#if 1
-  else {
-    string tmpstring;
-    if(p->isPlayerAction(PLR_ANONYMOUS) && !ch->isImmortal()){
-      tmpstring = "Anonymous";
-    } else {
-      tmpstring = p->getProfAbbrevName();
-      tmpstring += " Lev ";
-      sprintf(tempbuf, "%d", p->GetMaxLevel());
-      tmpstring += tempbuf;
-    }
-
-    while (tmpstring.length() < 13)
-      tmpstring = " " + tmpstring + " ";
-    if (tmpstring.length() < 14)
-      tmpstring += " ";
-
-    sprintf(tempbuf, "Level:[%s] ", tmpstring.c_str());
-  }
-#else
-  else if (ch->isImmortal()) {
-    string tmpstring = p->getProfAbbrevName();
-    tmpstring += " Lev ";
-    sprintf(tempbuf, "%d", p->GetMaxLevel());
-    tmpstring += tempbuf;
-    while (tmpstring.length() < 13)
-      tmpstring = " " + tmpstring + " ";
-    if (tmpstring.length() < 14)
-      tmpstring += " ";
-
-    sprintf(tempbuf, "Level:[%s] ", tmpstring.c_str());
-  }
-  else if (p->desc && p->desc->original)
-    sprintf(tempbuf, "Level:[      %-2d      ] ", p->desc->original->GetMaxLevel());
-  else      // a non immortal 
-    sprintf(tempbuf, "Level:[      %-2d      ] ", p->GetMaxLevel());
-#endif
-
-  return tempbuf;
-}
-
-void TBeing::doWho(const char *argument)
-{
-#if 0
-  // New Who Code to handle: who -ol j 20 40
-
-  if (gamePort == BETA_GAMEPORT) {
-    // 27 Who Flags upon (10-1-99):
-    //  i=Idle          l=Levels        q=Quests
-    //  h=Hit/Mana/Move z=Seeks-Group   p=Grouped
-    //  d=Linkdead      g=Gods/Creators b=Builders/Gods/Creators
-    //  o=Mortals       s=Stats         f=Faction
-    //  1=Mage          2=Cleric        3=Warrior
-    //  4=Thief         5=Deikhan       6=Monk
-    //  7=Ranger        8=Shaman        e=Elf
-    //  t=Hobbit        n=Gnome         u=Human
-    //  r=Ogre          w=Dwarven       y=Not-Grouped
-    const  char *tPerfMatches = "ilqhzpydgbosf12345678etnurw";
-    char   tString[256],
-           tBuffer[256]  = "\0",
-           tOutput[1024] = "\0";
-    int    tLow   =  0,
-           tHigh  = 60,
-           tCount =  0,
-           tLinkD =  0;
-    string tSb("");
-    unsigned long int tBits = 0;
-    TBeing *tBeing,
-           *tFollower;
-
-    while ((argument = one_argument(argument, tString))) {
-      if (tString[0] == '-') {
-        for (const char *tMarker = (tString + 1); *tMarker; tMarker++)
-          if (strchr(tPerfMatches, *tMarker))
-            tBits |= (1 << (strchr(tPerfMatches, *tMarker) - tPerfMatches));
-          else {
-            if (*tMarker != '?') {
-              sprintf(tBuffer, "Unknown Option '%c':\n\r", *tMarker);
-              tSb += tBuffer;
-            }
-
-            if (isImmortal()) {
-              tSb += "[-] [i]idle [l]levels [q]quests [h]hit/mana/move\n\r";
-              tSb += "[-] [z]seeks-group [p]groups [y]currently-not-grouped\n\r";
-              tSb += "[-] [d]linkdead [g]God [b]Builders [o]Mort [s]stats [f]action\n\r";
-              tSb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
-              tSb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
-            } else {
-              tSb += "[-] [q]quests [g]god [b]builder [o]mort [f]faction\n\r";
-              tSb += "[-] [z]seeks-group [p]groups [y]currently-not-grouped\n\r";
-              tSb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
-#if 1
-              tSb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
-#endif
-            }
-
-            if (desc)
-              desc->page_string(tSb.c_str(), 0, TRUE);
-
-            return;
-          }
-      } else if (is_number(tBuffer)) {
-        if (!tLow)
-          tLow = atoi(tBuffer);
-        else
-          tHigh = atoi(tBuffer);
-
-	if (tLow <= 0 || tHigh > 60) {
-          sendTo("Level numbers must be between 1 and 60.\n\r");
-          return;
-        }
-
-        if (tHigh < tLow) {
-          tCount = tLow;
-          tLow   = tHigh;
-          tHigh  = tCount;
-        }
-      } else
-        strcpy(tBuffer, tString);
-    }
-
-    tSb += "Players: (Use who -? for online help)\n\r----------\n\r";
-    tCount = tLinkD = 0;
-
-    for (tBeing = character_list; tBeing; tBeing = tBeing->next)
-      if (tBeing->isPc() && (tBeing->polyed == POLY_TYPE_NONE || isImmortal()) &&
-          dynamic_cast<TPerson *>(tBeing) && canSeeWho(tBeing)) {
-        if (tBeing->isLinkdead())
-          tLinkD++;
-        else
-          tCount++;
-
-        bool anonCheck == (isImmortal() || !tBeing->isPlayerAction(PLR_ANONYMOUS));
-
-        if ((!(tBits & (1 <<  2)) || tBeing->inQuest()) &&
-            (!(tBits & (1 <<  4)) || tBeing->isPlayerAction(PLR_SEEKSGROUP)) &&
-            (!(tBits & (1 <<  5)) || (tBeing->isAffected(AFF_GROUP) && !tBeing->master && tBeing->followers)) &&
-            (!(tBits & (1 <<  6)) || (!tBeing->isAffected(AFF_GROUP) && !tBeing->isImmortal())) &&
-            (!(tBits & (1 <<  7)) || (tBeing->isLinkdead() && isImmortal())) && 
-            (!(tBits & (1 <<  8)) || tBeing->hasWizPower(POWER_GOD)) &&
-            (!(tBits & (1 <<  9)) || tBeing->hasWizPower(POWER_BUILDER)) &&
-            (!(tBits & (1 << 10)) || !tBeing->hasWizPower(POEWR_BUILDER)) &&
-            (!(tBits & (1 << 13)) || (anonCheck && tBeing->hasClass(CLASS_MAGE))) &&
-            (!(tBits & (1 << 14)) || (anonCheck && tBeing->hasClass(CLASS_CLERIC))) &&
-            (!(tBits & (1 << 15)) || (anonCheck && tBeing->hasClass(CLASS_WARRIOR))) &&
-            (!(tBits & (1 << 16)) || (anonCheck && tBeing->hasClass(CLASS_THIEF))) &&
-            (!(tBits & (1 << 17)) || (anonCheck && tBeing->hasClass(CLASS_DEIKHAN))) &&
-            (!(tBits & (1 << 18)) || (anonCheck && tBeing->hasClass(CLASS_MONK))) &&
-            (!(tBits & (1 << 19)) || (anonCheck && tBeing->hasClass(CLASS_RANGER))) &&
-            (!(tBits & (1 << 20)) || (anonCheck && tBeing->hasClass(CLASS_SHAMAN))) &&
-            (!(tBits & (1 << 21)) || tBeing->getRace() == RACE_ELVEN) &&
-            (!(tBits & (1 << 22)) || tBeing->getRace() == RACE_GNOME) &&
-            (!(tBits & (1 << 23)) || tBeing->getRace() == RACE_HUMAN) &&
-            (!(tBits & (1 << 24)) || tBeing->getRace() == RACE_DWARF) &&
-            (!(tBits & (1 << 25)) || tBeing->getRace() == RACE_OGRE) &&
-            (!(tBits & (1 << 26)) || tBeing->getRace() == RACE_HOBBIT) &&
-            (!*tBuffer || is_abbrev(tBuffer, tBeing->getName())) &&
-            in_range(tBeing->GetMaxLevel(), tLow, tHigh)) {
-          tOutput[0] = '\0';
-
-          if ((tBits & (1 << 0)) && isImmortal()) {
-            sprintf(tString, "Idle:[%-3d] ", tBeing->getTimer());
-            strcat(tOutput, tString);
-          }
-
-          if ((tBits & (1 << 1)))
-            strcat(tOutput, getWhoLevel(this, tBeing).c_str());
-
-
-	  // Name goes here.
-
-          if ((tBits & (1 << 12))) {
-            if ((isImmortal() || getFaction() == tBeing->getFaction()) && !tBeing->isImmortal())
-#if FACTIONS_IN_USE
-              sprintf(tString, " [%s] %5.2f%%",
-                      FactionInfo[tBeing->getFaction()].faction_name,
-                      tBeing->getPerc());
-#else
-              sprintf(tString, " [%s]",
-                      FactionInfo[tBeing->getFaction()].faction_name);
-#endif
-
-            strcat(tOutput, tString);
-          }
-
-          if (isImmortal()) {
-            if (tBeing->polyed == POLY_TYPE_SWITCH)
-              strcat(tOutput, " (switched)")
-          }
-
-          if ((tBits & (1 << 3)) && isImmortal()) {
-            if (tBeing->hasClass(CLASS_CLERIC) || tBeing->hasClass(CLASS_DEIKHAN))
-              sprintf(tString, "\n\r\tHit:[%-3d] Pty:[%-5.2f] Move:[%-3d] Talens:[%-8d] Bank:[%-8d]",
-                      tBeing->getHit(), tBeing->getPiety(), tBeing->getMove(), tBeing->getMoney(), tBeing->getBank());
-            else
-              sprintf(tString, "\n\r\tHit:[%-3d] Mna:[%-3f] Move:[%-3d] Talens:[%-8d] Bank:[%-8d]",
-                      tBeing->getHit(), tBeing->getMana(), tBeing->getMove(), tBeing->getMoney(), tBeing->getBank());
-
-            strcat(tOutput, tString);
-          }
-
-          if ((tBits & (1 << 11)) && isImmortal()) {
-            sprintf(tString, "\n\r\t[St:%-3d Br:%-3d Co:%-3d De:%-3d Ag:%-3d In:%-3d Wi:%-3d Fo:%-3d Pe:%-3d Ch:%-3d Ka:%-3d Sp:%-3d]",
-                    tBeing->curStats.get(STAT_STR),
-                    tBeing->curStats.get(STAT_BRA),
-                    tBeing->curStats.get(STAT_CON),
-                    tBeing->curStats.get(STAT_DEX),
-                    tBeing->curStats.get(STAT_AGI),
-                    tBeing->curStats.get(STAT_INT),
-                    tBeing->curStats.get(STAT_WIS),
-                    tBeing->curStats.get(STAT_FOC),
-                    tBeing->curStats.get(STAT_PER),
-                    tBeing->curStats.get(STAT_CHA),
-                    tBeing->curStats.get(STAT_KAR),
-                    tBeing->curStats.get(STAT_SPE));
-
-            strcat(tOutput, tString);
-          }
-        }
-      }
-    /*
-    char   tString[256],
-           tBuffer[256]  = "\0",
-           tOutput[1024] = "\0";
-    string tSb("");
-    TBeing *tBeing,
-           *tFollower;
-
-[-] [i]idle [l]levels [q]quests [h]hit/mana/move
-[-] [z]seeks-group [p]groups [y]currently-not-grouped
-[-] [d]linkdead [g]God [b]Builders [o]Mort [s]stats [f]action
-[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman
-[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven
-     */
-
-    return;
-  }
-#endif
-
-  TBeing *k, *p;
-  char buf[1024] = "\0\0\0";
-  int listed = 0, lcount, l;
-  unsigned int count;
-  char arg[1024], tempbuf[1024];
-  string sb;
-  int which1 = 0;
-  int which2 = 0;
-
-  for (; isspace(*argument); argument++);
-
-  sb += "Players: (Add -? for online help)\n\r--------\n\r";
-  lcount = count = 0;
-
-  if (!*argument || 
-       ((sscanf(argument, "%d %d", &which1, &which2) == 2) && 
-          which1 > 0 && which2 > 0) ||
-       ((sscanf(argument, "%d %d", &which1, &which2) == 1) && 
-          which1 > 0  && (which2 = MAX_IMMORT))) {
-    // plain old 'who' command 
-    // who <level>      level2 assigned to 60
-    // who <level> <level2>
-    for (p = character_list; p; p = p->next) {
-      if (p->isPc() && p->polyed == POLY_TYPE_NONE) {
-        if (dynamic_cast<TPerson *>(p)) {
-          if (canSeeWho(p) && (!*argument || ((!p->isPlayerAction(PLR_ANONYMOUS) || isImmortal()) && p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2))){
-            count++;
-
-            p->parseTitle(buf, desc);
-            if (!*argument) {
-              if (p->isPlayerAction(PLR_SEEKSGROUP))
-                sprintf(buf + strlen(buf), "   (Seeking Group)");
-
-              if (p->isPlayerAction(PLR_NEWBIEHELP))
-                sprintf(buf + strlen(buf), "   (Newbie-Helper)");
-
-              strcat(buf, "\n\r");
-            } else {
-              sprintf(buf + strlen(buf), "   %s", getWhoLevel(this, p).c_str());
-              if (p->isPlayerAction(PLR_SEEKSGROUP))
-                sprintf(buf + strlen(buf), "   (Seeking Group)");
-
-              if (p->isPlayerAction(PLR_NEWBIEHELP))
-                sprintf(buf + strlen(buf), "   (Newbie-Helper)");
-
-              sprintf(buf + strlen(buf), "\n\r");
-            }
-            char tmp[256];
-            if (isImmortal() && p->isLinkdead()) {
-              sprintf(tmp, "** %s", buf);
-            } else {
-              sprintf(tmp, "%s%s",
-                  (p->polyed == POLY_TYPE_SWITCH ?  "(switched) " : ""), buf);
-              sb += tmp;
-            }
-            //            sb += tmp;
-          }
-        } else if (isImmortal()) {
-// only immortals will see this to provide them some concealment
-          if (canSeeWho(p) && 
-              (!*argument || 
-                (p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2)) &&
-              IS_SET(p->specials.act, ACT_POLYSELF)) {
-            count++;
-            strcpy(tempbuf, pers(p));
-            sprintf(buf, "%s (polymorphed magic user)\n\r", cap(tempbuf));
-            sb += buf;
-          } else if (canSeeWho(p) &&
-                (!*argument || 
-                (p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2)) &&
-                     IS_SET(p->specials.act, ACT_DISGUISED)) {
-            count++;
-            strcpy(tempbuf, pers(p));
-            sprintf(buf, "%s (disguised thief)\n\r", cap(tempbuf));
-            sb += buf;
-          }
-        }
-      }
-    }
-    max_player_since_reboot = max(max_player_since_reboot, count);
-    sprintf(buf, "\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r", count, max_player_since_reboot, stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
-    sb += buf;
-    if (desc)
-      desc->page_string(sb.c_str(), 0, TRUE);
-
-    return;
-  } else {
-    argument = one_argument(argument, arg);
-    if (*arg == '-') {
-      if (strchr(arg, '?')) {
-        if (isImmortal()) {
-          sb += "[-] [i]idle [l]levels [q]quests [h]hit/mana/move\n\r";
-          sb += "[-] [z]seeks-group [p]groups [y]currently-not-grouped\n\r";
-          sb += "[-] [d]linkdead [g]God [b]Builders [o]Mort [s]stats [f]action\n\r";
-          sb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
-          sb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
-        } else {
-          sb += "[-] [q]quests [g]god [b]builder [o]mort [f]faction\n\r";
-          sb += "[-] [z]seeks-group [p]groups [y]currently-not-grouped\n\r";
-          sb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
-#if 1
-          sb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
-#endif
-        }
-        if (desc)
-          desc->page_string(sb.c_str(), 0, TRUE);
-        return;
-      }
-      bool level, statsx, iPoints, quest, idle, align, group;
-      for (p = character_list; p; p = p->next) {
-        align = level = statsx = idle = iPoints = quest = group = FALSE;
-        if (dynamic_cast<TPerson *>(p) && canSeeWho(p)) {
-          count++;
-          if (p->isLinkdead())
-            lcount++;
-
-          if ((canSeeWho(p) &&
-              (!strchr(arg, 'g') || (p->GetMaxLevel() >= GOD_LEVEL1)) &&
-              (!strchr(arg, 'b') || (p->GetMaxLevel() >= GOD_LEVEL1)) &&
-              (!strchr(arg, 'q') || (p->inQuest())) &&
-              (!strchr(arg, 'o') || (p->GetMaxLevel() <= MAX_MORT)) &&
-              (!strchr(arg, 'z') || (p->isPlayerAction(PLR_SEEKSGROUP))) &&
-              (!strchr(arg, 'p') || (p->isAffected(AFF_GROUP) && !p->master && p->followers)) &&
-              (!strchr(arg, 'y') || (!p->isAffected(AFF_GROUP) && !p->isImmortal())) &&
-              (!strchr(arg, '1') || (p->hasClass(CLASS_MAGIC_USER) && (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-              (!strchr(arg, '2') || (p->hasClass(CLASS_CLERIC) && (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-              (!strchr(arg, '3') || (p->hasClass(CLASS_WARRIOR) && (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-              (!strchr(arg, '4') || (p->hasClass(CLASS_THIEF) && (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-              (!strchr(arg, '5') || (p->hasClass(CLASS_DEIKHAN) && (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-              (!strchr(arg, '6') || (p->hasClass(CLASS_MONK) && (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-              (!strchr(arg, '7') || (p->hasClass(CLASS_RANGER) && (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-              (!strchr(arg, '8') || (p->hasClass(CLASS_SHAMAN) && (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-              (!strchr(arg, 'd') || (p->isLinkdead() && isImmortal())) &&
-              (!strchr(arg, 'e') || p->getRace() == RACE_ELVEN) &&
-              (!strchr(arg, 'n') || p->getRace() == RACE_GNOME) &&
-              (!strchr(arg, 'u') || p->getRace() == RACE_HUMAN) &&
-              (!strchr(arg, 'w') || p->getRace() == RACE_DWARF) &&
-              (!strchr(arg, 'r') || p->getRace() == RACE_OGRE) &&
-              (!strchr(arg, 't') || p->getRace() == RACE_HOBBIT))) {
-            if (p->isLinkdead() && isImmortal())
-              sprintf(buf, "[%-12s] ", pers(p));
-            else if (p->polyed == POLY_TYPE_SWITCH && isImmortal())
-              sprintf(buf, "[%-12s] (switched) ", pers(p));
-            else if (dynamic_cast<TMonster *>(p) &&
-                     (p->specials.act & ACT_POLYSELF))
-              sprintf(buf, "(%-14s) ", pers(p));
-            else 
-              sprintf(buf, "%-11s ", pers(p));
-            listed++;
-            for (l = 1; l <= (int) strlen(arg); l++) {
-              switch (arg[l]) {
-                case 'p':
-                  // we trapped only group leaders above...
-                  if (!group) {
-                    TBeing *ch;
-                    followData *f;
-                    for (f = p->followers; f; f = f->next) {
-                      ch = f->follower;
-                      if (!ch->isPc())
-                        continue;
-                      if (!canSeeWho(ch))
-                        continue;
-                      if (ch->isLinkdead() && isImmortal())
-                        sprintf(buf, "[%-12s] ", pers(ch));
-                      else if (ch->polyed == POLY_TYPE_SWITCH && isImmortal())
-                        sprintf(buf, "[%-12s] (switched) ", pers(ch));
-                      else if (dynamic_cast<TMonster *>(ch) &&
-                               (ch->specials.act & ACT_POLYSELF))
-                        sprintf(buf + strlen(buf), "(%-14s) ", pers(ch));
-                      else if (ch->isPlayerAction(PLR_ANONYMOUS) && !isImmortal())
-                        sprintf(buf + strlen(buf), "%-11s (???) ", pers(ch));
-                      else
-                        sprintf(buf + strlen(buf), "%-11s (L%d) ", pers(ch), ch->GetMaxLevel());
-                    }
-
-                    group = true;
-                  }
-                  break;
-                case 'i':
-                  if (!idle) {
-                    if (isImmortal())
-                      sprintf(buf + strlen(buf), "Idle:[%-3d] ", p->getTimer());
-                  }
-                  idle = TRUE;
-                  break;
-                case 'l':
-                case 'y':
-                  if (!level) {
-                    strcat(buf, getWhoLevel(this, p).c_str());
-                    if (p->isPlayerAction(PLR_SEEKSGROUP))
-                      sprintf(buf + strlen(buf), "   (Seeking Group)");
-
-                    if (p->isPlayerAction(PLR_NEWBIEHELP))
-                      sprintf(buf + strlen(buf), "   (Newbie-Helper)");
-                  }
-                  level = TRUE;
-                  break;
-                case 'g':
-                case 'b':
-                  // canSeeWho already separated out invisLevel > my own
-                  // only a god can go invis, mortals technically have
-                  // invisLevel if they are linkdead, ignore that though
-                  if (p->getInvisLevel() > MAX_MORT)
-                    sprintf(buf + strlen(buf), "  (invis %d)  ",
-                        p->getInvisLevel());
-                  break;
-                case 'h':
-                  if (!iPoints) {
-                    if (isImmortal())
-                      if (p->hasClass(CLASS_CLERIC)||p->hasClass(CLASS_DEIKHAN))
-                        sprintf(buf + strlen(buf), "Hit:[%-3d] Pty:[%-.2f] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]",
-                              p->getHit(), p->getPiety(), p->getMove(), p->getMoney(), p->getBank());
-                      else
-                          sprintf(buf + strlen(buf), "Hit:[%-3d] Mana:[%-3d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]",
-                              p->getHit(), p->getMana(), p->getMove(), p->getMoney(), p->getBank());
-                  }
-                  iPoints = TRUE;
-                  break;
-                case 'f':
-                  if (!align) {
-                    // show factions of everyone to immorts
-                    // mortal version will show non-imms that are in same fact
-                    if ((getFaction()==p->getFaction() &&
-                         p->GetMaxLevel() <= MAX_MORT) || isImmortal())
-#if FACTIONS_IN_USE
-                      sprintf(buf + strlen(buf), "[%s] %5.2f%%", 
-                        FactionInfo[p->getFaction()].faction_name,
-                        p->getPerc());
-#else
-                      sprintf(buf + strlen(buf), "[%s]", 
-                        FactionInfo[p->getFaction()].faction_name);
-#endif
-                  }
-                  align = TRUE;
-                  break;
-                case 's':
-                  if (!statsx) {
-                    if (isImmortal())
-                      sprintf(buf + strlen(buf), "\n\r\t[St:%-3d Br:%-3d Co:%-3d De:%-3d Ag:%-3d In:%-3d Wi:%-3d Fo:%-3d Pe:%-3d Ch:%-3d Ka:%-3d Sp:%-3d]",
-                        p->curStats.get(STAT_STR),
-                        p->curStats.get(STAT_BRA),
-                        p->curStats.get(STAT_CON),
-                        p->curStats.get(STAT_DEX),
-                        p->curStats.get(STAT_AGI),
-                        p->curStats.get(STAT_INT),
-        		p->curStats.get(STAT_WIS),
-			p->curStats.get(STAT_FOC),
-			p->curStats.get(STAT_PER),
-			p->curStats.get(STAT_CHA),
-			p->curStats.get(STAT_KAR),
-			p->curStats.get(STAT_SPE));
-                  }
-                  statsx = TRUE;
-                  break;
-                case 'q':
-                  if (!quest) {
-                    if (p->isPlayerAction(PLR_SOLOQUEST))
-                      sprintf(buf + strlen(buf), " (%sSOLO QUEST%s)", red(), norm());
-                    
-                    if (p->isPlayerAction(PLR_GRPQUEST))
-                      sprintf(buf + strlen(buf), " (%sGROUP QUEST%s)", blue(), norm());
-                  }
-                  quest = TRUE;
-                  break;
-                default:
-                  break;
-              }        // end of switch statement 
-            }        // end of for-loop 
-            strcat(buf, "\n\r");
-            sb += buf;
-          }        // end of 'should I skip this fool' if-statement 
-        }        // end of !NPC(p) loop 
-      }                // end of 'step through the character list loop 
-    } else {
-      // 'who playername' command 
-      int c = 0;
-      for (k = character_list; k; k = k->next) {
-        if (!k->isPc() || !isname(arg, k->name) || !canSee(k)) 
-          continue;
- 
-        c++;
-        *buf = '\0';
-        k->parseTitle(buf, desc);
-        strcat(buf, "    ");
-        strcat(buf, getWhoLevel(this, k).c_str());
-        if (k->isPlayerAction(PLR_SEEKSGROUP))
-          sprintf(buf + strlen(buf), "   (Seeking Group)");
-
-        if (k->isLinkdead() && isImmortal())
-          strcat(buf, "   (link-dead)");
-
-        if (k->polyed == POLY_TYPE_SWITCH && isImmortal())
-          strcat(buf, "   (switched)");
-
-        if (k->isPlayerAction(PLR_NEWBIEHELP))
-          sprintf(buf + strlen(buf), "   (Newbie-Helper)");
-
-        strcat(buf, "\n\r");
-        sb += buf;
-      }
-      if (!c)
-        sb += "No one logged in with that name.\n\r";
-
-      if (desc)
-        desc->page_string(sb.c_str(), 0, TRUE);
-      return;
-    }
-  }
-  max_player_since_reboot = max(max_player_since_reboot, count);
-  if (isImmortal()) {
-    if (!listed)
-      sprintf(buf, "\n\rTotal players / Link dead [%d/%d] (%2.0f%%)\n\rMax since Reboot [%d]  Avg Players : [%.1f]\n\r",
-           count, lcount, ((double) lcount / (int) count) * 100, 
-           max_player_since_reboot,
-           stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
-    else
-      sprintf(buf, "\n\rTotal players / Link dead [%d/%d] (%2.0f%%)\n\rNumber Listed: %d  Max since Reboot [%d]  Avg Players : [%.1f]\n\r", 
-           count, lcount, ((double) lcount / (int) count) * 100, listed,
-           max_player_since_reboot,
-           stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
-  } else {
-    sprintf(buf, "\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r", count, max_player_since_reboot, stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
-  }
-  sb += buf;
-  if (desc)
-    desc->page_string(sb.c_str(), 0, TRUE);
-  return;
-}
-
 static const string describe_part_wounds(const TBeing *ch, wearSlotT pos)
 {
   int i, flags;
@@ -1613,6 +143,7 @@ void TBeing::listExits(const TRoom *rp) const
   dirTypeT door;
   roomDirData *exitdata;
   char buf[1024];
+  bool tCS = (getStat(STAT_CURRENT, STAT_PER) > 150);
 
   const char *exDirs[] =
   {
@@ -1622,15 +153,16 @@ void TBeing::listExits(const TRoom *rp) const
 
   *buf = '\0';
 
-  if (desc && desc->client) 
+  if (desc && desc->m_bIsClient) 
     return;
   
   // Red if closed (imm only), Blue if an open exit has a type, purple if normal
 
   if (isPlayerAction(PLR_BRIEF)) {
-    sendTo("[Exits: ");
+    sendTo("[Exits:");
     for (door = MIN_DIR; door < MAX_DIR; door++) {
       exitdata = rp->exitDir(door);
+
       if (exitdata && (exitdata->to_room != ROOM_NOWHERE)) {
         if (isImmortal()) {
           if (IS_SET(exitdata->condition, EX_CLOSED)) 
@@ -1639,15 +171,49 @@ void TBeing::listExits(const TRoom *rp) const
             sendTo(" %s%s%s", blue(), exDirs[door], norm());
           else 
             sendTo(" %s%s%s", purple(), exDirs[door], norm());
-        } else if (canSeeThruDoor(exitdata)) {
+        } else /*if (canSeeThruDoor(exitdata))*/ {
+          TRoom *exitp = real_roomp(exitdata->to_room);
+
+#if 0
           if (exitdata->door_type != DOOR_NONE && !IS_SET(exitdata->condition, EX_CLOSED)) 
             sendTo(" %s%s%s", blue(), exDirs[door], norm());
           else 
             sendTo(" %s%s%s", purple(), exDirs[door], norm());
+#else
+
+          if (exitp) {
+#if 1
+            if (exitdata->door_type != DOOR_NONE &&
+                ((tCS && !IS_SET(exitdata->condition, EX_SECRET)) ||
+                 !IS_SET(exitdata->condition, EX_CLOSED))) {
+#else
+            if (exitdata->door_type != DOOR_NONE && !IS_SET(exitdata->condition, EX_CLOSED)) {
+#endif
+              if (IS_SET(exitdata->condition, EX_CLOSED))
+                sendTo(" %s*%s%s",
+                       (exitp->getSectorType() == SECT_FIRE ? red() :
+                        (exitp->isAirSector() ? cyan() :
+                         (exitp->isWaterSector() ? blue() : purple()))),
+                       exDirs[door], norm());
+              else
+                sendTo(" %s%s%s",
+                       (exitp->getSectorType() == SECT_FIRE ? redBold() :
+                        (exitp->isAirSector() ? cyanBold() :
+                         (exitp->isWaterSector() ? blueBold() : purpleBold()))),
+                       exDirs[door], norm());
+            } else if (exitdata->door_type == DOOR_NONE)
+	      sendTo(" %s%s%s",
+                     (exitp->getSectorType() == SECT_FIRE ? red() :
+                      (exitp->isAirSector() ? cyan() :
+                       (exitp->isWaterSector() ? blue() : purple()))),
+                     exDirs[door], norm());
+          } else
+            vlogf(LOG_LOW, "Problem with door in room %d", inRoom());
+#endif
         }
       }
     }
-    sendTo("]\n\r");
+    sendTo(" ]\n\r");
     return;
   }
 
@@ -1666,7 +232,7 @@ void TBeing::listExits(const TRoom *rp) const
       }
       if (IS_SET(exitdata->condition, EX_DESTROYED)) {
         if (!exitdata->keyword) {
-          vlogf(LOW_ERROR,"Destroyed door with no name!  Room %d", in_room);
+          vlogf(LOG_LOW,"Destroyed door with no name!  Room %d", in_room);
         } else if (door == 4) 
           sendTo("%sThe %s in the ceiling has been destroyed.%s\n\r",
               blue(), fname(exitdata->keyword).c_str(), norm());
@@ -1730,12 +296,29 @@ void TBeing::listExits(const TRoom *rp) const
           else
             sprintf(buf + strlen(buf), "and %s%s%s.\n\r", purple(), dirs[door], norm());
         }
-      } else {
-        if ((canSeeThruDoor(exitdata))) {
-          TRoom *exitp = real_roomp(exitdata->to_room);
-          if (exitp) {
-            if (exitdata->door_type != DOOR_NONE &&
-                !IS_SET(exitdata->condition, EX_CLOSED)) {
+      } else /*if (canSeeThruDoor(exitdata))*/ {
+        TRoom *exitp = real_roomp(exitdata->to_room);
+
+        if (exitp) {
+#if 1
+          if (exitdata->door_type != DOOR_NONE &&
+              ((tCS && !IS_SET(exitdata->condition, EX_SECRET)) ||
+               !IS_SET(exitdata->condition, EX_CLOSED))) {
+#else
+          if (exitdata->door_type != DOOR_NONE &&
+              !IS_SET(exitdata->condition, EX_CLOSED)) {
+#endif
+            if (IS_SET(exitdata->condition, EX_CLOSED))
+              sprintf(buf + strlen(buf), "%s%s*%s%s%s",
+                ((count != 1 && door == num) ? "and " : ""),
+                (exitp->getSectorType() == SECT_FIRE ? red() :
+                (exitp->isAirSector() ? cyan() :
+                (exitp->isWaterSector() ? blue() :
+                purple()))),
+                dirs[door],
+                norm(),
+                (count == 1 || door == num ? ".\n\r" : ", "));
+            else
               sprintf(buf + strlen(buf), "%s%s%s%s%s",
                 ((count != 1 && door == num) ? "and " : ""),
                 (exitp->getSectorType() == SECT_FIRE ? redBold() :
@@ -1745,20 +328,19 @@ void TBeing::listExits(const TRoom *rp) const
                 dirs[door],
                 norm(),
                 (count == 1 || door == num ? ".\n\r" : ", "));
-            } else {
-              sprintf(buf + strlen(buf), "%s%s%s%s%s",
-                ((count != 1 && door == num) ? "and " : ""),
-                (exitp->getSectorType() == SECT_FIRE ? red() :
-                (exitp->isAirSector() ? cyan() :
-                (exitp->isWaterSector() ? blue() :
-                purple()))),
-                dirs[door],
-                norm(),
-                (count == 1 || door == num ? ".\n\r" : ", "));
-            }
-          } else
-            vlogf(LOW_ERROR, "Problem with door in room %d", inRoom());
-        }
+          } else if (exitdata->door_type == DOOR_NONE) {
+            sprintf(buf + strlen(buf), "%s%s%s%s%s",
+              ((count != 1 && door == num) ? "and " : ""),
+              (exitp->getSectorType() == SECT_FIRE ? red() :
+              (exitp->isAirSector() ? cyan() :
+              (exitp->isWaterSector() ? blue() :
+              purple()))),
+              dirs[door],
+              norm(),
+              (count == 1 || door == num ? ".\n\r" : ", "));
+          }
+        } else
+          vlogf(LOG_LOW, "Problem with door in room %d", inRoom());
       }
     }
   }
@@ -1827,736 +409,6 @@ void list_char_to_char(TBeing *list, TBeing *ch, int)
   }
 }
 
-void TBaseCup::lookObj(TBeing *ch, int) const
-{
-  int temp;
-
-  if (getMaxDrinkUnits()/128) {
-    ch->sendTo(COLOR_OBJECTS, "%s has a capacity of %d gallon%s, %d fluid ounce%s.\n\r",
-          good_cap(ch->pers(this)).c_str(),
-          getMaxDrinkUnits()/128,
-          (getMaxDrinkUnits()/128 == 1 ? "" : "s"),
-          getMaxDrinkUnits()%128,
-          (getMaxDrinkUnits()%128 == 1 ? "" : "s"));
-  } else {
-    ch->sendTo(COLOR_OBJECTS, "%s has a capacity of %d fluid ounce%s.\n\r",
-          good_cap(ch->pers(this)).c_str(),
-          getMaxDrinkUnits()%128,
-          (getMaxDrinkUnits()%128 == 1 ? "" : "s"));
-  }
-  if (getDrinkUnits() <= 0 || !getMaxDrinkUnits())
-    act("It is empty.", FALSE, ch, 0, 0, TO_CHAR);
-  else {
-    temp = ((getDrinkUnits() * 3) / getMaxDrinkUnits());
-    ch->sendTo(COLOR_OBJECTS, "It's %sfull of a %s liquid.\n\r",
-          fullness[temp], DrinkInfo[getDrinkType()]->color);
-  }
-}
-
-void TObj::lookObj(TBeing *ch, int bits) const
-{
-  ch->sendTo("That is not a container.\n\r");
-}
-
-void TRealContainer::lookObj(TBeing *ch, int bits) const
-{
-  if (isClosed()) {
-    ch->sendTo("It is closed.\n\r");
-    return;
-  }
-
-  ch->sendTo(fname(name).c_str());
-  switch (bits) {
-    case FIND_OBJ_INV:
-      ch->sendTo(" (carried) : ");
-      break;
-    case FIND_OBJ_ROOM:
-      ch->sendTo(" (here) : ");
-      break;
-    case FIND_OBJ_EQUIP:
-      ch->sendTo(" (used) : ");
-      break;
-  }
-  if (carryVolumeLimit() && carryWeightLimit()) {
-    // moneypouches are occasionally overfilled, so we will just force the
-    // info to look right...
-    ch->sendTo("%d%% full, %d%% loaded.\n\r",
-      min(100, getCarriedVolume() * 100 / carryVolumeLimit()),
-      min(100, (int) (getCarriedWeight() * 100.0 / carryWeightLimit())));
-  } else {
-    vlogf(8, "Problem in look in for object: (%s:%d), check vol/weight limit", getName(), objVnum());
-  }
-  list_in_heap(stuff, ch, 0, 100);
-
-  // list_in_heap uses sequential sendTo's, so lets string it to them for
-  // easier browsing
-  ch->makeOutputPaged();
-}
-
-void TThing::lookAtObj(TBeing *ch, const char *, showModeT x) const
-{
-  ch->showTo(this, x);        // Show no-description 
-  ch->describeObject(this);
-}
-
-void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
-{
-  char buffer[256], *tmp_desc, *tmp;
-  char arg1[MAX_INPUT_LENGTH], arg2[MAX_INPUT_LENGTH];
-  int keyword_no, res, j, found, totalFound = 0, iNum = 0;
-  unsigned int bits = 0;
-  TThing *t = NULL, *t2 = NULL;
-  TObj *o = NULL;
-  TObj *o2 = NULL;
-  TBeing *tmp_char = NULL;
-  roomDirData *exitp;
-  TRoom *rp;
-
-  static const char *keywords[] = {
-    "north",    // 0
-    "east",
-    "south",
-    "west",
-    "up",
-    "down",     // 5
-    "in",
-    "at",
-    "",                                // Look at '' case 
-    "room",
-    "ne",      // 10
-    "nw",
-    "se",
-    "sw",
-    "\n"
-  };
-
-  if (!desc || !roomp)
-    return;
-
-  if (gGin.check(this)) {
-    if (gGin.look(this, argument))
-      return;
-  }
-  if (checkHearts()) {
-    if (gHearts.look(this, argument))
-      return;
-  }
-  if (checkCrazyEights()) {
-    if (gEights.look(this, argument))
-      return;
-  }
-  if (checkDrawPoker()) {
-    if (gPoker.look(this, argument))
-      return;
-  }
-  if (getPosition() < POSITION_SLEEPING)
-    sendTo("You can't see anything but stars!\n\r");
-  else if (getPosition() == POSITION_SLEEPING)
-    sendTo("You can't see anything -- you're sleeping!\n\r");
-  else if (isAffected(AFF_BLIND) && !isImmortal() && !isAffected(AFF_TRUE_SIGHT))
-    sendTo("You can't see a damn thing -- you're blinded!\n\r");
-  else if (roomp->pitchBlackDark() && !isImmortal() &&
-           (visionBonus <= 0) &&
-           !(roomp->getRoomFlags() & ROOM_ALWAYS_LIT) &&
-           !isAffected(AFF_TRUE_SIGHT)) {
-    sendTo("It is very dark in here...\n\r");
-
-    // this already handles stuff like infravision, and glowing mobs
-    list_char_in_room(roomp->stuff, this);
-
-    for (t = roomp->stuff; t; t = t->nextThing) {
-      if (dynamic_cast<TObj *>(t) && canSee(t))   // glowing objects
-        showTo(t, SHOW_MODE_DESC_PLUS);
-    }
-  } else {
-    // we use only_arg so we pick up "at" from "look at the window"
-    only_argument(argument, arg1);
-
-    // then we start using one_argument so we will munch "the" in above example
-    if (!strncmp(arg1, "at", 2) && isspace(arg1[2])) {
-      strcpy(arg2, argument + 3);
-      keyword_no = 7;
-    } else if (!strncmp(arg1, "in", 2) && isspace(arg1[2])) {
-      strcpy(arg2, argument + 3);
-      keyword_no = 6;
-    } else if (!strncmp(arg1, "on", 2) && isspace(arg1[2])) {
-      strcpy(arg2, argument + 3);
-      keyword_no = 6;
-    } else
-      keyword_no = search_block(arg1, keywords, FALSE);
-
-    if ((keyword_no == -1) && *arg1) {
-      keyword_no = 7;
-      strcpy(arg2, argument);
-    }
-    found = FALSE;
-    o = NULL;
-    tmp_char = NULL;
-    tmp_desc = NULL;
-
-    switch (keyword_no) {
-      case 0:
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 10:   // diagonals
-      case 11:
-      case 12:
-      case 13:
-        if (keyword_no >= 10)  // adjust cause of our whacky array
-          keyword_no -= 4;
-
-        if (!(exitp = exitDir(dirTypeT(keyword_no)))) {
-          if (roomp && roomp->ex_description &&
-              (tmp_desc = roomp->ex_description->findExtraDesc(dirs[keyword_no])))
-            sendTo(tmp_desc);
-          else
-            sendTo("You see nothing special.\n\r");
-
-          return;
-        } else {
-          sendTo("You look %swards.\n\r", dirs[keyword_no]);
-          sprintf(buffer, "$n looks %swards.", dirs[keyword_no]);
-          act(buffer, TRUE, this, 0, 0, TO_ROOM);
-
-          if (canSeeThruDoor(exitp)) {
-            if (exitp->description)
-              sendTo(COLOR_ROOMS, exitp->description);
-            else {
-              if (exitp->to_room && (rp = real_roomp(exitp->to_room))) {
-                if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
-                  if (hasColorStrings(NULL, rp->getName(), 2)) {
-                    sendTo(COLOR_ROOM_NAME, "You see %s<1>.\n\r",
-                           dynColorRoom(rp, 1, TRUE).c_str());
-                  } else {
-                    sendTo(COLOR_ROOM_NAME, "You see %s%s%s.\n\r",
-                           addColorRoom(rp, 1).c_str(), rp->name ,norm());
-                  }
-                } else {
-                  sendTo(COLOR_BASIC, "You see %s%s%s.\n\r", purple(), 
-                       rp->getNameNOC(this).c_str(), norm());
-                }
-              } else {
-                sendTo("You see nothing special.\n\r");
-                vlogf(9, "Bad room exit in room %d", in_room);
-              }
-            }
-
-            if (keyword_no != DIR_UP && keyword_no != DIR_DOWN)
-              if ((exitp->condition & EX_SLOPED_UP))
-                sendTo("The way seems sloped up in that direction.\n\r");
-              else if ((exitp->condition & EX_SLOPED_DOWN))
-                sendTo("The way seems sloped down in that direction.\n\r");
-
-            if (isAffected(AFF_SCRYING) || isImmortal()) {
-              if (!(rp = real_roomp(exitp->to_room)))
-                sendTo("You see swirling chaos.\n\r");
-              else {
-                if (!isPlayerAction(PLR_BRIEF))
-                  sendRoomDesc(rp);
-
-                listExits(rp);
-                list_thing_in_room(rp->stuff, this);
-              }
-            }
-          } else if (!(exitp->condition & EX_SECRET))
-            sendTo("The %s is closed.\n\r", exitp->getName().c_str());
-          else
-            sendTo("You see nothing special.\n\r");
-        }
-        break;
-      case 6:
-        if (*arg2 || specific) {
-          if (specific) {
-            if (!dynamic_cast<TObj *> (specific)) {
-              sendTo("Look in what?!\n\r");
-            } else {
-              TObj *tmpO = dynamic_cast<TObj *> (specific);
-              if (tmpO->parent && (this == parent)) {
-                bits = FIND_OBJ_INV;
-              } else if (tmpO->equippedBy && (this == tmpO->equippedBy)) {
-                bits = FIND_OBJ_EQUIP;
-              } else if (tmpO->parent && (roomp == tmpO->parent)) {
-                bits = FIND_OBJ_ROOM;
-              }
-              if ((bits == FIND_OBJ_ROOM) && riding && tmpO->parent) {
-                sendTo("You can't look into items on the %s while mounted!\n\r",roomp->describeGround().c_str());
-                return;
-              } else {
-                tmpO->lookObj(this, bits);
-              }
-            }
-            return;
-          }
-          bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_ROOM | FIND_OBJ_EQUIP, this, &tmp_char, &o);
-          if (bits) {
-            if ((bits == FIND_OBJ_ROOM) && riding && o->parent) {
-              // we want to allow them to look at item's on a table, but not
-              // in a bag while on a horse.
-              sendTo("You can't look into items on the %s while mounted!\n\r", roomp->describeGround().c_str());
-              return;
-            }
-
-            o->lookObj(this, bits);
-            
-          } else        // wrong argument 
-            sendTo("You do not see that item here.\n\r");
-        } else                // no argument 
-          sendTo("Look in what?!\n\r");
-
-        break;
-      case 7:{
-          if (*arg2 || specific) {
-            if (cmd == CMD_READ) {
-#if 1 
-              const char *tempArg = NULL;
-              char tempArg2[256];
-              tempArg = arg2;
-              tempArg = one_argument(tempArg, tempArg2);
-              if (is_abbrev(tempArg2, "chapter") ||
-		  is_abbrev(tempArg2, "section")) {
-                char tempArg3[256];
-                if (tempArg)
-                  tempArg = one_argument(tempArg, tempArg3);
-                if (*tempArg || !atoi(tempArg3)) {
-                   bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tmp_char, &o2);
-                } else if (atoi(tempArg3)) {
-                  TObj * tempObj = NULL;
-                  if ((tempObj = dynamic_cast<TBook *> (heldInPrimHand()))) {
-                    o2 = tempObj;
-                    bits = FIND_OBJ_EQUIP;
-                  } else if ((tempObj = dynamic_cast<TBook *> (heldInSecHand()))) {
-                    o2 = tempObj;
-                    bits = FIND_OBJ_EQUIP;
-                  }
-                  if (!bits) {
-                    TThing * tempThing = NULL;
-                    for (tempThing = stuff; tempThing; tempThing = tempThing->nextThing) {
-                      if (!dynamic_cast<TBook *> (tempThing)) {
-                        continue;
-                      } else {
-                        o2 = dynamic_cast<TBook *> (tempThing);
-                        if (o2) {
-                          bits = FIND_OBJ_INV;
-                          break;
-                        }
-                      }
-                    }
-                  }
-                  if (!bits)
-                    bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_EQUIP, this , &tmp_char, &o2);
-                } else {
-                  bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_EQUIP, this , &tmp_char, &o2);
-                }
-              } else {
-                bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_EQUIP,
-                        this, &tmp_char, &o2);
-              }
-#else
-              bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_EQUIP,
-                        this, &tmp_char, &o2);
-#endif
-            } else {
-              bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_ROOM |
-                        FIND_OBJ_EQUIP | FIND_CHAR_ROOM, this, &tmp_char, &o2);
-            }
-            if (dynamic_cast<TBeing *> (specific)) {
-              TBeing *tmpBeing = dynamic_cast<TBeing *> (specific);
-              showTo(tmpBeing, SHOW_MODE_SHORT_PLUS);
-              if (this != tmpBeing && !affectedBySpell(SKILL_SPY) &&
-                                      !tmpBeing->isImmortal()) {
-                act("$n looks at you.", TRUE, this, 0, tmpBeing, TO_VICT);
-                act("$n looks at $N.", TRUE, this, 0, tmpBeing, TO_NOTVICT);
-                if (!tmpBeing->isPc())
-                  dynamic_cast<TMonster *>(tmpBeing)->aiLook(this);
-              } else if (tmpBeing != this && !tmpBeing->isImmortal()) {
-                // Thieves in the room will be able to detect spying looks.
-                TBeing *bOther;
-                for (t = roomp->stuff; t; t = t->nextThing)
-                  if ((bOther = dynamic_cast<TBeing *>(t)) &&
-                      (bOther->affectedBySpell(SKILL_SPY) ||
-                       bOther->isAffected(AFF_SCRYING)) &&
-                      bOther->GetMaxLevel() >= GetMaxLevel() &&
-                      bOther != this) {
-                    sprintf(arg1, "You detect $n looking at %s with spying eyes.",
-                            (bOther == tmpBeing ? "you" : tmpBeing->getName()));
-                    act(arg1, TRUE, this, 0, bOther, TO_VICT);
-                    if (bOther == tmpBeing && !tmpBeing->isPc())
-                      dynamic_cast<TMonster *>(tmpBeing)->aiLook(this);
-                  }
-              }
-              return;
-            } else if (dynamic_cast<TObj *> (specific)) {
-              TObj *tmpObj = dynamic_cast<TObj *> (specific);
-              if (!canSee(tmpObj)) {
-                sendTo("Look at what?\n\r");
-                return;
-              }
-              if (tmpObj->ex_description) {
-                if ((tmp_desc = tmpObj->ex_description->findExtraDesc(tmp))) {
-                  desc->page_string(tmp_desc, 0);
-                  found = TRUE;
-                  describeObject(tmpObj);
-                  if (tmpObj->riding)
-                    sendTo(COLOR_OBJECTS, "%s is on %s.", tmpObj->getName(), tmpObj->riding->getName());
-                  showTo(tmpObj, SHOW_MODE_PLUS);
-                  return;
-                } else {
-                  tmpObj->lookAtObj(this, tmp, SHOW_MODE_TYPE);
-                  if (tmpObj->riding)
-                    sendTo(COLOR_OBJECTS, "%s is on %s.", tmpObj->getName(), tmpObj->riding->getName());
-                  return;
-                }
-              } else {
-                tmpObj->lookAtObj(this, tmp, SHOW_MODE_TYPE);
-                return;
-              }
-            }
-            if (tmp_char) {
-              showTo(tmp_char, SHOW_MODE_SHORT_PLUS);
-              if (this != tmp_char && !affectedBySpell(SKILL_SPY) &&
-                                   !tmp_char->isImmortal()) {
-                act("$n looks at you.", TRUE, this, 0, tmp_char, TO_VICT);
-                act("$n looks at $N.", TRUE, this, 0, tmp_char, TO_NOTVICT);
-                if (!tmp_char->isPc())
-                  dynamic_cast<TMonster *>(tmp_char)->aiLook(this);
-              } else if (tmp_char != this && !tmp_char->isImmortal()) {
-                // Thieves in the room will be able to detect spying looks.
-                TBeing *bOther;
-                for (t = roomp->stuff; t; t = t->nextThing)
-                  if ((bOther = dynamic_cast<TBeing *>(t)) &&
-                      (bOther->affectedBySpell(SKILL_SPY) ||
-                       bOther->isAffected(AFF_SCRYING)) &&
-                      bOther->GetMaxLevel() >= GetMaxLevel() &&
-                      bOther != this) {
-                    sprintf(arg1, "You detect $n looking at %s with spying eyes.",
-                            (bOther == tmp_char ? "you" : tmp_char->getName()));
-                    act(arg1, TRUE, this, 0, bOther, TO_VICT);
-                    if (bOther == tmp_char && !tmp_char->isPc())
-                      dynamic_cast<TMonster *>(tmp_char)->aiLook(this);
-                  }
-              }
-              return;
-            }
-            char tmpname[MAX_INPUT_LENGTH];
-            strcpy(tmpname, arg2);
-            tmp = tmpname;
-            iNum = get_number(&tmp);
-
-            if (!strcmp(tmp, "_tele_") && !isImmortal()) {
-              sendTo("Look at what?\n\r");
-              return;
-            }
-            if (!found) {
-              for (t = roomp->stuff; t && !found; t = t->nextThing) {
-                if (!dynamic_cast<TBeing *>(t))
-                  continue;
-                if (!canSee(t))
-                  continue;
-                if (isname(tmp, t->name)) {
-                  totalFound++;
-                }
-              }
-            }
-            // In inventory
-            if (!found) {
-              for (t = stuff; t && !found; t = t->nextThing) {
-                if (!canSee(t))
-                  continue;
-                if (t->ex_description) {
-                  if ((tmp_desc = t->ex_description->findExtraDesc(tmp))) {
-                    totalFound++;
-                    if (iNum != totalFound)
-                      continue;
-                    if (o2 == t) {
-                      // look at XX where XX is the item's name and extradesc
-                      desc->page_string(tmp_desc, 0);
-                      found = TRUE;
-                      describeObject(t);
-                      o2 = dynamic_cast<TObj *>(t);  // for showTo(o2,6) later on
-                    } else {
-                      // look at XX where XX is some random desc on the obj
-                        desc->page_string(tmp_desc, 0);
-                        found = TRUE;
-                        return;
-                    }
-                  }
-                }
-                if (isname(tmp, t->name)) {
-                  totalFound++;
-                  if (iNum == totalFound) {
-                    t->lookAtObj(this, tmp, SHOW_MODE_TYPE);
-                    return;
-                  } else {
-                    continue;
-                  }
-                }
-              }
-            }
-            // Worn equipment second
-            if (!found) {
-              for (j = MIN_WEAR; j < MAX_WEAR && !found; j++) {
-                t = equipment[j];
-                if (t) {
-                  TObj *tobj = dynamic_cast<TObj *>(t);
-                  if (tobj->isPaired()) {
-                    if (isRightHanded()) {
-                      if ((j == WEAR_LEGS_L) || (j == HOLD_LEFT))
-                        continue;
-                    } else {
-                      if ((j == WEAR_LEGS_L) || (j == HOLD_RIGHT))
-                        continue;
-                    }
-                  }
-                  if (!canSee(t))
-                    continue;
-                  if (t->ex_description) {
-                    if ((tmp_desc = t->ex_description->findExtraDesc(tmp))) {
-                      totalFound++;
-                      if (iNum != totalFound)
-                        continue;
-                      if (o2 == t) {
-                        // look at XX where XX is the item's name and extradesc
-                        desc->page_string(tmp_desc, 0);
-                        found = TRUE;
-                        describeObject(t);
-                        o2 = dynamic_cast<TObj *>(t);  // for showTo(o2,6) later on
-                      } else {
-                        // look at XX where XX is some random desc on the obj
-                        desc->page_string(tmp_desc, 0);
-                        found = TRUE;
-                        return;
-                      }
-                    }
-                  }
-                  if (isname(tmp, t->name)) {
-                    totalFound++;
-                    if (iNum == totalFound) {
-                      t->lookAtObj(this, tmp, SHOW_MODE_TYPE);
-                      return;
-                    } else {
-                      continue;
-                    }
-                  }
-                }
-              }
-            }
-            // room objects
-            if (!found) {
-              for (t = roomp->stuff; t && !found; t = t->nextThing) {
-                if (dynamic_cast<TBeing *>(t))
-                  continue;
-                if (!canSee(t))
-                  continue;
-                if (t->ex_description) {
-                  if ((tmp_desc = t->ex_description->findExtraDesc(tmp))) {
-                    totalFound++;
-                    if (iNum != totalFound)
-                      continue;
-                    if (o2 == (TObj *) t) {
-                      desc->page_string(tmp_desc, 0);
-                      found = TRUE;
-                      describeObject(t);
-                      return;
-                    } else {
-                      // look at XX where XX is some random desc on the obj
-                      desc->page_string(tmp_desc, 0);
-                      found = TRUE;
-                      return;
-                    }
-                  }
-                }
-                if (isname(tmp, t->name)) {
-                  totalFound++;
-                  if (iNum == totalFound) {
-                    t->lookAtObj(this, tmp, SHOW_MODE_TYPE);
-                    return;
-                  } else {
-                    continue;
-                  }
-                }
-                if (dynamic_cast<TTable *>(t)) {
-                  for (t2 = t->rider; t2; t2 = t2->nextRider) {
-                    if (dynamic_cast<TBeing *>(t2))
-                      continue;
-                    if (!canSee(t2))
-                      continue;
-                    if (t2->ex_description &&
-                        (tmp_desc = t2->ex_description->findExtraDesc(tmp))) {
-                      totalFound++;
-                      if (iNum != totalFound)
-                        continue;
-                      desc->page_string(tmp_desc, 0);
-                      found = TRUE;
-                      describeObject(t2);
-                      sendTo(COLOR_OBJECTS, "%s is on %s.", t2->getName(), t->getName());
-                      return;
-                    }
-                    if (isname(tmp, t2->name)) {
-                      totalFound++;
-                      if (iNum == totalFound) {
-                        t2->lookAtObj(this, tmp, SHOW_MODE_TYPE);
-                        sendTo(COLOR_OBJECTS, "%s is on %s.", t2->getName(), t->getName());
-                        return;
-                      } else {
-                        continue;
-                      }
-                    }
-                  }
-                }  // table
-              }
-            }
-            // room extras
-            if (!found) {
-              if ((tmp_desc = roomp->ex_description->findExtraDesc(tmp))) {
-                totalFound++;
-                if (totalFound == iNum) {
-                  desc->page_string(tmp_desc, 0);
-                  return;
-                }
-              }
-            }
-            if (!found) {
-              if (bits)                 // If an object was found 
-                o2->lookAtObj(this, tmp, SHOW_MODE_TYPE);
-              else
-                sendTo("You do not see that here.\n\r");
-              return;
-            }
-            showTo(o2, SHOW_MODE_PLUS);
-            return;
-          }
-          sendTo("Look at what?\n\r");
-          return;
-        }
-        break;
-
-       // look '' 
-      case 8:
-// purple if color basic, nothing if no color, varied color if color room name
-        sendRoomName(roomp);
-        if (!isPlayerAction(PLR_BRIEF)) 
-          sendRoomDesc(roomp);
-
-        describeWeather(in_room);
-        listExits(roomp);
-
-        if (dynamic_cast<TPerson *>(this)) {
-          if (isPlayerAction(PLR_HUNTING)) {
-            if (affectedBySpell(SKILL_TRACK)) {
-              if (!(res = track(specials.hunting))) {
-                specials.hunting = 0;
-                hunt_dist = 0;
-                remPlayerAction(PLR_HUNTING);
-                affectFrom(SKILL_TRACK);
-              }
-            } else if (affectedBySpell(SKILL_SEEKWATER)) {
-              if (!(res = track(NULL))) {
-                hunt_dist = 0;
-                remPlayerAction(PLR_HUNTING);
-                affectFrom(SKILL_SEEKWATER);
-              }
-            } else {
-              hunt_dist = 0;
-              remPlayerAction(PLR_HUNTING);
-            }
-          }
-        } else {
-          if (specials.act & ACT_HUNTING) {
-            if (affectedBySpell(SKILL_TRACK)) {
-              if (!(res = track(specials.hunting))) {
-                specials.hunting = 0;
-                hunt_dist = 0;
-                REMOVE_BIT(specials.act, ACT_HUNTING);
-                affectFrom(SKILL_TRACK);
-              }
-            } else if (affectedBySpell(SKILL_SEEKWATER)) {
-              if (!(res = track(NULL))) {
-                hunt_dist = 0;
-                REMOVE_BIT(specials.act, ACT_HUNTING);
-                affectFrom(SKILL_SEEKWATER);
-              }
-            } else if (specials.hunting) {
-              if (!(res = track(specials.hunting))) {
-                specials.hunting = 0;
-                hunt_dist = 0;
-                REMOVE_BIT(specials.act, ACT_HUNTING);
-              }
-            } else {
-              hunt_dist = 0;
-              REMOVE_BIT(specials.act, ACT_HUNTING);
-            }
-          }
-        }
-        list_thing_in_room(roomp->stuff, this);
-        break;
-      case -1:
-        // wrong arg     
-        sendTo("Sorry, I didn't understand that!\n\r");
-        break;
-      case 9:{
-// purple if color basic, nothing if no color, varied color if color room name
-        sendRoomName(roomp);
-        sendRoomDesc(roomp);
-        describeWeather(in_room);
-        listExits(roomp);
-
-        if (dynamic_cast<TPerson *>(this)) {
-          if (isPlayerAction(PLR_HUNTING)) {
-            if (affectedBySpell(SKILL_TRACK)) {
-              if (!(res = track(specials.hunting))) {
-                specials.hunting = 0;
-                hunt_dist = 0;
-                remPlayerAction(PLR_HUNTING);
-                affectFrom(SKILL_TRACK);
-              }
-            } else if (affectedBySpell(SKILL_SEEKWATER)) {
-              if (!(res = track(NULL))) {
-                hunt_dist = 0;
-                remPlayerAction(PLR_HUNTING);
-                affectFrom(SKILL_SEEKWATER);
-              }
-            } else {
-              hunt_dist = 0;
-              remPlayerAction(PLR_HUNTING);
-            }
-          }
-        } else {
-          if (IS_SET(specials.act, ACT_HUNTING)) {
-            if (affectedBySpell(SKILL_TRACK)) {
-              if (!(res = track(specials.hunting))) {
-                specials.hunting = 0;
-                hunt_dist = 0;
-                REMOVE_BIT(specials.act, ACT_HUNTING);
-                affectFrom(SKILL_TRACK);
-              }
-            } else if (affectedBySpell(SKILL_SEEKWATER)) {
-              if (!(res = track(NULL))) {
-                hunt_dist = 0;
-                REMOVE_BIT(specials.act, ACT_HUNTING);
-                affectFrom(SKILL_SEEKWATER);
-              }
-            } else if (specials.hunting) {
-              if (!(res = track(specials.hunting))) {
-                specials.hunting = 0;
-                hunt_dist = 0;
-                REMOVE_BIT(specials.act, ACT_HUNTING);
-              }
-            } else {
-              hunt_dist = 0;
-              REMOVE_BIT(specials.act, ACT_HUNTING);
-            }
-          }
-        }
-        list_thing_in_room(roomp->stuff, this);
-      }
-      break;
-    }
-  }
-}
-
 string TBeing::dynColorRoom(TRoom * rp, int title, bool) const
 {
 //  if (rp && title && full) {
@@ -2585,7 +437,7 @@ string TBeing::dynColorRoom(TRoom * rp, int title, bool) const
         strcpy(buf2, addColorRoom(rp, 1).c_str());
       }
     } else {
-      vlogf(5, "%s is in a room with no descr", getName());
+      vlogf(LOG_BUG, "%s is in a room with no descr", getName());
       return "Bogus Name";
     }
   } else if (title == 2) {
@@ -2606,11 +458,11 @@ string TBeing::dynColorRoom(TRoom * rp, int title, bool) const
         strcpy(buf2, addColorRoom(rp, 2).c_str());
       }
     } else {
-      vlogf(5, "%s is in a room with no descr", getName());
+      vlogf(LOG_BUG, "%s is in a room with no descr", getName());
       return "Bogus Name";
     }
   } else {
-    vlogf(5, "%s called a function with a bad dynColorRoom argument", getName());
+    vlogf(LOG_BUG, "%s called a function with a bad dynColorRoom argument", getName());
     return "Something Bogus, tell a god";
   }
 // Found had to initialize with this logic and too tired to figure out why
@@ -2916,18 +768,18 @@ const string TBeing::addColorRoom(TRoom * rp, int title) const
     if (rp->getName()) {
       return buf2;
     } else {
-      vlogf(5, "room without a name for dynamic coloring");
+      vlogf(LOG_BUG, "room without a name for dynamic coloring");
       return "";
     }
   } else if (title == 2) {
     if (rp->getDescr()) 
       return buf3;
     else {
-      vlogf(5, "room without a descr for dynamic coloring, %s", roomp->getName());
+      vlogf(LOG_BUG, "room without a descr for dynamic coloring, %s", roomp->getName());
       return "";
     }
   } else {
-    vlogf(5, "addColorRoom without a correct title variable");
+    vlogf(LOG_BUG, "addColorRoom without a correct title variable");
     return "";
   }
 }
@@ -2942,31 +794,6 @@ void TBeing::doRead(const char *argument)
 }
 
 void TBaseCup::examineObj(TBeing *ch) const
-{
-  int bits = FALSE;
-
-  if (parent && (ch == parent)) {
-    bits = FIND_OBJ_INV;
-  } else if (equippedBy && (ch == equippedBy)) {
-    bits = FIND_OBJ_EQUIP;
-  } else if (parent && (ch->roomp == parent)) {
-    bits = FIND_OBJ_ROOM;
-  }
-
-  ch->sendTo("When you look inside, you see:\n\r");
-#if 1
-  lookObj(ch, bits);
-#else
-  char buf[256];
-  char buf2[256];
-  sprintf(buf2, "%s", name);
-  add_bars(buf2);
-  sprintf(buf, "in %s", buf2);
-  ch->doLook(buf, CMD_LOOK);
-#endif
-}
-
-void TContainer::examineObj(TBeing *ch) const
 {
   int bits = FALSE;
 
@@ -3022,119 +849,683 @@ void TBeing::doExamine(const char *argument, TThing * specific)
     sendTo("Examine what?\n\r");
 }
 
-void TBeing::describeAffects(TBeing *ch)
+// affect is on ch, this is person looking
+string TBeing::describeAffects(TBeing *ch, showMeT showme) const
 {
   affectedData *aff, *af2;
+  char buf[256];
+  string str;
+
+  // limit what others can see.  Magic should reveal truth, but in general
+  // keep some stuff concealed
+  bool show = (ch==this) | showme;
 
   for (aff = ch->affected; aff; aff = af2) {
     af2 = aff->next;
 
-    if (aff->type == AFFECT_DISEASE) {
-      if (ch == this)
-        sendTo("Disease: '%s'\n\r",
-                DiseaseInfo[DISEASE_INDEX(aff->modifier)].name);
-    } else if (aff->type == AFFECT_DUMMY) {
-      if (this == ch)
-        sendTo("Dummy Affect: \n\r");
-      else
-        sendTo("Affected : '%s'\t: Time Left : %s %s\n\r",
-               "DUMMY",
-               describeDuration(this, aff->duration).c_str(),
-               (aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)"));
-    } else if (aff->type == AFFECT_FREE_DEATHS) {
-      sendTo("Free deaths remaining: %d\n\r",
-               aff->modifier);
-    } else if (aff->type == AFFECT_PLAYERKILL) {
-      sendTo("PLAYER KILLER!\n\r");
-    } else if (aff->type == AFFECT_TEST_FIGHT_MOB) {
-      sendTo("Test Fight Mob: %d\n\r",
-               aff->modifier);
-    } else if (aff->type == AFFECT_SKILL_ATTEMPT) {
-      if (isImmortal()) {
-        sendTo("Skill Attempt:(%d) '%s'\t: Time Left : %s\n\r", aff->modifier, (discArray[aff->modifier] ? discArray[aff->modifier]->name : "Unknown"), describeDuration(this, aff->duration).c_str());
-      } else if (aff->modifier != getSkillNum(SKILL_SNEAK)) {
-        sendTo("Skill Attempt: '%s'\t: Time Left : %s\n\r", (discArray[aff->modifier] ? discArray[aff->modifier]->name : "Unknown"), describeDuration(this, aff->duration).c_str());
-      }
-    } else if (aff->type == AFFECT_NEWBIE) {
-      if (this == ch)
-        sendTo("Donation Recipient: \n\r");
-    } else if (aff->type == SKILL_TRACK || aff->type == SKILL_SEEKWATER) {
-      sendTo("Tracking: %s\n\r", (aff->type == SKILL_TRACK ?
-             ch->specials.hunting->getName() : "seeking water"));
-    } else if (aff->type == AFFECT_COMBAT || aff->type == AFFECT_PET) {
-      // no display
-    } else if (aff->type == AFFECT_TRANSFORMED_ARMS) {
-      if (ch == this)
-        sendTo("Affected: Transformed Limb: falcon wings: approx. duration : %s\n\r",
-               describeDuration(this, aff->duration).c_str());
-      else
-        sendTo("Affected: Transformed Limb: falcon wings: \n\r");
-    } else if (aff->type == AFFECT_TRANSFORMED_HANDS) {
-      if (ch == this)
-        sendTo("Affected: Transformed Limb: bear claws: approx. duration : %s\n\r",
-               describeDuration(this, aff->duration).c_str());
-      else
-        sendTo("Affected: Transformed Limb: bear claws \n\r");
-    } else if (aff->type == AFFECT_TRANSFORMED_LEGS) {
-      if (ch == this)
-        sendTo("Affected: Transformed Limb: dolphin tail: approx. duration : %s\n\r",
-               describeDuration(this, aff->duration).c_str());
-      else
-        sendTo("Affected: Transformed Limb: dolphin tail: \n\r");
-    } else if (aff->type == AFFECT_TRANSFORMED_HEAD) {
-      if (ch == this)
-        sendTo("Affected: Transformed Limb: eagle's head: approx. duration : %s\n\r",
-               describeDuration(this, aff->duration).c_str());
-      else
-        sendTo("Affected: Transformed Limb: eagle's head: \n\r");
-    } else if (aff->type == AFFECT_TRANSFORMED_NECK) {
-      if (ch == this)
-        sendTo("Affected: Transformed Limb: fish gills: approx. duration : %s\n\r",
-               describeDuration(this, aff->duration).c_str());
-      else
-        sendTo("Affected: Transformed Limb: fish gills: \n\r");
-    } else if (aff->type == AFFECT_DRUNK) {
-      if (ch == this)
-        sendTo("Affected: Drunken Slumber: approx. duration : %s\n\r",
-               describeDuration(this, aff->duration).c_str());
-      else
-        sendTo("Affected: Drunken Slumber: \n\r");
-    } else if (aff->type == AFFECT_DRUG) {
-      if (!aff->shouldGenerateText())
-	continue;
-      if (ch == this)
-	sendTo("Affected: %s: approx. duration : %s\n\r",
-	       drugTypes[aff->modifier2].name,
-	       describeDuration(this, aff->duration).c_str());
-      else
-	sendTo("Affected: %s: \n\r", drugTypes[aff->modifier2].name);
-    } else if (aff->type >= MIN_SPELL && aff->type < MAX_SKILL) {
-      // some spells have 2 effects, skip over one of them
-      if (!aff->shouldGenerateText())
-        continue;
-      else if (discArray[aff->type]) {
-        if ((ch == this) && strcmp(discArray[aff->type]->name, "sneak")) {
-          if (aff->renew < 0) {
-            sendTo("Affected : '%s'\t: Approx. Duration : %s\n\r",
+    switch (aff->type) {
+      case SKILL_TRACK:
+      case SKILL_SEEKWATER:
+        sprintf(buf,"Tracking: %s\n\r", (aff->type == SKILL_TRACK ?
+               ch->specials.hunting->getName() : "seeking water"));
+        str += buf;
+        break;
+      case SPELL_GUST:
+      case SPELL_DUST_STORM:
+      case SPELL_TORNADO:
+      case SKILL_QUIV_PALM:
+      case SKILL_SHOULDER_THROW:
+      case SPELL_CALL_LIGHTNING_DEIKHAN:
+      case SPELL_CALL_LIGHTNING:
+      case SPELL_LIGHTNING_BREATH:
+      case SPELL_GUSHER:
+      case SPELL_AQUATIC_BLAST:
+      case SPELL_ICY_GRIP:
+      case SPELL_ARCTIC_BLAST:
+      case SPELL_ICE_STORM:
+      case SPELL_FROST_BREATH:
+      case SPELL_WATERY_GRAVE:
+      case SPELL_TSUNAMI:
+      case SPELL_CHLORINE_BREATH:
+      case SPELL_DUST_BREATH:
+      case SPELL_POISON_DEIKHAN:
+      case SPELL_POISON:
+      case SPELL_ACID_BREATH:
+      case SPELL_ACID_BLAST:
+      case SKILL_BODYSLAM:
+      case SKILL_SPIN:
+      case SKILL_POWERMOVE:
+      case SKILL_CHARGE:
+      case SKILL_SMITE:
+      case SPELL_METEOR_SWARM:
+      case SPELL_EARTHQUAKE_DEIKHAN:
+      case SPELL_EARTHQUAKE:
+      case SPELL_PILLAR_SALT:
+      case SPELL_FIREBALL:
+      case SPELL_HANDS_OF_FLAME:
+      case SPELL_INFERNO:
+      case SPELL_HELLFIRE:
+      case SPELL_RAIN_BRIMSTONE_DEIKHAN:
+      case SPELL_RAIN_BRIMSTONE:
+      case SPELL_FLAMESTRIKE:
+      case SPELL_FIRE_BREATH:
+      case SPELL_SPONTANEOUS_COMBUST:
+      case SPELL_FLAMING_SWORD:
+      case SPELL_FLARE:
+      case SPELL_MYSTIC_DARTS:
+      case SPELL_STUNNING_ARROW:
+      case SPELL_COLOR_SPRAY:
+      case SPELL_SAND_BLAST:
+      case SPELL_PEBBLE_SPRAY:
+      case SPELL_LAVA_STREAM:
+      case SPELL_SLING_SHOT:
+      case SPELL_GRANITE_FISTS:
+      case SPELL_ENERGY_DRAIN:
+      case SPELL_SYNOSTODWEOMER:
+      case SPELL_HARM_DEIKHAN:
+      case SPELL_HARM:
+      case SPELL_HARM_LIGHT_DEIKHAN:
+      case SPELL_HARM_SERIOUS_DEIKHAN:
+      case SPELL_HARM_CRITICAL_DEIKHAN:
+      case SPELL_HARM_LIGHT:
+      case SPELL_HARM_SERIOUS:
+      case SPELL_HARM_CRITICAL:
+      case SPELL_WITHER_LIMB:
+      case SPELL_BLEED:
+      case SKILL_KICK_DEIKHAN:
+      case SKILL_KICK_THIEF:
+      case SKILL_KICK_MONK:
+      case SKILL_KICK_RANGER:
+      case SKILL_KICK:
+      case SKILL_SPRINGLEAP:
+      case SKILL_DEATHSTROKE:
+      case SKILL_BASH_DEIKHAN:
+      case SKILL_BASH_RANGER:
+      case SKILL_BASH:
+      case SPELL_BONE_BREAKER:
+      case SPELL_PARALYZE:
+      case SPELL_PARALYZE_LIMB:
+      case SPELL_INFECT_DEIKHAN:
+      case SPELL_INFECT:
+      case SKILL_CHOP:
+      case SPELL_DISEASE:
+      case SPELL_SUFFOCATE:
+      case SKILL_GARROTTE:
+      case SKILL_STABBING:
+      case SKILL_BACKSTAB:
+      case SKILL_HEADBUTT:
+      case SKILL_STOMP:
+      case SPELL_BLAST_OF_FURY:
+      case SKILL_CHI:
+      case SPELL_FUMBLE:
+      case SPELL_BLINDNESS:
+      case SPELL_GARMULS_TAIL:
+      case SPELL_SORCERERS_GLOBE:
+      case SPELL_FAERIE_FIRE:
+      case SPELL_ILLUMINATE:
+      case SPELL_DETECT_MAGIC:
+      case SPELL_MATERIALIZE:
+      case SPELL_PROTECTION_FROM_EARTH:
+      case SPELL_PROTECTION_FROM_AIR:
+      case SPELL_PROTECTION_FROM_FIRE:
+      case SPELL_PROTECTION_FROM_WATER:
+      case SPELL_PROTECTION_FROM_ELEMENTS:
+      case SPELL_INFRAVISION:
+      case SPELL_IDENTIFY:
+      case SPELL_POWERSTONE:
+      case SPELL_FAERIE_FOG:
+      case SPELL_TELEPORT:
+      case SPELL_SENSE_LIFE:
+      case SPELL_CALM:
+      case SPELL_ACCELERATE:
+      case SPELL_LEVITATE:
+      case SPELL_FEATHERY_DESCENT:
+      case SPELL_STEALTH:
+      case SPELL_GILLS_OF_FLESH:
+      case SPELL_AQUALUNG:
+      case SPELL_TELEPATHY:
+      case SPELL_FEAR:
+      case SPELL_SLUMBER:
+      case SPELL_CONJURE_EARTH:
+      case SPELL_ENTHRALL_SPECTRE:
+      case SPELL_ENTHRALL_GHAST:
+      case SPELL_ENTHRALL_GHOUL:
+      case SPELL_ENTHRALL_DEMON:
+      case SPELL_CONJURE_AIR:
+      case SPELL_CONJURE_FIRE:
+      case SPELL_CONJURE_WATER:
+      case SPELL_DISPEL_MAGIC:
+      case SPELL_ENHANCE_WEAPON:
+      case SPELL_GALVANIZE:
+      case SPELL_DETECT_INVISIBLE:
+      case SPELL_DISPEL_INVISIBLE:
+      case SPELL_FARLOOK:
+      case SPELL_FALCON_WINGS:
+      case SPELL_INVISIBILITY:
+      case SPELL_ENSORCER:
+      case SPELL_EYES_OF_FERTUMAN:
+      case SPELL_COPY:
+      case SPELL_HASTE:
+      case SPELL_IMMOBILIZE:
+      case SPELL_FLY:
+      case SPELL_ANTIGRAVITY:
+      case SPELL_DIVINATION:
+      case SPELL_SHATTER:
+      case SKILL_SCRIBE:
+      case SPELL_SPONTANEOUS_GENERATION:
+      case SPELL_STONE_SKIN:
+      case SPELL_TRAIL_SEEK:
+      case SPELL_FLAMING_FLESH:
+      case SPELL_ATOMIZE:
+      case SPELL_ANIMATE:
+      case SPELL_BIND:
+      case SPELL_TRUE_SIGHT:
+      case SPELL_CLOUD_OF_CONCEALMENT:
+      case SPELL_POLYMORPH:
+      case SPELL_SILENCE:
+      case SPELL_BREATH_OF_SARAHAGE:
+      case SPELL_PLASMA_MIRROR:
+      case SPELL_THORNFLESH:
+      case SPELL_ETHER_GATE:
+      case SPELL_HEAL_LIGHT:
+      case SPELL_CREATE_FOOD:
+      case SPELL_CREATE_WATER:
+      case SPELL_ARMOR:
+      case SPELL_BLESS:
+      case SPELL_CLOT:
+      case SPELL_HEAL_SERIOUS:
+      case SPELL_STERILIZE:
+      case SPELL_EXPEL:
+      case SPELL_CURE_DISEASE:
+      case SPELL_CURSE:
+      case SPELL_REMOVE_CURSE:
+      case SPELL_CURE_POISON:
+      case SPELL_HEAL_CRITICAL:
+      case SPELL_SALVE:
+      case SPELL_REFRESH:
+      case SPELL_NUMB:
+      case SPELL_PLAGUE_LOCUSTS:
+      case SPELL_CURE_BLINDNESS:
+      case SPELL_SUMMON:
+      case SPELL_HEAL:
+      case SPELL_WORD_OF_RECALL:
+      case SPELL_SANCTUARY:
+      case SPELL_CURE_PARALYSIS:
+      case SPELL_SECOND_WIND:
+      case SPELL_HEROES_FEAST:
+      case SPELL_ASTRAL_WALK:
+      case SPELL_PORTAL:
+      case SPELL_HEAL_FULL:
+      case SPELL_HEAL_CRITICAL_SPRAY:
+      case SPELL_HEAL_SPRAY:
+      case SPELL_HEAL_FULL_SPRAY:
+      case SPELL_RESTORE_LIMB:
+      case SPELL_KNIT_BONE:
+      case SPELL_SHIELD_OF_MISTS:
+      case SKILL_RESCUE:
+      case SKILL_SMYTHE:
+      case SKILL_SACRIFICE:
+      case SKILL_DISARM:
+      case SKILL_PARRY_WARRIOR:
+      case SKILL_DUAL_WIELD_WARRIOR:
+      case SKILL_BERSERK:
+      case SKILL_SWITCH_OPP:
+      case SKILL_KNEESTRIKE:
+      case SKILL_SHOVE:
+      case SKILL_RETREAT:
+      case SKILL_GRAPPLE:
+      case SKILL_DOORBASH:
+      case SKILL_TRANCE_OF_BLADES:
+      case SKILL_HIKING:
+      case SKILL_FORAGE:
+      case SKILL_TRANSFORM_LIMB:
+      case SKILL_BEAST_SOOTHER:
+      case SPELL_ROOT_CONTROL:
+      case SKILL_RESCUE_RANGER:
+      case SKILL_BEFRIEND_BEAST:
+      case SKILL_TRANSFIX:
+      case SKILL_SKIN:
+      case SKILL_DUAL_WIELD:
+      case SPELL_LIVING_VINES:
+      case SKILL_BEAST_SUMMON:
+      case SKILL_BARKSKIN:
+      case SKILL_SWITCH_RANGER:
+      case SKILL_RETREAT_RANGER:
+      case SPELL_STICKS_TO_SNAKES:
+      case SPELL_STORMY_SKIES:
+      case SPELL_TREE_WALK:
+      case SKILL_BEAST_CHARM:
+      case SPELL_SHAPESHIFT:
+      case SKILL_CONCEALMENT:
+      case SKILL_APPLY_HERBS:
+      case SKILL_DIVINATION:
+      case SKILL_ENCAMP:
+      case SPELL_HEAL_LIGHT_DEIKHAN:
+      case SKILL_CHIVALRY:
+      case SPELL_ARMOR_DEIKHAN:
+      case SPELL_BLESS_DEIKHAN:
+      case SPELL_EXPEL_DEIKHAN:
+      case SPELL_CLOT_DEIKHAN:
+      case SPELL_STERILIZE_DEIKHAN:
+      case SPELL_REMOVE_CURSE_DEIKHAN:
+      case SPELL_CURSE_DEIKHAN:
+      case SKILL_RESCUE_DEIKHAN:
+      case SPELL_CURE_DISEASE_DEIKHAN:
+      case SPELL_CREATE_FOOD_DEIKHAN:
+      case SPELL_HEAL_SERIOUS_DEIKHAN:
+      case SPELL_CURE_POISON_DEIKHAN:
+      case SKILL_DISARM_DEIKHAN:
+      case SPELL_HEAL_CRITICAL_DEIKHAN:
+      case SKILL_SWITCH_DEIKHAN:
+      case SKILL_RETREAT_DEIKHAN:
+      case SKILL_SHOVE_DEIKHAN:
+      case SKILL_RIDE:
+      case SKILL_CALM_MOUNT:
+      case SKILL_TRAIN_MOUNT:
+      case SKILL_ADVANCED_RIDING:
+      case SKILL_RIDE_DOMESTIC:
+      case SKILL_RIDE_NONDOMESTIC:
+      case SKILL_RIDE_WINGED:
+      case SPELL_CREATE_WATER_DEIKHAN:
+      case SKILL_RIDE_EXOTIC:
+      case SPELL_HEROES_FEAST_DEIKHAN:
+      case SPELL_REFRESH_DEIKHAN:
+      case SPELL_SALVE_DEIKHAN:
+      case SKILL_LAY_HANDS:
+      case SPELL_NUMB_DEIKHAN:
+      case SKILL_YOGINSA:
+      case SKILL_CINTAI:
+      case SKILL_OOMLAT:
+      case SKILL_ADVANCED_KICKING:
+      case SKILL_DISARM_MONK:
+      case SKILL_GROUNDFIGHTING:
+      case SKILL_DUFALI:
+      case SKILL_RETREAT_MONK:
+      case SKILL_SNOFALTE:
+      case SKILL_COUNTER_MOVE:
+      case SKILL_SWITCH_MONK:
+      case SKILL_JIRIN:
+      case SKILL_KUBO:
+      case SKILL_CATFALL:
+      case SKILL_WOHLIN:
+      case SKILL_VOPLAT:
+      case SKILL_BLINDFIGHTING:
+      case SKILL_CRIT_HIT:
+      case SKILL_FEIGN_DEATH:
+      case SKILL_BLUR:
+      case SKILL_HURL:
+      case SKILL_SWINDLE:
+      case SKILL_SNEAK:
+      case SKILL_RETREAT_THIEF:
+      case SKILL_PICK_LOCK:
+      case SKILL_SEARCH:
+      case SKILL_SPY:
+      case SKILL_SWITCH_THIEF:
+      case SKILL_STEAL:
+      case SKILL_DETECT_TRAP:
+      case SKILL_SUBTERFUGE:
+      case SKILL_DISARM_TRAP:
+      case SKILL_CUDGEL:
+      case SKILL_HIDE:
+      case SKILL_POISON_WEAPON:
+      case SKILL_DISGUISE:
+      case SKILL_DODGE_THIEF:
+      case SKILL_SET_TRAP_CONT:
+      case SKILL_SET_TRAP_DOOR:
+      case SKILL_SET_TRAP_MINE:
+      case SKILL_SET_TRAP_GREN:
+      case SKILL_DUAL_WIELD_THIEF:
+      case SKILL_DISARM_THIEF:
+      case SKILL_COUNTER_STEAL:
+      case SPELL_CACAODEMON:
+      case SPELL_CREATE_GOLEM:
+      case SPELL_DANCING_BONES:
+      case SPELL_CONTROL_UNDEAD:
+      case SPELL_RESURRECTION:
+      case SPELL_VOODOO:
+      case SKILL_BREW:
+      case SPELL_VAMPIRIC_TOUCH:
+      case SPELL_LIFE_LEECH:
+      case SKILL_TURN:
+      case SKILL_SIGN:
+      case SKILL_SWIM:
+      case SKILL_CONS_UNDEAD:
+      case SKILL_CONS_VEGGIE:
+      case SKILL_CONS_DEMON:
+      case SKILL_CONS_ANIMAL:
+      case SKILL_CONS_REPTILE:
+      case SKILL_CONS_PEOPLE:
+      case SKILL_CONS_GIANT:
+      case SKILL_CONS_OTHER:
+      case SKILL_READ_MAGIC:
+      case SKILL_BANDAGE:
+      case SKILL_CLIMB:
+      case SKILL_FAST_HEAL:
+      case SKILL_EVALUATE:
+      case SKILL_TACTICS:
+      case SKILL_DISSECT:
+      case SKILL_DEFENSE:
+      case SKILL_OFFENSE:
+      case SKILL_WHITTLE:
+      case SKILL_WIZARDRY:
+      case SKILL_MEDITATE:
+      case SKILL_DEVOTION:
+      case SKILL_PENANCE:
+      case SKILL_SLASH_PROF:
+      case SKILL_PIERCE_PROF:
+      case SKILL_BLUNT_PROF:
+      case SKILL_BAREHAND_PROF:
+      case SKILL_SLASH_SPEC:
+      case SKILL_BLUNT_SPEC:
+      case SKILL_PIERCE_SPEC:
+      case SKILL_BAREHAND_SPEC:
+      case SKILL_RANGED_SPEC:
+      case SKILL_RANGED_PROF:
+      case SKILL_FAST_LOAD:
+      case SKILL_SHARPEN:
+      case SKILL_DULL:
+      case SKILL_ATTUNE:
+      case SKILL_STAVECHARGE:
+#if 1
+      case SPELL_EARTHMAW:
+      case SPELL_CREEPING_DOOM:
+      case SPELL_FERAL_WRATH:
+      case SPELL_SKY_SPIRIT:
+#endif
+        // some spells have 2 effects, skip over one of them
+        if (!aff->shouldGenerateText())
+          continue;
+        else if (discArray[aff->type]) {
+          if (show && strcmp(discArray[aff->type]->name, "sneak")) {
+            if (aff->renew < 0) {
+              sprintf(buf,"Affected : '%s'\t: Approx. Duration : %s\n\r",
+                   discArray[aff->type]->name,
+                   describeDuration(this, aff->duration).c_str());
+  
+            } else {
+              sprintf(buf,"Affected : '%s'\t: Time Left : %s %s\n\r",
                  discArray[aff->type]->name,
-                 describeDuration(this, aff->duration).c_str());
-
-          } else {
-            sendTo("Affected : '%s'\t: Time Left : %s %s\n\r",
-               discArray[aff->type]->name,
-               describeDuration(this, aff->duration).c_str(), 
-               (aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)"));
+                 describeDuration(this, aff->duration).c_str(), 
+                 (aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)"));
+            }
+            str += buf;
           }
+        } else {
+          forceCrash("BOGUS AFFECT (%d) on %s.", aff->type, ch->getName());
+          ch->affectRemove(aff);
         }
-      } else {
+        break;
+      case AFFECT_DISEASE:
+        if (show) {
+          sprintf(buf, "Disease: '%s'\n\r",
+                  DiseaseInfo[affToDisease(*aff)].name);
+          str += buf;
+        } 
+        break;
+      case AFFECT_DUMMY:
+        if (show) {
+          sprintf(buf, "Affected : '%s'\t: Time Left : %s %s\n\r",
+                 "DUMMY",
+                 describeDuration(this, aff->duration).c_str(),
+                 (aff->canBeRenewed() ? "(Renewable)" : "(Not Yet Renewable)"));
+          str += buf;
+        }
+        break;
+      case AFFECT_FREE_DEATHS:
+        sprintf(buf, "Free deaths remaining: %ld\n\r",
+               aff->modifier);
+        str += buf;
+        break;
+      case AFFECT_HORSEOWNED:
+        sprintf(buf, "Horseowned:\t Time Left : %s\n\r",
+  	     describeDuration(this, aff->duration).c_str());
+        str += buf;
+        break;
+      case AFFECT_PLAYERKILL:
+        sprintf(buf, "Player Killer:\t Time Left : %s\n\r",
+	     describeDuration(this, aff->duration).c_str());
+        str += buf;
+        break;
+      case AFFECT_PLAYERLOOT:
+        sprintf(buf, "Player Looter:\t Time Left : %s\n\r",
+                describeDuration(this, aff->duration).c_str());
+        str += buf;
+        break;
+      case AFFECT_TEST_FIGHT_MOB:
+        sprintf(buf, "Test Fight Mob: %ld\n\r",
+               aff->modifier);
+        str += buf;
+        break;
+      case AFFECT_SKILL_ATTEMPT:
+        if (isImmortal()) {
+          sprintf(buf, "Skill Attempt:(%ld) '%s'\t: Time Left : %s\n\r", aff->modifier, (discArray[aff->modifier] ? discArray[aff->modifier]->name : "Unknown"), describeDuration(this, aff->duration).c_str());
+          str += buf;
+        } else if (aff->modifier != getSkillNum(SKILL_SNEAK)) {
+          sprintf(buf, "Skill Attempt: '%s'\t: Time Left : %s\n\r", (discArray[aff->modifier] ? discArray[aff->modifier]->name : "Unknown"), describeDuration(this, aff->duration).c_str());
+          str += buf;
+        }
+        break;
+      case AFFECT_NEWBIE:
+        if (show) {
+          sprintf(buf, "Donation Recipient: \n\r");
+          str += buf;
+        }
+        break;
+      case AFFECT_DRUNK:
+        if (show) {
+          sprintf(buf, "Affected: Drunken Slumber: approx. duration : %s\n\r",
+                 describeDuration(this, aff->duration).c_str());
+          str += buf;
+        } else {
+          sprintf(buf, "Affected: Drunken Slumber: \n\r");
+          str += buf;
+        }
+        break;
+      case AFFECT_DRUG:
+        if (!aff->shouldGenerateText())
+          continue;
+        if (show) {
+          sprintf(buf, "Affected: %s: approx. duration : %s\n\r",
+  	       drugTypes[aff->modifier2].name,
+	       describeDuration(this, aff->duration).c_str());
+          str += buf;
+        } else {
+          sprintf(buf, "Affected: %s: \n\r", drugTypes[aff->modifier2].name);
+          str += buf;
+        }
+        break;
+      case AFFECT_TRANSFORMED_ARMS:
+        if (show) {
+          sprintf(buf, "Affected: Transformed Limb: falcon wings: approx. duration : %s\n\r",
+                 describeDuration(this, aff->duration).c_str());
+        } else {
+          sprintf(buf, "Affected: Transformed Limb: falcon wings: \n\r");
+        }
+        str += buf;
+        break;
+      case AFFECT_TRANSFORMED_HANDS:
+        if (ch == this)
+          sprintf(buf, "Affected: Transformed Limb: bear claws: approx. duration : %s\n\r",
+                 describeDuration(this, aff->duration).c_str());
+        else
+          sprintf(buf, "Affected: Transformed Limb: bear claws \n\r");
+        str += buf;
+        break;
+      case AFFECT_TRANSFORMED_LEGS:
+        if (ch == this)
+          sprintf(buf, "Affected: Transformed Limb: dolphin tail: approx. duration : %s\n\r",
+                 describeDuration(this, aff->duration).c_str());
+        else
+          sprintf(buf, "Affected: Transformed Limb: dolphin tail: \n\r");
+        str += buf;
+        break;
+      case AFFECT_TRANSFORMED_HEAD:
+        if (ch == this)
+          sprintf(buf, "Affected: Transformed Limb: eagle's head: approx. duration : %s\n\r",
+                 describeDuration(this, aff->duration).c_str());
+        else
+          sprintf(buf, "Affected: Transformed Limb: eagle's head: \n\r");
+        break;
+      case AFFECT_TRANSFORMED_NECK:
+        if (ch == this)
+          sprintf(buf, "Affected: Transformed Limb: fish gills: approx. duration : %s\n\r",
+                 describeDuration(this, aff->duration).c_str());
+        else
+          sprintf(buf, "Affected: Transformed Limb: fish gills: \n\r");
+        str += buf;
+        break;
+      case AFFECT_GROWTH_POTION:
+        if (ch == this)
+          sprintf(buf, "Affected: Abnormal Growth: approx duration : %s\n\r",
+                  describeDuration(this, aff->duration).c_str());
+        else
+          sprintf(buf, "Affected: Abnormal Growth\n\r");
+
+        str += buf;
+        break;
+
+      case AFFECT_COMBAT:
+        // no display
+        break;
+      case AFFECT_PET:
+        if (show) {
+          sprintf(buf, "Pet of: '%s'.  Approx. duration : %s\n\r",
+                 (char *) aff->be,
+                 describeDuration(this, aff->duration).c_str());
+        } else {
+          sprintf(buf, "Somebody's Pet.\n\r");
+        }
+        str += buf;
+        break;
+      case AFFECT_CHARM:
+        if (show) {
+          sprintf(buf, "Charm of: '%s'.  Approx. duration : %s\n\r",
+                 (char *) aff->be,
+                 describeDuration(this, aff->duration).c_str());
+        } else {
+          sprintf(buf, "Somebody's Charm.\n\r");
+        }
+        str += buf;
+        break;
+      case AFFECT_THRALL:
+        if (show) {
+          sprintf(buf, "Thrall of: '%s'.  Approx. duration : %s\n\r",
+                 (char *) aff->be,
+                 describeDuration(this, aff->duration).c_str());
+        } else {
+          sprintf(buf, "Somebody's Thrall.\n\r");
+        }
+        str += buf;
+        break;
+      case AFFECT_ORPHAN_PET:
+        // no display
+        break;
+
+      // cases beyond here are considered BOGUS
+      case LAST_ODDBALL_AFFECT:
+      case LAST_TRANSFORMED_LIMB:
+      case LAST_BREATH_WEAPON:
+      case DAMAGE_GUST:
+      case DAMAGE_TRAP_TNT:
+      case DAMAGE_ELECTRIC:
+      case DAMAGE_TRAP_FROST:
+      case DAMAGE_FROST:
+      case DAMAGE_DROWN:
+      case DAMAGE_WHIRLPOOL:
+      case DAMAGE_HEMORRAGE:
+      case DAMAGE_IMPALE:
+      case DAMAGE_TRAP_POISON:
+      case DAMAGE_ACID:
+      case DAMAGE_TRAP_ACID:
+      case DAMAGE_COLLISION:
+      case DAMAGE_FALL:
+      case DAMAGE_TRAP_BLUNT:
+      case DAMAGE_TRAP_FIRE:
+      case DAMAGE_FIRE:
+      case DAMAGE_DISRUPTION:
+      case DAMAGE_DRAIN:
+      case DAMAGE_TRAP_ENERGY:
+      case DAMAGE_KICK_HEAD:
+      case DAMAGE_KICK_SHIN:
+      case DAMAGE_KICK_SIDE:
+      case DAMAGE_KICK_SOLAR:
+      case DAMAGE_TRAP_DISEASE:
+      case DAMAGE_SUFFOCATION:
+      case DAMAGE_TRAP_SLASH:
+      case DAMAGE_ARROWS:
+      case DAMAGE_TRAP_PIERCE:
+      case DAMAGE_DISEMBOWLED_HR:
+      case DAMAGE_DISEMBOWLED_VR:
+      case DAMAGE_EATTEN:
+      case DAMAGE_HACKED:
+      case DAMAGE_KNEESTRIKE_FOOT:
+      case DAMAGE_HEADBUTT_FOOT:
+      case DAMAGE_KNEESTRIKE_SHIN:
+      case DAMAGE_KNEESTRIKE_KNEE:
+      case DAMAGE_KNEESTRIKE_THIGH:
+      case DAMAGE_HEADBUTT_LEG:
+      case DAMAGE_KNEESTRIKE_SOLAR:
+      case DAMAGE_HEADBUTT_BODY:
+      case DAMAGE_KNEESTRIKE_CROTCH:      
+      case DAMAGE_HEADBUTT_CROTCH:
+      case DAMAGE_HEADBUTT_THROAT:
+      case DAMAGE_KNEESTRIKE_CHIN:
+      case DAMAGE_HEADBUTT_JAW:
+      case DAMAGE_KNEESTRIKE_FACE:
+      case DAMAGE_CAVED_SKULL:
+      case DAMAGE_HEADBUTT_SKULL:
+      case DAMAGE_STARVATION:
+      case DAMAGE_STOMACH_WOUND:
+      case DAMAGE_RAMMED:
+      case DAMAGE_BEHEADED:
+      case DAMAGE_NORMAL:
+      case DAMAGE_TRAP_SLEEP:
+      case DAMAGE_TRAP_TELEPORT:
+      case MAX_SKILL:
+      case TYPE_WATER:
+      case TYPE_AIR:
+      case TYPE_EARTH:
+      case TYPE_FIRE:
+      case TYPE_KICK:
+      case TYPE_CLAW:
+      case TYPE_SLASH:
+      case TYPE_CLEAVE:
+      case TYPE_SLICE:
+      case TYPE_BEAR_CLAW:
+      case TYPE_MAUL:
+      case TYPE_SMASH:
+      case TYPE_WHIP:
+      case TYPE_CRUSH:
+      case TYPE_BLUDGEON:
+      case TYPE_SMITE:
+      case TYPE_HIT:
+      case TYPE_FLAIL:
+      case TYPE_PUMMEL:
+      case TYPE_THRASH:
+      case TYPE_THUMP:
+      case TYPE_WALLOP:
+      case TYPE_BATTER:
+      case TYPE_BEAT:
+      case TYPE_STRIKE:
+      case TYPE_POUND:
+      case TYPE_CLUB:
+      case TYPE_PIERCE:
+      case TYPE_STAB:
+      case TYPE_STING:
+      case TYPE_THRUST:
+      case TYPE_SPEAR:
+      case TYPE_BEAK:
+      case TYPE_BITE:
+      case TYPE_UNDEFINED:
+      case TYPE_MAX_HIT:
+      case SKILL_ALCOHOLISM:
+      case SKILL_FISHING:
         forceCrash("BOGUS AFFECT (%d) on %s.", aff->type, ch->getName());
         ch->affectRemove(aff);
-      }
-    } else {
-      forceCrash("BOGUS AFFECT (%d) on %s.", aff->type, ch->getName());
-      ch->affectRemove(aff);
+        break;
     }
   }
+  return str;
 }
 
 void TBeing::describeLimbDamage(const TBeing *ch) const
@@ -3178,10 +1569,10 @@ void TBeing::describeLimbDamage(const TBeing *ch) const
         if (!aff->level) {
           if (ch == this)
             sendTo(COLOR_BASIC, "<y>You have %s.<1>\n\r",
-               DiseaseInfo[DISEASE_INDEX(aff->modifier)].name);
+               DiseaseInfo[affToDisease(*aff)].name);
           else
             sendTo(COLOR_BASIC, "<y>It seems %s has %s.<1>\n\r",
-                ch->hssh(), DiseaseInfo[DISEASE_INDEX(aff->modifier)].name);
+                ch->hssh(), DiseaseInfo[affToDisease(*aff)].name);
         }
       }
     }
@@ -3191,7 +1582,7 @@ void TBeing::describeLimbDamage(const TBeing *ch) const
 void TBeing::doTime(const char *argument)
 {
   char buf[100], arg[160];
-  int weekday, day, tmp_num, tmp2;
+  int weekday, day, tmp2;
 
   if (!desc) {
     sendTo("Silly mob, go home.\n\r");
@@ -3210,11 +1601,8 @@ void TBeing::doTime(const char *argument)
     desc->saveAccount();
     return;
   }
-  tmp_num = (time_info.hours / 2);
-  sprintf(buf, "It is %d:%s %s, on ",
-          (!(tmp_num % 12) ? 12 : (tmp_num % 12)),
-          (!(time_info.hours % 2) ? "00" : "30"),
-          ((time_info.hours >= 24) ? "PM" : "AM"));
+  sprintf(buf, "It is %s, on ",
+          hmtAsString(hourminTime()).c_str());
 
   weekday = ((28 * time_info.month) + time_info.day + 1) % 7;        // 28 days in a month 
 
@@ -3222,42 +1610,30 @@ void TBeing::doTime(const char *argument)
   strcat(buf, "\n\r");
   sendTo(buf);
 
-  day = time_info.day + 1;        // day in [1..35] 
+  day = time_info.day + 1;        // day in [1..28] 
 
   sendTo("The %s day of %s, Year %d P.S.\n\r", 
            numberAsString(day).c_str(),
            month_name[time_info.month], time_info.year);
 
-  tmp2 = sunRise();
-  tmp_num = tmp2 / 2;
-  sprintf(buf, "The sun will rise today at:   %d:%s %s.\n\r",
-          (!(tmp_num % 12) ? 12 : (tmp_num % 12)),
-          (!(tmp2 % 2) ? "00" : "30"),
-          ((tmp2 >= 24) ? "PM" : "AM"));
+  tmp2 = sunTime(SUN_TIME_RISE);
+  sprintf(buf, "The sun will rise today at:   %s.\n\r",
+       hmtAsString(tmp2).c_str());
   sendTo(buf);
 
-  tmp2 = sunSet();
-  tmp_num = tmp2 / 2;
-  sprintf(buf, "The sun will set today at:    %d:%s %s.\n\r",
-          (!(tmp_num % 12) ? 12 : (tmp_num % 12)),
-          (!(tmp2 % 2) ? "00" : "30"),
-          ((tmp2 >= 24) ? "PM" : "AM"));
+  tmp2 = sunTime(SUN_TIME_SET);
+  sprintf(buf, "The sun will set today at:    %s.\n\r",
+       hmtAsString(tmp2).c_str());
   sendTo(buf);
 
-  tmp2 = moonRise();
-  tmp_num = tmp2 / 2;
-  sprintf(buf, "The moon will rise today at:  %d:%s %s    (%s).\n\r",
-          (!(tmp_num % 12) ? 12 : (tmp_num % 12)),
-          (!(tmp2 % 2) ? "00" : "30"),
-          ((tmp2 >= 24) ? "PM" : "AM"), moonType());
+  tmp2 = moonTime(MOON_TIME_RISE);
+  sprintf(buf, "The moon will rise today at:  %s    (%s).\n\r",
+       hmtAsString(tmp2).c_str(), moonType());
   sendTo(buf);
 
-  tmp2 = moonSet();
-  tmp_num = tmp2 / 2;
-  sprintf(buf, "The moon will set today at:   %d:%s %s.\n\r",
-          (!(tmp_num % 12) ? 12 : (tmp_num % 12)),
-          (!(tmp2 % 2) ? "00" : "30"),
-          ((tmp2 >= 24) ? "PM" : "AM"));
+  tmp2 = moonTime(MOON_TIME_SET);
+  sprintf(buf, "The moon will set today at:   %s.\n\r",
+       hmtAsString(tmp2).c_str());
   sendTo(buf);
 
   time_t ct;
@@ -3309,8 +1685,12 @@ down");
       describeRoomLight();
       return;
     } else {
-      vlogf(5,"Error in getWeather for %s.",getName());
+      vlogf(LOG_BUG,"Error in getWeather for %s.",getName());
       return;
+    }
+    if (isImmortal()) {
+      sendTo("The current barometer is: %d.  Barometric change is: %d\n\r",
+            weather_info.pressure, weather_info.change); 
     }
     sendTo(COLOR_BASIC, "%s and %s.\n\r", buf,
         (weather_info.change >= 0 ? "you feel a relatively warm wind from the south" :
@@ -3534,9 +1914,6 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
     case CMD_EGOTRIP:
       return POWER_EGOTRIP;
       break;
-    case CMD_LONGDESCR:
-      return POWER_LONGDESC;
-      break;
     case CMD_POWERS:
       return POWER_POWERS;
       break;
@@ -3579,12 +1956,29 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
 
 void TBeing::doWizhelp()
 {
-  char      buf[MAX_STRING_LENGTH];
-  int       no;
+  char      buf[MAX_STRING_LENGTH],
+            tString[MAX_STRING_LENGTH];
+  int       no,
+            tLength = 2;
+  unsigned int i;
   wizPowerT tPower;
 
   if (!isImmortal())
     return;
+
+  for (i = 0; i < MAX_CMD_LIST; i++) {
+    if (!commandArray[i])
+      continue;
+
+    if ((GetMaxLevel() >= commandArray[i]->minLevel) &&
+        (commandArray[i]->minLevel > MAX_MORT) &&
+        ((tPower = wizPowerFromCmd(cmdTypeT(i))) == MAX_POWER_INDEX ||
+         hasWizPower(tPower)))
+      tLength = max(strlen(commandArray[i]->name), (unsigned) tLength);
+  }
+
+  sprintf(tString, "%%-%ds", (tLength + 1));
+  tLength = (79 / tLength);
 
   sendTo("The following privileged commands are available:\n\r\n\r");
 
@@ -3592,9 +1986,7 @@ void TBeing::doWizhelp()
 
   if ((tPower = wizPowerFromCmd(CMD_AS)) == MAX_POWER_INDEX ||
       hasWizPower(tPower))
-    strcpy(buf,"as        ");  // has to be at level 1 to be useful 
-
-  unsigned int i;
+    sprintf(buf, tString, "as");
 
   for (no = 2, i = 0; i < MAX_CMD_LIST; i++) {
     if (!commandArray[i])
@@ -3605,15 +1997,17 @@ void TBeing::doWizhelp()
         ((tPower = wizPowerFromCmd(cmdTypeT(i))) == MAX_POWER_INDEX ||
          hasWizPower(tPower))) {
 
-      sprintf(buf + strlen(buf), "%-10s", commandArray[i]->name);
-      if (!(no % 7))
+      sprintf(buf + strlen(buf), tString, commandArray[i]->name);
+
+      if (!(no % (tLength - 1)))
         strcat(buf, "\n\r");
+
       no++;
     }
   }
 
   strcat(buf, "\n\r      Check out HELP GODS (or HELP BUILDERS) for an index of help files.\n\r");
-  desc->page_string(buf, 0);
+  desc->page_string(buf);
 }
 
 void TBeing::doUsers(const char *)
@@ -3659,7 +2053,16 @@ void TPerson::doUsers(const char *argument)
             !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
         sprintf(line + strlen(line), "*** Information Concealed ***\n\r");
       } else {
-        sprintf(buf2, "[%s]", (d->host ? d->host : "????"));
+	MYSQL_RES *res;
+	MYSQL_ROW row;
+	
+	dbquery(&res, "sneezy", "doUser", "select pingtime from pings where host='%s'", d->host);
+	if((row=mysql_fetch_row(res))){
+	  sprintf(buf2, "[%s](%s)", (d->host ? d->host : "????"), row[0]);
+	} else {
+	  sprintf(buf2, "[%s](???)", (d->host ? d->host : "????"));
+	}
+
         sprintf(buf3, "[%s]", ((d->connected < MAX_CON_STATUS && d->connected >= 0) ? connected_types[d->connected] : "Editing"));
         sprintf(buf4, "[%s]", (d->account && d->account->name) ? d->account->name : "UNDEFINED");
         sprintf(line + strlen(line), "%s%-34.34s%s %s%-10.10s%s %s%s%s\n\r", red(), buf2, norm(), green(), buf3, norm(), cyan(), buf4, norm());
@@ -3670,7 +2073,7 @@ void TPerson::doUsers(const char *argument)
     sprintf(buf2, "\n\rTotal Descriptors : %d\n\r", count);
     sb += buf2;
     if (desc)
-      desc->page_string(sb.c_str(), 0, TRUE);
+      desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
     return;
   } else if (is_abbrev(arg1, "site")) {
     if (!*arg2 || !arg2) {
@@ -3754,9 +2157,9 @@ void TBeing::doInventory(const char *argument)
     list_in_heap(stuff, this, 0, 100);
 
     if (GetMaxLevel() > 10) {
-      sendTo("\n\r%d%% volume, %d%% weight.\n\r",
-              getCarriedVolume() * 100 / carryVolumeLimit(),
-              (int) (getCarriedWeight() * 100.0 / carryWeightLimit()));
+      sendTo("\n\r%3.f%% volume, %3.f%% weight.\n\r",
+             ((float) getCarriedVolume() / (float) carryVolumeLimit()) * 100.0,
+             ((float) getCarriedWeight() / (float) carryWeightLimit()) * 100.0);
     }
   } else {
     victim = get_char_vis_world(this, arg, NULL, EXACT_YES);
@@ -3926,15 +2329,6 @@ void TBeing::doCredits()
     desc->start_page_file(CREDITS_FILE, "Credits file being revised!\n\r");
 }
 
-
-void TBeing::doNews()
-{
-  if (desc) {
-    news_used_num++;
-    desc->start_page_file(NEWS_FILE, "No news is good news!\n\r");
-  }
-}
-
 void TBeing::doWizlist()
 {
   if (desc) {
@@ -3946,8 +2340,8 @@ void TBeing::doWizlist()
     else {
       wizlist_used_num++;
 
-      file_to_string(WIZLIST_FILE, tStString, true);
-      desc->page_string(tStString.c_str(), 0);
+      file_to_string(WIZLIST_FILE, tStString);
+      desc->page_string(tStString.c_str());
       fclose(tFile);
     }
   }
@@ -4119,11 +2513,76 @@ void TBeing::doWhere(const char *argument)
   string sb;
   bool dash = FALSE;
   bool gods = FALSE;
+  unsigned int tot_found = 0;
+  string tStString(argument),
+         tStName(""),
+         tStArg("");
 
   if (powerCheck(POWER_WHERE))
     return;
 
   only_argument(argument, namebuf);
+  two_arg(tStString, tStArg, tStName);
+
+  if (hasWizPower(POWER_WIZARD) && (GetMaxLevel() > MAX_MORT) &&
+      (is_abbrev(tStArg, "engraved") || is_abbrev(tStArg, "owners"))) {
+    count = 0;
+
+    for (k = object_list; k; k = k->next) {
+      if (!k->name) {
+        vlogf(LOG_BUG, "Item without a name in object_list (doWhere) looking for %s", namebuf);
+        continue;
+      }
+
+      if (is_abbrev(tStArg, "owners")) {
+        if (!k->owners)
+          continue;
+
+        const char * tTmpBuffer = k->owners;
+	char tTmpString[256];
+
+        while (tTmpBuffer && *tTmpBuffer) {
+          tTmpBuffer = one_argument(tTmpBuffer, tTmpString);
+
+          if (!tTmpString || !*tTmpString)
+            continue;
+
+          if (!is_abbrev(tStName, tTmpString))
+            continue;
+
+          break;
+        }
+
+        if (!tTmpString || !*tTmpString || !is_abbrev(tStName, tTmpString))
+          continue;
+      }
+
+      if (is_abbrev(tStArg, "engraved"))
+        if (!k->action_description)
+          continue;
+        else if ((sscanf(k->action_description, "This is the personalized object of %s.", buf)) != 1)
+          continue;
+        else if (!is_abbrev(tStName, buf))
+          continue;
+
+      sprintf(buf, "[%2d] ", ++count);
+      sb += buf;
+
+      if (++tot_found == 100) {
+        sb += "Too many objects found.\n\r";
+        break;
+      }
+
+      do_where_thing(this, k, 0, sb);
+    }
+
+    if (sb.empty())
+      sendTo("Couldn't find any such object.\n\r");
+    else if (desc)
+      desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+
+    return;
+  }
 
   if (!*namebuf || (dash = (*namebuf == '-'))) {
     if (GetMaxLevel() <= MAX_MORT) {
@@ -4155,7 +2614,7 @@ void TBeing::doWhere(const char *argument)
         }
       }
       if (desc)
-        desc->page_string(sb.c_str(), 0, TRUE);
+        desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
       return;
     }
   }
@@ -4167,10 +2626,9 @@ void TBeing::doWhere(const char *argument)
 
   *buf = '\0';
 
-  unsigned int tot_found = 0;
   for (i = character_list; i; i = i->next) {
     if (!i->name) {
-      vlogf(5, "Being without a name in character_list (doWhere) looking for %s", namebuf);
+      vlogf(LOG_BUG, "Being without a name in character_list (doWhere) looking for %s", namebuf);
       continue;
     }
     if (isname(namebuf, i->name) && canSeeWho(i) && canSee(i)) {
@@ -4198,7 +2656,7 @@ void TBeing::doWhere(const char *argument)
   if (GetMaxLevel() > MAX_MORT) {
     for (k = object_list; k; k = k->next) {
       if (!k->name) {
-        vlogf(5, "Item without a name in object_list (doWhere) looking for %s", namebuf);
+        vlogf(LOG_BUG, "Item without a name in object_list (doWhere) looking for %s", namebuf);
         continue;
       }
       if (isname(namebuf, k->name) && canSee(k)) {
@@ -4223,9 +2681,8 @@ void TBeing::doWhere(const char *argument)
     sendTo("Couldn't find any such thing.\n\r");
   else {
     if (desc)
-      desc->page_string(sb.c_str(), 0, TRUE);
+      desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
   }
-
 }
 
 extern void comify(char *);
@@ -4278,7 +2735,7 @@ void TBeing::doLevels(const char *argument)
   tStString += "\n\r";
 
   if (desc)
-    desc->page_string(tStString.c_str(), 0, TRUE);
+    desc->page_string(tStString.c_str(), SHOWNOW_NO, ALLOWREP_YES);
 #else
   int i;
   classIndT Class;
@@ -4395,260 +2852,9 @@ void TBeing::doLevels(const char *argument)
   }
   sb += "\n\r";
   if (desc)
-    desc->page_string(sb.c_str(), 0, TRUE);
+    desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
   return;
 #endif
-}
-
-
-void TBeing::doConsider(const char *argument)
-{
-  TBeing *victim;
-  char namebuf[256];
-  int diff=0;
-
-  only_argument(argument, namebuf);
-
-  if (!(victim = get_char_room_vis(this, namebuf))) {
-    if (!isImmortal() || !hasWizPower(POWER_IMM_EVAL)) {
-      sendTo("Consider killing whom?\n\r");
-      return;
-    } else if (!(victim = get_char_vis_world(this, namebuf, NULL, EXACT_YES)) &&
-               !(victim = get_char_vis_world(this, namebuf, NULL, EXACT_NO))) {
-      sendTo("I'm afraid I was unable to find them.\n\r");
-      return;
-    } else if (!dynamic_cast<TPerson *>(victim)) {
-      sendTo("I'm afraid you can only use this on mortals in this fashion.\n\r");
-      return;
-    }
-  }
-  if (!canSee(victim) && canSee(victim, INFRA_YES)) {
-    strcpy(namebuf, "a blob");
-  } else {
-    strcpy(namebuf, victim->getName());
-  }
-  if (victim == this) {
-    if (!isImmortal()) {
-      sendTo("You consider your equipment...\n\r");
-      int armor = 1000 - getArmor();
-      sh_int suggest = suggestArmor();
-      diff = (int) (suggest - armor);
-      sendTo("Your equipment would seem %s for your class and level.\n\r",
-             (diff >=  210 ? "laughably pathetic" :
-             (diff >=  160 ? "horrid" :
-             (diff >=   90 ? "bad" :
-             (diff >=   50 ? "poor" :
-             (diff >=   30 ? "weak" :
-             (diff >=   10 ? "o.k." :
-             (diff >     0 ? "near perfect" :
-             (diff ==    0 ? "perfect" :
-             (diff >= - 30 ? "good" :
-             (diff >= - 40 ? "very good" :
-             (diff >= - 80 ? "great" :
-             (diff >= -150 ? "fantastic" :
-             (diff >= -200 ? "superb" : "incredibly good"))))))))))))));
-      return;
-    } else {
-      sendTo("You're funny...  You're a god, what do you need armor for??\n\r");
-      return;
-    }
-  }
-  if (victim->isPc() && victim->isImmortal()) {
-    sendTo("You must sure have a big ego to contemplate fighting gods.\n\r");
-    act("$N just considered fighting you.",TRUE,victim,0,this,TO_CHAR);
-    return;
-  } else if (dynamic_cast<TPerson *>(victim)) {
-    if (isImmortal() && hasWizPower(POWER_IMM_EVAL)) {
-      diff       = (int) (victim->getArmor());
-      sh_int suggest = victim->suggestArmor();
-      int prefArmorC = (1000 - suggest);
-
-      sendTo("You consider %s's equipment...\n\r", victim->getName());
-      sendTo("%s should have an AC of [%d] but has an AC of [%d]\n\r",
-             good_cap(victim->getName()).c_str(),
-             prefArmorC,
-             diff);
-      return;
-    } else {
-      sendTo("Would you like to borrow a cross and a shovel?\n\r");
-      playsound(SOUND_DONT_KILL_ME, SOUND_TYPE_COMBAT);
-      return;
-    }
-  }
-
-  // everything should be a monster by this point
-  TMonster *tmon = dynamic_cast<TMonster *>(victim);
-
-  act("$n looks $N over.", TRUE, this, 0, tmon, TO_NOTVICT);
-  act("$n looks you over.", TRUE, this, 0, tmon, TO_VICT);
-
-#if 0
-  diff = tmon->GetMaxLevel() - GetMaxLevel();
-#else
-  // let's use the present real lev so we look at spells and stuff
-  diff = (int) (tmon->getRealLevel() + 0.5) - GetMaxLevel();
-#endif
-  if (diff <= -15)
-    sendTo("Shall I tie both hands behind your back, or just one?\n\r");
-  else if (diff <= -10)
-    sendTo("Why bother???\n\r");
-  else if (diff <= -6)
-    sendTo("Don't strain yourself.\n\r");
-  else if (diff <= -3)
-    sendTo("Piece of cake.\n\r");
-  else if (diff <= -2)
-    sendTo("Odds are in your favor.\n\r");
-  else if (diff <= -1)
-    sendTo("You have a slight advantage.\n\r");
-  else if (!diff)
-    sendTo("A fair fight.\n\r");
-  else if (diff <= 1)
-    act("$E doesn't look that tough...", TRUE, this, 0, tmon, TO_CHAR);
-  else if (diff <= 2)
-    sendTo("Cross your fingers.\n\r");
-  else if (diff <= 3)
-    sendTo("Cross your fingers and hope they don't get broken.\n\r");
-  else if (diff <= 6)
-    sendTo("I hope you have a good plan!\n\r");
-  else if (diff <= 10)
-    sendTo("Bring friends.\n\r");
-  else if (diff <= 15)
-    sendTo("You and what army??\n\r");
-  else if (diff <= 30)
-    act("You'll win if $E never hits you.", TRUE, this, 0, tmon, TO_CHAR);
-  else
-    sendTo("There are better ways to suicide.\n\r");
-
-  if (getDiscipline(DISC_ADVENTURING)) {
-    int learn = 0;
-    spellNumT sknum = TYPE_UNDEFINED;
-    int roll = 0;
-
-    if (tmon->isAnimal() && doesKnowSkill(SKILL_CONS_ANIMAL)) {
-      sknum = SKILL_CONS_ANIMAL;
-      roll = 1;
-      learn = getSkillValue(SKILL_CONS_ANIMAL);
-      sendTo(COLOR_MOBS, "Using your knowledge of animal lore, you determine that %s is %s %s.\n\r",
-            namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
-            tmon->getMyRace()->getSingularName().c_str());
-    }
-    if (tmon->isVeggie() && doesKnowSkill(SKILL_CONS_VEGGIE)) {
-      sknum = SKILL_CONS_VEGGIE;
-      roll = 1;
-      learn = max(learn, (int) getSkillValue(SKILL_CONS_VEGGIE));
-      sendTo(COLOR_MOBS, "Using your knowledge of vegetable lore, you determine that %s is %s %s.\n\r",
-            namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
-            tmon->getMyRace()->getSingularName().c_str());
-    }
-    if (tmon->isDiabolic() && doesKnowSkill(SKILL_CONS_DEMON)) {
-      sknum = SKILL_CONS_DEMON;
-      roll = 1;
-      learn = max(learn, (int) getSkillValue(SKILL_CONS_DEMON));
-      sendTo(COLOR_MOBS, "Using your knowledge of demon lore, you determine that %s is %s %s.\n\r",
-            namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
-            tmon->getMyRace()->getSingularName().c_str());
-    }
-    if (tmon->isReptile() && doesKnowSkill(SKILL_CONS_REPTILE)) {
-      sknum = SKILL_CONS_REPTILE;
-      roll = 2;
-      learn = max(learn, (int) getSkillValue(SKILL_CONS_REPTILE));
-      sendTo(COLOR_MOBS, "Using your knowledge of reptile lore, you determine that %s is %s %s.\n\r",
-            namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
-            tmon->getMyRace()->getSingularName().c_str());
-    }
-    if (tmon->isUndead() && doesKnowSkill(SKILL_CONS_UNDEAD)) {
-      sknum = SKILL_CONS_UNDEAD;
-      roll = 2;
-      learn = max(learn, (int) getSkillValue(SKILL_CONS_UNDEAD));
-      sendTo(COLOR_MOBS, "Using your knowledge of the undead, you determine that %s is %s %s.\n\r",
-            namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
-            tmon->getMyRace()->getSingularName().c_str());
-    }
-    if (tmon->isGiantish() && doesKnowSkill(SKILL_CONS_GIANT)) {
-      sknum = SKILL_CONS_GIANT;
-      roll = 1;
-      learn = max(learn, (int) getSkillValue(SKILL_CONS_GIANT));
-      sendTo(COLOR_MOBS, "Using your knowledge of giant lore, you determine that %s is %s %s.\n\r",
-            namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
-            tmon->getMyRace()->getSingularName().c_str());
-    }
-    if (tmon->isPeople() && doesKnowSkill(SKILL_CONS_PEOPLE)) {
-      sknum = SKILL_CONS_PEOPLE;
-      roll = 2;
-      learn = max(learn, (int) getSkillValue(SKILL_CONS_PEOPLE));
-      sendTo(COLOR_MOBS, "Using your knowledge of human and demi-human lore, you determine that %s is %s %s.\n\r",
-            namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
-            tmon->getMyRace()->getSingularName().c_str());
-    }
-    if (tmon->isOther() && doesKnowSkill(SKILL_CONS_OTHER)) {
-      sknum = SKILL_CONS_OTHER;
-      roll = 1;
-      learn = max(learn, (int) getSkillValue(SKILL_CONS_OTHER));
-      sendTo(COLOR_MOBS, "Using your knowledge of monster lore, you determine that %s is %s %s.\n\r",
-            namebuf,
-            startsVowel(tmon->getMyRace()->getSingularName().c_str()) ? "an" : "a",
-            tmon->getMyRace()->getSingularName().c_str());
-    }
-    if (learn > MAX_SKILL_LEARNEDNESS)
-      learn = MAX_SKILL_LEARNEDNESS;
-
-    if (!learn)
-      return;
-
-    if ((GetMaxLevel() <= MAX_MORT) && !::number(0,roll)) {
-      learnFromDoing(sknum, SILENT_NO, 0);
-    }
-
-    addToWait(combatRound(1));
-
-    int num = GetApprox(tmon->hitLimit(), max(80,learn));
-    double fnum = hitLimit() ? ((double) num / (double) hitLimit()) : 
-            (num ? 10.0 : 0.0);
-    if (learn > 5)
-      sendTo("Est Max HP are: %s.\n\r", DescRatio(fnum));
-
-    // mob's AC : expressed as a level (use mob scale for AC-lev)
-    num = GetApprox(max(((1000 - tmon->getArmor()) - 400)/20, 0), 10*max(80,learn));
-    // my AC : expressed as a level  (use PC scale for AC-lev)
-    int num2 = (int) max(((1000 - getArmor()) - 500)/25, 0);
-    // take the difference
-    num -= num2;  // if positive, mob has better armor
-    // normalize it
-    fnum = ((double) num/get_doubling_level(GetMaxLevel()));
-    // if same ACs, num = 0 and want it to be 1.0
-    // if mob had AC of twice as good mob, num = 1, want it to be 2.0
-    // if mob had AC of 4X as good mob, num = 2, want it to be 4.0
-    // if mob had AC of twice as bad mob, num = -1, want it to be 0.5
-    fnum = pow(2.0, fnum);
-
-    if (learn > 20)
-      sendTo("Est. armor class is : %s.\n\r", DescRatio(fnum));
-
-    if (learn > 40)
-      sendTo("Est. # of attacks: %s.\n\r", DescAttacks(GetApprox((int) tmon->getMult(), max(80,learn))));
-
-    if (learn > 60) {
-      num = GetApprox((int) tmon->baseDamage(), max(80,learn));
-      fnum = (double) num;
-      sendTo("Est. damage of attacks: %s.\n\r", DescDamage(fnum));
-    }
-  }
-  immortalEvaluation(tmon);
-}
-
-
-int offset;
-
-int compar(const void *i, const void *j) 
-{ 
-  return(strcmp((const char *) i + offset, (const char *) j + offset)); 
 }
 
 void TBeing::doWorld()
@@ -4656,77 +2862,123 @@ void TBeing::doWorld()
   time_t ct, ot, tt;
   char *tmstr, *otmstr;
   int i;
+  string str;
+  char buf[256];
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+
+  if (!desc)
+    return;
 
   ot = Uptime;
-  if (desc && desc->account)
-    tt = ot + 3600 * desc->account->time_adjust;
-  else
-    tt = ot;
+  tt = ot + 3600 * desc->account->time_adjust;
 
   otmstr = asctime(localtime(&tt));
   *(otmstr + strlen(otmstr) - 1) = '\0';
-  sendTo("%sStart time was:                      %s%s\n\r", 
+  sprintf(buf, "%sStart time was:                      %s%s\n\r", 
         blue(),otmstr, norm());
+  str += buf;
 
-  if (desc && desc->account)
-    ct = time(0) + 3600 * desc->account->time_adjust;
-  else
-    ct = time(0);
+  ct = time(0) + 3600 * desc->account->time_adjust;
+
   tmstr = asctime(localtime(&ct));
   *(tmstr + strlen(tmstr) - 1) = '\0';
-  sendTo("%sCurrent time is:                     %s%s\n\r", 
+  sprintf(buf, "%sCurrent time is:                     %s%s\n\r", 
          blue(), tmstr, norm());
+  str += buf;
 
   time_t upt = ct - tt;
-  sendTo("%sUptime is:                           %s%s\n\r", 
+  sprintf(buf, "%sUptime is:                           %s%s\n\r", 
          blue(), secsToString(upt).c_str(), norm());
+  str += buf;
 
-  sendTo("%sMachine Lag: Avg/Cur/High/Low        %d/%d/%d/%d%s\n\r",
-	 blue(), 
-	 (lag_info.count ? lag_info.total/lag_info.count : 0),
-	 lag_info.current,
-	 lag_info.high,
-	 lag_info.low, norm());
+  long int total=0, count=0;
+  for(i=0;i<10;++i){
+    if(lag_info.lagcount[i]){
+      total+=lag_info.lagtime[i];
+      count++;
+    }
+  }
+  sprintf(buf, "%sMachine Lag: Avg/Cur/High/Low        %ld/%ld/%ld/%ld%s\n\r",
+	  blue(),
+	  (count ? total/count : 0),
+	  lag_info.current,
+	  lag_info.high,
+	  lag_info.low, norm());
+  str += buf;
 
-  if(isImmortal()){
-    for(i=0;i<10;++i){
-      if(lag_info.lagcount[i])
-	sendTo("%sLag %i:                              %d/%d%s\n\r",
-	       blue(), i, lag_info.lagtime[i], lag_info.lagcount[i], norm());
+  dbquery(&res, "sneezy", "doWorld(1)", 
+	  "select pingtime from pings where host='%s'", desc->host);
+  if((row=mysql_fetch_row(res))){
+    sprintf(buf, "%sNetwork Lag: Yours/Avg/High/Low      %s",
+	    blue(), row[0]);
+    str += buf;
+    dbquery(&res, "sneezy", "doWorld(2)", 
+	    "select avg(pingtime), max(pingtime), min(pingtime) from pings");
+    if((row=mysql_fetch_row(res))){
+      sprintf(buf, "/%s/%s/%s%s\n\r", row[0], row[1], row[2], norm());
+      str += buf;
+    } else {
+      sprintf(buf, "/???/???/???%s\n\r", norm());
+      str += buf;
     }
   }
 
 
-  sendTo("Total number of rooms in world:               %d\n\r", 
+  sprintf(buf, "Total number of rooms in world:               %ld\n\r", 
         roomCount);
-  sendTo("Total number of zones in world:               %d\n\r", 
+  str += buf;
+  sprintf(buf, "Total number of zones in world:               %d\n\r", 
         zone_table.size());
-  sendTo("Total number of distinct objects in world:%s    %d%s\n\r",
+  str += buf;
+  sprintf(buf, "Total number of distinct objects in world:%s    %d%s\n\r",
         green(), obj_index.size(), norm());
-  sendTo("Total number of objects in game:%s              %d%s\n\r",
+  str += buf;
+  sprintf(buf, "Total number of objects in game:%s              %ld%s\n\r",
         green(), objCount, norm());
-  sendTo("Total number of registered accounts:%s          %d%s\n\r", 
-         blue(), account_number, norm());
-  sendTo("Total number of registered players:%s           %d%s\n\r", 
-         blue(), player_count, norm());
+  str += buf;
+  sprintf(buf, "Total number of registered accounts:%s          %d%s\n\r", 
+         blue(), accStat.account_number, norm());
+  str += buf;
+  sprintf(buf, "Total number of registered players:%s           %d%s\n\r", 
+         blue(), accStat.player_count, norm());
+  str += buf;
+
+  if (hasWizPower(POWER_WIZARD)) {
+    sprintf(buf, "Total number of 7-day active accounts:%s        %d%s\n\r", 
+           blue(), accStat.active_account7, norm());
+    str += buf;
+    sprintf(buf, "Total number of 7-day active players:%s         %d%s\n\r", 
+           blue(), accStat.active_player7, norm());
+    str += buf;
+    sprintf(buf, "Total number of 30-day active accounts:%s       %d%s\n\r", 
+           blue(), accStat.active_account30, norm());
+    str += buf;
+    sprintf(buf, "Total number of 30-day active players:%s        %d%s\n\r", 
+           blue(), accStat.active_player30, norm());
+    str += buf;
+  }
 
   char timebuf[256];
 
   strcpy(timebuf, ctime(&stats.first_login));
   timebuf[strlen(timebuf) - 1] = '\0';
   strcat(timebuf, ":");
-  sendTo("Logins since %-32.32s %s%ld  (%ld per day)%s\n\r",
+  sprintf(buf, "Logins since %-32.32s %s%ld  (%ld per day)%s\n\r",
      timebuf,  blue(), stats.logins, 
      (long) ((double) stats.logins * SECS_PER_REAL_DAY / (time(0) - stats.first_login)),
      norm());
+  str += buf;
 
-  sendTo("Total number of distinct mobiles in world:%s    %d%s\n\r",
+  sprintf(buf, "Total number of distinct mobiles in world:%s    %d%s\n\r",
         red(), mob_index.size(), norm());
+  str += buf;
 
   if (GetMaxLevel() >= GOD_LEVEL1) {
-    sendTo("%sDistinct Mobs by level:%s\n\r",
+    sprintf(buf, "%sDistinct Mobs by level:%s\n\r",
          blue(), norm());
-    sendTo("%sL1-5  [%s%3d%s]  L6-10 [%s%3d%s]  L11-15[%s%3d%s]  L16-20[%s%3d%s]  L21-25 [%s%3d%s] L26-30  [%s%3d%s]%s\n\r", norm(),
+    str += buf;
+    sprintf(buf, "%sL1-5  [%s%3d%s]  L6-10 [%s%3d%s]  L11-15[%s%3d%s]  L16-20[%s%3d%s]  L21-25 [%s%3d%s] L26-30  [%s%3d%s]%s\n\r", norm(),
         purple(), stats.mobs_1_5, norm(),
         purple(), stats.mobs_6_10, norm(),
         purple(), stats.mobs_11_15, norm(),
@@ -4734,7 +2986,8 @@ void TBeing::doWorld()
         purple(), stats.mobs_21_25, norm(),
         purple(), stats.mobs_26_30, norm(),
         norm());
-    sendTo("%sL31-40[%s%3d%s]  L41-50[%s%3d%s]  L51-60[%s%3d%s]  L61-70[%s%3d%s]  L71-100[%s%3d%s] L101-127[%s%3d%s]%s\n\r", norm(),
+    str += buf;
+    sprintf(buf, "%sL31-40[%s%3d%s]  L41-50[%s%3d%s]  L51-60[%s%3d%s]  L61-70[%s%3d%s]  L71-100[%s%3d%s] L101-127[%s%3d%s]%s\n\r", norm(),
         purple(), stats.mobs_31_40, norm(),
         purple(), stats.mobs_41_50, norm(),
         purple(), stats.mobs_51_60, norm(),
@@ -4742,27 +2995,38 @@ void TBeing::doWorld()
         purple(), stats.mobs_71_100, norm(),
         purple(), stats.mobs_101_127, norm(),
         norm());
+    str += buf;
   }
-  sendTo("Total number of monsters in game:%s             %d%s\n\r",
+  sprintf(buf, "Total number of monsters in game:%s             %ld%s\n\r",
         red(), mobCount, norm());
-  sendTo("%sActual Mobs by level:%s\n\r",
+  str += buf;
+
+  sprintf(buf, "%sActual Mobs by level:%s\n\r",
         purple(), norm());
-  sendTo("%sL1-5  [%s%4u%s]  L6-10 [%s%3u%s]  L11-15[%s%3u%s]  L16-20[%s%3u%s]  L21-25 [%s%3u%s] L26-30  [%s%3u%s]%s\n\r", norm(),
-        purple(), stats.act_1_5, norm(),
-        purple(), stats.act_6_10, norm(),
-        purple(), stats.act_11_15, norm(),
-        purple(), stats.act_16_20, norm(),
-        purple(), stats.act_21_25, norm(),
-        purple(), stats.act_26_30, norm(),
-        norm());
-  sendTo("%sL31-40[%s%4u%s]  L41-50[%s%3u%s]  L51-60[%s%3u%s]  L61-70[%s%3u%s]  L71-100[%s%3u%s] L101-127[%s%3u%s]%s\n\r", norm(),
-        purple(), stats.act_31_40, norm(),
-        purple(), stats.act_41_50, norm(),
-        purple(), stats.act_51_60, norm(),
-        purple(), stats.act_61_70, norm(),
-        purple(), stats.act_71_100, norm(),
-        purple(), stats.act_101_127, norm(),
-        norm());
+  str += buf;
+
+  sprintf(buf, "%sL  1-  5  [%s%4u%s]  L  6- 10  [%s%4u%s]  L 11- 15  [%s%4u%s]  L 16- 20  [%s%4u%s]\n\r", norm(),
+         purple(), stats.act_1_5, norm(),
+         purple(), stats.act_6_10, norm(),
+         purple(), stats.act_11_15, norm(),
+         purple(), stats.act_16_20, norm());
+  str += buf;
+
+  sprintf(buf, "%sL 21- 25  [%s%4u%s]  L 26- 30  [%s%4u%s]  L 31- 40  [%s%4u%s]  L 41- 50  [%s%4u%s]\n\r", norm(),
+         purple(), stats.act_21_25, norm(),
+         purple(), stats.act_26_30, norm(),
+         purple(), stats.act_31_40, norm(),
+         purple(), stats.act_41_50, norm());
+  str += buf;
+
+  sprintf(buf, "%sL 51- 60  [%s%4u%s]  L 61- 70  [%s%4u%s]  L 71-100  [%s%4u%s]  L101-127  [%s%4u%s]\n\r", norm(),
+         purple(), stats.act_51_60, norm(),
+         purple(), stats.act_61_70, norm(),
+         purple(), stats.act_71_100, norm(),
+         purple(), stats.act_101_127, norm());
+  str += buf;
+
+  desc->page_string(str.c_str());
 }
 
 const char *DescRatio(double f)
@@ -4900,7 +3164,7 @@ void TBeing::doAlias(const char *argument)
   if (!desc)
     return;
 
-  if (desc->client) {
+  if (desc->m_bIsClient) {
     sendTo("Use the client aliases. See client help file for #alias command and
 options menu\n\r");
     return;
@@ -5111,7 +3375,7 @@ void TBeing::doLimbs(const string & argument)
 	return;
       }
     }
-    if (!sameRoom(v)) {
+    if (!sameRoom(*v)) {
       sendTo("That person doesn't seem to be around.\n\r");
       return;
     }
@@ -5205,7 +3469,7 @@ void TBeing::doLimbs(const string & argument)
         if (!aff->level) {
           sendTo("%s %s %s.\n\r", who, 
 	         (v==this)?"have":"has",
-                 DiseaseInfo[DISEASE_INDEX(aff->modifier)].name);
+                 DiseaseInfo[affToDisease(*aff)].name);
           found = TRUE;
         }
       }
@@ -5299,7 +3563,7 @@ void TBeing::doEvaluate(const char *argument)
 
     if (!roomp) {
       sendTo("You have no idea where you are do you...\n\r");
-      vlogf(7, "Player without room called evaluate room.  [%s]", getName());
+      vlogf(LOG_BUG, "Player without room called evaluate room.  [%s]", getName());
     } else if (roomp->isCitySector())
       sendTo("You assume you are in a city by the way things look.\n\r");
     else if (roomp->isRoadSector())
@@ -5319,7 +3583,7 @@ void TBeing::doEvaluate(const char *argument)
     else if (roomp->isMountainSector())
       sendTo("This appears to be a mountain.\n\r");
     else if (roomp->isForestSector())
-      sendTo("Judging by the trees you bet your in a forest.\n\r");
+      sendTo("Judging by the trees you bet you're in a forest.\n\r");
     else if (roomp->isAirSector())
       sendTo("You are up in the air, are you sure you should be here?\n\r");
     else if (roomp->isOceanSector())
@@ -5428,6 +3692,9 @@ void TCorpse::describeObjectSpecifics(const TBeing *ch) const
   if (isCorpseFlag(CORPSE_NO_DISSECT))
     act("$p appears to have been dissected already.",
         FALSE, ch, this, 0, TO_CHAR);
+  if (isCorpseFlag(CORPSE_NO_SACRIFICE))
+    act("$p appears to have been sacrificed already.",
+        FALSE, ch, this, 0, TO_CHAR);
 }
 
 void TSymbol::describeObjectSpecifics(const TBeing *ch) const
@@ -5506,15 +3773,21 @@ void TObj::describeMe(const TBeing *ch) const
   if (ch->isImmortal() || canWear(ITEM_TAKE)) {
 
     if (ch->desc && IS_SET(ch->desc->account->flags, ACCOUNT_IMMORTAL)){
-      if(obj_index[getItemIndex()].max_exist <= MIN_EXIST_IMMORTAL)
+#if 1
+      if (obj_index[getItemIndex()].max_exist < 9999)
+#else
+      if (obj_index[getItemIndex()].max_exist <= MIN_EXIST_IMMORTAL)
+#endif
         ch->sendTo("It is limited for immortals and there is %i out of %i in existence.\n\r", 
                    obj_index[getItemIndex()].number,
                    obj_index[getItemIndex()].max_exist);
       else
         ch->sendTo("It is not limited for immortals.\n\r");
     }
-
-
+    if (10 >= max_exist) {
+      ch->sendTo("This item is considered limited and will cost a rental fee.\n\r");
+    }
+#ifndef SNEEZY2000
     if (isRentable()) {
       int temp = max(0, rentCost());
   
@@ -5522,7 +3795,7 @@ void TObj::describeMe(const TBeing *ch) const
           temp, (temp != 1 ? "s" : ""));
     } else 
       ch->sendTo("It can't be rented.\n\r");
-
+#endif
     int volume = getVolume();
     volume = ((volume >= 100) ? volume/100 * 100 :
               ((volume >= 10) ? volume/10 * 10 : volume));
@@ -5832,11 +4105,19 @@ void TBeing::describeMaxStructure(const TObj *obj, int learn) const
 
 void TBeing::describeWeaponDamage(const TBaseWeapon *obj, int learn) const
 {
-  if (!hasClass(CLASS_RANGER) && !hasClass(CLASS_WARRIOR) && 
-      !hasClass(CLASS_DEIKHAN)) {
+  if (!hasClass(CLASS_RANGER) &&
+      !hasClass(CLASS_WARRIOR) && 
+      !hasClass(CLASS_DEIKHAN) &&
+      !hasWizPower(POWER_WIZARD)) {
     learn /= 3;
   }
 
+#if 1
+  double av_dam = GetApprox(obj->damageLevel(), learn);
+
+  sendTo(COLOR_OBJECTS, "It is capable of doing %s of damage for your level\n\r", 
+         describe_damage((int) av_dam, this));
+#else
   double av_dam = obj->baseDamage();
   av_dam += (double) obj->itemDamroll();
   av_dam = GetApprox((int) av_dam, learn);
@@ -5863,6 +4144,7 @@ void TBeing::describeWeaponDamage(const TBaseWeapon *obj, int learn) const
           ((av_dam < 19) ? "awesome" :
           ((av_dam < 20) ? "superb" :
                            "super-human")))))))))))))))))))));
+#endif
 }
 
 void TBeing::describeArmor(const TBaseClothing *obj, int learn)
@@ -5871,6 +4153,54 @@ void TBeing::describeArmor(const TBaseClothing *obj, int learn)
       !hasClass(CLASS_DEIKHAN))
     learn /= 3;
 
+#if 1
+  double tACPref,
+         tStrPref,
+         tSHLvl = suggestArmor(),
+         tIsLvl = obj->armorLevel(ARMOR_LEV_AC),
+         tACMin,
+         tACQua;
+
+  obj->armorPercs(&tACPref, &tStrPref);
+
+  // This tells us what they 'should have' on the slot:
+  tSHLvl *= tACPref;
+
+  // Convert tSHLvl to a level
+  tACPref *= (obj->isPaired() ? 2.0 : 1.0);
+  tACMin = ((500.0 * tACPref) + (obj->isPaired() ? 1.0 : 0.5));
+  tACQua = (max(0.0, (tSHLvl - tACMin)) / tACPref);
+  tSHLvl = tACQua / 25;
+
+  int tDiff = GetApprox((int) (tIsLvl - tSHLvl), learn);
+  string tStLevel("");
+
+  if (tDiff < -20)
+    tStLevel = "a horrid amount";
+  else if (tDiff < -15)
+    tStLevel = "a sad amount";
+  else if (tDiff < -10)
+    tStLevel = "a pathetic amount";
+  else if (tDiff < -5)
+    tStLevel = "a decent amount";
+  else if (tDiff <= -1)
+    tStLevel = "a near perfect amount";
+  else if (tDiff == 0)
+    tStLevel = "a Perfect amount";
+  else if (tDiff <= 2)
+    tStLevel = "a near perfect amount"; // This and -1 is where we confuse them
+  else if (tDiff < 5)
+    tStLevel = "a good amount";
+  else if (tDiff < 10)
+    tStLevel = "a really good amount";
+  else if (tDiff < 15)
+    tStLevel = "an extremely good amount";
+  else
+    tStLevel = "way too much of an amount";
+
+  sendTo(COLOR_OBJECTS, "This supplies %s of protection for your class and level\n\r",
+         tStLevel.c_str());
+#else
   int armor = 0;    // works in reverse here.  armor > 0 is GOOD
   armor -= obj->itemAC();
   armor = GetApprox(armor, learn);
@@ -5893,11 +4223,15 @@ void TBeing::describeArmor(const TBaseClothing *obj, int learn)
       ((armor < 28) ? "armoring you like a dragon" :
       ((armor < 30) ? "being virtually impenetrable" :
                        "being impenetrable")))))))))))))))));
+#endif
 }
 
-void TBeing::describeImmunities(TBeing *vict, int learn)
+string TBeing::describeImmunities(const TBeing *vict, int learn) const
 {
   char buf[80];
+  char buf2[256];
+  string str;
+
   int x;
   for (immuneTypeT i = MIN_IMMUNE;i < MAX_IMMUNES; i++) {
     x = GetApprox(vict->getImmunity(i), learn);
@@ -5917,16 +4251,18 @@ void TBeing::describeImmunities(TBeing *vict, int learn)
     else
       strcpy(buf, "lightly");
 
-    if (vict == this)
-      sendTo(COLOR_MOBS, "You are %s %s to %s.\n\r",
+    if (vict == this) 
+      sprintf(buf2, "You are %s %s to %s.\n\r",
          buf, (x > 0 ? "resistant" : "susceptible"),
          immunity_names[i]);
     else
-      sendTo(COLOR_MOBS, "%s is %s %s to %s.\n\r",
+      sprintf(buf2, "%s is %s %s to %s.\n\r",
          good_cap(pers(vict)).c_str(),
          buf, (x > 0 ? "resistant" : "susceptible"),
          immunity_names[i]);
+    str += buf2;
   }
+  return str;
 }
 
 void TBeing::describeArrowDamage(const TArrow *obj, int learn)
@@ -6036,17 +4372,17 @@ void TBeing::describeRoomLight()
 {
   int illum = roomp->getLight();
 
-  sendTo("This area is %s.\n\r", 
-          ((illum < -4) ? "super dark" :
-          ((illum < 0) ? "pitch dark" :
-          ((illum < 1) ? "dark" :
-          ((illum < 3) ? "very dimly lit" :
-          ((illum < 5) ? "dimly lit" :
+  sendTo(COLOR_BASIC, "This area is %s.\n\r", 
+          ((illum < -4) ? "<k>super dark<1>" :
+          ((illum < 0) ? "<k>pitch dark<1>" :
+          ((illum < 1) ? "<k>dark<1>" :
+          ((illum < 3) ? "<w>very dimly lit<1>" :
+          ((illum < 5) ? "<w>dimly lit<1>" :
           ((illum < 9) ? "barely lit" :
           ((illum < 13) ? "lit" :
           ((illum < 19) ? "brightly lit" :
-          ((illum < 25) ? "very brightly lit" :
-                           "bright as day"))))))))));
+          ((illum < 25) ? "<Y>very brightly lit<1>" :
+                           "<Y>bright as day<1>"))))))))));
 }
 
 void TBeing::describeBowRange(const TBow *obj, int learn)
@@ -6355,60 +4691,89 @@ void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
   return;
 }
 
-void TBeing::describeMaterial(const TThing *t)
+string describeMaterial(const TThing *t)
 {
+  string str;
+  char buf[256];
+
   int mat = t->getMaterial();
   char mat_name[40];
 
   strcpy(mat_name, good_uncap(material_nums[mat].mat_name).c_str());
 
   if (dynamic_cast<const TBeing *>(t))
-    sendTo(COLOR_MOBS, "%s has a skin type of %s.\n\r", good_cap(t->getName()).c_str(), mat_name);
+    sprintf(buf, "%s has a skin type of %s.\n\r", good_cap(t->getName()).c_str(), mat_name);
   else
-    sendTo(COLOR_OBJECTS, "%s is made of %s.\n\r", good_cap(t->getName()).c_str(), mat_name);
+    sprintf(buf, "%s is made of %s.\n\r", good_cap(t->getName()).c_str(), mat_name);
+  str += buf;
 
-  describeMaterial(mat);
+  str += describeMaterial(mat);
+
+  return str;
 }
 
-void TBeing::describeMaterial(int mat)
+string describeMaterial(int mat)
 {
-  //  int mat = t->getMaterial();
+  string str;
+  char buf[256];
+
   char mat_name[40];
 
   strcpy(mat_name, good_uncap(material_nums[mat].mat_name).c_str());
 
-  sendTo("%s is %d%% susceptible to slash attacks.\n\r",
+  sprintf(buf, "%s is %d%% susceptible to slash attacks.\n\r",
      good_cap(mat_name).c_str(),
      material_nums[mat].cut_susc);
-  sendTo("%s is %d%% susceptible to pierce attacks.\n\r",
+  str += buf;
+
+  sprintf(buf, "%s is %d%% susceptible to pierce attacks.\n\r",
      good_cap(mat_name).c_str(),
      material_nums[mat].pierced_susc);
-  sendTo("%s is %d%% susceptible to blunt attacks.\n\r",
+  str += buf;
+
+  sprintf(buf, "%s is %d%% susceptible to blunt attacks.\n\r",
      good_cap(mat_name).c_str(),
      material_nums[mat].smash_susc);
-  sendTo("%s is %d%% susceptible to flame attacks.\n\r",
+  str += buf;
+
+  sprintf(buf, "%s is %d%% susceptible to flame attacks.\n\r",
      good_cap(mat_name).c_str(),
      material_nums[mat].burned_susc);
-  sendTo("%s is %d%% susceptible to acid attacks.\n\r",
+  str += buf;
+
+  sprintf(buf, "%s is %d%% susceptible to acid attacks.\n\r",
      good_cap(mat_name).c_str(),
      material_nums[mat].acid_susc);
-  sendTo("%s is %d%% susceptible to water erosion, and suffers %d damage per erosion.\n\r",
+  str += buf;
+
+  sprintf(buf, "%s is %d%% susceptible to water erosion, and suffers %d damage per erosion.\n\r",
      good_cap(mat_name).c_str(),
      material_nums[mat].water_susc%10 * 10,
      material_nums[mat].water_susc/10);
-  sendTo("%s is %d%% susceptible to fall shock, and suffers %d damage per shock.\n\r",
+  str += buf;
+
+  sprintf(buf, "%s is %d%% susceptible to fall shock, and suffers %d damage per shock.\n\r",
      good_cap(mat_name).c_str(),
      material_nums[mat].fall_susc%10 *10,
      material_nums[mat].fall_susc/10);
-  sendTo("%s has a hardness of %d units.\n\r",
+  str += buf;
+
+  sprintf(buf, "%s has a hardness of %d units.\n\r",
      good_cap(mat_name).c_str(),
      material_nums[mat].hardness);
-  sendTo("%s has a compaction ratio of %d:1.\n\r",
+  str += buf;
+
+  sprintf(buf, "%s has a compaction ratio of %d:1.\n\r",
      good_cap(mat_name).c_str(),
      material_nums[mat].vol_mult);
-  sendTo("%s is %sconsidered a conductive material.\n\r",
+  str += buf;
+
+  sprintf(buf, "%s is %sconsidered a conductive material.\n\r",
      good_cap(mat_name).c_str(),
      (material_nums[mat].conductivity ? "" : "not "));
+  str += buf;
+
+  return str;
 }
 
 void TBeing::sendRoomName(TRoom *rp) const
@@ -6425,7 +4790,7 @@ void TBeing::sendRoomName(TRoom *rp) const
   if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
     if (hasColorStrings(this, rp->getName(), 2)) {
       sendTo(COLOR_ROOM_NAME,"%s%s%s%s%s%s\n\r", 
-                d->client ? clientBuf : "",
+                d->m_bIsClient ? clientBuf : "",
                 dynColorRoom(rp, 1, TRUE).c_str(),
                 norm(), red(), 
                 ((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
@@ -6434,7 +4799,7 @@ void TBeing::sendRoomName(TRoom *rp) const
                 " "))), norm());
     } else {
       sendTo(COLOR_ROOM_NAME,"%s%s%s%s%s%s%s\n\r", 
-                d->client ? clientBuf : "",  
+                d->m_bIsClient ? clientBuf : "",  
                 addColorRoom(rp, 1).c_str(),
                 rp->getName(), norm(), red(),  
                 ((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
@@ -6445,7 +4810,7 @@ void TBeing::sendRoomName(TRoom *rp) const
   } else {
     if (hasColorStrings(this, rp->getName(), 2)) {
       sendTo(COLOR_BASIC,"%s%s%s%s%s%s\n\r", 
-              d->client ? clientBuf : "", purple(), 
+              d->m_bIsClient ? clientBuf : "", purple(), 
               colorString(this, desc, rp->getName(), NULL, COLOR_NONE, FALSE).c_str(),
               red(),
               ((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
@@ -6453,7 +4818,7 @@ void TBeing::sendRoomName(TRoom *rp) const
               ((rFlags & ROOM_HOSPITAL) ? "     [ARENA]" :
              " "))), norm());
     } else {
-      sendTo(COLOR_BASIC,"%s%s%s%s%s%s\n\r", d->client ? clientBuf : "", 
+      sendTo(COLOR_BASIC,"%s%s%s%s%s%s\n\r", d->m_bIsClient ? clientBuf : "", 
              purple(),rp->getName(), red(),
              ((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
              ((rFlags & ROOM_HOSPITAL) ? "     [HOSPITAL]" :
@@ -6555,7 +4920,7 @@ void TBeing::doSpells(const char *argument)
   int totalcharges;
   wizardryLevelT wizlevel = getWizardryLevel();
   TThing *t1, *t2;
-  TRealContainer *tContainer;
+  TOpenContainer *tContainer;
 
   struct {
     TThing *where;
@@ -6651,7 +5016,7 @@ void TBeing::doSpells(const char *argument)
       i = skillSortVec[j].theSkill;
       das = getDisciplineNumber(i, FALSE);
       if (das == DISC_NONE) {
-        vlogf(5, "Bad disc for skill %d in doSpells", i);
+        vlogf(LOG_BUG, "Bad disc for skill %d in doSpells", i);
         continue;
       }
       cd = getDiscipline(das);
@@ -6694,7 +5059,7 @@ void TBeing::doSpells(const char *argument)
         if (search[l].where && wizlevel >= search[l].wizlevel) {
           for (t1 = search[l].where; t1; t1 = t1->nextThing) {
             if (!(item = dynamic_cast<TComponent *>(t1)) &&
-                (!(tContainer = dynamic_cast<TRealContainer *>(item)) ||
+                (!(tContainer = dynamic_cast<TOpenContainer *>(item)) ||
                  !tContainer->isClosed())) {
               for (t2 = t1->stuff; t2; t2 = t2->nextThing) {
                 if ((item = dynamic_cast<TComponent *>(t2)) &&
@@ -6760,7 +5125,7 @@ void TBeing::doSpells(const char *argument)
       strcat(buffer, buf);
     } 
   }
-  d->page_string(buffer, 0);
+  d->page_string(buffer);
   return;
 }
 
@@ -6782,7 +5147,7 @@ void TBeing::doPrayers(const char *argument)
   int totalcharges;
   wizardryLevelT wizlevel = getWizardryLevel();
   TThing *t1, *t2;
-  TRealContainer *tContainer;
+  TOpenContainer *tContainer;
 
   struct {
     TThing *where;
@@ -6868,7 +5233,7 @@ void TBeing::doPrayers(const char *argument)
       i = skillSortVec[j].theSkill;
       das = getDisciplineNumber(i, FALSE);
       if (das == DISC_NONE) {
-        vlogf(5, "Bad disc for skill %d in doPrayers", i);
+        vlogf(LOG_BUG, "Bad disc for skill %d in doPrayers", i);
           continue;
       }
       cd = getDiscipline(das);
@@ -6914,7 +5279,7 @@ void TBeing::doPrayers(const char *argument)
         if (search[l].where && wizlevel >= search[l].wizlevel) {
           for (t1 = search[l].where; t1; t1 = t1->nextThing) {
             if(!(item=dynamic_cast<TComponent *>(t1)) &&
-               (!(tContainer = dynamic_cast<TRealContainer *>(item)) ||
+               (!(tContainer = dynamic_cast<TOpenContainer *>(item)) ||
                 !tContainer->isClosed())) {
               for (t2 = t1->stuff; t2; t2 = t2->nextThing) {
                 if ((item=dynamic_cast<TComponent *>(t2)) &&
@@ -6966,6 +5331,6 @@ void TBeing::doPrayers(const char *argument)
       strcat(buffer, buf);
     } 
   }
-  d->page_string(buffer, 0);
+  d->page_string(buffer);
   return;
 }

@@ -1,20 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: task.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "task.cc" - All functions related to tasks that keep mobs/PCs busy
 //
@@ -142,14 +127,14 @@ void TBeing::stopTask()
 int start_task(TBeing *ch, TThing *t, TRoom *rp, taskTypeT task, const char *arg, int timeLeft, ushort wasInRoom, ubyte status, int flags, int nextUpdate)
 {
   if (!ch || (ch->task)) {
-    vlogf(10, "%s got to bad place in start_task (%d).  Tell Brutius or Batopr",
+    vlogf(LOG_BUG, "%s got to bad place in start_task (%d).  Tell Brutius or Batopr",
        (ch ? ch->getName() : "Unknown"), task);
     if (ch)
       ch->sendTo("Problem in task.  Bug Brutius.\n\r");
     return FALSE;
   }
   if (!(ch->task = new taskData)) {
-    vlogf(10, "Couldn't allocate memory in start_task for %s", ch->getName());
+    vlogf(LOG_BUG, "Couldn't allocate memory in start_task for %s", ch->getName());
     return FALSE;
   }
   ch->task->orig_arg = mud_str_dup(arg);
@@ -167,7 +152,7 @@ int start_task(TBeing *ch, TThing *t, TRoom *rp, taskTypeT task, const char *arg
 void warn_busy(TBeing *ch)
 {
   if (!ch || !(ch->task)) {
-    vlogf(10, "%s got to bad place in warn_busy.  Tell Brutius or Batopr",
+    vlogf(LOG_BUG, "%s got to bad place in warn_busy.  Tell Brutius or Batopr",
        (ch ? ch->getName() : "Unknown"));
     return;
   }
@@ -178,7 +163,7 @@ void warn_busy(TBeing *ch)
 int task_bogus(TBeing *ch, cmdTypeT, const char *, int , TRoom *, TObj *)
 {
   ch->sendTo("Um... you hit a buggy spot in the code.  Tell an immort or something.\n\r");
-  vlogf(10, "%s was busy doing a buggy task!  Yikes!", ch->getName());
+  vlogf(LOG_BUG, "%s was busy doing a buggy task!  Yikes!", ch->getName());
   ch->stopTask();
 
   return FALSE;
@@ -220,6 +205,10 @@ TaskEntry tasks[NUM_TASKS] =
   {"charging", "You are too busy barreling down on someone.\n\r", task_charge},
   {"whittling", "You are too busy using your whittle skills.\n\r", task_whittle},
   {"stave charging", "You are too busy charging a stave.\n\r", task_stavecharging},
+  {"in a defensive trance", "Not while you're in a defensive trance!\n\r", task_trance_of_blades},
+  {"sacrificing", "Not while you are performing the sacrificial ritual of life!\n\r", task_sacrifice},
+  {"fishing", "You are too busy fishing.\n\r", task_fishing},
+  {"extinguishing", "You are too busy putting a fire out.\n\r", task_extinguish_my_ass},
 };
 
 bool TBeing::nobrainerTaskCommand(cmdTypeT cmd)
@@ -255,6 +244,7 @@ bool TBeing::utilityTaskCommand(cmdTypeT cmd)
     case CMD_GLANCE:
     case CMD_TIME:
     case CMD_SCORE:
+    case CMD_TROPHY:
     case CMD_HELP:
     case CMD_ZONES:
     case CMD_WHO:
@@ -293,3 +283,8 @@ bool TBeing::utilityTaskCommand(cmdTypeT cmd)
       return FALSE;
   }
 }
+
+
+
+
+

@@ -2,22 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: makecorpse.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
-//
-//      "combat.cc" - All functions and routines related to combat
+// "makecorpse.cc" - All functions and routines related to corpse creation
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -25,7 +10,7 @@
 #include "combat.h"
 #include "components.h"
 
-void TBeing::makeCorpse(int dmg_type)
+TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
 {
   TMoney *money;
   TThing *o, *next_o;
@@ -41,15 +26,15 @@ void TBeing::makeCorpse(int dmg_type)
     // character was in void
     // bleeding, infected, etc can cause this
 
-    vlogf(5, "Character: %s in void when corpse made.  Being moved to room #%d.", getName(), specials.was_in_room);
+    vlogf(LOG_BUG, "Character: %s in void when corpse made.  Being moved to room #%d.", getName(), specials.was_in_room);
     --(*this);
     rp = real_roomp(specials.was_in_room);
     *rp += *this;
   }
 
   if (isPc() && !desc) {
-    vlogf(5, "Character: %s with no link when creating corpse in rm %d", getName(), in_room);
-    vlogf(5, "%s corpse generated in room %d to avoid possible duplication", getName(), ROOM_STORAGE);
+    vlogf(LOG_BUG, "Character: %s with no link when creating corpse in rm %d", getName(), in_room);
+    vlogf(LOG_BUG, "%s corpse generated in room %d to avoid possible duplication", getName(), ROOM_STORAGE);
     --(*this);
     rp = real_roomp(ROOM_STORAGE);
     *rp += *this;
@@ -57,7 +42,7 @@ void TBeing::makeCorpse(int dmg_type)
   sprintf(tmpbuf, "%s", getName());
   strcpy(namebuf, cap(tmpbuf));
 
-  if ((desc || isPc()) && (GetMaxLevel() < MAX_MORT)) {
+  if ((desc || isPc()) && (GetMaxLevel() <= MAX_MORT)) {
     pcorpse = race->makePCorpse();
     gen_corpse = pcorpse;
     pcorpse->setCorpseVnum(-2);  // flag for pc
@@ -67,6 +52,9 @@ void TBeing::makeCorpse(int dmg_type)
     corpse = race->makeCorpse();
     gen_corpse = corpse;
     corpse->setCorpseVnum(mobVnum());
+
+    if (mobVnum() < 0)
+      corpse->addCorpseFlag(CORPSE_NO_REGEN);
   }
   
   gen_corpse->setCorpseFlags(0);
@@ -106,6 +94,13 @@ void TBeing::makeCorpse(int dmg_type)
       gen_corpse->shortDescr = mud_str_dup("a small uncontrolled tornado");
       gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
       gen_corpse->setMaterial(MAT_POWDER);
+    } else {
+      // non-standard elementals
+      sprintf(buf, "corpse %s",name);
+      gen_corpse->name = mud_str_dup(buf);
+      gen_corpse->setDescr(mud_str_dup("The corpse of some sort of elemental is here."));
+      gen_corpse->shortDescr = mud_str_dup("the corpse of an elemental");
+      gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
     }
     specialCorpse = TRUE;
   } else if (isUndead() || (dmg_type == SKILL_TURN)) {
@@ -164,15 +159,16 @@ void TBeing::makeCorpse(int dmg_type)
       case SPELL_LIGHTNING_BREATH:
         sprintf(buf, "The charred and burnt corpse of %s smolders here.",getName());
         break;
-    case SPELL_GUSHER:
+      case SPELL_GUSHER:
+      case SPELL_AQUATIC_BLAST:
         sprintf(buf, "The dripping wet corpse of %s is here.",getName());
         break;
-    case SPELL_ICY_GRIP:
-    case SPELL_ARCTIC_BLAST:
-    case SPELL_ICE_STORM:
-    case SPELL_FROST_BREATH:
-    case DAMAGE_TRAP_FROST:
-    case DAMAGE_FROST:
+      case SPELL_ICY_GRIP:
+      case SPELL_ARCTIC_BLAST:
+      case SPELL_ICE_STORM:
+      case SPELL_FROST_BREATH:
+      case DAMAGE_TRAP_FROST:
+      case DAMAGE_FROST:
         sprintf(buf, "The frozen solid corpse of %s is imbedded in some ice here.",getName());
         break;
       case DAMAGE_DROWN:
@@ -193,6 +189,9 @@ void TBeing::makeCorpse(int dmg_type)
       case SPELL_CHLORINE_BREATH:
         sprintf(buf, "%s's corpse is here, melting with a wisp of caustic smoke.  The face looks strangled.",namebuf);
         break;
+      case SPELL_DUST_BREATH:
+        sprintf(buf, "%s's corpse has been shredded by some unseen force.", namebuf);
+        break;
       case SPELL_POISON_DEIKHAN:
       case SPELL_POISON:
       case DAMAGE_TRAP_POISON:
@@ -207,6 +206,9 @@ void TBeing::makeCorpse(int dmg_type)
       case SKILL_BODYSLAM:
         sprintf(buf, "The body of %s looks as if a great weight has squished %s.",getName(),hmhr());
         break;
+      case SKILL_SPIN:
+	sprintf(buf, "%s's corpse lies here with a dazed look.", getName());
+	break;
       case DAMAGE_COLLISION:
         sprintf(buf, "%s's corpse lies shattered here, having collided with something massive.", namebuf);
         break;
@@ -265,8 +267,7 @@ void TBeing::makeCorpse(int dmg_type)
         sprintf(buf, "%s's forehead has been caved in by some massive force.", namebuf);
         break;
       case SPELL_GRANITE_FISTS:
-        sprintf(buf, "It appears %s was punched by someone incredibly hard.",
-           getName());
+        sprintf(buf, "It appears %s was punched incredibly hard by someone.", getName());
         break;
       case SPELL_ENERGY_DRAIN:
       case SPELL_SYNOSTODWEOMER:
@@ -302,6 +303,7 @@ void TBeing::makeCorpse(int dmg_type)
       case SKILL_KICK_RANGER:
       case SKILL_KICK:
       case SKILL_SPRINGLEAP:
+      case TYPE_KICK:
         sprintf(buf, "The body of %s has a footprint in its solar plexus.",getName());
         break;
       case SKILL_DEATHSTROKE:
@@ -391,8 +393,11 @@ void TBeing::makeCorpse(int dmg_type)
       case SKILL_BACKSTAB:
         sprintf(buf, "A big gaping wound is in the center of %s's back.", getName());
         break;
-      case DAMAGE_DISEMBOWLED:
+      case DAMAGE_DISEMBOWLED_HR:
         sprintf(buf, "The corpse of %s has been disembowled with a slash from gullet to groin!",getName());
+        break;
+      case DAMAGE_DISEMBOWLED_VR:
+        sprintf(buf, "The corpse of %s has a large slash from hip to hip!", getName());
         break;
       case DAMAGE_EATTEN:
         sprintf(buf,"%s's corpse has been mawed and chewed upon by something VERY large!",namebuf);
@@ -458,11 +463,327 @@ void TBeing::makeCorpse(int dmg_type)
       case SKILL_CHI:
 	sprintf(buf, "%s's corpse wears a deep grimace of agony.", getName());
 	break;
+#if 1
+      case SPELL_EARTHMAW:
+	sprintf(buf, "The corpse of %s lies here half buried in the earth.", getName());
+	break;
+      case SPELL_CREEPING_DOOM:
+        sprintf(buf, "A light coat of pollen covers the wide-eyed corpse of %s.", getName());
+        break;
+      case SPELL_FERAL_WRATH:
+        sprintf(buf, "%s's corpse wears a fierce snarl.", getName());
+        break;
+      case SPELL_SKY_SPIRIT:
+        sprintf(buf, "The corpse of %s looks torn apart by some terrible beast.", getName());
+        break;
+#endif
       case DAMAGE_NORMAL:
       case SPELL_FUMBLE:
       case SPELL_BLINDNESS:
       case SPELL_GARMULS_TAIL:
         sprintf(buf, "The corpse of %s is lying here.", getName());
+        break;
+      case DAMAGE_TRAP_SLEEP:
+      case DAMAGE_TRAP_TELEPORT:
+      case TYPE_UNDEFINED:
+      case SPELL_SORCERERS_GLOBE:
+      case SPELL_FAERIE_FIRE:
+      case SPELL_ILLUMINATE:
+      case SPELL_DETECT_MAGIC:
+      case SPELL_MATERIALIZE:
+      case SPELL_PROTECTION_FROM_EARTH:
+      case SPELL_PROTECTION_FROM_AIR:
+      case SPELL_PROTECTION_FROM_FIRE:
+      case SPELL_PROTECTION_FROM_WATER:
+      case SPELL_PROTECTION_FROM_ELEMENTS:
+      case SPELL_INFRAVISION:
+      case SPELL_IDENTIFY:
+      case SPELL_POWERSTONE:
+      case SPELL_FAERIE_FOG:
+      case SPELL_TELEPORT:
+      case SPELL_SENSE_LIFE:
+      case SPELL_CALM:
+      case SPELL_ACCELERATE:
+      case SPELL_LEVITATE:
+      case SPELL_FEATHERY_DESCENT:
+      case SPELL_STEALTH:
+      case SPELL_GILLS_OF_FLESH:
+      case SPELL_AQUALUNG:
+      case SPELL_TELEPATHY:
+      case SPELL_FEAR:
+      case SPELL_SLUMBER:
+      case SPELL_ENTHRALL_SPECTRE:
+      case SPELL_ENTHRALL_GHAST:
+      case SPELL_ENTHRALL_GHOUL:
+      case SPELL_ENTHRALL_DEMON:
+      case SPELL_CONJURE_EARTH:
+      case SPELL_CONJURE_AIR:
+      case SPELL_CONJURE_FIRE:
+      case SPELL_CONJURE_WATER:
+      case SPELL_DISPEL_MAGIC:
+      case SPELL_ENHANCE_WEAPON:
+      case SPELL_GALVANIZE:
+      case SPELL_DETECT_INVISIBLE:
+      case SPELL_DISPEL_INVISIBLE:
+      case SPELL_FARLOOK:
+      case SPELL_FALCON_WINGS:
+      case SPELL_INVISIBILITY:
+      case SPELL_ENSORCER:
+      case SPELL_EYES_OF_FERTUMAN:
+      case SPELL_COPY:
+      case SPELL_HASTE:
+      case SPELL_IMMOBILIZE:
+      case SPELL_FLY:
+      case SPELL_ANTIGRAVITY:
+      case SPELL_DIVINATION:
+      case SPELL_SHATTER:
+      case SKILL_SCRIBE:
+      case SPELL_SPONTANEOUS_GENERATION:
+      case SPELL_STONE_SKIN:
+      case SPELL_TRAIL_SEEK:
+      case SPELL_FLAMING_FLESH:
+      case SPELL_ATOMIZE:
+      case SPELL_ANIMATE:
+      case SPELL_BIND:
+      case SPELL_TRUE_SIGHT:
+      case SPELL_CLOUD_OF_CONCEALMENT:
+      case SPELL_POLYMORPH:
+      case SPELL_SILENCE:
+      case SPELL_BREATH_OF_SARAHAGE:
+      case SPELL_PLASMA_MIRROR:
+      case SPELL_THORNFLESH:
+      case SPELL_ETHER_GATE:
+      case SPELL_HEAL_LIGHT:
+      case SPELL_CREATE_FOOD:
+      case SPELL_CREATE_WATER:
+      case SPELL_ARMOR:
+      case SPELL_BLESS:
+      case SPELL_CLOT:
+      case SPELL_HEAL_SERIOUS:
+      case SPELL_STERILIZE:
+      case SPELL_EXPEL:
+      case SPELL_CURE_DISEASE:
+      case SPELL_CURSE:
+      case SPELL_REMOVE_CURSE:
+      case SPELL_CURE_POISON:
+      case SPELL_HEAL_CRITICAL:
+      case SPELL_SALVE:
+      case SPELL_REFRESH:
+      case SPELL_NUMB:
+      case SPELL_PLAGUE_LOCUSTS:
+      case SPELL_CURE_BLINDNESS:
+      case SPELL_SUMMON:
+      case SPELL_HEAL:
+      case SPELL_WORD_OF_RECALL:
+      case SPELL_SANCTUARY:
+      case SPELL_CURE_PARALYSIS:
+      case SPELL_SECOND_WIND:
+      case SPELL_HEROES_FEAST:
+      case SPELL_ASTRAL_WALK:
+      case SPELL_PORTAL:
+      case SPELL_HEAL_FULL:
+      case SPELL_HEAL_CRITICAL_SPRAY:
+      case SPELL_HEAL_SPRAY:
+      case SPELL_HEAL_FULL_SPRAY:
+      case SPELL_RESTORE_LIMB:
+      case SPELL_KNIT_BONE:
+      case SKILL_RESCUE:
+      case SKILL_SMYTHE:
+      case SKILL_SACRIFICE:
+      case SKILL_DISARM:
+      case SKILL_PARRY_WARRIOR:
+      case SKILL_POWERMOVE:
+      case SKILL_BERSERK:
+      case SKILL_SWITCH_OPP:
+      case SKILL_KNEESTRIKE:
+      case SKILL_SHOVE:
+      case SKILL_RETREAT:
+      case SKILL_GRAPPLE:
+      case SKILL_DUAL_WIELD_WARRIOR:
+      case SKILL_DOORBASH:
+      case SKILL_TRANCE_OF_BLADES:
+      case SKILL_HIKING:
+      case SKILL_FORAGE:
+      case SKILL_SEEKWATER:
+      case SKILL_TRANSFORM_LIMB:
+      case SKILL_BEAST_SOOTHER:
+      case SKILL_TRACK:
+      case SPELL_ROOT_CONTROL:
+      case SKILL_RESCUE_RANGER:
+      case SKILL_BEFRIEND_BEAST:
+      case SKILL_TRANSFIX:
+      case SKILL_SKIN:
+      case SKILL_DUAL_WIELD:
+      case SPELL_LIVING_VINES:
+      case SKILL_BEAST_SUMMON:
+      case SKILL_BARKSKIN:
+      case SKILL_SWITCH_RANGER:
+      case SKILL_RETREAT_RANGER:
+      case SPELL_STICKS_TO_SNAKES:
+      case SPELL_STORMY_SKIES:
+      case SPELL_TREE_WALK:
+      case SKILL_BEAST_CHARM:
+      case SPELL_SHAPESHIFT:
+      case SKILL_CONCEALMENT:
+      case SKILL_APPLY_HERBS:
+      case SKILL_DIVINATION:
+      case SKILL_ENCAMP:
+      case SPELL_HEAL_LIGHT_DEIKHAN:
+      case SKILL_CHIVALRY:
+      case SPELL_ARMOR_DEIKHAN:
+      case SPELL_BLESS_DEIKHAN:
+      case SPELL_EXPEL_DEIKHAN:
+      case SPELL_CLOT_DEIKHAN:
+      case SPELL_STERILIZE_DEIKHAN:
+      case SPELL_REMOVE_CURSE_DEIKHAN:
+      case SPELL_CURSE_DEIKHAN:
+      case SKILL_RESCUE_DEIKHAN:
+      case SPELL_CURE_DISEASE_DEIKHAN:
+      case SPELL_CREATE_FOOD_DEIKHAN:
+      case SPELL_HEAL_SERIOUS_DEIKHAN:
+      case SPELL_CURE_POISON_DEIKHAN:
+      case SKILL_DISARM_DEIKHAN:
+      case SPELL_HEAL_CRITICAL_DEIKHAN:
+      case SKILL_SWITCH_DEIKHAN:
+      case SKILL_RETREAT_DEIKHAN:
+      case SKILL_SHOVE_DEIKHAN:
+      case SKILL_RIDE:
+      case SKILL_CALM_MOUNT:
+      case SKILL_TRAIN_MOUNT:
+      case SKILL_ADVANCED_RIDING:
+      case SKILL_RIDE_DOMESTIC:
+      case SKILL_RIDE_NONDOMESTIC:
+      case SKILL_RIDE_WINGED:
+      case SPELL_CREATE_WATER_DEIKHAN:
+      case SKILL_RIDE_EXOTIC:
+      case SPELL_HEROES_FEAST_DEIKHAN:
+      case SPELL_REFRESH_DEIKHAN:
+      case SPELL_SALVE_DEIKHAN:
+      case SKILL_LAY_HANDS:
+      case SPELL_NUMB_DEIKHAN:
+      case SKILL_YOGINSA:
+      case SKILL_CINTAI:
+      case SKILL_OOMLAT:
+      case SKILL_ADVANCED_KICKING:
+      case SKILL_DISARM_MONK:
+      case SKILL_GROUNDFIGHTING:
+      case SKILL_DUFALI:
+      case SKILL_RETREAT_MONK:
+      case SKILL_SNOFALTE:
+      case SKILL_COUNTER_MOVE:
+      case SKILL_SWITCH_MONK:
+      case SKILL_JIRIN:
+      case SKILL_KUBO:
+      case SKILL_CATFALL:
+      case SKILL_WOHLIN:
+      case SKILL_VOPLAT:
+      case SKILL_BLINDFIGHTING:
+      case SKILL_CRIT_HIT:
+      case SKILL_FEIGN_DEATH:
+      case SKILL_BLUR:
+      case SKILL_HURL:
+      case SKILL_SWINDLE:
+      case SKILL_SNEAK:
+      case SKILL_RETREAT_THIEF:
+      case SKILL_PICK_LOCK:
+      case SKILL_SEARCH:
+      case SKILL_SPY:
+      case SKILL_SWITCH_THIEF:
+      case SKILL_STEAL:
+      case SKILL_DETECT_TRAP:
+      case SKILL_SUBTERFUGE:
+      case SKILL_DISARM_TRAP:
+      case SKILL_CUDGEL:
+      case SKILL_HIDE:
+      case SKILL_POISON_WEAPON:
+      case SKILL_DISGUISE:
+      case SKILL_DODGE_THIEF:
+      case SKILL_SET_TRAP_CONT:
+      case SKILL_SET_TRAP_DOOR:
+      case SKILL_SET_TRAP_MINE:
+      case SKILL_SET_TRAP_GREN:
+      case SKILL_DUAL_WIELD_THIEF:
+      case SKILL_DISARM_THIEF:
+      case SKILL_COUNTER_STEAL:
+      case SPELL_CACAODEMON:
+      case SPELL_CREATE_GOLEM:
+      case SPELL_DANCING_BONES:
+      case SPELL_CONTROL_UNDEAD:
+      case SPELL_RESURRECTION:
+      case SPELL_VOODOO:
+      case SKILL_BREW:
+      case SPELL_VAMPIRIC_TOUCH:
+      case SPELL_LIFE_LEECH:
+      case SKILL_TURN:
+      case SKILL_SIGN:
+      case SKILL_SWIM:
+      case SKILL_CONS_UNDEAD:
+      case SKILL_CONS_VEGGIE:
+      case SKILL_CONS_DEMON:
+      case SKILL_CONS_ANIMAL:
+      case SKILL_CONS_REPTILE:
+      case SKILL_CONS_PEOPLE:
+      case SKILL_CONS_GIANT:
+      case SKILL_CONS_OTHER:
+      case SKILL_READ_MAGIC:
+      case SKILL_BANDAGE:
+      case SKILL_CLIMB:
+      case SKILL_FAST_HEAL:
+      case SKILL_EVALUATE:
+      case SKILL_TACTICS:
+      case SKILL_DISSECT:
+      case SKILL_DEFENSE:
+      case SKILL_OFFENSE:
+      case SKILL_WHITTLE:
+      case SKILL_WIZARDRY:
+      case SKILL_MEDITATE:
+      case SKILL_DEVOTION:
+      case SKILL_PENANCE:
+      case SKILL_SLASH_PROF:
+      case SKILL_PIERCE_PROF:
+      case SKILL_BLUNT_PROF:
+      case SKILL_BAREHAND_PROF:
+      case SKILL_SLASH_SPEC:
+      case SKILL_BLUNT_SPEC:
+      case SKILL_PIERCE_SPEC:
+      case SKILL_BAREHAND_SPEC:
+      case SKILL_RANGED_SPEC:
+      case SKILL_RANGED_PROF:
+      case SKILL_FAST_LOAD:
+      case SKILL_SHARPEN:
+      case SKILL_DULL:
+      case SKILL_ATTUNE:
+      case SKILL_STAVECHARGE:
+      case SPELL_SHIELD_OF_MISTS:
+      case MAX_SKILL:
+      case TYPE_MAX_HIT:
+      case AFFECT_TRANSFORMED_HANDS:
+      case AFFECT_TRANSFORMED_ARMS:
+      case AFFECT_TRANSFORMED_LEGS:
+      case AFFECT_TRANSFORMED_HEAD:
+      case AFFECT_TRANSFORMED_NECK:
+      case LAST_TRANSFORMED_LIMB:
+      case LAST_BREATH_WEAPON:
+      case AFFECT_DUMMY:
+      case AFFECT_DRUNK:
+      case AFFECT_NEWBIE:
+      case AFFECT_SKILL_ATTEMPT:
+      case AFFECT_FREE_DEATHS:
+      case AFFECT_TEST_FIGHT_MOB:
+      case AFFECT_DRUG:
+      case AFFECT_ORPHAN_PET:
+      case AFFECT_DISEASE:
+      case AFFECT_COMBAT:
+      case AFFECT_PET:
+      case AFFECT_CHARM:
+      case AFFECT_THRALL:
+      case AFFECT_PLAYERKILL:
+      case AFFECT_PLAYERLOOT:
+      case AFFECT_HORSEOWNED:
+      case AFFECT_GROWTH_POTION:
+      case LAST_ODDBALL_AFFECT:
+      case SKILL_ALCOHOLISM:
+      case SKILL_FISHING:
         break;
     }
   }
@@ -475,14 +796,24 @@ void TBeing::makeCorpse(int dmg_type)
   gen_corpse->setWeight(specialCorpse ? 1.0 : getWeight());
   gen_corpse->obj_flags.wear_flags = ITEM_TAKE;
   gen_corpse->setVolume(getVolume());
+
+  // whacky problems from shadowy/glowing EQ and such
+  // No reason to set the cbs based on creature.
+#if 1
+  if (isPc())
+    gen_corpse->canBeSeen = 0;
+  else
+    gen_corpse->canBeSeen = canBeSeen;
+#else
   gen_corpse->canBeSeen = canBeSeen;
+#endif
 
   // generate an empty corpse if in a pk zone
   if(pcorpse && inPkZone()){
     pcorpse->obj_flags.decay_time = MAX_NPC_CORPSE_TIME;
     *roomp+=*pcorpse;
 
-    return;
+    return pcorpse;
   }
 
   if (getMoney() > 0) {
@@ -516,18 +847,21 @@ void TBeing::makeCorpse(int dmg_type)
       logItem(obo, CMD_SOUTH);
     }
   }
+
   //load a herald and put on corpse - Russ 010298
   // Grimhaven Newsboy, chance to put herald in corpse
   if (mobVnum() == MOB_NEWSBOY) { 
     if (!::number(0, 10)) 
       *gen_corpse += *(read_object(OBJ_HERALD, VIRTUAL));
   } 
+
   // banshee loading banshee larynx (shatter comp)
   // would be better as dissect, but banshee=undead=dustpile=no-dissect
   if (mobVnum() == MOB_BANSHEE) { 
     if (!::number(0, 1)) 
       *gen_corpse += *(read_object(COMP_SHATTER, VIRTUAL));
   } 
+
   while (stuff) {
     TThing * obo = stuff;
     *gen_corpse += (*obo)--;
@@ -543,7 +877,16 @@ void TBeing::makeCorpse(int dmg_type)
       gen_corpse->obj_flags.decay_time = MAX_PC_CORPSE_EMPTY_TIME;
   }
 
-  *roomp += *gen_corpse;
+  if (roomp) {
+    *roomp += *gen_corpse;
+    rp = roomp;
+  } else {
+    vlogf(LOG_BUG, "%s had NULL roomp pointer, moved to room %d.",
+          getName(), ROOM_STORAGE);
+
+    rp = real_roomp(ROOM_STORAGE);
+    *rp += *gen_corpse;
+  }
 
   // make sure we don't have any "corpses in a corpse" 
   for (o = gen_corpse->stuff; o; o = next_o) {
@@ -551,7 +894,7 @@ void TBeing::makeCorpse(int dmg_type)
     TBaseCorpse *tbc = dynamic_cast<TBaseCorpse *>(o);
     if (tbc) {
       --(*tbc);
-      *roomp += *tbc;
+      *rp += *tbc;
       TPCorpse * tmpcorpse = dynamic_cast<TPCorpse *>(o);
       if (tmpcorpse) {
         tmpcorpse->setRoomNum(in_room);
@@ -572,6 +915,13 @@ void TBeing::makeCorpse(int dmg_type)
 
   if (gamePort != PROD_GAMEPORT)
     gen_corpse->setupDissectionObjects();
+
+  TPerson * tPerson = dynamic_cast<TPerson *>(tKiller);
+
+  if (tPerson && !isPc() && tPerson->isPc() && !tPerson->isImmortal())
+    gen_corpse->checkOwnersList(tPerson);
+
+  return gen_corpse;
 }
 
 void TBaseCorpse::setupDissectionObjects()
@@ -580,7 +930,7 @@ void TBaseCorpse::setupDissectionObjects()
                    (Races[getCorpseRace()]->tDissectItem[1].loadItem ? 1 : 0) : -1);
 
   if (tPossible > -1) {
-    vlogf(1, "setupDissectionObjects: tPossible(%d)", tPossible);
+    vlogf(LOG_LAPSOS, "setupDissectionObjects: tPossible(%d)", tPossible);
 
     tPossible = ::number(0, tPossible);
 

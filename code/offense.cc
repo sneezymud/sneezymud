@@ -1,21 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: offense.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/09/29 01:17:30  lapsos
-// Modified to allow for mounted opening of doors.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //     SneezyMUD++ - All rights reserved, SneezyMUD++ Coding Team
@@ -121,6 +103,21 @@ int TBeing::doHit(const char *argument, TBeing *vict)
     return FALSE;
 
   if ((getPosition() >= POSITION_CRAWLING) && !fight()) {
+    TThing      * tThing;
+    TBaseWeapon * tWeapon;
+
+    if (isPc())
+      if ((tThing   = equipment[getPrimaryHold()]) &&
+          !(tWeapon = dynamic_cast<TBaseWeapon *>(tThing)) &&
+          (tThing   = equipment[getSecondaryHold()]) &&
+          !(tWeapon = dynamic_cast<TBaseWeapon *>(tThing)) &&
+          !IS_SET(desc->autobits, AUTO_ENGAGE) &&
+          !IS_SET(desc->autobits, AUTO_ENGAGE_ALWAYS)) {
+        sendTo("You are wielding no weapons and intend to attack?\n\r");
+        sendTo("I'm afraid that's rather hard, use engage instead.\n\r");
+        return FALSE;
+      }
+
 
 //    if (!victim->fight()) 
 // put if statement back in if doesnt work right
@@ -213,14 +210,14 @@ int TBeing::doEngagedHit(const char *argument, TBeing *vict)
   spellNumT skill = getSkillNum(SKILL_SWITCH_OPP);
 
   if (!fight()) {
-    vlogf(5,"DoEngagedHit called without pc (%s) fighting", getName());
+    vlogf(LOG_BUG,"DoEngagedHit called without pc (%s) fighting", getName());
     return FALSE;
   }
 
   only_argument(argument, arg);
 
   if (!(victim = vict)) {
-    if (!(victim = get_char_room_vis(this, arg))) {
+    if (!(victim = get_char_room_vis(this, arg, NULL, EXACT_NO, INFRA_YES))) {
       sendTo("Hit whom?\n\r");
       return FALSE;
     }
@@ -307,7 +304,7 @@ int TBeing::doEngage(const char *argument, TBeing *vict)
       return FALSE;
     }
   } else {
-      if ((tmp = get_char_room_vis(this,arg))) {
+      if ((tmp = get_char_room_vis(this,arg, NULL, EXACT_NO, INFRA_YES))) {
         victim = tmp; 
       } else if (fight() && !isAffected(AFF_ENGAGER)) {
         victim = fight();
@@ -461,7 +458,7 @@ int TBeing::doKill(const char *argument, TBeing *vict)
   only_argument(argument, arg);
 
   if (!(v = vict)) {
-    if (!(v = get_char_room_vis(this, arg))) {
+    if (!(v = get_char_room_vis(this, arg, NULL, EXACT_NO, INFRA_YES))) {
       sendTo("They aren't here.\n\r");
       return FALSE;
     }
@@ -476,7 +473,7 @@ int TBeing::doKill(const char *argument, TBeing *vict)
           FALSE, v, 0, this, TO_CHAR);
       act(msgVariables(MSG_SLAY, v).c_str(), 
           FALSE, this, 0, v, TO_NOTVICT);
-      v->rawKill(DAMAGE_NORMAL);
+      v->rawKill(DAMAGE_NORMAL, this);
       if (vict)
         return DELETE_VICT;
       v->reformGroup();
@@ -503,7 +500,7 @@ static int applyOrder(TBeing *ch, TBeing *vict, const char * message, silentType
     ch->sendTo("OK.\n\r");
 
   if (vict->getWait() <= 1) {
-    vlogf(-1, "%s ordering %s to '%s' at %d",
+    vlogf(LOG_SILENT, "%s ordering %s to '%s' at %d",
           ch->getName(), vict->getName(), message, ch->inRoom());
     if (!strncmp(message, "ret", 3)) {
       rc = vict->checkDecharm(FORCE_YES);
@@ -516,6 +513,31 @@ static int applyOrder(TBeing *ch, TBeing *vict, const char * message, silentType
     }
   }
   return FALSE;
+}
+
+static bool orderDenyCheck(const char * cmd_buf)
+{
+  return (is_abbrev(cmd_buf, "kill") ||
+      is_abbrev(cmd_buf, "hit") ||
+      is_abbrev(cmd_buf, "engage") ||
+      is_abbrev(cmd_buf, "assist") ||
+      is_abbrev(cmd_buf, "attack") ||
+      is_abbrev(cmd_buf, "kick") ||
+      is_abbrev(cmd_buf, "bash") ||
+      is_abbrev(cmd_buf, "deathstroke") ||
+      is_abbrev(cmd_buf, "grapple") ||
+      is_abbrev(cmd_buf, "shove") ||
+      is_abbrev(cmd_buf, "bodyslam") ||
+      is_abbrev(cmd_buf, "rescue") ||
+      is_abbrev(cmd_buf, "kneestrike") ||
+      is_abbrev(cmd_buf, "sleep") || // order sleep, backstab....
+      is_abbrev(cmd_buf, "emote") ||
+      is_abbrev(cmd_buf, "mount") ||
+      is_abbrev(cmd_buf, "headbutt") ||
+      is_abbrev(cmd_buf, "open") ||
+      is_abbrev(cmd_buf, "lower") ||
+      is_abbrev(cmd_buf, "lift") ||
+      is_abbrev(cmd_buf, "raise"));
 }
 
 // returns DELETE_THIS
@@ -541,7 +563,7 @@ int TBeing::doOrder(const char *argument)
     sendTo("Order whom to do what?\n\r");
     return FALSE;
   }
-  TBeing *v = get_char_room_vis(this, caName);
+  TBeing *v = get_char_room_vis(this, caName, NULL, EXACT_NO, INFRA_YES);
   if (!v && !is_abbrev(caName, "followers") && strcmp("all", caName)) {
     sendTo("That person isn't here.\n\r");
     return FALSE;
@@ -568,36 +590,28 @@ int TBeing::doOrder(const char *argument)
     bool messSent = false;
 
     // I am a charm taking orders from my master
-    if (v->master == this && v->isAffected(AFF_CHARM))
-      legitimate = true;
+    if (v->master == this && v->isAffected(AFF_CHARM)) {
+      // pets aren't too eager to leap into the fray, but will do so on their
+      // own.  Charms and zombies do what they are told
+      if (v->isPet(PETTYPE_PET)) {
+        if (!orderDenyCheck(cmd_buf))
+          legitimate = true;
+      } else
+        legitimate = true;
+    }
+
     // I am a captive, taking orders from my capter
     if (!legitimate &&
         v->getCaptiveOf() == this)
       legitimate = true;
+
     // I am a horse, taking orders from my master
     if (!legitimate &&
       v->horseMaster() == this) {
       int check = MountEgoCheck(this, v);
-      if (is_abbrev(cmd_buf, "kill") ||
-          is_abbrev(cmd_buf, "hit") ||
-          is_abbrev(cmd_buf, "engage") ||
-          is_abbrev(cmd_buf, "assist") ||
-          is_abbrev(cmd_buf, "attack") ||
-          is_abbrev(cmd_buf, "kick") ||
-          is_abbrev(cmd_buf, "bash") ||
-          is_abbrev(cmd_buf, "deathstroke") ||
-          is_abbrev(cmd_buf, "grapple") ||
-          is_abbrev(cmd_buf, "shove") ||
-          is_abbrev(cmd_buf, "bodyslam") ||
-          is_abbrev(cmd_buf, "rescue") ||
-          is_abbrev(cmd_buf, "kneestrike") ||
-          is_abbrev(cmd_buf, "sleep") || // order sleep, backstab....
-          is_abbrev(cmd_buf, "emote") ||
-          is_abbrev(cmd_buf, "headbutt") ||
-          is_abbrev(cmd_buf, "open") ||
-          is_abbrev(cmd_buf, "lower") ||
-          is_abbrev(cmd_buf, "lift") ||
-          is_abbrev(cmd_buf, "raise"))
+
+      // mounts are not gung-ho supporters of their riders
+      if (orderDenyCheck(cmd_buf))
         check = 3;   // force indifference
 
       // if mount has no ego (check <=0) do command
@@ -682,6 +696,9 @@ static bool canFleeThisWay(TBeing *ch, dirTypeT dir)
   if (rp2->getMoblim() && MobCountInRoom(rp2->stuff) >= rp2->getMoblim())
     return false;
 
+  if (rp2->isVertSector())
+    return false;
+
 #if 0
   // out of the frying pan, into the fire...
   // this should be allowed, that's the way it worked in original DIKU
@@ -716,6 +733,7 @@ int TBeing::doFlee(const char *arg)
   TBeing *vict;
 
   spellNumT skill = getSkillNum(SKILL_RETREAT);
+  spellNumT skill2 = getSkillNum(SKILL_RIDE);
 
   // automatic flee attempts should fail if lagging
   // remember that wait comes in as 1 naturaly i think
@@ -723,6 +741,21 @@ int TBeing::doFlee(const char *arg)
     sendTo("You can't flee while orienting yourself.\n\r");
     return TRUE;
   }
+  // This is used to prevent 'insta-fleeing' on mobiles
+  if (isAffected(AFF_SHOCKED) && !isPc()) {
+    sendTo("You are still recovering from something!\n\r");
+    return FALSE;
+  } if (!isPc()) {
+    affectedData tAff;
+
+    tAff.type     = AFFECT_COMBAT;
+    tAff.duration = 1; // Short and sweet
+    tAff.modifier = AFF_SHOCKED;
+    tAff.location = APPLY_NONE;
+
+    affectTo(&tAff, -1);
+  }
+
   if (isAffected(AFF_PARALYSIS)) {
     sendTo("You can't flee while paralyzed.\n\r");
     return FALSE;
@@ -756,7 +789,7 @@ int TBeing::doFlee(const char *arg)
          TRUE, this, NULL, NULL, TO_ROOM);
     return FALSE;
   }
-  if (isAffected(AFF_CHARM) && master && sameRoom(master)) {
+  if (isAffected(AFF_CHARM) && master && sameRoom(*master)) {
     if (!::number(0, 5))
       act("$n bursts into tears.", TRUE, this, 0, 0, TO_ROOM);
     act("You burst into tears at  the thought of leaving $N.", 
@@ -772,15 +805,15 @@ int TBeing::doFlee(const char *arg)
   }
   if (riding) {
     // Let's make retreat skill have some chance of keeping you on the mount - Brutius 07/26/1999
-    if (!doesKnowSkill(skill) || !bSuccess(this, getSkillValue(skill)/2, skill)) { 
+    if (!(doesKnowSkill(skill) && doesKnowSkill(skill2)) || 
+	!(bSuccess(this, getSkillValue(skill), skill) && bSuccess(this, getSkillValue(skill2), skill2))) { 
       sendTo("Your panic causes you to fall.\n\r");
       rc = fallOffMount(riding, POSITION_SITTING);
       panic = TRUE;
       if (IS_SET_DELETE(rc, DELETE_THIS)) 
         return DELETE_THIS;
     }
-  }
-  if (getPosition() <= POSITION_SITTING) {
+  } else if (getPosition() <= POSITION_SITTING) {
     addToMove(-10);
     act("$n scrambles madly to $s feet!", TRUE, this, 0, 0, TO_ROOM);
     act("Panic-stricken, you scramble to your feet.", TRUE, this, 0, 0, TO_CHAR);
@@ -788,8 +821,7 @@ int TBeing::doFlee(const char *arg)
     addToWait(combatRound(1));
 
     panic = TRUE;
-  }
-  if ((t = rider)) {
+  } else if ((t = rider)) {
     t->sendTo("Your mount panics and attempts to flee.\n\r");
     rc = t->fallOffMount(this, POSITION_SITTING);
     panic = TRUE;
@@ -801,7 +833,8 @@ int TBeing::doFlee(const char *arg)
       t = NULL;
     }
   }
-
+   
+  
   dirTypeT chosenDir = getDirFromChar(arg);
 
   soundNumT snd = pickRandSound(SOUND_FLEE_01, SOUND_FLEE_03);
@@ -810,18 +843,17 @@ int TBeing::doFlee(const char *arg)
   if (!(vict = fight())) {
     for (i = 0; i < 20; i++) {
       dirTypeT attempt = dirTypeT(::number(MIN_DIR, MAX_DIR-1));        // Select a random direction 
-
+      
       // not fighting, so encourage flight to be in dir PC selected
-      if (chosenDir != DIR_NONE && !panic &&
-          ::number(0,4))
-          attempt = chosenDir;
-
+      if (chosenDir != DIR_NONE && !panic) {
+	attempt = chosenDir;
+      }
       if (canFleeThisWay(this, attempt)) {
         act("$n panics, and attempts to flee.", TRUE, this, 0, 0, TO_ROOM);
         TBeing *tbt = dynamic_cast<TBeing *>(rider);
         if (tbt) {
           act("You turn tail and attempt to run away.", 
-                TRUE, this, 0, 0, TO_CHAR);
+	      TRUE, this, 0, 0, TO_CHAR);
           loseSneak();
           iDie = tbt->moveOne(attempt);
           if (IS_SET_DELETE(iDie, DELETE_THIS)) {
@@ -839,16 +871,16 @@ int TBeing::doFlee(const char *arg)
           }
         } else {
           act("You turn tail and attempt to run away.", 
-                TRUE, this, 0, 0, TO_CHAR);
+	      TRUE, this, 0, 0, TO_CHAR);
           loseSneak();
           iDie = moveOne(attempt);
           if (IS_SET_DELETE(iDie, DELETE_THIS))
             return DELETE_THIS;
-
+	  
           if (iDie == TRUE) {
             sendTo("You nearly hurt yourself as you fled madly %swards.\n\r", dirs[attempt]);
             REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
-
+	    
             return TRUE;
           } else {
             fleeFail(this);
@@ -863,12 +895,11 @@ int TBeing::doFlee(const char *arg)
   }
   for (i = 0; i < 20; i++) {
     dirTypeT attempt = dirTypeT(::number(MIN_DIR, MAX_DIR-1));        // Select a random direction 
-
+    
     // fighting, so give slight chance of letting PC direct the direction
-    if (chosenDir != DIR_NONE && !panic &&
-        !::number(0,2))
-        attempt = chosenDir;
-
+    if (chosenDir != DIR_NONE && !panic && !::number(0,99) < (30+getSkillValue(skill)/2))
+      attempt = chosenDir;
+    
     if (canFleeThisWay(this, attempt)) {
       if (panic || !doesKnowSkill(skill) || 
           !bSuccess(this, getSkillValue(skill), skill)) {
@@ -1006,7 +1037,7 @@ int TBeing::doAssist(const char *argument, TBeing *vict, bool flags)
   only_argument(argument, v_name);
 
   if (!(v = vict)) {
-    if (!(v = get_char_room_vis(this, v_name))) {
+    if (!(v = get_char_room_vis(this, v_name, NULL, EXACT_NO, INFRA_YES))) {
       sendTo("Whom do you want to assist?\n\r");
       return FALSE;
     }
@@ -1138,7 +1169,7 @@ int TBeing::doAssist(const char *argument, TBeing *vict, bool flags)
 #if 0
   // trap a problem report
   if (!fight())
-    vlogf(5, "%s not fighting after assist %s", getName(), v->getName());
+    vlogf(LOG_BUG, "%s not fighting after assist %s", getName(), v->getName());
 #endif
 
   return rc;
@@ -1163,19 +1194,24 @@ void TBeing::doWimpy(const char *arg)
        return;
     }
   }
-  if (is_abbrev(buf, "off") || buf[0] == '0') {
+
+  int hl = hitLimit();
+  int wimplimit = hl / 2 + hl % 2;
+
+  if (is_abbrev(buf, "max")) {
+    sendTo("Setting Wimpy to Max(%d).\n\r", wimplimit - 1);
+    num = wimplimit - 1;
+  } else if (is_abbrev(buf, "off") || (num = atoi(buf)) <= 0) {
     sendTo("Turning wimpy mode off.\n\r");
     wimpy = 0;
     return;
   }
-  num = atoi(buf);
 
-  int hl = hitLimit();
-  int wimplimit = hl/2 + hl%2;
   if ((num < 0) || (wimplimit <= num)) {
     sendTo("Please enter a number between 0-%d.\n\r", wimplimit-1);
     return;
   }
+
   sendTo("You are now a wimp!!\n\r");
   sendTo("You will now flee at %d hit points!\n\r", num);
   wimpy = num;
@@ -1199,6 +1235,10 @@ int TObj::burnObject(TBeing *ch, int perc)
     return FALSE;
   if (::number(1,100) > perc)
     return FALSE;
+  if (dynamic_cast<TSpellBag *>(this))
+    return FALSE;
+  if (this->isObjStat(ITEM_BAG))
+    return FALSE;
 
   if (ch && (ch == equippedBy) &&
       material_nums[getMaterial()].conductivity) {
@@ -1212,24 +1252,21 @@ int TObj::burnObject(TBeing *ch, int perc)
       return DELETE_VICT;
     }
   }
-  TRealContainer *trc = dynamic_cast<TRealContainer *>(this);
+  TOpenContainer *trc = dynamic_cast<TOpenContainer *>(this);
   for (t = stuff; t; t = t2) {
     int perc2;
     t2 = t->nextThing;
     if (trc) {
       if (trc->isClosed())
-        perc2 = 10 * perc / 100;   // 10% chance if closed
+        perc2 = 5 * perc / 100;   // 5% chance if closed
       else if (trc->isCloseable())
-        perc2 = 8 * perc / 10;     // 80% chance if open and closable
+        perc2 = 6 * perc / 10;     // 60% chance if open and closable
       else
-        perc2 = 6 * perc / 10;     // 60% chance for unclosable containers
+        perc2 = 5 * perc / 10;     // 50% chance for unclosable containers
     } else
-      perc2 = 6 * perc / 10;     // 60% chance for unclosable containers
+      perc2 = 5 * perc / 10;     // 50% chance for unclosable containers
     TObj * tot = dynamic_cast<TObj *>(t);
 
-    // Seems alot of comps are burnable.  Lets make it a little easier on them.
-    if (dynamic_cast<TSpellBag *>(this))
-      perc2 /= 3;
 
     if (tot) {
       rc = tot->burnObject(ch, perc2);
@@ -1240,8 +1277,18 @@ int TObj::burnObject(TBeing *ch, int perc)
     }
   }
 
-  int orig = getStructPoints();
-  while (::number(0,101) < material_nums[getMaterial()].burned_susc) {
+
+
+  int orig = getMaxStructPoints();
+  int burndam = ::number(0,(int)((double)orig * 1.00 * 
+				 ((double)(material_nums[getMaterial()].flammability))/1000.0) +1);
+
+
+  // now apply the damage
+
+
+
+  while (burndam-- >= 0 && material_nums[getMaterial()].flammability) {
     addToStructPoints(-1);
     if (getStructPoints() <= 0) {
       if (ch) {
@@ -1261,7 +1308,7 @@ int TObj::burnObject(TBeing *ch, int perc)
         else if (roomp)
           *roomp += *t;
         else
-          vlogf(5, "Bad struct on burnObj %s", t->name);
+          vlogf(LOG_BUG, "Bad struct on burnObj %s", t->name);
         TObj * tot = dynamic_cast<TObj *>(t);
         if (tot) {
           rc = tot->burnObject(ch, 100);
@@ -1282,8 +1329,22 @@ int TObj::burnObject(TBeing *ch, int perc)
       act("The flame slightly singes $n, but it looks intact.",
            TRUE,this,0,0,TO_ROOM);
     }
+
+    //i want to give objs only a CHANCE to burn
+    // flamability is usually 1-10 so if we use this as a
+    // modifier
+    // and give flammable objects only a 0-75% chance of burning, it should be good
+
+    if(::number(0,100) < (int)(7.5*(double)material_nums[getMaterial()].flammability) &&
+       !isObjStat(ITEM_BURNING) && !isObjStat(ITEM_PAIRED)){
+      setBurning(ch);
+      sprintf(buf, "Your $o start$Q to burn!\a");
+      act(buf,TRUE,ch,this,0,TO_CHAR);
+    }
+
     return TRUE;
   }
+
   return FALSE;
 }
 
@@ -1352,7 +1413,7 @@ int TObj::freezeObject(TBeing *ch, int perc)
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
   }
-  TRealContainer *trc = dynamic_cast<TRealContainer *>(this);
+  TOpenContainer *trc = dynamic_cast<TOpenContainer *>(this);
   for (t = stuff; t; t = t2) {
     int perc2;
     t2 = t->nextThing;
@@ -1497,7 +1558,7 @@ int TObj::meltObject(TBeing *ch, int perc)
   if (::number(1,100) > perc)
     return FALSE;
 
-  TRealContainer *trc = dynamic_cast<TRealContainer *>(this);
+  TOpenContainer *trc = dynamic_cast<TOpenContainer *>(this);
   for (t = stuff; t; t = t2) {
     int perc2;
     t2 = t->nextThing;
@@ -1614,7 +1675,7 @@ int TBeing::chlorineEngulfed()
 
   af.type = SPELL_POISON;
   af.level = 51;
-  af.duration = (60) * UPDATES_PER_TICK;
+  af.duration = (60) * UPDATES_PER_MUDHOUR;
   af.modifier = -20;
   af.location = APPLY_STR;
   af.bitvector = AFF_POISON;
@@ -1765,12 +1826,32 @@ bool TBeing::noHarmCheck(TBeing *vict)
 {
   if (this == vict)
     return FALSE;
-  if (desc &&
-      IS_SET(desc->autobits, AUTO_NOHARM) && vict->isPc()) {
-    sendTo("You have your AUTO NOHARM flag set.\n\r");
-    sendTo("You must remove it before attacking another PC.\n\r");
-    return TRUE;
+
+  if (desc && IS_SET(desc->autobits, AUTO_NOHARM)) {
+    if (vict->isPc()) {
+      sendTo("You have your AUTO NOHARM flag set.\n\r");
+      sendTo("You must remove it before attacking another PC.\n\r");
+      return TRUE;
+    }
+    if (vict->master == this) {
+      if (vict->isPet(PETTYPE_PET)) {
+        sendTo("You have your AUTO NOHARM flag set.\n\r");
+        sendTo("You must remove it before attacking one of your pets.\n\r");
+        return TRUE;
+      }
+      if (vict->isPet(PETTYPE_CHARM)) {
+        sendTo("You have your AUTO NOHARM flag set.\n\r");
+        sendTo("You must remove it before attacking one of your charms.\n\r");
+        return TRUE;
+      }
+      if (vict->isPet(PETTYPE_THRALL)) {
+        sendTo("You have your AUTO NOHARM flag set.\n\r");
+        sendTo("You must remove it before attacking one of your thralls.\n\r");
+        return TRUE;
+      }
+    }
   }
+
   if (desc && !isImmortal() && isPc() && 
           vict->desc && vict->isPc() &&
           (vict->GetMaxLevel() < 5) && 

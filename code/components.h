@@ -3,6 +3,18 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.2  2001/04/26 22:23:57  peel
+// *** empty log message ***
+//
+// Revision 5.1.1.3  2001/02/01 21:58:29  jesus
+// shaman stuff
+//
+// Revision 5.1.1.2  2001/01/11 19:55:39  jesus
+// shaman stuff
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -103,6 +115,12 @@ const int COMP_ENHANCE_WEAPON   =274;
 const int COMP_FLIGHT           =275;
 const int COMP_PROT_EARTH       =293;
 const int COMP_TRANSFORM_LIMB   =298;
+#if 0
+const int COMP_EARTHMAW         =343;
+const int COMP_CREEPING_DOOM    =344;
+const int COMP_FERAL_WRATH      =345;
+const int COMP_SKY_SPIRIT       =346;
+#endif
 const int COMP_DISPEL_MAGIC_BREW=1405;
 const int COMP_TRAIL_SEEK_BREW  =1408;
 const int COMP_INFRAVISION_BREW =1411;
@@ -112,7 +130,15 @@ const int COMP_INFRAVISION2_BREW=1415;
 const int COMP_INVISIBILITY_BREW=1416;
 const int COMP_TRUE_SIGHT_BREW  =1418;
 const int COMP_GILLS_OF_FLESH_BREW   =1420;
-const int COMP_PLASMA_MIRROR    =1421;
+const int COMP_PLASMA_MIRROR      =1421;
+const int COMP_SHIELD_OF_MISTS    =23020;
+const int COMP_ENTHRALL_SPECTRE   =31301;
+const int COMP_ENTHRALL_GHAST     =31302;
+const int COMP_ENTHRALL_GHOUL     =31303;
+const int COMP_ENTHRALL_DEMON     =31304;
+const int COMP_THORNFLESH         =31305;
+const int COMP_AQUALUNG           =31306;
+const int COMP_AQUATIC_BLAST      =31307;
 
 class compPlace
 {
@@ -235,3 +261,66 @@ extern vector<compInfo>CompInfo;
 
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

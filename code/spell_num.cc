@@ -2,13 +2,8 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: spell_num.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+// spell_num : conversion between internal enums and external ints for 
+//    spell numbers
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -430,6 +425,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 225;
     case SKILL_KNEESTRIKE:
       return 226;
+    case SKILL_TRANCE_OF_BLADES:
+      return 227;
     case SKILL_SHOVE:
       return 229;
     case SKILL_RETREAT:
@@ -688,7 +685,7 @@ int mapSpellnumToFile(spellNumT stt)
       return 500;
     case SKILL_GARROTTE:
       return 501;
-    case SKILL_SET_TRAP:
+    case SKILL_SET_TRAP_CONT:
       return 502;
     case SKILL_DUAL_WIELD_THIEF:
       return 503;
@@ -696,6 +693,30 @@ int mapSpellnumToFile(spellNumT stt)
       return 504;
     case SKILL_COUNTER_STEAL:
       return 505;
+    case SKILL_SET_TRAP_DOOR:
+      return 506;
+    case SKILL_SET_TRAP_MINE:
+      return 507;
+    case SKILL_SET_TRAP_GREN:
+      return 508;
+    case SKILL_SACRIFICE:
+      return 547;
+    case SPELL_AQUALUNG:
+      return 548;
+    case SPELL_AQUATIC_BLAST:
+      return 549;
+    case SPELL_THORNFLESH:
+      return 550;
+    case SPELL_ENTHRALL_GHOUL:
+      return 551;
+    case SPELL_ENTHRALL_GHAST:
+      return 552;
+    case SPELL_ENTHRALL_DEMON:
+      return 553;
+    case SPELL_ENTHRALL_SPECTRE:
+      return 554;
+    case SPELL_SHIELD_OF_MISTS:
+      return 555;
     case SPELL_CACAODEMON:
       return 556;
     case SPELL_CREATE_GOLEM:
@@ -754,8 +775,6 @@ int mapSpellnumToFile(spellNumT stt)
       return 593;
     case SKILL_OFFENSE:
       return 594;
-    case SKILL_WHITTLE:
-      return 663;
     case SKILL_WIZARDRY:
       return 596;
     case SKILL_MEDITATE:
@@ -776,7 +795,7 @@ int mapSpellnumToFile(spellNumT stt)
       return 649;
     case SKILL_SLASH_PROF:
       return 654;
-    case SKILL_BOW:
+    case SKILL_RANGED_PROF:
       return 655;
     case SKILL_PIERCE_PROF:
       return 656;
@@ -792,6 +811,30 @@ int mapSpellnumToFile(spellNumT stt)
       return 661;
     case SKILL_STAVECHARGE:
       return 662;
+    case SKILL_WHITTLE:
+      return 663;
+    case SKILL_PARRY_WARRIOR:
+      return 664;
+    case SKILL_SPIN:
+      return 665;
+    case SKILL_DUAL_WIELD_WARRIOR:
+      return 666;
+    case SKILL_POWERMOVE:
+      return 667;
+    case SKILL_ALCOHOLISM:
+      return 668;
+    case SKILL_FISHING:
+      return 669;
+#if 1
+    case SPELL_EARTHMAW:
+      return 670;
+    case SPELL_CREEPING_DOOM:
+      return 671;
+    case SPELL_FERAL_WRATH:
+      return 672;
+    case SPELL_SKY_SPIRIT:
+      return 673;
+#endif
     case AFFECT_DISEASE:
       return 2500;
     case AFFECT_COMBAT:
@@ -824,18 +867,33 @@ int mapSpellnumToFile(spellNumT stt)
       return 2514;
     case AFFECT_DRUG:
       return 2515;
+    case AFFECT_ORPHAN_PET:
+      return 2516;
+    case AFFECT_PLAYERKILL:
+      return 2517;
+    case AFFECT_HORSEOWNED:
+      return 2518;
+    case AFFECT_THRALL:
+      return 2519;
+    case AFFECT_CHARM:
+      return 2520;
+    case AFFECT_PLAYERLOOT:
+      return 2521;
+    case AFFECT_GROWTH_POTION:
+      return 2522;
     case SPELL_FIRE_BREATH:
     case SPELL_CHLORINE_BREATH:
     case SPELL_FROST_BREATH:
     case SPELL_ACID_BREATH:
     case SPELL_LIGHTNING_BREATH:
+    case SPELL_DUST_BREATH:
     case LAST_BREATH_WEAPON:
     case MAX_SKILL:
-    case AFFECT_ORPHAN_PET:
     case DAMAGE_NORMAL:
     case DAMAGE_CAVED_SKULL:
     case DAMAGE_BEHEADED:
-    case DAMAGE_DISEMBOWLED:
+    case DAMAGE_DISEMBOWLED_HR:
+    case DAMAGE_DISEMBOWLED_VR:
     case DAMAGE_STOMACH_WOUND:
     case DAMAGE_HACKED:
     case DAMAGE_IMPALE:
@@ -922,7 +980,6 @@ int mapSpellnumToFile(spellNumT stt)
     case TYPE_KICK:
     case TYPE_MAUL:
     case TYPE_MAX_HIT:
-    case AFFECT_PLAYERKILL:
     case LAST_ODDBALL_AFFECT:
       break;
   }
@@ -1243,6 +1300,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_BODYSLAM;
     case 226:
       return SKILL_KNEESTRIKE;
+    case 227:
+      return SKILL_TRANCE_OF_BLADES;
     case 229:
       return SKILL_SHOVE;
     case 230:
@@ -1502,13 +1561,37 @@ spellNumT mapFileToSpellnum(int stt)
     case 501:
       return SKILL_GARROTTE;
     case 502:
-      return SKILL_SET_TRAP;
+      return SKILL_SET_TRAP_CONT;
     case 503:
       return SKILL_DUAL_WIELD_THIEF;
     case 504:
       return SKILL_DISARM_THIEF;
     case 505:
       return SKILL_COUNTER_STEAL;
+    case 506:
+      return SKILL_SET_TRAP_DOOR;
+    case 507:
+      return SKILL_SET_TRAP_MINE;
+    case 508:
+      return SKILL_SET_TRAP_GREN;
+    case 547:
+      return SKILL_SACRIFICE;
+    case 548:
+      return SPELL_AQUALUNG;
+    case 549:
+      return SPELL_AQUATIC_BLAST;
+    case 550:
+      return SPELL_THORNFLESH;
+    case 551:
+      return SPELL_ENTHRALL_GHOUL;
+    case 552:
+      return SPELL_ENTHRALL_GHAST;
+    case 553:
+      return SPELL_ENTHRALL_DEMON;
+    case 554:
+      return SPELL_ENTHRALL_SPECTRE;
+    case 555:
+      return SPELL_SHIELD_OF_MISTS;
     case 556:
       return SPELL_CACAODEMON;
     case 557:
@@ -1567,8 +1650,6 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_DEFENSE;
     case 594:
       return SKILL_OFFENSE;
-    case 663:
-      return SKILL_WHITTLE;
     case 596:
       return SKILL_WIZARDRY;
     case 597:
@@ -1590,7 +1671,7 @@ spellNumT mapFileToSpellnum(int stt)
     case 654:
       return SKILL_SLASH_PROF;
     case 655:
-      return SKILL_BOW;
+      return SKILL_RANGED_PROF;
     case 656:
       return SKILL_PIERCE_PROF;
     case 657:
@@ -1605,6 +1686,30 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_ATTUNE;
     case 662:
       return SKILL_STAVECHARGE;
+    case 663:
+      return SKILL_WHITTLE;
+    case 664:
+      return SKILL_PARRY_WARRIOR;
+    case 665:
+      return SKILL_SPIN;
+    case 666:
+      return SKILL_DUAL_WIELD_WARRIOR;
+    case 667:
+      return SKILL_POWERMOVE;
+    case 668:
+      return SKILL_ALCOHOLISM;
+    case 669:
+      return SKILL_FISHING;
+#if 1
+    case 670:
+      return SPELL_EARTHMAW;
+    case 671:
+      return SPELL_CREEPING_DOOM;
+    case 672:
+      return SPELL_FERAL_WRATH;
+    case 673:
+      return SPELL_SKY_SPIRIT;
+#endif
     case 2500:
       return AFFECT_DISEASE;
     case 2501:
@@ -1637,6 +1742,20 @@ spellNumT mapFileToSpellnum(int stt)
       return AFFECT_TEST_FIGHT_MOB;
     case 2515:
       return AFFECT_DRUG;
+    case 2516:
+      return AFFECT_ORPHAN_PET;
+    case 2517:
+      return AFFECT_PLAYERKILL;
+    case 2518:
+      return AFFECT_HORSEOWNED;
+    case 2519:
+      return AFFECT_THRALL;
+    case 2520:
+      return AFFECT_CHARM;
+    case 2521:
+      return AFFECT_PLAYERLOOT;
+    case 2522:
+      return AFFECT_GROWTH_POTION;
     default:
       break;
   }
@@ -1659,3 +1778,7 @@ bool applyTypeShouldBeSpellnum(applyTypeT att)
 {
   return (att == APPLY_SPELL);
 }
+
+
+
+

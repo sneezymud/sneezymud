@@ -1,20 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: components.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 //      "components.c" - All functions and routines related to components
@@ -23,7 +8,6 @@
 
 #include "stdsneezy.h"
 #include "components.h"
-#include "create.h"
 #include "shop.h"
 
 vector<compPlace>component_placement(0);
@@ -32,6 +16,11 @@ vector<COMPINDEX>CompIndex(0);
 
 void assign_component_placement()
 {
+  if(gamePort==8900){
+    vlogf(LOG_LOW, "Skipping assign_component_placement for builder mud");
+    return;
+  }
+
 // rainbow bridge 1
   component_placement.push_back(compPlace(BRIDGE_ROOM, -1, MOB_NONE, 
      ITEM_RAINBOW_BRIDGE1,
@@ -565,7 +554,7 @@ void do_components(int situ)
 
   for (i = 0; i < component_placement.size(); i++) {
     if ((value = real_object(component_placement[i].number)) < 0) {
-      vlogf(5, "Bad component (%d, %d)", i, component_placement[i].number);
+      vlogf(LOG_MISC, "Bad component (%d, %d)", i, component_placement[i].number);
       continue;
     }
 
@@ -575,29 +564,29 @@ void do_components(int situ)
     start = component_placement[i].hour1;
     stop = component_placement[i].hour2;
     if (start == HOUR_SUNRISE)
-      start = sunRise();
+      start = sunTime(SUN_TIME_RISE);
     else if (start == HOUR_SUNSET)
-      start = sunSet();
+      start = sunTime(SUN_TIME_SET);
     else if (start == HOUR_MOONRISE)
-      start = moonRise();
+      start = moonTime(MOON_TIME_RISE);
     else if (start == HOUR_MOONSET)
-      start = moonSet();
+      start = moonTime(MOON_TIME_SET);
     else if (start == HOUR_DAY_BEGIN)
-      start = sunRise() + 3;
+      start = sunTime(SUN_TIME_DAY);
     else if (start == HOUR_DAY_END)
-      start = sunSet() - 3;
+      start = sunTime(SUN_TIME_SINK);
     if (stop == HOUR_SUNRISE)
-      stop = sunRise();
+      stop = sunTime(SUN_TIME_RISE);
     else if (stop == HOUR_SUNSET)
-      stop = sunSet();
+      stop = sunTime(SUN_TIME_SET);
     else if (stop == HOUR_MOONRISE)
-      stop = moonRise();
+      stop = moonTime(MOON_TIME_RISE);
     else if (stop == HOUR_MOONSET)
-      stop = moonSet();
+      stop = moonTime(MOON_TIME_SET);
     else if (stop == HOUR_DAY_BEGIN)
-      stop = sunRise() + 3;
+      stop = sunTime(SUN_TIME_DAY);
     else if (stop == HOUR_DAY_END)
-      stop = sunSet() - 3;
+      stop = sunTime(SUN_TIME_SINK);
 
     if (start != -1) {
       if (stop == -1) {
@@ -813,10 +802,10 @@ void do_components(int situ)
           } // else no room
         } // end of for loop
       } else {
-        vlogf(8, "No direction specified on component placement (%d)", i);
+        vlogf(LOG_MISC, "No direction specified on component placement (%d)", i);
       }
     } else {
-      vlogf(8, "No room specified on component placement (%d)", i);
+      vlogf(LOG_MISC, "No room specified on component placement (%d)", i);
     }
   }
 }
@@ -1159,12 +1148,20 @@ void buildComponentArray()
     "$n tosses $p into the pile of armor.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_SHIELD_OF_MISTS,
+    "You masticate $p and spit it at $N.",
+    "$n masticates $p and spits it at $N.",
+    "$n masticates $p and spits it at you.",                       
+    "You chew $p and swallow it down.",
+    "$n chews $p and swallows it down.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_SORCERERS_GLOBE,
-    "You twirl $p in the air before $N.",
-    "$n twirls $p in the air before $N.",
-    "$n twirls $p in the air before you.",                       
-    "You twirl $p in the air in front of you.",
-    "$n twirls $p in the air in front of $mself.",
+    "You twirl $p in front of $N.",
+    "$n twirls $p in front of $N.",
+    "$n twirls $p in front of you.",                       
+    "You twirl $p in front of yourself.",
+    "$n twirls $p in front of $mself.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_BIND,
@@ -1465,6 +1462,40 @@ void buildComponentArray()
     "$n squeezes $p.",
     "",
     ""));
+#if 1
+  CompInfo.push_back(compInfo(SPELL_EARTHMAW,
+			      "You grind $p into the ground.",
+			      "$n grinds $p into the ground.",
+			      "$n grinds $p into the ground.",
+			      "",
+			      "",
+			      "",
+			      ""));
+  CompInfo.push_back(compInfo(SPELL_CREEPING_DOOM,
+                              "You uncork $p blow it in $N's direction.",
+                              "$n uncorks $p and blows it in $N's direction.",
+                              "$n uncorks $p and blows in in your direction.",
+                              "You uncork $p and sprinkle some on yourself.",
+                              "$n uncorks $p and sprinkles some on $mself.",
+                              "",
+                              ""));
+  CompInfo.push_back(compInfo(SPELL_FERAL_WRATH,
+                              "",
+                              "",
+                              "",
+                              "You thrust $p into your palm.",
+                              "$n thrusts $p $s palm.",
+                              "",
+                              ""));
+  CompInfo.push_back(compInfo(SPELL_SKY_SPIRIT,
+                              "You toss $p at $N.",
+                              "$n tosses $p at $N.",
+                              "$n tosses $p at you.",
+                              "You toss $p into the air.",
+                              "$n tosses $p into the air..",
+                              "",
+                              ""));
+#endif
   CompInfo.push_back(compInfo(SKILL_BEAST_SOOTHER,
     "You coat $N with $p.",
     "$n coats $N with $p.",
@@ -1593,7 +1624,101 @@ void buildComponentArray()
     "$n twirls $p about $mself.",
     "",
     ""));
-};
+  CompInfo.push_back(compInfo(SPELL_AQUALUNG,
+    "You apply $p to $N's face.",
+    "$n applies $p to $N's face.",
+    "$n applies $p to your face.",                       
+    "You apply $p to your face.",
+    "$n applies $p to $s face.",
+    "",
+    ""));
+  CompInfo.push_back(compInfo(SPELL_AQUATIC_BLAST,
+    "",
+    "",
+    "",
+    "You drink $p and, before swallowing it, spit it out forcefully.",
+    "$n drinks $p and, before swallowing it, spits it out forcefully.",
+    "",
+    ""));
+  CompInfo.push_back(compInfo(SPELL_THORNFLESH,
+    "",
+    "",
+    "",
+    "You nibble on $p and swallow it down.",
+    "$n nibbles on $p and swallows it down.",
+    "",
+    ""));
+  CompInfo.push_back(compInfo(SPELL_ENTHRALL_SPECTRE,
+    "",                       
+    "",
+    "",
+    "You sprinkle $p on the ground.",
+    "$n sprinkles $p on the ground.",
+    "",
+    ""));
+  CompInfo.push_back(compInfo(SPELL_ENTHRALL_GHAST,
+    "",                       
+    "",
+    "",
+    "You sprinkle $p on the ground.",
+    "$n sprinkles $p on the ground.",
+    "",
+    ""));
+  CompInfo.push_back(compInfo(SPELL_ENTHRALL_GHOUL,
+    "",                       
+    "",
+    "",
+    "You sprinkle $p on the ground.",
+    "$n sprinkles $p on the ground.",
+    "",
+    ""));
+  CompInfo.push_back(compInfo(SPELL_ENTHRALL_DEMON,
+    "",                       
+    "",
+    "",
+    "You sprinkle $p on the ground.",
+    "$n sprinkles $p on the ground.",
+    "",
+    ""));
+
+
+  COMPINDEX ci;
+  unsigned int j;
+  int vnum, usage;
+  spellNumT spell;
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+
+  int retdb = dbquery(&res, "sneezy", "buildComponentArray", "select vnum, val2, val3 from obj where type=%d", mapFileToItemType(ITEM_COMPONENT));
+  if (retdb) {
+    vlogf(LOG_BUG, "Terminal database error (buildComponentArray)!  ret=%d", retdb);
+    exit(0);
+  }
+  while((row=mysql_fetch_row(res))){
+    vnum=atoi(row[0]);
+    spell=mapFileToSpellnum(atoi(row[1]));
+    usage=atoi(row[2]);
+
+    if(spell != TYPE_UNDEFINED &&
+       (((usage & COMP_SPELL) != 0))){
+      for(j=0;j<CompInfo.size();j++){
+	if(CompInfo[j].spell_num == spell){
+	  if(CompInfo[j].comp_num == -1 ||
+	     vnum < CompInfo[j].comp_num){
+	    CompInfo[j].comp_num = vnum;
+	    break;
+	  }
+	}
+      }
+    }
+
+    ci.comp_vnum = vnum;
+    ci.spell_num = spell;
+    ci.usage = usage;
+    CompIndex.push_back(ci);
+  }
+  mysql_free_result(res);
+}
 
 TComponent::TComponent() :
   TObj(),
@@ -1752,7 +1877,7 @@ int TComponent::componentSell(TBeing *ch, TMonster *keeper, int shop_nr, TThing 
     *ch += *ch->unequip(eq_pos);
 
   if (sub) {
-    rc = get(ch, this, sub);
+    rc = get(ch, this, sub, GETOBJOBJ, true);
     if (IS_SET_DELETE(rc, DELETE_ITEM))
       return DELETE_THIS;
 
@@ -1781,7 +1906,7 @@ TThing *sub)
     *ch += *ch->unequip(eq_pos);
 
   if (sub) {
-    rc = get(ch, this, sub);
+    rc = get(ch, this, sub, GETOBJOBJ, true);
     if (IS_SET_DELETE(rc, DELETE_ITEM))
       return DELETE_THIS;
 
@@ -1976,11 +2101,11 @@ bool TComponent::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 void TComponent::lowCheck()
 {
   if (!isname("component", name)) {
-    vlogf(LOW_ERROR, "Component without COMPONENT in name (%s : %d)", getName(), objVnum());
+    vlogf(LOG_LOW, "Component without COMPONENT in name (%s : %d)", getName(), objVnum());
   }
   int sp = suggestedPrice();
   if (obj_flags.cost != sp) {
-    vlogf(LOW_ERROR, "component (%s:%d) with bad price %d should be %d.",
+    vlogf(LOG_LOW, "component (%s:%d) with bad price %d should be %d.",
           getName(), objVnum(), obj_flags.cost, sp);
     obj_flags.cost = sp;
   }
@@ -2029,7 +2154,7 @@ void TComponent::findComp(TComponent **best, spellNumT spell)
   }
 }
 
-int TComponent::putMeInto(TBeing *, TRealContainer *)
+int TComponent::putMeInto(TBeing *, TOpenContainer *)
 {
   // components can only be put into spellbags
   return FALSE;
@@ -2069,7 +2194,7 @@ void TComponent::findSomeComponent(TComponent **comp_gen, TComponent **spell_com
   else if (type == 2)
     dink = COMP_SCRIBE;
   else {
-    vlogf(10, "Unknown type in findSomeComps");
+    vlogf(LOG_MISC, "Unknown type in findSomeComps");
     return;
   }
 
@@ -2197,7 +2322,7 @@ bool TComponent::splitMe(TBeing *ch, const char *tString)
   return true;
 }
 
-int TComponent::putSomethingIntoContainer(TBeing *ch, TRealContainer *cont)
+int TComponent::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
 {
   int rc = TObj::putSomethingIntoContainer(ch, cont);
   if (rc != TRUE)
@@ -2439,7 +2564,7 @@ const string TComponent::shopList(const TBeing *ch, const char *tArg,
       break;
 
   if (!tKeeper) {
-    vlogf(10, "TComponent::shopList called by non-existant keeper.");
+    vlogf(LOG_MISC, "TComponent::shopList called by non-existant keeper.");
     return "";
   }
 
@@ -2542,7 +2667,7 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
   if (shop_producing(this, tShop)) {
     if (!(tObj = read_object(number, REAL))) {
-      vlogf(7, "Shop producing unlimited of an item not in db!  [%d]", number);
+      vlogf(LOG_MISC, "Shop producing unlimited of an item not in db!  [%d]", number);
       return;
     }
 
@@ -2586,7 +2711,7 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
       --(*tObj);
     } else {
       if (!(tObj = read_object(number, REAL))) {
-        vlogf(7, "Shop with item not in db!  [%d]", number);
+        vlogf(LOG_MISC, "Shop with item not in db!  [%d]", number);
         return;
       }
 

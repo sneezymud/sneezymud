@@ -2,13 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: spells.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+// spells.h
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -17,10 +11,11 @@
 #define __SPELLS_H
 
 enum spellNumT {
+  DAMAGE_DISEMBOWLED_VR = -57,
      DAMAGE_NORMAL = -56,
      DAMAGE_CAVED_SKULL = -55,
      DAMAGE_BEHEADED = -54,
-     DAMAGE_DISEMBOWLED = -53,
+     DAMAGE_DISEMBOWLED_HR = -53,
      DAMAGE_STOMACH_WOUND = -52,
      DAMAGE_HACKED = -51,
      DAMAGE_IMPALE = -50,
@@ -120,6 +115,10 @@ enum spellNumT {
      SPELL_TELEPATHY,
      SPELL_FEAR,
      SPELL_SLUMBER,
+     SPELL_ENTHRALL_SPECTRE,
+     SPELL_ENTHRALL_GHAST,
+     SPELL_ENTHRALL_GHOUL,
+     SPELL_ENTHRALL_DEMON,
      SPELL_CONJURE_EARTH,
      SPELL_CONJURE_AIR,
      SPELL_CONJURE_FIRE,
@@ -240,9 +239,11 @@ enum spellNumT {
      SKILL_RESCUE,
      SKILL_SMYTHE,
      SKILL_DISARM,
+     SKILL_PARRY_WARRIOR,
      SKILL_BERSERK,
      SKILL_SWITCH_OPP,
      SKILL_BODYSLAM,
+     SKILL_SPIN,
      SKILL_KNEESTRIKE,
      SKILL_SHOVE,
      SKILL_RETREAT,
@@ -250,7 +251,10 @@ enum spellNumT {
      SKILL_STOMP,
      SKILL_DOORBASH,
      SKILL_DEATHSTROKE,
-  
+     SKILL_DUAL_WIELD_WARRIOR,  
+     SKILL_POWERMOVE,
+     SKILL_TRANCE_OF_BLADES,
+   
      // end of warrior
      // start of ranger
 
@@ -282,7 +286,12 @@ enum spellNumT {
      SKILL_APPLY_HERBS,
      SKILL_DIVINATION,
      SKILL_ENCAMP,
-  
+#if 1
+  SPELL_EARTHMAW,
+  SPELL_CREEPING_DOOM,
+  SPELL_FERAL_WRATH,
+  SPELL_SKY_SPIRIT,
+#endif
      // end of ranger
      // start of deikhan
 
@@ -388,14 +397,21 @@ enum spellNumT {
      SKILL_DISGUISE,
      SKILL_DODGE_THIEF,
      SKILL_GARROTTE,
-     SKILL_SET_TRAP,
+     SKILL_SET_TRAP_CONT,
+     SKILL_SET_TRAP_DOOR,
+     SKILL_SET_TRAP_MINE,
+     SKILL_SET_TRAP_GREN,
      SKILL_DUAL_WIELD_THIEF,
      SKILL_DISARM_THIEF,
      SKILL_COUNTER_STEAL,
   
      // end of thief
      // start of shaman
-
+     SKILL_SACRIFICE,
+     SPELL_AQUALUNG,
+     SPELL_AQUATIC_BLAST,
+     SPELL_THORNFLESH,
+     SPELL_SHIELD_OF_MISTS,
      SPELL_CACAODEMON,
      SPELL_CREATE_GOLEM,
      SPELL_DANCING_BONES,
@@ -443,13 +459,15 @@ enum spellNumT {
      SKILL_PIERCE_SPEC,
      SKILL_BAREHAND_SPEC,
      SKILL_RANGED_SPEC,
-     SKILL_BOW,
+     SKILL_RANGED_PROF,
      SKILL_FAST_LOAD,
      SKILL_SHARPEN,
      SKILL_DULL,
      SKILL_ATTUNE,
      SKILL_STAVECHARGE,
-  
+     SKILL_ALCOHOLISM,
+     SKILL_FISHING,
+
      // end of generic
 
      // keep this as the last of the true skills
@@ -511,6 +529,7 @@ enum spellNumT {
      SPELL_FROST_BREATH,
      SPELL_ACID_BREATH,
      SPELL_LIGHTNING_BREATH,
+     SPELL_DUST_BREATH,
      LAST_BREATH_WEAPON,
 
      // these represent oddball affects, mostly used for affectData stuff
@@ -521,12 +540,17 @@ enum spellNumT {
      AFFECT_FREE_DEATHS,
      AFFECT_TEST_FIGHT_MOB,
      AFFECT_DRUG,
+     AFFECT_PET,
+     AFFECT_CHARM,
+     AFFECT_THRALL,
      AFFECT_ORPHAN_PET,
      AFFECT_DISEASE,
      AFFECT_COMBAT,
-     AFFECT_PET,
      AFFECT_PLAYERKILL,
-     LAST_ODDBALL_AFFECT,
+     AFFECT_PLAYERLOOT,
+     AFFECT_HORSEOWNED,
+     AFFECT_GROWTH_POTION,
+     LAST_ODDBALL_AFFECT
 };
 const spellNumT MIN_SPELL = spellNumT(TYPE_UNDEFINED+1);
 const spellNumT TYPE_MIN_HIT = TYPE_HIT;
@@ -566,3 +590,15 @@ extern spellNumT & operator-= (spellNumT &, spellNumT);
 const spellNumT ABSOLUTE_MAX_SKILL    = spellNumT(900);
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+

@@ -2,44 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: periodic.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.9  1999/10/07 03:53:16  batopr
-// *** empty log message ***
-//
-// Revision 1.8  1999/10/07 03:25:44  batopr
-// *** empty log message ***
-//
-// Revision 1.7  1999/09/29 07:46:14  lapsos
-// Added code for the Mobile Strings stuff.
-//
-// Revision 1.6  1999/09/26 17:04:13  lapsos
-// Fixed problem with elementals not draining mana from enthral.
-//
-// Revision 1.5  1999/09/22 17:08:49  peel
-// Minor changes to smoke
-//
-// Revision 1.4  1999/09/17 06:36:23  peel
-// changed burn message frequency
-//
-// Revision 1.3  1999/09/17 06:23:35  peel
-// tidied up soome of the burning code
-//
-// Revision 1.2  1999/09/17 04:53:59  peel
-// Added smoke clouds to burning things
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////////////////////////////////////////////
-//  
-//      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      periodic.cc : functions that are called periodically by the game
 //  
 ///////////////////////////////////////////////////////////////////////////
@@ -50,6 +12,7 @@
 #include "mail.h"
 #include "disc_monk.h"
 #include "components.h"
+#include "drug.h"
 
 // this function gets called ever 120 pulse (30 secs?)
 // it should randomly load a deity and/or extract extra deitys
@@ -84,10 +47,10 @@ void deityCheck(int)
           break;
       }
       if (!deity) {   
-        vlogf(5,"Big 'Ol bug in deityCheck()");
+        vlogf(LOG_BUG,"Big 'Ol bug in deityCheck()");
         return;
       }
-      vlogf(3,"Purging the deity in room #%d",deity->in_room);
+      vlogf(LOG_BUG,"Purging the deity in room #%d",deity->in_room);
       delete deity;
       deity = NULL;
     }
@@ -115,7 +78,7 @@ void apocCheck()
     return;
 
   if (!(mob = read_mobile(num, REAL))) {
-    vlogf(9, "Bad mob in apocCheck");
+    vlogf(LOG_BUG, "Bad mob in apocCheck");
     return;
   }  
   thing_to_room(mob, ROOM_IMPERIA);
@@ -125,7 +88,7 @@ void apocCheck()
     mob = NULL;
     return;
   }
-  vlogf(3,"Loading a horseman into the game.");
+  //vlogf(LOG_MISC,"Loading a horseman into the game.");
 }
 
 // this simplifies room specials since we have a huge number of rooms
@@ -175,7 +138,7 @@ int TBeing::riverFlow(int)
 
   dirTypeT rd = roomp->getRiverDir();
   if ((rd < MIN_DIR) || (rd >= MAX_DIR)) {
-    vlogf(9, "Illegal river direction (%d) in room %d", rd, inRoom());
+    vlogf(LOG_BUG, "Illegal river direction (%d) in room %d", rd, inRoom());
     return FALSE;
   }
 
@@ -191,6 +154,11 @@ int TBeing::riverFlow(int)
   if (!exitDir(rd) || (exitDir(rd)->to_room == ROOM_NOWHERE) ||
       IS_SET(exitDir(rd)->condition, EX_CLOSED))
     return FALSE;
+
+  if ((rc = canSwim(rd)) > 0) {
+    sendTo("You swim valiantly against the current.\n\r");
+    return FALSE;
+  }
 
   if (!(to_room = real_roomp(exitDir(rd)->to_room)))
     return FALSE;
@@ -360,7 +328,7 @@ int TBeing::teleportRoomFlow(int pulse)
   }
 
   if (!(dest = real_roomp(roomp->getTeleTarg()))) {
-    vlogf(10, "Invalid teleTarg room (%d) to room (%d)", 
+    vlogf(LOG_BUG, "Invalid teleTarg room (%d) to room (%d)", 
              inRoom(), roomp->getTeleTarg());
     return FALSE;
   }
@@ -369,7 +337,7 @@ int TBeing::teleportRoomFlow(int pulse)
   thing_to_room(this, tmprp->getTeleTarg());
   if ((tmp_desc = tmprp->ex_description->findExtraDesc("_tele_"))) {
     if (desc)
-      desc->page_string(tmp_desc, 0);
+      desc->page_string(tmp_desc);
   }
   if (tmprp->getTeleLook())
     doLook("", CMD_LOOK);
@@ -391,7 +359,7 @@ void TMonster::makeNoise()
   if (inRoom() == ROOM_NOCTURNAL_STORAGE)
     return;
 
-  if (!isPc() && sounds) {
+  if (!isPc() && sounds && !rider) {
     if (default_pos > POSITION_SLEEPING) {
       if (getPosition() > POSITION_SLEEPING) 
         MakeRoomNoise(this, in_room, sounds, distantSnds);
@@ -430,7 +398,7 @@ int TBeing::updateAffects()
 
     if ((af->duration == PERMANENT_DURATION) &&
           (af->type == AFFECT_DISEASE)) {
-      rc = (DiseaseInfo[DISEASE_INDEX(af->modifier)].code) (this, DISEASE_PULSE, af);
+      rc = (DiseaseInfo[affToDisease(*af)].code) (this, DISEASE_PULSE, af);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       continue;
@@ -447,6 +415,7 @@ int TBeing::updateAffects()
            (af->type == SKILL_TRACK) ||
            (af->type == SKILL_SEEKWATER) ||
            (af->type == AFFECT_PET) ||
+           (af->type == AFFECT_THRALL) ||
            (af->type == SKILL_BERSERK))) {
       continue;
     }
@@ -472,11 +441,11 @@ int TBeing::updateAffects()
       }
 
       if (af->type == AFFECT_DISEASE) {
-        rc = (DiseaseInfo[DISEASE_INDEX(af->modifier)].code) 
+        rc = (DiseaseInfo[affToDisease(*af)].code) 
                     (this, DISEASE_PULSE, af);
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
-      } else if (af->duration == 1 * UPDATES_PER_TICK) {
+      } else if (af->duration == 1 * UPDATES_PER_MUDHOUR) {
         // some spells have > 1 effect, do not show 2 messages
         if (af->shouldGenerateText())
           spellWearOffSoon(af->type);
@@ -541,6 +510,7 @@ int TBeing::updateAffects()
   return 0;
 }
 
+// this is called once per mud hour (about 144 real seconds)
 // returns DELETE_THIS
 int TBeing::updateTickStuff()
 {
@@ -554,16 +524,20 @@ int TBeing::updateTickStuff()
         (hasWizPower(POWER_WIZARD) || inRoom() == ROOM_STORAGE))
       setTimer(4);
     rc = checkIdling();
-    if (IS_SET_DELETE(rc, DELETE_THIS))
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      vlogf(LOG_SILENT, "updateTickStuff: %s (desc) caught idling", getName());
       return DELETE_THIS;
-    
+    }
+
     if (getCond(DRUNK) > 15) {
       rc = passOut();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        vlogf(LOG_SILENT, "updateTickStuff: %s passed out", getName());
         return DELETE_THIS;
+      }
     }
     if (desc && (desc->character != this))
-      vlogf(0, "bad desc in updateTickStuff() (%s)(%s)", (name ? getName() :
+      vlogf(LOG_BUG, "bad desc in updateTickStuff() (%s)(%s)", (name ? getName() :
 "unknown"), desc->character ? desc->character->name ? desc->character->getName() : "unknown" : "no char");
     if (desc && vt100())
       desc->updateScreenVt100(CHANGED_MUD);
@@ -578,16 +552,18 @@ int TBeing::updateTickStuff()
     if (getTimer() > 15 && GetMaxLevel() <= MAX_MORT) {
       // mortals get 15 mins
       nukeLdead(this);
+      vlogf(LOG_SILENT, "updateTickStuff: %s (ldead) idled", getName());
       return DELETE_THIS;
     } else if (getTimer() > 60) {
       // imms get an hour
       nukeLdead(this);
+      vlogf(LOG_SILENT, "updateTickStuff: %s (ldead-imm) idled", getName());
       return DELETE_THIS;
     }
   } else if (desc && desc->original) {
     if (desc->original->getTimer() < 127)
       desc->original->addToTimer(1);
-  } else if (!desc && !master) {
+  } else if (!desc && !master && (gamePort != PROD_GAMEPORT || in_room != ROOM_NOCTURNAL_STORAGE)) {
 #if 1
     bool isAnElemental = isElemental();
     bool hasExp = getExp();
@@ -598,8 +574,9 @@ int TBeing::updateTickStuff()
 
     if (!fight() && ((isAnElemental || isAnOldPet) || 
                      (!isAnOrphanPet && !hasExp))) {
-      if (specials.hunting || act_ptr || (dynamic_cast<TMonster *>(this) && 
-                              dynamic_cast<TMonster *>(this)->hates.clist)) {
+      if (specials.hunting || act_ptr || getSnum() >= 0 ||
+          (dynamic_cast<TMonster *>(this) && 
+           dynamic_cast<TMonster *>(this)->hates.clist)) {
         shouldGo = FALSE;
       }
       if (shouldGo && !stuff) {
@@ -612,17 +589,21 @@ int TBeing::updateTickStuff()
         if (shouldGo) {
           if (isAnElemental) {
             rc = checkDecharm(FORCE_YES);
-            if (IS_SET_DELETE(rc, DELETE_THIS))
+            if (IS_SET_DELETE(rc, DELETE_THIS)) {
+              vlogf(LOG_SILENT, "updateTickStuff: %s decharmed", getName());
               return DELETE_THIS;
+            }
             return 0;
           } else {
             act("$n passes away from natural causes.",
                 TRUE, this, NULL, NULL, TO_ROOM);
             j = die(DAMAGE_NORMAL);
-            if (IS_SET_DELETE(j, DELETE_THIS))
+            if (IS_SET_DELETE(j, DELETE_THIS)) {
+              vlogf(LOG_SILENT, "updateTickStuff: %s died naturally", getName());
               return DELETE_THIS;
-
+            }
           }
+          vlogf(LOG_SILENT, "updateTickStuff: %s died (2) naturally", getName());
           return DELETE_THIS;
         }
       }
@@ -680,7 +661,7 @@ int TBeing::updateBodyParts()
       if (isLimbFlags(i, PART_MISSING)) {
         setLimbFlags(i, PART_MISSING);   // get rid of superfluous flags
         if (i == WEAR_HEAD) {
-          vlogf(5, "%s killed by lack of a head at %s (%d)",
+          vlogf(LOG_BUG, "%s killed by lack of a head at %s (%d)",
             getName(), roomp->getName(), inRoom());
 
           rc = die(DAMAGE_BEHEADED);
@@ -688,7 +669,7 @@ int TBeing::updateBodyParts()
             return DELETE_THIS;
         }
         if ((i == WEAR_BODY) || (i == WEAR_NECK) || (i == WEAR_BACK)) {
-          vlogf(5, "%s killed by lack of a critical body spot (%d:1) at %s (%d)",
+          vlogf(LOG_BUG, "%s killed by lack of a critical body spot (%d:1) at %s (%d)",
             getName(), i, roomp->getName(), inRoom());
           rc = die(DAMAGE_NORMAL);
           if (IS_SET_ONLY(rc, DELETE_THIS))
@@ -717,14 +698,14 @@ int TBeing::updateBodyParts()
     if (isLimbFlags(i, PART_MISSING)) {
       setLimbFlags(i, PART_MISSING);   // get rid of superfluous flags
       if (i == WEAR_HEAD) {
-        vlogf(5, "%s killed by lack of a head at %s (%d)",
+        vlogf(LOG_BUG, "%s killed by lack of a head at %s (%d)",
             getName(), roomp->getName(), inRoom());
         rc = die(DAMAGE_BEHEADED);
         if (IS_SET_ONLY(rc, DELETE_THIS))
           return DELETE_THIS;
       }
       if ((i == WEAR_BODY) || (i == WEAR_NECK) || (i == WEAR_BACK)) {
-        vlogf(5, "%s killed by lack of a critical body spot (i:2) at %s (%d)",
+        vlogf(LOG_BUG, "%s killed by lack of a critical body spot (i:2) at %s (%d)",
             getName(), i, roomp->getName(), inRoom());
         rc = die(DAMAGE_NORMAL);
         if (IS_SET_ONLY(rc, DELETE_THIS))
@@ -742,6 +723,7 @@ int TBeing::updateBodyParts()
   return TRUE;
 }
 
+// this is called once per tick (about 36 real seconds)
 // DELETE_THIS implies this should be deleted
 int TBeing::updateHalfTickStuff()
 {
@@ -755,14 +737,30 @@ int TBeing::updateHalfTickStuff()
   int loadRoom = 0;
   int vnum = mobVnum();
   affectedData *af;
-  int berserk_noheal=0;
+  bool berserk_noheal=0;
   TBeing *trider=NULL;
+  unsigned int i, hours_first, hours_last, severity;
+  
+
+  if (hasClass(CLASS_SHAMAN)) {
+    if (0 >= getLifeforce()) {
+      setLifeforce(0);
+      addToHit(-2);
+      updatePos();
+      sendTo("The ancestors are not pleased with you.\n\r");
+      sendTo("Your ancestors demand you gather lifeforce.\n\r");
+    } else {
+      addToLifeforce(-1);
+    }
+  }
+
 
   if (isAffected(AFF_SLEEP) && (getPosition() > POSITION_SLEEPING)) {
     sendTo("You grow sleepy and can remain awake no longer.\n\r");
     act("$n collapses as $e falls asleep.", TRUE, this, 0, 0, TO_ROOM);
     setPosition(POSITION_SLEEPING);
   }
+    
 
   rc = updateBodyParts();
   if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -778,7 +776,7 @@ int TBeing::updateHalfTickStuff()
   
   if (isFlying()) {
     if (!canFly() && roomp && !roomp->isFlyingSector()) {
-      vlogf(5, "Somehow %s was position fly and was not in flying sector", getName());
+      vlogf(LOG_BUG, "Somehow %s was position fly and was not in flying sector", getName());
       sendTo("You stop flying around in the air.\n\r");
       setPosition(POSITION_STANDING);
     }
@@ -788,14 +786,14 @@ int TBeing::updateHalfTickStuff()
     if (!riding && !isFlying()) {
       setPosition(POSITION_FLYING);
       sendTo("You start to fly up in the air.\n\r");
-      vlogf(5, "Somehow %s was not flying in flying sector", getName());
+      vlogf(LOG_BUG, "Somehow %s was not flying in flying sector", getName());
     } else if (riding && !tbr) {
       dismount(POSITION_FLYING);
       sendTo("You start to fly up in the air.\n\r");
     } else if (tbr && !tbr->isFlying()) {
       tbr->setPosition(POSITION_FLYING);
       sendTo("Your mount starts to fly up in the air.\n\r");
-      vlogf(5, "Somehow %s was not flying in flying sector", getName());
+      vlogf(LOG_BUG, "Somehow %s was not flying in flying sector", getName());
     }
   }
   if (roomp && (zone_table[roomp->getZone()].enabled == TRUE) && 
@@ -815,20 +813,22 @@ int TBeing::updateHalfTickStuff()
         // they are removed via nocturnal, but we don't want them
         // "reappearing" by waking up, so if they get sucked out, just
         // whack them
-        if ((vnum == MOB_MALE_HOPPER) || (vnum == MOB_FEMALE_HOPPER)) 
+        if ((vnum == MOB_MALE_HOPPER) || (vnum == MOB_FEMALE_HOPPER) ||
+            (vnum == MOB_MALE_CHURCH_GOER) || (vnum == MOB_FEMALE_CHURCH_GOER))
           return DELETE_THIS;
 
         if (is_daytime()) {
           if (loadRoom == ROOM_NOCTURNAL_STORAGE) {
             return DELETE_THIS;
-            vlogf(5, "%s has oldRoom equal to %d", getName(), loadRoom);
+            vlogf(LOG_BUG, "NOC:DIU: %s has oldRoom equal to %d", getName(), loadRoom);
           }
           if (!loadRoom || (loadRoom == ROOM_NOWHERE)) {
-            vlogf(0, "%s was without loadRoom or was in room NOWHERE.", getName());
+            vlogf(LOG_BUG, "NOC:DIU: %s was %s.", getName(),
+                  (!loadRoom ? "without loadRoom" : "in room nowhere"));
             return DELETE_THIS;
           }
           if (!(room = real_roomp(loadRoom))) {
-            vlogf(0, "%s was in a room that no longer exists.", getName());
+            vlogf(LOG_BUG, "NOC:DIU: %s was in a room that no longer exists.", getName());
             return DELETE_THIS;
           }
           --(*this);
@@ -887,18 +887,21 @@ int TBeing::updateHalfTickStuff()
     } else if (IS_SET(specials.act, ACT_NOCTURNAL) && !isAffected(AFF_CHARM)) {
       if ((in_room == ROOM_NOCTURNAL_STORAGE)) {
         if (!is_nighttime()) {
-          if ((vnum == MOB_MALE_HOPPER) || (vnum == MOB_FEMALE_HOPPER)) {
+          if ((vnum == MOB_MALE_HOPPER) || (vnum == MOB_FEMALE_HOPPER) ||
+              (vnum == MOB_MALE_CHURCH_GOER) || (vnum == MOB_FEMALE_CHURCH_GOER))
             return DELETE_THIS;
-          }
         } else {
           if (loadRoom == ROOM_NOCTURNAL_STORAGE) {
             return DELETE_THIS;
-            vlogf(5, "%s has oldRoom equal to %d", getName(), loadRoom);
+            vlogf(LOG_BUG, "NOC:DIU: %s has oldRoom equal to %d", getName(), loadRoom);
           }
           if (!loadRoom || (loadRoom == ROOM_NOWHERE)) {
+            vlogf(LOG_BUG, "NOC:DIU: %s was %s.", getName(),
+                  (!loadRoom ? "without loadRoom" : "in room nowhere"));
             return DELETE_THIS;
           }
           if (!(room = real_roomp(loadRoom))) {
+            vlogf(LOG_BUG, "NOC:DIU: %s was in a room that no longer exists.", getName());
             return DELETE_THIS;
           }
           --(*this);
@@ -959,6 +962,14 @@ int TBeing::updateHalfTickStuff()
 // do nothing cause it doesnt involve nocturnal or diurnal mobs
     }
   }
+
+ 
+ // VERY TEMP FIX 10/99 -- COS
+  if (!roomp) {
+    vlogf(LOG_BUG, "%s has no roomp in updateHalf tick. Try to find", getName());
+      return FALSE;
+  }
+
   if (!isPc() || desc) {
     int mg = moveGain();
     mg = min(mg, moveLimit() - getMove());
@@ -1006,6 +1017,33 @@ int TBeing::updateHalfTickStuff()
       }
     }
 
+    if(desc && isPc()){
+      for(i=0;i<drugTypes.size();i++){
+	if(desc->drugs[i].current_consumed>0){
+	  --desc->drugs[i].current_consumed;
+	  applyDrugAffects(this, (drugTypeT) i, true);
+	  saveDrugStats();
+	}
+	if(desc->drugs[i].total_consumed>0){
+	  hours_first=
+	    (((time_info.year - desc->drugs[i].first_use.year) * 12 * 28 * 24) +
+	     ((time_info.month - desc->drugs[i].first_use.month) * 28 * 24) +
+	     ((time_info.day - desc->drugs[i].first_use.day) * 24) +
+	     time_info.hours - desc->drugs[i].first_use.hours);
+	  hours_last=
+	    (((time_info.year - desc->drugs[i].last_use.year) * 12 * 28 * 24) +
+	     ((time_info.month - desc->drugs[i].last_use.month) * 28 * 24) +
+	     ((time_info.day - desc->drugs[i].last_use.day) * 24) +
+	     time_info.hours - desc->drugs[i].last_use.hours);
+	  if(hours_last && hours_first){
+	    severity=(desc->drugs[i].total_consumed / hours_first) * hours_last;
+	    if(severity>0)
+	      applyAddictionAffects(this, (drugTypeT) i, severity);
+	  }
+	}
+      }
+    }
+
     int drunk = getCond(DRUNK);
     if (drunk > 15) {
       rc = passOut();
@@ -1033,7 +1071,7 @@ int TBeing::updateHalfTickStuff()
           foodReject = TRUE;
           updatePos();
           if (points.hit < -10) {
-            vlogf(5, "%s killed by starvation at %s (%d)",
+            vlogf(LOG_MISC, "%s killed by starvation at %s (%d)",
                 getName(), roomp ? roomp->getName() : "nowhere", inRoom());
             rc = die(DAMAGE_STARVATION);
             if (IS_SET_ONLY(rc, DELETE_THIS))
@@ -1055,7 +1093,7 @@ int TBeing::updateHalfTickStuff()
         int mana_bump = manaGain(), mana_max = manaLimit(), mana_cur = getMana();
         if (foodReject || (drunk > 15)) {
           mana_bump = ::number(1,3);
-          if (!foodReject) {
+          if (!foodReject || (0 >= getLifeforce())) {
             addToHit(1);
             sendTo("Your condition prevents your body's full recovery.\n\r");
           } else 
@@ -1064,7 +1102,8 @@ int TBeing::updateHalfTickStuff()
           addToHit(hitGain());
       
         addToPiety(pietyGain(0.0));
-        if ((hasClass(CLASS_RANGER) || hasClass(CLASS_SHAMAN) || hasClass(CLASS_MAGIC_USER)) && 
+
+        if ((hasClass(CLASS_RANGER) || hasClass(CLASS_MAGIC_USER)) && 
               (stone = find_biggest_powerstone(this)) && 
               (mana_bump + mana_cur >= mana_max)) {
           addToMana(mana_max - mana_cur);
@@ -1164,7 +1203,7 @@ int TObj::objectTickUpdate(int pulse)
   int rc;
 
   if (!name) {
-    vlogf(10, "Object with NULL name in objectTickUpdate() : %d", objVnum());
+    vlogf(LOG_BUG, "Object with NULL name in objectTickUpdate() : %d", objVnum());
     return DELETE_THIS;
   }
 
@@ -1286,6 +1325,12 @@ int TObj::objectTickUpdate(int pulse)
 	break;
     }
 
+    if(equippedBy && ch){
+      act("Your $o burns you!",
+	  FALSE, ch, this, 0, TO_CHAR);
+      ch->reconcileDamage(ch, ::number(1,7), DAMAGE_FIRE);
+    }
+
     // we let non-flammable things burn, but we don't 'decay' them
     if(material_nums[getMaterial()].flammability){
       addToStructPoints(-burnamount);
@@ -1315,7 +1360,7 @@ int TObj::objectTickUpdate(int pulse)
             *equippedBy += *t;
           }
         } else if (parent) {
-          act("$p biodegrade$Q in your hands.", FALSE, parent, this, 0, TO_CHAR);
+          act("$p disintegrate$Q in your hands.", FALSE, parent, this, 0, TO_CHAR);
           while ((t = stuff)) {
             (*t)--;
             *parent += *t;
@@ -1393,7 +1438,7 @@ void do_check_mail()
       for (tmp = recipient; *tmp; tmp++)
         if (isupper(*tmp))
           *tmp = tolower(*tmp);
-      if (has_mail(recipient))
+      if (has_mail(recipient) && gamePort != BUILDER_GAMEPORT)
         ch->sendTo("You have %sMAIL!%s\n\r", ch->cyan(), ch->norm());
     }
     // d->checkForMultiplay();
@@ -1422,7 +1467,7 @@ int TBeing::terrainSpecial()
     case SECT_DESERT:
       // drain water
       for (t = stuff; t; t = t->nextThing) {
-        evaporate(this);
+        evaporate(this, SILENT_NO);
       }
       return FALSE;
     case SECT_SUBARCTIC:
@@ -1483,8 +1528,25 @@ int TBeing::passOut()
   affectedData af;
   int rc;
 
-  int drunk = max(1,plotStat(STAT_CURRENT, STAT_CON, 13, 28, 23) - getCond(DRUNK));
-  if (::number(0,drunk))
+  // Coded by : Glint
+  // Coded on : 04/10/2001
+  //
+  // Old Code for passout Check : {
+  // int drunk = max(1,plotStat(STAT_CURRENT,STAT_CON,13,28,23)-getCond(DRUNK))
+  // if (::number(0,drunk))
+  // return FALSE;
+  // } end of Old Code
+  //
+  // Modified the chance of passing out from being drunk.  
+  // If just drunk enough to pass out you have 1/8th chance (human)
+  // If MAX drunk, 50% chance to pass out.
+  // Constitution is used to modify chance of passing out.
+
+  int getDrunk = getCond(DRUNK)-14;
+  int chancePassOut = (int)(4.17*(double)getDrunk+8.33);
+  double conEffect = 1.0 - plotStat(STAT_CURRENT, STAT_CON, 0.25, 0.75, 0.50);
+  chancePassOut = (int)((double)chancePassOut * 2.0 * conEffect);
+  if (::number(1,100) > chancePassOut)
     return FALSE;
   af.type = AFFECT_DRUNK;
   af.level = max(1, (int) getCond(DRUNK));
@@ -1493,15 +1555,20 @@ int TBeing::passOut()
   af.location = APPLY_NONE;
   af.bitvector = AFF_SLEEP;
   affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
-  sendTo("You pass out from too much drink.\n\r");
+
+  if (awake())
+    sendTo("You pass out from too much drink.\n\r");
+
   if (getPosition() > POSITION_SLEEPING) {
     if (riding) {
       rc = fallOffMount(riding, POSITION_STANDING);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
     }
-    act("$n passes out!", TRUE, this, NULL, NULL, TO_ROOM);
-    setPosition(POSITION_SLEEPING);
+    if (awake()) {
+      act("$n passes out!", TRUE, this, NULL, NULL, TO_ROOM);
+      setPosition(POSITION_SLEEPING);
+    }
   }
   return TRUE;
 }
@@ -1514,7 +1581,7 @@ int TBeing::bumpHead(int *iHeight)
     return FALSE;
   
   if (!isPc() && !inImperia() && master && isAffected(AFF_CHARM))
-    vlogf(LOW_ERROR,"Being (%s) (height %d) in small room (#%d)(roof: %d)",
+    vlogf(LOG_LOW,"Being (%s) (height %d) in small room (#%d)(roof: %d)",
            getName(), getPosHeight(), roomp->number, *iHeight); 
 
   int num = max(0,(getPosHeight() - *iHeight));
@@ -1541,13 +1608,15 @@ void TBeing::checkCharmMana()
   for (k = followers;k; k = k2) {
     k2 = k->next;
     if (!(ch = k->follower) || !dynamic_cast<TBeing *>(ch)) {
-      vlogf(10, "Non-Tbeing in followers of %s", getName());
+      vlogf(LOG_BUG, "Non-Tbeing in followers of %s", getName());
       return;
     }
-    if (!ch->isCharm() && !ch->isZombie())
+    bool ischarm = isPet(PETTYPE_CHARM);
+    bool isthrall = isPet(PETTYPE_THRALL);
+    if (!ischarm && !isthrall)
       continue;
  
-    if (!sameRoom(ch)) {
+    if (!sameRoom(*ch)) {
       ch->stopFollower(TRUE);
       continue;
     }
@@ -1558,10 +1627,11 @@ void TBeing::checkCharmMana()
     mana += plotStat(STAT_CURRENT, STAT_FOC, 16, 1, 8);
     mana += plotStat(STAT_CURRENT, STAT_CHA, 16, 1, 8);
 
-    if (ch->isZombie())
+    // thralls owe lifeforce to master, so don't fight master's will as much
+    if (isthrall)
       mana = 2*mana/3;
 
-    if (!hasClass(CLASS_CLERIC) && !hasClass(CLASS_DEIKHAN)) {
+    if (!hasClass(CLASS_CLERIC) && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN)) {
       if (getMana() < mana && isPc()) {
         sendTo(COLOR_MOBS, "You lack the mental concentration to control %s any longer.\n\r", ch->getName());
         ch->stopFollower(TRUE);
@@ -1574,8 +1644,13 @@ void TBeing::checkCharmMana()
         }
         setMana(0);
       } else {
-        act("The effort of keeping $N enthralled weakens you.", 
-             FALSE, this, 0, ch, TO_CHAR);
+        if (isthrall)
+          act("The effort of keeping $N enthralled weakens you.", 
+               FALSE, this, 0, ch, TO_CHAR);
+        else
+          act("The effort of keeping $N charmed weakens you.", 
+               FALSE, this, 0, ch, TO_CHAR);
+
         reconcileMana(TYPE_UNDEFINED, FALSE, mana);
       }
     } else {
@@ -1594,7 +1669,13 @@ void TBeing::checkCharmMana()
         }
         setPiety(0.0);
       } else {
-        act("The effort of keeping $N enthralled weakens you.", FALSE, this, 0, ch, TO_CHAR);
+        if (isthrall)
+          act("The effort of keeping $N enthralled weakens you.", 
+               FALSE, this, 0, ch, TO_CHAR);
+        else
+          act("The effort of keeping $N charmed weakens you.", 
+               FALSE, this, 0, ch, TO_CHAR);
+
         addToPiety(-piety);
       }
     }
@@ -1607,7 +1688,7 @@ void sendAutoTips()
   // first, get a tip...
   FILE *fp = fopen("tipsfile", "r");
   if (!fp) {
-    vlogf(5, "Failed opening tipsfile.");
+    vlogf(LOG_SILENT, "Failed opening tipsfile.");
     return;
   }
   // skip any comments
