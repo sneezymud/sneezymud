@@ -1192,12 +1192,22 @@ void TBeing::setDamroll(int d)
 
 int TBeing::getBank() const
 {
-  return 0;
-  return points.bankmoney;
+  TDatabase db(DB_SNEEZY);
+  int bankmoney=0;
+
+  if(isPc()){
+    db.query("select sum(talens) as talens from shopownedbank where player_id=%i",
+	     getPlayerID());
+    if(db.fetchRow())
+      bankmoney=convertTo<int>(db["talens"]);
+  }
+
+  return bankmoney;
 }
 
 void TBeing::setBank(int bank)
 {
+  vlogf(LOG_BUG, fmt("%s called setBank(%i)!") % getName() % bank);
   points.bankmoney = bank;
 }
 
