@@ -192,10 +192,6 @@ void TVehicle::vehiclePulse(int pulse)
 
   if(getSpeed()==0)
     return;
-
-  vlogf(LOG_PEEL, "pulse=%i, ONE_SECOND=%i, getSpeed=%i",
-	pulse, ONE_SECOND, getSpeed());
-
   
   // this is where we regulate speed
   if(pulse % max(1, (ONE_SECOND*10)/getSpeed()))
