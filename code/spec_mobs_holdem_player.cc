@@ -1,0 +1,213 @@
+#include "stdsneezy.h"
+#include "obj_casino_chip.h"
+#include "games.h"
+
+void deleteChips(TMonster *me)
+{
+  vector <TThing *> chipl;
+  TCasinoChip *chip;
+
+  for(TThing *t=me->getStuff();t;t=t->nextThing){
+    if((chip=dynamic_cast<TCasinoChip *>(t))){
+      chipl.push_back(t);
+    }
+  }
+
+  for(unsigned int i=0;i<chipl.size();++i){
+    (*chipl[i])--;
+    delete chipl[i];
+  }
+}
+
+
+struct holdemPlayerInfo {
+  sstring name;
+  bool enabled;
+  int chip;
+  bool free_chips;
+};
+
+void holdemStatus(TMonster *me, holdemPlayerInfo *hpi)
+{
+  me->doEmote("suddenly snaps to rigid attention.");
+  me->doSay("Name        : %s", hpi->name.c_str());
+  me->doSay("Enabled     : %s", hpi->enabled?"<G>YES<1>":"<R>NO<1>");
+  me->doSay("Chip        : %s", obj_index[real_object(hpi->chip)].short_desc);
+  me->doSay("All systems : <G>NOMINAL<1>");
+  me->doEmote("resumes a relaxed pose.");
+}
+
+int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, TObj *)
+{
+  holdemPlayerInfo *hpi;
+  sstring arg=lower(argument), buf;
+  TObj *obj;
+
+  if(!me->act_ptr) {
+    if(!(me->act_ptr = new holdemPlayerInfo)) {
+     vlogf(LOG_BUG, "failed new of holdem player.");
+     return false;
+    }
+    hpi = static_cast<holdemPlayerInfo *>(me->act_ptr);    
+    hpi->name="gambler2000";
+    hpi->enabled=false;
+    hpi->chip=CHIP_100;
+    hpi->free_chips=true;
+  } else {
+    hpi = static_cast<holdemPlayerInfo *>(me->act_ptr);
+  }
+  
+  arg=one_argument(arg, buf);
+  
+  if(cmd == CMD_SAY2 && ch->isImmortal() && buf==hpi->name){
+    if(arg=="power up"){
+      hpi->enabled=true;
+      me->doSay("Gambler 2000 powering up!");
+      holdemStatus(me, hpi);
+    } else if(arg=="status"){
+      holdemStatus(me, hpi);
+    } else if(arg=="power down"){
+      me->doSay("Gambler 2000 powering down!");
+      delete static_cast<holdemPlayerInfo *>(me->act_ptr);
+      me->act_ptr = NULL;
+    } else if(arg.find("name ", 0)!=sstring::npos){
+      arg=one_argument(arg, buf);
+      hpi->name=arg;
+      me->doSay("Gambler2000 will now bust a dope rhyme.");
+      me->doSay("My name is... huh?");
+      me->doSay("My name is... what?");
+      me->doSay("My name is %s.", hpi->name.c_str());
+    } else if(arg.find("chip ", 0)!=sstring::npos){
+      arg=one_argument(arg, buf);
+      if(convertTo<int>(arg)==0)
+	return false;
+      hpi->chip=convertTo<int>(arg);
+      me->doSay("All your %s are belong to Gambler2000.",
+		obj_index[real_object(hpi->chip)].short_desc);
+    } else if(arg=="freechips"){
+      if(hpi->free_chips){
+	hpi->free_chips=false;
+	me->doSay("There ain't no such thing as a free chip.");
+
+	int tcount=0;
+	for(TThing *t=me->getStuff();t;t=t->nextThing){
+	  if((obj=dynamic_cast<TObj *>(t))){
+	    if(obj->objVnum() == hpi->chip)
+	      tcount++;
+	  }
+	}
+
+	me->doSay("I have %s [%i].",
+		  obj_index[real_object(hpi->chip)].short_desc, tcount);
+      } else {
+	hpi->free_chips=true;
+	me->doSay("I will now pull chips out of my ass.");
+      }
+    }
+    return true;
+  }
+
+  if (cmd == CMD_GENERIC_DESTROYED) {
+    delete static_cast<holdemPlayerInfo *>(me->act_ptr);
+    me->act_ptr = NULL;
+    return FALSE;
+  }
+
+  if(cmd != CMD_GENERIC_QUICK_PULSE || !hpi->enabled)
+    return false;
+
+  if(hpi->free_chips)
+    deleteChips(me);
+
+  if (!me->checkHoldem(true))
+    return false;
+
+  if(!gHoldem.isPlaying(me)){
+    gHoldem.enter(me);
+    return false;
+  }
+
+  HoldemPlayer *hp=gHoldem.getPlayer(me->name);
+
+  if(gHoldem.getBetter() != hp)
+    return false;
+
+  int handval=gHoldem.handValue(hp);
+  TObj *chip;
+  vector <TObj *> chipl;
+
+  if(gHoldem.getLastBet()){
+    if(gHoldem.getLastBet() != hpi->chip){
+      me->doSay("Sorry, I only play with '%s' right now.", 
+		obj_index[real_object(hpi->chip)].short_desc);
+      gHoldem.fold(me);
+      return false;
+    }
+
+    if(hpi->free_chips){
+      for(int i=0;i<gHoldem.getNRaises()+1;++i){
+	chip=read_object(gHoldem.getLastBet(), VIRTUAL);
+	*me += *chip;
+	chipl.push_back(chip);
+      }
+    }
+  } else {
+    return false;
+  }
+
+  switch(gHoldem.getState()){
+    case STATE_NONE:
+      break;
+    case STATE_DEAL:
+      if(handval > 15 && ::number(0,1)){
+	gHoldem.raise(me, "");
+	return true;
+      } else if((hp->hand[0]->getValAceHi() >= 10) &&
+		(hp->hand[1]->getValAceHi() >= 10)){
+	if(::number(0, 4)){
+	  me->doStay();
+	  return true;
+	} else {
+	  gHoldem.raise(me, "");
+	  return true;
+	}
+      } else if(::number(0,2)){
+	gHoldem.call(me);
+	return true;
+      }
+      break;
+    case STATE_FLOP:
+      if(handval > 30 && ::number(0,1)){
+	gHoldem.raise(me, "");
+	return true;
+      } else if(handval > 15 || !::number(0,4)){
+	gHoldem.call(me);
+	return true;
+      }
+      break;
+    case STATE_TURN:
+    case STATE_RIVER:
+      if(handval > 45 && ::number(0,1))
+	gHoldem.raise(me, "");
+      else if(handval > 15 || !::number(0,4))
+	gHoldem.call(me);
+      else
+	gHoldem.fold(me);
+      if(hpi->free_chips)
+	deleteChips(me);
+      return true;
+      break;
+  }
+
+  if(hpi->free_chips){
+    for(unsigned int i=0;i<chipl.size();++i){
+      (*chipl[i])--;
+      delete chipl[i];
+    }
+  }
+  
+  gHoldem.fold(me);
+  return true;
+}
+
+
