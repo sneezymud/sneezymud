@@ -337,7 +337,7 @@ int HoldemGame::exitGame(const TBeing *ch)
 
   for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
     if(players[i] && players[i]->name == ch->name){
-      if(players[i]->name == players[better]->name)
+      if(players[better] && players[i]->name == players[better]->name)
 	was_better=true;
 
       ch->sendTo("You leave the hold'em table.\n\r");
