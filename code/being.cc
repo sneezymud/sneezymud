@@ -1372,7 +1372,7 @@ sstring TBeing::displayExp() const
   if (getExp() < 100)
     sprintf(buf, "%.3f", getExp());
   else
-    sprintf(buf, "%d", (int) getExp());
+    sprintf(buf, "%.0f", getExp());
 #else
   if (getExp() < 100)
     sprintf(buf, "%.3f", getExp());
