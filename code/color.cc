@@ -472,54 +472,36 @@ void TBeing::doCls(bool tell)
     sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() - 3, 1);
     sprintf(buf + strlen(buf), "_____________________________________________________________________________");
     sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() - 2, 1);
-    if (vt100()) {
-      if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
-        sprintf(buf + strlen(buf), "Hit Points:                     Piety:               Move Points:");
-      else if (hasClass(CLASS_SHAMAN))
-        sprintf(buf + strlen(buf), "Hit Points:                    Lifeforce:               Move Points:");
-      else
-        sprintf(buf + strlen(buf), "Hit Points:               Mana Points:               Move Points:");
-    } else {
-      if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
-        sprintf(buf + strlen(buf), "Hits:                      Piety:                      Moves:");
-      else if (hasClass(CLASS_SHAMAN))
-        sprintf(buf + strlen(buf), "Hits:                    Lifeforce:                      Moves:");
-      else
-        sprintf(buf + strlen(buf), "Hits:                       Mana:                      Moves:");
-    }
-    
+
+    if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
+      sprintf(buf + strlen(buf), "Hits:                     Piety:                      Moves:                 ");
+    else if (hasClass(CLASS_SHAMAN))
+      sprintf(buf + strlen(buf), "Hits:                 Lifeforce:                      Moves:                 ");
+    else
+      sprintf(buf + strlen(buf), "Hits:                      Mana:                      Moves:                 ");
+
     sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() -1 , 1);
+
     if (!isImmortal()) {
 #if FACTIONS_IN_USE
-      if (vt100())
-        sprintf(buf + strlen(buf), "     Aff %%:");
-      else
-        sprintf(buf + strlen(buf), "Aff%%:");
+      sprintf(buf + strlen(buf), "Talens:               Exp:                            Aff %%:                 ");
 #else
-      if (vt100())
-        sprintf(buf + strlen(buf), "           ");
-      else
-        sprintf(buf + strlen(buf), "     ");
+      sprintf(buf + strlen(buf), "Talens:               Exp:                                                   ");
 #endif
-    } else {
-      if (vt100())
-        sprintf(buf + strlen(buf), "      Room:");
-      else
-        sprintf(buf + strlen(buf), "Room:");
-    }
-    if (vt100())
-      sprintf(buf + strlen(buf), "                    Talens:                    Exp:");
-    else
-      sprintf(buf + strlen(buf), "                     Talens:                     Exp:");
+    } else
+      sprintf(buf + strlen(buf), "Talens:               Exp:                            Room:                  ");
 
     sprintf(buf + strlen(buf), VT_CURSPOS, getScreen(), 1);
+    sprintf(buf + strlen(buf), "                      TNL:                                                   ");
     sendTo(buf);
 
     sendTo(fmt(VT_CURSPOS) % 1 % 1);
+
     if (vt100()) {
       desc->updateScreenVt100(2*CHANGED_PIETY - 1);
     } else if (ansi()) 
       desc->updateScreenAnsi(2*CHANGED_PIETY - 1);
+
     sendTo(fmt("%s") % norm());
   } else if (tell || !desc || IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR))
     cls();
