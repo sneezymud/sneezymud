@@ -857,7 +857,7 @@ void TPerson::doToggle(const char *arg2)
     WizInvis = ! WizInvis;
     sendTo("Immortals can now %s invisible.\n\r", WizInvis ? "go" : "not go");
     vlogf(LOG_MISC,"%s has turned invisibility %s.",getName(),WizInvis? "on" : "off");
-  } else if (is_abbrev(arg, "newbiePK") || is_abbrev(arg, "newbiepk")  && hasWizPower(POWER_TOGGLE)) {
+  } else if ((is_abbrev(arg, "newbiePK") || is_abbrev(arg, "newbiepk"))  && hasWizPower(POWER_TOGGLE)) {
       NewbiePK = ! NewbiePK;
       sendTo("Newbie Pk toggle is now %s.\n\r", NewbiePK ? "in use" : "off");
       vlogf(LOG_MISC,"%s has now %s newbie pk.",getName(),NewbiePK ? "enabled" : "disabled");
@@ -935,17 +935,17 @@ void TPerson::doToggle(const char *arg2)
     sendTo("Questcode is now %s.\n\r", QuestCode ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s questcode.",getName(),QuestCode ? "enabled" : "disabled");
 
-  } else if (is_abbrev(arg, "questcode2") || is_abbrev(arg, "quest2") && hasWizPower(POWER_TOGGLE)) {
+  } else if ((is_abbrev(arg, "questcode2") || is_abbrev(arg, "quest2")) && hasWizPower(POWER_TOGGLE)) {
     QuestCode2 = !QuestCode2;
     sendTo("Questcode 2 is now %s.\n\r", QuestCode2 ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s questcode 2.",getName(),QuestCode2 ? "enabled" : "disabled");
 
-  } else if (is_abbrev(arg, "questcode3") || is_abbrev(arg, "quest3") && hasWizPower(POWER_TOGGLE)) {
+  } else if ((is_abbrev(arg, "questcode3") || is_abbrev(arg, "quest3")) && hasWizPower(POWER_TOGGLE)) {
     QuestCode3 = !QuestCode3;
     sendTo("Questcode 3 is now %s.\n\r", QuestCode3 ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s questcode 3.",getName(),QuestCode3 ? "enabled" : "disabled");
 
-  } else if (is_abbrev(arg, "questcode4") || is_abbrev(arg, "quest4") && hasWizPower(POWER_TOGGLE)) {
+  } else if ((is_abbrev(arg, "questcode4") || is_abbrev(arg, "quest4")) && hasWizPower(POWER_TOGGLE)) {
     QuestCode4 = !QuestCode4;
     sendTo("Questcode 4 is now %s.\n\r", QuestCode4 ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s questcode 4.",getName(),QuestCode4 ? "enabled" : "disabled");
