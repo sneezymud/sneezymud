@@ -455,40 +455,49 @@ int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
   }
 }
 
-int dancingBones(TBeing * caster, TObj * corpse, TMagicItem *obj)
+void dancingBones(TBeing *caster, TObj *corpse, TMagicItem *obj)
 {
-  int ret;
+  int ret, level;
 
-  act("$p directs a strange beam of energy at $N.",
+  level = caster->getSkillLevel(SPELL_DANCING_BONES);
+  int bKnown = caster->getSkillValue(SPELL_DANCING_BONES);
+  act("You direct a strange beam of energy at $p.",
           FALSE, caster, obj, corpse, TO_CHAR);
-  act("$p directs a strange beam of energy at $N.",
+  act("$n directs a strange beam of energy at $p.",
           FALSE, caster, obj, corpse, TO_ROOM);
- 
-  ret=dancingBones(caster,corpse,obj->getMagicLevel(),obj->getMagicLearnedness());
- 
-  // nuke corpse
+  ret=dancingBones(caster,corpse,level,bKnown);
+}
+
+int castDancingBones(TBeing * caster, TObj * corpse)
+{
+  int ret, level;
+
+  level = caster->getSkillLevel(SPELL_DANCING_BONES);
+  int bKnown = caster->getSkillValue(SPELL_DANCING_BONES);
+  act("You direct a strange beam of energy at $p.",
+          FALSE, caster, corpse, 0, TO_CHAR);
+  act("$n directs a strange beam of energy at $p.",
+          FALSE, caster, corpse, 0, TO_ROOM);
+  if ((ret=dancingBones(caster,corpse,level,bKnown)) == SPELL_SUCCESS) {
+  }
   if (IS_SET(ret, VICTIM_DEAD))
     return DELETE_ITEM;
-
-  return FALSE;
+  return TRUE;
 }
 
 int dancingBones(TBeing * caster, TObj * corpse)
 {
-  int ret,level;
+  taskDiffT diff;
 
-  if (!bPassClericChecks(caster,SPELL_DANCING_BONES))
+  if (!bPassShamanChecks(caster, SPELL_DANCING_BONES, corpse))
     return FALSE;
 
-  level = caster->getSkillLevel(SPELL_DANCING_BONES);
-  int bKnown = caster->getSkillValue(SPELL_DANCING_BONES);
+  lag_t rounds = discArray[SPELL_DANCING_BONES]->lag;
+  diff = discArray[SPELL_DANCING_BONES]->task;
 
-  ret=voodoo(caster,corpse,level,bKnown);
-  if (IS_SET(ret, VICTIM_DEAD))
-    return DELETE_ITEM;   // nuke the corpse
-  return FALSE;
+  start_cast(caster, NULL, corpse, caster->roomp, SPELL_DANCING_BONES, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+  return TRUE;
 }
-
 
 int shieldOfMists(TBeing *caster, TBeing *victim, int level, byte bKnown)
 {

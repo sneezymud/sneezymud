@@ -956,6 +956,14 @@ void buildComponentArray()
     "$n tastes $p and then $e spits it out.",
     "You taste $p and spit it out.",
     "$n tastes $p and then $e spits it out."));
+  CompInfo.push_back(compInfo(SPELL_DANCING_BONES,
+    "",                       
+    "",
+    "",
+    "You blow $p into the air.",
+    "$n blows $p into the air.",
+    "You blow $p into the air.",
+    "$n blows $p into the air."));
   CompInfo.push_back(compInfo(SPELL_RESURRECTION,
     "",                       
     "",

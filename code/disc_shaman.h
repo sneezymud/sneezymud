@@ -64,14 +64,15 @@ private:
     int voodoo(TBeing *, TObj *);
     int castVoodoo(TBeing *, TObj *);
 
+    int dancingBones(TBeing *, TObj *, int, byte);
+    void dancingBones(TBeing *, TObj *, TMagicItem *);
+    int dancingBones(TBeing *, TObj *);
+    int castDancingBones(TBeing *, TObj *);
+
     int resurrection(TBeing *, TObj *, int, byte);
     void resurrection(TBeing *, TObj *, TMagicItem *);
     int resurrection(TBeing *, TObj *);
     int castResurrection(TBeing *, TObj *);
-
-    int dancingBones(TBeing *, TObj *);
-    int dancingBones(TBeing *, TObj *, TMagicItem *);
-    int dancingBones(TBeing *, TObj *, int, byte);
 
     int enthrallSpectre(TBeing * caster, int level, byte bKnown);
     int enthrallSpectre(TBeing * caster);

@@ -2587,7 +2587,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       resurrection(caster,obj);
       break;
     case SPELL_DANCING_BONES:
-      rc = dancingBones(caster,target,obj);
+      dancingBones(caster,obj);
       break;
     case SPELL_VOODOO:
       voodoo(caster,obj);
