@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj2.h,v $
+// Revision 1.3  1999/10/04 03:01:31  batopr
+// *** empty log message ***
+//
 // Revision 1.2  1999/09/16 05:42:19  peel
 // Added setVolume and addToVolume to TSmoke
 //
@@ -1374,6 +1377,7 @@ class TMoney : public TObj {
     virtual void moneyMove(TBeing *);
     virtual bool canCarryMe(const TBeing *, silentTypeT) const;
     virtual bool isPluralItem() const;
+    virtual void onObjLoad();
 
     int getMoney() const;
     void setMoney(int n);

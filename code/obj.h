@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj.h,v $
+// Revision 1.2  1999/10/04 02:59:44  batopr
+// *** empty log message ***
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -416,6 +419,7 @@ class TObj : public TThing {
     bool willTear(int);
     bool willPuncture(int);
     virtual int riverFlow(int);
+    virtual void onObjLoad();
     bool willFloat();
     int itemAC() const;
     int itemNoise() const;

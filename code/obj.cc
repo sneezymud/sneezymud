@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj.cc,v $
+// Revision 1.2  1999/10/04 03:00:04  batopr
+// *** empty log message ***
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -494,3 +497,6 @@ int TObj::galvanizeMe(TBeing *caster, byte bKnown)
   return SPELL_FAIL;
 }
 
+void TObj::onObjLoad()
+{
+}
