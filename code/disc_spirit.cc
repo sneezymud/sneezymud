@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_spirit.cc,v $
+// Revision 1.3  1999/09/23 22:28:54  cosmo
+// Just made a crash fix.
+//
 // Revision 1.2  1999/09/13 01:51:51  cosmo
 // Fixed Crash Bug in Polylist--missing comma--Cos .
 //
@@ -391,7 +394,8 @@ int ensorcer(TBeing *caster, TBeing *victim, int level, byte bKnown)
     if (victim->fight() == caster)
       caster->stopFighting();
     // and don't let the charm hurt anyone that we didn't order them to hurt
-    victim->stopFighting();
+    if (victim->fight)
+      victim->stopFighting();
 
     return SPELL_SUCCESS;
   } else {
