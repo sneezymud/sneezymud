@@ -774,7 +774,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_STEAL:
-          rc = doSteal(newarg, dynamic_cast<TBeing *>(vict));
+          rc = doSteal(stringarg, dynamic_cast<TBeing *>(vict));
           break;
         case CMD_INVISIBLE:
           doInvis(newarg);
@@ -3268,15 +3268,6 @@ sstring nextToken(char delim, unsigned int maxSize, char *str)
   return retbuf;
 }
 
-
-char *mud_str_dup(const char *buf)
-{
-  if (!buf)
-    return NULL;
-
-  return mud_str_dup((sstring) buf);
-}
-
 char * mud_str_dup(const sstring &buf)
 {
   char *tmp = NULL;
@@ -3293,11 +3284,11 @@ char * mud_str_dup(const sstring &buf)
 // copy n bytes of src to dest
 // if src is bigger than n, copy as much as possible to dest and null terminate
 // then generate an error log
-char *mud_str_copy(char *dest, const char *src, size_t n)
+char *mud_str_copy(char *dest, const sstring &src, size_t n)
 {
-  strncpy(dest, src, n);
+  strncpy(dest, src.c_str(), n);
 
-  if(strlen(src) > n){
+  if(src.length() > n){
     dest[n-1]='\0';
     vlogf(LOG_BUG, "mud_str_copy: source sstring too long.  Truncated to: %s", dest);
   }

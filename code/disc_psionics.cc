@@ -337,7 +337,7 @@ int TBeing::doPSay(const char *arg){
     else 
       drunkNum=getCond(DRUNK);
     
-    mud_str_copy(garbed, garble(arg, drunkNum).c_str(), 256);
+    mud_str_copy(garbed, garble(arg, drunkNum), 256);
 
     sendTo(COLOR_COMM, "<g>You think to the room, <z>\"%s%s\"\n\r", 
             colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE).c_str(), norm());
@@ -456,7 +456,7 @@ void TBeing::doPShout(const char *msg){
     else 
       drunkNum=getCond(DRUNK);
     
-    mud_str_copy(garbed, garble(msg, drunkNum).c_str(), 256);
+    mud_str_copy(garbed, garble(msg, drunkNum), 256);
 
 
     sendTo(COLOR_SPELLS, "You telepathically send the message, \"%s<z>\"\n\r", garbed);

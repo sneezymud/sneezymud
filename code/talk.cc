@@ -160,7 +160,7 @@ int TBeing::doSay(const sstring &arg)
   if (arg.empty())
     sendTo("Yes, but WHAT do you want to say?\n\r");
   else {
-    mud_str_copy(garbed, garble(arg.c_str(), getCond(DRUNK)).c_str(), MAX_INPUT_LENGTH);
+    mud_str_copy(garbed, garble(arg.c_str(), getCond(DRUNK)), MAX_INPUT_LENGTH);
 
     if (hasDisease(DISEASE_DROWNING)) 
       mud_str_copy(garbed, "Glub glub glub.", MAX_INPUT_LENGTH);
@@ -391,7 +391,7 @@ void TBeing::doShout(const char *arg)
        !isImmortal())
     mud_str_copy(garbed, "Glub glub glub.", 256);
   else
-    mud_str_copy(garbed, garble(arg, getCond(DRUNK)).c_str(), 256);
+    mud_str_copy(garbed, garble(arg, getCond(DRUNK)), 256);
 
   sendTo(COLOR_COMM, "<g>You shout<Z>, \"%s%s\"\n\r", colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE).c_str(), norm());
   act("$n rears back $s head and shouts loudly.", FALSE, this, 0, 0, TO_ROOM);
@@ -924,7 +924,7 @@ int TBeing::doWhisper(const char *arg)
   }
 
   char garbed[256];
-  mud_str_copy(garbed, garble(message, getCond(DRUNK)).c_str(), 256);
+  mud_str_copy(garbed, garble(message, getCond(DRUNK)), 256);
 
   sprintf(buf, "$n whispers to you, \"%s\"", colorString(this, vict->desc, garbed, NULL, COLOR_COMM, TRUE).c_str());
 
@@ -994,7 +994,7 @@ int TBeing::doAsk(const char *arg)
     act("$n quietly asks $mself a question.", TRUE, this, 0, 0, TO_ROOM);
     sendTo("You think about it for a while...\n\r");
   } else {
-    mud_str_copy(garbled, garble(message, getCond(DRUNK)).c_str(), 256);
+    mud_str_copy(garbled, garble(message, getCond(DRUNK)), 256);
 
     sprintf(buf, "$n asks you, \"%s\"", garbled);
     act(buf, TRUE, this, 0, vict, TO_VICT);

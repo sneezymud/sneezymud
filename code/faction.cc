@@ -2374,7 +2374,7 @@ void TBeing::doAdjust(const char *arg)
         sendTo("Grimhaven, Brightmoon, Logrus, Amber\n\r");
         return;
       }
-      mud_str_copy(tmpbuf2, lower(tmpbuf2).c_str(), 128);
+      mud_str_copy(tmpbuf2, lower(tmpbuf2), 128);
       if (is_abbrev(tmpbuf2, "grimhaven")) {
         uamount = CARAVAN_DEST_GH;
       } else if (is_abbrev(tmpbuf2, "brightmoon")) {

@@ -1867,7 +1867,7 @@ class TBeing : public TThing {
     int doJunk(const char *, TObj *);
     int doNoJunk(const char *, TObj *);
     int doDonate(const char *);
-    int doSteal(const char *, TBeing *);
+    int doSteal(const sstring &, TBeing *);
     void doRestore(const char *);
     void doThrow(const sstring &);
     void doWear(const char *);

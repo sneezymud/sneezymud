@@ -216,7 +216,7 @@ int TThing::stealModifier()
   return 0;
 }
 
-static int steal(TBeing * thief, TBeing * victim, char * obj_name)
+static int steal(TBeing * thief, TBeing * victim, const sstring &obj_name)
 {
   int modifier;
   wearSlotT eq_pos;
@@ -429,15 +429,13 @@ static int steal(TBeing * thief, TBeing * victim, char * obj_name)
   return TRUE;
 }
 
-int TBeing::doSteal(const char *argument, TBeing *vict)
+int TBeing::doSteal(const sstring &argument, TBeing *vict)
 {
   TBeing * victim;
-  char victim_name[240];
-  char obj_name[240];
+  sstring victim_name, obj_name;
   int rc;
 
-  argument = one_argument(argument, obj_name);
-  strcpy(victim_name, argument);
+  argument_parser(argument, obj_name, victim_name);
 
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, victim_name))) {
