@@ -81,7 +81,7 @@ using namespace std;
 #include "account.h"
 #include "extern.h"
 #include "handler.h"
-#include "rent.h"
+//#include "rent.h"
 #include "spec_mobs.h"
 //#include "spec_rooms.h"
 #include "materials.h"

@@ -13,6 +13,18 @@
 #endif
 
 
+class objCost { 
+  public:
+    int total_cost;
+    int no_carried;
+    int lowrentobjs;
+    bool ok;
+    objCost();
+    ~objCost();
+};
+
+
+
 extern vector<objIndexData>obj_index;
 
 typedef list<TObj *> TObjList;

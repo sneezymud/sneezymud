@@ -2,34 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: rent.h,v $
-// Revision 5.6  2003/10/08 20:49:01  peel
-// upped rent max to 10k again
-// will try and debug if we run into crashes again
-//
-// Revision 5.5  2002/07/16 20:47:29  dash
-// made it so you can land during combat
-// lowered max obj count to 1k
-//
-// Revision 5.4  2002/06/14 02:15:40  peel
-// changed rent item limit to 10k from 1k
-//
-// Revision 5.3  2002/06/13 05:00:59  peel
-// updated rent file version, woops
-//
-// Revision 5.2  2002/06/04 19:57:23  peel
-// rent file version change
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -49,16 +21,6 @@ const int CURRENT_RENT_VERSION     =9;
 
 // This was 200, but i see no technical reason to not be able to increase it
 const int MAX_OBJ_SAVE =10000;
-
-class objCost { 
-  public:
-    int total_cost;
-    int no_carried;
-    int lowrentobjs;
-    bool ok;
-    objCost();
-    ~objCost();
-};
 
 class pcorpseObject
 {
@@ -118,7 +80,20 @@ class rentHeader {
     rentHeader();
 };
 
+
+class ItemSave {
+  FILE *fp;
+ public:
+  rentHeader st;
+
+  void setFile(FILE *);
+  
+  bool raw_write_item(TObj *);
+  void objsToStore(signed char, TObj *, TBeing *, bool, bool);
+};
+
+
+
 extern TObj *raw_read_item(FILE * fp, unsigned char version);
-extern bool raw_write_item(FILE * fp, TObj *o, unsigned char version);
 
 #endif

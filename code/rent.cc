@@ -1,5 +1,3 @@
-// Rent for SneezyMUD, by Ben Youngdahl. Additions by Russ Russell
-
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/types.h>
@@ -472,7 +470,8 @@ static bool raw_read_rentObject(FILE *fp, rentObject *item, char **name, char **
   return TRUE;
 }
 
-bool raw_write_item(FILE * fp, TObj *o, unsigned char /* version */)
+
+bool ItemSave::raw_write_item(TObj *o)
 {
   rentObject item;
   int j;
@@ -931,6 +930,12 @@ static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE
   return FALSE;
 }
 
+void ItemSave::setFile(FILE *f)
+{
+  fp=f;
+}
+
+
 // write a list of items and their contents to storage. 
 //
 // slot = slot the item is worn on, if worn (NORMAL_SLOT if in inventory)
@@ -940,8 +945,8 @@ static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE
 // d = delete the item after saving (for renting)
 // fp = file to write items too
 // corpse = indicate if pcorpse saving items
-void objsToStore(signed char slot, TObj *o, rentHeader * st, TBeing *ch, 
-		 bool d, FILE * fp, bool corpse = FALSE)
+void ItemSave::objsToStore(signed char slot, TObj *o, 
+			   TBeing *ch, bool d, bool corpse = FALSE)
 {
   if (!o)
     return;
@@ -950,7 +955,7 @@ void objsToStore(signed char slot, TObj *o, rentHeader * st, TBeing *ch,
   if (dynamic_cast<TBeing *>(o)) {
     // TRoom::saveItems  calls this, we don't want to save beings that might
     // be hanging out in the room
-    objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, st, ch, d, fp, corpse);
+    objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse);
 
     // save pcorpses
   } else if (corpse && !(o->parent && o->parent->isPc())) {
@@ -965,12 +970,12 @@ void objsToStore(signed char slot, TObj *o, rentHeader * st, TBeing *ch,
       return;
     }
 
-    (st->number)++;
-    if (!raw_write_item(fp, tmpcorpse, st->version))
+    (st.number)++;
+    if (!raw_write_item(tmpcorpse))
       vlogf(LOG_BUG, fmt("Rent error in %s's file") %  tmpcorpse->getName());
 
     objsToStore(NORMAL_SLOT, dynamic_cast<TObj *>(tmpcorpse->getStuff()), 
-		st, ch, d, fp, FALSE);
+		ch, d, FALSE);
     slot = CONTENTS_END;
     if (fwrite(&slot, sizeof(signed char), 1, fp) != 1) {
       vlogf(LOG_BUG, fmt("Error saving %s's objects -- slot write.") % 
@@ -978,14 +983,14 @@ void objsToStore(signed char slot, TObj *o, rentHeader * st, TBeing *ch,
       return;
     }
     if (tmpcorpse->getNext()) 
-      objsToStore(NORMAL_SLOT, tmpcorpse->getNext(), st, ch, d, fp, corpse);
+      objsToStore(NORMAL_SLOT, tmpcorpse->getNext(), ch, d, corpse);
 
 
     // if it's not rentable, save what it contains and
     // move on to the next item in the list
   } else if (!o->isRentable()) {
-    objsToStore(NORMAL_SLOT, (TObj *) o->getStuff(), st, ch, d, fp, corpse);
-    objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, st, ch, d, fp, corpse);
+    objsToStore(NORMAL_SLOT, (TObj *) o->getStuff(), ch, d, corpse);
+    objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse);
 
 
     // normal item, save it
@@ -997,15 +1002,15 @@ void objsToStore(signed char slot, TObj *o, rentHeader * st, TBeing *ch,
       return;
     }
 
-    (st->number)++;
+    (st.number)++;
 
     // write out the item
-    if (!raw_write_item(fp, o, st->version)) 
+    if (!raw_write_item(o)) 
       vlogf(LOG_BUG, fmt("Rent error in %s's file") %
 	    (ch?ch->getName():"UNKNOWN"));
 
     // save the contents
-    objsToStore(NORMAL_SLOT, (TObj *) o->getStuff(), st, ch, d, fp, corpse);
+    objsToStore(NORMAL_SLOT, (TObj *) o->getStuff(), ch, d, corpse);
 
     // write the contents footer
     slot = CONTENTS_END;
@@ -1019,7 +1024,7 @@ void objsToStore(signed char slot, TObj *o, rentHeader * st, TBeing *ch,
     if (o->nextThing) {
       // and it has a name, store it
       if (o->nextThing->getName()) {
-        objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, st, ch, d, fp, corpse);
+        objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, ch, d, corpse);
       } else {
         o->nextThing = NULL;
         vlogf(LOG_BUG, fmt("Error saving %s's objects -- nextThing.") % 
@@ -1337,19 +1342,20 @@ void TMonster::saveItems(const sstring &filepath)
 {
   FILE *fp;
   signed char i;
-  rentHeader st;
   TObj *obj;
+  ItemSave is;
 
   // open the save file
   if (!(fp = fopen(filepath.c_str(), "w+b"))) {
     //    vlogf(LOG_BUG, fmt("Error saving mob [%s] items.") %  getName());
     return;
   }
+  is.setFile(fp);
 
   // prepare the rent file header and write it out
-  memset(&st, 0, sizeof(rentHeader));
-  st.version = CURRENT_RENT_VERSION;
-  fwrite(&st.version, sizeof(st.version), 1, fp);
+  memset(&is.st, 0, sizeof(rentHeader));
+  is.st.version = CURRENT_RENT_VERSION;
+  fwrite(&is.st.version, sizeof(is.st.version), 1, fp);
 
   // store worn objects
   wearSlotT ij;
@@ -1360,12 +1366,12 @@ void TMonster::saveItems(const sstring &filepath)
     if (!(((ij == WEAR_LEGS_L) && obj->isPaired()) ||
           ((ij == WEAR_EX_LEG_L) && obj->isPaired()) ||
           ((ij == HOLD_LEFT) && obj->isPaired()))) {
-      objsToStore(mapSlotToFile(ij), obj, &st, this, FALSE, fp);
+      is.objsToStore(mapSlotToFile(ij), obj, this, FALSE);
     }
   }
 
   // store inventory objects
-  objsToStore(NORMAL_SLOT, (TObj *) getStuff(), &st, this, FALSE, fp);
+  is.objsToStore(NORMAL_SLOT, (TObj *) getStuff(), this, FALSE);
 
   // write the rent file footer
   i = CONTENTS_END;
@@ -1385,7 +1391,7 @@ void TRoom::saveItems(const sstring &)
   FILE *fp;
   sstring filepath;
   signed char i;
-  rentHeader st;
+  ItemSave is;
 
   filepath = fmt("%s/%d") % ROOM_SAVE_PATH % number;
 
@@ -1393,11 +1399,12 @@ void TRoom::saveItems(const sstring &)
     vlogf(LOG_BUG, fmt("Error saving room [%d] items.") %  number);
     return;
   }
-  memset(&st, 0, sizeof(rentHeader));
-  st.version = CURRENT_RENT_VERSION;
-  fwrite(&st.version, sizeof(st.version), 1, fp);
+  is.setFile(fp);
+  memset(&is.st, 0, sizeof(rentHeader));
+  is.st.version = CURRENT_RENT_VERSION;
+  fwrite(&is.st.version, sizeof(is.st.version), 1, fp);
 
-  objsToStore(NORMAL_SLOT, (TObj *) getStuff(), &st, NULL, FALSE, fp);
+  is.objsToStore(NORMAL_SLOT, (TObj *) getStuff(), NULL, FALSE);
   i = CONTENTS_END;
   fwrite(&i, sizeof(i), 1, fp);
   fclose(fp);
@@ -1948,7 +1955,6 @@ rp2->getName() % corpse->getRoomNum());
 
 void TPCorpse::saveCorpseToFile()
 {
-  rentHeader st;
   signed char i;
   char buf[256];
   FILE *fp;
@@ -1956,6 +1962,7 @@ void TPCorpse::saveCorpseToFile()
   TPCorpse *tmpCorpse = NULL;
   int numCorpses = 0;
   bool onlyCorpse = FALSE;
+  ItemSave is;
 
   if (fileName.empty()) {
     vlogf(LOG_BUG, fmt("Attempt to save a corpse with no fileName (%s)") %  getName());
@@ -1969,6 +1976,7 @@ void TPCorpse::saveCorpseToFile()
   if (!(fp = fopen(buf, "w+b"))) {
     onlyCorpse = TRUE; 
   }
+  is.setFile(fp);
 
   firstCorpse = this;
   while (firstCorpse) {
@@ -1985,16 +1993,16 @@ void TPCorpse::saveCorpseToFile()
   }
 
 
-  memset(&st, 0, sizeof(rentHeader));
-  strcpy(st.owner, fileName.c_str());
-  st.number = numCorpses;
-  st.version = (unsigned char) CURRENT_RENT_VERSION;
-  st.gold_left = (int) in_room; 
-  st.original_gold = 0;
-  st.total_cost = 0;
-  st.first_update = st.last_update = (long) time(0);
+  memset(&is.st, 0, sizeof(rentHeader));
+  strcpy(is.st.owner, fileName.c_str());
+  is.st.number = numCorpses;
+  is.st.version = (unsigned char) CURRENT_RENT_VERSION;
+  is.st.gold_left = (int) in_room; 
+  is.st.original_gold = 0;
+  is.st.total_cost = 0;
+  is.st.first_update = is.st.last_update = (long) time(0);
 
-  if (fwrite(&st, sizeof(rentHeader), 1, fp) != 1) {
+  if (fwrite(&is.st, sizeof(rentHeader), 1, fp) != 1) {
     vlogf(LOG_BUG, fmt("Error writing corpse header for %s.") %  getName());
     fclose(fp);
     return;
@@ -2003,13 +2011,13 @@ void TPCorpse::saveCorpseToFile()
   tmpCorpse = firstCorpse;
 #if 0 
   while (tmpCorpse) {
-    objsToStore(NORMAL_SLOT, (TObj *) tmpCorpse, &st, NULL, FALSE, fp, TRUE);
+    objsToStore(NORMAL_SLOT, (TObj *) tmpCorpse, NULL, FALSE, TRUE);
     tmpCorpse = tmpCorpse->nextCorpse;
   }
   i = CONTENTS_END;
   fwrite(&i, sizeof(signed char), 1, fp);
 #else
-  objsToStore(NORMAL_SLOT, (TObj *) tmpCorpse, &st, NULL, FALSE, fp, TRUE);
+  is.objsToStore(NORMAL_SLOT, (TObj *) tmpCorpse, NULL, FALSE, TRUE);
   i = CONTENTS_END;
   fwrite(&i, sizeof(signed char), 1, fp);
 #endif
@@ -2022,12 +2030,12 @@ void TPCorpse::saveCorpseToFile()
 // msgStatus = 2, "renting"
 void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 {
-  rentHeader st;
   signed char i;
   char buf[256];
   FILE *fp;
   TPerson *tmp;
   TObj *obj;
+  ItemSave is;
 
   if (desc && desc->original)
     tmp = desc->original;
@@ -2039,20 +2047,21 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
     vlogf(LOG_BUG, fmt("Error opening file for saving %s's objects") %  getName());
     return;
   }
-  memset(&st, 0, sizeof(rentHeader));
-  strcpy(st.owner, getName());
-  st.number = (int) cost->no_carried;
-  st.version = (unsigned char) CURRENT_RENT_VERSION;
-  st.gold_left = (int) getMoney();
-  st.original_gold = (int) getMoney();
-  st.total_cost = (int) cost->total_cost;
-  st.first_update = st.last_update = (long) time(0);
+  is.setFile(fp);
+  memset(&is.st, 0, sizeof(rentHeader));
+  strcpy(is.st.owner, getName());
+  is.st.number = (int) cost->no_carried;
+  is.st.version = (unsigned char) CURRENT_RENT_VERSION;
+  is.st.gold_left = (int) getMoney();
+  is.st.original_gold = (int) getMoney();
+  is.st.total_cost = (int) cost->total_cost;
+  is.st.first_update = is.st.last_update = (long) time(0);
 
-  if (fwrite(&st, sizeof(rentHeader), 1, fp) != 1) {
+  if (fwrite(&is.st, sizeof(rentHeader), 1, fp) != 1) {
     vlogf(LOG_BUG, fmt("Error writing rent header for %s.") %  getName());
     return;
   }
-  st.number = 0;        // reset to count actual # saved 
+  is.st.number = 0;        // reset to count actual # saved 
 
   wearSlotT ij;
   for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
@@ -2061,17 +2070,17 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
       continue;
     if (d) {
       unequip(ij);
-      objsToStore(mapSlotToFile(ij), obj, &st, this, d, fp);
+      is.objsToStore(mapSlotToFile(ij), obj, this, d);
     } else {
       // if they're wearing a paired item, don't save the other slot 
       if (!(((ij == WEAR_LEGS_L) && obj->isPaired()) ||
           ((ij == WEAR_EX_LEG_L) && obj->isPaired()) ||
           ((ij == HOLD_LEFT) && obj->isPaired()))) {
-        objsToStore(mapSlotToFile(ij), obj, &st, this, d, fp);
+        is.objsToStore(mapSlotToFile(ij), obj, this, d);
       }
     }
   }
-  objsToStore(NORMAL_SLOT, (TObj *) getStuff(), &st, this, d, fp);
+  is.objsToStore(NORMAL_SLOT, (TObj *) getStuff(), this, d);
 
   i = CONTENTS_END;
   fwrite(&i, sizeof(signed char), 1, fp);
@@ -2082,23 +2091,23 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 #if 0
   // a nice idea, but no longer works since "cost" is tracking mobs +
   // items on mobs.  st is only tracking items on me.
-  if (st.number != cost->no_carried)
-    vlogf(LOG_BUG, fmt("Number of items saved [%d] for %s does not match # charged for [%d]") %  st.number % getName() % cost->no_carried);
+  if (is.st.number != cost->no_carried)
+    vlogf(LOG_BUG, fmt("Number of items saved [%d] for %s does not match # charged for [%d]") %  is.st.number % getName() % cost->no_carried);
 #endif
 
   if (msgStatus == 1 && desc) {
     vlogf(LOG_PIO, fmt("Saving %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") %  
-        getName() % getMoney() % getBank() % getExp() % st.number % 
-        age_mod % st.total_cost);
+        getName() % getMoney() % getBank() % getExp() % is.st.number % 
+        age_mod % is.st.total_cost);
   } else if (msgStatus == 2 && desc) {
     vlogf(LOG_PIO, fmt("Renting %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") %  
-        getName() % getMoney() % getBank() % getExp() % st.number % 
-        age_mod % st.total_cost);
+        getName() % getMoney() % getBank() % getExp() % is.st.number % 
+        age_mod % is.st.total_cost);
   }
-  last_rent = st.total_cost;
+  last_rent = is.st.total_cost;
   fclose(fp);
 
-  if (!st.number) 
+  if (!is.st.number) 
     wipeRentFile(getName());
 }
 
@@ -3869,6 +3878,7 @@ bool TBeing::saveFollowers(bool rent_time)
   bool found = FALSE;
   unsigned char version;
   TObj *obj;
+  ItemSave is;
  
   if (desc && desc->original)
     tmp = desc->original;
@@ -4015,12 +4025,13 @@ bool TBeing::saveFollowers(bool rent_time)
           sprintf(buf, "rent/%c/%s.fr", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
           if (!(fp2 = fopen(buf, "w+b"))) {
             vlogf(LOG_BUG, fmt("Error opening %'s follower rent file for write.") %  tmp->name);
-          } else
+          } else 
             fp2_open = true;
         }
-        
+	
+	is.setFile(fp2);
         if (fp2_open)
-          raw_write_item(fp2, obj, version);
+          is.raw_write_item(obj);
 
         if (rent_time) {
           vlogf(LOG_SILENT, fmt("%s's %s renting: (%s : %d)") %  getName() % mob->getName() % obj->getName() % obj->objVnum());
@@ -4048,8 +4059,9 @@ bool TBeing::saveFollowers(bool rent_time)
           fp2_open = true;
       }
         
+      is.setFile(fp2);
       if (fp2_open)
-        raw_write_item(fp2, obj, version);
+        is.raw_write_item(obj);
 
       if (rent_time) {
         vlogf(LOG_SILENT, fmt("%s's %s renting: (%s : %d)") %  getName() % mob->getName() % obj->getName() % obj->objVnum());

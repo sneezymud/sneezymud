@@ -9,6 +9,7 @@
 #include "shop.h"
 #include "database.h"
 #include "shopowned.h"
+#include "rent.h"
 
 int counter_done;  // Global variable used to count # of done items/repairman 
 int counter_work;  // Global variable used to count # of undone items/man 
@@ -184,6 +185,7 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
   long then;
   int cost;
   unsigned char version;
+  ItemSave is;
 
   // check for valid args
   if (!repair || !buyer) {
@@ -236,7 +238,8 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
   }
 
   // write the object
-  raw_write_item(fp, o, version);
+  is.setFile(fp);
+  is.raw_write_item(o);
   fclose(fp);
 
   // Save the repair number so we can keep up with it.

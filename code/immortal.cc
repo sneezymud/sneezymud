@@ -34,6 +34,7 @@ extern "C" {
 #include "obj_portal.h"
 #include "obj_base_clothing.h"
 #include "database.h"
+#include "rent.h"
 
 bool Silence = FALSE;
 bool Sleep = TRUE;
