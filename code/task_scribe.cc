@@ -17,8 +17,8 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
   int how_many;
   char buf[256];
   int knowledge = ch->getSkillValue(SKILL_SCRIBE);
-  int factor1 = (ch->getSkillValue(SKILL_SCRIBE) * 3);
-  int factor2 = (ch->getSkillValue(SKILL_SCRIBE) * 2);
+  int factor1 = (ch->getSkillValue(SKILL_SCRIBE) * 6);
+  int factor2 = (ch->getSkillValue(SKILL_SCRIBE) * 4);
   int resulting = ((factor1 + factor2) / 15);
 
   if (ch->isLinkdead()) {
