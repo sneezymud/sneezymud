@@ -239,7 +239,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
     if (!v->isPc() && (v->getHit() <= -2))
       dam = 11 + v->getHit();
 
-    if(this->isPc() && !v->isPc()){
+    if(!v->isPc()){
       followData *f;
       TBeing *k;
       int groupcount=1;
@@ -251,6 +251,8 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
         k = this;
 
 
+      vlogf(LOG_PEEL, "got here");
+
       for (f = k->followers; f; f = f->next) {
 	if (inGroup(*f->follower) && sameRoom(*f->follower)) {
 	  groupcount++;
@@ -260,7 +262,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
       trophyperc=(double)(((double)dam/(double)(v->hitLimit()+11))/groupcount);
 
       if(!isImmortal())
-	trophy->addToCount(v->mobVnum(), trophyperc);
+	k->trophy->addToCount(v->mobVnum(), trophyperc);
 
       for (f = k->followers; f; f = f->next) {
 	if (f->follower->isPc() && inGroup(*f->follower) && 
