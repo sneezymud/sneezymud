@@ -120,7 +120,8 @@ FILE *obj_f = NULL;        // obj prototypes
 
 vector<TRoom *>roomspec_db(0);
 
-vector<TObj *>obj_cache(0);
+struct cached_object { int number; string s[17]; };
+vector<cached_object *>obj_cache(0);
 
 
 struct time_info_data time_info;        // the infomation about the time   
@@ -1226,7 +1227,7 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
   int i, rc, tmpcost;
   TDatabase db("sneezy");
 
-  cache = false;  // eep caching don't seem to work
+  cache = true;  // eep caching don't seem to work
 
   i = nr;
   if (type == VIRTUAL)
@@ -1239,41 +1240,60 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
 
 
   if(cache && cache_object(nr)!=-1){
-    //    vlogf(LOG_PEEL, "using cached object - %s", obj_cache[cache_object(nr)]->shortDescr);
-    obj = makeNewObj(mapFileToItemType(obj_cache[cache_object(nr)]->itemType()));
-    *obj = *obj_cache[cache_object(nr)];
-    return obj;
+    vlogf(LOG_PEEL, "using cached object - %s", obj_index[nr].short_desc);
+    obj = makeNewObj(mapFileToItemType(atoi_safe(obj_cache[cache_object(nr)]->s[0].c_str())));
+    obj->number=nr;
+    obj->name = obj_index[nr].name;
+    obj->shortDescr = obj_index[nr].short_desc;
+    obj->setDescr(obj_index[nr].long_desc);
+    obj->action_description = obj_index[nr].description;
+    obj->setObjStat(atoi_safe(obj_cache[cache_object(nr)]->s[1].c_str()));
+    obj->obj_flags.wear_flags = atoi_safe(obj_cache[cache_object(nr)]->s[2].c_str());
+    obj->assignFourValues(atoi_safe(obj_cache[cache_object(nr)]->s[3].c_str()), atoi_safe(obj_cache[cache_object(nr)]->s[4].c_str()), atoi_safe(obj_cache[cache_object(nr)]->s[5].c_str()), atoi_safe(obj_cache[cache_object(nr)]->s[6].c_str()));
+    obj->setWeight(atof_safe(obj_cache[cache_object(nr)]->s[7].c_str()));
+    obj->obj_flags.cost = atoi_safe(obj_cache[cache_object(nr)]->s[8].c_str());
+    obj->canBeSeen = atoi_safe(obj_cache[cache_object(nr)]->s[9].c_str());
+    obj->spec = atoi_safe(obj_cache[cache_object(nr)]->s[10].c_str());
+    obj->setMaxStructPoints(atoi_safe(obj_cache[cache_object(nr)]->s[11].c_str()));
+    obj->setStructPoints(atoi_safe(obj_cache[cache_object(nr)]->s[12].c_str()));
+    obj->setDepreciation(0);
+    obj->obj_flags.decay_time=atoi_safe(obj_cache[cache_object(nr)]->s[13].c_str());
+    obj->setVolume(atoi_safe(obj_cache[cache_object(nr)]->s[14].c_str()));
+    obj->setMaterial(atoi_safe(obj_cache[cache_object(nr)]->s[15].c_str()));
+    // beta is used to test LOW loads, so don't let max_exist be a factor
+    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : atoi_safe(obj_cache[cache_object(nr)]->s[16].c_str()));
+    obj->ex_description=obj_index[nr].ex_description;
+
+  } else {
+    db.query("select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt);
+  
+    if(!db.fetchRow())
+      return NULL;
+    
+    obj = makeNewObj(mapFileToItemType(atoi_safe(db.getColumn(0))));
+    obj->number=nr;
+    obj->name = obj_index[nr].name;
+    obj->shortDescr = obj_index[nr].short_desc;
+    obj->setDescr(obj_index[nr].long_desc);
+    obj->action_description = obj_index[nr].description;
+    obj->setObjStat(atoi_safe(db.getColumn(1)));
+    obj->obj_flags.wear_flags = atoi_safe(db.getColumn(2));
+    obj->assignFourValues(atoi_safe(db.getColumn(3)), atoi_safe(db.getColumn(4)), atoi_safe(db.getColumn(5)), atoi_safe(db.getColumn(6)));
+    obj->setWeight(atof_safe(db.getColumn(7)));
+    obj->obj_flags.cost = atoi_safe(db.getColumn(8));
+    obj->canBeSeen = atoi_safe(db.getColumn(9));
+    obj->spec = atoi_safe(db.getColumn(10));
+    obj->setMaxStructPoints(atoi_safe(db.getColumn(11)));
+    obj->setStructPoints(atoi_safe(db.getColumn(12)));
+    obj->setDepreciation(0);
+    obj->obj_flags.decay_time=atoi_safe(db.getColumn(13));
+    obj->setVolume(atoi_safe(db.getColumn(14)));
+    obj->setMaterial(atoi_safe(db.getColumn(15)));
+    // beta is used to test LOW loads, so don't let max_exist be a factor
+    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : atoi_safe(db.getColumn(16)));
+    obj->ex_description=obj_index[nr].ex_description;
   }
-
-
-  db.query("select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt);
   
-  if(!db.fetchRow())
-    return NULL;
-  
-
-  obj = makeNewObj(mapFileToItemType(atoi_safe(db.getColumn(0))));
-  obj->number=nr;
-  obj->name = obj_index[nr].name;
-  obj->shortDescr = obj_index[nr].short_desc;
-  obj->setDescr(obj_index[nr].long_desc);
-  obj->action_description = obj_index[nr].description;
-  obj->setObjStat(atoi_safe(db.getColumn(1)));
-  obj->obj_flags.wear_flags = atoi_safe(db.getColumn(2));
-  obj->assignFourValues(atoi_safe(db.getColumn(3)), atoi_safe(db.getColumn(4)), atoi_safe(db.getColumn(5)), atoi_safe(db.getColumn(6)));
-  obj->setWeight(atof_safe(db.getColumn(7)));
-  obj->obj_flags.cost = atoi_safe(db.getColumn(8));
-  obj->canBeSeen = atoi_safe(db.getColumn(9));
-  obj->spec = atoi_safe(db.getColumn(10));
-  obj->setMaxStructPoints(atoi_safe(db.getColumn(11)));
-  obj->setStructPoints(atoi_safe(db.getColumn(12)));
-  obj->setDepreciation(0);
-  obj->obj_flags.decay_time=atoi_safe(db.getColumn(13));
-  obj->setVolume(atoi_safe(db.getColumn(14)));
-  obj->setMaterial(atoi_safe(db.getColumn(15)));
-  // beta is used to test LOW loads, so don't let max_exist be a factor
-  obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : atoi_safe(db.getColumn(16)));
-  obj->ex_description=obj_index[nr].ex_description;
 
   for(i=0;i<MAX_OBJ_AFFECT;++i){
     obj->affected[i].location = obj_index[nr].affected[i].location;
@@ -1308,29 +1328,34 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
 
   obj->checkObjStats();
 
-  if(cache){
-    //    vlogf(LOG_PEEL, "caching object - %s", obj->shortDescr);
-    obj_cache.push_back(obj);
+  if(cache && cache_object(nr)==-1){
+    vlogf(LOG_PEEL, "caching object - %s", obj->shortDescr);
+    cached_object *c=new cached_object;
     
-    // since we cached this object, we need to remove it from the object_list
-    // otherwise spec_procs will trigger and all that jazz
-    // downside is we have to loop through the object_list to unlink it
-    TObj *t=object_list;
-    if(t==obj){
-      object_list=obj->next;
-    } else {
-      for(;t;t=t->next){
-	if(t->next == obj){
-	  t->next=obj->next;
-	  break;
-	}
-      }
-    }
-    
-    return (read_object(nr, REAL, true));
-  } else {
-    return obj;
+    c->number=nr;
+    c->s[0]=db.getColumn(0);
+    c->s[1]=db.getColumn(1);
+    c->s[2]=db.getColumn(2);
+    c->s[3]=db.getColumn(3);
+    c->s[4]=db.getColumn(4);
+    c->s[5]=db.getColumn(5);
+    c->s[6]=db.getColumn(6);
+    c->s[7]=db.getColumn(7);
+    c->s[8]=db.getColumn(8);
+    c->s[9]=db.getColumn(9);
+    c->s[10]=db.getColumn(10);
+    c->s[11]=db.getColumn(11);
+    c->s[12]=db.getColumn(12);
+    c->s[13]=db.getColumn(13);
+    c->s[14]=db.getColumn(14);
+    c->s[15]=db.getColumn(15);
+    c->s[16]=db.getColumn(16);
+
+    obj_cache.push_back(c);
+
   }
+
+  return obj;
 }
 
 void zoneData::closeDoors()
