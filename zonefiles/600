@@ -13,6 +13,22 @@ D 0 644 3 1
 D 0 643 3 1		Training Room
 D 0 645 1 1 
 
+
+* windows
+O 0 637 1 618
+O 0 638 1 618
+O 0 639 1 618
+O 0 640 1 619
+
+M 0 594 1 619
+
+O 0 633 1 619
+O 0 635 1 619
+O 0 641 1 619
+O 0 9057 1 618
+O 0 9056 1 618
+
+
 O 0 3 1 611        Fountain
 O 0 4600 1 611       a small lamppost
 O 0 4600 1 609       a small lamppost
