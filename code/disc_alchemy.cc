@@ -672,7 +672,6 @@ int TOpal::powerstoneMe(TBeing *caster, int, byte bKnown)
       act("You have created a powerstone -- $p begins to glow softly!", FALSE, caster, this, NULL, TO_CHAR);
       act("$n seems to have somehow enchanted $p! It begins to glow softly!", FALSE, caster, this, NULL, TO_ROOM);
       // init the four values
-      psSetMana(0);
       psSetConsecFails(0);
       buf=name;
       buf+=" stone powerstone power";

@@ -18,15 +18,12 @@ class TOpal : public TObj {
     int psMana;
     int psFails;
   public:
-    virtual int chiMe(TBeing *);
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual int objectSell(TBeing *, TMonster *);
     virtual sstring statObjInfo() const;
     virtual void describeObjectSpecifics(const TBeing *) const;
     virtual void powerstoneCheck(TOpal **);
-    virtual void powerstoneCheckCharged(TOpal **);
-    virtual void powerstoneMostMana(int *);
     virtual int powerstoneMe(TBeing *, int, byte);
     virtual itemTypeT itemType() const { return ITEM_OPAL; }
     virtual sstring compareMeAgainst(TBeing *, TObj *);
@@ -36,9 +33,6 @@ class TOpal : public TObj {
     int psGetStrength() const;
     void psSetStrength(int num);
     void psAddStrength(int num);
-    int psGetMana() const;
-    void psSetMana(int num);
-    void psAddMana(int num);
     int psGetConsecFails() const;
     void psSetConsecFails(int num);
     void psAddConsecFails(int num);

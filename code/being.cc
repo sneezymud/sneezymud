@@ -854,9 +854,7 @@ void TBeing::setMaxMove(int move)
 
 int TBeing::getMana() const
 {
-  TOpal *stone = find_biggest_charged_powerstone(this);
-
-  return (points.mana + (stone ? stone->psGetMana() : 0));
+  return points.mana;
 }
 
 void TBeing::setMana(int mana)

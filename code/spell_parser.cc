@@ -463,7 +463,6 @@ int TBeing::reconcilePiety(spellNumT spl, bool checking)
 int TBeing::reconcileMana(spellNumT spl, bool checking, int mana)
 {
   int mana_to_burn;
-  TOpal *stone;
 
   if (desc && isImmortal())
     return TRUE;
@@ -485,17 +484,7 @@ int TBeing::reconcileMana(spellNumT spl, bool checking, int mana)
   } else {
     mana_to_burn = mana;
   }
-  if ((mana_to_burn > 0) && (stone = find_biggest_charged_powerstone(this))) {
-    if (stone->psGetMana() >= mana_to_burn) {
-      stone->psAddMana(-mana_to_burn);
-      mana_to_burn = 0;
-      act("Your $o darkens slightly.", TRUE, this, stone, 0, TO_CHAR);
-    } else if (stone->psGetMana() > 0) {
-      mana_to_burn -= stone->psGetMana();
-      stone->psSetMana(0);
-      act("Your $o goes completely black.", TRUE, this, stone, 0, TO_CHAR);
-    }
-  }
+
   if (mana_to_burn > 0) {
     if (getMana() >= mana_to_burn) {
       setMana(max(0, getMana() - mana_to_burn));

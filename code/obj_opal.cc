@@ -58,20 +58,6 @@ void TOpal::psAddStrength(int num)
   psStrength += num;
 }
 
-int TOpal::psGetMana() const
-{
-  return (psMana);
-}
-
-void TOpal::psSetMana(int num)
-{
-  psMana = num;
-}
-
-void TOpal::psAddMana(int num)
-{
-  psMana += num;
-}
 
 int TOpal::psGetConsecFails() const
 {
@@ -107,7 +93,6 @@ void TOpal::assignFourValues(int x1, int x2, int x3, int x4)
 {
   psSetCarats(x1);
   psSetStrength(x2);
-  psSetMana(x3);
   psSetConsecFails(x4);
 }
 
@@ -115,7 +100,7 @@ void TOpal::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 {
   *x1 = psGetCarats();
   *x2 = psGetStrength();
-  *x3 = psGetMana();
+  *x3 = -1;
   *x4 = psGetConsecFails();
 }
 
@@ -129,9 +114,9 @@ sstring TOpal::statObjInfo() const
 {
   char buf[256];
 
-  sprintf(buf, "Carats: %d, Strength: %d, Mana Charge: %d, Consecutive Fails: %d",
+  sprintf(buf, "Carats: %d, Strength: %d, Consecutive Fails: %d",
                 psGetCarats(),
-                psGetStrength(), psGetMana(), psGetConsecFails());
+                psGetStrength(),psGetConsecFails());
 
   sstring a(buf);
   return a;
@@ -139,16 +124,6 @@ sstring TOpal::statObjInfo() const
 
 void TOpal::describeObjectSpecifics(const TBeing *ch) const
 {
-  double diff = (double) ((double) psGetMana() / (double) psGetMaxMana());
-  ch->sendTo(COLOR_OBJECTS,fmt("It appears %s is %s.\n\r") %
-	     sstring(getName()).uncap() %
-         ((diff <= 0.0) ? "completely uncharged" :
-          ((diff >= 1.0) ? "fully charged" :
-          ((diff >= 0.8) ? "almost fully charged" :
-          ((diff >= 0.6) ? "mostly charged" :
-          ((diff >= 0.4) ? "about half charged" :
-          ((diff >= 0.2) ? "partially charged" :
-                    "uncharged")))))));
 }
 
 TOpal *find_biggest_powerstone(TBeing *ch)
@@ -171,22 +146,10 @@ TOpal *find_biggest_powerstone(TBeing *ch)
   return stone;
 }
 
-void TOpal::powerstoneCheckCharged(TOpal **topMax)
-{
-  if (!*topMax || ((psGetStrength() > (*topMax)->psGetStrength()) && (psGetMana() > 0))) 
-    *topMax = this;
-}
-
-
 void TOpal::powerstoneCheck(TOpal **topMax)
 {
   if (!*topMax || (psGetStrength() > (*topMax)->psGetStrength())) 
     *topMax = this;
-}
-
-void TOpal::powerstoneMostMana(int *topMax)
-{
-  *topMax = max(*topMax, psGetMana());
 }
 
 int TOpal::suggestedPrice() const
@@ -212,31 +175,3 @@ void TOpal::lowCheck()
   TObj::lowCheck();
 }
 
-int TOpal::chiMe(TBeing *tLunatic)
-{
-  int tMana  = ::number(10, 30),
-      bKnown = tLunatic->getSkillLevel(SKILL_CHI);
-
-  if (tLunatic->getMana() < tMana) {
-    tLunatic->sendTo("You lack the chi to do this!\n\r");
-    return RET_STOP_PARSING;
-  } else
-    tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
-
-  if (!bSuccess(tLunatic, bKnown, SKILL_CHI) || psGetMana() >= psGetMaxMana()) {
-    act("You fail to affect $p in any way.",
-        FALSE, tLunatic, this, NULL, TO_CHAR);
-    return true;
-  }
-
-  act("You focus upon $p causing it to glow violently!",
-      FALSE, tLunatic, this, NULL, TO_CHAR);
-  act("$n concentrates upon $p, causing it to glow violently!",
-      TRUE, tLunatic, this, NULL, TO_ROOM);
-
-  // increased mana input from 1-4 (mean 2.5) to 3-10 (mean 7.5)
-  //   still slow, but not totally useless
-  psSetMana(min(psGetMaxMana(), (psGetMana() + ::number(4, 11))));
-
-  return true;
-}

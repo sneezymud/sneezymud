@@ -759,10 +759,8 @@ int TBeing::updateHalfTickStuff()
 {
   int foodReject = FALSE;
   int rc = FALSE;
-  TOpal *stone = NULL;
   TThing *t;
   int j;
-  char buf[256];
   TRoom *room = NULL;
   int loadRoom = 0;
   int vnum = mobVnum();
@@ -1175,7 +1173,7 @@ int TBeing::updateHalfTickStuff()
       // At the end of this if we do the elemental 'drain' checks.  Regardless of
       // the following 3 conditions we Always want that check to occure.
       if (!roomp->isRoomFlag(ROOM_NO_HEAL) && (drunk < 15) && has_healthy_body(this)) {
-        int mana_bump = manaGain(), mana_max = manaLimit(), mana_cur = getMana();
+        int mana_bump = manaGain();
 
 	if (affectedBySpell(SKILL_MIND_FOCUS)) {
 	  mana_bump = (int)((float) mana_bump * 
@@ -1195,20 +1193,6 @@ int TBeing::updateHalfTickStuff()
       
         addToPiety(pietyGain(0.0));
 
-        if ((stone = find_biggest_powerstone(this)) && 
-              (mana_bump + mana_cur >= mana_max)) {
-          addToMana(mana_max - mana_cur);
-        
-          if (stone->psGetMana() != stone->psGetMaxMana()) {
-            stone->psAddMana(mana_bump - (mana_max - mana_cur));
-              stone->psSetMana(min(stone->psGetMana(), stone->psGetMaxMana()));
-            if (stone->psGetMana() != stone->psGetMaxMana())
-              sprintf(buf, "Your $o turn$Q whiter.");
-            else
-              sprintf(buf, "Your $o $q now a solid white.");
-            act(buf, TRUE, this, stone, 0, TO_CHAR);
-          }
-        } else
           addToMana(mana_bump);
       }
 
