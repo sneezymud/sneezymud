@@ -30,7 +30,7 @@ cp $BUILD_MUD_ROOT/lib/mobdata/responses/crier.new $PROD_MUD_ROOT/lib/mobdata/re
 echo '***** Note that "XXX_pkey does not exist" errors are ok - ignore them.'
 for i in obj objextra objaffect \
          shop shopproducing shopmaterial shoptype \
-         room roomexit roomextra; 
+         room roomexit roomextra innkeeptaxation;
 do 
   echo Copying $i table.
   pg_dump -F c -t $i sneezybeta | pg_restore -c -d sneezyq
