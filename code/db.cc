@@ -1710,6 +1710,11 @@ void zoneData::resetZone(bool bootTime)
             mob->brtRoom = (rp ? rp->number : ROOM_NOWHERE);
             mobRepop(mob, zone_nr, (rp ? rp->number : ROOM_NOWHERE));
           } else {
+	    if(bootTime && 
+	       mob_index[rs.arg1].number >= mob_index[rs.arg1].max_exist)
+	      vlogf(LOG_LOW, "Mob %s (%i) tried to load but hit max_exist",
+		    mob_index[rs.arg1].short_desc, mob_index[rs.arg1].virt);
+
             last_cmd = 0;
             mobload = 0;
           }
