@@ -2069,12 +2069,25 @@ int TComponent::rentCost() const
 
 void TComponent::decayMe()
 {
-  if (obj_flags.decay_time > 0) {
-    // decay comps that aren't in spellbags
-    if (isComponentType(COMP_DECAY) &&
-	(!parent ||
-	 !dynamic_cast<TSpellBag *>(parent) || (!::number(0,5))))
-      obj_flags.decay_time--;
+  if (obj_flags.decay_time <= 0)
+    return;
+
+  // not a decaying component
+  if (!isComponentType(COMP_DECAY))
+    return;
+
+  // don't decay if a shopkeeper has the comp
+  if (dynamic_cast<TMonster *>(parent) &&
+      parent->spec == SPEC_SHOPKEEPER)
+    return;
+
+  // decay if it doesn't have a parent (lying on the ground)
+  // or if the parent is not spellbag
+  // or random chance
+  if(!parent ||
+     !dynamic_cast<TSpellBag *>(parent) || 
+     (!::number(0,5))){
+    obj_flags.decay_time--;
   }
 }
 
