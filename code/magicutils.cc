@@ -973,8 +973,16 @@ int TThing::genericTeleport(silentTypeT silent, bool keepZone)
   TRoom *rp;
   int rc;
   TThing *t;
+  int breakout=0;
 
   for (;;) {
+    // this keeps getting caught in a loop on builder mud
+    // and I don't want to fix it properly.
+    if(++breakout>1000000){ // presumably we won't ever have > 1 mil rooms
+      vlogf(LOG_BUG, "genericTeleport got caught in a loop");
+      return FALSE;
+    }
+
     // note, all rooms below 100 are ignored
 
     if (keepZone) {
