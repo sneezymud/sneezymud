@@ -13,12 +13,24 @@ O 0 18583 1 1365   trashcan
 O 0 18583 1 1200   trashcan
 O 0 18583 1 1218   trashcan
 
-M 0 1399 5 1385       trash collectors
-M 0 1399 5 1385       trash collectors
-M 0 1399 5 1385       trash collectors
-M 0 1399 5 1385       trash collectors
-M 0 1399 5 1385       trash collectors
+M 0 1399 3 1385       trash collectors
+M 0 1399 3 1385       trash collectors
+M 0 1399 3 1385       trash collectors
+M 0 1399 3 1385       trash collectors
+M 0 1399 3 1385       trash collectors
 
+M 0 1214 5 1200       leper hunter
+? 0 2 0 E
+E 1 1365 30 19          Battle Axe (Two-Handed)
+Y 0 11 5		5% chance of platemail
+M 0 1214 5 1200       leper hunter
+? 0 2 0 E
+E 1 1365 30 19          Battle Axe (Two-Handed)
+Y 0 11 5		5% chance of platemail
+M 0 1214 5 1200       leper hunter
+? 0 2 0 E
+E 1 1365 30 19          Battle Axe (Two-Handed)
+Y 0 11 5		5% chance of platemail
 
 M 0 1389 1 1293        Fisherman (shark quest)
 M 0 1250 1 1352        medic
