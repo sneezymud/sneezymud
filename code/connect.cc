@@ -1043,7 +1043,7 @@ int Descriptor::nanny(const char *arg)
             character->fullscreen();
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
             page_string(str, SHOWNOW_YES);
             connected = CON_QRACE;
@@ -1101,7 +1101,7 @@ int Descriptor::nanny(const char *arg)
       str += "\n\r[Press Return to continue]\n\r";
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
       character->fullscreen();
       writeToQ(str.c_str());
@@ -1114,7 +1114,7 @@ int Descriptor::nanny(const char *arg)
       str += "\n\r[Press Return to continue]\n\r";
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
       character->fullscreen();
       writeToQ(str.c_str());
@@ -1128,7 +1128,7 @@ int Descriptor::nanny(const char *arg)
       character->fullscreen();
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
       writeToQ(str.c_str());
       connected = CON_MULTIWARN;
@@ -1565,7 +1565,7 @@ int Descriptor::nanny(const char *arg)
           character->fullscreen();
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
           page_string(str, SHOWNOW_YES);
           return FALSE;
@@ -1634,7 +1634,7 @@ int Descriptor::nanny(const char *arg)
           character->fullscreen();
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
           page_string(str, SHOWNOW_YES);
           return FALSE;
@@ -1693,7 +1693,7 @@ int Descriptor::nanny(const char *arg)
           character->fullscreen();
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
           page_string(str, SHOWNOW_YES);
           return FALSE;
@@ -1747,7 +1747,7 @@ int Descriptor::nanny(const char *arg)
           character->fullscreen();
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
           page_string(str, SHOWNOW_YES);
           return FALSE;
@@ -1796,7 +1796,7 @@ int Descriptor::nanny(const char *arg)
           character->fullscreen();
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
           page_string(str, SHOWNOW_YES);
           return FALSE;
@@ -1860,7 +1860,7 @@ int Descriptor::nanny(const char *arg)
           character->fullscreen();
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
           page_string(str, SHOWNOW_YES);
           return FALSE;
@@ -1997,7 +1997,7 @@ int Descriptor::nanny(const char *arg)
             character->fullscreen();
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
             page_string(str, SHOWNOW_YES);
             connected = CON_QCLASS;
@@ -2173,7 +2173,7 @@ int Descriptor::nanny(const char *arg)
         character->fullscreen();
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
         page_string(str, SHOWNOW_YES);
         break;
@@ -2264,7 +2264,7 @@ int Descriptor::nanny(const char *arg)
         character->fullscreen();
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
         page_string(str, SHOWNOW_YES);
         break;
@@ -2357,7 +2357,7 @@ int Descriptor::nanny(const char *arg)
         character->fullscreen();
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
         page_string(str, SHOWNOW_YES);
         break;
@@ -2454,7 +2454,7 @@ int Descriptor::nanny(const char *arg)
         character->fullscreen();
 
       // swap color sstrings
-      str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
+      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
 
         page_string(str, SHOWNOW_YES);
         break;
@@ -4744,7 +4744,7 @@ void Descriptor::worldSend(const sstring &text, TBeing *ch)
 
   for (d = descriptor_list; d; d = d->next) {
     if (!d->connected)
-      d->output.putInQ(colorString(ch, d, text.c_str(), NULL, COLOR_BASIC, TRUE));
+      d->output.putInQ(colorString(ch, d, text, NULL, COLOR_BASIC, TRUE));
   }
 }
 
@@ -5951,7 +5951,7 @@ void Descriptor::sendMotd(int wiz)
 
   file_to_sstring(MOTD_FILE, version);
   // swap color sstrings
-  version = colorString(character, this, version.c_str(), NULL, COLOR_BASIC,  false);
+  version = colorString(character, this, version, NULL, COLOR_BASIC,  false);
   strcat(motd, version.c_str());
 
   if (stat(NEWS_FILE, &timestat)) {
@@ -5964,7 +5964,7 @@ void Descriptor::sendMotd(int wiz)
   if (wiz) {
     file_to_sstring(WIZMOTD_FILE, version);
     // swap color sstrings
-    version = colorString(character, this, version.c_str(), NULL, COLOR_BASIC,  false);
+    version = colorString(character, this, version, NULL, COLOR_BASIC,  false);
     strcat(motd, version.c_str());
     if (stat(WIZNEWS_FILE, &timestat)) {
       vlogf(LOG_BUG, "bad call to wiznews file");

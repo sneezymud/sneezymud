@@ -10,15 +10,13 @@
 #include "colorstring.h"
 
 
-sstring stripColorCodes(sstring s)
+sstring stripColorCodes(const sstring &s)
 {
   sstring buf;
   
   for(unsigned int i=0;i<s.length();++i){
-    if(s[i] == '<'){
-      i+=2;
-      continue;
-    }
+    if(s[i] == '<')
+      i+=3;
     
     buf += s[i];
   }
@@ -27,11 +25,11 @@ sstring stripColorCodes(sstring s)
 }
 
 
-bool hasColorStrings(const TBeing *mob, const char *arg, int field)
+bool hasColorStrings(const TBeing *mob, const sstring &arg, int field)
 {
-  const char *s = NULL;
+  sstring s;
 
-  if (!arg || !*arg)
+  if(arg.empty())
     return FALSE;
 
   mud_assert(field >=1 && field <= 2, "Bad args");
@@ -44,10 +42,9 @@ bool hasColorStrings(const TBeing *mob, const char *arg, int field)
       s = arg;
       break;
   }
-  for (; *s; s++) {
-
-    if ((*s == '<') && ((*(s + 2)) == '>')) {
-      switch (*(s + 1)) {
+  for(unsigned int i=0;i<s.size()-1;++i){
+    if ((s[i] == '<') && (s[i+2] == '>')) {
+      switch (s[i+1]) {
         case 'b':
         case 'c':
         case 'g':
@@ -109,19 +106,19 @@ bool hasColorStrings(const TBeing *mob, const char *arg, int field)
 // takes the sstring given by arg, replaces any <m> or <M> in it with
 // ting's name.  Colorizes as appropriate for me/ch.  Undoes any color
 // changes that were made by insertion of ting's name sstring also.
-sstring addNameToBuf(const TBeing *me, const Descriptor *ch, const TThing *ting, const char *arg, colorTypeT lev) 
+sstring addNameToBuf(const TBeing *me, const Descriptor *ch, const TThing *ting, const sstring &arg, colorTypeT lev) 
 {
   unsigned int s;
   unsigned int len;
   sstring buf;
-  char tmp[256];
+  char tmp[80];
   bool y = FALSE;
   int x = 0;
 
   if (!ch)
     return arg;
 
-  len = strlen(arg);
+  len = arg.length();
   buf = "";
 
   for(s = 0;len > 2 && s<(len-2);s++) {
@@ -215,14 +212,12 @@ sstring addNameToBuf(const TBeing *me, const Descriptor *ch, const TThing *ting,
   return buf;
 }
 
-sstring nameColorString(TBeing *me, Descriptor *ch, const char *arg, int *flag, colorTypeT, bool noret)
+sstring nameColorString(TBeing *me, Descriptor *ch, const sstring &arg, int *flag, colorTypeT, bool noret)
 {
   unsigned int len, s;
   sstring buf;
-  char tmp[256];
           
-  len = strlen(arg);
-  buf = "";
+  len = arg.length();
 
   for(s = 0;len > 2 && s < (len-2); s++) {
     if ((arg[s] == '<') && (arg[s + 2] == '>')) {
@@ -235,8 +230,7 @@ sstring nameColorString(TBeing *me, Descriptor *ch, const char *arg, int *flag, 
         case 'n':
         case 'N':
           if (me) {
-            strcpy(tmp, me->getName());
-            buf += cap(tmp);
+            buf += good_cap(me->getName());
             if (flag)
               *flag = TRUE;
             s += 2;
@@ -263,7 +257,7 @@ sstring nameColorString(TBeing *me, Descriptor *ch, const char *arg, int *flag, 
   return buf;
 }
 
-const sstring colorString(const TBeing *me, const Descriptor *ch, const char *arg, int *flag, colorTypeT lev, bool end, bool noret)
+const sstring colorString(const TBeing *me, const Descriptor *ch, const sstring &arg, int *flag, colorTypeT lev, bool end, bool noret)
 {
 // (me = who to, ch is the desc, arg = arg, flag = ?, int lev = desired color
 //  level, end = whether to send terminator at end of sstring..false if in
@@ -272,11 +266,10 @@ const sstring colorString(const TBeing *me, const Descriptor *ch, const char *ar
 //  to no so if you dont pass anything, it will not return -Cos
   int len, s;
   sstring buf;
-  char tmp[80];
   bool colorize = TRUE;
   bool addNorm = FALSE;
 
-  if (!arg)
+  if (arg.empty())
     return ("");
 
   if (!ch && lev != COLOR_NONE && lev != COLOR_NEVER)
@@ -357,7 +350,7 @@ const sstring colorString(const TBeing *me, const Descriptor *ch, const char *ar
       colorize = TRUE;
       break;
   }
-  len = strlen(arg);
+  len = arg.length();
 
   buf = "";
   if (colorize) {
@@ -603,8 +596,7 @@ const sstring colorString(const TBeing *me, const Descriptor *ch, const char *ar
           case 'n':
           case 'N':
             if (me) {
-              strcpy(tmp, me->getName());
-              buf += cap(tmp);
+              buf += good_cap(me->getName());
               if (flag)
                 *flag = TRUE;
               s += 2;

@@ -65,43 +65,42 @@ void TBeing::disturbMeditation(TBeing *vict) const
 }
 
 // Make drunk people garble their words!
-static sstring garble(const char *arg, int chance)
+sstring TBeing::garble(const sstring &arg, int chance)
 {
-  char *tmp;
-  char temp[256];
-  char word[80], latin[80];
-  int i;
+  sstring obuf, buf, latin;
 
-  if (!*arg)
+  if (arg.empty())
     return "";
 
   if (chance <= 9)
     return arg;
 
-  for (;!isalpha(*arg); arg++);
-// get rid of bad things at the beginning of sstring
+  vector <sstring> args;
+  vector <sstring>::iterator iter;
+  unsigned int loc;
+  argument_parser(arg, args);
+  buf=obuf=arg;
 
-  // first, lets turn things into pig latin
-  *temp = '\0';
-  *word = '\0';
-  i = 0;
-  while (*arg) {
-    while (*arg && isalpha(*arg)) {
-      word[i++] = *arg;
-      arg++;
+  // first, lets turn things into pig latin, word by word
+  for(iter=args.begin();iter!=args.end();++iter){
+    ssprintf(latin, "%s%cay", (*iter).substr(1,(*iter).size()-1).c_str(),
+	     (*iter)[0]);
+    
+    // replace the original word in obuf with whitespace
+    // replace the original word in buf with the new word
+    loc=obuf.find((*iter), 0);
+    if(loc != sstring::npos){
+      obuf.erase(loc, (*iter).size());
+      obuf.insert(loc, latin.size(), ' ');
+      buf.erase(loc, (*iter).size());
+      buf.insert(loc, latin);
     }
-    word[i] = '\0';
-    i = 0;
-    sprintf(latin, "%s%cay", &word[1], word[0]);
-    sprintf(temp, "%s%s%c", temp, latin, *arg);
-    if (*arg)
-      arg++;
   }
   
-  // Since say handles spaces, no need to worry about them 
-  for (tmp = temp; *tmp; tmp++) {
-    if (number(0, chance + 3) >= 10) {
-      switch (*tmp) {
+  // change some letters randomly
+  for(unsigned int i=0;i<buf.size()-1;++i){
+    if (::number(0, chance + 3) >= 10) {
+      switch (buf[i]) {
         case 'a':
         case 'e':
         case 'i':
@@ -115,17 +114,19 @@ static sstring garble(const char *arg, int chance)
           break;
         case 'z':
         case 'Z':
-          *tmp = 'y';
+          buf[i] = 'y';
           break;
         default:
-          if (isalpha(*tmp))
-            (*tmp)++;
+          if (isalpha(buf[i]))
+            (buf[i])++;
           break;
       }
     }
   }
-  return (temp);
+  return buf;
 }
+
+
 
 // uses printf style arguments
 int TBeing::doSay(const char *fmt, ...)
@@ -145,14 +146,10 @@ int TBeing::doSay(const char *fmt, ...)
 // may return DELETE_THIS
 int TBeing::doSay(const sstring &arg)
 {
-  char buf[MAX_INPUT_LENGTH + 40];
-  char garbed[MAX_INPUT_LENGTH];
-  *buf = '\0';
+  sstring buf, garbed, capbuf, tmpbuf, nameBuf, garbedBuf;
   TThing *tmp, *tmp2;
   TBeing *mob = NULL;
   int rc;
-  char capbuf[MAX_INPUT_LENGTH];
-  char tmpbuf[MAX_INPUT_LENGTH], nameBuf[MAX_INPUT_LENGTH], garbedBuf[MAX_INPUT_LENGTH];
   Descriptor *d;
 
   if (desc)
@@ -168,115 +165,127 @@ int TBeing::doSay(const sstring &arg)
 
   if (isAffected(AFF_SILENT)) {
     sendTo("You can't make a sound!\n\r");
-    act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0, 0, TO_ROOM);
+    act("$n waves $s hands and points silently toward $s mouth.",
+	TRUE, this, 0, 0, TO_ROOM);
     return FALSE;
   }
-  if (arg.empty())
+
+  if (arg.empty()){
     sendTo("Yes, but WHAT do you want to say?\n\r");
-  else {
-    mud_str_copy(garbed, garble(arg.c_str(), getCond(DRUNK)), MAX_INPUT_LENGTH);
+    return FALSE;
+  }
 
-    if (hasDisease(DISEASE_DROWNING)) 
-      mud_str_copy(garbed, "Glub glub glub.", MAX_INPUT_LENGTH);
+  garbed=garble(arg, getCond(DRUNK));
+  
+  if (hasDisease(DISEASE_DROWNING)) 
+    garbed="Glub glub glub.";
+  
+  sendTo(COLOR_COMM, "<g>You say, <z>\"%s%s\"\n\r", 
+	 colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE).c_str(), 
+	 norm());
 
-    sendTo(COLOR_COMM, "<g>You say, <z>\"%s%s\"\n\r", 
-            colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE).c_str(), norm());
-    // show everyone in room the say.
-    for (tmp = roomp->getStuff(); tmp; tmp = tmp2) {
-      tmp2 = tmp->nextThing;
-          
-      if (!(mob = dynamic_cast<TBeing *>(tmp)))
-        continue;
-
-      if (!(d = mob->desc) || mob == this || (mob->getPosition() <= POSITION_SLEEPING))
-        continue;
-
-      mud_str_copy(capbuf, mob->pers(this), MAX_INPUT_LENGTH);
-      cap(capbuf);
-      sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str()); 
-
-      if (mob->isPc()) {
-        if (hasColorStrings(NULL, capbuf, 2)) {
-          if (IS_SET(mob->desc->plr_color, PLR_COLOR_MOBS)) {
-            sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str());
-	    if (Lapspeak == 1) {
-	      mob->sendTo(COLOR_COMM, "%s says, \"Heh.  %s%s  Heh.\"\n\r", tmpbuf, garbed, mob->norm());
-	    } else {
-	      mob->sendTo(COLOR_COMM, "%s says, \"%s%s\"\n\r", tmpbuf, garbed, mob->norm());
-	    }
-            if (d->m_bIsClient) {
-              sprintf(garbedBuf, "%s", 
-                colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-              d->clientf("%d|%s|%s", CLIENT_SAY, tmpbuf, garbedBuf);
-            }
-          } else {
-	    if (Lapspeak == 1) {
-	      mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"Heh.  %s  Heh.\"\n\r", tmpbuf, garbed);
-	    } else {
-	      mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"%s\"\n\r", tmpbuf, garbed);
-	    }
-            if (d->m_bIsClient) {
-              sprintf(nameBuf, "<c>%s<z>", tmpbuf);
-              sprintf(garbedBuf, "%s", 
-                colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-              d->clientf("%d|%s|%s", CLIENT_SAY, 
-                colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
-                garbedBuf);
-            }
-          }
-        } else {
+  // show everyone in room the say.
+  for (tmp = roomp->getStuff(); tmp; tmp = tmp2) {
+    tmp2 = tmp->nextThing;
+    
+    if (!(mob = dynamic_cast<TBeing *>(tmp)))
+      continue;
+    
+    if (!(d = mob->desc) || mob == this ||
+	(mob->getPosition() <= POSITION_SLEEPING))
+      continue;
+    
+    capbuf=good_cap(mob->pers(this));
+    ssprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str()); 
+    
+    if (mob->isPc()) {
+      if (hasColorStrings(NULL, capbuf, 2)) {
+	if (IS_SET(mob->desc->plr_color, PLR_COLOR_MOBS)) {
+	  ssprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str());
 	  if (Lapspeak == 1) {
-	    mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"Heh.  %s  Heh.\"\n\r", tmpbuf, garbed);
+	    mob->sendTo(COLOR_COMM, "%s says, \"Heh.  %s%s  Heh.\"\n\r",
+			tmpbuf.c_str(), garbed.c_str(), mob->norm());
 	  } else {
-	    mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"%s\"\n\r", tmpbuf, garbed);
+	    mob->sendTo(COLOR_COMM, "%s says, \"%s%s\"\n\r", 
+			tmpbuf.c_str(), garbed.c_str(), mob->norm());
 	  }
-          if (d->m_bIsClient) {
-            sprintf(nameBuf, "<c>%s<z>", tmpbuf);
-            sprintf(garbedBuf, "%s",
-            colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-            d->clientf("%d|%s|%s", CLIENT_SAY,
-                colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
-                garbedBuf);
-          }
-        }
+	  if (d->m_bIsClient) {
+	    ssprintf(garbedBuf, "%s", 
+		     colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
+	    d->clientf("%d|%s|%s", CLIENT_SAY, tmpbuf.c_str(), garbedBuf.c_str());
+	  }
+	} else {
+	  if (Lapspeak == 1) {
+	    mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"Heh.  %s  Heh.\"\n\r",
+			tmpbuf.c_str(), garbed.c_str());
+	  } else {
+	    mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"%s\"\n\r",
+			tmpbuf.c_str(), garbed.c_str());
+	  }
+	  if (d->m_bIsClient) {
+	    ssprintf(nameBuf, "<c>%s<z>", tmpbuf.c_str());
+	    ssprintf(garbedBuf, "%s", 
+		     colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
+	    d->clientf("%d|%s|%s", CLIENT_SAY, 
+		       colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
+		       garbedBuf.c_str());
+	  }
+	}
       } else {
-	  if (Lapspeak == 1) {
-	    mob->sendTo(COLOR_COMM, "%s says, \"Heh.  %s  Heh.\"\n\r", good_cap(getName()).c_str(), 
-			colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE).c_str());
-	  } else {
-	    mob->sendTo(COLOR_COMM, "%s says, \"%s\"\n\r", good_cap(getName()).c_str(), 
-			colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE).c_str());
-	  }
-        if (d->m_bIsClient) {
-          d->clientf("%d|%s|%s", CLIENT_SAY, good_cap(getName()).c_str(),
-            colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-        }
+	if (Lapspeak == 1) {
+	  mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"Heh.  %s  Heh.\"\n\r",
+		      tmpbuf.c_str(), garbed.c_str());
+	} else {
+	  mob->sendTo(COLOR_COMM, "<c>%s says, <z>\"%s\"\n\r",
+		      tmpbuf.c_str(), garbed.c_str());
+	}
+	if (d->m_bIsClient) {
+	  ssprintf(nameBuf, "<c>%s<z>", tmpbuf.c_str());
+	  ssprintf(garbedBuf, "%s",
+		   colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
+	  d->clientf("%d|%s|%s", CLIENT_SAY,
+		     colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
+		     garbedBuf.c_str());
+	}
       }
-    }
-
-    // everyone needs to see the say before the response gets triggered
-    for (tmp = roomp->getStuff(); tmp; tmp = tmp2) {
-      tmp2 = tmp->nextThing;
-      mob = dynamic_cast<TBeing *>(tmp);
-      if (!mob)
-        continue;
-
-      if (mob == this || (mob->getPosition() <= POSITION_SLEEPING))
-        continue;
-
-      if (isPc() && !mob->isPc()) { 
-        TMonster *tmons = dynamic_cast<TMonster *>(mob);
-        tmons->aiSay(this, garbed);
-        rc = tmons->checkResponses(this, 0, garbed, CMD_SAY);
-        if (IS_SET_DELETE(rc, DELETE_THIS)) {
-          delete tmons;
-          tmons = NULL;
-        }
-        if (IS_SET_DELETE(rc, DELETE_VICT)) 
-          return DELETE_THIS;
+    } else {
+      if (Lapspeak == 1) {
+	mob->sendTo(COLOR_COMM, "%s says, \"Heh.  %s  Heh.\"\n\r", good_cap(getName()).c_str(), 
+		    colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE).c_str());
+      } else {
+	mob->sendTo(COLOR_COMM, "%s says, \"%s\"\n\r", good_cap(getName()).c_str(), 
+		    colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE).c_str());
+      }
+      if (d->m_bIsClient) {
+	d->clientf("%d|%s|%s", CLIENT_SAY, good_cap(getName()).c_str(),
+		   colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
       }
     }
   }
+  
+  // everyone needs to see the say before the response gets triggered
+  for (tmp = roomp->getStuff(); tmp; tmp = tmp2) {
+    tmp2 = tmp->nextThing;
+    mob = dynamic_cast<TBeing *>(tmp);
+    if (!mob)
+      continue;
+    
+    if (mob == this || (mob->getPosition() <= POSITION_SLEEPING))
+      continue;
+    
+    if (isPc() && !mob->isPc()) { 
+      TMonster *tmons = dynamic_cast<TMonster *>(mob);
+      tmons->aiSay(this, NULL);
+      rc = tmons->checkResponses(this, 0, garbed, CMD_SAY);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	delete tmons;
+	tmons = NULL;
+      }
+      if (IS_SET_DELETE(rc, DELETE_VICT)) 
+	return DELETE_THIS;
+    }
+  }
+
   return FALSE;
 }
 
@@ -979,11 +988,10 @@ int TBeing::doWhisper(const char *arg)
 }
 
 // returns DELETE_THIS is this should go poof
-int TBeing::doAsk(const char *arg)
+int TBeing::doAsk(const sstring &arg)
 {
   TBeing *vict;
-  char name[100], message[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH];
-  char garbled[256];
+  sstring name, message, garbled, buf;
   int rc;
 
   if (isAffected(AFF_SILENT)) {
@@ -998,9 +1006,10 @@ int TBeing::doAsk(const char *arg)
     return FALSE;
   }
 
-  half_chop(arg, name, message);
+  message=arg;
+  message=one_argument(message, name);
 
-  if (!*name || !*message)
+  if (name.empty() || message.empty())
     sendTo("Whom do you want to ask something...and what??\n\r");
   else if (!(vict = get_char_room_vis(this, name)))
     sendTo("No-one by that name here...\n\r");
@@ -1008,11 +1017,12 @@ int TBeing::doAsk(const char *arg)
     act("$n quietly asks $mself a question.", TRUE, this, 0, 0, TO_ROOM);
     sendTo("You think about it for a while...\n\r");
   } else {
-    mud_str_copy(garbled, garble(message, getCond(DRUNK)), 256);
+    garbled=garble(message, getCond(DRUNK));
 
-    sprintf(buf, "$n asks you, \"%s\"", garbled);
+    ssprintf(buf, "$n asks you, \"%s\"", garbled.c_str());
     act(buf, TRUE, this, 0, vict, TO_VICT);
-    sendTo(COLOR_MOBS, "You ask %s, \"%s\"\n\r", vict->getName(), garbled);
+    sendTo(COLOR_MOBS, "You ask %s, \"%s\"\n\r",
+	   vict->getName(), garbled.c_str());
     act("$n asks $N a question.", TRUE, this, 0, vict, TO_NOTVICT);
     disturbMeditation(vict);
     if (!vict->isPc()) {

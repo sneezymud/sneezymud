@@ -94,69 +94,6 @@ static void convertStringColor(const sstring replacement, sstring & str)
     str.replace(str.find("<tmpi>"), 6, "<z>");
 }
 
-// Make drunk people garble their words!
-static sstring garble(const sstring &arg, int chance)
-{
-  sstring obuf, buf, latin;
-
-  if (arg.empty())
-    return "";
-
-  if (chance <= 9)
-    return arg;
-
-  vector <sstring> args;
-  vector <sstring>::iterator iter;
-  unsigned int loc;
-  argument_parser(arg, args);
-  buf=obuf=arg;
-
-  // first, lets turn things into pig latin, word by word
-  for(iter=args.begin();iter!=args.end();++iter){
-    ssprintf(latin, "%s%cay", (*iter).substr(1,(*iter).size()-1).c_str(),
-	     (*iter)[0]);
-    
-    // replace the original word in obuf with whitespace
-    // replace the original word in buf with the new word
-    loc=obuf.find((*iter), 0);
-    if(loc != sstring::npos){
-      obuf.erase(loc, (*iter).size());
-      obuf.insert(loc, latin.size(), ' ');
-      buf.erase(loc, (*iter).size());
-      buf.insert(loc, latin);
-    }
-  }
-  
-  // change some letters randomly
-  for(unsigned int i=0;i<buf.size()-1;++i){
-    if (number(0, chance + 3) >= 10) {
-      switch (buf[i]) {
-        case 'a':
-        case 'e':
-        case 'i':
-        case 'o':
-        case 'u':
-        case 'A':
-        case 'E':
-        case 'I':
-        case 'O':
-        case 'U':
-          break;
-        case 'z':
-        case 'Z':
-          buf[i] = 'y';
-          break;
-        default:
-          if (isalpha(buf[i]))
-            (buf[i])++;
-          break;
-      }
-    }
-  }
-  return buf;
-}
-
-
 int TBeing::doPTell(const char *arg, bool visible){
   TBeing *vict;
   char name[100], capbuf[256], message[MAX_INPUT_LENGTH + 40];

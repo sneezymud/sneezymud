@@ -10,15 +10,15 @@
 #ifndef __COLORSTRING_H
 #define __COLORSTRING_H
 
-sstring stripColorCodes(sstring s);
+sstring stripColorCodes(const sstring &s);
 
-bool hasColorStrings(const TBeing *, const char *, int);
+bool hasColorStrings(const TBeing *, const sstring &, int);
 
-sstring addNameToBuf(const TBeing *, const Descriptor *, const TThing *, const char *, colorTypeT);
+sstring addNameToBuf(const TBeing *, const Descriptor *, const TThing *, const sstring &, colorTypeT);
 
-sstring nameColorString(TBeing *, Descriptor *, const char *, int *, colorTypeT, bool = false);
+sstring nameColorString(TBeing *, Descriptor *, const sstring &, int *, colorTypeT, bool = false);
 
-const sstring colorString(const TBeing *, const Descriptor *, const char *, int *, colorTypeT, bool, bool = false);
+const sstring colorString(const TBeing *, const Descriptor *, const sstring &, int *, colorTypeT, bool, bool = false);
 
 
 #endif

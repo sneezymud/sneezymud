@@ -117,7 +117,7 @@ void TBeing::doMessage(const char *tArg)
 
       bool isNamed = (colorString(this, desc, getName(), NULL, COLOR_NONE, TRUE).find(getNameNOC(this)) != sstring::npos);
 
-      if (colorString(this, desc, tStString.c_str(), NULL, COLOR_NONE, TRUE).length() >
+      if (colorString(this, desc, tStString, NULL, COLOR_NONE, TRUE).length() >
           messageCommandSwitches[tValue][0]) {
         sendTo("String length, for this field, is limited to %d characters in total.\n\r",
                messageCommandSwitches[tValue][0]);

@@ -1960,13 +1960,14 @@ class TBeing : public TThing {
     virtual void doShutdown(const char *);
     const sstring addColorRoom(TRoom *, int) const;
     sstring dynColorRoom(TRoom *, int, bool) const;
+    sstring garble(const sstring &, int);
     void doLook(const char *, cmdTypeT, TThing *specific = NULL);
     void doShout(const char *);
     int doWhisper(const char *);
     int doTell(const sstring &, const char *, ...);
     int doTell(const sstring &, bool visible = TRUE);
     int doClientMessage(const char *);
-    int doAsk(const char *);
+    int doAsk(const sstring &);
     void doSign(const sstring &);
     void doGrouptell(const char *);
     void doWrite(const char *);
