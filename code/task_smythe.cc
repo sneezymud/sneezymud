@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.16  2002/08/10 05:39:53  dash
+// smythe fix, backstab fix
+//
 // Revision 5.15  2002/07/14 04:46:41  dash
 // changes to cleric wrath spells
 //
@@ -655,8 +658,8 @@ int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 	  act("You pound $p on an anvil with your $O.", FALSE, ch, o, hammer, TO_CHAR);
 	  hammer->addToToolUses(-1);
 	  if (hammer->getToolUses() <= 0) {
-	    act("Your $o breaks due to overuse.", FALSE, ch, o, hammer, TO_CHAR);
-	    act("$n looks startled as $e breaks $P while hammering.", FALSE, ch, o, hammer, TO_ROOM);
+	    act("Your $o breaks due to overuse.", FALSE, ch, hammer, hammer, TO_CHAR);
+	    act("$n looks startled as $e breaks $P while hammering.", FALSE, ch, hammer, hammer, TO_ROOM);
 	    hammer->makeScraps();
 	    ch->stopTask();
 	    delete hammer;
@@ -879,7 +882,7 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 {
 
   TThing *t;
-  TTool *ladel = NULL, *oils = NULL, *soil = NULL;
+  TTool *ladel = NULL, *oils = NULL;
   TObj *o = NULL;
   int learning;
   int percent;
@@ -957,9 +960,9 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	  } else {
 	    
 	    act("$n drops oil from $P and rubs it across $p.", FALSE, ch, o, oils, TO_ROOM);
-	    act("You tkae soild from $P and rub it across $p.", FALSE, ch, o, oils, TO_CHAR);
-	    soil->addToToolUses(-1);
-	    if (soil->getToolUses() <= 0) {
+	    act("You take soild from $P and rub it across $p.", FALSE, ch, o, oils, TO_CHAR);
+	    oils->addToToolUses(-1);
+	    if (oils->getToolUses() <= 0) {
 	      act("Your $P is all used up, and you discard it.", FALSE, ch, o, oils, TO_CHAR);
 	      act("$n's $P is all used up, and $e discards it.", FALSE, ch, o, oils, TO_ROOM);
 	      

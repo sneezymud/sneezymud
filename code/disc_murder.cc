@@ -93,7 +93,7 @@ int TBeing::backstabHit(TBeing *victim, TThing *obj)
         if (victim->isUndead()) {
           act("$N coughs, shivers, then collapses as you place $p in $S back.",
               FALSE, this, obj, victim, TO_CHAR);
-          act("$N coughs, shivers, then collapses as $N placs $p in $S back.",
+          act("$N coughs, shivers, then collapses as $n places $p in $S back.",
               FALSE, this, obj, victim, TO_NOTVICT);
         } else {
           int tMessageChoice = (::number(0, BS_MSG_DEATH_MAX) * 2);
