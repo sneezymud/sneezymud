@@ -5242,7 +5242,17 @@ int totemMask(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
   result = ::number(5, 16);
 
   if (chance >= 65) {
-    // do nothing
+    if (chance >=80)
+      return FALSE;
+    if (o->getStructPoints() < o->getMaxStructPoints()) {
+      if(::number(1,100) < (int)(100.0*((float)(o->getStructPoints()) / (float)(o->getMaxStructPoints()))))
+        return FALSE;
+      act("<k>Worms crawl from behind <1>$n<k>'s <1>$p<k> and then liquify filling in the damaged places.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("<k>Worms crawl from behind <1>$o<k> and then liquify, filling in the damaged places.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      o->addToStructPoints(::number(1,min(5, o->getMaxStructPoints() - o->getStructPoints())));
+      return FALSE;
+    }
+    return FALSE;
   } else {
     act("<r>The eyes of $o <r>glow blood red as life force is channeled from your body.<1>"
 	, 0, v, o, 0, TO_CHAR);
@@ -5256,6 +5266,7 @@ int totemMask(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
       return DELETE_VICT;
   }
   return TRUE;
+
 }
 
 
