@@ -1454,12 +1454,12 @@ int vending_machine2(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *o
     arg = one_argument(arg, arg3);
     if ((is_abbrev(arg1, "button") || is_abbrev(arg1, "machine") || is_abbrev(arg1, "vending")) &&
 	(!is_abbrev(arg2, "button") || !is_abbrev(arg2, "machine") || !is_abbrev(arg2, "vending")) && arg2)
-      drink = arg2;
+      strncpy(drink, arg2, sizeof(drink));
     else if ((is_abbrev(arg1, "button") || is_abbrev(arg1, "machine") || is_abbrev(arg1, "vending")) &&
 	     (is_abbrev(arg2, "button") || is_abbrev(arg2, "machine") || is_abbrev(arg2, "vending")) && arg3)
-      drink = arg3;
+      strncpy(drink, arg3, sizeof(drink));
     else if (arg1)
-      drink = arg1;
+      strncpy(drink, arg1, sizeof(drink));
     else
       return FALSE;
     
