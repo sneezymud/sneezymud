@@ -414,8 +414,9 @@ void TObj::lowCheck()
 
   // not sure logically, but would a canWear(ITEM_TAKE) check be appropriate here?
   // allow APPLY_LIGHT on untakeable things?
+  // ^ yes... Maror 08/04
   for (i=0; i<MAX_OBJ_AFFECT;i++) {
-    if (affected[i].location == APPLY_LIGHT) {
+    if (affected[i].location == APPLY_LIGHT && canWear(ITEM_TAKE)) {
       vlogf(LOG_LOW,fmt("item %s was defined apply-light.") % getName());
     }
   }

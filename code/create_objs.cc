@@ -313,8 +313,10 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
   }
   
   for (i = 0; i < MAX_OBJ_AFFECT; i++) {
-    if (o->affected[i].location == APPLY_LIGHT)
+    if (o->affected[i].location == APPLY_LIGHT && o->canWear(ITEM_TAKE)) {
+      ch->sendTo("Removing light affects on takeable item.\n\r");
       continue;
+    }
     
     if (o->affected[i].location != APPLY_NONE) {
       if(!db.query("insert into objaffect (type, mod1, mod2, owner, vnum) values (%i, %i, %i, '%s', %i)",
@@ -915,7 +917,7 @@ void TPerson::doOEdit(const char *argument)
 
 void TObj::writeAffects(int i, FILE *fp) const
 {
-  if (affected[i].location == APPLY_LIGHT)
+  if (affected[i].location == APPLY_LIGHT && canWear(ITEM_TAKE))
     return;
 
   if (affected[i].location != APPLY_NONE) {
@@ -2943,8 +2945,8 @@ void generic_dirlist(const char *buf, const TBeing *ch)
 
 int TObj::addApply(TBeing *ch, applyTypeT apply)
 {
-  if (apply == APPLY_LIGHT) {
-    ch->sendTo("If you want light on the object, please do so by setting GLOW.\n\r");
+  if (apply == APPLY_LIGHT && !canWear(ITEM_TAKE)) {
+    ch->sendTo("If you want light on a takeable object, please do so by setting GLOW.\n\r");
     return TRUE;
   }
   return FALSE;
