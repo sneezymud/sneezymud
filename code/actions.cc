@@ -711,6 +711,33 @@ void TBeing::doPee(const sstring &argument)
   setCond(PEE, 0);
 }
 
+void TBeing::doTip(const sstring &arg)
+{
+  TThing *t;
+  sstring hat=equipment[WEAR_HEAD]?fname(equipment[WEAR_HEAD]->name):"hat";
+
+  if(arg.empty()){
+    act(fmt("You tip your %s.") % hat,  FALSE, this, NULL, NULL, TO_CHAR);
+    act(fmt("$n tips $s %s.") % hat,  FALSE, this, NULL, NULL, TO_ROOM);
+  } else {
+    t=searchLinkedList(arg, roomp->getStuff(), TYPETHING);
+    
+    if(t==this){
+      act(fmt("You tip your %s to yourself - are you feeling alright?") % hat,
+	  FALSE, this, NULL, t, TO_CHAR);
+      act(fmt("$n tips $s %s to $mself? Don't ask...") % hat,
+	  FALSE, this, NULL, t, TO_ROOM);
+    } else {
+      act(fmt("You tip your %s in acknowledgement of $N.") % hat, 
+	  FALSE, this, NULL, t, TO_CHAR);
+      act(fmt("$n tips $s %s to $N.") % hat,
+	  FALSE, this, NULL, t, TO_NOTVICT);
+      act(fmt("$n tips $s %s to you.") % hat,
+	  FALSE, this, NULL, t, TO_VICT);
+    }
+  }
+}
+
 void TBeing::doPoke(const sstring &arg)
 {
   TThing *t = NULL;

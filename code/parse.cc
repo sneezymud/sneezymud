@@ -641,7 +641,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_BLINK:
         case CMD_FAINT:
         case CMD_GREET:
-        case CMD_TIP:
         case CMD_BOP:
         case CMD_WHIMPER:
         case CMD_SNEER:
@@ -676,6 +675,9 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           rc = doJump(stringarg);
 	  addToLifeforce(1);
           break;
+        case CMD_TIP:
+	  doTip(stringarg);
+	  break;
         case CMD_POKE:
 	  doPoke(stringarg);
 	  addToLifeforce(1);
