@@ -437,7 +437,7 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
   sstring line, garbled;
 
   sstring newDescr = "";
-  size_t swlen = 0, llen_diff = 0;
+  size_t swlen = 0, swlen_diff = 0, llen_diff = 0;
   bool was_word = false;
 
   if (regStr.empty()) {
@@ -456,23 +456,32 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
     indent = false;
   }
 
-  sstring raw_word = garbled.word(0);
-  for(int i=0;!raw_word.empty();raw_word = garbled.word(++i)){
+  int i = 0;
+  while (true) {
+    sstring raw_word = garbled.word(i++);
+  
+    if (raw_word.empty()) {
+      // complete the last line
+      line += "\n\r";
+      newDescr += line;
+      break;
+    }
 
     // count the number of unprintable characters in each word
     sstring stripped_word = stripColorCodes(raw_word);
     swlen = stripped_word.length();
+    swlen_diff = raw_word.length() - swlen;
 
     // add the length difference to the total difference for the current line
-    llen_diff += raw_word.length() - swlen;
+    llen_diff += swlen_diff;
 
+    // if the word is just a color code, just append it on the current line
+    if (!swlen) {
+      line += raw_word;
     // if the word is too long to fit on the current line
-    if ((line.length() + 1) + (raw_word.length() + 1) >= (79 + llen_diff)) {
-      if (!garbled.word(i+1).empty()) {
-        line += "\n\r";
-      }
-
-      // then start a new line
+    } else if ((line.length() + 1 + raw_word.length()) > (79 + llen_diff)) {
+      // terminate this line
+      line += "\n\r";
       newDescr += line;
 
       // check if the stripped word ends with punctuation
@@ -481,19 +490,14 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
         raw_word += " ";
       }
 
+      // then start a new line
       line = raw_word;
       // we just started a new line, so reset the line length difference
       // to that of the word minus stripped word
-      llen_diff = raw_word.length() - swlen;
+      llen_diff = swlen_diff;
 
     // word fits ok on the current line
     } else {
-      // check if the stripped word ends with punctuation
-      if (wordHasPunctuation(stripped_word)) {
-        // and add an extra space to the end of the original word
-        raw_word += " ";
-      }
-
       // if the length of the stripped word > 0
       // and the previous word was a real word, then append a space to the
       // line before appending the word.
@@ -502,15 +506,20 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
           line += " ";
         }
         was_word = true;
+
+        // check if the stripped word ends with punctuation
+        if (wordHasPunctuation(stripped_word) &&
+            !garbled.word(i+1).empty()) {
+          // and add an extra space to the end of the original word
+          raw_word += " ";
+        }
       } else {
         was_word = false;
       }
+
       line += raw_word;
     }
   }
-
-  newDescr += line;
-  newDescr += "\n\r";
 
   return newDescr;
 }
@@ -579,7 +588,7 @@ sstring TBeing::dynColorRoom(TRoom * rp, int title, bool) const
   }
 
   len = strlen(argument);
-  for(letter=0; letter <= len; letter++) {
+  for(letter=0; letter < len; letter++) {
     if (letter < 2) {
       buf += argument[letter];
       continue;
@@ -5092,7 +5101,7 @@ void TBeing::sendRoomDesc(TRoom *rp) const
     if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
       sendTo(COLOR_ROOMS, "%s%s", dynColorRoom(rp, 2, TRUE).toCRLF().c_str(), norm());
     } else {
-      sendTo(COLOR_ROOMS, "%s%s\n\r", autoFormatDesc(dynColorRoom(rp, 2, TRUE), true).c_str(), norm());
+      sendTo(COLOR_ROOMS, "%s%s", autoFormatDesc(dynColorRoom(rp, 2, TRUE), true).c_str(), norm());
     }
   } else {
     if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
