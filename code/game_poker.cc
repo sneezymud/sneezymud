@@ -327,7 +327,7 @@ void PokerGame::discard(TBeing *ch, sstring arg)
   sstring buf;
   int i=convertTo<int>(arg);
 
-  if(!i){
+  if(!i || i<1 || i>5){
     ch->sendTo("You need to enter the number of the card to discard.\n\r");
     return;
   }
