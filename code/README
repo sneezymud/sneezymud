@@ -7,6 +7,7 @@
 - Added purchaseMe to TRealContainer which sets the container with Empty
   Trap if it isn't current trapped/ghost-trapped.  This should fix the
   'buy bag then find a trap on it'.
+- Setup the 'kill blob' for infravision killing to allow 'kill blob-race'.
 
 12-09-99 - bat
 - created an rcsls.csh script that basically reveals what files are
