@@ -670,17 +670,18 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
       o->affected[j].modifier2 = item.affected[j].modifier2;
       o->affected[j].bitvector = item.affected[j].bitvector;
     }
-    // version 7
+    // version 7 or less
   } else {
     if ((item.extra_flags & ITEM_STRUNG) &&
 	!o->isObjStat(ITEM_STRUNG))
       o->addObjStat(ITEM_STRUNG);  // preserve strung
-  }
+    
     // deal with structure
     o->setStructPoints(min(item.struct_points, (int) obj_index[o->getItemIndex()].max_struct));
     
   if ((item.extra_flags & ITEM_CHARRED) && !o->isObjStat(ITEM_CHARRED))
     o->addObjStat(ITEM_CHARRED); // preserve charred
+  }
     
   if (o->isObjStat(ITEM_STRUNG)) {
     if (name)
