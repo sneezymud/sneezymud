@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: structs.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #ifndef __STRUCTS_H
 #define __STRUCTS_H
 
@@ -61,8 +46,8 @@ class TArrow;
 class TBow;
 class TBaseCorpse;
 class TTable;
-class TContainer;
-class TRealContainer;
+class TBaseContainer;
+class TOpenContainer;
 class boardStruct;
 
 const int MAX_BUF_LENGTH              = 240;
@@ -73,8 +58,10 @@ typedef short int sh_int;
 typedef unsigned short int ush_int;
 typedef signed char byte;
 
-extern void vlogf(int severity, const char *errorMsg,...);
+extern void vlogf(const char *, ...);
+extern void vlogf(logTypeT, const char *, ...);
 extern char * mud_str_dup(const char *buf);
+extern char * mud_str_copy(char *dest, const char *src, size_t n);
 
 class time_info_data
 {
@@ -115,6 +102,9 @@ class lag_data
     current(0),
     count(0)
   {
+    memset(&lagstart, 0, sizeof(lagstart));
+    memset(&lagtime, 0, sizeof(lagtime));
+    memset(&lagcount, 0, sizeof(lagcount));
   }
 };
 extern lag_data lag_info;
@@ -133,7 +123,7 @@ const int WAIT_ROUND   = 4;
 const unsigned int MAX_STRING_LENGTH   = 32000;
 const int MAX_INPUT_LENGTH    = 160;
 const int MAX_MESSAGES        =  60;
-const int MAX_ITEMS           = 153;
+const int MAX_ITEMS           = 15;
 
 const int MESS_ATTACKER = 1;
 const int MESS_VICTIM   = 2;
@@ -143,11 +133,6 @@ const int SECS_PER_REAL_MIN  = 60;
 const int SECS_PER_REAL_HOUR  = (60*SECS_PER_REAL_MIN);
 const int SECS_PER_REAL_DAY   = (24*SECS_PER_REAL_HOUR);
 const int SECS_PER_REAL_YEAR  = (365*SECS_PER_REAL_DAY);
-
-const int SECS_PER_MUD_HOUR  = 75;
-const int SECS_PER_MUD_DAY   = (48*SECS_PER_MUD_HOUR);
-const int SECS_PER_MUD_MONTH = (28*SECS_PER_MUD_DAY);
-const int SECS_PER_MUD_YEAR  = (12*SECS_PER_MUD_MONTH);
 
 const int INCHES_PER_FOOT    = 12;
 const int FEET_PER_YARD      = 3;
@@ -160,8 +145,10 @@ const int MAX_BAN_HOSTS = 15;
 
 const int LIM_ITEM_COST_MIN =  1499;   /* mininum rent cost of a lim. item */
 
-const int TICK_WRAP_COUNT = 3;   /*  PULSE_MOBILE / PULSE_TELEPORT */
-const int PLR_TICK_WRAP   = 24;  /*  this should be a divisor of 24 (hours) */
+// pet information
+const unsigned int PETTYPE_PET    = (1<<0);   // 1
+const unsigned int PETTYPE_CHARM  = (1<<1);   // 2
+const unsigned int PETTYPE_THRALL = (1<<2);   // 4
 
 struct show_room_zone_struct {
   int blank;
@@ -185,8 +172,6 @@ class drinkInfo {
   private:
   drinkInfo();  // deny usage in this format
 };
-
-const int LOW_ERROR   = -12;
 
 class snoopData {
   public:
@@ -258,21 +243,10 @@ class lastChangeData {
     int minute;
     int fighting;
     byte full, thirst, pos;
+    sh_int lifeforce;
     lastChangeData();
     lastChangeData(const lastChangeData &a);
     ~lastChangeData();
-};
-
-class poofinData {
-  public:
-    char *poofin;
-    char *poofout;
-    char *ldesc;
-    int pmask;
-    poofinData();
-    poofinData(const poofinData &a);
-    poofinData & operator=(const poofinData &a);
-    ~poofinData();
 };
 
 class objAffData {
@@ -304,14 +278,14 @@ class roomDirData {
     byte weight;               // how heavy door is, -1 = no door
     byte trap_info;            // Trap flags
     sh_int trap_dam;           // Damage trap will do
-    sh_int key;                // Number of object that opens door
-    sh_int to_room;            // What room we exit to. -1 means no exit
+    int key;                // Number of object that opens door
+    int to_room;            // What room we exit to. -1 means no exit
 
     void destroyDoor(dirTypeT, int);
     void caveinDoor(dirTypeT, int);
     void wardDoor(dirTypeT, int);
     doorTypeT doorType() { return door_type; };
-    sh_int destination() { return to_room; };
+    int destination() { return to_room; };
     const string getName() const;
     const string closed() const;
 
@@ -385,15 +359,6 @@ class saveAffectedData {
     saveAffectedData();
     saveAffectedData & operator=(const affectedData &a);
 };
-
-/*
-   Template Classes:
-   My understanding of this stuff is a wee bit weak, anyway...
- 
-   Essentially, this allows us to write a "generic" function.
-   if you pass it an int, the "template" is an int, pass it a long, and
-   the template is a long.  The type is being defined on the fly.
-*/
 
 #if 1
 template<class T>

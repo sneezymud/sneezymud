@@ -2,13 +2,16 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: paths.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
+//   Paths.h - SneezyMUD Development team.
+//   Copyright 1997, All Rights Reserved.
 //
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
+//   Defines paths for various special mobs to follow.
+//   This file is somewhat maintained by the LOWs and to keep them
+//   from corrupting real code, I split it out to its own file.
 //
+//   These paths are somewhat a pain to generate.  There is a small
+//   #if piece of code at the bottom of doMove() (movement.cc) to help
+//   generate paths quickly.
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -16,23 +19,9 @@
 #ifndef __PATHS_H
 #define __PATHS_H
 
-/*
-     Paths.h - SneezyMUD Development team.
-     Copyright 1997, All Rights Reserved.
-*/
-/*
-     Defines paths for various special mobs to follow.
-     This file is somewhat maintained by the LOWs and to keep them
-     from corrupting real code, I split it out to its own file.
-
-     These paths are somewhat a pain to generate.  There is a small
-     #if piece of code at the bottom of doMove() (movement.cc) to help
-     generate paths quickly.
-*/
-
 struct path_struct {
     dirTypeT direction;
-    sh_int cur_room;
+    int cur_room;
 };
 
 const path_struct hobbit_path_pos[2][50] = {

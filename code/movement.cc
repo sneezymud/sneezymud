@@ -1444,7 +1444,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
 // was_in should equal -1 if you don't want player being returned to original rm
 // gets called recursively for all riders, so initial call should be for
 // lowest level of riding
-int TBeing::genericMovedIntoRoom(TRoom *rp, sh_int was_in, 
+int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in, 
      checkFallingT checkFall)
 {
   TThing *t, *t2, *t3;

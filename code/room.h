@@ -188,7 +188,7 @@ class TRoom : public TThing {
     byte teleLook;          // do a do_look or not when teleported 
     zoneData *zone;         // Room zone (for resetting)          
     sh_int teleTime;        // time to a teleport                
-    sh_int teleTarg;        // target room of a teleport       
+    int teleTarg;        // target room of a teleport       
     ubyte moblim;           // # of mobs allowed in room.       
     int roomHeight;         // room height
     unsigned int roomFlags; // Bitvector os flags for room
@@ -282,7 +282,7 @@ class TRoom : public TThing {
     ubyte getMoblim() const {
       return moblim;
     }
-    sh_int getTeleTarg() const {
+    int getTeleTarg() const {
       return teleTarg;
     }
     sh_int getTeleTime() const {

@@ -460,7 +460,7 @@ class spellTaskData {
     int nextUpdate;
     int rounds;
     const char *orig_arg;
-    unsigned short wasInRoom;
+    int wasInRoom;
     int status;
     int text;
     unsigned int flags;
@@ -492,7 +492,7 @@ class taskData {
     int nextUpdate;
     int timeLeft;
     const char *orig_arg;
-    unsigned short wasInRoom;
+    int wasInRoom;
     ubyte status;
     int flags;
     TObj *obj;
@@ -1007,7 +1007,7 @@ class TBeing : public TThing {
     void listExits(const TRoom *) const;
     virtual bool listThingRoomMe(const TBeing *) const;
     void genericKillFix();
-    virtual int genericMovedIntoRoom(TRoom *, sh_int, checkFallingT = CHECK_FALL_YES);
+    virtual int genericMovedIntoRoom(TRoom *, int, checkFallingT = CHECK_FALL_YES);
     int genericItemCheck(TThing *);
     void genericEvaluateItem(const TThing *);
     void preKillCheck(bool rent = FALSE);
