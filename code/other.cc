@@ -2613,6 +2613,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_PROTECTION_FROM_ELEMENTS:
       protectionFromElements(caster,victim,obj);
       break;
+    case SPELL_PROTECTION_FROM_FIRE:
+      protectionFromFire(caster,victim,obj);
+      break;
     case SPELL_PROTECTION_FROM_WATER:
       protectionFromWater(caster,victim,obj);
       break;
