@@ -3456,6 +3456,10 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     if (tch->isImmortal() && tch->isPlayerAction(PLR_NOHASSLE))
       continue;
     if (!ch->isUndead() && !ch->isDiabolic()) {
+      TObj *amulet; // something special for my amulet - dash
+      if (tch->isUndead() && (amulet = dynamic_cast<TObj *>(ch->equipment[WEAR_NECK])) && 
+	  obj_index[amulet->getItemIndex()].virt != 9597)
+	continue;
       if ((tch->isUndead() || tch->isDiabolic()) && !tch->inGrimhaven() && !tch->isPc()) {
         if (!ch->checkSoundproof())
           act("$n screams 'Get thee back to the underworld that spawned you!!!!'", FALSE, ch, 0, 0, TO_ROOM);

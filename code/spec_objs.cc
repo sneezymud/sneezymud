@@ -3298,12 +3298,40 @@ int squirtGun(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TObj *)
  return FALSE;
 }
 
+int fireGlove(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int rc, dam = 1;
+
+  if (!o || !vict)
+    return FALSE;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;       // weapon not equipped (carried or on ground)
+  if (::number(0,5))
+    return FALSE;
+  if (cmd != CMD_OBJ_HIT)
+    return FALSE;
+  dam = (::number( 1, (ch->GetMaxLevel()) / 10 + 2));
+
+  act("<o>Your $o bursts into <r>flame<1><o> as you strike $N<1><o>!<1>",
+      TRUE,ch,o,vict,TO_CHAR,NULL);
+  act("<o>$n's $o bursts into <r>flame<1><o> as $e strikes $N<1><o>!<1>",
+      TRUE,ch,o,vict,TO_NOTVICT,NULL);
+  act("<o>$n'a $o bursts into <r>flame<1><o> as $e strikes you!<1>",
+      TRUE,ch,o,vict,TO_VICT,NULL);
+  
+  rc = ch->reconcileDamage(vict, dam, DAMAGE_FIRE);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
+  return TRUE;
+}
+
 
 int razorGlove(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
   TBeing *ch;
   int rc, dam = 1, which;
-
+  
   if (!o || !vict)
     return FALSE;
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
@@ -4842,7 +4870,64 @@ int selfRepairing(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   return FALSE;
 }
 
+int USPortal(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
+  
+  if(cmd == CMD_ENTER || cmd == CMD_LEAVE) {
+    if (!ch->isUndead()) {
+      act("<k>There is a sharp crackle of negative energy as $n tries to go through the portal.<1>"
+	  ,TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("<k>There is a sharp crackle of negative energy as you try to go through the portal.<1>"
+	  ,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      
+      act("<k>Suddenly, $n is thrown backwards from the portal with tremendous force!<1>"
+	  ,TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("<k>Suddenly, you are thrown backwards from the portal with tremendous force!<1>"
+	  ,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      
+      int rc, dam;
+      dam = ::number(10,30);
+      ch->setPosition(POSITION_SITTING);
+      rc = ch->reconcileDamage(ch, dam, DAMAGE_NORMAL);
+      if (rc == -1)
+	return DELETE_VICT;
+      
+      return TRUE;
+    } else { // ch is undead
+      act("<k>A chill radiates from $n as $e enters the portal.<1>"
+          ,TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("<k>A terrible chill runs through you as you enter the portal.<1>"
+          ,TRUE,ch,o,NULL,TO_CHAR,NULL);
+      return FALSE;
+    }
+  }
+  return FALSE;
+}
+    
 
+
+int AKAmulet(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+  if (cmd == CMD_GENERIC_PULSE && !::number(0,3)) {
+    if(ch->isUndead()) {
+       int dam =::number(1,5);
+       act("$n regenerates slightly.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+       act("You regenerate slightly.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+       ch->addToHit(dam);
+       return FALSE;
+    } else {
+      int dam = ::number(25,100);
+      act("$n screams in pain as $p drains the life from $s body!",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("You scream in pain as $p drains the life from your body!",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      int rc = ch->reconcileDamage(ch, dam, DAMAGE_DRAIN);
+      if (rc == -1)
+        return DELETE_THIS;
+      return FALSE;
+    }
+  }
+  return FALSE;
+  
+}
 
 //MARKER: END OF SPEC PROCS
 
@@ -4940,7 +5025,11 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Chipped Tooth Food Item", chippedTooth}, // 80
   {FALSE, "Goofers Dust", goofersDust},
   {FALSE, "teleport ring", teleportRing},
-  {FALSE, "self repairing", selfRepairing}
+  {FALSE, "self repairing", selfRepairing},
+  {FALSE, "undead spewing portal", USPortal},
+  {FALSE, "Amulet of Aeth Koralm", AKAmulet}, // 85
+  {FALSE, "fire glove", fireGlove},
+  {FALSE, "last proc", bogusObjProc}
 };
 
 

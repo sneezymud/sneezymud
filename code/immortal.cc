@@ -62,6 +62,11 @@ bool WizGoto = FALSE;
 bool AllowPcMobs = FALSE;    // PCs with same name as mob allowed?
 bool TurboMode = FALSE;      // bumps pulse-actions at 2x speed
 
+int QuestVar1 = 0; // varibles for changing constants in the code in-game
+int QuestVar2 = 0;
+int QuestVar3 = 0;
+int QuestVar4 = 0;
+
 void TBeing::doChange(const char *argument)
 {
   change_hands(this, argument);
@@ -79,6 +84,43 @@ void TPerson::doChange(const char *argument)
     change_hands(this, argument);
     return;
   }
+  
+
+
+
+  if (is_abbrev(argument, "questvar1")) {
+    argument = one_argument(argument, buf);
+    argument = one_argument(argument, buf);
+    int val = atoi(buf);
+    QuestVar1 = val;
+    sendTo("You have changed QuestVar1 to %d.", val);
+    return;
+  } else if (is_abbrev(argument, "questvar2")) {
+    argument = one_argument(argument, buf);
+    argument = one_argument(argument, buf);
+    int val = atoi(buf);
+    QuestVar2 = val;
+    sendTo("You have changed QuestVar2 to %d.", val);
+    return;
+  } else if (is_abbrev(argument, "questvar3")) {
+    argument = one_argument(argument, buf);
+    argument = one_argument(argument, buf);
+    int val = atoi(buf);
+    QuestVar3 = val;
+    sendTo("You have changed QuestVar3 to %d.", val);
+    return;
+  } else if (is_abbrev(argument, "questvar4")) {
+    argument = one_argument(argument, buf);
+    argument = one_argument(argument, buf);
+    int val = atoi(buf);
+    QuestVar4 = val;
+    sendTo("You have changed QuestVar4 to %d.", val);
+    return;
+  }
+
+
+
+
   if (*buf && *buf2 && hasWizPower(POWER_CHANGE)) {
     if (isdigit(*buf2)) {
       if ((new_lev = atoi(buf2)) > MAX_IMMORT) {
