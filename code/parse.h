@@ -568,6 +568,7 @@ enum cmdTypeT {
      CMD_TELEVISION,
      CMD_PLANT,
      CMD_COOK,
+     CMD_DRIVE,
     MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow

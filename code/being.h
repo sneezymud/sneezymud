@@ -1388,6 +1388,7 @@ class TBeing : public TThing {
     void doButcher(const char *);
     void doPlant(const char *);
     void doCook(string);
+    void doDrive(string);
     void doSacrifice(const char *);
     void doWhittle(const char *);
     void doBload(const char *);
