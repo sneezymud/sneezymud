@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.cc,v $
+// Revision 1.3  1999/09/15 03:58:04  batopr
+// fixed memory leak in hobbit emissary
+//
 // Revision 1.2  1999/09/14 01:33:32  batopr
 // fixed frostGiant not to leak hunt_struct memory
 //
@@ -5701,9 +5704,6 @@ int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
 {
   int rc;
 
-  if (::number(0,2))
-    return FALSE;
-
   class hunt_struct {
     public:
     byte cur_pos;
@@ -5729,6 +5729,9 @@ int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
   }
 
   if (cmd != CMD_GENERIC_PULSE) 
+    return FALSE;
+
+  if (::number(0,2))
     return FALSE;
 
   if (!myself->awake() || myself->fight())
