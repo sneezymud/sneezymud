@@ -452,12 +452,23 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
     llen_diff += word.length() - swlen;
 
     if ((line.length() + 1) + (word.length() + 1) >= (80 + llen_diff)) {
+      size_t last_char = 0;
+
       if (iter!=words.end()) {
         line += "\n\r";
       }
       newDescr += line;
+
+      // check if the word ends with punctuation
+      stripped_word += " ";
+      last_char = stripped_word.find_last_not_of(" ");
+
+      if (stripped_word.find_first_of(punctuation, last_char) !=
+          stripped_word.npos) {
+        word += " "; // and add an extra space to the end.
+      }
       line = word;
-      llen_diff = 0;
+      llen_diff = word.length() - swlen;
     } else { // word fits ok on line
       size_t last_char = 0;
 
