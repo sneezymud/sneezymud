@@ -23,7 +23,7 @@ bool TBeing::canSpin(TBeing *victim, silentTypeT silent)
       sendTo("You need hands to spin someone.\n\r");
     return FALSE;
   }
-  if (victim->!hasHands()) {
+  if (!victim->hasHands()) {
     if (!silent)
       sendTo("You need something to grab to make this work.\n\r");
     return FALSE;
@@ -115,14 +115,12 @@ static int spinMiss(TBeing *caster, TBeing *victim, spinMissT type)
     act("$N deftly avoids $n's attempt at spinning $M.", FALSE, caster, 
               0, victim, TO_NOTVICT);
   } else if (type == TYPE_MONK) {
-    act("$N deftly counters your attemptat spinning $M. You trip and land on the $g.", 
-              FALSE, caster, 0, victim, TO_CHAR, ANSI_RED);
-    act("You deftly counter $n's attempt at spinning you.\n\rYou stick out your foot and trip
-$m to the $g.", 
-              FALSE, caster, 0, victim, TO_VICT);
-    act("$N deftly counters $n's attempt at spinning $M.\n\r$N sticks out $S foot tripping $n
-to the $g.",
-              FALSE, caster, 0, victim, TO_NOTVICT);
+    act("$N deftly counters your attempt at spinning $M.", FALSE, caster, 0, victim, TO_CHAR, ANSI_RED);
+    act("You trip and land on the $g.", FALSE, caster, 0, victim, TO_CHAR, ANSI_RED);
+    act("You deftly counter $n's attempt at spinning you.", FALSE, caster, 0, victim, TO_VICT);
+    act("You stick out your foot and trip $m to the $g.", FALSE, caster, 0, victim, TO_VICT);
+    act("$N deftly counters $n's attempt at spinning $M.", FALSE, caster, 0, victim, TO_NOTVICT);
+    act("$N sticks out $S foot tripping $n to the $g.", FALSE, caster, 0, victim, TO_NOTVICT);
 
     rc = caster->crashLanding(POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -132,12 +130,9 @@ to the $g.",
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else {
-    act("$n tries to spin $N, but ends up falling down.", FALSE, 
-              caster, 0, victim, TO_NOTVICT);
-    act("You try to spin $N, but end up falling on your face.",
-                         FALSE, caster, 0, victim, TO_CHAR);
-    act("$n fails to spin you, and tumbles to the $g.", FALSE, 
-              caster, 0, victim, TO_VICT);
+    act("$n tries to spin $N, but ends up falling down.", FALSE, caster, 0, victim, TO_NOTVICT);
+    act("You try to spin $N, but end up falling on your face.", FALSE, caster, 0, victim, TO_CHAR);
+    act("$n fails to spin you, and tumbles to the $g.", FALSE, caster, 0, victim, TO_VICT);
 
     rc = caster->crashLanding(POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -159,23 +154,21 @@ static int spinHit(TBeing *caster, TBeing *victim)
   int rc;
 
   if (!victim->riding) {
-    act("$n grabs $N's arm and spins $M! Now dizzy, $N trips and falls to the $g.",
-           FALSE, caster, 0, victim, TO_NOTVICT);
-    act("You grab $N's arm and spin $M HARD! Now dizzy $N trips and falls to the $g.",
-           FALSE, caster, 0, victim, TO_CHAR);
-    act("$n grabs you by the arm and spins you violently.",
-           FALSE, caster, 0, victim, TO_VICT);
-    act("As the world spins into a blur before your eyes you become dazed, and fall face first to the $g.",
+    act("$n grabs $N's arm and spins $M!", FALSE, caster, 0, victim, TO_NOTVICT);
+    act("Now dizzy, $N trips and falls to the $g.", FALSE, caster, 0, victim, TO_NOTVICT);
+    act("You grab $N's arm and spin $M HARD!", FALSE, caster, 0, victim, TO_CHAR);
+    act("Now dizzy $N trips and falls to the $g.", FALSE, caster, 0, victim, TO_CHAR);
+    act("$n grabs you by the arm and spins you violently.", FALSE, caster, 0, victim, TO_VICT);
+    act("As the world spins into a blur before your eyes you become dazed,\n\rand fall face first to the $g.",
            FALSE, caster, 0, victim, TO_VICT, ANSI_RED);
   } else {
-    act("$n grabs $N's arm and rips $M off of $S $o! $N slams head first into the $g.",
-           FALSE, caster, victim->riding, victim, TO_NOTVICT);
-    act("You grab $N's arm and pull $M off of $S $o! $N slams head first into the $g.",
-           FALSE, caster, victim->riding, victim, TO_CHAR);
-    act("$n suddenly grabs your arm and gives a hard yank!",
-           FALSE, caster, victim->riding, victim, TO_VICT);
-    act("Suddenly, the $g rushes upward as you fall off of your $o. OOFF!! Yuck, dirt tastes AWFUL!",
-           FALSE, caster, victim->riding, victim, TO_VICT, ANSI_RED);
+    act("$n grabs $N's arm and rips $M off of $S $o!", FALSE, caster, victim->riding, victim, TO_NOTVICT);
+    act("$N slams head first into the $g.", FALSE, caster, victim->riding, victim, TO_NOTVICT);
+    act("You grab $N's arm and pull $M off of $S $o!", FALSE, caster, victim->riding, victim, TO_CHAR);
+    act("$N slams head first into the $g.", FALSE, caster, victim->riding, victim, TO_CHAR);
+    act("$n suddenly grabs your arm and gives a hard yank!", FALSE, caster, victim->riding, victim, TO_VICT);
+    act("Suddenly, the $g rushes upward as you fall off of your $o.", FALSE, caster, victim->riding, victim, TO_VICT, ANSI_RED);
+    act("OOFFF!! Yuck, dirt tastes AWFUL!", FALSE, caster, victim->riding, victim, TO_VICT, ANSI_RED);
     victim->dismount(POSITION_RESTING);
   }
 
@@ -225,7 +218,7 @@ static int spin(TBeing *caster, TBeing *victim)
   int percent;
   int i = 0;
   int rc;
-  const int SPIN_COST = 35;       // movement cost to spin
+  const int SPIN_COST = 25;       // movement cost to spin
 
   if (!caster->canSpin(victim, SILENT_NO))
     return FALSE;
