@@ -5982,7 +5982,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	  break;
 	case 1:
 	  job->john->doAction("", CMD_SNEER);
-	  job->john->doSay("Get the hell away from you skank ghetto whore!");
+	  job->john->doSay("Get the hell away from me you skank ghetto whore!");
 	  break;
 	case 2:
 	  job->john->doAction("", CMD_BLUSH);
