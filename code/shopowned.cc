@@ -311,14 +311,14 @@ void TShopOwned::showInfo()
   int count=0, value=0, tmp=0;
   unsigned int i=0;
   sstring buf;
-  int volume=0;
+  //  int volume=0;
 
   // if not owned, or owned and has "owner" or "info"
   if(!isOwned() || hasAccess(SHOPACCESS_INFO)){
     for(tt=keeper->getStuff();tt;tt=tt->nextThing){
       o=dynamic_cast<TObj *>(tt);
       ++count;
-      volume+=o->getVolume();
+      //      volume+=o->getVolume();
       value+=o->obj_flags.cost;
       // shopPrice does db queries, it tends to be too slow here
       //      price+=o->shopPrice(1, shop_nr, -1, ch);
@@ -327,14 +327,17 @@ void TShopOwned::showInfo()
 		   fmt("I have %i talens and %i items worth %i talens and selling for approximately %i talens.") %
 		   keeper->getMoney() % count % value %
 		   (int)(value * shop_index[shop_nr].profit_buy));
-    keeper->doTell(ch->getName(), fmt("My inventory takes up %i cubic inches of space.") % volume);
+
+    //    keeper->doTell(ch->getName(), fmt("My inventory takes up %i cubic inches of space.") % volume);
     
     keeper->doTell(ch->getName(), fmt("That puts my total value at %i talens.") %
 		   (keeper->getMoney()+value));
-    
-    keeper->doTell(ch->getName(), fmt("My corporate dividend kickback is %f.") % getDividend());
-    keeper->doTell(ch->getName(), fmt("My corporate reserve is %i-%i.") %
-		   getMinReserve() % getMaxReserve());
+
+    if(getDividend() > 0)
+      keeper->doTell(ch->getName(), fmt("My corporate dividend kickback is %f.") % getDividend());
+    if(getMinReserve() > 0 || getMaxReserve() > 0)
+      keeper->doTell(ch->getName(), fmt("My corporate reserve is %i-%i.") %
+		     getMinReserve() % getMaxReserve());
 
   }
 
