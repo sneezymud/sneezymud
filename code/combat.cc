@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: combat.cc,v $
+// Revision 1.7  1999/10/14 04:45:39  cosmo
+// *** empty log message ***
+//
 // Revision 1.6  1999/10/14 03:49:57  cosmo
 // Made Fix so that any magic weapon is considered a magic weapon.
 //
@@ -4006,7 +4009,7 @@ int TBeing::weaponCheck(TBeing *v, TThing *o, spellNumT type, int dam)
   }
 
   TObj *tobj = dynamic_cast<TObj *>(o);
-  total = (tobj ? tobj->itemHitroll() : 0);  
+//  total = (tobj ? tobj->itemHitroll() : 0);  
   if (tobj) {
     total = tobj->itemHitroll();
     if (!total & tobj->isObjStat(ITEM_MAGIC))
