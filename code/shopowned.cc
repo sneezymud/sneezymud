@@ -796,7 +796,7 @@ int TShopOwned::doLogs(sstring arg)
     }    
 
     while(db.fetchRow()){
-      buf = fmt("%s  Talens: %8i  Value: %8i  Total: %8i\n\r") % db["logtime"] % convertTo<int>(db["shoptalens"]) % convertTo<int>(db["shopvalue"]) % (convertTo<int>(db["shopvalue"])+convertTo<int>(db["shoptalens"]));
+      buf = fmt("%19.19s  Talens: %8i  Value: %8i  Total: %8i\n\r") % db["logtime"] % convertTo<int>(db["shoptalens"]) % convertTo<int>(db["shopvalue"]) % (convertTo<int>(db["shopvalue"])+convertTo<int>(db["shoptalens"]));
       sb += buf;
       
       buf = fmt("%-12.12s %-10.10s %-32.32s for %8i talens.\n\r\n\r") %
