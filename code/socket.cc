@@ -471,14 +471,44 @@ struct timeval TMainSocket::handleTimeAndSockets()
   return timespent;
 }
 
+class TPulseList {
+public:  
+  int teleport, combat, drowning, special_procs, update_stuff;
+  int pulse_mudhour, mobstuff, pulse_tick, wayslowpulse;
+
+  void init(int pulse){
+    teleport = (pulse % PULSE_TELEPORT);
+    combat = (pulse % PULSE_COMBAT);
+    drowning = (pulse % PULSE_DROWNING);
+    special_procs = (pulse % PULSE_SPEC_PROCS);
+    update_stuff = (pulse % PULSE_NOISES);
+    pulse_mudhour = (pulse % PULSE_MUDHOUR);
+    mobstuff = (pulse % PULSE_MOBACT);
+    pulse_tick = (pulse % PULSE_UPDATE);
+    wayslowpulse = (pulse % 2400);
+  }
+
+  TPulseList & operator=(const TPulseList &a){
+    if (this == &a) return *this;    
+    teleport=a.teleport;
+    combat=a.combat;
+    drowning=a.drowning;
+    special_procs=a.special_procs;
+    update_stuff=a.update_stuff;
+    pulse_mudhour=a.pulse_mudhour;
+    mobstuff=a.mobstuff;
+    pulse_tick=a.pulse_tick;
+    wayslowpulse=a.wayslowpulse;
+    return *this;
+  }
+};
 
 
 int TMainSocket::gameLoop()
 {
   Descriptor *point;
   int pulse = 0;
-  int teleport=0, combat=0, drowning=0, special_procs=0, update_stuff=0;
-  int pulse_tick=0, pulse_mudhour=0, mobstuff=0, wayslowpulse=0;
+  TPulseList pl;
   TBeing *tmp_ch=NULL, *temp;
   TObj *obj=NULL, *next_thing;
   int rc = 0;
@@ -491,7 +521,6 @@ int TMainSocket::gameLoop()
   bool doneStockHistory=false;
 
   avail_descs = 150;		
-  
 
   // players may have connected before this point via 
   // addNewDescriptorsDuringBoot, so send all those descriptors the login
@@ -503,27 +532,26 @@ int TMainSocket::gameLoop()
 
   while (!handleShutdown()) {
     timespent=handleTimeAndSockets();
-
     
     if(TestCode1){
       sstring str = "";
-      if(!combat)
+      if(!pl.combat)
 	str += "combat        ";
-      if(!update_stuff)
+      if(!pl.update_stuff)
 	str += "update_stuff  ";
-      if(!pulse_tick)
+      if(!pl.pulse_tick)
 	str += "pulse_tick    ";
-      if(!teleport)
+      if(!pl.teleport)
 	str += "teleport      ";
-      if(!special_procs)
+      if(!pl.special_procs)
 	str += "special_procs ";
-      if(!pulse_mudhour)
+      if(!pl.pulse_mudhour)
 	str += "pulse_mudhour ";
-      if(!mobstuff)
+      if(!pl.mobstuff)
 	str += "mobstuff      ";
-      if(!drowning)
+      if(!pl.drowning)
 	str += "drowning      ";
-      if(!wayslowpulse)
+      if(!pl.wayslowpulse)
 	str += "wayslowpulse  ";
       
       vlogf(LOG_MISC, fmt("%i %i) %s = %i") % 
@@ -536,62 +564,8 @@ int TMainSocket::gameLoop()
     ////////////////////////////////////////////
     // setup the pulse boolean flags
     ////////////////////////////////////////////
-    // we should spread out these pulses among out cycles
-    // since we work on multiples of 12, that gives us 12 pulse lines
-    // in order to do some load balanced along our cycles,
-    // I've sorted these into 3 groups of 3 -
-    // one group of fast pulses (12), one group of medium pulses (36,48)
-    // and one group of slow pulses (360, 1440, 17280)
-    // then reordered those groups in evenly mixed groups
-    // of 1 fast, 1 medium and 1 slow, then spread those out evenly
-    // along a 12 pulse cycle, like so:
-    // 0 - combat;
-    // 1 - drowning;
-    // 2 - pulsetick;
-    // 3 - <none>;
-    // 4 - teleport;
-    // 5 - specproc;
-    // 6 - pulsemudhour;
-    // 7 - <none>
-    // 8 - mobstuff;
-    // 9 - updatestuff;
-    // 10 - wayslow;
-    // 11 - <none>
-    // new pulses can be inserted into the <none> slots if needed
-    // additionally, medium and slow pulses can be offset by additional
-    // multiples of 12 to seperate themselves from the same 12 pulse cycle
-    // this takes a little bit of hand tuning I guess
-    
     pulse++;
-
-    // this doesn't really work unfortunately, pulses need to be
-    // multiples of 12
-#if 0
-    combat = ((pulse+0) % PULSE_COMBAT);               // 12
-    update_stuff = ((pulse+1) % PULSE_NOISES);         // 48
-    pulse_tick = ((pulse+2) % PULSE_UPDATE);           // 360
-    // 3 - empty
-    teleport = ((pulse+4) % PULSE_TELEPORT);           // 12
-    pulse_mudhour = ((pulse+5) % PULSE_MUDHOUR);       // 1440
-    special_procs = ((pulse+6+12) % PULSE_SPEC_PROCS); // 36
-    // 7 - empty
-    mobstuff = ((pulse+8) % PULSE_MOBACT);             // 12
-    drowning = ((pulse+9) % PULSE_DROWNING);           // 36
-    wayslowpulse = ((pulse+10) % (PULSE_MUDHOUR * 12)); // 17280
-    // 11 - empty
-#endif
-
-    teleport = (pulse % PULSE_TELEPORT);
-    combat = (pulse % PULSE_COMBAT);
-    drowning = (pulse % PULSE_DROWNING);
-    special_procs = (pulse % PULSE_SPEC_PROCS);
-    update_stuff = (pulse % PULSE_NOISES);
-    pulse_mudhour = (pulse % PULSE_MUDHOUR);
-    mobstuff = (pulse % PULSE_MOBACT);
-    pulse_tick = (pulse % PULSE_UPDATE);
-    //    wayslowpulse = (pulse % (PULSE_MUDHOUR * 12));
-    // pulse wraps around at 2400, so 2400 is the largest possible here
-    wayslowpulse = (pulse % 2400);
+    pl.init(pulse);
 
     ////////////////////////////////////////////
     ////////////////////////////////////////////
@@ -600,11 +574,11 @@ int TMainSocket::gameLoop()
     // interport communication
     mudRecvMessage();
 
-    if(!wayslowpulse){
+    if(!pl.wayslowpulse){
       checkForRepo();
     }
 
-    if (!pulse_tick) {
+    if (!pl.pulse_tick) {
       // these are done per tick (15 mud minutes)
       doGlobalRoomStuff();
       deityCheck(FALSE);
@@ -630,12 +604,12 @@ int TMainSocket::gameLoop()
       doneStockHistory=false;
     }
 
-    if (!combat){
+    if (!pl.combat){
       perform_violence(pulse);
     }
 
 
-    if (!pulse_mudhour) {
+    if (!pl.pulse_mudhour) {
       // these are done per mud hour
       recalcFactionPower();
 
@@ -667,33 +641,13 @@ int TMainSocket::gameLoop()
     // temporarily put the pulse at the next multiple of 12
     // this is pretty klugey
 
-    // save the old values
-    int oldpulse=pulse;
-    int old_teleport=teleport;
-    int old_combat=combat;
-    int old_drowning=drowning;
-    int old_special_procs=special_procs;
-    int old_update_stuff=update_stuff;
-    int old_pulse_mudhour=pulse_mudhour;
-    int old_mobstuff=mobstuff;
-    int old_pulse_tick=pulse_tick;
-    int old_wayslowpulse=wayslowpulse;
-
     // advance the pulse to the next multiple of 12
+    int oldpulse=pulse;
     while(pulse % 12)
       ++pulse;
 
     // reset the pulse flags
-    teleport = (pulse % PULSE_TELEPORT);
-    combat = (pulse % PULSE_COMBAT);
-    drowning = (pulse % PULSE_DROWNING);
-    special_procs = (pulse % PULSE_SPEC_PROCS);
-    update_stuff = (pulse % PULSE_NOISES);
-    pulse_mudhour = (pulse % PULSE_MUDHOUR);
-    mobstuff = (pulse % PULSE_MOBACT);
-    pulse_tick = (pulse % PULSE_UPDATE);
-    wayslowpulse = (pulse % (PULSE_MUDHOUR * 12));
-
+    pl.init(pulse);
 
     // note on this loop
     // it is possible that next_thing gets deleted in one of the sub funcs
@@ -773,7 +727,7 @@ int TMainSocket::gameLoop()
       }
       // end 12 pulse
 
-      if (!special_procs) { // 36
+      if (!pl.special_procs) { // 36
 	check_sinking_obj(obj, obj->in_room);
 	if (obj->spec) {
 	  rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
@@ -808,7 +762,7 @@ int TMainSocket::gameLoop()
 
       }
 
-      if (!pulse_mudhour) { // 1440
+      if (!pl.pulse_mudhour) { // 1440
 	rc = obj->objectTickUpdate(pulse);
 	if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	  next_thing = obj->next;
@@ -857,7 +811,7 @@ int TMainSocket::gameLoop()
 	tmp_ch->setPosition(POSITION_STANDING);
       }
 
-      if (!special_procs) {
+      if (!pl.special_procs) {
 	if (tmp_ch->spec) {
 	  rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_PULSE, "", NULL);
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -871,7 +825,7 @@ int TMainSocket::gameLoop()
 	}
       }
 
-      if (!drowning) {
+      if (!pl.drowning) {
 	rc = tmp_ch->checkDrowning();
 	if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	  temp = tmp_ch->next;
@@ -890,7 +844,7 @@ int TMainSocket::gameLoop()
 
       }
 
-      if (!mobstuff) {
+      if (!pl.mobstuff) {
 	if (Gravity) {
 	  tmp_ch->checkSinking(tmp_ch->in_room);
 
@@ -939,7 +893,7 @@ int TMainSocket::gameLoop()
 	}
       }
 
-      if (!combat) {
+      if (!pl.combat) {
 
 	if (tmp_ch->isPc() && tmp_ch->desc && tmp_ch->GetMaxLevel() > MAX_MORT &&
 	    !tmp_ch->limitPowerCheck(CMD_GOTO, tmp_ch->roomp->number)
@@ -997,7 +951,7 @@ int TMainSocket::gameLoop()
 	if ((tmp_ch->cantHit > 0) && !tmp_ch->fight())
 	  tmp_ch->cantHit--;
       }
-      if (!teleport) {
+      if (!pl.teleport) {
 	rc = tmp_ch->riverFlow(pulse);
 	if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	  temp = tmp_ch->next;
@@ -1014,7 +968,7 @@ int TMainSocket::gameLoop()
 	}
       }
       TMonster *tmon = dynamic_cast<TMonster *>(tmp_ch);
-      if (!update_stuff) {
+      if (!pl.update_stuff) {
 	if (!number(0, 3) && !tmp_ch->isPc() && tmon)
 	  tmon->makeNoise();
       }
@@ -1026,7 +980,7 @@ int TMainSocket::gameLoop()
       }
 
 
-      if (!pulse_tick) {
+      if (!pl.pulse_tick) {
 	rc = tmp_ch->updateHalfTickStuff();
 	if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	  if (!tmp_ch)
@@ -1040,7 +994,7 @@ int TMainSocket::gameLoop()
 	} else if (rc == ALREADY_DELETED)  continue;
       }
       
-      if (!pulse_mudhour) {
+      if (!pl.pulse_mudhour) {
 	rc = tmp_ch->updateTickStuff();
 	if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	  temp = tmp_ch->next;
@@ -1055,7 +1009,7 @@ int TMainSocket::gameLoop()
       }
 	
       // check for vampires in daylight
-      if(!teleport){
+      if(!pl.teleport){
 	if(!tmp_ch->roomp->isIndoorSector() && 
 	   !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
 	   (tmp_ch->inRoom() != ROOM_VOID) && sunIsUp()){
@@ -1085,7 +1039,7 @@ int TMainSocket::gameLoop()
       }
 
       // lycanthrope transformation
-      if(!teleport){
+      if(!pl.teleport){
 	if(tmp_ch->hasQuestBit(TOG_LYCANTHROPE) &&
 	   !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)
            && !tmp_ch->isLinkdead() &&
@@ -1108,7 +1062,7 @@ int TMainSocket::gameLoop()
       }
 
 
-      if (!teleport) {
+      if (!pl.teleport) {
 	if (tmp_ch->spec) {
 	  rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_QUICK_PULSE, "", NULL);
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -1142,18 +1096,7 @@ int TMainSocket::gameLoop()
 
     // reset the old values from the artifical pulse
     pulse=oldpulse;
-    teleport=old_teleport;
-    combat=old_combat;
-    drowning=old_drowning;
-    special_procs=old_special_procs;
-    update_stuff=old_update_stuff;
-    pulse_mudhour=old_pulse_mudhour;
-    mobstuff=old_mobstuff;
-    pulse_tick=old_pulse_tick;
-    wayslowpulse=old_wayslowpulse;
-
-
-
+    pl.init(pulse);
 
     if (!(pulse % 2399))
       do_check_mail();
