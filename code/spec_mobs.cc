@@ -1327,12 +1327,13 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
       cmd != CMD_SE &&
       cmd != CMD_SW &&
       cmd != CMD_FLEE &&
-      cmd != CMD_DRAG)
+      cmd != CMD_DRAG &&
+      cmd != CMD_OPEN)
     return FALSE;
 
   if (cmd >= CMD_NORTH && cmd <= CMD_SW) {
     dir = getDirFromCmd(cmd);
-  } else if (cmd == CMD_DRAG) {
+  } else if (cmd == CMD_FLEE) {
     if (myself == ch)
       return FALSE;
     act("$n blocks $N from fleeing!", false, myself, 0, ch, TO_NOTVICT);
@@ -1357,7 +1358,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
   switch(myself->inRoom()){
     case 1024:
       if(!myself->canSee(ch) || myself==ch || ch->isAnimal() || 
-         !myself->awake() || myself->fight()) {
+         !myself->awake() || myself->fight() || (cmd == CMD_OPEN)) {
 	return FALSE;
       } else if(rev_dir[dir]==ch->specials.last_direction){
 	act("$n growls but lets you return the way you came.",
@@ -1383,8 +1384,46 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 	return TRUE;
       }
       break;
+
+
+    case 36060:
+      if (!myself->canSee(ch) || (myself == ch) || ch->isAnimal() || !myself->awake() || myself->fight()) {
+        return FALSE;
+      } else if (((cmd == CMD_OPEN) && arg && is_abbrev(arg, "gate")) || (cmd == CMD_NORTH)) {
+        TThing * tThing  = ch->getStuff();
+        TRoom  * tRoom   = real_roomp(36060);
+        TObj   * tObj    = NULL;
+
+        for (; tThing; tThing = tThing->nextThing)
+          if ((tObj = dynamic_cast<TObj *>(tThing)) && (tObj->objVnum() == 36060))
+            return FALSE;
+
+        if (ch->master && ch->sameRoom(*(ch->master)))
+          for (tThing = ch->master->getStuff(); tThing; tThing = tThing->nextThing)
+            if ((tObj = dynamic_cast<TObj *>(tThing)) && (tObj->objVnum() == 36060))
+              return FALSE;
+
+        act("$n growls and says, 'Hey! Your not authorized to be here!'", FALSE, myself, 0, 0, TO_ROOM);
+        act("$n shoves you south out of the room!", FALSE, myself, 0, ch, TO_VICT);
+        act("$n shoves $N south out of the room!", FALSE, myself, 0, ch, TO_NOTVICT);
+
+        if (tRoom) {
+          --(*ch);
+          (*tRoom) += (*ch);
+
+	  myself->doAction("", CMD_WHISTLE);
+	  ch->doLook("", CMD_LOOK);
+        } else
+          vlogf(LOG_PROC, "Error loading room 36060 for forced creature movement.  (toll taker proc)");
+
+        return TRUE;
+      } else
+        return FALSE;
+      break;
+
+
     case 22713:
-      if(rev_dir[dir]==ch->specials.last_direction){
+      if((rev_dir[dir]==ch->specials.last_direction) || (cmd == CMD_OPEN)){
 	return FALSE;
       } else if(ch->hasQuestBit(TOG_PAID_TOLL) || 
                 dynamic_cast<TMonster *>(ch)){
@@ -1408,7 +1447,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
     case 22738:
     case 22748:
       if(((!myself->canSee(ch) || myself==ch)) || ch->isAnimal() ||
-         myself->fight()){
+         myself->fight() || (cmd == CMD_OPEN)){
 	return FALSE;
       } else if(rev_dir[dir]==ch->specials.last_direction){
 	return FALSE;
