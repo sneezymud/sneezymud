@@ -1581,10 +1581,8 @@ string TBaseWeapon::showModifier(showModeT mode, const TBeing *ch) const
     }
   }
 
-  for (int tIndex = 0; tIndex < MAX_SWING_AFFECT; tIndex++)
-    if (oneSwing[tIndex].type != TYPE_UNDEFINED &&
-        oneSwing[tIndex].bitvector == AFF_POISON)
-      a += " (poisoned)";
+  if(isPoisoned())
+    a += " (poisoned)";
 
   return a;
 }
