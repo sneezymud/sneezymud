@@ -1064,21 +1064,21 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
   switch (spell) {
     case SPELL_CONJURE_AIR:
       // air elems fly, so let's account for this and make uhm weak
-      level = (int) (0.9 * level);
-      elemmod = 0.9;
+      level = (int) (1.0 * level);
+      //      elemmod = 0.9;
       break;
     case SPELL_CONJURE_FIRE:
       // fire elms fly, so let's account for this and also make them weak
-      level = (int) (0.9 * level);
-      elemmod = 0.9;
+      level = (int) (1.0 * level);
+      //      elemmod = 0.8;
       break;
     case SPELL_CONJURE_EARTH:
-      elemmod = 0.9;
+      //      elemmod = 1.1;
       level = (int) (1.0 * level);
       break;
     case SPELL_CONJURE_WATER:
       level = (int) (1.0 * level);
-      elemmod = 0.9;
+      //      elemmod = 1.0;
       break;
     case SPELL_ENTHRALL_SPECTRE:
       level = (int) (0.8 * level);

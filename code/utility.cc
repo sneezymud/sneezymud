@@ -1261,10 +1261,11 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
   int count = 0;  // current power of pets
   unsigned int tot_num = 0;  // actual number of pets ALREADY IN GROUP
 
-  max_followers = GetMaxLevel() / 5;
-  max_followers += plotStat(STAT_CURRENT, STAT_CHA, 1, 19, 9);
+  //  max_followers = GetMaxLevel() / 20; //changed this from 5
+  //  max_followers += plotStat(STAT_CURRENT, STAT_CHA, 1, 19, 9);
 
-
+  max_followers = (GetMaxLevel() + plotStat(STAT_CURRENT, STAT_CHA, -15, 15, 0)) / 20; 
+  max_followers = max(1, (min(3,max_followers)));
 
   for(k = followers, count = 0; k; k = k->next) {
     if (k->follower->isPet(PETTYPE_THRALL)) {
@@ -1290,7 +1291,7 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
   if (count > max_followers)
     return TRUE;
   //  if (tot_num >= 3)  // allow 3 pets max
-  if (tot_num >=1) // nah, make it 1.  pets suck.
+  if ((int)(tot_num) >=max_followers) // nah, make it 1.  pets suck.
     return TRUE;
 
   return FALSE;
