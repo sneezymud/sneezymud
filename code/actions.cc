@@ -562,8 +562,7 @@ void TBeing::doPee(const char *argument)
   TThing *t;
   TObj *o;
   TBeing *tmp_char;
-  char arg[200], arg2[200], buf[200];
-  int j, k;
+  char arg[200], arg2[200];
   liqTypeT liquid=MAX_DRINK_TYPES, i;
 
   if (powerCheck(POWER_PEE))
@@ -575,15 +574,7 @@ void TBeing::doPee(const char *argument)
   only_argument(argument, arg);
 
   for (i = MIN_DRINK_TYPES; i < MAX_DRINK_TYPES; i++) {
-    for (j = 0,k = 0;DrinkInfo[i]->name[j];++j) {
-      if (DrinkInfo[i]->name[j] == '<')
-	j += 3;
-
-      buf[k] = DrinkInfo[i]->name[j];
-      ++k;
-    }
-
-    if (is_abbrev(arg, buf)) {
+    if (is_abbrev(arg, stripColorCodes(DrinkInfo[i]->name).c_str())) {
       liquid = i;
       break;
     }
