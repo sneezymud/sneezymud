@@ -1116,16 +1116,11 @@ int Descriptor::nanny(const char *arg)
         break;
       }
       
-#if 0
-      // this is dumb here, they already made the char
-      // we can't just go around fucking people when we add mobs
-      // that have the same name they do
       if (_parse_name(arg, tmp_name)) {
         writeToQ("Illegal name, please try another.\n\r");
         writeToQ("Name -> ");
         return FALSE;
       }
-#endif
 
       if (IS_SET(account->flags, ACCOUNT_EMAIL)) {
         // too bad they can't do this from the menu, but they won't get this
@@ -5818,16 +5813,11 @@ int Descriptor::doAccountStuff(char *arg)
         break;
       }
 
-#if 0
-      // this is dumb here, they already made the char
-      // we can't just go around fucking people when we add mobs
-      // that have the same name they do
       if (_parse_name(arg, tmp_name)) {
         writeToQ("Illegal name, please try another.\n\r");
         writeToQ("Name -> ");
         return FALSE;
       }
-#endif
 
       // lower() returns static buf, so add one at a time
       sprintf(buf, "account/%c/%s", LOWER(account->name[0]), lower(account->name).c_str());
