@@ -117,14 +117,14 @@ bool trytelekinesis(TBeing *caster, TBeing *victim, TObj *obj){
 
   if(!bSuccess(victim, victim->getSkillValue(SKILL_TELEKINESIS), 
 	       SKILL_TELEKINESIS)){
-    act("You try to retrieve your $p using telekinesis, but it is too difficult.", 
+    act("You try to retrieve $p using telekinesis, but it is too difficult.", 
 	FALSE, caster, obj, victim, TO_VICT, ANSI_CYAN);
     act("$N furrows $s brow for a moment, but nothing happens.",
 	FALSE, caster, obj, victim, TO_NOTVICT, ANSI_NORMAL);
     act("$N furrows $s brow for a moment, but nothing happens.",
 	FALSE, caster, obj, victim, TO_CHAR, ANSI_NORMAL);
   } else {
-    act("You catch your $p in mid-air with the powers of your mind and return it to your grasp!",
+    act("You catch $p in mid-air with the powers of your mind and return it to your grasp!",
 	FALSE, caster, obj, victim, TO_VICT, ANSI_CYAN);
     act("$N's $p stops in mid-air, then flies back to his hand!",
 	FALSE, caster, obj, victim, TO_NOTVICT, ANSI_CYAN);
