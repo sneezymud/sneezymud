@@ -118,10 +118,10 @@ bool TDatabase::query(const char *query,...)
 
 	  break;
 	case 'i':
-	  ssprintf(buf, "%s%i", buf.c_str(), va_arg(ap, int));
+	  buf = fmt("%s%i") % buf % va_arg(ap, int);
 	  break;
 	case 'f':
-	  ssprintf(buf, "%s%f", buf.c_str(), va_arg(ap, double));
+	  buf = fmt("%s%f") % buf % va_arg(ap, double);
 	  break;
 	case '%':
 	  buf += "%";

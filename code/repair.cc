@@ -448,7 +448,7 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
     if (!found) 
       buyer->sendTo("You have no damaged items in your inventory!\n\r");
     else
-      buyer->sendTo("You gave a total of %d talens in damaged equipment.\n\r", total);
+      buyer->sendTo(fmt("You gave a total of %d talens in damaged equipment.\n\r") % total);
 
     return FALSE;
   }

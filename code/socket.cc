@@ -371,7 +371,7 @@ int lycanthropeTransform(TBeing *ch)
   }
 
   mob->doAction("", CMD_HOWL);
-  mob->roomp->getZone()->sendTo("You hear a chilling wolf howl in the distance.\n\r", mob->roomp->number);
+  mob->roomp->getZone()->sendTo(fmt("You hear a chilling wolf howl in the distance.\n\r") % mob->roomp->number);
 
 
   return TRUE;

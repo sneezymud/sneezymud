@@ -469,13 +469,13 @@ void TThing::skinMe(TBeing *ch, const char *arg)
 
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
-    ch->sendTo("You do not see a %s here.\n\r", arg);
+    ch->sendTo(fmt("You do not see a %s here.\n\r") % arg);
     return;
   }
   // Check to see if corpse is a corpse
   
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, "You cannot skin %s.\n\r", obj->getName());
+    ch->sendTo(COLOR_OBJECTS, fmt("You cannot skin %s.\n\r") % obj->getName());
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
@@ -538,13 +538,13 @@ void TTool::skinMe(TBeing *ch, const char *arg)
   }
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
-    ch->sendTo("You do not see a %s here.\n\r", arg);
+    ch->sendTo(fmt("You do not see a %s here.\n\r") % arg);
     return;
   }
   // Check to see if corpse is a corpse
   
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, "You cannot skin %s.\n\r", obj->getName());
+    ch->sendTo(COLOR_OBJECTS, fmt("You cannot skin %s.\n\r") % obj->getName());
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
@@ -676,8 +676,8 @@ void TBeing::doSeekwater()
     worked = bSuccess(this, skill, SKILL_SEEKWATER);
     if (worked) {
       if (code <= 9)
-        sendTo("%sYou see traces of water %s.%s\n\r", purple(),
-               dirs_to_blank[code], norm());
+        sendTo(fmt("%sYou see traces of water %s.%s\n\r") % purple() %
+               dirs_to_blank[code] % norm());
       else {
         int count = code - 9, seen = 0;
         for (t = roomp->getStuff(); t; t = t->nextThing) {
@@ -685,8 +685,8 @@ void TBeing::doSeekwater()
           if (tp) {
             seen++;
             if (count == seen) {
-              sendTo(COLOR_OBJECTS, "%sYou see traces of water through %s.%s\n\r", 
-                     purple(), tp->getName(), norm());
+              sendTo(COLOR_OBJECTS, fmt("%sYou see traces of water through %s.%s\n\r") % 
+                     purple() % tp->getName() % norm());
               break;
             }
           }
@@ -881,7 +881,7 @@ int TDrinkCon::divineMe(TBeing *caster, int, byte bKnown)
       setDrinkType(LIQ_WATER);
       addToDrinkUnits(units);
       weightChangeObject(units * SIP_WEIGHT);
-      caster->sendTo("You divine %d ounces of water.\n\r", units);
+      caster->sendTo(fmt("You divine %d ounces of water.\n\r") % units);
       if (getDrinkUnits() == getMaxDrinkUnits())
         act("$p is filled.", FALSE, caster, this, 0, TO_CHAR);
       else
@@ -940,13 +940,13 @@ void TThing::butcherMe(TBeing *ch, const char *arg)
 
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
-    ch->sendTo("You do not see a %s here.\n\r", arg);
+    ch->sendTo(fmt("You do not see a %s here.\n\r") % arg);
     return;
   }
   // Check to see if corpse is a corpse
   
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, "You cannot butcher %s.\n\r", obj->getName());
+    ch->sendTo(COLOR_OBJECTS, fmt("You cannot butcher %s.\n\r") % obj->getName());
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
@@ -997,13 +997,13 @@ void TTool::butcherMe(TBeing *ch, const char *arg)
   }
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
-    ch->sendTo("You do not see a %s here.\n\r", arg);
+    ch->sendTo(fmt("You do not see a %s here.\n\r") % arg);
     return;
   }
   // Check to see if corpse is a corpse
   
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, "You cannot butcher %s.\n\r", obj->getName());
+    ch->sendTo(COLOR_OBJECTS, fmt("You cannot butcher %s.\n\r") % obj->getName());
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {

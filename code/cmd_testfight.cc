@@ -297,7 +297,7 @@ void TBeing::doTestFight(const char *arg)
     return;
   } else if (*cmob1 && is_abbrev(cmob1, "class")) {
     changed_class = convertTo<int>(cmob2);
-    sendTo("Changed class is now %d.\n\r", changed_class);
+    sendTo(fmt("Changed class is now %d.\n\r") % changed_class);
     return;
   }
 

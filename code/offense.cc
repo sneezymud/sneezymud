@@ -490,7 +490,7 @@ int TBeing::doKill(const char *argument, TBeing *vict)
       delete v;
       v = NULL;
     } else {
-      sendTo(COLOR_MOBS, "You can't kill %s!\n\r", v->getName());
+      sendTo(COLOR_MOBS, fmt("You can't kill %s!\n\r") % v->getName());
     }
   }
   return FALSE;
@@ -892,7 +892,7 @@ int TBeing::doFlee(const char *arg)
             return DELETE_THIS;
 	  
           if (iDie == TRUE) {
-            sendTo("You nearly hurt yourself as you fled madly %swards.\n\r", dirs[attempt]);
+            sendTo(fmt("You nearly hurt yourself as you fled madly %swards.\n\r") % dirs[attempt]);
             REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
 	    
             return TRUE;
@@ -993,9 +993,9 @@ int TBeing::doFlee(const char *arg)
             addToExp(-min(lose, getExp()));
         }
         if (panic)
-          sendTo("Panic-stricken, you flee %s.\n\r", dirs[attempt]);
+          sendTo(fmt("Panic-stricken, you flee %s.\n\r") % dirs[attempt]);
         else
-          sendTo("You retreat skillfully %s.\n\r", dirs[attempt]);
+          sendTo(fmt("You retreat skillfully %s.\n\r") % dirs[attempt]);
 
         // do this before lookForEngaged to get attackers check to work OK
         if (fight())
@@ -1664,7 +1664,7 @@ int TBeing::chlorineEngulfed()
     if (!(t = equipment[i]) && slotChance(i)) {
       int dam = ::number(2,11);
       if ((dam = getActualDamage(this, 0, dam, SPELL_CHLORINE_BREATH)))
-        sendTo("The chlorine gas gives you a caustic burn on your %s.\n\r",describeBodySlot(i).c_str());
+        sendTo(fmt("The chlorine gas gives you a caustic burn on your %s.\n\r") %describeBodySlot(i));
       rc = applyDamage(this,dam,SPELL_CHLORINE_BREATH);
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return DELETE_THIS;

@@ -263,31 +263,31 @@ void TArrow::evaluateMe(TBeing *ch) const
   if (learn > 10)
     switch (arrowType) {
       case 0:
-        ch->sendTo(COLOR_OBJECTS, "%s is a hunting type arrow.\n\r", getName());
+        ch->sendTo(COLOR_OBJECTS, fmt("%s is a hunting type arrow.\n\r") % getName());
         break;
       case 1:
-        ch->sendTo(COLOR_OBJECTS, "%s is a fighting type arrow.\n\r", getName());
+        ch->sendTo(COLOR_OBJECTS, fmt("%s is a fighting type arrow.\n\r") % getName());
         break;
       case 2:
-        ch->sendTo(COLOR_OBJECTS, "%s is a squabble type quarrel.\n\r", getName());
+        ch->sendTo(COLOR_OBJECTS, fmt("%s is a squabble type quarrel.\n\r") % getName());
         break;
       case 3:
-        ch->sendTo(COLOR_OBJECTS, "%s is a common type quarrel.\n\r", getName());
+        ch->sendTo(COLOR_OBJECTS, fmt("%s is a common type quarrel.\n\r") % getName());
         break;
       case 4:
-        ch->sendTo(COLOR_OBJECTS, "%s is a sniper type blowdart.\n\r", getName());
+        ch->sendTo(COLOR_OBJECTS, fmt("%s is a sniper type blowdart.\n\r") % getName());
         break;
       case 5:
-        ch->sendTo(COLOR_OBJECTS, "%s is a common type blowdart.\n\r", getName());
+        ch->sendTo(COLOR_OBJECTS, fmt("%s is a common type blowdart.\n\r") % getName());
         break;
       case 6:
-        ch->sendTo(COLOR_OBJECTS, "%s is a heavy type sling ammo.\n\r", getName());
+        ch->sendTo(COLOR_OBJECTS, fmt("%s is a heavy type sling ammo.\n\r") % getName());
         break;
       case 7:
-        ch->sendTo(COLOR_OBJECTS, "%s is a common type sling ammo.\n\r", getName());
+        ch->sendTo(COLOR_OBJECTS, fmt("%s is a common type sling ammo.\n\r") % getName());
         break;
       default:
-        ch->sendTo("%s is a messed up arrow type.\n\r", getName());
+        ch->sendTo(fmt("%s is a messed up arrow type.\n\r") % getName());
         break;
     }
 

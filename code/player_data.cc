@@ -219,13 +219,13 @@ void TPerson::resetChar()
       *tmp = tolower(*tmp);
   }
   if (!no_mail && has_mail(recipient))
-    sendTo("\n\rYou have %sMAIL%s.\n\r", bold(), norm());
+    sendTo(fmt("\n\rYou have %sMAIL%s.\n\r") % bold() % norm());
 
   time_t ct = player.time.last_logon ? player.time.last_logon : time(0);
   tmstr = (char *) asctime(localtime(&ct));
   *(tmstr + strlen(tmstr) - 1) = '\0';
   if (*lastHost)
-    sendTo("\n\rYou last logged in %s from %s\n\r\n\r", tmstr, lastHost);
+    sendTo(fmt("\n\rYou last logged in %s from %s\n\r\n\r") % tmstr % lastHost);
   else {
     sendTo("This is your first login.\n\r");
   }
@@ -236,7 +236,7 @@ void TPerson::resetChar()
   lastHost[39] = '\0';
 
   if (desc && desc->bad_login)
-    sendTo("%sYou have had %d unsuccessful logins to your player since last login.%s\n\r", red(), desc->bad_login, norm());
+    sendTo(fmt("%sYou have had %d unsuccessful logins to your player since last login.%s\n\r") % red() % desc->bad_login % norm());
 
   // Now that bad logins have been sent, reset it to 0 
   desc->bad_login = 0;
@@ -1553,7 +1553,7 @@ void TBeing::doReset(sstring arg)
         else 
           pracs += calcNewPracs(Class, false);
       }
-      sendTo("Class: %s: %d practices reset.\n\r", classInfo[Class].name.cap().c_str(), pracs);
+      sendTo(fmt("Class: %s: %d practices reset.\n\r") % classInfo[Class].name.cap() % pracs);
       setPracs(pracs, Class);
     }
     resetEffectsChar();
@@ -1593,7 +1593,7 @@ void TBeing::doReset(sstring arg)
           delete tmp;
         }
         keeper->autoCreateShop(isi);
-        ssprintf(buf, "%s/%d", SHOPFILE_PATH, isi);
+        buf = fmt("%s/%d") % SHOPFILE_PATH % isi;
         keeper->saveItems(buf);
       }
     }
@@ -1618,12 +1618,12 @@ void TBeing::doReset(sstring arg)
       for (i= 0; i < zone_table.size(); i++) {
         zone_table[i].resetZone(FALSE);
       }
-      sendTo("Zone 0-%d reset.\n\r", i-1);
+      sendTo(fmt("Zone 0-%d reset.\n\r") % (i-1));
       return;
     }
     zone = convertTo<int>(buf);
     zone_table[zone].resetZone(FALSE);
-    sendTo("Zone %d reset.\n\r", zone);
+    sendTo(fmt("Zone %d reset.\n\r") % zone);
     return;
   } else if (is_abbrev(buf, "levels") && isImmortal()) {
     if (!hasWizPower(POWER_RESET)) {
@@ -1673,7 +1673,7 @@ void TBeing::saveTitle()
   if(!(tp=dynamic_cast<TPerson *>(this)))
     return;
 
-  ssprintf(buf, "player/%c/%s.title", LOWER(name[0]), sstring(name).lower().c_str());
+  buf = fmt("player/%c/%s.title") % LOWER(name[0]) % sstring(name).lower();
 
   if (!(fp = fopen(buf.c_str(), "w"))) {
     vlogf(LOG_FILE, "Unable to open file (%s) for saving title (%d)", 
@@ -1698,7 +1698,7 @@ void TBeing::loadTitle()
   if(!(tp=dynamic_cast<TPerson *>(this)))
     return;
 
-  ssprintf(buf, "player/%c/%s.title", LOWER(name[0]), sstring(name).lower().c_str());
+  buf = fmt("player/%c/%s.title") % LOWER(name[0]) % sstring(name).lower();
 
   if (!(fp = fopen(buf.c_str(), "r"))) {
     //    vlogf(LOG_FILE, "Unable to open file (%s) for loading title (%d)", buf.c_str(), errno);

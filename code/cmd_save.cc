@@ -48,7 +48,7 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
   if (dynamic_cast<TBeing *>(tThing) &&
       (dynamic_cast<TBeing *>(tThing))->isPc()) {
     ch->sendTo("Kinky.  Did you buy them dinner first?\n\r");
-    (dynamic_cast<TBeing *>(tThing))->sendTo("%s just tried to save you for later use!\n\r",
+    (dynamic_cast<TBeing *>(tThing))->sendTo(fmt("%s just tried to save you for later use!\n\r") %
                                              ch->getName());
     return;
   }

@@ -86,10 +86,10 @@ void TDrug::describeObjectSpecifics(const TBeing *ch) const
   if (getMaxFuel()) {
     diff = (double) ((double) getCurFuel() / (double) getMaxFuel());
     ch->sendTo(COLOR_OBJECTS,
-          "You can tell that %s has %s of its %s left.\n\r",
-          sstring(getName()).uncap().c_str(),
+          fmt("You can tell that %s has %s of its %s left.\n\r") %
+          sstring(getName()).uncap() %
           ((diff < .20) ? "very little" : ((diff < .50) ? "some" :
-          ((diff < .75) ? "a good bit of" : "almost all of its"))),
+          ((diff < .75) ? "a good bit of" : "almost all of its"))) %
 	       drugTypes[getDrugType()].name);
   }
 }
@@ -118,7 +118,7 @@ void TDrug::refuelMeDrug(TBeing *ch, TDrugContainer *lamp)
 
   sprintf(buf, "$n packs some %s into $s $o", drugTypes[getDrugType()].name);
   act(buf, TRUE, ch, lamp, 0, TO_ROOM);
-  ch->sendTo("You pack some %s into the %s.\n\r", drugTypes[getDrugType()].name,
+  ch->sendTo(fmt("You pack some %s into the %s.\n\r") % drugTypes[getDrugType()].name %
 	     fname(lamp->name).c_str());
 
   addToCurFuel(-use);
@@ -126,7 +126,7 @@ void TDrug::refuelMeDrug(TBeing *ch, TDrugContainer *lamp)
   lamp->setDrugType(getDrugType());
 
   if (getCurFuel() <= 0) {
-    ch->sendTo("Your %s is all used up, and you discard it.\n\r",
+    ch->sendTo(fmt("Your %s is all used up, and you discard it.\n\r") %
 	       drugTypes[getDrugType()].name);
     if (equippedBy) {
       dynamic_cast<TBeing *>(equippedBy)->unequip(eq_pos);
@@ -380,9 +380,9 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
 	break;
 
       if(severity<20){
-	ch->sendTo("You could use some %s right now.\n\r", drugTypes[drug].name);
+	ch->sendTo(fmt("You could use some %s right now.\n\r") % drugTypes[drug].name);
       } else if(severity<40){
-	ch->sendTo("You feel queasy and your hands are trembling, you really need some %s.\n\r", drugTypes[drug].name);
+	ch->sendTo(fmt("You feel queasy and your hands are trembling, you really need some %s.\n\r") % drugTypes[drug].name);
 
 	aff.type = AFFECT_DRUG;
 	aff.bitvector = 0;
@@ -397,7 +397,7 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
 	  reapplyDrugAffect(ch, affptr, aff.modifier, aff.duration);
 	}
       } else {
-	ch->sendTo("You need to smoke some %s to feed your addiction.\n\r", drugTypes[drug].name);
+	ch->sendTo(fmt("You need to smoke some %s to feed your addiction.\n\r") % drugTypes[drug].name);
 	ch->sendTo("You've got a splitting headache and you feel very very tired.\n\r");
 	ch->setMove(max((ch->getMove() - 50), 0));
 	

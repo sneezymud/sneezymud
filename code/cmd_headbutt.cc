@@ -78,7 +78,7 @@ bool TBeing::canHeadbutt(TBeing *victim, silentTypeT silent)
   if ((int) (getPosHeight() * 0.9) > victim->getPosHeight()) {
     if (victim->getPosition() < POSITION_STANDING) {
       if (!silent)
-        sendTo("That might work, but your victim seems to be on the %s.\n\r", roomp->describeGround().c_str());
+        sendTo(fmt("That might work, but your victim seems to be on the %s.\n\r") % roomp->describeGround());
     } else {
       if (!silent)
         sendTo("Your head is much higher than theirs.\n\r");

@@ -112,7 +112,7 @@ int Limb::toInt(sstring limb_name) {
 }
 
 void Limb::showLimb(TBeing *caller){
-  caller->sendTo("Limb: %s\n\r",name.c_str());
+  caller->sendTo(fmt("Limb: %s\n\r") %name);
 }
 
 bool VITAL_PART(wearSlotT pos)
@@ -135,8 +135,8 @@ int TBeing::hurtLimb(unsigned int dam, wearSlotT part_hit)
     addCurLimbHealth(part_hit, -min(dam, limHlt));
     if (getCurLimbHealth(part_hit) <= 0) {
       char buf[256];
-      sendTo(COLOR_BASIC, "%sYour %s has become totally useless!%s\n\r",
-         red(), describeBodySlot(part_hit).c_str(), norm());
+      sendTo(COLOR_BASIC, fmt("%sYour %s has become totally useless!%s\n\r") %
+         red() % describeBodySlot(part_hit) % norm());
       sprintf(buf, "$n's %s has become completely useless!",
          describeBodySlot(part_hit).c_str());
       act(buf, TRUE, this, NULL, NULL, TO_ROOM, ANSI_ORANGE);

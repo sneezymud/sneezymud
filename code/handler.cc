@@ -1017,7 +1017,7 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
 
 #if 0
   if (!canUseLimb(pos)) {
-    sendTo("Your limb is busted and %s drops off.\n\r",obj->shortDescr);
+    sendTo(fmt("Your limb is busted and %s drops off.\n\r") %obj->shortDescr);
     act("$n drops $s $o.", TRUE, this, obj, 0, TO_ROOM);
     *roomp += *obj;
     return;
@@ -1027,7 +1027,7 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
   if (pos == HOLD_RIGHT) {
     if (!canUseLimb(WEAR_HAND_R)) {
       if (roomp) {
-        sendTo(COLOR_BASIC, "Your hand is damaged and you drop %s.\n\r",obj->shortDescr);
+        sendTo(COLOR_BASIC, fmt("Your hand is damaged and you drop %s.\n\r") %obj->shortDescr);
         *roomp += *obj;
       } else 
         *this += *obj;
@@ -1037,7 +1037,7 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
   } else if (pos == HOLD_LEFT) {
     if (!canUseLimb(WEAR_HAND_L)) {
       if (roomp) {
-        sendTo(COLOR_BASIC, "Your hand is damaged and you drop %s.\n\r",obj->shortDescr);
+        sendTo(COLOR_BASIC, fmt("Your hand is damaged and you drop %s.\n\r") %obj->shortDescr);
         *roomp += *obj;
       } else 
         *this += *obj;

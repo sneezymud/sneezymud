@@ -154,10 +154,10 @@ void TBed::changeBedValue1(TBeing *ch, const char *arg, editorEnterTypeT type)
   }
   ch->sendTo(VT_HOMECLR);
   ch->sendTo("1) Max users (number that can sit/sleep/rest on)\n\r");
-  ch->sendTo("        current: %d\n\r", getMaxUsers());
+  ch->sendTo(fmt("        current: %d\n\r") % getMaxUsers());
   ch->sendTo("2) Min position (0 = sleeping, 1 = resting, 2 = sitting)\n\r");
-  ch->sendTo("        current: %d\n\r", getMinPosUse());
-  ch->sendTo(VT_CURSPOS, 10, 1);
+  ch->sendTo(fmt("        current: %d\n\r") % getMinPosUse());
+  ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
 
@@ -208,7 +208,7 @@ void TBed::bedRegen(TBeing *ch, int *gain, silentTypeT silent) const
   if (ch->getHit() < ch->hitLimit()) {
     // act() is suppressed if person is !awake(), use a sendTo
     if (!silent)
-      ch->sendTo(COLOR_OBJECTS, "Your rest on %s rejuvenates you.\n\r", getName());
+      ch->sendTo(COLOR_OBJECTS, fmt("Your rest on %s rejuvenates you.\n\r") % getName());
   }
 }
 
@@ -452,7 +452,7 @@ int TBed::mobPulseBed(TMonster *mob, short int occurrence)
   int n;
   sstring fullName;
 // concatenate name of object with occurrence in room, e.g. 3.chair
-  ssprintf(fullName, "%hi%s%s", occurrence, ".", fname(name).c_str());
+  fullName = fmt("%hi%s%s") % occurrence % "." % fname(name);
 
   if (mob->default_pos <= POSITION_SLEEPING)
     n = 3;

@@ -61,13 +61,13 @@ int TVial::objectSell(TBeing *ch, TMonster *keeper)
   sstring buf;
 
   if(getDrinkType()!=LIQ_HOLYWATER){
-    ssprintf(buf, "%s Hey, that's not holy water!.", ch->getName());
+    buf = fmt("%s Hey, that's not holy water!.") % ch->getName();
     keeper->doTell(buf);
     return TRUE;
   }
 
   if(getDrinkUnits()!=getMaxDrinkUnits()){
-    ssprintf(buf, "%s I only purchase full vials.", ch->getName());
+    buf = fmt("%s I only purchase full vials.") % ch->getName();
     keeper->doTell(buf);
     return TRUE;
   }

@@ -192,9 +192,9 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
       amt2 = (int) (amount * FactionInfo[ch->getFaction()].faction_tithe / 100.0);
 
     if (!amt2)
-      ch->sendTo("There were %d talens.\n\r", amount);
+      ch->sendTo(fmt("There were %d talens.\n\r") % amount);
     else
-      ch->sendTo("There were %d talens, and you tithe %d of them.\n\r", amount, amt2);
+      ch->sendTo(fmt("There were %d talens, and you tithe %d of them.\n\r") % amount % amt2);
   }
 
   if (ch->getMoney() > 500000 && (amount > 100000))

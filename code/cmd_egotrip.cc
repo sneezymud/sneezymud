@@ -61,7 +61,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
     
-    sendTo("You teleport %s\n\r", ch->getName());
+    sendTo(fmt("You teleport %s\n\r") % ch->getName());
     
     ch->genericTeleport(SILENT_NO, false, true);
   } else if(is_abbrev(argument, "portal")){
@@ -140,8 +140,8 @@ void TBeing::doEgoTrip(const char *arg)
       act("$N has graciously bestowned upon you $S blessing.",
             FALSE, ch, 0, this, TO_CHAR);
 #else
-      ch->sendTo("%s has graciously bestowed upon you %s blessing.\n\r",
-            sstring(ch->pers(this)).cap().c_str(), hshr());
+      ch->sendTo(fmt("%s has graciously bestowed upon you %s blessing.\n\r") %
+            sstring(ch->pers(this)).cap() % hshr());
 #endif
       bless(this, ch);
     }
@@ -168,8 +168,8 @@ void TBeing::doEgoTrip(const char *arg)
       act("$N has given you sanctuary.",
             FALSE, ch, 0, this, TO_CHAR);
 #else
-      ch->sendTo("%s has given you sanctuary.\n\r",
-            sstring(ch->pers(this)).cap().c_str(), hshr());
+      ch->sendTo(fmt("%s has given you sanctuary.\n\r") %
+            sstring(ch->pers(this)).cap() % hshr());
 #endif
       sanctuary(this, ch);
     }
@@ -191,8 +191,8 @@ void TBeing::doEgoTrip(const char *arg)
       // Try and ditch some of the un-needed spam/waste.
       if (!ch || ch->GetMaxLevel() > MAX_MORT)
         continue;
-      ch->sendTo("%s has reconfirmed %s suspicions.\n\r",
-            sstring(ch->pers(this)).cap().c_str(), hshr());
+      ch->sendTo(fmt("%s has reconfirmed %s suspicions.\n\r") %
+            sstring(ch->pers(this)).cap() % hshr());
       castStupidity(this, ch);
     }
     return;
@@ -213,7 +213,7 @@ void TBeing::doEgoTrip(const char *arg)
       // Try and ditch some of the un-needed spam/waste.
       if (!ch || ch->GetMaxLevel() > MAX_MORT)
         continue;
-      ch->sendTo("%s has bestowed upon you enlivenment.\n\r",
+      ch->sendTo(fmt("%s has bestowed upon you enlivenment.\n\r") %
             sstring(ch->pers(this)).cap().c_str());
       castEnliven(this, ch);
     }
@@ -254,7 +254,7 @@ void TBeing::doEgoTrip(const char *arg)
     aff.duration = 5;
     aff.modifier2 = crit;
     ch->affectTo(&aff);
-    sendTo("It looks like some bad luck will befall %s before too long. Heh, heh, heh.\n\r",ch->getName());
+    sendTo(fmt("It looks like some bad luck will befall %s before too long. Heh, heh, heh.\n\r") %ch->getName());
     vlogf(LOG_MISC, "%s egotrip critted %s with crit #%d", getName(), ch->getName(), crit);
     return;
   } else if (is_abbrev(argument, "blast")) {
@@ -414,13 +414,13 @@ void TBeing::doEgoTrip(const char *arg)
           continue;
         }
 
-        tBeing->sendTo("%s has cured your %s.\n\r",
-                       sstring(getName()).cap().c_str(),
+        tBeing->sendTo(fmt("%s has cured your %s.\n\r") %
+                       sstring(getName()).cap() %
                        DiseaseInfo[affToDisease(*tAff)].name);
 
 
-	sendTo(COLOR_BASIC, "Your cure %s of: %s.\n\r",
-	       tBeing->getName(),
+	sendTo(COLOR_BASIC, fmt("Your cure %s of: %s.\n\r") %
+	       tBeing->getName() %
 	       DiseaseInfo[affToDisease(*tAff)].name);
 
         if (tAff->modifier == DISEASE_POISON) {

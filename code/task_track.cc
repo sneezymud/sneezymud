@@ -167,7 +167,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
             !ch->isAffected(AFF_TRUE_SIGHT)) {
           if (ch->task->flags != 100) {
             ch->task->flags = 100;
-            ch->sendTo("You can't see well enough to %s.\n\r",
+            ch->sendTo(fmt("You can't see well enough to %s.\n\r") %
                        (isSW ? "seek water" : "track"));
           }
           return TRUE;
@@ -207,8 +207,8 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
         // this bit of code to become active.
         if ((ch->specials.hunting && ch->sameRoom(*ch->specials.hunting)) ||
             (targetRm != -1 && targetRm == ch->inRoom())) {
-          ch->sendTo("%s###You have found %s!%s\n\r", ch->orange(),
-                     (isSW ? "some water" : "your target"), ch->norm());
+          ch->sendTo(fmt("%s###You have found %s!%s\n\r") % ch->orange() %
+                     (isSW ? "some water" : "your target") % ch->norm());
           if (ch->desc && ch->desc->m_bIsClient)
             ch->desc->clientf("%d", CLIENT_TRACKOFF);
           ch->stopTask();
@@ -231,10 +231,10 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
           ch->task->flags = code+1;
           // If the exit code is less than 10, then it has to be on the 10-exit compass
           if (code >= 0 && code <= 9) {
-            ch->sendTo("%s###You track %s %s.%s\n\r",
-                   ch->purple(),
-		       (isSW ? "some water" : "your target"),
-                   dirs_to_blank[code], ch->norm());
+            ch->sendTo(fmt("%s###You track %s %s.%s\n\r") %
+                   ch->purple() %
+		       (isSW ? "some water" : "your target") %
+                   dirs_to_blank[code] % ch->norm());
             // Client check
             if (ch->desc && ch->desc->m_bIsClient)
               ch->desc->clientf("%d|%d", CLIENT_TRACKING, 1 << code);
@@ -251,8 +251,8 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
               if (tp) {
                 seen++;
                 if (count == seen) {
-                  ch->sendTo(COLOR_OBJECTS, "%sYou track %s through %s.%s\n\r", ch->purple(),
-                             (isSW ? "some water" : "your quarry"), tp->getName(), ch->norm());
+                  ch->sendTo(COLOR_OBJECTS, fmt("%sYou track %s through %s.%s\n\r") % ch->purple() %
+                             (isSW ? "some water" : "your quarry") % tp->getName() % ch->norm());
                   break;
                 }
               }
@@ -277,7 +277,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
           return TRUE;
         } else {
           // Failure.
-          ch->sendTo(COLOR_MOBS, "You continue tracking %s, but fail this turn.\n\r",
+          ch->sendTo(COLOR_MOBS, fmt("You continue tracking %s, but fail this turn.\n\r") %
                      (isSW ? "some water" : ch->specials.hunting->getName()));
           ch->task->flags -= 2;
           ch->addToWait(combatRound(1));
@@ -295,14 +295,14 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
       break;
   case CMD_ABORT:
   case CMD_STOP:
-      ch->sendTo(COLOR_MOBS, "You stop %s %s.\n\r",
-                 (isSW ? "seeking" : "tracking"),
+      ch->sendTo(COLOR_MOBS, fmt("You stop %s %s.\n\r") %
+                 (isSW ? "seeking" : "tracking") %
                  (isSW ? "water"   : ch->specials.hunting->getName()));
       stop_tracking(ch);
       ch->addToWait(combatRound(1));
       break;
   case CMD_TASK_FIGHTING:
-      ch->sendTo("You can not continue %s while under attack!\n\r",
+      ch->sendTo(fmt("You can not continue %s while under attack!\n\r") %
                  (isSW ? "seeking water" : "tracking"));
       stop_tracking(ch);
       break;

@@ -149,7 +149,7 @@ int TBaseCup::drinkMe(TBeing *ch)
   }
   sprintf(buf, "$n drinks %s from $p.", DrinkInfo[getDrinkType()]->name);
   act(buf, TRUE, ch, this, 0, TO_ROOM);
-  ch->sendTo(COLOR_OBJECTS, "You drink the %s.\n\r", DrinkInfo[getDrinkType()]->name);
+  ch->sendTo(COLOR_OBJECTS, fmt("You drink the %s.\n\r") % DrinkInfo[getDrinkType()]->name);
 
   // a single drink "should" average about 8 oz.
   // this means have to drink 3-4 to get unthirsty so go with unreal value.
@@ -472,8 +472,8 @@ void TBaseCup::pourMeIntoDrink2(TBeing *ch, TBaseCup *from_obj)
     ch->sendTo("How are you going to pour from something into itself?\n\r");
     return;
   }
-  ch->sendTo(COLOR_OBJECTS, "You pour %s into %s.\n\r", 
-          DrinkInfo[from_obj->getDrinkType()]->name, ch->objs(this));
+  ch->sendTo(COLOR_OBJECTS, fmt("You pour %s into %s.\n\r") % 
+          DrinkInfo[from_obj->getDrinkType()]->name % ch->objs(this));
 
   // set liquid type
   setDrinkType(from_obj->getDrinkType());
@@ -571,7 +571,7 @@ void TBaseCup::sipMe(TBeing *ch)
   }
   act("You sip from the $o.", FALSE, ch, this, NULL, TO_CHAR);
   act("$n sips from the $o.", TRUE, ch, this, 0, TO_ROOM);
-  ch->sendTo(COLOR_OBJECTS, "It tastes like %s.\n\r", DrinkInfo[getDrinkType()]->name);
+  ch->sendTo(COLOR_OBJECTS, fmt("It tastes like %s.\n\r") % DrinkInfo[getDrinkType()]->name);
 
   if(ch->isVampire()){
     ch->sendTo("You drink the mortal food, but it has no affect on you.\n\r");

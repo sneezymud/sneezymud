@@ -368,25 +368,25 @@ void TBaseWeapon::recalcShopData(int bought, int cost)
 
 void TBaseWeapon::objMenu(const TBeing *ch) const
 {
-  ch->sendTo(VT_CURSPOS, 3, 1);
-  ch->sendTo("%sSuggested price:%s %d%s", ch->purple(), ch->norm(),
-                 suggestedPrice(), (suggestedPrice() != obj_flags.cost ? " *" : ""));
+  ch->sendTo(fmt(VT_CURSPOS) % 3 % 1);
+  ch->sendTo(fmt("%sSuggested price:%s %d%s") % ch->purple() % ch->norm() %
+                 suggestedPrice() % (suggestedPrice() != obj_flags.cost ? " *" : ""));
 
-  ch->sendTo(VT_CURSPOS, 4, 1);
-  ch->sendTo("%sReal Lvl:%s %.2f",
-        ch->purple(), ch->norm(), weaponLevel());
+  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(fmt("%sReal Lvl:%s %.2f") %
+        ch->purple() % ch->norm() % weaponLevel());
                  
-  ch->sendTo(VT_CURSPOS, 4, 18);
-  ch->sendTo("%sDam Lvl:%s %.2f",
-        ch->purple(), ch->norm(), damageLevel());
+  ch->sendTo(fmt(VT_CURSPOS) % 4 % 18);
+  ch->sendTo(fmt("%sDam Lvl:%s %.2f") %
+        ch->purple() % ch->norm() % damageLevel());
                  
-  ch->sendTo(VT_CURSPOS, 4, 32);
-  ch->sendTo("%sStr Lvl:%s %.2f",
-        ch->purple(), ch->norm(), structLevel());
+  ch->sendTo(fmt(VT_CURSPOS) % 4 % 32);
+  ch->sendTo(fmt("%sStr Lvl:%s %.2f") %
+        ch->purple() % ch->norm() % structLevel());
                  
-  ch->sendTo(VT_CURSPOS, 4, 50);
-  ch->sendTo("%sQual Lvl:%s %.2f",
-        ch->purple(), ch->norm(), sharpLevel());
+  ch->sendTo(fmt(VT_CURSPOS) % 4 % 50);
+  ch->sendTo(fmt("%sQual Lvl:%s %.2f") %
+        ch->purple() % ch->norm() % sharpLevel());
 }
 
 void TBaseWeapon::changeObjValue1(TBeing *ch)
@@ -410,13 +410,13 @@ void TBaseWeapon::changeObjValue2(TBeing *ch)
     return;
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo("What does this value do? :\n\r %s\n\r",
+  ch->sendTo(fmt("What does this value do? :\n\r %s\n\r") %
         ItemInfo[itemType()]->val1_info);
   ch->specials.edit = CHANGE_OBJ_VALUE2;
 
-  ch->sendTo("Value 2 for %s : %d\n\r\n\r",
-       sstring(getName()).uncap().c_str(), x2);
-  ch->sendTo(VT_CURSPOS, 10, 1);
+  ch->sendTo(fmt("Value 2 for %s : %d\n\r\n\r") %
+       sstring(getName()).uncap() % x2);
+  ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
 
@@ -430,13 +430,13 @@ void TBaseWeapon::changeObjValue3(TBeing *ch)
     return;
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo("What does this value do? :\n\r %s\n\r",
+  ch->sendTo(fmt("What does this value do? :\n\r %s\n\r") %
         ItemInfo[itemType()]->val2_info);
   ch->specials.edit = CHANGE_OBJ_VALUE3;
 
-  ch->sendTo("Value 3 for %s : %d\n\r\n\r",
-       sstring(getName()).uncap().c_str(), x3);
-  ch->sendTo(VT_CURSPOS, 10, 1);
+  ch->sendTo(fmt("Value 3 for %s : %d\n\r\n\r") %
+       sstring(getName()).uncap() % x3);
+  ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
 
@@ -494,7 +494,7 @@ int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
               v->describeBodySlot(part_hit).c_str());
       }
       act(buf, TRUE, v, item, ch, TO_VICT);
-      ch->sendTo(COLOR_OBJECTS, "It is in %s condition.\n\r",equip_condition(-1).c_str());
+      ch->sendTo(COLOR_OBJECTS, fmt("It is in %s condition.\n\r") %equip_condition(-1));
       addToCurSharp(-1);
     }
     // Check for structural damage
@@ -512,7 +512,7 @@ int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
              ch->red(), ch->norm(), (item ? "$p on " : ""),
                v->describeBodySlot(part_hit).c_str());
           act(buf, FALSE, ch, item, v, TO_CHAR);
-	  ch->sendTo(COLOR_OBJECTS, "<R>It is in<1> %s <R>condition.<1>\n\r",equip_condition(-1).c_str());
+	  ch->sendTo(COLOR_OBJECTS, fmt("<R>It is in<1> %s <R>condition.<1>\n\r") %equip_condition(-1));
         }
       }
     }
@@ -679,10 +679,10 @@ bool TBaseWeapon::isPierceWeapon() const
 void TBaseWeapon::divinateMe(TBeing *caster) const
 {
 #if 1
-  caster->sendTo("It is capable of doing %s of damage for your level.\n\r", 
+  caster->sendTo(fmt("It is capable of doing %s of damage for your level.\n\r") % 
           describe_damage((int) damageLevel(), caster));
 #else
-  caster->sendTo("It is capable of doing %s of damage.\n\r", 
+  caster->sendTo(fmt("It is capable of doing %s of damage.\n\r") % 
           describe_damage((int) damageLevel(), caster));
 #endif
 }
@@ -854,12 +854,12 @@ void TBaseWeapon::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnte
       switch (update_num) {
         case 1:
           ch->sendTo(VT_HOMECLR);
-          ch->sendTo("Current max %s: %d\n\r",
+          ch->sendTo(fmt("Current max %s: %d\n\r") %
                 ((isBluntWeapon() ? "bluntness" :
                  (isPierceWeapon() ? "pointiness" :
-                 "sharpness"))),
+                 "sharpness"))) %
                 getMaxSharp());
-          ch->sendTo("Enter new max %s.\n\r--> ",
+          ch->sendTo(fmt("Enter new max %s.\n\r--> ") %
                 ((isBluntWeapon() ? "bluntness" :
                  (isPierceWeapon() ? "pointiness" :
                  "sharpness"))));
@@ -867,12 +867,12 @@ void TBaseWeapon::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnte
           return;
         case 2:
           ch->sendTo(VT_HOMECLR);
-          ch->sendTo("Current %s: %d\n\r",
+          ch->sendTo(fmt("Current %s: %d\n\r") %
                 ((isBluntWeapon() ? "bluntness" :
                  (isPierceWeapon() ? "pointiness" :
-                 "sharpness"))),
+                 "sharpness"))) %
                  getCurSharp());
-          ch->sendTo("Enter new %s.\n\r--> ",
+          ch->sendTo(fmt("Enter new %s.\n\r--> ") %
                 ((isBluntWeapon() ? "bluntness" :
                  (isPierceWeapon() ? "pointiness" :
                  "sharpness"))));
@@ -907,16 +907,16 @@ void TBaseWeapon::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnte
   }
   ch->sendTo(VT_HOMECLR);
   if (isSlashWeapon()) {
-    ch->sendTo("1) Max sharpness (Maximum sharpness item can ever be):     Max    =%d\n\r", getMaxSharp());
-    ch->sendTo("2) Sharpness (sharpness that weapon will start out with):  Current=%d\n\r", getCurSharp());
+    ch->sendTo(fmt("1) Max sharpness (Maximum sharpness item can ever be):     Max    =%d\n\r") % getMaxSharp());
+    ch->sendTo(fmt("2) Sharpness (sharpness that weapon will start out with):  Current=%d\n\r") % getCurSharp());
   } else if (isBluntWeapon()) {
-    ch->sendTo("1) Max Bluntness (Maximum bluntness item can ever be):     Max    =%d\n\r", getMaxSharp());
-    ch->sendTo("2) Bluntness (sharpness that weapon will start out with):  Current=%d\n\r", getCurSharp());
+    ch->sendTo(fmt("1) Max Bluntness (Maximum bluntness item can ever be):     Max    =%d\n\r") % getMaxSharp());
+    ch->sendTo(fmt("2) Bluntness (sharpness that weapon will start out with):  Current=%d\n\r") % getCurSharp());
   } else {
-    ch->sendTo("1) Max Pointiness (Maximum pointiness item can ever have):   Max    =%d\n\r", getMaxSharp());
-    ch->sendTo("2) Pointiness (pointiness that weapon will start out with):  Current=%d\n\r", getCurSharp());
+    ch->sendTo(fmt("1) Max Pointiness (Maximum pointiness item can ever have):   Max    =%d\n\r") % getMaxSharp());
+    ch->sendTo(fmt("2) Pointiness (pointiness that weapon will start out with):  Current=%d\n\r") % getCurSharp());
   }
-  ch->sendTo(VT_CURSPOS, 10, 1);
+  ch->sendTo(fmt(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
 
@@ -928,8 +928,8 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
   if ((objVnum() != WEAPON_AVENGER1) &&
       (objVnum() != WEAPON_AVENGER2) &&
       (objVnum() != WEAPON_AVENGER3)) {
-    ch->sendTo(COLOR_OBJECTS, "%s has no respect for someone using %s.\n\r",
-        sstring(ch->yourDeity(SKILL_SMITE, FIRST_PERSON)).cap().c_str(), getName());
+    ch->sendTo(COLOR_OBJECTS, fmt("%s has no respect for someone using %s.\n\r") %
+        sstring(ch->yourDeity(SKILL_SMITE, FIRST_PERSON)).cap() % getName());
     return FALSE;
   }
 
@@ -1263,16 +1263,16 @@ void TBaseWeapon::evaluateMe(TBeing *ch) const
     ch->describeWeaponDamage(this, learn);
 
   if (ch->isImmortal()) {
-    ch->sendTo(COLOR_OBJECTS, "IMMORTAL EVAL: %s overall is rated as a L%5.2f weapon.\n\r", getName(), weaponLevel());
-    ch->sendTo(COLOR_OBJECTS, "IMMORTAL EVAL: %s damage is rated as L%5.2f.\n\r", getName(), damageLevel());
-    ch->sendTo(COLOR_OBJECTS, "IMMORTAL EVAL: %s structure is rated as L%5.2f.\n\r", getName(), structLevel());
-    ch->sendTo(COLOR_OBJECTS, "IMMORTAL EVAL: %s quality is rated as L%5.2f.\n\r", getName(), sharpLevel());
+    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s overall is rated as a L%5.2f weapon.\n\r") % getName() % weaponLevel());
+    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s damage is rated as L%5.2f.\n\r") % getName() % damageLevel());
+    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s structure is rated as L%5.2f.\n\r") % getName() % structLevel());
+    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s quality is rated as L%5.2f.\n\r") % getName() % sharpLevel());
   }
 }
 
 void TBaseWeapon::describeObjectSpecifics(const TBeing *ch) const
 {
-  ch->sendTo(COLOR_OBJECTS, "You can tell that %s.\n\r", ch->describeSharpness(this).c_str());
+  ch->sendTo(COLOR_OBJECTS, fmt("You can tell that %s.\n\r") % ch->describeSharpness(this));
 }
 
 sstring TBaseWeapon::describeMySharp(const TBeing *ch) const
@@ -1326,8 +1326,8 @@ void TBaseWeapon::descMaxStruct(const TBeing *ch, int learn) const
   int maxstruct = GetApprox(getMaxStructPoints(), learn);
 
   strcpy(capbuf, ch->objs(this));
-  ch->sendTo(COLOR_OBJECTS,"%s seems to %s.\n\r",
-           cap(capbuf),
+  ch->sendTo(COLOR_OBJECTS,fmt("%s seems to %s.\n\r") %
+           cap(capbuf) %
           ((maxstruct >= 99) ? "be virtually indestructible" :
            ((maxstruct >= 95) ? "be very durable" :
            ((maxstruct >= 91) ? "be durable" :

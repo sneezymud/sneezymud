@@ -1116,7 +1116,7 @@ void TBeing::statBeing(TBeing *k)
         sprintf(buf + strlen(buf),"----------\n\r");
       }
     } else
-      sendTo(buf + strlen(buf),"Response(s): None.\n\r");
+      sprintf(buf + strlen(buf),"Response(s): None.\n\r");
   }
 
   strcat(buf, "\n\rAffecting Spells:\n\r--------------\n\r");
@@ -1984,33 +1984,33 @@ void TPerson::doStat(const char *argument)
       }
     }
     if ((snt < MIN_SPELL) || (snt >= MAX_SKILL)) {
-      sendTo("Not a good skill number (%d) or the being doesnt have the skill!\n\r", snt);
+      sendTo(fmt("Not a good skill number (%d) or the being doesnt have the skill!\n\r") % snt);
       sendTo("Syntax: stat <char name> <skill> <value>\n\r");
       return;
     }
 
     if (!k->doesKnowSkill(snt)) {
       if (discArray[snt])
-        sendTo(COLOR_MOBS, "%s doesnt appear to know that skill (%s).\n\r", k->getName(), (discArray[snt]->name ? discArray[snt]->name : "unknown"));
+        sendTo(COLOR_MOBS, fmt("%s doesnt appear to know that skill (%s).\n\r") % k->getName() % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
       else
-        sendTo(COLOR_MOBS, "%s doesnt appear to know that skill.\n\r", k->getName());
+        sendTo(COLOR_MOBS, fmt("%s doesnt appear to know that skill.\n\r") % k->getName());
       return;
     }
     CSkill *sk = k->getSkill(snt);
     if (!sk) {
       if (discArray[snt])
-        sendTo(COLOR_MOBS, "%s doesnt appear to have that skill (%s).\n\r", k->getName(), (discArray[snt]->name ? discArray[snt]->name : "unknown"));
+        sendTo(COLOR_MOBS, fmt("%s doesnt appear to have that skill (%s).\n\r") % k->getName() % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
       else
-        sendTo(COLOR_MOBS, "%s doesnt appear to know that skill.\n\r", k->getName());
+        sendTo(COLOR_MOBS, fmt("%s doesnt appear to know that skill.\n\r") % k->getName());
        return;
     }
-    sendTo(COLOR_MOBS, "%s's %s Raw (stored) Learning: Current (%d) Natural (%d).\n\r", k->getName(), discArray[snt]->name, k->getRawSkillValue(snt), k->getRawNatSkillValue(snt));
-    sendTo(COLOR_MOBS, "%s's %s Actual (used) Learning: Current (%d) Natural (%d) Max (%d).\n\r", k->getName(), discArray[snt]->name, k->getSkillValue(snt), k->getNatSkillValue(snt), k->getMaxSkillValue(snt));
+    sendTo(COLOR_MOBS, fmt("%s's %s Raw (stored) Learning: Current (%d) Natural (%d).\n\r") % k->getName() % discArray[snt]->name % k->getRawSkillValue(snt) % k->getRawNatSkillValue(snt));
+    sendTo(COLOR_MOBS, fmt("%s's %s Actual (used) Learning: Current (%d) Natural (%d) Max (%d).\n\r") % k->getName() % discArray[snt]->name % k->getSkillValue(snt) % k->getNatSkillValue(snt) % k->getMaxSkillValue(snt));
 
     time_t ct = sk->lastUsed;
     char * tmstr = (char *) asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
-    sendTo(COLOR_MOBS, "%s's %s Last Increased: %s\n\r", k->getName(), discArray[snt]->name, tmstr);
+    sendTo(COLOR_MOBS, fmt("%s's %s Last Increased: %s\n\r") % k->getName() % discArray[snt]->name % tmstr);
 
     return;
   } else if (is_abbrev(skbuf, "discipline")) {
@@ -2033,12 +2033,12 @@ void TPerson::doStat(const char *argument)
     CDiscipline *cd;
     
     if (!namebuf && !k->isPc() && !k->desc) {
-      sendTo(COLOR_MOBS, "%s has the following disciplines:\n\r\n\r", k->getName());
+      sendTo(COLOR_MOBS, fmt("%s has the following disciplines:\n\r\n\r") % k->getName());
       discNumT dnt;
       for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
         if (!(cd = k->getDiscipline(dnt)))
           break;
-        sendTo(COLOR_MOBS, "Discpline %20.20s : Current (%d) Natural (%d).\n\r", discNames[dnt].practice, cd->getLearnedness() , cd->getNatLearnedness());
+        sendTo(COLOR_MOBS, fmt("Discpline %20.20s : Current (%d) Natural (%d).\n\r") % discNames[dnt].practice % cd->getLearnedness()  % cd->getNatLearnedness());
       }
       return;
     } else if (!namebuf) {
@@ -2053,15 +2053,15 @@ void TPerson::doStat(const char *argument)
     }
 
     if (!k->discs) {
-      sendTo(COLOR_MOBS, "%s does not have disciplines allocated yet!\n\r", k->getName());
+      sendTo(COLOR_MOBS, fmt("%s does not have disciplines allocated yet!\n\r") % k->getName());
       return;
     }
 
     if (!(cd = k->getDiscipline(dnt))) {
-       sendTo(COLOR_MOBS, "%s doesnt appear to have that disipline.\n\r", k->getName());
+       sendTo(COLOR_MOBS, fmt("%s doesnt appear to have that disipline.\n\r") % k->getName());
        return;
     }
-    sendTo(COLOR_MOBS, "%s's %s Used Learning: Current (%d) Natural (%d).\n\r", k->getName(), discNames[dnt].practice, cd->getLearnedness(), cd->getNatLearnedness());
+    sendTo(COLOR_MOBS, fmt("%s's %s Used Learning: Current (%d) Natural (%d).\n\r") % k->getName() % discNames[dnt].practice % cd->getLearnedness() % cd->getNatLearnedness());
     return;
   } else if (is_abbrev(skbuf, "donebasic")) {
     if (!hasWizPower(POWER_STAT_SKILL)) {
@@ -2082,7 +2082,7 @@ void TPerson::doStat(const char *argument)
       }
     }
     for (count = 0; count < MAX_CLASSES; count++) {
-      sendTo("%-25.25s  :  %d\n\r", classInfo[count].name.cap().c_str(), k->player.doneBasic[count]);
+      sendTo(fmt("%-25.25s  :  %d\n\r") % classInfo[count].name.cap() % k->player.doneBasic[count]);
     }
     return;
   } else if (!strcmp("room", arg1)) {

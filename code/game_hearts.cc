@@ -140,10 +140,10 @@ void HeartsGame::deal(TBeing *ch)
   across->doPeek();
   right->doPeek();
 
-  ch->sendTo("The pass for this hand is %s.\n\r", which_pass[ipass]);
-  left->sendTo("The pass for this hand is %s.\n\r", which_pass[ipass]);
-  right->sendTo("The pass for this hand is %s.\n\r", which_pass[ipass]);
-  across->sendTo("The pass for this hand is %s.\n\r", which_pass[ipass]);
+  ch->sendTo(fmt("The pass for this hand is %s.\n\r") % which_pass[ipass]);
+  left->sendTo(fmt("The pass for this hand is %s.\n\r") % which_pass[ipass]);
+  right->sendTo(fmt("The pass for this hand is %s.\n\r") % which_pass[ipass]);
+  across->sendTo(fmt("The pass for this hand is %s.\n\r") % which_pass[ipass]);
 }
 
 void HeartsGame::peek(const TBeing *ch)
@@ -163,8 +163,8 @@ void HeartsGame::peek(const TBeing *ch)
 
   for (i = 0; i < 13; i++) {
     if (hands[which][i])
-      ch->sendTo("%2d) %-5s | %s\n\r", i + 1, card_names[CARD_NUM(hands[which][i])],
-	    suit(ch, hands[which][i]).c_str());
+      ch->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[which][i])] %
+	    suit(ch, hands[which][i]));
   }
   return;
 }
@@ -183,7 +183,7 @@ int HeartsGame::move_card(TBeing *ch, const char *arg)
       return FALSE;
     }
     if (orig == n) {
-      ch->sendTo("The number %d card is already in the number %d slot!\n\r", orig, n);
+      ch->sendTo(fmt("The number %d card is already in the number %d slot!\n\r") % orig % n);
       return FALSE;
     }
     orig--;
@@ -203,7 +203,7 @@ int HeartsGame::move_card(TBeing *ch, const char *arg)
 	hands[which][i] = hands[which][i - 1];
     }
     hands[which][n] = tmp;
-    ch->sendTo("You move card number %d to slot %d.\n\r", orig + 1, n + 1);
+    ch->sendTo(fmt("You move card number %d to slot %d.\n\r") % (orig + 1) % (n + 1));
   } else {
     ch->sendTo("Hearts table syntax : put <original card place number> <new place number>\n\r");
     return FALSE;
@@ -354,10 +354,10 @@ int HeartsGame::new_deal()
     }
     ipass = (ipass == PASS_NONE) ? PASS_LEFT : ipass + 1;
     deal(ch1);
-    ch1->sendTo("The score is now %s.\n\r", hearts_score().c_str());
-    ch2->sendTo("The score is now %s.\n\r", hearts_score().c_str());
-    ch3->sendTo("The score is now %s.\n\r", hearts_score().c_str());
-    ch4->sendTo("The score is now %s.\n\r", hearts_score().c_str());
+    ch1->sendTo(fmt("The score is now %s.\n\r") % hearts_score());
+    ch2->sendTo(fmt("The score is now %s.\n\r") % hearts_score());
+    ch3->sendTo(fmt("The score is now %s.\n\r") % hearts_score());
+    ch4->sendTo(fmt("The score is now %s.\n\r") % hearts_score());
     if (ipass == PASS_NONE) {
       passing = FALSE;
       canplay = find_two_of_clubs();
@@ -407,8 +407,7 @@ int HeartsGame::new_round(TBeing *ch, int *pilex)
     return FALSE;
   }
   sendrpf(won->roomp, "%s takes the trick with the %s.\n\r", won->getName(), pretty_card_printout(NULL, pilex[wincard]).c_str());
-  won->sendTo("You take the trick with the %s.\n\r", pretty_card_printout(ch,
-pilex[wincard]).c_str());
+  won->sendTo(fmt("You take the trick with the %s.\n\r") % pretty_card_printout(ch, pilex[wincard]));
 
   tricks[round][4] = winner;
 
@@ -483,11 +482,11 @@ void HeartsGame::play(TBeing *ch, const char *arg)
     broken |= is_heart(pile[iplay]);
     firstplay = FALSE;
     take_card_from_hand(hands[which], card, 12);
-    ch->sendTo("You play the %s.\n\r", pretty_card_printout(ch, pile[iplay]).c_str());
+    ch->sendTo(fmt("You play the %s.\n\r") % pretty_card_printout(ch, pile[iplay]));
     for (TThing *t = ch->roomp->getStuff(); t; t = t->nextThing) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (tbt && (tbt != ch))
-        tbt->sendTo(COLOR_MOBS, "%s plays the %s.\n\r", ch->getName(), pretty_card_printout(tbt, pile[iplay]).c_str());
+        tbt->sendTo(COLOR_MOBS, fmt("%s plays the %s.\n\r") % ch->getName() % pretty_card_printout(tbt, pile[iplay]));
     }
     if (++iplay == 4)
       new_round(ch, pile);
@@ -604,7 +603,7 @@ int HeartsGame::get_pass(TBeing *ch, char *arg)
     strcpy(buf2, pretty_card_printout(ch, passes[passed_from][1]).c_str());
     strcpy(buf3, pretty_card_printout(ch, passes[passed_from][2]).c_str());
   
-    ch->sendTo("You pick up the pile and get the %s, %s, and %s.\n\r", buf1, buf2, buf3);
+    ch->sendTo(fmt("You pick up the pile and get the %s, %s, and %s.\n\r") % buf1 % buf2 % buf3);
   
     cangetpass[which] = FALSE;
     if (++done_passing == 4) {
@@ -625,7 +624,7 @@ int HeartsGame::look(TBeing *ch, const char *arg)
   if (is_abbrev(arg, "table")) {
     get_other_players(ch, &left, &across, &right);
     if (game)
-      ch->sendTo("You see the score on a piece of paper on the corner of the table : %s\n\r", hearts_score().c_str());
+      ch->sendTo(fmt("You see the score on a piece of paper on the corner of the table : %s\n\r") % hearts_score());
 
     if (!pile[0])
       ch->sendTo("No cards are on the table.\n\r");
@@ -633,13 +632,13 @@ int HeartsGame::look(TBeing *ch, const char *arg)
       ch->sendTo("You see the following cards:\n\r");
       for (int i = 0; i < 4; i++) {
         if (pile[i])
-          ch->sendTo("%s\n\r", pretty_card_printout(ch, pile[i]).c_str());
+          ch->sendTo(fmt("%s\n\r") % pretty_card_printout(ch, pile[i]));
       }
     }
-    ch->sendTo("%s sits to your left, %s across from you, and %s to your right.\n\r",
-	  left ? left->getName() : "No one",
-	  across ? across->getName() : "no one",
-	  right ? right->getName() : "no one");
+    ch->sendTo(fmt("%s sits to your left, %s across from you, and %s to your right.\n\r") %
+	       (left ? left->getName() : "No one") %
+	       (across ? across->getName() : "no one") %
+	       (right ? right->getName() : "no one"));
 
     return TRUE;
   }

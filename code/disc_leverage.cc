@@ -104,10 +104,10 @@ static int hurlHit(TBeing *caster, TBeing *victim, dirTypeT dr)
       dam += 2;
     }
 
-    caster->sendTo(COLOR_MOBS, "%s is hurled %s out of the room!\n\r", 
-         sstring(victim->getName()).cap().c_str(), dirs[dr]);
-    victim->sendTo(COLOR_MOBS, "%s hurls you %s out of the room!\n\r", 
-            sstring(caster->getName()).cap().c_str(), dirs[dr]);
+    caster->sendTo(COLOR_MOBS, fmt("%s is hurled %s out of the room!\n\r") % 
+         sstring(victim->getName()).cap() % dirs[dr]);
+    victim->sendTo(COLOR_MOBS, fmt("%s hurls you %s out of the room!\n\r") % 
+            sstring(caster->getName()).cap() % dirs[dr]);
     sprintf(buf, "$N is hurled %s out of the room by $n.", dirs[dr]);
     act(buf, TRUE, caster, 0, victim, TO_NOTVICT);
 
@@ -226,11 +226,11 @@ int hurl(TBeing *caster, TBeing *victim, char *direction)
     caster->sendTo("You can't use that attack on a mounted person!\n\r");
     return FALSE;
   } else if (victim->riding) {
-    caster->sendTo(COLOR_MOBS, "You can't use that attack while %s is on %s!\n\r", victim->getName(), victim->riding->getName());
+    caster->sendTo(COLOR_MOBS, fmt("You can't use that attack while %s is on %s!\n\r") % victim->getName() % victim->riding->getName());
     return FALSE;
   }
   if (victim->getPosition() < POSITION_STANDING)  {
-    caster->sendTo("You can't hurl someone whom is already on the %s.\n\r", 
+    caster->sendTo(fmt("You can't hurl someone whom is already on the %s.\n\r") % 
     caster->roomp->describeGround().c_str());
     return FALSE;
   }
@@ -450,12 +450,12 @@ int shoulderThrow(TBeing *caster, TBeing *victim)
     caster->sendTo("You can't use that attack on a mounted person!\n\r");
     return FALSE;
   } else if (victim->riding) {
-    caster->sendTo(COLOR_MOBS, "You can't use that attack while %s is on %s!\n\r", victim->getName(), victim->riding->getName());
+    caster->sendTo(COLOR_MOBS, fmt("You can't use that attack while %s is on %s!\n\r") % victim->getName() % victim->riding->getName());
     return FALSE;
   }
 
   if (victim->getPosition() < POSITION_STANDING)  {
-    caster->sendTo("You can't shoulder throw someone whom is already on the %s.\n\r", caster->roomp->describeGround().c_str());
+    caster->sendTo(fmt("You can't shoulder throw someone whom is already on the %s.\n\r") % caster->roomp->describeGround());
     return FALSE;
   }
   if (caster->getPosition() != POSITION_STANDING)  {

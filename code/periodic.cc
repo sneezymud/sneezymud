@@ -184,7 +184,7 @@ int TBeing::riverFlow(int)
 
     TBeing *tbt = dynamic_cast<TBeing *>(t);
     if (tbt) {
-      tbt->sendTo("You drift %s...\n\r", dirs[rd]);
+      tbt->sendTo(fmt("You drift %s...\n\r") % dirs[rd]);
       tbt->doLook("", CMD_LOOK);
     }
 
@@ -196,7 +196,7 @@ int TBeing::riverFlow(int)
 
   }
 
-  sendTo("You drift %s...\n\r", dirs[rd]);
+  sendTo(fmt("You drift %s...\n\r") % dirs[rd]);
   --(*this);
   *to_room += *this;
   doLook("", CMD_LOOK);
@@ -275,7 +275,7 @@ int TObj::riverFlow(int)
   for (t = rider; t; t = t2) {
     t2 = t->nextRider;
 
-    t->sendTo("Your %s drifts %s...\n\r", objn(this).c_str(), dirs[rd]);
+    t->sendTo(fmt("Your %s drifts %s...\n\r") % objn(this) % dirs[rd]);
     sprintf(buf, "$n drifts %s in $p.", dirs[rd]);
     act(buf, TRUE, t, this, 0, TO_ROOM);
 
@@ -452,7 +452,7 @@ int TBeing::updateAffects()
       if (!couldBeRenewed && af->canBeRenewed()) {
         if (af->shouldGenerateText()) {
           if (af->type >= 0 && af->type < MAX_SKILL && discArray[af->type])
-            sendTo("The effects of %s can now be renewed.\n\r",
+            sendTo(fmt("The effects of %s can now be renewed.\n\r") %
               discArray[af->type]->name);
         }
       }
@@ -683,7 +683,7 @@ int TBeing::updateBodyParts()
       if (::number(0,1)) {
         addCurLimbHealth(i, -1);
         if (getCurLimbHealth(i) <= 0) {
-          sendTo("The leprosy in your %s causes it to fall off!!\n\r",
+          sendTo(fmt("The leprosy in your %s causes it to fall off!!\n\r") %
                describeBodySlot(i).c_str());
           makePartMissing(i, TRUE);
         }
@@ -717,7 +717,7 @@ int TBeing::updateBodyParts()
           // let go to 0, but don't cause "neck to fall off"
           setCurLimbHealth(i, 0);
         } else {
-          sendTo("The leprosy in your %s causes it to fall off!!\n\r",
+          sendTo(fmt("The leprosy in your %s causes it to fall off!!\n\r") %
                describeBodySlot(i).c_str());
           makePartMissing(i, TRUE);
         }
@@ -1400,11 +1400,11 @@ int TObj::objectTickUpdate(int pulse)
   // Jugged items - Russ 
   if (eq_stuck > WEAR_NOWHERE) {
     if ((t = stuckIn) && (ch = dynamic_cast<TBeing *>(t))) {
-      ch->sendTo(COLOR_OBJECTS, "The wounds in your %s start to fester as %s sinks deeper into your flesh.\n\r", ch->describeBodySlot(eq_stuck).c_str(), shortDescr);
+      ch->sendTo(COLOR_OBJECTS, fmt("The wounds in your %s start to fester as %s sinks deeper into your flesh.\n\r") % ch->describeBodySlot(eq_stuck) % shortDescr);
       if (::number(0, ch->getConShock()) < 2) {
         if (!ch->isLimbFlags(eq_stuck, PART_INFECTED)) {
           if (ch->rawInfect(eq_stuck, 200, SILENT_YES, CHECK_IMMUNITY_YES)) 
-            ch->sendTo(COLOR_OBJECTS, "Your %s has been infected by %s.\n\r", ch->describeBodySlot(eq_stuck).c_str(), shortDescr);
+            ch->sendTo(COLOR_OBJECTS, fmt("Your %s has been infected by %s.\n\r") % ch->describeBodySlot(eq_stuck) % shortDescr);
         }
       }
       if (ch->reconcileDamage(ch, (int) baseDamage(), SPELL_INFECT) == -1) {
@@ -1591,7 +1591,7 @@ void do_check_mail()
         if (isupper(*tmp))
           *tmp = tolower(*tmp);
       if (has_mail(recipient) && gamePort != BUILDER_GAMEPORT)
-        ch->sendTo("You have %sMAIL!%s\n\r", ch->cyan(), ch->norm());
+        ch->sendTo(fmt("You have %sMAIL!%s\n\r") % ch->cyan() % ch->norm());
     }
     // d->checkForMultiplay();
   }
@@ -1816,7 +1816,7 @@ void TBeing::checkCharmMana()
 
     if (!hasClass(CLASS_CLERIC) && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN)) {
       if (getMana() < mana && isPc()) {
-        sendTo(COLOR_MOBS, "You lack the mental concentration to control %s any longer.\n\r", ch->getName());
+        sendTo(COLOR_MOBS, fmt("You lack the mental concentration to control %s any longer.\n\r") % ch->getName());
         ch->stopFollower(TRUE);
         if (ch->fight()) {
           rc = ch->doFlee("");
@@ -1841,7 +1841,7 @@ void TBeing::checkCharmMana()
       double piety;
       piety = (double) mana / 6.0;
       if (getPiety() < piety) {
-        sendTo(COLOR_MOBS, "You lack the concentration to control %s any longer.\n\r", ch->getName());
+        sendTo(COLOR_MOBS, fmt("You lack the concentration to control %s any longer.\n\r") % ch->getName());
         ch->stopFollower(TRUE);
         if (ch->fight()) {
           rc = ch->doFlee("");
@@ -1916,6 +1916,6 @@ void sendAutoTips()
       continue;
     if (!IS_SET(d->autobits, AUTO_TIPS) || ch->isImmortal())
       continue;
-    ch->sendTo(COLOR_BASIC, "<y>%s Tip :<z> %s\n\r", MUD_NAME, buf);
+    ch->sendTo(COLOR_BASIC, fmt("<y>%s Tip :<z> %s\n\r") % MUD_NAME % buf);
   }
 }

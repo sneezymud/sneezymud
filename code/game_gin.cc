@@ -89,9 +89,8 @@ void GinGame::peek(const TBeing *ch)
 
   for (i = 0; i < 11; i++) {
     if (hands[which][i])
-      ch->sendTo("%2d) %-5s | %s\n\r", i + 1,
-card_names[CARD_NUM(hands[which][i])],
-	    suit(ch, hands[which][i]).c_str());
+      ch->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) %		 card_names[CARD_NUM(hands[which][i])] %
+		 suit(ch, hands[which][i]));
   }
   return;
 }
@@ -110,7 +109,7 @@ int GinGame::move_card(TBeing *ch, const char *arg)
       return FALSE;
     }
     if (orig == n) {
-      ch->sendTo("The number %d card is already in the number %d slot!\n\r", orig,
+      ch->sendTo(fmt("The number %d card is already in the number %d slot!\n\r") % orig %
 n);
       return FALSE;
     }
@@ -131,7 +130,7 @@ n);
 	hands[which][i] = hands[which][i - 1];
     }
     hands[which][n] = tmp;
-    ch->sendTo("You move card number %d to slot %d.\n\r", orig + 1, n + 1);
+    ch->sendTo(fmt("You move card number %d to slot %d.\n\r") % (orig + 1) % (n + 1));
     return TRUE;
   }
   ch->sendTo("Gin table syntax : put <original card place number> <new place number>\n\r");
@@ -159,7 +158,7 @@ int GinGame::enter(const TBeing *ch)
       game = FALSE;
       which = 1;
     }
-    ch->sendTo("You sit down at the gin table. %s sits across from you at the table.\n\r", inuse[!which] ? names[!which] : "No one");
+    ch->sendTo(fmt("You sit down at the gin table. %s sits across from you at the table.\n\r") % (inuse[!which] ? names[!which] : "No one"));
     strcpy(names[which], ch->getName());
     inuse[which] = TRUE;
     loser[which] = TRUE;
@@ -239,14 +238,13 @@ int GinGame::draw(TBeing *ch, const char *arg)
   }
   if (is_abbrev(arg, "deck")) {
     hands[which][10] = deck[deck_index++];
-    ch->sendTo("You draw the %s.\n\r", pretty_card_printout(ch,
-hands[which][10]).c_str());
+    ch->sendTo(fmt("You draw the %s.\n\r") % pretty_card_printout(ch,hands[which][10]));
     act("$n draws a card from the deck.", FALSE, ch, NULL, NULL, TO_ROOM);
     return TRUE;
   } else if (is_abbrev(arg, "pile")) {
     hands[which][10] = pile[pile_index];
     pile[pile_index--] = 0;
-    ch->sendTo("You draw the %s off of the pile top.\n\r",
+    ch->sendTo(fmt("You draw the %s off of the pile top.\n\r") %
 pretty_card_printout(ch, hands[which][10]).c_str());
     act("$n takes the top card from the pile.", FALSE, ch, NULL, NULL, TO_ROOM);
     return TRUE;
@@ -311,7 +309,7 @@ void GinGame::win(TBeing *ch)
     vlogf(LOG_BUG, "GinGame::win() called without two players!");
     return;
   }
-  ch->sendTo("You win the game! The score is : %s.\n\r", gin_score().c_str());
+  ch->sendTo(fmt("You win the game! The score is : %s.\n\r") % gin_score());
   sprintf(buf, "$n wins the game! The score is : %s", gin_score().c_str());
   act(buf, TRUE, ch, 0, 0, TO_ROOM);
 
@@ -335,7 +333,7 @@ void GinGame::win_hand(TBeing *ch)
     vlogf(LOG_BUG, "GinGame::win_hand() called without two players!");
     return;
   }
-  ch->sendTo("You win the hand! The score is : %s.\n\r", gin_score().c_str());
+  ch->sendTo(fmt("You win the hand! The score is : %s.\n\r") % gin_score());
   sprintf(buf, "$n wins the hand! The score is : %s", gin_score().c_str());
   act(buf, TRUE, ch, 0, 0, TO_ROOM);
 
@@ -364,18 +362,18 @@ void GinGame::gin(TBeing *ch)
 
   ch->sendTo("You call a gin hand!\n\r");
   act("$n calls a gin hand!", TRUE, ch, NULL, NULL, TO_ROOM);
-  ch->sendTo(COLOR_MOBS, "%s had %d points in %s hand!\n\r", other->getName(), low, other->hshr());
-  other->sendTo("You have %d points in your hand!\n\r", low);
+  ch->sendTo(COLOR_MOBS, fmt("%s had %d points in %s hand!\n\r") % other->getName() % low % other->hshr());
+  other->sendTo(fmt("You have %d points in your hand!\n\r") % low);
   sprintf(buf, "$n gins, and $N had %d points in $S hand.", low);
   act(buf, FALSE, ch, NULL, other, TO_NOTVICT);
   other->sendTo("Here is your opponents winning hand.\n\r");
   ch->sendTo("Here is your opponents losing hand.\n\r");
   for (int i = 0; i < 11; i++) {
     if (hands[which][i])
-      other->sendTo("%2d) %-5s | %s\n\r", i + 1, card_names[CARD_NUM(hands[which][i])],
+      other->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[which][i])] %
             suit(ch, hands[which][i]).c_str());
     if (hands[!which][i])
-      ch->sendTo("%2d) %-5s | %s\n\r", i + 1, card_names[CARD_NUM(hands[!which][i])],
+      ch->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[!which][i])] %
             suit(ch, hands[!which][i]).c_str());
   }
   score[which] += (25 + low);
@@ -402,12 +400,12 @@ void GinGame::knock(TBeing *ch, int low)
   if ((other_low = can_knock_or_gin(other)) == -1)
     return;
 
-  ch->sendTo("You knock with %d point%s!\n\r", low, low == 1 ? "" : "s");
+  ch->sendTo(fmt("You knock with %d point%s!\n\r") % low % (low == 1 ? "" : "s"));
   sprintf(buf, "$n calls a knock hand with %d point%s!", low, low == 1 ? "" : "s");
   act(buf, TRUE, ch, NULL, NULL, TO_ROOM);
-  ch->sendTo(COLOR_MOBS, "%s had %d points in %s hand!\n\r", other->getName(), other_low,
+  ch->sendTo(COLOR_MOBS, fmt("%s had %d points in %s hand!\n\r") % other->getName() % other_low %
 other->hshr());
-  other->sendTo("You have %d points in your hand!\n\r", other_low);
+  other->sendTo(fmt("You have %d points in your hand!\n\r") % other_low);
 
   if (low < other_low) {
     ch->sendTo("You win your knock!\n\r");
@@ -415,10 +413,10 @@ other->hshr());
     ch->sendTo("Here is your opponents losing hand.\n\r");
     for (int i = 0; i < 11; i++) {
       if (hands[which][i])
-        other->sendTo("%2d) %-5s | %s\n\r", i + 1, card_names[CARD_NUM(hands[which][i])],
+        other->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[which][i])] %
               suit(ch, hands[which][i]).c_str());
       if (hands[!which][i])
-        ch->sendTo("%2d) %-5s | %s\n\r", i + 1, card_names[CARD_NUM(hands[!which][i])],
+        ch->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[!which][i])] %
               suit(ch, hands[!which][i]).c_str());
     }
     score[which] += (other_low - low);
@@ -428,15 +426,15 @@ other->hshr());
       win_hand(ch);
   } else {
     ch->sendTo("Your knock is busted!\n\r");
-    other->sendTo("You bust %s knock!\n\r", ch->hshr());
+    other->sendTo(fmt("You bust %s knock!\n\r") % ch->hshr());
     other->sendTo("Here is your opponents losing hand.\n\r");
     ch->sendTo("Here is your opponents winning hand.\n\r");
     for (int i = 0; i < 11; i++) {
       if (hands[which][i])
-        other->sendTo("%2d) %-5s | %s\n\r", i + 1, card_names[CARD_NUM(hands[which][i])],
+        other->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[which][i])] %
               suit(ch, hands[which][i]).c_str());
       if (hands[!which][i])
-        ch->sendTo("%2d) %-5s | %s\n\r", i + 1, card_names[CARD_NUM(hands[!which][i])],
+        ch->sendTo(fmt("%2d) %-5s | %s\n\r") % (i+1) % card_names[CARD_NUM(hands[!which][i])] %
               suit(ch, hands[!which][i]).c_str());
     }
     score[!which] += (10 + (low - other_low));
@@ -490,7 +488,7 @@ void GinGame::play(TBeing *ch, const char *arg)
 	knock(ch, low);
 	return;
       } else {
-	ch->sendTo("You can't gin, you have too many points (%d).\n\r", low);
+	ch->sendTo(fmt("You can't gin, you have too many points (%d).\n\r") % low);
 	for (i = 10; i > discard; i--)
 	  hands[which][i] = hands[which][i - 1];
 
@@ -519,10 +517,8 @@ void GinGame::play(TBeing *ch, const char *arg)
     take_card_from_hand(hands[which], card, 10);
 
     can_draw = !which;
-    ch->sendTo("You place the %s on the card pile.\n\r", pretty_card_printout(ch,
-pile[pile_index]).c_str());
-    sprintf(buf, "$n places the %s on the card pile.", pretty_card_printout(ch,
-pile[pile_index]).c_str());
+    ch->sendTo(fmt("You place the %s on the card pile.\n\r") % pretty_card_printout(ch, pile[pile_index]));
+    sprintf(buf, "$n places the %s on the card pile.", pretty_card_printout(ch, pile[pile_index]).c_str());
     act(buf, FALSE, ch, NULL, NULL, TO_ROOM);
     return;
   } else {
@@ -773,14 +769,13 @@ int GinGame::look(TBeing *ch, const char *arg)
       ch->sendTo("The pile has no cards in it currently.\n\r");
       return TRUE;
     }
-    ch->sendTo("The top card on the pile is the %s.\n\r", pretty_card_printout(ch,
-pile[pile_index]).c_str());
+    ch->sendTo(fmt("The top card on the pile is the %s.\n\r") % pretty_card_printout(ch, pile[pile_index]));
     return TRUE;
   }
   if (is_abbrev(arg, "table")) {
     look(ch, "pile");
     if (game)
-      ch->sendTo("You see the score on a piece of paper on the corner of the table :\n\r\t%s\n\r", gin_score().c_str());
+      ch->sendTo(fmt("You see the score on a piece of paper on the corner of the table :\n\r\t%s\n\r") % gin_score());
 
     return TRUE;
   }

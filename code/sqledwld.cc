@@ -27,50 +27,50 @@ int main(int argc, char **argv)
 
     db.query("select * from room where vnum=%i", vnums[i]);
     if(db.fetchRow()){
-      ssprintf(buf, "- room\n"); sbuf+=buf;
-      ssprintf(buf, "vnum: %s\n", db["vnum"]);  sbuf+=buf;
-      ssprintf(buf, "x:    %s\n", db["x"]);  sbuf+=buf;
-      ssprintf(buf, "y:    %s\n", db["y"]);  sbuf+=buf;
-      ssprintf(buf, "z:    %s\n", db["z"]);  sbuf+=buf;
-      ssprintf(buf, "name: %s\n", db["name"]);  sbuf+=buf;
-      ssprintf(buf, "description~:\n%s~\n", db["description"]);  sbuf+=buf;
-      ssprintf(buf, "room_flag: %s\n", db["room_flag"]);  sbuf+=buf;
-      ssprintf(buf, "sector:    %s\n", db["sector"]);  sbuf+=buf;
-      ssprintf(buf, "teletime:  %s\n", db["teletime"]);  sbuf+=buf;
-      ssprintf(buf, "teletarg:  %s\n", db["teletarg"]);  sbuf+=buf;
-      ssprintf(buf, "telelook:  %s\n", db["telelook"]);  sbuf+=buf;
-      ssprintf(buf, "river_speed: %s\n", db["river_speed"]);  sbuf+=buf;
-      ssprintf(buf, "river_dir: %s\n", db["river_dir"]);  sbuf+=buf;
-      ssprintf(buf, "capacity:  %s\n", db["capacity"]);  sbuf+=buf;
-      ssprintf(buf, "height:    %s\n", db["height"]);  sbuf+=buf;
-      ssprintf(buf, "\n"); sbuf+=buf;
+      buf = fmt("- room\n"); sbuf+=buf;
+      buf = fmt("vnum: %s\n") % db["vnum"];  sbuf+=buf;
+      buf = fmt("x:    %s\n") % db["x"];  sbuf+=buf;
+      buf = fmt("y:    %s\n") % db["y"];  sbuf+=buf;
+      buf = fmt("z:    %s\n") % db["z"];  sbuf+=buf;
+      buf = fmt("name: %s\n") % db["name"];  sbuf+=buf;
+      buf = fmt("description~:\n%s~\n") % db["description"];  sbuf+=buf;
+      buf = fmt("room_flag: %s\n") % db["room_flag"];  sbuf+=buf;
+      buf = fmt("sector:    %s\n") % db["sector"];  sbuf+=buf;
+      buf = fmt("teletime:  %s\n") % db["teletime"];  sbuf+=buf;
+      buf = fmt("teletarg:  %s\n") % db["teletarg"];  sbuf+=buf;
+      buf = fmt("telelook:  %s\n") % db["telelook"];  sbuf+=buf;
+      buf = fmt("river_speed: %s\n") % db["river_speed"];  sbuf+=buf;
+      buf = fmt("river_dir: %s\n") % db["river_dir"];  sbuf+=buf;
+      buf = fmt("capacity:  %s\n") % db["capacity"];  sbuf+=buf;
+      buf = fmt("height:    %s\n") % db["height"];  sbuf+=buf;
+      buf = fmt("\n"); sbuf+=buf;
     }
 
 
     db.query("select * from roomextra where vnum=%i", vnums[i]);
     while(db.fetchRow()){
-      ssprintf(buf, "- roomextra\n"); sbuf+=buf;
-      ssprintf(buf, "vnum: %s\n", db["vnum"]);  sbuf+=buf;
-      ssprintf(buf, "name: %s\n", db["name"]);  sbuf+=buf;
-      ssprintf(buf, "description~:\n%s~\n", db["description"]);  sbuf+=buf;
-      ssprintf(buf, "\n"); sbuf+=buf;
+      buf = fmt("- roomextra\n"); sbuf+=buf;
+      buf = fmt("vnum: %s\n") % db["vnum"];  sbuf+=buf;
+      buf = fmt("name: %s\n") % db["name"];  sbuf+=buf;
+      buf = fmt("description~:\n%s~\n") % db["description"];  sbuf+=buf;
+      buf = fmt("\n"); sbuf+=buf;
     }
 
 
     db.query("select * from roomexit where vnum=%i", vnums[i]);
     while(db.fetchRow()){
-      ssprintf(buf, "- roomexit\n"); sbuf+=buf;
-      ssprintf(buf, "vnum:      %s\n", db["vnum"]);  sbuf+=buf;
-      ssprintf(buf, "direction: %s\n", db["direction"]);  sbuf+=buf;
-      ssprintf(buf, "name:      %s\n", db["name"]);  sbuf+=buf;
-      ssprintf(buf, "description~:\n%s~\n", db["description"]);  sbuf+=buf;
-      ssprintf(buf, "type:      %s\n", db["type"]);  sbuf+=buf;
-      ssprintf(buf, "condition_flag: %s\n", db["condition_flag"]); sbuf+=buf;
-      ssprintf(buf, "lock_difficulty: %s\n", db["lock_difficulty"]); sbuf+=buf;
-      ssprintf(buf, "weight:    %s\n", db["weight"]);  sbuf+=buf;
-      ssprintf(buf, "key_num:   %s\n", db["key_num"]);  sbuf+=buf;
-      ssprintf(buf, "destination:      %s\n", db["destination"]);  sbuf+=buf;
-      ssprintf(buf, "\n"); sbuf+=buf;
+      buf = fmt("- roomexit\n"); sbuf+=buf;
+      buf = fmt("vnum:      %s\n") % db["vnum"];  sbuf+=buf;
+      buf = fmt("direction: %s\n") % db["direction"];  sbuf+=buf;
+      buf = fmt("name:      %s\n") % db["name"];  sbuf+=buf;
+      buf = fmt("description~:\n%s~\n") % db["description"];  sbuf+=buf;
+      buf = fmt("type:      %s\n") % db["type"];  sbuf+=buf;
+      buf = fmt("condition_flag: %s\n") % db["condition_flag"]; sbuf+=buf;
+      buf = fmt("lock_difficulty: %s\n") % db["lock_difficulty"]; sbuf+=buf;
+      buf = fmt("weight:    %s\n") % db["weight"];  sbuf+=buf;
+      buf = fmt("key_num:   %s\n") % db["key_num"];  sbuf+=buf;
+      buf = fmt("destination:      %s\n") % db["destination"];  sbuf+=buf;
+      buf = fmt("\n"); sbuf+=buf;
     }
   }
 
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
   fclose(tmpfile);
 
   printf("Opening editor.\n");
-  ssprintf(buf, "$EDITOR %s", file);
+  buf = fmt("$EDITOR %s") % file;
   system(buf.c_str());
 
 
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
     }
   }
 
-  ssprintf(buf, "/bin/cp -f %s %s.backup", file, file);
+  buf = fmt("/bin/cp -f %s %s.backup") % file % file;
   system(buf.c_str());
 
 

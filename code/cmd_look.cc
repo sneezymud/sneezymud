@@ -18,24 +18,24 @@ void TBaseCup::lookObj(TBeing *ch, int) const
   int temp;
 
   if (getMaxDrinkUnits()/128) {
-    ch->sendTo(COLOR_OBJECTS, "%s has a capacity of %d gallon%s, %d fluid ounce%s.\n\r",
-          sstring(ch->pers(this)).cap().c_str(),
-          getMaxDrinkUnits()/128,
-          (getMaxDrinkUnits()/128 == 1 ? "" : "s"),
-          getMaxDrinkUnits()%128,
+    ch->sendTo(COLOR_OBJECTS, fmt("%s has a capacity of %d gallon%s, %d fluid ounce%s.\n\r") %
+          sstring(ch->pers(this)).cap() %
+          (getMaxDrinkUnits()/128) %
+          (getMaxDrinkUnits()/128 == 1 ? "" : "s") %
+          (getMaxDrinkUnits()%128) %
           (getMaxDrinkUnits()%128 == 1 ? "" : "s"));
   } else {
-    ch->sendTo(COLOR_OBJECTS, "%s has a capacity of %d fluid ounce%s.\n\r",
-          sstring(ch->pers(this)).cap().c_str(),
-          getMaxDrinkUnits()%128,
+    ch->sendTo(COLOR_OBJECTS, fmt("%s has a capacity of %d fluid ounce%s.\n\r") %
+          sstring(ch->pers(this)).cap() %
+	       (getMaxDrinkUnits()%128) %
           (getMaxDrinkUnits()%128 == 1 ? "" : "s"));
   }
   if (getDrinkUnits() <= 0 || !getMaxDrinkUnits())
     act("It is empty.", FALSE, ch, 0, 0, TO_CHAR);
   else {
     temp = ((getDrinkUnits() * 3) / getMaxDrinkUnits());
-    ch->sendTo(COLOR_OBJECTS, "It's %sfull of a %s liquid.\n\r",
-          fullness[temp], DrinkInfo[getDrinkType()]->color);
+    ch->sendTo(COLOR_OBJECTS, fmt("It's %sfull of a %s liquid.\n\r") %
+          fullness[temp] % DrinkInfo[getDrinkType()]->color);
   }
 }
 
@@ -168,7 +168,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
 
           return;
         } else {
-          sendTo("You look %swards.\n\r", dirs[keyword_no]);
+          sendTo(fmt("You look %swards.\n\r") % dirs[keyword_no]);
           sprintf(buffer, "$n looks %swards.", dirs[keyword_no]);
           act(buffer, TRUE, this, 0, 0, TO_ROOM);
 
@@ -179,15 +179,13 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
               if (exitp->to_room && (rp = real_roomp(exitp->to_room))) {
                 if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
                   if (hasColorStrings(NULL, rp->getName(), 2)) {
-                    sendTo(COLOR_ROOM_NAME, "You see %s<1>.\n\r",
-                           dynColorRoom(rp, 1, TRUE).c_str());
+                    sendTo(COLOR_ROOM_NAME, fmt("You see %s<1>.\n\r") %                           dynColorRoom(rp, 1, TRUE).c_str());
                   } else {
-                    sendTo(COLOR_ROOM_NAME, "You see %s%s%s.\n\r",
-                           addColorRoom(rp, 1).c_str(), rp->name ,norm());
+                    sendTo(COLOR_ROOM_NAME, fmt("You see %s%s%s.\n\r") %                           addColorRoom(rp, 1) % rp->name  %norm());
                   }
                 } else {
-                  sendTo(COLOR_BASIC, "You see %s%s%s.\n\r", purple(), 
-                       rp->getNameNOC(this).c_str(), norm());
+                  sendTo(COLOR_BASIC, fmt("You see %s%s%s.\n\r") % purple() % 
+                       rp->getNameNOC(this) % norm());
                 }
               } else {
                 sendTo("You see nothing special.\n\r");
@@ -215,7 +213,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
               }
             }
           } else if (!(exitp->condition & EX_SECRET))
-            sendTo("The %s is closed.\n\r", exitp->getName().c_str());
+            sendTo(fmt("The %s is closed.\n\r") % exitp->getName());
           else
             sendTo("You see nothing special.\n\r");
         }
@@ -235,7 +233,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                 bits = FIND_OBJ_ROOM;
               }
               if ((bits == FIND_OBJ_ROOM) && riding && tmpO->parent) {
-                sendTo("You can't look into items on the %s while mounted!\n\r",roomp->describeGround().c_str());
+                sendTo(fmt("You can't look into items on the %s while mounted!\n\r") %roomp->describeGround());
                 return;
               } else {
                 tmpO->lookObj(this, bits);
@@ -263,7 +261,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
             if ((bits == FIND_OBJ_ROOM) && riding && o->parent) {
               // we want to allow them to look at item's on a table, but not
               // in a bag while on a horse.
-              sendTo("You can't look into items on the %s while mounted!\n\r", roomp->describeGround().c_str());
+              sendTo(fmt("You can't look into items on the %s while mounted!\n\r") % roomp->describeGround());
               return;
             }
 
@@ -369,13 +367,13 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                   found = TRUE;
                   describeObject(tmpObj);
                   if (tmpObj->riding)
-                    sendTo(COLOR_OBJECTS, "%s is on %s.", tmpObj->getName(), tmpObj->riding->getName());
+                    sendTo(COLOR_OBJECTS, fmt("%s is on %s.") % tmpObj->getName() % tmpObj->riding->getName());
                   showTo(tmpObj, SHOW_MODE_PLUS);
                   return;
                 } else {
                   tmpObj->lookAtObj(this, tmp, SHOW_MODE_TYPE);
                   if (tmpObj->riding)
-                    sendTo(COLOR_OBJECTS, "%s is on %s.", tmpObj->getName(), tmpObj->riding->getName());
+                    sendTo(COLOR_OBJECTS, fmt("%s is on %s.") % tmpObj->getName() % tmpObj->riding->getName());
                   return;
                 }
               } else {
@@ -571,14 +569,14 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                       desc->page_string(tmp_desc);
                       found = TRUE;
                       describeObject(t2);
-                      sendTo(COLOR_OBJECTS, "%s is on %s.", t2->getName(), t->getName());
+                      sendTo(COLOR_OBJECTS, fmt("%s is on %s.") % t2->getName() % t->getName());
                       return;
                     }
                     if (isname(tmp, t2->name)) {
                       totalFound++;
                       if (iNum == totalFound) {
                         t2->lookAtObj(this, tmp, SHOW_MODE_TYPE);
-                        sendTo(COLOR_OBJECTS, "%s is on %s.", t2->getName(), t->getName());
+                        sendTo(COLOR_OBJECTS, fmt("%s is on %s.") % t2->getName() % t->getName());
                         return;
                       } else {
                         continue;

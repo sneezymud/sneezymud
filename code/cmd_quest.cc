@@ -119,9 +119,9 @@ void TBeing::doMortalQuest(const char *tArg)
     }
   }
 
-  sendTo("You have %d total current quest goals.\n\r", totFound);
+  sendTo(fmt("You have %d total current quest goals.\n\r") % totFound);
   if (questRes == -1) {
-    sendTo("You don't seem to have a quest goal #%d\n\r", questNumber);
+    sendTo(fmt("You don't seem to have a quest goal #%d\n\r") % questNumber);
     return;
   }
 

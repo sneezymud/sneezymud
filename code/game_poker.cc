@@ -60,10 +60,10 @@ void PokerGame::stay(TBeing *ch)
       card[i] = deck[deck_inx++];
 
       
-    ssprintf(log_msg, "%i) %s\n\r", i+1, pretty_card_printout(ch, card[i]).c_str());
+    log_msg = fmt("%i) %s\n\r") % (i+1) % pretty_card_printout(ch, card[i]);
     ch->sendTo(COLOR_BASIC, log_msg);
     
-    ssprintf(log_msg, "%s",pretty_card_printout(ch, card[i]).c_str());
+    log_msg = fmt("%s") %pretty_card_printout(ch, card[i]);
     act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
   }
 
@@ -293,9 +293,9 @@ void PokerGame::Bet(TBeing *ch, const sstring &arg)
     ch->doSave(SILENT_YES);
 
     sstring buf;
-    ssprintf(buf, "$n bets %s.", chip->getName());
+    buf = fmt("$n bets %s.") % chip->getName();
     act(buf, TRUE, ch, 0, 0, TO_ROOM);
-    ssprintf(buf, "You bet %s.", chip->getName());
+    buf = fmt("You bet %s.") % chip->getName();
     act(buf, TRUE, ch, 0, 0, TO_CHAR);
 
     (*chip)--;
@@ -311,11 +311,11 @@ void PokerGame::Bet(TBeing *ch, const sstring &arg)
     for(int i=0;i<5;++i){
       card[i] = deck[deck_inx++];
 
-      ssprintf(log_msg, "%i) %s\n\r", i+1, pretty_card_printout(ch, card[i]).c_str());
+      log_msg = fmt("%i) %s\n\r") % (i+1) % pretty_card_printout(ch, card[i]);
       ch->sendTo(COLOR_BASIC, log_msg);
       
 
-      ssprintf(log_msg, "%s",pretty_card_printout(ch, card[i]).c_str());
+      log_msg = fmt("%s") %pretty_card_printout(ch, card[i]);
       act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
     }    
 
@@ -341,7 +341,7 @@ void PokerGame::discard(TBeing *ch, sstring arg)
     }
     
     
-    ch->sendTo(COLOR_BASIC, "You discard %s.\n\r",
+    ch->sendTo(COLOR_BASIC, fmt("You discard %s.\n\r") %
 	       pretty_card_printout(ch, card[i]).c_str());
     ssprintf(buf, "$n discards %s.",
 	     pretty_card_printout(ch, card[i]).c_str());

@@ -219,8 +219,8 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
           anteCost = convertTo<int>(tString);
 
           if (!in_range(anteCost, anteCosts[0], anteCosts[1])) {
-            ch->sendTo("No luck slick.  Ante must be between: %d-%d\n\r",
-                       anteCosts[0], anteCosts[1]);
+            ch->sendTo(fmt("No luck slick.  Ante must be between: %d-%d\n\r") %
+                       anteCosts[0] % anteCosts[1]);
             return;
           }
 
@@ -230,8 +230,8 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
           bidCosts[1] = convertTo<int>(tString);
 
           if (!in_range(bidCosts[1], bidCosts[0], oldMax)) {
-            ch->sendTo("No luck slick.  Bid max must be between: %d-%d\n\r",
-                       bidCosts[0], oldMax);
+            ch->sendTo(fmt("No luck slick.  Bid max must be between: %d-%d\n\r") %
+                       bidCosts[0] % oldMax);
             bidCosts[1] = oldMax;
             return;
           }
@@ -270,7 +270,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
     for(int playerIndex = 0; playerIndex < 6; playerIndex++)
       if (tChar[playerIndex] && inuse[playerIndex])
         if ((tChar[playerIndex]->getMoney() < anteCost) && !silentBets) {
-          ch->sendTo("You can not cover the ante of %d talens, your forced to sit out.\n\r",
+          ch->sendTo(fmt("You can not cover the ante of %d talens, your forced to sit out.\n\r") %
                      anteCost);
           act("$n is forced to sit out this round due to low talens.",
               FALSE, ch, NULL, NULL, TO_ROOM);
@@ -419,8 +419,8 @@ int DrawPokerGame::move_card(TBeing *ch, const char *tArg)
     }
 
     hands[playerNum][moveSlot] = tempCard;
-    ch->sendTo("You move the card %d to slot %d.\n\r",
-               (origSlot + 1), (moveSlot + 1));
+    ch->sendTo(fmt("You move the card %d to slot %d.\n\r") %
+               (origSlot + 1) % (moveSlot + 1));
   } else {
     ch->sendTo("Poker Syntax: put <old card slot> <new card slot>\n\r");
     return FALSE;
@@ -619,7 +619,7 @@ int DrawPokerGame::new_deal()
 
   for (int playerIndex = 0; playerIndex < 6; playerIndex++) {
     if (tChar[playerIndex] && !silentBets) {
-      tChar[playerIndex]->sendTo("The score is now %s.\n\r", tString);
+      tChar[playerIndex]->sendTo(fmt("The score is now %s.\n\r") % tString);
 
       settleUp(tChar[playerIndex], false);
     }
@@ -662,7 +662,7 @@ void DrawPokerGame::pass(const TBeing *ch)
     return;
   }
 
-  ch->sendTo("You skip %s this time.\n\r",
+  ch->sendTo(fmt("You skip %s this time.\n\r") %
              (iplay == 1 ? "discarding" : "betting"));
 
   if (iplay == 1)
@@ -732,7 +732,7 @@ void DrawPokerGame::bet(const TBeing *ch, const char *tArg)
   for (; isspace(*tArg); tArg++);
   strcpy(tBuffer, tArg);
   if (!*tArg || !is_number(tBuffer)) {
-    ch->sendTo("Poker Syntax: bet <amount[Limit:%d]>\n\r", bidCosts[1]);
+    ch->sendTo(fmt("Poker Syntax: bet <amount[Limit:%d]>\n\r") % bidCosts[1]);
     return;
   }
 
@@ -744,8 +744,8 @@ void DrawPokerGame::bet(const TBeing *ch, const char *tArg)
   }
 
   if (!in_range(newBet, bidCosts[0], bidCosts[1])) {
-    ch->sendTo("Funny, Real Funny.  Bugger off.  Bid is limited to: %d-%d\n\r",
-               bidCosts[0], bidCosts[1]);
+    ch->sendTo(fmt("Funny, Real Funny.  Bugger off.  Bid is limited to: %d-%d\n\r") %
+               bidCosts[0] % bidCosts[1]);
     return;
   }
 
@@ -762,7 +762,7 @@ void DrawPokerGame::bet(const TBeing *ch, const char *tArg)
     iplay++;
   }
 
-  ch->sendTo("You bet %d.\n\r%s", newBet,
+  ch->sendTo(fmt("You bet %d.\n\r%s") % newBet %
              (nextPlayer == playerNum ? "Betting is closed." : ""));
 
   if (nextPlayer == playerNum && iplay == 2)
@@ -861,8 +861,8 @@ int DrawPokerGame::look(const TBeing *ch, const char *tArg)
       if (silentBets) {
         ch->sendTo("Since there is no bidding there isn't any scores to view.\n\r");
       } else {
-        ch->sendTo("The score is currently:\n\r%s\n\r", score().c_str());
-        ch->sendTo("The bet is currently:\n\r%s\n\r", bets().c_str());
+        ch->sendTo(fmt("The score is currently:\n\r%s\n\r") % score());
+        ch->sendTo(fmt("The bet is currently:\n\r%s\n\r") % bets());
       }
     }
   } else
@@ -950,7 +950,7 @@ void DrawPokerGame::discard(const TBeing *ch, const char *tArg)
 
   discarded[playerNum] = true;
 
-  ch->sendTo("You discard %d cards.\n\r", discardIndex);
+  ch->sendTo(fmt("You discard %d cards.\n\r") % discardIndex);
   sprintf(tString, "$n discards %d cards.", discardIndex);
   act(tString, FALSE, ch, NULL, NULL, TO_ROOM);
 

@@ -30,9 +30,9 @@ void payout(TBeing *ch, int talens, int chip_vnum=0)
       } else if(talens >= 100){
 	chip=read_object(CHIP_100, VIRTUAL);
       } else {
-	ssprintf(buf, "You receive %i talens.", talens);
+	buf = fmt("You receive %i talens.") % talens;
 	act(buf, TRUE, ch, 0, 0, TO_CHAR);
-	ssprintf(buf, "$n receives %i talens.", talens);
+	buf = fmt("$n receives %i talens.") % talens;
 	act(buf, TRUE, ch, 0, 0, TO_ROOM);
 	ch->addToMoney(talens, GOLD_GAMBLE);
 	break;

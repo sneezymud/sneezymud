@@ -14,8 +14,8 @@ static void repHealing(TBeing *caster, TBeing *victim)
   sprintf(nameBuf,"%s",colorString(caster,caster->desc,nameBuf,NULL,COLOR_MOBS, TRUE).c_str());
 
   if (caster != victim) {
-    caster->sendTo(COLOR_SPELLS, "%s looks to be at <r>%.1f%%<z> HP.\n\r",
-       nameBuf, victim->getPercHit());
+    caster->sendTo(COLOR_SPELLS, fmt("%s looks to be at <r>%.1f%%<z> HP.\n\r") %
+       nameBuf % victim->getPercHit());
   }
 }
 
@@ -137,7 +137,7 @@ int castHealLight(TBeing *caster, TBeing *victim)
       if (caster == victim)
         caster->sendTo(COLOR_SPELLS, "<p>You are fully healed so you stop your prayer.<z>\n\r");
       else
-        caster->sendTo(COLOR_SPELLS, "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r", nameBuf);
+        caster->sendTo(COLOR_SPELLS, fmt("<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") % nameBuf);
 
       act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
@@ -148,7 +148,7 @@ int castHealLight(TBeing *caster, TBeing *victim)
       if (caster == victim)
         caster->sendTo(COLOR_SPELLS, "<p>You are fully healed so you stop your prayer.<z>\n\r");
       else 
-        caster->sendTo(COLOR_SPELLS, "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r", nameBuf);
+        caster->sendTo(COLOR_SPELLS, fmt("<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") % nameBuf);
       act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     }
@@ -233,7 +233,7 @@ int castHealSerious(TBeing *caster, TBeing *victim)
       if (caster == victim)
         caster->sendTo(COLOR_SPELLS, "<p>You are fully healed so you stop your prayer.<z>\n\r");
       else
-        caster->sendTo(COLOR_SPELLS, "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r", nameBuf);
+        caster->sendTo(COLOR_SPELLS, fmt("<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") % nameBuf);
     act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
     caster->stopCast(STOP_CAST_NONE);
     } else {
@@ -244,7 +244,7 @@ int castHealSerious(TBeing *caster, TBeing *victim)
       if (caster == victim)
         caster->sendTo(COLOR_SPELLS, "<p>You are fully healed so you stop your prayer.<z>\n\r");
       else
-        caster->sendTo(COLOR_SPELLS, "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r", nameBuf);
+        caster->sendTo(COLOR_SPELLS, fmt("<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") % nameBuf);
       act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     }
@@ -349,7 +349,7 @@ int castHealCritical(TBeing *caster, TBeing *victim)
       if (caster == victim)
         caster->sendTo(COLOR_SPELLS, "<p>You are fully healed so you stop your prayer.<z>\n\r");
       else
-        caster->sendTo(COLOR_SPELLS, "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r", nameBuf);
+        caster->sendTo(COLOR_SPELLS, fmt("<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") % nameBuf);
     act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
     caster->stopCast(STOP_CAST_NONE);
     } else {
@@ -360,7 +360,7 @@ int castHealCritical(TBeing *caster, TBeing *victim)
       if (caster == victim)
         caster->sendTo(COLOR_SPELLS, "<p>You are fully healed so you stop your prayer.<z>\n\r");
       else
-        caster->sendTo(COLOR_SPELLS, "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r", nameBuf);
+        caster->sendTo(COLOR_SPELLS, fmt("<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") % nameBuf);
       act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     }
@@ -442,7 +442,7 @@ int castHeal(TBeing *caster, TBeing *victim)
       if (caster == victim)
         caster->sendTo(COLOR_SPELLS, "<p>You are fully healed so you stop your prayer.<z>\n\r");
       else
-        caster->sendTo(COLOR_SPELLS, "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r", nameBuf);
+        caster->sendTo(COLOR_SPELLS, fmt("<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") % nameBuf);
     act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
     caster->stopCast(STOP_CAST_NONE);
     } else {
@@ -453,7 +453,7 @@ int castHeal(TBeing *caster, TBeing *victim)
       if (caster == victim)
         caster->sendTo(COLOR_SPELLS, "<p>You are fully healed so you stop your prayer.<z>\n\r");
       else
-        caster->sendTo(COLOR_SPELLS, "<p>%s <z><p>is fully healed so you stop your prayer<z>.\n\r", nameBuf);
+        caster->sendTo(COLOR_SPELLS, fmt("<p>%s <z><p>is fully healed so you stop your prayer<z>.\n\r") % nameBuf);
       act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     }
@@ -540,7 +540,7 @@ int castHealFull(TBeing *caster, TBeing *victim)
       if (caster == victim)                                                     
         caster->sendTo(COLOR_SPELLS, "<p>You are fully healed so you stop your prayer.<z>\n\r");                                                                
       else                                                                      
-        caster->sendTo(COLOR_SPELLS, "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r", nameBuf);                                                   
+        caster->sendTo(COLOR_SPELLS, fmt("<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") % nameBuf);                                                   
     act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);                
     caster->stopCast(STOP_CAST_NONE);                                                        
     } else {                                                                    
@@ -551,7 +551,7 @@ int castHealFull(TBeing *caster, TBeing *victim)
       if (caster == victim)                                                     
         caster->sendTo(COLOR_SPELLS, "<p>You are fully healed so you stop your prayer.<z>\n\r");                                                                
       else                                                                      
-        caster->sendTo(COLOR_SPELLS, "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r", nameBuf);                                                   
+        caster->sendTo(COLOR_SPELLS, fmt("<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") % nameBuf);                                                   
       act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);              
       caster->stopCast(STOP_CAST_NONE);                                                      
     }                                                                           
@@ -619,7 +619,7 @@ int healCritSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
     }
 #if 0
     if (healed_evil) {
-      caster->sendTo("%s frowns upon the healing of minions of the enemy.\n\r",
+      caster->sendTo(fmt("%s frowns upon the healing of minions of the enemy.\n\r") %
             caster->yourDeity(SPELL_HEAL_CRITICAL_SPRAY, FIRST_PERSON.cap()).c_str());
       caster->sendTo("You are exhausted from the effort of doing so.\n\r");
       act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
@@ -715,7 +715,7 @@ int healSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
     }
 #if 0
     if (healed_evil) {
-      caster->sendTo("%s frowns upon the healing of minions of the enemy.\n\r",
+      caster->sendTo(fmt("%s frowns upon the healing of minions of the enemy.\n\r") %
           caster->yourDeity(SPELL_HEAL_SPRAY, FIRST_PERSON.cap()).c_str());
       caster->sendTo("You are exhausted from the effort of doing so.\n\r");
       act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
@@ -816,7 +816,7 @@ int healFullSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
     }
 #if 0
     if (healed_evil) {
-      caster->sendTo("%s frowns upon the healing of minions of the enemy.\n\r",
+      caster->sendTo(fmt("%s frowns upon the healing of minions of the enemy.\n\r") %
             caster->yourDeity(SPELL_HEAL_FULL_SPRAY, FIRST_PERSON.cap()).c_str());
       caster->sendTo("You are exhausted from the effort of doing so.\n\r");
       act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
@@ -1191,9 +1191,9 @@ int salve(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT sp
         victim->addCurLimbHealth(slot, 1);
       }
       if (victim->getCurLimbHealth(slot) >= victim->getMaxLimbHealth(slot))
-        victim->sendTo("Your %s has been completely healed.\n\r",victim->describeBodySlot(slot).c_str());
+        victim->sendTo(fmt("Your %s has been completely healed.\n\r") %victim->describeBodySlot(slot));
       else
-        victim->sendTo("Your %s has been partially healed.\n\r",victim->describeBodySlot(slot).c_str());
+        victim->sendTo(fmt("Your %s has been partially healed.\n\r") %victim->describeBodySlot(slot));
     
       if (fixed > max_am)
         break;

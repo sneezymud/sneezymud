@@ -101,15 +101,15 @@ void TBeing::doMessage(const char *tArg)
       sendTo("All sstrings have a hard limit of 250 characters, please use less than you did.\n\r");
     else {
       if (tStString.empty()) {
-        sendTo(COLOR_BASIC, "Message Type: %s set to:\n\r%s\n\r",
-               messageCommandTypes[(tValue - 1)],
-               msgVariables(messageTypeT(tValue), (TThing *)NULL, (const char *)NULL, false).c_str());
+        sendTo(COLOR_BASIC, fmt("Message Type: %s set to:\n\r%s\n\r") %
+               messageCommandTypes[(tValue - 1)] %
+               msgVariables(messageTypeT(tValue), (TThing *)NULL, (const char *)NULL, false));
         return;
       }
 
       if (is_abbrev(tStString, "default")) {
         msgVariables(messageTypeT(tValue), "");
-        sendTo("Message Type: %s set to default.\n\r",
+        sendTo(fmt("Message Type: %s set to default.\n\r") %
                messageCommandTypes[(tValue - 1)]);
         msgVariables.savedown();
         return;
@@ -119,7 +119,7 @@ void TBeing::doMessage(const char *tArg)
 
       if (colorString(this, desc, tStString, NULL, COLOR_NONE, TRUE).length() >
           messageCommandSwitches[tValue][0]) {
-        sendTo("String length, for this field, is limited to %d characters in total.\n\r",
+        sendTo(fmt("String length, for this field, is limited to %d characters in total.\n\r") %
                messageCommandSwitches[tValue][0]);
         return;
       }
@@ -138,7 +138,7 @@ void TBeing::doMessage(const char *tArg)
 
       if ((messageCommandSwitches[tValue][1] & MSG_REQ_GNAME) &&
           !isNamed && (tStString.find("<n>") == sstring::npos)) {
-        sendTo("This type requires your name.  Either use %s or <n>\n\r",
+        sendTo(fmt("This type requires your name.  Either use %s or <n>\n\r") %
                getNameNOC(this).c_str());
         return;
       }
@@ -163,9 +163,9 @@ void TBeing::doMessage(const char *tArg)
 
       msgVariables(messageTypeT(tValue), tStString);
 
-      sendTo(COLOR_BASIC, "Message %s set to:\n\r%s\n\r",
-              messageCommandTypes[(tValue - 1)],
-              msgVariables(messageTypeT(tValue), (TThing *)NULL, (const char *)NULL, false).c_str());
+      sendTo(COLOR_BASIC, fmt("Message %s set to:\n\r%s\n\r") %
+              messageCommandTypes[(tValue - 1)] %
+              msgVariables(messageTypeT(tValue), (TThing *)NULL, (const char *)NULL, false));
       msgVariables.savedown();
 
       if (tStString.find("$") != sstring::npos)

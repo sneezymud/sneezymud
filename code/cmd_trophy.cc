@@ -176,7 +176,7 @@ void TBeing::doTrophy(const sstring &arg)
       // print the zone header if we haven't already
       // we do it here, so we can prevent printing headers for empty zones
       if(!header){
-	ssprintf(buf, "\n--%s\n", zd.name);
+	buf = fmt("\n--%s\n") % zd.name;
 	sb += buf; 
 	header=1;
       }
@@ -201,7 +201,7 @@ void TBeing::doTrophy(const sstring &arg)
 
     // we have some mobs for this zone, so do some tallies
     if(header){
-      ssprintf(buf, "Total mobs: %i\n\r", zcount);
+      buf = fmt("Total mobs: %i\n\r") % zcount;
       sb += buf;
 
       unsigned int objnx;
@@ -213,7 +213,7 @@ void TBeing::doTrophy(const sstring &arg)
 	}
       }
 
-      ssprintf(buf, "You have killed %1.2f%% of mobs in this zone.\n\r",((float)((float)active_zcount/(float)zcountt)*100.0));
+      buf = fmt("You have killed %1.2f%% of mobs in this zone.\n\r") %((float)((float)active_zcount/(float)zcountt)*100.0);
       sb += buf;
     }
 
@@ -237,10 +237,10 @@ void TBeing::doTrophy(const sstring &arg)
 
 
 
-  ssprintf(buf, "\n--\nTotal mobs: %i\n\r", mcount);
+  buf = fmt("\n--\nTotal mobs: %i\n\r") % mcount;
   sb += buf;
   if(mcount>0){
-    ssprintf(buf, "You have killed %1.2f%% of all mobs.\n\r",((float)((float)mcount/(float)activemobcount)*100.0));
+    buf = fmt("You have killed %1.2f%% of all mobs.\n\r") %((float)((float)mcount/(float)activemobcount)*100.0);
     sb += buf;
   }
 

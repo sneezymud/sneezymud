@@ -307,7 +307,7 @@ void TBaseCup::evaporate(TBeing *ch, silentTypeT tSilent)
       addToDrinkUnits(-amount);
 
       if (!tSilent)
-        ch->sendTo(COLOR_OBJECTS, "The desert heat causes some of your %s to evaporate.\n\r",
+        ch->sendTo(COLOR_OBJECTS, fmt("The desert heat causes some of your %s to evaporate.\n\r") %
             DrinkInfo[getDrinkType()]->name);
     }
   }
@@ -427,7 +427,7 @@ void TBaseCup::updateDesc()
   if(getDrinkUnits()<=0){
     liquid="an empty";
   } else {
-    ssprintf(liquid, "a %s", DrinkInfo[getDrinkType()]->color);
+    liquid = fmt("a %s") % DrinkInfo[getDrinkType()]->color;
   }
 
   while (newname.find("$$al") != sstring::npos){
@@ -459,7 +459,7 @@ void TBaseCup::updateDesc()
   if(getDrinkUnits()<=0){
     liquid="nothing";
   } else {
-    ssprintf(liquid, "%s", DrinkInfo[getDrinkType()]->name);
+    liquid = fmt("%s") % DrinkInfo[getDrinkType()]->name;
   }
 
   while (newname.find("$$nl") != sstring::npos){

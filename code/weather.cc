@@ -121,7 +121,7 @@ void fixSunlight()
    sendToOutdoor(COLOR_BASIC, "<b>The moon sets.<1>\n\r","<b>The moon sets.<1>\n\r");
   }
   if (hmt == moonTime(MOON_TIME_RISE)) {
-    ssprintf(buf, "<b>The %s moon rises in the east.<1>\n\r", moonType().c_str());
+    buf = fmt("<b>The %s moon rises in the east.<1>\n\r") % moonType();
     sendToOutdoor(COLOR_BASIC, buf, buf);
   }
   if (hmt == sunTime(SUN_TIME_DAWN)) {
@@ -188,7 +188,7 @@ void anotherHour()
         if (time_info.month >= 12) {
           time_info.month = 0;
           time_info.year++;
-          ssprintf(buf, "Happy New Year! It is now the Year %d P.S\n\r", time_info.year);
+          buf = fmt("Happy New Year! It is now the Year %d P.S\n\r") % time_info.year;
           descriptor_list->worldSend(buf, NULL);
         }
       }
@@ -637,7 +637,7 @@ void GetMonth(int month)
   }
 
   sstring buf;
-  ssprintf(buf, "It is now the %s of %s.\n\r", numberAsString(time_info.day + 1).c_str(), month_name[month]);
+  buf = fmt("It is now the %s of %s.\n\r") % numberAsString(time_info.day + 1) % month_name[month];
   descriptor_list->worldSend(buf, NULL);
 }
 

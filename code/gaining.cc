@@ -1497,8 +1497,7 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
       return TRUE;
     } else {
       ch->addPracs(-1, accclass);
-      ch->sendTo("You have %d %s practices left.\n\r", 
-      ch->getPracs(accclass), classInfo[accclass].name.c_str());
+      ch->sendTo(fmt("You have %d %s practices left.\n\r") %       ch->getPracs(accclass) % classInfo[accclass].name);
     }
 
     initial = (ch->getDiscipline(TrainerInfo[offset].disc))->getNatLearnedness();

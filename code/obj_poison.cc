@@ -70,7 +70,7 @@ int TPoison::objectSell(TBeing *ch, TMonster *keeper)
   sstring buf;
 
   if(!DrinkInfo[getDrinkType()]->poison){
-    ssprintf(buf, "%s Hey, that's not poison!.", ch->getName());
+    buf = fmt("%s Hey, that's not poison!.") % ch->getName();
     keeper->doTell(buf);
     return TRUE;
   }

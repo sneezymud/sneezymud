@@ -76,7 +76,7 @@ void TVehicle::lookObj(TBeing *ch, int) const
 {
   sstring buf;
 
-  ssprintf(buf, "%d look", getTarget());
+  buf = fmt("%d look") % getTarget();
   ch->doAt(buf.c_str(), true);
 }
 
@@ -134,9 +134,9 @@ void TVehicle::driveDir(TBeing *ch, dirTypeT dir)
 
   setDir(dir);
 
-  ssprintf(buf, "$n directs $p to the %s.", dirs[dir]);
+  buf = fmt("$n directs $p to the %s.") % dirs[dir];
   act(buf, 0, ch, this, 0, TO_ROOM);
-  ssprintf(buf, "You direct $p to the %s.", dirs[dir]);
+  buf = fmt("You direct $p to the %s.") % dirs[dir];
   act(buf, 0, ch, this, 0, TO_CHAR);
 }
 
@@ -157,7 +157,7 @@ void TVehicle::driveLook(TBeing *ch, bool silent=false)
   if(!silent)
     ch->sendTo("You look outside.\n\r");
 
-  ssprintf(buf, "%d look", in_room);
+  buf = fmt("%d look") % in_room;
   ch->doAt(buf.c_str(), true);
 }
 
@@ -273,29 +273,29 @@ void TVehicle::vehiclePulse(int pulse)
     if(getSpeed() >= FAST_SPEED){
       sendrpf(COLOR_OBJECTS, roomp, "%s sails rapidly in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      ssprintf(buf, "$p sails %s.", dirs[getDir()]);
+      buf = fmt("$p sails %s.") % dirs[getDir()];
     } else if(getSpeed() >= MED_SPEED){
       sendrpf(COLOR_OBJECTS, roomp, "%s sails in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      ssprintf(buf, "$p sails %s.", dirs[getDir()]);
+      buf = fmt("$p sails %s.") % dirs[getDir()];
     } else {
       sendrpf(COLOR_OBJECTS, roomp, "%s drifts in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      ssprintf(buf, "$p drifts %s.", dirs[getDir()]);
+      buf = fmt("$p drifts %s.") % dirs[getDir()];
     }
   } else {
     if(getSpeed() >= FAST_SPEED){
       sendrpf(COLOR_OBJECTS, roomp, "%s speeds in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      ssprintf(buf, "$p speeds %s.", dirs[getDir()]);
+      buf = fmt("$p speeds %s.") % dirs[getDir()];
     } else if(getSpeed() >= MED_SPEED){
       sendrpf(COLOR_OBJECTS, roomp, "%s rolls in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      ssprintf(buf, "$p rolls %s.", dirs[getDir()]);
+      buf = fmt("$p rolls %s.") % dirs[getDir()];
     } else {
       sendrpf(COLOR_OBJECTS, roomp, "%s creeps in from the %s.\n\r",
 	      shortdescr, dirs[rev_dir[getDir()]]);
-      ssprintf(buf, "$p creeps %s.", dirs[getDir()]);
+      buf = fmt("$p creeps %s.") % dirs[getDir()];
     }
   }
   
@@ -328,7 +328,7 @@ void TVehicle::driveStatus(TBeing *ch)
 {
   sstring buf;
 
-  ssprintf(buf, "$p is pointing to the %s.\n\r", dirs[getDir()]);
+  buf = fmt("$p is pointing to the %s.\n\r") % dirs[getDir()];
   act(buf, 0, ch, this, 0, TO_CHAR);
   ssprintf(buf, "$p is traveling at a %i speed.\n\r",
 	   getSpeed());

@@ -270,19 +270,19 @@ void TDrugContainer::describeObjectSpecifics(const TBeing *ch) const
   if (getMaxBurn() < 0)
     act("$p doesn't seem to be reusable.", FALSE, ch, this, 0, TO_CHAR);
   else 
-    ch->sendTo(COLOR_OBJECTS,"%s is reusable.\n\r", sstring(getName()).cap().c_str());
+    ch->sendTo(COLOR_OBJECTS,fmt("%s is reusable.\n\r") % sstring(getName()).cap());
   
   diff = (double) ((double) getCurBurn() / max(1.0, (double) getMaxBurn()));
   if(diff==0 || getDrugType()==DRUG_NONE)
-    ch->sendTo(COLOR_OBJECTS, "%s is completely empty.\n\r",
+    ch->sendTo(COLOR_OBJECTS, fmt("%s is completely empty.\n\r") %
 	       sstring(getName()).uncap().c_str());
   else      
-    ch->sendTo(COLOR_OBJECTS, "You can tell that %s has %s %s left.\n\r", sstring(getName()).uncap().c_str(),
-	       ((diff == 0) ? "no" :
+    ch->sendTo(COLOR_OBJECTS, fmt("You can tell that %s has %s %s left.\n\r") % sstring(getName()).uncap() %
+	       (((diff == 0) ? "no" :
 		((diff < .20) ? "very little" :
 		 ((diff < .50) ? "some" :
 		  ((diff < .75) ? "a good bit of" : 
-                    ((diff==1.00) ? "all of" : "almost all of its"))))),
+                    ((diff==1.00) ? "all of" : "almost all of its")))))) %
 	       drugTypes[getDrugType()].name);
 }
 

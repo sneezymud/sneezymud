@@ -27,51 +27,51 @@ int main(int argc, char **argv)
 
     db.query("select * from obj where vnum=%i", vnums[i]);
     if(db.fetchRow()){
-      ssprintf(buf, "- obj\n"); sbuf+=buf;
-      ssprintf(buf, "vnum: %s\n", db["vnum"]);  sbuf+=buf;
-      ssprintf(buf, "name: %s\n", db["name"]);  sbuf+=buf;
-      ssprintf(buf, "short_desc: %s\n", db["short_desc"]);  sbuf+=buf;
-      ssprintf(buf, "long_desc: %s\n", db["long_desc"]);  sbuf+=buf;
-      ssprintf(buf, "action_desc: %s\n", db["action_desc"]);  sbuf+=buf;
-      ssprintf(buf, "type: %s\n", db["type"]);  sbuf+=buf;
-      ssprintf(buf, "action_flag: %s\n", db["action_flag"]);  sbuf+=buf;
-      ssprintf(buf, "wear_flag: %s\n", db["wear_flag"]);  sbuf+=buf;
-      ssprintf(buf, "val0: %s\n", db["val0"]);  sbuf+=buf;
-      ssprintf(buf, "val1: %s\n", db["val1"]);  sbuf+=buf;
-      ssprintf(buf, "val2: %s\n", db["val2"]);  sbuf+=buf;
-      ssprintf(buf, "val3: %s\n", db["val3"]);  sbuf+=buf;
-      ssprintf(buf, "weight: %s\n", db["weight"]);  sbuf+=buf;
-      ssprintf(buf, "price: %s\n", db["price"]);  sbuf+=buf;
-      ssprintf(buf, "can_be_seen: %s\n", db["can_be_seen"]);  sbuf+=buf;
-      ssprintf(buf, "spec_proc: %s\n", db["spec_proc"]);  sbuf+=buf;
-      ssprintf(buf, "max_exist: %s\n", db["max_exist"]);  sbuf+=buf;
-      ssprintf(buf, "max_struct: %s\n", db["max_struct"]);  sbuf+=buf;
-      ssprintf(buf, "cur_struct: %s\n", db["cur_struct"]);  sbuf+=buf;
-      ssprintf(buf, "decay: %s\n", db["decay"]);  sbuf+=buf;
-      ssprintf(buf, "volume: %s\n", db["volume"]);  sbuf+=buf;
-      ssprintf(buf, "material: %s\n", db["material"]);  sbuf+=buf;
-      ssprintf(buf, "\n"); sbuf+=buf;
+      buf = fmt("- obj\n"); sbuf+=buf;
+      buf = fmt("vnum: %s\n") % db["vnum"];  sbuf+=buf;
+      buf = fmt("name: %s\n") % db["name"];  sbuf+=buf;
+      buf = fmt("short_desc: %s\n") % db["short_desc"];  sbuf+=buf;
+      buf = fmt("long_desc: %s\n") % db["long_desc"];  sbuf+=buf;
+      buf = fmt("action_desc: %s\n") % db["action_desc"];  sbuf+=buf;
+      buf = fmt("type: %s\n") % db["type"];  sbuf+=buf;
+      buf = fmt("action_flag: %s\n") % db["action_flag"];  sbuf+=buf;
+      buf = fmt("wear_flag: %s\n") % db["wear_flag"];  sbuf+=buf;
+      buf = fmt("val0: %s\n") % db["val0"];  sbuf+=buf;
+      buf = fmt("val1: %s\n") % db["val1"];  sbuf+=buf;
+      buf = fmt("val2: %s\n") % db["val2"];  sbuf+=buf;
+      buf = fmt("val3: %s\n") % db["val3"];  sbuf+=buf;
+      buf = fmt("weight: %s\n") % db["weight"];  sbuf+=buf;
+      buf = fmt("price: %s\n") % db["price"];  sbuf+=buf;
+      buf = fmt("can_be_seen: %s\n") % db["can_be_seen"];  sbuf+=buf;
+      buf = fmt("spec_proc: %s\n") % db["spec_proc"];  sbuf+=buf;
+      buf = fmt("max_exist: %s\n") % db["max_exist"];  sbuf+=buf;
+      buf = fmt("max_struct: %s\n") % db["max_struct"];  sbuf+=buf;
+      buf = fmt("cur_struct: %s\n") % db["cur_struct"];  sbuf+=buf;
+      buf = fmt("decay: %s\n") % db["decay"];  sbuf+=buf;
+      buf = fmt("volume: %s\n") % db["volume"];  sbuf+=buf;
+      buf = fmt("material: %s\n") % db["material"];  sbuf+=buf;
+      buf = fmt("\n"); sbuf+=buf;
     }
 
 
     db.query("select * from objextra where vnum=%i", vnums[i]);
     while(db.fetchRow()){
-      ssprintf(buf, "- objextra\n"); sbuf+=buf;
-      ssprintf(buf, "vnum: %s\n", db["vnum"]);  sbuf+=buf;
-      ssprintf(buf, "name: %s\n", db["name"]);  sbuf+=buf;
-      ssprintf(buf, "description~:\n%s~\n", db["description"]);  sbuf+=buf;
-      ssprintf(buf, "\n"); sbuf+=buf;
+      buf = fmt("- objextra\n"); sbuf+=buf;
+      buf = fmt("vnum: %s\n") % db["vnum"];  sbuf+=buf;
+      buf = fmt("name: %s\n") % db["name"];  sbuf+=buf;
+      buf = fmt("description~:\n%s~\n") % db["description"];  sbuf+=buf;
+      buf = fmt("\n"); sbuf+=buf;
     }
 
 
     db.query("select * from objaffect where vnum=%i", vnums[i]);
     while(db.fetchRow()){
-      ssprintf(buf, "- objaffect\n"); sbuf+=buf;
-      ssprintf(buf, "vnum: %s\n", db["vnum"]);  sbuf+=buf;
-      ssprintf(buf, "type: %s\n", db["type"]);  sbuf+=buf;
-      ssprintf(buf, "mod1: %s\n", db["mod1"]);  sbuf+=buf;
-      ssprintf(buf, "mod2: %s\n", db["mod2"]);  sbuf+=buf;
-      ssprintf(buf, "\n"); sbuf+=buf;
+      buf = fmt("- objaffect\n"); sbuf+=buf;
+      buf = fmt("vnum: %s\n") % db["vnum"];  sbuf+=buf;
+      buf = fmt("type: %s\n") % db["type"];  sbuf+=buf;
+      buf = fmt("mod1: %s\n") % db["mod1"];  sbuf+=buf;
+      buf = fmt("mod2: %s\n") % db["mod2"];  sbuf+=buf;
+      buf = fmt("\n"); sbuf+=buf;
     }
   }
 
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
   fclose(tmpfile);
 
   printf("Opening editor.\n");
-  ssprintf(buf, "$EDITOR %s", file);
+  buf = fmt("$EDITOR %s") % file;
   system(buf.c_str());
 
 
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
     }
   }
 
-  ssprintf(buf, "/bin/cp -f %s %s.backup", file, file);
+  buf = fmt("/bin/cp -f %s %s.backup") % file % file;
   system(buf.c_str());
 
 

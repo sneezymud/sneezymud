@@ -958,11 +958,11 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	return FALSE;
       case 96:
       case 97:
-	ssprintf(buf, "You swing your %s right into $N's face, sending a tooth flying.", limbStr.c_str());
+	buf = fmt("You swing your %s right into $N's face, sending a tooth flying.") % limbStr;
 	act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
-	ssprintf(buf, "$n's %s connects with your face, sending a tooth flying.", limbStr.c_str());
+	buf = fmt("$n's %s connects with your face, sending a tooth flying.") % limbStr;
 	act(buf, FALSE, this, obj, v, TO_VICT, ANSI_ORANGE);
-	ssprintf(buf, "$n's %s connects with $N's face, sending a tooth flying.", limbStr.c_str());
+	buf = fmt("$n's %s connects with $N's face, sending a tooth flying.") % limbStr;
 	act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 	      	      
 	TTrash *corpse;
@@ -970,10 +970,10 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	corpse = new TTrash();
 	corpse->name = mud_str_dup("tooth");
 	      
-	ssprintf(buf, "<W>a <1><r>bloody<1><W> tooth of %s<1>", v->getName());
+	buf = fmt("<W>a <1><r>bloody<1><W> tooth of %s<1>") % v->getName();
 	corpse->shortDescr = mud_str_dup(buf);
 	      
-	ssprintf(buf, "<W>A <1><r>bloody<1><W> tooth lies here, having been knocked out of %s's mouth.<1>", v->getName());
+	buf = fmt("<W>A <1><r>bloody<1><W> tooth lies here, having been knocked out of %s's mouth.<1>") % v->getName();
 	corpse->setDescr(mud_str_dup(buf));
 	      
 	corpse->setStuff(NULL);
@@ -1026,10 +1026,10 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	    corpse = new TDrinkCon();
 	    corpse->name = mud_str_dup("heart");
 	    
-	    ssprintf(buf, "the lifeless <r>heart<1> of %s", v->getName());
+	    buf = fmt("the lifeless <r>heart<1> of %s") % v->getName();
 	    corpse->shortDescr = mud_str_dup(buf);
 	    
-	    ssprintf(buf, "The lifeless <r>heart<1> of %s lies here.", v->getName());
+	    buf = fmt("The lifeless <r>heart<1> of %s lies here.") % v->getName();
 	    corpse->setDescr(mud_str_dup(buf));
 	    
 	    corpse->setStuff(NULL);
@@ -1141,13 +1141,13 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     // double damage 
     *dam *= 2;;
 
-    ssprintf(buf, "You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!", v->describeBodySlot(*part_hit).c_str(), limbStr.c_str());
+    buf = fmt("You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % limbStr;
     act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
 
-    ssprintf(buf, "$n strikes your %s exceptionally well, sinking $s %s deep into your flesh!", v->describeBodySlot(*part_hit).c_str(), limbStr.c_str());
+    buf = fmt("$n strikes your %s exceptionally well, sinking $s %s deep into your flesh!") % v->describeBodySlot(*part_hit) % limbStr;
     act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
 
-    ssprintf(buf, "$n strikes $N's %s exceptionally well, sinking $s %s deep into $N's flesh!", v->describeBodySlot(*part_hit).c_str(), limbStr.c_str());
+    buf = fmt("$n strikes $N's %s exceptionally well, sinking $s %s deep into $N's flesh!") % v->describeBodySlot(*part_hit) % limbStr;
     act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
@@ -1155,13 +1155,13 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     // triple damage
     *dam *= 3;
 
-    ssprintf(buf, "You critically strike $N's %s, sinking your %s deep into $S flesh!", v->describeBodySlot(*part_hit).c_str(), limbStr.c_str());
+    buf = fmt("You critically strike $N's %s, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % limbStr;
     act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
 
-    ssprintf(buf, "$n critically strikes your %s, sinking $s %s deep into your flesh!", v->describeBodySlot(*part_hit).c_str(), limbStr.c_str());
+    buf = fmt("$n critically strikes your %s, sinking $s %s deep into your flesh!") % v->describeBodySlot(*part_hit) % limbStr;
     act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
 
-    ssprintf(buf, "$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!", v->describeBodySlot(*part_hit).c_str(), limbStr.c_str());
+    buf = fmt("$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!") % v->describeBodySlot(*part_hit) % limbStr;
     act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
@@ -1230,8 +1230,8 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	if (!v->isHumanoid())
 	  return 0;
 	if ((obj = v->equipment[WEAR_WRIST_R])) {
-	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from losing your %s!\n\r",
-		    fname(obj->name).c_str(), v->describeBodySlot(WEAR_HAND_R).c_str());
+	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from losing your %s!\n\r") %
+		    fname(obj->name) % v->describeBodySlot(WEAR_HAND_R));
 	  for (i=1;i<5;i++)
 	    if (v->equipment[WEAR_WRIST_R])
 	      v->damageItem(this,WEAR_WRIST_R,wtype,weapon,*dam);
@@ -1274,7 +1274,7 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	if (!v->isHumanoid())
 	  return 0;
 	if ((obj = v->equipment[WEAR_WRIST_L])) {
-	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from losing a hand!\n\r",
+	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from losing a hand!\n\r") %
 		    fname(obj->name).c_str());
 	  for (i=1;i<5;i++)
 	    if (v->equipment[WEAR_WRIST_L])
@@ -1571,9 +1571,9 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
       case 92:
 	if(v->getSex()==SEX_MALE && v->hasPart(WEAR_WAISTE) &&
 	   (!(obj = v->equipment[WEAR_WAISTE]) || !obj->isMetal())){
-	  ssprintf(buf, "With a deft swing of your %s, you sever $N's genitals.", limbStr.c_str());
+	  buf = fmt("With a deft swing of your %s, you sever $N's genitals.") % limbStr;
 	  act(buf,FALSE,this,obj,v,TO_CHAR,ANSI_ORANGE);
-	  ssprintf(buf, "$n deftly severs your genitals with $s %s!  OWWWWW!", limbStr.c_str());
+	  buf = fmt("$n deftly severs your genitals with $s %s!  OWWWWW!") % limbStr;
 	  act(buf,FALSE,this,obj,v,TO_VICT,ANSI_ORANGE);
 
 	  if(obj)
@@ -1586,17 +1586,17 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 		
 	  if (v->getMaterial() > MAT_GEN_MINERAL) {
 	    // made of mineral or metal
-	    ssprintf(buf, "the mangled genitalia of %s", v->getName());
+	    buf = fmt("the mangled genitalia of %s") % v->getName();
 	  } else {
-	    ssprintf(buf, "the bloody, mangled genitalia of %s", v->getName());
+	    buf = fmt("the bloody, mangled genitalia of %s") % v->getName();
 	  }
 	  corpse->shortDescr = mud_str_dup(buf);
 		
 	  if (v->getMaterial() > MAT_GEN_MINERAL) {
 	    // made of mineral or metal
-	    ssprintf(buf, "The mangled, severed genitalia of %s is lying here.", v->getName());
+	    buf = fmt("The mangled, severed genitalia of %s is lying here.") % v->getName();
 	  } else {
-	    ssprintf(buf, "The bloody, mangled, severed genitalia of %s is lying here.", v->getName());
+	    buf = fmt("The bloody, mangled, severed genitalia of %s is lying here.") % v->getName();
 	  }
 	  corpse->setDescr(mud_str_dup(buf));
 		
@@ -1706,13 +1706,13 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     // double damage 
     *dam *= 2;
 
-    ssprintf(buf, "You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!", v->describeBodySlot(*part_hit).c_str(), weaponStr.c_str());
+    buf = fmt("You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
     act(buf, FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
 
-    ssprintf(buf, "$n strikes your %s exceptionally well, sinking $s %s deep into your flesh!", v->describeBodySlot(*part_hit).c_str(), weaponStr.c_str());
+    buf = fmt("$n strikes your %s exceptionally well, sinking $s %s deep into your flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
     act(buf, FALSE, this, weapon, v, TO_VICT, ANSI_RED);
 
-    ssprintf(buf, "$n strikes $N's %s exceptionally well, sinking $s %s deep into $N's flesh!", v->describeBodySlot(*part_hit).c_str(), weaponStr.c_str());
+    buf = fmt("$n strikes $N's %s exceptionally well, sinking $s %s deep into $N's flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
     act(buf, FALSE, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
@@ -1720,13 +1720,13 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     // triple damage 
     *dam *= 3;
 
-    ssprintf(buf, "You critically strike $N's %s, sinking your %s deep into $S flesh!", v->describeBodySlot(*part_hit).c_str(), weaponStr.c_str());
+    buf = fmt("You critically strike $N's %s, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
     act(buf, FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
 
-    ssprintf(buf, "$n critically strikes your %s, sinking $s %s deep into your flesh!", v->describeBodySlot(*part_hit).c_str(), weaponStr.c_str());
+    buf = fmt("$n critically strikes your %s, sinking $s %s deep into your flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
     act(buf, FALSE, this, weapon, v, TO_VICT, ANSI_RED);
 
-    ssprintf(buf, "$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!", v->describeBodySlot(*part_hit).c_str(), weaponStr.c_str());
+    buf = fmt("$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
     act(buf, FALSE, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
@@ -1740,7 +1740,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	  return 0;
 	*part_hit = WEAR_NECK;
 	if ((obj = v->equipment[WEAR_NECK])) {
-	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from a punctured larynx!\n\r",
+	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from a punctured larynx!\n\r") %
 		    fname(obj->name).c_str());
 	  for (i=1;i<5;i++)
 	    if (v->equipment[WEAR_NECK])
@@ -1821,7 +1821,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	if (!v->isHumanoid())
 	  return 0;
 	if ((obj = v->equipment[WEAR_LEGS_R])) {
-	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from losing a tendon!\n\r",
+	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from losing a tendon!\n\r") %
 		    fname(obj->name).c_str());
 	  for (i=1;i<5;i++)
 	    if (v->equipment[WEAR_LEGS_R])
@@ -1861,7 +1861,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	if (!v->hasPart(WEAR_BACK))
 	  return 0;
 	if ((obj = v->equipment[WEAR_BACK])) {
-	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from a gory wound!\n\r",
+	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from a gory wound!\n\r") %
 		    fname(obj->name).c_str());
 	  for (i=1;i<5;i++)
 	    if (v->equipment[WEAR_BACK])
@@ -1903,7 +1903,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 		  "You try to thrust your %s into the back of $N's head.",
 		  limbStr.c_str());
 	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-	  ssprintf(buf, "Unfortunately, $p saves $M from a hideous death!");
+	  buf = fmt("Unfortunately, $p saves $M from a hideous death!");
 	  act(buf, FALSE, this, obj, v, TO_CHAR);
 	  ssprintf(buf, 
 		  "$n tries to thrust $s %s into the back of your head.",
@@ -1935,7 +1935,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 		  "$n's %s tears into the back of your unprotected head.",
 		  limbStr.c_str());
 	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	  ssprintf(buf,"The world goes black and dark...");
+	  buf = fmt("The world goes black and dark...");
 	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_BLACK);
 	  ssprintf(buf, "$n thrusts $s %s deep into the back of $N's unprotected head, causing an immediate death.", 
 		  limbStr.c_str());
@@ -2023,7 +2023,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	if (!v->hasPart(WEAR_BODY))
 	  return 0;
 	if ((obj = v->equipment[WEAR_BODY])) {
-	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from a punctured lung!\n\r",
+	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from a punctured lung!\n\r") %
 		    fname(obj->name).c_str());
 	  for (i=1;i<9;i++)
 	    if (v->equipment[WEAR_BODY])
@@ -2067,7 +2067,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	if (!v->hasPart(WEAR_BODY))
 	  return 0;
 	if ((obj = v->equipment[WEAR_BODY])) {
-	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from a kidney wound!\n\r",
+	  v->sendTo(COLOR_OBJECTS, fmt("Your %s saves you from a kidney wound!\n\r") %
 		    fname(obj->name).c_str());
 	  for (i=1;i<7;i++)
 	    if (v->equipment[WEAR_BODY])

@@ -636,7 +636,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
           character->sendTo("You are berserking.\n\r");
           break;
         }
-        character->sendTo("Setting attack mode to %snormal%s\n\r", character->redBold(), character->norm());
+        character->sendTo(fmt("Setting attack mode to %snormal%s\n\r") % character->redBold() % character->norm());
         character->setCombatMode(ATTACK_NORMAL);
       }
       break;
@@ -646,7 +646,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
           character->sendTo("You are berserking.\n\r");
           break;
         }
-        character->sendTo("Setting attack mode to %soffensive%s\n\r", character->redBold(), character->norm());
+        character->sendTo(fmt("Setting attack mode to %soffensive%s\n\r") % character->redBold() % character->norm());
         character->setCombatMode(ATTACK_OFFENSE);
       }
       break;
@@ -656,7 +656,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
           character->sendTo("You are berserking.\n\r");
           break;
         }
-        character->sendTo("Setting attack mode to %sdefensive%s\n\r", character->redBold(), character->norm());
+        character->sendTo(fmt("Setting attack mode to %sdefensive%s\n\r") % character->redBold() % character->norm());
         character->setCombatMode(ATTACK_DEFENSE);
       }
       break;
@@ -1326,9 +1326,9 @@ int TBeing::doClientMessage(const char *arg)
 
   for (i = descriptor_list; i; i = i->next) {
     if ((b = i->character) && (b != this) && !i->connected && i->m_bIsClient)
-      b->sendTo(COLOR_COMM, "<p>CLIENT<1> (%s): %s\n\r", getName(), arg);  
+      b->sendTo(COLOR_COMM, fmt("<p>CLIENT<1> (%s): %s\n\r") % getName() % arg);  
   }
-  sendTo(COLOR_COMM, "<p>CLIENT<1>: %s\n\r", arg);
+  sendTo(COLOR_COMM, fmt("<p>CLIENT<1>: %s\n\r") % arg);
   return TRUE;
 }
 

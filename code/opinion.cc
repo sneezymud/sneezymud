@@ -257,7 +257,7 @@ bool TMonster::Fears(const TBeing *v, const char *s) const
       return TRUE;
 
   if (IS_SET(fearfield, FEAR_VNUM)) {
-    sendTo("You fear %i \n\r", fears.vnum);
+    sendTo(fmt("You fear %i \n\r") % fears.vnum);
     const TMonster *mv = dynamic_cast<const TMonster *>(v);
     if (mv && (fears.vnum == mv->mobVnum()))
       return TRUE;
@@ -513,5 +513,5 @@ void TMonster::setHunting(TBeing *tch)
   oldRoom = inRoom();
 
   if (tch->isImmortal())
-    tch->sendTo(COLOR_MOBS,">>%s is hunting you from %s\n\r", getName(), roomp->name);
+    tch->sendTo(COLOR_MOBS,fmt(">>%s is hunting you from %s\n\r") % getName() % roomp->name);
 }

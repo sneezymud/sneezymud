@@ -164,7 +164,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
 	////////////////////////////////////////////////////////////
 	// we know that wizradry is < 60 from getWizardryLevel check
 	////////////////////////////////////////////////////////////
-	ch->sendTo("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r", sstring(position_types[ch->getPosition()]).uncap().c_str());
+	ch->sendTo(fmt("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r") % sstring(position_types[ch->getPosition()]).uncap());
 	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
 	return FALSE;
       }
@@ -196,7 +196,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
 	////////////////////////////////////////////////////////////////
 	// we know that ritualism is < 60 from getRitualismLevel check
 	///////////////////////////////////////////////////////////////
-	ch->sendTo("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r", sstring(position_types[ch->getPosition()]).uncap().c_str());
+	ch->sendTo(fmt("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r") % sstring(position_types[ch->getPosition()]).uncap());
 	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
 	return FALSE;
       }
@@ -2525,7 +2525,7 @@ void checkFactionHurt(TBeing * caster, TBeing * victim)
   if (caster->isSameFaction(victim)) {
     dec_amt = (int) (caster->getMove() / 4);
     caster->addToMove(-dec_amt);
-    caster->sendTo("%s frown upon the harming of a creature of the same faction.\n\r", sstring(caster->yourDeity(your_deity_val, FIRST_PERSON).cap()).c_str());
+    caster->sendTo(fmt("%s frown upon the harming of a creature of the same faction.\n\r") % sstring(caster->yourDeity(your_deity_val, FIRST_PERSON).cap()));
     caster->sendTo("You are exhausted from the effort of doing so.\n\r");
     act("$n's chest heaves from exhaustion.", FALSE, caster, 0, 0, TO_ROOM);
     caster->updatePos();
@@ -2541,7 +2541,7 @@ void checkFactionHelp(TBeing *caster, TBeing *victim)
   if (caster->isOppositeFaction(victim)) {
     dec_amt = (int) (caster->getMove() / 4);
     caster->addToMove(-dec_amt);
-    caster->sendTo("%s frown upon the minions of the enemy.\n\r", sstring(caster->yourDeity(your_deity_val, FIRST_PERSON)).cap().c_str());
+    caster->sendTo(fmt("%s frown upon the minions of the enemy.\n\r") % sstring(caster->yourDeity(your_deity_val, FIRST_PERSON)).cap());
     caster->sendTo("You are exhausted from the effort of doing so.\n\r");
     act("$n's chest heaves from exhaustion.", FALSE, caster, 0, 0, TO_ROOM);
     caster->updatePos();
@@ -3600,11 +3600,11 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     } else
       strcpy(tString, "feel your skills honing in regards to");
 
-    sendTo(COLOR_BASIC, "<c>You %s %s.<z>\n\r", tString, discArray[sknum]->name);
+    sendTo(COLOR_BASIC, fmt("<c>You %s %s.<z>\n\r") % tString % discArray[sknum]->name);
   }
 #else
   if (!silent)
-    sendTo(COLOR_BASIC, "<c>You increase your mastery of %s.<z>\n\r", discArray[sknum]->name);
+    sendTo(COLOR_BASIC, fmt("<c>You increase your mastery of %s.<z>\n\r") % discArray[sknum]->name);
 #endif
 
   // boost at this point is 1, now make it more it if appropriate
@@ -3631,7 +3631,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     } else if(getNatSkillValue(sknum) >= 20 &&
 	      (sknum == SKILL_SLASH_PROF || sknum == SKILL_BLUNT_PROF ||
 	       sknum == SKILL_PIERCE_PROF || sknum == SKILL_RANGED_PROF)){
-      sendTo(COLOR_BASIC, "<c>You feel that you have enough knowledge of %s to please your guildmaster.<z>", discArray[sknum]->name);
+      sendTo(COLOR_BASIC, fmt("<c>You feel that you have enough knowledge of %s to please your guildmaster.<z>") % discArray[sknum]->name);
     }
   }
   
@@ -3650,7 +3650,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
       strcpy(tString, "feel you have total mastery over");
 
     if (!silent)
-      sendTo(COLOR_BASIC, "<c>You %s %s.<z>\n\r", tString, discArray[sknum]->name);
+      sendTo(COLOR_BASIC, fmt("<c>You %s %s.<z>\n\r") % tString % discArray[sknum]->name);
 
     if (doesKnowSkill(SKILL_KICK_MONK) && sknum == SKILL_KICK_MONK) {
       setQuestBit(TOG_ELIGIBLE_ADVANCED_KICKING);
@@ -3669,7 +3669,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
       strcpy(tString, "feel you have all the control you can currently have over");
 
     if (!silent)
-      sendTo(COLOR_BASIC, "<c>You %s %s.<z>\n\r", tString, discArray[sknum]->name);
+      sendTo(COLOR_BASIC, fmt("<c>You %s %s.<z>\n\r") % tString % discArray[sknum]->name);
   }
 
   return TRUE;

@@ -45,7 +45,7 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
       // init timeLeft to 0 and increment by 1 each iteration
       if (ch->task->timeLeft) {
         if (ch->task->timeLeft < (how_many * 2)) {
-          ch->sendTo("You continue drafting your scroll%s.\n\r",
+          ch->sendTo(fmt("You continue drafting your scroll%s.\n\r") %
 		     (how_many == 1 ? "" : "s"));
 	  ch->addToMana(-resulting);
         } else {
@@ -73,7 +73,7 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 
           if (bSuccess(ch, knowledge, SKILL_SCRIBE) ||
 	      bSuccess(ch, readmagic, SKILL_READ_MAGIC)) {
-            ch->sendTo("You have successfully scribed your scroll%s.\n\r",
+            ch->sendTo(fmt("You have successfully scribed your scroll%s.\n\r") %
 		       (how_many == 1 ? "" : "s"));
 	    if (ch->getSkillValue(which) > 0) {
 	      scroll_obj->setMagicLearnedness(ch->getSkillValue(which));

@@ -192,8 +192,8 @@ int TFFlame::pourWaterOnMe(TBeing *ch, TObj *sObj)
     dContainer->setDrinkUnits(0);
     // If object is left, then we 'crack and pop'
     if (obj_flags.decay_time > 0) {
-      ch->sendTo(COLOR_OBJECTS, "%s lets off a large crack and pop as you pour some %s on it.\n\r",
-                 cap(shortDescr), DrinkInfo[dContainer->getDrinkType()]->name);
+      ch->sendTo(COLOR_OBJECTS, fmt("%s lets off a large crack and pop as you pour some %s on it.\n\r") %
+                 cap(shortDescr) % DrinkInfo[dContainer->getDrinkType()]->name);
       sprintf(Buf[0], "%s dies down a little as $n pours %s over it.",
               cap(shortDescr), DrinkInfo[dContainer->getDrinkType()]->name);
       act(Buf[0], TRUE, ch, NULL, NULL, TO_ROOM);
@@ -214,7 +214,7 @@ int TFFlame::getMe(TBeing *ch, TThing *)
 {
   if (!ch->isImmortal()) {
     ch->sendTo(COLOR_OBJECTS,
-               "As you grab ahold of %s, you feel your fingers begin to burn and drop it.\n\r",
+               fmt("As you grab ahold of %s % you feel your fingers begin to burn and drop it.\n\r") %
                shortDescr);
     ch->doDrop("", this, true);
     if (ch->reconcileDamage(ch, ::number(1,2), DAMAGE_FIRE) == -1)
@@ -243,7 +243,7 @@ void TFFlame::extinguishMe(TBeing *ch)
 
 void TFFlame::peeOnMe(const TBeing *ch)
 {
-  ch->sendTo(COLOR_OBJECTS, "Steam rises from %s as you pee on it.\n\r", getName());
+  ch->sendTo(COLOR_OBJECTS, fmt("Steam rises from %s as you pee on it.\n\r") % getName());
 }
 
 void TFFlame::refuelMeLight(TBeing *ch, TThing *)
@@ -253,7 +253,7 @@ void TFFlame::refuelMeLight(TBeing *ch, TThing *)
 
 void TFFlame::describeObjectSpecifics(const TBeing *ch) const
 {
-  ch->sendTo(COLOR_OBJECTS, "%s seems to be %s.", getName(),
+  ch->sendTo(COLOR_OBJECTS, fmt("%s seems to be %s.") % getName() %
     (obj_flags.decay_time > 150 ? "burning wildly" :
     (obj_flags.decay_time > 100 ? "burning fiercly" :
     (obj_flags.decay_time >  50 ? "burning barely out of control" :
@@ -505,7 +505,7 @@ void TFFlame::addFlameToMe(TBeing *ch, const char *argument, TThing *fObj, bool 
     }
     if (!(woodItem = searchLinkedListVis(ch, argument, ch->getStuff(), &count)) &&
         !(woodItem = searchLinkedListVis(ch, argument, ch->roomp->getStuff(), &count))) {
-      ch->sendTo(COLOR_OBJECTS, "You can not seem to find the '%s'.\n\r", argument);
+      ch->sendTo(COLOR_OBJECTS, fmt("You can not seem to find the '%s'.\n\r") % argument);
       if (isFirst) delete this;
       return;
     }

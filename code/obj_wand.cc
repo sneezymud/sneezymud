@@ -86,8 +86,8 @@ int TWand::changeItemVal4Check(TBeing *ch, int the_update)
 
 void TWand::divinateMe(TBeing *caster) const
 {
-  caster->sendTo("It has %d out of %d charges left.\n\r",
-           getCurCharges(), getMaxCharges());
+  caster->sendTo(fmt("It has %d out of %d charges left.\n\r") %
+           getCurCharges() % getMaxCharges());
   caster->describeMagicLevel(this, 101);
   caster->describeMagicLearnedness(this, 101);
   caster->describeMagicSpell(this, 101);

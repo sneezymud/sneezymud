@@ -30,11 +30,6 @@ template <class T> sstring fmt::doFormat(const sstring &fmt, const T &x)
   return (sstring) buf;
 }
 
-sstring fmt::doFormat(const sstring &fmt, const sstring &x)
-{
-  return doFormat(fmt, x.c_str());
-}
-
 
 template <class T> fmt & fmt::operator %(const T &x)
 {

@@ -289,9 +289,9 @@ void TLight::describeObjectSpecifics(const TBeing *ch) const
   else {
     diff = (double) ((double) getCurBurn() /
             max(1.0, (double) getMaxBurn()));
-    ch->sendTo(COLOR_OBJECTS,"%s looks refuelable.\n\r", sstring(getName()).cap().c_str());
-    ch->sendTo(COLOR_OBJECTS, "You can tell that %s has %s fuel left.\n\r",
-	       sstring(getName()).uncap().c_str(),
+    ch->sendTo(COLOR_OBJECTS,fmt("%s looks refuelable.\n\r") % sstring(getName()).cap());
+    ch->sendTo(COLOR_OBJECTS, fmt("You can tell that %s has %s fuel left.\n\r") %
+	       sstring(getName()).uncap() %
           ((diff == 0) ? "no" :
            ((diff < .20) ? "very little" :
            ((diff < .50) ? "some" :

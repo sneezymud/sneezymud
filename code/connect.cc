@@ -309,10 +309,10 @@ bool Descriptor::checkForMultiplay()
         vlogf(LOG_CHEAT, "MULTIPLAY: %s and %s from same account[%s]",
               character->name, ch->name, account->name);
 #if FORCE_MULTIPLAY_COMPLIANCE
-        character->sendTo("Player Load: %d, Current MultiPlay Limit: %d\n\r",
-             tot_descs, max_multiplay_chars);
+        character->sendTo(fmt("Player Load: %d, Current MultiPlay Limit: %d\n\r") %
+             tot_descs % max_multiplay_chars);
         if (diff < (30 * SECS_PER_REAL_MIN))
-          character->sendTo("No MultiPlay allowed during first 30 mins after reboot.  Please wait %d mins.\n\r", diff/SECS_PER_REAL_MIN + 1);
+          character->sendTo(fmt("No MultiPlay allowed during first 30 mins after reboot.  Please wait %d mins.\n\r") % (diff/SECS_PER_REAL_MIN + 1));
 
         character->sendTo("Adding this character would cause you to be in violation of multiplay rules.\n\r");
         character->sendTo("Access denied.  Please log one (or more) of your other characters off and then\n\r");
@@ -850,7 +850,7 @@ void ShowNewNews(TBeing * tBeing)
           }
 
           bufStr = tString;
-          tBeing->sendTo("%s", bufStr.toCRLF().c_str());
+          tBeing->sendTo(fmt("%s") % bufStr.toCRLF());
 
           if (++tCount == 10) {
             tBeing->sendTo("...And there is more, SEE NEWS to see more.\n\r");
@@ -886,7 +886,7 @@ void ShowNewNews(TBeing * tBeing)
           }
 
           bufStr = tString;
-          tBeing->sendTo("%s", bufStr.toCRLF().c_str());
+          tBeing->sendTo(fmt("%s") % bufStr.toCRLF());
 
           if (++tCount == 10) {
             tBeing->sendTo("...And there is more, SEE NEWS to see more.\n\r");
@@ -921,7 +921,7 @@ void ShowNewNews(TBeing * tBeing)
           }
 
           bufStr = tString;
-          tBeing->sendTo("%s", bufStr.toCRLF().c_str());
+          tBeing->sendTo(fmt("%s") % bufStr.toCRLF());
 
           if (++tCount == 10) {
             tBeing->sendTo("...And there is more, SEE WIZNEWS to see more.\n\r");
@@ -2128,7 +2128,7 @@ int Descriptor::nanny(const char *arg)
         // we do need to check for +s and make sure this is +1, -s == -1
         if (!(amt = convertTo<int>(buf)))
           amt = (*buf == '+' ? +1 : -1);
-        character->sendTo("amount was: %d\n\r", amt);
+        character->sendTo(fmt("amount was: %d\n\r") % amt);
         // Need to initialize buf or they can cheat 
         memset(buf, '\0', sizeof(buf));
         if (local_stats + amt < -25) {
@@ -2219,7 +2219,7 @@ int Descriptor::nanny(const char *arg)
         // we do need to check for +s and make sure this is +1, -s == -1
         if (!(amt = convertTo<int>(buf)))
           amt = (*buf == '+' ? +1 : -1);
-        character->sendTo("amount was: %d\n\r", amt);
+        character->sendTo(fmt("amount was: %d\n\r") % amt);
 
         // Need to initialize buf or they can cheat
         memset(buf, '\0', sizeof(buf));
@@ -2312,7 +2312,7 @@ int Descriptor::nanny(const char *arg)
         // we do need to check for +s and make sure this is +1, -s == -1
         if (!(amt = convertTo<int>(buf)))
           amt = (*buf == '+' ? +1 : -1);
-        character->sendTo("amount was: %d\n\r", amt);
+        character->sendTo(fmt("amount was: %d\n\r") % amt);
 
         // Need to initialize buf or they can cheat
         memset(buf, '\0', sizeof(buf));
@@ -2409,7 +2409,7 @@ int Descriptor::nanny(const char *arg)
         // we do need to check for +s and make sure this is +1, -s == -1
         if (!(amt = convertTo<int>(buf)))
           amt = (*buf == '+' ? +1 : -1);
-        character->sendTo("amount was: %d\n\r", amt);
+        character->sendTo(fmt("amount was: %d\n\r") % amt);
 
         // Need to initialize buf or they can cheat
         memset(buf, '\0', sizeof(buf));

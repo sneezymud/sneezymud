@@ -43,8 +43,7 @@ void TBeing::doScore()
   sstring Buf, tString;
   char tbuf[256];
 
-  sendTo(fmt("You have %s%d%s/%s%d%s hit points, %s%d%s/%s%d%s moves and ") %
-	 red() % getHit() % norm() %
+  sendTo(fmt("You have %s%d%s/%s%d%s hit points, %s%d%s/%s%d%s moves and ") %	 red() % getHit() % norm() %
 	 green() % hitLimit() % norm() %
 	 purple() % getMove() % norm() %
 	 green() % moveLimit() % norm());
@@ -60,16 +59,14 @@ void TBeing::doScore()
 
   sendTo(Buf);
 
-  sendTo(fmt("You are %s.\n\r") % DescMoves((((double) getMove()) / ((double)
-         moveLimit()))));
+  sendTo(fmt("You are %s.\n\r") % DescMoves((((double) getMove()) / ((double)         moveLimit()))));
 
   tString = displayExp();
   strcpy(tbuf, tString.c_str());
   comify(tbuf);
   tString=tbuf;
 
-  sendTo(fmt("You have %s%s%s exp, and have %s%d%s talens plus %s%d%s talens in the bank.\n\r") %
-         cyan() % tString % norm() %
+  sendTo(fmt("You have %s%s%s exp, and have %s%d%s talens plus %s%d%s talens in the bank.\n\r") %         cyan() % tString % norm() %
          purple() % getMoney() % norm() %
          purple() % getBank() % norm());
 
@@ -78,15 +75,13 @@ void TBeing::doScore()
     strcpy(tbuf, tString.c_str());
     comify(tbuf);
     tString=tbuf;
-    sendTo(fmt("You have earned %s%s%s exp this session.\n\r") %
-         cyan() % tString % norm());
+    sendTo(fmt("You have earned %s%s%s exp this session.\n\r") %         cyan() % tString % norm());
 
     realTimePassed((time(0) - desc->session.connect), 0, &playing_time);
     if (playing_time.day)
       playing_time.hours += playing_time.day * 24;
 
-    sendTo(fmt("You have been playing for %s%d%s hour%s, %s%d%s minute%s and %s%d%s second%s in this session.\n\r") %
-         purple() % playing_time.hours   % norm() % (playing_time.hours   == 1 ? "" : "s") %
+    sendTo(fmt("You have been playing for %s%d%s hour%s, %s%d%s minute%s and %s%d%s second%s in this session.\n\r") %         purple() % playing_time.hours   % norm() % (playing_time.hours   == 1 ? "" : "s") %
          purple() % playing_time.minutes % norm() % (playing_time.minutes == 1 ? "" : "s") %
          purple() % playing_time.seconds % norm() % (playing_time.seconds == 1 ? "" : "s"));
   }
@@ -94,8 +89,7 @@ void TBeing::doScore()
   realTimePassed((time(0) - player.time.logon) + player.time.played,
                  0, &playing_time);
 
-  sendTo(fmt("For a lifetime total of %s%d%s day%s and %s%d%s hour%s.\n\r") %
-         purple() % playing_time.day   % norm() % (playing_time.day   == 1 ? "" : "s") %
+  sendTo(fmt("For a lifetime total of %s%d%s day%s and %s%d%s hour%s.\n\r") %         purple() % playing_time.day   % norm() % (playing_time.day   == 1 ? "" : "s") %
          purple() % playing_time.hours % norm() % (playing_time.hours == 1 ? "" : "s"));
 
   classIndT i;
@@ -108,15 +102,13 @@ void TBeing::doScore()
       allClassesSame = false;
 
   if (allClassesSame)
-    sendTo(fmt("Your level: %s lev %2d          This ranks you as:\n\r") %
-           getProfName() % GetMaxLevel());
+    sendTo(fmt("Your level: %s lev %2d          This ranks you as:\n\r") %           getProfName() % GetMaxLevel());
   else {
     sendTo("Your level: ");
     bool shownFirst = false;
     for (i = MAGE_LEVEL_IND; i < MAX_CLASSES; i++) {
       if (getLevel(i)) {
-        sendTo(fmt("%s%s lev %2d") %
-             (shownFirst ? ", " : "") %
+        sendTo(fmt("%s%s lev %2d") %             (shownFirst ? ", " : "") %
 	       classInfo[i].name.cap() % getLevel(i));
         shownFirst = true;
       }
@@ -138,14 +130,12 @@ void TBeing::doScore()
       comify(tbuf);
       tString=tbuf;
       if (allClassesSame) {
-        sendTo(fmt("You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r") %
-             purple() % tString % norm() % purple() % (getLevel(i)+1) %
+        sendTo(fmt("You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r") %             purple() % tString % norm() % purple() % (getLevel(i)+1) %
 	       getProfName() % norm());
         break;
       } else {
         // leveled in one class, but not another, show each class as own line
-        sendTo(fmt("You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r") %
-             purple() % tString % norm() % purple() % (getLevel(i)+1) %
+        sendTo(fmt("You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r") %             purple() % tString % norm() % purple() % (getLevel(i)+1) %
              classInfo[i].name.cap() % norm());
       }
     }
@@ -282,8 +272,7 @@ void TBeing::doScore()
     }
   }
 
-  sendTo(fmt("You are in %s%s%s attack mode.\n\r") %
-         cyan() % attack_modes[getCombatMode()] % norm());
+  sendTo(fmt("You are in %s%s%s attack mode.\n\r") %         cyan() % attack_modes[getCombatMode()] % norm());
 
   if (wimpy)
     sendTo(fmt("You are in wimpy mode, and will flee at %d hit points.\n\r") % wimpy);

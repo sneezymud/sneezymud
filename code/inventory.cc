@@ -234,7 +234,7 @@ void TTrap::dropMe(TBeing *ch, showMeT, showRoomT showroom)
   extraDescription *ed;
 
   if (!isname("grenade", name)) {
-    ch->sendTo(COLOR_OBJECTS, "You drop %s, concealing and arming it.\n\r", 
+    ch->sendTo(COLOR_OBJECTS, fmt("You drop %s, concealing and arming it.\n\r") % 
                      sstring(getName()).uncap().c_str());
 
     swapToStrung();
@@ -249,7 +249,7 @@ void TTrap::dropMe(TBeing *ch, showMeT, showRoomT showroom)
     TObj::dropMe(ch, DONT_SHOW_ME, DONT_SHOW_ROOM);
     return;
   } else {
-    ch->sendTo(COLOR_OBJECTS, "You drop %s, activating it.\n\r", 
+    ch->sendTo(COLOR_OBJECTS, fmt("You drop %s, activating it.\n\r") % 
                      sstring(getName()).uncap().c_str());
 
     armGrenade(ch);
@@ -574,7 +574,7 @@ int TBeing::doPut(const char *argument)
           return FALSE;
         }
         if (!(sub = get_obj_vis_accessible(this, arg2))) {
-          sendTo("You don't see any '%s' here.\n\r", arg2);
+          sendTo(fmt("You don't see any '%s' here.\n\r") % arg2);
           return FALSE;
         }
         sub->putMoneyInto(this, amount);
@@ -647,7 +647,7 @@ int TBeing::doPut(const char *argument)
           }
           return FALSE;
         } else {
-          sendTo("You don't have the '%s'.\n\r", arg2);
+          sendTo(fmt("You don't have the '%s'.\n\r") % arg2);
           return FALSE;
         }
       } else {
@@ -655,7 +655,7 @@ int TBeing::doPut(const char *argument)
         tmp = tmpname;
 
         if (!(iNumb = get_number(&tmp))) {
-          sendTo("You don't have the '%s'.\n\r", arg1);
+          sendTo(fmt("You don't have the '%s'.\n\r") % arg1);
           return FALSE;
         }
 	bool firsttimeround=TRUE;
@@ -706,17 +706,17 @@ int TBeing::doPut(const char *argument)
                 num = 0;
               }
             } else {
-              sendTo("You don't have the '%s'.\n\r", arg2);
+              sendTo(fmt("You don't have the '%s'.\n\r") % arg2);
               num = 0;
             }
           }
         }  // for loop
         if (i == 0 && num != 0) {
-          sendTo("You don't have the '%s'.\n\r", arg1);
+          sendTo(fmt("You don't have the '%s'.\n\r") % arg1);
         }
       }
     } else
-      sendTo("Put %s in what?\n\r", arg1);
+      sendTo(fmt("Put %s in what?\n\r") % arg1);
   } else
     sendTo("Put what in what?\n\r");
 
@@ -838,8 +838,7 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
       act("Not while $N is fighting.", FALSE, this, 0, vict, TO_CHAR);
       return FALSE;
     }
-    sendTo(COLOR_MOBS, "You give %d talen%s to %s.\n\r", amount, 
-            (amount == 1) ? "" : "s", pers(vict));
+    sendTo(COLOR_MOBS, fmt("You give %d talen%s to %s.\n\r") % amount %             ((amount == 1) ? "" : "s") % pers(vict));
     sprintf(buf, "$n gives you %d talen%s.\n\r", amount,
             (amount == 1) ? "" : "s");
     if(flags != GIVE_FLAG_SILENT_VICT){
@@ -1272,7 +1271,7 @@ bool TThing::canCarryMe(const TBeing *ch, silentTypeT silent) const
 
     if (ch->getCarriedVolume() + (getTotalVolume() - getReducedVolume(NULL)) > ch->carryVolumeLimit()) {
       if (!silent)
-        ch->sendTo(COLOR_OBJECTS,"%s : You need more dexterity to carry that much volume.\n\r", sstring(getName()).cap().c_str());
+        ch->sendTo(COLOR_OBJECTS,fmt("%s : You need more dexterity to carry that much volume.\n\r") % sstring(getName()).cap());
       return FALSE;
     }
   } else {
@@ -1282,13 +1281,13 @@ bool TThing::canCarryMe(const TBeing *ch, silentTypeT silent) const
     if (compareWeights(getTotalWeight(TRUE),
                   (ch->carryWeightLimit() - ch->getCarriedWeight())) == -1) {
       if (!silent)
-        ch->sendTo(COLOR_OBJECTS, "%s : You don't have enough strength to carry that much weight.\n\r", sstring(getName()).cap().c_str());
+        ch->sendTo(COLOR_OBJECTS, fmt("%s : You don't have enough strength to carry that much weight.\n\r") % sstring(getName()).cap());
       return FALSE;
     }
 
     if (ch->getCarriedVolume() + getTotalVolume() > ch->carryVolumeLimit()) {
       if (!silent)
-        ch->sendTo(COLOR_OBJECTS,"%s : You need more dexterity to carry that much volume.\n\r", sstring(getName()).cap().c_str());
+        ch->sendTo(COLOR_OBJECTS,fmt("%s : You need more dexterity to carry that much volume.\n\r") % sstring(getName()).cap());
       return FALSE;
     }
   }
@@ -1352,7 +1351,7 @@ bool TTrap::canDrop() const
 
 int TObj::getAllFrom(TBeing *ch, const char *argument)
 {
-  ch->sendTo(COLOR_OBJECTS, "%s is not a container.\n\r", sstring(getName()).cap().c_str());
+  ch->sendTo(COLOR_OBJECTS, fmt("%s is not a container.\n\r") % sstring(getName()).cap());
   return FALSE;
 }
 
@@ -1371,7 +1370,7 @@ int TTable::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
 
   if (getall(arg1, newarg)) {
     if (!get_thing_on_list_vis(ch, newarg, rider)) {
-      ch->sendTo(COLOR_OBJECTS, "There are no \"%s\"'s visible on %s.\n\r",newarg, getName());
+      ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible on %s.\n\r") % newarg % getName());
       return TRUE;
     }
     if (ch->getPosition() <= POSITION_SITTING) {
@@ -1402,7 +1401,7 @@ int TTable::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     return TRUE;
   } else if ((p = getabunch(arg1, newarg))) {
     if (!get_thing_on_list_vis(ch, newarg, rider)) {
-      ch->sendTo(COLOR_OBJECTS, "There are no \"%s\"'s visible on %s.\n\r",newarg, getName());
+      ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible on %s.\n\r") % newarg % getName());
       return TRUE;
     }
     if (ch->getPosition() <= POSITION_SITTING) {

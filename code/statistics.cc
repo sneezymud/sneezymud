@@ -325,14 +325,14 @@ void TBeing::doGamestats(const sstring &arg)
       setStat(STAT_CURRENT, STAT_STR, tmpint);
       plot1 = plotStat(STAT_CURRENT, STAT_STR, .80, 1.25, 1.00, curve);
       plot2 = plotStat(STAT_CURRENT, STAT_STR, 0.0, 100.0, 50.0, curve);
-      ssprintf(buf, "Stat Value: %5.2f     Plot1: %5.2f    Plot2: %5.2f%%\n\r", (double)tmpint, plot1, plot2);
+      buf = fmt("Stat Value: %5.2f     Plot1: %5.2f    Plot2: %5.2f%%\n\r") % (double)tmpint % plot1 % plot2;
       sendTo(buf);
     }
     setStat(STAT_CURRENT, STAT_STR, temp_stat);
     return;
   } else if (is_abbrev(buf, "combat")) {
     int tot_dam = stats.damage[PC_STAT] + stats.damage[MOB_STAT];
-    ssprintf(buf, "Total damage taken  : %d\n\r", tot_dam);
+    buf = fmt("Total damage taken  : %d\n\r") % tot_dam;
     str += buf;
 
     ssprintf(buf, "\tMob damage taken    : %ld   (%5.2f%%)\n\r", 
@@ -343,7 +343,7 @@ void TBeing::doGamestats(const sstring &arg)
     str += buf;
 
     tot_dam = stats.combat_damage[PC_STAT] + stats.combat_damage[MOB_STAT];
-    ssprintf(buf, "Combat damage only  : %d\n\r", tot_dam);
+    buf = fmt("Combat damage only  : %d\n\r") % tot_dam;
     str += buf;
     ssprintf(buf, "\tMob combat damage taken    : %ld   (%5.2f%%)\n\r", 
          stats.combat_damage[MOB_STAT], (tot_dam ? (100.0 * stats.combat_damage[MOB_STAT] / tot_dam) : 0));
@@ -353,7 +353,7 @@ void TBeing::doGamestats(const sstring &arg)
     str += buf;
 
     int tot_ac = stats.ac_absorb[MOB_STAT] + stats.ac_absorb[PC_STAT];
-    ssprintf(buf, "AC  damage absorbed : %d\n\r", tot_ac);
+    buf = fmt("AC  damage absorbed : %d\n\r") % tot_ac;
     str += buf;
 
     int mob_dam = stats.ac_absorb[MOB_STAT] + stats.combat_damage[MOB_STAT];
@@ -373,7 +373,7 @@ void TBeing::doGamestats(const sstring &arg)
     str += buf;
 
     long tot_blows = stats.combat_blows[PC_STAT] + stats.combat_blows[MOB_STAT];
-    ssprintf(buf, "Total Combat blows        : %ld\n\r", tot_blows);
+    buf = fmt("Total Combat blows        : %ld\n\r") % tot_blows;
     str += buf;
     ssprintf(buf, "\tMob combat blows           : %ld   (%5.2f%%)\n\r", 
          stats.combat_blows[MOB_STAT], (tot_blows ? (100.0 * stats.combat_blows[MOB_STAT] / tot_blows) : 0));
@@ -437,36 +437,32 @@ void TBeing::doGamestats(const sstring &arg)
               (100.0 * stats.combat_crit_fail_pass / (tot_blows - tot_hits))));
     str += buf;
     str += "\n\r";
-    ssprintf(buf, "Mobiles have tried to aggro : %d times.\n\r", stats.aggro_attempts);
+    buf = fmt("Mobiles have tried to aggro : %d times.\n\r") % stats.aggro_attempts;
     str += buf;
-    ssprintf(buf, "Mobiles have aggro'd        : %d times.\n\r", stats.aggro_successes);
+    buf = fmt("Mobiles have aggro'd        : %d times.\n\r") % stats.aggro_successes;
     str += buf;
     if (desc)
       desc->page_string(str, SHOWNOW_NO, ALLOWREP_YES);
     return;
   } else if (is_abbrev(buf, "equipment")) {
-    sendTo("Current Equipment Load Modifier : %4.2f\n\r", stats.equip);
-    sendTo("Current Max-Exist Modifier      : %4.2f\n\r", stats.max_exist);
-    sendTo("Current Mob-Money Modifier      : %4.2f\n\r", gold_modifier[GOLD_INCOME].getVal());
-    sendTo("Current Mob-XP Modifier         : %4.2f\n\r", stats.xp_modif);
-    sendTo("Current Damage Modifier         : %4.2f\n\r", stats.damage_modifier);
+    sendTo(fmt("Current Equipment Load Modifier : %4.2f\n\r") % stats.equip);
+    sendTo(fmt("Current Max-Exist Modifier      : %4.2f\n\r") % stats.max_exist);
+    sendTo(fmt("Current Mob-Money Modifier      : %4.2f\n\r") % gold_modifier[GOLD_INCOME].getVal());
+    sendTo(fmt("Current Mob-XP Modifier         : %4.2f\n\r") % stats.xp_modif);
+    sendTo(fmt("Current Damage Modifier         : %4.2f\n\r") % stats.damage_modifier);
     return;
   } else if (is_abbrev(buf, "trivia")) {
-    sendTo("Average HP regen              : %4.2f  (attempts : %d)\n\r",
-        (stats.hit_gained_attempts == 0 ? 0.0 :
-        ((float) stats.hit_gained / (float) stats.hit_gained_attempts)),
+    sendTo(fmt("Average HP regen              : %4.2f  (attempts : %d)\n\r") %        (stats.hit_gained_attempts == 0 ? 0.0 :
+        ((float) stats.hit_gained / (float) stats.hit_gained_attempts)) %
         stats.hit_gained_attempts);
-    sendTo("Average MV regen              : %4.2f  (attempts : %d)\n\r",
-        (stats.move_gained_attempts == 0 ? 0.0 :
-        ((float) stats.move_gained / (float) stats.move_gained_attempts)),
+    sendTo(fmt("Average MV regen              : %4.2f  (attempts : %d)\n\r") %        (stats.move_gained_attempts == 0 ? 0.0 :
+        ((float) stats.move_gained / (float) stats.move_gained_attempts)) %
         stats.move_gained_attempts);
-    sendTo("Average mana regen            : %4.2f  (attempts : %d)\n\r",
-        (stats.mana_gained_attempts == 0 ? 0.0 :
-        ((float) stats.mana_gained / (float) stats.mana_gained_attempts)),
+    sendTo(fmt("Average mana regen            : %4.2f  (attempts : %d)\n\r") %        (stats.mana_gained_attempts == 0 ? 0.0 :
+        ((float) stats.mana_gained / (float) stats.mana_gained_attempts)) %
         stats.mana_gained_attempts);
-    sendTo("Average piety regen           : %4.2f  (attempts : %d)\n\r",
-        (stats.piety_gained_attempts == 0 ? 0.0 :
-        (stats.piety_gained / (float) stats.piety_gained_attempts)),
+    sendTo(fmt("Average piety regen           : %4.2f  (attempts : %d)\n\r") %        (stats.piety_gained_attempts == 0 ? 0.0 :
+        (stats.piety_gained / (float) stats.piety_gained_attempts)) %
         stats.piety_gained_attempts);
     return;
   } else if (is_abbrev(buf, "levels")) {
@@ -476,13 +472,13 @@ void TBeing::doGamestats(const sstring &arg)
     }
     lev = convertTo<int>(buf2);
     if ((lev >= 0) && (lev < 70)) {
-      sendTo("Mobile Deaths for level %d, %ld\n\r", lev, stats.deaths[lev][1]);
-      sendTo("PC  Deaths for level %d, %ld\n\r", lev, stats.deaths[lev][0]);
+      sendTo(fmt("Mobile Deaths for level %d, %ld\n\r") % lev % stats.deaths[lev][1]);
+      sendTo(fmt("PC  Deaths for level %d, %ld\n\r") % lev % stats.deaths[lev][0]);
 
       if (lev >= 1 && lev <= 50) {
         sendTo("PC Leveling Data:\n\r");
         unsigned int factor = secs_to_level(lev);
-        sendTo("Desired leveling time: %s\n\r",
+        sendTo(fmt("Desired leveling time: %s\n\r") %
            secsToString(factor).c_str());
 
         for (i=0;i<MAX_CLASSES;i++) {
@@ -490,9 +486,9 @@ void TBeing::doGamestats(const sstring &arg)
           if (stats.levels[i][lev-1])
             factor = SECS_PER_REAL_MIN * stats.time_levels[i][lev-1] / stats.levels[i][lev-1];
 
-          sendTo("Class: %-10.10s :    number %3d,  avg. time: %s\n\r",
-            classInfo[i].name.c_str(), stats.levels[i][lev-1],
-            secsToString(factor).c_str());
+          sendTo(fmt("Class: %-10.10s :    number %3d,  avg. time: %s\n\r") %
+            classInfo[i].name % stats.levels[i][lev-1] %
+            secsToString(factor));
         }
       }
       return;

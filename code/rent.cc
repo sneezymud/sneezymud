@@ -985,9 +985,9 @@ void TBeing::addObjCost(TBeing *re, TObj *obj, objCost *cost, sstring &str)
         str += buf;
     } else if (!silent && re) {
         if (!FreeRent) 
-	  sendTo(COLOR_OBJECTS, "%-30s : %d talens/day\n\r", obj->getName(), temp);
+	  sendTo(COLOR_OBJECTS, fmt("%-30s : %d talens/day\n\r") % obj->getName() % temp);
 	else
-	  sendTo(COLOR_OBJECTS, "%-30s \n\r", obj->getName());
+	  sendTo(COLOR_OBJECTS, fmt("%-30s \n\r") % obj->getName());
 
     }
     if (temp<=100)
@@ -1065,7 +1065,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
 	str += buf;
       } else if (!silent) {
 	if (!FreeRent) 
-	  sendTo(COLOR_OBJECTS, "%-30s : %d talens/day   ********** Storage fee \n\r", ch->getName(), actual_cost);
+	  sendTo(COLOR_OBJECTS, fmt("%-30s : %d talens/day   ********** Storage fee \n\r") % ch->getName() % actual_cost);
         else
           sprintf(buf, "%-30s - Pet/Charm/Thrall/Mount \n\r", ch->getName());
 
@@ -1116,7 +1116,7 @@ bool TBeing::recepOffer(TBeing *recep, objCost *cost)
   }
   if (recep && hasClass(CLASS_MONK) && ((cost->no_carried-cost->lowrentobjs) > 35)) {
     sendTo("You remember your vow not to carry over 35 items, and change your mind.\n\r");
-    sendTo("You are currently carrying %d items.\n\r", cost->no_carried-cost->lowrentobjs);
+    sendTo(fmt("You are currently carrying %d items.\n\r") % (cost->no_carried-cost->lowrentobjs));
     return FALSE;
   }
   if (recep) {
@@ -1288,7 +1288,7 @@ void TRoom::saveItems(const sstring &)
   signed char i;
   rentHeader st;
 
-  ssprintf(filepath, "%s/%d", ROOM_SAVE_PATH, number);
+  filepath = fmt("%s/%d") % ROOM_SAVE_PATH % number;
 
   if (!(fp = fopen(filepath.c_str(), "w+b"))) {
     vlogf(LOG_BUG, "Error saving room [%d] items.", number);
@@ -1332,7 +1332,7 @@ void TRoom::loadItems()
   int reset;
   unsigned char version;
 
-  ssprintf(filepath, "%s/%d", ROOM_SAVE_PATH, number);
+  filepath = fmt("%s/%d") % ROOM_SAVE_PATH % number;
   if (!(fp = fopen(filepath.c_str(), "r+b"))) 
     return;
   
@@ -2191,8 +2191,7 @@ void TPerson::loadRent()
 
     int total_rent=(timegold + gone)>st.total_cost?st.total_cost:(timegold + gone);
     if (!FreeRent)
-      sendTo("You ran up charges of %d talen%s in rent.\n\r", total_rent,
-      ((total_rent) == 1) ? "" : "s");
+      sendTo(fmt("You ran up charges of %d talen%s in rent.\n\r") % total_rent %      (((total_rent) == 1) ? "" : "s"));
     addToMoney(-(total_rent), GOLD_RENT);
 
 
@@ -2353,7 +2352,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, TThing *tList, int
     }
   }
 
-  ssprintf(tBuffer, "%%-%ds : ", (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str()))));
+  tBuffer = fmt("%%-%ds : ") % (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str())));
 
   if (isRentable()) {
     tBuffer+="%5d talens/day";
@@ -2368,7 +2367,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, TThing *tList, int
       if (lCount == 1)
 	tString+="\n\r";
       else {
-	ssprintf(tBuffer, "  x%3d\n\r", lCount);
+	tBuffer = fmt("  x%3d\n\r") % lCount;
 	tString+=tBuffer;
       }
     } else {
@@ -2376,7 +2375,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, TThing *tList, int
       if (lCount == 1)
 	tString+="\n\r";
       else {
-	ssprintf(tBuffer, "  [%5dx%3d]\n\r", max(0, rentCost()), lCount);
+	tBuffer = fmt("  [%5dx%3d]\n\r") % max(0, rentCost()) % lCount;
 	tString+=tBuffer;
       }
     }
@@ -2390,7 +2389,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, TThing *tList, int
     if (lCount == 1)
       tString+="\n\r";
     else {
-      ssprintf(tBuffer, "      [x%3d]\n\r", lCount);
+      tBuffer = fmt("      [x%3d]\n\r") % lCount;
       tString+=tBuffer;
     }
 

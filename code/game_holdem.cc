@@ -167,34 +167,34 @@ sstring HoldemGame::handValToStr(int val){
   
   switch((int)((float)val/15.0)){
     case 0:
-      ssprintf(msg, "high card %s", cards_names[val%15].c_str());
+      msg = fmt("high card %s") % cards_names[val%15];
       break;
     case 1:
-      ssprintf(msg, "a pair of %ss", cards_names[val%15].c_str());
+      msg = fmt("a pair of %ss") % cards_names[val%15];
       break;
     case 2:
-      ssprintf(msg, "two pair, high pair %ss", cards_names[val%15].c_str());
+      msg = fmt("two pair, high pair %ss") % cards_names[val%15];
       break;
     case 3:
-      ssprintf(msg, "three of a kind, %ss", cards_names[val%15].c_str());
+      msg = fmt("three of a kind, %ss") % cards_names[val%15];
       break;
     case 4:
-      ssprintf(msg, "a straight, high card %s", cards_names[val%15].c_str());
+      msg = fmt("a straight, high card %s") % cards_names[val%15];
       break;
     case 5:
-      ssprintf(msg, "a flush, high card %s", cards_names[val%15].c_str());
+      msg = fmt("a flush, high card %s") % cards_names[val%15];
       break;
     case 6:
-      ssprintf(msg, "a full house, high card %s", cards_names[val%15].c_str());
+      msg = fmt("a full house, high card %s") % cards_names[val%15];
       break;
     case 7:
-      ssprintf(msg, "four of a kind, %ss", cards_names[val%15].c_str());
+      msg = fmt("four of a kind, %ss") % cards_names[val%15];
       break;
     case 8:
-      ssprintf(msg, "a straight flush, high card %s", cards_names[val%15].c_str());
+      msg = fmt("a straight flush, high card %s") % cards_names[val%15];
       break;
     case 9:
-      ssprintf(msg, "a royal flush", cards_names[val%15].c_str());
+      msg = fmt("a royal flush") % cards_names[val%15];
       break;
   }
 
@@ -223,14 +223,14 @@ void HoldemGame::showdown(TBeing *ch)
 	hands[i]=handValue(players[i]);
 
 	act("$n's hand was:", FALSE, players[i]->ch, 0, 0, TO_ROOM);
-	ssprintf(buf, "%s", players[i]->hand[0]->getName());
+	buf = fmt("%s") % players[i]->hand[0]->getName();
 	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
-	ssprintf(buf, "%s", players[i]->hand[1]->getName());
+	buf = fmt("%s") % players[i]->hand[1]->getName();
 	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
-	ssprintf(buf, "$n has %s.\n\r", handValToStr(hands[i]).c_str());
+	buf = fmt("$n has %s.\n\r") % handValToStr(hands[i]);
 	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
 
-	ssprintf(buf, "You have %s.\n\r", handValToStr(hands[i]).c_str());
+	buf = fmt("You have %s.\n\r") % handValToStr(hands[i]);
 	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_CHAR);
 
 	players[i]->allin=false;
@@ -271,9 +271,9 @@ void HoldemGame::showdown(TBeing *ch)
 	}
       }
       
-      ssprintf(buf, "$n has %i chips left.", tcount);
+      buf = fmt("$n has %i chips left.") % tcount;
       act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
-      ssprintf(buf, "You have %i chips left.", tcount);
+      buf = fmt("You have %i chips left.") % tcount;
       act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_CHAR);
       tcount=0;
     }
@@ -502,8 +502,8 @@ void HoldemGame::peek(const TBeing *ch)
     return;
 
   if(last_bet){
-    ch->sendTo(COLOR_BASIC, "You peek at the pot and see: %s. [%i]\n\r\n\r",
-	       obj_index[real_object(last_bet)].short_desc, 
+    ch->sendTo(COLOR_BASIC, fmt("You peek at the pot and see: %s. [%i]\n\r\n\r") %
+	       obj_index[real_object(last_bet)].short_desc % 
 	       (int)(bet/obj_index[real_object(last_bet)].value));
   }
 
@@ -520,11 +520,11 @@ void HoldemGame::peek(const TBeing *ch)
     for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
       if(players[i] && players[i]->hand[0] &&
 	 players[i]->hand[1] && players[i]->name != ch->name){
-	ch->sendTo(COLOR_BASIC, "\n\rYou peek at %s's hand:\n\r",
+	ch->sendTo(COLOR_BASIC, fmt("\n\rYou peek at %s's hand:\n\r") %
 		   players[i]->name.c_str());
-	ch->sendTo(COLOR_BASIC, "%s\n\r", players[i]->hand[0]->getName());
-	ch->sendTo(COLOR_BASIC, "%s\n\r", players[i]->hand[1]->getName());
-	ch->sendTo(COLOR_BASIC, "%s has %s.\n\r", players[i]->name.c_str(),
+	ch->sendTo(COLOR_BASIC, fmt("%s\n\r") % players[i]->hand[0]->getName());
+	ch->sendTo(COLOR_BASIC, fmt("%s\n\r") % players[i]->hand[1]->getName());
+	ch->sendTo(COLOR_BASIC, fmt("%s has %s.\n\r") % players[i]->name %
 		   handValToStr(handValue(players[i])).c_str());
       }
     }
@@ -539,8 +539,8 @@ void HoldemGame::peek(const TBeing *ch)
   tmp = getPlayer(ch->name);
   if(tmp && tmp->hand[0] && tmp->hand[1]){
     ch->sendTo(COLOR_BASIC, "You peek at your hand:\n\r");
-    ch->sendTo(COLOR_BASIC, "%s\n\r", tmp->hand[0]->getName());
-    ch->sendTo(COLOR_BASIC, "%s\n\r", tmp->hand[1]->getName());
+    ch->sendTo(COLOR_BASIC, fmt("%s\n\r") % tmp->hand[0]->getName());
+    ch->sendTo(COLOR_BASIC, fmt("%s\n\r") % tmp->hand[1]->getName());
   }  
 
   if(community[0]){
@@ -548,7 +548,7 @@ void HoldemGame::peek(const TBeing *ch)
 
     for(int i=0;i<5;++i){
       if(community[i]){
-	ch->sendTo(COLOR_BASIC, "%s\n\r", community[i]->getName());
+	ch->sendTo(COLOR_BASIC, fmt("%s\n\r") % community[i]->getName());
       }
     }
   }
@@ -728,17 +728,17 @@ void HoldemGame::flop(TBeing *ch)
   act("The flop is:", FALSE, ch, 0, 0, TO_CHAR);
   
   community[0]=deck.draw();
-  ssprintf(buf, "%s", community[0]->getName());
+  buf = fmt("%s") % community[0]->getName();
   act(buf, FALSE, ch, 0, 0, TO_ROOM);
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
   
   community[1]=deck.draw();
-  ssprintf(buf, "%s", community[1]->getName());
+  buf = fmt("%s") % community[1]->getName();
   act(buf, FALSE, ch, 0, 0, TO_ROOM);
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
   
   community[2]=deck.draw();
-  ssprintf(buf, "%s", community[2]->getName());
+  buf = fmt("%s") % community[2]->getName();
   act(buf, FALSE, ch, 0, 0, TO_ROOM);
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
   
@@ -767,7 +767,7 @@ void HoldemGame::turn(TBeing *ch)
   act("The turn is:", FALSE, ch, 0, 0, TO_CHAR);
   
   community[3]=deck.draw();
-  ssprintf(buf, "%s", community[3]->getName());
+  buf = fmt("%s") % community[3]->getName();
   act(buf, FALSE, ch, 0, 0, TO_ROOM);
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
 
@@ -795,7 +795,7 @@ void HoldemGame::river(TBeing *ch)
   act("The river is:", FALSE, ch, 0, 0, TO_CHAR);
   
   community[4]=deck.draw();
-  ssprintf(buf, "%s", community[4]->getName());
+  buf = fmt("%s") % community[4]->getName();
   act(buf, FALSE, ch, 0, 0, TO_ROOM);
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
   
@@ -915,9 +915,9 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
   ch->doSave(SILENT_YES);
   
   sstring buf;
-  ssprintf(buf, "$n bets %s.", chip->getName());
+  buf = fmt("$n bets %s.") % chip->getName();
   act(buf, FALSE, ch, 0, 0, TO_ROOM);
-  ssprintf(buf, "You bet %s.", chip->getName());
+  buf = fmt("You bet %s.") % chip->getName();
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
   
   (*chip)--;
@@ -943,11 +943,11 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
     
     card=deck.draw();
     players[i]->hand[0]=card;
-    players[i]->ch->sendTo(COLOR_BASIC, "%s\n\r", card->getName());
+    players[i]->ch->sendTo(COLOR_BASIC, fmt("%s\n\r") % card->getName());
     
     card=deck.draw();
     players[i]->hand[1]=card;
-    players[i]->ch->sendTo(COLOR_BASIC, "%s\n\r", card->getName());
+    players[i]->ch->sendTo(COLOR_BASIC, fmt("%s\n\r") % card->getName());
   }
     
   // move the bet to the next person

@@ -143,8 +143,8 @@ sstring TOpal::statObjInfo() const
 void TOpal::describeObjectSpecifics(const TBeing *ch) const
 {
   double diff = (double) ((double) psGetMana() / (double) psGetMaxMana());
-  ch->sendTo(COLOR_OBJECTS,"It appears %s is %s.\n\r",
-	     sstring(getName()).uncap().c_str(),
+  ch->sendTo(COLOR_OBJECTS,fmt("It appears %s is %s.\n\r") %
+	     sstring(getName()).uncap() %
          ((diff <= 0.0) ? "completely uncharged" :
           ((diff >= 1.0) ? "fully charged" :
           ((diff >= 0.8) ? "almost fully charged" :

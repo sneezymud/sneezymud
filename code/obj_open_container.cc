@@ -186,7 +186,7 @@ void TOpenContainer::changeObjValue2(TBeing *ch)
 void TOpenContainer::describeContains(const TBeing *ch) const
 {
   if (getStuff() && !isClosed())
-    ch->sendTo(COLOR_OBJECTS, "%s seems to have something in it...\n\r",
+    ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have something in it...\n\r") %
 	       sstring(getName()).cap().c_str());
 }
 
@@ -472,8 +472,8 @@ void TOpenContainer::lookObj(TBeing *ch, int bits) const
   if (carryVolumeLimit() && carryWeightLimit()) {
     // moneypouches are occasionally overfilled, so we will just force the
     // info to look right...
-    ch->sendTo("%d%% full, %d%% loaded.\n\r",
-      min(100, getCarriedVolume() * 100 / carryVolumeLimit()),
+    ch->sendTo(fmt("%d%% full, %d%% loaded.\n\r") %
+      min(100, getCarriedVolume() * 100 / carryVolumeLimit()) %
       min(100, (int) (getCarriedWeight() * 100.0 / carryWeightLimit())));
   } else {
     vlogf(LOG_BUG, "Problem in look in for object: (%s:%d), check vol/weight limit", getName(), objVnum());

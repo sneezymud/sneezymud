@@ -121,7 +121,7 @@ int lava_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   if ((cmd != CMD_GENERIC_PULSE) || number(0, 9))
     return FALSE;
 
-  rp->sendTo("A scorching burst of lava spits from a crevice in the %s!\n\r", rp->describeGround().c_str());
+  rp->sendTo(fmt("A scorching burst of lava spits from a crevice in the %s!\n\r") % rp->describeGround());
 
 #if 0
   for (k = rp->contents; k; k = next) {
@@ -277,7 +277,7 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
 #if 0
     if (ch->hasClass(CLASS_MONK) && 
         ((ch->getBank() + money) > MONK_BANK_LIMIT)) {
-      ch->sendTo("Your vows forbid you to retain personal wealth in excess of %d talens.\n\r", MONK_BANK_LIMIT);
+      ch->sendTo(fmt("Your vows forbid you to retain personal wealth in excess of %d talens.\n\r") % MONK_BANK_LIMIT);
       return TRUE;
     }
 #endif
@@ -290,7 +290,7 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
       ch->sendTo("Go away, you bother me.\n\r");
       return TRUE;
     } else if ((money + ch->getBank()) > bankLimit(ch)) {
-      ch->sendTo("I'm sorry, regulations only allow us to ensure %d talens at your present level.\n\r", bankLimit(ch));
+      ch->sendTo(fmt("I'm sorry, regulations only allow us to ensure %d talens at your present level.\n\r") % bankLimit(ch));
       money = bankLimit(ch) - ch->getBank();
 
       if (money <= 0) {
@@ -298,13 +298,13 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
         return TRUE;
       }
 
-      ch->sendTo("You can deposit at most %d more talen%s.\n\r",
-                 money, (money > 1 ? "s" : ""));
+      ch->sendTo(fmt("You can deposit at most %d more talen%s.\n\r") %
+                 money % (money > 1 ? "s" : ""));
     }
     ch->sendTo("Thank you.\n\r");
     ch->addToMoney(-money, GOLD_XFER);
     ch->setBank(ch->getBank() + money);
-    ch->sendTo("Your balance is %d.\n\r", ch->getBank());
+    ch->sendTo(fmt("Your balance is %d.\n\r") % ch->getBank());
     return TRUE;
     // deposit
   } else if (cmd == CMD_WITHDRAW) {
@@ -327,7 +327,7 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
       ch->sendTo("Thank you.\n\r");
       ch->addToMoney(money, GOLD_XFER);
       ch->setBank(ch->getBank() - money);
-      ch->sendTo("Your balance is %d.\n\r", ch->getBank());
+      ch->sendTo(fmt("Your balance is %d.\n\r") % ch->getBank());
       return TRUE;
     }
   } else if (cmd == CMD_BALANCE) {
@@ -336,7 +336,7 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
       return TRUE;
     }
 
-    ch->sendTo("Your balance is %d.\n\r", ch->getBank());
+    ch->sendTo(fmt("Your balance is %d.\n\r") % ch->getBank());
     return TRUE;
   } else if (cmd == CMD_TITHE) {
     if (!ch->isPc()) {
@@ -353,7 +353,7 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
       }
       FactionInfo[ch->getFaction()].faction_wealth += money;
       ch->addToMoney(-money, GOLD_TITHE);
-      ch->sendTo("You withdraw %d talens from the faction treasury.\n\r", -money);
+      ch->sendTo(fmt("You withdraw %d talens from the faction treasury.\n\r") % -money);
       vlogf(LOG_SILENT, "%s tithe withdraw %d talens from %s", ch->getName(), -money, FactionInfo[ch->getFaction()].faction_name);
       return TRUE;
     } else if (money < 0) {
@@ -364,7 +364,7 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
       return TRUE;
     } else {
       if (ch->isUnaff()) {
-        ch->sendTo("No treasury exists for %s.\n\r",
+        ch->sendTo(fmt("No treasury exists for %s.\n\r") %
               FactionInfo[FACT_NONE].faction_name);
         return TRUE;
       }
@@ -375,7 +375,7 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
 
       FactionInfo[ch->getFaction()].faction_wealth += money;
       ch->addToMoney(-money, GOLD_TITHE);
-      ch->sendTo("You tithe %d talen%s to the faction treasury.\n\r", money, (money == 1 ? "" : "s"));
+      ch->sendTo(fmt("You tithe %d talen%s to the faction treasury.\n\r") % money % (money == 1 ? "" : "s"));
       vlogf(LOG_SILENT, "%s tithe deposit %d talens to %s", ch->getName(), money, FactionInfo[ch->getFaction()].faction_name);
       ch->sendTo("Your deities thank you.\n\r");
       return TRUE;

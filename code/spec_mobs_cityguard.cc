@@ -16,7 +16,7 @@ sstring guardShout(TBeing *ch){
       break;
     case 6:
       if (targVis) {
-	ssprintf(s, "One of these days, %s, POW!  ZOOM!  To the moon!", ch->pers(ch->fight()));
+	s = fmt("One of these days, %s, POW!  ZOOM!  To the moon!") % ch->pers(ch->fight());
 	break;
       }
     case 7:
@@ -44,28 +44,28 @@ sstring guardShout(TBeing *ch){
       break;
     case 20:
       if (targVis) {
-	ssprintf(s, "All these HORTS like %s will die to me and my COHORTS!!", ch->pers(ch->fight()));
+	s = fmt("All these HORTS like %s will die to me and my COHORTS!!") % ch->pers(ch->fight());
 	break;
       }
     case 21:
     case 22:
     case 23:
       if (targVis) {
-	ssprintf(s, "I need help! %s is attacking me at %s!", ch->pers(ch->fight()), ch->roomp->name);
+	s = fmt("I need help! %s is attacking me at %s!") % ch->pers(ch->fight()) % ch->roomp->name;
 	break;
       }
     case 24:
     case 25:
     case 26:
       if (targVis) {
-	ssprintf(s, "%s, I'm gonna rip off your head and puke down your neck!", ch->pers(ch->fight()));
+	s = fmt("%s, I'm gonna rip off your head and puke down your neck!") % ch->pers(ch->fight());
 	break;
       }
     case 27:
     case 28:
     case 29:
       if (targVis) {
-	ssprintf(s, "%s must think %s is pretty tough to tangle with me!!", ch->pers(ch->fight()), ch->fight()->hssh());
+	s = fmt("%s must think %s is pretty tough to tangle with me!!") % ch->pers(ch->fight()) % ch->fight()->hssh();
 	break;
       }
     case 30:
@@ -84,14 +84,14 @@ sstring guardShout(TBeing *ch){
     case 39:
     case 40:
     case 41:
-      ssprintf(s, "I need some backup here, come to %s!", ch->roomp->getName());
+      s = fmt("I need some backup here, come to %s!") % ch->roomp->getName();
       break;
     case 42:
     case 43:
     case 44:
     case 45:
       if (targVis) {
-	ssprintf(s, "Time to die, %s.", ch->pers(ch->fight()));
+	s = fmt("Time to die, %s.") % ch->pers(ch->fight());
 	break;
       }
     case 46:
@@ -102,13 +102,13 @@ sstring guardShout(TBeing *ch){
     case 51:
     case 52:
       if (targVis) {
-	ssprintf(s, "You're dead meat, %s!", ch->pers(ch->fight()));
+	s = fmt("You're dead meat, %s!") % ch->pers(ch->fight());
 	break;
       }
     case 53:
     case 54:
       if (targVis) {
-	ssprintf(s, "The corpse of %s is about to be made available for looting at %s!", ch->pers(ch->fight()), ch->roomp->name);
+	s = fmt("The corpse of %s is about to be made available for looting at %s!") % ch->pers(ch->fight()) % ch->roomp->name;
 	break;
       }
     case 55:
@@ -120,11 +120,11 @@ sstring guardShout(TBeing *ch){
     case 59:
     case 60:
       if (targVis) {
-	ssprintf(s, "Clearly, %s wants to die!", ch->pers(ch->fight()));
+	s = fmt("Clearly, %s wants to die!") % ch->pers(ch->fight());
 	break;
       }
     case 61:
-      ssprintf(s, "Hey I'm kicking %s's ass right now...anyone want to join me?!", ch->pers(ch->fight()));
+      s = fmt("Hey I'm kicking %s's ass right now...anyone want to join me?!") % ch->pers(ch->fight());
       break;
     case 62:
     case 63:
@@ -136,24 +136,24 @@ sstring guardShout(TBeing *ch){
     case 65:
     case 66:
       if (targVis) {
-	ssprintf(s, "Foolish %s thinks %s can beat me!", ch->pers(ch->fight()), ch->fight()->hssh());
+	s = fmt("Foolish %s thinks %s can beat me!") % ch->pers(ch->fight()) % ch->fight()->hssh();
 	break;
       }
     case 67:
     case 68:
     case 69:
       if (targVis) {
-	ssprintf(s, "You think you're tough, %s?  Take that!", ch->pers(ch->fight()));
+	s = fmt("You think you're tough, %s?  Take that!") % ch->pers(ch->fight());
 	break;
       }
     case 70:
     case 71:
     case 72:
-      ssprintf(s, "Help!  Criminals at %s!", ch->roomp->name);
+      s = fmt("Help!  Criminals at %s!") % ch->roomp->name;
       break;
     case 73:
       if (targVis) {
-	ssprintf(s, "Hey!! Come and check this out! %s is wearing pink chainmail! HAHAHAHAHA!!!", ch->pers(ch->fight()));
+	s = fmt("Hey!! Come and check this out! %s is wearing pink chainmail! HAHAHAHAHA!!!") % ch->pers(ch->fight());
 	break;
       }
     case 74:
@@ -161,7 +161,7 @@ sstring guardShout(TBeing *ch){
     case 76:
     case 77:
       if (targVis) {
-	ssprintf(s, "%s is going to have a VERY bad day once I finish with %s!", ch->pers(ch->fight()), ch->fight()->hmhr());
+	s = fmt("%s is going to have a VERY bad day once I finish with %s!") % ch->pers(ch->fight()) % ch->fight()->hmhr();
 	break;
       }
     case 78:
@@ -171,7 +171,7 @@ sstring guardShout(TBeing *ch){
       break;
     case 81:
       if (targVis) {
-	ssprintf(s, "%s's face is about to be stamped into 200 gorilla cookies!", ch->pers(ch->fight()));
+	s = fmt("%s's face is about to be stamped into 200 gorilla cookies!") % ch->pers(ch->fight());
 	break;
       }
     case 82:
@@ -179,7 +179,7 @@ sstring guardShout(TBeing *ch){
     case 84:
     case 85:
       if (targVis) {
-	ssprintf(s, "They'll be picking up pieces of %s for weeks when I get finished with %s!", ch->pers(ch->fight()), ch->fight()->hmhr());
+	s = fmt("They'll be picking up pieces of %s for weeks when I get finished with %s!") % ch->pers(ch->fight()) % ch->fight()->hmhr();
 	break;
       }
     case 86:
@@ -191,7 +191,7 @@ sstring guardShout(TBeing *ch){
     case 90:
     case 91:
       if (targVis) {
-	ssprintf(s, "I'm your worst nightmare, %s!", ch->pers(ch->fight()));
+	s = fmt("I'm your worst nightmare, %s!") % ch->pers(ch->fight());
 	break;
       }
     case 92:
@@ -206,7 +206,7 @@ sstring guardShout(TBeing *ch){
     case 97:
     case 98:
       if (targVis) {
-	ssprintf(s, "I hate it when newbies, like %s, attack me!", ch->pers(ch->fight()));
+	s = fmt("I hate it when newbies, like %s, attack me!") % ch->pers(ch->fight());
 	break;
       }
     case 99:
@@ -217,79 +217,79 @@ sstring guardShout(TBeing *ch){
     case 102:
     case 103:
       if (targVis) {
-	ssprintf(s, "It's time to remind %s just what a wimp %s is!", ch->pers(ch->fight()), ch->fight()->hssh());
+	s = fmt("It's time to remind %s just what a wimp %s is!") % ch->pers(ch->fight()) % ch->fight()->hssh();
 	break;
       }
     case 104:
     case 105:
       if (targVis) {
-	ssprintf(s, "It's time to remind %s just what the words 'You wish your wounds would stop BLEEDING so much mean!!!", ch->pers(ch->fight()));
+	s = fmt("It's time to remind %s just what the words 'You wish your wounds would stop BLEEDING so much mean!!!") % ch->pers(ch->fight());
 	break;
       }
     case 106:
     case 107:
     case 108:
     case 109:
-      ssprintf(s, "Ruffians at %s!", ch->roomp->name);
+      s = fmt("Ruffians at %s!") % ch->roomp->name;
       break;
     case 110:
     case 111:
     case 112:
       if (targVis) {
-	ssprintf(s, "%s is gonna die at my hands!", ch->pers(ch->fight()));
+	s = fmt("%s is gonna die at my hands!") % ch->pers(ch->fight());
 	break;
       }
     case 113:
     case 114:
     case 115:
       if (targVis) {
-	ssprintf(s, "Just wait until my friends get here, %s!", ch->pers(ch->fight()));
+	s = fmt("Just wait until my friends get here, %s!") % ch->pers(ch->fight());
 	break;
       }
     case 116:
       if (targVis) {
-	ssprintf(s, "%s fights like a wombat!", ch->pers(ch->fight()));
+	s = fmt("%s fights like a wombat!") % ch->pers(ch->fight());
 	break;
       }
     case 117:
       if (targVis) {
-	ssprintf(s, "%s's momma wears combat boots!", ch->pers(ch->fight()));
+	s = fmt("%s's momma wears combat boots!") % ch->pers(ch->fight());
 	break;
       }
     case 118:
     case 119:
     case 120:
       if (targVis) {
-	ssprintf(s, "When I get through with %s, %s'll wish %s'd never heard the name %s!", ch->pers(ch->fight()), ch->fight()->hssh(), ch->fight()->hssh(), MUD_NAME);
+	s = fmt("When I get through with %s, %s'll wish %s'd never heard the name %s!") % ch->pers(ch->fight()) % ch->fight()->hssh() % ch->fight()->hssh() % MUD_NAME;
 	break;
       }
     case 121:
     case 122:
-      ssprintf(s, "I need a cleric and two bags of marshmallows at %s....STAT!", ch->roomp->name);
+      s = fmt("I need a cleric and two bags of marshmallows at %s....STAT!") % ch->roomp->name;
       break;
     case 123:
     case 124:
     case 125:
       if (targVis) {
-	ssprintf(s, "Anybody want a piece of %s?  I'm tanking!", ch->pers(ch->fight()));
+	s = fmt("Anybody want a piece of %s?  I'm tanking!") % ch->pers(ch->fight());
 	break;
       }
     case 126:
     case 127:
       if (targVis) {
-	ssprintf(s, "I hope you brought your recall scrolls with you, %s!  Cuz' you ain't walking away from this one!", ch->pers(ch->fight()));
+	s = fmt("I hope you brought your recall scrolls with you, %s!  Cuz' you ain't walking away from this one!") % ch->pers(ch->fight());
 	break;
       }
     case 128:
     case 129:
     case 130:
       if (targVis) {
-	ssprintf(s, "Bandits and marauders at %s!  Help me destroy them!", ch->roomp->name);
+	s = fmt("Bandits and marauders at %s!  Help me destroy them!") % ch->roomp->name;
 	break;
       }
     case 131:
       if (targVis) {
-	ssprintf(s, "I'm gonna stomp %s's butt right out of %s!", ch->pers(ch->fight()), MUD_NAME);
+	s = fmt("I'm gonna stomp %s's butt right out of %s!") % ch->pers(ch->fight()) % MUD_NAME;
 	break;
       }
     case 132:
@@ -297,7 +297,7 @@ sstring guardShout(TBeing *ch){
     case 134:
     case 135:
       if (targVis) {
-	ssprintf(s, "%s is a bloody coward!", ch->pers(ch->fight()));
+	s = fmt("%s is a bloody coward!") % ch->pers(ch->fight());
 	break;
       }
     case 136:
@@ -306,7 +306,7 @@ sstring guardShout(TBeing *ch){
     case 139:
     case 140:
       if (targVis) {
-	ssprintf(s, "%s is going down!  HARD!", ch->pers(ch->fight()));
+	s = fmt("%s is going down!  HARD!") % ch->pers(ch->fight());
 	break;
       }    
     case 141:

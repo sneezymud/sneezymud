@@ -85,7 +85,7 @@ cmdTypeT searchForCommandNum(const char *argument)
 
 void TBeing::incorrectCommand() const
 {
-  sendTo("%sIncorrect%s command. Please see help files if you need assistance!\n\r", red(), norm());
+  sendTo(fmt("%sIncorrect%s command. Please see help files if you need assistance!\n\r") % red() % norm());
 }
 
 bool willBreakHide(cmdTypeT tCmd, bool isPre)

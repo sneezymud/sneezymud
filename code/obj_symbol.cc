@@ -251,13 +251,13 @@ int TSymbol::suggestedPrice() const
 
 void TSymbol::objMenu(const TBeing *ch) const
 {
-  ch->sendTo(VT_CURSPOS, 3, 1);
-  ch->sendTo("%sSuggested price:%s %d%s",
-             ch->purple(), ch->norm(), suggestedPrice(),
+  ch->sendTo(fmt(VT_CURSPOS) % 3 % 1);
+  ch->sendTo(fmt("%sSuggested price:%s %d%s") %
+             ch->purple() % ch->norm() % suggestedPrice() %
              (suggestedPrice() != obj_flags.cost ? " *" : ""));
-  ch->sendTo(VT_CURSPOS, 4, 1);
-  ch->sendTo("%sSymbol Level:%s %.1f",
-       ch->purple(), ch->norm(),
+  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
+  ch->sendTo(fmt("%sSymbol Level:%s %.1f") %
+       ch->purple() % ch->norm() %
        getSymbolLevel());
 }
 

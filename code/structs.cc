@@ -191,7 +191,7 @@ TBeing::~TBeing()
         REMOVE_BIT(k->specials.act, ACT_HUNTING);
 
         if (k->affectedBySpell(SKILL_TRACK)) {
-          k->sendTo(COLOR_MOBS, "You stop tracking %s.\n\r", getName());
+          k->sendTo(COLOR_MOBS, fmt("You stop tracking %s.\n\r") % getName());
           k->affectFrom(SKILL_TRACK);
           k->stopTask();
         }

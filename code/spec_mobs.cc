@@ -1238,7 +1238,7 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   if ((SWALLOWER_TO_ROOM_PROC[targetSwallower][3] != -1) &&
       (::number(1, 100) < SWALLOWER_TO_ROOM_PROC[targetSwallower][3])) {
-    vict->sendTo("%s chomps down upon you, biting you in two!!!!\n\r", myself->getName());
+    vict->sendTo(fmt("%s chomps down upon you, biting you in two!!!!\n\r") % myself->getName());
     act("$n's mawed corpse arrives tumbling down $N's throat!",
         FALSE, vict, 0, myself, TO_ROOM);
     vlogf(LOG_PROC, "%s killed by Belimus-swallow[%s] at %s (%d)",
@@ -2050,8 +2050,8 @@ void TBeing::throwChar(TBeing *v, dirTypeT dir, bool also, silentTypeT silent, b
       return;
     }
     if(!silent){
-      sendTo(COLOR_MOBS, "You push %s %s out of the room.\n\r", v->getName(), dirs[dir]);
-      v->sendTo(COLOR_MOBS, "%s pushes you %s out of the room.\n\r", sstring(getName()).cap().c_str(), dirs[dir]);
+      sendTo(COLOR_MOBS, fmt("You push %s %s out of the room.\n\r") % v->getName() % dirs[dir]);
+      v->sendTo(COLOR_MOBS, fmt("%s pushes you %s out of the room.\n\r") % sstring(getName()).cap() % dirs[dir]);
       sprintf(buf, "$N is pushed %s out of the room by $n.", dirs[dir]);
       act(buf, TRUE, this, 0, v, TO_NOTVICT);
     }
@@ -6069,7 +6069,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	  job->john->doAction("", CMD_GIGGLE);	  
 	  break;
 	case 4:
-	  ssprintf(tmp, "%s Do you swallow?", hookername.c_str());
+	  tmp = fmt("%s Do you swallow?") % hookername;
 	  job->john->doWhisper(tmp.c_str());
 	  myself->doEmote("looks startled and almost chokes.");
 	  myself->doAction(johnname, CMD_SLAP);
@@ -6748,8 +6748,8 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       sprintf(buf, "Thanks for your business, I'll take your %d talens payment in advance!", cost);
       me->doSay(buf);
       ch->addToMoney(-cost, GOLD_HOSPITAL);
-      ch->sendTo("%s concentrates deeply on %s.\n\r", me->getName(), item->getName());
-      ch->sendTo("%s conjours a cloud of smoke.\n\rInside the cloud of smoke you see...\n\r", me->getName());
+      ch->sendTo(fmt("%s concentrates deeply on %s.\n\r") % me->getName() % item->getName());
+      ch->sendTo(fmt("%s conjours a cloud of smoke.\n\rInside the cloud of smoke you see...\n\r") % me->getName());
       ch->statObjForDivman(item);
       sprintf(buf, "Thank you, %s, for your business! Please come again!", ch->getName());
       me->doSay(buf);
@@ -7525,7 +7525,7 @@ int konastisGuard(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
   }
 
   if(cmd == CMD_MOB_GIVEN_ITEM && o && (tdc=dynamic_cast<TDrinkCon *>(o))){
-    ssprintf(buf, "takes a sip from the %s.", tdc->getName());
+    buf = fmt("takes a sip from the %s.") % tdc->getName();
 
     switch(tdc->getDrinkType()){
       case LIQ_BEER:
@@ -7737,7 +7737,7 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
     act("<c>$n says,<z> \"A clue, hmm, a clue... ah, hmm, yes, if you answer this I'll know that my friend you have found:\"", 
       TRUE, tree, NULL, ch, TO_ROOM);
     sstring sayRiddle;
-    ssprintf(sayRiddle, "<c>$n says,<z> \"%s\"", riddles[whichRiddle].c_str());
+    sayRiddle = fmt("<c>$n says,<z> \"%s\"") % riddles[whichRiddle];
     act(sayRiddle, TRUE, tree, NULL, ch, TO_ROOM);
     sstring askForClue;
     ssprintf(askForClue, "<c>$n says,<z> \"You'll have to <g>tell<z> me the answer if you hope to pass.  I'll give you %d %s to guess.\"", 

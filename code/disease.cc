@@ -334,7 +334,7 @@ int disease_numbed(TBeing *victim, int message, affectedData *af)
         victim->remLimbFlags(slot, PART_PARALYZED); 
                                                                             
       if (victim->getPosition() > POSITION_DEAD) {
-        victim->sendTo("You feel the life come back to your %s!\n\r", victim->describeBodySlot(slot).c_str());
+        victim->sendTo(fmt("You feel the life come back to your %s!\n\r") % victim->describeBodySlot(slot));
       }
       break;                                                                    
     default:
@@ -380,7 +380,7 @@ int disease_bleeding(TBeing *victim, int message, affectedData *af)
             break;
           }
         }
-	victim->sendTo("You feel your energy drained as your blood drips out of your %s.\n\r",victim-> describeBodySlot(i).c_str());
+	victim->sendTo(fmt("You feel your energy drained as your blood drips out of your %s.\n\r") %victim-> describeBodySlot(i));
 	sprintf(buf, "$n looks stunned as blood drips from $s %s.", victim->describeBodySlot(i).c_str());
 
 	act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
@@ -404,7 +404,7 @@ int disease_bleeding(TBeing *victim, int message, affectedData *af)
 	victim->remLimbFlags(i, PART_BLEEDING);
 
       if (victim->getPosition() > POSITION_DEAD) {
-        victim->sendTo("Your %s stops bleeding and clots!\n\r", victim->describeBodySlot(i).c_str());
+        victim->sendTo(fmt("Your %s stops bleeding and clots!\n\r") % victim->describeBodySlot(i));
         sprintf(buf, "$n's %s stops bleeding and clots!", victim->describeBodySlot(i).c_str());
         act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
       }
@@ -437,7 +437,7 @@ int disease_infection(TBeing *victim, int message, affectedData * af)
       }
 
       if (!number(0, 10)) {
-	victim->sendTo("Your %s shakes and twinges as the infection in it festers.\n\r", victim->describeBodySlot(slot).c_str());
+	victim->sendTo(fmt("Your %s shakes and twinges as the infection in it festers.\n\r") % victim->describeBodySlot(slot));
 	sprintf(buf, "$n's %s shakes and twinges as the infection in it festers.", victim->describeBodySlot(slot).c_str());
 	act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
         int rc = victim->hurtLimb(1, slot);
@@ -458,7 +458,7 @@ int disease_infection(TBeing *victim, int message, affectedData * af)
       victim->remLimbFlags(slot, PART_INFECTED);
 
       if (victim->getPosition() > POSITION_DEAD) {
-        victim->sendTo("Your %s stops twitching and heals!\n\r", victim->describeBodySlot(slot).c_str());
+        victim->sendTo(fmt("Your %s stops twitching and heals!\n\r") % victim->describeBodySlot(slot));
         sprintf(buf, "$n's %s stops twitching and heals!", victim->describeBodySlot(slot).c_str());
         act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
       }
@@ -559,7 +559,7 @@ int disease_frostbite(TBeing *victim, int message, affectedData *)
 	    victim->addToLimbFlags(i, PART_USELESS);
 	    sprintf(buf, "$n's %s takes on a gray-blue color as frost-bite sets in.", victim->describeBodySlot(i).c_str());
 	    act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
-	    victim->sendTo("Your %s feels numb and takes on a gray-blue color.  Looks like frostbite.\n\r", victim->describeBodySlot(i).c_str());
+	    victim->sendTo(fmt("Your %s feels numb and takes on a gray-blue color.  Looks like frostbite.\n\r") % victim->describeBodySlot(i));
 	  }
         }
 	break;

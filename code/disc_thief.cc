@@ -499,7 +499,7 @@ int disguise(TBeing *caster, char * buffer)
       continue;
 
     if(!*buffer){
-      caster->sendTo("%-25s", DisguiseList[i].name);
+      caster->sendTo(fmt("%-25s") % DisguiseList[i].name);
       if((column++)==2){
 	caster->sendTo("\n\r");
 	column=0;

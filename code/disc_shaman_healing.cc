@@ -21,8 +21,8 @@ static void repHealing2(TBeing *caster, TBeing *victim)
   sprintf(nameBuf,"%s",colorString(caster,caster->desc,nameBuf,NULL,COLOR_MOBS, TRUE).c_str());
 
   if (caster != victim) {
-    caster->sendTo(COLOR_SPELLS, "%s looks to be at <r>%.1f%%<z> HP.\n\r",
-       nameBuf, victim->getPercHit());
+    caster->sendTo(COLOR_SPELLS, fmt("%s looks to be at <r>%.1f%%<z> HP.\n\r") %
+       nameBuf % victim->getPercHit());
   }
 }
 
@@ -119,7 +119,7 @@ int castHealingGrasp(TBeing *caster, TBeing *victim)
       if (caster == victim)
         caster->sendTo(COLOR_SPELLS, "<p>You are fully healed so you cease the ritual.<z>\n\r");
       else
-        caster->sendTo(COLOR_SPELLS, "<p>%s <z><p>is fully healed so you cease the ritual.<z>\n\r", nameBuf);
+        caster->sendTo(COLOR_SPELLS, fmt("<p>%s <z><p>is fully healed so you cease the ritual.<z>\n\r") % nameBuf);
 
       act("$n stops $s healing ritual.", TRUE, caster, NULL, NULL, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
@@ -130,7 +130,7 @@ int castHealingGrasp(TBeing *caster, TBeing *victim)
       if (caster == victim)
         caster->sendTo(COLOR_SPELLS, "<p>You are fully healed so you cease the ritual.<z>\n\r");
       else 
-        caster->sendTo(COLOR_SPELLS, "<p>%s <z><p>is fully healed so you cease the ritual.<z>\n\r", nameBuf);
+        caster->sendTo(COLOR_SPELLS, fmt("<p>%s <z><p>is fully healed so you cease the ritual.<z>\n\r") % nameBuf);
       act("$n stops $s healing ritual.", TRUE, caster, NULL, NULL, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     }

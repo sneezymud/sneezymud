@@ -66,7 +66,7 @@ int lotteryTicket(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   ch->sendTo(COLOR_BASIC, buf.c_str());
 
-  ssprintf(buf, "%s\n\r%s", o->ex_description->description, buf.c_str());
+  buf = fmt("%s\n\r%s") % o->ex_description->description % buf;
   delete o->ex_description->description;
   o->ex_description->description=mud_str_dup(buf);
 

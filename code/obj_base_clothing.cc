@@ -97,19 +97,19 @@ bool TBaseClothing::isBarding() const
 
 void TBaseClothing::objMenu(const TBeing *ch) const
 {
-  ch->sendTo(VT_CURSPOS, 3, 1);
-  ch->sendTo("%sSuggested price:%s %d%s",
-             ch->purple(), ch->norm(), suggestedPrice(),
+  ch->sendTo(fmt(VT_CURSPOS) % 3 % 1);
+  ch->sendTo(fmt("%sSuggested price:%s %d%s") %
+             ch->purple() % ch->norm() % suggestedPrice() %
              (suggestedPrice() != obj_flags.cost ? " *" : ""));
-  ch->sendTo(VT_CURSPOS, 3, 25);
-  ch->sendTo("%sReal Level:%s %.2f",
-             ch->purple(), ch->norm(), armorLevel(ARMOR_LEV_REAL));
-  ch->sendTo(VT_CURSPOS, 3, 45);
-  ch->sendTo("%sAC Lev:%s %.2f",
-             ch->purple(), ch->norm(), armorLevel(ARMOR_LEV_AC));
-  ch->sendTo(VT_CURSPOS, 3, 60);
-  ch->sendTo("%sStr Lev:%s %.2f",
-             ch->purple(), ch->norm(), armorLevel(ARMOR_LEV_STR));
+  ch->sendTo(fmt(VT_CURSPOS) % 3 % 25);
+  ch->sendTo(fmt("%sReal Level:%s %.2f") %
+             ch->purple() % ch->norm() % armorLevel(ARMOR_LEV_REAL));
+  ch->sendTo(fmt(VT_CURSPOS) % 3 % 45);
+  ch->sendTo(fmt("%sAC Lev:%s %.2f") %
+             ch->purple() % ch->norm() % armorLevel(ARMOR_LEV_AC));
+  ch->sendTo(fmt(VT_CURSPOS) % 3 % 60);
+  ch->sendTo(fmt("%sStr Lev:%s %.2f") %
+             ch->purple() % ch->norm() % armorLevel(ARMOR_LEV_STR));
 }
 
 void TBaseClothing::evaluateMe(TBeing *ch) const
@@ -128,9 +128,9 @@ void TBaseClothing::evaluateMe(TBeing *ch) const
     ch->describeArmor(this, learn);
 
   if (ch->isImmortal()) {
-    ch->sendTo(COLOR_OBJECTS, "IMMORTAL EVAL: %s overall is rated as %.2f gear.\n\r", getName(), armorLevel(ARMOR_LEV_REAL));
-    ch->sendTo(COLOR_OBJECTS, "IMMORTAL EVAL: %s has structure of %.2f gear.\n\r", getName(), armorLevel(ARMOR_LEV_STR));
-    ch->sendTo(COLOR_OBJECTS, "IMMORTAL EVAL: %s has armor of %.2f gear.\n\r", getName(), armorLevel(ARMOR_LEV_AC));
+    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s overall is rated as %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_REAL));
+    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s has structure of %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_STR));
+    ch->sendTo(COLOR_OBJECTS, fmt("IMMORTAL EVAL: %s has armor of %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_AC));
   }
 }
 
@@ -145,8 +145,8 @@ void TBaseClothing::descMaxStruct(const TBeing *ch, int learn) const
   int maxstruct = GetApprox(getMaxStructPoints(), learn);
 
   strcpy(capbuf, ch->objs(this));
-  ch->sendTo(COLOR_OBJECTS,"%s seems to %s.\n\r",
-           cap(capbuf),
+  ch->sendTo(COLOR_OBJECTS,fmt("%s seems to %s.\n\r") %
+           cap(capbuf) %
           ((maxstruct >= 99) ? "be virtually indestructible" :
            ((maxstruct >= 95) ? "be very durable" :
            ((maxstruct >= 91) ? "be durable" :

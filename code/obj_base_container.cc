@@ -177,8 +177,8 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
 
   if (getall(arg1, newarg)) {                                 
     if (!searchLinkedListVis(ch, newarg, getStuff())) {            
-      ch->sendTo(COLOR_OBJECTS, "There are no \"%s\"'s visible in %s.\n\r",
-               newarg, getName());
+      ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible in %s.\n\r") %
+               newarg % getName());
       return TRUE;                                            
     }                                                         
     if (ch->getPosition() <= POSITION_SITTING) {              
@@ -224,8 +224,8 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     return TRUE;
   } else if ((p = getabunch(arg1, newarg))) {
     if (!searchLinkedListVis(ch, newarg, getStuff())) {
-      ch->sendTo(COLOR_OBJECTS, "There are no \"%s\"'s visible in %s.\n\r",
-              newarg, getName());
+      ch->sendTo(COLOR_OBJECTS, fmt("There are no \"%s\"'s visible in %s.\n\r") %
+              newarg % getName());
       return TRUE;
     }
     if (ch->getPosition() <= POSITION_SITTING) {

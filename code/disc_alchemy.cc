@@ -28,7 +28,7 @@ int identify(TBeing *caster, TObj *obj, int, byte bKnown)
     buf2=sstring(ItemInfo[obj->itemType()]->name).lower();
     buf=sstring(material_nums[obj->getMaterial()].mat_name).lower();
 
-    caster->sendTo(COLOR_OBJECTS, "You feel informed about %s...\n\rIt appears to be a kind of %s %s.\n\r", obj->getName(), buf.c_str(), buf2.c_str());
+    caster->sendTo(COLOR_OBJECTS, fmt("You feel informed about %s...\n\rIt appears to be a kind of %s %s.\n\r") % obj->getName() % buf % buf2);
     caster->sendTo("You feel it will last ");
 
     if ((obj->obj_flags.decay_time == -1) || (obj->obj_flags.decay_time > 800))
@@ -57,18 +57,17 @@ int identify(TBeing *caster, TObj *obj, int, byte bKnown)
       z = obj->getWeight();
 
     if ((z - (int) z) == 0.0) {
-      caster->sendTo("It seems to be about %d cubic inch%s in volume, and %d pound%s in weight.\n\r",
-              x, (x != 1) ? "es" : "",
-              (int) z, ((int) z != 1) ? "s" : "");
+      caster->sendTo(fmt("It seems to be about %d cubic inch%s in volume, and %d pound%s in weight.\n\r") %
+              x % ((x != 1) ? "es" : "") %
+              (int) z % (((int) z != 1) ? "s" : ""));
     } else if (z >= 1.0) {
-      caster->sendTo("It seems to be about %d cubic inch%s in volume, %d pound%s, %d drechel%s in weight.\n\r", 
-              x, (x != 1) ? "es" : "",
-              (int) (z), ((int) (z) != 1) ? "s" : "",
-              (int) (10.0 * (z - (int) z)), ((int) (10.0 * (z - (int) z)) != 1) ? "s" : "");
+      caster->sendTo(fmt("It seems to be about %d cubic inch%s in volume, %d pound%s, %d drechel%s in weight.\n\r") %
+		     x % ((x != 1) ? "es" : "") %
+		     (int) (z) % (((int) (z) != 1) ? "s" : "") %
+		     (int) (10.0 * (z - (int) z)) % (((int) (10.0 * (z - (int) z)) != 1) ? "s" : ""));
     } else {
-      caster->sendTo("It seems to be about %d cubic inch%s in volume, and %d drechel%s in weight.\n\r",
-              x, (x != 1) ? "es" : "",
-              (int) (10.0 * (z - (int) z)), ((int) (10.0 * (z - (int) z)) != 1) ? "s" : "");
+      caster->sendTo(fmt("It seems to be about %d cubic inch%s in volume, and %d drechel%s in weight.\n\r") % x % ((x != 1) ? "es" : "") %
+              (int) (10.0 * (z - (int) z)) % (((int) (10.0 * (z - (int) z)) != 1) ? "s" : ""));
     }
 
     if (obj->obj_flags.cost > 100)
@@ -89,18 +88,18 @@ int identify(TBeing *caster, TObj *obj, int, byte bKnown)
       caster->sendTo("You'd judge it to be completely worthless.\n\r");
 #if 0
     else if (x <= 0)
-      caster->sendTo("Although it looks worthless, you'd guess they'll charge you %d talen%s to rent it.\n\r", y, (y != 1) ? "s" : "");
+      caster->sendTo(fmt("Although it looks worthless, you'd guess they'll charge you %d talen%s to rent it.\n\r") % y % (y != 1) ? "s" : "");
     else if (y <= 0)
-      caster->sendTo("Although it looks worth at least %d talen%s, you guess its unrentable.\n\r", x, (x != 1) ? "s" : "");
+      caster->sendTo(fmt("Although it looks worth at least %d talen%s, you guess its unrentable.\n\r") % x % (x != 1) ? "s" : "");
     else
-      caster->sendTo("You'd judge its worth to be about %d talen%s.  Rent, around %d.\n\r", x, (x != 1) ? "s" : "", y);
+      caster->sendTo(fmt("You'd judge its worth to be about %d talen%s.  Rent, around %d.\n\r") % x % (x != 1) ? "s" : "" % y);
 #else
     else if(obj->max_exist <= 10 && x <= 0)
-      caster->sendTo("Although it looks worthless, you'd guess they'll charge you %d talen%s to rent it.\n\r", y, (y !=1) ? "s" : "");
+      caster->sendTo(fmt("Although it looks worthless, you'd guess they'll charge you %d talen%s to rent it.\n\r") % y % ((y !=1) ? "s" : ""));
     else if(obj->max_exist <= 10 && x > 0)
-      caster->sendTo("You'd judge its worth to be about %d talen%s.  Rent, around %d.\n\r", x, (x != 1) ? "s" : "", y);
+      caster->sendTo(fmt("You'd judge its worth to be about %d talen%s.  Rent, around %d.\n\r") % x % ((x != 1) ? "s" : "") % y);
     else
-      caster->sendTo("You'd judge its worth to be about %d talen%s.\n\r", x, (x != 1) ? "s" : "");
+      caster->sendTo(fmt("You'd judge its worth to be about %d talen%s.\n\r") % x % ((x != 1) ? "s" : ""));
 #endif
     return SPELL_SUCCESS;
   } else {
@@ -256,9 +255,9 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
 
   if (bSuccess(caster, bKnown, SPELL_DIVINATION)) {
     buf=obj->shortDescr;
-    caster->sendTo(COLOR_OBJECTS, "Your mind analyzes %s...\n\r", buf.uncap().c_str());
+    caster->sendTo(COLOR_OBJECTS, fmt("Your mind analyzes %s...\n\r") % buf.uncap());
 
-    caster->sendTo("%s\n\r", obj->statObjInfo().c_str());
+    caster->sendTo(fmt("%s\n\r") % obj->statObjInfo());
 
     obj->divinateMe(caster);
 
@@ -275,38 +274,38 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
         }
         if (obj->affected[i].location == APPLY_SPELL) {
           if (discArray[obj->affected[i].modifier])
-            caster->sendTo("   Affects:  %s: %s by %ld\n\r",
-                apply_types[obj->affected[i].location].name,
-                discArray[obj->affected[i].modifier]->name,
+            caster->sendTo(fmt("   Affects:  %s: %s by %ld\n\r") %
+                apply_types[obj->affected[i].location].name %
+                discArray[obj->affected[i].modifier]->name %
                 obj->affected[i].modifier2);
           else
             vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", obj->affected[i].modifier,
                   obj->getName());
         } else if (obj->affected[i].location == APPLY_DISCIPLINE) {
           if (discNames[obj->affected[i].modifier].practice)
-            caster->sendTo("   Affects:  %s: %s by %ld\n\r",
-                apply_types[obj->affected[i].location].name,
-                discNames[obj->affected[i].modifier].practice,
+            caster->sendTo(fmt("   Affects:  %s: %s by %ld\n\r") %
+                apply_types[obj->affected[i].location].name %
+                discNames[obj->affected[i].modifier].practice %
                 obj->affected[i].modifier2);
           else
             vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", obj->affected[i].modifier,
                   obj->getName());
 
         } else if (obj->affected[i].location == APPLY_IMMUNITY) {
-          caster->sendTo("   Affects:  %s: %s by %ld\n\r",
-            apply_types[obj->affected[i].location].name,
-            immunity_names[obj->affected[i].modifier],
+          caster->sendTo(fmt("   Affects:  %s: %s by %ld\n\r") %
+            apply_types[obj->affected[i].location].name %
+            immunity_names[obj->affected[i].modifier] %
             obj->affected[i].modifier2);
         } else {
-          caster->sendTo("   Affects:  %s by %ld\n\r",
-              apply_types[obj->affected[i].location].name,
+          caster->sendTo(fmt("   Affects:  %s by %ld\n\r") %
+              apply_types[obj->affected[i].location].name %
               obj->affected[i].modifier);
         }
       }
     }
 
     // seems silly, but the use of "%" in this text makes it necessary
-    caster->sendTo(COLOR_OBJECTS, "%s", describeMaterial(obj).c_str());
+    caster->sendTo(COLOR_OBJECTS, fmt("%s") % describeMaterial(obj));
 
     return SPELL_SUCCESS;
   } else {
@@ -507,15 +506,15 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
           } else {
             if (IS_SET(caster->desc->plr_color, PLR_COLOR_ROOM_NAME)) {
               if (hasColorStrings(NULL, obj->roomp->getName(), 2)) {
-                 caster->sendTo(COLOR_ROOM_NAME, "%s is in %s.\n\r", capbuf, caster->dynColorRoom(obj->roomp, 1, TRUE).c_str());
+                 caster->sendTo(COLOR_ROOM_NAME, fmt("%s is in %s.\n\r") % capbuf % caster->dynColorRoom(obj->roomp, 1, TRUE));
               } else {
-                caster->sendTo(COLOR_ROOM_NAME, "%s is in %s%s%s.\n\r",  
-                   capbuf, 
-                   caster->addColorRoom(obj->roomp, 1).c_str(),
-                   obj->roomp->getName(), caster->norm());
+                caster->sendTo(COLOR_ROOM_NAME, fmt("%s is in %s%s%s.\n\r") %  
+                   capbuf % 
+                   caster->addColorRoom(obj->roomp, 1) %
+                   obj->roomp->getName() % caster->norm());
               }
             } else {
-              caster->sendTo(COLOR_BASIC, "%s is in %s%s%s.\n\r", capbuf, caster->purple(), colorString(caster, caster->desc, obj->roomp->getName(), NULL, COLOR_NONE, TRUE).c_str(), caster->norm());
+              caster->sendTo(COLOR_BASIC, fmt("%s is in %s%s%s.\n\r") % capbuf % caster->purple() % colorString(caster, caster->desc, obj->roomp->getName(), NULL, COLOR_NONE, TRUE) % caster->norm());
             }
             found = TRUE;
           }
@@ -540,22 +539,22 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
         } else {
           if (IS_SET(caster->desc->plr_color, PLR_COLOR_ROOM_NAME)) {
             if (hasColorStrings(NULL, ch->roomp->getName(), 2)) {
-              caster->sendTo(COLOR_ROOM_NAME, "%s is in %s.\n\r", capbuf, caster->dynColorRoom(ch->roomp, 1, TRUE).c_str());
+              caster->sendTo(COLOR_ROOM_NAME, fmt("%s is in %s.\n\r") % capbuf % caster->dynColorRoom(ch->roomp, 1, TRUE));
             } else {
-              caster->sendTo(COLOR_ROOM_NAME, "%s is in %s%s%s.\n\r",
-                   capbuf,
-                   caster->addColorRoom(ch->roomp, 1).c_str(),
-                   ch->roomp->getName(), caster->norm());
+              caster->sendTo(COLOR_ROOM_NAME, fmt("%s is in %s%s%s.\n\r") %
+                   capbuf %
+                   caster->addColorRoom(ch->roomp, 1) %
+                   ch->roomp->getName() % caster->norm());
             }
           } else {
-            caster->sendTo(COLOR_BASIC, "%s is in %s%s%s.\n\r", capbuf, caster->purple(), colorString(caster, caster->desc, ch->roomp->getName(), NULL, COLOR_NONE, TRUE).c_str(), caster->norm());
+            caster->sendTo(COLOR_BASIC, fmt("%s is in %s%s%s.\n\r") % capbuf % caster->purple() % colorString(caster, caster->desc, ch->roomp->getName(), NULL, COLOR_NONE, TRUE) % caster->norm());
           }
           found = TRUE;
         }
 #else
 // old
         strcpy(capbuf, ch->getName());
-        caster->sendTo("%s at %s.\n\r", cap(capbuf), 
+        caster->sendTo(fmt("%s at %s.\n\r") % cap(capbuf) % 
           (ch->roomp ? ch->roomp->name : "God only knows where..."));
 #endif
         j--;
@@ -2168,10 +2167,10 @@ void TBeing::doScribe(const char *arg)
     act(buf, FALSE, this, 0, 0, TO_CHAR);
   }
   if (how_many > 1) {
-    ssprintf(buf, "$n begins to scribe some scrolls.");
+    buf = fmt("$n begins to scribe some scrolls.");
     act(buf, FALSE, this, 0, 0, TO_ROOM);
   } else {
-    ssprintf(buf, "$n begins to scribe a scroll.");
+    buf = fmt("$n begins to scribe a scroll.");
     act(buf, FALSE, this, 0, 0, TO_ROOM);
   }
 
@@ -2180,7 +2179,7 @@ void TBeing::doScribe(const char *arg)
   act(buf, FALSE, this, comp_gen, 0, TO_CHAR);
   comp_gen->addToComponentCharges(-how_many);
   if (comp_gen->getComponentCharges() <= 0) {
-    ssprintf(buf, "$p is consumed in the process.");
+    buf = fmt("$p is consumed in the process.");
     act(buf, FALSE, this, comp_gen, 0, TO_CHAR);
     delete comp_gen;
     comp_gen = NULL;
@@ -2191,7 +2190,7 @@ void TBeing::doScribe(const char *arg)
   act(buf, FALSE, this, comp_scribe, 0, TO_CHAR);
   comp_scribe->addToComponentCharges(-how_many);
   if (comp_scribe->getComponentCharges() <= 0) {
-    ssprintf(buf, "$p is consumed in the process.");
+    buf = fmt("$p is consumed in the process.");
     act(buf, FALSE, this, comp_scribe, 0, TO_CHAR);
     delete comp_scribe;
     comp_scribe = NULL;
@@ -2202,7 +2201,7 @@ void TBeing::doScribe(const char *arg)
   act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
   comp_spell->addToComponentCharges(-how_many);
   if (comp_spell->getComponentCharges() <= 0) {
-    ssprintf(buf, "$p is consumed in the process.");
+    buf = fmt("$p is consumed in the process.");
     act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
     delete comp_spell;
     comp_spell = NULL;

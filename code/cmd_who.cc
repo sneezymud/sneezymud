@@ -51,7 +51,7 @@ void Descriptor::menuWho()
           (person->getInvisLevel() < GOD_LEVEL1)) {
         person->parseTitle(buf, this);
 
-        ssprintf(buf2, "%s\n\r", colorString(person, this, buf, NULL, COLOR_BASIC, FALSE).c_str());
+        buf2 = fmt("%s\n\r") % colorString(person, this, buf, NULL, COLOR_BASIC, FALSE);
 	send += buf2;
       }
     }
@@ -219,7 +219,7 @@ void TBeing::doWho(const char *argument)
       }
     }
     accStat.max_player_since_reboot = max(accStat.max_player_since_reboot, count);
-    ssprintf(buf, "\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r", count, accStat.max_player_since_reboot, stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
+    buf = fmt("\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r") % count % accStat.max_player_since_reboot % (stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
     sb += buf;
     if (desc)
       desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
@@ -255,10 +255,10 @@ void TBeing::doWho(const char *argument)
 
       if(strchr(arg, 'c') && isImmortal()){
 	
-	ssprintf(buf, "%sList may not be accurate for ports that are not currently running.\n\r", buf.c_str());
-	ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
-        ssprintf(buf, "%sProduction (Port 7900)\n\r", buf.c_str());
-        ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
+	buf = fmt("%sList may not be accurate for ports that are not currently running.\n\r") % buf;
+	buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
+        buf = fmt("%sProduction (Port 7900)\n\r") % buf;
+        buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
 
 
 	TDatabase db(DB_SNEEZYPROD);
@@ -278,9 +278,9 @@ void TBeing::doWho(const char *argument)
 		   db["port"], stmp.c_str());
 	}
 	
-        ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
-        ssprintf(buf, "%sBuilder (Port 8900)\n\r", buf.c_str());
-        ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
+        buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
+        buf = fmt("%sBuilder (Port 8900)\n\r") % buf;
+        buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
 
         TDatabase db2(DB_SNEEZYBUILDER);
         db2.query("select title, port, name from wholist order by port");
@@ -299,9 +299,9 @@ void TBeing::doWho(const char *argument)
                    db2["port"], stmp.c_str());
         }
 	
-        ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
-        ssprintf(buf, "%sTesting (Other Ports)\n\r", buf.c_str());
-        ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
+        buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
+        buf = fmt("%sTesting (Other Ports)\n\r") % buf;
+        buf = fmt("%s------------------------------------------------------------------\n\r") % buf;
 
 
         TDatabase db3(DB_SNEEZYBETA);
@@ -364,14 +364,14 @@ void TBeing::doWho(const char *argument)
               (!strchr(arg, 't') || p->getRace() == RACE_HOBBIT) &&
 	      (!strchr(arg, 'x') || p->hasQuestBit(TOG_PERMA_DEATH_CHAR)))) {
             if (p->isLinkdead() && isImmortal())
-              ssprintf(buf, "[%-12s] ", pers(p));
+              buf = fmt("[%-12s] ") % pers(p);
             else if (p->polyed == POLY_TYPE_SWITCH && isImmortal())
-              ssprintf(buf, "[%-12s] (switched) ", pers(p));
+              buf = fmt("[%-12s] (switched) ") % pers(p);
             else if (dynamic_cast<TMonster *>(p) &&
                      (p->specials.act & ACT_POLYSELF))
-              ssprintf(buf, "(%-14s) ", pers(p));
+              buf = fmt("(%-14s) ") % pers(p);
             else 
-              ssprintf(buf, "%-11s ", pers(p));
+              buf = fmt("%-11s ") % pers(p);
             listed++;
             for (l = 1; l <= (int) strlen(arg); l++) {
               switch (arg[l]) {
@@ -392,16 +392,16 @@ void TBeing::doWho(const char *argument)
                       if (!canSeeWho(ch))
                         continue;
                       if (ch->isLinkdead() && isImmortal())
-                        ssprintf(buf, "%s[%-12s] ", buf.c_str(), pers(ch));
+                        buf = fmt("%s[%-12s] ") % buf % pers(ch);
                       else if (ch->polyed == POLY_TYPE_SWITCH && isImmortal())
-                        ssprintf(buf, "%s[%-12s] (switched) ", buf.c_str(), pers(ch));
+                        buf = fmt("%s[%-12s] (switched) ") % buf % pers(ch);
                       else if (dynamic_cast<TMonster *>(ch) &&
                                (ch->specials.act & ACT_POLYSELF))
-                        ssprintf(buf, "%s(%-14s) ", buf.c_str(), pers(ch));
+                        buf = fmt("%s(%-14s) ") % buf % pers(ch);
                       else if (ch->isPlayerAction(PLR_ANONYMOUS) && !isImmortal())
-                        ssprintf(buf, "%s%-11s (???) ", buf.c_str(), pers(ch));
+                        buf = fmt("%s%-11s (???) ") % buf % pers(ch);
                       else
-                        ssprintf(buf, "%s%-11s (L%d) ", buf.c_str(), pers(ch), ch->GetMaxLevel());
+                        buf = fmt("%s%-11s (L%d) ") % buf % pers(ch) % ch->GetMaxLevel();
                     }
 
                     group = true;
@@ -410,7 +410,7 @@ void TBeing::doWho(const char *argument)
                 case 'i':
                   if (!idle) {
                     if (isImmortal())
-                      ssprintf(buf, "%sIdle:[%-3d] ", buf.c_str(), p->getTimer());
+                      buf = fmt("%sIdle:[%-3d] ") % buf % p->getTimer();
                   }
                   idle = TRUE;
                   break;
@@ -513,10 +513,10 @@ void TBeing::doWho(const char *argument)
                 case 'q':
                   if (!quest) {
                     if (p->isPlayerAction(PLR_SOLOQUEST))
-                      ssprintf(buf, "%s (%sSOLO QUEST%s)", buf.c_str(), red(), norm());
+                      buf = fmt("%s (%sSOLO QUEST%s)") % buf % red() % norm();
                     
                     if (p->isPlayerAction(PLR_GRPQUEST))
-                      ssprintf(buf, "%s (%sGROUP QUEST%s)", buf.c_str(), blue(), norm());
+                      buf = fmt("%s (%sGROUP QUEST%s)") % buf % blue() % norm();
                   }
                   quest = TRUE;
                   break;
@@ -587,7 +587,7 @@ void TBeing::doWho(const char *argument)
            accStat.max_player_since_reboot,
            stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
   } else {
-    ssprintf(buf, "\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r", count, accStat.max_player_since_reboot, stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
+    buf = fmt("\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r") % count % accStat.max_player_since_reboot % (stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
   }
   sb += buf;
   if (desc)
@@ -608,9 +608,9 @@ void TBeing::doWhozone()
     if (!d->connected && canSee(d->character) &&
         (rp = real_roomp((person = (d->original ? d->original : d->character))->in_room)) &&
         (rp->getZoneNum() == roomp->getZoneNum())) {
-      ssprintf(sbuf, "%-25s - %s ", person->getName(), rp->name);
+      sbuf = fmt("%-25s - %s ") % person->getName() % rp->name;
       if (GetMaxLevel() > MAX_MORT){
-        ssprintf(buf, "[%d]", person->in_room);
+        buf = fmt("[%d]") % person->in_room;
 	sbuf+=buf;
       }
       sbuf += "\n\r";
@@ -618,5 +618,5 @@ void TBeing::doWhozone()
       count++;
     }
   }
-  sendTo("\n\rTotal visible players: %d\n\r", count);
+  sendTo(fmt("\n\rTotal visible players: %d\n\r") % count);
 }

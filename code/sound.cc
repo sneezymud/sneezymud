@@ -194,7 +194,7 @@ void TBeing::stopmusic()
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
       sstring url = "http://sneezy.stanford.edu/sounds/";
-      sendTo("!!MUSIC(Off U=%s)\n\r", url.c_str());
+      sendTo(fmt("!!MUSIC(Off U=%s)\n\r") % url);
     }
   }
 }
@@ -235,9 +235,9 @@ void TBeing::playmusic(musicNumT music, const sstring &type, int vol, int cont, 
         sprintf(buf, " L=%d", loop);
         argString += buf;
       }
-      sendTo("!!MUSIC(%s T=%s%s)\n\r",
-            musicStruct[music].c_str(), 
-            type.c_str(), argString.c_str());
+      sendTo(fmt("!!MUSIC(%s T=%s%s)\n\r") %
+            musicStruct[music] % 
+            type % argString);
     }
   }
 }
@@ -250,7 +250,7 @@ void TBeing::stopsound()
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
       sstring url = "http://sneezy.stanford.edu/sounds/";
-      sendTo("!!SOUND(Off U=%s)\n\r", url.c_str());
+      sendTo(fmt("!!SOUND(Off U=%s)\n\r") % url);
     }
   }
 }
@@ -479,9 +479,9 @@ void TBeing::playsound(soundNumT sound, const sstring &type, int vol, int prior,
         sprintf(buf, " L=%d", loop);
         argString += buf;
       }
-      sendTo("!!SOUND(%s T=%s%s)\n\r",
-            soundStruct[sound].c_str(), 
-            type.c_str(), argString.c_str());
+      sendTo(fmt("!!SOUND(%s T=%s%s)\n\r") %
+            soundStruct[sound] % 
+            type % argString);
     }
   }
 }

@@ -1691,7 +1691,7 @@ void TBeing::doMakeLeader(const char *arg)
     return;
   }
   if (fnum == FACT_NONE) {
-    sendTo("%s don't have or want leaders.\n\r",
+    sendTo(fmt("%s don't have or want leaders.\n\r") %
          sstring(FactionInfo[FACT_NONE].faction_name).cap().c_str());
     return;
   }
@@ -1707,15 +1707,15 @@ void TBeing::doMakeLeader(const char *arg)
            FactionInfo[fnum].faction_name);
     vlogf(LOG_FACT,"Changed from %s to %s.",FactionInfo[fnum].leader[which],
            namebuf);
-    sendTo("You have set %s's leader %d to %s.\n\r", 
-           FactionInfo[fnum].faction_name, which, namebuf);
+    sendTo(fmt("You have set %s's leader %d to %s.\n\r") % 
+           FactionInfo[fnum].faction_name % which % namebuf);
 
     if (strcmp(namebuf, "Noone")) {
       strcpy(FactionInfo[fnum].leader[which],namebuf);
       if ((vict = get_char(namebuf, EXACT_YES)) ||
           (vict = get_char(namebuf, EXACT_NO))) {
-        vict->sendTo(COLOR_MOBS, "%s has made you leader %d of %s.\n\r",
-            getName(), which, FactionInfo[fnum].faction_name);
+        vict->sendTo(COLOR_MOBS, fmt("%s has made you leader %d of %s.\n\r") %
+            getName() % which % FactionInfo[fnum].faction_name);
       }
     } else
       strcpy(FactionInfo[fnum].leader[which],"");
@@ -1732,7 +1732,7 @@ void TBeing::doNewMember(const char *arg)
   factionTypeT fnum = getFaction();
 
   if (isUnaff()) {
-    sendTo("You can't apppoint members to %s.\n\r",
+    sendTo(fmt("You can't apppoint members to %s.\n\r") %
                FactionInfo[FACT_NONE].faction_name);
     return;
   }
@@ -1775,9 +1775,9 @@ void TBeing::doNewMember(const char *arg)
     vict->setPercX(0.0, i);
 #endif
 
-  vict->sendTo("You have been made a member of the %s.\n\r",
+  vict->sendTo(fmt("You have been made a member of the %s.\n\r") %
         FactionInfo[fnum].faction_name);
-  sendTo(COLOR_MOBS, "You have added %s to the %s.\n\r", vict->getName(),
+  sendTo(COLOR_MOBS, fmt("You have added %s to the %s.\n\r") % vict->getName() %
         FactionInfo[fnum].faction_name);
   vlogf(LOG_FACT, "Newmember: %s adding %s to %s.",getName(),vict->getName(),
         FactionInfo[fnum].faction_name); 
@@ -1801,7 +1801,7 @@ void TBeing::doRMember(const char *arg)
     return;
   }
   if (fnum == FACT_NONE) {
-    sendTo("You can't remove someone from %s!\n\r",
+    sendTo(fmt("You can't remove someone from %s!\n\r") %
            FactionInfo[FACT_NONE].faction_name);
     return;
   }
@@ -1822,7 +1822,7 @@ void TBeing::doRMember(const char *arg)
   for (j = 0;j < FACT_LEADER_SLOTS;j++) {
     if (!strcmp(FactionInfo[fnum].leader[j],vict->getName())) {
       sendTo("Sorry, that person is a leader of that faction and can't be removed.\n\r");
-      sendTo("Appoint a new leader to slot %d and then you may remove them.\n\r",j);
+      sendTo(fmt("Appoint a new leader to slot %d and then you may remove them.\n\r") %j);
       return;
     }
   }
@@ -1834,9 +1834,9 @@ void TBeing::doRMember(const char *arg)
     vict->setPercX(0.0, i);
 #endif
 
-  vict->sendTo("You have been kicked out of the %s.\n\r",
+  vict->sendTo(fmt("You have been kicked out of the %s.\n\r") %
         FactionInfo[fnum].faction_name);
-  sendTo(COLOR_MOBS, "You have removed %s from the %s.\n\r", vict->getName(),
+  sendTo(COLOR_MOBS, fmt("You have removed %s from the %s.\n\r") % vict->getName() %
         FactionInfo[fnum].faction_name);
   vlogf(LOG_FACT, "RMember: %s removing %s from %s.",getName(),vict->getName(),
         FactionInfo[fnum].faction_name);
@@ -1860,11 +1860,11 @@ void TBeing::doDisband()
   for (ij = 0;ij < FACT_LEADER_SLOTS;ij++) {
     if (!strcmp(FactionInfo[fnum].leader[ij],getName())) {
       sendTo("What?!?  And leave them leaderless?\n\r");
-      sendTo("Appoint a new leader for slot %d and then you may disband.\n\r",ij);
+      sendTo(fmt("Appoint a new leader for slot %d and then you may disband.\n\r") %ij);
       return;
     }
   }
-  sendTo("You have disbanded from %s.\n\r",FactionInfo[fnum].faction_name);
+  sendTo(fmt("You have disbanded from %s.\n\r") %FactionInfo[fnum].faction_name);
   vlogf(LOG_FACT,"Disband: %s left %s.",getName(),FactionInfo[fnum].faction_name);
   setFaction(FACT_NONE);
 #if FACTIONS_IN_USE
@@ -1891,8 +1891,8 @@ void sendToFaction(factionTypeT fnum, const char *who, const char *arg)
         !tmpch->hasWizPower(POWER_SEE_FACTION_SENDS))
       continue;
 
-    d->character->sendTo(COLOR_SHOUTS, "<g>%s <c>%s<1>: %s\n\r",
-			 FactionInfo[fnum].faction_name, who, arg);
+    d->character->sendTo(COLOR_SHOUTS, fmt("<g>%s <c>%s<1>: %s\n\r") %
+			 FactionInfo[fnum].faction_name % who % arg);
   }
 }
 
@@ -2010,7 +2010,7 @@ void TBeing::doRelease(const sstring & arg)
     return;
   }
 
-  sendTo(COLOR_MOBS, "You release %s.\n\r", targ->getName());
+  sendTo(COLOR_MOBS, fmt("You release %s.\n\r") % targ->getName());
   act("$n releases you.", TRUE, this, 0, targ, TO_VICT);
   act("$n releases $N.", TRUE, this, 0, targ, TO_NOTVICT);
   remCaptive(targ);  
@@ -2031,7 +2031,7 @@ void TBeing::doCapture(const sstring & arg)
       sendTo("No one.\n\r");
     else {
       for(targ = getCaptive(); targ; targ = targ->getNextCaptive()) {
-        sendTo(COLOR_MOBS, " %s",targ->getName());
+        sendTo(COLOR_MOBS, fmt(" %s") %targ->getName());
         if (targ->getNextCaptive())
           sendTo(",");
       }
@@ -2058,8 +2058,8 @@ void TBeing::doCapture(const sstring & arg)
   if (targ->master) {
     targ->stopFollower(TRUE);
   }
-  sendTo(COLOR_MOBS, "You capture %s.\n\r", targ->getName());
-  targ->sendTo(COLOR_MOBS, "You have been captured by %s!\n\r", getName());
+  sendTo(COLOR_MOBS, fmt("You capture %s.\n\r") % targ->getName());
+  targ->sendTo(COLOR_MOBS, fmt("You have been captured by %s!\n\r") % getName());
   act("$n captures $N!", TRUE, this, 0, targ, TO_NOTVICT);
 
   // Don't let captives have captives...
@@ -2099,7 +2099,7 @@ void TBeing::doFactions(const sstring &arg)
     }
   }
 
-  ssprintf(buf, "You are allied to: %s\n\r", FactionInfo[which].faction_name);
+  buf = fmt("You are allied to: %s\n\r") % FactionInfo[which].faction_name;
   sbuf += buf;
 
   if (which != FACT_NONE) {
@@ -2144,19 +2144,19 @@ void TBeing::doFactions(const sstring &arg)
       sbuf+=buf;
 
       if (IS_SET(FactionInfo[which].caravan_flags, CARAVAN_DEST_GH)){
-        ssprintf(buf, " %s", CaravanDestination(CARAVAN_DEST_GH));
+        buf = fmt(" %s") % CaravanDestination(CARAVAN_DEST_GH);
 	sbuf+=buf;
       }
       if (IS_SET(FactionInfo[which].caravan_flags, CARAVAN_DEST_BM)){
-	ssprintf(buf, " %s", CaravanDestination(CARAVAN_DEST_BM));
+	buf = fmt(" %s") % CaravanDestination(CARAVAN_DEST_BM);
 	sbuf+=buf;
       }
       if (IS_SET(FactionInfo[which].caravan_flags, CARAVAN_DEST_LOG)){
-        ssprintf(buf, " %s", CaravanDestination(CARAVAN_DEST_LOG));
+        buf = fmt(" %s") % CaravanDestination(CARAVAN_DEST_LOG);
 	sbuf+=buf;
       }
       if (IS_SET(FactionInfo[which].caravan_flags, CARAVAN_DEST_AMBER)){
-        ssprintf(buf, " %s", CaravanDestination(CARAVAN_DEST_AMBER));
+        buf = fmt(" %s") % CaravanDestination(CARAVAN_DEST_AMBER);
 	sbuf+=buf;
       }
       if (!IS_SET(FactionInfo[which].caravan_flags, 
@@ -2216,7 +2216,7 @@ void TBeing::doFactions(const sstring &arg)
       mud_str_copy(timebuf, ctime(&(timestat.st_mtime)), 256);
       timebuf[strlen(timebuf) - 1] = '\0';
 
-      ssprintf(buf, "\n\rMembership as of last rollcall (%s):\n\r", timebuf);
+      buf = fmt("\n\rMembership as of last rollcall (%s):\n\r") % timebuf;
       sbuf += buf;
 
       TDatabase db(DB_SNEEZY);
@@ -2294,8 +2294,8 @@ void TBeing::doAdjust(const char *arg)
     }
     vlogf(LOG_FACT, "Faction name changed from %s to %s.\n\r",
           oldname, arg);
-    sendTo("You change the name of the faction from %s to %s.\n\r",
-          oldname, arg);
+    sendTo(fmt("You change the name of the faction from %s to %s.\n\r") %
+          oldname % arg);
     sendTo("Remember to update factionNumber() in faction.cc with the new abbreviations.\n\r");
     sprintf(FactionInfo[fnum].faction_name, arg);
     save_factions();
@@ -2321,12 +2321,12 @@ void TBeing::doAdjust(const char *arg)
       }
       amount = convertTo<int>(tmpbuf2);
       if (amount < MIN_CARAVAN_INTERVAL  && amount != -1) {
-        sendTo("You can't specify an interval less than %d.\n\r", MIN_CARAVAN_INTERVAL);
+        sendTo(fmt("You can't specify an interval less than %d.\n\r") % MIN_CARAVAN_INTERVAL);
         return;
       }
       FactionInfo[fnum].caravan_interval = amount;
-      sendTo("You set %s's caravan interval to %d ticks.\n\r",
-          FactionInfo[fnum].faction_name,
+      sendTo(fmt("You set %s's caravan interval to %d ticks.\n\r") %
+          FactionInfo[fnum].faction_name %
           FactionInfo[fnum].caravan_interval);
       return;
     } else if (is_abbrev(tmpbuf, "value")) {
@@ -2341,12 +2341,11 @@ void TBeing::doAdjust(const char *arg)
         return;
       }
       if (amount % CARAVAN_TRADE) {
-        sendTo("Caravans may only transport goods in multiples of %d.\n\r", CARAVAN_TRADE);
+        sendTo(fmt("Caravans may only transport goods in multiples of %d.\n\r") % CARAVAN_TRADE);
         return;
       }
       FactionInfo[fnum].caravan_value = amount;
-      sendTo("You set %s's caravan value to %d talens.\n\r",
-          FactionInfo[fnum].faction_name,
+      sendTo(fmt("You set %s's caravan value to %d talens.\n\r") %          FactionInfo[fnum].faction_name %
           FactionInfo[fnum].caravan_value);
        return;
     } else if (is_abbrev(tmpbuf, "defense")) {
@@ -2361,8 +2360,7 @@ void TBeing::doAdjust(const char *arg)
         return;
       }
       FactionInfo[fnum].caravan_defense = amount;
-      sendTo("You set %s's caravan defense value to %d talens.\n\r",
-          FactionInfo[fnum].faction_name,
+      sendTo(fmt("You set %s's caravan defense value to %d talens.\n\r") %          FactionInfo[fnum].faction_name %
           FactionInfo[fnum].caravan_defense);
        return;
     } else if (is_abbrev(tmpbuf, "destination")) {
@@ -2431,13 +2429,12 @@ void TBeing::doAdjust(const char *arg)
       }
       if (!IS_SET(FactionInfo[fnum].caravan_flags, uamount)) {
         SET_BIT(FactionInfo[fnum].caravan_flags, uamount);
-        sendTo("You set %s's caravan destination to %s.\n\r",
-            FactionInfo[fnum].faction_name,
+        sendTo(fmt("You set %s's caravan destination to %s.\n\r") %
+            FactionInfo[fnum].faction_name %
             CaravanDestination(uamount));
       } else {
         REMOVE_BIT(FactionInfo[fnum].caravan_flags, uamount);
-        sendTo("Future caravans of %s will no longer go to %s.\n\r",
-            FactionInfo[fnum].faction_name,
+        sendTo(fmt("Future caravans of %s will no longer go to %s.\n\r") %            FactionInfo[fnum].faction_name %
             CaravanDestination(uamount));
       }
       return;
@@ -2513,7 +2510,7 @@ void TBeing::doAdjust(const char *arg)
     }
     if (verses == FACT_NONE) {
       if (hval == ADJ_HURT && value > -1.0) {
-        sendTo("You have no quarrel with %s, and can not benefit from their destruction.\n\r", FactionInfo[FACT_NONE].faction_name);
+        sendTo(fmt("You have no quarrel with %s, and can not benefit from their destruction.\n\r") % FactionInfo[FACT_NONE].faction_name);
         return;
       }
     }
@@ -2543,33 +2540,33 @@ void TBeing::doAdjust(const char *arg)
       if (verses == FACT_BROTHERHOOD) {
         if ((hval == ADJ_HELP) &&
             (value + FactionInfo[fnum].faction_array[FACT_CULT][OFF_HELP] > 1.0)) {
-          sendTo("At present, that value is limited to %5.2f.\n\r",
+          sendTo(fmt("At present, that value is limited to %5.2f.\n\r") %
               1.0 - FactionInfo[fnum].faction_array[FACT_CULT][OFF_HELP]);
           return;
         }
         if ((hval == ADJ_HURT) &&
             (value + FactionInfo[fnum].faction_array[FACT_CULT][OFF_HURT] > 1.0)) {
-          sendTo("At present, that value is limited to %5.2f.\n\r",
+          sendTo(fmt("At present, that value is limited to %5.2f.\n\r") %
               1.0 - FactionInfo[fnum].faction_array[FACT_CULT][OFF_HURT]);
           return;
         }
       } else if (verses == FACT_CULT) {
         if ((hval == ADJ_HELP) &&
             (value + FactionInfo[fnum].faction_array[FACT_BROTHERHOOD][OFF_HELP] > 1.0)) {
-          sendTo("At present, that value is limited to %5.2f.\n\r",
+          sendTo(fmt("At present, that value is limited to %5.2f.\n\r") %
               1.0 - FactionInfo[fnum].faction_array[FACT_BROTHERHOOD][OFF_HELP]);
           return;
         }
         if ((hval == ADJ_HURT) &&
             (value + FactionInfo[fnum].faction_array[FACT_BROTHERHOOD][OFF_HURT] > 1.0)) {
-          sendTo("At present, that value is limited to %5.2f.\n\r",
+          sendTo(fmt("At present, that value is limited to %5.2f.\n\r") %
               1.0 - FactionInfo[fnum].faction_array[FACT_BROTHERHOOD][OFF_HURT]);
           return;
         }
       }
     }
 
-    sendTo("You change %s's %s rating verses %s from %5.2f to %5.2f.\n\r",
+    sendTo(fmt("You change %s's %s rating verses %s from %5.2f to %5.2f.\n\r") %
           FactionInfo[fnum].faction_name,
           (hval == ADJ_HURT ? "harm" : "help"),
           FactionInfo[verses].faction_name,
@@ -2583,8 +2580,7 @@ void TBeing::doAdjust(const char *arg)
       sendTo("Tithe <value> must be in range 0.0 to 15.0\n\r");
       return;
     }
-    sendTo("You change %s's tithe rate from %5.2f to %5.2f.\n\r",
-          FactionInfo[fnum].faction_name, old_val, value);
+    sendTo(fmt("You change %s's tithe rate from %5.2f to %5.2f.\n\r") %          FactionInfo[fnum].faction_name % old_val % value);
     FactionInfo[fnum].faction_tithe = value;
   }
   

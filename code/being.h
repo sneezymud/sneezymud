@@ -1269,8 +1269,8 @@ class TBeing : public TThing {
     void informMess();
     int objDam(spellNumT, int, TThing *);
     int objDamage(spellNumT, int, TThing *);
-    virtual void sendTo(colorTypeT, const sstring &, ...) const;
-    virtual void sendTo(const sstring &, ...) const;
+    virtual void sendTo(colorTypeT, const sstring &) const;
+    virtual void sendTo(const sstring &) const;
     void sendRoomName(TRoom *) const;
     void sendRoomDesc(TRoom *) const;
     void addFollower(TBeing *, bool = FALSE);

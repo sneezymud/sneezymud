@@ -137,13 +137,13 @@ int TMonster::lookForHorse()
   if (tbt) {
     if (tbt->getPosition() < POSITION_SLEEPING) {
     } else if (tbt->getPosition() == POSITION_SLEEPING) {
-      ssprintf(buf,"order %s wake",fname(tbt->name).c_str());
+      buf = fmt("order %s wake") %fname(tbt->name);
       rc = addCommandToQue(buf.c_str());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     } else if (tbt->getPosition() <= POSITION_SITTING) {
-      ssprintf(buf,"order %s stand",fname(tbt->name).c_str());
+      buf = fmt("order %s stand") %fname(tbt->name);
       rc = addCommandToQue(buf.c_str());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
@@ -152,7 +152,7 @@ int TMonster::lookForHorse()
 
     /* don't look for another horse, but make mount assist me */
     if (fight() && !tbt->fight()) {
-      ssprintf(buf,"order %s hit ",fname(tbt->name).c_str());
+      buf = fmt("order %s hit ") %fname(tbt->name);
       buf += fname(fight()->name);
       rc = addCommandToQue(buf.c_str());
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -333,7 +333,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
       return FALSE;
     }
     if (horse->getNumRiders(this) >= horse->getMaxRiders()) {
-      sendTo(COLOR_MOBS, "The maximum number of riders are already riding %s.\n\r", horse->getName());
+      sendTo(COLOR_MOBS, fmt("The maximum number of riders are already riding %s.\n\r") % horse->getName());
       return FALSE;
     }
     // weight > free horse carry weight

@@ -1004,13 +1004,13 @@ int TBeing::damageHand(TBeing *v, wearSlotT part_hit)
   if (::number(1, 100) < hardness) {
     if (!::number(0, getCurLimbHealth(getPrimaryHold()))) {
       if (affectedBySpell(AFFECT_TRANSFORMED_HANDS))
-        sendTo(COLOR_MOBS, "You damage your claw on %s's %s.\n\r", pers(v), 
+        sendTo(COLOR_MOBS, fmt("You damage your claw on %s's %s.\n\r") % pers(v) % 
               (item ? fname(item->name).c_str() : (v->isHumanoid() ? "body" : "hide")));
       else if (affectedBySpell(AFFECT_TRANSFORMED_ARMS))
-        sendTo(COLOR_MOBS, "You damage your wing on %s's %s.\n\r", pers(v),
+        sendTo(COLOR_MOBS, fmt("You damage your wing on %s's %s.\n\r") % pers(v) %
               (item ? fname(item->name).c_str() : (v->isHumanoid() ? "body" : "hide")));
       else
-        sendTo(COLOR_MOBS, "You damage your hand on %s's %s.\n\r", pers(v),
+        sendTo(COLOR_MOBS, fmt("You damage your hand on %s's %s.\n\r") % pers(v) %
               (item ? fname(item->name).c_str() : (v->isHumanoid() ? "body" : "hide")));
       return TRUE;
     }
@@ -2640,7 +2640,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
           strcpy(namebuf, other->pers(this));
           strcpy(victbuf, other->pers(v));
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS,"%s tries to bite %s, but misses.\n\r", sstring(namebuf).cap().c_str(), victbuf);
+            other->sendTo(COLOR_MOBS,fmt("%s tries to bite %s, but misses.\n\r") % sstring(namebuf).cap() % victbuf);
 
         }
         break;
@@ -2662,7 +2662,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
       strcpy(namebuf, other->pers(this));
       strcpy(victbuf, other->pers(v));
       if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-	other->sendTo(COLOR_MOBS,"%s tries to shoot %s, but misses.\n\r", sstring(namebuf).cap().c_str(), victbuf);
+	other->sendTo(COLOR_MOBS,fmt("%s tries to shoot %s, but misses.\n\r") % sstring(namebuf).cap() % victbuf);
     }
   } else if (pierceType(wtype)) {
     num = ::number(1,10);
@@ -2689,7 +2689,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, "%s thrusts at %s, but misses.\n\r", sstring(namebuf).cap().c_str(),
+            other->sendTo(COLOR_MOBS, fmt("%s thrusts at %s, but misses.\n\r") % sstring(namebuf).cap() %
                  victbuf);
         }
         break;
@@ -2711,7 +2711,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(namebuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(this)), NULL, COLOR_MOBS, TRUE));
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, "%s stabs wildly, but misses %s.\n\r", sstring(namebuf).cap().c_str(),
+            other->sendTo(COLOR_MOBS, fmt("%s stabs wildly, but misses %s.\n\r") % sstring(namebuf).cap() %
                  victbuf);
         }
         break;
@@ -2739,7 +2739,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, "%s hits %s, but fails to penetrate %s thick %s.\n\r", sstring(namebuf).cap().c_str(), victbuf, v->hshr(), 
+            other->sendTo(COLOR_MOBS, fmt("%s hits %s, but fails to penetrate %s thick %s.\n\r") % sstring(namebuf).cap() % victbuf % v->hshr() % 
                     (v->isHumanoid() ? "armor" : "hide"));
         }
         break;
@@ -2778,7 +2778,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, "%s misses %s.\n\r", sstring(namebuf).cap().c_str(),
+            other->sendTo(COLOR_MOBS, fmt("%s misses %s.\n\r") % sstring(namebuf).cap() %
                  victbuf);
         }
         break;
@@ -2809,7 +2809,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, "%s swings wildly, but misses %s.\n\r", sstring(namebuf).cap().c_str(),
+            other->sendTo(COLOR_MOBS, fmt("%s swings wildly, but misses %s.\n\r") % sstring(namebuf).cap() %
                  victbuf);
         }
         break;
@@ -2837,8 +2837,8 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, "%s hits %s, but fails to penetrate %s thick %s.\n\r",
-                    sstring(namebuf).cap().c_str(), victbuf, v->hshr(),
+            other->sendTo(COLOR_MOBS, fmt("%s hits %s, but fails to penetrate %s thick %s.\n\r") %
+                    sstring(namebuf).cap() % victbuf % v->hshr() %
                     (v->isHumanoid() ? "armor" : "hide"));
         }
         break;
@@ -2877,7 +2877,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, "%s misses %s.\n\r", sstring(namebuf).cap().c_str(),
+            other->sendTo(COLOR_MOBS, fmt("%s misses %s.\n\r") % sstring(namebuf).cap() %
                  victbuf);
         }
         break;
@@ -3162,9 +3162,9 @@ int TBeing::checkShield(TBeing *v, TThing *weapon, wearSlotT part_hit, spellNumT
     sprintf(namebuf, other->pers(this));
     sstring equipBuf = colorString(other, other->desc, shield->getName(), NULL, COLOR_OBJECTS, TRUE);
     if (!other->desc || !(other->desc->autobits & AUTO_NOSPAM))
-      other->sendTo(COLOR_MOBS, "%s parries %s's blow with %s.\n\r",
-		    sstring(other->pers(v)).cap().c_str(),
-		    namebuf, equipBuf.c_str()); 
+      other->sendTo(COLOR_MOBS, fmt("%s parries %s's blow with %s.\n\r") %
+		    sstring(other->pers(v)).cap() %
+		    namebuf % equipBuf); 
   }
 
   if (shield->spec){
@@ -3230,36 +3230,28 @@ bool TBeing::canAttack(primaryTypeT isprimary)
   if (!canUseArm(isprimary)) {
     if (isprimary) {
       if (!canUseLimb(getPrimaryArm())) {
-        sendTo("%sYou didn't hit here because your arm is damaged.%s\n\r",
-            purple(), norm());
+        sendTo(fmt("%sYou didn't hit here because your arm is damaged.%s\n\r") %            purple() % norm());
       } else if (!canUseLimb(getPrimaryWrist())) {
-        sendTo("%sYour injured wrist makes it impossible to hit here.%s\n\r",
-            purple(), norm());
+        sendTo(fmt("%sYour injured wrist makes it impossible to hit here.%s\n\r") %            purple() % norm());
       } else if (!canUseLimb(getPrimaryHand()) ||
                  !canUseLimb(getPrimaryHold())) {
-        sendTo("%sYou didn't hit here because your hand is damaged.%s\n\r",
-            purple(), norm());
+        sendTo(fmt("%sYou didn't hit here because your hand is damaged.%s\n\r") %            purple() % norm());
       } else if (!canUseLimb(getPrimaryFinger())) {
-        sendTo("%sYour injured finger makes it impossible to hit here.%s\n\r",
-            purple(), norm());
+        sendTo(fmt("%sYour injured finger makes it impossible to hit here.%s\n\r") %            purple() % norm());
       } else {
         // we checked all the cases right?
         vlogf(LOG_COMBAT, "WTF is wrong in hit check");
       }
     } else {
       if (!canUseLimb(getSecondaryArm())) {
-        sendTo("%sYou didn't hit here because your arm is damaged.%s\n\r",
-            purple(), norm());
+        sendTo(fmt("%sYou didn't hit here because your arm is damaged.%s\n\r") %            purple() % norm());
       } else if (!canUseLimb(getSecondaryWrist())) {
-        sendTo("%sYour injured wrist makes it impossible to hit here.%s\n\r",
-            purple(), norm());
+        sendTo(fmt("%sYour injured wrist makes it impossible to hit here.%s\n\r") %            purple() % norm());
       } else if (!canUseLimb(getSecondaryHand()) ||
                  !canUseLimb(getSecondaryHold())) {
-        sendTo("%sYou didn't hit here because your hand is damaged.%s\n\r",
-            purple(), norm());
+        sendTo(fmt("%sYou didn't hit here because your hand is damaged.%s\n\r") %            purple() % norm());
       } else if (!canUseLimb(getSecondaryFinger())) {
-        sendTo("%sYour injured finger makes it impossible to hit here.%s\n\r",
-            purple(), norm());
+        sendTo(fmt("%sYour injured finger makes it impossible to hit here.%s\n\r") %            purple() % norm());
       } else {
         // we checked all the cases right?
         vlogf(LOG_COMBAT, "WTF is wrong in hit check");
@@ -3502,7 +3494,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     mod = attackRound(vict); // no defense against guns
 
     if(!gun->isSilenced())
-      roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r", in_room);
+      roomp->getZone()->sendTo(fmt("A gunshot echoes in the distance.\n\r") % in_room);
   }
 
 
@@ -4152,7 +4144,7 @@ void fleeFlush(TBeing *ch)
     commText *s;
     while ((s = ch->desc->input.getBegin())) {
       if (strcmp("flee", s->getText())) {
-        ch->sendTo("Flushing input command: '%s'\n\r", 
+        ch->sendTo(fmt("Flushing input command: '%s'\n\r") % 
              s->getText());
         ch->desc->input.setBegin(s->getNext());
         delete s;
@@ -4228,7 +4220,7 @@ int TBeing::tellStatus(int dam, bool same, bool flying)
   } else {
     max_hit = hitLimit();
     if (dam > (max_hit / 5))
-      sendTo("That really did %sHURT%s!\n\r", red(), norm());
+      sendTo(fmt("That really did %sHURT%s!\n\r") % red() % norm());
 
     // self-preservation check for charms and pets
     if (!same && isPet(PETTYPE_CHARM | PETTYPE_PET)) {
@@ -4244,7 +4236,7 @@ int TBeing::tellStatus(int dam, bool same, bool flying)
       return TRUE;
     }
     if (dam && (getHit() < (hitLimit() / 6))) 
-      sendTo("You wish that your wounds would stop %sHURTING%s so much!!\n\r", red(), norm());
+      sendTo(fmt("You wish that your wounds would stop %sHURTING%s so much!!\n\r") % red() % norm());
     
     if (getHit() < (hitLimit() / 10)) {
       if (dynamic_cast<TMonster *>(this) && !same && (specials.act & ACT_WIMPY) && (dam > 0)) {
@@ -4766,8 +4758,8 @@ void TBeing::doAttack(const char *argument)
   one_argument(argument, arg);
 
   if (!*arg || is_abbrev(arg, "?")) {
-    sendTo("You are in %s%s%s attack mode.\n\r",
-        cyan(), attack_modes[getCombatMode()], norm());
+    sendTo(fmt("You are in %s%s%s attack mode.\n\r") %
+        cyan() % attack_modes[getCombatMode()] % norm());
     return;
   }
   if (isCombatMode(ATTACK_BERSERK)) {
@@ -4788,12 +4780,12 @@ void TBeing::doAttack(const char *argument)
     return;
   }
   if (isCombatMode(new_combat)) {
-    sendTo("You are already in attack mode: %s.\n\r", attack_modes[getCombatMode()]);
+    sendTo(fmt("You are already in attack mode: %s.\n\r") % attack_modes[getCombatMode()]);
     return;
   }
   setCombatMode(new_combat);
 
-  sendTo("Switching attack mode to %s.\n\r", attack_modes[getCombatMode()]);
+  sendTo(fmt("Switching attack mode to %s.\n\r") % attack_modes[getCombatMode()]);
   return;
 }
 
@@ -5163,12 +5155,12 @@ int TBeing::dislodgeWeapon(TBeing *v, TThing *weapon, wearSlotT part)
   if (weapon && !v->getStuckIn(part)) {
     sstring nameBuf = colorString(this, desc, pers(v), NULL, COLOR_MOBS, TRUE);
 
-    sendTo(COLOR_OBJECTS, "Your %s, still stuck in %s's %s, is %storn from your grasp%s.\n\r",
-       objn(weapon).c_str(), nameBuf.c_str(), 
-       v->describeBodySlot(part).c_str(),red(),norm());
-    v->sendTo(COLOR_OBJECTS, "%s%s leaves %s %s stuck in your %s%s.\n\r",
-       v->orange(), sstring(getName()).cap().c_str(), hshr(),
-       objn(weapon).c_str(),v->describeBodySlot(part).c_str(), v->norm());
+    sendTo(COLOR_OBJECTS, fmt("Your %s, still stuck in %s's %s, is %storn from your grasp%s.\n\r") %
+       objn(weapon) % nameBuf % 
+       v->describeBodySlot(part) %red() %norm());
+    v->sendTo(COLOR_OBJECTS, fmt("%s%s leaves %s %s stuck in your %s%s.\n\r") %
+       v->orange() % sstring(getName()).cap().c_str() % hshr() %
+       objn(weapon) %v->describeBodySlot(part) % v->norm());
 
     sprintf(buf,"$n leaves $s $o stuck in $N's %s", v->describeBodySlot(part).c_str());
     act(buf, TRUE, this, weapon, v, TO_NOTVICT);
@@ -5350,7 +5342,7 @@ void TBeing::reformGroup()
       if (!new_master->isAffected(AFF_GROUP))
         SET_BIT(new_master->specials.affectedBy, AFF_GROUP);
 
-      new_master->sendTo(COLOR_BASIC, "<R>%s has died and you have taken over leadership of the group.<z>\n\r", getName());
+      new_master->sendTo(COLOR_BASIC, fmt("<R>%s has died and you have taken over leadership of the group.<z>\n\r") % getName());
       continue;
     }
     survivor = tmp->follower;
@@ -5360,7 +5352,7 @@ void TBeing::reformGroup()
     if (!survivor->isAffected(AFF_GROUP))
       SET_BIT(survivor->specials.affectedBy, AFF_GROUP);
 
-    survivor->sendTo(COLOR_BASIC, "<R>%s has died and %s has taken over leadership of the group.<z>\n\r", getName(), new_master->getName());
+    survivor->sendTo(COLOR_BASIC, fmt("<R>%s has died and %s has taken over leadership of the group.<z>\n\r") % getName() % new_master->getName());
   }
 
 // ADDING in linkDeads, polyed mobs and Immortals after finding a new leader
@@ -5381,7 +5373,7 @@ void TBeing::reformGroup()
       new_master->master = NULL;
       if (!new_master->isAffected(AFF_GROUP))
         SET_BIT(new_master->specials.affectedBy, AFF_GROUP);
-      new_master->sendTo(COLOR_BASIC, "<R>%s has died and you have taken over leadership of the group.<z>\n\r", getName());
+      new_master->sendTo(COLOR_BASIC, fmt("<R>%s has died and you have taken over leadership of the group.<z>\n\r") % getName());
       continue;
     }
    
@@ -5391,7 +5383,7 @@ void TBeing::reformGroup()
 
     if (!survivor->isAffected(AFF_GROUP))
       SET_BIT(survivor->specials.affectedBy, AFF_GROUP);
-    survivor->sendTo(COLOR_BASIC, "<R>%s has died and %s has taken over leadership of the group.<z>\n\r", getName(), new_master->getName());
+    survivor->sendTo(COLOR_BASIC, fmt("<R>%s has died and %s has taken over leadership of the group.<z>\n\r") % getName() % new_master->getName());
   }
  
   return;

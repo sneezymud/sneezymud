@@ -951,7 +951,7 @@ void TBeing::cls() const
 void TBeing::fullscreen() const
 {
   if ((ansi() || vt100()))
-    sendTo(VT_MARGSET, 1, getScreen());
+    sendTo(fmt(VT_MARGSET) % 1 % getScreen());
 }
 
 int TBeing::getScreen() const

@@ -402,7 +402,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
                 act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
                 sprintf(buf, "$n waves $s hands, utters many magic phrases and touches your %s!", ch->describeBodySlot(i).c_str());
                 act(buf, TRUE, me, NULL, ch, TO_VICT);
-                ch->sendTo("Your %s is healed!\n\r", ch->describeBodySlot(i).c_str());
+                ch->sendTo(fmt("Your %s is healed!\n\r") % ch->describeBodySlot(i));
                 ch->remLimbFlags(i, 1 << j);
                 if (i == WEAR_HAND_R) {
                   ch->remLimbFlags(HOLD_RIGHT, 1 << j);
@@ -437,7 +437,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
             sprintf(buf, "$n waves $s hands, utters many magic phrases and touches your %s!", ch->describeBodySlot(i).c_str());
             act(buf, TRUE, me, NULL, ch, TO_VICT);
-            ch->sendTo("Your %s feels better!\n\r", ch->describeBodySlot(i).c_str());
+            ch->sendTo(fmt("Your %s feels better!\n\r") % ch->describeBodySlot(i));
             ch->setCurLimbHealth(i, ch->getMaxLimbHealth(i));
             if (i == WEAR_HAND_R) {
               ch->setCurLimbHealth(HOLD_RIGHT, ch->getMaxLimbHealth(HOLD_RIGHT));
@@ -617,7 +617,7 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       } else {
         healed->sendTo("The hospital works wonders on your body.\n\r");
         healed->addToHit(num);
-        healed->sendTo("The charge for the healing is %d talens.\n\r", cost);
+        healed->sendTo(fmt("The charge for the healing is %d talens.\n\r") % cost);
         healed->addToMoney(-cost, GOLD_HOSPITAL);
       }
     }
@@ -639,7 +639,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
     ch->sendTo("1 - Healing of the Physical Self (HP Restore)\n\r");
     ch->sendTo("2 - Healing of the Mind (Mana Restore)\n\r");
     ch->sendTo("3 - Healing of the Spirit (Lifeforce Restore)\n\r");
-    ch->sendTo("Any of these for %d talens.\n\r", cost);
+    ch->sendTo(fmt("Any of these for %d talens.\n\r") % cost);
     return TRUE;
   } else if (cmd == CMD_BUY) {        /* Buy */
     arg = one_argument(arg, buf);

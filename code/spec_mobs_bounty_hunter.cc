@@ -646,7 +646,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
         for (aff = targ->affected; aff; aff = aff->next) {
           if (aff->type == SKILL_CONCEALMENT) {
             if (::number(1,150) < aff->modifier) {
-              myself->sendTo("%s##You have lost the trail.%s\n\r", myself->orange(), myself->norm());
+              myself->sendTo(fmt("%s##You have lost the trail.%s\n\r") % myself->orange() % myself->norm());
    
               if (aff->be == targ) {
                 act("You have successfully concealed your path from $N.",

@@ -197,7 +197,7 @@ int TObj::personalizedCheck(TBeing *ch)
     } else if (strcmp(namebuf, ch->getName()) && (!ch->isPc() || dynamic_cast<TPerson *>(ch))) {
       // skips for polys
       act("You shouldn't have $p! It isn't yours!", 0, ch, this, NULL, TO_CHAR);
-      sendTo("It's the personalized item of %s!\n\r", namebuf);
+      sendTo(fmt("It's the personalized item of %s!\n\r") % namebuf);
       act("The gods have taken away $p!", FALSE, ch, this, NULL, TO_CHAR);
       act("$n is zapped by $p!",TRUE,ch,this,0,TO_ROOM);
 
@@ -225,8 +225,8 @@ int TObj::personalizedCheck(TBeing *ch)
         }
       }
       if (orig) {
-        orig->sendTo(COLOR_BASIC, "The gods found your personalized item (%s) on %s at %s.\n\r", 
-           getName(), ch->getName(), ch->roomp ? ch->roomp->name : "No Room");
+        orig->sendTo(COLOR_BASIC, fmt("The gods found your personalized item (%s) on %s at %s.\n\r") % 
+           getName() % ch->getName() % (ch->roomp ? ch->roomp->name : "No Room"));
         if (eq_pos != WEAR_NOWHERE) 
           *ch->roomp += *ch->unequip(eq_pos);
         else if (parent) {
@@ -1291,7 +1291,7 @@ void TBeing::doWear(const char *argument)
         keyword = tobj->getWearKey();
         if (keyword != WEAR_KEY_NONE) {
           strcpy(buf, tobj->getName());
-          sendTo(COLOR_OBJECTS,"%s: ", cap(buf));
+          sendTo(COLOR_OBJECTS,fmt("%s: ") % cap(buf));
           rc = wear(tobj, keyword, this);
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
             delete tobj;
@@ -1306,15 +1306,15 @@ void TBeing::doWear(const char *argument)
         if (*arg2) {
           int sbnum = search_block(arg2, keywords, FALSE);  // Partial Match 
           if (sbnum == -1) {
-            sendTo("Unknown body location: %s\n\r", arg2);
+            sendTo(fmt("Unknown body location: %s\n\r") % arg2);
             sendTo("Valid body locations:\n\r");
             for (i = 0; *keywords[i] != '\n'; i++)
-              sendTo("%s%s", keywords[i], (i%3 == 2 ? "\n\r" : "\t"));
+              sendTo(fmt("%s%s") % keywords[i] % (i%3 == 2 ? "\n\r" : "\t"));
             if (i%3)
               sendTo("\n\r");
           } else {
             strcpy(buf, o->shortDescr);
-            sendTo(COLOR_OBJECTS,"%s: ", cap(buf));
+            sendTo(COLOR_OBJECTS,fmt("%s: ") % cap(buf));
             keyword = wearKeyT(sbnum+1);
             rc = wear(o, keyword, this);
             if (IS_SET_DELETE(rc, DELETE_ITEM)) {
@@ -1326,7 +1326,7 @@ void TBeing::doWear(const char *argument)
           keyword = o->getWearKey();
 
           strcpy(buf, o->shortDescr);
-          sendTo(COLOR_OBJECTS,"%s: ", cap(buf));
+          sendTo(COLOR_OBJECTS,fmt("%s: ") % cap(buf));
           rc = wear(o, keyword, this);
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
             delete o;
@@ -1334,7 +1334,7 @@ void TBeing::doWear(const char *argument)
           }
         }
       } else
-        sendTo("You do not seem to have the '%s'.\n\r", arg1);
+        sendTo(fmt("You do not seem to have the '%s'.\n\r") % arg1);
     }
   } else
     sendTo("Wear what?\n\r");
@@ -1360,7 +1360,7 @@ void TBeing::doWield(const char *argument)
 
   if (*arg1) {
     if (!(o = searchLinkedList(arg1, getStuff()))) {
-      sendTo("You do not seem to have the '%s'.\n\r", arg1);
+      sendTo(fmt("You do not seem to have the '%s'.\n\r") % arg1);
       return;
     }
     int rc = o->wieldMe(this, arg2);
@@ -1387,7 +1387,7 @@ void TBeing::doGrab(const char *argument)
     TThing *tto = searchLinkedList(arg1, getStuff());
     TObj *o = dynamic_cast<TObj *>(tto);
     if (!o) {
-      sendTo("You do not seem to have the '%s'.\n\r", arg1);
+      sendTo(fmt("You do not seem to have the '%s'.\n\r") % arg1);
       return;
     }
     if (!*arg2) {
@@ -1603,9 +1603,9 @@ int TBeing::doRemove(const sstring &argument, TThing *obj)
         }
         return TRUE;
       } else {
-        sendTo("There is nothing %s your %s.\n\r", 
-               ((slot == HOLD_RIGHT || slot == HOLD_LEFT) ? "in" : "on"),
-               describeBodySlot(slot).c_str());
+        sendTo(fmt("There is nothing %s your %s.\n\r") % 
+               ((slot == HOLD_RIGHT || slot == HOLD_LEFT) ? "in" : "on") %
+               describeBodySlot(slot));
         return FALSE;
       }
     }
@@ -1675,7 +1675,7 @@ int TBeing::doRemove(const sstring &argument, TThing *obj)
       }
     } else {
       if (!(ch = get_char_room_vis(this, buf))) {
-        sendTo("You don't see '%s' here.\n\r", buf.c_str());
+        sendTo(fmt("You don't see '%s' here.\n\r") % buf);
         return FALSE;
       }
       if (! ((ch->master == this && ch->isAffected(AFF_CHARM)) ||
@@ -2023,7 +2023,7 @@ int TBeing::doUnsaddle(sstring arg)
     return FALSE;
   }
   if (!(horse = get_char_room_vis(this, arg))) {
-    sendTo("You don't see '%s' here.\n\r", arg.c_str());
+    sendTo(fmt("You don't see '%s' here.\n\r") % arg);
     return FALSE;
   }
   if (!horse->isRideable()) {
@@ -2087,17 +2087,17 @@ int TBeing::doSaddle(sstring arg)
     return FALSE;
   }
   if (!(horse = get_char_room_vis(this, arg1))) {
-    sendTo("You don't see '%s' here.\n\r", arg1.c_str());
+    sendTo(fmt("You don't see '%s' here.\n\r") % arg1);
     return FALSE;
   }
 
   if (!(t = searchLinkedListVis(this, arg2, getStuff()))) {
-    sendTo("You don't seem to have the '%s'.\n\r", arg2.c_str());
+    sendTo(fmt("You don't seem to have the '%s'.\n\r") % arg2);
     return FALSE;
   }
   saddle = dynamic_cast<TObj *>(t);
   if (!saddle) {
-    sendTo("You don't seem to have the '%s'.\n\r", arg2.c_str());
+    sendTo(fmt("You don't seem to have the '%s'.\n\r") % arg2);
     return FALSE;
   }
   if (this == horse) {
@@ -2227,12 +2227,12 @@ void TBeing::doOutfit(const sstring &arg)
   }
   obj = get_obj_vis_accessible(this, buf.c_str());
   if (!obj || (obj && obj->equippedBy)) {
-    sendTo("You can't seem to find '%s'.\n\r", buf.c_str());
+    sendTo(fmt("You can't seem to find '%s'.\n\r") % buf);
     sendTo("Syntax: outfit <thing> <person>\n\r");
     return;
   }
   if (!(mob = get_char_room_vis(this, buf2))) {
-    sendTo("%s: No one by that name here.\n\r", buf.c_str());
+    sendTo(fmt("%s: No one by that name here.\n\r") % buf);
     sendTo("Syntax: outfit <thing> <person>\n\r");
     return;
   }

@@ -694,9 +694,9 @@ void TBeing::doPoke(const sstring &arg)
     buf="finger";
 
   if (arg.empty()) {
-    ssprintf(holdBuf, "You point your %s around threateningly.", buf.c_str());
+    holdBuf = fmt("You point your %s around threateningly.") % buf;
     act(holdBuf, FALSE, this, NULL, this, TO_CHAR);
-    ssprintf(holdBuf, "$n points $s %s around threateningly.", buf.c_str());
+    holdBuf = fmt("$n points $s %s around threateningly.") % buf;
     act(holdBuf, FALSE, this, NULL, this, TO_ROOM);
     return;
   }
@@ -705,8 +705,8 @@ void TBeing::doPoke(const sstring &arg)
     if (isname(arg, t->name)) {
       obj = dynamic_cast<TObj *>(t);
       if (obj) {
-	sendTo(COLOR_OBJECTS, "You carefully prod %s with your %s.\n\r", obj->getName(), buf.c_str());
-	ssprintf(holdBuf, "$n carefully prods $N with $s %s.", buf.c_str());
+	sendTo(COLOR_OBJECTS, fmt("You carefully prod %s with your %s.\n\r") % obj->getName() % buf);
+	holdBuf = fmt("$n carefully prods $N with $s %s.") % buf;
 	act(holdBuf, FALSE, this, NULL, obj, TO_ROOM);
         return;
       } 
@@ -716,10 +716,10 @@ void TBeing::doPoke(const sstring &arg)
           sendTo("You poke yourself in the ribs, feeling very silly.\n\r");
           act("$n pokes $mself in the ribs, looking very sheepish.", FALSE, this, NULL, NULL, TO_ROOM);
         } else {
-	  sendTo(COLOR_OBJECTS,"You poke %s in the ribs with your %s.\n\r", b->getName(), buf.c_str());
-	  ssprintf(holdBuf, "$n pokes %s in the ribs with $s %s.", b->getName(),buf.c_str());
+	  sendTo(COLOR_OBJECTS,fmt("You poke %s in the ribs with your %s.\n\r") % b->getName() % buf);
+	  holdBuf = fmt("$n pokes %s in the ribs with $s %s.") % b->getName() %buf;
 	  act(holdBuf, FALSE, this, NULL, b, TO_NOTVICT);
-	  ssprintf(holdBuf, "$n pokes you in the ribs with $s %s.", buf.c_str());
+	  holdBuf = fmt("$n pokes you in the ribs with $s %s.") % buf;
 	  act(holdBuf, FALSE, this, NULL, b,TO_VICT);
 	}
         return;
@@ -748,9 +748,9 @@ void TBeing::doPoint(const sstring &arg)
     buf="finger";
 
   if (arg.empty()) {
-    ssprintf(holdBuf, "You point your %s around randomly.", buf.c_str());
+    holdBuf = fmt("You point your %s around randomly.") % buf;
     act(holdBuf, FALSE, this, NULL, this, TO_CHAR);
-    ssprintf(holdBuf, "$n points $s %s around randomly.", buf.c_str());
+    holdBuf = fmt("$n points $s %s around randomly.") % buf;
     act(holdBuf, FALSE, this, NULL, this, TO_ROOM);
     return;
   }
@@ -758,7 +758,7 @@ void TBeing::doPoint(const sstring &arg)
   // point in a direction
   dirTypeT dir = getDirFromChar(arg);
   if (dir != DIR_NONE) {
-    sendTo("You point your %s %s.\n\r", buf.c_str(), dirs_to_blank[dir]);
+    sendTo(fmt("You point your %s %s.\n\r") % buf % dirs_to_blank[dir]);
     ssprintf(holdBuf, "$n points $s %s %s.", 
 	    buf.c_str(), dirs_to_blank[dir]);
     act(holdBuf, false, this, NULL, NULL, TO_ROOM);
@@ -770,9 +770,9 @@ void TBeing::doPoint(const sstring &arg)
     if (isname(arg, t->name)) {
       obj = dynamic_cast<TObj *>(t);
       if (obj) {
-        sendTo(COLOR_OBJECTS,"You point your %s at %s.\n\r", 
-	       buf.c_str(), obj->getName());
-        ssprintf(holdBuf, "$n points $s %s at $o.", buf.c_str());
+        sendTo(COLOR_OBJECTS,fmt("You point your %s at %s.\n\r") % 
+	       buf % obj->getName());
+        holdBuf = fmt("$n points $s %s at $o.") % buf;
         act(holdBuf, FALSE, this, obj, NULL, TO_ROOM);
         return;
       } 
@@ -782,11 +782,11 @@ void TBeing::doPoint(const sstring &arg)
           sendTo("You point at yourself.\n\r");
           act("$n points at $mself.", FALSE, this, NULL, NULL, TO_ROOM);
         } else {
-	  sendTo(COLOR_OBJECTS, "You point at %s with your %s.\n\r", 
-		 b->getName(), buf.c_str());
-	  ssprintf(holdBuf, "$n points at $N with $s %s.", buf.c_str());
+	  sendTo(COLOR_OBJECTS, fmt("You point at %s with your %s.\n\r") % 
+		 b->getName() % buf);
+	  holdBuf = fmt("$n points at $N with $s %s.") % buf;
 	  act(holdBuf, FALSE, this, NULL, b, TO_NOTVICT);
-	  ssprintf(holdBuf, "$n points at you with $s %s.", buf.c_str());
+	  holdBuf = fmt("$n points at you with $s %s.") % buf;
 	  act(holdBuf, FALSE, this, NULL, b, TO_VICT);
 	}
         return;
@@ -972,7 +972,7 @@ int TBeing::doBite(const sstring &arg)
 	  sendTo(COLOR_OBJECTS, "You bite yourself. Are you that deranged?\n\r");
 	  act("$n bites himself. WEIRD?!?", FALSE, this, NULL, b, TO_NOTVICT);
 	} else if(b){
-	  sendTo(COLOR_OBJECTS, "You rip %s's flesh with your piercing bite.\n\r",
+	  sendTo(COLOR_OBJECTS, fmt("You rip %s's flesh with your piercing bite.\n\r") %
 		 b->getName());
 	  act("$n sinks $s teeth into $N. $N screams in agony!",
 	      FALSE, this, NULL, b, TO_NOTVICT);

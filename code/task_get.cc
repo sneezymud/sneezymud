@@ -120,14 +120,14 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
 	    // attached items
             if (o->isObjStat(ITEM_ATTACHED)) {
               if (ch->isImmortal()) {
-                ch->sendTo(COLOR_OBJECTS, "%s : You'll have to be more specific to get this.\n\r",
+                ch->sendTo(COLOR_OBJECTS, fmt("%s : You'll have to be more specific to get this.\n\r") %
                            sstring(o->getName()).cap().c_str());
               } else {
                 if (o->canWear(ITEM_TAKE)) {
-                  ch->sendTo(COLOR_OBJECTS, "%s is attached and is not currently getable.\n\r",
+                  ch->sendTo(COLOR_OBJECTS, fmt("%s is attached and is not currently getable.\n\r") %
                              o->getName());
                 } else {
-                  ch->sendTo(COLOR_OBJECTS, "%s is attached and is not getable.\n\r",
+                  ch->sendTo(COLOR_OBJECTS, fmt("%s is attached and is not getable.\n\r") %
                              o->getName());
                 }
               }
@@ -136,10 +136,10 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
 
             if (!o->canWear(ITEM_TAKE)) {
               if (ch->isImmortal()) {
-                ch->sendTo(COLOR_OBJECTS, "%s : You'll have to be more specific to get this.\n\r",
+                ch->sendTo(COLOR_OBJECTS, fmt("%s : You'll have to be more specific to get this.\n\r") %
                            sstring(o->getName()).cap().c_str());
               } else {
-		//  ch->sendTo(COLOR_OBJECTS, "%s : You can't take that.\n\r",
+		//  ch->sendTo(COLOR_OBJECTS, fmt("%s : You can't take that.\n\r") %
 		//             sstring(o->getName()).cap().c_str());
               }
               continue;
@@ -252,7 +252,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
 	    }
 	}
 	if (!sub) {
-	  ch->sendTo("The %s is no longer accessible.\n\r", buf2.c_str());
+	  ch->sendTo(fmt("The %s is no longer accessible.\n\r") % buf2);
 	  ch->stopTask();
 	  ch->doSave(SILENT_YES);
 	  return FALSE;

@@ -106,7 +106,7 @@ void TBeing::doNameChange(const char *argument)
     mons->swapToStrung();
 
     //  Remake the pet's name.  
-    ssprintf(tmpbuf, "%s %s", mons->name, new_name);
+    tmpbuf = fmt("%s %s") % mons->name % new_name;
     delete [] mons->name;
     mons->name = mud_str_dup(tmpbuf);
 
@@ -117,7 +117,7 @@ void TBeing::doNameChange(const char *argument)
       ssprintf(tmpbuf, "\"%s\", the %s", sstring(new_name).cap().c_str(), 
              one_argument(tmpbuf2, arg));
     else
-      ssprintf(tmpbuf, "\"%s\", %s", sstring(new_name).cap().c_str(), mons->getName());
+      tmpbuf = fmt("\"%s\" % %s") % sstring(new_name).cap() % mons->getName();
 
     delete [] mons->shortDescr;
     mons->shortDescr = mud_str_dup(tmpbuf);
@@ -154,7 +154,7 @@ void TBeing::doNameChange(const char *argument)
   }
   
   // check for corspse file
-  ssprintf(tmpbuf, "corpses/%s", sstring(orig_name).lower().c_str());
+  tmpbuf = fmt("corpses/%s") % sstring(orig_name).lower();
   if ((fp = fopen(tmpbuf.c_str(), "r"))) {
     fclose(fp);
     sendTo("That player has a corpse file.\n\r");

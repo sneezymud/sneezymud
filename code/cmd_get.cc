@@ -98,11 +98,11 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
     if (!ch->isImmortal()) {
       if (obj->canWear(ITEM_TAKE)) {
         if (obj->riding) { 
-          ch->sendTo(COLOR_OBJECTS, "%s is attached to %s and is not currently getable.\n\r", obj->getName(), obj->riding->getName());
+          ch->sendTo(COLOR_OBJECTS, fmt("%s is attached to %s and is not currently getable.\n\r") % obj->getName() % obj->riding->getName());
         } else 
-          ch->sendTo(COLOR_OBJECTS, "%s is attached and is not currently getable.\n\r", obj->getName());
+          ch->sendTo(COLOR_OBJECTS, fmt("%s is attached and is not currently getable.\n\r") % obj->getName());
       } else 
-        ch->sendTo(COLOR_OBJECTS, "%s is attached and is not getable.\n\r", obj->getName());
+        ch->sendTo(COLOR_OBJECTS, fmt("%s is attached and is not getable.\n\r") % obj->getName());
       
       return FALSE;
     }
@@ -345,7 +345,7 @@ int TBeing::doGet(const char *argument)
       }
       if (getall(arg1, newarg)) {
         if (!searchLinkedListVis(this, newarg, roomp->getStuff())) {
-          sendTo("There are no \"%s\"'s visible in this room.\n\r", newarg);
+          sendTo(fmt("There are no \"%s\"'s visible in this room.\n\r") % newarg);
           return FALSE;    
         }
         if (getPosition() <= POSITION_SITTING) {
@@ -374,7 +374,7 @@ int TBeing::doGet(const char *argument)
         break;
       } else if ((p = getabunch(arg1, newarg))) {
         if (!searchLinkedListVis(this, newarg, roomp->getStuff())) {
-          sendTo("There are no \"%s\"'s visible in this room.\n\r", newarg);
+          sendTo(fmt("There are no \"%s\"'s visible in this room.\n\r") % newarg);
           return FALSE;
         }
         if (getPosition() <= POSITION_SITTING) {
@@ -419,9 +419,9 @@ int TBeing::doGet(const char *argument)
         }
       } else {
         if ((tmp_desc = roomp->ex_description->findExtraDesc(arg1)))
-          sendTo("You can't get a %s.\n\r", arg1);
+          sendTo(fmt("You can't get a %s.\n\r") % arg1);
         else
-          sendTo("You don't see a %s here.\n\r", arg1);
+          sendTo(fmt("You don't see a %s here.\n\r") % arg1);
       }
       break;
     case GETALLALL:
@@ -489,7 +489,7 @@ int TBeing::doGet(const char *argument)
 	if(autoloot==TRUE)
 	  sendTo("You do not see or have the corpse.\n\r");
 	else 
-	  sendTo("You do not see or have the %s.\n\r", arg2);
+	  sendTo(fmt("You do not see or have the %s.\n\r") % arg2);
         break;
       } else {
         if (getAllObjChecks(this))
@@ -537,7 +537,7 @@ int TBeing::doGet(const char *argument)
 	if(autoloot==TRUE)
 	  sendTo("You do not see or have the corpse.\n\r");
 	else
-	  sendTo("You do not see or have the %s.\n\r", arg2);
+	  sendTo(fmt("You do not see or have the %s.\n\r") % arg2);
         break;
       }
       if ((t = searchLinkedListVis(this, arg1, sub->getStuff()))) {
@@ -581,8 +581,8 @@ int TBeing::doGet(const char *argument)
           found = TRUE;
         }
       } else {
-        sendTo(COLOR_OBJECTS, "%s does not contain the %s.\n\r",
-	       sstring(sub->getName()).cap().c_str(), arg1);
+        sendTo(COLOR_OBJECTS, fmt("%s does not contain the %s.\n\r") %
+	       sstring(sub->getName()).cap() % arg1);
       }
       break;
   }

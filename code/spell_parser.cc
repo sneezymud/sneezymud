@@ -594,10 +594,10 @@ static void badCastSyntax(const TBeing *ch, spellNumT which)
   }
   if (IS_SET(discArray[which]->targets, TAR_NAME)) {
     if (cast) {
-      ch->sendTo("Syntax : cast %s <argument>\n\r", discArray[which]->name);
+      ch->sendTo(fmt("Syntax : cast %s <argument>\n\r") % discArray[which]->name);
       ch->sendTo("See the CAST help file for more details!\n\r");
     } else {
-      ch->sendTo("Syntax : pray %s <argument>\n\r", discArray[which]->name);
+      ch->sendTo(fmt("Syntax : pray %s <argument>\n\r") % discArray[which]->name);
       ch->sendTo("See the PRAY help file for more details!\n\r");
     }
     return;
@@ -620,10 +620,10 @@ static void badCastSyntax(const TBeing *ch, spellNumT which)
   }
 
   if (cast) {
-    ch->sendTo("Syntax : cast %s <%s>\n\r", discArray[which]->name, tars.c_str());
+    ch->sendTo(fmt("Syntax : cast %s <%s>\n\r") % discArray[which]->name % tars);
     ch->sendTo("See the CAST help file for more details!\n\r");
   } else {
-    ch->sendTo("Syntax : pray %s <%s>\n\r", discArray[which]->name, tars.c_str());
+    ch->sendTo(fmt("Syntax : pray %s <%s>\n\r") % discArray[which]->name % tars);
     ch->sendTo("See the PRAY help file for more details!\n\r");
   }
 }

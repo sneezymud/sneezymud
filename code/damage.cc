@@ -886,8 +886,8 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       }
 
       if(desc && IS_SET(desc->autobits, AUTO_TROPHY)){
-	sendTo(COLOR_BASIC,"You will gain %s experience when fighting %s.\n\r",
-	       trophy->getExpModDescr(trophy->getCount(v->mobVnum())),
+	sendTo(COLOR_BASIC,fmt("You will gain %s experience when fighting %s.\n\r") %
+	       trophy->getExpModDescr(trophy->getCount(v->mobVnum())) %
 	       v->getName());
       }
 

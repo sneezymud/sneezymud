@@ -81,6 +81,7 @@
 //#include "spec_rooms.h"
 #include "materials.h"
 #include "colorstring.h"
+#include "format.h"
 
 // defines the port of the running muds
 extern const int PROD_GAMEPORT;

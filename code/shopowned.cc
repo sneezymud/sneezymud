@@ -130,11 +130,11 @@ void TShopOwned::showInfo()
     keeper->doTell(ch->getName(), 
 		   "I only sell things, I do not buy anything.");
   } else {
-    ssprintf(buf, "%s I deal in", ch->getName());
+    buf = fmt("%s I deal in") % ch->getName();
     for(i=0;i<shop_index[shop_nr].type.size();++i){
       tmp=shop_index[shop_nr].type[i];
       if(tmp != MAX_OBJ_TYPES && (int) tmp != -1)
-	ssprintf(buf, "%s %s,", buf.c_str(), ItemInfo[tmp]->name);
+	buf = fmt("%s %s,") % buf % ItemInfo[tmp]->name;
     }
     keeper->doTell(buf);
   }
@@ -325,7 +325,7 @@ int TShopOwned::buyShop(){
   
   db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, ch->getName(),  SHOPACCESS_OWNER);
   
-  ssprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
+  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
   keeper->saveItems(buf);
   
   keeper->doTell(ch->getName(), "Congratulations, you now own this shop.");
@@ -501,7 +501,7 @@ int TShopOwned::doLogs(sstring arg)
     if(arg=="summaries"){
       db.query("select name, sum(talens) as tsum from shoplog where shop_nr=%i group by name order by tsum desc", shop_nr);
       
-      ssprintf(buf, "<r>%-10s %-65.65s<1>\n\r", "Profit", "Person");
+      buf = fmt("<r>%-10s %-65.65s<1>\n\r") % "Profit" % "Person";
       sb += buf;
       
       while(db.fetchRow()){
@@ -515,7 +515,7 @@ int TShopOwned::doLogs(sstring arg)
       
       db.query("select item, sum(talens) as tsum from shoplog where shop_nr=%i group by item order by tsum desc", shop_nr);
 
-      ssprintf(buf, "<r>%-10s %-65.65s<1>\n\r", "Profit", "Item");
+      buf = fmt("<r>%-10s %-65.65s<1>\n\r") % "Profit" % "Item";
       sb += buf;
       
       while(db.fetchRow()){
@@ -550,7 +550,7 @@ int TShopOwned::doLogs(sstring arg)
     if(db.fetchRow())
       profit=convertTo<int>(db["talens"]);
     
-    ssprintf(buf, "%-15.15s %i\n\r", "Sales Profit", profit);
+    buf = fmt("%-15.15s %i\n\r") % "Sales Profit" % profit;
     sb += buf;
     
     db.query("select sum(talens) as talens from shoplog where shop_nr=%i and talens < 0 and action != 'receiving' and action != 'giving'", shop_nr);
@@ -558,10 +558,10 @@ int TShopOwned::doLogs(sstring arg)
     if(db.fetchRow())
       loss=convertTo<int>(db["talens"]);
     
-    ssprintf(buf, "%-15.15s %i\n\r", "Sales Loss", loss);
+    buf = fmt("%-15.15s %i\n\r") % "Sales Loss" % loss;
     sb += buf;
     
-    ssprintf(buf, "%-15.15s %i\n\r", "Sales Income", profit+loss);
+    buf = fmt("%-15.15s %i\n\r") % "Sales Income" % (profit+loss);
     sb += buf;
     
     /////////
@@ -575,7 +575,7 @@ int TShopOwned::doLogs(sstring arg)
     if(db.fetchRow())
       profit=convertTo<int>(db["talens"]);
     
-    ssprintf(buf, "%-15.15s %i\n\r", "Gross Profit", profit);
+    buf = fmt("%-15.15s %i\n\r") % "Gross Profit" % profit;
     sb += buf;
     
     db.query("select sum(talens) as talens from shoplog where shop_nr=%i and talens < 0",
@@ -583,10 +583,10 @@ int TShopOwned::doLogs(sstring arg)
     if(db.fetchRow())
       loss=convertTo<int>(db["talens"]);
     
-    ssprintf(buf, "%-15.15s %i\n\r", "Gross Loss", loss);
+    buf = fmt("%-15.15s %i\n\r") % "Gross Loss" % loss;
     sb += buf;
     
-    ssprintf(buf, "%-15.15s %i\n\r", "Net Income", profit+loss);
+    buf = fmt("%-15.15s %i\n\r") % "Net Income" % (profit+loss);
     sb += buf;
     
     /////////
@@ -601,7 +601,7 @@ int TShopOwned::doLogs(sstring arg)
     }    
 
     while(db.fetchRow()){
-      ssprintf(buf, "%s  Talens: %8i  Value: %8i  Total: %8i\n\r", db["logtime"], convertTo<int>(db["shoptalens"]), convertTo<int>(db["shopvalue"]), convertTo<int>(db["shopvalue"])+convertTo<int>(db["shoptalens"]));
+      buf = fmt("%s  Talens: %8i  Value: %8i  Total: %8i\n\r") % db["logtime"] % convertTo<int>(db["shoptalens"]) % convertTo<int>(db["shopvalue"]) % (convertTo<int>(db["shopvalue"])+convertTo<int>(db["shoptalens"]));
       sb += buf;
       
       ssprintf(buf, "%-12.12s %-10.10s %-32.32s for %8i talens.\n\r\n\r",

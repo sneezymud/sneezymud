@@ -147,8 +147,8 @@ static int steal(TBeing * thief, TBeing * victim)
       thief->addToMoney(gold, GOLD_INCOME);
       victim->addToMoney(-gold, GOLD_INCOME);
       
-      thief->sendTo("You have just stolen %d talen%s from %s.\n\r", gold, 
-            (gold > 1) ? "s" : "", victim->getName());
+      thief->sendTo(fmt("You have just stolen %d talen%s from %s.\n\r") % gold % 
+            ((gold > 1) ? "s" : "") % victim->getName());
 
       if (victim->isPerceptive())
         victim->sendTo("You suddenly feel lighter in your moneypouch...\n\r");

@@ -143,7 +143,7 @@ void TBeing::doGload(sstring arg)
     }
     
     if(gun->getAmmo()){
-      ssprintf(buf, "unload %s", arg1.c_str());
+      buf = fmt("unload %s") % arg1;
       doGload(buf);
       if(gun->getAmmo()){
 	sendTo("That gun is already loaded!\n\r");
@@ -211,11 +211,11 @@ sstring TGun::statObjInfo() const
 void TGun::describeObjectSpecifics(const TBeing *ch) const
 {
   if(getAmmo()){
-    ch->sendTo("It has %i rounds of %s ammunition left.\n\r",
-	       getAmmo()->getRounds(), getAmmoDescr(getAmmoType()));
+    ch->sendTo(fmt("It has %i rounds of %s ammunition left.\n\r") %
+	       getAmmo()->getRounds() % getAmmoDescr(getAmmoType()));
   } else {
     // yeah yeah bad grammar, may as well be consistant though
-    ch->sendTo("Is has 0 rounds of %s ammunition left.\n\r",
+    ch->sendTo(fmt("Is has 0 rounds of %s ammunition left.\n\r") %
 	       getAmmoDescr(getAmmoType()));
   }
 
@@ -224,8 +224,8 @@ void TGun::describeObjectSpecifics(const TBeing *ch) const
 
 void TAmmo::describeObjectSpecifics(const TBeing *ch) const
 {
-  ch->sendTo("It has %i rounds of %s ammunition left.\n\r",
-	     getRounds(), getAmmoDescr(getAmmoType()));
+  ch->sendTo(fmt("It has %i rounds of %s ammunition left.\n\r") %
+	     getRounds() % getAmmoDescr(getAmmoType()));
 
 }
 
@@ -420,13 +420,13 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
     
     if (targ)
-      ch->sendTo(COLOR_MOBS, "You shoot %s out of %s at %s.\n\r",
-		 capbuf.uncap().c_str(), capbuf2.uncap().c_str(),
+      ch->sendTo(COLOR_MOBS, fmt("You shoot %s out of %s at %s.\n\r") %
+		 capbuf.uncap().c_str() % capbuf2.uncap().c_str() %
 		 targ->getName());
     else
-      ch->sendTo("You shoot %s out of %s.\n\r",
-		 capbuf.uncap().c_str(), 
-		 capbuf2.uncap().c_str());
+      ch->sendTo(fmt("You shoot %s out of %s.\n\r") %
+		 capbuf.uncap() % 
+		 capbuf2.uncap());
     
     sprintf(buf, "$n points $p %swards, and shoots $N out of it.",
 	    dirs[dir]);
@@ -438,7 +438,7 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     int rc = throwThing(bullet, dir, ch->in_room, &targ, shoot_dist, 10, ch);
 
     if(!isSilenced())
-      ch->roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r",
+      ch->roomp->getZone()->sendTo(fmt("A gunshot echoes in the distance.\n\r") %
 				   ch->in_room);
 
     // delete the bullet afterwards, arbitrary decision

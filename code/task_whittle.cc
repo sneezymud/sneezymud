@@ -589,14 +589,14 @@ void TBeing::doWhittle(const char *tArg)
                                 whittleItems[whittleIndex].weiSize) / 25) *
                               whittleItems[whittleIndex].itemType);
 
-        sendTo("%-45s:%c: %6.0f %3.0f %3.0d%% %5d %2d %4.0f\n\r",
-               whittleItems[whittleIndex].name.c_str(),
-               (whittleItems[whittleIndex].valid ? '*' : ' '),
-               whittleItems[whittleIndex].volSize,
-               whittleItems[whittleIndex].weiSize,
-               whittleItems[whittleIndex].whittleReq,
-               whittleItems[whittleIndex].itemVnum,
-               whittleItems[whittleIndex].itemType,
+        sendTo(fmt("%-45s:%c: %6.0f %3.0f %3.0d%% %5d %2d %4.0f\n\r") %
+               whittleItems[whittleIndex].name.c_str() %
+               (whittleItems[whittleIndex].valid ? '*' : ' ') %
+               whittleItems[whittleIndex].volSize %
+               whittleItems[whittleIndex].weiSize %
+               whittleItems[whittleIndex].whittleReq %
+               whittleItems[whittleIndex].itemVnum %
+               whittleItems[whittleIndex].itemType %
                whittleTime);
       }
     }

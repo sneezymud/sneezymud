@@ -149,7 +149,7 @@ vlogf(LOG_BUG, buf);
 
   if ((iDist > 50) || (max_distance < (unsigned int) iDist)) {
     ch->sendTo("Much too far.  Maybe in your dreams!\n\r");
-    ch->sendTo("You couldn't possibly throw it further than %d rooms.\n\r", max_distance);
+    ch->sendTo(fmt("You couldn't possibly throw it further than %d rooms.\n\r") % max_distance);
     return FALSE;
   }
 
@@ -1016,10 +1016,10 @@ void TBeing::doScan(const char *argument)
       if (t == this)
         continue;
       if (canSee(t)) {
-        sendTo(COLOR_MOBS, "%30s : right here\n\r", t->getNameNOC(this).c_str());
+        sendTo(COLOR_MOBS, fmt("%30s : right here\n\r") % t->getNameNOC(this));
         found = TRUE;
       } else if (canSee(t, INFRA_YES)) {
-        sendTo(COLOR_MOBS, "%30s : right here\n\r", "A blob of heat");
+        sendTo(COLOR_MOBS, fmt("%30s : right here\n\r") % "A blob of heat");
         found = TRUE;
       }
     }
@@ -1066,20 +1066,20 @@ void TBeing::doScan(const char *argument)
           if (!tbt)
             continue;
           if (can_see_char_other_room(this, tbt, real_roomp(rm))) {
-            sendTo(COLOR_MOBS, "%30s : %s %s\n\r", tbt->getNameNOC(this).c_str(), rng_desc[range], dirs_to_blank[i]);
+            sendTo(COLOR_MOBS, fmt("%30s : %s %s\n\r") % tbt->getNameNOC(this) % rng_desc[range] % dirs_to_blank[i]);
             nfnd++;
             found = TRUE;
             if (nfnd > (5 + visionBonus / 3)) {
-              sendTo("The crowd hinders you from seeing any further %s.\n\r", dirs_to_blank[i]);
+              sendTo(fmt("The crowd hinders you from seeing any further %s.\n\r") % dirs_to_blank[i]);
               hindered = TRUE;
               break;
             }
           } else if (canSee(tbt, INFRA_YES)) {
-            sendTo(COLOR_MOBS, "%30s : %s %s\n\r", "A blob of heat", rng_desc[range], dirs_to_blank[i]);
+            sendTo(COLOR_MOBS, fmt("%30s : %s %s\n\r") % "A blob of heat" % rng_desc[range] % dirs_to_blank[i]);
             nfnd++;
             found = TRUE;
             if (nfnd > (5 + visionBonus / 3)) {
-              sendTo("The crowd hinders you from seeing any further %s.\n\r", dirs_to_blank[i]);
+              sendTo(fmt("The crowd hinders you from seeing any further %s.\n\r") % dirs_to_blank[i]);
               hindered = TRUE;
               break;
             }
@@ -1568,8 +1568,7 @@ void TBeing::doBload(const char *arg)
   }
   if (heldInPrimHand()) {
     if (!isname(arg1, heldInPrimHand()->name)) {
-      sendTo(COLOR_OBJECTS, "You would have a hard time firing your %s, while holding %s.\n\r",
-            arg1, sstring(heldInPrimHand()->getName()).uncap().c_str());
+      sendTo(COLOR_OBJECTS, fmt("You would have a hard time firing your %s, while holding %s.\n\r") %            arg1 % sstring(heldInPrimHand()->getName()).uncap());
       return;
     } else {
       TThing *tObj = heldInPrimHand();
@@ -1577,13 +1576,12 @@ void TBeing::doBload(const char *arg)
       *this += *(unequip(getPrimaryHold()));
       //--(*tObj);
       //*this += *tObj;
-      sendTo(COLOR_OBJECTS, "You remove %s to load it.\n\r",
+      sendTo(COLOR_OBJECTS, fmt("You remove %s to load it.\n\r") %
              sstring(tObj->getName()).uncap().c_str());
     }
   }
   if (heldInSecHand()) {
-    sendTo(COLOR_OBJECTS, "You would have a hard time firing your %s, while holding %s.\n\r",
-          arg1, sstring(heldInSecHand()->getName()).uncap().c_str());
+    sendTo(COLOR_OBJECTS, fmt("You would have a hard time firing your %s, while holding %s.\n\r") %          arg1 % sstring(heldInSecHand()->getName()).uncap());
     return;
   }
   if (!(bow = searchLinkedListVis(this, arg1, getStuff()))) {
@@ -1600,7 +1598,7 @@ void TBeing::doBload(const char *arg)
     if (arrow)
       arrow->bloadBowArrow(this, bow);
     else
-      sendTo("You seem to have run out of '%s's.\n\r", arg2);
+      sendTo(fmt("You seem to have run out of '%s's.\n\r") % arg2);
   }
 }
 

@@ -137,7 +137,7 @@ static int bodyslamMiss(TBeing *caster, TBeing *victim, bodySlamMissT type)
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return rc;
 
-    caster->sendTo("%sYou fall to the %s.%s\n\r", caster->blue(), caster->roomp->describeGround().c_str(), caster->norm());
+    caster->sendTo(fmt("%sYou fall to the %s.%s\n\r") % caster->blue() % caster->roomp->describeGround() % caster->norm());
 
     rc = caster->trySpringleap(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))

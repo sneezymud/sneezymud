@@ -251,7 +251,7 @@ int castCreateWater(TBeing *caster, TObj *obj)
   if (ret == SPELL_SUCCESS) {
     if ((drink = dynamic_cast<TDrinkCon *>(obj))) {
       if (!(drink->getMaxDrinkUnits() - drink->getDrinkUnits())) {
-        caster->sendTo(COLOR_SPELLS, "<p>Your %s is completely full so you stop your prayer.<z>\n\r", fname(drink->name).c_str());
+        caster->sendTo(COLOR_SPELLS, fmt("<p>Your %s is completely full so you stop your prayer.<z>\n\r") % fname(drink->name));
         act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
         caster->stopCast(STOP_CAST_NONE);
       }
@@ -348,7 +348,7 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, byte bKnown)
 
   if (victim->isImmortal()) {
     caster->sendTo("I don't think that is a good idea...\n\r");
-    victim->sendTo("%s just tried to recall you, how pathetic...\n\r",
+    victim->sendTo(fmt("%s just tried to recall you, how pathetic...\n\r") %
                    caster->getNameNOC(victim).c_str());
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;

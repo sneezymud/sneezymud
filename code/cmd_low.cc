@@ -958,12 +958,12 @@ void TBeing::immortalEvaluation(const TMonster * victim) const
     return;
 
   sendTo("********* Immortal Evaluation *********\n\r");
-  sendTo(" Real Level    : %.2f\n\r", victim->getRealLevel());
-  sendTo("    HP level      : %.2f (theo: %.1f)\n\r", hpModifier(victim), victim->getHPLevel());
-  sendTo("    Dam level     : %.2f (theo: %.1f)\n\r", damModifier(victim), victim->getDamLevel());
-  sendTo("    AC level      : %.2f (theo: %.1f)\n\r", acModifier(victim), victim->getACLevel());
-  sendTo("    Hitroll level : %.2f\n\r", thacoModifier(victim));
-  sendTo("    Spell Hitroll : %d\n\r", (int) victim->getSpellHitroll());
+  sendTo(fmt(" Real Level    : %.2f\n\r") % victim->getRealLevel());
+  sendTo(fmt("    HP level      : %.2f (theo: %.1f)\n\r") % hpModifier(victim) % victim->getHPLevel());
+  sendTo(fmt("    Dam level     : %.2f (theo: %.1f)\n\r") % damModifier(victim) % victim->getDamLevel());
+  sendTo(fmt("    AC level      : %.2f (theo: %.1f)\n\r") % acModifier(victim) % victim->getACLevel());
+  sendTo(fmt("    Hitroll level : %.2f\n\r") % thacoModifier(victim));
+  sendTo(fmt("    Spell Hitroll : %d\n\r") % (int) victim->getSpellHitroll());
 }
 
 static void compare2Mobs(TBeing *ch, TBeing *mob1, TBeing *mob2)
@@ -983,16 +983,16 @@ static void compare2Mobs(TBeing *ch, TBeing *mob1, TBeing *mob2)
       num_hits++;
   }
   float hitRate = (float) num_hits / (float) tot_hits;
-  ch->sendTo(COLOR_MOBS, "%s hits %s roughly %.2f%% of the time.\n\r",
-    mob1->getName(), mob2->getName(), hitRate * 100.0);
+  ch->sendTo(COLOR_MOBS, fmt("%s hits %s roughly %.2f%% of the time.\n\r") %
+    mob1->getName() % mob2->getName() % (hitRate * 100.0));
 
   double avg_dam = avgDam(mob1);
   float modDam = (float) (avg_dam * hitRate);
-  ch->sendTo(COLOR_MOBS, "Average damage: %.2f, Modified Damage: %.2f\n\r",
-       avg_dam, modDam);
+  ch->sendTo(COLOR_MOBS, fmt("Average damage: %.2f, Modified Damage: %.2f\n\r") %
+       avg_dam % modDam);
   float num_rounds = mob2->hitLimit() / modDam;
-  ch->sendTo(COLOR_MOBS, "%s has %d HPs, so can survive %.2f rounds.\n\r",
-        mob2->getName(), mob2->hitLimit(), num_rounds);
+  ch->sendTo(COLOR_MOBS, fmt("%s has %d HPs, so can survive %.2f rounds.\n\r") %
+        mob2->getName() % mob2->hitLimit() % num_rounds);
 }
 
 void TBeing::doCompare(const char *arg)
@@ -1014,7 +1014,7 @@ void TBeing::doCompare(const char *arg)
     if (!mob1) {
       mob1 = get_char_vis_world(this, mArg1, NULL, EXACT_NO);
       if (!mob1) {
-        sendTo("Can't locate '%s' here.\n\r", mArg1);
+        sendTo(fmt("Can't locate '%s' here.\n\r") % mArg1);
         return;
       }
     }
@@ -1028,7 +1028,7 @@ void TBeing::doCompare(const char *arg)
     if (!mob2) {
       mob2 = get_char_vis_world(this, mArg2, NULL, EXACT_NO);
       if (!mob2) {
-        sendTo("Can't locate '%s' here.\n\r", mArg2);
+        sendTo(fmt("Can't locate '%s' here.\n\r") % mArg2);
         return;
       }
     }
@@ -1037,7 +1037,7 @@ void TBeing::doCompare(const char *arg)
     return;
   }
 
-  sendTo(COLOR_MOBS, "Comparison of %s vs %s.\n\r", mob1->getName(), mob2->getName());
+  sendTo(COLOR_MOBS, fmt("Comparison of %s vs %s.\n\r") % mob1->getName() % mob2->getName());
 
   // first check 1 v 2
   compare2Mobs(this, mob1, mob2);
@@ -1091,8 +1091,8 @@ void TPerson::doLow(const sstring &arg)
     TDatabase db(DB_SNEEZY);
     db.query("select type, count(*) as count, max(mod1) as max, min(mod1) as min, avg(mod1) as avg, sum(mod1) as sum from objaffect group by type");
 
-    sendTo("%13s %5s %5s %5s %10s %10s\n\r", 
-	   "Bonus       :","Cnt","Max","Min","Avg","Sum");
+    sendTo(fmt("%13s %5s %5s %5s %10s %10s\n\r") % 
+	   "Bonus       :" %"Cnt" %"Max" %"Min" %"Avg" %"Sum");
 
     while(db.fetchRow()){
       ssprintf(buf, "%5s %5s %5s %10s %10s", db["count"],
@@ -1100,40 +1100,40 @@ void TPerson::doLow(const sstring &arg)
 
       switch(mapFileToApply(convertTo<int>(db["type"]))){
 	case APPLY_STR:
-	  sendTo("Strength    : %s\n\r", buf.c_str());
+	  sendTo(fmt("Strength    : %s\n\r") % buf);
 	  break;
 	case APPLY_BRA:
-	  sendTo("Brawn       : %s\n\r", buf.c_str());
+	  sendTo(fmt("Brawn       : %s\n\r") % buf);
 	  break;
 	case APPLY_CON:
-	  sendTo("Constitution: %s\n\r", buf.c_str());
+	  sendTo(fmt("Constitution: %s\n\r") % buf);
 	  break;
 	case APPLY_DEX:
-	  sendTo("Dexterity   : %s\n\r", buf.c_str());
+	  sendTo(fmt("Dexterity   : %s\n\r") % buf);
 	  break;
 	case APPLY_AGI:
-	  sendTo("Agility     : %s\n\r", buf.c_str());
+	  sendTo(fmt("Agility     : %s\n\r") % buf);
 	  break;
 	case APPLY_INT:
-	  sendTo("Intelligence: %s\n\r", buf.c_str());
+	  sendTo(fmt("Intelligence: %s\n\r") % buf);
 	  break;
 	case APPLY_WIS:
-	  sendTo("Wisdom      : %s\n\r", buf.c_str());
+	  sendTo(fmt("Wisdom      : %s\n\r") % buf);
 	  break;
 	case APPLY_FOC:
-	  sendTo("Focus       : %s\n\r", buf.c_str());
+	  sendTo(fmt("Focus       : %s\n\r") % buf);
 	  break;
 	case APPLY_PER:
-	  sendTo("Perception  : %s\n\r", buf.c_str());
+	  sendTo(fmt("Perception  : %s\n\r") % buf);
 	  break;
 	case APPLY_CHA:
-	  sendTo("Charisma    : %s\n\r", buf.c_str());
+	  sendTo(fmt("Charisma    : %s\n\r") % buf);
 	  break;
 	case APPLY_KAR:
-	  sendTo("Karma       : %s\n\r", buf.c_str());
+	  sendTo(fmt("Karma       : %s\n\r") % buf);
 	  break;
 	case APPLY_SPE:
-	  sendTo("Speed       : %s\n\r", buf.c_str());
+	  sendTo(fmt("Speed       : %s\n\r") % buf);
 	  break;
 	default:
 	  break;
@@ -1161,63 +1161,63 @@ void TPerson::doLow(const sstring &arg)
       }
       buf += "\n\r";
     }
-    sendTo(COLOR_BASIC, "%s\n\r", buf.c_str());
+    sendTo(COLOR_BASIC, fmt("%s\n\r") % buf);
 
     for(territoryT terr=HOME_TER_NONE;terr<MAX_HOME_TERS;terr++){
       switch(terr){
 	case HOME_TER_HUMAN_VILLAGER:
 	  sendTo("Villager");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo("%4d  ", territory_adjustment(terr, stat));
+	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
 	  }
 	  sendTo("\n\r");
 	  break;
 	case HOME_TER_HUMAN_URBAN:
 	  sendTo("Urban   ");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo("%4d  ", territory_adjustment(terr, stat));
+	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
 	  }
 	  sendTo("\n\r");
 	  break;
 	case HOME_TER_HUMAN_PLAINS:
 	  sendTo("Plains  ");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo("%4d  ", territory_adjustment(terr, stat));
+	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
 	  }
 	  sendTo("\n\r");
 	  break;
 	case HOME_TER_HUMAN_RECLUSE:
 	  sendTo("Recluse ");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo("%4d  ", territory_adjustment(terr, stat));
+	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
 	  }
 	  sendTo("\n\r");
 	  break;
 	case HOME_TER_HUMAN_HILL:
 	  sendTo("Hill    ");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo("%4d  ", territory_adjustment(terr, stat));
+	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
 	  }
 	  sendTo("\n\r");
 	  break;
 	case HOME_TER_HUMAN_MOUNTAIN:
 	  sendTo("Mountain");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo("%4d  ", territory_adjustment(terr, stat));
+	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
 	  }
 	  sendTo("\n\r");
 	  break;
 	case HOME_TER_HUMAN_FOREST:
 	  sendTo("Forest  ");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo("%4d  ", territory_adjustment(terr, stat));
+	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
 	  }
 	  sendTo("\n\r");
 	  break;
 	case HOME_TER_HUMAN_MARINER:
 	  sendTo("Marine  ");
 	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo("%4d  ", territory_adjustment(terr, stat));
+	    sendTo(fmt("%4d  ") % territory_adjustment(terr, stat));
 	  }
 	  sendTo("\n\r");
 	  break;

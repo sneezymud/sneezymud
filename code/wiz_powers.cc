@@ -5,7 +5,7 @@
 bool TBeing::powerCheck(wizPowerT wpt) const
 {
   if (!hasWizPower(wpt)) {
-    sendTo("%s: You lack this power.\n\r", getWizPowerName(wpt).c_str());
+    sendTo(fmt("%s: You lack this power.\n\r") % getWizPowerName(wpt));
     return true;
   }
   return false;
@@ -377,7 +377,7 @@ void TPerson::saveWizPowers()
   sstring caFilebuf;
   FILE *fp;
 
-  ssprintf(caFilebuf, "player/%c/%s.wizpower", LOWER(name[0]), sstring(name).lower().c_str());
+  caFilebuf = fmt("player/%c/%s.wizpower") % LOWER(name[0]) % sstring(name).lower();
 
 // REMOVED by Cosmo 7/15/01-- cant figure out a reason why this should be in here
 //  if (hasWizPower(POWER_IDLED))
@@ -408,7 +408,7 @@ void TPerson::loadWizPowers()
   sstring caFilebuf;
   FILE *fp;
 
-  ssprintf(caFilebuf, "player/%c/%s.wizpower", LOWER(name[0]), sstring(name).lower().c_str());
+  caFilebuf = fmt("player/%c/%s.wizpower") % LOWER(name[0]) % sstring(name).lower();
 
   if (!(fp = fopen(caFilebuf.c_str(), "r")))
     return;

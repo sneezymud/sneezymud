@@ -661,7 +661,7 @@ rp->isFlyingSector())) {
           fallKill();
           return DELETE_THIS;
         } else {
-          sendTo("You are CRUSHED as you impact with the %s.\n\r", rp->describeGround().c_str());
+          sendTo(fmt("You are CRUSHED as you impact with the %s.\n\r") % rp->describeGround());
           if (rp->isWaterSector())
             act("$n plunges into the waters.", FALSE, this, 0, 0, TO_ROOM);
           else
@@ -706,7 +706,7 @@ rp->isFlyingSector())) {
             return DELETE_THIS;
         } else {
           act("$n screams as $e tumbles to the $g.", FALSE, this, 0, 0, TO_ROOM);
-          sendTo("You scream in pain as you tumble to the %s.\n\r", roomp->describeGround().c_str());
+          sendTo(fmt("You scream in pain as you tumble to the %s.\n\r") % roomp->describeGround());
           int dam = count * ::number(15,55);
           if (affectedBySpell(SPELL_FEATHERY_DESCENT) ||
               doesKnowSkill(SKILL_CATFALL))
@@ -722,7 +722,7 @@ rp->isFlyingSector())) {
         sendTo("You fall un-scathed into the refreshing waters.\n\r");
       } else {
         act("$n drops gracefully onto the $g.", FALSE, this, 0, 0, TO_ROOM);
-        sendTo("You drop gracefully to the %s.\n\r", roomp->describeGround().c_str());
+        sendTo(fmt("You drop gracefully to the %s.\n\r") % roomp->describeGround());
       }
       return TRUE;
     }

@@ -44,10 +44,10 @@ void TBeing::wizFileRead()
   if (!(GetMaxLevel() > MAX_MORT) || !(d = desc))
     return;
 
-  ssprintf(buf, "immortals/%s/wizdata", getName());
+  buf = fmt("immortals/%s/wizdata") % getName();
   fp = fopen(buf.c_str(), "r");
   if (!fp) {
-    ssprintf(buf2, "immortals/%s", getName());
+    buf2 = fmt("immortals/%s") % getName();
     fp = fopen(buf2.c_str(), "r");
     if (!fp) {	// no immort directory 
       if (mkdir(buf2.c_str(), 0770)) {
@@ -82,7 +82,7 @@ void TBeing::wizFileRead()
   if (tPerson && !tPerson->tLogFile && should_be_logged(tPerson)) {
     sstring tString;
 
-    ssprintf(tString, "immortals/%s/logfile", name);
+    tString = fmt("immortals/%s/logfile") % name;
 
     if (!(tPerson->tLogFile = fopen(tString.c_str(), "a")))
       vlogf(LOG_FILE, "Unable to open Log File for %s", name);
@@ -108,10 +108,10 @@ void TPerson::wizFileSave()
   if (d->connected != CON_PLYNG)  // semi arbitrary, but here for sanity
     return;
 
-  ssprintf(buf, "immortals/%s/wizdata", getName());
+  buf = fmt("immortals/%s/wizdata") % getName();
   unlink(buf.c_str());
   if (!(fp = fopen(buf.c_str(), "wa+"))) {
-    ssprintf(buf, "immortals/%s", getName());
+    buf = fmt("immortals/%s") % getName();
     if (!(fp = fopen(buf.c_str(), "r"))) {	// no immort directory 
       if (mkdir(buf.c_str(), 0770))
 	sendTo("Unable to create a wizard directory for you.  Tell Brutius or Batopr.\n\r");

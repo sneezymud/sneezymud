@@ -643,43 +643,43 @@ void vlogf(logTypeT tError, const char *errorMsg,...)
       break;
     case LOG_BATOPR:
       name = "Batopr";
-      ssprintf(buf, "%s: ", name.c_str());
+      buf = fmt("%s: ") % name;
       break;
     case LOG_BRUTIUS:
       name = "Brutius";
-      ssprintf(buf, "%s: ", name.c_str());
+      buf = fmt("%s: ") % name;
       break;
     case LOG_COSMO:
       name = "Cosmo";
-      ssprintf(buf, "%s: ", name.c_str());
+      buf = fmt("%s: ") % name;
       break;
     case LOG_LAPSOS:
       name = "Lapsos";
-      ssprintf(buf, "%s: ", name.c_str());
+      buf = fmt("%s: ") % name;
       break;
     case LOG_PEEL:
       name = "Peel";
-      ssprintf(buf, "%s: ", name.c_str());
+      buf = fmt("%s: ") % name;
       break;
     case LOG_JESUS:
       name = "Jesus";
-      ssprintf(buf, "%s: ", name.c_str());
+      buf = fmt("%s: ") % name;
       break;
     case LOG_DASH:
       name = "Dash";
-      ssprintf(buf, "%s: ", name.c_str());
+      buf = fmt("%s: ") % name;
       break;
     case LOG_ANGUS:
       name = "Angus: ";
-      ssprintf(buf, "%s: ", name.c_str());
+      buf = fmt("%s: ") % name;
       break;
     case LOG_MAROR:
       name = "Maror";
-      ssprintf(buf, "%s: ", name.c_str());
+      buf = fmt("%s: ") % name;
       break;
     case LOG_DB:
       name = "Database";
-      ssprintf(buf, "%s: ", name.c_str());
+      buf = fmt("%s: ") % name;
       break;
     default:
       buf[0] = '\0';
@@ -719,7 +719,7 @@ void vlogf(logTypeT tError, const char *errorMsg,...)
       if (i->m_bIsClient)
         i->clientf("%d|%d|%s", CLIENT_LOG, tError, buf.c_str());
       else
-        i->character->sendTo(COLOR_LOGS, "// %s\n\r", buf.c_str());
+        i->character->sendTo(COLOR_LOGS, fmt("// %s\n\r") % buf);
     }
   }
 }
@@ -1169,7 +1169,7 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
 
     if (rider) {
       if (!silent)
-        ch->sendTo(COLOR_OBJECTS, "%s : Occupied.\n\r", sstring(shortDescr).cap().c_str());
+        ch->sendTo(COLOR_OBJECTS, fmt("%s : Occupied.\n\r") % sstring(shortDescr).cap());
       return FALSE;
     }
 
@@ -1178,13 +1178,13 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
       if (!ch->isImmortal()) {
         if (canWear(ITEM_TAKE)) {
           if (riding) {
-            ch->sendTo(COLOR_OBJECTS, "%s is attached to %s and is not currently getable.\n\r", getName(), riding->getName());
+            ch->sendTo(COLOR_OBJECTS, fmt("%s is attached to %s and is not currently getable.\n\r") % getName() % riding->getName());
           } else {
-            ch->sendTo(COLOR_OBJECTS, "%s is attached and is not currently getable.\n\r", getName());
+            ch->sendTo(COLOR_OBJECTS, fmt("%s is attached and is not currently getable.\n\r") % getName());
           
           }
         } else {
-          ch->sendTo(COLOR_OBJECTS, "%s : You can't take that.\n\r", getName());
+          ch->sendTo(COLOR_OBJECTS, fmt("%s : You can't take that.\n\r") % getName());
         }
         return FALSE;
       }
@@ -1200,14 +1200,14 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
     // attached items
     if (isObjStat(ITEM_ATTACHED)) {
       if (canWear(ITEM_TAKE))
-        ch->sendTo(COLOR_OBJECTS, "%s is attached and is not currently getable.\n\r", getName());
+        ch->sendTo(COLOR_OBJECTS, fmt("%s is attached and is not currently getable.\n\r") % getName());
       else
-        ch->sendTo(COLOR_OBJECTS, "%s : You can't take that.\n\r", getName());
+        ch->sendTo(COLOR_OBJECTS, fmt("%s : You can't take that.\n\r") % getName());
       return FALSE;
     }
 
     if (!silent)
-      ch->sendTo(COLOR_OBJECTS, "%s : You can't take that.\n\r", sstring(shortDescr).cap().c_str());
+      ch->sendTo(COLOR_OBJECTS, fmt("%s : You can't take that.\n\r") % sstring(shortDescr).cap());
 
     return FALSE;
   }
@@ -1437,7 +1437,7 @@ int TBeing::bumpHeadDoor(roomDirData *exitp, int *height)
 
   ssprintf(doorbuf, exitp->getName().c_str());
   if (::number(1, 300) > plotStat(STAT_CURRENT, STAT_AGI, 30, 180, 110)) {
-    sendTo("You bump your head as you go through the %s.  OUCH!\n\r",
+    sendTo(fmt("You bump your head as you go through the %s.  OUCH!\n\r") %
 	   doorbuf.uncap().c_str());
     ssprintf(buf, "$n bumps $s head on the %s.  That had to hurt.",
 	     doorbuf.uncap().c_str());
@@ -1458,7 +1458,7 @@ int TBeing::bumpHeadDoor(roomDirData *exitp, int *height)
         return DELETE_THIS;
     } 
   } else 
-    sendTo("You duck down as you go through the %s.\n\r",
+    sendTo(fmt("You duck down as you go through the %s.\n\r") %
 	   doorbuf.uncap().c_str());
   
   return FALSE;
@@ -1658,7 +1658,7 @@ void TBeing::addToMoney(int money, moneyTypeT type)
           reconcileHelp(NULL, amount * TITHE_FACTOR);
 
 	  if(amount>0)
-	    sendTo("You tithe %i talens.\n\r", amount);
+	    sendTo(fmt("You tithe %i talens.\n\r") % amount);
         }
         break;
       case GOLD_TITHE:
@@ -1888,13 +1888,13 @@ bool TBeing::checkBusy(const sstring &buf="")
   }
 #if 0
   int tmpnum = (hitsPerRound ? (int) (cantHit/hitsPerRound + 1) : 1000000); 
-  sendTo(" (Roughly %d round%s to go)\n\r", tmpnum, (tmpnum > 1) ? "s" : "");
+  sendTo(fmt(" (Roughly %d round%s to go)\n\r") % tmpnum % (tmpnum > 1) ? "s" : "");
 #else
   float tmpnum = (hitsPerRound ? (cantHit/hitsPerRound) : 1000000); 
   tmpnum *= PULSE_COMBAT;
   tmpnum /= ONE_SECOND;
 
-  sendTo(" (Roughly %.1f seconds to go)\n\r", tmpnum);
+  sendTo(fmt(" (Roughly %.1f seconds to go)\n\r") % tmpnum);
 #endif
   return TRUE;
 }
@@ -1927,30 +1927,30 @@ sstring secsToString(time_t num)
 
 #if 0
   if (weeks) {
-    ssprintf(buf, "%d week%s", weeks, weeks == 1 ? "" : "s");
+    buf = fmt("%d week%s") % weeks % weeks == 1 ? "" : "s";
     timesstring += buf;
   }
 #endif
   if (days) {
-    ssprintf(buf, "%d day%s", days, days == 1 ? "" : "s");
+    buf = fmt("%d day%s") % days % (days == 1 ? "" : "s");
     if (!timesstring.empty())
       timesstring += ", ";
     timesstring += buf;
   }
   if (hours) {
-    ssprintf(buf, "%d hour%s", hours, hours == 1 ? "" : "s");
+    buf = fmt("%d hour%s") % hours % (hours == 1 ? "" : "s");
     if (!timesstring.empty())
       timesstring += ", ";
     timesstring += buf;
   }
   if (mins) {
-    ssprintf(buf, "%d minute%s", mins, mins == 1 ? "" : "s");
+    buf = fmt("%d minute%s") % mins % (mins == 1 ? "" : "s");
     if (!timesstring.empty())
       timesstring += ", ";
     timesstring += buf;
   }
   if (secs) {
-    ssprintf(buf, "%d second%s", secs, secs == 1 ? "" : "s");
+    buf = fmt("%d second%s") % secs % (secs == 1 ? "" : "s");
     if (!timesstring.empty())
       timesstring += ", ";
     timesstring += buf;

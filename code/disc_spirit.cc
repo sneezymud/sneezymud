@@ -596,7 +596,7 @@ int cloudOfConcealment(TBeing *caster, int level, byte bKnown)
   affectedData aff;
   int found = FALSE;
   if (bSuccess(caster, bKnown, SPELL_CLOUD_OF_CONCEALMENT)) {
-    caster->sendTo("You focus your powers and cause a cloud to materialize around your group.\n\r",ANSI_GRAY);
+    caster->sendTo(fmt("You focus your powers and cause a cloud to materialize around your group.\n\r") %ANSI_GRAY);
     act("$n invokes some magic and produces huge volumes of vaporous smoke.",
         TRUE,caster,0,0,TO_ROOM,ANSI_GRAY);
 
@@ -618,7 +618,7 @@ int cloudOfConcealment(TBeing *caster, int level, byte bKnown)
 #if 0
 // setting the affect sends similar text, so don't be redundant
             act("$n dissolves out of sight!", TRUE, tmp_victim, NULL, NULL, TO_ROOM,ANSI_GRAY);
-            tmp_victim->sendTo("You vanish!\n\r",ANSI_GRAY);
+            tmp_victim->sendTo(fmt("You vanish!\n\r") %ANSI_GRAY);
 #endif
 
             tmp_victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
@@ -630,7 +630,7 @@ int cloudOfConcealment(TBeing *caster, int level, byte bKnown)
     if (!caster->isAffected(AFF_INVISIBLE)) {
 #if 0
       act("$n dissolves out of sight!", TRUE, caster, NULL, NULL, TO_ROOM, ANSI_GRAY);
-      caster->sendTo("You vanish!\n\r",ANSI_GRAY);
+      caster->sendTo(fmt("You vanish!\n\r") %ANSI_GRAY);
 #endif
       caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
       found = TRUE;
@@ -686,7 +686,7 @@ int dispelInvisible(TBeing *caster, TBeing *victim, int level, byte bKnown)
     if (victim->affectedBySpell(SPELL_INVISIBILITY)) {
 #if 0
       act("$n slowly becomes visible again.", TRUE, victim, NULL, NULL, TO_ROOM, ANSI_WHITE_BOLD);
-      victim->sendTo("You slowly become visible again.\n\r",ANSI_WHITE_BOLD);
+      victim->sendTo(fmt("You slowly become visible again.\n\r") %ANSI_WHITE_BOLD);
 #endif
 
       victim->affectFrom(SPELL_INVISIBILITY);
@@ -766,7 +766,7 @@ int dispelInvisible(TBeing *caster, TObj * obj, int, byte bKnown)
       act("$p loses its cloak of invisibility!",
                   FALSE, caster, obj, NULL, TO_ROOM);
     } else {
-      caster->sendTo("Uhm, that item wasn't invisible.\n\r",ANSI_WHITE);
+      caster->sendTo(fmt("Uhm, that item wasn't invisible.\n\r") %ANSI_WHITE);
       caster->nothingHappens(SILENT_YES);
     }
 
@@ -1767,7 +1767,7 @@ int telepathy(TBeing *caster, int, byte bKnown)
       caster->sendTo("Telepathy is a nice spell, but you need to send some sort of message!\n\r");
       caster->nothingHappens(SILENT_YES);
     } else {
-      caster->sendTo(COLOR_SPELLS, "You telepathically send the message, \"%s<z>\"\n\r", msg);
+      caster->sendTo(COLOR_SPELLS, fmt("You telepathically send the message, \"%s<z>\"\n\r") % msg);
       for (i = descriptor_list; i; i = i->next) {
         if (i->character && (i->character != caster) &&
             !i->connected && !i->character->checkSoundproof() &&
@@ -1775,11 +1775,11 @@ int telepathy(TBeing *caster, int, byte bKnown)
               (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
               !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
 
-	  i->character->sendTo(COLOR_SPELLS, "Your mind is flooded with a telepathic message from %s.\n\r", caster->getName());
+	  i->character->sendTo(COLOR_SPELLS, fmt("Your mind is flooded with a telepathic message from %s.\n\r") % caster->getName());
 	  //	  if (!strcmp(caster->name, "Frobozz") || !strcmp(caster->name, "Belannaer"))
-	  //	    i->character->sendTo(COLOR_SPELLS, "The message is, \"I abused telepath, and I'm a loser!%s\"\n\r", i->character->norm());
+	  //	    i->character->sendTo(COLOR_SPELLS, fmt("The message is, \")I abused telepath % and I'm a loser!%s\"\n\r" % i->character->norm());
 	  //	  else
-	    i->character->sendTo(COLOR_SPELLS, "The message is, \"%s%s\"\n\r", msg, i->character->norm());
+	    i->character->sendTo(COLOR_SPELLS, fmt("The message is, \"%s%s\"\n\r") % msg % i->character->norm());
         }
       }
       caster->addToMove(-5);

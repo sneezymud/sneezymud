@@ -338,19 +338,19 @@ int TMonster::aiInsultDoer(TBeing *vict)
   }
   switch (::number(1,21)) {
     case 1:
-      ssprintf(buf, "You %s %s",buf2.c_str(), buf3.c_str());
+      buf = fmt("You %s %s") %buf2 % buf3;
       break;
     case 2:
-      ssprintf(buf, "Goddamn %s %s",buf2.c_str(), buf3.c_str());
+      buf = fmt("Goddamn %s %s") %buf2 % buf3;
       break;
     case 3:
-      ssprintf(buf, "Damn %s", buf3.c_str());
+      buf = fmt("Damn %s") % buf3;
       break;
     case 4:
       buf="Piece of doo-doo";
       break;
     case 5:
-      ssprintf(buf, "Janky %s",buf3.c_str());
+      buf = fmt("Janky %s") %buf3;
       break;
     case 6:
       buf="Dude, you got some heinous weenie-dog breath";
@@ -359,7 +359,7 @@ int TMonster::aiInsultDoer(TBeing *vict)
       buf=buf3;
       break;
     case 8:
-      ssprintf(buf, "Mangy %s",buf3.c_str());
+      buf = fmt("Mangy %s") %buf3;
       break;
     case 9:
       buf="Faggot";
@@ -369,7 +369,7 @@ int TMonster::aiInsultDoer(TBeing *vict)
       break;
     case 11:
       if (getRace() != vict->getRace()) {
-        ssprintf(buf, "All %s are faeries", vict->getMyRace()->getProperName().c_str());
+        buf = fmt("All %s are faeries") % vict->getMyRace()->getProperName();
         break;
       } // else fall through
     case 12:
@@ -382,7 +382,7 @@ int TMonster::aiInsultDoer(TBeing *vict)
       buf = "Where'd you get that equipment?  I've seen better stuff in a dump";
       break;
     case 15:
-      ssprintf(buf, "Hey %s, is it true your IQ is the same as your shoe size", fname(vict->name).c_str());
+      buf = fmt("Hey %s, is it true your IQ is the same as your shoe size") % fname(vict->name);
       break;
     case 16:
       buf = "The only reason you were born is your dad could run faster than your mom";
@@ -411,9 +411,9 @@ int TMonster::aiInsultDoer(TBeing *vict)
     for (insult=1; insult <= ::number(1,5); insult++)
       buf += "!";
 
-    ssprintf(buf2,"$n looks at you and says, \"%s\"",buf.c_str());
+    buf2 = fmt("$n looks at you and says, \"%s\"") %buf;
     act(buf2,TRUE,this,0,vict,TO_VICT);
-    ssprintf(buf2,"$n looks at $N and says, \"%s\"",buf.c_str());
+    buf2 = fmt("$n looks at $N and says, \"%s\"") %buf;
     act(buf2,TRUE,this,0,vict,TO_NOTVICT);
   }
 
@@ -720,11 +720,11 @@ int TMonster::aiMudSex(TBeing *doer)
       doSay("Come to me, I want you!");
       break;
     case 12:
-      ssprintf(buf,"%s Will you still respect me in the morning?",fname(doer->name).c_str());
+      buf = fmt("%s Will you still respect me in the morning?") %fname(doer->name);
       doAsk(buf);
       break;
     case 13:
-      ssprintf(buf,"%s I love you for your body.",fname(doer->name).c_str());
+      buf = fmt("%s I love you for your body.") %fname(doer->name);
       doWhisper(buf);
       break;
     default:

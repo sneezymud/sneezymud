@@ -28,7 +28,7 @@ TPortal::TPortal(const TRoom *rp) :
 
   name = mud_str_dup("portal");
   shortDescr = mud_str_dup("a magic portal");
-  ssprintf(buf, "A portal going to %s is in the room.", rp->name);
+  buf = fmt("A portal going to %s is in the room.") % rp->name;
   setDescr(mud_str_dup(buf));
   obj_flags.wear_flags = 0;
   obj_flags.decay_time = 5;

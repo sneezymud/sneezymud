@@ -98,7 +98,7 @@ const sstring Stats::printRawStats(const TBeing *) const
   sstring rawStats, buf;
 
   for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-    ssprintf(buf, " %3d ", get(stat));
+    buf = fmt(" %3d ") % get(stat);
     rawStats += buf;
   }
   rawStats += "\n\r";

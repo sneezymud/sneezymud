@@ -186,11 +186,11 @@ void TBeing::listExits(const TRoom *rp) const
       if (exitdata && (exitdata->to_room != ROOM_NOWHERE)) {
         if (isImmortal()) {
           if (IS_SET(exitdata->condition, EX_CLOSED)) 
-            sendTo(" %s%s%s", red(), exDirs[door], norm());
+            sendTo(fmt(" %s%s%s") % red() % exDirs[door] % norm());
           else if (exitdata->door_type != DOOR_NONE) 
-            sendTo(" %s%s%s", blue(), exDirs[door], norm());
+            sendTo(fmt(" %s%s%s") % blue() % exDirs[door] % norm());
           else 
-            sendTo(" %s%s%s", purple(), exDirs[door], norm());
+            sendTo(fmt(" %s%s%s") % purple() % exDirs[door] % norm());
         } else /*if (canSeeThruDoor(exitdata))*/ {
           TRoom *exitp = real_roomp(exitdata->to_room);
 
@@ -199,23 +199,22 @@ void TBeing::listExits(const TRoom *rp) const
                 ((tCS && !IS_SET(exitdata->condition, EX_SECRET)) ||
                  !IS_SET(exitdata->condition, EX_CLOSED))) {
               if (IS_SET(exitdata->condition, EX_CLOSED))
-                sendTo(" %s*%s%s",
-                       (exitp->getSectorType() == SECT_FIRE ? red() :
+                sendTo(fmt(" %s*%s%s") %                       (exitp->getSectorType() == SECT_FIRE ? red() :
                         (exitp->isAirSector() ? cyan() :
-                         (exitp->isWaterSector() ? blue() : purple()))),
-                       exDirs[door], norm());
+                         (exitp->isWaterSector() ? blue() : purple()))) %
+                       exDirs[door] % norm());
               else
-                sendTo(" %s%s%s",
-                       (exitp->getSectorType() == SECT_FIRE ? redBold() :
+                sendTo(fmt(" %s%s%s") %
+                       ((exitp->getSectorType() == SECT_FIRE ? redBold() :
                         (exitp->isAirSector() ? cyanBold() :
-                         (exitp->isWaterSector() ? blueBold() : purpleBold()))),
-                       exDirs[door], norm());
+                         (exitp->isWaterSector() ? blueBold() : purpleBold())))) %
+                       exDirs[door] % norm());
             } else if (exitdata->door_type == DOOR_NONE)
-	      sendTo(" %s%s%s",
+	      sendTo(fmt(" %s%s%s") %
                      (exitp->getSectorType() == SECT_FIRE ? red() :
                       (exitp->isAirSector() ? cyan() :
-                       (exitp->isWaterSector() ? blue() : purple()))),
-                     exDirs[door], norm());
+                       (exitp->isWaterSector() ? blue() : purple()))) %
+                     exDirs[door] % norm());
           } else
             vlogf(LOG_LOW, "Problem with door in room %d", inRoom());
         }
@@ -242,18 +241,18 @@ void TBeing::listExits(const TRoom *rp) const
         if (!exitdata->keyword) {
           vlogf(LOG_LOW,"Destroyed door with no name!  Room %d", in_room);
         } else if (door == 4) 
-          sendTo("%sThe %s in the ceiling has been destroyed.%s\n\r",
-              blue(), fname(exitdata->keyword).c_str(), norm());
+          sendTo(fmt("%sThe %s in the ceiling has been destroyed.%s\n\r") %
+              blue() % fname(exitdata->keyword) % norm());
         else if (door == 5)
-          sendTo("%sThe %s in the %s has been destroyed.%s\n\r",
-              blue(), fname(exitdata->keyword).c_str(), roomp->describeGround().c_str(), norm());
+          sendTo(fmt("%sThe %s in the %s has been destroyed.%s\n\r") %
+              blue() % fname(exitdata->keyword) % roomp->describeGround() % norm());
         else
-          sendTo("%sThe %s %s has been destroyed.%s\n\r",
-              blue(), fname(exitdata->keyword).c_str(), dirs_to_leading[door], norm());
+          sendTo(fmt("%sThe %s %s has been destroyed.%s\n\r") %
+              blue() % fname(exitdata->keyword) % dirs_to_leading[door] % norm());
       }
       if (IS_SET(exitdata->condition, EX_CAVED_IN)) {
-        sendTo("%sA cave in blocks the way %s.%s\n\r",
-            blue(), dirs[door], norm());
+        sendTo(fmt("%sA cave in blocks the way %s.%s\n\r") %
+            blue() % dirs[door] % norm());
       }
       // chance to detect secret - bat
       // the || case is a chance at a false-positive   :)
@@ -271,8 +270,8 @@ void TBeing::listExits(const TRoom *rp) const
           chance += GetMaxLevel()/2 + 10;
 
         if ((::number(1,1000) < chance) && !isImmortal())
-          sendTo("%sYou suspect something out of the ordinary here.%s\n\r",
-              blue(), norm());
+          sendTo(fmt("%sYou suspect something out of the ordinary here.%s\n\r") %
+              blue() % norm());
       }
     }
   }
@@ -355,9 +354,9 @@ void TBeing::listExits(const TRoom *rp) const
 
   if (*buf) {
     if (count == 1) 
-      sendTo("You see an exit %s", buf);
+      sendTo(fmt("You see an exit %s") % buf);
     else 
-      sendTo("You can see exits to the %s", buf);
+      sendTo(fmt("You can see exits to the %s") % buf);
   } else
     sendTo("You see no obvious exits.\n\r");
 }
@@ -1809,11 +1808,11 @@ void TBeing::describeLimbDamage(const TBeing *ch) const
       if (aff->type == AFFECT_DISEASE) {
         if (!aff->level) {
           if (ch == this)
-            sendTo(COLOR_BASIC, "<y>You have %s.<1>\n\r",
+            sendTo(COLOR_BASIC, fmt("<y>You have %s.<1>\n\r") %
                DiseaseInfo[affToDisease(*aff)].name);
           else
-            sendTo(COLOR_BASIC, "<y>It seems %s has %s.<1>\n\r",
-                ch->hssh(), DiseaseInfo[affToDisease(*aff)].name);
+            sendTo(COLOR_BASIC, fmt("<y>It seems %s has %s.<1>\n\r") %
+                ch->hssh() % DiseaseInfo[affToDisease(*aff)].name);
         }
       }
     }
@@ -1833,12 +1832,12 @@ void TBeing::doTime(const char *argument)
   one_argument(argument, arg);
   if (!arg.empty()) {
     if (!convertTo<int>(arg) && arg!="0"){
-      sendTo("Present time differential is set to %d hours.\n\r", desc->account->time_adjust);
+      sendTo(fmt("Present time differential is set to %d hours.\n\r") % desc->account->time_adjust);
       sendTo("Syntax: time <difference>\n\r");
       return;
     }
     desc->account->time_adjust = convertTo<int>(arg);
-    sendTo("Your new time difference between your site and %s's will be: %d hours.\n\r", MUD_NAME, desc->account->time_adjust);
+    sendTo(fmt("Your new time difference between your site and %s's will be: %d hours.\n\r") % MUD_NAME % desc->account->time_adjust);
     desc->saveAccount();
     return;
   }
@@ -1853,9 +1852,9 @@ void TBeing::doTime(const char *argument)
 
   day = time_info.day + 1;        // day in [1..28] 
 
-  sendTo("The %s day of %s, Year %d P.S.\n\r", 
-           numberAsString(day).c_str(),
-           month_name[time_info.month], time_info.year);
+  sendTo(fmt("The %s day of %s, Year %d P.S.\n\r") % 
+           numberAsString(day).c_str() %
+           month_name[time_info.month] % time_info.year);
 
   tmp2 = sunTime(SUN_TIME_RISE);
   ssprintf(buf, "The sun will rise today at:   %s.\n\r",
@@ -1885,13 +1884,13 @@ void TBeing::doTime(const char *argument)
     ct = time(0);
   tmstr = asctime(localtime(&ct));
   *(tmstr + strlen(tmstr) - 1) = '\0';
-  sendTo("%sIn the real world, the time is:                     %s%s\n\r", 
-        blue(), tmstr, norm());
+  sendTo(fmt("%sIn the real world, the time is:                     %s%s\n\r") % 
+        blue() % tmstr % norm());
 
   if (timeTill) {
-    sendTo("%sThe game will be shutdown in %s.\n\r%s",
-           red(),
-           secsToString(timeTill - time(0)).c_str(),
+    sendTo(fmt("%sThe game will be shutdown in %s.\n\r%s") %
+           red() %
+           secsToString(timeTill - time(0)) %
            norm());
   }
 }
@@ -1930,15 +1929,15 @@ down");
       return;
     }
     if (isImmortal()) {
-      sendTo("The current barometer is: %d.  Barometric change is: %d\n\r",
-            weather_info.pressure, weather_info.change); 
+      sendTo(fmt("The current barometer is: %d.  Barometric change is: %d\n\r") %
+            weather_info.pressure % weather_info.change); 
     }
-    sendTo(COLOR_BASIC, "%s and %s.\n\r", buf,
+    sendTo(COLOR_BASIC, fmt("%s and %s.\n\r") % buf %
         (weather_info.change >= 0 ? "you feel a relatively warm wind from the south" :
          "your foot tells you bad weather is due"));
 
     if (moonIsUp()) {
-      sendTo("A %s moon hangs in the sky.\n\r", moonType().c_str());
+      sendTo(fmt("A %s moon hangs in the sky.\n\r") % moonType());
     }
     describeRoomLight();
     return;
@@ -1983,7 +1982,7 @@ down");
         return;
       }
       time_info.month = num - 1 ;
-      sendTo("You set the month to: %s\n\r", month_name[time_info.month]);
+      sendTo(fmt("You set the month to: %s\n\r") % month_name[time_info.month]);
       return;
     } else if (is_abbrev(buffer, "moon")) {
       arg = one_argument(arg, buffer);
@@ -1998,7 +1997,7 @@ down");
         return;
       }
       moontype = num;
-      sendTo("The moon is now in stage %d (%s).\n\r", moontype, moonType().c_str());
+      sendTo(fmt("The moon is now in stage %d (%s).\n\r") % moontype % moonType());
       return;
     } else {
       sendTo("Syntax: weather <\"worse\" | \"better\" | \"month\" | \"moon\">\n\r");
@@ -2214,7 +2213,7 @@ void TBeing::doWizhelp()
       tLength = max(strlen(commandArray[i]->name), (unsigned) tLength);
   }
 
-  ssprintf(tString, "%%-%ds", (tLength + 1));
+  tString = fmt("%%-%ds") % (tLength + 1);
   tLength = (79 / tLength);
 
   sendTo("The following privileged commands are available:\n\r\n\r");
@@ -2317,7 +2316,7 @@ void TPerson::doUsers(const sstring &argument)
       sendTo("Syntax : users site <sitename>\n\r");
       return;
     } else {
-      sendTo("\n\rPlayers online from %s:\n\r\n\r", arg2.c_str());
+      sendTo(fmt("\n\rPlayers online from %s:\n\r\n\r") % arg2);
       sendTo(USERS_HEADER);
       for (d = descriptor_list; d; d = d->next) {
         if (d->host && strcasestr(d->host, arg2.c_str())) {
@@ -2357,12 +2356,12 @@ void TPerson::doUsers(const sstring &argument)
       // don't let newbie gods blab who imm's mortals are
       if (k->desc->account && IS_SET(k->desc->account->flags, ACCOUNT_IMMORTAL) && 
             !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
-        sendTo(COLOR_MOBS, "\n\r%-16.16s : *******Information Concealed*******\n\r", k->getName());
+        sendTo(COLOR_MOBS, fmt("\n\r%-16.16s : *******Information Concealed*******\n\r") % k->getName());
       } else {
         sprintf(buf2, "[%s]", (k->desc->host ? k->desc->host : "????"));
         sprintf(buf3, "[%s]", ((k->desc->connected < MAX_CON_STATUS && k->desc->connected >= 0) ? connected_types[k->desc->connected] : "Editing"));
         sprintf(buf4, "[%s]", (k->desc->account->name));
-        sendTo(COLOR_MOBS, "\n\r%-16.16s : %-34.34s %-15.15s %-10.10s\n\r", k->getName(), buf2, buf3, buf4);
+        sendTo(COLOR_MOBS, fmt("\n\r%-16.16s : %-34.34s %-15.15s %-10.10s\n\r") % k->getName() % buf2 % buf3 % buf4);
       }
       return;
     } else {
@@ -2401,9 +2400,9 @@ void TBeing::doInventory(const char *argument)
       list_in_heap(getStuff(), this, 0, 100);
 
       if (GetMaxLevel() > 10) {
-        sendTo("\n\r%3.f%% volume, %3.f%% weight.\n\r",
-               ((float)getCarriedVolume() / (float)carryVolumeLimit()) * 100.0,
-               ((float)getCarriedWeight() / (float)carryWeightLimit()) * 100.0);
+        sendTo(fmt("\n\r%3.f%% volume, %3.f%% weight.\n\r") %
+               (((float)getCarriedVolume() / (float)carryVolumeLimit()) * 100.0) %
+               (((float)getCarriedWeight() / (float)carryWeightLimit()) * 100.0));
       }
     } else {
       sendTo("It's pretty hard to take inventory when you can't see.\n\r");
@@ -2429,7 +2428,7 @@ void TBeing::doEquipment(const char *argument)
       if (tobj && tobj->getMaxStructPoints() != tobj->getStructPoints()) {
         if (!tobj->shouldntBeShown(j)) {
           sprintf(buf, "<%s>", describeEquipmentSlot(j).c_str());
-	  sendTo("%s%-25s%s", cyan(), buf, norm());
+	  sendTo(fmt("%s%-25s%s") % cyan() % buf % norm());
 	  if (canSee(tobj)) {
             showTo(tobj, SHOW_MODE_SHORT_PLUS);
             found = TRUE;
@@ -2449,14 +2448,14 @@ void TBeing::doEquipment(const char *argument)
       tattoos[convertTo<int>(db["location"])]=db["tattoo"];
     }
 
-    sendTo("You are using %i pounds of equipment:\n\r", 
+    sendTo(fmt("You are using %i pounds of equipment:\n\r") % 
 	   (int)equipment.getWeight());
     found = FALSE;
     for (j = MIN_WEAR; j < MAX_WEAR; j++) {
       if (equipment[j]) {
         if (!equipment[j]->shouldntBeShown(j)) {
           sprintf(buf, "<%s>", describeEquipmentSlot(j).c_str());
-          sendTo("%s%-26s%s", cyan(), buf, norm());
+          sendTo(fmt("%s%-26s%s") % cyan() % buf % norm());
           if (canSee(equipment[j])) {
             showTo(equipment[j], SHOW_MODE_SHORT_PLUS);
             found = TRUE;
@@ -2468,7 +2467,7 @@ void TBeing::doEquipment(const char *argument)
       } else if(tattoos[j]!=""){
 	sstring slot = describeEquipmentSlot(j);
 	sprintf(buf, "<%s>", (slot.find("Worn") != sstring::npos ? slot.replace(slot.find("Worn"),4,"Tattooed").c_str() : slot.c_str()));
-	sendTo("%s%-26s%s", red(), buf, norm());
+	sendTo(fmt("%s%-26s%s") % red() % buf % norm());
 	sendTo(COLOR_BASIC, tattoos[j]);
 	sendTo("\n\r");
       }
@@ -2494,7 +2493,7 @@ void TBeing::doEquipment(const char *argument)
         if (victim->equipment[j]) {
           if (!victim->equipment[j]->shouldntBeShown(j)) {
             sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
-            sendTo("%s%-26s%s", cyan(), buf, norm());
+            sendTo(fmt("%s%-26s%s") % cyan() % buf % norm());
             if (canSee(victim->equipment[j])) {
               showTo(victim->equipment[j], SHOW_MODE_SHORT_PLUS);
               found = TRUE;
@@ -2506,10 +2505,10 @@ void TBeing::doEquipment(const char *argument)
         } else if(tattoos[j]!=""){
 	  sstring slot = describeEquipmentSlot(j);
 	  sprintf(buf, "<%s>", (slot.find("Worn") != sstring::npos ? slot.replace(slot.find("Worn"),4,"Tattooed").c_str() : slot.c_str()));
-	  sendTo("%s%-26s%s", red(), buf, norm());
+	  sendTo(fmt("%s%-26s%s") % red() % buf % norm());
 
 	  //	  sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
-	  //	  sendTo("%s%-26s%s", cyan(), buf, norm());
+	  //	  sendTo(fmt("%s%-26s%s") % cyan() % buf % norm());
 	  sendTo(COLOR_BASIC, tattoos[j]);
 	  sendTo("\n\r");
 	}
@@ -2534,19 +2533,19 @@ void TBeing::doEquipment(const char *argument)
           break;
         case WEAR_NECK:
           sprintf(trans, "<%s>", describeTransLimb(j).c_str());
-          sendTo("%s%s%s\n\r", cyan(), trans, norm());
+          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_BODY:
           break;
         case WEAR_HEAD:
           sprintf(trans, "<%s>", describeTransLimb(j).c_str());
-          sendTo("%s%s%s\n\r", cyan(), trans, norm());
+          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_LEGS_L:
           break;
         case WEAR_LEGS_R:
           sprintf(trans, "<%s>", describeTransLimb(j).c_str());
-          sendTo("%s%s%s\n\r", cyan(), trans, norm());
+          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_FOOT_R:
         case WEAR_FOOT_L:
@@ -2555,21 +2554,21 @@ void TBeing::doEquipment(const char *argument)
           if (isLimbFlags(WEAR_ARM_R, PART_TRANSFORMED))
             break;
           sprintf(trans, "<%s>", describeTransLimb(j).c_str());
-          sendTo("%s%s%s\n\r", cyan(), trans, norm());
+          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_HAND_L:
           if (isLimbFlags(WEAR_ARM_L, PART_TRANSFORMED))
             break;
           sprintf(trans, "<%s>", describeTransLimb(j).c_str());
-          sendTo("%s%s%s\n\r", cyan(), trans, norm());
+          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_ARM_R:
           sprintf(trans, "<%s>", describeTransLimb(j).c_str());
-          sendTo("%s%s%s\n\r", cyan(), trans, norm());
+          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_ARM_L:
           sprintf(trans, "<%s>", describeTransLimb(j).c_str());
-          sendTo("%s%s%s\n\r", cyan(), trans, norm());
+          sendTo(fmt("%s%s%s\n\r") % cyan() % trans % norm());
           break;
         case WEAR_BACK :
         case WEAR_WAISTE:
@@ -2587,7 +2586,7 @@ void TBeing::doEquipment(const char *argument)
     if ((t = getStuckIn(j))) {
       if (canSee(t)) {
         strcpy(capbuf, t->getName());
-        sendTo(COLOR_OBJECTS, "%s is sticking out of your %s!\n\r", cap(capbuf), describeBodySlot(j).c_str());
+        sendTo(COLOR_OBJECTS, fmt("%s is sticking out of your %s!\n\r") % cap(capbuf) % describeBodySlot(j));
       }
     }
   }
@@ -3000,7 +2999,7 @@ void TBeing::doLevels(const char *argument)
         break;
 
       default:
-        sendTo("I don't recognize %s\n\r", argument);
+        sendTo(fmt("I don't recognize %s\n\r") % argument);
         return;
         break;
     }
@@ -3386,7 +3385,7 @@ void TBeing::doClear(const char *argument)
   if ((i > -1) && (i < 16)) {
     desc->alias[i].command[0] = '\0';
     desc->alias[i].word[0] = '\0';
-    sendTo("Ok. Alias %d now clear.\n\r", i + 1);
+    sendTo(fmt("Ok. Alias %d now clear.\n\r") % (i + 1));
     return;
   } else {
     sendTo("Syntax :clear <alias number>\n\r");
@@ -3418,10 +3417,10 @@ options menu\n\r");
   if (!*argument) {
     sendTo("Your list of aliases.....\n\r");
     for (i = 0; i < 16; i++) {
-      sendTo("%2d) %s%s %s %s\n\r", i + 1, desc->alias[i].word,
-            spaces + strlen(desc->alias[i].word),
-            (ansi() ? ANSI_BLUE_BAR : "|"),
-            desc->alias[i].command);
+      sendTo(fmt("%2d) %s%s %s %s\n\r") % (i + 1) % desc->alias[i].word %
+            (spaces + strlen(desc->alias[i].word)) %
+            (ansi() ? ANSI_BLUE_BAR : "|") %
+	     desc->alias[i].command);
     }
     return;
   }
@@ -3453,12 +3452,12 @@ options menu\n\r");
   if (remOption) {
     while ((i < 16)) {
       if (*desc->alias[i].word && !strcmp(arg2, desc->alias[i].word)) {
-        sendTo("Clearing alias %s\n\r", arg2);
+        sendTo(fmt("Clearing alias %s\n\r") % arg2);
         return;
       }
       i++;
     }
-    sendTo("You have no alias for %s.\n\r", arg2);
+    sendTo(fmt("You have no alias for %s.\n\r") % arg2);
     return;
   }
 
@@ -3474,7 +3473,7 @@ options menu\n\r");
   }
   strcpy(desc->alias[i].word, arg1);
   strcpy(desc->alias[i].command, arg2);
-  sendTo("Setting alias %s to %s\n\r", arg1, arg2);
+  sendTo(fmt("Setting alias %s to %s\n\r") % arg1 % arg2);
 }
 
 sstring TObj::equip_condition(int amt) const
@@ -3633,7 +3632,7 @@ void TBeing::doLimbs(const sstring & argument)
   } else {
     strncpy(who, v->hshr(), 5);
     cap(who);
-    sendTo(COLOR_BASIC, "You evaluate %s's limbs and their health.\n\r", v->getName());
+    sendTo(COLOR_BASIC, fmt("You evaluate %s's limbs and their health.\n\r") % v->getName());
   }
 
 
@@ -3646,57 +3645,57 @@ void TBeing::doLimbs(const sstring & argument)
     double perc = (double) v->getCurLimbHealth(i) / (double) v->getMaxLimbHealth(i);
 
     if (v->isLimbFlags(i, PART_MISSING)) {
-      sendTo(COLOR_BASIC, "<R>%s %s%s%s %s missing!<Z>\n\r", who, red(), v->describeBodySlot(i).c_str(), norm(), v->slotPlurality(i).c_str());
+      sendTo(COLOR_BASIC, fmt("<R>%s %s%s%s %s missing!<Z>\n\r") % who % red() % v->describeBodySlot(i) % norm() % v->slotPlurality(i));
       found = TRUE;
       continue;
     } 
     if (perc < 1.00) {
-      sendTo(COLOR_BASIC, "%s %s %s %s.\n\r", who, v->describeBodySlot(i).c_str(), v->slotPlurality(i).c_str(), LimbHealth(perc));
+      sendTo(COLOR_BASIC, fmt("%s %s %s %s.\n\r") % who % v->describeBodySlot(i) % v->slotPlurality(i) % LimbHealth(perc));
       found = TRUE;
     } 
     if (v->isLimbFlags(i, PART_USELESS)) {
-      sendTo(COLOR_BASIC, "%s %s%s%s %s <O>useless<Z>!\n\r",who, red(),v->describeBodySlot(i).c_str(),norm(), v->slotPlurality(i).c_str());
+      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s <O>useless<Z>!\n\r") %who % red() %v->describeBodySlot(i) %norm() % v->slotPlurality(i));
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_PARALYZED)) {
-      sendTo(COLOR_BASIC, "%s %s%s%s %s <O>paralyzed<Z>!\n\r",
-         who,red(),v->describeBodySlot(i).c_str(),
-         norm(), v->slotPlurality(i).c_str());
+      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s <O>paralyzed<Z>!\n\r") %
+         who %red() %v->describeBodySlot(i).c_str() %
+         norm() % v->slotPlurality(i));
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_BLEEDING)) {
-      sendTo(COLOR_BASIC, "%s %s%s%s %s <R>bleeding profusely<Z>!\n\r",
-         who,red(),v->describeBodySlot(i).c_str(),
-         norm(), v->slotPlurality(i).c_str());
+      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s <R>bleeding profusely<Z>!\n\r") %
+         who %red() %v->describeBodySlot(i).c_str() %
+         norm() % v->slotPlurality(i));
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_INFECTED)) {
-      sendTo(COLOR_BASIC, "%s %s%s%s %s infected with many germs!\n\r",
-         who,red(),v->describeBodySlot(i).c_str(),
-         norm(), v->slotPlurality(i).c_str());
+      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s infected with many germs!\n\r") %
+         who %red() %v->describeBodySlot(i).c_str() %
+         norm() % v->slotPlurality(i));
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_BROKEN)) {
-      sendTo(COLOR_BASIC, "%s %s%s%s %s broken!\n\r",
-         who,red(),v->describeBodySlot(i).c_str(),
-         norm(), v->slotPlurality(i).c_str());
+      sendTo(COLOR_BASIC, fmt("%s %s%s%s %s broken!\n\r") %
+         who %red() %v->describeBodySlot(i).c_str() %
+         norm() % v->slotPlurality(i));
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_LEPROSED)) {
-      sendTo(COLOR_BASIC, "Leprosy has set into %s %s%s%s!\n\r",
-          v->hshr(), red(),v->describeBodySlot(i).c_str(),norm());
+      sendTo(COLOR_BASIC, fmt("Leprosy has set into %s %s%s%s!\n\r") %
+          v->hshr() % red() %v->describeBodySlot(i) %norm());
       found = TRUE;
     }
     if (v->isLimbFlags(i, PART_TRANSFORMED)) {
-      sendTo(COLOR_BASIC, "%s %s%s%s has been transformed!\n\r",
-          who, red(),v->describeBodySlot2(i).c_str(),norm());
+      sendTo(COLOR_BASIC, fmt("%s %s%s%s has been transformed!\n\r") %
+          who % red() %v->describeBodySlot2(i) %norm());
       found = TRUE;
     }
     if ((t = v->getStuckIn(i))) {
       if (canSee(t)) {
         strcpy(buf, t->getName());
-        sendTo(COLOR_OBJECTS, "%s is sticking out of %s %s!\n\r",
-        cap(buf), v->hshr(), v->describeBodySlot(i).c_str());
+        sendTo(COLOR_OBJECTS, fmt("%s is sticking out of %s %s!\n\r") %
+        cap(buf) % v->hshr() % v->describeBodySlot(i));
       }
     }
   }
@@ -3712,8 +3711,8 @@ void TBeing::doLimbs(const sstring & argument)
     for (aff = v->affected; aff; aff = aff->next) {
       if (aff->type == AFFECT_DISEASE) {
         if (!aff->level) {
-          sendTo("%s %s %s.\n\r", who, 
-	         (v==this)?"have":"has",
+          sendTo(fmt("%s %s %s.\n\r") % who % 
+	         ((v==this)?"have":"has") %
                  DiseaseInfo[affToDisease(*aff)].name);
           found = TRUE;
         }
@@ -3721,7 +3720,7 @@ void TBeing::doLimbs(const sstring & argument)
     }
   }
   if (!found)
-    sendTo("All %s limbs are perfectly healthy!\n\r", (v==this)?"your":v->hshr());
+    sendTo(fmt("All %s limbs are perfectly healthy!\n\r") % ((v==this)?"your":v->hshr()));
 }
 
 void TBeing::genericEvaluateItem(const TThing *obj)
@@ -3870,7 +3869,7 @@ void TBeing::doEvaluate(const char *argument)
     wearSlotT j;
     if (!(obj = get_thing_in_equip(this, arg, equipment, &j, TRUE, &count))) {
       if (!(obj = searchLinkedListVis(this, arg, getStuff(), &count))) {
-        sendTo("You do not seem to have the '%s'.\n\r", arg);
+        sendTo(fmt("You do not seem to have the '%s'.\n\r") % arg);
         return;
       }
     }
@@ -3885,24 +3884,24 @@ void TTool::describeCondition(const TBeing *) const
 
 void TObj::describeCondition(const TBeing *ch) const
 {
-  ch->sendTo(COLOR_OBJECTS, "It is in %s condition.\n\r",equip_condition(-1).c_str());
+  ch->sendTo(COLOR_OBJECTS, fmt("It is in %s condition.\n\r") %equip_condition(-1));
 }
 
 void TThing::describeContains(const TBeing *ch) const
 {
   if (getStuff())
-    ch->sendTo(COLOR_OBJECTS, "%s seems to have something in it...\n\r", sstring(getName()).cap().c_str());
+    ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have something in it...\n\r") % sstring(getName()).cap());
 }
 
 void TBaseCup::describeContains(const TBeing *ch) const
 {
   if (getDrinkUnits())
-    ch->sendTo(COLOR_OBJECTS, "%s seems to have some %s liquid in it...\n\r", sstring(getName()).cap().c_str(), DrinkInfo[getDrinkType()]->color);
+    ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have some %s liquid in it...\n\r") % sstring(getName()).cap() % DrinkInfo[getDrinkType()]->color);
 }
 
 void TFood::describeCondition(const TBeing *ch) const
 {
-  ch->sendTo(COLOR_OBJECTS, "It is in %s condition.\n\r",equip_condition(-1).c_str());
+  ch->sendTo(COLOR_OBJECTS, fmt("It is in %s condition.\n\r") %equip_condition(-1));
 }
 
 void TFood::describeObjectSpecifics(const TBeing *ch) const
@@ -3939,36 +3938,36 @@ void TSymbol::describeObjectSpecifics(const TBeing *ch) const
 if (attuneCode) {
   switch (sym_faction) {
     case FACT_NONE:
-      ch->sendTo(COLOR_OBJECTS, "You can tell that %s has been sanctified but it bears no insignia.\n\r", sstring(getName()).cap().c_str());
+      ch->sendTo(COLOR_OBJECTS, fmt("You can tell that %s has been sanctified but it bears no insignia.\n\r") % sstring(getName()).cap());
       break;
     case FACT_BROTHERHOOD:
-      ch->sendTo(COLOR_OBJECTS, "%s has the sign of the Brotherhood of Galek stamped upon it.\n\r", sstring(getName()).cap().c_str());
+      ch->sendTo(COLOR_OBJECTS, fmt("%s has the sign of the Brotherhood of Galek stamped upon it.\n\r") % sstring(getName()).cap());
       break;
     case FACT_CULT:
-      ch->sendTo(COLOR_OBJECTS, "%s has been sanctified and bears the insignia of the Cult of the Logrus.\n\r", sstring(getName()).cap().c_str());
+      ch->sendTo(COLOR_OBJECTS, fmt("%s has been sanctified and bears the insignia of the Cult of the Logrus.\n\r") % sstring(getName()).cap());
       break;
     case FACT_SNAKE:
-      ch->sendTo(COLOR_OBJECTS, "%s has been sanctified and branded with the image of a snake.\n\r", sstring(getName()).cap().c_str());
+      ch->sendTo(COLOR_OBJECTS, fmt("%s has been sanctified and branded with the image of a snake.\n\r") % sstring(getName()).cap());
       break;
     case MAX_FACTIONS:
     case FACT_UNDEFINED:
-      ch->sendTo(COLOR_OBJECTS, "%s is inert and has not been sanctified for use.\n\r", sstring(getName()).cap().c_str());
+      ch->sendTo(COLOR_OBJECTS, fmt("%s is inert and has not been sanctified for use.\n\r") % sstring(getName()).cap());
   }
 }
 
   if (getSymbolMaxStrength()) {
     if (getSymbolCurStrength() == getSymbolMaxStrength()) {
-      ch->sendTo(COLOR_OBJECTS, "%s has all of its original strength, it has not been used.\n\r", sstring(getName()).cap().c_str());
+      ch->sendTo(COLOR_OBJECTS, fmt("%s has all of its original strength, it has not been used.\n\r") % sstring(getName()).cap());
 
     } else {
       diff = (double) ((double) getSymbolCurStrength() /
                        (double) getSymbolMaxStrength());
-      ch->sendTo(COLOR_OBJECTS, "You can tell that %s has %s strength left.\n\r", getName(),
+      ch->sendTo(COLOR_OBJECTS, fmt("You can tell that %s has %s strength left.\n\r") % getName() %
           ((diff < .20) ? "very little" : ((diff < .50) ? "some" :
           ((diff < .75) ? "a good bit of" : "most of its"))));
     }
   } else {
-    ch->sendTo(COLOR_OBJECTS, "%s has none of its strength left.\n\r", sstring(getName()).cap().c_str());
+    ch->sendTo(COLOR_OBJECTS, fmt("%s has none of its strength left.\n\r") % sstring(getName()).cap());
   }
 }
 
@@ -3981,7 +3980,7 @@ void TTool::describeObjectSpecifics(const TBeing *ch) const
   else
     diff = 1.00;
 
-  ch->sendTo(COLOR_OBJECTS,"It appears %s is %s.\n\r", getName(),
+  ch->sendTo(COLOR_OBJECTS,fmt("It appears %s is %s.\n\r") % getName() %
        ((diff <= 0.0) ? "totally gone" :
         ((diff >= 1.0) ? "brand new" :
         ((diff >= 0.8) ? "almost new" :
@@ -4000,9 +3999,9 @@ void TObj::describeMe(TBeing *ch) const
 
   strcpy(buf, material_nums[getMaterial()].mat_name);
   strcpy(buf2, ch->objs(this));
-  ch->sendTo(COLOR_OBJECTS,"%s is %s made of %s.\n\r", cap(buf2),
-                 ItemInfo[itemType()]->common_name, 
-	     sstring(buf).uncap().c_str());
+  ch->sendTo(COLOR_OBJECTS,fmt("%s is %s made of %s.\n\r") % cap(buf2) %
+                 ItemInfo[itemType()]->common_name % 
+	     sstring(buf).uncap());
 
   if (ch->isImmortal() || canWear(ITEM_TAKE)) {
 
@@ -4012,8 +4011,8 @@ void TObj::describeMe(TBeing *ch) const
 #else
       if (obj_index[getItemIndex()].max_exist <= MIN_EXIST_IMMORTAL)
 #endif
-        ch->sendTo("It is limited for immortals and there is %i out of %i in existence.\n\r", 
-                   obj_index[getItemIndex()].getNumber(),
+        ch->sendTo(fmt("It is limited for immortals and there is %i out of %i in existence.\n\r") % 
+                   obj_index[getItemIndex()].getNumber() %
                    obj_index[getItemIndex()].max_exist);
       else
         ch->sendTo("It is not limited for immortals.\n\r");
@@ -4028,7 +4027,7 @@ void TObj::describeMe(TBeing *ch) const
     if (isRentable()) {
       int temp = max(0, rentCost());
   
-      ch->sendTo("It has a rental cost of %d talen%s.\n\r",
+      ch->sendTo(fmt("It has a rental cost of %d talen%s.\n\r") %
           temp, (temp != 1 ? "s" : ""));
     } else 
       ch->sendTo("It can't be rented.\n\r");
@@ -4063,11 +4062,11 @@ void TObj::describeMe(TBeing *ch) const
     }
 
     if (compareWeights(wgt, 1.0) != 1) 
-      ch->sendTo("It weighs about %d pound%s and occupies roughly %s.\n\r", 
-               (int) wgt, ((((int) wgt) == 1) ? "" : "s"), volumeBuf);
+      ch->sendTo(fmt("It weighs about %d pound%s and occupies roughly %s.\n\r") % 
+               (int) wgt % ((((int) wgt) == 1) ? "" : "s") % volumeBuf);
     else 
-      ch->sendTo("It weighs about %d drechel%s and occupies roughly %s.\n\r", 
-               getDrechels(TRUE), ((getDrechels(TRUE) == 1) ? "" : "s"), volumeBuf);
+      ch->sendTo(fmt("It weighs about %d drechel%s and occupies roughly %s.\n\r") % 
+               getDrechels(TRUE) % ((getDrechels(TRUE) == 1) ? "" : "s") % volumeBuf);
   }
   describeCondition(ch);
   if (isObjStat(ITEM_GLOW))
@@ -4091,7 +4090,7 @@ void TObj::describeMe(TBeing *ch) const
   if (action_description) {
     strcpy(capbuf, action_description);
     if ((sscanf(capbuf, "This is the personalized object of %s.", name_buf)) == 1)
-      sendTo("A monogram on it indicates it belongs to %s.\n\r", name_buf);
+      sendTo(fmt("A monogram on it indicates it belongs to %s.\n\r") % name_buf);
   }
   describeObjectSpecifics(ch);
   evaluateMe(ch);
@@ -4228,8 +4227,8 @@ void TBeing::describeMaxSharpness(const TBaseWeapon *obj, int learn) const
   else
     strcpy(sharpbuf, "having a ragged edge");
 
-  sendTo(COLOR_OBJECTS,"%s seems to be capable of %s.\n\r",
-           cap(capbuf), sharpbuf);
+  sendTo(COLOR_OBJECTS,fmt("%s seems to be capable of %s.\n\r") %
+           cap(capbuf) % sharpbuf);
 }
 
 void TBeing::describeMaxPointiness(const TBaseWeapon *obj, int learn) const
@@ -4269,8 +4268,8 @@ void TBeing::describeMaxPointiness(const TBaseWeapon *obj, int learn) const
   else
     strcpy(sharpbuf, "having a dull point");
 
-  sendTo(COLOR_OBJECTS,"%s seems to be capable of %s.\n\r",
-           cap(capbuf), sharpbuf);
+  sendTo(COLOR_OBJECTS,fmt("%s seems to be capable of %s.\n\r") %
+           cap(capbuf) % sharpbuf);
 }
 
 void TBeing::describeOtherFeatures(const TGenWeapon *obj, int learn) const
@@ -4285,13 +4284,13 @@ void TBeing::describeOtherFeatures(const TGenWeapon *obj, int learn) const
 
   if (hasClass(CLASS_THIEF) || isImmortal()) {
     if (obj->canCudgel())
-      sendTo(COLOR_OBJECTS, "%s seems small enough to be used for cudgeling.\n\r",
+      sendTo(COLOR_OBJECTS, fmt("%s seems small enough to be used for cudgeling.\n\r") %
              cap(capbuf));
     if (obj->canStab())
-      sendTo(COLOR_OBJECTS, "%s seems small enough to be used for stabbing.\n\r",
+      sendTo(COLOR_OBJECTS, fmt("%s seems small enough to be used for stabbing.\n\r") %
              cap(capbuf));
     if (obj->canBackstab())
-      sendTo(COLOR_OBJECTS, "%s seems small enough to be used for backstabbing or throat slitting.\n\r",
+      sendTo(COLOR_OBJECTS, fmt("%s seems small enough to be used for backstabbing or throat slitting.\n\r") %
              cap(capbuf));
   }
 }
@@ -4332,8 +4331,8 @@ void TBeing::describeMaxBluntness(const TBaseWeapon *obj, int learn) const
   else
     strcpy(sharpbuf, "having a sharp and ragged bluntness");
 
-  sendTo(COLOR_OBJECTS,"%s seems to be capable of %s.\n\r",
-           cap(capbuf), sharpbuf);
+  sendTo(COLOR_OBJECTS,fmt("%s seems to be capable of %s.\n\r") %
+           cap(capbuf) % sharpbuf);
 }
 
 void TBeing::describeMaxStructure(const TObj *obj, int learn) const
@@ -4353,14 +4352,14 @@ void TBeing::describeWeaponDamage(const TBaseWeapon *obj, int learn) const
 #if 1
   double av_dam = GetApprox(obj->damageLevel(), learn);
 
-  sendTo(COLOR_OBJECTS, "It is capable of doing %s of damage for your level\n\r", 
+  sendTo(COLOR_OBJECTS, fmt("It is capable of doing %s of damage for your level\n\r") % 
          describe_damage((int) av_dam, this));
 #else
   double av_dam = obj->baseDamage();
   av_dam += (double) obj->itemDamroll();
   av_dam = GetApprox((int) av_dam, learn);
 
-  sendTo(COLOR_OBJECTS,"It's capable of doing %s damage.\n\r",
+  sendTo(COLOR_OBJECTS,fmt("It's capable of doing %s damage.\n\r") %
           ((av_dam < 1) ? "exceptionally low" :
           ((av_dam < 2) ? "incredibly low" :
           ((av_dam < 3) ? "very low" :
@@ -4436,14 +4435,14 @@ void TBeing::describeArmor(const TBaseClothing *obj, int learn)
   else
     tStLevel = "way too much of an amount";
 
-  sendTo(COLOR_OBJECTS, "This supplies %s of protection for your class and level\n\r",
+  sendTo(COLOR_OBJECTS, fmt("This supplies %s of protection for your class and level\n\r") %
          tStLevel.c_str());
 #else
   int armor = 0;    // works in reverse here.  armor > 0 is GOOD
   armor -= obj->itemAC();
   armor = GetApprox(armor, learn);
 
-  sendTo(COLOR_OBJECTS,"In terms of armor quality, it ranks as %s.\n\r",
+  sendTo(COLOR_OBJECTS,fmt("In terms of armor quality, it ranks as %s.\n\r") %
       ((armor < 0) ? "being more hurt then help" :
       ((armor < 2) ? "being virtually non-existant" :
       ((armor < 4) ? "being exceptionally low" :
@@ -4512,7 +4511,7 @@ void TBeing::describeArrowDamage(const TArrow *obj, int learn)
   av_dam += (double) obj->itemDamroll();
   av_dam = GetApprox((int) av_dam, learn);
 
-  sendTo(COLOR_OBJECTS, "It's capable of doing %s damage.\n\r",
+  sendTo(COLOR_OBJECTS, fmt("It's capable of doing %s damage.\n\r") %
           ((av_dam < 1) ? "exceptionally low" :
           ((av_dam < 2) ? "incredibly low" :
           ((av_dam < 3) ? "very low" :
@@ -4571,7 +4570,7 @@ void TBeing::describeArrowSharpness(const TArrow *obj, int learn)
   else
     strcpy(sharpbuf, "extremely dull");
  
-  sendTo(COLOR_OBJECTS, "%s has a tip that is %s.\n\r", cap(capbuf), sharpbuf);
+  sendTo(COLOR_OBJECTS, fmt("%s has a tip that is %s.\n\r") % cap(capbuf) % sharpbuf);
 
 }
 
@@ -4590,7 +4589,7 @@ void TBeing::describeNoise(const TObj *obj, int learn) const
   char capbuf[160];
   strcpy(capbuf, objs(obj));
 
-  sendTo(COLOR_OBJECTS, "%s is %s.\n\r", cap(capbuf),
+  sendTo(COLOR_OBJECTS, fmt("%s is %s.\n\r") % cap(capbuf) %
           ((iNoise < -9) ? "beyond silent" :
           ((iNoise < -5) ? "extremely silent" :
           ((iNoise < -2) ? "very silent" :
@@ -4610,7 +4609,7 @@ void TBeing::describeRoomLight()
 {
   int illum = roomp->getLight();
 
-  sendTo(COLOR_BASIC, "This area is %s.\n\r", 
+  sendTo(COLOR_BASIC, fmt("This area is %s.\n\r") % 
           ((illum < -4) ? "<k>super dark<1>" :
           ((illum < 0) ? "<k>pitch dark<1>" :
           ((illum < 1) ? "<k>dark<1>" :
@@ -4633,7 +4632,7 @@ void TBeing::describeBowRange(const TBow *obj, int learn)
   char capbuf[160];
   strcpy(capbuf, objs(obj));
 
-  sendTo(COLOR_OBJECTS, "%s can %s.\n\r", cap(capbuf),
+  sendTo(COLOR_OBJECTS, fmt("%s can %s.\n\r") % cap(capbuf) %
           ((range < 1) ? "not shoot out of the immediate area" :
           ((range < 3) ? "barely shoot beyond arm's length" :
           ((range < 5) ? "shoot a short distance" :
@@ -4652,9 +4651,9 @@ void TBeing::describeMagicLevel(const TMagicItem *obj, int learn) const
   int level = GetApprox(obj->getMagicLevel(), learn);
   level = max(level,0);
 
-  sendTo(COLOR_OBJECTS, "Spells from %s seem to be cast at %s level.\n\r", 
-	 sstring(objs(obj)).uncap().c_str(),
-          numberAsString(level).c_str());
+  sendTo(COLOR_OBJECTS, fmt("Spells from %s seem to be cast at %s level.\n\r") % 
+	 sstring(objs(obj)).uncap() %
+          numberAsString(level));
 
 }
 
@@ -4684,8 +4683,8 @@ void TBeing::describeMagicLearnedness(const TMagicItem *obj, int learn) const
 
   int level = GetApprox(obj->getMagicLearnedness(), learn);
 
-  sendTo(COLOR_OBJECTS, "The learnedness of the spells in %s is: %s.\n\r",
-	 sstring(objs(obj)).uncap().c_str(),
+  sendTo(COLOR_OBJECTS, fmt("The learnedness of the spells in %s is: %s.\n\r") %
+	 sstring(objs(obj)).uncap() %
 	 how_good(level));
 }
 
@@ -4698,7 +4697,7 @@ void TBeing::describeMagicSpell(const TMagicItem *obj, int learn)
   int level = GetApprox(getSkillLevel(SKILL_EVALUATE), learn);
 
   if (obj->getMagicLevel() > level) {
-    sendTo(COLOR_OBJECTS, "You can tell nothing about the spells %s produces.\n\r", 
+    sendTo(COLOR_OBJECTS, fmt("You can tell nothing about the spells %s produces.\n\r") % 
 	   sstring(objs(obj)).uncap().c_str());
     return;
   }
@@ -4716,10 +4715,10 @@ void TWand::descMagicSpells(TBeing *ch) const
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
       ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(iSpell))
-      ch->sendTo(COLOR_OBJECTS, "%s produces: %s.\n\r", cap(capbuf), 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % cap(capbuf) % 
             discArray[iSpell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, "%s produces: Something from the %s discipline.\n\r", cap(capbuf),  disc_names[das]);
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % cap(capbuf) %  disc_names[das]);
   }
 
   return;
@@ -4735,10 +4734,10 @@ void TStaff::descMagicSpells(TBeing *ch) const
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
       ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(iSpell))
-      ch->sendTo(COLOR_OBJECTS, "%s produces: %s.\n\r", cap(capbuf), 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % cap(capbuf) % 
             discArray[iSpell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, "%s produces: Something from the %s discipline.\n\r", cap(capbuf),  disc_names[das]);
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % cap(capbuf) %  disc_names[das]);
   }
 
   return;
@@ -4755,30 +4754,30 @@ void TScroll::descMagicSpells(TBeing *ch) const
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
       ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, "%s produces: %s.\n\r", cap(capbuf), 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % cap(capbuf) % 
             discArray[spell]->name);
     else
-      ch->sendTo(COLOR_OBJECTS, "%s produces: Something from the %s discipline.\n\r", cap(capbuf),  disc_names[das]);
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % cap(capbuf) %  disc_names[das]);
   }
 
   spell = getSpell(1);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
       ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, "%s produces: %s.\n\r", cap(capbuf), 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % cap(capbuf) % 
             discArray[spell]->name);
     else
-       ch->sendTo(COLOR_OBJECTS, "%s produces: Something from the %s discipline.\n\r", cap(capbuf), disc_names[das]);
+       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % cap(capbuf) % disc_names[das]);
   }
 
   spell = getSpell(2);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
       ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
-      ch->sendTo(COLOR_OBJECTS, "%s produces: %s.\n\r", cap(capbuf), 
+      ch->sendTo(COLOR_OBJECTS, fmt("%s produces: %s.\n\r") % cap(capbuf) % 
             discArray[spell]->name);
     else
-       ch->sendTo(COLOR_OBJECTS, "%s produces: Something from the %s discipline.\n\r", cap(capbuf), disc_names[das]);
+       ch->sendTo(COLOR_OBJECTS, fmt("%s produces: Something from the %s discipline.\n\r") % cap(capbuf) % disc_names[das]);
   }
 
   return;
@@ -4801,7 +4800,7 @@ void TBeing::describeSymbolOunces(const TSymbol *obj, int learn) const
   char capbuf[160];
   strcpy(capbuf, objs(obj));
 
-  sendTo(COLOR_OBJECTS, "%s requires about %d ounce%s of holy water to attune.\n\r", cap(capbuf), amt, amt == 1 ? "" : "s");
+  sendTo(COLOR_OBJECTS, fmt("%s requires about %d ounce%s of holy water to attune.\n\r") % cap(capbuf) % amt % (amt == 1 ? "" : "s"));
 
   return;
 }
@@ -4812,11 +4811,11 @@ void TBeing::describeComponentUseage(const TComponent *obj, int) const
   strcpy(capbuf, objs(obj));
 
   if (IS_SET(obj->getComponentType(), COMP_SPELL))
-    sendTo(COLOR_OBJECTS, "%s is a component used in creating magic.\n\r", cap(capbuf));
+    sendTo(COLOR_OBJECTS, fmt("%s is a component used in creating magic.\n\r") % cap(capbuf));
   else if (IS_SET(obj->getComponentType(), COMP_POTION))
-    sendTo(COLOR_OBJECTS, "%s is a component used to brew potions.\n\r", cap(capbuf));
+    sendTo(COLOR_OBJECTS, fmt("%s is a component used to brew potions.\n\r") % cap(capbuf));
   else if (IS_SET(obj->getComponentType(), COMP_SCRIBE))
-    sendTo(COLOR_OBJECTS, "%s is a component used during scribing.\n\r", cap(capbuf));
+    sendTo(COLOR_OBJECTS, fmt("%s is a component used during scribing.\n\r") % cap(capbuf));
 
   return;
 }
@@ -4832,7 +4831,7 @@ void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
   char capbuf[160];
   strcpy(capbuf, objs(obj));
 
-  sendTo(COLOR_OBJECTS, "%s will last ", cap(capbuf));
+  sendTo(COLOR_OBJECTS, fmt("%s will last ") % cap(capbuf));
 
   if (!obj->isComponentType(COMP_DECAY)) {
     sendTo("well into the future.\n\r");
@@ -4865,7 +4864,7 @@ void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
 
 #if 0
   if (obj->getMagicLevel() > level) {
-    sendTo(COLOR_OBJECTS, "You can tell nothing about the spell %s is used for.\n\r", 
+    sendTo(COLOR_OBJECTS, fmt("You can tell nothing about the spell %s is used for.\n\r") % 
 	   sstring(objs(obj)).uncap().c_str());
     return;
   }
@@ -4874,8 +4873,8 @@ void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
   int which = obj->getComponentSpell();
 
   if (which >= 0 && discArray[which])
-    sendTo(COLOR_OBJECTS, "%s is used for: %s.\n\r", 
-	   sstring(objs(obj)).cap().c_str(),
+    sendTo(COLOR_OBJECTS, fmt("%s is used for: %s.\n\r") % 
+	   sstring(objs(obj)).cap() %
           discArray[which]->name);
 
   return;
@@ -4979,63 +4978,64 @@ void TBeing::sendRoomName(TRoom *rp) const
 
   if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
     if (hasColorStrings(this, rp->getName(), 2)) {
-      sendTo(COLOR_ROOM_NAME,"%s%s%s%s%s%s\n\r", 
-                d->m_bIsClient ? clientBuf : "",
-                dynColorRoom(rp, 1, TRUE).c_str(),
-                norm(), red(), 
-                ((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
+      sendTo(COLOR_ROOM_NAME,fmt("%s%s%s%s%s%s\n\r") % 
+                (d->m_bIsClient ? clientBuf : "") %
+                dynColorRoom(rp, 1, TRUE) %
+                norm() % red() % 
+                (((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
                 ((rFlags & ROOM_HOSPITAL) ? "     [HOSPITAL]" :
                 ((rFlags & ROOM_ARENA) ? "     [ARENA]" :
-                " "))), norm());
+                " ")))) % norm());
     } else {
-      sendTo(COLOR_ROOM_NAME,"%s%s%s%s%s%s%s\n\r", 
-                d->m_bIsClient ? clientBuf : "",  
-                addColorRoom(rp, 1).c_str(),
-                rp->getName(), norm(), red(),  
-                ((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
+      sendTo(COLOR_ROOM_NAME,fmt("%s%s%s%s%s%s%s\n\r") % 
+                (d->m_bIsClient ? clientBuf : "") %
+                addColorRoom(rp, 1) %
+                rp->getName() % norm() % red() %  
+                (((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
                 ((rFlags & ROOM_HOSPITAL) ? "     [HOSPITAL]" :
                 ((rFlags & ROOM_ARENA) ? "     [ARENA]" :
-                " "))), norm());
+                " ")))) % norm());
     }
   } else {
     if (hasColorStrings(this, rp->getName(), 2)) {
-      sendTo(COLOR_BASIC,"%s%s%s%s%s%s\n\r", 
-              d->m_bIsClient ? clientBuf : "", purple(), 
-              colorString(this, desc, rp->getName(), NULL, COLOR_NONE, FALSE).c_str(),
-              red(),
-              ((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
+      sendTo(COLOR_BASIC,fmt("%s%s%s%s%s%s\n\r") % 
+              (d->m_bIsClient ? clientBuf : "") % purple() % 
+              colorString(this, desc, rp->getName(), NULL, COLOR_NONE, FALSE) %
+              red() %
+              (((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
               ((rFlags & ROOM_HOSPITAL) ? "     [HOSPITAL]" :
               ((rFlags & ROOM_HOSPITAL) ? "     [ARENA]" :
-             " "))), norm());
+             " ")))) % norm());
     } else {
-      sendTo(COLOR_BASIC,"%s%s%s%s%s%s\n\r", d->m_bIsClient ? clientBuf : "", 
-             purple(),rp->getName(), red(),
-             ((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
+      sendTo(COLOR_BASIC,fmt("%s%s%s%s%s%s\n\r") % 
+	     (d->m_bIsClient ? clientBuf : "") % 
+             purple() %rp->getName() % red() %
+             (((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
              ((rFlags & ROOM_HOSPITAL) ? "     [HOSPITAL]" :
              ((rFlags & ROOM_HOSPITAL) ? "     [ARENA]" :
-             " "))), norm());
+             " ")))) % norm());
     }
   }
   if (isImmortal() && (desc->prompt_d.type & PROMPT_BUILDER_ASSISTANT)) {
-    sendTo("{ %s%s%s%s%s%s%s%s%s%s%s%s%s%s}\n\r",
+    sendTo(fmt("{ %s%s%s%s%s%s%s%s%s%s%s%s%s%s}\n\r") %
            (rFlags == 0 ?
-           "--none-- "       : ""),
+	    "--none-- "       : "") %
            (!(rFlags & (ROOM_ALWAYS_LIT | ROOM_NO_MOB    | ROOM_INDOORS |
                         ROOM_PEACEFUL   | ROOM_NO_STEAL  | ROOM_NO_ESCAPE  |
                         ROOM_NO_MAGIC   | ROOM_NO_PORTAL | ROOM_SILENCE |
                         ROOM_NO_ORDER   | ROOM_NO_FLEE   | ROOM_HAVE_TO_WALK)) &&
-            (rFlags > 0)                 ? "--others-- "     : ""),
-           ((rFlags & ROOM_ALWAYS_LIT)   ? "[Light] "        : ""),
-           ((rFlags & ROOM_NO_MOB)       ? "[!Mob] "         : ""),
-           ((rFlags & ROOM_INDOORS)      ? "[Indoors] "      : ""),
-           ((rFlags & ROOM_PEACEFUL)     ? "[Peaceful] "     : ""),
-           ((rFlags & ROOM_NO_STEAL)     ? "[!Steal] "       : ""),
-           ((rFlags & ROOM_NO_ESCAPE)       ? "[!Escape] "      : ""),
-           ((rFlags & ROOM_NO_MAGIC)     ? "[!Magic] "       : ""),
-           ((rFlags & ROOM_NO_PORTAL)    ? "[!Portal] "      : ""),
-           ((rFlags & ROOM_SILENCE)      ? "[Silent] "       : ""),
-           ((rFlags & ROOM_NO_ORDER)     ? "[!Order] "       : ""),
-           ((rFlags & ROOM_NO_FLEE)      ? "[!Flee] "        : ""),
+            (rFlags > 0)                 ? "--others-- "     : "") %
+           ((rFlags & ROOM_ALWAYS_LIT)   ? "[Light] "        : "") %
+           ((rFlags & ROOM_NO_MOB)       ? "[!Mob] "         : "") %
+           ((rFlags & ROOM_INDOORS)      ? "[Indoors] "      : "") %
+           ((rFlags & ROOM_PEACEFUL)     ? "[Peaceful] "     : "") %
+           ((rFlags & ROOM_NO_STEAL)     ? "[!Steal] "       : "") %
+           ((rFlags & ROOM_NO_ESCAPE)    ? "[!Escape] "      : "") %
+           ((rFlags & ROOM_NO_MAGIC)     ? "[!Magic] "       : "") %
+           ((rFlags & ROOM_NO_PORTAL)    ? "[!Portal] "      : "") %
+           ((rFlags & ROOM_SILENCE)      ? "[Silent] "       : "") %
+           ((rFlags & ROOM_NO_ORDER)     ? "[!Order] "       : "") %
+           ((rFlags & ROOM_NO_FLEE)      ? "[!Flee] "        : "") %
            ((rFlags & ROOM_HAVE_TO_WALK) ? "[Have-To-Walk] " : ""));
   }
 }
@@ -5048,16 +5048,16 @@ void TBeing::sendRoomDesc(TRoom *rp) const
 
   if (hasColorStrings(this, tmp.c_str(), 2)) {
     if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
-      sendTo(COLOR_ROOMS, "%s%s", dynColorRoom(rp, 2, TRUE).toCRLF().c_str(), norm());
+      sendTo(COLOR_ROOMS, fmt("%s%s") % dynColorRoom(rp, 2, TRUE).toCRLF() % norm());
     } else {
-      sendTo(COLOR_ROOMS, "%s%s", autoFormatDesc(dynColorRoom(rp, 2, TRUE), true).c_str(), norm());
+      sendTo(COLOR_ROOMS, fmt("%s%s") % autoFormatDesc(dynColorRoom(rp, 2, TRUE), true) % norm());
     }
   } else {
     if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
-      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), tmp.toCRLF().c_str(), norm());
-      // sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), autoFormatDesc(rp->getDescr(), true, true).c_str(), norm());
+      sendTo(COLOR_ROOMS, fmt("%s%s%s") % addColorRoom(rp, 2) % tmp.toCRLF() % norm());
+      // sendTo(COLOR_ROOMS, fmt("%s%s%s") % addColorRoom(rp % 2) % autoFormatDesc(rp->getDescr() % true % true) % norm());
     } else {
-      sendTo(COLOR_ROOMS, "%s%s%s", addColorRoom(rp, 2).c_str(), autoFormatDesc(tmp, true).c_str(), norm());
+      sendTo(COLOR_ROOMS, fmt("%s%s%s") % addColorRoom(rp, 2) % autoFormatDesc(tmp, true) % norm());
     }
   }
 }
@@ -5076,8 +5076,8 @@ void TBeing::describeTrapLevel(const TTrap *obj, int learn) const
   int level = GetApprox(obj->getTrapLevel(), learn);
   level = max(level,0);
 
-  sendTo(COLOR_OBJECTS, "%s seems to be a %s level trap.\n\r", 
-       sstring(objs(obj)).cap().c_str(), numberAsString(level).c_str());
+  sendTo(COLOR_OBJECTS, fmt("%s seems to be a %s level trap.\n\r") % 
+       sstring(objs(obj)).cap() % numberAsString(level));
 }
 
 void TBeing::describeTrapCharges(const TTrap *obj, int learn) const
@@ -5088,8 +5088,8 @@ void TBeing::describeTrapCharges(const TTrap *obj, int learn) const
   int level = GetApprox(obj->getTrapCharges(), learn);
   level = max(level,0);
 
-  sendTo(COLOR_OBJECTS, "%s seems to have %d charge%s left.\n\r", 
-       sstring(objs(obj)).cap().c_str(), level, level == 1 ? "" : "s");
+  sendTo(COLOR_OBJECTS, fmt("%s seems to have %d charge%s left.\n\r") % 
+       sstring(objs(obj)).cap() % level % (level == 1 ? "" : "s"));
 }
 
 void TBeing::describeTrapDamType(const TTrap *obj, int) const
@@ -5097,10 +5097,10 @@ void TBeing::describeTrapDamType(const TTrap *obj, int) const
   if (!doesKnowSkill(SKILL_DETECT_TRAP))
     return;
 
-  sendTo(COLOR_OBJECTS, "You suspect %s is %s %s trap.\n\r", 
-       sstring(objs(obj)).uncap().c_str(),
-       trap_types[obj->getTrapDamType()].startsVowel() ? "an" : "a",
-       trap_types[obj->getTrapDamType()].uncap().c_str());
+  sendTo(COLOR_OBJECTS, fmt("You suspect %s is %s %s trap.\n\r") % 
+       sstring(objs(obj)).uncap() %
+       (trap_types[obj->getTrapDamType()].startsVowel() ? "an" : "a") %
+       trap_types[obj->getTrapDamType()].uncap());
 }
 
 void TBeing::doSpells(const sstring &argument)

@@ -109,9 +109,9 @@ int TMagicItem::getMagicLearnedness() const
 
 void TMagicItem::objMenu(const TBeing *ch) const
 {
-  ch->sendTo(VT_CURSPOS, 3, 1);
-  ch->sendTo("%sSuggested price:%s %d%s",
-             ch->purple(), ch->norm(), suggestedPrice(),
+  ch->sendTo(fmt(VT_CURSPOS) % 3 % 1);
+  ch->sendTo(fmt("%sSuggested price:%s %d%s") %
+             ch->purple() % ch->norm() % suggestedPrice() %
              (suggestedPrice() != obj_flags.cost ? " *" : ""));
 }
 

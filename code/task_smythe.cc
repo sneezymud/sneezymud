@@ -466,7 +466,7 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
             FALSE, ch, o, 0, TO_CHAR);
     addToToolUses(-1);
     if (getToolUses() <= 0) {
-      ch->sendTo("Your %s breaks due to overuse.\n\r", fname(name).c_str());
+      ch->sendTo(fmt("Your %s breaks due to overuse.\n\r") % fname(name));
       act("$n looks startled as $e breaks $P while hammering.", FALSE, ch, o, this, TO_ROOM);
       makeScraps();
       ch->stopTask();

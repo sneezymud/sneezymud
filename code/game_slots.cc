@@ -325,7 +325,7 @@ void spin_slot(TBeing *ch)
     fruit2 = ChooseSecondFruit();
     fruit3 = ChooseThirdFruit();
   }
-  ch->sendTo("%-10s %-10s %-10s\n\r", fruit1, fruit2, fruit3);
+  ch->sendTo(fmt("%-10s %-10s %-10s\n\r") % fruit1 % fruit2 % fruit3);
   sprintf(buf, "$n spins a [%-10s %-10s %-10s]", fruit1, fruit2, fruit3);
   act(buf, FALSE, ch, 0, 0, TO_ROOM);
 

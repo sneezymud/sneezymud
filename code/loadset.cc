@@ -110,7 +110,7 @@ static void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const
 {
   if (vnum < 0) {
     if (chance > 100)
-      ch->sendTo("No %s exists in that set.\n\r", slotname.c_str());
+      ch->sendTo(fmt("No %s exists in that set.\n\r") % slotname);
     return;
   }
 
@@ -129,7 +129,7 @@ static void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const
 
       return;
     } else {
-      ch->sendTo("The %s in that suit is over max.\n\r", slotname.c_str());
+      ch->sendTo(fmt("The %s in that suit is over max.\n\r") % slotname);
 
       // let L58+ gods load full set regardless
       if (!ch->hasWizPower(POWER_LOAD_LIMITED))
@@ -156,7 +156,7 @@ static void loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const
         if (!ch->hasWizPower(POWER_LOAD_NOPROTOS))
           obj->addObjStat(ITEM_PROTOTYPE);
     } else if (chance > 100)
-      ch->sendTo("The %s was listed but not found, not in db yet?\n\r", slotname.c_str());
+      ch->sendTo(fmt("The %s was listed but not found, not in db yet?\n\r") % slotname);
   }
 }
 
@@ -535,7 +535,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
       sendTo("You load a set of armor.\n\r");
       act("$n loads a set of armor.", TRUE, this, 0, 0, TO_ROOM);
     } else {
-      sendTo("You load a %s piece from a suit of armor.\n\r", suitPieceNames[tPiece]);
+      sendTo(fmt("You load a %s piece from a suit of armor.\n\r") % suitPieceNames[tPiece]);
       act("$n loads a piece of armor.", TRUE, this, 0, 0, TO_ROOM);
     }
 }

@@ -151,7 +151,7 @@ void TBeing::doBandage(const sstring &arg)
     return;
   }
   if (vict->isLimbFlags(slot, PART_BANDAGED)) {
-    ssprintf(buf, "$N's %s is already bandaged!", vict->describeBodySlot(slot).c_str());
+    buf = fmt("$N's %s is already bandaged!") % vict->describeBodySlot(slot);
     act(buf, FALSE, this, NULL, vict, TO_CHAR);
     return;
   }
@@ -203,7 +203,7 @@ void TBeing::doBandage(const sstring &arg)
     } else {
       if (bSuccess(this,  getSkillValue(SKILL_BANDAGE), SKILL_BANDAGE)) {
         if (band_num > 1) {
-          ssprintf(buf,"You quickly combine %d bandages into one big enough to bandage that part.\n\r",band_num);
+          buf = fmt("You quickly combine %d bandages into one big enough to bandage that part.\n\r") %band_num;
           sendTo(buf);
         }
         bandage(vict,slot);
@@ -214,5 +214,5 @@ void TBeing::doBandage(const sstring &arg)
       addSkillLag(SKILL_BANDAGE, 0);
     }
   } else
-    sendTo("You need %d total bandages to cover that area.  You have %d.\n\r", band_num, count);
+    sendTo(fmt("You need %d total bandages to cover that area.  You have %d.\n\r") % band_num % count);
 }

@@ -72,14 +72,14 @@ static const char *script_edit_menu =
 
 void send_sedit_menu(TBeing *ch)
 {
-  ch->sendTo(script_edit_menu,
-             ch->cyan(), ch->norm(),
-             ch->cyan(), ch->norm(),
-             ch->cyan(), ch->norm(),
-             ch->cyan(), ch->norm(),
-             ch->cyan(), ch->norm(),
-             ch->cyan(), ch->norm(),
-             ch->cyan(), ch->norm());
+  ch->sendTo(fmt(script_edit_menu) %
+             ch->cyan() % ch->norm() %
+             ch->cyan() % ch->norm() %
+             ch->cyan() % ch->norm() %
+             ch->cyan() % ch->norm() %
+             ch->cyan() % ch->norm() %
+             ch->cyan() % ch->norm() %
+             ch->cyan() % ch->norm());
 }
 
 void stSpaceOut(sstring & tStString)
@@ -371,12 +371,13 @@ void seditCoreAdd(TBeing *ch, TMonster *tMonster,
   else
     tRespCmd = (respIndex->cmds = new command(tCmd, tString));
 
-  ch->sendTo("\t%s%s%s;\n\rAdded to Trigger {%s%s%s}\n\r",
-             seditExtraWords(tRespCmd->cmd).c_str(),
-             (tRespCmd->args ? " " : ""),
-             (tRespCmd->args ? tRespCmd->args : ""),
-             seditExtraWords(respIndex->cmd).c_str(),
-             (respIndex->args ? " " : ""),
+  ch->sendTo(fmt("\t%s%s%s;\n\rAdded to Trigger {%s%s%s}\n\r") %
+
+             seditExtraWords(tRespCmd->cmd) %
+             (tRespCmd->args ? " " : "") %
+             (tRespCmd->args ? tRespCmd->args : "") %
+             seditExtraWords(respIndex->cmd) %
+             (respIndex->args ? " " : "") %
              (respIndex->args ? respIndex->args : ""));
 }
 
@@ -406,8 +407,7 @@ void seditCoreDelete(TBeing *ch, TMonster *tMonster,
     }
 
     respIndexB->next = respIndex->next;
-    ch->sendTo("Block {%s} deleted.\n\r",
-               seditExtraWords(blockCmd).c_str(), tStCommand.c_str());
+    ch->sendTo(fmt("Block {%s} deleted.\n\r") %               seditExtraWords(blockCmd) % tStCommand);
     delete respIndex;
     respIndex = NULL;
     return;
@@ -434,12 +434,13 @@ void seditCoreDelete(TBeing *ch, TMonster *tMonster,
     return;
   }
 
-  ch->sendTo("\t%s%s%s;\n\rDeleted from Trigger {%s%s%s}\n\r",
-             seditExtraWords(tRespCmd->cmd).c_str(),
-             (tRespCmd->args ? " " : ""),
-             (tRespCmd->args ? tRespCmd->args : ""),
-             seditExtraWords(respIndex->cmd).c_str(),
-             (respIndex->args ? " " : ""),
+  ch->sendTo(fmt("\t%s%s%s;\n\rDeleted from Trigger {%s%s%s}\n\r") %
+
+             seditExtraWords(tRespCmd->cmd) %
+             (tRespCmd->args ? " " : "") %
+             (tRespCmd->args ? tRespCmd->args : "") %
+             seditExtraWords(respIndex->cmd) %
+             (respIndex->args ? " " : "") %
              (respIndex->args ? respIndex->args : ""));
 
   tRespCmdB->next = tRespCmd->next;
@@ -471,7 +472,7 @@ FILE * seditVerifyDirTree(TBeing *ch, char *tArg = NULL,
   FILE *tFile;
   sstring tPath;
 
-  ssprintf(tPath, "immortals/%s/mobs", ch->getNameNOC(ch).c_str());
+  tPath = fmt("immortals/%s/mobs") % ch->getNameNOC(ch);
 
   if (!(tFile = fopen(tPath.c_str(), "r"))) {
     if (mkdir(tPath.c_str(), 0770)) {
@@ -754,7 +755,7 @@ void seditDisplayResponse(TBeing *ch, resp *respIndex,
     if (isSilent)
       *tStString += tBuffer;
     else
-      ch->sendTo(tBuffer, tValue);
+      ch->sendTo(fmt(tBuffer) % tValue);
   }
 
   if (respIndex->cmd == CMD_GIVE && ch->hasWizPower(POWER_SEDIT_IMP_POWER) &&
@@ -930,12 +931,10 @@ long int seditCountTriggers(TMonster *tMonster, int tCmd = -1)
 void update_sedit_menu(TBeing *ch, TMonster *tMonster, bool useBar = false)
 {
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo("%sMobile Name:%s %s",
-             ch->cyan(), ch->norm(), tMonster->name);
-  ch->sendTo(VT_CURSPOS, 2, 1);
-  ch->sendTo("%sTotal Triggers:%s %d",
-              ch->cyan(), ch->norm(), seditCountTriggers(tMonster));
-  ch->sendTo(VT_CURSPOS, 4, 1);
+  ch->sendTo(fmt("%sMobile Name:%s %s") %             ch->cyan() % ch->norm() % tMonster->name);
+  ch->sendTo(fmt(VT_CURSPOS) % 2 % 1);
+  ch->sendTo(fmt("%sTotal Triggers:%s %d") %              ch->cyan() % ch->norm() % seditCountTriggers(tMonster));
+  ch->sendTo(fmt(VT_CURSPOS) % 4 % 1);
   ch->sendTo("Editing Menu:\n\r");
   send_sedit_menu(ch);
 
@@ -1346,11 +1345,11 @@ void seditDisplayMenuFull(TBeing *ch, TMonster *tMonster, const char *tArg, int 
   ch->specials.editFriend = 0;
   ch->sendTo(VT_HOMECLR);
   ch->sendTo("Options: [More than 20 Triggers present]\n\r\n\r");
-  ch->sendTo(sedit_display_menu,
-             ch->cyan(), ch->norm(), seditCountTriggers(tMonster, CMD_SAY),
-             ch->cyan(), ch->norm(), seditCountTriggers(tMonster, CMD_GIVE),
-             ch->cyan(), ch->norm(), seditCountTriggers(tMonster, CMD_RESP_ROOM_ENTER),
-             ch->cyan(), ch->norm(), seditCountTriggers(tMonster, -2));
+  ch->sendTo(fmt(sedit_display_menu) %
+             ch->cyan() % ch->norm() % seditCountTriggers(tMonster, CMD_SAY) %
+             ch->cyan() % ch->norm() % seditCountTriggers(tMonster, CMD_GIVE) %
+             ch->cyan() % ch->norm() % seditCountTriggers(tMonster, CMD_RESP_ROOM_ENTER) %
+             ch->cyan() % ch->norm() % seditCountTriggers(tMonster, -2));
   ch->sendTo("\n\r\n\r--> ");
 }
 

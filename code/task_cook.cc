@@ -128,7 +128,7 @@ void TBeing::doCook(sstring arg)
   }
     
 
-  sendTo(COLOR_BASIC, "You begin to cook %s.\n\r", recipes[recipe].name);
+  sendTo(COLOR_BASIC, fmt("You begin to cook %s.\n\r") % recipes[recipe].name);
   start_task(this, pot, NULL, TASK_COOK, "", 2, inRoom(), 0, 0, 5);
 }
 

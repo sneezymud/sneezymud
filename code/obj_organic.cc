@@ -490,7 +490,7 @@ const sstring TOrganic::shopList(const TBeing *ch, const sstring &arg,
   bool usePlural = false;
   int cost = shopPrice(num, shop_nr, -1, &num);
 
-  ssprintf(Buf[1], "%s", shortDescr);
+  Buf[1] = fmt("%s") % shortDescr;
 
   if (Buf[1].length() > 31) {
     Buf[1] = Buf[1].substr(0,28);
@@ -502,14 +502,14 @@ const sstring TOrganic::shopList(const TBeing *ch, const sstring &arg,
       tString = "unlim";
       usePlural = true;
     } else {
-      ssprintf(tString, "%5d", getUnits());
+      tString = fmt("%5d") % getUnits();
       usePlural = (getUnits() > 1 ? true : false);
     }
   } else {
     if (shop_index[shop_nr].isProducing(this))
       tString = "unlimited";
     else
-      ssprintf(tString, "%d", num);
+      tString = fmt("%d") % num;
 
     usePlural = (cost > 1 ? true : false);
   }
@@ -604,8 +604,8 @@ bool TOrganic::splitMe(TBeing *ch, const sstring &argument)
     ch->sendTo("That hide is just not big enough to be split so much.\n\r");
     return true;
   }
-  ch->sendTo(COLOR_OBJECTS, "You split %s into %d pieces.\n\r",
-             shortDescr, num);
+  ch->sendTo(COLOR_OBJECTS, fmt("You split %s into %d pieces.\n\r") %
+             shortDescr % num);
   ssprintf(Buf, "$n splits %s into %d pieces.",
           shortDescr, num);
   act(Buf, TRUE, ch, 0, 0, TO_ROOM);

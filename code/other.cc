@@ -525,8 +525,8 @@ void TBeing::doSplit(const char *argument, bool tell)
 
       k->addToMoney(tmp_amount, GOLD_XFER);
       if (k->getPosition() >= POSITION_RESTING) 
-        k->sendTo(COLOR_MOBS, "%s splits %d talens, and you receive %d of them.\n\r",
-                    getName(), amount, tmp_amount);
+        k->sendTo(COLOR_MOBS, fmt("%s splits %d talens, and you receive %d of them.\n\r") %
+                    getName() % amount % tmp_amount);
     }
     for (f = k->followers; f; f = f->next) {
       if (f->follower->isAffected(AFF_GROUP) && sameRoom(*f->follower) && f->follower != this) {
@@ -539,10 +539,10 @@ void TBeing::doSplit(const char *argument, bool tell)
 
         f->follower->addToMoney(tmp_amount, GOLD_XFER);
         if (f->follower->getPosition() >= POSITION_RESTING)
-          f->follower->sendTo(COLOR_MOBS, "%s splits %d talens, and you receive %d of them.\n\r", getName(), amount, tmp_amount);
+          f->follower->sendTo(COLOR_MOBS, fmt("%s splits %d talens, and you receive %d of them.\n\r") % getName() % amount % tmp_amount);
       }
     }
-    sendTo("%d talens divided in %d shares of %d talens.\n\r", amount, no_members, amount / no_members);
+    sendTo(fmt("%d talens divided in %d shares of %d talens.\n\r") % amount % no_members % (amount / no_members));
     if ((GetMaxLevel() > MAX_MORT) && (no_members > 1))
       vlogf(LOG_MISC, "%s was kind enough to share %d talens with others...", getName(), amount);
   } else {
@@ -613,7 +613,7 @@ void TBeing::doReport(const char *argument)
       sendTo("You try to report your status to yourself.\n\r");
       return;
     }
-    sendTo(COLOR_MOBS, "You report your status to %s.\n\r", targ->getName());
+    sendTo(COLOR_MOBS, fmt("You report your status to %s.\n\r") % targ->getName());
     if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
       sprintf(info, "<G>$n directly reports to you  '%s%.1f%% H, %.2f%% P. I am %s%s'<1>",
            red(), getPercHit(), getPiety(),
@@ -661,7 +661,7 @@ void TPerson::doTitle(const char *argument)
     if (str.find("<n>") == sstring::npos &&
         colorString(this, desc, argument, NULL, COLOR_NONE, TRUE).find(getNameNOC(this).c_str()) ==
         sstring::npos) {
-      sendTo("Your %s or <n> Must appear somewhere in here.\n\r", getNameNOC(this).c_str());
+      sendTo(fmt("Your %s or <n> Must appear somewhere in here.\n\r") % getNameNOC(this));
       return;
     }
 
@@ -687,7 +687,7 @@ void TPerson::doTitle(const char *argument)
     delete [] title;
     title = mud_str_dup(str);
 
-    sendTo("Your title has been set to : <%s>\n\r", str.c_str());
+    sendTo(fmt("Your title has been set to : <%s>\n\r") % str);
   } else {
     sendTo("The best title is the original anyway right? :)\n\r");
     setTitle(true);
@@ -696,10 +696,10 @@ void TPerson::doTitle(const char *argument)
 
 void TBeing::doQuit()
 {
-  sendTo("%sQuitting%s from the game will make you lose %sALL%s equipment and talens.\n\r",
-           red(), norm(), blue(), norm());
-  sendTo("If you are sure you would like to do this, type %squit!%s instead of quit.\n\r",
-           blue(), norm());
+  sendTo(fmt("%sQuitting%s from the game will make you lose %sALL%s equipment and talens.\n\r") %
+           red() % norm() % blue() % norm());
+  sendTo(fmt("If you are sure you would like to do this, type %squit!%s instead of quit.\n\r") %
+           blue() % norm());
 }
 
 int TMonster::doQuit2()
@@ -1308,7 +1308,7 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
     //sendTo(COLOR_BASIC, buf);
     return;
   } else if (found == 1 && skill > TYPE_UNDEFINED) {
-    sendTo("Skill %s: Unlearned. You can only use practice skill about skills that you have learned.\n\r", discArray[skill]->name);
+    sendTo(fmt("Skill %s: Unlearned. You can only use practice skill about skills that you have learned.\n\r") % discArray[skill]->name);
     return;
   } else if (!wiz) {
     sendTo("That does not appear to be a valid skill: practice skill <name>\n\r");
@@ -1575,10 +1575,10 @@ void TBeing::doGroup(const char *argument)
       sendTo("But you are a member of no group?!\n\r");
     else {
       if(master && master->desc){
-	sendTo(COLOR_BASIC, "%s consists of:\n\r\n\r", 
+	sendTo(COLOR_BASIC, fmt("%s consists of:\n\r\n\r") % 
 	       master->desc->session.groupName.c_str());
       } else {
-	sendTo(COLOR_BASIC, "%s consists of:\n\r\n\r", 
+	sendTo(COLOR_BASIC, fmt("%s consists of:\n\r\n\r") % 
 	       desc->session.groupName.c_str());
       }
 
@@ -1594,41 +1594,41 @@ void TBeing::doGroup(const char *argument)
           tmp_share = splitShares(this, k);
 
           if (k->hasClass(CLASS_CLERIC) || k->hasClass(CLASS_DEIKHAN)) {
-            sendTo("%s%-15.15s%s [%s%.1f%%hp %.1f%%p. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r", cyan(), cap(namebuf), norm(), red(),
-              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100),
-              k->getPiety(), 
-              cap(namebuf),
-              (k != this ? "s" : ""),
-              DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))),
-              norm(), purple(),
-              tmp_share, ((tmp_share == 1) ? "" : "s"),
-              k->getExpSharePerc(),
+            sendTo(fmt("%s%-15.15s%s [%s%.1f%%hp %.1f%%p. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) %
+              k->getPiety() % 
+              cap(namebuf) %
+              (k != this ? "s" : "") %
+              DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
+              norm() % purple() %
+              tmp_share % ((tmp_share == 1) ? "" : "s") %
+              k->getExpSharePerc() %
               norm());
           } else if (k->hasClass(CLASS_SHAMAN)) {
-            sendTo("%s%-15.15s%s [%s%.1f%%hp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r", cyan(), cap(namebuf), norm(), red(),
-              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100),
-              k->getLifeforce(), 
-              cap(namebuf),
-              (k != this ? "s" : ""),
-              DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))),
-              norm(), purple(),
-              tmp_share, ((tmp_share == 1) ? "" : "s"),
-              k->getExpSharePerc(),
+            sendTo(fmt("%s%-15.15s%s [%s%.1f%%hp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) %
+              k->getLifeforce() % 
+              cap(namebuf) %
+              (k != this ? "s" : "") %
+              DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
+              norm() % purple() %
+              tmp_share % ((tmp_share == 1) ? "" : "s") %
+              k->getExpSharePerc() %
               norm());
           } else {
-            sendTo("%s%-15.15s%s [%s%.1f%%hp %.1f%%m. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r", cyan(), cap(namebuf), norm(), red(),
-              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100),
-              (((double) (k->getMana())) / ((double) k->manaLimit()) * 100), 
-              cap(namebuf),
-              (k != this ? "s" : ""),
-              DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))),
-              norm(), purple(),
-              tmp_share, ((tmp_share == 1) ? "" : "s"), 
-              k->getExpSharePerc(),
+            sendTo(fmt("%s%-15.15s%s [%s%.1f%%hp %.1f%%m. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) %
+              (((double) (k->getMana())) / ((double) k->manaLimit()) * 100) % 
+              cap(namebuf) %
+              (k != this ? "s" : "") %
+              DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
+              norm() % purple() %
+              tmp_share % ((tmp_share == 1) ? "" : "s") % 
+              k->getExpSharePerc() %
               norm());
           }
         } else 
-          sendTo("%-15.15s [not around]\n\r", cap(namebuf));
+          sendTo(fmt("%-15.15s [not around]\n\r") % cap(namebuf));
       }
       for (f = k->followers; f; f = f->next) {
         sprintf(namebuf, "%s", (f->follower != this ? f->follower->getNameNOC(this).c_str() : "You"));
@@ -1638,42 +1638,42 @@ void TBeing::doGroup(const char *argument)
           if (sameRoom(*f->follower)) { 
             if (f->follower->hasClass(CLASS_CLERIC) || 
                 f->follower->hasClass(CLASS_DEIKHAN))
-              sendTo("%s%-15.15s%s [%s%.1f%%hp %.1f%%p. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r", cyan(), cap(namebuf), norm(), red(),
-                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100),
-                f->follower->getPiety(),
-                cap(namebuf),
-                (f->follower != this ? "s" : ""),
-                DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))),
-                norm(), purple(),
-                tmp_share, ((tmp_share == 1) ? "" : "s"), 
-                f->follower->getExpSharePerc(),
+              sendTo(fmt("%s%-15.15s%s [%s%.1f%%hp %.1f%%p. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) %
+                f->follower->getPiety() %
+                cap(namebuf) %
+                (f->follower != this ? "s" : "") %
+                DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
+                norm() % purple() %
+                tmp_share % ((tmp_share == 1) ? "" : "s") % 
+                f->follower->getExpSharePerc() %
                 norm());
             else if (f->follower->hasClass(CLASS_SHAMAN))
-              sendTo("%s%-15.15s%s [%s%.1f%%hp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r", cyan(), cap(namebuf), norm(), red(),
-                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100),
-                f->follower->getLifeforce(),
-                cap(namebuf),
-                (f->follower != this ? "s" : ""),
-                DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))),
-                norm(), purple(),
-                tmp_share, ((tmp_share == 1) ? "" : "s"), 
-                f->follower->getExpSharePerc(),
+              sendTo(fmt("%s%-15.15s%s [%s%.1f%%hp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) %
+                f->follower->getLifeforce() %
+                cap(namebuf) %
+                (f->follower != this ? "s" : "") %
+                DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
+                norm() % purple() %
+                tmp_share % ((tmp_share == 1) ? "" : "s") % 
+                f->follower->getExpSharePerc() %
                 norm());
 
             else {
-              sendTo("%s%-15.15s%s [%s%.1f%%hp %.1f%%m. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r", cyan(), cap(namebuf), norm(), red(), 
-                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100),
-                (((double) (f->follower->getMana())) / ((double) f->follower->manaLimit()) * 100),
-                cap(namebuf),
-                (f->follower != this ? "s" : ""),
-                DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))),
-                norm(), purple(),
-                tmp_share, ((tmp_share == 1) ? "" : "s"), 
-                f->follower->getExpSharePerc(),
+              sendTo(fmt("%s%-15.15s%s [%s%.1f%%hp %.1f%%m. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() % 
+                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) %
+                (((double) (f->follower->getMana())) / ((double) f->follower->manaLimit()) * 100) %
+                cap(namebuf) %
+                (f->follower != this ? "s" : "") %
+                DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
+                norm() % purple() %
+                tmp_share % ((tmp_share == 1) ? "" : "s") % 
+                f->follower->getExpSharePerc() %
                 norm());
             }
           } else 
-            sendTo("%-15.15s [not around]\n\r", cap(namebuf));
+            sendTo(fmt("%-15.15s [not around]\n\r") % cap(namebuf));
         }
       }
     }
@@ -1684,10 +1684,10 @@ void TBeing::doGroup(const char *argument)
       sendTo("Syntax: group name <name>\n\r");
       if(isAffected(AFF_GROUP)) {
 	if(master){
-	  sendTo("Current group name: %s", 
+	  sendTo(fmt("Current group name: %s") % 
 		 master->desc->session.groupName.c_str());
 	} else {
-	  sendTo("Current group name: %s", 
+	  sendTo(fmt("Current group name: %s") % 
 		 desc->session.groupName.c_str());
 	}
       }
@@ -1803,12 +1803,12 @@ void TBeing::doGroup(const char *argument)
 
       if (victim->isPlayerAction(PLR_SOLOQUEST) && (this != victim)
           && (victim->master == this)) {
-        sendTo(COLOR_MOBS, "%s is on a quest! No grouping allowed!\n\r", victim->getName());
+        sendTo(COLOR_MOBS, fmt("%s is on a quest! No grouping allowed!\n\r") % victim->getName());
         continue;
       }
       if (victim->isPlayerAction(PLR_GRPQUEST)) {
         if (!isPlayerAction(PLR_GRPQUEST)) {
-          sendTo(COLOR_MOBS, "%s is on a group quest that you aren't on! You can't group!\n\r",victim->getName());
+          sendTo(COLOR_MOBS, fmt("%s is on a group quest that you aren't on! You can't group!\n\r") %victim->getName());
           continue;
         }
       }
@@ -1836,9 +1836,9 @@ void TBeing::doGroup(const char *argument)
         found = TRUE;
         continue;
       } else if (victim->master == this) {
-        sendTo(COLOR_MOBS, "You add %s to your group.\n\r",victim->getName());
+        sendTo(COLOR_MOBS, fmt("You add %s to your group.\n\r") %victim->getName());
         act("$n adds $N to $s group.",TRUE,this,0,victim,TO_NOTVICT);
-        victim->sendTo(COLOR_MOBS, "You are now a member of %s's group.\n\r",getName());
+        victim->sendTo(COLOR_MOBS, fmt("You are now a member of %s's group.\n\r") %getName());
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
 	if (hasClass(CLASS_SHAMAN)) {
 	  if (desc && desc->m_bIsClient)
@@ -2501,8 +2501,8 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     if (victim && 
         !IS_SET(discArray[spell]->targets, TAR_CHAR_ROOM | TAR_CHAR_WORLD | TAR_FIGHT_SELF | TAR_SELF_ONLY)) {
       // tried to invoke on being, not designed for that
-      caster->sendTo(COLOR_BASIC, "You can not invoke '%s' on %s.\n\r",
-          discArray[spell]->name, victim->getName());
+      caster->sendTo(COLOR_BASIC, fmt("You can not invoke '%s' on %s.\n\r") %
+          discArray[spell]->name % victim->getName());
       return 0;
     }
 
@@ -2511,8 +2511,8 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     if (target && 
         !IS_SET(discArray[spell]->targets, TAR_OBJ_INV | TAR_OBJ_EQUIP | TAR_OBJ_ROOM | TAR_OBJ_WORLD)) {
       // tried to invoke on being, not designed for that
-      caster->sendTo(COLOR_BASIC, "You can not invoke '%s' on %s.\n\r",
-          discArray[spell]->name, target->getName());
+      caster->sendTo(COLOR_BASIC, fmt("You can not invoke '%s' on %s.\n\r") %
+          discArray[spell]->name % target->getName());
       return 0;
     }
   }
@@ -3380,7 +3380,7 @@ void TBeing::doStop(const sstring &tStArg)
   TBeing * tBeing = get_best_char_room(this, tStArg.c_str());
 
   if (!tBeing) {
-    sendTo("Whom?  You look around for '%s', but fail to find them...\n\r",
+    sendTo(fmt("Whom?  You look around for '%s', but fail to find them...\n\r") %
            tStArg.c_str());
     return;
   }
@@ -3465,13 +3465,13 @@ void TBeing::doContinue(const char *argument)
     if (IS_SET(discArray[(spelltask->spell)]->comp_types, SPELL_TASKED_EVERY)) {
       spelltask->rounds += value;
       if (!IS_SET(spelltask->flags, CASTFLAG_CAST_INDEFINITE)) {
-        sendTo(COLOR_SPELLS, "<o>You continue your prayer for %d additional round%s (%d total round%s).<1>\n\r",
-         value, value != 1 ? "s" : "",
-         spelltask->rounds, spelltask->rounds != 1 ? "s" : "");
+        sendTo(COLOR_SPELLS, fmt("<o>You continue your prayer for %d additional round%s (%d total round%s).<1>\n\r") %
+         value % (value != 1 ? "s" : "") %
+         spelltask->rounds % (spelltask->rounds != 1 ? "s" : ""));
       } else {
-         sendTo(COLOR_SPELLS, "<o>You add %d round%s to your indefinite prayer (%d total round%s).<1>\n\r", 
-         value, value != 1 ? "s" : "",
-         spelltask->rounds, spelltask->rounds != 1 ? "s" : "");
+         sendTo(COLOR_SPELLS, fmt("<o>You add %d round%s to your indefinite prayer (%d total round%s).<1>\n\r") % 
+         value % (value != 1 ? "s" : "") %
+         spelltask->rounds % (spelltask->rounds != 1 ? "s" : ""));
 
       }
       return;
@@ -3482,7 +3482,7 @@ void TBeing::doContinue(const char *argument)
       sendTo(COLOR_SPELLS,"<B>You decide to continue your praying indefinitely.<1>\n\r");
       SET_BIT(spelltask->flags, CASTFLAG_CAST_INDEFINITE);
     } else {
-      sendTo(COLOR_SPELLS,"<b>You are praying indefinitely with %d rounds to go.<1>\n\r", max(spelltask->rounds, 1));
+      sendTo(COLOR_SPELLS,fmt("<b>You are praying indefinitely with %d rounds to go.<1>\n\r") % max(spelltask->rounds, 1));
     }
   }
 #endif
@@ -3502,14 +3502,14 @@ void TBeing::doHistory()
   }
   sendTo("Your command history :\n\r\n\r");
   for (i = 0; i < 10; i++)
-    sendTo("[%d] %s\n\r", i, d->history[i]);
+    sendTo(fmt("[%d] %s\n\r") % i % d->history[i]);
 
   TDatabase db(DB_SNEEZY);
   sendTo("\n\rYour tell history :\n\r\n\r");
   db.query("select tellfrom, tell from tellhistory where tellto='%s' order by telltime desc", getName());
   for(i=0;i<25 && db.fetchRow();i++){
-    sendTo(COLOR_BASIC, "[%d] <p>%s<1> told you, \"<c>%s<1>\"\n\r",
-	   i, db["tellfrom"], db["tell"]);
+    sendTo(COLOR_BASIC, fmt("[%d] <p>%s<1> told you, \"<c>%s<1>\"\n\r") %
+	   i % db["tellfrom"] % db["tell"]);
   }
   
 
@@ -3818,7 +3818,7 @@ void TBeing::doDrag(const sstring &arg)
   exitp = exitDir(tdir);
 
   if (!exit_ok(exitp, NULL) || IS_SET(exitp->condition, EX_CLOSED)) {
-    sendTo("You are blocked from dragging %s.\n\r", dirs[tdir]);
+    sendTo(fmt("You are blocked from dragging %s.\n\r") % dirs[tdir]);
     sendTo(syntax);
     return;
   }
@@ -3858,14 +3858,14 @@ void TBeing::doEmail(const char *arg)
     return;
 
   if (!*buf) {
-    sendTo("Your present email address is: %s\n\r", desc->account->email);
+    sendTo(fmt("Your present email address is: %s\n\r") % desc->account->email);
     return;
   }
   if (illegalEmail(buf, desc, SILENT_NO)) {
     return;
   }
-  sendTo("Changing email address from %s to %s.\n\r",
-           desc->account->email, buf);
+  sendTo(fmt("Changing email address from %s to %s.\n\r") %
+           desc->account->email % buf);
   strcpy(desc->account->email, buf);
   desc->saveAccount();
 }
@@ -4352,7 +4352,7 @@ void TBeing::doRoll(const sstring &arg)
   exitp = exitDir(tdir);
 
   if (!exit_ok(exitp, NULL) || IS_SET(exitp->condition, EX_CLOSED)) {
-    sendTo("You are blocked from rolling %s.\n\r", dirs[tdir]);
+    sendTo(fmt("You are blocked from rolling %s.\n\r") % dirs[tdir]);
     sendTo(syntax);
     return;
   }

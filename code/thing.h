@@ -135,8 +135,8 @@ class TThing {
     virtual void showMultTo(const TThing *, showModeT, unsigned int) {}
 
     virtual bool isPc() const { return false; }
-    virtual void sendTo(colorTypeT, const sstring &, ...) const;
-    virtual void sendTo(const sstring &, ...) const;
+    virtual void sendTo(colorTypeT, const sstring &) const;
+    virtual void sendTo(const sstring &) const;
     virtual void update(int) {}
 
     virtual int  pourWaterOnMe(TBeing *, TObj *) { return false; }

@@ -267,7 +267,7 @@ static void load_shop_file(TMonster *ch, int shop_nr)
 {
   sstring buf;
 
-  ssprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
+  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
   ch->loadItems(buf);
 
   // do some discounting where appropriate
@@ -413,13 +413,13 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   int discount = 100;
 
   if ((ch->getCarriedVolume() + (num * getTotalVolume())) > ch->carryVolumeLimit()) {
-    ch->sendTo("%s: You can't carry that much volume.\n\r", fname(name).c_str());
+    ch->sendTo(fmt("%s: You can't carry that much volume.\n\r") % fname(name));
     return -1;
   }
   // obj-weight > free ch limit
   if (compareWeights(getTotalWeight(TRUE),
        ((ch->carryWeightLimit() - ch->getCarriedWeight())/num)) == -1) {
-    ch->sendTo("%s: You can't carry that much weight.\n\r", fname(name).c_str());
+    ch->sendTo(fmt("%s: You can't carry that much weight.\n\r") % fname(name));
     return -1;
   }
   if (shop_index[shop_nr].isProducing(this)) {
@@ -463,7 +463,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       count++;
       temp1->recalcShopData(TRUE, cost);
     }
-    ssprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
+    buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
     keeper->saveItems(buf);
   } else {
     tmp = number_objects_in_list(this, (TObj *) keeper->getStuff());
@@ -530,7 +530,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       count++;
       temp1->recalcShopData(TRUE, cost);
     }
-    ssprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
+    buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
     keeper->saveItems(buf);
   }
   if (!count)
@@ -539,12 +539,12 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   keeper->doTell(ch->name, shop_index[shop_nr].message_buy,
           (cost * count));
 
-  ch->sendTo(COLOR_OBJECTS, "You now have %s (*%d).\n\r", 
-          sstring(getName()).uncap().c_str(), count);
+  ch->sendTo(COLOR_OBJECTS, fmt("You now have %s (*%d).\n\r") % 
+          sstring(getName()).uncap() % count);
   if (count == 1) 
     act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM); 
   else {
-    ssprintf(buf, "$n buys %d %ss.", count, fname(name).c_str());
+    buf = fmt("$n buys %d %ss.") % count % fname(name);
     act(buf, FALSE, ch, this, 0, TO_ROOM);
   }
   ch->doSave(SILENT_YES);
@@ -560,24 +560,24 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
   }
 #if NO_DAMAGED_ITEMS_SHOP
   if (temp1->getStructPoints() != temp1->getMaxStructPoints()) {
-    ssprintf(buf, "%s I don't buy damaged goods.", ch->getName());
+    buf = fmt("%s I don't buy damaged goods.") % ch->getName();
     keeper->doTell(buf);
     return TRUE;
   }
 #endif
   if (temp1->getStuff()) {
-    ssprintf(buf, "%s Sorry, I don't buy items that contain other items.", ch->getName());
+    buf = fmt("%s Sorry, I don't buy items that contain other items.") % ch->getName();
     keeper->doTell(buf);
     return TRUE;
   }
   // Notes have been denied by objectSell() above
   if (temp1->action_description) {
-    ssprintf(buf, "%s I'm sorry, I don't buy monogrammed goods.", ch->getName());
+    buf = fmt("%s I'm sorry, I don't buy monogrammed goods.") % ch->getName();
     keeper->doTell(buf);
     return TRUE;
   }
   if(temp1->isObjStat(ITEM_BURNING) || temp1->isObjStat(ITEM_CHARRED)){
-    ssprintf(buf, "%s I'm sorry, I don't buy fire damaged goods.", ch->getName());
+    buf = fmt("%s I'm sorry, I don't buy fire damaged goods.") % ch->getName();
     keeper->doTell(buf);
     return TRUE;
   }
@@ -615,7 +615,7 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
   int max_num=tso.getMaxNum(this);
 
   if(max_num == 0){
-    ssprintf(buf, "%s I don't wish to buy any of those right now.", ch->name);
+    buf = fmt("%s I don't wish to buy any of those right now.") % ch->name;
     keeper->doTell(buf);
     return TRUE;
   }
@@ -626,7 +626,7 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
          !strcmp(t->getName(), getName()))) {
       total += 1;
       if (total >= max_num) {
-        ssprintf(buf, "%s I already have plenty of those.", ch->name);
+        buf = fmt("%s I already have plenty of those.") % ch->name;
         keeper->doTell(buf);
         return TRUE;
       }
@@ -701,7 +701,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     return;
   }
   if (obj_flags.cost <= 1 || isObjStat(ITEM_NEWBIE)) {
-    ssprintf(buf, "%s I'm sorry, I don't buy valueless items.", ch->getName());
+    buf = fmt("%s I'm sorry, I don't buy valueless items.") % ch->getName();
     keeper->doTell(buf);
     return;
   }
@@ -733,16 +733,16 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     return;
   }
   if (obj_index[getItemIndex()].max_exist <= 10) {
-    ssprintf(buf, "%s Wow!  This is one of those limited items.", ch->name);
+    buf = fmt("%s Wow!  This is one of those limited items.") % ch->name;
     keeper->doTell(buf);
-    ssprintf(buf, "%s You should really think about auctioning it.", ch->name);
+    buf = fmt("%s You should really think about auctioning it.") % ch->name;
     keeper->doTell(buf);
   }
   act("$n sells $p.", FALSE, ch, this, 0, TO_ROOM);
 
   keeper->doTell(ch->getName(), shop_index[shop_nr].message_sell, cost);
 
-  ch->sendTo(COLOR_OBJECTS, "The shopkeeper now has %s.\n\r", sstring(getName()).uncap().c_str());
+  ch->sendTo(COLOR_OBJECTS, fmt("The shopkeeper now has %s.\n\r") % sstring(getName()).uncap());
   ch->logItem(this, CMD_SELL);
 
   --(*this);
@@ -757,7 +757,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   if (ch->isAffected(AFF_GROUP) && ch->desc &&
            IS_SET(ch->desc->autobits, AUTO_SPLIT) && 
           (ch->master || ch->followers)){
-    ssprintf(buf, "%d", cost);
+    buf = fmt("%d") % cost;
     ch->doSplit(buf.c_str(), false);
   }
 
@@ -785,7 +785,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 #endif
 
 
-  ssprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
+  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
   keeper->saveItems(buf);
   ch->doSave(SILENT_YES);
 }
@@ -970,7 +970,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
   strcpy(argm, tString);
 
   if (!*argm) {
-    ssprintf(buf, "%s What do you want to sell??", ch->getName());
+    buf = fmt("%s What do you want to sell??") % ch->getName();
     tKeeper->doTell(buf);
     return FALSE;
   }
@@ -1185,7 +1185,7 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   strcpy(argm, arg);
 
   if (!*argm) {
-    ssprintf(buf, "%s What do you want me to evaluate??", ch->name);
+    buf = fmt("%s What do you want me to evaluate??") % ch->name;
     keeper->doTell(buf);
     return;
   }
@@ -1276,9 +1276,9 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   cost = sellPrice(1, shop_nr, chr, &discount);
 
   if (obj_index[getItemIndex()].max_exist <= 10) {
-    ssprintf(buf, "%s Wow!  This is one of those limited items.", ch->name);
+    buf = fmt("%s Wow!  This is one of those limited items.") % ch->name;
     keeper->doTell(buf);
-    ssprintf(buf, "%s You should really think about auctioning it.", ch->name);
+    buf = fmt("%s You should really think about auctioning it.") % ch->name;
     keeper->doTell(buf);
   }
 
@@ -1296,14 +1296,14 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   }
   max(cost, 1);  // at least 1 talen
   if(willbuy){
-    ssprintf(buf, "%s I'll give you %d talens for %s!", ch->name, cost, getName());
+    buf = fmt("%s I'll give you %d talens for %s!") % ch->name % cost % getName();
   } else {
-    ssprintf(buf, "%s Normally, I'd give you %d talens for %s!", ch->name, cost, getName());
+    buf = fmt("%s Normally, I'd give you %d talens for %s!") % ch->name % cost % getName();
   }
   keeper->doTell(buf);
 
   if (keeper->getMoney() < cost) {
-    ssprintf(buf, "%s Unfortunately, at the moment, I can not afford to buy that item from you.", fname(ch->name).c_str());
+    buf = fmt("%s Unfortunately, at the moment, I can not afford to buy that item from you.") % fname(ch->name);
     keeper->doTell(buf);
     return;
   }
@@ -1638,7 +1638,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
   int max_trade=0;
   max_trade=shop_index[shop_nr].type.size()-1;
 
-  ssprintf(buf, "%s You can buy:", ch->getName());
+  buf = fmt("%s You can buy:") % ch->getName();
   keeper->doTell(buf);
   for (counter = 0; counter < max_trade; counter++) {
     if (shop_index[shop_nr].type[counter] == ITEM_COMPONENT)
@@ -1737,7 +1737,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
       ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
 
     keeper->autoCreateShop(shop_nr);
-    ssprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
+    buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
     keeper->saveItems(buf);
     return;
   }
@@ -1869,11 +1869,11 @@ void shopping_kill(const char *, TBeing *ch, TBeing *keeper, int shop_nr)
 
   switch (shop_index[shop_nr].temper2) {
     case 0:
-      ssprintf(buf, "%s Don't ever try that again!", ch->name);
+      buf = fmt("%s Don't ever try that again!") % ch->name;
       keeper->doTell(buf);
       return;
     case 1:
-      ssprintf(buf, "%s Scram - midget!", ch->name);
+      buf = fmt("%s Scram - midget!") % ch->name;
       keeper->doTell(buf);
       return;
 
@@ -1886,7 +1886,7 @@ void waste_shop_file(int shop_nr)
 {
   sstring buf;
 
-  ssprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
+  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
   unlink(buf.c_str());
 }
 

@@ -2231,7 +2231,7 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
     max_num=tso.getMaxNum(this);
 
   if(max_num == 0){
-    ssprintf(buf, "%s I don't wish to buy any of those right now.", ch->name);
+    buf = fmt("%s I don't wish to buy any of those right now.") % ch->name;
     keeper->doTell(buf);
     return TRUE;
   }
@@ -2248,11 +2248,11 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
     }
   }
   if (total >= max_num) {
-    ssprintf(buf, "%s I already have plenty of %s.", ch->getName(), getName());
+    buf = fmt("%s I already have plenty of %s.") % ch->getName() % getName();
     keeper->doTell(buf);
     return TRUE;
   } else if (total + num > max_num) {
-    ssprintf(buf, "%s I'll buy no more than %d charge%s of %s.", ch->getName(), max_num - total, (max_num - total > 1 ? "s" : ""), getName());
+    buf = fmt("%s I'll buy no more than %d charge%s of %s.") % ch->getName() % (max_num - total) % (max_num - total > 1 ? "s" : "") % getName();
     keeper->doTell(buf);
     return FALSE;
   }
@@ -2411,29 +2411,29 @@ void TComponent::changeComponentValue4(TBeing *ch, const char *arg, editorEnterT
 
   ch->sendTo(VT_HOMECLR);
 
-  ch->sendTo(VT_CURSPOS, 3, 5);
+  ch->sendTo(fmt(VT_CURSPOS) % 3 % 5);
   sprintf(buf, "1: [%c]  Decay-Enabled",
              (isComponentType(COMP_DECAY) ? 'X' : ' '));
   ch->sendTo(buf);
 
-  ch->sendTo(VT_CURSPOS, 4, 5);
+  ch->sendTo(fmt(VT_CURSPOS) % 4 % 5);
   sprintf(buf, "2: [%c]  Component for Spell-casting",
              (isComponentType( COMP_SPELL) ? 'X' : ' '));
   ch->sendTo(buf);
 
-  ch->sendTo(VT_CURSPOS, 5, 5);
+  ch->sendTo(fmt(VT_CURSPOS) % 5 % 5);
   sprintf(buf, "3: [%c]  Component for Potion-brewing",
              (isComponentType( COMP_POTION) ? 'X' : ' '));
   ch->sendTo(buf);
 
-  ch->sendTo(VT_CURSPOS, 6, 5);
+  ch->sendTo(fmt(VT_CURSPOS) % 6 % 5);
   sprintf(buf, "4: [%c]  Component for Scribing",
              (isComponentType( COMP_SCRIBE) ? 'X' : ' '));
   ch->sendTo(buf);
 
-  ch->sendTo(VT_CURSPOS, 22, 1);
+  ch->sendTo(fmt(VT_CURSPOS) % 22 % 1);
   ch->sendTo("Hit return when finished.");
-  ch->sendTo(VT_CURSPOS, 23, 1);
+  ch->sendTo(fmt(VT_CURSPOS) % 23 % 1);
   ch->sendTo("Select the property to toggle.\n\r--> ");
 }
 
@@ -2624,8 +2624,8 @@ int TComponent::putMeInto(TBeing *, TOpenContainer *)
 
 void TComponent::describeObjectSpecifics(const TBeing *ch) const
 {
-  ch->sendTo(COLOR_OBJECTS,"%s has about %d uses left.\n\r",
-        sstring(getName()).cap().c_str(), getComponentCharges());
+  ch->sendTo(COLOR_OBJECTS,fmt("%s has about %d uses left.\n\r") %
+        sstring(getName()).cap() % getComponentCharges());
 }
 
 void TComponent::update(int use)
@@ -2738,7 +2738,7 @@ bool TComponent::splitMe(TBeing *ch, const sstring &tString)
   }
 
   if (tCount >= getComponentCharges()) {
-    ch->sendTo("Charges must be between 1 and %d.\n\r",
+    ch->sendTo(fmt("Charges must be between 1 and %d.\n\r") %
                (getComponentCharges() -1));
     return true;
   }
@@ -2856,9 +2856,9 @@ int TComponent::suggestedPrice() const
 
 void TComponent::objMenu(const TBeing *ch) const
 {
-  ch->sendTo(VT_CURSPOS, 3, 1);
-  ch->sendTo("%sSuggested price:%s %d%s",
-             ch->purple(), ch->norm(), suggestedPrice(),
+  ch->sendTo(fmt(VT_CURSPOS) % 3 % 1);
+  ch->sendTo(fmt("%sSuggested price:%s %d%s") %
+             ch->purple() % ch->norm() % suggestedPrice() %
              (suggestedPrice() != obj_flags.cost ? " *" : ""));
 }
 
@@ -2997,13 +2997,13 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   TObj   *tObj;
 
   if ((ch->getCarriedVolume() + getTotalVolume()) > ch->carryVolumeLimit()) {
-    ch->sendTo("%s: You can not carry that much volume.\n\r", fname(name).c_str());
+    ch->sendTo(fmt("%s: You can not carry that much volume.\n\r") % fname(name));
     return -1;
   }
 
   if (compareWeights(getTotalWeight(TRUE),
                      (ch->carryWeightLimit() - ch->getCarriedWeight())) == -1) {
-    ch->sendTo("%s: You can not carry that much weight.\n\r", fname(name).c_str());
+    ch->sendTo(fmt("%s: You can not carry that much weight.\n\r") % fname(name));
     return -1;
   }
 
@@ -3036,8 +3036,8 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     tObj->purchaseMe(ch, tKeeper, tCost, tShop);
     tKeeper->doTell(ch->name, shop_index[tShop].message_buy, tCost);
 
-    ch->sendTo(COLOR_OBJECTS, "You now have %s (*%d charges).\n\r",
-            sstring(getName()).uncap().c_str(), tNum);
+    ch->sendTo(COLOR_OBJECTS, fmt("You now have %s (*%d charges).\n\r") %
+            sstring(getName()).uncap() % tNum);
     act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
     *ch += *tObj;
     ch->logItem(tObj, CMD_BUY);
@@ -3079,8 +3079,8 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     tObj->purchaseMe(ch, tKeeper, tCost, tShop);
     tKeeper->doTell(ch->name, shop_index[tShop].message_buy, tCost);
 
-    ch->sendTo(COLOR_OBJECTS, "You now have %s (*%d charges).\n\r",
-            sstring(getName()).uncap().c_str(), tNum);
+    ch->sendTo(COLOR_OBJECTS, fmt("You now have %s (*%d charges).\n\r") %
+            sstring(getName()).uncap() % tNum);
     act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
 
     *ch += *tObj;
@@ -3088,7 +3088,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     tValue++;
     tObj->recalcShopData(TRUE, tCost);
 
-    ssprintf(tString, "%s/%d", SHOPFILE_PATH, tShop);
+    tString = fmt("%s/%d") % SHOPFILE_PATH % tShop;
     tKeeper->saveItems(tString);
   }
 
@@ -3119,7 +3119,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
   }
 
   if (obj_flags.cost <= 1 || isObjStat(ITEM_NEWBIE)) {
-    ssprintf(buf, "%s I'm sorry, I don't buy valueless items.", ch->getName());
+    buf = fmt("%s I'm sorry, I don't buy valueless items.") % ch->getName();
     tKeeper->doTell(buf);
     return;
   }
@@ -3159,9 +3159,9 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
   }
 
   if (obj_index[getItemIndex()].max_exist <= 10) {
-    ssprintf(buf, "%s Wow!  This is one of those limited items.", ch->getName());
+    buf = fmt("%s Wow!  This is one of those limited items.") % ch->getName();
     tKeeper->doTell(buf);
-    ssprintf(buf, "%s You should really think about auctioning it.", ch->getName());
+    buf = fmt("%s You should really think about auctioning it.") % ch->getName();
     tKeeper->doTell(buf);
   }
 
@@ -3169,7 +3169,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
 
   tKeeper->doTell(ch->getName(), shop_index[tShop].message_sell,tCost);
 
-  ch->sendTo(COLOR_OBJECTS, "The shopkeeper now has %s.\n\r", sstring(getName()).uncap().c_str());
+  ch->sendTo(COLOR_OBJECTS, fmt("The shopkeeper now has %s.\n\r") % sstring(getName()).uncap());
   ch->logItem(this, CMD_SELL);
 
   sellMeMoney(ch, tKeeper, tCost, tShop);
@@ -3178,7 +3178,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
   if (ch->isAffected(AFF_GROUP) && ch->desc &&
            IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
           (ch->master || ch->followers)) {
-    ssprintf(buf, "%d", tCost);
+    buf = fmt("%d") % tCost;
     ch->doSplit(buf.c_str(), false);
   }
 
@@ -3202,7 +3202,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
 
     if ((tValue = real_object(objVnum())) < 0 || tValue > (signed) obj_index.size() ||
         !(tComponent = dynamic_cast<TComponent *>(read_object(tValue, REAL)))) {
-      ch->sendTo(COLOR_OBJECTS, "For some reason %s resists being partially sold.\n\r", getName());
+      ch->sendTo(COLOR_OBJECTS, fmt("For some reason %s resists being partially sold.\n\r") % getName());
       return;
     }
     int cost_per = 0;
@@ -3227,7 +3227,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
     *tKeeper += *tComponent;
   }
 
-  ssprintf(buf, "%s/%d", SHOPFILE_PATH, tShop);
+  buf = fmt("%s/%d") % SHOPFILE_PATH % tShop;
   tKeeper->saveItems(buf);
   ch->doSave(SILENT_YES);
 }
@@ -3291,9 +3291,9 @@ void TComponent::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   }
 
   if (willbuy) {
-    ssprintf(buf, "%s I'll give you %d talens for %s!", ch->getName(), price, getName());
+    buf = fmt("%s I'll give you %d talens for %s!") % ch->getName() % price % getName();
   } else {
-    ssprintf(buf, "%s Normally, I'd give you %d talens for %s!", ch->getName(), price, getName());
+    buf = fmt("%s Normally, I'd give you %d talens for %s!") % ch->getName() % price % getName();
   }
   keeper->doTell(buf);
   return;

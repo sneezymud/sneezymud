@@ -516,7 +516,7 @@ void TBeing::doAttribute(const char *arg)
 
     if (victim) {
       if (!(d = victim->desc)) {
-        sendTo(COLOR_MOBS, "%s doesn't seem to have a connection right now.\n\r", victim->getName());
+        sendTo(COLOR_MOBS, fmt("%s doesn't seem to have a connection right now.\n\r") % victim->getName());
         return;
       }
       showStatsTo(d, this, true);
@@ -540,8 +540,8 @@ void TBeing::doAttribute(const char *arg)
       home_terrains[player.hometerrain], getBaseAge());
     sendTo(buf);
 
-    sendTo("You are %d years and %d months old, %d inches tall, and you weigh %d lbs.\n\r",
-        age()->year, age()->month, getHeight(), (int) getWeight());
+    sendTo(fmt("You are %d years and %d months old, %d inches tall, and you weigh %d lbs.\n\r") %
+        age()->year % age()->month % getHeight() % (int) getWeight());
     if (!age()->month && !age()->day)
       sendTo(" It's your birthday today.\n\r");
 
@@ -551,14 +551,14 @@ void TBeing::doAttribute(const char *arg)
     buf+="\n\r";
     sendTo(buf);
     if (TestCode5) {
-      sendTo(COLOR_BASIC, "You are a member of %s<1>, and have a rank of %s<1>.\n\r",
-	     newfaction()->getName(), rank());
+      sendTo(COLOR_BASIC, fmt("You are a member of %s<1>, and have a rank of %s<1>.\n\r") %
+	     newfaction()->getName() % rank());
     } else {
 #if FACTIONS_IN_USE
-      sendTo("You are allied to %s, and have a %.4f%% rating.\n\r",
+      sendTo(fmt("You are allied to %s, and have a %.4f%% rating.\n\r") %
 	     FactionInfo[getFaction()].faction_name, getPerc());
 #else
-      sendTo("You are allied to %s.\n\r",
+      sendTo(fmt("You are allied to %s.\n\r") %
 	     FactionInfo[getFaction()].faction_name);
 #endif
     }
@@ -575,17 +575,17 @@ void TBeing::doAttribute(const char *arg)
   } else if (is_abbrev(cmdbuf, "condition")) {
     if (GetMaxLevel() > 10) {
       if (!isImmortal()) {
-        sendTo("You are carrying %3.f%% of your maximum weight capacity.\n\r",
-          (getCarriedWeight()/carryWeightLimit()) * 100.0);
-        sendTo("You are carrying %3.f%% of your maximum volume capacity.\n\r",
-          (float) ((float) getCarriedVolume()/(float) carryVolumeLimit()) * 100);
+        sendTo(fmt("You are carrying %3.f%% of your maximum weight capacity.\n\r") %
+          ((getCarriedWeight()/carryWeightLimit()) * 100.0));
+        sendTo(fmt("You are carrying %3.f%% of your maximum volume capacity.\n\r") %
+          ((float) ((float) getCarriedVolume()/(float) carryVolumeLimit()) * 100));
       } else {
-        sendTo("You have %.1f lbs of equipment, and can carry up to %.1f lbs - %.1f spare lbs.\n\r",
-            getCarriedWeight(), carryWeightLimit(), 
-            carryWeightLimit() - getCarriedWeight());
-        sendTo("You have %d volume in inventory.\n\rYou can carry up to %d volume - You have %d spare volume capacity.\n\r",
-            getCarriedVolume(), carryVolumeLimit(), 
-            carryVolumeLimit() - getCarriedVolume());
+        sendTo(fmt("You have %.1f lbs of equipment, and can carry up to %.1f lbs - %.1f spare lbs.\n\r") %
+            getCarriedWeight() % carryWeightLimit() % 
+            (carryWeightLimit() - getCarriedWeight()));
+        sendTo(fmt("You have %d volume in inventory.\n\rYou can carry up to %d volume - You have %d spare volume capacity.\n\r") %
+            getCarriedVolume() % carryVolumeLimit() % 
+            (carryVolumeLimit() - getCarriedVolume()));
       }
     }
     sendTo(COLOR_MOBS, "<c>Stats  :<z>");
@@ -604,7 +604,7 @@ void TBeing::doAttribute(const char *arg)
       sendTo(COLOR_MOBS,"<c>Natural:<z>");
       statTypeT ij;
       for(ij = MIN_STAT; ij<MAX_STATS_USED; ij++) {
-        sendTo(" %3d ", getStat(STAT_NATURAL, ij));
+        sendTo(fmt(" %3d ") % getStat(STAT_NATURAL, ij));
       }
       sendTo("\n\r");
 
@@ -614,7 +614,7 @@ void TBeing::doAttribute(const char *arg)
       sendTo(COLOR_MOBS,"<c>Natural:<z>");
       statTypeT ij;
       for(ij = MIN_STAT; ij<MAX_STATS_USED; ij++) {
-        sendTo(" %3d ", getStat(STAT_NATURAL, ij));
+        sendTo(fmt(" %3d ") % getStat(STAT_NATURAL, ij));
       }
       sendTo("\n\r");
 
@@ -629,33 +629,33 @@ void TBeing::doAttribute(const char *arg)
       mod=(int)(getStrDamModifier()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, "Your strength gives you a %i%% damage %s.\n\r",
-	       mod, (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your strength gives you a %i%% damage %s.\n\r") %
+	       mod % ((mod>0)?"bonus":"penalty"));
       } else {
-	sendTo(COLOR_MOBS, "Your strength gives you %s damage %s.\n\r",
-	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your strength gives you %s damage %s.\n\r") %
+	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
       }
 
       //// bra
       mod=(int)(getBraMod()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, "Your brawn gives you a %i%% damage absorption %s.\n\r",
-	       mod, (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your brawn gives you a %i%% damage absorption %s.\n\r") %
+	       mod % ((mod>0)?"bonus":"penalty"));
       } else {
-	sendTo(COLOR_MOBS, "Your brawn gives you %s damage absorption %s.\n\r",
-	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your brawn gives you %s damage absorption %s.\n\r") %
+	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
       }
 
       //// con
       mod=(int)(getConHpModifier()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, "Your constitution gives you a %i%% hit point %s.\n\r",
-	       mod, (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your constitution gives you a %i%% hit point %s.\n\r") %
+	       mod % ((mod>0)?"bonus":"penalty"));
       } else {
-	sendTo(COLOR_MOBS, "Your constitution gives you %s hit point %s.\n\r",
-	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your constitution gives you %s hit point %s.\n\r") %
+	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
       }
 
       
@@ -663,22 +663,22 @@ void TBeing::doAttribute(const char *arg)
       mod=(int)(getDexMod()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, "Your dexterity gives you a %i%% hitting %s.\n\r",
-	       mod, (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your dexterity gives you a %i%% hitting %s.\n\r") %
+	       mod % ((mod>0)?"bonus":"penalty"));
       } else {
-	sendTo(COLOR_MOBS, "Your dexterity gives you %s hitting %s.\n\r",
-	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your dexterity gives you %s hitting %s.\n\r") %
+	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
       }
 
       //// agi
       mod=(int)(getAgiMod()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, "Your agility gives you a %i%% armor class %s.\n\r",
-	       mod, (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your agility gives you a %i%% armor class %s.\n\r") %
+	       mod % ((mod>0)?"bonus":"penalty"));
       } else {
-	sendTo(COLOR_MOBS, "Your agility gives you %s armor class %s.\n\r",
-	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your agility gives you %s armor class %s.\n\r") %
+	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
       }
 
 
@@ -687,22 +687,22 @@ void TBeing::doAttribute(const char *arg)
       mod=(int)(getIntModForPracs()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, "Your intelligence gives you a %i%% practice %s.\n\r",
-	       mod, (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your intelligence gives you a %i%% practice %s.\n\r") %
+	       mod % ((mod>0)?"bonus":"penalty"));
       } else {
-	sendTo(COLOR_MOBS, "Your intelligence gives you %s practice %s.\n\r",
-	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your intelligence gives you %s practice %s.\n\r") %
+	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
       }
 
       //// foc
       mod=(int)(getFocMod()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, "Your focus gives you a %i%% skill success %s.\n\r",
-	       mod, (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your focus gives you a %i%% skill success %s.\n\r") %
+	       mod % ((mod>0)?"bonus":"penalty"));
       } else {
-	sendTo(COLOR_MOBS, "Your focus gives you %s skill success %s.\n\r",
-	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your focus gives you %s skill success %s.\n\r") %
+	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
       }
 
       //// cha
@@ -711,22 +711,22 @@ void TBeing::doAttribute(const char *arg)
       mod=-mod;
 	
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, "Your charisma gives you a %i%% shop price %s.\n\r",
-	       mod, (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your charisma gives you a %i%% shop price %s.\n\r") %
+	       mod % ((mod>0)?"bonus":"penalty"));
       } else {
-	sendTo(COLOR_MOBS, "Your charisma gives you %s shop price %s.\n\r",
-	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your charisma gives you %s shop price %s.\n\r") %
+	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
       }
 
       //// spe
       mod=(int)(getSpeMod()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, "Your speed gives you a %i%% %s to your number of attacks.\n\r",
-	       mod, (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your speed gives you a %i%% %s to your number of attacks.\n\r") %
+	       mod % ((mod>0)?"bonus":"penalty"));
       } else {
-	sendTo(COLOR_MOBS, "Your speed gives you %s %s to your number of attacks.\n\r",
-	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+	sendTo(COLOR_MOBS, fmt("Your speed gives you %s %s to your number of attacks.\n\r") %
+	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
       }
 
 
@@ -777,7 +777,7 @@ void TBeing::doAttribute(const char *arg)
     if (fight())
       act("You are fighting $N.", FALSE, this, NULL, fight(), TO_CHAR);
     else if (task) {
-      ssprintf(buf, "You are %s.\n\r", tasks[task->task].name);
+      buf = fmt("You are %s.\n\r") % tasks[task->task].name;
       sendTo(buf);
     } else {
       TBeing *tbr;
@@ -820,7 +820,7 @@ void TBeing::doAttribute(const char *arg)
           sendTo(buf);
             break;
         case POSITION_CRAWLING:
-          sendTo(buf, "You are crawling.\n\r");
+          buf="You are crawling.\n\r";
           break;
         case POSITION_SITTING:
           if (riding) {
@@ -875,11 +875,11 @@ void TBeing::doAttribute(const char *arg)
       if (discArray[which]->minLifeforce)
         sendTo("You are invoking a ritual.\n\r");
     }
-    sendTo("You are in %s%s%s attack mode.\n\r",
-          cyan(), attack_modes[getCombatMode()], norm());
+    sendTo(fmt("You are in %s%s%s attack mode.\n\r") %
+          cyan() % attack_modes[getCombatMode()] % norm());
 
     if (wimpy)
-      sendTo("You are in wimpy mode, and will flee at %d hit points.\n\r", wimpy);
+      sendTo(fmt("You are in wimpy mode, and will flee at %d hit points.\n\r") % wimpy);
     if (IS_SET(desc->account->flags, ACCOUNT_BOSS))
       sendTo("Your account is in boss-mode.\n\r");
     if (IS_SET(desc->account->flags, ACCOUNT_MSP))
@@ -897,21 +897,21 @@ void TBeing::doAttribute(const char *arg)
     int i;
     for(i=MIN_DRUG;i<MAX_DRUG;++i){
       if(desc->drugs[i].total_consumed>0){
-	sendTo("%s (%i):\n\r", drugTypes[i].name, i);
-	sendTo("You first used %s on the %s day of %s, Year %d P.S.\n\r", 
-	       drugTypes[i].name,
-	       numberAsString(desc->drugs[i].first_use.day+1).c_str(),
-	       month_name[desc->drugs[i].first_use.month], 
+	sendTo(fmt("%s (%i):\n\r") % drugTypes[i].name % i);
+	sendTo(fmt("You first used %s on the %s day of %s, Year %d P.S.\n\r") % 
+	       drugTypes[i].name %
+	       numberAsString(desc->drugs[i].first_use.day+1) %
+	       month_name[desc->drugs[i].first_use.month] % 
 	       desc->drugs[i].first_use.year);
-	sendTo("You last used %s on the %s day of %s, Year %d P.S.\n\r", 
-	       drugTypes[i].name,
-	       numberAsString(desc->drugs[i].last_use.day+1).c_str(),
-	       month_name[desc->drugs[i].last_use.month], 
+	sendTo(fmt("You last used %s on the %s day of %s, Year %d P.S.\n\r") % 
+	       drugTypes[i].name %
+	       numberAsString(desc->drugs[i].last_use.day+1) %
+	       month_name[desc->drugs[i].last_use.month] % 
 	       desc->drugs[i].last_use.year);
-	sendTo("You have consumed %i units of %s.\n\r", 
-	       desc->drugs[i].total_consumed, drugTypes[i].name);
-	sendTo("You currently have %i units of %s in your body.\n\r", 
-	       desc->drugs[i].current_consumed, drugTypes[i].name);
+	sendTo(fmt("You have consumed %i units of %s.\n\r") % 
+	       desc->drugs[i].total_consumed % drugTypes[i].name);
+	sendTo(fmt("You currently have %i units of %s in your body.\n\r") % 
+	       desc->drugs[i].current_consumed % drugTypes[i].name);
 	
       }
     }

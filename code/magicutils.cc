@@ -234,7 +234,7 @@ void TBeing::spellWearOffSoon(spellNumT s)
   }
 
   if (discArray[s]->fadeAwaySoon) 
-    sendTo("%s\n\r", discArray[s]->fadeAwaySoon);
+    sendTo(fmt("%s\n\r") % discArray[s]->fadeAwaySoon);
   
   if (discArray[s]->fadeAwaySoonRoom)
     act(discArray[s]->fadeAwaySoonRoom, TRUE, this, 0, 0, TO_ROOM);
@@ -269,7 +269,7 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe)
   }
 
   if (discArray[s]->fadeAway) 
-    sendTo("%s\n\r", discArray[s]->fadeAway);
+    sendTo(fmt("%s\n\r") % discArray[s]->fadeAway);
   
   if (discArray[s]->fadeAwayRoom)
     act(discArray[s]->fadeAwayRoom, TRUE, this, 0, 0, TO_ROOM);
@@ -1370,8 +1370,8 @@ int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent, checkImmun
   dropBloodLimb(pos);
 
   if (!silent) {
-    sendTo("%sYour %s has started to bleed!%s\n\r", 
-        red(), describeBodySlot(pos).c_str(), norm());
+    sendTo(fmt("%sYour %s has started to bleed!%s\n\r") % 
+        red() % describeBodySlot(pos) % norm());
     sprintf(buf, "$n's %s has begun to bleed!", describeBodySlot(pos).c_str());
     act(buf, TRUE, this, NULL, NULL, TO_ROOM);
   }
@@ -1407,7 +1407,7 @@ int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent, checkImmu
   disease_start(this, &aff);
 
   if (!silent) {
-    sendTo("Your %s has become totally infected!\n\r", describeBodySlot(pos).c_str());
+    sendTo(fmt("Your %s has become totally infected!\n\r") % describeBodySlot(pos));
     sprintf(buf, "$n's %s has become totally infected!", describeBodySlot(pos).c_str());
     act(buf, TRUE, this, NULL, NULL, TO_ROOM);
   }

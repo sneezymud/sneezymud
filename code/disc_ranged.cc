@@ -70,24 +70,24 @@ void TBeing::doRestring(const sstring &argument)
     }
   }
   if (!bow) {
-    sendTo("You don't seem to have '%s' in your inventory.\n\r", arg1);
+    sendTo(fmt("You don't seem to have '%s' in your inventory.\n\r") % arg1);
     sendTo("Syntax : restring <bow> <string>\n\r");
     return;
   }
   if (!bstr) {
-    sendTo("You don't seem to have '%s' in your inventory.\n\r", arg2);
+    sendTo(fmt("You don't seem to have '%s' in your inventory.\n\r") % arg2);
     sendTo("Syntax : restring <bow> <string>\n\r");
     return;
   }
 #else
   // works, but gets confused since "bow" is an abbrev for "bowsstring"
   if (!(bow = searchLinkedListVis(this, arg1, getStuff()))) {
-    sendTo("You don't seem to have '%s' in your inventory.\n\r", arg1);
+    sendTo(fmt("You don't seem to have '%s' in your inventory.\n\r") % arg1);
     sendTo("Syntax : restring <bow> <string>\n\r");
     return;
   }
   if (!(bstr = searchLinkedListVis(this, arg2, getStuff()))) {
-    sendTo("You don't seem to have '%s' in your inventory.\n\r", arg2);
+    sendTo(fmt("You don't seem to have '%s' in your inventory.\n\r") % arg2);
     sendTo("Syntax : restring <bow> <string>\n\r");
     return;
   }
