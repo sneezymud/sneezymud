@@ -199,6 +199,80 @@ int transformLimb(TBeing * caster, const char * buffer, int level, byte bKnown)
   }
 }
 
+int vampireTransform(TBeing *ch)
+{
+  TMonster *mob;
+  
+  if (!(mob = read_mobile(13749, VIRTUAL))) {
+    ch->sendTo("It didn't seem to work.\n\r");
+    return FALSE;
+  }
+  thing_to_room(mob,ROOM_VOID);
+  mob->swapToStrung();
+  
+
+  act("You use your dark powers to transform into $N.", 
+       TRUE, ch, NULL, mob, TO_CHAR);
+  act("$n transforms into $N.",
+       TRUE, ch, NULL, mob, TO_ROOM);
+
+  DisguiseStuff(ch, mob);
+  
+  --(*mob);
+  *ch->roomp += *mob;
+  --(*ch);
+  thing_to_room(ch, ROOM_POLY_STORAGE);
+  
+  // stop following whoever you are following.
+  if (ch->master)
+    ch->stopFollower(TRUE);
+  
+  for(int tmpnum = 1; tmpnum < MAX_TOG_INDEX; tmpnum++) {
+    if (ch->hasQuestBit(tmpnum))
+      mob->setQuestBit(tmpnum);
+  }
+  
+  mob->specials.affectedBy = ch->specials.affectedBy;
+  
+  
+  // switch ch into mobile 
+  ch->desc->character = mob;
+  ch->desc->original = dynamic_cast<TPerson *>(ch);
+
+  mob->desc = ch->desc;
+  ch->desc = NULL;
+  ch->polyed = POLY_TYPE_DISGUISE;
+
+  SET_BIT(mob->specials.act, ACT_DISGUISED);
+  SET_BIT(mob->specials.act, ACT_POLYSELF);
+  SET_BIT(mob->specials.act, ACT_NICE_THIEF);
+  SET_BIT(mob->specials.act, ACT_SENTINEL);
+  REMOVE_BIT(mob->specials.act, ACT_AGGRESSIVE);
+  REMOVE_BIT(mob->specials.act, ACT_SCAVENGER);
+  REMOVE_BIT(mob->specials.act, ACT_DIURNAL);
+  REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
+
+  sstring tStNewNameList(mob->name);
+  
+  tStNewNameList += " [";
+  tStNewNameList += ch->getNameNOC(ch);
+  tStNewNameList += "]";
+  
+  delete [] mob->name;
+  mob->name = mud_str_dup(tStNewNameList);
+  
+  mob->setSex(ch->getSex());
+  mob->setHeight(ch->getHeight());
+  mob->setWeight(ch->getWeight());
+
+  for (statTypeT tStat = MIN_STAT; tStat < MAX_STATS; tStat++) {
+    mob->setStat(STAT_CURRENT, tStat, ch->getStat(STAT_CURRENT, tStat));
+  }
+
+  return TRUE;
+}
+
+
 int TBeing::doTransform(const char *argument) 
 {
   int i = 0, bKnown = 0;
@@ -208,6 +282,9 @@ int TBeing::doTransform(const char *argument)
   char buffer[256];
 
   if (!doesKnowSkill(SKILL_TRANSFORM_LIMB)) {
+    if(hasQuestBit(TOG_VAMPIRE))
+      return vampireTransform(this);
+
     sendTo("You know nothing about transforming your limbs.\n\r");
     return FALSE;
   }
@@ -230,6 +307,9 @@ int TBeing::doTransform(const char *argument)
     }
   }
   if (i >= LAST_TRANSFORM_LIMB) {
+    if(hasQuestBit(TOG_VAMPIRE))
+      return vampireTransform(this);
+
     sendTo("Couldn't find any such limb to transform.\n\r");
     return FALSE;
   }
