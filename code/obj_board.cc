@@ -306,6 +306,13 @@ int board_display_msg(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
     ch->sendTo("This board is for the Order of Serpents only.\n\r");
     return TRUE;
   }
+  if (!ch->isImmortal() && me->objVnum()==FACT_BOARD_LOGRUS && 
+      ch->getFaction()!=FACT_CULT){
+    ch->sendTo("This board is for the Cult of Logrus only.\n\r");
+    return TRUE;
+  }
+
+
   if (me->getBoardLevel() > ch->GetMaxLevel()) {
     ch->sendTo("Your eyes are too lowly to look at this board.\n\r");
     return TRUE;
@@ -366,6 +373,11 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
   }
   if (!ch->isImmortal() && me->objVnum()==FACT_BOARD_SERPENT && 
       ch->getFaction()!=FACT_SNAKE){
+    ch->sendTo("This board is for the Order of Serpents only.\n\r");
+    return TRUE;
+  }
+  if (!ch->isImmortal() && me->objVnum()==FACT_BOARD_LOGRUS && 
+      ch->getFaction()!=FACT_CULT){
     ch->sendTo("This board is for the Order of Serpents only.\n\r");
     return TRUE;
   }
@@ -599,7 +611,9 @@ int get_note_from_board(TBeing *ch, const char *arg, boardStruct *b, TBoard *tb)
        !(tb->objVnum()==FACT_BOARD_SERPENT && 
 	 ch->getFactionAuthority(FACT_SNAKE, 0)) &&
       !(tb->objVnum()==FACT_BOARD_BROTHER && 
-	ch->getFactionAuthority(FACT_BROTHERHOOD, 0))){
+	ch->getFactionAuthority(FACT_BROTHERHOOD, 0)) &&
+      !(tb->objVnum()==FACT_BOARD_LOGRUS &&
+	ch->getFactionAuthority(FACT_CULT, 0))){
       ch->sendTo("You didn't write that note!\n\r");
       return TRUE;
   }

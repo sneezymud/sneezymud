@@ -4725,7 +4725,7 @@ static int FRACT(TBeing *ch, TBeing *v)
     }
 
     if(db.fetchRow())
-      fract=(int)(fract*trophy_exp_mod(atof(db.getColumn(0))));
+      fract=(int)(fract*trophy_exp_mod(atof(db.getColumn(1))));
   }
 
 
