@@ -930,11 +930,25 @@ void gain_exp(TBeing *ch, double gain, int dam)
 	  }
 	}
 
-
 	if(new_exp > peak){
 	  // getting exp in the next level
-	  t_curr=peak;
-	  t_peak=peak2;
+
+	  if(ch->getLevel(Class)>=MAX_MORT){
+	    // for level 50's we need to calculate what level they would
+	    // be with the exp they have and use that for peak and peak2
+	    // arbitrarily cutting loop off at 127
+	    for(int i=50;i<127;++i){
+	      if(getExpClassLevel(Class,i) > ch->getExp()){
+		t_curr=getExpClassLevel(Class,i-1);
+		t_peak=getExpClassLevel(Class,i);
+		break;
+	      }
+	    }
+	  } else {
+	    t_curr=peak;
+	    t_peak=peak2;
+	  }
+
 	  delta_exp = (t_peak - t_curr) / ch->pracsPerLevel(Class, false);
 	  exp = max(ch->getMaxExp(),t_curr+1);
 	  new_exp = ch->getExp() + gain;

@@ -2349,8 +2349,8 @@ double getExpClassLevel(classIndT Class, int level)
     return 0;
 
   // avoid roundoff thing
-  //  if (level == MAX_MORT)
-  //    return 1000000000;
+  if (level == MAX_MORT)
+    return 1000000000;
 
   exp_amt = getExpClassLevel(Class, level-1);
 
