@@ -383,6 +383,10 @@ void poison(TBeing * caster, TBeing * victim)
     caster->deityIgnore();
   } else {
   }
+  if (!victim->isPc()) {
+    dynamic_cast<TMonster *>(victim)->addHated(caster);
+  }
+  return;
 }
 
 int poison(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
@@ -429,6 +433,9 @@ int poison(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
     caster->deityIgnore(SILENT_YES);
   } else {
     // where various falses return that we dont want messages
+  }
+  if (!victim->isPc()) {
+    dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
   return FALSE;  
 }
@@ -572,6 +579,11 @@ void blindness(TBeing * caster, TBeing * victim, TMagicItem * obj)
     }
   } else if (IS_SET(ret, SPELL_FALSE)) {
   }
+
+  if (!victim->isPc()) {
+    dynamic_cast<TMonster *>(victim)->addHated(caster);
+  }
+  return;
 }
 
 void blindness(TBeing * caster, TBeing * victim)
@@ -637,6 +649,11 @@ void blindness(TBeing * caster, TBeing * victim)
   }
   if (IS_SET(ret, SPELL_FALSE)) {
   }
+
+  if (!victim->isPc()) {
+    dynamic_cast<TMonster *>(victim)->addHated(caster);
+  }
+  return;
 }
 
 int harmLight(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spell, int adv_learn)
@@ -1035,8 +1052,6 @@ int paralyze(TBeing * caster, TBeing * victim, int level, byte bKnown)
       victim->fallOffMount(victim->riding, POSITION_STUNNED);
 
     victim->setPosition(POSITION_STUNNED);
-    victim->setHunting(caster);
-    victim->addHated(caster);
     return ret;
   } else {
     switch (critFail(caster, SPELL_PARALYZE)) {
@@ -1121,6 +1136,11 @@ void paralyze(TBeing * caster, TBeing * victim, TMagicItem * obj)
             FALSE, caster, NULL, victim, TO_VICT);
   } else if (IS_SET(ret, SPELL_FALSE)) {
   }
+
+  if (!victim->isPc()) {
+    dynamic_cast<TMonster *>(victim)->addHated(caster);
+  }
+  return;
 }
 
 void paralyze(TBeing * caster, TBeing * victim)
@@ -1192,6 +1212,10 @@ void paralyze(TBeing * caster, TBeing * victim)
   if (IS_SET(ret, SPELL_FALSE)) {
   } 
 
+  if (!victim->isPc()) {
+    dynamic_cast<TMonster *>(victim)->addHated(caster);
+  }
+  return;
 }
 
 bool notBreakSlot(wearSlotT slot, bool avoid)
@@ -1284,13 +1308,20 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
   int ret;
   wearSlotT slot;
 
-  if (!caster->canBoneBreak(victim, SILENT_NO))
+  if (!caster->canBoneBreak(victim, SILENT_NO)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FALSE;
+  }
 
   if (caster->isNotPowerful(victim, level, SPELL_BONE_BREAKER, SILENT_YES)) {
     act("You see a glow around $N's limbs but it disappears fast.",
             FALSE, caster, NULL, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FALSE;
   }
 
@@ -1298,6 +1329,9 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
     act("You see a glow around $N's limbs but it has no effect.", 
            FALSE, caster, NULL, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FALSE;
   }
 
@@ -1355,8 +1389,9 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
     if (caster->reconcileDamage(victim, dam, SPELL_BONE_BREAKER) == -1)
       ret += VICTIM_DEAD;
 
-    if (!victim->isPc())
-      dynamic_cast<TMonster *>(victim)->addFeared(caster);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
 
     return ret;
   } else {
@@ -1381,11 +1416,21 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
           act(buf, FALSE, caster, NULL, NULL, TO_CHAR);
           sprintf(buf, "You hear a muffled SNAP as $n clutches $s %s in extreme pain!", limb);
           act(buf, FALSE, caster, NULL, NULL, TO_ROOM);
+
+          if (!victim->isPc()) {
+            dynamic_cast<TMonster *>(victim)->addHated(caster);
+          }
           return SPELL_CRIT_FAIL;
         } else {
+          if (!victim->isPc()) {
+            dynamic_cast<TMonster *>(victim)->addHated(caster);
+          }
           break;
         }
       case CRIT_F_NONE:
+        if (!victim->isPc()) {
+          dynamic_cast<TMonster *>(victim)->addHated(caster);
+        }
         break;
     }
 
@@ -1395,6 +1440,10 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
       int rc = injureLimbs(caster, victim, SPELL_BONE_BREAKER, level, adv_learn);
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return SPELL_FAIL | VICTIM_DEAD;
+
+      if (!victim->isPc()) {
+        dynamic_cast<TMonster *>(victim)->addHated(caster);
+      }
       return SPELL_FAIL;
     }
 
@@ -1468,17 +1517,22 @@ int bleed(TBeing * caster, TBeing * victim, int level, byte bKnown)
   wearSlotT slot;
   int duration;
 
-
   if (victim->isUndead()) {
     act("Undead tend not to have beating hearts, so can't bleed.", 
         FALSE, caster,0,0,TO_CHAR);
     caster->deityIgnore(SILENT_YES);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return FALSE;
   }
   if (victim->isImmune(IMMUNE_BLEED)) {
     act("Your prayer seems to have no effect on $N!",
         FALSE, caster, NULL, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return FALSE;
   }
   if (caster->isNotPowerful(victim, level, SPELL_BLEED, SILENT_YES) ||
@@ -1487,6 +1541,9 @@ int bleed(TBeing * caster, TBeing * victim, int level, byte bKnown)
         TRUE, victim, 0,0,TO_ROOM);
     act("A small welt appears on your body but it subsides quickly.",
         TRUE, victim, 0,0,TO_CHAR);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return FALSE; 
   }
   caster->reconcileHurt(victim, discArray[SPELL_BLEED]->alignMod);
@@ -1506,6 +1563,9 @@ int bleed(TBeing * caster, TBeing * victim, int level, byte bKnown)
   if (slot < MAX_WEAR) {
     act("$N is already bleeding!", FALSE, caster, NULL, victim, TO_CHAR);
     act("Your prayer goes for naught.", FALSE, caster, NULL, victim, TO_CHAR);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
 
@@ -1531,6 +1591,9 @@ int bleed(TBeing * caster, TBeing * victim, int level, byte bKnown)
  limb);
     act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
 
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     ret = SPELL_SUCCESS;
     duration = (level * 3) + 100;
     victim->rawBleed(slot, duration, SILENT_YES, CHECK_IMMUNITY_NO);
@@ -1571,8 +1634,14 @@ int bleed(TBeing * caster, TBeing * victim, int level, byte bKnown)
         caster->rawBleed(slot, duration, SILENT_YES, CHECK_IMMUNITY_YES);
         if (caster->reconcileDamage(caster, dam, SPELL_BLEED) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
+        if (!victim->isPc()) {
+          dynamic_cast<TMonster *>(victim)->addHated(caster);
+        }
         return SPELL_CRIT_FAIL;
       case CRIT_F_NONE:
+        if (!victim->isPc()) {
+          dynamic_cast<TMonster *>(victim)->addHated(caster);
+        }
         return SPELL_FAIL;
         break;
     }
@@ -1699,11 +1768,19 @@ int witherLimb(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv
   char buf[256], limb[256];
   wearSlotT slot;
 
-  if (!caster->canWither(victim, SILENT_NO))
+  if (!caster->canWither(victim, SILENT_NO)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
+  }
 
-  if (caster->isNotPowerful(victim, level, SPELL_WITHER_LIMB, SILENT_NO))
+  if (caster->isNotPowerful(victim, level, SPELL_WITHER_LIMB, SILENT_NO)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
+  }
 
   caster->reconcileHurt(victim, discArray[SPELL_WITHER_LIMB]->alignMod);
 
@@ -1729,9 +1806,9 @@ int witherLimb(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv
     act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
 
     victim->dropWeapon(slot);
-
-    if (!victim->isPc())
-      dynamic_cast<TMonster *>(victim)->addFeared(caster);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
 
     return SPELL_SUCCESS;
   } else {
@@ -1741,9 +1818,15 @@ int witherLimb(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv
       int rc = injureLimbs(caster, victim, SPELL_WITHER_LIMB, level, adv_learn);
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return SPELL_FAIL | VICTIM_DEAD;
+      if (!victim->isPc()) {
+        dynamic_cast<TMonster *>(victim)->addHated(caster);
+      }
       return SPELL_FAIL;
     }
     caster->deityIgnore();
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
 }
@@ -1842,14 +1925,25 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
   char buf[256], limb[256];
   wearSlotT slot;
 
-  if (!caster->canParalyzeLimb(victim, SILENT_NO))
+  if (!caster->canParalyzeLimb(victim, SILENT_NO)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
+  }
 
-  if (caster->isNotPowerful(victim, level, SPELL_PARALYZE_LIMB, SILENT_NO)) 
+  if (caster->isNotPowerful(victim, level, SPELL_PARALYZE_LIMB, SILENT_NO)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
+  }
 
   if (victim->isImmune(IMMUNE_PARALYSIS)) {
     caster->deityIgnore();
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
 
@@ -1878,8 +1972,9 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
   
     victim->dropWeapon(slot);
 
-    if (!victim->isPc())
-      dynamic_cast<TMonster *>(victim)->addFeared(caster);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
 
     return SPELL_SUCCESS;
   } else {
@@ -1889,10 +1984,16 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
       int rc = injureLimbs(caster, victim, SPELL_PARALYZE_LIMB, level, adv_learn);
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return SPELL_FAIL | VICTIM_DEAD;
+      if (!victim->isPc()) {
+        dynamic_cast<TMonster *>(victim)->addHated(caster);
+      }
       return SPELL_FAIL;
     }
 
     caster->deityIgnore();
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
 }
@@ -1949,11 +2050,17 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
   if (victim->isUndead()) {
     act("Being undead, they can't get much more numb.", FALSE, caster,0,0,TO_CHAR);
     act("Being undead, they can't get much more numb.", FALSE,caster,0,0,TO_ROOM);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
 
   if (victim->isImmune(IMMUNE_PARALYSIS)) {
     caster->deityIgnore();
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
 
@@ -1961,6 +2068,9 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
     act("$d refuses to torment $N any further.",
            false, caster, 0, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
 
@@ -1979,6 +2089,9 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
   if (!ok) {
     act("Belatedly, you realize $N doesn't have a limb left to paralyze!", FALSE, caster, NULL, victim, TO_CHAR);
     act("Your attack goes for naught.", FALSE, caster, NULL, victim, TO_CHAR);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
   if (found) {
@@ -1987,6 +2100,9 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
     act("Your attack goes for naught.",
           FALSE, caster, NULL, victim, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
 
@@ -2033,6 +2149,9 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
 
     victim->dropWeapon(slot);
 
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_SUCCESS;
   } else {
     // turn some "failures" into successes
@@ -2041,10 +2160,16 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
       int rc = injureLimbs(caster, victim, spell, level, adv_learn);
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return SPELL_FAIL | VICTIM_DEAD;
+      if (!victim->isPc()) {
+        dynamic_cast<TMonster *>(victim)->addHated(caster);
+      }
       return SPELL_FAIL;
     }
 
     caster->deityIgnore();
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
 }
@@ -2131,6 +2256,10 @@ void disease(TBeing *caster, TBeing *victim, TMagicItem *obj)
         FALSE, victim, obj, 0, TO_ROOM);
  
   disease(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+
+  if (!victim->isPc()) {
+    dynamic_cast<TMonster *>(victim)->addHated(caster);
+  }
  
   return;
 }
@@ -2148,6 +2277,9 @@ void disease(TBeing *caster, TBeing *victim)
   if (ret == SPELL_SUCCESS) {
   } else {
   }
+  if (!victim->isPc()) {
+    dynamic_cast<TMonster *>(victim)->addHated(caster);
+  }
   return;
 }
 
@@ -2158,12 +2290,19 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
   wearSlotT slot;
   int duration;
 
-  if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) 
+  if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) {
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
+  }
 
   if (victim->isUndead()) {
     act("Seeing they are undead, infectation is the least of their worries.", FALSE, caster,0,0,TO_CHAR);
     act("The undead tend to be immune to infection.", FALSE,caster,0,0,TO_ROOM);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
 
@@ -2183,6 +2322,9 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
     act("$N is already infected! Don't get too near $M!",
         FALSE, caster, NULL, victim, TO_CHAR);
     act("Your attack goes for naught.", FALSE, caster, NULL, NULL, TO_CHAR);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
 
@@ -2226,9 +2368,15 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
           act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
         }
       }
+      if (!victim->isPc()) {
+        dynamic_cast<TMonster *>(victim)->addHated(caster);
+      }
       return SPELL_SUCCESS;
     } else {
       // Victim passed luck/save
+      if (!victim->isPc()) {
+        dynamic_cast<TMonster *>(victim)->addHated(caster);
+      }
       return SPELL_FAIL;
     }
   } else {
@@ -2259,12 +2407,18 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
         }
         if (caster->reconcileDamage(caster, dam, spell) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
+        if (!victim->isPc()) {
+          dynamic_cast<TMonster *>(victim)->addHated(caster);
+        }
         return SPELL_CRIT_FAIL;
       case CRIT_F_NONE:
         break;
     }
     caster->sendTo("You fail to harm your victim.\n\r");
     caster->deityIgnore(SILENT_YES);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
 }

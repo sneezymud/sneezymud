@@ -102,6 +102,9 @@ int icyGrip(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_le
   if (victim->affectedBySpell(SPELL_ICY_GRIP)) {
     act("$N is already affected by icy grip.", FALSE, caster, NULL, victim, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_FAIL;
   }
 
@@ -134,6 +137,13 @@ int icyGrip(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_le
       aff.modifier = -10;
     }
 
+    int immunity;
+
+    if ((immunity = victim->getImmunity(getTypeImmunity(SPELL_ICY_GRIP)))) {
+      aff.duration *= (100 - immunity);
+      aff.duration /= 100;
+    }
+
     victim->affectTo(&aff);
     act("You summon forth two ice-blue hands that rush toward $N and grab ahold of $M.", TRUE, caster, 0, victim, TO_CHAR, ANSI_BLUE);
     act("$n summons forth two ice-blue hands that rush quickly toward $N and grab ahold of $M.", TRUE, caster, 0, victim, TO_NOTVICT, ANSI_BLUE);
@@ -145,6 +155,9 @@ int icyGrip(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_le
     caster->reconcileHurt(victim, discArray[SPELL_ICY_GRIP]->alignMod);
     if (caster->reconcileDamage(victim, damage, SPELL_ICY_GRIP) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return SPELL_SUCCESS;
   } else {
     switch (critFail(caster, SPELL_ICY_GRIP)) {
@@ -155,11 +168,17 @@ int icyGrip(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_le
         act("For some reason, you feel a deep hostility towards $n.", FALSE, caster, NULL, victim, TO_VICT, ANSI_BLUE);
         if (caster->reconcileDamage(caster, damage,SPELL_ICY_GRIP) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
+        if (!victim->isPc()) {
+          dynamic_cast<TMonster *>(victim)->addHated(caster);
+        }
         return SPELL_CRIT_FAIL;
         break;
       default:
         act("Your attempt to icily grip $N fails!", FALSE, caster, NULL, victim, TO_CHAR, ANSI_CYAN);
         act("$n's attempt at icily gripping $N fails!", FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_CYAN);
+        if (!victim->isPc()) {
+          dynamic_cast<TMonster *>(victim)->addHated(caster);
+        }
         break;
     }
     return SPELL_FAIL;

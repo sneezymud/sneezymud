@@ -485,6 +485,10 @@ void curse(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
     act("You glow evilly with a dark forboding red!", 
        FALSE, victim, NULL, 0, TO_VICT);
   }
+  if (!victim->isPc()) {
+    dynamic_cast<TMonster *>(victim)->addHated(caster);
+  }
+  return;
 }
 
 void curse(TBeing * caster, TObj * obj)
@@ -570,6 +574,10 @@ void curse(TBeing * caster, TBeing * victim)
     } else
       act("Nothing seems to happen...", FALSE, caster, NULL, NULL, TO_CHAR);
   }
+  if (!victim->isPc()) {
+    dynamic_cast<TMonster *>(victim)->addHated(caster);
+  }
+  return;
 }
 
 int earthquake(TBeing *caster, int level, byte bKnown, spellNumT spell, int adv_learn)

@@ -385,6 +385,9 @@ void faerieFire(TBeing *caster, TBeing *victim, TMagicItem * obj)
     act("$n just tried to cast something on you!",
         0, caster, NULL, victim, TO_VICT);
     caster->nothingHappens(SILENT_YES);
+    if (!victim->isPc()) {
+      dynamic_cast<TMonster *>(victim)->addHated(caster);
+    }
     return;
   }
 
@@ -446,6 +449,9 @@ void faerieFire(TBeing *caster, TBeing *victim, TMagicItem * obj)
   if (IS_SET(ret, SPELL_ACTION)) {
   }
   if (IS_SET(ret, SPELL_FALSE)) {
+  }
+  if (!victim->isPc()) {
+    dynamic_cast<TMonster *>(victim)->addHated(caster);
   }
 }
 
