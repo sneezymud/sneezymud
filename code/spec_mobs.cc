@@ -7445,7 +7445,7 @@ int chicken(TBeing *, cmdTypeT cmd, const char *, TMonster *chicken, TObj *)
   if(cmd != CMD_GENERIC_PULSE || !chicken || !chicken->roomp)
     return FALSE;
 
-  if(::number(0,1999))
+  if(::number(0,4999))
     return FALSE;
 
   TObj *egg=read_object(2376, VIRTUAL);
