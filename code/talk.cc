@@ -583,9 +583,9 @@ void TBeing::doCommune(const char *arg)
   return;
 }
 
-static const char *RandomWord()
+const sstring RandomWord()
 {
-  static const char *sstring[50] =
+  static sstring str[50] =
   {
     "argle",
     "bargle",
@@ -638,7 +638,7 @@ static const char *RandomWord()
     "your",
     "mother"                    // 50 */
   };
-  return (sstring[number(0, 49)]);
+  return (str[number(0, 49)]);
 }
 
 
