@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.14  2002/07/12 07:56:29  dash
+// fixed smythe
+//
 // Revision 5.13  2002/07/04 19:38:48  dash
 // repair cost changes, reenabled wearntear, lengthened repai times
 //
@@ -101,24 +104,35 @@ int TBeing::get_metal_tools(TTool **forge, TTool **anvil, TTool **hammer, TTool 
   TRoom *rp;
   TThing *t;
   TTool *tt;
+ 
   if (!(rp = real_roomp(in_room)))
     return FALSE;
+
   for (t = rp->getStuff(); t; t = t->nextThing) {
     if ((tt = dynamic_cast<TTool *>(t))) {
-      if (!*forge && tt->getToolType() == TOOL_FORGE)
+      if (!*forge && tt->getToolType() == TOOL_FORGE) {
 	*forge = tt;
-      else if (!*anvil && tt->getToolType() == TOOL_ANVIL)
+      }
+      else if (!*anvil && tt->getToolType() == TOOL_ANVIL) {
 	*anvil = tt;
+      }
     }
   }
   if ((tt = dynamic_cast<TTool *>(heldInPrimHand()))) {
-    if (!*hammer && tt->getToolType() == TOOL_HAMMER)
+    if (!*hammer && tt->getToolType() == TOOL_HAMMER) {
       *hammer = tt;
+    }
   }
   if ((tt = dynamic_cast<TTool *>(heldInSecHand()))) {
-    if (!*tongs && tt->getToolType() == TOOL_TONGS)
+    if (!*tongs && tt->getToolType() == TOOL_TONGS) {
       *tongs = tt;
+    }
   }
+
+  if (!*forge) sendTo("You need to have a forge in the room.\n\r");
+  if (!*anvil) sendTo("You need to have a anvil in the room.\n\r");
+  if (!*hammer) sendTo("You need to have a hammer in your primary hand.\n\r");
+  if (!*tongs) sendTo("You need to have some tongs in your secondary hand.\n\r");
 
   return (*forge && *anvil && *hammer && *tongs);
 }
@@ -136,6 +150,12 @@ int TBeing::get_wood_tools(TTool **ladel, TTool **soil)
       *soil = tt;
   }
 
+
+
+  if (!*ladel) sendTo("You need to have a ladel in your primary hand.\n\r");
+  if (!*soil) sendTo("You need to have some soil in your secondary hand.\n\r");
+
+
   return (*ladel && *soil);
 }
 
@@ -152,6 +172,11 @@ int TBeing::get_shell_tools(TTool **ladel, TTool **oils)
     if (!*oils && tt->getToolType() == TOOL_PLANT_OIL)
       *oils = tt;
   }
+
+
+  if (!*ladel) sendTo("You need to have a ladel in your primary hand.\n\r");
+  if (!*oils) sendTo("You need to have some oil in your secondary hand.\n\r");
+
 
   return (*ladel && *oils);
 }
@@ -178,6 +203,12 @@ int TBeing::get_magic_tools(TTool **pentagram, TTool **runes, TTool **energy)
       *energy = tt;
   }
 
+
+  if (!*pentagram) sendTo("You need to have a magical pentagram in the room.\n\r");
+  if (!*runes) sendTo("You need to have some runes in your primary hand.\n\r");
+  if (!*energy) sendTo("You need to have some energy in your secondary hand.\n\r");
+
+
   return (*pentagram && *runes && *energy);
 
 }
@@ -203,6 +234,12 @@ int TBeing::get_dead_tools(TTool **operatingtable, TTool **scalpel, TTool **forc
     if (!*forceps && tt->getToolType() == TOOL_FORCEPS)
       *forceps = tt;
   }
+
+
+  if (!*operatingtable) sendTo("You need to have an operating table in the room.\n\r");
+  if (!*scalpel) sendTo("You need to have a scalpel in your primary hand.\n\r");
+  if (!*forceps) sendTo("You need to have some forceps in your secondary hand.\n\r");
+
 
   return (*operatingtable && *scalpel && *forceps);
 
@@ -232,6 +269,12 @@ int TBeing::get_rock_tools(TTool **pentagram, TTool **chisel, TTool **silica)
       *silica = tt;
   }
   
+
+  if (!*pentagram) sendTo("You need to have a magical pentagram in the room.\n\r");
+  if (!*chisel) sendTo("You need to have a chisel in your primary hand.\n\r");
+  if (!*silica) sendTo("You need to have some silica in your secondary hand.\n\r");
+
+
   return (*pentagram && *silica && *chisel);
 }
 
@@ -257,6 +300,11 @@ int TBeing::get_gemmed_tools(TTool **workbench, TTool **loupe, TTool **pliers)
       *pliers = tt;
   }
 
+  if (!*workbench) sendTo("You need to have a workbench in the room.\n\r");
+  if (!*loupe) sendTo("You need to have a loupe in your primary hand.\n\r");
+  if (!*pliers) sendTo("You need to have some pliers in your secondary hand.\n\r");
+
+
   return (*workbench && *loupe && *pliers);
 
 }
@@ -275,6 +323,11 @@ int TBeing::get_leather_tools(TTool **punch, TTool **cording)
       *cording = tt;
   }
 
+
+  if (!*punch) sendTo("You need to have a punch in your primary hand.\n\r");
+  if (!*cording) sendTo("You need to have some cording in your secondary hand.\n\r");
+
+
   return (*punch && *cording);
 }
 
@@ -287,6 +340,8 @@ int TBeing::get_paper_tools(TTool **tape)
     if (!*tape && tt->getToolType() == TOOL_TAPE)
       *tape = tt;
   }
+
+  if (!*tape) sendTo("You need to have some tape in your primary hand.\n\r");
 
   return (int)(*tape);
 }
@@ -301,6 +356,10 @@ int TBeing::get_melt_tools(TTool **candle)
       *candle = tt;
   }
 
+
+  if (!*candle) sendTo("You need to have some tape in your primary hand.\n\r");
+
+
   return (int)(*candle);
 
 }
@@ -314,6 +373,9 @@ int TBeing::get_weave_tools(TTool **needle)
     if (!*needle && tt->getToolType() == TOOL_NEEDLE)
       *needle = tt;
   }
+
+  if (!*needle) sendTo("You need to have a needle in your primary hand.\n\r");
+
 
   return (int)(*needle);
 }
@@ -332,6 +394,14 @@ int TBeing::get_sew_tools(TTool **needle, TTool **thread)
       *thread = tt;
   }
 
+
+  if (!*needle) sendTo("You need to have a needle in your primary hand.\n\r");
+
+  if (!*thread) sendTo("You need to have some thread in your secondary hand.\n\r");
+
+
+
+
   return (*needle && *thread);
 }
 
@@ -344,6 +414,10 @@ int TBeing::get_ceramic_tools(TTool **glue)
     if (!*glue && tt->getToolType() == TOOL_GLUE)
       *glue = tt;
   }
+
+
+  if (!*glue) sendTo("You need to have some glue your primary hand.\n\r");
+
 
   return (int)(*glue);
 
@@ -370,6 +444,12 @@ int TBeing::get_spirit_tools(TTool **altar, TTool **brush, TTool **resin)
     if (!*resin && tt->getToolType() == TOOL_ASTRAL_RESIN)
       *resin = tt;
   }
+
+
+  if (!*altar) sendTo("You need to have an altar in the room.\n\r");
+  if (!*brush) sendTo("You need to have a brush in your primary hand.\n\r");
+  if (!*resin) sendTo("You need to have some resin in your secondary hand.\n\r");
+
 
   return (*altar && *brush && *resin);
 
@@ -429,7 +509,6 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
   }
   if (ch->task->status < HEATING_TIME) {
     if (!ch->task->status) {
-
     // task can continue forever, so don't bother decrementing 
       act("$n allows $p to heat in $P.", FALSE, ch, o, forge, TO_ROOM);
       act("You allow $p to heat in $P.", FALSE, ch, o, forge, TO_CHAR);
@@ -512,16 +591,27 @@ int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
   if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
 
+
   switch (cmd) {
     case CMD_TASK_CONTINUE:
+
+
+
       if (!ch->get_metal_tools(&forge, &anvil, &hammer, &tongs) || (ch->getPosition() < POSITION_RESTING)) {
 	smythe_stop(ch);
 	return FALSE;
       }
+      
+
+
       learning = ch->getSkillValue(SKILL_SMYTHE);
       didSucceed = bSuccess(ch, learning, SKILL_SMYTHE);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
+
+
       if (ch->task->status && didSucceed || !ch->task->status) {
+	
+
 
 	if (ch->getRace() == RACE_DWARF) {
 	  ch->addToMove(min(-1, ::number(-10,-25) + ::number(1,((ch->getSkillValue(SKILL_SMYTHE) / 10))) + 4));
@@ -596,14 +686,17 @@ int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 	  // task can continue forever, so don't bother decrementing the timer
 	}
 	
-	if (::number(0,1)) {
-	  act("$n examines $p carefully.", FALSE, ch, o, 0, TO_ROOM);
-	  act("You carefully examine $p.", FALSE, ch, o, 0, TO_CHAR);
-	}
-	return FALSE;
       }
+      if (::number(0,1)) {
+	act("$n examines $p carefully.", FALSE, ch, o, 0, TO_ROOM);
+	act("You carefully examine $p.", FALSE, ch, o, 0, TO_CHAR);
+      }
+      return FALSE;
+      break;
     case CMD_ABORT:
     case CMD_STOP:
+
+
       act("You stop trying to repair $p.", FALSE, ch, o, 0, TO_CHAR);
       ch->sendTo("Isn't there a professional around here somewhere?\n\r");
       act("$n stops repairing $p.", FALSE, ch, o, 0, TO_ROOM);
@@ -618,10 +711,14 @@ int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
       ch->stopTask();
       break;
     default:
+
+
       if (cmd < MAX_CMD_LIST)
         warn_busy(ch);
       break;                    // eat the command
   }
+
+
   return TRUE;
 }
 
@@ -745,7 +842,7 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 	act("You carefully examine $p.", FALSE, ch, o, 0, TO_CHAR);
       }
       return FALSE;
-      
+      break;
     case CMD_ABORT:
     case CMD_STOP:
       act("You stop trying to operate on $p.", FALSE, ch, o, 0, TO_CHAR);
@@ -914,7 +1011,7 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	act("You carefully examine $p.", FALSE, ch, o, 0, TO_CHAR);
       }
       return FALSE;
-  
+      break;
     case CMD_ABORT:
     case CMD_STOP:
       act("You stop trying to regenerate $p.", FALSE, ch, o, 0, TO_CHAR);
@@ -1072,7 +1169,7 @@ int task_repair_magical(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
         act("You carefully examine $p.", FALSE, ch, o, 0, TO_CHAR);
       }
       return FALSE;
-
+      break;
     case CMD_ABORT:
     case CMD_STOP:
       act("You stop trying to refocus the energy in $p.", FALSE, ch, o, 0, TO_CHAR);
@@ -1236,7 +1333,7 @@ int task_repair_rock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
         act("You carefully examine $p.", FALSE, ch, o, 0, TO_CHAR);
       }
       return FALSE;
-
+      break;
     case CMD_ABORT:
     case CMD_STOP:
       act("You stop trying to reforming the crystals in $p.", FALSE, ch, o, 0, TO_CHAR);
@@ -1387,7 +1484,7 @@ int task_smythe_advanced(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoo
         act("You carefully examine $p.", FALSE, ch, o, 0, TO_CHAR);
       }
       return FALSE;
-
+      break;
     case CMD_ABORT:
     case CMD_STOP:
       act("You stop trying to rearranging the gems in $p.", FALSE, ch, o, 0, TO_CHAR);
@@ -1540,7 +1637,7 @@ int task_mend_hide(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
         act("You carefully examine $p.", FALSE, ch, o, 0, TO_CHAR);
       }
       return FALSE;
-
+      break;
     case CMD_ABORT:
     case CMD_STOP:
       act("You stop trying to mend $p.", FALSE, ch, o, 0, TO_CHAR);
@@ -1575,7 +1672,6 @@ int task_mend_hide(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 
 int task_mend(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
-  return TRUE;
   ch->sendTo("This skill is not yet implemented.\n\r");
   ch->stopTask();
   return TRUE;
@@ -1715,7 +1811,7 @@ int task_repair_spiritual(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
         act("You carefully examine $p.", FALSE, ch, o, 0, TO_CHAR);
       }
       return FALSE;
-
+      break;
     case CMD_ABORT:
     case CMD_STOP:
       act("You stop trying to mending $p.", FALSE, ch, o, 0, TO_CHAR);
