@@ -136,11 +136,13 @@ void TBeing::setSpellEligibleToggle(TMonster *trainer, spellNumT spell, silentTy
   return;
 }
 
+// this function determines how many pracs each disc requires
 int TBeing::calcRaiseDisc(discNumT which, bool drop) const
 {
   int L, i_inc;
+  CDiscipline *cd=getDiscipline(which);
 
-  L = getDiscipline(which)->getNatLearnedness();
+  L = cd->getNatLearnedness();
   if (!drop && (L >= MAX_DISC_LEARNEDNESS)) {
     return 0;
   }
@@ -148,29 +150,10 @@ int TBeing::calcRaiseDisc(discNumT which, bool drop) const
     return 0;
   }
 
-  switch (which) {
-    case DISC_COMBAT:
-    case DISC_MAGE:
-    case DISC_CLERIC:
-    case DISC_THIEF:
-    case DISC_WARRIOR:
-    case DISC_RANGER:
-    case DISC_DEIKHAN:
-    case DISC_MONK:
-    case DISC_SHAMAN:
-    case DISC_LORE:
-    case DISC_THEOLOGY:
-      return 1;
-    case DISC_SLASH:
-    case DISC_BLUNT:
-    case DISC_PIERCE:
-    case DISC_BAREHAND:
-    case DISC_DEFENSE:
-    case DISC_PSIONICS:
-      return min(5, (MAX_DISC_LEARNEDNESS - L));
-    default:
-      break;
-  }
+  if(cd->isBasic())
+    return 1;
+  else if(cd->isFast())
+    return min(5, (MAX_DISC_LEARNEDNESS - L));
 
   // this logic gets a bit involved.  I am writing it all down for
   // posterity and incase someone decides to screw things up later.
