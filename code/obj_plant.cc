@@ -182,7 +182,7 @@ void TPlant::updateDesc()
 
 
 void TPlant::updateAge(){
-  setAge(getAge()+::number(1,10));
+  setAge(getAge()+::number(1,3));
   setAge(min(30, getAge()));
   updateDesc();
 }
