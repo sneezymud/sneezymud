@@ -1077,8 +1077,10 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     bool tattoo=false;
 
     db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
-    if(db.fetchRow())
+    if(db.fetchRow()){
       tattoo=true;
+      found=true;
+    }
 
     if (found && ch->GetMaxLevel() != GOD_LEVEL1) {
       act("$n is using:", FALSE, this, 0, ch, TO_VICT);
@@ -1100,9 +1102,9 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
         } else {
 	  if(tattoo && (wearSlotT)(atoi_safe(db.getColumn(0))) == ij){
 	    sprintf(buf, "<%s>", describeEquipmentSlot(ij).c_str());
-	    sendTo("%s%-25s%s", cyan(), buf, norm());
-	    sendTo(COLOR_BASIC, db.getColumn(1));
-	    sendTo("\n\r");
+	    ch->sendTo("%s%-25s%s", cyan(), buf, norm());
+	    ch->sendTo(COLOR_BASIC, db.getColumn(1));
+	    ch->sendTo("\n\r");
 	    if(db.fetchRow())
 	      tattoo=true;
 	    else

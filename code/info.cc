@@ -2366,15 +2366,15 @@ void TBeing::doEquipment(const char *argument)
     TDatabase db("sneezy");
     bool tattoo=false;
 
-    db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
-    if(db.fetchRow())
-      tattoo=true;
-
 
     // allow immortals to get eq of players
     TBeing *victim = get_char_vis_world(this, argument, NULL, EXACT_YES);
     if (!victim)
       victim = get_char_vis_world(this, argument, NULL, EXACT_NO);
+
+    db.query("select location, tattoo from tattoos where name='%s' order by location",victim->getName());
+    if(db.fetchRow())
+      tattoo=true;
 
     if (victim) {
       act("$N is using.", FALSE, this, 0, victim, TO_CHAR);
@@ -2394,7 +2394,7 @@ void TBeing::doEquipment(const char *argument)
           }
 	} else {
 	  if(tattoo && (wearSlotT)(atoi_safe(db.getColumn(0))) == j){
-	    sprintf(buf, "<%s>", describeEquipmentSlot(j).c_str());
+	    sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
 	    sendTo("%s%-25s%s", cyan(), buf, norm());
 	    sendTo(COLOR_BASIC, db.getColumn(1));
 	    sendTo("\n\r");
