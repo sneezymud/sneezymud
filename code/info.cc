@@ -2343,7 +2343,7 @@ void TBeing::doEquipment(const char *argument)
       if (equipment[j]) {
         if (!equipment[j]->shouldntBeShown(j)) {
           sprintf(buf, "<%s>", describeEquipmentSlot(j).c_str());
-          sendTo("%s%-25s%s", cyan(), buf, norm());
+          sendTo("%s%-26s%s", cyan(), buf, norm());
           if (canSee(equipment[j])) {
             showTo(equipment[j], SHOW_MODE_SHORT_PLUS);
             found = TRUE;
@@ -2353,8 +2353,9 @@ void TBeing::doEquipment(const char *argument)
           }
         }
       } else if(tattoos[j]!=""){
-	sprintf(buf, "<%s>", describeEquipmentSlot(j).c_str());
-	sendTo("%s%-25s%s", cyan(), buf, norm());
+	string slot = describeEquipmentSlot(j);
+	sprintf(buf, "<%s>", slot.replace(slot.find("Worn on"),7,"Tattooed on").c_str());
+	sendTo("%s%-26s%s", red(), buf, norm());
 	sendTo(COLOR_BASIC, tattoos[j].c_str());
 	sendTo("\n\r");
       }
@@ -2380,7 +2381,7 @@ void TBeing::doEquipment(const char *argument)
         if (victim->equipment[j]) {
           if (!victim->equipment[j]->shouldntBeShown(j)) {
             sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
-            sendTo("%s%-25s%s", cyan(), buf, norm());
+            sendTo("%s%-26s%s", cyan(), buf, norm());
             if (canSee(victim->equipment[j])) {
               showTo(victim->equipment[j], SHOW_MODE_SHORT_PLUS);
               found = TRUE;
@@ -2390,8 +2391,12 @@ void TBeing::doEquipment(const char *argument)
             }
           }
         } else if(tattoos[j]!=""){
-	  sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
-	  sendTo("%s%-25s%s", cyan(), buf, norm());
+	  string slot = describeEquipmentSlot(j);
+	  sprintf(buf, "<%s>", slot.replace(slot.find("Worn on"),7,"Tattooed on").c_str());
+	  sendTo("%s%-26s%s", red(), buf, norm());
+
+	  //	  sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
+	  //	  sendTo("%s%-26s%s", cyan(), buf, norm());
 	  sendTo(COLOR_BASIC, tattoos[j].c_str());
 	  sendTo("\n\r");
 	}
