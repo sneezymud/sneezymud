@@ -47,11 +47,10 @@ int TBeing::doLeap(const sstring &arg)
   }
 
   dirTypeT dir=getDirFromChar(arg);
-  if(!exitDir(dir)){
+  if(dir == -1 || !exitDir(dir)){
     sendTo("You can't go that way.\n\r");
     return FALSE;
   }
-
 
   bool was_flying=IS_SET(specials.affectedBy, AFF_FLYING);
 
