@@ -156,28 +156,45 @@ LDFLAGS +=-lpq
 # this is a list of objects to be compiled and linked
 # just add new ones to the bottom
 LIBMISC=actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
-	alignment_deity.o ansi.o being.o game_blackjack.o body.o \
-	breath.o bwiz.o game_cards.o client.o colorstring.o \
-	color.o combat.o comm.o connect.o constants.o \
-	game_craps.o game_crazyeights.o create_engine.o database.o \
+	alignment_deity.o being.o body.o \
+	breath.o bwiz.o \
+	combat.o constants.o \
+	create_engine.o \
 	create_mobs.o create_objs.o create_rooms.o crit_combat.o damage.o \
-	db.o game_drawpoker.o discipline.o disease.o doors.o faction.o   \
-	edit.o enum.o equip.o gaining.o game_gin.o handler.o \
-	game_hearts.o hospital.o immortal.o immunity.o \
-	indexdata.o info.o inventory.o limbs.o limits.o loadset.o luck.o  \
+	discipline.o disease.o doors.o faction.o   \
+	enum.o equip.o gaining.o \
+	hospital.o immortal.o immunity.o \
+	info.o inventory.o limbs.o limits.o loadset.o luck.o  \
 	magic_skills.o magicutils.o mail.o makecorpse.o materials.o \
 	meeting.o mob_loader.o mobact.o  monster.o movement.o \
-	multiclass.o newbie.o  obj.o magic_off.o offense.o oldlimbs.o \
+	multiclass.o newbie.o magic_off.o offense.o oldlimbs.o \
 	oldrace.o  opinion.o other.o  parse.o peelpk.o  periodic.o pets.o \
-	physics.o  player_data.o game_poker.o race.o range.o rent.o \
+	physics.o  player_data.o race.o range.o rent.o \
 	repair.o response.o riding.o room.o shop.o show.o \
-	signals.o skill_dam.o skills.o game_slots.o socket.o sound.o \
+	skill_dam.o skills.o \
         spell_info.o spell_num.o spell_parser.o spellstore.o spelltask.o \
-	statistics.o stats.o structs.o systemtask.o \
+	statistics.o stats.o structs.o \
 	talk.o task.o thing.o toggle.o trap.o  utility.o weather.o \
-	sys_loot.o wiz_data.o wiz_powers.o timing.o shopowned.o
+	sys_loot.o wiz_data.o wiz_powers.o shopowned.o
 
 LIBMISC := $(sort $(addprefix $(OBJDIR), $(LIBMISC)))
+
+LIBSYS=	ansi.o         database.o   socket.o		\
+	client.o       db.o         sound.o		\
+	color.o        edit.o       systemtask.o	\
+	colorstring.o  handler.o    timing.o		\
+	comm.o         indexdata.o			\
+	connect.o      signals.o			
+
+LIBSYS := $(sort $(addprefix $(OBJDIR), $(LIBSYS)))
+
+
+LIBGAME=game_blackjack.o  game_crazyeights.o  game_hearts.o	\
+	game_cards.o      game_drawpoker.o    game_poker.o	\
+	game_craps.o      game_gin.o          game_slots.o
+
+LIBGAME := $(sort $(addprefix $(OBJDIR), $(LIBGAME)))
+
 
 LIBOBJ =obj_armor.o		obj_light.o		\
 	obj_appliedsub.o	obj_keyring.o		\
@@ -213,7 +230,8 @@ LIBOBJ =obj_armor.o		obj_light.o		\
 	obj_general_weapon.o	obj_wand.o		\
 	obj_gun.o		obj_window.o		\
 	obj_jewelry.o		obj_worn.o		\
-	obj_key.o
+	obj_key.o		obj.o
+
 LIBOBJ := $(sort $(addprefix $(OBJDIR), $(LIBOBJ)))
 
 
@@ -294,7 +312,8 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
 # list of our local shared libs
-LIBS = libmisc.so libcmd.so libspec.so libobj.so libtask.so libdisc.so
+LIBS =	libmisc.so libcmd.so libspec.so libobj.so libtask.so libdisc.so \
+	libgame.so libsys.so
 LIBS := $(sort $(addprefix $(OBJDIR), $(LIBS)))
 
 ifdef USEINSURE
@@ -348,6 +367,14 @@ $(OBJDIR)libtask.so:	$(LIBTASK)
 $(OBJDIR)libspec.so:	$(LIBSPEC)
 	@echo Making library: libspec.so
 	@$(CC) -fPIC -shared -o $(OBJDIR)libspec.so $(LIBSPEC) $(LDFLAGS)
+
+$(OBJDIR)libgame.so:	$(LIBGAME)
+	@echo Making library: libgame.so
+	@$(CC) -fPIC -shared -o $(OBJDIR)libgame.so $(LIBGAME) $(LDFLAGS)
+
+$(OBJDIR)libsys.so:	$(LIBSYS)
+	@echo Making library: libsys.so
+	@$(CC) -fPIC -shared -o $(OBJDIR)libsys.so $(LIBSYS) $(LDFLAGS)
 ###
 
 # low tool
@@ -364,7 +391,7 @@ lowtools: sqladdobjs
 
 
 clean:
-	/bin/rm -f $(OBJDIR)*.o
+	/bin/rm -f $(OBJDIR)*.o $(OBJDIR)*.so
 
 depend:
 	makedepend -I/usr/include/g++-3/ -p$(OBJDIR) -- $(CFLAGS) -- *.cc 
