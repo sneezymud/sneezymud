@@ -126,11 +126,11 @@ int TBeing::doThiefPlant(string arg)
 
   if(bSuccess(this, getPlantThiefChance(this, vict), SKILL_PLANT)){
     return doGive(vict, obj, GIVE_FLAG_SILENT_VICT);
-    sendTo("You were not noticed.\n\r");
+    sendTo("You were not detected.\n\r");
   } else {
     int rc=doGive(vict, obj);
     vict->sendTo("That seemed suspicious.\n\r");
-    sendTo("You were noticed.\n\r");
+    sendTo("You were detected.\n\r");
     return rc;
   }
 }
