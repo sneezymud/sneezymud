@@ -1962,6 +1962,7 @@ class TBeing : public TThing {
     sstring autoFormatDesc(const sstring &, bool) const;
     sstring dynColorRoom(TRoom *, int, bool) const;
     sstring garble(const sstring &, int) const;
+    sstring blahblah(const sstring &) const;
     void doLook(const char *, cmdTypeT, TThing *specific = NULL);
     void doShout(const char *);
     int doWhisper(const sstring &);

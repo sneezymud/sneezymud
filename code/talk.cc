@@ -64,6 +64,63 @@ void TBeing::disturbMeditation(TBeing *vict) const
   }
 }
 
+// Deal with whiney bitches
+sstring TBeing::blahblah(const sstring &arg) const
+{
+  sstring obuf, buf, blah, origword;
+
+  if (arg.empty())
+    return "";
+
+  vector <sstring> args;
+  unsigned int loc;
+  argument_parser(arg, args);
+  buf=obuf=arg;
+
+  for(unsigned int i=0;i<args.size()-1;++i){
+    // remove color codes at the beginning
+    while(args[i].length()>2 && args[i][0]=='<' && args[i][2]=='>'){
+      args[i].erase(0, 3);
+    }
+
+    // make sure we have something left to play with
+    if(args[i].length()<2)
+      continue;
+
+    // find punctuation at the end of the word and remove
+    for(loc=args[i].length()-1;loc>=0;--loc){
+      if(isalpha(args[i][loc]) || args[i][loc]=='>')
+	break;
+      args[i].erase(loc, 1);
+    }
+
+    // make sure we have something left to play with
+    if(args[i].length()<2)
+      continue;
+
+    // swap out with a random word sometimes
+    if (::number(0, 4)) {
+      blah="blah";
+    } else {
+      blah=args[i];
+    }
+
+    if(isupper(args[i][0]))
+      blah[0]=toupper(blah[0]);
+
+    // replace the original word in obuf with whitespace
+    // replace the original word in buf with the new word
+    loc=obuf.find(args[i], 0);
+    if(loc != sstring::npos){
+      obuf.erase(loc, args[i].length());
+      obuf.insert(loc, blah.length(), ' ');
+      buf.erase(loc, args[i].length());
+      buf.insert(loc, blah);
+    }
+  }
+  return buf;
+}
+
 // Make drunk people garble their words!
 sstring TBeing::garble(const sstring &arg, int chance) const
 {
@@ -335,6 +392,7 @@ void Descriptor::sendShout(TBeing *ch, const char *arg)
   Descriptor *i;
   char capbuf[256];
   char namebuf[100];
+  bool blah=false;
 
   for (i = descriptor_list; i; i = i->next) {
     if (i->connected != CON_PLYNG)
@@ -349,6 +407,8 @@ void Descriptor::sendShout(TBeing *ch, const char *arg)
       continue;
     if (b->isPlayerAction(PLR_MAILING | PLR_BUGGING))
       continue;
+    if (ch->hasQuestBit(TOG_BLAHBLAH))
+      blah=true;
 
     // don't use awake(), paralyzed should hear, asleep should not
     if (b->getPosition() <= POSITION_SLEEPING)
@@ -375,18 +435,18 @@ void Descriptor::sendShout(TBeing *ch, const char *arg)
 
           if (i->m_bIsClient)
             i->clientf("%d|%s|%s", CLIENT_SHOUT, tmpbuf2.c_str(), argbuf.c_str());
-          b->sendTo(COLOR_SHOUTS, "%s shouts, \"%s<1>\"\n\r",tmpbuf.c_str(), arg);
+          b->sendTo(COLOR_SHOUTS, "%s %s, \"%s<1>\"\n\r",tmpbuf.c_str(), blah ? "whines" : "shouts", arg);
         } else {
           if (i->m_bIsClient)
             i->clientf("%d|%s|%s%s", CLIENT_SHOUT, nameStr.c_str(), argbuf.c_str());
 
-          b->sendTo(COLOR_SHOUTS, "<g>%s<z> shouts, \"%s<1>\"\n\r", cap(capbuf), arg);
+          b->sendTo(COLOR_SHOUTS, "<g>%s<z> %s, \"%s<1>\"\n\r", cap(capbuf), blah ? "whines" : "shouts", arg);
         }
       } else {
         if (i->m_bIsClient)
           i->clientf("%d|%s|%s", CLIENT_SHOUT, nameStr.c_str(), argbuf.c_str());
 
-        b->sendTo(COLOR_SHOUTS, "<g>%s<z> shouts, \"%s<1>\"\n\r", cap(capbuf), arg);
+        b->sendTo(COLOR_SHOUTS, "<g>%s<z> %s, \"%s<1>\"\n\r", cap(capbuf), blah ? "whines" : "shouts", arg);
       }
     }
   }
@@ -466,7 +526,13 @@ void TBeing::doShout(const char *arg)
     addToMove(-30);
 
   addToWait(combatRound(0.5));
-  descriptor_list->sendShout(this, garbed);
+
+  if (hasQuestBit(TOG_BLAHBLAH)) {
+    mud_str_copy(garbed, blahblah(arg), 256);
+    descriptor_list->sendShout(this, garbed);
+  } else {
+    descriptor_list->sendShout(this, garbed);
+  }
 }
 
 void TBeing::doGrouptell(const char *arg)

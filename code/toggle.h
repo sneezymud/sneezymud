@@ -379,7 +379,9 @@ const int TOG_LYCANTHROPE_YURNO_WOLVESBANE     = 272;
 const int TOG_LYCANTHROPE_YURNO_SILVER         = 273;
 const int TOG_LYCANTHROPE_YURNO_HEMLOCK        = 274;
 
-const int MAX_TOG_INDEX       = 275;  // move and change
+const int TOG_BLAHBLAH                         = 275;
+
+const int MAX_TOG_INDEX       = 276;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 

@@ -287,6 +287,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Lycanthropy: wolvesbane", 6762},
   {"Lycanthropy: silver", 6762},
   {"Lycanthropy: hemlock", 6762},
+  {"BlahBlah Shouts", MOB_NONE},
 
   {"", MOB_NONE}, 
 };
