@@ -52,7 +52,7 @@ static bool isBadForAffectFlags(int update)
     case AFF_SLEEP:
     case AFF_STUNNED:
     case AFF_SHOCKED:
-    case AFF_UNDEF3:    
+    case AFF_SYPHILIS:    
       //    case AFF_UNDEF4:
     case AFF_ENGAGER:
     case AFF_SCRYING:

@@ -3480,12 +3480,6 @@ void TBeing::doLimbs(const string & argument)
          norm(), v->slotPlurality(i).c_str());
       found = TRUE;
     }
-    if (v->isLimbFlags(i, PART_SYPHILIS)) {
-      sendTo(COLOR_BASIC, "%s %s%s%s %s infected with syphilis!\n\r",
-         who,red(),v->describeBodySlot(i).c_str(),
-         norm(), v->slotPlurality(i).c_str());
-      found = TRUE;
-    }
     if (v->isLimbFlags(i, PART_BROKEN)) {
       sendTo(COLOR_BASIC, "%s %s%s%s %s broken!\n\r",
          who,red(),v->describeBodySlot(i).c_str(),

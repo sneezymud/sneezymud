@@ -437,6 +437,9 @@ int TBeing::moveGain()
   if (isAffected(AFF_POISON))
     gain >>= 2;	// rightshift by 2 is div by 4
 
+  if (isAffected(AFF_SYPHILIS))
+    gain >>= 2;	// rightshift by 2 is div by 4
+
   if (!getCond(FULL) || !getCond(THIRST))
     gain >>= 2;	// rightshift by 2 is div by 4
 

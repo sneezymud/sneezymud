@@ -1670,7 +1670,7 @@ static bool stupidityCheck(TBeing &ch, TBeing &vict, spellNumT spell)
 // SHAMAN
 static bool deathMistCheck(TBeing &ch, TBeing &vict, spellNumT spell)
 {
-  if (!vict.affectedBySpell(SPELL_POISON) && !::number(0, 6) &&
+  if (!vict.affectedBySpell(SPELL_DEATH_MIST) && !::number(0, 6) &&
        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
     act("$n utters the invokation, 'Chowe Kondiz Bub!'",
              TRUE, &ch, 0, 0, TO_ROOM);

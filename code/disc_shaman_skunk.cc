@@ -26,19 +26,19 @@ int deathMist(TBeing *caster, int level, byte bKnown)
     act("$n opens $s mouth and a chilling green mist pours out.",
         TRUE,caster,0,0,TO_ROOM,ANSI_GREEN);
 
-    aff.type = SPELL_POISON;
+    aff.type = SPELL_DEATH_MIST;
     aff.level = 30;
     aff.duration = (25) * UPDATES_PER_MUDHOUR;
-    aff.modifier = -20;
+    aff.modifier = -10;
     aff.location = APPLY_STR;
-    aff.bitvector = AFF_POISON;
+    aff.bitvector = AFF_SYPHILIS;
 
     aff2.type = AFFECT_DISEASE;
     aff2.level = 30;
     aff2.duration = (25) * UPDATES_PER_MUDHOUR;
-    aff2.modifier = DISEASE_POISON;
+    aff2.modifier = DISEASE_SYPHILIS;
     aff2.location = APPLY_NONE;
-    aff2.bitvector = AFF_POISON;
+    aff2.bitvector = AFF_SYPHILIS;
 
     for (t = caster->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
@@ -47,20 +47,22 @@ int deathMist(TBeing *caster, int level, byte bKnown)
         continue;
       if (caster != tmp_victim && !tmp_victim->isImmortal()) {
 	//        if (caster->inGroup(*tmp_victim)) {
-          if (!tmp_victim->isAffected(AFF_POISON)) {
+          if (!tmp_victim->isAffected(AFF_SYPHILIS)) {
             caster->reconcileHelp(tmp_victim,discArray[SPELL_DEATH_MIST]->alignMod);
             tmp_victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+            tmp_victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
             found = TRUE;
           }
 	  // }
       } 
     }
-    if (!caster->isAffected(AFF_POISON)) {
+    if (!caster->isAffected(AFF_SYPHILIS)) {
       caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+      caster->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
       found = TRUE;
     }
     if (!found) {
-      caster->sendTo("Everything here seems to be poisonous.\n\r");
+      caster->sendTo("Everything here seems to be diseased.\n\r");
       return SPELL_FAIL;
     }
     return SPELL_SUCCESS;

@@ -728,8 +728,8 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
 #endif
   if (isAffected(AFF_SHOCKED)) 
     vlogf(LOG_LOW, "mob (%s:%d) with AFF_SHOCKED set. make %d", getName(), mobVnum(), specials.affectedBy & ~AFF_SHOCKED);
-  if (isAffected(AFF_UNDEF3)) 
-    vlogf(LOG_LOW, "mob (%s:%d) with AFF_UNDEF3 (%d) set.", getName(), mobVnum(), AFF_UNDEF3);
+  if (isAffected(AFF_SYPHILIS)) 
+    vlogf(LOG_LOW, "mob (%s:%d) with AFF_SYPHILIS (%d) set.", getName(), mobVnum(), AFF_SYPHILIS);
 #ifdef JEEZ
   if (isAffected(AFF_UNDEF4)) 
     vlogf(LOG_LOW, "mob (%s:%d) with AFF_UNDEF4 (%d) set.", getName(), mobVnum(), AFF_UNDEF4);

@@ -2165,7 +2165,7 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
       continue;
     if (!victim->slotChance(slot))
       continue;
-    if ((found = (victim->isLimbFlags(slot, PART_INFECTED | PART_SYPHILIS)))) {
+    if ((found = (victim->isLimbFlags(slot, PART_INFECTED)))) {
       break;
     }
   }
@@ -2188,7 +2188,7 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
           continue;
         if (!victim->slotChance(slot))
           continue;
-        if (victim->isLimbFlags(slot, PART_INFECTED | PART_SYPHILIS))
+        if (victim->isLimbFlags(slot, PART_INFECTED))
           continue;
         break;
       }
@@ -2216,16 +2216,6 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
           act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
         }
       }
-      if (!victim->isLimbFlags(slot, PART_SYPHILIS)) {
-        if (victim->rawSyphilis(slot, duration, SILENT_YES, CHECK_IMMUNITY_YES)) {
-    
-          sprintf(buf, "Germs infest the bloody sore on your %s!", limb);
-          act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
-          sprintf(buf, "$n looks at a bloody sore that emerged on $s %s.\nBe afraid...be VERY afraid!", limb);
-          act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
-        }
-      }
-  
       return SPELL_SUCCESS;
     } else {
       // Victim passed luck/save
@@ -2243,8 +2233,6 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
             continue;
           if (caster->isLimbFlags(slot, PART_INFECTED))
             continue;
-          if (caster->isLimbFlags(slot, PART_SYPHILIS))
-            continue;
           break;
         }
   
@@ -2257,12 +2245,6 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
 
           caster->sendTo("You scream in agony as your own attack turns on you infecting your limb!\n\r");
           act("$n grimaces in surprise as $e skin becomes infected!", 
-             TRUE, caster, 0, 0, TO_ROOM);
-        }
-        if (caster->rawSyphilis(slot, duration, SILENT_YES, CHECK_IMMUNITY_YES)) {
-
-          caster->sendTo("You scream in agony as you discover you've infected yourself with syphilis!\n\r");
-          act("$n grimaces in surprise as $s skin becomes infected!", 
              TRUE, caster, 0, 0, TO_ROOM);
         }
         if (caster->reconcileDamage(caster, dam, spell) == -1)

@@ -227,12 +227,23 @@ int TBaseCup::drinkMe(TBeing *ch)
   }
   if (getDrinkType() == LIQ_BLOOD) {
     int numchance = ::number(0,5);
-    if (numchance > 4) {
+    if (numchance < 4) {
+      act("Oops, it tasted rather strange, but you don't think it had any ill-effect.",
+            FALSE, ch, 0, 0, TO_CHAR);
+    } else {
       act("Oops, it tasted rather strange?!!?", FALSE, ch, 0, 0, TO_CHAR);
       act("$n chokes and utters some strange sounds.", TRUE, ch, 0, 0, TO_ROOM);
-      ch->rawSyphilis(WEAR_NECK, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-    } else {
-      // do nothing
+      aff2.type = AFFECT_DISEASE;
+      aff2.level = 0;
+      aff2.duration = af.duration;
+      aff2.modifier = DISEASE_SYPHILIS;
+      aff2.location = APPLY_NONE;
+      aff2.bitvector = AFF_SYPHILIS;
+      ch->affectJoin(NULL, &aff2, AVG_DUR_NO, AVG_EFF_YES);
+      disease_start(ch, &aff2);
+
+      act("Oops, it tasted rather strange?!!?", FALSE, ch, 0, 0, TO_CHAR);
+      act("$n chokes and utters some strange sounds.", TRUE, ch, 0, 0, TO_ROOM);
     }
   }
   if (!isDrinkConFlag(DRINK_PERM))

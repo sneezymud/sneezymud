@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_aegis.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "disease.h"
 #include "combat.h"
@@ -21,16 +6,12 @@
 int cureBlindness(TBeing *c, TBeing * victim, int level, byte learn)
 {
   affectedData * aff;  // pointer declaration is an exception to this rule
-  int duration;
 
   if (!victim->isAffected(AFF_BLIND)) {
     act("Nothing seems to happen.  Try someone who is blind.", FALSE, c, NULL, victim, TO_CHAR);
     c->deityIgnore(SILENT_YES);
     return FALSE;
   }
-
-  duration = level * UPDATES_PER_TICK;
-  duration = (int) (c->percModifier() * duration);
 
   if (bSuccess(c, learn, c->getPerc(), SPELL_CURE_BLINDNESS)) {
     if (victim->affected) {
@@ -47,6 +28,9 @@ int cureBlindness(TBeing *c, TBeing * victim, int level, byte learn)
     checkFactionHelp(c,victim);
     return SPELL_SUCCESS;
   } else {
+    int duration = (level/10 + 1) * UPDATES_PER_MUDHOUR;
+    duration = (int) (c->percModifier() * duration);
+
     switch (critFail(c, SPELL_CURE_BLINDNESS)) {
       case CRIT_F_HITOTHER:
       case CRIT_F_HITSELF:
@@ -120,14 +104,14 @@ int cureDisease(TBeing *caster, TBeing * victim, int, byte learn, spellNumT spel
 {
   char buf[256];
   bool found = FALSE;
-  int disease = DISEASE_NULL;
+  diseaseTypeT disease = DISEASE_NULL;
   int s1 = 0, u1 = 0, mod;
   int i;
   
   if (spell==SKILL_WOHLIN || 
       bSuccess(caster, learn, caster->getPerc(), spell)) {
   
-    for (i=1; i <= 5; i++) {
+    for (i=1; i <= 6; i++) {
       switch (i) {
         case 1:
           disease = DISEASE_COLD;
@@ -151,6 +135,11 @@ int cureDisease(TBeing *caster, TBeing * victim, int, byte learn, spellNumT spel
           break;
         case 5:
           disease = DISEASE_PLAGUE;
+          s1 = 75;
+          u1 = 2;
+          break;
+        case 6:
+          disease = DISEASE_SYPHILIS;
           s1 = 75;
           u1 = 2;
           break;
@@ -269,7 +258,7 @@ int curePoison(TBeing *c, TBeing * victim, int level, byte learn, spellNumT spel
         CF(spell);
         aff.type = SPELL_POISON;
         aff.level = level;
-        aff.duration = (aff.level << 1) * UPDATES_PER_TICK;
+        aff.duration = (aff.level << 1) * UPDATES_PER_MUDHOUR;
         aff.modifier = -20;
         aff.location = APPLY_STR;
         aff.bitvector = AFF_POISON;
@@ -344,6 +333,7 @@ int refresh(TBeing *c, TBeing * victim, int level, byte learn, spellNumT spell)
         break;
     }
     dam = min(dam, victim->moveLimit() - victim->getMove());
+    LogDam(c, spell, dam);
     victim->addToMove(dam);
 
     victim->updatePos();
@@ -462,6 +452,8 @@ int secondWind(TBeing *c, TBeing *victim, int level, byte learn)
         CS(SPELL_SECOND_WIND);
         dam *= 2;
         dam = min(dam, victim->moveLimit() - victim->getMove());
+
+        LogDam(c, SPELL_SECOND_WIND, dam);
         victim->addToMove(dam);
 
         victim->updatePos();
@@ -473,6 +465,7 @@ int secondWind(TBeing *c, TBeing *victim, int level, byte learn)
     }
 
     dam = min(dam, victim->moveLimit() - victim->getMove());
+    LogDam(c, SPELL_SECOND_WIND, dam);
     victim->addToMove(dam);
 
     victim->updatePos();
@@ -756,7 +749,7 @@ int TBeing::removeCurseBeing(TBeing * victim, int level, byte learn, spellNumT s
 
       aff.type = SPELL_CURSE;
       aff.level = level;
-      aff.duration = 24 * 7 * UPDATES_PER_TICK; // 3 Days 
+      aff.duration = 24 * 3 * UPDATES_PER_MUDHOUR; // 3 Days 
       aff.modifier = -10;
       aff.location = APPLY_SPELL_HITROLL;
       aff.bitvector = AFF_CURSE;
@@ -813,7 +806,7 @@ int armor(TBeing *c, TBeing * victim, int level, byte learn, spellNumT spell)
 
   aff.type = SPELL_ARMOR;
   aff.level = level;
-  aff.duration = (3 + (aff.level / 2)) * UPDATES_PER_TICK;
+  aff.duration = (3 + (aff.level / 2)) * UPDATES_PER_MUDHOUR;
   aff.location = APPLY_ARMOR;
   aff.bitvector = 0;
 
@@ -823,7 +816,7 @@ int armor(TBeing *c, TBeing * victim, int level, byte learn, spellNumT spell)
   else if (spell == SPELL_ARMOR_DEIKHAN)
     aff.modifier = -75;
   else {
-    vlogf(5, "Unknown spell %d in armor()", spell);
+    vlogf(LOG_BUG, "Unknown spell %d in armor()", spell);
     aff.modifier = 0;
   }
   
@@ -952,7 +945,7 @@ int sanctuary(TBeing *c, TBeing *victim, int level, byte learn)
 
   aff.type = SPELL_SANCTUARY;
   aff.level = level;
-  aff.duration = ((level <= MAX_MORT) ? 3 : level) * UPDATES_PER_TICK;
+  aff.duration = ((level <= MAX_MORT) ? 3 : level) * UPDATES_PER_MUDHOUR;
   aff.location = APPLY_PROTECTION;
   aff.modifier = min(level, 50);
   aff.bitvector = AFF_SANCTUARY;
@@ -967,7 +960,7 @@ int sanctuary(TBeing *c, TBeing *victim, int level, byte learn)
       case CRIT_S_KILL:
       case CRIT_S_DOUBLE:
         CS(SPELL_SANCTUARY);
-        aff.duration = ((level <= MAX_MORT) ? 5 : level) * UPDATES_PER_TICK;
+        aff.duration = ((level <= MAX_MORT) ? 5 : level) * UPDATES_PER_MUDHOUR;
         if (!victim->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES))
           return SPELL_FAIL;
         return SPELL_CRIT_SUCCESS;

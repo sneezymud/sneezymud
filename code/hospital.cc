@@ -17,6 +17,12 @@ int poison_price(TBeing *, affectedData *)
   return 500;
 }
 
+int syphilis_price(TBeing *, affectedData *)
+{
+  // get more exotic later
+  return 10000;
+}
+
 int limb_heal_price(TBeing *ch, wearSlotT pos)
 {
   int basenum;
@@ -92,9 +98,6 @@ int limb_wound_price(TBeing *ch, wearSlotT pos, unsigned short int wound)
 
   else if (IS_SET(wound, PART_INFECTED))
     price *= 5;
-
-  else if (IS_SET(wound, PART_SYPHILIS))
-    price *= 12;
 
   else if (IS_SET(wound, PART_LEPROSED))
     price *= 14;
@@ -523,6 +526,9 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
                 if (aff->modifier == DISEASE_POISON) {
                   ch->affectFrom(SPELL_POISON);
                   ch->affectFrom(SPELL_POISON_DEIKHAN);
+                }
+                if (aff->modifier == DISEASE_SYPHILIS) {
+                  ch->affectFrom(SPELL_DEATH_MIST);
                 }
                 ch->diseaseStop(aff);
                 ch->affectRemove(aff);

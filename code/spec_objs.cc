@@ -2807,7 +2807,6 @@ int splinteredClub(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if(!vict->isImmune(IMMUNE_BLEED, 50)){
     vict->rawBleed(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
     vict->rawInfect(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
-    vict->rawSyphilis(slot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
 
     sprintf(buf, "<R>Blood<1> <o>drips out of the wound created by the splinter.<1>");
     act(buf, 0, vict, o, 0, TO_ROOM);

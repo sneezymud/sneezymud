@@ -184,9 +184,8 @@ const unsigned short int PART_USELESS      = (1<<7);
 const unsigned short int PART_LEPROSED     = (1<<8);
 const unsigned short int PART_TRANSFORMED  = (1<<9);
 const unsigned short int PART_ENTANGLED    = (1<<10);
-const unsigned short int PART_SYPHILIS     = (1<<11);
 
-const int MAX_PARTS          = 12;       // move and change
+const int MAX_PARTS          = 11;       // move and change
 
 typedef struct _app_typ {
   bool assignable;
@@ -230,7 +229,7 @@ const unsigned long AFF_SNEAK             = (1<<19);       // 524288
 const unsigned long AFF_HIDE              = (1<<20);       // 1048576
 const unsigned long AFF_SHOCKED           = (1<<21);       // 2097152
 const unsigned long AFF_CHARM             = (1<<22);       // 4194304
-const unsigned long AFF_UNDEF3            = (1<<23);       // 8388608
+const unsigned long AFF_SYPHILIS          = (1<<23);       // 8388608
 const unsigned long AFF_SHADOW_WALK       = (1<<24);       // 16777216
 const unsigned long AFF_TRUE_SIGHT        = (1<<25);       // 33554432
 const unsigned long AFF_MUNCHING_CORPSE   = (1<<26);       // 67108864
@@ -1094,7 +1093,6 @@ class TBeing : public TThing {
     int dropPool(int, liqTypeT);
     int dropBloodLimb(wearSlotT);
     int rawInfect(wearSlotT, int, silentTypeT, checkImmunityT);
-    int rawSyphilis(wearSlotT, int, silentTypeT, checkImmunityT);
     int tooTired();
     void deathCry();
     void appear();
