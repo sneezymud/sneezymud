@@ -2658,10 +2658,8 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
 	recep->doSay("Hey, no loitering!  Make room for the other customers.");
 	for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
 	  if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
-	    act("$n throws you from the inn.",
-		FALSE, recep, 0, tbt, TO_VICT);
-	    act("$n throws $N from the inn.",
-		FALSE, recep, 0, tbt, TO_NOTVICT);
+	    act("$n throws you from the inn.", FALSE, recep, 0, tbt, TO_VICT);
+	    act("$n throws $N from the inn.", FALSE, recep, 0, tbt, TO_NOTVICT);
 	    recep->throwChar(tbt, dir, FALSE, SILENT_NO, true);
 	    return TRUE;
 	  }
