@@ -700,7 +700,7 @@ void TThing::sacrificeMe(TBeing *ch, const char *arg)
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
-    act("Someone must be sacrificing $p currently.",
+    act("$p is no longer worthy of the ritual.",
           FALSE, ch, corpse, 0, TO_CHAR);    
     return;
   }

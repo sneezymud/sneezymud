@@ -187,8 +187,6 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   case CMD_TASK_FIGHTING:
       ch->sendTo("You can't sacrifice a corpse while under attack.\n\r");
       ch->stopTask();
-      if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
-	corpse->remCorpseFlag(CORPSE_SACRIFICE);
       break;
   default:
       if (cmd < MAX_CMD_LIST)
