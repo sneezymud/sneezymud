@@ -450,14 +450,16 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
   }
 
   if (v->isPc() && !v->desc) {
-    if (this != v) {
+    if (this != v && !v->affectedBySpell(AFFECT_PLAYERKILL) &&
+	!v->affectedBySpell(AFFECT_PLAYERLOOT)){
       catchLostLink(v);
       return FALSE;
     }
     if (v->getPosition() != POSITION_DEAD)
       return FALSE;
   }
-  if (isPc() && !desc) {
+  if (isPc() && !desc && !v->affectedBySpell(AFFECT_PLAYERKILL) &&
+      !v->affectedBySpell(AFFECT_PLAYERLOOT)) {
     if (this != v) {
       v->catchLostLink(this);
       return FALSE;

@@ -3219,7 +3219,10 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
               vict->getName(), getName(), vict->in_room);
  
         // grab their stuff if they were REALLY cheating
-        catchLostLink(vict);
+	if(!vict->affectedBySpell(AFFECT_PLAYERLOOT) &&
+	   !vict->affectedBySpell(AFFECT_PLAYERKILL)){
+	  catchLostLink(vict);
+	}
       }
     }
     

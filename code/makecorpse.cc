@@ -36,7 +36,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
     *rp += *this;
   }
 
-  if (isPc() && !desc) {
+  if (isPc() && !desc && !affectedBySpell(AFFECT_PLAYERKILL)) {
     vlogf(LOG_BUG, "Character: %s with no link when creating corpse in rm %d", getName(), in_room);
     vlogf(LOG_BUG, "%s corpse generated in room %d to avoid possible duplication", getName(), ROOM_STORAGE);
     --(*this);
