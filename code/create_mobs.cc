@@ -3,8 +3,8 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: create_mobs.cc,v $
-// Revision 1.2  1999/09/29 07:46:14  lapsos
-// Added code for the advanced user menus
+// Revision 1.3  1999/09/30 03:33:36  lapsos
+// Added code for mobile strings and the advanced menu stuff.
 //
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
@@ -101,29 +101,29 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
  "\n\r";
   const char *mob_edit_menu_advanced =
  " %s1)%s %-20s  %s2)%s %s\n\r"
- " %s3)%s %-20s  %s4)%s Description\n\r"
- " %s5)%s Action Flags         %s6)%s Affect Flags\n\r"
- " %s7)%s %-20s  %s8)%s HitRoll: %s\n\r"
- " %s9)%s Lvl: %-15s %s10)%s HP-Lvl: %s\n\r"
- "%s11)%s AC-Lvl: %-12s %s13)%s Money: %s\n\r"
- "%s13)%s Dam-Lvl: %-11s %s14)%s %s\n\r"
- "%s15)%s Unused               %s16)%s Max: %s\n\r"
- "%s17)%s %-20s %s18)%s %s\n\r"
- "%s19)%s %-20s %s20)%s Mobile Strings\n\r"
- "%s21)%s Immunities           %s22)%s %s\n\r"
- "%s23)%s %-20s %s24)%s Characteristics\n\r"
- "%s25)%s Height: %-12s %s26)%s Weight: %s\n\r"
- "%s27)%s %-20s %s28)%s VB: %s\n\r"
- "%s29)%s CBS: %-15s %s30)%s Mobile Sounds\n\r"
+ " %s3)%s %-20s  %s4)%s %sDescription%s\n\r"
+ " %s5)%s %sAction Flags%s          %s6)%s %sAffect Flags%s\n\r"
+ " %s7)%s %sFaction%s: %-11s  %s8)%s %sAttacks%s: %s\n\r"
+ " %s9)%s %sLvl%s: %-15s %s10)%s %sHitRoll%s: %s\n\r"
+ "%s11)%s %sAC-Lvl%s: %-12s %s12)%s %sHP-Lvl%s: %s\n\r"
+ "%s13)%s %sDam-Lvl%s: %-11s %s14)%s %sMoney%s:%s\n\r"
+ "%s15)%s %sUnused%s               %s16)%s %s\n\r"
+ "%s17)%s %-20s %s18)%s %sMax%s: %s\n\r"
+ "%s19)%s %-20s %s20)%s %sMobile Strings%s\n\r"
+ "%s21)%s %sImmunities%s           %s22)%s %s\n\r"
+ "%s23)%s %-20s %s24)%s %sCharacteristics%s\n\r"
+ "%s25)%s %sHeight%s: %-12s %s26)%s %sWeight%s: %s\n\r"
+ "%s27)%s %-20s %s28)%s %sVB%s: %s\n\r"
+ "%s29)%s %sCBS%s: %-15s %s30)%s %sMobile Sounds%s\n\r"
   "\n\r";
 
   if (IS_SET(ch->desc->autobits, AUTO_TIPS)) {
-    char tStringOut[21][256];
+    char tStringOut[22][256];
 
-    strcpy(tStringOut[0], (tMon->getName()        ? tMon->getName()        : "Unknown"));
+    strcpy(tStringOut[0], (tMon->name             ? tMon->name             : "Unknown"));
     strcpy(tStringOut[1], (tMon->shortDescr       ? tMon->shortDescr       : "Unknown"));
     strcpy(tStringOut[2], (tMon->player.longDescr ? tMon->player.longDescr : "Unknown"));
-    sprintf(tStringOut[3], "%s %3.2f", FactionInfo[tMon->getFaction()].faction_name, tMon->getPerc());
+    sprintf(tStringOut[3], "%d %3.2f", tMon->getFaction(), tMon->getPerc());
     sprintf(tStringOut[4], "%.1f", tMon->getMult());
     sprintf(tStringOut[5], "%d", tMon->GetMaxLevel());
     sprintf(tStringOut[6], "%d", tMon->getHitroll());
@@ -136,45 +136,51 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
     sprintf(tStringOut[13], "%d", tMon->max_exist);
     strcpy(tStringOut[14], position_types[tMon->default_pos]);
     strcpy(tStringOut[15], material_nums[tMon->getMaterial()].mat_name);
-    strcpy(tStringOut[16], ((tMon->getClass() < MAX_CLASSES) ? classNames[tMon->getClass()].capName: "Confused..."));
+    strcpy(tStringOut[16], tMon->getProfName());
     int tHeight = (int)(tMon->getHeight() / 12);
     sprintf(tStringOut[17], "%d\'%d\" (%d)", tHeight, (tMon->getHeight() - (tHeight * 12)), tMon->getHeight());
     sprintf(tStringOut[18], "%d (lbs)", tMon->getWeight());
-    strcpy(tStringOut[19], ((tMon->spec < NUM_MOB_SPECIALS) ? (tMon->spec <= 0 ? "none" : mob_specials[GET_MOB_SPE_INDEX(tMon->spec)].name) : "Confused..."));
-    sprintf(tStringOut[19], "%d", tMon->visionBonus);
-    sprintf(tStringOut[20], "%d", tMon->canBeSeen);
+    strcpy(tStringOut[19], ((tMon->spec < NUM_MOB_SPECIALS) ? (tMon->spec <= 0 ? "Proc: none" : mob_specials[GET_MOB_SPE_INDEX(tMon->spec)].name) : "Confused..."));
+    sprintf(tStringOut[20], "%d", tMon->visionBonus);
+    sprintf(tStringOut[21], "%d", tMon->canBeSeen);
+
+    for (int tMsgIndex = 0; tMsgIndex < 22; tMsgIndex++)
+      if (strlen(tStringOut[tMsgIndex]) > 20) {
+        tStringOut[tMsgIndex][16] = '\0';
+        strcat(tStringOut[tMsgIndex], "...");
+      }
 
     ch->sendTo(mob_edit_menu_advanced,
-          ch->cyan()  , ch->norm(), tStringOut[0],
-          ch->purple(), ch->norm(), tStringOut[1],
-          ch->cyan()  , ch->norm(), tStringOut[2],
-          ch->purple(), ch->norm(),
-          ch->cyan()  , ch->norm(),
-          ch->purple(), ch->norm(),
-          ch->cyan()  , ch->norm(), tStringOut[3],
-          ch->purple(), ch->norm(), tStringOut[4],
-          ch->cyan()  , ch->norm(), tStringOut[5],
-          ch->purple(), ch->norm(), tStringOut[6],
-          ch->cyan()  , ch->norm(), tStringOut[7],
-          ch->purple(), ch->norm(), tStringOut[8],
-          ch->cyan()  , ch->norm(), tStringOut[9],
-          ch->purple(), ch->norm(), tStringOut[10],
-          ch->cyan()  , ch->norm(),
-          ch->purple(), ch->norm(), tStringOut[11],
-          ch->cyan()  , ch->norm(), tStringOut[12],
-          ch->purple(), ch->norm(), tStringOut[13],
-          ch->cyan()  , ch->norm(), tStringOut[14],
-          ch->purple(), ch->norm(),
-          ch->cyan()  , ch->norm(),
-          ch->purple(), ch->norm(), tStringOut[15],
-          ch->cyan()  , ch->norm(), tStringOut[16],
-          ch->purple(), ch->norm(),
-          ch->cyan()  , ch->norm(), tStringOut[17],
-          ch->purple(), ch->norm(), tStringOut[18],
-          ch->cyan()  , ch->norm(), tStringOut[19],
-          ch->purple(), ch->norm(), tStringOut[20],
-          ch->cyan()  , ch->norm(), tStringOut[21],
-          ch->purple(), ch->norm());
+          ch->cyan()  , ch->norm(),                           tStringOut[0],
+          ch->purple(), ch->norm(),                           tStringOut[1],
+          ch->cyan()  , ch->norm(),                           tStringOut[2],
+          ch->purple(), ch->norm(), ch->cyan()  , ch->norm(),
+          ch->cyan()  , ch->norm(), ch->purple(), ch->norm(),
+          ch->purple(), ch->norm(), ch->cyan()  , ch->norm(),
+          ch->cyan()  , ch->norm(), ch->purple(), ch->norm(), tStringOut[3],
+          ch->purple(), ch->norm(), ch->cyan()  , ch->norm(), tStringOut[4],
+          ch->cyan()  , ch->norm(), ch->purple(), ch->norm(), tStringOut[5],
+          ch->purple(), ch->norm(), ch->cyan()  , ch->norm(), tStringOut[6],
+          ch->cyan()  , ch->norm(), ch->purple(), ch->norm(), tStringOut[7],
+          ch->purple(), ch->norm(), ch->cyan()  , ch->norm(), tStringOut[8],
+          ch->cyan()  , ch->norm(), ch->purple(), ch->norm(), tStringOut[9],
+          ch->purple(), ch->norm(), ch->cyan()  , ch->norm(), tStringOut[10],
+          ch->cyan()  , ch->norm(), ch->purple(), ch->norm(),
+          ch->purple(), ch->norm(),                           tStringOut[11],
+          ch->cyan()  , ch->norm(),                           tStringOut[12],
+          ch->purple(), ch->norm(), ch->cyan()  , ch->norm(), tStringOut[13],
+          ch->cyan()  , ch->norm(),                           tStringOut[14],
+          ch->purple(), ch->norm(), ch->cyan()  , ch->norm(),
+          ch->cyan()  , ch->norm(), ch->purple(), ch->norm(),
+          ch->purple(), ch->norm(),                           tStringOut[15],
+          ch->cyan()  , ch->norm(),                           tStringOut[16],
+          ch->purple(), ch->norm(), ch->cyan()  , ch->norm(),
+          ch->cyan()  , ch->norm(), ch->purple(), ch->norm(), tStringOut[17],
+          ch->purple(), ch->norm(), ch->cyan()  , ch->norm(), tStringOut[18],
+          ch->cyan()  , ch->norm(),                           tStringOut[19],
+          ch->purple(), ch->norm(), ch->cyan()  , ch->norm(), tStringOut[20],
+          ch->cyan()  , ch->norm(), ch->purple(), ch->norm(), tStringOut[21],
+          ch->purple(), ch->norm(), ch->cyan()  , ch->norm());
   } else
     ch->sendTo(mob_edit_menu_basic,
           ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
@@ -2799,13 +2805,18 @@ static void change_mob_string_enter(TBeing *ch, TMonster *tMob, const char *tStr
   extraDescription *tExDesc,
                    *tExLast = NULL;
 
+  string tStString(tString);
+
+  while (tStString.find("$$") != string::npos)
+    tStString.replace(tStString.find("$$"), 2, "$");
+
   for (tExDesc = tMob->ex_description; ; tExDesc = tExDesc->next) {
     if (!tExDesc && *tString != '`') {
       tExDesc = new extraDescription();
       tExDesc->next = tMob->ex_description;
       tMob->ex_description = tExDesc;
       tExDesc->keyword = mud_str_dup(tMobStringShorts[tType]);
-      tExDesc->description = mud_str_dup(tString);
+      tExDesc->description = mud_str_dup(tStString.c_str());
       break;
     } else if (tExDesc && !strcmp(tExDesc->keyword, tMobStringShorts[tType]))
       if (*tString == '`') {
@@ -2819,7 +2830,7 @@ static void change_mob_string_enter(TBeing *ch, TMonster *tMob, const char *tStr
         break;
       } else {
         delete [] tExDesc->description;
-        tExDesc->description = mud_str_dup(tString);
+        tExDesc->description = mud_str_dup(tStString.c_str());
         break;
       }
 
