@@ -2,24 +2,10 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: food.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+//      "food.cc" - Procedures for eating/drinking. And general liquid 
+//      containers like vials
 //
 //////////////////////////////////////////////////////////////////////////
-
-
-/*************************************************************************
-
-      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
-      "food.cc" - Procedures for eating/drinking. And general liquid 
-      containers like vials
-
-*************************************************************************/
 
 #include <cmath>
 
@@ -48,8 +34,8 @@ void TBaseCup::weightChangeObject(float wgt_amt)
                (-wgt_amt + obj_index[getItemIndex()].weight)) == 1) {
 #if DRINK_DEBUG
     // this happens sometimes because of that stupid roundoff error in floats
-    vlogf(5, "Attempt to reduce %s below its empty weight", getName());
-    vlogf(5, "weight: %f, adjust: %f, base: %f", getWeight(), 
+    vlogf(LOG_BUG, "Attempt to reduce %s below its empty weight", getName());
+    vlogf(LOG_BUG, "weight: %f, adjust: %f, base: %f", getWeight(), 
          -wgt_amt, obj_index[getItemIndex()].weight);
 #endif
     wgt_amt = -(getWeight() - obj_index[getItemIndex()].weight);
@@ -79,8 +65,10 @@ void TBaseCup::weightChangeObject(float wgt_amt)
     addToWeight(wgt_amt);
     mount(tmp);
   } else {
-    vlogf(9, "Unknown attempt to subtract weight from an object. (weightChangeObject)");
-    vlogf(9, "OBJ: %s", getName());
+    // if object (pool) is changing in weight at load time, this is ok
+    //vlogf(LOG_BUG, "Unknown attempt to subtract weight from an object. (weightChangeObject) obj=%s", getName());
+
+    addToWeight(wgt_amt);
   }
 
   // weight debug: check if greater then max units
@@ -88,14 +76,14 @@ void TBaseCup::weightChangeObject(float wgt_amt)
   // obj weight > max
   if (compareWeights(getWeight(), max_amt) == -1) {
 #if DRINK_DEBUG
-    // this also happens, silly float round off
-    vlogf(3, "DRINK: Bad weight change on %s.  Location %s", getName(),
+    // this happens, silly float round off
+    vlogf(LOG_BUG, "DRINK: Bad weight change on %s.  Location %s", getName(),
            (in_room != ROOM_NOWHERE ? roomp->getName() :
            (equippedBy ? equippedBy->getName() :
            parent->getName())));
-    vlogf(3, "DRINK: Orig: %.1f, change %.1f, now %.1f, max %.1f, sips: %d", 
+    vlogf(LOG_BUG, "DRINK: Orig: %.1f, change %.1f, now %.1f, max %.1f, sips: %d", 
         sweight, wgt_amt, getWeight(), max_amt, getMaxDrinkUnits());
-    vlogf(3, "DRINK: resetting");
+    vlogf(LOG_BUG, "DRINK: resetting");
 #endif
     if ((tmp = parent)) {
       if (dynamic_cast<TBeing *> (tmp)) {
@@ -182,6 +170,9 @@ int TBaseCup::drinkMe(TBeing *ch)
     // use leftover as chance to go 1 more unit up/down
     if (::number(0,9) < ((abs(getLiqDrunk()) * amount) % 10))
       ch->gainCondition(DRUNK, (getLiqDrunk() > 0 ? 1 : -1));
+
+    if(getLiqDrunk()>0)
+      bSuccess(ch, ch->getSkillValue(SKILL_ALCOHOLISM), SKILL_ALCOHOLISM);
   }
 
   if (ch->getCond(FULL) >= 0) {
@@ -217,7 +208,7 @@ int TBaseCup::drinkMe(TBeing *ch)
       act("Oops, it tasted rather strange?!!?", FALSE, ch, 0, 0, TO_CHAR);
       act("$n chokes and utters some strange sounds.", TRUE, ch, 0, 0, TO_ROOM);
       af.type = SPELL_POISON;
-      af.duration = amount * 3 * UPDATES_PER_TICK;
+      af.duration = amount * 3 * UPDATES_PER_MUDHOUR;
       af.modifier = -20;
       af.location = APPLY_STR;
       af.bitvector = AFF_POISON;
@@ -316,7 +307,7 @@ void foodPoisoned(TFood *food, TBeing *ch, int dur)
       act("That tasted rather strange !!", FALSE, ch, 0, 0, TO_CHAR);
       act("$n coughs and utters some strange sounds.", FALSE, ch, 0, 0, TO_ROOM);
       af.type = SPELL_POISON;
-      af.duration = dur * UPDATES_PER_TICK;
+      af.duration = dur * UPDATES_PER_MUDHOUR;
       af.modifier = 0;
       af.location = APPLY_NONE;
       af.bitvector = AFF_POISON;
@@ -336,7 +327,7 @@ void foodSpoiled(TFood *food, TBeing *ch, int dur)
       af.type = AFFECT_DISEASE;
       af.level = 0;
      // Added /4 because of player complaints of food poisoning - Russ 04/28/96
-      af.duration = dur * UPDATES_PER_TICK;
+      af.duration = dur * UPDATES_PER_MUDHOUR;
       af.modifier = DISEASE_FOODPOISON;
       af.location = APPLY_NONE;
       af.bitvector = 0;
@@ -536,10 +527,12 @@ void TBaseCup::sipMe(TBeing *ch)
   act("$n sips from the $o.", TRUE, ch, this, 0, TO_ROOM);
   ch->sendTo(COLOR_OBJECTS, "It tastes like %s.\n\r", DrinkInfo[getDrinkType()]->name);
 
-  ch->gainCondition(DRUNK, (getLiqDrunk() / 10));
-  // use leftover as chance to go 1 more unit up/down
-  if (::number(0,9) < (abs(getLiqDrunk()) % 10))
-    ch->gainCondition(DRUNK, (getLiqDrunk() > 0 ? 1 : -1));
+  if (getLiqDrunk()) {
+    ch->gainCondition(DRUNK, (getLiqDrunk() / 10));
+    // use leftover as chance to go 1 more unit up/down
+    if (::number(0,9) < (abs(getLiqDrunk()) % 10))
+      ch->gainCondition(DRUNK, (getLiqDrunk() > 0 ? 1 : -1));
+  }
 
   ch->gainCondition(FULL, (getLiqHunger() / 10));
   // use leftover as chance to go 1 more unit up/down
@@ -569,7 +562,7 @@ void TBaseCup::sipMe(TBeing *ch)
     else {
       act("But it also had a strange aftertaste!", FALSE, ch, 0, 0, TO_CHAR);
       af.type = SPELL_POISON;
-      af.duration = 3 * UPDATES_PER_TICK;
+      af.duration = 3 * UPDATES_PER_MUDHOUR;
       af.modifier = 0;
       af.location = APPLY_NONE;
       af.bitvector = AFF_POISON;
@@ -746,6 +739,12 @@ void TBeing::checkForSpills() const
 
 void TBeing::setCond(condTypeT i, sbyte val)
 {
+  // Don't set thirst/hunter/drunk for immortals, even if in mortal form at current.
+  if (GetMaxLevel() > MAX_MORT) {
+    specials.conditions[i] = -1;
+    return;
+  }
+
   specials.conditions[i] = val;
 }
 
@@ -831,29 +830,31 @@ int TFood::suggestedPrice() const
 void TFood::lowCheck()
 {
   if (getFoodFill() <= 0)
-        vlogf(LOW_ERROR,"food (%s) with bad fills value.", getName());
+        vlogf(LOG_LOW,"food (%s) with bad fills value.", getName());
 
   int vModified = suggestedPrice();
   if (vModified != obj_flags.cost) {
-    vlogf(LOW_ERROR, "food (%s:%d) with bad price.  Should be: %d.",
+    vlogf(LOG_LOW, "food (%s:%d) with bad price.  Should be: %d.",
           getName(), objVnum(), vModified);
     obj_flags.cost = vModified;
   }
   if (obj_flags.decay_time < 0 && !isObjStat(ITEM_MAGIC)) {
-    vlogf(LOW_ERROR, "food (%s:%d) with bad decay.  Should be magic or decay.",
+    vlogf(LOG_LOW, "food (%s:%d) with bad decay.  Should be magic or decay.",
           getName(), objVnum());
   }
 
   if ((vModified = (getFoodFill() * 10)) != getVolume()) {
-    vlogf(LOW_ERROR, "food (%s) with bad volume.  Should be: %d.",
+    vlogf(LOG_LOW, "food (%s) with bad volume.  Should be: %d.",
           getName(), vModified);
     setVolume(vModified);
   }
+#if 0
   if ((vModified = (int) (getFoodFill() / 12)) != getWeight()) {
-    vlogf(LOW_ERROR, "food (%s) with bad weight.  Should be: %d",
+    vlogf(LOG_LOW, "food (%s) with bad weight.  Should be: %d",
           getName(), vModified);
     setWeight(vModified);
   }
+#endif
   TObj::lowCheck();
 }
 
@@ -935,3 +936,29 @@ void TFood::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
     keeper->addToMoney(-cost, GOLD_SHOP_FOOD);
 }
 
+int TFood::chiMe(TBeing *tLunatic)
+{
+  int tMana  = ::number(10, 30),
+      bKnown = tLunatic->getSkillLevel(SKILL_CHI);
+
+  if (tLunatic->getMana() < tMana) {
+    tLunatic->sendTo("You lack the chi to do this.\n\r");
+    return RET_STOP_PARSING;
+  } else
+    tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
+
+  if (!bSuccess(tLunatic, bKnown, SKILL_CHI) || isFoodFlag(FOOD_SPOILED)) {
+    act("You fail to affect $p in any way.",
+        FALSE, tLunatic, this, NULL, TO_CHAR);
+    return true;
+  }
+
+  act("You focus your chi, causing $p to become a little fresher!",
+      FALSE, tLunatic, this, NULL, TO_CHAR);
+  act("$n stares at $p, causing it to become a little fresher!",
+      TRUE, tLunatic, this, NULL, TO_ROOM);
+
+  obj_flags.decay_time += ::number(1, 3);
+
+  return true;
+}

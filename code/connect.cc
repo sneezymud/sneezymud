@@ -36,6 +36,7 @@ extern "C" {
 #include "socket.h"
 #include "mail.h"
 #include "games.h"
+#include "cmd_trophy.h"
 
 const int DONT_SEND = -1;
 const int FORCE_LOW_INVSTE = 1;
@@ -5996,11 +5997,12 @@ int Descriptor::doAccountStuff(char *arg)
       DeleteHatreds(NULL, delname);
       autobits = 0;
       // remove trophy entries so they do not carry over if the character is recreated
-    
+      wipeTrophy(delname);
 
       //if((rc=dbquery(NULL, "sneezy", "doTrophy", "delete * from trophy where name='%s'", ch->getName()))==-1){
       //vlogf(LOG_BUG, "Database error for trophy character delete");
       //}
+    
 
 
 

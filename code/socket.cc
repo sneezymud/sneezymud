@@ -1,20 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: socket.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
 //   SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 //   "socket.cc" - All methods for TSocket class
@@ -76,7 +61,7 @@ static void timediff(struct timeval *a, struct timeval *b, struct timeval *rslt)
   return;
 }
 
-void TSocket::addNewDescriptorsDuringBoot()
+void TSocket::addNewDescriptorsDuringBoot(string tStString)
 {
   fd_set input_set, output_set, exc_set;
   static struct timeval last_time, now, timespent, timeout, null_time;
@@ -96,7 +81,7 @@ void TSocket::addNewDescriptorsDuringBoot()
     opt_time.tv_sec = 0;
     gettimeofday(&last_time, NULL);
 
-    maxdesc = sock;
+    maxdesc = m_sock;
     avail_descs = 150;
 
 #ifndef SOLARIS
@@ -115,11 +100,11 @@ void TSocket::addNewDescriptorsDuringBoot()
   FD_ZERO(&input_set);
   FD_ZERO(&output_set);
   FD_ZERO(&exc_set);
-  FD_SET(sock, &input_set);
+  FD_SET(m_sock, &input_set);
   for (point = descriptor_list; point; point = point->next) {
-    FD_SET(point->socket->sock, &input_set);
-    FD_SET(point->socket->sock, &exc_set);
-  FD_SET(point->socket->sock, &output_set);
+    FD_SET(point->socket->m_sock, &input_set);
+    FD_SET(point->socket->m_sock, &exc_set);
+    FD_SET(point->socket->m_sock, &output_set);
   }
   // check out the time 
   gettimeofday(&now, NULL);
@@ -153,23 +138,27 @@ void TSocket::addNewDescriptorsDuringBoot()
 #endif
 
   // establish any new connections 
-  if (FD_ISSET(sock, &input_set)) {
-    if (newDescriptor() < 0)
+  if (FD_ISSET(m_sock, &input_set)) {
+    int tFd;
+
+    if ((tFd = newDescriptor()) < 0)
       perror("New connection");
+    else if (!tStString.empty() && tFd)
+      descriptor_list->writeToQ(tStString.c_str());
   }
   // close any connections with an exceptional condition pending 
   for (point = descriptor_list; point; point = next_to_process) {
     next_to_process = point->next;
-    if (FD_ISSET(point->socket->sock, &exc_set)) {
-      FD_CLR(point->socket->sock, &input_set);
-      FD_CLR(point->socket->sock, &output_set);
+    if (FD_ISSET(point->socket->m_sock, &exc_set)) {
+      FD_CLR(point->socket->m_sock, &input_set);
+      FD_CLR(point->socket->m_sock, &output_set);
       delete point;
     }
   }
   // read any incoming input, and queue it up 
   for (point = descriptor_list; point; point = next_to_process) {
     next_to_process = point->next;
-    if (FD_ISSET(point->socket->sock, &input_set)) {
+    if (FD_ISSET(point->socket->m_sock, &input_set)) {
       if (point->inputProcessing() < 0) {
         delete point;
         point = NULL;
@@ -187,7 +176,7 @@ int TSocket::gameLoop()
   Descriptor *point;
   int pulse = 0;
   int teleport, combat, drowning, special_procs, update_stuff;
-  int points, tick_updates, mobstuff;
+  int pulse_tick, pulse_mudhour, mobstuff, quickpulse;
   TBeing *tmp_ch, *temp;
   TObj *obj, *next_thing;
   static int sent = 0;
@@ -206,7 +195,7 @@ int TSocket::gameLoop()
   gettimeofday(&last_time, NULL);
 
 #if 0
-  maxdesc = sock;
+  maxdesc = m_sock;
 #endif
   avail_descs = 150;		
 
@@ -222,17 +211,12 @@ int TSocket::gameLoop()
   // players may have connected before this point via 
   // addNewDescriptorsDuringBoot, so send all those descriptors the login
   for (point = descriptor_list; point; point = point->next)
-    if (!point->client)
+    if (!point->m_bIsClient)
       point->sendLogin("1");
 
   time_t ticktime = time(0);
 
   while (!Shutdown) {
-#if 0
-    if  (!(pulse % PULSE_TICKS)) {
-      vlogf(-1, "tick log");
-    }
-#endif
     if (timeTill  && (timeTill <= time(0))) {
       if (descriptor_list) {
         sprintf(buf, "%s time has arrived!\n\r", shutdown_or_reboot().c_str());
@@ -260,11 +244,11 @@ int TSocket::gameLoop()
     FD_ZERO(&input_set);
     FD_ZERO(&output_set);
     FD_ZERO(&exc_set);
-    FD_SET(sock, &input_set);
+    FD_SET(m_sock, &input_set);
     for (point = descriptor_list; point; point = point->next) {
-      FD_SET(point->socket->sock, &input_set);
-      FD_SET(point->socket->sock, &exc_set);
-      FD_SET(point->socket->sock, &output_set);
+      FD_SET(point->socket->m_sock, &input_set);
+      FD_SET(point->socket->m_sock, &exc_set);
+      FD_SET(point->socket->m_sock, &output_set);
     }
     // check out the time 
     gettimeofday(&now, NULL);
@@ -298,30 +282,30 @@ int TSocket::gameLoop()
 #endif
 
     // establish any new connections 
-    if (FD_ISSET(sock, &input_set)) {
+    if (FD_ISSET(m_sock, &input_set)) {
       int rc = newDescriptor();
       if (rc < 0)
 	perror("New connection");
       else if (rc) {
         // we created a new descriptor
         // so send the login to the first desc in list
-        if (!descriptor_list->client)
+        if (!descriptor_list->m_bIsClient)
           descriptor_list->sendLogin("1");
       }
     }
     // close any connections with an exceptional condition pending 
     for (point = descriptor_list; point; point = next_to_process) {
       next_to_process = point->next;
-      if (FD_ISSET(point->socket->sock, &exc_set)) {
-	FD_CLR(point->socket->sock, &input_set);
-	FD_CLR(point->socket->sock, &output_set);
+      if (FD_ISSET(point->socket->m_sock, &exc_set)) {
+	FD_CLR(point->socket->m_sock, &input_set);
+	FD_CLR(point->socket->m_sock, &output_set);
 	delete point;
       }
     }
     // read any incoming input, and queue it up 
     for (point = descriptor_list; point; point = next_to_process) {
       next_to_process = point->next;
-      if (FD_ISSET(point->socket->sock, &input_set)) {
+      if (FD_ISSET(point->socket->m_sock, &input_set)) {
 	if (point->inputProcessing() < 0) {
 	  delete point;
           point = NULL;
@@ -340,36 +324,37 @@ int TSocket::gameLoop()
       drowning = (pulse % PULSE_DROWNING);
       special_procs = (pulse % PULSE_SPEC_PROCS);
       update_stuff = (pulse % PULSE_NOISES);
-      tick_updates = (pulse % PULSE_TICKS);
+      pulse_mudhour = (pulse % PULSE_MUDHOUR);
       mobstuff = (pulse % PULSE_MOBACT);
-      points = (pulse % PULSE_UPDATES);
+      pulse_tick = (pulse % PULSE_UPDATE);
+      quickpulse = (pulse % ONE_SECOND);
     } else {
       teleport = (pulse % (PULSE_TELEPORT/2));
       combat = (pulse % (PULSE_COMBAT/2));
       drowning = (pulse % (PULSE_DROWNING/2));
       special_procs = (pulse % (PULSE_SPEC_PROCS/2));
       update_stuff = (pulse % (PULSE_NOISES/2));
-      tick_updates = (pulse % (PULSE_TICKS/2));
+      pulse_mudhour = (pulse % (PULSE_MUDHOUR/2));
       mobstuff = (pulse % (PULSE_MOBACT/2));
-      points = (pulse % (PULSE_UPDATES/2));
+      pulse_tick = (pulse % (PULSE_UPDATE/2));
+      quickpulse = (pulse % ONE_SECOND);
     }
 
-    if (!tick_updates)
-      time_info.seconds = 0;
-    else if (!(pulse % 12))
-      time_info.seconds++;
-
-    if (!points) {
+    if (!pulse_tick) {
+      // these are done per tick (15 mud minutes)
       doGlobalRoomStuff();
       deityCheck(FALSE);
       apocCheck();
       save_factions();
+
+      weatherAndTime(1);
     }
 
     if (!combat)
       perform_violence(pulse);
 
-    if (!tick_updates) {
+    if (!pulse_mudhour) {
+      // these are done per mud hour
       recalcFactionPower();
 
       // adjust zones for nuking
@@ -391,7 +376,6 @@ int TSocket::gameLoop()
 
 
       // weather and time stuff
-      weatherAndTime(1);
       if (time_info.hours == 1)
 	update_time();
       zone_update();
@@ -413,11 +397,11 @@ int TSocket::gameLoop()
       }
       checkGoldStats();
     }
-    if (!teleport || !special_procs || !tick_updates) {
+    if (!teleport || !special_procs || !pulse_mudhour) {
       call_room_specials();
 // this is advanced weather stuff, do not activate - Bat
 #if 0 
-      if (!tick_updates)
+      if (!pulse_mudhour)
         update_world_weather();
 #endif
       // note on this loop
@@ -432,8 +416,8 @@ int TSocket::gameLoop()
 	next_thing = obj->next;
 
         if (!dynamic_cast<TObj *>(obj)) {
-          vlogf(9, "Object_list produced a non-obj().  rm: %d", obj->in_room);
-          vlogf(9, "roomp %s, parent %s", 
+          vlogf(LOG_BUG, "Object_list produced a non-obj().  rm: %d", obj->in_room);
+          vlogf(LOG_BUG, "roomp %s, parent %s", 
                 (obj->roomp ? "true" : "false"),
                 (obj->parent ? "true" : "false"));
           // bogus objects tend to have garbage in obj->next
@@ -483,7 +467,22 @@ int TSocket::gameLoop()
             }
           }
 	}
-	if (!tick_updates) {
+	if (!quickpulse) {
+          if (obj->spec) {
+            rc = obj->checkSpec(NULL, CMD_GENERIC_QUICK_PULSE, "", NULL);
+            if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+              next_thing = obj->next;
+              delete obj;
+              obj = NULL;
+              continue;
+            }
+            if (rc) {
+              next_thing = obj->next;
+              continue;
+            }
+          }
+        }
+	if (!pulse_mudhour) {
 	  rc = obj->objectTickUpdate(pulse);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             next_thing = obj->next;
@@ -496,7 +495,17 @@ int TSocket::gameLoop()
       } // object list
     }
 
-    if (!combat || !mobstuff || !teleport || !drowning || !update_stuff || !points) {
+    if (!combat || !mobstuff || !teleport || !drowning || !update_stuff || !pulse_tick) {
+      unsigned int i;
+      for (i = 0; i < zone_table.size(); i++) {
+	if (isEmpty(i))
+	  zone_table[i].zone_value=1;
+	else{
+	  zone_table[i].zone_value=-1;
+	  //	  vlogf(LOG_PEEL, "zone %i not empty", i);
+	}
+      }
+
       // note on this loop
       // it is possible that temp gets deleted in one of the sub funcs
       // we don't get acknowledgement of this in any way.
@@ -508,7 +517,7 @@ int TSocket::gameLoop()
 	temp = tmp_ch->next;  // just for safety
 
         if (tmp_ch->getPosition() == POSITION_DEAD) {
-          vlogf(9, "Error: dead creature (%s at %d) in character_list, removing.",
+          vlogf(LOG_BUG, "Error: dead creature (%s at %d) in character_list, removing.",
                tmp_ch->getName(), tmp_ch->in_room);
           delete tmp_ch;
           tmp_ch = NULL;
@@ -516,9 +525,9 @@ int TSocket::gameLoop()
         }
         if ((tmp_ch->getPosition() < POSITION_STUNNED) &&
             (tmp_ch->getHit() > 0)) {
-          vlogf(10, "Error: creature (%s) with hit > 0 found with position < stunned",
+          vlogf(LOG_BUG, "Error: creature (%s) with hit > 0 found with position < stunned",
                     tmp_ch->getName());
-          vlogf(10, "Setting player to POSITION_STANDING");
+          vlogf(LOG_BUG, "Setting player to POSITION_STANDING");
           tmp_ch->setPosition(POSITION_STANDING);
         }
 #if 0
@@ -549,7 +558,9 @@ int TSocket::gameLoop()
 	      continue;
             }
           }
-	  if (!tmp_ch->isPc() && dynamic_cast<TMonster *>(tmp_ch)) {
+	  if (!tmp_ch->isPc() && dynamic_cast<TMonster *>(tmp_ch) &&
+	      (zone_table[tmp_ch->roomp->getZone()].zone_value!=1 || 
+	       tmp_ch->spec==SPEC_SHOPKEEPER)){
 	    rc = dynamic_cast<TMonster *>(tmp_ch)->mobileActivity(pulse);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               temp = tmp_ch->next;
@@ -559,8 +570,20 @@ int TSocket::gameLoop()
             }
           }
 	  if (tmp_ch->task && (pulse >= tmp_ch->task->nextUpdate)) {
+	    TObj *tmper_obj = NULL;
+	    if (tmp_ch->task->obj) {
+	      tmper_obj = tmp_ch->task->obj; 
+	    } 
 	    rc = (*(tasks[tmp_ch->task->task].taskf))
       (tmp_ch, CMD_TASK_CONTINUE, "", pulse, tmp_ch->task->room, tmp_ch->task->obj);
+	    if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+	      if (tmper_obj) {
+	        delete tmper_obj;
+	        tmper_obj = NULL;
+	      } else {
+	        vlogf(LOG_BUG, "bad item delete in gameloop -- task calling");
+	      }
+	    }
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               temp = tmp_ch->next;
               delete tmp_ch;
@@ -571,6 +594,26 @@ int TSocket::gameLoop()
 	}
 
         if (!combat) {
+
+	  if (tmp_ch->isPc() && tmp_ch->desc && tmp_ch->GetMaxLevel() > MAX_MORT &&
+	      !tmp_ch->limitPowerCheck(CMD_GOTO, tmp_ch->roomp->number)) {
+	    char tmpbuf[256];
+	    strcpy(tmpbuf, "");
+	    tmp_ch->sendTo("An incredibly powerful force pulls you back into Imperia.\n\r");
+	    act("$n is pulled back from whence $e came.", TRUE, tmp_ch, 0, 0, TO_ROOM);
+	    vlogf(LOG_BUG,"%s was wandering around the mortal world (R:%d) so moving to office.",
+		  tmp_ch->getName(), tmp_ch->roomp->number);
+	    
+	    if (!tmp_ch->hasWizPower(POWER_GOTO)) {
+	      tmp_ch->setWizPower(POWER_GOTO);
+	      tmp_ch->doGoto(tmpbuf);
+	      tmp_ch->remWizPower(POWER_GOTO);
+	    } else {
+	      tmp_ch->doGoto(tmpbuf);
+	    }
+	    act("$n appears in the room with a sheepish look in $s face.", TRUE, tmp_ch, 0, 0, TO_ROOM);
+	  }
+
 
           if (tmp_ch->spelltask) {
             rc = (tmp_ch->cast_spell(tmp_ch, CMD_TASK_CONTINUE, pulse));
@@ -631,7 +674,7 @@ int TSocket::gameLoop()
         }
 #endif
 
-	if (!points) {
+	if (!pulse_tick) {
 	  rc = tmp_ch->updateHalfTickStuff();
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	    if (!tmp_ch)
@@ -643,7 +686,7 @@ int TSocket::gameLoop()
             continue;
           }
 	}
-	if (!tick_updates) {
+	if (!pulse_mudhour) {
 	  rc = tmp_ch->updateTickStuff();
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
             temp = tmp_ch->next;
@@ -681,21 +724,48 @@ int TSocket::gameLoop()
     if (!(pulse % 1199))
       sendAutoTips();
 
-    if (!(pulse % 100)){
-      lag_info.current=time(0)-lagtime_t;
-      lagtime_t=time(0);
-
-      lag_info.total+=lag_info.current;
-      ++lag_info.count;
+    if (!(pulse %100)){
+      int which=(pulse/100)%10;
       
-      lag_info.high = max(lag_info.current, lag_info.high);
-      lag_info.low = min(lag_info.current, lag_info.low);
+      lag_info.current=lag_info.lagtime[which]=time(0)-lagtime_t;
+      lagtime_t=time(0);
+      lag_info.lagcount[which]=1;
+
+      lag_info.high = max(lag_info.lagtime[which], lag_info.high);
+      lag_info.low = min(lag_info.lagtime[which], lag_info.low);
     }
 
+    if(!(pulse % 600)){
+      static FILE *p;
+      Descriptor *d;
+  
+      if(p) pclose(p);
+
+      if(gamePort == PROD_GAMEPORT){
+	p=popen("/mud/prod/lib/bin/ping sneezy", "w");
+      } else if(gamePort == BUILDER_GAMEPORT){
+	p=popen("/mud/prod/lib/bin/ping sneezybuilder", "w");
+      } else {
+	p=popen("/mud/prod/lib/bin/ping sneezybeta", "w");
+      }
+
+
+      for (d = descriptor_list; d; d = d->next) {
+        if (d->host){
+	  fprintf(p, "%s\n", d->host);
+	}
+      }
+      fprintf(p, "EOM\n");
+      fflush(p);
+    }
+
+
     if (pulse >= 2400) {
+      unsigned int secs = time(0) - ticktime;
+      ticktime = time(0);
+
       if (TestCode1) {
-        vlogf(5, "2400 pulses took %ld seconds.", time(0)-ticktime);
-        ticktime = time(0);
+        vlogf(LOG_MISC, "2400 pulses took %ld seconds.  ONE_SEC=%.3f pulses", secs, 2400.0/(float) secs);
       }
       pulse = 0;
     }
@@ -718,12 +788,12 @@ TSocket *TSocket::newConnection()
   TSocket *s;
 
   i = sizeof(isa);
-  if (getsockname(sock, (struct sockaddr *) &isa, &i)) {
+  if (getsockname(m_sock, (struct sockaddr *) &isa, &i)) {
     perror("getsockname");
     return NULL;
   }
   s = new TSocket(0);
-  if ((s->sock = accept(sock, (struct sockaddr *) (&isa), &i)) < 0) {
+  if ((s->m_sock = accept(m_sock, (struct sockaddr *) (&isa), &i)) < 0) {
     perror("Accept");
     return NULL;
   }
@@ -771,19 +841,19 @@ int TSocket::newDescriptor()
     return 0;
 
   if ((maxdesc + 1) >= avail_descs) {
-    vlogf(0, "Descriptor being dumped due to high load - Bug Batopr");
+    vlogf(LOG_MISC, "Descriptor being dumped due to high load - Bug Batopr");
     s->writeToSocket("Sorry.. The game is full...\n\r");
     s->writeToSocket("Please try again later...\n\r");
-    close(s->sock);
+    close(s->m_sock);
     delete s;
     return 0;
-  } else if (s->sock > maxdesc)
-    maxdesc = s->sock;
+  } else if (s->m_sock > maxdesc)
+    maxdesc = s->m_sock;
 
   newd = new Descriptor(s);
 
   size = sizeof(saiSock);
-  if (getpeername(s->sock, (struct sockaddr *) &saiSock, &size) < 0) {
+  if (getpeername(s->m_sock, (struct sockaddr *) &saiSock, &size) < 0) {
     perror("getpeername");
     *newd->host = '\0';
   } else {
@@ -791,11 +861,9 @@ int TSocket::newDescriptor()
     // I _think_ the problem is caused by a site that has changed its DNS
     // entry, but the mud's site has not updated the new list yet.
     signal(SIGALRM, sig_alrm);
-    alarm(10); // let's not hang for more than 10 seconds - Peel
     time_t init_time = time(0);
     he = gethostbyaddr((const char *) &saiSock.sin_addr, sizeof(struct in_addr), AF_INET);
     time_t fin_time = time(0);
-    alarm(0);
 
     if (he) {
       if (he->h_name) 
@@ -807,7 +875,7 @@ int TSocket::newDescriptor()
     strcpy(temphostaddr, IP_String(saiSock).c_str());
 
     if (fin_time - init_time >= 10)
-      vlogf(8, "DEBUG: gethostbyaddr (1) took %d secs to complete for host %s", fin_time-init_time, temphostaddr);
+      vlogf(LOG_BUG, "DEBUG: gethostbyaddr (1) took %d secs to complete for host %s", fin_time-init_time, temphostaddr);
 
     if (numberhosts) {
       for (a = 0; a <= numberhosts - 1; a++) {
@@ -858,10 +926,10 @@ int TSocket::writeToSocket(const char *txt)
   total = strlen(txt);
   sofar = 0;
 
-  //txt >> sock;
+  //txt >> m_sock;
  
   do {
-    thisround = write(sock, txt + sofar, total - sofar);
+    thisround = write(m_sock, txt + sofar, total - sofar);
     if (thisround < 0) {
       if (errno == EWOULDBLOCK)
 	break;
@@ -878,18 +946,18 @@ int TSocket::writeToSocket(const char *txt)
 
 void TSocket::closeAllSockets()
 {
-  vlogf(1, "Closing all sockets.");
+  vlogf(LOG_MISC, "Closing all sockets.");
 
   while (descriptor_list)
     delete descriptor_list;
 
-  close(sock);
+  close(m_sock);
 }
 
 
 void TSocket::nonBlock()
 {
-  if (fcntl(sock, F_SETFL, FNDELAY) == -1) {
+  if (fcntl(m_sock, F_SETFL, FNDELAY) == -1) {
     perror("Noblock");
     exit(1);
   }
@@ -915,42 +983,42 @@ void TSocket::initSocket()
 #else
   if (!(hp = gethostbyname("localhost"))) {
 #endif
-    vlogf(10, "failed getting hostname structure.  hostname: %s", hostname);
+    vlogf(LOG_BUG, "failed getting hostname structure.  hostname: %s", hostname);
     perror("gethostbyname");
     exit(1);
   }
   sa.sin_family = hp->h_addrtype;
-  sa.sin_port = htons(port);
-  if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+  sa.sin_port = htons(m_port);
+  if ((m_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
     perror("Init-socket");
     exit(1);
   }
-  if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, sizeof(opt)) < 0) {
+  if (setsockopt(m_sock, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, sizeof(opt)) < 0) {
     perror("setsockopt REUSEADDR");
     exit(1);
   }
   ld.l_linger = 1000;
   ld.l_onoff = 0;
 #ifdef OSF
-  if (setsockopt(sock, SOL_SOCKET, SO_LINGER, &ld, sizeof(ld)) < 0) {
+  if (setsockopt(m_sock, SOL_SOCKET, SO_LINGER, &ld, sizeof(ld)) < 0) {
 #else
-  if (setsockopt(sock, SOL_SOCKET, SO_LINGER, (char *) &ld, sizeof(ld)) < 0) {
+  if (setsockopt(m_sock, SOL_SOCKET, SO_LINGER, (char *) &ld, sizeof(ld)) < 0) {
 #endif
     perror("setsockopt LINGER");
     exit(1);
   }
-  if (bind(sock, (struct sockaddr *) &sa, sizeof(sa)) < 0) {
+  if (bind(m_sock, (struct sockaddr *) &sa, sizeof(sa)) < 0) {
     perror("bind");
-    vlogf(9, "initSocket: bind: errno=%d", errno);
-    close(sock);
+    vlogf(LOG_BUG, "initSocket: bind: errno=%d", errno);
+    close(m_sock);
     exit(0);
   }
-  listen(sock, 3);
+  listen(m_sock, 3);
 }
 
 TSocket::TSocket(int p) :
-  sock(0),
-  port(p)
+  m_sock(0),
+  m_port(p)
 {
 }
 
