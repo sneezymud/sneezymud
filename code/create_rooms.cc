@@ -2788,7 +2788,8 @@ static void ChangeExitDir(TRoom *rp, TBeing *ch, const char *arg, editorEnterTyp
       ch->sendTo("\n\rMaking new exit.");
       rp->dir_option[update] = new roomDirData();
     } else {
-      ch->sendTo("\n\rModifying exit.");
+      ch->sendTo(fmt("\n\rModifying exit.  Current exit to room %i.") % 
+		 rp->dir_option[update]->to_room);
     }
     ch->sendTo("\n\r\n\rExit to Room: ");
 
