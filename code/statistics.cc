@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: statistics.cc,v $
+// Revision 1.9  1999/10/14 00:38:21  batopr
+// Added the saving/loading of stats.equip from file
+//
 // Revision 1.8  1999/10/12 17:06:21  batopr
 // Change gold to need 5M (from 2M) before shifting
 //
@@ -181,6 +184,10 @@ int init_game_stats(void)
           gold_modifier[j] = 1.0;
     }
 
+    if (fscanf(fp, "%f\n", &stats.equip) != 1) {
+      vlogf(5, "bad value for equipment load rate");
+    }
+
     for (i = 0; i < 50; i++) {
       for (j = 0; j < MAX_CLASSES; j++) {
         if (fscanf(fp, "%d %ld ", 
@@ -268,6 +275,8 @@ void save_game_stats(void)
          gold_modifier[GOLD_SHOP_PET],
          gold_modifier[GOLD_SHOP_RESPONSES],
          gold_modifier[GOLD_DUMP]);
+
+    fprintf(fp, "%.2f\n", stats.equip);
 
     for (i = 0; i < 50; i++) {
       for (j = 0; j < MAX_CLASSES; j++) {
