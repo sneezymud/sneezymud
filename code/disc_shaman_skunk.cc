@@ -19,6 +19,8 @@ int deathMist(TBeing *caster, int level, byte bKnown)
   TThing *t, *t2;
   affectedData aff, aff2;
   int found = FALSE;
+
+
   if (bSuccess(caster, bKnown, SPELL_DEATH_MIST)) {
     caster->sendTo("A misty cloud escapes your open mouth.\n\r",ANSI_GREEN);
     act("$n opens $s mouth and a chilling green mist pours out.",
@@ -30,9 +32,10 @@ int deathMist(TBeing *caster, int level, byte bKnown)
     aff.modifier = -20;
     aff.location = APPLY_STR;
     aff.bitvector = AFF_POISON;
-    aff.duration = (25) * UPDATES_PER_MUDHOUR;
+
     aff2.type = AFFECT_DISEASE;
-    aff2.level = 0;
+    aff2.level = 30;
+    aff2.duration = (25) * UPDATES_PER_MUDHOUR;
     aff2.modifier = DISEASE_POISON;
     aff2.location = APPLY_NONE;
     aff2.bitvector = AFF_POISON;
@@ -111,6 +114,13 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
   bool save = victim->isLucky(caster->spellLuckModifier(SPELL_LICH_TOUCH));
   int vit = dice(number(1,level),4);
   int lfmod = ::number(20,(level*5));
+
+  if (victim->isImmune(IMMUNE_DRAIN, level)) {
+    act("$N is immune to draining!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
+    return SPELL_FAIL;
+  }
 
   if (bSuccess(caster, bKnown,SPELL_LICH_TOUCH)) {
     act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);

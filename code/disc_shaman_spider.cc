@@ -461,8 +461,7 @@ TO_ROOM, ANSI_RED_BOLD);
       (victim->isLucky(caster->spellLuckModifier(SPELL_HYPNOSIS)))) {
 
       victim->failCharm(caster);
-      act("You have failed in this important ritual!", FALSE, caster, NULL, victim, 
-TO_CHAR, ANSI_RED_BOLD);
+      act("You have failed in this important ritual! Your victim is immune!", FALSE, caster, NULL, victim, TO_CHAR, ANSI_RED_BOLD);
       caster->nothingHappens(SILENT_YES);
       act("$n just tried to hypnotize you!", FALSE, caster, NULL, victim, TO_VICT, 
 ANSI_RED_BOLD);
@@ -641,6 +640,14 @@ int raze(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
   int dam = caster->getSkillDam(victim, SPELL_RAZE, level, adv_learn);
 
   caster->reconcileHurt(victim, discArray[SPELL_RAZE]->alignMod);
+
+
+  if (victim->isImmune(IMMUNE_ENERGY, level)) {
+    act("$N is immune to energy rituals!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
+    return SPELL_FAIL;
+  }
 
   if (bSuccess(caster,bKnown,SPELL_RAZE)) {
     act("$n calls the spirits to erase $N's existance!", FALSE, caster, NULL, victim, TO_NOTVICT);

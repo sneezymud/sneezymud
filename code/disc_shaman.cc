@@ -923,6 +923,13 @@ int lifeLeech(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
   int num2 = ::number(1,((caster->getSkillValue(SPELL_LIFE_LEECH) / 9) *3));
   int num3 = ::number(20,70);
 
+  if (victim->isImmune(IMMUNE_DRAIN, 0)) {
+    act("$N is immune to draining!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
+    return SPELL_FAIL;
+  }
+
   if (bSuccess(caster, bKnown,SPELL_LIFE_LEECH)) {
     act("$N buckles in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$N buckles in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
@@ -1548,19 +1555,34 @@ int djallasProtection(TBeing *caster, TBeing *victim, int level, byte bKnown)
   aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
   aff.location = APPLY_IMMUNITY;
   aff.modifier = IMMUNE_SUMMON;
-  aff2.location = APPLY_IMMUNITY;
-  aff2.modifier = IMMUNE_POISON;
-  aff3.location = APPLY_IMMUNITY;
-  aff3.modifier = IMMUNE_DRAIN;
-  aff4.location = APPLY_IMMUNITY;
-  aff4.modifier = IMMUNE_ENERGY;
   aff.modifier2 = ((level * 2) / 3);
   aff.bitvector = 0;
- 
+
+  aff2.type = SPELL_DJALLA;
+  aff2.level = level;
+  aff2.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff2.location = APPLY_IMMUNITY;
+  aff2.modifier = IMMUNE_POISON;
+  aff2.modifier2 = ((level * 2) / 3);
+  aff2.bitvector = 0;
+
+  aff3.type = SPELL_DJALLA;
+  aff3.level = level;
+  aff3.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff3.location = APPLY_IMMUNITY;
+  aff3.modifier = IMMUNE_DRAIN;
+  aff3.modifier2 = ((level * 2) / 3);
+  aff3.bitvector = 0;
+
+  aff4.type = SPELL_DJALLA;
+  aff4.level = level;
+  aff4.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff4.location = APPLY_IMMUNITY;
+  aff4.modifier = IMMUNE_ENERGY;
+  aff4.modifier2 = ((level * 2) / 3);
+  aff4.bitvector = 0;
+
   if (bSuccess(caster,bKnown,SPELL_DJALLA)) {
-    act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
-    act("You have been granted the protection of Djalla!", FALSE, victim, NULL, NULL, 
-TO_CHAR, ANSI_GREEN);
     switch (critSuccess(caster, SPELL_DJALLA)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -1568,15 +1590,31 @@ TO_CHAR, ANSI_GREEN);
         CS(SPELL_DJALLA);
         aff.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
         aff.modifier2 = (level * 2);
+        aff2.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff2.modifier2 = (level * 2);
+        aff3.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff3.modifier2 = (level * 2);
+        aff4.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff4.modifier2 = (level * 2);
+	act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
+	act("You have been greatly blessed with the protection of Djalla!", FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
         break;
       case CRIT_S_NONE:
+      act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
+      act("You have been granted the protection of Djalla!", FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
         break;
     }
  
     if (caster != victim) 
       aff.modifier2 /= 2;
+      aff2.modifier2 /= 2;
+      aff3.modifier2 /= 2;
+      aff4.modifier2 /= 2;
  
     victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
+    victim->affectJoin(caster, &aff3, AVG_DUR_NO, AVG_EFF_YES);
+    victim->affectJoin(caster, &aff4, AVG_DUR_NO, AVG_EFF_YES);
     caster->reconcileHelp(victim, discArray[SPELL_DJALLA]->alignMod);
     return SPELL_SUCCESS;
   } else {
@@ -1623,19 +1661,34 @@ int legbasGuidance(TBeing *caster, TBeing *victim, int level, byte bKnown)
   aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
   aff.location = APPLY_IMMUNITY;
   aff.modifier = IMMUNE_BLEED;
-  aff2.location = APPLY_IMMUNITY;
-  aff2.modifier = IMMUNE_EARTH;
-  aff3.location = APPLY_IMMUNITY;
-  aff3.modifier = IMMUNE_CHARM;
-  aff4.location = APPLY_IMMUNITY;
-  aff4.modifier = IMMUNE_SLEEP;
   aff.modifier2 = ((level * 2) / 3);
   aff.bitvector = 0;
- 
+
+  aff2.type = SPELL_LEGBA;
+  aff2.level = level;
+  aff2.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff2.location = APPLY_IMMUNITY;
+  aff2.modifier = IMMUNE_EARTH;
+  aff2.modifier2 = ((level * 2) / 3);
+  aff2.bitvector = 0;
+
+  aff3.type = SPELL_LEGBA;
+  aff3.level = level;
+  aff3.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff3.location = APPLY_IMMUNITY;
+  aff3.modifier = IMMUNE_CHARM;
+  aff3.modifier2 = ((level * 2) / 3);
+  aff3.bitvector = 0;
+
+  aff4.type = SPELL_LEGBA;
+  aff4.level = level;
+  aff4.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff4.location = APPLY_IMMUNITY;
+  aff4.modifier = IMMUNE_SLEEP;
+  aff4.modifier2 = ((level * 2) / 3);
+  aff4.bitvector = 0;
+
   if (bSuccess(caster,bKnown,SPELL_LEGBA)) {
-    act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
-    act("You have been granted the protection of Legba!", FALSE, victim, NULL, NULL, 
-TO_CHAR, ANSI_GREEN);
     switch (critSuccess(caster, SPELL_LEGBA)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -1643,15 +1696,31 @@ TO_CHAR, ANSI_GREEN);
         CS(SPELL_LEGBA);
         aff.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
         aff.modifier2 = (level * 2);
+        aff2.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff2.modifier2 = (level * 2);
+        aff3.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff3.modifier2 = (level * 2);
+        aff4.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff4.modifier2 = (level * 2);
+	act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
+	act("You have been greatly blessed with the protection of Legba!", FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
         break;
       case CRIT_S_NONE:
+	act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
+	act("You have been granted the protection of Legba!", FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
         break;
     }
  
     if (caster != victim) 
       aff.modifier2 /= 2;
+      aff2.modifier2 /= 2;
+      aff3.modifier2 /= 2;
+      aff4.modifier2 /= 2;
  
     victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
+    victim->affectJoin(caster, &aff3, AVG_DUR_NO, AVG_EFF_YES);
+    victim->affectJoin(caster, &aff4, AVG_DUR_NO, AVG_EFF_YES);
     caster->reconcileHelp(victim, discArray[SPELL_LEGBA]->alignMod);
     return SPELL_SUCCESS;
   } else {
@@ -1804,6 +1873,13 @@ int distort(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
 
   caster->reconcileHurt(victim, discArray[SPELL_DISTORT]->alignMod);
 
+  if (victim->isImmune(IMMUNE_DRAIN, level)) { 
+    act("$N is immune to draining!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
+    return SPELL_FAIL;
+  }
+
   if (bSuccess(caster, bKnown,SPELL_DISTORT)) {
     switch (critSuccess(caster, SPELL_DISTORT)) {
       case CRIT_S_DOUBLE:
@@ -1955,6 +2031,12 @@ int soulTwist(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
   if (victim->isImmortal()) {
     act("You can't twist a gods soul!", FALSE, caster, NULL, victim, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
+  if (victim->isImmune(IMMUNE_DRAIN, level)) { 
+    act("$N is immune to draining!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
     return SPELL_FAIL;
   }
 
@@ -2445,6 +2527,13 @@ int flatulence(TBeing * caster, int level, byte bKnown, int adv_learn)
   level = min(level, 20);
 
   int dam = caster->getSkillDam(NULL, SPELL_FLATULENCE, level, adv_learn);
+
+  if (vict->isImmune(IMMUNE_SUFFOCATION, level)) { 
+    act("$N is immune to suffocation!", FALSE, caster, NULL, vict, TO_CHAR);
+    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, vict, TO_NOTVICT);
+    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, vict, TO_VICT);
+    return SPELL_FAIL;
+  }
 
   if (bSuccess(caster, bKnown, SPELL_FLATULENCE)) {
     act("<o>You turn around quickly and pass gas!<1>", FALSE, caster, NULL, NULL, TO_CHAR);

@@ -170,6 +170,13 @@ int aquaticBlast(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
 
   int dam = caster->getSkillDam(victim, SPELL_AQUATIC_BLAST, level, adv_learn);
 
+  if (victim->isImmune(IMMUNE_WATER, level)) {
+    act("$N is immune to water damage!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
+    return SPELL_FAIL;
+  }
+
   if (bSuccess(caster, bKnown, SPELL_AQUATIC_BLAST)) {
     caster->reconcileHurt(victim,discArray[SPELL_AQUATIC_BLAST]->alignMod);
 
@@ -550,6 +557,13 @@ int deathWave(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
   int dam = caster->getSkillDam(victim, SPELL_DEATHWAVE, level, adv_learn);
   int beams = (dam / 3) + ::number(0, (caster->GetMaxLevel() / 10));
   beams = max(beams, 1);
+
+  if (victim->isImmune(IMMUNE_DRAIN, level)) {
+    act("$N is immune to draining!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
+    return SPELL_FAIL;
+  }
 
   caster->reconcileHurt(victim, discArray[SPELL_DEATHWAVE]->alignMod);
 
