@@ -432,7 +432,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
         sprintf(buf, "A big gaping wound is in the center of %s's back.", getName());
         break;
       case SKILL_THROATSLIT:
-        sprintf(buf, "The corpse of %s's throat has been sliced from ear to ear.", getName());
+        sprintf(buf, "The throat of %s's corpse has been sliced from ear to ear.", getName());
         break;
       case DAMAGE_DISEMBOWLED_HR:
         sprintf(buf, "The corpse of %s has been disembowled with a slash from gullet to groin!",getName());
@@ -460,7 +460,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
         break;
       case DAMAGE_KNEESTRIKE_SOLAR:
       case DAMAGE_HEADBUTT_BODY:
-        sprintf(buf,"%s's corpse's rib cage is crushed in.",
+        sprintf(buf,"%s's corpse lies here with a crushed rib cage.",
              namebuf);
         break;
       case DAMAGE_KNEESTRIKE_CROTCH:      
