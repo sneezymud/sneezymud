@@ -1,20 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: task_brew.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
 //      SneezyMUD 4.0 - All rights reserved, SneezyMUD Coding Team
 //      "task.cc" - All functions related to tasks that keep mobs/PCs busy
 //
@@ -31,6 +16,9 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
   int how_many;
   char buf[256];
   int knowledge = ch->getSkillValue(SKILL_BREW);
+  int factor1 = (ch->getSkillValue(SKILL_BREW) * 3);
+  int factor2 = (ch->getSkillValue(SKILL_BREW) * 2);
+  int resulting = ((factor1 + factor2) / 15);
 
   if (ch->isLinkdead()) {
     ch->stopTask();
@@ -57,6 +45,7 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
         if (ch->task->timeLeft < (how_many * 2)) {
           ch->sendTo("You continue brewing your potion%s.\n\r",
 		     (how_many == 1 ? "" : "s"));
+	  ch->addToLifeforce(-resulting);
         } else {
 
           // brewing has finished
@@ -81,7 +70,7 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
             obj = read_object(OBJ_GENERIC_POTION, VIRTUAL);
             potion_obj = dynamic_cast<TPotion *>(obj);
             if (!potion_obj) {
-              vlogf(9, "Error creating generic brew potion.");
+              vlogf(LOG_BUG, "Error creating generic brew potion.");
               ch->sendTo("Serious error, tell a god what you did.\n\r");
               return FALSE;
             }
@@ -92,14 +81,14 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
           // we now have a valid potion_obj with values 1,2,3 set
 
           // set the level equal to brewer's level
-          potion_obj->setMagicLevel(ch->getClassLevel(CLASS_MAGIC_USER));
+          potion_obj->setMagicLevel(ch->getClassLevel(CLASS_SHAMAN));
 
           if (bSuccess(ch, knowledge, SKILL_BREW)) {
             // successful brew, set learnedness to knowledge in the skill
             ch->sendTo("You successfully create your potion%s.\n\r",
 		       (how_many == 1 ? "" : "s"));
-            potion_obj->setMagicLearnedness( ch->getSkillValue(which) );
-
+	    // potion_obj->setMagicLearnedness( ch->getSkillValue(which) );
+	    potion_obj->setMagicLearnedness(ch->getSkillValue(SKILL_BREW));
           } else {
             // failed brew, set learnedness to 0
             if (how_many > 1)
@@ -114,6 +103,7 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
           sprintf(buf, "You now have %d potion%s of %s.\n\r",
 		  how_many, (how_many == 1 ? "" : "s"), discArray[which]->name);
           ch->sendTo(buf);
+	  vlogf(LOG_MISC, "%s has just brewed %d potion%s of %s", ch->getName(), how_many, (how_many == 1 ? "" : "s"), discArray[which]->name);
           act("$n finishes brewing.", FALSE, ch, 0, 0, TO_ROOM);
 
           while ((--how_many) > 0) {

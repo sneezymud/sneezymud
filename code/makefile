@@ -178,7 +178,8 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	disc_hand_of_god.o disc_hth.o disc_leverage.o disc_looting.o \
 	disc_mage.o disc_meditation.o disc_mindbody.o disc_monk.o \
 	disc_mounted.o disc_murder.o disc_physical.o disc_nature.o \
-	disc_pierce.o disc_ranged.o disc_ranger.o disc_shaman.o disc_shaman_armadillo.o \
+	disc_pierce.o disc_ranged.o disc_ranger.o disc_shaman.o \
+	disc_shaman_alchemy.o disc_shaman_armadillo.o \
 	disc_shaman_frog.o disc_shaman_spider.o disc_shaman_control.o \
 	disc_shaman_skunk.o \
 	disc_slash.o disc_smythe.o disc_sorcery.o disc_spirit.o \
@@ -390,6 +391,7 @@ $(OBJDIR)disc_monk.o: disc_monk.h combat.h
 $(OBJDIR)disc_mounted.o: disc_mounted.h
 $(OBJDIR)disc_murder.o: disc_murder.h combat.h spelltask.h
 $(OBJDIR)disc_nature.o: disc_nature.h combat.h spelltask.h
+$(OBJDIR)disc_shaman_alchemy.o: disc_shaman_alchemy.h components.h combat.h spelltask.h
 $(OBJDIR)disc_shaman_armadillo.o: disc_shaman_armadillo.h combat.h spelltask.h
 $(OBJDIR)disc_shaman_skunk.o: disc_shaman_skunk.h combat.h spelltask.h
 $(OBJDIR)disc_shaman_frog.o: disc_shaman_frog.h combat.h spelltask.h

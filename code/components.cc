@@ -2202,7 +2202,7 @@ bool TComponent::sellMeCheck(const TBeing *ch, TMonster *keeper) const
         total += tComp->getComponentCharges();
 
         if (total >= 300) {
-          sprintf(buf, "%s I already have plenty of that.", ch->name);
+          sprintf(buf, "%s I already have plenty of that.", ch->getName());
           keeper->doTell(buf);
           return TRUE;
         }
@@ -2215,7 +2215,7 @@ bool TComponent::sellMeCheck(const TBeing *ch, TMonster *keeper) const
            !strcmp(t->getName(), getName()))) {
         total += 1;
         if (total > 50) {
-          sprintf(buf, "%s I already have plenty of those.", ch->name);
+          sprintf(buf, "%s I already have plenty of those.", ch->getName());
           keeper->doTell(buf);
           return TRUE;
         }
@@ -2462,7 +2462,7 @@ bool TComponent::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
   if (!silent) {
     char buf[256];
   
-    sprintf(buf, "%s You might wanna take that to the magic shop!", fname(ch->name).c_str());
+    sprintf(buf, "%s You might wanna take that to the magic shop!", fname(ch->getName()).c_str());
 
     repair->doTell(buf);
   }
@@ -2621,7 +2621,7 @@ void TComponent::evaluateMe(TBeing *ch) const
 
 bool TComponent::fitInShop(const char *, const TBeing *ch) const
 {
-  if (ch->hasClass(CLASS_MAGE | CLASS_RANGER)) {
+  if (ch->hasClass(CLASS_MAGE | CLASS_RANGER | CLASS_SHAMAN)) {
     // skip brew and scribe comps
     if (!IS_SET(getComponentType(), COMP_SPELL))
       return false;
@@ -3028,12 +3028,12 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   tCost  = (int) ((double) shopPrice(1, tShop, tChr, &tDiscount) * tCount);
 
   if ((ch->getMoney() < tCost) && !ch->hasWizPower(POWER_GOD)) {
-    sprintf(tString, shop_index[tShop].missing_cash2, ch->name);
+    sprintf(tString, shop_index[tShop].missing_cash2, ch->getName());
     tKeeper->doTell(tString);
 
     switch (shop_index[tShop].temper1) {
       case 0:
-        tKeeper->doAction(ch->name, CMD_SMILE);
+        tKeeper->doAction(ch->getName(), CMD_SMILE);
         break;
       case 1:
         act("$n grins happily.", 0, tKeeper, 0, 0, TO_ROOM);
@@ -3077,7 +3077,7 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
     if (tNum > getComponentCharges()) {
       sprintf(tString, "%s I don't have %d charges of that component.  Here %s the %d I do have.",
-              ch->name, tNum, ((getComponentCharges() > 2) ? "are" : "is"),
+              ch->getName(), tNum, ((getComponentCharges() > 2) ? "are" : "is"),
               getComponentCharges());
       tKeeper->doTell(tString);
       tNum  = getComponentCharges();
@@ -3120,7 +3120,7 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     return;
 
   sprintf(tString, shop_index[tShop].message_buy,
-          ch->name, tCost);
+          ch->getName(), tCost);
   tKeeper->doTell(tString);
 
   ch->sendTo(COLOR_OBJECTS, "You now have %s (*%d charges).\n\r",
@@ -3175,9 +3175,9 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop)
   }
 
   if (isRare() && obj_index[getItemIndex()].max_exist <= 10) {
-    sprintf(tString, "%s Wow!  This is one of those limited items.", ch->name);
+    sprintf(tString, "%s Wow!  This is one of those limited items.", ch->getName());
     tKeeper->doTell(tString);
-    sprintf(tString, "%s You should really think about auctioning it.", ch->name);
+    sprintf(tString, "%s You should really think about auctioning it.", ch->getName());
     tKeeper->doTell(tString);
   }
 

@@ -456,7 +456,7 @@ void TMonster::mageComponentLoader(void)
       continue;
     }
     // skip scribe comps
-    if (tcom->isComponentType(COMP_SCRIBE | COMP_POTION)) {
+    if (tcom->isComponentType(COMP_SCRIBE)) {
       num = -1;
       delete tcom;
       continue;
@@ -556,7 +556,7 @@ void TMonster::rangerComponentLoader(void)
       continue;
     }
     // skip scribe comps
-    if (tcom->isComponentType(COMP_SCRIBE | COMP_POTION)) {
+    if (tcom->isComponentType(COMP_SCRIBE)) {
       num = -1;
       delete tcom;
       continue;
@@ -654,14 +654,12 @@ void TMonster::shamanComponentLoader(void)
           if (::number(0,19))
             num = -1;
           break;
-#ifdef NOBREW
 	case COMP_INVISIBILITY_BREW:
 	case COMP_TRUE_SIGHT_BREW:
           // keep VERY rare
           if (::number(0,29))
             num = -1;
           break;
-#endif
         default:
           break;
       }
