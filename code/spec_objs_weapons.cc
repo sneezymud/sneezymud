@@ -2196,6 +2196,7 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
       if (!vict->isImmune(IMMUNE_BLEED) && 
           !vict->isLimbFlags(part, PART_BLEEDING))
         vict->rawBleed(part, 100, SILENT_NO, CHECK_IMMUNITY_NO);
+      return TRUE;
     } else if (o->isObjStat(ITEM_HUM)) {
       act("A loud *BRRAAACK* sounds out as the bar makes contact.",
           false, ch, o, vict, TO_CHAR, ANSI_CYAN);
@@ -2247,10 +2248,14 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
           act("Pain blossoms in your head as an intense shockwave rips through the vicinity.",
             false, ch, NULL, tmp_victim, TO_VICT, ANSI_RED_BOLD);
           if (ch->reconcileDamage(tmp_victim, dmg, DAMAGE_NORMAL) == -1) {
-            tmp_victim->reformGroup();
-            delete tmp_victim;
-            tmp_victim = NULL;
-            continue;
+            if (tmp_victim == vict)
+              return DELETE_VICT;
+            else {
+              tmp_victim->reformGroup();
+              delete tmp_victim;
+              tmp_victim = NULL;
+              continue;
+            }
           }
         } else if ((ch != tmp_victim) && (tmp_victim->in_room != ROOM_NOWHERE) &&
             (ch->roomp->getZoneNum() == tmp_victim->roomp->getZoneNum())) {
@@ -2259,7 +2264,7 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
         }
       }
       act("The deep silence lifts from around you.",
-          false, ch, o, vict, TO_CHAR, ANSI_CYAN);
+          false, ch, o, 0, TO_CHAR, ANSI_CYAN);
       for (tmp_victim = character_list; tmp_victim; tmp_victim = temp) {
         temp = tmp_victim->next;
         if (ch->sameRoom(*tmp_victim) && (ch != tmp_victim) &&
