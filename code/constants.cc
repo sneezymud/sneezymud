@@ -881,7 +881,7 @@ const struct class_info classInfo[MAX_CLASSES] =
   {true, MONK_LEVEL_IND, CLASS_MONK, "monk",
    DISC_MONK, DISC_NONE, 0.44, 5.5},
 
-  {true, RANGER_LEVEL_IND, CLASS_RANGER, "ranger",
+  {false, RANGER_LEVEL_IND, CLASS_RANGER, "ranger",
    DISC_RANGER, DISC_NONE, 0.46, 7},
 };
 
