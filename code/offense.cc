@@ -418,7 +418,7 @@ int TBeing::doDisengage()
     return FALSE;
   }
 
-  if (isTanking() && isAffected(AFF_ENGAGER)) {
+  if (isTanking() && isAffected(AFF_ENGAGER) && (fight()->getPosition() > POSITION_SLEEPING)) {
     act("You can not fully disengage while you are tanking.", 
         FALSE, this, 0, 0, TO_CHAR);
     return FALSE;
