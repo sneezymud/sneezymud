@@ -1265,9 +1265,11 @@ void TBeing::sendSkillsList(discNumT which)
       } else if (wiz_lev == WIZ_LEV_NO_MANTRA) {
         strcpy(how_long, "\tcomponent=any hand or inventory; no speak; no gestures");
       } else if (wiz_lev >= WIZ_LEV_COMP_BELT) {
-        strcpy(how_long, "\tcomponent=any hand, inventory, waist, or neck; no speak; no gestures");
+        strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
       } else if (wiz_lev >= WIZ_LEV_COMP_NECK) {
-        strcpy(how_long, "\tcomponent=any hand, inventory, waist, or neck; no speak; no gestures");
+        strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
+      } else if (wiz_lev >= WIZ_LEV_COMP_WRIST) {
+        strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
       }
     } else if (i == SKILL_DEVOTION) {
       devotionLevelT wiz_lev = getDevotionLevel();
@@ -1493,9 +1495,11 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
     } else if (wiz_lev == WIZ_LEV_NO_MANTRA) {
       strcpy(how_long, "\tcomponent=any hand or inventory; no speak; no gestures.\n\r");
     } else if (wiz_lev >= WIZ_LEV_COMP_BELT) {
-      strcpy(how_long, "\tcomponent=any hand, waist, neck, or inventory; no speak; no gestures.\n\r");
+      strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
     } else if (wiz_lev >= WIZ_LEV_COMP_NECK) {
-      strcpy(how_long, "\tcomponent=any hand, waist, neck, or inventory; no speak; no gestures.\n\r");
+      strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
+    } else if (wiz_lev >= WIZ_LEV_COMP_WRIST) {
+      strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
     }
     sendTo(COLOR_BASIC, how_long);
 

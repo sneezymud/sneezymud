@@ -1133,6 +1133,8 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
       accclass = RANGER_LEVEL_IND;
     else if ((is_abbrev(classbuf, "monk")) && ch->hasClass(CLASS_MONK))
       accclass = MONK_LEVEL_IND;
+    else if ((is_abbrev(classbuf, "shaman")) && ch->hasClass(CLASS_SHAMAN))
+      accclass = SHAMAN_LEVEL_IND;
     else {
       act("$n growls, \"Get real, $N. I'm not an idiot!\"", 
                    FALSE, me, 0, ch, TO_ROOM);
@@ -1500,7 +1502,6 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
         }
         break;
       case CLERIC_LEVEL_IND:
-
         if ((discipline == DISC_CLERIC)) {
           if (combatLearn) {
             return FALSE;
@@ -1733,6 +1734,8 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
         ch->sendTo("It is ok to have components contained on your belt.\n\r");
     else if (wiz == WIZ_LEV_COMP_NECK)
         ch->sendTo("It is ok to have components contained in a neck pouch.\n\r");
+    else if (wiz == WIZ_LEV_COMP_WRIST)
+        ch->sendTo("It is ok to have components contained in a wristpouch.\n\r");
     else if (wiz == WIZ_LEV_NO_MANTRA)
         ch->sendTo("You no longer need to speak the incantation.\n\r");
     else if (wiz == WIZ_LEV_NO_GESTURES)
@@ -2016,7 +2019,9 @@ wizardryLevelT TBeing::getWizardryLevel() const
     return WIZ_LEV_NO_GESTURES;
   else if (skill < 75)
     return WIZ_LEV_NO_MANTRA;
-  else if (skill < MAX_SKILL_LEARNEDNESS)
+  else if (skill < 98)
+    return WIZ_LEV_COMP_NECK;
+  else if (skill < 99)
     return WIZ_LEV_COMP_NECK;
   else if (skill < MAX_SKILL_LEARNEDNESS)
     return WIZ_LEV_COMP_BELT;
@@ -2303,4 +2308,8 @@ double getExpClassLevel(classIndT Class, int level)
 
   return (int) exp_amt;
 }
+
+
+
+
 

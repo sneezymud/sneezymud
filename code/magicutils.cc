@@ -369,7 +369,7 @@ TComponent *comp_from_object(TThing *item, spellNumT spell)
 // This only returns components that are for spell-casting
 TComponent *TBeing::findComponent(spellNumT spell) const
 {
-  TThing *primary, *secondary, *belt, *juju, *inventory;
+  TThing *primary, *secondary, *belt, *juju, *wristpouch, *inventory;
   TComponent *item;
   wizardryLevelT wizlevel = WIZ_LEV_NONE;
 
@@ -377,6 +377,7 @@ TComponent *TBeing::findComponent(spellNumT spell) const
   secondary = heldInSecHand();
   belt = equipment[WEAR_WAISTE];
   juju = equipment[WEAR_NECK];
+  wristpouch = equipment[WEAR_WRIST_R | WEAR_WRIST_L];
   inventory = stuff;
   item = NULL;
 
@@ -426,7 +427,7 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 	return NULL;
     }
   }
-  if (primary || secondary || belt || juju || inventory) {
+  if (primary || secondary || belt || juju || wristpouch || inventory) {
     if (primary)
       item = comp_from_object(primary, spell);
     if (!item && secondary)
@@ -435,6 +436,8 @@ TComponent *TBeing::findComponent(spellNumT spell) const
       item = comp_from_object(belt, spell);
     if (!item && juju)
       item = comp_from_object(juju, spell);
+    if (!item && wristpouch)
+      item = comp_from_object(wristpouch, spell);
     if (!item && inventory) {
       TThing *t;
       for (t = stuff; t && !item; t = t->nextThing) {

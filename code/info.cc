@@ -4921,6 +4921,8 @@ void TBeing::doSpells(const char *argument)
   TThing *primary=heldInPrimHand(), *secondary=heldInSecHand();
   TThing *belt=equipment[WEAR_WAISTE];
   TThing *juju=equipment[WEAR_NECK];
+  TThing *wristpouch=equipment[WEAR_WRIST_R];
+  TThing *wristpouch2=equipment[WEAR_WRIST_L];
   TComponent *item=NULL;
   int totalcharges;
   wizardryLevelT wizlevel = getWizardryLevel();
@@ -4935,7 +4937,9 @@ void TBeing::doSpells(const char *argument)
       {secondary, WIZ_LEV_COMP_EITHER         },
       {stuff    , WIZ_LEV_COMP_INV            },
       {belt     , WIZ_LEV_COMP_BELT           },
-      {juju     , WIZ_LEV_COMP_NECK           }
+      {juju     , WIZ_LEV_COMP_NECK           },
+      {wristpouch, WIZ_LEV_COMP_WRIST         },
+      {wristpouch2, WIZ_LEV_COMP_WRIST         }
   };
 
   if (!(d = desc))
@@ -5061,7 +5065,7 @@ void TBeing::doSpells(const char *argument)
       totalcharges = 0;
       item = NULL;
       
-      for (l = 0; l < 4; l++) {
+      for (l = 0; l < 7; l++) {
         if (search[l].where && wizlevel >= search[l].wizlevel) {
           for (t1 = search[l].where; t1; t1 = t1->nextThing) {
             if (!(item = dynamic_cast<TComponent *>(t1)) &&
@@ -5150,6 +5154,8 @@ void TBeing::doPrayers(const char *argument)
   TThing *primary = heldInPrimHand(), *secondary = heldInSecHand();
   TThing *belt = equipment[WEAR_WAISTE];
   TThing *juju = equipment[WEAR_NECK];
+  TThing *wristpouch = equipment[WEAR_WRIST_R];
+  TThing *wristpouch2 = equipment[WEAR_WRIST_L];
   TComponent *item = NULL;
   int totalcharges;
   wizardryLevelT wizlevel = getWizardryLevel();
@@ -5159,7 +5165,7 @@ void TBeing::doPrayers(const char *argument)
   struct {
     TThing *where;
     wizardryLevelT wizlevel;
-  } search[]={{primary, WIZ_LEV_COMP_PRIM_OTHER_FREE}, {secondary, WIZ_LEV_COMP_EITHER}, {stuff, WIZ_LEV_COMP_INV}, {belt, WIZ_LEV_COMP_BELT}, {juju, WIZ_LEV_COMP_NECK}};
+  } search[]={{primary, WIZ_LEV_COMP_PRIM_OTHER_FREE}, {secondary, WIZ_LEV_COMP_EITHER}, {stuff, WIZ_LEV_COMP_INV}, {belt, WIZ_LEV_COMP_BELT}, {juju, WIZ_LEV_COMP_NECK}, {wristpouch, WIZ_LEV_COMP_WRIST}, {wristpouch2, WIZ_LEV_COMP_WRIST}};
 
   if (!(d = desc))
     return;
@@ -5282,7 +5288,7 @@ void TBeing::doPrayers(const char *argument)
       totalcharges = 0;
       item = NULL;
         
-      for (l = 0; l < 4; ++l){
+      for (l = 0; l < 7; ++l){
         if (search[l].where && wizlevel >= search[l].wizlevel) {
           for (t1 = search[l].where; t1; t1 = t1->nextThing) {
             if(!(item=dynamic_cast<TComponent *>(t1)) &&
@@ -5341,5 +5347,12 @@ void TBeing::doPrayers(const char *argument)
   d->page_string(buffer);
   return;
 }
+
+
+
+
+
+
+
 
 
