@@ -875,7 +875,8 @@ int TBeing::getStat(statSetT fromSet, statTypeT whichStat) const
 
       // and add on age modifiers
       my_age = age()->year - getBaseAge() + 17;
-      amount += age_mod_for_stat(my_age, whichStat);
+      if(!hasQuestBit(TOG_VAMPIRE))
+	amount += age_mod_for_stat(my_age, whichStat);
     
       amount += territory_adjustment(player.hometerrain, whichStat);
 
@@ -897,7 +898,10 @@ int TBeing::getStat(statSetT fromSet, statTypeT whichStat) const
     case(STAT_RACE):
       return race->baseStats.get(whichStat);
     case(STAT_AGE):
-      return age_mod_for_stat((age()->year - getBaseAge() + 17), whichStat);
+      if(!hasQuestBit(TOG_VAMPIRE))
+	return age_mod_for_stat((age()->year - getBaseAge() + 17), whichStat);
+      else
+	return 0;
     case(STAT_TERRITORY):
       return territory_adjustment(player.hometerrain, whichStat);
   }
