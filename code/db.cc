@@ -2216,6 +2216,19 @@ void zoneData::resetZone(bool bootTime)
               continue;
             }
 
+	    count=0;
+	    for(t=rp->getStuff();t;t=t->nextThing){
+	      TObj *o = dynamic_cast<TObj *>(t);
+	      if(o && o->objVnum() == obj_index[rs.arg1].virt)
+		count++;
+	    }
+
+            if (count >= rs.arg2) {
+              last_cmd = 0;
+              objload = 0;
+              continue;
+            }
+
             obj = read_object(rs.arg1, REAL);
             if (obj != NULL) {
               *rp += *obj;
