@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.15  2002/03/12 06:24:05  dash
+// fixes for repo
+//
 // Revision 5.14  2002/02/24 18:09:56  dash
 // added getDexMod, getBraMod, getAgiMod, getSpeMod for stat stuff
 // tweaked bounty hunters alot
@@ -297,6 +300,7 @@ class bounty_hunt_struct
   public:
   char *hunted_item;
   char *hunted_victim;
+  char *last_targ;
   int num_chances;
   int level_command;
   int num_retrieved;
