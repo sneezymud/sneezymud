@@ -3904,7 +3904,7 @@ int manaBurnRobe(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 
   } // end manaBurnRobe
 
-int healingHead ( Tbeing *vict, cmdTypeT cmd, const char arg, TObj *0, TObj * ) {
+int healingHead ( TBeing *vict, cmdTypeT cmd, const char arg, TObj *o, TObj * ) {
   
   TBeing *ch;
   wearSlotT slot;
