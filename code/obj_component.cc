@@ -2499,7 +2499,11 @@ void TComponent::lowCheck()
     vlogf(LOG_LOW, "Component without COMPONENT in name (%s : %d)", getName(), objVnum());
   }
   int sp = suggestedPrice();
-  if (obj_flags.cost != sp) {
+  // added the 2 vnums of the flask and parchment so they dont throw price error
+  if ((objVnum() == 1400) || (objVnum() == 1487)) {
+    return;
+  }
+  if ((obj_flags.cost != sp)) {
     vlogf(LOG_LOW, "component (%s:%d) with bad price %d should be %d.",
           getName(), objVnum(), obj_flags.cost, sp);
     obj_flags.cost = sp;
