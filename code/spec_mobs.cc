@@ -5995,7 +5995,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	case 4:
 	  job->john->doSay("Wait, is that my wife I see down the street?!?");
 	  job->john->doSay("I'm out of here!");
-	  job->john->doFlee();
+	  job->john->doFlee("");
 	  break;
       }
       job->john=NULL;
@@ -6084,7 +6084,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	case 3:
 	  job->john->doSay("Wait, is that my wife I see down the street?!?");
 	  job->john->doSay("I'm out of here!");
-	  job->john->doFlee();
+	  job->john->doFlee("");
 	  break;
       }
       job->john=NULL;
