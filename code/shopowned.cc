@@ -148,9 +148,11 @@ void TShopOwned::doReserve()
     corp.corpLog(keeper->getName(), "reserve", -amt);
 
     keeper->addToMoney(amt, GOLD_SHOP);
+    keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 
     if(banker){
       banker->addToMoney(-amt, GOLD_SHOP);
+      dynamic_cast<TMonster *>(banker)->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
       shoplog(bank_nr, keeper, dynamic_cast<TMonster *>(banker), "talens", -amt, "reserve");
     }
 
@@ -162,9 +164,12 @@ void TShopOwned::doReserve()
     corp.corpLog(keeper->getName(), "reserve", amt);
 
     keeper->addToMoney(-amt, GOLD_SHOP);
+    keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 
     if(banker){
       banker->addToMoney(amt, GOLD_SHOP);
+      dynamic_cast<TMonster *>(banker)->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+      
       shoplog(bank_nr, keeper,  dynamic_cast<TMonster *>(banker), "talens", amt, "reserve");
     }
 
@@ -261,10 +266,12 @@ void TShopOwned::doDividend(TObj *o, int cost)
       vlogf(LOG_BUG, fmt("couldn't find banker for shop_nr=%i!") % bank_nr);
     else {
       banker->addToMoney(div, GOLD_SHOP);
+      dynamic_cast<TMonster *>(banker)->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
       shoplog(bank_nr, keeper,  dynamic_cast<TMonster *>(banker), "talens", div, "dividend");
     }
 
     keeper->addToMoney(-div, GOLD_SHOP);
+    keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
     shoplog(shop_nr, ch, keeper, o->getName(), -div, "dividend");
     
 
