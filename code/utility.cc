@@ -1263,7 +1263,7 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
 
   //  max_followers = GetMaxLevel() / 20; //changed this from 5
   //  max_followers += plotStat(STAT_CURRENT, STAT_CHA, 1, 19, 9);
-  int max_count = GetMaxLevel() / 5;
+  //  int max_count = GetMaxLevel() / 5;
 
   max_followers = (GetMaxLevel() + plotStat(STAT_CURRENT, STAT_CHA, -20, 20, 0)) / 30 + 1; 
   max_followers = max(1, (min(3,max_followers)));
@@ -1293,8 +1293,8 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
   vlogf(LOG_DASH, "tooManyFollowers(): %d = (%d + %d) / 20", max_followers, GetMaxLevel(),
 	plotStat(STAT_CURRENT, STAT_CHA, -15, 15, 0));
 
-  if (count > max_count)
-    return TRUE;
+  //  if (count > max_count)
+  //  return TRUE;
   //  if (tot_num >= 3)  // allow 3 pets max
   if (tot_num >= max_followers) // nah, make it 1.  pets suck.
     return TRUE;
