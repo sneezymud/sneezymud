@@ -533,7 +533,7 @@ class TObj : public TThing {
     virtual void changeComponentValue4(TBeing *, const char *, editorEnterTypeT) {}
     virtual void boottimeInit() {}
     virtual void decayMe();
-    virtual bool sellMeCheck(const TBeing *, TMonster *) const;
+    virtual bool sellMeCheck(TBeing *, TMonster *) const;
     virtual void recalcShopData(int, int) {}
     virtual bool fitsSellType(tObjectManipT, TBeing *, TMonster *, string, itemTypeT, int &, int);
     virtual int treeMe(TBeing *, const char *, int, int*);

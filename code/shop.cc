@@ -571,7 +571,7 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int)
 }
 
 
-bool TObj::sellMeCheck(const TBeing *, TMonster *) const
+bool TObj::sellMeCheck(TBeing *, TMonster *) const
 {
   return FALSE;
 }

@@ -153,6 +153,19 @@ int TShopOwned::setRates(string arg)
   if(buf != "")
     argc++;
 
+
+  if(buf == "clear"){ /////////////////////////////////////////////
+    arg = one_argument(arg, buf);
+    if(buf == "all"){
+      db.query("delete from shopownedratios where shop_nr=%i", shop_nr);
+      db.query("delete from shopownedmatch where shop_nr=%i", shop_nr);
+      keeper->doTell(ch->getName(), "Ok, I cleared all of the individual profit ratios.");
+      return TRUE;
+    } else {
+    }
+  }
+
+
   arg = one_argument(arg, buf);
   profit_sell = atof_safe(buf.c_str());
   if(buf != "")
@@ -210,14 +223,6 @@ int TShopOwned::setRates(string arg)
     }
     
     keeper->doTell(ch->getName(), "Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i, all for keyword %s.", profit_buy, profit_sell, max_num, buf.c_str());    
-  } else if(buf == "clear"){ /////////////////////////////////////////////
-    arg = one_argument(arg, buf);
-    if(buf == "all"){
-      db.query("delete from shopownedratios where shop_nr=%i", shop_nr);
-      db.query("delete from shopownedmatch where shop_nr=%i", shop_nr);
-      keeper->doTell(ch->getName(), "Ok, I cleared all of the individual profit ratios.");
-    } else {
-    }
   } else { ////////////////////////////////////////////////////////////////
     // find item in inventory matching keywords in arg
     // get vnum, then store in db
@@ -586,4 +591,33 @@ int TShopOwned::doLogs(const char *arg)
   return TRUE;
 }
 
+
+
+int TShopOwned::getMaxNum(TObj *o)
+{
+  TDatabase db("sneezy");
+  
+  if(!o)
+    return 0;
+
+  db.query("select match, max_num from shopownedmatch where shop_nr=%i", shop_nr);
+  
+  while(db.fetchRow()){
+    if(isname(db.getColumn(0), o->name))
+      return atoi_safe(db.getColumn(1));
+  }
+  
+  db.query("select max_num from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, o->objVnum());
+
+  if(db.fetchRow())
+    return atoi_safe(db.getColumn(0));
+
+  db.query("select max_num from shopowned where shop_nr=%i", shop_nr);
+  
+  if(db.fetchRow())
+    return atoi_safe(db.getColumn(0));
+
+  // shouldn't get here...
+  return 9;
+}
 

@@ -12,6 +12,7 @@
 #include "obj_spellbag.h"
 #include "obj_open_container.h"
 #include "obj_component.h"
+#include "shopowned.h"
 
 vector<compPlace>component_placement(0);
 vector<compInfo>CompInfo(0);
@@ -2219,38 +2220,32 @@ void TComponent::changeObjValue4(TBeing *ch)
   return;
 }
 
-bool TComponent::sellMeCheck(const TBeing *ch, TMonster *keeper) const
+bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper) const
 {
   int total = 0;
   TThing *t;
-  TComponent *tComp;
   char buf[256];
+  unsigned int shop_nr;
 
-  if (false) {
-    for (t = keeper->getStuff(); t; t = t->nextThing) {
-      if ((t->number == number) &&
-          (t->getName() && getName() && !strcmp(t->getName(), getName())) &&
-          (tComp = dynamic_cast<TComponent *>(t))) {
-        total += tComp->getComponentCharges();
+  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
 
-        if (total >= 300) {
-          sprintf(buf, "%s I already have plenty of that.", ch->getName());
-          keeper->doTell(buf);
-          return TRUE;
-        }
-      }
-    }
-  } else {
-    for (t = keeper->getStuff(); t; t = t->nextThing) {
-      if ((t->number == number) &&
-          (t->getName() && getName() &&
-           !strcmp(t->getName(), getName()))) {
-        total += 1;
-        if (total > 50) {
-          sprintf(buf, "%s I already have plenty of those.", ch->getName());
-          keeper->doTell(buf);
-          return TRUE;
-        }
+  if (shop_nr >= shop_index.size()) {
+    vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", (keeper)->number);
+    return FALSE;
+  }
+  
+  TShopOwned tso(shop_nr, keeper, ch);
+  int max_num=50;
+
+  for (t = keeper->getStuff(); t; t = t->nextThing) {
+    if ((t->number == number) &&
+	(t->getName() && getName() &&
+	 !strcmp(t->getName(), getName()))) {
+      total += 1;
+      if (total >= max_num) {
+	sprintf(buf, "%s I already have plenty of those.", ch->getName());
+	keeper->doTell(buf);
+	return TRUE;
       }
     }
   }

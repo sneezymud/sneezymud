@@ -26,7 +26,7 @@ class TSymbol : public TObj {
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
     virtual void sellMeMoney(TBeing *, TMonster *, int, int);
     virtual int objectSell(TBeing *, TMonster *);
-    virtual bool sellMeCheck(const TBeing *, TMonster *) const;
+    virtual bool sellMeCheck(TBeing *, TMonster *) const;
     virtual int getShopPrice(int *) const;
     virtual void recalcShopData(int, int);
     virtual void describeObjectSpecifics(const TBeing *) const;

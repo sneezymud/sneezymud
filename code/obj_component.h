@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_component.h,v $
+// Revision 5.6  2002/11/24 17:45:29  peel
+// setting max_num for owned shops should work now
+// had to remove const correctness from sellMeCheck
+//
 // Revision 5.5  2002/10/18 15:50:08  peel
 // changed buyMe to return the item cost, or -1 on failure
 //
@@ -459,7 +463,7 @@ class TComponent : public TObj {
     virtual void findComp(TComponent **, spellNumT);
     virtual void decayMe();
     virtual int objectSell(TBeing *, TMonster *);
-    virtual bool sellMeCheck(const TBeing *, TMonster *) const;
+    virtual bool sellMeCheck(TBeing *, TMonster *) const;
     virtual int componentSell(TBeing *, TMonster *, int, TThing *);
     virtual int componentValue(TBeing*, TMonster *, int, TThing *);
     virtual int getShopPrice(int *) const;

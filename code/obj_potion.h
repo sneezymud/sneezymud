@@ -30,7 +30,7 @@ class TPotion : public TMagicItem {
     virtual void divinateMe(TBeing *) const;
     virtual int quaffMe(TBeing *);
     virtual int drinkMe(TBeing *);
-    virtual bool sellMeCheck(const TBeing *, TMonster *) const;
+    virtual bool sellMeCheck(TBeing *, TMonster *) const;
     virtual int suggestedPrice() const;
 
     spellNumT getSpell(int num) const;

@@ -46,7 +46,7 @@ class TArrow : public TBaseWeapon {
     virtual string compareMeAgainst(TBeing *, TObj *);
     virtual void changeObjValue4(TBeing *);
     virtual string displayFourValues();
-    virtual bool sellMeCheck(const TBeing *, TMonster *) const;
+    virtual bool sellMeCheck(TBeing *, TMonster *) const;
 
     TArrow();
     TArrow(const TArrow &a);

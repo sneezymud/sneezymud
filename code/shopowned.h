@@ -13,6 +13,7 @@ class TShopOwned {
   bool hasAccess(int);
   int getPurchasePrice(int, int);
 
+  int getMaxNum(TObj *);
   void showInfo();
   int setRates(string);
   int buyShop();

@@ -25,7 +25,7 @@ class TGenWeapon : public TBaseWeapon {
     virtual spellNumT getWtype() const;
     virtual float blowCountSplitter(const TBeing *, bool) const;
     virtual void lowCheck();
-    virtual bool sellMeCheck(const TBeing *, TMonster *) const;
+    virtual bool sellMeCheck(TBeing *, TMonster *) const;
   
     virtual weaponT getWeaponType(int which=-1) const;
     virtual void setWeaponType(weaponT n, int which=0);

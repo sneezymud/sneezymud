@@ -10,6 +10,7 @@
 #include "stdsneezy.h"
 #include "shop.h"
 #include "obj_symbol.h"
+#include "shopowned.h"
 
 TSymbol::TSymbol() :
   TObj(),
@@ -141,18 +142,29 @@ void TSymbol::setSymbolFaction(factionTypeT r)
 }
 
 
-bool TSymbol::sellMeCheck(const TBeing *ch, TMonster *keeper) const
+bool TSymbol::sellMeCheck(TBeing *ch, TMonster *keeper) const
 {
   int total = 0;
   TThing *t;
   char buf[256];
+  unsigned int shop_nr;
+
+  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
+
+  if (shop_nr >= shop_index.size()) {
+    vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", (keeper)->number);
+    return FALSE;
+  }
+  
+  TShopOwned tso(shop_nr, keeper, ch);
+  int max_num=10;
 
   for (t = keeper->getStuff(); t; t = t->nextThing) {
     if ((t->number == number) &&
         (t->getName() && getName() &&
          !strcmp(t->getName(), getName()))) {
       total += 1;
-      if (total > 9) {
+      if (total >= max_num) {
         sprintf(buf, "%s I already have plenty of those.", ch->name);
         keeper->doTell(buf);
         return TRUE;
