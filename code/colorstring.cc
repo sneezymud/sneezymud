@@ -12,15 +12,16 @@
 
 string stripColorCodes(string s)
 {
-  char buf[strlen(s.c_str())+1];
+  char buf[MAX_STRING_LENGTH];
+  const char *stmp=s.c_str();
   int j=0;
 
-  for(int i=0;s.c_str()[i];++i){
-    if(s.c_str()[i] == '<')
-      while(s.c_str()[i-1]!='>')
+  for(int i=0;stmp[i];++i){
+    if(stmp[i] == '<')
+      while(stmp[i-1]!='>')
 	++i;
     
-    buf[j++]=s.c_str()[i];
+    buf[j++]=stmp[i];
   }
   buf[j]='\0';
 
