@@ -66,6 +66,7 @@ bool TDatabase::query(const char *query,...){
   string buf;
   int fromlen=0, tolen=(512*2)+1, numlen=32;
   char *from=NULL, to[tolen], numbuf[numlen];
+  const char *qsave=query;
   MYSQL_RES *restmp;
   
   // no db set yet
@@ -79,12 +80,19 @@ bool TDatabase::query(const char *query,...){
       switch(*query){
 	case 's':
 	  from=va_arg(ap, char *);
+	  
+	  if(!from){
+	    vlogf(LOG_DB, "null argument for format specifier 's'");
+	    vlogf(LOG_DB, "%s", qsave);	    
+	  }
+
 	  fromlen=strlen(from);
 	  
 	  // mysql_escape_string needs a buffer that is 
 	  // (string * 2) + 1 in size to avoid overruns
 	  if(((fromlen*2)+1) > tolen){
-	    vlogf(LOG_DB, "query - buffer overrun on %s");
+	    vlogf(LOG_DB, "query - buffer overrun on %s", from);
+	    vlogf(LOG_DB, "%s", qsave);
 	    return FALSE;
 	  }
 	  
@@ -103,7 +111,8 @@ bool TDatabase::query(const char *query,...){
 	  buf += "%";
 	  break;
 	default:
-	  vlogf(LOG_DB, "query - bad format specifier");
+	  vlogf(LOG_DB, "query - bad format specifier - %c", *query);
+	  vlogf(LOG_DB, "%s", qsave);
 	  return FALSE;
       }
     } else {

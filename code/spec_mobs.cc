@@ -6241,7 +6241,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	if(!strcmp(buf, "topten")){
 	  db.query("select o.name, o.weight, count(l.name) from fishkeeper o left join fishlargest l on o.name=l.name group by o.name, o.weight order by weight desc limit 10");
 	} else {
-	  db.query("select o.name, o.weight, count(l.name) from fishkeeper o left join fishlargest l on o.name=l.name where o.name='%s' group by o.name, o.weight order by weight desc limit 10");
+	  db.query("select o.name, o.weight, count(l.name) from fishkeeper o left join fishlargest l on o.name=l.name where o.name='%s' group by o.name, o.weight order by weight desc limit 10", buf);
 	}
 	
 	while(db.fetchRow()){
