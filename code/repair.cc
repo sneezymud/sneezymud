@@ -215,6 +215,7 @@ static int check_time_and_gold(TBeing *repair, TBeing *buyer, int ticket, TNote 
     return FALSE;
   } else {
     if ((fixed_obj = raw_read_item(fp, version))) {
+      obj_index[fixed_obj->getItemIndex()].addToNumber(-1);
       sprintf(buf2, "%s, Ah yes, %s, here is %s.",
            fname(buyer->name).c_str(), buyer->getName(),fixed_obj->shortDescr);
       repair->doTell(buf2);
