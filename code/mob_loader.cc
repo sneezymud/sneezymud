@@ -80,13 +80,19 @@ void potionLoader(TMonster *tmons)
   TPotion *tpot;
 
   obj=read_object(potions[pot], VIRTUAL);
-  
-  if((tpot=dynamic_cast<TPotion *>(obj))){
-    tpot->setMaxDrinkUnits(1);
-    tpot->setDrinkUnits(1);
+
+  // buy it, if we can afford it
+  if(tmons->getMoney() > obj->obj_flags.cost){
+    if((tpot=dynamic_cast<TPotion *>(obj))){
+      tpot->setMaxDrinkUnits(1);
+      tpot->setDrinkUnits(1);
+    }
+
+    tmons->setMoney(tmons->getMoney()-obj->obj_flags.cost);
     *tmons += *obj;
     tmons->logItem(obj, CMD_LOAD);
-  }
+  } else
+    delete obj;
 }
 
 
@@ -199,19 +205,37 @@ void loadRepairItems(TMonster *tmons)
 void TMonster::thiefLootLoader()
 {
   int vnum=0;
-  vector<int>poisons;
+  vector<int>loot;
   TObj *obj;
 
   if(::number(0,3))
     return;
 
+  loot.push_back(907);
+  loot.push_back(909);
+  loot.push_back(910);
+  loot.push_back(912);
+  loot.push_back(915);
+  loot.push_back(916);
+  loot.push_back(917);
+  loot.push_back(918);
+  loot.push_back(919);
+  loot.push_back(921);
+  loot.push_back(922);
+  loot.push_back(923);
+  loot.push_back(926);
+  loot.push_back(927);
+  loot.push_back(932);
+  loot.push_back(933);
+  loot.push_back(934);
+
   // make a list of the available poisons
   for(int i=31008;i<=31020;++i)
-    poisons.push_back(i);
-  poisons.push_back(914);
+    loot.push_back(i);
+  loot.push_back(914);
 
   // pick one
-  vnum=poisons[::number(0, poisons.size()-1)];
+  vnum=loot[::number(0, loot.size()-1)];
   
   // load it
   if (!(obj = read_object(vnum,VIRTUAL))){
