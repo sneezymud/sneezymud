@@ -350,6 +350,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SKILL_TRANSFIX:
       bit = IMMUNE_CHARM;
       break;
+    case SPELL_FLATULENCE:
     case DAMAGE_SUFFOCATION:
     case DAMAGE_DROWN:
     case SPELL_SUFFOCATE:

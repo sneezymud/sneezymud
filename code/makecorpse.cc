@@ -350,6 +350,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case DAMAGE_TRAP_DISEASE:
         sprintf(buf, "%s's corpse is here.  It appears %s was consumed by disease.",namebuf, hssh());
         break;
+      case SPELL_FLATULENCE:
       case DAMAGE_SUFFOCATION:
       case SPELL_SUFFOCATE:
       case SKILL_GARROTTE:

@@ -1114,6 +1114,14 @@ void buildComponentArray()
     "$n presses $p to the $g.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_FLATULENCE,
+    "",                       
+    "",
+    "",
+    "You quickly eat $p.",
+    "$n quickly eats $p.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_SAND_BLAST,
     "",                       
     "",

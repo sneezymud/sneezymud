@@ -2436,3 +2436,83 @@ int ret,level;
   return FALSE;
 
 }
+
+int flatulence(TBeing * caster, int level, byte bKnown, int adv_learn)
+{
+  TThing *t, *t2;
+  TBeing *vict = NULL;
+
+  level = min(level, 20);
+
+  int dam = caster->getSkillDam(NULL, SPELL_FLATULENCE, level, adv_learn);
+
+  if (bSuccess(caster, bKnown, SPELL_FLATULENCE)) {
+    act("<o>You turn around quickly and pass gas!<1>", FALSE, caster, NULL, NULL, TO_CHAR);
+    act("<o>$n turns around quickly and passes gas!<1>", FALSE, caster, NULL, NULL, TO_ROOM);
+    for (t = caster->roomp->stuff; t; t = t2) {
+      t2 = t->nextThing;
+      vict = dynamic_cast<TBeing *>(t);
+      if (!vict)
+        continue;
+
+      if (!caster->inGroup(*vict) && !vict->isImmortal()) {
+        caster->reconcileHurt(vict, discArray[SPELL_FLATULENCE]->alignMod);
+        act("$n is choked by the natural gasses!", FALSE, vict, NULL, NULL, TO_ROOM);
+        act("You are choked by the natural gasses!", FALSE, vict, NULL, NULL, TO_CHAR);
+        if (caster->reconcileDamage(vict, dam, SPELL_FLATULENCE) == -1) {
+          delete vict;
+          vict = NULL;
+        }
+      } else {
+        act("$n takes a deep breath and holds it until the noxious fumes disperse.", TRUE, vict, NULL, 0 , TO_ROOM);
+        act("You take a deep breath and hold it until the noxious fumes disperse.", TRUE, vict, NULL, NULL, TO_CHAR);
+      }
+    }
+    return SPELL_SUCCESS;
+  } else {
+    if (critFail(caster, SPELL_FLATULENCE)) {
+      CF(SPELL_FLATULENCE);
+      act("Oh no!!! That one stuck with you!", 
+            FALSE, caster, NULL, NULL, TO_CHAR);
+      act("$n chokes on $s own fumes!!", 
+            FALSE, caster, NULL, NULL, TO_ROOM);
+      if (caster->reconcileDamage(caster, dam, SPELL_FLATULENCE) == -1)
+        return SPELL_CRIT_FAIL + CASTER_DEAD;
+      return SPELL_CRIT_FAIL;
+    }
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+
+int flatulence(TBeing * caster)
+{
+  if (!bPassShamanChecks(caster, SPELL_FLATULENCE, NULL))
+    return FALSE; 
+
+  lag_t rounds = discArray[SPELL_FLATULENCE]->lag;
+  taskDiffT diff = discArray[SPELL_FLATULENCE]->task;
+
+  start_cast(caster, NULL, NULL, caster->roomp, SPELL_FLATULENCE, diff, 1, "", rounds, 
+caster->in_room, 0, 0,TRUE, 0);
+  return TRUE;
+}
+
+int castFlatulence(TBeing * caster)
+{
+  int ret,level;
+  int rc = 0;
+
+  level = caster->getSkillLevel(SPELL_FLATULENCE);
+
+  ret=flatulence(caster,level,caster->getSkillValue(SPELL_FLATULENCE), caster->getAdvLearning(SPELL_FLATULENCE));
+  if (IS_SET(ret, SPELL_SUCCESS)) {
+  } else {
+    if (ret == SPELL_CRIT_FAIL) {
+    } else {
+    }
+  }
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}

@@ -1722,6 +1722,22 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
   if (best_disc == DISC_SHAMAN) {
     // AREA AFFECT HERE
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
+      spell = SPELL_FLATULENCE;
+      if (!::number(0, 3) &&
+	  (cutoff < discArray[spell]->start) &&
+	  ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+	act("$n utters the invokation, 'He who smelt it, dealt it!'",
+	    TRUE, &ch, 0, 0, TO_ROOM);
+	return spell;
+      }
+      spell = SPELL_FLATULENCE;
+      if (!::number(0, 3) &&
+	  (cutoff < discArray[spell]->start) &&
+	  ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+	act("$n utters the invokation, 'He who denied it, supplied it!'",
+	    TRUE, &ch, 0, 0, TO_ROOM);
+	return spell;
+      }
     }
 
     // STANDARD OFFENSE

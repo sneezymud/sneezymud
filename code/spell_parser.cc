@@ -1712,6 +1712,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SPELL_BLOOD_BOIL:
       rc = bloodBoil(this, ch);
       break;
+    case SPELL_FLATULENCE:
+      rc = flatulence(this);
+      break;
     case SPELL_BLAST_OF_FURY:
       rc = blastOfFury(this, ch);
       break;

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.29  2001/06/28 02:18:02  jesus
+// flatulence spell
+//
 // Revision 5.28  2001/06/27 22:08:18  jesus
 // boiling blood spell
 //
@@ -253,6 +256,7 @@ const int COMP_CELERITE           =31337;
 const int COMP_STUPIDITY          =31338;
 const int COMP_CONTROL_UNDEAD     =31339;
 const int COMP_BLOOD_BOIL         =31340;
+const int COMP_FLATULENCE         =31341;
 
 class compPlace
 {

@@ -1021,6 +1021,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_PEBBLE_SPRAY:
       case SPELL_LAVA_STREAM:
       case SPELL_DEATH_MIST:
+      case SPELL_FLATULENCE:
       case SPELL_SLING_SHOT:
       case SPELL_GRANITE_FISTS:
       case SPELL_STICKS_TO_SNAKES:

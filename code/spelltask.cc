@@ -1095,6 +1095,7 @@ int TBeing::checkBadSpellCondition(TBeing *caster, int which)
     case SPELL_GRANITE_FISTS:
     case SPELL_PEBBLE_SPRAY:
     case SPELL_SAND_BLAST:
+    case SPELL_FLATULENCE:
     case SPELL_LAVA_STREAM:
     case SPELL_SQUISH: // shaman
     case SPELL_DEATH_MIST: // shaman
@@ -1855,7 +1856,13 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         } else
           vlogf(LOG_BUG, "SPELL_PROTECTION_FROM_EARTH called with null obj");
         break;
-      case SPELL_SQUISH:
+    case SPELL_FLATULENCE:
+      if (!o) {
+	rc = castFlatulence(this);
+      } else
+	vlogf(LOG_BUG, "SPELL_FLATULENCE called with null obj");
+      break;
+    case SPELL_SQUISH:
         if (!o) {
           rc = castSquish(this, victim);
         } else
