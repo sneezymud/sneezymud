@@ -10,6 +10,8 @@
 
 #include <algorithm>
 #include <iostream.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 #include "account.h"
 #include "games.h"
@@ -19,6 +21,7 @@
 #include "obj_component.h"
 #include "database.h"
 #include "room.h"
+#include "shop.h"
 
 #include "skillsort.h"
 #include "obj_open_container.h"
@@ -2888,6 +2891,54 @@ void TBeing::doWhere(const char *argument)
         }
         if (GetMaxLevel() <= MAX_MORT)
           break;
+      }
+    }
+
+
+    // if it's a repair guy check his saved inventory
+    if(i->spec==SPEC_REPAIRMAN){
+      struct dirent *dp;
+      DIR *dfd;
+      long time;
+      int cost, ticket;
+      unsigned char version;
+      TObj *k;
+      
+      if((dfd=opendir((fmt("mobdata/repairs/%d") % i->mobVnum()).c_str()))){
+	while ((dp = readdir(dfd))) {
+	  if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
+	    continue;
+	  
+	  ticket=convertTo<int>(dp->d_name);
+	  
+	  if((k=loadRepairItem(i, ticket, time, cost, version))){
+	    if (!k->getName()) {
+	      vlogf(LOG_BUG, "Item without a name in object_list (doWhere) looking for %s", namebuf);
+	      continue;
+	    }
+	    
+	    if (isname(namebuf, k->name) && canSee(k)) {
+	      if (!iNum || !(--count)) {
+		if (!iNum) {
+		  sb += fmt("[%2d] ") % ++count;
+		}
+		if (++tot_found > 500) {
+		  sb += "Too many objects found.\n\r";
+		  break;
+		}
+		
+		sb += fmt("%-30s- being repaired by %s\n\r") % 
+		  k->getNameNOC(this) % i->getName();
+
+		if (iNum != 0)
+		  break;
+	      }
+	    }
+
+	    delete k;
+	  }
+	}
+	closedir(dfd);
       }
     }
   }

@@ -47,6 +47,8 @@ extern int cached_shop_nr;
 extern map <int,float> ratios_cache;
 extern map <sstring,float> matches_cache;
 
+extern TObj *loadRepairItem(TBeing *, int, long &, int &, unsigned char &);
+
 
 extern void shoplog(int, TBeing *, TMonster *, const char *, int, const char *);
 

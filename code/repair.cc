@@ -263,6 +263,7 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
 
     repair->doTell(fname(buyer->name), "Your item isn't ready yet.");
     repair->doTell(fname(buyer->getName()),  fmt("It will be ready in %d hours, %d minutes and %d seconds.") % hours % minutes % seconds);
+    delete fixed_obj;
     return FALSE;
   }
   
@@ -272,6 +273,7 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
     repair->doSay(buf);
     sprintf(buf, "Remember the price is %d.", tmp_cost);
     repair->doSay(buf);
+    delete fixed_obj;
     return FALSE;
   }
 
@@ -668,6 +670,7 @@ sstring repairList(TMonster *repair)
     if((o=loadRepairItem(repair, ticket, time, cost, version))){
       buf+=fmt("%i) %s - %i talens\n\r") % ticket %
 	o->getName() % cost;
+      delete o;
     }
   }
   closedir(dfd);
