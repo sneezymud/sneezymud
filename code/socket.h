@@ -16,29 +16,39 @@ extern void close_sockets(int);
 extern int init_socket(int);
 extern char hostlist[MAX_BAN_HOSTS][40];
 
-class TSocket {
-  public:
-    int m_sock;
-    int m_port;
-    
+class TMainSocket {
+ public:
+  int m_sock;
+  int m_port;
+
   int gameLoop();
-  int writeToSocket(const char *);
+  struct timeval handleTimeAndSockets();
+  void addNewDescriptorsDuringBoot(sstring);
+  void initSocket();
+  bool handleShutdown();
   void closeAllSockets();
   TSocket *newConnection();
   int newDescriptor();
-  void nonBlock();
-  void initSocket();
-  void addNewDescriptorsDuringBoot(sstring);
-  bool handleShutdown();
-  struct timeval handleTimeAndSockets();
 
-  TSocket(int p);
-  ~TSocket();
+  TMainSocket(int p);
+  ~TMainSocket();
 
   private:
-    TSocket() {}  // prevent default ctor being used
+    TMainSocket() {}  // prevent default ctor being used
+
 };
 
-extern TSocket *gSocket;
+class TSocket {
+ public:
+  int m_sock;
+    
+  int writeToSocket(const char *);
+  void nonBlock();
+
+  TSocket();
+  ~TSocket();
+};
+
+extern TMainSocket *gSocket;
 
 #endif

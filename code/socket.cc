@@ -44,7 +44,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown
 int tics = 0;
-TSocket *gSocket;
+TMainSocket *gSocket;
 long timeTill = 0;
 Descriptor *descriptor_list = NULL, *next_to_process; 
 
@@ -65,7 +65,7 @@ struct timeval timediff(struct timeval *a, struct timeval *b)
   return rslt;
 }
 
-void TSocket::addNewDescriptorsDuringBoot(sstring tStString)
+void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
 {
   fd_set input_set, output_set, exc_set;
   static struct timeval null_time;
@@ -296,7 +296,7 @@ void updateAvgPlayers()
 ////////////////////////////////////////////
 // handle shutdown
 ////////////////////////////////////////////
-bool TSocket::handleShutdown()
+bool TMainSocket::handleShutdown()
 {
   sstring buf;
   static bool sent = false;
@@ -338,7 +338,7 @@ bool TSocket::handleShutdown()
 
 // this function handles time regulation, new socket connections,
 // queueing up socket input, and prompt displaying
-struct timeval TSocket::handleTimeAndSockets()
+struct timeval TMainSocket::handleTimeAndSockets()
 {
   fd_set input_set, output_set, exc_set;
   static struct timeval last_time;
@@ -458,7 +458,7 @@ struct timeval TSocket::handleTimeAndSockets()
 }
 
 
-int TSocket::gameLoop()
+int TMainSocket::gameLoop()
 {
   Descriptor *point;
   int pulse = 0;
@@ -1186,7 +1186,7 @@ int TSocket::gameLoop()
 }
 
 
-TSocket *TSocket::newConnection()
+TSocket *TMainSocket::newConnection()
 {
   struct sockaddr_in isa;
 #if defined(LINUX)
@@ -1201,7 +1201,7 @@ TSocket *TSocket::newConnection()
     perror("getsockname");
     return NULL;
   }
-  s = new TSocket(0);
+  s = new TSocket();
   if ((s->m_sock = accept(m_sock, (struct sockaddr *) (&isa), &i)) < 0) {
     perror("Accept");
     return NULL;
@@ -1232,7 +1232,7 @@ static const sstring IP_String(sockaddr_in &_a)
 
 void sig_alrm(int){return;}
 
-int TSocket::newDescriptor()
+int TMainSocket::newDescriptor()
 {
   int a;
 #if defined(LINUX)
@@ -1246,7 +1246,7 @@ int TSocket::newDescriptor()
   char temphostaddr[255];
   TSocket *s = NULL;
 
-  if (!(s = gSocket->newConnection())) 
+  if (!(s = newConnection())) 
     return 0;
 
   if ((maxdesc + 1) >= avail_descs) {
@@ -1353,7 +1353,7 @@ int TSocket::writeToSocket(const char *txt)
 }
 
 
-void TSocket::closeAllSockets()
+void TMainSocket::closeAllSockets()
 {
   vlogf(LOG_MISC, "Closing all sockets.");
 
@@ -1372,7 +1372,7 @@ void TSocket::nonBlock()
   }
 }
 
-void TSocket::initSocket()
+void TMainSocket::initSocket()
 {
   const char *opt = "1";
   char hostname[MAXHOSTNAMELEN];
@@ -1425,12 +1425,20 @@ void TSocket::initSocket()
   listen(m_sock, 3);
 }
 
-TSocket::TSocket(int p) :
+TSocket::TSocket()
+{
+}
+
+TSocket::~TSocket()
+{
+}
+
+TMainSocket::TMainSocket(int p) :
   m_sock(0),
   m_port(p)
 {
 }
 
-TSocket::~TSocket()
+TMainSocket::~TMainSocket()
 {
 }

@@ -59,7 +59,7 @@ int run_the_game()
   signalSetup();
 
   vlogf(LOG_MISC, "Opening mother connection.");
-  gSocket = new TSocket(gamePort);
+  gSocket = new TMainSocket(gamePort);
   gSocket->initSocket();
 
   bootDb();
