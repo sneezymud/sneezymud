@@ -1371,6 +1371,7 @@ class TBeing : public TThing {
     virtual void doOEdit(const char *);
     void doScratch(const char *);
     void doPee(const sstring &);
+    void doPoop(void);
     void doPoint(const sstring &);
     void doPoke(const sstring &);
     int doBite(const sstring &);

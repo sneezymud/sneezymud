@@ -567,6 +567,39 @@ void TPlant::peeOnMe(const TBeing *ch)
   updateAge();
 }
 
+void TBeing::doPoop(void)
+{
+  TObj *obj=NULL;
+
+  if(isPc() && !isImmortal()){
+    sendTo("Hey buddy, this isn't ScatMUD.  Mind your manners.\n\r");
+    return;
+  }
+  
+  if(!roomp){
+    sendTo("You can't go poop unless you're in a room.\n\r");
+    return;
+  }
+
+  if(!(obj=read_object(OBJ_PILE_OFFAL, VIRTUAL))){
+    vlogf(LOG_BUG, "problem loading offal in doPoop()");
+    return;
+  }
+
+  if(equipment[WEAR_WAISTE]||equipment[WEAR_LEGS_R]||equipment[WEAR_LEGS_L]){
+    sendTo("You can't go poop with pants or a belt on!\n\r");
+    return;
+  }
+
+  *this->roomp += *obj;
+  act("$n <o>defecates<z> on the $g.",
+      TRUE, this, NULL, NULL, TO_ROOM);
+  act("You <o>defecate<z> on the $g.",
+      TRUE, this, NULL, NULL, TO_CHAR);
+
+  return;
+}
+
 void TBeing::doPee(const sstring &argument)
 {
   TThing *t;
