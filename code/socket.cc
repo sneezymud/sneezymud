@@ -244,7 +244,6 @@ void updateUsagelogs(int count)
   
   // every 10 RL seconds
   TDatabase db("sneezyglobal");
-  db.query("delete from wholist where port=%i", gamePort);
 
   if(logtime/TIME_BETWEEN_LOGS < ct/TIME_BETWEEN_LOGS) {
     //	vlogf(LOG_DASH, "Webstuff: collecting game usage data - %d seconds since last log", ct-lastlog);
