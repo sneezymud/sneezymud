@@ -139,8 +139,8 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     return FALSE;
 
   // speed
-  //  if(::number(0,2))
-  //    return FALSE;
+  if(::number(0,2))
+    return FALSE;
 
   // now the actual actions
   switch(job->state){
