@@ -3574,7 +3574,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       critKillCheck(this, vict, mess_sent);
       return retCode | DELETE_VICT;
     }
-    if (hasClass(CLASS_SHAMAN) && (dam == 0)) {
+    if (hasClass(CLASS_SHAMAN) && (0 >= dam)) {
       addToLifeforce(1);
       updatePos();
     }
