@@ -25,7 +25,8 @@ void TPerson::doSet(const char *argument)
   int i, foundNum = 0, doneBasic = 0,parm = 0, value = 0, parm2 = 0;
   int parm3 = 0, amt = 0, initial = 0;
   float percent;
-  char buf2[256], buf[256];
+  char buf2[256];
+  sstring buf;
   TObj *obj;
   charFile st;
   int faction_num;
@@ -175,9 +176,9 @@ void TPerson::doSet(const char *argument)
     mob->doSave(SILENT_NO);
     return;
   } else if (is_abbrev(field, "newfaction")) {
-    sprintf(buf, "%s%s", parmstr, argument);
+    buf=fmt("%s%s") % parmstr % argument;
     TFaction *f = NULL;
-    f = get_faction(buf);
+    f = get_faction(buf.c_str());
     if(!f) {
       sendTo("No such factions\n\r");
       return;
@@ -207,10 +208,11 @@ void TPerson::doSet(const char *argument)
       return;
     }
     delete [] tper->title;
-    sprintf(buf, "%s%s", parmstr, argument);
-    tper->title = mud_str_dup(buf);
-    tper->parseTitle(buf, desc);
-    sendTo(COLOR_MOBS, fmt("%s's title is now: %s\n\r") % tper->getName() % tper->title);
+    buf=fmt("%s%s") % parmstr % argument;
+    tper->title = mud_str_dup(buf.c_str());
+    buf=tper->parseTitle(desc);
+    sendTo(COLOR_MOBS, fmt("%s's title is now: %s\n\r") % 
+	   tper->getName() % tper->title);
     return;
   } else if (is_abbrev(field, "toggle")) {
     sscanf(parmstr, "%d", &parm);
@@ -532,8 +534,9 @@ void TPerson::doSet(const char *argument)
 
 //    vlogf(LOG_MISC, fmt("parmstr is %s, argument is %s") %  parmstr % argument);
     while (sscanf(argument, "%d", &parm2) != 1) {
-      argument = one_argument(argument, buf);
-      sprintf(buf2," %s",buf);
+      argument=one_argument(argument, buf2);
+      buf=buf2;
+      sprintf(buf2," %s",buf.c_str());
       strcat(parmstr,buf2);
  //     vlogf(LOG_MISC,fmt("parmstr is %s, argument is %s, buf is %s, parm2 is %s, buf2 is %s") %  parmstr % argument % buf % parm2 % buf2);
       if (!argument || !strcmp(argument,"")) {
@@ -1011,7 +1014,7 @@ mob->getName());
       return;
     }
 
-    sprintf(buf, "You stick $p into $N's %s.", mob->describeBodySlot(wearSlotT(parm)).c_str());
+    buf=fmt("You stick $p into $N's %s.") % mob->describeBodySlot(wearSlotT(parm));
     act(buf, FALSE, this, obj, mob, TO_CHAR);
     --(*obj);
     mob->stickIn(obj, wearSlotT(parm));

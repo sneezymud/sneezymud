@@ -879,7 +879,7 @@ class TBeing : public TThing {
     int getClassLevel(int) const;
     void loseSneak();
     int checkEngagementStatus();
-    virtual void parseTitle(char *, Descriptor *);
+    virtual sstring parseTitle(Descriptor *);
     int onlyClass(int) const;
     int getClassNum(const char *, exactTypeT);
     int getClassNum(classIndT);

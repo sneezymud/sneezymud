@@ -87,9 +87,7 @@ void TBeing::doScore()
     sendTo("          This ranks you as:\n\r");
   }
 
-  char tbuf[256];
-  parseTitle(tbuf, desc);
-  Buf = tbuf;
+  Buf = parseTitle(desc);
   Buf += "\n\r";
   // Done this way just in case the player uses a % in their title.
   sendTo(COLOR_BASIC, fmt("%s") % Buf);

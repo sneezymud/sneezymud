@@ -107,7 +107,7 @@ class TPerson : public TBeing {
     virtual void reconcileHelp(TBeing *, double);
     virtual void reconcileHurt(TBeing *, double);
     virtual void doTitle(const char *);
-    virtual void parseTitle(char *, Descriptor *);
+    virtual sstring parseTitle(Descriptor *);
     virtual void addToWait(int);
     virtual void doBug(const sstring &);
     virtual void doIdea(const sstring &);

@@ -11,37 +11,35 @@
 #include "games.h"
 #include "database.h"
 
-void TBeing::parseTitle(char *arg, Descriptor *)
+sstring TBeing::parseTitle(Descriptor *)
 {
-  strcpy(arg, getName());
-  return;
+  return getName();
 }
 
-void TPerson::parseTitle(char *arg, Descriptor *user)
+sstring TPerson::parseTitle(Descriptor *user)
 {
+  sstring buf;
   int flag = FALSE;
+
   if (!title) {
-    strcpy(arg, getName());
-    return;
+    return getName();;
   }
 
-  strcpy(arg, nameColorString(this, user, title, &flag, COLOR_BASIC, FALSE).c_str());
+  buf=nameColorString(this, user, title, &flag, COLOR_BASIC, FALSE);
   if (!flag &&
-      colorString(this, user, title, NULL, COLOR_NONE, TRUE).find(getNameNOC(this).c_str()) ==
-      sstring::npos)
-    strcpy(arg, getName());  // did not specify a <n>
+      colorString(this, user, title, NULL, COLOR_NONE, TRUE).find(getNameNOC(this)) == sstring::npos)
+    buf=getName();  // did not specify a <n>
 
   // explicitely terminate it since players are sloppy
-  strcat(arg, "<1>");
+  buf += "<1>";
 
-  return;
+  return buf;
 }
 
 void Descriptor::menuWho() 
 {
   TBeing *person;
-  char buf[256];
-  sstring buf2, send;
+  sstring buf, buf2, send;
 
   send="\n\r";
 
@@ -49,8 +47,7 @@ void Descriptor::menuWho()
     if (person->isPc() && person->polyed == POLY_TYPE_NONE) {
       if (dynamic_cast<TPerson *>(person) &&
           (person->getInvisLevel() < GOD_LEVEL1)) {
-        person->parseTitle(buf, this);
-
+        buf=person->parseTitle(this);
         buf2 = fmt("%s\n\r") % colorString(person, this, buf, NULL, COLOR_BASIC, FALSE);
 	send += buf2;
       }
@@ -141,7 +138,7 @@ void TBeing::doWho(const char *argument)
   sstring buf;
   int listed = 0, lcount, l;
   unsigned int count;
-  char arg[1024], tempbuf[1024];
+  char arg[1024];
   char tString[256];
   sstring sb;
   int which1 = 0;
@@ -169,8 +166,7 @@ void TBeing::doWho(const char *argument)
           if (canSeeWho(p) && (!*argument || ((!p->isPlayerAction(PLR_ANONYMOUS) || isImmortal()) && p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2))){
             count++;
 
-            p->parseTitle(tempbuf, desc);
-	    buf = tempbuf;
+            buf=p->parseTitle(desc);
 
             if (!*argument) {
               if (p->isPlayerAction(PLR_SEEKSGROUP))
@@ -549,8 +545,7 @@ void TBeing::doWho(const char *argument)
           continue;
  
         c++;
-        k->parseTitle(tempbuf, desc);
-	buf = tempbuf;
+        buf=k->parseTitle(desc);
 	buf += "    ";
 	buf += getWhoLevel(this, k);
         if (k->isPlayerAction(PLR_SEEKSGROUP))
