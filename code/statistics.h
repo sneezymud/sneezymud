@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: statistics.h,v $
+// Revision 1.3  1999/10/14 02:28:46  batopr
+// *** empty log message ***
+//
 // Revision 1.2  1999/10/07 16:01:30  batopr
 // Shifted some gold statistics stuff to functions
 //
@@ -51,7 +54,7 @@ class GameStats {
     float piety_gained;
     unsigned int piety_gained_attempts;
 
-    double equip;
+    float equip;
     double max_exist;
     double xp_modif;
     double damage_modifier;

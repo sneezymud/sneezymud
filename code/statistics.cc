@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: statistics.cc,v $
+// Revision 1.12  1999/10/14 02:28:46  batopr
+// *** empty log message ***
+//
 // Revision 1.11  1999/10/14 00:56:47  batopr
 // *** empty log message ***
 //
@@ -190,7 +193,7 @@ int init_game_stats(void)
           gold_modifier[j] = 1.0;
     }
 
-    if (fscanf(fp, " %f ", &stats.equip) != 1) {
+    if (fscanf(fp, "%f\n", &stats.equip) != 1) {
       vlogf(5, "bad value for equipment load rate");
     }
 
