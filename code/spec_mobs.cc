@@ -7665,6 +7665,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Brightmoon Archer", bmarcher},
   {FALSE, "Money Train", moneyTrain},
   {FALSE, "Adventurer", adventurer},
+  {FALSE, "Trainer: iron body", CDGenericTrainer},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
