@@ -28,6 +28,21 @@ TExpandableContainer & TExpandableContainer::operator=(const TExpandableContaine
   return *this;
 }
 
+TThing & TExpandableContainer::operator+= (TThing &t)
+{
+  TOpenContainer::operator+=(t);
+
+  if(isContainerFlag(CONT_WEIGHTLESS)){
+    addToCarriedWeight((-t.getTotalWeight(TRUE)));
+    addToCarriedVolume(-t.getReducedVolume(this));
+  }
+
+  return *this;
+}
+
+
+
+
 TExpandableContainer::~TExpandableContainer()
 {
 }

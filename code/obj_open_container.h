@@ -65,21 +65,6 @@ class TOpenContainer : public TBaseContainer {
     virtual int carryVolumeLimit() const;
     void setCarryVolumeLimit(int);
 
-
-    virtual float getTotalWeight(bool pweight) const {
-      if(isContainerFlag(CONT_WEIGHTLESS))
-	return getWeight();
-      return TThing::getTotalWeight(pweight);
-    }
-    virtual int getTotalVolume() const {
-      if(isContainerFlag(CONT_WEIGHTLESS))
-	return getVolume();
-      return TThing::getTotalVolume();
-    }
-
-
-
-
   protected:
     TOpenContainer();
   public:

@@ -20,6 +20,7 @@
 #include "obj_magic_item.h"
 #include "obj_wand.h"
 #include "obj_general_weapon.h"
+#include "obj_open_container.h"
 
 static const char ROOM_SAVE_PATH[] = "roomdata/saved";
 static const int NORMAL_SLOT   = -1;
@@ -615,7 +616,11 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
 #endif
 
 
-    if(version<8 && dynamic_cast<TGenWeapon *>(o)){
+    if(version<9 && dynamic_cast<TOpenContainer *>(o)){
+      item.value[1]=((item.value[1]>>8)<<16) ^ ((item.value[1]<<24)>>24);
+
+      o->assignFourValues(item.value[0],item.value[1],item.value[2],item.value[3]);
+    } else if(version<8 && dynamic_cast<TGenWeapon *>(o)){
       int x;
 
       // damage level and deviation are now merged
@@ -623,9 +628,12 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
       SET_BITS(x, 15, 8, item.value[2]);
 
       o->assignFourValues(item.value[0],x,item.value[3],0);
+
     } else {
       o->assignFourValues(item.value[0],item.value[1],item.value[2],item.value[3]);
     }
+
+
     
     o->setObjStat(item.extra_flags);
     o->setWeight((float) item.weight);

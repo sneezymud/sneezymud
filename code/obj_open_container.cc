@@ -10,7 +10,6 @@
 #include "stdsneezy.h"
 #include "disc_looting.h"
 #include "obj_open_container.h"
-#include "obj_open_container.h"
 #include "obj_money.h"
 
 TOpenContainer::TOpenContainer() :
@@ -55,9 +54,9 @@ TOpenContainer::~TOpenContainer()
 void TOpenContainer::assignFourValues(int x1, int x2, int x3, int x4)
 {
   setCarryWeightLimit((float) x1);
-  setContainerFlags(GET_BITS(x2, 7, 8));
-  setContainerTrapType(mapFileToDoorTrap(GET_BITS(x2, 15, 8)));
-  setContainerTrapDam(GET_BITS(x2, 23, 8));
+  setContainerFlags(GET_BITS(x2, 15, 16));
+  setContainerTrapType(mapFileToDoorTrap(GET_BITS(x2, 23, 8)));
+  setContainerTrapDam(GET_BITS(x2, 31, 8));
   setKeyNum(x3);
   setCarryVolumeLimit(x4);
 }
@@ -67,9 +66,9 @@ void TOpenContainer::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x1 = (int) carryWeightLimit();
 
   int r = 0;
-  SET_BITS(r, 7, 8, getContainerFlags());
-  SET_BITS(r, 15, 8, mapDoorTrapToFile(getContainerTrapType()));
-  SET_BITS(r, 23, 8, getContainerTrapDam());
+  SET_BITS(r, 15, 16, getContainerFlags());
+  SET_BITS(r, 23, 8, mapDoorTrapToFile(getContainerTrapType()));
+  SET_BITS(r, 31, 8, getContainerTrapDam());
   *x2 = r;
   *x3 = getKeyNum();
   *x4 = carryVolumeLimit();

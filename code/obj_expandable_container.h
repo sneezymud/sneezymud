@@ -27,6 +27,7 @@ class TExpandableContainer : public TOpenContainer {
     TExpandableContainer(const TExpandableContainer &a);
     TExpandableContainer & operator=(const TExpandableContainer &a);
     virtual ~TExpandableContainer();
+    virtual TThing & operator+= (TThing & t);
 };
 
 
