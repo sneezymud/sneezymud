@@ -7,7 +7,7 @@
 
 
 bool check_ingredients(TCookware *pot, int recipe){
-  int found=0;
+  int nfound=0;
   TThing *t;
   TPool *pool;
   TCorpse *corpse;
@@ -18,37 +18,43 @@ bool check_ingredients(TCookware *pot, int recipe){
     if(ingredients[i].recipe!=recipe)
       continue;
     
-    // look for this ingredient
-    found=0;
-    for(t=pot->getStuff();t;t=t->nextThing){
-      switch(ingredients[i].type){
-	case TYPE_VNUM:
-	  if(obj_index[t->number].virt==ingredients[i].num)
-	    found++;
-	  break;
-	case TYPE_LIQUID:
-	  if((pool=dynamic_cast<TPool *>(t)) &&
-	     pool->getDrinkType() == ingredients[i].num)
-	      found += pool->getDrinkUnits();
-	  break;
-	case TYPE_MATERIAL:
-	  if(t->getMaterial() == ingredients[i].num)
-	    found++;
-	  break;
-	case TYPE_CORPSE:
-	  if((corpse=dynamic_cast<TCorpse *>(t)) &&
-	     corpse->getCorpseRace() == ingredients[i].num)
-	    found++;
-	  break;
-	case TYPE_ITEM:
-	  if((obj=dynamic_cast<TObj *>(t)) &&
-	     obj->itemType() == ingredients[i].num)
-	    found++;
-	  break;
+
+    for(int j=i;ingredients[j].recipe>=0 && ingredients[j].ingredient==ingredients[i].ingredient;++j){
+      // look for this ingredient
+      nfound=0;
+      for(t=pot->getStuff();t;t=t->nextThing){
+	switch(ingredients[i].type){
+	  case TYPE_VNUM:
+	    if(obj_index[t->number].virt==ingredients[i].num)
+	      nfound++;
+	    break;
+	  case TYPE_LIQUID:
+	    if((pool=dynamic_cast<TPool *>(t)) &&
+	       pool->getDrinkType() == ingredients[i].num)
+	      nfound += pool->getDrinkUnits();
+	    break;
+	  case TYPE_MATERIAL:
+	    if(t->getMaterial() == ingredients[i].num)
+	      nfound++;
+	    break;
+	  case TYPE_CORPSE:
+	    if((corpse=dynamic_cast<TCorpse *>(t)) &&
+	       corpse->getCorpseRace() == ingredients[i].num)
+	      nfound++;
+	    break;
+	  case TYPE_ITEM:
+	    if((obj=dynamic_cast<TObj *>(t)) &&
+	       obj->itemType() == ingredients[i].num)
+	      nfound++;
+	    break;
+	}
       }
+
+      i=j;
     }
 
-    if(found < ingredients[i].amt){
+    
+    if(nfound < ingredients[i].amt){
       return false;
     }
   }

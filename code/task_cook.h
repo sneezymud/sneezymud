@@ -11,14 +11,14 @@ const int BOGUS_PLACEHOLDER = 10913;
 
 class ingredientTypeT {
 public:
-  int recipe, amt, type, num;
+  int recipe, ingredient, amt, type, num;
 };
 
 class recipeTypeT {
 public:
   int recipe;
   const sstring keywords, name;
-  int vnum; // base, quality adds more
+  int vnum;
 };
 
 // recipe number, keywords, name
@@ -38,34 +38,37 @@ recipeTypeT recipes[] =
 ingredientTypeT ingredients[] =
 { 
   // marinated steak
-  {0, 1, TYPE_VNUM, GENERIC_STEAK},  // any steak will do
-  {0, 3, TYPE_LIQUID, LIQ_WHISKY}, // 3 ounces of whiskey
-  {0, 1, TYPE_VNUM, 432}, // 1 orange
+  {0, 1, 1, TYPE_VNUM, GENERIC_STEAK},  // any steak will do
+  {0, 2, 3, TYPE_LIQUID, LIQ_WHISKY}, // 3 ounces of whiskey
+  {0, 3, 1, TYPE_VNUM, 432}, // 1 orange
   
   // fried catfish
-  {1, 1, TYPE_VNUM, 13803}, // 1 catfish
-  {1, 1, TYPE_VNUM, 263}, // jar of whale grease
+  {1, 1, 1, TYPE_VNUM, 13803}, // 1 catfish
+  {1, 2, 1, TYPE_VNUM, 263}, // jar of whale grease
 
   // rat on a stick
-  {2, 1, TYPE_CORPSE, RACE_RODENT}, // 1 rat
-  {2, 1, TYPE_ITEM, ITEM_ARROW}, // 1 arrow
+  {2, 1, 1, TYPE_CORPSE, RACE_RODENT}, // 1 rat
+  {2, 2, 1, TYPE_ITEM, ITEM_ARROW}, // 1 arrow
 
   // mashed potatoes
-  {3, 1, TYPE_VNUM, 31766}, // 1 potato
-  {3, 1, TYPE_VNUM, 31767}, // butter
+  {3, 1, 1, TYPE_VNUM, 31766}, // 1 potato
+  {3, 2, 1, TYPE_VNUM, 31767}, // butter
 
   // side salad
-  {4, 1, TYPE_VNUM, 31768}, // lettuce
-  {4, 1, TYPE_VNUM, 14348}, // tomato
-  {4, 1, TYPE_VNUM, 31769}, // dressing
-  {4, 1, TYPE_VNUM, 31770}, // onion
-  {4, 1, TYPE_VNUM, 31771}, // carrot
-  {4, 1, TYPE_VNUM, 31772}, // croutons
+  {4, 1, 1, TYPE_VNUM, 10037}, // lettuce
+  {4, 1, 1, TYPE_VNUM, 14349},
+  {4, 1, 1, TYPE_VNUM, 28947},
+  {4, 1, 1, TYPE_VNUM, 31768},
+  {4, 2, 1, TYPE_VNUM, 14348}, // tomato
+  {4, 3, 1, TYPE_VNUM, 31769}, // dressing
+  {4, 4, 1, TYPE_VNUM, 31770}, // onion
+  {4, 5, 1, TYPE_VNUM, 31771}, // carrot
+  {4, 6, 1, TYPE_VNUM, 31772}, // croutons
 
   // steak dinner
-  {5, 1, TYPE_VNUM, 405}, // marinated steak, recipe 0
-  {5, 1, TYPE_VNUM, 31773}, // side of mashed potatoes, recipe 3
-  {5, 1, TYPE_VNUM, 31774}, // side salad, recipe 4
+  {5, 1, 1, TYPE_VNUM, 405}, // marinated steak, recipe 0
+  {5, 2, 1, TYPE_VNUM, 31773}, // side of mashed potatoes, recipe 3
+  {5, 3, 1, TYPE_VNUM, 31774}, // side salad, recipe 4
 
   {-1, -1, -1, -1}
 };
