@@ -3054,20 +3054,6 @@ char *strstr(const char *s1, const char *s2)
 }
 #endif
 
-const char *strcasestr(const char *s1, const char *s2)
-{
-  if (!*s2)
-    return s1;  // conformance with strstr
-
-  int j = strlen(s1) - strlen(s2);
-  if (j < 0)
-    return NULL;  // conformance with strstr
-  int i, k = strlen(s2);
-  for (i = 0; i <= j && strncasecmp(&s1[i], s2, k) != 0; i++);
-
-  return (i > j) ? NULL : &s1[i];
-}
-
 // I redid this function to make it more flexible. It has a new argument  
 // for the array, making it useful with any array.  - Russ                
 void bisect_arg(const char *arg, int *field, char *sstring, const char * const array[])

@@ -24,7 +24,6 @@ extern int split_sstring(const sstring &str, const sstring &sep, vector<sstring>
 extern void sendrp_exceptf(TRoom *, TBeing *, const char *,...);
 extern const char *how_good(int);
 extern void sprintbit(unsigned long, const char * const [], char *);
-extern const char *strcasestr(const char *, const char *);
 extern bool is_exact_spellname(const sstring &, const sstring &);
 extern bool is_exact_name(const sstring &, const sstring &);
 extern int get_number(char **);

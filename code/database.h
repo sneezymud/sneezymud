@@ -1,7 +1,7 @@
 #ifndef __DATABASE_H
 #define __DATABASE_H
 
-#include <postgresql/libpq-fe.h>
+#include <libpq-fe.h>
 
 // TDatabase is a class for interacting with the sql database.
 //

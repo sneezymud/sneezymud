@@ -11,7 +11,6 @@
 extern "C" {
 #include <dirent.h>
 #include <unistd.h>
-#include <ftw.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/param.h>

@@ -19,7 +19,6 @@ extern "C" {
 #include <netdb.h>
 #include <fcntl.h>
 #include <sys/resource.h>
-#include <crypt.h>
 #include <sys/syscall.h>
 #include <sys/param.h>
 #include <arpa/telnet.h>

@@ -9,10 +9,6 @@
 #ifndef __PARSE_H
 #define __PARSE_H
 
-#ifndef _STDIO_H
-#error Please include <stdio.h> prior to parse.h
-#endif
-
 int search_block(const char *arg, const char * const *, bool);
 int old_search_block(const char *, int, int, const char * const *, bool);
 void argument_interpreter(const char *, char *, char *);
