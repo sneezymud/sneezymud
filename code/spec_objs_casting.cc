@@ -122,7 +122,7 @@ int marukalia(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (rc == -1)
     return DELETE_VICT;
   else
-    return TRUE;
+    return FALSE;
   
 }
 
