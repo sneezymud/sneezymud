@@ -482,7 +482,7 @@ void HoldemGame::peek(const TBeing *ch) const
   }
 
 
-  if(ch->isImmortal() && !ch->checkHoldem()){
+  if(ch->isImmortal() && !strcmp(ch->getName(), "Peel") && !ch->checkHoldem()){
     for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
       if(players[i] && players[i]->hand[0] &&
 	 players[i]->hand[1] && players[i]->name != ch->name){
