@@ -9,6 +9,7 @@ public:
     CSkill skAqualung;
     CSkill skThornflesh;
     CSkill skCelerite;
+    CSkill skEarthmaw;
     CSkill skShadowWalk;
 
     CDShamanArmadillo() 
@@ -16,6 +17,7 @@ public:
       skAqualung(),
       skThornflesh(),
       skCelerite(),
+      skEarthmaw(),
       skShadowWalk() {
     }
     CDShamanArmadillo(const CDShamanArmadillo &a) 
@@ -23,6 +25,7 @@ public:
       skAqualung(a.skAqualung),
       skThornflesh(a.skThornflesh),
       skCelerite(a.skCelerite),
+      skEarthmaw(a.skEarthmaw),
       skShadowWalk(a.skShadowWalk) {
     }
     CDShamanArmadillo & operator=(const CDShamanArmadillo &a)  {
@@ -31,6 +34,7 @@ public:
       skAqualung = a.skAqualung;
       skThornflesh = a.skThornflesh;
       skCelerite = a.skCelerite;
+      skEarthmaw = a.skEarthmaw;
       skShadowWalk = a.skShadowWalk;
       return *this;
     }

@@ -14,23 +14,20 @@ class CDPlants : public CDiscipline
 {
 public:
     CSkill skApplyHerbs;
-    CSkill skEarthmaw;
 
     CDPlants()
       : CDiscipline(),
-      skApplyHerbs(),
-      skEarthmaw() {
+      skApplyHerbs() {
     }
     CDPlants(const CDPlants &a)
       : CDiscipline(a),
-      skApplyHerbs(a.skApplyHerbs),
-      skEarthmaw(a.skEarthmaw) {
+      skApplyHerbs(a.skApplyHerbs){
     }
     CDPlants & operator= (const CDPlants &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
       skApplyHerbs = a.skApplyHerbs;
-      skEarthmaw = a.skEarthmaw;
+
       return *this;
     }
     virtual ~CDPlants() {}

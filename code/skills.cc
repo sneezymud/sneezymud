@@ -595,8 +595,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SKILL_APPLY_HERBS:  //                382
       return &((CDPlants *) cd)->skApplyHerbs;
 #if 1
-    case SPELL_EARTHMAW:
-      return &((CDPlants *) cd)->skEarthmaw;
 #endif
 // disc_survival
 
@@ -1021,6 +1019,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDShamanArmadillo *) cd)->skAqualung;
     case SPELL_THORNFLESH:
       return &((CDShamanArmadillo *) cd)->skThornflesh;
+    case SPELL_EARTHMAW:
+      return &((CDShamanArmadillo *) cd)->skEarthmaw;
 
       // control abilities--------------------------
 
