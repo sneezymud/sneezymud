@@ -1977,31 +1977,37 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     arg = one_argument(arg, buf);
     
     if(!strcmp(buf, "info")){ /////////////////////////////////////////
+#if 0
       if(owned && !(access & SHOPACCESS_OWNER) && !(access & SHOPACCESS_INFO)){
 	sprintf(buf, "%s Sorry, you don't have access to do that.", ch->getName());
 	myself->doTell(buf);
 	return FALSE;
       }
+#endif
 
-      for(tt=myself->getStuff();tt;tt=tt->nextThing){
-	o=dynamic_cast<TObj *>(tt);
-	++count;
-	value+=o->obj_flags.cost;
-	price+=o->shopPrice(1, shop_nr, -1, &discount);
+      // if not owned, or owned and has "owner" or "info"
+      if(!owned || ((access & SHOPACCESS_OWNER)||(access & SHOPACCESS_INFO))){
+	for(tt=myself->getStuff();tt;tt=tt->nextThing){
+	  o=dynamic_cast<TObj *>(tt);
+	  ++count;
+	  value+=o->obj_flags.cost;
+	  price+=o->shopPrice(1, shop_nr, -1, &discount);
+	}
+	sprintf(buf, "%s I have %i talens and %i items worth %i talens and selling for %i talens.", ch->getName(), myself->getMoney(), count, value, price);
+	myself->doTell(buf);
+	sprintf(buf, "%s That puts my total value at %i talens.",
+		ch->getName(), myself->getMoney()+value);
+	myself->doTell(buf);
+	
+	if(!owned){
+	  sprintf(buf, "%s This shop is for sale, however the King charges a sales tax and an ownership fee.", ch->getName());
+	  myself->doTell(buf);
+	  sprintf(buf, "%s That puts the sale price at %i.", ch->getName(),
+		  (int)((myself->getMoney()+value)*1.15)+1000000);
+	  myself->doTell(buf);
+	} 
       }
-      sprintf(buf, "%s I have %i talens and %i items worth %i talens and selling for %i talens.", ch->getName(), myself->getMoney(), count, value, price);
-      myself->doTell(buf);
-      sprintf(buf, "%s That puts my total value at %i talens.",
-	      ch->getName(), myself->getMoney()+value);
-      myself->doTell(buf);
-      
-      if(!owned){
-	sprintf(buf, "%s This shop is for sale, however the King charges a sales tax and an ownership fee.", ch->getName());
-	myself->doTell(buf);
-	sprintf(buf, "%s That puts the sale price at %i.", ch->getName(),
-		(int)((myself->getMoney()+value)*1.15)+1000000);
-	myself->doTell(buf);
-      } 
+      // anyone can see profit_buy, profit_sell and trading types, anytime
 
       sprintf(buf, "%s My profit_buy is %f and my profit_sell is %f.",
 	      ch->getName(), shop_index[shop_nr].profit_buy,
@@ -2340,16 +2346,23 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	    vlogf(LOG_BUG, "Database error in shop_keeper");
 	  return FALSE;
 	}
-      } else if(*buf){
-	if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select access from shopownedaccess where shop_nr=%i and name='%s'", shop_nr, buf))==-1){
-	  vlogf(LOG_BUG, "Database error in shop_keeper");
-	  return FALSE;
+      } else {
+	if(*buf){
+	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select name, access from shopownedaccess where shop_nr=%i and name='%s'", shop_nr, buf))==-1){
+	    vlogf(LOG_BUG, "Database error in shop_keeper");
+	    return FALSE;
+	  }
+	} else {
+	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select name, access from shopownedaccess where shop_nr=%i order by access", shop_nr))==-1){
+	    vlogf(LOG_BUG, "Database error in shop_keeper");
+	    return FALSE;
+	  }
 	}
-	if((row=mysql_fetch_row(res))){
-	  access=atoi(row[0]);
+	while((row=mysql_fetch_row(res))){
+	  access=atoi(row[1]);
 
 	  sprintf(buf2, "%s Access for %s is set to %i, commands/abilities:", ch->getName(),
-		  buf, access);
+		  row[0], access);
 
           if(access>=SHOPACCESS_LOGS){
 	    access-=SHOPACCESS_LOGS;
