@@ -500,36 +500,33 @@ int TShopOwned::doLogs(sstring arg)
     ch->sendTo("Done.\n\r");
   } else if(arg==" summaries" || arg==" balance"){
     if(arg==" summaries"){
-      db.query("select name, action, sum(talens) as tsum from shoplog where shop_nr=%i group by name, action order by tsum desc", shop_nr);
+      db.query("select name, sum(talens) as tsum from shoplog where shop_nr=%i group by name order by tsum desc", shop_nr);
       
-      ssprintf(buf, "<r>%-12.12s %-10.10s %s<1>\n\r",
-	       "Person", "Action", "Total Talens");
+      ssprintf(buf, "<r>%-10s %-65.65s<1>\n\r", "Profit", "Person");
       sb += buf;
       
       while(db.fetchRow()){
-	ssprintf(buf, "%-12.12s %-10.10s %8i\n\r", 
-		 db.getColumn(0), db.getColumn(1), convertTo<int>(db.getColumn(2)));
+	ssprintf(buf, "%10i %-65.65s\n\r",
+		 convertTo<int>(db.getColumn(1)), db.getColumn(0));
 	sb += buf;
       }
       
       //////////
       sb += "\n\r";
       
-      db.query("select item, action, sum(talens) as tsum from shoplog where shop_nr=%i group by item, action order by tsum desc", shop_nr);
-      
-      ssprintf(buf, "<r>%-26.26s %-10.10s %s<1>\n\r",
-	       "Item", "Action" ,"Total Talens");
+      db.query("select item, sum(talens) as tsum from shoplog where shop_nr=%i group by item order by tsum desc", shop_nr);
+
+      ssprintf(buf, "<r>%-10s %-65.65s<1>\n\r", "Profit", "Item");
       sb += buf;
       
       while(db.fetchRow()){
-	ssprintf(buf, "%-32.32s %-10.10s %8i\n\r", 
-		 db.getColumn(0), db.getColumn(1), convertTo<int>(db.getColumn(2)));
+	ssprintf(buf, "%10i %-65.65s\n\r", 
+		 convertTo<int>(db.getColumn(1)), db.getColumn(0));
 	sb += buf;
       }
 
       sb += "\n\r";
     }
- 
     
     db.query("select action, sum(talens) as tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
     
