@@ -1256,10 +1256,21 @@ void TPerson::doEdit(const char *arg)
         swlen = stripped_word.length();
 
         if ((line.length() + 1) + (word.length() + 1) >= 80) {
+          size_t last_char = 0;
+
           if (iter!=words.end()) {
             line += "\n\r";
           }
           newDescr += line;
+
+          // check if the word ends with punctuation
+          stripped_word += " ";
+          last_char = stripped_word.find_last_not_of(" ");
+
+          if (stripped_word.find_first_of(punctuation, last_char) !=
+              stripped_word.npos) {
+            word += " "; // and add an extra space to the end.
+          }
           line = word;
         } else { // word fits ok on line
           size_t last_char = 0;
