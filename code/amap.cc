@@ -548,9 +548,9 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
     
     // color by popularity
     if(logf){
-      float perc =  log(roomcount[t->num]) / log(max);
+      double perc =  log(double(roomcount[t->num])) / log(double(max));
       perc=1.0-perc;
-      float red, green, blue;
+      double red, green, blue;
       
       if (perc < 0.5 && perc >= 0.25)
 	red = min(255.0, 255  * ((0.25 - (perc - 0.25)) / 0.25));
