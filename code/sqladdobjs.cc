@@ -48,19 +48,21 @@ int main(int argc, char **argv)
     }
 
     //// objaffect
+    db_beta.query("delete from objaffect where vnum=%i", vnums[t]);
+
     db_immo.query("select vnum, type, mod1, mod2 from objaffect where owner='%s' and vnum=%i", immortal.c_str(), vnums[t]);
 
-    if(db_immo.fetchRow()){
-      db_beta.query("delete from objaffect where vnum=%i", vnums[t]);
+    while(db_immo.fetchRow()){
       db_beta.query("insert into objaffect values(%s, %s, %s, %s)", db_immo.getColumn(0), db_immo.getColumn(1), db_immo.getColumn(2), db_immo.getColumn(3));
     }      
 
     
     //// obj extra
+    db_beta.query("delete from objextra where vnum=%i", vnums[t]);
+
     db_immo.query("select vnum, name, description from objextra where owner='%s' and vnum=%i", immortal.c_str(), vnums[t]);
 
-    if(db_immo.fetchRow()){
-      db_beta.query("delete from objextra where vnum=%i", vnums[t]);
+    while(db_immo.fetchRow()){
       db_beta.query("insert into objextra values(%s, '%s', '%s')", db_immo.getColumn(0), db_immo.getColumn(1), db_immo.getColumn(2));
     }
 
