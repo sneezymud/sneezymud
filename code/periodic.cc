@@ -894,6 +894,23 @@ int TBeing::updateHalfTickStuff()
     setPosition(POSITION_SLEEPING);
   }
 
+  if(hasQuestBit(TOG_IS_NECROPHOBIC) && !::number(0,3)){
+    TBeing *tb;
+    for(TThing *t=roomp->getStuff();t;t=t->nextThing){
+      if(dynamic_cast<TBaseCorpse *>(t) ||
+	 ((tb=dynamic_cast<TBeing *>(t)) && tb->isUndead())){
+	sendTo(fmt("You lose your cool at the sight of %s and freak out!\n\r")%
+	       t->getName());
+	doFlee("");
+	addCommandToQue("flee");
+	addCommandToQue("flee");
+	break;
+      }
+    }
+  }
+
+
+
   if(inRoom() >= 31800 && inRoom() <= 31899 && getCond(DRUNK) == 0){
     sendTo("Totally sober now, this world seems to fade away like a dream.\n\r");
     setPosition(POSITION_SLEEPING);
