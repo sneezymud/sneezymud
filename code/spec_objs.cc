@@ -3,9 +3,8 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_objs.cc,v $
-// Revision 1.5  1999/09/26 23:49:47  lapsos
-// Changes to the wicked proc.
-//
+// Revision 1.6  1999/09/27 09:20:02  lapsos
+// Various changes to the wickedDagger proc.
 //
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
@@ -2259,7 +2258,7 @@ int wickedDagger(TBeing *vict, cmdTypeT cmd, const char *, TObj *me, TObj *ch_ob
 
     int rc = ch->reconcileDamage(vict, dam, wtype);
     if (rc == -1)
-      return DELETE_THIS;
+      return DELETE_VICT;
 
     return FALSE;
   }
