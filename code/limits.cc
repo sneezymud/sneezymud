@@ -562,7 +562,7 @@ double TBeing::pracsPerLevel(classIndT Class, bool forceBasic)
   // advancedpracs is the pracs per level you get after you finish basic
   double advancedpracs = (getAdvancedPracs(this) * learnrate)/(50.0 - advancedlevel);
 
-  if (getLevel(Class) >= advancedlevel && !forceBasic)
+  if (getLevel(Class) >= advancedlevel && !forceBasic && getLevel(Class)<=50)
     num = advancedpracs;
   else
     num = basicpracs;
