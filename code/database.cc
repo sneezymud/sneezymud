@@ -132,7 +132,7 @@ bool TDatabase::query(const char *query,...){
   // free the previous results (if any) and assign the new results
   // if there aren't supposed to be results (update, insert, delete, etc)
   // then don't do anything with the results, they might still be used
-  if(mysql_field_count(db)){
+  if(restmp){
     if(res)
       mysql_free_result(res);
     res=restmp;
