@@ -823,6 +823,11 @@ void TThing::sacrificeMe(TBeing *ch, const char *arg)
   TObj *obj;
   TBeing *dummy;
 
+  if (ch->getPosition() != POSITION_STANDING) {
+    ch->sendTo(COLOR_OBJECTS, "You must stand to sacrifice %s.\n\r", obj->getName());
+    return;
+  }
+
   // Check to see if argument passed exists in room
   if (!generic_find(arg, FIND_OBJ_ROOM, ch, &dummy, &obj)) {
     ch->sendTo("You do not see a %s here.\n\r", arg);
@@ -860,6 +865,10 @@ void TTool::sacrificeMe(TBeing *ch, const char *arg)
 
   if (getToolType() != TOOL_TOTEM) {
     ch->sendTo("You must be holding a totem in your primary hand to perform this ritual.\n\r");
+    return;
+  }
+  if (ch->getPosition() != POSITION_STANDING) {
+    ch->sendTo(COLOR_OBJECTS, "You must stand to sacrifice %s.\n\r", obj->getName());
     return;
   }
 

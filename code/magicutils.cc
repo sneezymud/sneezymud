@@ -1411,131 +1411,183 @@ void TBeing::nothingHappens(silentTypeT silent_caster) const
     }
   }
 
-  int num = ::number(0,17);
-  switch(num) {
-    default:
-    case 0:
-      if (!silent_caster)
-        sendTo("Nothing seems to happen.\n\r");
-      act("Nothing seems to happen.", TRUE, this, 0, 0, TO_ROOM);
-      break;
-    case 1:
-      if (!silent_caster)
-        sendTo("Nothing happens.\n\r");
-      act("Nothing happens.", TRUE, this, 0, 0, TO_ROOM);
-      break;
-    case 2:
-      if (!silent_caster)
-        act("Uh oh, maybe you ought to try that again.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("Humor the little mage and pretend the spell worked.",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 3:
-      if (!silent_caster)
-        act("That didn't work...ONE MORE TIME!",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("$n's spell didn't work.",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 4:
-      if (!silent_caster)
-        act("Nope, nuh uh, nada, zip, the big mage fizzle.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("Chant, chant, wave hands, wave hands, mages suck.",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 5:
-      if (!silent_caster)
-        act("Damn!  Missed again.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("The mage casts and misses!",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 6:
-      if (!silent_caster)
-        act("The forces of magic fail to come forth.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("The forces of magic fail to come forth.",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 7:
-      if (!silent_caster)
-        act("Try as you might, your magic fails you.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("Try as $n might, the magic fails.",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 8:
-      if (!silent_caster)
-        act("Your attempt at magic is unsuccessful.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("$n's attempt at magic is unsuccessful.",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 9:
-      if (!silent_caster)
-        act("Your spell dissipates without effect.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("$n's magic dissipates without any effect.",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 10:
-      if (!silent_caster)
-        act("Your mind lacks the focus to control the magic.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("$n's magic starts to form, but then collapses.",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 11:
-      if (!silent_caster)
-        act("Your thoughts go awry, and the magic fades harmlessly.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("$n looks perplexed and $s magic fades harmlessly.",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 12:
-      if (!silent_caster)
-        act("You're pretty sure that should have worked, but no such luck.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("$n blinks in bewilderment.  Perhaps $e was expecting something to happen...?",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 13:
-      if (!silent_caster)
-        act("Dang, you forgot part of the incantation and cease casting.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("$n throws $s hands up in disgust.",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 14:
-      if (!silent_caster)
-        act("Something seems amiss, and you give up on your spell.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("$n acts like $s spell is finished, but the magic ain't there.",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 15:
-      if (!silent_caster)
-        act("You slip up and manage to fill the air with goose feathers.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("$n fills the air with goose feathers.  Neat!",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 16:
-      if (!silent_caster)
-        act("You make an error and sparks seem to surround you.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("$n makes a mistake, and becomes surrounded by magical sparks.",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
-    case 17:
-      if (!silent_caster)
-        act("DAMN! Screwed up again!.",
-                 FALSE, this, NULL, NULL, TO_CHAR);
-      act("Chant...Chant...Wave hands...Wave hands...Mages suck!",
-                 FALSE, this, NULL, NULL, TO_ROOM);
-      break;
+  if (hasClass(CLASS_SHAMAN)) {
+    int num = ::number(0,6);
+    switch(num) {
+      default:
+      case 0:
+	if (!silent_caster)
+	  sendTo("Nothing seems to happen.\n\r");
+	act("Nothing seems to happen.", TRUE, this, 0, 0, TO_ROOM);
+	break;
+      case 1:
+	if (!silent_caster)
+	  sendTo("Nothing happens.\n\r");
+	act("Nothing happens.", TRUE, this, 0, 0, TO_ROOM);
+	break;
+      case 2:
+	if (!silent_caster)
+	  act("Uh oh, maybe you ought to try that again.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("Make like it worked.....shhhhhhhhhhh.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 3:
+	if (!silent_caster)
+	  act("That didn't work...",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("$n's invokation didn't work.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 4:
+	if (!silent_caster)
+	  act("Nope, nuh uh, nada, zip.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("Chant, dance, do the bugaloo...whatever, shaman suck.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 5:
+	if (!silent_caster)
+	  act("Damn!  Missed again.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("No luck here! Maybe something more simple for a shaman?",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 6:
+	if (!silent_caster)
+	  act("The power of your ancestors is not there.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("I feel like dancin'....YEAH!",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+    }
+  } else {
+    int num = ::number(0,17);
+    switch(num) {
+      default:
+      case 0:
+	if (!silent_caster)
+	  sendTo("Nothing seems to happen.\n\r");
+	act("Nothing seems to happen.", TRUE, this, 0, 0, TO_ROOM);
+	break;
+      case 1:
+	if (!silent_caster)
+	  sendTo("Nothing happens.\n\r");
+	act("Nothing happens.", TRUE, this, 0, 0, TO_ROOM);
+	break;
+      case 2:
+	if (!silent_caster)
+	  act("Uh oh, maybe you ought to try that again.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("Humor the little mage and pretend the spell worked.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 3:
+	if (!silent_caster)
+	  act("That didn't work...ONE MORE TIME!",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("$n's spell didn't work.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 4:
+	if (!silent_caster)
+	  act("Nope, nuh uh, nada, zip, the big mage fizzle.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("Chant, chant, wave hands, wave hands, mages suck.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 5:
+	if (!silent_caster)
+	  act("Damn!  Missed again.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("The mage casts and misses!",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 6:
+	if (!silent_caster)
+	  act("The forces of magic fail to come forth.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("The forces of magic fail to come forth.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 7:
+	if (!silent_caster)
+	  act("Try as you might, your magic fails you.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+  	  act("Try as $n might, the magic fails.",
+	      FALSE, this, NULL, NULL, TO_ROOM);
+	  break;
+      case 8:
+	if (!silent_caster)
+	  act("Your attempt at magic is unsuccessful.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("$n's attempt at magic is unsuccessful.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 9:
+	if (!silent_caster)
+	  act("Your spell dissipates without effect.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("$n's magic dissipates without any effect.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 10:
+	if (!silent_caster)
+	  act("Your mind lacks the focus to control the magic.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("$n's magic starts to form, but then collapses.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 11:
+	if (!silent_caster)
+	  act("Your thoughts go awry, and the magic fades harmlessly.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("$n looks perplexed and $s magic fades harmlessly.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 12:
+	if (!silent_caster)
+	  act("You're pretty sure that should have worked, but no such luck.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("$n blinks in bewilderment.  Perhaps $e was expecting something to happen...?",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 13:
+	if (!silent_caster)
+	  act("Dang, you forgot part of the incantation and cease casting.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("$n throws $s hands up in disgust.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 14:
+	if (!silent_caster)
+	  act("Something seems amiss, and you give up on your spell.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("$n acts like $s spell is finished, but the magic ain't there.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 15:
+	if (!silent_caster)
+	  act("You slip up and manage to fill the air with goose feathers.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("$n fills the air with goose feathers.  Neat!",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 16:
+	if (!silent_caster)
+	  act("You make an error and sparks seem to surround you.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("$n makes a mistake, and becomes surrounded by magical sparks.",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+      case 17:
+	if (!silent_caster)
+	  act("DAMN! Screwed up again!.",
+	      FALSE, this, NULL, NULL, TO_CHAR);
+	act("Chant...Chant...Wave hands...Wave hands...Mages suck!",
+	    FALSE, this, NULL, NULL, TO_ROOM);
+	break;
+    }
   }
 }
 
