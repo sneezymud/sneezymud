@@ -97,6 +97,7 @@ class lag_data
     time_t lagstart[10];
     time_t lagtime[10];
     unsigned long lagcount[10];
+    double laggroup[10][25];
 
   lag_data() :
     high(0),
@@ -108,6 +109,12 @@ class lag_data
     memset(&lagstart, 0, sizeof(lagstart));
     memset(&lagtime, 0, sizeof(lagtime));
     memset(&lagcount, 0, sizeof(lagcount));
+
+    for(int i=0;i<10;++i){
+      for(int j=0;j<25;++j){
+	laggroup[i][j]=0;
+      }
+    }
   }
 };
 extern lag_data lag_info;

@@ -39,6 +39,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "weather.h"
 #include "obj_smoke.h"
 #include "obj_vehicle.h"
+#include "timing.h"
 
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown
@@ -359,6 +360,8 @@ int TSocket::gameLoop()
   time_t lagtime_t = time(0);
   TVehicle *vehicle;
   int vehiclepulse = 0;
+  TTiming timer;
+  int timer_i = 0, timer_j=0;
 
 #ifndef SOLARIS
   int mask;
@@ -394,6 +397,9 @@ int TSocket::gameLoop()
   time_t ticktime = time(0);
 
   while (!Shutdown) {
+    timer.start();
+    timer_j=0;
+
     ////////////////////////////////////////////
     // handle shutdown
     ////////////////////////////////////////////
@@ -419,6 +425,7 @@ int TSocket::gameLoop()
       }
     } else
       sent = 0;
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
     ////////////////////////////////////////////    
     ////////////////////////////////////////////
 
@@ -452,6 +459,7 @@ int TSocket::gameLoop()
       last_time.tv_usec -= 1000000;
       last_time.tv_sec++;
     }
+
 #ifndef SOLARIS
     sigsetmask(mask);
 #endif
@@ -461,10 +469,15 @@ int TSocket::gameLoop()
     null_time.tv_sec = 0;
     null_time.tv_usec = 0;
 #endif
-    if (select(maxdesc + 1, &input_set, &output_set, &exc_set, &null_time) < 0) {
+
+    // this gets our list of socket connections that are ready for handling
+    if(select(maxdesc + 1, &input_set, &output_set, &exc_set, &null_time) < 0){
       perror("Error in Select (poll)");
       return (-1);
     }
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
+
+    // this regulates the speed of the mud
     if (select(0, 0, 0, 0, &timeout) < 0) {
       perror("Error in select (sleep)");
     }
@@ -472,6 +485,7 @@ int TSocket::gameLoop()
 #ifndef SOLARIS
     sigsetmask(0);
 #endif
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
     ////////////////////////////////////////////
     ////////////////////////////////////////////
 
@@ -489,6 +503,7 @@ int TSocket::gameLoop()
           descriptor_list->sendLogin("1");
       }
     }
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
     ////////////////////////////////////////////
     ////////////////////////////////////////////
 
@@ -503,6 +518,7 @@ int TSocket::gameLoop()
 	delete point;
       }
     }
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
     ////////////////////////////////////////////
     ////////////////////////////////////////////
 
@@ -521,6 +537,7 @@ int TSocket::gameLoop()
     processAllInput();
     setPrompts(output_set);
     afterPromptProcessing(output_set);
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
     ////////////////////////////////////////////
     ////////////////////////////////////////////
 
@@ -558,6 +575,8 @@ int TSocket::gameLoop()
     
     // interport communication
     mudRecvMessage();
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
+
 
     // this is causing tons of lag for some reason
     // ok i tried to fix this, switched the databases to one for each port. - dash 12/02
@@ -568,12 +587,14 @@ int TSocket::gameLoop()
       count=updateWholist();
       updateUsagelogs(count);
     }
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
 
 
     // send out repo mobs
     if(!wayslowpulse){
       checkForRepo();
     }
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
 
 
     if (!pulse_tick) {
@@ -586,9 +607,11 @@ int TSocket::gameLoop()
       weatherAndTime(1);
       //      updateStocks();
     }
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
 
     if (!combat)
       perform_violence(pulse);
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
 
     if (!pulse_mudhour) {
       // these are done per mud hour
@@ -608,6 +631,8 @@ int TSocket::gameLoop()
       updateAvgPlayers();
       checkGoldStats();
     }
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
+
     if (!teleport || !special_procs || !pulse_mudhour) {
       call_room_specials();
 // this is advanced weather stuff, do not activate - Bat
@@ -739,6 +764,8 @@ int TSocket::gameLoop()
         next_thing = obj->next;
       } // object list
     }
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
+
 
     if (!combat || !mobstuff || !teleport || !drowning || !update_stuff || !pulse_tick) {
       unsigned int i;
@@ -1041,7 +1068,7 @@ int TSocket::gameLoop()
         temp = tmp_ch->next;
       } // character_list
     }
-
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
 
     if (!(pulse % 2399))
       do_check_mail();
@@ -1058,7 +1085,10 @@ int TSocket::gameLoop()
 
       lag_info.high = max(lag_info.lagtime[which], lag_info.high);
       lag_info.low = min(lag_info.lagtime[which], lag_info.low);
+
+      timer_i=(timer_i+1)%10;
     }
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
 
     if(!(pulse % 600)){
       static FILE *p;
@@ -1083,7 +1113,7 @@ int TSocket::gameLoop()
       fprintf(p, "EOM\n");
       fflush(p);
     }
-
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
 
     if (pulse >= 2400) {
       unsigned int secs = time(0) - ticktime;
@@ -1101,6 +1131,7 @@ int TSocket::gameLoop()
 
     systask->CheckTask();
     tics++;			// tics since last checkpoint signal 
+    lag_info.laggroup[timer_i][timer_j++]=timer.getElapsedReset();
   }
   return TRUE;
 }

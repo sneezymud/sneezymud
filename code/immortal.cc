@@ -4734,14 +4734,67 @@ void TBeing::doInfo(const char *arg)
     return;
 
   arg = one_argument(arg, arg1);
-  sstring str = "Information available to you : Commands, Disciplines, MobSkills, ImmSkills, Numbers, Piety, Gold, Skills, Deaths, Objects, Unlinked";
-  str += ".\n\r";
+  sstring str = "Information available to you : \n\r";
+  str += "lag         : a breakdown of lag in the game loop.\n\r";
+  str += "commands    : how many times certain commands were used.\n\r";
+  str += "objects     : how many objects exist of each time.\n\r";
+  str += "unlinked    : how many objects are in the obj list but not in the mud.\n\r";
+  str += "tweak       : list or change global parameters.\n\r";
+  str += "deaths      : number of player deaths.\n\r";
+  str += "piety       : faction piety for everyone online.\n\r";
+  str += "descriptors : descriptor numbers for everyone online.\n\r";
+  str += "numbers     : some misc stats.\n\r";
+  str += "gold        : economy data.\n\r";
+  str += "discipline  : info on skill usage in specified disc.\n\r";
+  str += "skills      : detailed info on skill usage for specified skill.\n\r";
+  str += "mobskills   : same as discipline above, but for mobs.\n\r";
+  str += "immskills   : same as discipline above, but for imms.\n\r";
 
   if (!*arg1) {
     sendTo("What would you like info on?\n\r");
     sendTo(str.c_str());
   } else {
-    if (is_abbrev(arg1, "commands")) {
+    if (is_abbrev(arg1, "lag")){
+      sstring groupnames[25]={"Shutdown Handler",
+			      "Socket Handler", "Sleep",
+			      "New Connections",
+			      "Close Connections", "Input Handler",
+			      "Interport Recv", "Who List", "Repo",
+			      "Pulse Tick", "Combat", "Pulse Mudhour",
+			      "Object Loop", "Character Loop",
+			      "Misc 1", "Ping", "Misc 2", 
+			      "unknown",
+			      "unknown",
+			      "unknown",
+			      "unknown",
+			      "unknown",
+			      "unknown",
+			      "unknown", "unknown"};
+
+      double total=0, tlist[25], ttotal=0;
+      for(int i=0;i<25;++i){
+	for(int j=0;j<10;++j){
+	  total += lag_info.laggroup[j][i];
+	}
+	total/=10;
+	tlist[i]=total;
+	ttotal+=total;
+	total=0;
+      }
+
+      int n=0;
+      for(int j=0;j<25;++j){
+	for(int i=0;i<25;++i){
+	  if(tlist[i]>=tlist[n])
+	    n=i;
+	}
+	if(groupnames[n]!="unknown")
+	  sendTo("%-20s: %8.4f    %2.2f%%\n\r", groupnames[n].c_str(),tlist[n],
+		 ((tlist[n]/ttotal)*100));
+	tlist[n]=0;
+      }
+    }
+    else if (is_abbrev(arg1, "commands")) {
       sendTo("Command access information:\n\r");
       sendTo("  News file accessed %d times.\n\r", news_used_num);
       sendTo("  Wiznews file accessed %d times.\n\r", wiznews_used_num);
@@ -4807,8 +4860,6 @@ void TBeing::doInfo(const char *arg)
 
       desc->page_string(buf);
     }
-
-#if 1
     else if (is_abbrev(arg1, "tweak")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
         sendTo("You should not attempt to change that.\n\r");
@@ -4824,8 +4875,9 @@ void TBeing::doInfo(const char *arg)
 	else
 	  stats.equip -= .05;
 	save_game_stats();
+      } else {
+	sendTo("loadrate is %f\n\r", stats.equip);
       }
-#endif
     } 
       else if (is_abbrev(arg1, "deaths")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
@@ -5417,7 +5469,7 @@ void TBeing::doInfo(const char *arg)
         return;
       }
       int which = convertTo<int>(arg);
-      if (which < MIN_DISC || which >= MAX_DISCS) {
+      if (!*arg || which < MIN_DISC || which >= MAX_DISCS) {
         sendTo("Syntax: info discipline <disc #>\n\r");
         return;
       }

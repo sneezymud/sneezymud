@@ -24,6 +24,13 @@ double TTiming::getElapsed(){
   return (to_secs(tv_end)-to_secs(tv_start));
 }
 
+double TTiming::getElapsedReset(){
+  end();
+  double t=(to_secs(tv_end)-to_secs(tv_start));
+  start();
+  return t;
+}
+
 TTiming::TTiming(){
   tv_start.tv_sec=tv_start.tv_usec=0;
   tv_end.tv_sec=tv_end.tv_usec=0;

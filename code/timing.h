@@ -15,6 +15,7 @@ class TTiming {
   double getStart();
   double getEnd();
   double getElapsed();
+  double getElapsedReset();
 
   TTiming();
 };
