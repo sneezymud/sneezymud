@@ -157,6 +157,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
   if (!imm) {
     me->doTell(fname(name), fmt("I'll take %d talens for the stamp.") % amt);
     giveMoney(me, amt, GOLD_SHOP);
+    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
     shoplog(shop_nr, this, me, recipient, amt, "mailing");
 
   } else if (isImmortal()) {
