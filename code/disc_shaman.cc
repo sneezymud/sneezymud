@@ -731,7 +731,7 @@ void TTool::sacrificeMe(TBeing *ch, const char *arg)
   TBeing *dummy;
 
   if (getToolType() != TOOL_TOTEM) {
-    ch->sendTo("You must be holding a totem in your primary hand to perform this ritual.\n\r");
+    ch->sendTo("You must be holding a totem in your right hand to perform this ritual.\n\r");
     return;
   }
   if (ch->getPosition() != POSITION_STANDING) {
@@ -783,13 +783,9 @@ void TBeing::doSacrifice(const char *arg)
     return;
   }
 
-  tobj = heldInPrimHand();
-  if (!(tobj = heldInPrimHand())) {
-    sendTo("You must be holding a totem in your primary hand to perform the ritual.\n\r");
-    return;
-  }
-  if (!tobj) {
-    sendTo("You must be holding a totem in your primary hand to perform the ritual.\n\r");
+  tobj = equipment[HOLD_RIGHT];
+  if (!(tobj = equipment[HOLD_RIGHT])) {
+    sendTo("You must be holding a totem in your right hand to perform the ritual.\n\r");
     return;
   }
   tobj->sacrificeMe(this, arg);
