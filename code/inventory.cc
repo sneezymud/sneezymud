@@ -1023,12 +1023,17 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
           if (flags != GIVE_FLAG_DEF) 
             badVol = TRUE;
           else {
-            act("$N seems to have $S hands full.", 0, this, 0, vict, TO_CHAR);
-            act("$n offers $p to you, but your hands are full.",
-                 TRUE, this, obj, vict, TO_VICT);
-            act("$n offers $p to $N, but $E is too encumbered to accept it.",
-                TRUE, this, obj, vict, TO_NOTVICT);
-            return FALSE;
+	    if(!isImmortal()){
+	      act("$N seems to have $S hands full.", 0, this, 0, vict, TO_CHAR);
+	      act("$n offers $p to you, but your hands are full.",
+		  TRUE, this, obj, vict, TO_VICT);
+	      act("$n offers $p to $N, but $E is too encumbered to accept it.",
+		  TRUE, this, obj, vict, TO_NOTVICT);
+	      
+	      return FALSE;
+	    } else {
+	      act("$N seems to have $S hands full, but you don't let that stop you.", 0, this, 0, vict, TO_CHAR);
+	    }
           }
         }
         // obj-weight > vict->carry weight limit
@@ -1036,12 +1041,16 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
           if (flags != GIVE_FLAG_DEF) {
             badWeight = TRUE;
           } else {
-            act("$E can't carry that much weight.", 0, this, 0, vict, TO_CHAR);
-            act("$n offers $p to you, but you can't carry that much weight.",
-                 TRUE, this, obj, vict, TO_VICT);
-            act("$n offers $p to $N, but $E is too wimpy to carry it.",
-                 TRUE, this, obj, vict, TO_NOTVICT);
-            return FALSE;
+	    if(!isImmortal()){
+	      act("$E can't carry that much weight.", 0, this, 0, vict, TO_CHAR);
+	      act("$n offers $p to you, but you can't carry that much weight.",
+		  TRUE, this, obj, vict, TO_VICT);
+	      act("$n offers $p to $N, but $E is too wimpy to carry it.",
+		  TRUE, this, obj, vict, TO_NOTVICT);
+	      return FALSE;
+	    } else {
+	      act("$E can't carry that much weight, but you don't let that stop you.", 0, this, 0, vict, TO_CHAR);
+	    }
           }
         }
       }  // IGN_DEX
