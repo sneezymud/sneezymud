@@ -891,8 +891,11 @@ void TBeing::saveChar(sh_int load_room)
     sprintf(buf, "account/%c/%s/%s", LOWER(tmp->desc->account->name[0]), sstring(tmp->desc->account->name).lower().c_str(), buf2);
   }
   TDatabase db(DB_SNEEZY);
-  db.query("update player set talens=%i where id=%i",
-	   st.money, getPlayerID());
+
+  if(!isImmortal()){
+    db.query("update player set talens=%i where id=%i",
+	     st.money, getPlayerID());
+  }
 	   
 
   fl = fopen(buf, "w");
