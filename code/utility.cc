@@ -1871,6 +1871,11 @@ float TBeing::lagAdjust(lag_t orig_lag)
 
 sstring secsToString(time_t num)
 {
+  /// passing a negative time appears to have crashed the mud at some point - Maror
+  if (num < 0) {
+    vlogf(LOG_BUG, fmt("Passed a negative time to secsToString in utility.cc."));
+    return "BUG A CODER: something bad happened.";
+  }
   unsigned int days = num / SECS_PER_REAL_DAY;
   unsigned int hours = (num / SECS_PER_REAL_HOUR) % 24;
   unsigned int mins = (num / SECS_PER_REAL_MIN) % 60;
