@@ -1702,7 +1702,7 @@ void TBeing::doGroup(const char *argument)
     doGrouptell(buf);
   } else if (is_abbrev(namebuf, "lots")) {
     if (!isAffected(AFF_GROUP) || master) {
-      sendTo("Only the master of a group may throw lots.");
+      sendTo("Only the master of a group may throw lots.\n\r");
       return;
     }
     vector <sstring> gnames;
