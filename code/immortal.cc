@@ -1503,7 +1503,7 @@ void TPerson::doShutdown(const char *argument)
   } else {
     if (isdigit(*arg)) {
       num = atoi(arg);
-      if (num <= 0 || num > 15) {
+      if (num <= 0) {
         sendTo("Illegal number of minutes.\n\r");
         sendTo("Syntax : shutdown <minutes until shutdown>\n\r");
         return;
