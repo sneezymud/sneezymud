@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: immortal.cc,v $
+// Revision 1.7  1999/10/07 04:09:29  batopr
+// Added percentage indicator for budget economy in info gold
+//
 // Revision 1.6  1999/10/06 22:02:03  batopr
 // "Use the TIME command at any point to see time until x." now uses
 // shutdown_or_reboot to populate x
@@ -4193,7 +4196,8 @@ void TBeing::doInfo(const char *arg)
       buf += buf2;
       sprintf(buf2, "SHOP ECONOMY:      pos %u, net gold = %d, drain=%d\n\r", tot_gold_allshops, net_gold_allshops, tot_gold_allshops - net_gold_allshops);
       buf += buf2;
-      sprintf(buf2, "BUDGET ECONOMY:    pos %u, net gold = %d, drain=%d\n\r", tot_gold_budget, net_gold_budget, tot_gold_budget - net_gold_budget);
+      sprintf(buf2, "BUDGET ECONOMY:    pos %u, net gold = %d, drain=%d (%.2f%%)\n\r", tot_gold_budget, net_gold_budget, tot_gold_budget - net_gold_budget,
+ 100.0 * (tot_gold_budget - net_gold_budget) / tot_drain);
       buf += buf2;
 
       buf += "\n\r";
