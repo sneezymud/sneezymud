@@ -134,7 +134,7 @@ int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
     return SPELL_FAIL + VICTIM_DEAD;
   }
 }
-//////
+
 void voodoo(TBeing *caster, TObj *corpse, TMagicItem *obj)
 {
   int ret, level;
@@ -148,21 +148,6 @@ void voodoo(TBeing *caster, TObj *corpse, TMagicItem *obj)
   ret=voodoo(caster,corpse,level,bKnown);
 }
 
-int voodoo(TBeing * caster, TObj * corpse)
-{
-  taskDiffT diff;
-
-  if (!bPassShamanChecks(caster, SPELL_VOODOO, corpse))
-    return FALSE;
-
-  lag_t rounds = discArray[SPELL_VOODOO]->lag;
-  diff = discArray[SPELL_VOODOO]->task;
-
-  start_cast(caster, NULL, corpse, caster->roomp, SPELL_VOODOO, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
-  return TRUE;
-  // return FALSE;
-}
-// int castVoodoo(TBeing * caster, TObj * corpse, TMagicItem * obj)
 int castVoodoo(TBeing * caster, TObj * corpse)
 {
   int ret, level;
@@ -178,9 +163,22 @@ int castVoodoo(TBeing * caster, TObj * corpse)
   if (IS_SET(ret, VICTIM_DEAD))
     return DELETE_ITEM;
   return TRUE;
-  //  return FALSE;
 }
-//////
+
+int voodoo(TBeing * caster, TObj * corpse)
+{
+  taskDiffT diff;
+
+  if (!bPassShamanChecks(caster, SPELL_VOODOO, corpse))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_VOODOO]->lag;
+  diff = discArray[SPELL_VOODOO]->task;
+
+  start_cast(caster, NULL, corpse, caster->roomp, SPELL_VOODOO, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+  return TRUE;
+}
+
 int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
 {
   affectedData aff;
@@ -257,9 +255,22 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
   }
 }
 
-int resurrection(TBeing * caster, TObj * obj, TMagicItem *obj_mi)
+void resurrection(TBeing *caster, TObj *obj, TMagicItem * obj_mi)
 {
-  int ret;
+  int ret, level;
+
+  level = caster->getSkillLevel(SPELL_VOODOO);
+  int bKnown = caster->getSkillValue(SPELL_VOODOO);
+  act("You direct a strange beam of energy at $p.",
+          FALSE, caster, obj_mi, obj, TO_CHAR);
+  act("$n directs a strange beam of energy at $p.",
+          FALSE, caster, obj_mi, obj, TO_ROOM);
+  ret=resurrection(caster,obj,level,bKnown);
+}
+
+int castResurrection(TBeing * caster, TObj * obj)
+{
+  int ret, level;
   TBaseCorpse *corpse;
 
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
@@ -269,7 +280,6 @@ int resurrection(TBeing * caster, TObj * obj, TMagicItem *obj_mi)
   if (dynamic_cast<TPCorpse *>(corpse)) {
      /* corpse is a pc */
     caster->sendTo("Resurrection of players is not currently supported.\n\r");
-    caster->sendTo("Bug Brutius is you want to see resurrection of players.\n\r");
     return FALSE;
   }
   if (corpse->getCorpseVnum() == -1) {
@@ -282,55 +292,32 @@ int resurrection(TBeing * caster, TObj * obj, TMagicItem *obj_mi)
     caster->sendTo("There isn't enough left to resurrect.\n\r");
     return FALSE;
   }
-
-  act("$p directs a strange beam of energy at $N.",
-          FALSE, caster, obj_mi, corpse, TO_CHAR);
-  act("$p directs a strange beam of energy at $N.",
-          FALSE, caster, obj_mi, corpse, TO_ROOM);
-
-  ret=resurrection(caster,corpse,obj_mi->getMagicLevel(),obj_mi->getMagicLearnedness());
-  if (ret == SPELL_SUCCESS) {
-    return DELETE_ITEM;  // delete corpse
-  }
-  return FALSE;
-}
-
-int resurrection(TBeing * caster, TObj * obj)
-{
-  int ret,level;
-  TBaseCorpse *corpse;
-    
-  if (!obj || !(corpse = dynamic_cast<TBaseCorpse *>(obj))) 
-    return FALSE;
-  
-  if (!bPassClericChecks(caster,SPELL_RESURRECTION))
-    return FALSE;
-
-  if (dynamic_cast<TPCorpse *>(corpse)) {
-     /* corpse is a npc */
-    caster->sendTo("Resurrection of players is not currently supported.\n\r");
-    caster->sendTo("Bug Brutius is you want to see resurrection of players.\n\r");
-    return FALSE;
-  }
-  if (corpse->getCorpseVnum() == -1) {
-     /* corpse is a MEDIT mob */
-    caster->sendTo("You can't resurrect that.\n\r");
-    return FALSE;
-  }
-  if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
-     /* corpse is a body part, pile of dust, etc */
-    caster->sendTo("There isn't enough left to resurrect.\n\r");
-    return FALSE;
-  }
+  act("You direct a strange beam of energy at $p.",
+          FALSE, caster, obj, 0, TO_CHAR);
+  act("$n directs a strange beam of energy at $p.",
+          FALSE, caster, obj, 0, TO_ROOM);
 
   level = caster->getSkillLevel(SPELL_RESURRECTION);
   int bKnown = caster->getSkillValue(SPELL_RESURRECTION);
-
   ret=resurrection(caster,corpse,level,bKnown);
   if (ret == SPELL_SUCCESS) {
     return DELETE_ITEM;  // delete corpse
   }
-  return FALSE;
+  return TRUE;
+}
+
+int resurrection(TBeing * caster, TObj * obj)
+{
+  taskDiffT diff;
+
+  if (!bPassShamanChecks(caster, SPELL_RESURRECTION, obj))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_RESURRECTION]->lag;
+  diff = discArray[SPELL_RESURRECTION]->task;
+
+  start_cast(caster, NULL, obj, caster->roomp, SPELL_RESURRECTION, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+  return TRUE;
 }
 
 // returns VICTIM_DEAD if corpse should be fried
@@ -902,6 +889,10 @@ void TBeing::doSacrifice(const char *arg)
 
   for (; isspace(*arg); arg++);
 
+  if (getPosition() != POSITION_STANDING) {
+    sendTo("Have some respect! Stand to perform the sacrifice!\n\r");
+    return;
+  }
   if (!doesKnowSkill(SKILL_SACRIFICE)) {
     sendTo("You don't have a clue about sacrificing anything.\n\r");
     return;

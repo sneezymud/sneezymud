@@ -63,7 +63,11 @@ private:
     void voodoo(TBeing *, TObj *, TMagicItem *);
     int voodoo(TBeing *, TObj *);
     int castVoodoo(TBeing *, TObj *);
-//    int castVoodoo(TBeing *, TObj *, TMagicItem *);
+
+    int resurrection(TBeing *, TObj *, int, byte);
+    void resurrection(TBeing *, TObj *, TMagicItem *);
+    int resurrection(TBeing *, TObj *);
+    int castResurrection(TBeing *, TObj *);
 
     int dancingBones(TBeing *, TObj *);
     int dancingBones(TBeing *, TObj *, TMagicItem *);
@@ -76,10 +80,6 @@ private:
     int enthrallGhast(TBeing * caster, int level, byte bKnown);
     int enthrallGhast(TBeing * caster);
     int castEnthrallGhast(TBeing * caster);
-
-    int resurrection(TBeing *, TObj *);
-    int resurrection(TBeing *, TObj *, TMagicItem *);
-    int resurrection(TBeing *, TObj *, int, byte);
 
     int vampiricTouch(TBeing *, TBeing *);
     int castVampiricTouch(TBeing *, TBeing *);

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.10  2001/06/07 23:14:01  jesus
+// resurrection spell update
+//
 // Revision 5.9  2001/06/07 09:37:07  jesus
 // updated voodoo spell
 //
@@ -168,6 +171,7 @@ const int COMP_LICH_TOUCH         =31312;
 const int COMP_VAMPIRIC_TOUCH     =31313;
 const int COMP_LIFE_LEECH         =31320;
 const int COMP_VOODOO             =31321;
+const int COMP_RESURRECTION       =31322;
 
 class compPlace
 {

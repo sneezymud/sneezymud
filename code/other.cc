@@ -2584,7 +2584,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       shadowWalk(caster,victim,obj);
       break;
     case SPELL_RESURRECTION:
-      rc = resurrection(caster,target,obj);
+      resurrection(caster,obj);
       break;
     case SPELL_DANCING_BONES:
       rc = dancingBones(caster,target,obj);

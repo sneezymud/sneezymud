@@ -1239,6 +1239,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_SHIELD_OF_MISTS: // shaman
     case SPELL_LIFE_LEECH: // shaman
     case SPELL_VOODOO: // shaman
+    case SPELL_RESURRECTION: // shaman
     case SPELL_ANIMATE:
     case SPELL_BIND:
     case SPELL_TELEPORT:
@@ -2032,6 +2033,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
           castVoodoo(this, o);
         } else
           vlogf(LOG_BUG, "SPELL_VOODOO called with null obj");
+        break;
+      case SPELL_RESURRECTION:
+	if (o) { // !o
+          castResurrection(this, o);
+        } else
+          vlogf(LOG_BUG, "SPELL_RESURRECTION called with null obj");
         break;
       case SPELL_LIFE_LEECH:
         if (!o) {
