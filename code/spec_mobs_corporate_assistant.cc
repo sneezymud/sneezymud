@@ -40,7 +40,7 @@ void corpListing(TBeing *ch, TMonster *me)
   multimap <int, sstring, std::greater<int> > m;
   multimap <int, sstring, std::greater<int> >::iterator it;
 
-  db.query("select c.corp_id, c.name, sum(b.talens)+b.talens as gold, count(so.shop_nr) as shopcount from shopowned so, shop s, corporation c left outer join shopownedcorpbank b on (b.corp_id=c.corp_id) where c.bank=b.shop_nr and c.corp_id=so.corp_id and so.shop_nr=s.shop_nr group by c.corp_id, c.name, b.talens order by gold desc");
+  db.query("select c.corp_id, c.name, sum(s.gold)+b.talens as gold, count(so.shop_nr) as shopcount from shopowned so, shop s, corporation c left outer join shopownedcorpbank b on (b.corp_id=c.corp_id) where c.bank=b.shop_nr and c.corp_id=so.corp_id and so.shop_nr=s.shop_nr group by c.corp_id, c.name, b.talens order by gold desc");
   
   while(db.fetchRow()){
     corp_id=convertTo<int>(db["corp_id"]);
@@ -128,7 +128,7 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   }
   
 
-  db.query("select c.name, sum(s.gold) as gold, b.talens as talens, count(s.shop_nr) as shops, bank from corporation c left outer join shopownedcorpbank b on (c.corp_id=b.corp_id), shopowned so, shop s where c.corp_id=so.corp_id and c.corp_id=%i and so.shop_nr=s.shop_nr group by c.corp_id, c.name, b.talens, c.bank order by c.corp_id", corp_id);
+  db.query("select c.name, sum(s.gold) as gold, b.talens as banktalens, count(s.shop_nr) as shops, bank from corporation c left outer join shopownedcorpbank b on (c.corp_id=b.corp_id), shopowned so, shop s where c.corp_id=so.corp_id and c.corp_id=%i and so.shop_nr=s.shop_nr group by c.corp_id, c.name, b.talens, c.bank order by c.corp_id", corp_id);
   
   if(!db.fetchRow()){
     me->doTell(ch->getName(), "I don't have any information for that corporation.");
