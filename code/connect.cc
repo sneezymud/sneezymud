@@ -4934,7 +4934,8 @@ int Descriptor::sendLogin(const char *arg)
       fclose(fp);
     }
     sprintf(buf2 + strlen(buf2), "Celebrating ELEVEN years of quality mudding (est. 5-1-1992)\n\r\n\r");
-    sprintf(buf2 + strlen(buf2), "Please type NEW (case sensitive) for a new account, or ? for help.\n\r\n\r");
+    sprintf(buf2 + strlen(buf2), "Please type NEW (case sensitive) for a new account, or ? for help.\n\r");
+    sprintf(buf2 + strlen(buf2), "If you need assistance you may email mudadmin@sneezy.saw.net.\n\r\n\r");
     sprintf(buf2 + strlen(buf2), "\n\rLogin: ");
     output.putInQ(buf2);
     return FALSE;
