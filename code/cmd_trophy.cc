@@ -168,7 +168,7 @@ void TBeing::doTrophy(const string arg)
 	if(zonesearch!=zd.zone_nr)
 	  continue;
       } else if(!summary){
-	if(!isname(arg1, mob_index[rnum].name))
+	if(!arg1.empty() && !isname(arg1, mob_index[rnum].name))
 	  continue;
       }
 
