@@ -61,7 +61,7 @@ extern "C" {
 #include "database.h"
 #include "disc_cures.h"
 
-void TBeing::doGuard(const string argument)
+void TBeing::doGuard(const string &argument)
 {
   if (isPc()) {
     sendTo("Sorry, you can't just put your brain on autopilot!\n\r");
@@ -3517,7 +3517,7 @@ void TThing::refuelMeDrug(TBeing *ch, TDrugContainer *tdc)
   return;
 }
 
-void TBeing::doRefuel(const string argument)
+void TBeing::doRefuel(const string &argument)
 {
   TThing *fuel;
   TThing *t;
@@ -3557,7 +3557,7 @@ void TBeing::doRefuel(const string argument)
   t->refuelMeLight(this, fuel);
 }
 
-void TBeing::doStop(const string tStArg)
+void TBeing::doStop(const string &tStArg)
 {
   if (tStArg.empty()) {
     sendTo("Stop what?  You aren't doing anything!\n\r");
@@ -3953,7 +3953,7 @@ void TBeing::doDrag(TObj *o, dirTypeT tdir)
   addToWait(combatRound(1));
 }
 
-void TBeing::doDrag(const string arg)
+void TBeing::doDrag(const string &arg)
 {
   string caName, dir;
   TBeing *v;
@@ -4524,7 +4524,7 @@ void TBeing::doRoll(TObj *o, dirTypeT tdir)
   addToWait(combatRound(1));
 }
 
-void TBeing::doRoll(const string arg)
+void TBeing::doRoll(const string &arg)
 {
   string caName, dir;
   TBeing *v;

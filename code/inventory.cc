@@ -262,7 +262,7 @@ void TTrap::dropMe(TBeing *ch, showMeT, showRoomT showroom)
 }
 
 // returns DELETE_THIS, or DELETE_OBJ (tng)
-int TBeing::doDrop(const string argument, TThing *tng, bool forcedDrop)
+int TBeing::doDrop(const string &argument, TThing *tng, bool forcedDrop)
 {
   string arg, arg2;
   char  newarg[256], buf[256], *buf2;

@@ -44,7 +44,7 @@ class TPCorpse : public TBaseCorpse {
     void addToNumInRoom(int n);
     float getExpLost() const;
     void setExpLost(float exp);
-    void setOwner(const string Name);
+    void setOwner(const string &Name);
     const string & getOwner() const;
     void clearOwner();
     void setNext(TPCorpse *n);

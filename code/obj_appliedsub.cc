@@ -68,7 +68,7 @@ void TASubstance::describeObjectSpecifics(const TBeing *ch) const
 {
 }
 
-int TBeing::doApplyHerbs(const string tArg)
+int TBeing::doApplyHerbs(const string &tArg)
 {
   TBeing      *vict   = NULL;
   TThing      *tArrow = NULL;

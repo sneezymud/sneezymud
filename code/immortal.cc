@@ -4486,7 +4486,7 @@ void TPerson::doAccess(const char *arg)
   }
 }
 
-void TBeing::doReplace(const string argument)
+void TBeing::doReplace(const string &argument)
 {
   char buf[256], dir[256], dir2[256];
   string arg1, arg2, arg3;
@@ -6323,7 +6323,7 @@ void TBeing::doResize(const char *arg)
   }
 }
 
-void TBeing::doHeaven(string arg)
+void TBeing::doHeaven(const string &arg)
 {
   int num;
   string buf;
@@ -6702,7 +6702,7 @@ static bool verifyName(const string tStString)
   its ability.  We use the Creator check down in doAs() to make
   sure it's Only used by trusted people.
  */
-int TBeing::doAsOther(const string tStString)
+int TBeing::doAsOther(const string &tStString)
 {
   string   tStNewName(""),
            tStCommand(""),

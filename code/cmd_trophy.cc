@@ -98,7 +98,7 @@ const char *TTrophy::getExpModDescr(float count)
 }
 
 // this function is a little messy, I apologize
-void TBeing::doTrophy(const string arg)
+void TBeing::doTrophy(const string &arg)
 {
   int mcount=0, vnum, header=0, zcount=0, bottom=0, zcountt=0;
   int zonesearch=0, processrow=1;

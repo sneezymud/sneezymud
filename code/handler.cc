@@ -42,7 +42,7 @@ const string fname(const char *namelist)
 }
 
 // split up "str", using delimiters "sep" and place resulting strings in "argv"
-int split_string(const string str, const string sep, vector<string> &argv)
+int split_string(const string &str, const string &sep, vector<string> &argv)
 {
   unsigned int pos=0, last=0;
 
@@ -56,7 +56,7 @@ int split_string(const string str, const string sep, vector<string> &argv)
   return argv.size();
 }
 
-bool isname(const string str, const string namelist)
+bool isname(const string &str, const string &namelist)
 {
   vector <string> argv, xargv;
   unsigned int i, j;
@@ -80,7 +80,7 @@ bool isname(const string str, const string namelist)
   return TRUE;
 }
 
-bool is_exact_spellname(const string str, const string namelist)
+bool is_exact_spellname(const string &str, const string &namelist)
 {
   vector <string> argv, xargv;
   unsigned int i, j;
@@ -104,7 +104,7 @@ bool is_exact_spellname(const string str, const string namelist)
   return TRUE;
 }
 
-bool is_exact_name(const string str, const string namelist)
+bool is_exact_name(const string &str, const string &namelist)
 {
   vector <string> argv, xargv;
   unsigned int i, j;

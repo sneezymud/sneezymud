@@ -21,7 +21,7 @@ enum thingTypeT {
   TYPEBEING,    // = 5;
 };
 
-extern bool isname(const string str, const string namelist);
+extern bool isname(const string &str, const string &namelist);
 extern const string fname(const char *namelist);
 
 class extraDescription {

@@ -3709,7 +3709,7 @@ bool Descriptor::page_file(const char *the_input)
 // allow will permit the string to parse for %n in the colorstring
 // the chief problem with this is you can make a board message look like the
 // reader's name is in it.  (it is default TRUE)
-void Descriptor::page_string(const string strs, showNowT shownow, allowReplaceT allowRep)
+void Descriptor::page_string(const string &strs, showNowT shownow, allowReplaceT allowRep)
 {
   delete [] showstr_head;
   showstr_head = mud_str_dup(strs);

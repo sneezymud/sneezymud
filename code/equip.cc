@@ -1533,7 +1533,7 @@ int TBeing::remove(TThing *obj, TBeing *ch)
 }
 
 // DELETE_THIS
-int TBeing::doRemove(const string argument, TThing *obj)
+int TBeing::doRemove(const string &argument, TThing *obj)
 {
   string arg1, buf;
   TThing *o = NULL;
@@ -2236,7 +2236,7 @@ float TBeing::maxWieldWeight(const TThing *obj, handTypeT hands) const
   return maxval;
 }
 
-void TBeing::doOutfit(const string arg)
+void TBeing::doOutfit(const string &arg)
 {
   string buf, buf2;
   TBeing *mob;

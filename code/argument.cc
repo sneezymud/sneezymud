@@ -9,7 +9,7 @@
 // split up "argument" on whitespace and place resulting strings in "args"
 // returns number of arguments parsed
 // you should use one of the other argument_parser definitions if possible
-int argument_parser(const string argument, vector <string> &args)
+int argument_parser(const string &argument, vector <string> &args)
 {
   unsigned int copy_begin=0, copy_end=0, count=0;
   string whitespace=" \f\n\r\t\v"; // taken from isspace() man page
@@ -41,7 +41,7 @@ int argument_parser(const string argument, vector <string> &args)
 }
 
 
-int argument_parser(const string argument, string &arg1)
+int argument_parser(const string &argument, string &arg1)
 {
   vector <string> args;
 
@@ -53,7 +53,7 @@ int argument_parser(const string argument, string &arg1)
   return ret;
 }
 
-int argument_parser(const string argument, string &arg1, string &arg2)
+int argument_parser(const string &argument, string &arg1, string &arg2)
 {
   vector <string> args;
 
@@ -69,7 +69,7 @@ int argument_parser(const string argument, string &arg1, string &arg2)
 }
 
 
-int argument_parser(const string argument, string &arg1, string &arg2, string &arg3)
+int argument_parser(const string &argument, string &arg1, string &arg2, string &arg3)
 {
   vector <string> args;
 

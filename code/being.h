@@ -1353,7 +1353,7 @@ class TBeing : public TThing {
     void stopmusic();
     void doPlay(const char *);
     void doSort(const char *) const;
-    void doGamestats(const string);
+    void doGamestats(const string &);
     void doScan(const char *);
     int dislodgeWeapon(TBeing *, TThing *, wearSlotT);
     void doInsult(const char *);
@@ -1362,7 +1362,7 @@ class TBeing : public TThing {
     void doDeal(const char *);
     void doPass(const char *);
     int doAs(const char *);
-    int doAsOther(const string);
+    int doAsOther(const string &);
     void doAttack(const char *);
     void doBet(const char *);
     void doBreak(const char *, int);
@@ -1391,7 +1391,7 @@ class TBeing : public TThing {
     void doForage();
     void doTan();
     void doButcher();
-    int  doApplyHerbs(const string);
+    int  doApplyHerbs(const string &);
     void doSkin(const char *);
     void doButcher(const char *);
     int doPlant(string);
@@ -1435,7 +1435,7 @@ class TBeing : public TThing {
     void doReset(string);
     void doResize(const char *);
     int doDeathstroke(const char *, TBeing *);
-    void doBandage(const string);
+    void doBandage(const string &);
     int doBodyslam(const char *, TBeing *);
     int doSpin(const char *, TBeing *);
     int doStomp(const char *, TBeing *);
@@ -1478,7 +1478,7 @@ class TBeing : public TThing {
     bool hasPart(wearSlotT) const;
     void doResetMargins();
     void doWeather(const char *);
-    void doHeaven(const string);
+    void doHeaven(const string &);
     void wearNTear(void);
     void doPrompt(const char *);
     virtual void doPurge(const char *);
@@ -1760,9 +1760,9 @@ class TBeing : public TThing {
     int doSubterfuge(const char *);
     int doBackstab(const char *, TBeing *);
     int doThroatSlit(const char *, TBeing *);
-    void doGuard(const string);
+    void doGuard(const string &);
     void doSplit(const char *, bool);
-    void doReply(const string);
+    void doReply(const string &);
     void doReport(const char *);
     virtual void doTitle(const char *);
     int doTithe();
@@ -1780,9 +1780,9 @@ class TBeing : public TThing {
 
     void doPracSkill(const char *, spellNumT);
     void doPracDisc(const char *, int);
-    void doSpells(const string);
-    void doRituals(const string);
-    void doPrayers(const string);
+    void doSpells(const string &);
+    void doRituals(const string &);
+    void doPrayers(const string &);
     void sendSkillsList(discNumT);
     void doPractice(const char *);
     virtual void doIdea(const char *);
@@ -1794,7 +1794,7 @@ class TBeing : public TThing {
     void reformGroup();
     void doGroup(const char *);
     int doRecite(const char *);
-    int doUse(const string);
+    int doUse(string);
     int doUnsaddle(string);
     int doSaddle(string);
     int doChop(const char *, TBeing *);
@@ -1804,8 +1804,8 @@ class TBeing : public TThing {
     int doSmoke(const char *);
     void doExtinguish(const string &);
     void doLight(const string &);
-    void doRefuel(const string);
-    void doStop(const string);
+    void doRefuel(const string &);
+    void doStop(const string &);
     void doContinue(const char *);
     void doFish(string);
     void doHistory();
@@ -1815,12 +1815,12 @@ class TBeing : public TThing {
     int getPartMinHeight(int) const;
     void doDrag(TBeing *, dirTypeT);
     void doDrag(TObj *, dirTypeT);
-    void doDrag(const string);
+    void doDrag(const string &);
     void doCommand(const char *);
     int doAssist(const char *, TBeing *, bool flags = FALSE);
     void doRoll(TBeing *, dirTypeT);
     void doRoll(TObj *, dirTypeT);
-    void doRoll(const string);
+    void doRoll(const string &);
     void doEcho(const char *);
     void doHighfive(const char *);
     virtual void doToggle(const char *);
@@ -1840,7 +1840,7 @@ class TBeing : public TThing {
     void doLoglist(const char *, int);
     int doExits(const char *, cmdTypeT);
     void doWipe(const char *);
-    void doReplace(const string);
+    void doReplace(const string &);
     void doSetsev(const char *);
     void doTimeshift(const char *);
     void doInfo(const char *);
@@ -1857,7 +1857,7 @@ class TBeing : public TThing {
     int doDonate(const char *);
     int doSteal(const char *, TBeing *);
     void doRestore(const char *);
-    void doThrow(const string);
+    void doThrow(const string &);
     void doWear(const char *);
     int stickIn(TThing *o, wearSlotT pos, silentTypeT silent = SILENT_NO);
     int doEmote(const char *);
@@ -1889,7 +1889,7 @@ class TBeing : public TThing {
     int doTripleKick(const char *, int, TBeing *);
 #endif
 
-    int doDrop(const string, TThing *, bool forceDrop = FALSE);
+    int doDrop(const string &, TThing *, bool forceDrop = FALSE);
     int doGet(const char *);
     void doGrab(const char *);
     int doPut(const char *);
@@ -1904,7 +1904,7 @@ class TBeing : public TThing {
     void doPeek() const;
     int doAction(const string &, cmdTypeT);
     void doCls(bool);
-    int doRemove(const string, TThing *);
+    int doRemove(const string &, TThing *);
     void doSave(silentTypeT, const char * = NULL);
     void doZonefile(const string &);
     void doLoot(const string &);
@@ -1957,15 +1957,15 @@ class TBeing : public TThing {
     void doUnlock(const char *);
     void doLock(const char *);
     void doScore();
-    void doTrophy(const string);
+    void doTrophy(const string &);
     void doWhozone();
     void doWho(const char *);
     void doTime(const char *);
     void doWizhelp();
-    virtual void doUsers(const string);
+    virtual void doUsers(const string &);
     void doInventory(const char *);
     void doEquipment(const char *);
-    void doOutfit(const string);
+    void doOutfit(const string &);
     void doCredits();
     void doNews(const char *);
     void doWizlist();

@@ -2139,12 +2139,12 @@ void TBeing::doWizhelp()
   desc->page_string(buf);
 }
 
-void TBeing::doUsers(const string)
+void TBeing::doUsers(const string &)
 {
   sendTo("Dumb monsters can't use the users command!\n\r");
 }
 
-void TPerson::doUsers(const string argument)
+void TPerson::doUsers(const string &argument)
 {
   char line[200], buf2[100], buf3[100], buf4[10];
   Descriptor *d;
@@ -5068,7 +5068,7 @@ void TBeing::describeTrapDamType(const TTrap *obj, int) const
        good_uncap(trap_types[obj->getTrapDamType()]).c_str());
 }
 
-void TBeing::doSpells(const string argument)
+void TBeing::doSpells(const string &argument)
 {
   char buf[MAX_STRING_LENGTH * 2], buffer[MAX_STRING_LENGTH * 2];
   char learnbuf[64];
@@ -5306,7 +5306,7 @@ void TBeing::doSpells(const string argument)
   return;
 }
 
-void TBeing::doRituals(const string argument)
+void TBeing::doRituals(const string &argument)
 {
   char buf[MAX_STRING_LENGTH * 2], buffer[MAX_STRING_LENGTH * 2];
   char learnbuf[64];
@@ -5544,7 +5544,7 @@ void TBeing::doRituals(const string argument)
   return;
 }
 
-void TBeing::doPrayers(const string argument)
+void TBeing::doPrayers(const string &argument)
 {
   char buf[MAX_STRING_LENGTH * 2] = "\0";
   char buffer[MAX_STRING_LENGTH * 2] = "\0";

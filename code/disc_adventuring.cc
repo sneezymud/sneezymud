@@ -91,7 +91,7 @@ void TBeing::bandage(TBeing *victim,wearSlotT slot)
   }
 }
 
-void TBeing::doBandage(const string arg)
+void TBeing::doBandage(const string &arg)
 {
   TBeing *vict;
   wearSlotT slot;

@@ -9,6 +9,8 @@
 #include "stdsneezy.h"
 #include "obj_drug.h"
 
+const string whitespace=" \f\n\r\t\v";  // from isspace() man page
+
 const dirTypeT rev_dir[MAX_DIR] =
 {
   DIR_SOUTH,

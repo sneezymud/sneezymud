@@ -1096,7 +1096,7 @@ void TBeing::doWrite(const char *arg)
   pen->writeMePen(this, paper);
 }
 
-void TBeing::doReply(const string arg)
+void TBeing::doReply(const string &arg)
 {
   string buf;
 

@@ -51,7 +51,7 @@ void TPCorpse::addToNumInRoom(int n)
   num_corpses_in_room += n;
 }
 
-void TPCorpse::setOwner(const string Name)
+void TPCorpse::setOwner(const string &Name)
 {
   fileName = Name;
 }

@@ -2135,7 +2135,7 @@ void half_chop(const char *string, char *arg1, char *arg2)
   for (; (*arg2 = *string); string++, arg2++);
 }
 
-string add_bars(const string s){
+string add_bars(const string &s){
   string whitespace=" \f\n\r\t\v";
   string stmp=s;
 
@@ -3121,7 +3121,7 @@ char *cap(char *s)
   }
 }
 
-string good_cap(const string cp)
+string good_cap(const string &cp)
 {
   char buf[1024];
   strcpy(buf, cp.c_str());
@@ -3166,7 +3166,7 @@ char *uncap(char *s)
   }
 }
 
-string good_uncap(const string cp)
+string good_uncap(const string &cp)
 {
   char buf[1024];
   strcpy(buf, cp.c_str());
@@ -3279,7 +3279,7 @@ char *mud_str_dup(const char *buf)
   return mud_str_dup((string) buf);
 }
 
-char * mud_str_dup(const string buf)
+char * mud_str_dup(const string &buf)
 {
   char *tmp = NULL;
 

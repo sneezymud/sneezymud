@@ -296,7 +296,7 @@ void save_game_stats(void)
   }
 }
 
-void TBeing::doGamestats(const string arg)
+void TBeing::doGamestats(const string &arg)
 {
   string buf, buf2;
   int lev, i;
