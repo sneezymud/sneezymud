@@ -821,9 +821,6 @@ int vampiricTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int ad
     }
     caster->addToHit(num2);
     caster->addToLifeforce(num3);
-    vlogf(LOG_JESUS, "Vampiric Touch success: %s got %d HP and %d LF.", 
-caster->getName(), num2, num3);
-    vlogf(LOG_JESUS, "Vampiric Touch success: %s lost %d HP.", victim->getName(), num);
     return SPELL_SUCCESS;
   } else {
     switch (critFail(caster, SPELL_VAMPIRIC_TOUCH)) {
@@ -934,9 +931,6 @@ int lifeLeech(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
     }
     caster->addToHit(num2);
     caster->addToLifeforce(num3);
-    vlogf(LOG_JESUS, "Life Leech success: %s got %d HP and %d LF.", caster->getName(), num2, 
-num3);
-    vlogf(LOG_JESUS, "Life Leech success: %s lost %d HP.", victim->getName(), num);
     return SPELL_SUCCESS;
   } else {
     switch (critFail(caster, SPELL_LIFE_LEECH)) {
@@ -1725,7 +1719,6 @@ int squish(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_lea
         }
         break;
     }
-    vlogf(LOG_JESUS, "Squish damage: %d victim: %s caster: %s.", dam, victim->getName(), caster->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_SQUISH) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
@@ -1862,7 +1855,6 @@ int distort(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
           dam /= 2;
         }
     }
-    vlogf(LOG_JESUS, "Distort damage: %d victim: %s caster: %s", dam, victim->getName(), caster->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_DISTORT) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
@@ -1987,7 +1979,6 @@ int soulTwist(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
         }
     }
 
-    vlogf(LOG_JESUS, "Soul Twister damage: %d victim: %s caster: %s", dam, victim->getName(), caster->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_SOUL_TWIST) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
@@ -2466,7 +2457,6 @@ int flatulence(TBeing * caster, int level, byte bKnown, int adv_learn)
         act("You take a deep breath and hold it until the noxious fumes disperse.", TRUE, vict, NULL, NULL, TO_CHAR);
       }
     }
-    vlogf(LOG_JESUS, "Flatulance damage %d", dam);
     return SPELL_SUCCESS;
   } else {
     if (critFail(caster, SPELL_FLATULENCE)) {

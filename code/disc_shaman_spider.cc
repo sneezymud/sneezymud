@@ -115,7 +115,6 @@ int sticksToSnakes(TBeing * caster, TBeing * victim, int level, byte bKnown)
     aff.bitvector = 0;
     snake->affectTo(&aff);
 
-    vlogf(LOG_JESUS, "Sticks to Snakes made a snake of level %d for %s [lev:%d].", snake->GetMaxLevel(), caster->getName(), caster->GetMaxLevel());
     if (snake->reconcileDamage(victim, 0, SPELL_STICKS_TO_SNAKES) == -1)
        return SPELL_SUCCESS + VICTIM_DEAD;
 
@@ -660,7 +659,6 @@ int raze(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
           dam /= 2;
         }
     }
-    vlogf(LOG_JESUS, "Raze damage: %d caster: %s victim: %s", dam, caster->getName(), victim->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_RAZE) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;

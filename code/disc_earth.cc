@@ -54,7 +54,6 @@ int slingShot(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_
       }
     }
     victim->roomp->playsound(SOUND_SPELL_SLING_SHOT, SOUND_TYPE_MAGIC);
-    vlogf(LOG_JESUS, "Sling Shot damage: %d", dam);
     if (caster->reconcileDamage(victim, dam, SPELL_SLING_SHOT) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
@@ -142,8 +141,6 @@ int graniteFists(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
     }
 
     victim->roomp->playsound(SOUND_SPELL_GRANITE_FIST, SOUND_TYPE_MAGIC);
-    vlogf(LOG_JESUS, "Granite Fists damage: %d", dam);
-
     if (caster->reconcileDamage(victim, dam, SPELL_GRANITE_FISTS) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
@@ -234,7 +231,6 @@ int pebbleSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
         act("You dodge the pebbles!", TRUE, vict, NULL, NULL, TO_CHAR);
       }
     }
-    vlogf(LOG_JESUS, "Pebble Spray damage: %d", dam);
     return SPELL_SUCCESS;
   } else {
     if (critFail(caster, SPELL_PEBBLE_SPRAY)) {
@@ -415,7 +411,6 @@ int lavaStream(TBeing * caster, int level, byte bKnown, int adv_learn)
         }
       }
     }
-    vlogf(LOG_JESUS, "Lava Stream damage: %d", dam);
     return SPELL_SUCCESS;
   } else {
     if (critFail(caster, SPELL_LAVA_STREAM)) {
@@ -534,7 +529,6 @@ int meteorSwarm(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
     sprintf(buf, "$n calls forth %d meteors that blast you to smithereens!", num_meteors);
     act(buf, FALSE, caster, NULL, victim, TO_VICT);
     caster->reconcileHurt(victim,discArray[SPELL_METEOR_SWARM]->alignMod);
-    vlogf(LOG_JESUS, "Meteor Swarm damage: %d", damage);
     if (caster->reconcileDamage(victim, damage, SPELL_METEOR_SWARM) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;

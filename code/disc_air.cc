@@ -81,7 +81,6 @@ int gust(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn
       act("<W>You call up a gust of wind that buffets $N fiercely!<z>", 
           FALSE, caster, NULL, victim, TO_CHAR);
     }
-    vlogf(LOG_JESUS, "Gust damage: %d", dam);
     if (caster->reconcileDamage(victim, dam, SPELL_GUST) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;

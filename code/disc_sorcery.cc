@@ -95,7 +95,6 @@ int mysticDarts(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
 
     victim->roomp->playsound(SOUND_SPELL_MYSTIC_DART, SOUND_TYPE_MAGIC);
 
-    vlogf(LOG_JESUS, "Mystic Darts damage: %d [Caster=%s Victim=%s]", dam, caster->getName(), victim->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_MYSTIC_DARTS) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
 
@@ -223,7 +222,6 @@ int stunningArrow(TBeing *caster, TBeing *victim, int level, byte bKnown, int ad
 
     victim->roomp->playsound(SOUND_SPELL_STUNNING_ARROW, SOUND_TYPE_MAGIC);
 
-    vlogf(LOG_JESUS, "Stunning Arrow damage: %d [Caster=%s Victim=%s]", dam, caster->getName(), victim->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_STUNNING_ARROW) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
 
@@ -361,7 +359,6 @@ int blastOfFury(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
         }
         break;
     }
-    vlogf(LOG_JESUS, "Blast of Fury damage: %d [Caster=%s Victim=%s]", dam, caster->getName(), victim->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_BLAST_OF_FURY) == -1)
       return SPELL_FAIL + VICTIM_DEAD;
     return SPELL_FAIL;
@@ -620,7 +617,6 @@ int energyDrain(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
     }
     if (!victim->isImmortal())
       victim->addToMove(-vit);
-    vlogf(LOG_JESUS, "Energy Drain damage: %d [Caster=%s Victim=%s]", dam, caster->getName(), victim->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_ENERGY_DRAIN) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
@@ -849,7 +845,6 @@ int atomize(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
           dam /= 2;
         }
     }
-    vlogf(LOG_JESUS, "Atomize damage: %d [Caster=%s Victim=%s]", dam, caster->getName(), victim->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_ATOMIZE) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;

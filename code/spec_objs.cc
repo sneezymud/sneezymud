@@ -751,7 +751,7 @@ int ladder(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return TRUE;
   }
   if (vict->riding) {
-    vict->sendTo(COLOR_OBJECTS, "You can't ride your %s on %s.\n\r", fname(vict->riding->name).c_str(), o->getName());
+    vict->sendTo(COLOR_OBJECTS, "You can't ride your %s on %s.\n\r", fname(vict->riding->getName()).c_str(), o->getName());
     return TRUE;
   }
   if (vict->rider) {
@@ -930,7 +930,7 @@ int foodItem(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
   arg = one_argument(arg, buffer);
 
-  if (isname(buffer, o->name)) {
+  if (isname(buffer, o->getName())) {
     return o->foodItemUsed(ch, arg);
   }
 
@@ -957,7 +957,7 @@ int orbOfDestruction(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   if (cmd == CMD_USE || (cmd == CMD_PUSH && is_abbrev(buffer, "button"))) {
     arg = one_argument(arg, buffer);
-    if (isname(buffer, o->name)) {
+    if (isname(buffer, o->getName())) {
       if (ch->getStat(STAT_CURRENT, STAT_PER) < 90) {
         ch->sendTo("You can't figure out how to use it.\n\r");
         return TRUE;
@@ -1021,7 +1021,7 @@ int orbOfTeleportation(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj 
 
   if (cmd == CMD_USE || (cmd == CMD_PUSH && is_abbrev(buffer, "button"))) {
     arg = one_argument(arg, buffer);
-    if (isname(buffer, o->name)) {
+    if (isname(buffer, o->getName())) {
       if (ch->getStat(STAT_CURRENT, STAT_PER) < 90) {
         ch->sendTo("You can't figure out how to use it.\n\r");
         return TRUE;
@@ -1163,7 +1163,7 @@ int statue_of_feeding(TBeing *ch, cmdTypeT cmd, const char *argum, TObj *me, TOb
 
   one_argument(argum, arg);
   
-  if (*arg && !isname(arg, me->name))
+  if (*arg && !isname(arg, me->getName()))
     return FALSE;
 
   act("$n begins to pray quietly before $p.", TRUE, ch, me, NULL, TO_ROOM);
@@ -1272,7 +1272,7 @@ int fountain(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     return TRUE;
   } else if (cmd == CMD_DRINK) {        
     only_argument(arg, buf);
-    if (!isname(buf, me->name))
+    if (!isname(buf, me->getName()))
       return FALSE;
 
     if (ch->riding) {
@@ -1329,7 +1329,7 @@ int wine_fountain(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     return TRUE;
   } else if (cmd == CMD_DRINK) {        
     only_argument(arg, buf);
-    if (!isname(buf, me->name))
+    if (!isname(buf, me->getName()))
       return FALSE;
 
     if (ch->riding) {
@@ -1387,7 +1387,7 @@ int bless_fountain(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     return TRUE;
   } else if (cmd == CMD_DRINK) {        
     only_argument(arg, buf);
-    if (!isname(buf, me->name))
+    if (!isname(buf, me->getName()))
       return FALSE;
 
     if (ch->riding) {
@@ -1426,7 +1426,7 @@ int bowl_of_blood(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 
   if (cmd == CMD_DRINK) {        
     only_argument(arg, buf);
-    if (!isname(buf, me->name))
+    if (!isname(buf, me->getName()))
       return FALSE;
 
     if (ch->fight()) {
@@ -1674,7 +1674,7 @@ int dispenser(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   half_chop(arg, arg1, arg2);
 
   if (is_abbrev(arg1, "note")) {
-    if (isname(arg2, o->name)) {
+    if (isname(arg2, o->getName())) {
       act("You get a note from $p.", FALSE, ch, o, 0, TO_CHAR);
       act("$n gets a note from $p.", FALSE, ch, o, 0, TO_ROOM);
       if (!(note = read_object(GENERIC_NOTE, VIRTUAL))) {
@@ -1685,7 +1685,7 @@ int dispenser(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       return TRUE;
     }
   } else if (is_abbrev(arg1, "quill")) {
-    if (isname(arg2, o->name)) {
+    if (isname(arg2, o->getName())) {
       act("You get a quill from $p.", FALSE, ch, o, 0, TO_CHAR);
       act("$n gets a quill from $p.", FALSE, ch, o, 0, TO_ROOM);
       if (!(quill = read_object(GENERIC_PEN, VIRTUAL))) {
@@ -1743,11 +1743,11 @@ int pager(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *ob2)
       ch->sendTo("You must have it equipped to use it!\n\r");
     else if (job->isOn) {
       act("$n discretely turns off $s $o.", TRUE, ch, o, 0, TO_ROOM);
-      ch->sendTo("You turn off your %s, trying to be very discrete about it.\n\r", fname(o->name).c_str());
+      ch->sendTo("You turn off your %s, trying to be very discrete about it.\n\r", fname(o->getName()).c_str());
       job->isOn = FALSE;
     } else {
       act("$n turns on $s $o, causing it to beep obnoxiously.", FALSE, ch, o, 0, TO_ROOM);
-      ch->sendTo("You turn on your %s, producing a series of annoying beeps.\n\r", fname(o->name).c_str());
+      ch->sendTo("You turn on your %s, producing a series of annoying beeps.\n\r", fname(o->getName()).c_str());
       job->isOn = TRUE;
     }
     return TRUE;
@@ -1854,7 +1854,7 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 
   if (cmd == CMD_REMOVE) {
     one_argument(arg, objbuf);
-    if (!*objbuf || !isname(objbuf, me->name)) {
+    if (!*objbuf || !isname(objbuf, me->getName())) {
       return FALSE;
     }
 
@@ -1878,7 +1878,7 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 
   two_arg(arg, objbuf, targbuf);
 
-  if (!*objbuf || !isname(objbuf, me->name) || !*targbuf)
+  if (!*objbuf || !isname(objbuf, me->getName()) || !*targbuf)
     return FALSE;
 
   if (me->equippedBy)
@@ -1895,7 +1895,7 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 
     // cause it to target the thrower  :)
     ch->sendTo("A malicious force intervenes.\n\r");
-    strcpy(targbuf, ch->name);
+    strcpy(targbuf, ch->getName());
   }
 
   act("With a mighty heave, you toss $p straight up.",
@@ -2172,7 +2172,7 @@ bool genericPotion(TBeing *ch, TObj *me, cmdTypeT cmd, const char *arg, int &rc)
   }
 
   one_argument(arg, buf);
-  if (!isname(buf, me->name)) {
+  if (!isname(buf, me->getName())) {
     rc = FALSE;
     return true;
   }
@@ -2273,7 +2273,7 @@ int bogusObjProc(TBeing *, cmdTypeT, const char *, TObj *me, TObj *)
 {
   if (me)
     vlogf(LOG_PROC, "WARNING:  %s is running around with a bogus spec_proc #%d",
-       me->name, me->spec);
+       me->getName(), me->spec);
   else
     vlogf(LOG_PROC, "WARNING: indeterminate obj has bogus spec_proc");
   return FALSE;
@@ -2294,7 +2294,7 @@ int bleedChair(TBeing *ch, cmdTypeT cmd, const char *, TObj *me, TObj *)
   if (ch->isImmune(IMMUNE_BLEED, 0))
     return FALSE;
 
-  ch->doSit(me->name);
+  ch->doSit(me->getName());
 
   ch->sendTo("Ouch that %shurt!%s\n\r", ch->red(), ch->norm());
 
@@ -3325,7 +3325,7 @@ int teleportVial(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   char objname[256],buf[256];
   if (cmd != CMD_THROW) 
     return FALSE;
-  strcpy(objname,o->name);
+  strcpy(objname,o->getName());
   one_argument(one_argument(one_argument(objname,buf),buf),buf); //vial
 
   if (sscanf(buf,"%d",&targetroom) != 1) {
@@ -3348,7 +3348,7 @@ int teleportVial(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     --(*ch);
     delete o;  
     *newRoom += *ch;
-    vlogf(LOG_PROC, "TELEPORT VIAL: %s transfered to room #%d", ch->name, targetroom);
+    vlogf(LOG_PROC, "TELEPORT VIAL: %s transfered to room #%d", ch->getName(), targetroom);
     act("$n appears in the room with a puff of smoke.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
     ch->doLook("", CMD_LOOK);
     ch->addToWait(combatRound(2));
@@ -3947,6 +3947,49 @@ int healingNeckwear(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
   return TRUE;
 }
 
+int moveRestoreNeckwear(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
+{
+  TBeing *tmp;
+
+  if (cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  if (!(tmp = dynamic_cast<TBeing *>(me->equippedBy)))
+    return FALSE;
+
+  // if they areholding it, don't be silly
+  if (me->eq_pos != WEAR_NECK)
+    return FALSE;
+
+  if (!tmp->roomp)
+    return FALSE;
+
+  if (!tmp->isPc())
+    return FALSE;
+
+  act("$p constricts about your throat!", 0, tmp, me, 0, TO_CHAR);
+  act("$p constricts about $n's throat!", 0, tmp, me, 0, TO_ROOM);
+  if (tmp->hasClass(CLASS_SHAMAN)) {
+    tmp->addToMove(::number(20, 75));
+    act("The power of the loa enters your body through $p!", 0, tmp, me, 0, TO_CHAR);
+    act("$p disappears in a puff of smoke!", 0, tmp, me, 0, TO_CHAR);
+    act("$p's power refreshes you!", 0, tmp, me, 0, TO_CHAR);
+    act("In a puff of smoke, $p dissappears from $n's throat!", 0, tmp, me, 0, TO_ROOM);
+    delete me;
+  } else {
+    int rc;
+    rc = tmp->applyDamage(tmp, ::number(1,10), DAMAGE_SUFFOCATION);
+    act("$p disappears in a puff of smoke!", 0, tmp, me, 0, TO_CHAR);
+    act("In a puff of smoke, $p dissappears from $n's throat!", 0, tmp, me, 0, TO_ROOM);
+    delete me;
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      delete tmp;
+      tmp = NULL;
+    }
+  }
+  return TRUE;
+}
+
 int blessingHoldItem(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
 {
   TBeing *tmp;
@@ -4169,9 +4212,9 @@ int minecart(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
 	  vlogf(LOG_PROC, "Minecart looking for switchtrack that wasn't there. Dash sucks.");
 	  return FALSE;
 	} else {
-	  if (isname("switchtrackdoswitch", switchtrack->name))
+	  if (isname("switchtrackdoswitch", switchtrack->getName()))
 	    nextroom = doswitch;
-	  else if (isname("switchtrackdontswitch", switchtrack->name))
+	  else if (isname("switchtrackdontswitch", switchtrack->getName()))
 	    nextroom = dontswitch;
 	  else {
 	    vlogf(LOG_PROC, "Minecart found an indecisive switchtrack. Dash sucks.");
@@ -4362,7 +4405,7 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       cmd != CMD_TURN) 
     return FALSE;
   
-  if (!myself->name)
+  if (!myself->getName())
     return FALSE;
       
   int where = myself->in_room;
@@ -4374,10 +4417,10 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
     switch (where) { 
     case 18007:
       if(!arg2)
-	strcpy(arg2,isname("switchtrackdoswitch", myself->name)?"southwest":"south");
+	strcpy(arg2,isname("switchtrackdoswitch", myself->getName())?"southwest":"south");
       else if(is_abbrev(arg2, "south") || is_abbrev(arg2, "s")) {
 	strcpy(arg2,"southern");
-	if(isname("switchtrackdoswitch", myself->name)) {
+	if(isname("switchtrackdoswitch", myself->getName())) {
 	  ch->sendTo("The switchtrack is already aligned with the %s fork.", arg2);
 	  return TRUE;
 	}
@@ -4385,7 +4428,7 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       }
       else if(is_abbrev(arg2, "southwest") || is_abbrev(arg2, "se")) {
 	strcpy(arg2,"southwestern");
-	if(isname("switchtrackdontswitch", myself->name)) {
+	if(isname("switchtrackdontswitch", myself->getName())) {
 	  ch->sendTo("The switchtrack is already aligned with the %s fork.", arg2);
 	  return TRUE;
 	}
@@ -4398,10 +4441,10 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       break;
     case 18011:
       if(!arg2) 
-	strcpy(arg2,isname("switchtrackdoswitch", myself->name)?"south":"east");
+	strcpy(arg2,isname("switchtrackdoswitch", myself->getName())?"south":"east");
       else if(is_abbrev(arg2, "east") || is_abbrev(arg2, "e")) {
 	strcpy(arg2,"eastern");
-	if(isname("switchtrackdoswitch", myself->name)) {
+	if(isname("switchtrackdoswitch", myself->getName())) {
 	  ch->sendTo("The switchtrack is already aligned with the %s fork.", arg2);
 	  return TRUE;
 	}
@@ -4409,7 +4452,7 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       }
       else if(is_abbrev(arg2, "south") || is_abbrev(arg2, "s")) {
 	strcpy(arg2,"southern");
-	if (isname("switchtrackdontswitch", myself->name)) {
+	if (isname("switchtrackdontswitch", myself->getName())) {
 	  ch->sendTo("The switchtrack is already aligned with the %s fork.", arg2);
 	  return TRUE;
 	}
@@ -4422,10 +4465,10 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       break;
     case 18020:
       if(!arg2) 
-	strcpy(arg2,isname("switchtrackdoswitch", myself->name)?"north":"east");
+	strcpy(arg2,isname("switchtrackdoswitch", myself->getName())?"north":"east");
       else if(is_abbrev(arg2, "east") || is_abbrev(arg2, "e")) {
 	strcpy(arg2,"eastern");
-	if(isname("switchtrackdoswitch", myself->name)) {
+	if(isname("switchtrackdoswitch", myself->getName())) {
 	  ch->sendTo("The switchtrack is already aligned with the %s fork.", arg2);
 	  return TRUE;
 	}
@@ -4433,7 +4476,7 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       }
       else if(is_abbrev(arg2, "north") || is_abbrev(arg2, "n")) {
 	strcpy(arg2,"northern");
-	if(isname("switchtrackdontswitch", myself->name)) {
+	if(isname("switchtrackdontswitch", myself->getName())) {
 	  ch->sendTo("The switchtrack is already aligned with the %s fork.", arg2);
 	  return TRUE;
 	}
@@ -4681,7 +4724,7 @@ int dualStyleWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
 
   if(cmd == CMD_SWITCH) {
     arg = one_argument(arg, parg);
-    isname(parg, weap->name);
+    isname(parg, weap->getName());
     act("<c>You deftly change your grip on $p<c> to use it in a different style!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
     act("<c>$n deftly changes $s grip on $p to use it in a different style!<1>",TRUE,ch,o,vict,TO_ROOM,NULL);    
     if (weapspec->type1 == weapspec->norm) {
@@ -4796,6 +4839,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "Dual Style Weapon", dualStyleWeapon}, //75
   {FALSE, "Mana Burn Robe", manaBurnRobe},
   {FALSE, "Chrism: minor heal", healingNeckwear},
-  {FALSE, "Chrism: bless hold item", blessingHoldItem}
+  {FALSE, "Chrism: bless hold item", blessingHoldItem},
+  {FALSE, "Chrism: vitality restore", moveRestoreNeckwear}
 };
 

@@ -1903,6 +1903,18 @@ int Descriptor::nanny(const char *arg)
               connected = CON_QCLASS;
             }
             break;
+#ifdef CANSHAMAN
+          case '8':
+            if (canChooseClass(CLASS_SHAMAN)) {
+              character->setClass(CLASS_SHAMAN);
+              go2next = TRUE;
+            } else {
+              writeToQ(badClassMessage(CLASS_SHAMAN).c_str());
+              writeToQ("--> ");
+              connected = CON_QCLASS;
+            }
+            break;
+#endif
           case 'Z':
             if (canChooseClass(CLASS_SHAMAN)) {
               character->setClass(CLASS_SHAMAN);
@@ -1912,134 +1924,8 @@ int Descriptor::nanny(const char *arg)
               writeToQ("--> ");
               connected = CON_QCLASS;
             }
-	    writeToQ("Shaman are currently being play-tested.\n\r");
-	    // writeToQ("Shaman are not yet a playable class, sorry.\n\r");
-            // writeToQ("--> ");
-            // connected = CON_QCLASS;
 	    vlogf(LOG_JESUS, "Shaman created in the %s account, please check.", account->name);
             break;
-#ifdef SNEEZY2000
-#else
-          case 'a':
-          case 'A':
-            if (canChooseClass(CLASS_THIEF | CLASS_WARRIOR, TRUE)) {
-              if (IS_SET(account->flags, ACCOUNT_ALLOW_DOUBLECLASS)) {
-                character->setClass(CLASS_WARRIOR + CLASS_THIEF);
-                go2next = TRUE;
-              } else {
-                writeToQ("You must obtain a L50 single-class character first.\n\r");
-                writeToQ("--> ");
-                connected = CON_QCLASS;
-              }
-            } else {
-              writeToQ(badClassMessage(CLASS_THIEF | CLASS_WARRIOR, TRUE).c_str());
-              writeToQ("--> ");
-              connected = CON_QCLASS;
-            }
-            break;
-          case 'b':
-          case 'B':
-            if (canChooseClass(CLASS_CLERIC | CLASS_WARRIOR, TRUE)) {
-              if (IS_SET(account->flags, ACCOUNT_ALLOW_DOUBLECLASS)) {
-                character->setClass(CLASS_WARRIOR + CLASS_CLERIC);
-                go2next = TRUE;
-              } else {
-                writeToQ("You must obtain a L50 single-class character first.\n\r");
-                writeToQ("--> ");
-                connected = CON_QCLASS;
-              }
-            } else {
-              writeToQ(badClassMessage(CLASS_CLERIC | CLASS_WARRIOR, TRUE).c_str());
-              writeToQ("--> ");
-                   connected = CON_QCLASS;
-            }
-            break;
-          case 'c':
-          case 'C':
-            if (canChooseClass(CLASS_THIEF | CLASS_MAGIC_USER, TRUE)) {
-              if (IS_SET(account->flags, ACCOUNT_ALLOW_DOUBLECLASS)) {
-                 character->setClass(CLASS_MAGIC_USER + CLASS_THIEF);
-                 go2next = TRUE;
-              } else {
-                writeToQ("You must obtain a L50 single-class character first.\n\r");
-                writeToQ("--> ");
-                connected = CON_QCLASS;
-              }
-            } else {
-              writeToQ(badClassMessage(CLASS_THIEF | CLASS_MAGIC_USER, TRUE).c_str());
-              writeToQ("--> ");
-              connected = CON_QCLASS;
-            }
-            break;
-          case 'd':
-          case 'D':
-            if (canChooseClass(CLASS_MAGIC_USER | CLASS_WARRIOR, TRUE)) {
-              if (IS_SET(account->flags, ACCOUNT_ALLOW_DOUBLECLASS)) {
-                character->setClass(CLASS_MAGIC_USER + CLASS_WARRIOR);
-                go2next = TRUE;
-              } else {
-                writeToQ("You must obtain a L50 single-class character first.\n\r");
-                writeToQ("--> ");
-                connected = CON_QCLASS;
-              }
-            } else {
-              writeToQ(badClassMessage(CLASS_MAGIC_USER | CLASS_WARRIOR, TRUE).c_str());
-              writeToQ("--> ");
-              connected = CON_QCLASS;
-            }
-            break;
-          case 'e':
-          case 'E':
-            if (canChooseClass(CLASS_THIEF | CLASS_CLERIC, TRUE)) {
-              if (IS_SET(account->flags, ACCOUNT_ALLOW_DOUBLECLASS)) {
-                character->setClass(CLASS_CLERIC + CLASS_THIEF);
-                go2next = TRUE;
-              } else {
-                writeToQ("You must obtain a L50 single-class character first.\n\r");
-                writeToQ("--> ");
-                connected = CON_QCLASS;
-              }
-            } else {
-              writeToQ(badClassMessage(CLASS_THIEF | CLASS_CLERIC, TRUE).c_str());
-              writeToQ("--> ");
-              connected = CON_QCLASS;
-            }
-            break;
-          case 'f':
-          case 'F':
-            if (canChooseClass(CLASS_THIEF | CLASS_WARRIOR | CLASS_CLERIC, FALSE, TRUE)) {
-              if (IS_SET(account->flags, ACCOUNT_ALLOW_TRIPLECLASS)) {
-                character->setClass(CLASS_WARRIOR + CLASS_THIEF + CLASS_CLERIC);
-                go2next = TRUE;
-              } else {
-                writeToQ("You must obtain a L50 double-class character first.\n\r");
-                writeToQ("--> ");
-                connected = CON_QCLASS;
-              }
-            } else {
-              writeToQ(badClassMessage(CLASS_THIEF | CLASS_WARRIOR | CLASS_CLERIC, FALSE, TRUE).c_str());
-              writeToQ("--> ");
-              connected = CON_QCLASS;
-            }
-            break;
-          case 'g':
-          case 'G':
-            if (canChooseClass(CLASS_THIEF | CLASS_WARRIOR | CLASS_MAGIC_USER, FALSE, TRUE)) {
-              if (IS_SET(account->flags, ACCOUNT_ALLOW_TRIPLECLASS)) {
-                character->setClass(CLASS_MAGIC_USER + CLASS_THIEF + CLASS_WARRIOR);
-                go2next = TRUE;
-              } else {
-                writeToQ("You must obtain a L50 double-class character first.\n\r");
-                writeToQ("--> ");
-                connected = CON_QCLASS;
-              }
-            } else {
-              writeToQ(badClassMessage(CLASS_THIEF | CLASS_WARRIOR | CLASS_MAGIC_USER, FALSE, TRUE).c_str());
-              writeToQ("--> ");
-              connected = CON_QCLASS;
-            }
-            break;
-#endif
           case '~':
             return DELETE_THIS;
           case '/':
@@ -4031,8 +3917,25 @@ void Descriptor::sendClassList(int home)
   if (home) {
     writeToQ("Now you get to select your class.\n\r\n\r");
   }
+  ////////////////////////////////////////////////////////////////////
+  // BELOW IS CANSHAMAN - THIS IS TO BE ADDED TO THE MAKEFILE
+  // WHEN SHAMAN ARE OPENED OR CAN GET RID OF THE OLD VERSION
+  // BELOW
+  ////////////////////////////////////////////////////////////////////
 
-#ifdef SNEEZY2000
+#ifdef CANSHAMAN
+
+  strcpy(buf, "Please pick one of the following choices for your class.\n\r");
+  strcat(buf, "An X in front of the selection means that you can pick this class.\n\r");
+  strcat(buf, "If there is no X, for some reason you can't choose the class.\n\r");
+  strcat(buf, "To see why you can't choose a selection, choose it and you will be\n\r");
+  strcat(buf, "given an error message telling you why you cannot select the class.\n\r\n\r");
+  sprintf(buf + strlen(buf), "[%c] 1. Warrior                  [%c] 2. Cleric\n\r", CCC(this, CLASS_WARRIOR), CCC(this, CLASS_CLERIC));
+  sprintf(buf + strlen(buf), "[%c] 3. Mage                     [%c] 4. Thief\n\r", CCC(this, CLASS_MAGIC_USER), CCC(this, CLASS_THIEF));
+  sprintf(buf + strlen(buf), "[%c] 5. Deikhan                  [%c] 6. Monk\n\r", CCC(this, CLASS_DEIKHAN), CCC(this, CLASS_MONK));
+  sprintf(buf + strlen(buf), "[%c] 7. Ranger                   [%c] 8. Shaman\n\r\n\r\n\r", CCC(this, CLASS_RANGER), CCC(this, CLASS_SHAMAN)); 
+
+#else
   strcpy(buf, "Please pick one of the following choices for your class.\n\r");
   strcat(buf, "An X in front of the selection means that you can pick this class.\n\r");
   strcat(buf, "If there is no X, for some reason you can't choose the class.\n\r");
@@ -4042,22 +3945,6 @@ void Descriptor::sendClassList(int home)
   sprintf(buf + strlen(buf), "[%c] 3. Mage                     [%c] 4. Thief\n\r", CCC(this, CLASS_MAGIC_USER), CCC(this, CLASS_THIEF));
   sprintf(buf + strlen(buf), "[%c] 5. Deikhan                  [%c] 6. Monk\n\r", CCC(this, CLASS_DEIKHAN), CCC(this, CLASS_MONK));
   sprintf(buf + strlen(buf), "[%c] 7. Ranger\n\r\n\r\n\r", CCC(this, CLASS_RANGER)); 
-
-#else
-  strcpy(buf, "Please pick one of the following for your class.\n\r");
-  strcat(buf, "An X in front of the selection means that you can pick this class.\n\r");
-  strcat(buf, "If there is no X, for some reason you can't choose the class.\n\r");
-  strcat(buf, "To see why you can't choose a selection, choose it and you will be\n\r");
-  strcat(buf, "given an error message telling you why you cannot select the class.\n\r\n\r");
-  sprintf(buf + strlen(buf), "[%c] 1. Warrior                  [%c] A. Warrior/Thief\n\r", CCC(this, CLASS_WARRIOR), CCC(this, CLASS_WARRIOR | CLASS_THIEF, TRUE));
-  sprintf(buf + strlen(buf), "[%c] 2. Cleric                   [%c] B. Warrior/Cleric\n\r", CCC(this, CLASS_CLERIC), CCC(this, CLASS_WARRIOR | CLASS_CLERIC, TRUE));
-  sprintf(buf + strlen(buf), "[%c] 3. Mage                     [%c] C. Thief/Mage\n\r", CCC(this, CLASS_MAGIC_USER), CCC(this, CLASS_THIEF | CLASS_MAGIC_USER, TRUE));
-  sprintf(buf + strlen(buf), "[%c] 4. Thief                    [%c] D. Warrior/Mage\n\r", CCC(this, CLASS_THIEF), CCC(this, CLASS_WARRIOR | CLASS_MAGIC_USER, TRUE));
-  sprintf(buf + strlen(buf), "[%c] 5. Deikhan                  [%c] E. Thief/Cleric\n\r", CCC(this, CLASS_DEIKHAN), CCC(this, CLASS_THIEF | CLASS_CLERIC, TRUE));
-  sprintf(buf + strlen(buf), "[%c] 6. Monk                     [%c] F. Warrior/Thief/Cleric\n\r", CCC(this, CLASS_MONK), CCC(this, CLASS_WARRIOR | CLASS_THIEF | CLASS_CLERIC, FALSE, TRUE));
-  sprintf(buf + strlen(buf), "[%c] 7. Ranger                   [%c] G. Warrior/Thief/Mage\n\r", CCC(this, CLASS_RANGER), CCC(this, CLASS_WARRIOR | CLASS_THIEF | CLASS_MAGIC_USER, FALSE, TRUE));
-  sprintf(buf + strlen(buf), "[%c] 8. Shaman\n\r\n\r",
-          CCC(this, CLASS_SHAMAN));
 
 #endif
   strcat(buf, "There are advantages and disadvantages to each choice.\n\r");
@@ -5996,7 +5883,7 @@ int Descriptor::doAccountStuff(char *arg)
       // remove trophy entries so they do not carry over if the character is recreated
       wipeTrophy(delname);
 
-      //if((rc=dbquery(NULL, "sneezy", "doTrophy", "delete * from trophy where name='%s'", ch->getName()))==-1) {
+      //if((rc=dbquery(NULL, "sneezy", "doTrophy", "delete * from trophy where name='%s'", ch->name))==-1) {
       //vlogf(LOG_BUG, "Database error for trophy character delete");
       //}
     
