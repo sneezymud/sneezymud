@@ -216,6 +216,7 @@ void TBeing::setRacialStuff()
     case RACE_ANGEL:
     case RACE_BANSHEE:
     case RACE_WYVELIN:
+    case RACE_RATMEN:
     case MAX_RACIAL_TYPES:
       break;
   }
@@ -3742,6 +3743,7 @@ spellNumT TBeing::getFormType() const
     case RACE_VAMPIREBAT:
     case RACE_KUOTOA:
     case RACE_BAANTA:
+    case RACE_RATMEN:
     case RACE_WYVELIN:
       if (num <= 33)
         return (TYPE_BITE);
