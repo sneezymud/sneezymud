@@ -3143,57 +3143,64 @@ int TMonster::takeFirstHit(TBeing &vict)
       if (dynamic_cast<TBaseWeapon *>(stabber)) {
         if (stabber->isPierceWeapon()) {
           v2 = dynamic_cast<TBeing *>(vict.riding);
-          if (v2) {
+	  // basically if victim is < 35 we want backstab to fire
+	  // otherwise lets slit their throat
+	  // I would be in favor of discussing a better condition
+	  // but until then lets go with this
+	  if (GetMaxLevel() < 35) {
+	    if (v2) {
             // can't backstab them (mounted), scrag the horse instead
 	    //            rc = backstabHit(v2, stabber);
 	    //            addSkillLag(SKILL_BACKSTAB, 0);
 
 	    // lets not have automatic success
-	    rc=doBackstab("", v2);
+	      rc=doBackstab("", v2);
 
 
-            if (IS_SET_DELETE(rc, DELETE_VICT)) {
-              if (vict.riding) {
-                vlogf(LOG_MISC, "is this called (ping)?");
-                vict.dismount(POSITION_SITTING);
-              }
-              delete v2;
-              v2 = NULL;
-            }
-            return TRUE;
-          } else  {
+	      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+		if (vict.riding) {
+		  vlogf(LOG_MISC, "is this called (ping)?");
+		  vict.dismount(POSITION_SITTING);
+		}
+		delete v2;
+		v2 = NULL;
+	      }
+	      return TRUE;
+	    } else {
 	    //            rc = backstabHit(&vict, stabber);
 	    //            addSkillLag(SKILL_BACKSTAB, 0);
-	    rc=doBackstab("", &vict);
-
-            if (IS_SET_DELETE(rc, DELETE_VICT)) {
-              return DELETE_VICT;
-            }
-            return TRUE;
-          }
+	      rc=doBackstab("", &vict);
+	      vlogf(LOG_JESUS, "Backstab called in takeFirstHit");
+	      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+		return DELETE_VICT;
+	      }
+	      return TRUE;
+	    }
+	  } else {
 	  // Thieves should have slit as well
-          if (v2) {
+	    if (v2) {
 	    // lets not have automatic success
-	    rc=doThroatSlit("", v2);
+	      rc=doThroatSlit("", v2);
 
-            if (IS_SET_DELETE(rc, DELETE_VICT)) {
-              if (vict.riding) {
+	      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+		if (vict.riding) {
 		// not sure why were loging here with backstab
 		// but may as well do the same for slit
-                vlogf(LOG_MISC, "is this called? (slit-mobact.cc:3183)");
-                vict.dismount(POSITION_SITTING);
-              }
-              delete v2;
-              v2 = NULL;
-            }
-            return TRUE;
-          } else  {
-	    rc=doThroatSlit("", &vict);
-	    vlogf(LOG_JESUS, "Slit called in takeFirstHit");
-            if (IS_SET_DELETE(rc, DELETE_VICT)) {
-              return DELETE_VICT;
-            }
-            return TRUE;
+		  vlogf(LOG_MISC, "is this called? (slit-mobact.cc:3183)");
+		  vict.dismount(POSITION_SITTING);
+		}
+		delete v2;
+		v2 = NULL;
+	      }
+	      return TRUE;
+	    } else {
+	      rc=doThroatSlit("", &vict);
+	      vlogf(LOG_JESUS, "Slit called in takeFirstHit");
+	      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+		return DELETE_VICT;
+	      }
+	      return TRUE;
+	    }
           }
         }
       }
