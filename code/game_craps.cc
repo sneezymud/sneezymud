@@ -162,7 +162,7 @@ void TBeing::doBet(const char *arg)
 {
   Descriptor *d;
   char amount[15], craps[256];
-  int num;
+  TObj *chip;
 
   if (!(d = desc))
     return;
@@ -214,150 +214,162 @@ void TBeing::doBet(const char *arg)
       }
     }
     if (*craps) {
-      if (isdigit(*craps)) {
-	num = convertTo<int>(craps);
-	if (num > getMoney()) {
-	  sendTo("You don't have that much to bet!\n\r");
-	  return;
-	}
-	if (num <= 0) {
-	  sendTo("Nice try.\n\r");
-	  return;
-	}
-	if (is_abbrev(amount, "crap")) {
-	  if (!d->bet.crap) {
-	    d->bet_opt.crapsOptions += CRAP_OUT;
-	    sendTo("You add %d talen%s to your bet on the crap roll.\n\r", 
-               num, (num > 1) ? "s" : "");
-	  } else
-	    sendTo("You just added %d talen%s to your no pass bet.\n\r", num,
-               (num > 1) ? "s" : "");
+      if(!(chip=find_chip(this, craps))){
+	sendTo("You don't have that chip!\n\r");
+	return;
+      }
 
-	  addToMoney(-num, GOLD_GAMBLE);
-	  d->bet.crap += num;
-	} else if (is_abbrev(amount, "come")) {
-	  if (!checkForDiceHeld() && !checkForDiceInInv()) {
-            TObj *the_dice;
-            TMonster *crap_man;
-            char buf[80];
+      if (is_abbrev(amount, "crap")) {
+	if (!d->bet.crap) {
+	  d->bet_opt.crapsOptions += CRAP_OUT;
+	  sendTo(COLOR_OBJECTS, "You place %s for your bet on the crap roll.\n\r", 
+		 chip->getName());
 
-            if (!(crap_man = FindMobInRoomWithProcNum(in_room, SPEC_CRAPSGUY))) {
-            } else {
-              // no dice in world
-              if (!obj_index[real_object(CRAPS_DICE)].number) {
-                the_dice = read_object(CRAPS_DICE, VIRTUAL);
-                *crap_man += *the_dice;
-              }
-              if (!(the_dice = crap_man->checkForDiceInInv())) {
-                // player doesn't have dice, craps doesn't either
-                // someone else is the roller
-              } else {
-                sprintf(buf, "Fine %s, here are the dice!", getName());
-                crap_man->doSay(buf);
-                crap_man->doSay("Hold the dice, and throw them when I say it's ok!");
-                --(*the_dice);
-                *this += *the_dice;
-  
-                if (!crap_man->act_ptr)
-                  crap_man->act_ptr = new Ccraps();
-  
-                Ccraps *cr = (Ccraps *) crap_man->act_ptr;
-                cr->pos = 4;
-                m_craps = new Craps(this);
-              }
-            }
-          }
-	  if (!d->bet.come) {
-	    d->bet_opt.crapsOptions += COME_OUT;
-	    sendTo("You just placed %d talen%s down on the come out roll.\n\r",
-                num,(num > 1) ? "s" : "");
-	  } else
-	    sendTo("You add %d talen%s to your bet on the come out roll.\n\r",
-                num,(num > 1) ? "s" : "");
+	  d->bet.crap = chip->obj_flags.cost;
 
-	  addToMoney(-num, GOLD_GAMBLE);
-	  d->bet.come += num;
-	} else if (is_abbrev(amount, "three")) {
-	  if (!d->bet.three) {
-	    d->bet_opt.oneRoll += THREE3;
-	    sendTo("You just placed %d talen%s down on a oneroll three (3) bet.\n\r", 
-                num,(num > 1) ? "s" : "");
-	  } else
-	    sendTo("You add %d talen%s to your bet on the oneroll three (3).\n\r",
-                num,(num > 1) ? "s" : "");
-
-	  addToMoney(-num, GOLD_GAMBLE);
-	  d->bet.three += num;
-	} else if (is_abbrev(amount, "two")) {
-	  if (!d->bet.two) {
-	    d->bet_opt.oneRoll += TWO2;
-	    sendTo("You just placed %d talen%s down on a oneroll two (2) bet.\n\r", 
-                num,(num > 1) ? "s" : "");
-	  } else
-	    sendTo("You add %d talen%s to your bet on the oneroll two (2).\n\r",
-                num,(num > 1) ? "s" : "");
-
-	  addToMoney(-num, GOLD_GAMBLE);
-	  d->bet.two += num;
-	} else if (is_abbrev(amount, "eleven")) {
-	  if (!d->bet.eleven) {
-	    d->bet_opt.oneRoll += ELEVEN;
-	    sendTo("You just placed %d talen%s down on a oneroll eleven (11) bet.\n\r", 
-                num,(num > 1) ? "s" : "");
-	  } else
-	    sendTo("You add %d talen%s to your bet on the oneroll eleven (11).\n\r", 
-                num,(num > 1) ? "s" : "");
-
-	  addToMoney(-num, GOLD_GAMBLE);
-	  d->bet.eleven += num;
-	} else if (is_abbrev(amount, "twelve")) {
-	  if (!d->bet.twelve) {
-	    d->bet_opt.oneRoll += TWELVE;
-	    sendTo("You just placed %d talen%s down on a oneroll twelve (12) bet.\n\r", 
-                num,(num > 1) ? "s" : "");
-	  } else
-	    sendTo("You add %d talen%s to your bet on a oneroll twelve (12) bet.\n\r", 
-                num,(num > 1) ? "s" : "");
-
-	  addToMoney(-num, GOLD_GAMBLE);
-	  d->bet.twelve += num;
-	} else if (is_abbrev(amount, "horn")) {
-	  if (!d->bet.horn_bet) {
-	    d->bet_opt.oneRoll += HORN_BET;
-	    sendTo("You just placed %d talen%s down on a oneroll horn bet.\n\r",
-                num,(num > 1) ? "s" : "");
-	  } else
-	    sendTo("You add %d talen%s to your bet on a oneroll horn bet.\n\r",
-                num,(num > 1) ? "s" : "");
-
-	  addToMoney(-num, GOLD_GAMBLE);
-	  d->bet.horn_bet += num;
-	} else if (is_abbrev(amount, "field")) {
-	  if (!d->bet.field_bet) {
-	    d->bet_opt.oneRoll += FIELD_BET;
-	    sendTo("You just placed %d talen%s down on a oneroll field bet.\n\r",
-                num,(num > 1) ? "s" : "");
-	  } else
-	    sendTo("You add %d talen%s to your bet on a oneroll field bet.\n\r",
-                num,(num > 1) ? "s" : "");
-
-	  addToMoney(-num, GOLD_GAMBLE);
-	  d->bet.field_bet += num;
-	} else if (is_abbrev(amount, "seven")) {
-	  if (!d->bet.seven) {
-	    d->bet_opt.oneRoll += SEVEN;
-	    sendTo("You just placed %d talen%s down on a oneroll seven (7) bet.\n\r",
-                num,(num > 1) ? "s" : "");
-	  } else
-	    sendTo("You add %d talen%s to your bet on a oneroll seven (7) bet.\n\r",
-                num,(num > 1) ? "s" : "");
-
-	  addToMoney(-num, GOLD_GAMBLE);
-	  d->bet.seven += num;
+	  (*chip)--;
+	  delete chip;
 	} else {
-	  sendTo("Wrong option.\n\r");
-	  return;
+	  sendTo("You've already betted on craps.\n\r");
 	}
+      } else if (is_abbrev(amount, "come")) {
+	if (!checkForDiceHeld() && !checkForDiceInInv()) {
+	  TObj *the_dice;
+	  TMonster *crap_man;
+	  char buf[80];
+
+	  if (!(crap_man = FindMobInRoomWithProcNum(in_room, SPEC_CRAPSGUY))) {
+	  } else {
+	    // no dice in world
+	    if (!obj_index[real_object(CRAPS_DICE)].number) {
+	      the_dice = read_object(CRAPS_DICE, VIRTUAL);
+	      *crap_man += *the_dice;
+	    }
+	    if (!(the_dice = crap_man->checkForDiceInInv())) {
+	      // player doesn't have dice, craps doesn't either
+	      // someone else is the roller
+	    } else {
+	      sprintf(buf, "Fine %s, here are the dice!", getName());
+	      crap_man->doSay(buf);
+	      crap_man->doSay("Hold the dice, and throw them when I say it's ok!");
+	      --(*the_dice);
+	      *this += *the_dice;
+  
+	      if (!crap_man->act_ptr)
+		crap_man->act_ptr = new Ccraps();
+  
+	      Ccraps *cr = (Ccraps *) crap_man->act_ptr;
+	      cr->pos = 4;
+	      m_craps = new Craps(this);
+	    }
+	  }
+	}
+	if (!d->bet.come) {
+	  d->bet_opt.crapsOptions += COME_OUT;
+	  sendTo(COLOR_OBJECTS, "You just placed %s down on the come out roll.\n\r",
+		 chip->getName());
+
+	  d->bet.come = chip->obj_flags.cost;
+
+	  (*chip)--;
+          delete chip;
+	} else {
+	  sendTo("You've already betted on the come out roll.\n\r");
+	}
+      } else if (is_abbrev(amount, "three")) {
+	if (!d->bet.three) {
+	  d->bet_opt.oneRoll += THREE3;
+	  sendTo(COLOR_OBJECTS, "You just placed %s down on a oneroll three (3) roll.\n\r",
+		 chip->getName());
+
+	  d->bet.three = chip->obj_flags.cost;
+
+	  (*chip)--;
+          delete chip;
+	} else {
+	  sendTo("You've already betted on a oneroll three (3) roll.\n\r");
+	}
+      } else if (is_abbrev(amount, "two")) {
+	if (!d->bet.two) {
+	  d->bet_opt.oneRoll += TWO2;
+	  sendTo(COLOR_OBJECTS, "You just placed %s down on a oneroll two (2) roll.\n\r",
+		 chip->getName());
+
+	  d->bet.two = chip->obj_flags.cost;
+
+	  (*chip)--;
+          delete chip;
+	} else {
+	  sendTo("You've already betted on a oneroll two (2) roll.\n\r");
+	}
+      } else if (is_abbrev(amount, "eleven")) {
+	if (!d->bet.eleven) {
+	  d->bet_opt.oneRoll += ELEVEN;
+	  sendTo(COLOR_OBJECTS, "You just placed %s down on a oneroll eleven (11) roll.\n\r",
+		 chip->getName());
+
+	  d->bet.eleven = chip->obj_flags.cost;
+
+	  (*chip)--;
+          delete chip;
+	} else {
+	  sendTo("You've already betted on a oneroll eleven (11) roll.\n\r");
+	}
+      } else if (is_abbrev(amount, "twelve")) {
+	if (!d->bet.twelve) {
+	  d->bet_opt.oneRoll += TWELVE;
+	  sendTo(COLOR_OBJECTS, "You just placed %s down on a oneroll twelve (12) roll.\n\r",
+		 chip->getName());
+
+	  d->bet.twelve = chip->obj_flags.cost;
+
+	  (*chip)--;
+          delete chip;
+	} else {
+	  sendTo("You've already betted on a oneroll twelve (12) roll.\n\r");
+	}
+      } else if (is_abbrev(amount, "horn")) {
+	if (!d->bet.horn_bet) {
+	  d->bet_opt.oneRoll += HORN_BET;
+	  sendTo(COLOR_OBJECTS, "You just placed %s down on a oneroll horn roll.\n\r",
+		 chip->getName());
+
+	  d->bet.horn_bet = chip->obj_flags.cost;
+
+	  (*chip)--;
+          delete chip;
+	} else {
+	  sendTo("You've already betted on a oneroll horn roll.\n\r");
+	}
+      } else if (is_abbrev(amount, "field")) {
+	if (!d->bet.field_bet) {
+	  d->bet_opt.oneRoll += FIELD_BET;
+	  sendTo(COLOR_OBJECTS, "You just placed %s down on a oneroll field roll.\n\r",
+		 chip->getName());
+
+	  d->bet.field_bet = chip->obj_flags.cost;
+
+	  (*chip)--;
+          delete chip;
+	} else {
+	  sendTo("You've already betted on a oneroll field roll.\n\r");
+	}
+      } else if (is_abbrev(amount, "seven")) {
+	if (!d->bet.seven) {
+	  d->bet_opt.oneRoll += SEVEN;
+	  sendTo(COLOR_OBJECTS, "You just placed %s down on a oneroll seven roll.\n\r",
+		 chip->getName());
+
+	  d->bet.seven = chip->obj_flags.cost;
+
+	  (*chip)--;
+          delete chip;
+	} else {
+	  sendTo("You've already betted on a oneroll seven roll.\n\r");
+	}
+      } else {
+	sendTo("Wrong option.\n\r");
+	return;
       }
     }
   }
@@ -416,7 +428,8 @@ int Craps::checkCraps(int diceroll)
     if (IS_SET(d->bet_opt.crapsOptions, CRAP_OUT)) {
       t->sendTo("Craps....You Win your bet (%d)!\n\r", d->bet.crap);
       REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
-      dynamic_cast<TBeing *>(t)->addToMoney(2 * d->bet.crap, GOLD_GAMBLE);
+      payout(dynamic_cast<TBeing *>(t), 2 * d->bet.crap);
+
       d->bet.crap = 0;
       if (t == m_ch) {
         if (!newRoll)
@@ -457,7 +470,7 @@ int Craps::checkSeven(int diceroll)
     if (!pointRoll) {
       if (IS_SET(d->bet_opt.crapsOptions, COME_OUT)) {
 	tbt->sendTo("Seven! You win your come out bet (%d)!\n\r", d->bet.come);
-	tbt->addToMoney(2 * d->bet.come, GOLD_GAMBLE);
+	payout(tbt, 2 * d->bet.come);
 	REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
 	d->bet.come = 0;
       }
@@ -485,7 +498,7 @@ int Craps::checkSeven(int diceroll)
       }
       if (IS_SET(d->bet_opt.crapsOptions, CRAP_OUT)) {
 	tbt->sendTo("Seven! You win your crap out bet (%d)!\n\r", d->bet.crap);
-	tbt->addToMoney(2 * d->bet.crap, GOLD_GAMBLE);
+	payout(tbt, 2 * d->bet.crap);
 	REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
 	d->bet.crap = 0;
         if (tbt == m_ch) {
@@ -520,7 +533,7 @@ int Craps::checkEleven(int diceroll)
 
     if (IS_SET(d->bet_opt.crapsOptions, COME_OUT)) {
       tbt->sendTo("Seven come ELEVEN! You hit your come out bet!\n\r");
-      tbt->addToMoney(2 * d->bet.come, GOLD_GAMBLE);
+      payout(tbt, 2 * d->bet.come);
       REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
       d->bet.come = 0;
     }
@@ -560,7 +573,7 @@ void Craps::checkOnerollSeven(int diceroll, TBeing *ch)
   }
   if (diceroll == 7) {
     ch->sendTo("You win your oneroll seven bet (%d)!\n\r", (3 * d->bet.seven));
-    ch->addToMoney(4 * d->bet.seven, GOLD_GAMBLE);
+    payout(ch, 4 * d->bet.seven);
   } else
     ch->sendTo("You lose your oneroll seven bet (%d).\n\r", d->bet.seven);
 
@@ -581,10 +594,10 @@ void Craps::checkHorn(int diceroll, TBeing *ch)
   else {
     if ((diceroll == 2) || (diceroll == 12)) {
       ch->sendTo("The roll is a [%d]. You win your horn bet (%d)!\n\r", diceroll, (6 * d->bet.horn_bet));
-      ch->addToMoney(7 * d->bet.horn_bet, GOLD_GAMBLE);
+      payout(ch, 7 * d->bet.horn_bet);
     } else {
       ch->sendTo("The roll is a [%d]. You win your horn bet (%d)!\n\r", diceroll, (((int) (3.5 * d->bet.horn_bet)) - d->bet.horn_bet));
-      ch->addToMoney((int) (3.5 * d->bet.horn_bet), GOLD_GAMBLE);
+      payout(ch, (int)(3.5 * d->bet.horn_bet));
     }
   }
   REMOVE_BIT(d->bet_opt.oneRoll, HORN_BET);
@@ -612,10 +625,10 @@ void Craps::checkField(int diceroll, TBeing *ch)
   } else {
     if ((diceroll < 12) && (diceroll > 2)) {
       sprintf(buf, "%s The roll is %d. You win your bet on the field (%d)!", ch->getName(), diceroll, d->bet.field_bet);
-      ch->addToMoney(2 * d->bet.field_bet, GOLD_GAMBLE);
+      payout(ch, 2 * d->bet.field_bet);
     } else {
       sprintf(buf, "%s The roll is %d. You get your field bet back (%d)!", ch->getName(), diceroll, d->bet.field_bet);
-      ch->addToMoney(d->bet.field_bet, GOLD_GAMBLE);
+      payout(ch, d->bet.field_bet);
     }
     if (crap_man) {
       crap_man->doTell(buf);
@@ -659,7 +672,7 @@ void Craps::checkTwo(int diceroll, TBeing *ch)
   if (diceroll == 2) {
     ch->sendTo("Two hit!  Nice bet! You Win your bet (%d)!\n\r", (30 *
 d->bet.two));
-    ch->addToMoney(31 * d->bet.two, GOLD_GAMBLE);
+    payout(ch, 31 * d->bet.two);
     REMOVE_BIT(d->bet_opt.oneRoll, TWO2);
     d->bet.two = 0;
   } else {
@@ -680,7 +693,7 @@ void Craps::checkThree(int diceroll, TBeing *ch)
   if (diceroll == 3) {
     ch->sendTo("Three hit! Nice bet! You win your bet (%d)\n\r", (15 *
 d->bet.three));
-    ch->addToMoney(16 * d->bet.three, GOLD_GAMBLE);
+    payout(ch, 16 * d->bet.three);
     REMOVE_BIT(d->bet_opt.oneRoll, THREE3);
     d->bet.three = 0;
   } else {
@@ -701,7 +714,7 @@ void Craps::checkOnerollEleven(int diceroll, TBeing *ch)
   if (diceroll == 11) {
     ch->sendTo("Eleven hit! Nice bet! You win your bet (%d)!\n\r", (15 *
 d->bet.eleven));
-    ch->addToMoney(16 * d->bet.eleven, GOLD_GAMBLE);
+    payout(ch, 16 * d->bet.eleven);
     REMOVE_BIT(d->bet_opt.oneRoll, ELEVEN);
     d->bet.eleven = 0;
   } else {
@@ -721,7 +734,7 @@ void Craps::checkTwelve(int diceroll, TBeing *ch)
   }
   if (diceroll == 12) {
     ch->sendTo("Twelve hit! Nice bet You win your twelve bet (%d)!\n\r", (30 * d->bet.twelve));
-    ch->addToMoney(31 * d->bet.twelve, GOLD_GAMBLE);
+    payout(ch, 31 * d->bet.twelve);
   } else
     ch->sendTo("No twelve....You lose your twelve bet (%d)!\n\r", d->bet.twelve);
 
@@ -740,15 +753,15 @@ void Craps::checkOnerollCraps(int diceroll, TBeing *ch)
   if (diceroll == 3) {
     ch->sendTo("Three hit! Your bet on craps hit! You win (%d)!\n\r", (6 * d->bet.one_craps));
     REMOVE_BIT(d->bet_opt.oneRoll, CRAPS);
-    ch->addToMoney(7 * d->bet.one_craps, GOLD_GAMBLE);
+    payout(ch, 7 * d->bet.one_craps);
   } else if (diceroll == 2) {
     ch->sendTo("Two hit! Your bet on craps hit! You win (%d)!\n\r", (6 * d->bet.one_craps));
     REMOVE_BIT(d->bet_opt.oneRoll, CRAPS);
-    ch->addToMoney(7 * d->bet.one_craps, GOLD_GAMBLE);
+    payout(ch, 7 * d->bet.one_craps);
   } else if (diceroll == 12) {
     ch->sendTo("Twelve hit. Your bet on craps hit! You win (%d)!\n\r", (6 * d->bet.one_craps));
     REMOVE_BIT(d->bet_opt.oneRoll, CRAPS);
-    ch->addToMoney(7 * d->bet.one_craps, GOLD_GAMBLE);
+    payout(ch, 7 * d->bet.one_craps);
   } else {
     ch->sendTo("No craps....You lose your bet on craps (%d)!\n\r", d->bet.one_craps);
     REMOVE_BIT(d->bet_opt.oneRoll, CRAPS);
@@ -805,7 +818,7 @@ void WinLoseCraps(TBeing *ch, int diceroll)
 
     if (IS_SET(d->bet_opt.crapsOptions, COME_OUT)) {
       tbt->sendTo("The point [%d] was hit. You win your bet (%d)!\n\r", diceroll, d->bet.come);
-      tbt->addToMoney(2 * d->bet.come, GOLD_GAMBLE);
+      payout(tbt, 2 * d->bet.come);
       REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
       d->bet.come = 0;
     }
