@@ -1,36 +1,7 @@
-#include <stdio.h>
-#include <string>
-#include <string.h>
-#include <iostream.h>
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
-#include <sys/types.h>
-#include <cctype>
-#include <cassert>
-#include <cstring>
-
-#include <cerrno>
-#include <string>
-#include <vector>
-#include <map>
-
-
-static int gamePort=6968;
-
-static int PROD_GAMEPORT=7900;
-static int BUILDER_GAMEPORT=8900;
-
-#define vlogf fprintf
-#define LOG_DB stdout
-#define FALSE 0
-#define TRUE 1
-
+#include "stdsneezy.h"
 #include "database.h"
 
-
 static TDatabaseConnection database_connection;
-
 
 TDatabase::TDatabase() : 
   res(NULL), 
@@ -59,6 +30,8 @@ void TDatabase::setDB(string tdb){
     db=database_connection.getSneezyDB();
   } else if(tdb=="immortal"){
     db=database_connection.getImmoDB();
+  } else if(tdb=="sneezyglobal"){
+    db=database_connection.getSneezyGlobalDB();
   } else {
     vlogf(LOG_DB, "Unknown database %s", tdb.c_str());
     db=NULL;
