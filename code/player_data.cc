@@ -500,9 +500,11 @@ void TPerson::storeToSt(charFile *st)
   st->hitroll = 0;
   st->damroll = 0;
 
+#if 0
   if (title)
     strcpy(st->title, title);
   else
+#endif
     *st->title = '\0';
 
   strcpy(st->lastHost, lastHost);
@@ -576,10 +578,12 @@ void TPerson::loadFromSt(charFile *st)
 
   shortDescr = NULL;
   player.longDescr = NULL;
+#if 0
   if (*st->title) {
     title = mud_str_dup(st->title);
   } else
     title = NULL;
+#endif
 
   if (*st->description) {
     setDescr(mud_str_dup(st->description));
@@ -866,7 +870,7 @@ void TBeing::saveChar(sh_int load_room)
   saveCareerStats();
   saveFactionStats();
   saveDrugStats();
-
+  saveTitle();
 
   // tmp which is the original character should not have a desc when it leaves
   if (tmp) 
@@ -1628,6 +1632,62 @@ bool TBeing::isLinkdead() const
   return (isPc() && !desc && polyed == POLY_TYPE_NONE);
 }
 
+void TBeing::saveTitle()
+{
+  FILE *fp;
+  string buf;
+  TPerson *tp;
+
+  if(!(tp=dynamic_cast<TPerson *>(this)))
+    return;
+
+  ssprintf(buf, "player/%c/%s.title", LOWER(name[0]), lower(name).c_str());
+
+  if (!(fp = fopen(buf.c_str(), "w"))) {
+    vlogf(LOG_FILE, "Unable to open file (%s) for saving title (%d)", 
+	  buf.c_str(), errno);
+    return;
+  }
+
+  fprintf(fp,"%s\n", tp->title);
+  
+  if (fclose(fp)) 
+      vlogf(LOG_FILE, "Problem closing %s's saveTitle", name);
+
+}
+
+void TBeing::loadTitle()
+{
+  FILE *fp;
+  string buf;
+  char inbuf[1024];
+  TPerson *tp;
+
+  if(!(tp=dynamic_cast<TPerson *>(this)))
+    return;
+
+  ssprintf(buf, "player/%c/%s.title", LOWER(name[0]), lower(name).c_str());
+
+  if (!(fp = fopen(buf.c_str(), "r"))) {
+    vlogf(LOG_FILE, "Unable to open file (%s) for loading title (%d)",
+          buf.c_str(), errno);
+    return;
+  }
+
+  if (fscanf(fp, "%[^\n]", inbuf) != 1){
+    vlogf(LOG_BUG, "Bad data in drugs stat read (%s)", getName());
+    fclose(fp);
+    return;
+  }
+
+  delete [] tp->title;
+  tp->title = mud_str_dup(inbuf);
+
+  if (fclose(fp))
+    vlogf(LOG_FILE, "Problem closing %s's loadTitle", name);
+}
+
+
 void TBeing::saveDrugStats()
 {
   FILE *fp;
@@ -1678,6 +1738,8 @@ void TBeing::saveDrugStats()
       vlogf(LOG_FILE, "Problem closing %s's saveDrugStats", name);
 
 }
+
+
 
 void TBeing::loadDrugStats()
 {
@@ -1763,6 +1825,7 @@ void TBeing::loadDrugStats()
 
   fclose(fp);
 }
+
 
 void TBeing::saveCareerStats()
 {
@@ -1879,6 +1942,7 @@ void TBeing::saveCareerStats()
       vlogf(LOG_BUG, "Problem closing %s's saveCareerStats", name);
   
 }
+
 
 void TBeing::loadCareerStats()
 {

@@ -593,6 +593,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
           ch->loadCareerStats();
           ch->loadDrugStats();
 	  ch->loadFactionStats();
+	  ch->loadTitle();
           if (ch->getHit() < 0) 
             dynamic_cast<TPerson *>(ch)->autoDeath();
 
@@ -1197,6 +1198,7 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
       tmp_ch->loadCareerStats();
       tmp_ch->loadDrugStats();
       tmp_ch->loadFactionStats();
+      tmp_ch->loadTitle();
       if (tmp_ch->getHit() < 0) 
         dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
       

@@ -1300,6 +1300,8 @@ class TBeing : public TThing {
     void loadCareerStats();
     void saveDrugStats();
     void loadDrugStats();
+    void saveTitle();
+    void loadTitle();
     void saveFactionStats();
     void loadFactionStats();
     bool saveFollowers(bool);

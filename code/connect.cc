@@ -1332,6 +1332,7 @@ int Descriptor::nanny(const char *arg)
           tmp_ch->loadCareerStats();
 	  tmp_ch->loadDrugStats();
 	  tmp_ch->loadFactionStats();
+	  tmp_ch->loadTitle();
           if (tmp_ch->getHit() < 0) 
             dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
           
@@ -1450,6 +1451,7 @@ int Descriptor::nanny(const char *arg)
               tmp_ch->loadCareerStats();
               tmp_ch->loadDrugStats();
 	      tmp_ch->loadFactionStats();
+	      tmp_ch->loadTitle();
               if (tmp_ch->getHit() < 0) 
                 dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
               
@@ -2757,6 +2759,7 @@ int TPerson::genericLoadPC()
   loadCareerStats();
   loadDrugStats();
   loadFactionStats();
+  loadTitle();
 
   stats.logins++;
   save_game_stats();
