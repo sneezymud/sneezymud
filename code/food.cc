@@ -444,7 +444,10 @@ void TBaseCup::pourMeIntoDrink2(TBeing *ch, TBaseCup *from_obj)
   from_obj->weightChangeObject(-temp * SIP_WEIGHT);
   weightChangeObject(temp * SIP_WEIGHT);
 
-  addDrinkConFlags(from_obj->getDrinkConFlags());
+  //  addDrinkConFlags(from_obj->getDrinkConFlags());
+  if(from_obj->getDrinkConFlags() == DRINK_POISON){
+    addDrinkConFlags(DRINK_POISON);
+  }
 }
 
 int TBeing::doPour(const char *argument)
