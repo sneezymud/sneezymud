@@ -2645,6 +2645,10 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
       
       vict->sendTo("You feel ready to learn more.\n\r");
       break;
+    case LIQ_MAGICAL_ELIXIR:
+      vict->sendTo("A warm tingle runs through your body.\n\r");
+      vict->addToMana(amt);
+      break;
     case LIQ_POISON_STANDARD:
     case LIQ_POISON_CAMAS:
     case LIQ_POISON_ANGEL:

@@ -455,6 +455,39 @@ void TBaseCup::updateDesc()
     found=true;
   }
 
+
+  if(getDrinkUnits()<=0){
+    liquid="nothing";
+  } else {
+    ssprintf(liquid, "%s", DrinkInfo[getDrinkType()]->name);
+  }
+
+  while (newname.find("$$nl") != string::npos){
+    newname.replace(newname.find("$$nl"), 4, liquid);
+    found=true;
+  }
+  while (newname.find("$nl") != string::npos){
+    newname.replace(newname.find("$nl"), 3, liquid);
+    found=true;
+  }
+  while (short_desc.find("$$nl") != string::npos){
+    short_desc.replace(short_desc.find("$$nl"), 4, liquid);
+    found=true;
+  }
+  while (short_desc.find("$nl") != string::npos){
+    short_desc.replace(short_desc.find("$nl"), 3, liquid);
+    found=true;
+  }
+  while (long_desc.find("$$nl") != string::npos){
+    long_desc.replace(long_desc.find("$$nl"), 4, liquid);
+    found=true;
+  }
+  while (long_desc.find("$nl") != string::npos){
+    long_desc.replace(long_desc.find("$nl"), 3, liquid);
+    found=true;
+  }
+
+
   if(found){
     if (isObjStat(ITEM_STRUNG)) {
       delete [] name;
