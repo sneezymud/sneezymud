@@ -38,8 +38,8 @@ V 1 0 31756
 
 O 0 104 1 31759       teller window
 V 1 0 31760
-O 0 104 1 31760       teller window
-V 1 0 31759
+*O 0 104 1 31760       teller window
+*V 1 0 31759
 
 M 0 31764 1 31759    loan officer
 
@@ -75,12 +75,12 @@ O 0 31762 1 31755     a steel lockbox
 P 1 37 9999 31762        large pile of talens
 V 1 0 500000             500000 talens
 
-M 0 31750 1 31760      a bank teller
-G 1 31751 9999           a small silver key
-G 1 31761 9999           a small silver key
-O 0 31762 1 31760     a steel lockbox
-P 1 37 9999 31762        large pile of talens
-V 1 0 500000             500000 talens
+*M 0 31750 1 31760      a bank teller
+*G 1 31751 9999           a small silver key
+*G 1 31761 9999           a small silver key
+*O 0 31762 1 31760     a steel lockbox
+*P 1 37 9999 31762        large pile of talens
+*V 1 0 500000             500000 talens
 
 M 0 31750 1 31768      a bank teller
 G 1 31751 9999           a small silver key
