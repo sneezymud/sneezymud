@@ -174,7 +174,7 @@ sstring HoldemGame::handValToStr(int val){
       ssprintf(msg, "a pair of %ss", cards_names[val%15].c_str());
       break;
     case 2:
-      ssprintf(msg, "two pair of %ss", cards_names[val%15].c_str());
+      ssprintf(msg, "two pair, high pair %ss", cards_names[val%15].c_str());
       break;
     case 3:
       ssprintf(msg, "three of a kind, %ss", cards_names[val%15].c_str());
