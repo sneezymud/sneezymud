@@ -301,8 +301,6 @@ extern bool thingsInRoomVis(TThing *, TRoom *);
 extern int get(TBeing *, TThing *, TThing *, getTypeT, bool);
 extern void portal_flag_change(TPortal *, unsigned int, const char *, setRemT); 
 extern const sstring numberAsString(int);
-extern void loadShopPrices(void);
-extern void saveShopPrices(void);
 extern void readStringNoAlloc(FILE *);
 extern void reset_zone(int, bool);
 extern void loadsetCheck(TBeing *, int, int, wearSlotT, const sstring &);

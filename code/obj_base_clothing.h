@@ -25,8 +25,6 @@ class TBaseClothing : public virtual TObj
     virtual void lowCheck();
     virtual void descMaxStruct(const TBeing *, int) const;
     virtual bool sellMeCheck(TBeing *, TMonster *, int) const;
-    virtual int getShopPrice(int *) const;
-    virtual void recalcShopData(int, int);
     virtual void evaluateMe(TBeing *) const;
     virtual int scavengeMe(TBeing *, TObj **);
     virtual void describeObjectSpecifics(const TBeing *) const;

@@ -105,7 +105,7 @@ void TOrganic::lightMe(TBeing *ch, silentTypeT iSilent)
 }
 
 // Determine Sell[PC selling] value
-int TOrganic::sellPrice(int, int shop_nr, float, int *)
+int TOrganic::sellPrice(int, int shop_nr, float)
 {
 #if 1
   int price;
@@ -132,7 +132,7 @@ int TOrganic::sellPrice(int, int shop_nr, float, int *)
 }
 
 // Determine Buy[Shop selling] value
-int TOrganic::shopPrice(int num, int shop_nr, float, int *) const
+int TOrganic::shopPrice(int num, int shop_nr, float) const
 {
 #if 1
   int price;
@@ -159,7 +159,6 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   char Buf[2][256];
   int price,
       vnum,
-      discount = 0,
       nCost,
       nVolume,
       nWeight;
@@ -188,7 +187,7 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     }
   }
   // cost_per = pricePerUnit();
-  price = shopPrice(num, shop_nr, -1, &discount);
+  price = shopPrice(num, shop_nr, -1);
   vnum = objVnum();
   if (ch->getMoney() < price) {
     keeper->doTell(ch->name, shop_index[shop_nr].missing_cash2);
@@ -311,15 +310,14 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   TThing   *t;
   TOrganic *obj2 = NULL;
   int  price,
-       found = 0,
-       discount;
+    found = 0;
   char Buf[256];
 
   if (getUnits() > 0)
-    price = min(shopPrice(max(1, getUnits()), shop_nr, -1, &discount),
-                sellPrice(1, shop_nr, -1, &discount));
+    price = min(shopPrice(max(1, getUnits()), shop_nr, -1),
+                sellPrice(1, shop_nr, -1));
   else
-    price = sellPrice(1, shop_nr, -1, &discount);
+    price = sellPrice(1, shop_nr, -1);
 
   if (isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
@@ -430,16 +428,15 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 // Used by the value command
 void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 {
-  int  price,
-       discount = 0;
+  int  price;
   TThing   *t;
   TOrganic *obj2 = NULL;
 
   if (getUnits() > 0)
-    price = min(shopPrice(max(1, getUnits()), shop_nr, -1, &discount),
-                sellPrice(1, shop_nr, -1, &discount));
+    price = min(shopPrice(max(1, getUnits()), shop_nr, -1),
+                sellPrice(1, shop_nr, -1));
   else
-    price = sellPrice(1, shop_nr, -1, &discount);
+    price = sellPrice(1, shop_nr, -1);
 
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
@@ -471,7 +468,7 @@ const sstring TOrganic::shopList(const TBeing *ch, const sstring &arg,
 {
   sstring Buf[2], tString;
   bool usePlural = false;
-  int cost = shopPrice(num, shop_nr, -1, &num);
+  int cost = shopPrice(num, shop_nr, -1);
 
   Buf[1] = fmt("%s") % shortDescr;
 

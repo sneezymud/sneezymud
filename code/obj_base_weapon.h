@@ -45,8 +45,6 @@ class TBaseWeapon : public TObj {
     virtual int suggestedPrice() const;
     virtual void sharpenMeStoneWeap(TBeing *, TTool *);
     virtual void dullMeFileWeap(TBeing *, TTool *);
-    virtual int getShopPrice(int *) const;
-    virtual void recalcShopData(int, int);
     virtual int catchSmack(TBeing *, TBeing **, TRoom *, int, int);
     virtual bool isBluntWeapon() const;
     virtual bool isSlashWeapon() const;

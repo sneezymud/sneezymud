@@ -3243,20 +3243,6 @@ void TPerson::doPurge(const char *argument)
         }
       }
       return;
-    } else if ((!strcmp(name_buf, "shops") || !strcmp(name_buf, "shop")) &&
-               !(vict = get_char_room_vis(this, name_buf))) {
-      // wipe the fluxuating shop price stuff
-      // the get char is to prevent a "purge shop" if they mean nuke mob
-#if SHOP_PRICES_FLUXUATE
-      ShopPriceIndex.clear();
-      saveShopPrices();
-      sendTo("Fluxuating shop prices have been reset.\n\r");
-      sendTo("You may also want to do: \"reset shop\" to restore shops to just their\n\r");
-      sendTo("default items.\n\r");
-#else
-      sendTo("Currently, shop prices don't fluxuate, so nothing was done.\n\r");
-#endif
-      return;
     } else if (!strcmp(name_buf, "ldead")) {
       sendTo("Purge ldead has some bad side effects (pet loss, etc).\n\r");
       sendTo("If you are doing this out of habit, stop!\n\r");

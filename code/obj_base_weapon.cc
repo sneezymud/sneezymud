@@ -351,16 +351,6 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
   return FALSE;
 }
 
-int TBaseWeapon::getShopPrice(int *discount) const
-{
-  return shop_price(discount);
-}
-
-void TBaseWeapon::recalcShopData(int bought, int cost)
-{
-  genericCalc(bought, cost);
-}
-
 void TBaseWeapon::objMenu(const TBeing *ch) const
 {
   ch->sendTo(fmt(VT_CURSPOS) % 3 % 1);

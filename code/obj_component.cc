@@ -2367,16 +2367,6 @@ int TComponent::componentValue(TBeing *ch, TMonster *keeper, int shop_nr, TThing
   return FALSE;
 }
 
-int TComponent::getShopPrice(int *discount) const
-{
-  return shop_price(discount);
-}
-
-void TComponent::recalcShopData(int bought, int cost)
-{
-  genericCalc(bought, cost);
-}
-
 void TComponent::changeComponentValue4(TBeing *ch, const char *arg, editorEnterTypeT type)
 {
   int loc_update;
@@ -2983,7 +2973,6 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
   float     tChr;
   int        tCost,
-          tDiscount = 100,
           tValue = 0;
   sstring tString;
   TObj   *tObj;
@@ -3001,7 +2990,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
   tChr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   tChr   = max((float)1.0, tChr);
-  tCost  = (int) shopPrice(tNum, tShop, tChr, &tDiscount);
+  tCost  = (int) shopPrice(tNum, tShop, tChr);
 
   if ((ch->getMoney() < tCost) && !ch->hasWizPower(POWER_GOD)) {
     tKeeper->doTell(ch->name, shop_index[tShop].missing_cash2);
@@ -3034,14 +3023,13 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     *ch += *tObj;
     ch->logItem(tObj, CMD_BUY);
     tValue++;
-    tObj->recalcShopData(TRUE, tCost);
   } else {
     int charges = getComponentCharges();
 
     if (tNum > charges) {
       tKeeper->doTell(ch->getName(), fmt("I don't have %d charges of %s.  Here %s the %d I do have.") % tNum % getName() % ((charges > 2) ? "are" : "is") % charges);
       tNum  = charges;
-      tCost = shopPrice(tNum, tShop, tChr, &tDiscount);
+      tCost = shopPrice(tNum, tShop, tChr);
     }
 
     if (charges == tNum) {
@@ -3075,7 +3063,6 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     *ch += *tObj;
     ch->logItem(tObj, CMD_BUY);
     tValue++;
-    tObj->recalcShopData(TRUE, tCost);
 
     tString = fmt("%s/%d") % SHOPFILE_PATH % tShop;
     tKeeper->saveItems(tString);
@@ -3098,8 +3085,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
 
   sstring buf;
   float  tChr;
-  int     tCost,
-       tDiscount = 100;
+  int     tCost;
 
   if (!shop_index[tShop].profit_sell) {
     tKeeper->doTell(ch->getName(), shop_index[tShop].do_not_buy);
@@ -3138,7 +3124,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
   num = min(num, getComponentCharges());
   tChr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   tChr   = max((float)1.0, tChr);
-  tCost  = max(1, sellPrice(num, tShop, tChr, &tDiscount));
+  tCost  = max(1, sellPrice(num, tShop, tChr));
 
   if (tKeeper->getMoney() < tCost) {
     tKeeper->doTell(ch->name, shop_index[tShop].missing_cash1);
@@ -3158,7 +3144,6 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
   ch->logItem(this, CMD_SELL);
 
   sellMeMoney(ch, tKeeper, tCost, tShop);
-  recalcShopData(FALSE, tCost);
 
   if (ch->isAffected(AFF_GROUP) && ch->desc &&
            IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
@@ -3217,7 +3202,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
   ch->doSave(SILENT_YES);
 }
 
-int TComponent::sellPrice(int num, int shop_nr, float, int *)
+int TComponent::sellPrice(int num, int shop_nr, float)
 {
   int cost_per;
   int price;
@@ -3235,7 +3220,7 @@ int TComponent::sellPrice(int num, int shop_nr, float, int *)
   return price;
 }
 
-int TComponent::shopPrice(int num, int shop_nr, float, int *) const
+int TComponent::shopPrice(int num, int shop_nr, float) const
 {
   int cost_per;
   int price;
@@ -3263,11 +3248,10 @@ void TComponent::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 {
   int price;
   sstring buf;
-  int discount = 100;
   int willbuy = 0;
 
   willbuy=!sellMeCheck(ch, keeper, num);
-  price = sellPrice(num, shop_nr, -1, &discount);
+  price = sellPrice(num, shop_nr, -1);
 
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);

@@ -27,8 +27,6 @@ class TSymbol : public TObj {
     virtual void sellMeMoney(TBeing *, TMonster *, int, int);
     virtual int objectSell(TBeing *, TMonster *);
     virtual bool sellMeCheck(TBeing *, TMonster *, int) const;
-    virtual int getShopPrice(int *) const;
-    virtual void recalcShopData(int, int);
     virtual void describeObjectSpecifics(const TBeing *) const;
     virtual bool allowsCast() { return true; }
     virtual void findSym(TSymbol **);

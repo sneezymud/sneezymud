@@ -592,15 +592,6 @@ bool TBaseClothing::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
   return FALSE;
 }
 
-int TBaseClothing::getShopPrice(int *discount) const
-{
-  return shop_price(discount);
-}
-
-void TBaseClothing::recalcShopData(int bought, int cost)
-{
-  genericCalc(bought, cost);
-}
 
 void TBaseClothing::describeObjectSpecifics(const TBeing *ch) const
 {

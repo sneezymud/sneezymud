@@ -68,7 +68,7 @@ void TCommodity::lowCheck()
   TObj::lowCheck();
 }
 
-int TCommodity::sellPrice(int num, int shop_nr, float, int *)
+int TCommodity::sellPrice(int num, int shop_nr, float)
 {
   int cost_per;
   int price;
@@ -85,7 +85,7 @@ int TCommodity::sellPrice(int num, int shop_nr, float, int *)
   return price;
 }
 
-int TCommodity::shopPrice(int num, int shop_nr, float, int *) const
+int TCommodity::shopPrice(int num, int shop_nr, float) const
 {
   int cost_per;
   int price;
@@ -103,7 +103,6 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   char buf2[80];
   int price, cost_per, vnum;
   TObj *obj2;
-  int discount = 100;
 
   if (parent != keeper) {
     vlogf(LOG_BUG, "Error: buy_treasure():shop.cc  obj not on keeper");
@@ -118,7 +117,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     keeper->doTell(ch->getName(), fmt("I don't have that much %s.  Here's the %d that I do have.") % fname(name) % num);
   }
   cost_per = pricePerUnit();
-  price = shopPrice(num, shop_nr, -1, &discount);
+  price = shopPrice(num, shop_nr, -1);
   vnum = objVnum();
 
   if (ch->getMoney() < price) {
@@ -175,10 +174,9 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
   TCommodity *obj2 = NULL;
   int num, price;
   char buf[256], buf2[80];
-  int discount = 100;
 
   strcpy(buf2, fname(name).c_str());
-  price = sellPrice(1, shop_nr, -1, &discount);
+  price = sellPrice(1, shop_nr, -1);
 
   if (isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
@@ -274,10 +272,9 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 {
   int price;
   char buf2[80];
-  int discount = 100;
 
   strcpy(buf2, fname(name).c_str());
-  price = sellPrice(1, shop_nr, -1, &discount);
+  price = sellPrice(1, shop_nr, -1);
 
   if (!shop_index[shop_nr].willBuy(this)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);

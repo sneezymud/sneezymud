@@ -498,7 +498,6 @@ class TObj : public TThing {
     virtual roomDirData *exitDir(dirTypeT door) const;
     virtual bool shouldntBeShown(wearSlotT) const;
     virtual int putSomethingIntoContainer(TBeing *, TOpenContainer *);
-    virtual int getShopPrice(int *) const;
     virtual bool isSimilar(const TThing *) const;
     virtual bool isLevitating() const;
     virtual bool fitInShop(const char *, const TBeing *) const;
@@ -522,7 +521,7 @@ class TObj : public TThing {
     bool isPaired() const;
     bool usedAsPaired() const;
     int objVnum() const;
-    int adjPrice(int *) const;
+    int adjPrice() const;
 
     virtual void setVolume(int vol) {
       obj_flags.volume = vol;
@@ -634,7 +633,6 @@ class TObj : public TThing {
     virtual void boottimeInit() {}
     virtual void decayMe();
     virtual bool sellMeCheck(TBeing *, TMonster *, int) const;
-    virtual void recalcShopData(int, int) {}
     virtual bool fitsSellType(tObjectManipT, TBeing *, TMonster *, sstring, itemTypeT, int &, int);
     virtual int treeMe(TBeing *, const char *, int, int*);
     virtual bool canGetMeDeny(const TBeing *, silentTypeT) const;
@@ -646,8 +644,8 @@ class TObj : public TThing {
     virtual void valueMe(TBeing *, TMonster *, int, int);
     virtual const sstring shopList(const TBeing *, const sstring &, int, int, int, int, int, unsigned long int) const;
     virtual void makeScraps();
-    virtual int shopPrice(int, int, float, int *) const;
-    virtual int sellPrice(int ,int, float, int *);
+    virtual int shopPrice(int, int, float) const;
+    virtual int sellPrice(int ,int, float);
     virtual void divinateMe(TBeing *) const;
     virtual int copyMe(TBeing *, byte);
     virtual int changeItemVal2Check(TBeing *, int);
@@ -682,8 +680,6 @@ class TObj : public TThing {
     virtual void pickMe(TBeing *);
     virtual int trapMe(TBeing *, const char *);
     virtual void putMoneyInto(TBeing *, int);
-    void genericCalc(bool bought, int cost);
-    int shop_price(int *) const;
     virtual void show_me_mult_to_char(TBeing *, showModeT, unsigned int) const;
     virtual void show_me_to_char(TBeing *, showModeT) const;
     virtual void descMaxStruct(const TBeing *, int) const {}

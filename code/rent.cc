@@ -700,8 +700,6 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
 static bool shouldRecycle(int robj)
 {
   return false;
-// old rule vetod by ICon
-//          obj_index[robj].max_exist <= MIN_EXIST_IMMORTAL &&
 
   // nuke only if item is at its max
   //  return (obj_index[robj].max_exist &&

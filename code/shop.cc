@@ -22,14 +22,6 @@ int cached_shop_nr;
 map <int,float> ratios_cache;
 map <sstring,float> matches_cache;
 
-
-#if SHOP_PRICES_FLUXUATE
-vector<shop_pricing>ShopPriceIndex(0);
-#endif
-
-#define IMMORTEQTEST 1
-#define FLUX_SHOP_DEBUG     0
-
 const unsigned int SHOP_DUMP = 124;
 
 // A note on gold_modifier[GOLD_SHOP] :
@@ -57,11 +49,11 @@ bool shopData::isOwned(){
 
 
 // this is the price the shop will buy an item for
-int TObj::sellPrice(int, int shop_nr, float chr, int *discount)
+int TObj::sellPrice(int, int shop_nr, float chr)
 {
   float profit_sell=shop_index[shop_nr].profit_sell;
-  int cost;
 
+  // if the shop is player owned, we check custom pricing
   if(shop_index[shop_nr].isOwned()){
     TDatabase db(DB_SNEEZY);
 
@@ -83,37 +75,36 @@ int TObj::sellPrice(int, int shop_nr, float chr, int *discount)
     }
   }
 
+  // adjust cost based on structure
+  double cost = adjPrice();
+
+  // adjust cost based on shop pricing
+  cost *= profit_sell;
+
+  // adjust for charisma/swindle modifier
   if (chr != -1 && chr!=0)
-    cost = (int) (adjPrice(discount) * profit_sell / chr);
-  else
-    cost = (int) (adjPrice(discount) * profit_sell);
+    cost /= chr;
 
-  if (obj_flags.cost <= 1) {
-    cost = max(0, cost);
-  } else {
-    cost = max(1, cost);
-  }
+  // scale based on global settings for non-owned shops
+  if(!shop_index[shop_nr].isOwned())
+    cost *= gold_modifier[GOLD_SHOP].getVal();
 
-  // scale based on global settings
-  // but only for non-owned shops
-  if(!shop_index[shop_nr].isOwned()){
-    cost = (int) (cost * gold_modifier[GOLD_SHOP].getVal());
-  }
+  // make sure we don't have a negative cost
+  cost = max(1.0, cost);
 
-  return cost;
+  return (int) cost;
 }
 
 // this is price shop will sell it at
-int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
+int TObj::shopPrice(int num, int shop_nr, float chr) const
 {
-  int cost;
   float profit_buy=-1;
   map <sstring,float>::iterator iter;
   TDatabase db(DB_SNEEZY);
 
   // we do this caching so that if we get the shopPrice on many items at once
   // (list) it doesn't have to query for each one
-  // overhead is that with one at a time shopPrices (value/sell/buy) may
+  // overhead is that with one at a time shopPrices (value/sell/buy) we may
   // rebuild the cache needlessly.  On the upside, when you've got someone
   // doing value/buy/sell in a shop, they're likely to do a list pretty soon
   // as well, and then we'll have the cache ready.
@@ -133,6 +124,8 @@ int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
       matches_cache[db["match"]]=convertTo<float>(db["profit_buy"]);
   }
 
+
+  // if the shop is player owned, we check custom pricing
   if(shop_index[shop_nr].isOwned()){  
     if(cached_shop_nr==shop_nr){
       if(ratios_cache.count(objVnum()))
@@ -166,24 +159,34 @@ int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
     }
   }
 
+  // no custom price found, so use the normal shop pricing
   if(profit_buy == -1)
     profit_buy=shop_index[shop_nr].profit_buy;
     
-  if (chr != -1)
-    cost = (int) ((adjPrice(discount) * profit_buy) * chr);
-  else
-    cost = (int) (adjPrice(discount) * profit_buy);
+  // adjust cost based on structure
+  double cost = adjPrice();
 
+  // adjust cost based on shop pricing
+  cost *= profit_buy;
+
+  // adjust for charisma/swindle modifier
+  if(chr != -1)
+    cost *= chr;
+
+  // multiply by the number of items
   cost *= num;
-  cost = max(1, cost);
 
-  return cost;
+  // make sure we don't have a negative cost
+  cost = max(1.0, cost);
+
+  return (int) cost;
 }
 
 
 bool shopData::willTradeWith(TMonster *keeper, TBeing *ch)
 {
   int hmt = hourminTime();
+
   if (shop_index[shop_nr].open1 > hmt) {
      keeper->doSay("Come back later!");
     return FALSE;
@@ -196,24 +199,17 @@ bool shopData::willTradeWith(TMonster *keeper, TBeing *ch)
       return FALSE;
     }
   }
+
   if (!keeper->canSee(ch) && !ch->isImmortal()) {
     keeper->doSay("I don't trade with someone I can't see!");
     return FALSE;
   }
+
   if (dynamic_cast<TMonster *>(ch) && (ch != keeper)) {
     keeper->doSay("Hey, no animals in my shop!");
     return FALSE;
   }
-#if 0
-  switch (shop_index[shop_nr].flags) {
-    case 0:
-      return TRUE;
-    case 1:
-      return TRUE;
-    default:
-      return TRUE;
-  }
-#endif
+
   return TRUE;
 }
 
@@ -222,12 +218,12 @@ bool shopData::willBuy(const TObj *item)
   int counter, max_trade;
   bool mat_ok=FALSE;
 
-  if (item->obj_flags.cost < 1 || item->isObjStat(ITEM_NEWBIE))
+  if (item->obj_flags.cost < 1 || 
+      item->isObjStat(ITEM_NEWBIE) ||
+      item->isObjStat(ITEM_PROTOTYPE))
     return FALSE;
 
-  if (item->isObjStat(ITEM_PROTOTYPE))
-    return FALSE;
-
+  // check if there is a material type restriction
   if(IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_MAT_RESTRICTED)){
     int max_mat_trade=0;
 
@@ -243,13 +239,14 @@ bool shopData::willBuy(const TObj *item)
       return FALSE;
   }
 
+  // check normal shop types
   max_trade=shop_index[shop_nr].type.size();
-
   for (counter = 0; counter < max_trade; counter++) {
     if ((int) shop_index[shop_nr].type[counter] == item->itemType())
       return TRUE;
   }
 
+  // obviously we will trade in anything we produce
   if (shop_index[shop_nr].isProducing(item))
     return TRUE;
 
@@ -261,32 +258,6 @@ bool shopData::willBuy(const TObj *item)
     return TRUE;
   else
     return FALSE;
-}
-
-static void load_shop_file(TMonster *ch, int shop_nr)
-{
-  sstring buf;
-
-  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
-  ch->loadItems(buf);
-
-  // do some discounting where appropriate
-  TThing *t;
-  TObj *obj;
-  int discount = 100, price;
-  for (t = ch->getStuff(); t; t = t->nextThing) {
-    obj = dynamic_cast<TObj *>(t);
-    if (!obj)
-      continue;
-    price = obj->shopPrice(1, shop_nr, -1, &discount);
-    if (discount < 100) {
-      // item has not been sold in quite awhile
-      // fake a sell/buy to A) reset the discount timer and B) reduce the price
-      obj->recalcShopData(TRUE, price);
-      price = obj->sellPrice(1, shop_nr, -1, &discount);
-      obj->recalcShopData(FALSE, price);
-    }
-  }
 }
 
 
@@ -321,24 +292,21 @@ bool shopData::isProducing(const TObj *item)
   return FALSE;
 }
 
-void shopping_trade(const char *, TBeing *, TBeing *, int)
-{
-}
 
 static int number_objects_in_list(const TObj *item, const TObj *list)
 {
   const TObj *i = NULL;
   const TThing *t;
   int count = 0;
-  int discount;
 
   for (t = list; t; t = t->nextThing) {
-    i = dynamic_cast<const TObj *>(t);
-    if (!i)
+    if(!(i = dynamic_cast<const TObj *>(t)))
       continue;
+
     if ((i->number == item->number) &&
-        (i->getName() && item->getName() && !strcmp(i->getName() , item->getName())) &&
-        (i->adjPrice(&discount) == item->adjPrice(&discount)))
+        (i->getName() && item->getName() &&
+	 !strcmp(i->getName(), item->getName())) &&
+        (i->adjPrice() == item->adjPrice()))
       count++;
   }
   return (count);
@@ -387,16 +355,6 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     temp1 = NULL;
     return;
   }
-  if (ch->desc && IS_SET(ch->desc->account->flags, ACCOUNT_IMMORTAL) &&
-      !ch->isImmortal() &&
-      (obj_index[temp1->getItemIndex()].max_exist <= MIN_EXIST_IMMORTAL)) {
-#if IMMORTEQTEST
-    keeper->doTell(fname(ch->name), "This item is restricted for immortals.  If it ever reaches its max exist, it will be taken from you.");
-#else
-    keeper->doTell(fname(ch->name), "I'd love to sell it to you, but your immortality prevents you from renting it...");
-    return;
-#endif
-  }
 
   temp1->buyMe(ch, keeper, num, shop_nr);
 }
@@ -410,7 +368,6 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   int tmp;
   float chr;
   int i;
-  int discount = 100;
 
   if ((ch->getCarriedVolume() + (num * getTotalVolume())) > ch->carryVolumeLimit()) {
     ch->sendTo(fmt("%s: You can't carry that much volume.\n\r") % fname(name));
@@ -426,7 +383,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
     chr = max((float)1.0,chr);
 
-    cost = shopPrice(1, shop_nr, chr, &discount);
+    cost = shopPrice(1, shop_nr, chr);
 
     while (num-- > 0) {
       TObj *temp1;
@@ -469,7 +426,6 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
       ch->logItem(temp1, CMD_BUY);
       count++;
-      temp1->recalcShopData(TRUE, cost);
     }
     buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
     keeper->saveItems(buf);
@@ -487,7 +443,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
     chr = max((float)1.0,chr);
 
-    cost = shopPrice(1, shop_nr, chr, &discount);
+    cost = shopPrice(1, shop_nr, chr);
 
     for (i = 0; i < tmp; i++) {
       TThing *t_temp1 = searchLinkedListVis(ch, argm, keeper->getStuff());
@@ -536,7 +492,6 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
       ch->logItem(temp1, CMD_BUY);
       count++;
-      temp1->recalcShopData(TRUE, cost);
     }
     buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
     keeper->saveItems(buf);
@@ -592,8 +547,7 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
     return TRUE;
   }
 
-  int discount=100;
-  if(temp1->sellPrice(1, shop_nr, -1, &discount) < 0){
+  if(temp1->sellPrice(1, shop_nr, -1) < 0){
     keeper->doTell(ch->getName(), "You'd have to pay me to buy that!");
     return TRUE;
   }
@@ -697,7 +651,6 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   int cost;
   sstring buf;
   float chr;
-  int discount = 100;
 
   if (!shop_index[shop_nr].profit_sell) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
@@ -714,7 +667,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   chr = max((float)1.0,chr);
 
 
-  cost = sellPrice(1, shop_nr, chr, &discount);
+  cost = sellPrice(1, shop_nr, chr);
 
   if (getStructPoints() != getMaxStructPoints()) {
     cost *= 6;    /* base deduction of 60% */
@@ -752,7 +705,6 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 
 
   sellMeMoney(ch, keeper, cost, shop_nr);
-  recalcShopData(FALSE, cost);
 
   if (ch->isAffected(AFF_GROUP) && ch->desc &&
            IS_SET(ch->desc->autobits, AUTO_SPLIT) && 
@@ -1249,7 +1201,6 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   float chr;
   int cost;
   sstring buf;
-  int discount = 100;
   int willbuy=0;
   
 #if 0
@@ -1269,7 +1220,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   // do not adjust for swindle on valueing, give them worst case price
   chr = max((float)1.0,chr);
 
-  cost = sellPrice(1, shop_nr, chr, &discount);
+  cost = sellPrice(1, shop_nr, chr);
 
   if (obj_index[getItemIndex()].max_exist <= 10) {
     keeper->doTell(ch->name, "Wow!  This is one of those limited items.");
@@ -1316,7 +1267,6 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
   int counter;
   float chr;
   float perc;
-  int discount = 100;
   bool isWearable = false;
   const TGenWeapon * tWeapon = dynamic_cast<const TGenWeapon *>(this);
   const TComponent *tComp = dynamic_cast<const TComponent *>(this);
@@ -1341,7 +1291,7 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
   // do not adjust for swindle on list, give them worst case price
   chr = max((float)1.0, chr);
 
-  cost = shopPrice(1, shop_nr, chr, &discount);
+  cost = shopPrice(1, shop_nr, chr);
 
   wearSlotT slot;
   slot = slot_from_bit(obj_flags.wear_flags);
@@ -1359,10 +1309,6 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
     sprintf(buf3, "forbidden");
   } else if (tbc && tbc->isSaddle()) {
     sprintf(buf3, "for mounts");
-  } else if (ch->desc && IS_SET(ch->desc->account->flags, ACCOUNT_IMMORTAL) &&
-             obj_index[getItemIndex()].max_exist < MIN_EXIST_IMMORTAL &&
-	     !IMMORTEQTEST) {
-    sprintf(buf3, "imm. prohib.");
   } else if ((slot == HOLD_LEFT) || (slot == HOLD_RIGHT)) {
     if (isPaired()) {
       // weight > ch-wield_weight
@@ -1474,14 +1420,10 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
       strcpy(equipColor, equip_condition(-1).c_str());
       strcpy(equipCond, equipColor + 3); 
       equipColor[3] = '\0';
-      sprintf(buf, "%s[%2d] %-29s %s%-12s %-6d%s %-5s %c%s%s\n\r",
+      sprintf(buf, "%s[%2d] %-29s %s%-12s %-6d %-5s %s%s\n\r",
              wcolor, k + 1, cap(capbuf),
              equipColor, equipCond, cost, 
-             (discount < 100 ? "(*)" : "   "),
-             buf4, ((ch->desc && 
-		     IS_SET(ch->desc->account->flags, ACCOUNT_IMMORTAL) &&
-		     obj_index[getItemIndex()].max_exist<MIN_EXIST_IMMORTAL) ?
-		    '*' : ' '), buf3, ch->norm());
+             buf4, buf3, ch->norm());
       found = TRUE;
       strcpy(wcolor, ch->norm());
       break;
@@ -1492,9 +1434,8 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
     strcpy(equipColor, equip_condition(-1).c_str());
     strcpy(equipCond, equipColor + 3);
     equipColor[3] = '\0';
-    sprintf(buf, "%s[%2d] %-31s %s%-12s %-6d%s %-5s\n\r",
-            wcolor, k + 1, cap(capbuf), equipColor, equipCond, cost,
-            (discount < 100 ? "(*)" : "   "), buf4);
+    sprintf(buf, "%s[%2d] %-31s %s%-12s %-6d %-5s\n\r",
+            wcolor, k + 1, cap(capbuf), equipColor, equipCond, cost, buf4);
   }
 
   // This is for quick listing, fast and simple.
@@ -1950,7 +1891,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       vlogf(LOG_MISC, "Setting Pawn Broker pointer for rent functions!");
       pawnman = myself;
     }
-    load_shop_file(myself, shop_nr);
+    myself->loadItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
     return FALSE;
   } else if (cmd == CMD_MOB_VIOLENCE_PEACEFUL) {
     myself->doSay("Hey!  Take it outside.");
@@ -2328,234 +2269,18 @@ void processShopFiles(void)
    dirwalk(SHOPFILE_PATH, processShopFile);
 }
 
-void loadShopPrices(void)
-{
-#if SHOP_PRICES_FLUXUATE
-  FILE *fp;
-
-  if ((fp = fopen( SHOP_PRICING, "r+b")) == NULL) {
-    vlogf(LOG_BUG, "No shop pricing data exists.  creating.");
-    if ((fp = fopen( SHOP_PRICING, "w+b")) == NULL) {
-      vlogf(LOG_BUG, "Could not create pricing data file");
-      exit(0);
-    }
-    fclose(fp);
-    return;
-  }
-
-  unsigned char version;
-  if (fread(&version, sizeof(version), 1, fp) != 1) {
-    vlogf(LOG_BUG, "Serious error in shopprice read (version).");
-    // we effectively start dynamic shop prices over
-    return;
-  }
-
-  struct shop_pricing sp;
-
-  for (;;) {
-    if (fread(&sp, sizeof(struct shop_pricing), 1, fp) != 1) {
-      if (feof(fp) != 0)
-        break;
-      vlogf(LOG_BUG, "Error in fread of loadShopPrices()");
-      break;
-    }
-    ShopPriceIndex.push_back(sp);
-  }
-  fclose(fp);
-#endif
-  return;
-}
-
-void saveShopPrices(void)
-{
-#if SHOP_PRICES_FLUXUATE
-  FILE *fp;
-
-  if ((fp = fopen( SHOP_PRICING, "w+b")) == NULL) {
-    vlogf(LOG_BUG, "Error saving shop pricing data.");
-    return;
-  }
-  // write out version
-  unsigned char version = SHOP_FILE_VERSION;
-  fwrite(&version, sizeof(version), 1, fp);
-
-  int i, maxsize = ShopPriceIndex.size();
-  for (i = 0; i < maxsize; i++) {
-    if (fwrite(&ShopPriceIndex[i], sizeof(struct shop_pricing), 1, fp) != 1) {
-      vlogf(LOG_BUG, "Error in fwrite of saveShopPrices()");
-    }
-  }
-  fclose(fp);
-#endif
-}
 
 // adjusts the shop price based on structure
-int TObj::adjPrice(int *discount) const
+int TObj::adjPrice() const
 {
-  int value = ((getMaxStructPoints() <= 0) ? getShopPrice(discount) :
-               (int) (getShopPrice(discount) * 
+  int value = ((getMaxStructPoints() <= 0) ? obj_flags.cost :
+               (int) (obj_flags.cost * 
                 getStructPoints() / getMaxStructPoints()));
 
   return value;
 }
 
-int TObj::shop_price(int *discount) const
-{
-  int base_price = obj_flags.cost;
 
-#if SHOP_PRICES_FLUXUATE
-  int i;
-  for (i = 0; i < ShopPriceIndex.size(); i++) {
-    if (objVnum() == ShopPriceIndex[i].obj_vnum) {
-      int sum_buy_sell = ShopPriceIndex[i].rel_sold + ShopPriceIndex[i].rel_bought;
-      int total_traded = ShopPriceIndex[i].num_sold + ShopPriceIndex[i].num_bought;
-      double real_price = (double) base_price;
-      real_price += (double) ((double) sum_buy_sell / (double) total_traded);
-
-      long durat = time(0) - ShopPriceIndex[i].last_touch_buy;
-      if (durat >= 30 * SECS_PER_REAL_DAY)
-        *discount = 40;
-      else if (durat >= 20 * SECS_PER_REAL_DAY)
-        *discount = 50;
-      else if (durat >= 14 * SECS_PER_REAL_DAY)
-        *discount = 60;
-      else if (durat >= 10 * SECS_PER_REAL_DAY)
-        *discount = 70;
-      else if (durat >= 7 * SECS_PER_REAL_DAY)
-        *discount = 80;
-      else if (durat >= 5 * SECS_PER_REAL_DAY)
-        *discount = 90;
-      else
-        *discount = 100;
-
-      // if we are selling as many as we take in, raise price
-      switch (ShopPriceIndex[i].num_sold * 100 / 
-                max(1, ShopPriceIndex[i].num_bought)) {
-        case 95:
-        case 96:
-        case 97:
-        case 98:
-        case 99:
-        case 100:
-        case 101:
-        case 102:
-        case 103:
-        case 104:
-        case 105:
-          *discount *= 12;
-          *discount /= 10;
-          break;
-        case 106:
-        case 107:
-        case 108:
-        case 109:
-        case 110:
-        case 94:
-        case 93:
-        case 92:
-        case 91:
-        case 90:
-          *discount *= 11;
-          *discount /= 10;
-          break;
-        default:
-          break;
-      }
-      real_price *= *discount;
-      real_price /= 100;
-
-#if FLUX_SHOP_DEBUG
-      char *tmstr;
-      vlogf(LOG_MISC, "%s had shop-price: %d, set at: %d", 
-                getName(), (int) real_price, base_price);
-
-      tmstr = asctime(localtime(&ShopPriceIndex[i].last_touch_buy));
-      *(tmstr + strlen(tmstr) - 1) = '\0';
-      vlogf(LOG_MISC, "sold: %d, bought %d, last sale: %s",
-         ShopPriceIndex[i].num_sold, ShopPriceIndex[i].num_bought, tmstr);
-#endif
-      return max(1, (int) real_price);
-    }
-  }
-#endif
-  *discount = 100;
-  return base_price;
-}
-
-int TObj::getShopPrice(int *discount) const
-{
-  return obj_flags.cost;
-}
-
-#if 0
-int TSymbol::getShopPrice(int *discount) const
-{
-  return shop_price(discount);
-}
-#endif
-
-int TSymbol::getShopPrice(int *) const
-{
-  return obj_flags.cost;
-}
-
-// bought is TRUE if PC is buying something
-void TObj::genericCalc(bool bought, int cost)
-{
-#if SHOP_PRICES_FLUXUATE
-  int i;
-
-#if NO_DAMAGED_ITEMS_SHOP
-  // item was sold as scrap, if we allow this to affect price, it will
-  // cause prices to be dragged way down
-  if (getStructPoints() != getMaxStructPoints())
-    return;
-#endif
-
-  for (i = 0; i < ShopPriceIndex.size(); i++) {
-    if (objVnum() == ShopPriceIndex[i].obj_vnum) {
-      if (bought) {
-        ShopPriceIndex[i].num_bought++;
-        ShopPriceIndex[i].rel_bought += cost - obj_flags.cost;
-        ShopPriceIndex[i].last_touch_buy = time(0);
-      } else {
-        ShopPriceIndex[i].num_sold++;
-        ShopPriceIndex[i].rel_sold += cost - obj_flags.cost;
-        ShopPriceIndex[i].last_touch_sell = time(0);
-      }
-      saveShopPrices();
-      return;
-    }
-  }
-  
-  // item was not found, add new entry
-  
-  shop_pricing sp;
-  sp.obj_vnum = objVnum();
-  sp.num_bought = 0;
-  sp.rel_bought = 0;
-  sp.num_sold = 0;
-  sp.rel_sold = 0;
-  sp.last_touch_buy = time(0);
-  sp.last_touch_sell = time(0);
-
-  if (bought) {
-    sp.num_bought++;
-    sp.rel_bought += cost - obj_flags.cost;
-  } else {
-    sp.num_sold++;
-    sp.rel_sold += cost - obj_flags.cost;
-  }
-  ShopPriceIndex.push_back(sp);
-  saveShopPrices();
-  return;
-#endif
-}
-
-void TSymbol::recalcShopData(int bought, int cost)
-{
-  genericCalc(bought, cost);
-}
 
 shopData::shopData() :
   shop_nr(0),

@@ -270,8 +270,6 @@ void bootDb(void)
   vlogf(LOG_MISC, "Assigning function pointers:");
   vlogf(LOG_MISC, "   Shopkeepers.");
   bootTheShops();
-  vlogf(LOG_MISC, "Reading shop prices.");
-  loadShopPrices();
 
   bootPulse("Initializing boards.");
   InitBoards();

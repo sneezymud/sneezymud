@@ -176,13 +176,6 @@ extern const int WEAPON_DAM_MAX_HARDNESS;
 // the max value of a sharpness roll, raising it = weapon blunt DECREASE
 extern const int WEAPON_DAM_MAX_SHARP;
 
-// determines if the code that causes prices in shops to fluxuate based
-// on supply and demand is active.
-#define SHOP_PRICES_FLUXUATE 0
-
-// the cutoff max_exist below which immortals will not be allowed to save
-// the equipment.
-extern const int MIN_EXIST_IMMORTAL;
 
 #define SPEEF_MAKE_BODY 0
 

@@ -120,7 +120,7 @@ void TShopOwned::showInfo()
       volume+=o->getVolume();
       value+=o->obj_flags.cost;
       // shopPrice does db queries, it tends to be too slow here
-      //      price+=o->shopPrice(1, shop_nr, -1, &discount);
+      //      price+=o->shopPrice(1, shop_nr, -1);
     }
     keeper->doTell(ch->getName(),
 		   fmt("I have %i talens and %i items worth %i talens and selling for approximately %i talens.") %

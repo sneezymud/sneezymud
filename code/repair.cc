@@ -32,8 +32,7 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
 
   // makes an assumption that struct is > 0
   // pre assumes that it needs repairing.
-  int discount = 100;
-  int gsp = getShopPrice(&discount);
+  int gsp = obj_flags.cost;
 
   // ideally, this price will be < gsp, but gold_mod should handle that for us
   int price = (int) (gsp * gold_modifier[GOLD_REPAIR].getVal());
