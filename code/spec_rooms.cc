@@ -612,7 +612,7 @@ int belimusThroat(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     ch->sendTo("Belimus's throat muscles constrict slightly.\n\r");
 
     int dam = ::number(3,5);
-    if (ch->reconcileDamage(ch, dam, DAMAGE_NORMAL) == -1) {
+    if (ch->reconcileDamage(ch, dam, DAMAGE_SUFFOCATION) == -1) {
       delete ch;
       ch = NULL;
     }
