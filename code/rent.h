@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: rent.h,v $
+// Revision 5.6  2003/10/08 20:49:01  peel
+// upped rent max to 10k again
+// will try and debug if we run into crashes again
+//
 // Revision 5.5  2002/07/16 20:47:29  dash
 // made it so you can land during combat
 // lowered max obj count to 1k
@@ -44,8 +48,7 @@ const int CURRENT_RENT_VERSION     =9;
 // 8        5.2 : June 4 2002 : shuffled 4vals for weapons
 
 // This was 200, but i see no technical reason to not be able to increase it
-const int MAX_OBJ_SAVE =1000;
-// found one - too many objects rented crashes the mud. lowered from 10k to 1k     
+const int MAX_OBJ_SAVE =10000;
 
 class objCost { 
   public:
