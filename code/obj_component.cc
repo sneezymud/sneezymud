@@ -2437,7 +2437,7 @@ void TComponent::assignFourValues(int x1, int x2, int x3, int x4)
 {
   setComponentCharges(x1);
   setComponentMaxCharges(x2);
-  setComponentSpell(mapFileToSpellnum(x3));
+  setComponentSpell(spellNumT(x3));
   setComponentType(x4);
 }
 
@@ -2445,7 +2445,7 @@ void TComponent::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 {
   *x1 = getComponentCharges();
   *x2 = getComponentMaxCharges();
-  *x3 = mapSpellnumToFile(getComponentSpell());
+  *x3 = getComponentSpell();
   *x4 = getComponentType();
 }
 
