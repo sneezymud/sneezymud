@@ -214,6 +214,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
   // just to be dumb, check my own room first
   if(pt.isTarget(here)){
     dest = here;
+    dist = 0;
     return DIR_NONE;
   }
 
@@ -229,8 +230,9 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
   for(int distance=0;found;++distance){
     found=false;
 
-    if (path_map.size() > (unsigned int) range) {
+    if (distance > range) {
       dest = path_map.size();
+      dist = distance;
 
       // clean up allocated memory
       for (CI = path_map.begin(); CI != path_map.end(); ++CI)
@@ -277,7 +279,8 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	  if(pt.isTarget(exitp->to_room)){
 	    // found our target, walk our list backwards
 	    dest = exitp->to_room;
-	    
+	    dist = distance;
+
 	    pd = CI->second;
 	    for (;;) {
 	      if (pd->source == -1) {
@@ -331,6 +334,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	  if(pt.isTarget(tmp_room)){
             // found our target, walk our list backwards
 	    dest = tmp_room;
+	    dist = distance;
 
             pd = CI->second;
             for (;;) {

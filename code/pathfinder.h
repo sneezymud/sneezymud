@@ -88,6 +88,7 @@ class TPathFinder {
   bool no_mob;
 
   int dest;
+  int dist;
 
  public:
   void setRange(int);
@@ -97,6 +98,7 @@ class TPathFinder {
   void setNoMob(bool t){ no_mob=t; }
 
   int getDest(){ return dest; }
+  int getDist(){ return dist; }
 
   dirTypeT findPath(int, const TPathTarget &);
 
