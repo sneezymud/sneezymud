@@ -134,10 +134,6 @@ int TBaseCup::drinkMe(TBeing *ch)
     ch->sendTo("You decide to skip this drink until you feel better.\n\r");
     return FALSE;
   }
-  if (getDrinkType() == LIQ_HOLYWATER) {
-    ch->sendTo("You really shouldn't drink holy water.\n\r");
-    return FALSE;
-  }
   if (getDrinkUnits() <= 0) {
     act("It's empty already.", FALSE, ch, 0, 0, TO_CHAR);
     return FALSE;
