@@ -90,7 +90,12 @@ int fireman(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	continue;
       
       if (obj->isObjStat(ITEM_BURNING)){
-	t->extinguishMe(myself);
+	if(myself->getRace() == RACE_CANINE){
+	  act("$n barks excitedly at the fire and runs around in circles.", 
+	      0, myself, 0, 0, TO_ROOM);
+	} else {
+	  t->extinguishMe(myself);
+	}
 	
 	switch(::number(0,3)){
 	  case 0:
