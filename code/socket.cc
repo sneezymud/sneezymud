@@ -1116,7 +1116,7 @@ int TSocket::gameLoop()
 	     !strcmp(moonType(),"full") && !sunIsUp()){
 	    lycanthropeTransform(tmp_ch);
 	  } else if(tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)){
-	    if(strcmp(moonType(),"full")){
+	    if(strcmp(moonType(),"full") || sunIsUp()){
 	      tmp_ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
 	      tmp_ch->doReturn("", WEAR_NOWHERE, CMD_RETURN);
 	    } else if(!tmp_ch->fight() && tmp_ch->roomp && 
