@@ -536,9 +536,9 @@ int TShopOwned::doLogs(const char *arg)
       while (*arg && isspace(*arg))
 	arg++;
 
-      db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' and upper(name)=upper('%s') order by logtime desc, shoptalens+shopvalue desc", shop_nr, arg);      
+      db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' and upper(name)=upper('%s') order by logtime desc, action desc", shop_nr, arg);      
     } else {
-      db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' order by logtime desc, shoptalens+shopvalue desc", shop_nr);
+      db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' order by logtime desc, action desc", shop_nr);
     }    
 
     while(db.fetchRow()){
