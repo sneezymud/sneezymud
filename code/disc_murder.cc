@@ -132,6 +132,13 @@ int TBeing::backstabHit(TBeing *victim, TThing *obj)
 
         act("Suddenly, $n stabs you in the back!",
             FALSE, this, obj, victim, TO_VICT);
+
+	// poison
+	TBaseWeapon *tow;
+	if(obj && (tow = dynamic_cast<TBaseWeapon *>(obj)) && 
+	   tow->isPoisoned())
+	  tow->applyPoison(victim);
+
       }
     }
   } else {
@@ -473,6 +480,13 @@ int TBeing::throatSlitHit(TBeing *victim, TThing *obj)
 
         act("$n sneaks up behind you and cuts your throat!",
             FALSE, this, obj, victim, TO_VICT);
+
+      // poison
+	TBaseWeapon *tow;
+	if(obj && (tow = dynamic_cast<TBaseWeapon *>(obj)) && 
+	   tow->isPoisoned())
+	  tow->applyPoison(victim);
+	
       }
     }
   } else {
