@@ -1050,16 +1050,16 @@ void TBeing::doLow(const sstring &)
   sendTo("You are a monster now, forget about this command.");
 }
 
-void TPerson::doLow(const sstring &arg)
+void TPerson::doLow(const sstring &argument)
 {
-  sstring buf;
+  sstring buf, arg=argument;
 
   if (!hasWizPower(POWER_LOW)) {
     sendTo("You do not yet have the low command. If you need something, see a higher level god.");
     return;
   }
 
-  buf=arg.word(0);
+  arg=one_argument(arg, buf);
 
   sstring usage = "Syntax: low <mob | race | statbonus | statcharts | tasks | path room> ...\n\r";
   if (arg.empty()) {
