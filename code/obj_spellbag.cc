@@ -97,9 +97,6 @@ void TSpellBag::findSomeComponent(TComponent **comp_gen, TComponent **comp_spell
 
 void TSpellBag::getObjFromMeText(TBeing *tBeing, TThing *tThing, getTypeT tType, bool tFirst)
 {
-  --(*tThing);
-  *tBeing += *tThing;
-
 #if 1
   act("You take $p from $P.",
       FALSE, tBeing, tThing, this, TO_CHAR);
@@ -118,5 +115,8 @@ void TSpellBag::getObjFromMeText(TBeing *tBeing, TThing *tThing, getTypeT tType,
         FALSE, tBeing, this, NULL, TO_CHAR);
   }
 #endif
+
+  --(*tThing);
+  *tBeing += *tThing;
 }
 
