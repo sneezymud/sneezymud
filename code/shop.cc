@@ -135,7 +135,7 @@ float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
 
 
   // if the shop is player owned, we check custom pricing
-  if(shop_index[shop_nr].isOwned()){  
+  if(shop_index[shop_nr].isOwned() && obj){  
     if(cached_shop_nr==shop_nr){
       if(ratios_cache.count(obj->objVnum()))
 	profit_buy=ratios_cache[obj->objVnum()];
@@ -144,7 +144,7 @@ float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
       if(db.fetchRow())
 	profit_buy=convertTo<float>(db["profit_buy"]);
     }
-
+    
     if(profit_buy==-1){
       // ok, shop is owned and there is no ratio set for this specific object
       // so check keywords
@@ -157,7 +157,7 @@ float shopData::getProfitBuy(const TObj *obj, const TBeing *ch)
 	}
       } else {
 	db.query("select match, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
-      
+	
 	while(db.fetchRow()){
 	  if(isname(db["match"], obj->name)){
 	    profit_buy=convertTo<float>(db["profit_buy"]);
