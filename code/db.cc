@@ -330,6 +330,10 @@ void bootDb(void)
 
     vlogf(LOG_MISC, fmt("Performing boot-time reset of %s (rooms %d-%d).") %  s % d % e);
     zone_table[i].resetZone(TRUE);
+
+    // stagger reset times
+    zone_table[i].age = ::number(0, zone_table[i].lifespan);
+
     if (i%10 == 0)
       bootPulse(".", false);
   }
