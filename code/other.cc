@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: other.cc,v $
+// Revision 1.5  1999/09/27 00:07:47  lapsos
+// Added atomize to doObjSpell function.
+//
 // Revision 1.4  1999/09/24 02:03:56  batopr
 // Fixed array bounds problem on discArray
 //
@@ -2281,6 +2284,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       break;
     case SPELL_STORMY_SKIES:
       stormySkies(caster,victim,obj);
+      break;
+    case SPELL_ATMOZE:
+      atomize(caster,victim,obj);
       break;
     default:
       vlogf(5,"Object (%s) with uncoded spell (%d)!", obj->getName(), spell);
