@@ -595,6 +595,62 @@ void TBeing::doPee(string argument)
   }
 }
 
+void TBeing::doPoke(const char *arg)
+{
+  TThing *t = NULL;
+  TThing *hold = NULL;
+  TObj *obj;
+  TBeing *b;
+  char buf[128] = "\0";
+  char holdBuf[128] = "\0";
+
+  if (!roomp)
+    return;
+
+  for (;isspace(*arg);arg++);
+
+  if ((hold = equipment[getPrimaryHold()])) 
+    strcpy(buf, fname(hold->name).c_str());
+  else
+    strcpy(buf, "finger");
+
+  if (!*arg) {
+    sprintf(holdBuf, "You point your %s around threateningly.", buf);
+    act(holdBuf, FALSE, this, NULL, this, TO_CHAR);
+    sprintf(holdBuf, "$n points $s %s around threateningly.", buf);
+    act(holdBuf, FALSE, this, NULL, this, TO_ROOM);
+    return;
+  }
+  // point at someone
+  for (t = roomp->getStuff(); t; t = t->nextThing) {
+    if (isname(arg, t->name)) {
+      obj = dynamic_cast<TObj *>(t);
+      if (obj) {
+	sendTo(COLOR_OBJECTS, "You carefully prod %s with your %s.\n\r", obj->getName(), buf);
+	sprintf(holdBuf, "$n carefully prods $N with $s %s.", buf);
+	act(holdBuf, FALSE, this, NULL, obj, TO_ROOM);
+        return;
+      } 
+      b = dynamic_cast<TBeing *>(t);
+      if (b) {
+        if (b == this) {
+          sendTo("You poke yourself in the ribs, feeling very silly.\n\r");
+          act("$n pokes $mself in the ribs, looking very sheepish.", FALSE, this, NULL, NULL, TO_ROOM);
+        } else {
+	  sendTo(COLOR_OBJECTS,"You poke %s in the ribs with your %s.\n\r", b->getName(), buf);
+	  sprintf(holdBuf, "$n pokes %s in the ribs with $s %s.", b->getName(),buf);
+	  act(holdBuf, FALSE, this, NULL, b, TO_NOTVICT);
+	  sprintf(holdBuf, "$n pokes you in the ribs with $s %s.", buf);
+	  act(holdBuf, FALSE, this, NULL, b,TO_VICT);
+	}
+        return;
+      }
+    }
+  }
+  // If we got here, the person pointed at something that wasnt in the room
+  sendTo("You look for something to poke, but come up disappointed.\n\r");
+}
+
 void TBeing::doPoint(const char *arg)
 {
   TThing *t = NULL;
