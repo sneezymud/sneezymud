@@ -162,20 +162,23 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
       return FALSE;
     }
     
-    db.query("select p.name, b.talens from player p, shopownedbank b where b.shop_nr=%i and b.player_id=p.id", shop_nr);
+    db.query("select p.name, b.talens from player p, shopownedbank b where b.shop_nr=%i and b.player_id=p.id order by talens desc", shop_nr);
     
+    sstring buf;
     while(db.fetchRow()){
-      myself->doTell(ch->getName(), fmt("%s - %s talens.") % db["name"] %
-		     talenDisplay(convertTo<int>(db["talens"])));
+      buf += fmt("<c>%s - %s talens.<1>\n\r") % db["name"] %
+	talenDisplay(convertTo<int>(db["talens"]));
     }
 
     db.query("select count(*) as c, sum(talens) as t from shopownedbank where shop_nr=%i", shop_nr);
 
     if(db.fetchRow()){
-      myself->doTell(ch->getName(), fmt("%i accounts, %s talens.") %
-		     convertTo<int>(db["c"]) % 
-		     talenDisplay(convertTo<int>(db["t"])));
+      buf += fmt("%i accounts, %s talens.\n\r") %
+	convertTo<int>(db["c"]) % 
+	talenDisplay(convertTo<int>(db["t"]));
     }
+
+    ch->desc->page_string(buf);
 
     return TRUE;
   }
