@@ -1477,7 +1477,7 @@ int getRandomRoom(){
 int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   static bool done[24];
-  int n=rp->number-30975, exitrnum=0;
+  int n=rp->number-2375, exitrnum=0;
   
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
@@ -1493,8 +1493,8 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
     // if we're redoing our exits and this is an out of zone exit, delete it
     if(rp->dir_option[d] && 
-       rp->dir_option[d]->to_room<30975 &&
-       rp->dir_option[d]->to_room>30999)
+       rp->dir_option[d]->to_room<2375 &&
+       rp->dir_option[d]->to_room>2399)
       delete rp->dir_option[d];
 
     // if no exit, chance to add new one
@@ -2479,30 +2479,30 @@ void assign_rooms(void)
     {27828, SecretDoors},
     {27890, SecretDoors},
     {28800, moonGateRoom},
-    {30975, theKnot},
-    {30976, theKnot},
-    {30977, theKnot},
-    {30978, theKnot},
-    {30979, theKnot},
-    {30980, theKnot},
-    {30981, theKnot},
-    {30982, theKnot},
-    {30983, theKnot},
-    {30984, theKnot},
-    {30985, theKnot},
-    {30986, theKnot},
-    {30988, theKnot},
-    {30989, theKnot},
-    {30990, theKnot},
-    {30991, theKnot},
-    {30992, theKnot},
-    {30993, theKnot},
-    {30994, theKnot},
-    {30995, theKnot},
-    {30996, theKnot},
-    {30997, theKnot},
-    {30998, theKnot},
-    {30999, theKnot},
+    {2375, theKnot},
+    {2376, theKnot},
+    {2377, theKnot},
+    {2378, theKnot},
+    {2379, theKnot},
+    {2380, theKnot},
+    {2381, theKnot},
+    {2382, theKnot},
+    {2383, theKnot},
+    {2384, theKnot},
+    {2385, theKnot},
+    {2386, theKnot},
+    {2388, theKnot},
+    {2389, theKnot},
+    {2390, theKnot},
+    {2391, theKnot},
+    {2392, theKnot},
+    {2393, theKnot},
+    {2394, theKnot},
+    {2395, theKnot},
+    {2396, theKnot},
+    {2397, theKnot},
+    {2398, theKnot},
+    {2399, theKnot},
     {31751, bank},
     {31756, bank},
     {31759, bank},

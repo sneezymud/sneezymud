@@ -74,7 +74,7 @@ int knot(TBeing *caster, TBeing *victim, int, byte bKnown)
 	return SPELL_SUCCESS + CASTER_DEAD;
     }
     
-    TRoom *room = real_roomp(30987);
+    TRoom *room = real_roomp(2387);
     --(*caster);
     *room += *caster;
 
