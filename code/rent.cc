@@ -4426,9 +4426,9 @@ void TBeing::doClone(const sstring &arg)
 
   delete [] mob->getDescr();
   if(*st1.description)
-    mob->setDescr(st1.description);
+    mob->setDescr(mud_str_dup(fmt("%s\n\r") % st1.description));
   else 
-    mob->setDescr(NULL);
+    mob->setDescr(mud_str_dup("You see nothing special about him.\n\r"));
   
   mob->setSex(sexTypeT(st1.sex));
   mob->setHeight(st1.height);
