@@ -637,7 +637,7 @@ int raze(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
     return SPELL_FAIL;
   }
 
-  level = min((level+5), 85);
+  level = min(level, 90);
 
   int dam = caster->getSkillDam(victim, SPELL_RAZE, level, adv_learn);
 

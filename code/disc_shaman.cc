@@ -1794,7 +1794,7 @@ int distort(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
   if (caster->isNotPowerful(victim, level, SPELL_DISTORT, SILENT_NO))
     return SPELL_FAIL;
 
-  level = min(level, 10);
+  level = min(level, 15);
 
   int dam = caster->getSkillDam(victim, SPELL_DISTORT, level, adv_learn);
   int beams = (dam / 3) + ::number(0, (caster->GetMaxLevel() / 10));
@@ -1957,7 +1957,7 @@ int soulTwist(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
     return SPELL_FAIL;
   }
 
-  level = min(level, 25);
+  level = min(level, 30);
 
   int dam = caster->getSkillDam(victim, SPELL_SOUL_TWIST, level, adv_learn);
   caster->reconcileHurt(victim, discArray[SPELL_SOUL_TWIST]->alignMod);

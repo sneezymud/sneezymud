@@ -233,6 +233,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
   // deikhan = 0.639
   // monk    = 0.683
   // ranger  = 0.529
+  // shaman  = 2.300
 
   // some global modifications
   // saving throw: c.f. balance.
@@ -338,20 +339,32 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       // additionally, do faction percent modification for clerics
       dam = (int) (dam * percModifier());
       break;
-    case SPELL_RAZE:
-    case SPELL_BLOOD_BOIL:
-      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.05 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+      ////////////////////
+      // SHAMAN STUFF
+      ////////////////////
+    case SPELL_STORMY_SKIES:
+      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.3 * HARD_TO_FIND_COMPONENT * NEED_RAIN_SNOW_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
       break;
+    case SPELL_CARDIAC_STRESS:
+    case SPELL_AQUATIC_BLAST:
+    case SPELL_BLOOD_BOIL:
     case SPELL_DEATHWAVE:
+    case SPELL_RAZE:
+    case SPELL_LICH_TOUCH:
+      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.3 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);
+      break;
     case SPELL_DISTORT:
     case SPELL_STICKS_TO_SNAKES:
     case SPELL_SOUL_TWIST:
     case SPELL_SQUISH:
     case SPELL_FLATULENCE:
-    case SPELL_CARDIAC_STRESS:
-    case SPELL_AQUATIC_BLAST:
-      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.05 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+    case SPELL_VAMPIRIC_TOUCH:
+    case SPELL_LIFE_LEECH:
+      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.3 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
       break;
+      ///////////////////////
+      // END SHAMAN STUFF
+      ///////////////////////
     case SPELL_HARM_LIGHT:
     case SPELL_HARM_SERIOUS:
     case SPELL_HARM_CRITICAL:
@@ -448,19 +461,6 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_ROOT_CONTROL:
       // 4/3 factor added here due to save cutting into avg damage
       dam =  genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
-      break;
-    case SPELL_STORMY_SKIES:
-      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.05 * NEED_RAIN_SNOW_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
-      break;
-    case SPELL_LICH_TOUCH:
-      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.05 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);
-      break;
-    case SPELL_LIFE_LEECH:
-      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.05 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
-      break;
-    case SPELL_VAMPIRIC_TOUCH:
-      // added to follow suit
-      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 0.011 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SKILL_KICK_MONK:
     case SKILL_CHOP:

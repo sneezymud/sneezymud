@@ -170,7 +170,7 @@ int aquaticBlast(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
   int rc;
   TThing *t;
 
-  level = min(level, 10);
+  level = min(level, 50);
 
   int dam = caster->getSkillDam(victim, SPELL_AQUATIC_BLAST, level, adv_learn);
 
@@ -368,7 +368,7 @@ int shapeShift(TBeing *caster, int level, byte bKnown)
     return SPELL_FAIL;
   }
   if (caster->desc->snoop.snoop_by)
-    caster->desc->snoop.snoop_by->doSnoop(caster->desc->snoop.snoop_by->name);
+    caster->desc->snoop.snoop_by->doSnoop(caster->desc->snoop.snoop_by->getName());
 
   // first add the attempt -- used to regulate attempts
   aff.type = AFFECT_SKILL_ATTEMPT;
@@ -488,7 +488,7 @@ int shapeShift(TBeing *caster, const char * buffer)
     return SPELL_FAIL;
   }
   if (caster->desc->snoop.snoop_by)
-    caster->desc->snoop.snoop_by->doSnoop(caster->desc->snoop.snoop_by->name);
+    caster->desc->snoop.snoop_by->doSnoop(caster->desc->snoop.snoop_by->getName());
 
   if (!bPassShamanChecks(caster, SPELL_SHAPESHIFT, caster))
     return FALSE;
@@ -524,7 +524,7 @@ int deathWave(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
   if (caster->isNotPowerful(victim, level, SPELL_DEATHWAVE, SILENT_NO))
     return SPELL_FAIL;
 
-  level = min(level, 50);
+  level = min(level, 75);
 
   int dam = caster->getSkillDam(victim, SPELL_DEATHWAVE, level, adv_learn);
   int beams = (dam / 3) + ::number(0, (caster->GetMaxLevel() / 10));

@@ -233,7 +233,7 @@ int cardiacStress(TBeing * caster, TBeing * victim, int level, byte bKnown, int 
   int rc;
   TThing *t;
 
-  level = min(level, 15);
+  level = min(level, 80);
 
   int dam = caster->getSkillDam(victim, SPELL_CARDIAC_STRESS, level, adv_learn);
 
