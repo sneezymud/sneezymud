@@ -26,8 +26,9 @@ void TBeing::doPlant(const char *arg)
     return;
   }
 
-  for(t=roomp->getStuff(),count=0;t;t=t->nextThing){
-    if(dynamic_cast<TPlant *>(t))
+  TThing *tcount;
+  for(tcount=roomp->getStuff(),count=0;tcount;tcount=tcount->nextThing){
+    if(dynamic_cast<TPlant *>(tcount))
       ++count;
   }
   if(count>=7){
