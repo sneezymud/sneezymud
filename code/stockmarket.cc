@@ -5,8 +5,6 @@ void updateStockHistory()
 {
   TDatabase db(DB_SNEEZY);
 
-  // stockhistory table needs to be seeded with at least one entry for
-  // each stock, for this query to work
   db.query("insert into stockhistory select max(sh.n), si.ticker, si.price from stockinfo si, stockhistory sh group by si.ticker, si.price");
 }
 
