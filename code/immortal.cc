@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: immortal.cc,v $
+// Revision 1.12  1999/10/08 03:06:11  batopr
+// Improved messages for info gold
+//
 // Revision 1.11  1999/10/07 17:14:26  batopr
 // Added display of "factor" for info-gold on shops
 //
@@ -4171,10 +4174,20 @@ void TBeing::doInfo(const char *arg)
                  gold_positive[GOLD_RENT][j] +
                  gold_positive[GOLD_HOSPITAL][j] +
                  gold_positive[GOLD_TITHE][j];
-        sprintf(buf2, "   %sLevel %2d:%s       %sNet: %9ld%s %sPos: %9lu%s  (%5.2f)\n\r",
-          cyan(),j+1, norm(), cyan(), amount, norm(),
+        sprintf(buf2, "   %sLevel %2d:%s\n\r",
+          cyan(),j+1, norm());
+        buf += buf2;
+        sprintf(buf2, "         %sPos  : %9ld%s  (%.2f%% of total)\n\r",
           cyan(), pos, norm(),
-          pos ? (float) (100.0 * ((float) amount / (float) pos)) : 0);
+          100.0 * pos / tot_gold);
+        buf += buf2;
+        sprintf(buf2, "         %sNet  : %9ld%s  (%.2f%% of total)\n\r",
+          cyan(), amount, norm(),
+          100.0 * amount / net_gold);
+        buf += buf2;
+        sprintf(buf2, "         %sDrain: %9ld%s  (%.2f%% of total)\n\r",
+          cyan(), pos - amount, norm(),
+          100.0 * (pos - amount) / (tot_gold - net_gold));
         buf += buf2;
 
         sprintf(buf2, "      income     : %8ld, comm       : %8ld, gamble     : %8ld\n\r",
