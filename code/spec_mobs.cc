@@ -4063,6 +4063,8 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
     sprintf(buf, "Thanks for the donation.  I'll take your %d talen%s tithe in advance!", cost, (cost > 1) ? "s" : "");
     me->doSay(buf);
     ch->addToMoney(-cost, GOLD_SHOP_SYMBOL);
+    saveGovMoney("attuning", cost);
+
     job->cost = cost;
     job->hasJob = TRUE;
     job->pc = ch;
@@ -5343,6 +5345,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         sprintf(buf, "Thanks for your business, I'll take your %d talens payment in advance!", cost);
         me->doSay(buf);
         ch->addToMoney(-cost, GOLD_HOSPITAL);
+	saveGovMoney("engraver", cost);
         job->cost = cost;
         job->char_name = new char[strlen(ch->getName()) + 1];
         strcpy(job->char_name, ch->getName());

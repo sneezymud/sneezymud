@@ -351,6 +351,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             }
             int cashCost = min(ch->getMoney(), cost);
             ch->addToMoney(-cashCost, GOLD_HOSPITAL);
+	    saveGovMoney("hospital", cashCost);
 
             if (cashCost != cost) {
               cashCost = (ch->getBank() - (cost - cashCost));
@@ -388,6 +389,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
               } else {
                 int cashCost = min(ch->getMoney(), cost);
                 ch->addToMoney(-cashCost, GOLD_HOSPITAL);
+		saveGovMoney("hospital", cashCost);
 
                 if (cashCost != cost) {
                   cashCost = (ch->getBank() - (cost - cashCost));
@@ -423,6 +425,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
           } else {
             int cashCost = min(ch->getMoney(), cost);
             ch->addToMoney(-cashCost, GOLD_HOSPITAL);
+	    saveGovMoney("hospital", cashCost);
 
             if (cashCost != cost) {
               cashCost = (ch->getBank() - (cost - cashCost));
@@ -455,6 +458,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
           } else {
             int cashCost = min(ch->getMoney(), cost);
             ch->addToMoney(-cashCost, GOLD_HOSPITAL);
+	    saveGovMoney("hospital", cashCost);
 
             if (cashCost != cost) {
               cashCost = (ch->getBank() - (cost - cashCost));
@@ -504,6 +508,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
               } else {
                 int cashCost = min(ch->getMoney(), cost);
                 ch->addToMoney(-cashCost, GOLD_HOSPITAL);
+		saveGovMoney("hospital", cashCost);
 
                 if (cashCost != cost) {
                   cashCost = (ch->getBank() - (cost - cashCost));
@@ -536,6 +541,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             } else {
               int cashCost = min(ch->getMoney(), cost);
               ch->addToMoney(-cashCost, GOLD_HOSPITAL);
+	      saveGovMoney("hospital", cashCost);
 
               if (cashCost != cost) {
                 cashCost = (ch->getBank() - (cost - cashCost));
@@ -614,6 +620,7 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
         healed->addToHit(num);
         healed->sendTo("The charge for the healing is %d talens.\n\r", cost);
         healed->addToMoney(-cost, GOLD_HOSPITAL);
+	saveGovMoney("hospital", cost);
       }
     }
   }
@@ -649,6 +656,8 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
     }
     if ((opt >= 1) && (opt <= 3)) {
       ch->addToMoney(-cost, GOLD_HOSPITAL);
+      saveGovMoney("hospital", cost);
+
       switch (opt) {
         case 1:
           ch->setHit(ch->hitLimit());

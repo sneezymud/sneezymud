@@ -829,6 +829,9 @@ void TPerson::raiseLevel(classIndT Class, TMonster *gm)
         return;
       } else {
         addToMoney(-amount, GOLD_REPAIR);
+	saveGovMoney("repair", amount);
+	
+
         sprintf(buf, "$n says, \"$N, the High Tabuda thanks you for your %d talen donation to the kwoon.\"", amount);
         act(buf, FALSE, gm, 0, this, TO_VICT);
       }

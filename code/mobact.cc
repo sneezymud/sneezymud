@@ -3407,13 +3407,15 @@ int TMonster::mobileActivity(int pulse)
     }
     
     if(shopOwned(shop_nr)){
+      MYSQL_RES *res;
+      int rc;
+
       setMoney(getMoney()-100);
+      saveGovMoney("shop tick tax", 100);
       
       shoplog(shop_nr, this, this, "talens", 100, "paying tax");
 
       if(getMoney()<0){
-	MYSQL_RES *res;
-	int rc;
 
 	if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopowned where shop_nr=%i", shop_nr))){
 	  if(rc){
@@ -3421,13 +3423,15 @@ int TMonster::mobileActivity(int pulse)
 	    return FALSE;
 	  }
 	}
-	
+	mysql_free_result(res);
+
 	if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopownedaccess where shop_nr=%i", shop_nr))){
 	  if(rc){
 	    vlogf(LOG_BUG, "Database error in shop_keeper");
 	    return FALSE;
 	  }
 	}
+	mysql_free_result(res);
 	vlogf(LOG_PEEL, "shop_nr %i, ran out of money and was reclaimed", shop_nr);
 
 	setMoney(1000000);

@@ -2186,6 +2186,8 @@ void TPerson::loadRent()
     sendTo("You ran up charges of %d talen%s in rent.\n\r", total_rent,
       ((total_rent) == 1) ? "" : "s");
     addToMoney(-(total_rent), GOLD_RENT);
+    saveGovMoney("rent", total_rent);
+
 
    // NOTE:  I realize we can give out gold doing this, but my guess 
    // the only way barring bugs is via timeshifting.   

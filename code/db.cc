@@ -3204,3 +3204,15 @@ int dbquery(MYSQL_RES **res, const char *dbname, const char *msg, const char *qu
 }
 
 
+void saveGovMoney(const char *what, int talens){
+  MYSQL_RES *res;
+  int rc;
+  
+  if((rc=dbquery(&res, "sneezy", "saveGovMoney", "update govmoney set talens=talens+%i where type='%s'", talens, what))){
+    if(rc){
+      vlogf(LOG_BUG, "Database error in saveGovMoney");
+      return;
+    }
+  }
+  mysql_free_result(res);
+}

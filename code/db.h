@@ -23,6 +23,8 @@
 extern const char * const MUD_NAME;
 extern const char * const MUD_NAME_VERS;
 
+extern void saveGovMoney(const char *, int);
+
 const int MAX_OBJ_AFFECT = 5;
 
 const char * const SIGN_MESS = "/mud/sign/currentMess";

@@ -221,7 +221,10 @@ static int check_time_and_gold(TBeing *repair, TBeing *buyer, int ticket, TNote 
       repair->doSay("Thank you for your business!");
       fixed_obj->setStructPoints(fixed_obj->maxFix(repair, DEPRECIATION_YES));
       buyer->addToMoney(-tmp_cost, GOLD_REPAIR);
-      repair->addToMoney(tmp_cost, GOLD_REPAIR);
+      // I think this is just for gold stats, the repair guy doesn't use it
+      repair->addToMoney(tmp_cost, GOLD_REPAIR); 
+      saveGovMoney("repair", tmp_cost);
+
       *buyer += *fixed_obj;
       fclose(fp);
       sprintf(buf, "mobdata/repairs/%d/%d", repair->mobVnum(), ticket);

@@ -1918,7 +1918,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   if(cmd == CMD_WHISPER /*&& ch->isImmortal()*/ ){
     char buf[256], buf2[256];
     TThing *tt;
-    int count=0, value=0, price=0, discount=100, rc;
+    int count=0, value=0, price=0, discount=100, rc, tax=0;
     unsigned int access=0;
     bool owned=shopOwned(shop_nr);
     unsigned int i, tmp;
@@ -2050,7 +2050,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	value+=o->obj_flags.cost;
       }
       value+=myself->getMoney();
-      value=(int)(value*1.15)+1000000;
+      tax=(int)(value*0.15)+1000000;
+      value=value+tax;
       if(ch->getMoney()<value){
 	sprintf(buf, "%s Sorry, you can't afford this shop.  The price is %i.",
 		ch->getName(), value);
@@ -2058,6 +2059,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	return TRUE;
       }
       ch->setMoney(ch->getMoney()-value);
+      saveGovMoney("shop purchase", tax);
       
 
       if((rc=dbquery(&res, "sneezy", "shop_keeper", "insert into shopowned (shop_nr, profit_buy, profit_sell) values (%i, %f, %f)", shop_nr, shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell))){
