@@ -214,6 +214,7 @@ static int spin(TBeing *caster, TBeing *victim)
   int percent;
   int i = 0;
   int rc;
+  int flycheck = ::number(1, 10);
   const int SPIN_COST = 25;       // movement cost to spin
 
   if (!caster->canSpin(victim, SILENT_NO))
@@ -223,6 +224,20 @@ static int spin(TBeing *caster, TBeing *victim)
   percent = ((10 + (victim->getArmor() / 200)) << 1);
   int bKnown = caster->getSkillValue(SKILL_SPIN);
 
+  if (victim->isFlying()) {
+    if (flycheck > 5) {
+      act("Your spin attempt on $N is more difficult because $E is flying.", FALSE, caster, 0, victim, TO_CHAR, ANSI_YELLOW);
+      act("The fact that you are flying makes $n's spin attempt much more difficult.", FALSE, caster, 0, victim, TO_VICT, ANSI_YELLOW);
+      act("The fact that $N is flying makes $n's spin attempt more difficult.", FALSE, caster, 0, victim, TO_NOTVICT, ANSI_YELLOW);
+      return (spinMiss(caster, victim, TYPE_DEFAULT));
+    } else {
+      act("Your spin attempt on $N is more difficult because $E is flying.", FALSE, caster, 0, victim, TO_CHAR, ANSI_YELLOW);
+      act("The fact that you are flying makes $n's spin attempt much more difficult.", FALSE, caster, 0, victim, TO_VICT, ANSI_YELLOW);
+      act("The fact that $N is flying makes $n's spin attempt more difficult.", FALSE, caster, 0, victim, TO_NOTVICT, ANSI_YELLOW);
+      // continue spinning
+      // the above is to make spin less annoying to flyers
+    }
+  }
   if (caster->getMove() < SPIN_COST) {
     caster->sendTo("You don't have the vitality to spin anyone!\n\r");
     return FALSE;
