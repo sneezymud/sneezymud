@@ -3,14 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_objs.cc,v $
-// Revision 1.4  1999/09/26 23:13:53  lapsos
-// Typo fix.
+// Revision 1.5  1999/09/26 23:49:47  lapsos
+// Changes to the wicked proc.
 //
-// Revision 1.3  1999/09/26 23:04:37  lapsos
-// Few bug/crash fixes.
-//
-// Revision 1.2  1999/09/26 22:54:53  lapsos
-// Modifications to the wicked proc.
 //
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
@@ -2229,15 +2224,15 @@ int featherFallItem(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
 
 int wickedDagger(TBeing *vict, cmdTypeT cmd, const char *, TObj *me, TObj *ch_obj)
 {
-  int dam = ::number(1,2);
+  int dam = ::number(1,10);
   spellNumT wtype = me->getWtype();
 
-  if (::number(0,10) || !ch_obj || !vict || vict->getHit() <= 0 ||
-      (dynamic_cast<TBeing *>(dynamic_cast<TThing *>(ch_obj)))->getHit() <= 0)
+  if (::number(0,10) || !ch_obj || !vict || vict->getHit() <= dam ||
+      (dynamic_cast<TBeing *>(dynamic_cast<TThing *>(ch_obj)))->getHit() <= dam)
     return FALSE;
 
   sendrpf(COLOR_OBJECTS, vict->roomp, "%s<k> sheds a light of iniquity.<z>\n\r",
-          (me->getName() ? me->getName() : "Bogus Object"));
+          (me->getName() ? good_cap(me->getName()).c_str() : "Bogus Object"));
 
   if (cmd == CMD_OBJ_MISS) {
     // victim = vict
@@ -2245,7 +2240,7 @@ int wickedDagger(TBeing *vict, cmdTypeT cmd, const char *, TObj *me, TObj *ch_ob
     TThing *ch_thing = ch_obj;
     TBeing *ch = dynamic_cast<TBeing *>(ch_thing);
 
-    ch->sendTo("You feel the life within you slowly ebb away.");
+    ch->sendTo("You feel the life within you slowly ebb away.\n\r");
 
     // missing does dam to swinger
     int rc = ch->reconcileDamage(ch, dam, wtype);
@@ -2260,7 +2255,7 @@ int wickedDagger(TBeing *vict, cmdTypeT cmd, const char *, TObj *me, TObj *ch_ob
     // we can safely use equippedBy since ch takes no damage
     TBeing *ch = dynamic_cast<TBeing *>(me->equippedBy);
 
-    vict->sendTo("You feel the life within you slowly ebb away.");
+    vict->sendTo("You feel the life within you slowly ebb away.\n\r");
 
     int rc = ch->reconcileDamage(vict, dam, wtype);
     if (rc == -1)
