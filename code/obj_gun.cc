@@ -230,10 +230,12 @@ string TGun::statObjInfo() const
 void TGun::describeObjectSpecifics(const TBeing *ch) const
 {
   if(getAmmo()){
-    ch->sendTo("It has %i rounds of ammunition left.\n\r",
-	       getAmmo()->getRounds());
+    ch->sendTo("It has %i rounds of %s ammunition left.\n\r",
+	       getAmmo()->getRounds(), getAmmoDescr(getAmmoType()));
   } else {
-    ch->sendTo("Is does not have any rounds of ammunition left.\n\r");
+    // yeah yeah bad grammar, may as well be consistant though
+    ch->sendTo("Is has 0 rounds of %s ammunition left.\n\r",
+	       getAmmoDescr(getAmmoType()));
   }
 
 }
@@ -241,8 +243,8 @@ void TGun::describeObjectSpecifics(const TBeing *ch) const
 
 void TAmmo::describeObjectSpecifics(const TBeing *ch) const
 {
-  ch->sendTo("It has %i rounds of ammunition left.\n\r",
-	     getRounds());
+  ch->sendTo("It has %i rounds of %s ammunition left.\n\r",
+	     getRounds(), getAmmoDescr(getAmmoType()));
 
 }
 

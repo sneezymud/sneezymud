@@ -71,7 +71,7 @@ struct attack_hit_type attack_hit_text[TYPE_MAX_HIT - TYPE_MIN_HIT] =
   {"maul", "mauls", "mauling"},  // TYPE_BEAR_CLAW
   {"kick", "kicks", "kicking"},
   {"maul", "mauls", "mauling"},
-  {"shoot", "shoots", "shooting"},
+  {"shot", "shoots", "shooting"},
 };
 
 // isTanking() checks to see if I am tanking.  Conditions are if someone in
