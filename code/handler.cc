@@ -2481,7 +2481,7 @@ void forceCrash(const char *errorMsg,...)
   if (fork())
     abort();    // force a crash in the child
 #else
-  vlogf(LOG_BUG, "forceCrash: %s", message);
+  vlogf(LOG_BUG, "forceCrash (not crashing): %s", message);
 #endif
 
   // parent process continues on...
