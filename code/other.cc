@@ -2462,6 +2462,19 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
     case LIQ_POT_CELERITE3:
       celerite(ch,vict,level,learn);
       break;
+    case LIQ_POT_QUICKSILVER:
+      celerite(ch,vict,level,learn);
+      cheval(ch,vict,level,learn);
+      haste(ch,vict,level,learn);
+
+      aff.type = SPELL_HASTE;
+      aff.level = 50;
+      aff.duration = UPDATES_PER_MUDHOUR * 10;
+      aff.modifier = 50;
+      aff.location = APPLY_SPE;
+      vict->affectTo(&aff, -1);
+
+      break;
     case LIQ_POT_CLARITY:
       clarity(ch,vict,level,learn);
       break;

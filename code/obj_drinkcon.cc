@@ -259,7 +259,5 @@ void assign_drink_types()
   DrinkInfo[LIQ_URINE] = new drinkInfo(0,1,-5,false, false, "<Y>golden<1>", "<Y>urine<1>", 0);
   DrinkInfo[LIQ_POT_HEALING_GRASP]               = new drinkInfo(100,  0,  1, true, false, "<p>light purple<1>", "<y>a light purple potion<1>", 0);
   DrinkInfo[LIQ_POT_CLEANSE]               = new drinkInfo(100,  0,  1, true, false, "clear with clumps", "a clear potion with clumps", 0);
+  DrinkInfo[LIQ_POT_QUICKSILVER]            = new drinkInfo(-1,  -1,  -1, true, false, "shiny silver", "a shiny silver potion", 9999);
 }
-
-
-
