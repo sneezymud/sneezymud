@@ -386,10 +386,10 @@ void TPerson::doToggle(const char *arg2)
     }
   } else if(is_abbrev(arg, "showsaves")){
     if (isPlayerAction(PLR_SHOW_SAVES)) {
-      sendTo("You will now receive pfile save notification.\n\r");
+      sendTo("You will no longer receive pfile save notification.\n\r");
       remPlayerAction(PLR_SHOW_SAVES);
     } else {
-      sendTo("You will no longer receive pfile save notification.\n\r");
+      sendTo("You will now receive pfile save notification.\n\r");
       addPlayerAction(PLR_SHOW_SAVES);
     }
   } else if(is_abbrev(arg, "brief")){
