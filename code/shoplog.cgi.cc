@@ -40,11 +40,21 @@ int main(int argc, char **argv){
     cout << "<form method=post action=\"/shoplog.cgi\">" << endl;
     cout << "Select a shop: <select name=shop_nr>" << endl;
 
-    db.query("select soa.shop_nr from shopownedaccess soa, shopowned so where lower(name) = lower('%s') and soa.shop_nr=so.shop_nr and so.password='%s'", (**name).c_str(), (**pw).c_str());
+    db.query("select soa.shop_nr as shop_nr from shopownedaccess soa, shopowned so where lower(name) = lower('%s') and soa.shop_nr=so.shop_nr and so.password='%s'", (**name).c_str(), (**pw).c_str());
+    
     while(db.fetchRow()){
       cout << "<option value=" << db["shop_nr"];
       cout << "> " << db["shop_nr"] << endl;
     }
+
+    db.query("select so.shop_nr as shop_nr from corpaccess ca, shopowned so where lower(name)=lower('%s') and so.corp_id=ca.corp_id and so.password='%s'", (**name).c_str(), (**pw).c_str());
+
+    while(db.fetchRow()){
+      cout << "<option value=" << db["shop_nr"];
+      cout << "> " << db["shop_nr"] << endl;
+    }
+
+
     cout << "</select>";
     cout << "<input type=hidden name=name value=" << **name << ">";
     cout << "<input type=hidden name=pw value=" << **pw << ">";
