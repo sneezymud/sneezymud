@@ -309,7 +309,8 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_objs_graffitiMaker.o	spec_mobs_loanshark.o		\
 	spec_objs_weapons.o             spec_mobs_stockbroker.o		\
 	spec_mobs_banker.o		spec_mobs_taxman.o		\
-	spec_objs_ballot_box.o		spec_objs_casting.o
+	spec_objs_ballot_box.o		spec_objs_casting.o		\
+	spec_mobs_signmaker.o
 
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
@@ -15391,7 +15392,7 @@ objs/spec_mobs_paladin_patrol.o: person.h monster.h paths.h account.h
 objs/spec_mobs_paladin_patrol.o: extern.h handler.h obj_money.h spec_mobs.h
 objs/spec_mobs_paladin_patrol.o: materials.h colorstring.h format.h
 objs/spec_mobs_paladin_patrol.o: pathfinder.h /usr/include/g++/deque
-objs/spec_mobs_paladin_patrol.o: /usr/include/g++/stl_deque.h
+objs/spec_mobs_paladin_patrol.o: /usr/include/g++/stl_deque.h obj_commodity.h
 objs/spec_mobs_posse.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_posse.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_posse.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -15503,6 +15504,69 @@ objs/spec_mobs_postman.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/spec_mobs_postman.o: person.h monster.h paths.h account.h extern.h
 objs/spec_mobs_postman.o: handler.h obj_money.h spec_mobs.h materials.h
 objs/spec_mobs_postman.o: colorstring.h format.h
+objs/spec_mobs_signmaker.o: stdsneezy.h /usr/include/g++/cstdio
+objs/spec_mobs_signmaker.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/spec_mobs_signmaker.o: /usr/include/machine/ansi.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/ctime /usr/include/time.h
+objs/spec_mobs_signmaker.o: /usr/include/sys/_posix.h
+objs/spec_mobs_signmaker.o: /usr/include/sys/types.h
+objs/spec_mobs_signmaker.o: /usr/include/sys/inttypes.h
+objs/spec_mobs_signmaker.o: /usr/include/machine/types.h
+objs/spec_mobs_signmaker.o: /usr/include/machine/endian.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/spec_mobs_signmaker.o: /usr/include/runetype.h /usr/include/g++/cassert
+objs/spec_mobs_signmaker.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/spec_mobs_signmaker.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/cmath
+objs/spec_mobs_signmaker.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_signmaker.o: /usr/include/stddef.h /usr/include/math.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/string
+objs/spec_mobs_signmaker.o: /usr/include/g++/std/bastring.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/cstddef
+objs/spec_mobs_signmaker.o: /usr/include/g++/std/straits.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/alloc.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/stl_config.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/stl_alloc.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/iostream.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/streambuf.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/libio.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/iterator
+objs/spec_mobs_signmaker.o: /usr/include/g++/stl_relops.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/stl_iterator.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/std/bastring.cc
+objs/spec_mobs_signmaker.o: /usr/include/g++/vector
+objs/spec_mobs_signmaker.o: /usr/include/g++/stl_algobase.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/stl_pair.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/type_traits.h
+objs/spec_mobs_signmaker.o: /usr/include/limits.h
+objs/spec_mobs_signmaker.o: /usr/include/machine/limits.h
+objs/spec_mobs_signmaker.o: /usr/include/sys/syslimits.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/new.h /usr/include/g++/new
+objs/spec_mobs_signmaker.o: /usr/include/g++/exception
+objs/spec_mobs_signmaker.o: /usr/include/g++/stl_construct.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/stl_uninitialized.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/stl_vector.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/stl_bvector.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/stl_function.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/stl_map.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/stl_multimap.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/list /usr/include/g++/stl_list.h
+objs/spec_mobs_signmaker.o: /usr/include/g++/iostream
+objs/spec_mobs_signmaker.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/spec_mobs_signmaker.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/spec_mobs_signmaker.o: spells.h structs.h parse.h immunity.h
+objs/spec_mobs_signmaker.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/spec_mobs_signmaker.o: client.h response.h faction.h comm.h toggle.h
+objs/spec_mobs_signmaker.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/spec_mobs_signmaker.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/spec_mobs_signmaker.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/spec_mobs_signmaker.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/spec_mobs_signmaker.o: monster.h paths.h account.h extern.h handler.h
+objs/spec_mobs_signmaker.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/spec_mobs_signmaker.o: format.h shop.h obj_note.h shopowned.h
 objs/spec_mobs_statSurgeon.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_statSurgeon.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_statSurgeon.o: /usr/include/machine/ansi.h

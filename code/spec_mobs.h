@@ -182,7 +182,8 @@ const int SPEC_TRAINER_ADV_ADVENTURING=196;
 const int SPEC_AMBER_JANITOR      =197;
 const int SPEC_BRIGHTMOON_JANITOR =198;
 const int SPEC_GARBAGE_CONVOY     =199;
-const int NUM_MOB_SPECIALS        =199;
+const int SPEC_SIGNMAKER          =200;
+const int NUM_MOB_SPECIALS        =200;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

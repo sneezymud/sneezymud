@@ -6469,6 +6469,7 @@ extern int paralyzeGaze(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int poisonBite(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 // misc external procs
+extern int signMaker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int paladinPatrol(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int taxman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int banker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -6694,6 +6695,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "amber janitor", amberJanitor},
   {FALSE, "brightmoon janitor", brightmoonJanitor},
   {FALSE, "garbage convoy", garbageConvoy},
+  {FALSE, "signmaker", signMaker},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
