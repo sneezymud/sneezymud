@@ -948,6 +948,14 @@ void buildComponentArray()
     "",
     "You stretch $p between your forefingers.",
     "$n stretches $p between $s forefingers."));
+  CompInfo.push_back(compInfo(SPELL_VOODOO,
+    "",                       
+    "",
+    "",
+    "You taste $p and spit it out.",
+    "$n tastes $p and then $e spits it out.",
+    "You taste $p and spit it out.",
+    "$n tastes $p and then $e spits it out."));
   CompInfo.push_back(compInfo(SPELL_GALVANIZE,
     "",                       
     "",

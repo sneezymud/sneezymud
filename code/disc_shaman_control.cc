@@ -96,7 +96,7 @@ int enthrallGhoul(TBeing * caster)
     return FALSE;
   }
 
-  if (!bPassMageChecks(caster, SPELL_ENTHRALL_GHOUL, NULL))
+  if (!bPassShamanChecks(caster, SPELL_ENTHRALL_GHOUL, NULL))
     return FALSE;
 
   lag_t rounds = discArray[SPELL_ENTHRALL_GHOUL]->lag;
@@ -221,7 +221,7 @@ conditions!\n\r");
     return FALSE;
   }
 
-  if (!bPassMageChecks(caster, SPELL_ENTHRALL_DEMON, NULL))
+  if (!bPassShamanChecks(caster, SPELL_ENTHRALL_DEMON, NULL))
     return FALSE;
 
   lag_t rounds = discArray[SPELL_ENTHRALL_DEMON]->lag;

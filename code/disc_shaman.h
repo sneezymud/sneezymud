@@ -59,9 +59,11 @@ public:
 private:
 };
 
-    int voodoo(TBeing *, TObj *);
-    int voodoo(TBeing *, TObj *, TMagicItem *);
     int voodoo(TBeing *, TObj *, int, byte);
+    void voodoo(TBeing *, TObj *, TMagicItem *);
+    int voodoo(TBeing *, TObj *);
+    int castVoodoo(TBeing *, TObj *);
+//    int castVoodoo(TBeing *, TObj *, TMagicItem *);
 
     int dancingBones(TBeing *, TObj *);
     int dancingBones(TBeing *, TObj *, TMagicItem *);

@@ -2590,7 +2590,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       rc = dancingBones(caster,target,obj);
       break;
     case SPELL_VOODOO:
-      rc = voodoo(caster,target,obj);
+      voodoo(caster,obj);
       break;
     case SKILL_BARKSKIN:
       barkskin(caster,victim,obj);

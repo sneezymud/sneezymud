@@ -6,11 +6,11 @@
 
 
 // returns VICTIM_DEAD if corpse should be fried
-int voodoo(TBeing * caster, TObj * obj, int level, byte bKnown)
+int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
 {
   TMonster *mob;
   TThing *t, *n;
-  TBaseCorpse *corpse;
+  TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
   char buf[256], capbuf[256];
   wearSlotT i;
 
@@ -27,7 +27,7 @@ int voodoo(TBeing * caster, TObj * obj, int level, byte bKnown)
     act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
-  if (corpse->getCorpseLevel() > (unsigned int) (3 * level / 5)) {
+  if (corpse->getCorpseLevel() > (unsigned int) caster->GetMaxLevel() - 3) {
     caster->sendTo("Your invokation lacks the power.  Nothing happens.\n\r");
     act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
@@ -134,39 +134,53 @@ int voodoo(TBeing * caster, TObj * obj, int level, byte bKnown)
     return SPELL_FAIL + VICTIM_DEAD;
   }
 }
-
-int voodoo(TBeing * caster, TObj * corpse, TMagicItem *obj)
+//////
+void voodoo(TBeing *caster, TObj *corpse, TMagicItem *obj)
 {
-  int ret;
+  int ret, level;
 
-  act("$p directs ia strange beam of energy at $N.",
+  level = caster->getSkillLevel(SPELL_VOODOO);
+  int bKnown = caster->getSkillValue(SPELL_VOODOO);
+  act("You direct a strange beam of energy at $p.",
           FALSE, caster, obj, corpse, TO_CHAR);
-  act("$p directs ia strange beam of energy at $N.",
+  act("$n directs a strange beam of energy at $p.",
           FALSE, caster, obj, corpse, TO_ROOM);
- 
-  ret=voodoo(caster,corpse,obj->getMagicLevel(),obj->getMagicLearnedness());
-  if (IS_SET(ret, VICTIM_DEAD))
-    return DELETE_ITEM;
- 
-  return FALSE;
+  ret=voodoo(caster,corpse,level,bKnown);
 }
 
 int voodoo(TBeing * caster, TObj * corpse)
 {
-  int ret,level;
+  taskDiffT diff;
 
   if (!bPassShamanChecks(caster, SPELL_VOODOO, corpse))
     return FALSE;
 
+  lag_t rounds = discArray[SPELL_VOODOO]->lag;
+  diff = discArray[SPELL_VOODOO]->task;
+
+  start_cast(caster, NULL, corpse, caster->roomp, SPELL_VOODOO, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+  return TRUE;
+  // return FALSE;
+}
+// int castVoodoo(TBeing * caster, TObj * corpse, TMagicItem * obj)
+int castVoodoo(TBeing * caster, TObj * corpse)
+{
+  int ret, level;
+
   level = caster->getSkillLevel(SPELL_VOODOO);
   int bKnown = caster->getSkillValue(SPELL_VOODOO);
-
-  ret=voodoo(caster,corpse,level,bKnown);
+  act("You direct a strange beam of energy at $p.",
+          FALSE, caster, corpse, 0, TO_CHAR);
+  act("$n directs a strange beam of energy at $p.",
+          FALSE, caster, corpse, 0, TO_ROOM);
+  if ((ret=voodoo(caster,corpse,level,bKnown)) == SPELL_SUCCESS) {
+  }
   if (IS_SET(ret, VICTIM_DEAD))
-    return DELETE_ITEM;   // nuke the corpse
-  return FALSE;
+    return DELETE_ITEM;
+  return TRUE;
+  //  return FALSE;
 }
-
+//////
 int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
 {
   affectedData aff;
@@ -458,9 +472,9 @@ int dancingBones(TBeing * caster, TObj * corpse, TMagicItem *obj)
 {
   int ret;
 
-  act("$p directs ia strange beam of energy at $N.",
+  act("$p directs a strange beam of energy at $N.",
           FALSE, caster, obj, corpse, TO_CHAR);
-  act("$p directs ia strange beam of energy at $N.",
+  act("$p directs a strange beam of energy at $N.",
           FALSE, caster, obj, corpse, TO_ROOM);
  
   ret=dancingBones(caster,corpse,obj->getMagicLevel(),obj->getMagicLearnedness());

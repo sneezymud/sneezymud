@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.9  2001/06/07 09:37:07  jesus
+// updated voodoo spell
+//
 // Revision 5.8  2001/06/05 04:27:26  jesus
 // added life leech spell for shaman
 // fixed a glitch in sacrifice
@@ -164,6 +167,7 @@ const int COMP_DEATH_MIST         =31311;
 const int COMP_LICH_TOUCH         =31312;
 const int COMP_VAMPIRIC_TOUCH     =31313;
 const int COMP_LIFE_LEECH         =31320;
+const int COMP_VOODOO             =31321;
 
 class compPlace
 {

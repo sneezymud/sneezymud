@@ -1238,6 +1238,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_VAMPIRIC_TOUCH: // shaman
     case SPELL_SHIELD_OF_MISTS: // shaman
     case SPELL_LIFE_LEECH: // shaman
+    case SPELL_VOODOO: // shaman
     case SPELL_ANIMATE:
     case SPELL_BIND:
     case SPELL_TELEPORT:
@@ -1302,7 +1303,6 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
   int ok;
   int rc = 0;
   int retCode = FALSE;
-    
   if (!caster->spelltask)
     return FALSE;
 
@@ -2027,6 +2027,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         } else
           vlogf(LOG_BUG, "SPELL_VAMPIRIC_TOUCH called with null obj");
         break;
+      case SPELL_VOODOO:
+	if (o) { // !o
+          castVoodoo(this, o);
+        } else
+          vlogf(LOG_BUG, "SPELL_VOODOO called with null obj");
+        break;
       case SPELL_LIFE_LEECH:
         if (!o) {
           rc = castLifeLeech(this, victim);
@@ -2557,7 +2563,7 @@ void TBeing::sendCastingMessages(bool limbs, bool silence, int round, skillUseTy
             sprintf(buf, "Your words form the pattern calling on the magic to be unleashed.");
             sprintf(buf2, "$n words form a pattern calling on the magic to be released.");
           } else if (typ == SPELL_DANCER) {
-            sprintf(buf, "Your song calls upon the ancestors to release thier powers.");
+            sprintf(buf, "Your song calls upon the ancestors to release their powers.");
             sprintf(buf2, "$n song calls upon $s ancestors to release their power.");
           } else if (typ == SPELL_PRAYER) {
             sprintf(buf, "Your voice forms the historic words of supplication and entreaty.");
@@ -2569,7 +2575,7 @@ void TBeing::sendCastingMessages(bool limbs, bool silence, int round, skillUseTy
             sprintf(buf, "Your voice calls on the primordal forms and draws forth the primal magic.");
             sprintf(buf2, "$n's voice calls on the primordal forms and draws forth the primal magic.");
           } else if (typ == SPELL_DANCER) {
-            sprintf(buf, "Your voice calls the ancestors and draws thier power forth.");
+            sprintf(buf, "Your voice calls the ancestors and draws their power forth.");
             sprintf(buf2, "$n's voice calls to $s ancestors to do $s bidding.");
           } else if (typ == SPELL_PRAYER) {
             sprintf(buf, "Your voice continues towards the culmination of your prayer.");
