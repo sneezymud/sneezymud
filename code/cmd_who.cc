@@ -137,222 +137,9 @@ static const string getWhoLevel(const TBeing *ch, TBeing *p)
 
 void TBeing::doWho(const char *argument)
 {
-  // New Who Code to handle: who -ol j 20 40
-
-#if 0
-  if (gamePort == BETA_GAMEPORT) {
-    // 28 Who Flags upon ( 4-14-00):
-    //  i=Idle          l=Levels        q=Quests
-    //  h=Hit/Mana/Move z=Seeks-Group   p=Grouped
-    //  d=Linkdead      g=Gods/Creators b=Builders/Gods/Creators
-    //  o=Mortals       s=Stats         f=Faction
-    //  1=Mage          2=Cleric        3=Warrior
-    //  4=Thief         5=Deikhan       6=Monk
-    //  7=Ranger        8=Shaman        e=Elf
-    //  t=Hobbit        n=Gnome         u=Human
-    //  r=Ogre          w=Dwarven       y=Not-Grouped
-    //  a=Account Name  x=perma death
-    const  char *tPerfMatches = "ilqhzpydgbosf12345678etnurwax";
-    char   tString[256],
-           tBuffer[256]  = "\0",
-           tOutput[1024] = "\0";
-    int    tLow   =  0,
-           tHigh  = 60,
-           tCount =  0,
-           tLinkD =  0;
-    string tSb("");
-    unsigned long int tBits = 0;
-    TBeing *tBeing;
-      //           *tFollower;
-
-    while ((argument = one_argument(argument, tString))) {
-      if (tString[0] == '-') {
-        for (const char *tMarker = (tString + 1); *tMarker; tMarker++)
-          if (strchr(tPerfMatches, *tMarker))
-            tBits |= (1 << (strchr(tPerfMatches, *tMarker) - tPerfMatches));
-          else {
-            if (*tMarker != '?') {
-              sprintf(tBuffer, "Unknown Option '%c':\n\r", *tMarker);
-              tSb += tBuffer;
-            }
-
-            if (isImmortal()) {
-              tSb += "[-] [i]idle [l]levels [q]quests [h]hit/mana/move/lf\n\r";
-              tSb += "[-] [z]seeks-group [p]groups [y]currently-not-grouped\n\r";
-              tSb += "[-] [d]linkdead [g]God [b]Builders [o]Mort [s]stats [f]action\n\r";
-              tSb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
-              tSb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r";
-              tSb += "[-] [x]Perma Death\n\r";              
-
-              if (hasWizPower(POWER_WIZARD))
-                tSb += "[-] [a]ccount\n\r";
-
-              tSb += "\n\r";
-            } else {
-              tSb += "[-] [q]quests [g]god [b]builder [o]mort [f]faction\n\r";
-              tSb += "[-] [z]seeks-group [p]groups [y]currently-not-grouped\n\r";
-              tSb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
-              tSb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
-              tSb += "[-] [x]Perma Death\n\r";
-            }
-
-            if (desc)
-              desc->page_string(tSb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
-
-            return;
-          }
-      } else if (is_number(tBuffer)) {
-        if (!tLow)
-          tLow = atoi(tBuffer);
-        else
-          tHigh = atoi(tBuffer);
-
-	if (tLow <= 0 || tHigh > 60) {
-          sendTo("Level numbers must be between 1 and 60.\n\r");
-          return;
-        }
-
-        if (tHigh < tLow) {
-          tCount = tLow;
-          tLow   = tHigh;
-          tHigh  = tCount;
-        }
-      } else
-        strcpy(tBuffer, tString);
-    }
-
-    tSb += "Players: (Use who -? for online help)\n\r----------\n\r";
-    tCount = tLinkD = 0;
-
-    for (tBeing = character_list; tBeing; tBeing = tBeing->next)
-      if (tBeing->isPc() && (tBeing->polyed == POLY_TYPE_NONE || isImmortal()) &&
-          dynamic_cast<TPerson *>(tBeing) && canSeeWho(tBeing)) {
-        if (tBeing->isLinkdead())
-          tLinkD++;
-        else
-          tCount++;
-
-        bool anonCheck = (isImmortal() || !tBeing->isPlayerAction(PLR_ANONYMOUS));
-
-        if ((!(tBits & (1 <<  2)) || tBeing->inQuest()) &&
-            (!(tBits & (1 <<  4)) || tBeing->isPlayerAction(PLR_SEEKSGROUP)) &&
-            (!(tBits & (1 <<  5)) || (tBeing->isAffected(AFF_GROUP) && !tBeing->master && tBeing->followers)) &&
-            (!(tBits & (1 <<  6)) || (!tBeing->isAffected(AFF_GROUP) && !tBeing->isImmortal())) &&
-            (!(tBits & (1 <<  7)) || (tBeing->isLinkdead() && isImmortal())) && 
-            (!(tBits & (1 <<  8)) || tBeing->hasWizPower(POWER_GOD)) &&
-            (!(tBits & (1 <<  9)) || tBeing->hasWizPower(POWER_BUILDER)) &&
-            (!(tBits & (1 << 10)) || !tBeing->hasWizPower(POWER_BUILDER)) &&
-            (!(tBits & (1 << 13)) || (anonCheck && tBeing->hasClass(CLASS_MAGE))) &&
-            (!(tBits & (1 << 14)) || (anonCheck && tBeing->hasClass(CLASS_CLERIC))) &&
-            (!(tBits & (1 << 15)) || (anonCheck && tBeing->hasClass(CLASS_WARRIOR))) &&
-            (!(tBits & (1 << 16)) || (anonCheck && tBeing->hasClass(CLASS_THIEF))) &&
-            (!(tBits & (1 << 17)) || (anonCheck && tBeing->hasClass(CLASS_DEIKHAN))) &&
-            (!(tBits & (1 << 18)) || (anonCheck && tBeing->hasClass(CLASS_MONK))) &&
-            (!(tBits & (1 << 19)) || (anonCheck && tBeing->hasClass(CLASS_RANGER))) &&
-            (!(tBits & (1 << 20)) || (anonCheck && tBeing->hasClass(CLASS_SHAMAN))) &&
-            (!(tBits & (1 << 21)) || tBeing->getRace() == RACE_ELVEN) &&
-            (!(tBits & (1 << 22)) || tBeing->getRace() == RACE_GNOME) &&
-            (!(tBits & (1 << 23)) || tBeing->getRace() == RACE_HUMAN) &&
-            (!(tBits & (1 << 24)) || tBeing->getRace() == RACE_DWARF) &&
-            (!(tBits & (1 << 25)) || tBeing->getRace() == RACE_OGRE) &&
-            (!(tBits & (1 << 26)) || tBeing->getRace() == RACE_HOBBIT) &&
-	    (!(tBits & (1 << 28)) || tBeing->hasQuestBit(TOG_PERMA_DEATH_CHAR) &&
-            (!*tBuffer || is_abbrev(tBuffer, tBeing->getName())) &&
-            in_range(tBeing->GetMaxLevel(), tLow, tHigh)) {
-          tOutput[0] = '\0';
-
-	  if(tBeing->hasQuestBit(TOG_PERMA_DEATH_CHAR)){
-	    vlogf(LOG_PEEL, "%s has bit", tBeing->name);
-	  } else {
-	    vlogf(LOG_PEEL, "%s does not have bit", tBeing->name);
-	  }
-
-
-          if ((tBits & (1 << 0)) && isImmortal()) {
-            sprintf(tString, "Idle:[%-3d] ", tBeing->getTimer());
-            strcat(tOutput, tString);
-          }
-
-          if ((tBits & (1 << 1)))
-            strcat(tOutput, getWhoLevel(this, tBeing).c_str());
-
-          if (tBeing->isLinkdead())
-            sprintf(tString, "[%-12s]", pers(tBeing));
-          else if (tBeing->polyed == POLY_TYPE_SWITCH)
-            sprintf(tString, "[%-12s] (switched)", pers(tBeing));
-          else if (dynamic_cast<TMonster *>(tBeing) &&
-                   (tBeing->specials.act & ACT_POLYSELF))
-            sprintf(tString, "(%-12s)", pers(tBeing));
-          else
-            sprintf(tString, "%-14s", pers(tBeing));
-
-          strcat(tOutput, tString);
-	  // Name goes here.
-
-          if ((tBits & (1 << 12))) {
-            if ((isImmortal() || getFaction() == tBeing->getFaction()) && !tBeing->isImmortal())
-#if FACTIONS_IN_USE
-              sprintf(tString, " [%s] %5.2f%%",
-                      FactionInfo[tBeing->getFaction()].faction_name,
-                      tBeing->getPerc());
-#else
-              sprintf(tString, " [%s]",
-                      FactionInfo[tBeing->getFaction()].faction_name);
-#endif
-
-            strcat(tOutput, tString);
-          }
-
-          if ((tBits & (1 << 3)) && isImmortal()) {
-            if (tBeing->hasClass(CLASS_CLERIC) || tBeing->hasClass(CLASS_DEIKHAN))
-              sprintf(tString, "\n\r\tHit:[%-3d] Pty:[%-5.2f] Move:[%-3d] Talens:[%-8d] Bank:[%-8d]",
-                      tBeing->getHit(), tBeing->getPiety(), tBeing->getMove(), tBeing->getMoney(), tBeing->getBank());
-            else if (tBeing->hasClass(CLASS_SHAMAN))
-              sprintf(tString, "\n\r\tHit:[%-3d] Pty:[%-4d] Move:[%-3d] Talens:[%-8d] Bank:[%-8d]",
-                      tBeing->getHit(), tBeing->getLifeforce(), tBeing->getMove(), tBeing->getMoney(), tBeing->getBank());
-            else
-              sprintf(tString, "\n\r\tHit:[%-3d] Mna:[%-3d] Move:[%-3d] Talens:[%-8d] Bank:[%-8d]",
-                      tBeing->getHit(), tBeing->getMana(), tBeing->getMove(), tBeing->getMoney(), tBeing->getBank());
-
-            strcat(tOutput, tString);
-          }
-
-          if ((tBits & (1 << 27)) && isImmortal() &&
-              hasWizPower(POWER_WIZARD)) {
-            if (tBeing->desc && tBeing->desc->account)
-              sprintf(tString, " Account[%s]", tBeing->desc->account->name);
-            else
-              sprintf(tString, " Account[Unknown]");
-
-            strcat(tOutput, tString);
-          }
-
-          if ((tBits & (1 << 11)) && isImmortal()) {
-            sprintf(tString, "\n\r\t[St:%-3d Br:%-3d Co:%-3d De:%-3d Ag:%-3d In:%-3d Wi:%-3d Fo:%-3d Pe:%-3d Ch:%-3d Ka:%-3d Sp:%-3d]",
-                    tBeing->curStats.get(STAT_STR),
-                    tBeing->curStats.get(STAT_BRA),
-                    tBeing->curStats.get(STAT_CON),
-                    tBeing->curStats.get(STAT_DEX),
-                    tBeing->curStats.get(STAT_AGI),
-                    tBeing->curStats.get(STAT_INT),
-                    tBeing->curStats.get(STAT_WIS),
-                    tBeing->curStats.get(STAT_FOC),
-                    tBeing->curStats.get(STAT_PER),
-                    tBeing->curStats.get(STAT_CHA),
-                    tBeing->curStats.get(STAT_KAR),
-                    tBeing->curStats.get(STAT_SPE));
-
-            strcat(tOutput, tString);
-          }
-        }
-      }
-
-    return;
-  }
-#endif
-
   TBeing *k, *p;
   char buf[1024] = "\0\0\0";
+  string bufstr;
   int listed = 0, lcount, l;
   unsigned int count;
   char arg[1024], tempbuf[1024];
@@ -381,33 +168,33 @@ void TBeing::doWho(const char *argument)
             count++;
 
             p->parseTitle(buf, desc);
+	    bufstr=buf;
             if (!*argument) {
               if (p->isPlayerAction(PLR_SEEKSGROUP))
-                sprintf(buf + strlen(buf), "   (Seeking Group)");
+		bufstr += "   (Seeking Group)";
 
               if (p->isPlayerAction(PLR_NEWBIEHELP))
-                sprintf(buf + strlen(buf), "   (Newbie-Helper)");
+		bufstr += "   (Newbie-Helper)";
 
-              strcat(buf, "\n\r");
+	      bufstr += "\n\r";
             } else {
-              sprintf(buf + strlen(buf), "   %s", getWhoLevel(this, p).c_str());
+	      bufstr += "   " + getWhoLevel(this, p);
+
               if (p->isPlayerAction(PLR_SEEKSGROUP))
-                sprintf(buf + strlen(buf), "   (Seeking Group)");
+		bufstr += "   (Seeking Group)";
 
               if (p->isPlayerAction(PLR_NEWBIEHELP))
-                sprintf(buf + strlen(buf), "   (Newbie-Helper)");
+		bufstr += "   (Newbie-Helper)";
 
-              sprintf(buf + strlen(buf), "\n\r");
+	      bufstr += "\n\r";
             }
-            char tmp[256];
+
             if (isImmortal() && p->isLinkdead()) {
-              sprintf(tmp, "** %s", buf);
             } else {
-              sprintf(tmp, "%s%s",
-                  (p->polyed == POLY_TYPE_SWITCH ?  "(switched) " : ""), buf);
-              sb += tmp;
+              snprintf(tempbuf, 1023, "%s%s",
+                  (p->polyed == POLY_TYPE_SWITCH ?  "(switched) " : ""), bufstr.c_str());
+              sb += tempbuf;
             }
-            //            sb += tmp;
           }
         } else if (isImmortal()) {
 // only immortals will see this to provide them some concealment
@@ -416,23 +203,23 @@ void TBeing::doWho(const char *argument)
                 (p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2)) &&
               IS_SET(p->specials.act, ACT_POLYSELF)) {
             count++;
-            strcpy(tempbuf, pers(p));
-            sprintf(buf, "%s (polymorphed)\n\r", cap(tempbuf));
+            strncpy(tempbuf, pers(p), 1023);
+            snprintf(buf, 1023, "%s (polymorphed)\n\r", cap(tempbuf));
             sb += buf;
           } else if (canSeeWho(p) &&
                 (!*argument || 
                 (p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2)) &&
                      IS_SET(p->specials.act, ACT_DISGUISED)) {
             count++;
-            strcpy(tempbuf, pers(p));
-            sprintf(buf, "%s (disguised thief)\n\r", cap(tempbuf));
+            strncpy(tempbuf, pers(p), 1023);
+            snprintf(buf, 1023, "%s (disguised thief)\n\r", cap(tempbuf));
             sb += buf;
           }
         }
       }
     }
     accStat.max_player_since_reboot = max(accStat.max_player_since_reboot, count);
-    sprintf(buf, "\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r", count, accStat.max_player_since_reboot, stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
+    snprintf(buf, 1023, "\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r", count, accStat.max_player_since_reboot, stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
     sb += buf;
     if (desc)
       desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
@@ -498,14 +285,14 @@ void TBeing::doWho(const char *argument)
               (!strchr(arg, 't') || p->getRace() == RACE_HOBBIT) &&
 	      (!strchr(arg, 'x') || p->hasQuestBit(TOG_PERMA_DEATH_CHAR)))) {
             if (p->isLinkdead() && isImmortal())
-              sprintf(buf, "[%-12s] ", pers(p));
+              snprintf(buf, 1023, "[%-12s] ", pers(p));
             else if (p->polyed == POLY_TYPE_SWITCH && isImmortal())
-              sprintf(buf, "[%-12s] (switched) ", pers(p));
+              snprintf(buf, 1023, "[%-12s] (switched) ", pers(p));
             else if (dynamic_cast<TMonster *>(p) &&
                      (p->specials.act & ACT_POLYSELF))
-              sprintf(buf, "(%-14s) ", pers(p));
+              snprintf(buf, 1023, "(%-14s) ", pers(p));
             else 
-              sprintf(buf, "%-11s ", pers(p));
+              snprintf(buf, 1023, "%-11s ", pers(p));
             listed++;
             for (l = 1; l <= (int) strlen(arg); l++) {
               switch (arg[l]) {
@@ -521,16 +308,16 @@ void TBeing::doWho(const char *argument)
                       if (!canSeeWho(ch))
                         continue;
                       if (ch->isLinkdead() && isImmortal())
-                        sprintf(buf, "[%-12s] ", pers(ch));
+                        snprintf(buf, 1023, "[%-12s] ", pers(ch));
                       else if (ch->polyed == POLY_TYPE_SWITCH && isImmortal())
-                        sprintf(buf, "[%-12s] (switched) ", pers(ch));
+                        snprintf(buf, 1023, "[%-12s] (switched) ", pers(ch));
                       else if (dynamic_cast<TMonster *>(ch) &&
                                (ch->specials.act & ACT_POLYSELF))
-                        sprintf(buf + strlen(buf), "(%-14s) ", pers(ch));
+                        snprintf(buf + strlen(buf), 1023-strlen(buf), "(%-14s) ", pers(ch));
                       else if (ch->isPlayerAction(PLR_ANONYMOUS) && !isImmortal())
-                        sprintf(buf + strlen(buf), "%-11s (???) ", pers(ch));
+                        snprintf(buf + strlen(buf), 1023-strlen(buf), "%-11s (???) ", pers(ch));
                       else
-                        sprintf(buf + strlen(buf), "%-11s (L%d) ", pers(ch), ch->GetMaxLevel());
+                        snprintf(buf + strlen(buf), 1023-strlen(buf), "%-11s (L%d) ", pers(ch), ch->GetMaxLevel());
                     }
 
                     group = true;
@@ -539,19 +326,19 @@ void TBeing::doWho(const char *argument)
                 case 'i':
                   if (!idle) {
                     if (isImmortal())
-                      sprintf(buf + strlen(buf), "Idle:[%-3d] ", p->getTimer());
+                      snprintf(buf + strlen(buf), 1023-strlen(buf), "Idle:[%-3d] ", p->getTimer());
                   }
                   idle = TRUE;
                   break;
                 case 'l':
                 case 'y':
                   if (!level) {
-                    strcat(buf, getWhoLevel(this, p).c_str());
+                    strncat(buf, getWhoLevel(this, p).c_str(), 1023-strlen(buf));
                     if (p->isPlayerAction(PLR_SEEKSGROUP))
-                      sprintf(buf + strlen(buf), "   (Seeking Group)");
+                      snprintf(buf + strlen(buf), 1023-strlen(buf), "   (Seeking Group)");
 
                     if (p->isPlayerAction(PLR_NEWBIEHELP))
-                      sprintf(buf + strlen(buf), "   (Newbie-Helper)");
+                      snprintf(buf + strlen(buf), 1023-strlen(buf), "   (Newbie-Helper)");
                   }
                   level = TRUE;
                   break;
@@ -561,7 +348,7 @@ void TBeing::doWho(const char *argument)
                   // only a god can go invis, mortals technically have
                   // invisLevel if they are linkdead, ignore that though
                   if (p->getInvisLevel() > MAX_MORT)
-                    sprintf(buf + strlen(buf), "  (invis %d)  ",
+                    snprintf(buf + strlen(buf), 1023-strlen(buf), "  (invis %d)  ",
                         p->getInvisLevel());
                   break;
                 case 'h':
