@@ -804,7 +804,7 @@ int vampiricTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int ad
   }
   int num = ::number(1,((caster->getSkillValue(SPELL_VAMPIRIC_TOUCH) / 3) *2));
   int num2 = ::number(1,((caster->getSkillValue(SPELL_VAMPIRIC_TOUCH) / 6) *5));
-  int num3 = ::number(1,50);
+  int num3 = ::number(10,100);
 
   if (bSuccess(caster, bKnown,SPELL_VAMPIRIC_TOUCH)) {
     act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
@@ -914,7 +914,7 @@ int lifeLeech(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
   }
   int num = ::number(1,((caster->getSkillValue(SPELL_LIFE_LEECH) / 5) *2));
   int num2 = ::number(1,((caster->getSkillValue(SPELL_LIFE_LEECH) / 9) *5));
-  int num3 = ::number(1,20);
+  int num3 = ::number(5,60);
 
   if (bSuccess(caster, bKnown,SPELL_LIFE_LEECH)) {
     act("$N buckles in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);

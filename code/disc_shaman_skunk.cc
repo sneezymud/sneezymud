@@ -110,7 +110,7 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
   caster->reconcileHurt(victim, discArray[SPELL_LICH_TOUCH]->alignMod);
   bool save = victim->isLucky(caster->spellLuckModifier(SPELL_LICH_TOUCH));
   int vit = dice(number(1,level),4);
-  int lfmod = dice(number(1,level),4);
+  int lfmod = ::number(20,((level*5)/2));
 
   if (bSuccess(caster, bKnown,SPELL_LICH_TOUCH)) {
     act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);

@@ -172,7 +172,7 @@ bool TBeing::validMove(dirTypeT cmd)
       sendTo("You make yourself ethereal to pass through the barrier.\n\r");
       return TRUE;
     }
-    if (isAffected(AFF_SHADOW_WALK)) {
+    if (isAffected(AFF_SHADOW_WALK) && !riding) {
       int chnum = ::number(0,3);
       if (chnum == 1) {
       act( "$n's transparent body passes through the barrier!",
@@ -180,6 +180,7 @@ bool TBeing::validMove(dirTypeT cmd)
       sendTo("You walk directly through the barrier!\n\r");
       return TRUE;
       } else {
+	sendTo("You attempt to walk through a solid barrier and fail.\n\r");
         notLegalMove();
         return FALSE;
       }
