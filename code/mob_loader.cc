@@ -925,74 +925,30 @@ void TMonster::clericSymbolLoader(void)
 {
   int wealth = getMoney();
   TObj *obj;
-  int num = 0, value, div=3;
+  int value, div=5;
+
+  // list of syms, in order of preference (highest level first)
+  int syms[]={514,513,512,511,510,509,508,507,506,505,504,503,502,501,-1};
 
   if (::number(0,3) || isPc())
     return;
 
-  if (GetMaxLevel() >= 100)
-    num = 514;
-  else if (GetMaxLevel() >= 90)
-    num = 513;
-  else if (GetMaxLevel() >= 80)
-    num = 512;
-  else if (GetMaxLevel() >= 70)
-    num = 511;
-  else if (GetMaxLevel() >= 62)
-    num = 510;
-  else if (GetMaxLevel() >= 55)
-    num = 509;
-  else if (GetMaxLevel() >= 47)
-    num = 508;
-  else if (GetMaxLevel() >= 40)
-    num = 507;
-  else if (GetMaxLevel() >= 32)
-    num = 506;
-  else if (GetMaxLevel() >= 25)
-    num = 505;
-  else if (GetMaxLevel() >= 20)
-    num = 504;
-  else if (GetMaxLevel() >= 15)
-    num = 503;
-  else if (GetMaxLevel() >= 10)
-    num = 502;
-  else if (GetMaxLevel() >= 5)
-    num = 501;
-  else { 
-    if (!(::number(0, 1)))  
-      num = 501;
-  }
-  if (!num)
-    return;
+  for(int i=0;syms[i]!=-1;++i){
+    value = obj_index[real_object(syms[i])].value / div;
+    
+    if(wealth>value){
+      if (!(obj = read_object(syms[i], VIRTUAL))) {
+	vlogf(LOG_BUG, "Error in cleric Component Loader");
+	return;
+      }
 
-  if(!(::number(0,19)) && num<512){
-    num+=3;
-    div=6;
-  } else if(!(::number(0,6)) && num<513){
-    num+=2;
-    div=5;
-  } else if(!(::number(0,3)) && num<514){
-    num+=1;
-    div=4;
-  } 
-
-  if (!(obj = read_object(num, VIRTUAL))) {
-    vlogf(LOG_BUG, "Error in cleric Component Loader");
-    return;
+      *this += *obj;
+      logItem(obj, CMD_LOAD);
+      setMoney(wealth - value);
+      return;
+    }
   }
-  value = obj->obj_flags.cost / div;
 
-  // 5 overloads
-  if (wealth > value) {
-    *this += *obj;
-    setMoney(wealth - value);
-  } else if (GetMaxLevel() < 5) {
-    *this += *obj;
-    setMoney(0);
-  } else {
-    delete obj;
-    obj = NULL;
-  }
   return;
 }
 
