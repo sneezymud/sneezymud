@@ -311,6 +311,7 @@ LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 # list of our local shared libs
 LIBS =	libmisc.so libcmd.so libspec.so libobj.so libtask.so libdisc.so \
 	libgame.so libsys.so
+PRODLIBS := $(sort $(addprefix /mud/prod/objs/, $(LIBS)))
 LIBS := $(sort $(addprefix $(OBJDIR), $(LIBS)))
 
 ifdef USEINSURE
@@ -395,6 +396,17 @@ lowtools: sqladdobjs sqledobj amap
 	@/bin/cp -f sqladdobjs sqledobj /mud/low/bin
 	@echo Finished making lowtools
 
+# this links against prod libs for cgi execution
+shoplog.cgi:	$(LIBS) objs/shoplog.cgi.o
+	@echo \*\*\* Making Final Link: shoplog.cgi
+	@$(CC) -o shoplog.cgi objs/shoplog.cgi.o $(PRODLIBS) $(LDFLAGS) -lcgicc
+	@/usr/bin/strip shoplog.cgi
+
+
+# make all cgi programs
+cgi:	shoplog.cgi
+	@/bin/cp -f shoplog.cgi /mud/web
+	@echo Finished making cgi programs
 
 
 clean:
