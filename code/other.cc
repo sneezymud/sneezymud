@@ -4138,14 +4138,14 @@ void Descriptor::send_bug(const char *type, const char *msg)
 #else
     // send ideas to the coders
     // if they are going to the listserv, don't send it twice (bat & brut)
-    sprintf(cmd_buf,  "/usr/lib/sendmail -f%s russrussell@icqmail.com sculpy@tiedye.org elgabos@umail.ucsb.edu < %s",
+    sprintf(cmd_buf,  "/usr/lib/sendmail -f%s russrussell@icqmail.com sculpy@tiedye.org < %s",
          account->email, BUG_TEMP_FILE);
     vsystem(cmd_buf);
 #endif
   }
   if (!strcmp(type, "Bug")) {
     // send bugs to the coders
-    sprintf(cmd_buf,  "/usr/lib/sendmail -f%s russrussell@icqmail.com sculpy@tiedye.org elgabos@umail.ucsb.edu < %s",
+    sprintf(cmd_buf,  "/usr/lib/sendmail -f%s russrussell@icqmail.com sculpy@tiedye.org < %s",
          account->email, BUG_TEMP_FILE);
     vsystem(cmd_buf);
   }
