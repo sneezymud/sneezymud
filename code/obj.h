@@ -241,6 +241,7 @@ const unsigned int MAX_ITEM_WEARS                  = 16;
 
 /* Some different kind of liquids */
 enum liqTypeT {
+     LIQ_NONE=-1,
      LIQ_WATER, // 0
      LIQ_BEER,
      LIQ_WINE,

@@ -22,7 +22,7 @@ TBaseWeapon::TBaseWeapon() :
   curSharp(0),
   damLevel(0),
   damDev(0),
-  poison((liqTypeT)-1)
+  poison(LIQ_NONE)
 {
 }
 
@@ -1701,7 +1701,7 @@ void TBaseWeapon::applyPoison(TBeing *vict)
   }
 
 
-  poison=(liqTypeT)-1;
+  poison=LIQ_NONE;
 
 }
 
