@@ -806,7 +806,7 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
     if(gameLoopTiming){
       rc=(int)(t.getElapsedReset()*1000000);
       
-      if(rc>100){
+      if(rc>1000){
 	vlogf(LOG_MISC, fmt("characterPulse: %s: %i") % 
 	      tmp_ch->getName() % rc);
       }
