@@ -3169,7 +3169,9 @@ int TMonster::mobileActivity(int pulse)
     
     if(shopOwned(shop_nr)){
       setMoney(getMoney()-25);
-      //      vlogf(LOG_PEEL, "shop_nr %i, charged tax", shop_nr);
+      
+      shoplog(shop_nr, this, this, "talens", 25, "paying tax");
+
 
       if(getMoney()<0){
 	MYSQL_RES *res;

@@ -338,10 +338,7 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     return;
   }
   if (shop_producing(this, shop_nr)) {
-    if(shopOwned(shop_nr))
-      chr = 0;
-    else 
-      chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+    chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
     
     if (ch->doesKnowSkill(SKILL_SWINDLE)) {
       // make 5 separate rolls so chr goes up amount based on learning
@@ -399,10 +396,7 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     strcpy(argm, name);
 
     add_bars(argm);
-    if(shopOwned(shop_nr))
-      chr=1;
-    else
-      chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+    chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
 
     if (ch->doesKnowSkill(SKILL_SWINDLE)) {
       // make 5 separate rolls so chr goes up amount based on learning
@@ -568,10 +562,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   if (sellMeCheck(ch, keeper))
     return;
 
-  if(shopOwned(shop_nr))
-    chr=-1;
-  else
-    chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+  chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
 
   if (ch->doesKnowSkill(SKILL_SWINDLE)) {
     // make 5 separate rolls so chr goes up amount based on learning
@@ -1085,10 +1076,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
     return;
   }
 
-  if(shopOwned(shop_nr))
-    chr=-1;
-  else
-    chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+  chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
 
   // do not adjust for swindle on valueing, give them worst case price
   chr = min(18,chr);
@@ -1166,9 +1154,6 @@ const string TObj::shopList(const TBeing *ch, const char *arg, int iMin, int iMa
   chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
   // do not adjust for swindle on list, give them worst case price
   chr = min(18, chr);
-
-  if(shopOwned(shop_nr))
-    chr=-1;
 
   cost = shopPrice(1, shop_nr, chr, &discount);
 
