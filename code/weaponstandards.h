@@ -6,6 +6,7 @@
 
 
 
+
 #if 0
 struct weapon_type_numbers
 {
