@@ -229,7 +229,8 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
     return;
   }
 
-  db.query("update corporation set gold=gold-%i", gold);
+  db.query("update corporation set gold=gold-%i where corp_id=%i", 
+	   gold, corp_id);
 
   ch->addToMoney(gold, GOLD_XFER);
 
