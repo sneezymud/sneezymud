@@ -2756,7 +2756,7 @@ int vorpal(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
   TBeing *ch;
   int crits[20]={67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,91,92,98,99};
 
-  if(!(ch=genericWeaponProcCheck(vict, cmd, o, 15)))
+  if(!(ch=genericWeaponProcCheck(vict, cmd, o, 50)))
      return FALSE;
 
   part = vict->getPartHit(ch, TRUE);
