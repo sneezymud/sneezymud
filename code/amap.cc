@@ -643,25 +643,24 @@ void makezonelist(FILE *zone){
   int num, enabled, start_room;
   char buf[512];
 
-  while(1){
-    // read until we get to a new zone ('#')
-    while((tch=fgetc(zone))){
-      if(last=='\n' || tch=='#' || tch==EOF){
-	if(tch=='#')
-	  break;
-	if(tch==EOF)
-	  return;
+  // read until we get to a new zone ('#')
+  while((tch=fgetc(zone))){
+    if(last=='\n' || tch=='#' || tch==EOF){
+      if(tch=='#'){
+	break;
       }
-      last=tch;
+      if(tch==EOF)
+	return;
     }
-    
-    fscanf(zone, "%i", &num);
-    fscanf(zone, "%[^~]~", buf); // name
-    
-    fscanf(zone, "%i %i %i %i", &start_room, &num, &num, &enabled);
-    
-    zone_enabled[start_room]=enabled?true:false;
+    last=tch;
   }
+    
+  fscanf(zone, "%i", &num);
+  fscanf(zone, "%[^~]~", buf); // name
+  
+  fscanf(zone, "%i %i %i %i", &start_room, &num, &num, &enabled);
+  
+  zone_enabled[start_room]=enabled?true:false;
 }
 
 
@@ -792,8 +791,11 @@ int main(int argc, char **argv)
 
   printf("Making zone list.\n");
   while ((dp = readdir(dfd))) {
-    if (strcmp(dp->d_name, ".") && strcmp(dp->d_name, "..")){
-      if((zone=fopen(dp->d_name, "rt"))){
+    if (strcmp(dp->d_name, ".") && strcmp(dp->d_name, "..") &&
+	strcmp(dp->d_name, "CVS")){
+      buf=fmt("/mud/code/lib/zonefiles/%s") % dp->d_name;
+
+      if((zone=fopen(buf.c_str(), "rt"))){
 	makezonelist(zone);
 	fclose(zone);
       }
