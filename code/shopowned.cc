@@ -94,7 +94,12 @@ void TShopOwned::chargeTax(TObj *o, int cost)
   }
 
   keeper->addToMoney(-cost, GOLD_SHOP);
+  keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
   taxman->addToMoney(cost, GOLD_SHOP);
+  dynamic_cast<TMonster *>(taxman)->saveItems(fmt("%s/%d") % 
+					      SHOPFILE_PATH % gh_tax_office);
+
+
   
   shoplog(shop_nr, keeper, keeper, o->getName(), 
 	  -cost, "paying tax");
@@ -459,7 +464,7 @@ void TShopOwned::showInfo()
     keeper->doTell(ch->getName(),
 		   fmt("I pay out %f in yearly interest, compounded daily.") %
 		   (shop_index[shop_nr].profit_sell));
-    db.query("select a.talens+b.talens as talens from (select sum(talens) as talens from shopownedbank) a, (select sum(talens) as talens from shopownedcorpbank) b");
+    db.query("select a.talens+b.talens as talens from (select sum(talens) as talens from shopownedbank where shop_nr=%i) a, (select sum(talens) as talens from shopownedcorpbank where shop_nr=%i) b", shop_nr, shop_nr);
     if(db.fetchRow()){
       keeper->doTell(ch->getName(), fmt("My equity value is %i talens.") %
 		     (keeper->getMoney()-convertTo<int>(db["talens"])));
