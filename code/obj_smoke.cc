@@ -3,14 +3,24 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_smoke.cc,v $
-// Revision 1.1  1999/09/12 17:24:04  peel
+// Revision 1.2  1999/09/19 20:33:48  peel
+// Many changes.  Smoke actually works now.
+//
+// Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "stdsneezy.h"
+
+/* todo
+light reduction
+drifting
+coughing etc
+rain put out fire
+ */
+
 
 TSmoke::TSmoke() :
   TObj()
@@ -32,6 +42,21 @@ TSmoke & TSmoke::operator=(const TSmoke &a)
 TSmoke::~TSmoke()
 {
 }
+
+void TSmoke::setVolume(int n)
+{
+  TObj::setVolume(n);
+  updateDesc();
+  obj_flags.decay_time=getVolume();
+}
+
+void TSmoke::addToVolume(int n)
+{
+  TObj::addToVolume(n);
+  updateDesc();
+  obj_flags.decay_time=getVolume();
+}
+
 
 int TSmoke::getSizeIndex() const
 {
@@ -69,32 +94,32 @@ void TSmoke::updateDesc()
   
   const char *smokename [] =
   {
-    "a few drops of smoke", 
-    "a tiny puddle of smoke", 
-    "a small puddle of smoke", 
-    "a puddle of smoke", 
-    "a fair sized puddle of smoke", 
-    "a big pool of smoke", 
-    "a large pool of smoke", 
-    "a huge pool of smoke",
-    "a massive pool of smoke",
-    "a tremendously huge pool of smoke",
-    "a veritable ocean of smoke"
+    "<k>a few wisps of smoke<1>", 
+    "<k>a tiny cloud of smoke<1>", 
+    "<k>a small cloud of smoke<1>", 
+    "<k>a cloud of smoke<1>", 
+    "<k>a fair sized cloud of smoke<1>", 
+    "<k>a big cloud of smoke<1>", 
+    "<k>a large cloud of smoke<1>", 
+    "<k>a huge cloud of smoke<1>",
+    "<k>a massive cloud of smoke<1>",
+    "<k>a tremendously huge cloud of smoke<1>",
+    "<k>a room full of smoke<1>"
   };
   
   const char *smokedesc [] =
   {
-    "A few drops of smoke sprinkle the ground here and are fading fast.",
-    "A tiny puddle of smoke has gathered here.",
-    "A small puddle of smoke is here.",
-    "A puddle of smoke is here.",
-    "A fair sized puddle of smoke is here.",
-    "A big pool of smoke is here.",
-    "A large pool of smoke is here.",
-    "A huge pool of smoke is here.",
-    "A massive pool of smoke is here.",
-    "A tremendously huge pool of smoke dominates the area.",
-    "A veritable ocean of smoke covers the area."
+    "<k>A few wips of smoke are fading fast.<1>",
+    "<k>A tiny cloud of smoke has gathered here.<1>",
+    "<k>A small cloud of smoke is here.<1>",
+    "<k>A cloud of smoke is here.<1>",
+    "<k>A fair sized cloud of smoke is here.<1>",
+    "<k>A big cloud of smoke is here.<1>",
+    "<k>A large cloud of smoke is here.<1>",
+    "<k>A huge cloud of smoke is here.<1>",
+    "<k>A massive cloud of smoke is here.<1>",
+    "<k>A tremendously huge cloud of smoke dominates the area.<1>",
+    "<k>The whole area is filled with smoke.<1>"
   };
 
   if (isObjStat(ITEM_STRUNG)) {
@@ -162,6 +187,7 @@ int TThing::dropSmoke(int amt)
     smoke->swapToStrung();
     smoke->remObjStat(ITEM_TAKE);
     smoke->canBeSeen = 1;
+    smoke->setMaterial(MAT_GHOSTLY);
 
     sprintf(buf, "smoke cloud");
     delete [] smoke->name;
@@ -182,9 +208,11 @@ void TSmoke::decayMe()
   if(volume<=0)
     setVolume(0);
   else if(volume<25)
-    addToVolume(-1);
+    addToVolume((roomp->isIndoorSector() ? -1 : -3));
   else // large smokes evaporate faster
-    addToVolume(-(volume/25)); 
+    addToVolume((roomp->isIndoorSector() ? -(volume/25) : -(volume/15))); 
+
+  if(getVolume()<0) setVolume(0);
 }
 
 string TSmoke::statObjInfo() const
