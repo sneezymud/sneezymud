@@ -109,6 +109,7 @@ int fireman(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	    myself->doSay("Good thing that didn't spread.");
 	    break;
 	}
+	break;
       }
     }
   }
