@@ -1666,16 +1666,20 @@ bool TThing::outside() const
 bool TBeing::isSimilar(const TThing *t) const
 {
   const TBeing *tb = dynamic_cast<const TBeing *>(t);
+ 
   if (!tb)
     return FALSE;
 
-  if (tb->number == number && (tb->getPosition() == getPosition()) &&
-      (tb->specials.affectedBy == specials.affectedBy) &&
-      // if they have spells on them, prevent being similar
-      !affected && !tb->affected &&
-      ((tb->fight() == fight()) &&
-       (tb->getName() && getName() &&
-       !strcmp(tb->getName(), getName()))))
+  
+   if ((tb->number == number) && (tb->getPosition() == getPosition()) &&
+     (tb->specials.affectedBy == specials.affectedBy) &&
+     // if they have spells on them, prevent being similar
+     !affected && !tb->affected &&
+     (tb->fight() == fight()) &&
+     (tb->getName() && getName() &&
+     is_exact_name(tb->getName(), getName())))
+//     !strcmp(tb->getName(), getName()))))
+  //     !strcmp(add_bars(tb->getName()), add_bars(getName()))))
      return TRUE;
 
   return FALSE;
@@ -1693,7 +1697,8 @@ bool TObj::isSimilar(const TThing *t) const
       strcmp(getDescr(), obj->getDescr()))
     return false;
   if (!getName() || !obj->getName() ||
-      strcmp(getName(), obj->getName()))
+       !is_exact_name(getName(), obj->getName()))
+//      strcmp(add_bars(getName()), add_bars(obj->getName())))
     return false;
   if (getStructPoints() != obj->getStructPoints())
     return false;
