@@ -23,6 +23,11 @@ extern "C" {
 #include "obj_trash.h"
 #include "obj_book.h"
 #include "obj_trap.h"
+#include "obj_portal.h"
+#include "obj_arrow.h"
+#include "obj_base_weapon.h"
+#include "obj_gun.h"
+
 
 static void update_obj_menu(const TBeing *ch, const TObj *obj)
 {

@@ -19,6 +19,9 @@
 #include "obj_money.h"
 #include "obj_treasure.h"
 #include "obj_component.h"
+#include "obj_arrow.h"
+#include "obj_general_weapon.h"
+#include "obj_base_weapon.h"
 
 // returns DELETE_THIS if this has to be deleted
 int TMonster::mobileGuardian()

@@ -8,6 +8,7 @@
 #include "obj_drug.h"
 #include "obj_spellbag.h"
 #include "obj_symbol.h"
+#include "obj_general_weapon.h"
 
 vector<shopData>shop_index(0);
 

@@ -13,6 +13,11 @@
 #include "task_whittle.h"
 #include "obj_bow.h"
 #include "obj_organic.h"
+#include "obj_arrow.h"
+#include "obj_general_weapon.h"
+
+
+
 map<unsigned long int, taskWhittleEntry>whittleItems;
 
 void initWhittle()

@@ -54,6 +54,14 @@
 #include "obj_tool.h"
 #include "obj_trap.h"
 #include "obj_tree.h"
+#include "obj_window.h"
+#include "obj_portal.h"
+#include "obj_arrow.h"
+#include "obj_general_weapon.h"
+#include "obj_flame.h"
+#include "obj_light.h"
+#include "obj_gun.h"
+
 
 int top_of_world = 0;         // ref to the top element of world 
 

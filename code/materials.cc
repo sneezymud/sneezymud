@@ -5,35 +5,24 @@
 //
 // "materials.cc" - Various functions related to materials.
 //
-// $Log: materials.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.4  1999/10/03 14:56:30  lapsos
-// Added materials elvenmail/elvensteel
-//
-// Revision 1.3  1999/09/30 17:28:52  batopr
-// removed gold_modifier[GOLD_REPAIR] from damcheck formula
-//
-// Revision 1.2  1999/09/13 13:52:13  batopr
-// *** empty log message ***
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-//
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
 #include "statistics.h"
+#include "obj_base_weapon.h"
 
 static bool genericDamCheck(int susc, int sharp)
 {
 #if 0
   // gold_repair is taken into account in the cost to repair stuff formula
   // this is probably obsolete - 9/30/99
-  int chance = 1000 - (int) (1000 * gold_modifier[GOLD_REPAIR]); 
+  int chance = 1000 - (int) (1000 * gold_modifier[GOLD_REPAIR].getVal());
   if (::number(0,999) < chance)
     return false;
 #endif
+
+  if (::number(0,999) >= 300)
+    return false;
 
   // num is the hardness of what i a hitting
   // susc is the hardness of the hitter
@@ -88,22 +77,18 @@ int TBeing::dentItem(TBeing *victim, TObj *item, int amt, int slot)
     if (item->isMineral()) {
       if (item->thingHolding() == this) {
         act("You chip your $o.", TRUE, this, item, 0, TO_CHAR);
-
         sprintf(buf, "$n's $o %s chipped.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
         act("You chip $S $o.", TRUE, this, item, victim, TO_CHAR);
-
         sprintf(buf, "Your $o %s chipped.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
-
         sprintf(buf, "$N's $o %s chipped.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_NOTVICT);
       }
     } else {
       if (item->thingHolding() == this) {
         act("You dent your $o.", TRUE, this, item, 0, TO_CHAR);
-
         sprintf(buf, "$n's $o %s dented.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
@@ -111,12 +96,10 @@ int TBeing::dentItem(TBeing *victim, TObj *item, int amt, int slot)
 
         sprintf(buf, "Your $o %s dented.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
-
         sprintf(buf, "$N's $o %s dented.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_NOTVICT);
       }
     }
-
     item->addToStructPoints(-amt);
     if (item->getStructPoints() <= 0) {
       item->makeScraps();
@@ -147,7 +130,6 @@ int TBeing::tearItem(TBeing *victim, TObj *item, int amt, int slot)
     if (item->isMineral()) {
       if (item->thingHolding() == this) {
         act("You scratch your $o.", TRUE, this, item, 0, TO_CHAR);
-
         sprintf(buf, "$n's $o %s scratched.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
@@ -155,14 +137,12 @@ int TBeing::tearItem(TBeing *victim, TObj *item, int amt, int slot)
    
         sprintf(buf, "Your $o %s scratched.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
-   
         sprintf(buf, "$N's $o %s scratched.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_NOTVICT);
       }
     } else {
       if (item->thingHolding() == this) {
         act("You tear your $o.", TRUE, this, item, 0, TO_CHAR);
-
         sprintf(buf, "$n's $o %s torn.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
@@ -170,7 +150,6 @@ int TBeing::tearItem(TBeing *victim, TObj *item, int amt, int slot)
  
         sprintf(buf, "Your $o %s torn.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
- 
         sprintf(buf, "$N's $o %s torn.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_NOTVICT);
       }
@@ -205,7 +184,6 @@ int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
     if (item->isMineral()) {
       if (item->thingHolding() == this) {
         act("You crack your $o.", TRUE, this, item, 0, TO_CHAR);
-
         sprintf(buf, "$n's $o %s cracked.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
@@ -213,14 +191,12 @@ int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
  
         sprintf(buf, "Your $o %s cracked.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
- 
         sprintf(buf, "$N's $o %s cracked.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_NOTVICT);
       }
     } else {
       if (item->thingHolding() == this) {
         act("You puncture your $o.", TRUE, this, item, 0, TO_CHAR);
-
         sprintf(buf, "$n's $o %s punctured.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
@@ -228,12 +204,10 @@ int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
  
         sprintf(buf, "Your $o %s punctured.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
- 
         sprintf(buf, "$N's $o %s punctured.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_NOTVICT);
       }
     }
-
     item->addToStructPoints(-amt);
     if (item->getStructPoints() <= 0) {
       item->makeScraps();
@@ -260,6 +234,7 @@ bool TThing::isMetal() const
     case MAT_GOLD:
     case MAT_PLATINUM:
     case MAT_TITANIUM:
+    case MAT_MITHRIL:
     case MAT_ALUMINUM:
     case MAT_RINGMAIL:
     case MAT_GNOMEMAIL:
@@ -304,7 +279,6 @@ bool TThing::isMineral() const
     case MAT_DRAGONBONE:
     case MAT_MALACHITE:
     case MAT_GRANITE:
-    case MAT_MITHRIL:
     case MAT_ADAMANTITE:
       return TRUE;
     default:
@@ -330,3 +304,7 @@ bool TObj::canRust()
  
   return TRUE;
 }
+
+
+
+

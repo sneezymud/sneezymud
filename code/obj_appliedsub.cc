@@ -4,6 +4,10 @@
 #include "create_engine.h"
 #include "obj_expandable_container.h"
 #include "obj_organic.h"
+#include "obj_arrow.h"
+#include "obj_flame.h"
+
+
 TASubstance::TASubstance() :
   TObj(),
   AFlags(0),

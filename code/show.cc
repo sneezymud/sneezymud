@@ -17,7 +17,7 @@
 #include "obj_table.h"
 #include "obj_note.h"
 #include "obj_trap.h"
-
+#include "obj_window.h"
 
 void TThing::showMe(TBeing *ch) const
 {

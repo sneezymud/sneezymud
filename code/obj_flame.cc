@@ -12,6 +12,9 @@
 #include "obj_organic.h"
 #include "obj_trash.h"
 #include "obj_tool.h"
+#include "obj_flame.h"
+#include "obj_light.h"
+
 
 TFFlame::TFFlame() :
   TBaseLight(),

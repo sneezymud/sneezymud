@@ -32,6 +32,7 @@ extern "C" {
 #include "shop.h"
 #include "cmd_trophy.h"
 #include "obj_note.h"
+#include "obj_portal.h"
 
 bool Silence = FALSE;
 bool Sleep = TRUE;

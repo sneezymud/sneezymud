@@ -15,6 +15,7 @@
 #include "obj_base_corpse.h"
 #include "obj_table.h"
 #include "obj_money.h"
+#include "obj_seethru.h"
 
 TBeing::TBeing() :
   TThing(),

@@ -9,6 +9,7 @@
 //
 
 #include "stdsneezy.h"
+#include "obj_portal.h"
 
 TPortal::TPortal() :
   TSeeThru(),

@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "obj_base_weapon.h"
 
 int weaponJambiyaSpecial(TBeing *tVictim, cmdTypeT tCmd, const char *tArg, TObj *tObj, TObj *)
 {

@@ -18,6 +18,11 @@
 #include "cmd_trophy.h"
 #include "obj_money.h"
 #include "obj_trash.h"
+#include "obj_arrow.h"
+#include "obj_general_weapon.h"
+#include "obj_base_weapon.h"
+#include "obj_gun.h"
+
 
 #define DAMAGE_DEBUG 0
 

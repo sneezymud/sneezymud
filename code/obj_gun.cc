@@ -6,6 +6,10 @@
 
 
 #include "stdsneezy.h"
+#include "obj_general_weapon.h"
+#include "obj_base_weapon.h"
+#include "obj_gun.h"
+
 
 enum ammoTypeT {
   AMMO_NONE = 0,                // 0

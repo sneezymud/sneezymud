@@ -2,6 +2,7 @@
 #include "disease.h"
 #include "combat.h"
 #include "disc_ranger.h"
+#include "obj_portal.h"
 
 void TBeing::doTrack(const char *argument)
 {

@@ -9,6 +9,7 @@
 #include "disc_looting.h"
 #include "disease.h"
 #include "obj_trap.h"
+#include "obj_portal.h"
 
 
 #include "obj_open_container.h"

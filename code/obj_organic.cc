@@ -10,6 +10,9 @@
 #include "stdsneezy.h"
 #include "shop.h"
 #include "obj_organic.h"
+#include "obj_flame.h"
+
+
 TOrganic::TOrganic() :
   TObj(),
   OCType(ORGANIC_NONE),

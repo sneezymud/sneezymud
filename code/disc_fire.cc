@@ -11,6 +11,7 @@
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_fire.h"
+#include "obj_light.h"
 
 int handsOfFlame(TBeing *caster, TBeing *victim, int level, byte bKnown, int *damage, int adv_learn)
 {

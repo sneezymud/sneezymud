@@ -41,6 +41,7 @@ extern long random(void);
 #include "socket.h"
 #include "games.h"
 #include "mail.h"
+#include "obj_seethru.h"
 
 bool TBeing::canSeeWho(const TBeing *o) const
 {

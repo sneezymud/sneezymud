@@ -10,6 +10,7 @@
 #include "combat.h"
 #include "disc_looting.h"
 #include "obj_trap.h"
+#include "obj_portal.h"
 
 int TBeing::doSearch(const char *argument)
 {

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: peelpk.cc,v $
+// Revision 5.7  2002/01/10 05:56:59  peel
+// even more splitting up of obj2.h
+//
 // Revision 5.6  2001/09/07 07:07:35  peel
 // changed TThing->stuff to getStuff() and setStuff()
 //
@@ -48,6 +51,8 @@
 #include <ctime>
 
 #include "stdsneezy.h"
+#include "obj_gun.h"
+
 
 #define PEELPK_TEAMSIZE 12
 

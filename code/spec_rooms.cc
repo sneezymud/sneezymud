@@ -20,6 +20,9 @@
 #include "statistics.h"
 #include "obj_food.h"
 #include "obj_note.h"
+#include "obj_portal.h"
+
+
 int TRoom::checkSpec(TBeing *ch, cmdTypeT cmd, const char *arg, TThing *)
 {
   int rc;

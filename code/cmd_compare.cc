@@ -13,6 +13,9 @@
 #include "obj_symbol.h"
 #include "obj_food.h"
 #include "obj_opal.h"
+#include "obj_arrow.h"
+#include "obj_base_weapon.h"
+#include "obj_base_light.h"
 
 TObj * findShopObjForCompare(TBeing *ch, string StObject)
 {

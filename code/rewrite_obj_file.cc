@@ -1,19 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: rewrite_obj_file.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "rewrite_obj_file.cc" - Some optional tack on code that
 //       loads all the objects, and saves tehm out.
@@ -24,6 +10,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "obj_base_weapon.h"
 
 void rewrite_obj_file()
 {

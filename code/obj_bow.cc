@@ -1,6 +1,8 @@
 #include "stdsneezy.h"
 #include "range.h"
 #include "obj_bow.h"
+#include "obj_arrow.h"
+
 
 TBow::TBow() :
   TObj(),

@@ -26,6 +26,9 @@
 #include "obj_food.h"
 #include "obj_tool.h"
 #include "obj_trap.h"
+#include "obj_arrow.h"
+#include "obj_general_weapon.h"
+#include "obj_base_weapon.h"
 
 string describeDuration(const TBeing *ch, int dur)
 {

@@ -22,6 +22,8 @@
 #include "obj_money.h"
 #include "obj_key.h"
 #include "obj_trap.h"
+#include "obj_portal.h"
+#include "obj_arrow.h"
 
 
 // watches rent in, rent out, dropped, etc

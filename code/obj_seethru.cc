@@ -1,22 +1,8 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_seethru.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // see_thru.cc
-//
 
 #include "stdsneezy.h"
+#include "obj_seethru.h"
+#include "obj_window.h"
 
 TSeeThru::TSeeThru() :
   TObj(),
@@ -143,7 +129,7 @@ int TSeeThru::getLightFromOutside() const
   rp = real_roomp(getTarget());
 
   if (!rp) {
-    vlogf(7,"Bad room value on %s for light determination.",getName());
+    vlogf(LOG_BUG,"Bad room value on %s for light determination.",getName());
     return 0;
   }
   val = rp->outdoorLightWindow();

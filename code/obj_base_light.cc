@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "obj_base_light.h"
 
 TBaseLight::TBaseLight() :
   TObj(),

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_objs_manadrain.cc,v $
+// Revision 5.4  2002/01/10 05:56:59  peel
+// even more splitting up of obj2.h
+//
 // Revision 5.3  2001/07/05 21:25:54  peel
 // Trying to fix cvs
 // what a headache
@@ -24,6 +27,7 @@
 
 
 #include "stdsneezy.h"
+#include "obj_base_weapon.h"
 
 /*
   Name: Mana Drainer

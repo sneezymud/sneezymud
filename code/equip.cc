@@ -9,6 +9,7 @@
 #include "stdsneezy.h"
 #include "obj_base_container.h"
 #include "obj_bandaid.h"
+#include "obj_base_weapon.h"
 
 int GetItemClassRestrictions(const TObj *obj)
 {

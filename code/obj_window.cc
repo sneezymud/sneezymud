@@ -2,6 +2,7 @@
 //
 
 #include "stdsneezy.h"
+#include "obj_window.h"
 
 TWindow::TWindow() :
   TSeeThru()

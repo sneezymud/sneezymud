@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_boat.cc,v $
+// Revision 5.4  2002/01/10 05:56:58  peel
+// even more splitting up of obj2.h
+//
 // Revision 5.3  2002/01/09 23:27:04  peel
 // More splitting up of obj2.h
 // renamed food.cc to obj_food.cc
@@ -28,6 +31,8 @@
 
 #include "stdsneezy.h"
 #include "obj_boat.h"
+#include "obj_light.h"
+
 
 TBoat::TBoat() :
   TObj()

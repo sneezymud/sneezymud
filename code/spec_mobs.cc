@@ -48,6 +48,8 @@
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"
 #include "obj_symbol.h"
+#include "obj_window.h"
+#include "obj_general_weapon.h"
 
 #include <fstream.h>
 

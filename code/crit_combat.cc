@@ -11,6 +11,8 @@
 #include "combat.h"
 #include "statistics.h"
 #include "obj_corpse.h"
+#include "obj_gun.h"
+
 
 // returns DELETE_THIS
 // return ONEHIT_MESS_CRIT_S if oneHit should abort and no further oneHits should occur

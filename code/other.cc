@@ -49,6 +49,7 @@ extern "C" {
 #include "disc_shaman_spider.h"
 #include "disc_shaman_control.h"
 #include "obj_trap.h"
+#include "obj_light.h"
 
 
 #include "spelltask.h"

@@ -1,4 +1,8 @@
 #include "stdsneezy.h"
+#include "obj_general_weapon.h"
+#include "obj_base_weapon.h"
+#include "obj_gun.h"
+
 
 TGenWeapon::TGenWeapon() :
   TBaseWeapon(),

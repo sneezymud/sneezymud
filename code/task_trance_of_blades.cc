@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_trance_of_blades.cc,v $
+// Revision 5.2  2002/01/10 05:56:59  peel
+// even more splitting up of obj2.h
+//
+// Revision 5.1.1.1  2001/01/09 20:00:40  batopr
+// *** empty log message ***
+//
 // Revision 5.1  2001/01/09 20:00:32  batopr
 // *** empty log message ***
 //
@@ -24,6 +30,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "obj_base_weapon.h"
 
 void stop_trance_of_blades(TBeing *ch)
 {

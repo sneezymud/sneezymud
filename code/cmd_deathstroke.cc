@@ -1,20 +1,6 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: cmd_deathstroke.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "combat.h"
+#include "obj_base_weapon.h"
 
 static int deathstroke(TBeing *caster, TBeing *victim)
 {
@@ -165,7 +151,7 @@ static int deathstroke(TBeing *caster, TBeing *victim)
        caster->setCharFighting(victim);
      if (!vfight)
        caster->setVictFighting(victim);
-  } else if (!vfight && caster->sameRoom(victim)) {
+  } else if (!vfight && caster->sameRoom(*victim)) {
     // check sameRoom since may have fled from the damage
     if (victim->getPosition() > POSITION_STUNNED) {
       act("You begin fighting $n.", TRUE, caster, 0, victim, TO_VICT);
@@ -180,7 +166,7 @@ static int deathstroke(TBeing *caster, TBeing *victim)
       caster->setVictFighting(victim);
     } else if (cfight && (cfight == vfight)) {
       caster->setVictFighting(victim);
-      vlogf(5, "Should never have gotten here in deathstroke (%s)", caster->getName());
+      vlogf(LOG_BUG, "Should never have gotten here in deathstroke (%s)", caster->getName());
     } else if (cfight && (cfight != victim) && (::number(0,4) < 2)) {
       act("You turn your attention to $N.", TRUE, caster, 0, victim, TO_CHAR);
       act("$n turns $s attention to $N.", TRUE, caster, 0, victim, TO_NOTVICT);
@@ -192,7 +178,7 @@ static int deathstroke(TBeing *caster, TBeing *victim)
       caster->setVictFighting(victim);
       // do nothing here cept set victim fighting
     }
-  } else if (caster->sameRoom(victim)) { 
+  } else if (caster->sameRoom(*victim)) { 
     // again, check sameRoom in case victim fled when he was hit
     if (!cfight) {
       if (caster->getPosition() > POSITION_STUNNED) {
@@ -268,14 +254,14 @@ int TBeing::doDeathstroke(const char *argument, TBeing *vict)
       }
     }
   }
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
   rc = deathstroke(this,victim);
 
   if (rc)
-    addSkillLag(SKILL_DEATHSTROKE);
+    addSkillLag(SKILL_DEATHSTROKE, rc);
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)

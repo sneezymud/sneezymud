@@ -15,6 +15,11 @@
 #include "combat.h"
 #include "obj_quiver.h"
 #include "obj_bow.h"
+#include "obj_portal.h"
+#include "obj_arrow.h"
+#include "obj_gun.h"
+
+
 
 #define RANGE_DEBUG 0
 

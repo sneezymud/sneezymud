@@ -4,6 +4,10 @@
 #include "spelltask.h"
 #include "disc_murder.h"
 #include "obj_tool.h"
+#include "obj_general_weapon.h"
+#include "obj_base_weapon.h"
+#include "obj_gun.h"
+
 
 static void playBackstab(const TRoom *rp)
 {

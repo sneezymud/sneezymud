@@ -11,6 +11,7 @@
 #include "obj_organic.h"
 #include "obj_component.h"
 #include "obj_tool.h"
+#include "obj_base_weapon.h"
 
 void stop_skin(TBeing *ch)
 {

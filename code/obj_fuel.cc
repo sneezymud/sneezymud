@@ -9,6 +9,7 @@
 
 #include "stdsneezy.h"
 #include "obj_fuel.h"
+#include "obj_light.h"
 
 TFuel::TFuel() :
   TObj(),

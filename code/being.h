@@ -52,6 +52,9 @@
 #include "structs.h"
 #endif
 
+class TWindow;
+class TGenWeapon;
+
 
 class objCost;
 extern TBeing *character_list;

@@ -12,6 +12,7 @@
 
 #include "stdsneezy.h"
 #include "obj_table.h"
+#include "obj_seethru.h"
 
 const char *room_fields[] =
 {

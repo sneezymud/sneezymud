@@ -12,6 +12,8 @@
 #include "combat.h"
 #include "obj_player_corpse.h"
 #include "obj_smoke.h"
+#include "obj_arrow.h"
+#include "obj_base_weapon.h"
 
 double balanceCorrectionForLevel(double level)
 {
