@@ -11,7 +11,7 @@ int blackSun(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
 
-  if(::number(0,0))
+  if(::number(0,99))
     return FALSE;
 
   aff.type = SPELL_PLASMA_MIRROR;
