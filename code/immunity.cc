@@ -412,6 +412,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_DETECT_MAGIC:
     case SPELL_DISPEL_MAGIC:
     case SPELL_COPY:
+    case SPELL_CHRISM:
     case SPELL_MATERIALIZE:
     case SPELL_SPONTANEOUS_GENERATION:
     case SPELL_GALVANIZE:

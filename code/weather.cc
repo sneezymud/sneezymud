@@ -2,25 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: weather.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//    SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //    "weather.cc" - All functions and routines related to weather
-//
-//    The sneezyMUD weather is roughly derived from the original DikuMUD
-//    weather system. We at sneezyMUD tried to make the weather do a lot 
-//    more than the original.
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +10,7 @@
 
 #include "stdsneezy.h"
 
-// what stage is moon in?  (1 - 32) 
+// what stage is moon in?  (0 - 31) 
 unsigned char moontype;
 
 // due to the calculations involved in sunrise/set formula
@@ -36,6 +18,14 @@ unsigned char moontype;
 // do it as needed, and save it.
 static int si_sunRise = 0;
 static int si_sunSet = 0;
+
+// to simplify sun and moon time checks, this function returns the
+// combination of hour and minute as a single int [0-95]
+// the hour is simply val/4, and the minute is val%4
+int hourminTime()
+{
+  return time_info.hours*4 + (time_info.minutes/15);
+}
 
 const char * moonType()
 {
@@ -54,46 +44,52 @@ const char * moonType()
 // the set/rise times are loosely based on almanac data.
 // I've fudged some factors just for simplicity
 // realize sneezy-time and real-world time differ
-int moonSet()
+int moonTime(moonTimeT mtt)
 {
-  // almanac: full    6:30  hr=13   mn=17
-  // almanac: 3Q     12:30  hr=25   mn=25
-  // almanac: new    18:30  hr=37   mn=1
-  // almanac: 1Q      0:30  hr=1    mn=9
-
   int num;
+    
+  switch (mtt) {
+    case MOON_TIME_SET:
+      // almanac: full    6:30  hour=26   moon=16
+      // almanac: 3Q     12:30  hour=50   moon=24
+      // almanac: new    18:30  hour=74   moon=0
+      // almanac: 1Q      0:30  hour=2    moon=8
+    
+      num = (96 * moontype/32) + 74;
+      num %= 96;
 
-  num = (48 * (moontype - 1)/32) + 37;
-  if (num > 47)
-    num -= 48;
+      return num;
+    case MOON_TIME_RISE:
+      // almanac: full   18:00   hr=72   mn=16
+      // almanac: 3Q      0:00   hr=0    mn=24
+      // almanac: new     6:00   hr=24   mn=0
+      // almanac: 1Q     12:00   hr=48   mn=8
+    
+      num = (96 * moontype/32) + 24;
+      num %= 96;
 
-  return num;
+      return num;
+  }
+  return 0;
 }
 
-int moonRise()
+int sunTime(sunTimeT stt)
 {
-  // almanac: full   18:00   hr=36   mn=17
-  // almanac: 3Q      0:00   hr=0    mn=25
-  // almanac: new     6:00   hr=12   mn=1
-  // almanac: 1Q     12:00   hr=24   mn=9
- 
-  int num;
- 
-  num = (48 * (moontype - 1)/32) + 12;
-  if (num > 47)
-    num -= 48;
- 
-  return num;
-}
-
-int sunRise()
-{
-  return si_sunRise;
-}
-
-int sunSet()
-{
-  return si_sunSet;
+  switch (stt) {
+    case SUN_TIME_DAWN:
+      return si_sunRise - 6;
+    case SUN_TIME_RISE:
+      return si_sunRise;
+    case SUN_TIME_DAY:
+      return si_sunRise + 6;
+    case SUN_TIME_SINK:
+      return si_sunSet - 6;
+    case SUN_TIME_SET:
+      return si_sunSet;
+    case SUN_TIME_NIGHT:
+      return si_sunSet + 6;
+  }
+  return 0;
 }
 
 void weatherAndTime(int mode)
@@ -104,92 +100,112 @@ void weatherAndTime(int mode)
   sunriseAndSunset();
 }
 
-
 const char *describeTime(void)
 {
-  if (time_info.hours < 10) 
+  if (time_info.hours < 5) 
     return "evening";
-  else if (time_info.hours < 24)
+  else if (time_info.hours < 12)
     return "morning";
-  else if (time_info.hours < 36)
+  else if (time_info.hours < 18)
     return "afternoon";
   else
     return "evening";
+}
+
+void fixSunlight()
+{
+  int hmt = hourminTime();
+  char buf[256];
+
+  if (hmt == moonTime(MOON_TIME_SET)) {
+   sendToOutdoor(COLOR_BASIC, "<b>The moon sets.<1>\n\r","<b>The moon sets.<1>\n\r");
+  }
+  if (hmt == moonTime(MOON_TIME_RISE)) {
+    sprintf(buf, "<b>The %s moon rises in the east.<1>\n\r", moonType());
+    sendToOutdoor(COLOR_BASIC, buf, buf);
+  }
+  if (hmt == sunTime(SUN_TIME_DAWN)) {
+    weather_info.sunlight = SUN_DAWN;
+    sendToOutdoor(COLOR_BASIC, "<Y>The skies brighten as dawn begins.<1>\n\r",
+          "<Y>Dawn begins to break.<1>\n\r");
+  }
+  if (hmt == sunTime(SUN_TIME_RISE)) {
+    weather_info.sunlight = SUN_RISE;
+    sendToOutdoor(COLOR_BASIC, "<y>The sun rises in the east.<1>\n\r",
+  "<y>The sun rises in the east.<1>\n\r");
+  }
+  if (hmt == sunTime(SUN_TIME_DAY)) {
+    weather_info.sunlight = SUN_LIGHT;
+    sendToOutdoor(COLOR_BASIC, "<W>The day has begun.<1>\n\r",
+                      "<W>The day has begun.<1>\n\r");
+  }
+  if (hmt == sunTime(SUN_TIME_SINK)) {
+    weather_info.sunlight = SUN_SET;
+    sendToOutdoor(COLOR_BASIC, "<y>The sun slowly sinks in the west.<1>\n\r",
+                      "<y>The sun slowly sinks in the west.<1>\n\r");
+  }
+  if (hmt == sunTime(SUN_TIME_SET)) {
+    weather_info.sunlight = SUN_TWILIGHT;
+    sendToOutdoor(COLOR_BASIC, "<k>The sun sets as twilight begins.<1>\n\r",
+                      "<k>The sun sets as twilight begins.<1>\n\r");
+  }
+  if (hmt == sunTime(SUN_TIME_NIGHT)) {
+    weather_info.sunlight = SUN_DARK;
+    sendToOutdoor(COLOR_BASIC, "<k>The night has begun.<1>\n\r","<k>The night has begun.<1>\n\r");
+  }
 }
 
 void anotherHour()
 {
   char buf[100];
 
-  time_info.hours++;
+  // we have 4 ticks per mud hour (this is called per tick)
+  time_info.minutes += 15;
 
-  if (time_info.hours == moonSet()) {
-   sendToOutdoor(COLOR_BASIC, "<b>The moon sets.<1>\n\r","<b>The moon sets.<1>\n\r");
-  }
-  if (time_info.hours == sunRise() - 3) {
-    weather_info.sunlight = SUN_DAWN;
-    sendToOutdoor(COLOR_BASIC, "<Y>Dawn begins to break.<1>\n\r",
-          "<Y>Dawn begins to break.<1>\n\r");
-  }
-  if (time_info.hours == sunRise()) {
-    weather_info.sunlight = SUN_RISE;
-    sendToOutdoor(COLOR_BASIC, "<y>The sun rises in the east.<1>\n\r",
-  "<y>The sun rises in the east.<1>\n\r");
-  }
-  if (time_info.hours == sunRise() + 3) {
-    weather_info.sunlight = SUN_LIGHT;
-    sendToOutdoor(COLOR_BASIC, "<W>The day has begun.<1>\n\r",
-                      "<W>The day has begun.<1>\n\r");
-  }
-  if (time_info.hours == 24) {
-    sendToOutdoor(COLOR_NONE, "It is noon.\n\r","It is noon.\n\r");
-  }
-  if (time_info.hours == sunSet() - 3) {
-    weather_info.sunlight = SUN_SET;
-    sendToOutdoor(COLOR_BASIC, "<y>The sun slowly sinks in the west.<1>\n\r",
-                      "<y>The sun slowly sinks in the west.<1>\n\r");
-  }
-  if (time_info.hours == sunSet()) {
-    weather_info.sunlight = SUN_TWILIGHT;
-    sendToOutdoor(COLOR_BASIC, "<k>The sun sets as twilight begins.<1>\n\r",
-                      "<k>The sun sets as twilight begins.<1>\n\r");
-  }
-  if (time_info.hours == sunSet() + 3) {
-    weather_info.sunlight = SUN_DARK;
-    sendToOutdoor(COLOR_BASIC, "<k>The night has begun.<1>\n\r","<k>The night has begun.<1>\n\r");
-  }
-  if (time_info.hours == moonRise()) {
-    sprintf(buf, "<b>The %s moon rises in the east.<1>\n\r", moonType());
-    sendToOutdoor(COLOR_BASIC, buf, buf);
-  }
-  
-  if (time_info.hours > 47) {	// Changed by HHS due to bug ??? 
-    sendToOutdoor(COLOR_NONE, "It is midnight.\n\r","It is midnight.\n\r");
+  // check for new hour
+  if (time_info.minutes >= 60) {
+    time_info.hours++;
+    time_info.minutes = 0;
 
-    time_info.hours -= 48;
-    time_info.day++;
+    if (time_info.hours == 12)
+      sendToOutdoor(COLOR_NONE, "It is noon.\n\r","It is noon.\n\r");
 
-    moontype++;
-    if (moontype > 32)
-      moontype = 1;
+    // check for new day
+    if (time_info.hours >= 24) {
+      sendToOutdoor(COLOR_NONE, "It is midnight.\n\r","It is midnight.\n\r");
+      time_info.day++;
+      time_info.hours = 0;
 
-    if (time_info.day > 27) {
-      time_info.day = 0;
-      time_info.month++;
-      GetMonth(time_info.month);
-      sprintf(buf, "It is now the %s of %s.\n\r", numberAsString(time_info.day + 1).c_str(), month_name[time_info.month]);
-      descriptor_list->worldSend(buf, NULL);
+      // check for new month
+      if (time_info.day >= 28) {
+        time_info.month++;
+        time_info.day = 0;
 
-      if (time_info.month > 11) {
-	time_info.month = 0;
-	time_info.year++;
-        sprintf(buf, "Happy New Year! It is now the Year %d P.S\n\r", time_info.year);
-        descriptor_list->worldSend(buf, NULL);
+        // announce new month, etc.
+        GetMonth(time_info.month);
+    
+        // check for new year
+        if (time_info.month >= 12) {
+          time_info.month = 0;
+          time_info.year++;
+          sprintf(buf, "Happy New Year! It is now the Year %d P.S\n\r", time_info.year);
+          descriptor_list->worldSend(buf, NULL);
+        }
       }
+  
+      // on a new day, update the moontime too
+      moontype++;
+
+      if (moontype >= 32) {
+        moontype = 0;
+      }
+
+      // on a new day, determine the new sunrise/sunset
+      calcNewSunRise();
+      calcNewSunSet();
     }
-    calcNewSunRise();
-    calcNewSunSet();
   }
+  fixSunlight();
 }
 
 enum weatherMessT {
@@ -402,12 +418,12 @@ static void sendWeatherMessage(weatherMessT num)
             }
             break;
           default:
-            vlogf(5, "Bad num %d sent to sendWeatherMessage", num);
+            vlogf(LOG_BUG, "Bad num %d sent to sendWeatherMessage", num);
             break;
         }
 
         string buf = colorString(ch, i, text, NULL, COLOR_BASIC, FALSE);
-        (&i->output)->putInQ(buf.c_str());
+        i->output.putInQ(buf.c_str());
       }
     }
   }
@@ -577,30 +593,52 @@ weatherT TRoom::getWeather()
 
 void GetMonth(int month)
 {
-  if (month < 0)
-    return;
+  // at the time this is called, month has rolled over, but we haven't
+  // reset december+1 to january.  month is in range [1-12]
+  // correct this by doing...
+  month = month%12;
 
-  if (month <= 1)
-    sendToOutdoor(COLOR_NONE, "It is bitterly cold outside.\n\r",
-        "It is rather chilly outdoors.\n\r");
-  else if (month <= 2)
-    sendToOutdoor(COLOR_NONE, "It is very cold.\n\r", "The chill in the air begins to lessen.\n\r");
-  else if (month <= 3)
-    sendToOutdoor(COLOR_NONE, "It is chilly outside.\n\r","It begins to warm up dramatically.\n\r");
-  else if (month <= 4)
-    sendToOutdoor(COLOR_NONE, "The flowers start to bloom.\n\r","The flowers start to bloom.\n\r");
-  else if (month <= 7)
-    sendToOutdoor(COLOR_NONE, "It is warm and humid.\n\r","A hot dry breeze blows from the west.\n\r");
-  else if (month <= 8)
-    sendToOutdoor(COLOR_NONE, "It starts to get a little windy.\n\r","A cool breeze blows across the humid land.\n\r");
-  else if (month <= 9)
-    sendToOutdoor(COLOR_NONE, "The air is getting chilly.\n\r","The weather is less humid nowadays.\n\r");
-  else if (month <= 10)
-    sendToOutdoor(COLOR_NONE, "The leaves start to change colors. \n\r","The weather cools somewhat.\n\r");
-  else if (month <= 11)
-    sendToOutdoor(COLOR_NONE, "It starts to get cold.\n\r","There is a definite chill in the air.\n\r");
-  else if (month <= 12)
-    sendToOutdoor(COLOR_NONE, "It is bitterly cold outside.\n\r","It is becoming cold outside.\n\r");
+  switch (month) {
+    case 0:
+      sendToOutdoor(COLOR_NONE, "It is bitterly cold outside.\n\r",
+          "It is rather chilly outdoors.\n\r");
+      break;
+    case 1:
+      sendToOutdoor(COLOR_NONE, "It is very cold.\n\r", "The chill in the air begins to lessen.\n\r");
+      break;
+    case 2:
+      sendToOutdoor(COLOR_NONE, "It is chilly outside.\n\r","It begins to warm up dramatically.\n\r");
+      break;
+    case 3:
+      sendToOutdoor(COLOR_NONE, "The flowers start to bloom.\n\r","The flowers start to bloom.\n\r");
+      break;
+    case 4:
+    case 5:
+    case 6:
+      sendToOutdoor(COLOR_NONE, "It is warm and humid.\n\r","A hot dry breeze blows from the west.\n\r");
+      break;
+    case 7:
+      sendToOutdoor(COLOR_NONE, "It starts to get a little windy.\n\r","A cool breeze blows across the humid land.\n\r");
+      break;
+    case 8:
+      sendToOutdoor(COLOR_NONE, "The air is getting chilly.\n\r","The weather is less humid nowadays.\n\r");
+      break;
+    case 9:
+      sendToOutdoor(COLOR_NONE, "The leaves start to change colors. \n\r","The weather cools somewhat.\n\r");
+      break;
+    case 10:
+      sendToOutdoor(COLOR_NONE, "It starts to get cold.\n\r","There is a definite chill in the air.\n\r");
+      break;
+    case 11:
+      sendToOutdoor(COLOR_NONE, "It is bitterly cold outside.\n\r","It is becoming cold outside.\n\r");
+      break;
+    default:
+      break;
+  }
+
+  char buf[256];
+  sprintf(buf, "It is now the %s of %s.\n\r", numberAsString(time_info.day + 1).c_str(), month_name[month]);
+  descriptor_list->worldSend(buf, NULL);
 }
 
 int TRoom::outdoorLight(void)
@@ -645,7 +683,7 @@ int TRoom::outdoorLight(void)
       break;
   }
   if ((moontype >= 12) && (moontype < 20))    // full moon
-    if ((time_info.hours >= 44) || (time_info.hours < 6))   // moon is up
+    if (moonIsUp() && !sunIsUp())
       num += 1;
 
   return num;
@@ -708,149 +746,6 @@ void sunriseAndSunset(void)
     if ((rp = real_roomp(i)) != NULL)
       rp->initLight();
 }
-
-#if 0
-void TBeing::checkWeatherConditions()
-{
-  if (!roomp) {
-    vlogf(7,"Error: NULL roomp for %s.  was in room %d",getName(),in_room);
-    char_to_room(this,0);
-    return;
-  }
-}
-
-// this doesn't do anything.  not used anywhere (yet)  - bat
-void TRoom::initWeather(void)
-{
-  // check all surrounding rooms, if weather exists, this room
-  // should have an average.
-  // if weather is 0 (not inited) in all rooms, make a random number
-  // most values are set to 0 in constructor, so no need to do explicitely
-
-  dirTypeT door;
-  unsigned int num_rooms = 0;
-  TRoom *temp;
-  for (door = MIN_DIR; door < MAX_DIR; door++) {
-    if (dir_option[door]) {
-      if (temp = real_roomp(dir_option[door]->to_room)) {
-        // a valid exit was found
-        if (temp == this)
-          continue;
-        if (temp->weather.pressure) {
-          weather.new_pressure += temp->weather.pressure;
-          num_rooms++;
-          weather.new_temp += temp->weather.temp;
-        }
-      }
-    } 
-  }
-  // looked at all rooms
-  if (num_rooms == 0) {
-    // no rooms were found, randomize pressure
-    weather.pressure = ::number(970,1030);
-  } else {
-    weather.pressure = weather.new_pressure / num_rooms;
-  }
-  weather.new_temp += TerrainInfo[getSectorType()]->heat;
-  weather.temp = weather.new_temp / (num_rooms + 1);
-  weather.moist = TerrainInfo[getSectorType()]->humidity *= 10;
-}
-
-void TRoom::computeNewWeather()
-{
-  weather.new_pressure = weather.pressure;
-  weather.new_temp = weather.temp;
-  weather.moist += TerrainInfo[getSectorType()]->humidity;
-  dirTypeT door;
-  TRoom *temp;
-  int diff = 0, best = 0, dir = -1;
-  int num_rooms = 1;   // 1 for this room itself
-
-  for (door = MIN_DIR; door < MAX_DIR; door++) {
-    if (dir_option[door]) {
-      if ((temp = real_roomp(dir_option[door]->to_room)) != NULL) {
-        // a valid exit was found
-        if (temp == this)
-          continue;
-        weather.new_pressure += temp->weather.pressure;
-        num_rooms++;
-        weather.new_temp += temp->weather.temp;
-        diff = weather.pressure - temp->weather.pressure;
-        if (diff < 0)
-          diff = -diff;
-        if (diff > best) {
-          best = diff;
-          dir = door;
-        }
-      }
-    }
-  }
-  weather.wind = dir;   // wind in direction of greatest pressure difference
-  weather.new_pressure /= num_rooms;
-#if 0
-  int deltalow = (weather.pressure - 1000)  / -30;
-  int deltahigh = (weather.pressure - 1000)  / -6;
-  weather.new_pressure += ::number(deltalow,deltahigh);   // kicks toward norm
-  weather.new_pressure += ::number(-5,5);  // butterfly effect
-#endif
-  weather.new_temp /= num_rooms;
-#if 0
-  weather.new_temp -= (weather.pressure - 1000) / 5;
-     // high pressure = cold air, low pressure = warm
-  weather.new_temp += (25 - outdoorLight()/2)/2;
-    // cool it down if sun not up, warm it up at midday
-  switch (time_info.month) {
-    case 0:
-      weather.new_temp -= ::number(5,15);
-      break;
-    case 1:
-    case 2:
-    case 10:
-    case 11:
-      weather.new_temp -= ::number(0,10);
-      break;
-    case 3:
-    case 4:
-    case 8:
-    case 9:
-      weather.new_temp += ::number(5,-5);
-      break;
-    case 5:
-    case 7:
-      weather.new_temp += ::number(0,10);
-      break;
-    case 6:
-    default:
-      weather.new_temp += ::number(5,15);
-  }
-#endif
-}
-
-// copy the new weather (from ComputeWeather from temp to current
-void TRoom::updateWeather()
-{
-  weather.temp = weather.new_temp;
-  weather.pressure = weather.new_pressure;
-}
-
-void updateWorldWeather(void)
-{
-  register int i;
-  register TRoom *rp;
-
-  anotherHour();
-  for (i = 0; i < WORLD_SIZE; i++) {
-    rp = real_roomp(i);
-    if (rp)
-      rp->computeNewWeather(); 
-  }
-  for (i = 0; i < WORLD_SIZE; i++) {
-    rp = real_roomp(i);
-    if (rp)
-      rp->updateWeather();
-  }
-}
-#endif
 
 void doGlobalRoomStuff(void)
 {
@@ -918,25 +813,27 @@ bool TMonster::isDiurnal() const
 
 bool moonIsUp()
 {
-  int mr = moonRise();
-  int ms = moonSet();
+  int mr = moonTime(MOON_TIME_RISE);
+  int ms = moonTime(MOON_TIME_SET);
+  int hmt = hourminTime();
 
   // moon might set before it rises
   if (((mr < ms) &&
-          time_info.hours >= mr && time_info.hours < ms) ||
+          hmt >= mr && hmt < ms) ||
       ((mr > ms) &&
-          (time_info.hours < ms || time_info.hours >= mr)))
+          (hmt < ms || hmt >= mr)))
     return TRUE;
   return FALSE;
 }
 
 bool sunIsUp()
 {
-  int sr = sunRise();
-  int ss = sunSet();
+  int sr = sunTime(SUN_TIME_RISE);
+  int ss = sunTime(SUN_TIME_SET);
+  int hmt = hourminTime();
 
   // assumption that sr is always < ss
-  if (time_info.hours >= sr && time_info.hours < ss)
+  if (hmt >= sr && hmt < ss)
     return TRUE;
 
   return FALSE;
@@ -944,14 +841,18 @@ bool sunIsUp()
 
 bool is_daytime()
 {
-  return (time_info.hours >= (sunRise() + 3) &&
-           time_info.hours < (sunSet() - 3));
+  int hmt = hourminTime();
+
+  return (hmt >= sunTime(SUN_TIME_DAY) &&
+           hmt < sunTime(SUN_TIME_SINK));
 }
 
 bool is_nighttime()
 {
-  return (time_info.hours < (sunRise() - 3) ||
-           time_info.hours > (sunSet() + 3));
+  int hmt = hourminTime();
+
+  return (hmt < sunTime(SUN_TIME_DAWN) ||
+          hmt > sunTime(SUN_TIME_NIGHT));
 }
 
 void weatherChange()
@@ -975,6 +876,8 @@ void weatherChange()
   else
     diff = +2;
 
+#if 0
+// a worthy idea, but seems to make for crappy weather
   // summer months are warm, winter months cold : drive pressure accordingly
   if ((time_info.month == 6) || (time_info.month == 7))
     weather_info.change -= 2;
@@ -988,11 +891,12 @@ void weatherChange()
     weather_info.change += 2;
   else
     weather_info.change += 3;
+#endif
 
   // sun up warms land
-  if ((time_info.hours >= 18) && (time_info.hours < 30))
+  if (sunIsUp())
     weather_info.change -= 1;
-  else if ((time_info.hours < 6) || (time_info.hours >= 42))
+  else if (is_nighttime())
     weather_info.change += 1;
 
   // precipitation lessens air pressure
@@ -1001,10 +905,23 @@ void weatherChange()
   else if (weather_info.sky == SKY_LIGHTNING)
     weather_info.change += dice(2,3);
 
+  // slightly randomize things
   weather_info.change += (dice(1, 3) * diff + dice(2, 8) - dice(2, 6));
 
+  // limit to range -12..+12
   weather_info.change = max(-12, min(weather_info.change, 12));
-  weather_info.pressure += weather_info.change;
+
+  // this function gets called every tick (15 mud minutes)
+  // lets keep this from changing WAY too radically
+  weather_info.pressure += weather_info.change/10;
+
+  if (weather_info.change > 0) {
+    if (::number(0,9) < weather_info.change%10)
+      weather_info.pressure++;
+  } else {
+    if (::number(0,9) < (-weather_info.change)%10)
+      weather_info.pressure--;
+  }
 
   weather_info.pressure = min(weather_info.pressure, 1040);
   weather_info.pressure = max(weather_info.pressure, 960);
@@ -1012,50 +929,64 @@ void weatherChange()
   do_components(change);
 }
 
+// sunrise and sunset have seasonal variations
+// equinox on april 1 (month=3, day=0)
+// 12 hours of daylight on the equinox, 6am-6pm
+// winter solstices is 9 hours of daylight (7:30-4:30)
+// summer solstices is 15 hours of daylight (4:30-7:30)
+
 void calcNewSunRise()
 {
   // calc new sunrise
-  // seasonal variation
-  // Almanac data had to be adjusted for daylight-savings
-  // winter = 9 hours daylight, summer = 15 hours daylight
-  // center on 5am, on APR 1
-  // winter = 6:30, summer = 3:30
-
-  int num;
   int day = (time_info.month) * 28 + time_info.day + 1;
   int equinox = 3 * 28 + 1;  // april 1st
   
   // treat whole year as sinusoidal with APR 1 as origin
   // sneezy year = 12 months of 28 days
-  // 3 value is to get proper fluxuation for time
-  double x = -3 * sin( 2 * M_PI * ((double) (day-equinox))/(28.0 * 12.0));
+  double x = sin( 2 * M_PI * ((double) (day-equinox))/(28.0 * 12.0));
+  // x is in range [-1.0 (winter solstice) to +1.0 (summer solstice)]
 
-  // 5am = 10hr, 0.5 is for proper rounding
-  num = 10 + (int) (x + 0.5);
-  si_sunRise = num;
+  // at solstices, there are +-3 hours of daylight
+  // so move sunrise back by HALF that amount
+  x *= -1.5;
+  
+  // 6am  + seasonal value
+  // the 0.5 is for proper rounding
+  // convert our number into hourminTime
+  si_sunRise = (6*4+0) + (int) (x*4 + 0.5);
 }
 
 void calcNewSunSet()
 {
-  // seasonal variation
-  // Almanac data had to be adjusted for daylight-savings
-  // winter = 9 hours daylight, summer = 15 hours daylight
-  // make day a little longer then normal
-  // center on 17:30
-  // winter = 16:00, summer = 19:00
-
-  int num;
+  // calc new sunset
   int day = (time_info.month) * 28 + time_info.day + 1;
   int equinox = 3 * 28 + 1;  // april 1st
-  double x;
  
   // treat whole year as sinusoidal with APR 1 as origin
   // sneezy year = 12 months of 28 days
-  // 3 value is to get proper fluxuation for time
-  x = 3 * sin(2 * M_PI *((double) (day-equinox))/(28.0 * 12.0));
- 
-  // 17:30 = 35hr, 0.5 is for proper rounding
-  num = 35 + (int) (x + 0.5);
-  si_sunSet = num;;
+  double x = sin(2 * M_PI *((double) (day-equinox))/(28.0 * 12.0));
+  // x is in range [-1.0 (winter solstice) to +1.0 (summer solstice)]
+
+  // at solstices, there are +-3 hours of daylight
+  // so move sunset ahead by HALF that amount
+  x *= 1.5;
+  
+  // 6pm  + seasonal value
+  // the 0.5 is for proper rounding
+  // convert our number into hourminTime
+  si_sunSet = (18*4+0) + (int) (x*4 + 0.5);
 }
 
+// display time (given in hourminTime format) as a string
+string hmtAsString(int hmt)
+{
+  int hour = hmt/4;
+  int minute = hmt%4 * 15;
+
+  char buf[64];
+  sprintf(buf, "%d:%2.2d %s",
+     (!(hour % 12) ? 12 : hour%12),
+     minute,
+     (hour >= 12) ? "PM" : "AM");
+  return buf;
+}

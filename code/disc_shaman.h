@@ -13,6 +13,7 @@ public:
     CSkill skEnthrallGhast;
     CSkill skVoodoo;
     CSkill skCheval;
+    CSkill skChrism;
     CSkill skVampiricTouch;
     CSkill skLifeLeech;
     CSkill skDancingBones;
@@ -24,6 +25,7 @@ public:
       skEnthrallGhast(),
       skVoodoo(),
       skCheval(),
+      skChrism(),
       skVampiricTouch(),
       skLifeLeech(),
       skDancingBones() { 
@@ -36,6 +38,7 @@ public:
       skEnthrallGhast(a.skEnthrallGhast),
       skVoodoo(a.skVoodoo),
       skCheval(a.skCheval),
+      skChrism(a.skChrism),
       skVampiricTouch(a.skVampiricTouch),
       skLifeLeech(a.skLifeLeech),
       skDancingBones(a.skDancingBones) {
@@ -49,6 +52,7 @@ public:
       skEnthrallGhast = a.skEnthrallGhast;
       skVoodoo = a.skVoodoo;
       skCheval = a.skCheval;
+      skChrism = a.skChrism;
       skVampiricTouch = a.skVampiricTouch;
       skLifeLeech = a.skLifeLeech;
       skDancingBones = a.skDancingBones;
@@ -98,6 +102,12 @@ private:
     int castCheval(TBeing *, TBeing *);
     void cheval(TBeing *, TBeing *, TMagicItem *);
     int cheval(TBeing *, TBeing *, int, byte);
-
+ 
+    extern       bool shaman_create_deny(int);
+    const int CHRISM_PRICE = 250;
+    int castChrism(TBeing *, const char *);
+    int chrism(TBeing *, const char *);
+    int chrism(TBeing *, TObj **, int, const char *, byte);
+ 
 #endif
 

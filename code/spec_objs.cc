@@ -3904,61 +3904,47 @@ int manaBurnRobe(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 
   } // end manaBurnRobe
 
-int healingNeckwear(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
-{  
-  TBeing *ch;
- 
+int healingNeckwear(TBeing *, cmdTypeT cmd, const char *, TObj *me, TObj *)
+{
+  TBeing *tmp;
 
-  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+  if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  for (int i = 1; i < 5; i++) {
-    if (ch->hasClass(CLASS_SHAMAN)) {
-      ch->addToHit(::number(1,2));
-    } else {
-      ch->addToHit(-(::number(1,2)));
-    }
-    if (ch->hasClass(CLASS_SHAMAN)) {
-      if (i == 1) {
-	ch->sendTo("\n\r");
-      }
-      if (i == 2) {
-	ch->sendTo("\n\r");
-      }
-      if (i == 3) {
-	ch->sendTo("\n\r");
-      }
-      if (i == 4) {
-	ch->sendTo("\n\r");
-      }
-      if (i == 5) {
-	ch->sendTo("\n\r");
-      }
-    } else {
-      if (i == 1) {
-	ch->sendTo("\n\r");
-      }
-      if (i == 2) {
-	ch->sendTo("\n\r");
-      }
-      if (i == 3) {
-	ch->sendTo("\n\r");
-      }
-      if (i == 4) {
-	ch->sendTo("\n\r");
-      }
-      if (i == 5) {
- 	ch->sendTo("\n\r");
-      }
-    }
-  }
+  if (!(tmp = dynamic_cast<TBeing *>(me->equippedBy)))
+    return FALSE;
 
-  if (cmd == CMD_GENERIC_PULSE) {
-    return DELETE_THIS;
+  // if they areholding it, don't be silly
+  if (me->eq_pos != WEAR_NECK)
+    return FALSE;
+
+  if (!tmp->roomp)
+    return FALSE;
+
+  if (!tmp->isPc())
+    return FALSE;
+
+  act("$p constricts about your throat!", 0, tmp, me, 0, TO_CHAR);
+  act("$p constricts about $n's throat!", 0, tmp, me, 0, TO_ROOM);
+  if (tmp->hasClass(CLASS_SHAMAN)) {
+    tmp->addToHit(::number(1,((tmp->GetMaxLevel() *2) / 3)));
+    act("The power of the loa enters your body through $p!", 0, tmp, me, 0, TO_CHAR);
+    act("$p disappears in a puff of smoke!", 0, tmp, me, 0, TO_CHAR);
+    act("In a puff of smoke, $p dissappears from $n's throat!", 0, tmp, me, 0, TO_ROOM);
+    delete me;
+  } else {
+    int rc;
+    rc = tmp->applyDamage(tmp, ::number(1,10), DAMAGE_SUFFOCATION);
+    act("$p disappears in a puff of smoke!", 0, tmp, me, 0, TO_CHAR);
+    act("In a puff of smoke, $p dissappears from $n's throat!", 0, tmp, me, 0, TO_ROOM);
+    delete me;
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      delete tmp;
+      tmp = NULL;
+    }
   }
-  return FALSE;
+  return TRUE;
 }
-
 
 int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {

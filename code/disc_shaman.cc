@@ -1083,3 +1083,187 @@ int ret,level;
   }
   return TRUE;
 }
+
+bool shaman_create_deny(int numberx)
+{
+  objIndexData oid = obj_index[numberx];
+
+// CHECK BELOW FOR COMMENT
+
+  if (oid.itemtype == ITEM_WINDOW)
+    return true;
+  if (oid.itemtype == ITEM_MONEY)  // piles of coins
+    return true;
+  if (oid.itemtype == ITEM_HOLY_SYM)
+    return true;
+  if (oid.itemtype == ITEM_COMPONENT)
+    return true;
+  if (oid.itemtype == ITEM_BOOK)
+    return true;
+  if (oid.itemtype == ITEM_FOOD)  // domain of clerics
+    return true;
+  if (oid.itemtype == ITEM_STAFF)
+    return true;
+  if (oid.itemtype == ITEM_POTION)
+    return true;
+  if (oid.itemtype == ITEM_WAND)
+    return true;
+  if (oid.itemtype == ITEM_SCROLL)
+    return true;
+  if (oid.itemtype == ITEM_TREASURE)
+    return true;
+  if (oid.itemtype == ITEM_RAW_MATERIAL)
+    return true;
+  if (oid.itemtype == ITEM_RAW_ORGANIC)
+    return true;
+  if (oid.itemtype == ITEM_FLAME)
+    return true;
+  if (oid.itemtype == ITEM_KEY)
+    return true;
+  if (oid.itemtype == ITEM_PORTAL)
+    return true;
+  if (oid.itemtype == ITEM_BED)
+    return true;
+  if (oid.itemtype == ITEM_TABLE)
+    return true;
+  if (oid.itemtype == ITEM_STATUE)
+    return true;
+  if (oid.itemtype == ITEM_TRAP)
+    return true;
+  if (oid.itemtype == ITEM_CHEST)
+    return true;
+  if (!IS_SET(oid.where_worn, ITEM_TAKE))
+    return true;
+  if (isname("belt monk", oid.name))
+    return true;
+  if (isname("sash monk", oid.name))
+    return true;
+  if (isname("script bundle", oid.name))
+    return true;
+  if (isname("[quest_object]", oid.name))
+    return true;
+  if (isname("[prop_object]", oid.name))
+    return true;
+  if (isname("pager beeper", oid.name))
+    return true;
+  if (isname("muffs ear", oid.name))
+    return true;
+// ***********************************************************************
+// below is the one thing chrism will create
+// if it is not the item intended to be used for this spell
+// then the purpose of the spell is nothing
+// i will have checks below in the main spell to try and be
+// 100% certian that the intended obj is the only one that will work
+// I used the materialize code because it was there...and it works - Jesus
+// ***********************************************************************
+
+  if (!isname("[chrism_object]", oid.name))
+    return true;
+
+  return false;
+}
+        
+int chrism(TBeing *caster, TObj **obj, int, const char * name, byte bKnown)
+{
+  unsigned int numberx;
+
+  caster->sendTo("You drop some talens and they sink into the ground.\n\r");
+  act("$n drops some money.",
+      TRUE, caster, 0, 0, TO_ROOM, ANSI_WHITE);
+  caster->addToMoney(-CHRISM_PRICE, GOLD_HOSPITAL);
+
+  for (numberx = 0; numberx < obj_index.size(); numberx++) {
+    if (!isname(name, obj_index[numberx].name)) 
+      continue;
+    if (obj_index[numberx].value > CHRISM_PRICE) 
+      continue;
+    if (shaman_create_deny(numberx))
+      continue;
+    break;
+  }
+  if (numberx >= obj_index.size()) {
+    caster->sendTo("The loa know what your needs are, son't try and confuse things.\n\r");
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
+
+  if (bSuccess(caster, bKnown, SPELL_CHRISM)) {
+
+    int i, num;
+    if (obj_index[numberx].value)
+      num = CHRISM_PRICE / obj_index[numberx].value;
+    else
+      num = 250;
+    num = min(25, ::number(1,num));
+
+    bool grabbed = false;
+    for (i = 0; i < num; i++) {
+      *obj = read_object(numberx, REAL);
+
+      (*obj)->remObjStat(ITEM_NEWBIE);
+      (*obj)->setEmpty();
+
+      if (!caster->heldInPrimHand()) {
+        caster->equipChar(*obj, caster->getPrimaryHold(), SILENT_YES);
+        grabbed = true;
+      } else {
+        *caster->roomp += **obj;
+      }
+    }
+
+    act("Out of the sky $p gently falls into $n's hands.", TRUE, caster, *obj, NULL, 
+TO_ROOM);
+    act("The loa have blessed you with $p to aid you.", TRUE, caster, *obj, NULL, TO_CHAR);
+
+    if (grabbed)
+      act("You catch $p as it was gently falling onto the ground.",
+          TRUE, caster, *obj, NULL, TO_CHAR);
+
+    return SPELL_SUCCESS;
+  } else {
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+
+int chrism(TBeing *caster, const char * name)
+{
+  if (!bPassShamanChecks(caster, SPELL_CHRISM, NULL))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_CHRISM]->lag;
+  taskDiffT diff = discArray[SPELL_CHRISM]->task;
+
+  start_cast(caster, NULL, NULL, caster->roomp, SPELL_CHRISM, diff, 2, name, rounds, 
+caster->in_room, 0, 0,TRUE, 0);
+  return TRUE;
+}
+
+int castChrism(TBeing *caster, const char * name)
+{
+  if (caster->getMoney() < CHRISM_PRICE) {
+    caster->sendTo("You don't have the money for that!\n\r");
+    return FALSE;
+  }
+
+  if (!name || !*name) {
+    caster->sendTo("You need to specify an item. (insert item name)\n\r");
+    return FALSE;
+  }
+  if (strlen(name) < 3) {
+    caster->sendTo("You must specify something more specific.\n\r");
+    return FALSE;
+  }
+
+  int level = caster->getSkillLevel(SPELL_CHRISM);
+  TObj *obj = NULL;
+  
+  act("$n places $s hands on $s head and howls at the sky.", TRUE, caster, NULL, NULL, 
+TO_ROOM);
+  act("You place your hands on the sides of your head and call unto the loa to hear your 
+plea.", TRUE, caster, NULL, NULL, TO_CHAR);
+
+  chrism(caster, &obj, level, name, caster->getSkillValue(SPELL_CHRISM));
+  return TRUE;
+}
+

@@ -1198,6 +1198,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_TREE_WALK:
       case SKILL_BEAST_CHARM:
       case SPELL_SHAPESHIFT:
+      case SPELL_CHRISM:
       case SPELL_CLARITY:
       case SKILL_CONCEALMENT:
       case SKILL_APPLY_HERBS:

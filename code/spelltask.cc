@@ -1241,6 +1241,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
       }
       return FALSE;
     case SPELL_SHADOW_WALK: // shaman
+    case SPELL_CHRISM: // shaman
     case SPELL_INVISIBILITY:
     case SPELL_POWERSTONE:
     case SPELL_SHATTER:
@@ -2060,6 +2061,9 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         break;
       case SPELL_HYPNOSIS:
         castHypnosis(this, victim);
+        break;
+     case SPELL_CHRISM:
+        rc = castChrism(this, orgArg);
         break;
       case SPELL_VAMPIRIC_TOUCH:
         if (!o) {
