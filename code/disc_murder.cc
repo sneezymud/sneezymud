@@ -600,7 +600,7 @@ int throatSlit(TBeing *thief, TBeing * victim)
     thief->sendTo("You need to wield a weapon, to make it a success.\n\r");
     return FALSE;
   }
-  if (3*thief->getHeight() < 2*victim->getHeight() && !(thief->isFlying())) {
+  if (6*thief->getHeight() < 3*victim->getHeight() && !(thief->isFlying())) {
     thief->sendTo("You don't stand a chance, that creature is too tall.\n\r");
     return FALSE;
   }
