@@ -378,6 +378,11 @@ int TShopOwned::setRates(sstring arg)
     keeper->doTell(ch->getName(), "Due to fraud regulations, I cannot set my profit_sell or profit_buy to more than 5 or less than 0.");
     return FALSE;
   }
+
+  if(profit_buy < profit_sell){
+    keeper->doTell(ch->getName(), "You can't set your buy profit lower than your sell profit, you'd lose all your money!");
+    return FALSE;
+  }
   
   
   if(argc==0){
