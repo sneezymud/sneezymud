@@ -13,10 +13,9 @@
 const int VEHICLE_NONE = 0;
 const int VEHICLE_BOAT = 1;
 
-const int FAST_SPEED = 50;
-const int MED_SPEED = 25;
-const int SLOW_SPEED = 10;
-
+const int FAST_SPEED = 100;
+const int MED_SPEED = 50;
+const int SLOW_SPEED = 25;
 
 class TVehicle : public TPortal {
  private:
@@ -32,6 +31,7 @@ class TVehicle : public TPortal {
   void setDir(dirTypeT d) { dir=d; }
   dirTypeT getDir() const { return dir; };
 
+  bool isAllowedPath(int rnum);
   virtual void assignFourValues(int, int, int, int);
   virtual void getFourValues(int *, int *, int *, int *) const;
   virtual itemTypeT itemType() const { return ITEM_VEHICLE; }

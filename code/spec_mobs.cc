@@ -7245,7 +7245,94 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
   if(vehicle->getDir() != i)
     myself->doDrive(dirs[i]);
 
-  myself->doDrive("1");
+  myself->doDrive("10");
+
+  return TRUE;
+}
+
+
+int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
+{
+  const int elevatornum=2360;
+  static int timer;
+  TObj *elevator=NULL;
+  TRoom *elevatorroom=real_roomp(2370);
+  int *job=NULL;
+  int i;
+  TThing *tt;
+  TVehicle *vehicle=NULL;
+
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  // find the elevator
+  for(elevator=object_list;elevator;elevator=elevator->next){
+    if(elevator->objVnum() == elevatornum)
+      break;
+  }
+  if(!elevator)
+    return FALSE;
+
+  if(!(vehicle=dynamic_cast<TVehicle *>(elevator))){
+    vlogf(LOG_BUG, "couldn't cast elevator to vehicle!");
+    return FALSE;
+  }
+
+  if(!has_key(myself, vehicle->getPortalKey())){
+    return FALSE;
+  }
+
+
+  // wait until we have passengers before we leave the docks
+  if(elevator->in_room == 2352 && timer<=0 && vehicle->getSpeed()==0){
+    for(tt=elevatorroom->getStuff();tt;tt=tt->nextThing){
+      if(dynamic_cast<TPerson *>(tt))
+	break;
+    }
+    if(!tt)
+      return FALSE;
+    else
+      timer=10;
+  }
+
+  if((--timer)>0)
+    return FALSE;
+
+  // first, get out action pointer, which tells us which way to go
+  if (!myself->act_ptr) {
+    if (!(myself->act_ptr = new int)) {
+     perror("failed new of fishing elevator.");
+     exit(0);
+    }
+    job = static_cast<int *>(myself->act_ptr);
+    *job=2362;
+  } else {
+    job = static_cast<int *>(myself->act_ptr);
+  }
+
+  if(elevator->in_room == *job){
+    myself->doDrive("stop");
+    timer=10;
+
+    if(*job==2352){
+      *job=2362;
+    } else {
+      *job=2352;
+    }
+    return TRUE;
+  }
+
+  i=find_path(elevator->in_room, is_target_room_p, (void *) *job, 5000, 0);
+
+  if(i==DIR_NONE){
+    vlogf(LOG_BUG, "fishing elevator lost");
+    return FALSE;
+  }
+
+  if(vehicle->getDir() != i)
+    myself->doDrive(dirs[i]);
+
+  myself->doDrive("30");
 
   return TRUE;
 }
@@ -7428,15 +7515,16 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "stock broker", stockBroker},
   {FALSE,"Trainer: psionics", CDGenericTrainer},
   {TRUE, "Divination Man", divman},
-  {FALSE,"Trainer: healing abilities", CDGenericTrainer},           // 164
-  {FALSE, "Gardener", gardener}, // 165
+  {FALSE,"Trainer: healing abilities", CDGenericTrainer},
+  {FALSE, "Gardener", gardener},                 // 165
   {FALSE, "Brightmoon Archer", bmarcher},
   {FALSE, "Money Train", moneyTrain},
   {FALSE, "Adventurer", adventurer},
   {FALSE, "Trainer: iron body", CDGenericTrainer},
-  {FALSE, "Tudy", tudy},
+  {FALSE, "Tudy", tudy},                           // 170
   {TRUE, "Barmaid", barmaid},
   {FALSE, "tattoo artist", tattooArtist},
+  {FALSE, "casino elevator operator", casinoElevatorOperator},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

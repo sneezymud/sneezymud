@@ -161,6 +161,22 @@ void TVehicle::driveLook(TBeing *ch, bool silent=false)
   ch->doAt(buf.c_str(), true);
 }
 
+bool TVehicle::isAllowedPath(int rnum)
+{
+  // this isn't the right place to store this
+  const int elevator[]={2352, 2354, 2355, 2356, 2357, 2368, 2369, 2362, -1};
+
+  switch(objVnum()){
+    case 2360:
+      for(int i=0;elevator[i]!=-1;++i)
+	if(rnum==elevator[i])
+	  return true;
+    default:
+      return false;
+  }
+
+  return false;
+}
 
 void TVehicle::vehiclePulse(int pulse)
 {
@@ -176,6 +192,10 @@ void TVehicle::vehiclePulse(int pulse)
 
   if(getSpeed()==0)
     return;
+
+  vlogf(LOG_PEEL, "pulse=%i, ONE_SECOND=%i, getSpeed=%i",
+	pulse, ONE_SECOND, getSpeed());
+
   
   // this is where we regulate speed
   if(pulse % max(1, (ONE_SECOND*10)/getSpeed()))
@@ -217,6 +237,10 @@ void TVehicle::vehiclePulse(int pulse)
      !roomp->isWaterSector()){
     return;
   }
+
+  // tracked vehicles
+  if(!isAllowedPath(troom->dir_option[getDir()]->to_room))
+    return;
 
   // send message to people in old room here
   if(getType()==VEHICLE_BOAT){
