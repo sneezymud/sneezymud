@@ -270,7 +270,7 @@ void TBeing::doPeek() const
     gPoker.peek(this);
   else if (checkBaccarat())
     gBaccarat.peek(this);
-  else if (checkHoldem())
+  else if (checkHoldem(true))
     gHoldem.peek(this);
   else
     sendTo("So you think you are at a card table?\n\r");

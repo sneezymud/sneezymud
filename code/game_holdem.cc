@@ -470,27 +470,32 @@ HoldemPlayer *HoldemGame::getPlayer(const sstring &name) const
 void HoldemGame::peek(const TBeing *ch) const
 {
   sstring log_msg;
+  HoldemPlayer *tmp;
 
-  if (!ch->checkHoldem())
+  if (!ch->checkHoldem(true))
     return;
 
-  if(!isPlaying(ch)){
-    ch->sendTo("You are not sitting at the table yet.\n\r");
-    return;
+  if(last_bet){
+    ch->sendTo(COLOR_BASIC, "You peek at the pot and see: %s. [%i]\n\r\n\r",
+	       obj_index[real_object(last_bet)].short_desc, 
+	       (int)(bet/obj_index[real_object(last_bet)].value));
   }
 
-  if (!bet) {
-    ch->sendTo("You are not playing a game.\n\r");
-    return;
+
+  if(ch->isImmortal()){
+    for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
+      if(players[i] && players[i]->hand[0] &&
+	 players[i]->hand[1] && players[i]->name != ch->name){
+	ch->sendTo(COLOR_BASIC, "\n\rYou peek at %s's hand:\n\r",
+		   players[i]->name.c_str());
+	ch->sendTo(COLOR_BASIC, "%s\n\r", players[i]->hand[0]->getName());
+	ch->sendTo(COLOR_BASIC, "%s\n\r", players[i]->hand[1]->getName());
+      }
+    }
   }
 
-  ch->sendTo(COLOR_BASIC, "You peek at the pot and see: %s. [%i]\n\r\n\r",
-	     obj_index[real_object(last_bet)].short_desc, 
-	     (int)(bet/obj_index[real_object(last_bet)].value));
-
-  HoldemPlayer *tmp = getPlayer(ch->name);
-
-  if(tmp->hand[0] && tmp->hand[1]){
+  tmp = getPlayer(ch->name);
+  if(tmp && tmp->hand[0] && tmp->hand[1]){
     ch->sendTo(COLOR_BASIC, "You peek at your hand:\n\r");
     ch->sendTo(COLOR_BASIC, "%s\n\r", tmp->hand[0]->getName());
     ch->sendTo(COLOR_BASIC, "%s\n\r", tmp->hand[1]->getName());
