@@ -232,7 +232,7 @@ string TGun::statObjInfo() const
 {
   char buf[256];
 
-  TObj::statObjInfo();
+  TGenWeapon::statObjInfo();
 
   sprintf(buf, "Rate of Fire: %i, Ammo Type: %s, Ammo: %i, Ammo Loaded: %s",
 	  getROF(), getAmmoDescr(getAmmoType()), (ammo?ammo->getRounds():0),
