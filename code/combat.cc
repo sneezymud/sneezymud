@@ -3821,9 +3821,9 @@ int TBeing::preProcDam(spellNumT type, int dam) const
 
 int TBeing::weaponCheck(TBeing *vict, TThing *o, spellNumT type, int dam)
 {
-  int total = 0;
   immuneTypeT imm_type = getTypeImmunity(type);
-  int voplat_learn, imm_num;
+  int imm_num=0, total=0;
+  TObj *tobj;
 
   // this should only check weapon attacks, other imms handled in preProcDam
   if (imm_type != IMMUNE_SLASH &&
@@ -3832,44 +3832,27 @@ int TBeing::weaponCheck(TBeing *vict, TThing *o, spellNumT type, int dam)
     return dam;
   }
 
-  TObj *tobj = dynamic_cast<TObj *>(o);
-//  total = (tobj ? tobj->itemHitroll() : 0);  
-  if (tobj) {
-    total = tobj->itemHitroll();
-    if (!total & tobj->isObjStat(ITEM_MAGIC))
-      total = 1;
-  }
-  if(doesKnowSkill(SKILL_VOPLAT) && !o){
-    voplat_learn=getSkillValue(SKILL_VOPLAT);
-    total=(voplat_learn-1)/25;
-    if(::number(0, 25) >= (voplat_learn-(25*total)))
-      total=0;
-  } else 
-    voplat_learn=0;
-  
+  if ((tobj=dynamic_cast<TObj *>(o))) {
+    if(tobj->isObjStat(ITEM_MAGIC))
+      total=1;
 
-  if (total == 1) {
+    total = tobj->itemHitroll();
+  } else if(!o && doesKnowSkill(SKILL_VOPLAT))
+    total=getSkillValue(SKILL_VOPLAT)/15;
+
+  if(total < 1){
+    imm_num=vict->getImmunity(IMMUNE_NONMAGIC);
+  } else if (total == 1) {
     imm_num=vict->getImmunity(IMMUNE_PLUS1);
-    dam *= (100 - (int) imm_num);
-    dam /= 100;
-    return dam;
   } else if (total == 2) {
     imm_num=vict->getImmunity(IMMUNE_PLUS2);
-    dam *= (100 - (int) imm_num);
-    dam /= 100;
-    return dam;
-  } else if (total == 3) {
+  } else if (total >= 3) {
     imm_num=vict->getImmunity(IMMUNE_PLUS3);
-    dam *= (100 - (int) imm_num);
-    dam /= 100;
-    return dam;
-  } else {
-    imm_num=vict->getImmunity(IMMUNE_NONMAGIC);
-    dam *= (100 - (int) imm_num);
-    dam /= 100;
-    return dam;
   }
 
+  dam *= (100 - (int) imm_num);
+  dam /= 100;
+  return dam;
 }
 
 int TBeing::numValidSlots()
