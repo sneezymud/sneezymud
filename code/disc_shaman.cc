@@ -1297,9 +1297,11 @@ int intimidate(TBeing *caster, TBeing *victim, int level, byte bKnown)
     if (victim->isLucky(caster->spellLuckModifier(SPELL_INTIMIDATE)) || victim->isImmune(IMMUNE_FEAR, level)) {
       SV(SPELL_INTIMIDATE);
       act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_CHAR);
-      act("You feel intimidatedbriefly.", FALSE, caster, NULL, victim, TO_VICT, ANSI_YELLOW_BOLD);
+      act("You feel intimidated briefly.", FALSE, caster, NULL, victim, 
+TO_VICT, ANSI_YELLOW_BOLD);
     } else {
-      act("$N is totally intimidated of $n!", FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_YELLOW_BOLD);
+      act("$N is totally intimidated by $n!", FALSE, caster, NULL, victim, 
+TO_NOTVICT, ANSI_YELLOW_BOLD);
       act("$N is totally intimidated by you.", FALSE, caster, NULL, victim, TO_CHAR, ANSI_YELLOW_BOLD);
       act("$n intimidates you! RUN!!!", FALSE, caster, NULL, victim, TO_VICT, ANSI_YELLOW_BOLD);
 

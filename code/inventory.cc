@@ -180,7 +180,8 @@ void TObj::dropMe(TBeing *ch, showMeT showme, showRoomT showroom)
     if (showme)
       act("You drop $p and reattach it to its place.", 0, ch, this, 0, TO_CHAR);
     if (showroom)
-      act("$n drops $p and reattachs it to its place.", 1, ch, this, 0, TO_ROOM);
+      act("$n drops $p and reattaches it to its place.", 1, ch, this, 0, 
+TO_ROOM);
     // since we showed text here, reset and don't show it again
     // but still do recursion
     showme = DONT_SHOW_ME;
@@ -1516,7 +1517,7 @@ int TThing::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
      dynamic_cast<TKey *>(this)) {
     act("You attach $p to $P.",
 	TRUE, ch, this, cont, TO_CHAR);
-    act("$n attachs $p to $P.",
+    act("$n attaches $p to $P.",
 	TRUE, ch, this, cont, TO_ROOM); 
   } else if (dynamic_cast<TQuiver *>(cont) &&
              dynamic_cast<TArrow *>(this)) {
@@ -1599,7 +1600,7 @@ int TThing::putSomethingIntoTable(TBeing *ch, TTable *table)
   TObj *tobj = dynamic_cast<TObj *>(this);
   if (tobj && tobj->isObjStat(ITEM_ATTACHED)) {
     act("You attach $p to $P.", 0, ch, tobj, table, TO_CHAR);
-    act("$n attachs $p to $P.", 1, ch, tobj, table, TO_ROOM);
+    act("$n attaches $p to $P.", 1, ch, tobj, table, TO_ROOM);
   } else {
     act("You pile $p onto $P.", TRUE, ch, this, table, TO_CHAR);
     act("$n piles $p onto $P.", TRUE, ch, this, table, TO_ROOM);
