@@ -541,6 +541,39 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	}
 	setQuestBit(TOG_ELIGABLE_JUJU);
       }
+      if (getLevel(Class)>=30 &&
+            !hasQuestBit(TOG_TOTEM_MASK_ELIGABLE) &&
+            !hasQuestBit(TOG_TOTEM_MASK_STARTED) &&
+            !hasQuestBit(TOG_TOTEM_MASK_FIND_FORSAKEN) &&
+            !hasQuestBit(TOG_TOTEM_MASK_FIND_WOODEN_PLANK) &&
+            !hasQuestBit(TOG_TOTEM_MASK_HAS_SAPLESS_WOOD) &&
+            !hasQuestBit(TOG_TOTEM_MASK_FIND_SCALED_HIDE) &&
+            !hasQuestBit(TOG_TOTEM_MASK_GIVE_COVERED_GONDOLFO) &&
+            !hasQuestBit(TOG_TOTEM_MASK_RECOVER_VIAL) &&
+            !hasQuestBit(TOG_TOTEM_MASK_FIND_ELRIC_GRIS_GRIS) &&
+            !hasQuestBit(TOG_TOTEM_MASK_KILL_BARON_SAMEDI) &&
+            !hasQuestBit(TOG_TOTEM_MASK_HAS_BARONS_VISION) &&
+            !hasQuestBit(TOG_TOTEM_MASK_KILLED_ELRIC) &&
+            !hasQuestBit(TOG_TOTEM_MASK_FACE_TRUE_EVIL) &&
+            !hasQuestBit(TOG_TOTEM_MASK_KILLED_FATHERS_SPIRIT) &&
+            !hasQuestBit(TOG_TOTEM_MASK_FINISHED)) {
+	if(!silent){
+	  gm->doAction(name, CMD_BEAM);
+          sprintf(buf, "Excellent %s!", getName());
+          gm->doSay(buf);
+	  gm->doSay("Congratulations! You have learned enough of the ways of the Shaman");
+	  gm->doSay("to seek a better way to communicate with the loa!");
+	  gm->doSay("In order to do this you will have to seek out a very powerful and");
+	  gm->doSay("wise houngan by the name of <Y>Gandolfo<z>. He has the power to speak with");
+	  gm->doSay("the dead and can help you in your quest.");
+	  gm->doSay("You may of course wait until a time that you feel more confident in your");
+          gm->doSay("powers as a practitioner, however it is to your advantage to seek a more");
+          gm->doSay("higher power with the aid of Gondolfo.");
+	  gm->doSay("It is believed that Gondolfo lives in a small hut in Brazzed-Dum.");
+	  gm->doSay("I wish I knew more to help you.");
+	}
+	setQuestBit(TOG_TOTEM_MASK_ELIGABLE);
+      }
       break;
     case MAGE_LEVEL_IND:
       if (getLevel(Class)>=10 &&

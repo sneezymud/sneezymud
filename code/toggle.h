@@ -330,7 +330,23 @@ const int TOG_IMMORTAL_BLANK_10 = 96;
 const int TOG_HAS_PAID_FACT_FEE = 230;
 const int TOG_HAS_CREATED_FACTION = 231;
 
-const int MAX_TOG_INDEX       = 232;  // move and change
+const int TOG_TOTEM_MASK_ELIGABLE              = 232;
+const int TOG_TOTEM_MASK_STARTED               = 233;
+const int TOG_TOTEM_MASK_FIND_FORSAKEN         = 234;
+const int TOG_TOTEM_MASK_FIND_WOODEN_PLANK     = 235;
+const int TOG_TOTEM_MASK_HAS_SAPLESS_WOOD      = 236;
+const int TOG_TOTEM_MASK_FIND_SCALED_HIDE      = 237;
+const int TOG_TOTEM_MASK_GIVE_COVERED_GONDOLFO = 238;
+const int TOG_TOTEM_MASK_RECOVER_VIAL          = 239;
+const int TOG_TOTEM_MASK_FIND_ELRIC_GRIS_GRIS  = 240;
+const int TOG_TOTEM_MASK_KILL_BARON_SAMEDI     = 241;
+const int TOG_TOTEM_MASK_HAS_BARONS_VISION     = 242;
+const int TOG_TOTEM_MASK_KILLED_ELRIC          = 243;
+const int TOG_TOTEM_MASK_FACE_TRUE_EVIL        = 244;
+const int TOG_TOTEM_MASK_KILLED_FATHERS_SPIRIT = 245;
+const int TOG_TOTEM_MASK_FINISHED              = 246;
+
+const int MAX_TOG_INDEX       = 247;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 

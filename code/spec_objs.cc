@@ -4945,10 +4945,10 @@ int totemMask(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
 
   t=((!weapon || (weapon->eq_pos==HOLD_RIGHT))?WEAR_HAND_R:WEAR_HAND_L);
 
-  act("<r>The eyes on your $p <r>glow blood red as life force is channeled into your body.<1>"
-      , 0, v, o, 0, TO_ROOM);
-  act("<r>The eyes of $p <r>glow blood red as life force is channeled from your body.<1>"
+  act("<r>The eyes of $o <r>glow blood red as life force is channeled from your body.<1>"
       , 0, v, o, 0, TO_CHAR);
+  act("<r>The eyes of $p <r>glow blood red.<1>"
+      , 0, v, o, 0, TO_ROOM);
   ch->addToLifeforce(10);    
   dam = ::number(3, 15);
     

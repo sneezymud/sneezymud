@@ -242,8 +242,23 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Shaman L15 Juju: Get Sinew", MOB_NONE},
   {"Shaman L15 Juju: Get Beaded Necklace", MOB_JUJU_TETRARCH},
   {"Shaman L15 Juju: Has Juju", MOB_NONE},
-  {"Faction: Has paid registration fee", MOB_FACTION_REGISTRAR},
+  {"Faction: Has paid registration fee", MOB_FACTION_REGISTRAR}, // 230
   {"Faction: Has created a faction", MOB_FACTION_REGISTRAR},
+  {"Shaman Totem Mask: Eligable", MOB_NONE},
+  {"Shaman Totem Mask: Started", MOB_NONE},
+  {"Shaman Totem Mask: Find Forsaken", MOB_NONE},
+  {"Shaman Totem Mask: Find wooden plank", MOB_NONE}, // 235
+  {"Shaman Totem Mask: Has sapless wood for Ptok", MOB_NONE},
+  {"Shaman Totem Mask: Find Scaled Hide", MOB_NONE},
+  {"Shaman Totem Mask: Give Gondolfo covered plank", MOB_NONE},
+  {"Shaman Totem Mask: Recover vial of sap from Forsaken", MOB_NONE},
+  {"Shaman Totem Mask: Find Elric for gris gris", MOB_NONE}, // 240
+  {"Shaman Totem Mask: Kill Baron Samedi", MOB_NONE},
+  {"Shaman Totem Mask: Has Baron Samedi's vision", MOB_NONE},
+  {"Shaman Totem Mask: Killed Elric", MOB_NONE},
+  {"Shaman Totem Mask: Find Ptok to face true evil", MOB_NONE},
+  {"Shaman Totem Mask: Killed Father's Spirit", MOB_NONE}, // 245
+  {"Shaman Totem Mask: Finished", MOB_NONE},
   {"", MOB_NONE}, 
 };
 
