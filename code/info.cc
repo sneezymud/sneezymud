@@ -2930,7 +2930,7 @@ void TBeing::doWhere(const char *argument)
 
 	  tmp_sb="";
           do_where_thing(this, k, iNum != 0, tmp_sb);
-	  if(last_sb="")
+	  if(last_sb=="")
 	    last_sb=tmp_sb;
 	  if(tmp_sb != last_sb){
 	    sb += buf;
