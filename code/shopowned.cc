@@ -686,7 +686,7 @@ int TShopOwned::getMaxNum(const TObj *o)
   if(db.fetchRow())
     return atoi_safe(db.getColumn(0));
 
-  // shouldn't get here...
+  // this is non-owned shop default
   return 9;
 }
 

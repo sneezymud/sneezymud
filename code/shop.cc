@@ -544,8 +544,41 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int)
 }
 
 
-bool TObj::sellMeCheck(TBeing *, TMonster *) const
+bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper) const
 {
+  int total = 0;
+  TThing *t;
+  char buf[256];
+  unsigned int shop_nr;
+
+  for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
+
+  if (shop_nr >= shop_index.size()) {
+    vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", (keeper)->number);
+    return FALSE;
+  }
+  
+  TShopOwned tso(shop_nr, keeper, ch);
+  int max_num=tso.getMaxNum(this);
+
+  if(max_num == 0){
+    sprintf(buf, "%s I don't wish to buy any of those right now.", ch->name);
+    keeper->doTell(buf);
+    return TRUE;
+  }
+
+  for (t = keeper->getStuff(); t; t = t->nextThing) {
+    if ((t->number == number) &&
+        (t->getName() && getName() &&
+         !strcmp(t->getName(), getName()))) {
+      total += 1;
+      if (total >= max_num) {
+        sprintf(buf, "%s I already have plenty of those.", ch->name);
+        keeper->doTell(buf);
+        return TRUE;
+      }
+    }
+  }
   return FALSE;
 }
 
