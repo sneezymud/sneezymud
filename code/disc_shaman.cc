@@ -2528,13 +2528,6 @@ int flatulence(TBeing * caster, int level, byte bKnown, int adv_learn)
 
   int dam = caster->getSkillDam(NULL, SPELL_FLATULENCE, level, adv_learn);
 
-  if (vict->isImmune(IMMUNE_SUFFOCATION, level)) { 
-    act("$N is immune to suffocation!", FALSE, caster, NULL, vict, TO_CHAR);
-    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, vict, TO_NOTVICT);
-    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, vict, TO_VICT);
-    return SPELL_FAIL;
-  }
-
   if (bSuccess(caster, bKnown, SPELL_FLATULENCE)) {
     act("<o>You turn around quickly and pass gas!<1>", FALSE, caster, NULL, NULL, TO_CHAR);
     act("<o>$n turns around quickly and passes gas!<1>", FALSE, caster, NULL, NULL, TO_ROOM);
@@ -2544,7 +2537,7 @@ int flatulence(TBeing * caster, int level, byte bKnown, int adv_learn)
       if (!vict)
         continue;
 
-      if (!caster->inGroup(*vict) && !vict->isImmortal()) {
+      if (!caster->inGroup(*vict) && !vict->isImmortal() && !vict->isImmune(IMMUNE_SUFFOCATION, level)) {
         caster->reconcileHurt(vict, discArray[SPELL_FLATULENCE]->alignMod);
         act("$n is choked by the natural gasses!", FALSE, vict, NULL, NULL, TO_ROOM);
         act("You are choked by the natural gasses!", FALSE, vict, NULL, NULL, TO_CHAR);
