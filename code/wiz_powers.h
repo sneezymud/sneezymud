@@ -122,6 +122,7 @@ enum wizPowerT {
      POWER_WIZNET_ALWAYS,
      POWER_ZONEFILE_UTILITY,
      POWER_IDLED,
+     POWER_NO_LIMITS, // this lets gods edit/goto/blah outside thier blocks/imperia
 
      MAX_POWER_INDEX
 };
