@@ -1730,7 +1730,7 @@ void TBeing::doGroup(const char *argument)
               k->getExpSharePerc(),
               norm());
           } else if (k->hasClass(CLASS_SHAMAN)) {
-            sendTo("%s%-15.15s%s [%s%.1f%%hp %-4d% lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r", cyan(), cap(namebuf), norm(), red(),
+            sendTo("%s%-15.15s%s [%s%.1f%%hp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r", cyan(), cap(namebuf), norm(), red(),
               (((double) (k->getHit())) / ((double) k->hitLimit()) * 100),
               k->getLifeforce(), 
               cap(namebuf),
@@ -1773,7 +1773,7 @@ void TBeing::doGroup(const char *argument)
                 tmp_share, ((tmp_share == 1) ? "" : "s"), 
                 f->follower->getExpSharePerc(),
                 norm());
-            if (f->follower->hasClass(CLASS_SHAMAN))
+            else if (f->follower->hasClass(CLASS_SHAMAN))
               sendTo("%s%-15.15s%s [%s%.1f%%hp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r", cyan(), cap(namebuf), norm(), red(),
                 (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100),
                 f->follower->getLifeforce(),
