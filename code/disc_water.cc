@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_water.cc,v $
+// Revision 1.2  1999/09/15 21:41:52  peel
+// Gusher now creates pools of water after casting.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1081,6 +1084,7 @@ int gusher(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_lea
           FALSE, caster, NULL, victim, TO_VICT, ANSI_BLUE);
       act("$n directs a HUGE stream of water in $N's direction, knocking $M over!",
           FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
+      victim->dropPool(50, LIQ_WATER);
 
       if (victim->riding)
         victim->dismount(POSITION_STANDING);
@@ -1103,6 +1107,7 @@ int gusher(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_lea
           FALSE, caster, NULL, victim, TO_VICT, ANSI_BLUE);
       act("$n directs a tiny stream of water in $N's direction!",
           FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
+      victim->dropPool(10, LIQ_WATER);
 
       SV(SPELL_GUSHER);
       dam /= 2;
@@ -1113,6 +1118,7 @@ int gusher(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_lea
           FALSE, caster, NULL, victim, TO_VICT, ANSI_BLUE);
       act("$n directs a stream of water in $N's direction!",
           FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
+      victim->dropPool(25, LIQ_WATER);
     }
     if (caster->reconcileDamage(victim, dam, SPELL_GUSHER) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
@@ -1127,6 +1133,7 @@ int gusher(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_lea
            FALSE, caster, NULL, 0, TO_CHAR, ANSI_BLUE);
       act("$n calls forth a stream of water, but it leaves $m all wet!",
            FALSE, caster, NULL, 0, TO_ROOM, ANSI_BLUE);
+      caster->dropPool(10, LIQ_WATER);
       if (caster->reconcileDamage(caster, dam, SPELL_GUSHER) == -1)
         return SPELL_CRIT_FAIL + CASTER_DEAD;
       return SPELL_CRIT_FAIL;
