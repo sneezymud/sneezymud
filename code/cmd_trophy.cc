@@ -72,7 +72,7 @@ void TBeing::doTrophy(const char *arg)
     
     while(1){
       if(processedrow)
-	row=mysql_fetchrow(res);
+	row=mysql_fetch_row(res);
 
       if(!row)
 	break;
