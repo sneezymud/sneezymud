@@ -109,6 +109,26 @@ TObj *catch_a_fish(TRoom *rp){
 }
 
 
+TThing *findBait(TThing *stuff){
+  TThing *tt, *ret;
+  TTool *bait;
+
+  for(tt=stuff;tt;tt=tt->nextThing){
+    if(tt->getStuff() && (ret=findBait(tt->getStuff())))
+      return ret;
+
+    bait=dynamic_cast<TTool *>(tt);
+
+    if(bait && bait->getToolType() == TOOL_FISHINGBAIT)
+      return tt;
+  }
+
+  return NULL;
+}
+
+
+
+
 int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj *)
 {
   TTool *bait=NULL;
@@ -134,17 +154,17 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
   }
 
   // find our bait here
-  for(t=ch->getStuff();t;t=t->nextThing){
-    bait=dynamic_cast<TTool *>(t);
-
-    if(bait){
-      if(bait->getToolType() != TOOL_FISHINGBAIT){
-	bait=NULL;
-      } else {
-	break;
-      }
-    }
+  t=findBait(ch->getStuff());
+  
+  int m=WEAR_NOWHERE;
+  while(!t){
+    ++m;
+    t=findBait(ch->equipment[m]);
   }
+
+
+  bait=dynamic_cast<TTool *>(t);
+
   if(!bait){
     ch->sendTo("You need to have some bait to fish.\n\r");
     ch->stopTask();
