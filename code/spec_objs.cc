@@ -7101,7 +7101,6 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
     return FALSE;
 
   sscanf(o->name, "forearm-guard guard plastic lights stim wristband [on_%d] [charge_%d]", &isOn,  &charge);
-
   newcharge = charge;
 
   if (cmd == CMD_GENERIC_PULSE) {
@@ -7171,14 +7170,14 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
 	aff.duration = 2 * UPDATES_PER_MUDHOUR;
 	aff.modifier = ::number(10,20);
 	aff.location = APPLY_SPE;
-	aff.bitvector = AFF_SILENT;
+	aff.bitvector = 0;
 	ch->affectTo(&aff, -1);
 	aff.type = AFFECT_DRUG;
 	aff.level = 50;
 	aff.duration = 2 * UPDATES_PER_MUDHOUR;
 	aff.modifier = 0 - ::number(10,20);
 	aff.location = APPLY_CON;
-	aff.bitvector = AFF_SILENT;
+	aff.bitvector = 0;
 	ch->affectTo(&aff, -1);
 	if (charge == 1000) {  // give an extra boost when stimming from full 
 	  aff.type = SPELL_HASTE;
@@ -7186,7 +7185,7 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
 	  aff.duration =  1 * UPDATES_PER_MUDHOUR;
 	  aff.modifier = 0;
 	  aff.location = APPLY_NONE;
-	  aff.bitvector = AFF_SILENT;
+	  aff.bitvector = 0;
 	  ch->affectTo(&aff, -1);
 	}
 	
