@@ -817,204 +817,6 @@ static const sstring describe_practices(TBeing *ch)
 
 void TBeing::doPractice(const char *argument)
 {
-#if 0
-  // Experimental code to allow: prac <player> <ect...>
-
-  sstring       tStName(""),
-               tStArg(argument),
-               tStTemp(""),
-               tStOutput("");
-  TBeing      *tC = this;
-  Decriptor   *d;
-  CDiscipline *tDisc;
-  char         tString[256];
-  classTypeT   tClass = MAX_CLASSES;
-
-  stSpaceOut(tStArg);
-
-  // Let's allow: prac <player>
-  // We if we don't find a match here, don't bitch.  Could just be someone
-  // doing: prac <skill> or something.
-  if (argument && *argument && isImmortal() && hasWizPower(POWER_STAT_SKILL)) {
-    tStTemp = one_argument(tStArg, tStName);
-    stSpaceOut(tStTemp);
-    stSpaceOut(tStName);
-
-    if ((tC = get_char_room(tStName, in_room)) ||
-        (tC = get_char_world(this, tStName.c_str(), EXACT_YES))
-        (tC = get_char_world(this, tStName.c_str(), EXACT_NO))) {
-      d = tC->desc;
-      tStArg = tStTemp;
-      tStTemp = one_argument(tStArg, tStName);
-    }
-  }
-
-  if (!d || !tC)
-    return;
-
-  if (tC->polyed && !d->original->isImmortal()) {
-    sendTo("Polymorph types can't use the practice Command.  Bug if this is an error.");
-    return;
-  }
-
-  if (tStArg.empty()) {
-    tStOutput += "The following disciplines are valid:\n\r";
-
-    for (discNumT tDIn = MIN_DISC; tDIn < MAX_DISCS; tDIn++) {
-      tDisc = tC->getDiscipline(tDIn);
-
-      if (tDisc && (tC->isImmortal() || tDisc->ok_for_class)) {
-        if (tDisc->getLearnddness()) {
-          if (tDisc->getLearnddness() == tDisc->getNatLearnedness())
-            sprintf(tString, "%30s : Learnedness: %3d%%\n\r",
-                    disc_names[tDIn], tDisc->getLearnedness());
-          else
-            sprintf(tString, "%30s : Learnedness: Current (%3d%%) Natural (%3d%%\n\r",
-                    disc_names[tDIn], tDisc->getLearnedness(), tDisc->getNatLearnedness());
-        } else
-          sprintf(tString, "%30s : Learnedness: Unlearned\n\r",
-                  disc_names[tDIn]);
-
-        tOutput += tString;
-      }
-    }
-
-    tOutput += describe_practices(tC);
-    desc->page_string(tOutput);
-
-    return;
-  }
-
-  if (is_abbrev(tStName, "hth") &&
-      (tClass = discNames[DISC_HTH].class_num) &&
-      hasClass(tClass)) {
-    sendSkillsList(DISC_HTH);
-    return;
-  }
-
-  if (is_abbrev(tStName, "class")) {
-    tStArg = one_argument(tStTemp, tStName);
-
-    if (!tStName.empty())
-      for (tClass = MIN_CLASSES; tClass < MAX_CLASSES; tClass++)
-        if (is_abbrev(tStName, classInfo[tClass].name.c_str()))
-          break;
-
-    if (tClass >= MAX_CLASSES) {
-      sendTo("That is not a valid class.\n\r");
-      sendTo("Syntax: practice class <class>\n\r");
-      return;
-    }
-
-    tOutput += "The following disciplines are valid:\n\r";
-
-    for (discNumT tDIn = MIN_DISC; tDIn < MAX_DISCS; tDIn++) {
-      if (!strcmp(disc_names[tDIn], "unused"))
-        continue;
-
-      if (!(tDisc = tC->getDiscipline(tDIn)))
-        vlogf(LOG_BUG, "Somehow %s was not assigned a discipline (%d), used prac class (%d).",
-              getName(), tDIn, tClass);
-
-      if ((discNames[tDIn].class_name == 0) || IS_SET(discNames[tDIn].class_num, tClass))
-        if (tDisc && tDisc->getLearnedness() >= 0)
-          sprintf(tString, "%30s : (Learnedness: %3d%%)\n\r",
-                  disc_names[tDIn], tDisc->getLearnedness());
-        else
-          sprintf(tString, "%30s : (Learnedness: unlearned)\n\r",
-                  disc_names[tDIn]);
-
-      tOutput += tString;
-    }
-
-    tOutput += describe_practices(tC);
-    desc->page_string(tOutput);
-
-    return;
-  }
-
-  if (is_abbrev(tStName, "discipline")) {
-    tStArg = one_argument(tStTemp, tStName);
-
-    if (!tStName.empty()) {
-      if (is_abbrev(tStName, "hth"))
-        tStName = discNames[DISC_HTH].practice;
-
-      if (is_abbrev(tStName, "fighting") ||
-          is_abbrev(tStName, "alchemy") ||
-          is_abbrev(tStName, "aegis") ||
-          is_abbrev(tStName, "wrath") ||
-	  is_abbrev(tStName, "cures")) {
-        if ((tClass = getClassNum(tStArg.c_str(), EXACT_NO)))
-          doPracDisc(tStArg.c_str(), tClass);
-        else {
-          sendTo("You need to specify a valid class when looking for that discipline.\n\r");
-          sendTo("Syntax: practice discipline <discipline> <class>\n\r");
-        }
-      } else
-        doPracDisc(tStArg.c_str(), tClass);
-
-    } else
-      sendTo("Syntax: practice discipline <discipline> <class>\n\r");
-
-    return;
-  }
-
-  if (is_abbrev(tStName, "skill")) {
-    tStArg = one_argument(tStTemp, tStName);
-  }
-  /*
-  if (is_abbrev(arg, "skill")) {
-    for (; isspace(*argument); argument++);
-
-    if (!*argument) 
-      sendTo("You need to specify what skill: practice skill <\"skill\">.\n\r");
-    else {
-      if (strlen(argument) > 3 && is_abbrev(argument, "wizardry")) 
-        doPracSkill(argument, SKILL_WIZARDRY);
-      else if (strlen(argument) > 3 && is_abbrev(argument, "ritualism")) 
-        doPracSkill(argument, SKILL_RITUALISM);
-      else if (strlen(argument) > 3 && is_abbrev(argument, "devotion")) 
-        doPracSkill(argument, SKILL_DEVOTION);
-      else 
-        doPracSkill(argument, TYPE_UNDEFINED);
-    }
-    return; 
-  }
-  bool found = FALSE;
-  bool match = FALSE;
-  classNum = FALSE;
-  first = last = TRUE;
-
-  discNumT dnt = DISC_NONE;
-  for (i=MIN_DISC; i < MAX_DISCS; i++) {
-    strcpy(skillbuf, discNames[i].practice);
-    classNum = discNames[i].class_num;
-    if (is_abbrev(arg, skillbuf, MULTIPLE_YES)) {
-      match = TRUE;
-      if (classNum && !hasClass(classNum)) 
-        continue;
-      else {
-        dnt = discNames[i].disc_num;
-        found = TRUE;
-        break;
-      }     
-    }
-  }
-  if (!found) {
-    if (match) {
-      sendTo("That discipline exists, but is not available to you.\n\r");
-      sendTo("To find out about that discipline use prac discipline <discipline> <class>.\n\r");
-    } else
-      sendTo("Which discipline???\n\r");
-
-    return;
-  }
-// new function to send skills lists to pc's
-  sendSkillsList(dnt);
-  return;
-   */
-#else
   char buf[MAX_STRING_LENGTH * 2];
   char arg[256];
   char skillbuf[40];
@@ -1028,7 +830,7 @@ void TBeing::doPractice(const char *argument)
     return;
 
   if (polyed && !d->original->isImmortal()) {
-    sendTo("Polymorph types can't use the practice Command. Bug if this is an error.");
+    sendTo("Polymorph types can't use the practice command.");
     return;
   }
   for (; isspace(*argument); argument++);
@@ -1037,7 +839,7 @@ void TBeing::doPractice(const char *argument)
     sprintf(buf, "The following disciplines are valid:\n\r");
     for (i=MIN_DISC; i < MAX_DISCS; i++) {
       cd = getDiscipline(i);
-      if (cd && (isImmortal() || cd->ok_for_class)) {
+      if (cd && (isImmortal() || cd->ok_for_class || cd->getLearnedness())) {
         if (cd->getLearnedness()) {
           if (cd->getLearnedness() == cd->getNatLearnedness()) {
             sprintf(buf + strlen(buf), "%30s : Learnedness: %3d%%\n\r",
@@ -1183,7 +985,6 @@ void TBeing::doPractice(const char *argument)
 // new function to send skills lists to pc's
   sendSkillsList(dnt);
   return;
-#endif
 }
 
 bool skillSorter::operator() (const skillSorter &x, const skillSorter &y) const
