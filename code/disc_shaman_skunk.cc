@@ -234,7 +234,7 @@ int cardiacStress(TBeing * caster, TBeing * victim, int level, byte bKnown, int 
   int rc;
   TThing *t;
 
-  level = min(level, 10);
+  level = min(level, 15);
 
   int dam = caster->getSkillDam(victim, SPELL_CARDIAC_STRESS, level, adv_learn);
 
@@ -286,7 +286,7 @@ int cardiacStress(TBeing * caster, TBeing * victim, int level, byte bKnown, int 
   } else {
     caster->setCharFighting(victim);
     caster->setVictFighting(victim);
-    act("$n just tried to attack you.", FALSE, caster, 0, victim, TO_VICT, ANSI_BLUE);
+    act("$n just tried to attack you.", FALSE, caster, 0, victim, TO_VICT, ANSI_RED);
     if (critFail(caster, SPELL_CARDIAC_STRESS) == CRIT_F_HITSELF) {
       CF(SPELL_CARDIAC_STRESS);
       act("You screwed up the ritual and the loa make you pay for your mistake!",
