@@ -94,7 +94,24 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   
   act("$n scrawls some graffiti with $s $p.", TRUE, ch, o, NULL, TO_ROOM);
   act("You make your mark.", TRUE, ch, o, NULL, TO_CHAR);
-  *ch->roomp += *gfti;
+
+  // this clunky block of code inserts the message directly beneath
+  // any existing message
+  TThing *last=NULL;
+  TObj *obj;
+  for(TThing *t=ch->roomp->getStuff();t;t=t->nextThing){
+    if((obj=dynamic_cast<TObj *>(t)) && obj->objVnum()==GRAFFITI_OBJ)
+      last=t;
+  }
+
+  if(!last){
+    *ch->roomp += *gfti;
+  } else {
+    gfti->nextThing=last->nextThing;
+    last->nextThing=gfti;
+  }
+  //////
+
   tool->addToToolUses(-1);
   if (tool->getToolUses() <= 0) {
     act("Your $p is all used up.", FALSE, ch, o, NULL, TO_CHAR);
