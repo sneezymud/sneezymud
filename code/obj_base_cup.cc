@@ -134,6 +134,20 @@ int TBaseCup::getLiqThirst() const
   return DrinkInfo[liquidType]->thirst;
 }
 
+
+string TBaseCup::showModifier(showModeT tMode, const TBeing *tBeing) const
+{
+  // recurse if necessary
+  string tString = TObj::showModifier(tMode, tBeing);
+
+  if (!getDrinkUnits()){
+    tString += " (empty)";                                          
+  }                                                           
+                                                              
+  return tString;                                             
+}
+
+
 void TBaseCup::fillMe(const TBeing *ch, liqTypeT liq)
 {
  int water;
