@@ -3904,7 +3904,19 @@ int manaBurnRobe(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 
   } // end manaBurnRobe
 
-int healingHead ( Tbeing *vict, cmdTypeT cmd, const char arg, TObj *0, TObj * )
+int healingHead ( Tbeing *vict, cmdTypeT cmd, const char arg, TObj *0, TObj * ) {
+  
+  TBeing *ch;
+  if (!(ch = dynamic_cast<TBeing *> (o->equippedBy)))
+    return FALSE;
+
+  if (ch = dynamic_cast<TBeing *> (o->equippedBy)) {
+  
+    
+    
+  }
+    
+}
 int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch;
