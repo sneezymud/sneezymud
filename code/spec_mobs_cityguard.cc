@@ -171,7 +171,7 @@ string guardShout(TBeing *ch){
       break;
     case 81:
       if (targVis) {
-	ssprintf(s, "%s's face is about to be stamped into 200 gorrilla cookies!", ch->pers(ch->fight()));
+	ssprintf(s, "%s's face is about to be stamped into 200 gorilla cookies!", ch->pers(ch->fight()));
 	break;
       }
     case 82:

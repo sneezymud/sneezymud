@@ -1780,11 +1780,11 @@ int squish(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_lea
                FALSE, caster, NULL, victim, TO_VICT);
         break;
       case CRIT_S_NONE:
-        act("Your hands become enlargened and you reach out and squish $N!",
+        act("Your hands become enlarged and you reach out and squish $N!",
                FALSE, caster, NULL, victim, TO_CHAR);
-        act("$n's hands become enlargened and $e reaches out and squishes $N!",
+        act("$n's hands become enlarged and $e reaches out and squishes $N!",
                FALSE, caster, NULL, victim, TO_NOTVICT);
-        act("$n's hands become enlargened and $e reaches out and squishes your body!",
+        act("$n's hands become enlarged and $e reaches out and squishes your body!",
                FALSE, caster, NULL, victim, TO_VICT);
         if (victim->isLucky(caster->spellLuckModifier(SPELL_SQUISH))) {
           SV(SPELL_SQUISH);
@@ -2724,7 +2724,7 @@ int castChaseSpirits(TBeing *caster, TBeing * victim)
       act("$n chases away the evil spirits within $N...", FALSE, caster, NULL, victim, TO_NOTVICT);
     } else {
       act("The loa chases away the evil within you...", FALSE, caster, NULL, 0, TO_CHAR);
-      act("$n face glows with much relief.", FALSE, caster, NULL, 0, TO_ROOM);
+      act("$n's face glows with much relief.", FALSE, caster, NULL, 0, TO_ROOM);
     }
     int rc = genericChaseSpirits(caster, victim, level, caster->isImmortal());
     if (IS_SET_DELETE(rc, DELETE_VICT))

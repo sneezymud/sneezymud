@@ -214,7 +214,7 @@ int task_plant(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj 
     *ch->roomp += *tp;
 
     if (tt->getToolUses() <= 0) {
-      act("You disgard $p because it is empty.",
+      act("You discard $p because it is empty.",
 	  FALSE, ch, tt, 0, TO_CHAR);
       delete tt;
     }

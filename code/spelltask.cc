@@ -719,7 +719,7 @@ int TBeing::cast_spell(TBeing *ch, cmdTypeT cmd, int pulse)
 #endif
           rounds--;
         } else if (typ == SPELL_DANCER) {
-          colorAct(COLOR_SPELLS, "<B>Your concentration is good and you feel your acestors pleasure.<z>", FALSE, ch, NULL, NULL, TO_CHAR);
+          colorAct(COLOR_SPELLS, "<B>Your concentration is good and you feel your ancestors pleasure.<z>", FALSE, ch, NULL, NULL, TO_CHAR);
 #if SPELLTASK_DEBUG
           ch->spelltask->rounds--;
 #endif

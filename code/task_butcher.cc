@@ -94,7 +94,7 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
           FALSE, ch, 0, NULL, TO_ROOM);
       act("With the lack of a weapon, you grab the loose flesh and rip.",
           FALSE, ch, 0, 0, TO_CHAR);
-      act("$n grabs the loose steak and rips it off the carcas.",
+      act("$n grabs the loose steak and rips it off the carcass.",
           FALSE, ch, 0, NULL, TO_ROOM);
       if (ch->task->flags > 0)
         ch->task->flags--;
@@ -252,9 +252,9 @@ int TTool::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
       if (!bSuccess(ch, learning, SKILL_BUTCHER)) {
         // a doubele failure
         CF(SKILL_BUTCHER);  // failure
-        act("You slip up and destory a part of the carcas.",
+        act("You slip up and destory a part of the carcass.",
              FALSE, ch, 0, 0, TO_CHAR);
-        act("$n really slips up and mangles part of the carcas.",
+        act("$n really slips up and mangles part of the carcass.",
              FALSE, ch, 0, 0, TO_ROOM);
         corpse->addCorpseFlag(CORPSE_NO_BUTCHER);
         ch->stopTask();

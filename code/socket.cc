@@ -848,7 +848,7 @@ int TSocket::gameLoop()
 	    char tmpbuf[256];
 	    strcpy(tmpbuf, "");
 	    tmp_ch->sendTo("An incredibly powerful force pulls you back into Imperia.\n\r");
-	    act("$n is pulled back from whence $e came.", TRUE, tmp_ch, 0, 0, TO_ROOM);
+	    act("$n is pulled back whence $e came.", TRUE, tmp_ch, 0, 0, TO_ROOM);
 	    vlogf(LOG_BUG,"%s was wandering around the mortal world (R:%d) so moving to office.",
 		  tmp_ch->getName(), tmp_ch->roomp->number);
 	    

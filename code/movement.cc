@@ -2124,7 +2124,7 @@ void TBeing::doUnlock(const char *argument)
       sendTo("It's already unlocked, it seems.\n\r");
     else {
       if (fight()) {
-        act("You are forced to sacrafice a few rounds to unlock the $T",
+        act("You are forced to sacrifice a few rounds to unlock the $T.",
             TRUE, this, 0, (const TThing *)(exitp->getName().c_str()), TO_CHAR);
         cantHit += loseRound(5);
       }

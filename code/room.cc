@@ -370,7 +370,7 @@ int TRoom::chiMe(TBeing *tLunatic)
 
   act("You focus your <c>mind<z> and unleash a <r>blast of chi<z> upon your foes!",
       FALSE, tLunatic, NULL, NULL, TO_CHAR);
-  act("$n suddenly <r>radiates with power<z> and brings harm to $n enemies!",
+  act("$n suddenly <r>radiates with power<z> and brings harm to $s enemies!",
       TRUE, tLunatic, NULL, NULL, TO_ROOM);
 
   for (tThing = getStuff(); tThing; tThing = tNextThing) {

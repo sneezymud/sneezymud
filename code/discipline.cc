@@ -2955,7 +2955,7 @@ const char *skill_diff(byte num)
   else if (num < 30)
     return "lot more training";
   else if (num < 40)
-    return "in awhile";
+    return "in a while";
   else if (num < 50)
     return "some day";
   else if (num < 60)

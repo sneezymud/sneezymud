@@ -742,7 +742,7 @@ int TFFlame::chiMe(TBeing *tLunatic)
     return true;
   }
 
-  act("You focus your chi, causing $p to bursts momentarily!",
+  act("You focus your chi, causing $p to burst momentarily!",
       FALSE, tLunatic, this, NULL, TO_CHAR);
   act("$n stares at $p, causing it to burst momentarily",
       TRUE, tLunatic, this, NULL, TO_ROOM);

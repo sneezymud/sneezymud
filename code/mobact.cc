@@ -3802,7 +3802,7 @@ int TMonster::factionAggroCheck()
 	} else if(isBrother()){
 	  switch(::number(0,3)){
 	    case 0:
-	      doSay("Get thee back to the festering hole from whence thou came, Logrite!");
+	      doSay("Get thee back to the festering hole whence thou came, Logrite!");
 	      doEmote("screams with rage as he charges into battle.");
 	      break;
 	    case 1:

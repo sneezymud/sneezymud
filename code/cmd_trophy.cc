@@ -93,7 +93,7 @@ const char *TTrophy::getExpModDescr(float count)
 
   return((f == 1.0) ? "<Y>full<1>" :
 	 ((f >= 0.90) ? "<o>much<1>" :
-	  ((f >= 0.80) ? "a fair amount" :
+	  ((f >= 0.80) ? "a fair amount of" :
 	   ((f >= 0.70) ? "<w>some<1>" : "<k>little<1>"))));
 }
 

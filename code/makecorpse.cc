@@ -189,7 +189,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
       case SPELL_FROST_BREATH:
       case DAMAGE_TRAP_FROST:
       case DAMAGE_FROST:
-        sprintf(buf, "The frozen solid corpse of %s is imbedded in some ice here.",getName());
+        sprintf(buf, "The frozen solid corpse of %s is embedded in some ice here.",getName());
         break;
       case DAMAGE_DROWN:
       case SPELL_WATERY_GRAVE:
