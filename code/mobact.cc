@@ -1927,6 +1927,14 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
     }
     // REGULAR
+    spell = SPELL_BLOOD_BOIL;
+    if (!::number(0, 6) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the invokation, 'Bubble, bubble. BOILING BLOOD!!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
     spell = SPELL_CARDIAC_STRESS;
     if (!::number(0, 3) && 
            (cutoff < discArray[spell]->start) &&
@@ -1951,6 +1959,14 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
            (cutoff < discArray[spell]->start) &&
          ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
       act("$n utters the invokation, 'Lich me, SUCKAH!!!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
+    spell = SPELL_BLOOD_BOIL;
+    if (!::number(0, 6) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the invokation, 'Bubble, bubble. BOILING BLOOD!!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.28  2001/06/27 22:08:18  jesus
+// boiling blood spell
+//
 // Revision 5.27  2001/06/25 09:38:02  jesus
 // control undead update for shaman
 //
@@ -249,6 +252,7 @@ const int COMP_DEATHWAVE          =31336;
 const int COMP_CELERITE           =31337;
 const int COMP_STUPIDITY          =31338;
 const int COMP_CONTROL_UNDEAD     =31339;
+const int COMP_BLOOD_BOIL         =31340;
 
 class compPlace
 {

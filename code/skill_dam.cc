@@ -339,6 +339,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       dam = (int) (dam * percModifier());
       break;
     case SPELL_RAZE:
+    case SPELL_BLOOD_BOIL:
       dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.05 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_DEATHWAVE:

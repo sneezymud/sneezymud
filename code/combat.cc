@@ -797,7 +797,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
  // 2) Strength in limb(How healthy it is)  (body_parts[].health)     
  // 3) Constitution                         (getConShock())         
  // 4) Skin type                            (getMaterial())           
- // The healthier the limb, the less chance of this happening, and    
+ // The healtheir the limb, the less chance of this happening, and    
  // the more damage, the more chance of it happening. - Russ          
 
   if (setCharFighting(v, 0) == -1)

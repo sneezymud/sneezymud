@@ -2713,6 +2713,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_HYPNOSIS:
       hypnosis(caster,victim,obj);
       break;
+    case SPELL_BLOOD_BOIL:
+      rc = bloodBoil(caster, victim, obj);
+      break;
     case SPELL_CLARITY:
       clarity(caster,victim,obj);
       break;

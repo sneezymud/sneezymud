@@ -1,21 +1,6 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: ai_commands.cc,v $
-// Revision 5.1  1999/10/16 04:45:11  batopr
-// new version
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD 4.0 - All rights reserved, SneezyMUD Coding Team
+//      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "ai_commands.cc" - handles the actual responses to all commands
 //        a user can do for use with the mob AI routines.
 //
@@ -78,6 +63,7 @@ int TMonster::aiBounce(TBeing *doer,TBeing *, aiTarg cond)
         act("$n head bobs about watching people bounce around.",TRUE,this,0,doer,TO_ROOM);
       break;
   }
+
   return FALSE;
 }
 
@@ -129,7 +115,7 @@ int TMonster::aiDance(TBeing *doer, TBeing *other, aiTarg cond)
       } else if (doer->getSex() == getSex()) {
         act("$n prefers dancing with the opposite sex!",TRUE,this,0,doer,TO_ROOM);
         if (pissed() && !::number(0,2)) {
-          return takeFirstHit(doer);
+          return takeFirstHit(*doer);
         } else if (pissed())
           aiFag(doer,1);
       } else if (!doer->isUgly() && doer->isAgile(0)) {
@@ -147,7 +133,7 @@ int TMonster::aiDance(TBeing *doer, TBeing *other, aiTarg cond)
         act("$n is totally repulsed by your looks!",TRUE,this,0,doer,TO_VICT);
         act("$n is repulsed by $N's ugliness as they dance.",TRUE,this,0,doer,TO_NOTVICT);
         if (pissed()) {
-          return takeFirstHit(doer);
+          return takeFirstHit(*doer);
         }
       } else if (doer->isAgile(0)) {
         DMal(2);
@@ -173,7 +159,7 @@ int TMonster::aiDance(TBeing *doer, TBeing *other, aiTarg cond)
                    TRUE,this,0,doer,TO_ROOM);
         }
         if (pissed() && !::number(0,3)) {
-          return takeFirstHit(doer);
+          return takeFirstHit(*doer);
         } else if (pissed())
           aiFag(doer,1);
       } else if ((getSex() != other->getSex()) && !other->isUgly()) {
@@ -199,6 +185,7 @@ int TMonster::aiDance(TBeing *doer, TBeing *other, aiTarg cond)
       }
       break; 
   }
+
   return FALSE;
 }
 
@@ -293,6 +280,7 @@ int TMonster::aiSmile (TBeing *doer, TBeing *other, aiTarg cond)
       }
       break;
   }
+
   return FALSE;
 }
 
@@ -302,6 +290,7 @@ int TMonster::aiCackle(TBeing *doer, TBeing *, aiTarg cond)
     aiRudeNoise(doer);
     return FALSE;
   }
+
   switch (cond) {
     case TARGET_NONE:
     case TARGET_SELF:
@@ -312,6 +301,7 @@ int TMonster::aiCackle(TBeing *doer, TBeing *, aiTarg cond)
       aiStrangeThings(doer);
       break;
   }
+
   return FALSE;
 }
 
@@ -321,6 +311,7 @@ int TMonster::aiLaugh(TBeing *doer, TBeing *other, aiTarg cond)
     aiRudeNoise(doer);
     return FALSE;
   }
+
   switch (cond) {
     case TARGET_NONE:
       DA(1);
@@ -366,6 +357,7 @@ int TMonster::aiGiggle (TBeing *doer, TBeing *, aiTarg cond)
     // doubt they would understand a giggle 
     return FALSE;
   }
+
   switch (cond) {
     case TARGET_NONE:
     case TARGET_SELF:
@@ -383,6 +375,7 @@ int TMonster::aiGiggle (TBeing *doer, TBeing *, aiTarg cond)
       }
       break;
   }
+
   return FALSE;
 }
 
@@ -412,7 +405,7 @@ int TMonster::aiShake (TBeing *doer, TBeing *, aiTarg cond)
       UM(1);
       if (aggro()) {
         doAction(fname(doer->name), CMD_GROWL);
-        return takeFirstHit(doer);
+        return takeFirstHit(*doer);
       }
     } else
       US(1);
@@ -420,7 +413,7 @@ int TMonster::aiShake (TBeing *doer, TBeing *, aiTarg cond)
   }
   switch (cond) {
     case TARGET_NONE:
-      break;  // shakes thier head 
+      break;  // shakes their head 
     case TARGET_SELF:
       act("$n looks at you questiongly.",TRUE, this,0,doer,TO_VICT);
       if (doer->getSex() == SEX_MALE)
@@ -436,7 +429,7 @@ int TMonster::aiShake (TBeing *doer, TBeing *, aiTarg cond)
     case TARGET_MOB:
       if (isAngry()) {
         if (pissed()) {
-          return takeFirstHit(doer);
+          return takeFirstHit(*doer);
         } else 
           aiUpset(doer);
       } else if (isSusp()) {
@@ -453,6 +446,7 @@ int TMonster::aiShake (TBeing *doer, TBeing *, aiTarg cond)
     case TARGET_OTHER:
       break;
   }
+
   return FALSE;
 }
 
@@ -465,7 +459,7 @@ int TMonster::aiPuke (TBeing *doer, TBeing *, aiTarg cond)
       UA(6);
       doAction(fname(doer->name),CMD_SNARL);
       if (pissed()) {
-        return takeFirstHit(doer);
+        return takeFirstHit(*doer);
       }
     }
     return FALSE;
@@ -477,7 +471,7 @@ int TMonster::aiPuke (TBeing *doer, TBeing *, aiTarg cond)
       doAction(fname(doer->name),CMD_SNARL);
       aiInsultDoer(doer);
       if (pissed()) {
-        return takeFirstHit(doer);
+        return takeFirstHit(*doer);
       }
     case TARGET_NONE:
     case TARGET_SELF:
@@ -492,6 +486,7 @@ int TMonster::aiPuke (TBeing *doer, TBeing *, aiTarg cond)
       }
       break;
   }
+
   return FALSE;
 }
 
@@ -508,7 +503,7 @@ int TMonster::aiGrowl (TBeing *doer, TBeing *, aiTarg cond)
         act("The hair on $n's back bristles.",TRUE,this,0,doer,TO_ROOM);
       if (pissed()) {
         doAction("",CMD_SNARL);
-        return takeFirstHit(doer);
+        return takeFirstHit(*doer);
       }
     }
     return FALSE;
@@ -527,7 +522,7 @@ int TMonster::aiGrowl (TBeing *doer, TBeing *, aiTarg cond)
       if (getMaterial() == MAT_FUR_DOG)
         act("The hair on $n's back bristles.",TRUE,this,0,doer,TO_ROOM);
       if (pissed()) {
-        return takeFirstHit(doer);
+        return takeFirstHit(*doer);
       }
       break;
     case TARGET_OTHER:
@@ -566,7 +561,7 @@ int TMonster::aiScream (TBeing *doer, TBeing *, aiTarg cond)
     case TARGET_SELF:
     case TARGET_MOB:
     case TARGET_OTHER:
-      vlogf(6,"TMonster::aiScream is whacky.");
+      vlogf(LOG_MOB_AI, "TMonster::aiScream is whacky.");
       break;
   }
   return FALSE;
@@ -646,7 +641,7 @@ int TMonster::aiSigh (TBeing *, TBeing *, aiTarg cond)
     case TARGET_SELF:
     case TARGET_MOB:
     case TARGET_OTHER:
-      vlogf(5,"Wierd call into TMonster::aiSigh.");
+      vlogf(LOG_MOB_AI, "Wierd call into TMonster::aiSigh.");
       break;
   }
   return FALSE;
@@ -1229,7 +1224,7 @@ int TMonster::aiFart (TBeing *doer, TBeing *, aiTarg cond)
       break;
     case TARGET_MOB:
       if (pissed()) 
-        return takeFirstHit(doer);
+        return takeFirstHit(*doer);
       else
         aiUpset(doer); 
       break;
@@ -2856,7 +2851,7 @@ void TBeing::aiWear(TObj *obj)
   TThing *tmp;
 
   if (!obj) {
-    vlogf(8,"AI_wear called with bad declarations.");
+    vlogf(LOG_MOB_AI, "AI_wear called with bad declarations.");
     return;
   }
   if (inRoom() == ROOM_NOWHERE)
@@ -2882,11 +2877,11 @@ void TBeing::aiGet(TThing *obj)
   TThing *tmp;
 
   if (!obj) {
-    vlogf(8, "AI_wear called with bad declarations.");
+    vlogf(LOG_MOB_AI, "AI_wear called with bad declarations.");
     return;
   }
   if (!roomp) {
-    vlogf(5, "%s without a roomp in aiGet", getName());
+    vlogf(LOG_MOB, "%s without a roomp in aiGet", getName());
     return;
   }
   for (tmp = roomp->stuff; tmp; tmp = tmp->nextThing) {
@@ -3038,7 +3033,7 @@ int TMonster::aiSteal(TBeing *thief)
   US(25);
   UM(22);
   UA(38);
-  if (!pissed() && !isAffected(AFF_CHARM) && canSee(thief, INFRA_YES) && thief->isPc()) {
+  if (!pissed() && !isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && canSee(thief, INFRA_YES) && thief->isPc()) {
     if (!hasClass(CLASS_THIEF)) {
       sprintf(buf, "%s is a bloody thief.", thief->getName());
       doShout(buf);
@@ -3048,7 +3043,7 @@ int TMonster::aiSteal(TBeing *thief)
       doSay(buf);
     }
   } else
-    return (takeFirstHit(thief));
+    return (takeFirstHit(*thief));
   
   return FALSE;
 }

@@ -253,6 +253,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SPELL_FIRE_BREATH:
       case SPELL_SPONTANEOUS_COMBUST:
       case SPELL_FLAMING_SWORD:
+      case SPELL_BLOOD_BOIL:
       case DAMAGE_TRAP_FIRE:
       case TYPE_FIRE:
       case DAMAGE_FIRE:

@@ -164,7 +164,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
       return TRUE;
       }
       if (ch->hasClass(CLASS_SHAMAN)) {
-        act("You focus your thoughts upon the ancestors and thier swift movements...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
+        act("You focus your thoughts upon the ancestors and their swift movements...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
 	act("$n concentrates deeply upon $s task...", FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
       return TRUE;
       }
@@ -4187,7 +4187,7 @@ void SV(spellNumT spell_num)
 void LogDam(const TBeing *caster, spellNumT spell_num, int dam)
 {
   // this is used to log damage and number of victims
-  // thiere is no need to call this directly as it sits inside reconcileDamage()
+  // theire is no need to call this directly as it sits inside reconcileDamage()
   // however, non damagin spells that want to log "damage" (eg, heal) do call it
 
   // sometimes we call reconcileDamage with dam = 0 just to start a fight

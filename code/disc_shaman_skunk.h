@@ -9,6 +9,7 @@ class CDShamanSkunk : public CDiscipline
 public:
     CSkill skTurnSkill;
     CSkill skDeathMist;
+    CSkill skBloodBoil;
     CSkill skCardiacStress;
     CSkill skLichTouch;
 
@@ -16,6 +17,7 @@ public:
       : CDiscipline(),
       skTurnSkill(),
       skDeathMist(),
+      skBloodBoil(),
       skCardiacStress(),
       skLichTouch() {
     }
@@ -23,6 +25,7 @@ public:
       : CDiscipline(a),
       skTurnSkill(a.skTurnSkill),
       skDeathMist(a.skDeathMist),
+      skBloodBoil(a.skBloodBoil),
       skCardiacStress(a.skCardiacStress),
       skLichTouch(a.skLichTouch) {
     }
@@ -31,6 +34,7 @@ public:
       CDiscipline::operator=(a);
       skTurnSkill = a.skTurnSkill;
       skDeathMist = a.skDeathMist;
+      skBloodBoil = a.skBloodBoil;
       skCardiacStress = a.skCardiacStress;
       skLichTouch = a.skLichTouch;
       return *this;
@@ -54,6 +58,10 @@ private:
     int cardiacStress(TBeing *, TBeing *, TMagicItem *);
     int cardiacStress(TBeing *, TBeing *, int, byte, int);
 
+    int bloodBoil(TBeing *, TBeing *);
+    int castBloodBoil(TBeing *, TBeing *);
+    int bloodBoil(TBeing *, TBeing *, TMagicItem *);
+    int bloodBoil(TBeing *, TBeing *, int, byte, int);
 
 #endif
 

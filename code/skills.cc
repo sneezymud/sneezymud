@@ -933,6 +933,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
       // skunk abilities------------------------
 
+    case SPELL_BLOOD_BOIL:
+      return &((CDShamanSkunk *) cd)->skBloodBoil;
     case SPELL_LICH_TOUCH: // 543
       return &((CDShamanSkunk *) cd)->skLichTouch;
     case SPELL_DEATH_MIST: // 544

@@ -642,6 +642,7 @@ void TMonster::shamanComponentLoader(void)
           if (::number(0,2))
             num = -1;
           break;
+	case COMP_BLOOD_BOIL:
         case COMP_DETECT_SHADOW:
         case COMP_SHADOW_WALK:
         case COMP_CLARITY:

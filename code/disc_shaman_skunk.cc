@@ -347,3 +347,128 @@ int cardiacStress(TBeing * caster, TBeing * victim, TMagicItem * obj)
   return rc;
 }
 
+int bloodBoil(TBeing *caster, TBeing *victim, TMagicItem *tObj)
+{
+  int tLevel = tObj->getMagicLevel(),
+      tKnown = tObj->getMagicLearnedness(),
+      tReturn = 0;
+
+  tReturn = bloodBoil(caster, victim, tLevel, tKnown, 0);
+
+  if (IS_SET(tReturn, CASTER_DEAD))
+    ADD_DELETE(tReturn, DELETE_THIS);
+
+  return tReturn;
+}
+
+int bloodBoil(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+{
+  if (victim->isImmortal()) {
+    act("You can't boil $N's blood -- $E's a god! ", FALSE, caster, NULL, victim, TO_CHAR);
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
+  level = min(level, 45);
+
+  int dam = caster->getSkillDam(victim, SPELL_BLOOD_BOIL, level, adv_learn);
+
+  if (bSuccess(caster, bKnown, SPELL_BLOOD_BOIL)) {
+    caster->reconcileHurt(victim, discArray[SPELL_BLOOD_BOIL]->alignMod);
+
+    switch (critSuccess(caster, SPELL_BLOOD_BOIL)) {
+      case CRIT_S_KILL:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_DOUBLE:
+        CS(SPELL_BLOOD_BOIL);
+        dam <<= 1;
+        act("<R>$n directs <W>**INTENSE HEAT**<R> from $s hands boiling $N's blood!<z>", 
+                  FALSE, caster, NULL, victim, TO_NOTVICT);
+        act("<R>You direct <W>**INTENSE HEAT**<R> from your hands boiling $N's blood!<z>", 
+                  FALSE, caster, NULL, victim, TO_CHAR);
+        act("<R>$n directs <W>**INTENSE HEAT**<R> from $s hands boiling your blood!<z>", 
+                  FALSE, caster, NULL, victim, TO_VICT);
+        break;
+      case CRIT_S_NONE:
+        if (victim->isLucky(caster->spellLuckModifier(SPELL_BLOOD_BOIL))) {
+          SV(SPELL_BLOOD_BOIL);
+          dam /= 2;
+          act("<r>$n directs heat from $s hands boiling $N's blood!<z>", 
+                  FALSE, caster, NULL, victim, TO_NOTVICT);
+          act("<r>You direct heat from your hands boiling $N's blood!<z>", 
+                  FALSE, caster, NULL, victim, TO_CHAR);
+          act("<r>$n directs heat from $s hands boiling your blood!<z>", 
+                  FALSE, caster, NULL, victim, TO_VICT);
+        } else {
+          act("<R>$n directs heat from $s hands boiling $N's blood!<z>", 
+                  FALSE, caster, NULL, victim, TO_NOTVICT);
+          act("<R>You direct heat from your hands boiling $N's blood!<z>", 
+                  FALSE, caster, NULL, victim, TO_CHAR);
+          act("<R>$n directs heat from $s hands boiling your blood!<z>", 
+                  FALSE, caster, NULL, victim, TO_VICT);
+        }
+        break;
+    }
+    if (caster->reconcileDamage(victim, dam, SPELL_BLOOD_BOIL) == -1)
+      return SPELL_FAIL + VICTIM_DEAD;
+    return SPELL_FAIL;
+  } else {
+    switch(critFail(caster, SPELL_BLOOD_BOIL)) {
+      case CRIT_F_HITSELF:
+      case CRIT_F_HITOTHER:
+        CF(SPELL_BLOOD_BOIL);
+        caster->setCharFighting(victim);
+        caster->setVictFighting(victim);
+        act("<R>$n screwed up $s ritual and burned $mself!<z>", 
+                  FALSE, caster, NULL, victim, TO_NOTVICT);
+        act("<R>You direct <W>**INTENSE HEAT**<R> heat from your hands boiling <W>YOUR OWN<R> blood!<z>", 
+                  FALSE, caster, NULL, victim, TO_CHAR);
+        act("<R>$n has just tried to harm you!<z>", 
+                  FALSE, caster, NULL, victim, TO_VICT);
+        if (caster->reconcileDamage(caster, dam, SPELL_BLOOD_BOIL) == -1)
+          return SPELL_CRIT_FAIL + CASTER_DEAD;
+        return SPELL_CRIT_FAIL;
+      case CRIT_F_NONE:
+        break;
+    }
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+
+int bloodBoil(TBeing *caster, TBeing *victim)
+{
+  taskDiffT diff;
+
+    if (!bPassShamanChecks(caster, SPELL_BLOOD_BOIL, victim))
+       return FALSE;
+
+  lag_t rounds = discArray[SPELL_BLOOD_BOIL]->lag;
+  diff = discArray[SPELL_BLOOD_BOIL]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_BLOOD_BOIL, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+
+     return TRUE;
+}
+
+int castBloodBoil(TBeing *caster, TBeing *victim)
+{
+  int ret,level;
+  int rc = 0;
+
+  level = caster->getSkillLevel(SPELL_BLOOD_BOIL);
+  int bKnown = caster->getSkillValue(SPELL_BLOOD_BOIL);
+
+  ret=bloodBoil(caster,victim,level,bKnown, caster->getAdvLearning(SPELL_BLOOD_BOIL));
+  if (IS_SET(ret, SPELL_SUCCESS)) {
+  } else {
+    if (ret==SPELL_CRIT_FAIL) {
+    } else {
+    }
+  }
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+
+  return rc;
+}

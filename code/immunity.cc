@@ -165,6 +165,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
   immuneTypeT bit = IMMUNE_NONE;
 
   switch (type) {
+    case SPELL_BLOOD_BOIL:
     case DAMAGE_FIRE:
     case SPELL_FIREBALL:
     case SPELL_HANDS_OF_FLAME:

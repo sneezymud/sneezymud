@@ -974,6 +974,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_DETECT_MAGIC:
       case SPELL_MATERIALIZE:
       case SPELL_CHRISM:
+      case SPELL_BLOOD_BOIL:
       case SPELL_DJALLA:
       case SPELL_LEGBA:
       case SPELL_PROTECTION_FROM_EARTH:

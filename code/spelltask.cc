@@ -1280,6 +1280,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_SORCERERS_GLOBE:
     case SPELL_AQUATIC_BLAST:
     case SPELL_STORMY_SKIES:
+    case SPELL_BLOOD_BOIL:
     case SPELL_AQUALUNG:
     case SPELL_CARDIAC_STRESS:
     case SPELL_DEATHWAVE:
@@ -2127,6 +2128,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
           rc = castDeathWave(this, victim);
         else
           vlogf(LOG_BUG, "SPELL_DEATHWAVE called with null obj");
+        break;
+      case SPELL_BLOOD_BOIL:
+        if (!o) {
+          rc = castBloodBoil(this, victim);
+        } else
+          vlogf(LOG_BUG, "SPELL_BLOOD_BOIL called with null obj");
         break;
       case SPELL_BLAST_OF_FURY:
         if (!o) {

@@ -1306,6 +1306,14 @@ void buildComponentArray()
     "$n consumes $p and swallows it down.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_BLOOD_BOIL,
+    "You spit $p at $N.",
+    "$n spits $p at $N.",
+    "$n spits $p at you.",                       
+    "You swallow $p and start to drool.",
+    "$n swallows $p and drools on $mself.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_LIFE_LEECH,
     "You throw $p onto $N's chest.",
     "$n throws $p onto $N's chest.",

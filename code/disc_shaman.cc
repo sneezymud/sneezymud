@@ -1734,7 +1734,7 @@ int squish(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_lea
     act("$n just tried to attack you!", FALSE, caster, NULL, victim, TO_VICT);
     if (critFail(caster, SPELL_SQUISH) == CRIT_F_HITSELF) {
       CF(SPELL_SQUISH);
-      act("Your hands have a mind of thier own and you grab the wrong thing! OWWW!",
+      act("Your hands have a mind of their own and you grab the wrong thing! OWWW!",
           FALSE, caster, NULL, victim, TO_CHAR);
       act("$n fondles $mself fondly, and a bit rough...oww!",
           FALSE, caster, NULL, victim, TO_ROOM);

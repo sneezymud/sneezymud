@@ -946,7 +946,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
       }
 #if 0
       // Theoretically, a players peak - curr / gainmod is extremely reasonable
-      // for a veteran player hitting mobs above thier level but not too far
+      // for a veteran player hitting mobs above their level but not too far
       // We may need to watch for the backstabbers
       if(dam > 0) {
 	double peak = getExpClassLevel(i,ch->getLevel(i) + 1);
