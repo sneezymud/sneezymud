@@ -552,10 +552,10 @@ double GetApprox(double num, int perc)
   adj = max((float) 5.0, adj);
   // the better learned they are, the closer adj will be to 0 
 
-  // we should be +- 50% at most
+  // we should be +- 20% at most
   // adj is in range [5-100]
-  adj /= 2.0;
-  // adj is now [2.5 - 50], treat as a +- percentage
+  adj /= 5.0;
+  // adj is now [1 - 20], treat as a +- percentage
 
   // calculate the biggest deviation to allow
   double max_adj = adj * num / 100.0;
