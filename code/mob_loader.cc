@@ -152,7 +152,8 @@ void TMonster::thiefLootLoader()
     setMoney(getMoney()-obj->obj_flags.cost);
     *this += *obj;
     logItem(obj, CMD_LOAD);
-  }
+  } else
+    delete obj;
 }
 
 void TMonster::createWealth(void)
