@@ -1785,48 +1785,80 @@ int BankVault(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   TRoom *rp;
   TThing *tt;
   TBeing *tb;
-  static int pulse;
+  int rc;
 
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  ++pulse;
-  if(pulse%15)
+  if(::number(0,14))
     return FALSE;
 
   // close and lock vault doors
   //  vlogf(LOG_PEEL, "Bank: closing/locking vault doors");
-  
-  rp=real_roomp(31780);
-  SET_BIT(rp->dir_option[DIR_WEST]->condition, EX_CLOSED);
-  SET_BIT(rp->dir_option[DIR_WEST]->condition, EX_LOCKED);
-  
-  rp=real_roomp(31779);
-  SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_CLOSED);
-  SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_LOCKED);
 
-  rp=real_roomp(31786);
-  SET_BIT(rp->dir_option[DIR_WEST]->condition, EX_CLOSED);
-  SET_BIT(rp->dir_option[DIR_WEST]->condition, EX_LOCKED);
+  if(roomp->number==31780){
+    if(!IS_SET(roomp->dir_option[DIR_WEST]->condition, EX_CLOSED)){
+      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EX_CLOSED);
+      roomp->sendTo("The door to the west swings closed.\n\r");
+    }
+    if(!IS_SET(roomp->dir_option[DIR_WEST]->condition, EX_LOCKED)){
+      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EX_LOCKED);
+      roomp->sendTo("The door to the west locks with an audible *click*.\n\r");
+    }
+    
+    rp=real_roomp(31779);
+    if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EX_CLOSED)){
+      SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_CLOSED);
+      rp->sendTo("The door to the east swings closed.\n\r");
+    }
+    if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EX_LOCKED)){
+      SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_LOCKED);
+      rp->sendTo("The door to the east locks with an audible *click*.\n\r");
+    }
+  }
 
-  rp=real_roomp(31785);
-  SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_CLOSED);
-  SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_LOCKED);
+  if(roomp->number==31786){
+    if(!IS_SET(roomp->dir_option[DIR_WEST]->condition, EX_CLOSED)){
+      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EX_CLOSED);
+      roomp->sendTo("The door to the west swings closed.\n\r");
+    }
+    if(!IS_SET(roomp->dir_option[DIR_WEST]->condition, EX_LOCKED)){
+      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EX_LOCKED);
+      roomp->sendTo("The door to the west locks with an audible *click*.\n\r");
+    }
+    
+    rp=real_roomp(31785);
+    if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EX_CLOSED)){
+      SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_CLOSED);
+      rp->sendTo("The door to the east swings closed.\n\r");
+    }
+    if(!IS_SET(rp->dir_option[DIR_EAST]->condition, EX_LOCKED)){
+      SET_BIT(rp->dir_option[DIR_EAST]->condition, EX_LOCKED);
+      rp->sendTo("The door to the east locks with an audible *click*.\n\r");
+    }
+  }
   
+
   // check for player in this room and poison if so
-  
   for(tt=roomp->getStuff();tt;tt=tt->nextThing){
     if((tb=dynamic_cast<TBeing *>(tt)) && tb->isPc()){
       tb->sendTo(COLOR_BASIC, "<G>Acidic gas shoots out of small holes in the ceiling.<1>\n\r");
       tb->sendTo(COLOR_BASIC, "<r>It burns your skin and you choke uncontrollably!<1>\n\r");
 
-      vlogf(LOG_PEEL, fmt("Bank: %s caught in vault") %  tb->getName());
+      //  vlogf(LOG_PEEL, fmt("Bank: %s caught in vault") %  tb->getName());
 
-      if (tb->reconcileDamage(tb, ::number(20,50), DAMAGE_TRAP_POISON) == -1)
-	return DELETE_VICT;
+      rc=tb->reconcileDamage(tb, ::number(20,50), DAMAGE_TRAP_POISON);
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+	delete tb;
+	continue;
+      }
 
-      if (tb->reconcileDamage(tb, ::number(20,50), DAMAGE_TRAP_ACID) == -1)
-	return DELETE_VICT;
+      rc=tb->reconcileDamage(tb, ::number(20,50), DAMAGE_TRAP_ACID);
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+	delete tb;
+	continue;
+      }
+
     }
   }
 
@@ -1847,18 +1879,32 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   if(pulse%180)
     return FALSE;
 
-  //  vlogf(LOG_PEEL, "Bank: closing/locking main entrance");
-
   rp=real_roomp(31764);
-  SET_BIT(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED);
-  SET_BIT(rp->dir_option[DIR_NORTH]->condition, EX_LOCKED);
-  SET_BIT(rp->dir_option[DIR_SOUTH]->condition, EX_CLOSED);
+
+  if(!IS_SET(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED)){
+    rp->sendTo("The door to the north swings closed.\n\r");
+    SET_BIT(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED);
+  }
+  if(!IS_SET(rp->dir_option[DIR_NORTH]->condition, EX_LOCKED)){
+    rp->sendTo("The door to the north locks with an audible *click*.\n\r");
+    SET_BIT(rp->dir_option[DIR_NORTH]->condition, EX_LOCKED);
+  }
+  if(!IS_SET(rp->dir_option[DIR_SOUTH]->condition, EX_CLOSED)){
+    rp->sendTo("The door to the south swings closed.\n\r");
+    SET_BIT(rp->dir_option[DIR_SOUTH]->condition, EX_CLOSED);
+  }
 
   rp=real_roomp(31767);
-  SET_BIT(rp->dir_option[DIR_SOUTH]->condition, EX_CLOSED);
+  if(!IS_SET(rp->dir_option[DIR_SOUTH]->condition, EX_CLOSED)){
+    rp->sendTo("The door to the south swings closed.\n\r");
+    SET_BIT(rp->dir_option[DIR_SOUTH]->condition, EX_CLOSED);
+  }
 
   rp=real_roomp(31758);
-  SET_BIT(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED);
+  if(!IS_SET(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED)){
+    rp->sendTo("The door to the north swings closed.\n\r");
+    SET_BIT(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED);
+  }
 
   return TRUE;
 }
@@ -1866,29 +1912,30 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
 int BankTeleporter(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   TBeing *mob, *boss;
-  int i=0, found=0;
+  int i=0;
+  bool found=false;
   static unsigned int pulse;
   Descriptor *d;
-  int saferooms[7]={31750, 31751, 31756, 31757, 31758, 31759, 31764};  
+  int saferooms[]={31750, 31751, 31756, 31757, 31758, 31759, 31764, 31788,-1};
   
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
   ++pulse;
-  if(pulse%150)
+  if(pulse%180)
     return FALSE;
 
   for (d = descriptor_list; d ; d = d->next){
     if (!d->connected && d->character && d->character->roomp &&
 	d->character->roomp->getZoneNum() == rp->getZoneNum() &&
-	d->character->in_room != saferooms[0] &&
-	d->character->in_room != saferooms[1] &&
-	d->character->in_room != saferooms[2] &&
-	d->character->in_room != saferooms[3] &&
-	d->character->in_room != saferooms[4] &&
-	d->character->in_room != saferooms[5] &&
-	d->character->in_room != saferooms[6]){
-      found=1;
+	!d->character->isImmortal()){
+      found=true;
+
+      for(i=0;saferooms[i]!=-1;++i){
+	if(d->character->in_room == saferooms[i])
+	  found=false;
+      }
+
       break;
     }
   }
