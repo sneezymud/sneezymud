@@ -2689,7 +2689,7 @@ int TMonster::takeFirstHit(TBeing &vict)
           } else  {
 	    //            rc = backstabHit(&vict, stabber);
 	    //            addSkillLag(SKILL_BACKSTAB, 0);
-	    rc=doBackstab(NULL, v2);
+	    rc=doBackstab("", &vict);
 
             if (IS_SET_DELETE(rc, DELETE_VICT)) {
               return DELETE_VICT;
