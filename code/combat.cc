@@ -1673,7 +1673,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
   if (!wielded) {
     if (tmon)
       wepDam += tmon->getMobDamage();
-    else if (hasClass(CLASS_MONK))
+    else if (doesKnowSkill(SKILL_KUBO))
       return getMonkWeaponDam(this, v, isprimary, rollDam);
     else
       wepDam += ::number(1, 3);        
@@ -2062,27 +2062,27 @@ int TBeing::hit(TBeing *target, int pulse)
 
   //// cosmo start learn from doing primary hand-- secondary below
   if (desc && !dynamic_cast<TMonster *>(this)) {
-    if (((fx > 0.999) || (fy > 0.999)) && hasClass(CLASS_MONK) && (!o || !o2)){
+    if (((fx > 0.999) || (fy > 0.999)) && (!o || !o2)){
       if(doesKnowSkill(SKILL_OOMLAT))
         learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OOMLAT, 20);
+
       if(doesKnowSkill(SKILL_KUBO))
         learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_KUBO, 20);
+
       if(doesKnowSkill(SKILL_CINTAI))
         learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CINTAI, 20);
+
       if(doesKnowSkill(SKILL_ADVANCED_KICKING))
         learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_KICKING, 20);
+
       if(doesKnowSkill(SKILL_IRON_FIST) && 
 	 !equipment[WEAR_HAND_R] && !equipment[WEAR_HAND_L])
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_IRON_FIST, 20);
 
-#if 0
-      if(doesKnowSkill(SKILL_BLUR))
-        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_BLUR, 20);
-#endif
       if(doesKnowSkill(SKILL_CRIT_HIT))
         learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 20);
     }
-    if (((fx > 0.999) || (fy > 0.999)) && hasClass(CLASS_WARRIOR)){
+    if (((fx > 0.999) || (fy > 0.999))){
       if(doesKnowSkill(SKILL_POWERMOVE))
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_POWERMOVE, 20);
     }
@@ -4453,7 +4453,7 @@ spellNumT TBeing::getAttackType(const TThing *wielded) const
     return TYPE_BEAR_CLAW;
   else if (affectedBySpell(AFFECT_TRANSFORMED_ARMS))
     return TYPE_CLAW;
-  else if (hasClass(CLASS_MONK))
+  else if (doesKnowSkill(SKILL_KUBO))
     return monkDamType();
   else if (dynamic_cast<const TMonster *>(this))
     return getFormType();
@@ -5280,7 +5280,7 @@ bool pierceType(spellNumT wtype)
 
 spellNumT TBeing::monkDamType() const
 {
-  if (!hasClass(CLASS_MONK) || !doesKnowSkill(SKILL_KUBO))
+  if (!doesKnowSkill(SKILL_KUBO))
     return TYPE_HIT;
 
   double value;

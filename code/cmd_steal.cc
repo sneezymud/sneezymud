@@ -150,7 +150,7 @@ static int steal(TBeing * thief, TBeing * victim)
       thief->sendTo("You have just stolen %d talen%s from %s.\n\r", gold, 
             (gold > 1) ? "s" : "", victim->getName());
 
-      if (victim->hasClass(CLASS_THIEF) && victim->isPerceptive())
+      if (victim->isPerceptive())
         victim->sendTo("You suddenly feel lighter in your moneypouch...\n\r");
     } else 
       thief->sendTo("You couldn't seem to find any talens...\n\r");
@@ -367,7 +367,7 @@ static int steal(TBeing * thief, TBeing * victim, const sstring &obj_name)
           vlogf(LOG_MISC, "%s stole %s from %s.",thief->getName(),
                 obj->getName(), victim->getName());
 
-      if (victim->hasClass(CLASS_THIEF) && victim->isPerceptive())
+      if (victim->isPerceptive())
         victim->sendTo("You suddenly feel like something is missing...\n\r");
       } else
         thief->sendTo("You can't carry that much weight.\n\r");

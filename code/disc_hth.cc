@@ -160,7 +160,7 @@ int shove(TBeing *caster, TBeing * victim, char * direction, spellNumT skill)
     return FALSE;
   }
   if (bSuccess(caster, bKnown+ percent, skill)) {
-    if (victim->hasClass(CLASS_MONK)) {
+    if (victim->doesKnowSkill(SKILL_COUNTER_MOVE)) {
       if (min(2*victim->GetMaxLevel(),100) > percent) {
         act("$N deftly resists your shove attempt.", 
             FALSE, caster, 0, victim, TO_CHAR);
@@ -209,7 +209,7 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
 
   // presumes warrior is in appropriate position for parry already
 
-  if (!v->doesKnowSkill(SKILL_PARRY_WARRIOR) && hasClass(CLASS_WARRIOR))
+  if (!v->doesKnowSkill(SKILL_PARRY_WARRIOR))
     return FALSE;
   if (v->doesKnowSkill(SKILL_TRANCE_OF_BLADES) && (v->task) &&
       (v->task->task = TASK_TRANCE_OF_BLADES) &&
@@ -331,7 +331,7 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
 
   // presumes warrior is in appropriate position for parry already
 
-  if (!v->doesKnowSkill(SKILL_PARRY_WARRIOR) && hasClass(CLASS_WARRIOR))
+  if (!v->doesKnowSkill(SKILL_PARRY_WARRIOR))
     return FALSE;
 
   w_type -= TYPE_HIT;
@@ -394,20 +394,17 @@ int TBeing::doParry()
 
 void TBeing::doTranceOfBlades(const char *newarg) {
   TThing *obj;
-  if (!hasClass(CLASS_WARRIOR)) {
-    sendTo("Only warriors can enter the defensive trance.\n\r");
-  }
   
+  if (!doesKnowSkill(SKILL_TRANCE_OF_BLADES)) {
+    sendTo("You do not have the knowledge to attempt the defensive trance.\n\r");
+    return;
+  }
   if ( !(this->heldInPrimHand()) || 
        !(obj = dynamic_cast<TBaseWeapon *>(this->heldInPrimHand()))) {
     sendTo("You'll need to be holding a suitable weapon to enter the defensive trance.\n\r");
     return;
   }
   
-  if (!doesKnowSkill(SKILL_TRANCE_OF_BLADES)) {
-    sendTo("You do not have the knowledge to attempt the defensive trance.\n\r");
-    return;
-  }
   if (!canUseArm(HAND_PRIMARY)) {
     sendTo("You can't enter the defensive trance with a useless arm.\n\r");
     return;

@@ -31,7 +31,7 @@ bool TBeing::canKick(TBeing *victim, silentTypeT silent)
     return FALSE;
   }
 
-  if (hasClass(CLASS_MONK) && doesKnowSkill(SKILL_ADVANCED_KICKING)){
+  if (doesKnowSkill(SKILL_ADVANCED_KICKING)){
     if (!silent)
       sendTo("You are kicking constantly in melee, already.\n\r");
     return FALSE;
@@ -215,13 +215,6 @@ static int kickHit(TBeing *caster, TBeing *victim, int score, int level, spellNu
 
   dam = caster->getSkillDam(victim, skill, level, caster->getAdvLearning(skill));
 
-#if 0
-  if (victim->hasClass(CLASS_MONK) && victim->awake() &&
-        (score <= victim->getSkillValue(SKILL_LEG_BLOCK))) {
-    kickMiss(caster, victim, slot_i, skill);
-    return TRUE;
-  }
-#endif
   TObj *item;
   switch (slot_i) {
     case KICK_WAISTE:

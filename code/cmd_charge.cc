@@ -249,7 +249,7 @@ int TBeing::doCharge(const char *arg, TBeing *victim)
   int       rc        = 0;
   dirTypeT  Direction = DIR_NONE;
 
-  if (hasClass(CLASS_MAGE)) {
+  if (doesKnowSkill(SKILL_STAVECHARGE)) {
     doChargeStave(arg);
     return FALSE;
   }

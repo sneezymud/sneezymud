@@ -87,7 +87,7 @@ bool TBeing::canStomp(TBeing *victim, silentTypeT silent)
 
 static int stompMiss(TBeing *caster, TBeing *victim)
 {
-  if (victim->hasClass(CLASS_MONK)) {
+  if (victim->doesKnowSkill(SKILL_COUNTER_MOVE)) {
     act("$N deftly avoids $n's stomp.", 
         FALSE, caster, 0, victim, TO_NOTVICT);
     act("$N deftly avoids your stomp.", 

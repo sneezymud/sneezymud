@@ -18,8 +18,8 @@ static int feignDeath(TBeing * caster)
     caster->sendTo("But you are not fighting anything...\n\r");
     return FALSE;
   }
-  if (!caster->hasClass(CLASS_MONK) && !caster->isImmortal()) {
-    caster->sendTo("You're no monk!\n\r");
+  if (!caster->doesKnowSkill(SKILL_FEIGN_DEATH) && !caster->isImmortal()) {
+    caster->sendTo("You don't know how to do that!\n\r");
     return FALSE;
   }
   if (caster->riding) {

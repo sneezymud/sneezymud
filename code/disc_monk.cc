@@ -143,7 +143,7 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
 // automatically springleap.  They can still force it thru doSpringleap
 int TBeing::trySpringleap(TBeing *vict)
 {
-  if (!hasClass(CLASS_MONK) || !doesKnowSkill(SKILL_SPRINGLEAP))
+  if (!doesKnowSkill(SKILL_SPRINGLEAP))
     return FALSE;
 
   return doSpringleap("", false, vict);
@@ -201,8 +201,8 @@ int springleap(TBeing * caster, TBeing * victim, bool should_lag)
   if (caster->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
 
-  if (!caster->hasClass(CLASS_MONK)) {
-    caster->sendTo("You're no monk!\n\r");
+  if (!caster->doesKnowSkill(iSkill)) {
+    caster->sendTo("You don't know how to do that!\n\r");
     return FALSE;
   }
 
@@ -282,8 +282,6 @@ bool TBeing::canCounterMove(int perc)
   // perc is based on the person doing the move's skill
   // it is somewhat reduced based on arbitray rating of the skill's difficulty
 
-  if (!hasClass(CLASS_MONK))
-    return FALSE;
   if (!doesKnowSkill(SKILL_COUNTER_MOVE))
     return FALSE;
 
@@ -318,7 +316,7 @@ int TBeing::monkDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlotT
 
   // presumes monk is in appropriate position for dodging already
 
-  if (!v->doesKnowSkill(SKILL_JIRIN) && hasClass(CLASS_MONK))
+  if (!v->doesKnowSkill(SKILL_JIRIN))
     return FALSE;
 
   // Balance notes: dodging is in some ways a replacement for Monk's

@@ -108,7 +108,8 @@ static int headbuttMiss(TBeing *c, TBeing *v)
 {
   int rc;
 
-  if (v->hasClass(CLASS_MONK)) {
+  if (v->doesKnowSkill(SKILL_COUNTER_MOVE)) {
+    // I don't understand this logic
     act("$N deftly avoids $n's headbutt.", FALSE, c, 0, v, TO_NOTVICT); 
     act("$N deftly avoids your headbutt.", FALSE, c, 0, v, TO_CHAR);
     act("You deftly avoid $n's headbutt.", FALSE, c, 0, v, TO_VICT);

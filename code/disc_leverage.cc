@@ -80,7 +80,7 @@ static int hurlHit(TBeing *caster, TBeing *victim, dirTypeT dr)
     return FALSE;
   }
 
-  if (victim->hasClass(CLASS_MONK) && 
+  if (victim->doesKnowSkill(SKILL_COUNTER_MOVE) && 
       min(2*victim->GetMaxLevel(),100) > percent) {
     act("$N deftly resists your shove attempt.", 
           FALSE, caster, 0, victim, TO_CHAR);

@@ -1425,14 +1425,6 @@ int TBeing::doShoot(const char *arg)
   if ((!desc || (!isPc() && !orig)) && !(spec)) //added spec for the BM archers.. hopefully wont cause problems - Dash
     return FALSE;
 
-#if 0
-  if (!hasClass(CLASS_THIEF) && !hasClass(CLASS_RANGER) &&
-      !hasClass(CLASS_WARRIOR) && !hasClass(CLASS_DEIKHAN) &&
-      !isImmortal()) {
-    sendTo("You don't possess the correct skills to shoot a bow!\n\r");
-    return FALSE;
-  }
-#endif
   rc = sscanf(arg, "%s %s %d", arg2, arg1, &iDist);
   if (rc < 3) 
     iDist = 99;

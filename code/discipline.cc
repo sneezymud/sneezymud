@@ -3652,7 +3652,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     if (!silent)
       sendTo(COLOR_BASIC, "<c>You %s %s.<z>\n\r", tString, discArray[sknum]->name);
 
-    if (hasClass(CLASS_MONK) && sknum == SKILL_KICK_MONK) {
+    if (doesKnowSkill(SKILL_KICK_MONK) && sknum == SKILL_KICK_MONK) {
       setQuestBit(TOG_ELIGIBLE_ADVANCED_KICKING);
 
       sendTo(COLOR_BASIC, "<c>Perhaps your guildmaster could help you with <p>advanced kicking<c> now.<1>");

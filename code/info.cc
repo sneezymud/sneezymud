@@ -5064,16 +5064,13 @@ void TBeing::sendRoomDesc(TRoom *rp) const
 
 void TBeing::describeTrapEffect(const TTrap *, int) const
 {
-  if (!hasClass(CLASS_THIEF))
-    return;
-
   // this tells things like the triggers, why let them know these?
   return;
 }
 
 void TBeing::describeTrapLevel(const TTrap *obj, int learn) const
 {
-  if (!hasClass(CLASS_THIEF))
+  if (!doesKnowSkill(SKILL_DETECT_TRAP))
     return;
 
   int level = GetApprox(obj->getTrapLevel(), learn);
@@ -5085,7 +5082,7 @@ void TBeing::describeTrapLevel(const TTrap *obj, int learn) const
 
 void TBeing::describeTrapCharges(const TTrap *obj, int learn) const
 {
-  if (!hasClass(CLASS_THIEF))
+  if (!doesKnowSkill(SKILL_DETECT_TRAP))
     return;
 
   int level = GetApprox(obj->getTrapCharges(), learn);
@@ -5097,7 +5094,7 @@ void TBeing::describeTrapCharges(const TTrap *obj, int learn) const
 
 void TBeing::describeTrapDamType(const TTrap *obj, int) const
 {
-  if (!hasClass(CLASS_THIEF))
+  if (!doesKnowSkill(SKILL_DETECT_TRAP))
     return;
 
   sendTo(COLOR_OBJECTS, "You suspect %s is %s %s trap.\n\r", 

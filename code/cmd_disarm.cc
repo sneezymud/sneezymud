@@ -183,7 +183,6 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
 
   // if my hands are empty, make it easy  
   if (!caster->heldInPrimHand() &&
-//      !caster->hasClass(CLASS_MONK) &&
       caster->isHumanoid())
     percent += 10;
 

@@ -324,8 +324,8 @@ int pickLocks(TBeing *thief, const char * argument, const char * type, const cha
 {
   TThing *pick;
 
-  if (!thief->hasClass(CLASS_THIEF) && !thief->hasClass(CLASS_MONK) && !thief->isImmortal()) {
-    thief->sendTo("You're no thief!\n\r");
+  if (!thief->doesKnowSkill(SKILL_PICK_LOCK)){
+    thief->sendTo("You don't know to pick locks!\n\r");
     return FALSE;
   }
   if (!(pick = thief->heldInPrimHand())) {
@@ -719,7 +719,7 @@ int TBeing::thiefDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlot
 
   // presumes thief is in appropriate position for dodging already
 
-  if (!v->doesKnowSkill(SKILL_DODGE_THIEF) && hasClass(CLASS_THIEF))
+  if (!v->doesKnowSkill(SKILL_DODGE_THIEF))
     return FALSE;
 
   w_type -= TYPE_HIT;

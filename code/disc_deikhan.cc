@@ -135,10 +135,6 @@ int TBeing::doLayHands(const char *arg)
   char name_buf[MAX_INPUT_LENGTH + 1];
   TBeing *vict;
 
-  if (!hasClass(CLASS_DEIKHAN)) {
-    sendTo("Leave the faith healing to the deikhans.\n\r");
-    return FALSE;
-  }
   if (!doesKnowSkill(SKILL_LAY_HANDS)) {
     sendTo("You know nothing about laying on of hands.\n\r");
     return FALSE;

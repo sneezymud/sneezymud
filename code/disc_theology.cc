@@ -25,19 +25,15 @@ void TBeing::doAttune(const char *argument)
     return;
   }
 
-  if (!hasClass(CLASS_CLERIC) && !hasClass(CLASS_DEIKHAN)) {
-    sendTo("Only clerical types can attune objects.\n\r");
+  if (!doesKnowSkill(SKILL_ATTUNE)) {
+    sendTo("You know nothing about attuning symbols.\n\r");
+    return;
   }
-
   if (!(obj = equipment[getPrimaryHold()]) || !isname(name_buf, obj->name)) {
     sendTo("You'll have to be holding that in your primary hand to attune it.\n\r");
     return;
   }
 
-  if (!doesKnowSkill(SKILL_ATTUNE)) {
-    sendTo("You know nothing about attuning symbols.\n\r");
-    return;
-  }
   if (getPosition() > POSITION_SITTING) {
     sendTo("You can not attune symbols unless you are sitting comfortably.\n\r");
     return;

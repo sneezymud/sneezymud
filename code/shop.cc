@@ -1503,22 +1503,22 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     else if (is_abbrev(argument.word(i), "shadowy")) FitT |= (1 << 16);
     else if (is_abbrev(argument.word(i), "paired") ) FitT |= (1 << 17);
     else if (is_abbrev(argument.word(i), "stab")) {
-      if ((ch->hasClass(CLASS_THIEF) && ch->doesKnowSkill(SKILL_STABBING)) || ch->isImmortal()) {
+      if ((ch->doesKnowSkill(SKILL_STABBING)) || ch->isImmortal()) {
         FitT |= (1 << 18);
         FitT |= (1 <<  2);
       }
     } else if (is_abbrev(argument.word(i), "cudgel")) {
-      if ((ch->hasClass(CLASS_THIEF) && ch->doesKnowSkill(SKILL_CUDGEL)) || ch->isImmortal()) {
+      if ((ch->doesKnowSkill(SKILL_CUDGEL)) || ch->isImmortal()) {
         FitT |= (1 << 19);
         FitT |= (1 <<  3);
       }
     } else if (is_abbrev(argument.word(i), "backstab")) {
-      if ((ch->hasClass(CLASS_THIEF) && ch->doesKnowSkill(SKILL_BACKSTAB)) || ch->isImmortal()) {
+      if ((ch->doesKnowSkill(SKILL_BACKSTAB)) || ch->isImmortal()) {
         FitT |= (1 << 20);
         FitT |= (1 <<  2);
       }
     } else if (is_abbrev(argument.word(i), "slit")) {
-      if ((ch->hasClass(CLASS_THIEF) && ch->doesKnowSkill(SKILL_THROATSLIT)) || ch->isImmortal()) {
+      if ((ch->doesKnowSkill(SKILL_THROATSLIT)) || ch->isImmortal()) {
         FitT |= (1 << 20);
         FitT |= (1 <<  2);
       }

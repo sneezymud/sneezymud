@@ -1231,7 +1231,7 @@ int rombler(TBeing *caster, int, byte bKnown)
             (dynamic_cast<TMonster *>(i->character) ||
               (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
               !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
-	  if (i->character->hasClass(CLASS_SHAMAN) || i->character->isImmortal()) {
+	  if (i->character->doesKnowSkill(SPELL_ROMBLER) || i->character->isImmortal()) {
             i->character->sendTo(COLOR_SPELLS, "<Y>%s<z> rombles, \"<o>%s%s\"\n\r", caster->getName(),  msg, i->character->norm());
           } else {
 	    int num = ::number(0,3);
