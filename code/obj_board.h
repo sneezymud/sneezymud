@@ -61,7 +61,7 @@ int board(TBeing *ch, cmdTypeT cmd, const char *arg, TObj **me, TObj **ob2);
 int board_display_msg(TBeing *ch, const char *arg, TBoard *, boardStruct *b);
 void board_reset_board(boardStruct *b);
 void board_load_board(boardStruct *b);
-void post_note_on_board(TBeing *ch, const char *arg, boardStruct *b);
+void post_note_on_board(TBeing *ch, const sstring &arg, boardStruct *b);
 boardStruct *FindBoardInRoom(TBeing *, const char *arg);
 void OpenBoardFile(boardStruct *b);
 void InitABoard(TObj *obj);

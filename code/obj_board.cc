@@ -582,22 +582,30 @@ void TNote::postMe(TBeing *ch, const char *arg2, boardStruct *b)
   delete this;
 }
 
-void post_note_on_board(TBeing *ch, const char *argument, boardStruct *b)
+void post_note_on_board(TBeing *ch, const sstring &argument, boardStruct *b)
 {
-  char arg1[128], arg2[128];
+  sstring arg1, arg2;
   TThing *note;
 
-  half_chop(argument, arg1, arg2);
+  arg2=one_argument(argument, arg1);
 
   if (!(note = searchLinkedListVis(ch, arg1, ch->getStuff()))) {
     ch->sendTo("You don't have anything like that!\n\r");
     return;
   }
-  if (!*arg2) {
+  if (arg2.empty()) {
     ch->sendTo("Syntax : post <note> <title>\n\r");
     return;
   }
-  note->postMe(ch, arg2, b);
+  
+  if(arg2.word(0)=="board"){
+    ch->sendTo("Syntax : post <note> <title>\n\r");
+    ch->sendTo("You probably didn't mean to post with the title of 'board'.  Try again.\n\r");
+    return;
+  }
+  
+
+  note->postMe(ch, arg2.c_str(), b);
   // note is possibly invalid here
 }
 
