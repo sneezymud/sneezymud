@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.3  2001/04/28 06:04:38  jesus
+// Added clarify spell for shaman
+//
 // Revision 5.2  2001/04/26 22:23:57  peel
 // *** empty log message ***
 //
@@ -139,6 +142,7 @@ const int COMP_ENTHRALL_DEMON     =31304;
 const int COMP_THORNFLESH         =31305;
 const int COMP_AQUALUNG           =31306;
 const int COMP_AQUATIC_BLAST      =31307;
+const int COMP_CLARITY            =31309;
 
 class compPlace
 {

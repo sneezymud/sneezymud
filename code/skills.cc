@@ -579,6 +579,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDNature *) cd)->skTreeWalk;
     case SPELL_SHAPESHIFT:  //                 372
       return &((CDShamanFrog *) cd)->skShapeShift;
+    case SPELL_CLARITY:  // 546
+      return &((CDShamanSpider *) cd)->skClarity;
 
 // disc_animal
 

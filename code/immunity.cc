@@ -508,6 +508,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_CURE_DISEASE_DEIKHAN:
     case SPELL_PLASMA_MIRROR:
     case SPELL_THORNFLESH:
+    case SPELL_CLARITY:
     case SPELL_GARMULS_TAIL:
     case SPELL_ETHER_GATE:
     case SPELL_VAMPIRIC_TOUCH:

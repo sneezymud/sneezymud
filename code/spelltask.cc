@@ -1165,6 +1165,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
        return TRUE;
       }
       return FALSE;
+    case SPELL_CLARITY: // shaman
     case SPELL_SILENCE:
     case SPELL_SLUMBER:
     case SPELL_STEALTH:
@@ -1835,6 +1836,9 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         rc = castPolymorph(this);
         break;
 //#endif
+     case SPELL_CLARITY:
+        castClarity(this, victim);
+        break;
      case SPELL_SHAPESHIFT:
         rc = castShapeShift(this);
         break;

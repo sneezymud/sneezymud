@@ -338,3 +338,76 @@ void controlUndead(TBeing * caster, TBeing * victim)
 }
 
 // END CONTROL UNDEAD
+// START CLARITY
+
+int clarity(TBeing *caster, TBeing *victim, int level, byte bKnown)
+{
+  affectedData aff;
+
+  caster->reconcileHelp(victim, discArray[SPELL_CLARITY]->alignMod);
+
+  if (bSuccess(caster, bKnown, SPELL_CLARITY)) {
+    aff.type = SPELL_CLARITY;
+    aff.duration = 6+level / 3 * UPDATES_PER_MUDHOUR;
+    aff.modifier = 0;
+    aff.location = APPLY_NONE;
+    aff.bitvector = AFF_TRUE_SIGHT;
+
+    switch (critSuccess(caster, SPELL_CLARITY)) {
+      case CRIT_S_DOUBLE:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_KILL:
+        CS(SPELL_CLARITY);
+        aff.duration *= 2;
+        break;
+      case CRIT_S_NONE:
+        break;
+    }
+
+    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
+      caster->nothingHappens();
+      return SPELL_FALSE;
+    }
+
+
+    victim->sendTo("Your eyes flash.\n\r");
+    act("$n's eyes glow <G>green<1>.", FALSE, victim, 0, 0, TO_ROOM);
+
+    return SPELL_SUCCESS;
+  } else {
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+
+void clarity(TBeing *caster, TBeing *victim, TMagicItem * obj)
+{
+  clarity(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+}
+
+int clarity(TBeing *caster, TBeing *victim)
+{
+  taskDiffT diff;
+
+    if (!bPassShamanChecks(caster, SPELL_CLARITY, victim))
+       return FALSE;
+
+     lag_t rounds = discArray[SPELL_CLARITY]->lag;
+     diff = discArray[SPELL_CLARITY]->task;
+
+     start_cast(caster, victim, NULL, caster->roomp, SPELL_CLARITY, diff, 1, "", 
+rounds, caster->in_room, 0, 0,TRUE, 0);
+      return TRUE;
+}
+
+int castClarity(TBeing *caster, TBeing *victim)
+{
+  int ret,level;
+
+  level = caster->getSkillLevel(SPELL_CLARITY);
+  int bKnown = caster->getSkillValue(SPELL_CLARITY);
+
+  ret=clarity(caster,victim,level,bKnown);
+    return TRUE;
+}
+// END CLARITY

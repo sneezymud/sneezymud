@@ -1462,6 +1462,14 @@ void buildComponentArray()
     "$n squeezes $p.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_CLARITY,
+    "",
+    "",
+    "",                       
+    "You put a few drops of $p in your eyes.",
+    "$n put a few drops of $p in $s eyes.",
+    "",
+    ""));
 #if 1
   CompInfo.push_back(compInfo(SPELL_EARTHMAW,
 			      "You grind $p into the ground.",

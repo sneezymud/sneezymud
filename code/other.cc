@@ -2525,6 +2525,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_STICKS_TO_SNAKES:
       sticksToSnakes(caster,victim,obj);
       break;
+    case SPELL_CLARITY:
+      clarity(caster,victim,obj);
+      break;
     case SPELL_LIVING_VINES:
       livingVines(caster,victim,obj);
       break;

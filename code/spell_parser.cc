@@ -1924,6 +1924,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       case SPELL_CREATE_GOLEM:
           createGolem(this);
         break;
+      case SPELL_CLARITY:
+        clarity(this, ch);
+        break;
       case SPELL_THORNFLESH:
         rc = thornflesh(this);
 	break;
