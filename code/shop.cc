@@ -1939,8 +1939,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
       if(shop_nr==SHOP_DUMP && !::number(0,24)){
 	// this is the garbageman, he recycles items a lot
-	vlogf(LOG_OBJ, "shop %s (%i) recycling %s for %i talens", myself->getName(), shop_nr, obj->getName(), (int)(obj->obj_flags.cost * 0.75));	
-	myself->addToMoney((int)(obj->obj_flags.cost * 0.75), GOLD_SHOP);
+	vlogf(LOG_OBJ, "shop %s (%i) recycling %s for %i talens", myself->getName(), shop_nr, obj->getName(), (int)(obj->obj_flags.cost * shop_index[shop_nr].profit_sell));
+	myself->addToMoney((int)(obj->obj_flags.cost * shop_index[shop_nr].profit_sell), GOLD_SHOP);
 	delete obj;
 	continue;
       }
