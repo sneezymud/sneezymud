@@ -707,7 +707,6 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
       case SKILL_SWITCH_RANGER:
       case SKILL_RETREAT_RANGER:
       case SPELL_STICKS_TO_SNAKES:
-      case SPELL_STORMY_SKIES:
       case SPELL_TREE_WALK:
       case SKILL_BEAST_CHARM:
       case SPELL_SHAPESHIFT:
