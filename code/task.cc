@@ -237,6 +237,7 @@ bool TBeing::nobrainerTaskCommand(cmdTypeT cmd)
 bool TBeing::utilityTaskCommand(cmdTypeT cmd)
 {
   switch (cmd) {
+    case CMD_EQUIPMENT:
     case CMD_WIZLIST:
     case CMD_LOOK:
     case CMD_LIMBS:  // not realistic, but let's just be nice
