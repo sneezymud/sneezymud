@@ -526,10 +526,9 @@ void TPerson::doShow(const char *argument)
             sprintf(buf2, "%5d %5d   %s\n\r",
                     obj_index[objectIndex].virt, objectIndex, buf);
           else
-            sprintf(buf2, "%5d %3d    %5d%c   %3d %2d %5d %s\n\r",
+            sprintf(buf2, "%5d %3d    %5d   %3d %2d %5d %s\n\r",
                     obj_index[objectIndex].virt, obj_index[objectIndex].number,
                     obj_index[objectIndex].max_exist,
-                    (obj_index[objectIndex].value <= LIM_ITEM_COST_MIN ? ' ' : '*'),
                     obj_index[objectIndex].max_struct,
                     max(obj_index[objectIndex].armor, (sh_int) 0),
                     obj_index[objectIndex].value,
@@ -585,10 +584,9 @@ void TPerson::doShow(const char *argument)
       if (!hasWizPower(POWER_SHOW_TRUSTED)) {
         sprintf(buf, "%5d %5d   %s\n\r", obj_index[objnx].virt, objnx, buf2);
       } else {
-        sprintf(buf, "%5d %3d    %5d%c   %3d %2d %5d %s\n\r", 
+        sprintf(buf, "%5d %3d    %5d   %3d %2d %5d %s\n\r", 
               obj_index[objnx].virt, obj_index[objnx].number,
               obj_index[objnx].max_exist, 
-              (obj_index[objnx].value <= LIM_ITEM_COST_MIN ? ' ' : '*'), 
                obj_index[objnx].max_struct,
                max(obj_index[objnx].armor, (sh_int) 0),
                obj_index[objnx].value,
@@ -784,10 +782,9 @@ void TPerson::doShow(const char *argument)
       sprintf(buf2, "%s", obj->getNameForShow(false, true, this).c_str());
       delete obj;
 
-      sprintf(buf, "%5d %3d    %5d%c   %3d %2d %5d %s\n\r", 
+      sprintf(buf, "%5d %3d    %5d   %3d %2d %5d %s\n\r", 
               obj_index[objnx].virt, obj_index[objnx].number,
               obj_index[objnx].max_exist, 
-              (obj_index[objnx].value <= LIM_ITEM_COST_MIN ? ' ' : '*'), 
 	      obj_index[objnx].max_struct,
 	      max(obj_index[objnx].armor, (sh_int) 0),
 	      obj_index[objnx].value,
@@ -809,10 +806,9 @@ void TPerson::doShow(const char *argument)
       sprintf(buf2, "%s", obj->getNameForShow(false, true, this).c_str());
       delete obj;
 
-      sprintf(buf, "%5d %3d    %5d%c   %3d %2d %5d %s\n\r", 
+      sprintf(buf, "%5d %3d    %5d   %3d %2d %5d %s\n\r", 
               obj_index[objnx].virt, obj_index[objnx].number,
               obj_index[objnx].max_exist, 
-              (obj_index[objnx].value <= LIM_ITEM_COST_MIN ? ' ' : '*'), 
 	      obj_index[objnx].max_struct,
 	      max(obj_index[objnx].armor, (sh_int) 0),
 	      obj_index[objnx].value,

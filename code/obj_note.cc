@@ -138,8 +138,7 @@ void TNote::junkMe(TBeing *ch)
         // we should update the count
         int objv = getObjV();
         int objr = real_object(objv);
-        if (objr >= 0 && objr < (int) obj_index.size() &&
-            obj_index[objr].value > LIM_ITEM_COST_MIN) {
+        if (objr >= 0 && objr < (int) obj_index.size()){
           obj_index[objr].addToNumber(-1);
         }
       }

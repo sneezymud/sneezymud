@@ -153,8 +153,6 @@ const int CUBIC_INCHES_PER_YARD = INCHES_PER_YARD * INCHES_PER_YARD * INCHES_PER
 const int MIN_GLOB_TRACK_LEV = 31;   /* mininum level for global track */
 const int MAX_BAN_HOSTS = 15;
 
-const int LIM_ITEM_COST_MIN =  1499;   /* mininum rent cost of a lim. item */
-
 // pet information
 const unsigned int PETTYPE_PET    = (1<<0);   // 1
 const unsigned int PETTYPE_CHARM  = (1<<1);   // 2

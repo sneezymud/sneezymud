@@ -592,15 +592,6 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
     vlogf(LOG_BUG, "Unable to load object Vnum = %d from rent.", item.item_number);
     return NULL;
   }
-  // when an object is loaded from disk, and it is a limited object, we 
-  // presume that it has
-  // already been counted -- either at boot time, or when it was originally
-  // loaded in the game during this reboot. Since the limited item didn't
-  // decrement the item-types count when it went to disk, there is no reason
-  // to reincrement it in read_object. 
-  //// what the fuck? seriously? what the fuck? - peel
-  //  if ((o->number >= 0))
-  //    obj_index[o->getItemIndex()].addToNumber(-1);
 
 // old items should reflect current tiny file
 #if 0
@@ -729,13 +720,6 @@ static bool immortalityNukeCheck(TBeing *ch, TObj * new_obj, bool corpse)
     autoMail(ch, NULL, buf);
     vlogf(LOG_SILENT, "%s's %s being recycled due to immortality.", ch->getName(), new_obj->getName());
 
-#if 0
-// noteLimited is increasing the counter, so skip this kludge bat 12/17/99
-    // noteLimited didn't increment the counter for this item, so
-    // we need to adjust number to make up for this delete
-    if ((new_obj->number >= 0))
-      obj_index[new_obj->number].addToNumber(1);
-#endif
 
     delete new_obj;
     new_obj = NULL;
@@ -761,10 +745,6 @@ static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE
 
       return TRUE;
     }
-#if LOG_IRADEL
-    if (ch && !strcmp(ch->name, "Iradel"))
-      vlogf(LOG_SILENT, "IRADEL: slot read %d", slot);
-#endif
     
     if (slot == CONTENTS_END)
       return FALSE;
@@ -775,10 +755,6 @@ static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE
           if (ch)
             ch->logItem(new_obj, CMD_WEST);  // rent in
 	  obj_index[new_obj->number].addToNumber(-1);
-#if LOG_IRADEL
-if (ch && !strcmp(ch->name, "Iradel"))
-vlogf(LOG_SILENT, "IRADEL:        obj read %d", new_obj->objVnum());
-#endif
 
           *parent += *new_obj;
 
@@ -818,10 +794,7 @@ vlogf(LOG_SILENT, "IRADEL:        obj read %d", new_obj->objVnum());
           if (ch)
             ch->logItem(new_obj, CMD_WEST);  // rent in
 	  obj_index[new_obj->number].addToNumber(-1);
-#if LOG_IRADEL
-if (ch && !strcmp(ch->name, "Iradel"))
-vlogf(LOG_SILENT, "IRADEL:        obj read %d", new_obj->objVnum());
-#endif
+
           if (ch) {
             wearSlotT mapped_slot = mapFileToSlot( slot);
             if (!ch->canUseLimb(mapped_slot))
@@ -851,10 +824,7 @@ vlogf(LOG_SILENT, "IRADEL:        obj read %d", new_obj->objVnum());
           if (ch)
             ch->logItem(new_obj, CMD_WEST);  // rent in
 	  obj_index[new_obj->number].addToNumber(-1);
-#if LOG_IRADEL
-if (ch && !strcmp(ch->name, "Iradel"))
-vlogf(LOG_SILENT, "IRADEL:        obj read %d", new_obj->objVnum());
-#endif
+
           (*numread)++;
           if (ch)
             *ch += *new_obj;
@@ -935,18 +905,10 @@ void objsToStore(signed char slot, TObj *o, rentHeader * st, TBeing *ch, bool d,
       return;
     }
     (st->number)++;
-#if LOG_IRADEL
-if (ch && !strcmp(ch->name, "Iradel"))
-vlogf(LOG_SILENT, "IRADEL: slot write %d", slot);
-#endif
 
     if (!raw_write_item(fp, o, st->version)) 
       vlogf(LOG_BUG, "Rent error in %s's file", ((ch) ? ch->getName() : "UNKNOWN"));
 
-#if LOG_IRADEL
-if (ch && !strcmp(ch->name, "Iradel"))
-vlogf(LOG_SILENT, "IRADEL:          obj write  %d", o->objVnum());
-#endif
 
     objsToStore(NORMAL_SLOT, (TObj *) o->getStuff(), st, ch, d, fp, corpse);
     slot = CONTENTS_END;
@@ -955,10 +917,6 @@ vlogf(LOG_SILENT, "IRADEL:          obj write  %d", o->objVnum());
          ((ch) ? ch->getName() : "UNKNOWN"));
       return;
     }
-#if LOG_IRADEL
-if (ch && !strcmp(ch->name, "Iradel"))
-vlogf(LOG_SILENT, "IRADEL: slot write %d", slot);
-#endif
 
 //   objsToStore(NORMAL_SLOT, (TObj *) o->nextThing, st, ch, d, fp);
     if (o->nextThing) {
@@ -2897,8 +2855,6 @@ bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool im
   int depth = 0;
   char c, *n, *s, *d, *ad;
   signed char slot;
-  char buf[512];
-  int iNum;
 
   version = version;
 
@@ -2946,9 +2902,7 @@ bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool im
       ad = raw_read_sstring(fp);
     }
     int robj = real_object(item.item_number);
-//    if ((item.cost > LIM_ITEM_COST_MIN) && (item.item_number >= 0)) {
-    if ((obj_index[robj].value > LIM_ITEM_COST_MIN) &&
-        (item.item_number >= 0)) {
+    if (item.item_number >= 0) {
       if (robj < 0) {
         vlogf(LOG_BUG, "BOGUS ITEM #%d found in %s's rent file!", 
            item.item_number, tag);
@@ -2956,44 +2910,9 @@ bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool im
         delete [] s;
         continue;
       }
-      if (item.item_number != GENERIC_NOTE) {
-#if 0
-// not needed, count items owned by imms in rent (number should reflect them)
-// otherwise whacky things happen, bat 12/17/99
-        if (immortal && shouldRecycle(robj)) {
-          vlogf(LOG_MISC, "     [%d] - %s (recycled due to immortality)", item.item_number, tag);
 
-          // for now, we'll skip incrementing counter and remove it
-          // from them on login
-
-          delete [] ad;
-          delete [] s;
-          continue;
-        }
-#endif
-        vlogf(LOG_MISC, "     [%d] - %s%s", item.item_number, tag, immortal ? "  (immortal)" : "");
-        obj_index[robj].addToNumber(1);
-      } else {
-        // anything in here is a generic note
-        if (*ad) {
-          strcpy(buf, s);
-          if (sscanf(buf, "a small ticket marked number %d", &iNum) == 1) {
-#if 0
-            // repair items are counted in processRepairFile()
-            // this would just double count them all
-            sprintf(buf, "mobdata/repairs/%d/%d", item.value[0], iNum);
-            vlogf(LOG_MISC, "     [repair ticket %d] - %s (item vnum %d)",
-                 iNum, tag, item.value[2]);
-            robj = real_object(item.value[2]);
-            obj_index[robj].addToNumber(1);
-#endif
-          } else {
-            // a note/board msg, mail, etc
-          }
-        } else {
-          // a note with no msg written on it
-        }
-      }
+      vlogf(LOG_MISC, "     [%d] - %s%s", item.item_number, tag, immortal ? "  (immortal)" : "");
+      obj_index[robj].addToNumber(1);
     }
     delete [] ad;
     delete [] s;
@@ -4015,9 +3934,6 @@ bool TBeing::saveFollowers(bool rent_time)
         if (rent_time) {
           vlogf(LOG_SILENT, "%s's %s renting: (%s : %d)", getName(), mob->getName(), obj->getName(), obj->objVnum());
 
-          // we are saving the item to rent, so keep up with the number
-	  //          if ((obj->number >= 0))
-	  //            obj_index[obj->getItemIndex()].addToNumber(1);
 
           delete obj;
           char_eq[mapped_slot] = NULL;
@@ -4046,10 +3962,6 @@ bool TBeing::saveFollowers(bool rent_time)
 
       if (rent_time) {
         vlogf(LOG_SILENT, "%s's %s renting: (%s : %d)", getName(), mob->getName(), obj->getName(), obj->objVnum());
-
-        // we are saving the item to rent, so keep up with the number
-	//        if ((obj->number >= 0))
-	//          obj_index[obj->getItemIndex()].addToNumber(1);
 
         delete obj;
       }

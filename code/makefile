@@ -151,27 +151,36 @@ LDFLAGS += -L/usr/local/lib
 
 # this is a list of objects to be compiled and linked
 # just add new ones to the bottom
-LIBMISC=actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
-	ai_assignskills.o alignment_deity.o being.o body.o \
-	breath.o bwiz.o \
-	combat.o constants.o \
-	create_engine.o \
-	create_mobs.o create_objs.o create_rooms.o crit_combat.o damage.o \
-	discipline.o disease.o doors.o faction.o   \
-	enum.o equip.o gaining.o \
-	hospital.o immortal.o immunity.o \
-	info.o inventory.o limbs.o limits.o loadset.o luck.o  \
-	magic_skills.o magicutils.o mail.o makecorpse.o materials.o \
-	meeting.o mob_loader.o mobact.o  monster.o movement.o \
-	multiclass.o newbie.o magic_off.o offense.o oldlimbs.o \
-	oldrace.o  opinion.o other.o  parse.o peelpk.o  periodic.o pets.o \
-	physics.o  player_data.o race.o range.o rent.o \
-	repair.o response.o riding.o room.o shop.o show.o \
-	skill_dam.o skills.o \
-        spell_info.o spell_num.o spell_parser.o spellstore.o spelltask.o \
-	statistics.o stats.o structs.o \
-	talk.o task.o thing.o toggle.o trap.o  utility.o weather.o \
-	sys_loot.o wiz_data.o wiz_powers.o shopowned.o
+LIBMISC=actions.o		ai_commands.o 		ai_reactions.o     \
+	ai_responses.o		ai_utility.o 		ai_assignskills.o  \
+	alignment_deity.o 	being.o 		body.o             \
+	breath.o 		bwiz.o 			combat.o           \
+	constants.o 		create_engine.o		create_mobs.o      \
+	create_objs.o		create_rooms.o		crit_combat.o      \
+	damage.o 		discipline.o 		disease.o          \
+	doors.o 		faction.o 		enum.o             \
+	equip.o 		gaining.o 		hospital.o         \
+	immortal.o 		immunity.o 		info.o             \
+	inventory.o 		limbs.o 		limits.o           \
+	loadset.o 		luck.o 			magic_skills.o     \
+	magicutils.o 		mail.o 			makecorpse.o       \
+	materials.o 		meeting.o 		mob_loader.o       \
+	mobact.o  		monster.o 		movement.o         \
+	multiclass.o 		newbie.o 		magic_off.o        \
+	offense.o 		oldlimbs.o 		oldrace.o          \
+	opinion.o 		other.o  		parse.o            \
+	peelpk.o 		periodic.o 		pets.o             \
+	physics.o 	 	player_data.o 		race.o             \
+	range.o 		rent.o 			repair.o           \
+	response.o 		riding.o 		room.o             \
+	shop.o 			show.o 			skill_dam.o        \
+	skills.o 		spell_info.o 		spell_num.o        \
+	spell_parser.o 		spellstore.o 		spelltask.o        \
+	statistics.o 		stats.o 		structs.o          \
+	talk.o 			task.o 			thing.o            \
+	toggle.o 		trap.o  		utility.o          \
+	weather.o 		sys_loot.o 		wiz_data.o         \
+	wiz_powers.o 		shopowned.o
 
 LIBMISC := $(sort $(addprefix $(OBJDIR), $(LIBMISC)))
 
@@ -1723,9 +1732,12 @@ objs/cmd_get.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/cmd_get.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/cmd_get.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/cmd_get.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/cmd_get.o: colorstring.h games.h game_crazyeights.h game_drawpoker.h
-objs/cmd_get.o: obj_player_corpse.h obj_base_corpse.h obj_base_container.h
-objs/cmd_get.o: obj_trap.h obj_base_weapon.h
+objs/cmd_get.o: colorstring.h games.h /usr/include/g++/algorithm
+objs/cmd_get.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
+objs/cmd_get.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/cmd_get.o: /usr/include/g++/stl_deque.h game_crazyeights.h
+objs/cmd_get.o: game_drawpoker.h obj_player_corpse.h obj_base_corpse.h
+objs/cmd_get.o: obj_base_container.h obj_trap.h obj_base_weapon.h
 objs/cmd_grapple.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/cmd_grapple.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/cmd_grapple.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -2030,7 +2042,10 @@ objs/cmd_look.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/cmd_look.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/cmd_look.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/cmd_look.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/cmd_look.o: materials.h colorstring.h games.h game_crazyeights.h
+objs/cmd_look.o: materials.h colorstring.h games.h /usr/include/g++/algorithm
+objs/cmd_look.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
+objs/cmd_look.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/cmd_look.o: /usr/include/g++/stl_deque.h game_crazyeights.h
 objs/cmd_look.o: game_drawpoker.h obj_base_corpse.h obj_base_container.h
 objs/cmd_look.o: obj_table.h obj_book.h obj_base_cup.h
 objs/cmd_low.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
@@ -3066,7 +3081,10 @@ objs/cmd_who.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/cmd_who.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/cmd_who.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/cmd_who.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/cmd_who.o: colorstring.h statistics.h games.h game_crazyeights.h
+objs/cmd_who.o: colorstring.h statistics.h games.h /usr/include/g++/algorithm
+objs/cmd_who.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
+objs/cmd_who.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/cmd_who.o: /usr/include/g++/stl_deque.h game_crazyeights.h
 objs/cmd_who.o: game_drawpoker.h database.h /usr/local/include/libpq-fe.h
 objs/cmd_who.o: /usr/local/include/postgres_ext.h
 objs/cmd_zonefile.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
@@ -3387,6 +3405,9 @@ objs/connect.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/connect.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/connect.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/connect.o: colorstring.h statistics.h socket.h mail.h games.h
+objs/connect.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
+objs/connect.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
+objs/connect.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/connect.o: game_crazyeights.h game_drawpoker.h cmd_trophy.h database.h
 objs/connect.o: /usr/local/include/libpq-fe.h
 objs/connect.o: /usr/local/include/postgres_ext.h
@@ -6076,8 +6097,12 @@ objs/disc_thief.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/disc_thief.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/disc_thief.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/disc_thief.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/disc_thief.o: materials.h colorstring.h games.h game_crazyeights.h
-objs/disc_thief.o: game_drawpoker.h combat.h disc_thief.h obj_tool.h
+objs/disc_thief.o: materials.h colorstring.h games.h
+objs/disc_thief.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
+objs/disc_thief.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
+objs/disc_thief.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
+objs/disc_thief.o: game_crazyeights.h game_drawpoker.h combat.h disc_thief.h
+objs/disc_thief.o: obj_tool.h
 objs/disc_warrior.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_warrior.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disc_warrior.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -6610,8 +6635,11 @@ objs/game_baccarat.o: weather.h sound.h create.h thing.h room.h obj.h
 objs/game_baccarat.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/game_baccarat.o: person.h monster.h account.h extern.h handler.h
 objs/game_baccarat.o: obj_money.h rent.h spec_mobs.h materials.h
-objs/game_baccarat.o: colorstring.h games.h game_crazyeights.h
-objs/game_baccarat.o: game_drawpoker.h
+objs/game_baccarat.o: colorstring.h games.h /usr/include/g++/algorithm
+objs/game_baccarat.o: /usr/include/g++/stl_tempbuf.h
+objs/game_baccarat.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
+objs/game_baccarat.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
+objs/game_baccarat.o: game_crazyeights.h game_drawpoker.h
 objs/game_blackjack.o: stdsneezy.h /usr/include/g++/cstdio
 objs/game_blackjack.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/game_blackjack.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -6661,7 +6689,11 @@ objs/game_blackjack.o: weather.h sound.h create.h thing.h room.h obj.h
 objs/game_blackjack.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/game_blackjack.o: person.h monster.h account.h extern.h handler.h
 objs/game_blackjack.o: obj_money.h rent.h spec_mobs.h materials.h
-objs/game_blackjack.o: colorstring.h games.h game_crazyeights.h
+objs/game_blackjack.o: colorstring.h games.h /usr/include/g++/algorithm
+objs/game_blackjack.o: /usr/include/g++/stl_tempbuf.h
+objs/game_blackjack.o: /usr/include/g++/stl_algo.h
+objs/game_blackjack.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/game_blackjack.o: /usr/include/g++/stl_deque.h game_crazyeights.h
 objs/game_blackjack.o: game_drawpoker.h
 objs/game_cards.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/game_cards.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
@@ -6704,8 +6736,11 @@ objs/game_cards.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/game_cards.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/game_cards.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/game_cards.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/game_cards.o: materials.h colorstring.h games.h game_crazyeights.h
-objs/game_cards.o: game_drawpoker.h
+objs/game_cards.o: materials.h colorstring.h games.h
+objs/game_cards.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
+objs/game_cards.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
+objs/game_cards.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
+objs/game_cards.o: game_crazyeights.h game_drawpoker.h
 objs/game_craps.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/game_craps.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/game_craps.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -6747,8 +6782,11 @@ objs/game_craps.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/game_craps.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/game_craps.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/game_craps.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/game_craps.o: materials.h colorstring.h games.h game_crazyeights.h
-objs/game_craps.o: game_drawpoker.h
+objs/game_craps.o: materials.h colorstring.h games.h
+objs/game_craps.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
+objs/game_craps.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
+objs/game_craps.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
+objs/game_craps.o: game_crazyeights.h game_drawpoker.h
 objs/game_crazyeights.o: stdsneezy.h /usr/include/g++/cstdio
 objs/game_crazyeights.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/game_crazyeights.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -6802,7 +6840,11 @@ objs/game_crazyeights.o: weather.h sound.h create.h thing.h room.h obj.h
 objs/game_crazyeights.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/game_crazyeights.o: person.h monster.h account.h extern.h handler.h
 objs/game_crazyeights.o: obj_money.h rent.h spec_mobs.h materials.h
-objs/game_crazyeights.o: colorstring.h games.h game_crazyeights.h
+objs/game_crazyeights.o: colorstring.h games.h /usr/include/g++/algorithm
+objs/game_crazyeights.o: /usr/include/g++/stl_tempbuf.h
+objs/game_crazyeights.o: /usr/include/g++/stl_algo.h
+objs/game_crazyeights.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/game_crazyeights.o: /usr/include/g++/stl_deque.h game_crazyeights.h
 objs/game_crazyeights.o: game_drawpoker.h
 objs/game_drawpoker.o: stdsneezy.h /usr/include/g++/cstdio
 objs/game_drawpoker.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
@@ -6853,7 +6895,11 @@ objs/game_drawpoker.o: weather.h sound.h create.h thing.h room.h obj.h
 objs/game_drawpoker.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/game_drawpoker.o: person.h monster.h account.h extern.h handler.h
 objs/game_drawpoker.o: obj_money.h rent.h spec_mobs.h materials.h
-objs/game_drawpoker.o: colorstring.h games.h game_crazyeights.h
+objs/game_drawpoker.o: colorstring.h games.h /usr/include/g++/algorithm
+objs/game_drawpoker.o: /usr/include/g++/stl_tempbuf.h
+objs/game_drawpoker.o: /usr/include/g++/stl_algo.h
+objs/game_drawpoker.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/game_drawpoker.o: /usr/include/g++/stl_deque.h game_crazyeights.h
 objs/game_drawpoker.o: game_drawpoker.h
 objs/game_gin.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/game_gin.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
@@ -6894,7 +6940,10 @@ objs/game_gin.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/game_gin.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/game_gin.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/game_gin.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/game_gin.o: materials.h colorstring.h games.h game_crazyeights.h
+objs/game_gin.o: materials.h colorstring.h games.h /usr/include/g++/algorithm
+objs/game_gin.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
+objs/game_gin.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/game_gin.o: /usr/include/g++/stl_deque.h game_crazyeights.h
 objs/game_gin.o: game_drawpoker.h
 objs/game_hearts.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/game_hearts.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
@@ -6940,6 +6989,9 @@ objs/game_hearts.o: sound.h create.h thing.h room.h obj.h spec_objs.h
 objs/game_hearts.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/game_hearts.o: monster.h account.h extern.h handler.h obj_money.h rent.h
 objs/game_hearts.o: spec_mobs.h materials.h colorstring.h games.h
+objs/game_hearts.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
+objs/game_hearts.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
+objs/game_hearts.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/game_hearts.o: game_crazyeights.h game_drawpoker.h
 objs/game_hilo.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/game_hilo.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
@@ -6981,7 +7033,59 @@ objs/game_hilo.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
 objs/game_hilo.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/game_hilo.o: being.h person.h monster.h account.h extern.h handler.h
 objs/game_hilo.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
-objs/game_hilo.o: games.h game_crazyeights.h game_drawpoker.h
+objs/game_hilo.o: games.h /usr/include/g++/algorithm
+objs/game_hilo.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
+objs/game_hilo.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/game_hilo.o: /usr/include/g++/stl_deque.h game_crazyeights.h
+objs/game_hilo.o: game_drawpoker.h
+objs/game_holdem.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
+objs/game_holdem.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
+objs/game_holdem.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/game_holdem.o: /usr/include/g++/ctime /usr/include/time.h
+objs/game_holdem.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/game_holdem.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
+objs/game_holdem.o: /usr/include/machine/endian.h /usr/include/g++/cctype
+objs/game_holdem.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/game_holdem.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/game_holdem.o: /usr/include/g++/cstring /usr/include/string.h
+objs/game_holdem.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/game_holdem.o: /usr/include/errno.h /usr/include/g++/string
+objs/game_holdem.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
+objs/game_holdem.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/game_holdem.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/game_holdem.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/game_holdem.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
+objs/game_holdem.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/game_holdem.o: /usr/include/g++/stl_relops.h
+objs/game_holdem.o: /usr/include/g++/stl_iterator.h
+objs/game_holdem.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
+objs/game_holdem.o: /usr/include/g++/stl_algobase.h
+objs/game_holdem.o: /usr/include/g++/stl_pair.h
+objs/game_holdem.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/game_holdem.o: /usr/include/machine/limits.h
+objs/game_holdem.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/game_holdem.o: /usr/include/g++/new /usr/include/g++/exception
+objs/game_holdem.o: /usr/include/g++/stl_construct.h
+objs/game_holdem.o: /usr/include/g++/stl_uninitialized.h
+objs/game_holdem.o: /usr/include/g++/stl_vector.h
+objs/game_holdem.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/game_holdem.o: /usr/include/g++/stl_tree.h
+objs/game_holdem.o: /usr/include/g++/stl_function.h
+objs/game_holdem.o: /usr/include/g++/stl_map.h
+objs/game_holdem.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
+objs/game_holdem.o: /usr/include/g++/sstream low.h enum.h spells.h structs.h
+objs/game_holdem.o: parse.h immunity.h discipline.h spell2.h argument.h db.h
+objs/game_holdem.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/game_holdem.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/game_holdem.o: body.h race.h skills.h disease.h trap.h task.h weather.h
+objs/game_holdem.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/game_holdem.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/game_holdem.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/game_holdem.o: spec_mobs.h materials.h colorstring.h games.h
+objs/game_holdem.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
+objs/game_holdem.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
+objs/game_holdem.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
+objs/game_holdem.o: game_crazyeights.h game_drawpoker.h
 objs/game_poker.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/game_poker.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/game_poker.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -7023,8 +7127,11 @@ objs/game_poker.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/game_poker.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/game_poker.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/game_poker.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/game_poker.o: materials.h colorstring.h games.h game_crazyeights.h
-objs/game_poker.o: game_drawpoker.h
+objs/game_poker.o: materials.h colorstring.h games.h
+objs/game_poker.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
+objs/game_poker.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
+objs/game_poker.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
+objs/game_poker.o: game_crazyeights.h game_drawpoker.h
 objs/game_slots.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/game_slots.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/game_slots.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -7066,8 +7173,11 @@ objs/game_slots.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/game_slots.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/game_slots.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/game_slots.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/game_slots.o: materials.h colorstring.h games.h game_crazyeights.h
-objs/game_slots.o: game_drawpoker.h
+objs/game_slots.o: materials.h colorstring.h games.h
+objs/game_slots.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
+objs/game_slots.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
+objs/game_slots.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
+objs/game_slots.o: game_crazyeights.h game_drawpoker.h
 objs/games.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/games.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/games.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -7106,8 +7216,11 @@ objs/games.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/games.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/games.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/games.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/games.o: colorstring.h games.h game_crazyeights.h game_drawpoker.h
-objs/games.o: obj_casino_chip.h
+objs/games.o: colorstring.h games.h /usr/include/g++/algorithm
+objs/games.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
+objs/games.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/games.o: /usr/include/g++/stl_deque.h game_crazyeights.h
+objs/games.o: game_drawpoker.h obj_casino_chip.h
 objs/handler.o: /usr/include/g++/cstdarg /usr/include/stdarg.h
 objs/handler.o: /usr/include/unistd.h /usr/include/sys/cdefs.h
 objs/handler.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
@@ -7240,10 +7353,14 @@ objs/immortal.o: /usr/include/machine/signal.h /usr/include/machine/trap.h
 objs/immortal.o: /usr/include/sys/ucontext.h /usr/include/machine/ucontext.h
 objs/immortal.o: /usr/include/machine/param.h /usr/include/sys/syscall.h
 objs/immortal.o: /usr/include/sys/socket.h statistics.h combat.h mail.h
-objs/immortal.o: games.h game_crazyeights.h game_drawpoker.h disc_nature.h
-objs/immortal.o: disc_shaman_armadillo.h systemtask.h socket.h shop.h
-objs/immortal.o: cmd_trophy.h obj_note.h obj_portal.h obj_seethru.h
-objs/immortal.o: obj_base_clothing.h database.h /usr/local/include/libpq-fe.h
+objs/immortal.o: games.h /usr/include/g++/algorithm
+objs/immortal.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
+objs/immortal.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/immortal.o: /usr/include/g++/stl_deque.h game_crazyeights.h
+objs/immortal.o: game_drawpoker.h disc_nature.h disc_shaman_armadillo.h
+objs/immortal.o: systemtask.h socket.h shop.h cmd_trophy.h obj_note.h
+objs/immortal.o: obj_portal.h obj_seethru.h obj_base_clothing.h database.h
+objs/immortal.o: /usr/local/include/libpq-fe.h
 objs/immortal.o: /usr/local/include/postgres_ext.h
 objs/immunity.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/immunity.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
@@ -7367,6 +7484,7 @@ objs/info.o: being.h person.h monster.h account.h extern.h handler.h
 objs/info.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
 objs/info.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
 objs/info.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h games.h
+objs/info.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/info.o: game_crazyeights.h game_drawpoker.h combat.h statistics.h
 objs/info.o: obj_component.h database.h /usr/local/include/libpq-fe.h
 objs/info.o: /usr/local/include/postgres_ext.h skillsort.h
@@ -7415,13 +7533,16 @@ objs/inventory.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
 objs/inventory.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/inventory.o: being.h person.h monster.h account.h extern.h handler.h
 objs/inventory.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
-objs/inventory.o: games.h game_crazyeights.h game_drawpoker.h statistics.h
-objs/inventory.o: disc_looting.h shop.h obj_spellbag.h
-objs/inventory.o: obj_expandable_container.h obj_open_container.h
-objs/inventory.o: obj_base_container.h obj_keyring.h obj_base_corpse.h
-objs/inventory.o: obj_player_corpse.h obj_quiver.h obj_table.h obj_key.h
-objs/inventory.o: obj_trap.h obj_portal.h obj_seethru.h obj_arrow.h
-objs/inventory.o: obj_base_weapon.h
+objs/inventory.o: games.h /usr/include/g++/algorithm
+objs/inventory.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
+objs/inventory.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/inventory.o: /usr/include/g++/stl_deque.h game_crazyeights.h
+objs/inventory.o: game_drawpoker.h statistics.h disc_looting.h shop.h
+objs/inventory.o: obj_spellbag.h obj_expandable_container.h
+objs/inventory.o: obj_open_container.h obj_base_container.h obj_keyring.h
+objs/inventory.o: obj_base_corpse.h obj_player_corpse.h obj_quiver.h
+objs/inventory.o: obj_table.h obj_key.h obj_trap.h obj_portal.h obj_seethru.h
+objs/inventory.o: obj_arrow.h obj_base_weapon.h
 objs/limbs.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/limbs.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/limbs.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -7501,7 +7622,10 @@ objs/limits.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/limits.o: create.h thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/limits.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/limits.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/limits.o: colorstring.h statistics.h games.h game_crazyeights.h
+objs/limits.o: colorstring.h statistics.h games.h /usr/include/g++/algorithm
+objs/limits.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
+objs/limits.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/limits.o: /usr/include/g++/stl_deque.h game_crazyeights.h
 objs/limits.o: game_drawpoker.h obj_base_container.h obj_food.h obj_bed.h
 objs/limits.o: obj_drinkcon.h obj_base_cup.h
 objs/loadset.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
@@ -8125,6 +8249,9 @@ objs/movement.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/movement.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/movement.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/movement.o: materials.h colorstring.h combat.h games.h
+objs/movement.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
+objs/movement.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
+objs/movement.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/movement.o: game_crazyeights.h game_drawpoker.h disc_looting.h
 objs/movement.o: obj_base_corpse.h obj_base_container.h obj_keyring.h
 objs/movement.o: obj_expandable_container.h obj_open_container.h obj_key.h
@@ -8916,8 +9043,11 @@ objs/obj_bed.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/obj_bed.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/obj_bed.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/obj_bed.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/obj_bed.o: colorstring.h games.h game_crazyeights.h game_drawpoker.h
-objs/obj_bed.o: obj_bed.h
+objs/obj_bed.o: colorstring.h games.h /usr/include/g++/algorithm
+objs/obj_bed.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
+objs/obj_bed.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/obj_bed.o: /usr/include/g++/stl_deque.h game_crazyeights.h
+objs/obj_bed.o: game_drawpoker.h obj_bed.h
 objs/obj_board.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_board.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_board.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -11485,11 +11615,15 @@ objs/offense.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/offense.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/offense.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/offense.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/offense.o: colorstring.h games.h game_crazyeights.h game_drawpoker.h
-objs/offense.o: combat.h obj_spellbag.h obj_expandable_container.h
-objs/offense.o: obj_open_container.h obj_base_container.h obj_base_weapon.h
-objs/offense.o: obj_gun.h obj_general_weapon.h obj_base_cup.h
-objs/offense.o: obj_base_clothing.h obj_bag.h
+objs/offense.o: colorstring.h games.h /usr/include/g++/algorithm
+objs/offense.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
+objs/offense.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/offense.o: /usr/include/g++/stl_deque.h game_crazyeights.h
+objs/offense.o: game_drawpoker.h combat.h obj_spellbag.h
+objs/offense.o: obj_expandable_container.h obj_open_container.h
+objs/offense.o: obj_base_container.h obj_base_weapon.h obj_gun.h
+objs/offense.o: obj_general_weapon.h obj_base_cup.h obj_base_clothing.h
+objs/offense.o: obj_bag.h
 objs/oldlimbs.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/oldlimbs.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/oldlimbs.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -11651,6 +11785,7 @@ objs/other.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/other.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/other.o: handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/other.o: colorstring.h range.h statistics.h combat.h games.h
+objs/other.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/other.o: game_crazyeights.h game_drawpoker.h mail.h skillsort.h
 objs/other.o: obj_board.h obj_spellbag.h obj_expandable_container.h
 objs/other.o: obj_open_container.h obj_base_container.h obj_base_corpse.h
@@ -12307,7 +12442,7 @@ objs/shop.o: /usr/local/include/postgres_ext.h obj_spellbag.h
 objs/shop.o: obj_expandable_container.h obj_open_container.h
 objs/shop.o: obj_base_container.h obj_symbol.h obj_general_weapon.h
 objs/shop.o: obj_base_weapon.h obj_base_clothing.h obj_magic_item.h
-objs/shop.o: shopowned.h obj_casino_chip.h
+objs/shop.o: shopowned.h obj_casino_chip.h spec_objs_lottery_ticket.h
 objs/shoplog.cgi.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/shoplog.cgi.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/shoplog.cgi.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -12744,9 +12879,12 @@ objs/spec_mobs.o: obj_base_container.h obj_player_corpse.h obj_symbol.h
 objs/spec_mobs.o: obj_window.h obj_seethru.h obj_general_weapon.h
 objs/spec_mobs.o: obj_base_weapon.h obj_pool.h obj_base_cup.h
 objs/spec_mobs.o: obj_base_clothing.h obj_bow.h obj_trap.h obj_table.h
-objs/spec_mobs.o: obj_drinkcon.h obj_vehicle.h obj_portal.h games.h
-objs/spec_mobs.o: game_crazyeights.h game_drawpoker.h
-objs/spec_mobs.o: /usr/include/g++/fstream.h
+objs/spec_mobs.o: obj_drinkcon.h obj_vehicle.h obj_portal.h obj_casino_chip.h
+objs/spec_mobs.o: games.h /usr/include/g++/algorithm
+objs/spec_mobs.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
+objs/spec_mobs.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/spec_mobs.o: /usr/include/g++/stl_deque.h game_crazyeights.h
+objs/spec_mobs.o: game_drawpoker.h /usr/include/g++/fstream.h
 objs/spec_mobs_bounty_hunter.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_bounty_hunter.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/machine/ansi.h
@@ -14550,6 +14688,9 @@ objs/structs.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/structs.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/structs.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/structs.o: colorstring.h combat.h obj_board.h statistics.h games.h
+objs/structs.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
+objs/structs.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
+objs/structs.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/structs.o: game_crazyeights.h game_drawpoker.h obj_base_corpse.h
 objs/structs.o: obj_base_container.h obj_table.h obj_seethru.h cmd_trophy.h
 objs/structs.o: obj_open_container.h
@@ -16283,7 +16424,11 @@ objs/utility.o: /usr/include/sys/syscall.h /usr/include/sys/param.h
 objs/utility.o: /usr/include/g++/cmath /usr/include/math.h
 objs/utility.o: /usr/include/dirent.h /usr/include/sys/dirent.h
 objs/utility.o: /usr/include/sys/stat.h shop.h combat.h statistics.h socket.h
-objs/utility.o: games.h game_crazyeights.h game_drawpoker.h mail.h database.h
+objs/utility.o: games.h /usr/include/g++/algorithm
+objs/utility.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
+objs/utility.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
+objs/utility.o: /usr/include/g++/stl_deque.h game_crazyeights.h
+objs/utility.o: game_drawpoker.h mail.h database.h
 objs/utility.o: /usr/local/include/libpq-fe.h
 objs/utility.o: /usr/local/include/postgres_ext.h obj_seethru.h
 objs/weather.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h

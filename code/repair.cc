@@ -834,7 +834,7 @@ void processRepairFile(const char *name)
     fclose(fp);
     return;
   }
-  if ((item.cost > LIM_ITEM_COST_MIN) && (item.item_number >= 0)) {
+  if (item.item_number >= 0) {
     vlogf(LOG_BUG, "     [%d] - %s", item.item_number, name);
     obj_index[real_object(item.item_number)].addToNumber(1);
   }
