@@ -14,6 +14,19 @@ const int CARD_FIRE = 64;
 const int CARD_EARTH = 32;
 const int CARD_ETHER = 16;
 
+
+const int CHIP_10     = 2359;
+const int CHIP_100    = 2350;
+const int CHIP_500    = 2351;
+const int CHIP_1000   = 2352;
+const int CHIP_5000   = 2353;
+const int CHIP_10000  = 2354;
+const int CHIP_50000  = 2355;
+const int CHIP_100000 = 2356;
+const int CHIP_500000 = 2357;
+const int CHIP_1000000= 2358;
+
+
 int cardnumComparAscend(const void *, const void *);
 int cardnumComparDescend(const void *, const void *);
 

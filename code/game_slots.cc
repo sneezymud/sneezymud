@@ -14,6 +14,18 @@
 
 void spin_slot(TBeing *ch);
 
+TObj *find_chip(TBeing *ch, const int chip)
+{
+  TObj *o;
+
+  for(TThing *tt=ch->getStuff();tt;tt=tt->nextThing)
+    if((o=dynamic_cast<TObj *>(tt)) && o->objVnum()==chip)
+      return o;
+  
+  return NULL;
+}
+
+
 static const char *ChooseFirstFruit()
 {
   int num;
@@ -93,7 +105,7 @@ static const char *ChooseThirdFruit()
 
 bool TBeing::checkSlots() const
 {
-  if ((in_room < 8414) && (in_room > 8403))
+  if(in_room == 2365)
     return TRUE;
   else
     return FALSE;
@@ -120,6 +132,7 @@ void TBeing::doPlay(const char *arg)
 {
   char game[256], options[256];
   Descriptor *d;
+  TObj *chip=NULL;
 
   if (!(d = desc))
     return;
@@ -157,67 +170,77 @@ void TBeing::doPlay(const char *arg)
     }
     if (!*options) {
       sendTo("Slot machine options :\n\r");
-      sendTo("1) Play the cheap slots, and bet 1 coins (100 talens).\n\r");
-      sendTo("2) Play the cheap slots, and bet 2 coins (200 talens).\n\r");
-      sendTo("3) Play the cheap slots, and bet 3 coins (300 talens).\n\r");
-      sendTo("4) Play the expensive slots and bet 1 coin (1000 talens).\n\r");
-      sendTo("5) Play the expensive slots and bet 2 coins (2000 talens).\n\r");
-      sendTo("6) Play the expensive slots and bet 3 coins (3000 talens).\n\r");
-      sendTo("You MUST play the 3000 talens machine to have a chance at the jackpot.\n\r");
+      sendTo("1) Play the cheap slots, and bet a 10 talen chip.\n\r");
+      sendTo("2) Play the cheap slots, and bet a 100 talen chip.\n\r");
+      sendTo("3) Play the cheap slots, and bet a 500 talen chip.\n\r");
+      sendTo("4) Play the expensive slots and bet a 1000 talen chip.\n\r");
+      sendTo("5) Play the expensive slots and bet a 5000 talen chip.\n\r");
+      sendTo("6) Play the expensive slots and bet 10000 talen chip.\n\r");
     } else {
       if (!strcmp(options, "1")) {
-	if (getMoney() >= 100) {
-	  d->bet.slot = 100;
-	  addToMoney(-100, GOLD_GAMBLE);
- 
+	if((chip=find_chip(this, CHIP_10))){
+	  d->bet.slot = CHIP_10;
+	  (*chip)--;
+	  delete chip;
+
 	  spin_slot(this);
 	} else {
-	  sendTo("You search your pockets for talens but come up empty-handed.\n\r");
+	  sendTo("You search your pockets for chips but come up empty-handed.\n\r");
 	  return;
 	}
       } else if (!strcmp(options, "2")) {
-	if (getMoney() >= 200) {
-	  d->bet.slot = 200;
-	  addToMoney(-200, GOLD_GAMBLE);
+	if((chip=find_chip(this, CHIP_100))){
+	  d->bet.slot = CHIP_100;
+	  (*chip)--;
+	  delete chip;
+
 	  spin_slot(this);
 	} else {
-	  sendTo("You search your pockets for talens but come up empty-handed.\n\r");
+	  sendTo("You search your pockets for chips but come up empty-handed.\n\r");
 	  return;
 	}
       } else if (!strcmp(options, "3")) {
-	if (getMoney() >= 300) {
-	  d->bet.slot = 300;
-	  addToMoney(-300, GOLD_GAMBLE);
+	if((chip=find_chip(this, CHIP_500))){
+	  d->bet.slot = CHIP_500;
+	  (*chip)--;
+	  delete chip;
+
 	  spin_slot(this);
 	} else {
-	  sendTo("You search your pockets for talens but come up empty-handed.\n\r");
+	  sendTo("You search your pockets for chips but come up empty-handed.\n\r");
 	  return;
 	}
       } else if (!strcmp(options, "4")) {
-	if (getMoney() >= 1000) {
-	  d->bet.slot = 1000;
-	  addToMoney(-1000, GOLD_GAMBLE);
+	if((chip=find_chip(this, CHIP_1000))){
+	  d->bet.slot = CHIP_1000;
+	  (*chip)--;
+	  delete chip;
+
 	  spin_slot(this);
 	} else {
-	  sendTo("You search your pockets for talens but come up empty-handed.\n\r");
+	  sendTo("You search your pockets for chips but come up empty-handed.\n\r");
 	  return;
 	}
       } else if (!strcmp(options, "5")) {
-	if (getMoney() >= 2000) {
-	  d->bet.slot = 2000;
-	  addToMoney(-2000, GOLD_GAMBLE);
+	if((chip=find_chip(this, CHIP_5000))){
+	  d->bet.slot = CHIP_5000;
+	  (*chip)--;
+	  delete chip;
+
 	  spin_slot(this);
 	} else {
-	  sendTo("You search your pockets for talens but come up empty-handed.\n\r");
+	  sendTo("You search your pockets for chips but come up empty-handed.\n\r");
 	  return;
 	}
       } else if (!strcmp(options, "6")) {
-	if (getMoney() >= 3000) {
-	  d->bet.slot = 3000;
-	  addToMoney(-3000, GOLD_GAMBLE);
+	if((chip=find_chip(this, CHIP_10000))){
+	  d->bet.slot = CHIP_10000;
+	  (*chip)--;
+	  delete chip;
+
 	  spin_slot(this);
 	} else {
-	  sendTo("You search your pockets for talens but come up empty-handed.\n\r");
+	  sendTo("You search your pockets for chips but come up empty-handed.\n\r");
 	  return;
 	}
       } else {
@@ -288,7 +311,7 @@ void spin_slot(TBeing *ch)
   const char *fruit2;
   const char *fruit3;
   TObj *slot;
-  TMoney *coins;
+  TObj *chip;
   unsigned int bits;
   TBeing *tmp_char;
 
@@ -315,55 +338,55 @@ void spin_slot(TBeing *ch)
 
   bits = generic_find("slot", FIND_OBJ_ROOM, ch, &tmp_char, &slot);
 
+  if(bits != FIND_OBJ_ROOM){
+    vlogf(LOG_BUG, "No slot machine in room %d", ch->in_room);
+    return;
+  }
+
+  if(ch->desc->bet.slot==0){
+    vlogf(LOG_BUG, "slot bet was 0 in room %s", ch->in_room);
+    return;
+  }
+
   if (!strcmp(fruit1, "cherry")) {
     if (strcmp(fruit1, fruit2)) {
       ch->sendTo("You win!\n\r");
-      coins = create_money(ch->desc->bet.slot);
-      if (coins && (bits == FIND_OBJ_ROOM)) {
-	*slot += *coins;
-	ch->desc->bet.slot = 0;
-	return;
-      } else {
-	vlogf(LOG_BUG, "No slot machine in room %d", ch->in_room);
-	return;
-      }
+      chip=read_object(ch->desc->bet.slot, VIRTUAL);
+      *slot += *chip;
+      ch->desc->bet.slot = 0;
+      return;
     } else {
       ch->sendTo("You win!\n\r");
-      ch->sendTo("Some talens fall into the slot.\n\r");
-      coins = create_money(2 * ch->desc->bet.slot);
-      if (coins && (bits == FIND_OBJ_ROOM)) {
-	*slot += *coins;
-	ch->desc->bet.slot = 0;
-	return;
-      } else {
-	vlogf(LOG_BUG, "No slot machine in room %d", ch->in_room);
-	return;
+      ch->sendTo("Some chips fall into the slot.\n\r");
+      for(int i=0;i<2;++i){
+	chip=read_object(ch->desc->bet.slot, VIRTUAL);
+	*slot += *chip;
       }
+      ch->desc->bet.slot = 0;
+      return;
     }
   } else if (!strcmp(fruit1, fruit2) && !strcmp(fruit2, fruit3)) {
     ch->sendTo("You win!\n\r");
-    ch->sendTo("Some talens fall into the slot.\n\r");
-    coins = create_money(6 * ch->desc->bet.slot);
-    if (coins && (bits == FIND_OBJ_ROOM)) {
-      *slot += *coins;
-      ch->desc->bet.slot = 0;
-      return;
-    } else {
-      vlogf(LOG_BUG, "No slot machine in room %d", ch->in_room);
-      return;
+    ch->sendTo("Some chips fall into the slot.\n\r");
+
+    for(int i=0;i<6;++i){
+      chip=read_object(ch->desc->bet.slot, VIRTUAL);
+      *slot += *chip;
     }
+
+    ch->desc->bet.slot = 0;
+    return;
   } else if (!strcmp(fruit3, "bally") && !strcmp(fruit2, fruit1)) {
     ch->sendTo("You win!\n\r");
-    ch->sendTo("Some talens fall into the slot.\n\r");
-    coins = create_money(20 * (ch->desc->bet.slot));
-    if (coins && (bits == FIND_OBJ_ROOM)) {
-      *slot += *coins;
-      ch->desc->bet.slot = 0;
-      return;
-    } else {
-      vlogf(LOG_BUG, "No slot machine in room %d", ch->in_room);
-      return;
+    ch->sendTo("Some chips fall into the slot.\n\r");
+
+    for(int i=0;i<20;++i){
+      chip=read_object(ch->desc->bet.slot, VIRTUAL);
+      *slot += *chip;
     }
+
+    ch->desc->bet.slot = 0;
+    return;
   } else {
     ch->sendTo("You lose!\n\r");
     ch->desc->bet.slot = 0;
