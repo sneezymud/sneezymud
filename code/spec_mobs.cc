@@ -6406,7 +6406,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       me->doSay(buf);
       ch->addToMoney(-cost, GOLD_HOSPITAL);
       ch->sendTo(COLOR_BASIC, fmt("%s concentrates deeply on %s.\n\r") % me->getName() % item->getName());
-      ch->sendTo(fmt("%s conjours up a cloud of smoke.\n\rInside the cloud of smoke you see...\n\r") % me->getName());
+      ch->sendTo(fmt("%s conjures up a cloud of smoke.\n\rInside the cloud of smoke you see...\n\r") % me->getName());
       ch->statObjForDivman(item);
       sprintf(buf, "Thank you, %s, for your business! Please come again!", ch->getName());
       me->doSay(buf);
