@@ -125,7 +125,7 @@ class indexData {
   public:
     int virt;   
     long pos;  
-    short int number;
+    int number;
     char *name;
     char *short_desc;
     char *long_desc;

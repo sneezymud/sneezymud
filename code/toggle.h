@@ -13,12 +13,12 @@
 
 typedef struct {
   const char * name;
-  short int togmob;
+  int togmob;
 } TOGINFO;
 
 // defines for avenger quest
 
-const short int AVENGER_ROOM      = 9359;
+const int AVENGER_ROOM      = 9359;
 
 const int TOG_AVENGER_ELIGIBLE    = 1;
 const int TOG_AVENGER_RULES       = 2;
@@ -31,8 +31,8 @@ const int TOG_AVENGER_PENANCED    = 8;
 
 // defines for vindicator quest
 
-const short int ROOM_VINDICATOR_1       =        11149;
-const short int ROOM_VINDICATOR_2       =        23276;
+const int ROOM_VINDICATOR_1       =        11149;
+const int ROOM_VINDICATOR_2       =        23276;
 
 const int TOG_VINDICATOR_ELIGIBLE    = 9;
 const int TOG_VINDICATOR_FOUND_BLACKSMITH = 10;
@@ -61,7 +61,7 @@ const int TOG_IMMORTAL_ON_QUEST      = 29;
 
 // defines for silverclaw quest //
 
-const short int ROOM_SILVERCLAW_1		= 9489;
+const int ROOM_SILVERCLAW_1		= 9489;
 
 const int TOG_SILVERCLAW_TO_SCAR	 =   30;
 const int TOG_SILVERCLAW_EEL_SKIN    = 31;
@@ -82,17 +82,17 @@ const int TOG_SILVERCLAW_END_QUEST   = 45;
 
 // defines for holy devastator quest //
 
-const short int ROOM_CREED		= 	2495;
-const short int ROOM_TAILLE		= 	2273;
-const short int ROOM_OVERLORD		= 	5442;
-const short int ROOM_GRIZWALD		= 	9331;
-const short int ROOM_MOAT_MONSTER	= 	9736;
-const short int ROOM_ABNOR		= 	9326;
-const short int ROOM_ASSASSIN		= 	3857;
-const short int ROOM_LORTO		= 	28880;
-const short int ROOM_YOLA		= 	9148;
-const short int ROOM_SULTRESS		= 	3459;
-const short int ROOM_NESNUM		= 	7531;
+const int ROOM_CREED		= 	2495;
+const int ROOM_TAILLE		= 	2273;
+const int ROOM_OVERLORD		= 	5442;
+const int ROOM_GRIZWALD		= 	9331;
+const int ROOM_MOAT_MONSTER	= 	9736;
+const int ROOM_ABNOR		= 	9326;
+const int ROOM_ASSASSIN		= 	3857;
+const int ROOM_LORTO		= 	28880;
+const int ROOM_YOLA		= 	9148;
+const int ROOM_SULTRESS		= 	3459;
+const int ROOM_NESNUM		= 	7531;
 
 const int TOG_DEVASTATOR_FIND_BEN    = 46;
 const int TOG_DEVASTATOR_TOOK_BRIBE  = 47;

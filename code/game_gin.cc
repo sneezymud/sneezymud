@@ -14,7 +14,7 @@
 
 GinGame gGin;
 
-const short int GIN_TABLE =  8416;
+const int GIN_TABLE =  8416;
 
 bool GinGame::check(const TBeing *ch) const
 {
