@@ -21,6 +21,10 @@
   @set blocka <char> <start-room> <end-room>
   @set blockb <char> <start-room> <end-room>
 - Moved vlogf over to a bv setup instead of a solid value.
+- Finished the vlogf change over.  ALL vlogf lines in the code
+  have been fixed to reflect the new format.  I tried my best to
+  put a proper LOG_ type on each one but I expect that a good few
+  past by me, considering over 1800 in total.
 
 12-7 - Peel
 - added code to deal with player killing better
