@@ -5393,7 +5393,7 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   TDatabase db(DB_SNEEZY);
 
   //  db.query("select name, count(*) from trophy group by name order by count(*) desc limit 10");
-  db.query("select name, count from trophyplayer order by count desc limit 10");
+  db.query("select name, count from trophyplayer order by count desc limit 25");
 
   if(!db.isResults()){
     ch->sendTo("The board is empty.\n\r");
@@ -5407,26 +5407,19 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   ch->sendTo("-  than any other.                                         -\n\r");
   ch->sendTo("------------------------------------------------------------\n\r");
 
-  int activemobcount=0;
-  for (unsigned int mobnum = 0; mobnum < mob_index.size(); mobnum++) {
-    for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
-      if(mob_index[mobnum].virt <= zone_table[zone].top){
-	if(zone_table[zone].enabled)
-	  activemobcount++;
-	break;
-      }
-    }
-  }
-
-
-
+  // set the mob count to the highest players kill count
+  int activemobcount=1;
+  if(db.fetchRow())
+    activemobcount=convertTo<int>(db["count"]);
+    
   int i=1;
-  while(db.fetchRow()){
+  do {
     ch->sendTo(COLOR_BASIC, "%i) %s has killed %i (%d%%) life forms.\n\r", 
 	       i, db["name"], convertTo<int>(db["count"]), 
 	       (int)(((float)convertTo<int>(db["count"])/(float)activemobcount)*100));
     ++i;
-  }
+  } while(db.fetchRow());
+
 
   return TRUE;
 }
