@@ -74,9 +74,9 @@ void TBow::remBowFlags(unsigned int r)
 void TBow::describeObjectSpecifics(const TBeing *ch) const
 {
   if (getStuff())
-    ch->sendTo(COLOR_OBJECTS, "%s is loaded with an arrow.\n\r", good_cap(getName()).c_str());
+    ch->sendTo(COLOR_OBJECTS, "%s is loaded with an arrow.\n\r", sstring(getName()).cap().c_str());
   else
-    ch->sendTo(COLOR_OBJECTS, "%s has no arrow ready.\n\r", good_cap(getName()).c_str());
+    ch->sendTo(COLOR_OBJECTS, "%s has no arrow ready.\n\r", sstring(getName()).cap().c_str());
 
   if (isBowFlag(BOW_STRING_BROKE))
     act("$p has a broken string.", false, ch, this, 0, TO_CHAR);
@@ -373,12 +373,12 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     
     if (targ)
       ch->sendTo(COLOR_MOBS, "You shoot %s out of %s at %s.\n\r",
-		 good_uncap(capbuf).c_str(), good_uncap(capbuf2).c_str(),
+		 capbuf.uncap().c_str(), capbuf2.uncap().c_str(),
 		 targ->getName());
     else
       ch->sendTo("You shoot %s out of %s.\n\r",
-		 good_uncap(capbuf).c_str(), 
-		 good_uncap(capbuf2).c_str());
+		 capbuf.uncap().c_str(), 
+		 capbuf2.uncap().c_str());
     
     sprintf(buf, "$n points $p %swards, and shoots $N out of it.",
 	    dirs[dir]);

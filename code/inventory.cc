@@ -141,7 +141,7 @@ int TPortal::openMe(TBeing *ch)
   }
   if (isPortalFlag( EX_TRAPPED) && ch->doesKnowSkill(SKILL_DETECT_TRAP)) {
     if (detectTrapObj(ch, this)) {
-      sprintf(buf, "You start to open $p, but then notice an insidious %s trap...", good_uncap(trap_types[getPortalTrapType()]).c_str());
+      sprintf(buf, "You start to open $p, but then notice an insidious %s trap...", sstring(trap_types[getPortalTrapType()]).uncap().c_str());
       act(buf, TRUE, ch, this, NULL, TO_CHAR);
       return FALSE;
     }
@@ -235,7 +235,7 @@ void TTrap::dropMe(TBeing *ch, showMeT, showRoomT showroom)
 
   if (!isname("grenade", name)) {
     ch->sendTo(COLOR_OBJECTS, "You drop %s, concealing and arming it.\n\r", 
-                     good_uncap(getName()).c_str());
+                     sstring(getName()).uncap().c_str());
 
     swapToStrung();
     ed = new extraDescription();
@@ -250,7 +250,7 @@ void TTrap::dropMe(TBeing *ch, showMeT, showRoomT showroom)
     return;
   } else {
     ch->sendTo(COLOR_OBJECTS, "You drop %s, activating it.\n\r", 
-                     good_uncap(getName()).c_str());
+                     sstring(getName()).uncap().c_str());
 
     armGrenade(ch);
 
@@ -1270,7 +1270,7 @@ bool TThing::canCarryMe(const TBeing *ch, silentTypeT silent) const
 
     if (ch->getCarriedVolume() + (getTotalVolume() - getReducedVolume(NULL)) > ch->carryVolumeLimit()) {
       if (!silent)
-        ch->sendTo(COLOR_OBJECTS,"%s : You need more dexterity to carry that much volume.\n\r", good_cap(getName()).c_str());
+        ch->sendTo(COLOR_OBJECTS,"%s : You need more dexterity to carry that much volume.\n\r", sstring(getName()).cap().c_str());
       return FALSE;
     }
   } else {
@@ -1280,13 +1280,13 @@ bool TThing::canCarryMe(const TBeing *ch, silentTypeT silent) const
     if (compareWeights(getTotalWeight(TRUE),
                   (ch->carryWeightLimit() - ch->getCarriedWeight())) == -1) {
       if (!silent)
-        ch->sendTo(COLOR_OBJECTS, "%s : You don't have enough strength to carry that much weight.\n\r", good_cap(getName()).c_str());
+        ch->sendTo(COLOR_OBJECTS, "%s : You don't have enough strength to carry that much weight.\n\r", sstring(getName()).cap().c_str());
       return FALSE;
     }
 
     if (ch->getCarriedVolume() + getTotalVolume() > ch->carryVolumeLimit()) {
       if (!silent)
-        ch->sendTo(COLOR_OBJECTS,"%s : You need more dexterity to carry that much volume.\n\r", good_cap(getName()).c_str());
+        ch->sendTo(COLOR_OBJECTS,"%s : You need more dexterity to carry that much volume.\n\r", sstring(getName()).cap().c_str());
       return FALSE;
     }
   }
@@ -1350,7 +1350,7 @@ bool TTrap::canDrop() const
 
 int TObj::getAllFrom(TBeing *ch, const char *argument)
 {
-  ch->sendTo(COLOR_OBJECTS, "%s is not a container.\n\r", good_cap(getName()).c_str());
+  ch->sendTo(COLOR_OBJECTS, "%s is not a container.\n\r", sstring(getName()).cap().c_str());
   return FALSE;
 }
 

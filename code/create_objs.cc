@@ -2774,7 +2774,7 @@ void TObj::changeObjValue1(TBeing *ch)
   ch->specials.edit = CHANGE_OBJ_VALUE1;
 
   ch->sendTo("Value 1 for %s : %d\n\r\n\r",
-       good_uncap(getName()).c_str(), x1);
+       sstring(getName()).uncap().c_str(), x1);
   ch->sendTo(VT_CURSPOS, 10, 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
@@ -2790,7 +2790,7 @@ void TObj::changeObjValue2(TBeing *ch)
   ch->specials.edit = CHANGE_OBJ_VALUE2;
 
   ch->sendTo("Value 2 for %s : %d\n\r\n\r",
-       good_uncap(getName()).c_str(), x2);
+       sstring(getName()).uncap().c_str(), x2);
   ch->sendTo(VT_CURSPOS, 10, 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
@@ -2806,7 +2806,7 @@ void TObj::changeObjValue3(TBeing *ch)
   ch->specials.edit = CHANGE_OBJ_VALUE3;
 
   ch->sendTo("Value 3 for %s : %d\n\r\n\r",
-       good_uncap(getName()).c_str(), x3);
+       sstring(getName()).uncap().c_str(), x3);
   ch->sendTo(VT_CURSPOS, 10, 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
@@ -2822,7 +2822,7 @@ void TObj::changeObjValue4(TBeing *ch)
   ch->specials.edit = CHANGE_OBJ_VALUE4;
 
   ch->sendTo("Value 4 for %s : %d\n\r\n\r",
-       good_uncap(getName()).c_str(), x4);
+       sstring(getName()).uncap().c_str(), x4);
   ch->sendTo(VT_CURSPOS, 10, 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }

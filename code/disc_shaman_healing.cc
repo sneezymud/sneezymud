@@ -17,7 +17,7 @@ static void repHealing2(TBeing *caster, TBeing *victim)
 {
   char nameBuf[256];
 
-  strcpy(nameBuf, good_cap(victim->getName()).c_str());
+  strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf,"%s",colorString(caster,caster->desc,nameBuf,NULL,COLOR_MOBS, TRUE).c_str());
 
   if (caster != victim) {
@@ -109,7 +109,7 @@ int castHealingGrasp(TBeing *caster, TBeing *victim)
 {
   char nameBuf[256];
 
-  strcpy(nameBuf, good_cap(victim->getName()).c_str());
+  strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf,"%s",colorString(caster,caster->desc,nameBuf,NULL,COLOR_MOBS, TRUE).c_str());
 
   spellNumT spell = caster->getSkillNum(caster->spelltask->spell); 

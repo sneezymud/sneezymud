@@ -63,7 +63,7 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
         !isObjStat(ITEM_FLOAT) &&
         !objVnum() == GENERIC_FLARE ) {
       ssprintf(buffer, "%s is floating here.", getName());
-      buffer=good_cap(buffer);
+      buffer=buffer.cap();
     } else {
       ssprintf(capbuf, "%s", addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_OBJECTS).c_str());
       sstring cStrbuf = capbuf;
@@ -73,13 +73,13 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
       while (cStrbuf.find("$g") != sstring::npos)
         cStrbuf.replace(cStrbuf.find("$g"), 2,
                         (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
-      capbuf=good_cap(cStrbuf);
+      capbuf=cStrbuf.cap();
       buffer=colorString(ch, ch->desc, capbuf, NULL, COLOR_OBJECTS, TRUE);
     }
   } else if ((mode == SHOW_MODE_SHORT_PLUS || 
               mode == SHOW_MODE_SHORT_PLUS_INV ||
               mode == SHOW_MODE_SHORT) && getName()) {
-    buffer=good_cap(getName());
+    buffer=sstring(getName()).cap();
   } else if (mode == SHOW_MODE_TYPE) {
     showMe(ch);
     return;
@@ -116,11 +116,11 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
 
 
   if (parent && dynamic_cast<TObj *>(parent)) {
-    ssprintf(buf, " (in %s)", good_uncap(parent->getName()).c_str());
+    ssprintf(buf, " (in %s)", sstring(parent->getName()).uncap().c_str());
     buffer += buf;
   }
   if (riding) {
-    ssprintf(buf, " (on %s)", good_uncap(ch->objs(riding)).c_str());
+    ssprintf(buf, " (on %s)", sstring(ch->objs(riding)).uncap().c_str());
     buffer += buf;
   }
   if (dynamic_cast<const TTable *>(this) && rider) {
@@ -203,15 +203,15 @@ void TObj::show_me_mult_to_char(TBeing *ch, showModeT mode, unsigned int num) co
     buffer += tmp;
   }
   if (parent && dynamic_cast<TObj *>(parent)) {    
-    ssprintf(tmp, " (in %s)", good_uncap(parent->getName()).c_str());
+    ssprintf(tmp, " (in %s)", sstring(parent->getName()).uncap().c_str());
     buffer += tmp;
   }
   if (riding) {
-    ssprintf(tmp, " (on %s)", good_uncap(ch->objs(riding)).c_str());
+    ssprintf(tmp, " (on %s)", sstring(ch->objs(riding)).uncap().c_str());
     buffer += tmp;
   }
   buffer += "\n\r";
-  buffer=good_cap(buffer);
+  buffer=buffer.cap();
   ssprintf(buffer, "%s",colorString(ch, ch->desc, buffer, NULL, COLOR_OBJECTS, TRUE).c_str());
   ch->desc->page_string(buffer);
 }
@@ -695,9 +695,9 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
         if (dynamic_cast<const TPerson *>(this))
           sprintf(buffer, "%s", colorString(ch, ch->desc, getName(), NULL, COLOR_MOBS, FALSE).c_str());
         else 
-          sprintf(buffer, "%s", colorString(ch, ch->desc, good_cap(getName()).c_str(),NULL, COLOR_MOBS, FALSE).c_str());
+          sprintf(buffer, "%s", colorString(ch, ch->desc, sstring(getName()).cap().c_str(),NULL, COLOR_MOBS, FALSE).c_str());
       } else 
-        sprintf(buffer, "%s%s%s", ch->cyan(), good_cap(getName()).c_str(), ch->norm());
+        sprintf(buffer, "%s%s%s", ch->cyan(), sstring(getName()).cap().c_str(), ch->norm());
       
       if (isAffected(AFF_INVISIBLE) || getInvisLevel() > MAX_MORT)
         strcat(buffer, " (invisible)");
@@ -934,7 +934,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
     }
     if (riding && dynamic_cast<TObj *>(riding)) {
       sprintf(buffer, "$n is %s on %s.", 
-            good_uncap(position_types[getPosition()]).c_str(), 
+            sstring(position_types[getPosition()]).uncap().c_str(), 
             riding->getName());
       sprintf(buffer,"%s",colorString(ch,ch->desc,buffer,NULL,COLOR_MOBS, TRUE).c_str());
       act(buffer, FALSE, this, 0, ch, TO_VICT);
@@ -1389,8 +1389,8 @@ void TBeing::doGlance(const char *argument)
       describeLimbDamage(i);
 //      describeAffects(i);
       sendTo(COLOR_MOBS, "%s look%s %s.\n\r",
-        (i == this ? "You" : good_cap(i->getName())).c_str(),
-        (i == this ? "" : "s"),
+	     (i == this ? "You" : sstring(i->getName()).cap().c_str()),
+	     (i == this ? "" : "s"),
         DescMoves((((double) i->getMove()) / ((double) i->moveLimit()))));
 
       describeSpellEffects(i, this, TRUE);

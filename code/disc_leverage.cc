@@ -105,9 +105,9 @@ static int hurlHit(TBeing *caster, TBeing *victim, dirTypeT dr)
     }
 
     caster->sendTo(COLOR_MOBS, "%s is hurled %s out of the room!\n\r", 
-         good_cap(victim->getName()).c_str(), dirs[dr]);
+         sstring(victim->getName()).cap().c_str(), dirs[dr]);
     victim->sendTo(COLOR_MOBS, "%s hurls you %s out of the room!\n\r", 
-            good_cap(caster->getName()).c_str(), dirs[dr]);
+            sstring(caster->getName()).cap().c_str(), dirs[dr]);
     sprintf(buf, "$N is hurled %s out of the room by $n.", dirs[dr]);
     act(buf, TRUE, caster, 0, victim, TO_NOTVICT);
 

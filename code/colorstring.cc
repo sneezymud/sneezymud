@@ -232,7 +232,7 @@ sstring nameColorString(TBeing *me, Descriptor *ch, const sstring &arg, int *fla
         case 'n':
         case 'N':
           if (me) {
-            buf += good_cap(me->getName());
+            buf += sstring(me->getName()).cap();
             if (flag)
               *flag = TRUE;
             s += 2;
@@ -598,7 +598,7 @@ const sstring colorString(const TBeing *me, const Descriptor *ch, const sstring 
           case 'n':
           case 'N':
             if (me) {
-              buf += good_cap(me->getName());
+              buf += sstring(me->getName()).cap();
               if (flag)
                 *flag = TRUE;
               s += 2;

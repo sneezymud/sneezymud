@@ -72,9 +72,9 @@ int lightningRodFryPerson(TBaseWeapon *tObj, TBeing *tMaster, TBeing *tSucker)
 
   sendrpf(COLOR_OBJECTS, tMaster->roomp,
           "%s<W> glows violently as sparks begin to leap from it.<z>\n\r",
-          (tObj->getName() ? good_cap(tObj->getName()).c_str() : "Bogus Object"));
+          (tObj->getName() ? sstring(tObj->getName()).cap().c_str() : "Bogus Object"));
   tMaster->sendTo(COLOR_OBJECTS, "%s<W> is lit up like a lightbulb!<z>\n\r",
-                  (tSucker->getName() ? good_cap(tSucker->getName()).c_str() : "Bogus Mobile"));
+                  (tSucker->getName() ? sstring(tSucker->getName()).cap().c_str() : "Bogus Mobile"));
   tSucker->sendTo(COLOR_OBJECTS, "<W>You feel volts of electricty rush through your body!<z>\n\r");
 
   int tDamage = max(1, (int) (tObj->getWeapDamLvl() / 8.0));
@@ -95,7 +95,7 @@ int lightningRodGotHit(TBaseWeapon *tObj, TBeing *tMaster, TBeing *tSucker)
 
   sendrpf(COLOR_OBJECTS, tMaster->roomp,
           "%s<W> glows violently in reaction to being struck!<z>\n\r",
-          (tObj->getName() ? good_cap(tObj->getName()).c_str() : "Bogus Object"));
+          (tObj->getName() ? sstring(tObj->getName()).cap().c_str() : "Bogus Object"));
   tSucker->sendTo(COLOR_OBJECTS, "<W>Volts of electricty course through your body!<z>\n\r");
 
   int tDamage = max(1, (int) (tObj->getWeapDamLvl() / 8.0));
@@ -116,7 +116,7 @@ int lightningRodGotHit(TBaseClothing *tObj, TBeing *tMaster, TBeing *tSucker)
 
   sendrpf(COLOR_OBJECTS, tMaster->roomp,
           "%s<W> glows violently in reaction to being struck!<z>\n\r",
-          (tObj->getName() ? good_cap(tObj->getName()).c_str() : "Bogus Object"));
+          (tObj->getName() ? sstring(tObj->getName()).cap().c_str() : "Bogus Object"));
   tSucker->sendTo(COLOR_OBJECTS, "<W>Volts of electricty course through your body!<z>\n\r");
 
   int tDamage = max(1, (int) (tObj->armorLevel(ARMOR_LEV_REAL) / 8.0));
@@ -137,7 +137,7 @@ int lightningRodFryRoom(TBaseWeapon *tObj, TRoom *tRoom)
 
   sendrpf(COLOR_OBJECTS, tRoom,
           "<W>A bolt of lightning streaks down and strikes %s<W>!<z>\n\r",
-          (tObj->getName() ? good_uncap(tObj->getName()).c_str() : "Bogus Object"));
+          (tObj->getName() ? sstring(tObj->getName()).uncap().c_str() : "Bogus Object"));
 
   TThing *tThing,
          *tThingNext;
@@ -151,7 +151,7 @@ int lightningRodFryRoom(TBaseWeapon *tObj, TRoom *tRoom)
 
 
     tBeing->sendTo(COLOR_OBJECTS, "<W>A stream of energy launches from %s<W>, frying you!<z>\n\r",
-                   (tObj->getName() ? good_uncap(tObj->getName()).c_str() : "Bogus Object"));
+                   (tObj->getName() ? sstring(tObj->getName()).uncap().c_str() : "Bogus Object"));
 
     int tDamage = max(1, (int) (tObj->getWeapDamLvl() / 4.0));
 
@@ -175,7 +175,7 @@ int lightningRodInternalFry(TBaseWeapon *tObj, TBeing *tSucker)
 
   sendrpf(COLOR_OBJECTS, tSucker->roomp,
           "%s<W> suddenly flares up violently!<z>\n\r",
-          (tObj->getName() ? good_cap(tObj->getName()).c_str() : "Bogus Object"));
+          (tObj->getName() ? sstring(tObj->getName()).cap().c_str() : "Bogus Object"));
   tSucker->sendTo(COLOR_OBJECTS, "<W>Volts of energy course through your body!<z>\n\r");
 
   int tDamage = max(1, (int) (tObj->getWeapDamLvl() / 8.0));

@@ -892,7 +892,7 @@ void TPerson::doShow(const char *argument)
 	if(material_nums[i].mat_name[0]){
 	  buf[0]='\0';
 	  sprintf(buf, "%-9i %s\n\r", i, 
-		  good_uncap(material_nums[i].mat_name).c_str());
+		  sstring(material_nums[i].mat_name).uncap().c_str());
 	  sb += buf;
 	}
       }

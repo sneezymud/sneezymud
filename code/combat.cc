@@ -2634,7 +2634,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
           strcpy(namebuf, other->pers(this));
           strcpy(victbuf, other->pers(v));
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS,"%s tries to bite %s, but misses.\n\r", good_cap(namebuf).c_str(), victbuf);
+            other->sendTo(COLOR_MOBS,"%s tries to bite %s, but misses.\n\r", sstring(namebuf).cap().c_str(), victbuf);
 
         }
         break;
@@ -2656,7 +2656,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
       strcpy(namebuf, other->pers(this));
       strcpy(victbuf, other->pers(v));
       if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-	other->sendTo(COLOR_MOBS,"%s tries to shoot %s, but misses.\n\r", good_cap(namebuf).c_str(), victbuf);
+	other->sendTo(COLOR_MOBS,"%s tries to shoot %s, but misses.\n\r", sstring(namebuf).cap().c_str(), victbuf);
     }
   } else if (pierceType(wtype)) {
     num = ::number(1,10);
@@ -2683,7 +2683,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, "%s thrusts at %s, but misses.\n\r", good_cap(namebuf).c_str(),
+            other->sendTo(COLOR_MOBS, "%s thrusts at %s, but misses.\n\r", sstring(namebuf).cap().c_str(),
                  victbuf);
         }
         break;
@@ -2705,7 +2705,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(namebuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(this)), NULL, COLOR_MOBS, TRUE));
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, "%s stabs wildly, but misses %s.\n\r", good_cap(namebuf).c_str(),
+            other->sendTo(COLOR_MOBS, "%s stabs wildly, but misses %s.\n\r", sstring(namebuf).cap().c_str(),
                  victbuf);
         }
         break;
@@ -2733,7 +2733,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, "%s hits %s, but fails to penetrate %s thick %s.\n\r", good_cap(namebuf).c_str(), victbuf, v->hshr(), 
+            other->sendTo(COLOR_MOBS, "%s hits %s, but fails to penetrate %s thick %s.\n\r", sstring(namebuf).cap().c_str(), victbuf, v->hshr(), 
                     (v->isHumanoid() ? "armor" : "hide"));
         }
         break;
@@ -2772,7 +2772,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, "%s misses %s.\n\r", good_cap(namebuf).c_str(),
+            other->sendTo(COLOR_MOBS, "%s misses %s.\n\r", sstring(namebuf).cap().c_str(),
                  victbuf);
         }
         break;
@@ -2803,7 +2803,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, "%s swings wildly, but misses %s.\n\r", good_cap(namebuf).c_str(),
+            other->sendTo(COLOR_MOBS, "%s swings wildly, but misses %s.\n\r", sstring(namebuf).cap().c_str(),
                  victbuf);
         }
         break;
@@ -2832,7 +2832,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
             other->sendTo(COLOR_MOBS, "%s hits %s, but fails to penetrate %s thick %s.\n\r",
-                    good_cap(namebuf).c_str(), victbuf, v->hshr(),
+                    sstring(namebuf).cap().c_str(), victbuf, v->hshr(),
                     (v->isHumanoid() ? "armor" : "hide"));
         }
         break;
@@ -2871,7 +2871,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, "%s misses %s.\n\r", good_cap(namebuf).c_str(),
+            other->sendTo(COLOR_MOBS, "%s misses %s.\n\r", sstring(namebuf).cap().c_str(),
                  victbuf);
         }
         break;
@@ -2999,7 +2999,7 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
 
       strcpy(namebuf, other->pers(this)); 
       strcpy(victbuf, other->pers(v)); 
-      strcpy(buf, good_cap(namebuf).c_str());
+      strcpy(buf, sstring(namebuf).cap().c_str());
       if (Twink == 1) {
 	sprintf(buf + strlen(buf), " %s ", attack_hit_text_twink[w_type].plural);
       } else {
@@ -5195,7 +5195,7 @@ int TBeing::dislodgeWeapon(TBeing *v, TThing *weapon, wearSlotT part)
        objn(weapon).c_str(), nameBuf.c_str(), 
        v->describeBodySlot(part).c_str(),red(),norm());
     v->sendTo(COLOR_OBJECTS, "%s%s leaves %s %s stuck in your %s%s.\n\r",
-       v->orange(), good_cap(getName()).c_str(), hshr(),
+       v->orange(), sstring(getName()).cap().c_str(), hshr(),
        objn(weapon).c_str(),v->describeBodySlot(part).c_str(), v->norm());
 
     sprintf(buf,"$n leaves $s $o stuck in $N's %s", v->describeBodySlot(part).c_str());

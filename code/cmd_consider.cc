@@ -96,7 +96,7 @@ void TBeing::doConsider(const char *argument)
 
       sendTo("You consider %s's equipment...\n\r", victim->getName());
       sendTo("%s should have an AC of [%d] but has an AC of [%d]\n\r",
-             good_cap(victim->getName()).c_str(),
+             sstring(victim->getName()).cap().c_str(),
              prefArmorC,
              diff);
       return;

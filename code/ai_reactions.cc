@@ -932,15 +932,15 @@ int TMonster::aiWimpSwitch(TBeing *vict)
       char oMessage[200];
 
       sprintf(oMessage, "%s attempts to switch to %s, but you block it.",
-              good_cap(getName()).c_str(), vict->getName());
+              sstring(getName()).cap().c_str(), vict->getName());
       act(oMessage, TRUE, tank, 0, vict, TO_CHAR);
 
       sprintf(oMessage, "%s attempts to switch to %s, but %s blocks it.",
-              good_cap(getName()).c_str(), vict->getName(), tank->getName());
+              sstring(getName()).cap().c_str(), vict->getName(), tank->getName());
       act(oMessage, TRUE, tank, 0, vict, TO_NOTVICT);
 
       sprintf(oMessage, "%s attempts to switch to you, but %s blocks it.",
-              good_cap(getName()).c_str(), tank->getName());
+              sstring(getName()).cap().c_str(), tank->getName());
       act(oMessage, TRUE, tank, 0, vict, TO_VICT);
 
       return FALSE;

@@ -10,7 +10,7 @@ static void repHealing(TBeing *caster, TBeing *victim)
 {
   char nameBuf[256];
 
-  strcpy(nameBuf, good_cap(victim->getName()).c_str());
+  strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf,"%s",colorString(caster,caster->desc,nameBuf,NULL,COLOR_MOBS, TRUE).c_str());
 
   if (caster != victim) {
@@ -127,7 +127,7 @@ int castHealLight(TBeing *caster, TBeing *victim)
 {
   char nameBuf[256];
 
-  strcpy(nameBuf, good_cap(victim->getName()).c_str());
+  strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf,"%s",colorString(caster,caster->desc,nameBuf,NULL,COLOR_MOBS, TRUE).c_str());
 
   spellNumT spell = caster->getSkillNum(caster->spelltask->spell); 
@@ -223,7 +223,7 @@ int castHealSerious(TBeing *caster, TBeing *victim)
 {
   char nameBuf[256];
 
-  strcpy(nameBuf, good_cap(victim->getName()).c_str());
+  strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf,"%s",colorString(caster,caster->desc,nameBuf,NULL,COLOR_MOBS, TRUE).c_str());
 
   spellNumT spell = caster->getSkillNum(caster->spelltask->spell);
@@ -339,7 +339,7 @@ int castHealCritical(TBeing *caster, TBeing *victim)
 {
   char nameBuf[256];
 
-  strcpy(nameBuf, good_cap(victim->getName()).c_str());
+  strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf,"%s",colorString(caster,caster->desc,nameBuf,NULL,COLOR_MOBS, TRUE).c_str());
 
   spellNumT spell = caster->getSkillNum(caster->spelltask->spell);
@@ -431,7 +431,7 @@ int castHeal(TBeing *caster, TBeing *victim)
 {
   char nameBuf[256];
 
-  strcpy(nameBuf, good_cap(victim->getName()).c_str());
+  strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf,"%s",colorString(caster,caster->desc,nameBuf,NULL,COLOR_MOBS, TRUE).c_str());
 
   spellNumT spell = caster->getSkillNum(caster->spelltask->spell);
@@ -530,7 +530,7 @@ int castHealFull(TBeing *caster, TBeing *victim)
 {                                                                               
   char nameBuf[256];                                                            
                                                                                 
-  strcpy(nameBuf, good_cap(victim->getName()).c_str());
+  strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf,"%s",colorString(caster,caster->desc,nameBuf,NULL,COLOR_MOBS, TRUE).c_str());
                                                                                 
   spellNumT spell = caster->getSkillNum(caster->spelltask->spell);                        
@@ -620,7 +620,7 @@ int healCritSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 #if 0
     if (healed_evil) {
       caster->sendTo("%s frowns upon the healing of minions of the enemy.\n\r",
-            good_cap(caster->yourDeity(SPELL_HEAL_CRITICAL_SPRAY, FIRST_PERSON)).c_str());
+            caster->yourDeity(SPELL_HEAL_CRITICAL_SPRAY, FIRST_PERSON.cap()).c_str());
       caster->sendTo("You are exhausted from the effort of doing so.\n\r");
       act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
       caster->updatePos();
@@ -716,7 +716,7 @@ int healSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 #if 0
     if (healed_evil) {
       caster->sendTo("%s frowns upon the healing of minions of the enemy.\n\r",
-          good_cap(caster->yourDeity(SPELL_HEAL_SPRAY, FIRST_PERSON)).c_str());
+          caster->yourDeity(SPELL_HEAL_SPRAY, FIRST_PERSON.cap()).c_str());
       caster->sendTo("You are exhausted from the effort of doing so.\n\r");
       act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
       caster->updatePos();
@@ -817,7 +817,7 @@ int healFullSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 #if 0
     if (healed_evil) {
       caster->sendTo("%s frowns upon the healing of minions of the enemy.\n\r",
-            good_cap(caster->yourDeity(SPELL_HEAL_FULL_SPRAY, FIRST_PERSON)).c_str());
+            caster->yourDeity(SPELL_HEAL_FULL_SPRAY, FIRST_PERSON.cap()).c_str());
       caster->sendTo("You are exhausted from the effort of doing so.\n\r");
       act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
       caster->updatePos();

@@ -540,10 +540,10 @@ void seditSave(TBeing *ch, TMonster *tMonster, bool isSilent = false)
   } else {
     time_t tTime = time(0);
 
-    sprintf(tValue, "# %s\n", good_cap(tMonster->getNameNOC(ch)).c_str());
+    sprintf(tValue, "# %s\n", tMonster->getNameNOC(ch).cap().c_str());
     fputs(tValue, tFile);
     fputs("# Generic Quest\n", tFile);
-    sprintf(tValue, "# Created by %s\n", good_cap(ch->getNameNOC(ch)).c_str());
+    sprintf(tValue, "# Created by %s\n", ch->getNameNOC(ch).cap().c_str());
     fputs(tValue, tFile);
 
     sprintf(tValue, "# Copyright %d, SneezyMUD Dev Team.  All rights reserved.\n\n",

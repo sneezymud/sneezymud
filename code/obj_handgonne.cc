@@ -133,13 +133,13 @@ int THandgonne::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirType
     if (targ){
       ch->sendTo(COLOR_BASIC, "<Y>BANG!<1>  A loud blast sounds as you ignite %s.\n\r", shortDescr);
       ch->sendTo(COLOR_MOBS, "You shoot %s out of %s at %s.\n\r",
-		 good_uncap(capbuf).c_str(), good_uncap(capbuf2).c_str(),
+		 capbuf.uncap().c_str(), capbuf2.uncap().c_str(),
 		 targ->getName());
     } else {
       ch->sendTo(COLOR_BASIC, "<Y>BANG!<1>  A loud blast sounds as you ignite %s.\n\r", shortDescr);
       ch->sendTo("You shoot %s out of %s.\n\r",
-		 good_uncap(capbuf).c_str(), 
-		 good_uncap(capbuf2).c_str());
+		 capbuf.uncap().c_str(), 
+		 capbuf2.uncap().c_str());
     }    
 
     act("<Y>BANG!<1>  A loud blast sounds as $n ignites $p.",

@@ -2587,10 +2587,10 @@ void TComponent::describeObjectSpecifics(const TBeing *ch) const
 {
   if (getComponentCharges() != getComponentMaxCharges())
     ch->sendTo(COLOR_OBJECTS,"%s has been partially used.\n\r",
-        good_cap(getName()).c_str());
+        sstring(getName()).cap().c_str());
 
   ch->sendTo(COLOR_OBJECTS,"%s has about %d uses left.\n\r",
-        good_cap(getName()).c_str(), getComponentCharges());
+        sstring(getName()).cap().c_str(), getComponentCharges());
 }
 
 void TComponent::update(int use)
@@ -3075,7 +3075,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   tKeeper->doTell(tString);
 
   ch->sendTo(COLOR_OBJECTS, "You now have %s (*%d charges).\n\r",
-          good_uncap(getName()).c_str(), tNum);
+          sstring(getName()).uncap().c_str(), tNum);
   act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
   ch->doSave(SILENT_YES);
 
@@ -3131,7 +3131,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop)
   sprintf(tString, shop_index[tShop].message_sell, ch->getName(), tCost);
   tKeeper->doTell(tString);
 
-  ch->sendTo(COLOR_OBJECTS, "The shopkeeper now has %s.\n\r", good_uncap(getName()).c_str());
+  ch->sendTo(COLOR_OBJECTS, "The shopkeeper now has %s.\n\r", sstring(getName()).uncap().c_str());
   ch->logItem(this, CMD_SELL);
 
   sellMeMoney(ch, tKeeper, tCost, tShop);

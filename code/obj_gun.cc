@@ -421,12 +421,12 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     
     if (targ)
       ch->sendTo(COLOR_MOBS, "You shoot %s out of %s at %s.\n\r",
-		 good_uncap(capbuf).c_str(), good_uncap(capbuf2).c_str(),
+		 capbuf.uncap().c_str(), capbuf2.uncap().c_str(),
 		 targ->getName());
     else
       ch->sendTo("You shoot %s out of %s.\n\r",
-		 good_uncap(capbuf).c_str(), 
-		 good_uncap(capbuf2).c_str());
+		 capbuf.uncap().c_str(), 
+		 capbuf2.uncap().c_str());
     
     sprintf(buf, "$n points $p %swards, and shoots $N out of it.",
 	    dirs[dir]);

@@ -3073,50 +3073,6 @@ void bisect_arg(const char *arg, int *field, char *sstring, const char * const a
   return;
 }
 
-char *cap(char *s)
-{
-  char *letter;
-  int counter = 0;
-  int i;
-
-  if (!s || !*s) {
-    return s;
-  }
-
-  letter = s; 
-
-  if ((*letter != '<') && (*letter != '\0')) {
-    if (s && islower(*s)) {
-      *s = toupper(*s);
-    }
-    return s;
-  } else {
-// Accounting for Items with color sstrings and % as first character
-    for (i = 0; *letter; letter++, i++) {
-        if (*letter == '<')
-          counter = 0;
-        else 
-          counter++;
-      if (counter == 3) {
-        if (letter && islower(*letter))
-          *letter = toupper(*letter);
-        
-        s[i] = *letter;
-        return s;
-      } else 
-        s[i] = *letter;       
-    }
-    return s;
-  }
-}
-
-sstring good_cap(const sstring &cp)
-{
-  char buf[1024];
-  strcpy(buf, cp.c_str());
-  return cap(buf);
-}
-
 char *uncap(char *s)
 {
   char *letter;
@@ -3155,11 +3111,41 @@ char *uncap(char *s)
   }
 }
 
-sstring good_uncap(const sstring &cp)
+char *cap(char *s)
 {
-  char buf[1024];
-  strcpy(buf, cp.c_str());
-  return uncap(buf);
+  char *letter;
+  int counter = 0;
+  int i;
+
+  if (!s || !*s) {
+    return s;
+  }
+
+  letter = s; 
+
+  if ((*letter != '<') && (*letter != '\0')) {
+    if (s && islower(*s)) {
+      *s = toupper(*s);
+    }
+    return s;
+  } else {
+// Accounting for Items with color sstrings and % as first character
+    for (i = 0; *letter; letter++, i++) {
+        if (*letter == '<')
+          counter = 0;
+        else 
+          counter++;
+      if (counter == 3) {
+        if (letter && islower(*letter))
+          *letter = toupper(*letter);
+        
+        s[i] = *letter;
+        return s;
+      } else 
+        s[i] = *letter;       
+    }
+    return s;
+  }
 }
 
 char *fold(char *line)
@@ -3378,6 +3364,59 @@ const sstring sstring::upper() const
     if (iter != sstring::npos)
       s.replace(iter, 1, toupper(s[iter]));
   } while (iter != sstring::npos);
+
+  return s;
+}
+
+const sstring sstring::cap() const
+{
+  int counter = 0;
+  sstring s=*this;
+
+  if(s[0] != '<'){
+    s[0]=toupper(s[0]);
+  } else {
+// Accounting for Items with color strings and % as first character
+    for(sstring::size_type i=0;i<s.length();++i){
+      if (s[i] == '<')
+	counter = 0;
+      else 
+	counter++;
+
+      if (counter == 3) {
+	s[i] = toupper(s[i]);
+        return s;
+      }
+    }
+  }
+
+  return s;
+}
+
+
+
+const sstring sstring::uncap() const
+{
+  int counter = 0;
+  sstring s=*this;
+
+  if (s[0] != '<') {
+    s[0] = tolower(s[0]);
+  } else {
+// Accounting for Items with color sstrings and % as first character
+    for(sstring::size_type i=0;i<s.length();++i){
+      if (s[i] == '<')
+	counter = 0;
+      else
+	counter++;
+      
+      if (counter == 3) {
+	s[i] = tolower(s[i]);
+        return s;
+      }
+    }
+  }
+
 
   return s;
 }

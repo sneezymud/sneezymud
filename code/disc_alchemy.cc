@@ -165,7 +165,7 @@ static sstring identifyBeingStuff(const TBeing *caster, TBeing *victim, showMeT 
   sprintf(buf, "Height %d inches, weight %d pounds.\n\r", victim->getHeight(), (int) victim->getWeight());
   str += buf;
 
-  sprintf(buf, "%s is %s.\n\r", good_cap(victim->getName()).c_str(), ac_for_score(victim->getArmor()));
+  sprintf(buf, "%s is %s.\n\r", sstring(victim->getName()).cap().c_str(), ac_for_score(victim->getArmor()));
   str += buf;
 
   Stats tempStat;
@@ -258,7 +258,7 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
 
   if (bSuccess(caster, bKnown, SPELL_DIVINATION)) {
     buf=obj->shortDescr;
-    caster->sendTo(COLOR_OBJECTS, "Your mind analyzes %s...\n\r", good_uncap(buf).c_str());
+    caster->sendTo(COLOR_OBJECTS, "Your mind analyzes %s...\n\r", buf.uncap().c_str());
 
     caster->sendTo("%s\n\r", obj->statObjInfo().c_str());
 

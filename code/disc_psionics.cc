@@ -324,10 +324,10 @@ int TBeing::doPSay(const char *arg){
           }
         }
       } else {
-	mob->sendTo(COLOR_COMM, "%s thinks, \"%s\"\n\r", good_cap(getName()).c_str(), 
+	mob->sendTo(COLOR_COMM, "%s thinks, \"%s\"\n\r", sstring(getName()).cap().c_str(), 
 		    colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE).c_str());
         if (d->m_bIsClient) {
-          d->clientf("%d|%s|%s", CLIENT_SAY, good_cap(getName()).c_str(),
+          d->clientf("%d|%s|%s", CLIENT_SAY, sstring(getName()).cap().c_str(),
             colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
         }
       }

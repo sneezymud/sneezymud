@@ -1728,7 +1728,7 @@ int TBeing::doOpen(const char *argument)
       if (doesKnowSkill(SKILL_DETECT_TRAP)) {
         if (detectTrapDoor(this, door)) {
           sendTo("You start to open the %s, but then notice an insidious %s trap...\n\r",
-               exitp->getName().c_str(), good_uncap(trap_types[exitp->trap_info]).c_str());
+               sstring(exitp->getName()).c_str(), sstring(trap_types[exitp->trap_info]).uncap().c_str());
           return FALSE;
         }
       }
@@ -1819,7 +1819,7 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
         if (doesKnowSkill(SKILL_DETECT_TRAP)) {
           if (detectTrapDoor(this, door)) {
             sendTo("You start to raise the %s, but then notice an insidious %s trap...\n\r",
-                 exitp->getName().c_str(), good_uncap(trap_types[exitp->trap_info]).c_str());
+                 exitp->getName().c_str(), sstring(trap_types[exitp->trap_info]).uncap().c_str());
             return FALSE;
           }
         }
@@ -1966,7 +1966,7 @@ int TBeing::doLower(const char *argument)
         if (doesKnowSkill(SKILL_DETECT_TRAP)) {
           if (detectTrapDoor(this, door)) {
             sendTo("You start to lower the %s, but then notice an insidious %s trap...\n\r",
-                 exitp->getName().c_str(),  good_uncap(trap_types[exitp->trap_info]).c_str());
+                 exitp->getName().c_str(),  sstring(trap_types[exitp->trap_info]).uncap().c_str());
             return FALSE;
           }
         }

@@ -813,7 +813,7 @@ void DrawPokerGame::stop(const TBeing *ch)
     return;
   }
 
-  strcpy(tString, good_cap(ch->getName()).c_str());
+  strcpy(tString, sstring(ch->getName()).cap().c_str());
   ch->sendTo("You put down, and leave this hand to the others.\n\r");
   act("$n puts down, deciding not to play this hand.",
       FALSE, ch, NULL, NULL, TO_ROOM);

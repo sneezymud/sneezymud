@@ -19,14 +19,14 @@ void TBaseCup::lookObj(TBeing *ch, int) const
 
   if (getMaxDrinkUnits()/128) {
     ch->sendTo(COLOR_OBJECTS, "%s has a capacity of %d gallon%s, %d fluid ounce%s.\n\r",
-          good_cap(ch->pers(this)).c_str(),
+          sstring(ch->pers(this)).cap().c_str(),
           getMaxDrinkUnits()/128,
           (getMaxDrinkUnits()/128 == 1 ? "" : "s"),
           getMaxDrinkUnits()%128,
           (getMaxDrinkUnits()%128 == 1 ? "" : "s"));
   } else {
     ch->sendTo(COLOR_OBJECTS, "%s has a capacity of %d fluid ounce%s.\n\r",
-          good_cap(ch->pers(this)).c_str(),
+          sstring(ch->pers(this)).cap().c_str(),
           getMaxDrinkUnits()%128,
           (getMaxDrinkUnits()%128 == 1 ? "" : "s"));
   }

@@ -978,7 +978,7 @@ void do_the_player_stuff(const char *name)
 
     sprintf(tString, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
 
-    strcpy(longbuf, good_cap(name).c_str());
+    strcpy(longbuf, sstring(name).cap().c_str());
     longbuf[(strlen(longbuf) - 9)] = '\0';
 
     if ((fp = fopen(tString, "r"))) {

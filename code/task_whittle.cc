@@ -317,7 +317,7 @@ void task_whittleSetupObject(TBeing *ch, TObj *tObj, TOrganic *tWood, int tIndex
     tObj->name = mud_str_dup(tString);
 
     sprintf(tString, "%s %s %s %s<z>",
-            good_cap(tStPost.c_str()).c_str(), tStWood.c_str(),
+            sstring(tStPost).cap().c_str(), tStWood.c_str(),
             tStObject.c_str(), tailMessages[::number(0, 4)]);
     delete [] tObj->descr;
     tObj->descr = mud_str_dup(tString);

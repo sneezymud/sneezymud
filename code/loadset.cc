@@ -409,7 +409,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
                         CLASS_RANGER ) ? 'R': ' '));
 
               sprintf(tString, "  %-7s: %6d",
-                      good_cap(suitPieceNames[pieceIndex]).c_str(),
+                      sstring(suitPieceNames[pieceIndex]).cap().c_str(),
                       suitSets.suits[suitIndex].equipment[pieceIndex]);
               StString += tString;
 
@@ -459,7 +459,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
 
           sprintf(tString, " [%3.0f%%][%3d] %s\n\r",
                   tUsedPerc, suitRaces[raceIndex],
-                  good_cap(suitTypeRaces[raceIndex + 1]).c_str());
+                  sstring(suitTypeRaces[raceIndex + 1]).cap().c_str());
 
           StString += tString;
         }

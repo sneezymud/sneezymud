@@ -2051,7 +2051,7 @@ void TBeing::throwChar(TBeing *v, dirTypeT dir, bool also, silentTypeT silent, b
     }
     if(!silent){
       sendTo(COLOR_MOBS, "You push %s %s out of the room.\n\r", v->getName(), dirs[dir]);
-      v->sendTo(COLOR_MOBS, "%s pushes you %s out of the room.\n\r", good_cap(getName()).c_str(), dirs[dir]);
+      v->sendTo(COLOR_MOBS, "%s pushes you %s out of the room.\n\r", sstring(getName()).cap().c_str(), dirs[dir]);
       sprintf(buf, "$N is pushed %s out of the room by $n.", dirs[dir]);
       act(buf, TRUE, this, 0, v, TO_NOTVICT);
     }

@@ -186,7 +186,8 @@ void TOpenContainer::changeObjValue2(TBeing *ch)
 void TOpenContainer::describeContains(const TBeing *ch) const
 {
   if (getStuff() && !isClosed())
-    ch->sendTo(COLOR_OBJECTS, "%s seems to have something in it...\n\r", good_cap(getName()).c_str());
+    ch->sendTo(COLOR_OBJECTS, "%s seems to have something in it...\n\r",
+	       sstring(getName()).cap().c_str());
 }
 
 void TOpenContainer::lowCheck()
@@ -284,7 +285,7 @@ int TOpenContainer::openMe(TBeing *ch)
     if (ch->doesKnowSkill(SKILL_DETECT_TRAP)) {               
       if (detectTrapObj(ch, this) || isContainerFlag(CONT_GHOSTTRAP)) {      
         sprintf(buf, "You start to open $p, but then notice an insidious %s trap...",
-              good_uncap(trap_types[getContainerTrapType()]).c_str());
+              sstring(trap_types[getContainerTrapType()]).uncap().c_str());
         act(buf, TRUE, ch, this, NULL, TO_CHAR);
 
         return FALSE;
@@ -295,7 +296,7 @@ int TOpenContainer::openMe(TBeing *ch)
         addContainerFlag(CONT_GHOSTTRAP);
 
         sprintf(buf, "You start to open $p, but then notice an insidious %s trap...",
-                good_uncap(trap_types[getContainerTrapType()]).c_str());
+                sstring(trap_types[getContainerTrapType()]).uncap().c_str());
         act(buf, TRUE, ch, this, NULL, TO_CHAR);
 
         return FALSE;
@@ -436,12 +437,12 @@ sstring TOpenContainer::compareMeAgainst(TBeing *ch, TObj *tObj)
   tWeightDiff = (tWeight1 - tWeight2);
   tMessage2   = compareDetermineMessage(15, tWeightDiff);
 
-  StString += good_cap(getName());
+  StString += sstring(getName()).cap();
   StString += sizeLevels[tMessage1];
   StString += tOpenContainer->getName();
   StString += ".\n\r";
 
-  StString += good_cap(getName());
+  StString += sstring(getName()).cap();
   StString += weightLevels[tMessage2];
   StString += tOpenContainer->getName();
   StString += ".\n\r";
@@ -500,7 +501,7 @@ int TOpenContainer::trapMe(TBeing *ch, const char *trap_type)
     if (ch->doesKnowSkill(SKILL_DETECT_TRAP)) {
       if (detectTrapObj(ch, this)) {
         sprintf(buf, "You start to trap $p, but then notice an insidious %s trap already present.",
-           good_uncap(trap_types[getContainerTrapType()]).c_str());
+           sstring(trap_types[getContainerTrapType()]).uncap().c_str());
         act(buf, TRUE, ch, this, NULL, TO_CHAR);
         return FALSE;
       }

@@ -1202,7 +1202,7 @@ void TPerson::doEdit(const char *arg)
       break;
     case 15: // edit list <2>
       sprintf(tString, "immortals/%s/rooms%s",
-              good_cap(getNameNOC(this).c_str()).c_str(),
+              getNameNOC(this).cap().c_str(),
               (*sstring ? "_2" : ""));
 
       if (!(tFile = fopen(tString, "r"))) {

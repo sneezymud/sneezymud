@@ -2253,7 +2253,7 @@ void TPerson::loadRent()
 #if RENT_SELL_TO_PAWN
           if (pawnman) {
             *pawnman += *i;
-            sprintf(buf, "%s has been sold to %s for %d talens to meet your rent obligations.\n\r", good_cap(i->getName()).c_str(), pawnman->getName(), amt);
+            sprintf(buf, "%s has been sold to %s for %d talens to meet your rent obligations.\n\r", i->getName(.cap()).c_str(), pawnman->getName(), amt);
             lbuf += buf;
           } else {
             vlogf(LOG_BUG, "Pawnman is NULL! Putting rent items in brutius office!");
@@ -2262,7 +2262,7 @@ void TPerson::loadRent()
 #else
           // this just clutters up the pawnguy, plus he has to sell a bunch
           // of junk so other people use him as a junkyard.
-          sprintf(buf, "%s has been confiscated for %d talens to meet your rent obligations.\n\r", good_cap(i->getName()).c_str(), amt);
+          sprintf(buf, "%s has been confiscated for %d talens to meet your rent obligations.\n\r", sstring(i->getName()).cap().c_str(), amt);
           lbuf += buf;
 
           vlogf(LOG_SILENT, "%s's %s being recycled due to rent obligations.", 

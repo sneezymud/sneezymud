@@ -293,7 +293,7 @@ int TBeing::doSay(const sstring &arg)
 	(mob->getPosition() <= POSITION_SLEEPING))
       continue;
     
-    capbuf=good_cap(mob->pers(this));
+    capbuf=sstring(mob->pers(this)).cap();
     ssprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str()); 
     
     if (mob->isPc()) {
@@ -348,14 +348,14 @@ int TBeing::doSay(const sstring &arg)
       }
     } else {
       if (Lapspeak == 1) {
-	mob->sendTo(COLOR_COMM, "%s says, \"Heh.  %s  Heh.\"\n\r", good_cap(getName()).c_str(), 
+	mob->sendTo(COLOR_COMM, "%s says, \"Heh.  %s  Heh.\"\n\r", sstring(getName()).cap().c_str(), 
 		    colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE).c_str());
       } else {
-	mob->sendTo(COLOR_COMM, "%s says, \"%s\"\n\r", good_cap(getName()).c_str(), 
+	mob->sendTo(COLOR_COMM, "%s says, \"%s\"\n\r", sstring(getName()).cap().c_str(), 
 		    colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE).c_str());
       }
       if (d->m_bIsClient) {
-	d->clientf("%d|%s|%s", CLIENT_SAY, good_cap(getName()).c_str(),
+	d->clientf("%d|%s|%s", CLIENT_SAY, sstring(getName()).cap().c_str(),
 		   colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
       }
     }
@@ -960,15 +960,15 @@ int TBeing::doTell(const sstring &arg, bool visible)
   if (vict->hasColor()) {
     if (hasColorStrings(NULL, capbuf, 2)) {
       if (IS_SET(vict->desc->plr_color, PLR_COLOR_MOBS)) {
-        ssprintf(nameBuf, "%s", colorString(vict, vict->desc, good_cap(capbuf), NULL, COLOR_MOBS, FALSE).c_str());
+        ssprintf(nameBuf, "%s", colorString(vict, vict->desc, capbuf.cap(), NULL, COLOR_MOBS, FALSE).c_str());
       } else {
-        ssprintf(nameBuf, "<p>%s<z>", colorString(vict, vict->desc, good_cap(capbuf), NULL, COLOR_NONE, FALSE).c_str());
+        ssprintf(nameBuf, "<p>%s<z>", colorString(vict, vict->desc, capbuf.cap(), NULL, COLOR_NONE, FALSE).c_str());
       }
     } else {
-      ssprintf(nameBuf, "<p>%s<z>", good_cap(capbuf).c_str());
+      ssprintf(nameBuf, "<p>%s<z>", capbuf.cap().c_str());
     }
   } else {
-    ssprintf(nameBuf, "%s", good_cap(capbuf).c_str());
+    ssprintf(nameBuf, "%s", capbuf.cap().c_str());
   }
 
   sendTo(COLOR_COMM, "<G>You tell %s<z>, \"%s\"\n\r", vict->getName(), colorString(this, desc, garbed.c_str(), NULL, COLOR_BASIC, FALSE).c_str());
@@ -987,7 +987,7 @@ int TBeing::doTell(const sstring &arg, bool visible)
   }
 
   TDatabase db(DB_SNEEZY);
-  db.query("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())", good_cap(capbuf).c_str(), vict->getName(), garbed.c_str());
+  db.query("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())", capbuf.cap().c_str(), vict->getName(), garbed.c_str());
 
   // this is probably too slow, cron job or something would be better
   //  db.query("delete from tellhistory where tellto='%s' and telltime not in (select telltime from tellhistory where tellto='%s' order by telltime desc limit 25)", vict->getName(), vict->getName());

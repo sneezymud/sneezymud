@@ -114,10 +114,10 @@ void TBeing::doNameChange(const char *argument)
     sprintf(tmpbuf2, mons->getName());
     one_argument(tmpbuf2, arg);
     if (!strcmp(arg, "a") || !strcmp(arg, "an"))
-      ssprintf(tmpbuf, "\"%s\", the %s", good_cap(new_name).c_str(), 
+      ssprintf(tmpbuf, "\"%s\", the %s", sstring(new_name).cap().c_str(), 
              one_argument(tmpbuf2, arg));
     else
-      ssprintf(tmpbuf, "\"%s\", %s", good_cap(new_name).c_str(), mons->getName());
+      ssprintf(tmpbuf, "\"%s\", %s", sstring(new_name).cap().c_str(), mons->getName());
 
     delete [] mons->shortDescr;
     mons->shortDescr = mud_str_dup(tmpbuf);

@@ -81,7 +81,7 @@ void TBeing::doEgoTrip(const char *arg)
             FALSE, ch, 0, this, TO_CHAR);
 #else
       ch->sendTo("%s has graciously bestowed upon you %s blessing.\n\r",
-            good_cap(ch->pers(this)).c_str(), hshr());
+            sstring(ch->pers(this)).cap().c_str(), hshr());
 #endif
       bless(this, ch);
     }
@@ -109,7 +109,7 @@ void TBeing::doEgoTrip(const char *arg)
             FALSE, ch, 0, this, TO_CHAR);
 #else
       ch->sendTo("%s has given you sanctuary.\n\r",
-            good_cap(ch->pers(this)).c_str(), hshr());
+            sstring(ch->pers(this)).cap().c_str(), hshr());
 #endif
       sanctuary(this, ch);
     }
@@ -132,7 +132,7 @@ void TBeing::doEgoTrip(const char *arg)
       if (!ch || ch->GetMaxLevel() > MAX_MORT)
         continue;
       ch->sendTo("%s has reconfirmed %s suspicions.\n\r",
-            good_cap(ch->pers(this)).c_str(), hshr());
+            sstring(ch->pers(this)).cap().c_str(), hshr());
       castStupidity(this, ch);
     }
     return;
@@ -154,7 +154,7 @@ void TBeing::doEgoTrip(const char *arg)
       if (!ch || ch->GetMaxLevel() > MAX_MORT)
         continue;
       ch->sendTo("%s has bestowed upon you enlivenment.\n\r",
-            good_cap(ch->pers(this)).c_str());
+            sstring(ch->pers(this)).cap().c_str());
       castEnliven(this, ch);
     }
     return;
@@ -355,7 +355,7 @@ void TBeing::doEgoTrip(const char *arg)
         }
 
         tBeing->sendTo("%s has cured your %s.\n\r",
-                       good_cap(getName()).c_str(),
+                       sstring(getName()).cap().c_str(),
                        DiseaseInfo[affToDisease(*tAff)].name);
 
 

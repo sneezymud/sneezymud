@@ -271,7 +271,7 @@ int TPortal::objectDecay()
 {
   if (roomp && roomp->getStuff()) {
 #if 0
-    sendrpf(COLOR_OBJECTS, roomp, "%s flickers out of view.\n\r", good_cap(getName()).c_str());
+    sendrpf(COLOR_OBJECTS, roomp, "%s flickers out of view.\n\r", getName(.cap()).c_str());
 #else
     act("$n flickers out of view.", TRUE, this, 0, 0, TO_ROOM);
 #endif

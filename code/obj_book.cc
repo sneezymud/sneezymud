@@ -52,7 +52,7 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
     return;
 
   sprintf(buf, "With curious eyes, you begin to read the book entitled :\n\r");
-  sprintf(buf + strlen(buf), "%s...\n\r", good_cap(getName()).c_str());
+  sprintf(buf + strlen(buf), "%s...\n\r", sstring(getName()).cap().c_str());
 
 // spam reduction
 //  act("$n begins reading $p...", TRUE, ch, this, 0, TO_ROOM);

@@ -1580,7 +1580,7 @@ void TBeing::doBload(const char *arg)
   if (heldInPrimHand()) {
     if (!isname(arg1, heldInPrimHand()->name)) {
       sendTo(COLOR_OBJECTS, "You would have a hard time firing your %s, while holding %s.\n\r",
-            arg1, good_uncap(heldInPrimHand()->getName()).c_str());
+            arg1, sstring(heldInPrimHand()->getName()).uncap().c_str());
       return;
     } else {
       TThing *tObj = heldInPrimHand();
@@ -1589,12 +1589,12 @@ void TBeing::doBload(const char *arg)
       //--(*tObj);
       //*this += *tObj;
       sendTo(COLOR_OBJECTS, "You remove %s to load it.\n\r",
-             good_uncap(tObj->getName()).c_str());
+             sstring(tObj->getName()).uncap().c_str());
     }
   }
   if (heldInSecHand()) {
     sendTo(COLOR_OBJECTS, "You would have a hard time firing your %s, while holding %s.\n\r",
-          arg1, good_uncap(heldInSecHand()->getName()).c_str());
+          arg1, sstring(heldInSecHand()->getName()).uncap().c_str());
     return;
   }
   if (!(bow = searchLinkedListVis(this, arg1, getStuff()))) {

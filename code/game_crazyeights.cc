@@ -143,11 +143,11 @@ void CrazyEightsGame::deal(TBeing *ch)
 
   ch->sendTo("You turn the %s over as the starting card.\n\r", tString);
   ch2->sendTo("%s turns the %s over as the starting card.\n\r",
-              good_cap(ch->getName()).c_str(), tString);
+              sstring(ch->getName()).cap().c_str(), tString);
   ch3->sendTo("%s turns the %s over as the starting card.\n\r",
-              good_cap(ch->getName()).c_str(), tString);
+              sstring(ch->getName()).cap().c_str(), tString);
   ch4->sendTo("%s turns the %s over as the starting card.\n\r",
-              good_cap(ch->getName()).c_str(), tString);
+              sstring(ch->getName()).cap().c_str(), tString);
 }
 
 void CrazyEightsGame::peek(const TBeing *ch)
@@ -392,10 +392,10 @@ int CrazyEightsGame::new_deal()
   }
 
   if (tScore >= 100) {
-    ch1->sendTo("%s won the game.\n\r", good_cap(names[playerNum]).c_str());
-    ch2->sendTo("%s won the game.\n\r", good_cap(names[playerNum]).c_str());
-    ch3->sendTo("%s won the game.\n\r", good_cap(names[playerNum]).c_str());
-    ch4->sendTo("%s won the game.\n\r", good_cap(names[playerNum]).c_str());
+    ch1->sendTo("%s won the game.\n\r", sstring(names[playerNum]).cap().c_str());
+    ch2->sendTo("%s won the game.\n\r", sstring(names[playerNum]).cap().c_str());
+    ch3->sendTo("%s won the game.\n\r", sstring(names[playerNum]).cap().c_str());
+    ch4->sendTo("%s won the game.\n\r", sstring(names[playerNum]).cap().c_str());
 
     scores[0] = scores[1] = scores[2] = scores[3] = 0;
   }
@@ -576,7 +576,7 @@ void CrazyEightsGame::play(const TBeing *ch, const char *tArg)
 
   ch->sendTo("You play the %s.\n\r", pretty_card_printout(ch, starterCard).c_str());
   sprintf(tBuffer, "%s plays the %s.\n\r",
-          good_cap(ch->getName()).c_str(),
+          sstring(ch->getName()).cap().c_str(),
           pretty_card_printout(ch, starterCard).c_str());
   ch2->sendTo(tBuffer);
   ch3->sendTo(tBuffer);
@@ -591,7 +591,7 @@ void CrazyEightsGame::play(const TBeing *ch, const char *tArg)
     ch->sendTo("You change the %s into an %s.\n\r", tString,
                pretty_card_printout(ch, starterCard).c_str());
     sprintf(tBuffer, "%s waves his hand and changes the %s into an %s.\n\r",
-            good_cap(ch->getName()).c_str(), tString,
+            sstring(ch->getName()).cap().c_str(), tString,
             pretty_card_printout(ch, starterCard).c_str());
     ch2->sendTo(tBuffer);
     ch3->sendTo(tBuffer);
@@ -663,7 +663,7 @@ int CrazyEightsGame::get(const TBeing *ch, const char *tArg)
     sprintf(tString, "You draw the %s.\n\r",
             pretty_card_printout(ch, hands[playerNum][cardIndex]).c_str());
     ch->sendTo(tString);
-    sprintf(tString, "%s draws from the deck.\n\r", good_cap(ch->getName()).c_str());
+    sprintf(tString, "%s draws from the deck.\n\r", sstring(ch->getName()).cap().c_str());
     ch2->sendTo(tString);
     ch3->sendTo(tString);
     ch4->sendTo(tString);

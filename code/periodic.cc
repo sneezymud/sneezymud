@@ -1424,10 +1424,10 @@ int TObj::objectTickUpdate(int pulse)
       !dynamic_cast<TSeeThru *>(this)) {
     if (dice(1, 10) <= (material_nums[getMaterial()].water_susc % 10)) {
       if ((obj_flags.struct_points -= (material_nums[getMaterial()].water_susc / 10)) <= 0) {
-        sendrpf(roomp, "%s sinks into the water and is gone.\n\r", good_cap(shortDescr).c_str());
+        sendrpf(roomp, "%s sinks into the water and is gone.\n\r", sstring(shortDescr).cap().c_str());
         return DELETE_THIS;
       } else
-        sendrpf(roomp, "%s becomes water-logged and is damaged.\n\r", good_cap(shortDescr).c_str());
+        sendrpf(roomp, "%s becomes water-logged and is damaged.\n\r", sstring(shortDescr).cap().c_str());
     }
   }
   
@@ -1445,7 +1445,7 @@ int TObj::objectTickUpdate(int pulse)
 
       if (myTimer == 1) {
         if (rp) {
-          sendrpf(COLOR_BASIC, rp, "%s begins to wiggle a bit.\n\r", good_cap(shortDescr).c_str());
+          sendrpf(COLOR_BASIC, rp, "%s begins to wiggle a bit.\n\r", sstring(shortDescr).cap().c_str());
         }
       } else if (myTimer <= 0) {
         if (rp && !(rp->isRoomFlag(ROOM_NO_MOB))) {

@@ -86,7 +86,7 @@ int TQuiver::openMe(TBeing *ch)
     if (ch->doesKnowSkill(SKILL_DETECT_TRAP)) {
       if (detectTrapObj(ch, this)) {
         sprintf(buf, "You start to open $p, but then notice an insidious %s trap...",
-              good_uncap(trap_types[getContainerTrapType()]).c_str());
+              sstring(trap_types[getContainerTrapType()]).uncap().c_str());
         act(buf, TRUE, ch, this, NULL, TO_CHAR);
         return FALSE;
       }

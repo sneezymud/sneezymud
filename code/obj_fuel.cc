@@ -77,7 +77,7 @@ void TFuel::describeObjectSpecifics(const TBeing *ch) const
     diff = (double) ((double) getCurFuel() / (double) getMaxFuel());
     ch->sendTo(COLOR_OBJECTS,
           "You can tell that %s has %s of its fuel left.\n\r",
-          good_uncap(getName()).c_str(),
+          sstring(getName()).uncap().c_str(),
           ((diff < .20) ? "very little" : ((diff < .50) ? "some" :
           ((diff < .75) ? "a good bit of" : "almost all of its"))));
   }

@@ -239,7 +239,7 @@ int check_sinking_obj(TObj *obj, int room)
   if (obj->willFloat()) {
     if (!rp->isUnderwaterSector() || !clearpath(obj->in_room, DIR_UP))
       return FALSE;
-    sendrpf(rp, "%s floats silently upward.\n\r", good_cap(obj->shortDescr).c_str());
+    sendrpf(rp, "%s floats silently upward.\n\r", sstring(obj->shortDescr).cap().c_str());
     if (!(rp = real_roomp(obj->roomp->dir_option[DIR_UP]->to_room))) {
       vlogf(LOG_BUG, "Serious bug in floating objects!");
       return FALSE;
@@ -247,13 +247,13 @@ int check_sinking_obj(TObj *obj, int room)
     --(*obj);
     *rp += *obj;
     if (rp->isWaterSector())
-      sendrpf(rp, "%s floats up from below.\n\r", good_cap(obj->shortDescr).c_str());
+      sendrpf(rp, "%s floats up from below.\n\r", sstring(obj->shortDescr).cap().c_str());
     else
-      sendrpf(rp, "%s pops out of a burst of water from below.\n\r", good_cap(obj->shortDescr).c_str());
+      sendrpf(rp, "%s pops out of a burst of water from below.\n\r", sstring(obj->shortDescr).cap().c_str());
   } else {
     if (!clearpath(obj->in_room, DIR_DOWN))
       return FALSE;
-    sendrpf(rp, "%s sinks downward into the water.\n\r", good_cap(obj->shortDescr).c_str());
+    sendrpf(rp, "%s sinks downward into the water.\n\r", sstring(obj->shortDescr).cap().c_str());
     if (!(rp = real_roomp(obj->roomp->dir_option[DIR_DOWN]->to_room))) {
       vlogf(LOG_BUG, "Serious bug in sinking objects!");
       return FALSE;
@@ -261,10 +261,10 @@ int check_sinking_obj(TObj *obj, int room)
     --(*obj);
     *rp += *obj;
     if (rp->isWaterSector()){
-      sendrpf(rp, "%s sinks into the water from above.\n\r", good_cap(obj->shortDescr).c_str());
+      sendrpf(rp, "%s sinks into the water from above.\n\r", sstring(obj->shortDescr).cap().c_str());
       obj->extinguishWater();
     } else
-      sendrpf(rp, "%s drops with a gush of water from above.\n\r", good_cap(obj->shortDescr).c_str());
+      sendrpf(rp, "%s drops with a gush of water from above.\n\r", sstring(obj->shortDescr).cap().c_str());
 
     
   }
@@ -424,7 +424,7 @@ int TObj::checkFalling()
     return DELETE_THIS;
 
   while (count < 100) {
-    sendrpf(roomp, "%s drops downward.\n\r", good_cap(shortDescr).c_str());
+    sendrpf(roomp, "%s drops downward.\n\r", sstring(shortDescr).cap().c_str());
     if (!roomp) {
       forceCrash("Serious bug in falling objects!");
       return FALSE;
@@ -442,7 +442,7 @@ int TObj::checkFalling()
     }
     --(*this);
     *rp += *this;
-    sendrpf(rp, "%s falls from above.\n\r", good_cap(shortDescr).c_str());
+    sendrpf(rp, "%s falls from above.\n\r", sstring(shortDescr).cap().c_str());
     count++;
     if (!obj_hit_mobs(this, roomp))
       obj_hit_objs(this, roomp);

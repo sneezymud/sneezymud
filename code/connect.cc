@@ -4235,7 +4235,7 @@ void Descriptor::sstring_add(char *s)
           }
           char buf[256];
           sprintf(buf, "Write your %s, use ~ when done, or ` to cancel.\n\r",
-                good_uncap(name).c_str());
+                sstring(name).uncap().c_str());
           writeToQ(buf);
           t = *str;
           if (strcmp(name, "Comment")) {

@@ -2296,7 +2296,7 @@ int wickedDagger(TBeing *vict, cmdTypeT cmd, const char *, TObj *me, TObj *ch_ob
 
   if (cmd == CMD_GENERIC_PULSE && !::number(0,5) && vict->roomp) {
     sendrpf(COLOR_OBJECTS, vict->roomp, "%s<k> sheds a light of iniquity.<z>\n\r",
-	    (me->getName() ? good_cap(me->getName()).c_str() : "Bogus Object"));
+	    (me->getName() ? sstring(me->getName()).cap().c_str() : "Bogus Object"));
   }
 
   if (cmd == CMD_OBJ_MISS) {
@@ -3092,7 +3092,7 @@ int teleportingObject(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
     return FALSE;
 
   tp->roomp->sendTo(COLOR_BASIC, "%s flares up brightly and disappears.\n\r",
-		    good_cap(o->getName()).c_str());
+		    sstring(o->getName()).cap().c_str());
   
   rc = o->genericTeleport(SILENT_YES, FALSE);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {

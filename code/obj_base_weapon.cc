@@ -415,7 +415,7 @@ void TBaseWeapon::changeObjValue2(TBeing *ch)
   ch->specials.edit = CHANGE_OBJ_VALUE2;
 
   ch->sendTo("Value 2 for %s : %d\n\r\n\r",
-       good_uncap(getName()).c_str(), x2);
+       sstring(getName()).uncap().c_str(), x2);
   ch->sendTo(VT_CURSPOS, 10, 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
@@ -435,7 +435,7 @@ void TBaseWeapon::changeObjValue3(TBeing *ch)
   ch->specials.edit = CHANGE_OBJ_VALUE3;
 
   ch->sendTo("Value 3 for %s : %d\n\r\n\r",
-       good_uncap(getName()).c_str(), x3);
+       sstring(getName()).uncap().c_str(), x3);
   ch->sendTo(VT_CURSPOS, 10, 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
@@ -508,7 +508,7 @@ int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
           return DELETE_ITEM;
         } else {
           sprintf(buf, "%s%s%s is %sdamaged%s by %s$N's %s.",
-               ch->purple(), good_cap(getName()).c_str(), ch->norm(),
+               ch->purple(), sstring(getName()).cap().c_str(), ch->norm(),
              ch->red(), ch->norm(), (item ? "$p on " : ""),
                v->describeBodySlot(part_hit).c_str());
           act(buf, FALSE, ch, item, v, TO_CHAR);
@@ -929,7 +929,7 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
       (objVnum() != WEAPON_AVENGER2) &&
       (objVnum() != WEAPON_AVENGER3)) {
     ch->sendTo(COLOR_OBJECTS, "%s has no respect for someone using %s.\n\r",
-        good_cap(ch->yourDeity(SKILL_SMITE, FIRST_PERSON)).c_str(), getName());
+        sstring(ch->yourDeity(SKILL_SMITE, FIRST_PERSON)).cap().c_str(), getName());
     return FALSE;
   }
 
@@ -1311,7 +1311,7 @@ sstring TBaseWeapon::describeMySharp(const TBeing *ch) const
   else
     strcpy(sharpbuf, "is completely sharp");
 
-  sprintf(buf, "%s %s", good_uncap(capbuf).c_str(), sharpbuf);
+  sprintf(buf, "%s %s", capbuf.uncap().c_str(), sharpbuf);
   return buf;
 }
 

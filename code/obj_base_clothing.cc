@@ -618,7 +618,7 @@ void TBaseClothing::describeObjectSpecifics(const TBeing *ch) const
     int num = CountBits(ui) - 1;
     if (num >= 0) {
       sstring buf = "$p looks like it is meant to be worn on your ";
-      buf += good_uncap(wear_bits[num]);
+      buf += sstring(wear_bits[num]).uncap();
       buf += ".";
       act(buf, FALSE, ch, this, 0, TO_CHAR);
     } else {

@@ -164,7 +164,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
 	////////////////////////////////////////////////////////////
 	// we know that wizradry is < 60 from getWizardryLevel check
 	////////////////////////////////////////////////////////////
-	ch->sendTo("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r", good_uncap(position_types[ch->getPosition()]).c_str());
+	ch->sendTo("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r", sstring(position_types[ch->getPosition()]).uncap().c_str());
 	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
 	return FALSE;
       }
@@ -196,7 +196,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
 	////////////////////////////////////////////////////////////////
 	// we know that ritualism is < 60 from getRitualismLevel check
 	///////////////////////////////////////////////////////////////
-	ch->sendTo("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r", good_uncap(position_types[ch->getPosition()]).c_str());
+	ch->sendTo("Restricted movement while %s causes you to mess up the ritual's gestures.\n\r", sstring(position_types[ch->getPosition()]).uncap().c_str());
 	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
 	return FALSE;
       }
@@ -2525,7 +2525,7 @@ void checkFactionHurt(TBeing * caster, TBeing * victim)
   if (caster->isSameFaction(victim)) {
     dec_amt = (int) (caster->getMove() / 4);
     caster->addToMove(-dec_amt);
-    caster->sendTo("%s frown upon the harming of a creature of the same faction.\n\r", good_cap(caster->yourDeity(your_deity_val, FIRST_PERSON)).c_str());
+    caster->sendTo("%s frown upon the harming of a creature of the same faction.\n\r", sstring(caster->yourDeity(your_deity_val, FIRST_PERSON).cap()).c_str());
     caster->sendTo("You are exhausted from the effort of doing so.\n\r");
     act("$n's chest heaves from exhaustion.", FALSE, caster, 0, 0, TO_ROOM);
     caster->updatePos();
@@ -2541,7 +2541,7 @@ void checkFactionHelp(TBeing *caster, TBeing *victim)
   if (caster->isOppositeFaction(victim)) {
     dec_amt = (int) (caster->getMove() / 4);
     caster->addToMove(-dec_amt);
-    caster->sendTo("%s frown upon the minions of the enemy.\n\r", good_cap(caster->yourDeity(your_deity_val, FIRST_PERSON)).c_str());
+    caster->sendTo("%s frown upon the minions of the enemy.\n\r", sstring(caster->yourDeity(your_deity_val, FIRST_PERSON)).cap().c_str());
     caster->sendTo("You are exhausted from the effort of doing so.\n\r");
     act("$n's chest heaves from exhaustion.", FALSE, caster, 0, 0, TO_ROOM);
     caster->updatePos();

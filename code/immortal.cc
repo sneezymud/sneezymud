@@ -6733,7 +6733,7 @@ static bool verifyName(const sstring tStString)
 
   // Knocks it to lower case then ups the first letter.
   sprintf(tString, "immortals/%s/wizdata",
-          good_cap(tStString.lower()).c_str());
+          tStString.lower().cap().c_str());
 
   // Wizfile doesn't exist, not an immortal or something else.
   // this is a moot check, go back with a false.
@@ -6808,7 +6808,7 @@ int TBeing::doAsOther(const sstring &tStString)
 
   tStOriginalName = getName();
   delete [] name;
-  name = mud_str_dup(good_cap(tStNewName.lower()));
+  name = mud_str_dup(tStNewName.lower().cap());
   tStCommand += " ";
   tStCommand += tStArguments;
 

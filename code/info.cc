@@ -3967,13 +3967,13 @@ void TObj::describeCondition(const TBeing *ch) const
 void TThing::describeContains(const TBeing *ch) const
 {
   if (getStuff())
-    ch->sendTo(COLOR_OBJECTS, "%s seems to have something in it...\n\r", good_cap(getName()).c_str());
+    ch->sendTo(COLOR_OBJECTS, "%s seems to have something in it...\n\r", sstring(getName()).cap().c_str());
 }
 
 void TBaseCup::describeContains(const TBeing *ch) const
 {
   if (getDrinkUnits())
-    ch->sendTo(COLOR_OBJECTS, "%s seems to have some %s liquid in it...\n\r", good_cap(getName()).c_str(), DrinkInfo[getDrinkType()]->color);
+    ch->sendTo(COLOR_OBJECTS, "%s seems to have some %s liquid in it...\n\r", sstring(getName()).cap().c_str(), DrinkInfo[getDrinkType()]->color);
 }
 
 void TFood::describeCondition(const TBeing *ch) const
@@ -4015,26 +4015,26 @@ void TSymbol::describeObjectSpecifics(const TBeing *ch) const
 if (attuneCode) {
   switch (sym_faction) {
     case FACT_NONE:
-      ch->sendTo(COLOR_OBJECTS, "You can tell that %s has been sanctified but it bears no insignia.\n\r", good_cap(getName()).c_str());
+      ch->sendTo(COLOR_OBJECTS, "You can tell that %s has been sanctified but it bears no insignia.\n\r", sstring(getName()).cap().c_str());
       break;
     case FACT_BROTHERHOOD:
-      ch->sendTo(COLOR_OBJECTS, "%s has the sign of the Brotherhood of Galek stamped upon it.\n\r", good_cap(getName()).c_str());
+      ch->sendTo(COLOR_OBJECTS, "%s has the sign of the Brotherhood of Galek stamped upon it.\n\r", sstring(getName()).cap().c_str());
       break;
     case FACT_CULT:
-      ch->sendTo(COLOR_OBJECTS, "%s has been sanctified and bears the insignia of the Cult of the Logrus.\n\r", good_cap(getName()).c_str());
+      ch->sendTo(COLOR_OBJECTS, "%s has been sanctified and bears the insignia of the Cult of the Logrus.\n\r", sstring(getName()).cap().c_str());
       break;
     case FACT_SNAKE:
-      ch->sendTo(COLOR_OBJECTS, "%s has been sanctified and branded with the image of a snake.\n\r", good_cap(getName()).c_str());
+      ch->sendTo(COLOR_OBJECTS, "%s has been sanctified and branded with the image of a snake.\n\r", sstring(getName()).cap().c_str());
       break;
     case MAX_FACTIONS:
     case FACT_UNDEFINED:
-      ch->sendTo(COLOR_OBJECTS, "%s is inert and has not been sanctified for use.\n\r", good_cap(getName()).c_str());
+      ch->sendTo(COLOR_OBJECTS, "%s is inert and has not been sanctified for use.\n\r", sstring(getName()).cap().c_str());
   }
 }
 
   if (getSymbolMaxStrength()) {
     if (getSymbolCurStrength() == getSymbolMaxStrength()) {
-      ch->sendTo(COLOR_OBJECTS, "%s has all of its original strength, it has not been used.\n\r", good_cap(getName()).c_str());
+      ch->sendTo(COLOR_OBJECTS, "%s has all of its original strength, it has not been used.\n\r", sstring(getName()).cap().c_str());
 
     } else {
       diff = (double) ((double) getSymbolCurStrength() /
@@ -4044,7 +4044,7 @@ if (attuneCode) {
           ((diff < .75) ? "a good bit of" : "most of its"))));
     }
   } else {
-    ch->sendTo(COLOR_OBJECTS, "%s has none of its strength left.\n\r", good_cap(getName()).c_str());
+    ch->sendTo(COLOR_OBJECTS, "%s has none of its strength left.\n\r", sstring(getName()).cap().c_str());
   }
 }
 
@@ -4221,7 +4221,7 @@ sstring TBeing::describePointiness(const TBaseWeapon *obj) const
   else
     strcpy(sharpbuf, "is as pointed as it is going to get");
 
-  sprintf(buf, "%s %s", good_uncap(capbuf).c_str(), sharpbuf);
+  sprintf(buf, "%s %s", capbuf.uncap().c_str(), sharpbuf);
   return buf;
 }
 
@@ -4256,7 +4256,7 @@ sstring TBeing::describeBluntness(const TBaseWeapon *obj) const
   else
     strcpy(sharpbuf, "is completely blunt");
 
-  sprintf(buf, "%s %s", good_uncap(capbuf).c_str(), sharpbuf);
+  sprintf(buf, "%s %s", capbuf.uncap().c_str(), sharpbuf);
   return buf;
 }
 
@@ -4570,7 +4570,7 @@ sstring TBeing::describeImmunities(const TBeing *vict, int learn) const
          immunity_names[i]);
     else
       sprintf(buf2, "%s is %s %s to %s.\n\r",
-         good_cap(pers(vict)).c_str(),
+         sstring(pers(vict)).cap().c_str(),
          buf, (x > 0 ? "resistant" : "susceptible"),
          immunity_names[i]);
     str += buf2;
@@ -4972,12 +4972,12 @@ sstring describeMaterial(const TThing *t)
   int mat = t->getMaterial();
   char mat_name[40];
 
-  strcpy(mat_name, good_uncap(material_nums[mat].mat_name).c_str());
+  strcpy(mat_name, sstring(material_nums[mat].mat_name).uncap().c_str());
 
   if (dynamic_cast<const TBeing *>(t))
-    sprintf(buf, "%s has a skin type of %s.\n\r", good_cap(t->getName()).c_str(), mat_name);
+    sprintf(buf, "%s has a skin type of %s.\n\r", sstring(t->getName()).cap().c_str(), mat_name);
   else
-    sprintf(buf, "%s is made of %s.\n\r", good_cap(t->getName()).c_str(), mat_name);
+    sprintf(buf, "%s is made of %s.\n\r", sstring(t->getName()).cap().c_str(), mat_name);
   str += buf;
 
   str += describeMaterial(mat);
@@ -4992,57 +4992,57 @@ sstring describeMaterial(int mat)
 
   char mat_name[40];
 
-  strcpy(mat_name, good_uncap(material_nums[mat].mat_name).c_str());
+  strcpy(mat_name, sstring(material_nums[mat].mat_name).uncap().c_str());
 
   sprintf(buf, "%s is %d%% susceptible to slash attacks.\n\r",
-     good_cap(mat_name).c_str(),
+     sstring(mat_name).cap().c_str(),
      material_nums[mat].cut_susc);
   str += buf;
 
   sprintf(buf, "%s is %d%% susceptible to pierce attacks.\n\r",
-     good_cap(mat_name).c_str(),
+     sstring(mat_name).cap().c_str(),
      material_nums[mat].pierced_susc);
   str += buf;
 
   sprintf(buf, "%s is %d%% susceptible to blunt attacks.\n\r",
-     good_cap(mat_name).c_str(),
+     sstring(mat_name).cap().c_str(),
      material_nums[mat].smash_susc);
   str += buf;
 
   sprintf(buf, "%s is %d%% susceptible to flame attacks.\n\r",
-     good_cap(mat_name).c_str(),
+     sstring(mat_name).cap().c_str(),
      material_nums[mat].burned_susc);
   str += buf;
 
   sprintf(buf, "%s is %d%% susceptible to acid attacks.\n\r",
-     good_cap(mat_name).c_str(),
+     sstring(mat_name).cap().c_str(),
      material_nums[mat].acid_susc);
   str += buf;
 
   sprintf(buf, "%s is %d%% susceptible to water erosion, and suffers %d damage per erosion.\n\r",
-     good_cap(mat_name).c_str(),
+     sstring(mat_name).cap().c_str(),
      material_nums[mat].water_susc%10 * 10,
      material_nums[mat].water_susc/10);
   str += buf;
 
   sprintf(buf, "%s is %d%% susceptible to fall shock, and suffers %d damage per shock.\n\r",
-     good_cap(mat_name).c_str(),
+     sstring(mat_name).cap().c_str(),
      material_nums[mat].fall_susc%10 *10,
      material_nums[mat].fall_susc/10);
   str += buf;
 
   sprintf(buf, "%s has a hardness of %d units.\n\r",
-     good_cap(mat_name).c_str(),
+     sstring(mat_name).cap().c_str(),
      material_nums[mat].hardness);
   str += buf;
 
   sprintf(buf, "%s has a compaction ratio of %d:1.\n\r",
-     good_cap(mat_name).c_str(),
+     sstring(mat_name).cap().c_str(),
      material_nums[mat].vol_mult);
   str += buf;
 
   sprintf(buf, "%s is %sconsidered a conductive material.\n\r",
-     good_cap(mat_name).c_str(),
+     sstring(mat_name).cap().c_str(),
      (material_nums[mat].conductivity ? "" : "not "));
   str += buf;
 
@@ -5163,7 +5163,7 @@ void TBeing::describeTrapLevel(const TTrap *obj, int learn) const
   level = max(level,0);
 
   sendTo(COLOR_OBJECTS, "%s seems to be a %s level trap.\n\r", 
-       good_cap(objs(obj)).c_str(), numberAsString(level).c_str());
+       sstring(objs(obj)).cap().c_str(), numberAsString(level).c_str());
 }
 
 void TBeing::describeTrapCharges(const TTrap *obj, int learn) const
@@ -5175,7 +5175,7 @@ void TBeing::describeTrapCharges(const TTrap *obj, int learn) const
   level = max(level,0);
 
   sendTo(COLOR_OBJECTS, "%s seems to have %d charge%s left.\n\r", 
-       good_cap(objs(obj)).c_str(), level, level == 1 ? "" : "s");
+       sstring(objs(obj)).cap().c_str(), level, level == 1 ? "" : "s");
 }
 
 void TBeing::describeTrapDamType(const TTrap *obj, int) const
@@ -5184,9 +5184,9 @@ void TBeing::describeTrapDamType(const TTrap *obj, int) const
     return;
 
   sendTo(COLOR_OBJECTS, "You suspect %s is %s %s trap.\n\r", 
-       good_uncap(objs(obj)).c_str(),
+       sstring(objs(obj)).uncap().c_str(),
        startsVowel(trap_types[obj->getTrapDamType()]) ? "an" : "a",
-       good_uncap(trap_types[obj->getTrapDamType()]).c_str());
+       sstring(trap_types[obj->getTrapDamType()]).uncap().c_str());
 }
 
 void TBeing::doSpells(const sstring &argument)
