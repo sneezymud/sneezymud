@@ -1359,7 +1359,7 @@ int TBeing::hpGainForClass(classIndT Class) const
     hpgain += ::number(6,8); // old 5,9
 
   if (hasClass(CLASS_SHAMAN) && Class == SHAMAN_LEVEL_IND)
-    hpgain += ::number(3,9); 
+    hpgain += ::number(3,8); 
 
   return hpgain;
 }

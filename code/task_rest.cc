@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_rest.cc,v $
+// Revision 5.4  2001/06/20 04:27:24  jesus
+// couple updates for lifeforce and farlook fix for stuff they shouldnt see
+// will need review
+//
 // Revision 5.3  2001/06/09 07:35:45  jesus
 // minor updates for shaman
 //
@@ -50,7 +54,7 @@ int task_rest(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *, TOb
         if (!ch->roomp->isRoomFlag(ROOM_NO_HEAL)) {
           ch->addToMana(1);
           ch->addToPiety(.10);
-	  if (ch->hasClass(CLASS_SHAMAN)) {
+	  if (ch->hasClass(CLASS_SHAMAN) && !ch->affectedBySpell(SPELL_SHAPESHIFT)) {
 	    if (1 > ch->getLifeforce()) {
 	      ch->updateHalfTickStuff();
 	    } else {

@@ -85,8 +85,6 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     act("Some <r>blood<z> from $p has been left behind for the dogs!", FALSE, ch, corpse, 0, TO_CHAR);
     ch->dropPool(1, LIQ_BLOOD);
     ch->stopTask();
-    if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
-      corpse->remCorpseFlag(CORPSE_SACRIFICE);
     return DELETE_ITEM;
   }
 

@@ -2,16 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_alchemy.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/09/26 23:06:41  lapsos
-// Enabled divination for 'wizards'(creators).
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+// disc_alchemy.cc : The alchemy discipline
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -92,15 +83,23 @@ int identify(TBeing *caster, TObj *obj, int, byte bKnown)
     else
       y = obj->rentCost();
 
-    if ((x <= 0) && (y <= 0))
+    if ((x <= 0) && (y <= 0 || obj->max_exist > 10))
       caster->sendTo("You'd judge it to be completely worthless.\n\r");
+#ifndef SNEEZY2000
     else if (x <= 0)
       caster->sendTo("Although it looks worthless, you'd guess they'll charge you %d talen%s to rent it.\n\r", y, (y != 1) ? "s" : "");
     else if (y <= 0)
       caster->sendTo("Although it looks worth at least %d talen%s, you guess its unrentable.\n\r", x, (x != 1) ? "s" : "");
     else
       caster->sendTo("You'd judge its worth to be about %d talen%s.  Rent, around %d.\n\r", x, (x != 1) ? "s" : "", y);
-
+#else
+    else if(obj->max_exist <= 10 && x <= 0)
+      caster->sendTo("Although it looks worthless, you'd guess they'll charge you %d talen%s to rent it.\n\r", y, (y !=1) ? "s" : "");
+    else if(obj->max_exist <= 10 && x > 0)
+      caster->sendTo("You'd judge its worth to be about %d talen%s.  Rent, around %d.\n\r", x, (x != 1) ? "s" : "", y);
+    else
+      caster->sendTo("You'd judge its worth to be about %d talen%s.\n\r", x, (x != 1) ? "s" : "");
+#endif
     return SPELL_SUCCESS;
   } else {
     caster->nothingHappens();
@@ -142,40 +141,67 @@ int castIdentify(TBeing *caster, TObj *obj)
     return TRUE;
 }
 
+static string identifyBeingStuff(const TBeing *caster, TBeing *victim, showMeT show)
+{
+  string str;
+  char buf[256];
+
+  sprintf(buf, "You sense that %s is a %s %s.\n\r", victim->hssh(), 
+              describe_level(victim->GetMaxLevel()), 
+              victim->getMyRace()->getPluralName().c_str());
+  str += buf;
+
+  if (dynamic_cast<const TPerson *>(victim)) {
+    sprintf(buf, "%d years, %d months, %d days, %d hours old.\n\r",
+             victim->age()->year, victim->age()->month, 
+             victim->age()->day, victim->age()->hours / 2);
+    str += buf;
+  }
+
+  sprintf(buf, "Height %d inches, weight %d pounds.\n\r", victim->getHeight(), (int) victim->getWeight());
+  str += buf;
+
+  sprintf(buf, "%s is %s.\n\r", good_cap(victim->getName()).c_str(), ac_for_score(victim->getArmor()));
+  str += buf;
+
+  Stats tempStat;
+  tempStat = victim->getCurStats();
+
+  for(statTypeT the_stat=MIN_STAT; the_stat<MAX_STATS; the_stat++) {
+    int temp = caster->plotStat(STAT_CURRENT,STAT_PER, 0, 30, 20);
+    temp = ::number(0, temp) - 10;
+    if (temp > 0) {
+      continue;
+    } else {  
+      tempStat.add(the_stat, temp);
+    }
+  }
+  str += "<c>Current:<z>";
+  str += tempStat.printStatHeader();
+  str += "        ";
+
+  str += tempStat.printRawStats(caster);
+
+  str += "Affected by: ";
+
+  sprintbit(victim->specials.affectedBy, affected_bits, buf);
+  str += buf;
+  str += "\n\r";
+
+  str += caster->describeAffects(victim, show);
+
+  return str;
+}
+
 int identify(TBeing *caster, TBeing * victim, int, byte bKnown)
 {
-  char buf[80];
-
   if (bSuccess(caster, bKnown, SPELL_IDENTIFY)) {
-    if (dynamic_cast<TPerson *>(victim))
-      caster->sendTo("%d years, %d months, %d days, %d hours old.\n\r",
-               victim->age()->year, victim->age()->month, 
-               victim->age()->day, victim->age()->hours / 2);
+    if (caster->desc) {
+      string str = identifyBeingStuff(caster, victim, DONT_SHOW_ME);
+      str += caster->describeImmunities(victim, bKnown);
 
-    caster->sendTo("Height %d inches, weight %d pounds.\n\r", victim->getHeight(), (int) victim->getWeight());
-    strcpy(buf, victim->getName());
-    caster->sendTo(COLOR_MOBS, "%s is %s.\n\r", cap(buf), ac_for_score(victim->getArmor()));
-
-#if 1
-    Stats tempStat;
-    tempStat = victim->getCurStats();
-
-    for(statTypeT the_stat=MIN_STAT; the_stat<MAX_STATS; the_stat++) {
-      int temp = caster->plotStat(STAT_CURRENT,STAT_PER, 0, 30, 20);
-      temp = ::number(0, temp) - 10;
-      if (temp > 0) {
-        continue;
-      } else {  
-        tempStat.add(the_stat, temp);
-      }
+      caster->desc->page_string(str.c_str());
     }
-    caster->sendTo(COLOR_MOBS,"<c>Current:<z>");
-    caster->sendTo(COLOR_MOBS, tempStat.printStatHeader().c_str());
-    caster->sendTo("        ");
-    caster->sendTo(COLOR_MOBS, tempStat.printRawStats(caster).c_str());
-
-#endif
-    caster->describeImmunities(victim, bKnown);
 
     return SPELL_SUCCESS;
   } else {
@@ -253,7 +279,7 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
                 discArray[obj->affected[i].modifier]->name,
                 obj->affected[i].modifier2);
           else
-            vlogf(10, "BOGUS AFFECT (%d) on %s", obj->affected[i].modifier,
+            vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", obj->affected[i].modifier,
                   obj->getName());
         } else if (obj->affected[i].location == APPLY_DISCIPLINE) {
           if (discNames[obj->affected[i].modifier].practice)
@@ -262,7 +288,7 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
                 discNames[obj->affected[i].modifier].practice,
                 obj->affected[i].modifier2);
           else
-            vlogf(10, "BOGUS AFFECT (%d) on %s", obj->affected[i].modifier,
+            vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", obj->affected[i].modifier,
                   obj->getName());
 
         } else if (obj->affected[i].location == APPLY_IMMUNITY) {
@@ -277,7 +303,10 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
         }
       }
     }
-    caster->describeMaterial(obj);
+
+    // seems silly, but the use of "%" in this text makes it necessary
+    caster->sendTo(COLOR_OBJECTS, "%s", describeMaterial(obj).c_str());
+
     return SPELL_SUCCESS;
   } else {
     caster->nothingHappens();
@@ -302,7 +331,7 @@ int castDivinationObj(TBeing *caster, const TObj *obj)
 {
   if (caster->GetMaxLevel() > MAX_MORT && !caster->hasWizPower(POWER_WIZARD)) {
     caster->sendTo("Shame, Shame.  You shouldn't do this...\n\r");
-    vlogf(9, "%s used Divination Object on: %s",
+    vlogf(LOG_CHEAT, "%s used Divination Object on: %s",
           caster->getName(), obj->getName());
     return FALSE;
   }
@@ -318,21 +347,29 @@ int castDivinationObj(TBeing *caster, const TObj *obj)
 int divinationBeing(TBeing *caster, TBeing * victim, int, byte bKnown)
 {
   if (bSuccess(caster, bKnown, SPELL_DIVINATION)) {
-    caster->sendTo("You sense that %s is a %s %s.\n\r", victim->hssh(), 
-              describe_level(victim->GetMaxLevel()), 
-              victim->getMyRace()->getPluralName().c_str());
+    if (caster->desc) {
+      string str = identifyBeingStuff(caster, victim, SHOW_ME);
 
-    for (immuneTypeT i = MIN_IMMUNE;i < MAX_IMMUNES; i++) {
-      if (victim->getImmunity(i) == 0 || !*immunity_names[i])
-        continue;
-      if (victim->getImmunity(i) > 0)
-        caster->sendTo("%d%% resistant to %s.\n\r", victim->getImmunity(i),
-           immunity_names[i]);
-      if (victim->getImmunity(i) < 0)
-        caster->sendTo("%d%% susceptible to %s.\n\r", victim->getImmunity(i),
-           immunity_names[i]);
+      char buf[256];
+      for (immuneTypeT i = MIN_IMMUNE;i < MAX_IMMUNES; i++) {
+        if (victim->getImmunity(i) == 0 || !*immunity_names[i])
+          continue;
+        if (victim->getImmunity(i) > 0) {
+          sprintf(buf, "%d%% resistant to %s.\n\r", victim->getImmunity(i),
+             immunity_names[i]);
+          str += buf;
+        }
+        if (victim->getImmunity(i) < 0) {
+          sprintf(buf, "%d%% susceptible to %s.\n\r", victim->getImmunity(i),
+             immunity_names[i]);
+          str += buf;
+        }
+      }
+      str += describeMaterial(victim);
+
+      caster->desc->page_string(str.c_str());
     }
-    caster->describeMaterial(victim);
+  
     return SPELL_SUCCESS;
   } else {
     caster->nothingHappens();
@@ -355,9 +392,9 @@ int divinationBeing(TBeing *caster, TBeing * victim)
 
 int castDivinationBeing(TBeing *caster, TBeing * victim)
 {
-  if (caster->GetMaxLevel() > MAX_MORT) {
+  if (caster->GetMaxLevel() > MAX_MORT && !caster->hasWizPower(POWER_WIZARD)) {
     caster->sendTo("Shame, Shame.  You shouldn't do this...\n\r");
-    vlogf(9, "%s used Divination Being on: %s",
+    vlogf(LOG_CHEAT, "%s used Divination Being on: %s",
           caster->getName(), victim->getName());
     return FALSE;
   }
@@ -407,7 +444,7 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
         break;
     }
 
-    caster->sendTo("The eyes of Fertuman look far and wide across The World and find:\n\r");
+    caster->sendTo("The eyes of Fertuman look far and wide across the world and find:\n\r");
     for (obj = object_list; obj && j; obj = obj->next) {
       if (isname(mod_to_find.c_str(), obj->name)) {
       /* this should randomize display a bit */
@@ -418,10 +455,19 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
           continue;
         }
 
-	if (obj->objVnum()==YOUTH_POTION || obj->objVnum()==STATS_POTION) {
-	  continue;
-	}
+        TMonster * tMon = dynamic_cast<TMonster *>(obj->parent);
 
+	// added to skip on items flagged with nolocate 8-28-2000 -jh
+	if (obj->isObjStat(ITEM_NOLOCATE))
+	  continue;
+	if (obj->objVnum() == YOUTH_POTION ||
+            obj->objVnum() == STATS_POTION ||
+            obj->parent    == caster       ||
+            (tMon && mob_index[tMon->getMobIndex()].spec == SPEC_SHOPKEEPER))
+	  continue;
+        //added to skip items on gods 10-19-00 -dash
+	if(dynamic_cast<TBeing *>(obj->parent) && dynamic_cast<TBeing *>(obj->parent)->isImmortal())
+	  continue;
         if (dynamic_cast<TBeing *>(obj->parent)) {
           if (strlen(caster->pers(obj->parent)) > 0) {
             strcpy(capbuf, obj->getName());
@@ -448,6 +494,8 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
           sprintf(capbuf, colorString(caster, caster->desc, capbuf, NULL, COLOR_OBJECTS, TRUE).c_str());
           if (obj->in_room == ROOM_NOWHERE || !caster->canSee(obj)) {
             act("$p is in use but you can't tell the location.", TRUE, caster, obj,NULL, TO_CHAR);
+          } else if (obj->inImperia() && !caster->isImmortal()) {
+            continue;
           } else {
             if (IS_SET(caster->desc->plr_color, PLR_COLOR_ROOM_NAME)) {
               if (hasColorStrings(NULL, obj->roomp->getName(), 2)) {
@@ -479,6 +527,8 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
         sprintf(capbuf, colorString(caster, caster->desc, capbuf, NULL, COLOR_MOBS, TRUE).c_str());
         if (ch->in_room == ROOM_NOWHERE || !caster->canSee(ch)) {
           act("$N is somewhere but you can't tell the location.", TRUE, caster, NULL, ch, TO_CHAR);
+        } else if (ch->inImperia() && !caster->isImmortal()) {
+	  continue;
         } else {
           if (IS_SET(caster->desc->plr_color, PLR_COLOR_ROOM_NAME)) {
             if (hasColorStrings(NULL, ch->roomp->getName(), 2)) {
@@ -536,7 +586,7 @@ int eyesOfFertuman(TBeing *caster, const char * tofind)
   if (caster->GetMaxLevel() > MAX_MORT &&
       caster->GetMaxLevel() < commandArray[CMD_WHERE]->minLevel) {
     caster->sendTo("You are unable to locate things at your level.\n\r");
-    vlogf(5, "%s using %s to locate '%s'", caster->getName(), discArray[SPELL_EYES_OF_FERTUMAN]->name, tofind);
+    vlogf(LOG_CHEAT, "%s using %s to locate '%s'", caster->getName(), discArray[SPELL_EYES_OF_FERTUMAN]->name, tofind);
     return FALSE;
   }
 
@@ -555,7 +605,7 @@ int castEyesOfFertuman(TBeing *caster, const char * tofind)
   int ret = 0,level;
 
   if (!tofind) {
-    vlogf(5, "Somehow someone lost the argument in eyes of fert");
+    vlogf(LOG_BUG, "Somehow someone lost the argument in eyes of fert");
     return FALSE;
   }
 
@@ -788,6 +838,60 @@ int farlook(TBeing *caster, TBeing * victim, int level, byte bKnown)
         false, caster, 0, 0, TO_CHAR);
     return SPELL_FAIL;
   }
+  if (target == ROOM_VOID) {
+    caster->nothingHappens(SILENT_YES);
+    act("You can't seem to look there right now.",
+        false, caster, 0, 0, TO_CHAR);
+    return SPELL_FAIL;
+  }
+  if (target == ROOM_IMPERIA) {
+    caster->nothingHappens(SILENT_YES);
+    act("You can't seem to look there right now.",
+        false, caster, 0, 0, TO_CHAR);
+    return SPELL_FAIL;
+  }
+  if (target == ROOM_HELL) {
+    caster->nothingHappens(SILENT_YES);
+    act("You can't seem to look there right now.",
+        false, caster, 0, 0, TO_CHAR);
+    return SPELL_FAIL;
+  }
+  if (target == ROOM_STORAGE) {
+    caster->nothingHappens(SILENT_YES);
+    act("You can't seem to look there right now.",
+        false, caster, 0, 0, TO_CHAR);
+    return SPELL_FAIL;
+  }
+  if (target == ROOM_POLY_STORAGE) {
+    caster->nothingHappens(SILENT_YES);
+    act("You can't seem to look there right now.",
+        false, caster, 0, 0, TO_CHAR);
+    return SPELL_FAIL;
+  }
+  if (target == ROOM_CORPSE_STORAGE) {
+    caster->nothingHappens(SILENT_YES);
+    act("You can't seem to look there right now.",
+        false, caster, 0, 0, TO_CHAR);
+    return SPELL_FAIL;
+  }
+  if (target == ROOM_Q_STORAGE) {
+    caster->nothingHappens(SILENT_YES);
+    act("You can't seem to look there right now.",
+        false, caster, 0, 0, TO_CHAR);
+    return SPELL_FAIL;
+  }
+  if (target == ROOM_DONATION) {
+    caster->nothingHappens(SILENT_YES);
+    act("You can't seem to look there right now.",
+        false, caster, 0, 0, TO_CHAR);
+    return SPELL_FAIL;
+  }
+  if (target == ROOM_DUMP) {
+    caster->nothingHappens(SILENT_YES);
+    act("You can't seem to look there right now.",
+        false, caster, 0, 0, TO_CHAR);
+    return SPELL_FAIL;
+  }
 
   if (bSuccess(caster, bKnown, SPELL_FARLOOK)) {
     act("You conjure up a large cloud which shimmers slightly before revealing...",
@@ -966,13 +1070,14 @@ int detectMagic(TBeing *caster, TBeing * victim, int level, byte bKnown)
 {
   affectedData aff;
 // COMMENTED OUT FOR DURATIONS
-//  if (victim->affectedBySpell(SPELL_DETECT_MAGIC)) {
-//    caster->nothingHappens();
-//    return SPELL_FAIL;
-//  }
+  // to make compile uncommented 4 lines below
+  if (victim->affectedBySpell(SPELL_DETECT_MAGIC)) {
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
 
   aff.type = SPELL_DETECT_MAGIC;
-  aff.duration = level * 2 * UPDATES_PER_TICK;
+  aff.duration = level * 2 * UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_DETECT_MAGIC;
@@ -993,14 +1098,20 @@ int detectMagic(TBeing *caster, TBeing * victim, int level, byte bKnown)
     victim->sendTo("Your eyes tingle.\n\r");
     act("$n's eyes twinkle for a brief moment.",
               FALSE, victim, NULL, NULL, TO_ROOM);
-    victim->affectTo(&aff);
+    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
+      caster->nothingHappens();
+      return SPELL_FALSE;
+    }
+    // to make compile uncommented 2 lines below
     return SPELL_SUCCESS;
+    victim->affectTo(&aff);
   } else {
+    // to make compile uncommented 2 lines below
     caster->nothingHappens();
     return SPELL_FAIL;
   }
 }
-
+// XXX
 void detectMagic(TBeing *caster, TBeing * victim, TMagicItem *obj)
 {
   detectMagic(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
@@ -1119,6 +1230,9 @@ int dispelMagic(TBeing *caster, TBeing * victim, int, byte bKnown)
 
 int dispelMagic(TBeing *caster, TBeing * victim, TMagicItem *obj)
 {
+  mud_assert(caster != NULL, "dispelMagic(): no caster");
+  mud_assert(victim != NULL, "dispelMagic(): no victim");
+
   int level = obj->getMagicLevel();
 
   int ret = dispelMagic(caster,victim, level,obj->getMagicLearnedness());
@@ -1148,6 +1262,9 @@ int dispelMagic(TBeing *caster, TBeing * victim)
 
 int castDispelMagic(TBeing *caster, TBeing * victim)
 {
+  mud_assert(caster != NULL, "castDispelMagic(): no caster");
+  mud_assert(victim != NULL, "castDispelMagic(): no victim");
+
   int level = caster->getSkillLevel(SPELL_DISPEL_MAGIC);
   if (caster->isNotPowerful(victim, level, SPELL_DISPEL_MAGIC, SILENT_NO)) {
     return 0;
@@ -1179,6 +1296,12 @@ int castDispelMagic(TBeing *caster, TBeing * victim)
 // returns DELETE_VICT (vict)
 int generic_dispel_magic(TBeing *caster, TBeing *victim, int, immortalTypeT immortal, safeTypeT safe)
 {
+  // caster might be NULL (death-time), however, in such cases immortal is generally
+  // true.  Some of the logic that follows doesn't check for !caster, but uses
+  // immortal==true instead.
+
+  mud_assert(victim != NULL, "generic_dispel_magic(): no victim");
+
   TMonster *tvm = dynamic_cast<TMonster *>(victim);
   spellNumT spell;
   int rc;
@@ -1494,6 +1617,8 @@ bool alchemy_create_deny(int numberx)
     return true;
   if (oid.itemtype == ITEM_TRAP)
     return true;
+  if (oid.itemtype == ITEM_CHEST)
+    return true;
   if (!IS_SET(oid.where_worn, ITEM_TAKE))
     return true;
   if (isname("belt monk", oid.name))
@@ -1504,10 +1629,13 @@ bool alchemy_create_deny(int numberx)
     return true;
   if (isname("[quest_object]", oid.name))
     return true;
+  if (isname("[prop_object]", oid.name))
+    return true;
   if (isname("pager beeper", oid.name))
     return true;
   if (isname("muffs ear", oid.name))
     return true;
+
   return false;
 }
         
@@ -1547,19 +1675,20 @@ int materialize(TBeing *caster, TObj **obj, int, const char * name, byte bKnown)
     bool grabbed = false;
     for (i = 0; i < num; i++) {
       *obj = read_object(numberx, REAL);
-      act("In a flash of light, $p appears.", TRUE, caster, *obj, NULL, TO_ROOM);
-      act("In a flash of light, $p appears.", TRUE, caster, *obj, NULL, TO_CHAR);
 
       (*obj)->remObjStat(ITEM_NEWBIE);
+      (*obj)->setEmpty();
 
       if (!caster->heldInPrimHand()) {
         caster->equipChar(*obj, caster->getPrimaryHold(), SILENT_YES);
         grabbed = true;
       } else {
         *caster->roomp += **obj;
-        (*obj)->setEmpty();
       }
     }
+
+    act("In a flash of light, $p appears.", TRUE, caster, *obj, NULL, TO_ROOM);
+    act("In a flash of light, $p appears.", TRUE, caster, *obj, NULL, TO_CHAR);
 
     if (grabbed)
       act("You grab $p right out of the air.",
@@ -1648,22 +1777,23 @@ int spontaneousGeneration(TBeing *caster, TObj **obj, const char * name, int, by
       *obj = read_object(numberx, REAL);
 
       (*obj)->remObjStat(ITEM_NEWBIE);
+      (*obj)->setEmpty();
 
       if (!caster->heldInPrimHand())
         caster->equipChar(*obj, caster->getPrimaryHold(), SILENT_YES);
       else {
         *caster->roomp += **obj;
-        (*obj)->setEmpty();
       }
     }
 
     act("In a flash of light, $p appears.", TRUE, caster, *obj, NULL, TO_ROOM);
     act("In a flash of light, $p appears.", TRUE, caster, *obj, NULL, TO_CHAR);
 
-    if (dynamic_cast<TObj *>(caster->heldInPrimHand()) &&
-        dynamic_cast<TObj *>(caster->heldInPrimHand())->objVnum() == (*obj)->objVnum())
+    TObj *obj2 = dynamic_cast<TObj *>(caster->heldInPrimHand());
+    if (obj2 && obj2->objVnum() == (*obj)->objVnum()) {
       act("You grab $p right out of the air.",
           TRUE, caster, *obj, NULL, TO_CHAR);
+    }
 
     return SPELL_SUCCESS;
   } else {
@@ -1742,7 +1872,7 @@ int TScroll::copyMe(TBeing *caster, byte bKnown)
     }
     /* lets not make this a gold creating bug  -- bat */
     new_obj->obj_flags.cost = 1;
-
+    new_obj->obj_flags.decay_time = (int)((double)caster->getSkillLevel(SPELL_COPY)*95) + 50;
     *caster->roomp += *new_obj;
     return SPELL_SUCCESS;
   } else {
@@ -1933,21 +2063,21 @@ void TBeing::doBrew(const char *arg)
     return;
   }
 #if BREW_DEBUG
-  vlogf(4, "Generic comp: %s", comp_gen->getName());
+  vlogf(LOG_MISC, "Generic comp: %s", comp_gen->getName());
 #endif
   if (!comp_spell) {
     sendTo("You seem to be lacking the spell component.\n\r");
     return;
   }
 #if BREW_DEBUG
-  vlogf(4, "spell comp: %s", comp_spell->getName());
+  vlogf(LOG_MISC, "spell comp: %s", comp_spell->getName());
 #endif
   if (!comp_brew) {
     sendTo("You seem to be lacking the brew component.\n\r");
     return;
   }
 #if BREW_DEBUG
-  vlogf(4, "brew comp: %s", comp_brew->getName());
+  vlogf(LOG_MISC, "brew comp: %s", comp_brew->getName());
 #endif
 
   if (!doesKnowSkill(SKILL_BREW)) {
@@ -2041,21 +2171,21 @@ void TBeing::doScribe(const char *arg)
     return;
   }
 #if SCRIBE_DEBUG
-  vlogf(4, "Generic comp: %s", comp_gen->getName());
+  vlogf(LOG_MISC, "Generic comp: %s", comp_gen->getName());
 #endif
   if (!comp_spell) {
     sendTo("You seem to be lacking the spell component.\n\r");
     return;
   }
 #if SCRIBE_DEBUG
-  vlogf(4, "spell comp: %s", comp_spell->getName());
+  vlogf(LOG_MISC, "spell comp: %s", comp_spell->getName());
 #endif
   if (!comp_scribe) {
     sendTo("You seem to be lacking the scribe component.\n\r");
     return;
   }
 #if SCRIBE_DEBUG
-  vlogf(4, "scribe comp: %s", comp_scribe->getName());
+  vlogf(LOG_MISC, "scribe comp: %s", comp_scribe->getName());
 #endif
 
   if (!doesKnowSkill(SKILL_SCRIBE)) {

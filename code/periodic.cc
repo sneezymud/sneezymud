@@ -743,7 +743,7 @@ int TBeing::updateHalfTickStuff()
   TBeing *trider=NULL;
   unsigned int i, hours_first, hours_last, severity;
 
-  if (hasClass(CLASS_SHAMAN)) {
+  if (hasClass(CLASS_SHAMAN) && !affectedBySpell(SPELL_SHAPESHIFT)) {
     if ((isPc()) && (GetMaxLevel() < 51)) {
       if (0 >= getLifeforce()) {
 	reconcileDamage(this,::number(0,2),DAMAGE_DRAIN);

@@ -1,31 +1,31 @@
-#insure++.compiler c gcc
 insure++.compiler_cpp /usr/bin/g++
 insure++.linker /usr/bin/ld
-#insure++.compiler /usr/bin/g++
-#insure++.linker /usr/bin/g++
 insure++.temp_directory /tmp
-#insure++.temp_directory /mud/code/junk
+insure++.compiler_default cpp
 
 # redirect the logs, and skip the spam, and leave the file around
 insure++.compile.report_overwrite true
-#insure++.compile.report_file /mud/prod/lib/cores/compile-errs
 insure++.compile.report_file stderr
 
 insure++.runtime.report_file /mud/prod/lib/cores/%v-errs
-# insure++.runtime.report_file stderr
 insure++.runtime.report_overwrite true
 
-#insure++.report_overwrite false
 insure++.report_banner off
 insure++.error_format  "%f:line %l, %d %t <%c>"
 
 # The shared libs are corrupt, so link insure statically
- insure++.dynamic_linking off
+insure++.dynamic_linking off
 
-insure++.summarize leaks outstanding
+insure++.summarize leaks 
+insure++.summarize outstanding
+insure++.summarize bugs
 insure++.ignore_wild on
-insure++.unsuppress UNUSED_VAR
+insure++.suppress UNUSED_VAR
 insure++.stack_limit 15
+insure++.stack_internal on
+insure++.leak_search on
+insure++.malloc_trace -1
+insure++.trace on
 
 # Sneezy specific suppressions
 # suppress BAD_INTERFACE at stdlib.h:159
