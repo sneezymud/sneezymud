@@ -954,6 +954,7 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	  continue;
 	} else {
 	  pile->overFlow();
+	  pile->attractVermin();
 	  pile->updateDesc();
 	}
       }

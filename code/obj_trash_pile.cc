@@ -188,3 +188,67 @@ void TTrashPile::overFlow()
     rp->saveItems("");
   }
 }
+
+
+void TTrashPile::attractVermin()
+{
+  int index=getSizeIndex();
+  TMonster *mob;
+  sstring buf;
+  int mobvnum;
+  int count=0;
+
+  if(!::number(0,999) || index<3 || !roomp)
+    return;
+
+  for(TThing *t=roomp->getStuff();t;t=t->nextThing){
+    if(dynamic_cast<TBeing *>(t))
+      count++;
+  }
+  // don't spawn anything if there are already 11 mobs/people in the room
+  // sort of a kluge to help prevent endless mob spawning
+  if(count>11)
+    return;
+
+
+  switch(::number(3, max(7,index))){
+    case 3: // rats
+      mobvnum=132;
+      buf="%s starts sniffing around %s.\n\r";
+      break;
+    case 4: // plague rats
+      mobvnum=5109;
+      buf="%s starts sniffing around %s.\n\r";
+      break;
+    case 5: // raccoons
+      mobvnum=24723;
+      buf="%s starts sniffing around %s.\n\r";
+      break;
+    case 6: // vultures
+      mobvnum=1468;
+      buf="%s begins circling %s.\n\r";
+      break;
+    case 7: // bums
+      mobvnum=1656;
+      buf="%s starts rooting around in %s.\n\r";
+      break;
+    case 8: // lepers
+      mobvnum=6602;
+      buf="%s starts rooting around in %s.\n\r";
+      break;
+    default: // shouldn't happen, load a plague rat anyway
+      mobvnum=5109;
+      buf="%s starts sniffing around %s.\n\r";
+      break;
+
+  }
+
+  if(!(mob = read_mobile(mobvnum, VIRTUAL))){
+    vlogf(LOG_BUG, "couldn't load rat in attractVermin()");
+    return;
+  }
+  *roomp += *mob;
+  sendrpf(COLOR_BASIC, roomp, buf.c_str(), 
+	  sstring(mob->getName()).cap().c_str(), getName());
+  
+}
