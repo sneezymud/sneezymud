@@ -3,6 +3,7 @@
 #include "stdsneezy.h"
 #include "games.h"
 #include "obj_bed.h"
+#include "obj_base_corpse.h"
 
 TBed::TBed() :
   TObj(),
@@ -95,6 +96,31 @@ void TBed::changeObjValue1(TBeing *ch)
   ch->specials.edit = CHANGE_BED_VALUE1;
   change_bed_value1(ch, this, "", ENTER_CHECK);
   return;
+}
+
+int TBed::putSomethingInto(TBeing *ch, TThing *tThing)
+{
+  TBaseCorpse *corpse;
+
+  if(!(corpse=dynamic_cast<TBaseCorpse *>(tThing))){
+    ch->sendTo("You cannot do that.\n\r");
+    return 2;
+  }
+
+  if(getStuff() || rider){
+    ch->sendTo("It is already being used by somebody.\n\r");
+    return 2;
+  }
+  
+  --(*tThing);
+  *this->roomp += *tThing;
+  tThing->mount(this);
+
+  act("You prop up $p on $N.", TRUE, ch, tThing, this, TO_CHAR);
+  act("$N props up $p on $N.", TRUE, ch, tThing, this, TO_ROOM);
+
+
+  return 0;
 }
 
 void TBed::changeBedValue1(TBeing *ch, const char *arg, editorEnterTypeT type)

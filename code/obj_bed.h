@@ -36,6 +36,7 @@ class TBed : public TObj {
     virtual void changeObjValue1(TBeing *);
     virtual void changeBedValue1(TBeing *, const char *, editorEnterTypeT);
     virtual void lowCheck();
+    int putSomethingInto(TBeing *, TThing *);
 
     int getMinPosUse() const;
     void setMinPosUse(int n);
