@@ -1638,7 +1638,7 @@ int BankVault(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
     return FALSE;
 
   // close and lock vault doors
-  vlogf(LOG_PEEL, "Bank: closing/locking vault doors");
+  //  vlogf(LOG_PEEL, "Bank: closing/locking vault doors");
   
   rp=real_roomp(31780);
   SET_BIT(rp->dir_option[DIR_WEST]->condition, EX_CLOSED);
@@ -1690,7 +1690,7 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   if(pulse%60)
     return FALSE;
 
-  vlogf(LOG_PEEL, "Bank: closing/locking main entrance");
+  //  vlogf(LOG_PEEL, "Bank: closing/locking main entrance");
 
   rp=real_roomp(31764);
   SET_BIT(rp->dir_option[DIR_NORTH]->condition, EX_CLOSED);
