@@ -710,6 +710,10 @@ int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TO
       if (repairman_give(arg, repair, buyer) == DELETE_THIS) {
         return DELETE_THIS;  // buyer is poof
       }
+
+      repair->saveChar(ROOM_AUTO_RENT);
+      buyer->saveChar(ROOM_AUTO_RENT);
+
       return TRUE;
     case CMD_REMOVE:
       one_argument(arg, buf);
