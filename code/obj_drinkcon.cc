@@ -238,6 +238,21 @@ void assign_drink_types()
   DrinkInfo[LIQ_POT_YOUTH]             = new drinkInfo(-1, -1, 1, true, "<o>glowing<1> <p>purple<1>", "<p>youth potion<1>", 20000);
   DrinkInfo[LIQ_POT_STAT]             = new drinkInfo(-1, -1, 1, true, "<o>glowing<1> <p>purple<1>", "<p>characteristics potion<1>", 100000);
   DrinkInfo[LIQ_POT_LEARNING]             = new drinkInfo(-1, -1, 1, true, "<o>glowing<1> <p>purple<1>", "<p>learning potion<1>", 100000);
+  DrinkInfo[LIQ_POISON_STANDARD] = new drinkInfo(-1,-1,1,true, "<p>purple<1>", "<p>contact poison<1>", 90);
+  DrinkInfo[LIQ_POISON_CAMAS] = new drinkInfo(-1,-1,1,true, "<g>green<1>", "<g>Death Camas extract<1>", 750);
+  DrinkInfo[LIQ_POISON_ANGEL] = new drinkInfo(-1,-1,1,true, "<W>white<1>", "<W>Destroying Angel extract<1>", 350);
+  DrinkInfo[LIQ_POISON_JIMSON] = new drinkInfo(-1,-1,1,true, "<o>orange<1>", "<o>Jimson Weed extract<1>", 350);
+  DrinkInfo[LIQ_POISON_HEMLOCK] = new drinkInfo(-1,-1,1,true, "<o>reddish-brown<1>", "<o>Hemlock extract<1>", 350);
+  DrinkInfo[LIQ_POISON_MONKSHOOD] = new drinkInfo(-1,-1,1,true, "<b>blue<1>", "<b>Monkshood extract<1>", 50);
+  DrinkInfo[LIQ_POISON_GLOW_FISH] = new drinkInfo(-1,-1,1,true, "<r>glowing red<1>", "<r>Glow Fish extract<1>", 150);
+  DrinkInfo[LIQ_POISON_SCORPION] = new drinkInfo(-1,-1,1,true, "<o>smooth orange<1>", "<o>liquor of scorpion<1>", 350);
+  DrinkInfo[LIQ_POISON_VIOLET_FUNGUS] = new drinkInfo(-1,-1,1,true, "<p>violet<1>", "<p>Violet Fungus Spore extract<1>", 350);
+  DrinkInfo[LIQ_POISON_DEVIL_ICE] = new drinkInfo(-1,-1,1,true, "<W>shiny white<1>", "<W>Ice Devil Serum<1>", 150);
+  DrinkInfo[LIQ_POISON_FIREDRAKE] = new drinkInfo(-1,-1,1,true, "<r>glimmering red<1>", "<r>Firedrake Serum<1>", 150);
+  DrinkInfo[LIQ_POISON_INFANT] = new drinkInfo(-1,-1,1,true, "<r>dull red<1>", "<r>ichor of infant<1>", 150);
+  DrinkInfo[LIQ_POISON_PEA_SEED] = new drinkInfo(-1,-1,1,true, "<g>dull green<1>", "<g>Sweet Pea Seed extract<1>", 50);
+  DrinkInfo[LIQ_POISON_ACACIA] = new drinkInfo(-1,-1,1,true, "<o>dull yellow<1>", "<o>Acacia extract<1>", 150);
+
 }
 
 

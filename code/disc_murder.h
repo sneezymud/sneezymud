@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_murder.h,v $
+// Revision 5.4  2002/12/29 22:30:02  peel
+// converted poisons to true liquids
+//
 // Revision 5.3  2002/11/20 17:36:59  peel
 // you can now specify a poison with poison weapon
 //
@@ -60,6 +63,10 @@ private:
     int poisonWeapon(TBeing *, TThing *, TThing *);
     int garrotte(TBeing *, TBeing *);
     int cudgel(TBeing *, TBeing *);
+
+
+     bool addPoison(affectedData aff[5], 
+		    liqTypeT liq, int level, int duration);
 
 #endif
 

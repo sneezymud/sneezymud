@@ -6,6 +6,7 @@
 #include "obj_tool.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
+#include "obj_base_cup.h"
 
 
 static void playBackstab(const TRoom *rp)
@@ -777,15 +778,15 @@ void addPoisonDefaults(affectedData *aff, int level, int duration)
 }
 
 // this is ugly as hell
-void addPoison(affectedData aff[5], 
-	       int vnum, int level, int duration){
+bool addPoison(affectedData aff[5], 
+	       liqTypeT liq, int level, int duration){
   addPoisonDefaults(&aff[4], level, duration);
   aff[4].type = AFFECT_DISEASE;
   aff[4].modifier = DISEASE_POISON;
   aff[4].location = APPLY_NONE;
 
-  switch(vnum){
-    case 31008:
+  switch(liq){
+    case LIQ_POISON_CAMAS:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_DEX;
       aff[0].modifier=-20;
@@ -799,7 +800,7 @@ void addPoison(affectedData aff[5],
       aff[3].location=APPLY_SPE;
       aff[3].modifier=-20;
       break;
-    case 31009:
+    case LIQ_POISON_ANGEL:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_VISION;
       aff[0].modifier=-5;
@@ -810,7 +811,7 @@ void addPoison(affectedData aff[5],
       aff[2].location=APPLY_WIS;
       aff[2].modifier=-20;
       break;
-    case 31010:
+    case LIQ_POISON_JIMSON:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_VISION;
       aff[0].modifier=-10;
@@ -818,7 +819,7 @@ void addPoison(affectedData aff[5],
       aff[1].location=APPLY_FOC;
       aff[1].modifier=-20;
       break;
-    case 31011:      
+    case LIQ_POISON_HEMLOCK:      
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_STR;
       aff[0].modifier=-20;
@@ -829,17 +830,17 @@ void addPoison(affectedData aff[5],
       aff[2].location=APPLY_FOC;
       aff[2].modifier=-20;
       break;
-    case 31012:
+    case LIQ_POISON_MONKSHOOD:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_STR;
       aff[0].modifier=-20;
       break;
-    case 31013:
+    case LIQ_POISON_GLOW_FISH:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_LIGHT;
       aff[0].modifier=10;
       break;
-    case 31014:
+    case LIQ_POISON_SCORPION:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_INT;
       aff[0].modifier=-20;
@@ -847,68 +848,66 @@ void addPoison(affectedData aff[5],
       aff[1].location=APPLY_SPE;
       aff[1].modifier=-40;
       break;
-    case 31015:
+    case LIQ_POISON_VIOLET_FUNGUS:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_IMMUNITY;
       aff[0].modifier=IMMUNE_SLEEP;
       aff[0].modifier2=-30;
       break;
-    case 31016:
+    case LIQ_POISON_DEVIL_ICE:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_IMMUNITY;
       aff[0].modifier=IMMUNE_HEAT;
       aff[0].modifier2=-20;
       break;
-    case 31017:
+    case LIQ_POISON_FIREDRAKE:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_IMMUNITY;
       aff[0].modifier=IMMUNE_COLD;
       aff[0].modifier2=-20;
       break;
-    case 31018:
+    case LIQ_POISON_INFANT:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_IMMUNITY;
       aff[0].modifier=IMMUNE_DRAIN;
       aff[0].modifier2=-20;
       break;
-    case 31019:
+    case LIQ_POISON_PEA_SEED:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_SPE;
       aff[0].modifier=-20;
       break;
-    case 31020:
+    case LIQ_POISON_ACACIA:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_STR;
       aff[0].modifier=-40;
       break;
-    default:
+    case LIQ_POISON_STANDARD:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_STR;
       aff[0].modifier=-20;
       break;
+    default:
+      return false;
+      break;
   }
+  return true;
 }
 
-int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
+int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
 {
   int j;
   int level;
   int duration;
+  string s;
 
-  if (getToolType() != TOOL_POISON) {
-    act("$p isn't the proper kind of poison for this.", 
-            FALSE, ch, this, 0, TO_CHAR);
-    return FALSE;
-  }
-  if (getToolUses() <= 0) {
-    act("$p seems not to have any poison left in it.",
+  if (getDrinkUnits() <= 0) {
+    act("$p seems not to have anything in it.",
        TRUE, ch, this, 0, TO_CHAR);
     return FALSE;
   }
   level = ch->getSkillValue (SKILL_POISON_WEAPON) / 2;
   int bKnown = ch->getSkillValue (SKILL_POISON_WEAPON);
-
-  addToToolUses(-1);
 
   duration = (level << 2) * UPDATES_PER_MUDHOUR;
   if (bSuccess(ch, bKnown, SKILL_POISON_WEAPON)) {
@@ -919,10 +918,18 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
       }
     }
     
-    addPoison(weapon->oneSwing, objVnum(), level, duration);
+    if(!addPoison(weapon->oneSwing, getDrinkType(), level, duration)){
+      act("$p doesn't seem to contain a contact poison.",
+	  TRUE, ch, this, 0, TO_CHAR);
+      return FALSE;
+    }
 
-    act("You coat $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_CHAR);
-    act("$n coats $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_ROOM);
+    ssprintf(s, "You coat $p with %s.",
+	     DrinkInfo[getDrinkType()]->name);
+    act(s.c_str(), FALSE, ch, weapon, NULL, TO_CHAR);
+    ssprintf(s, "$n coats $p with %s.",
+	     DrinkInfo[getDrinkType()]->name);
+    act(s.c_str(), FALSE, ch, weapon, NULL, TO_ROOM);
   } else {
     if(critFail(ch, SKILL_POISON_WEAPON) != CRIT_F_NONE){
       act("You slip up and cut yourself with $p!", 
@@ -938,7 +945,13 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
 	  FALSE, ch, weapon, ch, TO_NOTVICT, ANSI_RED);
 
       affectedData aff[5];
-      addPoison(aff, objVnum(), level, duration);
+
+      if(!addPoison(aff, getDrinkType(), level, duration)){
+	act("$p doesn't seem to contain a contact poison.",
+	    TRUE, ch, this, 0, TO_CHAR);
+	return FALSE;
+      }
+
       for(int i=0;i<5;++i){
 	if(aff[i].type != TYPE_UNDEFINED)
 	  ch->affectTo(&aff[i], -1);
@@ -951,11 +964,17 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
       weapon->oneSwing[0].duration=0;  
       weapon->oneSwing[0].bitvector=AFF_POISON;
 
-
-      act("You coat $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_CHAR);
-      act("$n coats $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_ROOM);
+      
+      ssprintf(s, "You coat $p with %s.",
+	       DrinkInfo[getDrinkType()]->name);
+      act(s.c_str(), FALSE, ch, weapon, NULL, TO_CHAR);
+      ssprintf(s, "$n coats $p with %s.",
+	       DrinkInfo[getDrinkType()]->name);
+      act(s.c_str(), FALSE, ch, weapon, NULL, TO_ROOM);
     }
   }
+
+  addToDrinkUnits(-1);
   return TRUE;
 }
 

@@ -25,7 +25,6 @@ class TTool : public TObj {
     virtual int objectSell(TBeing *, TMonster *);
     virtual void sharpenMeStone(TBeing *, TThing *);
     virtual void dullMeFile(TBeing *, TThing *);
-    virtual int poisonMePoison(TBeing *, TBaseWeapon *);
     virtual int garotteMe(TBeing *, TBeing *);
     virtual void stringMeString(TBeing *, TBow *);
     virtual void skinMe(TBeing *, const char *);

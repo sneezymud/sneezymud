@@ -51,6 +51,7 @@ class TBaseCup : public TObj {
     virtual void examineObj(TBeing *) const;
     virtual void peeMe(const TBeing *);
     virtual int getReducedVolume(const TThing *) const;
+    virtual int poisonMePoison(TBeing *, TBaseWeapon *);
 
     void genericEmpty();
     unsigned int getDrinkConFlags() const;

@@ -49,6 +49,7 @@ extern "C" {
 #include "disc_shaman_skunk.h"
 #include "disc_shaman_spider.h"
 #include "disc_shaman_control.h"
+#include "disc_murder.h"
 #include "obj_trap.h"
 #include "obj_light.h"
 #include "obj_armor.h"
@@ -2302,12 +2303,15 @@ int TBeing::doQuaff(const char *argument)
 }
 
 
+// this function handles any special affect that drinking a liquid has
 int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
 {
-  int rc=0;
+  int rc=0, i;
   int level=max(30, amt*6), learn=max(100, amt*20);
-  affectedData aff;
+  int duration = (level << 2) * UPDATES_PER_MUDHOUR;
+  affectedData aff, aff5[5];
   statTypeT whichStat;
+
 
   switch(liq){
     case LIQ_POT_CURE_POISON:
@@ -2633,6 +2637,31 @@ int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
       }
       
       ch->sendTo("You feel ready to learn more.\n\r");
+      break;
+    case LIQ_POISON_STANDARD:
+    case LIQ_POISON_CAMAS:
+    case LIQ_POISON_ANGEL:
+    case LIQ_POISON_JIMSON:
+    case LIQ_POISON_HEMLOCK:
+    case LIQ_POISON_MONKSHOOD:
+    case LIQ_POISON_GLOW_FISH:
+    case LIQ_POISON_SCORPION:
+    case LIQ_POISON_VIOLET_FUNGUS:
+    case LIQ_POISON_DEVIL_ICE:
+    case LIQ_POISON_FIREDRAKE:
+    case LIQ_POISON_INFANT:
+    case LIQ_POISON_PEA_SEED:
+    case LIQ_POISON_ACACIA:
+      addPoison(aff5, liq, level, duration);
+      
+      for(i=0;i<5;++i){
+	if(aff5[i].type != TYPE_UNDEFINED){
+	  ch->affectTo(&(aff5[i]), -1);
+	
+	  if (aff5[i].type == AFFECT_DISEASE)
+	    disease_start(ch, &(aff5[i]));
+	}
+      }
       break;
     default:
       rc=0;
