@@ -76,8 +76,8 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
   TThing *t=NULL, *tpole=NULL;
   char buf[256];
   TObj *fish=NULL, *pole=NULL;
-  int baitmax=10000, baitchance=0;
-  int polemax=50000, polechance=0;
+  int baitmax=1000, baitchance=0;
+  int polemax=5000, polechance=0;
   int catchchance=0;
 
 
