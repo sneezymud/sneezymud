@@ -26,8 +26,6 @@ class TBaseContainer : public TObj {
     virtual int getObjFrom(TBeing *, const char *, const char *);
     virtual int putSomethingInto(TBeing *, TThing *) = 0;
     virtual int putSomethingIntoContainer(TBeing *, TOpenContainer *);
-    virtual int getMoney() const;
-    virtual void setMoney(int);
     virtual void findSomeDrink(TDrinkCon **, TBaseContainer **, TBaseContainer *);
     virtual void findSomeFood(TFood **, TBaseContainer **, TBaseContainer *);
     virtual bool engraveMe(TBeing *, TMonster *, bool);

@@ -1599,7 +1599,7 @@ void TBeing::addToMoney(int money, moneyTypeT type)
   int amount;
   TDatabase db(DB_SNEEZY);
 
-  setMoney(getMoney() + money);
+  points.money += money;
  
   // due to the way the stats are set up, don't try to change this 60 to
   // a #define value
@@ -1616,7 +1616,7 @@ void TBeing::addToMoney(int money, moneyTypeT type)
         if (money > 0) {
           amount = (int) (money * FactionInfo[getFaction()].faction_tithe / 100.0);
           // subtract the tithe amount from me
-	  setMoney(getMoney() - amount);
+          points.money -= amount;
           gold_statistics[GOLD_INCOME][(lev-1)] -= amount;
           gold_positive[GOLD_INCOME][(lev-1)] -= max(amount, 0);
 

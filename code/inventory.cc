@@ -275,6 +275,7 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
   arg=argument.word(0);
   arg2=argument.word(1);
 
+
   if(arg.empty() && !tng){
     sendTo("Drop what?!?\n\r");
     return FALSE;

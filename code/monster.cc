@@ -369,7 +369,6 @@ int TMonster::calculateGoldFromConstant()
   // adjust for global gold modifier...
   the_gold *= gold_modifier[GOLD_INCOME].getVal();
 
-#if 0
   if (isShopkeeper()){
     unsigned int shop_nr;
 
@@ -389,7 +388,6 @@ int TMonster::calculateGoldFromConstant()
       the_gold = 1000000;
     }
   }
-#endif
 
   setMoney((int) the_gold);
   return FALSE;

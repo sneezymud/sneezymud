@@ -187,20 +187,12 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
     if (rc)
       return FALSE;
 
-    int premoney=0;
-    if(dynamic_cast<TMoney *>(ttt)){
-      premoney=ttt->getMoney();
-    }
-
     --(*ttt);
     *ch += *ttt;
     TObj *tobj = dynamic_cast<TObj *>(ttt);
     if (tobj && tobj->isObjStat(ITEM_ATTACHED)) {
       act("You detach $p from its place and get it.", 0, ch, ttt, 0, TO_CHAR);
       act("$n detachs $p from its place and gets it.", 1, ch, ttt, 0, TO_ROOM);
-    } else if(dynamic_cast<TMoney *>(tobj)){
-      act(fmt("You get %i talens.") % premoney, 0, ch, ttt, 0, TO_CHAR);
-      act("$n gets $p.", 1, ch, ttt, 0, TO_ROOM);
     } else {
       act("You get $p.", 0, ch, ttt, 0, TO_CHAR);
       act("$n gets $p.", 1, ch, ttt, 0, TO_ROOM);

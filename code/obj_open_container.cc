@@ -445,59 +445,6 @@ sstring TOpenContainer::compareMeAgainst(TBeing *ch, TObj *tObj)
   return StString;
 }
 
-
-int TOpenContainer::getMoney() const
-{
-  int total=0;
-  
-  if(!isClosed()){
-    for(TThing *t=getStuff();t;t=t->nextThing){
-      total+=t->getMoney();
-    }
-  }
-  return total;
-}
-
-
-void TOpenContainer::setMoney(int m)
-{
-  int diff=getMoney()-m, tmp;
-  TMoney *money;
-  TThing *nextt;
-
-  if(isClosed())
-    return;
-
-  // subtract money
-  if(diff > 0){
-    for(TThing *t=getStuff();t && diff>0;t=nextt){
-      nextt=t->nextThing;
-      tmp=t->getMoney();
-
-      if(tmp > diff){
-	t->setMoney((tmp-diff));
-	diff=0;
-      } else {
-	t->setMoney(0);
-	diff-=tmp;
-
-	if(dynamic_cast<TMoney *>(t)){
-	  --(*t);
-	  delete t;
-	}
-      }
-    }
-  } else {
-    // add money
-    if (!(money = create_money(-diff)))
-      vlogf(LOG_BUG, "Problem creating money");
-    else 
-      *this+=*money;
-  }
-}
-
-
-
 void TOpenContainer::lookObj(TBeing *ch, int bits) const
 {
   if (isClosed()) {

@@ -157,15 +157,6 @@ void TThing::setCarriedVolume(int num)
   carried_volume = num;
 }
 
-void TThing::setMoney(int)
-{
-}
-
-int TThing::getMoney() const
-{
-  return 0;
-}
-
 float TThing::getWeight() const
 {
   return weight;
