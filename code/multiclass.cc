@@ -280,11 +280,7 @@ void TPerson::startLevels()
   // do pwipes or setup new muds very often (or ever, really)
   // it just ends up causing problems
 
-  // Partners
-  if (!strcmp(name, "Batopr") ||
-      !strcmp(name, "Brutius") ||
-      !strcmp(name, "Cosmo")) {
-#if 0
+  if (!strcmp(name, "Peel")){ ||
     setLevel(MAGE_LEVEL_IND, MAX_IMMORT);
     setLevel(CLERIC_LEVEL_IND, MAX_IMMORT);
     setLevel(THIEF_LEVEL_IND, MAX_IMMORT);
@@ -293,17 +289,9 @@ void TPerson::startLevels()
     setWizPowers(this,this,"allpowers");
     remWizPower(POWER_IDLED);
     calcMaxLevel();
-#endif
-    // Major Office Holders
-  } else if (!strcmp(name, "Peel")){
-    setLevel(MAGE_LEVEL_IND, MAX_IMMORT - 1);
-    setLevel(CLERIC_LEVEL_IND, MAX_IMMORT - 1);
-    setLevel(THIEF_LEVEL_IND, MAX_IMMORT - 1);
-    setLevel(WARRIOR_LEVEL_IND, MAX_IMMORT - 1);
-    setWizPowers(this,this,"allpowers");
-    remWizPower(POWER_IDLED);
-    calcMaxLevel();
   }
+#endif
+
 
   if (GetMaxLevel() > MAX_MORT) {
     // basically, if we are an autoleveleded person
