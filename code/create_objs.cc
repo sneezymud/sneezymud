@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: create_objs.cc,v $
+// Revision 1.3  1999/10/09 04:57:06  batopr
+// Fixed change_obj_apply to deal with apply numbers properly
+//
 // Revision 1.2  1999/10/09 04:37:42  batopr
 // *** empty log message ***
 //
@@ -1158,7 +1161,8 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
     if ((apply-1) < MIN_APPLY || (apply-1) >= MAX_APPLY_TYPES)
       return;
 
-    applyTypeT att = mapFileToApply(apply-1);
+    //applyTypeT att = mapFileToApply(apply-1);
+    applyTypeT att = applyTypeT(apply-1);
 
     if ((num != 2) && (num != 3)) {
       ch->sendTo("Syntax : <apply number> <arg>\n\r");
@@ -1267,7 +1271,8 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
     iter++;
 
     ch->sendTo(buf);
-    ch->sendTo("%2d %s", mapApplyToFile(att) + 1, apply_types[att].name);
+    // ch->sendTo("%2d %s", mapApplyToFile(att) + 1, apply_types[att].name);
+    ch->sendTo("%2d %s", att + 1, apply_types[att].name);
   }
   ch->sendTo(VT_CURSPOS, 15, 1);
 
