@@ -661,15 +661,17 @@ bool bootHome(int plan_i, int plot_start, int plot_end,
 	  dest->dir_option[realdir]->key =
 	    src->dir_option[dir]->key;
 	} else if(dest->dir_option[realdir]){
+	    TRoom *outside=real_roomp(dest->dir_option[realdir]->to_room);
+
 	  // if the template doesn't have the exit, then remove it from dest
-	  if(dest->dir_option[realdir]->to_room >= plot_start &&
-	     dest->dir_option[realdir]->to_room <= plot_end){
+	  if((dest->dir_option[realdir]->to_room >= plot_start &&
+	     dest->dir_option[realdir]->to_room <= plot_end) ||
+             !outside->isRoomFlag(ROOM_INDOORS)){
 
 	    dest->dir_option[realdir]=NULL;
-	    //	delete dest->dir_option[realdir];
+	    // delete?
 	  } else { // unless it goes outside, in which case make a door
 	    // external exit, make a door and lock it
-	    TRoom *outside=real_roomp(dest->dir_option[realdir]->to_room);
 	    
 	    dirTypeT dir_outside=flip_dir(realdir, FLIP_ALL);
 
