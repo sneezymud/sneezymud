@@ -644,6 +644,8 @@ void TBeing::doPee(const sstring &argument)
       if(is_abbrev(arg, stripColorCodes(DrinkInfo[liquid]->name)))
 	break;
     }
+    if(liquid==MAX_DRINK_TYPES)
+      liquid=LIQ_LEMONADE;
   }
 
   if (!arg.empty() && liquid == MAX_DRINK_TYPES) {
