@@ -1998,37 +1998,151 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       arg = one_argument(arg, buf);
       
       if(!strcmp(buf, "profit_buy")){
-	if(atof(arg)>5){
-	  sprintf(buf, "%s Because of fraud regulations, I can't set the profit_buy higher than 5!", ch->getName());
-	  myself->doTell(buf);
+	arg = one_argument(arg, buf);
+
+	if(!*buf){
+	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select obj_nr, profit_buy, profit_sell from shopownedratios where shop_nr=%i", shop_nr))==-1){
+	    vlogf(LOG_BUG, "Database error in shop_keeper");
+	    return FALSE;
+	  }
+	  while((row=mysql_fetch_row(res))){
+	    sprintf(buf2, "%s %f %f %s", ch->getName(), atof(row[1]), 
+		    atof(row[2]), obj_index[real_object(atoi(row[0]))].short_desc);
+	    myself->doTell(buf2);
+	  }
+	  mysql_free_result(res);
+	  return TRUE;
+	}
+
+	if(atof(buf)>5){
+	  sprintf(buf2, "%s Because of fraud regulations, I can't set the profit_buy higher than 5!", ch->getName());
+	  myself->doTell(buf2);
 	  return FALSE;
 	}
 
-	shop_index[shop_nr].profit_buy=atof(arg);
 
-	if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "update shopowned set profit_buy=%f where shop_nr=%i", shop_index[shop_nr].profit_buy, shop_nr))){
-	  if(rc==-1){
+	if(*arg){
+	  // find item in inventory matching keywords in arg
+          // get vnum, then store in db
+	  TThing *tt = searchLinkedListVis(ch, arg, myself->getStuff());
+	  
+	  if(!tt){
+	    sprintf(buf2, "%s I don't have that item.", ch->getName());
+	    myself->doTell(buf2);
+	    return FALSE;
+	  }
+
+	  TObj *o=dynamic_cast<TObj *>(tt);
+
+	  // get the default profit buy/sell
+	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select profit_buy, profit_sell from shop where shop_nr=%i", shop_nr))==-1){
 	    vlogf(LOG_BUG, "Database error in shop_keeper");
 	    return FALSE;
 	  }
-	}
+	  row=mysql_fetch_row(res);
+	  
+	  // create the entry if it doesn't exist, use default profit buy/sell
+	  dbquery(TRUE, &res, "sneezy", "shop_keeper", "insert ignore into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(row[0]), atof(row[1]));
 
-	sprintf(buf, "%s Ok, my profit_buy is now %f", 
-		ch->getName(), shop_index[shop_nr].profit_buy);
-	myself->doTell(buf);
+	  mysql_free_result(res);
+
+	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "update shopownedratios set profit_buy=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum()))){
+	    if(rc==-1){
+	      vlogf(LOG_BUG, "Database error in shop_keeper");
+	      return FALSE;
+	    }
+	  }
+	  
+	  sprintf(buf2, "%s Ok, my profit_buy is now %f for %s.", 
+		  ch->getName(), atof(buf), o->getName());
+	  myself->doTell(buf2);
+	} else { //////////////////////////////
+	shop_index[shop_nr].profit_buy=atof(buf);
+
+	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "update shopowned set profit_buy=%f where shop_nr=%i", shop_index[shop_nr].profit_buy, shop_nr))){
+	    if(rc==-1){
+	      vlogf(LOG_BUG, "Database error in shop_keeper");
+	      return FALSE;
+	    }
+	  }
+	  
+	  sprintf(buf2, "%s Ok, my profit_buy is now %f", 
+		  ch->getName(), shop_index[shop_nr].profit_buy);
+	  myself->doTell(buf2);
+	}
+	///////////////////// end profit buy
       } else if(!strcmp(buf, "profit_sell")){ 
-	shop_index[shop_nr].profit_sell=atof(arg);
+	arg = one_argument(arg, buf);
 
-	if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "update shopowned set profit_sell=%f where shop_nr=%i", shop_index[shop_nr].profit_sell, shop_nr))){
-	  if(rc==-1){
+	if(!*buf){
+	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select obj_nr, profit_buy, profit_sell from shopownedratios where shop_nr=%i", shop_nr))==-1){
 	    vlogf(LOG_BUG, "Database error in shop_keeper");
 	    return FALSE;
 	  }
+	  while((row=mysql_fetch_row(res))){
+	    sprintf(buf2, "%s %f %f %s", ch->getName(), atof(row[1]), 
+		    atof(row[2]), obj_index[real_object(atoi(row[0]))].short_desc);
+	    myself->doTell(buf2);
+	  }
+	  mysql_free_result(res);
+	  
+	  return TRUE;
 	}
 
-	sprintf(buf, "%s Ok, my profit_sell is now %f", 
-		ch->getName(), shop_index[shop_nr].profit_sell);
-	myself->doTell(buf);
+
+
+
+	if(*arg){
+	  // find item in inventory matching keywords in arg
+          // get vnum, then store in db
+	  TThing *tt = searchLinkedListVis(ch, arg, myself->getStuff());
+	  
+	  if(!tt){
+	    sprintf(buf2, "%s I don't have that item.", ch->getName());
+	    myself->doTell(buf2);
+	    return FALSE;
+	  }
+
+	  TObj *o=dynamic_cast<TObj *>(tt);
+
+	  // get the default profit buy/sell
+	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select profit_buy, profit_sell from shop where shop_nr=%i", shop_nr))==-1){
+	    vlogf(LOG_BUG, "Database error in shop_keeper");
+	    return FALSE;
+	  }
+	  row=mysql_fetch_row(res);
+	  
+	  // create the entry if it doesn't exist, use default profit buy/sell
+	  dbquery(TRUE, &res, "sneezy", "shop_keeper", "insert ignore into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(row[0]), atof(row[1]));
+
+	  mysql_free_result(res);
+
+	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "update shopownedratios set profit_sell=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum()))){
+	    if(rc==-1){
+	      vlogf(LOG_BUG, "Database error in shop_keeper");
+	      return FALSE;
+	    }
+	  }
+	  
+	  sprintf(buf2, "%s Ok, my profit_sell is now %f for %s.", 
+		  ch->getName(), atof(buf), o->getName());
+
+	  myself->doTell(buf2);
+
+	} else {
+	  shop_index[shop_nr].profit_sell=atof(buf);
+
+	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "update shopowned set profit_sell=%f where shop_nr=%i", shop_index[shop_nr].profit_sell, shop_nr))){
+	    if(rc==-1){
+	      vlogf(LOG_BUG, "Database error in shop_keeper");
+	      return FALSE;
+	    }
+	  }
+	  
+	  sprintf(buf, "%s Ok, my profit_sell is now %f", 
+		  ch->getName(), shop_index[shop_nr].profit_sell);
+	  myself->doTell(buf);
+	}
       } else {
 	sprintf(buf, "%s Sorry, I don't understand.  You can set either my profit_buy or profit_sell values.", ch->getName());
 	myself->doTell(buf);
