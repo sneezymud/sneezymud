@@ -58,11 +58,21 @@ int TVial::rentCost() const
 
 int TVial::objectSell(TBeing *ch, TMonster *keeper)
 {
-  char buf[256];
+  string buf;
 
-  sprintf(buf, "%s I'm sorry, I don't purchase vials.", ch->getName());
-  keeper->doTell(buf);
-  return TRUE;
+  if(getDrinkType()!=LIQ_HOLYWATER){
+    ssprintf(buf, "%s Hey, that's not holy water!.", ch->getName());
+    keeper->doTell(buf.c_str());
+    return TRUE;
+  }
+
+  if(getDrinkUnits()!=getMaxDrinkUnits()){
+    ssprintf(buf, "%s I only purchase full vials.", ch->getName());
+    keeper->doTell(buf.c_str());
+    return TRUE;
+  }
+
+  return FALSE;
 }
 
 bool TVial::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
