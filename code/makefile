@@ -24,60 +24,60 @@ CC = /usr/bin/g++
 ###############################################################################
 #                    Base Values (Do Not Modify/Add Here)                     #
 ###############################################################################
-CFLAGS = # empty
+CXXFLAGS = # empty
 
 
 ###############################################################################
-#                                   CFLAGS                                    #
+#                                   CXXFLAGS                                    #
 ###############################################################################
-# CFLAGS +=-static      # link statically
+# CXXFLAGS +=-static      # link statically
 ifdef GPROFF
-CFLAGS +=-pg            # add gprof mapping
+CXXFLAGS +=-pg            # add gprof mapping
 endif
-CFLAGS +=-g             # debugger
-# CFLAGS +=-ggdb        # force debugger into gdb format (if not default)
-# CFLAGS +=-gstabs+     # add stabs extensions
-# CFLAGS +=-DOSF        # compiling on an OSF/1 system
-# CFLAGS +=-DSUN        # compiling on SunOs UNIX
-# CFLAGS +=-DSOLARIS    # compiling on Solaris UNIX
-CFLAGS +=-DLINUX        # compiling on Linux
-# CFLAGS +=-DSLOW       # compiling on a slow processor machine
-CFLAGS +=-DFAST         # compiling on a fast processor machine
-CFLAGS +=-O2            # optimize code
+CXXFLAGS +=-g             # debugger
+# CXXFLAGS +=-ggdb        # force debugger into gdb format (if not default)
+# CXXFLAGS +=-gstabs+     # add stabs extensions
+# CXXFLAGS +=-DOSF        # compiling on an OSF/1 system
+# CXXFLAGS +=-DSUN        # compiling on SunOs UNIX
+# CXXFLAGS +=-DSOLARIS    # compiling on Solaris UNIX
+CXXFLAGS +=-DLINUX        # compiling on Linux
+# CXXFLAGS +=-DSLOW       # compiling on a slow processor machine
+CXXFLAGS +=-DFAST         # compiling on a fast processor machine
+CXXFLAGS +=-O2            # optimize code
 OBJDIR = objs/
 
 
-#CFLAGS +=-O3           # optimize code
-#CFLAGS +=-fhandle-exceptions
-#CFLAGS +=-frtti
-CFLAGS +=-Wall                  # all rec. warnings shown (includes all above)
-CFLAGS +=-Wpointer-arith        # looks for things that depend on sizeof()
-CFLAGS +=-Wcast-qual            # Warns about using casting to remove const
-CFLAGS +=-Wcast-align           # a pointer cast changes alignment
-CFLAGS +=-Wwrite-strings        # looks for formal const char* sent to char*
-CFLAGS +=-Wconversion           # bad conversions
-#CFLAGS +=-Wstrict-prototypes    # functions declared sans argument types
-#CFLAGS +=-Wmissing-prototypes   # global functions without a prototype
-#CFLAGS +=-Wmissing-declarations # global function without a declaration
-#CFLAGS +=-Wnested-externs       # extern found within a func
-CFLAGS +=-Woverloaded-virtual   # virtual without a declaration in base class
-CFLAGS +=-Werror                # turns a warning into an error
+#CXXFLAGS +=-O3           # optimize code
+#CXXFLAGS +=-fhandle-exceptions
+#CXXFLAGS +=-frtti
+CXXFLAGS +=-Wall                  # all rec. warnings shown (includes all above)
+CXXFLAGS +=-Wpointer-arith        # looks for things that depend on sizeof()
+CXXFLAGS +=-Wcast-qual            # Warns about using casting to remove const
+CXXFLAGS +=-Wcast-align           # a pointer cast changes alignment
+CXXFLAGS +=-Wwrite-strings        # looks for formal const char* sent to char*
+CXXFLAGS +=-Wconversion           # bad conversions
+#CXXFLAGS +=-Wstrict-prototypes    # functions declared sans argument types
+#CXXFLAGS +=-Wmissing-prototypes   # global functions without a prototype
+#CXXFLAGS +=-Wmissing-declarations # global function without a declaration
+#CXXFLAGS +=-Wnested-externs       # extern found within a func
+CXXFLAGS +=-Woverloaded-virtual   # virtual without a declaration in base class
+CXXFLAGS +=-Werror                # turns a warning into an error
 
 # **** Aggregates are bad, but are sometimes necessary.  We use them though.
-# CFLAGS +=-Waggregate-return # checks for structures passed on the stack
+# CXXFLAGS +=-Waggregate-return # checks for structures passed on the stack
 # **** disabled as is invalid warning on LINUX (?)
-# CFLAGS +=-Wenum-clash       # conversion between different enum types
+# CXXFLAGS +=-Wenum-clash       # conversion between different enum types
 # **** disabled due to shadows in header file functions
-# CFLAGS +=-Wshadow           # check if local variable shadows other variable
+# CXXFLAGS +=-Wshadow           # check if local variable shadows other variable
 # **** disabled due to redundancy in header file functions
-# CFLAGS +=-Wredundant-decls  # declaration done more than once
+# CXXFLAGS +=-Wredundant-decls  # declaration done more than once
 # **** the STL map header file has a non-inlinable function or two
-# CFLAGS +=-Winline           # looks for non-inlineable inlines
+# CXXFLAGS +=-Winline           # looks for non-inlineable inlines
 
 # for dynamic libraries
-CFLAGS +=-fPIC
+CXXFLAGS +=-fPIC
 
-CFLAGS += -I/usr/local/include
+CXXFLAGS += -I/usr/local/include
 
 ###############################################################################
 #                                   LDFLAGS                                   #
@@ -114,12 +114,11 @@ endif
 ifdef GPROFF
 LDFLAGS +=-pg #              gprof mapping
 endif
+LDFLAGS += -L/usr/local/lib
 #LDFLAGS +=-fhandle-exceptions
 # postgresql database lib
 #LDFLAGS +=-lpq++
 LDFLAGS +=-lpq
-
-LDFLAGS += -L/usr/local/lib
 
 ###############################################################################
 ##                        Actual Compiling Starts Here                       ##
@@ -428,16 +427,16 @@ clean:
 	/bin/rm -f $(OBJDIR)*.o $(OBJDIR)*.so
 
 depend:
-	makedepend -I/usr/local/include -I/usr/include/c++/3.4/ -p$(OBJDIR) -- $(CFLAGS) -- *.cc 
+	makedepend -I/usr/local/include -I/usr/include/c++/3.4/ -p$(OBJDIR) -- $(CXXFLAGS) -- *.cc 
 
 
 $(OBJDIR)%.o : %.cc
 	@echo Making \"$<\"
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CXXFLAGS) -c $< -o $@
 
 %.o : %.cc
 	@echo Making \"$<\"
-	@$(CC) $(CFLAGS) -c $< -o $(OBJDIR)$@
+	@$(CC) $(CXXFLAGS) -c $< -o $(OBJDIR)$@
 
 .SUFFIXES:     .cc 
 
