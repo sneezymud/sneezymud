@@ -12,6 +12,7 @@
 #include "statistics.h"
 #include "obj_corpse.h"
 #include "obj_gun.h"
+#include "obj_trash.h"
 
 
 // returns DELETE_THIS
@@ -955,9 +956,9 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	ssprintf(buf, "$n's %s connects with $N's face, sending a tooth flying.", limbStr.c_str());
 	act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 	      	      
-	TCorpse *corpse;
+	TTrash *corpse;
 	      
-	corpse = new TCorpse();
+	corpse = new TTrash();
 	corpse->name = mud_str_dup("tooth");
 	      
 	ssprintf(buf, "<W>a <1><r>bloody<1><W> tooth of %s<1>", v->getName());
@@ -968,8 +969,9 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	      
 	corpse->setStuff(NULL);
 	corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
-	corpse->addCorpseFlag(CORPSE_NO_REGEN);
-	corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
+	//	corpse->addCorpseFlag(CORPSE_NO_REGEN);
+	//	corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
+	corpse->obj_flags.decay_time=-1;
 	corpse->setWeight(0.1);
 	corpse->canBeSeen = v->canBeSeen;
 	corpse->setVolume(1);
