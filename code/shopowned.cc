@@ -36,14 +36,15 @@ bool sameAccount(sstring buf, int shop_nr){
 void TShopOwned::doBuyTransaction(int cashCost, const sstring &name, 
 			       const sstring &action, TObj *obj)
 {
+  // take the expense cut out
+  if(!doExpenses(cashCost, obj))
+    return;
+
   // buyer gives money to seller
   ch->giveMoney(keeper, cashCost, GOLD_SHOP);
 
   // log the sale
   shoplog(shop_nr, ch, keeper, name, cashCost, action);
-
-  // take the expense cut out
-  //  doExpenses(cashCost, profit_buy);
 
   if(owned){
     doDividend(cashCost, name);
@@ -56,46 +57,52 @@ void TShopOwned::doBuyTransaction(int cashCost, const sstring &name,
   ch->doSave(SILENT_YES);
 }
 
-#if 0
-void TShopOwned::doExpenses(int cashCost, double profit_buy)
+bool TShopOwned::doExpenses(int cashCost, TObj *obj)
 {
-  double ratio=profit_buy-getExpenseRatio();
-  double profit_buy=shop_index[shop_nr].getProfitBuy(o, ch));
-
-  int shop_nr=160;
+  double profit_buy=shop_index[shop_nr].getProfitBuy(obj, ch);
+  double ratio=getExpenseRatio();
+  int sba_nr=160;
   TMonster *sba;
   TBeing *t;
+  double value;
 
+  if(ratio == 0)
+    return false;
+
+  if(keeper->getMoney() < cashCost)
+    return false;
+
+// find the sba shopkeeper
   for(t=character_list;t;t=t->next){
-    if(t->number==shop_index[shop_nr].keeper)
+    if(t->number==shop_index[sba_nr].keeper)
       break;
   }
 
   if(t && (sba=dynamic_cast<TMonster *>(t))){
+    value=((double)cashCost/profit_buy) * ratio;
     
-
-    sba->addToMoney(value, GOLD_SHOP);
-    shoplog(shop_nr, speaker, sba, tm->getName(), 
-	    value, "giving");
+    sba->addToMoney((int)value, GOLD_SHOP);
+    shoplog(shop_nr, keeper, sba, "talens", (int)-value, "expenses");
+    shoplog(sba_nr, keeper, sba, "talens", (int)value, "expenses");
     sba->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
   }
 
-
+  return true;
 }
 
 
-double TShopOwned getExpenseRatio()
+double TShopOwned::getExpenseRatio()
 {
-  double ratio;
+  double ratio=0;
   TDatabase db(DB_SNEEZY);
 
-  db.query("select expense_ratio from shopowned where shop_nr=%i", shop_nr);
+  db.query("select expense_ratio from shop where shop_nr=%i", shop_nr);
   
   if(db.fetchRow())
     ratio=convertTo<double>(db["expense_ratio"]);
 
+  return ratio;
 }
-#endif
 
 
 int TShopOwned::getPurchasePrice(int talens, int value){

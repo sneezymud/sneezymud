@@ -15,6 +15,9 @@ class TShopOwned {
   int getCorpID();
 
   void doBuyTransaction(int, const sstring &, const sstring &, TObj *obj=NULL);
+  double getExpenseRatio();
+  bool doExpenses(int, TObj *);
+
 
   void setDividend(sstring);
   double getDividend();

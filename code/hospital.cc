@@ -352,6 +352,11 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             }
             int cashCost = min(ch->getMoney(), cost);
 
+	    if(me->getMoney() < cashCost){
+	      me->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+	      return TRUE;
+	    }
+
 	    TShopOwned tso(shop_nr, me, ch);
 	    tso.doBuyTransaction(cashCost, ch->describeBodySlot(i),
 			      "regenerating");
@@ -385,6 +390,12 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
                 return TRUE;
               } else {
                 int cashCost = min(ch->getMoney(), cost);
+		
+		if(me->getMoney() < cashCost){
+		  me->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+		  return TRUE;
+		}
+
 		TShopOwned tso(shop_nr, me, ch);
 		tso.doBuyTransaction(cashCost, ch->describeBodySlot(i),
 				  "mending");
@@ -416,6 +427,12 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             return TRUE;
           } else {
             int cashCost = min(ch->getMoney(), cost);
+
+	    if(me->getMoney() < cashCost){
+	      me->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+	      return TRUE;
+	    }
+
 	    TShopOwned tso(shop_nr, me, ch);
 	    tso.doBuyTransaction(cashCost, ch->describeBodySlot(i),
 			      "healing");
@@ -443,6 +460,12 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             return TRUE;
           } else {
             int cashCost = min(ch->getMoney(), cost);
+
+	    if(me->getMoney() < cashCost){
+	      me->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+	      return TRUE;
+	    }
+
 	    TShopOwned tso(shop_nr, me, ch);
 	    tso.doBuyTransaction(cashCost, ch->describeBodySlot(i),
 			      "expelling");
@@ -485,6 +508,12 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	      return TRUE;
 	    } else {
 	      int cashCost = min(ch->getMoney(), cost);
+
+	      if(me->getMoney() < cashCost){
+		me->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+		return TRUE;
+	      }
+
 	      TShopOwned tso(shop_nr, me, ch);
 	      tso.doBuyTransaction(cashCost, DiseaseInfo[affToDisease(*aff)].name,
 				"disease");
@@ -513,6 +542,12 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
               return TRUE;
             } else {
               int cashCost = min(ch->getMoney(), cost);
+
+	      if(me->getMoney() < cashCost){
+		me->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+		return TRUE;
+	      }
+
 	      TShopOwned tso(shop_nr, me, ch);
 	      tso.doBuyTransaction(cashCost, ch->describeBodySlot(i),
 				"blindness");
@@ -614,11 +649,17 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
             vlogf(LOG_PROC, fmt("Undefined room %d in healing_room") %  healed->in_room);
         }
       } else {
+	if(doctor->getMoney() < cost){
+	  doctor->doTell(healed->getName(), "I don't have enough money to cover my operating expenses!");
+	  return TRUE;
+	}
+
+	TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(doctor), healed);
+	tso.doBuyTransaction(cost, "healing", "healing");
+
         healed->sendTo("The hospital works wonders on your body.\n\r");
         healed->addToHit(num);
         healed->sendTo(fmt("The charge for the healing is %d talens.\n\r") % cost);
-	TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(doctor), healed);
-	tso.doBuyTransaction(cost, "healing", "healing");
       }
     }
   }
@@ -673,6 +714,12 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       ch->sendTo("Sorry, no medicare, medicaid or insurance allowed.\n\r");
       return TRUE;
     }
+    
+    if(doctor->getMoney() < cost){
+      doctor->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
+      return TRUE;
+    }
+
     if (ch->fight()) {
       ch->sendTo("The doctors can't work on you if you are fighting.\n\r");
       return TRUE;
