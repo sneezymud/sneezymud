@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: statistics.cc,v $
+// Revision 1.5  1999/10/07 16:00:58  batopr
+// Shifted some gold statistics stuff to functions
+//
 // Revision 1.4  1999/10/06 23:46:50  batopr
 // Boosted target profit ratio to 2% (from 1%) for PCs
 //
@@ -101,7 +104,7 @@ int init_game_stats(void)
     }
 
     for (i= 0; i < MAX_IMMORT; i++) {
-      if (fscanf(fp, " %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
+      if (fscanf(fp, " %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
              &gold_statistics[GOLD_INCOME][i], 
              &gold_statistics[GOLD_SHOP][i], 
              &gold_statistics[GOLD_REPAIR][i],
@@ -116,13 +119,14 @@ int init_game_stats(void)
              &gold_statistics[GOLD_SHOP_ARMOR][i],
              &gold_statistics[GOLD_SHOP_WEAPON][i],
              &gold_statistics[GOLD_SHOP_PET][i],
-             &gold_statistics[GOLD_SHOP_RESPONSES][i]) != 15) {
+             &gold_statistics[GOLD_SHOP_RESPONSES][i],
+             &gold_statistics[GOLD_DUMP][i]) != 16) {
         vlogf(5, "bad gold info, resetting %d", i);
         int j;
         for (j = 0; j < MAX_MONEY_TYPE; j++)
           gold_statistics[j][i] = 0;
       }
-      if (fscanf(fp, " %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
+      if (fscanf(fp, " %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
              &gold_positive[GOLD_INCOME][i], 
              &gold_positive[GOLD_SHOP][i], 
              &gold_positive[GOLD_REPAIR][i],
@@ -137,14 +141,15 @@ int init_game_stats(void)
              &gold_positive[GOLD_SHOP_ARMOR][i],
              &gold_positive[GOLD_SHOP_WEAPON][i],
              &gold_positive[GOLD_SHOP_PET][i],
-             &gold_positive[GOLD_SHOP_RESPONSES][i]) != 15) {
+             &gold_positive[GOLD_SHOP_RESPONSES][i],
+             &gold_positive[GOLD_DUMP][i]) != 16) {
         vlogf(5, "bad gold info, resetting %d", i);
         int j;
         for (j = 0; j < MAX_MONEY_TYPE; j++)
           gold_positive[j][i] = 0;
       }
     }
-    if (fscanf(fp, " %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n",
+    if (fscanf(fp, " %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n",
              &gold_modifier[GOLD_INCOME], 
              &gold_modifier[GOLD_SHOP], 
              &gold_modifier[GOLD_REPAIR],
@@ -159,7 +164,8 @@ int init_game_stats(void)
              &gold_modifier[GOLD_SHOP_ARMOR],
              &gold_modifier[GOLD_SHOP_WEAPON],
              &gold_modifier[GOLD_SHOP_PET],
-             &gold_modifier[GOLD_SHOP_RESPONSES]) != 15) {
+             &gold_modifier[GOLD_SHOP_RESPONSES],
+             &gold_modifier[GOLD_DUMP]) != 16) {
         vlogf(5, "bad gold modifier info, resetting %d", i);
         int j;
         for (j = 0; j < MAX_MONEY_TYPE; j++)
@@ -201,7 +207,7 @@ void save_game_stats(void)
     fprintf(fp, "%d %d\n", repair_number, total_help_number);
 
     for (i= 0; i < MAX_IMMORT; i++) {
-      fprintf(fp, "%ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n", 
+      fprintf(fp, "%ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n", 
          gold_statistics[GOLD_INCOME][i],
          gold_statistics[GOLD_SHOP][i],
          gold_statistics[GOLD_REPAIR][i],
@@ -216,8 +222,9 @@ void save_game_stats(void)
          gold_statistics[GOLD_SHOP_ARMOR][i],
          gold_statistics[GOLD_SHOP_WEAPON][i],
          gold_statistics[GOLD_SHOP_PET][i],
-         gold_statistics[GOLD_SHOP_RESPONSES][i]);
-      fprintf(fp, "%ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
+         gold_statistics[GOLD_SHOP_RESPONSES][i],
+         gold_statistics[GOLD_DUMP][i]);
+      fprintf(fp, "%ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
          gold_positive[GOLD_INCOME][i],
          gold_positive[GOLD_SHOP][i],
          gold_positive[GOLD_REPAIR][i],
@@ -232,9 +239,10 @@ void save_game_stats(void)
          gold_positive[GOLD_SHOP_ARMOR][i],
          gold_positive[GOLD_SHOP_WEAPON][i],
          gold_positive[GOLD_SHOP_PET][i],
-         gold_positive[GOLD_SHOP_RESPONSES][i]);
+         gold_positive[GOLD_SHOP_RESPONSES][i],
+         gold_positive[GOLD_DUMP][i]);
     }
-    fprintf(fp, "%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f\n",
+    fprintf(fp, "%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f\n",
          gold_modifier[GOLD_INCOME],
          gold_modifier[GOLD_SHOP],
          gold_modifier[GOLD_REPAIR],
@@ -249,7 +257,8 @@ void save_game_stats(void)
          gold_modifier[GOLD_SHOP_ARMOR],
          gold_modifier[GOLD_SHOP_WEAPON],
          gold_modifier[GOLD_SHOP_PET],
-         gold_modifier[GOLD_SHOP_RESPONSES]);
+         gold_modifier[GOLD_SHOP_RESPONSES],
+         gold_modifier[GOLD_DUMP]);
 
     for (i = 0; i < 50; i++) {
       for (j = 0; j < MAX_CLASSES; j++) {
@@ -459,57 +468,29 @@ void TBeing::doGamestats(const char *arg)
   return;
 }
 
-void checkGoldStats()
+int getNetGold(moneyTypeT mtt)
 {
-  int net_gold_shop_comp = 0;
-  int net_gold_shop_sym = 0;
-  int net_gold_shop_arm = 0;
-  int net_gold_shop_weap = 0;
-  int net_gold_shop_pet = 0;
-  int net_gold_shop_food = 0;
-  int net_gold_shop_resp = 0;
-  int net_gold_repair = 0;
-  int net_gold_shop = 0;
-  int net_gold_income = 0;
   int net_gold = 0;
-  int net_gold_all_shops = 0;
-  int net_gold_budget = 0;
-  unsigned int pos_gold_shop_food = 0;
-  unsigned int pos_gold_shop_comp = 0;
-  unsigned int pos_gold_shop_sym = 0;
-  unsigned int pos_gold_shop_arm = 0;
-  unsigned int pos_gold_shop_weap = 0;
-  unsigned int pos_gold_shop_pet = 0;
-  unsigned int pos_gold_shop_resp = 0;
-  unsigned int pos_gold_repair = 0;
-  unsigned int pos_gold_shop = 0;
-  unsigned int pos_gold_income = 0;
-  unsigned int pos_gold = 0;
-  unsigned int pos_gold_all_shops = 0;
-  unsigned int pos_gold_budget = 0;
-  int i;
-  for (i = 0; i < MAX_MORT; i++) {
-    net_gold_shop += gold_statistics[GOLD_SHOP][i];
-    pos_gold_shop += gold_positive[GOLD_SHOP][i];
-    net_gold_repair += gold_statistics[GOLD_REPAIR][i];
-    pos_gold_repair += gold_positive[GOLD_REPAIR][i];
-    net_gold_shop_food += gold_statistics[GOLD_SHOP_FOOD][i];
-    pos_gold_shop_food += gold_positive[GOLD_SHOP_FOOD][i];
-    net_gold_shop_comp += gold_statistics[GOLD_SHOP_COMPONENTS][i];
-    pos_gold_shop_comp += gold_positive[GOLD_SHOP_COMPONENTS][i];
-    net_gold_shop_sym += gold_statistics[GOLD_SHOP_SYMBOL][i];
-    pos_gold_shop_sym += gold_positive[GOLD_SHOP_SYMBOL][i];
-    net_gold_shop_arm += gold_statistics[GOLD_SHOP_ARMOR][i];
-    pos_gold_shop_arm += gold_positive[GOLD_SHOP_ARMOR][i];
-    net_gold_shop_weap += gold_statistics[GOLD_SHOP_WEAPON][i];
-    pos_gold_shop_weap += gold_positive[GOLD_SHOP_WEAPON][i];
-    net_gold_shop_pet += gold_statistics[GOLD_SHOP_PET][i];
-    pos_gold_shop_pet += gold_positive[GOLD_SHOP_PET][i];
-    net_gold_shop_resp += gold_statistics[GOLD_SHOP_RESPONSES][i];
-    pos_gold_shop_resp += gold_positive[GOLD_SHOP_RESPONSES][i];
-    net_gold_income += gold_statistics[GOLD_INCOME][i];
-    pos_gold_income += gold_positive[GOLD_INCOME][i];
+  unsigned int i;
+  for (i = 0; i < MAX_MORT; i++)
+    net_gold += gold_statistics[mtt][i];
+  return net_gold;
+}
 
+unsigned int getPosGold(moneyTypeT mtt)
+{
+  unsigned int pos_gold = 0;
+  unsigned int i;
+  for (i = 0; i < MAX_MORT; i++)
+    pos_gold += gold_positive[mtt][i];
+  return pos_gold;
+}
+
+int getNetGoldGlobal()
+{
+  int net_gold = 0;
+  unsigned int i;
+  for (i = 0; i < MAX_MORT; i++)
     net_gold += gold_statistics[GOLD_INCOME][i] + 
                 gold_statistics[GOLD_COMM][i] +
                 gold_statistics[GOLD_RENT][i] +
@@ -517,6 +498,7 @@ void checkGoldStats()
                 gold_statistics[GOLD_HOSPITAL][i] +
                 gold_statistics[GOLD_GAMBLE][i] +
                 gold_statistics[GOLD_TITHE][i] +
+                gold_statistics[GOLD_DUMP][i] +
                 gold_statistics[GOLD_SHOP_FOOD][i] +
                 gold_statistics[GOLD_SHOP_COMPONENTS][i] +
                 gold_statistics[GOLD_SHOP_SYMBOL][i] +
@@ -526,12 +508,22 @@ void checkGoldStats()
                 gold_statistics[GOLD_SHOP_PET][i] +
                 gold_statistics[GOLD_SHOP][i];
 
+
+  return net_gold;
+}
+
+unsigned int getPosGoldGlobal()
+{
+  unsigned int pos_gold = 0;
+  unsigned int i;
+  for (i = 0; i < MAX_MORT; i++)
     pos_gold += gold_positive[GOLD_INCOME][i] + 
                 gold_positive[GOLD_COMM][i] +
                 gold_positive[GOLD_RENT][i] +
                 gold_positive[GOLD_REPAIR][i] +
                 gold_positive[GOLD_HOSPITAL][i] +
                 gold_positive[GOLD_GAMBLE][i] +
+                gold_positive[GOLD_DUMP][i] +
                 gold_positive[GOLD_TITHE][i] +
                 gold_positive[GOLD_SHOP_FOOD][i] +
                 gold_positive[GOLD_SHOP_COMPONENTS][i] +
@@ -542,38 +534,15 @@ void checkGoldStats()
                 gold_positive[GOLD_SHOP_RESPONSES][i] +
                 gold_positive[GOLD_SHOP][i];
 
-    // we don't want income values floating high because PCs spend money
-    // on bad things (rent, pets)
-    net_gold_budget += gold_statistics[GOLD_INCOME][i] + 
-                gold_statistics[GOLD_COMM][i] +
-                gold_statistics[GOLD_REPAIR][i] +
-                gold_statistics[GOLD_HOSPITAL][i] +
-                gold_statistics[GOLD_GAMBLE][i] +
-                gold_statistics[GOLD_TITHE][i] +
-                gold_statistics[GOLD_SHOP_FOOD][i] +
-                gold_statistics[GOLD_SHOP_COMPONENTS][i] +
-                gold_statistics[GOLD_SHOP_SYMBOL][i] +
-                gold_statistics[GOLD_SHOP_ARMOR][i] +
-                gold_statistics[GOLD_SHOP_WEAPON][i] +
-                gold_statistics[GOLD_SHOP_RESPONSES][i] +
-                gold_statistics[GOLD_SHOP][i];
+  return pos_gold;
+}
 
-    pos_gold_budget += gold_positive[GOLD_INCOME][i] + 
-                gold_positive[GOLD_COMM][i] +
-                gold_positive[GOLD_REPAIR][i] +
-                gold_positive[GOLD_HOSPITAL][i] +
-                gold_positive[GOLD_GAMBLE][i] +
-                gold_positive[GOLD_TITHE][i] +
-                gold_positive[GOLD_SHOP_FOOD][i] +
-                gold_positive[GOLD_SHOP_COMPONENTS][i] +
-                gold_positive[GOLD_SHOP_SYMBOL][i] +
-                gold_positive[GOLD_SHOP_ARMOR][i] +
-                gold_positive[GOLD_SHOP_WEAPON][i] +
-                gold_positive[GOLD_SHOP_RESPONSES][i] +
-                gold_positive[GOLD_SHOP][i];
-
-
-    net_gold_all_shops += gold_statistics[GOLD_SHOP_FOOD][i] +
+int getNetGoldShops()
+{
+  int net_gold = 0;
+  unsigned int i;
+  for (i = 0; i < MAX_MORT; i++)
+    net_gold += gold_statistics[GOLD_SHOP_FOOD][i] +
                 gold_statistics[GOLD_SHOP_COMPONENTS][i] +
                 gold_statistics[GOLD_SHOP_SYMBOL][i] +
                 gold_statistics[GOLD_SHOP_ARMOR][i] +
@@ -582,7 +551,15 @@ void checkGoldStats()
                 gold_statistics[GOLD_SHOP_PET][i] +
                 gold_statistics[GOLD_SHOP][i];
 
-    pos_gold_all_shops += gold_positive[GOLD_SHOP_FOOD][i] +
+  return net_gold;
+}
+
+unsigned int getPosGoldShops()
+{
+  unsigned int pos_gold = 0;
+  unsigned int i;
+  for (i = 0; i < MAX_MORT; i++)
+    pos_gold += gold_positive[GOLD_SHOP_FOOD][i] +
                 gold_positive[GOLD_SHOP_COMPONENTS][i] +
                 gold_positive[GOLD_SHOP_SYMBOL][i] +
                 gold_positive[GOLD_SHOP_ARMOR][i] +
@@ -590,11 +567,91 @@ void checkGoldStats()
                 gold_positive[GOLD_SHOP_PET][i] +
                 gold_positive[GOLD_SHOP_RESPONSES][i] +
                 gold_positive[GOLD_SHOP][i];
-  }
 
+  return pos_gold;
+}
+
+// we don't want income values floating high because PCs spend money
+// on bad things (rent, pets)
+int getNetGoldBudget()
+{
+  int net_gold = 0;
+  unsigned int i;
+  for (i = 0; i < MAX_MORT; i++)
+    net_gold += gold_statistics[GOLD_INCOME][i] + 
+                gold_statistics[GOLD_COMM][i] +
+                gold_statistics[GOLD_REPAIR][i] +
+                gold_statistics[GOLD_HOSPITAL][i] +
+                gold_statistics[GOLD_GAMBLE][i] +
+                gold_statistics[GOLD_TITHE][i] +
+                gold_statistics[GOLD_DUMP][i] +
+                gold_statistics[GOLD_SHOP_FOOD][i] +
+                gold_statistics[GOLD_SHOP_COMPONENTS][i] +
+                gold_statistics[GOLD_SHOP_SYMBOL][i] +
+                gold_statistics[GOLD_SHOP_ARMOR][i] +
+                gold_statistics[GOLD_SHOP_WEAPON][i] +
+                gold_statistics[GOLD_SHOP_RESPONSES][i] +
+                gold_statistics[GOLD_SHOP][i];
+
+
+  return net_gold;
+}
+
+unsigned int getPosGoldBudget()
+{
+  unsigned int pos_gold = 0;
+  unsigned int i;
+  for (i = 0; i < MAX_MORT; i++)
+    pos_gold += gold_positive[GOLD_INCOME][i] + 
+                gold_positive[GOLD_COMM][i] +
+                gold_positive[GOLD_REPAIR][i] +
+                gold_positive[GOLD_HOSPITAL][i] +
+                gold_positive[GOLD_GAMBLE][i] +
+                gold_positive[GOLD_DUMP][i] +
+                gold_positive[GOLD_TITHE][i] +
+                gold_positive[GOLD_SHOP_FOOD][i] +
+                gold_positive[GOLD_SHOP_COMPONENTS][i] +
+                gold_positive[GOLD_SHOP_SYMBOL][i] +
+                gold_positive[GOLD_SHOP_ARMOR][i] +
+                gold_positive[GOLD_SHOP_WEAPON][i] +
+                gold_positive[GOLD_SHOP_RESPONSES][i] +
+                gold_positive[GOLD_SHOP][i];
+
+  return pos_gold;
+}
+
+void checkGoldStats()
+{
   // insure we have enough data to take accurate reading
+  unsigned int pos_gold = getPosGoldGlobal();
   if (pos_gold < 2000000U)
     return;
+
+  int net_gold_shop_comp = getNetGold(GOLD_SHOP_COMP);
+  int net_gold_shop_sym = getNetGold(GOLD_SHOP_SYM);
+  int net_gold_shop_arm = getNetGold(GOLD_SHOP_ARM);
+  int net_gold_shop_weap = getNetGold(GOLD_SHOP_WEAP);
+  int net_gold_shop_pet = getNetGold(GOLD_SHOP_PET);
+  int net_gold_shop_food = getNetGold(GOLD_SHOP_FOOD);
+  int net_gold_shop_resp = getNetGold(GOLD_SHOP_RESP);
+  int net_gold_repair = getNetGold(GOLD_REPAIR);
+  int net_gold_shop = getNetGold(GOLD_SHOP);
+  int net_gold_income = getNetGold(GOLD_INCOME);
+  int net_gold = getNetGoldGlobal();
+  int net_gold_all_shops = getNetGoldShops();
+  int net_gold_budget = getNetGoldBudget();
+  unsigned int pos_gold_shop_food = getPosGold(GOLD_SHOP_FOOD);
+  unsigned int pos_gold_shop_comp = getPosGold(GOLD_SHOP_COMP);
+  unsigned int pos_gold_shop_sym = getPosGold(GOLD_SHOP_SYM);
+  unsigned int pos_gold_shop_arm = getPosGold(GOLD_SHOP_ARM);
+  unsigned int pos_gold_shop_weap = getPosGold(GOLD_SHOP_WEAP);
+  unsigned int pos_gold_shop_pet = getPosGold(GOLD_SHOP_PET);
+  unsigned int pos_gold_shop_resp = getPosGold(GOLD_SHOP_RESP);
+  unsigned int pos_gold_repair = getPosGold(GOLD_REPAIR);
+  unsigned int pos_gold_shop = getPosGold(GOLD_SHOP);
+  unsigned int pos_gold_income = getPosGold(GOLD_INCOME);
+  unsigned int pos_gold_all_shops = getPosGoldShops();
+  unsigned int pos_gold_budget = getPosGoldBudget();
 
   bool should_reset = false;
 
@@ -646,6 +703,7 @@ void checkGoldStats()
 
   // We will have the repair modifier self-adjust in order to drive the
   // economy to the desired value
+#if 0
   int good_drain = (pos_gold_repair - net_gold_repair);
   good_drain += (pos_gold_income - net_gold_income);
   good_drain += (pos_gold_shop - net_gold_shop);
@@ -655,6 +713,9 @@ void checkGoldStats()
   good_drain += (pos_gold_shop_arm - net_gold_shop_arm);
   good_drain += (pos_gold_shop_weap - net_gold_shop_weap);
   good_drain += (pos_gold_shop_resp - net_gold_shop_resp);
+#else
+  int good_drain = (pos_gold_budget - net_gold_budget);
+#endif
 
   int total_drain = pos_gold - net_gold;
   if (good_drain < (int) ((target_drain - .05) * total_drain)) {

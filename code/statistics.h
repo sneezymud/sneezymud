@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: statistics.h,v $
+// Revision 1.2  1999/10/07 16:01:30  batopr
+// Shifted some gold statistics stuff to functions
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -178,5 +181,15 @@ extern unsigned int total_player_kills;
 extern long gold_statistics[MAX_MONEY_TYPE][GOD_LEVEL10];
 extern long gold_positive[MAX_MONEY_TYPE][GOD_LEVEL10];
 extern float gold_modifier[MAX_MONEY_TYPE];
+
+extern int getNetGold(moneyTypeT);
+extern unsigned int getPosGold(moneyTypeT);
+
+extern int getNetGoldGlobal();
+extern unsigned int getPosGoldGlobal();
+extern int getNetGoldShops();
+extern unsigned int getPosGoldShops();
+extern int getNetGoldBudget();
+extern unsigned int getPosGoldBudget();
 
 #endif
