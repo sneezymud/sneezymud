@@ -332,12 +332,22 @@ int blastOfFury(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
       case CRIT_S_DOUBLE:
         CS(SPELL_BLAST_OF_FURY);
         dam <<= 1;
-        act("$n unleashes all $s PENT UP ANGER AND FRUSTRATION on $N!", 
-                  FALSE, caster, NULL, victim, TO_NOTVICT);
-        act("You unleash all your PENT UP ANGER AND FRUSTRATION on $N!", 
-                  FALSE, caster, NULL, victim, TO_CHAR);
-        act("$n unleashes all $s PENT UP ANGER AND FRUSTRATION on you!", 
-                  FALSE, caster, NULL, victim, TO_VICT);
+	
+	if(!strcmp(caster->name, "Coppern")){
+	  act("$n unleashes all $s LATENT HOMOSEXUAL ANGER AND FRUSTRATION on $N!", 
+	      FALSE, caster, NULL, victim, TO_NOTVICT);
+	  act("You unleash all your PENT UP ANGER AND FRUSTRATION on $N!", 
+	      FALSE, caster, NULL, victim, TO_CHAR);
+	  act("$n unleashes all $s LATENT HOMOSEXUAL ANGER AND FRUSTRATION on you!", 
+	      FALSE, caster, NULL, victim, TO_VICT);
+	} else {
+	  act("$n unleashes all $s PENT UP ANGER AND FRUSTRATION on $N!", 
+	      FALSE, caster, NULL, victim, TO_NOTVICT);
+	  act("You unleash all your PENT UP ANGER AND FRUSTRATION on $N!", 
+	      FALSE, caster, NULL, victim, TO_CHAR);
+	  act("$n unleashes all $s PENT UP ANGER AND FRUSTRATION on you!", 
+	      FALSE, caster, NULL, victim, TO_VICT);
+	}
         break;
       case CRIT_S_NONE:
         if (victim->isLucky(caster->spellLuckModifier(SPELL_BLAST_OF_FURY))) {
