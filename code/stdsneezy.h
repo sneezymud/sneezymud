@@ -24,7 +24,7 @@
 #include <cassert>
 #include <cstring>
 #include <stdarg.h>
-
+#include <cmath>
 #include <cerrno>
 #include <string>
 #include <vector>
