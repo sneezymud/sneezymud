@@ -1927,8 +1927,11 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     MYSQL_ROW row;
 
     arg = one_argument(arg, buf);
-    if(!is_abbrev(buf, myself->getName()))
+    if(!isname(buf, myself->name))
       return FALSE;
+
+    //    if(!is_abbrev(buf, myself->getName()))
+    //      return FALSE;
 
     if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select access from shopownedaccess where shop_nr=%i and name='%s'", shop_nr, ch->getName()))==-1){
       vlogf(LOG_BUG, "Database error in shop_keeper");
@@ -1979,7 +1982,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       sprintf(buf, "%s I deal in", ch->getName());
       for(i=0;i<shop_index[shop_nr].type.size();++i){
 	tmp=shop_index[shop_nr].type[i];
-	if((int)tmp != -1)
+	if(tmp != MAX_OBJ_TYPES && (int) tmp != -1)
 	  sprintf(buf+strlen(buf), " %s,",
 		  ItemInfo[tmp]->name);
       }
