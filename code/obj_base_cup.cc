@@ -437,9 +437,6 @@ void TBaseCup::updateDesc()
     found=true;
   }
 
-
-
-
   if(found){
     if (isObjStat(ITEM_STRUNG)) {
       delete [] name;
@@ -459,24 +456,7 @@ void TBaseCup::updateDesc()
       action_description = NULL;
     }
 
-    
-    // strip out color codes omg ugliest code ever
-    char buf[256];
-    int j=0;
-    for(int i=0;newname.c_str()[i];++i){
-      if(newname.c_str()[i] == '<'){
-	do {
-	  ++i;
-	} while(newname.c_str()[i]!='>');
-	++i;
-      }
-
-      buf[j]=newname.c_str()[i];
-      ++j;
-    }
-    buf[j]='\0';
-
-    name=mud_str_dup(buf);
+    name=mud_str_dup(stripColorCodes(newname).c_str());
     shortDescr=mud_str_dup(short_desc.c_str());
     setDescr(mud_str_dup(long_desc.c_str()));
   }
