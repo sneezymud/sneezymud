@@ -3985,6 +3985,7 @@ void TObj::describeMe(TBeing *ch) const
 
   if (ch->isImmortal() || canWear(ITEM_TAKE)) {
 
+#if 0
     if (ch->desc && IS_SET(ch->desc->account->flags, ACCOUNT_IMMORTAL)){
 #if 1
       if (obj_index[getItemIndex()].max_exist < 9999)
@@ -3997,6 +3998,7 @@ void TObj::describeMe(TBeing *ch) const
       else
         ch->sendTo("It is not limited for immortals.\n\r");
     }
+#endif
 #if 0
     if (10 >= max_exist) {
       ch->sendTo("This item is considered limited and will cost a rental fee.\n\r");
