@@ -23,7 +23,8 @@ int task_rest(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *, TOb
         if (!ch->roomp->isRoomFlag(ROOM_NO_HEAL)) {
           ch->addToMana(1);
           ch->addToPiety(.10);
-	  if (ch->hasClass(CLASS_SHAMAN) && !ch->affectedBySpell(SPELL_SHAPESHIFT)) {
+	  if (ch->hasClass(CLASS_SHAMAN) && !ch->affectedBySpell(SPELL_SHAPESHIFT)
+        && !ch->isImmortal()) {
 	    if (ch->GetMaxLevel() > 5) {
 	      if (1 > ch->getLifeforce()) {
 		ch->updateHalfTickStuff();
