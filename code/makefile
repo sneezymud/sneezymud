@@ -156,7 +156,7 @@ LDFLAGS +=-lpq
 # this is a list of objects to be compiled and linked
 # just add new ones to the bottom
 LIBMISC=actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
-	alignment_deity.o being.o body.o \
+	ai_assignskills.o alignment_deity.o being.o body.o \
 	breath.o bwiz.o \
 	combat.o constants.o \
 	create_engine.o \
@@ -463,6 +463,63 @@ objs/actions.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/actions.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/actions.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/actions.o: obj_pool.h obj_base_cup.h
+objs/ai_assignskills.o: stdsneezy.h /usr/include/g++-3/cstdio
+objs/ai_assignskills.o: /usr/include/stdio.h /usr/include/features.h
+objs/ai_assignskills.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+objs/ai_assignskills.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/ai_assignskills.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/ai_assignskills.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/ai_assignskills.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/ai_assignskills.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/ai_assignskills.o: /usr/include/bits/stdio_lim.h
+objs/ai_assignskills.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
+objs/ai_assignskills.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/ai_assignskills.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/ai_assignskills.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/ai_assignskills.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/ai_assignskills.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/ai_assignskills.o: /usr/include/g++-3/cstring /usr/include/string.h
+objs/ai_assignskills.o: /usr/include/g++-3/cerrno /usr/include/errno.h
+objs/ai_assignskills.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/ai_assignskills.o: /usr/include/asm/errno.h /usr/include/g++-3/string
+objs/ai_assignskills.o: /usr/include/g++-3/std/bastring.h
+objs/ai_assignskills.o: /usr/include/g++-3/cstddef
+objs/ai_assignskills.o: /usr/include/g++-3/std/straits.h
+objs/ai_assignskills.o: /usr/include/g++-3/alloc.h
+objs/ai_assignskills.o: /usr/include/g++-3/stl_config.h
+objs/ai_assignskills.o: /usr/include/g++-3/stl_alloc.h
+objs/ai_assignskills.o: /usr/include/g++-3/iostream.h
+objs/ai_assignskills.o: /usr/include/g++-3/streambuf.h
+objs/ai_assignskills.o: /usr/include/g++-3/iterator
+objs/ai_assignskills.o: /usr/include/g++-3/stl_relops.h
+objs/ai_assignskills.o: /usr/include/g++-3/stl_iterator.h
+objs/ai_assignskills.o: /usr/include/g++-3/std/bastring.cc
+objs/ai_assignskills.o: /usr/include/g++-3/vector
+objs/ai_assignskills.o: /usr/include/g++-3/stl_algobase.h
+objs/ai_assignskills.o: /usr/include/g++-3/stl_pair.h
+objs/ai_assignskills.o: /usr/include/g++-3/type_traits.h
+objs/ai_assignskills.o: /usr/include/limits.h
+objs/ai_assignskills.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/ai_assignskills.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/ai_assignskills.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/ai_assignskills.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/ai_assignskills.o: /usr/include/g++-3/stl_construct.h
+objs/ai_assignskills.o: /usr/include/g++-3/stl_uninitialized.h
+objs/ai_assignskills.o: /usr/include/g++-3/stl_vector.h
+objs/ai_assignskills.o: /usr/include/g++-3/stl_bvector.h
+objs/ai_assignskills.o: /usr/include/g++-3/map /usr/include/g++-3/stl_tree.h
+objs/ai_assignskills.o: /usr/include/g++-3/stl_function.h
+objs/ai_assignskills.o: /usr/include/g++-3/stl_map.h
+objs/ai_assignskills.o: /usr/include/g++-3/stl_multimap.h low.h enum.h
+objs/ai_assignskills.o: spells.h structs.h immunity.h discipline.h spell2.h
+objs/ai_assignskills.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/ai_assignskills.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/ai_assignskills.o: stats.h limbs.h body.h race.h skills.h disease.h
+objs/ai_assignskills.o: trap.h task.h weather.h sound.h create.h thing.h
+objs/ai_assignskills.o: room.h obj.h spec_objs.h connect.h obj_drug.h
+objs/ai_assignskills.o: charfile.h being.h person.h monster.h account.h
+objs/ai_assignskills.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/ai_assignskills.o: materials.h
 objs/ai_commands.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/ai_commands.o: /usr/include/stdio.h /usr/include/features.h
 objs/ai_commands.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -3264,6 +3321,55 @@ objs/cmd_testfight.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/cmd_testfight.o: person.h monster.h account.h extern.h handler.h
 objs/cmd_testfight.o: obj_money.h rent.h spec_mobs.h materials.h combat.h
 objs/cmd_testfight.o: spelltask.h
+objs/cmd_trip.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/cmd_trip.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/cmd_trip.o: /usr/include/gnu/stubs.h
+objs/cmd_trip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/cmd_trip.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/cmd_trip.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/cmd_trip.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/cmd_trip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/cmd_trip.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
+objs/cmd_trip.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_trip.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_trip.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
+objs/cmd_trip.o: /usr/include/ctype.h /usr/include/endian.h
+objs/cmd_trip.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
+objs/cmd_trip.o: /usr/include/assert.h /usr/include/g++-3/cstring
+objs/cmd_trip.o: /usr/include/string.h /usr/include/g++-3/cerrno
+objs/cmd_trip.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/cmd_trip.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/cmd_trip.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
+objs/cmd_trip.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
+objs/cmd_trip.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
+objs/cmd_trip.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iostream.h
+objs/cmd_trip.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
+objs/cmd_trip.o: /usr/include/g++-3/stl_relops.h
+objs/cmd_trip.o: /usr/include/g++-3/stl_iterator.h
+objs/cmd_trip.o: /usr/include/g++-3/std/bastring.cc /usr/include/g++-3/vector
+objs/cmd_trip.o: /usr/include/g++-3/stl_algobase.h
+objs/cmd_trip.o: /usr/include/g++-3/stl_pair.h
+objs/cmd_trip.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/cmd_trip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/cmd_trip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/cmd_trip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/cmd_trip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/cmd_trip.o: /usr/include/g++-3/stl_construct.h
+objs/cmd_trip.o: /usr/include/g++-3/stl_uninitialized.h
+objs/cmd_trip.o: /usr/include/g++-3/stl_vector.h
+objs/cmd_trip.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
+objs/cmd_trip.o: /usr/include/g++-3/stl_tree.h
+objs/cmd_trip.o: /usr/include/g++-3/stl_function.h
+objs/cmd_trip.o: /usr/include/g++-3/stl_map.h
+objs/cmd_trip.o: /usr/include/g++-3/stl_multimap.h low.h enum.h spells.h
+objs/cmd_trip.o: structs.h immunity.h discipline.h spell2.h parse.h db.h
+objs/cmd_trip.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/cmd_trip.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/cmd_trip.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
+objs/cmd_trip.o: create.h thing.h room.h obj.h spec_objs.h connect.h
+objs/cmd_trip.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/cmd_trip.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/cmd_trip.o: materials.h combat.h obj_base_clothing.h
 objs/cmd_trophy.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_trophy.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/cmd_trophy.o: /usr/include/gnu/stubs.h
