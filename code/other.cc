@@ -3029,9 +3029,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       break;
     case SPELL_DIVINATION:
       if (!target) {
-        rc = divinationBeing(caster, victim);
+        divinationBeing(caster, victim, obj);
       } else 
-        rc = divinationObj(caster, target);
+        divinationObj(caster, target, obj);
       break;
     default:
       vlogf(LOG_BUG,fmt("Object (%s) with uncoded spell (%d)!") %  obj->getName() % spell);

@@ -313,6 +313,17 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
     return SPELL_FAIL;
   }
 }
+
+void divinationObj(TBeing *caster, TObj *obj, TMagicItem *usedobj)
+{
+  int level;
+
+  level = usedobj->getMagicLevel();
+
+  divinationObj(caster,obj,level,usedobj->getMagicLearnedness());
+}
+
+
 int divinationObj(TBeing *caster, TObj *obj)
 {
   taskDiffT diff;
@@ -376,6 +387,16 @@ int divinationBeing(TBeing *caster, TBeing * victim, int, byte bKnown)
     return SPELL_FAIL;
   }
 }
+
+void divinationBeing(TBeing *caster, TBeing *victim, TMagicItem *usedobj)
+{
+  int level;
+
+  level = usedobj->getMagicLevel();
+
+  divinationBeing(caster,victim,level,usedobj->getMagicLearnedness());
+}
+
 int divinationBeing(TBeing *caster, TBeing * victim)
 {
   taskDiffT diff;

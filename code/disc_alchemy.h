@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_alchemy.h,v $
+// Revision 5.2  2004/09/12 23:53:06  maror
+// divination scroll will now work
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -78,9 +84,12 @@ private:
     int divinationBeing(TBeing *, TBeing *);
     int castDivinationBeing(TBeing *, TBeing *);
     int divinationBeing(TBeing *, const TObj *, int, byte);
+    void divinationBeing(TBeing *, TBeing *, TMagicItem *);
     int divinationObj(TBeing *, TObj *);
     int castDivinationObj(TBeing *, const TObj *);
     int divinationObj(TBeing *, TBeing *, int, byte);
+    void divinationObj(TBeing *, TObj *, TMagicItem *);
+  
  
     int eyesOfFertuman(TBeing *, const char *);
     int castEyesOfFertuman(TBeing *, const char *);
