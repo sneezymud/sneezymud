@@ -596,7 +596,7 @@ int cloudOfConcealment(TBeing *caster, int level, byte bKnown)
   affectedData aff;
   int found = FALSE;
   if (bSuccess(caster, bKnown, SPELL_CLOUD_OF_CONCEALMENT)) {
-    caster->sendTo(fmt("You focus your powers and cause a cloud to materialize around your group.\n\r") %ANSI_GRAY);
+    caster->sendTo("You focus your powers and cause a cloud to materialize around your group.\n\r");
     act("$n invokes some magic and produces huge volumes of vaporous smoke.",
         TRUE,caster,0,0,TO_ROOM,ANSI_GRAY);
 
