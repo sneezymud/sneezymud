@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: immortal.cc,v $
+// Revision 1.13  1999/10/08 03:32:43  batopr
+// info gold display modification
+//
 // Revision 1.12  1999/10/08 03:06:11  batopr
 // Improved messages for info gold
 //
@@ -4091,10 +4094,18 @@ void TBeing::doInfo(const char *arg)
       buf += buf2;
       // shops are a little diff from normal
       // want shops to be a slight drain, so compare drain to source
-      sprintf(buf2, "SHOP ECONOMY:      pos %u, net gold = %d, drain=%d (factor %.2f%%)\n\r", tot_gold_allshops, net_gold_allshops, tot_gold_allshops - net_gold_allshops, 100.0 * (tot_gold_allshops - net_gold_allshops) / tot_gold_allshops );
+      sprintf(buf2, "SHOP ECONOMY:      pos %u, net gold = %d, drain=%d\n\r", tot_gold_allshops, net_gold_allshops, tot_gold_allshops - net_gold_allshops);
       buf += buf2;
-      sprintf(buf2, "BUDGET ECONOMY:    pos %u, net gold = %d, drain=%d (%.2f%%)\n\r", tot_gold_budget, net_gold_budget, tot_gold_budget - net_gold_budget,
- 100.0 * (tot_gold_budget - net_gold_budget) / tot_drain);
+      sprintf(buf2, "                   (shop factor  : %.2f%%)\n\r",
+           100.0 * (tot_gold_allshops - net_gold_allshops) / tot_gold_allshops);
+      buf += buf2;
+      sprintf(buf2, "BUDGET ECONOMY:    pos %u, net gold = %d, drain=%d\n\r", tot_gold_budget, net_gold_budget, tot_gold_budget - net_gold_budget);
+      buf += buf2;
+      sprintf(buf2, "                   (income factor: %.2f%%)\n\r",
+            100.0 * net_gold_budget / tot_gold_budget);
+      buf += buf2;
+      sprintf(buf2, "                   (repair factor: %.2f%%)\n\r",
+            100.0 * (tot_gold_budget - net_gold_budget) / tot_drain);
       buf += buf2;
 
       buf += "\n\r";
