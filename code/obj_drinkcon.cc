@@ -149,7 +149,7 @@ void assign_drink_types()
   DrinkInfo[LIQ_RED_WINE]             = new drinkInfo(7, -1,  6, false, "<R>red<1>", "<R>red wine<1>", 0);
   DrinkInfo[LIQ_WARM_MEAD]            = new drinkInfo(2,  1,  5, false, "<k>black<1>", "<k>warm mead<1>", 0);
   DrinkInfo[LIQ_CHAMPAGNE]            = new drinkInfo(6, -2,  4, false, "bubbly, translucent", "champagne", 0);
-  DrinkInfo[LIQ_HOLYWATER]            = new drinkInfo(0,  1, -5, false, "clear", "holy water", 0);
+  DrinkInfo[LIQ_HOLYWATER]            = new drinkInfo(0,  1, -5, true, "clear", "holy water", 0);
   DrinkInfo[LIQ_PORT]                 = new drinkInfo(8, -1,  5, false, "<R>red<1>", "<R>port<1>", 0);
   DrinkInfo[LIQ_MUSHROOM_ALE]         = new drinkInfo(7, -1,  5, false, "<g>green<1>", "<g>mushroom<1><o> ale<1>", 0);
   DrinkInfo[LIQ_VOMIT]                = new drinkInfo(8, -1,  5, false, "<G>light green<1>", "<G>v<o>o<G>m<o>i<G>t<1>", 0);

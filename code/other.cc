@@ -2314,6 +2314,14 @@ int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
 
 
   switch(liq){
+    case LIQ_HOLYWATER:
+      if(ch->isUndead())
+	harm(ch,ch,level,learn,SPELL_HARM,0);
+      else if(ch->isDiabolic())
+	harmLight(ch,ch,level,learn,SPELL_HARM,0);
+      else
+	bless(ch,ch,level/10,learn/10,SPELL_BLESS);
+      break;
     case LIQ_POT_CURE_POISON:
       curePoison(ch,ch,level,learn,SPELL_CURE_POISON);
       break;
