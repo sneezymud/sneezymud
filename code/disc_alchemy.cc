@@ -2094,6 +2094,11 @@ void TBeing::doScribe(const char *arg)
     return;
   }
 
+  if(!doesKnowSkill(which)){
+    sendTo("You don't know that spell.\n\r");
+    return;
+  }
+
   // find the 3 necessary pieces
   // generic component (spell == -1, type = scribe)
   comp_gen = NULL;
