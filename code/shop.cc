@@ -1941,6 +1941,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	// this is the garbageman, he recycles items a lot
 	vlogf(LOG_OBJ, "shop %s (%i) recycling %s for %i talens", myself->getName(), shop_nr, obj->getName(), (int)(obj->obj_flags.cost * shop_index[shop_nr].profit_sell));
 	myself->addToMoney((int)(obj->obj_flags.cost * shop_index[shop_nr].profit_sell), GOLD_SHOP);
+	shoplog(shop_nr, myself, myself, obj->getName(), (int)(obj->obj_flags.cost * shop_index[shop_nr].profit_sell), "recycling");
 	delete obj;
 	continue;
       }
