@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: magicutils.cc,v $
+// Revision 1.2  1999/10/09 04:20:55  batopr
+// rawSummon has disturbMeditation now
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -877,6 +880,9 @@ int TBeing::rawSummon(TBeing *v)
       }
     }
   }
+
+  disturbMeditation(tmp);
+
   return FALSE;
 }
 
