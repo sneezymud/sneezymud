@@ -16,12 +16,12 @@ cp $BUILD_MUD_ROOT/lib/tinyworld.mob $PROD_MUD_ROOT/lib/tinyworld.mob
 # copy latest Crier Response File
 echo Copying town crier response file
 
-cp  $BUILD_MUD_ROOT/lib/mobdata/responses/crier.new $PROD_MUD_ROOT/lib/mobdata/responses/crier
+cp $BUILD_MUD_ROOT/lib/mobdata/responses/crier.new $PROD_MUD_ROOT/lib/mobdata/responses/crier
 
 
 # note that we've removed indexes from sneezyq for speed, so pg_restore 
 # will complain about missing constraints
-echo ***** Note that "XXX_pkey does not exist" errors are ok - ignore them.
+echo '***** Note that "XXX_pkey does not exist" errors are ok - ignore them.'
 for i in obj objextra objaffect \
          shop shopproducing shopmaterial shoptype \
          room roomexit roomextra; 
