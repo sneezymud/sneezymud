@@ -5,18 +5,18 @@ Market Place~
 D 0 573 2 2           Gate/Grate from barn to lot
 D 0 575 0 2
 
-O 0 104 10 564       Window for pet room
+O 0 104 1 564       Window for pet room
 V 1 0 566
 
-O 0 132 9999 556     Window from Pub South to Market
+O 0 132 1 556     Window from Pub South to Market
 V 1 0 239
-O 0 133 9999 556     Window from Pub West to Branish
+O 0 133 1 556     Window from Pub West to Branish
 V 1 0 242
-O 0 130 9999 553     Window from Tavern North to W. Kings
+O 0 130 1 553     Window from Tavern North to W. Kings
 V 1 0 112
-O 0 131 9999 553     Window from Tavern East to S. Main
+O 0 131 1 553     Window from Tavern East to S. Main
 V 1 0 175
-O 0 130 9999 574     Window from Stable Loft North to Market
+O 0 130 1 574     Window from Stable Loft North to Market
 V 1 0 240
 
 M 0 553 1 574         Jessup - Roaring Lion Stableboy

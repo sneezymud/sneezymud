@@ -233,19 +233,19 @@ O 0 20 6 528
 O 0 20 7 528
 O 0 20 8 531
 O 0 20 9 531
-O 0 20 14 553
-O 0 20 15 553
-O 0 20 16 553
-O 0 20 17 553
-O 0 20 18 553
-O 0 20 19 553
-O 0 20 20 556
-O 0 20 21 556
-O 0 20 22 556
-O 0 20 23 556
-O 0 20 24 556
-O 0 20 25 556          generic chairs
-O 0 554 9999 556     faction score board
+O 0 20 6 553
+O 0 20 6 553
+O 0 20 6 553
+O 0 20 6 553
+O 0 20 6 553
+O 0 20 6 553
+O 0 20 6 556
+O 0 20 6 556
+O 0 20 6 556
+O 0 20 6 556
+O 0 20 6 556
+O 0 20 6 556          generic chairs
+O 0 554 1 556     faction score board
 O 0 20 26 23661
 O 0 20 27 23654 
 O 0 20 30 15284
@@ -259,26 +259,26 @@ O 0 22 1 3396     bed generic
 O 0 22 2 338     bed generic
 
 O 0 23 1 260      table generic
-O 0 23 2 553
 O 0 23 3 553
-O 0 23 4 553
-O 0 23 5 556
-O 0 23 6 556
-O 0 23 7 556
+O 0 23 3 553
+O 0 23 3 553
+O 0 23 3 556
+O 0 23 3 556
+O 0 23 3 556
 O 0 23 8 15284
 
 O 0 5 1 100                     Feeding Statue
 
 
 O 0 3096 1 5      Mortal Board
-O 0 3096 3 567      Mortal Board [Grimhaven]
+O 0 3096 1 567      Mortal Board [Grimhaven]
 O 1 3089 1 567          Note & Quill Dispenser
-O 0 3096 4 3771      Mortal Board [Logrus]
-O 1 3089 2 3771          Note & Quill Dispenser
-O 0 3096 5 1333      Mortal Board [Brightmoon]
-O 1 3089 3 1333          Note & Quill Dispenser
-O 0 3096 6 8766      Mortal Board [New Amber]
-O 1 3089 4 8766          Note & Quill Dispenser 
+O 0 3096 1 3771      Mortal Board [Logrus]
+O 1 3089 1 3771          Note & Quill Dispenser
+O 0 3096 1 1333      Mortal Board [Brightmoon]
+O 1 3089 1 1333          Note & Quill Dispenser
+O 0 3096 1 8766      Mortal Board [New Amber]
+O 1 3089 1 8766          Note & Quill Dispenser 
 
 O 0 3096 9999 11         Spawn's Office
 O 0 3096 9999 13         Batopr's Office
