@@ -5544,7 +5544,11 @@ void TBeing::doAccount(const sstring &arg)
   my_arg = one_argument(arg, namebuf);
 
   if (namebuf.empty())  {
-    sendTo("Syntax: account <account name>\n\r");
+    if (hasWizPower(POWER_ACCOUNT)) {
+      sendTo("Syntax: account <account name> [banished | email | double | triple | immortal]\n\r");
+    } else {
+      sendTo("Syntax: account <account name>\n\r");
+    }
     return;
   }
 
@@ -5577,22 +5581,22 @@ void TBeing::doAccount(const sstring &arg)
   // only let imms do this
   if (hasWizPower(POWER_ACCOUNT)) {
     my_arg = one_argument(arg, buf2);
-    if (is_abbrev(buf2, "banished")) {
+    if (is_abbrev(my_arg, "banished")) {
       if (IS_SET(afp.flags, ACCOUNT_BANISHED)) {
         REMOVE_BIT(afp.flags, ACCOUNT_BANISHED);
         sendTo(fmt("You have unbanished the %s account.\n\r") % afp.name);
-        vlogf(LOG_MISC, fmt("%s unbanished account '%s'") %  getName() % afp.name);
+        vlogf(LOG_MISC, fmt("%s unbanished account '%s'") % getName() % afp.name);
       } else {
         SET_BIT(afp.flags, ACCOUNT_BANISHED);
         sendTo(fmt("You have set the %s account banished.\n\r") % afp.name);
-        vlogf(LOG_MISC, fmt("%s banished account '%s'") %  getName() % afp.name);
+        vlogf(LOG_MISC, fmt("%s banished account '%s'") % getName() % afp.name);
       }
       
       rewind(fp);
       fwrite(&afp, sizeof(accountFile), 1, fp);
       fclose(fp);
       return;
-    } else if (is_abbrev(buf2, "email")) {
+    } else if (is_abbrev(my_arg, "email")) {
       if (IS_SET(afp.flags, ACCOUNT_EMAIL)) {
         REMOVE_BIT(afp.flags, ACCOUNT_EMAIL);
         sendTo(fmt("You have un-email-banished the %s account.\n\r") % afp.name);
@@ -5607,7 +5611,7 @@ void TBeing::doAccount(const sstring &arg)
       fwrite(&afp, sizeof(accountFile), 1, fp);
       fclose(fp);
       return;
-    } else if (is_abbrev(buf2, "double")) {
+    } else if (is_abbrev(my_arg, "double")) {
       if (powerCheck(POWER_FLAG_IMP_POWER)) {
         fclose(fp);
         return;
@@ -5625,7 +5629,7 @@ void TBeing::doAccount(const sstring &arg)
       fwrite(&afp, sizeof(accountFile), 1, fp);
       fclose(fp);
       return;
-    } else if (is_abbrev(buf2, "triple")) {
+    } else if (is_abbrev(my_arg, "triple")) {
       if (powerCheck(POWER_FLAG_IMP_POWER)) {
         fclose(fp);
         return;
@@ -5643,7 +5647,7 @@ void TBeing::doAccount(const sstring &arg)
       fwrite(&afp, sizeof(accountFile), 1, fp);
       fclose(fp);
       return;
-    } else if (is_abbrev(buf2, "immortal")) {
+    } else if (is_abbrev(my_arg, "immortal")) {
       // this is not something that should be done (manually) unless a 
       // god has left immortality entirely
 
