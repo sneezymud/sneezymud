@@ -4504,6 +4504,93 @@ int travelGear(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
 
 
+int dualStyleWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TGenWeapon *weap = dynamic_cast<TGenWeapon *>(o);
+  if (!weap)
+    return FALSE;
+  
+  class spectype_struct {
+  public:
+    weaponT norm;
+    weaponT type1;
+    weaponT type2;
+    int vnum;
+    
+    spectype_struct()
+    {
+    }
+    ~spectype_struct()
+    {
+    }
+  };
+
+  spectype_struct *weapspec = NULL;
+  if (cmd == CMD_GENERIC_CREATED || !(weapspec = static_cast<spectype_struct *>(o->act_ptr))) {
+    o->act_ptr = new spectype_struct();
+    vlogf(LOG_PROC, "obj (%s) with dualstyle proc ... attempting to alocate.", o->getName());
+    if (!(weapspec = static_cast<spectype_struct *>(o->act_ptr))) {
+      vlogf(LOG_PROC, "obj (%s) with dualstyle proc had no memory alocated, investigate.", o->getName());
+      return FALSE;
+    }
+    weapspec->type1 = weap->getWeaponType();
+    weapspec->norm = weapspec->type1;
+    weapspec->vnum = obj_index[o->getItemIndex()].virt;
+    switch (weapspec->vnum) {                             // this proc is versatile - add more vnums/secondary damage types
+      case 9595:                                // here to make it work with another weapon
+	weapspec->type2 = WEAPON_TYPE_SMITE; // hammerblade - dash 05/01
+      default:
+	weapspec->type2 = WEAPON_TYPE_SMASH;
+    }
+    return FALSE;
+  }
+
+  if (cmd == CMD_GENERIC_DESTROYED) {
+    delete static_cast<spectype_struct *>(o->act_ptr);
+    o->act_ptr = NULL;
+    return FALSE;
+  }  
+
+
+  TBeing *ch;
+  char parg[30];
+
+  if(!(ch=genericWeaponProcCheck(vict, CMD_OBJ_HIT, weap, 0)))
+    return FALSE;
+  
+  if (cmd != CMD_SWITCH && cmd != CMD_OBJ_HIT) {
+    if (cmd != CMD_OBJ_HITTING && cmd != CMD_OBJ_MISS)
+      weap->setWeaponType(weapspec->type1);
+    return FALSE;
+  }
+  
+
+  if(cmd == CMD_SWITCH) {
+    arg = one_argument(arg, parg);
+    isname(parg, weap->name);
+    act("<c>You deftly change your grip on $p<c> to use it in a different style!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+    act("<c>$n deftly changes $s grip on $p to use it in a different style!<1>",TRUE,ch,o,vict,TO_ROOM,NULL);    
+    if (weapspec->type1 == weapspec->norm) {
+      weapspec->type1 = weapspec->type2;
+      weapspec->type2 = weapspec->norm;
+    } else {
+      weapspec->type2 = weapspec->type1;
+      weapspec->type1 = weapspec->norm;
+    }
+    return TRUE;
+  }
+ 
+  if (::number(0,3)) { // 3/4 is type 1, 1/4 is type two
+    weap->setWeaponType(weapspec->type1);
+  } else {
+    weap->setWeaponType(weapspec->type2);
+  }
+  return TRUE;
+}
+
+
+
+
 //MARKER: END OF SPEC PROCS
 
 
@@ -4591,7 +4678,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Travel Gear", travelGear},
   {FALSE, "Maquahuitl", maquahuitl},
   {FALSE, "Randomizer", randomizer},
-  {FALSE, "Blunt/Pierce", bluntPierce}
+  {FALSE, "Blunt/Pierce", bluntPierce},
+  {TRUE, "Dual Style Weapon", dualStyleWeapon} //75
 };
 
 
