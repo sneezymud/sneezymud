@@ -491,6 +491,17 @@ int TSocket::gameLoop()
             obj = NULL;
 	    continue;
           }
+	  TSmoke *smoke=dynamic_cast<TSmoke *>(obj);
+	  
+	  if(smoke && smoke->getSizeIndex()>=7){
+	    for(TThing *t=real_roomp(smoke->in_room)->stuff;t;t=t->nextThing){
+	      TBeing *tb;
+	      if(!::number(0,4) && (tb=dynamic_cast<TBeing *>(t))){
+		tb->sendTo(COLOR_BASIC, "<r>The large amount of smoke in the room causes you to choke and cough!<1>\n\r");
+		tb->setHit(tb->getHit()-::number(3,11));
+	      }
+	    }
+	  }
 	}	
 	if (!pulse_mudhour) {
 	  rc = obj->objectTickUpdate(pulse);

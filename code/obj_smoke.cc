@@ -95,7 +95,7 @@ void TSmoke::updateDesc()
   
   const char *smokedesc [] =
   {
-    "<k>A few wips of smoke are fading fast.<1>",
+    "<k>A few wisps of smoke are fading fast.<1>",
     "<k>A tiny cloud of smoke has gathered here.<1>",
     "<k>A small cloud of smoke is here.<1>",
     "<k>A cloud of smoke is here.<1>",
@@ -192,7 +192,7 @@ int TThing::dropSmoke(int amt)
 
     sprintf(buf, "smoke cloud");
     delete [] smoke->name;
-    smoke->setName(mud_str_dup(buf));
+    smoke->name = mud_str_dup(buf);
 
     *roomp += *smoke;
   }
