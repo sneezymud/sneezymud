@@ -7461,7 +7461,7 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
 
 
 
-extern int corporateAssistant(TBeing *, cmdTypeT, const char *, TMonster *, TObj *)
+extern int corporateAssistant(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int postman(TBeing *, cmdTypeT , const char *, TMonster *, TObj *);
 extern int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *, TObj *);
 extern int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
