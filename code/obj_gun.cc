@@ -215,7 +215,7 @@ void TGun::describeObjectSpecifics(const TBeing *ch) const
 	       getAmmo()->getRounds() % getAmmoDescr(getAmmoType()));
   } else {
     // yeah yeah bad grammar, may as well be consistant though
-    ch->sendTo(fmt("Is has 0 rounds of %s ammunition left.\n\r") %
+    ch->sendTo(fmt("It has 0 rounds of %s ammunition left.\n\r") %
 	       getAmmoDescr(getAmmoType()));
   }
 
