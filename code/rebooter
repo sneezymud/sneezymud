@@ -1,0 +1,110 @@
+#!/bin/csh
+#
+# SneezyMUD reboot script.
+#
+# Written by Russ Russell. Last modified August 11 1995
+# Modified for Downtime building July 8 1996
+
+limit descriptors 256
+limit coredumpsize unlimited
+limit cputime unlimited
+limit stacksize unlimited
+
+# abort() if we detect heap corruption
+# I think this causes us to fall off rebooter on reboot - bat
+# setenv MALLOC_CHECK_ 2
+
+set SNEEZY=/mud/prod
+set PORT=7900
+set LIB=$SNEEZY/lib
+set LOW=/mud/low
+set OUTPUT_FILE=rebooter.file
+setenv PS_PERSONALITY BSD
+
+while (1)
+  set up1 = `ps auxw | grep "$SNEEZY/sneezy $PORT" | grep -v grep | wc -l`
+  @ num1 = $up1[1]
+  if ($num1 < 1) then
+
+    # verify it's really down
+    # this is because ps sometimes gives a false positive
+    sleep 5
+    set up2 = `ps auxw | grep "$SNEEZY/sneezy $PORT" | grep -v grep | wc -l`
+    @ num2 = $up2[1]
+    if ($num2 < 1) then     
+      # has now failed 2nd check
+      # MUD is down, reboot, and do file work
+      echo "Rebooting `date +%m%d%y.%H%M`" >>! "$OUTPUT_FILE"
+
+      # Backup core file and log to directorys
+      # only store if adequate disk space
+      set up3 = `df | grep "/dev/sda8" | awk '{print $4}'`
+      @ num3 = $up3[1]
+      if ($num3 > 45000) then
+        if (-f $LIB/core) then
+          chmod 770 $LIB/core
+          set newcore = $LIB/core.`date +%m%d%y.%H%M`
+          mv -f $LIB/core $newcore
+          mv -f $newcore $LIB/cores/. &
+        endif
+        if (-f $LIB/logs/logcurrent) then
+          mv -f $LIB/logs/logcurrent $LIB/logs/log.`date +%m%d%y.%H%M`
+        endif
+      else
+        echo "...Disk space was: $num3  (inadequate)" >> $OUTPUT_FILE
+        rm -f $LIB/core
+      endif
+  
+      # Move new wiznews up
+      if (-f $LIB/txt/wiznews.new) then
+        cp -fp $LIB/txt/wiznews.new $LIB/txt/wiznews
+      endif
+
+      # Move new news up
+      if (-f $LIB/txt/news.new) then
+        cp -fp $LIB/txt/news.new $LIB/txt/news
+      endif
+
+      # Move new version up
+      if (-f $LIB/txt/version.new) then
+        cp -fp $LIB/txt/version.new $LIB/txt/version
+      endif
+
+      # Move new objs over
+      if (-f $LIB/tinyworld.obj) then
+        cp -fp $LIB/tinyworld.obj $LIB/tinyobj.use
+      endif
+
+      # Move new mobs over
+      if (-f $LIB/tinyworld.mob) then
+        cp -fp $LIB/tinyworld.mob $LIB/tinymob.use
+      endif
+
+      # Move new world over
+#      if (-f $LIB/tinyworld.wld) then
+#        cp -fp $LIB/tinyworld.wld $LIB/tinywld.use
+#      endif
+
+      # Reboot MUD, moving files accordingly
+      if (-f $SNEEZY/sneezy) then
+        # cp $SNEEZY/sneezy $SNEEZY/sneezy.old
+      endif
+      if (-f $SNEEZY/sneezy.2) then
+        mv -f $SNEEZY/sneezy.2 $SNEEZY/sneezy
+      endif
+      cd $SNEEZY
+      $SNEEZY/sneezy $PORT >& $LIB/logs/logcurrent &
+    endif
+  endif
+
+  # periodically check for cores as well since forceCrash() may drop them
+#  if (-f $LIB/core) then
+#    chmod 770 $LIB/core
+#    set newcore = $LIB/core.`date +%m%d%y.%H%M`
+#    mv -f $LIB/core $newcore
+#    mv -f $newcore $LIB/cores/. &
+#  endif
+
+  sleep 15
+end
+echo "rebooter fell off end" >> $OUTPUT_FILE
