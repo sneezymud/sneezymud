@@ -417,8 +417,6 @@ int Craps::checkCraps(int diceroll)
     vlogf(LOG_BUG, "checkCraps() called with NULL roomp!");
     return FALSE;
   }
-  if ((diceroll != 2) && (diceroll != 3) && (diceroll != 12))
-    return FALSE;
 
   if (m_ch->desc->point_roll)
     return FALSE;
@@ -426,6 +424,13 @@ int Craps::checkCraps(int diceroll)
   for (t = m_ch->roomp->getStuff(); t; t = t->nextThing) {
     if (!(d = t->desc))
       continue;
+
+    if ((diceroll != 2) && (diceroll != 3) && (diceroll != 12)){
+      t->sendTo("No Craps....You Lose your bet (%d)!\n\r", d->bet.crap);
+      REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
+      d->bet.crap=0;
+      continue;
+    }
 
     if (IS_SET(d->bet_opt.crapsOptions, COME_OUT)) {
       t->sendTo("Craps....You Lose your bet (%d)!\n\r", d->bet.come);
@@ -999,7 +1004,7 @@ int craps_table_man(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
 	return FALSE;
       half_chop(arg, options, amount);
       if (ch->roomp->checkPointroll()) {
-	if (is_abbrev(options, "come") || is_abbrev(options, "craps")) {
+	if (is_abbrev(options, "come")) {
 	  sprintf(buf, "Sorry %s, no bets can be placed on the come", ch->getName());
 	  myself->doSay(buf);
 	  myself->doSay("or no-pass after a pointroll has been called.");
