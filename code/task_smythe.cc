@@ -1680,7 +1680,7 @@ int task_repair_spiritual(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
         } else if (::number(0,1)) {
 
           act("$n applies some resin to the $o using $s $O.", FALSE, ch, o, brush, TO_ROOM);
-          act("You applie some resin to the $o using your $O.", FALSE, ch, o, brush, TO_CHAR);
+          act("You apply some resin to the $o using your $O.", FALSE, ch, o, brush, TO_CHAR);
 	  resin->addToToolUses(-1);
           if (resin->getToolUses() <= 0) {
             act("$P is all used up, and you discard it as worthless.", FALSE, ch, o, resin, TO_CHAR);
