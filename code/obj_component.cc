@@ -2,7 +2,7 @@
 //
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-//      "components.c" - All functions and routines related to components
+//      "obj_component.cc" - All functions and routines related to components
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -62,9 +62,9 @@ void assign_component_placement()
   // cheval
   component_placement.push_back(compPlace(6101, -1, MOB_NONE, 
      COMP_CHEVAL,
-     CACT_PLACE, 20, 65,
+     CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
-     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+     "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6101, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
@@ -77,9 +77,9 @@ void assign_component_placement()
      "<k>$p flips over and flies away.<1>", ""));
   component_placement.push_back(compPlace(6104, -1, MOB_NONE, 
      COMP_CHEVAL,
-     CACT_PLACE, 20, 65,
+     CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
-     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+     "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6104, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
@@ -92,9 +92,9 @@ void assign_component_placement()
      "<k>$p flips over and flies away.<1>", ""));
   component_placement.push_back(compPlace(6108, -1, MOB_NONE, 
      COMP_CHEVAL,
-     CACT_PLACE, 20, 65,
+     CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
-     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+     "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6108, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
@@ -107,9 +107,9 @@ void assign_component_placement()
      "<k>$p flips over and flies away.<1>", ""));
   component_placement.push_back(compPlace(6200, -1, MOB_NONE, 
      COMP_CHEVAL,
-     CACT_PLACE, 20, 65,
+     CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
-     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+     "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6200, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
@@ -123,9 +123,9 @@ void assign_component_placement()
 
   component_placement.push_back(compPlace(6205, -1, MOB_NONE, 
      COMP_CHEVAL,
-     CACT_PLACE, 20, 65,
+     CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
-     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+     "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6205, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
@@ -139,9 +139,9 @@ void assign_component_placement()
 
   component_placement.push_back(compPlace(6211, -1, MOB_NONE, 
      COMP_CHEVAL,
-     CACT_PLACE, 20, 65,
+     CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
-     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+     "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6211, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
@@ -154,9 +154,9 @@ void assign_component_placement()
      "<k>$p flips over and flies away.<1>", ""));
   component_placement.push_back(compPlace(6220, -1, MOB_NONE, 
      COMP_CHEVAL,
-     CACT_PLACE, 20, 65,
+     CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
-     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+     "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
   component_placement.push_back(compPlace(6220, -1, MOB_NONE, 
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
@@ -172,7 +172,7 @@ void assign_component_placement()
 // color spray
   component_placement.push_back(compPlace(11328, -1, MOB_NONE, 
      COMP_COLOR_SPRAY,
-     CACT_PLACE, 20, 65,
+     CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>" ,""));
   component_placement.push_back(compPlace(11328, -1, MOB_NONE, 
@@ -188,7 +188,7 @@ void assign_component_placement()
 
   component_placement.push_back(compPlace(1008, 1015, MOB_NONE, 
      COMP_COLOR_SPRAY,
-     CACT_PLACE, 20, 65,
+     CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>",
      "<y>A beautiful rainbow streaks across the sky.<1>"));
@@ -204,7 +204,7 @@ void assign_component_placement()
      "<b>$p dulls and fades away.<1>", ""));
   component_placement.push_back( compPlace(11368, -1, MOB_NONE, 
      COMP_COLOR_SPRAY,
-     CACT_PLACE, 20, 65,
+     CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>",
      "<y>A beautiful rainbow streaks across the sky.<1>"));
@@ -220,7 +220,7 @@ void assign_component_placement()
      "<b>$p dulls and fades away.<1>", ""));
   component_placement.push_back( compPlace(1018, 1023, MOB_NONE, 
      COMP_COLOR_SPRAY,
-     CACT_PLACE, 20, 65,
+     CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>", ""));
   component_placement.push_back( compPlace(1018, 1023, MOB_NONE, 
@@ -237,7 +237,7 @@ void assign_component_placement()
 
   component_placement.push_back( compPlace(7510, 7512, MOB_NONE, 
      COMP_COLOR_SPRAY,
-     CACT_PLACE, 20, 65,
+     CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>",
      "<y>A beautiful rainbow streaks across the sky.<1>"));
@@ -254,7 +254,7 @@ void assign_component_placement()
 
   component_placement.push_back(compPlace(11324, -1, MOB_NONE, 
      COMP_COLOR_SPRAY,
-     CACT_PLACE, 20, 65,
+     CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>",
      "<y>A beautiful rainbow streaks across the sky.<1>"));
@@ -279,7 +279,7 @@ void assign_component_placement()
   // sand only CREATED during day, night doesn't destroy
   component_placement.push_back(compPlace(6798, -1, MOB_NONE,
      COMP_SAND_BLAST,
-     CACT_PLACE, 20, 50,
+     CACT_PLACE, 9999, 50,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
@@ -291,7 +291,7 @@ void assign_component_placement()
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(7524, -1, MOB_NONE,
      COMP_SAND_BLAST,
-     CACT_PLACE, 20, 50,
+     CACT_PLACE, 9999, 50,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
@@ -303,7 +303,7 @@ void assign_component_placement()
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(9110, -1, MOB_NONE,
      COMP_SAND_BLAST,
-     CACT_PLACE, 20, 50,
+     CACT_PLACE, 9999, 50,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
@@ -315,7 +315,7 @@ void assign_component_placement()
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(9114, -1, MOB_NONE,
      COMP_SAND_BLAST,
-     CACT_PLACE, 20, 50,
+     CACT_PLACE, 9999, 50,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
@@ -327,7 +327,7 @@ void assign_component_placement()
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(9118, -1, MOB_NONE,
      COMP_SAND_BLAST,
-     CACT_PLACE, 20, 50,
+     CACT_PLACE, 9999, 50,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
@@ -339,7 +339,7 @@ void assign_component_placement()
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(9157, -1, MOB_NONE,
      COMP_SAND_BLAST,
-     CACT_PLACE, 20, 50,
+     CACT_PLACE, 9999, 50,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
@@ -351,7 +351,7 @@ void assign_component_placement()
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(9163, 9164, MOB_NONE,
      COMP_SAND_BLAST,
-     CACT_PLACE, 20, 50,
+     CACT_PLACE, 9999, 50,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
@@ -363,7 +363,7 @@ void assign_component_placement()
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(9170, -1, MOB_NONE,
      COMP_SAND_BLAST,
-     CACT_PLACE, 20, 50,
+     CACT_PLACE, 9999, 50,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
@@ -375,7 +375,7 @@ void assign_component_placement()
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
   component_placement.push_back(compPlace(12641, 12643, MOB_NONE,
      COMP_SAND_BLAST,
-     CACT_PLACE, 20, 50,
+     CACT_PLACE, 9999, 50,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, 1<<WEATHER_CLOUDLESS,
      "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
@@ -387,7 +387,7 @@ void assign_component_placement()
 
   component_placement.push_back(compPlace(12795, 12799, MOB_NONE,
      COMP_SAND_BLAST,
-     CACT_PLACE, 20, 50,
+     CACT_PLACE, 9999, 50,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, 1<<WEATHER_CLOUDLESS,
      "The extreme heat from the sun dries and cracks the $g.", 
      "The blazing sun blisters the $g."));
@@ -400,14 +400,14 @@ void assign_component_placement()
 // Some porous bedrock [stoneskin] //
   component_placement.push_back(compPlace(10990, 10992, MOB_NONE, 
      COMP_STONE_SKIN,
-     CACT_PLACE | CACT_UNIQUE, 40, 15,
+     CACT_PLACE | CACT_UNIQUE, 9999, 15,
      -1, -1, -1, -1, -1, -1, -1,
      "A gust of wind exposes $p.", ""));
 
-// A dryad's footprint [stealth] //
+  // A dryad's footprint [stealth] //
   component_placement.push_back(compPlace(7829, -1, MOB_NONE, 
      COMP_STEALTH,
-     CACT_PLACE | CACT_UNIQUE, 40, 80,
+     CACT_PLACE | CACT_UNIQUE, 9999, 80,
      -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY | 1<<WEATHER_SNOWY),
      "", ""));
   component_placement.push_back(compPlace(7829, -1, MOB_NONE, 
@@ -416,12 +416,12 @@ void assign_component_placement()
      -1, -1, -1, -1, -1, -1, (1<<WEATHER_RAINY | 1<<WEATHER_SNOWY),
      "", ""));
 
-// A prism of condensation [concealment] //
+  // A prism of condensation [concealment] //
   // created during daylight rain, destroyed by sun
   // nighttime has no effect on destruction 
   component_placement.push_back(compPlace(2712, 2717, MOB_NONE, 
      COMP_CLOUD_OF_CONCEAL,
-     CACT_PLACE | CACT_UNIQUE, 40, 80,
+     CACT_PLACE | CACT_UNIQUE, 9999, 80,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
      "Raindrops slowly fall from the leaves.",
      "The falling rain gathers on the foliage around you."));
@@ -434,7 +434,7 @@ void assign_component_placement()
 
   component_placement.push_back(compPlace(10101, 10159, MOB_NONE, 
      COMP_CLOUD_OF_CONCEAL,
-     CACT_PLACE | CACT_UNIQUE, 40, 80,
+     CACT_PLACE | CACT_UNIQUE, 9999, 80,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
      "Raindrops slowly fall from the leaves.", 
      "The falling rain gathers on the foliage around you."));
@@ -445,17 +445,17 @@ void assign_component_placement()
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_CLOUDLESS),
      "The bright heat from the sun warms the air around you.", ""));
 
-// Some gnome flour [dispel invisible] //
+  // Some gnome flour [dispel invisible] //
   component_placement.push_back(compPlace(22480, -1, MOB_NONE, 
      COMP_DISPEL_INVIS,
      CACT_PLACE, 40, 90,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
-// A bit of brain coral [telepathy] //
+  // A bit of brain coral [telepathy] //
   component_placement.push_back(compPlace(4300, 4399, MOB_NONE, 
      COMP_TELEPATHY,
-     CACT_PLACE | CACT_UNIQUE, 40, 10,
+     CACT_PLACE | CACT_UNIQUE, 9999, 10,
      12, 25, -1, -1, -1, -1, -1,
      "$p washes up onto shore.",
      "The shallow waters churn, kicking up sediment and debris."));
@@ -467,7 +467,7 @@ void assign_component_placement()
 
   component_placement.push_back(compPlace(14111, 14115, MOB_NONE, 
      COMP_TELEPATHY,
-     CACT_PLACE | CACT_UNIQUE, 40, 10,
+     CACT_PLACE | CACT_UNIQUE, 9999, 10,
      40, 2, -1, -1, -1, -1, -1,
      "$p washes up onto shore.",
      "The shallow waters churn kicking up sediment and debris."));
@@ -481,19 +481,19 @@ void assign_component_placement()
 // A jar of whale grease [fumble] //
   component_placement.push_back(compPlace(1293, -1, 1389, 
      COMP_FUMBLE,
-     CACT_PLACE, 40, 80,
+     CACT_PLACE, 9999, 80,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
   component_placement.push_back(compPlace(2794, -1, 2773, 
      COMP_FUMBLE,
-     CACT_PLACE, 40, 80,
+     CACT_PLACE, 9999, 80,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 // A piece of cloud stone [conjure air elemental] //
   component_placement.push_back(compPlace(11000, 11017, MOB_NONE, 
      COMP_CONJURE_AIR,
-     CACT_PLACE | CACT_UNIQUE, 40, 60,
+     CACT_PLACE | CACT_UNIQUE, 9999, 60,
      -1, -1, -1, -1, -1, -1, (1<<WEATHER_CLOUDY | 1<<WEATHER_RAINY),
      "Heavy winds buffet the clouds, sending $p across the $g.",
      "Howling winds scream in your ears."));
@@ -507,7 +507,7 @@ void assign_component_placement()
 // A bit of cloud foam [fly] //
   component_placement.push_back(compPlace(11000, 11017, MOB_NONE, 
      COMP_FLIGHT,
-     CACT_PLACE | CACT_UNIQUE, 40, 40,
+     CACT_PLACE | CACT_UNIQUE, 9999, 40,
      -1, -1, -1, -1, -1, -1, (1<<WEATHER_RAINY),
      "The moist air creates $p on the $g.",
      "The $g becomes heavy with moisture."));
@@ -521,14 +521,37 @@ void assign_component_placement()
 // Some liquid brimstone [hellfire] //
   component_placement.push_back(compPlace(9994, -1, 9917, 
      COMP_HELLFIRE,
-     CACT_PLACE | CACT_UNIQUE, 40, 90,
+     CACT_PLACE | CACT_UNIQUE, 9999, 90,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
   component_placement.push_back(compPlace(7515, -1, MOB_NONE, 
      COMP_HELLFIRE,
-     CACT_PLACE | CACT_UNIQUE, 40, 70,
+     CACT_PLACE | CACT_UNIQUE, 9999, 70,
      -1, -1, -1, -1, -1, -1, -1,
      "Some brimstone boils out of the earth and collects in a nearby pot.", ""));
+
+  // Brown muchrooms to trade for promethian fire
+  // created (revealed) at first morning light
+  component_placement.push_back(compPlace(3401, 3449, MOB_NONE, 
+     BROWN_MUSHROOM,
+     CACT_PLACE, 9999, 90,
+     6, -1, -1, -1, -1, -1, -1,
+     "The morning light reveals $p growing in the $g.", ""));
+  component_placement.push_back(compPlace(3401, 3449, MOB_NONE, 
+     BROWN_MUSHROOM,
+     CACT_PLACE, 9999, 90,
+     6, -1, -1, -1, -1, -1, -1,
+     "The morning light reveals $p growing in the $g.", ""));
+  component_placement.push_back(compPlace(3451, 3482, MOB_NONE, 
+     BROWN_MUSHROOM,
+     CACT_PLACE, 9999, 90,
+     6, -1, -1, -1, -1, -1, -1,
+     "The morning light reveals $p growing in the $g.", ""));
+  component_placement.push_back(compPlace(3451, 3482, MOB_NONE, 
+     BROWN_MUSHROOM,
+     CACT_PLACE, 9999, 90,
+     6, -1, -1, -1, -1, -1, -1,
+     "The morning light reveals $p growing in the $g.", ""));
 
 #if 0
 // Please talk to Batopr before enabling these
@@ -834,6 +857,7 @@ void do_components(int situ)
                   (tmon->mobVnum() == component_placement[i].mob)) {
                 *tmon += *obj;
                 placed = TRUE;
+                vlogf(LOG_SILENT, fmt("Placing object %d on mob (room %d)") % component_placement[i].number % l_room);
                 break;
               }
             }
@@ -845,6 +869,7 @@ void do_components(int situ)
             m = NULL;
             *rp += *obj;
             placed = TRUE;
+            vlogf(LOG_SILENT, fmt("Placing object %d on ground (room %d)") % component_placement[i].number % l_room);
           }
         }
         if (placed && *component_placement[i].message && rp->getStuff()) {
@@ -889,6 +914,7 @@ void do_components(int situ)
                       found++;
                       delete tobj;
                       t2 = tmon->getStuff();
+                      vlogf(LOG_SILENT, fmt("Removing object %d from mob (room %d)") % component_placement[i].number % t_room);
                       continue;
                     }
                   }
@@ -909,6 +935,7 @@ void do_components(int situ)
                     delete to;
                     placed = TRUE;
                     found++;
+                    vlogf(LOG_SILENT, fmt("Removing object %d from ground (room %d)") % component_placement[i].number % t_room);
                     continue;
                   }
                 }

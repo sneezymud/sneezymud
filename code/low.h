@@ -135,6 +135,7 @@ const int GENERIC_DAGGER      = 1000;
 const int GENERIC_NOTE        = 3090;
 const int GENERIC_PEN         = 3091;
 const int OBJ_VENISON         = 3114;
+const int BROWN_MUSHROOM      = 3401;
 const int WEAPON_ARROW        = 3409;
 const int BOULDER_ITEM        = 4181;
 const int OBJ_GENERIC_GRAVE   = 4200;
