@@ -1685,9 +1685,12 @@ void TBaseWeapon::applyPoison(TBeing *vict)
 	FALSE, ch, this, vict, TO_CHAR, ANSI_RED);
     act("There was something nasty on that $o!",
 	FALSE, ch, this, vict, TO_NOTVICT, ANSI_RED);
+    doLiqSpell(ch, vict, poison, 1);
+  } else {
+    doLiqSpell(vict, vict, poison, 1);
   }
 
-  doLiqSpell(ch, vict, poison, 1);
+
   poison=(liqTypeT)-1;
 
 }
