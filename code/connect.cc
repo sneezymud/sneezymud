@@ -931,10 +931,12 @@ void ShowNewNews(TBeing * tBeing)
     tBeing->sendTo("\n\r");
 }
 
+
 // if descriptor is to be deleted, DELETE_THIS
 int Descriptor::nanny(const char *arg)
 {
   char buf[256];
+  char wizbuf[256];
   int count = 0, local_stats = 0;
   charFile st;
   TBeing *tmp_ch;
@@ -1280,7 +1282,8 @@ int Descriptor::nanny(const char *arg)
               vlogf(LOG_PIO, "%s[%s] has reconnected  (account: %s).", 
                      character->getName(), host, account->name);
             }
-
+	    sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
+	    character->mudMessage(character, 16, wizbuf);
             character->recepOffer(NULL, &cost);
             dynamic_cast<TPerson *>(character)->saveRent(&cost, FALSE, 1);
           }
@@ -1301,6 +1304,8 @@ int Descriptor::nanny(const char *arg)
         } else {
           vlogf(LOG_PIO, "%s[%s] has connected  (account: %s).", character->getName(), host, account->name);
         }
+	sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just logged onto port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
+	character->mudMessage(character, 16, wizbuf);
       }
       
       character->cls();
@@ -1397,6 +1402,8 @@ int Descriptor::nanny(const char *arg)
                 
                 tmp_ch->recepOffer(NULL, &cost);
                 dynamic_cast<TPerson *>(tmp_ch)->saveRent(&cost, FALSE, 1);
+		sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", tmp_ch->cyan(), tmp_ch->norm(), tmp_ch->getName(), gamePort);
+		tmp_ch->mudMessage(tmp_ch, 16, wizbuf);
               }
               act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
               tmp_ch->loadCareerStats();
@@ -2824,8 +2831,9 @@ int TPerson::genericLoadPC()
     return DELETE_THIS;
   }
     
-  if (should_be_logged(this))
+  if (should_be_logged(this)) {
     vlogf(LOG_PIO, "Loading %s's equipment", name);
+  }
   resetChar();
   BatoprsResetCharFlags(this);
   loadRent();

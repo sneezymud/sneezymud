@@ -687,6 +687,7 @@ int TMonster::doQuit2()
 int TPerson::doQuit2()
 {
   int rc;
+  char wizbuf[256];
 
   if (!desc || isAffected(AFF_CHARM))
     return FALSE;
@@ -709,7 +710,8 @@ int TPerson::doQuit2()
   act("Goodbye, friend.. Come back soon!", FALSE, this, 0, 0, TO_CHAR);
   act("$n has left the game.", TRUE, this, 0, 0, TO_ROOM);
   vlogf(LOG_PIO, "%s quit the game.", getName());
-
+  sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just quit on port %d.\n\r", cyan(), norm(), getName(), gamePort);
+  mudMessage(this, 16, wizbuf); 
   if (!isImmortal() && getMoney()) {
     *roomp += *create_money(getMoney());
     addToMoney(-getMoney(), GOLD_INCOME);
