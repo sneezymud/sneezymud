@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: connect.cc,v $
+// Revision 1.2  1999/10/15 21:53:22  batopr
+// Added code to protect against use of potentially freed memory following
+// call to parseCommand.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -4560,8 +4564,20 @@ void processAllInput()
           // the "if d" is here due to a core that showed d=0x0
           // after a purge ldead
           if (d && IS_SET_DELETE(rc, DELETE_THIS)) {
-            delete d->character;
-            d->character = NULL;
+            // in another wierd core, d was no longer in the descriptor_list
+            Descriptor *tmpdesc;
+            for (tempdesc = descriptor_list; tempdesc; tempdesc = tempdesc->next) {
+              if (tempdesc == d || tempdesc == next_to_process)
+                break;
+            }
+            if (tempdesc == d) {
+              delete d->character;
+              d->character = NULL;
+            } else {
+              // either descriptor_list hit end, or d is the next guy to process
+              // in all likelihood, this descriptor has already been deleted and we point to free'd memory
+              vlogf(9, "Descriptor not found in list after parseCommand called.  (%s).  VERY BAD!", comm);
+            }
             continue;
           }
         }
