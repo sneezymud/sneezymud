@@ -15,6 +15,9 @@ void TBeing::doBrew(const char *arg)
   spellNumT which = TYPE_UNDEFINED;
   int i;
 
+  sendTo("Brew is temporarily disabled.\n\r");
+  return;
+
   for (;arg && *arg && isspace(*arg); arg++);
 
   if (!*arg || !arg) {
