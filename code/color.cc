@@ -64,6 +64,8 @@ void TBeing::doPrompt(const char *arg)
     "exp_tolevel",
     "bar",
     "lifeforce",
+    "client-prompt",
+    "classic-ansi-bar",
     "\n"
   };
 
@@ -90,7 +92,9 @@ void TBeing::doPrompt(const char *arg)
       IS_SET(desc->prompt_d.type, PROMPT_EXPTONEXT_LEVEL),
       IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR),
       IS_SET(desc->prompt_d.type, PROMPT_PIETY),
-      IS_SET(desc->prompt_d.type, PROMPT_LIFEFORCE)
+      IS_SET(desc->prompt_d.type, PROMPT_LIFEFORCE),
+      IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT),
+      IS_SET(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR),
     };
 
     tStString += "Prompt Line Options:\n\r--------------------\n\r";
@@ -148,6 +152,14 @@ void TBeing::doPrompt(const char *arg)
     sprintf(str, "Tank-other: (%s): Current tank when in battle, excluding self.\n\r",
             (tPrompts[12] ? "yes" : " no"));
     tStString += str;
+    tStString += "--------------------\n\r";
+
+    sprintf(str, "Classic Bar   : %s\n\r", (tPrompts[19] ? "On" : "Off"));
+    tStString += str;
+
+    sprintf(str, "Client Prompts: %s\n\r", (tPrompts[18] ? "On" : "Off"));
+    tStString += str;
+
     tStString += "--------------------\n\r";
 
     desc->page_string(tStString);
@@ -443,6 +455,58 @@ void TBeing::doPrompt(const char *arg)
           sendTo("Initilizing ansi/vt100 information bar.\n\r");
         }
         break;
+    case 19:
+      if (IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
+        sendTo("Disabling client style code sends.\n\r");
+        REMOVE_BIT(desc->prompt_d.type, PROMPT_CLIENT_PROMPT);
+      } else {
+        sendTo("Enabling client style code sends.\n\r");
+        SET_BIT(desc->prompt_d.type, PROMPT_CLIENT_PROMPT);
+
+        if (desc) {
+	  Descriptor *d;
+	  char buf[256] = "\0";
+
+          desc->send_client_prompt(TRUE, 16383);
+
+	  for (d = descriptor_list; d; d = d->next) {
+	    if (d->character) {
+	      if (d->character->isLinkdead() && isImmortal())
+		sprintf(buf, "[%s]", d->character->getName());
+	      else
+		strcpy(buf, (d->character->getName() ? d->character->getName() : "UNKNOWN NAME"));
+
+	      if (canSeeWho(d->character)) {
+	        desc->prompt_mode = -1;
+	        desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
+	        desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % d->character->getName() % DELETE);
+
+	        if (d->character->isPlayerAction(PLR_ANONYMOUS) && !isImmortal())
+	          desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
+	        else
+	          desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % d->character->GetMaxLevel());
+	      }
+	    }
+	  }
+        }
+      }
+      break;
+    case 20:
+      if ((ansi() || vt100()) && IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR))
+        if (IS_SET(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR)) {
+          REMOVE_BIT(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR);
+          cls();
+          sendTo(fmt(VT_MARGSET) % 1 % (getScreen() - 3));
+          doCls(false);
+          sendTo("Changing to the modern vt100/ansi bar.\n\r");
+        } else {
+          SET_BIT(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR);
+          cls();
+          sendTo(fmt(VT_MARGSET) % 1 % (getScreen() - 3));
+          doCls(false);
+          sendTo("Changing to the classic vt100/ansi bar.\n\r");
+        }
+      break;
     default:
       sendTo("Invalid argument(s) to prompt command. See help file for PROMPT for more information.\n\r");
       break;
@@ -473,28 +537,50 @@ void TBeing::doCls(bool tell)
     sprintf(buf + strlen(buf), "_____________________________________________________________________________");
     sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() - 2, 1);
 
-    if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
-      sprintf(buf + strlen(buf), "Hits:                     Piety:                      Moves:                 ");
-    else if (hasClass(CLASS_SHAMAN))
-      sprintf(buf + strlen(buf), "Hits:                 Lifeforce:                      Moves:                 ");
-    else
-      sprintf(buf + strlen(buf), "Hits:                      Mana:                      Moves:                 ");
+    if (IS_SET(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR)) {
+      if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
+        sprintf(buf + strlen(buf), "Hits:                     Piety:                      Moves:                 ");
+      else if (hasClass(CLASS_SHAMAN))
+        sprintf(buf + strlen(buf), "Hits:                 Lifeforce:                      Moves:                 ");
+      else
+        sprintf(buf + strlen(buf), "Hits:                      Mana:                      Moves:                 ");
 
-    sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() -1 , 1);
+      sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() -1 , 1);
 
-    if (!isImmortal()) {
+      if (!isImmortal()) {
 #if FACTIONS_IN_USE
-      sprintf(buf + strlen(buf), "Talens:                     Exp:                      Aff %%:                 ");
+	sprintf(buf + strlen(buf), "Aff%%:                    Talens:                    Exp:                     ");
 #else
-      sprintf(buf + strlen(buf), "Talens:                     Exp:                                             ");
+        sprintf(buf + strlen(buf), "                         Talens:                    Exp:                     ");
 #endif
-    } else
-      sprintf(buf + strlen(buf), "Talens:                     Exp:                       Room:                 ");
+      } else
+        sprintf(buf + strlen(buf), "Room:                    Talens:                    Exp:                     ");
 
-    sprintf(buf + strlen(buf), VT_CURSPOS, getScreen(), 1);
-    sprintf(buf + strlen(buf), "                            TNL:                                             ");
+      sprintf(buf + strlen(buf), VT_CURSPOS, getScreen(), 1);
+    } else {
+      if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
+        sprintf(buf + strlen(buf), "Hits:                     Piety:                      Moves:                 ");
+      else if (hasClass(CLASS_SHAMAN))
+        sprintf(buf + strlen(buf), "Hits:                 Lifeforce:                      Moves:                 ");
+      else
+        sprintf(buf + strlen(buf), "Hits:                      Mana:                      Moves:                 ");
+
+      sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() -1 , 1);
+
+      if (!isImmortal()) {
+#if FACTIONS_IN_USE
+        sprintf(buf + strlen(buf), "                            Exp:                      Aff %%:                 ");
+#else
+        sprintf(buf + strlen(buf), "                            Exp:                                             ");
+#endif
+      } else
+        sprintf(buf + strlen(buf), "                            Exp:                       Room:                 ");
+
+      sprintf(buf + strlen(buf), VT_CURSPOS, getScreen(), 1);
+      sprintf(buf + strlen(buf), "                            TNL:                     Talens:                 ");
+    }
+
     sendTo(buf);
-
     sendTo(fmt(VT_CURSPOS) % 1 % 1);
 
     if (vt100()) {

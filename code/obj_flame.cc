@@ -14,8 +14,8 @@
 #include "obj_tool.h"
 #include "obj_flame.h"
 #include "obj_light.h"
-#include "liquids.h"
 #include "obj_drinkcon.h"
+#include "liquids.h"
 
 TFFlame::TFFlame() :
   TBaseLight(),
@@ -608,10 +608,10 @@ void TBeing::igniteObject(const char *argument, TThing *fObj)
 // Non-Class partly related functions:
 int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
 {
-  liqTypeT  type  = LIQ_WATER;
-  int  drunk = 0,
-       size  = 0,
-       rc    = 1;
+  liqTypeT type  = LIQ_WATER;
+  int drunk = 0;
+  int size  = 0,
+    rc    = 1;
   char Buf[256];
   TBaseCup *dContainer;
 
@@ -756,7 +756,7 @@ int TFFlame::chiMe(TBeing *tLunatic)
   } else
     tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
-  if (!bSuccess(tLunatic, bKnown, SKILL_CHI)) {
+  if (!tLunatic->bSuccess(bKnown, SKILL_CHI)) {
     act("You fail to affect $p in any way.",
         FALSE, tLunatic, this, NULL, TO_CHAR);
     return true;

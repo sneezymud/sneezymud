@@ -59,7 +59,7 @@ int berserk(TBeing * caster)
 
   level = caster->getSkillLevel(SKILL_BERSERK);
   int bKnown = caster->getSkillValue(SKILL_BERSERK);
-  if (bSuccess(caster, bKnown, SKILL_BERSERK)) {
+  if (caster->bSuccess(bKnown, SKILL_BERSERK)) {
     caster->setCombatMode(ATTACK_BERSERK);
     act("You go berserk!",TRUE,caster,0,0,TO_CHAR);
     act("$n goes berserk!", TRUE, caster,0,0,TO_ROOM);

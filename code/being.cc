@@ -1272,11 +1272,13 @@ byte TBeing::getInvisLevel() const
 
 void TBeing::setInvisLevel(byte num)
 {
-  if (desc && (invisLevel > 50) && (num < 50))
-    desc->clientf(fmt("%d|%d") % CLIENT_INVIS % FALSE);
+  if (desc && desc->m_bIsClient) {
+    if ((invisLevel > 50) && (num < 50))
+      desc->clientf(fmt("%d|%d") % CLIENT_INVIS % FALSE);
 
-  if (desc && (num > 50))
-    desc->clientf(fmt("%d|%d") % CLIENT_INVIS % TRUE);
+    if (num > 50)
+      desc->clientf(fmt("%d|%d") % CLIENT_INVIS % TRUE);
+  }
 
   invisLevel = num;
 }
@@ -1545,7 +1547,7 @@ int TBeing::chiMe(TBeing *tLunatic)
       return FALSE;
     }
 
-    if (bSuccess(this, bKnown, SKILL_CHI)) {
+    if (bSuccess(bKnown, SKILL_CHI)) {
       reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
       act("You close your eyes and concentrate for a moment, then begin radiating an intense <R>heat<1> from your body.", TRUE, this, NULL, NULL, TO_CHAR);
@@ -1573,7 +1575,7 @@ int TBeing::chiMe(TBeing *tLunatic)
   if (this->isImmortal() || this->inGroup(*tLunatic))
     return FALSE;
 
-  if (bSuccess(tLunatic, bKnown, SKILL_CHI)) {
+  if (tLunatic->bSuccess(bKnown, SKILL_CHI)) {
     tDamage = getSkillDam(this, SKILL_CHI,
                           tLunatic->getSkillLevel(SKILL_CHI),
                           tLunatic->getAdvLearning(SKILL_CHI));

@@ -69,7 +69,7 @@ int astralWalk(TBeing * caster, TBeing * victim, int level, byte bKnown)
     return SPELL_FAIL;  
   }
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_ASTRAL_WALK)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_ASTRAL_WALK)) {
     ret=SPELL_SUCCESS;
 
     switch (::number(1,2)) {
@@ -179,7 +179,7 @@ int createFood(TBeing *c, int level, byte bKnown, spellNumT spell)
   TFood *o;
   int fill_amt;
 
-  if (bSuccess(c, bKnown, c->getPerc(), spell)) {
+  if (c->bSuccess(bKnown, c->getPerc(), spell)) {
     o = new TFood();
 
     fill_amt = 4 + (level/3);
@@ -262,7 +262,7 @@ int castCreateWater(TBeing *caster, TObj *obj)
 
 int createWater(TBeing * caster, TObj * obj, int level, byte bKnown, spellNumT spell)
 {
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     obj->waterCreate(caster, level);
     return SPELL_SUCCESS;
   } else {
@@ -359,7 +359,7 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, byte bKnown)
 #else
   learning = bKnown;
 #endif
-  if (bSuccess(caster, learning, caster->getPerc(), SPELL_WORD_OF_RECALL)) {
+  if (caster->bSuccess(learning, caster->getPerc(), SPELL_WORD_OF_RECALL)) {
 
     if (!victim->desc && dynamic_cast<TMonster *>(victim))
       location = dynamic_cast<TMonster *>(victim)->oldRoom;
@@ -597,7 +597,7 @@ int summon(TBeing * caster, TBeing * victim, int level, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_SUMMON)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_SUMMON)) {
     rc = caster->rawSummon(victim);
     if (IS_SET_DELETE(rc, DELETE_VICT) && IS_SET_DELETE(rc, DELETE_THIS))
       return SPELL_SUCCESS | VICTIM_DEAD | CASTER_DEAD;
@@ -724,7 +724,7 @@ int heroesFeast(TBeing * caster, int, byte bKnown, spellNumT spell)
   int gain = 16, hitgain = 1;
   sstring message = "You partake of a magnificent feast!";
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
       tch = dynamic_cast<TBeing *>(t);
       if (!tch)
@@ -883,7 +883,7 @@ int portal(TBeing * caster, const char * portalroom, int level, byte bKnown)
   }
 
 
-  if (bSuccess(caster,bKnown,caster->getPerc(),SPELL_PORTAL)) {
+  if (caster->bSuccess(bKnown,caster->getPerc(),SPELL_PORTAL)) {
     TPortal * tmp_obj = new TPortal(rp);
     tmp_obj->setPortalNumCharges(1*((level/5)+1));
 

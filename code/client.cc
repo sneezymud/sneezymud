@@ -31,7 +31,8 @@ void Descriptor::clientf(const sstring &msg)
   // with other text and missed by the client interpreter Russ - 061299
   outputProcessing();
 
-  if (m_bIsClient && !msg.empty())
+  // This is the last sanity check.
+  if (!msg.empty() && (m_bIsClient || IS_SET(prompt_d.type, PROMPT_CLIENT_PROMPT)))
     output.putInQ(fmt("\200%s\n") % msg);
 }
 
@@ -39,9 +40,9 @@ void TRoom::clientf(const sstring &msg)
 {
   TThing *t;
 
-  if (!msg.empty()){
+  if (!msg.empty()) {
     for (t = getStuff(); t; t = t->nextThing) {
-      if (t->isPc() && t->desc && t->desc->m_bIsClient)
+      if (t->isPc() && t->desc && (t->desc->m_bIsClient || IS_SET(t->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
 	t->sendTo(fmt("\200%s\n") % msg);
     }
   }
@@ -64,8 +65,7 @@ void Descriptor::send_client_inventory()
     TObj * tobj = dynamic_cast<TObj *>(t);
     if (!tobj)
       continue;
-    clientf(fmt("%d|%d|%s|%d") % CLIENT_INVENTORY % ADD % 
-               tobj->getName() % tobj->itemType());
+    clientf(fmt("%d|%d|%s|%d") % CLIENT_INVENTORY % ADD % tobj->getName() % tobj->itemType());
   }
 }
 
@@ -124,32 +124,67 @@ void Descriptor::send_client_prompt(int, int update)
   }
   if ((update & CHANGED_MANA) || (update & CHANGED_PIETY) || (update & CHANGED_LIFEFORCE)) {
     char manaBuf[80], maxManaBuf[80];
+    int iClientCode = CLIENT_MANA;
+
     if (ch->hasClass(CLASS_CLERIC) || ch->hasClass(CLASS_DEIKHAN)) {
       sprintf(manaBuf, "%.1f", ch->getPiety());
       strcpy(maxManaBuf, "100");
+
+      if (!m_bIsClient && IS_SET(prompt_d.type, PROMPT_CLIENT_PROMPT))
+        iClientCode = CLIENT_PIETY;
     } else if (ch->hasClass(CLASS_SHAMAN)) {
       sprintf(manaBuf, "%d", ch->getLifeforce());
+      strcpy(maxManaBuf, "32000");
+
+      if (!m_bIsClient && IS_SET(prompt_d.type, PROMPT_CLIENT_PROMPT))
+        iClientCode = CLIENT_LIFEFORCE;
     } else {
       sprintf(manaBuf, "%d", ch->getMana());
       sprintf(maxManaBuf, "%d", ch->manaLimit());
     }
-    clientf(fmt("%d|%s|%s") % CLIENT_MANA % manaBuf % maxManaBuf);
+
+    clientf(fmt("%d|%s|%s") % iClientCode % manaBuf % maxManaBuf);
   }
   if (update & CHANGED_HP) 
     clientf(fmt("%d|%d|%d") % CLIENT_HITPOINT % ch->getHit() % ch->hitLimit());
-
 
   if (update & CHANGED_MOVE)
     clientf(fmt("%d|%d|%d") % CLIENT_MOVE % ch->getMove() % ch->moveLimit());
 
   if (update & CHANGED_ROOM) {
-    clientf(fmt("%d|%d") % CLIENT_ROOM % 
-	    (ch->isImmortal() ? ch->in_room : -1000));
+    if (m_bIsClient)
+      clientf(fmt("%d|%d") % CLIENT_ROOM % (ch->isImmortal() ? ch->in_room : -1000));
+
     send_client_exits();
   }
 
-  if (update & CHANGED_EXP)
+  if (update & CHANGED_EXP) {
     clientf(fmt("%d|%s") % CLIENT_EXP % ch->displayExp());
+
+    if (!m_bIsClient) {
+      classIndT iClass;
+
+      for (iClass = MAGE_LEVEL_IND; iClass < MAX_CLASSES; iClass++) {
+	if (ch->getLevel(iClass)) {
+          if (ch->getLevel(iClass) < MAX_MORT) {
+	    double iNeed = getExpClassLevel(iClass, ch->getLevel(iClass) + 1) - ch->getExp();
+            char   StTemp[2048];
+
+	    memset(&StTemp, 0, sizeof(StTemp));
+
+	    if (ch->getExp() < 100)
+	      sprintf(StTemp, "%.3f", iNeed);
+	    else
+	      sprintf(StTemp, "%.0f", iNeed);
+
+            clientf(fmt("%d|%d|%d|%s") % CLIENT_TONEXTLEVEL % iClass % (ch->getLevel(iClass) + 1) % StTemp);
+          }
+
+          break;
+        }
+      }
+    }
+  }
 
   if (update & CHANGED_GOLD)
     clientf(fmt("%d|%d") % CLIENT_GOLD % ch->getMoney());
@@ -171,7 +206,8 @@ void Descriptor::send_client_prompt(int, int update)
 void Descriptor::send_client_exits()
 {
   TBeing *ch;
-  int bits = 0;
+  int bits = 0,
+      cbits = 0;
   roomDirData *exitdata;
   dirTypeT door;
 
@@ -180,11 +216,16 @@ void Descriptor::send_client_exits()
 
   for (door = MIN_DIR; door < MAX_DIR; door++) {
     if ((exitdata = ch->exitDir(door)))
-      if ((exitdata->to_room != ROOM_NOWHERE) && 
-          (!(exitdata->condition & EX_CLOSED) || ch->isImmortal()))
-        SET_BIT(bits, 1 << door);
+      if ((exitdata->to_room != ROOM_NOWHERE) && (!(exitdata->condition & EX_CLOSED) || ch->isImmortal()))
+        SET_BIT(bits, (1 << door));
+      else
+        SET_BIT(cbits, (1 << door));
   }
-  clientf(fmt("%d|%d|%d") % CLIENT_EXITS % bits % ch->isImmortal());
+
+  if (m_bIsClient)
+    clientf(fmt("%d|%d|%d") % CLIENT_EXITS % bits % ch->isImmortal());
+  else if (IS_SET(prompt_d.type, PROMPT_CLIENT_PROMPT))
+    clientf(fmt("%d|%d|%d|%d") % CLIENT_EXITS % bits % cbits % ch->isImmortal());
 }
 
 // returns DELETE_THIS to delete the descriptor
@@ -549,7 +590,7 @@ int Descriptor::read_client(char *str2)
           connected = CON_PLYNG;
           flush();
           writeToQ("Reconnecting character...\n\r");
-          send_client_prompt(TRUE, 1983);
+          send_client_prompt(TRUE, 16383);
           clientf(fmt("%d|%d") % CLIENT_ENABLEWINDOW % TRUE);
 
           // setombatMode sends necessary client info about attack mode
@@ -599,7 +640,7 @@ int Descriptor::read_client(char *str2)
       }
       break;
     case CLIENT_PROMPT:
-      send_client_prompt(FALSE, 1983);
+      send_client_prompt(FALSE, 16383);
       break;
     case CLIENT_EXITS: 
       send_client_exits();
@@ -1153,7 +1194,7 @@ int Descriptor::client_nanny(char *arg)
       flush();
 
       writeToQ("Reconnecting character...\n\r");
-      send_client_prompt(TRUE, 1983);
+      send_client_prompt(TRUE, 16383);
       clientf(fmt("%d|%d") % CLIENT_ENABLEWINDOW % TRUE);
       if (tmp_ch->getCombatMode() == ATTACK_NORMAL)
         clientf(fmt("%d") % CLIENT_NORMAL);
@@ -1244,29 +1285,28 @@ void TBeing::fixClientPlayerLists(bool lost)
   char buf[256] = "\0";
 
   for (d = descriptor_list; d; d = d->next) {
-    if (!d->m_bIsClient || !d->character)
-      continue;
+    if (d->character && (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
+      if (isLinkdead() && d->character->isImmortal()) 
+        sprintf(buf, "[%s]", getName());
+      else
+        strcpy(buf, getName() ? getName() : "UNKNOWN NAME");
 
-    if (isLinkdead() && d->character->isImmortal()) 
-      sprintf(buf, "[%s]", getName());
-    else
-      strcpy(buf, getName() ? getName() : "UNKNOWN NAME");
-
-    if (lost) {
-      if (!d->character->canSeeWho(this)) {
-        d->prompt_mode = -1;
-        d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
-        d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % getName() % DELETE);
-      }
-    } else {
-      if (d->character->canSeeWho(this)) {
-        d->prompt_mode = -1;
-        d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
-        d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % getName() % DELETE);
-        if (isPlayerAction(PLR_ANONYMOUS) && !d->character->isImmortal())
-          d->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
-        else
-          d->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % GetMaxLevel());
+      if (lost) {
+        if (!d->character->canSeeWho(this)) {
+          d->prompt_mode = -1;
+          d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
+          d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % getName() % DELETE);
+        }
+      } else {
+        if (d->character->canSeeWho(this)) {
+          d->prompt_mode = -1;
+          d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
+          d->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % getName() % DELETE);
+          if (isPlayerAction(PLR_ANONYMOUS) && !d->character->isImmortal())
+            d->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
+          else
+            d->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % GetMaxLevel());
+        }
       }
     }
   }

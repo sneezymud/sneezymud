@@ -1399,6 +1399,34 @@ int Descriptor::nanny(const char *arg)
             dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
           
           tmp_ch->fixClientPlayerLists(FALSE);
+
+          if (tmp_ch->desc && !tmp_ch->desc->m_bIsClient && IS_SET(tmp_ch->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
+	    Descriptor *d;
+	    char buf[256] = "\0";
+
+	    tmp_ch->desc->send_client_prompt(TRUE, 16383);
+
+	    for (d = descriptor_list; d; d = d->next) {
+	      if (d->character) {
+		if (d->character->isLinkdead() && tmp_ch->isImmortal())
+		  sprintf(buf, "[%s]", d->character->getName());
+		else
+		  strcpy(buf, (d->character->getName() ? d->character->getName() : "UNKNOWN NAME"));
+
+		if (tmp_ch->canSeeWho(d->character)) {
+		  tmp_ch->desc->prompt_mode = -1;
+		  tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
+		  tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % d->character->getName() % DELETE);
+
+		  if (d->character->isPlayerAction(PLR_ANONYMOUS) && !tmp_ch->isImmortal())
+		    tmp_ch->desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
+		  else
+		    tmp_ch->desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % d->character->GetMaxLevel());
+		}
+	      }
+	    }
+          }
+
           return FALSE;
         }
       }
@@ -1518,6 +1546,34 @@ int Descriptor::nanny(const char *arg)
                 dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
               
               tmp_ch->fixClientPlayerLists(FALSE);
+
+	      if (tmp_ch->desc && !tmp_ch->desc->m_bIsClient && IS_SET(tmp_ch->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
+		Descriptor *d;
+		char buf[256] = "\0";  
+
+		tmp_ch->desc->send_client_prompt(TRUE, 16383);
+
+		for (d = descriptor_list; d; d = d->next) {
+		  if (d->character) {
+		    if (d->character->isLinkdead() && tmp_ch->isImmortal())
+		      sprintf(buf, "[%s]", d->character->getName());
+		    else
+		      strcpy(buf, (d->character->getName() ? d->character->getName() : "UNKNOWN NAME"));
+
+		    if (tmp_ch->canSeeWho(d->character)) {
+		      tmp_ch->desc->prompt_mode = -1;
+		      tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);                    
+		      tmp_ch->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % d->character->getName() % DELETE);
+
+		      if (d->character->isPlayerAction(PLR_ANONYMOUS) && !tmp_ch->isImmortal())
+			tmp_ch->desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
+		      else
+			tmp_ch->desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % d->character->GetMaxLevel());
+		    }
+		  }
+		}
+	      }
+
               return FALSE;
             }
           }
@@ -2654,7 +2710,7 @@ int Descriptor::nanny(const char *arg)
         character->doCls(false);
 
       character->fixClientPlayerLists(FALSE);
-   
+
       ShowNewNews(character);
 
       character->doLook("", CMD_LOOK);
@@ -2662,6 +2718,34 @@ int Descriptor::nanny(const char *arg)
       prompt_mode = 1;
       character->doSave(SILENT_YES);
       character->desc->saveAccount();
+
+      if (character->desc && !character->desc->m_bIsClient && IS_SET(character->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
+	Descriptor *d;
+	char buf[256] = "\0";  
+
+	character->desc->send_client_prompt(TRUE, 16383);
+
+	for (d = descriptor_list; d; d = d->next) {
+	  if (d->character) {
+	    if (d->character->isLinkdead() && character->isImmortal())
+	      sprintf(buf, "[%s]", d->character->getName());
+	    else
+	      strcpy(buf, (d->character->getName() ? d->character->getName() : "UNKNOWN NAME"));
+
+	    if (character->canSeeWho(d->character)) {
+	      character->desc->prompt_mode = -1;
+	      character->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);                    
+	      character->desc->clientf(fmt("%d|%s|%d|0") % CLIENT_WHO % d->character->getName() % DELETE);
+
+	      if (d->character->isPlayerAction(PLR_ANONYMOUS) && !character->isImmortal())
+		character->desc->clientf(fmt("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
+	      else
+		character->desc->clientf(fmt("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % d->character->GetMaxLevel());
+	    }
+	  }
+	}
+      }
+
       break;
     case CON_PLYNG:
     case CON_NMECNF:
@@ -4665,9 +4749,9 @@ void setPrompts(fd_set out)
           d->output.putInQ(promptbuf);
         } else
 
-        if ((ch->task->task == TASK_SMYTHE)            || (ch->task->task == TASK_REPAIR_DEAD)     ||
+        if ((ch->task->task == TASK_BLACKSMITHING)            || (ch->task->task == TASK_REPAIR_DEAD)     ||
             (ch->task->task == TASK_REPAIR_ORGANIC)    || (ch->task->task == TASK_REPAIR_MAGICAL)  ||
-            (ch->task->task == TASK_REPAIR_ROCK)       || (ch->task->task == TASK_SMYTHE_ADVANCED) ||
+            (ch->task->task == TASK_REPAIR_ROCK)       || (ch->task->task == TASK_BLACKSMITHING_ADVANCED) ||
             (ch->task->task == TASK_MEND_HIDE)         || (ch->task->task == TASK_MEND)            ||
             (ch->task->task == TASK_REPAIR_SPIRITUAL)) {
           TThing * tThing = NULL;
@@ -4724,8 +4808,8 @@ void setPrompts(fd_set out)
             d->green(),  d->norm());
           d->output.putInQ(promptbuf);
         } else {
-          if ((d->m_bIsClient || (ch->isPlayerAction(PLR_VT100 | PLR_ANSI) &&
-                             IS_SET(d->prompt_d.type, PROMPT_VTANSI_BAR)))) {
+          if (((d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) ||
+               (ch->isPlayerAction(PLR_VT100 | PLR_ANSI) && IS_SET(d->prompt_d.type, PROMPT_VTANSI_BAR)))) {
             if (ch->getHit() != d->last.hit) {
               d->last.hit = ch->getHit();
               SET_BIT(update, CHANGED_HP);
@@ -4785,7 +4869,8 @@ void setPrompts(fd_set out)
                 d->updateScreenVt100(update);
               else if (ch->ansi())
                 d->updateScreenAnsi(update);
-              else if (d->m_bIsClient) {
+
+              if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
                 d->outputProcessing();
                 d->send_client_prompt(TRUE, update); // Send client prompt
               }

@@ -339,7 +339,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
               showTo(tmpBeing, SHOW_MODE_SHORT_PLUS);
 
               if (bIsSpying) // Let thieves have a chance of learning spy when looking at someone.
-                bSuccess(this, getSkillValue(SKILL_SPY), SKILL_SPY);
+                bSuccess(SKILL_SPY);
 
               if (this != tmpBeing && !affectedBySpell(SKILL_SPY) && !tmpBeing->isImmortal()) {
                 act("$n looks at you.", TRUE, this, 0, tmpBeing, TO_VICT);

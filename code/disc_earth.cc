@@ -20,7 +20,7 @@ int slingShot(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_
   int dam = caster->getSkillDam(victim, SPELL_SLING_SHOT, level, adv_learn);
   caster->reconcileHurt(victim,discArray[SPELL_SLING_SHOT]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_SLING_SHOT)) {
+  if (caster->bSuccess(bKnown, SPELL_SLING_SHOT)) {
     if (victim->isLucky(caster->spellLuckModifier(SPELL_SLING_SHOT)) &&
         victim->awake()) {
       SV(SPELL_SLING_SHOT);
@@ -114,7 +114,7 @@ int graniteFists(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
 
   caster->reconcileHurt(victim,discArray[SPELL_GRANITE_FISTS]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_GRANITE_FISTS)) {
+  if (caster->bSuccess(bKnown, SPELL_GRANITE_FISTS)) {
     switch (critSuccess(caster, SPELL_GRANITE_FISTS)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -210,7 +210,7 @@ int pebbleSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 
   int dam = caster->getSkillDam(NULL, SPELL_PEBBLE_SPRAY, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_PEBBLE_SPRAY)) {
+  if (caster->bSuccess(bKnown, SPELL_PEBBLE_SPRAY)) {
     act("You whip up a spray of pebbles.", FALSE, caster, NULL, NULL, TO_CHAR);
     act("$n whips up a spray of pebbles.", FALSE, caster, NULL, NULL, TO_ROOM);
     for (t = caster->roomp->getStuff(); t; t = t2) {
@@ -289,7 +289,7 @@ int sandBlast(TBeing * caster, int level, byte bKnown, int adv_learn)
 
   int dam = caster->getSkillDam(NULL, SPELL_SAND_BLAST, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_SAND_BLAST)) {
+  if (caster->bSuccess(bKnown, SPELL_SAND_BLAST)) {
     for (t = caster->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       vict = dynamic_cast<TBeing *>(t);
@@ -389,7 +389,7 @@ int lavaStream(TBeing * caster, int level, byte bKnown, int adv_learn)
 
   int dam = caster->getSkillDam(NULL, SPELL_LAVA_STREAM, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_LAVA_STREAM)) {
+  if (caster->bSuccess(bKnown, SPELL_LAVA_STREAM)) {
     act("You call forth molten lava from the earth!", 
           FALSE, caster, NULL, NULL, TO_CHAR);
     act("$n calls forth molten lava from the earth!", 
@@ -499,7 +499,7 @@ int meteorSwarm(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
   // just used for effect, has no impact on damage
   int num_meteors = level; 
 
-  if (bSuccess(caster, bKnown, SPELL_METEOR_SWARM)) {
+  if (caster->bSuccess(bKnown, SPELL_METEOR_SWARM)) {
     switch (critSuccess(caster, SPELL_METEOR_SWARM)) {
       case CRIT_S_DOUBLE:
         CS(SPELL_METEOR_SWARM);
@@ -628,7 +628,7 @@ int stoneSkin(TBeing * caster, TBeing * victim, int level, byte bKnown)
     caster->nothingHappens(SILENT_YES);
     return FALSE;
   }
-  if (bSuccess(caster, bKnown, SPELL_STONE_SKIN)) {
+  if (caster->bSuccess(bKnown, SPELL_STONE_SKIN)) {
     caster->reconcileHelp(caster,discArray[SPELL_STONE_SKIN]->alignMod);
 
     // ARMOR APPLY
@@ -722,7 +722,7 @@ int trailSeek(TBeing * caster, TBeing * victim, int level, byte bKnown)
 {
   affectedData aff;
 
-  if (bSuccess(caster, bKnown, SPELL_TRAIL_SEEK)) {
+  if (caster->bSuccess(bKnown, SPELL_TRAIL_SEEK)) {
     caster->reconcileHelp(victim,discArray[SPELL_TRAIL_SEEK]->alignMod);
 
     aff.type = SPELL_TRAIL_SEEK;
@@ -822,7 +822,7 @@ int conjureElemEarth(TBeing * caster, int level, byte bKnown)
 
   victim->elementalFix(caster, SPELL_CONJURE_EARTH, 0);
 
-  if (bSuccess(caster, bKnown, SPELL_CONJURE_EARTH)) {
+  if (caster->bSuccess(bKnown, SPELL_CONJURE_EARTH)) {
     act("You summon the powers of the natural earthly forces!", 
              TRUE, caster, NULL, NULL, TO_CHAR);
     act("$n summons the powers of the natural earthly forces!", 
@@ -937,7 +937,7 @@ int protectionFromEarth(TBeing *caster, TBeing *victim, int level, byte bKnown)
   aff.modifier2 = ((level * 2) / 3);
   aff.bitvector = 0;
  
-  if (bSuccess(caster,bKnown,SPELL_PROTECTION_FROM_EARTH)) {
+  if (caster->bSuccess(bKnown,SPELL_PROTECTION_FROM_EARTH)) {
     act("$n glows with a faint brown aura for a brief moment.", FALSE, victim, NULL, NULL, TO_ROOM);
     act("You glow with a faint brown aura for a brief moment.", FALSE, victim, NULL, NULL, TO_CHAR);
     switch (critSuccess(caster, SPELL_PROTECTION_FROM_EARTH)) {

@@ -207,7 +207,7 @@ int transformLimb(TBeing * caster, const char * buffer, int level, byte bKnown)
       return FALSE;
   }
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SKILL_TRANSFORM_LIMB)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SKILL_TRANSFORM_LIMB)) {
     switch (critSuccess(caster, SKILL_TRANSFORM_LIMB)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -291,7 +291,7 @@ int stormySkies(TBeing * caster, TBeing * victim, int level, byte bKnown)
  
   if ((victim->roomp->getWeather() == WEATHER_RAINY) ||
      (victim->roomp->getWeather() == WEATHER_LIGHTNING)) {
-    if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_STORMY_SKIES)) {
+    if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_STORMY_SKIES)) {
       if (victim->isLucky(caster->spellLuckModifier(SPELL_STORMY_SKIES)))
         dam /= 2; // half damage
  
@@ -327,7 +327,7 @@ int stormySkies(TBeing * caster, TBeing * victim, int level, byte bKnown)
       return SPELL_FAIL;
     }
   } else if (victim->roomp->getWeather() == WEATHER_SNOWY) { 
-    if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_STORMY_SKIES)) {
+    if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_STORMY_SKIES)) {
       if (victim->isLucky(caster->spellLuckModifier(SPELL_STORMY_SKIES)))
         dam /= 2;         // half damage
  
@@ -429,7 +429,7 @@ int aquaticBlast(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, SPELL_AQUATIC_BLAST)) {
+  if (caster->bSuccess(bKnown, SPELL_AQUATIC_BLAST)) {
     caster->reconcileHurt(victim,discArray[SPELL_AQUATIC_BLAST]->alignMod);
 
     if ((critSuccess(caster, SPELL_AQUATIC_BLAST) ||
@@ -617,7 +617,7 @@ int shapeShift(TBeing *caster, int level, byte bKnown)
 
  int duration;
   
-  if (bSuccess(caster, bKnown, SPELL_SHAPESHIFT)) {
+  if (caster->bSuccess(bKnown, SPELL_SHAPESHIFT)) {
     switch (critSuccess(caster, SPELL_SHAPESHIFT)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -967,7 +967,7 @@ int deathWave(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
 
   caster->reconcileHurt(victim, discArray[SPELL_DEATHWAVE]->alignMod);
 
-  if (bSuccess(caster, bKnown,SPELL_DEATHWAVE)) {
+  if (caster->bSuccess(bKnown,SPELL_DEATHWAVE)) {
     switch (critSuccess(caster, SPELL_DEATHWAVE)) {
       case CRIT_S_DOUBLE:
         CS(SPELL_DEATHWAVE);

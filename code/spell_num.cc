@@ -417,7 +417,7 @@ int mapSpellnumToFile(spellNumT stt)
       return 219;
     case SKILL_RESCUE:
       return 220;
-    case SKILL_SMYTHE:
+    case SKILL_BLACKSMITHING:
       return 221;
     case SKILL_DISARM:
       return 222;
@@ -431,6 +431,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 226;
     case SKILL_TRANCE_OF_BLADES:
       return 227;
+    case SKILL_WEAPON_RETENTION:
+      return 228;
     case SKILL_SHOVE:
       return 229;
     case SKILL_RETREAT:
@@ -439,6 +441,10 @@ int mapSpellnumToFile(spellNumT stt)
       return 234;
     case SKILL_STOMP:
       return 235;
+    case SKILL_BRAWL_AVOIDANCE:
+      return 236;
+    case SKILL_CLOSE_QUARTERS_FIGHTING:
+      return 237;
     case SKILL_DOORBASH:
       return 238;
     case SKILL_DEATHSTROKE:
@@ -952,7 +958,7 @@ int mapSpellnumToFile(spellNumT stt)
       return 702;
     case SKILL_MEND:
       return 703;
-    case SKILL_SMYTHE_ADVANCED:
+    case SKILL_BLACKSMITHING_ADVANCED:
       return 704;
     case SKILL_PSIDRAIN:
       return 705;
@@ -1437,7 +1443,7 @@ spellNumT mapFileToSpellnum(int stt)
     case 220:
       return SKILL_RESCUE;
     case 221:
-      return SKILL_SMYTHE;
+      return SKILL_BLACKSMITHING;
     case 222:
       return SKILL_DISARM;
     case 223:
@@ -1450,6 +1456,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_KNEESTRIKE;
     case 227:
       return SKILL_TRANCE_OF_BLADES;
+    case 228:
+      return SKILL_WEAPON_RETENTION;
     case 229:
       return SKILL_SHOVE;
     case 230:
@@ -1458,6 +1466,10 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_GRAPPLE;
     case 235:
       return SKILL_STOMP;
+    case 236:
+      return SKILL_BRAWL_AVOIDANCE;
+    case 237:
+      return SKILL_CLOSE_QUARTERS_FIGHTING;
     case 238:
       return SKILL_DOORBASH;
     case 239:
@@ -1958,7 +1970,7 @@ spellNumT mapFileToSpellnum(int stt)
     case 703:
       return SKILL_MEND;
     case 704:
-      return SKILL_SMYTHE_ADVANCED;
+      return SKILL_BLACKSMITHING_ADVANCED;
     case 705:
       return SKILL_PSIDRAIN;
     case 706:

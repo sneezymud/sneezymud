@@ -41,7 +41,7 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
       if (!ch->task->status) {
         if (!(ch->roomp->getRoomFlags() & ROOM_NO_HEAL)) {
           learn = ch->getSkillValue(SKILL_PENANCE);
-          if (bSuccess(ch, learn, ch->getPerc(), SKILL_PENANCE)) {
+          if (ch->bSuccess(learn, ch->getPerc(), SKILL_PENANCE)) {
             amt = ch->pietyGain(val);
 	    
 	    if ((ch->getPiety() + amt) < 100.0){

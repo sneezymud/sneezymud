@@ -50,9 +50,9 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
 
     ch->dropPool(20, LIQ_BLOOD);
 
-    if (!bSuccess(ch, learning, SKILL_BUTCHER)) {
+    if (!ch->bSuccess(learning, SKILL_BUTCHER)) {
       CF(SKILL_BUTCHER);
-      if (bSuccess(ch, learning, SKILL_BUTCHER)) {
+      if (ch->bSuccess(learning, SKILL_BUTCHER)) {
         act("You gently over extend yourself and slightly dull your weapon.",
             FALSE, ch, 0, 0, TO_CHAR);
         if (tobj->getCurSharp() > 2)tobj->addToCurSharp(-1);
@@ -246,8 +246,8 @@ int TTool::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
       return FALSE;
     }
 
-    if (!bSuccess(ch, learning, SKILL_BUTCHER)) {
-      if (!bSuccess(ch, learning, SKILL_BUTCHER)) {
+    if (!ch->bSuccess(learning, SKILL_BUTCHER)) {
+      if (!ch->bSuccess(learning, SKILL_BUTCHER)) {
         // a doubele failure
         CF(SKILL_BUTCHER);  // failure
         act("You slip up and destory a part of the carcass.",

@@ -124,7 +124,7 @@ int TBeing::doThiefPlant(sstring arg)
   if(!genericCanPlantThief(this, vict))
     return FALSE;
 
-  if(bSuccess(this, getPlantThiefChance(this, vict), SKILL_PLANT)){
+  if(this->bSuccess(getPlantThiefChance(this, vict), SKILL_PLANT)){
     return doGive(vict, obj, GIVE_FLAG_SILENT_VICT);
     sendTo("You were not detected.\n\r");
   } else {

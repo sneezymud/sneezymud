@@ -44,7 +44,7 @@ int handsOfFlame(TBeing *caster, TBeing *victim, int level, byte bKnown, int *da
 //  *damage = caster->modSectorDamage(*damage);
 
 // Do success and Fail
-  if (bSuccess(caster, bKnown, SPELL_HANDS_OF_FLAME)) {
+  if (caster->bSuccess(bKnown, SPELL_HANDS_OF_FLAME)) {
     ret = SPELL_SUCCESS;
     switch (critSuccess(caster, SPELL_HANDS_OF_FLAME)) {
       case CRIT_S_DOUBLE:
@@ -328,7 +328,7 @@ int faerieFire(TBeing *caster, TBeing *victim, int level, byte bKnown)
   // let the affect be level dependant
   aff.modifier = 100 + (aff.level*4);
 
-  if (bSuccess(caster, bKnown, SPELL_FAERIE_FIRE)) {
+  if (caster->bSuccess(bKnown, SPELL_FAERIE_FIRE)) {
     ret = SPELL_SUCCESS;
     switch (critSuccess(caster, SPELL_FAERIE_FIRE)) {
       case CRIT_S_DOUBLE:
@@ -568,7 +568,7 @@ int flamingSword(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
 
   caster->reconcileHurt(victim,discArray[SPELL_FLAMING_SWORD]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_FLAMING_SWORD)) {
+  if (caster->bSuccess(bKnown, SPELL_FLAMING_SWORD)) {
     switch(critSuccess(caster, SPELL_FLAMING_SWORD)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -726,7 +726,7 @@ int inferno(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
 {
   int dam = caster->getSkillDam(victim, SPELL_INFERNO, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_INFERNO)) {
+  if (caster->bSuccess(bKnown, SPELL_INFERNO)) {
     caster->reconcileHurt(victim,discArray[SPELL_INFERNO]->alignMod);
 
     if (victim->isLucky(caster->spellLuckModifier(SPELL_INFERNO))) {
@@ -868,7 +868,7 @@ int hellfire(TBeing *caster, int level, byte bKnown, int adv_learn)
   vict = NULL;
   dam = caster->getSkillDam(NULL, SPELL_HELLFIRE, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_HELLFIRE)) {
+  if (caster->bSuccess(bKnown, SPELL_HELLFIRE)) {
 
     caster->roomp->playsound(SOUND_SPELL_HELLFIRE, SOUND_TYPE_MAGIC);
 
@@ -999,7 +999,7 @@ int fireball(TBeing *caster, int level, byte bKnown, int adv_learn)
 
   int damage = caster->getSkillDam(NULL, SPELL_FIREBALL, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_FIREBALL)) {
+  if (caster->bSuccess(bKnown, SPELL_FIREBALL)) {
     switch (critSuccess(caster, SPELL_FIREBALL)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -1151,7 +1151,7 @@ int flamingFlesh(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim,discArray[SPELL_FLAMING_FLESH]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_FLAMING_FLESH)) {
+  if (caster->bSuccess(bKnown, SPELL_FLAMING_FLESH)) {
 
     // ARMOR APPLY
     aff1.type = SPELL_FLAMING_FLESH;
@@ -1258,7 +1258,7 @@ int conjureElemFire(TBeing *caster, int level, byte bKnown)
 
   victim->elementalFix(caster, SPELL_CONJURE_FIRE, 0);
 
-  if (bSuccess(caster, bKnown, SPELL_CONJURE_FIRE)) {
+  if (caster->bSuccess(bKnown, SPELL_CONJURE_FIRE)) {
     act("You summon the powers of the inferno!", TRUE, caster, NULL, NULL, TO_CHAR);
     act("$n summons the powers of the inferno!", TRUE, caster, NULL, NULL, TO_ROOM);
 
@@ -1407,7 +1407,7 @@ int flare(TBeing *caster, int level, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown,SPELL_FLARE)) {
+  if (caster->bSuccess(bKnown,SPELL_FLARE)) {
     if (caster->outside()) {
       *caster->roomp += *o;
       act("$n illuminates the sky.", FALSE, o, 0, 0, TO_ROOM);
@@ -1630,7 +1630,7 @@ int infravision(TBeing *caster, TBeing *victim, int level, byte bKnown)
     caster->nothingHappens(SILENT_YES);
     return SPELL_FALSE;
   }
-  if (bSuccess(caster, bKnown, SPELL_INFRAVISION)) {
+  if (caster->bSuccess(bKnown, SPELL_INFRAVISION)) {
     ret = SPELL_SUCCESS;
     aff.type = SPELL_INFRAVISION;
     aff.duration = (level * UPDATES_PER_MUDHOUR)+level;
@@ -1822,7 +1822,7 @@ int protectionFromFire(TBeing *caster, TBeing *v,int level, byte bKnown)
   aff.modifier2 = ((level * 2)/3);
   aff.bitvector = 0;
  
-  if (bSuccess(caster,bKnown,SPELL_PROTECTION_FROM_FIRE)) {
+  if (caster->bSuccess(bKnown,SPELL_PROTECTION_FROM_FIRE)) {
     act("$n glows with a faint red aura for a brief moment.", FALSE, v, NULL, NULL, TO_ROOM);
     act("You glow with a faint red aura for a brief moment.", FALSE, v, NULL, NULL, TO_CHAR);
     switch (critSuccess(caster, SPELL_PROTECTION_FROM_FIRE)) {

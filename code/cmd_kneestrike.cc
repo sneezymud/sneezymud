@@ -421,7 +421,7 @@ static int kneestrike(TBeing *caster, TBeing *victim)
   if (i &&
       i != GUARANTEED_FAILURE &&
       percent < bKnown &&
-      bSuccess(caster, bKnown + percent, SKILL_KNEESTRIKE)) {
+      caster->bSuccess(bKnown + percent, SKILL_KNEESTRIKE)) {
 
     if (victim->canCounterMove((bKnown-adv/2)/3)) {
       SV(SKILL_KNEESTRIKE);

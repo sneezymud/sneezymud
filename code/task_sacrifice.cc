@@ -140,7 +140,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
               FALSE, ch, 0, 0, TO_CHAR);
           act("$n sings in an unfamiliar tongue over $p.", 
               TRUE, ch, corpse, 0, TO_ROOM);
-	        if (bSuccess(ch, learning, SKILL_SACRIFICE))
+	        if (ch->bSuccess(learning, SKILL_SACRIFICE))
 	          ch->task->timeLeft--;
 	        break;
         case 1:
@@ -148,7 +148,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
               FALSE, ch, totem, 0, TO_CHAR);
           act("The eyes on $n's $o begin to glow a <r>blood red<1>.", 
               TRUE, ch, totem, 0, TO_ROOM);
-	        if (bSuccess(ch, learning, SKILL_SACRIFICE))
+	        if (ch->bSuccess(learning, SKILL_SACRIFICE))
 	          ch->task->timeLeft--;
 	        break;
         case 0:
@@ -156,7 +156,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
               FALSE, ch, corpse, 0, TO_CHAR);
 	        act("$n's ritual sacrifice causes $p's face to glow <G>pale green<1>.", 
               FALSE, ch, corpse, 0, TO_ROOM);
-          if (bSuccess(ch, learning, SKILL_SACRIFICE))
+          if (ch->bSuccess(learning, SKILL_SACRIFICE))
             ch->task->timeLeft--;
           break;
         case -1:
@@ -193,9 +193,12 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       return FALSE;
       break;
     default:
-      if (cmd < MAX_CMD_LIST)
-      ch->addToLifeforce(-factor * 2);
-        warn_busy(ch);
+      if (cmd < MAX_CMD_LIST) {
+        ch->addToLifeforce(-factor * 2);
+        ch->sendTo("The loa are upset with your flagrant disregard for the houngan ways and punishes you!\n\r");
+      }
+
+      warn_busy(ch);
       break;
   }
   return TRUE;

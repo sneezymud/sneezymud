@@ -237,7 +237,7 @@ static int spin(TBeing *caster, TBeing *victim)
     return (spinHit(caster, victim));
   
   // remember, F = MA :) need to take  weight into account 
-  if (bSuccess(caster, bKnown + percent, SKILL_SPIN) &&
+  if (caster->bSuccess(bKnown + percent, SKILL_SPIN) &&
          (i = caster->specialAttack(victim,SKILL_SPIN)) && 
          i != GUARANTEED_FAILURE &&
          (percent < bKnown))  {

@@ -147,7 +147,7 @@ int TBeing::aiHurl(dirTypeT dr, TBeing *victim)
       return DELETE_VICT;
   } else if ((i = specialAttack(victim,SKILL_HURL)) &&
              (i != GUARANTEED_FAILURE) &&
-             bSuccess(this, bKnown, SKILL_HURL)) {
+             bSuccess(bKnown, SKILL_HURL)) {
     rc = hurlHit(this, victim, dr);
     if (rc) {
       addSkillLag(SKILL_HURL, rc);
@@ -289,7 +289,7 @@ int hurl(TBeing *caster, TBeing *victim, char *direction)
       return DELETE_VICT;
   } else if ((i = caster->specialAttack(victim,SKILL_HURL)) &&
              (i != GUARANTEED_FAILURE) &&
-             bSuccess(caster, bKnown + percent, SKILL_HURL)) {
+             caster->bSuccess(bKnown + percent, SKILL_HURL)) {
     rc = hurlHit(caster, victim, dr);
     if (rc) {
       caster->addSkillLag(SKILL_HURL, rc);
@@ -501,7 +501,7 @@ int shoulderThrow(TBeing *caster, TBeing *victim)
       return DELETE_VICT;
   } else if ((i = caster->specialAttack(victim,SKILL_SHOULDER_THROW)) &&
              (i != GUARANTEED_FAILURE) &&
-             bSuccess(caster, bKnown + percent, SKILL_SHOULDER_THROW)) {
+             caster->bSuccess(bKnown + percent, SKILL_SHOULDER_THROW)) {
     rc = shoulderThrowHit(caster, victim, bKnown + percent);
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;

@@ -247,7 +247,7 @@ TThing * TThing::dismount(positionTypeT pos)
       // skill based check to let mount continue to follow, even when dismounted
       if (!ch->doesKnowSkill(SKILL_TRAIN_MOUNT) || 
          (tmons && ch && ch->doesKnowSkill(SKILL_TRAIN_MOUNT) && 
-	 !bSuccess(ch, ch->getSkillValue(SKILL_TRAIN_MOUNT)/2, SKILL_TRAIN_MOUNT))) {
+	 !ch->bSuccess(ch->getSkillValue(SKILL_TRAIN_MOUNT)/2, SKILL_TRAIN_MOUNT))) {
         tbt->stopFollower(TRUE);
 
         // locate new master
@@ -394,7 +394,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
         fightCheck = 2;
       }
 
-      if (!bSuccess(this, learn, SKILL_RIDE)) {
+      if (!bSuccess(learn, SKILL_RIDE)) {
         if (fightCheck == 1) {
           if (horse->isTanking()) {
              sendTo("You find it extremely difficult to mount something that is tanking.\n\r");
@@ -690,7 +690,7 @@ int TBeing::rideCheck(int mod)
   // use of bSuccess here allows them to learn "ride" while on chairs.
   // since it is assumed that rideCheck is called (for objs) only during
   // attacks (being shoved, etc), this is thought to be an OK setup.
-  if (bSuccess(this, learn, SKILL_RIDE)) 
+  if (bSuccess(learn, SKILL_RIDE)) 
     return TRUE;
   return FALSE; 
 }

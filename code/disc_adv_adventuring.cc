@@ -51,7 +51,7 @@ int forage(TBeing *caster, byte bKnown)
   }
   caster->addToMove(-forage_move);
 
-  if (bSuccess(caster, bKnown, SKILL_FORAGE)) {
+  if (caster->bSuccess(bKnown, SKILL_FORAGE)) {
     forgeItem = ::number(FORAGE_BEGIN,FORAGE_END);
     obj = read_object(forgeItem, VIRTUAL);
 
@@ -664,7 +664,7 @@ void TBeing::doSeekwater()
   } else {
     addPlayerAction(PLR_HUNTING);
     skill = getSkillValue(SKILL_SEEKWATER);
-    worked = bSuccess(this, skill, SKILL_SEEKWATER);
+    worked = bSuccess(skill, SKILL_SEEKWATER);
     if (worked) {
       if (code <= 9)
         sendTo(fmt("%sYou see traces of water %s.%s\n\r") % purple() %
@@ -799,7 +799,7 @@ int encamp(TBeing * caster)
   aff.bitvector = 0;
   aff.be = caster->roomp;
 
-  if (bSuccess(caster, bKnown, SKILL_ENCAMP)) {
+  if (caster->bSuccess(bKnown, SKILL_ENCAMP)) {
     caster->sendTo("You stop and set up camp.\n\r");
     act("$n stops and begins to camp.", FALSE, caster, 0, 0, TO_ROOM);
 
@@ -857,7 +857,7 @@ int TDrinkCon::divineMe(TBeing *caster, int, byte bKnown)
 
   act("You divine for water.", FALSE, caster, this, 0, TO_CHAR);
 
-  if (bSuccess(caster, bKnown, SKILL_DIVINATION)) {
+  if (caster->bSuccess(bKnown, SKILL_DIVINATION)) {
     units = 10 + caster->getSkillLevel(SKILL_DIVINATION)/10;
     units = min(units, (getMaxDrinkUnits() - getDrinkUnits()));
  

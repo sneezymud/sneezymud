@@ -864,6 +864,11 @@ int TMonster::senseWimps()
           act("You feel nudged but you stay focused on your task.",
               TRUE, this, NULL, tmp_victim, TO_VICT);
           return FALSE;
+	} else if(tmp_victim->doesKnowSkill(SKILL_BRAWL_AVOIDANCE) &&
+		  tmp_victim->bSuccess(SKILL_BRAWL_AVOIDANCE)){
+	  act("You are nearly pulled into the brawl, but manage to avoid it.",
+	      TRUE, this, 0, tmp_victim,TO_VICT);
+	  return FALSE;
         } else {
           act("Suddenly, $N finds $Mself involved in the brawl.",
                    TRUE, this, 0, tmp_victim,TO_NOTVICT);

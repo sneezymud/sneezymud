@@ -69,7 +69,7 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, byte bKnown)
   act("You hear a loud humming sound as a swarm of locusts decends from above.", TRUE, locusts, NULL, caster, TO_ROOM);
   act("You hear a loud humming sound as a swarm of locusts decends from above.", TRUE, locusts, NULL, caster, TO_CHAR);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_PLAGUE_LOCUSTS)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_PLAGUE_LOCUSTS)) {
     switch(critSuccess(caster, SPELL_PLAGUE_LOCUSTS)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -206,7 +206,7 @@ int pillarOfSalt(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
 
   int dam = caster->getSkillDam(victim, SPELL_PILLAR_SALT, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_PILLAR_SALT)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_PILLAR_SALT)) {
     switch(critSuccess(caster, SPELL_PILLAR_SALT)) {
       case CRIT_S_KILL:
         CS(SPELL_PILLAR_SALT);
@@ -347,7 +347,7 @@ int rainBrimstone(TBeing * caster, TBeing * victim, int level, byte bKnown, spel
 
   int dam = caster->getSkillDam(victim, spell, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     switch(critSuccess(caster, spell)) {
       case CRIT_S_KILL: 
       case CRIT_S_TRIPLE:
@@ -451,7 +451,7 @@ int rainBrimstone(TBeing * caster, TBeing * victim)
 
 int curse(TBeing * caster, TObj * obj, int, byte bKnown, spellNumT spell)
 {
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     obj->addObjStat(ITEM_NODROP);
 
     obj->curseMe();
@@ -520,7 +520,7 @@ int curse(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT sp
 
   caster->reconcileHurt(victim,discArray[spell]->alignMod);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     // made it violent - Maror
 /*    if (!victim->isLucky(caster->spellLuckModifier(spell)) &&
         !victim->affectedBySpell(spell)) {
@@ -594,7 +594,7 @@ int earthquake(TBeing *caster, int level, byte bKnown, spellNumT spell, int adv_
 
   int dam = caster->getSkillDam(NULL, spell, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     act("The $g below you starts to shake and tremble! Earthquake!!", FALSE, caster, NULL, NULL, TO_CHAR);
     act("$n causes the $g below you to shake and tremble! Earthquake!!", FALSE, caster, NULL, NULL, TO_ROOM);
 
@@ -746,7 +746,7 @@ int callLightning(TBeing *caster, TBeing *victim, int level, byte bKnown, spellN
 
   int dam = caster->getSkillDam(victim, spell, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     if (victim->isLucky(caster->spellLuckModifier(spell)))
       dam /= 2;		// half damage 
 
@@ -851,7 +851,7 @@ int spontaneousCombust(TBeing *caster, TBeing *victim, int level, byte bKnown, i
 
   int dam = caster->getSkillDam(victim, SPELL_SPONTANEOUS_COMBUST, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_SPONTANEOUS_COMBUST)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_SPONTANEOUS_COMBUST)) {
 
     if (critSuccess(caster, SPELL_SPONTANEOUS_COMBUST)) {
       CS(SPELL_SPONTANEOUS_COMBUST);
@@ -1002,7 +1002,7 @@ int flamestrike(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
 
   caster->reconcileHurt(victim, discArray[SPELL_FLAMESTRIKE]->alignMod);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_FLAMESTRIKE)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_FLAMESTRIKE)) {
     act("The blazing column descends toward $n.",
           FALSE, victim, 0, 0, TO_ROOM);
     act("The blazing column descends toward you! <R>FIRE!!!<1>",

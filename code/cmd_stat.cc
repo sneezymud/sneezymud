@@ -1233,6 +1233,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_THROATSLIT:
       case SKILL_HEADBUTT:
       case SKILL_STOMP:
+      case SKILL_BRAWL_AVOIDANCE:
       case SPELL_BLAST_OF_FURY:
       case SKILL_CHI:
       case SKILL_TRIP:
@@ -1352,14 +1353,14 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_RESTORE_LIMB:
       case SPELL_KNIT_BONE:
       case SKILL_RESCUE:
-      case SKILL_SMYTHE:
+      case SKILL_BLACKSMITHING:
       case SKILL_REPAIR_MAGE:
       case SKILL_REPAIR_MONK:
       case SKILL_REPAIR_CLERIC:
       case SKILL_REPAIR_DEIKHAN:
       case SKILL_REPAIR_SHAMAN:
       case SKILL_REPAIR_THIEF:
-      case SKILL_SMYTHE_ADVANCED:
+      case SKILL_BLACKSMITHING_ADVANCED:
       case SKILL_MEND:
       case SKILL_DISARM:
       case SKILL_DUAL_WIELD:
@@ -1373,6 +1374,8 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_GRAPPLE:
       case SKILL_DOORBASH:
       case SKILL_TRANCE_OF_BLADES:
+      case SKILL_WEAPON_RETENTION:
+      case SKILL_CLOSE_QUARTERS_FIGHTING:
       case SKILL_HIKING:
       case SKILL_FORAGE:
       case SKILL_TRANSFORM_LIMB:

@@ -36,10 +36,6 @@ class CSkill {
 
 };
 
-// learnFromDoing prevents const on TBeing in bSuccess
-extern bool bSuccess(TBeing *, int, spellNumT);
-extern bool bSuccess(TBeing *, int, double, spellNumT);
-
 extern bool bPassMageChecks(TBeing * , spellNumT, TThing *);
 extern bool bPassShamanChecks(TBeing * , spellNumT, TThing *);
 extern bool bPassClericChecks(TBeing *, spellNumT);

@@ -36,7 +36,7 @@ static int feignDeath(TBeing * caster)
   caster->sendTo("You try to fake your own demise.\n\r");
 
   int bKnown = caster->getSkillValue(SKILL_FEIGN_DEATH);
-  if (bSuccess(caster, bKnown, SKILL_FEIGN_DEATH)) {
+  if (caster->bSuccess(bKnown, SKILL_FEIGN_DEATH)) {
     caster->deathCry();
     act("$n is dead! R.I.P.", FALSE, caster, 0, 0, TO_ROOM);
 

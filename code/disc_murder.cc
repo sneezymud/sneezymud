@@ -7,7 +7,6 @@
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_base_cup.h"
-#include "obj_drinkcon.h"
 #include "obj_arrow.h"
 #include "liquids.h"
 
@@ -345,7 +344,7 @@ int backstab(TBeing *thief, TBeing * victim)
   level = thief->getSkillLevel(SKILL_BACKSTAB);
   int bKnown = thief->getSkillValue(SKILL_BACKSTAB);
 
-  if ((bSuccess(thief, bKnown, SKILL_BACKSTAB) || !victim->awake())) {
+  if ((thief->bSuccess(bKnown, SKILL_BACKSTAB) || !victim->awake())) {
     thief->setSpellHitroll(thief->getSpellHitroll() + base);
     rc = thief->backstabHit(victim, obj);
     thief->setSpellHitroll(thief->getSpellHitroll() - base);
@@ -699,7 +698,7 @@ int throatSlit(TBeing *thief, TBeing * victim)
   level = thief->getSkillLevel(SKILL_THROATSLIT);
   int bKnown = thief->getSkillValue(SKILL_THROATSLIT);
 
-  if ((bSuccess(thief, bKnown, SKILL_THROATSLIT) || !victim->awake())) {
+  if ((thief->bSuccess(bKnown, SKILL_THROATSLIT) || !victim->awake())) {
     thief->setSpellHitroll(thief->getSpellHitroll() + base);
     rc = thief->throatSlitHit(victim, obj);
     thief->setSpellHitroll(thief->getSpellHitroll() - base);
@@ -927,7 +926,7 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
   int bKnown = ch->getSkillValue (skill);
 
   duration = (level << 2) * UPDATES_PER_MUDHOUR;
-  if (bSuccess(ch, bKnown, skill)) {
+  if (ch->bSuccess(bKnown, skill)) {
     for (j = 0; j < MAX_SWING_AFFECT; j++) {
       if (weapon->isPoisoned()) {
         ch->sendTo("That weapon is already affected by poison!\n\r");
@@ -1063,7 +1062,7 @@ int TTool::garotteMe(TBeing *thief, TBeing *victim)
   if (this != (thief->unequip(thief->getPrimaryHold()))) {
     vlogf(LOG_BUG, "Error in garotte");
   }
-  if (bSuccess(thief, bKnown, SKILL_GARROTTE) || !victim->awake()) {
+  if (thief->bSuccess(bKnown, SKILL_GARROTTE) || !victim->awake()) {
     affectedData aff;
 
     victim->equipChar(this, WEAR_NECK);
@@ -1267,7 +1266,7 @@ int cudgel(TBeing *thief, TBeing *victim)
   if (victim->fight())
     bKnown /= 2;
   thief->reconcileHurt(victim,0.06);
-  if ((bSuccess(thief, bKnown, SKILL_CUDGEL) && 
+  if ((thief->bSuccess(bKnown, SKILL_CUDGEL) && 
        !thief->isNotPowerful(victim, level, SKILL_CUDGEL, SILENT_YES)) || !victim->awake()) {
     if ((i = thief->specialAttack(victim, SKILL_CUDGEL)) ||
 	(i == GUARANTEED_SUCCESS)) {

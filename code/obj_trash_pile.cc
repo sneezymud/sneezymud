@@ -200,7 +200,7 @@ void TTrashPile::attractVermin()
   int count=0;
   TPathFinder path;
   
-  if(::number(0,999) || index<3 || !roomp)
+  if(::number(0,9999) || index<3 || !roomp)
     return;
 
   for(TThing *t=roomp->getStuff();t;t=t->nextThing){
@@ -209,8 +209,13 @@ void TTrashPile::attractVermin()
   }
   // don't spawn anything if there are already 11 mobs/people in the room
   // sort of a kluge to help prevent endless mob spawning
-  if(count>11)
+  if(count>5)
     return;
+
+  // don't spawn if the room is almost full either
+  if(roomp->getMoblim() && count >= (roomp->getMoblim()-1))
+    return;
+
 
   // see if there is a clear path outside, so we don't spawn in locked areas
   // player homes, etc

@@ -858,12 +858,6 @@ void TBeing::doPractice(const char *argument)
     return;
   }
   argument = one_argument(argument, arg);
-  if (is_abbrev(arg, "hth") &&
-      (classNum = discNames[DISC_HTH].class_num) &&
-      hasClass(classNum)) {
-    sendSkillsList(DISC_HTH);
-    return;
-  }
 
   if (is_abbrev(arg, "class")) {
     int which = 0;
@@ -912,9 +906,6 @@ void TBeing::doPractice(const char *argument)
       sendTo("You need to specify a discipline: practice discipline <discipline> <class>.\n\r");
       return;
     } else {
-      if (is_abbrev(arg, "hth")) {
-        strcpy(arg, discNames[DISC_HTH].practice);
-      }
       if (is_abbrev(arg, "fighting") || 
           is_abbrev(arg, "alchemy") || 
           is_abbrev(arg, "aegis") || 
@@ -1485,8 +1476,8 @@ void TPerson::doIdea(const sstring &arg)
     strcpy(desc->name, "Idea");
     desc->str = new const char *('\0');
     desc->max_str = MAX_MAIL_SIZE;
-  }
-  desc->clientf(fmt("%d") % CLIENT_IDEA);
+  } else
+    desc->clientf(fmt("%d") % CLIENT_IDEA);
 }
 
 void TBeing::doTypo(const sstring &)
@@ -1516,8 +1507,8 @@ void TPerson::doTypo(const sstring &arg)
     strcpy(desc->name, "Typo");
     desc->str = new const char *('\0');
     desc->max_str = MAX_MAIL_SIZE;
-  }
-  desc->clientf(fmt("%d") % CLIENT_TYPO);
+  } else
+    desc->clientf(fmt("%d") % CLIENT_TYPO);
 }
 
 void TBeing::doBug(const sstring &)
@@ -1547,8 +1538,8 @@ void TPerson::doBug(const sstring &arg)
     strcpy(desc->name, "Bug");
     desc->str = new const char *('\0');
     desc->max_str = MAX_MAIL_SIZE;
-  }
-  desc->clientf(fmt("%d") % CLIENT_BUG);
+  } else
+    desc->clientf(fmt("%d") % CLIENT_BUG);
 }
 
 void TBeing::doGroup(const char *argument)
@@ -1832,11 +1823,11 @@ void TBeing::doGroup(const char *argument)
         act("$n groups $mself.",TRUE,this,0,0,TO_ROOM);
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
 	if (hasClass(CLASS_SHAMAN)) {
-          if (desc && desc->m_bIsClient) 
-	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % getName() % getHit() % getLifeforce() % attack_modes[getCombatMode()]);
+          if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) 
+	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % getLifeforce() % attack_modes[getCombatMode()]);
 	} else { 
-          if (desc && desc->m_bIsClient) 
-	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % getName() % getHit() % getMana() % attack_modes[getCombatMode()]);
+          if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % getMana() % attack_modes[getCombatMode()]);
 	}       
         if (victim->desc)
           victim->desc->session.group_share = 1;
@@ -1849,35 +1840,34 @@ void TBeing::doGroup(const char *argument)
         victim->sendTo(COLOR_MOBS, fmt("You are now a member of %s's group.\n\r") %getName());
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
 	if (hasClass(CLASS_SHAMAN)) {
-	  if (desc && desc->m_bIsClient)
-	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % victim->getName() % victim->getHit() % victim->getLifeforce() % attack_modes[victim->getCombatMode()]);
+	  if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getLifeforce() % attack_modes[victim->getCombatMode()]);
 	} else {
-	  if (desc && desc->m_bIsClient)
-	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % victim->getName() % victim->getHit() % victim->getMana() % attack_modes[victim->getCombatMode()]);
+	  if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getMana() % attack_modes[victim->getCombatMode()]);
 	}        
         for (f = followers; f; f = f->next) {
           TBeing *b = f->follower;
-          if (victim->desc && victim->desc->m_bIsClient)  {
-            victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % 
-                       b->getName() % b->getHit() % b->getMana() % attack_modes[b->getCombatMode()]);
+          if (victim->desc && (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))  {
+            victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, b->getName(), NULL, COLOR_NONE, FALSE) % b->getHit() % b->getMana() % attack_modes[b->getCombatMode()]);
           } 
-          if (b->desc && b->desc->m_bIsClient) {
+          if (b->desc && (b->desc->m_bIsClient || IS_SET(b->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
 	    if (hasClass(CLASS_SHAMAN)) {
-	      b->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
-			       victim->getName() % victim->getHit() % victim->getLifeforce() % attack_modes[victim->getCombatMode()]);
+	      b->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(b, b->desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getLifeforce() % attack_modes[victim->getCombatMode()]);
 	    } else {
-	      b->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
-			       victim->getName() % victim->getHit() % victim->getMana() % attack_modes[victim->getCombatMode()]);
+	      b->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(b, b->desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getMana() % attack_modes[victim->getCombatMode()]);
 	    }
           }
         }
         found = TRUE;
         if (victim->desc) {
 	  if (hasClass(CLASS_SHAMAN)) {
-	    victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % getName() % getHit() % getLifeforce() % attack_modes[getCombatMode()]);
+            if (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
+	      victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % getLifeforce() % attack_modes[getCombatMode()]);
 	    victim->desc->session.group_share = 1;
 	  } else {
-	    victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % getName() % getHit() % getMana() % attack_modes[getCombatMode()]);
+            if (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
+	      victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % getMana() % attack_modes[getCombatMode()]);
 	    victim->desc->session.group_share = 1;
 	  }
         }
@@ -1935,7 +1925,7 @@ void TBeing::doGroup(const char *argument)
             
             if (desc) {
               desc->session.group_share = 1;
-              if (desc->m_bIsClient)
+              if (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
                 desc->clientf(fmt("%d") % CLIENT_GROUPDELETEALL);
             }
             for (f = followers; f; f = f->next) {
@@ -1943,7 +1933,7 @@ void TBeing::doGroup(const char *argument)
                 REMOVE_BIT(f->follower->specials.affectedBy, AFF_GROUP);
                 if (f->follower->desc) {
                   f->follower->desc->session.group_share = 1;
-                  if (f->follower->desc->m_bIsClient)
+                  if (f->follower->desc->m_bIsClient || IS_SET(f->follower->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
                     f->follower->desc->clientf(fmt("%d") % CLIENT_GROUPDELETEALL);
                 }
               }
@@ -1953,7 +1943,7 @@ void TBeing::doGroup(const char *argument)
             REMOVE_BIT(specials.affectedBy, AFF_GROUP);
             if (desc) {
               desc->session.group_share = 1;
-              if (desc->m_bIsClient)
+              if (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
                 desc->clientf(fmt("%d") % CLIENT_GROUPDELETEALL);
             }
           }
@@ -1968,17 +1958,17 @@ void TBeing::doGroup(const char *argument)
           REMOVE_BIT(victim->specials.affectedBy, AFF_GROUP);
           if (victim->desc) {
             victim->desc->session.group_share = 1;
-            if (victim->desc->m_bIsClient)
+            if (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
               victim->desc->clientf(fmt("%d") % CLIENT_GROUPDELETEALL);
           }
           for (f = followers; f; f = f->next) {
             if (IS_SET(f->follower->specials.affectedBy, AFF_GROUP)) {
-              if (f->follower->desc && f->follower->desc->m_bIsClient)
-                f->follower->desc->clientf(fmt("%d|%s") % CLIENT_GROUPDELETE % victim->getName());
-            }
+              if (f->follower->desc && (f->follower->desc->m_bIsClient || IS_SET(f->follower->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+                f->follower->desc->clientf(fmt("%d|%s") % CLIENT_GROUPDELETE % colorString(f->follower, f->follower->desc, victim->getName(), NULL, COLOR_NONE, FALSE));
+	    }
           }
-          if (desc && desc->m_bIsClient) 
-            desc->clientf(fmt("%d|%s") % CLIENT_GROUPDELETE % victim->getName());
+          if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+            desc->clientf(fmt("%d|%s") % CLIENT_GROUPDELETE % colorString(this, desc, victim->getName(), NULL, COLOR_NONE, FALSE));
         }
       } else {
         if (fight()) {
@@ -1993,41 +1983,39 @@ void TBeing::doGroup(const char *argument)
         act("You are now a member of $N's group.", FALSE, victim, 0, this, TO_CHAR);
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
 	if (hasClass(CLASS_SHAMAN)) {
-	  if (desc && desc->m_bIsClient)
-	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % victim->getName() % victim->getHit() % victim->getLifeforce() % attack_modes[victim->getCombatMode()]);
+	  if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getLifeforce() % attack_modes[victim->getCombatMode()]);
 	} else {
-	  if (desc && desc->m_bIsClient)
-	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % victim->getName() % victim->getHit() % victim->getMana() % attack_modes[victim->getCombatMode()]);
+	  if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+	    desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getMana() % attack_modes[victim->getCombatMode()]);
 	}        
         if (victim != this) {
           for (f = followers; f; f = f->next) {
             TBeing *b = f->follower;
-            if (victim->desc && victim->desc->m_bIsClient)  {
+            if (victim->desc && (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))  {
 	      if (hasClass(CLASS_SHAMAN)) {
-		victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
-				      b->getName() % b->getHit() % b->getLifeforce() % attack_modes[b->getCombatMode()]);
+		victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, b->getName(), NULL, COLOR_NONE, FALSE) % b->getHit() % b->getLifeforce() % attack_modes[b->getCombatMode()]);
 	      } else {
-		victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
-				      b->getName() % b->getHit() % b->getMana() % attack_modes[b->getCombatMode()]);
+		victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, b->getName(), NULL, COLOR_NONE, FALSE) % b->getHit() % b->getMana() % attack_modes[b->getCombatMode()]);
 	      }
             }
-            if (b->desc && b->desc->m_bIsClient) {
+            if (b->desc && (b->desc->m_bIsClient || IS_SET(b->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
 	      if (hasClass(CLASS_SHAMAN)) {
-		b->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
-				 victim->getName() % victim->getHit() % victim->getLifeforce() % attack_modes[victim->getCombatMode()]);
+		b->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(b, b->desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getLifeforce() % attack_modes[victim->getCombatMode()]);
 	      } else {
-		b->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
-				 victim->getName() % victim->getHit() % victim->getMana() % attack_modes[victim->getCombatMode()]);
+		b->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(b, b->desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getMana() % attack_modes[victim->getCombatMode()]);
 	      }
             }
           }
         }
         if (victim->desc) {
 	  if (hasClass(CLASS_SHAMAN)) {
-	    victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % getName() % getHit() % getLifeforce() % attack_modes[getCombatMode()]);
+            if (victim->desc && (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+	      victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % getLifeforce() % attack_modes[getCombatMode()]);
 	    victim->desc->session.group_share = 1;
 	  } else {
-	    victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % getName() % getHit() % getMana() % attack_modes[getCombatMode()]);
+            if (victim->desc && (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+	      victim->desc->clientf(fmt("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % getMana() % attack_modes[getCombatMode()]);
 	    victim->desc->session.group_share = 1;
 	  }
         }
@@ -3113,7 +3101,7 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
   if(ch->hasClass(CLASS_MAGE))
     skill=max(skill+50, 100);
 
-  if (!bSuccess(ch, ch->getSkillValue(SKILL_READ_MAGIC), SKILL_READ_MAGIC)) {
+  if (!ch->bSuccess(SKILL_READ_MAGIC)) {
     ch->sendTo("You flub the words and the spell does not fire.\n\r");
     return DELETE_THIS;
   }

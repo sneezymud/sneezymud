@@ -21,6 +21,9 @@ const unsigned int PROMPT_EXPTONEXT_LEVEL   = (1<<14);
 const unsigned int PROMPT_VTANSI_BAR        = (1<<15);
 const unsigned int PROMPT_PIETY             = (1<<16);
 const unsigned int PROMPT_LIFEFORCE         = (1<<17);
+// Add new prompt options here.
+const unsigned int PROMPT_CLASSIC_ANSIBAR   = (1<<30);
+const unsigned int PROMPT_CLIENT_PROMPT     = (1<<31);
 
 enum termTypeT {
      TERM_NONE,  //         = 0;

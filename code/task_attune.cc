@@ -165,7 +165,7 @@ int task_attuning(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
     if (ch->task->status) {
         learning = ch->getSkillValue(SKILL_ATTUNE);
         ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
-        if (bSuccess(ch, learning, SKILL_ATTUNE)) {
+        if (ch->bSuccess(learning, SKILL_ATTUNE)) {
           symbol->attunePulse(ch);
           if (ch->task)
             ch->task->status--;

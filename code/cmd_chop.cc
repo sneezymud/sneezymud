@@ -214,7 +214,7 @@ static int chop(TBeing *c, TBeing *v)
   i = c->specialAttack(v,SKILL_CHOP);
   if (!v->awake() ||
          (i && i != GUARANTEED_FAILURE &&
-         bSuccess(c, bKnown, SKILL_CHOP))) {
+         c->bSuccess(bKnown, SKILL_CHOP))) {
     rc = chopHit(c, v, bKnown + percent);
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;

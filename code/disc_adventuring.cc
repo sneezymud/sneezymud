@@ -210,7 +210,7 @@ void TBeing::doBandage(const sstring &arg)
       sendTo("code error - tell a god\n\r");
       return;
     } else {
-      if (bSuccess(this,  getSkillValue(SKILL_BANDAGE), SKILL_BANDAGE)) {
+      if (bSuccess( SKILL_BANDAGE)) {
         if (band_num > 1) {
           buf = fmt("You quickly combine %d bandages into one big enough to bandage that part.\n\r") %band_num;
           sendTo(buf);

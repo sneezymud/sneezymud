@@ -31,6 +31,10 @@ int goToMorgue(TBeing *myself)
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
 
+    rc = myself->doDrop("all.lost-limb", NULL);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+
     // chance to purge the room of objects
     if (myself->roomp->roomIsEmpty(FALSE) && !::number(0,34)) {
       TThing *t, *t2;

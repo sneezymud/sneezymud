@@ -71,8 +71,8 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 	  scroll_obj->setSpell(2, TYPE_UNDEFINED);
           scroll_obj->setMagicLevel(ch->getClassLevel(CLASS_MAGE));
 
-          if (bSuccess(ch, knowledge, SKILL_SCRIBE) ||
-	      bSuccess(ch, readmagic, SKILL_READ_MAGIC)) {
+          if (ch->bSuccess(knowledge, SKILL_SCRIBE) ||
+	      ch->bSuccess(readmagic, SKILL_READ_MAGIC)) {
             ch->sendTo(fmt("You have successfully scribed your scroll%s.\n\r") %
 		       (how_many == 1 ? "" : "s"));
 	    if (ch->getSkillValue(which) > 0) {

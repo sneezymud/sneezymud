@@ -409,7 +409,6 @@ void TBeing::doToggle(const char *arg2)
       sendTo(COLOR_BASIC, fmt("NewbiePK          : %s\n\r") % on_or_off(NewbiePK));
       sendTo(COLOR_BASIC, fmt("Time DB Queries   : %s  | ") %on_or_off(timeQueries));
       sendTo(COLOR_BASIC, fmt("Twinky Combat     : %s  | ") % on_or_off(Twink));
-      sendTo(COLOR_BASIC, fmt("Lapsos Speech     : %s\n\r") %on_or_off(Lapspeak));
       sendTo(COLOR_BASIC, fmt("Game Loop Timing  : %s\n\r") % on_or_off(gameLoopTiming));
 
 
@@ -503,12 +502,12 @@ void TBeing::doToggle(const char *arg2)
     if (isPlayerAction(PLR_STEALTH)) {
       sendTo("STEALTH mode OFF.\n\r");
       remPlayerAction(PLR_STEALTH);
-      if (desc)
+      if (desc && desc->m_bIsClient)
 	desc->clientf(fmt("%d|%d") % CLIENT_STEALTH % FALSE);
     } else {
       sendTo("STEALTH mode ON.\n\r");
       addPlayerAction(PLR_STEALTH);
-      if (desc)
+      if (desc && desc->m_bIsClient)
 	desc->clientf(fmt("%d|%d") % CLIENT_STEALTH % TRUE);
     }
   } else if (is_abbrev(arg, "newbiehelper") ||
@@ -920,11 +919,6 @@ void TBeing::doToggle(const char *arg2)
 	   (WizShout ? "shout" : "not shout"));
     vlogf(LOG_MISC,fmt("%s has turned shout %s for immortals.") % getName() %
 	  (WizShout ? "on" : "off"));
-  } else if (is_abbrev(arg, "lapspeak") && hasWizPower(POWER_TOGGLE)) {
-    Lapspeak = ! Lapspeak;
-    sendTo(fmt("Lapspeak is now %s.\n\r") % (Lapspeak ? "on" : "off"));
-    vlogf(LOG_MISC,fmt("%s has turned Lapspeak %s.") % getName() %
-	  (Lapspeak ? "on" : "off"));
   } else if (is_abbrev(arg, "twink") && hasWizPower(POWER_TOGGLE)) {
     Twink = ! Twink;
     sendTo(fmt("Twink combat mode is now %s.\n\r") % (Twink ? "on" : "off"));
@@ -952,10 +946,10 @@ void TBeing::doToggle(const char *arg2)
     vlogf(LOG_MISC,fmt("%s has %s game loop timing.") % getName() %
 	  (gameLoopTiming ? "enabled" : "disabled"));    
   } else if (is_abbrev(arg, "testcode1") && hasWizPower(POWER_TOGGLE)) {
-#if 1
+#if 0
     // if you are using testcode, change this so we don't collide usages
-    if (strcmp(name, "Peel")) {
-      sendTo("Sorry, this is only for Peel's use in testing.\n\r");
+    if (strcmp(name, "Batopr")) {
+      sendTo("Sorry, this is only for Batopr's use in testing.\n\r");
       return;
     }
 #endif

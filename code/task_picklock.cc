@@ -60,7 +60,7 @@ void TTool::pickPulse(TBeing *ch)
   difficulties = 3 * exitp->lock_difficulty;
   if (exitp->lock_difficulty >= 100) {
     // guaranteed unpickable, see if they recognize this fact 
-    if (bSuccess(ch, skill, SKILL_PICK_LOCK)) {
+    if (ch->bSuccess(skill, SKILL_PICK_LOCK)) {
       act("This lock is totally impossible to pick.  You give up.",
           TRUE, ch, this, 0, TO_CHAR);
       ch->stopTask();
@@ -78,7 +78,7 @@ void TTool::pickPulse(TBeing *ch)
       act("You wiggle $p in the lock, without luck. (yet...)",
           TRUE,ch,this,0,TO_CHAR);
     }
-  } else if (bSuccess(ch, skill, SKILL_PICK_LOCK)) {
+  } else if (ch->bSuccess(skill, SKILL_PICK_LOCK)) {
     // this used to just be an automatic for the else case
     // but what the heck, this makes it a bit harder to pick
     // and helps make pick-lock a learn-by-doing too

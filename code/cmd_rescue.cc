@@ -69,7 +69,7 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
   // int level = caster->getSkillLevel(skill);
   int bKnown = caster->getSkillValue(skill);
 
-  if (bSuccess(caster, bKnown + percent, skill)) {
+  if (caster->bSuccess(bKnown + percent, skill)) {
     caster->sendTo("Banzai! To the rescue...\n\r");
     act("You are rescued by $N, you are confused!",
          FALSE, victim, 0, caster, TO_CHAR);

@@ -751,6 +751,9 @@ class TBeing : public TThing {
     const char *WhiteOnPurple() const;
     const char *WhiteOnRed() const;
 
+    bool bSuccess(spellNumT);
+    bool bSuccess(int, spellNumT);
+    bool bSuccess(int, double, spellNumT);
     race_t getRaceIndex(const char *name) const;
     bool isWinged() const;
     bool isFourLegged() const;

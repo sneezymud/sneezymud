@@ -99,7 +99,7 @@ int sneak(TBeing *thief, spellNumT skill)
   int bKnown = thief->getSkillValue(skill);
   bKnown += thief->plotStat(STAT_CURRENT, STAT_DEX, -70, 15, 0);
 
-  if (bSuccess(thief, bKnown, skill)) {
+  if (thief->bSuccess(bKnown, skill)) {
     af.modifier = 1 + level/2;
     af.type = skill;
     af.duration = 5 * level;
@@ -151,7 +151,7 @@ int hide(TBeing *thief, spellNumT skill)
   int bKnown = thief->getSkillValue(skill);
   bKnown += thief->plotStat(STAT_CURRENT, STAT_DEX, -40, 15, 0);
 
-  if (bSuccess(thief, bKnown, skill)) {
+  if (thief->bSuccess(bKnown, skill)) {
     SET_BIT(thief->specials.affectedBy, AFF_HIDE);
   } else {
   }
@@ -221,7 +221,7 @@ int subterfuge(TBeing *thief, TBeing *victim)
     return TRUE;
   }
 
-  if (bSuccess(thief, bKnown, SKILL_SUBTERFUGE)) {
+  if (thief->bSuccess(bKnown, SKILL_SUBTERFUGE)) {
     if (victim->isLucky(thief->spellLuckModifier(SKILL_SUBTERFUGE))) {
       thief->sendTo("Uhoh! You simply fail to confuse your target!\n\r");
       thief->setCharFighting(victim);
@@ -337,7 +337,7 @@ int pickLocks(TBeing *thief, const char * argument, const char * type, const cha
 
 int TBeing::SpyCheck()
 {
-  if (bSuccess(this, getSkillValue(SKILL_SPY), SKILL_SPY))
+  if (bSuccess(SKILL_SPY))
     return TRUE;
 
   return FALSE;
@@ -378,7 +378,7 @@ int spy(TBeing *thief)
   aff.modifier = 0;
   aff.location = APPLY_NONE;
 
-  if (bSuccess(thief, bKnown, SKILL_SPY)) {
+  if (thief->bSuccess(bKnown, SKILL_SPY)) {
     aff.bitvector = AFF_SCRYING;
     thief->affectTo(&aff, -1);
     return TRUE;
@@ -416,7 +416,7 @@ int TBeing::thiefDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlot
 
   // check bSuccess after above check, so that we limit how often we
   // call the learnFrom stuff
-  if (bSuccess(v, v->getSkillValue(SKILL_DODGE_THIEF), SKILL_DODGE_THIEF)) {
+  if (v->bSuccess(SKILL_DODGE_THIEF)) {
     *dam = 0;
 
     strcpy(type, "dodge");
@@ -599,7 +599,7 @@ void TBeing::doTrack(const char *argument)
       worked = (::number(0, 110) < skill);
     } else {
       skill += getSkillValue(SKILL_TRACK);
-      worked = bSuccess(this, skill, SKILL_TRACK);
+      worked = bSuccess(skill, SKILL_TRACK);
     }
     if (worked) {
       if (code <= 9)

@@ -379,7 +379,7 @@ int disease_bleeding(TBeing *victim, int message, affectedData *af)
           // attempt to dodge it altogether
           amt = victim->getSkillValue(SKILL_SNOFALTE);
           if ((::number(0,99) < 40) &&
-               bSuccess(victim, amt, SKILL_SNOFALTE)) {
+               victim->bSuccess(amt, SKILL_SNOFALTE)) {
             victim->sendTo("You utilize the powers of snofalte to slow your bleeding.\n\r");
             break;
           }

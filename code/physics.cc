@@ -202,7 +202,7 @@ bool TBeing::canSwim(dirTypeT dir)
 
   // good swimming skill allows extra 60 pounds of mass
   int swim = getSkillValue(SKILL_SWIM);
-  if (bSuccess(this, swim, SKILL_SWIM))
+  if (bSuccess(swim, SKILL_SWIM))
     mass += (int) ((-0.6 * swim) * GRAMS_PER_POUND);
 
   // this is ok to do since mass is in grams, and volume is in cm^3
@@ -602,7 +602,7 @@ int TBeing::checkFalling()
   count = 0;
   num1 = (doesKnowSkill(SKILL_CATFALL) ||
 	  affectedBySpell(SPELL_FEATHERY_DESCENT) ||
-          bSuccess(this, getSkillValue(SPELL_FEATHERY_DESCENT)/4, SPELL_FEATHERY_DESCENT)) ? 10 : 5;
+          bSuccess(getSkillValue(SPELL_FEATHERY_DESCENT)/4, SPELL_FEATHERY_DESCENT)) ? 10 : 5;
   num2 = num1 - 2;
 
   while (count < 100) {

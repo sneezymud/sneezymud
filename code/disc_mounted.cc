@@ -18,13 +18,11 @@ int TBeing::advancedRidingBonus(TMonster *mount){
     return 0;
 
   if(doesKnowSkill(SKILL_ADVANCED_RIDING)){
-    if(bSuccess(this, getSkillValue(SKILL_ADVANCED_RIDING),
-		SKILL_ADVANCED_RIDING))
+    if(bSuccess(SKILL_ADVANCED_RIDING))
       skillTotal+=getSkillValue(SKILL_ADVANCED_RIDING);
   }
   if(doesKnowSkill(mount->mountSkillType())){
-    if(bSuccess(this, getSkillValue(mount->mountSkillType()),
-		mount->mountSkillType()))
+    if(bSuccess(mount->mountSkillType()))
       skillTotal+=getSkillValue(mount->mountSkillType());
   }
 
@@ -38,7 +36,7 @@ void TBeing::calmMount(TBeing *m){
 
   if(!m || !doesKnowSkill(SKILL_CALM_MOUNT) || 
      !(mount=dynamic_cast<TMonster *>(m)) ||
-     !bSuccess(this, getSkillValue(SKILL_CALM_MOUNT), SKILL_CALM_MOUNT))
+     !bSuccess(SKILL_CALM_MOUNT))
     return;
 
   skillTotal+=getSkillValue(SKILL_CALM_MOUNT); // 1/2 calm mount

@@ -1758,10 +1758,10 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_CURES, CLASS_CLERIC, "cures"},
   {DISC_HAND_OF_GOD, CLASS_CLERIC, "hand of the deities"},
   {DISC_WARRIOR, CLASS_WARRIOR, "warrior abilities"},
-  {DISC_HTH, CLASS_WARRIOR, "hand to hand abilities"},  //15
+  {DISC_DUELING, CLASS_WARRIOR, "dueling"},  //15
   {DISC_BRAWLING, CLASS_WARRIOR, "brawling skills"},
-  {DISC_PHYSICAL, CLASS_WARRIOR, "physical skills"},
-  {DISC_SMYTHE, CLASS_WARRIOR, "smythe"},
+  {DISC_SOLDIERING, CLASS_WARRIOR, "soldiering skills"},
+  {DISC_BLACKSMITHING, CLASS_WARRIOR, "blacksmithing"},
   {DISC_RANGER, CLASS_RANGER, "ranger abilities"},
   {DISC_BOGUS1, 0, "bogus1"},  //20
   {DISC_SHAMAN_ARMADILLO, CLASS_SHAMAN, "armadillo abilities"},
@@ -1831,10 +1831,10 @@ const char * const disc_names[MAX_DISCS] =
   "Cures",
   "Hand Of the Deities",
   "Warrior Abilities",
-  "Hand to Hand Abilities",     // 15
+  "Dueling Skills",     // 15
   "Brawling Skills",
-  "Physical Skills",
-  "Smythe Skills",
+  "Soldiering Skills",
+  "Blacksmithing Skills",
   "Ranger Abilities",
   "Fighting Skills",            // 20
   "Armadillo Abilities",

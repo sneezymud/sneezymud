@@ -36,8 +36,8 @@ class TTool : public TObj {
     virtual void unequipMe(TBeing *);
     virtual void describeCondition(const TBeing *) const;
     virtual void describeObjectSpecifics(const TBeing *) const;
-    virtual void findSmytheTools(TTool **, TTool**);
-    virtual void smythePulse(TBeing *, TObj *);
+    virtual void findBlacksmithingTools(TTool **, TTool**);
+    virtual void blacksmithingPulse(TBeing *, TObj *);
     virtual void pickPulse(TBeing *);
     virtual int  skinPulse(TBeing *, TBaseCorpse *);
     virtual int  butcherPulse(TBeing *, TBaseCorpse *);

@@ -1072,14 +1072,14 @@ void processRepairFiles(void)
 
 int repairMetal(TBeing *ch, TObj *o)
 {
-  if (!ch->doesKnowSkill(SKILL_SMYTHE)) {
+  if (!ch->doesKnowSkill(SKILL_BLACKSMITHING)) {
     ch->sendTo("You really don't know enough about repairing metal items.\n\r");
     return FALSE;
   }
   act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
   act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_SMYTHE, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  start_task(ch, NULL, NULL, TASK_BLACKSMITHING, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
   return 0;
 }
 
@@ -1150,14 +1150,14 @@ int repairRock(TBeing *ch, TObj *o)
 
 int repairCrystal(TBeing *ch, TObj *o)
 {
-  if (!ch->doesKnowSkill(SKILL_SMYTHE_ADVANCED) && !ch->doesKnowSkill(SKILL_REPAIR_THIEF)) {
+  if (!ch->doesKnowSkill(SKILL_BLACKSMITHING_ADVANCED) && !ch->doesKnowSkill(SKILL_REPAIR_THIEF)) {
     ch->sendTo("You really don't know enough about repairing crystalline materials.\n\r");
     return FALSE;
   }
   act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
   act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_SMYTHE_ADVANCED, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
+  start_task(ch, NULL, NULL, TASK_BLACKSMITHING_ADVANCED, o->name, 999, (ushort) ch->in_room, 0, 0, 0);
   return 0;
 }
 

@@ -39,7 +39,7 @@ int barkskin(TBeing * caster, TBeing * victim, int level, byte bKnown)
   aff.bitvector = 0;
   aff.modifier = -90;
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SKILL_BARKSKIN)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SKILL_BARKSKIN)) {
     if (critSuccess(caster, SKILL_BARKSKIN)) {
       CS(SKILL_BARKSKIN);
       aff.modifier *= 2;
@@ -179,7 +179,7 @@ int treeWalk(TBeing * caster, const char * arg, int, byte bKnown)
 
   for (;arg && *arg && isspace(*arg); arg++);
 
-  if (bSuccess(caster,bKnown,SPELL_TREE_WALK)) {
+  if (caster->bSuccess(bKnown,SPELL_TREE_WALK)) {
     strcpy(tmpname, arg);
     tmp = tmpname;
 

@@ -66,7 +66,6 @@ bool WizInvis = FALSE;
 bool WizShout = FALSE;
 bool WizGoto = FALSE;
 bool AllowPcMobs = TRUE;    // PCs with same name as mob allowed?
-bool Lapspeak = FALSE; // Heh. 
 bool Twink = FALSE; // combat twink fun stuff
 bool timeQueries = false; // store db query speeds THIS IS SLOW
 bool gameLoopTiming = false; // spit out game loop info, very spammy
@@ -2813,7 +2812,22 @@ void TPerson::doStart()
     addPracs(prac_gain, Class);
     // we need to do first level pracs this way even with the new system - dash
   }
-  
+
+  doNewbieEqLoad(RACE_NORACE, 0, true);
+
+  if (hasClass(CLASS_CLERIC))
+    personalize_object(NULL, this, 500, -1);
+
+  if (hasClass(CLASS_MAGE))
+    personalize_object(NULL, this, 321, -1);
+
+  if (hasClass(CLASS_SHAMAN)) {
+    personalize_object(NULL, this, 31317, -1);
+    personalize_object(NULL, this, 31395, -1);
+  }
+
+  if (hasClass(CLASS_DEIKHAN))
+    personalize_object(NULL, this, 500, -1);
 
   if ((r_num = real_object(1458)) >= 0) {
     obj = read_object(r_num, REAL);
@@ -2843,21 +2857,6 @@ void TPerson::doStart()
       *this += *obj;    // newbie staff 
     }
   }
-
-  if (hasClass(CLASS_CLERIC)) 
-    personalize_object(NULL, this, 500, -1);
-  
-  if (hasClass(CLASS_MAGE))
-    personalize_object(NULL, this, 321, -1);
-
-  if (hasClass(CLASS_SHAMAN)) {
-    personalize_object(NULL, this, 31317, -1);
-    personalize_object(NULL, this, 31395, -1);
-  }
-  if (hasClass(CLASS_DEIKHAN))
-    personalize_object(NULL, this, 500, -1);
-
-  doNewbieEqLoad(RACE_NORACE, 0, true);
 
   if (!desc->m_bIsClient) {
     sendTo("You have been given appropriate newbie equipment.\n\r");

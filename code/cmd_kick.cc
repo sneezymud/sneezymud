@@ -330,7 +330,7 @@ static int kick(TBeing *ch, TBeing *victim, spellNumT skill)
   i = ch->specialAttack(victim, skill);
   // check bSuccess last so skill counters are OK
   if (i && (i != GUARANTEED_FAILURE) &&
-      bSuccess(ch, bKnown, skill)) {
+      ch->bSuccess(bKnown, skill)) {
     if (victim->canCounterMove(bKnown/2)) {
       SV(skill);
       act("$N blocks your kick.", TRUE, ch, 0, victim, TO_CHAR, ANSI_RED);

@@ -412,7 +412,7 @@ int TLight::chiMe(TBeing *tLunatic)
   } else
     tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
-  if (!bSuccess(tLunatic, bKnown, SKILL_CHI)) {
+  if (!tLunatic->bSuccess(bKnown, SKILL_CHI)) {
     act("You fail to affect $p in any way.",
         FALSE, tLunatic, this, NULL, TO_CHAR);
     return true;

@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_warrior.h,v $
+// Revision 5.4  2004/12/06 18:39:47  peel
+// renamed smythe to blacksmithing
+// renamed hand to hand to dueling
+// renamed physical to soldiering
+// added weapon retention and brawl avoidance skill stubs
+//
 // Revision 5.3  2002/11/12 00:14:33  peel
 // added isBasic() and isFast() to CDiscipline
 // added isBasic() return true to each discipline that is a basic disc
@@ -43,7 +49,7 @@ public:
     CSkill skRescue;
 
 //Level 20
-    CSkill skSmythe;
+    CSkill skBlacksmithing;
     CSkill skDisarm;
 //Level 25
     CSkill skBerserk;
@@ -57,7 +63,7 @@ public:
       skBash(),
       skHeadbutt(),
       skRescue(),
-      skSmythe(),
+      skBlacksmithing(),
       skDisarm(),
       skBerserk(),
       skSwitch(),
@@ -70,7 +76,7 @@ public:
       skBash(a.skBash),
       skHeadbutt(a.skHeadbutt),
       skRescue(a.skRescue),
-      skSmythe(a.skSmythe),
+      skBlacksmithing(a.skBlacksmithing),
       skDisarm(a.skDisarm),
       skBerserk(a.skBerserk),
       skSwitch(a.skSwitch),
@@ -84,7 +90,7 @@ public:
       skBash = a.skBash;
       skHeadbutt = a.skHeadbutt;
       skRescue = a.skRescue;
-      skSmythe = a.skSmythe;
+      skBlacksmithing = a.skBlacksmithing;
       skDisarm = a.skDisarm;
       skBerserk = a.skBerserk;
       skSwitch = a.skSwitch;

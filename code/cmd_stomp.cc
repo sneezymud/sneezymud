@@ -204,7 +204,7 @@ static int stomp(TBeing *c, TBeing *victim)
 
   if (victim->getPosition() <= POSITION_STUNNED) {
     return (stompHit(c, victim));
-  } else if (bSuccess(c, bKnown + percent, SKILL_STOMP) &&
+  } else if (c->bSuccess(bKnown + percent, SKILL_STOMP) &&
          (i = c->specialAttack(victim,SKILL_STOMP)) &&
          i != GUARANTEED_FAILURE &&
         percent < bKnown&&

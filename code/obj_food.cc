@@ -14,12 +14,12 @@
 #include "shop.h"
 #include "obj_food.h"
 #include "obj_base_cup.h"
-#include "liquids.h"
 #include "obj_pool.h"
 #include "disc_aegis.h"
 #include "disc_shaman_armadillo.h"
 #include "shopowned.h"
 #include "corporation.h"
+#include "liquids.h"
 
 #define DRINK_DEBUG 0
 
@@ -178,7 +178,7 @@ int TBaseCup::drinkMe(TBeing *ch)
       ch->gainCondition(DRUNK, (getLiqDrunk() > 0 ? 1 : -1));
 
     if(getLiqDrunk()>0)
-      bSuccess(ch, ch->getSkillValue(SKILL_ALCOHOLISM), SKILL_ALCOHOLISM);
+      ch->bSuccess(SKILL_ALCOHOLISM);
   }
 
   if(ch->isVampire()){
@@ -639,9 +639,18 @@ void TBaseCup::sipMe(TBeing *ch)
   if (!isDrinkConFlag(DRINK_PERM))
     addToDrinkUnits(-1);
 
-  if (!getDrinkUnits()) {    /* The last bit */
-    act("$p is completely empty.", FALSE, ch, this, 0, TO_CHAR);
-    remDrinkConFlags(DRINK_POISON);
+  if (getDrinkUnits() <= 0) {
+    TPool * tPool = dynamic_cast<TPool *>(this);
+
+    if (!tPool) {
+      act("$p is completely empty.", FALSE, ch, this, 0, TO_CHAR);
+      remDrinkConFlags(DRINK_POISON);
+    } else {
+      act("You finish licking up $p from the $g.", FALSE, ch, this, 0, TO_CHAR);
+
+      delete this;
+      return;
+    }
   }
 }
 
@@ -1043,7 +1052,7 @@ int TFood::chiMe(TBeing *tLunatic)
   } else
     tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
-  if (!bSuccess(tLunatic, bKnown, SKILL_CHI) || isFoodFlag(FOOD_SPOILED)) {
+  if (!tLunatic->bSuccess(bKnown, SKILL_CHI) || isFoodFlag(FOOD_SPOILED)) {
     act("You fail to affect $p in any way.",
         FALSE, tLunatic, this, NULL, TO_CHAR);
     return true;

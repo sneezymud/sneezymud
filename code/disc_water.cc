@@ -18,7 +18,7 @@ int faerieFog(TBeing * caster, int, byte bKnown)
   TBeing *tmp_victim;
   TThing *t, *t2;
 
-  if (bSuccess(caster, bKnown, SPELL_FAERIE_FOG)) {
+  if (caster->bSuccess(bKnown, SPELL_FAERIE_FOG)) {
     for (t = caster->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       tmp_victim = dynamic_cast<TBeing *>(t);
@@ -112,7 +112,7 @@ int icyGrip(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_le
 
   int damage = caster->getSkillDam(victim, SPELL_ICY_GRIP, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_ICY_GRIP)) {
+  if (caster->bSuccess(bKnown, SPELL_ICY_GRIP)) {
     aff.type = SPELL_ICY_GRIP;
     aff.duration = 12 * UPDATES_PER_MUDHOUR;
     aff.location = APPLY_STR;
@@ -264,7 +264,7 @@ int wateryGrave(TBeing * caster, TBeing * victim, int level, byte bKnown, int)
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
 
-  if (bSuccess(caster, bKnown, SPELL_WATERY_GRAVE)) {
+  if (caster->bSuccess(bKnown, SPELL_WATERY_GRAVE)) {
     victim->affectTo(&aff);
     caster->setCharFighting(victim);
     caster->setVictFighting(victim);
@@ -338,7 +338,7 @@ int arcticBlast(TBeing * caster, int level, byte bKnown, int adv_learn)
 
   int damage = caster->getSkillDam(NULL, SPELL_ARCTIC_BLAST, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_ARCTIC_BLAST)) {
+  if (caster->bSuccess(bKnown, SPELL_ARCTIC_BLAST)) {
     caster->freezeRoom();
 
     switch (critSuccess(caster, SPELL_ARCTIC_BLAST)) {
@@ -480,7 +480,7 @@ int iceStorm(TBeing * caster, int level, byte bKnown, int adv_learn)
 
   int orig_damage = caster->getSkillDam(NULL, SPELL_ICE_STORM, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_ICE_STORM)) {
+  if (caster->bSuccess(bKnown, SPELL_ICE_STORM)) {
     switch (critSuccess(caster, SPELL_ICE_STORM)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -621,7 +621,7 @@ int tsunami(TBeing * caster, int level, byte bKnown, int adv_learn)
 
   int orig_damage = caster->getSkillDam(NULL, SPELL_TSUNAMI, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_TSUNAMI)) {
+  if (caster->bSuccess(bKnown, SPELL_TSUNAMI)) {
     act("$n beckons forth a tidal wave!", 
          FALSE, caster, NULL, NULL, TO_ROOM, ANSI_BLUE);
     act("You beckon forth a tidal wave!", 
@@ -745,7 +745,7 @@ int conjureElemWater(TBeing * caster, int level, byte bKnown)
 
   victim->elementalFix(caster, SPELL_CONJURE_WATER, 0);
 
-  if (bSuccess(caster, bKnown, SPELL_CONJURE_WATER)) {
+  if (caster->bSuccess(bKnown, SPELL_CONJURE_WATER)) {
     act("You summon the powers of the ocean!", 
             TRUE, caster, NULL, NULL, TO_CHAR, ANSI_BLUE_BOLD);
     act("$n summons the powers of the ocean!", 
@@ -910,7 +910,7 @@ int gillsOfFlesh(TBeing * caster, TBeing * victim, int level, byte bKnown)
   if (canBeGilled(caster, victim))
     return FALSE;
 
-  if (bSuccess(caster, bKnown, SPELL_GILLS_OF_FLESH)) {
+  if (caster->bSuccess(bKnown, SPELL_GILLS_OF_FLESH)) {
 
     caster->reconcileHelp(victim,discArray[SPELL_GILLS_OF_FLESH]->alignMod);
     aff.type = SPELL_GILLS_OF_FLESH;
@@ -990,7 +990,7 @@ int breathOfSarahage(TBeing * caster, int level, byte bKnown)
   TBeing *tmp_victim = NULL;
   affectedData aff;
 
-  if (bSuccess(caster, bKnown, SPELL_BREATH_OF_SARAHAGE)) {
+  if (caster->bSuccess(bKnown, SPELL_BREATH_OF_SARAHAGE)) {
     aff.type = SPELL_GILLS_OF_FLESH;
     aff.level = level;
     aff.duration = 6 * UPDATES_PER_MUDHOUR;
@@ -1064,7 +1064,7 @@ int protectionFromWater(TBeing *caster, TBeing *victim, int level, byte bKnown)
   aff.modifier2 = ((level * 2) / 3);
   aff.bitvector = 0;
  
-  if (bSuccess(caster,bKnown,SPELL_PROTECTION_FROM_WATER)) {
+  if (caster->bSuccess(bKnown,SPELL_PROTECTION_FROM_WATER)) {
     act("$n glows with a faint blue-green aura for a brief moment.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
     act("You glow with a faint blue-green aura for a brief moment.", FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
     switch (critSuccess(caster, SPELL_PROTECTION_FROM_WATER)) {
@@ -1128,7 +1128,7 @@ int gusher(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_lea
 
   int dam = caster->getSkillDam(victim, SPELL_GUSHER, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_GUSHER)) {
+  if (caster->bSuccess(bKnown, SPELL_GUSHER)) {
     caster->reconcileHurt(victim,discArray[SPELL_GUSHER]->alignMod);
 
     if ((critSuccess(caster, SPELL_GUSHER) ||
@@ -1338,7 +1338,7 @@ int plasmaMirror(TBeing *caster, int level, byte bKnown)
   aff.bitvector = 0;
   aff.level = level;
 
-  if (bSuccess(caster, bKnown, SPELL_PLASMA_MIRROR)) {
+  if (caster->bSuccess(bKnown, SPELL_PLASMA_MIRROR)) {
     switch (critSuccess(caster, SPELL_PLASMA_MIRROR)) {
       case CRIT_S_KILL:
         CS(SPELL_PLASMA_MIRROR);
@@ -1401,7 +1401,7 @@ int garmulsTail(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_GARMULS_TAIL]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_GARMULS_TAIL)) {
+  if (caster->bSuccess(bKnown, SPELL_GARMULS_TAIL)) {
     aff.type = SPELL_GARMULS_TAIL;
     aff.level = level;
     aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;

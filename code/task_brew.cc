@@ -72,7 +72,7 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
 	    return FALSE;
 	  }
 
-          if (bSuccess(ch, knowledge, SKILL_BREW)) {
+          if (ch->bSuccess(knowledge, SKILL_BREW)) {
             // successful brew, set learnedness to knowledge in the skill
             ch->sendTo(fmt("You successfully create your potion%s.\n\r") %
 		       (how_many <= 5 ? "" : "s"));

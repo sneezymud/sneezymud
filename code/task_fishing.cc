@@ -263,7 +263,7 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	  //	  vlogf(LOG_PEEL, fmt("fishing: baitcost=%i, bait=%i, pole=%i, catch=%i") % 
 	  //	bait->obj_flags.cost % baitchance % polechance % catchchance);
   
-	  if((bSuccess(ch, ch->getSkillValue(SKILL_FISHING), SKILL_FISHING) ||
+	  if((ch->bSuccess(SKILL_FISHING) ||
 	      (!ch->doesKnowSkill(SKILL_FISHING) && !::number(0,99))) &&
 	     (catchchance<(baitchance+polechance)) &&
 	     (fish=catch_a_fish(rp)) &&

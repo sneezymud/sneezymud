@@ -74,7 +74,7 @@ int TBeing::doEarthmaw(const char *argument)
   addToWait((int)combatRound(discArray[SPELL_EARTHMAW]->lag));
   reconcileHurt(victim,discArray[SPELL_EARTHMAW]->alignMod);
   
-  if (bSuccess(this, bKnown, SPELL_EARTHMAW)) {
+  if (bSuccess(bKnown, SPELL_EARTHMAW)) {
     
     if (critSuccess(this, SPELL_EARTHMAW) == CRIT_S_DOUBLE) {
       CS(SPELL_EARTHMAW);
@@ -180,7 +180,7 @@ int thornflesh(TBeing *caster, int level, byte bKnown)
   aff.bitvector = 0;
   aff.level = level;
 
-  if (bSuccess(caster, bKnown, SPELL_THORNFLESH)) {
+  if (caster->bSuccess(bKnown, SPELL_THORNFLESH)) {
     switch (critSuccess(caster, SPELL_THORNFLESH)) {
       case CRIT_S_KILL:
         CS(SPELL_THORNFLESH);
@@ -227,7 +227,7 @@ int aqualung(TBeing * caster, TBeing * victim, int level, byte bKnown)
   if (canBeLunged(caster, victim))
     return FALSE;
 
-  if (bSuccess(caster, bKnown, SPELL_AQUALUNG)) {
+  if (caster->bSuccess(bKnown, SPELL_AQUALUNG)) {
 
     caster->reconcileHelp(victim,discArray[SPELL_AQUALUNG]->alignMod);
     aff.type = SPELL_AQUALUNG;
@@ -318,7 +318,7 @@ TO_CHAR);
 
   caster->reconcileHelp(victim, discArray[SPELL_SHADOW_WALK]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_SHADOW_WALK)) {
+  if (caster->bSuccess(bKnown, SPELL_SHADOW_WALK)) {
     aff.type = SPELL_SHADOW_WALK;
     aff.level = level;
     aff.duration = 18 * UPDATES_PER_MUDHOUR;
@@ -414,7 +414,7 @@ int celerite(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_CELERITE]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_CELERITE)) {
+  if (caster->bSuccess(bKnown, SPELL_CELERITE)) {
     aff.type = SPELL_CELERITE;
     aff.level = level;
     aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;

@@ -265,7 +265,7 @@ int TEgg::chiMe(TBeing *tLunatic)
   } else
     tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
-  if (!bSuccess(tLunatic, bKnown, SKILL_CHI) || isFoodFlag(FOOD_SPOILED)) {
+  if (!tLunatic->bSuccess(bKnown, SKILL_CHI) || isFoodFlag(FOOD_SPOILED)) {
     act("You fail to affect $p in any way.",
         FALSE, tLunatic, this, NULL, TO_CHAR);
     return true;

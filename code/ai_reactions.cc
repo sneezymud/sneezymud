@@ -946,6 +946,8 @@ int TMonster::aiWimpSwitch(TBeing *vict)
     // If they got here, they failed the block so the monster switched.
   }
 
+  vlogf(LOG_COMBAT, fmt("Combat Switch: (%s) to (%s) from (%s)") % getName() % vict->getName() % tank->getName());
+
   switch (::number(1,7)) {
     case 1:
       act("$n senses that $N is a weaker opponent.",TRUE, this, 0, vict, 

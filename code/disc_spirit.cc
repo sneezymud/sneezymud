@@ -49,7 +49,7 @@ int knot(TBeing *caster, TBeing *victim, int, byte bKnown)
   int rc;
   TThing *t;
 
-  if (bSuccess(caster,bKnown,SPELL_KNOT)) {
+  if (caster->bSuccess(bKnown,SPELL_KNOT)) {
   // I added this to prevent pkillers from seeking refuge in the 
   // knot...jesus
     if (caster->affectedBySpell(AFFECT_PLAYERKILL) ||
@@ -129,7 +129,7 @@ int silence(TBeing *caster, TBeing *victim, int level, byte bKnown)
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_SILENT;
 
-  if (bSuccess(caster, bKnown, SPELL_SILENCE)) {
+  if (caster->bSuccess(bKnown, SPELL_SILENCE)) {
     switch (critSuccess(caster, SPELL_SILENCE)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -255,7 +255,7 @@ int slumber(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHurt(victim,discArray[SPELL_SLUMBER]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_SLUMBER)) {
+  if (caster->bSuccess(bKnown, SPELL_SLUMBER)) {
     switch (critSuccess(caster, SPELL_SLUMBER)) {
       case CRIT_S_DOUBLE:
         CS(SPELL_SLUMBER);
@@ -432,7 +432,7 @@ int ensorcer(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHurt(victim,discArray[SPELL_ENSORCER]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_ENSORCER)) {
+  if (caster->bSuccess(bKnown, SPELL_ENSORCER)) {
     if (victim->master)
       victim->stopFollower(TRUE);
     caster->addFollower(victim);
@@ -594,7 +594,7 @@ int cloudOfConcealment(TBeing *caster, int level, byte bKnown)
   TThing *t, *t2;
   affectedData aff;
   int found = FALSE;
-  if (bSuccess(caster, bKnown, SPELL_CLOUD_OF_CONCEALMENT)) {
+  if (caster->bSuccess(bKnown, SPELL_CLOUD_OF_CONCEALMENT)) {
     caster->sendTo("You focus your powers and cause a cloud to materialize around your group.\n\r");
     act("$n invokes some magic and produces huge volumes of vaporous smoke.",
         TRUE,caster,0,0,TO_ROOM,ANSI_GREEN);
@@ -681,7 +681,7 @@ int dispelInvisible(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHurt(victim,discArray[SPELL_DISPEL_INVISIBLE]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_DISPEL_INVISIBLE)) {
+  if (caster->bSuccess(bKnown, SPELL_DISPEL_INVISIBLE)) {
     if (victim->affectedBySpell(SPELL_INVISIBILITY)) {
 #if 0
       act("$n slowly becomes visible again.", TRUE, victim, NULL, NULL, TO_ROOM, ANSI_WHITE_BOLD);
@@ -757,7 +757,7 @@ int castDispelInvisible(TBeing *caster, TBeing *victim)
 
 int dispelInvisible(TBeing *caster, TObj * obj, int, byte bKnown)
 {
-  if (bSuccess(caster, bKnown, SPELL_DISPEL_INVISIBLE)) {
+  if (caster->bSuccess(bKnown, SPELL_DISPEL_INVISIBLE)) {
     if (obj->isObjStat(ITEM_INVISIBLE)) {
       obj->remObjStat(ITEM_INVISIBLE);
       act("$p loses its cloak of invisibility!",
@@ -854,7 +854,7 @@ int polymorph(TBeing *caster, int level, byte bKnown)
   
  int duration;
 
-  if (bSuccess(caster, bKnown, SPELL_POLYMORPH)) {
+  if (caster->bSuccess(bKnown, SPELL_POLYMORPH)) {
     switch (critSuccess(caster, SPELL_POLYMORPH)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -995,7 +995,7 @@ int stealth(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_STEALTH]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_STEALTH)) {
+  if (caster->bSuccess(bKnown, SPELL_STEALTH)) {
     aff.type = SPELL_STEALTH;
     aff.level = level;
     aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
@@ -1079,7 +1079,7 @@ int accelerate(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_ACCELERATE]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_ACCELERATE)) {
+  if (caster->bSuccess(bKnown, SPELL_ACCELERATE)) {
     aff.type = SPELL_ACCELERATE;
     aff.level = level;
     aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
@@ -1157,7 +1157,7 @@ int haste(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_HASTE]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_HASTE)) {
+  if (caster->bSuccess(bKnown, SPELL_HASTE)) {
     aff.type = SPELL_HASTE;
     aff.level = level;
     aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
@@ -1229,7 +1229,7 @@ int calm(TBeing *caster, TBeing *victim, int, byte bKnown)
 {
   affectedData aff;
 
-  if (bSuccess(caster, bKnown,SPELL_CALM )) {
+  if (caster->bSuccess(bKnown,SPELL_CALM )) {
     if (victim->isLucky(caster->spellLuckModifier(SPELL_CALM))) {
       SV(SPELL_CALM);
       act("$N seems to resist the calming!", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE_BOLD);
@@ -1339,7 +1339,7 @@ int invisibility(TBeing *caster, TObj * obj, int, byte bKnown)
   if (invisibilityCheck(caster, obj))
     return SPELL_FAIL;
 
-  if (bSuccess(caster, bKnown, SPELL_INVISIBILITY)) {
+  if (caster->bSuccess(bKnown, SPELL_INVISIBILITY)) {
     act("$p vanishes into the thin ether!",
                 FALSE, caster, obj, NULL, TO_CHAR, ANSI_GREEN);
     act("$p vanishes into the thin ether!",
@@ -1416,7 +1416,7 @@ int invisibility(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_INVISIBILITY]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_INVISIBILITY)) {
+  if (caster->bSuccess(bKnown, SPELL_INVISIBILITY)) {
     aff.type = SPELL_INVISIBILITY;
     aff.level = level;
     aff.duration = 24 * UPDATES_PER_MUDHOUR;
@@ -1507,7 +1507,7 @@ int senseLife(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_SENSE_LIFE]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_SENSE_LIFE)) {
+  if (caster->bSuccess(bKnown, SPELL_SENSE_LIFE)) {
     aff.type = SPELL_SENSE_LIFE;
     aff.duration = level * UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
@@ -1584,7 +1584,7 @@ int detectInvisibility(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_DETECT_INVISIBLE]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_DETECT_INVISIBLE)) {
+  if (caster->bSuccess(bKnown, SPELL_DETECT_INVISIBLE)) {
     aff.type = SPELL_DETECT_INVISIBLE;
     aff.duration = ((level * 3 * UPDATES_PER_MUDHOUR) / 2);
     aff.modifier = 0;
@@ -1656,7 +1656,7 @@ int trueSight(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_TRUE_SIGHT]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_TRUE_SIGHT)) {
+  if (caster->bSuccess(bKnown, SPELL_TRUE_SIGHT)) {
     aff.type = SPELL_TRUE_SIGHT;
     aff.duration = level / 2 * UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
@@ -1734,7 +1734,7 @@ int telepathy(TBeing *caster, int, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, SPELL_TELEPATHY)) {
+  if (caster->bSuccess(bKnown, SPELL_TELEPATHY)) {
     if (!*msg) {
       caster->sendTo("Telepathy is a nice spell, but you need to send some sort of message!\n\r");
       caster->nothingHappens(SILENT_YES);
@@ -1755,9 +1755,15 @@ int telepathy(TBeing *caster, int, byte bKnown)
 	    pgbuf = msg;
 	    pgbuf = i->character->PG13filter(pgbuf);
 	    i->character->sendTo(COLOR_SPELLS, fmt("The message is, \"%s%s\"\n\r") % pgbuf % i->character->norm());
-	  }
-	  else
+
+	    if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
+	      i->clientf(fmt("%d|%s|%s") % CLIENT_TELEPATHY % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuf, NULL, COLOR_NONE, FALSE));
+	  } else {
 	    i->character->sendTo(COLOR_SPELLS, fmt("The message is, \"%s%s\"\n\r") % msg % i->character->norm());
+
+	    if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
+	      i->clientf(fmt("%d|%s|%s") % CLIENT_TELEPATHY % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, msg, NULL, COLOR_NONE, FALSE));
+          }
         }
       }
       caster->addToMove(-5);
@@ -1805,7 +1811,7 @@ int fear(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHurt(victim, discArray[SPELL_FEAR]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_FEAR)) {
+  if (caster->bSuccess(bKnown, SPELL_FEAR)) {
     if (victim->isLucky(caster->spellLuckModifier(SPELL_FEAR)) || victim->isImmune(IMMUNE_FEAR)) {
       SV(SPELL_FEAR);
       act("Hmmm...nothing seems to happen.", FALSE, caster, NULL, NULL, TO_CHAR);
@@ -1909,7 +1915,7 @@ int fumble(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHurt(victim, discArray[SPELL_FUMBLE]->alignMod);
 
-  if (bSuccess(caster, bKnown,SPELL_FUMBLE)) {
+  if (caster->bSuccess(bKnown,SPELL_FUMBLE)) {
     switch (critSuccess(caster, SPELL_FUMBLE)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:

@@ -98,8 +98,8 @@ void TBeing::assignSkillsClass()
     prim=DISC_WARRIOR;
     favorites.clear();
     favorites.push_back(DISC_BRAWLING);
-    favorites.push_back(DISC_HTH);
-    favorites.push_back(DISC_PHYSICAL);
+    favorites.push_back(DISC_DUELING);
+    favorites.push_back(DISC_SOLDIERING);
     assignSkills(Class, prim, favorites);
   }
 

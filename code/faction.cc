@@ -1883,6 +1883,12 @@ void sendToFaction(factionTypeT fnum, const char *who, const char *arg)
 
     d->character->sendTo(COLOR_SHOUTS, fmt("<g>%s <c>%s<1>: %s\n\r") %
 			 FactionInfo[fnum].faction_name % who % arg);
+
+    if (!d->m_bIsClient && IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT))
+      if (d->character->isImmortal())
+        d->clientf(fmt("%d|%d|%s|%s") % CLIENT_FTELL % fnum % who % arg);
+      else
+        d->clientf(fmt("%d|%s|%s") % CLIENT_FTELL % who % arg);
   }
 }
 

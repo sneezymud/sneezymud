@@ -341,7 +341,7 @@ int TSymbol::chiMe(TBeing *tLunatic)
   } else
     tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
-  if (!bSuccess(tLunatic, bKnown, SKILL_CHI) ||
+  if (!tLunatic->bSuccess(bKnown, SKILL_CHI) ||
       (getSymbolCurStrength() >= getSymbolMaxStrength())) {
     act("You focus upon $p, but faulter and gently harm it!",
         FALSE, tLunatic, this, NULL, TO_CHAR);

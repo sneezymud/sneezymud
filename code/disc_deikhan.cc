@@ -34,7 +34,7 @@ int synostodweomer(TBeing *caster, TBeing *v, int level, byte bKnown)
 
   vlevel = v->GetMaxLevel();
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_SYNOSTODWEOMER)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_SYNOSTODWEOMER)) {
     act("Power rushes through your fingers as you touch $N with your blessings.", FALSE, caster, NULL, v, TO_CHAR);
     act("Power rushes through $n's fingers as $e touches $N with $s blessings.", TRUE, caster, NULL, v, TO_NOTVICT);
     act("Power surges through $n's fingers as $e touches you with $s blessings.", TRUE, caster, NULL, v, TO_VICT);
@@ -174,7 +174,7 @@ int TBeing::doLayHands(const char *arg)
   }
   amt = ::number(1,100) + getClassLevel(CLASS_DEIKHAN);
 
-  if (bSuccess(this, getSkillValue(SKILL_LAY_HANDS), getPerc(), SKILL_LAY_HANDS)) {
+  if (bSuccess(getSkillValue(SKILL_LAY_HANDS), getPerc(), SKILL_LAY_HANDS)) {
     LogDam(this, SKILL_LAY_HANDS, amt);
 
     if (this != vict) {

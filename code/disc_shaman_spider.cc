@@ -48,7 +48,7 @@ int transfix(TBeing * caster, TBeing * victim, int level, byte bKnown)
 
   dif = level - victim->GetMaxLevel();
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SKILL_TRANSFIX) && 
+  if (caster->bSuccess(bKnown, caster->getPerc(), SKILL_TRANSFIX) && 
            !victim->isLucky(caster->spellLuckModifier(SKILL_TRANSFIX))) {
     aff.type = SKILL_TRANSFIX;
     aff.level = level;
@@ -122,7 +122,7 @@ int livingVines(TBeing *caster, TBeing *victim,int level, byte bKnown)
   aff2.modifier = (-level*2);
   aff2.duration = level * UPDATES_PER_MUDHOUR;
    
-  if (bSuccess(caster, bKnown, SPELL_LIVING_VINES)) {
+  if (caster->bSuccess(bKnown, SPELL_LIVING_VINES)) {
     act("$n summons the vines to hold $N!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("You command the vines to trap $N!", FALSE, caster, NULL, victim, TO_CHAR);
     act("$n summons the vines to ensnare you!", FALSE, caster, NULL, victim, TO_VICT);
@@ -228,7 +228,7 @@ int rootControl(TBeing * caster, TBeing * victim, int, int dam, byte bKnown)
   act("Large tree roots start to form in front of $N.", TRUE, caster , NULL, victim, TO_NOTVICT);
   act("Large tree roots start to form in front of you.", TRUE, caster , NULL, victim, TO_VICT);
 
-  if (bSuccess(caster,bKnown,SPELL_ROOT_CONTROL)) {
+  if (caster->bSuccess(bKnown,SPELL_ROOT_CONTROL)) {
     act("$n commands the tree roots to trip $N, causing $M to fall to the $g.", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$n commands the tree roots to trip you!", FALSE, caster, NULL, victim, TO_VICT);
     act("You command the tree roots to trip $N, causing $M to fall to the $g.", FALSE, caster, NULL, victim, TO_CHAR);
@@ -394,7 +394,7 @@ int sticksToSnakes(TBeing * caster, TBeing * victim, int level, byte bKnown)
   act("A strange yellow mist appears and suddenly changes into $n!", TRUE, snake, NULL, caster, TO_ROOM);
   act("A strange yellow mist appears and suddenly changes into $n!", TRUE, snake, NULL, caster, TO_CHAR);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_STICKS_TO_SNAKES)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_STICKS_TO_SNAKES)) {
     switch(critSuccess(caster, SPELL_STICKS_TO_SNAKES)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -573,7 +573,7 @@ int controlUndead(TBeing *caster,TBeing *victim,int level,byte bKnown)
       return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_CONTROL_UNDEAD)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_CONTROL_UNDEAD)) {
     if (victim->master)
       victim->stopFollower(TRUE);
     caster->addFollower(victim);
@@ -663,7 +663,7 @@ int clarity(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_CLARITY]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_CLARITY)) {
+  if (caster->bSuccess(bKnown, SPELL_CLARITY)) {
     aff.type = SPELL_CLARITY;
     aff.duration = 6+level / 3 * UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
@@ -797,7 +797,7 @@ ANSI_RED_BOLD);
 
   caster->reconcileHurt(victim,discArray[SPELL_HYPNOSIS]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_HYPNOSIS)) {
+  if (caster->bSuccess(bKnown, SPELL_HYPNOSIS)) {
     if (victim->master)
       victim->stopFollower(TRUE);
     caster->addFollower(victim);
@@ -976,7 +976,7 @@ int raze(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster,bKnown,SPELL_RAZE)) {
+  if (caster->bSuccess(bKnown,SPELL_RAZE)) {
     act("$n calls the spirits to erase $N's existance!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("You call upon the loa to erase any memory of $N!", FALSE, caster, NULL, victim, TO_CHAR);
     act("$n calls upon the spirits to erase your existance!", FALSE, caster, NULL, victim, TO_VICT);

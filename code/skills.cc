@@ -17,8 +17,8 @@
 #include "stdsneezy.h"
 #include "disc_mage.h"
 #include "disc_cleric.h"
-#include "disc_physical.h"
-#include "disc_smythe.h"
+#include "disc_soldiering.h"
+#include "disc_blacksmithing.h"
 #include "disc_deikhan_fight.h"
 #include "disc_deikhan_aegis.h"
 #include "disc_deikhan_cures.h"
@@ -61,7 +61,7 @@
 #include "disc_ranger.h"
 #include "disc_looting.h"
 #include "disc_murder.h"
-#include "disc_hth.h"
+#include "disc_dueling.h"
 #include "disc_combat.h"
 #include "disc_adventuring.h"
 #include "disc_adv_adventuring.h"
@@ -493,8 +493,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDWarrior *) cd)->skHeadbutt;
     case SKILL_RESCUE:
       return &((CDWarrior *) cd)->skRescue;
-    case SKILL_SMYTHE:
-      return &((CDWarrior *) cd)->skSmythe;
+    case SKILL_BLACKSMITHING:
+      return &((CDWarrior *) cd)->skBlacksmithing;
     case SKILL_DISARM:
       return &((CDWarrior *) cd)->skDisarm;
     case SKILL_BERSERK:
@@ -506,42 +506,47 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SKILL_TRIP:
       return &((CDWarrior *) cd)->skTrip;
 
-//disc_hth
+//disc_dueling
 
     case SKILL_SHOVE:
-      return &((CDHTH *) cd)->skShove;
+      return &((CDDueling *) cd)->skShove;
     case SKILL_RETREAT:
-      return &((CDHTH *) cd)->skRetreat;
+      return &((CDDueling *) cd)->skRetreat;
     case SKILL_PARRY_WARRIOR:  //            664
-      return &((CDHTH *) cd)->skParryWarrior;
+      return &((CDDueling *) cd)->skParryWarrior;
     case SKILL_TRANCE_OF_BLADES:
-      return &((CDHTH *) cd)->skTranceOfBlades;
+      return &((CDDueling *) cd)->skTranceOfBlades;
+    case SKILL_WEAPON_RETENTION:
+      return &((CDDueling *) cd)->skWeaponRetention;
 //disc_brawling
 
     case SKILL_GRAPPLE:
       return &((CDBrawling *) cd)->skGrapple;
     case SKILL_STOMP:
       return &((CDBrawling *) cd)->skStomp;
+    case SKILL_BRAWL_AVOIDANCE:
+      return &((CDBrawling *) cd)->skBrawlAvoidance;
     case SKILL_BODYSLAM:
       return &((CDBrawling *) cd)->skBodyslam;
     case SKILL_SPIN:
       return &((CDBrawling *) cd)->skSpin;
+    case SKILL_CLOSE_QUARTERS_FIGHTING:
+      return &((CDBrawling *) cd)->skCloseQuartersFighting;
 
-
-// disc_physical
+// disc_soldiering
 
     case SKILL_DUAL_WIELD:  // needs to be moved   666
-      return &((CDPhysical *) cd)->skDualWieldWarrior;
+      return &((CDSoldiering *) cd)->skDualWieldWarrior;
     case SKILL_DOORBASH:
-      return &((CDPhysical *) cd)->skDoorbash;
+      return &((CDSoldiering *) cd)->skDoorbash;
     case SKILL_DEATHSTROKE:
-      return &((CDPhysical *) cd)->skDeathstroke;
+      return &((CDSoldiering *) cd)->skDeathstroke;
     case SKILL_POWERMOVE:
-      return &((CDPhysical *) cd)->skPowerMove;
+      return &((CDSoldiering *) cd)->skPowerMove;
 
-// disc_smythe
-    case SKILL_SMYTHE_ADVANCED:
-      return &((CDSmythe *) cd)->skSmytheAdvanced;
+// disc_blacksmithing
+    case SKILL_BLACKSMITHING_ADVANCED:
+      return &((CDBlacksmithing *) cd)->skBlacksmithingAdvanced;
 
 
 // No skills currently

@@ -58,7 +58,7 @@ int TArmor::galvanizeMe(TBeing *local_caster, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(local_caster, bKnown, SPELL_GALVANIZE)) {
+  if (local_caster->bSuccess(bKnown, SPELL_GALVANIZE)) {
     addToMaxStructPoints(1);
     addToStructPoints(1);
     return SPELL_SUCCESS;

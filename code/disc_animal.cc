@@ -37,7 +37,7 @@ int beastSoother(TBeing * caster, TBeing * victim, int tWand, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SKILL_BEAST_SOOTHER)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SKILL_BEAST_SOOTHER)) {
     if (IS_SET(victim->specials.act, ACT_HUNTING))
       REMOVE_BIT(victim->specials.act, ACT_HUNTING);
 
@@ -270,7 +270,7 @@ int TBeing::doSkySpirit(const char *argument)
 
   addToWait((int)combatRound(discArray[SPELL_SKY_SPIRIT]->lag));
   reconcileHurt(victim,discArray[SPELL_SKY_SPIRIT]->alignMod);
-  if (bSuccess(this, bKnown, SPELL_SKY_SPIRIT)) {
+  if (bSuccess(bKnown, SPELL_SKY_SPIRIT)) {
     
     if (critSuccess(this, SPELL_SKY_SPIRIT) == CRIT_S_DOUBLE) {
       CS(SPELL_SKY_SPIRIT);
@@ -364,7 +364,7 @@ int TBeing::doFeralWrath(const char *argument)
   aff2.duration = aff.duration;
   aff2.bitvector = 0;
 
-  if (bSuccess(this, bKnown, this->getPerc(), SPELL_FERAL_WRATH)) {
+  if (bSuccess(bKnown, this->getPerc(), SPELL_FERAL_WRATH)) {
     if (critSuccess(this, SPELL_FERAL_WRATH)) {
       CS(SPELL_FERAL_WRATH);
       aff2.modifier *= 2;
@@ -474,7 +474,7 @@ int beastSummon(TBeing * caster, const char * arg, int level, byte bKnown)
     return FALSE;
   }
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SKILL_BEAST_SUMMON)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SKILL_BEAST_SUMMON)) {
     max_dist = caster->isImmortal() ? 1000 : level;
     max_num = caster->isImmortal() ? 100 : level / 2;
   

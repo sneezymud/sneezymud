@@ -24,13 +24,13 @@
 
 extern int task_bogus         (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_sharpening    (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
-extern int task_smythe        (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_blacksmithing        (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_dead   (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_organic(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_wood   (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_magical(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_rock   (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
-extern int task_smythe_advanced(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_blacksmithing_advanced(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_mend_hide     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_mend          (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_repair_spiritual(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
@@ -81,13 +81,13 @@ typedef struct _tasks_entry {
 enum taskTypeT {
      TASK_BOGUS,
      TASK_SHARPEN,
-     TASK_SMYTHE,
+     TASK_BLACKSMITHING,
      TASK_REPAIR_DEAD,
      TASK_REPAIR_ORGANIC,
      TASK_REPAIR_WOOD,
      TASK_REPAIR_MAGICAL,
      TASK_REPAIR_ROCK,
-     TASK_SMYTHE_ADVANCED,
+     TASK_BLACKSMITHING_ADVANCED,
      TASK_MEND_HIDE,
      TASK_MEND,
      TASK_REPAIR_SPIRITUAL,

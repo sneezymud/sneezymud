@@ -215,7 +215,7 @@ int ladder(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   if (vict->eitherLegHurt() && !::number(0,2))
     going_to_fall = TRUE;
 
-  if (going_to_fall && (bSuccess(vict, vict->getSkillValue(SKILL_CLIMB)/4, SKILL_CLIMB))) {
+  if (going_to_fall && (vict->bSuccess(vict->getSkillValue(SKILL_CLIMB)/4, SKILL_CLIMB))) {
     vict->sendTo("Whoa!  You almost fell there but your climbing ability saved you.\n\r");
     going_to_fall = FALSE;
   }

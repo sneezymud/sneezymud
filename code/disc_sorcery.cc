@@ -33,7 +33,7 @@ int mysticDarts(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
 
   caster->reconcileHurt(victim, discArray[SPELL_MYSTIC_DARTS]->alignMod);
 
-  if (bSuccess(caster, bKnown,SPELL_MYSTIC_DARTS)) {
+  if (caster->bSuccess(bKnown,SPELL_MYSTIC_DARTS)) {
     switch (critSuccess(caster, SPELL_MYSTIC_DARTS)) {
       case CRIT_S_DOUBLE:
         CS(SPELL_MYSTIC_DARTS);
@@ -196,7 +196,7 @@ int stunningArrow(TBeing *caster, TBeing *victim, int level, byte bKnown, int ad
   int dam = caster->getSkillDam(victim, SPELL_STUNNING_ARROW, level, adv_learn);
   caster->reconcileHurt(victim, discArray[SPELL_STUNNING_ARROW]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_STUNNING_ARROW)) {
+  if (caster->bSuccess(bKnown, SPELL_STUNNING_ARROW)) {
     switch (critSuccess(caster, SPELL_STUNNING_ARROW)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -326,7 +326,7 @@ int blastOfFury(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
 
   int dam = caster->getSkillDam(victim, SPELL_BLAST_OF_FURY, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_BLAST_OF_FURY)) {
+  if (caster->bSuccess(bKnown, SPELL_BLAST_OF_FURY)) {
     caster->reconcileHurt(victim, discArray[SPELL_BLAST_OF_FURY]->alignMod);
 
     switch (critSuccess(caster, SPELL_BLAST_OF_FURY)) {
@@ -446,7 +446,7 @@ int colorSpray(TBeing *caster, int level, byte bKnown, int adv_learn)
 
   int orig_dam = caster->getSkillDam(NULL, SPELL_COLOR_SPRAY, level, adv_learn);
 
-  if (bSuccess(caster, bKnown,SPELL_COLOR_SPRAY)) {
+  if (caster->bSuccess(bKnown,SPELL_COLOR_SPRAY)) {
     switch (critSuccess(caster, SPELL_COLOR_SPRAY)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -598,7 +598,7 @@ int energyDrain(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
     return SPELL_FALSE;
   }
 
-  if (bSuccess(caster, bKnown,SPELL_ENERGY_DRAIN)) {
+  if (caster->bSuccess(bKnown,SPELL_ENERGY_DRAIN)) {
     act("$N screams in agony as energy pours from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$N screams in agony as energy pours from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
     act("You scream in agony as energy pours from your body!", FALSE, caster, NULL, victim, TO_VICT);
@@ -715,7 +715,7 @@ int acidBlast(TBeing *caster, int level, byte bKnown, int adv_learn)
 
   int orig_dam = caster->getSkillDam(NULL, SPELL_ACID_BLAST, level, adv_learn);
 
-  if (bSuccess(caster, bKnown,SPELL_ACID_BLAST)) {
+  if (caster->bSuccess(bKnown,SPELL_ACID_BLAST)) {
     switch (critSuccess(caster, SPELL_ACID_BLAST)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -841,7 +841,7 @@ int atomize(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
 
   caster->reconcileHurt(victim, discArray[SPELL_ATOMIZE]->alignMod);
 
-  if (bSuccess(caster,bKnown,SPELL_ATOMIZE)) {
+  if (caster->bSuccess(bKnown,SPELL_ATOMIZE)) {
     act("Whoah! $n disperses the atoms from $N's body!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("Whoah! You disperse the atoms from $N's body!", FALSE, caster, NULL, victim, TO_CHAR);
     act("Whoah! $n disperses the atoms from your body!", FALSE, caster, NULL, victim, TO_VICT);
@@ -943,7 +943,7 @@ int animate(TBeing *caster, int level, byte bKnown)
 
   act("$n waves $s hand over the pile of armor on the $g...", FALSE, caster, NULL, NULL, TO_ROOM);
   act("You wave your hands over the pile of armor on the $g...", FALSE, caster, NULL, NULL, TO_CHAR);
-  if (bSuccess(caster, bKnown,SPELL_ANIMATE)) {
+  if (caster->bSuccess(bKnown,SPELL_ANIMATE)) {
     // you need:  helm, jacket, 2 leggings, 2 sleeves, 2 gloves, 2 boots 
 
     TThing *obj;
@@ -1203,7 +1203,7 @@ int sorcerersGlobe(TBeing *caster, TBeing *victim, int level, byte bKnown)
   aff.modifier = -100;
   aff.bitvector = 0;
 
-  if (bSuccess(caster,bKnown,SPELL_SORCERERS_GLOBE)) {
+  if (caster->bSuccess(bKnown,SPELL_SORCERERS_GLOBE)) {
     switch (critSuccess(caster, SPELL_SORCERERS_GLOBE)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -1295,7 +1295,7 @@ int bind(TBeing *caster, TBeing *victim, int level, byte bKnown)
   aff2.modifier = (-level * 2);
   aff2.duration = level * UPDATES_PER_MUDHOUR;
 
-  if (bSuccess(caster, bKnown, SPELL_BIND)) {
+  if (caster->bSuccess(bKnown, SPELL_BIND)) {
     caster->reconcileHurt(victim, discArray[SPELL_BIND]->alignMod);
 
     act("$n traps $N in a mass of sticky, web-like substance!", FALSE, caster, NULL, victim, TO_NOTVICT);
@@ -1393,7 +1393,7 @@ int teleport(TBeing *caster, TBeing *victim, int, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster,bKnown,SPELL_TELEPORT)) {
+  if (caster->bSuccess(bKnown,SPELL_TELEPORT)) {
     if (caster->roomp->isRoomFlag(ROOM_NO_ESCAPE)) {
       caster->sendTo("The defenses of this area are too strong.\n\r");
       caster->nothingHappens(SILENT_YES);
@@ -1499,7 +1499,7 @@ int protectionFromElements(TBeing *caster, TBeing *victim, int level, byte bKnow
   aff2.modifier2 = ((level * 2) / 3);
   aff2.bitvector = 0;
  
-  if (bSuccess(caster,bKnown,SPELL_PROTECTION_FROM_ELEMENTS)) {
+  if (caster->bSuccess(bKnown,SPELL_PROTECTION_FROM_ELEMENTS)) {
     act("$n glows with a faint orange aura for a brief moment.", FALSE, victim, NULL, NULL, TO_ROOM);
     act("You glow with a faint orange aura for a brief moment.", FALSE, victim, NULL, NULL, TO_CHAR);
     switch (critSuccess(caster, SPELL_PROTECTION_FROM_ELEMENTS)) {

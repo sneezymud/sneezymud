@@ -11,7 +11,7 @@ int task_search(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
   roomDirData *fdd = NULL;
   int moveCost   = 3, // 10 exits *3 = 30, old cost.
       bKnown     = ch->getSkillValue(SKILL_SEARCH),
-      tsSuccess  = bSuccess(ch, bKnown, SKILL_SEARCH),
+      tsSuccess  = ch->bSuccess(bKnown, SKILL_SEARCH),
       eDirection = ch->task->flags;
   char buf[256];
 

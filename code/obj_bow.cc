@@ -355,7 +355,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
 
   // for learning - ranged spec is learned elsewhere
   if(ch->doesKnowSkill(SKILL_FAST_LOAD))
-    bSuccess(ch, ch->getSkillValue(SKILL_FAST_LOAD), SKILL_FAST_LOAD);
+    ch->bSuccess(SKILL_FAST_LOAD);
   while(nattacks > 0 && targ){
     // use remainder as a percentage chance of another arrow
     if(nattacks < 1.0 && ::number(0,99) > (nattacks*100))

@@ -21,6 +21,7 @@
 #include "database.h"
 #include "room.h"
 #include "shop.h"
+#include "liquids.h"
 
 #include "skillsort.h"
 #include "obj_open_container.h"
@@ -34,14 +35,12 @@
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_base_cup.h"
-#include "obj_drinkcon.h"
 #include "obj_base_clothing.h"
 #include "obj_magic_item.h"
 #include "obj_potion.h"
 #include "obj_scroll.h"
 #include "obj_staff.h"
 #include "obj_wand.h"
-#include "liquids.h"
 
 sstring describeDuration(const TBeing *ch, int dur)
 {
@@ -1067,6 +1066,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_BACKSTAB:
       case SKILL_THROATSLIT:
       case SKILL_HEADBUTT:
+      case SKILL_BRAWL_AVOIDANCE:
       case SKILL_STOMP:
       case SPELL_BLAST_OF_FURY:
       case SKILL_CHI:
@@ -1201,14 +1201,14 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_SHIELD_OF_MISTS:
       case SPELL_ENLIVEN:
       case SKILL_RESCUE:
-      case SKILL_SMYTHE:
+      case SKILL_BLACKSMITHING:
       case SKILL_REPAIR_MAGE:
       case SKILL_REPAIR_MONK:
       case SKILL_REPAIR_CLERIC:
       case SKILL_REPAIR_DEIKHAN:
       case SKILL_REPAIR_SHAMAN:
       case SKILL_REPAIR_THIEF:
-      case SKILL_SMYTHE_ADVANCED:
+      case SKILL_BLACKSMITHING_ADVANCED:
       case SKILL_MEND:
       case SPELL_RAZE:
       case SKILL_SACRIFICE:
@@ -1223,6 +1223,8 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_GRAPPLE:
       case SKILL_DOORBASH:
       case SKILL_TRANCE_OF_BLADES:
+      case SKILL_WEAPON_RETENTION:
+      case SKILL_CLOSE_QUARTERS_FIGHTING:
       case SKILL_HIKING:
       case SKILL_FORAGE:
       case SKILL_TRANSFORM_LIMB:

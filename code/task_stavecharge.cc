@@ -371,7 +371,7 @@ int TStaff::taskChargeMe(TBeing *ch, spellNumT tSpell, int & tCharge)
                       (isObjStat(ITEM_SHADOWY) ? 1 :
                        (isObjStat(ITEM_HUM) ? 2 : 3)));
 
-  if (bSuccess(ch, tLearn, SKILL_STAVECHARGE)) {
+  if (ch->bSuccess(tLearn, SKILL_STAVECHARGE)) {
     if (critSuccess(ch, tSpell)) {
       tMasterBlock = 0;
       tCharge -= min(tCharge, ::number(2, 10));

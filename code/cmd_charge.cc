@@ -103,7 +103,7 @@ vict->getName());
 
   if (vict->awake() &&
       (!ch->specialAttack(vict,SKILL_CHARGE) ||
-       !bSuccess(ch, bKnown, ch->getPerc(), SKILL_CHARGE))) {
+       !ch->bSuccess(bKnown, ch->getPerc(), SKILL_CHARGE))) {
     act("You charge $N, but $E dodges to the side at the last moment.",
           TRUE, ch, 0, vict, TO_CHAR);
     act("$n and $s mount come charging at you.\n\rFortunately you were able to dodge them.",

@@ -22,7 +22,7 @@ int deathMist(TBeing *caster, int level, byte bKnown)
   int found = FALSE;
 
 
-  if (bSuccess(caster, bKnown, SPELL_DEATH_MIST)) {
+  if (caster->bSuccess(bKnown, SPELL_DEATH_MIST)) {
     caster->sendTo("<g>A misty cloud escapes your open mouth.<1>\n\r");
     act("$n opens $s mouth and a chilling green mist pours out.",
         TRUE,caster,0,0,TO_ROOM,ANSI_GREEN);
@@ -107,7 +107,7 @@ int cleanse(TBeing *caster, TBeing * victim, int level, byte learn, spellNumT sp
   char buf[256];
   affectedData aff;
 
-  if (spell==SKILL_WOHLIN || bSuccess(caster, learn, caster->getPerc(), spell)) {
+  if (spell==SKILL_WOHLIN || caster->bSuccess(learn, caster->getPerc(), spell)) {
     if (victim->isAffected(AFF_SYPHILIS) || victim->affectedBySpell(SPELL_DEATH_MIST) || 
 	victim->hasDisease(DISEASE_SYPHILIS)) {
       sprintf(buf, "You succeed in curing the syphilis in %s body.", (caster == victim) ? "your" : "$N's");
@@ -216,7 +216,7 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown,SPELL_LICH_TOUCH)) {
+  if (caster->bSuccess(bKnown,SPELL_LICH_TOUCH)) {
     act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
     act("You groan in pain as life is drawn from your body!", FALSE, caster, NULL, victim, TO_VICT);
@@ -346,7 +346,7 @@ int cardiacStress(TBeing *caster, TBeing *victim, int level, byte bKnown, int ad
 
   caster->reconcileHurt(victim, discArray[SPELL_CARDIAC_STRESS]->alignMod);
 
-  if (bSuccess(caster,bKnown,SPELL_CARDIAC_STRESS)) {
+  if (caster->bSuccess(bKnown,SPELL_CARDIAC_STRESS)) {
     act("$N clutches $S chest and keels over in EXTREME pain!",
 	FALSE, caster, NULL, victim, TO_CHAR, ANSI_RED_BOLD);
     act("The stress on your heart is INTENSE!! You fall down from the pain!",
@@ -466,7 +466,7 @@ int bloodBoil(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
 
   int dam = caster->getSkillDam(victim, SPELL_BLOOD_BOIL, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_BLOOD_BOIL)) {
+  if (caster->bSuccess(bKnown, SPELL_BLOOD_BOIL)) {
     caster->reconcileHurt(victim, discArray[SPELL_BLOOD_BOIL]->alignMod);
 
     switch (critSuccess(caster, SPELL_BLOOD_BOIL)) {

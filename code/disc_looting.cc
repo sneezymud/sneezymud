@@ -101,7 +101,7 @@ int detectSecret(TBeing * thief)
           !strcmp(fdd->keyword, "_unique_door_"))
         continue;
 
-      if (bSuccess(thief, bKnown,SKILL_SEARCH)) {
+      if (thief->bSuccess(bKnown,SKILL_SEARCH)) {
 	thief->sendTo(fmt("Secret door found %s! Door is named %s.\n\r") %
 	      dirs[j] % (fdd->keyword ? fname(fdd->keyword) : "NO NAME. TELL A GOD"));
 	sprintf(buf, "$n exclaims, \"Look %s! A SECRET door named %s!\"\n\r", dirs[j], 
@@ -183,7 +183,7 @@ int TTrap::disarmMe(TBeing *thief)
 
   strcpy(trap_type, trap_types[getTrapDamType()].c_str());
 
-  if (bSuccess(thief, bKnown, SKILL_DISARM_TRAP)) {
+  if (thief->bSuccess(bKnown, SKILL_DISARM_TRAP)) {
     thief->sendTo(fmt("Click.  You disarm the %s trap.\n\r") % trap_type);
     act("$n disarms $p.", FALSE, thief, this, 0, TO_ROOM);
     setTrapCharges(0);
@@ -230,7 +230,7 @@ int disarmTrapDoor(TBeing * thief, dirTypeT door)
   strcpy(trap_type, trap_types[exitp->trap_info].c_str());
   learnedness = min((int) MAX_SKILL_LEARNEDNESS, 2*bKnown);
 
-  if (bSuccess(thief, learnedness, SKILL_DISARM_TRAP)) {
+  if (thief->bSuccess(learnedness, SKILL_DISARM_TRAP)) {
     thief->sendTo(fmt("Click.  You disarm the %s trap in the %s.\n\r") % trap_type % doorbuf);
     sprintf(buf, "$n disarms the %s trap in the %s.", trap_type, doorbuf);
     act(buf, FALSE, thief, 0, 0, TO_ROOM);
@@ -265,7 +265,7 @@ int TPortal::detectMe(TBeing *thief) const
     return FALSE;
 
   // opening a trapped portal
-  if (bSuccess(thief, bKnown, SKILL_DETECT_TRAP)) {
+  if (thief->bSuccess(bKnown, SKILL_DETECT_TRAP)) {
     CS(SKILL_DETECT_TRAP);
     return TRUE;
   } else {
@@ -280,7 +280,7 @@ int TTrap::detectMe(TBeing *thief) const
 
   // randomly seen when in room
   // reduced detection rate
-  if (bSuccess(thief, bKnown/10 + 1, SKILL_DETECT_TRAP)) 
+  if (thief->bSuccess(bKnown/10 + 1, SKILL_DETECT_TRAP)) 
     return TRUE;
   else 
     return FALSE;
@@ -296,7 +296,7 @@ int detectTrapDoor(TBeing * thief, int)
 {
   int bKnown =  thief->getSkillValue(SKILL_DETECT_TRAP);
 
-  if (bSuccess(thief, bKnown/3 + 1, SKILL_DETECT_TRAP)) 
+  if (thief->bSuccess(bKnown/3 + 1, SKILL_DETECT_TRAP)) 
     return TRUE;
   else 
     return FALSE;

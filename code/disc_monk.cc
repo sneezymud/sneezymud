@@ -62,7 +62,7 @@ int TBeing::doLeap(const sstring &arg)
   act("$n takes a great leap into the air!", FALSE, this, 0, 0, TO_ROOM);
   addToMove(-15);
 
-  if(!bSuccess(this, getSkillValue(SKILL_CATLEAP), SKILL_CATLEAP)){
+  if(!bSuccess(SKILL_CATLEAP)){
     act("You don't make it very far.", FALSE, this, 0, 0, TO_CHAR);
     act("$n doesn't make it very far.", FALSE, this, 0, 0, TO_ROOM);
     rc=crashLanding(POSITION_SITTING);
@@ -109,7 +109,7 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
           wohlin_learn = ch->getSkillValue(SKILL_WOHLIN);
 	  monk_level = ch->getLevel(MONK_LEVEL_IND);
 
-          if (bSuccess(ch, learn, SKILL_YOGINSA) && 
+          if (ch->bSuccess(learn, SKILL_YOGINSA) && 
 	      (::number(1,100) < (70+(wohlin_learn/4)))) {
 	    // this artifical roll to check for a success is so we can slowly
 	    // phase out the speed of hp recover without causing a ruckus.
@@ -288,7 +288,7 @@ int springleap(TBeing * caster, TBeing * victim, bool should_lag)
   act("$n leaps off the $g at you.", FALSE, caster, 0, victim, TO_VICT);
   caster->reconcileHurt(victim, 0.04);
 
-  if (bSuccess(caster, bKnown + percent, SKILL_SPRINGLEAP)) {
+  if (caster->bSuccess(bKnown + percent, SKILL_SPRINGLEAP)) {
     if ((i = caster->specialAttack(victim,SKILL_SPRINGLEAP)) || (i == GUARANTEED_SUCCESS)) {
       if (victim->getPosition() > POSITION_DEAD)
 	if (!(d = caster->getActualDamage(victim, NULL, caster->getSkillLevel(SKILL_SPRINGLEAP) >> 1, SKILL_KICK))) {
@@ -350,7 +350,7 @@ bool TBeing::canCounterMove(int perc)
 
   skill = max(skill, 1);
 
-  if (!bSuccess(this, skill, SKILL_COUNTER_MOVE))
+  if (!bSuccess(skill, SKILL_COUNTER_MOVE))
     return FALSE;
 
   return TRUE;
@@ -391,7 +391,7 @@ int TBeing::monkDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlotT
 
   // check bSuccess after above check, so that we limit how often we
   // call the learnFrom stuff
-  if (bSuccess(v, v->getSkillValue(SKILL_JIRIN), SKILL_JIRIN)) {
+  if (v->bSuccess(SKILL_JIRIN)) {
     *dam = 0;
 
     switch(::number(0,2)){

@@ -228,7 +228,7 @@ int TBaseCorpse::dissectMe(TBeing *caster)
   }
   int bKnown = caster->getSkillValue(SKILL_DISSECT);
   
-  if (!bSuccess(caster, bKnown, SKILL_DISSECT) &&
+  if (!caster->bSuccess(bKnown, SKILL_DISSECT) &&
       !caster->hasQuestBit(TOG_STARTED_MONK_BLUE)) {
     // dissection failed
     act("You find nothing useful in $p.",
@@ -358,7 +358,7 @@ int TBaseCorpse::chiMe(TBeing *tLunatic)
     tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
   if (dynamic_cast<TPCorpse *>(this) ||
-      !bSuccess(tLunatic, bKnown, SKILL_CHI) ||
+      !tLunatic->bSuccess(bKnown, SKILL_CHI) ||
       getCorpseLevel() > tLunatic->GetMaxLevel()) {
     act("You attempt to nuke $p, but fail to control the chi.",
         FALSE, tLunatic, this, NULL, TO_CHAR);

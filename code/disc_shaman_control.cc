@@ -33,7 +33,7 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
   }
   caster->addToMoney(-2500, GOLD_HOSPITAL);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_RESURRECTION)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_RESURRECTION)) {
     victim = read_mobile(corpse->getCorpseVnum(), VIRTUAL);
     *caster->roomp += *victim;
     victim->genericCharmFix();
@@ -170,7 +170,7 @@ int enthrallDemon(TBeing * caster, int level, byte bKnown)
 
   victim->elementalFix(caster, SPELL_ENTHRALL_DEMON, 0);
 
-  if (bSuccess(caster, bKnown, SPELL_ENTHRALL_DEMON)) {
+  if (caster->bSuccess(bKnown, SPELL_ENTHRALL_DEMON)) {
      act("You call upon the powers of your ancestors!",
             TRUE, caster, NULL, NULL, TO_CHAR);
      act("$n summons the powers of $s ancestors!",
@@ -297,7 +297,7 @@ int createWoodGolem(TBeing * caster, int level, byte bKnown)
 
   victim->elementalFix(caster, SPELL_CREATE_WOOD_GOLEM, 0);
 
-  if (bSuccess(caster, bKnown, SPELL_CREATE_WOOD_GOLEM)) {
+  if (caster->bSuccess(bKnown, SPELL_CREATE_WOOD_GOLEM)) {
      act("You call upon the powers of your ancestors!",
             TRUE, caster, NULL, NULL, TO_CHAR);
      act("$n summons the powers of $s ancestors!",
@@ -418,7 +418,7 @@ int createRockGolem(TBeing * caster, int level, byte bKnown)
 
   victim->elementalFix(caster, SPELL_CREATE_ROCK_GOLEM, 0);
 
-  if (bSuccess(caster, bKnown, SPELL_CREATE_ROCK_GOLEM)) {
+  if (caster->bSuccess(bKnown, SPELL_CREATE_ROCK_GOLEM)) {
      act("You call upon the powers of your ancestors!",
             TRUE, caster, NULL, NULL, TO_CHAR);
      act("$n summons the powers of $s ancestors!",
@@ -541,7 +541,7 @@ int createIronGolem(TBeing * caster, int level, byte bKnown)
 
   victim->elementalFix(caster, SPELL_CREATE_IRON_GOLEM, 0);
 
-  if (bSuccess(caster, bKnown, SPELL_CREATE_IRON_GOLEM)) {
+  if (caster->bSuccess(bKnown, SPELL_CREATE_IRON_GOLEM)) {
      act("You call upon the powers of your ancestors!",
             TRUE, caster, NULL, NULL, TO_CHAR);
      act("$n summons the powers of $s ancestors!",
@@ -663,7 +663,7 @@ int createDiamondGolem(TBeing * caster, int level, byte bKnown)
 
   victim->elementalFix(caster, SPELL_CREATE_DIAMOND_GOLEM, 0);
 
-  if (bSuccess(caster, bKnown, SPELL_CREATE_DIAMOND_GOLEM)) {
+  if (caster->bSuccess(bKnown, SPELL_CREATE_DIAMOND_GOLEM)) {
      act("You call upon the powers of your ancestors!",
             TRUE, caster, NULL, NULL, TO_CHAR);
      act("$n summons the powers of $s ancestors!",

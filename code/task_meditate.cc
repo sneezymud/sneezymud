@@ -37,7 +37,7 @@ int task_meditate(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
       if (!ch->task->status) {
         if (!ch->roomp->isRoomFlag(ROOM_NO_HEAL)) {
           learn = ch->getSkillValue(SKILL_MEDITATE);
-          if (bSuccess(ch, learn, SKILL_MEDITATE)) {
+          if (ch->bSuccess(learn, SKILL_MEDITATE)) {
             ch->sendTo(fmt("%sYour meditation focuses your mind%s!\n\r") %
                      ch->green() % ch->norm());
             gainAmt = ch->manaGain() - 1;

@@ -130,7 +130,7 @@ int conceal(TBeing *caster, TBeing *vict)
   aff.duration = (level/2 + 1) * UPDATES_PER_MUDHOUR;
   aff.be = caster;
 
-  if (bSuccess(caster, lnd, SKILL_CONCEALMENT)) {
+  if (caster->bSuccess(lnd, SKILL_CONCEALMENT)) {
     aff.level = level;
     aff.modifier = lnd;
 
@@ -316,7 +316,7 @@ int disguise(TBeing *caster, char * buffer)
   aff.bitvector = 0;
   aff.modifier = SKILL_DISGUISE;
 
-  if (!bSuccess(caster, bKnown, SKILL_DISGUISE)) {
+  if (!caster->bSuccess(bKnown, SKILL_DISGUISE)) {
     caster->sendTo("You seem to have screwed something up.\n\r");
     delete mob;
     mob = NULL;

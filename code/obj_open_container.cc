@@ -285,7 +285,7 @@ int TOpenContainer::openMe(TBeing *ch)
 
         return FALSE;
       } else if (!isContainerFlag(CONT_TRAPPED) &&
-                 !bSuccess(ch, ch->getSkillValue(SKILL_DETECT_TRAP), SKILL_DETECT_TRAP)) {
+                 !ch->bSuccess(SKILL_DETECT_TRAP)) {
         setContainerTrapType(doorTrapT(::number((DOOR_TRAP_NONE + 1), (MAX_TRAP_TYPES - 1))));
         setContainerTrapDam(0);
         addContainerFlag(CONT_GHOSTTRAP);
@@ -583,7 +583,7 @@ int TOpenContainer::disarmMe(TBeing *thief)
   learnedness = min((int) MAX_SKILL_LEARNEDNESS, 3*bKnown/2);
   addContainerFlag(CONT_EMPTYTRAP);
 
-  if (bSuccess(thief, learnedness, SKILL_DISARM_TRAP)) {
+  if (thief->bSuccess(learnedness, SKILL_DISARM_TRAP)) {
     sprintf(buf, "Click.  You disarm the %s trap in the $o.", trap_type_buf);
     act(buf, FALSE, thief, this, 0, TO_CHAR);
     act("$n disarms $p.", FALSE, thief, this, 0, TO_ROOM);
@@ -609,7 +609,7 @@ int TOpenContainer::detectMe(TBeing *thief) const
     return FALSE;
 
   // opening a trapped item
-  if (bSuccess(thief, bKnown, SKILL_DETECT_TRAP)) {
+  if (thief->bSuccess(bKnown, SKILL_DETECT_TRAP)) {
     CS(SKILL_DETECT_TRAP);
     return TRUE;
   } else {
@@ -639,14 +639,14 @@ void TOpenContainer::pickMe(TBeing *thief)
 
   int bKnown = thief->getSkillValue(SKILL_PICK_LOCK);
 
-  if (bSuccess(thief, bKnown, SKILL_PICK_LOCK)) {
+  if (thief->bSuccess(bKnown, SKILL_PICK_LOCK)) {
     remContainerFlag( CONT_LOCKED);
     thief->sendTo("*Click*\n\r");
     act("$n fiddles with $p.", FALSE, thief, this, 0, TO_ROOM);
   } else {
     if (critFail(thief, SKILL_PICK_LOCK)) {
-      act("Uhoh.  $n seems to have jammed the lock!", TRUE, thief, 0, 0, TO_ROOM
-);
+      act("Uhoh.  $n seems to have jammed the lock!", 
+	  TRUE, thief, 0, 0, TO_ROOM);
       thief->sendTo("Uhoh.  You seemed to have jammed the lock!\n\r");
       addContainerFlag(CONT_PICKPROOF);
     } else {

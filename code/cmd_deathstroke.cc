@@ -61,7 +61,7 @@ static int deathstroke(TBeing *caster, TBeing *victim)
 
   int dam = caster->getSkillDam(victim, SKILL_DEATHSTROKE, lev, caster->getAdvLearning(SKILL_DEATHSTROKE));
 
-  if ((bSuccess(caster, bKnown+ percent, SKILL_DEATHSTROKE) &&
+  if ((caster->bSuccess(bKnown+ percent, SKILL_DEATHSTROKE) &&
          (i = caster->specialAttack(victim,SKILL_DEATHSTROKE)) && 
          (i != GUARANTEED_FAILURE)) ||
       !victim->awake()) {
@@ -105,7 +105,7 @@ static int deathstroke(TBeing *caster, TBeing *victim)
     // ... fair is fair right? 
     int bKnown2 = victim->getSkillValue(SKILL_DEATHSTROKE);
     if (bKnown2 > 0 &&
-        bSuccess(victim, bKnown2 + 20, SKILL_DEATHSTROKE) &&
+        victim->bSuccess(bKnown2 + 20, SKILL_DEATHSTROKE) &&
          (i = victim->specialAttack(caster,SKILL_DEATHSTROKE)) &&
          i != GUARANTEED_FAILURE) 
     {

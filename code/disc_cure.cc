@@ -68,7 +68,7 @@ int healLight(TBeing *caster, TBeing * victim, int level, byte bKnown, spellNumT
   int hp = caster->getSkillDam(victim, spell, level, adv_learn);
   adjustHealHp(caster, hp, discArray[spell]->lag);
 
-  if (bSuccess(caster, bKnown,caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown,caster->getPerc(), spell)) {
     LogDam(caster, spell, hp);
     switch (critSuccess(caster, spell)) {
       case CRIT_S_KILL:
@@ -162,7 +162,7 @@ int healSerious(TBeing *caster, TBeing * victim, int level, byte bKnown, spellNu
   int hp = caster->getSkillDam(victim, spell, level, adv_learn);
   adjustHealHp(caster, hp, discArray[spell]->lag);
 
-  if (bSuccess(caster, bKnown,caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown,caster->getPerc(), spell)) {
     LogDam(caster, spell, hp);
 
     switch (critSuccess(caster, spell)) {
@@ -281,7 +281,7 @@ int healCritical(TBeing *caster, TBeing *victim, int level, byte bKnown, spellNu
   int hp = caster->getSkillDam(victim, spell, level, adv_learn);
   adjustHealHp(caster, hp, discArray[spell]->lag);
 
-  if (bSuccess(caster, bKnown,caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown,caster->getPerc(), spell)) {
     LogDam(caster, spell, hp);
 
     switch (critSuccess(caster, spell)) {
@@ -374,7 +374,7 @@ int heal(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
   int hp = caster->getSkillDam(victim, spell, level, adv_learn);
   adjustHealHp(caster, hp, discArray[spell]->lag);
 
-  if (bSuccess(caster, bKnown,caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown,caster->getPerc(), spell)) {
     LogDam(caster, spell, hp);
 
     switch (critSuccess(caster, spell)) {
@@ -467,7 +467,7 @@ int healFull(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_l
   int hp = caster->getSkillDam(victim, SPELL_HEAL_FULL, level, adv_learn);
   adjustHealHp(caster, hp, discArray[SPELL_HEAL_FULL]->lag);
 
-  if (bSuccess(caster, bKnown,caster->getPerc(), SPELL_HEAL_FULL)) {            
+  if (caster->bSuccess(bKnown,caster->getPerc(), SPELL_HEAL_FULL)) {            
     LogDam(caster, SPELL_HEAL_FULL, hp);                                        
                                                                                 
     switch (critSuccess(caster, SPELL_HEAL_FULL)) {                             
@@ -571,7 +571,7 @@ int healCritSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 
   // spray is not tasked, so no need to adjust hp like in other heals
 
-  if (bSuccess(caster, bKnown,caster->getPerc(), SPELL_HEAL_CRITICAL_SPRAY)) {
+  if (caster->bSuccess(bKnown,caster->getPerc(), SPELL_HEAL_CRITICAL_SPRAY)) {
     LogDam(caster, SPELL_HEAL_CRITICAL_SPRAY, hp);
 
     switch (critSuccess(caster, SPELL_HEAL_CRITICAL_SPRAY)) {
@@ -671,7 +671,7 @@ int healSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 
   // spray is not tasked, so no need to adjust hp like in other heals
 
-  if (bSuccess(caster, bKnown,caster->getPerc(), SPELL_HEAL_SPRAY)) {
+  if (caster->bSuccess(bKnown,caster->getPerc(), SPELL_HEAL_SPRAY)) {
     LogDam(caster, SPELL_HEAL_SPRAY, hp);
 
     switch (critSuccess(caster, SPELL_HEAL_SPRAY)) {
@@ -771,7 +771,7 @@ int healFullSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
 
   // spray is not tasked, so no need to adjust hp like in other heals
 
-  if (bSuccess(caster, bKnown,caster->getPerc(), SPELL_HEAL_FULL_SPRAY)) {
+  if (caster->bSuccess(bKnown,caster->getPerc(), SPELL_HEAL_FULL_SPRAY)) {
     LogDam(caster, SPELL_HEAL_FULL_SPRAY, hp);
 
     switch (critSuccess(caster, SPELL_HEAL_FULL_SPRAY)) {
@@ -895,7 +895,7 @@ int knitBone(TBeing * caster, TBeing * victim, int, byte bKnown)
 
   // If we got here, we know that there is a broken slot, and the next
   // for loop will not go infinite or crash - Russ 01/19/98
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_KNIT_BONE)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_KNIT_BONE)) {
     // find a suitable slot to knit 
     for (slot = pickRandomLimb();
         ((!victim->slotChance(slot)) ||
@@ -958,7 +958,7 @@ int clot(TBeing * caster, TBeing * victim, int, byte bKnown, spellNumT spell)
   }
 
   if (spell==SKILL_WOHLIN || 
-      bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+      caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     /* find a suitable slot to clot */
     for (slot = pickRandomLimb();
      ((!victim->slotChance(slot)) || (!victim->isLimbFlags(slot, PART_BLEEDING)));
@@ -1026,7 +1026,7 @@ int restoreLimb(TBeing *caster, TBeing *victim, int, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_RESTORE_LIMB)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_RESTORE_LIMB)) {
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     if (victim->isLimbFlags(slot, PART_PARALYZED))
       victim->remLimbFlags(slot, PART_PARALYZED);
@@ -1130,7 +1130,7 @@ int sterilize(TBeing * caster, TBeing * victim, int, byte bKnown, spellNumT spel
   }
 
   if (spell==SKILL_WOHLIN || 
-      bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+      caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     /* find a suitable slot to disinfect */
     for (slot = pickRandomLimb();
        (!victim->slotChance(slot) ||
@@ -1181,7 +1181,7 @@ int salve(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT sp
   max_am = 1 + (level * number(1,6)/2);
 
   if (spell==SKILL_WOHLIN ||
-      bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+      caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     if(spell!=SKILL_WOHLIN)
       LogDam(caster, spell, max_am);
 
@@ -1287,7 +1287,7 @@ int expel(TBeing * caster, TBeing * victim, int, byte bKnown, spellNumT spell)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     for (slot = pickRandomLimb();
          ((!victim->slotChance(slot)) ||
           !(o = victim->getStuckIn(slot)));

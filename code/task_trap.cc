@@ -131,7 +131,7 @@ int task_trap_door(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       // let's not test multiple times, check at end
       if (ch->task->timeLeft < 0 ||
           !ch->doesKnowSkill(SKILL_SET_TRAP_DOOR)) {
-        if (!bSuccess(ch, learning, SKILL_SET_TRAP_DOOR)) {
+        if (!ch->bSuccess(learning, SKILL_SET_TRAP_DOOR)) {
           // trigger trap
   
           rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_DOOR);
@@ -238,7 +238,7 @@ int task_trap_container(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
       // let's not test multiple times, check at end
       if (ch->task->timeLeft < 0 ||
           !ch->doesKnowSkill(SKILL_SET_TRAP_CONT)) {
-        if (!bSuccess(ch, learning, SKILL_SET_TRAP_CONT)) {
+        if (!ch->bSuccess(learning, SKILL_SET_TRAP_CONT)) {
           // trigger trap
           rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_CONT);
 	  ch->sendTo("Your attempt to set the trap has failed.\n\r");
@@ -375,7 +375,7 @@ int task_trap_mine(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       // let's not test multiple times, check at end
       if (ch->task->timeLeft < 0 ||
           !ch->doesKnowSkill(SKILL_SET_TRAP_MINE)) {
-        if (!bSuccess(ch, learning, SKILL_SET_TRAP_MINE)) {
+        if (!ch->bSuccess(learning, SKILL_SET_TRAP_MINE)) {
           // trigger trap
           rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_MINE);
 	  ch->sendTo("Your attempt to set the trap has failed.\n\r");
@@ -485,7 +485,7 @@ int task_trap_arrow(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, 
       // let's not test multiple times, check at end
       if (ch->task->timeLeft < 0 ||
           !ch->doesKnowSkill(SKILL_SET_TRAP_ARROW)) {
-        if (!bSuccess(ch, learning, SKILL_SET_TRAP_ARROW)) {
+        if (!ch->bSuccess(learning, SKILL_SET_TRAP_ARROW)) {
           // trigger trap
           rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_ARROW);
 	  ch->sendTo("Your attempt to set the trap has failed.\n\r");
@@ -612,7 +612,7 @@ int task_trap_grenade(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *
       // let's not test multiple times, check at end
       if (ch->task->timeLeft < 0 ||
           !ch->doesKnowSkill(SKILL_SET_TRAP_GREN)) {
-        if (!bSuccess(ch, learning, SKILL_SET_TRAP_GREN)) {
+        if (!ch->bSuccess(learning, SKILL_SET_TRAP_GREN)) {
           // trigger trap
           rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_GRENADE);
 	  ch->sendTo("Your attempt to set the trap has failed.\n\r");

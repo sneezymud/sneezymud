@@ -72,7 +72,7 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
 
   bKnown = c->getSkillValue(skill);
 
-  if ((bSuccess(c, bKnown + percent, skill) &&
+  if ((c->bSuccess(bKnown + percent, skill) &&
          // insure they can hit this critter
          (i = c->specialAttack(victim,skill)) && 
          i != GUARANTEED_FAILURE &&

@@ -74,7 +74,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     return TRUE;
   }
 
-  if (bSuccess(c, bKnown + percent, SKILL_QUIV_PALM) &&
+  if (c->bSuccess(bKnown + percent, SKILL_QUIV_PALM) &&
       ((i = c->specialAttack(v, SKILL_QUIV_PALM)) || (i == GUARANTEED_SUCCESS))) {
     int dam = v->getHit()+100;
     if (c->willKill(v, dam, SKILL_QUIV_PALM, false)) {

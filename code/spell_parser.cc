@@ -2227,7 +2227,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SKILL_BASH:
     case SKILL_HEADBUTT:
     case SKILL_RESCUE:
-    case SKILL_SMYTHE:
+    case SKILL_BLACKSMITHING:
     case SKILL_REPAIR_MAGE:
     case SKILL_REPAIR_DEIKHAN:
     case SKILL_REPAIR_CLERIC:
@@ -2235,7 +2235,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SKILL_REPAIR_SHAMAN:
     case SKILL_REPAIR_THIEF:
     case SKILL_MEND:
-    case SKILL_SMYTHE_ADVANCED:
+    case SKILL_BLACKSMITHING_ADVANCED:
     case SKILL_SACRIFICE:
     case SKILL_DISARM:
     case SKILL_PARRY_WARRIOR:
@@ -2249,10 +2249,13 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SKILL_POWERMOVE:
     case SKILL_RETREAT:
     case SKILL_GRAPPLE:
+    case SKILL_BRAWL_AVOIDANCE:
     case SKILL_STOMP:
     case SKILL_DOORBASH:
     case SKILL_DEATHSTROKE:
     case SKILL_TRANCE_OF_BLADES:
+    case SKILL_WEAPON_RETENTION:
+    case SKILL_CLOSE_QUARTERS_FIGHTING:
     case SKILL_HIKING:
     case SKILL_FORAGE:
     case SKILL_SEEKWATER:

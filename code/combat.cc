@@ -1458,7 +1458,7 @@ void TBeing::stopFighting()
     return;
   }
   // Clear out client fight and tank condition fields
-  if (desc && desc->m_bIsClient) 
+  if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) 
     desc->clientf(fmt("%d|%s|%s|%s|%s") % CLIENT_FIGHT % "" % "" % "" % "");
 
   // see explanation at declaration for details on this
@@ -2001,7 +2001,7 @@ int TBeing::hit(TBeing *target, int pulse)
      doesKnowSkill(SKILL_BLUR) && 
      ::number(0, 99) < 20 &&  // this makes it happen 20% of the time
      !isAffected(AFF_ENGAGER) && getMana()>=25 &&
-     bSuccess(this, getSkillValue(SKILL_BLUR), SKILL_BLUR)) {
+     bSuccess(SKILL_BLUR)) {
     // the number of extra swings use to be skill dependant too, but
     // this was getting too complex and is not how the balance document
     // devised things to occur.  Let's just double the normal number of
@@ -2112,13 +2112,13 @@ int TBeing::hit(TBeing *target, int pulse)
 
     if (awake() && getPosition() < POSITION_CRAWLING && (fx > 0 || fy > 0)) {
       if (doesKnowSkill(SKILL_GROUNDFIGHTING)) {
-        if (bSuccess(this, getSkillValue(SKILL_GROUNDFIGHTING), SKILL_GROUNDFIGHTING))
+        if (bSuccess(SKILL_GROUNDFIGHTING))
           ; // do nothing, just for sake of learning
       }
     }
     if (doesKnowSkill(SKILL_CHIVALRY) && (getPosition() == POSITION_MOUNTED) &&
         (fx > 0 || fy > 0)) {
-      if (bSuccess(this, getSkillValue(SKILL_CHIVALRY), SKILL_CHIVALRY))
+      if (bSuccess(SKILL_CHIVALRY))
         ; // do nothing, just for sake of learning
     }
   }
@@ -3339,12 +3339,16 @@ bool TBeing::canAttack(primaryTypeT isprimary)
   }
 
   // this needs work - bat 4/29/95
-  if (willBump(roomp->getRoomHeight())) {
-    if (::number(1,20) < (getHeight() - roomp->getRoomHeight())) {
-      if (!(::number(0,3))) {
-        sendTo("The cramped quarters makes it difficult to fight.\n\r");
-        return FALSE;
-      }
+  if (willBump(roomp->getRoomHeight()) &&
+      (::number(1,20) < (getHeight() - roomp->getRoomHeight())) &&
+      !(::number(0,3))){
+    if(doesKnowSkill(SKILL_CLOSE_QUARTERS_FIGHTING) &&
+       bSuccess(SKILL_CLOSE_QUARTERS_FIGHTING)){
+      sendTo("Your training helps you fight effectively in the cramped quarters.\n\r");
+      return TRUE;
+    } else {
+      sendTo("The cramped quarters make it difficult to fight.\n\r");
+      return FALSE;
     }
   }
 
@@ -3747,7 +3751,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	 !weapon &&                             // must be barehanded
 	 (::number(0,99) < 10) &&                // only 10% of the time
 	 getMana()>=10 &&                       // requires 10 mana
-	 bSuccess(this,getSkillValue(SKILL_CHAIN_ATTACK),SKILL_CHAIN_ATTACK)){
+	 bSuccess(SKILL_CHAIN_ATTACK)){
 	// successfully chain this attack
 	act("Lightning fast, you shift your balance and launch another strike.",
 	    FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);

@@ -81,7 +81,7 @@ int harm(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
 
   int dam = caster->getSkillDam(victim, spell, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     switch(critSuccess(caster, spell)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -185,7 +185,7 @@ int poison(TBeing * caster, TObj * obj, int, byte bKnown, spellNumT spell)
 {
   int rc;
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     rc = obj->poisonObject();
     if (rc) {
       return SPELL_SUCCESS;
@@ -280,7 +280,7 @@ int poison(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
   aff2.location = APPLY_NONE;
   aff2.bitvector = AFF_POISON;
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     if (victim->isLucky(caster->spellLuckModifier(spell))) {
       SV(spell);
       aff.duration /= 2;
@@ -462,7 +462,7 @@ int blindness(TBeing * caster, TBeing * victim, int level, byte bKnown)
     return SPELL_FALSE;
   }
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_BLINDNESS)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_BLINDNESS)) {
     caster->reconcileHurt(victim, discArray[SPELL_BLINDNESS]->alignMod);
 
     ret=SPELL_SUCCESS;
@@ -668,7 +668,7 @@ int harmLight(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNum
 
   caster->reconcileHurt(victim, discArray[spell]->alignMod);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     switch (critSuccess(caster, spell)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -775,7 +775,7 @@ int harmCritical(TBeing * caster, TBeing * victim, int level, byte bKnown, spell
   caster->reconcileHurt(victim, discArray[spell]->alignMod);
   int dam = caster->getSkillDam(victim, spell, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     if (critSuccess(caster, spell)) {
       CS(spell);
       dam *= 2;
@@ -873,7 +873,7 @@ int harmSerious(TBeing * caster, TBeing * victim, int level, byte bKnown, spellN
 
   caster->reconcileHurt(victim, discArray[spell]->alignMod);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     if (critSuccess(caster, spell)) {
       CS(spell);
       dam *= 2;
@@ -1022,7 +1022,7 @@ int paralyze(TBeing * caster, TBeing * victim, int level, byte bKnown)
 
   save1 = victim->isLucky(caster->spellLuckModifier(SPELL_PARALYZE));
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_PARALYZE)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_PARALYZE)) {
     caster->reconcileHurt(victim, discArray[SPELL_PARALYZE]->alignMod);
     if (save1) {
       SV(SPELL_PARALYZE);
@@ -1339,7 +1339,7 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
   dam = (int) (caster->percModifier() * dam);
   dam = max(1,dam);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_BONE_BREAKER)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_BONE_BREAKER)) {
     addTorment(victim, SPELL_BONE_BREAKER);
 
     caster->reconcileHurt(victim, discArray[SPELL_BONE_BREAKER]->alignMod);
@@ -1571,7 +1571,7 @@ int bleed(TBeing * caster, TBeing * victim, int level, byte bKnown)
 
   int dam = 0;
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_BLEED)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_BLEED)) {
     // find a suitable slot to bleed 
     for (slot = pickRandomLimb(); ; slot = pickRandomLimb()) {
       if (notBleedSlot(slot))
@@ -1784,7 +1784,7 @@ int witherLimb(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv
 
   caster->reconcileHurt(victim, discArray[SPELL_WITHER_LIMB]->alignMod);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_WITHER_LIMB)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_WITHER_LIMB)) {
     addTorment(victim, SPELL_WITHER_LIMB);
 
     // find a suitable limb to wither 
@@ -1949,7 +1949,7 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
 
   caster->reconcileHurt(victim, discArray[SPELL_PARALYZE_LIMB]->alignMod);
 
-  if (bSuccess(caster, bKnown, caster->getPerc(),SPELL_PARALYZE_LIMB)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(),SPELL_PARALYZE_LIMB)) {
     addTorment(victim, SPELL_PARALYZE_LIMB);
 
     // find a suitable limb to paralyze 
@@ -2106,7 +2106,7 @@ int numb(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT spe
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     caster->reconcileHurt(victim, discArray[spell]->alignMod);
     addTorment(victim, spell);
 
@@ -2220,7 +2220,7 @@ int disease(TBeing * caster, TBeing * victim, int level, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_DISEASE)){
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_DISEASE)){
     caster->reconcileHurt(victim, discArray[SPELL_DISEASE]->alignMod);
 
     if(!genericDisease(victim, level)){
@@ -2330,7 +2330,7 @@ int infect(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT s
 
   int dam = 0;
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     caster->reconcileHurt(victim, discArray[spell]->alignMod);
 
     if (!victim->isLucky(caster->spellLuckModifier(spell))) {

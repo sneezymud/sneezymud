@@ -87,7 +87,11 @@ const int CLIENT_GROUPDELETE  = 173;
 const int CLIENT_GROUP        = 174;
 const int CLIENT_GROUPDELETEALL = 175;
 const int CLIENT_ROMBLER      = 176;
-
+const int CLIENT_LIFEFORCE    = 177;
+const int CLIENT_TONEXTLEVEL  = 178;
+const int CLIENT_WHISPER      = 179;
+const int CLIENT_ASK          = 180;
+const int CLIENT_FTELL        = 181;
 
 const int ERR_BAD_NAME       = 1;
 const int ERR_BAD_PASSWD     = 2;

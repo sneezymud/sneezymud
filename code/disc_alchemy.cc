@@ -24,7 +24,7 @@ int identify(TBeing *caster, TObj *obj, int, byte bKnown)
   int x, y;
   double z;
 
-  if (bSuccess(caster, bKnown, SPELL_IDENTIFY)) {
+  if (caster->bSuccess(bKnown, SPELL_IDENTIFY)) {
     buf2=sstring(ItemInfo[obj->itemType()]->name).lower();
     buf=sstring(material_nums[obj->getMaterial()].mat_name).lower();
 
@@ -195,7 +195,7 @@ static sstring identifyBeingStuff(const TBeing *caster, TBeing *victim, showMeT 
 
 int identify(TBeing *caster, TBeing * victim, int, byte bKnown)
 {
-  if (bSuccess(caster, bKnown, SPELL_IDENTIFY)) {
+  if (caster->bSuccess(bKnown, SPELL_IDENTIFY)) {
     if (caster->desc) {
       sstring str = identifyBeingStuff(caster, victim, DONT_SHOW_ME);
       str += caster->describeImmunities(victim, bKnown);
@@ -253,7 +253,7 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
   sstring buf;
   int i, found = FALSE;
 
-  if (bSuccess(caster, bKnown, SPELL_DIVINATION)) {
+  if (caster->bSuccess(bKnown, SPELL_DIVINATION)) {
     buf=obj->shortDescr;
     caster->sendTo(COLOR_OBJECTS, fmt("Your mind analyzes %s...\n\r") % buf.uncap());
 
@@ -357,7 +357,7 @@ int castDivinationObj(TBeing *caster, const TObj *obj)
 
 int divinationBeing(TBeing *caster, TBeing * victim, int, byte bKnown)
 {
-  if (bSuccess(caster, bKnown, SPELL_DIVINATION)) {
+  if (caster->bSuccess(bKnown, SPELL_DIVINATION)) {
     if (caster->desc) {
       sstring str = identifyBeingStuff(caster, victim, SHOW_ME);
 
@@ -452,7 +452,7 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
     caster->nothingHappens();
   }
 
-  if (bSuccess(caster, bKnown, SPELL_EYES_OF_FERTUMAN)) {
+  if (caster->bSuccess(bKnown, SPELL_EYES_OF_FERTUMAN)) {
     switch (critSuccess(caster, SPELL_EYES_OF_FERTUMAN)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -664,7 +664,7 @@ int TOpal::powerstoneMe(TBeing *caster, int, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster,  bKnown, SPELL_POWERSTONE)) {
+  if (caster->bSuccess(bKnown, SPELL_POWERSTONE)) {
     switch (critSuccess(caster, SPELL_POWERSTONE)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -780,7 +780,7 @@ int shatter(TBeing *caster, TBeing * victim, int level, byte bKnown)
 
   caster->reconcileHurt(victim, discArray[SPELL_SHATTER]->alignMod);
 
-  if (bSuccess(caster, bKnown,SPELL_SHATTER)) {
+  if (caster->bSuccess(bKnown,SPELL_SHATTER)) {
     switch (critSuccess(caster, SPELL_SHATTER)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -921,7 +921,7 @@ int farlook(TBeing *caster, TBeing * victim, int level, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, SPELL_FARLOOK)) {
+  if (caster->bSuccess(bKnown, SPELL_FARLOOK)) {
     act("You conjure up a large cloud which shimmers slightly before revealing...",
               FALSE, caster, 0, 0, TO_CHAR);
     act("$n conjures up a large cloud which shimmers slightly before revealing...",
@@ -1028,7 +1028,7 @@ int TObj::illuminateMe(TBeing *caster, int level, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown,SPELL_ILLUMINATE)) {
+  if (caster->bSuccess(bKnown,SPELL_ILLUMINATE)) {
     for (i = 0;i < MAX_OBJ_AFFECT;i++) {
       if (affected[i].location == APPLY_LIGHT) {
         caster->sendTo("That item is already lit up.  It can't get any brighter.\n\r");
@@ -1110,7 +1110,7 @@ int detectMagic(TBeing *caster, TBeing * victim, int level, byte bKnown)
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_DETECT_MAGIC;
 
-  if (bSuccess(caster, bKnown, SPELL_DETECT_MAGIC)) {
+  if (caster->bSuccess(bKnown, SPELL_DETECT_MAGIC)) {
 
     switch (critSuccess(caster, SPELL_DETECT_MAGIC)) {
       case CRIT_S_DOUBLE:
@@ -1173,7 +1173,7 @@ int dispelMagic(TBeing *caster, TObj * obj, int, byte bKnown)
 {
   int i;
 
-  if (bSuccess(caster, bKnown, SPELL_DISPEL_MAGIC)) {
+  if (caster->bSuccess(bKnown, SPELL_DISPEL_MAGIC)) {
 
     // assumes item not being used so don't have to affectFrom()
     // this is the same list in checkObjStat for affects requiring MAGIC be set
@@ -1248,7 +1248,7 @@ int dispelMagic(TBeing *caster, TBeing * victim, int, byte bKnown)
 {
   caster->reconcileHurt(victim,discArray[SPELL_DISPEL_MAGIC]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_DISPEL_MAGIC)) {
+  if (caster->bSuccess(bKnown, SPELL_DISPEL_MAGIC)) {
     return SPELL_SUCCESS;
   } else {
     caster->nothingHappens();
@@ -1722,7 +1722,7 @@ int materialize(TBeing *caster, TObj **obj, int, const char * name, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, SPELL_MATERIALIZE)) {
+  if (caster->bSuccess(bKnown, SPELL_MATERIALIZE)) {
 
     int i, num;
     if (obj_index[numberx].value)
@@ -1825,7 +1825,7 @@ int spontaneousGeneration(TBeing *caster, TObj **obj, const char * name, int, by
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, SPELL_SPONTANEOUS_GENERATION)) {
+  if (caster->bSuccess(bKnown, SPELL_SPONTANEOUS_GENERATION)) {
 
     int i;
     int num;
@@ -1935,7 +1935,7 @@ int TScroll::copyMe(TBeing *caster, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, SPELL_COPY)) {
+  if (caster->bSuccess(bKnown, SPELL_COPY)) {
     new_obj = read_object(objVnum(),VIRTUAL);
     if (!new_obj) {
       caster->nothingHappens();

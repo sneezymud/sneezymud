@@ -101,7 +101,7 @@ int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
 
   REMOVE_BIT(mob->specials.affectedBy, AFF_CHARM );
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_VOODOO)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_VOODOO)) {
     affectedData aff;
 
     SET_BIT(mob->specials.affectedBy, AFF_CHARM );
@@ -275,7 +275,7 @@ int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
 
   REMOVE_BIT(mob->specials.affectedBy, AFF_CHARM );
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_DANCING_BONES)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_DANCING_BONES)) {
     affectedData aff;
 
     SET_BIT(mob->specials.affectedBy, AFF_CHARM );
@@ -369,7 +369,7 @@ int shieldOfMists(TBeing *caster, TBeing *victim, int level, byte bKnown)
   aff.modifier = -80;
   aff.bitvector = 0;
 
-  if (bSuccess(caster,bKnown,SPELL_SHIELD_OF_MISTS)) {
+  if (caster->bSuccess(bKnown,SPELL_SHIELD_OF_MISTS)) {
     switch (critSuccess(caster, SPELL_SHIELD_OF_MISTS)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -453,7 +453,7 @@ int enthrallSpectre(TBeing * caster, int level, byte bKnown)
 
   victim->elementalFix(caster, SPELL_ENTHRALL_SPECTRE, 0);
 
-  if (bSuccess(caster, bKnown, SPELL_ENTHRALL_SPECTRE)) {
+  if (caster->bSuccess(bKnown, SPELL_ENTHRALL_SPECTRE)) {
      act("You call upon the powers of your ancestors!",
             TRUE, caster, NULL, NULL, TO_CHAR);
      act("$n summons the powers of $s ancestors!",
@@ -573,7 +573,7 @@ int enthrallGhast(TBeing * caster, int level, byte bKnown)
 
   victim->elementalFix(caster, SPELL_ENTHRALL_GHAST, 0);
 
-  if (bSuccess(caster, bKnown, SPELL_ENTHRALL_GHAST)) {
+  if (caster->bSuccess(bKnown, SPELL_ENTHRALL_GHAST)) {
      act("You call upon the powers of your ancestors!",
             TRUE, caster, NULL, NULL, TO_CHAR);
      act("$n summons the powers of $s ancestors!",
@@ -819,7 +819,7 @@ int vampiricTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int ad
   int num2 = ::number(1,((caster->getSkillValue(SPELL_VAMPIRIC_TOUCH) / 6) *5));
   int num3 = ::number(50,150);
 
-  if (bSuccess(caster, bKnown,SPELL_VAMPIRIC_TOUCH)) {
+  if (caster->bSuccess(bKnown,SPELL_VAMPIRIC_TOUCH)) {
     act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
     act("You groan in pain as life is drawn from your body!", FALSE, caster, NULL, victim, TO_VICT);
@@ -929,7 +929,7 @@ int lifeLeech(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown,SPELL_LIFE_LEECH)) {
+  if (caster->bSuccess(bKnown,SPELL_LIFE_LEECH)) {
     act("$N buckles in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$N buckles in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
     act("You buckle in pain as life is drawn from your body!", FALSE, caster, NULL, victim, TO_VICT);
@@ -1020,7 +1020,7 @@ int cheval(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_CHEVAL]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_CHEVAL)) {
+  if (caster->bSuccess(bKnown, SPELL_CHEVAL)) {
     aff.type = SPELL_CHEVAL;
     aff.level = level;
     aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
@@ -1124,7 +1124,7 @@ int chrism(TBeing *caster, TObj **obj, int, const char * name, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, SPELL_CHRISM)) {
+  if (caster->bSuccess(bKnown, SPELL_CHRISM)) {
 
     int i, num;
     if (obj_index[numberx].value)
@@ -1219,7 +1219,7 @@ int rombler(TBeing *caster, int, byte bKnown)
   }
 
 
-  if (bSuccess(caster, bKnown, SPELL_ROMBLER)) {
+  if (caster->bSuccess(bKnown, SPELL_ROMBLER)) {
     if (msg.size() < 0) {
       caster->sendTo("Drumming without spirits to send is moot.\n\r");
       caster->nothingHappens(SILENT_YES);
@@ -1235,9 +1235,15 @@ int rombler(TBeing *caster, int, byte bKnown)
             if(IS_SET(i->autobits, AUTO_PG13)){
 	      pgbuff = i->character->PG13filter(msg);
 	      i->character->sendTo(COLOR_SPELLS, fmt("<Y>%s<z> rombles, \"<o>%s%s\"\n\r") % caster->getName() % pgbuff % i->character->norm());
-	    }
-	    else
+
+	      if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
+		i->clientf(fmt("%d|%s|%s") % CLIENT_ROMBLER % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, pgbuff, NULL, COLOR_NONE, FALSE));
+	    } else {
 	      i->character->sendTo(COLOR_SPELLS, fmt("<Y>%s<z> rombles, \"<o>%s%s\"\n\r") % caster->getName() %  msg % i->character->norm());
+
+              if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
+                i->clientf(fmt("%d|%s|%s") % CLIENT_ROMBLER % colorString(i->character, i, caster->getName(), NULL, COLOR_NONE, FALSE) % colorString(i->character, i, msg, NULL, COLOR_NONE, FALSE));
+	    }
           } else {
 	    int num = ::number(0,3);
 	    if (num == 0) {
@@ -1298,7 +1304,7 @@ int intimidate(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHurt(victim, discArray[SPELL_INTIMIDATE]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_INTIMIDATE)) {
+  if (caster->bSuccess(bKnown, SPELL_INTIMIDATE)) {
     if (victim->isLucky(caster->spellLuckModifier(SPELL_INTIMIDATE)) || victim->isImmune(IMMUNE_FEAR)) {
       SV(SPELL_INTIMIDATE);
       act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_CHAR);
@@ -1397,7 +1403,7 @@ int senseLifeShaman(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_SENSE_LIFE_SHAMAN]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_SENSE_LIFE_SHAMAN)) {
+  if (caster->bSuccess(bKnown, SPELL_SENSE_LIFE_SHAMAN)) {
     aff.type = SPELL_SENSE_LIFE_SHAMAN;
     aff.duration = (((level*2)/3) * UPDATES_PER_MUDHOUR);
     aff.modifier = 0;
@@ -1477,7 +1483,7 @@ int detectShadow(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_DETECT_SHADOW]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_DETECT_SHADOW)) {
+  if (caster->bSuccess(bKnown, SPELL_DETECT_SHADOW)) {
     aff.type = SPELL_DETECT_SHADOW;
     aff.duration = (((level * 3)/2) * UPDATES_PER_MUDHOUR);
     aff.modifier = 0;
@@ -1580,7 +1586,7 @@ int djallasProtection(TBeing *caster, TBeing *victim, int level, byte bKnown)
   aff4.modifier2 = ((level * 2) / 3);
   aff4.bitvector = 0;
 
-  if (bSuccess(caster,bKnown,SPELL_DJALLA)) {
+  if (caster->bSuccess(bKnown,SPELL_DJALLA)) {
     switch (critSuccess(caster, SPELL_DJALLA)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -1686,7 +1692,7 @@ int legbasGuidance(TBeing *caster, TBeing *victim, int level, byte bKnown)
   aff4.modifier2 = ((level * 2) / 3);
   aff4.bitvector = 0;
 
-  if (bSuccess(caster,bKnown,SPELL_LEGBA)) {
+  if (caster->bSuccess(bKnown,SPELL_LEGBA)) {
     switch (critSuccess(caster, SPELL_LEGBA)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -1786,7 +1792,7 @@ int embalm(TBeing *caster, TObj *o, int level, byte bKnown)
 {
   TBaseCorpse *corpse;
 
-  if(!bSuccess(caster, bKnown, SPELL_EMBALM)){
+  if(!caster->bSuccess(bKnown, SPELL_EMBALM)){
     caster->nothingHappens();
     return SPELL_FAIL;
   }
@@ -1838,7 +1844,7 @@ int squish(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_lea
 
   caster->reconcileHurt(victim,discArray[SPELL_SQUISH]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_SQUISH)) {
+  if (caster->bSuccess(bKnown, SPELL_SQUISH)) {
     switch (critSuccess(caster, SPELL_SQUISH)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -1945,7 +1951,7 @@ int distort(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown,SPELL_DISTORT)) {
+  if (caster->bSuccess(bKnown,SPELL_DISTORT)) {
     switch (critSuccess(caster, SPELL_DISTORT)) {
       case CRIT_S_DOUBLE:
         CS(SPELL_DISTORT);
@@ -2110,7 +2116,7 @@ int soulTwist(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
   int dam = caster->getSkillDam(victim, SPELL_SOUL_TWIST, level, adv_learn);
   caster->reconcileHurt(victim, discArray[SPELL_SOUL_TWIST]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_SOUL_TWIST)) {
+  if (caster->bSuccess(bKnown, SPELL_SOUL_TWIST)) {
     switch (critSuccess(caster, SPELL_SOUL_TWIST)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -2225,7 +2231,7 @@ int enthrallGhoul(TBeing * caster, int level, byte bKnown)
 
   victim->elementalFix(caster, SPELL_ENTHRALL_GHOUL, 0);
 
-  if (bSuccess(caster, bKnown, SPELL_ENTHRALL_GHOUL)) {
+  if (caster->bSuccess(bKnown, SPELL_ENTHRALL_GHOUL)) {
      act("You call upon the powers of your ancestors!",
             TRUE, caster, NULL, NULL, TO_CHAR);
      act("$n summons the powers of $s ancestors!",
@@ -2368,7 +2374,7 @@ int stupidity(TBeing *caster, TBeing *victim, int level, byte bKnown)
   // let the affect be level dependant
   aff.modifier = -(aff.level/4);
 
-  if (bSuccess(caster, bKnown, SPELL_STUPIDITY)) {
+  if (caster->bSuccess(bKnown, SPELL_STUPIDITY)) {
     ret = SPELL_SUCCESS;
     switch (critSuccess(caster, SPELL_STUPIDITY)) {
       case CRIT_S_DOUBLE:
@@ -2593,7 +2599,7 @@ int flatulence(TBeing * caster, int level, byte bKnown, int adv_learn)
 
   int dam = caster->getSkillDam(NULL, SPELL_FLATULENCE, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_FLATULENCE)) {
+  if (caster->bSuccess(bKnown, SPELL_FLATULENCE)) {
     act("<o>You turn around quickly and pass gas!<1>", FALSE, caster, NULL, NULL, TO_CHAR);
     act("<o>$n turns around quickly and passes gas!<1>", FALSE, caster, NULL, NULL, TO_ROOM);
     for (t = caster->roomp->getStuff(); t; t = t2) {
@@ -2669,7 +2675,7 @@ int chaseSpirits(TBeing *caster, TObj * obj, int, byte bKnown)
 {
   int i;
 
-  if (bSuccess(caster, bKnown, SPELL_CHASE_SPIRIT)) {
+  if (caster->bSuccess(bKnown, SPELL_CHASE_SPIRIT)) {
 
     for (i = 0; i < MAX_OBJ_AFFECT; i++) { 
       if ((obj->affected[i].location != APPLY_NONE) &&
@@ -2739,7 +2745,7 @@ int chaseSpirits(TBeing *caster, TBeing * victim, int, byte bKnown)
 {
   caster->reconcileHurt(victim,discArray[SPELL_CHASE_SPIRIT]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_CHASE_SPIRIT)) {
+  if (caster->bSuccess(bKnown, SPELL_CHASE_SPIRIT)) {
     return SPELL_SUCCESS;
   } else {
     caster->nothingHappens();

@@ -129,7 +129,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
   }
   dam = dice(exitp->weight, ::number(4,10));
 
-  if (bSuccess(caster, bKnown, SKILL_DOORBASH)) {
+  if (caster->bSuccess(bKnown, SKILL_DOORBASH)) {
     // this check used to be done before the bSuccess roll, but
     // it wound up causing PCs to virtually never increase
     // their skill

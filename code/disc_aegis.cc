@@ -37,7 +37,7 @@ void relive(TBeing *ch, TBeing *vict)
     return;
   }
   
-  if (bSuccess(ch, ch->getSkillValue(SPELL_RELIVE), ch->getPerc(), SPELL_RELIVE)) {
+  if (ch->bSuccess(ch->getSkillValue(SPELL_RELIVE), ch->getPerc(), SPELL_RELIVE)) {
     
     act("Images rapidly flash through your mind as you relive the experiences of your corpse.",
 	FALSE, ch, NULL, vict, TO_VICT);
@@ -90,7 +90,7 @@ int cureBlindness(TBeing *c, TBeing * victim, int level, byte learn)
     return FALSE;
   }
 
-  if (bSuccess(c, learn, c->getPerc(), SPELL_CURE_BLINDNESS)) {
+  if (c->bSuccess(learn, c->getPerc(), SPELL_CURE_BLINDNESS)) {
     if (victim->affected) {
       for (aff = victim->affected; aff; aff = aff->next) {
         if ((aff->type == AFFECT_DISEASE) && (aff->modifier == DISEASE_EYEBALL)) {
@@ -186,7 +186,7 @@ int cureDisease(TBeing *caster, TBeing * victim, int, byte learn, spellNumT spel
   int i;
   
   if (spell==SKILL_WOHLIN || 
-      bSuccess(caster, learn, caster->getPerc(), spell)) {
+      caster->bSuccess(learn, caster->getPerc(), spell)) {
   
     for (i=1; i <= 6; i++) {
       switch (i) {
@@ -339,7 +339,7 @@ int curePoison(TBeing *c, TBeing * victim, int level, byte learn, spellNumT spel
   char buf[256];
   affectedData aff;
 
-  if (spell==SKILL_WOHLIN || bSuccess(c, learn, c->getPerc(), spell)) {
+  if (spell==SKILL_WOHLIN || c->bSuccess(learn, c->getPerc(), spell)) {
     if (victim->isAffected(AFF_POISON) || 
         victim->affectedBySpell(SPELL_POISON) ||
         victim->affectedBySpell(SPELL_POISON_DEIKHAN) ||
@@ -432,7 +432,7 @@ int refresh(TBeing *c, TBeing * victim, int level, byte learn, spellNumT spell)
   dam = max(dam, 15);
   dam = min(dam, 35);
 
-  if (bSuccess(c, learn, c->getPerc(), spell)) {
+  if (c->bSuccess(learn, c->getPerc(), spell)) {
     LogDam(c,spell, dam);
 
     switch (critSuccess(c, spell)) {
@@ -559,7 +559,7 @@ int secondWind(TBeing *c, TBeing *victim, int level, byte learn)
   dam = max(dam, 40);
   dam = min(dam, 110);
 
-  if (bSuccess(c, learn, c->getPerc(), SPELL_SECOND_WIND)) {
+  if (c->bSuccess(learn, c->getPerc(), SPELL_SECOND_WIND)) {
     switch (critSuccess(c, SPELL_SECOND_WIND)) {
       case CRIT_S_DOUBLE:
         CS(SPELL_SECOND_WIND);
@@ -683,7 +683,7 @@ int cureParalysis(TBeing *c, TBeing * victim, int level, byte learn)
 {
   affectedData aff;
 
-  if (bSuccess(c, learn, c->getPerc(), SPELL_CURE_PARALYSIS)) {
+  if (c->bSuccess(learn, c->getPerc(), SPELL_CURE_PARALYSIS)) {
     if (victim->isAffected(AFF_PARALYSIS)) {
       act("You succeed in restoring $N's body to mobility!", FALSE, c, NULL, victim, TO_CHAR);
       act("$N's body constricts violently and then relaxes -- $E can move again!", FALSE, c, NULL, victim, TO_NOTVICT);
@@ -769,7 +769,7 @@ int TBeing::removeCurseObj(TObj * obj, int, byte learn, spellNumT spell)
     return SPELL_FALSE;
   }
 
-  if (bSuccess(this, learn, getPerc(), spell)) {
+  if (bSuccess(learn, getPerc(), spell)) {
     act("$p glows with a flash of bright white light!",
          FALSE, this, obj, NULL, TO_CHAR);
     act("$p glows with a flash of bright white light!",
@@ -835,7 +835,7 @@ int TBeing::removeCurseBeing(TBeing * victim, int level, byte learn, spellNumT s
     return SPELL_FALSE;
   }
 
-  if (bSuccess(this, learn, getPerc(), spell)) {
+  if (bSuccess(learn, getPerc(), spell)) {
     act("$n glows with a flash of bright white light!",
              FALSE, victim, NULL, NULL, TO_ROOM);
     act("You glow with a flash of bright white light!",
@@ -933,7 +933,7 @@ int armor(TBeing *c, TBeing * victim, int level, byte learn, spellNumT spell)
     aff.modifier = 0;
   }
   
-  if (bSuccess(c, learn, c->getPerc(), spell)) {
+  if (c->bSuccess(learn, c->getPerc(), spell)) {
     c->reconcileHelp(victim, discArray[spell]->alignMod);
 
     if (c != victim)
@@ -1066,7 +1066,7 @@ int sanctuary(TBeing *c, TBeing *victim, int level, byte learn)
   if (c != victim)
     aff.modifier /= 3;
 
-  if (bSuccess(c, learn, c->getPerc(), SPELL_SANCTUARY)) {
+  if (c->bSuccess(learn, c->getPerc(), SPELL_SANCTUARY)) {
     c->reconcileHelp(victim, discArray[SPELL_SANCTUARY]->alignMod);
 
     switch  (critSuccess(c, SPELL_SANCTUARY)) {
@@ -1128,7 +1128,7 @@ void sanctuary(TBeing *c, TBeing * victim)
 
 int bless(TBeing *c, TObj * obj, int level, byte learn, spellNumT spell)
 {
-  if (bSuccess(c, learn, c->getPerc(), spell)) {
+  if (c->bSuccess(learn, c->getPerc(), spell)) {
     if ((5 * level > (int) obj->getWeight())) { 
       obj->addObjStat(ITEM_BLESS);
       act("A soft yellow light shines down upon $p for a moment and then fades away...", FALSE, c, obj, NULL, TO_ROOM);
@@ -1169,7 +1169,7 @@ void bless(TBeing *c, TObj * obj)
 
 int bless(TBeing *c, TBeing * victim, int level, byte learn, spellNumT spell)
 {
-  if (bSuccess(c, learn, c->getPerc(), spell)) {
+  if (c->bSuccess(learn, c->getPerc(), spell)) {
     c->reconcileHelp(victim, discArray[spell]->alignMod);
 
     bool isCrit = FALSE;

@@ -6,6 +6,7 @@
 #include "shopowned.h"
 #include "liquids.h"
 
+
 TGenWeapon::TGenWeapon() :
   TBaseWeapon()
 {

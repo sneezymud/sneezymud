@@ -86,7 +86,7 @@ static bool countersteal(TBeing *thief, TBeing *vict, int known)
   bKnown+=vict->getSkillValue(SKILL_STEAL)/2;
   bKnown-=known;
   
-  if(bSuccess(vict, bKnown, SKILL_COUNTER_STEAL)){
+  if(vict->bSuccess(bKnown, SKILL_COUNTER_STEAL)){
     act("Just when you think you've succeeded, $N reaches out and swats your hand away painfully.", 
 	TRUE, thief, NULL, vict, TO_CHAR);
     act("You notice $n attempting to steal from you, so you wait until $e is almost successful and swat his hand away forcefully.", 
@@ -138,7 +138,7 @@ static int steal(TBeing * thief, TBeing * victim)
 
   if (!victim->awake() ||
       (!countersteal(thief, victim, bKnown+modifier) &&
-      bSuccess(thief, bKnown+ modifier, SKILL_STEAL))) {
+      thief->bSuccess(bKnown+ modifier, SKILL_STEAL))) {
     /* Steal some money */
     gold = (int) ((victim->getMoney() * ::number(1, 10)) / 100);
     gold = min(5000, gold);
@@ -335,7 +335,7 @@ static int steal(TBeing * thief, TBeing * victim, const sstring &obj_name)
 
   if (!victim->awake() || is_imp ||
       (!countersteal(thief, victim, bKnown+modifier) &&
-       bSuccess(thief, bKnown + modifier, SKILL_STEAL))) {
+       thief->bSuccess(bKnown + modifier, SKILL_STEAL))) {
     if (is_imp || ((thief->getCarriedVolume() + obj->getTotalVolume()) < thief->carryVolumeLimit())) {
       // obj-weight <= weight limit
       if (is_imp || (compareWeights(obj->getTotalWeight(TRUE), 

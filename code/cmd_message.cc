@@ -19,10 +19,10 @@ messageTypeT & operator++ (messageTypeT &c, int)
 }
 
 const char * messageCommandFormat =
-"Syntax: message <field> <message>\
-\r\tmessage <field> default   -  resets the type to the standard.\
-\r\tmessage <field>           -  displays that field's current setting.\
-\r\tmessage list              -  lists fields and their current settings.\
+"Syntax: message <field> <message>\n\r\
+\tmessage <field> default   -  resets the type to the standard.\n\r\
+\tmessage <field>           -  displays that field's current setting.\n\r\
+\tmessage list              -  lists fields and their current settings.\n\r\
 ";
 
 const unsigned short int messageCommandSwitches[][3] =

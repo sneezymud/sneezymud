@@ -163,7 +163,7 @@ int TBeing::doPTell(const char *arg, bool visible){
     return FALSE;
   }
 
-  if(!bSuccess(this, getSkillValue(SKILL_PSITELEPATHY), SKILL_PSITELEPATHY))
+  if(!bSuccess(SKILL_PSITELEPATHY))
     drunkNum=20;
   else 
     drunkNum = getCond(DRUNK);
@@ -208,7 +208,7 @@ int TBeing::doPTell(const char *arg, bool visible){
   vict->sendTo(COLOR_COMM, fmt("%s telepaths you, \"<c>%s<z>\"\n\r") %            nameBuf % garbed);
 
   Descriptor *d = vict->desc;
-  if (d->m_bIsClient) {
+  if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
     sprintf(garbedBuf, "<c>%s<z>", garbed.c_str());
     d->clientf(fmt("%d|%s|%s") % CLIENT_TELL %
         colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
@@ -267,7 +267,7 @@ int TBeing::doPSay(const char *arg){
   if (!*arg)
     sendTo("Yes, but WHAT do you want to say telepathically?\n\r");
   else {
-    if(!bSuccess(this, getSkillValue(SKILL_PSITELEPATHY), SKILL_PSITELEPATHY))
+    if(!bSuccess(SKILL_PSITELEPATHY))
       drunkNum=20;
     else 
       drunkNum=getCond(DRUNK);
@@ -294,14 +294,14 @@ int TBeing::doPSay(const char *arg){
           if (IS_SET(mob->desc->plr_color, PLR_COLOR_MOBS)) {
             sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str());
 	    mob->sendTo(COLOR_COMM, fmt("%s thinks, \"%s%s\"\n\r") % tmpbuf % garbed % mob->norm());
-            if (d->m_bIsClient) {
+            if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
               sprintf(garbedBuf, "%s", 
                 colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
               d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % tmpbuf % garbedBuf);
             }
           } else {
 	    mob->sendTo(COLOR_COMM, fmt("<c>%s thinks, <z>\"%s\"\n\r") % tmpbuf % garbed);
-            if (d->m_bIsClient) {
+            if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
               sprintf(nameBuf, "<c>%s<z>", tmpbuf);
               sprintf(garbedBuf, "%s", 
                 colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
@@ -312,7 +312,7 @@ int TBeing::doPSay(const char *arg){
           }
         } else {
 	  mob->sendTo(COLOR_COMM, fmt("<c>%s thinks, <z>\"%s\"\n\r") % tmpbuf % garbed);
-          if (d->m_bIsClient) {
+          if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
             sprintf(nameBuf, "<c>%s<z>", tmpbuf);
             sprintf(garbedBuf, "%s",
             colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
@@ -324,7 +324,7 @@ int TBeing::doPSay(const char *arg){
       } else {
 	mob->sendTo(COLOR_COMM, fmt("%s thinks, \"%s\"\n\r") % sstring(getName()).cap() % 
 		    colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE));
-        if (d->m_bIsClient) {
+        if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
           d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
             colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE));
         }
@@ -385,7 +385,7 @@ void TBeing::doPShout(const char *msg){
     sendTo("What do you wish to broadcast to the world?\n\r");
     return;
   } else {
-    if(!bSuccess(this, getSkillValue(SKILL_PSITELEPATHY), SKILL_PSITELEPATHY))
+    if(!bSuccess(SKILL_PSITELEPATHY))
       drunkNum=20;
     else 
       drunkNum=getCond(DRUNK);
@@ -477,7 +477,7 @@ void TBeing::doTelevision(const char *arg)
 
   reconcileMana(SKILL_TELE_VISION, FALSE);
 
-  if (bSuccess(this, getSkillValue(SKILL_TELE_VISION), SKILL_TELE_VISION)) {
+  if (bSuccess(SKILL_TELE_VISION)) {
     sprintf(buf1, "You peer through the eyes of %s and see...",
 	    vict->getName());
     act(buf1, FALSE, this, 0, 0, TO_CHAR);
@@ -513,7 +513,7 @@ void TBeing::doMindfocus(const char *){
   int bKnown=getSkillValue(SKILL_MIND_FOCUS);
   affectedData aff;
 
-  if (bSuccess(this, bKnown, SKILL_MIND_FOCUS)){
+  if (bSuccess(bKnown, SKILL_MIND_FOCUS)){
     act("You begin to focus your mind on regenerating your psionic powers.", TRUE, this, NULL, NULL, TO_CHAR);
 
     aff.type      = SKILL_MIND_FOCUS;
@@ -595,7 +595,7 @@ int TBeing::doPsiblast(const char *tString){
   int bKnown=getSkillValue(SKILL_PSI_BLAST);
   int tDamage=0;
 
-  if (bSuccess(this, bKnown, SKILL_PSI_BLAST)) {
+  if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
     act("You send a blast of psionic power towards $N!",
         FALSE, this, NULL, tVictim, TO_CHAR);
     
@@ -612,7 +612,7 @@ int TBeing::doPsiblast(const char *tString){
 
       // I do a success roll for each affect to mix things up a bit
 
-      if (bSuccess(this, bKnown, SKILL_PSI_BLAST)) {
+      if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
 	aff.type      = SKILL_PSI_BLAST;
 	aff.level     = bKnown;
 	aff.duration  = (bKnown / 10) * UPDATES_PER_MUDHOUR;
@@ -622,7 +622,7 @@ int TBeing::doPsiblast(const char *tString){
 	++count;
       }
 
-      if (bSuccess(this, bKnown, SKILL_PSI_BLAST)) {
+      if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
 	aff.type      = SKILL_PSI_BLAST;
 	aff.level     = bKnown;
 	aff.duration  = (bKnown / 10) * UPDATES_PER_MUDHOUR;
@@ -632,7 +632,7 @@ int TBeing::doPsiblast(const char *tString){
 	++count;
       }
 
-      if (bSuccess(this, bKnown, SKILL_PSI_BLAST)) {
+      if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
 	aff.type      = SKILL_PSI_BLAST;
 	aff.level     = bKnown;
 	aff.duration  = (bKnown / 10) * UPDATES_PER_MUDHOUR;
@@ -685,7 +685,7 @@ int TBeing::doMindthrust(const char *tString){
   int bKnown=getSkillValue(SKILL_MIND_THRUST);
   int tDamage=0;
 
-  if (bSuccess(this, bKnown, SKILL_MIND_THRUST)) {
+  if (bSuccess(bKnown, SKILL_MIND_THRUST)) {
     act("You use your psionic powers to stab at $N's mind!",
         FALSE, this, NULL, tVictim, TO_CHAR);
     
@@ -700,7 +700,7 @@ int TBeing::doMindthrust(const char *tString){
                           getAdvLearning(SKILL_MIND_THRUST));
 
     
-    if(bSuccess(this, bKnown/4, SKILL_MIND_THRUST) && tVictim->spelltask)
+    if(bSuccess(bKnown/4, SKILL_MIND_THRUST) && tVictim->spelltask)
       tVictim->addToDistracted(::number(1,2), FALSE);
   } else {
     psiAttackFailMsg(this, tVictim);
@@ -730,11 +730,11 @@ int TBeing::doPsycrush(const char *tString){
   int tDamage=0;
   int level = getSkillLevel(SKILL_PSYCHIC_CRUSH);
 
-  if (bSuccess(this, bKnown, SKILL_PSYCHIC_CRUSH)) {
+  if (bSuccess(bKnown, SKILL_PSYCHIC_CRUSH)) {
     act("You reach out with your psionic powers and CRUSH $N's psyche!",
         FALSE, this, NULL, tVictim, TO_CHAR);
 
-    if(bSuccess(this, bKnown/4, SKILL_PSYCHIC_CRUSH) && 
+    if(bSuccess(bKnown/4, SKILL_PSYCHIC_CRUSH) && 
        !tVictim->affectedBySpell(SPELL_BLINDNESS) &&
        !tVictim->isAffected(AFF_TRUE_SIGHT) &&
        !isNotPowerful(tVictim, level, SPELL_BLINDNESS, SILENT_YES)){
@@ -760,7 +760,7 @@ int TBeing::doPsycrush(const char *tString){
 	  TRUE, this, NULL, tVictim, TO_NOTVICT);
     }
 
-    if(bSuccess(this, bKnown, SKILL_PSYCHIC_CRUSH) &&
+    if(bSuccess(bKnown, SKILL_PSYCHIC_CRUSH) &&
        !isNotPowerful(tVictim, level, SPELL_FEAR, SILENT_YES)){ // flee
       doflee=1;
     }
@@ -803,7 +803,7 @@ int TBeing::doKwave(const char *tString){
   int bKnown=getSkillValue(SKILL_KINETIC_WAVE);
   int tDamage=0;
 
-  if (bSuccess(this, bKnown, SKILL_KINETIC_WAVE)) {
+  if (bSuccess(bKnown, SKILL_KINETIC_WAVE)) {
     act("You set loose a wave of kinetic force at $N!",
         FALSE, this, NULL, tVictim, TO_CHAR);
 
@@ -888,7 +888,7 @@ int TBeing::doPsidrain(const char *tString){
 
   int bKnown=getSkillValue(SKILL_PSIDRAIN);
 
-  if (bSuccess(this, bKnown, SKILL_PSIDRAIN)) {
+  if (bSuccess(bKnown, SKILL_PSIDRAIN)) {
     int perc=::number(15,25);
 
     // reduce amount significantly if victim is a dumb animal

@@ -7,8 +7,8 @@
 #include "combat.h"
 #include "disc_mage.h"
 #include "disc_cleric.h"
-#include "disc_physical.h"
-#include "disc_smythe.h"
+#include "disc_soldiering.h"
+#include "disc_blacksmithing.h"
 #include "disc_deikhan_fight.h"
 #include "disc_deikhan_aegis.h"
 #include "disc_deikhan_cures.h"
@@ -52,7 +52,7 @@
 #include "disc_deikhan.h"
 #include "disc_looting.h"
 #include "disc_murder.h"
-#include "disc_hth.h"
+#include "disc_dueling.h"
 #include "disc_warrior.h"
 #include "disc_brawling.h"
 #include "disc_adventuring.h"
@@ -1987,22 +1987,22 @@ static bool bSucCounter(TBeing *caster, skillUseClassT skillType, spellNumT spel
   }
 }
 
-bool bSuccess(TBeing * caster, int ubCompetence, double dPiety, spellNumT spell)
+bool TBeing::bSuccess(int ubCompetence, double dPiety, spellNumT spell)
 {
 // Is same as other formulas, with this correction being made
 // since factions' aren't in use, I'm simplifying and just making it
 // call the other function
-  return bSuccess(caster, ubCompetence, spell);
+  return bSuccess(ubCompetence, spell);
 
 #if FACTIONS_IN_USE
   // slight penalty based on low getPerc()
-  if (caster->desc) {
+  if (desc) {
     int pietyNum;
     if ((skillType == SPELL_CLERIC) || (skillType == SPELL_DEIKHAN) ||
         (skillType == SKILL_CLERIC) || (skillType == SKILL_DEIKHAN)) {
-      pietyNum = min(95, (3 * caster->GetMaxLevel())); 
+      pietyNum = min(95, (3 * GetMaxLevel())); 
     } else { 
-      pietyNum = min(70, (2 * caster->GetMaxLevel()));
+      pietyNum = min(70, (2 * GetMaxLevel()));
     }
     pietyNum = min(0, (((int) dPiety) - pietyNum));
     pietyNum = max(-64, pietyNum);
@@ -2045,28 +2045,33 @@ static void logLearnFail(TBeing *caster, spellNumT spell, int type)
 }
 #endif
 
-bool bSuccess(TBeing * caster, int ubCompetence, spellNumT spell)
+bool TBeing::bSuccess(spellNumT spell)
+{
+  return bSuccess(getSkillValue(spell), spell);
+}
+
+bool TBeing::bSuccess(int ubCompetence, spellNumT spell)
 {
   // number of uses
-  logSkillAttempts(caster, spell, ATTEMPT_ADD_NORM);
+  logSkillAttempts(this, spell, ATTEMPT_ADD_NORM);
 
-  if (caster->getQuaffUse()) {
-    logSkillSuccess(caster, spell, SKILL_SUCCESS_POTION);
+  if (getQuaffUse()) {
+    logSkillSuccess(this, spell, SKILL_SUCCESS_POTION);
     return true;
   }
 
-  if (caster->isImmortal() && caster->desc &&
-      IS_SET(caster->desc->autobits, AUTO_SUCCESS)) {
-    if (caster->isPlayerAction(PLR_NOHASSLE))
+  if (isImmortal() && desc &&
+      IS_SET(desc->autobits, AUTO_SUCCESS)) {
+    if (isPlayerAction(PLR_NOHASSLE))
       return TRUE;
     else
       return FALSE;
   }
 
-  if (caster->desc) {
+  if (desc) {
     // Do learning
-    if (caster->getRawSkillValue(spell) >= 0) {
-      if (caster->learnFromDoing(spell, SILENT_NO, 0)) {
+    if (getRawSkillValue(spell) >= 0) {
+      if (learnFromDoing(spell, SILENT_NO, 0)) {
         ubCompetence++;
       }
     }
@@ -2074,10 +2079,11 @@ bool bSuccess(TBeing * caster, int ubCompetence, spellNumT spell)
 
    // not learned at all
   if (ubCompetence <= 0) {
-    logSkillFail(caster, spell, FAIL_GENERAL);
+    logSkillFail(this, spell, FAIL_GENERAL);
 #if DISC_DEBUG
-    if (caster->desc && caster->isPc()) {
-      vlogf(LOG_BUG, fmt("%s Fail Spell %s (%d) ubComp < 0") %  caster->getName() % discArray[spell]->name % spell);
+    if (desc && isPc()) {
+      vlogf(LOG_BUG, fmt("%s Fail Spell %s (%d) ubComp < 0") %  
+	    getName() % discArray[spell]->name % spell);
     }
 #endif
     return FALSE;
@@ -2104,8 +2110,8 @@ bool bSuccess(TBeing * caster, int ubCompetence, spellNumT spell)
   limit /= MAX_SKILL_LEARNEDNESS;
 
   // factor in focus
-  //limit *= caster->plotStat(STAT_CURRENT, STAT_FOC, 0.80, 1.25, 1.00);
-  limit *= caster->getFocMod(); // does the same thing, just uses standard formula
+  //limit *= plotStat(STAT_CURRENT, STAT_FOC, 0.80, 1.25, 1.00);
+  limit *= getFocMod(); // does the same thing, just uses standard formula
 
   // make other adjustments here
   // possibly have some for things like position, etc
@@ -2116,11 +2122,11 @@ bool bSuccess(TBeing * caster, int ubCompetence, spellNumT spell)
 
   if (roll < iLimit) {
     // success
-    return bSucCounter(caster, skillType, spell, roll, ubCompetence);
+    return bSucCounter(this, skillType, spell, roll, ubCompetence);
 
   } else {
     // fail
-    logSkillFail(caster, spell, FAIL_GENERAL);
+    logSkillFail(this, spell, FAIL_GENERAL);
     return false;
   }
 }
@@ -2516,10 +2522,10 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_HAND_OF_GOD] = new CDHand();
 
     discs->disc[DISC_WARRIOR] = new CDWarrior();
-    discs->disc[DISC_HTH] = new CDHTH();
+    discs->disc[DISC_DUELING] = new CDDueling();
     discs->disc[DISC_BRAWLING] = new CDBrawling();
-    discs->disc[DISC_PHYSICAL] = new CDPhysical();
-    discs->disc[DISC_SMYTHE] = new CDSmythe();
+    discs->disc[DISC_SOLDIERING] = new CDSoldiering();
+    discs->disc[DISC_BLACKSMITHING] = new CDBlacksmithing();
 
     discs->disc[DISC_RANGER] = new CDRanger();
     discs->disc[DISC_ANIMAL] = new CDAnimal();
@@ -2635,10 +2641,10 @@ void TBeing::assignDisciplinesClass()
   if (hasClass(CLASS_WARRIOR)) {
     if (!isPc()) {
       discs->disc[DISC_WARRIOR] = new CDWarrior();
-      discs->disc[DISC_HTH] = new CDHTH();
+      discs->disc[DISC_DUELING] = new CDDueling();
       discs->disc[DISC_BRAWLING] = new CDBrawling();
-      discs->disc[DISC_PHYSICAL] = new CDPhysical();
-      discs->disc[DISC_SMYTHE] = new CDSmythe();
+      discs->disc[DISC_SOLDIERING] = new CDSoldiering();
+      discs->disc[DISC_BLACKSMITHING] = new CDBlacksmithing();
       discs->disc[DISC_DEFENSE] = new CDDefense();
     }
   }
@@ -3008,10 +3014,10 @@ int TBeing::getSkillLevel(spellNumT skill) const
       lev = getClassLevel(CLASS_RANGER);
       break;
     case DISC_WARRIOR:
-    case DISC_HTH:
+    case DISC_DUELING:
     case DISC_BRAWLING:
-    case DISC_PHYSICAL:
-    case DISC_SMYTHE:
+    case DISC_SOLDIERING:
+    case DISC_BLACKSMITHING:
       lev = getClassLevel(CLASS_WARRIOR);
       break;
     case DISC_DEIKHAN:

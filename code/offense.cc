@@ -14,7 +14,6 @@
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
 #include "obj_base_cup.h"
-#include "obj_drinkcon.h"
 #include "obj_base_clothing.h"
 #include "obj_bag.h"
 #include "liquids.h"
@@ -177,7 +176,7 @@ int TBeing::doHit(const sstring &argument, TBeing *vict)
   } else {
     if (victim != fight()) {
       if (doesKnowSkill(skill)) {
-        if (bSuccess(this, getSkillValue(skill), skill)) {
+        if (bSuccess(skill)) {
           stopFighting();
           if (victim->attackers < MAX_COMBAT_ATTACKERS) {
             if (isAffected(AFF_ENGAGER)) {
@@ -264,7 +263,7 @@ int TBeing::doEngagedHit(const char *argument, TBeing *vict)
     }
   } else {
       if (doesKnowSkill(getSkillNum(skill))) {
-        if (bSuccess(this, getSkillValue(skill), skill)) {
+        if (bSuccess(skill)) {
           if (victim->attackers < MAX_COMBAT_ATTACKERS) {
             stopFighting();
             // remove engager after stopFight so attackers kept up with OK
@@ -822,7 +821,7 @@ int TBeing::doFlee(const char *arg)
   if (riding) {
     // Let's make retreat skill have some chance of keeping you on the mount - Brutius 07/26/1999
     if (!(doesKnowSkill(skill) && doesKnowSkill(skill2)) || 
-	!(bSuccess(this, getSkillValue(skill), skill) && bSuccess(this, getSkillValue(skill2), skill2))) { 
+	!(bSuccess(skill) && bSuccess(skill2))) { 
       sendTo("Your panic causes you to fall.\n\r");
       rc = fallOffMount(riding, POSITION_SITTING);
       panic = TRUE;
@@ -918,7 +917,7 @@ int TBeing::doFlee(const char *arg)
     
     if (canFleeThisWay(this, attempt)) {
       if (panic || !doesKnowSkill(skill) || 
-          !bSuccess(this, getSkillValue(skill), skill)) {
+          !bSuccess(skill)) {
         act("$n panics, and attempts to flee.", TRUE, this, 0, 0, TO_ROOM);
         panic = TRUE;
       } else {
@@ -2061,7 +2060,7 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
     // berzerk
     if (isCombatMode(ATTACK_BERSERK) && 
         getPosition() >= POSITION_STANDING) {
-      if (bSuccess(this, getSkillValue(SKILL_BERSERK), SKILL_BERSERK)) {
+      if (bSuccess(SKILL_BERSERK)) {
         if (fx > 0.0)
           fx += 0.5;
         if (fy > 0.0)

@@ -311,8 +311,8 @@ class TThing {
     virtual int garottePulse(TBeing *, affectedData *);
     virtual int ChargePulse(TBeing *);
     virtual void unequipMe(TBeing *) {}
-    virtual void findSmytheTools(TTool **, TTool **) {}
-    virtual void smythePulse(TBeing *, TObj *);
+    virtual void findBlacksmithingTools(TTool **, TTool **) {}
+    virtual void blacksmithingPulse(TBeing *, TObj *);
     virtual void attunePulse(TBeing *);
     virtual void pickPulse(TBeing *);
     virtual int  skinPulse(TBeing *, TBaseCorpse *);

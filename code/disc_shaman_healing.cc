@@ -54,7 +54,7 @@ int healingGrasp(TBeing *caster, TBeing * victim, int level, byte bKnown, spellN
   int hp = caster->getSkillDam(victim, SPELL_HEALING_GRASP, level, adv_learn);
   adjustHealHp2(caster, hp, discArray[spell]->lag);
 
-  if (bSuccess(caster, bKnown,caster->getPerc(), SPELL_HEALING_GRASP)) {
+  if (caster->bSuccess(bKnown,caster->getPerc(), SPELL_HEALING_GRASP)) {
     LogDam(caster, spell, hp);
     switch (critSuccess(caster, SPELL_HEALING_GRASP)) {
       case CRIT_S_KILL:
@@ -145,7 +145,7 @@ int enliven(TBeing *caster, TBeing *victim, int level, byte bKnown)
 
   caster->reconcileHelp(victim, discArray[SPELL_ENLIVEN]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_ENLIVEN)) {
+  if (caster->bSuccess(bKnown, SPELL_ENLIVEN)) {
     aff.type = SPELL_ENLIVEN;
     aff.level = level;
     aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;

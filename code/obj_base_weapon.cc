@@ -22,7 +22,7 @@ TBaseWeapon::TBaseWeapon() :
   curSharp(0),
   damLevel(0),
   damDev(0),
-  poison(LIQ_NONE)
+  poison((liqTypeT)-1)
 {
 }
 
@@ -154,7 +154,7 @@ int TBaseWeapon::galvanizeMe(TBeing *caster, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, SPELL_GALVANIZE)) {
+  if (caster->bSuccess(bKnown, SPELL_GALVANIZE)) {
     addToMaxStructPoints(1);
     addToStructPoints(1);
     return SPELL_SUCCESS;
@@ -212,7 +212,7 @@ void TBaseWeapon::sharpenMe(TBeing *ch, TTool *tool)
     return;
   }
 
-  if (bSuccess(ch, ch->getSkillValue(SKILL_SHARPEN), SKILL_SHARPEN)) 
+  if (ch->bSuccess(SKILL_SHARPEN)) 
     addToCurSharp((itemType() == ITEM_ARROW) ? 2 : 1);
 
   // task can continue forever, so don't bother decrementing the timer
@@ -248,7 +248,7 @@ void TBaseWeapon::dullMe(TBeing *ch, TTool *tool)
     ch->stopTask();
     return;
   }
-  if (bSuccess(ch, ch->getSkillValue(SKILL_DULL), SKILL_DULL)) 
+  if (ch->bSuccess(SKILL_DULL)) 
     addToCurSharp(1);
 
   // task can continue forever, so don't bother decrementing the timer
@@ -698,7 +698,7 @@ int TBaseWeapon::enhanceMe(TBeing *caster, int level, byte bKnown)
     }
   }
 
-  if (bSuccess(caster, bKnown, SPELL_ENHANCE_WEAPON)) {
+  if (caster->bSuccess(bKnown, SPELL_ENHANCE_WEAPON)) {
     affected[0].location = APPLY_HITROLL;
     affected[0].modifier = 1;
     if (level > 20)
@@ -949,7 +949,7 @@ int TGenWeapon::smiteWithMe(TBeing *ch, TBeing *v)
   aff.bitvector = 0;
   ch->affectTo(&aff, -1);
 
-  if (!bSuccess(ch, bKnown, SKILL_SMITE)) {
+  if (!ch->bSuccess(bKnown, SKILL_SMITE)) {
     act("You call upon $d to smite $N, but $d does not heed your plea!",
              FALSE, ch, 0, v, TO_CHAR);
     act("$n calls upon $d to smite $N, but $d does not heed $m.",
@@ -1701,7 +1701,7 @@ void TBaseWeapon::applyPoison(TBeing *vict)
   }
 
 
-  poison=LIQ_NONE;
+  poison=(liqTypeT)-1;
 
 }
 

@@ -275,7 +275,7 @@ static int headbutt(TBeing *caster, TBeing *victim)
   }
   caster->addToMove(-HEADBUTT_MOVE);
 
-  if (bSuccess(caster, bKnown + percent, SKILL_HEADBUTT) &&
+  if (caster->bSuccess(bKnown + percent, SKILL_HEADBUTT) &&
          (i = caster->specialAttack(victim,SKILL_HEADBUTT)) &&
          i != GUARANTEED_FAILURE &&
          percent < bKnown&&

@@ -97,11 +97,11 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
       bodypart = limb;
     else {
       tooth = dynamic_cast<TTrash *>(t);
-      if (tooth && isname("tooth", tooth->name))
+      if (tooth && isname("tooth lost limb", tooth->name))
         bodypart = tooth;
       if (!tooth) {
         heart = dynamic_cast<TDrinkCon *>(t);
-        if (heart && isname("heart", heart->name))
+        if (heart && isname("heart lost limb", heart->name))
           bodypart = heart;
       }
     }

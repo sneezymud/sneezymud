@@ -108,9 +108,14 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
       case 4:
         // Lose grip. Dex check or drop weapon!
         if (weapon) {
-          if ((::number(0, plotStat(STAT_NATURAL, STAT_AGI, -30, 60, 0)) <
-              (30 + getCond(DRUNK))) &&
-               weapon->canDrop()) {
+	  int agi=plotStat(STAT_NATURAL, STAT_AGI, -30, 60, 0);
+
+	  if(doesKnowSkill(SKILL_WEAPON_RETENTION) &&
+	     bSuccess(SKILL_WEAPON_RETENTION)){
+            act("Your grasp on $p loosens, but you shift position for a firmer grip.",
+		FALSE, this, weapon, NULL, TO_CHAR);
+	  } else if ((::number(0, agi) < (30 + getCond(DRUNK))) &&
+		     weapon->canDrop()) {
             sprintf(buf, "You %slose%s your grip on $p and it %sfalls out of your grasp%s!",
                          red(), norm(), red(), norm());
             act(buf, FALSE, this, weapon, NULL, TO_CHAR);
@@ -125,12 +130,19 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
       case 5:
         // Lose grip and drop weapon with no dex check. 
         if (weapon && weapon->canDrop()) {
-          sprintf(buf, "You %slose%s your grip on $p and it %sfalls out of your grasp%s!",
-                       red(), norm(), red(), norm());
-          act(buf, FALSE, this, weapon, NULL, TO_CHAR);
-          act("$n seems to lose $s grip on $p and it falls out of $s grasp!", TRUE, this, weapon, NULL, TO_ROOM);
-          *roomp += *unequip(weapon->eq_pos);
-          return (ONEHIT_MESS_CRIT_S);
+	  if(doesKnowSkill(SKILL_WEAPON_RETENTION) &&
+	     bSuccess(SKILL_WEAPON_RETENTION)){
+            act("Your grasp on $p loosens, but you shift position for a firmer grip.",
+		FALSE, this, weapon, NULL, TO_CHAR);
+	  } else {
+	    sprintf(buf, "You %slose%s your grip on $p and it %sfalls out of your grasp%s!",
+		    red(), norm(), red(), norm());
+	    act(buf, FALSE, this, weapon, NULL, TO_CHAR);
+	    act("$n seems to lose $s grip on $p and it falls out of $s grasp!", TRUE, this, weapon, NULL, TO_ROOM);
+	    *roomp += *unequip(weapon->eq_pos);
+	  }
+
+	  return (ONEHIT_MESS_CRIT_S);
         }
       case 6:
       case 7:
@@ -975,7 +987,7 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	  tooth->setCorpseVnum(v->mobVnum());
 	}
 
-	buf = fmt("tooth %s [%d]") % v->name % v_vnum;
+	buf = fmt("tooth %s lost limb [%d]") % v->name % v_vnum;
 
         if (dynamic_cast<TPerson *>(this))
           buf = fmt("%s [%s]") % buf % getName();
@@ -1015,7 +1027,9 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
       case 98:
       case 99:
       case 100:
-	if (doesKnowSkill(SKILL_CRIT_HIT) && !v->equipment[WEAR_BODY] && v->hasPart(WEAR_BODY) && !weapon && bSuccess(this, getSkillValue(SKILL_CRIT_HIT), SKILL_CRIT_HIT) && !::number(0,4) && !IS_SET(v->specials.act, ACT_SKELETON)) {
+	if (doesKnowSkill(SKILL_CRIT_HIT) && !v->equipment[WEAR_BODY] &&
+	    v->hasPart(WEAR_BODY) && !weapon && bSuccess(SKILL_CRIT_HIT) && 
+	    !::number(0,4) && !IS_SET(v->specials.act, ACT_SKELETON)) {
 
           // Rip out the heart instead of head crush whee fancy.
           // ...But make it a bit fancier on ghosts, zombies and skeletons.
@@ -1591,7 +1605,7 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	  TCorpse *corpse;
 		
 	  corpse = new TCorpse();
-    buf = fmt("genitalia %s [%d]") % v->name % v_vnum;
+    buf = fmt("genitalia %s lost limb [%d]") % v->name % v_vnum;
     if (dynamic_cast<TPerson *>(this)) 
       buf = fmt("%s [%s]") % buf % getName();
     corpse->name = mud_str_dup(buf);

@@ -3184,8 +3184,7 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam)
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
     return TRUE;
-  } else if (doesKnowSkill(SKILL_CATFALL) &&
-	     bSuccess(this, getSkillValue(SKILL_CATFALL),SKILL_CATFALL)){
+  } else if (doesKnowSkill(SKILL_CATFALL) && bSuccess(SKILL_CATFALL)){
     setPosition(POSITION_STANDING);
     act("$n drops gracefully onto the $g.", FALSE, this, 0, 0, TO_ROOM);
     sendTo(fmt("You drop gracefully to the %s.\n\r") % roomp->describeGround());
@@ -3409,7 +3408,7 @@ int TBeing::doMortalGoto(const sstring & argument)
              is_abbrev(arg, "hand_trainer") ||
              is_abbrev(arg, "looting_trainer") ||
              is_abbrev(arg, "murder_trainer") ||
-             is_abbrev(arg, "hth_trainer") ||
+             is_abbrev(arg, "dueling_trainer") ||
              is_abbrev(arg, "wizardry_trainer") ||
              is_abbrev(arg, "faith_trainer") ||
              is_abbrev(arg, "slash_trainer") ||
@@ -3422,8 +3421,8 @@ int TBeing::doMortalGoto(const sstring & argument)
              is_abbrev(arg, "animal_trainer") ||
              is_abbrev(arg, "aegis_trainer") ||
              is_abbrev(arg, "plants_trainer") ||
-             is_abbrev(arg, "physical_trainer") ||
-             is_abbrev(arg, "smythe_trainer") ||
+             is_abbrev(arg, "soldiering_trainer") ||
+             is_abbrev(arg, "blacksmithing_trainer") ||
              is_abbrev(arg, "fighting_trainer") ||
              is_abbrev(arg, "mounted_trainer") ||
              is_abbrev(arg, "leverage_trainer") ||
@@ -3442,7 +3441,7 @@ int TBeing::doMortalGoto(const sstring & argument)
              is_abbrev(arg, "hand-trainer") ||
              is_abbrev(arg, "looting-trainer") ||
              is_abbrev(arg, "murder-trainer") ||
-             is_abbrev(arg, "hth-trainer") ||
+             is_abbrev(arg, "dueling-trainer") ||
              is_abbrev(arg, "wizardry-trainer") ||
              is_abbrev(arg, "faith-trainer") ||
              is_abbrev(arg, "slash-trainer") ||
@@ -3455,8 +3454,8 @@ int TBeing::doMortalGoto(const sstring & argument)
              is_abbrev(arg, "animal-trainer") ||
              is_abbrev(arg, "aegis-trainer") ||
              is_abbrev(arg, "plants-trainer") ||
-             is_abbrev(arg, "physical-trainer") ||
-             is_abbrev(arg, "smythe-trainer") ||
+             is_abbrev(arg, "soldiering-trainer") ||
+             is_abbrev(arg, "blacksmithing-trainer") ||
              is_abbrev(arg, "fighting-trainer") ||
              is_abbrev(arg, "mounted-trainer") ||
              is_abbrev(arg, "leverage-trainer") ||

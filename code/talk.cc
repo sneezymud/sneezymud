@@ -366,44 +366,25 @@ int TBeing::doSay(const sstring &arg)
       if (hasColorStrings(NULL, capbuf, 2)) {
 	if (IS_SET(mob->desc->plr_color, PLR_COLOR_MOBS)) {
 	  tmpbuf = fmt("%s") % colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE);
-	  if (Lapspeak == 1) {
-	    mob->sendTo(COLOR_COMM, fmt("%s says, \"Heh.  %s%s  Heh.\"\n\r") %
-			tmpbuf % garbed % mob->norm());
-	  } else {
-	    mob->sendTo(COLOR_COMM, fmt("%s says, \"%s%s\"\n\r") % 
-			tmpbuf % garbed % mob->norm());
-	  }
-	  if (d->m_bIsClient) {
-	    garbedBuf = fmt("%s") %
-	      colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
+	  mob->sendTo(COLOR_COMM, fmt("%s says, \"%s%s\"\n\r") % 
+		      tmpbuf % garbed % mob->norm());
+	  if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
+	    garbedBuf = fmt("%s") % colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
 	    d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % tmpbuf % garbedBuf);
 	  }
 	} else {
-	  if (Lapspeak == 1) {
-	    mob->sendTo(COLOR_COMM, fmt("<c>%s says, <z>\"Heh.  %s  Heh.\"\n\r") %
-			tmpbuf % garbed);
-	  } else {
-	    mob->sendTo(COLOR_COMM, fmt("<c>%s says, <z>\"%s\"\n\r") %
-			tmpbuf % garbed);
-	  }
-	  if (d->m_bIsClient) {
+	  mob->sendTo(COLOR_COMM, fmt("<c>%s says, <z>\"%s\"\n\r") %
+		      tmpbuf % garbed);
+	  if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
 	    nameBuf = fmt("<c>%s<z>") % tmpbuf;
-	    garbedBuf = fmt("%s") %
-	      colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
-	    d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % 
-		       colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
-		       garbedBuf);
+	    garbedBuf = fmt("%s") % colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
+	    d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) % garbedBuf);
 	  }
 	}
       } else {
-	if (Lapspeak == 1) {
-	  mob->sendTo(COLOR_COMM, fmt("<c>%s says, <z>\"Heh.  %s  Heh.\"\n\r") %
-		      tmpbuf % garbed);
-	} else {
-	  mob->sendTo(COLOR_COMM, fmt("<c>%s says, <z>\"%s\"\n\r") %
-		      tmpbuf % garbed);
-	}
-	if (d->m_bIsClient) {
+	mob->sendTo(COLOR_COMM, fmt("<c>%s says, <z>\"%s\"\n\r") %
+		    tmpbuf % garbed);
+	if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
 	  nameBuf = fmt("<c>%s<z>") % tmpbuf;
 	  garbedBuf = fmt("%s") %
 	    colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
@@ -413,14 +394,9 @@ int TBeing::doSay(const sstring &arg)
 	}
       }
     } else {
-      if (Lapspeak == 1) {
-	mob->sendTo(COLOR_COMM, fmt("%s says, \"Heh.  %s  Heh.\"\n\r") % sstring(getName()).cap() % 
-		    colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE));
-      } else {
-	mob->sendTo(COLOR_COMM, fmt("%s says, \"%s\"\n\r") % sstring(getName()).cap() % 
-		    colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE));
-      }
-      if (d->m_bIsClient) {
+      mob->sendTo(COLOR_COMM, fmt("%s says, \"%s\"\n\r") % sstring(getName()).cap() % 
+	          colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE));
+      if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
 	d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
 		   colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE));
       }
@@ -506,17 +482,17 @@ void Descriptor::sendShout(TBeing *ch, const char *arg)
           sstring tmpbuf = colorString(b, i, sstring(capbuf).cap().c_str(), NULL, COLOR_MOBS, FALSE);
           sstring tmpbuf2 = colorString(b, i, sstring(capbuf).cap().c_str(), NULL, COLOR_NONE, FALSE);
 
-          if (i->m_bIsClient)
+          if (i->m_bIsClient || IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
             i->clientf(fmt("%d|%s|%s") % CLIENT_SHOUT % tmpbuf2 % argbuf);
           b->sendTo(COLOR_SHOUTS, fmt("%s %s, \"%s<1>\"\n\r") %tmpbuf % (blah ? "whines" : "shouts") % arg);
         } else {
-          if (i->m_bIsClient)
-            i->clientf(fmt("%d|%s|%s%s") % CLIENT_SHOUT % nameStr % argbuf);
+          if (i->m_bIsClient || IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
+            i->clientf(fmt("%d|%s|%s") % CLIENT_SHOUT % nameStr % argbuf);
 
           b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap() % (blah ? "whines" : "shouts") % argbuf);
         }
       } else {
-        if (i->m_bIsClient)
+        if (i->m_bIsClient || IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
           i->clientf(fmt("%d|%s|%s") % CLIENT_SHOUT % nameStr % argbuf);
 
         b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap() % (blah ? "whines" : "shouts") % argbuf);
@@ -652,9 +628,8 @@ void TBeing::doGrouptell(const sstring &arg)
     sendTo(fmt("You tell your group: %s%s%s\n\r") % red() % colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) % norm());
   }
   if (k->isAffected(AFF_GROUP) && !k->checkSoundproof()) {
-    if (k->desc && k->desc->m_bIsClient && (k != this)) {
-      k->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % getName() % 
-        colorString(this, k->desc, garbed, NULL, COLOR_NONE, FALSE));
+    if (k->desc && (k->desc->m_bIsClient || IS_SET(k->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) && (k != this)) {
+      k->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % colorString(this, k->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, k->desc, garbed, NULL, COLOR_NONE, FALSE));
     }
     // a crash bug lies here....cut and paste from windows notepad
     // plays with the next few lines for some reason
@@ -668,9 +643,8 @@ void TBeing::doGrouptell(const sstring &arg)
 	garbed = PG13filter(garbed);
 	substitute = 1;
       }
-      if (f->follower->desc && f->follower->desc->m_bIsClient) {
-        f->follower->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % getName() % 
-          colorString(this, f->follower->desc, garbed, NULL, COLOR_NONE, FALSE));
+      if (f->follower->desc && (f->follower->desc->m_bIsClient || IS_SET(f->follower->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
+        f->follower->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % colorString(this, k->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, f->follower->desc, garbed, NULL, COLOR_NONE, FALSE));
       }
       buf = fmt("$n: %s%s%s") % f->follower->red() % colorString(this, f->follower->desc, garbed, NULL, COLOR_COMM, FALSE) % f->follower->norm();
       act(buf, 0, this, 0, f->follower, TO_VICT);
@@ -755,11 +729,17 @@ void TBeing::doCommune(const sstring &arg)
                  i->purple() % i->cyan() %
                  str % i->norm();
           act(buf, 0, this, 0, i->character, TO_VICT);
+
+	  if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
+	    i->clientf(fmt("%d|%d|%d|%s|%s") % CLIENT_WIZNET % levnum % gamePort % getName() % str);
         } else if (critter->hasWizPower(POWER_WIZNET_ALWAYS)) {
           buf = fmt("[nobuilders] %s$n: %s%s%s") %
                  i->purple() % i->cyan() %
                  str % i->norm();
           act(buf, 0, this, 0, i->character, TO_VICT);
+
+	  if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
+	    i->clientf(fmt("%d|%d|%d|%s|%s") % CLIENT_WIZNET % levnum % gamePort % getName() % str);
         }
       } else {
         str = colorString(this, i, 
@@ -773,12 +753,18 @@ void TBeing::doCommune(const sstring &arg)
                  i->purple() % levnum % i->cyan() %
                  str % i->norm();
           act(buf, 0, this, 0, i->character, TO_VICT);
+
+	  if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
+	    i->clientf(fmt("%d|%d|%d|%s|%s") % CLIENT_WIZNET % levnum % gamePort % getName() % str);
         } else if (critter->hasWizPower(POWER_WIZNET_ALWAYS) &&
                    critter->GetMaxLevel() >= levnum) {
           buf = fmt("%s(level: %d) $n: %s%s%s") % 
                  i->purple() % levnum % i->cyan() %
                  str % i->norm();
           act(buf, 0, this, 0, i->character, TO_VICT);
+
+	  if (!i->m_bIsClient && IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
+	    i->clientf(fmt("%d|%d|%d|%s|%s") % CLIENT_WIZNET % levnum % gamePort % getName() % str);
         }
       }
     }
@@ -886,7 +872,7 @@ void TBeing::doSign(const sstring &arg)
   while(pos!=sstring::npos){
     word=arg.substr(pos, arg.find_first_of(whitespace,pos)-pos);
     
-    if(bSuccess(this, getSkillValue(SKILL_SIGN) - buf.length(), SKILL_SIGN))
+    if(bSuccess(getSkillValue(SKILL_SIGN) - buf.length(), SKILL_SIGN))
       buf+=word;
     else
       buf+=RandomWord();
@@ -911,7 +897,7 @@ void TBeing::doSign(const sstring &arg)
     if (!ch->awake())
       continue;
     if (ch != this && ch->doesKnowSkill(SKILL_SIGN)) {
-      if (bSuccess(ch, ch->getSkillValue(SKILL_SIGN), SKILL_SIGN))
+      if (bSuccess(SKILL_SIGN))
         act(buf, TRUE, this, 0, ch, TO_VICT);
       else {
         // thieves are sneaky, others wouldn't see them trying to sign
@@ -1068,7 +1054,7 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 
 
   Descriptor *d = vict->desc;
-  if (d->m_bIsClient) {
+  if (d && d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
     garbedBuf = fmt("<c>%s<z>") % garbed;
     d->clientf(fmt("%d|%s|%s") % CLIENT_TELL %
         colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
@@ -1133,6 +1119,9 @@ int TBeing::doWhisper(const sstring &arg)
     garbed = PG13filter(garbed);
 
   buf = fmt("$n whispers to you, \"%s\"") % colorString(this, vict->desc, garbed, NULL, COLOR_COMM, TRUE);
+
+  if (vict->desc && !vict->desc->m_bIsClient && IS_SET(vict->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
+    vict->desc->clientf(fmt("%d|%s|%s") % CLIENT_WHISPER % colorString(this, vict->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, vict->desc, garbed, NULL, COLOR_NONE, FALSE));
 
   act(buf, TRUE, this, 0, vict, TO_VICT);
   sendTo(COLOR_MOBS, fmt("You whisper to %s, \"%s\"\n\r") % vict->getName() % colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE));
@@ -1206,6 +1195,10 @@ int TBeing::doAsk(const sstring &arg)
     act(buf, TRUE, this, 0, vict, TO_VICT);
     sendTo(COLOR_MOBS, fmt("You ask %s, \"%s\"\n\r") %
 	   vict->getName() % garbled);
+
+    if (vict->desc && !vict->desc->m_bIsClient && IS_SET(vict->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
+      vict->desc->clientf(fmt("%d|%s|%s") % CLIENT_ASK % colorString(this, vict->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, vict->desc, garbled, NULL, COLOR_NONE, FALSE));
+
     act("$n asks $N a question.", TRUE, this, 0, vict, TO_NOTVICT);
     disturbMeditation(vict);
     if (!vict->isPc()) {

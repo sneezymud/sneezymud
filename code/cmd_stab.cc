@@ -377,7 +377,8 @@ static int stab(TBeing *thief, TBeing * victim)
     tLimb = victim->getCritPartHit();
 
   if (!victim->awake() ||
-      (i && (i != GUARANTEED_FAILURE) && bSuccess(thief, bKnown, SKILL_STABBING))) {
+      (i && (i != GUARANTEED_FAILURE) && 
+      thief->bSuccess(bKnown, SKILL_STABBING))) {
     switch (critSuccess(thief, SKILL_STABBING)) {
       case CRIT_S_KILL:
         CS(SKILL_STABBING);

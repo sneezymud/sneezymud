@@ -29,7 +29,7 @@ int gust(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn
 
   caster->reconcileHurt(victim,discArray[SPELL_GUST]->alignMod); 
 
-  if (bSuccess(caster,bKnown,SPELL_GUST)) {
+  if (caster->bSuccess(bKnown,SPELL_GUST)) {
     if ((critSuccess(caster, SPELL_GUST) || 
         critSuccess(caster, SPELL_GUST) || 
         critSuccess(caster,SPELL_GUST)) &&
@@ -195,7 +195,7 @@ int immobilize(TBeing * caster, TBeing * victim, int level, byte bKnown)
   // adjust for saving-throw penalty
   rounds = (rounds * 4 / 3);
 
-  if (bSuccess(caster, bKnown, SPELL_IMMOBILIZE)) {
+  if (caster->bSuccess(bKnown, SPELL_IMMOBILIZE)) {
     retCode |= SPELL_SUCCESS;
     
     switch (critSuccess(caster, SPELL_FEATHERY_DESCENT)) {
@@ -372,7 +372,7 @@ int suffocate(TBeing * caster, TBeing * victim, int level, byte bKnown)
 
 // duration = spellNum, pointer to caster, victim, flags 
 
-  if (bSuccess(caster, bKnown, SPELL_SUFFOCATE)) {
+  if (caster->bSuccess(bKnown, SPELL_SUFFOCATE)) {
 
     if (victim->isLucky(caster->spellLuckModifier(SPELL_SUFFOCATE))) {
       SV(SPELL_SUFFOCATE);
@@ -493,7 +493,7 @@ int dustStorm(TBeing * caster, int level, byte bKnown, int adv_learn)
 
   int dam = caster->getSkillDam(NULL, SPELL_DUST_STORM, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_DUST_STORM)) {
+  if (caster->bSuccess(bKnown, SPELL_DUST_STORM)) {
     if (critSuccess(caster, SPELL_DUST_STORM) == CRIT_S_DOUBLE) {
       CS(SPELL_DUST_STORM);
       dam *= 2;
@@ -591,7 +591,7 @@ int tornado(TBeing * caster, int level, byte bKnown, int adv_learn)
 
   int dam = caster->getSkillDam(NULL, SPELL_TORNADO, level, adv_learn);
 
-  if (bSuccess(caster, bKnown, SPELL_TORNADO)) {
+  if (caster->bSuccess(bKnown, SPELL_TORNADO)) {
     if (critSuccess(caster, SPELL_TORNADO) == CRIT_S_DOUBLE) {
       CS(SPELL_TORNADO);
       dam *= 2;
@@ -787,7 +787,7 @@ int featheryDescent(TBeing * caster, TBeing * victim, int, affectedData * aff, b
 {
   caster->reconcileHelp(victim,discArray[SPELL_FEATHERY_DESCENT]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_FEATHERY_DESCENT)) {
+  if (caster->bSuccess(bKnown, SPELL_FEATHERY_DESCENT)) {
 
     switch (critSuccess(caster, SPELL_FEATHERY_DESCENT)) {
       case CRIT_S_DOUBLE:
@@ -881,7 +881,7 @@ int fly(TBeing * caster, TBeing * victim, int, affectedData * aff, byte bKnown)
 {
   caster->reconcileHelp(victim,discArray[SPELL_FLY]->alignMod);
 
-  if (bSuccess(caster, bKnown, SPELL_FLY)) {
+  if (caster->bSuccess(bKnown, SPELL_FLY)) {
 
     switch (critSuccess(caster, SPELL_FLY)) {
       case CRIT_S_DOUBLE:
@@ -985,7 +985,7 @@ int antigravity(TBeing *caster, int, affectedData *aff, byte bKnown)
   TBeing *vict = NULL;
   char buf[80];
   
-  if (bSuccess(caster, bKnown, SPELL_ANTIGRAVITY)) {
+  if (caster->bSuccess(bKnown, SPELL_ANTIGRAVITY)) {
 
     switch (critSuccess(caster, SPELL_ANTIGRAVITY)) {
       case CRIT_S_DOUBLE:
@@ -1072,7 +1072,7 @@ int conjureElemAir(TBeing * caster, int level, byte bKnown)
 
   victim->elementalFix(caster, SPELL_CONJURE_AIR, 0);
 
-  if (bSuccess(caster, bKnown, SPELL_CONJURE_AIR)) {
+  if (caster->bSuccess(bKnown, SPELL_CONJURE_AIR)) {
      act("You summon the powers of the sky!", 
             TRUE, caster, NULL, NULL, TO_CHAR);
      act("$n summons the powers of the sky!", 
@@ -1187,7 +1187,7 @@ int levitate(TBeing * caster, TBeing * victim, int level, byte bKnown)
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_LEVITATING;
 
-  if (bSuccess(caster, bKnown, SPELL_LEVITATE)) {
+  if (caster->bSuccess(bKnown, SPELL_LEVITATE)) {
     switch (critSuccess(caster, SPELL_LEVITATE)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -1273,7 +1273,7 @@ int falconWings(TBeing * caster, TBeing * victim, int level, byte bKnown)
   // correct for weight
   weightCorrectDuration(victim, &aff);
 
-  if (bSuccess(caster, bKnown, SPELL_FALCON_WINGS)) {
+  if (caster->bSuccess(bKnown, SPELL_FALCON_WINGS)) {
 
     switch (critSuccess(caster, SPELL_FALCON_WINGS)) {
       case CRIT_S_DOUBLE:
@@ -1361,7 +1361,7 @@ int protectionFromAir(TBeing *caster, TBeing *victim, int level, byte bKnown)
   aff.modifier2 = ((level * 2) / 3);
   aff.bitvector = 0;
  
-  if (bSuccess(caster,bKnown,SPELL_PROTECTION_FROM_AIR)) {
+  if (caster->bSuccess(bKnown,SPELL_PROTECTION_FROM_AIR)) {
     act("$n glows with a faint blue aura for a brief moment.", FALSE, victim, NULL, NULL, TO_ROOM);
     act("You glow with a faint blue aura for a brief moment.", FALSE, victim, NULL, NULL, TO_CHAR);
     switch (critSuccess(caster, SPELL_PROTECTION_FROM_AIR)) {

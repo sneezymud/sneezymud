@@ -867,65 +867,153 @@ void Descriptor::updateScreenVt100(unsigned int update)
   writeToQ(VT_CURSAVE);
   sprintf(buf, VT_CURSPOS, ch->getScreen() - 3, 1);
 
-  // Line 1:
+  if (IS_SET(prompt_d.type, PROMPT_CLASSIC_ANSIBAR)) {
 
-  if (update & CHANGED_HP) {
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 7);
-    sprintf(buf + strlen(buf), "%-5d", ch->getHit());
-  }
+    // Line 1:
 
-  if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC)) {
-    if (update & CHANGED_PIETY) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 34);
-      sprintf(buf + strlen(buf), "%.1f", ch->getPiety());
+    if (update & CHANGED_HP) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 7);
+      sprintf(buf + strlen(buf), "%d", ch->getHit());
     }
-  } else if (ch->hasClass(CLASS_SHAMAN)) {
-    if (update & CHANGED_LIFEFORCE) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 34);
-      sprintf(buf + strlen(buf), "%-4d", ch->getLifeforce());
+
+    if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC)) {
+      if (update & CHANGED_PIETY) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 34);
+        sprintf(buf + strlen(buf), "%.1f", ch->getPiety());
+      }
+    } else if (ch->hasClass(CLASS_SHAMAN)) {
+      if (update & CHANGED_LIFEFORCE) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 34);
+        sprintf(buf + strlen(buf), "%d", ch->getLifeforce());
+      }
+    } else {
+      if (update & CHANGED_MANA) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 34);
+        sprintf(buf + strlen(buf), "%d", ch->getMana());
+      }
     }
-  } else {
-    if (update & CHANGED_MANA) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 34);
-      sprintf(buf + strlen(buf), "%-4d", ch->getMana());
+
+    if (update & CHANGED_MOVE) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 62);
+      sprintf(buf + strlen(buf), "%d", ch->getMove());
     }
-  }
 
-  if (update & CHANGED_MOVE) {
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 62);
-    sprintf(buf + strlen(buf), "%-4d", ch->getMove());
-  }
+    // Line 2:
 
-  // Line 2:
-
-  if (update & CHANGED_GOLD) {
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 9);
-    sprintf(buf + strlen(buf), "%-8d", ch->getMoney());
-  }
-
-  if (update & CHANGED_EXP) {
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 34);
-    sprintf(buf + strlen(buf), "%s", ch->displayExp().c_str());
-  }
-
-  if (ch->isImmortal()) {
-    if (update & CHANGED_ROOM) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 62);
-      sprintf(buf + strlen(buf), "%-6d", ch->roomp->number);
-    }
-  } else {
+    if (ch->isImmortal()) {
+      if (update & CHANGED_ROOM) {
+	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 7);
+	sprintf(buf + strlen(buf), "%d", ch->roomp->number);
+      }
+    } else {
 #if FACTIONS_IN_USE
-    if (update & CHANGED_PERC) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 62);
-      sprintf(buf + strlen(buf), "%3.4f", ch->getPerc());
+      if (update & CHANGED_PERC) {
+	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 7);
+	sprintf(buf + strlen(buf), "%3.4f", ch->getPerc());
+      }
+#endif
     }
-#else
-    if (ch->fight() && ch->awake() && ch->fight()->sameRoom(*ch)) {
-      f = ch->fight()->fight();
 
-      if (f && (f != ch) && ch->sameRoom(*f)) {
+    if (update & CHANGED_GOLD) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 34);
+      sprintf(buf + strlen(buf), "%d", ch->getMoney());
+    }
+
+    if (update & CHANGED_EXP) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 58);
+      sprintf(buf + strlen(buf), "%s", ch->displayExp().c_str());
+    }
+
+    // Line 3:
+
+    if ((f = ch->fight()) != NULL) {
+      if (f->sameRoom(*ch)) {
+	int maxh = max(1, (int) f->hitLimit());
+	int ratio = min(10, max(0, ((f->getHit() * 9) / maxh)));
+	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 3);
+	sprintf(buf + strlen(buf), "<%s=%s>", fname(f->name).c_str(), prompt_mesg[ratio]);
+	last.fighting = TRUE;
+
+        ratio = fname(f->name).length() + strlen(prompt_mesg[ratio]);
+
+	while (ratio < 25) {
+          strcat(buf, " ");
+          ratio++;
+	}
+      }
+    } else {
+      if (last.fighting) {
+	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 3);
+	sprintf(buf + strlen(buf), "                         ");
+	last.fighting = FALSE;
+      }
+    }
+
+    if (IS_SET(update, CHANGED_MUD)) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 35);
+      sprintf(buf + strlen(buf), " %s ",
+	      hmtAsString(hourminTime()).c_str());
+    }
+
+    if (IS_SET(update, CHANGED_TIME)) {
+      time_t t1;
+      struct tm *tptr;
+      if ((t1 = time(0)) != -1) {
+	tptr = localtime(&t1);
+
+	// adjust time for users local site
+	tptr->tm_hour += account->time_adjust;
+	if (tptr->tm_hour < 0) {
+	  tptr->tm_hour += 24;
+	} else if (tptr->tm_hour > 23)
+	  tptr->tm_hour -= 24;
+
+	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 62);
+	sprintf(buf + strlen(buf), "%2d:%02d %2s",
+		(!(tptr->tm_hour%12) ? 12 : tptr->tm_hour%12),
+		tptr->tm_min,
+		(tptr->tm_hour >= 12) ? "PM" : "AM");
+      }
+    }
+
+  } else {
+
+    // Line 1:
+
+    if (update & CHANGED_HP) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 7);
+      sprintf(buf + strlen(buf), "%-5d", ch->getHit());
+    }
+
+    if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC)) {
+      if (update & CHANGED_PIETY) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 34);
+        sprintf(buf + strlen(buf), "%.1f", ch->getPiety());
+      }
+    } else if (ch->hasClass(CLASS_SHAMAN)) {
+      if (update & CHANGED_LIFEFORCE) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 34);
+        sprintf(buf + strlen(buf), "%-4d", ch->getLifeforce());
+      }
+    } else {
+      if (update & CHANGED_MANA) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 34);
+        sprintf(buf + strlen(buf), "%-4d", ch->getMana());
+      }
+    }
+
+    if (update & CHANGED_MOVE) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 62);
+      sprintf(buf + strlen(buf), "%-4d", ch->getMove());
+    }
+
+    // Line 2:
+
+    if ((f = ch->fight()) != NULL) {
+      if (f->sameRoom(*ch)) {
         char StTemp[2048];
-	int ratio = min(10, max(0, ((f->getHit() * 9) / f->hitLimit())));
+        int maxh = max(1, (int) f->hitLimit());
+        int ratio = min(10, max(0, ((f->getHit() * 9) / maxh)));
 
         memset(&StTemp, 0, sizeof(StTemp));
         sprintf(StTemp, "<%s=%s>", fname(f->name).c_str(), prompt_mesg[ratio]);
@@ -941,114 +1029,139 @@ void Descriptor::updateScreenVt100(unsigned int update)
 
         StTemp[23] = '\0';
 
-	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 1);
         strcat(buf + strlen(buf), StTemp);
 
-	last.fighting = TRUE;
-      } else {
-	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
-	sprintf(buf + strlen(buf), "                      ");
+        last.fighting = TRUE;
       }
     } else {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
-      sprintf(buf + strlen(buf), "                      ");
+      if (last.fighting) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 1);
+        sprintf(buf + strlen(buf), "                      ");
+        last.fighting = FALSE;
+      }
     }
-#endif
-  }
 
-  // Line 3:
-
-  if (IS_SET(update, CHANGED_MUD)) {
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 1);
-    sprintf(buf + strlen(buf), "   %8s   ", hmtAsString(hourminTime()).c_str());
-  }
-
-  if (IS_SET(update, CHANGED_TIME)) {
-    time_t t1;
-    struct tm *tptr;
-    if ((t1 = time(0)) != -1) {
-      tptr = localtime(&t1);
-
-      // adjust time for users local site
-      tptr->tm_hour += account->time_adjust;
-      if (tptr->tm_hour < 0) {
-        tptr->tm_hour += 24;
-      } else if (tptr->tm_hour > 23)
-        tptr->tm_hour -= 24;
-
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 15);
-      sprintf(buf + strlen(buf), "   %2d:%02d %2s   ",
-	      (!(tptr->tm_hour%12) ? 12 : tptr->tm_hour%12),
-	      tptr->tm_min,
-	      (tptr->tm_hour >= 12) ? "PM" : "AM");
+    if (update & CHANGED_EXP) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 34);
+      sprintf(buf + strlen(buf), "%s", ch->displayExp().c_str());
     }
-  }
 
-  if (update & CHANGED_EXP) {
-    classIndT iClass;
+    if (ch->isImmortal()) {
+      if (update & CHANGED_ROOM) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 62);
+        sprintf(buf + strlen(buf), "%-6d", ch->roomp->number);
+      }
+    } else {
+#if FACTIONS_IN_USE
+      if (update & CHANGED_PERC) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 62);
+        sprintf(buf + strlen(buf), "%3.4f", ch->getPerc());
+      }
+#else
+      if (ch->fight() && ch->awake() && ch->fight()->sameRoom(*ch)) {
+        f = ch->fight()->fight();
 
-    for (iClass = MAGE_LEVEL_IND; iClass < MAX_CLASSES; iClass++) {
-      if (ch->getLevel(iClass)) {
-        double iNeed = getExpClassLevel(iClass, ch->getLevel(iClass) + 1) - ch->getExp();
-
-        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 34);
-
-        if (ch->getLevel(iClass) >= MAX_MORT)
-          strcat(buf + strlen(buf), "0");
-        else {
+        if (f && (f != ch) && ch->sameRoom(*f)) {
           char StTemp[2048];
+	  int ratio = min(10, max(0, ((f->getHit() * 9) / f->hitLimit())));
 
           memset(&StTemp, 0, sizeof(StTemp));
+          sprintf(StTemp, "<%s=%s>", fname(f->name).c_str(), prompt_mesg[ratio]);
 
-          if (ch->getExp() < 100)
-            sprintf(StTemp, "%.3f", iNeed);
-          else
-            sprintf(StTemp, "%.0f", iNeed);
+          if (strlen(StTemp) > 22) {
+            StTemp[19] = StTemp[20] = StTemp[21] = '.';
+            StTemp[22] = '>';
+            StTemp[23] = '\0';
+          }
 
-          for (int iRunner = strlen(StTemp); iRunner < 11; iRunner++)
+          for (int iRunner = strlen(StTemp); iRunner < 23; iRunner++)
             StTemp[iRunner] = ' ';
 
-          StTemp[11] = '\0';
+          StTemp[23] = '\0';
 
+  	  sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
           strcat(buf + strlen(buf), StTemp);
-	}
 
-        break;
+  	  last.fighting = TRUE;
+        } else {
+	  sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
+	  sprintf(buf + strlen(buf), "                      ");
+        }
+      } else {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
+        sprintf(buf + strlen(buf), "                      ");
+      }
+#endif
+    }
+
+    // Line 3:
+
+    if (IS_SET(update, CHANGED_MUD)) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 1);
+      sprintf(buf + strlen(buf), "   %8s   ", hmtAsString(hourminTime()).c_str());
+    }
+
+    if (IS_SET(update, CHANGED_TIME)) {
+      time_t t1;
+      struct tm *tptr;
+      if ((t1 = time(0)) != -1) {
+        tptr = localtime(&t1);
+
+        // adjust time for users local site
+        tptr->tm_hour += account->time_adjust;
+        if (tptr->tm_hour < 0) {
+          tptr->tm_hour += 24;
+        } else if (tptr->tm_hour > 23)
+          tptr->tm_hour -= 24;
+
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 15);
+        sprintf(buf + strlen(buf), "   %2d:%02d %2s   ",
+	        (!(tptr->tm_hour%12) ? 12 : tptr->tm_hour%12),
+	        tptr->tm_min,
+	        (tptr->tm_hour >= 12) ? "PM" : "AM");
       }
     }
-  }
 
-  if ((f = ch->fight()) != NULL) {
-    if (f->sameRoom(*ch)) {
-      char StTemp[2048];
-      int maxh = max(1, (int) f->hitLimit());
-      int ratio = min(10, max(0, ((f->getHit() * 9) / maxh)));
+    if (update & CHANGED_EXP) {
+      classIndT iClass;
 
-      memset(&StTemp, 0, sizeof(StTemp));
-      sprintf(StTemp, "<%s=%s>", fname(f->name).c_str(), prompt_mesg[ratio]);
+      for (iClass = MAGE_LEVEL_IND; iClass < MAX_CLASSES; iClass++) {
+        if (ch->getLevel(iClass)) {
+          double iNeed = getExpClassLevel(iClass, ch->getLevel(iClass) + 1) - ch->getExp();
 
-      if (strlen(StTemp) > 22) {
-	StTemp[19] = StTemp[20] = StTemp[21] = '.';
-	StTemp[22] = '>';
-	StTemp[23] = '\0';
+          sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 34);
+
+          if (ch->getLevel(iClass) >= MAX_MORT)
+            strcat(buf + strlen(buf), "0");
+          else {
+            char StTemp[2048];
+
+            memset(&StTemp, 0, sizeof(StTemp));
+
+            if (ch->getExp() < 100)
+              sprintf(StTemp, "%.3f", iNeed);
+            else
+              sprintf(StTemp, "%.0f", iNeed);
+
+            for (int iRunner = strlen(StTemp); iRunner < 11; iRunner++)
+              StTemp[iRunner] = ' ';
+
+            StTemp[11] = '\0';
+
+            strcat(buf + strlen(buf), StTemp);
+	  }
+
+          break;
+        }
       }
-
-      for (int iRunner = strlen(StTemp); iRunner < 23; iRunner++)
-        StTemp[iRunner] = ' ';
-
-      StTemp[23] = '\0';
-
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 55);
-      strcat(buf + strlen(buf), StTemp);
-
-      last.fighting = TRUE;
     }
-  } else {
-    if (last.fighting) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 55);
-      sprintf(buf + strlen(buf), "                      ");
-      last.fighting = FALSE;
+
+    if (update & CHANGED_GOLD) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 62);
+      sprintf(buf + strlen(buf), "%-8d", ch->getMoney());
     }
+
   }
 
   writeToQ(buf);
@@ -1103,212 +1216,348 @@ void Descriptor::updateScreenAnsi(unsigned int update)
   missing_mana = 10 - current_mana;
   missing_moves = 10 - current_moves;
 
-  // Line 1:
-
   writeToQ(VT_CURSAVE);
   sprintf(buf, VT_CURSPOS, ch->getScreen() - 2, 1);
 
-  if (IS_SET(update, CHANGED_HP)) {
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 7);
-    sprintf(buf + strlen(buf), "%s%-5d ", current_hit > 2 ? VT_BOLDTEX : ANSI_RED, ch->getHit());
-    sprintf(buf + strlen(buf), ANSI_BLUE);
+  if (IS_SET(prompt_d.type, PROMPT_CLASSIC_ANSIBAR)) {
 
-    for (i = 1; i <= current_hit; i++)
-      sprintf(buf + strlen(buf), ANSI_BAR3);
+    // Line 1:
 
-    sprintf(buf + strlen(buf), ANSI_CYAN);
+    if (update & CHANGED_HP) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 7);
+      sprintf(buf + strlen(buf), "%s%-5d ",  current_hit > 2 ? VT_BOLDTEX : ANSI_RED, ch->getHit());
+      sprintf(buf + strlen(buf), ANSI_BLUE);
 
-    for (i = 1; i <= missing_hit; i++)
-      sprintf(buf + strlen(buf), ANSI_BAR3);
-  }
+      for (i = 1; i <= current_hit; i++)
+        sprintf(buf + strlen(buf), ANSI_BAR3);
 
-  if (IS_SET(update, CHANGED_MANA) || IS_SET(update, CHANGED_PIETY) || IS_SET(update, CHANGED_LIFEFORCE)) {
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 34);
+      sprintf(buf + strlen(buf), ANSI_CYAN);
 
-    if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC)) 
-      sprintf(buf + strlen(buf), "%s%-5.1f ", current_mana ? VT_BOLDTEX : ANSI_RED, ch->getPiety());
-    else if (ch->hasClass(CLASS_SHAMAN)) 
-      sprintf(buf + strlen(buf), "%s%-5d ", current_mana ? VT_BOLDTEX : ANSI_RED, ch->getLifeforce());
-    else
-      sprintf(buf + strlen(buf), "%s%-5d ", current_mana ? VT_BOLDTEX : ANSI_RED, ch->getMana());
-
-    sprintf(buf + strlen(buf), ANSI_BLUE);
-
-    for (i = 1; i <= current_mana; i++)
-      sprintf(buf + strlen(buf), ANSI_BAR3);
-
-    sprintf(buf + strlen(buf), ANSI_CYAN);
-
-    for (i = 1; i <= missing_mana; i++)
-      sprintf(buf + strlen(buf), ANSI_BAR3);
-  }
-
-  if (IS_SET(update, CHANGED_MOVE)) {
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 62);
-    sprintf(buf + strlen(buf), "%s%-5d ", current_moves ? VT_BOLDTEX : ANSI_RED, ch->getMove());
-    sprintf(buf + strlen(buf), ANSI_BLUE);
-
-    for (i = 1; i <= current_moves; i++)
-      sprintf(buf + strlen(buf), ANSI_BAR3);
-
-    sprintf(buf + strlen(buf), ANSI_CYAN);
-
-    for (i = 1; i <= missing_moves; i++)
-      sprintf(buf + strlen(buf), ANSI_BAR3);
-  }
-
-  // Line 2:
-
-  if (IS_SET(update, CHANGED_GOLD)) {
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 9);
-    sprintf(buf + strlen(buf), "%s%-8d", ANSI_GREEN, ch->getMoney());
-  }
-
-  if (IS_SET(update, CHANGED_EXP)) {
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 34);
-    sprintf(buf + strlen(buf), "%s%s", ANSI_GREEN, ch->displayExp().c_str());
-  }
-
-  if (ch->isImmortal()) {
-    if (IS_SET(update, CHANGED_ROOM)) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 62);
-      sprintf(buf + strlen(buf), "%s%-6d", ANSI_GREEN, ch->roomp->number);
+      for (i = 1; i <= missing_hit; i++)
+        sprintf(buf + strlen(buf), ANSI_BAR3);
     }
-  } else {
+
+    if (IS_SET(update, CHANGED_MANA) || IS_SET(update, CHANGED_PIETY) || IS_SET(update, CHANGED_LIFEFORCE)) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 34);
+
+      if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC))
+        sprintf(buf + strlen(buf), "%s%-5.1f ", current_mana ? VT_BOLDTEX : ANSI_RED, ch->getPiety());
+      else if (ch->hasClass(CLASS_SHAMAN))
+        sprintf(buf + strlen(buf), "%s%-5d ", current_mana ? VT_BOLDTEX : ANSI_RED, ch->getLifeforce());
+      else
+        sprintf(buf + strlen(buf), "%s%-5d ", current_mana ? VT_BOLDTEX : ANSI_RED, ch->getMana());
+
+      sprintf(buf + strlen(buf), ANSI_BLUE);
+
+      for (i = 1; i <= current_mana; i++)
+        sprintf(buf + strlen(buf), ANSI_BAR3);
+
+      sprintf(buf + strlen(buf), ANSI_CYAN);
+
+      for (i = 1; i <= missing_mana; i++)
+        sprintf(buf + strlen(buf), ANSI_BAR3);
+    }
+
+    if (IS_SET(update, CHANGED_MOVE)) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 62);
+      sprintf(buf + strlen(buf), "%s%-5d ", current_moves ? VT_BOLDTEX : ANSI_RED, ch->getMove());
+      sprintf(buf + strlen(buf), ANSI_BLUE);
+
+      for (i = 1; i <= current_moves; i++)
+        sprintf(buf + strlen(buf), ANSI_BAR3);
+
+      sprintf(buf + strlen(buf), ANSI_CYAN);
+
+      for (i = 1; i <= missing_moves; i++)
+        sprintf(buf + strlen(buf), ANSI_BAR3);
+    }
+
+    // Line 2:
+
+    if (ch->isImmortal()) {
+      if (update & CHANGED_ROOM) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 7);
+        sprintf(buf + strlen(buf), "%s%-6d", ANSI_GREEN, ch->roomp->number);
+      }
+    } else {
 #if FACTIONS_IN_USE
-    if (IS_SET(update, CHANGED_PERC)) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 45);
-      sprintf(buf + strlen(buf), "%s%3.4f", ANSI_GREEN, ch->getPerc());
+      if (update & CHANGED_PERC) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 7);
+        sprintf(buf + strlen(buf), "%3.4f", ch->getPerc());
+      }
+#endif
     }
-#else
-    if (ch->fight() && ch->awake() && ch->fight()->sameRoom(*ch)) {
-      f = ch->fight()->fight();
 
-      if (f && (f != ch) && ch->sameRoom(*f)) {
-	char StTemp[2048];
-	int ratio = min(10, max(0, ((f->getHit() * 9) / f->hitLimit())));
+    if (IS_SET(update, CHANGED_GOLD)) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 34);
+      sprintf(buf + strlen(buf), "%s%-8d", ANSI_GREEN, ch->getMoney());
+    }
+
+    if (IS_SET(update, CHANGED_EXP)) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 58);
+      sprintf(buf + strlen(buf), "%s%s", ANSI_GREEN, ch->displayExp().c_str());
+    }
+
+    // Line 3:
+
+    if ((f = ch->fight()) != NULL) {
+      if (f->sameRoom(*ch)) {
+        int maxh = max(1, (int) f->hitLimit());
+        int ratio = min(10, max(0, ((f->getHit() * 9) / maxh)));
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 3);
+        sprintf(buf + strlen(buf), "%s<%s=%s>%s", ch->purple(), fname(f->name).c_str(),
+                prompt_mesg[ratio], ch->norm());
+        last.fighting = TRUE;
+
+        ratio = fname(f->name).length() + strlen(prompt_mesg[ratio]);
+
+        while (ratio < 25) {
+          strcat(buf, " ");
+          ratio++;
+        }
+      }
+    } else {
+      if (last.fighting) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 3);
+        sprintf(buf + strlen(buf), "                         ");
+        last.fighting = FALSE;
+      }
+    }
+
+    if (IS_SET(update, CHANGED_MUD)) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 35);
+      sprintf(buf + strlen(buf), "%s",
+              hmtAsString(hourminTime()).c_str());
+    }
+
+    if (IS_SET(update, CHANGED_TIME)) {
+      time_t t1;
+      struct tm *tptr;
+      if ((t1 = time(0)) != -1) {
+        tptr = localtime(&t1);
+
+        // adjust time for users local site
+        tptr->tm_hour += account->time_adjust;
+        if (tptr->tm_hour < 0) {
+          tptr->tm_hour += 24;
+        } else if (tptr->tm_hour > 23)
+          tptr->tm_hour -= 24;
+
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 62);
+        sprintf(buf + strlen(buf), "%2d:%02d %2s",
+                (!(tptr->tm_hour%12) ? 12 : tptr->tm_hour%12),
+                tptr->tm_min,
+                (tptr->tm_hour >= 12) ? "PM" : "AM");
+      }
+    }
+
+  } else {
+
+    // Line 1:
+
+    if (IS_SET(update, CHANGED_HP)) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 7);
+      sprintf(buf + strlen(buf), "%s%-5d ", current_hit > 2 ? VT_BOLDTEX : ANSI_RED, ch->getHit());
+      sprintf(buf + strlen(buf), ANSI_BLUE);
+
+      for (i = 1; i <= current_hit; i++)
+        sprintf(buf + strlen(buf), ANSI_BAR3);
+
+      sprintf(buf + strlen(buf), ANSI_CYAN);
+
+      for (i = 1; i <= missing_hit; i++)
+        sprintf(buf + strlen(buf), ANSI_BAR3);
+    }
+
+    if (IS_SET(update, CHANGED_MANA) || IS_SET(update, CHANGED_PIETY) || IS_SET(update, CHANGED_LIFEFORCE)) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 34);
+
+      if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC)) 
+        sprintf(buf + strlen(buf), "%s%-5.1f ", current_mana ? VT_BOLDTEX : ANSI_RED, ch->getPiety());
+      else if (ch->hasClass(CLASS_SHAMAN)) 
+        sprintf(buf + strlen(buf), "%s%-5d ", current_mana ? VT_BOLDTEX : ANSI_RED, ch->getLifeforce());
+      else
+        sprintf(buf + strlen(buf), "%s%-5d ", current_mana ? VT_BOLDTEX : ANSI_RED, ch->getMana());
+
+      sprintf(buf + strlen(buf), ANSI_BLUE);
+
+      for (i = 1; i <= current_mana; i++)
+        sprintf(buf + strlen(buf), ANSI_BAR3);
+
+      sprintf(buf + strlen(buf), ANSI_CYAN);
+
+      for (i = 1; i <= missing_mana; i++)
+        sprintf(buf + strlen(buf), ANSI_BAR3);
+    }
+
+    if (IS_SET(update, CHANGED_MOVE)) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 2, 62);
+      sprintf(buf + strlen(buf), "%s%-5d ", current_moves ? VT_BOLDTEX : ANSI_RED, ch->getMove());
+      sprintf(buf + strlen(buf), ANSI_BLUE);
+
+      for (i = 1; i <= current_moves; i++)
+        sprintf(buf + strlen(buf), ANSI_BAR3);
+
+      sprintf(buf + strlen(buf), ANSI_CYAN);
+
+      for (i = 1; i <= missing_moves; i++)
+        sprintf(buf + strlen(buf), ANSI_BAR3);
+    }
+
+    // Line 2:
+
+    if ((f = ch->fight()) != NULL) {
+      if (f->sameRoom(*ch)) {
+        char StTemp[2048];
+        int ratio = min(10, max(0, ((f->getHit() * 9) / f->hitLimit())));
 
         memset(&StTemp, 0, sizeof(StTemp));
-	sprintf(StTemp, "<%s=%s>", fname(f->name).c_str(), prompt_mesg[ratio]);
+        sprintf(StTemp, "<%s=%s>", fname(f->name).c_str(), prompt_mesg[ratio]);
 
         if (strlen(StTemp) > 22) {
-          StTemp[19] = StTemp[20] = StTemp[21] = '.';
-          StTemp[22] = '>';
-          StTemp[23] = '\0';
-	}
+	  StTemp[19] = StTemp[20] = StTemp[21] = '.';
+	  StTemp[22] = '>';
+	  StTemp[23] = '\0';
+        }
 
-	for (int iRunner = strlen(StTemp); iRunner < 23; iRunner++)
-	  StTemp[iRunner] = ' ';
+        for (int iRunner = strlen(StTemp); iRunner < 23; iRunner++)
+          StTemp[iRunner] = ' ';
 
-	StTemp[23] = '\0';
+        StTemp[23] = '\0';
 
-	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 1);
         sprintf(buf + strlen(buf), "%s%s%s", ch->purple(), StTemp, ch->norm());
 
-	last.fighting = TRUE;
+        last.fighting = TRUE;
+      }
+    } else {
+      if (last.fighting) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 1);
+        sprintf(buf + strlen(buf), "                      ");
+        last.fighting = FALSE;
+      }
+    }
+
+    if (IS_SET(update, CHANGED_EXP)) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 34);
+      sprintf(buf + strlen(buf), "%s%s", ANSI_GREEN, ch->displayExp().c_str());
+    }
+
+    if (ch->isImmortal()) {
+      if (IS_SET(update, CHANGED_ROOM)) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 62);
+        sprintf(buf + strlen(buf), "%s%-6d", ANSI_GREEN, ch->roomp->number);
+      }
+    } else {
+#if FACTIONS_IN_USE
+      if (IS_SET(update, CHANGED_PERC)) {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 45);
+        sprintf(buf + strlen(buf), "%s%3.4f", ANSI_GREEN, ch->getPerc());
+      }
+#else
+      if (ch->fight() && ch->awake() && ch->fight()->sameRoom(*ch)) {
+        f = ch->fight()->fight();
+
+        if (f && (f != ch) && ch->sameRoom(*f)) {
+	  char StTemp[2048];
+	  int ratio = min(10, max(0, ((f->getHit() * 9) / f->hitLimit())));
+
+          memset(&StTemp, 0, sizeof(StTemp));
+	  sprintf(StTemp, "<%s=%s>", fname(f->name).c_str(), prompt_mesg[ratio]);
+
+          if (strlen(StTemp) > 22) {
+            StTemp[19] = StTemp[20] = StTemp[21] = '.';
+            StTemp[22] = '>';
+            StTemp[23] = '\0';
+  	  }
+
+	  for (int iRunner = strlen(StTemp); iRunner < 23; iRunner++)
+	    StTemp[iRunner] = ' ';
+
+  	  StTemp[23] = '\0';
+
+	  sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
+          sprintf(buf + strlen(buf), "%s%s%s", ch->purple(), StTemp, ch->norm());
+
+	  last.fighting = TRUE;
+        } else {
+          sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
+          sprintf(buf + strlen(buf), "                      ");
+        }
       } else {
         sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
         sprintf(buf + strlen(buf), "                      ");
       }
-    } else {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
-      sprintf(buf + strlen(buf), "                      ");
-    }
 #endif
-  }
+    }
 
-  // Line 3:
+    // Line 3:
 
-  if (IS_SET(update, CHANGED_MUD)) {
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 1);
-    sprintf(buf + strlen(buf), "   %8s   ", hmtAsString(hourminTime()).c_str());
-  }
+    if (IS_SET(update, CHANGED_MUD)) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 1);
+      sprintf(buf + strlen(buf), "   %8s   ", hmtAsString(hourminTime()).c_str());
+    }
 
-  time_t t1;
-  struct tm *tptr;
+    time_t t1;
+    struct tm *tptr;
 
-  if ((t1 = time((time_t *) 0)) != -1) {
-    tptr = localtime(&t1);
+    if ((t1 = time((time_t *) 0)) != -1) {
+      tptr = localtime(&t1);
 
-    // adjust time for users local site
-    if (account)
-      tptr->tm_hour += account->time_adjust;
-    if (tptr->tm_hour < 0)
-      tptr->tm_hour += 24;
-    else if (tptr->tm_hour > 23)
-      tptr->tm_hour -= 24;
+      // adjust time for users local site
+      if (account)
+        tptr->tm_hour += account->time_adjust;
+      if (tptr->tm_hour < 0)
+        tptr->tm_hour += 24;
+      else if (tptr->tm_hour > 23)
+        tptr->tm_hour -= 24;
 
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 15);
-    sprintf(buf + strlen(buf), "   %2d:%02d %2s   ",
-	    (!(tptr->tm_hour%12) ? 12 : tptr->tm_hour%12),
-	    tptr->tm_min,
-	    (tptr->tm_hour >= 12) ? "PM" : "AM");
-  }
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 15);
+      sprintf(buf + strlen(buf), "   %2d:%02d %2s   ",
+	      (!(tptr->tm_hour%12) ? 12 : tptr->tm_hour%12),
+	      tptr->tm_min,
+	      (tptr->tm_hour >= 12) ? "PM" : "AM");
+    }
 
-  if (update & CHANGED_EXP) {
-    classIndT iClass;
+    if (update & CHANGED_EXP) {
+      classIndT iClass;
 
-    for (iClass = MAGE_LEVEL_IND; iClass < MAX_CLASSES; iClass++) {
-      if (ch->getLevel(iClass)) {
-        double iNeed = getExpClassLevel(iClass, ch->getLevel(iClass) + 1) - ch->getExp();
+      for (iClass = MAGE_LEVEL_IND; iClass < MAX_CLASSES; iClass++) {
+        if (ch->getLevel(iClass)) {
+          double iNeed = getExpClassLevel(iClass, ch->getLevel(iClass) + 1) - ch->getExp();
 
-        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 34);
+          sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 34);
 
-        if (ch->getLevel(iClass) >= MAX_MORT)
-          strcat(buf + strlen(buf), "0");
-        else {
-          char StTemp[2048];
+          if (ch->getLevel(iClass) >= MAX_MORT)
+            strcat(buf + strlen(buf), "0");
+          else {
+            char StTemp[2048];
 
-          memset(&StTemp, 0, sizeof(StTemp));
+            memset(&StTemp, 0, sizeof(StTemp));
 
-          if (ch->getExp() < 100)
-            sprintf(StTemp, "%.3f", iNeed);
-          else
-            sprintf(StTemp, "%.0f", iNeed);
+            if (ch->getExp() < 100)
+              sprintf(StTemp, "%.3f", iNeed);
+            else
+              sprintf(StTemp, "%.0f", iNeed);
 
-          for (int iRunner = strlen(StTemp); iRunner < 11; iRunner++)
-            StTemp[iRunner] = ' ';
+            for (int iRunner = strlen(StTemp); iRunner < 11; iRunner++)
+              StTemp[iRunner] = ' ';
 
-          StTemp[11] = '\0';
+            StTemp[11] = '\0';
 
-          strcat(buf + strlen(buf), StTemp);
+            strcat(buf + strlen(buf), StTemp);
+          }
+
+          break;
         }
-
-        break;
       }
     }
-  }
 
-  if ((f = ch->fight()) != NULL) {
-    if (f->sameRoom(*ch)) {
-      char StTemp[2048];
-      int ratio = min(10, max(0, ((f->getHit() * 9) / f->hitLimit())));
-
-      memset(&StTemp, 0, sizeof(StTemp));
-      sprintf(StTemp, "<%s=%s>", fname(f->name).c_str(), prompt_mesg[ratio]);
-
-      if (strlen(StTemp) > 22) {
-          StTemp[19] = StTemp[20] = StTemp[21] = '.';
-          StTemp[22] = '>';
-          StTemp[23] = '\0';
-      }
-
-      for (int iRunner = strlen(StTemp); iRunner < 23; iRunner++)
-	StTemp[iRunner] = ' ';
-
-      StTemp[23] = '\0';
-
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 55);
-      sprintf(buf + strlen(buf), "%s%s%s", ch->purple(), StTemp, ch->norm());
-
-      last.fighting = TRUE;
+    if (IS_SET(update, CHANGED_GOLD)) {
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 62);
+      sprintf(buf + strlen(buf), "%s%-8d", ANSI_GREEN, ch->getMoney());
     }
-  } else {
-    if (last.fighting) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 55);
-      sprintf(buf + strlen(buf), "                      ");
-      last.fighting = FALSE;
-    }
+
   }
 
   writeToQ(buf);

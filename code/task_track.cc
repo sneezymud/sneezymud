@@ -73,10 +73,10 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
 
   if (isSW) {
     skill += ch->getSkillValue(SKILL_SEEKWATER);
-    worked = bSuccess(ch, skill, SKILL_SEEKWATER);
+    worked = ch->bSuccess(skill, SKILL_SEEKWATER);
   } else if (isTR) {
     skill += ch->getSkillValue(SKILL_TRACK);
-    worked = bSuccess(ch, skill, SKILL_TRACK);
+    worked = ch->bSuccess(skill, SKILL_TRACK);
   } else if (isTS) {
     skill += 50;
     worked = (::number(0, 110) < skill);

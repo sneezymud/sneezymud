@@ -244,7 +244,7 @@ static int bodyslam(TBeing *caster, TBeing *victim)
     return (bodyslamHit(caster, victim));
   
   // remember, F = MA :) need to take  weight into account 
-  if (bSuccess(caster, bKnown + percent, SKILL_BODYSLAM) &&
+  if (caster->bSuccess(bKnown + percent, SKILL_BODYSLAM) &&
          (i = caster->specialAttack(victim,SKILL_BODYSLAM)) && 
          i != GUARANTEED_FAILURE &&
          (percent < bKnown))  {

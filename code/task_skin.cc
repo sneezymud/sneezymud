@@ -59,7 +59,7 @@ int TThing::skinPulse(TBeing *ch, TBaseCorpse *corpse)
         FALSE, ch, corpse, NULL, TO_ROOM);
     ch->task->timeLeft--;
 
-    if (!bSuccess(ch, learning, SKILL_SKIN)) {
+    if (!ch->bSuccess(learning, SKILL_SKIN)) {
       // O.k.  Here is the run down:
       //   1 Fail         = +Fail !decay +UnitsGotten -1sharpness
       //   2 Fails        = +Fail !decay !UnitsGotten -2sharpness
@@ -72,7 +72,7 @@ int TThing::skinPulse(TBeing *ch, TBaseCorpse *corpse)
       // We also drop a little bit of blood in the room for visual fun,
       // but Do Not start a bleed on the person on question.
       CF(SKILL_SKIN);
-      if (bSuccess(ch, learning, SKILL_SKIN)) {
+      if (ch->bSuccess(learning, SKILL_SKIN)) {
         act("You gently over extend yourself and slightly dull your weapon.",
             FALSE, ch, 0, 0, TO_CHAR);
         if (tobj->getCurSharp() > 2)tobj->addToCurSharp(-1);
@@ -255,8 +255,8 @@ int TTool::skinPulse(TBeing *ch, TBaseCorpse *corpse)
       return FALSE;
     }
 
-    if (!bSuccess(ch, learning, SKILL_SKIN)) {
-      if (!bSuccess(ch, learning, SKILL_SKIN)) {
+    if (!ch->bSuccess(learning, SKILL_SKIN)) {
+      if (!ch->bSuccess(learning, SKILL_SKIN)) {
         // a doubele failure
         CF(SKILL_SKIN);  // failure on that skin
         act("You slip up and destory a part of the hide.",

@@ -105,8 +105,7 @@ bool trytelekinesis(TBeing *caster, TBeing *victim, TObj *obj){
     return FALSE;
   }
 
-  if(!bSuccess(victim, victim->getSkillValue(SKILL_TELEKINESIS), 
-	       SKILL_TELEKINESIS)){
+  if(!victim->bSuccess(SKILL_TELEKINESIS)){
     act("You try to retrieve $p using telekinesis, but it is too difficult.", 
 	FALSE, caster, obj, victim, TO_VICT, ANSI_CYAN);
     act("$N furrows $s brow for a moment, but nothing happens.",
@@ -183,7 +182,7 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
 
   i = caster->specialAttack(victim,skill);
   if (i && bKnown >= 0 && i != GUARANTEED_FAILURE &&
-      bSuccess(caster, bKnown + percent, skill)) {
+      caster->bSuccess(bKnown + percent, skill)) {
     TObj * obj = NULL;
     bool isobjprim=TRUE; // is the disarmed object the primary hand object?
 
@@ -209,10 +208,18 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
         act("$n lunges at you!",
              TRUE, caster, 0, victim, TO_VICT);
       }
-      if (victim->doesKnowSkill(SKILL_TRANCE_OF_BLADES) && (victim->task) &&
+      if(victim->doesKnowSkill(SKILL_WEAPON_RETENTION) &&
+	 (victim->bSuccess(SKILL_WEAPON_RETENTION))){
+	act("You try to disarm $N, but are easily countered..", 
+	    FALSE, caster, obj, victim, TO_CHAR);
+	act("$n tries to disarm you, but is easily countered.",
+	    FALSE, caster, obj, victim, TO_VICT, ANSI_RED);
+	act("$n tries to disarm $N, but is easily countered.",
+	    FALSE, caster, obj, victim, TO_NOTVICT);
+      } else if (victim->doesKnowSkill(SKILL_TRANCE_OF_BLADES) && (victim->task) &&
 	  (victim->task->task == TASK_TRANCE_OF_BLADES)) {
 	int val = (int)(((float) victim->getSkillValue(SKILL_TRANCE_OF_BLADES) * 0.70) + 30);
-	if (bSuccess(victim,val, SKILL_TRANCE_OF_BLADES)) {
+	if (victim->bSuccess(val, SKILL_TRANCE_OF_BLADES)) {
 	  act("You try to make it past $N's defensive trance, but get beaten back!", FALSE, caster, obj, victim, TO_CHAR);
 	  act("$n fails to make it past your defensive trance, and you beat $m back!", FALSE, caster, obj, victim, TO_VICT, ANSI_RED);
 	  act("$n fails to make it past $N's defensive trance, and gets beaten back!", FALSE, caster, obj, victim, TO_NOTVICT);
@@ -250,6 +257,7 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
   }
   return TRUE;
 }
+
 
 int TBeing::doDisarm(sstring argument, TThing *v) 
 {

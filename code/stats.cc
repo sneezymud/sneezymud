@@ -1140,7 +1140,7 @@ float TBeing::getSwindleBonus()
   if(doesKnowSkill(SKILL_SWINDLE)){
     // make 5 separate rolls so chr goes up amount based on learning
     for (int i = 0; i < 5; i++)
-      if (bSuccess(this, getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
+      if (bSuccess(SKILL_SWINDLE))
 	chr += 0.02;
   }
 

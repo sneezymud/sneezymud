@@ -200,7 +200,7 @@ int TFuel::chiMe(TBeing *tLunatic)
   if (tLunatic->checkPeaceful("Violent things can not be done here and something tells you that would be violent!"))
     return FALSE;
 
-  if (!bSuccess(tLunatic, bKnown, SKILL_CHI)) {
+  if (!tLunatic->bSuccess(bKnown, SKILL_CHI)) {
     act("You fail to affect $p in any way.",
         FALSE, tLunatic, this, NULL, TO_CHAR);
     return true;

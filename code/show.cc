@@ -36,15 +36,16 @@ void TNote::showMe(TBeing *ch) const
   if (action_description) {
     sb += HEADER_TXT_NOTE;
     sb += action_description;
-    if (ch->desc && !ch->desc->m_bIsClient) {
-      if (ch->desc)
+
+    if (ch->desc)
+      if (!ch->desc->m_bIsClient) {
         ch->desc->page_string(sb);
-    } else {
-      processStringForClient(sb);
-      ch->desc->clientf(fmt("%d") % CLIENT_NOTE);
-      ch->sendTo(fmt("%s") % sb);  // tmpbuf may have "%" in it, do it this way
-      ch->desc->clientf(fmt("%d") % CLIENT_NOTE_END);
-    }
+      } else {
+        processStringForClient(sb);
+        ch->desc->clientf(fmt("%d") % CLIENT_NOTE);
+        ch->sendTo(fmt("%s") % sb);  // tmpbuf may have "%" in it, do it this way
+        ch->desc->clientf(fmt("%d") % CLIENT_NOTE_END);
+      }
   } else
     ch->sendTo("It's blank.\n\r");
   return;
