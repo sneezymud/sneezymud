@@ -413,16 +413,19 @@ int TShopOwned::setAccess(sstring arg)
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
     return FALSE;
   }
-  
-  arg = one_argument(arg, buf);
-  arg = one_argument(arg, buf2);
+
+  argument_parser(arg, buf, buf2);
 
   if(!buf2.empty()){ // set value
-    db.query("delete from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf.c_str());
-    
-    if(convertTo<int>(buf2) != 0)
-      db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf.c_str(), convertTo<int>(buf2));
-    
+    if(buf=="password"){
+      db.query("update shopowned set password='%s' where shop_nr=%i", buf2.c_str(), shop_nr);
+      keeper->doTell(ch->getName(), "Ok, I changed the access password.");
+    } else {
+      db.query("delete from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf.c_str());
+      
+      if(convertTo<int>(buf2) != 0)
+	db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf.c_str(), convertTo<int>(buf2));
+    }
   } else {
     if(!buf.empty()){
       db.query("select name, access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf.c_str());
