@@ -168,6 +168,8 @@ int THandgonne::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirType
     sprintf(buf, "$n points $p %swards, and shoots $N out of it.",
 	    dirs[dir]);
     act(buf, FALSE, ch, this, bullet, TO_ROOM);
+
+    ch->dropSmoke(::number(1,5));
     
     // put the bullet in the room and then "throw" it
     *ch->roomp += *bullet;    
