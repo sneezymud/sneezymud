@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 SVNROOT="file:///mud/source/trunk/code"
 cd $HOME
