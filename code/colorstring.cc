@@ -12,9 +12,12 @@
 
 sstring stripColorCodes(const sstring &s)
 {
-  sstring buf;
+  sstring buf = "";
+  unsigned int len;
+
+  len = s.length();
   
-  for(unsigned int i=0;i<s.length();++i){
+  for(unsigned int i=0;i<len;++i){
     if(s[i] == '<') {
       i+=2;
       continue;

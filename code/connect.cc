@@ -5110,7 +5110,7 @@ void processAllInput()
 
     // this is where PC wait gets handled
     if (!d->getHostResolved()) {
-      d->output.putInQ("Waiting for DNS resolution...");
+      d->output.putInQ("\n\rWaiting for DNS resolution...");
       continue;
     }
     if ((--(d->wait) <= 0) && (&d->input)->takeFromQ(comm, sizeof(comm))){

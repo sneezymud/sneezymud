@@ -828,7 +828,7 @@ int TMonster::aiWimpCheck(TBeing *vict)
 {
   switch (::number(1,5)) {
     case 1:
-      doLook(fname(vict->name).c_str(), CMD_LOOK);
+      doLook(fname(vict->name), CMD_LOOK);
       break;
     case 2:
       act("$n glances at you.", FALSE, this, 0, vict, TO_VICT);
@@ -842,7 +842,7 @@ int TMonster::aiWimpCheck(TBeing *vict)
         doSay("Hmm...");
       break;
     case 4:
-      doLook(fname(vict->name).c_str(), CMD_LOOK);
+      doLook(fname(vict->name), CMD_LOOK);
       doAction("",CMD_PONDER);
       break;
     case 5:

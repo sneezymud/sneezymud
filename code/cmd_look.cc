@@ -52,11 +52,11 @@ void TThing::lookAtObj(TBeing *ch, const char *, showModeT x) const
   ch->describeObject(this);
 }
 
-void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
+void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 {
   char *tmp;
   const char *tmp_desc;
-  char arg1[MAX_INPUT_LENGTH], arg2[MAX_INPUT_LENGTH];
+  sstring arg1, arg2;
   int keyword_no, res, j, found, totalFound = 0, iNum = 0;
   unsigned int bits = 0;
   TThing *t = NULL, *t2 = NULL;
@@ -84,25 +84,24 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
     "\n"
   };
 
-  printf("[%s]\n", argument);
-  //sendrpf(COLOR_BASIC, roomp, "[%s]\n\r", argument);
+  // sendrpf(COLOR_NONE, roomp, "argument=[%s]\n\r", argument.c_str());
   if (!desc || !roomp)
     return;
 
   if (gGin.check(this)) {
-    if (gGin.look(this, argument))
+    if (gGin.look(this, argument.c_str()))
       return;
   }
   if (checkHearts()) {
-    if (gHearts.look(this, argument))
+    if (gHearts.look(this, argument.c_str()))
       return;
   }
   if (checkCrazyEights()) {
-    if (gEights.look(this, argument))
+    if (gEights.look(this, argument.c_str()))
       return;
   }
   if (checkDrawPoker()) {
-    if (gDrawPoker.look(this, argument))
+    if (gDrawPoker.look(this, argument.c_str()))
       return;
   }
   if (getPosition() < POSITION_SLEEPING)
@@ -126,25 +125,28 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
     }
   } else {
     // we use only_arg so we pick up "at" from "look at the window"
-    strcpy(arg1, argument);
-
     // then we start using one_argument so we will munch "the" in above example
-    if (!strncmp(arg1, "at", 2) && isspace(arg1[2])) {
-      strcpy(arg2, argument + 3);
+    if (argument.find("at ") != sstring::npos) {
+      arg2 = argument.substr(3);
       keyword_no = 7;
-    } else if (!strncmp(arg1, "in", 2) && isspace(arg1[2])) {
-      strcpy(arg2, argument + 3);
+    } else if (argument.find("in ") != sstring::npos) {
+      arg2 = argument.substr(3);
       keyword_no = 6;
-    } else if (!strncmp(arg1, "on", 2) && isspace(arg1[2])) {
-      strcpy(arg2, argument + 3);
+    } else if (argument.find("on ") != sstring::npos) {
+      arg2 = argument.substr(3);
       keyword_no = 6;
-    } else
-      keyword_no = search_block(arg1, keywords, FALSE);
-
-    if ((keyword_no == -1) && *arg1) {
-      keyword_no = 7;
-      strcpy(arg2, argument);
+    } else {
+      // sendrpf(COLOR_NONE, roomp, "argument=[%s]\n\r", argument.c_str());
+      keyword_no = search_block(stripColorCodes(argument), keywords, FALSE);
     }
+
+    // sendrpf(COLOR_NONE, roomp, "keyword_no=[%d]\n\r", keyword_no);
+    if ((keyword_no == -1) && (argument.empty())) {
+      keyword_no = 8;
+      // sendrpf(COLOR_NONE, roomp, "keyword_no=[%d]\n\r", keyword_no);
+      arg2 = stripColorCodes(argument);
+    }
+    // sendrpf(COLOR_NONE, roomp, "arg2=[%s]\n\r", arg2.c_str());
     found = FALSE;
     o = NULL;
     tmp_char = NULL;
@@ -204,8 +206,6 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
               else if ((exitp->condition & EX_SLOPED_DOWN))
                 sendTo("The way seems sloped down in that direction.\n\r");
 
-	    //            if (isAffected(AFF_SCRYING) || isImmortal()) {
-	    // let everyone "spy" into other rooms
 	    if(1){
               if (!(rp = real_roomp(exitp->to_room)))
                 sendTo("You see swirling chaos.\n\r");
@@ -224,7 +224,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
         }
         break;
       case 6:
-        if (*arg2 || specific) {
+        if (!(arg2.empty()) || specific) {
           if (specific) {
             if (!dynamic_cast<TObj *> (specific)) {
               sendTo("Look in what?!\n\r");
@@ -248,8 +248,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
           }
 
           // handle the look in all.corpse special case
-          if (is_abbrev(arg2, "all.corpse") &&
-              strlen(arg2) > 6) {
+          if (is_abbrev(arg2, "all.corpse") && arg2.length() > 6) {
             TThing *t;
             for (t = roomp->getStuff(); t; t = t->nextThing) {
               TBaseCorpse * tbc = dynamic_cast<TBaseCorpse *>(t);
@@ -261,7 +260,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
             return;
           }
 
-          bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_ROOM | FIND_OBJ_EQUIP, this, &tmp_char, &o);
+          bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_ROOM | FIND_OBJ_EQUIP, this, &tmp_char, &o);
           if (bits) {
             if ((bits == FIND_OBJ_ROOM) && riding && o->parent) {
               // we want to allow them to look at item's on a table, but not
@@ -279,20 +278,19 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
 
         break;
       case 7:{
-          if (*arg2 || specific) {
+          if (!(arg2.empty()) || specific) {
             if (cmd == CMD_READ) {
 #if 1 
-              const char *tempArg = NULL;
-              char tempArg2[256];
-              tempArg = arg2;
-              tempArg = one_argument(tempArg, tempArg2);
+              //const char *tempArg = NULL;
+              sstring tempArg, tempArg2;
+              tempArg = one_argument(arg2, tempArg2);
               if (is_abbrev(tempArg2, "chapter") ||
 		  is_abbrev(tempArg2, "section")) {
-                char tempArg3[256];
-                if (tempArg)
+                sstring tempArg3;
+                if (!(tempArg.empty()))
                   tempArg = one_argument(tempArg, tempArg3);
-                if (*tempArg || !convertTo<int>(tempArg3)) {
-                   bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tmp_char, &o2);
+                if (!(tempArg.empty()) || !convertTo<int>(tempArg3)) {
+                   bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tmp_char, &o2);
                 } else if (convertTo<int>(tempArg3)) {
                   TObj * tempObj = NULL;
                   if ((tempObj = dynamic_cast<TBook *> (heldInPrimHand()))) {
@@ -317,20 +315,20 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                     }
                   }
                   if (!bits)
-                    bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_EQUIP, this , &tmp_char, &o2);
+                    bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this , &tmp_char, &o2);
                 } else {
-                  bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_EQUIP, this , &tmp_char, &o2);
+                  bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this , &tmp_char, &o2);
                 }
               } else {
-                bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_EQUIP,
+                bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP,
                         this, &tmp_char, &o2);
               }
 #else
-              bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_EQUIP,
+              bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP,
                         this, &tmp_char, &o2);
 #endif
             } else {
-              bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_ROOM |
+              bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_ROOM |
                         FIND_OBJ_EQUIP | FIND_CHAR_ROOM, this, &tmp_char, &o2);
             }
             if (dynamic_cast<TBeing *> (specific)) {
@@ -356,8 +354,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                        bOther->isAffected(AFF_SCRYING)) &&
                       bOther->GetMaxLevel() >= GetMaxLevel() &&
                       bOther != this) {
-                    sprintf(arg1, "You detect $n looking at %s with spying eyes.",
-                            (bOther == tmpBeing ? "you" : tmpBeing->getName()));
+                    arg1 = fmt("You detect $n looking at %s with spying eyes.") % (bOther == tmpBeing ? "you" : tmpBeing->getName());
                     act(arg1, TRUE, this, 0, bOther, TO_VICT);
                     if (bOther == tmpBeing && !tmpBeing->isPc()
                          && !isname("[clone]", tmpBeing->name))
@@ -409,8 +406,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                        bOther->isAffected(AFF_SCRYING)) &&
                       bOther->GetMaxLevel() >= GetMaxLevel() &&
                       bOther != this) {
-                    sprintf(arg1, "You detect $n looking at %s with spying eyes.",
-                            (bOther == tmp_char ? "you" : tmp_char->getName()));
+                    arg1 = fmt("You detect $n looking at %s with spying eyes.") % (bOther == tmp_char ? "you" : tmp_char->getName());
                     act(arg1, TRUE, this, 0, bOther, TO_VICT);
                     if (bOther == tmp_char && !tmp_char->isPc() 
                           && !isname("[clone]", tmp_char->name))
@@ -420,7 +416,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
               return;
             }
             char tmpname[MAX_INPUT_LENGTH];
-            strcpy(tmpname, arg2);
+            strcpy(tmpname, arg2.c_str());
             tmp = tmpname;
             iNum = get_number(&tmp);
 

@@ -151,14 +151,18 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   int rc = 0;
   TBeing *ch;
   bool isPoly = FALSE;
-  sstring newarg;
-  sstring tStNewArg(""), buf, bufname;
+  sstring newarg = "";
+  sstring tStNewArg = "";
+  sstring buf, bufname;
   size_t tVar = 0;
  
+  // sendrpf(COLOR_NONE, roomp, "doCommand:argument=[%s]\n\r", argument.c_str());
+  newarg=stripColorCodes(argument);
+  // sendrpf(COLOR_NONE, roomp, "doCommand:newarg=[%s]\n\r", newarg.c_str());
   int i = 0;
-  tStNewArg += argument.word(i++);
+  tStNewArg += newarg.word(i++);
   while (true) {
-    sstring arg_word = argument.word(i++);
+    sstring arg_word = newarg.word(i++);
     if (arg_word.empty()) {
       break;
     }
@@ -166,6 +170,8 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
     tStNewArg += " ";
     tStNewArg += arg_word;
   }
+  tStNewArg = stripColorCodes(tStNewArg);
+  // sendrpf(COLOR_NONE, roomp, "doCommand:tStNewArg=[%s]\n\r", tStNewArg.c_str());
 
   // The pray code is extremely messed up so this is really
   // better put here until pray can get fixed.
@@ -470,7 +476,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 	addToLifeforce(1);
 	break;
       case CMD_LOOK:
-	doLook(newarg.c_str(), cmd);
+	doLook(newarg, cmd);
 	addToLifeforce(1);
 	break;
       case CMD_ADJUST:
@@ -1783,6 +1789,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_TASK_FIGHTING:
       case CMD_TASK_CONTINUE:
       case CMD_OBJ_OWNER_HIT:
+        sendTo(fmt("doCommand:incorrectCommand: [%d]\n\r") % cmd);
 	incorrectCommand();
 	return FALSE;
     }
@@ -1892,6 +1899,9 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn)
 
   cmdTypeT cmd = searchForCommandNum(arg1);
   if (cmd >= MAX_CMD_LIST) {
+    // sendrpf(COLOR_NONE, roomp, "parseCommand:incorrectCommand=[%s]\n\r", arg1.c_str());
+    arg1=stripColorCodes(arg1);
+    // sendrpf(COLOR_NONE, roomp, "parseCommand:incorrectCommand=[%s]\n\r", arg1.c_str());
     incorrectCommand();
     return FALSE;
   }
@@ -2048,7 +2058,7 @@ sstring one_argument(sstring argument, sstring & first_arg)
 {
   size_t bgin, look_at;
   sstring a2;
-  sstring whitespace = " \n\r";
+  sstring whitespace = " \n\r\t";
   bgin = 0;
 
   do {
@@ -2097,7 +2107,7 @@ bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple,
 {
   int spaces1 = 0;
   int spaces2 = 0;
-  const sstring whitespace = " \n\r";
+  const sstring whitespace = " \n\r\t";
 
   // This functionality was added 01/03/98 by me - Russ
   if (multiple) {

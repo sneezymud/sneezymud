@@ -1990,7 +1990,7 @@ class TBeing : public TThing {
     sstring garble(const sstring &, int) const;
     sstring PG13filter(const sstring &)const;
     sstring blahblah(const sstring &) const;
-    void doLook(const char *, cmdTypeT, TThing *specific = NULL);
+    void doLook(const sstring &, cmdTypeT, TThing *specific = NULL);
     void doShout(const char *);
     int doWhisper(const sstring &);
     int doTell(const sstring &, const sstring &, bool visible = TRUE);

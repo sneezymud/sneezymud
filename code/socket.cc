@@ -458,7 +458,6 @@ struct timeval TMainSocket::handleTimeAndSockets()
   ////////////////////////////////////////////
 
   ////////////////////////////////////////////
-  // close any connections with an exceptional condition pending 
   // process async dns queries
   ////////////////////////////////////////////
   fd_set read_fds, write_fds;
@@ -476,6 +475,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
   ////////////////////////////////////////////
 
   ////////////////////////////////////////////
+  // close any connections with an exceptional condition pending 
   ////////////////////////////////////////////
   for (point = descriptor_list; point; point = next_to_process) {
     next_to_process = point->next;
@@ -1309,6 +1309,7 @@ void sig_alrm(int){return;}
 void gethostbyaddr_cb(void *arg, int status, struct hostent *host_ent)
 {
   Descriptor *d;
+  Descriptor *d2;
   sstring ip_string, pend_ip_string;
 
   ip_string = (char *)arg;
@@ -1320,9 +1321,28 @@ void gethostbyaddr_cb(void *arg, int status, struct hostent *host_ent)
     vlogf(LOG_MISC, fmt("gethostbyaddr_cb: %s: %s") % ip_string % ares_strerror(status, &ares_errmem));
     ares_free_errmem(ares_errmem);
 
-    for (d = descriptor_list; d; d = d->next) {
+    for (d = descriptor_list; d; d = d2) {
+      d2 = d->next;
       if (!d->getHostResolved() && d->host == pend_ip_string) {
         d->setHostResolved(true, ip_string);
+        if (numberhosts) {
+          int a;
+          for (a = 0; a <= numberhosts - 1; a++) {
+            if (isdigit(hostlist[a][0])) {
+              if (d->host.find(hostlist[a], 0) != sstring::npos) {
+                d->socket->writeToSocket("Sorry, your site is banned.\n\r");
+                d->socket->writeToSocket("Questions regarding this may be addressed to: ");
+                d->socket->writeToSocket(MUDADMIN_EMAIL);
+                d->socket->writeToSocket(".\n\r");
+                if (!lockmess.empty())
+                  d->socket->writeToSocket(lockmess.c_str());
+
+                // descriptor deletion handles socket closing
+                delete d;
+              }
+            }
+          }
+        }
       }
     }
   } else {
@@ -1336,9 +1356,26 @@ void gethostbyaddr_cb(void *arg, int status, struct hostent *host_ent)
 
     vlogf(LOG_MISC, fmt("gethostbyaddr_cb: %s resolved to %-32s") % ip_string % resolved_name);
 
-    for (d = descriptor_list; d; d = d->next) {
+    for (d = descriptor_list; d; d = d2) {
+      d2 = d->next;
       if (!d->getHostResolved() && d->host == pend_ip_string) {
         d->setHostResolved(true, resolved_name);
+        if (numberhosts) {
+          int a;
+          for (a = 0; a <= numberhosts - 1; a++) {
+            if (d->host.find(sstring(hostlist[a]).lower(), 0) != sstring::npos) {
+              d->socket->writeToSocket("Sorry, your site is banned.\n\r");
+              d->socket->writeToSocket("Questions regarding this may be addressed to: ");
+              d->socket->writeToSocket(MUDADMIN_EMAIL);
+              d->socket->writeToSocket(".\n\r");
+              if (!lockmess.empty())
+                d->socket->writeToSocket(lockmess.c_str());
+
+              // descriptor deletion handles socket closing
+              delete d;
+            }
+          }
+        }
       }
     }
   }
@@ -1348,7 +1385,6 @@ void gethostbyaddr_cb(void *arg, int status, struct hostent *host_ent)
 
 int TMainSocket::newDescriptor(int t_sock)
 {
-  int a;
 #if defined(LINUX)
   unsigned int size;
 #else
@@ -1356,8 +1392,6 @@ int TMainSocket::newDescriptor(int t_sock)
 #endif
   Descriptor *newd;
   struct sockaddr_in saiSock;
-  //struct hostent *he;
-  sstring temphostaddr;
   TSocket *s = NULL;
   char *ip_cstr;
 
@@ -1385,67 +1419,13 @@ int TMainSocket::newDescriptor(int t_sock)
     // I _think_ the problem is caused by a site that has changed its DNS
     // entry, but the mud's site has not updated the new list yet.
     signal(SIGALRM, sig_alrm);
-    /*
-    time_t init_time = time(0);
-    he = gethostbyaddr((const char *) &saiSock.sin_addr, sizeof(struct in_addr), AF_INET);
-    time_t fin_time = time(0);
-
-    if (he) {
-      if (he->h_name) 
-        newd->host = he->h_name;
-      else 
-        newd->host = IP_String(saiSock.sin_addr);
-    } else 
-    */
     
     newd->setHostResolved(false, IP_String(saiSock.sin_addr) + "...");
 
     ip_cstr = mud_str_dup(IP_String(saiSock.sin_addr));
     memcpy(&ares_addr, &saiSock.sin_addr, sizeof(struct in_addr));
-    vlogf(LOG_MISC, "Calling ares_gethostbyaddr");
-    time_t init_time = time(0);
+
     ares_gethostbyaddr(channel, &ares_addr, sizeof(ares_addr), AF_INET, gethostbyaddr_cb, ip_cstr);
-    time_t fin_time = time(0);
-    vlogf(LOG_MISC, "Called ares_gethostbyaddr");
-
-    temphostaddr = IP_String(saiSock.sin_addr);
-
-    if (fin_time - init_time >= 10)
-      vlogf(LOG_BUG, fmt("DEBUG: gethostbyaddr (1) took %d secs to complete for host %s") % (fin_time-init_time) % temphostaddr);
-
-    if (numberhosts) {
-      for (a = 0; a <= numberhosts - 1; a++) {
-	if (isdigit(hostlist[a][0])) {
-          // if (strstr(temphostaddr, hostlist[a])) {
-          if (temphostaddr.find(hostlist[a], 0) != sstring::npos) {
-	    s->writeToSocket("Sorry, your site is banned.\n\r");
-	    s->writeToSocket("Questions regarding this may be addressed to: ");
-            s->writeToSocket(MUDADMIN_EMAIL);
-            s->writeToSocket(".\n\r");
-            if (!lockmess.empty())
-              s->writeToSocket(lockmess.c_str());
-
-            // descriptor deletion handles socket closing
-            delete newd;
-	    return 0;
-	  }
-	} else {
-          if (newd->host.lower().find(sstring(hostlist[a]).lower(), 0) != sstring::npos) {
-          // if (strcasestr(newd->host, hostlist[a])) {
-	    s->writeToSocket("Sorry, your site is banned.\n\r");
-	    s->writeToSocket("Questions regarding this may be addressed to: ");
-            s->writeToSocket(MUDADMIN_EMAIL);
-            s->writeToSocket(".\n\r");
-            if (!lockmess.empty())
-              s->writeToSocket(lockmess.c_str());
-
-            // descriptor deletion handles socket closing
-            delete newd;
-	    return 0;
-	  }
-	}
-      }
-    }
   }
 
   if (newd->inputProcessing() < 0) {

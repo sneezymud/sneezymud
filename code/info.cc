@@ -900,10 +900,11 @@ const sstring TBeing::addColorRoom(TRoom * rp, int title) const
 
 void TBeing::doRead(const char *argument)
 {
-  char buf[100];
+  sstring buf;
 
   // This is just for now - To be changed later! 
-  sprintf(buf, "at %s", argument);
+  buf = "at ";
+  buf += argument;
   doLook(buf, CMD_READ);
 }
 
@@ -925,7 +926,8 @@ void TBaseCup::examineObj(TBeing *ch) const
 
 void TBeing::doExamine(const char *argument, TThing * specific)
 {
-  char caName[100], buf[100];
+  sstring buf;
+  char caName[100];
   int bits;
   TBeing *tmp = NULL;
   TObj *o = NULL;
@@ -944,7 +946,8 @@ void TBeing::doExamine(const char *argument, TThing * specific)
   bits = generic_find(caName, FIND_ROOM_EXTRA | FIND_OBJ_INV | FIND_OBJ_ROOM | FIND_OBJ_EQUIP | FIND_CHAR_ROOM, this, &tmp, &o);
 
   if (bits) {
-    sprintf(buf, "at %s", argument);
+    buf = "at ";
+    buf += argument;
     doLook(buf, CMD_LOOK);
   }
   if (o) 
@@ -4944,13 +4947,13 @@ void TBeing::sendRoomName(TRoom *rp) const
 {
   unsigned int rFlags = rp->getRoomFlags();
   Descriptor *d = desc;
-  char clientBuf[20];
+  sstring clientBuf = "";
   sstring rFlagStr = "";
 
   if (!d)
     return;
 
-  sprintf(clientBuf, "\200%d|", CLIENT_ROOMNAME);
+  clientBuf = fmt("\200%d|") % CLIENT_ROOMNAME;
 
   rFlagStr = sstring((rFlags & ROOM_PEACEFUL) ? " [PEACEFUL]" : "") +
              sstring((rFlags & ROOM_NO_HEAL) ? " [NOHEAL]" : "") +
