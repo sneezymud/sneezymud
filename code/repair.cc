@@ -1,30 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: repair.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.5  1999/10/09 04:10:16  batopr
-// Removed 0.6 factor from repair_price, handled by gold_mod
-//
-// Revision 1.4  1999/09/30 17:36:49  batopr
-// added statistics.h
-//
-// Revision 1.3  1999/09/30 17:30:46  batopr
-// Made repair price take gold_modifier[GOLD_REPAIR] into account
-//
-// Revision 1.2  1999/09/30 17:27:24  batopr
-// *** empty log message ***
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include <unistd.h>
 #include <sys/stat.h>
 
@@ -63,7 +36,7 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
   int gsp = getShopPrice(&discount);
 
   // ideally, this price will be < gsp, but gold_mod should handle that for us
-  int price = (int) (gsp * gold_modifier[GOLD_REPAIR]);
+  int price = (int) (gsp * gold_modifier[GOLD_REPAIR].getVal());
 
   price *= maxFix(repair, dep_done) - getStructPoints();
   price /= getMaxStructPoints();
@@ -85,17 +58,28 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
 static int repair_time(const TObj *o)
 {
   int structs;
-  int iTime;
+  double percDam;
+  double iTime;
+  int MINS_AT_60TH = 40; // maximum (full repair) for 60th level eq
 
   if (!(structs = (o->getMaxStructPoints() - o->getStructPoints())))
     return (0);
-
+  percDam = ((double)(structs*75) / (double)(o->getMaxStructPoints())) + 25.0;
+  double levmod = (double)(o->objLevel() * o->objLevel());
 #if 1
+  iTime = levmod * (percDam);
+  iTime /= 100.0*60.0; // correct for the % thing
+  iTime *= (double)MINS_AT_60TH;
+  // max repair time * % damage to object
+#endif
+
+  // i took the following out, it kind of sucks. 
+#if 0
   // price is based on struct (armor/weapons) so no real need to
   // take both into account
   // let's just make time based on level of the gear
   iTime = (int) (o->objLevel() * 1);
-#else
+  // #else
   // Let's make the time be proportional to cost, and total damage - Russ 
   iTime = ((structs * 800) + (2 * o->obj_flags.cost));
 
@@ -107,12 +91,12 @@ static int repair_time(const TObj *o)
     iTime *= max(11, 10 + o->obj_flags.cost/10000);
     iTime /= 10;
   }
-
+ 
   iTime /= 500;  // Kludge since it is taking too long
 #endif
-  iTime = max(1,iTime);
+  iTime = max(1.0,iTime);
 
-  return (iTime);
+  return (int)(iTime);
 }
 
 static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTime, int)
@@ -124,11 +108,11 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
   unsigned char version;
 
   if (!repair || !buyer) {
-    vlogf(10, "save_repairman_file() called with NULL ch!");
+    vlogf(LOG_BUG, "save_repairman_file() called with NULL ch!");
     return;
   }
   if (!buyer->isPc()) {
-    vlogf(10, "Non-PC got into save_repairman_file() somehow!!! BUG BRUTIUS!!", buyer->getName());
+    vlogf(LOG_BUG, "Non-PC got into save_repairman_file() somehow!!! BUG BRUTIUS!!", buyer->getName());
     return;
   }
   then = (long) iTime;
@@ -138,29 +122,29 @@ static void save_repairman_file(TBeing *repair, TBeing *buyer, TObj *o, int iTim
   if (!(fp = fopen(buf, "w"))) {
     sprintf(buf2, "mobdata/repairs/%d", repair->mobVnum());
     if (mkdir(buf2, 0770)) {
-      vlogf(10, "Unable to create a repair directory for %s.", repair->getName());
+      vlogf(LOG_BUG, "Unable to create a repair directory for %s.", repair->getName());
       return;
     } else
-      vlogf(10, "Created a repair directory for %s", repair->getName());
+      vlogf(LOG_BUG, "Created a repair directory for %s", repair->getName());
 
     if (!(fp = fopen(buf, "w"))) {
-      vlogf(10, "Major problems trying to save %s repair file.", repair->getName());
+      vlogf(LOG_BUG, "Major problems trying to save %s repair file.", repair->getName());
       return;
     }
   }
   if (fwrite(&then, sizeof(then), 1, fp) != 1) {
-    vlogf(10, "Error writing time for repairman_file!");
+    vlogf(LOG_BUG, "Error writing time for repairman_file!");
     fclose(fp);
     return;
   }
   if (fwrite(&cost, sizeof(cost), 1, fp) != 1) {
-    vlogf(10, "Error writing cost for repairman_file!");
+    vlogf(LOG_BUG, "Error writing cost for repairman_file!");
     fclose(fp);
     return;
   }
   version = CURRENT_RENT_VERSION;
   if (fwrite(&version, sizeof(version), 1, fp) != 1) {
-    vlogf(10, "Error writing version for repairman_file!");
+    vlogf(LOG_BUG, "Error writing version for repairman_file!");
     fclose(fp);
     return;
   }
@@ -182,7 +166,7 @@ static int check_time_and_gold(TBeing *repair, TBeing *buyer, int ticket, TNote 
   unsigned char version;
 
   if (!repair || !buyer) {
-    vlogf(10, "check_time called with NULL character! BUG BRUTIUS!");
+    vlogf(LOG_BUG, "check_time called with NULL character! BUG BRUTIUS!");
     return FALSE;
   }
   sprintf(buf, "mobdata/repairs/%d/%d", repair->mobVnum(), ticket);
@@ -192,19 +176,19 @@ static int check_time_and_gold(TBeing *repair, TBeing *buyer, int ticket, TNote 
     return FALSE;
   }
   if (fread(&tmp, sizeof(tmp), 1, fp) != 1) {
-    vlogf(10, "No timer on item number %d for repairman %s", ticket, repair->getName());
+    vlogf(LOG_BUG, "No timer on item number %d for repairman %s", ticket, repair->getName());
     repair->doSay("Something is majorly wrong(Timer). Talk to a god");
     fclose(fp);
     return FALSE;
   }
   if (fread(&tmp_cost, sizeof(tmp_cost), 1, fp) != 1) {
-    vlogf(10, "No cost on item number %d for repairman %s", ticket, repair->getName());
+    vlogf(LOG_BUG, "No cost on item number %d for repairman %s", ticket, repair->getName());
     repair->doSay("Something is majorly wrong(Cost). Talk to a god");
     fclose(fp);
     return FALSE;
   }
   if (fread(&version, sizeof(version), 1, fp) != 1) {
-    vlogf(10, "No version on item number %d for repairman %s", ticket, repair->getName());
+    vlogf(LOG_BUG, "No version on item number %d for repairman %s", ticket, repair->getName());
     repair->doSay("Something is majorly wrong(version). Talk to a god");
     fclose(fp);
     return FALSE;
@@ -248,13 +232,15 @@ static int check_time_and_gold(TBeing *repair, TBeing *buyer, int ticket, TNote 
       // acknowledge the depreciation after all work is done
       // this way the price doesn't change during the process
       // and also makes the first repair "depreciation free"
-      if (::number(0,9) < 5)
-        fixed_obj->addToDepreciation(1);
+
+      fixed_obj->addToDepreciation(1);
+      if (fixed_obj->isObjStat(ITEM_CHARRED))
+	fixed_obj->addToDepreciation(2); // we want charred objects to deteriorate much faster
 
       return TRUE;
     } else {
       repair->doSay("Whoa, serious problems, tell a god.");
-      vlogf(8, "Bogus load of repair item problem!!!!!!");
+      vlogf(LOG_BUG, "Bogus load of repair item problem!!!!!!");
       fclose(fp);
       return TRUE;
     }
@@ -323,12 +309,18 @@ static bool will_not_repair(TBeing *ch, TMonster *repair, TObj *obj, silentTypeT
     }
     return TRUE;
   }
-  if (obj->isObjStat(ITEM_BURNING) || obj->isObjStat(ITEM_CHARRED)){
+  if (obj->isObjStat(ITEM_BURNING)) {
     if (!silent) {
-      sprintf(buf, "%s I can't repair fire damage.", fname(ch->name).c_str());
+      sprintf(buf, "%s I can't repair burning items.", fname(ch->name).c_str());
       repair->doTell(buf);
     }
     return TRUE;
+  }
+  if (obj->isObjStat(ITEM_CHARRED)) {
+    if (!silent) {
+      sprintf(buf, "%s I can repair this, but it is very badly fire-damaged.", fname(ch->name).c_str());
+      repair->doTell(buf);
+    }
   }
   if (obj_index[obj->getItemIndex()].number > 
       obj_index[obj->getItemIndex()].max_exist) {
@@ -498,10 +490,11 @@ static TObj *make_ticket(TMonster *repair, TBeing *buyer, TObj *repaired, time_t
 {
   TObj *tmp_obj;
   if (!(tmp_obj = read_object(GENERIC_NOTE, VIRTUAL))) {
-    vlogf(10, "Couldn't read in note for make_ticket. BUG BRUTIUS!!!");
+    vlogf(LOG_BUG, "Couldn't read in note for make_ticket. BUG BRUTIUS!!!");
     return NULL;
   }
   tmp_obj->noteMe(repair, buyer, repaired, when_ready, tick_num);
+  tmp_obj->max_exist = repaired->max_exist;
   return tmp_obj;
 }
 
@@ -546,6 +539,9 @@ void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
   ticket = make_ticket(repair, buyer, this, when_ready, repair_number);
   *buyer += *ticket;
   save_repairman_file(repair, buyer, this, when_ready, repair_number);
+  vlogf(LOG_DASH, "%s repairing %s - str %d/%d, lev %d.  Repair time: %s.", 
+  fname(buyer->name).c_str(), getName(), (int)getStructPoints(), (int)getMaxStructPoints(),
+  (int)(this->objLevel()*1), secsToString(when_ready-ct).c_str());
 
   buyer->logItem(this, CMD_REPAIR);
 
@@ -778,11 +774,11 @@ void count_repair_items(const char *name)
 
   sprintf(buf, "mobdata/repairs/%d/%s",global_repair, name);
   if (!(fp = fopen(buf, "r"))) {
-    vlogf(10, "Had a bad time opening repair file (%s) for initialization.", name);
+    vlogf(LOG_BUG, "Had a bad time opening repair file (%s) for initialization.", name);
     return;
   }
   if (fread(&tmp, sizeof(tmp), 1, fp) != 1) {
-    vlogf(10, "Couldn't find a timer for repaiman file %s", name);
+    vlogf(LOG_BUG, "Couldn't find a timer for repaiman file %s", name);
     fclose(fp);
     return;
   }
@@ -803,40 +799,40 @@ void processRepairFile(const char *name)
   FILE *fp;
 
   if (!(fp = fopen(name, "r"))) {
-    vlogf(10, "Error reading repairman_file %s for limited item count.  Point 1!", name);
+    vlogf(LOG_BUG, "Error reading repairman_file %s for limited item count.  Point 1!", name);
     return;
   }
   if (fread(&then, sizeof(then), 1, fp) != 1) {
-    vlogf(10, "Error reading repairman_file %s for limited item count.  Point 2!", name);
+    vlogf(LOG_BUG, "Error reading repairman_file %s for limited item count.  Point 2!", name);
     fclose(fp);
     return;
   }
 #if NUKE_REPAIR_ITEMS
   if ((time(0) - then) > 15 * SECS_PER_REAL_DAY) {
     fclose(fp);
-    vlogf(9, "REPAIR: Item %s was in repair %d days", name,
+    vlogf(LOG_MISC, "REPAIR: Item %s was in repair %d days", name,
          (time(0) - then)/SECS_PER_REAL_DAY);
     unlink(name);
     return;
   }
 #endif
   if (fread(&cost, sizeof(cost), 1, fp) != 1) {
-    vlogf(10, "Error reading repairman_file %s for limited item count.  Point 3!", name);
+    vlogf(LOG_BUG, "Error reading repairman_file %s for limited item count.  Point 3!", name);
     fclose(fp);
     return;
   }
   if (fread(&version, sizeof(version), 1, fp) != 1) {
-    vlogf(10, "Error reading repairman_file %s for limited item count.  Point 3b!", name);
+    vlogf(LOG_BUG, "Error reading repairman_file %s for limited item count.  Point 3b!", name);
     fclose(fp);
     return;
   }
   if (fread(&item, sizeof(item), 1, fp) != 1) {
-    vlogf(10, "Error reading repairman_file %s for limited item count.  Point 4!", name);
+    vlogf(LOG_BUG, "Error reading repairman_file %s for limited item count.  Point 4!", name);
     fclose(fp);
     return;
   }
   if ((item.cost > LIM_ITEM_COST_MIN) && (item.item_number >= 0)) {
-    vlogf(10, "     [%d] - %s", item.item_number, name);
+    vlogf(LOG_BUG, "     [%d] - %s", item.item_number, name);
     obj_index[real_object(item.item_number)].number++;
   }
   fclose(fp);

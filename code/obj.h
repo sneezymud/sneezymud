@@ -2,17 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: obj.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/10/04 02:59:44  batopr
-// *** empty log message ***
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -37,7 +26,7 @@ const float SIP_WEIGHT         = 0.065;
 const float SIP_VOLUME         = 1.8046875;
 
 const int MAX_SWING_AFFECT  = 5;
-const int MAX_OBJ_AFFECT    = 5;     
+//const int MAX_OBJ_AFFECT    = 5;     
 const int OBJ_NOTIMER    = -1;
 const int MAX_TOUNGE  = 3;
 const int MAX_AFFECT  = 25;
@@ -152,6 +141,8 @@ enum toolTypeT {
      TOOL_SKIN_KNIFE,
      TOOL_HOLYWATER,
      TOOL_FLINTSTEEL,
+     TOOL_TOTEM,
+     TOOL_FISHINGBAIT,
      MAX_TOOL_TYPE // move and change
 };
 const toolTypeT MIN_TOOL_TYPE = TOOL_WHETSTONE;
@@ -216,6 +207,8 @@ enum liqTypeT {
      LIQ_HOLYWATER,
      LIQ_PORT,
      LIQ_MUSHROOM_ALE,
+     LIQ_VOMIT,
+     LIQ_COLA,
      MAX_DRINK_TYPES     // move and change
 };
 extern liqTypeT & operator++(liqTypeT &, int);
@@ -238,18 +231,22 @@ const unsigned int CORPSE_NO_DISSECT    = (1<<1);
 const unsigned int CORPSE_NO_SKIN       = (1<<2);
 const unsigned int CORPSE_HALF_SKIN     = (1<<3);
 const unsigned int CORPSE_PC_SKINNING   = (1<<4);
+const unsigned int CORPSE_NO_SACRIFICE  = (1<<5);
+const unsigned int CORPSE_SACRIFICE     = (1<<6);
 
-const int MAX_CORPSE_FLAGS     = 3;  // move and change
+const int MAX_CORPSE_FLAGS     = 7;  // move and change
 
 /* for containers  - value[1] */
 
-const unsigned int CONT_CLOSEABLE      = (1<<0);
-const unsigned int CONT_PICKPROOF      = (1<<1);
-const unsigned int CONT_CLOSED         = (1<<2);
-const unsigned int CONT_LOCKED         = (1<<3);
-const unsigned int CONT_TRAPPED        = (1<<4);
-const unsigned int CONT_NOOKNICHE      = (1<<5);
-const unsigned int CONT_SECRET         = (1<<6);
+const unsigned int CONT_CLOSEABLE      = (1 << 0);
+const unsigned int CONT_PICKPROOF      = (1 << 1);
+const unsigned int CONT_CLOSED         = (1 << 2);
+const unsigned int CONT_LOCKED         = (1 << 3);
+const unsigned int CONT_TRAPPED        = (1 << 4);
+const unsigned int CONT_SECRET         = (1 << 5); // Contianer cannot be seen(window)
+const unsigned int CONT_EMPTYTRAP      = (1 << 6); // Can not have a fake trap.
+const unsigned int CONT_GHOSTTRAP      = (1 << 7); // Thief *THOUGHT* they saw a trap.
+const unsigned int MAX_CONTAINER_FLAG = 8;  // move and change
 
 const unsigned int BOW_STRING_BROKE    = (1 << 0);
 const unsigned int BOW_CARVED          = (1 << 1);
@@ -261,6 +258,15 @@ const unsigned int ARROW_CARVED        = (1 << 1);
 const unsigned int ARROW_SCRAPED       = (1 << 2);
 const unsigned int ARROW_SMOOTHED      = (1 << 3);
 
+
+// NOTE:::
+// I cleared way for 4 new extra flags to be used. The last flag
+// I added (nolocate) in my opinion was done improperly however
+// it works so should remain unchanged. Please remove the last part
+// of the comment on the line you use for your extra flag because
+// I use them as a marker for quick search...Thank you
+// -Jesus 10-19-2000
+
 const unsigned int ITEM_GLOW            = (1<<0);     // 1
 const unsigned int ITEM_HUM             = (1<<1);     // 2
 const unsigned int ITEM_STRUNG          = (1<<2);     // 4
@@ -270,7 +276,7 @@ const unsigned int ITEM_INVISIBLE       = (1<<5);     // 32
 const unsigned int ITEM_MAGIC           = (1<<6);     // 64
 const unsigned int ITEM_NODROP          = (1<<7);     // 128
 const unsigned int ITEM_BLESS           = (1<<8);     // 256
-const unsigned int ITEM_UNUSED          = (1<<9);     // 512      
+const unsigned int ITEM_SPIKED          = (1<<9);     // 512 USE ME FIRST
 const unsigned int ITEM_HOVER           = (1<<10);    // 1024
 const unsigned int ITEM_RUSTY           = (1<<11);    // 2048
 const unsigned int ITEM_ANTI_CLERIC     = (1<<12);    // 4096
@@ -286,14 +292,15 @@ const unsigned int ITEM_NORENT          = (1<<21);    // 2097152
 const unsigned int ITEM_FLOAT           = (1<<22);    // 4194304
 const unsigned int ITEM_NOPURGE         = (1<<23);    // 8388608
 const unsigned int ITEM_NEWBIE          = (1<<24);    // 16777216
-const unsigned int ITEM_ONLY_MALE       = (1<<25);    // 33554432
-const unsigned int ITEM_ONLY_FEMALE     = (1<<26);    // 67108864
-const unsigned int ITEM_ONLY_NEUTER     = (1<<27);    // 134217728
+const unsigned int ITEM_NOT_USED1       = (1<<25);    // 33554432 USE THIS SPOT FOR EXTRA
+const unsigned int ITEM_NOT_USED2       = (1<<26);    // 67108864 USE THIS SPOT FOR EXTRA
+const unsigned int ITEM_NOT_USED3       = (1<<27);    // 134217728  USE THIS SPOT FOR EXTRA
 const unsigned int ITEM_ATTACHED        = (1<<28);    // 268435456 
 const unsigned int ITEM_BURNING         = (1<<29);    // 536870912
 const unsigned int ITEM_CHARRED         = (1<<30);    // 1073741824
+const long int ITEM_NOLOCATE            = (1<<31);    // returns negitive int
 
-const int MAX_OBJ_STAT        = 31;        // move and change
+const int MAX_OBJ_STAT        = 32;        // move and change
 
 extern long objCount;
 
@@ -346,7 +353,7 @@ class TObj : public TThing {
 
     virtual roomDirData *exitDir(dirTypeT door) const;
     virtual bool shouldntBeShown(wearSlotT) const;
-    virtual int putSomethingIntoContainer(TBeing *, TRealContainer *);
+    virtual int putSomethingIntoContainer(TBeing *, TOpenContainer *);
     virtual int getShopPrice(int *) const;
     virtual bool isSimilar(const TThing *) const;
     virtual bool isLevitating() const;
@@ -473,8 +480,8 @@ class TObj : public TThing {
     virtual int disarmMe(TBeing *);
     virtual void changeTrapValue2(TBeing *, const char *, editorEnterTypeT) {}
     virtual void changeTrapValue3(TBeing *, const char *, editorEnterTypeT) {}
-    virtual void makeTrapLand(TBeing *, trap_t, const char *) {}
-    virtual void makeTrapGrenade(TBeing *, trap_t, const char *) {}
+    virtual void makeTrapLand(TBeing *, doorTrapT, const char *) {}
+    virtual void makeTrapGrenade(TBeing *, doorTrapT, const char *) {}
     virtual void purgeMe(TBeing *);
     virtual int boardHandler(TBeing *, cmdTypeT, const char *);
     virtual void changeComponentValue4(TBeing *, const char *, editorEnterTypeT) {}
@@ -503,6 +510,8 @@ class TObj : public TThing {
     virtual string getNameForShow(bool = true, bool = true, const TBeing * = NULL) const;
     virtual int foodItemUsed(TBeing *ch, const char *arg);
     virtual void changeBaseWeaponValue1(TBeing *, const char *, editorEnterTypeT) {}
+    //virtual void changeBaseWeaponValue2(TBeing *, const char *, editorEnterTypeT) {}
+    //virtual void changeBaseWeaponValue3(TBeing *, const char *, editorEnterTypeT) {}
     virtual void objMenu(const TBeing *) const;
     virtual int rentCost() const;
     virtual int galvanizeMe(TBeing *, byte);
@@ -545,7 +554,7 @@ class TObj : public TThing {
     wearKeyT getWearKey() const;
     virtual int suggestedPrice() const { return 0; }
     void addGlowEffects();
-    void checkOwnersList(const TPerson *);
+    bool checkOwnersList(const TPerson *, bool = false);
     virtual double objLevel() const;
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
     virtual void sellMeMoney(TBeing *, TMonster *, int, int);
