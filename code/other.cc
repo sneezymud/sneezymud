@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: other.cc,v $
+// Revision 1.4  1999/09/24 02:03:56  batopr
+// Fixed array bounds problem on discArray
+//
 // Revision 1.3  1999/09/23 22:05:35  cosmo
 // Simple change of victim to target to avoid null pointer
 //
@@ -1140,11 +1143,11 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
   if (wiz && !(found == 1)) {
     sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s\n\r", cyan(), discArray[skNum]->name, norm(), how_good(getSkillValue(skNum)), how_good(getMaxSkillValue(skNum)));
      sendTo(COLOR_BASIC, buf);
-  } else if (found == 2 || (skill >= 0)) {
+  } else if (found == 2 || (skill > TYPE_UNDEFINED)) {
     //sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s\n\r", cyan(), discArray[skill]->name, norm(), how_good(getSkillValue(skill)), how_good(getMaxSkillValue(skill))); 
     //sendTo(COLOR_BASIC, buf);
     return;
-  } else if (found == 1) {
+  } else if (found == 1 && skill > TYPE_UNDEFINED) {
     sendTo("Skill %s: Unlearned. You can only use practice skill about skills that you have learned.\n\r", discArray[skill]->name);
     return;
   } else if (!wiz) {
