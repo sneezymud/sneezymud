@@ -2298,8 +2298,8 @@ void TBeing::doEquipment(const char *argument)
       if (tobj && tobj->getMaxStructPoints() != tobj->getStructPoints()) {
         if (!tobj->shouldntBeShown(j)) {
           sprintf(buf, "<%s>", describeEquipmentSlot(j).c_str());
-            sendTo("%s%-25s%s", cyan(), buf, norm());
-            if (canSee(tobj)) {
+	  sendTo("%s%-25s%s", cyan(), buf, norm());
+	  if (canSee(tobj)) {
             showTo(tobj, SHOW_MODE_SHORT_PLUS);
             found = TRUE;
           } else {

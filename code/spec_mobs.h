@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.18  2002/04/26 06:23:34  peel
+// implemented iron body disc
+//
 // Revision 5.17  2002/04/08 22:52:52  peel
 // added adventurer proc
 //
@@ -233,7 +236,8 @@ const int SPEC_PLANTER            =165;
 const int SPEC_BMARCHER           =166;
 const int SPEC_MONEY_TRAIN        =167;
 const int SPEC_ADVENTURER         =168;
-const int NUM_MOB_SPECIALS        =169;
+const int SPEC_TRAINER_IRON_BODY  =169;
+const int NUM_MOB_SPECIALS        =170;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

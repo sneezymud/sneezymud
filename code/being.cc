@@ -1221,6 +1221,53 @@ void TBeing::setMult(double mult)
   multAtt = mult;
 }
 
+// I took these numbers from banded mail (level 19)
+// this is a crummy way to do this, but the right way is too hard
+int getIronFleshArmor(wearSlotT slot){
+  switch(slot){
+    case WEAR_HEAD:
+      return -70;
+    case WEAR_NECK:
+      return -40;
+    case WEAR_BODY:
+      return -147;
+    case WEAR_BACK:
+      return -70;
+    case WEAR_ARM_R:
+    case WEAR_ARM_L:
+      return -39;
+    case WEAR_WRIST_R:
+    case WEAR_WRIST_L:
+      return -20;
+    case WEAR_HAND_R:
+    case WEAR_HAND_L:
+      return -29;
+    case WEAR_FINGER_R:
+    case WEAR_FINGER_L:
+      return -10;
+    case WEAR_WAISTE:
+      return -78;
+    case WEAR_EX_LEG_R:
+    case WEAR_EX_LEG_L:
+    case WEAR_LEGS_R:
+    case WEAR_LEGS_L:
+      return -49;
+    case WEAR_FOOT_R:
+    case WEAR_FOOT_L:
+    case WEAR_EX_FOOT_R:
+    case WEAR_EX_FOOT_L:
+      return -19;
+    case WEAR_NOWHERE:
+    case HOLD_RIGHT:
+    case HOLD_LEFT:
+    case MAX_WEAR:
+      return 0;
+  }
+
+  return 0;
+}
+
+
 sh_int TBeing::getArmor() const
 {
   sh_int armor=1000;
@@ -1238,6 +1285,12 @@ sh_int TBeing::getArmor() const
 	  armor+=to->affected[i].modifier;
       }
     }
+
+    // nekkid monk
+    if(discs && !equipment[wearIndex] && doesKnowSkill(SKILL_IRON_FLESH)){
+      armor+=(int)(getIronFleshArmor(wearIndex)*(getSkillValue(SKILL_IRON_FLESH)/100.0));
+    }
+    
   }
     
   // spell affects

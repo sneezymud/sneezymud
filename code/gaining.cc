@@ -1089,6 +1089,7 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_DEFENSE, "defense", "about Defense", DISC_DEFENSE, CLASS_WARRIOR | CLASS_RANGER | CLASS_DEIKHAN | CLASS_MONK},
   {SPEC_TRAINER_PSIONICS, "psionics", "about psionics", DISC_PSIONICS, CLASS_WARRIOR | CLASS_RANGER | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_THIEF | CLASS_SHAMAN},
   {SPEC_TRAINER_SHAMAN_HEALING, "healing", "about healing abilities for shaman", DISC_SHAMAN_HEALING, CLASS_SHAMAN},
+  {SPEC_TRAINER_IRON_BODY, "iron body", "about iron body techniques", DISC_IRON_BODY, CLASS_MONK},
   {-1}          /* required terminator */
 };
 

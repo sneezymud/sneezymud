@@ -1535,6 +1535,13 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
   // account for stats
   // float statDam = (ch->getStrDamModifier() + ch->getDexDamModifier()) / 2;
   float statDam = ch->getStrDamModifier(); // we already account for dex bonuses in tohit -dash
+  
+  if(ch->doesKnowSkill(SKILL_IRON_FIST) && 
+     !ch->equipment[WEAR_HAND_R] && !ch->equipment[WEAR_HAND_L]){
+    // extra 0-4%
+    statDam += (ch->getSkillLevel(SKILL_IRON_FIST)/2500);
+  }
+
   int dam = (int) (wepDam * statDam);
 
   // add bonuses
@@ -1987,6 +1994,10 @@ int TBeing::hit(TBeing *target, int pulse)
         learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CINTAI, 20);
       if(doesKnowSkill(SKILL_ADVANCED_KICKING))
         learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_KICKING, 20);
+      if(doesKnowSkill(SKILL_IRON_FIST) && 
+	 !equipment[WEAR_HAND_R] && !equipment[WEAR_HAND_L])
+	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_IRON_FIST, 20);
+
 #if 0
       if(doesKnowSkill(SKILL_BLUR))
         learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_BLUR, 20);

@@ -171,6 +171,10 @@ short int TBeing::moveLimit() const
 {
   int iMax = getMaxMove() + race->getMoveMod();
 
+  if(discs && doesKnowSkill(SKILL_IRON_LEGS)){
+    iMax += getSkillValue(SKILL_IRON_LEGS)*2;
+  }
+
   iMax += points.maxMove;        /* move bonus */
 
   return (iMax);

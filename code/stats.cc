@@ -879,6 +879,13 @@ int TBeing::getStat(statSetT fromSet, statTypeT whichStat) const
     
       amount += territory_adjustment(player.hometerrain, whichStat);
 
+      // monk skill
+      // this is kind of a wack place to put it I think, but it's the easiest
+      // place to do a dynamic change based on skill
+      if(discs && whichStat == STAT_STR && doesKnowSkill(SKILL_IRON_MUSCLES)){
+	amount += getSkillValue(SKILL_IRON_MUSCLES)/8;
+      }
+
       return amount;
     case(STAT_RACE):
       return race->baseStats.get(whichStat);
