@@ -398,9 +398,9 @@ const int TOG_IS_AMBIDEXTROUS                  = 287;
 const int TOG_IS_HEALTHY                       = 288;
 const int TOG_HAS_NIGHTVISION                  = 289;
 const int TOG_IS_ALCOHOLIC                     = 290;
+const int TOG_HAS_TOURETTES                    = 291;
 
-
-const int MAX_TOG_INDEX       = 291;  // move and change
+const int MAX_TOG_INDEX       = 292;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 

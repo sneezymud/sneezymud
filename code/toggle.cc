@@ -303,6 +303,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Trait: Disease Resistant", MOB_NONE},
   {"Trait: Nightvision", MOB_NONE},
   {"Trait: Alcoholic", MOB_NONE},
+  {"Trait: Tourettes", MOB_NONE},
   {"", MOB_NONE}, 
 };
 

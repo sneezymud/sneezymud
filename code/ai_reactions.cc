@@ -211,14 +211,10 @@ int TMonster::aiFag(TBeing *homo,int self)
   return TRUE;
 }
 
-int TMonster::aiInsultDoer(TBeing *vict)
+sstring TBeing::getInsult(TBeing *vict)
 {
   sstring buf, buf2, buf3;
   ubyte insult = 1;
-  int say_this = TRUE;
-
-  if (!isAngry() && !(::number(0,1)))
-    return FALSE;
 
   // find a convenient stat to make fun of.  allow some randomness 
   if (!::number(0,3)) {
@@ -336,7 +332,7 @@ int TMonster::aiInsultDoer(TBeing *vict)
       buf3 = "freak of nature";
       break;
   }
-  switch (::number(1,21)) {
+  switch (::number(1,20)) {
     case 1:
       buf = fmt("You %s %s") %buf2 % buf3;
       break;
@@ -394,22 +390,31 @@ int TMonster::aiInsultDoer(TBeing *vict)
       buf = "I could have been your father if I'd've had change for a talen";
       break;
     case 19:
-      say_this = FALSE;
-      act("$n sticks $s tongue out at $N gives $M a razzberry.",
-          FALSE, this, 0, vict, TO_NOTVICT);
-      act("$n sticks $s tongue out at you gives you a razzberry!",
-          FALSE, this, 0, vict, TO_VICT);
+      buf = "You are the finest woman to have ever walked the streets";
       break;
     case 20:
-    buf = "The best part of you rolled down the back of a horses leg!";
+      buf = "The best part of you rolled down the back of a horses leg!";
       break;  
     default:
       return FALSE;
   }
 
-  if (canSpeak() && say_this) {
-    for (insult=1; insult <= ::number(1,5); insult++)
-      buf += "!";
+  for (insult=1; insult <= ::number(1,5); insult++)
+    buf += "!";
+
+  return buf;
+}
+
+
+int TMonster::aiInsultDoer(TBeing *vict)
+{
+  sstring buf, buf2;
+
+  if (!isAngry() && !(::number(0,1)))
+    return FALSE;
+
+  if (canSpeak()) {
+    buf=getInsult(vict);
 
     buf2 = fmt("$n looks at you and says, \"%s\"") %buf;
     act(buf2,TRUE,this,0,vict,TO_VICT);

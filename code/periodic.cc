@@ -622,6 +622,7 @@ int TBeing::updateTickStuff()
     }
 
 
+
     if(hasQuestBit(TOG_IS_NARCOLEPTIC) && awake() && !::number(0,99)){
       affectedData af;
       af.type = AFFECT_DUMMY;
@@ -909,6 +910,34 @@ int TBeing::updateHalfTickStuff()
     }
   }
 
+  if(hasQuestBit(TOG_HAS_TOURETTES) && !::number(0,3)){
+    sstring buf, buf2;
+    TBeing *tb;
+    TMonster *tm;
+    
+    for(TThing *t=roomp->getStuff();t;t=t->nextThing){
+      if(!::number(0,1))
+	continue;
+
+      if((tb=dynamic_cast<TBeing *>(t))){
+	if(tb==this)
+	  continue;
+
+	buf=getInsult(tb);
+	buf2 = fmt("$n looks at you and says, \"%s\"") %buf;
+	act(buf2,TRUE,this,0,tb,TO_VICT);
+	buf2 = fmt("$n looks at $N and says, \"%s\"") %buf;
+	act(buf2,TRUE,this,0,tb,TO_NOTVICT);
+	buf2 = fmt("You look at $N and say, \"%s\"") %buf;
+	act(buf2,TRUE,this,0,tb,TO_CHAR);
+	
+	if((tm=dynamic_cast<TMonster *>(t)))
+	  tm->aiUpset(this);
+	
+	break;
+      }
+    }
+  }
 
 
   if(inRoom() >= 31800 && inRoom() <= 31899 && getCond(DRUNK) == 0){

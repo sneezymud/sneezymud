@@ -690,7 +690,9 @@ class TBeing : public TThing {
     int getPetAge();
     bool doRetrainPet(const char *, TBeing *);
     bool restorePetToPc(TBeing *tBeing);
-
+    
+    sstring getInsult(TBeing *);
+    
     ubyte GetMaxLevel() const;
     void setMaxLevel(ubyte num);
     sstring const getProfName() const;

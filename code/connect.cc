@@ -56,7 +56,7 @@ static const char * const TER_GNOME_HELP = "help/territory help gnome";
 static const char * const TER_OGRE_HELP = "help/territory help ogre";
 static const char * const TER_HOBBIT_HELP = "help/territory help hobbit";
 
-const int MAX_TRAITS=12;
+const int MAX_TRAITS=13;
 
 
 //  {TOG_IS_DEAF, 0, "deaf (not implemented)",   // not implemented
@@ -86,6 +86,8 @@ struct {
    "You have necrophobia and are terrified at the sight of dead things."},
   {TOG_IS_ALCOHOLIC, 3, "alcoholism",
    "You are an alcoholic and feel a constant urge to drink booze."},
+  {TOG_HAS_TOURETTES, 1, "tourettes",
+   "You involuntarily insult other people."},
   {TOG_IS_HEALTHY, -3, "healthy",
    "You are particularly healthy and resistant to disease."},
   {TOG_IS_AMBIDEXTROUS, -6, "ambidextrous",
