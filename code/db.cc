@@ -1878,7 +1878,7 @@ void zoneData::resetZone(bool bootTime)
             continue;
           }
 
-	  if(this->zone_value != 0){
+	  if(this->zone_value != 0 && bootTime){
 	    mob_index[rs.arg1].doesLoad=true;
 	    mob_index[rs.arg1].numberLoad++;
 	  }
@@ -2129,7 +2129,7 @@ void zoneData::resetZone(bool bootTime)
               continue;
             }
 	    
-	    if(this->zone_value != 0){
+	    if(this->zone_value != 0 && bootTime){
 	      mob_index[rs.arg1].doesLoad=true;
 	      mob_index[rs.arg1].numberLoad++;
 	    }
