@@ -105,7 +105,7 @@ void TOrganic::lightMe(TBeing *ch, silentTypeT iSilent)
 }
 
 // Determine Sell[PC selling] value
-int TOrganic::sellPrice(int shop_nr, int, int *)
+int TOrganic::sellPrice(int shop_nr, float, int *)
 {
 #if 1
   int price;
@@ -132,7 +132,7 @@ int TOrganic::sellPrice(int shop_nr, int, int *)
 }
 
 // Determine Buy[Shop selling] value
-int TOrganic::shopPrice(int num, int shop_nr, int, int *) const
+int TOrganic::shopPrice(int num, int shop_nr, float, int *) const
 {
 #if 1
   int price;
@@ -191,8 +191,7 @@ void TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     }
   }
   // cost_per = pricePerUnit();
-  // price = shopPrice(num, shop_nr, -1, &discount);
-  price = shopPrice(num, shop_nr, 0, &discount);
+  price = shopPrice(num, shop_nr, -1, &discount);
   vnum = objVnum();
   if (ch->getMoney() < price) {
     sprintf(Buf[0], shop_index[shop_nr].missing_cash2, ch->name);
@@ -330,10 +329,10 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   char Buf[256];
 
   if (getUnits() > 0)
-    price = min(shopPrice(max(1, getUnits()), shop_nr, 0, &discount),
-                sellPrice(shop_nr, 0, &discount));
+    price = min(shopPrice(max(1, getUnits()), shop_nr, -1, &discount),
+                sellPrice(shop_nr, -1, &discount));
   else
-    price = sellPrice(shop_nr, 0, &discount);
+    price = sellPrice(shop_nr, -1, &discount);
 
   if (isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
@@ -455,10 +454,10 @@ void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
   TOrganic *obj2 = NULL;
 
   if (getUnits() > 0)
-    price = min(shopPrice(max(1, getUnits()), shop_nr, 0, &discount),
-                sellPrice(shop_nr, 0, &discount));
+    price = min(shopPrice(max(1, getUnits()), shop_nr, -1, &discount),
+                sellPrice(shop_nr, -1, &discount));
   else
-    price = sellPrice(shop_nr, 0, &discount);
+    price = sellPrice(shop_nr, -1, &discount);
 
   if (!shop_index[shop_nr].willBuy(this)) {
     sprintf(Buf, shop_index[shop_nr].do_not_buy, ch->getName());
@@ -491,7 +490,7 @@ const string TOrganic::shopList(const TBeing *ch, const char *arg,
   char Buf[2][256];
   char tString[256];
   bool usePlural = false;
-  int cost = shopPrice(num, shop_nr, 0, &num);
+  int cost = shopPrice(num, shop_nr, -1, &num);
 
   sprintf(Buf[1], "%s", shortDescr);
 

@@ -510,8 +510,8 @@ class TObj : public TThing {
     virtual void valueMe(TBeing *, TMonster *, int);
     virtual const string shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
     virtual void makeScraps();
-    virtual int shopPrice(int, int, int, int *) const;
-    virtual int sellPrice(int, int, int *);
+    virtual int shopPrice(int, int, float, int *) const;
+    virtual int sellPrice(int, float, int *);
     virtual void divinateMe(TBeing *) const;
     virtual int copyMe(TBeing *, byte);
     virtual int changeItemVal2Check(TBeing *, int);

@@ -1113,6 +1113,11 @@ float TBeing::getIntModForPracs() const
   return plotStat(STAT_NATURAL, STAT_INT, .666 , 1.333, 1.0, 1.2);
 }
 
+float TBeing::getChaShopPenalty() const
+{
+  return plotStat(STAT_CURRENT, STAT_CHA, 1.3, 1.0, 1.1);
+}
+
 Stats TBeing::getCurStats() const
 {
   return curStats;

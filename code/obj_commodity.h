@@ -25,8 +25,8 @@ class TCommodity : public TObj {
     virtual int sellCommod(TBeing *, TMonster *, int, TThing *);
     virtual void valueMe(TBeing *, TMonster *, int);
     virtual const string shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
-    virtual int shopPrice(int, int, int, int *) const;
-    virtual int sellPrice(int, int, int *);
+    virtual int shopPrice(int, int, float, int *) const;
+    virtual int sellPrice(int, float, int *);
 
     int pricePerUnit() const;
     int numUnits() const;

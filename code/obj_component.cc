@@ -2981,7 +2981,7 @@ const string TComponent::shopList(const TBeing *ch, const char *tArg,
       tCharges += tComp->getComponentCharges();
 
   tCost = (shopPrice(1, shop_nr,
-                     min(18, ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13)),
+                     min((float)1.3, ch->getChaShopPenalty()),
                      &tDiscount) / getComponentCharges());
 
   tLearn = ch->getSkillValue(SKILL_EVALUATE);
@@ -3024,8 +3024,8 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     return;
   }
 
-  int     tChr,
-          tCost,
+  float     tChr;
+  int        tCost,
           tDiscount = 100,
           tValue = 0;
   double  tCount;
@@ -3043,16 +3043,16 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     return;
   }
 
-  tChr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+  tChr = ch->getChaShopPenalty();
 
   if (ch->doesKnowSkill(SKILL_SWINDLE)) {
     // make 5 separate rolls so chr goes up amount based on learning
     for (int tRunner = 0; tRunner < 5; tRunner++)
       if (bSuccess(ch, ch->getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
-        tChr += 1;
+        tChr += 0.02;
   }
 
-  tChr   = min(18, tChr);
+  tChr   = min((float)1.3, tChr);
   tCount = ((double) tNum / (double) getComponentCharges());
   tCost  = (int) ((double) shopPrice(1, tShop, tChr, &tDiscount) * tCount);
 
@@ -3166,8 +3166,8 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop)
   }
 
   char tString[256];
-  int  tChr,
-       tCost,
+  float  tChr;
+  int     tCost,
        tDiscount = 100;
 
   if (!shop_index[tShop].profit_sell) {
@@ -3185,16 +3185,16 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop)
   if (sellMeCheck(ch, tKeeper))
     return;
 
-  tChr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+  tChr = ch->getChaShopPenalty();
 
   if (ch->doesKnowSkill(SKILL_SWINDLE)) {
     // make 5 separate rolls so chr goes up amount based on learning
     for (int tRunner = 0; tRunner < 5; tRunner++)
       if (bSuccess(ch, ch->getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
-        tChr += 1;
+        tChr += 0.02;
   }
 
-  tChr   = min(18, tChr);
+  tChr   = min((float)1.3, tChr);
   tCost  = max(1, sellPrice(tShop, tChr, &tDiscount));
 
   if (tKeeper->getMoney() < tCost) {

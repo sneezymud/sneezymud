@@ -149,7 +149,7 @@ void TBeing::doConsider(const char *argument)
   else
     sendTo("There are better ways to suicide.\n\r");
 
-  if(trophy->getExpModVal(tmon->mobVnum()) > 0){
+  if(trophy->getCount(tmon->mobVnum()) > 0){
     sendTo(COLOR_BASIC, "You will gain %s experience when fighting %s.\n\r", 
 	   trophy->getExpModDescr(tmon->mobVnum()),
 	   namebuf);

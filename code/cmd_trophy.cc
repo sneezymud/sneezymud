@@ -63,7 +63,6 @@ float TTrophy::getExpModVal(int vnum)
 {
   float count=getCount(vnum);
 
-
   float min_mod=0.3;
   float max_mod=1.0; // shouldn't ever be above 1.0
   float free_kills=8; // how many kills you get before trophy kicks in

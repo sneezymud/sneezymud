@@ -86,7 +86,7 @@ bool sameAccount(const char *buf, int shop_nr){
 
 
 // this is the price the shop will buy an item for
-int TObj::sellPrice(int shop_nr, int chr, int *discount)
+int TObj::sellPrice(int shop_nr, float chr, int *discount)
 {
   float profit_sell=shop_index[shop_nr].profit_sell;
   int cost;
@@ -100,9 +100,8 @@ int TObj::sellPrice(int shop_nr, int chr, int *discount)
       profit_sell=atof(db.getColumn(0));
   }
 
-  if (chr != -1)
-    cost = (int) (adjPrice(discount) * profit_sell *
-                 (100 - (2 * (18 - chr))) / 100);
+  if (chr != -1 && chr!=0)
+    cost = (int) (adjPrice(discount) * profit_sell / chr);
   else
     cost = (int) (adjPrice(discount) * profit_sell);
 
@@ -119,7 +118,7 @@ int TObj::sellPrice(int shop_nr, int chr, int *discount)
 }
 
 // this is price shop will sell it at
-int TObj::shopPrice(int num, int shop_nr, int chr, int *discount) const
+int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
 {
   int cost;
   float profit_buy=shop_index[shop_nr].profit_buy;
@@ -133,10 +132,8 @@ int TObj::shopPrice(int num, int shop_nr, int chr, int *discount) const
       profit_buy=atof(db.getColumn(0));
   }
 
-
   if (chr != -1)
-    cost = (int) (adjPrice(discount) * profit_buy *
-                 (100 + (2 * (18 - chr))) / 100);
+    cost = (int) ((adjPrice(discount) * profit_buy) * chr);
   else
     cost = (int) (adjPrice(discount) * profit_buy);
 
@@ -378,7 +375,7 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   int cost;
   int count = 0;
   int tmp;
-  int chr;
+  float chr;
   int i;
   int discount = 100;
 
@@ -393,15 +390,15 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     return;
   }
   if (shop_index[shop_nr].isProducing(this)) {
-    chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+    chr = ch->getChaShopPenalty();
     
     if (ch->doesKnowSkill(SKILL_SWINDLE)) {
       // make 5 separate rolls so chr goes up amount based on learning
       for (i = 0; i < 5; i++)
         if (bSuccess(ch, ch->getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
-          chr += 1;
+          chr += 0.02;
     }
-    chr = min(18,chr);
+    chr = min((float)1.3,chr);
 
     cost = shopPrice(1, shop_nr, chr, &discount);
 
@@ -451,15 +448,15 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     strcpy(argm, name);
 
     add_bars(argm);
-    chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+    chr = ch->getChaShopPenalty();
 
     if (ch->doesKnowSkill(SKILL_SWINDLE)) {
       // make 5 separate rolls so chr goes up amount based on learning
       for (i = 0; i < 5; i++)
         if (bSuccess(ch, ch->getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
-          chr += 1;
+          chr += 0.02;
     }
-    chr = min(18,chr);
+    chr = min((float)1.3,chr);
 
     cost = shopPrice(1, shop_nr, chr, &discount);
 
@@ -607,7 +604,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
 {
   int cost;
   char buf[256];
-  int chr;
+  float chr;
   int j;
   int discount = 100;
 
@@ -624,15 +621,15 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   if (sellMeCheck(ch, keeper))
     return;
 
-  chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+  chr = ch->getChaShopPenalty();
 
   if (ch->doesKnowSkill(SKILL_SWINDLE)) {
     // make 5 separate rolls so chr goes up amount based on learning
     for (j = 0; j < 5; j++)
       if (bSuccess(ch, ch->getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
-        chr += 1;
+        chr += 0.02;
   }
-  chr = min(18,chr);
+  chr = min((float)1.3,chr);
 
 
   cost = sellPrice(shop_nr, chr, &discount);
@@ -1118,7 +1115,7 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
 
 void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
 {
-  int chr;
+  float chr;
   int cost;
   char buf[256];
   int discount = 100;
@@ -1138,10 +1135,10 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
     return;
   }
 
-  chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+  chr = ch->getChaShopPenalty();
 
   // do not adjust for swindle on valueing, give them worst case price
-  chr = min(18,chr);
+  chr = min((float)1.3,chr);
 
   cost = sellPrice(shop_nr, chr, &discount);
 
@@ -1191,7 +1188,7 @@ const string TObj::shopList(const TBeing *ch, const char *arg, int iMin, int iMa
   char atbuf[25];
   char wcolor[25];
   int counter;
-  int chr;
+  float chr;
   float perc;
   int discount = 100;
   bool isWearable = false;
@@ -1213,9 +1210,9 @@ const string TObj::shopList(const TBeing *ch, const char *arg, int iMin, int iMa
     capbuf[28] = '.';
     capbuf[29] = '\0';
   }
-  chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
+  chr = ch->getChaShopPenalty();
   // do not adjust for swindle on list, give them worst case price
-  chr = min(18, chr);
+  chr = min((float)1.3, chr);
 
   cost = shopPrice(1, shop_nr, chr, &discount);
 
@@ -2913,6 +2910,7 @@ void TSymbol::recalcShopData(int bought, int cost)
 }
 
 shopData::shopData() :
+  shop_nr(0),
   profit_buy(1.0),
   profit_sell(1.0),
   no_such_item1(NULL),
@@ -2950,6 +2948,7 @@ shopData::~shopData()
 }
 
 shopData::shopData(const shopData &t) :
+  shop_nr(t.shop_nr),
   profit_buy(t.profit_buy),
   profit_sell(t.profit_sell),
   temper1(t.temper1),
@@ -3029,6 +3028,7 @@ shopData & shopData::operator =(const shopData &t)
   open2 = t.open2;
   close1 = t.close1;
   close2 = t.close2;
+  shop_nr = t.shop_nr;
 
   return *this;
 }
