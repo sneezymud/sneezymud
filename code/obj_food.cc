@@ -614,7 +614,7 @@ void TBaseCup::sipMe(TBeing *ch)
     addToDrinkUnits(-1);
 
   if (!getDrinkUnits()) {    /* The last bit */
-    //    setDrinkType(LIQ_WATER);
+    act("$p is completely empty.", FALSE, ch, this, 0, TO_CHAR);
     remDrinkConFlags(DRINK_POISON);
   }
 }
