@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: constants.cc,v $
+// Revision 1.2  1999/09/17 06:39:20  peel
+// Added a few more flammability values to material types
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1161,8 +1164,8 @@ extern int repairMetal(TBeing *,TObj *);
 const struct material_type_numbers material_nums[200] =
 {
   {100, 100, 100, 100, 50, 11, 11, 5,10, 1, 0, 0, 0, 0, 0, NULL, "Undefined"},
-  {100,  20, 100, 100, 5, 209, 0, 5,-1,8, 0, 0, 75, 0, 0, NULL,"Paper"},
-  {90, 0, 100, 100, 1, 11, 0, 30, -3,8, 0, 0, 65, 0, 0, NULL,"Cloth"},
+  {100,  20, 100, 100, 5, 209, 0, 5,-1,8, 0, 1000, 75, 0, 0, NULL,"Paper"},
+  {90, 0, 100, 100, 1, 11, 0, 30, -3,8, 0, 750, 65, 0, 0, NULL,"Cloth"},
   {50, 50, 95, 80, 7, 153, 105, 0,-2,1, 0, 0, 40, 0, 0, NULL,"Wax"},
   {0, 100, 0, 50, 40, 0, 249, 0, 3,1, 0, 0, 5, 0, 0, NULL,"Glass"},
   {40, 30, 75, 50, 25, 42, 53, 255, 3,1, 0, 500, 25, 0, 0, NULL,"Wood"},
@@ -1170,10 +1173,10 @@ const struct material_type_numbers material_nums[200] =
   {75, 75, 75, 100, 5, 35, 55, 30, 1,2, 0, 0, 95, 0, 0, NULL,"Foodstuff"},
   {65, 65, 25, 100, 3, 0, 51, 0, -1,2, 0, 0, 50, 0, 0, NULL,"Plastic"},
   {75, 0, 0, 100, 10, 0, 0, 0, -2,1, 0, 0, 66, 0, 0, NULL,"Rubber"},
-  {40, 20, 100, 100, 6, 209, 0, 10, 0,1, 0, 0, 80, 0, 0, NULL,"Cardboard"},
+  {40, 20, 100, 100, 6, 209, 0, 10, 0,1, 0, 900, 80, 0, 0, NULL,"Cardboard"},
   {40, 10, 75, 50, 2, 105, 0, 100, -1,2, 0, 0, 85, 0, 0, NULL,"String"},
   {75, 75, 25, 50, 4, 59, 79, 2, 0,1, 0, 0, 25, 0, 0, NULL,"Plasma"},
-  {83, 0, 100, 95, 2, 11, 0, 25, -3,6, 0, 0, 60, 0, 0, NULL,"Toughened cloth"},
+  {83, 0, 100, 95, 2, 11, 0, 25, -3,6, 0, 600, 60, 0, 0, NULL,"Toughened cloth"},
   {80, 100, 10, 40, 3, 0, 99, 20, 3, 1, 0, 0, 90, 0, 0, NULL,"Coral"},
   {80, 3, 80, 10, 2, 101, 0, 100, -1, 3, 0, 0, 70, 0, 0, NULL,"Horsehair"},
   {40, 10, 75, 50, 2, 105, 0, 100, -1, 2, 0, 0, 85, 0, 0, NULL,"Hair"},
