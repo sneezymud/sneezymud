@@ -1478,8 +1478,11 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   static bool done[24];
   int n=rp->number-30975, exitrnum=0;
+  
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
 
-  if(done[n] || cmd != CMD_GENERIC_PULSE)
+  if(done[n] && ::number(0,9999))
     return FALSE;
   
   // loop through all directions
@@ -1488,6 +1491,12 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
        d==DIR_SOUTHEAST || d==DIR_SOUTHWEST)
       continue;
 
+    // if we're redoing our exits and this is an out of zone exit, delete it
+    if(rp->dir_option[d] && 
+       rp->dir_option[d]->to_room<30975 &&
+       rp->dir_option[d]->to_room>30999)
+      delete rp->dir_option[d];
+
     // if no exit, chance to add new one
     if(!rp->dir_option[d] && !::number(0,9)){
       if(!(exitrnum=getRandomRoom()))
@@ -1495,10 +1504,12 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       
       if(!(rp->dir_option[d] = new roomDirData()))
 	continue;
-      
+
       rp->dir_option[d]->to_room = exitrnum;
     }
   }
+
+  vlogf(LOG_PEEL, "the knot: did exits for room %i", rp->number);
 
   done[n]=true;
   return TRUE;
