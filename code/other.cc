@@ -2565,6 +2565,14 @@ int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
       secondWind(ch,ch,level,learn);
       sterilize(ch,ch,level,learn,SPELL_STERILIZE);
       break;
+    case LIQ_POT_YOUTH:
+      if(amt==1)
+	ch->sendTo("You feel a little younger.\n\r");
+      else
+	ch->sendTo("You feel much younger.\n\r");
+
+      while(amt--)
+	ch->age_mod -= ::number(1, 2);
     default:
       rc=0;
   }
