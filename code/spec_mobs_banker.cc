@@ -51,6 +51,7 @@ int bankWithdraw(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, in
 int bankDeposit(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, int money)
 {
   TDatabase db(DB_SNEEZY);
+  int bankmoney;
 
   if (!ch->isPc() || dynamic_cast<TMonster *>(ch)) {
     teller->doTell(ch->getName(), "Stupid monster can't bank here!");
@@ -82,6 +83,19 @@ int bankDeposit(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, int
   db.query("update shopownedbank set talens=talens+%i where player_id=%i and shop_nr=%i", money, ch->getPlayerID(), shop_nr);
   
   shoplog(shop_nr, ch, myself, "talens", money, "deposit");
+
+  db.query("select talens from shopownedbank where shop_nr=%i and player_id=%i", shop_nr, ch->getPlayerID());
+
+  if (!db.fetchRow()) {
+    teller->doTell(ch->getName(), "You really should not see me, this is an error...");
+    vlogf(LOG_BUG, fmt("Banking error, was unable to retrieve balance after a deposit: %s") % ch->getName());
+
+    return TRUE;
+  } else
+    bankmoney = convertTo<int>(db["talens"]);
+
+  teller->doTell(ch->getName(), fmt("...Your new balance is %i") % bankmoney);
+
   return TRUE;
 }
 
