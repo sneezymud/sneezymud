@@ -35,10 +35,10 @@ int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
         found=1;
     }
     if(!found){
-      act("You can't find $p and stop trying to light it on fire.",
-          FALSE, ch, obj, 0, TO_CHAR);
+      act("You can't find your target and stop trying to light it on fire.",
+          FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops trying to start a fire.",
-          TRUE, ch, obj, 0, TO_ROOM);
+          TRUE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       return FALSE; // returning FALSE lets command be interpreted
     }
