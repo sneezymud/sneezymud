@@ -476,6 +476,9 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     
     int rc = throwThing(bullet, dir, ch->in_room, &targ, shoot_dist, 10, ch);
 
+    ch->roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r",
+				 ch->in_room);
+
     // delete the bullet afterwards, arbitrary decision
     // since they are arrow type and you usually don't find spent lead anyway
     delete bullet;
