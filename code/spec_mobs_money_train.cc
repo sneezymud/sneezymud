@@ -129,27 +129,35 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   TBeing *vict;
 
 
-  enum bmStateT {
+  enum hunt_stateT {
     STATE_NONE,
-    STATE_TO_CS,
-    STATE_TROLLEY_TO,
-    STATE_DELIVERING,
-    STATE_RETURNING,
-    STATE_TROLLEY_RET,
-    STATE_TO_BANK
+    STATE_TO_CS,          // gh bank to cs
+    STATE_TROLLEY_TO,     // wait for trolley, board, ride to bm, get off
+    STATE_BM_DELIVERING,  // walk from bm fountain to bm bank
+    STATE_BM_RETURNING,   // walk from bm bank to bm fountain
+    STATE_TROLLEY_RET,    // wait for trolley, board, ride to gh, get off
+    STATE_TO_BANK,        // cs to gh bank
+    STATE_TO_AMBER_BANK,  // cs to amber bank
+    STATE_AMBER_TO_CS     // amber bank to cs
   };
 
+  enum whichBankT {
+    BANK_BM,
+    BANK_AMBER
+  };
 
   class hunt_struct {
     public:
       int cur_pos;
       int cur_path;
-      bmStateT state;
+      hunt_stateT state;
+      whichBankT which;
 
       hunt_struct() :
         cur_pos(0),
         cur_path(0),
-        state(STATE_NONE)
+        state(STATE_NONE),
+	which((whichBankT)::number(BANK_BM, BANK_AMBER))
       {
       }
       ~hunt_struct()
@@ -208,9 +216,34 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       break;
     case STATE_TO_CS:
       if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
-	job->cur_path=1;
+	if(job->which == BANK_BM){
+	  job->cur_path=1;
+	  job->cur_pos=0;
+	  job->state=STATE_TROLLEY_TO;
+	} else {
+	  job->cur_path=4;
+	  job->cur_pos=0;
+	  job->state=STATE_TO_AMBER_BANK;
+	}	  
+      }
+      break;
+    case STATE_TO_AMBER_BANK:
+      if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
+	phat_lewt(myself);
+
+	act("$n receives several bags of valuables for delivery.",
+	    TRUE, myself, 0, 0, TO_ROOM);
+
+	job->cur_path=5;
 	job->cur_pos=0;
-	job->state=STATE_TROLLEY_TO;
+	job->state=STATE_AMBER_TO_CS;
+      }
+      break;
+    case STATE_AMBER_TO_CS:
+      if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
+	job->cur_path=3;
+	job->cur_pos=0;
+	job->state=STATE_TO_BANK;
       }
       break;
     case STATE_TROLLEY_TO:
@@ -225,7 +258,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	  
 	  job->cur_pos=0;
 	  job->cur_path=1;
-	  job->state=STATE_DELIVERING;
+	  job->state=STATE_BM_DELIVERING;
 	}
       } else {
 	for(t=myself->roomp->getStuff();t;t=t->nextThing){
@@ -236,16 +269,19 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	}
       }
       break;
-    case STATE_DELIVERING:
+    case STATE_BM_DELIVERING:
       if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
 	phat_lewt(myself);
 
+	act("$n receives several bags of valuables for delivery.",
+	    TRUE, myself, 0, 0, TO_ROOM);
+
 	job->cur_path=2;
 	job->cur_pos=0;
-	job->state=STATE_RETURNING;
+	job->state=STATE_BM_RETURNING;
       }
       break;
-    case STATE_RETURNING:
+    case STATE_BM_RETURNING:
       if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
 	job->cur_path=3;
 	job->cur_pos=0;
