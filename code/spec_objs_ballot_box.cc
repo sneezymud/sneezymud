@@ -1,9 +1,9 @@
 #include "stdsneezy.h"
 #include "database.h"
 
-// create table poll (poll_id int, descr varchar(127), status varchar(8));
-// create table poll_option (option_id int, poll_id int, descr varchar(127));
-// create table poll_vote (account varchar(80), poll_id int, option_id int);
+// create table poll (poll_id int primary key, descr varchar(127), status varchar(8));
+// create table poll_option (option_id int, poll_id int, descr varchar(127), primary key (option_id, poll_id));
+// create table poll_vote (account varchar(80), poll_id int, option_id int, primary key (account, poll_id, option_id));
 
 int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
 {
@@ -73,6 +73,120 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
     }
     return true;
   } else if(cmd==CMD_VOTE){
+    sstring usage="Usage: vote <poll_id> <option_id>";
+    int poll_id, option_id;
+    sstring tmp;
+    arg=one_argument(arg, tmp);
+
+    if(tmp.empty()){
+      if(!ch->isImmortal()){
+	ch->sendTo(fmt("%s\n\r") % usage);
+      } else {
+	ch->sendTo("Usage:\n\r");
+	ch->sendTo("vote <poll_id> <option_id>\n\r");
+	ch->sendTo("vote <poll_id> add <option_id> <descr>\n\r");
+	ch->sendTo("vote <poll_id> remove <option_id>\n\r");
+	ch->sendTo("vote add <poll_id> <descr>\n\r");
+	ch->sendTo("vote close <poll_id>\n\r");
+	ch->sendTo("vote open <poll_id>\n\r");
+      }
+      return true;
+    } if(tmp == "add"){
+      // vote add <poll_id> <descr>
+      if(!ch->isImmortal()){
+	ch->sendTo(fmt("%s\n\r") % usage);
+	return true;
+      }
+
+      arg=one_argument(arg, tmp);
+
+      db.query("insert into poll values (%i, '%s', 'open')",
+	       convertTo<int>(tmp), arg.c_str());
+      ch->sendTo("Done.\n\r");
+    } else if(tmp == "close"){
+      // vote close <poll_id>
+      if(!ch->isImmortal()){
+	ch->sendTo(fmt("%s\n\r") % usage);
+	return true;
+      }
+      arg=one_argument(arg, tmp);
+
+      db.query("update poll set status='closed' where poll_id=%i",
+	       convertTo<int>(tmp));
+      ch->sendTo("Done.\n\r");
+    } else if(tmp == "open"){
+      // vote open <poll_id>
+      if(!ch->isImmortal()){
+	ch->sendTo(fmt("%s\n\r") % usage);
+	return true;
+      }
+      arg=one_argument(arg, tmp);
+
+      db.query("update poll set status='open' where poll_id=%i",
+	       convertTo<int>(tmp));
+      ch->sendTo("Done.\n\r");
+    } else {
+      poll_id=convertTo<int>(tmp);
+      arg=one_argument(arg, tmp);
+      
+      if(tmp == "add"){
+	// vote <poll_id> add <option_id> <descr>
+	if(!ch->isImmortal()){
+	  ch->sendTo(fmt("%s\n\r") % usage);
+	  return true;
+	}
+	arg=one_argument(arg, tmp);
+	option_id=convertTo<int>(tmp);
+
+	db.query("insert into poll_option values (%i, %i, '%s')",
+		 option_id, poll_id, arg.c_str());
+	ch->sendTo("Done.\n\r");
+      } else if(tmp == "remove"){
+	// vote <poll_id> remove <option_id>
+	if(!ch->isImmortal()){
+	  ch->sendTo(fmt("%s\n\r") % usage);
+	  return true;
+	}
+	arg=one_argument(arg, tmp);
+	option_id=convertTo<int>(tmp);
+
+	db.query("delete from poll_option where option_id=%i",
+		 option_id);
+	ch->sendTo("Done.\n\r");
+      } else {
+	// vote <poll_id> <option_id>
+	option_id=convertTo<int>(tmp);
+
+	db.query("select 1 from poll_vote where poll_id=%i and account='%s'",
+		 poll_id, ch->desc->account->name);
+
+	if(db.fetchRow()){
+	  ch->sendTo("You've already voted in that poll.\n\r");
+	  return true;
+	}
+
+	db.query("select 1 from poll where poll_id=%i and status='open'",
+		 poll_id);
+
+	if(!db.fetchRow()){
+	  ch->sendTo("That poll isn't open for voting.\n\r");
+	  return true;
+	}
+	
+	db.query("insert into poll_vote values ('%s', %i, %i)",
+		 ch->desc->account->name, poll_id, option_id);
+
+
+	db.query("select po.descr as descr from poll_option po, poll_vote pv where po.poll_id=%i and po.option_id=%i and pv.poll_id=%i and pv.option_id=%i and pv.account='%s'", poll_id, option_id, poll_id, option_id, ch->desc->account->name);
+	
+	if(db.fetchRow()){
+	  ch->sendTo(fmt("You cast your vote for %s.\n\r") % 
+		     db["descr"]);
+	} else {
+	  ch->sendTo("There was an error - speak to an admin.\n\r");
+	}
+      }
+    }
 
     return true;
   }
