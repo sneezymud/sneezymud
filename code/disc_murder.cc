@@ -748,14 +748,104 @@ int TThing::poisonMePoison(TBeing *ch, TBaseWeapon *)
   return FALSE;
 }
 
-void addPoison(int poison, affectedData *aff, int level, int duration){
-  aff->type = SPELL_POISON;
-  aff->bitvector = AFF_POISON;
-  aff->location = APPLY_STR;
-  aff->modifier = -level;
-  aff->duration = duration;
-  aff->level = level;
-  aff->renew = -1;
+
+// this is ugly as hell
+void addPoison(affectedData aff[5], 
+	       int vnum, int level, int duration){
+  int i;
+
+  for(i=0;i<5;++i){
+    aff[i].type=SPELL_POISON;
+    aff[i].bitvector=AFF_POISON;
+    aff[i].renew=-1;
+    aff[i].level=level;
+    aff[i].duration=duration;
+  }
+
+  aff[4].type = AFFECT_DISEASE;
+  aff[4].modifier = DISEASE_POISON;
+  aff[4].location = APPLY_NONE;
+
+  switch(vnum){
+    case 31008:
+      aff[0].location=APPLY_DEX;
+      aff[0].modifier=-20;
+      aff[1].location=APPLY_AGI;
+      aff[1].modifier=-20;
+      aff[2].location=APPLY_STR;
+      aff[2].modifier=-20;
+      aff[3].location=APPLY_SPE;
+      aff[3].modifier=-20;
+      break;
+    case 31009:
+      aff[0].location=APPLY_VISION;
+      aff[0].modifier=-5;
+      aff[1].location=APPLY_FOC;
+      aff[1].modifier=-20;
+      aff[2].location=APPLY_WIS;
+      aff[2].modifier=-20;
+      break;
+    case 31010:
+      aff[0].location=APPLY_VISION;
+      aff[0].modifier=-10;
+      aff[1].location=APPLY_FOC;
+      aff[1].modifier=-20;
+      break;
+    case 31011:
+      aff[0].location=APPLY_STR;
+      aff[0].modifier=-20;
+      aff[1].location=APPLY_INT;
+      aff[1].modifier=-20;
+      aff[2].location=APPLY_FOC;
+      aff[2].modifier=-20;
+      break;
+    case 31012:
+      aff[0].location=APPLY_STR;
+      aff[0].modifier=-20;
+      break;
+    case 31013:
+      aff[0].location=APPLY_LIGHT;
+      aff[0].modifier=10;
+      break;
+    case 31014:
+      aff[0].location=APPLY_INT;
+      aff[0].modifier=-20;
+      aff[1].location=APPLY_SPE;
+      aff[1].modifier=-40;
+      break;
+    case 31015:
+      aff[0].location=APPLY_IMMUNITY;
+      aff[0].modifier=IMMUNE_SLEEP;
+      aff[0].modifier2=-30;
+      break;
+    case 31016:
+      aff[0].location=APPLY_IMMUNITY;
+      aff[0].modifier=IMMUNE_HEAT;
+      aff[0].modifier2=-20;
+      break;
+    case 31017:
+      aff[0].location=APPLY_IMMUNITY;
+      aff[0].modifier=IMMUNE_COLD;
+      aff[0].modifier2=-20;
+      break;
+    case 31018:
+      aff[0].location=APPLY_IMMUNITY;
+      aff[0].modifier=IMMUNE_DRAIN;
+      aff[0].modifier2=-20;
+      break;
+    case 31019:
+      aff[0].location=APPLY_SPE;
+      aff[0].modifier=-20;
+      break;
+    case 31020:
+      aff[0].location=APPLY_STR;
+      aff[0].modifier=-40;
+      break;
+    default:
+      aff[0].location=APPLY_STR;
+      aff[0].modifier=-20;
+      break;
+  }
 }
 
 int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
@@ -774,7 +864,7 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
        TRUE, ch, this, 0, TO_CHAR);
     return FALSE;
   }
-  level = ch->getSkillLevel(SKILL_POISON_WEAPON);
+  level = ch->getSkillValue (SKILL_POISON_WEAPON) / 2;
   int bKnown = ch->getSkillValue (SKILL_POISON_WEAPON);
 
   addToToolUses(-1);
@@ -784,30 +874,12 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
     for (j = 0; j < MAX_SWING_AFFECT; j++) {
       if (weapon->oneSwing[j].type == SPELL_POISON) {
         ch->sendTo("That weapon is already affected by poison!\n\r");
-        break;
+        return FALSE;
       }
+    }
+    
+    addPoison(weapon->oneSwing, objVnum(), level, duration);
 
-      if (weapon->oneSwing[j].type == TYPE_UNDEFINED) {
-	addPoison(-1, &weapon->oneSwing[j], level, duration);
-        break;
-      }
-    }
-    for (; j < MAX_SWING_AFFECT; j++) {
-      if (weapon->oneSwing[j].type == TYPE_UNDEFINED) {
-        weapon->oneSwing[j].type = AFFECT_DISEASE;
-        weapon->oneSwing[j].level = 0;
-        weapon->oneSwing[j].duration = duration;
-        weapon->oneSwing[j].modifier = DISEASE_POISON;
-        weapon->oneSwing[j].location = APPLY_NONE;
-        weapon->oneSwing[j].bitvector = AFF_POISON;
-        weapon->oneSwing[j].renew = -1;
-        break;
-      }
-    }
-    if (j == MAX_SWING_AFFECT) {
-      ch->sendTo("You coat the blade, but it seems to be too sticky.\n\r");
-      return TRUE;
-    }
     act("You coat $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_CHAR);
     act("$n coats $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_ROOM);
   } else {
@@ -824,9 +896,11 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
       act("There was something nasty on that $o!",
 	  FALSE, ch, weapon, ch, TO_NOTVICT, ANSI_RED);
 
-      affectedData critfail;
-      addPoison(-1, &critfail, level, duration);
-      ch->affectTo(&(critfail), -1);
+      affectedData aff[5];
+      addPoison(aff, objVnum(), level, duration);
+      for(int i=0;i<5;++i){
+	ch->affectTo(&aff[i], -1);
+      }
     } else {
       act("You coat $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_CHAR);
       act("$n coats $p in a dark ichor.", FALSE, ch, weapon, NULL, TO_ROOM);

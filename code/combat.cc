@@ -3742,6 +3742,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       // this was developed with poison weapons in mind, but may be generic
       // enough for other stuff   - bat
       TObj *tow;
+      bool foundPoison=false;
       if (weapon && (tow = dynamic_cast<TObj *>(weapon))) {
         for (int j = 0; j < MAX_SWING_AFFECT; j++) {
           if (tow->oneSwing[j].type != TYPE_UNDEFINED) {
@@ -3750,14 +3751,8 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
             else
               vict->affectJoin(this, &(tow->oneSwing[j]), AVG_DUR_NO, AVG_EFF_NO);
 
-            if (tow->oneSwing[j].type == SPELL_POISON) {
-              act("There was something nasty on that $o!",
-                    FALSE, this, tow, vict, TO_VICT, ANSI_RED);
-              act("You inflict something nasty on $N!",
-                    FALSE, this, tow, vict, TO_CHAR, ANSI_RED);
-              act("There was something nasty on that $o!",
-                    FALSE, this, tow, vict, TO_NOTVICT, ANSI_RED);
-            }
+            if (tow->oneSwing[j].type == SPELL_POISON)
+	      foundPoison=true;
  
             if (tow->oneSwing[j].type == AFFECT_DISEASE)
               disease_start(vict, &(tow->oneSwing[j]));
@@ -3772,6 +3767,14 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
             tow->oneSwing[j].bitvector = 0;
           }
         }
+	if(foundPoison){
+	  act("There was something nasty on that $o!",
+	      FALSE, this, tow, vict, TO_VICT, ANSI_RED);
+	  act("You inflict something nasty on $N!",
+	      FALSE, this, tow, vict, TO_CHAR, ANSI_RED);
+	  act("There was something nasty on that $o!",
+	      FALSE, this, tow, vict, TO_NOTVICT, ANSI_RED);
+	}
       }
     
       // more absorbtion stuff..
