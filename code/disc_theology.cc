@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_theology.cc,v $
+// Revision 5.3  2001/11/11 06:48:49  brutius
+// *** empty log message ***
+//
 // Revision 5.2  2001/09/07 07:07:34  peel
 // changed TThing->stuff to getStuff() and setStuff()
 //
@@ -103,11 +106,12 @@ void attune(TBeing * caster, TThing * sym)
     return;
   }
   
-  for (obj = caster->getStuff(); obj; obj = obj->nextThing) {
+  for (obj = caster->getStuff(); obj; obj = obj->nextThing) 
     obj->getBestVial(&best);
-  }
+  
   if (!best) {
-    caster->sendTo("You need to own some holy water.\n\r");
+    caster->sendTo("You need more holy water to attempt this attune.\n\r");
+    //caster->sendTo("You need to own some holy water.\n\r");
     return;
   }
   sym->attuneMe(caster, best);
