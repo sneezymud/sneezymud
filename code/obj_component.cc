@@ -1854,7 +1854,7 @@ void buildComponentArray()
                               "",
                               "",
                               "You thrust $p into your palm.",
-                              "$n thrusts $p $s palm.",
+                              "$n thrusts $p into $s palm.",
                               "",
                               ""));
   CompInfo.push_back(compInfo(SPELL_SKY_SPIRIT,
