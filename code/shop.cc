@@ -352,7 +352,7 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
 #if IMMORTEQTEST
     keeper->doTell(fname(ch->name).c_str(), "This item is restricted for immortals.  If it ever reaches its max exist, it will be taken from you.");
 #else
-    keeper->doTell(fname(ch->name).c_str(), "%s I'd love to sell it to you, but your immortality prevents you from renting it...");
+    keeper->doTell(fname(ch->name).c_str(), "I'd love to sell it to you, but your immortality prevents you from renting it...");
     return;
 #endif
   }
@@ -423,7 +423,7 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   } else {
     tmp = number_objects_in_list(this, (TObj *) keeper->getStuff());
     if (num > tmp) {
-      keeper->doTell(ch->name, "%s I don't have %d of that item. Here %s the %d I do have.",
+      keeper->doTell(ch->name, "I don't have %d of that item. Here %s the %d I do have.",
                 num , (tmp > 1) ? "are" : "is", tmp);
     } else
       tmp = num;
