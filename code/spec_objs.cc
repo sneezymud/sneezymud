@@ -2745,6 +2745,8 @@ int bloodspike(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   return TRUE;
 }
 
+
+
 int vorpal(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
   TThing *weap=dynamic_cast<TThing *>(o);
   int dam, rc=0;
@@ -2977,6 +2979,90 @@ int newbieHelperWProc(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TOb
   }
 
   return FALSE;
+}
+
+int maquahuitl(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int randomizer = ::number(0,9);
+  TGenWeapon *weapon = dynamic_cast<TGenWeapon *>(o);
+  // Proc goes off like mad but damage is way minimal to produce the 
+  // affect of a blunt item slashing
+
+  if(!(ch=genericWeaponProcCheck(vict, cmd, weapon, 0)))
+     return FALSE;
+
+  if (randomizer >= 5) {
+    weapon->setWeaponType(WEAPON_TYPE_SLASH);
+  } else {
+    weapon->setWeaponType(WEAPON_TYPE_SMITE);
+  }
+  return TRUE;
+}
+
+int bluntPierce(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int randomizer = ::number(0,9);
+  TGenWeapon *weapon = dynamic_cast<TGenWeapon *>(o);
+  // Proc goes off like mad but damage is way minimal to produce the 
+  // affect of a blunt item slashing
+
+  if(!(ch=genericWeaponProcCheck(vict, cmd, weapon, 0)))
+     return FALSE;
+
+  if (randomizer >= 5) {
+    weapon->setWeaponType(WEAPON_TYPE_PIERCE);
+  } else {
+    weapon->setWeaponType(WEAPON_TYPE_SMITE);
+  }
+  return TRUE;
+}
+
+int randomizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int randomizer = ::number(0,9);
+  TGenWeapon *weapon = dynamic_cast<TGenWeapon *>(o);
+  // Proc goes off like mad but damage is way minimal to produce the 
+  // affect of a blunt item slashing
+
+  if(!(ch=genericWeaponProcCheck(vict, cmd, weapon, 0)))
+     return FALSE;
+
+  switch (randomizer) {
+    case 9:
+      weapon->setWeaponType(WEAPON_TYPE_SLASH);
+      break;
+    case 8:
+      weapon->setWeaponType(WEAPON_TYPE_CRUSH);
+      break;
+    case 7:
+      weapon->setWeaponType(WEAPON_TYPE_BITE);
+      break;
+    case 6:
+      weapon->setWeaponType(WEAPON_TYPE_THUMP);
+      break;
+    case 5:
+      weapon->setWeaponType(WEAPON_TYPE_WHIP);
+      break;
+    case 4:
+      weapon->setWeaponType(WEAPON_TYPE_STAB);
+      break;
+    case 3:
+      weapon->setWeaponType(WEAPON_TYPE_CLEAVE);
+      break;
+    case 2:
+      weapon->setWeaponType(WEAPON_TYPE_CLAW);
+      break;
+    case 1:
+      weapon->setWeaponType(WEAPON_TYPE_SLICE);
+      break;
+    default:
+      weapon->setWeaponType(WEAPON_TYPE_SPEAR);
+      break;
+  }
+  return TRUE;
 }
 
 int trolley(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *){  
@@ -4502,7 +4588,10 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Switchtrack", switchtrack},
   {FALSE, "vorpal", vorpal},
   {TRUE, "Berserker Weapon", berserkerWeap},// 70
-  {FALSE, "Travel Gear", travelGear}
+  {FALSE, "Travel Gear", travelGear},
+  {FALSE, "Maquahuitl", maquahuitl},
+  {FALSE, "Randomizer", randomizer},
+  {FALSE, "Blunt/Pierce", bluntPierce}
 };
 
 

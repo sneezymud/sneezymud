@@ -1473,7 +1473,6 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
           }
         } else {
           found = 2;
-          break;
         }
         break;
       case RANGER_LEVEL_IND:
@@ -2091,7 +2090,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
       break;
     case SHAMAN_LEVEL_IND:
       combat = getDiscipline(DISC_COMBAT)->getNatLearnedness();
-      basic = getDiscipline(DISC_SHAMAN)->getNatLearnedness();
+      basic = getDiscipline(DISC_WARRIOR)->getNatLearnedness();
       if (basic >= MAX_DISC_LEARNEDNESS) {
         basicLearn=TRUE;
       }
@@ -2099,7 +2098,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class, ubyte pracs)
         combatLearn = TRUE;
         combatMax = 1;
       }
-      if (combat == 2* MAX_DISC_LEARNEDNESS) {
+      if (combat == MAX_DISC_LEARNEDNESS) {
          combatMax = 2;
          combatLearn = TRUE;
       }
