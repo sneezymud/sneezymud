@@ -428,6 +428,46 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
   return;
 }
 
+const char *statBonusDescr(int percent)
+{
+  if (percent <= 80)
+    return "terrible";
+  else if (percent <= 83)
+    return "horrid";
+  else if (percent <= 86)
+    return "awful";
+  else if (percent <= 89)
+    return "bad";
+  else if (percent <= 92)
+    return "lousy";
+  else if (percent <= 95)
+    return "poor";
+  else if (percent <= 98)
+    return "so-so";
+  else if (percent <= 101)
+    return "average";
+  else if (percent <= 104)
+    return "fair";
+  else if (percent <= 107)
+    return "ok";
+  else if (percent <= 110)
+    return "decent";
+  else if (percent <= 113)
+    return "good";
+  else if (percent <= 116)
+    return "pretty good";
+  else if (percent <= 119)
+    return "very good";
+  else if (percent <= 122)
+    return "extremely good";
+  else if (percent >= 125)
+    return "superb";
+  else
+    return "unknown";
+}
+
+
+
 void TBeing::doAttribute(const char *arg)
 {
   char buf[512], buf2[512], cmdbuf[256];
@@ -556,6 +596,123 @@ void TBeing::doAttribute(const char *arg)
       sendTo("\n\r");
 
     }
+
+
+
+    if(GetMaxLevel() >= 5){
+      int mod;
+      
+      //// str
+      mod=(int)(getStrDamModifier()*100)-100;
+
+      if(GetMaxLevel()>=25){
+	sendTo(COLOR_MOBS, "Your strength gives you a %i%% damage %s.\n\r",
+	       mod, (mod>0)?"bonus":"penalty");
+      } else {
+	sendTo(COLOR_MOBS, "Your strength gives you a %s damage %s.\n\r",
+	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+      }
+
+      //// bra
+      mod=(int)(getBraMod()*100)-100;
+
+      if(GetMaxLevel()>=25){
+	sendTo(COLOR_MOBS, "Your brawn gives you a %i%% damage absorption %s.\n\r",
+	       mod, (mod>0)?"bonus":"penalty");
+      } else {
+	sendTo(COLOR_MOBS, "Your brawn gives you a %s damage absorption %s.\n\r",
+	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+      }
+
+      //// con
+      mod=(int)(getConHpModifier()*100)-100;
+
+      if(GetMaxLevel()>=25){
+	sendTo(COLOR_MOBS, "Your constitution gives you a %i%% hit point %s.\n\r",
+	       mod, (mod>0)?"bonus":"penalty");
+      } else {
+	sendTo(COLOR_MOBS, "Your constitution gives you a %s hit point %s.\n\r",
+	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+      }
+
+      
+      //// dex
+      mod=(int)(getDexMod()*100)-100;
+
+      if(GetMaxLevel()>=25){
+	sendTo(COLOR_MOBS, "Your dexterity gives you a %i%% hitting %s.\n\r",
+	       mod, (mod>0)?"bonus":"penalty");
+      } else {
+	sendTo(COLOR_MOBS, "Your dexterity gives you a %s hitting %s.\n\r",
+	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+      }
+
+      //// agi
+      mod=(int)(getAgiMod()*100)-100;
+
+      if(GetMaxLevel()>=25){
+	sendTo(COLOR_MOBS, "Your agility gives you a %i%% armor class %s.\n\r",
+	       mod, (mod>0)?"bonus":"penalty");
+      } else {
+	sendTo(COLOR_MOBS, "Your agility gives you a %s armor class %s.\n\r",
+	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+      }
+
+
+
+      //// int
+      mod=(int)(getIntModForPracs()*100)-100;
+
+      if(GetMaxLevel()>=25){
+	sendTo(COLOR_MOBS, "Your intelligence gives you a %i%% practice %s.\n\r",
+	       mod, (mod>0)?"bonus":"penalty");
+      } else {
+	sendTo(COLOR_MOBS, "Your intelligence gives you a %s practice %s.\n\r",
+	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+      }
+
+      //// foc
+      mod=(int)(getFocMod()*100)-100;
+
+      if(GetMaxLevel()>=25){
+	sendTo(COLOR_MOBS, "Your focus gives you a %i%% skill success %s.\n\r",
+	       mod, (mod>0)?"bonus":"penalty");
+      } else {
+	sendTo(COLOR_MOBS, "Your focus gives you a %s skill success %s.\n\r",
+	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+      }
+
+      //// cha
+      mod=(int)(getChaShopPenalty()*100)-100;
+
+      mod=-mod;
+	
+      if(GetMaxLevel()>=25){
+	sendTo(COLOR_MOBS, "Your charisma gives you a %i%% shop price %s.\n\r",
+	       mod, (mod>0)?"bonus":"penalty");
+      } else {
+	sendTo(COLOR_MOBS, "Your charisma gives you a %s shop price %s.\n\r",
+	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+      }
+
+      //// spe
+      mod=(int)(getSpeMod()*100)-100;
+
+      if(GetMaxLevel()>=25){
+	sendTo(COLOR_MOBS, "Your speed gives you a %i%% %s to your number of attacks.\n\r",
+	       mod, (mod>0)?"bonus":"penalty");
+      } else {
+	sendTo(COLOR_MOBS, "Your speed gives you a %s %s to your number of attacks.\n\r",
+	       statBonusDescr(mod+100), (mod>0)?"bonus":"penalty");
+      }
+
+
+
+    }
+
+
+
+
 
     if (GetMaxLevel() >= 5)
       sendTo(describeImmunities(this, 100).c_str());
