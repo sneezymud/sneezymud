@@ -469,7 +469,7 @@ int TShopOwned::setRates(sstring arg)
     return FALSE;
   }
 
-  if(profit_buy < profit_sell){
+  if(profit_buy < profit_sell && buf != "repair"){
     keeper->doTell(ch->getName(), "You can't set your buy profit lower than your sell profit, you'd lose all your money!");
     return FALSE;
   }
