@@ -2,7 +2,13 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: poker.cc,v $
+// $Log: game_poker.cc,v $
+// Revision 5.1  2001/07/13 05:39:09  peel
+// renamed
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
