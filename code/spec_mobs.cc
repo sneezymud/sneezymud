@@ -6152,7 +6152,8 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	  job->john->doSay("Alright, but you better not have crabs or anything.");
 	  break;
       }
-      job->john->doFollow(hookername.c_str());
+      if(!IS_SET(job->john->specials.act, ACT_SENTINEL))
+	job->john->doFollow(hookername.c_str());
       job->state=STATE_WALKING;
       break;
     case STATE_WALKING:
