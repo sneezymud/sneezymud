@@ -110,7 +110,8 @@ short int TPerson::hitLimit() const
 
   newmax += eqHpBonus(this);
 
-  return (int) newmax;
+  return (int) newmax + graf((age()->year - getBaseAge() + 15), 2, 4, 17, 14, 8, 4, 3);
+;
 #else
   return points.maxHit + graf((age()->year - getBaseAge() + 15), 2, 4, 17, 14, 8, 4, 3);
 #endif
