@@ -137,6 +137,7 @@ class CDiscipline
 
     virtual bool isBasic(){ return false; }
     virtual bool isFast(){ return false; }
+    virtual bool isAutomatic(){ return false; }
 
     virtual CDiscipline * cloneMe() = 0;  // a virtual constructor
     int getDoLearnedness() const;

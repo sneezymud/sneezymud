@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_adventuring.h,v $
+// Revision 5.4  2002/11/12 01:33:55  peel
+// added isAutomatic() for automatic discs like adventuring, faith etc
+//
 // Revision 5.3  2002/07/04 18:34:11  dash
 // added new repair skills
 //
@@ -146,6 +149,8 @@ class CDAdventuring : public CDiscipline
     virtual CDAdventuring * cloneMe() {
       return new CDAdventuring(*this);
     }
+
+    bool isAutomatic(){ return true; }
 
 private:
 };

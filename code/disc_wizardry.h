@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_wizardry.h,v $
+// Revision 5.2  2002/11/12 01:33:55  peel
+// added isAutomatic() for automatic discs like adventuring, faith etc
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -41,6 +47,8 @@ public:
     }
     virtual ~CDWizardry() {}
     virtual CDWizardry * cloneMe() { return new CDWizardry(*this); }
+
+    bool isAutomatic(){ return true; }
 
 private:
 };

@@ -25,6 +25,7 @@ public:
     virtual ~CDRitualism() {}
     virtual CDRitualism * cloneMe() { return new CDRitualism(*this); }
 
+    bool isAutomatic(){ return true; }
 private:
 };
 
