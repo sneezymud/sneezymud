@@ -557,13 +557,13 @@ void TPool::peeMe(const TBeing *ch)
     fillMe(ch, LIQ_LEMONADE);
 }
 
-void TBeing::doPee(const char *argument)
+void TBeing::doPee(string argument)
 {
   TThing *t;
   TObj *o;
   TBeing *tmp_char;
-  char arg[200], arg2[200];
-  liqTypeT liquid=MAX_DRINK_TYPES, i;
+  string arg;
+  liqTypeT liquid=MAX_DRINK_TYPES;
 
   if (powerCheck(POWER_PEE))
     return;
@@ -571,23 +571,23 @@ void TBeing::doPee(const char *argument)
   if (in_room < 0)
     return;
 
-  only_argument(argument, arg);
+  //  argument=one_argument(argument, arg);
+  arg=argument;
 
-  for (i = MIN_DRINK_TYPES; i < MAX_DRINK_TYPES; i++) {
-    if (is_abbrev(arg, stripColorCodes(DrinkInfo[i]->name).c_str())) {
-      liquid = i;
+  for(liquid=MIN_DRINK_TYPES;liquid<MAX_DRINK_TYPES;liquid++){
+    if(is_abbrev(arg, stripColorCodes(DrinkInfo[liquid]->name)))
       break;
-    }
   }
 
-  if (*arg && liquid == MAX_DRINK_TYPES) {
-    if (!strncmp(arg, "in", 2) && isspace(arg[2])) {
-      only_argument(argument + 3, arg2);
+  if (!arg.empty() && liquid == MAX_DRINK_TYPES) {
+    if(arg.substr(0,2) == "in" && isspace(arg[2])){
+      arg.erase(0,3); // remove "in "
 
-      if (arg2 && generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_ROOM, this, &tmp_char, &o)) 
+      if (!arg.empty() && generic_find(arg.c_str(), FIND_OBJ_INV | FIND_OBJ_ROOM, this, &tmp_char, &o)) 
        	o->peeMe(this);	
-    } else if ((t = searchLinkedListVis(this, arg, roomp->getStuff()))) 
+    } else if((t = searchLinkedListVis(this, arg.c_str(),roomp->getStuff()))){
       t->peeOnMe(this);
+    }
   } else {
     act("$n quietly relieves $mself.  You are not amused.", TRUE, this, NULL, NULL, TO_ROOM);
     sendTo("You relieve yourself as stealthfully as possible.\n\r");
