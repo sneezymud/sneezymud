@@ -1386,6 +1386,7 @@ int generic_dispel_magic(TBeing *caster, TBeing *victim, int, immortalTypeT immo
     { SPELL_DJALLA, true, true, false },
     { SPELL_SENSE_LIFE_SHAMAN, true, true, false },
     { SPELL_DETECT_SHADOW, true, true, false },
+    { SPELL_SHADOW_WALK, false, true, false },
     { SPELL_INTIMIDATE, true, true, false },
     { SPELL_CHEVAL, true, true, false },
     { SPELL_HYPNOSIS, true, true, false },
