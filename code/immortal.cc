@@ -59,7 +59,7 @@ bool WizBuild = true;         // can builders hear wiznet
 bool WizInvis = FALSE;
 bool WizShout = FALSE;
 bool WizGoto = FALSE;
-bool AllowPcMobs = FALSE;    // PCs with same name as mob allowed?
+bool AllowPcMobs = TRUE;    // PCs with same name as mob allowed?
 bool TurboMode = FALSE;      // bumps pulse-actions at 2x speed
 
 int QuestVar1 = 0; // varibles for changing constants in the code in-game
