@@ -42,39 +42,56 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   sstring buf3, buf4;
 
 // About 10,000 mobs load currently
-// want about 1/25 mobs to load a token - that's about 400 token loads
-//   in the game
-//   1% = 4 of that token
-//
-//   set up for 4 pocs, 4 poys, 4 pols, 16 mystery pots
-//   P's are limited (40 of them), O's are common
-//   
-  if (roll == 1)
+  if (roll == 1 || roll == 2)
     buf3 = "C";
-  else if (roll == 2)
+  else if (roll == 3 || roll ==4)
     buf3 = "L";
-  else if (roll == 3)
+  else if (roll == 5 || roll == 6)
     buf3 = "Y";
-  else if (roll > 3 && roll <= 7)
+  else if (roll == 7 || roll == 8)
+    buf3 = "H";
+  else if (roll == 9 || roll == 10)
+    buf3 = "N";
+  else if (roll == 11 || roll == 12)
+    buf3 = "T";
+  else if (roll > 12 && roll <= 20)
+    buf3 = "S";
+  else if (roll > 20 && roll <= 40)
     buf3 = "M";
-  else if (roll > 7 && roll <= 90)
+  else if (roll > 40 && roll <= 70)
     buf3 = "O";
-  else if (roll > 90)
+  else
     buf3 = "P";
   
   ch->sendTo("As you watch, the blank face of the tile blurs momentarily.\n\r");
   buf4 = fmt("The letter <Y>%s<z> appears.") % buf3;
-  sstring buf5 = fmt("tile %s") % buf3;
-  sstring buf6 = fmt("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % buf3;
-  o->swapToStrung();
-  o->name = mud_str_dup(buf5);
-  o->shortDescr = mud_str_dup(buf6);
-  o->spec = SPEC_SPLIT_JOIN;
-  o->addObjStat(ITEM_NORENT);
-  act(buf4,TRUE,ch,NULL,NULL,TO_CHAR,NULL);
-  
 
+// delete tile, load tile with join proc
+// need to know what hand to hold it in tile->eq_pos
+  TObj *newtile = NULL;
+  if (!(newtile = read_object(TILEVNUM_SHAKEN, VIRTUAL))) {
+    vlogf(LOG_LOW, fmt("could not read obj %d in spec_objs_sweeps.cc") % 
+        TILEVNUM_SHAKEN);
+  }
+  if (newtile) { // delete tile and load item
+    wearSlotT pos = o->eq_pos;
+    delete o;
+    o = NULL;
+    sstring buf5 = fmt("tile %s") % buf3;
+    sstring buf6 = fmt("an <b>obsidian tile<z> inscribed with <Y>%s<z>") % buf3;
+    newtile->swapToStrung();
+    newtile->name = mud_str_dup(buf5);
+    newtile->shortDescr = mud_str_dup(buf6);
+    act(buf4,TRUE,ch,NULL,NULL,TO_CHAR,NULL);
+      
+    ch->equipChar(newtile, pos, SILENT_YES);
+  } else {
+    ch->sendTo("Something has gone horribly wrong with your tile.\n\r");
+    vlogf(LOG_LOW, "Error in tile shake - no new tile.\n\r");
+  }
+ 
   return TRUE;
+
 }
   
 int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
@@ -152,16 +169,20 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
       teleport(ch,ch,50,100);
     } else {
       int newobjn = 0;
-      if (newname == "POC") {
+      if (newname == "PCH") {
         newobjn = STATS_POTION;
-      } else if (newname == "POL") {
+      } else if (newname == "PLN") {
         newobjn = LEARNING_POTION;
-      } else if (newname == "POM") {
+      } else if (newname == "PMS") {
         newobjn = MYSTERY_POTION;
-      } else if (newname == "POY") {
+      } else if (newname == "PYT") {
         newobjn = YOUTH_POTION;
-      } else if (newname == "POO")
+      } else if (newname == "POO") {
         newobjn = OBJ_PILE_OFFAL;
+      } else if (newname == "MOP") {
+        newobjn = 9083; // a mop
+      }
+      
       
       if (newobjn > 0) { 
         TObj *newobj = NULL;
