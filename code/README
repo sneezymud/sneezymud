@@ -1,3 +1,14 @@
+12-03-99 - Lapsos
+- Added 'arrowType' output to 'eval bow'
+- Added 'arrowType' output to 'eval arrow'
+- Changed mobile transform-limb to also check for Held objects first.
+- Fixed bug that allowed a person to wither unchecked.
+- AUTO_NOHARM will prevent attacking of one's own pets.
+- 'chi' will no longer default to the chi'er.
+- Doorbash will no longer stun immortals.
+- Fumble will now initiate combat on success or crit-failure.
+- Added rent cost to 'value <mob>' when in pet-shop.
+
 11-05-99 - Peel
 - Added checknroom, moveto and destination response script actions.
 
