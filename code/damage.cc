@@ -883,14 +883,14 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
         int comp, amt;
         TBaseCorpse *corpse = NULL;
 
-	sprintf(buf, "%s-corpse-autoloot", buf2);
+	sprintf(buf, "%s-corpse", buf2);
 
         if ((t2 = searchLinkedListVis(this, buf, roomp->getStuff())) &&
             (corpse = dynamic_cast<TBaseCorpse *>(t2))) {
           if (doesKnowSkill(SKILL_DISSECT)) {
             comp = determineDissectionItem(corpse, &amt, msg, gl, this);
             if (comp != -1) {
-              sprintf(buf, "dissect %s-corpse-autoloot", buf2);
+              sprintf(buf, "dissect %s-corpse", buf2);
               addCommandToQue(buf);
             }
           }
