@@ -170,6 +170,7 @@ extern void CallForGuard(TBeing *ch, TBeing *vict, int lev);
 extern TMonster *FindMobInRoomWithProcNum(int room, int num);
 extern bool okForJanitor(TMonster *, TObj *);
 
+extern int payToll(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int meeting_organizer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int fighter(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int doctor(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);

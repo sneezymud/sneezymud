@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_charge.cc,v $
+// Revision 5.4  2002/10/16 05:40:22  peel
+// moved extern payToll to spec_mobs.h
+//
 // Revision 5.3  2002/03/06 04:07:51  peel
 // added atoi_safe and atof_safe to check for NULL values
 // converted all the atoi and atof to the safe versions
@@ -25,7 +28,6 @@
 
 #include "stdsneezy.h"
 
-extern int  payToll(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern void warn_busy(TBeing *);
 
 void stop_charge(TBeing *ch)
