@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_rest.cc,v $
+// Revision 5.7  2001/08/21 22:19:10  jesus
+// shaman newbie protection updates
+//
 // Revision 5.6  2001/08/16 22:10:29  jesus
 // fixed a bug with newbie protection for shamans
 //
@@ -61,12 +64,16 @@ int task_rest(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *, TOb
         if (!ch->roomp->isRoomFlag(ROOM_NO_HEAL)) {
           ch->addToMana(1);
           ch->addToPiety(.10);
-	  if (ch->hasClass(CLASS_SHAMAN) && !ch->affectedBySpell(SPELL_SHAPESHIFT) && (ch->GetMaxLevel() > 5)) {
-	    if (1 > ch->getLifeforce()) {
-	      ch->updateHalfTickStuff();
+	  if (ch->hasClass(CLASS_SHAMAN) && !ch->affectedBySpell(SPELL_SHAPESHIFT)) {
+	    if (ch->GetMaxLevel() > 5) {
+	      if (1 > ch->getLifeforce()) {
+		ch->updateHalfTickStuff();
+	      } else {
+		ch->addToLifeforce(-1);
+		ch->sendTo("Your lack of activity drains your precious lifeforce.\n\r");
+	      }
 	    } else {
-	      ch->addToLifeforce(-1);
-	      ch->sendTo("Your lack of activity drains your precious lifeforce.\n\r");
+	      ch->addToHit(1);
 	    }
 	  } else {
 	    ch->addToHit(1);
