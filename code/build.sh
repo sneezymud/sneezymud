@@ -9,7 +9,7 @@ then
   if [ "$pid" == "" ]
   then
     echo "Starting make, output to file.mak.";
-    gmake -k -j 5 -l 2 >& file.mak &
+    gmake -k -j 2 -l 3 >& file.mak &
   else
     echo "You are already running make."
   fi
