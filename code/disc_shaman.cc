@@ -1791,8 +1791,6 @@ int distort(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
   char buf[256];
   string bBuf;
 
-  if (caster->isNotPowerful(victim, level, SPELL_DISTORT, SILENT_NO))
-    return SPELL_FAIL;
 
   level = min(level, 15);
 

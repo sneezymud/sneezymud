@@ -521,9 +521,6 @@ int deathWave(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
   char buf[256];
   string bBuf;
 
-  if (caster->isNotPowerful(victim, level, SPELL_DEATHWAVE, SILENT_NO))
-    return SPELL_FAIL;
-
   level = min(level, 75);
 
   int dam = caster->getSkillDam(victim, SPELL_DEATHWAVE, level, adv_learn);
