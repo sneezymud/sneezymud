@@ -612,7 +612,13 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
       // discard 0-cost components and symbols due to overhaul
       dynamic_cast<TNote *>(o)) {
 #endif
-    o->assignFourValues(item.value[0],item.value[1],item.value[2],item.value[3]);
+
+
+    if(version<8 && dynamic_cast<TComponent *>){
+      o->assignFourValues(item.value[0],item.value[1],item.value[3],0);
+    } else {
+      o->assignFourValues(item.value[0],item.value[1],item.value[2],item.value[3]);
+    }
     
     o->setObjStat(item.extra_flags);
     o->setWeight((float) item.weight);

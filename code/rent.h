@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: rent.h,v $
+// Revision 5.2  2002/06/04 19:57:23  peel
+// rent file version change
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -16,7 +22,7 @@
 #ifndef __RENT_H
 #define __RENT_H
 
-const int CURRENT_RENT_VERSION     =7;
+const int CURRENT_RENT_VERSION     =8;
 // 0        3.x - initial version
 // 1        4.1 rev 61  - changed weight from int to float
 // 2        pre 4.5 - added depreciation to rentObject structure
@@ -25,6 +31,7 @@ const int CURRENT_RENT_VERSION     =7;
 // 5        5.0 : Jan 14 1999 : Forced all EQ to become like tinyfile
 // 6        5.0 : Jan 19 1999 : More of the same
 // 7        5.1 : April 16 1999 : More of the same
+// 8        5.2 : June 4 2002 : shuffled 4vals for weapons
 
 // This was 200, but i see no technical reason to not be able to increase it
 const int MAX_OBJ_SAVE =1000 ;     
