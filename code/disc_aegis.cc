@@ -53,9 +53,17 @@ void relive(TBeing *ch, TBeing *vict)
 
 
     aff.type = SPELL_RELIVE;
-    aff.duration = 7 * 24 * UPDATES_PER_MUDHOUR;
-    aff.modifier = 100;
-    aff.location = APPLY_AGE;
+    aff.duration = 24 * UPDATES_PER_MUDHOUR;
+    aff.modifier = 50;
+    aff.location = APPLY_STR;
+    vict->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    aff.location = APPLY_CON;
+    vict->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    aff.location = APPLY_AGI;
+    vict->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    aff.location = APPLY_DEX;
+    vict->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    aff.location = APPLY_SPE;
     vict->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES);
 
     act("The ordeal has left you feeling aged.",
