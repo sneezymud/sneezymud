@@ -3022,7 +3022,7 @@ void printLimitedInRent(void)
             obj_index[i].name, obj_index[i].virt,
             obj_index[i].max_exist, obj_index[i].number);
 	// these have to be lower case
-        autoMail(NULL, "jesus", buf);
+        // autoMail(NULL, "jesus", buf);
         autoMail(NULL, "damescena", buf);
 
       }
