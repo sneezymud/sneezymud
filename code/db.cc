@@ -309,14 +309,6 @@ void bootDb(void)
   bootPulse("Processing corpse-save files.");
   processCorpseFiles();
 
-
-  bootPulse("Booting mail system:", false);
-  if (!scan_file(SILENT_NO)) {
-    vlogf(LOG_MISC, "   Mail system error -- mail system disabled!");
-    no_mail = 1;
-  }
-  bootPulse(NULL, true);
-
   bootPulse("Calculating number of items in rent.");
   vlogf(LOG_MISC, "Totals on limited items:");
   printLimitedInRent();

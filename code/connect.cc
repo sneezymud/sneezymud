@@ -5439,7 +5439,7 @@ int Descriptor::doAccountStuff(char *arg)
 
       while (has_mail(delname)) {
         vlogf(LOG_PIO, "Deleting mail for character %s.", delname);
-        char *tmpp = read_delete(delname, delname);
+        const char *tmpp = read_delete(delname, delname);
         delete [] tmpp;
       }
 
