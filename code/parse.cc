@@ -1395,6 +1395,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       case CMD_LEAP:
 	rc = doLeap(newarg);
 	break;
+      case CMD_VOTE:
+	rc = doVote(newarg);
+	break;
       case CMD_EVALUATE:
 	doEvaluate(newarg.c_str());
 	break;
@@ -2754,6 +2757,7 @@ void buildCommandArray(void)
   commandArray[CMD_HURL] = new commandInfo("hurl", POSITION_FIGHTING, 0);
   commandArray[CMD_CHI] = new commandInfo("chi", POSITION_FIGHTING, 0);
   commandArray[CMD_LEAP] = new commandInfo("leap", POSITION_STANDING, 0);
+  commandArray[CMD_VOTE] = new commandInfo("vote", POSITION_STANDING, 0);
   commandArray[CMD_DIVINE] = new commandInfo("divine", POSITION_STANDING, 0);
   commandArray[CMD_OUTFIT] = new commandInfo("outfit", POSITION_STANDING, 0);
   commandArray[CMD_CLIENTS] = new commandInfo("clients", POSITION_DEAD, GOD_LEVEL1);

@@ -5675,6 +5675,7 @@ int switchObject(TBeing *me, cmdTypeT cmd, const char *, TObj *o, TObj *)
 //MARKER: END OF SPEC PROCS
 
 
+extern int ballotBox(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int stockBoard(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int board(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int weaponBlinder(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
@@ -5736,7 +5737,7 @@ extern int marukalia(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj 
 TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
 {
   {TRUE, "BOGUS", bogusObjProc},  // 0
-  {TRUE, "BOGUS", bogusObjProc},
+  {TRUE, "ballot box", ballotBox},
   {FALSE, "bulletin board", board},
   {TRUE, "note dispenser", dispenser},
   {TRUE, "statue of feeding", statue_of_feeding},

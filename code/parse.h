@@ -565,6 +565,7 @@ enum cmdTypeT {
      CMD_FOLD,
      CMD_BOOT,
      CMD_LEAP,
+     CMD_VOTE,
      MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow
