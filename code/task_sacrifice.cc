@@ -18,6 +18,14 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
 
+  if (!corpse) {
+    act("You cease your ritual sacrifice.", false, ch, 0, 0, TO_CHAR);
+    act("$n ceases $s sacrifice.", false, ch, 0, 0, TO_ROOM);
+    ch->stopTask();
+    vlogf(LOG_BUG, "task_sacrifice.cc: Corpse sacrifice task entered without a corpse!");
+    return FALSE;
+  }
+
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) || (ch->getPosition() < POSITION_RESTING)) {
     act("You cease the ritual sacrifice of $p.", FALSE, ch, corpse, 0, TO_CHAR);
     act("$n stops trying to sacrifice $p.", TRUE, ch, corpse, 0, TO_ROOM);
