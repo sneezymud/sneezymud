@@ -614,7 +614,7 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
 #endif
 
 
-    if(version<8 && dynamic_cast<TComponent *>){
+    if(version<8 && dynamic_cast<TComponent *>(o)){
       int x;
       
       // damage level and deviation are now merged
