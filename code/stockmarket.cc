@@ -8,6 +8,7 @@ void updateStockHistory()
   // stockhistory table needs to be seeded with at least one entry for
   // each stock, for this query to work
   db.query("insert into stockhistory select sh.n+1, s.ticker, s.price from stockinfo s left outer join (select ticker, max(n) as n from stockhistory group by ticker) sh on (s.ticker=sh.ticker)");
+
 }
 
 
@@ -109,7 +110,7 @@ int stockBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   ch->sendTo("Ticker   Bid    Ask  Change  Market Cap                                \n\r");
   ch->sendTo("------------------------------------------------------------\n\r");
   
-  db.query("select distinct si.ticker, si.price, sh.price as dayprice, si.shares from stockinfo si, stockhistory sh, (select ticker, max(n) as n from stockhistory group by ticker) sn where sh.n=sn.n and si.ticker=sh.ticker");
+  db.query("select distinct si.ticker, si.price, sh.price as dayprice, si.shares from stockinfo si, stockhistory sh, (select ticker, max(n) as n from stockhistory group by ticker) sn where sh.n=sn.n and si.ticker=sh.ticker and sn.ticker=si.ticker");
 
 
   while(db.fetchRow()){
