@@ -794,6 +794,31 @@ void TPerson::doShow(const char *argument)
               buf2);
       sb += buf;
     }
+  } else if (is_abbrev(buf, "overmax")) {
+    if (!hasWizPower(POWER_SHOW_OBJ) || !hasWizPower(POWER_SHOW_TRUSTED)) {
+      sendTo("You lack the power to show maxed obj information.\n\r");
+      return;
+    }
+
+    sb += "VNUM  count max_exist str AC value names\n\r";
+
+    unsigned int objnx;
+    for (objnx = 0; objnx < obj_index.size(); objnx++) {
+      if(obj_index[objnx].number<=obj_index[objnx].max_exist) continue;
+      obj = read_object(obj_index[objnx].virt, VIRTUAL);
+      sprintf(buf2, "%s", obj->getNameForShow(false, true, this).c_str());
+      delete obj;
+
+      sprintf(buf, "%5d %3d    %5d%c   %3d %2d %5d %s\n\r", 
+              obj_index[objnx].virt, obj_index[objnx].number,
+              obj_index[objnx].max_exist, 
+              (obj_index[objnx].value <= LIM_ITEM_COST_MIN ? ' ' : '*'), 
+	      obj_index[objnx].max_struct,
+	      max(obj_index[objnx].armor, (sh_int) 0),
+	      obj_index[objnx].value,
+              buf2);
+      sb += buf;
+    }
   } else if (is_abbrev(buf, "rooms")) {
     only_argument(argument, zonenum);
 
@@ -1094,6 +1119,7 @@ void TPerson::doShow(const char *argument)
     sb += "Usage:\n\r";
     sb += "  show zones (<zonename> | \"disabled\")\n\r";
     sb += "  show objects (zone#|name|maxed)\n\r";
+    sb += "  show (maxed|overmax)\n\r";
     sb += "  show mobiles (zone#|name|\"pets\"|\"hunters\"|\"bounty\"|\"response\")\n\r";
 
     sb += "  show free (mobiles|objects) (zone#/all) <zone#>\n\r";
