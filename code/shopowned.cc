@@ -462,7 +462,7 @@ int TShopOwned::doLogs(const char *arg)
     db.query("delete from shoplog where shop_nr=%i", shop_nr);
     ch->sendTo("Done.\n\r");
   } else if(!strcmp(arg, " summaries")){
-    db.query("select name, action, sum(talens) tsum from shoplog where shop_nr=%i group by name, action order by tsum desc", shop_nr);
+    db.query("select name, action, sum(talens) as tsum from shoplog where shop_nr=%i group by name, action order by tsum desc", shop_nr);
     
     while(db.fetchRow()){
       sprintf(buf, "%-12.12s %-10.10s %8i\n\r", 
@@ -474,7 +474,7 @@ int TShopOwned::doLogs(const char *arg)
     //////////
     sb += "\n\r";
     
-    db.query("select item, action, sum(talens) tsum from shoplog where shop_nr=%i group by item, action order by tsum desc", shop_nr);
+    db.query("select item, action, sum(talens) as tsum from shoplog where shop_nr=%i group by item, action order by tsum desc", shop_nr);
     
     while(db.fetchRow()){
       sprintf(buf, "%-32.32s %-10.10s %8i\n\r", 
@@ -486,7 +486,7 @@ int TShopOwned::doLogs(const char *arg)
     /////////
     sb += "\n\r";
     
-    db.query("select action, sum(talens) tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
+    db.query("select action, sum(talens) as tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
     
     while(db.fetchRow()){
       sprintf(buf, "%-12.12s %8i\n\r", 
