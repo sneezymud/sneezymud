@@ -136,6 +136,12 @@ int TThing::getCarriedVolume() const
 {
   TThing *t;
   int total=0;
+  const TOpenContainer *toc;
+
+  if((toc=dynamic_cast<const TOpenContainer *>(this)) &&
+     toc->isContainerFlag(CONT_WEIGHTLESS))
+    return getVolume();
+
 
   for(t=rider;t;t=t->nextRider){
     total+=t->getTotalVolume();
