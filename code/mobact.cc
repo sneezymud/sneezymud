@@ -1121,10 +1121,6 @@ int TMonster::monkMove(TBeing &vict)
 
       for (i = 0; i < 20; i++) {
 	dirTypeT hurlDir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
-	/*
-	Peel tells you, "so roomp->dir_option[::number(0,MAX_DIR)]"
-	exitDir(dirTypeT door)
-	*/
 
 	if (this->canGo(hurlDir)) {
           vlogf(LOG_ANGUS, "monkMove: %s hurling %s, dir= %i", name, vict.name, hurlDir);
@@ -1179,15 +1175,6 @@ static bool faerieFireCheck(TBeing &ch, TBeing &vict, spellNumT spell)
        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
     act("$n utters the words, 'Tingle all over!'",
              TRUE, &ch, 0, 0, TO_ROOM);
-    return true;
-  }
-  return false;
-}
-
-static bool victSpelledCheck(TBeing &ch, TBeing &vict, spellNumT spell)
-{
-  if (vict.affectedBySpell(spell) && ch.doesKnowSkill(SPELL_DISPEL_MAGIC) &&
-       (ch.getSkillValue(SPELL_DISPEL_MAGIC) > 66)) {
     return true;
   }
   return false;
@@ -1338,11 +1325,17 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
     // offensive spells
     // hit um with the long-term effect ones first
     spell = SPELL_DISPEL_MAGIC;
-    if (!::number(0, 4) && (victSpelledCheck(ch, vict, SPELL_HASTE)) &&
-           !(victSpelledCheck(ch, vict, SPELL_FAERIE_FIRE)) &&
-           (cutoff < discArray[spell]->start)) {
+    if (!::number(0, 3) &&
+       ch.doesKnowSkill(SPELL_DISPEL_MAGIC) &&
+       (ch.getSkillValue(SPELL_DISPEL_MAGIC) > 66) &&
+       (vict.affectedBySpell(SPELL_HASTE) ||
+       vict.affectedBySpell(SPELL_PLASMA_MIRROR) ||
+       vict.affectedBySpell(SPELL_GILLS_OF_FLESH)) &&
+       !(vict.affectedBySpell(SPELL_FAERIE_FIRE) ||
+       vict.affectedBySpell(SPELL_BIND)) &&
+       (cutoff < discArray[spell]->start)) {
       act("$n utters the words, 'Back to the basics!'",
-               TRUE, &ch, 0, 0, TO_ROOM);
+          TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
     spell = SPELL_FAERIE_FIRE;
@@ -3619,6 +3612,22 @@ int TMonster::mobileActivity(int pulse)
       else if (rc)
         return TRUE;
     }
+
+    // Do the vampire/lycanthrope stuff
+    if (!::number(0, 5)) {
+      if ((isVampire() && (tmp_ch->hitLimit() < hitLimit()) &&
+         (GetMaxLevel() > tmp_ch->GetMaxLevel() + 10) &&
+         hits(tmp_ch, attackRound(tmp_ch) - tmp_ch->defendRound(this))) ||
+         ((getMyRace()->isLycanthrope()) &&
+         (!isPc() || hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)))) {
+        rc = doBite(tmp_ch->name);
+        if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
+          return DELETE_THIS;
+        else if (rc)
+          return TRUE;
+      }
+    }
+
     // either no spec or decided against it
     // go into normal class-related attacks
 
@@ -4671,9 +4680,19 @@ int TMonster::defendSelf(int)
     if (!found && specials.hunting && Hates(specials.hunting, NULL)) {
       // we're hunting down some bastard!  Let's be real nasty about it
       if (!found) {
+        spell = SPELL_DISPEL_MAGIC;
+        if (affectedBySpell(SPELL_CALM) &&
+	    doesKnowSkill(spell) &&
+            (getSkillValue(spell) > 66)) {
+          act("$n utters the words, 'Back to the basics!'",
+                   TRUE, this, 0, 0, TO_ROOM);
+          found = TRUE;
+        }
+      }
+      if (!found) {
         spell = SPELL_HASTE;
         if (!affectedBySpell(spell) &&
-	     doesKnowSkill(spell) && (getSkillValue(spell) > 70)) {
+	     doesKnowSkill(spell) && (getSkillValue(spell) > 50)) {
           act("$n utters the words, 'Time to get moving!'",
                    TRUE, this, 0, 0, TO_ROOM);
           found = TRUE;
