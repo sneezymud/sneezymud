@@ -1658,7 +1658,6 @@ void TBaseWeapon::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_n
     TShopOwned tso(shop_nr, keeper, ch);
 
     tso.doReserve();
-    tso.chargeTax(this, cost);
   }
 
 }

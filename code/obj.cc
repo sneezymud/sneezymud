@@ -499,7 +499,6 @@ void TObj::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
     TShopOwned tso(shop_nr, keeper, ch);
 
     tso.doReserve();
-    tso.chargeTax(this, cost);
   }
 }
 
