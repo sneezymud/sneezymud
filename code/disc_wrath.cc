@@ -517,7 +517,8 @@ int curse(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT sp
   caster->reconcileHurt(victim,discArray[spell]->alignMod);
 
   if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
-    if (!victim->isLucky(caster->spellLuckModifier(spell)) &&
+    // made it violent - Maror
+/*    if (!victim->isLucky(caster->spellLuckModifier(spell)) &&
         !victim->affectedBySpell(spell)) {
 
       genericCurse(caster, victim, level, spell);
@@ -529,12 +530,12 @@ int curse(TBeing * caster, TBeing * victim, int level, byte bKnown, spellNumT sp
         tmons->US(5);
         tmons->UA(7);
         tmons->aiTarget(caster);
-      }
+      }*/
 
       return SPELL_SUCCESS;
-    } else {
+/*    } else {
       return SPELL_FAIL;
-    }
+    }*/
   } else {
     if (critFail(caster, spell)) {
       CF(spell);
