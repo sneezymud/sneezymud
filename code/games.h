@@ -381,7 +381,7 @@ class HoldemGame : public CardGame {
   CardDeck deck;
   const Card *community[5];
   HoldemPlayer *players[MAX_HOLDEM_PLAYERS];
-  int better;
+  int better, firstbetter, button;
   
   holdemStateT state;
   int last_bet;
@@ -400,6 +400,8 @@ class HoldemGame : public CardGame {
   int handValue(HoldemPlayer *);
   void advanceRound(TBeing *ch);
   int nextBetter(int);
+  int nextPlayer(int);
+  int nextButton();
   int lastPlayer();
   int firstPlayer();
   void linkPlayers();

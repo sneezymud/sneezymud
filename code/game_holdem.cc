@@ -7,7 +7,6 @@
 
 HoldemGame gHoldem;
 
-
 bool TBeing::checkHoldem(bool inGame = false) const
 {
   gHoldem.linkPlayers();
@@ -282,15 +281,14 @@ void HoldemGame::showdown(TBeing *ch)
 
 
   // move button
-  for(i=1;i<MAX_HOLDEM_PLAYERS;++i){
-    if(players[i] && players[i]->ch && players[i]->ch->isPc()){
-      act("The button moves to $n.",
-	  FALSE, players[i]->ch, 0, 0, TO_ROOM);
-      act("The button moves to you.",
-	  FALSE, players[i]->ch, 0, 0, TO_CHAR);
-      break;
-    }
-  }
+  vlogf(LOG_PEEL, "pre button: %i", button);
+  button=nextButton();
+  vlogf(LOG_PEEL, "post button: %i", button);
+
+  act("The button moves to $n.",
+      FALSE, players[button]->ch, 0, 0, TO_ROOM);
+  act("The button moves to you.",
+      FALSE, players[button]->ch, 0, 0, TO_CHAR);
 
 
   // reinitialize players
@@ -345,12 +343,34 @@ void HoldemGame::linkPlayers()
 int HoldemGame::nextBetter(int b)
 {
   // find the next better that isn't all in
-  for(int i=b+1;i<MAX_HOLDEM_PLAYERS;++i){
-    if(players[i] && players[i]->hand[0] && !players[i]->allin){
+  for(int i=b+1;i!=firstbetter;i=(i+1)%MAX_HOLDEM_PLAYERS){
+    if(players[i] && players[i]->ch && 
+       players[i]->hand[0] && !players[i]->allin){
       return i;
     }
   }
   return -1;
+}
+
+int HoldemGame::nextPlayer(int b)
+{
+  // find the next better that isn't all in
+  for(int i=b+1;i!=firstbetter;i=(i+1)%MAX_HOLDEM_PLAYERS){
+    if(players[i] && players[i]->ch){
+      return i;
+    }
+  }
+  return -1;
+}
+
+int HoldemGame::nextButton()
+{
+  for(int i=button+1;i!=button;i=(i+1)%MAX_HOLDEM_PLAYERS){
+    if(players[i] && players[i]->ch && players[i]->ch->isPc()){
+      return i;
+    }
+  }
+  return button;
 }
 
 
@@ -604,9 +624,8 @@ void HoldemGame::call(TBeing *ch)
 
   ch->doSave(SILENT_YES);
   
-  int tmp;
-  if((tmp=nextBetter(better))!=-1){
-    better=tmp;
+  if(nextBetter(better)!=-1){
+    better=nextBetter(better);
     act("The bet moves to $n.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
     players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
   } else {
@@ -687,25 +706,10 @@ void HoldemGame::raise(TBeing *ch, const sstring &arg)
 
   ch->doSave(SILENT_YES);
   
+  firstbetter=better;
 
-  if(better!=0){
-    HoldemPlayer *hp[MAX_HOLDEM_PLAYERS];
-    int i=better, j=0;
-
-    do {
-      hp[j]=players[i];
-      j++;
-      i=(i+1)%MAX_HOLDEM_PLAYERS;
-    } while((i != better) && (j<MAX_HOLDEM_PLAYERS));
-    for(i=0;i<MAX_HOLDEM_PLAYERS;++i)
-      players[i]=hp[i];
-    better=0;
-  }
-
-
-  int tmp;
-  if((tmp=nextBetter(better))!=-1){
-    better=tmp;
+  if(nextBetter(better)!=-1){
+    better=nextBetter(better);
     act("The bet moves to $n.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
     players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
   } else {
@@ -740,7 +744,7 @@ void HoldemGame::flop(TBeing *ch)
   act(buf, FALSE, ch, 0, 0, TO_ROOM);
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
   
-  better=nextBetter(-1);
+  better=firstbetter;
 
   act("The bet moves to $n.",
       FALSE, players[better]->ch, 0, 0, TO_ROOM);
@@ -764,7 +768,7 @@ void HoldemGame::turn(TBeing *ch)
   act(buf, FALSE, ch, 0, 0, TO_ROOM);
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
 
-  better=nextBetter(-1);
+  better=firstbetter;
 
   act("The bet moves to $n.",
       FALSE, players[better]->ch, 0, 0, TO_ROOM);
@@ -788,7 +792,7 @@ void HoldemGame::river(TBeing *ch)
   act(buf, FALSE, ch, 0, 0, TO_ROOM);
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
   
-  better=nextBetter(-1);
+  better=firstbetter;
 
   act("The bet moves to $n.",
       FALSE, players[better]->ch, 0, 0, TO_ROOM);
@@ -825,20 +829,18 @@ void HoldemGame::fold(TBeing *ch)
   act("$n folds.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
   act("You fold.", FALSE, players[better]->ch, 0, 0, TO_CHAR);
 
-  if(playerHandCount() == 2){
-    players[better]->hand[0]=NULL;
-    players[better]->hand[1]=NULL;
+  players[better]->hand[0]=NULL;
+  players[better]->hand[1]=NULL;
+
+  if(playerHandCount() == 1){
+    // 1 player left, win by default
     showdown(players[firstPlayer()]->ch);
-  } else if(players[better]->name!=players[lastPlayer()]->name){
-    players[better]->hand[0]=NULL;
-    players[better]->hand[1]=NULL;
-    if((better=nextBetter(better))!=-1){
-      act("The bet moves to $n.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
-      players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
-    }
+  } else if(nextBetter(better)!=-1){
+    better=nextBetter(better);
+
+    act("The bet moves to $n.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
+    players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
   } else {
-    players[better]->hand[0]=NULL;
-    players[better]->hand[1]=NULL;
     advanceRound(players[better]->ch);
   }
 }
@@ -920,25 +922,10 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
       break;
   }
 
+  better=firstbetter=button=i;
 
-  // rotate so they are the first player
-  HoldemPlayer *tmp=players[0];
-  sstring pname=players[i]->name;
-
-  better=0;
-
-  while(!players[0] || players[0]->name!=pname){
-    tmp=players[0];
-    for(i=0;i<MAX_HOLDEM_PLAYERS-1;++i)
-      players[i]=players[i+1];
-    players[i]=tmp;
-  }
-  
   // deal cards to everyone
-  for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){    
-    if(!players[i])
-      continue;
-
+  for(int i=better;i!=-1;i=nextPlayer(i)){
     players[i]->ch->sendTo(COLOR_BASIC, "You are dealt:\n\r");
     act("$n is dealt two cards facedown.", 
 	FALSE, players[i]->ch, 0, 0, TO_ROOM);
@@ -953,9 +940,7 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
   }
     
   // move the bet to the next person
-  vlogf(LOG_PEEL, "better1=%i, %s", better, players[better]->name.c_str());
   better=nextBetter(better);
-  vlogf(LOG_PEEL, "better2=%i, %s", better,  players[better]->name.c_str());  
 
   act("The bet moves to $n.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
   players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
@@ -963,24 +948,4 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
   state=STATE_DEAL;
 }
 
-
-
-/*
-
-deal 2 cards
-bet
-deal 3 community cards
-bet
-deal 1
-bet
-deal 1
-bet
-
-first player: bet fold or check
-after that:   raise fold or call
-
-
-
-
-*/
 
