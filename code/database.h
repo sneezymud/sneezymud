@@ -86,6 +86,9 @@ enum dbTypeT {
   DB_SNEEZYPROD,
 };
 
+// we return this instead of null if they try to fetch an invalid column
+const sstring empty="";
+
 
 class TDatabase
 {
@@ -97,7 +100,7 @@ class TDatabase
   void setDB(dbTypeT);
   bool query(const char *,...);
   bool fetchRow();
-  char *operator[] (const sstring &) const;
+  const char *operator[] (const sstring &) const;
   bool isResults();
 
 

@@ -68,7 +68,7 @@ bool TDatabase::fetchRow(){
   return TRUE;
 }
 
-char *TDatabase::operator[] (const sstring &s) const
+const char *TDatabase::operator[] (const sstring &s) const
 {
   if(!res || row<0 || row >= PQntuples(res))
     return NULL;
@@ -77,7 +77,7 @@ char *TDatabase::operator[] (const sstring &s) const
 
   if(i < 0){
     vlogf(LOG_DB, "TDatabase::operator[%s] - invalid column name", s.c_str());
-    return NULL;
+    return empty.c_str();
   } else {
     return PQgetvalue(res, row, i);
   }
