@@ -5448,10 +5448,8 @@ int Descriptor::doAccountStuff(char *arg)
       wipeRentFile(delname);
       wipeFollowersFile(delname);
 
-      while (has_mail(delname)) {
-        vlogf(LOG_PIO, "Deleting mail for character %s.", delname);
-	db.query("delete from mail where mailto='%s'", delname);
-      }
+      vlogf(LOG_PIO, "Deleting mail for character %s.", delname);
+      db.query("delete from mail where lower(mailto)=lower('%s')", delname);
 
       sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]), 
            lower(account->name).c_str(), delname);

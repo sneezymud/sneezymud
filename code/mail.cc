@@ -10,9 +10,9 @@ bool has_mail(const char *recipient)
 {
   TDatabase db("sneezy");
 
-  db.query("select 1 from mail where lower(mailto)=lower('%s')", recipient);
+  db.query("select count(*) from mail where lower(mailto)=lower('%s')", recipient);
 
-  if(db.fetchRow())
+  if(db.fetchRow() && convertTo<int>(db.getColumn(0)) != 0)
     return TRUE;
 
   return FALSE;
