@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: other_obj.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // other_obj.cc
 
 #include "stdsneezy.h"
@@ -62,7 +47,7 @@ void TOtherObj::lowCheck()
   // function.  We do however do modified versions of what that func does
 
   if (!getVolume() && canWear(ITEM_TAKE))
-    vlogf(LOW_ERROR,"other item (%s:%d) had 0 volume.",getName(), objVnum());
+    vlogf(LOG_LOW,"other item (%s:%d) had 0 volume.",getName(), objVnum());
 
   // simulated light sources are allowed under following constraints:
   // non-takeable : can have as much light as want (lampposts, etc)
@@ -79,7 +64,7 @@ void TOtherObj::lowCheck()
         ((int) getWeight() < lgt)) ||
         (max_exist >= 10 &&
         ((int) getWeight() < 2*lgt))) {
-      vlogf(LOW_ERROR,"other item (%s:%d) had bad light-to-weight ratio.",getName(), objVnum());
+      vlogf(LOG_LOW,"other item (%s:%d) had bad light-to-weight ratio.",getName(), objVnum());
       setWeight(2*lgt);
     }
   }
