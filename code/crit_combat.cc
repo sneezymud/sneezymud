@@ -396,10 +396,20 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
   return FALSE;
 }
 
-void TBeing::critHitEqDamage(TThing *obj, int eqdam)
+void TBeing::critHitEqDamage(TBeing *v, TThing *obj, int eqdam)
 {
   TObj *damaged_item = dynamic_cast<TObj *>(obj);
+
   damaged_item->addToStructPoints(eqdam);
+  act("$N's $p is greatly damaged by the force of your hit.",
+    FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
+
+  act("Your $p suffers massive damage from $n's mighty hit.",
+    FALSE, this, obj, v, TO_VICT, ANSI_RED);
+
+  act("$N's $p suffers massive damage from $n's powerful hit.",
+    FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+
   if (damaged_item->getStructPoints() <= 0) {
     damaged_item->makeScraps();
     delete damaged_item;
@@ -1249,7 +1259,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		  */
 		  // Just do big damage to the item.  It'll scrap if the damage
 		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(obj, (::number(-35,-22)));
+		  critHitEqDamage(v, obj, (::number(-35,-22)));
                 }
                 v->rawBleed(WEAR_LEGS_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
                 *part_hit = WEAR_LEGS_R;
@@ -1288,7 +1298,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		  */
 		  // Just do big damage to the item.  It'll scrap if the damage
 		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(obj, (::number(-35,-22)));
+		  critHitEqDamage(v, obj, (::number(-35,-22)));
                 }
                 v->rawBleed(WEAR_LEGS_L, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
                 *part_hit = WEAR_LEGS_L;
@@ -1350,7 +1360,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		*/
 		// Just do big damage to the item.  It'll scrap if the damage
 		// is more than the eq can handle. angus 08/2003
-		critHitEqDamage(obj, (::number(-55,-40)));
+		critHitEqDamage(v, obj, (::number(-55,-40)));
 
                 *part_hit = WEAR_WAISTE;
                 rc = damageLimb(v,WEAR_WAISTE,weapon,dam);
@@ -1385,7 +1395,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		    */
 		    // Just do big damage to the item.  It'll scrap if the
 		    // damage is more than the eq can handle. angus 08/2003
-		    critHitEqDamage(obj, (::number(-45,-30)));
+		    critHitEqDamage(v, obj, (::number(-45,-30)));
                   }
                   *part_hit = WEAR_WAISTE;
                   if (desc)
@@ -1413,7 +1423,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		    */
 		    // Just do big damage to the item.  It'll scrap if the
 		    // damage is more than the eq can handle. angus 08/2003
-		    critHitEqDamage(obj, (::number(-45,-30)));
+		    critHitEqDamage(v, obj, (::number(-45,-30)));
                   }
                   applyDamage(v, 20 * v->hitLimit(),DAMAGE_HACKED);
                   *part_hit = WEAR_WAISTE;
@@ -1447,7 +1457,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		  */
 		  // Just do big damage to the item.  It'll scrap if the damage
 		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(obj, (::number(-105,-80)));
+		  critHitEqDamage(v, obj, (::number(-105,-80)));
                 }
                 applyDamage(v, 20 * v->hitLimit(),DAMAGE_DISEMBOWLED_HR);
                 *part_hit = WEAR_BODY;
@@ -1474,7 +1484,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		  */
 		  // Just do big damage to the item.  It'll scrap if the damage
 		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(obj, (::number(-45,-30)));
+		  critHitEqDamage(v, obj, (::number(-45,-30)));
 		}
 
 		TCorpse *corpse;
@@ -1554,7 +1564,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		*/
 		// Just do big damage to the item.  It'll scrap if the damage
 		// is more than the eq can handle. angus 08/2003
-		critHitEqDamage(obj, (::number(-40,-25)));
+		critHitEqDamage(v, obj, (::number(-40,-25)));
                 *part_hit = WEAR_NECK;
                 rc = damageLimb(v,*part_hit,weapon,dam);
                 if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -1575,7 +1585,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		  */
 		  // Just do big damage to the item.  It'll scrap if the damage
 		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(obj, (::number(-40,-25)));
+		  critHitEqDamage(v, obj, (::number(-40,-25)));
 		}
 		v->makeBodyPart(WEAR_HEAD);
 		applyDamage(v, (20 * v->hitLimit()),DAMAGE_BEHEADED);
@@ -1712,7 +1722,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		*/
 		// Just do big damage to the item.  It'll scrap if the damage
 		// is more than the eq can handle. angus 08/2003
-		critHitEqDamage(obj, (::number(-21,-15)));
+		critHitEqDamage(v, obj, (::number(-21,-15)));
               }
               *part_hit = WEAR_FINGER_R;
               if (desc)
@@ -2100,7 +2110,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		  */
 		  // Just do big damage to the item.  It'll scrap if the damage
 		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(obj, (::number(-55,-40)));
+		  critHitEqDamage(v, obj, (::number(-55,-40)));
                 }
                 *part_hit = WEAR_HEAD;
                 rc = damageLimb(v,*part_hit,weapon,dam);
@@ -2131,7 +2141,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 		  */
 		  // Just do big damage to the item.  It'll scrap if the damage
 		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(obj, (::number(-55,-40)));
+		  critHitEqDamage(v, obj, (::number(-55,-40)));
 		}
 		if (desc)
 		  desc->career.crit_crushed_skull++;

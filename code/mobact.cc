@@ -1184,6 +1184,15 @@ static bool faerieFireCheck(TBeing &ch, TBeing &vict, spellNumT spell)
   return false;
 }
 
+static bool victSpelledCheck(TBeing &ch, TBeing &vict, spellNumT spell)
+{
+  if (vict.affectedBySpell(spell) && ch.doesKnowSkill(SPELL_DISPEL_MAGIC) &&
+       (ch.getSkillValue(SPELL_DISPEL_MAGIC) > 66)) {
+    return true;
+  }
+  return false;
+}
+
 static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
 {
   spellNumT spell = TYPE_UNDEFINED;
@@ -1329,9 +1338,9 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
     // offensive spells
     // hit um with the long-term effect ones first
     spell = SPELL_DISPEL_MAGIC;
-    if (!::number(0, 4) && !(faerieFireCheck(ch, vict, spell)) &&
-           (cutoff < discArray[spell]->start) &&
-         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+    if (!::number(0, 4) && (victSpelledCheck(ch, vict, SPELL_HASTE)) &&
+           !(victSpelledCheck(ch, vict, SPELL_FAERIE_FIRE)) &&
+           (cutoff < discArray[spell]->start)) {
       act("$n utters the words, 'Back to the basics!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;

@@ -79,18 +79,18 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
 	    
 	    potion_obj->setDrinkUnits(how_many);
 	    potion_obj->setDrinkType(spell_to_liq(which));
+            ch->sendTo("You now have a potion of %s.\n\r",
+                       discArray[which]->name);
           } else {
             // failed brew, set learnedness to 0
             if (how_many > 1)
               ch->sendTo("Your brewing incompetence results in unusable potion.\n\r");
             else
               ch->sendTo("Your brewing incompetence results in unusable potion.\n\r");
-            potion_obj->setDrinkUnits(0);
-	    potion_obj->setDrinkType(LIQ_WATER);
+            potion_obj->setDrinkUnits(::number(0, 5));
+	    potion_obj->setDrinkType(LIQ_LEMONADE);
           }
 
-          ch->sendTo("You now have a potion of %s.\n\r",
-		     discArray[which]->name);
           act("$n finishes brewing.", FALSE, ch, 0, 0, TO_ROOM);
 
           ch->stopTask();

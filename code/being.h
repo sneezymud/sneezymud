@@ -1493,7 +1493,7 @@ class TBeing : public TThing {
     int backstabHit(TBeing *, TThing *);
     int throatSlitHit(TBeing *, TThing *);
     int critFailureChance(TBeing *, TThing *, spellNumT);
-    void critHitEqDamage(TThing *, int);
+    void critHitEqDamage(TBeing *, TThing *, int);
     int critSuccessChance(TBeing *, TThing *, wearSlotT *, spellNumT, int *, int);
     int numValidSlots();
     int checkShield(TBeing *, TThing *, wearSlotT, spellNumT, int);
