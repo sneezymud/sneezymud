@@ -335,48 +335,57 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
       return FALSE;
     }
   }
-  --(*the_arrow);
-  string capbuf = colorString(ch, ch->desc, the_arrow->getName(), NULL, COLOR_OBJECTS, TRUE);
-  string capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
 
-  if (targ)
-    ch->sendTo(COLOR_MOBS, "You shoot %s out of %s at %s.\n\r",
-          good_uncap(capbuf).c_str(), good_uncap(capbuf2).c_str(),
-          targ->getName());
-  else
-    ch->sendTo("You shoot %s out of %s.\n\r",
-          good_uncap(capbuf).c_str(), 
-          good_uncap(capbuf2).c_str());
+  // determine how many arrows we can shoot in a round
+  float nattacks=1.0;
+  nattacks += (ch->getSkillValue(SKILL_FAST_LOAD)/100);
+  nattacks += (ch->getSkillValue(SKILL_RANGED_SPEC)/100);
 
-  sprintf(buf, "$n points $p %swards, and shoots $N out of it.",
-             dirs[dir]);
-  act(buf, FALSE, ch, this, the_arrow, TO_ROOM);
+  // for learning - ranged spec is learned elsewhere
+  if(ch->doesKnowSkill(SKILL_FAST_LOAD))
+    bSuccess(ch, ch->getSkillValue(SKILL_FAST_LOAD), SKILL_FAST_LOAD);
 
-  *ch->roomp += *the_arrow;
+  while(nattacks > 0 && targ){
+    // use remainder as a percentage chance of another arrow
+    if(nattacks < 1.0 && ::number(0,99) > (nattacks*100))
+      break;
+    else
+      --nattacks;
 
-  ch->addToWait(combatRound(1));
+    --(*the_arrow);
+    string capbuf = colorString(ch, ch->desc, the_arrow->getName(), NULL, COLOR_OBJECTS, TRUE);
+    string capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
+    
+    if (targ)
+      ch->sendTo(COLOR_MOBS, "You shoot %s out of %s at %s.\n\r",
+		 good_uncap(capbuf).c_str(), good_uncap(capbuf2).c_str(),
+		 targ->getName());
+    else
+      ch->sendTo("You shoot %s out of %s.\n\r",
+		 good_uncap(capbuf).c_str(), 
+		 good_uncap(capbuf2).c_str());
+    
+    sprintf(buf, "$n points $p %swards, and shoots $N out of it.",
+	    dirs[dir]);
+    act(buf, FALSE, ch, this, the_arrow, TO_ROOM);
+    
+    *ch->roomp += *the_arrow;
+    
+    // construct reload buf, do it here since arrow might go bye-bye
+    // as sanity check, verify that person has an arrow to reload at this
+    // point too.
+    sprintf(buf, "%s", fname(the_arrow->name).c_str());
 
-  // construct reload buf, do it here since arrow might go bye-bye
-  // as sanity check, verify that person has an arrow to reload at this
-  // point too.
-  sprintf(buf, "%s ", fname(name).c_str());
-  strcat(buf, fname(the_arrow->name).c_str());
-  bool hasAnotherArrow = false;
-  if (ch->findArrow(the_arrow->name, SILENT_YES))
-    hasAnotherArrow = true;
+    rc = throwThing(the_arrow, dir, ch->in_room, &targ, shoot_dist, max_distance, ch);
+    if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+      delete the_arrow;
+      the_arrow = NULL;
+    }
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      delete targ;
+      targ = NULL;
+    }
 
-  rc = throwThing(the_arrow, dir, ch->in_room, &targ, shoot_dist, max_distance, ch);
-  if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-    delete the_arrow;
-    the_arrow = NULL;
-  }
-  if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    delete targ;
-    targ = NULL;
-  }
-
-  if (ch->doesKnowSkill(SKILL_FAST_LOAD) && hasAnotherArrow) {
-    ch->sendTo("You quickly try to reload.\n\r");
 
     rc = ch->doRemove("", this);
     if (IS_SET_DELETE(rc, DELETE_ITEM))
@@ -384,19 +393,21 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
 
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
-
-    if (bSuccess(ch, ch->getSkillValue(SKILL_FAST_LOAD), SKILL_FAST_LOAD)) {
-      ch->doBload(buf);
-
-    } else {
-      ch->sendTo("You fumble your %s which hampers your reload attempt.\n\r", buf);
-      //      ch->sendTo("Oops!  You miscock your %s, and screw up your rhythm.\n\r", buf);
-      ch->addToWait(combatRound(1));
-
+    
+    the_arrow = dynamic_cast<TObj *>(ch->findArrow(buf, SILENT_NO));
+    if (the_arrow)
+      the_arrow->bloadBowArrow(ch, this);
+    else {
+      ch->sendTo("You seem to have run out of '%s's.\n\r", buf);
+      break;
     }
-  } else {
-    ch->addToWait(combatRound(1));
   }
+
+  // firing multiple arrows above stacks up the combat lag
+  // but we don't want that in this case, so use setWait()
+  // to just set it appropriately
+  ch->setWait(combatRound(4));
+
   return FALSE;
 }
 
