@@ -113,6 +113,8 @@ int stockBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   }
 
   ch->sendTo("------------------------------------------------------------\n\r");
+  ch->sendTo("Price charts can be seen at: http://sneezy.saw.net/peel/stocks/\n\r");
+  ch->sendTo("------------------------------------------------------------\n\r");
 
   return TRUE;
 }
