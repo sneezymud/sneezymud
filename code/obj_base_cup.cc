@@ -290,6 +290,9 @@ bool TBaseCup::waterSource()
 
 void TBaseCup::nukeFood()
 {
+  if(DrinkInfo[getDrinkType()]->potion)
+    return;
+
   genericEmpty();
 }
 
