@@ -1,3 +1,8 @@
+12-12-99 - Lapsos
+- Fixed a bug in @set blocka/blockb that was not setting the ending block.
+- Fixed a bug in stat that was displaying the stater's rooms and not the
+  stat'eds rooms.
+
 12-09-99 - bat
 - created an rcsls.csh script that basically reveals what files are
   checked out, and by whom.  It's slightly better than "rlog -L -R RCS/*"
@@ -6,7 +11,9 @@
 12-09-99 - Lapsos
 - Removed bamfin/bamfout/longdescr from the Wizfile data.
   They are now part of the messages code.
-- Move most of the longDescr calls over to getLongdesc()
+- Move most of the longDescr calls over to getLongdesc() which controls
+  the call between msgVariables.msgLongDesc and player.longDesc to keep
+  everything like it was before.
 - Redid the wizfile struct.  Now contains:
   office number, block a/b start/end numbers, log severity
 - redit and edit are now setup to disallow a builder to modify a room
@@ -20,12 +27,28 @@
   @set office <char> <room-number>
   @set blocka <char> <start-room> <end-room>
   @set blockb <char> <start-room> <end-room>
+    stat <person> will now display the 3 above also.
 - Moved vlogf over to a bv setup instead of a solid value.
+  In combination to the shown log types there is also 'special'
+  log types: LOG_BATOPR, LOG_BRUTIUS, LOG_COSMO, LOG_LAPSOS, LOG_PEEL
+  that can only be turned on by their respective owners.  Basically
+  they are 'private' log outputs to just us in turn, so as to not
+  spam everyone else, and also makes log checking easier for some.
+  Also to simulate the old -1 log type you simply use LOG_SILENT
+  which saves the log to-file but doesn't echo it to anyone online.
+  All the LOG_ types are listed in enum.h under logTypeT.
 - Finished the vlogf change over.  ALL vlogf lines in the code
   have been fixed to reflect the new format.  I tried my best to
   put a proper LOG_ type on each one but I expect that a good few
-  past by me, considering over 1800 in total.
-- The new vlogf function is in place.
+  past by me, considering over 1800 in total.  The large majority of
+  the non -1 and non LOW_ERROR vlogf's became LOG_BUG.  A number are
+  LOG_MISC and a small handful in the other types.  I can almost bet
+  we will have to slowly catch any non-fitting logs and change them
+  over in time.
+- The new vlogf function is in place and working.  There is a switch
+  statement in vlogf to control the // <stat>: line inside the function.
+  I also setup a vlogf without a logTypeT that will default to LOG_MISC
+  for quick entry logs.
 
 12-7 - Peel
 - added code to deal with player killing better
