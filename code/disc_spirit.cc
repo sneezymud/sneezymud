@@ -765,7 +765,7 @@ int dispelInvisible(TBeing *caster, TObj * obj, int, byte bKnown)
       act("$p loses its cloak of invisibility!",
                   FALSE, caster, obj, NULL, TO_ROOM);
     } else {
-      caster->sendTo(fmt("Uhm, that item wasn't invisible.\n\r") %ANSI_WHITE);
+      caster->sendTo(fmt("Uhm, that item wasn't invisible.\n\r"));
       caster->nothingHappens(SILENT_YES);
     }
 
