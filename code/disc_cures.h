@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_cures.h,v $
+// Revision 5.3  2002/11/29 20:03:36  peel
+// fixed a few incorrect prototypes
+//
 // Revision 5.2  2002/11/28 22:43:17  peel
 // fixed a bad a prototype
 //
@@ -68,7 +71,7 @@ private:
     void healLight(TBeing *, TBeing *);      
     int castHealLight(TBeing *, TBeing *);      
     void healLight(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int healLight(TBeing *, TBeing *, int, byte, spellNumT);
+    int healLight(TBeing *, TBeing *, int, byte, spellNumT, int);
 
     void healSerious(TBeing *, TBeing *);    
     int castHealSerious(TBeing *, TBeing *);      
@@ -78,12 +81,12 @@ private:
     void healCritical(TBeing *, TBeing *);   
     int castHealCritical(TBeing *, TBeing *);      
     void healCritical(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int healCritical(TBeing *, TBeing *, int, byte, spellNumT);
+    int healCritical(TBeing *, TBeing *, int, byte, spellNumT, int);
 
     void heal(TBeing *, TBeing *);           
     int castHeal(TBeing *, TBeing *);      
     void heal(TBeing *, TBeing *, TMagicItem *, spellNumT);
-    int heal(TBeing *, TBeing *, int, byte, spellNumT);
+    int heal(TBeing *, TBeing *, int, byte, spellNumT, int);
 
     void healFull(TBeing *, TBeing *);       
     int castHealFull(TBeing *, TBeing *);      
