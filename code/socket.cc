@@ -491,6 +491,8 @@ int TSocket::gameLoop()
     
     if(TestCode1){
       sstring str = "";
+      if(!quickpulse)
+	str += "quickpulse    ";
       if(!combat)
 	str += "combat        ";
       if(!update_stuff)
@@ -627,7 +629,7 @@ int TSocket::gameLoop()
       checkGoldStats();
     }
 
-    if (!teleport){
+    if (!teleport){ // 12
       // set zone emptiness flags
       for (unsigned int i = 0; i < zone_table.size(); i++)
 	zone_table[i].zone_value=zone_table[i].isEmpty()?1:-1;
@@ -665,7 +667,7 @@ int TSocket::gameLoop()
 	  vehicle->vehiclePulse(vehiclepulse);
 	
 
-        if (!combat) {
+        if (!combat) { // 12
           rc = obj->detonateGrenade();
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             next_thing = obj->next;
@@ -674,7 +676,7 @@ int TSocket::gameLoop()
             continue;
           }
         }
-	if (!teleport) {
+	if (!teleport) { // 12
           rc = obj->checkFalling();
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             next_thing = obj->next;
@@ -690,7 +692,7 @@ int TSocket::gameLoop()
             continue;
           }
 	}
-	if (!special_procs) {
+	if (!special_procs) { // 36
 	  check_sinking_obj(obj, obj->in_room);
           if (obj->spec) {
             rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
@@ -706,7 +708,7 @@ int TSocket::gameLoop()
             }
           }
 	}
-	if (!quickpulse) {
+	if (!quickpulse) { // 2
           if (obj->spec) {
             rc = obj->checkSpec(NULL, CMD_GENERIC_QUICK_PULSE, "", NULL);
             if (IS_SET_DELETE(rc, DELETE_ITEM)) {
@@ -737,7 +739,7 @@ int TSocket::gameLoop()
 	    smoke->doChoke();
 	  }
 	}	
-	if (!pulse_mudhour) {
+	if (!pulse_mudhour) { // 1440
 	  rc = obj->objectTickUpdate(pulse);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             next_thing = obj->next;
