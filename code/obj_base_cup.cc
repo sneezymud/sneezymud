@@ -92,11 +92,13 @@ int TBaseCup::getDrinkUnits() const
 void TBaseCup::setDrinkUnits(int n)
 {
   curDrinks = n;
+  updateDesc();
 }
 
 void TBaseCup::addToDrinkUnits(int n)
 {
   curDrinks += n;
+  updateDesc();
 }
 
 liqTypeT TBaseCup::getDrinkType() const
@@ -107,6 +109,7 @@ liqTypeT TBaseCup::getDrinkType() const
 void TBaseCup::setDrinkType(liqTypeT n)
 {
   liquidType = n;
+  updateDesc();
 }
 
 int TBaseCup::getLiqDrunk() const
@@ -351,4 +354,94 @@ int TBaseCup::chiMe(TBeing *tLunatic)
 
   return true;
 
+}
+
+
+void TBaseCup::updateDesc()
+{
+  string name, short_desc, long_desc, liquid;
+  bool found=false;
+
+  // get og desc
+  // replace all $l
+  // if $l found, set strung and move desc
+  
+  name=obj_index[getItemIndex()].name;
+  short_desc=obj_index[getItemIndex()].short_desc;
+  long_desc=obj_index[getItemIndex()].long_desc;
+
+  if(getDrinkUnits()<=0){
+    liquid="nothing";
+  } else {
+    liquid=DrinkInfo[getDrinkType()]->name;
+  }
+
+  while (name.find("$$l") != string::npos){
+    name.replace(name.find("$$l"), 3, liquid);
+    found=true;
+  }
+  while (name.find("$l") != string::npos){
+    name.replace(name.find("$l"), 3, liquid);
+    found=true;
+  }
+  while (short_desc.find("$$l") != string::npos){
+    short_desc.replace(short_desc.find("$$l"), 3, liquid);
+    found=true;
+  }
+  while (short_desc.find("$l") != string::npos){
+    short_desc.replace(short_desc.find("$l"), 3, liquid);
+    found=true;
+  }
+  while (long_desc.find("$$l") != string::npos){
+    long_desc.replace(long_desc.find("$$l"), 3, liquid);
+    found=true;
+  }
+  while (long_desc.find("$l") != string::npos){
+    long_desc.replace(long_desc.find("$l"), 3, liquid);
+    found=true;
+  }
+
+
+  if(found){
+    if (isObjStat(ITEM_STRUNG)) {
+      delete [] this->name;
+      delete [] shortDescr;
+      delete [] descr;
+      
+      extraDescription *exd;
+      while ((exd = ex_description)) {
+	ex_description = exd->next;
+	delete exd;
+      }
+      ex_description = NULL;
+      delete [] action_description;
+      action_description = NULL;
+    } else {
+      addObjStat(ITEM_STRUNG);
+      ex_description = NULL;
+      action_description = NULL;
+    }
+
+    
+
+    // strip out color codes omg ugliest code ever
+    char buf[256];
+    int j=0;
+    for(int i=0;name.c_str()[i];++i){
+      if(name.c_str()[i] == '<'){
+	do {
+	  ++i;
+	} while(name.c_str()[i]!='>');
+	++i;
+      }
+
+      buf[j]=name.c_str()[i];
+      ++j;
+    }
+    buf[j]='\0';
+
+    this->name=mud_str_dup(buf);
+    this->shortDescr=mud_str_dup(short_desc.c_str());
+    this->descr=mud_str_dup(long_desc.c_str());
+  }
 }

@@ -28,6 +28,7 @@ class TBaseCup : public TObj {
     virtual void lowCheck();
     virtual bool waterSource();
     virtual string statObjInfo() const;
+    void updateDesc();
 
     virtual int chiMe(TBeing *);
     virtual bool poisonObject();
