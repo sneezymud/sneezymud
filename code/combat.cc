@@ -1943,7 +1943,7 @@ int TBeing::hit(TBeing *target, int pulse)
   if (pulse >= 0 && !(pulse % len_rnd) &&
      !heldInPrimHand() && !heldInSecHand() &&
      doesKnowSkill(SKILL_BLUR) && 
-     ::number(0, 100) < 10 &&  // this makes it happen 10% of the time
+     ::number(0, 99) < 10 &&  // this makes it happen 10% of the time
      !isAffected(AFF_ENGAGER) && getMana()>=25 &&
      bSuccess(this, getSkillValue(SKILL_BLUR), SKILL_BLUR)) {
     // the number of extra swings use to be skill dependant too, but
