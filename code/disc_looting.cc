@@ -33,11 +33,28 @@ int TBeing::doSearch(const char *argument)
         FALSE, this, 0, 0, TO_ROOM);
     start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1, 0, 4);
   } else {
-    for(rc = 0; rc < MAX_DIR; rc++)
+    for(rc = 0; rc < MAX_DIR; rc++){
       if (is_abbrev(argument, dirs[rc])) {
         start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1, rc+100, 4);
         return TRUE;
       }
+    }
+    // there's probably a better way to do this
+    if(!strcmp(argument, "ne")){
+      start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1, DIR_NORTHEAST+100, 4);
+      return TRUE;
+    } else if(!strcmp(argument, "nw")){
+      start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1, DIR_NORTHWEST+100, 4);
+      return TRUE;
+    } else if(!strcmp(argument, "se")){
+      start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1, DIR_SOUTHEAST+100, 4);
+      return TRUE;
+    } else if(!strcmp(argument, "sw")){
+      start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1, DIR_SOUTHWEST+100, 4);
+      return TRUE;
+    }
+
+
     sendTo("You look and look, but cannot seem to find that direction.\n\r");
   }
   return TRUE;
