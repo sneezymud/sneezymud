@@ -2659,14 +2659,16 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
     case LIQ_POISON_INFANT:
     case LIQ_POISON_PEA_SEED:
     case LIQ_POISON_ACACIA:
-      addPoison(aff5, liq, level, duration);
-      
-      for(i=0;i<5;++i){
-	if(aff5[i].type != TYPE_UNDEFINED){
-	  vict->affectTo(&(aff5[i]), -1);
+      if(!vict->isImmune(IMMUNE_POISON, level)){
+	addPoison(aff5, liq, level, duration);
 	
-	  if (aff5[i].type == AFFECT_DISEASE)
-	    disease_start(vict, &(aff5[i]));
+	for(i=0;i<5;++i){
+	  if(aff5[i].type != TYPE_UNDEFINED){
+	    vict->affectTo(&(aff5[i]), -1);
+	    
+	    if (aff5[i].type == AFFECT_DISEASE)
+	      disease_start(vict, &(aff5[i]));
+	  }
 	}
       }
       break;
