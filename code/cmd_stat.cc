@@ -1024,6 +1024,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_SLING_SHOT:
       case SPELL_GRANITE_FISTS:
       case SPELL_DISTORT: // shaman
+      case SPELL_DEATHWAVE: // shaman
       case SPELL_SOUL_TWIST: // shaman
       case SPELL_SQUISH: // shaman
       case SPELL_ENERGY_DRAIN:

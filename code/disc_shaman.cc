@@ -58,7 +58,7 @@ int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
   caster->roomp->playsound(SOUND_SPELL_ANIMATE_DEAD, SOUND_TYPE_MAGIC);
 
   // adjust stats : somewhat weaker
-  mob->setMaxHit(max(1, mob->hitLimit() * 2 / 10));
+  mob->setMaxHit(max(1, mob->hitLimit() * 2 / 7));
   mob->setHit((int) (mob->hitLimit() >> 1));
   mob->setSex(SEX_NEUTER);
 
@@ -235,7 +235,7 @@ int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
   act("$n channels some of the cosmic energy into $p!", TRUE, caster, corpse, NULL, TO_ROOM);
 
   // adjust stats : somewhat weaker
-  mob->setMaxHit(max(1, mob->hitLimit() * 4 / 10));
+  mob->setMaxHit(max(1, mob->hitLimit() * 4 / 7));
   mob->setHit((int) (mob->hitLimit() >> 1));
   mob->setSex(SEX_NEUTER);
   mob->setCarriedWeight(0.0);
@@ -1229,7 +1229,17 @@ int rombler(TBeing *caster, int, byte bKnown)
 	  if (i->character->hasClass(CLASS_SHAMAN) || i->character->isImmortal()) {
             i->character->sendTo(COLOR_SPELLS, "<P>%s<z> rombles, \"<c>%s%s\"\n\r", caster->getName(),  msg, i->character->norm());
           } else {
-            i->character->sendTo(COLOR_SPELLS, "<P>In the faint distance you hear savage drumming.<z>\n\r"); 
+	    int num = ::number(0,3);
+	    if (num == 0) {
+            i->character->sendTo(COLOR_SPELLS, "<p>In the faint distance you hear savage drumming.<z>\n\r"); 
+	    }
+	    if (num == 1) {
+            i->character->sendTo(COLOR_SPELLS, "<o>Savage drumming can be heard in the distance.<z>\n\r"); 
+	    }
+	    if (num == 2) {
+	    }
+	    if (num == 3) {
+	    }
           } 
         }
       }

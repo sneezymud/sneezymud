@@ -2415,6 +2415,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_DISTORT:
       rc = distort(caster,victim,obj);
       break;
+    case SPELL_DEATHWAVE:
+      rc = deathWave(caster,victim,obj);
+      break;
     case SPELL_FLARE:
       rc = flare(caster,obj);
       break;

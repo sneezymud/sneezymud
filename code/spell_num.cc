@@ -699,6 +699,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 507;
     case SKILL_SET_TRAP_GREN:
       return 508;
+    case SPELL_DEATHWAVE:
+      return 528;
     case SPELL_DISTORT:
       return 529;
     case SPELL_SOUL_TWIST:
@@ -1612,6 +1614,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_SET_TRAP_MINE;
     case 508:
       return SKILL_SET_TRAP_GREN;
+    case 528:
+      return SPELL_DEATHWAVE;
     case 529:
       return SPELL_DISTORT;
     case 530:

@@ -1685,6 +1685,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SPELL_DISTORT:
       rc = distort(this, ch);
       break;
+    case SPELL_DEATHWAVE:
+      rc = deathWave(this, ch);
+      break;
     case SPELL_SOUL_TWIST:
       rc = soulTwist(this, ch);
       break;
@@ -2073,7 +2076,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
           livingVines(this, ch);
         break;
       case SPELL_STORMY_SKIES:
-          stormySkies(this, ch);
+        rc = stormySkies(this, ch);
         break;
 #if 0
       case SKILL_TRANSFORM_LIMB:

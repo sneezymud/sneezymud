@@ -173,10 +173,16 @@ bool TBeing::validMove(dirTypeT cmd)
       return TRUE;
     }
     if (isAffected(AFF_SHADOW_WALK)) {
+      int chnum = ::number(0,3);
+      if (chnum == 1) {
       act( "$n's transparent body passes through the barrier!",
           TRUE, this, 0, NULL, TO_ROOM, NULL, (isPlayerAction(PLR_STEALTH) ? MAX_MORT : 0));
       sendTo("You walk directly through the barrier!\n\r");
       return TRUE;
+      } else {
+        notLegalMove();
+        return FALSE;
+      }
     }
     if (exitp->keyword) {
       if (!IS_SET(exitp->condition, EX_SECRET)) {

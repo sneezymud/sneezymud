@@ -946,6 +946,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDShamanFrog *) cd)->skShapeShift;
     case SPELL_AQUATIC_BLAST: 
       return &((CDShamanFrog *) cd)->skAquaticBlast;
+    case SPELL_DEATHWAVE: 
+      return &((CDShamanFrog *) cd)->skDeathWave;
 
       // armadillo abilities----------------------
 

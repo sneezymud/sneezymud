@@ -1204,6 +1204,14 @@ void buildComponentArray()
     "$n blow $p at $mself.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_DEATHWAVE,
+    "You blow $p at $N.",
+    "$n blow $p at $N.",
+    "$n blows $p at you.",                       
+    "You blow $p at yourself.",
+    "$n blow $p at $mself.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_COLOR_SPRAY,
     "",                       
     "",

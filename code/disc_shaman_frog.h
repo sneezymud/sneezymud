@@ -1,4 +1,3 @@
-
 #ifndef __DISC_SHAMAN_FROG_H
 #define __DISC_SHAMAN_FROG_H
 
@@ -6,28 +5,57 @@
 class CDShamanFrog : public CDiscipline
 {
 public:
-    CSkill skTurnSkill;
+    CSkill skStormySkies;
+    CSkill skDeathWave;
+    CSkill skAquaticBlast;
+    CSkill skShapeShift;
 
     CDShamanFrog() 
-      : CDiscipline(), 
-      skTurnSkill() {
+      : CDiscipline(),
+      skStormySkies(),
+      skDeathWave(),
+      skAquaticBlast(),
+      skShapeShift() {
     }
     CDShamanFrog(const CDShamanFrog &a) 
-      : CDiscipline(a), 
-      skTurnSkill(a.skTurnSkill) {
+      : CDiscipline(a),
+      skStormySkies(a.skStormySkies),
+      skDeathWave(a.skDeathWave),
+      skAquaticBlast(a.skAquaticBlast),
+      skShapeShift(a.skShapeShift) {
     }
-    CDShamanFrog & operator=(const CDShamanFrog &a) {
+    CDShamanFrog & operator=(const CDShamanFrog &a)  {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skTurnSkill = a.skTurnSkill;
+      skStormySkies = a.skStormySkies;
+      skDeathWave = a.skDeathWave;
+      skAquaticBlast = a.skAquaticBlast;
+      skShapeShift = a.skShapeShift;
       return *this;
     }
     virtual ~CDShamanFrog() {}
     virtual CDShamanFrog * cloneMe() { return new CDShamanFrog(*this); }
-
 private:
 };
+    int stormySkies(TBeing *, TBeing *);
+    int castStormySkies(TBeing *, TBeing *);
+    int stormySkies(TBeing *, TBeing *, TMagicItem *);
+    int stormySkies(TBeing *, TBeing *, int, byte);
 
+    int aquaticBlast(TBeing *, TBeing *);
+    int castAquaticBlast(TBeing *, TBeing *);
+    int aquaticBlast(TBeing *, TBeing *, TMagicItem *);
+    int aquaticBlast(TBeing *, TBeing *, int, byte, int);
+
+    int shapeShift(TBeing *caster, int level, byte bKnown);
+    int shapeShift(TBeing *caster, const char * buffer);
+    int castShapeShift(TBeing *caster);
+
+    int deathWave(TBeing *, TBeing *);
+    int castDeathWave(TBeing *, TBeing *);
+    int deathWave(TBeing *, TBeing *, TMagicItem *);
+    int deathWave(TBeing *, TBeing *, int, byte, int);
 
 #endif
+
 

@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.22  2001/06/17 01:39:38  jesus
+// death wave spell
+// comp load changes for shaman
+//
 // Revision 5.21  2001/06/16 10:10:42  jesus
 // basic shaman spell work
 //
@@ -221,6 +225,7 @@ const int COMP_LEGBA              =31332;
 const int COMP_CARDIAC_STRESS     =31333;
 const int COMP_SQUISH             =31334;
 const int COMP_SOUL_TWIST         =31335;
+const int COMP_DEATHWAVE          =31336;
 
 class compPlace
 {

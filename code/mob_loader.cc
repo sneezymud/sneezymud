@@ -390,11 +390,9 @@ void TMonster::mageComponentLoader(void)
         case COMP_DETECT_SHADOW:
         case COMP_DISPEL_INVIS:
         case COMP_TELEPATHY:
-	case COMP_ROMBLER:
         case COMP_POLYMORPH:
         case COMP_GILLS_OF_FLESH:
         case COMP_BREATH_SARAHAGE:
-	case COMP_HYPNOSIS:
         case COMP_INFRAVISION:
         case COMP_FLIGHT:
           // we'll make utility comps more rare so that relatively speaking
@@ -633,13 +631,53 @@ void TMonster::shamanComponentLoader(void)
       	continue;
       }
 
-      // disallow certain components
       switch (comp) {
-#if 0
-        case xxx:
-          num = -1;
+        case COMP_THORNFLESH:
+        case COMP_AQUALUNG:
+        case COMP_VOODOO:
+        case COMP_RESURRECTION:
+        case COMP_DANCING_BONES:
+        case COMP_HYPNOSIS:
+        case COMP_ROMBLER:
+        case COMP_INTIMIDATE:
+        case COMP_SENSE_LIFE_SHAMAN:
+        case COMP_DJALLA:
+        case COMP_LEGBA:
+          // we'll make utility comps more rare so that relatively speaking
+          // the comps for offensive spells are more prevalent
+          if (::number(0,2))
+            num = -1;
           break;
-#endif
+        case COMP_DETECT_SHADOW:
+        case COMP_SHADOW_WALK:
+        case COMP_CLARITY:
+        case COMP_CHEVAL:
+          // these are also "utility" comps, but players have asked for a
+          // slightly higher load rate on them
+          if (::number(0,9) < 5)
+            num = -1;
+          break;
+        case COMP_RAZE:
+        case COMP_CARDIAC_STRESS:
+        case COMP_AQUATIC_BLAST:
+        case COMP_DEATHWAVE:
+          // keep fairly rare
+          if (::number(0,19))
+            num = -1;
+          break;
+	case COMP_DISPEL_MAGIC_BREW:
+	case COMP_TRAIL_SEEK_BREW:
+	case COMP_INFRAVISION_BREW:
+	case COMP_SORCERERS_GLOBE_BREW:
+	case COMP_SENSE_LIFE_BREW:
+	case COMP_INFRAVISION2_BREW:
+	case COMP_INVISIBILITY_BREW:
+	case COMP_TRUE_SIGHT_BREW:
+	case COMP_GILLS_OF_FLESH_BREW:
+          // keep VERY rare
+          if (::number(0,29))
+            num = -1;
+          break;
         default:
           break;
       }

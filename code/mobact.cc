@@ -1859,11 +1859,19 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
 
   } else if (best_disc == DISC_SHAMAN_FROG) {
-    spell = SPELL_AQUATIC_BLAST;
+    spell = SPELL_STORMY_SKIES;
     if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
          ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'River run DEEEEEEEEEEP!!!!'",
+      act("$n utters the invokation, 'Weather! Do my deed!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
+    spell = SPELL_DEATHWAVE;
+    if (!::number(0, 3) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the invokation, 'Deadly Blackness!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
@@ -1872,6 +1880,30 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
            (cutoff < discArray[spell]->start) &&
          ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
       act("$n utters the invokation, 'River run DEEEEEEEEEEP!!!!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
+    spell = SPELL_STORMY_SKIES;
+    if (!::number(0, 3) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the invokation, 'Weather! Do my deed!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
+    spell = SPELL_AQUATIC_BLAST;
+    if (!::number(0, 3) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the invokation, 'River run DEEEEEEEEEEP!!!!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
+    spell = SPELL_DEATHWAVE;
+    if (!::number(0, 3) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the invokation, 'Deadly Blackness!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }

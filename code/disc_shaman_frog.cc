@@ -113,9 +113,41 @@ int stormySkies(TBeing * caster, TBeing * victim, int level, byte bKnown)
   }
 }
 
+int stormySkies(TBeing * caster, TBeing * victim)
+{
+  taskDiffT diff;
+
+   if (!bPassShamanChecks(caster, SPELL_STORMY_SKIES, victim))
+      return FALSE;
+
+    lag_t rounds = discArray[SPELL_STORMY_SKIES]->lag;
+    diff = discArray[SPELL_STORMY_SKIES]->task;
+
+    start_cast(caster, victim, NULL, caster->roomp, SPELL_STORMY_SKIES, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+
+      return TRUE;
+}
+
+int castStormySkies(TBeing * caster, TBeing * victim)
+{
+  int ret,level;
+  int rc = 0;
+
+  level = caster->getSkillLevel(SPELL_STORMY_SKIES);
+  int bKnown = caster->getSkillValue(SPELL_STORMY_SKIES);
+
+  ret=stormySkies(caster,victim,level,bKnown);
+
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
 int stormySkies(TBeing * caster, TBeing * victim, TMagicItem * obj)
 {
-  int ret;
+  int ret = 0;
   int rc = 0;
 
   ret=stormySkies(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
@@ -126,25 +158,6 @@ int stormySkies(TBeing * caster, TBeing * victim, TMagicItem * obj)
   return rc;
 }
 
-int stormySkies(TBeing * caster, TBeing * victim)
-{
-  int ret,level;
- 
-  if (!bPassMageChecks(caster, SPELL_STORMY_SKIES, victim))
-    return FALSE;
- 
-  level = caster->getSkillLevel(SPELL_STORMY_SKIES);
-  int bKnown = caster->getSkillValue(SPELL_STORMY_SKIES);
- 
-  if ((ret=stormySkies(caster,victim,level,bKnown)) == SPELL_SUCCESS) {
-  } else {
-    if (ret==SPELL_CRIT_FAIL) {
-    } else {
-    }
-  }
-  return FALSE;
-}
- 
 // END STORMY SKIES
 // AQUATIC BLAST
 
@@ -235,7 +248,7 @@ int aquaticBlast(TBeing * caster, TBeing * victim)
 {
   taskDiffT diff;
 
-   if (!bPassMageChecks(caster, SPELL_AQUATIC_BLAST, victim))
+   if (!bPassShamanChecks(caster, SPELL_AQUATIC_BLAST, victim))
       return FALSE;
 
     lag_t rounds = discArray[SPELL_AQUATIC_BLAST]->lag;
@@ -472,7 +485,7 @@ int shapeShift(TBeing *caster, const char * buffer)
   if (caster->desc->snoop.snoop_by)
     caster->desc->snoop.snoop_by->doSnoop(caster->desc->snoop.snoop_by->name);
 
-  if (!bPassMageChecks(caster, SPELL_SHAPESHIFT, caster))
+  if (!bPassShamanChecks(caster, SPELL_SHAPESHIFT, caster))
     return FALSE;
 
   lag_t rounds = discArray[SPELL_SHAPESHIFT]->lag;
@@ -498,14 +511,167 @@ int castShapeShift(TBeing *caster)
 
 // END SHAPESHIFT
 
+int deathWave(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+{
+  char buf[256];
+  string bBuf;
 
+  if (caster->isNotPowerful(victim, level, SPELL_DEATHWAVE, SILENT_NO))
+    return SPELL_FAIL;
 
+  level = min(level, 50);
 
+  int dam = caster->getSkillDam(victim, SPELL_DEATHWAVE, level, adv_learn);
+  int beams = (dam / 3) + ::number(0, (caster->GetMaxLevel() / 10));
+  beams = max(beams, 1);
 
+  caster->reconcileHurt(victim, discArray[SPELL_DEATHWAVE]->alignMod);
 
+  if (bSuccess(caster, bKnown,SPELL_DEATHWAVE)) {
+    switch (critSuccess(caster, SPELL_DEATHWAVE)) {
+      case CRIT_S_DOUBLE:
+        CS(SPELL_DEATHWAVE);
+        dam *= 2;
+        beams *= 2;
+        sprintf(buf, "%d", beams);
+        bBuf = buf;
+        bBuf += " intense black energy beam";
+        if (beams != 1)
+          bBuf += "s expel";
+        else
+          bBuf += " expels";
 
+        sprintf(buf, "%s from $n's hands course into $N's body!", bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        sprintf(buf, "%s from your hands course into $N's body!", bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        sprintf(buf, "%s from $n's hands course into your body distorting your soul!", bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        break;
+      case CRIT_S_TRIPLE:
+      case CRIT_S_KILL:
+        CS(SPELL_DEATHWAVE);
+        dam *= 3;
+        beams *=3;
 
+        sprintf(buf, "%d", beams);
+        bBuf = buf;
+        bBuf += " DEADLY black energy beam";
+        if (beams != 1)
+          bBuf += "s expel";
+        else
+          bBuf += " expels";
 
+        sprintf(buf, "%s from $n's hands course into $N's body!", bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        sprintf(buf, "%s from your hands course into $N's body!", bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        sprintf(buf, "%s from $n's hands course into your body distorting your soul!", bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        break;
+      case CRIT_S_NONE:
+        sprintf(buf, "%d", beams);
+        bBuf = buf;
+        bBuf += " black energy beam";
+        if (beams != 1)
+          bBuf += "s expel";
+        else
+          bBuf += " expels";
 
+        sprintf(buf, "%s from $n's hands course into $N's body!", bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        sprintf(buf, "%s from your hands course into $N's body!", bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        sprintf(buf, "%s from $n's hands course into your body distorting your soul!", bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        if (victim->isLucky(caster->spellLuckModifier(SPELL_DEATHWAVE))) {
+          SV(SPELL_DEATHWAVE);
+          dam /= 2;
+        }
+    }
 
+    if (caster->reconcileDamage(victim, dam, SPELL_DEATHWAVE) == -1)
+      return SPELL_SUCCESS + VICTIM_DEAD;
 
+    return SPELL_SUCCESS;
+  } else {
+    switch (critFail(caster, SPELL_DEATHWAVE)) {
+      case CRIT_F_HITSELF:
+      case CRIT_F_HITOTHER:
+        CF(SPELL_DEATHWAVE);
+        sprintf(buf, "%d", beams);
+        bBuf = buf;
+        bBuf += " black energy beam";
+        if (beams != 1)
+          bBuf += "s expel";
+        else
+          bBuf += " expels";
+
+        sprintf(buf, "%s from $n's hands and blow up in $n's face!", bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        sprintf(buf, "%s from your hands and blow up in your face!", bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        sprintf(buf, "%s from $n's hands and blow up in $n's face!", bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        if (caster->reconcileDamage(caster, dam, SPELL_DEATHWAVE) == -1)
+          return SPELL_CRIT_FAIL + CASTER_DEAD;
+
+        return SPELL_CRIT_FAIL;
+        break;
+      case CRIT_F_NONE:
+        break;
+    } 
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+
+int deathWave(TBeing *caster, TBeing *victim, TMagicItem * obj)
+{
+  int rc = 0;
+  int ret = 0;
+
+  ret = deathWave(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), 0);
+  if (IS_SET(ret, VICTIM_DEAD)) 
+    ADD_DELETE(rc, DELETE_VICT);
+  
+  if (IS_SET(ret, CASTER_DEAD)) 
+    ADD_DELETE(rc, DELETE_THIS);
+
+  return rc;
+}
+
+int deathWave(TBeing *caster, TBeing *victim)
+{
+  taskDiffT diff;
+
+  if (!bPassShamanChecks(caster, SPELL_DEATHWAVE, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_DEATHWAVE]->lag;
+  diff = discArray[SPELL_DEATHWAVE]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_DEATHWAVE, diff, 1, "", rounds, 
+caster->in_room, 0, 0,TRUE, 0);
+
+  return TRUE;
+}
+
+int castDeathWave(TBeing *caster, TBeing *victim)
+{
+  int level;
+  int rc = 0;
+  int ret = 0;
+
+  level = caster->getSkillLevel(SPELL_DEATHWAVE);
+  int bKnown = caster->getSkillValue(SPELL_DEATHWAVE);
+
+  ret=deathWave(caster,victim,level,bKnown, caster->getAdvLearning(SPELL_DEATHWAVE));
+
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+
+  return rc;
+}

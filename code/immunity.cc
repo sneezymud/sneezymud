@@ -205,7 +205,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_ATOMIZE:
     case SPELL_RAZE:
     case SPELL_DISTORT:
-    case SPELL_SOUL_TWIST:
+    case SPELL_DEATHWAVE:
     case DAMAGE_TRAP_ENERGY:
       bit = IMMUNE_ENERGY;
       break;
@@ -237,6 +237,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_ENERGY_DRAIN:
     case DAMAGE_DRAIN:
     case SPELL_HARM_DEIKHAN:
+    case SPELL_SOUL_TWIST:
     case SPELL_HARM:
     case SPELL_HARM_LIGHT_DEIKHAN:
     case SPELL_HARM_SERIOUS_DEIKHAN:

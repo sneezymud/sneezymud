@@ -341,6 +341,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_RAZE:
       dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.05 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
       break;
+    case SPELL_DEATHWAVE:
     case SPELL_DISTORT:
     case SPELL_SOUL_TWIST:
     case SPELL_SQUISH:
@@ -446,8 +447,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       dam =  genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_STORMY_SKIES:
-      // 4/3 factor added here due to save cutting into avg damage
-      dam =  genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529 * HAS_SAVING_THROW * OUTDOOR_ONLY * NEED_RAIN_SNOW_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.05 * NEED_RAIN_SNOW_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_LICH_TOUCH:
       dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.05 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);

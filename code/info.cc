@@ -923,6 +923,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_GRANITE_FISTS:
       case SPELL_ENERGY_DRAIN:
       case SPELL_SOUL_TWIST:
+      case SPELL_DEATHWAVE:
       case SPELL_DISTORT: // shaman
       case SPELL_SQUISH: // shaman
       case SPELL_LICH_TOUCH: // shaman

@@ -153,6 +153,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
           "The skin on %s's corpse has been torn to shreds by something explosive.",
           getName());
         break;
+      case SPELL_DEATHWAVE:
       case SPELL_DISTORT:
       case SKILL_QUIV_PALM:
         sprintf(buf,
