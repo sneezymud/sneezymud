@@ -1,6 +1,7 @@
 #include "stdsneezy.h"
 #include "obj_base_corpse.h"
 #include "obj_tool.h"
+#include "obj_food.h"
 #include "obj_base_weapon.h"
 #include "obj_player_corpse.h"
 
@@ -18,12 +19,12 @@ void stop_butcher(TBeing *ch)
 int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
 {
   TThing *Tobj;
-  TObj *steak = NULL;
+  TFood *steak = NULL;
   TObj *item;
   TBaseWeapon *tobj;
   int  learning = ch->getSkillValue(SKILL_BUTCHER),
     Ceffect = (corpse->isCorpseFlag(CORPSE_HALF_BUTCHERED)?2:1),
-    maxUnitsP = max(1, (int)((corpse->getWeight()*.10)/2)-1);
+    maxUnitsP = max(0, (int)((corpse->getWeight()*.10)/2)-1);
   char buf[256];
   //  char msg   [256],
   //       gl_msg[256];
@@ -82,7 +83,7 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
       corpse->obj_flags.decay_time++;
       if (tobj->getCurSharp() > 2 && (ch->task->flags % 10) == 0)
         tobj->addToCurSharp(-1);
-      ch->task->flags = max(1, min(ch->task->flags, maxUnitsP));
+      ch->task->flags = max(1, min(ch->task->flags, maxUnitsP/Ceffect));
     }
     return FALSE;
   } else {
@@ -109,9 +110,9 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
           FALSE, ch, 0, NULL, TO_ROOM);
 
     } else if (ch->task->flags == 0) {
-      act("You finish up your butchering and realize you have mangled the carcas.",
+      act("You finish up your butchering and realize you have mangled the carcass.",
           FALSE, ch, 0, 0, TO_CHAR);
-      act("$n finishes up and has apparently destroyed the carcas.",
+      act("$n finishes up and has apparently destroyed the carcass.",
           FALSE, ch, 0, NULL, TO_ROOM);
       ch->stopTask();
       return FALSE;
@@ -166,7 +167,7 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
 #else
     item = read_object(GENERIC_STEAK, VIRTUAL);
 #endif
-    steak = dynamic_cast<TObj *>(item);
+    steak = dynamic_cast<TFood *>(item);
     if (!steak)
       return false;
     steak->swapToStrung();
@@ -187,6 +188,10 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
       namebuf[0]=toupper(namebuf[0]);
     }
     
+    int FoodUnits = max(0,min(100,(maxUnitsP/Ceffect)/2));
+    steak->setFoodFill(FoodUnits);
+    steak->setWeight((float)FoodUnits / 10.0);
+    steak->setVolume(FoodUnits * 10);
 
     sprintf(buf, "meat %s %s",
 	    tpc?namebuf:Races[corpse->getCorpseRace()]->getSingularName().c_str(),

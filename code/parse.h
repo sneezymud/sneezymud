@@ -621,6 +621,7 @@ enum cmdTypeT {
        CMD_OBJ_EXPELLED,
        CMD_OBJ_START_TO_FALL,
        CMD_OBJ_OWNER_HIT,
+     CMD_OBJ_OPENED,
        CMD_ARROW_GLANCE,
        CMD_ARROW_MISSED,
        CMD_ARROW_EMBED,

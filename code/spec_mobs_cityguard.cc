@@ -378,6 +378,8 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         if(!tbt)
           continue;
         if (ch == tbt)
+	  continue;
+	if (tbt->isAffected(AFF_STUNNED))
           continue;
         if (tbt->spec != SPEC_CITYGUARD)
           continue;

@@ -1845,7 +1845,13 @@ void TBeing::wearNTear(void)
 {
   int i = 0, j;
 
+  if (!isPc())
+    return;
+
   if (inRoom() == ROOM_NOWHERE)
+    return;
+
+  if (inLethargica())
     return;
 
   if (roomp && roomp->isRoomFlag(ROOM_ARENA))
@@ -1882,7 +1888,7 @@ void TBeing::wearNTear(void)
         continue;
       if (obj->getStructPoints() < 0)
         continue;
-      if (!::number(0,chance) && !::number(0,obj->getStructPoints())) {
+      if (!::number(0,chance) && !::number(0,(100 * obj->getStructPoints()) / obj->getMaxStructPoints())) {
         act("$p suffers damage from general wear and tear.",TRUE,this,obj,0,TO_CHAR);
         obj->addToStructPoints(-1);
         if (obj->getStructPoints() <= 0) {
@@ -1890,6 +1896,22 @@ void TBeing::wearNTear(void)
           delete obj;
           obj = NULL;
         }
+      }
+    } else if(hasPart((wearSlotT)i)) {
+      if(!::number(0,chance) && ::number(0,getCurLimbHealth((wearSlotT)i)) && GetMaxLevel() <= 10) {
+	if (i == WEAR_LEGS_R || i == WEAR_LEGS_L || i == WEAR_EX_LEG_R || i == WEAR_EX_LEG_L) {
+	  act("<o>$n screams in pain, and stumbles to the ground holding $s knee.<1>",TRUE,this,NULL,0,TO_ROOM);
+	  act("<r>You scream in pain as you twist your knee and stumble to the ground.<1>",TRUE,this,NULL,0,TO_CHAR);
+	  act("Maybe you should be wearing something on your leg?",TRUE,this,NULL,0,TO_CHAR);
+	} 
+	if (i == WEAR_FOOT_R || i == WEAR_FOOT_L || i == WEAR_EX_FOOT_R || i == WEAR_EX_FOOT_L) {
+          act("<o>$n screams in pain, and stumbles to the ground holding $s ankle.<1>",TRUE,this,NULL,0,TO_ROOM);
+          act("<r>You scream in pain as you twist your ankle and stumble to the ground.<1>",TRUE,this,NULL,0,TO_CHAR);
+          act("Maybe you should be wearing something on your foot?",TRUE,this,NULL,0,TO_CHAR);
+        }
+	setPosition(POSITION_SITTING);
+	hurtLimb(getMaxLimbHealth((wearSlotT)i)/2, (wearSlotT)i);
+	return;
       }
     }
   }

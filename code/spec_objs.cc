@@ -4249,7 +4249,7 @@ int telekinesisGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
     act("$n points at you, and $s glove begins to <G>glow<1>.",TRUE,ch,o,vict,TO_VICT,NULL);
     act("<g>As $n raises $s arm, you flail wildly and are lifted into the air.<G>  Uh oh!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
-    act("<R>$n spreads $s fingers wide, and your are thrown backwards with incredible force!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+    act("<R>$n spreads $s fingers wide, and you are thrown backwards with incredible force!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
 
     
     if (vict->riding) {
@@ -4260,11 +4260,11 @@ int telekinesisGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     vict->setPosition(POSITION_SITTING);
 
     ch->addToWait(combatRound(6));
-    ch->cantHit += ch->loseRound(2);
+    ch->cantHit += ch->loseRound(3);
     vict->addToWait(combatRound(2));
     vict->cantHit += ch->loseRound(2);
 
-    dam = ::number(10,80);
+    dam = ::number(10,40);
     rc = ch->applyDamage(vict, dam, SKILL_KINETIC_WAVE);
     return TRUE;
 
@@ -4299,7 +4299,18 @@ int telekinesisGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
     dam = ::number(10,30);
     rc = ch->applyDamage(vict, dam, SKILL_KINETIC_WAVE);
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      vict->reformGroup();
+      delete vict;
+      vict = NULL;
+    }
     rc = ch->applyDamage(vict2, dam, SKILL_KINETIC_WAVE);
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      vict2->reformGroup();
+      delete vict2;
+      vict2 = NULL;
+    }
+
 
     return TRUE;
   } 
@@ -5113,6 +5124,7 @@ int travelGear(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
 int dualStyleWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
+  return FALSE; // buggy
 
   // this code is for weapons with more than one damage type
   // it utilizes two 'styles' that can be changed with the switch <weapon> command
@@ -5750,9 +5762,10 @@ int frostSpear(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     }
     
     rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
-    if (rc == -1)
+    if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
     return TRUE;
+
 
   }
 
@@ -5790,8 +5803,13 @@ int frostSpear(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       
       int dam = ::number(10,60);
       rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
-      if (rc == -1)
-	return DELETE_VICT;
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+	vict->reformGroup();
+	delete vict;
+	vict = NULL;
+      }
+
+
       
       return TRUE;
     }
@@ -5827,7 +5845,7 @@ int iceStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     }
 
     rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
-    if (rc == -1)
+    if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
     return TRUE;
 
@@ -5867,8 +5885,13 @@ int iceStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
       int dam = ::number(10,60);
       rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
-      if (rc == -1)
-        return DELETE_VICT;
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+	vict->reformGroup();
+	delete vict;
+	vict = NULL;
+      }
+
+
       
       return TRUE;
     }
@@ -6072,6 +6095,11 @@ int blizzardRing(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 	int dam = ::number(10,60);
 	rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
+	if (IS_SET_DELETE(rc, DELETE_VICT)) {
+	  vict->reformGroup();
+	  delete vict;
+	  vict = NULL;
+	}
 
 
         affectedData aff;
@@ -6241,13 +6269,13 @@ int fragileArrow(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *)
     case CMD_ARROW_DODGED:
     case CMD_ARROW_HIT_OBJ:
     case CMD_OBJ_EXPELLED:
-      vlogf(LOG_DASH,"fragile arrow proc called case 1");
+      //   vlogf(LOG_DASH,"fragile arrow proc called case 1");
       act("$n<1> strikes the $g at an odd angle and snaps in two.", FALSE, o,0,0,TO_ROOM,NULL);
       delete o;
       break;
     case CMD_REMOVE:
     case CMD_ARROW_RIPPED:
-      vlogf(LOG_DASH,"fragile arrow proc called case 2");
+      //      vlogf(LOG_DASH,"fragile arrow proc called case 2");
       act("$n accidentally snaps $p in two as $e rips it out.", FALSE, v,o,0,TO_ROOM,NULL);
       act("You accidentally snap $p in two as you rip it out.", FALSE, v,o,0,TO_CHAR,NULL);
       delete o;
@@ -6611,6 +6639,14 @@ int HSPendant(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   act("Your $o shines with a <p>violet<1> aura briefly.",TRUE,ch,o,vict,TO_CHAR,NULL);
   act("$n's $o shines with a <p>violet<1> aura briefly.",TRUE,ch,o,vict,TO_NOTVICT,NULL);
 
+  aff.type = SPELL_PLASMA_MIRROR;
+  aff.duration = UPDATES_PER_MUDHOUR/2;
+  aff.modifier = 0;
+  aff.location = APPLY_NONE;
+  aff.bitvector = 0;
+  aff.level = 40;
+  ch->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES);
+
   charge -= 50;
   sprintf(pendant->name, "pendant crystal hammer [quest] [charge=%d]", charge);
 
@@ -6673,7 +6709,44 @@ int weaponUnmaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   char limb[80];
   sprintf(limb, "%s", vict->describeBodySlot(slot).c_str());
 
-  vict->makePartMissing(slot, FALSE);
+  // snipped limb missing code
+
+  TThing *t;
+
+  if (!vict->hasPart(slot)) {
+    vlogf(LOG_COMBAT, "BOGUS SLOT trying to be made PART_MISSING: %d on %s",
+	  slot, vict->getName());
+    return FALSE;
+  }
+  if (!vict->roomp) {
+    // bat 8-16-96, mob could be dead, this is a bug
+    vlogf(LOG_COMBAT, "!roomp for target (%s) of makePartMissing().", vict->getName());
+    return FALSE;
+  }
+
+ vict->setLimbFlags(slot, PART_MISSING);
+
+  if ((t = vict->unequip(slot)))
+    *(vict->roomp) += *t;
+
+  for (wearSlotT j=MIN_WEAR; j < MAX_WEAR; j++) {
+    if (!vict->hasPart(j))
+      continue;
+    if (!vict->limbConnections(j)) {
+      vict->setLimbFlags(j, PART_MISSING);
+      TThing *tmp = vict->unequip(j);
+      if (tmp)
+        *(vict->roomp) += *tmp;
+    }
+  }
+
+  // check for damage to both hands
+  vict->woundedHand(TRUE);
+  vict->woundedHand(FALSE);
+
+  // snipped limb missing code
+
+
   sprintf(buf, "$n's $o glows with a <g>sickly light<1> as it strikes your %s!", limb);
   act(buf, FALSE, ch, o, vict, TO_VICT, NULL);
   sprintf(buf, "Your %s turns to <o>soft clay<1> and falls to the ground!\n\rYou look down at your missing %s and scream!", limb, limb);
@@ -6691,6 +6764,91 @@ int weaponUnmaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   vict->dropWeapon(slot);
 
   return TRUE;
+}
+
+int chromaticWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int rc, dam;
+  
+  ch = genericWeaponProcCheck(vict, cmd, o, 5);
+  if (!ch)
+    return FALSE;
+  
+  spellNumT DamType = DAMAGE_NORMAL;
+  
+  char txt1[256],txt2[256];
+  
+  switch(::number(0,4)) {
+    case 0:
+      sprintf(txt1, "<b>$p<b> becomes covered with ice and freezes $n.<1>");
+      sprintf(txt2, "<b>$p<b> becomes covered with ice and freezes you.<1>");
+      DamType = DAMAGE_FROST;
+      break;
+    case 1:
+      sprintf(txt1, "<k>$p<k> turns into solid rock as it hits $n.<1>");
+      sprintf(txt2, "<k>$p<k> turns into solid rock as it hits you.<1>");
+      DamType = TYPE_CRUSH;
+      break;
+    case 2:
+      sprintf(txt1, "<r>$p<r> bursts into flame and sorches $n.<1>");
+      sprintf(txt2, "<r>$p<r> bursts into flame and sorches you.<1>");
+      DamType = DAMAGE_FIRE;
+      break;
+    case 3:
+      sprintf(txt1, "<c>$p<c> crackles with electricity as it shocks $n.<1>");
+      sprintf(txt2, "<c>$p<c> crackles with electricity as it shocks you.<1>");
+      DamType = DAMAGE_ELECTRIC;
+      break;
+    case 4:
+    default:
+      sprintf(txt1, "<g>$p<g> becomes covered with acid as it burns $n.<1>");
+      sprintf(txt2, "<g>$p<g> becomes covered with acid as it burns you.<1>");
+      DamType = DAMAGE_ACID;
+      break;
+  }
+
+  dam = ::number(4,10);
+
+  act(txt1,
+      0, vict, o, 0, TO_ROOM, ANSI_CYAN);
+  act(txt2,
+      0, vict, o, 0, TO_CHAR, ANSI_CYAN);
+
+
+
+  rc = ch->reconcileDamage(vict, dam,DamType);
+  if (rc == -1)
+    return DELETE_VICT;
+  return TRUE;
+}
+
+
+int mobSpawnOpen(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  
+  if (cmd != CMD_OBJ_OPENED) 
+    return FALSE;
+
+  if(isname("[OPENED]", o->getName()))
+    return FALSE;
+
+  TBeing *mob = read_mobile(obj_index[o->getItemIndex()].virt , VIRTUAL);
+  if (!mob) {
+    ch->sendTo("Problem!  Tell a god.\n\r");
+    return FALSE;
+  }
+  *ch->roomp += *mob;
+
+  colorAct(COLOR_MOBS, ((mob->ex_description && mob->ex_description->findExtraDesc("repop")) ?
+                        mob->ex_description->findExtraDesc("repop") :
+                        "$n appears suddenly in the room."),
+           TRUE, mob, 0, 0, TO_ROOM);
+
+  sprintf(o->name, "%s [OPENED]", o->name);
+
+
+  return FALSE;
 }
 
 
@@ -6718,7 +6876,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "bulletin board", board},
   {TRUE, "note dispenser", dispenser},
   {TRUE, "statue of feeding", statue_of_feeding},
-  {TRUE, "pager", pager},             // 5
+  {TRUE, "pager", pager},          // 5
   {TRUE, "ear muffs", ear_muffs},
   {FALSE, "Jewel of Judgment", JewelJudgment},   
   {FALSE, "Gwarthir", Gwarthir},
@@ -6831,6 +6989,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "telekinesis glove", telekinesisGlove}, //115
   {FALSE, "Symbol of the Blinding Light", symbolBlindingLight},
   {TRUE, "Weapon: Unmaker", weaponUnmaker},
+  {TRUE, "Chromatic Weapon", chromaticWeapon},
+  {FALSE, "spawning object: open", mobSpawnOpen},
   {FALSE, "last proc", bogusObjProc}
 };
 

@@ -1289,9 +1289,9 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
   else if (type == FOL_PET)
     count += 1 + (pet->GetMaxLevel() / 7);
 
-  vlogf(LOG_DASH, "tooManyFollowers(): %s has %d followers & %d count with max of %d.", getName(), tot_num, count, max_followers);
-  vlogf(LOG_DASH, "tooManyFollowers(): %d = (%d + %d) / 20", max_followers, GetMaxLevel(),
-	plotStat(STAT_CURRENT, STAT_CHA, -15, 15, 0));
+  //  vlogf(LOG_DASH, "tooManyFollowers(): %s has %d followers & %d count with max of %d.", getName(), tot_num, count, max_followers);
+  //  vlogf(LOG_DASH, "tooManyFollowers(): %d = (%d + %d) / 20", max_followers, GetMaxLevel(),
+  //plotStat(STAT_CURRENT, STAT_CHA, -15, 15, 0));
 
   //  if (count > max_count)
   //  return TRUE;

@@ -312,7 +312,7 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
           act("You have successfully concealed your path from $N.",
                     FALSE, vict, 0, this, TO_CHAR, ANSI_GREEN);
           return DIR_NONE;
-        } else if (vict->sameRoom(*aff->be)) {
+        } else if (aff->be && vict->sameRoom(*aff->be)) {
           act("$N has successfully concealed your path from $P.",
                     FALSE, vict, this, aff->be, TO_CHAR, ANSI_GREEN);
           act("You have successfully concealed $n's path from $P.",

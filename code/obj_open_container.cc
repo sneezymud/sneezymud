@@ -301,11 +301,29 @@ int TOpenContainer::openMe(TBeing *ch)
         return FALSE;
       }
     }
+
     act("You open $p.", TRUE, ch, this, NULL, TO_CHAR);
     act("$n opens $p.", TRUE, ch, this, 0, TO_ROOM);
     remContainerFlag(CONT_CLOSED);
     remContainerFlag(CONT_GHOSTTRAP);
     addContainerFlag(CONT_EMPTYTRAP);
+
+
+    if (spec) {
+      int res = 0;
+      int rc = checkSpec(ch, CMD_OBJ_OPENED, NULL, NULL);
+      if (IS_SET_ONLY(rc, DELETE_THIS))
+	res |= DELETE_ITEM;
+      if (IS_SET_ONLY(rc, DELETE_VICT)) {
+	res |= DELETE_VICT;
+	return res;
+      }
+      if (rc)
+	return res;
+    }
+
+
+
 
     if (isContainerFlag(CONT_TRAPPED)) {
       int rc = ch->triggerContTrap(this);
@@ -326,6 +344,21 @@ int TOpenContainer::openMe(TBeing *ch)
     addContainerFlag(CONT_EMPTYTRAP);
     act("You open $p.", TRUE, ch, this, NULL, TO_CHAR);
     act("$n opens $p.", TRUE, ch, this, 0, TO_ROOM);
+
+    if (spec) {
+      int res = 0;
+      int rc = checkSpec(ch, CMD_OBJ_OPENED, NULL, NULL);
+      if (IS_SET_ONLY(rc, DELETE_THIS))
+        res |= DELETE_ITEM;
+      if (IS_SET_ONLY(rc, DELETE_VICT)) {
+        res |= DELETE_VICT;
+        return res;
+      }
+      if (rc)
+        return res;
+    }
+
+
     return TRUE;
   }
 }

@@ -541,9 +541,9 @@ void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
   ticket = make_ticket(repair, buyer, this, when_ready, repair_number);
   *buyer += *ticket;
   save_repairman_file(repair, buyer, this, when_ready, repair_number);
-  vlogf(LOG_DASH, "%s repairing %s - str %d/%d, lev %d.  Repair time: %s.", 
-  fname(buyer->name).c_str(), getName(), (int)getStructPoints(), (int)getMaxStructPoints(),
-  (int)(this->objLevel()*1), secsToString(when_ready-ct).c_str());
+  // vlogf(LOG_DASH, "%s repairing %s - str %d/%d, lev %d.  Repair time: %s.", 
+  //fname(buyer->name).c_str(), getName(), (int)getStructPoints(), (int)getMaxStructPoints(),
+  //(int)(this->objLevel()*1), secsToString(when_ready-ct).c_str());
 
   buyer->logItem(this, CMD_REPAIR);
 

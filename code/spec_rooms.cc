@@ -211,6 +211,14 @@ int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     if (isname("[prop]", t->getName()))
       wasProp = true;
 
+    TObj *obj = dynamic_cast<TObj *>(t);
+    if (!obj)
+      continue;
+
+
+    if (obj->isObjStat(ITEM_NOJUNK_PLAYER))
+      continue;
+
     t->thingDumped(ch, &value);
     // t may be invalid afterwards
   }
@@ -1930,7 +1938,7 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   if (hourminTime() > 50   || hourminTime() < 46) {
     // code to remove gate
     if (found && to) {
-      vlogf(LOG_DASH, "daygate proc found gate, removing");
+      //     vlogf(LOG_DASH, "daygate proc found gate, removing");
       act("<Y>The radiant portal flares up once and is gone.<1>",
 	  TRUE, to, 0, 0, TO_ROOM);
       --(*to);
@@ -1939,7 +1947,7 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   } else {
     // code to place gate
     if (!found) {
-      vlogf(LOG_DASH, "daygate proc didn't find gate, placing");
+      //      vlogf(LOG_DASH, "daygate proc didn't find gate, placing");
       if (!(to = read_object(ITEM_DAYGATE, VIRTUAL))) {
 	vlogf(LOG_LOW, "Error loading daygate");
 	return FALSE;;
@@ -1985,7 +1993,7 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   if ( hourminTime() > 2 && hourminTime() < 94) {
     // code to remove gate
     if (found && to) {
-      vlogf(LOG_DASH, "moongate proc found moongate, removing");
+      //     vlogf(LOG_DASH, "moongate proc found moongate, removing");
       
       act("<k>The dark portal silently disperses into nothingness.<1>",
 	  TRUE, to, 0, 0, TO_ROOM);
@@ -2007,7 +2015,7 @@ int moonGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	obj->setPortalNumCharges(-1);
 	obj->setPortalType(10);
 	*rp += *to;
-	vlogf(LOG_DASH, "moongate proc didn't find moongate, placing");
+	//vlogf(LOG_DASH, "moongate proc didn't find moongate, placing");
 	
 	act("<k>A portal of midnight darkness suddenly shimmers into reality.<1>",
 	    TRUE, to, 0, 0, TO_ROOM);

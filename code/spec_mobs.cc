@@ -6748,7 +6748,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   }
 
   if (nobow) {
-    vlogf(LOG_DASH, "archer loading a new bow");
+    //    vlogf(LOG_DASH, "archer loading a new bow");
     if (!(bow = dynamic_cast<TBow *>(read_object(bownum, VIRTUAL)))) {
       vlogf(LOG_PROC, "Archer couldn't load his bow %d.  DASH!!!", bownum);
       return TRUE;
@@ -6893,7 +6893,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       }
 
       sprintf(buf, "%s %d.%s 1", directions[i][0], numsimilar, temp);
-      vlogf(LOG_DASH, "Brightmoon Defense: %s shooting at %s (%d.%s)", ch->getName(), tbt->getName(), numsimilar, temp);
+      //      vlogf(LOG_DASH, "Brightmoon Defense: %s shooting at %s (%d.%s)", ch->getName(), tbt->getName(), numsimilar, temp);
 
       strcpy(temp, tbt->getName());
 
@@ -6902,8 +6902,8 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       Hf = tbt->getHit();
 
 #if 1
-      vlogf(LOG_DASH, "archer debug: %d->%d, temp/name: (%s)/(%s), tbt?: %s",
-	    Hi, Hf, temp, (tbt->getName() ? tbt->getName() : "(NULL)"), (tbt ? "exists" : "(NULL)"));
+      //      vlogf(LOG_DASH, "archer debug: %d->%d, temp/name: (%s)/(%s), tbt?: %s",
+      //    Hi, Hf, temp, (tbt->getName() ? tbt->getName() : "(NULL)"), (tbt ? "exists" : "(NULL)"));
 #endif
       if (!tbt->getName()) {
         switch(::number(1,7)) {
