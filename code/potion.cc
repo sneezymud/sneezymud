@@ -208,7 +208,7 @@ int TPotion::suggestedPrice() const
       value *= getSpellCasttime(curspell);
 
       // since it's from an obj, arbitrarily double it
-      value *= 2;
+      value *= 30;
     }
 
     tot += value;
