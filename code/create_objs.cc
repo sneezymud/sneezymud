@@ -506,6 +506,8 @@ void TPerson::doOEdit(const char *argument)
 
       else {
         sprintf(sstring, "%s %d", sstring, cObj->getSnum());
+	sendTo(fmt("Resaving in slot %i.\n\r") % cObj->getSnum());
+	oremove(this, cObj->getSnum());
         osave(this, sstring);
       }
       return;
