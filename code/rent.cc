@@ -1439,7 +1439,11 @@ void TMonster::saveItems(const sstring &filepath)
   TObj *obj;
   ItemSave is;
 
-  is.openFile(filepath);
+  if (!is.openFile(filepath)) {
+    vlogf(LOG_FILE, fmt("Failed to open file '%s' in saveItems() call.") % filepath);
+    return;
+  }
+
   is.writeVersion();
 
   // store worn objects
@@ -1514,8 +1518,10 @@ void TRoom::loadItems()
   ItemLoad il;
 
   filepath = fmt("%s/%d") % ROOM_SAVE_PATH % number;
-  if(!il.openFile(filepath))
+  if(!il.openFile(filepath)) {
+    vlogf(LOG_FILE, fmt("Failed to open file '%s' in saveItems() call.") % filepath);
     return;
+  }
   
   reset = isRoomFlag(ROOM_SAVE_ROOM);
   // we need to fool obj_to_room into not trying to resave    
@@ -1942,8 +1948,10 @@ void TBeing::assignCorpsesToRooms()
 //  sprintf(buf, "rent/%c/%s", LOWER(tmp->name[0]), tmp->name.lower());
 
 
-  if(!il.openFile(buf))
+  if(!il.openFile(buf)) {
+    vlogf(LOG_FILE, fmt("Failed to open file '%s' in saveItems() call.") % buf);
     return;
+  }
 
   sprintf(buf, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
   if (!(playerFile = fopen(buf, "r"))) {
@@ -2040,6 +2048,7 @@ void TPCorpse::saveCorpseToFile()
   sprintf(buf, "corpses/%s", fileName.c_str());
 
   if(!is.openFile(buf)){
+    vlogf(LOG_FILE, fmt("Failed to open file '%s' in saveItems() call.") % buf);
     onlyCorpse = TRUE; 
   }
 
@@ -2170,8 +2179,10 @@ void TMonster::loadItems(const sstring &filepath)
   int num_read = 0;
   ItemLoad il;
 
-  if(!il.openFile(filepath))
+  if(!il.openFile(filepath)) {
+    vlogf(LOG_FILE, fmt("Failed to open file '%s' in saveItems() call.") % filepath);
     return;
+  }
 
   if(!il.readVersion()){
     vlogf(LOG_BUG, fmt("Error while reading version from %s.") %  filepath);
