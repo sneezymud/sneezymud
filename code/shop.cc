@@ -111,7 +111,10 @@ int TObj::sellPrice(int shop_nr, float chr, int *discount)
   }
 
   // scale based on global settings
-  cost = (int) (cost * gold_modifier[GOLD_SHOP].getVal());
+  // but only for non-owned shops
+  if(!shop_index[shop_nr].isOwned()){
+    cost = (int) (cost * gold_modifier[GOLD_SHOP].getVal());
+  }
 
   return cost;
 }
