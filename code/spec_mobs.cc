@@ -1987,7 +1987,7 @@ void TBeing::throwChar(TBeing *v, dirTypeT dir, bool also, silentTypeT silent, b
                 false, this, 0, v, TO_CHAR);
       act("$n drags you to your feet.",
                 false, this, 0, v, TO_VICT);
-      act("$n drag $N to $S feet.",
+      act("$n drags $N to $S feet.",
                 false, this, 0, v, TO_NOTVICT);
       v->setPosition(POSITION_STANDING);
     }

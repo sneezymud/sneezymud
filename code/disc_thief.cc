@@ -595,7 +595,7 @@ int disguise(TBeing *caster, char * buffer)
   }
   act("You apply your skills and make yourself look like $N.", 
        TRUE, caster, NULL, mob, TO_CHAR);
-  act("$n apply $s skills and makes $mself look like $N.", 
+  act("$n applies $s skills and makes $mself look like $N.", 
        TRUE, caster, NULL, mob, TO_ROOM);
 
 // first add the attempt -- used to regulate attempts
