@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_fire.cc,v $
+// Revision 1.5  1999/09/16 05:06:44  peel
+// more typo's, dammit
+//
 // Revision 1.4  1999/09/16 05:05:12  peel
 // Typo
 //
@@ -1341,7 +1344,7 @@ int conjureElemFire(TBeing *caster)
   for(t=caster->roomp->stuff;t;t=t->nextThing){
     if((tl=dynamic_cast<TLight *>(t)) &&
        tl->isLit()){
-      t->putLightOut();
+      tl->putLightOut();
       found=1;
       break;
     }
