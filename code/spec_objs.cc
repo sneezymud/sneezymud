@@ -5342,7 +5342,9 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 
   int i=1;
   while((row=mysql_fetch_row(res))){
-    ch->sendTo(COLOR_BASIC, "%i) %s has killed %i life forms.\n\r", i, row[0], atoi(row[1]));
+    ch->sendTo(COLOR_BASIC, "%i) %s has killed %i (%d%%) life forms.\n\r", 
+	       i, row[0], atoi(row[1]), 
+	       (int)(((float)atoi(row[1])/(float)mob_index.size())*100));
     ++i;
   }
 
