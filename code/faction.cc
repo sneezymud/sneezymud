@@ -1998,11 +1998,6 @@ void TBeing::doRelease(const string & arg)
   TBeing *targ;
   string buf;
 
-  if (!hasWizPower(POWER_WIZARD)) {
-    sendTo("Prototype command.  You need to be a developer to use this.\n\r");
-    return;
-  }
-
   one_argument(arg, buf);
 
   if (is_abbrev(buf, "all")) {
@@ -2032,11 +2027,6 @@ void TBeing::doCapture(const string & arg)
 {
   TBeing *targ;
   string buf;
-
-  if (!hasWizPower(POWER_WIZARD)) {
-    sendTo("Prototype command.  You need to be a developer to use this.\n\r");
-    return;
-  }
 
   one_argument(arg, buf);
 
