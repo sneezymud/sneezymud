@@ -1295,7 +1295,7 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
 
 int TBeing::followTime() const
 {
-  return (plotStat(STAT_CURRENT, STAT_CHA, 6, 36, 22) * UPDATES_PER_MUDHOUR);
+  return (plotStat(STAT_CURRENT, STAT_CHA, 6, 36, 22) * (UPDATES_PER_MUDHOUR / 2));
 }
 
 // a higher value = harder to see
