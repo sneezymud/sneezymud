@@ -3337,7 +3337,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 	  }
         case 121:
         case 122:
-          sprintf(buf, "I need a cleric and two bags of marshmallows as %s....STAT!", ch->roomp->name);
+          sprintf(buf, "I need a cleric and two bags of marshmallows at %s....STAT!", ch->roomp->name);
           break;
         case 123:
         case 124:
