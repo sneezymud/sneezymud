@@ -92,7 +92,7 @@ using namespace std;
 // defines the port of the running muds
 extern const int PROD_GAMEPORT;
 extern const int BETA_GAMEPORT;
-extern const int GAMMA_GAMEPORT; // quick boot
+extern       int GAMMA_GAMEPORT; // quick boot
 extern const int ALPHA_GAMEPORT;
 extern const int BUILDER_GAMEPORT;
 

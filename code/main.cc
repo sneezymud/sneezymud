@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
 #endif
   int a, pos = 1;
   char dir[256];
+  bool bTrimmed = false;
 
   gamePort = PROD_GAMEPORT;   // set as default
   strcpy(dir, DFLT_DIR);
@@ -46,10 +47,17 @@ int main(int argc, char *argv[])
 	  exit(0);
 	}
 	break;
+
       case 's':
 	noSpecials = 1;
 	vlogf(LOG_MISC, "Suppressing assignment of special routines.");
 	break;
+
+      case 't':
+        bTrimmed = true;
+        vlogf(LOG_MISC, "Loading as trimmed port.");
+        break;
+
       default:
 	vlogf(LOG_MISC, fmt("Unknown option -% in argument sstring.") %  *(argv[pos] + 1));
 	break;
@@ -66,6 +74,10 @@ int main(int argc, char *argv[])
       exit(0);
     }
   }
+
+  if (bTrimmed)
+    GAMMA_GAMEPORT = gamePort;
+
   Uptime = time(0);
 
   vlogf(LOG_MISC, fmt("Running %s on port %d.") %  MUD_NAME % gamePort);
