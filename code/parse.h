@@ -661,11 +661,9 @@ template<class T> T convertTo(const string s)
 {
   T x;
   istringstream is(s);
-  if(!(is >> x)){
-    if(!s.empty()) // we allow "" to be converted to 0 with no warning
-      vlogf(LOG_BUG, "convertTo extraction failed on '%s'.", s.c_str());
-    x=0;
-  }
+  if(!(is >> x)) // let failure convert to 0 with no warning.  we relied on
+    x=0;         // this (undefined) behavior with atoi, so we need it now
+
   return x;
 }
 
