@@ -7449,11 +7449,11 @@ int adventurer(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     fighting=true;
   } else {
     for (followData *f = myself->followers; f; f = f->next){
-      if(myself->inGroup(*f->follower) && f->follower->fight()){
+      if(myself->inGroup(*f->follower) && 
+	 (f->follower->fight() || f->follower->spelltask)){
 	fighting=true;
       }
     }
-
   }
 
   if(fighting)
