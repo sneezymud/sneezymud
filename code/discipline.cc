@@ -2669,8 +2669,11 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_WATER] = new CDWater();
       discs->disc[DISC_WIZARDRY] = new CDWizardry();
       discs->disc[DISC_LORE] = new CDLore();
-      discs->disc[DISC_PIERCE] = new CDPierce();
 
+      discs->disc[DISC_BLUNT] = new CDBash();
+      discs->disc[DISC_SLASH] = new CDSlash();
+      discs->disc[DISC_PIERCE] = new CDPierce();
+      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -2682,9 +2685,13 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_AFFLICTIONS] = new CDAfflict();
       discs->disc[DISC_CURES] = new CDCures();
       discs->disc[DISC_HAND_OF_GOD] = new CDHand();
-      discs->disc[DISC_BLUNT] = new CDBash();
       discs->disc[DISC_FAITH] = new CDFaith();
       discs->disc[DISC_THEOLOGY] = new CDTheology();
+
+      discs->disc[DISC_BLUNT] = new CDBash();
+      discs->disc[DISC_SLASH] = new CDSlash();
+      discs->disc[DISC_PIERCE] = new CDPierce();
+      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -2695,10 +2702,12 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_BRAWLING] = new CDBrawling();
       discs->disc[DISC_PHYSICAL] = new CDPhysical();
       discs->disc[DISC_SMYTHE] = new CDSmythe();
+      discs->disc[DISC_DEFENSE] = new CDDefense();
+
       discs->disc[DISC_BLUNT] = new CDBash();
       discs->disc[DISC_SLASH] = new CDSlash();
       discs->disc[DISC_PIERCE] = new CDPierce();
-      discs->disc[DISC_DEFENSE] = new CDDefense();
+      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -2709,11 +2718,13 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_ANIMAL] = new CDAnimal();
       discs->disc[DISC_PLANTS] = new CDPlants();
       discs->disc[DISC_SURVIVAL] = new CDSurvival();
-      discs->disc[DISC_SLASH] = new CDSlash();
       discs->disc[DISC_NATURE] = new CDNature();
-      discs->disc[DISC_RANGED] = new CDRanged();
-      discs->disc[DISC_PIERCE] = new CDPierce();
       discs->disc[DISC_DEFENSE] = new CDDefense();
+
+      discs->disc[DISC_BLUNT] = new CDBash();
+      discs->disc[DISC_SLASH] = new CDSlash();
+      discs->disc[DISC_PIERCE] = new CDPierce();
+      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -2727,9 +2738,12 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_DEIKHAN_WRATH] = new CDDeikhanWrath();
       discs->disc[DISC_FAITH] = new CDFaith();
       discs->disc[DISC_THEOLOGY] = new CDTheology();
+      discs->disc[DISC_DEFENSE] = new CDDefense();
+
       discs->disc[DISC_BLUNT] = new CDBash();
       discs->disc[DISC_SLASH] = new CDSlash();
-      discs->disc[DISC_DEFENSE] = new CDDefense();
+      discs->disc[DISC_PIERCE] = new CDPierce();
+      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -2743,12 +2757,16 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_BAREHAND] = new CDBarehand();
       discs->disc[DISC_DEFENSE] = new CDDefense();
       discs->disc[DISC_IRON_BODY] = new CDIronBody();
+
+      discs->disc[DISC_BLUNT] = new CDBash();
+      discs->disc[DISC_SLASH] = new CDSlash();
+      discs->disc[DISC_PIERCE] = new CDPierce();
+      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
   if (hasClass(CLASS_THIEF)) {
     if (!isPc()) {
-
       discs->disc[DISC_THIEF] = new CDThief();
       discs->disc[DISC_THIEF_FIGHT] = new CDThiefFight();
       discs->disc[DISC_MURDER] = new CDMurder();
@@ -2756,8 +2774,11 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_POISONS] = new CDPoisons();
       discs->disc[DISC_STEALTH] = new CDStealth();
       discs->disc[DISC_TRAPS] = new CDTraps();
-      discs->disc[DISC_PIERCE] = new CDPierce();
+
+      discs->disc[DISC_BLUNT] = new CDBash();
       discs->disc[DISC_SLASH] = new CDSlash();
+      discs->disc[DISC_PIERCE] = new CDPierce();
+      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -2772,8 +2793,11 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_SHAMAN_FROG] = new CDShamanFrog();
       discs->disc[DISC_SHAMAN_SKUNK] = new CDShamanSkunk();
       discs->disc[DISC_SHAMAN_SPIDER] = new CDShamanSpider();
+
       discs->disc[DISC_BLUNT] = new CDBash();
+      discs->disc[DISC_SLASH] = new CDSlash();
       discs->disc[DISC_PIERCE] = new CDPierce();
+      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
