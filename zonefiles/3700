@@ -1,6 +1,6 @@
 #3700
 Spawn - The Town of Logrus~
-3865 35 2 1
+3899 35 2 1
 
 M 0 3750 1 3753      barber
 
@@ -317,5 +317,16 @@ E 1 1058 999 17         hardened steel bracer
 E 1 1059 999 12	 	hardened steel armband
 ? 0 2 0 E
 E 1 1089 999 1         metal ring
+
+D 0 3866 4 1         Adrielz Chest -> A Balcony Overlooking the City
+D 0 3867 5 1         A Balcony Overlooking the City -> Adrielz Chest
+D 0 3867 7 1         A Balcony Overlooking the City -> Inside the Spire
+D 0 3869 4 1         Skull Duggory's  -> A Balcony Overlooking the City 
+D 0 3870 5 1         A Balcony Overlooking the City  -> Skull Duggory's 
+D 0 3870 8 1         A Balcony Overlooking the City  -> Inside the Blood Red Tower
+D 0 3871 7 1         Inside the Blood Red Tower -> A Balcony Overlooking the City 
+D 0 3872 8 1         Inside the Spire -> A Balcony Overlooking the City
+M 0 3866 1 3866         Adrielz
+M 0 3869 1 3869         Turk
 S
 
