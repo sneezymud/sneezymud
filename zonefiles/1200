@@ -169,6 +169,12 @@ Y 0 10 5		5% chance of metal armor
 M 0 1302 5 1283 ; Paladin Guard Wall
 Y 0 10 5		5% chance of metal armor
 
+M 0 1211 1 1303  ; Paladin Guard Patrol Lieutenant
+? 0 2 0 E
+E 1 1365 30 19          Battle Axe (Two-Handed)
+Y 0 11 5		5% chance of platemail
+
+
 M 0 1201 1 1339  ; Paladin Guard Lieutenant
 ? 0 2 0 E
 E 1 1365 30 19          Battle Axe (Two-Handed)
