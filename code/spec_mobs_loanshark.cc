@@ -229,13 +229,12 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
       int loanamt=convertTo<int>(sstring(arg).word(1));
     
-      if(loanamt > amt){
+      if(loanamt > amt || loanamt <= 0){
 	me->doTell(ch->getName(), fmt("You can't take out a loan for that much.  The most I can give you is %i.") % amt);
 	return true;
       }
 
-      if(loanamt > 0 && loanamt <= amt)
-	amt=loanamt;
+      amt=loanamt;
 
       if(amt > me->getMoney()){
 	me->doTell(ch->getName(), "At the moment, I don't have the necessary capital to extend a loan to you.");
