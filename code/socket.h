@@ -30,7 +30,7 @@ class TSocket {
   void initSocket();
   void addNewDescriptorsDuringBoot(sstring);
   bool handleShutdown();
-
+  struct timeval handleTimeAndSockets();
 
   TSocket(int p);
   ~TSocket();

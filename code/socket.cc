@@ -336,11 +336,130 @@ bool TSocket::handleShutdown()
 }
 
 
-int TSocket::gameLoop()
+// this function handles time regulation, new socket connections,
+// queueing up socket input, and prompt displaying
+struct timeval TSocket::handleTimeAndSockets()
 {
   fd_set input_set, output_set, exc_set;
-  struct timeval last_time, now, timespent, timeout, null_time;
-  static struct timeval opt_time;
+  static struct timeval last_time;
+  struct timeval now, timespent, timeout, null_time, opt_time;
+  Descriptor *point;
+
+  null_time.tv_sec = 0;
+  null_time.tv_usec = 0;
+  opt_time.tv_usec = OPT_USEC;
+  opt_time.tv_sec = 0;
+  
+  int mask = sigmask(SIGUSR1) | sigmask(SIGUSR2) | sigmask(SIGINT) |
+    sigmask(SIGPIPE) | sigmask(SIGTERM) |
+    sigmask(SIGURG) | sigmask(SIGXCPU) | sigmask(SIGHUP);
+
+  ////////////////////////////////////////////
+  // do some socket stuff or something
+  ////////////////////////////////////////////
+  // Check what's happening out there 
+  FD_ZERO(&input_set);
+  FD_ZERO(&output_set);
+  FD_ZERO(&exc_set);
+  FD_SET(m_sock, &input_set);
+  for (point = descriptor_list; point; point = point->next) {
+    FD_SET(point->socket->m_sock, &input_set);
+    FD_SET(point->socket->m_sock, &exc_set);
+    FD_SET(point->socket->m_sock, &output_set);
+  }
+  ////////////////////////////////////////////
+  ////////////////////////////////////////////
+
+  ////////////////////////////////////////////
+  // do some time related stuff
+  ////////////////////////////////////////////
+  // check out the time 
+  gettimeofday(&now, NULL);
+  timespent=timediff(&now, &last_time);
+  timeout=timediff(&opt_time, &timespent);
+
+
+  last_time.tv_sec = now.tv_sec + timeout.tv_sec;
+  last_time.tv_usec = now.tv_usec + timeout.tv_usec;
+  if (last_time.tv_usec >= 1000000) {
+    last_time.tv_usec -= 1000000;
+    last_time.tv_sec++;
+  }
+
+  sigsetmask(mask);
+
+
+  // this gets our list of socket connections that are ready for handling
+  if(select(maxdesc + 1, &input_set, &output_set, &exc_set, &null_time) < 0){
+    perror("Error in Select (poll)");
+    exit(-1);
+  }
+
+  // this regulates the speed of the mud
+  if (select(0, 0, 0, 0, &timeout) < 0) {
+    perror("Error in select (sleep)");
+  }
+
+  sigsetmask(0);
+
+  ////////////////////////////////////////////
+  ////////////////////////////////////////////
+
+  ////////////////////////////////////////////
+  // establish any new connections 
+  ////////////////////////////////////////////
+  if (FD_ISSET(m_sock, &input_set)) {
+    int rc = newDescriptor();
+    if (rc < 0)
+      perror("New connection");
+    else if (rc) {
+      // we created a new descriptor
+      // so send the login to the first desc in list
+      if (!descriptor_list->m_bIsClient)
+	descriptor_list->sendLogin("1");
+    }
+  }
+  ////////////////////////////////////////////
+  ////////////////////////////////////////////
+
+  ////////////////////////////////////////////
+  // close any connections with an exceptional condition pending 
+  ////////////////////////////////////////////
+  for (point = descriptor_list; point; point = next_to_process) {
+    next_to_process = point->next;
+    if (FD_ISSET(point->socket->m_sock, &exc_set)) {
+      FD_CLR(point->socket->m_sock, &input_set);
+      FD_CLR(point->socket->m_sock, &output_set);
+      delete point;
+    }
+  }
+  ////////////////////////////////////////////
+  ////////////////////////////////////////////
+
+  ////////////////////////////////////////////
+  // read any incoming input, and queue it up 
+  ////////////////////////////////////////////
+  for (point = descriptor_list; point; point = next_to_process) {
+    next_to_process = point->next;
+    if (FD_ISSET(point->socket->m_sock, &input_set)) {
+      if (point->inputProcessing() < 0) {
+	delete point;
+	point = NULL;
+      }
+    }
+  }
+  processAllInput();
+  setPrompts(output_set);
+  afterPromptProcessing(output_set);
+  ////////////////////////////////////////////
+  ////////////////////////////////////////////
+
+  return timespent;
+}
+
+
+int TSocket::gameLoop()
+{
   Descriptor *point;
   int pulse = 0;
   int teleport=0, combat=0, drowning=0, special_procs=0, update_stuff=0;
@@ -353,20 +472,10 @@ int TSocket::gameLoop()
   int vehiclepulse = 0;
   sstring str;
   int count;
-  int mask;
-
-  // prepare the time values 
-  null_time.tv_sec = 0;
-  null_time.tv_usec = 0;
-  opt_time.tv_usec = OPT_USEC;
-  opt_time.tv_sec = 0;
-  gettimeofday(&last_time, NULL);
+  struct timeval timespent;
 
   avail_descs = 150;		
   
-  mask = sigmask(SIGUSR1) | sigmask(SIGUSR2) | sigmask(SIGINT) |
-    sigmask(SIGPIPE) | sigmask(SIGTERM) |
-    sigmask(SIGURG) | sigmask(SIGXCPU) | sigmask(SIGHUP);
 
   // players may have connected before this point via 
   // addNewDescriptorsDuringBoot, so send all those descriptors the login
@@ -377,33 +486,11 @@ int TSocket::gameLoop()
   time_t ticktime = time(0);
 
   while (!handleShutdown()) {
-    ////////////////////////////////////////////
-    // do some socket stuff or something
-    ////////////////////////////////////////////
-    // Check what's happening out there 
-    FD_ZERO(&input_set);
-    FD_ZERO(&output_set);
-    FD_ZERO(&exc_set);
-    FD_SET(m_sock, &input_set);
-    for (point = descriptor_list; point; point = point->next) {
-      FD_SET(point->socket->m_sock, &input_set);
-      FD_SET(point->socket->m_sock, &exc_set);
-      FD_SET(point->socket->m_sock, &output_set);
-    }
-    ////////////////////////////////////////////
-    ////////////////////////////////////////////
+    timespent=handleTimeAndSockets();
 
-    ////////////////////////////////////////////
-    // do some time related stuff
-    ////////////////////////////////////////////
-    // check out the time 
-    gettimeofday(&now, NULL);
-    timespent=timediff(&now, &last_time);
-    timeout=timediff(&opt_time, &timespent);
-
-
+    
     if(TestCode1){
-      str = "";
+      sstring str = "";
       if(!combat)
 	str += "combat        ";
       if(!update_stuff)
@@ -422,93 +509,13 @@ int TSocket::gameLoop()
 	str += "drowning      ";
       if(!wayslowpulse)
 	str += "wayslowpulse  ";
-
+      
       vlogf(LOG_MISC, fmt("%i %i) %s = %i") % 
 	    pulse % (pulse%12) % str %
 	    ((timespent.tv_sec*1000000)+timespent.tv_usec));
     }
+    
 
-
-    last_time.tv_sec = now.tv_sec + timeout.tv_sec;
-    last_time.tv_usec = now.tv_usec + timeout.tv_usec;
-    if (last_time.tv_usec >= 1000000) {
-      last_time.tv_usec -= 1000000;
-      last_time.tv_sec++;
-    }
-
-    sigsetmask(mask);
-
-#ifdef LINUX
-    // linux uses a nonstandard style of "timedout" (the last parm of select)
-    // it gets hosed each select() so must be reinited here
-    null_time.tv_sec = 0;
-    null_time.tv_usec = 0;
-#endif
-
-    // this gets our list of socket connections that are ready for handling
-    if(select(maxdesc + 1, &input_set, &output_set, &exc_set, &null_time) < 0){
-      perror("Error in Select (poll)");
-      return (-1);
-    }
-
-    // this regulates the speed of the mud
-    if (select(0, 0, 0, 0, &timeout) < 0) {
-      perror("Error in select (sleep)");
-    }
-
-    sigsetmask(0);
-
-    ////////////////////////////////////////////
-    ////////////////////////////////////////////
-
-    ////////////////////////////////////////////
-    // establish any new connections 
-    ////////////////////////////////////////////
-    if (FD_ISSET(m_sock, &input_set)) {
-      int rc = newDescriptor();
-      if (rc < 0)
-	perror("New connection");
-      else if (rc) {
-        // we created a new descriptor
-        // so send the login to the first desc in list
-        if (!descriptor_list->m_bIsClient)
-          descriptor_list->sendLogin("1");
-      }
-    }
-    ////////////////////////////////////////////
-    ////////////////////////////////////////////
-
-    ////////////////////////////////////////////
-    // close any connections with an exceptional condition pending 
-    ////////////////////////////////////////////
-    for (point = descriptor_list; point; point = next_to_process) {
-      next_to_process = point->next;
-      if (FD_ISSET(point->socket->m_sock, &exc_set)) {
-	FD_CLR(point->socket->m_sock, &input_set);
-	FD_CLR(point->socket->m_sock, &output_set);
-	delete point;
-      }
-    }
-    ////////////////////////////////////////////
-    ////////////////////////////////////////////
-
-    ////////////////////////////////////////////
-    // read any incoming input, and queue it up 
-    ////////////////////////////////////////////
-    for (point = descriptor_list; point; point = next_to_process) {
-      next_to_process = point->next;
-      if (FD_ISSET(point->socket->m_sock, &input_set)) {
-	if (point->inputProcessing() < 0) {
-	  delete point;
-          point = NULL;
-        }
-      }
-    }
-    processAllInput();
-    setPrompts(output_set);
-    afterPromptProcessing(output_set);
-    ////////////////////////////////////////////
-    ////////////////////////////////////////////
 
     ////////////////////////////////////////////
     // setup the pulse boolean flags
