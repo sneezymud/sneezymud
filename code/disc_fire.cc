@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_fire.cc,v $
+// Revision 1.2  1999/09/16 05:01:10  peel
+// Conjure fire elemental requires a lit light in the room to work.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1313,6 +1316,10 @@ int conjureElemFire(TBeing *caster, int level, byte bKnown)
 
 int conjureElemFire(TBeing *caster)
 {
+  TThing *t;
+  int found=0;
+  TLight *tl;
+
   if (caster->roomp->isUnderwaterSector()) {
     caster->sendTo("You cannot cast that under these wet conditions!\n\r");
     return FALSE;
@@ -1324,6 +1331,19 @@ int conjureElemFire(TBeing *caster)
 
   if (!bPassMageChecks(caster, SPELL_CONJURE_FIRE, NULL))
     return FALSE;
+
+  for(t=caster->roomp->stuff;t;t=t->nextStuff){
+    if((tl=dynamic_cast<TLight *>(t)) &&
+       tl->isLit()){
+      found=1;
+      break;
+    }
+  }
+  if(!found){
+    caster->sendTo("There doesn't seem to be enough fire around to conjure a fire elemental.\n\r");
+    return FALSE;
+  }
+
 
   lag_t rounds = discArray[SPELL_CONJURE_FIRE]->lag;
   taskDiffT diff = discArray[SPELL_CONJURE_FIRE]->task;
