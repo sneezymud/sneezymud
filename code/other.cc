@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: other.cc,v $
+// Revision 1.9  1999/09/30 01:04:49  lapsos
+// Added code for the auto-tips advanced menus.
+//
 // Revision 1.8  1999/09/29 07:46:14  lapsos
 // Added code for the Mobile Strings stuff.
 //
@@ -3094,7 +3097,7 @@ void TBeing::doAuto(const char *buf)
         continue;
       if (*auto_name[i]) {
         sendTo("%-35s : %s\n\r",
-               ((i == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]),
+               (((1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]),
                ((IS_SET(desc->autobits, (unsigned) (1<<i))) ? "on" : "off"));
       }
     }
@@ -3229,10 +3232,16 @@ void TBeing::doAuto(const char *buf)
     }
   } else if (is_abbrev(arg, "tips")) {
     if (IS_SET(desc->autobits, AUTO_TIPS)) {
-      sendTo("You will no longer see periodic tips.\n\r");
+      if (isImmortal())
+        sendTo("You will now see the basic menus in the editors.\n\r");
+      else
+        sendTo("You will no longer see periodic tips.\n\r");
       REMOVE_BIT(desc->autobits, AUTO_TIPS);
     } else {
-      sendTo("You will now see periodic tips.\n\r");
+      if (isImmortal())
+        sendTo("You will now see the advanced menus in the editors.\n\r");
+      else
+        sendTo("You will now see periodic tips.\n\r");
       SET_BIT(desc->autobits, AUTO_TIPS);
     }
   } else if (is_abbrev(arg, "join") ) {
