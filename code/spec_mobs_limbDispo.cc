@@ -149,18 +149,25 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
     case 3:
     case 4:
       resp = "Thanks.";
+      break;
     case 5:
       resp = "Trying to hide the evidence, eh?  Don't worry, your secret is safe with me.";
+      break;
     case 6:
       resp = "Hmm... I've seen fresher.";
+      break;
     case 7:
       resp = "Barbarian!  Get a real job!";
+      break;
     case 8:
       resp = "This is nothing compared to what the last guy gave me.";
+      break;
     case 9:
       resp = "Hey!  That came from a good friend of mine!";
+      break;
     default:
       resp = "Seen a lot of those this week, I have.";
+      break;
   }
   mob->doWhisper(fmt("%s %s") % ch->name % resp);
   
