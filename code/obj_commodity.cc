@@ -153,6 +153,8 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
 
     ch->giveMoney(keeper, price, GOLD_COMM);
+    shoplog(shop_nr, ch, keeper, obj2->getName(), price, "buying");
+
   } else {
     // this happens with sub zero weight components
     vlogf(LOG_BUG, fmt("Bogus num %d in buyMe component at %d.  wgt=%.2f") %  num % ch->in_room % getWeight());
@@ -217,6 +219,9 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
     --(*this);
 
     keeper->giveMoney(ch, price, GOLD_COMM);
+    shoplog(shop_nr, ch, keeper, obj2->getName(), price, "selling");
+
+
     keeper->doTell(ch->getName(), fmt("Thanks, here's your %d talens.") % price);
     act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
