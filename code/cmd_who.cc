@@ -305,13 +305,13 @@ void TBeing::doWho(const char *argument)
         ssprintf(buf, "%sTesting (Other Ports)\n\r", buf.c_str());
         ssprintf(buf, "%s------------------------------------------------------------------\n\r", buf.c_str());
 
-	vlogf(LOG_DASH, "checkpoint 1");
+
         TDatabase db3("sneezybeta");
         db3.query("select title, port, name from wholist order by port");
-	vlogf(LOG_DASH, "checkpoint 2");
+
         while(db3.fetchRow()){
           stmp=db3.getColumn(0);
-	  vlogf(LOG_DASH, "checkpoint 3");
+
           if((pos=stmp.find("<n>")) != string::npos)
             stmp.replace(pos,3,db3.getColumn(2));
 
@@ -322,7 +322,7 @@ void TBeing::doWho(const char *argument)
           ssprintf(buf, "%s[%s] %s<1>\n\r", buf.c_str(),
                    db3.getColumn(1), stmp.c_str());
         }
-	vlogf(LOG_DASH, "checkpoint 4");
+
 
 	sb += buf;
 	

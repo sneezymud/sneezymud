@@ -224,7 +224,7 @@ int updateWholist()
 
   db.query("delete from wholist where port=%i", gamePort);
   
-  vlogf(LOG_DASH, "Updating who table for port %d", gamePort);
+  //  vlogf(LOG_DASH, "Updating who table for port %d", gamePort);
   for (p = character_list; p; p = p->next) {
     if (p->isPc() && !p->isLinkdead() && p->polyed == POLY_TYPE_NONE) {
       if ((p2 = dynamic_cast<TPerson *>(p))) {
