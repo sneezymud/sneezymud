@@ -332,8 +332,11 @@ void TBeing::doWho(const char *argument)
                   if (!group) {
                     TBeing *ch;
                     followData *f;
-		    ssprintf(buf, "Group: %s\n\r%s",
-			     p->desc->session.groupName.c_str(), buf.c_str());
+
+		    if(p->desc)
+		      ssprintf(buf, "Group: %s\n\r%s",
+			   p->desc->session.groupName.c_str(), buf.c_str());
+
                     for (f = p->followers; f; f = f->next) {
                       ch = f->follower;
                       if (!ch->isPc())
