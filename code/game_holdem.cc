@@ -242,6 +242,30 @@ void HoldemGame::showdown(TBeing *ch)
     }
   }
 
+  int tcount=0;
+  TObj *obj;
+  for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
+    if(players[i] && players[i]->ch){
+      for(TThing *t=players[i]->ch->getStuff();t;t=t->nextThing){
+	if((obj=dynamic_cast<TObj *>(t))){
+	  if(obj->objVnum() == last_bet)
+	    tcount++;
+	}
+      }
+      
+      vlogf(LOG_PEEL, "got here2=%i", tcount);
+
+      ssprintf(buf, "$n has %i chips left.", tcount);
+      vlogf(LOG_PEEL, buf.c_str());
+
+      act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
+      ssprintf(buf, "You have %i chips left.", tcount);
+      act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_CHAR);
+      tcount=0;
+    }
+  }
+
+
   for(i=1;i<MAX_HOLDEM_PLAYERS;++i){
     if(players[i] && players[i]->ch && players[i]->ch->isPc()){
       act("The button moves to $n.",
