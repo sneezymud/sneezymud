@@ -74,6 +74,10 @@ void TShopOwned::chargeTax(TObj *o, int cost)
 {
   int gh_tax_office=14; // shop number
   
+  // no tax for messing with inventory if you own the shop
+  if(!hasAccess(SHOPACCESS_OWNER))
+    return;
+
   cost = (int)((float)cost * shop_index[gh_tax_office].getProfitBuy(o, ch));
   
   TBeing *t;
