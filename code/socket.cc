@@ -796,7 +796,7 @@ int TMainSocket::characterPulse(TPulseList &pl)
     temp = tmp_ch->next;
   } // character_list
 
-  return retcount;
+  return retcount-count;
 }
 
 
@@ -932,7 +932,7 @@ int TMainSocket::objectPulse(TPulseList &pl)
   } // object list
 
 
-  return retcount;
+  return retcount-count;
 }
 
 void pingData()
