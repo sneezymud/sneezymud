@@ -3,7 +3,7 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: doors.cc,v $
-// Revision 1.2  1999/09/29 01:05:34  lapsos
+// Revision 1.3  1999/09/29 01:37:15  lapsos
 // Modified to allow for mounted opening of doors.
 //
 // Revision 1.1  1999/09/12 17:24:04  sneezy
@@ -210,11 +210,19 @@ void TBeing::rawOpenDoor(dirTypeT dir)
             uncap(doorbuf), dirs_to_blank[dir]);
       break;
     case DOOR_PORTCULLIS:
-      sprintf(buf, "$n squats down and lifts the %s %s open.",
-            uncap(doorbuf), dirs_to_blank[dir]);
-      act(buf, TRUE, this, 0, 0, TO_ROOM);
-      sendTo("You squat down and lift the %s %s open.\n\r",
-            uncap(doorbuf), dirs_to_blank[dir]);
+      if (riding) {
+        sprintf(buf, "$n leans over and lifts the %s %s open.",
+                uncap(doorbuf), dirs_to_blank[dir]);
+        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        sendTo("You lean over and lift the %s %s open.\n\r",
+               uncap(doorbuf), dirs_to_blank[dir]);
+      } else {
+        sprintf(buf, "$n squats down and lifts the %s %s open.",
+              uncap(doorbuf), dirs_to_blank[dir]);
+        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        sendTo("You squat down and lift the %s %s open.\n\r",
+              uncap(doorbuf), dirs_to_blank[dir]);
+      }
       break;
     case DOOR_GRATE:
       if (dir == DIR_UP) {
