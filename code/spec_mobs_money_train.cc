@@ -3,7 +3,6 @@
 
 const unsigned int MT_GUARD=31762;
 const unsigned int MT_CLERIC=31763;
-const int ROOM_TROLLEY=15344;
 const int MONEY_BAG=31776;
 const unsigned int PROMISSORY_NOTE=31777;
 

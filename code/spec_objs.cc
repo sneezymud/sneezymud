@@ -1926,7 +1926,7 @@ int trolley(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
 	      34704, 34703, 34702, 34701, 34700, 735, 736, 737,
 	      738, 739, 1381, 1200, 1201, 1204, 1207, 1215, 1218, 1221, 
 	      1301, 1302, 1303, -1};
-  TRoom *trolleyroom=real_roomp(15344);
+  TRoom *trolleyroom=real_roomp(ROOM_TROLLEY);
   static int timer;
   char buf[256], shortdescr[256];
 

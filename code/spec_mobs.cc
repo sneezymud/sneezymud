@@ -6970,7 +6970,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 
       Hi = tbt->getHit();
 
-      if(ch->in_room == 15344) {
+      if(ch->in_room == ROOM_TROLLEY) {
 	
 	sprintf(buf, "From inside the trolley, $N aims a $o at you.");
 	act(buf,FALSE, tbt, bow, ch, TO_CHAR);
@@ -7233,11 +7233,14 @@ int trolleyBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
 
   // find the trolley
   for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
-    if((*iter)->objVnum() == trolleynum)
+    if((*iter)->objVnum() == trolleynum){
+      trolley=*iter;
       break;
+    }
   }
-  if(!trolley)
+  if(!trolley){
     return FALSE;
+  }
 
   if(!(vehicle=dynamic_cast<TVehicle *>(trolley))){
     vlogf(LOG_BUG, "couldn't cast trolley to vehicle!");
@@ -7247,7 +7250,6 @@ int trolleyBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
   if(!has_key(myself, vehicle->getPortalKey())){
     return FALSE;
   }
-
 
   if((--timer)>0)
     return FALSE;
@@ -7481,8 +7483,10 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
 
   // find the elevator
   for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
-    if((*iter)->objVnum() == elevatornum)
+    if((*iter)->objVnum() == elevatornum){
+      elevator=*iter;
       break;
+    }
   }
   if(!elevator)
     return FALSE;
@@ -8220,6 +8224,7 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 }
 
 
+extern int garbageConvoy(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int taxman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int banker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int stockBroker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -8443,6 +8448,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE,"Trainer: advanced adventuring", CDGenericTrainer},
   {FALSE, "amber janitor", amberJanitor},
   {FALSE, "brightmoon janitor", brightmoonJanitor},
+  {FALSE, "garbage convoy", garbageConvoy},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
