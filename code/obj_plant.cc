@@ -163,7 +163,8 @@ void TPlant::updateDesc()
   // really old plants should wither and die
   if(getAge() > 300){
     plantindex=4;
-    obj_flags.decay_time=10;
+    if(obj_flags.decay_time <= -1)
+      obj_flags.decay_time=10;
   }
 
   if (isObjStat(ITEM_STRUNG)) {
