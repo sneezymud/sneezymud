@@ -817,6 +817,12 @@ void TPerson::raiseLevel(classIndT Class, TMonster *gm)
 
         sprintf(buf, "$n says, \"$N, the High Tabuda thanks you for your %d talen donation to the kwoon.\"", amount);
         act(buf, FALSE, gm, 0, this, TO_VICT);
+
+	act("$n says, \"Here, have a fortune cookie.\"",
+	    FALSE, gm, 0, this, TO_VICT);
+	TObj *o=read_object(606, VIRTUAL);
+	*this += *o;
+	act("$n gives you $p.", 0, gm, o, this, TO_VICT);
       }
     }
     act("$n smiles, \"Yes...it is time for you to advance.\"", 
