@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "database.h"
+#include "corporation.h"
 
 int getAssets(int corp_id)
 {
@@ -70,6 +71,56 @@ void corpListing(TBeing *ch, TMonster *me)
 
   for(it=m.begin();it!=m.end();++it)
     me->doTell(ch->getName(), (*it).second);
+}
+
+void corpLogs(TBeing *ch, TMonster *me, sstring arg)
+{
+  TDatabase db(DB_SNEEZY);
+  sstring buf, sb;
+  int corp_id=0;
+
+  db.query("select corp_id from corpaccess where lower(name)='%s'",
+	   sstring(ch->getName()).lower().c_str());
+
+  if(arg.empty()){
+    if(db.fetchRow())
+      corp_id=convertTo<int>(db["corp_id"]);
+
+    if(db.fetchRow()){
+      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
+      return;
+    }
+  } else {
+    if(convertTo<int>(arg) == 0){
+      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
+      return;
+    }
+
+    while(db.fetchRow()){
+      if(convertTo<int>(db["corp_id"]) == convertTo<int>(arg)){
+	corp_id=convertTo<int>(arg);
+	break;
+      }
+    }
+  }
+
+  if(!corp_id){
+      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
+      return;
+  }
+  
+
+  db.query("select name, action, talens, corptalens, logtime from corplog where corp_id = %i order by logtime desc", corp_id);
+  
+  while(db.fetchRow()){
+    buf = fmt("%s  %12s %10s %10s  Total: %s\n\r") %
+      db["logtime"] % db["name"] % db["action"] %
+      db["talens"] % db["corptalens"];
+    sb += buf;
+  }
+  
+  if (ch->desc)
+    ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
 }
 
 void corpSummary(TBeing *ch, TMonster *me, int corp_id)
@@ -174,6 +225,8 @@ void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
       me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
       return;
   }
+  
+  TCorporation corp(corp_id);
 
   if(ch->getMoney() < gold){
     me->doTell(ch->getName(), "You don't have that many talens.");
@@ -182,12 +235,10 @@ void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
 
   me->doTell(ch->getName(), fmt("Ok, you are depositing %i gold.") % gold);
   ch->addToMoney(-gold, GOLD_XFER);
-  db.query("update corporation set gold=gold+%i where corp_id=%i",
-	   gold, corp_id);
-  db.query("select gold from corporation where corp_id=%i", corp_id);
-  db.fetchRow();
+  corp.setMoney(corp.getMoney() + gold);
+  corp.corpLog(ch->getName(), "deposit", gold);
 
-  me->doTell(ch->getName(), fmt("Your balance is %s.") % db["gold"]);
+  me->doTell(ch->getName(), fmt("Your balance is %i.") % corp.getMoney());
 }
 
 
@@ -226,18 +277,17 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
       return;
   }
 
-  db.query("select gold from corporation where corp_id=%i", corp_id);
-  db.fetchRow();
+  TCorporation corp(corp_id);
 
-  int tmp=convertTo<int>(db["gold"]);
+  int tmp=corp.getMoney();
 
   if(tmp < gold){
     me->doTell(ch->getName(), fmt("Your corporation only has %i talens.") % tmp);
     return;
   }
 
-  db.query("update corporation set gold=gold-%i where corp_id=%i", 
-	   gold, corp_id);
+  corp.setMoney(corp.getMoney() - gold);
+  corp.corpLog(ch->getName(), "withdrawal", -gold);
 
   ch->addToMoney(gold, GOLD_XFER);
 
@@ -303,6 +353,8 @@ int corporateAssistant(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster 
     if(arg.empty()){
       // list short summary of all corporations
       corpListing(ch, me);
+    } else if(arg.word(0) == "logs"){
+      corpLogs(ch, me, arg.word(1));
     } else if(!arg.empty()){
       // list details of a specific corporation
       tmp=convertTo<int>(arg);

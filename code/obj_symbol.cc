@@ -303,6 +303,7 @@ void TSymbol::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
     TShopOwned tso(shop_nr, keeper, ch);
     
     tso.doDividend(this, cost);
+    tso.doReserve();
   }
 
 }
@@ -314,6 +315,14 @@ void TSymbol::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
     keeper->addToMoney(-cost, GOLD_SHOP_SYMBOL);
 
   shoplog(shop_nr, ch, keeper, getName(), -cost, "selling");
+
+
+  if(shop_index[shop_nr].isOwned()){
+    TShopOwned tso(shop_nr, keeper, ch);
+
+    tso.doReserve();
+  }
+
 }
 
 sstring TSymbol::getNameForShow(bool useColor, bool useName, const TBeing *ch) const

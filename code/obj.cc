@@ -478,6 +478,7 @@ void TObj::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
     TShopOwned tso(shop_nr, keeper, ch);
 
     tso.doDividend(this, cost);
+    tso.doReserve();
   }
 }
 
@@ -486,9 +487,13 @@ void TObj::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
   ch->addToMoney(cost, GOLD_SHOP);
   if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY))
     keeper->addToMoney(-cost, GOLD_SHOP);
-
-
   shoplog(shop_nr, ch, keeper, getName(), -cost, "selling");
+
+  if(shop_index[shop_nr].isOwned()){
+    TShopOwned tso(shop_nr, keeper, ch);
+
+    tso.doReserve();
+  }
 }
 
 void TObj::peeOnMe(const TBeing *ch)

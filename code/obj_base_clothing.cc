@@ -672,6 +672,7 @@ void TBaseClothing::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_
     TShopOwned tso(shop_nr, keeper, ch);
 
     tso.doDividend(this, cost);
+    tso.doReserve();
   }
 
 }
@@ -683,5 +684,13 @@ void TBaseClothing::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop
     keeper->addToMoney(-cost, GOLD_SHOP_ARMOR);
 
   shoplog(shop_nr, ch, keeper, getName(), -cost, "selling");
+
+
+
+  if(shop_index[shop_nr].isOwned()){
+    TShopOwned tso(shop_nr, keeper, ch);
+
+    tso.doReserve();
+  }
 }
 

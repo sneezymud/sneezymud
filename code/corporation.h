@@ -12,6 +12,8 @@ class TCorporation {
   int getCorpID();
   sstring getName();
 
+  void corpLog(const sstring &name, const sstring &action, int talens);
+
   TCorporation(int);
   ~TCorporation();
 };

@@ -21,6 +21,8 @@ class TShopOwned {
   void setReserve(sstring);
   int getMinReserve();
   int getMaxReserve();
+  void doReserve();
+
   int getMaxNum(const TObj *);
   void showInfo();
   int setRates(sstring);

@@ -21,6 +21,16 @@ TCorporation::~TCorporation(){
 }
 
 
+void TCorporation::corpLog(const sstring &name, const sstring &action, int talens)
+{
+  TDatabase db(DB_SNEEZY);
+  
+
+  db.query("insert into corplog values (%i, '%s', '%s', %i, %i, now())", 
+	   corp_id, name.c_str(), action.c_str(), talens, getMoney());
+}
+
+
 int TCorporation::getAccess(TBeing *ch){
   TDatabase db(DB_SNEEZY);
   

@@ -114,6 +114,40 @@ int TShopOwned::getMaxReserve()
   return 0;  
 }
 
+void TShopOwned::doReserve()
+{
+  TCorporation corp(getCorpID());
+  int min=getMinReserve();
+  int max=getMaxReserve();
+  int even=min + (int)((max-min)/2);
+  int money=keeper->getMoney();
+  int amt=0;
+
+  if(min<=0 || max<=0 || min>max || (max-min)<100000)
+    return;
+
+  if(money < min){
+    amt=even-money;
+
+    if(corp.getMoney() < amt)
+      amt=corp.getMoney();
+
+    corp.setMoney(corp.getMoney() - amt);
+    corp.corpLog(keeper->getName(), "reserve", -amt);
+
+    keeper->addToMoney(amt, GOLD_SHOP);
+    shoplog(shop_nr, ch, keeper, "talens", amt, "reserve");
+  } else if(money > max){
+    amt=money-even;
+
+    corp.setMoney(corp.getMoney() + amt);
+    corp.corpLog(keeper->getName(), "reserve", amt);
+
+    keeper->addToMoney(-amt, GOLD_SHOP);
+    shoplog(shop_nr, ch, keeper, "talens", -amt, "reserve");
+  }
+}
+
 
 void TShopOwned::doDividend(TObj *o, int cost)
 {
@@ -126,6 +160,7 @@ void TShopOwned::doDividend(TObj *o, int cost)
     
     TCorporation corp(getCorpID());
     corp.setMoney(corp.getMoney() + div);
+    corp.corpLog(keeper->getName(), "dividend", div);
   }
 }
 
