@@ -9,29 +9,8 @@
 
 // this code is totally janky, but it gets the job done - peel
 
-//#define MINLEVEL -20
-//#define MAXLEVEL 10
-
 #define MAXCOORDITER 1000
-
-#define NORTH 0
-#define EAST 1
-#define SOUTH 2
-#define WEST 3
-#define UP 4
-#define DOWN 5
-#define NORTHEAST 6
-#define NORTHWEST 7
-#define SOUTHEAST 8
-#define SOUTHWEST 9
-
 #define SCALEBY 2
-
-const char *dirstrings[]={"north", "east", "south", "west", "up", "down",
-		    "northeast", "northwest", "southeast", "southwest"};
-
-int opposite[]={SOUTH, WEST, NORTH, EAST, DOWN, UP, SOUTHWEST, SOUTHEAST,
-		NORTHWEST, NORTHEAST};
 
 int sector_colors[66][3]={
   {255,255,255},  // arctic
@@ -120,7 +99,6 @@ public:
   NODE();
 
 } *head;
-
 
 map <int, class NODE *> nodes;
 
@@ -381,12 +359,12 @@ void check_rooms(){
     if(nodes[i]){
       for(int j=0;j<10;++j){
 	if(nodes[i]->pdirs[j]){
-	  if((!nodes[i]->pdirs[j]->pdirs[opposite[j]] ||
-	     (nodes[i]->pdirs[j]->pdirs[opposite[j]]->num !=
+	  if((!nodes[i]->pdirs[j]->pdirs[rev_dir[j]] ||
+	     (nodes[i]->pdirs[j]->pdirs[rev_dir[j]]->num !=
 	     nodes[i]->num)) && !done[i]){
 	    
 	    printf("Room %i has a one way exit %i (%i) to room %i\n",
-		   nodes[i]->num, j, opposite[j], nodes[i]->pdirs[j]->num);
+		   nodes[i]->num, j, rev_dir[j], nodes[i]->pdirs[j]->num);
 
 	    done[i]=true;
 	  }
