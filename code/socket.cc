@@ -68,8 +68,7 @@ static void timediff(struct timeval *a, struct timeval *b, struct timeval *rslt)
 void TSocket::addNewDescriptorsDuringBoot(sstring tStString)
 {
   fd_set input_set, output_set, exc_set;
-  static struct timeval last_time, now, timespent, timeout, null_time;
-  static struct timeval opt_time;
+  static struct timeval null_time;
   Descriptor *point;
   static bool been_called = false;
 
@@ -81,9 +80,6 @@ void TSocket::addNewDescriptorsDuringBoot(sstring tStString)
     // prepare the time values 
     null_time.tv_sec = 0;
     null_time.tv_usec = 0;
-    opt_time.tv_usec = OPT_USEC;
-    opt_time.tv_sec = 0;
-    gettimeofday(&last_time, NULL);
 
     maxdesc = m_sock;
     avail_descs = 150;
@@ -110,16 +106,7 @@ void TSocket::addNewDescriptorsDuringBoot(sstring tStString)
     FD_SET(point->socket->m_sock, &exc_set);
     FD_SET(point->socket->m_sock, &output_set);
   }
-  // check out the time 
-  gettimeofday(&now, NULL);
-  timediff(&now, &last_time, &timespent);
-  timediff(&opt_time, &timespent, &timeout);
-  last_time.tv_sec = now.tv_sec + timeout.tv_sec;
-  last_time.tv_usec = now.tv_usec + timeout.tv_usec;
-  if (last_time.tv_usec >= 1000000) {
-    last_time.tv_usec -= 1000000;
-    last_time.tv_sec++;
-  }
+
 #ifndef SOLARIS
   sigsetmask(mask);
 #endif
@@ -133,9 +120,7 @@ void TSocket::addNewDescriptorsDuringBoot(sstring tStString)
     perror("Error in Select (poll)");
     return;
   }
-  if (select(0, 0, 0, 0, &timeout) < 0) {
-    perror("Error in select (sleep)");
-  }
+
 
 #ifndef SOLARIS
   sigsetmask(0);
