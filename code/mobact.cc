@@ -1101,17 +1101,21 @@ int TMonster::monkMove(TBeing &vict)
          vict.getPosition() > POSITION_SITTING)) &&
          canBash(&vict, SILENT_YES) && (getPosition() >= POSITION_CRAWLING)) {
       return doShoulderThrow("", &vict);
-    } else if ((num <= 8) &&
+    } else if ((num <= 7) &&
                canDisarm(&vict, SILENT_YES) &&
                (getPosition() >= POSITION_CRAWLING) &&
                (vict.heldInPrimHand() || vict.heldInSecHand())) {
       return doDisarm("", &vict);
     //else if (num <= 11 && (4 * getHit() < 3 * hitLimit()))
       //return doFeignDeath();
-    } else if ((num <= 11) &&
+    } else if ((num <= 10) &&
 	      (getPosition() == POSITION_STANDING)) {
-      return doChi("", &vict);
-    } else if ((num <= 12) &&
+      if (!vict.affectedBySpell(SKILL_CHI)) {
+        return doChi("", &vict);
+      } else {
+        return doChop("", &vict);
+      }
+    } else if ((num <= 11) &&
 	       (this->attackers > 2) &&
                (getPosition() == POSITION_STANDING)) {
       if (doesKnowSkill(SKILL_HURL) && (getSkillValue(SKILL_HURL) > 66)) {
@@ -1126,12 +1130,13 @@ int TMonster::monkMove(TBeing &vict)
             return aiHurl(hurlDir, &vict);
           }
         }
-        return doChi("", &vict);
+        return doChop("", &vict);
       } else {
-        return doChi("", &vict);
+        return doChop("", &vict);
       }
-    } else 
+    } else {
       return doChop("", &vict);
+    }
   }
   return FALSE;
 }
@@ -1145,10 +1150,18 @@ int TMonster::thiefMove(TBeing &vict)
   if (!sameRoom(vict))
     return FALSE;
 
-  TThing * prim = heldInPrimHand();
-  if (hasHands() && (getPosition() >= POSITION_CRAWLING) &&
-      prim && prim->isPierceWeapon()) {
-    return doStab("", &vict);
+  if (::number(0, 1)) {
+    TThing * prim = heldInPrimHand();
+    if (hasHands() && (getPosition() >= POSITION_CRAWLING) &&
+        prim && prim->isPierceWeapon()) {
+      return doStab("", &vict);
+    }
+  } else {
+    if (canDisarm(&vict, SILENT_YES) && 
+       (getPosition() >= POSITION_STANDING) &&
+       (vict.heldInPrimHand() || vict.heldInSecHand())) {
+      return doDisarm("", &vict);
+    }
   }
   return FALSE;
 }
@@ -1332,8 +1345,11 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
        ch.doesKnowSkill(SPELL_DISPEL_MAGIC) &&
        (ch.getSkillValue(SPELL_DISPEL_MAGIC) > 66) &&
        (vict.affectedBySpell(SPELL_HASTE) ||
+       vict.affectedBySpell(SPELL_CELERITE) ||
        vict.affectedBySpell(SPELL_PLASMA_MIRROR) ||
-       vict.affectedBySpell(SPELL_GILLS_OF_FLESH)) &&
+       vict.affectedBySpell(SPELL_THORNFLESH) ||
+       vict.affectedBySpell(SPELL_GILLS_OF_FLESH) ||
+       vict.affectedBySpell(SPELL_AQUALUNG)) &&
        !(vict.affectedBySpell(SPELL_FAERIE_FIRE) ||
        vict.affectedBySpell(SPELL_BIND)) &&
        (cutoff < discArray[spell]->start)) {
@@ -1654,7 +1670,8 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
   } else if (best_disc == DISC_SPIRIT) {
     spell = SPELL_FUMBLE;
     if ((cutoff < discArray[spell]->start) &&
-         ch.doesKnowSkill(spell)) {
+         ch.doesKnowSkill(spell) &&
+         (vict.heldInPrimHand() || vict.heldInSecHand())) {
       act("$n utters the words, 'Butter Fingers!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
@@ -1776,8 +1793,27 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
       ch.getDiscipline(best_disc)->getLearnedness() <= 0)
     return TYPE_UNDEFINED;
 
-  // PANIC spells
   int cutoff = min((int) ch.GetMaxLevel(), 50);
+
+  spell = SPELL_CHASE_SPIRIT;
+  if (!::number(0, 3) &&
+     ch.doesKnowSkill(SPELL_CHASE_SPIRIT) &&
+     (ch.getSkillValue(SPELL_CHASE_SPIRIT) > 66) &&
+     (vict.affectedBySpell(SPELL_HASTE) ||
+     vict.affectedBySpell(SPELL_CELERITE) ||
+     vict.affectedBySpell(SPELL_PLASMA_MIRROR) ||
+     vict.affectedBySpell(SPELL_THORNFLESH) ||
+     vict.affectedBySpell(SPELL_GILLS_OF_FLESH) ||
+     vict.affectedBySpell(SPELL_AQUALUNG)) &&
+     !(vict.affectedBySpell(SPELL_FAERIE_FIRE) ||
+     vict.affectedBySpell(SPELL_BIND)) &&
+     (cutoff < discArray[spell]->start)) {
+    act("$n utters the words, 'Spirits be gone from this pathetic one!'",
+        TRUE, &ch, 0, 0, TO_ROOM);
+    return spell;
+  }
+
+  // PANIC spells
   spell = SPELL_INTIMIDATE;
   if (ch.doesKnowSkill(spell) && 
       (ch.getSkillValue(spell) > 33)) {
