@@ -52,7 +52,6 @@ CFLAGS +=-DLINUX        # compiling on Linux
 # CFLAGS +=-DSLOW       # compiling on a slow processor machine
 CFLAGS +=-DFAST         # compiling on a fast processor machine
 CFLAGS +=-DSNEEZY2000   # activation of sneezy version 5.2
-CFLAGS +=-D_SVID_SOURCE # ipc.h complains about this
 
 ifdef BATOPR
 #  CFLAGS +=-O4            # optimize code
@@ -335,9 +334,9 @@ objs/actions.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/actions.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/actions.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/actions.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/actions.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/actions.o: /usr/include/time.h /usr/include/alloca.h
-objs/actions.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/actions.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/actions.o: /usr/include/time.h /usr/include/bits/time.h
+objs/actions.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/actions.o: /usr/include/ctype.h /usr/include/endian.h
 objs/actions.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/actions.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -387,9 +386,9 @@ objs/ai_commands.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/ai_commands.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/ai_commands.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/ai_commands.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/ai_commands.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/ai_commands.o: /usr/include/time.h /usr/include/alloca.h
-objs/ai_commands.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/ai_commands.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/ai_commands.o: /usr/include/time.h /usr/include/bits/time.h
+objs/ai_commands.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/ai_commands.o: /usr/include/ctype.h /usr/include/endian.h
 objs/ai_commands.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/ai_commands.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -446,9 +445,9 @@ objs/ai_reactions.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/ai_reactions.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/ai_reactions.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/ai_reactions.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/ai_reactions.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/ai_reactions.o: /usr/include/time.h /usr/include/alloca.h
-objs/ai_reactions.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/ai_reactions.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/ai_reactions.o: /usr/include/time.h /usr/include/bits/time.h
+objs/ai_reactions.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/ai_reactions.o: /usr/include/ctype.h /usr/include/endian.h
 objs/ai_reactions.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/ai_reactions.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -505,9 +504,9 @@ objs/ai_responses.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/ai_responses.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/ai_responses.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/ai_responses.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/ai_responses.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/ai_responses.o: /usr/include/time.h /usr/include/alloca.h
-objs/ai_responses.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/ai_responses.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/ai_responses.o: /usr/include/time.h /usr/include/bits/time.h
+objs/ai_responses.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/ai_responses.o: /usr/include/ctype.h /usr/include/endian.h
 objs/ai_responses.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/ai_responses.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -554,7 +553,7 @@ objs/ai_responses.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
 objs/ai_responses.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/ai_responses.o: obj2.h charfile.h being.h person.h monster.h account.h
 objs/ai_responses.o: extern.h handler.h rent.h spec_mobs.h spec_rooms.h
-objs/ai_responses.o: materials.h combat.h
+objs/ai_responses.o: materials.h combat.h obj_symbol.h
 objs/ai_utility.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/ai_utility.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/ai_utility.o: /usr/include/gnu/stubs.h
@@ -564,9 +563,9 @@ objs/ai_utility.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/ai_utility.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/ai_utility.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/ai_utility.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/ai_utility.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/ai_utility.o: /usr/include/time.h /usr/include/alloca.h
-objs/ai_utility.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/ai_utility.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/ai_utility.o: /usr/include/time.h /usr/include/bits/time.h
+objs/ai_utility.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/ai_utility.o: /usr/include/ctype.h /usr/include/endian.h
 objs/ai_utility.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/ai_utility.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -622,8 +621,8 @@ objs/alignment_deity.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/alignment_deity.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/alignment_deity.o: /usr/include/bits/stdio_lim.h
 objs/alignment_deity.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/alignment_deity.o: /usr/include/sys/types.h /usr/include/time.h
-objs/alignment_deity.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/alignment_deity.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/alignment_deity.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/alignment_deity.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/alignment_deity.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/alignment_deity.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -682,9 +681,9 @@ objs/ansi.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/ansi.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/ansi.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/ansi.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/ansi.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/ansi.o: /usr/include/time.h /usr/include/alloca.h
-objs/ansi.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/ansi.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/ansi.o: /usr/include/time.h /usr/include/bits/time.h
+objs/ansi.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/ansi.o: /usr/include/ctype.h /usr/include/endian.h
 objs/ansi.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/ansi.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -730,9 +729,9 @@ objs/being.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/being.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/being.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/being.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/being.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/being.o: /usr/include/time.h /usr/include/alloca.h
-objs/being.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/being.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/being.o: /usr/include/time.h /usr/include/bits/time.h
+objs/being.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/being.o: /usr/include/ctype.h /usr/include/endian.h
 objs/being.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/being.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -778,9 +777,9 @@ objs/body.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/body.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/body.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/body.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/body.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/body.o: /usr/include/time.h /usr/include/alloca.h
-objs/body.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/body.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/body.o: /usr/include/time.h /usr/include/bits/time.h
+objs/body.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/body.o: /usr/include/ctype.h /usr/include/endian.h
 objs/body.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/body.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -827,9 +826,9 @@ objs/breath.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/breath.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/breath.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/breath.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/breath.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/breath.o: /usr/include/time.h /usr/include/alloca.h
-objs/breath.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/breath.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/breath.o: /usr/include/time.h /usr/include/bits/time.h
+objs/breath.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/breath.o: /usr/include/ctype.h /usr/include/endian.h
 objs/breath.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/breath.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -877,13 +876,13 @@ objs/bwiz.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/bwiz.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/bwiz.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/bwiz.o: /usr/include/bits/stdio_lim.h /usr/include/time.h
-objs/bwiz.o: /usr/include/sys/types.h /usr/include/sys/ipc.h
-objs/bwiz.o: /usr/include/bits/ipc.h /usr/include/sys/msg.h
-objs/bwiz.o: /usr/include/bits/msq.h /usr/include/errno.h
-objs/bwiz.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
-objs/bwiz.o: /usr/include/asm/errno.h /usr/include/string.h stdsneezy.h
-objs/bwiz.o: /usr/include/g++-3/cstdio /usr/include/g++-3/cstdlib
-objs/bwiz.o: /usr/include/stdlib.h /usr/include/alloca.h
+objs/bwiz.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/bwiz.o: /usr/include/sys/ipc.h /usr/include/bits/ipc.h
+objs/bwiz.o: /usr/include/sys/msg.h /usr/include/bits/msq.h
+objs/bwiz.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/bwiz.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/bwiz.o: /usr/include/string.h stdsneezy.h /usr/include/g++-3/cstdio
+objs/bwiz.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
 objs/bwiz.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
 objs/bwiz.o: /usr/include/ctype.h /usr/include/endian.h
 objs/bwiz.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
@@ -931,8 +930,8 @@ objs/client.o: /usr/include/libio.h /usr/include/_G_config.h
 objs/client.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/client.o: /usr/include/gconv.h /usr/include/bits/stdio_lim.h
 objs/client.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/client.o: /usr/include/sys/types.h /usr/include/time.h
-objs/client.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/client.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/client.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/client.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/client.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/client.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -982,8 +981,8 @@ objs/cmd_attribute.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_attribute.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_attribute.o: /usr/include/bits/stdio_lim.h
 objs/cmd_attribute.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/cmd_attribute.o: /usr/include/sys/types.h /usr/include/time.h
-objs/cmd_attribute.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/cmd_attribute.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/cmd_attribute.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/cmd_attribute.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/cmd_attribute.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/cmd_attribute.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -1040,9 +1039,9 @@ objs/cmd_bash.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_bash.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_bash.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_bash.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_bash.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_bash.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_bash.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_bash.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_bash.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_bash.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_bash.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_bash.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_bash.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1092,9 +1091,9 @@ objs/cmd_bodyslam.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_bodyslam.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_bodyslam.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_bodyslam.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_bodyslam.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_bodyslam.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_bodyslam.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_bodyslam.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_bodyslam.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_bodyslam.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_bodyslam.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_bodyslam.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_bodyslam.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1151,9 +1150,9 @@ objs/cmd_charge.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_charge.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_charge.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_charge.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_charge.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_charge.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_charge.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_charge.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_charge.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_charge.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_charge.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_charge.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_charge.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1208,9 +1207,9 @@ objs/cmd_chop.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_chop.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_chop.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_chop.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_chop.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_chop.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_chop.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_chop.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_chop.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_chop.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_chop.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_chop.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_chop.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1260,9 +1259,9 @@ objs/cmd_compare.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_compare.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_compare.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_compare.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_compare.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_compare.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_compare.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_compare.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_compare.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_compare.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_compare.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_compare.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_compare.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1309,7 +1308,7 @@ objs/cmd_compare.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
 objs/cmd_compare.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
 objs/cmd_compare.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/cmd_compare.o: handler.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/cmd_compare.o: shop.h
+objs/cmd_compare.o: shop.h obj_bow.h obj_symbol.h
 objs/cmd_consider.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/cmd_consider.o: /usr/include/bits/types.h /usr/include/features.h
 objs/cmd_consider.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -1322,9 +1321,9 @@ objs/cmd_consider.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_consider.o: /usr/include/libio.h
 objs/cmd_consider.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_consider.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_consider.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_consider.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_consider.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_consider.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_consider.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_consider.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_consider.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_consider.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_consider.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1382,8 +1381,8 @@ objs/cmd_deathstroke.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_deathstroke.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_deathstroke.o: /usr/include/bits/stdio_lim.h
 objs/cmd_deathstroke.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/cmd_deathstroke.o: /usr/include/sys/types.h /usr/include/time.h
-objs/cmd_deathstroke.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/cmd_deathstroke.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/cmd_deathstroke.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/cmd_deathstroke.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/cmd_deathstroke.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/cmd_deathstroke.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -1442,9 +1441,9 @@ objs/cmd_disarm.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_disarm.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_disarm.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_disarm.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_disarm.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_disarm.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_disarm.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_disarm.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_disarm.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_disarm.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_disarm.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_disarm.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_disarm.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1499,9 +1498,9 @@ objs/cmd_dissect.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_dissect.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_dissect.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_dissect.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_dissect.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_dissect.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_dissect.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_dissect.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_dissect.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_dissect.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_dissect.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_dissect.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_dissect.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1559,9 +1558,9 @@ objs/cmd_doorbash.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_doorbash.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_doorbash.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_doorbash.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_doorbash.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_doorbash.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_doorbash.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_doorbash.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_doorbash.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_doorbash.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_doorbash.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_doorbash.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_doorbash.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1618,9 +1617,9 @@ objs/cmd_egotrip.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_egotrip.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_egotrip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_egotrip.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_egotrip.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_egotrip.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_egotrip.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_egotrip.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_egotrip.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_egotrip.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_egotrip.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_egotrip.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_egotrip.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1678,8 +1677,8 @@ objs/cmd_feigndeath.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_feigndeath.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_feigndeath.o: /usr/include/bits/stdio_lim.h
 objs/cmd_feigndeath.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/cmd_feigndeath.o: /usr/include/sys/types.h /usr/include/time.h
-objs/cmd_feigndeath.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/cmd_feigndeath.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/cmd_feigndeath.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/cmd_feigndeath.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/cmd_feigndeath.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/cmd_feigndeath.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -1737,9 +1736,9 @@ objs/cmd_get.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_get.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_get.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_get.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_get.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_get.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_get.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_get.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_get.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_get.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_get.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_get.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_get.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1791,9 +1790,9 @@ objs/cmd_grapple.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_grapple.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_grapple.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_grapple.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_grapple.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_grapple.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_grapple.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_grapple.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_grapple.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_grapple.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_grapple.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_grapple.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_grapple.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1850,9 +1849,9 @@ objs/cmd_headbutt.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_headbutt.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_headbutt.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_headbutt.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_headbutt.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_headbutt.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_headbutt.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_headbutt.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_headbutt.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_headbutt.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_headbutt.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_headbutt.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_headbutt.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1909,9 +1908,9 @@ objs/cmd_help.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_help.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_help.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_help.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_help.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_help.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_help.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_help.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_help.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_help.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_help.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_help.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_help.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -1958,9 +1957,8 @@ objs/cmd_help.o: /usr/include/sys/socket.h /usr/include/sys/uio.h
 objs/cmd_help.o: /usr/include/bits/uio.h /usr/include/bits/socket.h
 objs/cmd_help.o: /usr/include/bits/sockaddr.h /usr/include/asm/socket.h
 objs/cmd_help.o: /usr/include/asm/sockios.h /usr/include/dirent.h
-objs/cmd_help.o: /usr/include/bits/dirent.h /usr/include/bits/posix1_lim.h
-objs/cmd_help.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
-objs/cmd_help.o: help.h components.h statistics.h systemtask.h
+objs/cmd_help.o: /usr/include/bits/dirent.h help.h components.h statistics.h
+objs/cmd_help.o: systemtask.h
 objs/cmd_jump.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_jump.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/cmd_jump.o: /usr/include/gnu/stubs.h
@@ -1970,9 +1968,9 @@ objs/cmd_jump.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_jump.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_jump.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_jump.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_jump.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_jump.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_jump.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_jump.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_jump.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_jump.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_jump.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_jump.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_jump.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -2022,9 +2020,9 @@ objs/cmd_kick.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_kick.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_kick.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_kick.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_kick.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_kick.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_kick.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_kick.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_kick.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_kick.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_kick.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_kick.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_kick.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -2075,8 +2073,8 @@ objs/cmd_kneestrike.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_kneestrike.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_kneestrike.o: /usr/include/bits/stdio_lim.h
 objs/cmd_kneestrike.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/cmd_kneestrike.o: /usr/include/sys/types.h /usr/include/time.h
-objs/cmd_kneestrike.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/cmd_kneestrike.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/cmd_kneestrike.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/cmd_kneestrike.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/cmd_kneestrike.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/cmd_kneestrike.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -2133,9 +2131,9 @@ objs/cmd_look.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_look.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_look.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_look.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_look.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_look.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_look.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_look.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_look.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_look.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_look.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_look.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_look.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -2177,7 +2175,7 @@ objs/cmd_look.o: create.h thing.h room.h obj.h obj2.h charfile.h being.h
 objs/cmd_look.o: person.h monster.h account.h extern.h handler.h rent.h
 objs/cmd_look.o: spec_mobs.h spec_rooms.h materials.h games.h
 objs/cmd_look.o: game_crazyeights.h game_drawpoker.h obj_base_corpse.h
-objs/cmd_look.o: obj_base_container.h
+objs/cmd_look.o: obj_base_container.h obj_table.h
 objs/cmd_low.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/cmd_low.o: /usr/include/bits/types.h /usr/include/features.h
 objs/cmd_low.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -2191,8 +2189,7 @@ objs/cmd_low.o: /usr/include/g++-3/stl_pair.h
 objs/cmd_low.o: /usr/include/g++-3/type_traits.h /usr/include/string.h
 objs/cmd_low.o: /usr/include/limits.h
 objs/cmd_low.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
-objs/cmd_low.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_low.o: /usr/include/time.h /usr/include/alloca.h
+objs/cmd_low.o: /usr/include/stdlib.h
 objs/cmd_low.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
 objs/cmd_low.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
 objs/cmd_low.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
@@ -2205,16 +2202,17 @@ objs/cmd_low.o: /usr/include/g++-3/stl_tempbuf.h
 objs/cmd_low.o: /usr/include/g++-3/stl_algo.h /usr/include/g++-3/stl_heap.h
 objs/cmd_low.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_low.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_low.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
-objs/cmd_low.o: /usr/include/ctype.h /usr/include/endian.h
-objs/cmd_low.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
-objs/cmd_low.o: /usr/include/assert.h /usr/include/g++-3/cstring
-objs/cmd_low.o: /usr/include/g++-3/cerrno /usr/include/errno.h
-objs/cmd_low.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
-objs/cmd_low.o: /usr/include/asm/errno.h /usr/include/g++-3/string
-objs/cmd_low.o: /usr/include/g++-3/std/bastring.h /usr/include/g++-3/cstddef
-objs/cmd_low.o: /usr/include/g++-3/std/straits.h /usr/include/g++-3/alloc.h
-objs/cmd_low.o: /usr/include/g++-3/stl_config.h
+objs/cmd_low.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/cmd_low.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/cmd_low.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/cmd_low.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/cmd_low.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/cmd_low.o: /usr/include/g++-3/cstring /usr/include/g++-3/cerrno
+objs/cmd_low.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/cmd_low.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/cmd_low.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
+objs/cmd_low.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
+objs/cmd_low.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
 objs/cmd_low.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iterator
 objs/cmd_low.o: /usr/include/g++-3/stl_relops.h
 objs/cmd_low.o: /usr/include/g++-3/stl_iterator.h
@@ -2247,8 +2245,8 @@ objs/cmd_mend_limb.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_mend_limb.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_mend_limb.o: /usr/include/bits/stdio_lim.h
 objs/cmd_mend_limb.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/cmd_mend_limb.o: /usr/include/sys/types.h /usr/include/time.h
-objs/cmd_mend_limb.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/cmd_mend_limb.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/cmd_mend_limb.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/cmd_mend_limb.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/cmd_mend_limb.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/cmd_mend_limb.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -2307,9 +2305,9 @@ objs/cmd_message.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/cmd_message.o: /usr/include/gconv.h
 objs/cmd_message.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_message.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_message.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_message.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_message.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_message.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_message.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_message.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_message.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_message.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_message.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -2360,17 +2358,16 @@ objs/cmd_news.o: /usr/include/sys/types.h /usr/include/features.h
 objs/cmd_news.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/cmd_news.o: /usr/include/bits/types.h
 objs/cmd_news.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
-objs/cmd_news.o: /usr/include/time.h /usr/include/sys/stat.h
-objs/cmd_news.o: /usr/include/bits/stat.h /usr/include/dirent.h
-objs/cmd_news.o: /usr/include/bits/dirent.h /usr/include/bits/posix1_lim.h
-objs/cmd_news.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
+objs/cmd_news.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_news.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+objs/cmd_news.o: /usr/include/dirent.h /usr/include/bits/dirent.h
 objs/cmd_news.o: /usr/include/g++-3/algorithm
 objs/cmd_news.o: /usr/include/g++-3/stl_algobase.h
 objs/cmd_news.o: /usr/include/g++-3/stl_pair.h
 objs/cmd_news.o: /usr/include/g++-3/type_traits.h /usr/include/string.h
 objs/cmd_news.o: /usr/include/limits.h
 objs/cmd_news.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
-objs/cmd_news.o: /usr/include/stdlib.h /usr/include/alloca.h
+objs/cmd_news.o: /usr/include/stdlib.h
 objs/cmd_news.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
 objs/cmd_news.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
 objs/cmd_news.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
@@ -2425,9 +2422,9 @@ objs/cmd_quest.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_quest.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_quest.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_quest.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_quest.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_quest.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_quest.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_quest.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_quest.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_quest.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_quest.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_quest.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_quest.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -2478,9 +2475,9 @@ objs/cmd_quivpalm.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_quivpalm.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_quivpalm.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_quivpalm.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_quivpalm.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_quivpalm.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_quivpalm.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_quivpalm.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_quivpalm.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_quivpalm.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_quivpalm.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_quivpalm.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_quivpalm.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -2539,9 +2536,9 @@ objs/cmd_rename.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/cmd_rename.o: /usr/include/gconv.h
 objs/cmd_rename.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_rename.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_rename.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_rename.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_rename.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_rename.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_rename.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_rename.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_rename.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_rename.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_rename.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -2595,9 +2592,9 @@ objs/cmd_rescue.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_rescue.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_rescue.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_rescue.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_rescue.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_rescue.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_rescue.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_rescue.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_rescue.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_rescue.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_rescue.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_rescue.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_rescue.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -2651,9 +2648,9 @@ objs/cmd_save.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_save.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_save.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_save.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_save.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_save.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_save.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_save.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_save.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_save.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_save.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_save.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_save.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -2703,9 +2700,9 @@ objs/cmd_score.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_score.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_score.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_score.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_score.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_score.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_score.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_score.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_score.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_score.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_score.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_score.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_score.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -2753,16 +2750,13 @@ objs/cmd_sedit.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
 objs/cmd_sedit.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
 objs/cmd_sedit.o: /usr/include/bits/confname.h /usr/include/sys/stat.h
 objs/cmd_sedit.o: /usr/include/bits/stat.h /usr/include/dirent.h
-objs/cmd_sedit.o: /usr/include/bits/dirent.h /usr/include/bits/posix1_lim.h
-objs/cmd_sedit.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
-objs/cmd_sedit.o: /usr/include/g++-3/algorithm
+objs/cmd_sedit.o: /usr/include/bits/dirent.h /usr/include/g++-3/algorithm
 objs/cmd_sedit.o: /usr/include/g++-3/stl_algobase.h
 objs/cmd_sedit.o: /usr/include/g++-3/stl_pair.h
 objs/cmd_sedit.o: /usr/include/g++-3/type_traits.h /usr/include/string.h
 objs/cmd_sedit.o: /usr/include/limits.h
 objs/cmd_sedit.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
-objs/cmd_sedit.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_sedit.o: /usr/include/time.h /usr/include/alloca.h
+objs/cmd_sedit.o: /usr/include/stdlib.h
 objs/cmd_sedit.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
 objs/cmd_sedit.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
 objs/cmd_sedit.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
@@ -2777,14 +2771,15 @@ objs/cmd_sedit.o: /usr/include/g++-3/stl_tempbuf.h
 objs/cmd_sedit.o: /usr/include/g++-3/stl_algo.h /usr/include/g++-3/stl_heap.h
 objs/cmd_sedit.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_sedit.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_sedit.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
-objs/cmd_sedit.o: /usr/include/ctype.h /usr/include/endian.h
-objs/cmd_sedit.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
-objs/cmd_sedit.o: /usr/include/assert.h /usr/include/g++-3/cstring
-objs/cmd_sedit.o: /usr/include/g++-3/cerrno /usr/include/errno.h
-objs/cmd_sedit.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
-objs/cmd_sedit.o: /usr/include/asm/errno.h /usr/include/g++-3/string
-objs/cmd_sedit.o: /usr/include/g++-3/std/bastring.h
+objs/cmd_sedit.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/cmd_sedit.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/cmd_sedit.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/cmd_sedit.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/cmd_sedit.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/cmd_sedit.o: /usr/include/g++-3/cstring /usr/include/g++-3/cerrno
+objs/cmd_sedit.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/cmd_sedit.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/cmd_sedit.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
 objs/cmd_sedit.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
 objs/cmd_sedit.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
 objs/cmd_sedit.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iterator
@@ -2817,9 +2812,9 @@ objs/cmd_set.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_set.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_set.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_set.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_set.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_set.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_set.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_set.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_set.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_set.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_set.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_set.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_set.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -2864,17 +2859,16 @@ objs/cmd_show.o: /usr/include/dirent.h /usr/include/features.h
 objs/cmd_show.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/cmd_show.o: /usr/include/bits/types.h
 objs/cmd_show.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
-objs/cmd_show.o: /usr/include/bits/dirent.h /usr/include/bits/posix1_lim.h
-objs/cmd_show.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
-objs/cmd_show.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/cmd_show.o: /usr/include/bits/dirent.h stdsneezy.h
+objs/cmd_show.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_show.o: /usr/include/libio.h /usr/include/_G_config.h
 objs/cmd_show.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/cmd_show.o: /usr/include/gconv.h
 objs/cmd_show.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_show.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_show.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_show.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_show.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_show.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_show.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_show.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_show.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_show.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_show.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -2926,9 +2920,9 @@ objs/cmd_spin.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_spin.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_spin.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_spin.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_spin.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_spin.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_spin.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_spin.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_spin.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_spin.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_spin.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_spin.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_spin.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -2978,9 +2972,9 @@ objs/cmd_stab.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_stab.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_stab.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_stab.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_stab.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_stab.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_stab.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_stab.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_stab.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_stab.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_stab.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_stab.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_stab.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3030,9 +3024,9 @@ objs/cmd_stat.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_stat.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_stat.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_stat.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_stat.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_stat.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_stat.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_stat.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_stat.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_stat.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_stat.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_stat.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_stat.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3082,9 +3076,9 @@ objs/cmd_steal.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_steal.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_steal.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_steal.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_steal.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_steal.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_steal.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_steal.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_steal.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_steal.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_steal.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_steal.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_steal.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3136,9 +3130,9 @@ objs/cmd_stomp.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_stomp.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_stomp.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_stomp.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_stomp.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_stomp.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_stomp.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_stomp.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_stomp.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_stomp.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_stomp.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_stomp.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_stomp.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3189,9 +3183,9 @@ objs/cmd_testcode.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_testcode.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_testcode.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_testcode.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_testcode.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_testcode.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_testcode.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_testcode.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_testcode.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_testcode.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_testcode.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_testcode.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_testcode.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3238,7 +3232,7 @@ objs/cmd_testcode.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
 objs/cmd_testcode.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/cmd_testcode.o: obj2.h charfile.h being.h person.h monster.h account.h
 objs/cmd_testcode.o: extern.h handler.h rent.h spec_mobs.h spec_rooms.h
-objs/cmd_testcode.o: materials.h statistics.h
+objs/cmd_testcode.o: materials.h statistics.h obj_symbol.h
 objs/cmd_testfight.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_testfight.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_testfight.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -3249,8 +3243,8 @@ objs/cmd_testfight.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_testfight.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_testfight.o: /usr/include/bits/stdio_lim.h
 objs/cmd_testfight.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/cmd_testfight.o: /usr/include/sys/types.h /usr/include/time.h
-objs/cmd_testfight.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/cmd_testfight.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/cmd_testfight.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/cmd_testfight.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/cmd_testfight.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/cmd_testfight.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -3307,9 +3301,9 @@ objs/cmd_trophy.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_trophy.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_trophy.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_trophy.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_trophy.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_trophy.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_trophy.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_trophy.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_trophy.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_trophy.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_trophy.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_trophy.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_trophy.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3364,9 +3358,9 @@ objs/cmd_visible.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_visible.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_visible.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_visible.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_visible.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_visible.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_visible.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_visible.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_visible.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_visible.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_visible.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_visible.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_visible.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3422,9 +3416,9 @@ objs/cmd_who.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_who.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_who.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_who.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_who.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_who.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_who.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_who.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_who.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_who.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_who.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_who.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_who.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3475,9 +3469,9 @@ objs/cmd_zonefile.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/cmd_zonefile.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/cmd_zonefile.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_zonefile.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_zonefile.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_zonefile.o: /usr/include/time.h /usr/include/alloca.h
-objs/cmd_zonefile.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/cmd_zonefile.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/cmd_zonefile.o: /usr/include/time.h /usr/include/bits/time.h
+objs/cmd_zonefile.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/cmd_zonefile.o: /usr/include/ctype.h /usr/include/endian.h
 objs/cmd_zonefile.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/cmd_zonefile.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3534,16 +3528,15 @@ objs/cmd_zones.o: /usr/include/gnu/stubs.h
 objs/cmd_zones.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
 objs/cmd_zones.o: /usr/include/limits.h
 objs/cmd_zones.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
-objs/cmd_zones.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/cmd_zones.o: /usr/include/bits/types.h /usr/include/time.h
-objs/cmd_zones.o: /usr/include/alloca.h
+objs/cmd_zones.o: /usr/include/stdlib.h
 objs/cmd_zones.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
 objs/cmd_zones.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
 objs/cmd_zones.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
 objs/cmd_zones.o: /usr/include/g++-3/iostream.h
 objs/cmd_zones.o: /usr/include/g++-3/streambuf.h /usr/include/libio.h
-objs/cmd_zones.o: /usr/include/_G_config.h /usr/include/wchar.h
-objs/cmd_zones.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/cmd_zones.o: /usr/include/_G_config.h /usr/include/bits/types.h
+objs/cmd_zones.o: /usr/include/wchar.h /usr/include/bits/wchar.h
+objs/cmd_zones.o: /usr/include/gconv.h
 objs/cmd_zones.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/cmd_zones.o: /usr/include/g++-3/stl_construct.h
 objs/cmd_zones.o: /usr/include/g++-3/stl_uninitialized.h
@@ -3551,14 +3544,15 @@ objs/cmd_zones.o: /usr/include/g++-3/stl_tempbuf.h
 objs/cmd_zones.o: /usr/include/g++-3/stl_algo.h /usr/include/g++-3/stl_heap.h
 objs/cmd_zones.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_zones.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/cmd_zones.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
-objs/cmd_zones.o: /usr/include/ctype.h /usr/include/endian.h
-objs/cmd_zones.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
-objs/cmd_zones.o: /usr/include/assert.h /usr/include/g++-3/cstring
-objs/cmd_zones.o: /usr/include/g++-3/cerrno /usr/include/errno.h
-objs/cmd_zones.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
-objs/cmd_zones.o: /usr/include/asm/errno.h /usr/include/g++-3/string
-objs/cmd_zones.o: /usr/include/g++-3/std/bastring.h
+objs/cmd_zones.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/cmd_zones.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/cmd_zones.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/cmd_zones.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/cmd_zones.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/cmd_zones.o: /usr/include/g++-3/cstring /usr/include/g++-3/cerrno
+objs/cmd_zones.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/cmd_zones.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/cmd_zones.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
 objs/cmd_zones.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
 objs/cmd_zones.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
 objs/cmd_zones.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iterator
@@ -3591,9 +3585,9 @@ objs/color.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/color.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/color.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/color.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/color.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/color.o: /usr/include/time.h /usr/include/alloca.h
-objs/color.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/color.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/color.o: /usr/include/time.h /usr/include/bits/time.h
+objs/color.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/color.o: /usr/include/ctype.h /usr/include/endian.h
 objs/color.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/color.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3639,9 +3633,9 @@ objs/colorstring.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/colorstring.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/colorstring.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/colorstring.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/colorstring.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/colorstring.o: /usr/include/time.h /usr/include/alloca.h
-objs/colorstring.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/colorstring.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/colorstring.o: /usr/include/time.h /usr/include/bits/time.h
+objs/colorstring.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/colorstring.o: /usr/include/ctype.h /usr/include/endian.h
 objs/colorstring.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/colorstring.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3700,9 +3694,9 @@ objs/combat.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/combat.o: /usr/include/libio.h
 objs/combat.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/combat.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/combat.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/combat.o: /usr/include/time.h /usr/include/alloca.h
-objs/combat.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/combat.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/combat.o: /usr/include/time.h /usr/include/bits/time.h
+objs/combat.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/combat.o: /usr/include/ctype.h /usr/include/endian.h
 objs/combat.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/combat.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3752,9 +3746,9 @@ objs/comm.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/comm.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/comm.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/comm.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/comm.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/comm.o: /usr/include/time.h /usr/include/alloca.h
-objs/comm.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/comm.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/comm.o: /usr/include/time.h /usr/include/bits/time.h
+objs/comm.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/comm.o: /usr/include/ctype.h /usr/include/endian.h
 objs/comm.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/comm.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3800,19 +3794,17 @@ objs/comm.o: /usr/include/sys/uio.h /usr/include/bits/uio.h
 objs/comm.o: /usr/include/bits/socket.h /usr/include/bits/sockaddr.h
 objs/comm.o: /usr/include/asm/socket.h /usr/include/asm/sockios.h
 objs/comm.o: /usr/include/sys/select.h /usr/include/bits/select.h
-objs/comm.o: /usr/include/bits/time.h /usr/include/netinet/in.h
-objs/comm.o: /usr/include/stdint.h /usr/include/bits/wordsize.h
-objs/comm.o: /usr/include/bits/in.h /usr/include/bits/byteswap.h
-objs/comm.o: /usr/include/sys/wait.h /usr/include/sys/resource.h
-objs/comm.o: /usr/include/bits/resource.h /usr/include/bits/waitflags.h
-objs/comm.o: /usr/include/bits/waitstatus.h /usr/include/bits/siginfo.h
-objs/comm.o: /usr/include/netdb.h /usr/include/rpc/netdb.h
-objs/comm.o: /usr/include/bits/netdb.h /usr/include/fcntl.h
-objs/comm.o: /usr/include/bits/fcntl.h /usr/include/sys/syscall.h
-objs/comm.o: /usr/include/asm/unistd.h /usr/include/bits/syscall.h
-objs/comm.o: /usr/include/sys/param.h /usr/include/linux/limits.h
-objs/comm.o: /usr/include/linux/param.h /usr/include/asm/param.h
-objs/comm.o: /usr/include/arpa/inet.h
+objs/comm.o: /usr/include/netinet/in.h /usr/include/stdint.h
+objs/comm.o: /usr/include/bits/wordsize.h /usr/include/bits/in.h
+objs/comm.o: /usr/include/bits/byteswap.h /usr/include/sys/wait.h
+objs/comm.o: /usr/include/sys/resource.h /usr/include/bits/resource.h
+objs/comm.o: /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h
+objs/comm.o: /usr/include/netdb.h /usr/include/bits/netdb.h
+objs/comm.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+objs/comm.o: /usr/include/sys/syscall.h /usr/include/asm/unistd.h
+objs/comm.o: /usr/include/bits/syscall.h /usr/include/sys/param.h
+objs/comm.o: /usr/include/linux/limits.h /usr/include/linux/param.h
+objs/comm.o: /usr/include/asm/param.h /usr/include/arpa/inet.h
 objs/components.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/components.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/components.o: /usr/include/gnu/stubs.h
@@ -3822,9 +3814,9 @@ objs/components.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/components.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/components.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/components.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/components.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/components.o: /usr/include/time.h /usr/include/alloca.h
-objs/components.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/components.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/components.o: /usr/include/time.h /usr/include/bits/time.h
+objs/components.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/components.o: /usr/include/ctype.h /usr/include/endian.h
 objs/components.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/components.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -3884,11 +3876,10 @@ objs/connect.o: /usr/include/libio.h /usr/include/_G_config.h
 objs/connect.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/connect.o: /usr/include/gconv.h /usr/include/g++-3/fstream.h
 objs/connect.o: /usr/include/dirent.h /usr/include/bits/dirent.h
-objs/connect.o: /usr/include/bits/posix1_lim.h /usr/include/bits/local_lim.h
-objs/connect.o: /usr/include/linux/limits.h /usr/include/unistd.h
-objs/connect.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
-objs/connect.o: /usr/include/sys/socket.h /usr/include/sys/uio.h
-objs/connect.o: /usr/include/sys/types.h /usr/include/time.h
+objs/connect.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+objs/connect.o: /usr/include/bits/confname.h /usr/include/sys/socket.h
+objs/connect.o: /usr/include/sys/uio.h /usr/include/sys/types.h
+objs/connect.o: /usr/include/time.h /usr/include/bits/time.h
 objs/connect.o: /usr/include/bits/uio.h /usr/include/bits/socket.h
 objs/connect.o: /usr/include/limits.h
 objs/connect.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
@@ -3898,29 +3889,28 @@ objs/connect.o: /usr/include/stdint.h /usr/include/bits/wordsize.h
 objs/connect.o: /usr/include/bits/in.h /usr/include/endian.h
 objs/connect.o: /usr/include/bits/endian.h /usr/include/bits/byteswap.h
 objs/connect.o: /usr/include/sys/wait.h /usr/include/sys/resource.h
-objs/connect.o: /usr/include/bits/resource.h /usr/include/bits/time.h
-objs/connect.o: /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h
-objs/connect.o: /usr/include/bits/siginfo.h /usr/include/netdb.h
-objs/connect.o: /usr/include/rpc/netdb.h /usr/include/bits/netdb.h
-objs/connect.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
-objs/connect.o: /usr/include/crypt.h /usr/include/sys/syscall.h
-objs/connect.o: /usr/include/asm/unistd.h /usr/include/bits/syscall.h
-objs/connect.o: /usr/include/sys/param.h /usr/include/linux/param.h
+objs/connect.o: /usr/include/bits/resource.h /usr/include/bits/waitflags.h
+objs/connect.o: /usr/include/bits/waitstatus.h /usr/include/netdb.h
+objs/connect.o: /usr/include/bits/netdb.h /usr/include/fcntl.h
+objs/connect.o: /usr/include/bits/fcntl.h /usr/include/crypt.h
+objs/connect.o: /usr/include/sys/syscall.h /usr/include/asm/unistd.h
+objs/connect.o: /usr/include/bits/syscall.h /usr/include/sys/param.h
+objs/connect.o: /usr/include/linux/limits.h /usr/include/linux/param.h
 objs/connect.o: /usr/include/asm/param.h /usr/include/arpa/telnet.h
 objs/connect.o: /usr/include/arpa/inet.h /usr/include/sys/stat.h
 objs/connect.o: /usr/include/bits/stat.h stdsneezy.h
 objs/connect.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/connect.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/connect.o: /usr/include/stdlib.h /usr/include/alloca.h
-objs/connect.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
-objs/connect.o: /usr/include/ctype.h /usr/include/g++-3/cassert
-objs/connect.o: /usr/include/assert.h /usr/include/g++-3/cstring
-objs/connect.o: /usr/include/string.h /usr/include/g++-3/cerrno
-objs/connect.o: /usr/include/errno.h /usr/include/bits/errno.h
-objs/connect.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
-objs/connect.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
-objs/connect.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
-objs/connect.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
+objs/connect.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/connect.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/connect.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/connect.o: /usr/include/g++-3/cstring /usr/include/string.h
+objs/connect.o: /usr/include/g++-3/cerrno /usr/include/errno.h
+objs/connect.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/connect.o: /usr/include/asm/errno.h /usr/include/g++-3/string
+objs/connect.o: /usr/include/g++-3/std/bastring.h /usr/include/g++-3/cstddef
+objs/connect.o: /usr/include/g++-3/std/straits.h /usr/include/g++-3/alloc.h
+objs/connect.o: /usr/include/g++-3/stl_config.h
 objs/connect.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iterator
 objs/connect.o: /usr/include/g++-3/stl_relops.h
 objs/connect.o: /usr/include/g++-3/stl_iterator.h
@@ -3961,9 +3951,9 @@ objs/constants.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/constants.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/constants.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/constants.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/constants.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/constants.o: /usr/include/time.h /usr/include/alloca.h
-objs/constants.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/constants.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/constants.o: /usr/include/time.h /usr/include/bits/time.h
+objs/constants.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/constants.o: /usr/include/ctype.h /usr/include/endian.h
 objs/constants.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/constants.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -4015,8 +4005,8 @@ objs/create_engine.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/create_engine.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/create_engine.o: /usr/include/bits/stdio_lim.h
 objs/create_engine.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/create_engine.o: /usr/include/sys/types.h /usr/include/time.h
-objs/create_engine.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/create_engine.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/create_engine.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/create_engine.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/create_engine.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/create_engine.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -4076,9 +4066,9 @@ objs/create_mobs.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/create_mobs.o: /usr/include/gconv.h
 objs/create_mobs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/create_mobs.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/create_mobs.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/create_mobs.o: /usr/include/time.h /usr/include/alloca.h
-objs/create_mobs.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/create_mobs.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/create_mobs.o: /usr/include/time.h /usr/include/bits/time.h
+objs/create_mobs.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/create_mobs.o: /usr/include/ctype.h /usr/include/endian.h
 objs/create_mobs.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/create_mobs.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -4132,16 +4122,13 @@ objs/create_objs.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
 objs/create_objs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
 objs/create_objs.o: /usr/include/bits/confname.h /usr/include/sys/stat.h
 objs/create_objs.o: /usr/include/bits/stat.h /usr/include/dirent.h
-objs/create_objs.o: /usr/include/bits/dirent.h /usr/include/bits/posix1_lim.h
-objs/create_objs.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
-objs/create_objs.o: /usr/include/g++-3/algorithm
+objs/create_objs.o: /usr/include/bits/dirent.h /usr/include/g++-3/algorithm
 objs/create_objs.o: /usr/include/g++-3/stl_algobase.h
 objs/create_objs.o: /usr/include/g++-3/stl_pair.h
 objs/create_objs.o: /usr/include/g++-3/type_traits.h /usr/include/string.h
 objs/create_objs.o: /usr/include/limits.h
 objs/create_objs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
-objs/create_objs.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/create_objs.o: /usr/include/time.h /usr/include/alloca.h
+objs/create_objs.o: /usr/include/stdlib.h
 objs/create_objs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
 objs/create_objs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
 objs/create_objs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
@@ -4157,13 +4144,15 @@ objs/create_objs.o: /usr/include/g++-3/stl_algo.h
 objs/create_objs.o: /usr/include/g++-3/stl_heap.h stdsneezy.h
 objs/create_objs.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/create_objs.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/create_objs.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
-objs/create_objs.o: /usr/include/ctype.h /usr/include/endian.h
-objs/create_objs.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
-objs/create_objs.o: /usr/include/assert.h /usr/include/g++-3/cstring
-objs/create_objs.o: /usr/include/g++-3/cerrno /usr/include/errno.h
-objs/create_objs.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
-objs/create_objs.o: /usr/include/asm/errno.h /usr/include/g++-3/string
+objs/create_objs.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/create_objs.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/create_objs.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/create_objs.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/create_objs.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/create_objs.o: /usr/include/g++-3/cstring /usr/include/g++-3/cerrno
+objs/create_objs.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/create_objs.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/create_objs.o: /usr/include/g++-3/string
 objs/create_objs.o: /usr/include/g++-3/std/bastring.h
 objs/create_objs.o: /usr/include/g++-3/cstddef
 objs/create_objs.o: /usr/include/g++-3/std/straits.h
@@ -4202,9 +4191,9 @@ objs/create_rooms.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/create_rooms.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/create_rooms.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/create_rooms.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/create_rooms.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/create_rooms.o: /usr/include/time.h /usr/include/alloca.h
-objs/create_rooms.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/create_rooms.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/create_rooms.o: /usr/include/time.h /usr/include/bits/time.h
+objs/create_rooms.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/create_rooms.o: /usr/include/ctype.h /usr/include/endian.h
 objs/create_rooms.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/create_rooms.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -4251,7 +4240,7 @@ objs/create_rooms.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
 objs/create_rooms.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/create_rooms.o: obj2.h charfile.h being.h person.h monster.h account.h
 objs/create_rooms.o: extern.h handler.h rent.h spec_mobs.h spec_rooms.h
-objs/create_rooms.o: materials.h
+objs/create_rooms.o: materials.h obj_table.h
 objs/crit_combat.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/crit_combat.o: /usr/include/stdio.h /usr/include/features.h
 objs/crit_combat.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -4261,9 +4250,9 @@ objs/crit_combat.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/crit_combat.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/crit_combat.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/crit_combat.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/crit_combat.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/crit_combat.o: /usr/include/time.h /usr/include/alloca.h
-objs/crit_combat.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/crit_combat.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/crit_combat.o: /usr/include/time.h /usr/include/bits/time.h
+objs/crit_combat.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/crit_combat.o: /usr/include/ctype.h /usr/include/endian.h
 objs/crit_combat.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/crit_combat.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -4321,9 +4310,9 @@ objs/damage.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/damage.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/damage.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/damage.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/damage.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/damage.o: /usr/include/time.h /usr/include/alloca.h
-objs/damage.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/damage.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/damage.o: /usr/include/time.h /usr/include/bits/time.h
+objs/damage.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/damage.o: /usr/include/ctype.h /usr/include/endian.h
 objs/damage.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/damage.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -4373,8 +4362,8 @@ objs/db.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/db.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/db.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/db.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/db.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
-objs/db.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/db.o: /usr/include/stdlib.h /usr/include/g++-3/ctime /usr/include/time.h
+objs/db.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/db.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/db.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/db.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -4415,6 +4404,7 @@ objs/db.o: mail.h components.h board.h loadset.h sys_loot.h shop.h
 objs/db.o: obj_spellbag.h obj_expandable_container.h obj_open_container.h
 objs/db.o: obj_base_container.h obj_player_corpse.h obj_base_corpse.h
 objs/db.o: obj_corpse.h obj_quiver.h obj_keyring.h obj_chest.h obj_bag.h
+objs/db.o: obj_bow.h obj_commodity.h obj_symbol.h obj_table.h
 objs/disc_adventuring.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_adventuring.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_adventuring.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -4425,8 +4415,8 @@ objs/disc_adventuring.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_adventuring.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_adventuring.o: /usr/include/bits/stdio_lim.h
 objs/disc_adventuring.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_adventuring.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_adventuring.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_adventuring.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_adventuring.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_adventuring.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_adventuring.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_adventuring.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -4485,9 +4475,9 @@ objs/disc_aegis.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_aegis.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_aegis.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_aegis.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_aegis.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_aegis.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_aegis.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_aegis.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_aegis.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_aegis.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_aegis.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_aegis.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_aegis.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -4543,8 +4533,8 @@ objs/disc_afflictions.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_afflictions.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_afflictions.o: /usr/include/bits/stdio_lim.h
 objs/disc_afflictions.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_afflictions.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_afflictions.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_afflictions.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_afflictions.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_afflictions.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_afflictions.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_afflictions.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -4603,9 +4593,9 @@ objs/disc_air.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_air.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_air.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_air.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_air.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_air.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_air.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_air.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_air.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_air.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_air.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_air.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_air.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -4656,9 +4646,9 @@ objs/disc_alchemy.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_alchemy.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_alchemy.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_alchemy.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_alchemy.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_alchemy.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_alchemy.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_alchemy.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_alchemy.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_alchemy.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_alchemy.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_alchemy.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_alchemy.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -4716,9 +4706,9 @@ objs/disc_animal.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_animal.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_animal.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_animal.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_animal.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_animal.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_animal.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_animal.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_animal.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_animal.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_animal.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_animal.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_animal.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -4775,9 +4765,9 @@ objs/disc_blunt.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_blunt.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_blunt.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_blunt.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_blunt.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_blunt.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_blunt.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_blunt.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_blunt.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_blunt.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_blunt.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_blunt.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_blunt.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -4833,8 +4823,8 @@ objs/disc_brawling.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_brawling.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_brawling.o: /usr/include/bits/stdio_lim.h
 objs/disc_brawling.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_brawling.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_brawling.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_brawling.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_brawling.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_brawling.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_brawling.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_brawling.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -4891,9 +4881,9 @@ objs/disc_cleric.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_cleric.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_cleric.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_cleric.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_cleric.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_cleric.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_cleric.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_cleric.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_cleric.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_cleric.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_cleric.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_cleric.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_cleric.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -4950,9 +4940,9 @@ objs/disc_combat.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_combat.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_combat.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_combat.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_combat.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_combat.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_combat.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_combat.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_combat.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_combat.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_combat.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_combat.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_combat.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -5009,9 +4999,9 @@ objs/disc_cure.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_cure.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_cure.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_cure.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_cure.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_cure.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_cure.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_cure.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_cure.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_cure.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_cure.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_cure.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_cure.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -5063,9 +5053,9 @@ objs/disc_defense.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_defense.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_defense.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_defense.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_defense.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_defense.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_defense.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_defense.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_defense.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_defense.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_defense.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_defense.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_defense.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -5122,9 +5112,9 @@ objs/disc_deikhan.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_deikhan.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_deikhan.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_deikhan.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_deikhan.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_deikhan.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_deikhan.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_deikhan.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_deikhan.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_deikhan.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_deikhan.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_deikhan.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_deikhan.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -5181,9 +5171,9 @@ objs/disc_earth.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_earth.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_earth.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_earth.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_earth.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_earth.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_earth.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_earth.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_earth.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_earth.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_earth.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_earth.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_earth.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -5239,8 +5229,8 @@ objs/disc_fattacks.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_fattacks.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_fattacks.o: /usr/include/bits/stdio_lim.h
 objs/disc_fattacks.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_fattacks.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_fattacks.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_fattacks.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_fattacks.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_fattacks.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_fattacks.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_fattacks.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -5297,9 +5287,9 @@ objs/disc_fire.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_fire.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_fire.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_fire.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_fire.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_fire.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_fire.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_fire.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_fire.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_fire.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_fire.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_fire.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_fire.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -5352,8 +5342,8 @@ objs/disc_hand_of_god.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_hand_of_god.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_hand_of_god.o: /usr/include/bits/stdio_lim.h
 objs/disc_hand_of_god.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_hand_of_god.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_hand_of_god.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_hand_of_god.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_hand_of_god.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_hand_of_god.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_hand_of_god.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_hand_of_god.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -5412,9 +5402,9 @@ objs/disc_hth.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_hth.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_hth.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_hth.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_hth.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_hth.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_hth.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_hth.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_hth.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_hth.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_hth.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_hth.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_hth.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -5466,8 +5456,8 @@ objs/disc_leverage.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_leverage.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_leverage.o: /usr/include/bits/stdio_lim.h
 objs/disc_leverage.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_leverage.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_leverage.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_leverage.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_leverage.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_leverage.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_leverage.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_leverage.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -5524,9 +5514,9 @@ objs/disc_looting.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_looting.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_looting.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_looting.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_looting.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_looting.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_looting.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_looting.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_looting.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_looting.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_looting.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_looting.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_looting.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -5583,9 +5573,9 @@ objs/disc_mage.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_mage.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_mage.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_mage.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_mage.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_mage.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_mage.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_mage.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_mage.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_mage.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_mage.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_mage.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_mage.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -5637,8 +5627,8 @@ objs/disc_meditation.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_meditation.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_meditation.o: /usr/include/bits/stdio_lim.h
 objs/disc_meditation.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_meditation.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_meditation.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_meditation.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_meditation.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_meditation.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_meditation.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_meditation.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -5698,8 +5688,8 @@ objs/disc_mindbody.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_mindbody.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_mindbody.o: /usr/include/bits/stdio_lim.h
 objs/disc_mindbody.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_mindbody.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_mindbody.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_mindbody.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_mindbody.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_mindbody.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_mindbody.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_mindbody.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -5756,9 +5746,9 @@ objs/disc_monk.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_monk.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_monk.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_monk.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_monk.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_monk.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_monk.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_monk.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_monk.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_monk.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_monk.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_monk.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_monk.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -5810,9 +5800,9 @@ objs/disc_mounted.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_mounted.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_mounted.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_mounted.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_mounted.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_mounted.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_mounted.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_mounted.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_mounted.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_mounted.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_mounted.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_mounted.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_mounted.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -5869,9 +5859,9 @@ objs/disc_murder.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_murder.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_murder.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_murder.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_murder.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_murder.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_murder.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_murder.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_murder.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_murder.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_murder.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_murder.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_murder.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -5928,9 +5918,9 @@ objs/disc_nature.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_nature.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_nature.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_nature.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_nature.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_nature.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_nature.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_nature.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_nature.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_nature.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_nature.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_nature.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_nature.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -5988,8 +5978,8 @@ objs/disc_physical.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_physical.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_physical.o: /usr/include/bits/stdio_lim.h
 objs/disc_physical.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_physical.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_physical.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_physical.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_physical.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_physical.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_physical.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_physical.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -6046,9 +6036,9 @@ objs/disc_pierce.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_pierce.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_pierce.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_pierce.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_pierce.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_pierce.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_pierce.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_pierce.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_pierce.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_pierce.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_pierce.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_pierce.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_pierce.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -6106,8 +6096,8 @@ objs/disc_psionics.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_psionics.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_psionics.o: /usr/include/bits/stdio_lim.h
 objs/disc_psionics.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_psionics.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_psionics.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_psionics.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_psionics.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_psionics.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_psionics.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_psionics.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -6164,9 +6154,9 @@ objs/disc_ranged.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_ranged.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_ranged.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_ranged.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_ranged.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_ranged.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_ranged.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_ranged.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_ranged.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_ranged.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_ranged.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_ranged.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_ranged.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -6213,7 +6203,7 @@ objs/disc_ranged.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
 objs/disc_ranged.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
 objs/disc_ranged.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_ranged.o: handler.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/disc_ranged.o: disc_ranged.h
+objs/disc_ranged.o: disc_ranged.h obj_bow.h
 objs/disc_ranger.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_ranger.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_ranger.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -6223,9 +6213,9 @@ objs/disc_ranger.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_ranger.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_ranger.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_ranger.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_ranger.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_ranger.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_ranger.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_ranger.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_ranger.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_ranger.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_ranger.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_ranger.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_ranger.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -6282,9 +6272,9 @@ objs/disc_shaman.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_shaman.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_shaman.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_shaman.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_shaman.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_shaman.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_shaman.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_shaman.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_shaman.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_shaman.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_shaman.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_shaman.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_shaman.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -6343,8 +6333,8 @@ objs/disc_shaman_alchemy.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_shaman_alchemy.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_shaman_alchemy.o: /usr/include/bits/stdio_lim.h
 objs/disc_shaman_alchemy.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_shaman_alchemy.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_shaman_alchemy.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_shaman_alchemy.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_shaman_alchemy.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_shaman_alchemy.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_shaman_alchemy.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_shaman_alchemy.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -6409,9 +6399,9 @@ objs/disc_shaman_armadillo.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_shaman_armadillo.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_shaman_armadillo.o: /usr/include/bits/stdio_lim.h
 objs/disc_shaman_armadillo.o: /usr/include/g++-3/cstdlib
-objs/disc_shaman_armadillo.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_shaman_armadillo.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_shaman_armadillo.o: /usr/include/g++-3/ctime
+objs/disc_shaman_armadillo.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_shaman_armadillo.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_shaman_armadillo.o: /usr/include/sys/types.h
 objs/disc_shaman_armadillo.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_shaman_armadillo.o: /usr/include/endian.h
 objs/disc_shaman_armadillo.o: /usr/include/bits/endian.h
@@ -6478,8 +6468,8 @@ objs/disc_shaman_control.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_shaman_control.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_shaman_control.o: /usr/include/bits/stdio_lim.h
 objs/disc_shaman_control.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_shaman_control.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_shaman_control.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_shaman_control.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_shaman_control.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_shaman_control.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_shaman_control.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_shaman_control.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -6544,8 +6534,8 @@ objs/disc_shaman_frog.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_shaman_frog.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_shaman_frog.o: /usr/include/bits/stdio_lim.h
 objs/disc_shaman_frog.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_shaman_frog.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_shaman_frog.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_shaman_frog.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_shaman_frog.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_shaman_frog.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_shaman_frog.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_shaman_frog.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -6605,8 +6595,8 @@ objs/disc_shaman_skunk.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_shaman_skunk.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_shaman_skunk.o: /usr/include/bits/stdio_lim.h
 objs/disc_shaman_skunk.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_shaman_skunk.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_shaman_skunk.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_shaman_skunk.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_shaman_skunk.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_shaman_skunk.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_shaman_skunk.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_shaman_skunk.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -6669,8 +6659,8 @@ objs/disc_shaman_spider.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_shaman_spider.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_shaman_spider.o: /usr/include/bits/stdio_lim.h
 objs/disc_shaman_spider.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_shaman_spider.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_shaman_spider.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_shaman_spider.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_shaman_spider.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_shaman_spider.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_shaman_spider.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_shaman_spider.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -6732,9 +6722,9 @@ objs/disc_slash.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_slash.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_slash.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_slash.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_slash.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_slash.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_slash.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_slash.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_slash.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_slash.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_slash.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_slash.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_slash.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -6789,9 +6779,9 @@ objs/disc_smythe.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_smythe.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_smythe.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_smythe.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_smythe.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_smythe.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_smythe.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_smythe.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_smythe.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_smythe.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_smythe.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_smythe.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_smythe.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -6851,9 +6841,9 @@ objs/disc_sorcery.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disc_sorcery.o: /usr/include/libio.h
 objs/disc_sorcery.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_sorcery.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_sorcery.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_sorcery.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_sorcery.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_sorcery.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_sorcery.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_sorcery.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_sorcery.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_sorcery.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_sorcery.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -6910,9 +6900,9 @@ objs/disc_spirit.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_spirit.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_spirit.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_spirit.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_spirit.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_spirit.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_spirit.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_spirit.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_spirit.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_spirit.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_spirit.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_spirit.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_spirit.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -6970,8 +6960,8 @@ objs/disc_survival.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_survival.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_survival.o: /usr/include/bits/stdio_lim.h
 objs/disc_survival.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_survival.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_survival.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_survival.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_survival.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_survival.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_survival.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_survival.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -7030,8 +7020,8 @@ objs/disc_theology.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_theology.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_theology.o: /usr/include/bits/stdio_lim.h
 objs/disc_theology.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/disc_theology.o: /usr/include/sys/types.h /usr/include/time.h
-objs/disc_theology.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/disc_theology.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/disc_theology.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/disc_theology.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/disc_theology.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/disc_theology.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -7078,7 +7068,7 @@ objs/disc_theology.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
 objs/disc_theology.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/disc_theology.o: obj2.h charfile.h being.h person.h monster.h account.h
 objs/disc_theology.o: extern.h handler.h rent.h spec_mobs.h spec_rooms.h
-objs/disc_theology.o: materials.h disc_theology.h
+objs/disc_theology.o: materials.h disc_theology.h obj_symbol.h
 objs/disc_thief.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disc_thief.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disc_thief.o: /usr/include/gnu/stubs.h
@@ -7088,9 +7078,9 @@ objs/disc_thief.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_thief.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_thief.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_thief.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_thief.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_thief.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_thief.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_thief.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_thief.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_thief.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_thief.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_thief.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_thief.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7146,9 +7136,9 @@ objs/disc_warrior.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_warrior.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_warrior.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_warrior.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_warrior.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_warrior.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_warrior.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_warrior.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_warrior.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_warrior.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_warrior.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_warrior.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_warrior.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7205,9 +7195,9 @@ objs/disc_water.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_water.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_water.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_water.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_water.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_water.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_water.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_water.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_water.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_water.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_water.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_water.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_water.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7262,9 +7252,9 @@ objs/disc_wrath.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disc_wrath.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disc_wrath.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disc_wrath.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disc_wrath.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disc_wrath.o: /usr/include/time.h /usr/include/alloca.h
-objs/disc_wrath.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disc_wrath.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disc_wrath.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disc_wrath.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disc_wrath.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disc_wrath.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disc_wrath.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7322,9 +7312,9 @@ objs/discipline.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/discipline.o: /usr/include/libio.h
 objs/discipline.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/discipline.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/discipline.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/discipline.o: /usr/include/time.h /usr/include/alloca.h
-objs/discipline.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/discipline.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/discipline.o: /usr/include/time.h /usr/include/bits/time.h
+objs/discipline.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/discipline.o: /usr/include/ctype.h /usr/include/endian.h
 objs/discipline.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/discipline.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7390,6 +7380,7 @@ objs/discipline.o: disc_combat.h disc_wizardry.h disc_lore.h disc_theology.h
 objs/discipline.o: disc_faith.h disc_slash.h disc_blunt.h disc_pierce.h
 objs/discipline.o: disc_ranged.h disc_barehand.h disc_survival.h
 objs/discipline.o: disc_animal.h disc_nature.h disc_psionics.h spelltask.h
+objs/discipline.o: obj_symbol.h
 objs/disease.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disease.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disease.o: /usr/include/gnu/stubs.h
@@ -7399,9 +7390,9 @@ objs/disease.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/disease.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/disease.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/disease.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/disease.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/disease.o: /usr/include/time.h /usr/include/alloca.h
-objs/disease.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/disease.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/disease.o: /usr/include/time.h /usr/include/bits/time.h
+objs/disease.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/disease.o: /usr/include/ctype.h /usr/include/endian.h
 objs/disease.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/disease.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7451,9 +7442,9 @@ objs/doors.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/doors.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/doors.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/doors.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/doors.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/doors.o: /usr/include/time.h /usr/include/alloca.h
-objs/doors.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/doors.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/doors.o: /usr/include/time.h /usr/include/bits/time.h
+objs/doors.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/doors.o: /usr/include/ctype.h /usr/include/endian.h
 objs/doors.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/doors.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7499,9 +7490,9 @@ objs/edit.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/edit.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/edit.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/edit.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/edit.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/edit.o: /usr/include/time.h /usr/include/alloca.h
-objs/edit.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/edit.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/edit.o: /usr/include/time.h /usr/include/bits/time.h
+objs/edit.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/edit.o: /usr/include/ctype.h /usr/include/endian.h
 objs/edit.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/edit.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7546,11 +7537,11 @@ objs/edit.o: /usr/include/netinet/in.h /usr/include/stdint.h
 objs/edit.o: /usr/include/bits/wordsize.h /usr/include/bits/socket.h
 objs/edit.o: /usr/include/bits/sockaddr.h /usr/include/asm/socket.h
 objs/edit.o: /usr/include/asm/sockios.h /usr/include/bits/in.h
-objs/edit.o: /usr/include/bits/byteswap.h /usr/include/rpc/netdb.h
-objs/edit.o: /usr/include/bits/netdb.h /usr/include/sys/param.h
-objs/edit.o: /usr/include/linux/limits.h /usr/include/linux/param.h
-objs/edit.o: /usr/include/asm/param.h /usr/include/sys/socket.h
-objs/edit.o: /usr/include/sys/uio.h /usr/include/bits/uio.h
+objs/edit.o: /usr/include/bits/byteswap.h /usr/include/bits/netdb.h
+objs/edit.o: /usr/include/sys/param.h /usr/include/linux/limits.h
+objs/edit.o: /usr/include/linux/param.h /usr/include/asm/param.h
+objs/edit.o: /usr/include/sys/socket.h /usr/include/sys/uio.h
+objs/edit.o: /usr/include/bits/uio.h
 objs/enum.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/enum.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/enum.o: /usr/include/gnu/stubs.h
@@ -7560,9 +7551,9 @@ objs/enum.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/enum.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/enum.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/enum.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/enum.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/enum.o: /usr/include/time.h /usr/include/alloca.h
-objs/enum.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/enum.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/enum.o: /usr/include/time.h /usr/include/bits/time.h
+objs/enum.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/enum.o: /usr/include/ctype.h /usr/include/endian.h
 objs/enum.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/enum.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7608,9 +7599,9 @@ objs/equip.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/equip.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/equip.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/equip.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/equip.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/equip.o: /usr/include/time.h /usr/include/alloca.h
-objs/equip.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/equip.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/equip.o: /usr/include/time.h /usr/include/bits/time.h
+objs/equip.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/equip.o: /usr/include/ctype.h /usr/include/endian.h
 objs/equip.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/equip.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7662,9 +7653,9 @@ objs/faction.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/faction.o: /usr/include/libio.h
 objs/faction.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/faction.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/faction.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/faction.o: /usr/include/time.h /usr/include/alloca.h
-objs/faction.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/faction.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/faction.o: /usr/include/time.h /usr/include/bits/time.h
+objs/faction.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/faction.o: /usr/include/ctype.h /usr/include/endian.h
 objs/faction.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/faction.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7714,9 +7705,9 @@ objs/flame.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/flame.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/flame.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/flame.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/flame.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/flame.o: /usr/include/time.h /usr/include/alloca.h
-objs/flame.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/flame.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/flame.o: /usr/include/time.h /usr/include/bits/time.h
+objs/flame.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/flame.o: /usr/include/ctype.h /usr/include/endian.h
 objs/flame.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/flame.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7765,9 +7756,9 @@ objs/food.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/food.o: /usr/include/libio.h
 objs/food.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/food.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/food.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/food.o: /usr/include/time.h /usr/include/alloca.h
-objs/food.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/food.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/food.o: /usr/include/time.h /usr/include/bits/time.h
+objs/food.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/food.o: /usr/include/ctype.h /usr/include/endian.h
 objs/food.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/food.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7816,9 +7807,9 @@ objs/gaining.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/gaining.o: /usr/include/libio.h
 objs/gaining.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/gaining.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/gaining.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/gaining.o: /usr/include/time.h /usr/include/alloca.h
-objs/gaining.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/gaining.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/gaining.o: /usr/include/time.h /usr/include/bits/time.h
+objs/gaining.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/gaining.o: /usr/include/ctype.h /usr/include/endian.h
 objs/gaining.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/gaining.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7870,8 +7861,8 @@ objs/game_blackjack.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/game_blackjack.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/game_blackjack.o: /usr/include/bits/stdio_lim.h
 objs/game_blackjack.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/game_blackjack.o: /usr/include/sys/types.h /usr/include/time.h
-objs/game_blackjack.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/game_blackjack.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/game_blackjack.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/game_blackjack.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/game_blackjack.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/game_blackjack.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -7929,9 +7920,9 @@ objs/game_cards.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/game_cards.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/game_cards.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/game_cards.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/game_cards.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/game_cards.o: /usr/include/time.h /usr/include/alloca.h
-objs/game_cards.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/game_cards.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/game_cards.o: /usr/include/time.h /usr/include/bits/time.h
+objs/game_cards.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/game_cards.o: /usr/include/ctype.h /usr/include/endian.h
 objs/game_cards.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/game_cards.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -7986,9 +7977,9 @@ objs/game_craps.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/game_craps.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/game_craps.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/game_craps.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/game_craps.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/game_craps.o: /usr/include/time.h /usr/include/alloca.h
-objs/game_craps.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/game_craps.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/game_craps.o: /usr/include/time.h /usr/include/bits/time.h
+objs/game_craps.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/game_craps.o: /usr/include/ctype.h /usr/include/endian.h
 objs/game_craps.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/game_craps.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8044,8 +8035,8 @@ objs/game_crazyeights.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/game_crazyeights.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/game_crazyeights.o: /usr/include/bits/stdio_lim.h
 objs/game_crazyeights.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/game_crazyeights.o: /usr/include/sys/types.h /usr/include/time.h
-objs/game_crazyeights.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/game_crazyeights.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/game_crazyeights.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/game_crazyeights.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/game_crazyeights.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/game_crazyeights.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -8106,8 +8097,8 @@ objs/game_drawpoker.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/game_drawpoker.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/game_drawpoker.o: /usr/include/bits/stdio_lim.h
 objs/game_drawpoker.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/game_drawpoker.o: /usr/include/sys/types.h /usr/include/time.h
-objs/game_drawpoker.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/game_drawpoker.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/game_drawpoker.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/game_drawpoker.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/game_drawpoker.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/game_drawpoker.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -8165,9 +8156,9 @@ objs/game_gin.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/game_gin.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/game_gin.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/game_gin.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/game_gin.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/game_gin.o: /usr/include/time.h /usr/include/alloca.h
-objs/game_gin.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/game_gin.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/game_gin.o: /usr/include/time.h /usr/include/bits/time.h
+objs/game_gin.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/game_gin.o: /usr/include/ctype.h /usr/include/endian.h
 objs/game_gin.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/game_gin.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8218,9 +8209,9 @@ objs/game_hearts.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/game_hearts.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/game_hearts.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/game_hearts.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/game_hearts.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/game_hearts.o: /usr/include/time.h /usr/include/alloca.h
-objs/game_hearts.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/game_hearts.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/game_hearts.o: /usr/include/time.h /usr/include/bits/time.h
+objs/game_hearts.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/game_hearts.o: /usr/include/ctype.h /usr/include/endian.h
 objs/game_hearts.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/game_hearts.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8277,9 +8268,9 @@ objs/game_slots.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/game_slots.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/game_slots.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/game_slots.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/game_slots.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/game_slots.o: /usr/include/time.h /usr/include/alloca.h
-objs/game_slots.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/game_slots.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/game_slots.o: /usr/include/time.h /usr/include/bits/time.h
+objs/game_slots.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/game_slots.o: /usr/include/ctype.h /usr/include/endian.h
 objs/game_slots.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/game_slots.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8337,8 +8328,8 @@ objs/handler.o: /usr/include/libio.h /usr/include/_G_config.h
 objs/handler.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/handler.o: /usr/include/gconv.h /usr/include/bits/stdio_lim.h
 objs/handler.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/handler.o: /usr/include/sys/types.h /usr/include/time.h
-objs/handler.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/handler.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/handler.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/handler.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/handler.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/handler.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -8382,6 +8373,7 @@ objs/handler.o: person.h monster.h account.h extern.h handler.h rent.h
 objs/handler.o: spec_mobs.h spec_rooms.h materials.h combat.h range.h shop.h
 objs/handler.o: obj_spellbag.h obj_expandable_container.h
 objs/handler.o: obj_open_container.h obj_base_container.h obj_bag.h
+objs/handler.o: obj_table.h
 objs/hospital.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/hospital.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/hospital.o: /usr/include/gnu/stubs.h
@@ -8391,9 +8383,9 @@ objs/hospital.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/hospital.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/hospital.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/hospital.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/hospital.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/hospital.o: /usr/include/time.h /usr/include/alloca.h
-objs/hospital.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/hospital.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/hospital.o: /usr/include/time.h /usr/include/bits/time.h
+objs/hospital.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/hospital.o: /usr/include/ctype.h /usr/include/endian.h
 objs/hospital.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/hospital.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8443,9 +8435,9 @@ objs/immortal.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/immortal.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/immortal.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/immortal.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/immortal.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/immortal.o: /usr/include/time.h /usr/include/alloca.h
-objs/immortal.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/immortal.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/immortal.o: /usr/include/time.h /usr/include/bits/time.h
+objs/immortal.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/immortal.o: /usr/include/ctype.h /usr/include/endian.h
 objs/immortal.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/immortal.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8486,25 +8478,23 @@ objs/immortal.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/immortal.o: create.h thing.h room.h obj.h obj2.h charfile.h being.h
 objs/immortal.o: person.h monster.h account.h extern.h handler.h rent.h
 objs/immortal.o: spec_mobs.h spec_rooms.h materials.h /usr/include/dirent.h
-objs/immortal.o: /usr/include/bits/dirent.h /usr/include/bits/posix1_lim.h
-objs/immortal.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
-objs/immortal.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
-objs/immortal.o: /usr/include/bits/confname.h /usr/include/ftw.h
-objs/immortal.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
-objs/immortal.o: /usr/include/netdb.h /usr/include/netinet/in.h
-objs/immortal.o: /usr/include/stdint.h /usr/include/bits/wordsize.h
-objs/immortal.o: /usr/include/bits/socket.h /usr/include/bits/sockaddr.h
-objs/immortal.o: /usr/include/asm/socket.h /usr/include/asm/sockios.h
-objs/immortal.o: /usr/include/bits/in.h /usr/include/bits/byteswap.h
-objs/immortal.o: /usr/include/rpc/netdb.h /usr/include/bits/netdb.h
-objs/immortal.o: /usr/include/sys/param.h /usr/include/linux/param.h
-objs/immortal.o: /usr/include/asm/param.h /usr/include/sys/syscall.h
-objs/immortal.o: /usr/include/asm/unistd.h /usr/include/bits/syscall.h
-objs/immortal.o: /usr/include/sys/socket.h /usr/include/sys/uio.h
-objs/immortal.o: /usr/include/bits/uio.h statistics.h combat.h mail.h games.h
-objs/immortal.o: game_crazyeights.h game_drawpoker.h disc_nature.h
-objs/immortal.o: disc_shaman_armadillo.h systemtask.h socket.h shop.h
-objs/immortal.o: cmd_trophy.h
+objs/immortal.o: /usr/include/bits/dirent.h /usr/include/unistd.h
+objs/immortal.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+objs/immortal.o: /usr/include/ftw.h /usr/include/sys/stat.h
+objs/immortal.o: /usr/include/bits/stat.h /usr/include/netdb.h
+objs/immortal.o: /usr/include/netinet/in.h /usr/include/stdint.h
+objs/immortal.o: /usr/include/bits/wordsize.h /usr/include/bits/socket.h
+objs/immortal.o: /usr/include/bits/sockaddr.h /usr/include/asm/socket.h
+objs/immortal.o: /usr/include/asm/sockios.h /usr/include/bits/in.h
+objs/immortal.o: /usr/include/bits/byteswap.h /usr/include/bits/netdb.h
+objs/immortal.o: /usr/include/sys/param.h /usr/include/linux/limits.h
+objs/immortal.o: /usr/include/linux/param.h /usr/include/asm/param.h
+objs/immortal.o: /usr/include/sys/syscall.h /usr/include/asm/unistd.h
+objs/immortal.o: /usr/include/bits/syscall.h /usr/include/sys/socket.h
+objs/immortal.o: /usr/include/sys/uio.h /usr/include/bits/uio.h statistics.h
+objs/immortal.o: combat.h mail.h games.h game_crazyeights.h game_drawpoker.h
+objs/immortal.o: disc_nature.h disc_shaman_armadillo.h systemtask.h socket.h
+objs/immortal.o: shop.h cmd_trophy.h
 objs/immunity.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/immunity.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/immunity.o: /usr/include/gnu/stubs.h
@@ -8514,9 +8504,9 @@ objs/immunity.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/immunity.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/immunity.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/immunity.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/immunity.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/immunity.o: /usr/include/time.h /usr/include/alloca.h
-objs/immunity.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/immunity.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/immunity.o: /usr/include/time.h /usr/include/bits/time.h
+objs/immunity.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/immunity.o: /usr/include/ctype.h /usr/include/endian.h
 objs/immunity.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/immunity.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8566,9 +8556,9 @@ objs/indexdata.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/indexdata.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/indexdata.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/indexdata.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/indexdata.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/indexdata.o: /usr/include/time.h /usr/include/alloca.h
-objs/indexdata.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/indexdata.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/indexdata.o: /usr/include/time.h /usr/include/bits/time.h
+objs/indexdata.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/indexdata.o: /usr/include/ctype.h /usr/include/endian.h
 objs/indexdata.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/indexdata.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8619,9 +8609,9 @@ objs/info.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/info.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/info.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/info.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/info.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/info.o: /usr/include/time.h /usr/include/alloca.h
-objs/info.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/info.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/info.o: /usr/include/time.h /usr/include/bits/time.h
+objs/info.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/info.o: /usr/include/ctype.h /usr/include/endian.h
 objs/info.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/info.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8662,7 +8652,8 @@ objs/info.o: /usr/include/g++-3/algorithm /usr/include/g++-3/stl_tempbuf.h
 objs/info.o: /usr/include/g++-3/stl_algo.h /usr/include/g++-3/stl_heap.h
 objs/info.o: games.h game_crazyeights.h game_drawpoker.h combat.h
 objs/info.o: statistics.h components.h skillsort.h obj_open_container.h
-objs/info.o: obj_base_container.h obj_corpse.h obj_base_corpse.h
+objs/info.o: obj_base_container.h obj_corpse.h obj_base_corpse.h obj_bow.h
+objs/info.o: obj_symbol.h
 objs/inventory.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/inventory.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/inventory.o: /usr/include/gnu/stubs.h
@@ -8672,9 +8663,9 @@ objs/inventory.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/inventory.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/inventory.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/inventory.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/inventory.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/inventory.o: /usr/include/time.h /usr/include/alloca.h
-objs/inventory.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/inventory.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/inventory.o: /usr/include/time.h /usr/include/bits/time.h
+objs/inventory.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/inventory.o: /usr/include/ctype.h /usr/include/endian.h
 objs/inventory.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/inventory.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8720,7 +8711,7 @@ objs/inventory.o: game_crazyeights.h game_drawpoker.h statistics.h
 objs/inventory.o: disc_looting.h shop.h obj_spellbag.h
 objs/inventory.o: obj_expandable_container.h obj_open_container.h
 objs/inventory.o: obj_base_container.h obj_keyring.h obj_base_corpse.h
-objs/inventory.o: obj_player_corpse.h obj_quiver.h
+objs/inventory.o: obj_player_corpse.h obj_quiver.h obj_table.h
 objs/limbs.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/limbs.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/limbs.o: /usr/include/gnu/stubs.h
@@ -8730,9 +8721,9 @@ objs/limbs.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/limbs.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/limbs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/limbs.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/limbs.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/limbs.o: /usr/include/time.h /usr/include/alloca.h
-objs/limbs.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/limbs.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/limbs.o: /usr/include/time.h /usr/include/bits/time.h
+objs/limbs.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/limbs.o: /usr/include/ctype.h /usr/include/endian.h
 objs/limbs.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/limbs.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8785,9 +8776,9 @@ objs/limits.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/limits.o: /usr/include/libio.h
 objs/limits.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/limits.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/limits.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/limits.o: /usr/include/time.h /usr/include/alloca.h
-objs/limits.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/limits.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/limits.o: /usr/include/time.h /usr/include/bits/time.h
+objs/limits.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/limits.o: /usr/include/ctype.h /usr/include/endian.h
 objs/limits.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/limits.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8837,9 +8828,9 @@ objs/loadset.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/loadset.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/loadset.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/loadset.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/loadset.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/loadset.o: /usr/include/time.h /usr/include/alloca.h
-objs/loadset.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/loadset.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/loadset.o: /usr/include/time.h /usr/include/bits/time.h
+objs/loadset.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/loadset.o: /usr/include/ctype.h /usr/include/endian.h
 objs/loadset.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/loadset.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8889,9 +8880,9 @@ objs/luck.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/luck.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/luck.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/luck.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/luck.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/luck.o: /usr/include/time.h /usr/include/alloca.h
-objs/luck.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/luck.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/luck.o: /usr/include/time.h /usr/include/bits/time.h
+objs/luck.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/luck.o: /usr/include/ctype.h /usr/include/endian.h
 objs/luck.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/luck.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8937,9 +8928,9 @@ objs/magic_item.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/magic_item.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/magic_item.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/magic_item.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/magic_item.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/magic_item.o: /usr/include/time.h /usr/include/alloca.h
-objs/magic_item.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/magic_item.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/magic_item.o: /usr/include/time.h /usr/include/bits/time.h
+objs/magic_item.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/magic_item.o: /usr/include/ctype.h /usr/include/endian.h
 objs/magic_item.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/magic_item.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -8993,9 +8984,9 @@ objs/magic_off.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/magic_off.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/magic_off.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/magic_off.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/magic_off.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/magic_off.o: /usr/include/time.h /usr/include/alloca.h
-objs/magic_off.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/magic_off.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/magic_off.o: /usr/include/time.h /usr/include/bits/time.h
+objs/magic_off.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/magic_off.o: /usr/include/ctype.h /usr/include/endian.h
 objs/magic_off.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/magic_off.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9046,9 +9037,9 @@ objs/magic_skills.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/magic_skills.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/magic_skills.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/magic_skills.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/magic_skills.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/magic_skills.o: /usr/include/time.h /usr/include/alloca.h
-objs/magic_skills.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/magic_skills.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/magic_skills.o: /usr/include/time.h /usr/include/bits/time.h
+objs/magic_skills.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/magic_skills.o: /usr/include/ctype.h /usr/include/endian.h
 objs/magic_skills.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/magic_skills.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9105,9 +9096,9 @@ objs/magicutils.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/magicutils.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/magicutils.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/magicutils.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/magicutils.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/magicutils.o: /usr/include/time.h /usr/include/alloca.h
-objs/magicutils.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/magicutils.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/magicutils.o: /usr/include/time.h /usr/include/bits/time.h
+objs/magicutils.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/magicutils.o: /usr/include/ctype.h /usr/include/endian.h
 objs/magicutils.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/magicutils.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9162,9 +9153,9 @@ objs/mail.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/mail.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/mail.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/mail.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/mail.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/mail.o: /usr/include/time.h /usr/include/alloca.h
-objs/mail.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/mail.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/mail.o: /usr/include/time.h /usr/include/bits/time.h
+objs/mail.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/mail.o: /usr/include/ctype.h /usr/include/endian.h
 objs/mail.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/mail.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9210,9 +9201,9 @@ objs/makecorpse.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/makecorpse.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/makecorpse.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/makecorpse.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/makecorpse.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/makecorpse.o: /usr/include/time.h /usr/include/alloca.h
-objs/makecorpse.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/makecorpse.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/makecorpse.o: /usr/include/time.h /usr/include/bits/time.h
+objs/makecorpse.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/makecorpse.o: /usr/include/ctype.h /usr/include/endian.h
 objs/makecorpse.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/makecorpse.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9268,9 +9259,9 @@ objs/materials.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/materials.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/materials.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/materials.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/materials.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/materials.o: /usr/include/time.h /usr/include/alloca.h
-objs/materials.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/materials.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/materials.o: /usr/include/time.h /usr/include/bits/time.h
+objs/materials.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/materials.o: /usr/include/ctype.h /usr/include/endian.h
 objs/materials.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/materials.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9321,9 +9312,9 @@ objs/meeting.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/meeting.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/meeting.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/meeting.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/meeting.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/meeting.o: /usr/include/time.h /usr/include/alloca.h
-objs/meeting.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/meeting.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/meeting.o: /usr/include/time.h /usr/include/bits/time.h
+objs/meeting.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/meeting.o: /usr/include/ctype.h /usr/include/endian.h
 objs/meeting.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/meeting.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9374,9 +9365,9 @@ objs/mob_loader.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/mob_loader.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/mob_loader.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/mob_loader.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/mob_loader.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/mob_loader.o: /usr/include/time.h /usr/include/alloca.h
-objs/mob_loader.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/mob_loader.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/mob_loader.o: /usr/include/time.h /usr/include/bits/time.h
+objs/mob_loader.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/mob_loader.o: /usr/include/ctype.h /usr/include/endian.h
 objs/mob_loader.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/mob_loader.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9431,9 +9422,9 @@ objs/mobact.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/mobact.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/mobact.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/mobact.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/mobact.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/mobact.o: /usr/include/time.h /usr/include/alloca.h
-objs/mobact.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/mobact.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/mobact.o: /usr/include/time.h /usr/include/bits/time.h
+objs/mobact.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/mobact.o: /usr/include/ctype.h /usr/include/endian.h
 objs/mobact.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/mobact.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9475,7 +9466,7 @@ objs/mobact.o: monster.h account.h extern.h handler.h rent.h spec_mobs.h
 objs/mobact.o: spec_rooms.h materials.h range.h statistics.h components.h
 objs/mobact.o: shop.h obj_spellbag.h obj_expandable_container.h
 objs/mobact.o: obj_open_container.h obj_base_container.h obj_base_corpse.h
-objs/mobact.o: obj_player_corpse.h
+objs/mobact.o: obj_player_corpse.h obj_bow.h
 objs/monster.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/monster.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/monster.o: /usr/include/gnu/stubs.h
@@ -9485,9 +9476,9 @@ objs/monster.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/monster.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/monster.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/monster.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/monster.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/monster.o: /usr/include/time.h /usr/include/alloca.h
-objs/monster.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/monster.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/monster.o: /usr/include/time.h /usr/include/bits/time.h
+objs/monster.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/monster.o: /usr/include/ctype.h /usr/include/endian.h
 objs/monster.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/monster.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9537,9 +9528,9 @@ objs/movement.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/movement.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/movement.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/movement.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/movement.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/movement.o: /usr/include/time.h /usr/include/alloca.h
-objs/movement.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/movement.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/movement.o: /usr/include/time.h /usr/include/bits/time.h
+objs/movement.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/movement.o: /usr/include/ctype.h /usr/include/endian.h
 objs/movement.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/movement.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9592,9 +9583,9 @@ objs/multiclass.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/multiclass.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/multiclass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/multiclass.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/multiclass.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/multiclass.o: /usr/include/time.h /usr/include/alloca.h
-objs/multiclass.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/multiclass.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/multiclass.o: /usr/include/time.h /usr/include/bits/time.h
+objs/multiclass.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/multiclass.o: /usr/include/ctype.h /usr/include/endian.h
 objs/multiclass.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/multiclass.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9648,9 +9639,9 @@ objs/newbie.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/newbie.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/newbie.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/newbie.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/newbie.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/newbie.o: /usr/include/time.h /usr/include/alloca.h
-objs/newbie.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/newbie.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/newbie.o: /usr/include/time.h /usr/include/bits/time.h
+objs/newbie.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/newbie.o: /usr/include/ctype.h /usr/include/endian.h
 objs/newbie.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/newbie.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9699,9 +9690,9 @@ objs/obj.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9747,8 +9738,8 @@ objs/obj_appliedsub.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_appliedsub.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_appliedsub.o: /usr/include/bits/stdio_lim.h
 objs/obj_appliedsub.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/obj_appliedsub.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_appliedsub.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/obj_appliedsub.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_appliedsub.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/obj_appliedsub.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/obj_appliedsub.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/obj_appliedsub.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -9807,9 +9798,9 @@ objs/obj_armor.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_armor.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_armor.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_armor.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_armor.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_armor.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_armor.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_armor.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_armor.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_armor.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_armor.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_armor.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_armor.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9861,8 +9852,8 @@ objs/obj_armor_wand.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_armor_wand.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_armor_wand.o: /usr/include/bits/stdio_lim.h
 objs/obj_armor_wand.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/obj_armor_wand.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_armor_wand.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/obj_armor_wand.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_armor_wand.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/obj_armor_wand.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/obj_armor_wand.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/obj_armor_wand.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -9919,9 +9910,9 @@ objs/obj_arrow.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_arrow.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_arrow.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_arrow.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_arrow.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_arrow.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_arrow.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_arrow.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_arrow.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_arrow.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_arrow.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_arrow.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_arrow.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -9973,9 +9964,9 @@ objs/obj_audio.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_audio.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_audio.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_audio.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_audio.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_audio.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_audio.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_audio.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_audio.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_audio.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_audio.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_audio.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_audio.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -10026,9 +10017,9 @@ objs/obj_bag.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_bag.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_bag.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_bag.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_bag.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_bag.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_bag.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_bag.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_bag.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_bag.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_bag.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_bag.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_bag.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -10080,9 +10071,9 @@ objs/obj_bandaid.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_bandaid.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_bandaid.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_bandaid.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_bandaid.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_bandaid.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_bandaid.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_bandaid.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_bandaid.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_bandaid.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_bandaid.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_bandaid.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_bandaid.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -10143,8 +10134,8 @@ objs/obj_base_clothing.o: /usr/include/libio.h
 objs/obj_base_clothing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_base_clothing.o: /usr/include/bits/stdio_lim.h
 objs/obj_base_clothing.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/obj_base_clothing.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_base_clothing.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/obj_base_clothing.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_base_clothing.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/obj_base_clothing.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/obj_base_clothing.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/obj_base_clothing.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -10206,8 +10197,8 @@ objs/obj_base_container.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_base_container.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_base_container.o: /usr/include/bits/stdio_lim.h
 objs/obj_base_container.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/obj_base_container.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_base_container.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/obj_base_container.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_base_container.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/obj_base_container.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/obj_base_container.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/obj_base_container.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -10271,8 +10262,8 @@ objs/obj_base_corpse.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_base_corpse.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_base_corpse.o: /usr/include/bits/stdio_lim.h
 objs/obj_base_corpse.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/obj_base_corpse.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_base_corpse.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/obj_base_corpse.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_base_corpse.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/obj_base_corpse.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/obj_base_corpse.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/obj_base_corpse.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -10332,9 +10323,9 @@ objs/obj_base_cup.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_base_cup.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_base_cup.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_base_cup.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_base_cup.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_base_cup.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_base_cup.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_base_cup.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_base_cup.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_base_cup.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_base_cup.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_base_cup.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_base_cup.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -10392,8 +10383,8 @@ objs/obj_base_light.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_base_light.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_base_light.o: /usr/include/bits/stdio_lim.h
 objs/obj_base_light.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/obj_base_light.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_base_light.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/obj_base_light.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_base_light.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/obj_base_light.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/obj_base_light.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/obj_base_light.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -10451,8 +10442,8 @@ objs/obj_base_weapon.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_base_weapon.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_base_weapon.o: /usr/include/bits/stdio_lim.h
 objs/obj_base_weapon.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/obj_base_weapon.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_base_weapon.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/obj_base_weapon.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_base_weapon.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/obj_base_weapon.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/obj_base_weapon.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/obj_base_weapon.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -10512,8 +10503,8 @@ objs/obj_base_weapontwo.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_base_weapontwo.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_base_weapontwo.o: /usr/include/bits/stdio_lim.h
 objs/obj_base_weapontwo.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/obj_base_weapontwo.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_base_weapontwo.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/obj_base_weapontwo.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_base_weapontwo.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/obj_base_weapontwo.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/obj_base_weapontwo.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/obj_base_weapontwo.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -10574,9 +10565,9 @@ objs/obj_bed.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_bed.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_bed.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_bed.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_bed.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_bed.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_bed.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_bed.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_bed.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_bed.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_bed.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_bed.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_bed.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -10627,9 +10618,9 @@ objs/obj_board.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_board.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_board.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_board.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_board.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_board.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_board.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_board.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_board.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_board.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_board.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_board.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_board.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -10680,9 +10671,9 @@ objs/obj_boat.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_boat.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_boat.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_boat.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_boat.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_boat.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_boat.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_boat.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_boat.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_boat.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_boat.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_boat.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_boat.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -10732,9 +10723,9 @@ objs/obj_book.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_book.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_book.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_book.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_book.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_book.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_book.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_book.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_book.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_book.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_book.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_book.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_book.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -10784,9 +10775,9 @@ objs/obj_bow.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_bow.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_bow.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_bow.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_bow.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_bow.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_bow.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_bow.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_bow.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_bow.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_bow.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_bow.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_bow.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -10826,7 +10817,7 @@ objs/obj_bow.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
 objs/obj_bow.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/obj_bow.o: create.h thing.h room.h obj.h obj2.h charfile.h being.h
 objs/obj_bow.o: person.h monster.h account.h extern.h handler.h rent.h
-objs/obj_bow.o: spec_mobs.h spec_rooms.h materials.h range.h
+objs/obj_bow.o: spec_mobs.h spec_rooms.h materials.h range.h obj_bow.h
 objs/obj_chest.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_chest.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_chest.o: /usr/include/gnu/stubs.h
@@ -10836,9 +10827,9 @@ objs/obj_chest.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_chest.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_chest.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_chest.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_chest.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_chest.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_chest.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_chest.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_chest.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_chest.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_chest.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_chest.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_chest.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -10891,8 +10882,8 @@ objs/obj_commodity.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_commodity.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_commodity.o: /usr/include/bits/stdio_lim.h
 objs/obj_commodity.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/obj_commodity.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_commodity.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/obj_commodity.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_commodity.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/obj_commodity.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/obj_commodity.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/obj_commodity.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -10939,7 +10930,7 @@ objs/obj_commodity.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
 objs/obj_commodity.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/obj_commodity.o: obj2.h charfile.h being.h person.h monster.h account.h
 objs/obj_commodity.o: extern.h handler.h rent.h spec_mobs.h spec_rooms.h
-objs/obj_commodity.o: materials.h shop.h
+objs/obj_commodity.o: materials.h shop.h obj_commodity.h
 objs/obj_corpse.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_corpse.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_corpse.o: /usr/include/gnu/stubs.h
@@ -10949,9 +10940,9 @@ objs/obj_corpse.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_corpse.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_corpse.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_corpse.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_corpse.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_corpse.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_corpse.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_corpse.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_corpse.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_corpse.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_corpse.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_corpse.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_corpse.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11006,9 +10997,9 @@ objs/obj_drinkcon.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_drinkcon.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_drinkcon.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_drinkcon.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_drinkcon.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_drinkcon.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_drinkcon.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_drinkcon.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_drinkcon.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_drinkcon.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_drinkcon.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_drinkcon.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_drinkcon.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11065,9 +11056,9 @@ objs/obj_drug.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_drug.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_drug.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_drug.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_drug.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_drug.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_drug.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_drug.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_drug.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_drug.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_drug.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_drug.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_drug.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11118,8 +11109,8 @@ objs/obj_drug_container.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_drug_container.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_drug_container.o: /usr/include/bits/stdio_lim.h
 objs/obj_drug_container.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/obj_drug_container.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_drug_container.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/obj_drug_container.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_drug_container.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/obj_drug_container.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/obj_drug_container.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/obj_drug_container.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -11186,9 +11177,9 @@ objs/obj_expandable_container.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stda
 objs/obj_expandable_container.o: /usr/include/bits/stdio_lim.h
 objs/obj_expandable_container.o: /usr/include/g++-3/cstdlib
 objs/obj_expandable_container.o: /usr/include/stdlib.h
-objs/obj_expandable_container.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_expandable_container.o: /usr/include/alloca.h
-objs/obj_expandable_container.o: /usr/include/g++-3/ctime
+objs/obj_expandable_container.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_expandable_container.o: /usr/include/bits/time.h
+objs/obj_expandable_container.o: /usr/include/sys/types.h
 objs/obj_expandable_container.o: /usr/include/g++-3/cctype
 objs/obj_expandable_container.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_expandable_container.o: /usr/include/bits/endian.h
@@ -11257,9 +11248,9 @@ objs/obj_fuel.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_fuel.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_fuel.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_fuel.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_fuel.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_fuel.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_fuel.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_fuel.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_fuel.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_fuel.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_fuel.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_fuel.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_fuel.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11309,9 +11300,9 @@ objs/obj_gemstone.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_gemstone.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_gemstone.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_gemstone.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_gemstone.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_gemstone.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_gemstone.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_gemstone.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_gemstone.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_gemstone.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_gemstone.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_gemstone.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_gemstone.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11369,8 +11360,8 @@ objs/obj_general_weapon.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_general_weapon.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_general_weapon.o: /usr/include/bits/stdio_lim.h
 objs/obj_general_weapon.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/obj_general_weapon.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_general_weapon.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/obj_general_weapon.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_general_weapon.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/obj_general_weapon.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/obj_general_weapon.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/obj_general_weapon.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -11431,9 +11422,9 @@ objs/obj_gun.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_gun.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_gun.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_gun.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_gun.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_gun.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_gun.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_gun.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_gun.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_gun.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_gun.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_gun.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_gun.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11483,9 +11474,9 @@ objs/obj_jewelry.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_jewelry.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_jewelry.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_jewelry.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_jewelry.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_jewelry.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_jewelry.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_jewelry.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_jewelry.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_jewelry.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_jewelry.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_jewelry.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_jewelry.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11541,9 +11532,9 @@ objs/obj_key.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_key.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_key.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_key.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_key.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_key.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_key.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_key.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_key.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_key.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_key.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_key.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_key.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11594,9 +11585,9 @@ objs/obj_keyring.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_keyring.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_keyring.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_keyring.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_keyring.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_keyring.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_keyring.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_keyring.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_keyring.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_keyring.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_keyring.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_keyring.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_keyring.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11654,9 +11645,9 @@ objs/obj_light.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_light.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_light.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_light.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_light.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_light.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_light.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_light.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_light.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_light.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_light.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_light.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_light.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11707,9 +11698,9 @@ objs/obj_money.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_money.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_money.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_money.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_money.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_money.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_money.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_money.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_money.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_money.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_money.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_money.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_money.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11761,9 +11752,9 @@ objs/obj_note.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_note.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_note.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_note.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_note.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_note.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_note.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_note.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_note.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_note.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_note.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_note.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_note.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11814,9 +11805,9 @@ objs/obj_opal.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_opal.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_opal.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_opal.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_opal.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_opal.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_opal.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_opal.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_opal.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_opal.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_opal.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_opal.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_opal.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11867,8 +11858,8 @@ objs/obj_open_container.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_open_container.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_open_container.o: /usr/include/bits/stdio_lim.h
 objs/obj_open_container.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/obj_open_container.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_open_container.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/obj_open_container.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_open_container.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/obj_open_container.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/obj_open_container.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/obj_open_container.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -11930,9 +11921,9 @@ objs/obj_pen.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_pen.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_pen.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_pen.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_pen.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_pen.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_pen.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_pen.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_pen.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_pen.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_pen.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_pen.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_pen.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -11983,8 +11974,8 @@ objs/obj_player_corpse.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_player_corpse.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_player_corpse.o: /usr/include/bits/stdio_lim.h
 objs/obj_player_corpse.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/obj_player_corpse.o: /usr/include/sys/types.h /usr/include/time.h
-objs/obj_player_corpse.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/obj_player_corpse.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/obj_player_corpse.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/obj_player_corpse.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/obj_player_corpse.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/obj_player_corpse.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -12046,9 +12037,9 @@ objs/obj_pool.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_pool.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_pool.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_pool.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_pool.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_pool.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_pool.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_pool.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_pool.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_pool.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_pool.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_pool.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_pool.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12098,9 +12089,9 @@ objs/obj_portal.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_portal.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_portal.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_portal.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_portal.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_portal.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_portal.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_portal.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_portal.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_portal.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_portal.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_portal.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_portal.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12154,9 +12145,9 @@ objs/obj_potion.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_potion.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_potion.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_potion.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_potion.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_potion.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_potion.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_potion.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_potion.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_potion.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_potion.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_potion.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_potion.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12210,9 +12201,9 @@ objs/obj_quiver.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_quiver.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_quiver.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_quiver.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_quiver.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_quiver.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_quiver.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_quiver.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_quiver.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_quiver.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_quiver.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_quiver.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_quiver.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12268,9 +12259,9 @@ objs/obj_scroll.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_scroll.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_scroll.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_scroll.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_scroll.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_scroll.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_scroll.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_scroll.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_scroll.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_scroll.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_scroll.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_scroll.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_scroll.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12324,9 +12315,9 @@ objs/obj_seethru.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_seethru.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_seethru.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_seethru.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_seethru.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_seethru.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_seethru.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_seethru.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_seethru.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_seethru.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_seethru.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_seethru.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_seethru.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12382,9 +12373,9 @@ objs/obj_smoke.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_smoke.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_smoke.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_smoke.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_smoke.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_smoke.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_smoke.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_smoke.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_smoke.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_smoke.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_smoke.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_smoke.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_smoke.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12435,9 +12426,9 @@ objs/obj_spellbag.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_spellbag.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_spellbag.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_spellbag.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_spellbag.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_spellbag.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_spellbag.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_spellbag.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_spellbag.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_spellbag.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_spellbag.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_spellbag.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_spellbag.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12495,9 +12486,9 @@ objs/obj_staff.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_staff.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_staff.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_staff.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_staff.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_staff.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_staff.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_staff.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_staff.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_staff.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_staff.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_staff.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_staff.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12548,9 +12539,9 @@ objs/obj_statue.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_statue.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_statue.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_statue.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_statue.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_statue.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_statue.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_statue.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_statue.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_statue.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_statue.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_statue.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_statue.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12604,9 +12595,9 @@ objs/obj_symbol.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_symbol.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_symbol.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_symbol.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_symbol.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_symbol.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_symbol.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_symbol.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_symbol.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_symbol.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_symbol.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_symbol.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_symbol.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12651,7 +12642,7 @@ objs/obj_symbol.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
 objs/obj_symbol.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
 objs/obj_symbol.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_symbol.o: handler.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_symbol.o: shop.h
+objs/obj_symbol.o: shop.h obj_symbol.h
 objs/obj_table.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_table.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_table.o: /usr/include/gnu/stubs.h
@@ -12661,9 +12652,9 @@ objs/obj_table.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_table.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_table.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_table.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_table.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_table.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_table.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_table.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_table.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_table.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_table.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_table.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_table.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12704,7 +12695,7 @@ objs/obj_table.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
 objs/obj_table.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/obj_table.o: create.h thing.h room.h obj.h obj2.h charfile.h being.h
 objs/obj_table.o: person.h monster.h account.h extern.h handler.h rent.h
-objs/obj_table.o: spec_mobs.h spec_rooms.h materials.h
+objs/obj_table.o: spec_mobs.h spec_rooms.h materials.h obj_table.h
 objs/obj_tool.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_tool.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_tool.o: /usr/include/gnu/stubs.h
@@ -12714,9 +12705,9 @@ objs/obj_tool.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_tool.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_tool.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_tool.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_tool.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_tool.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_tool.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_tool.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_tool.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_tool.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_tool.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_tool.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_tool.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12766,9 +12757,9 @@ objs/obj_trap.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_trap.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_trap.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_trap.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_trap.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_trap.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_trap.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_trap.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_trap.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_trap.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_trap.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_trap.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_trap.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12818,9 +12809,9 @@ objs/obj_trash.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_trash.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_trash.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_trash.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_trash.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_trash.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_trash.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_trash.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_trash.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_trash.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_trash.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_trash.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_trash.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12871,9 +12862,9 @@ objs/obj_treasure.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_treasure.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_treasure.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_treasure.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_treasure.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_treasure.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_treasure.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_treasure.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_treasure.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_treasure.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_treasure.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_treasure.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_treasure.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12930,9 +12921,9 @@ objs/obj_tree.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_tree.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_tree.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_tree.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_tree.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_tree.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_tree.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_tree.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_tree.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_tree.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_tree.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_tree.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_tree.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -12982,9 +12973,9 @@ objs/obj_vial.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_vial.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_vial.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_vial.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_vial.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_vial.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_vial.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_vial.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_vial.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_vial.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_vial.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_vial.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_vial.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13034,9 +13025,9 @@ objs/obj_wand.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_wand.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_wand.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_wand.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_wand.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_wand.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_wand.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_wand.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_wand.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_wand.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_wand.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_wand.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_wand.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13086,9 +13077,9 @@ objs/obj_window.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_window.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_window.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_window.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_window.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_window.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_window.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_window.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_window.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_window.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_window.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_window.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_window.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13142,9 +13133,9 @@ objs/obj_worn.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/obj_worn.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/obj_worn.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/obj_worn.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/obj_worn.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/obj_worn.o: /usr/include/time.h /usr/include/alloca.h
-objs/obj_worn.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/obj_worn.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_worn.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_worn.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/obj_worn.o: /usr/include/ctype.h /usr/include/endian.h
 objs/obj_worn.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/obj_worn.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13194,9 +13185,9 @@ objs/offense.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/offense.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/offense.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/offense.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/offense.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/offense.o: /usr/include/time.h /usr/include/alloca.h
-objs/offense.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/offense.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/offense.o: /usr/include/time.h /usr/include/bits/time.h
+objs/offense.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/offense.o: /usr/include/ctype.h /usr/include/endian.h
 objs/offense.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/offense.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13249,9 +13240,9 @@ objs/oldlimbs.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/oldlimbs.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/oldlimbs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/oldlimbs.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/oldlimbs.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/oldlimbs.o: /usr/include/time.h /usr/include/alloca.h
-objs/oldlimbs.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/oldlimbs.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/oldlimbs.o: /usr/include/time.h /usr/include/bits/time.h
+objs/oldlimbs.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/oldlimbs.o: /usr/include/ctype.h /usr/include/endian.h
 objs/oldlimbs.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/oldlimbs.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13302,9 +13293,9 @@ objs/oldrace.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/oldrace.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/oldrace.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/oldrace.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/oldrace.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/oldrace.o: /usr/include/time.h /usr/include/alloca.h
-objs/oldrace.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/oldrace.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/oldrace.o: /usr/include/time.h /usr/include/bits/time.h
+objs/oldrace.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/oldrace.o: /usr/include/ctype.h /usr/include/endian.h
 objs/oldrace.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/oldrace.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13355,9 +13346,9 @@ objs/opinion.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/opinion.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/opinion.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/opinion.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/opinion.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/opinion.o: /usr/include/time.h /usr/include/alloca.h
-objs/opinion.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/opinion.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/opinion.o: /usr/include/time.h /usr/include/bits/time.h
+objs/opinion.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/opinion.o: /usr/include/ctype.h /usr/include/endian.h
 objs/opinion.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/opinion.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13407,9 +13398,9 @@ objs/organic.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/organic.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/organic.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/organic.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/organic.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/organic.o: /usr/include/time.h /usr/include/alloca.h
-objs/organic.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/organic.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/organic.o: /usr/include/time.h /usr/include/bits/time.h
+objs/organic.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/organic.o: /usr/include/ctype.h /usr/include/endian.h
 objs/organic.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/organic.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13459,8 +13450,7 @@ objs/other.o: /usr/include/g++-3/stl_algobase.h /usr/include/g++-3/stl_pair.h
 objs/other.o: /usr/include/g++-3/type_traits.h /usr/include/string.h
 objs/other.o: /usr/include/limits.h
 objs/other.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
-objs/other.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/other.o: /usr/include/time.h /usr/include/alloca.h
+objs/other.o: /usr/include/stdlib.h
 objs/other.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
 objs/other.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
 objs/other.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
@@ -13475,17 +13465,19 @@ objs/other.o: /usr/include/g++-3/stl_tempbuf.h /usr/include/g++-3/stl_algo.h
 objs/other.o: /usr/include/g++-3/stl_heap.h stdsneezy.h
 objs/other.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/other.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/other.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
-objs/other.o: /usr/include/ctype.h /usr/include/endian.h
-objs/other.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
-objs/other.o: /usr/include/assert.h /usr/include/g++-3/cstring
-objs/other.o: /usr/include/g++-3/cerrno /usr/include/errno.h
-objs/other.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
-objs/other.o: /usr/include/asm/errno.h /usr/include/g++-3/string
-objs/other.o: /usr/include/g++-3/std/bastring.h /usr/include/g++-3/cstddef
-objs/other.o: /usr/include/g++-3/std/straits.h /usr/include/g++-3/alloc.h
-objs/other.o: /usr/include/g++-3/stl_config.h /usr/include/g++-3/stl_alloc.h
-objs/other.o: /usr/include/g++-3/iterator /usr/include/g++-3/stl_relops.h
+objs/other.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/other.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/other.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/other.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/other.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/other.o: /usr/include/g++-3/cstring /usr/include/g++-3/cerrno
+objs/other.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/other.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/other.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
+objs/other.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
+objs/other.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
+objs/other.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iterator
+objs/other.o: /usr/include/g++-3/stl_relops.h
 objs/other.o: /usr/include/g++-3/stl_iterator.h
 objs/other.o: /usr/include/g++-3/std/bastring.cc /usr/include/g++-3/vector
 objs/other.o: /usr/include/g++-3/stl_vector.h
@@ -13521,9 +13513,9 @@ objs/other_obj.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/other_obj.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/other_obj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/other_obj.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/other_obj.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/other_obj.o: /usr/include/time.h /usr/include/alloca.h
-objs/other_obj.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/other_obj.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/other_obj.o: /usr/include/time.h /usr/include/bits/time.h
+objs/other_obj.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/other_obj.o: /usr/include/ctype.h /usr/include/endian.h
 objs/other_obj.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/other_obj.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13576,9 +13568,9 @@ objs/parse.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/parse.o: /usr/include/gconv.h
 objs/parse.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/parse.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/parse.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/parse.o: /usr/include/time.h /usr/include/alloca.h
-objs/parse.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/parse.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/parse.o: /usr/include/time.h /usr/include/bits/time.h
+objs/parse.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/parse.o: /usr/include/ctype.h /usr/include/endian.h
 objs/parse.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/parse.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13616,29 +13608,29 @@ objs/parse.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/parse.o: obj2.h charfile.h being.h person.h monster.h account.h extern.h
 objs/parse.o: handler.h rent.h spec_mobs.h spec_rooms.h materials.h mail.h
 objs/peelpk.o: /usr/include/g++-3/ctime /usr/include/time.h
-objs/peelpk.o: /usr/include/bits/types.h /usr/include/features.h
-objs/peelpk.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+objs/peelpk.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/peelpk.o: /usr/include/gnu/stubs.h
 objs/peelpk.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
-objs/peelpk.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/peelpk.o: /usr/include/bits/time.h /usr/include/bits/types.h stdsneezy.h
+objs/peelpk.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/peelpk.o: /usr/include/libio.h /usr/include/_G_config.h
 objs/peelpk.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/peelpk.o: /usr/include/gconv.h
 objs/peelpk.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/peelpk.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
 objs/peelpk.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/peelpk.o: /usr/include/alloca.h /usr/include/g++-3/cctype
-objs/peelpk.o: /usr/include/ctype.h /usr/include/endian.h
-objs/peelpk.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
-objs/peelpk.o: /usr/include/assert.h /usr/include/g++-3/cstring
-objs/peelpk.o: /usr/include/string.h /usr/include/g++-3/cerrno
-objs/peelpk.o: /usr/include/errno.h /usr/include/bits/errno.h
-objs/peelpk.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
-objs/peelpk.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
-objs/peelpk.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
-objs/peelpk.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
-objs/peelpk.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iostream.h
-objs/peelpk.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
-objs/peelpk.o: /usr/include/g++-3/stl_relops.h
+objs/peelpk.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/peelpk.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/peelpk.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/peelpk.o: /usr/include/g++-3/cstring /usr/include/string.h
+objs/peelpk.o: /usr/include/g++-3/cerrno /usr/include/errno.h
+objs/peelpk.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/peelpk.o: /usr/include/asm/errno.h /usr/include/g++-3/string
+objs/peelpk.o: /usr/include/g++-3/std/bastring.h /usr/include/g++-3/cstddef
+objs/peelpk.o: /usr/include/g++-3/std/straits.h /usr/include/g++-3/alloc.h
+objs/peelpk.o: /usr/include/g++-3/stl_config.h /usr/include/g++-3/stl_alloc.h
+objs/peelpk.o: /usr/include/g++-3/iostream.h /usr/include/g++-3/streambuf.h
+objs/peelpk.o: /usr/include/g++-3/iterator /usr/include/g++-3/stl_relops.h
 objs/peelpk.o: /usr/include/g++-3/stl_iterator.h
 objs/peelpk.o: /usr/include/g++-3/std/bastring.cc /usr/include/g++-3/vector
 objs/peelpk.o: /usr/include/g++-3/stl_algobase.h
@@ -13675,9 +13667,9 @@ objs/periodic.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/periodic.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/periodic.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/periodic.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/periodic.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/periodic.o: /usr/include/time.h /usr/include/alloca.h
-objs/periodic.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/periodic.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/periodic.o: /usr/include/time.h /usr/include/bits/time.h
+objs/periodic.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/periodic.o: /usr/include/ctype.h /usr/include/endian.h
 objs/periodic.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/periodic.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13729,9 +13721,9 @@ objs/pets.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/pets.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/pets.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/pets.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/pets.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/pets.o: /usr/include/time.h /usr/include/alloca.h
-objs/pets.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/pets.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/pets.o: /usr/include/time.h /usr/include/bits/time.h
+objs/pets.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/pets.o: /usr/include/ctype.h /usr/include/endian.h
 objs/pets.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/pets.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13777,9 +13769,9 @@ objs/physics.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/physics.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/physics.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/physics.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/physics.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/physics.o: /usr/include/time.h /usr/include/alloca.h
-objs/physics.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/physics.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/physics.o: /usr/include/time.h /usr/include/bits/time.h
+objs/physics.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/physics.o: /usr/include/ctype.h /usr/include/endian.h
 objs/physics.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/physics.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13825,17 +13817,16 @@ objs/player_data.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/player_data.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
 objs/player_data.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
 objs/player_data.o: /usr/include/bits/confname.h /usr/include/dirent.h
-objs/player_data.o: /usr/include/bits/dirent.h /usr/include/bits/posix1_lim.h
-objs/player_data.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
-objs/player_data.o: stdsneezy.h /usr/include/g++-3/cstdio
-objs/player_data.o: /usr/include/stdio.h /usr/include/libio.h
-objs/player_data.o: /usr/include/_G_config.h /usr/include/wchar.h
-objs/player_data.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/player_data.o: /usr/include/bits/dirent.h stdsneezy.h
+objs/player_data.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/player_data.o: /usr/include/libio.h /usr/include/_G_config.h
+objs/player_data.o: /usr/include/wchar.h /usr/include/bits/wchar.h
+objs/player_data.o: /usr/include/gconv.h
 objs/player_data.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/player_data.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/player_data.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/player_data.o: /usr/include/time.h /usr/include/alloca.h
-objs/player_data.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/player_data.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/player_data.o: /usr/include/time.h /usr/include/bits/time.h
+objs/player_data.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/player_data.o: /usr/include/ctype.h /usr/include/endian.h
 objs/player_data.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/player_data.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13892,9 +13883,9 @@ objs/race.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/race.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/race.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/race.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/race.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/race.o: /usr/include/time.h /usr/include/alloca.h
-objs/race.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/race.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/race.o: /usr/include/time.h /usr/include/bits/time.h
+objs/race.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/race.o: /usr/include/ctype.h /usr/include/endian.h
 objs/race.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/race.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -13945,8 +13936,7 @@ objs/range.o: /usr/include/g++-3/stl_tree.h /usr/include/g++-3/stl_algobase.h
 objs/range.o: /usr/include/g++-3/stl_pair.h /usr/include/g++-3/type_traits.h
 objs/range.o: /usr/include/string.h /usr/include/limits.h
 objs/range.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
-objs/range.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/range.o: /usr/include/time.h /usr/include/alloca.h
+objs/range.o: /usr/include/stdlib.h
 objs/range.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
 objs/range.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
 objs/range.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
@@ -13959,16 +13949,18 @@ objs/range.o: /usr/include/g++-3/stl_function.h /usr/include/g++-3/stl_map.h
 objs/range.o: /usr/include/g++-3/stl_multimap.h stdsneezy.h
 objs/range.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/range.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/range.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
-objs/range.o: /usr/include/ctype.h /usr/include/endian.h
-objs/range.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
-objs/range.o: /usr/include/g++-3/cstring /usr/include/g++-3/cerrno
-objs/range.o: /usr/include/errno.h /usr/include/bits/errno.h
-objs/range.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
-objs/range.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
-objs/range.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
-objs/range.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
-objs/range.o: /usr/include/g++-3/iterator /usr/include/g++-3/stl_relops.h
+objs/range.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/range.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/range.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/range.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/range.o: /usr/include/g++-3/cassert /usr/include/g++-3/cstring
+objs/range.o: /usr/include/g++-3/cerrno /usr/include/errno.h
+objs/range.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/range.o: /usr/include/asm/errno.h /usr/include/g++-3/string
+objs/range.o: /usr/include/g++-3/std/bastring.h /usr/include/g++-3/cstddef
+objs/range.o: /usr/include/g++-3/std/straits.h /usr/include/g++-3/alloc.h
+objs/range.o: /usr/include/g++-3/stl_config.h /usr/include/g++-3/iterator
+objs/range.o: /usr/include/g++-3/stl_relops.h
 objs/range.o: /usr/include/g++-3/stl_iterator.h
 objs/range.o: /usr/include/g++-3/std/bastring.cc /usr/include/g++-3/vector
 objs/range.o: /usr/include/g++-3/stl_uninitialized.h
@@ -13985,15 +13977,14 @@ objs/range.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/range.o: obj2.h charfile.h being.h person.h monster.h account.h extern.h
 objs/range.o: handler.h rent.h spec_mobs.h spec_rooms.h materials.h range.h
 objs/range.o: combat.h obj_quiver.h obj_expandable_container.h
-objs/range.o: obj_open_container.h obj_base_container.h
+objs/range.o: obj_open_container.h obj_base_container.h obj_bow.h
 objs/rent.o: /usr/include/unistd.h /usr/include/features.h
 objs/rent.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/rent.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
 objs/rent.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
 objs/rent.o: /usr/include/bits/confname.h /usr/include/dirent.h
-objs/rent.o: /usr/include/bits/dirent.h /usr/include/bits/posix1_lim.h
-objs/rent.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
-objs/rent.o: /usr/include/sys/types.h /usr/include/time.h
+objs/rent.o: /usr/include/bits/dirent.h /usr/include/sys/types.h
+objs/rent.o: /usr/include/time.h /usr/include/bits/time.h
 objs/rent.o: /usr/include/sys/stat.h /usr/include/bits/stat.h stdsneezy.h
 objs/rent.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/rent.o: /usr/include/libio.h /usr/include/_G_config.h
@@ -14001,20 +13992,19 @@ objs/rent.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/rent.o: /usr/include/gconv.h
 objs/rent.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/rent.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/rent.o: /usr/include/stdlib.h /usr/include/alloca.h
-objs/rent.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
-objs/rent.o: /usr/include/ctype.h /usr/include/endian.h
-objs/rent.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
-objs/rent.o: /usr/include/assert.h /usr/include/g++-3/cstring
-objs/rent.o: /usr/include/string.h /usr/include/g++-3/cerrno
-objs/rent.o: /usr/include/errno.h /usr/include/bits/errno.h
-objs/rent.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
-objs/rent.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
-objs/rent.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
-objs/rent.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
-objs/rent.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iostream.h
-objs/rent.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
-objs/rent.o: /usr/include/g++-3/stl_relops.h
+objs/rent.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/rent.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/rent.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/rent.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/rent.o: /usr/include/g++-3/cstring /usr/include/string.h
+objs/rent.o: /usr/include/g++-3/cerrno /usr/include/errno.h
+objs/rent.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/rent.o: /usr/include/asm/errno.h /usr/include/g++-3/string
+objs/rent.o: /usr/include/g++-3/std/bastring.h /usr/include/g++-3/cstddef
+objs/rent.o: /usr/include/g++-3/std/straits.h /usr/include/g++-3/alloc.h
+objs/rent.o: /usr/include/g++-3/stl_config.h /usr/include/g++-3/stl_alloc.h
+objs/rent.o: /usr/include/g++-3/iostream.h /usr/include/g++-3/streambuf.h
+objs/rent.o: /usr/include/g++-3/iterator /usr/include/g++-3/stl_relops.h
 objs/rent.o: /usr/include/g++-3/stl_iterator.h
 objs/rent.o: /usr/include/g++-3/std/bastring.cc /usr/include/g++-3/vector
 objs/rent.o: /usr/include/g++-3/stl_algobase.h /usr/include/g++-3/stl_pair.h
@@ -14041,7 +14031,7 @@ objs/rent.o: obj2.h charfile.h being.h person.h monster.h account.h extern.h
 objs/rent.o: handler.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/rent.o: statistics.h mail.h shop.h obj_player_corpse.h obj_base_corpse.h
 objs/rent.o: obj_base_container.h obj_bag.h obj_expandable_container.h
-objs/rent.o: obj_open_container.h
+objs/rent.o: obj_open_container.h obj_symbol.h
 objs/repair.o: /usr/include/unistd.h /usr/include/features.h
 objs/repair.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/repair.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -14053,9 +14043,9 @@ objs/repair.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/repair.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/repair.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/repair.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/repair.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/repair.o: /usr/include/time.h /usr/include/alloca.h
-objs/repair.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/repair.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/repair.o: /usr/include/time.h /usr/include/bits/time.h
+objs/repair.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/repair.o: /usr/include/ctype.h /usr/include/endian.h
 objs/repair.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/repair.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -14104,9 +14094,9 @@ objs/response.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/response.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/response.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/response.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/response.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/response.o: /usr/include/time.h /usr/include/alloca.h
-objs/response.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/response.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/response.o: /usr/include/time.h /usr/include/bits/time.h
+objs/response.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/response.o: /usr/include/ctype.h /usr/include/endian.h
 objs/response.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/response.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -14157,8 +14147,8 @@ objs/rewrite_obj_file.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/rewrite_obj_file.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/rewrite_obj_file.o: /usr/include/bits/stdio_lim.h
 objs/rewrite_obj_file.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/rewrite_obj_file.o: /usr/include/sys/types.h /usr/include/time.h
-objs/rewrite_obj_file.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/rewrite_obj_file.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/rewrite_obj_file.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/rewrite_obj_file.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/rewrite_obj_file.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/rewrite_obj_file.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -14217,9 +14207,9 @@ objs/riding.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/riding.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/riding.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/riding.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/riding.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/riding.o: /usr/include/time.h /usr/include/alloca.h
-objs/riding.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/riding.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/riding.o: /usr/include/time.h /usr/include/bits/time.h
+objs/riding.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/riding.o: /usr/include/ctype.h /usr/include/endian.h
 objs/riding.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/riding.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -14268,9 +14258,9 @@ objs/room.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/room.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/room.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/room.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/room.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/room.o: /usr/include/time.h /usr/include/alloca.h
-objs/room.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/room.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/room.o: /usr/include/time.h /usr/include/bits/time.h
+objs/room.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/room.o: /usr/include/ctype.h /usr/include/endian.h
 objs/room.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/room.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -14320,8 +14310,7 @@ objs/shop.o: /usr/include/g++-3/algorithm /usr/include/g++-3/stl_algobase.h
 objs/shop.o: /usr/include/g++-3/stl_pair.h /usr/include/g++-3/type_traits.h
 objs/shop.o: /usr/include/string.h /usr/include/limits.h
 objs/shop.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
-objs/shop.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/shop.o: /usr/include/time.h /usr/include/alloca.h
+objs/shop.o: /usr/include/stdlib.h
 objs/shop.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
 objs/shop.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
 objs/shop.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
@@ -14334,17 +14323,19 @@ objs/shop.o: /usr/include/g++-3/stl_tempbuf.h /usr/include/g++-3/stl_algo.h
 objs/shop.o: /usr/include/g++-3/stl_heap.h stdsneezy.h
 objs/shop.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/shop.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/shop.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
-objs/shop.o: /usr/include/ctype.h /usr/include/endian.h
-objs/shop.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
-objs/shop.o: /usr/include/assert.h /usr/include/g++-3/cstring
-objs/shop.o: /usr/include/g++-3/cerrno /usr/include/errno.h
-objs/shop.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
-objs/shop.o: /usr/include/asm/errno.h /usr/include/g++-3/string
-objs/shop.o: /usr/include/g++-3/std/bastring.h /usr/include/g++-3/cstddef
-objs/shop.o: /usr/include/g++-3/std/straits.h /usr/include/g++-3/alloc.h
-objs/shop.o: /usr/include/g++-3/stl_config.h /usr/include/g++-3/stl_alloc.h
-objs/shop.o: /usr/include/g++-3/iterator /usr/include/g++-3/stl_relops.h
+objs/shop.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/shop.o: /usr/include/bits/time.h /usr/include/sys/types.h
+objs/shop.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/shop.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/shop.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/shop.o: /usr/include/g++-3/cstring /usr/include/g++-3/cerrno
+objs/shop.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/shop.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/shop.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
+objs/shop.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
+objs/shop.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
+objs/shop.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iterator
+objs/shop.o: /usr/include/g++-3/stl_relops.h
 objs/shop.o: /usr/include/g++-3/stl_iterator.h
 objs/shop.o: /usr/include/g++-3/std/bastring.cc /usr/include/g++-3/vector
 objs/shop.o: /usr/include/g++-3/stl_vector.h /usr/include/g++-3/stl_bvector.h
@@ -14362,22 +14353,20 @@ objs/shop.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/shop.o: obj2.h charfile.h being.h person.h monster.h account.h extern.h
 objs/shop.o: handler.h rent.h spec_mobs.h spec_rooms.h materials.h shop.h
 objs/shop.o: statistics.h obj_spellbag.h obj_expandable_container.h
-objs/shop.o: obj_open_container.h obj_base_container.h
+objs/shop.o: obj_open_container.h obj_base_container.h obj_symbol.h
 objs/show.o: /usr/include/dirent.h /usr/include/features.h
 objs/show.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/show.o: /usr/include/bits/types.h
 objs/show.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
-objs/show.o: /usr/include/bits/dirent.h /usr/include/bits/posix1_lim.h
-objs/show.o: /usr/include/bits/local_lim.h /usr/include/linux/limits.h
-objs/show.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
-objs/show.o: /usr/include/libio.h /usr/include/_G_config.h
-objs/show.o: /usr/include/wchar.h /usr/include/bits/wchar.h
-objs/show.o: /usr/include/gconv.h
+objs/show.o: /usr/include/bits/dirent.h stdsneezy.h /usr/include/g++-3/cstdio
+objs/show.o: /usr/include/stdio.h /usr/include/libio.h
+objs/show.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/show.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/show.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/show.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/show.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/show.o: /usr/include/time.h /usr/include/alloca.h
-objs/show.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/show.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/show.o: /usr/include/time.h /usr/include/bits/time.h
+objs/show.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/show.o: /usr/include/ctype.h /usr/include/endian.h
 objs/show.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/show.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -14414,7 +14403,7 @@ objs/show.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/show.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/show.o: obj2.h charfile.h being.h person.h monster.h account.h extern.h
 objs/show.o: handler.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/show.o: disc_looting.h combat.h components.h disc_alchemy.h
+objs/show.o: disc_looting.h combat.h components.h disc_alchemy.h obj_table.h
 objs/signals.o: /usr/include/g++-3/csignal /usr/include/signal.h
 objs/signals.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/signals.o: /usr/include/gnu/stubs.h /usr/include/bits/sigset.h
@@ -14429,18 +14418,17 @@ objs/signals.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/signals.o: /usr/include/gconv.h
 objs/signals.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/signals.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/signals.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/signals.o: /usr/include/alloca.h /usr/include/g++-3/ctime
-objs/signals.o: /usr/include/g++-3/cctype /usr/include/ctype.h
-objs/signals.o: /usr/include/endian.h /usr/include/bits/endian.h
-objs/signals.o: /usr/include/g++-3/cassert /usr/include/assert.h
-objs/signals.o: /usr/include/g++-3/cstring /usr/include/string.h
-objs/signals.o: /usr/include/g++-3/cerrno /usr/include/errno.h
-objs/signals.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
-objs/signals.o: /usr/include/asm/errno.h /usr/include/g++-3/string
-objs/signals.o: /usr/include/g++-3/std/bastring.h /usr/include/g++-3/cstddef
-objs/signals.o: /usr/include/g++-3/std/straits.h /usr/include/g++-3/alloc.h
-objs/signals.o: /usr/include/g++-3/stl_config.h
+objs/signals.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/signals.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
+objs/signals.o: /usr/include/ctype.h /usr/include/endian.h
+objs/signals.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
+objs/signals.o: /usr/include/assert.h /usr/include/g++-3/cstring
+objs/signals.o: /usr/include/string.h /usr/include/g++-3/cerrno
+objs/signals.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/signals.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/signals.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
+objs/signals.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
+objs/signals.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
 objs/signals.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iostream.h
 objs/signals.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
 objs/signals.o: /usr/include/g++-3/stl_relops.h
@@ -14481,9 +14469,9 @@ objs/skill_dam.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/skill_dam.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/skill_dam.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/skill_dam.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/skill_dam.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/skill_dam.o: /usr/include/time.h /usr/include/alloca.h
-objs/skill_dam.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/skill_dam.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/skill_dam.o: /usr/include/time.h /usr/include/bits/time.h
+objs/skill_dam.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/skill_dam.o: /usr/include/ctype.h /usr/include/endian.h
 objs/skill_dam.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/skill_dam.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -14534,9 +14522,9 @@ objs/skills.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/skills.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/skills.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/skills.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/skills.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/skills.o: /usr/include/time.h /usr/include/alloca.h
-objs/skills.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/skills.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/skills.o: /usr/include/time.h /usr/include/bits/time.h
+objs/skills.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/skills.o: /usr/include/ctype.h /usr/include/endian.h
 objs/skills.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/skills.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -14604,8 +14592,9 @@ objs/socket.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/socket.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
 objs/socket.o: /usr/include/bits/confname.h /usr/include/sys/socket.h
 objs/socket.o: /usr/include/sys/uio.h /usr/include/sys/types.h
-objs/socket.o: /usr/include/time.h /usr/include/bits/uio.h
-objs/socket.o: /usr/include/bits/socket.h /usr/include/limits.h
+objs/socket.o: /usr/include/time.h /usr/include/bits/time.h
+objs/socket.o: /usr/include/bits/uio.h /usr/include/bits/socket.h
+objs/socket.o: /usr/include/limits.h
 objs/socket.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
 objs/socket.o: /usr/include/bits/sockaddr.h /usr/include/asm/socket.h
 objs/socket.o: /usr/include/asm/sockios.h /usr/include/netinet/in.h
@@ -14614,21 +14603,19 @@ objs/socket.o: /usr/include/bits/wordsize.h /usr/include/bits/in.h
 objs/socket.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/socket.o: /usr/include/bits/byteswap.h /usr/include/sys/wait.h
 objs/socket.o: /usr/include/sys/resource.h /usr/include/bits/resource.h
-objs/socket.o: /usr/include/bits/time.h /usr/include/bits/waitflags.h
-objs/socket.o: /usr/include/bits/waitstatus.h /usr/include/bits/siginfo.h
+objs/socket.o: /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h
 objs/socket.o: /usr/include/sys/time.h /usr/include/sys/select.h
 objs/socket.o: /usr/include/bits/select.h /usr/include/netdb.h
-objs/socket.o: /usr/include/rpc/netdb.h /usr/include/bits/netdb.h
-objs/socket.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
-objs/socket.o: /usr/include/sys/syscall.h /usr/include/asm/unistd.h
-objs/socket.o: /usr/include/bits/syscall.h /usr/include/sys/param.h
-objs/socket.o: /usr/include/linux/limits.h /usr/include/linux/param.h
-objs/socket.o: /usr/include/asm/param.h stdsneezy.h /usr/include/g++-3/cstdio
-objs/socket.o: /usr/include/stdio.h /usr/include/libio.h
-objs/socket.o: /usr/include/_G_config.h /usr/include/wchar.h
-objs/socket.o: /usr/include/gconv.h /usr/include/bits/stdio_lim.h
-objs/socket.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/socket.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/socket.o: /usr/include/bits/netdb.h /usr/include/fcntl.h
+objs/socket.o: /usr/include/bits/fcntl.h /usr/include/sys/syscall.h
+objs/socket.o: /usr/include/asm/unistd.h /usr/include/bits/syscall.h
+objs/socket.o: /usr/include/sys/param.h /usr/include/linux/limits.h
+objs/socket.o: /usr/include/linux/param.h /usr/include/asm/param.h
+objs/socket.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/socket.o: /usr/include/libio.h /usr/include/_G_config.h
+objs/socket.o: /usr/include/wchar.h /usr/include/gconv.h
+objs/socket.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
+objs/socket.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
 objs/socket.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/socket.o: /usr/include/g++-3/cassert /usr/include/assert.h
 objs/socket.o: /usr/include/g++-3/cstring /usr/include/string.h
@@ -14675,9 +14662,9 @@ objs/sound.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/sound.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/sound.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/sound.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/sound.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/sound.o: /usr/include/time.h /usr/include/alloca.h
-objs/sound.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/sound.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/sound.o: /usr/include/time.h /usr/include/bits/time.h
+objs/sound.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/sound.o: /usr/include/ctype.h /usr/include/endian.h
 objs/sound.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/sound.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -14723,9 +14710,9 @@ objs/spec_mobs.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/spec_mobs.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spec_mobs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spec_mobs.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/spec_mobs.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/spec_mobs.o: /usr/include/time.h /usr/include/alloca.h
-objs/spec_mobs.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/spec_mobs.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/spec_mobs.o: /usr/include/time.h /usr/include/bits/time.h
+objs/spec_mobs.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/spec_mobs.o: /usr/include/ctype.h /usr/include/endian.h
 objs/spec_mobs.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/spec_mobs.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -14770,7 +14757,8 @@ objs/spec_mobs.o: spec_mobs.h spec_rooms.h materials.h combat.h
 objs/spec_mobs.o: disc_sorcery.h disc_afflictions.h disc_aegis.h disc_earth.h
 objs/spec_mobs.o: disc_water.h disc_wrath.h disc_alchemy.h components.h
 objs/spec_mobs.o: paths.h obj_base_corpse.h obj_base_container.h
-objs/spec_mobs.o: obj_player_corpse.h /usr/include/g++-3/fstream.h
+objs/spec_mobs.o: obj_player_corpse.h obj_symbol.h
+objs/spec_mobs.o: /usr/include/g++-3/fstream.h
 objs/spec_mobs_bounty_hunter.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_mobs_bounty_hunter.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/sys/cdefs.h
@@ -14785,9 +14773,9 @@ objs/spec_mobs_bounty_hunter.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdar
 objs/spec_mobs_bounty_hunter.o: /usr/include/bits/stdio_lim.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++-3/cstdlib
 objs/spec_mobs_bounty_hunter.o: /usr/include/stdlib.h
-objs/spec_mobs_bounty_hunter.o: /usr/include/sys/types.h /usr/include/time.h
-objs/spec_mobs_bounty_hunter.o: /usr/include/alloca.h
-objs/spec_mobs_bounty_hunter.o: /usr/include/g++-3/ctime
+objs/spec_mobs_bounty_hunter.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_mobs_bounty_hunter.o: /usr/include/bits/time.h
+objs/spec_mobs_bounty_hunter.o: /usr/include/sys/types.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/g++-3/cctype
 objs/spec_mobs_bounty_hunter.o: /usr/include/ctype.h /usr/include/endian.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/bits/endian.h
@@ -14856,8 +14844,8 @@ objs/spec_mobs_coroner.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spec_mobs_coroner.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spec_mobs_coroner.o: /usr/include/bits/stdio_lim.h
 objs/spec_mobs_coroner.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/spec_mobs_coroner.o: /usr/include/sys/types.h /usr/include/time.h
-objs/spec_mobs_coroner.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/spec_mobs_coroner.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_mobs_coroner.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/spec_mobs_coroner.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/spec_mobs_coroner.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/spec_mobs_coroner.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -14920,9 +14908,9 @@ objs/spec_mobs_doppleganger.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spec_mobs_doppleganger.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spec_mobs_doppleganger.o: /usr/include/bits/stdio_lim.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++-3/cstdlib
-objs/spec_mobs_doppleganger.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/spec_mobs_doppleganger.o: /usr/include/time.h /usr/include/alloca.h
-objs/spec_mobs_doppleganger.o: /usr/include/g++-3/ctime
+objs/spec_mobs_doppleganger.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/spec_mobs_doppleganger.o: /usr/include/time.h /usr/include/bits/time.h
+objs/spec_mobs_doppleganger.o: /usr/include/sys/types.h
 objs/spec_mobs_doppleganger.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/spec_mobs_doppleganger.o: /usr/include/endian.h
 objs/spec_mobs_doppleganger.o: /usr/include/bits/endian.h
@@ -14995,9 +14983,10 @@ objs/spec_mobs_earthquake_digger.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/s
 objs/spec_mobs_earthquake_digger.o: /usr/include/bits/stdio_lim.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++-3/cstdlib
 objs/spec_mobs_earthquake_digger.o: /usr/include/stdlib.h
-objs/spec_mobs_earthquake_digger.o: /usr/include/sys/types.h
-objs/spec_mobs_earthquake_digger.o: /usr/include/time.h /usr/include/alloca.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++-3/ctime
+objs/spec_mobs_earthquake_digger.o: /usr/include/time.h
+objs/spec_mobs_earthquake_digger.o: /usr/include/bits/time.h
+objs/spec_mobs_earthquake_digger.o: /usr/include/sys/types.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/g++-3/cctype
 objs/spec_mobs_earthquake_digger.o: /usr/include/ctype.h
 objs/spec_mobs_earthquake_digger.o: /usr/include/endian.h
@@ -15067,8 +15056,8 @@ objs/spec_mobs_goring.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spec_mobs_goring.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spec_mobs_goring.o: /usr/include/bits/stdio_lim.h
 objs/spec_mobs_goring.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/spec_mobs_goring.o: /usr/include/sys/types.h /usr/include/time.h
-objs/spec_mobs_goring.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/spec_mobs_goring.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_mobs_goring.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/spec_mobs_goring.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/spec_mobs_goring.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/spec_mobs_goring.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -15128,8 +15117,8 @@ objs/spec_mobs_posse.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spec_mobs_posse.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spec_mobs_posse.o: /usr/include/bits/stdio_lim.h
 objs/spec_mobs_posse.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/spec_mobs_posse.o: /usr/include/sys/types.h /usr/include/time.h
-objs/spec_mobs_posse.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/spec_mobs_posse.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_mobs_posse.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/spec_mobs_posse.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/spec_mobs_posse.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/spec_mobs_posse.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -15190,8 +15179,9 @@ objs/spec_mobs_realestate.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spec_mobs_realestate.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spec_mobs_realestate.o: /usr/include/bits/stdio_lim.h
 objs/spec_mobs_realestate.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/spec_mobs_realestate.o: /usr/include/sys/types.h /usr/include/time.h
-objs/spec_mobs_realestate.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/spec_mobs_realestate.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_mobs_realestate.o: /usr/include/bits/time.h
+objs/spec_mobs_realestate.o: /usr/include/sys/types.h
 objs/spec_mobs_realestate.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/spec_mobs_realestate.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/spec_mobs_realestate.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -15253,9 +15243,9 @@ objs/spec_objs.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/spec_objs.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spec_objs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spec_objs.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/spec_objs.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/spec_objs.o: /usr/include/time.h /usr/include/alloca.h
-objs/spec_objs.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/spec_objs.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/spec_objs.o: /usr/include/time.h /usr/include/bits/time.h
+objs/spec_objs.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/spec_objs.o: /usr/include/ctype.h /usr/include/endian.h
 objs/spec_objs.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/spec_objs.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -15308,8 +15298,8 @@ objs/spec_objs_blind.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spec_objs_blind.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spec_objs_blind.o: /usr/include/bits/stdio_lim.h
 objs/spec_objs_blind.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/spec_objs_blind.o: /usr/include/sys/types.h /usr/include/time.h
-objs/spec_objs_blind.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/spec_objs_blind.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_objs_blind.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/spec_objs_blind.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/spec_objs_blind.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/spec_objs_blind.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -15369,8 +15359,8 @@ objs/spec_objs_jambiya.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spec_objs_jambiya.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spec_objs_jambiya.o: /usr/include/bits/stdio_lim.h
 objs/spec_objs_jambiya.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/spec_objs_jambiya.o: /usr/include/sys/types.h /usr/include/time.h
-objs/spec_objs_jambiya.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/spec_objs_jambiya.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_objs_jambiya.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/spec_objs_jambiya.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/spec_objs_jambiya.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/spec_objs_jambiya.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -15436,9 +15426,9 @@ objs/spec_objs_lightning_rod.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdar
 objs/spec_objs_lightning_rod.o: /usr/include/bits/stdio_lim.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++-3/cstdlib
 objs/spec_objs_lightning_rod.o: /usr/include/stdlib.h
-objs/spec_objs_lightning_rod.o: /usr/include/sys/types.h /usr/include/time.h
-objs/spec_objs_lightning_rod.o: /usr/include/alloca.h
-objs/spec_objs_lightning_rod.o: /usr/include/g++-3/ctime
+objs/spec_objs_lightning_rod.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_objs_lightning_rod.o: /usr/include/bits/time.h
+objs/spec_objs_lightning_rod.o: /usr/include/sys/types.h
 objs/spec_objs_lightning_rod.o: /usr/include/g++-3/cctype
 objs/spec_objs_lightning_rod.o: /usr/include/ctype.h /usr/include/endian.h
 objs/spec_objs_lightning_rod.o: /usr/include/bits/endian.h
@@ -15506,8 +15496,8 @@ objs/spec_objs_manadrain.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spec_objs_manadrain.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spec_objs_manadrain.o: /usr/include/bits/stdio_lim.h
 objs/spec_objs_manadrain.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/spec_objs_manadrain.o: /usr/include/sys/types.h /usr/include/time.h
-objs/spec_objs_manadrain.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/spec_objs_manadrain.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_objs_manadrain.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/spec_objs_manadrain.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/spec_objs_manadrain.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/spec_objs_manadrain.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -15572,9 +15562,9 @@ objs/spec_rooms.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/spec_rooms.o: /usr/include/libio.h
 objs/spec_rooms.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spec_rooms.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/spec_rooms.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/spec_rooms.o: /usr/include/time.h /usr/include/alloca.h
-objs/spec_rooms.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/spec_rooms.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/spec_rooms.o: /usr/include/time.h /usr/include/bits/time.h
+objs/spec_rooms.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/spec_rooms.o: /usr/include/ctype.h /usr/include/endian.h
 objs/spec_rooms.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/spec_rooms.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -15630,8 +15620,8 @@ objs/spec_rooms_sleeptag.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spec_rooms_sleeptag.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spec_rooms_sleeptag.o: /usr/include/bits/stdio_lim.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/spec_rooms_sleeptag.o: /usr/include/sys/types.h /usr/include/time.h
-objs/spec_rooms_sleeptag.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/spec_rooms_sleeptag.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_rooms_sleeptag.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/spec_rooms_sleeptag.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/spec_rooms_sleeptag.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -15693,9 +15683,9 @@ objs/spell_info.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/spell_info.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spell_info.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spell_info.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/spell_info.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/spell_info.o: /usr/include/time.h /usr/include/alloca.h
-objs/spell_info.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/spell_info.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/spell_info.o: /usr/include/time.h /usr/include/bits/time.h
+objs/spell_info.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/spell_info.o: /usr/include/ctype.h /usr/include/endian.h
 objs/spell_info.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/spell_info.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -15749,9 +15739,9 @@ objs/spell_num.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/spell_num.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spell_num.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spell_num.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/spell_num.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/spell_num.o: /usr/include/time.h /usr/include/alloca.h
-objs/spell_num.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/spell_num.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/spell_num.o: /usr/include/time.h /usr/include/bits/time.h
+objs/spell_num.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/spell_num.o: /usr/include/ctype.h /usr/include/endian.h
 objs/spell_num.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/spell_num.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -15802,9 +15792,9 @@ objs/spell_parser.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/spell_parser.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spell_parser.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spell_parser.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/spell_parser.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/spell_parser.o: /usr/include/time.h /usr/include/alloca.h
-objs/spell_parser.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/spell_parser.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/spell_parser.o: /usr/include/time.h /usr/include/bits/time.h
+objs/spell_parser.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/spell_parser.o: /usr/include/ctype.h /usr/include/endian.h
 objs/spell_parser.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/spell_parser.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -15869,9 +15859,9 @@ objs/spellstore.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/spellstore.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spellstore.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spellstore.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/spellstore.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/spellstore.o: /usr/include/time.h /usr/include/alloca.h
-objs/spellstore.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/spellstore.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/spellstore.o: /usr/include/time.h /usr/include/bits/time.h
+objs/spellstore.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/spellstore.o: /usr/include/ctype.h /usr/include/endian.h
 objs/spellstore.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/spellstore.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -15925,9 +15915,9 @@ objs/spelltask.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/spelltask.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/spelltask.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/spelltask.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/spelltask.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/spelltask.o: /usr/include/time.h /usr/include/alloca.h
-objs/spelltask.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/spelltask.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/spelltask.o: /usr/include/time.h /usr/include/bits/time.h
+objs/spelltask.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/spelltask.o: /usr/include/ctype.h /usr/include/endian.h
 objs/spelltask.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/spelltask.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -15976,7 +15966,7 @@ objs/spelltask.o: disc_earth.h disc_fire.h disc_sorcery.h disc_spirit.h
 objs/spelltask.o: disc_water.h disc_aegis.h disc_wrath.h disc_shaman.h
 objs/spelltask.o: disc_afflictions.h disc_hand_of_god.h disc_deikhan.h
 objs/spelltask.o: disc_ranger.h disc_survival.h disc_animal.h disc_leverage.h
-objs/spelltask.o: disc_ranged.h combat.h
+objs/spelltask.o: disc_ranged.h combat.h obj_symbol.h
 objs/statistics.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/statistics.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/statistics.o: /usr/include/gnu/stubs.h
@@ -15986,9 +15976,9 @@ objs/statistics.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/statistics.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/statistics.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/statistics.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/statistics.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/statistics.o: /usr/include/time.h /usr/include/alloca.h
-objs/statistics.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/statistics.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/statistics.o: /usr/include/time.h /usr/include/bits/time.h
+objs/statistics.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/statistics.o: /usr/include/ctype.h /usr/include/endian.h
 objs/statistics.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/statistics.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -16043,9 +16033,9 @@ objs/stats.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/stats.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/stats.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/stats.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/stats.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/stats.o: /usr/include/time.h /usr/include/alloca.h
-objs/stats.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/stats.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/stats.o: /usr/include/time.h /usr/include/bits/time.h
+objs/stats.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/stats.o: /usr/include/ctype.h /usr/include/endian.h
 objs/stats.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/stats.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -16094,9 +16084,9 @@ objs/structs.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/structs.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/structs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/structs.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/structs.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/structs.o: /usr/include/time.h /usr/include/alloca.h
-objs/structs.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/structs.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/structs.o: /usr/include/time.h /usr/include/bits/time.h
+objs/structs.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/structs.o: /usr/include/ctype.h /usr/include/endian.h
 objs/structs.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/structs.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -16138,7 +16128,7 @@ objs/structs.o: create.h thing.h room.h obj.h obj2.h charfile.h being.h
 objs/structs.o: person.h monster.h account.h extern.h handler.h rent.h
 objs/structs.o: spec_mobs.h spec_rooms.h materials.h combat.h board.h
 objs/structs.o: statistics.h games.h game_crazyeights.h game_drawpoker.h
-objs/structs.o: obj_base_corpse.h obj_base_container.h
+objs/structs.o: obj_base_corpse.h obj_base_container.h obj_table.h
 objs/sys_loot.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/sys_loot.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/sys_loot.o: /usr/include/gnu/stubs.h
@@ -16148,9 +16138,9 @@ objs/sys_loot.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/sys_loot.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/sys_loot.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/sys_loot.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/sys_loot.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/sys_loot.o: /usr/include/time.h /usr/include/alloca.h
-objs/sys_loot.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/sys_loot.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/sys_loot.o: /usr/include/time.h /usr/include/bits/time.h
+objs/sys_loot.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/sys_loot.o: /usr/include/ctype.h /usr/include/endian.h
 objs/sys_loot.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/sys_loot.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -16199,8 +16189,7 @@ objs/systemtask.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
 objs/systemtask.o: /usr/include/bits/signum.h /usr/include/sys/resource.h
 objs/systemtask.o: /usr/include/bits/resource.h /usr/include/bits/time.h
 objs/systemtask.o: /usr/include/bits/waitflags.h
-objs/systemtask.o: /usr/include/bits/waitstatus.h /usr/include/bits/siginfo.h
-objs/systemtask.o: /usr/include/bits/wordsize.h /usr/include/sys/stat.h
+objs/systemtask.o: /usr/include/bits/waitstatus.h /usr/include/sys/stat.h
 objs/systemtask.o: /usr/include/bits/stat.h /usr/include/unistd.h
 objs/systemtask.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
 objs/systemtask.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
@@ -16209,16 +16198,15 @@ objs/systemtask.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/systemtask.o: /usr/include/gconv.h
 objs/systemtask.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/systemtask.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/systemtask.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/systemtask.o: /usr/include/time.h /usr/include/alloca.h
-objs/systemtask.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
-objs/systemtask.o: /usr/include/ctype.h /usr/include/endian.h
-objs/systemtask.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
-objs/systemtask.o: /usr/include/assert.h /usr/include/g++-3/cstring
-objs/systemtask.o: /usr/include/string.h /usr/include/g++-3/cerrno
-objs/systemtask.o: /usr/include/errno.h /usr/include/bits/errno.h
-objs/systemtask.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
-objs/systemtask.o: /usr/include/g++-3/string
+objs/systemtask.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/systemtask.o: /usr/include/time.h /usr/include/sys/types.h
+objs/systemtask.o: /usr/include/g++-3/cctype /usr/include/ctype.h
+objs/systemtask.o: /usr/include/endian.h /usr/include/bits/endian.h
+objs/systemtask.o: /usr/include/g++-3/cassert /usr/include/assert.h
+objs/systemtask.o: /usr/include/g++-3/cstring /usr/include/string.h
+objs/systemtask.o: /usr/include/g++-3/cerrno /usr/include/errno.h
+objs/systemtask.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+objs/systemtask.o: /usr/include/asm/errno.h /usr/include/g++-3/string
 objs/systemtask.o: /usr/include/g++-3/std/bastring.h
 objs/systemtask.o: /usr/include/g++-3/cstddef
 objs/systemtask.o: /usr/include/g++-3/std/straits.h
@@ -16266,9 +16254,9 @@ objs/talk.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/talk.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/talk.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/talk.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/talk.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/talk.o: /usr/include/time.h /usr/include/alloca.h
-objs/talk.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/talk.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/talk.o: /usr/include/time.h /usr/include/bits/time.h
+objs/talk.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/talk.o: /usr/include/ctype.h /usr/include/endian.h
 objs/talk.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/talk.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -16314,9 +16302,9 @@ objs/task.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task.o: /usr/include/time.h /usr/include/alloca.h
-objs/task.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -16364,9 +16352,9 @@ objs/task_attune.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_attune.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_attune.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_attune.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_attune.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_attune.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_attune.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_attune.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_attune.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_attune.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_attune.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_attune.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_attune.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -16413,6 +16401,7 @@ objs/task_attune.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
 objs/task_attune.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
 objs/task_attune.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/task_attune.o: handler.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/task_attune.o: obj_symbol.h
 objs/task_brew.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/task_brew.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/task_brew.o: /usr/include/gnu/stubs.h
@@ -16422,9 +16411,9 @@ objs/task_brew.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_brew.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_brew.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_brew.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_brew.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_brew.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_brew.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_brew.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_brew.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_brew.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_brew.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_brew.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_brew.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -16475,9 +16464,9 @@ objs/task_butcher.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_butcher.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_butcher.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_butcher.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_butcher.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_butcher.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_butcher.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_butcher.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_butcher.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_butcher.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_butcher.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_butcher.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_butcher.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -16534,9 +16523,9 @@ objs/task_charge.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_charge.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_charge.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_charge.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_charge.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_charge.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_charge.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_charge.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_charge.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_charge.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_charge.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_charge.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_charge.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -16592,9 +16581,9 @@ objs/task_dull.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_dull.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_dull.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_dull.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_dull.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_dull.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_dull.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_dull.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_dull.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_dull.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_dull.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_dull.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_dull.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -16647,9 +16636,9 @@ objs/task_extinguish_my_ass.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_extinguish_my_ass.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_extinguish_my_ass.o: /usr/include/bits/stdio_lim.h
 objs/task_extinguish_my_ass.o: /usr/include/g++-3/cstdlib
-objs/task_extinguish_my_ass.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_extinguish_my_ass.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_extinguish_my_ass.o: /usr/include/g++-3/ctime
+objs/task_extinguish_my_ass.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_extinguish_my_ass.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_extinguish_my_ass.o: /usr/include/sys/types.h
 objs/task_extinguish_my_ass.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/task_extinguish_my_ass.o: /usr/include/endian.h
 objs/task_extinguish_my_ass.o: /usr/include/bits/endian.h
@@ -16715,9 +16704,9 @@ objs/task_fishing.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_fishing.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_fishing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_fishing.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_fishing.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_fishing.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_fishing.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_fishing.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_fishing.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_fishing.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_fishing.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_fishing.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_fishing.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -16774,9 +16763,9 @@ objs/task_get.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_get.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_get.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_get.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_get.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_get.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_get.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_get.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_get.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_get.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_get.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_get.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_get.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -16817,7 +16806,7 @@ objs/task_get.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/task_get.o: create.h thing.h room.h obj.h obj2.h charfile.h being.h
 objs/task_get.o: person.h monster.h account.h extern.h handler.h rent.h
 objs/task_get.o: spec_mobs.h spec_rooms.h materials.h obj_player_corpse.h
-objs/task_get.o: obj_base_corpse.h obj_base_container.h
+objs/task_get.o: obj_base_corpse.h obj_base_container.h obj_table.h
 objs/task_lightfire.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/task_lightfire.o: /usr/include/stdio.h /usr/include/features.h
 objs/task_lightfire.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -16828,8 +16817,8 @@ objs/task_lightfire.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_lightfire.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_lightfire.o: /usr/include/bits/stdio_lim.h
 objs/task_lightfire.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/task_lightfire.o: /usr/include/sys/types.h /usr/include/time.h
-objs/task_lightfire.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/task_lightfire.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/task_lightfire.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/task_lightfire.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/task_lightfire.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/task_lightfire.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -16887,8 +16876,8 @@ objs/task_meditate.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_meditate.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_meditate.o: /usr/include/bits/stdio_lim.h
 objs/task_meditate.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/task_meditate.o: /usr/include/sys/types.h /usr/include/time.h
-objs/task_meditate.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/task_meditate.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/task_meditate.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/task_meditate.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/task_meditate.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/task_meditate.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -16945,9 +16934,9 @@ objs/task_penance.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_penance.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_penance.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_penance.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_penance.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_penance.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_penance.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_penance.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_penance.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_penance.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_penance.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_penance.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_penance.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -17005,8 +16994,8 @@ objs/task_picklock.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_picklock.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_picklock.o: /usr/include/bits/stdio_lim.h
 objs/task_picklock.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/task_picklock.o: /usr/include/sys/types.h /usr/include/time.h
-objs/task_picklock.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/task_picklock.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/task_picklock.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/task_picklock.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/task_picklock.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/task_picklock.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -17063,9 +17052,9 @@ objs/task_rest.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_rest.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_rest.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_rest.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_rest.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_rest.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_rest.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_rest.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_rest.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_rest.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_rest.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_rest.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_rest.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -17117,8 +17106,8 @@ objs/task_sacrifice.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_sacrifice.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_sacrifice.o: /usr/include/bits/stdio_lim.h
 objs/task_sacrifice.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/task_sacrifice.o: /usr/include/sys/types.h /usr/include/time.h
-objs/task_sacrifice.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/task_sacrifice.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/task_sacrifice.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/task_sacrifice.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/task_sacrifice.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/task_sacrifice.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -17176,9 +17165,9 @@ objs/task_scribe.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_scribe.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_scribe.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_scribe.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_scribe.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_scribe.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_scribe.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_scribe.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_scribe.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_scribe.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_scribe.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_scribe.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_scribe.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -17234,9 +17223,9 @@ objs/task_search.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_search.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_search.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_search.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_search.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_search.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_search.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_search.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_search.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_search.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_search.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_search.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_search.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -17293,8 +17282,8 @@ objs/task_seekwater.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_seekwater.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_seekwater.o: /usr/include/bits/stdio_lim.h
 objs/task_seekwater.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/task_seekwater.o: /usr/include/sys/types.h /usr/include/time.h
-objs/task_seekwater.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/task_seekwater.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/task_seekwater.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/task_seekwater.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/task_seekwater.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/task_seekwater.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -17351,9 +17340,9 @@ objs/task_sharpen.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_sharpen.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_sharpen.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_sharpen.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_sharpen.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_sharpen.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_sharpen.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_sharpen.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_sharpen.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_sharpen.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_sharpen.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_sharpen.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_sharpen.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -17410,9 +17399,9 @@ objs/task_sit.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_sit.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_sit.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_sit.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_sit.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_sit.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_sit.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_sit.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_sit.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_sit.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_sit.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_sit.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_sit.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -17462,9 +17451,9 @@ objs/task_skin.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_skin.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_skin.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_skin.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_skin.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_skin.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_skin.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_skin.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_skin.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_skin.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_skin.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_skin.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_skin.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -17516,9 +17505,9 @@ objs/task_sleep.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_sleep.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_sleep.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_sleep.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_sleep.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_sleep.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_sleep.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_sleep.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_sleep.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_sleep.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_sleep.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_sleep.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_sleep.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -17572,9 +17561,9 @@ objs/task_smythe.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_smythe.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_smythe.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_smythe.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_smythe.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_smythe.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_smythe.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_smythe.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_smythe.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_smythe.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_smythe.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_smythe.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_smythe.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -17631,8 +17620,8 @@ objs/task_spell_friends.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_spell_friends.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_spell_friends.o: /usr/include/bits/stdio_lim.h
 objs/task_spell_friends.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/task_spell_friends.o: /usr/include/sys/types.h /usr/include/time.h
-objs/task_spell_friends.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/task_spell_friends.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/task_spell_friends.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/task_spell_friends.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/task_spell_friends.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/task_spell_friends.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -17694,8 +17683,8 @@ objs/task_stavecharge.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_stavecharge.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_stavecharge.o: /usr/include/bits/stdio_lim.h
 objs/task_stavecharge.o: /usr/include/g++-3/cstdlib /usr/include/stdlib.h
-objs/task_stavecharge.o: /usr/include/sys/types.h /usr/include/time.h
-objs/task_stavecharge.o: /usr/include/alloca.h /usr/include/g++-3/ctime
+objs/task_stavecharge.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/task_stavecharge.o: /usr/include/bits/time.h /usr/include/sys/types.h
 objs/task_stavecharge.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/task_stavecharge.o: /usr/include/endian.h /usr/include/bits/endian.h
 objs/task_stavecharge.o: /usr/include/g++-3/cassert /usr/include/assert.h
@@ -17754,9 +17743,9 @@ objs/task_track.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_track.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_track.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_track.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_track.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_track.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_track.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_track.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_track.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_track.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_track.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_track.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_track.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -17812,9 +17801,9 @@ objs/task_trance_of_blades.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_trance_of_blades.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_trance_of_blades.o: /usr/include/bits/stdio_lim.h
 objs/task_trance_of_blades.o: /usr/include/g++-3/cstdlib
-objs/task_trance_of_blades.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_trance_of_blades.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_trance_of_blades.o: /usr/include/g++-3/ctime
+objs/task_trance_of_blades.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_trance_of_blades.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_trance_of_blades.o: /usr/include/sys/types.h
 objs/task_trance_of_blades.o: /usr/include/g++-3/cctype /usr/include/ctype.h
 objs/task_trance_of_blades.o: /usr/include/endian.h
 objs/task_trance_of_blades.o: /usr/include/bits/endian.h
@@ -17879,9 +17868,9 @@ objs/task_trap.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_trap.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_trap.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_trap.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_trap.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_trap.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_trap.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_trap.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_trap.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_trap.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_trap.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_trap.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_trap.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -17933,9 +17922,9 @@ objs/task_whittle.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/task_whittle.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/task_whittle.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/task_whittle.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/task_whittle.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/task_whittle.o: /usr/include/time.h /usr/include/alloca.h
-objs/task_whittle.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/task_whittle.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/task_whittle.o: /usr/include/time.h /usr/include/bits/time.h
+objs/task_whittle.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/task_whittle.o: /usr/include/ctype.h /usr/include/endian.h
 objs/task_whittle.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/task_whittle.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -17982,7 +17971,7 @@ objs/task_whittle.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
 objs/task_whittle.o: task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/task_whittle.o: obj2.h charfile.h being.h person.h monster.h account.h
 objs/task_whittle.o: extern.h handler.h rent.h spec_mobs.h spec_rooms.h
-objs/task_whittle.o: materials.h task_whittle.h
+objs/task_whittle.o: materials.h task_whittle.h obj_bow.h
 objs/thing.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/thing.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/thing.o: /usr/include/gnu/stubs.h
@@ -17992,9 +17981,9 @@ objs/thing.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/thing.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/thing.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/thing.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/thing.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/thing.o: /usr/include/time.h /usr/include/alloca.h
-objs/thing.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/thing.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/thing.o: /usr/include/time.h /usr/include/bits/time.h
+objs/thing.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/thing.o: /usr/include/ctype.h /usr/include/endian.h
 objs/thing.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/thing.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -18041,9 +18030,9 @@ objs/toggle.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/toggle.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/toggle.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/toggle.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/toggle.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/toggle.o: /usr/include/time.h /usr/include/alloca.h
-objs/toggle.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/toggle.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/toggle.o: /usr/include/time.h /usr/include/bits/time.h
+objs/toggle.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/toggle.o: /usr/include/ctype.h /usr/include/endian.h
 objs/toggle.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/toggle.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -18092,9 +18081,9 @@ objs/trap.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/trap.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/trap.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/trap.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/trap.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/trap.o: /usr/include/time.h /usr/include/alloca.h
-objs/trap.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/trap.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/trap.o: /usr/include/time.h /usr/include/bits/time.h
+objs/trap.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/trap.o: /usr/include/ctype.h /usr/include/endian.h
 objs/trap.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/trap.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -18141,9 +18130,9 @@ objs/utility.o: /usr/include/_G_config.h /usr/include/wchar.h
 objs/utility.o: /usr/include/bits/wchar.h /usr/include/gconv.h
 objs/utility.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/utility.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/utility.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/utility.o: /usr/include/time.h /usr/include/alloca.h
-objs/utility.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/utility.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/utility.o: /usr/include/time.h /usr/include/bits/time.h
+objs/utility.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/utility.o: /usr/include/ctype.h /usr/include/endian.h
 objs/utility.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/utility.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -18193,24 +18182,22 @@ objs/utility.o: /usr/include/bits/uio.h /usr/include/bits/socket.h
 objs/utility.o: /usr/include/bits/sockaddr.h /usr/include/asm/socket.h
 objs/utility.o: /usr/include/asm/sockios.h /usr/include/sys/wait.h
 objs/utility.o: /usr/include/sys/resource.h /usr/include/bits/resource.h
-objs/utility.o: /usr/include/bits/time.h /usr/include/bits/waitflags.h
-objs/utility.o: /usr/include/bits/waitstatus.h /usr/include/bits/siginfo.h
-objs/utility.o: /usr/include/bits/wordsize.h /usr/include/netinet/in.h
-objs/utility.o: /usr/include/stdint.h /usr/include/bits/in.h
+objs/utility.o: /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h
+objs/utility.o: /usr/include/netinet/in.h /usr/include/stdint.h
+objs/utility.o: /usr/include/bits/wordsize.h /usr/include/bits/in.h
 objs/utility.o: /usr/include/bits/byteswap.h /usr/include/netdb.h
-objs/utility.o: /usr/include/rpc/netdb.h /usr/include/bits/netdb.h
-objs/utility.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
-objs/utility.o: /usr/include/arpa/telnet.h /usr/include/sys/syscall.h
-objs/utility.o: /usr/include/asm/unistd.h /usr/include/bits/syscall.h
-objs/utility.o: /usr/include/sys/param.h /usr/include/linux/limits.h
-objs/utility.o: /usr/include/linux/param.h /usr/include/asm/param.h
-objs/utility.o: /usr/include/g++-3/cmath /usr/include/math.h
-objs/utility.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
-objs/utility.o: /usr/include/bits/mathcalls.h /usr/include/dirent.h
-objs/utility.o: /usr/include/bits/dirent.h /usr/include/bits/posix1_lim.h
-objs/utility.o: /usr/include/bits/local_lim.h /usr/include/sys/stat.h
-objs/utility.o: /usr/include/bits/stat.h shop.h combat.h statistics.h
-objs/utility.o: socket.h games.h game_crazyeights.h game_drawpoker.h mail.h
+objs/utility.o: /usr/include/bits/netdb.h /usr/include/fcntl.h
+objs/utility.o: /usr/include/bits/fcntl.h /usr/include/arpa/telnet.h
+objs/utility.o: /usr/include/sys/syscall.h /usr/include/asm/unistd.h
+objs/utility.o: /usr/include/bits/syscall.h /usr/include/sys/param.h
+objs/utility.o: /usr/include/linux/limits.h /usr/include/linux/param.h
+objs/utility.o: /usr/include/asm/param.h /usr/include/g++-3/cmath
+objs/utility.o: /usr/include/math.h /usr/include/bits/huge_val.h
+objs/utility.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+objs/utility.o: /usr/include/dirent.h /usr/include/bits/dirent.h
+objs/utility.o: /usr/include/sys/stat.h /usr/include/bits/stat.h shop.h
+objs/utility.o: combat.h statistics.h socket.h games.h game_crazyeights.h
+objs/utility.o: game_drawpoker.h mail.h
 objs/weather.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/weather.o: /usr/include/bits/types.h /usr/include/features.h
 objs/weather.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -18223,9 +18210,9 @@ objs/weather.o: /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/weather.o: /usr/include/libio.h
 objs/weather.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/weather.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/weather.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/weather.o: /usr/include/time.h /usr/include/alloca.h
-objs/weather.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/weather.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/weather.o: /usr/include/time.h /usr/include/bits/time.h
+objs/weather.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/weather.o: /usr/include/ctype.h /usr/include/endian.h
 objs/weather.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/weather.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -18278,9 +18265,9 @@ objs/wiz_data.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/wiz_data.o: /usr/include/gconv.h
 objs/wiz_data.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/wiz_data.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/wiz_data.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/wiz_data.o: /usr/include/time.h /usr/include/alloca.h
-objs/wiz_data.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/wiz_data.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/wiz_data.o: /usr/include/time.h /usr/include/bits/time.h
+objs/wiz_data.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/wiz_data.o: /usr/include/ctype.h /usr/include/endian.h
 objs/wiz_data.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/wiz_data.o: /usr/include/assert.h /usr/include/g++-3/cstring
@@ -18332,9 +18319,9 @@ objs/wiz_powers.o: /usr/include/wchar.h /usr/include/bits/wchar.h
 objs/wiz_powers.o: /usr/include/gconv.h
 objs/wiz_powers.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
 objs/wiz_powers.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/wiz_powers.o: /usr/include/stdlib.h /usr/include/sys/types.h
-objs/wiz_powers.o: /usr/include/time.h /usr/include/alloca.h
-objs/wiz_powers.o: /usr/include/g++-3/ctime /usr/include/g++-3/cctype
+objs/wiz_powers.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/wiz_powers.o: /usr/include/time.h /usr/include/bits/time.h
+objs/wiz_powers.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
 objs/wiz_powers.o: /usr/include/ctype.h /usr/include/endian.h
 objs/wiz_powers.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
 objs/wiz_powers.o: /usr/include/assert.h /usr/include/g++-3/cstring
