@@ -2652,6 +2652,7 @@ int boneStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     act("$p draws the life force of $n through it into $N.",
        TRUE, vict, o, ch, TO_NOTVICT);
     ch->addToHit(amount);
+    ch->addToLifeforce(10);
   }
 
   return TRUE;

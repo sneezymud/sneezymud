@@ -52,7 +52,7 @@ void TBeing::doScore()
     sprintf(Buf, "%s%.2f%% %spiety.\n\r",
             cyan(), getPiety(), norm());
   else if (hasClass(CLASS_SHAMAN))
-    sprintf(Buf, "%s%d%slifeforce.\n\r",
+    sprintf(Buf, "%s%d %slifeforce.\n\r",
             red(), getLifeforce(), norm());
   else
     sprintf(Buf, "%s%d%s/%s%d%s mana.\n\r",

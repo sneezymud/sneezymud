@@ -2977,10 +2977,10 @@ void TPerson::doStart()
   if (hasClass(CLASS_MAGIC_USER))
     personalize_object(NULL, this, 321, -1);
 
-  if (hasClass(CLASS_SHAMAN))
+  if (hasClass(CLASS_SHAMAN)) {
     personalize_object(NULL, this, 31317, -1);
     personalize_object(NULL, this, 31395, -1);
-
+  }
   if (hasClass(CLASS_DEIKHAN))
     personalize_object(NULL, this, 500, -1);
 
@@ -2994,7 +2994,7 @@ void TPerson::doStart()
   }
 
   if (hasClass(CLASS_SHAMAN)) {
-    sendTo("%s**%s\t*+*+*+*+*+*+*+*+*+ %sWARNING%s +*+*+*+*+*+*+*+*+*+*+*+\n\r", red(), norm(), red(), norm());
+    sendTo("\n\r%s**%s\a\t*+*+*+*+*+*+*+*+*+*+*+ %sWARNING%s +*+*+*+*+*+*+*+*+*+*+*+\n\r\n\r", red(), norm(), red(), norm());
     sendTo("%s**%s\tThe class you are about to play has been designed with\n\r", red(), norm());
     sendTo("%s**%s\tthe most advanced of players in mind. The class is not\n\r", red(), norm());
     sendTo("%s**%s\tan easy one to play in the least. Please be sure, if \n\r", red(), norm());
@@ -3007,6 +3007,7 @@ void TPerson::doStart()
     sendTo("%s**%s\tBe sure to read your %snewbie guide%s...\n\r", red(), norm(), green(), norm());
     sendTo("%s**%s\tIf you have serious problems, by all means,\n\r", red(), norm());
     sendTo("%s**%s\task a player with the %sNEWBIE HELPER%s flag.\n\r", red(), norm(), red(), norm());
+    sendTo("***********************************************************************\n\r\n\r");
   }
 
   setMaxHit(21);

@@ -1910,15 +1910,7 @@ int Descriptor::nanny(const char *arg)
               writeToQ("--> ");
               connected = CON_QCLASS;
             }
-	    writeToQ("Shaman are not yet a playable class.\n\r");
-	    writeToQ("At some point in time, Jesus may authorize your use of this\n\r");
-	    writeToQ("class as a play tester or whatever. If not consider this a \n\r");
-	    writeToQ("warning to go back and create something else.\n\r\n\r");
-	    writeToQ("Shaman are to be a very high maintainance class. You are\n\r");
-	    writeToQ("therefore warned now that this class may be unplayable by\n\r");
-	    writeToQ("even the average mudder. This class is meant for the most\n\r");
-	    writeToQ("experienced of players. Not paying attention to your Shaman\n\r");
-	    writeToQ("can and will result in multiple deaths. YOU HAVE BEEN WARNED!\n\r");
+	    writeToQ("Shaman are currently being play-tested.\n\r");
 	    // writeToQ("Shaman are not yet a playable class, sorry.\n\r");
             // writeToQ("--> ");
             // connected = CON_QCLASS;
@@ -4137,7 +4129,6 @@ bool Descriptor::canChooseClass(int Class, bool multi, bool triple)
 
   if (Class & CLASS_SHAMAN) {
     return TRUE;
-    // enabled for development - was FALSE
   }
 
   if (Class &CLASS_DEIKHAN) {
