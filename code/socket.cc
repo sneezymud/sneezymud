@@ -40,6 +40,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "obj_smoke.h"
 #include "obj_vehicle.h"
 #include "pathfinder.h"
+#include "stockmarket.h"
 
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown
@@ -471,6 +472,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
 }
 
 
+
 int TMainSocket::gameLoop()
 {
   Descriptor *point;
@@ -595,10 +597,11 @@ int TMainSocket::gameLoop()
     // interport communication
     mudRecvMessage();
 
-    // send out repo mobs
-    if(!wayslowpulse)
-      checkForRepo();
 
+    if(!wayslowpulse){
+      checkForRepo();
+      updateStockHistory();
+    }
 
     if (!pulse_tick) {
       // these are done per tick (15 mud minutes)
@@ -611,11 +614,15 @@ int TMainSocket::gameLoop()
 
       count=updateWholist();
       updateUsagelogs(count);
+
+      updateStocks();
     }
 
     if (!combat){
       perform_violence(pulse);
     }
+
+
 
     if (!pulse_mudhour) {
       // these are done per mud hour
