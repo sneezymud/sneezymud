@@ -455,8 +455,7 @@ void TMonster::mageComponentLoader(void)
       delete tcom;
       continue;
     }
-    // skip scribe comps
-    if (tcom->isComponentType(COMP_SCRIBE)) {
+    if (tcom->isComponentType(COMP_POTION)) {
       num = -1;
       delete tcom;
       continue;
@@ -557,6 +556,12 @@ void TMonster::rangerComponentLoader(void)
     }
     // skip scribe comps
     if (tcom->isComponentType(COMP_SCRIBE)) {
+      num = -1;
+      delete tcom;
+      continue;
+    }
+    // skip scribe comps
+    if (tcom->isComponentType(COMP_POTION)) {
       num = -1;
       delete tcom;
       continue;

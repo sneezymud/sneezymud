@@ -1,20 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: task_scribe.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
 //      SneezyMUD 4.0 - All rights reserved, SneezyMUD Coding Team
 //      "task.cc" - All functions related to tasks that keep mobs/PCs busy
 //
@@ -24,13 +9,16 @@
 
 int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
-  TScroll *scribe_obj = NULL, *p2;
+  TScroll *scroll_obj = NULL, *s2;
   TObj *obj;
   int w2;
   spellNumT which;
   int how_many;
   char buf[256];
   int knowledge = ch->getSkillValue(SKILL_SCRIBE);
+  int factor1 = (ch->getSkillValue(SKILL_SCRIBE) * 3);
+  int factor2 = (ch->getSkillValue(SKILL_SCRIBE) * 2);
+  int resulting = ((factor1 + factor2) / 15);
 
   if (ch->isLinkdead()) {
     ch->stopTask();
@@ -55,70 +43,75 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
       // init timeLeft to 0 and increment by 1 each iteration
       if (ch->task->timeLeft) {
         if (ch->task->timeLeft < (how_many * 2)) {
-          ch->sendTo("You continue scribing your scroll%s.\n\r",
+          ch->sendTo("You continue drafting your scroll%s.\n\r",
 		     (how_many == 1 ? "" : "s"));
+	  ch->addToMana(-resulting);
         } else {
-          // scribing has finished
-
-          // see if a scroll exists for this item type in database
           unsigned int i;
           for (i = 0; i < obj_index.size(); i++) {
             if (obj_index[i].itemtype == ITEM_SCROLL) {
               obj = read_object(i, REAL);
-              scribe_obj = dynamic_cast<TScroll *>(obj);
-              if ((scribe_obj->getSpell(0) == which) &&
-                  (scribe_obj->getSpell(1) == TYPE_UNDEFINED) &&
-                  (scribe_obj->getSpell(2) == TYPE_UNDEFINED)) {
+              scroll_obj = dynamic_cast<TScroll *>(obj);
+              if ((scroll_obj->getSpell(0) == which) &&
+                  (scroll_obj->getSpell(1) == TYPE_UNDEFINED) &&
+                  (scroll_obj->getSpell(2) == TYPE_UNDEFINED)) {
                 break;
               } else {
-                delete scribe_obj;
-                scribe_obj = NULL;
+                delete scroll_obj;
+                scroll_obj = NULL;
               }
             }
           }
-          if (scribe_obj == NULL) {
+          if (scroll_obj == NULL) {
             obj = read_object(OBJ_GENERIC_SCROLL, VIRTUAL);
-            scribe_obj = dynamic_cast<TScroll *>(obj);
-            if (!scribe_obj) {
-              vlogf(9, "Error creating generic scribe scroll.");
+            scroll_obj = dynamic_cast<TScroll *>(obj);
+            if (!scroll_obj) {
+              vlogf(LOG_BUG, "Error creating generic scroll for scribe skill.");
               ch->sendTo("Serious error, tell a god what you did.\n\r");
               return FALSE;
             }
-            scribe_obj->setSpell(0, which);
-            scribe_obj->setSpell(1, TYPE_UNDEFINED);
-            scribe_obj->setSpell(2, TYPE_UNDEFINED);
+            scroll_obj->setSpell(0,which);
+            scroll_obj->setSpell(1, TYPE_UNDEFINED);
+            scroll_obj->setSpell(2, TYPE_UNDEFINED);
           }
-          // we now have a valid scribe_obj with values 1,2,3 set
-
-          // set the level equal to brewer's level
-          scribe_obj->setMagicLevel(ch->getClassLevel(CLASS_MAGIC_USER));
+          scroll_obj->setMagicLevel(ch->getClassLevel(CLASS_MAGE));
 
           if (bSuccess(ch, knowledge, SKILL_SCRIBE)) {
-            // successful scribe, set learnedness to knowledge in the skill
-            ch->sendTo("You successfully create your scroll%s.\n\r",
+            ch->sendTo("You have successfully scribed your scroll%s.\n\r",
 		       (how_many == 1 ? "" : "s"));
-            scribe_obj->setMagicLearnedness( ch->getSkillValue(which) );
-
+	    if (ch->getSkillValue(which) > 0) {
+	      scroll_obj->setMagicLearnedness(ch->getSkillValue(which));
+	    } else {
+	      scroll_obj->setMagicLearnedness(ch->getSkillValue(SKILL_SCRIBE));
+	    }
           } else {
             // failed brew, set learnedness to 0
             if (how_many > 1)
-              ch->sendTo("Your scribing incompetence results in illegible scrolls.\n\r");
+              ch->sendTo("Your incompetence has resulted in unreadable scrolls.\n\r");
             else
-              ch->sendTo("Your scribing incompetence results in an illegible scroll.\n\r");
-            scribe_obj->setMagicLearnedness(0);
+              ch->sendTo("Your incompetence has resulted in unreadable scrolls.\n\r");
+            scroll_obj->setMagicLearnedness(0);
           }
 
-          *ch += *scribe_obj;
+          *ch += *scroll_obj;
 
           sprintf(buf, "You now have %d scroll%s of %s.\n\r",
 		  how_many, (how_many == 1 ? "" : "s"), discArray[which]->name);
           ch->sendTo(buf);
+	  vlogf(LOG_MISC, "%s has just scribed %d scroll%s of %s", ch->getName(), how_many, (how_many == 1 ? "" : "s"), discArray[which]->name);
           act("$n finishes scribing.", FALSE, ch, 0, 0, TO_ROOM);
 
           while ((--how_many) > 0) {
-            // use copy constructor to duplicate it
-            p2 = new TScroll(*scribe_obj);
-            *ch += *p2;
+            obj = read_object(scroll_obj->number, REAL);
+            s2 = dynamic_cast<TScroll *>(obj);
+            s2->setSpell(0, scroll_obj->getSpell(0));
+            s2->setSpell(1, scroll_obj->getSpell(1));
+            s2->setSpell(2, scroll_obj->getSpell(2));
+            s2->setMagicLevel(scroll_obj->getMagicLevel());
+            s2->setMagicLearnedness(scroll_obj->getMagicLearnedness());
+	    s2->addObjStat(ITEM_NORENT);
+	    s2->obj_flags.cost = 0;
+            *ch += *s2;
           }
           ch->stopTask();
           return FALSE;
@@ -134,7 +127,7 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
       break;
   case CMD_TASK_FIGHTING:
       ch->sendTo("You are unable to continue scribing while under attack!\n\r");
-      ch->sendTo("Your manuscript was lost!\n\r");
+      ch->sendTo("Your hand was jarred and the scribe was lost!\n\r");
       ch->stopTask();
       break;
   default:
@@ -144,3 +137,4 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
   }
   return TRUE;
 }
+

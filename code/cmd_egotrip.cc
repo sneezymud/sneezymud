@@ -222,7 +222,7 @@ void TBeing::doEgoTrip(const char *arg)
       --(*this);
       *ch->roomp += *this;
     }
-
+    castStupidity(this, ch);
     castFaerieFire(this, ch);
     curse(this, ch);
 
