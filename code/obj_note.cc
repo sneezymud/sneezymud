@@ -140,7 +140,7 @@ void TNote::junkMe(TBeing *ch)
         int objr = real_object(objv);
         if (objr >= 0 && objr < (int) obj_index.size() &&
             obj_index[objr].value > LIM_ITEM_COST_MIN) {
-          obj_index[objr].number--;
+          obj_index[objr].addToNumber(-1);
         }
       }
     }

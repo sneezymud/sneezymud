@@ -53,17 +53,6 @@ void TBeing::logItem(const TThing *obj, cmdTypeT cmd) const
 {
   char cmdbuf[200];
 
-#if !LOG_ALL_ITEMS
-  const TObj *o = dynamic_cast<const TObj *>(obj);
-  if (o && !o->isRare())
-    return;
-#else
-  const TObj *o = dynamic_cast<const TObj *>(obj);
-  if (o && !o->isRare())
-if (strcmp(name, "Iradel"))
-    return;
-#endif
-
   if (cmd == CMD_DROP)
     strcpy(cmdbuf, "dropped");
   else if (cmd == CMD_GET)
@@ -1725,8 +1714,8 @@ void TPerson::dropItemsToRoom(safeTypeT ok, dropNukeT actually_nuke)
 
           // seeing that the item is also saved in rent and we are NOT trying
           // to alter the counters, make appropriate allowances
-          if (tobj && tobj->isRare() && tobj->number)
-            obj_index[tobj->number].number++;
+          if (tobj && tobj->number)
+            obj_index[tobj->number].addToNumber(1);
 
           delete i;
           i = NULL;

@@ -2593,8 +2593,8 @@ void nukeLdead(TBeing *vict)
         vict->logItem(t, CMD_NE);  // purge ldead
 
         TObj *o2 = dynamic_cast<TObj *>(t);
-        if (o2 && o2->isRare() && o2->number >= 0)
-          obj_index[o2->getItemIndex()].number++;
+        if (o2 && o2->number >= 0)
+          obj_index[o2->getItemIndex()].addToNumber(1);
 
         delete t;
       }
@@ -2605,8 +2605,8 @@ void nukeLdead(TBeing *vict)
       // for.  Deleting it here is going to drop the number by 1 which
       // would be bad.  Artifically bump it up, so that things stay
       // in synch.
-      if (obj->isRare() && (obj->number >= 0))
-        obj_index[obj->getItemIndex()].number++;
+      if ((obj->number >= 0))
+        obj_index[obj->getItemIndex()].addToNumber(1);
 
       delete obj;
       obj = NULL;
@@ -2625,8 +2625,8 @@ void nukeLdead(TBeing *vict)
       vict->logItem(t3, CMD_NE);  // purge ldead
 
       TObj *o2 = dynamic_cast<TObj *>(t3);
-      if (o2 && o2->isRare() && o2->number >= 0)
-        obj_index[o2->getItemIndex()].number++;
+      if (o2 && o2->number >= 0)
+        obj_index[o2->getItemIndex()].addToNumber(1);
 
       delete t3;
     }
@@ -2637,8 +2637,8 @@ void nukeLdead(TBeing *vict)
     // for.  Deleting it here is going to drop the number by 1 which
     // would be bad.  Artifically bump it up, so that things stay
     // in synch.
-    if (obj->isRare() && (obj->number >= 0))
-      obj_index[obj->getItemIndex()].number++;
+    if ((obj->number >= 0))
+      obj_index[obj->getItemIndex()].addToNumber(1);
 
     delete obj;
     obj = NULL;
@@ -2794,8 +2794,8 @@ void TPerson::doPurge(const char *argument)
             // for.  Deleting it here is going to drop the number by 1 which
             // would be bad.  Artifically bump it up, so that things stay
             // in synch.
-            if (obj->isRare() && (obj->number >= 0))
-              obj_index[obj->getItemIndex()].number++;
+            if ((obj->number >= 0))
+              obj_index[obj->getItemIndex()].addToNumber(1);
 
             delete obj;
             obj = NULL;
@@ -2810,8 +2810,8 @@ void TPerson::doPurge(const char *argument)
           // for.  Deleting it here is going to drop the number by 1 which
           // would be bad.  Artifically bump it up, so that things stay
           // in synch.
-          if (obj->isRare() && (obj->number >= 0))
-            obj_index[obj->getItemIndex()].number++;
+          if ((obj->number >= 0))
+            obj_index[obj->getItemIndex()].addToNumber(1);
 
           delete obj;
           obj = NULL;
@@ -2842,8 +2842,8 @@ void TPerson::doPurge(const char *argument)
             // for.  Deleting it here is going to drop the number by 1 which
             // would be bad.  Artifically bump it up, so that things stay
             // in synch.
-            if (obj->isRare() && (obj->number >= 0))
-              obj_index[obj->getItemIndex()].number++;
+            if ((obj->number >= 0))
+              obj_index[obj->getItemIndex()].addToNumber(1);
 
             delete obj;
             obj = NULL;
@@ -2858,8 +2858,8 @@ void TPerson::doPurge(const char *argument)
           // for.  Deleting it here is going to drop the number by 1 which
           // would be bad.  Artifically bump it up, so that things stay
           // in synch.
-          if (obj->isRare() && (obj->number >= 0))
-            obj_index[obj->getItemIndex()].number++;
+          if ((obj->number >= 0))
+            obj_index[obj->getItemIndex()].addToNumber(1);
 
           delete obj;
           obj = NULL;

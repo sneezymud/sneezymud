@@ -386,7 +386,6 @@ class TObj : public TThing {
     bool isPaired() const;
     bool usedAsPaired() const;
     int objVnum() const;
-    bool isRare() const;
     int adjPrice(int *) const;
 
     virtual void setVolume(int vol) {

@@ -5036,8 +5036,8 @@ static int engraveCost(TObj *obj)
   int cost;
 
   cost = (int) (REGISTRATION_FEE * (obj->obj_flags.cost));
-  if (obj->isRare())
-    cost *= max(1,obj->obj_flags.cost/10000);
+
+  cost *= max(1,obj->obj_flags.cost/10000);
 
   return cost;
 }

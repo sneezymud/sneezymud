@@ -3187,7 +3187,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop)
     return;
   }
 
-  if (isRare() && obj_index[getItemIndex()].max_exist <= 10) {
+  if (obj_index[getItemIndex()].max_exist <= 10) {
     sprintf(tString, "%s Wow!  This is one of those limited items.", ch->getName());
     tKeeper->doTell(tString);
     sprintf(tString, "%s You should really think about auctioning it.", ch->getName());

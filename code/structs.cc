@@ -402,7 +402,7 @@ TObj::~TObj()
 
   if (number >= 0) {
     mud_assert(number < (signed int) obj_index.size(), "~TObj: range (%d) beyond obj_index size (%d).  obj=[%s]", number, obj_index.size(), name);
-    obj_index[number].number--;
+    obj_index[number].addToNumber(-1);
   }
   
   objCount--;

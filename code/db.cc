@@ -1530,7 +1530,7 @@ TObj *read_object(int nr, readFileTypeT type)
   obj->number = nr;
 
   if (nr >= 0)
-    obj_index[nr].number++;
+    obj_index[nr].addToNumber(1);
 
   obj->weightCorrection();
 
@@ -1601,7 +1601,8 @@ TObj *read_object(int nr, readFileTypeT type)
       obj->addToLight(obj->affected[i].modifier);
   }
 
-  obj_index[nr].number++;
+  vlogf(LOG_PEEL, "got here");
+  obj_index[nr].addToNumber(1);
   
   obj->weightCorrection();
 

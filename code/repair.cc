@@ -87,10 +87,8 @@ static int repair_time(const TObj *o)
   // adjust time accordingly - Russ                     
   //  iTime += wait_for_items_already_here() 
 
-  if (o->isRare()) {
-    iTime *= max(11, 10 + o->obj_flags.cost/10000);
-    iTime /= 10;
-  }
+  iTime *= max(11, 10 + o->obj_flags.cost/10000);
+  iTime /= 10;
  
   iTime /= 500;  // Kludge since it is taking too long
 #endif
@@ -550,8 +548,8 @@ void TObj::giveToRepair(TMonster *repair, TBeing *buyer, int *found)
   // we haven't really destroyed the item, repair still keeps
   // track of it.  ~TObj() will decrease number, so arbitrarily increment
   // it prior to deleting
-  if (number && isRare())
-    obj_index[number].number++;
+  if (number)
+    obj_index[number].addToNumber(1);
   buyer->doSave(SILENT_YES);
 
   // o should always get deleted following return here
@@ -835,7 +833,7 @@ void processRepairFile(const char *name)
   }
   if ((item.cost > LIM_ITEM_COST_MIN) && (item.item_number >= 0)) {
     vlogf(LOG_BUG, "     [%d] - %s", item.item_number, name);
-    obj_index[real_object(item.item_number)].number++;
+    obj_index[real_object(item.item_number)].addToNumber(1);
   }
   fclose(fp);
 }

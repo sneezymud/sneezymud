@@ -631,7 +631,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
     keeper->doTell(buf);
     return;
   }
-  if (isRare() && obj_index[getItemIndex()].max_exist <= 10) {
+  if (obj_index[getItemIndex()].max_exist <= 10) {
     sprintf(buf, "%s Wow!  This is one of those limited items.", ch->name);
     keeper->doTell(buf);
     sprintf(buf, "%s You should really think about auctioning it.", ch->name);
@@ -1120,7 +1120,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
 
   cost = sellPrice(shop_nr, chr, &discount);
 
-  if (isRare() && obj_index[getItemIndex()].max_exist <= 10) {
+  if (obj_index[getItemIndex()].max_exist <= 10) {
     sprintf(buf, "%s Wow!  This is one of those limited items.", ch->name);
     keeper->doTell(buf);
     sprintf(buf, "%s You should really think about auctioning it.", ch->name);

@@ -992,8 +992,7 @@ void TObj::makeScraps()
     act(buf, TRUE, ch, this, NULL, TO_ROOM);
     act(buf2, FALSE, ch, this, NULL, TO_CHAR, ANSI_RED);
 
-    if (isRare())
-      vlogf(LOG_COMBAT, "%s's %s just scrapped.", ch->getName(), getName());
+    vlogf(LOG_COMBAT, "%s's %s just scrapped.", ch->getName(), getName());
   } else {
     if ((parent && (tmp = parent->equippedBy)) || (tmp = parent))  {
       if (isMineral()) {

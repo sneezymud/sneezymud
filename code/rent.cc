@@ -596,10 +596,9 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
   // loaded in the game during this reboot. Since the limited item didn't
   // decrement the item-types count when it went to disk, there is no reason
   // to reincrement it in read_object. 
-
-  // current definition of isRare makes this correct
-  if (o->isRare() && (o->number >= 0))
-    obj_index[o->getItemIndex()].number--;
+  //// what the fuck? seriously? what the fuck? - peel
+  //  if ((o->number >= 0))
+  //    obj_index[o->getItemIndex()].addToNumber(-1);
 
 // old items should reflect current tiny file
 #if 0
@@ -713,8 +712,8 @@ static bool immortalityNukeCheck(TBeing *ch, TObj * new_obj, bool corpse)
 // noteLimited is increasing the counter, so skip this kludge bat 12/17/99
     // noteLimited didn't increment the counter for this item, so
     // we need to adjust number to make up for this delete
-    if (new_obj->isRare() && (new_obj->number >= 0))
-      obj_index[new_obj->number].number++;
+    if ((new_obj->number >= 0))
+      obj_index[new_obj->number].addToNumber(1);
 #endif
 
     delete new_obj;
@@ -754,6 +753,7 @@ static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE
           (*numread)++;
           if (ch)
             ch->logItem(new_obj, CMD_WEST);  // rent in
+	  obj_index[new_obj->number].addToNumber(-1);
 #if LOG_IRADEL
 if (ch && !strcmp(ch->name, "Iradel"))
 vlogf(LOG_SILENT, "IRADEL:        obj read %d", new_obj->objVnum());
@@ -796,6 +796,7 @@ vlogf(LOG_SILENT, "IRADEL:        obj read %d", new_obj->objVnum());
           (*numread)++;
           if (ch)
             ch->logItem(new_obj, CMD_WEST);  // rent in
+	  obj_index[new_obj->number].addToNumber(-1);
 #if LOG_IRADEL
 if (ch && !strcmp(ch->name, "Iradel"))
 vlogf(LOG_SILENT, "IRADEL:        obj read %d", new_obj->objVnum());
@@ -828,6 +829,7 @@ vlogf(LOG_SILENT, "IRADEL:        obj read %d", new_obj->objVnum());
         if ((new_obj = raw_read_item(fp, version))) {
           if (ch)
             ch->logItem(new_obj, CMD_WEST);  // rent in
+	  obj_index[new_obj->number].addToNumber(-1);
 #if LOG_IRADEL
 if (ch && !strcmp(ch->name, "Iradel"))
 vlogf(LOG_SILENT, "IRADEL:        obj read %d", new_obj->objVnum());
@@ -958,9 +960,8 @@ vlogf(LOG_SILENT, "IRADEL: slot write %d", slot);
       vlogf(LOG_BUG, "Error in table doing save");
     }
     ch->logItem(o, CMD_RENT);
-    // Make sure that limited items don't get decremented in delete
-    if (o->isRare() && (o->number >= 0))
-      obj_index[o->number].number++;
+    if (o->number >= 0)
+      obj_index[o->number].addToNumber(1);
 
     delete o;
     o = NULL;
@@ -2945,7 +2946,7 @@ bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool im
         }
 #endif
         vlogf(LOG_MISC, "     [%d] - %s%s", item.item_number, tag, immortal ? "  (immortal)" : "");
-        obj_index[robj].number++;
+        obj_index[robj].addToNumber(1);
       } else {
         // anything in here is a generic note
         if (*ad) {
@@ -2958,7 +2959,7 @@ bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool im
             vlogf(LOG_MISC, "     [repair ticket %d] - %s (item vnum %d)",
                  iNum, tag, item.value[2]);
             robj = real_object(item.value[2]);
-            obj_index[robj].number++;
+            obj_index[robj].addToNumber(1);
 #endif
           } else {
             // a note/board msg, mail, etc
@@ -3432,7 +3433,7 @@ float old_ac_lev = mob->getACLevel();
           // count the item
           // we want to add 1 to count the item, and another 1 because
           // the delete will reduce the number, add an additional one
-          if (new_obj->isRare() && (new_obj->number >= 0)) {
+          if ((new_obj->number >= 0)) {
             obj_index[new_obj->getItemIndex()].number += 2;
             vlogf(LOG_PIO, "     [%d] - in %s's follower rent", 
                      new_obj->objVnum(), arg);
@@ -3465,7 +3466,7 @@ float old_ac_lev = mob->getACLevel();
           // count the item
           // we want to add 1 to count the item, and another 1 because
           // the delete will reduce the number, add an additional one
-          if (new_obj->isRare() && (new_obj->number >= 0)) {
+          if ((new_obj->number >= 0)) {
             obj_index[new_obj->getItemIndex()].number += 2;
             vlogf(LOG_PIO, "     [%d] - in %s's follower rent", 
                      new_obj->objVnum(), arg);
@@ -3988,8 +3989,8 @@ bool TBeing::saveFollowers(bool rent_time)
           vlogf(LOG_SILENT, "%s's %s renting: (%s : %d)", getName(), mob->getName(), obj->getName(), obj->objVnum());
 
           // we are saving the item to rent, so keep up with the number
-          if (obj->isRare() && (obj->number >= 0))
-            obj_index[obj->getItemIndex()].number++;
+	  //          if ((obj->number >= 0))
+	  //            obj_index[obj->getItemIndex()].addToNumber(1);
 
           delete obj;
           char_eq[mapped_slot] = NULL;
@@ -4020,8 +4021,8 @@ bool TBeing::saveFollowers(bool rent_time)
         vlogf(LOG_SILENT, "%s's %s renting: (%s : %d)", getName(), mob->getName(), obj->getName(), obj->objVnum());
 
         // we are saving the item to rent, so keep up with the number
-        if (obj->isRare() && (obj->number >= 0))
-          obj_index[obj->getItemIndex()].number++;
+	//        if ((obj->number >= 0))
+	//          obj_index[obj->getItemIndex()].addToNumber(1);
 
         delete obj;
       }

@@ -21,12 +21,6 @@ int TObj::objVnum() const
   return ((number < 0) ? -1 : obj_index[number].virt);
 }
 
-bool TObj::isRare() const
-{
-//  return (obj_flags.cost > LIM_ITEM_COST_MIN);
-  return (number < 0 ? false : obj_index[number].value > LIM_ITEM_COST_MIN);
-}
-
 bool TObj::isObjStat(unsigned int num) const
 {
   return (obj_flags.extra_flags & num) != 0;
