@@ -6033,11 +6033,15 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	  myself->doAction(johnname, CMD_MASSAGE);
 	  break;
       }
-
-      if(::number(0,1))
+      
+      if(job && job->john && IS_SET(job->john->specials.act, ACT_SENTINEL)){
 	job->state=STATE_REJECT2;
-      else
-	job->state=STATE_ACCEPT;
+      } else {
+	if(::number(0,1))
+	  job->state=STATE_REJECT2;
+	else
+	  job->state=STATE_ACCEPT;
+      }
       break;
     case STATE_REJECT2:
       switch(::number(0,3)){
