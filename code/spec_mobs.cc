@@ -7822,22 +7822,60 @@ int shippingOfficial(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
 int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 {
   TBeing *tb;
+  TMonster *tm;
   vector <TBeing *> roompeople;
+  vector <TObj *> roomobj;
+  TObj *o;
+  affectedData af;
 
-  // on pet, purr, nuzzle
-  // random, rub against leg, nuzzle
-  // if someone is sitting on something, join them and nuzzle/lap etc
-  // if other cats, play
-  // if other cat leaves, chase
-
-  if(!me || !me->roomp || cmd!=CMD_GENERIC_PULSE)
+  if(!me || !me->roomp || (me->getPosition() <= POSITION_SLEEPING) ||
+     (cmd!=CMD_GENERIC_PULSE && cmd!=CMD_PET))
     return FALSE;
+
+  if(cmd==CMD_PET){
+    for(TThing *t=ch->roomp->getStuff();t;t=t->nextThing){
+      if (((tb = get_char_room_vis(ch, arg, NULL, EXACT_YES)) ||
+	   (tb = get_char_room_vis(ch, arg))) && tb==me){
+	ch->doAction(arg, CMD_PET);
+	switch(::number(0,4)){
+	  case 0:
+	    me->doAction(add_bars(ch->name), CMD_PURR);
+	    break;
+	  case 1:
+	    me->doAction(add_bars(ch->name), CMD_DROOL);
+	    break;
+	  case 2:
+	    me->doAction(add_bars(ch->name), CMD_LICK);
+	    break;
+	  case 3:
+	    me->doAction(add_bars(ch->name), CMD_STRETCH);
+	    break;	    
+	  case 4:
+	    me->doAction(add_bars(ch->name), CMD_NUZZLE);
+	    break;	    
+	}	    
+	return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
 
   if(cmd==CMD_GENERIC_PULSE){
     if(::number(0,49))
       return FALSE;
+    
+    // LOOK FOR MICE
+    for(TThing *t=me->roomp->getStuff();t;t=t->nextThing){
+      if((tm=dynamic_cast<TMonster *>(t)) && tm->getRace()==RACE_RODENT &&
+	 tm->getRealLevel() < me->getRealLevel()){
+	me->doAction(add_bars(tm->name), CMD_GROWL);
+	return tm->takeFirstHit(*me);
+      }
+    }
 
-    switch(::number(0,8)){
+    // no mice, do some other lower priority stuff.
+    switch(::number(0,10)){
       case 0:
 	// clean
 	act("$n begins cleaning $mself.", TRUE, me, NULL, NULL, TO_ROOM);
@@ -7875,9 +7913,33 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	break;
       case 4:
 	// sleep
+	af.type = AFFECT_DUMMY;
+	af.level = 1;
+	af.duration = 15;
+	af.modifier = 0;
+	af.location = APPLY_NONE;
+	af.bitvector = AFF_SLEEP;
+	me->affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
 	me->doSleep("");
 	break;
-      case 5: case 6: case 7: case 8:
+      case 5: 
+	me->doAction("", CMD_STRETCH);
+	break;
+      case 6:
+	for(TThing *t=me->roomp->getStuff();t;t=t->nextThing){
+	  if((o=dynamic_cast<TObj *>(t))){
+	    roomobj.push_back(o);
+	  }
+	}
+	
+	if(roomobj.size()>0){
+	  o=roomobj[::number(0,roomobj.size()-1)];
+	  act("$n sharpens $s claws on $p.",
+	      TRUE, me, o, NULL, TO_ROOM);
+	}
+	
+	break;
+      case 7: case 8: case 9: case 10:
 	// play with other cats
         for(TThing *t=me->roomp->getStuff();t;t=t->nextThing){
           if((tb=dynamic_cast<TBeing *>(t)) && 
