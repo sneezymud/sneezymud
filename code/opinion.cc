@@ -61,6 +61,9 @@ bool TMonster::addHated(TBeing *hatee)
     if (Hates(hatee, NULL))	/* hate someone only once - SG */
       return FALSE;
 
+    if (!awake())               /* don't add to the list if mob is !awake */
+      return FALSE;
+
     charList *list = new charList();
     list->name = mud_str_dup(hatee->name);
     list->next = hates.clist;
@@ -160,9 +163,6 @@ bool TMonster::Hates(const TBeing *v, const char *n) const
   if (namebuf.empty())
     return FALSE;
  
-  if (!awake())
-    return FALSE;
-
   if (this == v)
     return FALSE;
 
