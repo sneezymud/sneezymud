@@ -94,8 +94,8 @@ endif
 # **** the STL map header file has a non-inlinable function or two
 # CFLAGS +=-Winline           # looks for non-inlineable inlines
 # postgresql header files
-CFLAGS +=-I/usr/include/postgresql
-CFLAGS +=-DUSE_SQL=0
+#CFLAGS +=-I/usr/include/postgresql
+CFLAGS +=-DUSE_SQL=1
 
 ###############################################################################
 #                                   LDFLAGS                                   #
