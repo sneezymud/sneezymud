@@ -1622,7 +1622,8 @@ void TBeing::addToMoney(int money, moneyTypeT type)
 
           FactionInfo[getFaction()].addToMoney(amount);
 	  TCorporation corp(FactionInfo[getFaction()].corp_id);
-	  corp.corpLog(getName(), "tithe", -amount);
+	  if(amount!=0)
+	    corp.corpLog(getName(), "tithe", -amount);
 
           gold_statistics[GOLD_TITHE][(lev-1)] += amount;
           gold_positive[GOLD_TITHE][(lev-1)] += max(amount, 0);
