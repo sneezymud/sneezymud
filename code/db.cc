@@ -472,7 +472,7 @@ void bootWorld(void)
       for (z = 0; rp->number>zone_table[z].top && z<zone_table.size(); z++);
 
       if (z >= zone_table.size()) {
-	vlogf(LOG_EDIT, fmt("Room %d is outside of any zone.\n") %  number);
+	vlogf(LOG_EDIT, fmt("Room %d is outside of any zone.\n") % rp->number);
 	exit(0);
       }
       rp->setZoneNum(z);
