@@ -2251,27 +2251,6 @@ int goofersDust(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
   return FALSE;
 }
 
-int learningPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
-{
-  int rc;
-  if (genericPotion(ch, me, cmd, arg, rc))
-    return rc;
-
-  act("$n imbibes $p.", TRUE, ch, me, 0, TO_ROOM);
-  act("You imbibe $p.", TRUE, ch, me, 0, TO_CHAR);
-
-
-  for (classIndT Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
-    if (ch->hasClass(1<<Class)){
-      ch->addPracs(1, Class);
-      break;
-    }
-  }
-
-  ch->sendTo("You feel ready to learn more.\n\r");
-
-  return DELETE_THIS;
-}
 
 int mysteryPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 {
@@ -2365,90 +2344,6 @@ int mysteryPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
   return DELETE_THIS;
 }
 
-int youthPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
-{
-  int rc;
-  if (genericPotion(ch, me, cmd, arg, rc))
-    return rc;
-
-  act("$n imbibes $p.", TRUE, ch, me, 0, TO_ROOM);
-  act("You imbibe $p.", TRUE, ch, me, 0, TO_CHAR);
-
-  // every 2-weeks adds a year just from time
-  // add on deaths.  Folks probably are not getting potions very often
-  // so we can probably have a fairly high number on this
-  ch->age_mod -= 7;
-
-  ch->sendTo("You feel much younger.\n\r");
-
-  return DELETE_THIS;
-}
-
-int statPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
-{
-  int rc;
-
-  if (genericPotion(ch, me, cmd, arg, rc))
-    return rc;
-
-  TPotion *pot = dynamic_cast<TPotion *>(me);
-  if (!pot)
-    return true;
-
-  act("$n imbibes $p.", TRUE, ch, pot, 0, TO_ROOM);
-  act("You imbibe $p.", TRUE, ch, pot, 0, TO_CHAR);
-
-  statTypeT whichStat = statTypeT(number(0, MAX_STATS - 1));
-
-  ch->addToStat(STAT_CHOSEN, whichStat, 1);
-
-  switch (whichStat) {
-    case STAT_STR:
-      ch->sendTo("You feel stronger.\n\r");
-      break;
-    case STAT_BRA:
-      ch->sendTo("You feel brawnier.\n\r");
-      break;
-    case STAT_AGI:
-      ch->sendTo("You feel more agile.\n\r");
-      break;
-    case STAT_CON:
-      ch->sendTo("You feel more hardy.\n\r");
-      break;
-    case STAT_DEX:
-      ch->sendTo("You feel more dexterous.\n\r");
-      break;
-    case STAT_INT:
-      ch->sendTo("You feel smarter.\n\r");
-      break;
-    case STAT_WIS:
-      ch->sendTo("You feel more wise.\n\r");
-      break;
-    case STAT_FOC:
-      ch->sendTo("You feel more focused.\n\r");
-      break;
-    case STAT_KAR:
-      ch->sendTo("You feel luckier.\n\r");
-      break;
-    case STAT_CHA:
-      ch->sendTo("You feel more charismatic.\n\r");
-      break;
-    case STAT_SPE:
-      ch->sendTo("You feel faster.\n\r");
-      break;
-    case STAT_PER:
-      ch->sendTo("You feel more perceptive.\n\r");
-      break;
-    case STAT_LUC:
-    case STAT_EXT:
-    case MAX_STATS:
-      ch->age_mod -= 1;
-      ch->sendTo("You feel younger.\n\r");
-      break;
-  }
-
-  return DELETE_THIS;
-}
 
 int bogusObjProc(TBeing *, cmdTypeT, const char *, TObj *me, TObj *)
 {
@@ -7358,7 +7253,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Glowing Cutlass", glowCutlass},
   {TRUE, "poison whip", poisonWhip},
   {TRUE, "magic gills", magicGills},
-  {FALSE, "potion of youth", youthPotion},      // 20
+  {FALSE, "BOGUS", bogusObjProc},      // 20
   {FALSE, "rainbow bridge", rainbowBridge},
   {FALSE, "Hunting Dagger", daggerOfHunting}, 
   {TRUE, "flame weapon", flameWeapon}, 
@@ -7384,7 +7279,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "poison sap dagger", poisonSap},  
   {FALSE, "blinder weapon", weaponBlinder},
   {FALSE, "mana drain weapon", weaponManaDrainer}, // 45
-  {FALSE, "potion of characteristics", statPotion},  
+  {FALSE, "BOGUS", bogusObjProc},  
   {FALSE, "daySword", daySword},  
   {FALSE, "nightBlade", nightBlade},  
   {TRUE, "Lightning Rod", weaponLightningRod},
@@ -7460,7 +7355,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "spawning object: open", mobSpawnOpen},
   {FALSE, "Energy Shield: generator", energyShieldGenerator}, //120
   {FALSE, "Energy Shield: shield", energyShield},
-  {FALSE, "potion of learning", learningPotion},
+  {FALSE, "BOGUS", bogusObjProc},
   {FALSE, "mystery potion", mysteryPotion},
   {FALSE, "BOGUS", bogusObjProc},
   {TRUE, "Fireball Weapon", fireballWeapon}, //125

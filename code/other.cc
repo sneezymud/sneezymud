@@ -2307,6 +2307,7 @@ int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
   int rc=0;
   int level=max(30, amt*6), learn=max(100, amt*20);
   affectedData aff;
+  statTypeT whichStat;
 
   switch(liq){
     case LIQ_POT_CURE_POISON:
@@ -2573,6 +2574,66 @@ int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
 
       while(amt--)
 	ch->age_mod -= ::number(1, 2);
+      break;
+    case LIQ_POT_STAT:
+      whichStat = statTypeT(number(0, MAX_STATS - 1));
+      ch->addToStat(STAT_CHOSEN, whichStat, amt);
+      
+      switch (whichStat) {
+	case STAT_STR:
+	  ch->sendTo("You feel stronger.\n\r");
+	  break;
+	case STAT_BRA:
+	  ch->sendTo("You feel brawnier.\n\r");
+	  break;
+	case STAT_AGI:
+	  ch->sendTo("You feel more agile.\n\r");
+	  break;
+	case STAT_CON:
+	  ch->sendTo("You feel more hardy.\n\r");
+	  break;
+	case STAT_DEX:
+	  ch->sendTo("You feel more dexterous.\n\r");
+	  break;
+	case STAT_INT:
+	  ch->sendTo("You feel smarter.\n\r");
+	  break;
+	case STAT_WIS:
+	  ch->sendTo("You feel more wise.\n\r");
+	  break;
+	case STAT_FOC:
+	  ch->sendTo("You feel more focused.\n\r");
+	  break;
+	case STAT_KAR:
+	  ch->sendTo("You feel luckier.\n\r");
+	  break;
+	case STAT_CHA:
+	  ch->sendTo("You feel more charismatic.\n\r");
+	  break;
+	case STAT_SPE:
+	  ch->sendTo("You feel faster.\n\r");
+	  break;
+	case STAT_PER:
+	  ch->sendTo("You feel more perceptive.\n\r");
+	  break;
+	case STAT_LUC:
+	case STAT_EXT:
+	case MAX_STATS:
+	  ch->age_mod -= 1;
+	  ch->sendTo("You feel younger.\n\r");
+	  break;
+      }
+      break;
+    case LIQ_POT_LEARNING:
+      for (classIndT Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
+	if (ch->hasClass(1<<Class)){
+	  ch->addPracs(amt, Class);
+	  break;
+	}
+      }
+      
+      ch->sendTo("You feel ready to learn more.\n\r");
+      break;
     default:
       rc=0;
   }
