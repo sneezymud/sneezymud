@@ -1262,7 +1262,7 @@ void TPerson::doEdit(const char *arg)
 	}
 
 
-	if ((line.length() - 1) + (word.length() - 1) > 80) {// word is too long, end line and start on next
+	if ((line.length() + 1) + (word.length() + 1) >= 80) {// word is too long, end line and start on next
 	  line += "\n\r";
 	  newDescr += line;
 	  line = word;

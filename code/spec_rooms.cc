@@ -1968,6 +1968,47 @@ int boulderRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   }
 }
 
+int collapsingTunnel(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
+{
+
+  if(cmd!=CMD_ROOM_ENTERED)
+    return FALSE;
+
+  act("<k>Rubble<1> collapses <k>behind you, blocking the way you came.<1>", FALSE, ch, NULL, NULL, TO_CHAR);
+  int dam = ::number(21,40);
+  if(::number(0,100) > ch->plotStat(STAT_CURRENT, STAT_DEX, 0, 50, 100)) {
+    act("<k>You're hit by the falling rocks!  Ouch!<1>", FALSE, ch, NULL, NULL, TO_CHAR);
+  } else {
+    act("<k>You manage to dodge most of the falling rocks!  Whew.<1>", FALSE, ch, NULL, NULL, TO_CHAR);
+    dam -= 20;
+  }
+  
+  TRoom *rp2 = NULL;
+
+
+
+  if(ch->in_room == 24643) {
+
+    rp2 = real_roomp(24674);
+
+  }
+  if(ch->in_room == 24674) {
+
+    rp2 = real_roomp(24643);
+
+  }
+  *rp += *ch;
+
+  if (ch->reconcileDamage(ch, dam, TYPE_CRUSH) == -1) {
+    delete ch;
+    ch = NULL;
+  }
+
+
+  return TRUE;
+}
+
+
 extern int healing_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
 extern int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
 extern int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
@@ -2329,6 +2370,8 @@ void assign_rooms(void)
     {23598, sleepTagRoom},
 #endif
     {23599, sleepTagControl},
+    {24643, collapsingTunnel},
+    {24674, collapsingTunnel},
     {27103, SecretDoors},
     {27104, SecretDoors},
     {27106, SecretDoors},
