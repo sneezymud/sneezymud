@@ -41,6 +41,12 @@ production code, for compiling.
 
 ---
 
+The lib directory is linked to /mud/code/lib.  You don't have your own
+copy of lib, so be aware that cvs doesn't have any affect on those
+files.
+
+---
+
 CVS has many other options and abilities.  Try 'cvs help' for more
 details.  Also: http://cvshome.org/docs/manual/cvs.html
 
