@@ -7,6 +7,10 @@
 
 #include "stdsneezy.h"
 
+extern bool affectShouldApply(const TObj *obj, wearSlotT pos);
+
+
+
 playerData::playerData() :
   longDescr(NULL),
   sex(SEX_NEUTER),
@@ -1219,14 +1223,47 @@ void TBeing::setMult(double mult)
 
 sh_int TBeing::getArmor() const
 {
-  // we use to D&D this and make it +1000 to -1000
-  // probably a bad idea given the balance considerations
-  return points.armor;
+  sh_int armor=1000;
+  affectedData *af;
+  TObj *to;
+  int i;
+  const TMonster *tm;
+
+  // eq
+  for(wearSlotT wearIndex = MIN_WEAR; wearIndex < MAX_WEAR; wearIndex++){
+    if((to=dynamic_cast<TObj *>(equipment[wearIndex])) &&
+       affectShouldApply(to, wearIndex)){
+      for(i=0;i<MAX_OBJ_AFFECT;++i){
+	if(to->affected[i].location == APPLY_ARMOR)
+	  armor+=to->affected[i].modifier;
+      }
+    }
+  }
+    
+  // spell affects
+  for (af = affected; af; af = af->next) {
+    if(af->location == APPLY_ARMOR)
+      armor+=af->modifier;
+  }
+
+  // mobs have a different base AC
+  if((tm=dynamic_cast<const TMonster *>(this))){
+    sh_int num = 600 - ((sh_int) (20 * tm->getACLevel()));
+
+    // mobs get either their default AC or their normal calculated AC,
+    // whichever is better.
+    armor=min(num, armor);
+  }
+
+  return armor;
 }
 
 void TBeing::setArmor(sh_int armor)
 {
-  points.armor = armor;
+  vlogf(LOG_PEEL, "Something called setArmor(%i) on %s",
+	armor, getName());
+
+  //  points.armor = armor;
 }
 
 bool TBeing::isAffected(unsigned long bv) const

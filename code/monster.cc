@@ -407,8 +407,8 @@ void TMonster::setACFromACLevel()
 {
   // this is based on the balance doctrine
   // AC should be 600 - 20*level
-  sh_int num = (sh_int) (20 * getACLevel());
-  setArmor(600 - num);
+  //  sh_int num = (sh_int) (20 * getACLevel());
+  //  setArmor(600 - num);
 }
 
 void TMonster::setHPFromHPLevel()

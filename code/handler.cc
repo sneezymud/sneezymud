@@ -472,7 +472,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, unsigned long bit
         setMove(moveLimit());
       return;
     case APPLY_ARMOR:
-      points.armor += mod;
+      //      points.armor += mod;
       return;
     case APPLY_SPELL_HITROLL:
       // we don't do a *10 here, assume anywhere its set is setting properly
@@ -504,7 +504,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, unsigned long bit
   forceCrash("how'd this happen");
 }
 
-static bool affectShouldApply(const TObj *obj, wearSlotT pos)
+bool affectShouldApply(const TObj *obj, wearSlotT pos)
 {
   // this second check is to see if they are holding an item normally worn
   // elsewhere.  While we want to allow them to hold it, its effects should

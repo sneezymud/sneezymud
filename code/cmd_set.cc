@@ -830,9 +830,10 @@ mob->getName());
     mob->setDamroll(parm);
     sendTo(COLOR_MOBS, "You set %s's +todam to %d.\n\r", mob->getName(), mob->getDamroll());
   } else if (is_abbrev(field, "ac")) {
-    sscanf(parmstr, "%d", &parm);
-    mob->setArmor(parm);
-    sendTo(COLOR_MOBS, "You set %s's armor to %d.\n\r", mob->getName(), mob->getArmor());
+    //    sscanf(parmstr, "%d", &parm);
+    //    mob->setArmor(parm);
+    //    sendTo(COLOR_MOBS, "You set %s's armor to %d.\n\r", mob->getName(), mob->getArmor());
+    sendTo(COLOR_MOBS, "Armor is dynamic now, you can't set it.\n\r");
   } else if (is_abbrev(field, "bank")) {
     sscanf(parmstr, "%d", &parm);
     mob->setBank(parm);

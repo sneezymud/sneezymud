@@ -240,7 +240,7 @@ void TPerson::resetChar()
   // Now that bad logins have been sent, reset it to 0 
   desc->bad_login = 0;
 
-  setArmor(1000);  // need to set this to 100 or we have double spell affect
+  //  setArmor(1000);  // need to set this to 100 or we have double spell affect
 
   // racial stuff 
   setRacialStuff();
@@ -435,7 +435,7 @@ void TPerson::storeToSt(charFile *st)
   st->spellHitroll = points.spellHitroll;
   st->hitroll = points.hitroll;
   st->damroll = points.damroll;
-  st->armor = points.armor;
+  //  st->armor = points.armor;
 // end storing pointsData
 #if FACTIONS_IN_USE
   st->f_percent = getPerc();
@@ -662,7 +662,7 @@ void TPerson::loadFromSt(charFile *st)
    points.spellHitroll = st->spellHitroll;
    points.hitroll = st->hitroll;
    points.damroll = st->damroll;
-   points.armor = st->armor;
+   //   points.armor = st->armor;
   // end loading pointData info
   if (desc) {
     desc->bad_login = st->bad_login;
@@ -716,7 +716,7 @@ void TPerson::loadFromSt(charFile *st)
   specials.act = 0;
   setCarriedWeight(0.0);
   setCarriedVolume(0);
-  setArmor(1000);
+  //  setArmor(1000);
   setSpellHitroll(0);
   setHitroll(0);
   setDamroll(0);

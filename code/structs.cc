@@ -258,7 +258,7 @@ TBeing::~TBeing()
         vlogf(LOG_BUG, "%s (being) deleted without removal from character_list connected = (%d)", getName(), desc->connected);
     }
   }
-  setArmor(1000);
+  //  setArmor(1000);
 
   // OK, technically, this is all Descriptor maintained stuff...
   // but, has to be here for this situation:
