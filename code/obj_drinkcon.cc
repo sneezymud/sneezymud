@@ -235,7 +235,7 @@ void assign_drink_types()
   DrinkInfo[LIQ_POT_MULTI9]           = new drinkInfo(-1, -1, 1, true, "<o>rancid brown<1>", "<o>rancid brown potion<1>", 2891);
   DrinkInfo[LIQ_POT_MULTI10]           = new drinkInfo(-1, -1, 1, true, "<k>silvery grey<1>", "<k>silvery grey potion<1>", 1900);
   DrinkInfo[LIQ_POT_MULTI11]           = new drinkInfo(-1, -1, 1, true, "<r>ruby<1>", "<r>ruby potion<1>", 2721);
-  DrinkInfo[LIQ_POT_YOUTH]             = new drinkInfo(-1, -1, 1, true, "<p>purple<1>", "<p>youth potion<1>", 20000);
+  DrinkInfo[LIQ_POT_YOUTH]             = new drinkInfo(-1, -1, 1, true, "<o>glowing<1> <p>purple<1>", "<p>youth potion<1>", 20000);
 }
 
 
