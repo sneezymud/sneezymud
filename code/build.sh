@@ -1,11 +1,13 @@
 #!/usr/local/bin/bash
 
+whoami=`whoami`
+
 if [ "$1" = "" ]
 then
   echo "Usage: $0 <start|stop>";
 elif [ "$1" = "start" ]
 then
-  pid=`pgrep -U peel -f "gmake"`
+  pid=`pgrep -U $whoami -f "gmake"`
   if [ "$pid" == "" ]
   then
     echo "Starting make, output to file.mak.";
@@ -15,7 +17,7 @@ then
   fi
 elif [ "$1" = "stop" ]
 then
-  pid=`pgrep -U peel -f "gmake"`
+  pid=`pgrep -U $whoami -f "gmake"`
   if [ "$pid" != "" ]
   then
     echo "Killing process $pid."
@@ -25,7 +27,7 @@ then
   fi
 elif [ "$1" = "status" ]
 then
-  pid=`pgrep -U peel -f "gmake"`
+  pid=`pgrep -U $whoami -f "gmake"`
   if [ "$pid" != "" ]
   then
     echo "Make process found, pid $pid."
