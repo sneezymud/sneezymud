@@ -12,6 +12,9 @@ public:
     CSkill skEnthrallSpectre;
     CSkill skEnthrallGhast;
     CSkill skVoodoo;
+    CSkill skSoulTwist;
+    CSkill skDistort;
+    CSkill skSquish;
     CSkill skIntimidate;
     CSkill skCheval;
     CSkill skChrism;
@@ -31,6 +34,9 @@ public:
       skEnthrallSpectre(),
       skEnthrallGhast(),
       skVoodoo(),
+      skSoulTwist(),
+      skDistort(),
+      skSquish(),
       skIntimidate(),
       skCheval(),
       skChrism(),
@@ -50,6 +56,9 @@ public:
       skEnthrallSpectre(a.skEnthrallSpectre),
       skEnthrallGhast(a.skEnthrallGhast),
       skVoodoo(a.skVoodoo),
+      skSoulTwist(a.skSoulTwist),
+      skDistort(a.skDistort),
+      skSquish(a.skSquish),
       skIntimidate(a.skIntimidate),
       skCheval(a.skCheval),
       skChrism(a.skChrism),
@@ -70,6 +79,9 @@ public:
       skEnthrallSpectre = a.skEnthrallSpectre;
       skEnthrallGhast = a.skEnthrallGhast;
       skVoodoo = a.skVoodoo;
+      skSoulTwist = a.skSoulTwist;
+      skDistort = a.skDistort;
+      skSquish = a.skSquish;
       skIntimidate = a.skIntimidate;
       skCheval = a.skCheval;
       skChrism = a.skChrism;
@@ -161,6 +173,21 @@ private:
     int castLegbasGuidance(TBeing *, TBeing *);
     void legbasGuidance(TBeing *, TBeing *, TMagicItem *);
     int legbasGuidance(TBeing *, TBeing *, int, byte);
+
+    int squish(TBeing *, TBeing *);
+    int castSquish(TBeing *, TBeing *);
+    int squish(TBeing *, TBeing *, int, byte, int);
+
+    int distort(TBeing *, TBeing *);
+    int castDistort(TBeing *, TBeing *);
+    int distort(TBeing *, TBeing *, TMagicItem *);
+    int distort(TBeing *, TBeing *, int, byte, int);
+
+    int soulTwist(TBeing *, TBeing *);
+    int castSoulTwist(TBeing *, TBeing *);
+    int soulTwist(TBeing *, TBeing *, TMagicItem *);
+    int soulTwist(TBeing *, TBeing *, int, byte, int);
+
 
 #endif
 

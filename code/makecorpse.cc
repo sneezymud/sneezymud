@@ -153,6 +153,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
           "The skin on %s's corpse has been torn to shreds by something explosive.",
           getName());
         break;
+      case SPELL_DISTORT:
       case SKILL_QUIV_PALM:
         sprintf(buf,
           "%s's corpse has been shattered from within by a powerful shockwave.",
@@ -290,6 +291,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SPELL_HARM_CRITICAL_DEIKHAN:
       case SPELL_HARM_LIGHT:
       case SPELL_HARM_SERIOUS:
+      case SPELL_SOUL_TWIST:
       case SPELL_HARM_CRITICAL:
       case SPELL_WITHER_LIMB:
       case DAMAGE_TRAP_ENERGY:
@@ -297,6 +299,9 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
         break;
       case SPELL_BLEED:
         sprintf(buf, "The corpse of %s lies in a pool of blood.",getName());
+        break;
+      case SPELL_SQUISH:
+        sprintf(buf, "The corpse of %s has been squished into a ball.", getName());
         break;
       case DAMAGE_KICK_HEAD:
         sprintf(buf, "The body of %s has a footprint on its forehead.", getName());

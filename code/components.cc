@@ -1156,12 +1156,28 @@ void buildComponentArray()
     "$n flings $p at $mself.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_SQUISH,
+    "You squeeze $p tightly.",
+    "$n squeezes $p tightly.",
+    "$n squeezes $p tightly.",                       
+    "You squeeze $p tightly.",
+    "$n squeezes $p tightly.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_CARDIAC_STRESS,
     "You chew up $p and then kiss $N deeply on the mouth.",
     "$n chews up $p and then kisses $N deeply on the mouth.",
     "$n chews up $p and then kisses you deeply on the mouth.",                       
     "You chew up $p and accidentally swallow the poisonous juice.",
     "$n chews up $p and accidentally swallows it.",
+    "",
+    ""));
+  CompInfo.push_back(compInfo(SPELL_SOUL_TWIST,
+    "You wrap $p around your wrist and reach for $N.",
+    "$n wraps $p around a wrist and reaches for $N.",
+    "$n wraps $P around a wrist and reaches for you.",                       
+    "You wrap $p around your wrist and grab yourself.",
+    "$n wraps $p around a wrist and grabs $mself.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_VAMPIRIC_TOUCH,

@@ -2412,11 +2412,17 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_MYSTIC_DARTS:
       rc = mysticDarts(caster,victim,obj);
       break;
+    case SPELL_DISTORT:
+      rc = distort(caster,victim,obj);
+      break;
     case SPELL_FLARE:
       rc = flare(caster,obj);
       break;
     case SPELL_STUNNING_ARROW:
       rc = stunningArrow(caster,victim,obj);
+      break;
+    case SPELL_SOUL_TWIST:
+      rc = soulTwist(caster,victim,obj);
       break;
     case SPELL_COLOR_SPRAY:
       rc = colorSpray(caster,obj);

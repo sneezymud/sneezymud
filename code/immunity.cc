@@ -204,6 +204,8 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_BLAST_OF_FURY:
     case SPELL_ATOMIZE:
     case SPELL_RAZE:
+    case SPELL_DISTORT:
+    case SPELL_SOUL_TWIST:
     case DAMAGE_TRAP_ENERGY:
       bit = IMMUNE_ENERGY;
       break;
@@ -354,6 +356,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SKILL_GARROTTE:
       bit = IMMUNE_SUFFOCATION;
       break;
+    case SPELL_SQUISH:
     case SPELL_BONE_BREAKER:
       bit = IMMUNE_BONE_COND;
       break;

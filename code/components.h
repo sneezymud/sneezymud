@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.21  2001/06/16 10:10:42  jesus
+// basic shaman spell work
+//
 // Revision 5.20  2001/06/15 05:46:28  jesus
 // coronary spell
 //
@@ -216,6 +219,8 @@ const int COMP_SENSE_LIFE_SHAMAN  =31330;
 const int COMP_DJALLA             =31331;
 const int COMP_LEGBA              =31332;
 const int COMP_CARDIAC_STRESS     =31333;
+const int COMP_SQUISH             =31334;
+const int COMP_SOUL_TWIST         =31335;
 
 class compPlace
 {

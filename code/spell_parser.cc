@@ -1682,6 +1682,12 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SPELL_STUNNING_ARROW:
       rc = stunningArrow(this, ch);
       break;
+    case SPELL_DISTORT:
+      rc = distort(this, ch);
+      break;
+    case SPELL_SOUL_TWIST:
+      rc = soulTwist(this, ch);
+      break;
     case SPELL_BLAST_OF_FURY:
       rc = blastOfFury(this, ch);
       break;
@@ -1731,6 +1737,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       break;
     case SPELL_CALM:
       calm(this, ch);
+      break;
+    case SPELL_SQUISH:
+      rc = squish(this, ch);
       break;
     case SPELL_ENSORCER:
       rc = ensorcer(this, ch);

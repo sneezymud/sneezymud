@@ -1092,6 +1092,7 @@ int TBeing::checkBadSpellCondition(TBeing *caster, int which)
     case SPELL_PEBBLE_SPRAY:
     case SPELL_SAND_BLAST:
     case SPELL_LAVA_STREAM:
+    case SPELL_SQUISH: // shaman
     case SPELL_DEATH_MIST: // shaman
     case SPELL_TRAIL_SEEK:
     case SPELL_CONJURE_EARTH:
@@ -1274,6 +1275,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_AQUATIC_BLAST:
     case SPELL_AQUALUNG:
     case SPELL_CARDIAC_STRESS:
+    case SPELL_DISTORT: // shaman
     case SPELL_LICH_TOUCH: // shaman
     case SPELL_VAMPIRIC_TOUCH: // shaman
     case SPELL_SHIELD_OF_MISTS: // shaman
@@ -1287,6 +1289,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_TELEPORT:
     case SPELL_PROTECTION_FROM_ELEMENTS:
     case SPELL_STUNNING_ARROW:
+    case SPELL_SOUL_TWIST: // shaman
       return FALSE; 
 
 // disc_nature
@@ -1829,6 +1832,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         } else
           vlogf(LOG_BUG, "SPELL_PROTECTION_FROM_EARTH called with null obj");
         break;
+      case SPELL_SQUISH:
+        if (!o) {
+          rc = castSquish(this, victim);
+        } else
+          vlogf(LOG_BUG, "SPELL_SQUISH called with null obj");
+        break;
       case SPELL_ENTHRALL_SPECTRE:
         if (!o) {
           rc = castEnthrallSpectre(this);
@@ -2049,6 +2058,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         else
           vlogf(LOG_BUG, "SPELL_MYSTIC_DARTS called with null obj");
         break;
+      case SPELL_DISTORT:
+        if (!o) 
+          rc = castDistort(this, victim);
+        else
+          vlogf(LOG_BUG, "SPELL_DISTORT called with null obj");
+        break;
       case SPELL_BLAST_OF_FURY:
         if (!o) {
           rc = castBlastOfFury(this, victim);
@@ -2174,6 +2189,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
           rc = castStunningArrow(this, victim);
         } else
           vlogf(LOG_BUG, "SPELL_STUNNING_ARROW called with null obj");
+        break;
+      case SPELL_SOUL_TWIST:
+        if (!o) {
+          rc = castSoulTwist(this, victim);
+        } else
+          vlogf(LOG_BUG, "SPELL_SOUL_TWIST called with null obj");
         break;
 
 // disc_nature

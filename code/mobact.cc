@@ -1715,6 +1715,54 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     // STANDARD OFFENSE
     // hit um with the long-term effect ones first
     // just plain damage spells here on
+    spell = SPELL_DISTORT;
+    if (!::number(0, 3) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the invokation, 'Houngan's Delight!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
+    spell = SPELL_DISTORT;
+    if (!::number(0, 3) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the invokation, 'Houngan's Delight!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
+    spell = SPELL_SOUL_TWIST;
+    if (!::number(0, 3) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the invokation, 'Internal Pretzel!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
+    spell = SPELL_SOUL_TWIST;
+    if (!::number(0, 3) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the invokation, 'Internal Pretzel!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
+    spell = SPELL_SQUISH;
+    if (!::number(0, 3) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the invokation, 'Firsta you takka da dough like-a dis...'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
+    spell = SPELL_SQUISH;
+    if (!::number(0, 3) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the invokation, 'Firsta you takka da dough like-a dis...'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
     spell = SPELL_LIFE_LEECH;
     if (!::number(0, 3) && 
            (cutoff < discArray[spell]->start) &&
