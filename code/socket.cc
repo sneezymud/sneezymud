@@ -465,7 +465,7 @@ int TSocket::gameLoop()
   int teleport=0, combat=0, drowning=0, special_procs=0, update_stuff=0;
   int pulse_tick=0, pulse_mudhour=0, mobstuff=0, wayslowpulse=0;
   TBeing *tmp_ch, *temp;
-  TObj *obj, *next_thing;
+  TObj *obj=NULL, *next_thing;
   int rc = 0;
   time_t lagtime_t = time(0);
   TVehicle *vehicle;
@@ -623,131 +623,163 @@ int TSocket::gameLoop()
       checkGoldStats();
     }
 
-    if (!teleport){ // 12
-      // set zone emptiness flags
-      for (unsigned int i = 0; i < zone_table.size(); i++)
-	zone_table[i].zone_value=zone_table[i].isEmpty()?1:-1;
+    // set zone emptiness flags
+    for (unsigned int i = 0; i < zone_table.size(); i++)
+      zone_table[i].zone_value=zone_table[i].isEmpty()?1:-1;
 
-      // room procs
-      call_room_specials();
+    // room procs
+    call_room_specials();
 
-      // note on this loop
-      // it is possible that next_thing gets deleted in one of the sub funcs
-      // we don't get acknowledgement of this in any way.
-      // to avoid problems this might cause, we reinitialize at
-      // the end (eg, before any deletes, or before we come back around)
-      // bottom line is that next_thing keeps getting set because it might be
-      // bogus after the function call.
+    // note on this loop
+    // it is possible that next_thing gets deleted in one of the sub funcs
+    // we don't get acknowledgement of this in any way.
+    // to avoid problems this might cause, we reinitialize at
+    // the end (eg, before any deletes, or before we come back around)
+    // bottom line is that next_thing keeps getting set because it might be
+    // bogus after the function call.
 
-      ++vehiclepulse;
-
-      for (obj = object_list; obj; obj = next_thing) {
-	next_thing = obj->next;
-
-        if (!dynamic_cast<TObj *>(obj)) {
-          vlogf(LOG_BUG, fmt("Object_list produced a non-obj().  rm: %d") %  obj->in_room);
-          vlogf(LOG_BUG, fmt("roomp %s, parent %s") %  
-                (obj->roomp ? "true" : "false") %
-                (obj->parent ? "true" : "false"));
-          // bogus objects tend to have garbage in obj->next
-          // it would be dangerous to continue with this loop
-          // this is called often enough that one skipped iteration should
-          // not be noticed.  Therefore, break out.
-          break;
-        }
-
-	// vehicle movement
-	if((vehicle=dynamic_cast<TVehicle *>(obj)))
-	  vehicle->vehiclePulse(vehiclepulse);
-	
-
-        if (!combat) { // 12
-          rc = obj->detonateGrenade();
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            next_thing = obj->next;
-            delete obj;
-            obj = NULL;
-            continue;
-          }
-        }
-	if (!teleport) { // 12
-          rc = obj->checkFalling();
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            next_thing = obj->next;
-            delete obj;
-            obj = NULL;
-            continue;
-          }
-          rc = obj->riverFlow(pulse);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            next_thing = obj->next;
-            delete obj;
-            obj = NULL;
-            continue;
-          }
-          if (obj->spec) {
-            rc = obj->checkSpec(NULL, CMD_GENERIC_QUICK_PULSE, "", NULL);
-            if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-              next_thing = obj->next;
-              delete obj;
-              obj = NULL;
-              continue;
-            }
-            if (rc) {
-              next_thing = obj->next;
-              continue;
-            }
-          }
-
-	}
-
-	if (!special_procs) { // 36
-	  check_sinking_obj(obj, obj->in_room);
-          if (obj->spec) {
-            rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
-            if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-              next_thing = obj->next;
-              delete obj;
-              obj = NULL;
-              continue;
-            }
-            if (rc) {
-              next_thing = obj->next;
-              continue;
-            }
-          }
-
-	  rc = obj->updateBurning();
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            next_thing = obj->next;
-            delete obj;
-            obj = NULL;
-	    continue;
-          }
-
-	  // fun with smoke
-	  TSmoke *smoke=dynamic_cast<TSmoke *>(obj);
-	  if(smoke){
-	    smoke->doMerge();
-	    smoke->doDrift();
-	    smoke->doChoke();
-	  }
-
-
-	}
-
-	if (!pulse_mudhour) { // 1440
-	  rc = obj->objectTickUpdate(pulse);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            next_thing = obj->next;
-            delete obj;
-            obj = NULL;
-	    continue;
-          }
-        }
-        next_thing = obj->next;
-      } // object list
+    ++vehiclepulse;
+      
+    // we've already finished going through the object list, so start over
+    if(!obj){
+      vlogf(LOG_PEEL, "obj is null, starting list over");
+      obj=object_list;
     }
+
+    // we want to go through 1/12th of the object list every pulse
+    // obviously the object count will change, so this is approximate.
+    count=objCount/12;
+
+    // since we're operating on non-multiples of 12 pulses, we need to
+    // temporarily put the pulse at the next multiple of 12
+    // this is pretty klugey
+
+    // save the old values
+    int oldpulse=pulse;
+    int old_special_procs=special_procs;
+    int old_pulse_mudhour=pulse_mudhour;
+
+    // advance the pulse to the next multiple of 12
+    while(pulse % 12)
+      ++pulse;
+
+    // set the pulse flags that are used in the object loop
+    // if you use any of the other pulses in the object loop, you'll
+    // need to add them here
+    special_procs = (pulse % PULSE_SPEC_PROCS);
+    pulse_mudhour = (pulse % PULSE_MUDHOUR);
+           
+    for (; obj; obj = next_thing) {
+      next_thing = obj->next;
+
+      if(!count--)
+	break;
+
+      if (!dynamic_cast<TObj *>(obj)) {
+	vlogf(LOG_BUG, fmt("Object_list produced a non-obj().  rm: %d") %  obj->in_room);
+	vlogf(LOG_BUG, fmt("roomp %s, parent %s") %  
+	      (obj->roomp ? "true" : "false") %
+	      (obj->parent ? "true" : "false"));
+	// bogus objects tend to have garbage in obj->next
+	// it would be dangerous to continue with this loop
+	// this is called often enough that one skipped iteration should
+	// not be noticed.  Therefore, break out.
+	break;
+      }
+
+      // vehicle movement
+      if((vehicle=dynamic_cast<TVehicle *>(obj)))
+	vehicle->vehiclePulse(vehiclepulse);
+	
+      // this stuff all happens every time we go through here, which is
+      // about every 12 pulses, ie "combat" or "teleport" pulse
+      rc = obj->detonateGrenade();
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	next_thing = obj->next;
+	delete obj;
+	obj = NULL;
+	continue;
+      }
+      rc = obj->checkFalling();
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	next_thing = obj->next;
+	delete obj;
+	obj = NULL;
+	continue;
+      }
+      rc = obj->riverFlow(pulse);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	next_thing = obj->next;
+	delete obj;
+	obj = NULL;
+	continue;
+      }
+      if (obj->spec) {
+	rc = obj->checkSpec(NULL, CMD_GENERIC_QUICK_PULSE, "", NULL);
+	if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+	  next_thing = obj->next;
+	  delete obj;
+	  obj = NULL;
+	  continue;
+	}
+	if (rc) {
+	  next_thing = obj->next;
+	  continue;
+	}
+      }
+      // end 12 pulse
+
+      if (!special_procs) { // 36
+	check_sinking_obj(obj, obj->in_room);
+	if (obj->spec) {
+	  rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
+	  if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+	    next_thing = obj->next;
+	    delete obj;
+	    obj = NULL;
+	    continue;
+	  }
+	  if (rc) {
+	    next_thing = obj->next;
+	    continue;
+	  }
+	}
+
+	rc = obj->updateBurning();
+	if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	  next_thing = obj->next;
+	  delete obj;
+	  obj = NULL;
+	  continue;
+	}
+
+	// fun with smoke
+	TSmoke *smoke=dynamic_cast<TSmoke *>(obj);
+	if(smoke){
+	  smoke->doMerge();
+	  smoke->doDrift();
+	  smoke->doChoke();
+	}
+
+
+      }
+
+      if (!pulse_mudhour) { // 1440
+	rc = obj->objectTickUpdate(pulse);
+	if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	  next_thing = obj->next;
+	  delete obj;
+	  obj = NULL;
+	  continue;
+	}
+      }
+      next_thing = obj->next;
+    } // object list
+
+      // reset the old values from the artifical pulse
+    pulse=oldpulse;
+    special_procs=old_special_procs;
+    pulse_mudhour=old_pulse_mudhour;
 
 
     // note on this loop
