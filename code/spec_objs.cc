@@ -3232,6 +3232,165 @@ int trolley(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *){
   return TRUE;
 }
 
+int fishingBoat(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
+{  
+  int *job=NULL, where=0, i, found=1;
+  int path[]={-1, 15150, 
+	      2439, 2440, 2441, 2442, 2443, 2444, 2445, 2446, 2447, 2448,
+	      2449, 2450, 2451, 2452, 2453, 2454, 2455, 2456, 2457, 2458,
+	      2459, 2460, 2461, 2462, 2463, 2464, 2465, 2466, 2467, 2468,
+	      2469, 2470, 2471, 2475, 12551, 12583, 12616, 12651, 12690,
+	      12733, 12770, 12803, 12831, 12857, 12886, 12911, 12935, 12958,
+	      12982, 13006, 13030, 13052, 13072, 13091, -1};
+  const char *boatleaving[]={
+                   "The fishing boat is going to be leaving immediately.\n\r",
+		   "The fishing boat is almost ready to leave.\n\r",
+		   "The fishing boat will be leaving very soon.\n\r",
+		   "The fishing boat will be leaving soon.\n\r",
+		   "The fishing boat is getting ready to leave.\n\r"};
+  TRoom *boatroom=real_roomp(15349);
+  static int timer;
+  char buf[256], shortdescr[256];
+  TThing *tt;
+
+  // docks 15150
+
+  if (cmd == CMD_GENERIC_DESTROYED) {
+    delete static_cast<int *>(myself->act_ptr);
+    myself->act_ptr = NULL;
+    return FALSE;
+  }
+
+  if (cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  if(!myself->in_room)
+    return FALSE;
+
+  if(::number(0,4)) // slow it down a bit, this is a fishing trip after all
+    return FALSE;
+
+  // we just idle in 15150 if we're empty
+  if(myself->in_room == 15150){
+    found=0;
+    for(tt=boatroom->getStuff();tt;tt=tt->nextThing){
+      if(dynamic_cast<TPerson *>(tt)){
+	found=1;
+	break;
+      }
+    }
+    if(!found)
+      return FALSE;
+    else if(timer <= 0){
+      vlogf(LOG_PEEL, "found people in boat, setting timer");
+      
+      if(myself->in_room == 15150){
+	sendrpf(real_roomp(15150), "The fishing boat is preparing to leave.\n\r");
+      } else if(myself->in_room == 13091){
+	sendrpf(real_roomp(13091), "The fishing boat is preparing to leave.\n\r");
+      }
+      sendrpf(boatroom, "The fishing boat is preparing to leave.\n\r");
+      
+      timer=5;
+    }
+  }
+
+  if((--timer)>0){
+
+    if(timer<=5 && timer>0){
+      if(myself->in_room == 15150){
+	sendrpf(real_roomp(15150), boatleaving[timer-1]);
+      } else if(myself->in_room == 13091){
+	sendrpf(real_roomp(13091), boatleaving[timer-1]);
+      }
+      sendrpf(boatroom, boatleaving[timer-1]);
+    }
+
+    return FALSE;
+  }
+
+  strcpy(shortdescr, myself->shortDescr);
+  cap(shortdescr);
+
+  if (!myself->act_ptr) {
+    if (!(myself->act_ptr = new int)) {
+     perror("failed new of fishing boat.");
+     exit(0);
+    }
+    job = static_cast<int *>(myself->act_ptr);
+    *job=1;
+  } else {
+    job = static_cast<int *>(myself->act_ptr);
+  }
+
+  for(where=1;path[where]!=-1 && myself->in_room != path[where];++where);
+
+  if(path[where]==-1){
+    vlogf(LOG_PEEL, "fishing boat lost");
+    return FALSE;
+  }
+
+  if((path[where+*job])==-1){
+    switch(*job){
+      case -1:
+	sendrpf(COLOR_OBJECTS, boatroom, "%s has arrived at the docks.\n\r",
+		shortdescr);
+	break;
+      case 1:
+	sendrpf(COLOR_OBJECTS, boatroom, "%s has arrived at the island.\n\r",
+		shortdescr);
+	timer=10;
+	break;
+    }
+
+    *job=-*job;
+    return TRUE;
+  }
+
+  
+  for(i=MIN_DIR;i<MAX_DIR;++i){
+    if(myself->roomp->dir_option[i] &&
+       myself->roomp->dir_option[i]->to_room==path[where+*job]){
+      break;
+    }
+  }
+  
+  switch(*job){
+    case -1: 
+      sprintf(buf, "$n continues %s towards the docks.",
+	      (i==MAX_DIR)?"on":dirs[i]);
+      act(buf,FALSE, myself, 0, 0, TO_ROOM); 
+      sendrpf(COLOR_OBJECTS, boatroom, "%s sails %s towards land.\n\r",
+	      shortdescr, (i==MAX_DIR)?"on":dirs[i]);
+      sendrpf(COLOR_OBJECTS, real_roomp(path[where+*job]), 
+	      "%s enters the room, heading towards land.\n\r",
+	      shortdescr);
+      break;
+    case 1: 
+      sprintf(buf, "$n continues %s towards Brightmoon.",
+	      (i==MAX_DIR)?"on":dirs[i]);
+      act(buf,FALSE, myself, 0, 0, TO_ROOM); 
+      sendrpf(COLOR_OBJECTS, boatroom, "%s sails %s out to sea.\n\r",
+	      shortdescr, (i==MAX_DIR)?"on":dirs[i]);
+      sendrpf(COLOR_OBJECTS, real_roomp(path[where+*job]), 
+	      "%s enters the room, heading out to sea.\n\r",
+	      shortdescr);
+      break;
+  }
+  
+  --(*myself);
+  *real_roomp(path[where+*job])+=*myself;
+
+  if(!boatroom->dir_option[0]){
+    boatroom->dir_option[0] = new roomDirData();
+  }
+  
+  boatroom->dir_option[0]->to_room=path[where+*job];
+
+  return TRUE;
+}
+
+
 int squirtGun(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TObj *)
 {
   TBeing *ch;
@@ -5122,5 +5281,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "fire glove", fireGlove},
   {FALSE, "Shaman's Totem Mask", totemMask},
   {FALSE, "perma death monument", permaDeathMonument},
+  {FALSE, "fishing boat", fishingBoat},
   {FALSE, "last proc", bogusObjProc}
 };
