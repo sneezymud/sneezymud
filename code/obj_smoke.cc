@@ -34,14 +34,23 @@ void TSmoke::setVolume(int n)
 {
   TObj::setVolume(n);
   updateDesc();
-  obj_flags.decay_time=getVolume();
+
+  if(roomp && roomp->isIndoorSector()){
+    obj_flags.decay_time=getVolume()/2;
+  } else {
+    obj_flags.decay_time=getVolume()/4;
+  }
 }
 
 void TSmoke::addToVolume(int n)
 {
   TObj::addToVolume(n);
   updateDesc();
-  obj_flags.decay_time=getVolume();
+  if(roomp->isIndoorSector()){
+    obj_flags.decay_time=getVolume()/2;
+  } else {
+    obj_flags.decay_time=getVolume()/4;
+  }
 }
 
 
