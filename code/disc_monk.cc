@@ -167,9 +167,11 @@ int TBeing::doSpringleap(const char *argument, bool should_lag, TBeing *vict)
         sendTo("Springleap at whom?\n\r");
         return FALSE;
       }
+#if 0
     } else if (!fight()) {
       sendTo("You are not able to initiate combat with a springleap.\n\r");
       return FALSE;
+#endif
     }
   }
   if (!sameRoom(*victim)) {
