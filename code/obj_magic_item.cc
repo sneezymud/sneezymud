@@ -1,22 +1,6 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: magic_item.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // magic_item.cc
 
 #include "stdsneezy.h"
-#include "create.h"
 
 TMagicItem::TMagicItem() :
   TObj(),
@@ -134,7 +118,7 @@ void TMagicItem::lowCheck()
 {
   int sp = suggestedPrice();
   if (obj_flags.cost >= 0 && obj_flags.cost < sp) {
-    vlogf(LOW_ERROR, "magicitem (%s:%d) with bad price %d should be %d.",
+    vlogf(LOG_LOW, "magicitem (%s:%d) with bad price %d should be %d.",
           getName(), objVnum(), obj_flags.cost, sp);
     obj_flags.cost = sp;
   }
