@@ -2107,9 +2107,10 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     return shopping_evaluate(arg, ch, myself, shop_nr);
   }
 
-#if 0
+#if 1
   // the sweepers should be reasonably efficient about cleaning up, so this
   // probably isn't needed.  Non-GH might still suffer though....
+  // -Cept they don't Enter shops, simply prevent them from dropping like before.
 
   if ((cmd == CMD_DROP) && (ch->in_room == shop_index[shop_nr].in_room)) {
     // possible alternative would be to move dropped stuff to ROOM_DONATION
