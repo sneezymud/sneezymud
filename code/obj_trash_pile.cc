@@ -203,6 +203,10 @@ void TTrashPile::attractVermin()
   if(index<3 || !roomp)
     return;
 
+  if(roomp->isRoomFlag(ROOM_PEACEFUL) || 
+     roomp->isRoomFlag(ROOM_NO_MOB))
+    return;
+
   for(TThing *t=roomp->getStuff();t;t=t->nextThing){
     if(dynamic_cast<TBeing *>(t))
       count++;
