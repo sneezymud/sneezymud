@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: show.cc,v $
+// Revision 1.2  1999/09/17 17:38:45  peel
+// Added show maxed, for listing maxed objects
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1930,6 +1933,31 @@ void TPerson::doShow(const char *argument)
                obj_index[objnx].value,
               buf2);
       }
+      sb += buf;
+    }
+  } else if (is_abbrev(buf, "maxed")) {
+    if (!hasWizPower(POWER_SHOW_OBJ) || !hasWizPower(POWER_SHOW_TRUSTED)) {
+      sendTo("You lack the power to show maxed obj information.\n\r");
+      return;
+    }
+
+    sb += "VNUM  count max_exist str AC value names\n\r";
+
+    unsigned int objnx;
+    for (objnx = 0; objnx < obj_index.size(); objnx++) {
+      if(obj_index[objnx].number<obj_index[objnx].max_exist) continue;
+      obj = read_object(obj_index[objnx].virt, VIRTUAL);
+      sprintf(buf2, "%s", obj->getNameForShow(false, true, this).c_str());
+      delete obj;
+
+      sprintf(buf, "%5d %3d    %5d%c   %3d %2d %5d %s\n\r", 
+              obj_index[objnx].virt, obj_index[objnx].number,
+              obj_index[objnx].max_exist, 
+              (obj_index[objnx].value <= LIM_ITEM_COST_MIN ? ' ' : '*'), 
+	      obj_index[objnx].max_struct,
+	      max(obj_index[objnx].armor, (sh_int) 0),
+	      obj_index[objnx].value,
+              buf2);
       sb += buf;
     }
   } else if (is_abbrev(buf, "mobiles")) {
