@@ -2328,11 +2328,12 @@ void TBeing::doEquipment(const char *argument)
     }
   } else if (!*argument || !isImmortal()) {
     TDatabase db("sneezy");
-    bool tattoo=false;
+    string tattoos[MAX_WEAR];
 
     db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
-    if(db.fetchRow())
-      tattoo=true;
+    while(db.fetchRow()){
+      tattoos[atoi_safe(db.getColumn(0))]=db.getColumn(1);
+    }
 
     sendTo("You are using:\n\r");
     found = FALSE;
@@ -2349,23 +2350,16 @@ void TBeing::doEquipment(const char *argument)
             found = TRUE;
           }
         }
-      } else {
-	if(tattoo && (wearSlotT)(atoi_safe(db.getColumn(0))) == j){
-          sprintf(buf, "<%s>", describeEquipmentSlot(j).c_str());
-          sendTo("%s%-25s%s", cyan(), buf, norm());
-	  sendTo(COLOR_BASIC, db.getColumn(1));
-	  sendTo("\n\r");
-	  if(db.fetchRow())
-	    tattoo=true;
-	  else
-	    tattoo=false;
-	}
+      } else if(tattoos[j]!=""){
+	sprintf(buf, "<%s>", describeEquipmentSlot(j).c_str());
+	sendTo("%s%-25s%s", cyan(), buf, norm());
+	sendTo(COLOR_BASIC, tattoos[j].c_str());
+	sendTo("\n\r");
       }
     }
   } else {
     TDatabase db("sneezy");
-    bool tattoo=false;
-
+    string tattoos[MAX_WEAR];
 
     // allow immortals to get eq of players
     TBeing *victim = get_char_vis_world(this, argument, NULL, EXACT_YES);
@@ -2373,8 +2367,9 @@ void TBeing::doEquipment(const char *argument)
       victim = get_char_vis_world(this, argument, NULL, EXACT_NO);
 
     db.query("select location, tattoo from tattoos where name='%s' order by location",victim->getName());
-    if(db.fetchRow())
-      tattoo=true;
+    while(db.fetchRow()){
+      tattoos[atoi_safe(db.getColumn(0))]=db.getColumn(1);
+    }
 
     if (victim) {
       act("$N is using.", FALSE, this, 0, victim, TO_CHAR);
@@ -2392,17 +2387,11 @@ void TBeing::doEquipment(const char *argument)
               found = TRUE;
             }
           }
-	} else {
-	  if(tattoo && (wearSlotT)(atoi_safe(db.getColumn(0))) == j){
-	    sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
-	    sendTo("%s%-25s%s", cyan(), buf, norm());
-	    sendTo(COLOR_BASIC, db.getColumn(1));
-	    sendTo("\n\r");
-	    if(db.fetchRow())
-	      tattoo=true;
-	    else
-	      tattoo=false;
-	  }
+        } else if(tattoos[j]!=""){
+	  sprintf(buf, "<%s>", victim->describeEquipmentSlot(j).c_str());
+	  sendTo("%s%-25s%s", cyan(), buf, norm());
+	  sendTo(COLOR_BASIC, tattoos[j].c_str());
+	  sendTo("\n\r");
 	}
       }
     } else 

@@ -1074,11 +1074,11 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
           found = TRUE;
     }
     TDatabase db("sneezy");
-    bool tattoo=false;
+    string tattoos[MAX_WEAR];
 
     db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
-    if(db.fetchRow()){
-      tattoo=true;
+    while(db.fetchRow()){
+      tattoos[atoi_safe(db.getColumn(0))]=db.getColumn(1);
       found=true;
     }
 
@@ -1099,17 +1099,11 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
               ch->showTo(equipment[ij], SHOW_MODE_SHORT_PLUS);
             }
           }
-        } else {
-	  if(tattoo && (wearSlotT)(atoi_safe(db.getColumn(0))) == ij){
-	    sprintf(buf, "<%s>", describeEquipmentSlot(ij).c_str());
-	    ch->sendTo("%s%-25s%s", cyan(), buf, norm());
-	    ch->sendTo(COLOR_BASIC, db.getColumn(1));
-	    ch->sendTo("\n\r");
-	    if(db.fetchRow())
-	      tattoo=true;
-	    else
-	      tattoo=false;
-	  }
+        } else if(tattoos[ij]!=""){
+	  sprintf(buf, "<%s>", describeEquipmentSlot(ij).c_str());
+	  ch->sendTo("%-25s",buf);
+	  ch->sendTo(COLOR_BASIC, tattoos[ij].c_str());
+	  ch->sendTo("\n\r");
 	}
       }
     }
