@@ -145,7 +145,7 @@ class TDatabaseConnection
       vlogf(LOG_DB, "Initializing database 'sneezyprod'.");
       
       vlogf(LOG_DB, "Connecting to database.");
-      if(!(sneezybetadb=PQconnectdb("dbname=sneezyprod"))){
+      if(!(sneezyproddb=PQconnectdb("dbname=sneezyprod"))){
 	vlogf(LOG_DB, "Could not connect to database 'sneezyprod'.");
 	return NULL;
       }
@@ -160,7 +160,7 @@ class TDatabaseConnection
       vlogf(LOG_DB, "Initializing database 'sneezybuilder'.");
       
       vlogf(LOG_DB, "Connecting to database.");
-      if(!(sneezybetadb=PQconnectdb("dbname=sneezybuilder"))){
+      if(!(sneezybuilderdb=PQconnectdb("dbname=sneezybuilder"))){
 	vlogf(LOG_DB, "Could not connect to database 'sneezybuilder'.");
 	return NULL;
       }
