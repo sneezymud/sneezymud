@@ -57,7 +57,7 @@ int TPotion::shopPrice(int num, int shop_nr, float, int *) const
   int price;
 
   cost_per = DrinkInfo[getDrinkType()]->price;
-  price = (int) (num * cost_per * shop_index[shop_nr].profit_buy);
+  price = (int) (num * cost_per * getDrinkUnits() * shop_index[shop_nr].profit_buy);
   price = max(1, price);
 
   return price;
