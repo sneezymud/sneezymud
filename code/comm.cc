@@ -904,19 +904,19 @@ void Descriptor::updateScreenVt100(unsigned int update)
   }
 
   if (update & CHANGED_EXP) {
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 28);
+    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 34);
     sprintf(buf + strlen(buf), "%s", ch->displayExp().c_str());
   }
 
   if (ch->isImmortal()) {
     if (update & CHANGED_ROOM) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 61);
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 62);
       sprintf(buf + strlen(buf), "%-6d", ch->roomp->number);
     }
   } else {
 #if FACTIONS_IN_USE
     if (update & CHANGED_PERC) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 45);
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 62);
       sprintf(buf + strlen(buf), "%3.4f", ch->getPerc());
     }
 #else
@@ -928,20 +928,30 @@ void Descriptor::updateScreenVt100(unsigned int update)
 	int ratio = min(10, max(0, ((f->getHit() * 9) / f->hitLimit())));
 
         memset(&StTemp, 0, sizeof(StTemp));
-        sprintf(StTemp, "%s<%s=%s>%s", ch->purple(), fname(f->name).c_str(), prompt_mesg[ratio], ch->norm());
+        sprintf(StTemp, "<%s=%s>", fname(f->name).c_str(), prompt_mesg[ratio]);
 
-        for (int iRunner = strlen(StTemp); iRunner < 38; iRunner++)
+        if (strlen(StTemp) > 22) {
+          StTemp[19] = StTemp[20] = StTemp[21] = '.';
+          StTemp[22] = '>';
+          StTemp[23] = '\0';
+        }
+
+        for (int iRunner = strlen(StTemp); iRunner < 23; iRunner++)
           StTemp[iRunner] = ' ';
 
-        StTemp[38] = '\0';
+        StTemp[23] = '\0';
 
-	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 40);
+	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
         strcat(buf + strlen(buf), StTemp);
+
 	last.fighting = TRUE;
+      } else {
+	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
+	sprintf(buf + strlen(buf), "                    ");
       }
     } else {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 40);
-      sprintf(buf + strlen(buf), "                                      ");
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
+      sprintf(buf + strlen(buf), "                    ");
     }
 #endif
   }
@@ -950,7 +960,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
 
   if (IS_SET(update, CHANGED_MUD)) {
     sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 1);
-    sprintf(buf + strlen(buf), "%s   ", hmtAsString(hourminTime()).c_str());
+    sprintf(buf + strlen(buf), "   %8s   ", hmtAsString(hourminTime()).c_str());
   }
 
   if (IS_SET(update, CHANGED_TIME)) {
@@ -966,8 +976,8 @@ void Descriptor::updateScreenVt100(unsigned int update)
       } else if (tptr->tm_hour > 23)
         tptr->tm_hour -= 24;
 
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 12);
-      sprintf(buf + strlen(buf), "%2d:%02d %2s   ",
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 15);
+      sprintf(buf + strlen(buf), "   %2d:%02d %2s   ",
 	      (!(tptr->tm_hour%12) ? 12 : tptr->tm_hour%12),
 	      tptr->tm_min,
 	      (tptr->tm_hour >= 12) ? "PM" : "AM");
@@ -981,7 +991,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
       if (ch->getLevel(iClass)) {
         double iNeed = getExpClassLevel(iClass, ch->getLevel(iClass) + 1) - ch->getExp();
 
-        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 28);
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 34);
 
         if (ch->getLevel(iClass) >= MAX_MORT)
           strcat(buf + strlen(buf), "0");
@@ -1015,21 +1025,28 @@ void Descriptor::updateScreenVt100(unsigned int update)
       int ratio = min(10, max(0, ((f->getHit() * 9) / maxh)));
 
       memset(&StTemp, 0, sizeof(StTemp));
-      sprintf(StTemp, "%s<%s=%s>%s", ch->purple(), fname(f->name).c_str(), prompt_mesg[ratio], ch->norm());
+      sprintf(StTemp, "<%s=%s>", fname(f->name).c_str(), prompt_mesg[ratio]);
 
-      for (int iRunner = strlen(StTemp); iRunner < 38; iRunner++)
+      if (strlen(StTemp) > 22) {
+	StTemp[19] = StTemp[20] = StTemp[21] = '.';
+	StTemp[22] = '>';
+	StTemp[23] = '\0';
+      }
+
+      for (int iRunner = strlen(StTemp); iRunner < 23; iRunner++)
         StTemp[iRunner] = ' ';
 
-      StTemp[38] = '\0';
+      StTemp[23] = '\0';
 
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 40);
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 55);
       strcat(buf + strlen(buf), StTemp);
+
       last.fighting = TRUE;
     }
   } else {
     if (last.fighting) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 40);
-      sprintf(buf + strlen(buf), "                                      ");
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 55);
+      sprintf(buf + strlen(buf), "                    ");
       last.fighting = FALSE;
     }
   }
@@ -1037,7 +1054,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
   writeToQ(buf);
   writeToQ(VT_NORMALT);
   writeToQ(VT_CURREST);
-  
+
   // Make sure it doesn't send a new '>' when automatically updated - Russ
   if ((update == CHANGED_TIME) || (update == CHANGED_MUD))
     prompt_mode = PROMPT_DONT_SEND;
@@ -1148,13 +1165,13 @@ void Descriptor::updateScreenAnsi(unsigned int update)
   }
 
   if (IS_SET(update, CHANGED_EXP)) {
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 28);
+    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 34);
     sprintf(buf + strlen(buf), "%s%s", ANSI_GREEN, ch->displayExp().c_str());
   }
 
   if (ch->isImmortal()) {
     if (IS_SET(update, CHANGED_ROOM)) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 61);
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 62);
       sprintf(buf + strlen(buf), "%s%-6d", ANSI_GREEN, ch->roomp->number);
     }
   } else {
@@ -1172,20 +1189,30 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 	int ratio = min(10, max(0, ((f->getHit() * 9) / f->hitLimit())));
 
         memset(&StTemp, 0, sizeof(StTemp));
-	sprintf(StTemp, "%s<%s=%s>%s", ch->purple(), fname(f->name).c_str(), prompt_mesg[ratio], ch->norm());
+	sprintf(StTemp, "<%s=%s>", fname(f->name).c_str(), prompt_mesg[ratio]);
 
-	for (int iRunner = strlen(StTemp); iRunner < 38; iRunner++)
+        if (strlen(StTemp) > 22) {
+          StTemp[19] = StTemp[20] = StTemp[21] = '.';
+          StTemp[22] = '>';
+          StTemp[23] = '\0';
+	}
+
+	for (int iRunner = strlen(StTemp); iRunner < 23; iRunner++)
 	  StTemp[iRunner] = ' ';
 
-	StTemp[38] = '\0';
+	StTemp[23] = '\0';
 
-	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 40);
-	strcat(buf + strlen(buf), StTemp);
+	sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
+        sprintf(buf + strlen(buf), "%s%s%s", ch->purple(), StTemp, ch->norm());
+
 	last.fighting = TRUE;
+      } else {
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
+        sprintf(buf + strlen(buf), "                    ");
       }
     } else {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 40);
-      sprintf(buf + strlen(buf), "                                      ");
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen() - 1, 55);
+      sprintf(buf + strlen(buf), "                    ");
     }
 #endif
   }
@@ -1194,7 +1221,7 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 
   if (IS_SET(update, CHANGED_MUD)) {
     sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 1);
-    sprintf(buf + strlen(buf), "%s   ", hmtAsString(hourminTime()).c_str());
+    sprintf(buf + strlen(buf), "   %8s   ", hmtAsString(hourminTime()).c_str());
   }
 
   time_t t1;
@@ -1211,8 +1238,8 @@ void Descriptor::updateScreenAnsi(unsigned int update)
     else if (tptr->tm_hour > 23)
       tptr->tm_hour -= 24;
 
-    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 12);
-    sprintf(buf + strlen(buf), "%2d:%02d %2s   ",
+    sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 15);
+    sprintf(buf + strlen(buf), "   %2d:%02d %2s   ",
 	    (!(tptr->tm_hour%12) ? 12 : tptr->tm_hour%12),
 	    tptr->tm_min,
 	    (tptr->tm_hour >= 12) ? "PM" : "AM");
@@ -1225,7 +1252,7 @@ void Descriptor::updateScreenAnsi(unsigned int update)
       if (ch->getLevel(iClass)) {
         double iNeed = getExpClassLevel(iClass, ch->getLevel(iClass) + 1) - ch->getExp();
 
-        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 28);
+        sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 34);
 
         if (ch->getLevel(iClass) >= MAX_MORT)
           strcat(buf + strlen(buf), "0");
@@ -1258,21 +1285,28 @@ void Descriptor::updateScreenAnsi(unsigned int update)
       int ratio = min(10, max(0, ((f->getHit() * 9) / f->hitLimit())));
 
       memset(&StTemp, 0, sizeof(StTemp));
-      sprintf(StTemp, "%s<%s=%s>%s", ch->purple(), fname(f->name).c_str(), prompt_mesg[ratio], ch->norm());
+      sprintf(StTemp, "<%s=%s>", fname(f->name).c_str(), prompt_mesg[ratio]);
 
-      for (int iRunner = strlen(StTemp); iRunner < 38; iRunner++)
+      if (strlen(StTemp) > 22) {
+          StTemp[19] = StTemp[20] = StTemp[21] = '.';
+          StTemp[22] = '>';
+          StTemp[23] = '\0';
+      }
+
+      for (int iRunner = strlen(StTemp); iRunner < 23; iRunner++)
 	StTemp[iRunner] = ' ';
 
-      StTemp[38] = '\0';
+      StTemp[23] = '\0';
 
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 40);
-      strcat(buf + strlen(buf), StTemp);
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 55);
+      sprintf(buf + strlen(buf), "%s%s%s", ch->purple(), StTemp, ch->norm());
+
       last.fighting = TRUE;
     }
   } else {
     if (last.fighting) {
-      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 40);
-      sprintf(buf + strlen(buf), "                                      ");
+      sprintf(buf + strlen(buf), VT_CURSPOS, ch->getScreen(), 55);
+      sprintf(buf + strlen(buf), "                    ");
       last.fighting = FALSE;
     }
   }

@@ -484,15 +484,15 @@ void TBeing::doCls(bool tell)
 
     if (!isImmortal()) {
 #if FACTIONS_IN_USE
-      sprintf(buf + strlen(buf), "Talens:               Exp:                            Aff %%:                 ");
+      sprintf(buf + strlen(buf), "Talens:                     Exp:                      Aff %%:                 ");
 #else
-      sprintf(buf + strlen(buf), "Talens:               Exp:                                                   ");
+      sprintf(buf + strlen(buf), "Talens:                     Exp:                                             ");
 #endif
     } else
-      sprintf(buf + strlen(buf), "Talens:               Exp:                            Room:                  ");
+      sprintf(buf + strlen(buf), "Talens:                     Exp:                       Room:                 ");
 
     sprintf(buf + strlen(buf), VT_CURSPOS, getScreen(), 1);
-    sprintf(buf + strlen(buf), "                      TNL:                                                   ");
+    sprintf(buf + strlen(buf), "                            TNL:                                             ");
     sendTo(buf);
 
     sendTo(fmt(VT_CURSPOS) % 1 % 1);
