@@ -343,7 +343,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       // SHAMAN STUFF
       ////////////////////
     case SPELL_STORMY_SKIES:
-      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.25 * HARD_TO_FIND_COMPONENT * NEED_RAIN_SNOW_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.15 * HARD_TO_FIND_COMPONENT * NEED_RAIN_SNOW_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_CARDIAC_STRESS:
     case SPELL_AQUATIC_BLAST:
@@ -351,7 +351,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_DEATHWAVE:
     case SPELL_RAZE:
     case SPELL_LICH_TOUCH:
-      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.25 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.15 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_DISTORT:
     case SPELL_STICKS_TO_SNAKES:
@@ -360,7 +360,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_FLATULENCE:
     case SPELL_VAMPIRIC_TOUCH:
     case SPELL_LIFE_LEECH:
-      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.25 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.15 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
       break;
       ///////////////////////
       // END SHAMAN STUFF

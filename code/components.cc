@@ -2810,6 +2810,13 @@ bool isInkComponent(int vnum)
   return false;
 }
 
+bool isBrewComponent(int vnum)
+{
+  if(vnum>=1401 && vnum<=1412)
+    return true;
+  return false;
+}
+
 bool isDissectComponent(int vnum)
 {
   switch (vnum) {

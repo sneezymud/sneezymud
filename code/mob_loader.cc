@@ -603,6 +603,7 @@ void TMonster::shamanComponentLoader(void)
   int comp = 0;
   int bag_num = 0;
   bool found = FALSE;
+  int Brewload = 0;
 
   if (GetMaxLevel() >= 50  && wealth > 1000) {
     wealth -= 800;
@@ -615,6 +616,7 @@ void TMonster::shamanComponentLoader(void)
 
   if (!(bag = read_object(bag_num, VIRTUAL)))
     return;
+
 
   while (::number(0,3) && (wealth > 10)) { 
     iters = 0;
@@ -641,6 +643,9 @@ void TMonster::shamanComponentLoader(void)
 
       if (isDissectComponent(comp))
         num = -1;
+
+      if (isBrewComponent(comp) && ++Brewload>3)
+	num = -1;
 
       // disallow certain components
       switch (comp) {

@@ -420,6 +420,7 @@ extern unsigned int rent_credit(ush_int, unsigned int, unsigned int);
 extern int levelLuckModifier(float);
 extern bool isDissectComponent(int);
 extern bool isInkComponent(int);
+extern bool isBrewComponent(int);
 extern wizPowerT mapFileToWizPower(int);
 extern int mapWizPowerToFile(wizPowerT);
 extern long room_file_pos[WORLD_SIZE];
