@@ -57,45 +57,6 @@ void phat_lewt(TMonster *myself)
 }
 
 
-// returns true if reached end of path
-int walk_path(TMonster *myself, const path_struct *p, int &pos)
-{
-  int rc;
-
-  if (p[(pos + 1)].direction == -1){
-    return TRUE;
-  } else if (p[pos].cur_room != myself->in_room){
-    dirTypeT dir;
-    for (dir=MIN_DIR; dir < MAX_DIR;dir++) {
-      if (myself->canGo(dir) && 
-	  myself->roomp->dir_option[dir]->to_room ==
-	  p[pos].cur_room){
-	rc = myself->goDirection(dir);
-	if (IS_SET_DELETE(rc, DELETE_THIS))
-	  return DELETE_THIS;
-	return FALSE;
-      }
-    }
-    
-    // trace along entire route and see if I can correct
-    pos = -1;
-    do {
-      pos += 1;
-      if (p[pos].cur_room == myself->in_room)
-	return FALSE;
-    } while (p[pos].cur_room != -1);
-  } else if (myself->getPosition() < POSITION_STANDING) {
-    myself->doStand();
-  } else {
-    rc=myself->goDirection(p[pos + 1].direction);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      return DELETE_THIS;
-    } else if(rc){
-      pos++;
-    }
-  }
-  return 0;
-}
 
 
 void gather_posse(TMonster *myself)
@@ -237,7 +198,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       job->state=STATE_TO_CS; 
       break;
     case STATE_TO_CS:
-      if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
+      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	if(job->which == BANK_BM){
 	  job->cur_path=1;
 	  job->cur_pos=0;
@@ -254,7 +215,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_TO_LOGRUS_BANK:
-      if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
+      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	phat_lewt(myself);
 
 	act("$n receives several bags of valuables for delivery.",
@@ -266,14 +227,14 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_LOGRUS_TO_CS:
-      if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
+      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	job->cur_path=3;
 	job->cur_pos=0;
 	job->state=STATE_TO_BANK;
       }
       break;
     case STATE_TO_AMBER_BANK:
-      if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
+      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	phat_lewt(myself);
 
 	act("$n receives several bags of valuables for delivery.",
@@ -285,7 +246,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_AMBER_TO_CS:
-      if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
+      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	job->cur_path=3;
 	job->cur_pos=0;
 	job->state=STATE_TO_BANK;
@@ -315,7 +276,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_BM_DELIVERING:
-      if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
+      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	phat_lewt(myself);
 
 	act("$n receives several bags of valuables for delivery.",
@@ -327,7 +288,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_BM_RETURNING:
-      if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
+      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	job->cur_path=3;
 	job->cur_pos=0;
 	job->state=STATE_TROLLEY_RET;
@@ -357,7 +318,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
       break;
     case STATE_TO_BANK:
-      if(walk_path(myself, money_train_path[job->cur_path], job->cur_pos)){
+      if(myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
 	for (f = myself->followers; f; f = n) {
 	  n = f->next;
 	  if((vict=f->follower)&& vict->inGroup(*myself) && !vict->fight()){

@@ -101,6 +101,48 @@ int TMonster::checkSpec(TBeing *t, cmdTypeT cmd, const char *arg, TThing *t2)
   return FALSE;
 }
 
+// returns true if reached end of path
+int TMonster::walk_path(const path_struct *p, int &pos)
+{
+  int rc;
+
+  if (p[(pos + 1)].direction == -1){
+    return TRUE;
+  } else if (p[pos].cur_room != in_room){
+    dirTypeT dir;
+    for (dir=MIN_DIR; dir < MAX_DIR;dir++) {
+      if (canGo(dir) && 
+	  roomp->dir_option[dir]->to_room ==
+	  p[pos].cur_room){
+	rc = goDirection(dir);
+	if (IS_SET_DELETE(rc, DELETE_THIS))
+	  return DELETE_THIS;
+	return FALSE;
+      }
+    }
+    
+    // trace along entire route and see if I can correct
+    pos = -1;
+    do {
+      pos += 1;
+      if (p[pos].cur_room == in_room)
+	return FALSE;
+    } while (p[pos].cur_room != -1);
+  } else if (getPosition() < POSITION_STANDING) {
+    doStand();
+  } else {
+    rc=goDirection(p[pos + 1].direction);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      return DELETE_THIS;
+    } else if(rc){
+      pos++;
+    }
+  }
+  return 0;
+}
+
+
+
 bool TMonster::isPolice() const
 {
   int num = mobVnum();
