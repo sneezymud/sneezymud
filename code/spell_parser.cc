@@ -1535,6 +1535,18 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SPELL_ENTHRALL_DEMON:
       rc = enthrallDemon(this);
       break;
+    case SPELL_CREATE_WOOD_GOLEM:
+      rc = createWoodGolem(this);
+      break;
+    case SPELL_CREATE_ROCK_GOLEM:
+      rc = createRockGolem(this);
+      break;
+    case SPELL_CREATE_IRON_GOLEM:
+      rc = createIronGolem(this);
+      break;
+    case SPELL_CREATE_DIAMOND_GOLEM:
+      rc = createDiamondGolem(this);
+      break;
     case SPELL_FEATHERY_DESCENT:
       rc = featheryDescent(this, ch);
       break;
@@ -1984,12 +1996,6 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       case SPELL_EXPEL:
       case SPELL_EXPEL_DEIKHAN:
           expel(this, ch);
-        break;
-      case SPELL_CACAODEMON:
-          cacaodemon(this, n);
-        break;
-      case SPELL_CREATE_GOLEM:
-          createGolem(this);
         break;
       case SPELL_CLARITY:
         clarity(this, ch);

@@ -249,10 +249,8 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe)
       s == SPELL_CONJURE_EARTH ||
       s == SPELL_CONJURE_FIRE ||
       s == SPELL_CONJURE_WATER ||
-      s == SPELL_CREATE_GOLEM ||
       s == SPELL_CONTROL_UNDEAD ||
       s == SPELL_VOODOO ||
-      s == SPELL_CACAODEMON ||
       s == SPELL_RESURRECTION ||
       s == SPELL_DANCING_BONES) {
     rc = checkDecharm(FORCE_NO, safe);
@@ -1003,13 +1001,25 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
       level = (int) (0.5 * level);
       break;
     case SPELL_ENTHRALL_GHAST:
-      level = (int) (0.5 * level);
+      level = (int) (0.55 * level);
       break;
     case SPELL_ENTHRALL_GHOUL:
       level = (int) (0.6 * level);
       break;
     case SPELL_ENTHRALL_DEMON:
-      level = (int) (0.6 * level);
+      level = (int) (0.65 * level);
+      break;
+    case SPELL_CREATE_WOOD_GOLEM:
+      level = (int) (0.75 * level);
+      break;
+    case SPELL_CREATE_ROCK_GOLEM:
+      level = (int) (0.8 * level);
+      break;
+    case SPELL_CREATE_IRON_GOLEM:
+      level = (int) (0.85 * level);
+      break;
+    case SPELL_CREATE_DIAMOND_GOLEM:
+      level = (int) (0.9 * level);
       break;
     default:
       forceCrash("Bad spellNumT (%d) to elementalFix", spell);

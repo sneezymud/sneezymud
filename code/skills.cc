@@ -964,12 +964,16 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDShamanControl *) cd)->skEnthrallGhoul;
     case SPELL_ENTHRALL_DEMON:
       return &((CDShamanControl *) cd)->skEnthrallDemon;
-    case SPELL_CACAODEMON: // 400
-      return &((CDShamanControl *) cd)->skCacaodemon;
+    case SPELL_CREATE_WOOD_GOLEM:
+      return &((CDShamanControl *) cd)->skCreateWoodGolem;
+    case SPELL_CREATE_ROCK_GOLEM:
+      return &((CDShamanControl *) cd)->skCreateRockGolem;
+    case SPELL_CREATE_IRON_GOLEM:
+      return &((CDShamanControl *) cd)->skCreateIronGolem;
+    case SPELL_CREATE_DIAMOND_GOLEM:
+      return &((CDShamanControl *) cd)->skCreateDiamondGolem;
     case SPELL_RESURRECTION: // 404
       return &((CDShamanControl *) cd)->skResurrection;
-    case SPELL_CREATE_GOLEM: // 401
-      return &((CDShamanControl *) cd)->skCreateGolem;
 
       // shaman alchemy------------------------------
 

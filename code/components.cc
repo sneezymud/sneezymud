@@ -1848,6 +1848,38 @@ void buildComponentArray()
     "$n sprinkles $p on the ground.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_CREATE_WOOD_GOLEM,
+    "",                       
+    "",
+    "",
+    "You throw $p into the air and it disappears!",
+    "$n throws $p into the air and it disappears!",
+    "",
+    ""));
+  CompInfo.push_back(compInfo(SPELL_CREATE_ROCK_GOLEM,
+    "",                       
+    "",
+    "",
+    "You throw $p into the air and it disappears!",
+    "$n throws $p into the air and it disappears!",
+    "",
+    ""));
+  CompInfo.push_back(compInfo(SPELL_CREATE_IRON_GOLEM,
+    "",                       
+    "",
+    "",
+    "You throw $p into the air and it disappears!",
+    "$n throws $p into the air and it disappears!",
+    "",
+    ""));
+  CompInfo.push_back(compInfo(SPELL_CREATE_DIAMOND_GOLEM,
+    "",                       
+    "",
+    "",
+    "You throw $p into the air and it disappears!",
+    "$n throws $p into the air and it disappears!",
+    "",
+    ""));
 
 
   COMPINDEX ci;

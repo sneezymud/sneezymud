@@ -540,6 +540,10 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SPELL_ENTHRALL_GHAST:
       case SPELL_ENTHRALL_GHOUL:
       case SPELL_ENTHRALL_DEMON:
+      case SPELL_CREATE_WOOD_GOLEM:
+      case SPELL_CREATE_ROCK_GOLEM:
+      case SPELL_CREATE_IRON_GOLEM:
+      case SPELL_CREATE_DIAMOND_GOLEM:
       case SPELL_CONJURE_EARTH:
       case SPELL_CONJURE_AIR:
       case SPELL_CONJURE_FIRE:
@@ -733,8 +737,6 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SKILL_DUAL_WIELD_THIEF:
       case SKILL_DISARM_THIEF:
       case SKILL_COUNTER_STEAL:
-      case SPELL_CACAODEMON:
-      case SPELL_CREATE_GOLEM:
       case SPELL_DANCING_BONES:
       case SPELL_CONTROL_UNDEAD:
       case SPELL_RESURRECTION:

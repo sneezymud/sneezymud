@@ -4428,13 +4428,15 @@ int TMonster::defendSelf(int)
 	int mentals[]={SPELL_CONJURE_AIR, SPELL_CONJURE_FIRE, 
 		       SPELL_CONJURE_EARTH, SPELL_CONJURE_WATER, 
 		       SPELL_ENTHRALL_SPECTRE, SPELL_ENTHRALL_GHAST,
-		       SPELL_ENTHRALL_GHOUL, SPELL_ENTHRALL_DEMON};
-	int count=8, i, foundmental=0;
+		       SPELL_ENTHRALL_GHOUL, SPELL_ENTHRALL_DEMON, 
+		       SPELL_CREATE_WOOD_GOLEM, SPELL_CREATE_ROCK_GOLEM,
+		       SPELL_CREATE_IRON_GOLEM, SPELL_CREATE_DIAMOND_GOLEM};
+	int count=12, i, foundmental=0;
 	followData *k, *k2;
 	TBeing *ch=NULL;
 
 	// pick a conjure spell
-	for(i=::number(0,7),count+=i;i<count;++i)
+	for(i=::number(0,11),count+=i;i<count;++i)
 	  if (doesKnowSkill(mentals[i%4]) && 
 	      (getSkillValue(mentals[i%4]) > 33))
 	    spell=mentals[i%4];
@@ -4483,6 +4485,22 @@ int TMonster::defendSelf(int)
 	      break;
 	    case SPELL_ENTHRALL_DEMON:
 	      act("$n sings the rada, 'Xebec Tamala!'",
+		  TRUE, this, 0, 0, TO_ROOM);	      
+	      break;
+	    case SPELL_CREATE_WOOD_GOLEM:
+	      act("$n sings the rada, 'Xebec Oakala!'",
+		  TRUE, this, 0, 0, TO_ROOM);	      
+	      break;
+	    case SPELL_CREATE_ROCK_GOLEM:
+	      act("$n sings the rada, 'Xebec Rokala!'",
+		  TRUE, this, 0, 0, TO_ROOM);	      
+	      break;
+	    case SPELL_CREATE_IRON_GOLEM:
+	      act("$n sings the rada, 'Xebec Metala!'",
+		  TRUE, this, 0, 0, TO_ROOM);	      
+	      break;
+	    case SPELL_CREATE_DIAMOND_GOLEM:
+	      act("$n sings the rada, 'Xebec Diala!'",
 		  TRUE, this, 0, 0, TO_ROOM);	      
 	      break;
 	  }

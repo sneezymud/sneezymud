@@ -403,10 +403,8 @@ void TBeing::doHelp(const char *arg)
           purple(), norm(), discArray[skill]->holyStrength);
       str += buf2;
 #endif
-    } else if (skill == SPELL_CACAODEMON ||
-               skill == SPELL_MATERIALIZE ||
-               skill == SPELL_SPONTANEOUS_GENERATION ||
-               skill == SPELL_CREATE_GOLEM) {
+    } else if (skill == SPELL_MATERIALIZE ||
+               skill == SPELL_SPONTANEOUS_GENERATION) {
       sprintf(buf2, "\n\r%sSpell Component  :%s SPECIAL (see below)\n\r", purple(), norm());
       str += buf2;
     } else if (IS_SET(discArray[skill]->comp_types, COMP_MATERIAL)) {

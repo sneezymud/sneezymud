@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.24  2001/06/19 06:29:03  jesus
+// skills on shaman
+//
 // Revision 5.23  2001/06/17 23:21:34  jesus
 // sticks to snakes update
 //
@@ -200,6 +203,10 @@ const int COMP_INVISIBILITY_BREW=1416;
 const int COMP_TRUE_SIGHT_BREW  =1418;
 const int COMP_GILLS_OF_FLESH_BREW   =1420;
 const int COMP_PLASMA_MIRROR      =1421;
+const int COMP_CREATE_WOOD_GOLEM  =1700;
+const int COMP_CREATE_ROCK_GOLEM  =1701;
+const int COMP_CREATE_IRON_GOLEM  =1702;
+const int COMP_CREATE_DIAMOND_GOLEM  =1703;
 const int COMP_SHIELD_OF_MISTS    =23020;
 const int COMP_ENTHRALL_SPECTRE   =31301;
 const int COMP_ENTHRALL_GHAST     =31302;

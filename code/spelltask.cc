@@ -1068,6 +1068,10 @@ int TBeing::checkBadSpellCondition(TBeing *caster, int which)
     case SPELL_ENTHRALL_GHOUL: // shaman 
     case SPELL_ENTHRALL_GHAST: // shaman 
     case SPELL_ENTHRALL_DEMON: // shaman 
+    case SPELL_CREATE_WOOD_GOLEM:
+    case SPELL_CREATE_ROCK_GOLEM:
+    case SPELL_CREATE_IRON_GOLEM:
+    case SPELL_CREATE_DIAMOND_GOLEM:
     case SPELL_FEATHERY_DESCENT:
     case SPELL_TORNADO:
       return FALSE;
@@ -1870,6 +1874,30 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
           rc = castEnthrallDemon(this);
         } else
           vlogf(LOG_BUG, "SPELL_ENTHRALL_DEMON called with null obj");
+        break;
+      case SPELL_CREATE_WOOD_GOLEM:
+        if (!o) {
+          rc = castCreateWoodGolem(this);
+        } else
+          vlogf(LOG_BUG, "SPELL_CREATE_WOOD_GOLEM called with null obj");
+        break;
+      case SPELL_CREATE_ROCK_GOLEM:
+        if (!o) {
+          rc = castCreateRockGolem(this);
+        } else
+          vlogf(LOG_BUG, "SPELL_CREATE_ROCK_GOLEM called with null obj");
+        break;
+      case SPELL_CREATE_IRON_GOLEM:
+        if (!o) {
+          rc = castCreateIronGolem(this);
+        } else
+          vlogf(LOG_BUG, "SPELL_CREATE_IRON_GOLEM called with null obj");
+        break;
+      case SPELL_CREATE_DIAMOND_GOLEM:
+        if (!o) {
+          rc = castCreateDiamondGolem(this);
+        } else
+          vlogf(LOG_BUG, "SPELL_CREATE_DIAMOND_GOLEM called with null obj");
         break;
 // disc_water
       case SPELL_FAERIE_FOG:

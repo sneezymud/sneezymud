@@ -755,9 +755,9 @@ int mapSpellnumToFile(spellNumT stt)
       return 554;
     case SPELL_SHIELD_OF_MISTS:
       return 555;
-    case SPELL_CACAODEMON:
+    case SPELL_CREATE_IRON_GOLEM:
       return 556;
-    case SPELL_CREATE_GOLEM:
+    case SPELL_CREATE_DIAMOND_GOLEM:
       return 557;
     case SPELL_DANCING_BONES:
       return 558;
@@ -775,6 +775,10 @@ int mapSpellnumToFile(spellNumT stt)
       return 564;
     case SKILL_TURN:
       return 565;
+    case SPELL_CREATE_WOOD_GOLEM:
+      return 566;
+    case SPELL_CREATE_ROCK_GOLEM:
+      return 567;
     case SKILL_SIGN:
       return 576;
     case SKILL_SWIM:
@@ -1671,10 +1675,10 @@ spellNumT mapFileToSpellnum(int stt)
     case 555:
       return SPELL_SHIELD_OF_MISTS;
     case 556:
-      return SPELL_CACAODEMON;
+      return SPELL_CREATE_IRON_GOLEM;
     case 557:
-      return SPELL_CREATE_GOLEM;
-    case 558:
+      return SPELL_CREATE_DIAMOND_GOLEM;
+    case 558: 
       return SPELL_DANCING_BONES;
     case 559:
       return SPELL_CONTROL_UNDEAD;
@@ -1690,6 +1694,10 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_LIFE_LEECH;
     case 565:
       return SKILL_TURN;
+    case 566:
+      return SPELL_CREATE_WOOD_GOLEM;
+    case 567:
+      return SPELL_CREATE_ROCK_GOLEM;
     case 576:
       return SKILL_SIGN;
     case 577:

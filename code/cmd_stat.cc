@@ -1205,6 +1205,10 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_ENTHRALL_GHAST:
       case SPELL_ENTHRALL_GHOUL:
       case SPELL_ENTHRALL_DEMON:
+      case SPELL_CREATE_WOOD_GOLEM:
+      case SPELL_CREATE_ROCK_GOLEM:
+      case SPELL_CREATE_IRON_GOLEM:
+      case SPELL_CREATE_DIAMOND_GOLEM:
       case SPELL_STORMY_SKIES:
       case SPELL_TREE_WALK:
       case SKILL_BEAST_CHARM:
@@ -1294,8 +1298,6 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_DUAL_WIELD_THIEF:
       case SKILL_DISARM_THIEF:
       case SKILL_COUNTER_STEAL:
-      case SPELL_CACAODEMON:
-      case SPELL_CREATE_GOLEM:
       case SPELL_DANCING_BONES:
       case SPELL_CONTROL_UNDEAD:
       case SPELL_RESURRECTION:

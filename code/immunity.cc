@@ -336,9 +336,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
       break;
     case SPELL_ENSORCER:
     case SPELL_HYPNOSIS:
-    case SPELL_CACAODEMON:
     case SPELL_CONTROL_UNDEAD:
-    case SPELL_CREATE_GOLEM:
     case SPELL_ANIMATE:
     case SPELL_VOODOO:
     case SPELL_DANCING_BONES:
@@ -652,6 +650,10 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_ENTHRALL_GHAST:
     case SPELL_ENTHRALL_GHOUL:
     case SPELL_ENTHRALL_DEMON:
+    case SPELL_CREATE_WOOD_GOLEM:
+    case SPELL_CREATE_ROCK_GOLEM:
+    case SPELL_CREATE_IRON_GOLEM:
+    case SPELL_CREATE_DIAMOND_GOLEM:
     case DAMAGE_NORMAL:
     case DAMAGE_BEHEADED:
     case DAMAGE_RAMMED:
