@@ -7624,6 +7624,12 @@ int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   vector <TObj *> chipl;
 
   if(gHoldem.getLastBet()){
+    if(gHoldem.getLastBet() != 2350){
+      me->doSay("Sorry, I only play with 100 talen chips right now.");
+      me->doFold("");
+      return false;
+    }
+
     for(int i=0;i<gHoldem.getNRaises();++i){
       chip=read_object(gHoldem.getLastBet(), VIRTUAL);
       *me += *chip;
