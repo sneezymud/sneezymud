@@ -1337,9 +1337,22 @@ int TObj::burnObject(TBeing *ch, int perc)
 
     if(::number(0,100) < (int)(0.075*(double)material_nums[getMaterial()].flammability) &&
        !isObjStat(ITEM_BURNING) && !isObjStat(ITEM_PAIRED)){
+
+#if 1
+      if (ch) {
+        sprintf(buf, "Your $o $q consumed in <r>flame<1>.");
+        act(buf,TRUE,ch,this,0,TO_CHAR, ANSI_YELLOW);
+        sprintf(buf, "$n's $o $q consumed in the flames.");
+        act(buf,TRUE,ch,this,0,TO_ROOM);
+      } else {
+        act("The flame consumes $n.",TRUE,this,0,0,TO_ROOM);
+      }
+      return DELETE_THIS;
+#else
       setBurning(ch);
       sprintf(buf, "Your $o start$Q to burn!\a");
       act(buf,TRUE,ch,this,0,TO_CHAR);
+#endif
     }
 
     return TRUE;
