@@ -1206,7 +1206,6 @@ int TBeing::doShoot(const char *arg)
   dirTypeT dir;
   TThing *t;
   unsigned int count = 0;
- 
   // Prevent: order elemental shoot <blah>
   // for Free xp.
   if ((!desc || (!isPc() && !orig)) && !(spec)) //added spec for the BM archers.. hopefully wont cause problems - Dash
@@ -1230,7 +1229,6 @@ int TBeing::doShoot(const char *arg)
   }
   if (checkPeaceful("You feel much too peaceful to contemplate violence.\n\r"))
     return FALSE;
-
   if (!(t = equipment[getPrimaryHold()])) {
     sendTo("You are not holding a bow to shoot!\n\r");
     return FALSE;
@@ -1268,7 +1266,7 @@ int TBeing::doShoot(const char *arg)
     }
   }
 
-  return FALSE;
+  return TRUE;  // changed this to TRUE for success
 }
 
 // DELETE_THIS, DELETE_VICT(ch)

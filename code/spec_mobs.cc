@@ -7673,6 +7673,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "riddling tree", riddlingTree},
   {FALSE, "fireman", fireman},
   {TRUE, "mimic", mimic},
+  {TRUE, "archer", archer},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

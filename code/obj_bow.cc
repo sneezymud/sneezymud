@@ -350,13 +350,12 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
 
   // determine how many arrows we can shoot in a round
   float nattacks=1.0;
-  nattacks += ((float)ch->getSkillValue(SKILL_FAST_LOAD)/100.0);
-  nattacks += ((float)ch->getSkillValue(SKILL_RANGED_SPEC)/100.0);
+  nattacks += max((double) 0, ((float)ch->getSkillValue(SKILL_FAST_LOAD)/100.0));
+  nattacks += max((double) 0, ((float)ch->getSkillValue(SKILL_RANGED_SPEC)/100.0));
 
   // for learning - ranged spec is learned elsewhere
   if(ch->doesKnowSkill(SKILL_FAST_LOAD))
     bSuccess(ch, ch->getSkillValue(SKILL_FAST_LOAD), SKILL_FAST_LOAD);
-
   while(nattacks > 0 && targ){
     // use remainder as a percentage chance of another arrow
     if(nattacks < 1.0 && ::number(0,99) > (nattacks*100))

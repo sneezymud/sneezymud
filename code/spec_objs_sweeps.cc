@@ -215,9 +215,9 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
       act("You must be holding a tile, with the other hand empty, to split the tile.",TRUE,ch,NULL,NULL,TO_CHAR,NULL);
      return TRUE;
     }
-    if (!(tile2 = read_object(TILEVNUM, VIRTUAL) ))
+    if (!(tile2 = read_object(TILEVNUM_SHAKEN, VIRTUAL) ))
     {
-      vlogf(LOG_BUG, fmt("spec_objs_sweeps.cc, problem loading object %d") % TILEVNUM);
+      vlogf(LOG_BUG, fmt("spec_objs_sweeps.cc, problem loading object %d") % TILEVNUM_SHAKEN);
       act("Nothing happens.",TRUE,ch,NULL,NULL,TO_ROOM,NULL);
       act("Nothing happens.",TRUE,ch,NULL,NULL,TO_CHAR,NULL);
       return TRUE;
@@ -252,7 +252,6 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
     tile2->swapToStrung();
     tile2->name = mud_str_dup(buf5);
     tile2->shortDescr = mud_str_dup(buf6);
-    tile2->spec = SPEC_SPLIT_JOIN;
     
     if (!left)
     {

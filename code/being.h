@@ -57,6 +57,7 @@ class TTrophy;
 class TWindow;
 class TGenWeapon;
 class TBaseClothing;
+class TQuiver;
 
 class objCost;
 extern TBeing *character_list;
@@ -1414,6 +1415,9 @@ class TBeing : public TThing {
     void doSacrifice(const char *);
     void doWhittle(const char *);
     void doBload(const char *);
+    vector <TBow *> getBows();
+    TArrow * autoGetAmmoQuiver(TBow *, TQuiver *);
+    TArrow * autoGetAmmo(TBow *);
     void doGload(sstring);
     void doPrerequisite(const char *, int);
     void doBrew(const char *);

@@ -165,7 +165,8 @@ const int SPEC_POISON_BITE        =180;
 const int SPEC_RIDDLING_TREE      =181;
 const int SPEC_FIREMAN            =182;
 const int SPEC_MIMIC              =183;
-const int NUM_MOB_SPECIALS        =183;
+const int SPEC_ARCHER             =184;
+const int NUM_MOB_SPECIALS        =184;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
@@ -214,6 +215,7 @@ extern int fishTracker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int bankGuard(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int realEstateAgent(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int shopWhisper(TBeing *, TMonster *, int, const char *);
+extern int archer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 class attune_struct {
   public:

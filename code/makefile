@@ -299,7 +299,7 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_objs_lottery_ticket.o	spec_mobs_lottery_redeemer.o	\
 	spec_mobs_holdem_player.o	spec_mobs_postman.o		\
 	spec_mobs_corporate_assistant.o spec_mobs_fireman.o \
-	spec_objs_sweeps.o
+	spec_objs_sweeps.o spec_mobs_archer.o
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
 # list of our local shared libs
@@ -663,8 +663,9 @@ objs/ai_responses.o: sound.h create.h thing.h room.h obj.h spec_objs.h
 objs/ai_responses.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/ai_responses.o: monster.h account.h extern.h handler.h obj_money.h
 objs/ai_responses.o: rent.h spec_mobs.h materials.h colorstring.h format.h
-objs/ai_responses.o: combat.h obj_symbol.h pathfinder.h
-objs/ai_responses.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
+objs/ai_responses.o: combat.h obj_symbol.h obj_potion.h obj_base_cup.h
+objs/ai_responses.o: pathfinder.h /usr/include/g++/deque
+objs/ai_responses.o: /usr/include/g++/stl_deque.h
 objs/ai_utility.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/ai_utility.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/ai_utility.o: /usr/include/g++/cstdlib /usr/include/stdlib.h

@@ -474,9 +474,33 @@ int TMonster::hunt()
     for (count = 0; count < amt; count++) {
       if (persist <= 0)
         return TRUE;
-
       persist -= 1;
       res = dirTrack(hunted);
+      int next_room;
+      if (spec == SPEC_ARCHER && (next_room = clearpath(in_room, res)) &&
+          next_room != inRoom() && next_room == hunted->inRoom()) {
+        TBow *bow = NULL;
+        TArrow *ammo = NULL;
+        TArrow *tempArr = NULL;
+        vector <TBow *> bows = getBows();
+        unsigned int j;
+        for (j = 0; j < bows.size(); j++)
+        {
+          bow = bows[j];
+          if (bow->getStuff())
+          break;
+          if (!bow) vlogf(LOG_BUG, fmt("mobact.cc: bow is null somehow"));
+          if (bow && (tempArr = autoGetAmmo(bow))) {
+            ammo = tempArr;
+            break;
+          }
+        }
+        if (bow && (ammo || bow->getStuff())) {
+          if (archer(NULL, CMD_GENERIC_PULSE, NULL, this, NULL))
+            break;
+        }
+      }
+      
       if (res != DIR_NONE) {
         if (legalMobMovement(this, res)) {
           rc = goDirection(res);
