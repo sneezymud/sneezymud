@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: actions.cc,v $
+// Revision 5.1  1999/10/16 04:43:45  batopr
+// new version
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
