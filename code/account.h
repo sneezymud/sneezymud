@@ -2,22 +2,36 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: account.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
 #ifndef __ACCOUNT_H
 #define __ACCOUNT_H
 
-extern int account_number;
-extern int player_count;
+class TAccountStats
+{
+  public:
+    unsigned int account_number;
+    unsigned int player_count;
+    unsigned int active_player7;
+    unsigned int active_account7;
+    unsigned int active_player30;
+    unsigned int active_account30;
+    unsigned int player_num;
+    unsigned int max_player_since_reboot;
+
+    TAccountStats() :
+      account_number(0),
+      player_count(0),
+      active_player7(0),
+      active_account7(0),
+      active_player30(0),
+      active_account30(0),
+      player_num(0),
+      max_player_since_reboot(0)
+    {}
+};
+extern TAccountStats accStat;
 
 class TAccount
 {
@@ -59,5 +73,6 @@ class accountFile {
     byte term;
     byte time_adjust;
     unsigned int flags;
+    time_t last_logon;
 };
 #endif

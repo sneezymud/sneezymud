@@ -6465,6 +6465,13 @@ void TBeing::doAccount(const char *arg)
   sprintf(buf2, "Account email address : %s%s%s\n\r", cyan(), afp.email, norm());
   str += buf2;
 
+  char *tmstr = (char *) asctime(localtime(&afp.last_logon));
+  *(tmstr + strlen(tmstr) - 1) = '\0';
+  sstring tmpbuf = fmt("Last login : %s%s%s\n\r") %
+    green() % tmstr % norm();
+  str += tmpbuf;
+  
+
   if ((afp.flags & ACCOUNT_IMMORTAL) && !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
     str += "This account belongs to an immortal.\n\r";
     str += "*** Information Concealed ***\n\r";

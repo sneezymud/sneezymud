@@ -2455,6 +2455,7 @@ int Descriptor::nanny(const char *arg)
 
       prompt_mode = 1;
       character->doSave(SILENT_YES);
+      character->desc->saveAccount();
       break;
     case CON_PLYNG:
     case CON_NMECNF:
@@ -4891,12 +4892,8 @@ int Descriptor::sendLogin(const char *arg)
       strcpy(account->passwd, afp.passwd);
       strcpy(account->email, afp.email);
       account->term = termTypeT(afp.term);
-#if 1
-// COSMO TEST
       if (account->term == TERM_ANSI) 
         plr_act = PLR_COLOR;
-#endif
-
       account->birth = afp.birth;
       account->login = time(0);
       account->status = FALSE;
@@ -5680,6 +5677,7 @@ void Descriptor::saveAccount()
   afp.term = account->term;
   afp.time_adjust = account->time_adjust;
   afp.flags = account->flags;
+  afp.last_logon = account->login;
 
   fwrite(&afp, sizeof(accountFile), 1, fp);
   fclose(fp);
