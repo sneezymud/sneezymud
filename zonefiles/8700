@@ -204,22 +204,22 @@ O 0 10763 1 8785
 O 0 6609 1 8869 	bunkbed
 
 ? 0 5 0 B 
-B 1 820 9999 8836    det invis potion in treasure room
+B 1 820 1 8836    det invis potion in treasure room
 
 ? 0 5 0 B 
-B 1 820 9999 8836    det invis potion in treasure room
+B 1 820 1 8836    det invis potion in treasure room
 
 ? 0 5 0 B 
-B 1 802 9999 8836    cure crit pot
+B 1 802 1 8836    cure crit pot
 
 ? 0 5 0 B 
-B 1 3012 9999 8836   harm crit/infra/armor pot ++
+B 1 3012 1 8836   harm crit/infra/armor pot ++
 
 ? 0 5 0 B 
-B 1 3014 9999 8836   sanc pot ++
+B 1 3014 1 8836   sanc pot ++
 
 ? 0 5 0 B 
-B 1 3767 9999 8836   city treasure
+B 1 3767 1 8836   city treasure
 
 ? 0 5 0 B 
 B 1 8722 1 8836      chest

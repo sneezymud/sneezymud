@@ -47,7 +47,7 @@ P 1 30985 9999 30996 # moleskin history
 O 0 30997 1 30998  # chair
 
 O 0 30996 1 30978  # table
-B 0 30993 9999 30978 # incense, decays in 30
+B 0 30993 1 30978 # incense, decays in 30
 
 O 0 30981 1 30996  # sarcophagus
 P 1 30982 9999 30981 # desiccated corpse

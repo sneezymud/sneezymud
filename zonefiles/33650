@@ -30,7 +30,7 @@ O 0 33667 1 33698 	cookpit
 P 1 33668 9999 33667	cookpot on the cookpit
 O 0 33689 1 33698 	tree stump chair
 O 0 33669 1 33698 	log of larchwood
-B 0 33669 9999 33698	feed the log pile
+B 0 33669 3 33698	feed the log pile
 
 
 X 1 5 33673		maypop garland

@@ -177,23 +177,23 @@ E 1 10245 1 3				armoury key around neck
 Y 0 11 1                                platemail
 
 */ loading of key dumps full suit of platemail into armory
-B 1 1100 14 10245			platemail helm
-B 1 1101 14 10245			platemail collar
-B 1 1102 14 10245			platemail suit
-B 1 1103 20 10245			platemail armband
-B 1 1103 20 10245			platemail armband
-B 1 1104 20 10245			platemail gauntelt
-B 1 1104 20 10245			platemail gauntlet
-B 1 1105 14 10245			platemail girth
-B 1 1106 20 10245			platemail bracer
-B 1 1106 20 10245			platemail bracer
-B 1 1107 20 10245			platemail legging
-B 1 1107 20 10245			platemail legging
-B 1 1108 20 10245			platemail boot
-B 1 1108 20 10245			platemail boot
-B 1 1109 20 10245			brass knuckles
-B 1 1110 12 10245			kite shield
-B 1 1111 12 10245			purple black cape
+B 1 1100 1 10245			platemail helm
+B 1 1101 1 10245			platemail collar
+B 1 1102 1 10245			platemail suit
+B 1 1103 2 10245			platemail armband
+B 1 1103 2 10245			platemail armband
+B 1 1104 2 10245			platemail gauntelt
+B 1 1104 2 10245			platemail gauntlet
+B 1 1105 1 10245			platemail girth
+B 1 1106 2 10245			platemail bracer
+B 1 1106 2 10245			platemail bracer
+B 1 1107 2 10245			platemail legging
+B 1 1107 2 10245			platemail legging
+B 1 1108 2 10245			platemail boot
+B 1 1108 2 10245			platemail boot
+B 1 1109 2 10245			brass knuckles
+B 1 1110 1 10245			kite shield
+B 1 1111 1 10245			purple black cape
 
 M 0 10208 1 10257 			frontier signalman
 G 1 10223 20					key to footlocker

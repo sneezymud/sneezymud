@@ -59,11 +59,11 @@ O 0 28942 1 28951  large bed
 O 0 28942 1 28960 
 O 0 28912 1 28954  scraps bag
 O 0 28911 1 28956  large well
-B 0 28917 9999 28956 red rose
-B 0 28918 9999 28956 white rose
-B 0 28919 9999 28956 yellow rose
-B 0 28946 9999 28957 carrot
-B 0 28947 9999 28957 Lettuce
+B 0 28917 3 28956 red rose
+B 0 28918 3 28956 white rose
+B 0 28919 3 28956 yellow rose
+B 0 28946 3 28957 carrot
+B 0 28947 3 28957 Lettuce
 O 0 28948 1 28961  table
 O 0 28949 4 28961  chair
 O 0 28950 1 28961  fireplace

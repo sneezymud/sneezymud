@@ -119,8 +119,8 @@ P 1 26651 999 26695		marble bust of Talana
 O 0 26696 1 26696 		iron throne
 O 0 26698 1 26698 		exotic bed
 O 0 26699 1 26699 		grisly torture device
-B 0 26688 999 26687		cake of soap
-B 0 26688 999 26688
+B 0 26688 1 26687		cake of soap
+B 0 26688 1 26688
 
 M 0 26650 1 26660		chaos knight
 ? 0 2 0 E

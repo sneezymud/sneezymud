@@ -213,9 +213,9 @@ V 1 2 7058			; Change to key 7058
 P 1 7018 9999 1212		; Chunk of Polished Obsidian
 
 ? 0 20 0 B
-B 1 7020 30 7024        ; Bowl of Human Blood
+B 1 7020 1 7024        ; Bowl of Human Blood
 ? 0 20 0 B  
-B 1 7020 30 7076        
+B 1 7020 1 7076        
 
 O 0 7020 1 7024 	; Bowl of Human Blood
 O 0 7020 1 7076 
