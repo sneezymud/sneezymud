@@ -82,6 +82,7 @@
 #include "obj_vehicle.h"
 #include "obj_casino_chip.h"
 #include "obj_poison.h"
+#include "obj_handgonne.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -2602,6 +2603,8 @@ TObj * makeNewObj(itemTypeT tmp)
       return new TCasinoChip();
     case ITEM_POISON:
       return new TPoison();
+    case ITEM_HANDGONNE:
+      return new THandgonne();
     case ITEM_UNDEFINED:
     case ITEM_MARTIAL_WEAPON:
     case MAX_OBJ_TYPES:

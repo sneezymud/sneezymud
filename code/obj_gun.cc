@@ -11,71 +11,7 @@
 #include "obj_gun.h"
 #include "range.h"
 #include "obj_arrow.h"
-
-enum ammoTypeT {
-  AMMO_NONE = 0,                // 0
-  AMMO_10MM_PISTOL,             // 1
-  AMMO_9MM_PARABELLEM_PISTOL,   // 2
-  AMMO_45CAL_ACP_PISTOL,        // 3
-  AMMO_50CAL_AE_PISTOL,         // 4
-  AMMO_44CAL_MAGNUM_PISTOL,     // 5
-  AMMO_32CAL_ACP_PISTOL,        // 6
-  AMMO_50CAL_BMG_PISTOL,        // 7
-  AMMO_556MM_NATO_PISTOL,       // 8
-  AMMO_SS190,                   // 9
-  AMMO_9MM_PARABELLEM_RIFLE,    // 10
-  AMMO_45CAL_ACP_RIFLE,         // 11
-  AMMO_556MM_RIFLE,             // 12
-  AMMO_762MM_RIFLE,             // 13
-  AMMO_30CAL_RIFLE,             // 14
-  AMMO_FLECHETTE,               // 15
-  AMMO_LAW,                     // 16
-  AMMO_MAX
-};
-
-const char *shelldesc [] =
-{
-  "None",                       // 0
-  "10mm pistol",                // 1
-  "9mm Parabellem pistol",      // 2
-  ".45cal ACP pistol",          // 3
-  ".50cal Action Express",      // 4
-  ".44cal Magnum",              // 5
-  ".32cal ACP",                 // 6
-  ".50cal BMG",                 // 7
-  "5.56mm NATO pistol",         // 8
-  "SS190",                      // 9
-  "9mm Parabellem rifle",       // 10
-  ".45cal ACP rifle",           // 11
-  "5.56mm rifle",               // 12
-  "7.62mm rifle",               // 13
-  "30cal rifle",                // 14
-  "flechette",                  // 15
-  "LAW rocket",                 // 16
-};
-
-const char *shellkeyword [] = 
-{
-  "None",                       // 0
-  "10mmPistol",                 // 1
-  "9mmPistol",                  // 2
-  "45calPistol",                // 3
-  "50calAE",                    // 4
-  "44calMag",                   // 5
-  "32calACP",                   // 6
-  "50calBMG",                   // 7
-  "556mmPistol",                 // 8
-  "SS190",                      // 9
-  "9mmRifle",                   // 10
-  "45calRifle",                 // 11
-  "556mmRifle",                 // 12
-  "762mmRifle",                 // 13
-  "30calRifle",                  // 14
-  "flechette",                   // 15
-  "lawrocket",
-};
-
-
+#include "obj_handgonne.h"
 
 const char *getAmmoKeyword(int ammo){
   if(ammo < AMMO_NONE ||
@@ -98,9 +34,10 @@ const char *getAmmoDescr(int ammo){
 }
 
 
-void dropSpentCasing(TRoom *roomp, int ammo){
+void TGun::dropSpentCasing(TRoom *roomp){
   TObj *obj;
   char buf[256];
+  int ammo=getAmmoType();
 
   int robj = real_object(13874);
   if (robj < 0 || robj >= (signed int) obj_index.size()) {
@@ -137,6 +74,36 @@ void gload_usage(TBeing *tb){
   return;
 }
 
+void TGun::loadMe(TBeing *ch, TAmmo *ammo)
+{
+  --(*ammo);
+  setAmmo(ammo);
+  
+  act("You load $p into $N.", TRUE, ch, ammo, this, TO_CHAR);
+  act("$n loads $p into $N.", TRUE, ch, ammo, this, TO_ROOM);
+  ch->addToWait(combatRound(1));
+}
+
+void TGun::unloadMe(TBeing *ch, TAmmo *ammo)
+{
+  TThing *arrow=dynamic_cast<TThing *>(ammo);
+
+  if(ammo->getRounds() == 0){
+    --(*ammo);
+    *roomp += *ammo;
+    
+    act("You unload $N and drop $p.", TRUE, ch, ammo, this, TO_CHAR);
+    act("$n unloads $N and drops $p.", TRUE, ch, ammo, this, TO_ROOM);
+  } else {
+    --(*arrow);
+    *this += *arrow;
+    
+    act("You unload $N.", TRUE, ch, ammo, this, TO_CHAR);
+    act("$n unloads $N.", TRUE, ch, ammo, this, TO_ROOM);
+  }
+  
+  ch->addToWait(combatRound(1));    
+}
 
 void TBeing::doGload(sstring arg)
 {
@@ -187,13 +154,8 @@ void TBeing::doGload(sstring arg)
       sendTo("That isn't the right kind of ammunition.\n\r");
       return;
     }
-    
-    --(*ammo);
-    gun->setAmmo(ammo);
-    
-    act("You load $p into $N.", TRUE, this, ammo, gun, TO_CHAR);
-    act("$n loads $p into $N.", TRUE, this, ammo, gun, TO_ROOM);
-    addToWait(combatRound(1));
+
+    gun->loadMe(this, ammo);
   } else {
     generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tb, &bow);
 
@@ -206,24 +168,8 @@ void TBeing::doGload(sstring arg)
       sendTo("That gun isn't loaded!\n\r");
       return;
     }
-    
-    arrow=dynamic_cast<TThing *>(ammo);
 
-    if(ammo->getRounds() == 0){
-      --(*ammo);
-      *roomp += *ammo;
-
-      act("You unload $N and drop $p.", TRUE, this, ammo, gun, TO_CHAR);
-      act("$n unloads $N and drops $p.", TRUE, this, ammo, gun, TO_ROOM);
-    } else {
-      --(*arrow);
-      *this += *arrow;
-      
-      act("You unload $N.", TRUE, this, ammo, gun, TO_CHAR);
-      act("$n unloads $N.", TRUE, this, ammo, gun, TO_ROOM);
-    }
-
-    addToWait(combatRound(1));    
+    gun->unloadMe(this, ammo);
   }
 }
 
@@ -460,7 +406,7 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
 
     // decrement ammo and drop a casing
     if(!isCaseless())
-      dropSpentCasing(ch->roomp, ammo->getAmmoType());
+      dropSpentCasing(ch->roomp);
     setRounds(getRounds()-1);
     
     // send messages

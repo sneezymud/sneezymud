@@ -215,6 +215,7 @@ TaskEntry tasks[NUM_TASKS] =
   {"extinguishing", "You are too busy putting a fire out.\n\r", task_extinguish_my_ass},
   {"butchering", "You are too busy butchering a corpse.\n\r", task_butchering},
   {"cooking", "You are too busy cooking.\n\r", task_cook},
+  {"loading a handgonne", "You are too busy loading your handgonne.\n\r", task_handgonne_load},
 };
 
 bool TBeing::nobrainerTaskCommand(cmdTypeT cmd)

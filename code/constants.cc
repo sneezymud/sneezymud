@@ -8,6 +8,8 @@
 
 #include "stdsneezy.h"
 #include "obj_drug.h"
+#include "obj_gun.h"
+
 
 const sstring whitespace=" \f\n\r\t\v";  // from isspace() man page
 
@@ -563,9 +565,9 @@ void assign_item_info()
 				    "Rate of fire", 10, 0,
 				    "Damage Level * 4 and Damage Precision", 10000, 0,
 				    "Bit flags", 2147483647, 0,
-				    "Ammo type", 14, 0);
+				    "Ammo type", AMMO_MAX-1, AMMO_NONE+1);
   ItemInfo[ITEM_AMMO] = new itemInfo("Ammo", "some ammo",
-				     "Ammo type", 14, 0,
+				     "Ammo type", AMMO_MAX-1, AMMO_NONE+1,
 				     "Rounds", 500, 0,
 				     "Unused", 0, 0,
 				     "Unused", 0, 0);
@@ -600,6 +602,11 @@ void assign_item_info()
      "Number of units left", 2560, 0,
      "Liquid type - see help liquids", MAX_DRINK_TYPES - 1, 0,
      "1 = Poisoned, 2 = Unlimited drinks, 4 = Spillable", 7, 0);
+  ItemInfo[ITEM_HANDGONNE] = new itemInfo("Handgonne","a handgonne",
+				    "Rate of fire", 1, 1,
+				    "Damage Level * 4 and Damage Precision", 10000, 0,
+				    "Bit flags", 2147483647, 0,
+				    "Ammo type", AMMO_LEAD_SHOT, AMMO_LEAD_SHOT);
   
 };
 
@@ -1895,6 +1902,58 @@ const char * const deities[MAX_DEITIES] =
   "Talana, the lawgiver",
   "Salurel, the proud",
 };
+
+
+
+
+const char *shelldesc [] =
+{
+  "None",                       // 0
+  "10mm pistol",                // 1
+  "9mm Parabellem pistol",      // 2
+  ".45cal ACP pistol",          // 3
+  ".50cal Action Express",      // 4
+  ".44cal Magnum",              // 5
+  ".32cal ACP",                 // 6
+  ".50cal BMG",                 // 7
+  "5.56mm NATO pistol",         // 8
+  "SS190",                      // 9
+  "9mm Parabellem rifle",       // 10
+  ".45cal ACP rifle",           // 11
+  "5.56mm rifle",               // 12
+  "7.62mm rifle",               // 13
+  "30cal rifle",                // 14
+  "flechette",                  // 15
+  "LAW rocket",                 // 16
+  "lead shot",                  // 17
+};
+
+const char *shellkeyword [] = 
+{
+  "None",                       // 0
+  "10mmPistol",                 // 1
+  "9mmPistol",                  // 2
+  "45calPistol",                // 3
+  "50calAE",                    // 4
+  "44calMag",                   // 5
+  "32calACP",                   // 6
+  "50calBMG",                   // 7
+  "556mmPistol",                 // 8
+  "SS190",                      // 9
+  "9mmRifle",                   // 10
+  "45calRifle",                 // 11
+  "556mmRifle",                 // 12
+  "762mmRifle",                 // 13
+  "30calRifle",                  // 14
+  "flechette",                   // 15
+  "lawrocket",
+  "leadshot",                    // 17
+};
+
+
+
+
+
 
 const char * const trap_effects[MAX_TRAP_EFF] =
 {

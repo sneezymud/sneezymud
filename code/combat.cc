@@ -22,13 +22,13 @@
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
+#include "obj_handgonne.h"
 #include "obj_base_clothing.h"
 #include "cmd_trophy.h"
 
 #define DAMAGE_DEBUG 0
 
 extern class TPeelPk peelPk;
-extern void dropSpentCasing(TRoom *, int);
 
 
 TBeing *gCombatList = NULL;        // head of l-list of fighting chars    
@@ -3471,15 +3471,18 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 
   // handle ammunition
   TGun *gun;
-  if(weapon && (gun=dynamic_cast<TGun *>(weapon))){
+  if(dynamic_cast<THandgonne *>(weapon)){
+    act("You can't fire $N while under attack!", TRUE, this, NULL, weapon, TO_CHAR);
+    found=TRUE;
+  } else if(weapon && (gun=dynamic_cast<TGun *>(weapon))){
     if(dynamic_cast<TMonster *>(this) && !master){
       // unlimited ammo for mobs
       if(!gun->isCaseless())
-	dropSpentCasing(roomp, gun->getAmmoType());
+	gun->dropSpentCasing(roomp);
     } else {
       if(gun->getRounds()>0){
 	if(!gun->isCaseless() && gun->getAmmo())
-	  dropSpentCasing(roomp, gun->getAmmo()->getAmmoType());
+	  gun->dropSpentCasing(roomp);
 	gun->setRounds(gun->getRounds()-1);
       } else {
 	act("Click.  $N is out of ammunition.", TRUE, this, NULL, gun, TO_CHAR);

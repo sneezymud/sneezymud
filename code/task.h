@@ -66,6 +66,7 @@ extern int task_sacrifice      (TBeing *, cmdTypeT, const char *, int, TRoom *, 
 extern int task_fishing     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_extinguish_my_ass (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_butchering      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_handgonne_load      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 
 typedef struct _tasks_entry {
   const char * const name;
@@ -118,6 +119,7 @@ enum taskTypeT {
      TASK_EXTINGUISH_MY_ASS,
      TASK_BUTCHER,
      TASK_COOK,
+     TASK_HANDGONNE_LOAD,
      NUM_TASKS  // keep this as max
 };
 

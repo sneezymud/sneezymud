@@ -13,7 +13,33 @@
 const unsigned int GUN_FLAG_SILENCED         = (1<<0);
 const unsigned int GUN_FLAG_CASELESS         = (1<<1);
 const unsigned int GUN_FLAG_CLIPLESS         = (1<<2);
+const unsigned int GUN_FLAG_FOULED           = (1<<3);
 
+enum ammoTypeT {
+  AMMO_NONE = 0,                // 0
+  AMMO_10MM_PISTOL,             // 1
+  AMMO_9MM_PARABELLEM_PISTOL,   // 2
+  AMMO_45CAL_ACP_PISTOL,        // 3
+  AMMO_50CAL_AE_PISTOL,         // 4
+  AMMO_44CAL_MAGNUM_PISTOL,     // 5
+  AMMO_32CAL_ACP_PISTOL,        // 6
+  AMMO_50CAL_BMG_PISTOL,        // 7
+  AMMO_556MM_NATO_PISTOL,       // 8
+  AMMO_SS190,                   // 9
+  AMMO_9MM_PARABELLEM_RIFLE,    // 10
+  AMMO_45CAL_ACP_RIFLE,         // 11
+  AMMO_556MM_RIFLE,             // 12
+  AMMO_762MM_RIFLE,             // 13
+  AMMO_30CAL_RIFLE,             // 14
+  AMMO_FLECHETTE,               // 15
+  AMMO_LAW,                     // 16
+  AMMO_LEAD_SHOT,               // 17
+  AMMO_MAX
+};
+
+
+extern const char *shelldesc [];
+extern const char *shellkeyword [];
 
 
 
@@ -49,6 +75,9 @@ class TGun : public TGenWeapon {
     int flags;
 
   public:    
+    virtual void loadMe(TBeing *ch, TAmmo *ammo);
+    virtual void unloadMe(TBeing *ch, TAmmo *ammo);
+
     void setROF(int r) { rof=r; }
     int getROF() const { return rof; }
     void setAmmoType(int a) { ammotype=a; }
@@ -61,10 +90,15 @@ class TGun : public TGenWeapon {
     int getRounds() const;
     void setFlags(int f) { flags=f; }
     int getFlags() const { return flags; }
+    void addToFlags(int f) { flags=flags ^ f; }
+    void remFromFlags(int f) { flags=flags | f; }
+
     bool isSilenced() const { return flags & GUN_FLAG_SILENCED; }
     bool isCaseless() const { return flags & GUN_FLAG_CASELESS; }
     bool isClipless() const { return flags & GUN_FLAG_CLIPLESS; }
-    
+    bool isFouled() const { return flags & GUN_FLAG_FOULED; }
+    void dropSpentCasing(TRoom *roomp);
+
 
     bool canStab() const { return false; }
     bool canBackstab() const { return false; }

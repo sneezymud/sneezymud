@@ -99,6 +99,7 @@ enum itemTypeT {
     ITEM_VEHICLE,
     ITEM_CASINO_CHIP,
     ITEM_POISON,
+    ITEM_HANDGONNE,
     MAX_OBJ_TYPES
 };
 const itemTypeT MIN_OBJ_TYPE = itemTypeT(0);
@@ -160,23 +161,24 @@ enum toolTypeT {
      TOOL_LADEL,
      TOOL_SOIL,
      TOOL_PLANT_OIL,
-     TOOL_CHALK,
+     TOOL_CHALK,  // 25
      TOOL_RUNES,
      TOOL_ENERGY,
      TOOL_PENTAGRAM,
      TOOL_CHISEL,
-     TOOL_SILICA,
+     TOOL_SILICA, // 30
      TOOL_WORKBENCH,
      TOOL_LOUPE,
      TOOL_PLIERS,
      TOOL_PUNCH,
-     TOOL_CORDING,
+     TOOL_CORDING, // 35
      TOOL_TAPE,
      TOOL_CANDLE,
      TOOL_GLUE,
      TOOL_ALTAR,
-     TOOL_BRUSH,
+     TOOL_BRUSH,  // 40
      TOOL_ASTRAL_RESIN,
+     TOOL_BLACK_POWDER,
      MAX_TOOL_TYPE // move and change
 };
 const toolTypeT MIN_TOOL_TYPE = TOOL_WHETSTONE;
