@@ -262,6 +262,8 @@ void TShopOwned::showInfo()
 		   (keeper->getMoney()+value));
     
     keeper->doTell(ch->getName(), fmt("My corporate dividend kickback is %f.") % getDividend());
+    keeper->doTell(ch->getName(), fmt("My corporate reserve is %i-%i.") %
+		   getMinReserve() % getMaxReserve());
 
   }
 
