@@ -5756,15 +5756,24 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	db.query("update fishkeeper set weight=weight+%f where name='%s'", o->getWeight(), ch->name);
       }
 
+      // create new entry for fish if one doesn't exist
+      db.query("select 1 from fishlargest where type='%s'", o->shortDescr);
+      if(!db.fetchRow()){
+	db.query("insert into fishlargest values ('no one', '%s', 0.0)", 
+		 o->shortDescr);
+      }
+
+
       // check for largest
       db.query("select weight, name from fishlargest where type='%s'", o->shortDescr);
-      db.fetchRow();
 
-      if(o->getWeight() > convertTo<int>(db.getColumn(0))){
-	db.query("update fishlargest set name='%s', weight=%f where type='%s'", ch->getName(), o->getWeight(), o->shortDescr);
+      if(!db.fetchRow() || (o->getWeight() > convertTo<int>(db.getColumn(0)))){
 
 	sprintf(buf, "Oh my, you've broken %s's record!  This the largest %s I've seen, weighing in at %f!  Very nice! (%i talens)",
 		db.getColumn(1), o->shortDescr, o->getWeight(), (int)(o->getWeight()*100));
+
+	db.query("update fishlargest set name='%s', weight=%f where type='%s'", ch->getName(), o->getWeight(), o->shortDescr);
+
 	myself->doSay(buf);
 	ch->addToMoney((int)(o->getWeight()*100), GOLD_COMM);	
       } else {
