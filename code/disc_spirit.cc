@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_spirit.cc,v $
+// Revision 1.4  1999/09/23 22:35:10  cosmo
+// *** empty log message ***
+//
 // Revision 1.3  1999/09/23 22:28:54  cosmo
 // Just made a crash fix.
 //
@@ -394,7 +397,7 @@ int ensorcer(TBeing *caster, TBeing *victim, int level, byte bKnown)
     if (victim->fight() == caster)
       caster->stopFighting();
     // and don't let the charm hurt anyone that we didn't order them to hurt
-    if (victim->fight)
+    if (victim->fight())
       victim->stopFighting();
 
     return SPELL_SUCCESS;
