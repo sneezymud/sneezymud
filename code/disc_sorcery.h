@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_sorcery.h,v $
+// Revision 1.5  1999/10/06 22:13:58  batopr
+// *** empty log message ***
+//
 // Revision 1.4  1999/09/27 00:38:17  lapsos
 // *** empty log message ***
 //
@@ -95,7 +98,7 @@ private:
     int atomize(TBeing *, TBeing *);
     int castAtomize(TBeing *, TBeing *);
     int atomize(TBeing *, TBeing *, int, byte, int);
-//    int atomize(TBeing *, TBeing *, TMagicItem *);
+    int atomize(TBeing *, TBeing *, TMagicItem *);
 
     int castAnimate(TBeing *);
     int animate(TBeing *);
