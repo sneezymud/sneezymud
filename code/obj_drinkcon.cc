@@ -37,7 +37,7 @@ TDrinkCon::~TDrinkCon()
 void TDrinkCon::findSomeDrink(TDrinkCon **last_good, TBaseContainer **last_cont, TBaseContainer *cont)
 {
   // 6-1-2004 - We want to make sure this is Water, if they want to drink something else they need to do it manually.  -Lapsos
-  if ((getDrinkUnits() > 0) && (getLiqThirst() > 0) && (getDrinkType() != LIQ_WATER)) {
+  if ((getDrinkUnits() > 0) && (getLiqThirst() > 0) && (getDrinkType() == LIQ_WATER)) {
     *last_good = this;
     *last_cont = cont;
   }
