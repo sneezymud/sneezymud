@@ -100,9 +100,16 @@ void TCookware::pourMeIntoDrink2(TBeing *ch, TBaseCup *from)
 
 
   // let them know
-  ch->sendTo(COLOR_OBJECTS, "You pour %s into %s.\n\r", 
-          DrinkInfo[from->getDrinkType()]->name, ch->objs(this));
+  string buf;
+  ssprintf(buf, "You pour %s into %s.\n\r",
+	   DrinkInfo[from->getDrinkType()]->name, ch->objs(this));
+  act(buf.c_str(), FALSE, ch, 0, 0, TO_CHAR);
 
+  ssprintf(buf, "$n pours %s into %s.\n\r",
+	   DrinkInfo[from->getDrinkType()]->name, ch->objs(this));
+  act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+
+  
   // init the pool
   pool->initPool(from->getDrinkUnits(), from->getDrinkType());
   from->genericEmpty();
