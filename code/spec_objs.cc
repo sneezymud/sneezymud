@@ -3081,15 +3081,18 @@ int teleportingObject(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
   int rc;
   TPortal *tp;
 
-  if(cmd!=CMD_GENERIC_PULSE && !::number(0,10))
+  if(cmd!=CMD_GENERIC_PULSE || ::number(0,250))
     return FALSE;
 
   // don't teleport if it's a portal that is open
   if((tp=dynamic_cast<TPortal *>(o)) && !tp->isPortalFlag(EX_CLOSED))
     return FALSE;
 
-  tp->roomp->sendTo("%s flares up brightly and disappears.",
-		    o->getName());
+  if(!tp->roomp)
+    return FALSE;
+
+  tp->roomp->sendTo(COLOR_BASIC, "%s flares up brightly and disappears.\n\r",
+		    good_cap(o->getName()).c_str());
   
   rc = o->genericTeleport(SILENT_YES, FALSE);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
