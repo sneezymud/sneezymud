@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: statistics.cc,v $
+// Revision 1.3  1999/09/22 19:05:50  cosmo
+// Took out peels .3 cap on GOLD_INCOME, just made the mud not modify for it in
+// monster.cc. so it will still float but wont be used till we evaluate it
+//
 // Revision 1.2  1999/09/22 17:48:22  peel
 // Put a floor on gold_modifier[GOLD_INCOME] of .3, temporary economy 'fix'
 //
@@ -616,9 +620,6 @@ void checkGoldStats()
     gold_modifier[GOLD_INCOME] -= 0.01;
 //    vlogf(5, "ECONOMY: income modifier lowered. %d %u %.2f", net_gold_budget, pos_gold_budget, gold_modifier[GOLD_INCOME]);
     should_reset = true;
-  }
-  if(gold_modifier[GOLD_INCOME] < .3){
-    gold_modifier[GOLD_INCOME]=.3;
   }
   
   // good drain:
