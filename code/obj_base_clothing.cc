@@ -1,20 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_base_clothing.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // base_clothing.cc
-//
 
 #include <cmath>
 
@@ -58,7 +42,7 @@ void TBaseClothing::lowCheck()
   // warn about prices that are WAY too high though too
   if ((ap > obj_flags.cost || ap < obj_flags.cost-200) && !isSaddle()) {
 #endif
-    vlogf(LOW_ERROR, "base_clothing (%s:%d) has a bad price (%d).  should be (%d)",
+    vlogf(LOG_LOW, "base_clothing (%s:%d) has a bad price (%d).  should be (%d)",
          getName(), objVnum(), obj_flags.cost, ap);
     obj_flags.cost = ap;
   }
@@ -67,13 +51,13 @@ void TBaseClothing::lowCheck()
     float amt = -(float) itemAC();
 
     if ((20*getWeight()) < amt)
-      vlogf(LOW_ERROR, "shield %s has a bad weight.  should be (%.1f)",
+      vlogf(LOG_LOW, "shield %s has a bad weight.  should be (%.1f)",
            getName(), amt/20.0+.1);
   } else {
     if (canWear(ITEM_HOLD)) {
       int amt = -itemAC();
       if (amt)
-        vlogf(LOW_ERROR, "Holdable item (%s:%d) with AC that was not a shield.",
+        vlogf(LOG_LOW, "Holdable item (%s:%d) with AC that was not a shield.",
             getName(), objVnum());
     }
   }
@@ -86,7 +70,7 @@ void TBaseClothing::lowCheck()
   if (ui != ITEM_HOLD) {
     int num = CountBits(ui) - 1;
     if (num < 0) {
-      vlogf(LOW_ERROR, "Base Clothing (%s:%d) with insufficient wearability.",
+      vlogf(LOG_LOW, "Base Clothing (%s:%d) with insufficient wearability.",
             getName(), objVnum());
     }
   }
@@ -236,7 +220,7 @@ void TBaseClothing::armorPercs(double *ac_perc, double *str_perc) const
     *ac_perc  = 0.25;
     *str_perc = 0.07;
   } else {
-    vlogf(LOW_ERROR, "Item %s needs a definition of where worn", getName());
+    vlogf(LOG_LOW, "Item %s needs a definition of where worn", getName());
     *ac_perc = 0.01;
     *str_perc = 0.01;
   }
@@ -388,7 +372,7 @@ int TBaseClothing::armorPriceStruct(armorLevT type, double *lev) const
   // double it since cost = 2 * rent
   price *= 2;
 
-// vlogf(3, "ac_lev: %.2f, str_lev: %.2f, price: %d", ac_lev, str_lev, price);
+// vlogf(LOG_MISC, "ac_lev: %.2f, str_lev: %.2f, price: %d", ac_lev, str_lev, price);
 
   return price;
 }
@@ -448,7 +432,7 @@ int TBaseClothing::suggestedPrice() const
   double modif = (lev + lev_mod) * max(20.0, (lev + lev_mod)) /
                 max(1.0, (lev * max(20.0, lev)));
   modif = min(1.25, modif);
-// vlogf(5, "%s had a wearability modifier of %.3f (%.3f)", getName(), modif, lev_mod);
+// vlogf(LOG_MISC, "%s had a wearability modifier of %.3f (%.3f)", getName(), modif, lev_mod);
   price = (int) (price * modif);
 #endif
   
@@ -618,6 +602,9 @@ void TBaseClothing::describeObjectSpecifics(const TBeing *ch) const
       buf += good_uncap(wear_bits[num]);
       buf += ".";
       act(buf.c_str(), FALSE, ch, this, 0, TO_CHAR);
+    } else {
+      vlogf(LOG_LOW, "Base Clothing (%s:%d) with insufficient wearability.",
+            getName(), objVnum());
     }
   }
 }
@@ -667,6 +654,12 @@ bool TBaseClothing::isPluralItem() const
 
 void TBaseClothing::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
+  int discount=100;
+  vlogf(LOG_PEEL, "shopDebug: %s value %i cost %i, purchased for %i",
+	this->getName(), this->obj_flags.cost, 
+	this->shopPrice(1, shop_nr, -1, &discount), cost);
+      
+
   ch->addToMoney(-cost, GOLD_SHOP_ARMOR);
   if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY)) {
     keeper->addToMoney(cost, GOLD_SHOP_ARMOR);
@@ -675,6 +668,12 @@ void TBaseClothing::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_
 
 void TBaseClothing::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
+  int discount=100;
+  vlogf(LOG_PEEL, "shopDebug: %s value %i cost %i, sold for %i",
+	this->getName(), this->obj_flags.cost, 
+	this->shopPrice(1, shop_nr, -1, &discount), cost);
+
+
   ch->addToMoney(cost, GOLD_SHOP_ARMOR);
   if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY))
     keeper->addToMoney(-cost, GOLD_SHOP_ARMOR);
