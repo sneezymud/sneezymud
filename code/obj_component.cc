@@ -530,16 +530,16 @@ void assign_component_placement()
      -1, -1, -1, -1, -1, -1, -1,
      "Some brimstone boils out of the earth and collects in a nearby pot.", ""));
 
-  // Brown muchrooms to trade for promethian fire
+  // Brown mushrooms to trade for promethian fire
   // created (revealed) at first morning light
   component_placement.push_back(compPlace(3401, 3449, MOB_NONE, 
      BROWN_MUSHROOM,
-     CACT_PLACE, 9999, 50,
+     CACT_PLACE, 9999, 10,
      5, -1, -1, -1, -1, -1, -1,
      "The morning light reveals $p growing in the $g.", ""));
   component_placement.push_back(compPlace(3451, 3482, MOB_NONE, 
      BROWN_MUSHROOM,
-     CACT_PLACE, 9999, 50,
+     CACT_PLACE, 9999, 10,
      5, -1, -1, -1, -1, -1, -1,
      "The morning light reveals $p growing in the $g.", ""));
 
