@@ -45,7 +45,7 @@ void TBeing::doScore()
 
     if (getExp() < getMaxExp()) {
       tString = (fmt("%.2f") % getMaxExp()).comify();
-      sendTo(fmt("Your most exp since your last death was: %s%s%s\n\r") % cyan() % tString % norm());
+      sendTo(fmt("Your most exp before your last death was: %s%s%s\n\r") % cyan() % tString % norm());
     }
 
     realTimePassed((time(0) - desc->session.connect), 0, &playing_time);
