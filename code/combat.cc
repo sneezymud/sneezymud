@@ -242,8 +242,10 @@ void TBeing::updatePos()
   if (hasClass(CLASS_SHAMAN) && (-11 >= getHit())) {
     sendTo("You have just died and are being regenerated at the location of your corpse.\n\r");
     sendTo("This is a temporary fix to an annoying problem and will change.\n\r");
+    if (getPosition() == POSITION_FIGHTING) {
+      stopFighting();
+    }
     setPosition(POSITION_DEAD);
-    stopFighting();
     die(DAMAGE_NORMAL);
     rawKill(DAMAGE_NORMAL);
     return;
