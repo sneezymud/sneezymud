@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: create_objs.cc,v $
+// Revision 1.4  1999/10/09 05:04:23  batopr
+// Fixed errmsgs in obj_applys
+//
 // Revision 1.3  1999/10/09 04:57:06  batopr
 // Fixed change_obj_apply to deal with apply numbers properly
 //
@@ -1179,13 +1182,13 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
       }
     }
     if ((att == APPLY_IMMUNITY) && (num != 3)) {
-      ch->sendTo("Syntax : %d <immunity #> <amount>\n\r", mapApplyToFile(APPLY_IMMUNITY)+1);
+      ch->sendTo("Syntax : %d <immunity #> <amount>\n\r", APPLY_IMMUNITY+1);
       return;
     } else if ((att == APPLY_SPELL) && (num != 3)) {
-      ch->sendTo("Syntax : %d <skill #> <amount>\n\r", mapApplyToFile(APPLY_SPELL) + 1);
+      ch->sendTo("Syntax : %d <skill #> <amount>\n\r", APPLY_SPELL + 1);
       return;
     } else if ((att == APPLY_DISCIPLINE) && (num != 3)) {
-      ch->sendTo("Syntax : %d <discipline #> <amount>\n\r", mapApplyToFile(APPLY_DISCIPLINE) + 1);
+      ch->sendTo("Syntax : %d <discipline #> <amount>\n\r", APPLY_DISCIPLINE + 1);
       return;
     } else if ((att != APPLY_SPELL) &&
                (att != APPLY_DISCIPLINE) &&
