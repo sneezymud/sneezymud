@@ -1709,17 +1709,35 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
 int BankTeleporter(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   TBeing *mob, *boss;
-  int i=0;
+  int i=0, found=0;
   static unsigned int pulse;
-
+  Descriptor *d;
+  int saferooms[7]={31750, 31751, 31756, 31757, 31758, 31759, 31764};  
+  
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
   ++pulse;
   if(pulse%75)
     return FALSE;
+
+  for (d = descriptor_list; d ; d = d->next){
+    if (!d->connected && d->character && d->character->roomp &&
+	d->character->roomp->getZoneNum() == rp->getZoneNum() &&
+	d->character->in_room != saferooms[0] &&
+	d->character->in_room != saferooms[1] &&
+	d->character->in_room != saferooms[2] &&
+	d->character->in_room != saferooms[3] &&
+	d->character->in_room != saferooms[4] &&
+	d->character->in_room != saferooms[5] &&
+	d->character->in_room != saferooms[6]){
+      found=1;
+      break;
+    }
+  }
+
   
-  if(!rp->getZone()->isEmpty()){
+  if(found){
     vlogf(LOG_PEEL, "Bank: here comes the wrecking crew");
 
     boss = read_mobile(31759, VIRTUAL);
