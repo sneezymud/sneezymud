@@ -48,11 +48,13 @@ void TBeing::doZonesSingle(string tStString)
 
     strcpy(tString, zd.name);
 
+#if 0
     // strip up the zone creator info
     char *s = strrchr(tString, '-');
 
     if (s)
       *s = '\0';
+#endif
 
     float avg = (zd.num_mobs ? zd.mob_levels/zd.num_mobs : 0);
     sprintf(tBuffer, "%-30.30s : Level: avg: %3.0f, min: %3.0f, max %3.0f\n\r",
