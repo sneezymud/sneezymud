@@ -794,7 +794,7 @@ void TPerson::advanceSelectDisciplines(TBeing *gm, classIndT Class, int numx, si
 void logPermaDeathLevel(TBeing *ch){
   TDatabase db("sneezy");
   db.query("delete from permadeath where name='%s'", ch->name);
-  db.query("intert into permadeath (name, level, killer, died) values ('%s', %i, 'no one', 0)", ch->name, ch->GetMaxLevel());
+  db.query("insert into permadeath (name, level, killer, died) values ('%s', %i, 'no one', 0)", ch->name, ch->GetMaxLevel());
 }
 
 void clearPermaDeathLevel(TBeing *ch){
