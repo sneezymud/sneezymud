@@ -545,6 +545,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_ARMOR:
     case SPELL_ASTRAL_WALK:
     case SPELL_SANCTUARY:
+    case SPELL_RELIVE:
     case SPELL_WORD_OF_RECALL:
     case SPELL_SUMMON:
     case SPELL_REMOVE_CURSE_DEIKHAN:

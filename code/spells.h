@@ -226,7 +226,8 @@ enum spellNumT {
      SPELL_HEAL_FULL_SPRAY,
      SPELL_RESTORE_LIMB,
      SPELL_KNIT_BONE,
-  
+     SPELL_RELIVE,
+   
      // end of cleric
      // start of warrior
 

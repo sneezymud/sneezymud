@@ -51,7 +51,6 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
     gen_corpse = pcorpse;
     pcorpse->setCorpseVnum(-2);  // flag for pc
     pcorpse->addCorpseFlag(CORPSE_NO_REGEN);
-
   } else {
     corpse = race->makeCorpse();
     gen_corpse = corpse;
@@ -636,6 +635,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SPELL_HEAL:
       case SPELL_WORD_OF_RECALL:
       case SPELL_SANCTUARY:
+      case SPELL_RELIVE:
       case SPELL_CURE_PARALYSIS:
       case SPELL_SECOND_WIND:
       case SPELL_HEROES_FEAST:

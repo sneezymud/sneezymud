@@ -177,6 +177,7 @@ const short int MASK5          = 1419;
 const short int MASK6          = 1420;
 const short int GENERIC_STEAK  = 31365;
 const short int OBJ_GENERIC_PLANT = 15347;
+const short int OBJ_ANGEL_HEART = 9634;
 
 // ------------------------- MOBS
 

@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_aegis.h,v $
+// Revision 5.2  2002/05/16 00:26:15  peel
+// added relive spell
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -24,16 +30,17 @@ public:
     CSkill skSanctuary;
     CSkill skCureParalyze;
     CSkill skSecondWind;
+    CSkill skRelive;
 
     CDAegis()
       : CDiscipline(),
         skSanctuary(), skCureParalyze(),
-        skSecondWind() {
+        skSecondWind(), skRelive() {
     }
     CDAegis(const CDAegis &a)
       : CDiscipline(a),
         skSanctuary(a.skSanctuary), skCureParalyze(a.skCureParalyze),
-        skSecondWind(a.skSecondWind) {
+        skSecondWind(a.skSecondWind), skRelive(a.skRelive) {
     }
     CDAegis & operator=(const CDAegis &a) {
       if (this == &a) return *this;
@@ -41,6 +48,7 @@ public:
       skSanctuary = a.skSanctuary;
       skCureParalyze = a.skCureParalyze;
       skSecondWind = a.skSecondWind;
+      skRelive = a.skRelive;
       return *this;
     }
     virtual ~CDAegis() {}
@@ -87,4 +95,6 @@ private:
     void cureDisease(TBeing *, TBeing *);
     int  cureDisease(TBeing *, TBeing *, int, byte, spellNumT);
     void cureDisease(TBeing *, TBeing *, TMagicItem *, spellNumT);
+
+    void relive(TBeing *, TBeing *);
 #endif

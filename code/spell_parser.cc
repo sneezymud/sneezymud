@@ -2149,6 +2149,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       case SPELL_SANCTUARY:
           sanctuary(this, ch);
         break;
+      case SPELL_RELIVE:
+        relive(this,ch);
+	break;
       case SPELL_CURE_POISON:
       case SPELL_CURE_POISON_DEIKHAN:
         curePoison(this, ch);

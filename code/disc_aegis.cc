@@ -3,6 +3,57 @@
 #include "combat.h"
 #include "disc_aegis.h"
 #include "obj_magic_item.h"
+#include "obj_player_corpse.h"
+
+void relive(TBeing *ch, TBeing *vict)
+{
+
+  TThing *t;
+  TPCorpse *corpse=NULL;
+  string s;
+  TObj *o;
+
+  if (!bPassClericChecks(ch,SPELL_RELIVE))
+    return;
+
+  // need to be holding angel heart
+  o=dynamic_cast<TObj *>(ch->equipment[HOLD_LEFT]);
+  if(!o || o->objVnum() != OBJ_ANGEL_HEART){
+    ch->sendTo("You lack an appropriate object to focus this prayer with.\n\r");
+    return;
+  }
+  
+
+  // locate corpse
+  for(t=ch->roomp->getStuff();t;t=t->nextThing){
+    if((corpse=dynamic_cast<TPCorpse *>(t)) &&
+       !strcmp(lower(corpse->getOwner()).c_str(), 
+	       lower(vict->getName()).c_str()))
+	break;
+  }
+
+  if(!corpse){
+    act("You could not find an appropriate corpse.",
+	FALSE, ch, NULL, vict, TO_CHAR);
+    return;
+  }
+
+  act("Images rapidly flash through your mind as you relive the experiences of your corpse.",
+      FALSE, ch, NULL, vict, TO_VICT);
+  act("$N looks dazed as $n completes $s prayer.",
+      FALSE, ch, NULL, vict, TO_ROOM);
+  act("$N looks dazed as you complete your prayer.",
+      FALSE, ch, NULL, vict, TO_CHAR);
+  
+  // Up to 50% exp back
+  vict->addToExp(((vict->deathExp()/100)*ch->getSkillValue(SPELL_RELIVE)) / 2);
+
+  // 0-2 age added
+  vict->age_mod += ::number(0,2);
+  
+  corpse->objectDecay();
+  delete corpse;
+}
 
 int cureBlindness(TBeing *c, TBeing * victim, int level, byte learn)
 {
