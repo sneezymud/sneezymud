@@ -1966,6 +1966,10 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
       fx += (0.60 * num);
     else {
       fx = prim->blowCountSplitter(this, true);
+      if (getPosition() >= POSITION_STANDING) {
+        prim->specializationCheck(this, &fx);
+      }
+
       if((gun=dynamic_cast<TGun *>(prim))){
 	fx = gun->getROF();
       }
