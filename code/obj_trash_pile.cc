@@ -147,6 +147,9 @@ void TTrashPile::overFlow()
   if(!roomp)
     return;
 
+  if(::number(0,99))
+    return;
+
   if(index>=9){
     // pick a random exit, not up
     for (int i = 0; i < 20; i++) {
