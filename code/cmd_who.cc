@@ -258,7 +258,7 @@ void TBeing::doWho(const char *argument)
       if(strchr(arg, 'c') && isImmortal()){
 	db.query("select title, port, name from wholist order by port");
 	
-	ssprintf(buf, "%s\n\r", buf.c_str());
+	ssprintf(buf, "%sList may not be accurate for ports that are not currently running.\n\r", buf.c_str());
 	
 	while(db.fetchRow()){
 	  stmp=db.getColumn(0);
