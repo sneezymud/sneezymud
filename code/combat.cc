@@ -3,8 +3,8 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: combat.cc,v $
-// Revision 1.4  1999/10/12 00:24:01  lapsos
-// Added vlogf for shopkeeper kills and inventory nuking.
+// Revision 1.5  1999/10/12 00:35:25  lapsos
+// Added vlogf for shopkeeper kills and invenotry nuking.
 //
 // Revision 1.3  1999/09/30 01:07:10  lapsos
 // Added code for the new mobile strings.
@@ -405,6 +405,7 @@ int TBeing::rawKill(int dmg_type)
     }
 
     stuff = NULL;
+    setMoney(0);
   }
 
   makeCorpse(dmg_type);
