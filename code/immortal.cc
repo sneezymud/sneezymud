@@ -4271,7 +4271,7 @@ void TBeing::doInfo(const char *arg)
     return;
 
   arg = one_argument(arg, arg1);
-  string str = "Information available to you : Commands, Disciplines, MobSkills, ImmSkills, Numbers, Piety, Gold, Skills, Deaths";
+  string str = "Information available to you : Commands, Disciplines, MobSkills, ImmSkills, Numbers, Piety, Gold, Skills, Deaths, Objects";
   str += ".\n\r";
 
   if (!*arg1) {
@@ -4289,6 +4289,31 @@ void TBeing::doInfo(const char *arg)
       sendTo("  Bugs file accessed %d times.\n\r", bug_used_num);
       sendTo("  Idea file accessed %d times.\n\r", idea_used_num);
     } 
+    else if (is_abbrev(arg1, "objects")) {
+      TObj *o;
+      int count[MAX_OBJ_TYPES], i=0, li=0;
+      
+      for(i=0;i<MAX_OBJ_TYPES;++i)
+	count[i]=0;
+
+      for(o=object_list;o;o=o->next)
+	count[o->itemType()]++;
+
+      // BUBBLESORT IS L33T!!!
+      while(1){
+	for(i=0;i<MAX_OBJ_TYPES;++i){
+	  if(count[i]>count[li])
+	    li=i;
+	}
+
+	if(count[li]==-1)
+	  break;
+
+	sendTo("[%6i] %-17s\n\r", count[li], ItemInfo[li]->name);
+	count[li]=-1;
+      }
+    }
+
 #if 1
     else if (is_abbrev(arg1, "tweak")) {
       if (!hasWizPower(POWER_INFO_TRUSTED)) {
