@@ -3915,7 +3915,7 @@ int healingHead ( TBeing *vict, cmdTypeT cmd, const char arg, TObj *o, TObj * ) 
   for (int i = 1; i < 5; i++) {
   
     ch->setHit(ch->getHit() + 2);
-    if (ch-> ! hasClass(CLASS_SHAMAN)) 
+    if (!(ch-> hasClass(CLASS_SHAMAN))) 
       ch->setHit(ch->getHit()-2);
   }
 
