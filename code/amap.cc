@@ -140,6 +140,7 @@ S
  */
 
 NODE *find_node(int num){
+  return NULL;
   if(num<0) 
     return NULL;
 
@@ -168,6 +169,7 @@ bool isEnabled(int num)
 NODE *read_room(TDatabase *db, TDatabase *dbexits)
 {
   NODE *tmp=new NODE;
+  tmp->next=NULL;
 
   if(!tmp) {
     fprintf(stderr, "read_room(): unable to allocate new NODE (tmp==NULL)\n");
@@ -809,7 +811,7 @@ int main(int argc, char **argv)
   }
 
   nodes[head->num]=head;
-
+  head->next=NULL;
 
   for(rcount=1; (!tiny || !feof(tiny)); ++rcount){
     if(tiny){
