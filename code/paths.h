@@ -93,7 +93,7 @@ const path_struct hobbit_path_pos[2][50] = {
       }  /* outbound */
 };
 
-const int GRIM_LAMP_PATHS   = 8;
+const int GRIM_LAMP_PATHS   = 9;
 const int MIN_GRIM_PATHS    = 0;
 const int MAX_GRIM_PATHS    = (GRIM_LAMP_PATHS - 1);
 const int BMOON_LAMP_PATHS  = 4;
@@ -303,6 +303,46 @@ const path_struct lamp_path_pos[TOTAL_LAMP_PATHS][75] = {
         {DIR_EAST, 113}, 
         {DIR_EAST, 112}, 
         {DIR_EAST, 100}, 
+        {DIR_NONE, -1},
+      },  // SW side + S/W gate
+      { 
+        {DIR_NONE, 100},
+        {DIR_SOUTH, 175}, 
+        {DIR_SOUTH, 176}, 
+        {DIR_SOUTH, 177}, 
+        {DIR_WEST, 240}, 
+        {DIR_WEST, 239}, 
+        {DIR_WEST, 238},
+        {DIR_SOUTH, 243}, 
+        {DIR_SOUTH, 244}, 
+        {DIR_SOUTH, 602}, 
+        {DIR_EAST, 603}, 
+        {DIR_WEST, 602}, 
+        {DIR_WEST, 601},
+        {DIR_EAST, 602}, 
+        {DIR_SOUTH, 606}, 
+        {DIR_SOUTH, 629}, 
+        {DIR_SOUTH, 611}, 
+        {DIR_EAST, 612}, 
+        {DIR_SOUTHEAST, 614},
+        {DIR_EAST, 184}, 
+        {DIR_WEST, 614}, 
+        {DIR_NORTHWEST, 612}, 
+        {DIR_WEST, 611}, 
+        {DIR_WEST, 609}, 
+        {DIR_EAST, 611},
+        {DIR_NORTH, 629}, 
+        {DIR_NORTH, 606}, 
+        {DIR_NORTH, 602}, 
+        {DIR_NORTH, 244}, 
+        {DIR_NORTH, 243}, 
+        {DIR_NORTH, 238},
+        {DIR_NORTH, 242}, 
+        {DIR_NORTH, 241}, 
+        {DIR_NORTH, 114}, 
+        {DIR_EAST, 113}, 
+        {DIR_EAST, 112}, 
+        {DIR_EAST, 100},
         {DIR_NONE, -1},
       },  // SW side + S/W gate
       { 
