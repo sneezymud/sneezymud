@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: game_cards.cc,v $
+// Revision 5.4  2003/04/28 02:04:39  peel
+// added poker game (video poker)
+//
 // Revision 5.3  2003/03/13 22:40:53  peel
 // added sstring class, same as string but takes NULL as an empty string
 // replaced all uses of string to sstring
@@ -44,6 +47,19 @@ unsigned char CARD_NUM(unsigned char card)
 {
   return (card & 0x0f);
 }
+
+unsigned char CARD_NUM_ACEHI(unsigned char card)
+{
+  int c = (card & 0x0f);
+  
+  if(c==1)
+    return 14;
+  else
+    return c;
+}
+
+
+
 
 void CardGame::setup_deck()
 {
@@ -186,6 +202,8 @@ void TBeing::doPeek() const
   else if (checkCrazyEights())
     gEights.peek(this);
   else if (checkDrawPoker())
+    gDrawPoker.peek(this);
+  else if (checkPoker())
     gPoker.peek(this);
   else
     sendTo("So you think you are at a card table?\n\r");
@@ -200,7 +218,7 @@ void TBeing::doDeal(const char *tArg)
   else if (checkCrazyEights())
     gEights.deal(this);
   else if (checkDrawPoker())
-    gPoker.deal(this, tArg);
+    gDrawPoker.deal(this, tArg);
   else {
     sendTo("Does this look like a card table?\n\r");
     return;
@@ -241,7 +259,7 @@ void TBeing::doPass(const char *arg)
     gEights.pass(this);
 
   if (checkDrawPoker())
-    gPoker.pass(this);
+    gDrawPoker.pass(this);
 
   return;
 }
@@ -339,9 +357,9 @@ void TBeing::doSort(const char *arg) const
     }
     doPeek();
     return;
-  } else if ((index_num = gPoker.index(this)) > -1) {
+  } else if ((index_num = gDrawPoker.index(this)) > -1) {
     int tmp3[6];
-    for (i = 0; i < 5; tmp3[i] = gPoker.hands[index_num][i], i++);
+    for (i = 0; i < 5; tmp3[i] = gDrawPoker.hands[index_num][i], i++);
 
     if (is_abbrev(arg, "ascending")) {
       tmp3[5] = 999999;
@@ -351,7 +369,7 @@ void TBeing::doSort(const char *arg) const
       qsort(tmp3, 6, 4, cardnumComparDescend);
     }
 
-    for (i = 0; i < 5; gPoker.hands[index_num][i] = tmp3[i], i++);
+    for (i = 0; i < 5; gDrawPoker.hands[index_num][i] = tmp3[i], i++);
 
     doPeek();
     return;

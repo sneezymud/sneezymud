@@ -12,7 +12,7 @@
 #include "stdsneezy.h"
 #include "games.h"
 
-DrawPokerGame gPoker;
+DrawPokerGame gDrawPoker;
 
 const int ROOM_DRAWPOKER    = 2;
 
@@ -431,7 +431,7 @@ int DrawPokerGame::move_card(TBeing *ch, const char *tArg)
 
 bool TBeing::checkDrawPoker(bool inGame = false) const
 {
-  if (in_room == ROOM_DRAWPOKER && (inGame || (gPoker.index(this) > -1)))
+  if (in_room == ROOM_DRAWPOKER && (inGame || (gDrawPoker.index(this) > -1)))
     return true;
   else
     return false;

@@ -542,7 +542,7 @@ int TBeing::doPut(const char *argument)
       return FALSE;
   }
   if (checkDrawPoker()) {
-    if (gPoker.move_card(this, argument))
+    if (gDrawPoker.move_card(this, argument))
       return FALSE;
   }
   if (getPosition() == POSITION_RESTING) {

@@ -1692,7 +1692,7 @@ int TPerson::doAt(const char *argument, bool isFarlook)
   if ((checkBlackjack(true) && gBj.index(this) >= 0) ||
       (gGin.check(this) && gGin.index(this) >= 0) || 
       (checkCrazyEights() && gEights.index(this) >= 0) ||
-      (checkDrawPoker() && gPoker.index(this) >= 0) ||
+      (checkDrawPoker() && gDrawPoker.index(this) >= 0) ||
       (checkHearts(true) && gHearts.index(this) >= 0)) {
     sendTo("You can't do that while in a casino game.\n\r");
     return FALSE;

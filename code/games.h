@@ -41,6 +41,7 @@ int cardnumComparAscend(const void *, const void *);
 int cardnumComparDescend(const void *, const void *);
 
 extern unsigned char CARD_NUM(unsigned char card);
+extern unsigned char CARD_NUM_ACEHI(unsigned char card);
 
 class Craps {
   public: 
@@ -252,11 +253,42 @@ class HiLoGame : public CardGame {
   virtual int index(const TBeing *) const;
 };
 
+class PokerGame : public CardGame {
+ private:
+  int card[5];
+  bool inuse;
+  int deck_inx;
+  float win_perc;
+  sstring name;
+ public:
+  bool enter(const TBeing *ch);
+  virtual void peek(const TBeing *) const;
+  void Bet(TBeing *ch, const sstring &arg);
+  void poker_shuffle(const TBeing *ch);
+  void stay(TBeing *ch);
+  void discard(TBeing *ch, sstring arg);
+  int check_for_bet() {
+    return bet;
+  }
+  int exitGame(const TBeing *ch);
+  virtual int index(const TBeing *) const;
+  bool isRoyalFlush();
+  bool isStraightFlush();
+  bool isFourOfAKind();
+  bool isFullHouse();
+  bool isFlush();
+  bool isStraight();
+  bool isThreeOfAKind();
+  bool isTwoPair();
+  bool isPair();
+};
+
 
 extern GinGame gGin;
 extern HeartsGame gHearts;
 extern BjGame gBj;
 extern HiLoGame gHiLo;
+extern PokerGame gPoker;
 
 /* craps_options */
 

@@ -194,6 +194,17 @@ void TBeing::doStay()
       return;
     }
     gHiLo.stay(this);
+  } else if(checkPoker()){
+    if ((inx = gPoker.index(this)) < 0){
+      sendTo("You are not sitting at the table yet.\n\r");
+      return;
+    }
+    
+    if(!gPoker.check_for_bet()) {
+      sendTo("You are not playing a game.\n\r");
+      return;
+    }
+    gPoker.stay(this);
   } else
     sendTo("So you think you are in a casino?\n\r");
 }

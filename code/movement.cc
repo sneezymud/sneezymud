@@ -2360,6 +2360,10 @@ static bool sitCasinoEnter(const TBeing *ch)
     if (!gHiLo.enter(ch))
       return true;
   }
+  if (ch->checkPoker(true)) {
+    if (!gPoker.enter(ch))
+      return true;
+  }
   if (ch->checkHearts(true)) {
     if (!gHearts.enter(ch))
       return true;
@@ -2369,7 +2373,7 @@ static bool sitCasinoEnter(const TBeing *ch)
       return true;
   }
   if (ch->checkDrawPoker(true)) {
-    if (!gPoker.enter(ch))
+    if (!gDrawPoker.enter(ch))
       return true;
   }
   if (ch->checkSlots()) {
@@ -3554,6 +3558,11 @@ bool TBeing::removeAllCasinoGames() const
     if (gHiLo.index(this) >= 0)
       gHiLo.exitGame(this);
 
+  if (checkPoker())
+    if (gPoker.index(this) >= 0)
+      gPoker.exitGame(this);
+
+
   if (gGin.check(this))
     if (gGin.index(this) >= 0)
       if (!gGin.exitGame(this))
@@ -3572,8 +3581,8 @@ bool TBeing::removeAllCasinoGames() const
   }
 
   if (checkDrawPoker()) {
-    if (gPoker.index(this) >= 0)
-      if (!gPoker.exitGame(this))
+    if (gDrawPoker.index(this) >= 0)
+      if (!gDrawPoker.exitGame(this))
         return true;
   }
 

@@ -174,13 +174,18 @@ void TBeing::doBet(const char *arg)
     return;
   }
   if (checkDrawPoker()) {
-    gPoker.bet(this, arg);
+    gDrawPoker.bet(this, arg);
     return;
   }
   if (checkHiLo()){
     gHiLo.Bet(this, arg);
     return;
   }
+  if (checkPoker()){
+    gPoker.Bet(this, arg);
+    return;
+  }
+
   
   if (!FindMobInRoomWithProcNum(in_room, SPEC_CRAPSGUY)) {
     sendTo("The bet command is used for the blackjack, craps and draw poker games.\n\r");

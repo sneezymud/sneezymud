@@ -97,7 +97,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
       return;
   }
   if (checkDrawPoker()) {
-    if (gPoker.look(this, argument))
+    if (gDrawPoker.look(this, argument))
       return;
   }
   if (getPosition() < POSITION_SLEEPING)

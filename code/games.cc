@@ -90,7 +90,7 @@ void react_gambler_won(TBeing *ch, TMonster *tm)
       tm->doSay("Nice win!");
       break;
     case 3:
-      tm->doSay("Hey can I borrow some of chips?");
+      tm->doSay("Hey can I borrow some of those chips?");
       tm->doAction(ch->name, CMD_GRIN);
       break;
   }

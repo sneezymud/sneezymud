@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: game_drawpoker.h,v $
+// Revision 5.3  2003/04/28 02:04:39  peel
+// added poker game (video poker)
+//
 // Revision 5.2  2003/03/13 22:40:53  peel
 // added sstring class, same as string but takes NULL as an empty string
 // replaced all uses of string to sstring
@@ -78,4 +81,4 @@ class DrawPokerGame : public CardGame {
     DrawPokerGame();
 };
 
-extern DrawPokerGame gPoker;
+extern DrawPokerGame gDrawPoker;

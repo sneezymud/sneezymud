@@ -5,6 +5,8 @@ HiLoGame gHiLo;
 
 const float WIN_INIT=0.05;
 
+
+
 bool HiLoGame::enter(const TBeing *ch)
 {
   if(inuse){
@@ -41,7 +43,7 @@ void HiLoGame::BetHi(TBeing *ch, int new_card)
 {
   sstring buf;
 
-  if(CARD_NUM(new_card) > CARD_NUM(card)){
+  if(CARD_NUM_ACEHI(new_card) > CARD_NUM_ACEHI(card)){
     win_perc*=2;
     ch->sendTo("You win!  Your winnings are now at %i talens.\n\r",
 	       (int)((float)bet * (1.0 + win_perc)));
@@ -62,7 +64,7 @@ void HiLoGame::BetLo(TBeing *ch, int new_card)
 {
   sstring buf;
 
-  if(CARD_NUM(new_card) < CARD_NUM(card)){
+  if(CARD_NUM_ACEHI(new_card) < CARD_NUM_ACEHI(card)){
     win_perc*=2;
     ch->sendTo("You win!  Your winnings are now at %i talens.\n\r",
 	       (int)((float)bet * (1.0 + win_perc)));
@@ -118,7 +120,7 @@ void HiLoGame::Bet(TBeing *ch, const sstring &arg)
 	
 	new_card=deck[deck_inx++];
 	
-	ssprintf(buf, "$n bets %s", arg.c_str());
+	ssprintf(buf, "$n bets %s.", arg.c_str());
 	act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
 	
 	ssprintf(log_msg, "You are dealt:\n\r%s\n\r", pretty_card_printout(ch, new_card).c_str());

@@ -138,9 +138,14 @@ void TBeing::doPlay(const char *arg)
     return;
   }
   if (checkDrawPoker()) {
+    gDrawPoker.discard(this, arg);
+    return;
+  }
+  if (checkPoker()) {
     gPoker.discard(this, arg);
     return;
   }
+  
   half_chop(arg, game, options);
 
   if (!*game) {

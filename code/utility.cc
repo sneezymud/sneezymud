@@ -370,6 +370,10 @@ int TMonster::standUp()
 
     if (checkBlackjack())
       gBj.exitGame(this);
+    if (checkHiLo())
+      gHiLo.exitGame(this);
+    if (checkPoker())
+      gPoker.exitGame(this);
     if (gGin.check(this))
       gGin.exitGame(this);
     if (checkHearts())
@@ -377,7 +381,7 @@ int TMonster::standUp()
     if (checkCrazyEights())
       gEights.exitGame(this);
     if (checkDrawPoker())
-      gPoker.exitGame(this);
+      gDrawPoker.exitGame(this);
 
     if (riding) {
       dismount(POSITION_STANDING);
