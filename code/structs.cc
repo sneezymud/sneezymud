@@ -62,6 +62,10 @@ TBeing::TBeing() :
 {
   // change the default value here
   number = -1;
+  
+  for (int i = 1; i< MAX_TOG_INDEX; i++) {
+    toggles[i] = 0;
+  }
 
   mobCount++;
   setRace(RACE_NORACE);
@@ -1262,6 +1266,10 @@ TBeing::TBeing(const TBeing &a) :
   else
     body = NULL;
 
+  for (i = 1; i< MAX_TOG_INDEX; i++) {
+    toggles[i] = a.toggles[i];
+  }
+
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     body_parts[i] = a.body_parts[i];
   }
@@ -1334,6 +1342,10 @@ TBeing & TBeing::operator=(const TBeing &a)
   invisLevel = a.invisLevel;
   my_protection = a.my_protection;
   equipment = a.equipment;
+
+  for (i = 1; i< MAX_TOG_INDEX; i++) {
+    toggles[i] = a.toggles[i];
+  }
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     body_parts[i] = a.body_parts[i];

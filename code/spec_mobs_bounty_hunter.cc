@@ -182,11 +182,14 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
     return FALSE;
   }
 
+  if (myself->act_ptr) 
+    job = static_cast<bounty_hunt_struct *>(myself->act_ptr);
+
   //  vlogf(LOG_DASH, "hunter being called - proc = %d, generic pulse? %s", cmd, (cmd==CMD_GENERIC_PULSE ? "yes" : "no"));
 
   if ((cmd != CMD_GENERIC_PULSE)) {
     if ((cmd == CMD_RENT) || (cmd == CMD_DROP) || (cmd == CMD_GIVE)) {
-      if (!isname(job->hunted_victim, ch->name))
+      if (!ch->name || !job || !job->hunted_victim || !isname(job->hunted_victim, ch->name))
         return FALSE;
       if (!arg)
         return FALSE;
@@ -256,13 +259,16 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
       return FALSE;
     } else if (((cmd == CMD_GROUP) || (cmd == CMD_FOLLOW)) && !ch->isImmortal()) {
       // need this, since mob follows pc, they might try and group it
-      if (!isname(job->hunted_victim, ch->name)) 
+      if (!ch->name || !job || !job->hunted_victim || !isname(job->hunted_victim, ch->name)) 
 	return FALSE;
       myself->doAction(ch->name, CMD_GROWL);
       myself->doSay("No one is grouping here, scum.");
       return TRUE;
     } else if (cmd == CMD_FLEE && ch != myself) {
-      if (!isname(job->hunted_victim, ch->name))
+      vlogf(LOG_DASH, "hunter flee ch->name: %s, job->vict: %s, isname? %s", 
+	    (ch->name ? ch->name : "NULL"),(job && job->hunted_victim ? job->hunted_victim : "NULL"),
+	    (job && job->hunted_victim && ch->name && isname(job->hunted_victim, ch->name) ? "yes" : "no"));
+      if (!ch->name || !job || !job->hunted_victim || !isname(job->hunted_victim, ch->name))
         return FALSE;
       ch->addToMove(-15);
       job = static_cast<bounty_hunt_struct *>(myself->act_ptr);
@@ -281,7 +287,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
       }
       return FALSE;
     } else if (cmd == CMD_CONSIDER) {
-      if (!isname(job->hunted_victim, ch->name))
+      if (!ch->name || !job || !job->hunted_victim || !isname(job->hunted_victim, ch->name))
         return FALSE;
 
       job = static_cast<bounty_hunt_struct *>(myself->act_ptr);
@@ -536,6 +542,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
         if (tmpch != targ) {
           act("$n has no time for this right now.", false, myself, 0, 0, TO_ROOM);
 	  tmpch->stopFighting();
+	  myself->stopFighting();
           TThing *toto;
           // stop all fights
           for (toto = myself->roomp->getStuff(); toto; toto = toto->nextThing) {
