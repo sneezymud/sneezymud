@@ -438,7 +438,7 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     int rc = throwThing(bullet, dir, ch->in_room, &targ, shoot_dist, 10, ch);
 
     if(!isSilenced())
-      ch->roomp->getZone()->sendTo(fmt("A gunshot echoes in the distance.\n\r") %
+      ch->roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r",
 				   ch->in_room);
 
     // delete the bullet afterwards, arbitrary decision
