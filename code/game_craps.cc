@@ -950,7 +950,7 @@ int Craps::rollDice()
     buf=fmt("You rolled a %d and a %d. Total = %d\n\r") %
       die_one % die_two % dice_roll;
     buf2=fmt("%s rolled a %d and a %d. Total = %d\n\r") %
-      m_ch->getName() % die_one % die_two, dice_roll;
+      m_ch->getName() % die_one % die_two % dice_roll;
   }
   act(buf,TRUE, m_ch, NULL, NULL, TO_CHAR);
   act(buf2,TRUE, m_ch, NULL, NULL, TO_ROOM);
