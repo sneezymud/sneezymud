@@ -1567,7 +1567,7 @@ void save_factions()
 }
 
 
-factionTypeT factionNumber(const char *name)
+factionTypeT factionNumber(const sstring name)
 {
   if (is_abbrev(name,"brotherhood") || is_abbrev(name,"galek"))
     return FACT_BROTHERHOOD;

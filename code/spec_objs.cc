@@ -3197,7 +3197,7 @@ int fishingBoat(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
 	      2469, 2470, 2471, 2475, 12551, 12583, 12616, 12651, 12690,
 	      12733, 12770, 12803, 12831, 12857, 12886, 12911, 12935, 12958,
 	      12982, 13006, 13030, 13052, 13072, 13091, -1};
-  const char *boatleaving[]={
+  const sstring boatleaving[]={
                    "The fishing boat is going to be leaving immediately.\n\r",
 		   "The fishing boat is almost ready to leave.\n\r",
 		   "The fishing boat will be leaving very soon.\n\r",
@@ -3252,11 +3252,11 @@ int fishingBoat(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *)
 
     if(timer<=5 && timer>0){
       if(myself->in_room == 15150){
-	sendrpf(real_roomp(15150), boatleaving[timer-1]);
+	sendrpf(real_roomp(15150), boatleaving[timer-1].c_str());
       } else if(myself->in_room == 13091){
-	sendrpf(real_roomp(13108), boatleaving[timer-1]);
+	sendrpf(real_roomp(13108), boatleaving[timer-1].c_str());
       }
-      sendrpf(boatroom, boatleaving[timer-1]);
+      sendrpf(boatroom, boatleaving[timer-1].c_str());
     }
 
     return FALSE;
@@ -3376,32 +3376,32 @@ int squirtGun(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TObj *)
       ch->sendTo("You don't see them here.\n\r");
       return TRUE;
     } else {
-      const char *liqname =DrinkInfo[gun->getDrinkType()]->name;
+      const sstring liqname =DrinkInfo[gun->getDrinkType()]->name;
       int shot = (::number(1,min(5,gun->getDrinkUnits())));
       gun->addToDrinkUnits(-shot);
       ch->dropPool(shot, gun->getDrinkType());
       
       /*act("<1>You squeeze the trigger on your $p.",TRUE,ch,gun,squirtee,TO_CHAR,NULL);
-	ch->sendTo(COLOR_OBJECTS, "A deadly stream of %s squirts at %s!\n\r",liqname, squirtee->getName());
+	ch->sendTo(COLOR_OBJECTS, "A deadly stream of %s squirts at %s!\n\r",liqname.c_str(), squirtee->getName());
 	act("<1>$n squeezes the trigger on $s $p, shooting a deadly stream of liquid at $N!"
 	,TRUE,ch,gun,squirtee,TO_NOTVICT,NULL);
 	
 	act("<1>$n squeezes the trigger on $s $p.",TRUE,ch,gun,squirtee,TO_VICT,NULL);
-	squirtee->sendTo(COLOR_OBJECTS, "A deadly stream of %s squirts at you!\n\r",liqname);
+	squirtee->sendTo(COLOR_OBJECTS, "A deadly stream of %s squirts at you!\n\r",liqname.c_str());
       */
       char Buf[256];
-      sprintf(Buf, "You squeeze the trigger on $p, squirting a deadly stream of %s at $N!", liqname);
+      sprintf(Buf, "You squeeze the trigger on $p, squirting a deadly stream of %s at $N!", liqname.c_str());
     act(Buf, TRUE, ch, gun, squirtee, TO_CHAR);
-    sprintf(Buf, "$n squeezes the trigger on $p, squirting a deadly stream of %s at $N!", liqname);
+    sprintf(Buf, "$n squeezes the trigger on $p, squirting a deadly stream of %s at $N!", liqname.c_str());
     act(Buf, TRUE, ch, gun, squirtee, TO_NOTVICT);
-    sprintf(Buf, "$n squeezes the trigger on $p, squirting a deadly stream of %s at you!", liqname);
+    sprintf(Buf, "$n squeezes the trigger on $p, squirting a deadly stream of %s at you!", liqname.c_str());
     act(Buf, TRUE, ch, gun, squirtee, TO_VICT);
     if (shot>4) {
     char Buf2[256];
-    sprintf(Buf2, "$N is totally soaked with %s!", liqname);
+    sprintf(Buf2, "$N is totally soaked with %s!", liqname.c_str());
     act(Buf2, TRUE, ch, gun, squirtee, TO_CHAR);
     act(Buf2, TRUE, ch, gun, squirtee, TO_NOTVICT);
-    sprintf(Buf2, "You're totally soaked with %s!", liqname);
+    sprintf(Buf2, "You're totally soaked with %s!", liqname.c_str());
     act(Buf2, TRUE, ch, gun, squirtee, TO_VICT);
     }
     return TRUE;
@@ -3632,10 +3632,10 @@ int blazeOfGlory(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     
   } else if ((cmd == CMD_SAY || cmd == CMD_SAY2) && !(ch->checkForSkillAttempt(SPELL_BLAST_OF_FURY))) {
     affectedData aff;
-    char buf[256];
-      
-    one_argument(arg, buf);
-    if(!strcmp(buf, "aerolithe")) {  //this is the activation keyword
+    sstring buf;
+    argument_parser(arg, buf);
+
+    if(buf=="aerolithe") {  //this is the activation keyword
       aff.type = AFFECT_SKILL_ATTEMPT;
       aff.level = 0;
       aff.location = APPLY_NONE;
@@ -3743,10 +3743,10 @@ int elementalWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
     return TRUE;
   } else if (cmd == CMD_SAY || cmd == CMD_SAY2) {
     affectedData aff, aff2;
-    char buf[256];
-    
-    one_argument(arg, buf);
-    if(!strcmp(buf, "rime")) {  //this is the activation keyword
+    sstring buf;
+    argument_parser(arg, buf);
+
+    if(buf=="rime") {  //this is the activation keyword
       if(ch->checkForSkillAttempt(SPELL_CONJURE_WATER)) {
 	act("The $o's power of ice can only be used once a day!",TRUE,ch,o,NULL,TO_CHAR,NULL);
 	return TRUE;
@@ -3779,7 +3779,7 @@ int elementalWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
       
       act("You brandish $p, shouting the command word, <p>rime<1>!",TRUE,ch,o,NULL,TO_CHAR,NULL);
       act("<b>A chill wind swirls around you, and your <B>$o<1><b> forms a thin layer of ice<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
-    } else if(!strcmp(buf, "incandesce")) {  //this is the activation keyword
+    } else if(buf=="incandesce") {  //this is the activation keyword
       if(ch->checkForSkillAttempt(SPELL_CONJURE_FIRE)) {
 	act("The $o's power of fire can only be used once a day!",TRUE,ch,o,NULL,TO_CHAR,NULL);
 	return TRUE;
@@ -3811,7 +3811,7 @@ int elementalWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
       
       act("You brandish $p, shouting the command word, <p>incandesce<1>!",TRUE,ch,o,NULL,TO_CHAR,NULL);
       act("<r>A scorching wind swirls around you, and your <R>$o<1><r> bursts into flame<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
-    } else if(!strcmp(buf, "evoke")) {  //this is the activation keyword
+    } else if(buf=="evoke") {  //this is the activation keyword
       if(ch->checkForSkillAttempt(SPELL_CONJURE_AIR)) {
 	act("The $o's power of lightning can only be used once a day!",TRUE,ch,o,NULL,TO_CHAR,NULL);
         return TRUE;
@@ -3931,9 +3931,10 @@ int stoneSkinAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
     return FALSE;
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-    char buf[256];
-    one_argument(arg, buf);
-    if(!strcmp(buf, "fortify")) {
+    sstring buf;
+    argument_parser(arg, buf);
+
+    if(buf=="fortify"){
       if(ch->affectedBySpell(SPELL_FLAMING_FLESH)) {
         act("The $o's cannot function while you are affected by flaming flesh.",TRUE,ch,o,NULL,TO_CHAR,NULL);
         return FALSE;
@@ -4197,9 +4198,10 @@ int manaBurnRobe(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
       return FALSE;
 
     if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-      char buf[256];
-      one_argument(arg, buf);
-      if(!strcmp(buf, "manifest")) {
+      sstring buf;
+      argument_parser(arg, buf);
+
+      if(buf=="manifest"){
 	double currentMana = ch-> getMana();
 	double percentBurn = ch->hitLimit() * .2;
 	double healthSteal = min((ch->hitLimit()- percentBurn),(ch->getHit() - percentBurn));
@@ -4368,9 +4370,10 @@ int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
     return FALSE;
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-    char buf[256];
-    one_argument(arg, buf);
-    if(!strcmp(buf, "whullalo")) {
+    sstring buf;
+    argument_parser(arg, buf);
+
+    if(buf=="whullalo"){
       TObj *portal;
       act("You grasp $p and utter the word '<p>whullalo<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
       act("$n grasps $p and utters the word '<p>whullalo<1>'.",TRUE,ch,o,NULL,TO_ROOM,NULL);
@@ -5552,9 +5555,9 @@ int force(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-    char buf[256];
-    one_argument(arg, buf);
-    if(!strcmp(buf, "force")) {
+    sstring buf;
+    argument_parser(arg, buf);
+    if(buf=="force"){
       if(ch->checkObjUsed(o)) {
         act("You cannot use $p's powers again this soon.",TRUE,ch,o,NULL,TO_CHAR,NULL);
         return FALSE;
@@ -5655,12 +5658,11 @@ int frostSpear(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-    char buf[256], buf2[256];
+    sstring buf, buf2;
     TBeing *vict = NULL;
-    arg = one_argument(arg, buf);
-    arg = one_argument(arg, buf2);
+    argument_parser(arg, buf, buf2);
     
-    if(!strcmp(buf, "chill") && !strcmp(buf2, "out")) {
+    if(buf=="chill" && buf2=="out"){
       if(ch->checkObjUsed(o)) {
         act("You cannot use $p's powers again this soon.",TRUE,ch,o,NULL,TO_CHAR,NULL);
         return FALSE;
@@ -5737,12 +5739,11 @@ int iceStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-    char buf[256], buf2[256];
+    sstring buf, buf2;
     TBeing *vict = NULL;
-    arg = one_argument(arg, buf);
-    arg = one_argument(arg, buf2);
+    argument_parser(arg, buf, buf2);
 
-    if(!strcmp(buf, "chill") && !strcmp(buf2, "out")) {
+    if(buf=="chill" && buf2=="out"){
       if(ch->checkObjUsed(o)) {
         act("You cannot use $p's powers again this soon.",TRUE,ch,o,NULL,TO_CHAR,NULL);
         return FALSE;
@@ -5790,7 +5791,7 @@ int frostArmor(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
   int rc, dam;
   wearSlotT t;
   TObj *savedby=NULL;
-  char buf[256];
+  sstring buf;
 
   if(cmd != CMD_OBJ_BEEN_HIT || !v || !o)
     return FALSE;
@@ -5812,9 +5813,9 @@ int frostArmor(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
       , 0, v, o, 0, TO_CHAR);
 
   if(savedby){
-    sprintf(buf, "<k>Luckily, $s <1>$o<k> is not conductive and saves $m from harm.<1>");
+    ssprintf(buf, "<k>Luckily, $s <1>$o<k> is not conductive and saves $m from harm.<1>");
     act(buf, 0, v, savedby, 0, TO_ROOM);
-    sprintf(buf, "<k>Luckily, your <1>$o<k> is not conductive and saves you from harm.<1>");
+    ssprintf(buf, "<k>Luckily, your <1>$o<k> is not conductive and saves you from harm.<1>");
     act(buf, 0, v, savedby, 0, TO_CHAR);
   } else {
     dam = ::number(2, 10);
@@ -5918,11 +5919,10 @@ int arcticHeart(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-    char buf[256], buf2[256];
-    arg = one_argument(arg, buf);
-    arg = one_argument(arg, buf2);
-    if(!strcmp(buf, "blizzard") && !strcmp(buf2, "soul")) {
-      
+    sstring buf, buf2;
+    argument_parser(arg, buf, buf2);
+
+    if(buf=="blizzard" && buf2=="soul"){
       if(ch->checkObjUsed(o)) {
         act("You cannot use $p's powers again this soon.",TRUE,ch,o,NULL,TO_CHAR,NULL);
         return FALSE;
@@ -6011,10 +6011,10 @@ int blizzardRing(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-    char buf[256], buf2[256];
-    arg = one_argument(arg, buf);
-    arg = one_argument(arg, buf2);
-    if(!strcmp(buf, "cold") && !strcmp(buf2, "shoulder")) {
+    sstring buf, buf2;
+    argument_parser(arg, buf, buf2);
+
+    if(buf=="cold" && buf2=="shoulder"){
       if(ch->checkObjUsed(o)) {
         act("You cannot use $p's powers again this soon.",TRUE,ch,o,NULL,TO_CHAR,NULL);
         return FALSE;
@@ -6114,7 +6114,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
   ch->sendTo(" Concerning the relative power of the 3 main factions:\n\r");
   ch->sendTo("------------------------------------------------------------\n\r\n\r");
 
-  const char *factnames[]={"cult", "snake", "brother"};
+  const sstring factnames[]={"cult", "snake", "brother"};
   TDatabase db("sneezy");
   int totalscore=0;
   int score=0;
@@ -6125,7 +6125,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
 #if 0
     // get the number of members, we use this in a few places
-    db.query("select count(*) from factionmembers where faction='%s'", factnames[i]);
+    db.query("select count(*) from factionmembers where faction='%s'", factnames[i].c_str());
     db.fetchRow();
     int nmembers=convertTo<int>(db.getColumn(0));
 #endif
@@ -6134,7 +6134,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
 
     // number of members and total levels
-    db.query("select level from factionmembers where faction='%s'", factnames[i]);
+    db.query("select level from factionmembers where faction='%s'", factnames[i].c_str());
     score=0;
     float level=0;
     while(db.fetchRow()){
@@ -6151,7 +6151,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
 
     // fishing
-    db.query("select sum(fk.weight) from fishkeeper fk, factionmembers fm where fk.name=fm.name and fm.faction='%s'", factnames[i]);
+    db.query("select sum(fk.weight) from fishkeeper fk, factionmembers fm where fk.name=fm.name and fm.faction='%s'", factnames[i].c_str());
     score=0;
     if(db.fetchRow()){
       float pounds=0.0;
@@ -6162,7 +6162,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
       }
     }
 
-    db.query("select count(*) from fishlargest fl, factionmembers fm where  fl.name=fm.name and fm.faction='%s'", factnames[i]);
+    db.query("select count(*) from fishlargest fl, factionmembers fm where  fl.name=fm.name and fm.faction='%s'", factnames[i].c_str());
     if(db.fetchRow()){
       score+=convertTo<int>(db.getColumn(0));
     }
@@ -6175,8 +6175,8 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
 
     // trophy
-    //    db.query("select fm.level, count(*) from trophy t, factionmembers fm where t.name=fm.name and fm.faction='%s' group by fm.name, fm.level", factnames[i]);
-    db.query("select fm.level, t.count from trophyplayer t, factionmembers fm where t.name=fm.name and fm.faction='%s' group by fm.level, t.count", factnames[i]);
+    //    db.query("select fm.level, count(*) from trophy t, factionmembers fm where t.name=fm.name and fm.faction='%s' group by fm.name, fm.level", factnames[i].c_str());
+    db.query("select fm.level, t.count from trophyplayer t, factionmembers fm where t.name=fm.name and fm.faction='%s' group by fm.level, t.count", factnames[i].c_str());
     score=0;
 
     while(db.fetchRow()){
@@ -6191,7 +6191,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
 
     // shops
-    db.query("select count(distinct soa.shop_nr) from shopownedaccess soa, factionmembers fm where (soa.access & %i)>0 and upper(fm.name) = upper(soa.name) and fm.faction='%s'", SHOPACCESS_OWNER, factnames[i]);
+    db.query("select count(distinct soa.shop_nr) from shopownedaccess soa, factionmembers fm where (soa.access & %i)>0 and upper(fm.name) = upper(soa.name) and fm.faction='%s'", SHOPACCESS_OWNER, factnames[i].c_str());
     score=0;
     if(db.fetchRow()){
       score=convertTo<int>(db.getColumn(0))*10;
@@ -6316,9 +6316,9 @@ int starfiresheath(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   TBeing *ch2 = NULL;
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-    char buf[256];
-    one_argument(arg, buf);
-    if(!strcmp(buf, "kaeshite")) {
+    sstring buf;
+    argument_parser(arg, buf);
+    if(buf=="kaeshite"){
       act("<c>$n<c> utters a word of <p>power<c>.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
       act("<c>You utter a word of <p>power<c>.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
 
@@ -6641,7 +6641,7 @@ int weaponUnmaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   TBeing *ch;
   TObj *clay;
 
-  char buf[256];
+  sstring buf;
 
   if (!o || !vict)
     return FALSE;
@@ -6725,17 +6725,17 @@ int weaponUnmaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   // snipped limb missing code
 
 
-  sprintf(buf, "$n's $o glows with a <g>sickly light<1> as it strikes your %s!", limb);
+  ssprintf(buf, "$n's $o glows with a <g>sickly light<1> as it strikes your %s!", limb);
   act(buf, FALSE, ch, o, vict, TO_VICT, NULL);
-  sprintf(buf, "Your %s turns to <o>soft clay<1> and falls to the ground!\n\rYou look down at your missing %s and scream!", limb, limb);
+  ssprintf(buf, "Your %s turns to <o>soft clay<1> and falls to the ground!\n\rYou look down at your missing %s and scream!", limb, limb);
   act(buf, FALSE, vict, NULL, NULL, TO_CHAR, NULL);
 
-  sprintf(buf, "Your $o glows with a <g>sickly light<1> as it strikes $N's %s!", limb);
+  ssprintf(buf, "Your $o glows with a <g>sickly light<1> as it strikes $N's %s!", limb);
   act(buf, FALSE, ch, o, vict, TO_CHAR, NULL);
-  sprintf(buf, "$n's $o glows with a <g>sickly light<1> as it strikes $N's %s!", limb);
+  ssprintf(buf, "$n's $o glows with a <g>sickly light<1> as it strikes $N's %s!", limb);
   act(buf, FALSE, ch, o, vict, TO_NOTVICT, NULL);
 
-  sprintf(buf, "$N looks down in terror as $S %s turns to <o>soft clay<1> before $S eyes!\n\r<o>A lump of clay falls to the ground.<1>"
+  ssprintf(buf, "$N looks down in terror as $S %s turns to <o>soft clay<1> before $S eyes!\n\r<o>A lump of clay falls to the ground.<1>"
 	  , limb);
   act(buf, FALSE, vict, NULL, vict, TO_ROOM, NULL);
 
@@ -6834,8 +6834,7 @@ int energyShield(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
 
   TBeing *ch;
   TObj *generator = NULL;
-  char buf2[256];
-  char buf[256];
+  sstring buf, buf2;
 
   if (cmd != CMD_GENERIC_QUICK_PULSE)
     return FALSE;
@@ -6880,17 +6879,15 @@ int energyShield(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
   }
   
   if ((charge-1) / 100 != (newcharge-1) / 100 || (newcharge == 1000 && charge < 1000)) {
-    if (newcharge / 100 <= 3) sprintf(buf, "<r>red");
-    else if ( newcharge / 100 <= 6) sprintf(buf, "<Y>yellow");
-    else if ( newcharge / 100 <= 9) sprintf(buf, "<g>green");
-    else sprintf(buf, "<c>blue");
+    if (newcharge / 100 <= 3) ssprintf(buf, "<r>red");
+    else if ( newcharge / 100 <= 6) ssprintf(buf, "<Y>yellow");
+    else if ( newcharge / 100 <= 9) ssprintf(buf, "<g>green");
+    else ssprintf(buf, "<c>blue");
     
-    sprintf(buf2, "The display panel on your $o glows %s<1> as it reads %d0%%.", buf, newcharge/100);
+    ssprintf(buf2, "The display panel on your $o glows %s<1> as it reads %d0%%.", buf.c_str(), newcharge/100);
     act(buf2,TRUE,ch,generator,NULL,TO_CHAR,NULL);
-    sprintf(buf2, "The display panel on $n's $o glows %s<1>.", buf);
+    ssprintf(buf2, "The display panel on $n's $o glows %s<1>.", buf.c_str());
     act(buf2,TRUE,ch,generator,NULL, TO_ROOM,NULL);
-
-    
   }
   
   
@@ -6905,10 +6902,7 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
 {
   TBeing *ch = NULL;
   //  TObj *shield = NULL;
-  char buf[256];
-  char buf2[256];
-  char arg1[256];
-  char arg2[256];
+  sstring buf, buf2, arg1, arg2;
 
   int charge;
   int newcharge;
@@ -6977,10 +6971,10 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
 	  
 	  ch->equipChar(shield, il);
 	  
-	  sprintf(buf2, "Your %s is surrounded by a crackling blue aura.", ch->describeBodySlot((wearSlotT)il).c_str());
+	  ssprintf(buf2, "Your %s is surrounded by a crackling blue aura.", ch->describeBodySlot((wearSlotT)il).c_str());
 	  
 	  act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-	  sprintf(buf2, "$n's %s is surrounded by a crackling blue aura.", ch->describeBodySlot((wearSlotT)il).c_str());
+	  ssprintf(buf2, "$n's %s is surrounded by a crackling blue aura.", ch->describeBodySlot((wearSlotT)il).c_str());
 	  
 	  act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
 	  
@@ -6991,14 +6985,14 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
 
     }
     if ((charge-1) / 100 != (newcharge-1) / 100 || (newcharge == 1000 && charge < 1000)) {
-      if (newcharge / 100 <= 3) sprintf(buf, "<r>red");
-      else if ( newcharge / 100 <= 6) sprintf(buf, "<Y>yellow");
-      else if ( newcharge / 100 <= 9) sprintf(buf, "<g>green");
-      else sprintf(buf, "<c>blue");
+      if (newcharge / 100 <= 3) ssprintf(buf, "<r>red");
+      else if ( newcharge / 100 <= 6) ssprintf(buf, "<Y>yellow");
+      else if ( newcharge / 100 <= 9) ssprintf(buf, "<g>green");
+      else ssprintf(buf, "<c>blue");
       
-      sprintf(buf2, "The display panel on your $o glows %s<1> as it reads %d0%%.", buf, newcharge/100);
+      ssprintf(buf2, "The display panel on your $o glows %s<1> as it reads %d0%%.", buf.c_str(), newcharge/100);
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "The display panel on $n's $o glows %s<1>.", buf);
+      ssprintf(buf2, "The display panel on $n's $o glows %s<1>.", buf.c_str());
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
       
     }
@@ -7007,27 +7001,26 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
     return FALSE;
 
   } else if ((cmd == CMD_PUSH || cmd == CMD_PRESS)) {
-    arg = one_argument(arg, arg1);
-    arg = one_argument(arg, arg2);
+    argument_parser(arg, arg1, arg2);
     if (is_abbrev(arg1, "display") && is_abbrev(arg2, "button")) {
      
       sscanf(o->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
       
-      if (charge / 100 <= 3) sprintf(buf, "<r>red");
-      else if (charge / 100 <= 6) sprintf(buf, "<Y>yellow");
-      else if (charge / 100 <= 9) sprintf(buf, "<g>green");
-      else sprintf(buf, "<c>blue");
+      if (charge / 100 <= 3) ssprintf(buf, "<r>red");
+      else if (charge / 100 <= 6) ssprintf(buf, "<Y>yellow");
+      else if (charge / 100 <= 9) ssprintf(buf, "<g>green");
+      else ssprintf(buf, "<c>blue");
 
 
       act("You press the display button on $p.",TRUE,ch,o,NULL,TO_CHAR,NULL);
       act("$n presses the display button on $p.",TRUE,ch,o,NULL, TO_ROOM,NULL);
 
 
-      sprintf(buf2, "The display panel on your $o glows %s<1> as it reads %d%%.", buf, charge/10);
+      ssprintf(buf2, "The display panel on your $o glows %s<1> as it reads %d%%.", buf.c_str(), charge/10);
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "The display panel on $n's $o glows %s<1>.", buf);
+      ssprintf(buf2, "The display panel on $n's $o glows %s<1>.", buf.c_str());
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-      sprintf(buf2, "The power LED on your $o is currently %s<1>.", (isOn ? "<g>on<1>" : "<r>off<1>"));
+      ssprintf(buf2, "The power LED on your $o is currently %s<1>.", (isOn ? "<g>on<1>" : "<r>off<1>"));
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
 
       
@@ -7048,7 +7041,7 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
 	isOn = 1;
       }
 
-      sprintf(buf2, "The power LED on your $o turns %s<1>.", (isOn ? "<g>on<1>" : "<r>off<1>"));
+      ssprintf(buf2, "The power LED on your $o turns %s<1>.", (isOn ? "<g>on<1>" : "<r>off<1>"));
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
 
       sprintf(o->name, "generator shield belt [on=%d] [charge=%d]", isOn, charge);
@@ -7067,9 +7060,7 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
   TBeing *ch = NULL;
   //  TObj *shield = NULL;
 
-  char buf2[256];
-  char arg1[256];
-  char arg2[256];
+  sstring buf2, arg1, arg2;
 
   int charge;
   int newcharge;
@@ -7098,8 +7089,7 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
 
 
   } else if ((cmd == CMD_PUSH || cmd == CMD_PRESS)) {
-    arg = one_argument(arg, arg1);
-    arg = one_argument(arg, arg2);
+    argument_parser(arg, arg1, arg2);
     if (is_abbrev(arg1, "display") && is_abbrev(arg2, "button")) {
       
       
@@ -7109,25 +7099,25 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
       act("$n presses a button on $s <W>forearm guard<1>.",TRUE,ch,o,NULL, TO_ROOM,NULL);
       
       
-      sprintf(buf2, "The display panel on your <W>forearm guard<1> flips open, revealing a row of lights.");
+      ssprintf(buf2, "The display panel on your <W>forearm guard<1> flips open, revealing a row of lights.");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "A panel on $n's <W>forearm guard<1> flips open, revealing a row of lights.");
+      ssprintf(buf2, "A panel on $n's <W>forearm guard<1> flips open, revealing a row of lights.");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-      sprintf(buf2, "The light representing the first stim is %s.", (charge >= 1000 ? "<B>lit<1>" : "<k>dim<1>"));
+      ssprintf(buf2, "The light representing the first stim is %s.", (charge >= 1000 ? "<B>lit<1>" : "<k>dim<1>"));
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "The light representing the second stim is %s.", (charge >= 800 ? "<C>lit<1>" : "<k>dim<1>"));
+      ssprintf(buf2, "The light representing the second stim is %s.", (charge >= 800 ? "<C>lit<1>" : "<k>dim<1>"));
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "The light representing the third stim is %s.", (charge >= 600 ? "<G>lit<1>" : "<k>dim<1>"));
+      ssprintf(buf2, "The light representing the third stim is %s.", (charge >= 600 ? "<G>lit<1>" : "<k>dim<1>"));
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "The light representing the fourth stim is %s.", (charge >= 400 ? "<Y>lit<1>" : "<k>dim<1>"));
+      ssprintf(buf2, "The light representing the fourth stim is %s.", (charge >= 400 ? "<Y>lit<1>" : "<k>dim<1>"));
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "The light representing the fifth stim is %s.", (charge >= 200 ? "<R>lit<1>" : "<k>dim<1>"));
+      ssprintf(buf2, "The light representing the fifth stim is %s.", (charge >= 200 ? "<R>lit<1>" : "<k>dim<1>"));
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "$n glances quickly at the panel before flipping it closed again.");
+      ssprintf(buf2, "$n glances quickly at the panel before flipping it closed again.");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-      sprintf(buf2, "The charging LED on your <W>forearm guard<1> is currently %s<1>.", (isOn ? "<P>on<1>" : "<k>off<1>"));
+      ssprintf(buf2, "The charging LED on your <W>forearm guard<1> is currently %s<1>.", (isOn ? "<P>on<1>" : "<k>off<1>"));
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "You quickly flip the display panel closed again.");
+      ssprintf(buf2, "You quickly flip the display panel closed again.");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
 
       
@@ -7138,7 +7128,7 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
       act("$n presses a button on $s <W>forearm guard<1>.",TRUE,ch,o,NULL, TO_ROOM,NULL);
       
       if (charge < 200) {
-	sprintf(buf2, "Nothing seems to happen.");
+	ssprintf(buf2, "Nothing seems to happen.");
 	act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       } else {
       
@@ -7193,9 +7183,9 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
         isOn = 1;
       }
 
-      sprintf(buf2, "The charging LED on your $o turns %s<1>.", (isOn ? "<P>on<1>" : "<k>off<1>"));
+      ssprintf(buf2, "The charging LED on your $o turns %s<1>.", (isOn ? "<P>on<1>" : "<k>off<1>"));
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "A little %s on $n's <W>forearm guard<1> %s.", 
+      ssprintf(buf2, "A little %s on $n's <W>forearm guard<1> %s.", 
 	      (isOn ? "<k>light<1>" : "<P>light<1>"), (isOn ? "turns <P>on<1>" : "goes <k>out<1>"));
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
       
@@ -7210,64 +7200,64 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
   if (newcharge != charge) {
     // for display lights turning on  
     if (newcharge >= 200 && charge < 200) {
-      sprintf(buf2, "The <k>first<1> LED on your <W>forearm guard<1> begins to <R>glow<1>.");
+      ssprintf(buf2, "The <k>first<1> LED on your <W>forearm guard<1> begins to <R>glow<1>.");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <R>glow<1>.");
+      ssprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <R>glow<1>.");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge >= 400 && charge < 400) {
-      sprintf(buf2, "The <k>second<1> LED on your <W>forearm guard<1> begins to <Y>glow<1>.");
+      ssprintf(buf2, "The <k>second<1> LED on your <W>forearm guard<1> begins to <Y>glow<1>.");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <Y>glow<1>.");
+      ssprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <Y>glow<1>.");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge >= 600 && charge < 600) {
-      sprintf(buf2, "The <k>third<1> LED on your <W>forearm guard<1> begins to <G>glow<1>.");
+      ssprintf(buf2, "The <k>third<1> LED on your <W>forearm guard<1> begins to <G>glow<1>.");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <G>glow<1>.");
+      ssprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <G>glow<1>.");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge >= 800 && charge < 800) {
-      sprintf(buf2, "The <k>fourth<1> LED on your <W>forearm guard<1> begins to <C>glow<1>.");
+      ssprintf(buf2, "The <k>fourth<1> LED on your <W>forearm guard<1> begins to <C>glow<1>.");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <C>glow<1>.");
+      ssprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <C>glow<1>.");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge == 1000 && charge < 1000) {
-      sprintf(buf2, "The <k>fifth<1> LED on your <W>forearm guard<1> begins to <B>glow<1>.");
+      ssprintf(buf2, "The <k>fifth<1> LED on your <W>forearm guard<1> begins to <B>glow<1>.");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <B>glow<1>.");
+      ssprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <B>glow<1>.");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     // for display lights turning off
     if (newcharge < 200 && charge >= 200) {
-      sprintf(buf2, "The <R>first<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      ssprintf(buf2, "The <R>first<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "One of the <R>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      ssprintf(buf2, "One of the <R>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge < 400 && charge >= 400) {
-      sprintf(buf2, "The <Y>second<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      ssprintf(buf2, "The <Y>second<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "One of the <Y>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      ssprintf(buf2, "One of the <Y>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge < 600 && charge >= 600) {
-      sprintf(buf2, "The <G>third<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      ssprintf(buf2, "The <G>third<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "One of the <G>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      ssprintf(buf2, "One of the <G>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge < 800 && charge >= 800) {
-      sprintf(buf2, "The <C>fourth<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      ssprintf(buf2, "The <C>fourth<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "One of the <C>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      ssprintf(buf2, "One of the <C>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge < 1000 && charge >= 1000) {
-      sprintf(buf2, "The <B>fifth<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      ssprintf(buf2, "The <B>fifth<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      sprintf(buf2, "One of the <B>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      ssprintf(buf2, "One of the <B>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
       
     }

@@ -244,7 +244,7 @@ extern char * display_faction_flags(unsigned int);
 
 extern int load_factions();
 extern void save_factions();
-extern factionTypeT factionNumber(const char *);
+extern factionTypeT factionNumber(const sstring);
 extern char *get_faction_leader_name(char *);
 extern void save_faction_file(TBeing *);
 extern void read_faction_file(TBeing *);
