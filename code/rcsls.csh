@@ -18,7 +18,7 @@ foreach file (*.cc *.h makefile README)
 
   set headLine = `rlog $file | grep "head:"`
   if ("$headLine" != "head:") then
-    if ("$headLine[2]" != "5.1.1") then
+    if ("$headLine[2]" != "5.1") then
       echo "$file *** $headLine"
     endif
   endif
