@@ -215,9 +215,15 @@ int updateWholist()
   TBeing *p;
   TPerson *p2;
   int count = 0;
-  
+  TDatabase db;
   // every 10 RL seconds
-  TDatabase db("sneezyglobal");
+  if (gamePort == PROD_GAMEPORT)
+    TDatabase db("sneezy");
+  else if (gamePort == BUILDER_GAMEPORT)
+    TDatabase db("sneezybuilder");  
+  else 
+    TDatabase db("sneezybeta");
+
   db.query("delete from wholist where port=%i", gamePort);
   
   //      vlogf(LOG_DASH, "Updating who table for port %d", gamePort);
@@ -239,11 +245,18 @@ void updateUsagelogs(int count)
   time_t ct=time(0);
   static time_t logtime;
   static time_t lastlog;
-  
+  TDatabase db;
   int TIME_BETWEEN_LOGS = 300;
   
   // every 10 RL seconds
-  TDatabase db("sneezyglobal");
+  if (gamePort == PROD_GAMEPORT)
+    TDatabase db("sneezy");
+  else if (gamePort == BUILDER_GAMEPORT)
+    TDatabase db("sneezybuilder");
+  else
+    TDatabase db("sneezybeta");
+
+
 
   if(logtime/TIME_BETWEEN_LOGS < ct/TIME_BETWEEN_LOGS) {
     //	vlogf(LOG_DASH, "Webstuff: collecting game usage data - %d seconds since last log", ct-lastlog);
@@ -253,7 +266,6 @@ void updateUsagelogs(int count)
     if (logtime != 0) logtime += TIME_BETWEEN_LOGS;
     else logtime = ct;
     lastlog = ct;
-    
     db.query("insert into usagelogs (time, players, port) VALUES(%i, %i, %i)", logtime, count, gamePort);
     
   }
@@ -535,7 +547,8 @@ int TSocket::gameLoop()
     mudRecvMessage();
 
     // this is causing tons of lag for some reason
-#if 0
+    // ok i tried to fix this, switched the databases to one for each port. - dash 12/02
+#if 1
     int count;
     // update statistics in the database
     if(!(pulse % (ONE_SECOND*5))) {

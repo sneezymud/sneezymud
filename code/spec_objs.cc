@@ -6118,6 +6118,90 @@ int frostArmor(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
   return TRUE;
 }
 
+int fireArmor(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
+{
+  TBeing *ch;
+  int rc, dam;
+  //  wearSlotT t;
+  //  TObj *savedby=NULL;
+  //  char buf[256];
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+
+  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
+    //    char buf[256];
+    //    one_argument(arg, buf);
+    if(!strcmp(arg, "scorching redemption")) {
+      if(ch->checkObjUsed(o)) {
+        act("The $o's powers can only be used once per day.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return FALSE;
+      }
+      affectedData aff1;
+
+      act("$n closes $s eyes and whispers, '<p>scorching redemption<1>'.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("<o>$p becomes covered in searing flames, <R>complete engulfing<1><r> $n!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("The $o slowly stops burning, but $n remains wreathed in <r>flames<1>.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+
+      act("You close your eyes and whipser, '<p>scorching redemption<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("<o>$p becomes covered in searing flames, <R>complete engulfing<1><r> you!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("The $o slowly stops burning, but you remain wreathed in <r>flames<1>.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+
+
+      // ARMOR APPLY
+      aff1.type = SPELL_FLAMING_FLESH;
+      aff1.level = 30;
+      aff1.duration = 12 * UPDATES_PER_MUDHOUR;
+      aff1.location = APPLY_ARMOR;
+      aff1.modifier = -75;
+
+
+      ch->affectTo(&aff1);
+      ch->addObjUsed(o, 24 * UPDATES_PER_MUDHOUR);
+      ch->addToWait(combatRound(3));
+      return TRUE;
+    }
+  }
+
+
+  if(cmd != CMD_OBJ_BEEN_HIT || !v || !o)
+    return FALSE;
+  if(::number(0, 8))
+    return FALSE;
+ 
+
+  if (!::number(0,2)) {
+    act("$p<o> emits a few dim sparks, then sputters out.<1>"
+	, 0, v, o, 0, TO_ROOM);
+
+    act("$p<o> emits a few dim sparks, then sputters out.<1>"
+	, 0, v, o, ch, TO_CHAR);
+
+  } else {
+    act("$p<o> emits a <Y>dazzling<1> shower of <R>incandescent<1><o> sparks at $n!<1>"
+	, 0, v, o, 0, TO_ROOM);
+    act("$n is <r>burned<1> by the <o>fireworks<1> from the $o!<1>"
+	, 0, v, o, ch, TO_ROOM);
+    
+    act("$p<o> glows <R>red hot<1><o> and releases a burst of <R>fire<1><o> at you!<1>"
+	, 0, v, o, ch, TO_CHAR);
+    act("You are <r>burned<1> by the <o>fireworks<1> from the $o!<1>"
+	, 0, v, o, ch, TO_CHAR);
+    
+    
+    dam = ::number(2, 30);
+    
+    rc = ch->reconcileDamage(v, dam, DAMAGE_FIRE);
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
+  }
+
+
+  return TRUE;
+}
+
 int arcticHeart(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch;
@@ -7412,6 +7496,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "potion of learning", learningPotion},
   {FALSE, "mystery potion", mysteryPotion},
   {FALSE, "Offal slip proc", slipInOffal},
-  {TRUE, "Fireball Weapon", fireballWeapon},
+  {TRUE, "Fireball Weapon", fireballWeapon}, //125
+  {FALSE, "Fire Shield", fireArmor},
   {FALSE, "last proc", bogusObjProc}
 };
