@@ -1613,9 +1613,11 @@ static const string factionLeaderTitle(factionTypeT faction, int slot)
     if (slot == 0)
       mud_str_copy(buf, "Overlord of the Serpents", 64);
     else if (slot == 1)
-      mud_str_copy(buf, "Emir of the Serpents", 64);
-    else if (slot == 2 || slot == 3)
-      mud_str_copy(buf, "Commander of the Serpents", 64);
+      mud_str_copy(buf, "Lord of the Purse", 64);
+    else if (slot == 2)
+      mud_str_copy(buf, "Lord of the Shadow", 64);
+    else if (slot == 3)
+      mud_str_copy(buf, "Lord of the Fist", 64);
   } else {
     if (slot == 0)
       mud_str_copy(buf, "Faction Leader", 64);
