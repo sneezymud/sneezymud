@@ -238,7 +238,7 @@ void TBeing::appear()
 void TBeing::updatePos()
 {
   positionTypeT newPos = POSITION_DEAD;
-
+#ifdef SHAMANDEAD
   if (isPc()) {
     if (hasClass(CLASS_SHAMAN) && (-11 >= getHit())) {
       // reconcileDamage(this, 5, DAMAGE_NORMAL);
@@ -262,6 +262,7 @@ void TBeing::updatePos()
     // nothing here
   }
   // XXXXXX
+#endif
 
   if ((getHit() > 0) && (getPosition() > POSITION_STUNNED))
     return;

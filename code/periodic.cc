@@ -742,15 +742,35 @@ int TBeing::updateHalfTickStuff()
   bool berserk_noheal=0;
   TBeing *trider=NULL;
   unsigned int i, hours_first, hours_last, severity;
-  
 
   if (hasClass(CLASS_SHAMAN)) {
     if ((isPc()) && (GetMaxLevel() < 51)) {
       if (0 >= getLifeforce()) {
 	setLifeforce(0);
-	addToHit(-2);
+	if (-10 > getHit()) {
+	  vlogf(LOG_MISC, "%s killed by excessive lifeforce drain at %s (%d)",
+		getName(), roomp ? roomp->getName() : "nowhere", inRoom());
+	  reconcileDamage(this,::number(1,3),DAMAGE_DRAIN);
+	  die(DAMAGE_DRAIN);
+	  return DELETE_THIS;
+	}
+	if (-7 > getHit()) {
+	  vlogf(LOG_MISC, "%s drain-killed by lifeforce code at %s (%d)",
+		getName(), roomp ? roomp->getName() : "nowhere", inRoom());
+	  sendTo("The loa have reclaimed your soul!\n\r");
+	  reconcileDamage(this,10,DAMAGE_DRAIN);
+	  die(DAMAGE_DRAIN);
+	  return DELETE_THIS;
+	}
+	if (0 > getHit()) {
+	  reconcileDamage(this,1,DAMAGE_DRAIN);
+	  sendTo("Your condition makes it impossible to gather lifeforce!\n\r");
+	}
+	if (getHit() > 0) {
+	  reconcileDamage(this,::number(1,2),DAMAGE_DRAIN);
+	  sendTo("Your ancestors demand you gather lifeforce.\n\r");
+	}
 	updatePos();
-	sendTo("Your ancestors demand you gather lifeforce.\n\r");
       } else {
 	addToLifeforce(-1);
 	updatePos();
@@ -759,6 +779,7 @@ int TBeing::updateHalfTickStuff()
       setLifeforce(9000);
       updatePos();
     }
+
   }
 
   if (isAffected(AFF_SLEEP) && (getPosition() > POSITION_SLEEPING)) {
