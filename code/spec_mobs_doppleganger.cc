@@ -111,7 +111,7 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
   switch (cmd) {
     case CMD_GENERIC_CREATED:
       if (tMyself->act_ptr) {
-        vlogf(LOG_PROG, "%s created with action pointer already existing.\n\r", tMyself->getName());
+        vlogf(LOG_PROC, "%s created with action pointer already existing.\n\r", tMyself->getName());
         return FALSE;
       }
 
@@ -125,7 +125,7 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
       tJob = static_cast<mimicStructure *>(tMyself->act_ptr);
       tJob->tName    = tMyself->getName();
       tJob->tShort   = tMyself->shortDescr;
-      tJob->tLong    = tMyself->player.getLongDesc();
+      tJob->tLong    = tMyself->getLongDesc();
       tJob->tDesc    = tMyself->getDescr();
       tJob->tAssumed = "";
 
@@ -178,7 +178,7 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
             tMyself->shortDescr = mud_str_dup(tSucker->shortDescr);
 
             delete [] tMyself->player.longDescr;
-            tMyself->player.getLongDesc() = mud_str_dup(tSucker->player.getLongDesc);
+            tMyself->player.longDescr = mud_str_dup(tSucker->getLongDesc());
 
             delete [] tMyself->descr;
             tMyself->descr = mud_str_dup(tSucker->descr);
