@@ -96,6 +96,9 @@
   'think' they see a trap when one doesn't exist, this is controlled through
   a container flag to avoid constant occurance, and also a chance that a
   trap will fail to go off, become a dud.  These only work for containers.
+- If an object is added to a pet whom has a master then the master's name
+  goes on the owners list.  This was being used to loot with pet and
+  transfer goods to another PC in the same account.
 
 09-23-99 - Cos
 - Disabled GOLD_INCOME modifier from actually being used, although
