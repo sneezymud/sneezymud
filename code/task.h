@@ -49,6 +49,7 @@ extern int task_scribe        (TBeing *, cmdTypeT, const char *, int, TRoom *, T
 extern int task_trap_container(TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_trap_mine     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_trap_grenade  (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_trap_arrow  (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_yoginsa       (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_attuning      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_tracking      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
@@ -67,6 +68,8 @@ extern int task_fishing     (TBeing *, cmdTypeT, const char *, int, TRoom *, TOb
 extern int task_extinguish_my_ass (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_butchering      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_handgonne_load      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_trap_arrow(TBeing *, cmdTypeT cmd, const char *, int, TRoom *, TObj *);
+
 
 typedef struct _tasks_entry {
   const char * const name;
@@ -121,6 +124,7 @@ enum taskTypeT {
      TASK_COOK,
      TASK_HANDGONNE_LOAD,
      TASK_CANNON_LOAD,
+     TASK_TRAP_ARROW,
      NUM_TASKS  // keep this as max
 };
 

@@ -919,6 +919,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDTraps *) cd)->skSetTrapsMine;
     case SKILL_SET_TRAP_GREN:
       return &((CDTraps *) cd)->skSetTrapsGren;
+    case SKILL_SET_TRAP_ARROW:
+      return &((CDTraps *) cd)->skSetTrapsArrow;
 
     case SPELL_TREE_WALK:
       return &((CDNature *) cd)->skTreeWalk;

@@ -45,7 +45,8 @@ enum trap_targ_t {
   TRAP_TARG_DOOR,
   TRAP_TARG_CONT,
   TRAP_TARG_MINE,
-  TRAP_TARG_GRENADE
+  TRAP_TARG_GRENADE,
+  TRAP_TARG_ARROW
 };
 
 extern const sstring trap_types[];

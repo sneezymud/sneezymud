@@ -11,7 +11,9 @@ TArrow::TArrow() :
   arrowType(0),
   arrowHead(0),
   arrowHeadMat(0),
-  arrowFlags(0)
+  arrowFlags(0),
+  trap_level(0),
+  trap_dam_type(DOOR_TRAP_NONE)
 {
 }
 
@@ -20,7 +22,9 @@ TArrow::TArrow(const TArrow &a) :
   arrowType(a.arrowType),
   arrowHead(a.arrowHead),
   arrowHeadMat(a.arrowHeadMat),
-  arrowFlags(a.arrowFlags)
+  arrowFlags(a.arrowFlags),
+  trap_level(a.trap_level),
+  trap_dam_type(a.trap_dam_type)
 {
 }
 
@@ -32,6 +36,8 @@ TArrow & TArrow::operator=(const TArrow &a)
   arrowHead    = a.arrowHead;
   arrowHeadMat = a.arrowHeadMat;
   arrowFlags   = a.arrowFlags;
+  trap_level   = a.trap_level;
+  trap_dam_type= a.trap_dam_type;
   return *this;
 }
 
@@ -93,6 +99,33 @@ void TArrow::setArrowHeadMat(unsigned char newArrowHeadMat)
 {
   arrowHeadMat = newArrowHeadMat;
 }
+
+int TArrow::getTrapDamAmount() const
+{
+  return dice(getTrapLevel(), 8);
+}
+
+int TArrow::getTrapLevel() const
+{
+  return trap_level;
+}
+
+void TArrow::setTrapLevel(int r)
+{
+  trap_level = r;
+}
+
+doorTrapT TArrow::getTrapDamType() const
+{
+  return trap_dam_type;
+}
+
+void TArrow::setTrapDamType(doorTrapT r)
+{
+  trap_dam_type = r;
+}
+
+
 
 bool TArrow::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
 {
@@ -204,6 +237,16 @@ sstring TArrow::statObjInfo() const
   sprintf(buf, "Arrow Flags: %d",
           getArrowFlags());
   a += buf;
+
+  if(getTrapDamType()!=DOOR_TRAP_NONE){
+    sprintf(buf, "Trap Type: %s (%d)", 
+	    trap_types[getTrapDamType()].c_str(), getTrapDamType());
+    a += buf;
+    
+    sprintf(buf, "Trap Level: %i", 
+	    getTrapLevel());
+    a += buf;
+  }
 
   return a;
 }

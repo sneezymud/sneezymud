@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_traps.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -21,20 +13,38 @@
 class CDTraps : public CDiscipline
 {
 public:
-    CSkill skSetTraps;   
+    CSkill skSetTrapsCont;   
+    CSkill skSetTrapsDoor;   
+    CSkill skSetTrapsMine;   
+    CSkill skSetTrapsGren;   
+    CSkill skSetTrapsArrow;
 
     CDTraps()
       : CDiscipline(),
-      skSetTraps() {
+      skSetTrapsCont(),
+      skSetTrapsDoor(),
+      skSetTrapsMine(),
+      skSetTrapsGren(),
+      skSetTrapsArrow()
+    {
     }
     CDTraps(const CDTraps &a)
       : CDiscipline(a),
-      skSetTraps(a.skSetTraps) {
+      skSetTrapsCont(a.skSetTrapsCont),
+      skSetTrapsDoor(a.skSetTrapsDoor),
+      skSetTrapsMine(a.skSetTrapsMine),
+      skSetTrapsGren(a.skSetTrapsGren),
+      skSetTrapsArrow(a.skSetTrapsArrow)
+    {
     }
     CDTraps & operator=(const CDTraps &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skSetTraps = a.skSetTraps;
+      skSetTrapsCont = a.skSetTrapsCont;
+      skSetTrapsDoor = a.skSetTrapsDoor;
+      skSetTrapsMine = a.skSetTrapsMine;
+      skSetTrapsGren = a.skSetTrapsGren;
+      skSetTrapsArrow = a.skSetTrapsArrow;
       return *this;
     }
     virtual ~CDTraps() {}

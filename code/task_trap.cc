@@ -9,7 +9,7 @@
 #include "stdsneezy.h"
 #include "obj_open_container.h"
 #include "obj_trap.h"
-
+#include "obj_arrow.h"
 
 // returns DELETE_THIS for ch
 // returns true if guard disrupts trap pulse
@@ -388,6 +388,106 @@ int task_trap_mine(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     case CMD_STOP:
       act("You stop trying to build a land mine.", FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops tinkering with $s land mine.", FALSE, ch, 0, 0, TO_ROOM);
+      ch->stopTask();
+      break;
+    case CMD_TASK_FIGHTING:
+      ch->sendTo("You stop setting the trap so that you can defend yourself!\n\r");
+      ch->stopTask();
+      break;
+    default:
+      if (cmd < MAX_CMD_LIST)
+	warn_busy(ch);
+      break;			// eat the command 
+  }
+  return TRUE;
+}
+
+
+int task_trap_arrow(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *obj)
+{
+  int learning;
+  int rc; 
+  TArrow *arrow;
+
+  if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
+      !ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_CONT, 0) ||
+      (ch->getPosition() <= POSITION_SITTING) ||
+      !ch->getDiscipline(DISC_LOOTING)) {
+    if (ch->getPosition() >= POSITION_RESTING) {
+      act("You suddenly stop trapping your arrow for some reason.",
+                 FALSE, ch, 0, 0, TO_CHAR);
+      act("$n stops trapping and looks about confused and embarrassed.",
+                 TRUE, ch, 0, 0, TO_ROOM);
+    }
+    ch->stopTask();
+    return FALSE; // returning FALSE lets command be interpreted 
+  }
+
+  if (ch->utilityTaskCommand(cmd) ||
+      ch->nobrainerTaskCommand(cmd))
+    return FALSE;
+
+  if(!(arrow=dynamic_cast<TArrow *>(obj))){
+    act("You can't put an arrow trap on a non-arrow.",
+	FALSE, ch, 0, 0, TO_CHAR);
+    act("$n stops trapping and looks about confused and embarrassed.",
+	TRUE, ch, 0, 0, TO_ROOM);
+    ch->stopTask();
+    return FALSE;
+  }
+
+  if (ch->task->timeLeft < 0)  {
+    // Made it to end, set trap 
+    arrow->setTrapLevel(ch->getArrowTrapDam(doorTrapT(ch->task->status)));
+    arrow->setTrapDamType(doorTrapT(ch->task->status));
+    ch->stopTask();
+    return FALSE;
+  }
+
+  switch (cmd) {
+    case CMD_TASK_CONTINUE:
+      learning = ch->getArrowTrapLearn(doorTrapT(ch->task->status));
+      ch->task->calcNextUpdate(pulse, 
+                 PULSE_MOBACT * (5 + ((100 - learning)/3)));
+
+      switch (ch->task->timeLeft) {
+	case 3:
+	  ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 1);
+	  ch->task->timeLeft--;
+	  break;
+	case 2:
+	  ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 2);
+	  ch->task->timeLeft--;
+	  break;
+	case 1:
+	  ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 3);
+	  ch->task->timeLeft--;
+	  break;
+	case 0:
+	  ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 4);
+	  ch->task->timeLeft--;
+	  break;
+      }
+
+      // test for failure
+      // let's not test multiple times, check at end
+      if (ch->task->timeLeft < 0 ||
+          !ch->doesKnowSkill(SKILL_SET_TRAP_ARROW)) {
+        if (!bSuccess(ch, learning, SKILL_SET_TRAP_ARROW)) {
+          // trigger trap
+          rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_ARROW);
+          if (IS_SET_DELETE(rc, DELETE_THIS))
+            return DELETE_THIS;
+  
+          ch->stopTask();
+          return FALSE;
+        }
+      }
+      break;
+    case CMD_ABORT:
+    case CMD_STOP:
+      act("You stop trying to trap an arrow.", FALSE, ch, 0, 0, TO_CHAR);
+      act("$n stops tinkering with $s arrow.", FALSE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:

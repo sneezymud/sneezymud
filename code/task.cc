@@ -132,6 +132,7 @@ int start_task(TBeing *ch, TThing *t, TRoom *rp, taskTypeT task, const char *arg
     vlogf(LOG_BUG, fmt("Couldn't allocate memory in start_task for %s") %  ch->getName());
     return FALSE;
   }
+
   ch->task->orig_arg = mud_str_dup(arg);
   ch->task->obj = dynamic_cast<TObj *>(t);
   ch->task->room = rp;
@@ -216,6 +217,8 @@ TaskEntry tasks[NUM_TASKS] =
   {"butchering", "You are too busy butchering a corpse.\n\r", task_butchering},
   {"cooking", "You are too busy cooking.\n\r", task_cook},
   {"loading a handgonne", "You are too busy loading your handgonne.\n\r", task_handgonne_load},
+  {"loading a cannon", "You are too busy loading your cannon.\n\r", task_handgonne_load},
+  {"trapping an arrow", "You are too busy trapping your arrow.\n\r", task_trap_arrow}
 };
 
 bool TBeing::nobrainerTaskCommand(cmdTypeT cmd)

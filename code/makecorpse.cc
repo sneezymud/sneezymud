@@ -793,6 +793,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case SKILL_SET_TRAP_DOOR:
       case SKILL_SET_TRAP_MINE:
       case SKILL_SET_TRAP_GREN:
+      case SKILL_SET_TRAP_ARROW:
       case SKILL_DUAL_WIELD_THIEF:
       case SKILL_DISARM_THIEF:
       case SKILL_COUNTER_STEAL:

@@ -1206,6 +1206,7 @@ class TBeing : public TThing {
     int triggerDoorTrap(dirTypeT);
     int triggerPortalTrap(TPortal *);
     int triggerContTrap(TOpenContainer *);
+    int triggerArrowTrap(TArrow *);
     int checkForMoveTrap(dirTypeT);
     int checkForInsideTrap(TThing *);
     int checkForGetTrap(TThing *);
@@ -1226,10 +1227,12 @@ class TBeing : public TThing {
     int getContainerTrapDam(doorTrapT);
     int getMineTrapDam(doorTrapT);
     int getGrenadeTrapDam(doorTrapT);
+    int getArrowTrapDam(doorTrapT);
     int getDoorTrapLearn(doorTrapT);
     int getContainerTrapLearn(doorTrapT);
     int getMineTrapLearn(doorTrapT);
     int getGrenadeTrapLearn(doorTrapT);
+    int getArrowTrapLearn(doorTrapT);
     bool canDoSummon() const;
     bool isSummonable() const;
     bool isTanking();

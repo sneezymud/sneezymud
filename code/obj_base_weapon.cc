@@ -1496,6 +1496,14 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
 	
 	if(isPoisoned())
 	  applyPoison(tb);
+
+	TArrow *arrow;
+	if((arrow=dynamic_cast<TArrow *>(this)) && 
+	   arrow->getTrapDamType()!=DOOR_TRAP_NONE){
+	  tb->triggerArrowTrap(arrow);
+	  arrow->setTrapLevel(0);
+	  arrow->setTrapDamType(DOOR_TRAP_NONE);
+	}
 	
         if (c->roomp && !c->roomp->isRoomFlag(ROOM_ARENA)) {
           if (::number(1, d) <= getStructPoints()) {

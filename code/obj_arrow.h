@@ -17,12 +17,21 @@ class TArrow : public TBaseWeapon {
     unsigned char arrowHead;
     unsigned int  arrowHeadMat;
     unsigned int  arrowFlags;
+    int trap_level;
+    doorTrapT trap_dam_type;
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_ARROW; }
     virtual int suggestedPrice() const;
+
+    int getTrapLevel() const;
+    void setTrapLevel(int r);
+    doorTrapT getTrapDamType() const;
+    void setTrapDamType(doorTrapT r);
+    int getTrapDamAmount() const;
+
 
     unsigned char getArrowType() const;
     void setArrowType(unsigned int);
