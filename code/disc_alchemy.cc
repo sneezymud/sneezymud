@@ -1721,7 +1721,9 @@ int materialize(TBeing *caster, TObj **obj, int, const char * name, byte bKnown)
       (*obj)->remObjStat(ITEM_NEWBIE);
       (*obj)->setEmpty();
 
-      if (!caster->heldInPrimHand()) {
+      if (((*obj)->isPaired() && !caster->heldInPrimHand() &&
+	  !caster->heldInSecHand()) ||
+	  (!(*obj)->isPaired() && !caster->heldInPrimHand())) {
         caster->equipChar(*obj, caster->getPrimaryHold(), SILENT_YES);
         grabbed = true;
       } else {
