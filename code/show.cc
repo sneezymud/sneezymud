@@ -21,6 +21,7 @@
 #include "obj_potion.h"
 #include "obj_scroll.h"
 #include "obj_staff.h"
+#include "database.h"
 
 void TThing::showMe(TBeing *ch) const
 {
@@ -1072,6 +1073,13 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
       if (isLimbFlags(ij, PART_TRANSFORMED))
           found = TRUE;
     }
+    TDatabase db("sneezy");
+    bool tattoo=false;
+
+    db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
+    if(db.fetchRow())
+      tattoo=true;
+
     if (found && ch->GetMaxLevel() != GOD_LEVEL1) {
       act("$n is using:", FALSE, this, 0, ch, TO_VICT);
       for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
@@ -1089,7 +1097,18 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
               ch->showTo(equipment[ij], SHOW_MODE_SHORT_PLUS);
             }
           }
-        }
+        } else {
+	  if(tattoo && (wearSlotT)(atoi_safe(db.getColumn(0))) == ij){
+	    sprintf(buf, "<%s>", describeEquipmentSlot(ij).c_str());
+	    sendTo("%s%-25s%s", cyan(), buf, norm());
+	    sendTo(COLOR_BASIC, db.getColumn(1));
+	    sendTo("\n\r");
+	    if(db.fetchRow())
+	      tattoo=true;
+	    else
+	      tattoo=false;
+	  }
+	}
       }
     }
 

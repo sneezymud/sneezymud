@@ -152,7 +152,8 @@ const int SPEC_MONEY_TRAIN        =167;
 const int SPEC_ADVENTURER         =168;
 const int SPEC_TRAINER_IRON_BODY  =169;
 const int SPEC_TUDY               =170;
-const int NUM_MOB_SPECIALS        =171;
+const int SPEC_TATTOO_ARTIST      =171;
+const int NUM_MOB_SPECIALS        =172;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
@@ -170,6 +171,7 @@ extern void CallForGuard(TBeing *ch, TBeing *vict, int lev);
 extern TMonster *FindMobInRoomWithProcNum(int room, int num);
 extern bool okForJanitor(TMonster *, TObj *);
 
+extern int tattooArtist(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int payToll(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int meeting_organizer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int fighter(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);

@@ -299,7 +299,8 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_mobs_money_train.o	    	spec_objs_poison_cutlass.o	\
 	spec_mobs_posse.o		spec_objs_unholy_cutlass.o	\
 	spec_mobs_realestate.o	    	spec_rooms.o			\
-	spec_mobs_tudy.o		spec_rooms_sleeptag.o
+	spec_mobs_tudy.o		spec_rooms_sleeptag.o           \
+	spec_mobs_tattoo_artist.o
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
 # list of our local shared libs
@@ -8835,6 +8836,53 @@ objs/mail.o: being.h person.h monster.h account.h extern.h handler.h
 objs/mail.o: obj_money.h rent.h spec_mobs.h materials.h mail.h database.h
 objs/mail.o: /usr/include/postgresql/libpq-fe.h
 objs/mail.o: /usr/include/postgresql/postgres_ext.h
+objs/main.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/main.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/main.o: /usr/include/gnu/stubs.h
+objs/main.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/main.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/main.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/main.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/main.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/main.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
+objs/main.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/main.o: /usr/include/time.h /usr/include/bits/time.h
+objs/main.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
+objs/main.o: /usr/include/ctype.h /usr/include/endian.h
+objs/main.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
+objs/main.o: /usr/include/assert.h /usr/include/g++-3/cstring
+objs/main.o: /usr/include/string.h /usr/include/g++-3/cerrno
+objs/main.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/main.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/main.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
+objs/main.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
+objs/main.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
+objs/main.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iostream.h
+objs/main.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
+objs/main.o: /usr/include/g++-3/stl_relops.h
+objs/main.o: /usr/include/g++-3/stl_iterator.h
+objs/main.o: /usr/include/g++-3/std/bastring.cc /usr/include/g++-3/vector
+objs/main.o: /usr/include/g++-3/stl_algobase.h /usr/include/g++-3/stl_pair.h
+objs/main.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/main.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/main.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/main.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/main.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/main.o: /usr/include/g++-3/stl_construct.h
+objs/main.o: /usr/include/g++-3/stl_uninitialized.h
+objs/main.o: /usr/include/g++-3/stl_vector.h /usr/include/g++-3/stl_bvector.h
+objs/main.o: /usr/include/g++-3/map /usr/include/g++-3/stl_tree.h
+objs/main.o: /usr/include/g++-3/stl_function.h /usr/include/g++-3/stl_map.h
+objs/main.o: /usr/include/g++-3/stl_multimap.h low.h enum.h spells.h
+objs/main.o: structs.h immunity.h discipline.h spell2.h parse.h db.h ansi.h
+objs/main.o: cmd_dissect.h client.h response.h faction.h comm.h toggle.h
+objs/main.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
+objs/main.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
+objs/main.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
+objs/main.o: being.h person.h monster.h account.h extern.h handler.h
+objs/main.o: obj_money.h rent.h spec_mobs.h materials.h socket.h
+objs/main.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+objs/main.o: /usr/include/bits/confname.h
 objs/makecorpse.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/makecorpse.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/makecorpse.o: /usr/include/gnu/stubs.h
@@ -14149,9 +14197,7 @@ objs/shop.o: /usr/include/postgresql/postgres_ext.h statistics.h
 objs/shop.o: obj_spellbag.h obj_expandable_container.h obj_open_container.h
 objs/shop.o: obj_base_container.h obj_symbol.h obj_general_weapon.h
 objs/shop.o: obj_base_weapon.h obj_base_clothing.h obj_magic_item.h
-objs/shop.o: shopowned.h timing.h /usr/include/sys/time.h
-objs/shop.o: /usr/include/sys/select.h /usr/include/bits/select.h
-objs/shop.o: /usr/include/bits/sigset.h
+objs/shop.o: shopowned.h
 objs/shopowned.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/shopowned.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/shopowned.o: /usr/include/gnu/stubs.h
@@ -14252,7 +14298,9 @@ objs/show.o: being.h person.h monster.h account.h extern.h handler.h
 objs/show.o: obj_money.h rent.h spec_mobs.h materials.h disc_looting.h
 objs/show.o: combat.h obj_component.h disc_alchemy.h obj_table.h obj_note.h
 objs/show.o: obj_trap.h obj_window.h obj_seethru.h obj_potion.h
-objs/show.o: obj_magic_item.h obj_scroll.h obj_staff.h
+objs/show.o: obj_magic_item.h obj_scroll.h obj_staff.h database.h
+objs/show.o: /usr/include/postgresql/libpq-fe.h
+objs/show.o: /usr/include/postgresql/postgres_ext.h
 objs/signals.o: /usr/include/g++-3/csignal /usr/include/signal.h
 objs/signals.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/signals.o: /usr/include/gnu/stubs.h /usr/include/bits/sigset.h
@@ -15179,6 +15227,79 @@ objs/spec_mobs_realestate.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/spec_mobs_realestate.o: materials.h database.h
 objs/spec_mobs_realestate.o: /usr/include/postgresql/libpq-fe.h
 objs/spec_mobs_realestate.o: /usr/include/postgresql/postgres_ext.h
+objs/spec_mobs_tattoo_artist.o: stdsneezy.h /usr/include/g++-3/cstdio
+objs/spec_mobs_tattoo_artist.o: /usr/include/stdio.h /usr/include/features.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/sys/cdefs.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/gnu/stubs.h
+objs/spec_mobs_tattoo_artist.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/bits/types.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/libio.h /usr/include/_G_config.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/wchar.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/bits/wchar.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/gconv.h
+objs/spec_mobs_tattoo_artist.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/bits/stdio_lim.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/cstdlib
+objs/spec_mobs_tattoo_artist.o: /usr/include/stdlib.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/ctime /usr/include/time.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/bits/time.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/sys/types.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/cctype
+objs/spec_mobs_tattoo_artist.o: /usr/include/ctype.h /usr/include/endian.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/bits/endian.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/cassert
+objs/spec_mobs_tattoo_artist.o: /usr/include/assert.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/cstring
+objs/spec_mobs_tattoo_artist.o: /usr/include/string.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/cerrno
+objs/spec_mobs_tattoo_artist.o: /usr/include/errno.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/bits/errno.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/linux/errno.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/asm/errno.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/string
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/std/bastring.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/cstddef
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/std/straits.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/alloc.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_config.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_alloc.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/iostream.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/streambuf.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/iterator
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_relops.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_iterator.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/std/bastring.cc
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/vector
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_algobase.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_pair.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/type_traits.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/limits.h
+objs/spec_mobs_tattoo_artist.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/spec_mobs_tattoo_artist.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/spec_mobs_tattoo_artist.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/spec_mobs_tattoo_artist.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_construct.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_uninitialized.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_vector.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_bvector.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/map
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_tree.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_function.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_map.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/g++-3/stl_multimap.h low.h
+objs/spec_mobs_tattoo_artist.o: enum.h spells.h structs.h immunity.h
+objs/spec_mobs_tattoo_artist.o: discipline.h spell2.h parse.h db.h ansi.h
+objs/spec_mobs_tattoo_artist.o: cmd_dissect.h client.h response.h faction.h
+objs/spec_mobs_tattoo_artist.o: comm.h toggle.h wiz_powers.h cmd_message.h
+objs/spec_mobs_tattoo_artist.o: stats.h limbs.h body.h race.h skills.h
+objs/spec_mobs_tattoo_artist.o: disease.h trap.h task.h weather.h sound.h
+objs/spec_mobs_tattoo_artist.o: create.h thing.h room.h obj.h spec_objs.h
+objs/spec_mobs_tattoo_artist.o: connect.h obj_drug.h charfile.h being.h
+objs/spec_mobs_tattoo_artist.o: person.h monster.h account.h extern.h
+objs/spec_mobs_tattoo_artist.o: handler.h obj_money.h rent.h spec_mobs.h
+objs/spec_mobs_tattoo_artist.o: materials.h database.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/postgresql/libpq-fe.h
+objs/spec_mobs_tattoo_artist.o: /usr/include/postgresql/postgres_ext.h
 objs/spec_mobs_tudy.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_mobs_tudy.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_mobs_tudy.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h

@@ -2328,9 +2328,11 @@ void TBeing::doEquipment(const char *argument)
     }
   } else if (!*argument || !isImmortal()) {
     TDatabase db("sneezy");
+    bool tattoo=false;
 
     db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
-    db.fetchRow();
+    if(db.fetchRow())
+      tattoo=true;
 
     sendTo("You are using:\n\r");
     found = FALSE;
@@ -2348,15 +2350,27 @@ void TBeing::doEquipment(const char *argument)
           }
         }
       } else {
-	if((wearSlotT)(atoi_safe(db.getColumn(0))) == j){
+	if(tattoo && (wearSlotT)(atoi_safe(db.getColumn(0))) == j){
           sprintf(buf, "<%s>", describeEquipmentSlot(j).c_str());
           sendTo("%s%-25s%s", cyan(), buf, norm());
 	  sendTo(COLOR_BASIC, db.getColumn(1));
 	  sendTo("\n\r");
+	  if(db.fetchRow())
+	    tattoo=true;
+	  else
+	    tattoo=false;
 	}
       }
     }
   } else {
+    TDatabase db("sneezy");
+    bool tattoo=false;
+
+    db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
+    if(db.fetchRow())
+      tattoo=true;
+
+
     // allow immortals to get eq of players
     TBeing *victim = get_char_vis_world(this, argument, NULL, EXACT_YES);
     if (!victim)
@@ -2378,7 +2392,18 @@ void TBeing::doEquipment(const char *argument)
               found = TRUE;
             }
           }
-        }
+	} else {
+	  if(tattoo && (wearSlotT)(atoi_safe(db.getColumn(0))) == j){
+	    sprintf(buf, "<%s>", describeEquipmentSlot(j).c_str());
+	    sendTo("%s%-25s%s", cyan(), buf, norm());
+	    sendTo(COLOR_BASIC, db.getColumn(1));
+	    sendTo("\n\r");
+	    if(db.fetchRow())
+	      tattoo=true;
+	    else
+	      tattoo=false;
+	  }
+	}
       }
     } else 
       sendTo("No such character exists.\n\r");
