@@ -108,7 +108,7 @@ extern bool nuke_inactive_mobs;
 // Good to keep things circulating, but bad if extended downtime anticipated.
 // Simply deletes the file in mobdata/repairs/, the tickets still exist
 // and the repairman will say he doesn't have the item.
-#define NUKE_REPAIR_ITEMS    0
+#define NUKE_REPAIR_ITEMS    1
 
 // Enables a check to validate that players are not multiplaying. 
 // check is done each login and periodically for all chars logged in.

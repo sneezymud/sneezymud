@@ -811,7 +811,7 @@ void processRepairFile(const char *name)
     return;
   }
 #if NUKE_REPAIR_ITEMS
-  if ((time(0) - then) > 15 * SECS_PER_REAL_DAY) {
+  if ((time(0) - then) > 180 * SECS_PER_REAL_DAY) {
     fclose(fp);
     vlogf(LOG_MISC, "REPAIR: Item %s was in repair %d days", name,
          (time(0) - then)/SECS_PER_REAL_DAY);
