@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: person.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -23,7 +15,9 @@ class TPerson : public TBeing {
   private:
     ush_int base_age;
     TPerson();  // made private to make it uncallable
+
   public:
+    FILE *tLogFile;
     char lastHost[40];
     char *title; 
     int last_rent;
@@ -110,6 +104,7 @@ class TPerson : public TBeing {
     virtual void doStealth(const char *);
     virtual short int manaLimit() const;
     virtual short int hitLimit() const;
+    virtual void setMaxHit(int);
     virtual int getMaxMove() const;
     virtual void reconcileHelp(TBeing *, double);
     virtual void reconcileHurt(TBeing *, double);
@@ -134,6 +129,7 @@ class TPerson : public TBeing {
     virtual void doStat(const char *);
     virtual void doShow(const char *);
     virtual bool isPc() const { return TRUE; }
+    virtual void logf(const char *, ...);
     virtual int manaGain();
     virtual int hitGain();
     virtual int doQuit2();

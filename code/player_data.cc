@@ -299,6 +299,56 @@ bool load_char(const char *name, charFile *char_element)
 
   int rc = fread(char_element, sizeof(charFile), 1, fl);
   fclose(fl);
+
+  //
+  int lev=0, c;
+
+
+  // get the highest level
+  for(c=0;c<MAX_SAVED_CLASSES;++c){
+    if(char_element->level[c]>0){
+      lev=char_element->level[c];
+      break;
+    }
+  }
+
+
+  if(lev>30){
+    vlogf(LOG_PEEL, "giving %i pracs for %i to %s", lev-30, c, char_element->name);
+
+    switch(c){
+      case CLASS_MAGE:
+	char_element->practices.mage+=lev-30;
+	break;
+      case CLASS_CLERIC:
+	char_element->practices.cleric+=lev-30;
+	break;
+      case CLASS_WARRIOR:
+	char_element->practices.warrior+=lev-30;
+	break;
+      case CLASS_THIEF:
+	char_element->practices.thief+=lev-30;
+	break;
+      case CLASS_SHAMAN:
+	char_element->practices.shaman+=lev-30;
+	break;
+      case CLASS_DEIKHAN:
+	char_element->practices.deikhan+=lev-30;
+	break;
+      case CLASS_MONK:
+	char_element->practices.monk+=lev-30;
+	break;
+      case CLASS_RANGER:
+	char_element->practices.ranger+=lev-30;
+	break;
+      default:
+	break;
+    }
+  }
+
+
+  //
+
   if (rc == 1)
     return TRUE;
   return FALSE;

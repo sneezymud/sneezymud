@@ -1618,7 +1618,7 @@ class TBeing : public TThing {
     int getHit() const;
     void addToHit(int add);
     void setHit(int newhit);
-    void setMaxHit(int newhit);
+    virtual void setMaxHit(int);
     double getPercHit(void);
     int getMove() const;
     void addToMove(int add);

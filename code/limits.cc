@@ -44,9 +44,56 @@ int graf(int age, int p0, int p1, int p2, int p3, int p4, int p5, int p6)
     return (p6);
 }
 
+void TPerson::setMaxHit(int newhit)
+{
+#if NEW_HP
+  // TPerson hit points are dynamic now, so this shouldn't happen
+  // unless an immortal uses @set
+  vlogf(LOG_BUG, "TPerson::setMaxHit() got called on %s", getName());
+  points.maxHit = newhit;  
+#else
+  points.maxHit = newhit;  
+#endif
+}
+
+
 short int TPerson::hitLimit() const
 {
+#if NEW_HP
+
+  if(isImmortal())
+    return points.maxHit;
+
+  float hpgain=0;
+
+  if (hasClass(CLASS_MONK))
+    hpgain = 5.5;
+  
+  if (hasClass(CLASS_RANGER))
+    hpgain = 7.0;
+
+  if (hasClass(CLASS_DEIKHAN))
+    hpgain = 7.5;
+  
+  if (hasClass(CLASS_MAGIC_USER) || hasClass(CLASS_SHAMAN))
+    hpgain = 7.5;
+  
+  if (hasClass(CLASS_CLERIC) || hasClass(CLASS_THIEF))
+    hpgain = 8;
+  
+  if (hasClass(CLASS_WARRIOR))
+    hpgain = 8.5;
+
+  float defense_amt=((35.0/100.0) * (float) getSkillValue(SKILL_DEFENSE));
+  float adefense_amt=((15.0/100.0) * (float) getSkillValue(SKILL_ADVANCED_DEFENSE));
+  float newmax = 21; // level 1 base hp
+  newmax += ((hpgain * defense_amt) * (float) getConHpModifier());
+  newmax += ((hpgain * adefense_amt) * (float) getConHpModifier());
+
+  return (int) newmax;
+#else
   return points.maxHit + graf((age()->year - getBaseAge() + 15), 2, 4, 17, 14, 8, 4, 3);
+#endif
 }
 
 short int TPerson::manaLimit() const
@@ -461,19 +508,19 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
       discs = 5.0;
       break;
     case WARRIOR_LEVEL_IND:
-      discs = 4.666;
+      discs = 5.00;  // 4.666;
       break;
     case THIEF_LEVEL_IND:
       discs = 5.5;
       break;
     case DEIKHAN_LEVEL_IND:
-      discs = 5.5;
+      discs = 5.833; // 5.5;
       break;
     case MONK_LEVEL_IND:
-      discs = 4.666;
+      discs = 5.00; // 4.666;
       break;
     case RANGER_LEVEL_IND:
-      discs = 5.5;
+      discs = 5.833; // 5.5;
       break;
     case SHAMAN_LEVEL_IND:
       discs = 6.00;

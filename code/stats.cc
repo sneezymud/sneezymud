@@ -1,21 +1,5 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: stats.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // stats.cc
-//
-//
+
 #include "stdsneezy.h"
 #include "stats.h"
 
@@ -123,7 +107,7 @@ const string Stats::printRawStats(const TBeing *) const
   return rawStats;
 }
 
-static int age_mod_for_stat(int age_num, statTypeT whichStat)
+int age_mod_for_stat(int age_num, statTypeT whichStat)
 {
   // age_num is the "human" age, realize non-humans have been adjusted
   // to the human age, so no need to modify for race.
@@ -632,7 +616,7 @@ static int age_mod_for_stat(int age_num, statTypeT whichStat)
   return 0;
 }
 
-static int territory_adjustment(territoryT ter, statTypeT whichStat)
+int territory_adjustment(territoryT ter, statTypeT whichStat)
 {
   // This function defines how territorial choice affects natural stats.
   // I'm loosely grouping stats into 3 groups
@@ -896,6 +880,12 @@ int TBeing::getStat(statSetT fromSet, statTypeT whichStat) const
       amount += territory_adjustment(player.hometerrain, whichStat);
 
       return amount;
+    case(STAT_RACE):
+      return race->baseStats.get(whichStat);
+    case(STAT_AGE):
+      return age_mod_for_stat((age()->year - getBaseAge() + 17), whichStat);
+    case(STAT_TERRITORY):
+      return territory_adjustment(player.hometerrain, whichStat);
   }
   return 0;
 }
@@ -906,10 +896,13 @@ int TBeing::setStat(statSetT whichSet, statTypeT whichStat, int value)
     case(STAT_CHOSEN):
       return chosenStats.set(whichStat,value);
     case(STAT_NATURAL):
-      vlogf(6, "some piece of code was trying to set a person's natural stats");
+      vlogf(LOG_BUG, "some piece of code was trying to set a person's natural stats");
       return 0;
     case(STAT_CURRENT):
       return curStats.set(whichStat,value);
+    case(STAT_RACE): case(STAT_AGE): case(STAT_TERRITORY):
+      vlogf(LOG_BUG, "something tried to set STAT_RACE, STAT_AGE or STAT_TERRITORY");
+      return 0;
   }
   return 0;
 }
@@ -920,10 +913,13 @@ int TBeing::addToStat(statSetT whichSet, statTypeT whichStat, int modifier)
   case(STAT_CHOSEN):
     return chosenStats.add(whichStat,modifier);
   case(STAT_NATURAL):
-    vlogf(5,"You should not attempt to modify Natural Stats.");
+    vlogf(LOG_BUG,"You should not attempt to modify Natural Stats.");
     return 0;
   case(STAT_CURRENT):
     return curStats.add(whichStat,modifier);
+    case(STAT_RACE): case(STAT_AGE): case(STAT_TERRITORY):
+      vlogf(LOG_BUG, "something tried to add to STAT_RACE, STAT_AGE or STAT_TERRITORY");
+      return 0;
   }
   return 0;
 }
@@ -965,8 +961,8 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
     cleared = true;
   }
  
-  int MAXSTAT = 180;
-  int MINSTAT = 30;
+  int MAXSTAT = 205;
+  int MINSTAT = 005;
   if (whichSet == STAT_CHOSEN) {
     MAXSTAT = 25;
     MINSTAT = -25;
@@ -985,10 +981,14 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
   // A = (max_value - avg)/(MAXSTAT ^ power - midline ^ power)
   // B = avg - (midline^power) * A 
 
+  // March, 2001:
+  // this is incorrect, A = (max_value - avg)/(MAXSTAT-midline)^power
+
+
   int stat = getStat(whichSet, whichStat);
   // pin the value if necessary
   stat = min(max(stat, MINSTAT), MAXSTAT);
-
+#if 0
   if (power == 1.4 && whichSet != STAT_CHOSEN) {
     // we only store for the default value of power
     // storedPlot will represent the curve as normalized to -1,1,0
@@ -999,8 +999,10 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
       if (stat >= midline) {
         A = 1  / (pow(MAXSTAT, power) - pow(midline, power)); 
       } else {
-        A = -1 / (pow(MINSTAT, power) - pow(midline, power)); 
+        A = 1 / (pow(midline, power) - pow(MINSTAT, power)); 
       }
+
+      // this if statment is equiv to A = abs(1 / (pow(midline,power) - pow(MAXSTAT,power)))
       B = - pow(midline, power) * A;
       num = A * pow(stat, power) + B;
       storedPlots[stat] = num;
@@ -1012,18 +1014,18 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
     else
       return (num * (avg-min_value))+avg;
   }
-
+#endif
   double A, B;
   double num; 
 
   if (stat >= midline) {
-    A = (max_value - avg) / (pow(MAXSTAT, power) - pow(midline, power)); 
-    B = avg - pow(midline, power) * A;
-    num = A * pow(stat, power) + B;
+    A = (max_value - avg) / (pow(MAXSTAT - midline, power)); 
+    B = avg;
+    num = A * pow(stat - midline, power) + B;
   } else {
-    A = (min_value - avg) / (pow(MINSTAT, power) - pow(midline, power)); 
-    B = avg - pow(midline, power) * A;
-    num = A * pow(stat, power) + B;
+    A = (min_value - avg) / (pow(midline - MINSTAT, power)); 
+    B =  avg;
+    num = A * pow(midline - stat, power) + B;
   }
   return num;
 }
@@ -1064,7 +1066,16 @@ float TBeing::getConHpModifier() const
   // High con should give 5/4 more HP than normal, and low con should be 4/5
   // assuming that warriors have 8 HP/lev, we want -1.6 and +2.0 as the
   // values
-  return plotStat(STAT_NATURAL, STAT_CON, (float) -1.6, (float) 2.0, (float) 0.0);
+
+  // i think this would work more predictably if we actually just factored in
+  // the values and used our standards - Dash
+  // (and its still following balance notes)
+
+#if NEW_HP
+  return plotStat(STAT_CURRENT, STAT_CON, (float) 4.0/5.0, (float) 5.0/4.0, (float) 1.0);
+#else
+  return plotStat(STAT_NATURAL, STAT_CON, (float) 4.0/5.0, (float) 5.0/4.0, (float) 1.0);
+#endif
 }
 
 Stats TBeing::getCurStats() const

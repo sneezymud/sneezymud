@@ -814,7 +814,12 @@ void TPerson::raiseLevel(classIndT Class, TMonster *gm)
 
     maxhit=points.maxHit;
     advanceLevel(Class, gm);
+
+    // may as well still give them the hp in case we want to switch back
+    // just don't announce it
+#if NEW_HP
     sendTo("You gain %i hitpoints!\n\r", points.maxHit-maxhit);
+#endif
 
     fixClientPlayerLists(FALSE);
     setTitle(false);
@@ -1029,6 +1034,8 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_LORE, "lore", "about Magic Lores", DISC_LORE, CLASS_MAGIC_USER},
 
  {SPEC_TRAINER_THEOLOGY, "theology", "about Theology", DISC_THEOLOGY, CLASS_CLERIC | CLASS_DEIKHAN},
+
+  {SPEC_TRAINER_DEFENSE, "defense", "about Defense", DISC_DEFENSE, CLASS_WARRIOR | CLASS_RANGER | CLASS_DEIKHAN | CLASS_MONK},
 
   {-1}          /* required terminator */
 };

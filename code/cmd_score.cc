@@ -60,6 +60,8 @@ void TBeing::doScore()
             green(), manaLimit(), norm());
   sendTo(Buf);
 
+
+#if 0
   // Peel test info
   // x = avg hp per level for this class
   // y = 35/100
@@ -103,6 +105,7 @@ void TBeing::doScore()
   }
 
   // end Peel test info
+#endif
 
 
   sendTo("You are %s.\n\r", DescMoves((((double) getMove()) / ((double)

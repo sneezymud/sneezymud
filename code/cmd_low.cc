@@ -626,6 +626,7 @@ bool GuildProcs(int spec)
     case SPEC_TRAINER_TRAPS: 
     case SPEC_TRAINER_LORE:
     case SPEC_TRAINER_THEOLOGY:
+    case SPEC_TRAINER_DEFENSE:
       return TRUE;
     default:
       return FALSE;

@@ -6749,6 +6749,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Real Estate Agent", realEstateAgent},
   {FALSE, "Coroner", coroner},
   {FALSE, "Faction Registrar", factionRegistrar},
+  {FALSE, "Trainer: defense", CDGenericTrainer},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

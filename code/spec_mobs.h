@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.7  2001/07/17 03:30:09  peel
+// switched to new hp system
+// also, temp practice adjustment code in, must boot once then remove
+//
 // Revision 5.6  2001/07/05 21:25:54  peel
 // Trying to fix cvs
 // what a headache
@@ -183,7 +187,8 @@ const int SPEC_BANK_GUARD      =155;
 const int SPEC_REAL_ESTATE_AGENT=156;
 const int SPEC_CORONER         =157;
 const int SPEC_FACTON_REGISTRAR=158;
-const int NUM_MOB_SPECIALS     =159;
+const int SPEC_TRAINER_DEFENSE=159;
+const int NUM_MOB_SPECIALS     =160;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
