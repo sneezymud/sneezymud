@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: statistics.cc,v $
+// Revision 1.2  1999/09/22 17:48:22  peel
+// Put a floor on gold_modifier[GOLD_INCOME] of .3, temporary economy 'fix'
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -613,6 +616,9 @@ void checkGoldStats()
     gold_modifier[GOLD_INCOME] -= 0.01;
 //    vlogf(5, "ECONOMY: income modifier lowered. %d %u %.2f", net_gold_budget, pos_gold_budget, gold_modifier[GOLD_INCOME]);
     should_reset = true;
+  }
+  if(gold_modifier[GOLD_INCOME] < .3){
+    gold_modifier[GOLD_INCOME]=.3;
   }
   
   // good drain:
