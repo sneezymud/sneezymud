@@ -804,17 +804,30 @@ void TBeing::statBeing(TBeing *k)
           fx, fy);
 
     int dam=0;
-    for(i=0;i<100;++i)
-      dam+=k->getWeaponDam(this, k->heldInPrimHand(), HAND_PRIMARY);
-    dam/=100;
-    sprintf(buf + strlen(buf),"Averaged prim damage: %i\n\r", dam);
+    int prim_min=9999, prim_max=0;
+    int sec_min=9999, sec_max=0;
+    for(i=0;i<100;++i){
+      dam=k->getWeaponDam(this, k->heldInPrimHand(), HAND_PRIMARY);
+      if(dam<prim_min)
+	prim_min=dam;
+      if(dam>prim_max)
+	prim_max=dam;
 
-    dam=0;
-    for(i=0;i<100;++i)
-      dam+=k->getWeaponDam(this, k->heldInSecHand(), HAND_SECONDARY);
-    dam/=100;
-    sprintf(buf + strlen(buf),"Averaged sec damage: %i\n\r", dam);
+      dam=k->getWeaponDam(this, k->heldInSecHand(), HAND_SECONDARY);
+      if(dam<sec_min)
+	sec_min=dam;
+      if(dam>sec_max)
+	sec_max=dam;
+    }
 
+    sprintf(buf + strlen(buf),"Prim damage: %i-%i, Off damage: %i-%i\n\r",
+	    prim_min, prim_max, sec_min, sec_max);
+
+
+    sprintf(buf + strlen(buf), "Approximate damage per round: %i-%i\n\r",
+	    (int)((fx*(float)prim_min)+((fy*(float)sec_min))),
+	    (int)((fx*(float)prim_max)+((fy*(float)sec_max))));
+	    
 
   }
   if (TestCode5 && k->newfaction()) {
