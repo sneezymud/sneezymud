@@ -1377,7 +1377,8 @@ int TBeing::eyeSight(TRoom *rp) const
     vision += 25;
   
   if (rp) {
-    vision += rp->getLight();
+    int light = rp->getLight();
+    vision += light;
 
     if (rp->getWeather() == WEATHER_RAINY)
       vision -= 1;
@@ -1388,7 +1389,7 @@ int TBeing::eyeSight(TRoom *rp) const
   
     // if they are indoors, the lighting of the room should be "subdued"
     if (rp->isRoomFlag(ROOM_INDOORS))
-      vision -= rp->getLight() / 2;
+      vision -= light / 2;
   }
 
   return vision;

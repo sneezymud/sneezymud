@@ -569,7 +569,11 @@ int TBeing::doOrder(const char *argument)
     sendTo("Order whom to do what?\n\r");
     return FALSE;
   }
-  TBeing *v = get_char_room_vis(this, caName, NULL, EXACT_NO, INFRA_YES);
+/*  TBeing *v = get_char_room_vis(this, caName, NULL, EXACT_NO, INFRA_YES);*/
+  TBeing *v = get_best_char_room(this, caName, VISIBLE_YES, INFRA_NO);
+  if (!v)
+    v = get_best_char_room(this, caName, VISIBLE_YES, INFRA_YES);
+
   if (!v && !is_abbrev(caName, "followers") && strcmp("all", caName)) {
     sendTo("That person isn't here.\n\r");
     return FALSE;

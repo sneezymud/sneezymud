@@ -558,7 +558,8 @@ enum logTypeT
   LOG_LAPSOS  = 27, // Lapsos only logs
   LOG_PEEL    = 28,  // Peel only logs
   LOG_JESUS   = 29,  // Jesus only
-  LOG_DASH    = 30  // Dash only
+  LOG_DASH    = 30, // Dash only
+  LOG_ANGUS   = 31  // Angus only
 };
 
 enum checkFallingT
