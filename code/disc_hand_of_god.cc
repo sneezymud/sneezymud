@@ -40,7 +40,7 @@ int astralWalk(TBeing * caster, TBeing * victim, int level, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (caster->roomp->isRoomFlag(ROOM_NO_PORTAL) &&
+  if (caster->roomp->isRoomFlag(ROOM_NO_ESCAPE) &&
       !caster->isImmortal()) {
     act("$d refuses to let you astral walk from here.",
              FALSE, caster, 0, 0, TO_CHAR);
@@ -331,7 +331,7 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, byte bKnown)
   }
 
   if (victim->roomp->isRoomFlag(ROOM_ARENA) ||
-      victim->roomp->isRoomFlag(ROOM_NO_PORTAL)) {
+      victim->roomp->isRoomFlag(ROOM_NO_ESCAPE)) {
     caster->sendTo("You can't recall from here!\n\r");
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
@@ -562,7 +562,7 @@ int summon(TBeing * caster, TBeing * victim, int level, byte bKnown)
   }
 #endif
   if (!caster->isImmortal()) {
-    if (victim->roomp->isRoomFlag(ROOM_NO_SUM)) {
+    if (victim->roomp->isRoomFlag(ROOM_NO_ESCAPE)) {
       caster->sendTo("You cannot penetrate the defenses of that area.\n\r");
       act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
       return SPELL_FAIL;

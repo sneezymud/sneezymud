@@ -4996,7 +4996,7 @@ void TBeing::sendRoomName(TRoom *rp) const
            (rFlags == 0 ?
            "--none-- "       : ""),
            (!(rFlags & (ROOM_ALWAYS_LIT | ROOM_NO_MOB    | ROOM_INDOORS |
-                        ROOM_PEACEFUL   | ROOM_NO_STEAL  | ROOM_NO_SUM  |
+                        ROOM_PEACEFUL   | ROOM_NO_STEAL  | ROOM_NO_ESCAPE  |
                         ROOM_NO_MAGIC   | ROOM_NO_PORTAL | ROOM_SILENCE |
                         ROOM_NO_ORDER   | ROOM_NO_FLEE   | ROOM_HAVE_TO_WALK)) &&
             (rFlags > 0)                 ? "--others-- "     : ""),
@@ -5005,7 +5005,7 @@ void TBeing::sendRoomName(TRoom *rp) const
            ((rFlags & ROOM_INDOORS)      ? "[Indoors] "      : ""),
            ((rFlags & ROOM_PEACEFUL)     ? "[Peaceful] "     : ""),
            ((rFlags & ROOM_NO_STEAL)     ? "[!Steal] "       : ""),
-           ((rFlags & ROOM_NO_SUM)       ? "[!Summon] "      : ""),
+           ((rFlags & ROOM_NO_ESCAPE)       ? "[!Escape] "      : ""),
            ((rFlags & ROOM_NO_MAGIC)     ? "[!Magic] "       : ""),
            ((rFlags & ROOM_NO_PORTAL)    ? "[!Portal] "      : ""),
            ((rFlags & ROOM_SILENCE)      ? "[Silent] "       : ""),

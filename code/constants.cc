@@ -697,7 +697,7 @@ const char * const room_bits[MAX_ROOM_BITS] =
   "INDOORS",
   "PEACEFUL",
   "NO-STEAL",
-  "NO-SUM",
+  "NO-ESCAPE",
   "NO-MAGIC",
   "NO-PORTAL",
   "PRIVATE",

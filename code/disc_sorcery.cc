@@ -1394,7 +1394,7 @@ int teleport(TBeing *caster, TBeing *victim, int, byte bKnown)
   }
 
   if (bSuccess(caster,bKnown,SPELL_TELEPORT)) {
-    if (caster->roomp->isRoomFlag(ROOM_NO_PORTAL)) {
+    if (caster->roomp->isRoomFlag(ROOM_NO_ESCAPE)) {
       caster->sendTo("The defenses of this area are too strong.\n\r");
       caster->nothingHappens(SILENT_YES);
       return SPELL_FAIL;

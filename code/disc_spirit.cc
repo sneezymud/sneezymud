@@ -61,7 +61,7 @@ int knot(TBeing *caster, TBeing *victim, int, byte bKnown)
           FALSE, caster, NULL, NULL, TO_ROOM);
       return SPELL_FAIL;
     }
-    if (caster->roomp->isRoomFlag(ROOM_NO_PORTAL)) {
+    if (caster->roomp->isRoomFlag(ROOM_NO_ESCAPE)) {
       caster->sendTo("The defenses of this area are too strong.\n\r");
       caster->nothingHappens(SILENT_YES);
       return SPELL_FAIL;
