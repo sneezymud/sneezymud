@@ -888,7 +888,7 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	  } else {
 	    
 	    act("$n drops oil from $P and rubs it across $p.", FALSE, ch, o, oils, TO_ROOM);
-	    act("You take soil from $P and rub it across $p.", FALSE, ch, o, oils, TO_CHAR);
+	    act("You take oil from $P and rub it across $p.", FALSE, ch, o, oils, TO_CHAR);
 	    oils->addToToolUses(-1);
 	    if (oils->getToolUses() <= 0) {
 	      act("Your $P is all used up, and you discard it.", FALSE, ch, o, oils, TO_CHAR);
