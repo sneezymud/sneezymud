@@ -712,6 +712,55 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
     else
       o->ex_description = NULL;
 
+//strung objects keep everything
+#if 1 
+    if(version<9 && dynamic_cast<TOpenContainer *>(o)){
+      item.value[1]=((item.value[1]>>8)<<16) ^ ((item.value[1]<<24)>>24);
+
+      o->assignFourValues(item.value[0],item.value[1],item.value[2],item.value[3]);
+    } else if(version<8 && dynamic_cast<TGenWeapon *>(o)){
+      int x;
+
+      // damage level and deviation are now merged
+      SET_BITS(x, 7, 8, item.value[1]);
+      SET_BITS(x, 15, 8, item.value[2]);
+
+      o->assignFourValues(item.value[0],x,item.value[3],0);
+
+    } else {
+      o->assignFourValues(item.value[0],item.value[1],item.value[2],item.value[3]);
+    }
+    
+    o->setObjStat(item.extra_flags);
+    o->setWeight((float) item.weight);
+    o->weightCorrection();
+    
+    o->setVolume(item.volume);
+    o->obj_flags.bitvector = item.bitvector;
+    o->obj_flags.struct_points = item.struct_points;
+    o->obj_flags.max_struct_points = item.max_struct_points;
+    o->obj_flags.decay_time = item.decay_time;
+    o->setMaterial(item.material_points);
+    o->setDepreciation(item.depreciation);
+    
+    o->obj_flags.cost = item.cost;
+    
+    for (j = 0; j < MAX_OBJ_AFFECT; j++) {
+      o->affected[j].type = mapFileToSpellnum(item.affected[j].type);
+      o->affected[j].level = item.affected[j].level;
+      o->affected[j].duration = item.affected[j].duration;
+      o->affected[j].renew = item.affected[j].renew;
+      o->affected[j].location = mapFileToApply(item.affected[j].location);
+      
+      if (applyTypeShouldBeSpellnum(o->affected[j].location))
+	o->affected[j].modifier = mapFileToSpellnum(item.affected[j].modifier);
+      else
+	o->affected[j].modifier = item.affected[j].modifier;
+      
+      o->affected[j].modifier2 = item.affected[j].modifier2;
+      o->affected[j].bitvector = item.affected[j].bitvector;
+    }
+#endif 
   }
   // if they had a lantern lit, set light appropriately
   o->adjustLight();

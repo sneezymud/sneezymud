@@ -14724,6 +14724,7 @@ objs/spec_objs_sweeps.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/spec_objs_sweeps.o: person.h monster.h account.h extern.h handler.h
 objs/spec_objs_sweeps.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/spec_objs_sweeps.o: colorstring.h format.h spec_objs_sweeps.h
+objs/spec_objs_sweeps.o: disc_sorcery.h
 objs/spec_objs_unholy_cutlass.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_objs_unholy_cutlass.o: /usr/include/stdio.h
 objs/spec_objs_unholy_cutlass.o: /usr/include/sys/cdefs.h

@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "spec_objs_sweeps.h"
+#include "disc_sorcery.h"
 
 
 int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
@@ -21,7 +22,7 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   cho = ch;
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
   {
-    cho->sendTo("Maybe you should hold the tile in your hand.\n\r");
+    cho->sendTo("Maybe you should hold an unused tile in your hand.\n\r");
     return TRUE;
   }
 
@@ -40,6 +41,14 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   int roll = ::number(1,100);
   sstring buf3, buf4;
 
+// About 10,000 mobs load currently
+// want about 1/25 mobs to load a token - that's about 400 token loads
+//   in the game
+//   1% = 4 of that token
+//
+//   set up for 4 pocs, 4 poys, 4 pols, 16 mystery pots
+//   P's are limited (40 of them), O's are common
+//   
   if (roll == 1)
     buf3 = "C";
   else if (roll == 2)
@@ -48,9 +57,9 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     buf3 = "Y";
   else if (roll > 3 && roll <= 7)
     buf3 = "M";
-  else if (roll > 7 && roll <= 36)
+  else if (roll > 7 && roll <= 90)
     buf3 = "O";
-  else if (roll > 36)
+  else if (roll > 90)
     buf3 = "P";
   
   ch->sendTo("As you watch, the blank face of the tile blurs momentarily.\n\r");
@@ -61,7 +70,9 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   o->name = mud_str_dup(buf5);
   o->shortDescr = mud_str_dup(buf6);
   o->spec = SPEC_SPLIT_JOIN;
+  o->addObjStat(ITEM_NORENT);
   act(buf4,TRUE,ch,NULL,NULL,TO_CHAR,NULL);
+  
 
   return TRUE;
 }
@@ -131,6 +142,46 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
     tile1->name = mud_str_dup(buf5);
     tile1->shortDescr = mud_str_dup(buf6);
     act(buf4, TRUE,ch,NULL,NULL,TO_CHAR,NULL);
+
+    if (newname == "POP") {
+      act("The tile vanishes.", TRUE,ch,NULL,NULL,TO_CHAR,NULL);
+      act("The tile vanishes.", TRUE,ch,NULL,NULL,TO_ROOM,NULL);
+      delete tile1;
+      vlogf(LOG_LOW, fmt("%s has just been teleported by the sneezy sweeps") %
+          ch->getName());
+      teleport(ch,ch,50,100);
+    } else {
+      int newobjn = 0;
+      if (newname == "POC") {
+        newobjn = STATS_POTION;
+      } else if (newname == "POL") {
+        newobjn = LEARNING_POTION;
+      } else if (newname == "POM") {
+        newobjn = MYSTERY_POTION;
+      } else if (newname == "POY") {
+        newobjn = YOUTH_POTION;
+      } else if (newname == "POO")
+        newobjn = OBJ_PILE_OFFAL;
+      
+      if (newobjn > 0) { 
+        TObj *newobj = NULL;
+        if (!(newobj = read_object(newobjn, VIRTUAL))) {
+          vlogf(LOG_LOW, fmt("could not read obj %d in spec_objs_sweeps.cc") % 
+              newobjn);
+        }
+        if (newobj) { // delete tile and load item
+          delete tile1;
+          act("The tile vanishes, and $p appears in your hand.",
+              TRUE,ch,newobj,NULL,TO_CHAR,NULL);
+          act("The tile vanishes, and $p appears in $n's hand.",
+              TRUE,ch,newobj,NULL,TO_ROOM,NULL);
+          ch->equipChar(newobj, HOLD_RIGHT, SILENT_YES);
+          vlogf(LOG_LOW, fmt("%s has just won %s in the sneezy sweeps") %
+              ch->getName() % newobj->getName());
+        }
+      }
+    }
+    
   } else if (cmd == CMD_SPLIT) {
     TThing *left=NULL, *right=NULL;
     tile1 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT]);

@@ -1155,6 +1155,16 @@ void TMonster::genericMobLoader(TOpenContainer **bag)
 
   *bag = NULL;
 
+  //sneezy sweeps
+#if 1
+  if (!::number(0,29) && wealth > 0)
+  {
+    TObj *tile = read_object(29301, VIRTUAL);
+    if (tile)
+      *this += *tile;
+  }
+#endif
+  
   if (GetMaxLevel() < 9)
     return;
   if (!isHumanoid())
