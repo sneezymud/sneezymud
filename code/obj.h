@@ -94,6 +94,7 @@ enum itemTypeT {
     ITEM_DRUG,
     ITEM_GUN,
     ITEM_AMMO,
+    ITEM_PLANT,
     MAX_OBJ_TYPES
 };
 const itemTypeT MIN_OBJ_TYPE = itemTypeT(0);
@@ -147,6 +148,7 @@ enum toolTypeT {
      TOOL_TOTEM,
      TOOL_FISHINGBAIT,
      TOOL_BUTCHER_KNIFE,
+     TOOL_SEED,
      MAX_TOOL_TYPE // move and change
 };
 const toolTypeT MIN_TOOL_TYPE = TOOL_WHETSTONE;

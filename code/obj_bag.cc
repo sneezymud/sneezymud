@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_bag.cc,v $
+// Revision 5.3  2002/01/16 05:40:29  peel
+// added plants
+//
 // Revision 5.2  2002/01/08 21:05:12  peel
 // removed the TBaseContainer hierarchy from obj2.h
 // added header files for those objects
@@ -93,4 +96,3 @@ int TBag::getMe(TBeing *ch, TThing *sub)
   }
   return FALSE;
 }
-

@@ -16,6 +16,7 @@
 #include "obj_player_corpse.h"
 #include "obj_opal.h"
 #include "obj_seethru.h"
+#include "obj_plant.h"
 
 // this function gets called ever 120 pulse (30 secs?)
 // it should randomly load a deity and/or extract extra deitys
@@ -1310,6 +1311,11 @@ int TObj::objectTickUpdate(int pulse)
         affected[j].bitvector = 0;
       }
     }
+  }
+
+  TPlant *tp;
+  if((tp=dynamic_cast<TPlant *>(this))){
+    tp->updateAge();
   }
 
   if (obj_flags.decay_time > -1) {

@@ -1539,6 +1539,9 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_TAN:
           doTan();
           break;
+	case CMD_PLANT:
+	  doPlant(newarg);
+	  break;
         case CMD_WHITTLE:
           doWhittle(newarg);
 	  addToLifeforce(1);
@@ -2802,6 +2805,7 @@ void buildCommandArray(void)
   commandArray[CMD_DULL] = new commandInfo("smooth", POSITION_SITTING, 0);
   commandArray[CMD_ADJUST] = new commandInfo("adjust", POSITION_SLEEPING, 0);
   commandArray[CMD_BUTCHER] = new commandInfo("butcher", POSITION_STANDING, 0);
+  commandArray[CMD_PLANT] = new commandInfo("plant", POSITION_STANDING, 0);
   commandArray[CMD_SKIN] = new commandInfo("skin", POSITION_STANDING, 0);
   commandArray[CMD_TAN] = new commandInfo("tan", POSITION_STANDING, 0);
   commandArray[CMD_TITHE] = new commandInfo("tithe", POSITION_STANDING, 0);

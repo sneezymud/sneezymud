@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task.h,v $
+// Revision 5.5  2002/01/16 05:40:29  peel
+// added plants
+//
 // Revision 5.4  2001/12/15 04:26:52  jesus
 // added in butcher skill under adventuring disc
 // will add more descs for races as time goes on 30 of about 125 races supported
@@ -78,6 +81,7 @@ extern int task_tracking      (TBeing *, cmdTypeT, const char *, int, TRoom *, T
 extern int task_seekwater     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_search        (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_lightfire     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_plant     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_createEngine  (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_charge        (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_whittle       (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
@@ -120,6 +124,7 @@ enum taskTypeT {
      TASK_SEEKWATER,
      TASK_SEARCH,
      TASK_LIGHTFIRE,
+     TASK_PLANT,
      TASK_CREATENGINE,
      TASK_MOUNTCHARGING,
      TASK_WHITTLE,

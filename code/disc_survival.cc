@@ -1057,7 +1057,3 @@ void TBeing::doButcher(const char *arg)
 
 
 
-
-
-
-

@@ -572,6 +572,11 @@ void assign_item_info()
 				     "Rounds", 500, 0,
 				     "Unused", 0, 0,
 				     "Unused", 0, 0);
+  ItemInfo[ITEM_PLANT] = new itemInfo("Plant","a plant",
+     "Type", 0, 0,
+     "Age", 0, 0,
+     "Unused", 0, 0,
+     "Unused", 0, 0);
 				     
 };
 

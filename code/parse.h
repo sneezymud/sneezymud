@@ -563,6 +563,7 @@ enum cmdTypeT {
      CMD_PSYCRUSH,
      CMD_KWAVE,
      CMD_TELELKINESIS,
+     CMD_PLANT,
     MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow

@@ -76,6 +76,7 @@
 #include "obj_appliedsub.h"
 #include "obj_wand.h"
 #include "obj_worn.h"
+#include "obj_plant.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -3116,6 +3117,8 @@ TObj * makeNewObj(itemTypeT tmp)
       return new TGun();
     case ITEM_AMMO:
       return new TAmmo();
+    case ITEM_PLANT:
+      return new TPlant();
     case ITEM_UNDEFINED:
     case ITEM_MARTIAL_WEAPON:
     case MAX_OBJ_TYPES:

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_lightfire.cc,v $
+// Revision 5.4  2002/01/16 05:40:29  peel
+// added plants
+//
 // Revision 5.3  2002/01/10 00:45:49  peel
 // more splitting up of obj2.h
 //
@@ -177,3 +180,4 @@ int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   }
   return TRUE;
 }
+
