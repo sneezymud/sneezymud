@@ -52,8 +52,8 @@
 #include "structs.h"
 #endif
 
-#include "cmd_trophy.h"
 
+class TTrophy;
 class TWindow;
 class TGenWeapon;
 class TBaseClothing;

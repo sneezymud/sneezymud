@@ -23,7 +23,7 @@
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
 #include "obj_base_clothing.h"
-
+#include "cmd_trophy.h"
 
 #define DAMAGE_DEBUG 0
 
@@ -4724,7 +4724,7 @@ static int FRACT(TBeing *ch, TBeing *v)
 
   // modify for trophy now
   if(ch->isPc() && !v->isPc()){
-    fract=(int)(fract*ch->trophy->getExpModVal(v->mobVnum()));
+    fract=(int)(fract*ch->trophy->getExpModVal(ch->trophy->getCount(v->mobVnum())));
   }
 
 

@@ -4,7 +4,7 @@
 // TTrophy is a class for interacting with the trophy data
 // for a particular player
 //
-// ch->trophy->getExpModDescr(mobvnum);
+// ch->trophy->getExpModDescr(ch->trophy->getCount(mobvnum));
 //
 // The TBeing class contains an instance of TTrophy that is initialized for
 // that particular TBeing.  Normally, you would use that instance of TTrophy.
@@ -24,10 +24,10 @@
 // the TBeing pointer that is stored.  Use this if you want to re-use a
 // TTrophy instance.
 //
-// float getExpModVal(int) - Returns the exp mod value for the mob vnum that
+// float getExpModVal(float) - Returns the exp mod value for the count that
 // is passed.  The value will be in the range 0.0 - 1.0.
 //
-// const char *getExpModDescr(int) - Returns a text description of the exp
+// const char *getExpModDescr(float) - Returns a text description of the exp
 // mod value, such as "full", "much", "some", etc.
 //
 // addToCount(int vnum, double cnt) - Adds cnt to the count for the mob vnum.
@@ -35,6 +35,11 @@
 // getCount(int vnum) - Returns the count value for the mob vnum.
 //
 // wipe() - Clears the trophy for the parent, this is for character deletion.
+//
+//
+// On retrospect, it'd probably be better to move getCount and AddToCount
+// into TBeing, and leave TTrophy as a generic trophy count manipulation class
+
 
 class TDatabase;
 
@@ -49,8 +54,8 @@ class TTrophy {
  public:
   void setName(string);
 
-  float getExpModVal(int);
-  const char *getExpModDescr(int);
+  float getExpModVal(float);
+  const char *getExpModDescr(float);
   void addToCount(int, double);
   float getCount(int);
 
@@ -62,5 +67,3 @@ class TTrophy {
 
 
 #endif
-
-

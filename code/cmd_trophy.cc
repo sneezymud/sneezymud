@@ -64,10 +64,8 @@ float TTrophy::getCount(int vnum)
 }
 
 
-float TTrophy::getExpModVal(int vnum)
+float TTrophy::getExpModVal(float count)
 {
-  float count=getCount(vnum);
-
   float min_mod=0.3;
   float max_mod=1.0; // shouldn't ever be above 1.0
   float free_kills=8; // how many kills you get before trophy kicks in
@@ -89,18 +87,15 @@ float TTrophy::getExpModVal(int vnum)
 }
 
 
-
-const char *TTrophy::getExpModDescr(int vnum)
+const char *TTrophy::getExpModDescr(float count)
 {
-  float f=getExpModVal(vnum);
+  float f=getExpModVal(count);
 
   return((f == 1.0) ? "<Y>full<1>" :
 	 ((f >= 0.90) ? "<o>much<1>" :
 	  ((f >= 0.80) ? "a fair amount" :
 	   ((f >= 0.70) ? "<w>some<1>" : "<k>little<1>"))));
 }
-
-
 
 // this function is a little messy, I apologize
 void TBeing::doTrophy(const char *arg)
@@ -190,7 +185,7 @@ void TBeing::doTrophy(const char *arg)
 
       if(!summary){
 	sprintf(buf, "You will gain %s experience when fighting %s.\n\r", 
-		trophy.getExpModDescr(vnum),
+		trophy.getExpModDescr(count),
 		mob_index[rnum].short_desc);
 	sb += buf;
       }

@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "cmd_trophy.h"
 
 void TBeing::doConsider(const char *argument)
 {
@@ -151,12 +152,12 @@ void TBeing::doConsider(const char *argument)
 
   if(trophy->getCount(tmon->mobVnum()) > 0){
     sendTo(COLOR_BASIC, "You will gain %s experience when fighting %s.\n\r", 
-	   trophy->getExpModDescr(tmon->mobVnum()),
+	   trophy->getExpModDescr(trophy->getCount(tmon->mobVnum())),
 	   namebuf);
   } else {
     sendTo(COLOR_BASIC, "You have never fought %s and will gain %s experience.\n\r",
 	   namebuf,
-	   trophy->getExpModDescr(tmon->mobVnum()));
+	   trophy->getExpModDescr(trophy->getCount(tmon->mobVnum())));
   }
 
   if (getDiscipline(DISC_ADVENTURING)) {
