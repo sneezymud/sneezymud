@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_spirit.h,v $
+// Revision 5.2  2002/06/22 22:19:46  peel
+// added knot spell and knot room proc
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -26,6 +32,7 @@ public:
     CSkill skTrueSight;
     CSkill skPolymorph;
     CSkill skFumble;
+    CSkill skKnot;
 
     CDSpirit()
       : CDiscipline(),
@@ -33,7 +40,8 @@ public:
       skCloudOfConcealment(),
       skTrueSight(),
       skPolymorph(),
-      skFumble() {
+      skFumble(),
+      skKnot(){
     }
     CDSpirit(const CDSpirit &a)
       : CDiscipline(a),
@@ -41,7 +49,8 @@ public:
       skCloudOfConcealment(a.skCloudOfConcealment),
       skTrueSight(a.skTrueSight),
       skPolymorph(a.skPolymorph),
-      skFumble(a.skFumble) {
+      skFumble(a.skFumble),
+      skKnot(a.skKnot){
     }
     CDSpirit & operator=(const CDSpirit &a) {
       if (this == &a) return *this;
@@ -51,12 +60,17 @@ public:
       skTrueSight = a.skTrueSight;
       skPolymorph = a.skPolymorph;
       skFumble = a.skFumble;
+      skKnot = a.skKnot;
       return *this;
     }
     virtual ~CDSpirit() {}
     virtual CDSpirit * cloneMe() { return new CDSpirit(*this); }
 private:
 };
+
+    int knot(TBeing *, TBeing *);
+    int castKnot(TBeing *, TBeing *);
+    int knot(TBeing *, TBeing *, int, byte);
 
     int silence(TBeing *, TBeing *);
     int castSilence(TBeing *, TBeing *);

@@ -279,6 +279,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 98;
     case SPELL_ETHER_GATE:
       return 99;
+    case SPELL_KNOT:
+      return 100;
     case SPELL_FUMBLE:
       return 102;
     case SPELL_TRUE_SIGHT:
@@ -1267,6 +1269,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_BIND;
     case 99:
       return SPELL_ETHER_GATE;
+    case 100:
+      return SPELL_KNOT;
     case 102:
       return SPELL_FUMBLE;
     case 103:

@@ -997,6 +997,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_POWERSTONE:
       case SPELL_FAERIE_FOG:
       case SPELL_TELEPORT:
+      case SPELL_KNOT:
       case SPELL_SENSE_LIFE:
       case SPELL_SENSE_LIFE_SHAMAN: // shaman
       case SPELL_CALM:

@@ -12,6 +12,93 @@
 #include "disc_spirit.h"
 #include "obj_magic_item.h"
 
+
+int knot(TBeing *caster, TBeing *victim)
+{
+  taskDiffT diff;
+
+  if (!bPassMageChecks(caster, SPELL_KNOT, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_KNOT]->lag;
+  diff = discArray[SPELL_KNOT]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_KNOT, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+
+  return TRUE;
+}
+
+int castKnot(TBeing *caster, TBeing *victim)
+{
+  int ret,level;
+  int rc = 0;
+
+  level = caster->getSkillLevel(SPELL_KNOT);
+  int bKnown = caster->getSkillValue(SPELL_KNOT);
+
+  ret = knot(caster,victim,level,bKnown);
+
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
+int knot(TBeing *caster, TBeing *victim, int, byte bKnown)
+{
+  int rc;
+  TThing *t;
+
+  if (bSuccess(caster,bKnown,SPELL_KNOT)) {
+    if (caster->roomp->isRoomFlag(ROOM_NO_PORTAL)) {
+      caster->sendTo("The defenses of this area are too strong.\n\r");
+      caster->nothingHappens(SILENT_YES);
+      return SPELL_FAIL;
+    }
+
+    act("$n <r>tears a gap in reality and steps through.<1>", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("<r>You tear a gap in reality and step through.<1>", FALSE, caster, NULL, NULL, TO_CHAR);
+    
+    while ((t = caster->rider)) {
+      rc = t->fallOffMount(caster, POSITION_STANDING);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	delete t;
+	t = NULL; 
+      }
+    }
+    
+    if (caster->riding) {
+      rc = caster->fallOffMount(caster->riding, POSITION_STANDING);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+	return SPELL_SUCCESS + CASTER_DEAD;
+    }
+    
+    TRoom *room = real_roomp(30987);
+    --(*caster);
+    *room += *caster;
+
+    act("$n <r>steps into <1><k>the knot<1><r>.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("<r>You step into <1><k>the knot<1><r>.", FALSE, caster, NULL, NULL, TO_CHAR);
+
+    TBeing *tbt = dynamic_cast<TBeing *>(caster);
+    if (tbt) {
+      tbt->doLook("", CMD_LOOK);
+      rc = tbt->genericMovedIntoRoom(room, -1);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+	return SPELL_SUCCESS + CASTER_DEAD;
+    }
+
+
+    return SPELL_SUCCESS;
+  } else {
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+
+}
+
+
 int silence(TBeing *caster, TBeing *victim, int level, byte bKnown)
 {
   affectedData aff;

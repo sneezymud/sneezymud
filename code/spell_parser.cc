@@ -1759,6 +1759,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SPELL_TELEPORT:
       rc = teleport(this, ch);
       break;
+    case SPELL_KNOT:
+      rc = knot(this, ch);
+      break;
     case SPELL_PROTECTION_FROM_ELEMENTS:
       protectionFromElements(this, ch);
       break;

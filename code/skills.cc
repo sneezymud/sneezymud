@@ -333,7 +333,9 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDSpirit *) cd)->skPolymorph;
     case SPELL_SILENCE:
       return &((CDSpirit *) cd)->skSilence;
-
+    case SPELL_KNOT:
+      return &((CDSpirit *) cd)->skKnot;
+ 
 // disc_water
 
     case SPELL_WATERY_GRAVE:

@@ -476,6 +476,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_RESURRECTION:
     case SPELL_ENHANCE_WEAPON:
     case SPELL_TELEPORT:
+    case SPELL_KNOT:
     case DAMAGE_TRAP_TELEPORT:
     case SPELL_FEATHERY_DESCENT:
     case SPELL_FLY:

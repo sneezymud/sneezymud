@@ -1439,6 +1439,79 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   return FALSE;
 }
 
+
+int getRandomRoom(){
+  int to_room;
+  TRoom *rp;
+  int breakout=0;
+
+  for (;;) {
+    // this keeps getting caught in a loop on builder mud
+    // and I don't want to fix it properly.
+    if(++breakout>1000000){ // presumably we won't ever have > 1 mil rooms
+      vlogf(LOG_BUG, "getRandomRoom got caught in a loop");
+      return FALSE;
+    }
+
+    // note, all rooms below 100 are ignored
+
+    to_room = ::number(100, top_of_world);
+
+    if (!(rp = real_roomp(to_room)))
+      continue;
+    if (rp->isRoomFlag(ROOM_PRIVATE))
+      continue;
+    if (rp->isRoomFlag(ROOM_HAVE_TO_WALK))
+      continue;
+    if (rp->isFlyingSector())
+      continue;
+    if (zone_table[rp->getZoneNum()].enabled == FALSE)
+      continue;
+
+    break;
+  }
+  return to_room;
+}
+
+
+int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
+{
+  static bool done[24];
+  int n=rp->number-30975, exitrnum=0;
+
+  vlogf(LOG_PEEL, "entering theKnot");
+  
+  if(done[n] || cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+  
+  // loop through all directions
+  for(dirTypeT d=DIR_NORTH;d<MAX_DIR;d++){
+    if(d==DIR_NORTHEAST || d==DIR_NORTHWEST || 
+       d==DIR_SOUTHEAST || d==DIR_SOUTHWEST)
+      continue;
+
+    // if no exit, chance to add new one
+    if(!rp->dir_option[d] && !::number(0,9)){
+      vlogf(LOG_PEEL, "found a direction: dir=%i, room=%i",
+	    d, rp->number);
+
+      if(!(exitrnum=getRandomRoom()))
+	continue;
+      
+      if(!(rp->dir_option[d] = new roomDirData()))
+	continue;
+      
+      rp->dir_option[d]->to_room = exitrnum;
+
+      vlogf(LOG_PEEL, "made new direction: from=%i to=%i",
+	    rp->number, exitrnum);
+    }
+  }
+
+  done[n]=true;
+  return TRUE;
+}
+
 // Peel
 int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
@@ -2403,6 +2476,30 @@ void assign_rooms(void)
     {27828, SecretDoors},
     {27890, SecretDoors},
     {28800, moonGateRoom},
+    {30975, theKnot},
+    {30976, theKnot},
+    {30977, theKnot},
+    {30978, theKnot},
+    {30979, theKnot},
+    {30980, theKnot},
+    {30981, theKnot},
+    {30982, theKnot},
+    {30983, theKnot},
+    {30984, theKnot},
+    {30985, theKnot},
+    {30986, theKnot},
+    {30988, theKnot},
+    {30989, theKnot},
+    {30990, theKnot},
+    {30991, theKnot},
+    {30992, theKnot},
+    {30993, theKnot},
+    {30994, theKnot},
+    {30995, theKnot},
+    {30996, theKnot},
+    {30997, theKnot},
+    {30998, theKnot},
+    {30999, theKnot},
     {31751, bank},
     {31756, bank},
     {31759, bank},

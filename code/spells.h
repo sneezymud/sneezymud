@@ -169,6 +169,7 @@ enum spellNumT {
      SPELL_PLASMA_MIRROR,
      SPELL_GARMULS_TAIL,
      SPELL_ETHER_GATE,
+     SPELL_KNOT,
 
      // end of mage
      // start of cleric
