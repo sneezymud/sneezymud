@@ -2054,6 +2054,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	      return FALSE;
 	    }
 	  }
+	  mysql_free_result(res);
 	  sprintf(buf2, "%s Ok, I cleared all of the individual profit ratios.", ch->getName());
 	  myself->doTell(buf2);
 	  return TRUE;
@@ -2086,6 +2087,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  }
 	  row=mysql_fetch_row(res);
 	  
+	  mysql_free_result(res);
+
 	  // create the entry if it doesn't exist, use default profit buy/sell
 	  dbquery(TRUE, &res, "sneezy", "shop_keeper", "insert ignore into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(row[0]), atof(row[1]));
 
@@ -2097,6 +2100,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	      return FALSE;
 	    }
 	  }
+	  mysql_free_result(res);
 	  
 	  sprintf(buf2, "%s Ok, my profit_buy is now %f for %s.", 
 		  ch->getName(), atof(buf), o->getName());
@@ -2110,6 +2114,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	      return FALSE;
 	    }
 	  }
+	  mysql_free_result(res);
 	  
 	  sprintf(buf2, "%s Ok, my profit_buy is now %f", 
 		  ch->getName(), shop_index[shop_nr].profit_buy);
@@ -2139,6 +2144,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	      return FALSE;
 	    }
 	  }
+	  mysql_free_result(res);
 	  sprintf(buf2, "%s Ok, I cleared all of the individual profit ratios.", ch->getName());
 	  myself->doTell(buf2);
 	  return TRUE;
@@ -2178,6 +2184,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	      return FALSE;
 	    }
 	  }
+	  mysql_free_result(res);
 	  
 	  sprintf(buf2, "%s Ok, my profit_sell is now %f for %s.", 
 		  ch->getName(), atof(buf), o->getName());
@@ -2193,7 +2200,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	      return FALSE;
 	    }
 	  }
-	  
+	  mysql_free_result(res);	  
 	  sprintf(buf, "%s Ok, my profit_sell is now %f", 
 		  ch->getName(), shop_index[shop_nr].profit_sell);
 	  myself->doTell(buf);
