@@ -161,7 +161,31 @@ int TShopOwned::setRates(string arg)
       db.query("delete from shopownedmatch where shop_nr=%i", shop_nr);
       keeper->doTell(ch->getName(), "Ok, I cleared all of the individual profit ratios.");
       return TRUE;
+    } else if(buf == "match"){
+      arg = one_argument(arg, buf);
+
+      db.query("delete from shopownedmatch where shop_nr=%i and match='%s'",
+	       shop_nr, buf.c_str());
+      
+      keeper->doTell(ch->getName(), "Done.");
+      return TRUE;
     } else {
+      // find item in inventory matching keywords in arg
+      // get vnum, then store in db
+      TThing *tt = searchLinkedListVis(ch, buf.c_str(), keeper->getStuff());
+      
+      if(!tt){
+	keeper->doTell(ch->getName(), "I don't have that item.");
+	return FALSE;
+      }
+      
+      TObj *o=dynamic_cast<TObj *>(tt);
+
+      db.query("delete from shopownedratios where shop_nr=%i and obj_nr=%i",
+	       shop_nr, o->objVnum());
+      
+      keeper->doTell(ch->getName(), "Done.");
+      return TRUE;
     }
   }
 
@@ -593,7 +617,7 @@ int TShopOwned::doLogs(const char *arg)
 
 
 
-int TShopOwned::getMaxNum(TObj *o)
+int TShopOwned::getMaxNum(const TObj *o)
 {
   TDatabase db("sneezy");
   

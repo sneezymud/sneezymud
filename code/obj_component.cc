@@ -2237,6 +2237,16 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper) const
   TShopOwned tso(shop_nr, keeper, ch);
   int max_num=50;
 
+  if(tso.isOwned())
+    max_num=tso.getMaxNum(this);
+
+  if(max_num == 0){
+    sprintf(buf, "%s I don't wish to buy any of those right now.", ch->name);
+    keeper->doTell(buf);
+    return TRUE;
+  }
+
+
   for (t = keeper->getStuff(); t; t = t->nextThing) {
     if ((t->number == number) &&
 	(t->getName() && getName() &&
