@@ -3318,7 +3318,7 @@ const path_struct money_train_path[8][200]={
 
 
 
-const path_struct garbage_convoy_path[8][200]={
+const path_struct garbage_convoy_path[10][200]={
   // surplus to cs
   {
     {DIR_NONE, 563},
@@ -3925,20 +3925,14 @@ const path_struct garbage_convoy_path[8][200]={
     {DIR_EAST, 3772},
     {DIR_EAST, 3724},
     {DIR_EAST, 3723},
-    {DIR_EAST, 3722},
-    {DIR_EAST, 3721},
-    {DIR_EAST, 3711},
-    {DIR_EAST, 3701},
+    {DIR_NORTH, 3700},
     {DIR_NONE, -1}
   },
 
   // logrus to gh
   {
-    {DIR_NONE, 3701},
-    {DIR_WEST, 3711},
-    {DIR_WEST, 3721},
-    {DIR_WEST, 3722},
-    {DIR_WEST, 3723},
+    {DIR_NONE, 3700},
+    {DIR_SOUTH, 3723},
     {DIR_WEST, 3724},
     {DIR_WEST, 3772},
     {DIR_WEST, 3773},
@@ -4114,6 +4108,41 @@ const path_struct garbage_convoy_path[8][200]={
     {DIR_NORTH, 100},
     {DIR_NONE, -1}
   },
+
+  // cs to gh dump
+  {
+    {DIR_NONE, 100},
+    {DIR_WEST, 112},
+    {DIR_WEST, 113},
+    {DIR_WEST, 114},
+    {DIR_SOUTH, 241},
+    {DIR_SOUTH, 242},
+    {DIR_SOUTH, 238},
+    {DIR_SOUTH, 243},
+    {DIR_SOUTH, 244},
+    {DIR_SOUTH, 602},
+    {DIR_WEST, 601},
+    {DIR_WEST, 600},
+    {DIR_NONE, -1}
+  },
+
+  // gh dump to cs
+  {
+    {DIR_NONE, 600},
+    {DIR_EAST, 601},
+    {DIR_EAST, 602},
+    {DIR_NORTH, 244},
+    {DIR_NORTH, 243},
+    {DIR_NORTH, 238},
+    {DIR_NORTH, 242},
+    {DIR_NORTH, 241},
+    {DIR_NORTH, 114},
+    {DIR_EAST, 113},
+    {DIR_EAST, 112},
+    {DIR_EAST, 100},
+    {DIR_NONE, -1}
+  }
+  
 };
 
 

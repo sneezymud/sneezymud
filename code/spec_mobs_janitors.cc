@@ -558,11 +558,13 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     STATE_BM_DELIVERING,  // walk from bm fountain to bm dump
     STATE_BM_RETURNING,   // walk from bm dump to bm fountain
     STATE_TROLLEY_RET,    // wait for trolley, board, ride to gh, get off
-    STATE_TO_GH_DUMP,        // cs to gh surplus
+    STATE_TO_GH_SURPLUS,        // cs to gh surplus
     STATE_TO_AMBER_DUMP,  // cs to amber dump
     STATE_AMBER_TO_CS,    // amber dump to cs
     STATE_TO_LOGRUS_DUMP, // cs to logrus
-    STATE_LOGRUS_TO_CS    // logrus to cs
+    STATE_LOGRUS_TO_CS,    // logrus to cs
+    STATE_TO_GH_DUMP,
+    STATE_DUMP_TO_CS
   };
 
   class hunt_struct {
@@ -588,7 +590,8 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     return FALSE;
   }
 
-  if (cmd != CMD_GENERIC_PULSE || !myself->awake() || myself->fight())
+  if ((cmd != CMD_GENERIC_PULSE && cmd != CMD_GENERIC_QUICK_PULSE) 
+      || !myself->awake() || myself->fight())
     return FALSE;
 
   cart=findCart(myself);
@@ -616,8 +619,8 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     return FALSE;
 
   // speed
-  if(::number(0,2))
-    return FALSE;
+  //  if(::number(0,2))
+  //    return FALSE;
 
   // now the actual actions
   switch(job->state){
@@ -631,7 +634,6 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	if(!cart->getStuff()){
 	  switch(::number(0,3)){
 	    case 0:
-
 	      job->cur_pos=0;
 	      job->state=STATE_TROLLEY_TO;
 	      break;
@@ -643,26 +645,43 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	    case 2:
 	      job->cur_path=3;
 	      job->cur_pos=0;
-	      job->state=STATE_TO_GH_DUMP;
+	      job->state=STATE_TO_GH_SURPLUS;
+	      break;
+	    case 3:
+	      job->cur_path=6;
+	      job->cur_pos=0;
+	      job->state=STATE_TO_LOGRUS_DUMP;
 	      break;
 	  }
 	} else {
-	  job->cur_path=6;
+	  job->cur_path=8;
 	  job->cur_pos=0;
-	  job->state=STATE_TO_LOGRUS_DUMP;
+	  job->state=STATE_TO_GH_DUMP;
 	}
+      } else
+	moveCart(myself, cart);
+      break;
+    case STATE_TO_GH_DUMP:
+      if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
+	dropAllCart(myself, cart);
+
+	job->cur_path=9;
+	job->cur_pos=0;
+	job->state=STATE_DUMP_TO_CS;
+      } else
+	moveCart(myself, cart);
+      break;
+    case STATE_DUMP_TO_CS:
+      if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
+	job->cur_path=0;
+	job->cur_pos=0;
+	job->state=STATE_TO_CS;
       } else
 	moveCart(myself, cart);
       break;
     case STATE_TO_LOGRUS_DUMP:
       if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
-	// we do this to distribute the junk around the plaza
-	if(::number(0,8)){
-	  myself->wanderAround();
-	  moveCart(myself, cart);
-	}
-
-	dropAllCart(myself, cart);
+	putAllCart(myself, cart);
 
 	job->cur_path=7;
 	job->cur_pos=0;
@@ -762,7 +781,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	moveCart(myself, cart);
       }
       break;
-    case STATE_TO_GH_DUMP:
+    case STATE_TO_GH_SURPLUS:
       if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
 	putAllCart(myself, cart);
 
@@ -773,7 +792,6 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	moveCart(myself, cart);
       break;
   }
-
 
   return 0;
 }

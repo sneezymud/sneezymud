@@ -270,6 +270,10 @@ int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       if (obj->objVnum() == GENERIC_FLARE)
         continue;
 
+      // refuse haulers cart
+      if(obj->objVnum() == 33270)
+	continue;
+
       sendrpf(rp, "A %s vanishes in a puff of smoke.\n\r", fname(obj->name).c_str());
 
       obj->logMe(NULL, "Dump nuking");
