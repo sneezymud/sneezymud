@@ -281,7 +281,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       if(coins>=amt){
 	me->doTell(ch->getName(), "Alright, everything appears to be in order here.  Consider your loan paid off!");
 	db.query("delete from shopownedloans where player_id=%i", ch->getPlayerID());
-	shoplog(shop_nr, ch, me, "talens", coins, "receiving");
+	shoplog(shop_nr, ch, me, "talens", coins, "giving");
       } else {
 	// how much of the amount owed is the principle
 	float perc=(float)principle / (float)amt;
@@ -292,7 +292,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
 	me->doTell(ch->getName(), fmt("Thanks for the payment.  You paid down the principle by %i talens, the rest went to interest.") % (int)(perc*coins));
 
-	shoplog(shop_nr, ch, me, "talens", coins, "receiving");
+	shoplog(shop_nr, ch, me, "talens", coins, "giving");
       }
     } else {
       me->doTell(ch->getName(), "Uhh... thanks!");
