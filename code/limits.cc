@@ -461,7 +461,7 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
       discs = 4.666;
       break;
     case THIEF_LEVEL_IND:
-      discs = 6.333;
+      discs = 5.5;
       break;
     case DEIKHAN_LEVEL_IND:
       discs = 5.5;
@@ -848,6 +848,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
 {
   classIndT i;
   double newgain = 0;
+  double oldcap = 0;
   bool been_here = false;
 #if 0
   if (!ch->isPc() && ch->isAffected(AFF_CHARM)) {
@@ -874,15 +875,23 @@ void gain_exp(TBeing *ch, double gain, int dam)
             if (!been_here && gain > ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000))+2.0 && dam > 0) {
               been_here = TRUE; // don't show multiple logs for multiclasses
               // the 100 turns dam into a %
-              newgain = ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000)) + 2.0;
-	    
+              newgain = ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000)) + 1.0;
+	      
+	      // 05/24/01 - adding a 'soft' cap here
+
+	      oldcap = newgain;
+
+	      double softmod = (1.0 - pow( 1.1 , -1*(gain/newgain))) + 1;     // this gives us a range of 1-2
+	      
+	      newgain *= softmod;
+
 	      newgain = (newgain*0.95) +  (((float)::number(0,100))*newgain)/1000.0;
+	      
 
-
-              vlogf(LOG_DASH, "%s(L%d) vs %s(L%d) cap: D: %d%%, E: %5.2f -> %5.2f (%5.2fx)",
+              vlogf(LOG_DASH, "%s(L%d) vs %s(L%d)  %3.1f>%3.1f*%3.1fs=%3.1fe   (%5.2fs <- %5.2fh)",
                     ch->getName(), ch->getLevel(i), (ch->specials.fighting) ?  ch->specials.fighting->getName() : "n/a",
-                    (ch->specials.fighting) ?  ch->specials.fighting->GetMaxLevel() : -1, dam/100 + 1, gain,
-                    newgain, (gain/newgain));
+                    (ch->specials.fighting) ?  ch->specials.fighting->GetMaxLevel() : -1, 
+		    gain, oldcap, softmod, newgain, (gain/newgain), (gain/oldcap));
 	      gain = newgain;
 
 
@@ -941,8 +950,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
 	gain = min(gain, newgain); 
 	//	gain += (rand()%(int)(gain*.1))-(gain*.05);
 	gain = (gain*0.95) +  (((float)::number(0,100))*gain)/1000.0;
-    }
-#else
+      }
 #endif
       ch->addToExp(gain);
       // we check mortal level here...
@@ -966,6 +974,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
   }
   }
   // whats this shit above?
+
 void TFood::findSomeFood(TFood **last_good, TBaseContainer **last_cont, TBaseContainer *cont) 
 {
   // get item closest to spoiling.
