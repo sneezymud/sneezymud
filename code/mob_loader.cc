@@ -231,8 +231,10 @@ void TMonster::thiefLootLoader()
   }
     
   // buy it, if we can afford it
-  if(getMoney() > obj->obj_flags.cost){
-    setMoney(getMoney()-obj->obj_flags.cost);
+  // divided cost by 2 - mobs are buying at cost here to get load rate
+  //   more reasonable - Maror
+  if(getMoney() > obj->obj_flags.cost/2){
+    setMoney(getMoney()-obj->obj_flags.cost/2);
     *this += *obj;
     logItem(obj, CMD_LOAD);
   } else
