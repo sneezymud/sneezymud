@@ -802,8 +802,8 @@ int vampiricTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int ad
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
-  int num = ::number(1,(caster->hitLimit() / 10));
-  int num2 = ::number(1,(caster->hitLimit() / 15));
+  int num = ::number(1,(caster->hitLimit() / 20));
+  int num2 = ::number(1,(caster->hitLimit() / 30));
   int num3 = ::number(1,50);
 
   if (bSuccess(caster, bKnown,SPELL_VAMPIRIC_TOUCH)) {
@@ -912,8 +912,8 @@ int lifeLeech(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
-  int num = ::number(1,(caster->hitLimit() / 20));
-  int num2 = ::number(1,(caster->hitLimit() / 30));
+  int num = ::number(1,(caster->hitLimit() / 40));
+  int num2 = ::number(1,(caster->hitLimit() / 60));
   int num3 = ::number(1,20);
 
   if (bSuccess(caster, bKnown,SPELL_LIFE_LEECH)) {

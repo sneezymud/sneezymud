@@ -1730,14 +1730,8 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     // AREA AFFECT HERE
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
     }
-    spell = SPELL_VAMPIRIC_TOUCH;
-    if (!::number(0, 1) && 
-           (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell)) {
-      act("$n utters the invokation, 'I vant to DDDreenk youddrrr BLUUD!'",
-               TRUE, &ch, 0, 0, TO_ROOM);
-      return spell;
-    }
+
+    // STANDARD OFFENSE
     spell = SPELL_LIFE_LEECH;
     if (!::number(0, 1) && 
            (cutoff < discArray[spell]->start) &&
@@ -1746,8 +1740,15 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
+    spell = SPELL_VAMPIRIC_TOUCH;
+    if (!::number(0, 1) && 
+           (cutoff < discArray[spell]->start) &&
+        ch.doesKnowSkill(spell)) {
+      act("$n utters the invokation, 'I Vaant your BLUUD!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
 
-    // STANDARD OFFENSE
     // hit um with the long-term effect ones first
 
     // just plain damage spells here on
@@ -1775,6 +1776,25 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
   } else if (best_disc == DISC_SHAMAN_SKUNK) {
+    // AREA AFFECT
+    if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
+      spell = SPELL_DEATH_MIST;
+      if (!::number(0, 1) && (cutoff < discArray[spell]->start) &&
+        ch.doesKnowSkill(spell)) {
+	act("$n utters the invokation, 'CHOKE ON THIS!!!'",
+	    TRUE, &ch, 0, 0, TO_ROOM);
+	return spell;
+      }
+    }
+    // REGULAR
+    spell = SPELL_LICH_TOUCH;
+    if (!::number(0, 1) && 
+           (cutoff < discArray[spell]->start) &&
+        ch.doesKnowSkill(spell)) {
+      act("$n utters the invokation, 'River run DEEP!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
   } else if (best_disc == DISC_SHAMAN_ARMADILLO) {
   } else if (best_disc == DISC_TOTEM) {
   } else if (best_disc == DISC_SHAMAN_CONTROL) {
