@@ -417,8 +417,20 @@ void TPerson::storeToSt(charFile *st)
   st->attack_type = getCombatMode();
 
   st->stats = chosenStats.values;
-  st->practices = practices;
   st->wimpy = wimpy;
+
+  
+  st->practices = practices;
+  sh_int tmp=0;
+  // these pracs are switched in the actual pfiles for some dumb reason
+  tmp=st->practices.prac[WARRIOR_LEVEL_IND];
+  st->practices.prac[WARRIOR_LEVEL_IND]=st->practices.prac[THIEF_LEVEL_IND];
+  st->practices.prac[THIEF_LEVEL_IND]=tmp;
+
+  tmp=st->practices.prac[MONK_LEVEL_IND];
+  st->practices.prac[MONK_LEVEL_IND]=st->practices.prac[RANGER_LEVEL_IND];
+  st->practices.prac[RANGER_LEVEL_IND]=tmp;
+
 
 //  st->points = points;
 // storing pointsData
@@ -600,7 +612,20 @@ void TPerson::loadFromSt(charFile *st)
   // we have to assign discs before we set the learnedness
   // BUT make sure it has a class before calling this
   assignDisciplinesClass();
+
+
   practices = st->practices;
+
+  sh_int tmp=0;
+  // these pracs are switched in the actual pfiles for some dumb reason
+  tmp=practices.prac[WARRIOR_LEVEL_IND];
+  practices.prac[WARRIOR_LEVEL_IND]=practices.prac[THIEF_LEVEL_IND];
+  practices.prac[THIEF_LEVEL_IND]=tmp;
+
+  tmp=practices.prac[MONK_LEVEL_IND];
+  practices.prac[MONK_LEVEL_IND]=practices.prac[RANGER_LEVEL_IND];
+  practices.prac[RANGER_LEVEL_IND]=tmp;
+
 
   discNumT dnt;
   for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
