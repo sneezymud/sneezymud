@@ -76,7 +76,7 @@
 #include "obj_potion.h"
 #include "obj_staff.h"
 #include "obj_wand.h"
-
+#include "disc_fire.h"
 
 // CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye
@@ -545,6 +545,27 @@ int flameWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   rc = ch->reconcileDamage(vict, dam, DAMAGE_FIRE);
   if (rc == -1)
     return DELETE_VICT;
+  return TRUE;
+}
+
+int fireballWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int chance;
+
+  ch = genericWeaponProcCheck(vict, cmd, o, 3);
+  if (!ch)
+    return FALSE;
+
+  chance = ::number(4,10);
+  if (chance < 8) {
+    act("Your $p glows fire red.", 0, ch, o, 0, TO_ROOM, ANSI_RED);
+    act("$n's $p glows fire red.", 0, ch, o, 0, TO_CHAR, ANSI_RED);
+  } else {
+    act("$p glows fire red and launches a fireball at $n.", 0, vict, o, 0, TO_ROOM, ANSI_RED_BOLD);
+    act("$p glows fire red and launches a fireball at you.", 0, vict, o, 0, TO_CHAR, ANSI_RED_BOLD);
+    fireball(ch, 100, 100, 100);
+  }
   return TRUE;
 }
 
@@ -7385,6 +7406,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "potion of learning", learningPotion},
   {FALSE, "mystery potion", mysteryPotion},
   {FALSE, "Offal slip proc", slipInOffal},
+  {TRUE, "Fireball Weapon", fireballWeapon},
   {FALSE, "last proc", bogusObjProc}
 };
 
