@@ -269,6 +269,8 @@ bool TBeing::isVampire() const
 
 bool TBeing::isUndead() const
 {
+  if (hasQuestBit(TOG_VAMPIRE))
+    return TRUE;
   if (IS_SET(specials.act, ACT_SKELETON))
     return TRUE;
   if (IS_SET(specials.act, ACT_ZOMBIE))
