@@ -1480,8 +1480,16 @@ void buildComponentArray()
     "You flick $p at $N.",
     "$n flicks $p at $N.",
     "$n flicks $p at you.",                       
-    "You rub $p on your face? YUCK!.",
+    "You rub $p on your face? YUCK!",
     "$n rubs $p on $s face! What a dweeb!",
+    "",
+    ""));
+  CompInfo.push_back(compInfo(SPELL_FEAR,
+    "You throw $p at $N.",
+    "$n throws $p at $N.",
+    "$n throws $p at you.",                       
+    "You throw $p on the ground.",
+    "$n throws $p on the ground.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_INVISIBILITY,
