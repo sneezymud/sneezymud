@@ -7332,7 +7332,7 @@ int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself
   
 
   if(cmd == CMD_ENTER){
-    myself->doSay("Entering the elevator requires a 10 talen chip.");
+    myself->doSay("Entering the elevator requires a 100 talen chip.");
     myself->doEmote("stretches out his hand expectantly.");
     return true;
   }
