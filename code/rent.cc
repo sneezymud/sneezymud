@@ -479,8 +479,9 @@ void ItemSave::writeFooter()
 
 bool ItemLoad::readHeader()
 {
-  return (fread(&st, sizeof(rentHeader), 1, fp)==1);
-
+  int ret=fread(&st, sizeof(rentHeader), 1, fp);
+  version=st.version;
+  return (ret==1);
 }
 
 bool ItemSave::writeHeader()
