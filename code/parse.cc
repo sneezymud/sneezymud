@@ -2181,21 +2181,6 @@ const string two_arg(const string &str, string &arg1, string &arg2)
   }
 }
 
-const char *three_arg(const char *string, char *a, char *b, char *c)
-{
-  for (; isspace(*string); string++);
-  for (; !isspace(*a = *string) && *string; string++, a++);
-  *a = '\0';
-  for (; isspace(*string); string++);
-  for (; !isspace(*b = *string) && *string; string++, b++);
-  *b = '\0';
-  for (; isspace(*string); string++);
-  for (; !isspace(*c = *string) && *string; string++, c++);
-  *c = '\0';
-
-  return string;
-}
-
 char *add_bars(char *string)
 {
   for (; *string; string++) {

@@ -4469,9 +4469,10 @@ void TPerson::doAccess(const char *arg)
   }
 }
 
-void TBeing::doReplace(const char *argument)
+void TBeing::doReplace(const string argument)
 {
-  char buf[256], dir[256], dir2[256], arg1[256], arg2[256], arg3[256];
+  char buf[256], dir[256], dir2[256];
+  string arg1, arg2, arg3;
   FILE *fp;
   charFile st;
   bool dontMove = FALSE;
@@ -4481,15 +4482,13 @@ void TBeing::doReplace(const char *argument)
     return;
   }
 
-  for (; isspace(*argument); argument++);
-
-  if (!*argument) {
+  if(argument.empty()) {
     sendTo("Syntax : replace <playername> <player | rent | account> <today | yesterday>\n\r");
     return;
   }
-  argument = three_arg(argument, arg1, arg2, arg3);
+  int argc=argument_parser(argument, arg1, arg2, arg3);
 
-  if (!*arg1 || !*arg2 || !*arg3) {
+  if (argc<3){
     sendTo("Syntax : replace <playername> <player | rent | account> <today | yesterday>\n\r");
     return;
   }
@@ -4515,11 +4514,11 @@ void TBeing::doReplace(const char *argument)
     sendTo("Syntax : replace <playername> <player | rent | account> <today | yesterday>\n\r");
     return;
   }
-  if (get_pc_world(this, arg1, EXACT_YES)) {
+  if (get_pc_world(this, arg1.c_str(), EXACT_YES)) {
     sendTo("Probably don't want to backup with the person on. Ask them to log off.\n\r");
     return;
   }
-  sprintf(buf, "%s/%s/%c/%s", dir, dir2, arg1[0], arg1);
+  sprintf(buf, "%s/%s/%c/%s", dir, dir2, arg1[0], arg1.c_str());
   if (!(fp = fopen(buf, "r"))) {
     sendTo("Sorry, can't find file '%s'.\n\r", buf);
     return;
@@ -4528,32 +4527,32 @@ void TBeing::doReplace(const char *argument)
 
     // log this event so we can see if item duplication (etc.) is caused by it.
     vlogf(LOG_FILE, "%s replacing %s's %s file.",
-       getName(), arg1, dir2);
+       getName(), arg1.c_str(), dir2);
 
     sprintf(buf, "cp -r %s/%s/%c/%s %s/%c/%s", 
-                    dir, dir2, arg1[0], arg1, dir2, arg1[0], arg1);
+	    dir, dir2, arg1[0], arg1.c_str(), dir2, arg1[0], arg1.c_str());
     vsystem(buf);
     // Make sure that the player file hard link is still intact, if
     // not, saves will be inconsistent - Russ 04-19-96
     if (dontMove) {
       sendTo("Removing and relinking player files...\n\r");
-      if (!load_char(arg1, &st)) {
+      if (!load_char(arg1.c_str(), &st)) {
          sendTo("Can't find that player file.\n\r");
          return;
       }
       // Check for account directory here maybe. This won't work
       // if account directory isn't there.
 
-      sprintf(buf, "rm player/%c/%s", arg1[0], arg1);
+      sprintf(buf, "rm player/%c/%s", arg1[0], arg1.c_str());
       vsystem(buf);
-      sprintf(buf, "account/%c/%s/%s", LOWER(st.aname[0]),lower(st.aname).c_str(),arg1);
-      sprintf(dir2, "player/%c/%s",  arg1[0], arg1);
+      sprintf(buf, "account/%c/%s/%s", LOWER(st.aname[0]),lower(st.aname).c_str(),arg1.c_str());
+      sprintf(dir2, "player/%c/%s",  arg1[0], arg1.c_str());
       link(buf, dir2); 
       sendTo("Done.\n\r");
     }
     if (!dontMove) {
       sendTo("Copying backup %s file from %s/%s/%c/%s to %s/%c/%s.\n\r",
-      dir2, dir, dir2, arg1[0], arg1, dir2, arg1[0], arg1);
+      dir2, dir, dir2, arg1[0], arg1.c_str(), dir2, arg1[0], arg1.c_str());
       return;
     }
   }

@@ -5068,7 +5068,7 @@ void TBeing::describeTrapDamType(const TTrap *obj, int) const
        good_uncap(trap_types[obj->getTrapDamType()]).c_str());
 }
 
-void TBeing::doSpells(const char *argument)
+void TBeing::doSpells(const string argument)
 {
   char buf[MAX_STRING_LENGTH * 2], buffer[MAX_STRING_LENGTH * 2];
   char learnbuf[64];
@@ -5076,7 +5076,7 @@ void TBeing::doSpells(const char *argument)
   unsigned int j, l;
   Descriptor *d;
   CDiscipline *cd;
-  char arg[200], arg2[200], arg3[200];
+  string arg, arg2, arg3;
   int subtype=0, types[4], type=0, badtype=0, showall=0;
   discNumT das;
   TThing *primary=heldInPrimHand(), *secondary=heldInSecHand();
@@ -5114,17 +5114,17 @@ void TBeing::doSpells(const char *argument)
 
   *buffer = '\0';
 
-  if (!*argument)
+  if (argument.empty())
     memset(types, 1, sizeof(int) * 4);      
   else {
     memset(types, 0, sizeof(int) * 4);
 
-    three_arg(argument, arg, arg2, arg3);    
+    argument_parser(argument, arg, arg2, arg3);
 
-    if (*arg3 && is_abbrev(arg3, "all"))
+    if (is_abbrev(arg3, "all"))
       showall = 1;
 
-    if (*arg2) {
+    if (!arg2.empty()) {
       if (is_abbrev(arg2, "all"))
         showall = 1;
       else if (is_abbrev(arg2, "targeted"))
@@ -5306,7 +5306,7 @@ void TBeing::doSpells(const char *argument)
   return;
 }
 
-void TBeing::doRituals(const char *argument)
+void TBeing::doRituals(const string argument)
 {
   char buf[MAX_STRING_LENGTH * 2], buffer[MAX_STRING_LENGTH * 2];
   char learnbuf[64];
@@ -5314,7 +5314,7 @@ void TBeing::doRituals(const char *argument)
   unsigned int j, l;
   Descriptor *d;
   CDiscipline *cd;
-  char arg[200], arg2[200], arg3[200];
+  string arg, arg2, arg3;
   int subtype=0, types[4], type=0, badtype=0, showall=0;
   discNumT das;
   TThing *primary=heldInPrimHand(), *secondary=heldInSecHand();
@@ -5352,17 +5352,17 @@ void TBeing::doRituals(const char *argument)
 
   *buffer = '\0';
 
-  if (!*argument)
+  if (argument.empty())
     memset(types, 1, sizeof(int) * 4);      
   else {
     memset(types, 0, sizeof(int) * 4);
 
-    three_arg(argument, arg, arg2, arg3);    
+    argument_parser(argument, arg, arg2, arg3);
 
-    if (*arg3 && is_abbrev(arg3, "all"))
+    if (is_abbrev(arg3, "all"))
       showall = 1;
 
-    if (*arg2) {
+    if (!arg2.empty()) {
       if (is_abbrev(arg2, "all"))
         showall = 1;
       else if (is_abbrev(arg2, "targeted"))
@@ -5544,7 +5544,7 @@ void TBeing::doRituals(const char *argument)
   return;
 }
 
-void TBeing::doPrayers(const char *argument)
+void TBeing::doPrayers(const string argument)
 {
   char buf[MAX_STRING_LENGTH * 2] = "\0";
   char buffer[MAX_STRING_LENGTH * 2] = "\0";
@@ -5553,7 +5553,7 @@ void TBeing::doPrayers(const char *argument)
   unsigned int j, l;
   Descriptor *d;
   CDiscipline *cd;
-  char arg[200], arg2[200], arg3[200];
+  string arg, arg2, arg3;
   int subtype=0, types[4], type=0, badtype=0, showall=0;
   discNumT das;
   TThing *primary = heldInPrimHand(), *secondary = heldInSecHand();
@@ -5575,17 +5575,17 @@ void TBeing::doPrayers(const char *argument)
   if (!(d = desc))
     return;
 
-  if(!*argument)
+  if(argument.empty())
     memset(types, 1, sizeof(int)*4);      
   else {
     memset(types, 0, sizeof(int)*4);
 
-    three_arg(argument, arg, arg2, arg3);    
+    argument_parser(argument, arg, arg2, arg3);
 
-    if (*arg3 && is_abbrev(arg3, "all"))
+    if (is_abbrev(arg3, "all"))
       showall = 1;
 
-    if (*arg2){
+    if (!arg2.empty()){
       if (is_abbrev(arg2, "all")) 
         showall=1;
         else if(is_abbrev(arg2, "targeted")) 

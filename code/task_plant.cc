@@ -103,8 +103,7 @@ int TBeing::doThiefPlant(string arg)
   TObj *obj;
   TBeing *vict;
 
-  arg=one_argument(arg, obj_arg);
-  arg=one_argument(arg, vict_arg);
+  argument_parser(arg, obj_arg, vict_arg);
 
   if(obj_arg.empty() || vict_arg.empty()){
     sendTo("Plant what on whom?\n\r");

@@ -197,10 +197,10 @@ vlogf(LOG_BUG, buf);
   return TRUE;
 }
 
-void TBeing::doThrow(const char *argument)
+void TBeing::doThrow(const string argument)
 {
   TThing *t;
-  char object[256], dir[256], vict[256];
+  string object, dir, vict;
   int rc;
   dirTypeT tdir;
 
@@ -211,23 +211,23 @@ void TBeing::doThrow(const char *argument)
     sendTo("You are too tired to throw anything!\n\r");
     return;
   }
-  *vict = '\0';
-  three_arg(argument, object, dir, vict);
-  if (!*object) {
+  vict="";
+  argument_parser(argument, object, dir, vict);
+  if (object.empty()) {
     sendTo("Syntax: throw <object> [direction] [character | distance]\n\r");
     return;
   }
 
   tdir = getDirFromChar(dir);
   if (tdir == DIR_NONE) {
-    strcpy(vict, dir);
+    vict=dir;
     tdir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
   }
-  if (!*vict) {
+  if (vict.empty()) {
     if (fight())
-      strcpy(vict, fight()->name);
+      vict=fight()->name;
     else
-      strcpy(vict, "mama-o-Brutius");
+      vict="mama-o-Brutius";
   }
   if (!(t = equipment[getPrimaryHold()])) {
     sendTo("You can only throw objects you are holding in your primary hand.\n\r");
@@ -248,14 +248,8 @@ void TBeing::doThrow(const char *argument)
     sendTo("You can only throw objects you are holding in your primary hand.\n\r");
     return;
   }
-#if 0
-  if (!t->canWear(ITEM_THROW)) {
-    sendTo("That object isn't aerodynamic enough to be thrown.\n\r");
-    return;
-  }
-#endif
 
-  rc = t->throwMe(this, tdir, vict);
+  rc = t->throwMe(this, tdir, vict.c_str());
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete t;
     t = NULL;

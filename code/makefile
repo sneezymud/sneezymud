@@ -178,7 +178,7 @@ LIBSYS=	ansi.o         database.o   socket.o		\
 	color.o        edit.o       systemtask.o	\
 	colorstring.o  handler.o    timing.o		\
 	comm.o         indexdata.o			\
-	connect.o      signals.o			
+	connect.o      signals.o    argument.o
 
 LIBSYS := $(sort $(addprefix $(OBJDIR), $(LIBSYS)))
 

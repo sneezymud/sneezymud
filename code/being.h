@@ -1780,9 +1780,9 @@ class TBeing : public TThing {
 
     void doPracSkill(const char *, spellNumT);
     void doPracDisc(const char *, int);
-    void doSpells(const char *);
-    void doRituals(const char *);
-    void doPrayers(const char *);
+    void doSpells(const string);
+    void doRituals(const string);
+    void doPrayers(const string);
     void sendSkillsList(discNumT);
     void doPractice(const char *);
     virtual void doIdea(const char *);
@@ -1804,7 +1804,7 @@ class TBeing : public TThing {
     int doSmoke(const char *);
     void doExtinguish(const string &);
     void doLight(const string &);
-    void doRefuel(const char *);
+    void doRefuel(const string);
     void doStop(const string);
     void doContinue(const char *);
     void doFish(string);
@@ -1840,7 +1840,7 @@ class TBeing : public TThing {
     void doLoglist(const char *, int);
     int doExits(const char *, cmdTypeT);
     void doWipe(const char *);
-    void doReplace(const char *);
+    void doReplace(const string);
     void doSetsev(const char *);
     void doTimeshift(const char *);
     void doInfo(const char *);
@@ -1857,7 +1857,7 @@ class TBeing : public TThing {
     int doDonate(const char *);
     int doSteal(const char *, TBeing *);
     void doRestore(const char *);
-    void doThrow(const char *);
+    void doThrow(const string);
     void doWear(const char *);
     int stickIn(TThing *o, wearSlotT pos, silentTypeT silent = SILENT_NO);
     int doEmote(const char *);

@@ -3513,26 +3513,26 @@ void TThing::refuelMeDrug(TBeing *ch, TDrugContainer *tdc)
   return;
 }
 
-void TBeing::doRefuel(const char *argument)
+void TBeing::doRefuel(const string argument)
 {
   TThing *fuel;
   TThing *t;
-  char arg[128], arg2[128], arg3[128];
+  string arg, arg2, arg3;
   int roomOnly, heldOnly;
 
-  three_arg(argument, arg, arg2, arg3);
+  argument_parser(argument, arg, arg2, arg3);
 
-  if (!*arg) {
+  if (arg.empty()) {
     sendTo("Refuel what?\n\r");
     sendTo("Syntax: refuel <light> <fuel> {\"room\" | \"held\"}\n\r");
     return;
   }
-  if (!*arg2) {
+  if (arg2.empty()) {
     sendTo("Refuel with what?\n\r");
     sendTo("Syntax: refuel <light> <fuel> {\"room\" | \"held\"}\n\r");
     return;
   }
-  if (!(fuel = get_thing_char_using(this, arg2, 0, FALSE, FALSE))) {
+  if (!(fuel = get_thing_char_using(this, arg2.c_str(), 0, FALSE, FALSE))) {
     sendTo("You don't have that fuel in your inventory!\n\r");
     sendTo("Syntax: refuel <light> <fuel> {\"room\" | \"held\"}\n\r");
     return;
@@ -3541,7 +3541,7 @@ void TBeing::doRefuel(const char *argument)
   heldOnly = is_abbrev(arg3, "held");
 
   if (roomOnly || 
-      !(t = get_thing_char_using(this, arg, 0, FALSE, FALSE))) {
+      !(t = get_thing_char_using(this, arg.c_str(), 0, FALSE, FALSE))) {
     if (heldOnly ||
         !(t = searchLinkedListVis(this, arg, roomp->getStuff()))) {
       sendTo("You can only refuel an object in the room, or held.\n\r");
