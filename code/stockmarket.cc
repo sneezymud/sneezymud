@@ -15,8 +15,8 @@ void stockSplit(sstring ticker, float pricechange)
 
   db.query("update stockinfo set shares=shares*2, price=(price/2)+%f where ticker='%s'", pricechange, ticker.c_str());
   
-  //  db.query("update stockhistory set price=price/2 where ticker='%s'",
-  //	   ticker.c_str());
+  db.query("update stockhistory set price=price/2 where ticker='%s'",
+  	   ticker.c_str());
 
   //  db.query("insert into stockhistory select max(n), ticker, max(price) from stockhistory where ticker='%s' group by ticker", ticker.c_str());
   //  db.query("insert into stockhistory select max(n), ticker, min(price) from stockhistory where ticker='%s' group by ticker", ticker.c_str());
@@ -28,8 +28,8 @@ void stockReverseSplit(sstring ticker, float pricechange)
 
   db.query("update stockinfo set shares=shares/10, price=(price*2)+%f where ticker='%s'", pricechange, ticker.c_str());
 
-  //  db.query("update stockhistory set price=price*10 where ticker='%s'",
-	   //	   ticker.c_str());
+  db.query("update stockhistory set price=price*10 where ticker='%s'",
+	   ticker.c_str());
     
   //  db.query("insert into stockhistory select max(n), ticker, max(price) from stockhistory where ticker='%s' group by ticker", ticker.c_str());
   //  db.query("insert into stockhistory select max(n), ticker, min(price) from stockhistory where ticker='%s' group by ticker", ticker.c_str());
