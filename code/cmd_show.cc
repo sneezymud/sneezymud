@@ -618,6 +618,35 @@ void TPerson::doShow(const char *argument)
         desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
 
       return;
+    } else if (is_abbrev(zonenum, "haters")){
+      sb += "Hating Mobs\n\r";
+      sb += "-------------------------------------\n\r";
+
+      for (b = character_list; b; b = b->next) {
+	TMonster *tmons = dynamic_cast<TMonster *>(b);
+	sstring haters;
+	charList *list;
+	
+	if (tmons && IS_SET(tmons->hatefield, HATE_CHAR) &&
+	    tmons->hates.clist){
+	  for (list = tmons->hates.clist; list; list = list->next) {
+	    if (list->name)
+	      haters+=list->name;
+	  }
+	}
+	
+	
+	if(!haters.empty()){
+	  sprintf(buf, "%-20.20s (room: %5d) Hates: %s", 
+		  tmons->getName(), tmons->inRoom(), haters.c_str());
+	  sb += buf;
+	  
+	}
+      }
+      sb += "\n\r";
+      if (desc)
+        desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
+      return;
     } else if (is_abbrev(zonenum, "hunters")) {
       sb += "Hunting Mobs\n\r";
       sb += "-------------------------------------\n\r";
