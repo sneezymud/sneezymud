@@ -135,6 +135,7 @@ int task_trap_door(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
           // trigger trap
   
           rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_DOOR);
+	  ch->sendTo("Your attempt to set the trap has failed.\n\r");
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;
           ch->stopTask();
@@ -240,6 +241,7 @@ int task_trap_container(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
         if (!bSuccess(ch, learning, SKILL_SET_TRAP_CONT)) {
           // trigger trap
           rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_CONT);
+	  ch->sendTo("Your attempt to set the trap has failed.\n\r");
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
             delete cont;
             cont = NULL;
@@ -376,6 +378,7 @@ int task_trap_mine(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
         if (!bSuccess(ch, learning, SKILL_SET_TRAP_MINE)) {
           // trigger trap
           rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_MINE);
+	  ch->sendTo("Your attempt to set the trap has failed.\n\r");
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;
   
@@ -485,6 +488,7 @@ int task_trap_arrow(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, 
         if (!bSuccess(ch, learning, SKILL_SET_TRAP_ARROW)) {
           // trigger trap
           rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_ARROW);
+	  ch->sendTo("Your attempt to set the trap has failed.\n\r");
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;
   
@@ -611,6 +615,7 @@ int task_trap_grenade(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *
         if (!bSuccess(ch, learning, SKILL_SET_TRAP_GREN)) {
           // trigger trap
           rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_GRENADE);
+	  ch->sendTo("Your attempt to set the trap has failed.\n\r");
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;
   
