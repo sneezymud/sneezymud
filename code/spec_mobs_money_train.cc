@@ -176,7 +176,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   // Not doing anything yet, time to start a posse  
   if (!myself->act_ptr) {
-    if(::number(0,25))
+    if(::number(0,99))
       return FALSE;
 
     if (!(myself->act_ptr = new hunt_struct())) {
