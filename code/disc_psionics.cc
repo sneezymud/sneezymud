@@ -95,43 +95,42 @@ static void convertStringColor(const sstring replacement, sstring & str)
 }
 
 // Make drunk people garble their words!
-static sstring garble(const char *arg, int chance)
+static sstring garble(const sstring &arg, int chance)
 {
-  char *tmp;
-  char temp[256];
-  char word[80], latin[80];
-  int i;
+  sstring obuf, buf, latin;
 
-  if (!*arg)
+  if (arg.empty())
     return "";
 
   if (chance <= 9)
     return arg;
 
-  for (;!isalpha(*arg); arg++);
-// get rid of bad things at the beginning of sstring
+  vector <sstring> args;
+  vector <sstring>::iterator iter;
+  unsigned int loc;
+  argument_parser(arg, args);
+  buf=obuf=arg;
 
-  // first, lets turn things into pig latin
-  *temp = '\0';
-  *word = '\0';
-  i = 0;
-  while (*arg) {
-    while (*arg && isalpha(*arg)) {
-      word[i++] = *arg;
-      arg++;
+  // first, lets turn things into pig latin, word by word
+  for(iter=args.begin();iter!=args.end();++iter){
+    ssprintf(latin, "%s%cay", (*iter).substr(1,(*iter).size()-1).c_str(),
+	     (*iter)[0]);
+    
+    // replace the original word in obuf with whitespace
+    // replace the original word in buf with the new word
+    loc=obuf.find((*iter), 0);
+    if(loc != sstring::npos){
+      obuf.erase(loc, (*iter).size());
+      obuf.insert(loc, latin.size(), ' ');
+      buf.erase(loc, (*iter).size());
+      buf.insert(loc, latin);
     }
-    word[i] = '\0';
-    i = 0;
-    sprintf(latin, "%s%cay", &word[1], word[0]);
-    sprintf(temp, "%s%s%c", temp, latin, *arg);
-    if (*arg)
-      arg++;
   }
   
-  // Since say handles spaces, no need to worry about them 
-  for (tmp = temp; *tmp; tmp++) {
+  // change some letters randomly
+  for(unsigned int i=0;i<buf.size()-1;++i){
     if (number(0, chance + 3) >= 10) {
-      switch (*tmp) {
+      switch (buf[i]) {
         case 'a':
         case 'e':
         case 'i':
@@ -145,16 +144,16 @@ static sstring garble(const char *arg, int chance)
           break;
         case 'z':
         case 'Z':
-          *tmp = 'y';
+          buf[i] = 'y';
           break;
         default:
-          if (isalpha(*tmp))
-            (*tmp)++;
+          if (isalpha(buf[i]))
+            (buf[i])++;
           break;
       }
     }
   }
-  return (temp);
+  return buf;
 }
 
 
@@ -336,6 +335,8 @@ int TBeing::doPSay(const char *arg){
       drunkNum=20;
     else 
       drunkNum=getCond(DRUNK);
+
+    drunkNum=20;
     
     mud_str_copy(garbed, garble(arg, drunkNum), 256);
 
