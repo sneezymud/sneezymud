@@ -105,13 +105,15 @@ void recvTextHandler(const char *str)
     if (!och)
       continue;
     if (och->hasWizPower(POWER_WIZNET)) {
-      och->sendTo(buf);
-    } else {
-      // do nothing
+      if (!d->isEditing()) {
+	och->sendTo(buf);
+      } else {
+	// do nothing
+      }
     }
   }
-}
-
+} 
+ 
 void mudRecvMessage()
 {
   struct mud_msgbuf qbuf;
