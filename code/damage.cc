@@ -478,6 +478,13 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     return false;
   }
 
+  for(af=v->affected;af;af=af->next){
+    if(af->type==AFFECT_BITTEN_BY_VAMPIRE){
+      v->affectRemove(af);
+      break;
+    }
+  }
+
 
 
 
