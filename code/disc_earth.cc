@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_earth.cc,v $
+// Revision 1.2  1999/09/16 04:56:10  peel
+// Conjure earth elemental requires being in an earthy sector to work (!notRangerLandSector())
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -901,6 +904,11 @@ int conjureElemEarth(TBeing * caster)
 
   if (!bPassMageChecks(caster, SPELL_CONJURE_EARTH, NULL))
     return FALSE;
+
+  if(caster->roomp->notRangerLandSector()){
+    caster->sendTo("There doesn't seem to be enough earth here to conjure an earth elemental.\n\r");
+    return FALSE;
+  }
 
   lag_t rounds = discArray[SPELL_CONJURE_EARTH]->lag;
   taskDiffT diff = discArray[SPELL_CONJURE_EARTH]->task;
