@@ -228,16 +228,21 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
     db.query("select p.name, b.talens from player p, shopownedbank b where b.shop_nr=%i and b.player_id=p.id union select c.name, b.talens from corporation c, shopownedcorpbank b where b.shop_nr=c.bank and b.shop_nr=%i and b.corp_id=c.corp_id order by talens desc", shop_nr, shop_nr);
 
     sstring buf;
+    int empty=0;
     while(db.fetchRow()){
-      buf += fmt("<c>%s - %s talens.<1>\n\r") % db["name"] %
-	talenDisplay(convertTo<int>(db["talens"]));
+      if(convertTo<int>(db["talens"]) == 0)
+	empty++;
+      else
+	buf += fmt("<c>%s - %s talens.<1>\n\r") % db["name"] %
+	  talenDisplay(convertTo<int>(db["talens"]));
     }
+    buf += fmt("%i empty accounts.\n\r") % empty;
 
     db.query("select (sb.c+sbc.c) as c, (sb.t+sbc.t) as t from (select count(*) as c, sum(talens) as t from shopownedbank where shop_nr=%i) sb, (select count(*) as c, sum(talens) as t from shopownedcorpbank where shop_nr=%i) sbc", shop_nr, shop_nr);
 
 
     if(db.fetchRow()){
-      buf += fmt("%i accounts, %s talens.\n\r") %
+      buf += fmt("%i total accounts, %s talens.\n\r") %
 	convertTo<int>(db["c"]) % 
 	talenDisplay(convertTo<int>(db["t"]));
     }
