@@ -1,3 +1,27 @@
+12-09-99 - bat
+- created an rcsls.csh script that basically reveals what files are
+  checked out, and by whom.  It's slightly better than "rlog -L -R RCS/*"
+  as it shows version and person that has it checked out.
+
+12-09-99 - Lapsos
+- Removed bamfin/bamfout/longdescr from the Wizfile data.
+  They are now part of the messages code.
+- Move most of the longDescr calls over to getLongdesc()
+- Redid the wizfile struct.  Now contains:
+  office number, block a/b start/end numbers, log severity
+- redit and edit are now setup to disallow a builder to modify a room
+  that is not in their blocks and is not their office.
+- connect.cc setup to use the office variable from the wizfile data
+  instead of hard-coded office numbers.
+- changes to goto:
+  goto <no arguments> = goto office
+  goto help = displays a series of 'useful' rooms
+- Added the following to @set:
+  @set office <char> <room-number>
+  @set blocka <char> <start-room> <end-room>
+  @set blockb <char> <start-room> <end-room>
+- Moved vlogf over to a bv setup instead of a solid value.
+
 12-7 - Peel
 - added code to deal with player killing better
   specifically, player killers get an affect added, that prevents them from
