@@ -2257,7 +2257,7 @@ int CDiscipline::useMana(byte ubCompetence, byte ubDifficulty)
 }
 
 // LIFEFORCE
-int CDiscipline::useLifeforce(byte ubCompetence, byte ubDifficulty)
+int CDiscipline::useLifeforce(int ubCompetence, int ubDifficulty)
 {
   return(max((int) ubDifficulty,(100-((int) ubCompetence))/2));
 }

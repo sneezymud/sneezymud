@@ -67,13 +67,18 @@ int TBeing::useLifeforce(spellNumT spl)
 {
   int arrayLifeforce;
   int rounds;
+  int temp;
+  int temper;
   spl = getSkillNum(spl);
   discNumT das = getDisciplineNumber(spl, FALSE);
   if (das == DISC_NONE) {
     vlogf(LOG_BUG, "useLifeforce() with bad discipline for spell=%d", spl);
     return 0;
   }
-  arrayLifeforce = getDiscipline(das)->useLifeforce(getSkillValue(spl),discArray[spl]->minLifeforce);
+  temp = discArray[spl]->minLifeforce;
+  temper = getSkillValue(spl);
+  arrayLifeforce = getDiscipline(das)->useLifeforce(temper,temp);
+//  arrayLifeforce = getDiscipline(das)->useLifeforce(getSkillValue(spl),discArray[spl]->minLifeforce);
 
 // divide total LF/rounds for each spell if spell tasked
   if (IS_SET(discArray[spl]->comp_types, SPELL_TASKED) &&
