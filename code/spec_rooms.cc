@@ -1482,7 +1482,7 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  if(done[n] && ::number(0,9999))
+  if(rp->number!=13700 && done[n] && ::number(0,9999))
     return FALSE;
   
   // loop through all directions
@@ -1511,7 +1511,8 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
   //  vlogf(LOG_PEEL, "the knot: did exits for room %i", rp->number);
 
-  done[n]=true;
+  if(rp->number!=13700)
+    done[n]=true;
   return TRUE;
 }
 
@@ -2503,6 +2504,7 @@ void assign_rooms(void)
     {2397, theKnot},
     {2398, theKnot},
     {2399, theKnot},
+    {13700, theKnot},
     {31751, bank},
     {31756, bank},
     {31759, bank},
