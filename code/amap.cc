@@ -5,12 +5,14 @@
 #include<map>
 #include<vector>
 #include<ctype.h>
+#include <unistd.h>
+#include"stdsneezy.h"
 #include"lowtools.h"
+#include"parse.h"
 
 // this code is totally janky, but it gets the job done - peel
 
 #define MAXCOORDITER 1000
-#define SCALEBY 2
 
 int sector_colors[66][3]={
   {255,255,255},  // arctic
@@ -226,12 +228,13 @@ NODE *read_room(FILE *tiny){
   return tmp;
 }
 
-void consolidate_nodes(){
+void consolidate_nodes(bool quiet=false){
   NODE *t;
   int i, j=0;
  
   for(t=head;t;t=t->next){
-    printf("\rConsolidating %i", ++j);
+    if(!quiet)
+      printf("\rConsolidating %i", ++j);
     for(i=0;i<10;++i){
       t->pdirs[i]=find_node(t->idirs[i]);
     }
@@ -239,7 +242,7 @@ void consolidate_nodes(){
 }
 
 
-int coordinates()
+int coordinates(bool quiet=false)
 {
   NODE *t;
   int i;
@@ -303,10 +306,12 @@ int coordinates()
       }
     }
   }
-
-  printf("Coordinate iteration %4i (%i rooms left)\r",
-	 ++count, roomsleft);
-  fflush(stdout);
+  
+  if(!quiet){
+    printf("Coordinate iteration %4i (%i rooms left)\r",
+	   ++count, roomsleft);
+    fflush(stdout);
+  }
 
   if(count>MAXCOORDITER)
     return false;
@@ -342,10 +347,10 @@ char *itoa(int n){
   return(s);
 }
 
-#if 0
-void check_rooms(){
+void check_rooms(int MAXROOMS){
   int count=0;
   
+
   for(int i=0;i<MAXROOMS;++i){
     for(int j=i+1;j<MAXROOMS;++j){
       if(nodes[i] && nodes[j] &&
@@ -403,11 +408,11 @@ void check_rooms(){
     }
   }
 }
-#endif
 
 
 
-void createmap(int MINLEVEL, int MAXLEVEL){
+void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY=2)
+{
   NODE *t;
   int minx=0, maxx=0, miny=0, maxy=0, mapsize=0, mapwidth, mapheight, loc;
   int newloc, cellx, celly;
@@ -537,71 +542,101 @@ void makezonelist(FILE *zone){
   }
 }
 
+void usage(){
+  printf("Syntax: amap <options>\n");
+  printf("  -f <tinyfile>   - any room file will work.  the default is to\n");
+  printf("                  - use /mud/code/lib/tinyworld.wld.\n");
+  printf("  -s <scale by>   - scaling factor for the map, default is 2\n");
+  printf("                  - factor of 1 will give you a more compact view\n");
+  printf("  -c              - print consistency errors.  this will create\n");
+  printf("                  - tons of spam, so redirect to a file.  suggest\n");
+  printf("                  - using the q option with this as well\n");
+  printf("  -q              - quiet mode, useful for slow connections\n");
+  printf("  -h <head room>  - specify the 0,0,0 coordinate room\n");
+  printf("  -r <room range> - a list of room numbers to map, in the same\n");
+  printf("                  - format as the other tools.\n");
+  printf("                  - MUST BE THE LAST ARGUMENT\n");
+  printf("\n");
+  printf("You may attempt to map multiple zones if they are connected, by\n");
+  printf("specifying both of their room ranges, ex: 2350-2374 600-649\n");
+  printf("will attempt to map both the casino and twilight square.\n");
+  printf("The mapping program needs to have a base room to use as the\n");
+  printf("0,0,0 coordinate.  With a full world map, this room is center\n");
+  printf("square, or you may specify a room to use with the -h option or\n");
+  printf("the first room listed in the room range will be used.\n");
+}
 
-int main(int argc, char **argv){
+int main(int argc, char **argv)
+{
   FILE *tiny;
   FILE *zone=fopen("/mud/code/lib/tinyworld.zon", "rt");
   NODE *last=NULL, *t;
-  int i;
+  int SCALEBY=2, rcount, ch;
   vector <int> roomrange_t;
   map <int, bool> roomrange;
-  bool use_range=false;
+  bool use_range=false, checkrooms_p=false, quiet=false;
   int headroom=100;
+  sstring infile="/mud/code/lib/tinyworld.wld";
 
-  if(argc>1 && !isdigit(argv[1][0])){
-    printf("Using '%s' as room file.\n", argv[1]);
-    tiny=fopen(argv[1], "rt");
-    parse_num_args(argc-2, argv+2, roomrange_t);
-  } else {
-    printf("Using '/mud/code/lib/tinyworld.wld' as room file.\n");
-    tiny=fopen("/mud/code/lib/tinyworld.wld", "rt");
-    parse_num_args(argc-1, argv+1, roomrange_t);
+  while ((ch = getopt(argc, argv, "r:f:s:ch:q")) != -1){
+    switch (ch) {
+      case 'r':
+	parse_num_args(argc-optind+1, argv+optind-1, roomrange_t);
+	for(unsigned int i=0;i<roomrange_t.size();++i)
+	  roomrange[roomrange_t[i]]=true;
 
-    printf("Making zone list.");
-    makezonelist(zone);
+	use_range=true;
+	printf("%i rooms in custom range\n", roomrange_t.size());
+	break;
+      case 'f':
+	infile=optarg;
+	break;
+      case 's':
+	SCALEBY=convertTo<int>(optarg);
+	printf("Scaling by %i\n", SCALEBY);
+	break;
+      case 'c':
+        checkrooms_p=true;
+	break;
+      case 'h':
+	headroom=convertTo<int>(optarg);
+	printf("Using %i as head room (0,0,0)\n", headroom);
+	break;
+      case 'q':
+	quiet=true;
+	break;
+      case '?':
+      default:
+	usage();
+	exit(0);
+    }
   }
+
+  printf("Using '%s' as room file.\n", infile.c_str());
+  tiny=fopen(infile.c_str(), "rt");
 
   if(!tiny){
     printf("Unable to open tiny file.\n");
-    printf("Syntax: amap <tinyfile> <room range>\n");
-    printf("<tinyfile> - any room file will work\n");
-    printf("  the default is to use /mud/code/lib/tinyworld.wld.\n");
-    printf("<room range> - a list of room numbers to map, in the same\n");
-    printf("  format as the other tools.\n\n");
-    printf("You may attempt to map multiple zones if they are connected, by\n");
-    printf("specifying both of their room ranges, ex: 2350-2374 600-649\n");
-    printf("will attempt to map both the casino and twilight square.\n");
-    printf("The mapping program needs to have a base room to use as the\n");
-    printf("0,0,0 coordinate.  With a full world map, this room is center\n");
-    printf("square.  With a custom room range, the first room specified in\n");
-    printf("the room range will be used.  You may specify a room number\n");
-    printf("multiple times with no ill effects. ex: 13701 13700-13899\n");
-    printf("will attempt to map dark dwarves, using 13701 as the base room\n");
-    printf("rather than 13700.\n");
+    usage();
     exit(0);
   }
 
+  printf("Making zone list.");
+  makezonelist(zone);
 
-  if(roomrange_t.size()>0)
-    use_range=true;
 
-  for(unsigned int i=0;i<roomrange_t.size();++i){
-    roomrange[roomrange_t[i]]=true;
-  }
-
-  i=0;
   head=read_room(tiny);
-
   nodes[head->num]=head;
 
-  while(!feof(tiny)){
+  for(rcount=1; !feof(tiny); ++rcount){
     if(!(t=read_room(tiny)))
       break;
 
     if(use_range && roomrange.count(t->num)==0)
       continue;
 
-    printf("\rReading room %i (%i)", ++i, t->num);
+    if(!quiet)
+      printf("\rReading room %i (%i)", rcount, t->num);
     t->next=head;
     head=t;
     nodes[t->num]=t;
@@ -614,12 +649,12 @@ int main(int argc, char **argv){
   // now we fill in the array of exits in each node to point to the nodes
   // that they lead to
   printf("\nBeginning consolidation\n");
-  consolidate_nodes();
+  consolidate_nodes(quiet);
   printf("\nFinished consolidation\n");
   
   // this lets us specify a better 0,0,0 point for custom ranges
   // the first room passed in the argument is used as the 0,0,0 point
-  if(use_range)
+  if(use_range && headroom==100)
     headroom=roomrange_t[0];
 
   // find desired room and make it the head
@@ -635,11 +670,13 @@ int main(int argc, char **argv){
   printf("Using %i as the base room (0,0,0)\n", head->num);
 
   printf("Calculating coordinates\n");
-  while(coordinates());
+  while(coordinates(quiet));
   printf("Finished coordinates\n");
-  //  check_rooms();
 
-  createmap(-10,20);
+  if(checkrooms_p)
+    check_rooms(rcount);
+    
+  createmap(-10,20,SCALEBY);
 
   t=head;
   while(t){
