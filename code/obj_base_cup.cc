@@ -150,9 +150,17 @@ sstring TBaseCup::showModifier(showModeT tMode, const TBeing *tBeing) const
 
 void TBaseCup::fillMe(const TBeing *ch, liqTypeT liq)
 {
- int water;
+  int water;
 
- if ((getDrinkType() != liq) && (getDrinkUnits() != 0)) {
+  if ((getDrinkType() != liq) && isDrinkConFlag(DRINK_PERM)) {
+    sstring mesg;
+
+    mesg = fmt("$p is filled with %s, but quickly dilutes.") %
+      DrinkInfo[liq]->name;
+
+    act(mesg, FALSE, ch, this, 0, TO_ROOM);
+    act(mesg, FALSE, ch, this, 0, TO_CHAR);
+  } else if ((getDrinkType() != liq) && (getDrinkUnits() != 0)) {
     setDrinkType(LIQ_SLIME);
     act("$p is filled (but you won't like what it's filled with!)",
          FALSE, ch, this, 0, TO_CHAR);
