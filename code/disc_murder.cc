@@ -734,8 +734,11 @@ int TBeing::doPoisonWeapon(const char * argument)
   if(*namebuf){
     if ((!(poison=searchLinkedListVis(this, namebuf, getStuff())))){
       for(int m=WEAR_NOWHERE;m<MAX_WEAR;++m){
-	if((poison=equipment[m]) && isname(namebuf, poison->name))
+	if((poison=equipment[m]) && poison->name && 
+	   isname(namebuf, poison->name))
 	  break;
+	else
+	  poison=NULL;
       }
       
       if(!poison){
@@ -746,8 +749,11 @@ int TBeing::doPoisonWeapon(const char * argument)
   } else {
     if ((!(poison=searchLinkedListVis(this, "poison", getStuff())))){
       for(int m=WEAR_NOWHERE;m<MAX_WEAR;++m){
-	if((poison=equipment[m]) && isname("poison", poison->name))
+	if((poison=equipment[m]) && poison->name &&
+	   isname("poison", poison->name))
 	  break;
+	else
+	  poison=NULL;
       }
       
       if(!poison){
