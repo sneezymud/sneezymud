@@ -3,6 +3,9 @@
 #include<math.h>
 #include<string.h>
 #include<map>
+#include<vector>
+#include<ctype.h>
+#include"lowtools.h"
 
 // this code is totally janky, but it gets the job done - peel
 
@@ -22,7 +25,6 @@
 #define SOUTHEAST 8
 #define SOUTHWEST 9
 
-#define CELLSIZE 3
 #define SCALEBY 2
 
 const char *dirstrings[]={"north", "east", "south", "west", "up", "down",
@@ -424,6 +426,7 @@ void createmap(int MINLEVEL, int MAXLEVEL){
   char *mapdata, buff[256], *newmap;
   int i=0, j, k, l;
   FILE *out=fopen("imageout.raw", "wb");
+  const int CELLSIZE=3;
 
   for(t=head;t;t=t->next){
     if(t->z<MINLEVEL || t->z>MAXLEVEL) continue;
@@ -449,6 +452,7 @@ void createmap(int MINLEVEL, int MAXLEVEL){
     if(t->z<MINLEVEL || t->z>MAXLEVEL)
       continue;
 
+    // shift the x,y values so that we always have positive coords
     t->x+=abs(minx);
     t->y+=abs(miny);
 
@@ -456,10 +460,12 @@ void createmap(int MINLEVEL, int MAXLEVEL){
     celly=t->y*CELLSIZE;
     loc=(mapwidth*celly)+cellx;
 
+    // color the room
     mapdata[loc*3]=sector_colors[t->sector][0];
     mapdata[(loc*3)+1]=sector_colors[t->sector][1];
     mapdata[(loc*3)+2]=sector_colors[t->sector][2];
 
+    // color the exits
     //0=n, 1=e, 2=s, 3=w, 4=u, 5=d 6=ne 7=nw 8=se 9=sw
     // map is upside down so north south are reversed
     for(i=0;i<10;++i){
@@ -485,7 +491,8 @@ void createmap(int MINLEVEL, int MAXLEVEL){
       }
     }
   }
-  
+
+  // scale it larger
   mapsize=mapsize*SCALEBY*SCALEBY;
   newmap=(char *)malloc(mapsize);
   for(j=0;j<mapheight;++j){
@@ -544,11 +551,34 @@ void makezonelist(FILE *zone){
 
 
 int main(int argc, char **argv){
-  FILE *tiny=fopen("/mud/code/lib/tinyworld.wld", "rt");
+  FILE *tiny;
   FILE *zone=fopen("/mud/code/lib/tinyworld.zon", "rt");
   NODE *last=NULL, *t;
   int i;
+  vector <int> roomrange_t;
+  map <int, bool> roomrange;
+  bool use_range=false;
+  int headroom=100;
 
+  if(argc>1 && !isdigit(argv[1][0])){
+    printf("Using '%s' as room file.\n", argv[1]);
+    tiny=fopen(argv[1], "rt");
+    parse_num_args(argc-2, argv+2, roomrange_t);
+  } else {
+    printf("Using '/mud/code/lib/tinyworld.wld' as room file.\n");
+    tiny=fopen("/mud/code/lib/tinyworld.wld", "rt");
+    parse_num_args(argc-1, argv+1, roomrange_t);
+  }
+
+  if(roomrange_t.size()>0)
+    use_range=true;
+
+  for(unsigned int i=0;i<roomrange_t.size();++i){
+    roomrange[roomrange_t[i]]=true;
+  }
+
+
+  printf("Making zone list.");
   makezonelist(zone);
 
   i=0;
@@ -557,6 +587,9 @@ int main(int argc, char **argv){
   while(!feof(tiny)){
     if(!(t=read_room(tiny)))
       break;
+
+    if(use_range && roomrange.count(t->num)==0)
+      continue;
 
     printf("\rReading room %i (%i)", ++i, t->num);
     t->next=head;
@@ -573,15 +606,23 @@ int main(int argc, char **argv){
   printf("\nBeginning consolidation\n");
   consolidate_nodes();
   printf("\nFinished consolidation\n");
+  
+  // this lets us specify a better 0,0,0 point for custom ranges
+  // the first room passed in the argument is used as the 0,0,0 point
+  if(use_range)
+    headroom=roomrange_t[0];
 
-  // find room 100 and make it the head
-  for(t=head;t->num!=100;t=t->next)
+  // find desired room and make it the head
+  for(t=head;t && t->num!=headroom;t=t->next)
     last=t;
 
-  last->next=t->next;
-  t->next=head;
-  head=t;
+  if(t && last){
+    last->next=t->next;
+    t->next=head;
+    head=t;
+  }
 
+  printf("Using %i as the base room (0,0,0)\n", head->num);
 
   printf("Calculating coordinates\n");
   while(coordinates());

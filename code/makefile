@@ -385,9 +385,10 @@ sqledobj: $(LIBS) objs/sqledobj.o objs/lowtools.o
 	@$(CC) -o sqledobj objs/sqledobj.o objs/lowtools.o $(LIBS) $(LDFLAGS)
 	@/usr/bin/strip sqledobj
 
-amap:	amap.cc
+amap:	$(LIBS) objs/amap.o objs/lowtools.o
 	@echo \*\*\* Making Final Link: amap
-	@$(CC) $(CFLAGS) -o amap amap.cc
+	@$(CC) -o amap objs/amap.o objs/lowtools.o $(LIBS) $(LDFLAGS)
+	@/usr/bin/strip amap
 
 # make all low tools
 lowtools: sqladdobjs sqledobj amap
