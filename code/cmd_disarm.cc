@@ -155,10 +155,11 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
   level = caster->getSkillLevel(skill);
 
   int bKnown = caster->getSkillValue(skill);
-  int level2  = victim->getSkillLevel(skill);
+//  int level2  = victim->getSkillLevel(skill);
 
-  if (caster->isNotPowerful(victim, level, skill, SILENT_YES) ||
-      !victim->isNotPowerful(caster, level2, skill, SILENT_YES)) {
+  if (caster->isNotPowerful(victim, level, skill, SILENT_YES) ) {
+// wtf is this doing here - Maror
+ //   ||  !victim->isNotPowerful(caster, level2, skill, SILENT_YES)) {
     act("You try to disarm $N, but fail miserably.",
            TRUE, caster, 0, victim, TO_CHAR);
     if (caster->isHumanoid())

@@ -1895,7 +1895,8 @@ int fumble(TBeing *caster, TBeing *victim, int level, byte bKnown)
   bool both = FALSE, done = FALSE;
   TObj *tobj;
 
-  if (caster->isNotPowerful(victim, level, SPELL_DISPEL_INVISIBLE, SILENT_NO)) {
+//  if (caster->isNotPowerful(victim, level, SPELL_DISPEL_INVISIBLE, SILENT_NO)) {
+  if (caster->isNotPowerful(victim, level, SKILL_DISARM, SILENT_NO)) {
     return SPELL_FAIL;
   }
 

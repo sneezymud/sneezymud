@@ -2913,7 +2913,7 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
     return 2;
   }
 
-  int advLearning = 0;
+//  int advLearning = 0;
   // adjust lev for stuff here
   // this allows for casting spells over level
 // COSMO DISC MARKER - change to add in deikhan and shaman, ranger for casting
@@ -2975,20 +2975,34 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
       break;
   }
 
+
+  // this is crazy atm - disabled for reconsideration - Maror
+/*  
   if (discArray[skill]->disc != discArray[skill]->assDisc) {
     CDiscipline * assDisc = getDiscipline(discArray[skill]->assDisc);
     if (assDisc) {
-      advLearning = getAdvLearning(skill);
-      lev += (level * advLearning) / 200;
+      // do not reward for just spending pracs here
+//      advLearning = getAdvLearning(skill);
+//      lev += (level * advLearning) / 200;
       advLearning = getAdvDoLearning(skill);
       lev += (level * advLearning) / 200;
     }                      
-  }                      
-
-  if (lev < vict->GetMaxLevel()) {
+  } 
+*/
+  
+  // make the chance at equal level 90%
+  // still always works on something more than 3 levels lower than you
+  double halfLev = 6;
+  double startLev = 1;  // number of levels below current where this takes effect
+  // same level = 85%, level + 10 = 16%
+  double levelDiff = (double) vict->GetMaxLevel() - (double) lev + startLev;
+  int chance = (int) (10000 * exp(-levelDiff / halfLev ));
+  if (chance < 0) chance = 10001; //roll over of int
+  int roll = ::number(1,10000);
+  if (levelDiff >= 0 && chance > roll) {
     if (!silent) {
-      act("$N is too powerful to be affected.", FALSE, this, 0, vict, TO_CHAR);
-      act("Nothing seems to happen.", TRUE, this, 0, 0, TO_ROOM);
+      act("You are unable to get past $N's defenses.", FALSE, this, 0, vict, TO_CHAR);
+      act("$n is unable to get past $N's defenses.", TRUE, this, 0, 0, TO_ROOM);
     }
     return TRUE;
   }
