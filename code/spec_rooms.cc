@@ -1473,6 +1473,58 @@ int getRandomRoom(){
   return to_room;
 }
 
+int randomMobDistribution(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
+{
+  int exitrnum=0, rc;
+  TMonster *tm;
+  TThing *tmp_t;
+
+  static int pulse;
+  ++pulse;
+
+  if(cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  // loop through all directions
+  for(dirTypeT d=DIR_NORTH;d<MAX_DIR;d++){
+    if(d==DIR_NORTHEAST || d==DIR_NORTHWEST || 
+       d==DIR_SOUTHEAST || d==DIR_SOUTHWEST)
+      continue;
+
+    // remove the old exit, if any
+    delete rp->dir_option[d];
+
+    // choose a random location
+    if(!(exitrnum=getRandomRoom()))
+      continue;
+      
+    // create the exit
+    if(!(rp->dir_option[d] = new roomDirData()))
+      continue;
+    
+    // link the exit
+    rp->dir_option[d]->to_room = exitrnum;
+  }
+
+  // this zone is inactive, so let's force a wanderAround
+  if(zone_table[rp->getZoneNum()].zone_value==1){
+    for(TThing *t=rp->getStuff();t;t=tmp_t){
+      tmp_t = t->nextThing;  // just for safety
+      
+      if((tm=dynamic_cast<TMonster *>(t))){
+	rc = tm->mobileActivity(pulse);
+	if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	  tmp_t = t->nextThing;
+	  delete tm;
+	  tm = NULL;
+	}
+      }
+    }
+  }
+
+  return TRUE;
+}
+
 
 int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
@@ -1482,7 +1534,7 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  if(rp->number!=13700 && done[n] && ::number(0,9999))
+  if(done[n] && ::number(0,9999))
     return FALSE;
   
   // loop through all directions
@@ -1511,8 +1563,7 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
   //  vlogf(LOG_PEEL, "the knot: did exits for room %i", rp->number);
 
-  if(rp->number!=13700)
-    done[n]=true;
+  done[n]=true;
   return TRUE;
 }
 
@@ -2504,7 +2555,7 @@ void assign_rooms(void)
     {2397, theKnot},
     {2398, theKnot},
     {2399, theKnot},
-    {13700, theKnot},
+    {13700, randomMobDistribution},
     {31751, bank},
     {31756, bank},
     {31759, bank},
