@@ -1235,7 +1235,7 @@ void TPerson::doLow(const sstring &arg)
 
 void TBeing::lowPath(const sstring &arg)
 {
-  dirTypeT dir;
+  dirTypeT dir, lastdir=DIR_NORTH;
   sstring buf1, buf2;
   int room=in_room;
 
@@ -1246,11 +1246,14 @@ void TBeing::lowPath(const sstring &arg)
 
   while((dir=find_path(room, is_target_room_p, 
 		       (void *)convertTo<int>(buf2), -5000, false)) >= 0){
-    ssprintf(buf1, "{DIR_%s, %i},\n\r", upper(dirs[dir]).c_str(), room);
+    ssprintf(buf1, "{DIR_%s, %i},\n\r", upper(dirs[lastdir]).c_str(), room);
     sendTo(buf1.c_str());
 
     room=real_roomp(room)->dir_option[dir]->to_room;
+    lastdir=dir;
   }
+
+  sendTo("{DIR_NONE, -1}\n\r");
 
 }
 
