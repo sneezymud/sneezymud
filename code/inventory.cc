@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: inventory.cc,v $
+// Revision 1.3  1999/10/07 06:37:27  peel
+// Closed containers that aren't set to be coseable can now be opened.
+//
 // Revision 1.2  1999/09/12 19:55:04  peel
 // Removed the volume penalty for having held items.
 //
@@ -225,7 +228,7 @@ int TRealContainer::openMe(TBeing *ch)
   if (!isClosed()) {
     ch->sendTo("But it's already open!\n\r");
     return FALSE;
-  } else if (!isCloseable()) {
+  } else if (!isCloseable() && !isClosed()) {
     ch->sendTo("You can't do that.\n\r");
     return FALSE;
   } else if (isContainerFlag(CONT_LOCKED)) {
