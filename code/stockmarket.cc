@@ -13,14 +13,7 @@ void updateStockHistory()
 void updateStocks()
 {
   TDatabase db(DB_SNEEZY);
-  float delta=0.0;
 
-  db.query("select ticker from stockinfo");
+  db.query("update stockinfo set price=price + ((floor(random() * volatility * 2) - volatility) / 100)");
 
-  while(db.fetchRow()){
-    delta=(::number(-100, 100) / 100.0);
-
-    db.query("update stockinfo set price=round(price+%f, 2) where ticker='%s'",
-	     delta, db["ticker"].c_str());
-  }
 }
