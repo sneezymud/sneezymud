@@ -655,15 +655,15 @@ int TBeing::getPlayerID() const
     myname=getName();
   }
 
-  db.query("select id from player where name='%s'", myname.c_str());
+  db.query("select id from player where lower(name)=lower('%s')", myname.c_str());
 
   if(db.fetchRow()){
     return convertTo<int>(db["id"]);
   } else {
     vlogf(LOG_BUG, fmt("Couldn't find a player_id for '%s', creating a new one.") % myname);
 
-    db.query("insert into player (name) values ('%s')", myname.c_str());
-    db.query("select id from player where name='%s'", myname.c_str());
+    db.query("insert into player (name) values (lower('%s'))", myname.c_str());
+    db.query("select id from player where lower(name)=('%s')", myname.c_str());
     
     if(db.fetchRow()){
       return convertTo<int>(db["id"]);
