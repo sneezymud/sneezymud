@@ -2124,6 +2124,11 @@ void zoneData::resetZone(bool bootTime)
               mobload = 0;
               continue;
             }
+	    
+	    if(this->zone_value != 0){
+	      mob_index[rs.arg1].doesLoad=true;
+	      mob_index[rs.arg1].numberLoad++;
+	    }
 
             count = 0;
 #if 1
