@@ -2568,6 +2568,9 @@ void TBeing::makeRentNote(TBeing *recip)
 
   char *dummy = mud_str_dup(tStBuffer.c_str());
   TNote * note = createNote(dummy);
+  if (!note) {
+    return; 
+  }
   note->addObjStat(ITEM_NEWBIE);
   *recip += *note;
   return;

@@ -5014,6 +5014,10 @@ void TBeing::doInfo(const char *arg)
       one_argument(arg, arg1);
       if (*arg1 && is_abbrev(arg1, "note")) {
         TNote *note = createNote(mud_str_dup(buf.c_str()));
+        if (!note) {
+          sendTo("No note created in doInfo, tell a God.\n\r");
+          return;
+        }
         *this += *note;
         sendTo("Note created.\n\r");
       } else

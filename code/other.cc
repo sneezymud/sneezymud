@@ -3962,7 +3962,10 @@ void Descriptor::add_comment(const char *who, const char *msg)
   char *notebuf=(char *)malloc(strlen(&buf[i]));
   strcpy(notebuf, &buf[i]);
   TNote *mynote=createNote(notebuf);
-
+  if (!mynote) {
+    character->sendTo("Could not create a note in add_comment, please tell a god.\n\r");
+    return;
+  }
   sprintf(buf, "****** Comment on %s", lower(who).c_str());
   
   mynote->postMe(character, buf, FindBoardInRoom(8, "board"));

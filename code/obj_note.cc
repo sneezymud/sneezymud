@@ -23,7 +23,11 @@ TNote * createNote(char *msg)
   TObj  *obj;
   TNote *note;
 
-  obj = read_object(GENERIC_NOTE, VIRTUAL);
+  if (!(obj = read_object(GENERIC_NOTE, VIRTUAL))) {
+     vlogf(LOG_BUG, "Unable to load note in createNote");
+     return NULL;
+  }
+				  
   note = dynamic_cast<TNote *>(obj);
 
   //  Create the note with the output.

@@ -2,13 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: systemtask.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+// systemtask.cc : tasks shelled out to the operating system
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -57,14 +51,14 @@ void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
   //  See if someone is trying to send shell commands to the script.
   if (opt) {
     if (strchr(opt, '`') || strchr(opt, '|') || strchr(opt, '>') || strchr(opt, ';')) {
-      vlogf(10, "Invalid char found in task option.  Tasks disabled.");
+      vlogf(LOG_BUG, "Invalid char found in task option.  Tasks disabled.");
       taskstatus = false;
       return;
     }
   }
   //  Allocate space for the new task.
   if (!(tmp = new _task(own, tsk))) {
-    vlogf(10, "ERROR: SystemTask::AddTask(): malloc of struct _task failed");
+    vlogf(LOG_BUG, "ERROR: SystemTask::AddTask(): malloc of struct _task failed");
     return;
   }
   //  Insert the new task into the linked list.
@@ -106,7 +100,7 @@ void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
       sprintf(lbuf, "bin/helpsearch %s", opt);
       break;
     default:
-      vlogf(10, "SystemTask::AddTask(): Unknown task!");
+      vlogf(LOG_BUG, "SystemTask::AddTask(): Unknown task!");
       remove(top);
       top = top->next;
       delete tmp;
@@ -114,7 +108,9 @@ void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
   }
   sprintf(strchr(lbuf, '\000'), " >%s 2>&1", TMPFILE);
   tmp->cmd = mud_str_dup(lbuf);
-  top->owner->sendTo("Your task has been added to the queue.\n\r");
+
+  if (top && top->owner)
+    top->owner->sendTo("Your task has been added to the queue.\n\r");
 }
 
 //
@@ -135,14 +131,14 @@ void SystemTask::CheckTask()
   //  Check on the running task.
   } else {
     if (waitpid(top->pid, &pstatus, WNOHANG) < 0) {
-      vlogf(1, "INFO: task '%s' completed.", top->cmd);
+      vlogf(LOG_SILENT, "INFO: task '%s' completed.", top->cmd);
       //  Process the output.
       memset((char *) &fstatus, 0, sizeof(struct stat));
       if (stat(TMPFILE, &fstatus) < 0) 
 #if defined(LINUX)
-        vlogf(2, "WARNING: SystemTask::CheckTask(): stat()");
+        vlogf(LOG_BUG, "WARNING: SystemTask::CheckTask(): stat()");
 #else
-        vlogf(2, "WARNING: SystemTask::CheckTask(): stat(): errno=%d", errno);
+        vlogf(LOG_BUG, "WARNING: SystemTask::CheckTask(): stat(): errno=%d", errno);
 #endif
 
       // there's no real technical reason we couldn't shove all the
@@ -156,8 +152,12 @@ void SystemTask::CheckTask()
         // Create a note and put the output in it.
         TNote * note = createNote(mud_str_dup(str.c_str()));
         // Inform the requester and give them the note.
-        *(top->owner) += *note;
-        top->owner->sendTo("Your task has completed.  A note with your output is in your inventory.\n\r");
+	if (note) {
+          *(top->owner) += *note;
+          top->owner->sendTo("Your task has completed.  A note with your output is in your inventory.\n\r");
+        } else {
+	  top->owner->sendTo("There was a problem making a note, please tell a god.\n\r");
+        }
       } else if (fstatus.st_size > maxnotesize) {
         sprintf(file, "tmp/%s.output", top->owner->getName());
         rename(TMPFILE, file);
@@ -207,7 +207,7 @@ string SystemTask::Tasks(TBeing *ch, const char *args)
 void SystemTask::remove(_task *tsk) 
 {
   if (!tsk) {
-    vlogf(1, "WARNING: SystemTask::remove(): trying to remove NULL task");
+    vlogf(LOG_BUG, "WARNING: SystemTask::remove(): trying to remove NULL task");
     return;
   }
   if (tsk == top) 
@@ -234,12 +234,12 @@ void SystemTask::start_task()
     return;
 
   if (top->pid) {
-    vlogf(10, "ERROR: SystemTask::start_task(): task '%s' is already running.", top->cmd);
+    vlogf(LOG_BUG, "ERROR: SystemTask::start_task(): task '%s' is already running.", top->cmd);
     return;
   }
   unlink(TMPFILE);
   if (forktask(top)) {
-    vlogf(10, "ERROR: SystemTask::AddTask(): forktask() for task '%s' failed.", top->cmd);
+    vlogf(LOG_BUG, "ERROR: SystemTask::AddTask(): forktask() for task '%s' failed.", top->cmd);
     top->owner->sendTo("Your task failed and has been deleted.\n\r");
     remove(top);
   }
@@ -254,15 +254,15 @@ int SystemTask::forktask(_task *tsk)
   char cmd[32], *argv[4];
 
   if (!tsk) {
-    vlogf(10, "SystemTask::forktask tsk is NULL!");
+    vlogf(LOG_BUG, "SystemTask::forktask tsk is NULL!");
     return(1);
   }
   if (!tsk->cmd) {
-    vlogf(10, "SystemTask::forktask tsk->cmd is NULL!");
+    vlogf(LOG_BUG, "SystemTask::forktask tsk->cmd is NULL!");
     remove(tsk);
     return(1);
   }
-  vlogf(-1, "INFO: task '%s' started.", tsk->cmd);
+  vlogf(LOG_SILENT, "INFO: task '%s' started.", tsk->cmd);
   top->owner->sendTo("Your task has started.\n\r");
   
   sscanf(tsk->cmd, "%s", cmd);
@@ -278,7 +278,7 @@ int SystemTask::forktask(_task *tsk)
     _exit(-1);
   }
   if (tsk->pid < 0) {
-    vlogf(10, "ERROR: SystemTask::forktask(): vfork() failed.");
+    vlogf(LOG_BUG, "ERROR: SystemTask::forktask(): vfork() failed.");
     return(1);
   }
   return(0);
