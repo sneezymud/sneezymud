@@ -697,7 +697,7 @@ void usage(){
 int main(int argc, char **argv)
 {
   FILE *tiny=NULL, *logf=NULL;
-  FILE *zone=fopen("/mud/code/lib/tinyworld.zon", "rt");
+  FILE *zone=fopen("/mud/backups/tinyworld.zon", "rt");
   NODE *last=NULL, *t;
   int SCALEBY=2, rcount, ch, zmax=20, zmin=-10, tmp;
   vector <int> roomrange_t;
