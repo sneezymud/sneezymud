@@ -29,6 +29,7 @@ class TMoney : public TObj {
     virtual bool isPluralItem() const;
     virtual void onObjLoad();
     virtual sstring getNameForShow(bool, bool, const TBeing *) const;
+    void describeContains(const TBeing *) const;
 
     int getMoney() const;
     void setMoney(int n);

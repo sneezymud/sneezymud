@@ -1744,6 +1744,8 @@ void Descriptor::clientShoppingList(const char *argument, TMonster *keeper, int 
     i = dynamic_cast<TObj *>(t);
     if (!i)
       continue;
+    if(dynamic_cast<TMoney *>(t))
+      continue;
     if (character->canSee(i)) {
       if ((i->obj_flags.cost > 1) &&
           !i->isObjStat(ITEM_NEWBIE) &&

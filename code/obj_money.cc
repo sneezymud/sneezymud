@@ -56,6 +56,7 @@ sstring TMoney::statObjInfo() const
   return a;
 }
 
+
 TMoney *create_money(int amount)
 {
   TObj *obj;
@@ -71,74 +72,7 @@ TMoney *create_money(int amount)
   money = dynamic_cast<TMoney *>(obj);
   mud_assert(money != NULL, "create_money created something that was not TMoney.  obj was: %s", obj ? obj->getName() : "NO OBJECT");
 
-  extraDescription *new_descr;
-  char buf[80];
-
-  money->swapToStrung();
-
-  // clean off any descriptions that came through from the tinyworld file
-  while ((new_descr = money->ex_description)) {
-    money->ex_description = money->ex_description->next;
-    delete new_descr;
-  }
-
-  new_descr = new extraDescription();
-
-  delete [] money->name;
-  delete [] money->shortDescr;
-  delete [] money->getDescr();
-  if (amount == 1) {
-    money->name = mud_str_dup("talens money");
-    money->shortDescr = mud_str_dup("a talen");
-    money->setDescr(mud_str_dup("One miserable talen lies here."));
-
-    new_descr->keyword = mud_str_dup("talen money");
-    new_descr->description = mud_str_dup("One miserable talen.\n\r");
-
-  } else {
-    money->name = mud_str_dup("talens money");
-    money->shortDescr = mud_str_dup("some talens");
-    if (amount > 100000)
-      sprintf(buf, "A tremendously HUGE pile of talens lies here.");
-    else if (amount > 50000)
-      sprintf(buf, "A HUGE pile of talens lies here.");
-    else if (amount > 10000)
-      sprintf(buf, "A LARGE pile of talens lies here.");
-    else if (amount > 1000)
-      sprintf(buf, "A nice-sized pile of talens lies here.");
-    else if (amount > 500)
-      sprintf(buf, "A pile of talens lies here.");
-    else if (amount > 100)
-      sprintf(buf, "A small pile of talens lies here.");
-    else if (amount > 50)
-      sprintf(buf, "A tiny pile of talens lies here.");
-    else
-      sprintf(buf, "A few talens have been left in a pile here.");
-
-    money->setDescr(mud_str_dup(buf));
-    new_descr->keyword = mud_str_dup("talens money");
-    if (amount < 10) {
-      sprintf(buf, "There are %d talens.\n\r", amount);
-      new_descr->description = mud_str_dup(buf);
-    } else if (amount < 100) {
-      sprintf(buf, "There are about %d talens.\n\r", 10 * (amount / 10));
-      new_descr->description = mud_str_dup(buf);
-    } else if (amount < 10000) {
-      sprintf(buf, "You guess there are %d talens.\n\r", 100 * (amount / 100));
-      new_descr->description = mud_str_dup(buf);
-    } else
-      new_descr->description = mud_str_dup("There are a LOT of talens.\n\r");
-  }
-  new_descr->next = NULL;
-  money->ex_description = new_descr;
-
-  money->obj_flags.wear_flags = ITEM_TAKE;
-  money->obj_flags.decay_time = -1;
   money->setMoney(amount);
-  money->obj_flags.cost = amount;
-
-  money->setVolume(amount/2 + amount%2);
-  money->setWeight(amount/75.0);
 
   return money;
 }
@@ -158,6 +92,13 @@ int TMoney::getMe(TBeing *ch, TThing *sub)
   return TRUE;
 }
 
+void TMoney::describeContains(const TBeing *ch) const
+{
+  //  ch->sendTo(COLOR_OBJECTS, fmt("%s has %i talens in it.\n\r") % 
+  //	     sstring(getName()).cap() % getMoney());
+}
+
+
 int TMoney::getMoney() const
 {
   return money;
@@ -166,6 +107,77 @@ int TMoney::getMoney() const
 void TMoney::setMoney(int n)
 {
   money = n;
+  obj_flags.cost=n;
+
+
+  extraDescription *new_descr;
+  char buf[80];
+  int amount=getMoney();
+  
+  swapToStrung();
+  
+  // clean off any descriptions that came through from the tinyworld file
+  while ((new_descr = ex_description)) {
+    ex_description = ex_description->next;
+    delete new_descr;
+  }
+  
+  new_descr = new extraDescription();
+  
+  delete [] name;
+  delete [] shortDescr;
+  delete [] getDescr();
+  if (amount == 1) {
+    name = mud_str_dup("talens money");
+    shortDescr = mud_str_dup("a talen");
+    setDescr(mud_str_dup("One miserable talen lies here."));
+    
+    new_descr->keyword = mud_str_dup("talen money");
+    new_descr->description = mud_str_dup("One miserable talen.\n\r");
+    
+  } else {
+    name = mud_str_dup("talens money");
+    shortDescr = mud_str_dup("some talens");
+    if (amount > 100000)
+      sprintf(buf, "A tremendously HUGE pile of talens lies here.");
+    else if (amount > 50000)
+      sprintf(buf, "A HUGE pile of talens lies here.");
+    else if (amount > 10000)
+      sprintf(buf, "A LARGE pile of talens lies here.");
+    else if (amount > 1000)
+      sprintf(buf, "A nice-sized pile of talens lies here.");
+    else if (amount > 500)
+      sprintf(buf, "A pile of talens lies here.");
+    else if (amount > 100)
+      sprintf(buf, "A small pile of talens lies here.");
+    else if (amount > 50)
+      sprintf(buf, "A tiny pile of talens lies here.");
+    else
+      sprintf(buf, "A few talens have been left in a pile here.");
+    
+    setDescr(mud_str_dup(buf));
+    new_descr->keyword = mud_str_dup("talens money");
+    if (amount < 10) {
+      sprintf(buf, "There are %d talens.\n\r", amount);
+      new_descr->description = mud_str_dup(buf);
+    } else if (amount < 100) {
+      sprintf(buf, "There are about %d talens.\n\r", 10 * (amount / 10));
+      new_descr->description = mud_str_dup(buf);
+    } else if (amount < 10000) {
+      sprintf(buf, "You guess there are %d talens.\n\r", 100 * (amount / 100));
+      new_descr->description = mud_str_dup(buf);
+    } else
+      new_descr->description = mud_str_dup("There are a LOT of talens.\n\r");
+  }
+  new_descr->next = NULL;
+  ex_description = new_descr;
+  
+  obj_flags.wear_flags = ITEM_TAKE;
+  obj_flags.decay_time = -1;
+
+  setVolume(amount/100);
+  setWeight(amount/10000.0);
+
 }
 
 int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
@@ -181,16 +193,18 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
   (*this)--;
   amount = getMoney();
   if (amount == 1) {
-    ch->sendTo("There was one talen.\n\r");
+    //    ch->sendTo("There was one talen.\n\r");
   } else {
     int amt2 = 0;
     if (!isMyCorpse && !ch->isImmortal())
       amt2 = (int) (amount * FactionInfo[ch->getFaction()].faction_tithe / 100.0);
 
+#if 0
     if (!amt2)
       ch->sendTo(fmt("There were %d talens.\n\r") % amount);
     else
       ch->sendTo(fmt("There were %d talens, and you tithe %d of them.\n\r") % amount % amt2);
+#endif
   }
 
   if (ch->getMoney() > 500000 && (amount > 100000))

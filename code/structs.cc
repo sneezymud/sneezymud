@@ -681,9 +681,42 @@ TThing& TThing::operator += (TThing& t)
               (t.inRoom() == ROOM_AUTO_RENT)),
       "TThing += with t.inRoom()");
 
+  TThing *i;
+  TRoom *rp;
+
+  TMoney *m=dynamic_cast<TMoney *>(&t);
+  if(m){
+    for (i = getStuff(); i; i = i->nextThing) {
+      TMoney *tMoney;
+
+      if (i == m || !(tMoney = dynamic_cast<TMoney *>(i)))
+        continue;
+
+      rp = NULL;
+
+      if (!(rp = roomp)) {
+        if (parent) {
+          rp = parent->roomp;
+        } else {
+          if (!(rp = tMoney->roomp)) {
+            if (tMoney->parent) {
+              rp = tMoney->parent->roomp;
+            }
+          }
+        }
+      }
+      // set m to the full amount
+      m->setMoney(m->getMoney() + tMoney->getMoney());
+
+      // ditch the pile we picked up
+      --(*tMoney);
+      delete tMoney;
+
+    }
+  }
+
   TComponent *c = dynamic_cast<TComponent *>(&t);
   if (c) {
-    TThing *i;
     for (i = getStuff(); i; i = i->nextThing) {
       TComponent *tComp;
       // Basically find another component of the same type that is:

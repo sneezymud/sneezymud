@@ -258,6 +258,8 @@ class TThing {
     virtual int scavengeMe(TBeing *, TObj **) { return FALSE; }
     virtual int moneyMeBeing(TThing *, TThing *) { return FALSE; }
     virtual int moneyMeMoney(TBeing *, TThing *) { return FALSE; }
+    virtual int getMoney() const;
+    virtual void setMoney(int);
     virtual void logMe(const TBeing *, const char *) const;
     virtual int powerstoneMe(TBeing *, int, byte);
     virtual int divineMe(TBeing *, int, byte);

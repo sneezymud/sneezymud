@@ -1676,8 +1676,8 @@ class TBeing : public TThing {
     void setDamroll(int d);
     int getBank() const;
     void setBank(int bank);
-    int getMoney() const;
-    void setMoney(int money);
+    virtual int getMoney() const;
+    virtual void setMoney(int money);
     void addToMoney(int money, moneyTypeT type);
     void giveMoney(TBeing *, int money, moneyTypeT);
     sexTypeT getSex() const;

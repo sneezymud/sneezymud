@@ -1220,12 +1220,50 @@ void TBeing::setBank(int bank)
 
 int TBeing::getMoney() const
 {
-  return points.money;
+  int total=0;
+  for(TThing *t=getStuff();t;t=t->nextThing){
+    total+=t->getMoney();
+  }
+
+  return total;
+  //  return total+points.money;
 }
 
-void TBeing::setMoney(int money)
+void TBeing::setMoney(int m)
 {
-  points.money = money;
+  int diff=getMoney()-m, tmp;
+  TMoney *money;
+  TThing *nextt;
+  
+  // subtract money
+  if(diff > 0){
+    for(TThing *t=getStuff();t && diff>0;t=nextt){
+      nextt=t->nextThing;
+      tmp=t->getMoney();
+
+      if(tmp >= diff){
+	t->setMoney((tmp-diff));
+	diff=0;
+      } else {
+	t->setMoney(0);
+	diff-=tmp;
+	
+	if(dynamic_cast<TMoney *>(t)){
+	  --(*t);
+	  delete t;
+	}
+      }
+    }
+  } else {
+    // add money
+    if (!(money = create_money(-diff)))
+      vlogf(LOG_BUG, "Problem creating money");
+    else 
+      *this+=*money;
+  }
+
+  // just saving this for the pfile, so we can track it externally
+  points.money = getMoney();
 }
 
 sexTypeT TBeing::getSex() const

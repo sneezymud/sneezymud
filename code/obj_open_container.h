@@ -40,6 +40,8 @@ class TOpenContainer : public TBaseContainer {
     virtual void putMoneyInto(TBeing *, int);
     virtual void describeContains(const TBeing *) const;
     virtual void lowCheck();
+    virtual int getMoney() const;
+    virtual void setMoney(int);
     virtual int sellCommod(TBeing *, TMonster *, int, TThing *);
     virtual int putSomethingInto(TBeing *, TThing *);
     virtual sstring compareMeAgainst(TBeing *, TObj *);

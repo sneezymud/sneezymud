@@ -1646,6 +1646,8 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     i = dynamic_cast<TObj *>(t);
     if (!i)
       continue;
+    if(dynamic_cast<TMoney *>(t))
+      continue;
     if (ch->canSee(i)) {
       if ((i->getValue() > 1) &&
           !i->isObjStat(ITEM_NEWBIE) &&
@@ -1680,7 +1682,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
           continue;
         }
         // pawn shop shouldn't junk
-        if (shop_index[shop_nr].in_room != 562 || owned) {
+        if (shop_index[shop_nr].in_room != 562 || owned){
           keeper->doSay("How did I get this piece of junk?!?!");
           rc = keeper->doJunk("", i);
           // doJunk might fail (cursed, etc), delete regardless
