@@ -353,7 +353,7 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != repair->number); shop_nr++);
   
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  repair->number);
   }
   shoplog(shop_nr, buyer, dynamic_cast<TMonster *>(repair), fixed_obj->getName(), tmp_cost, "repairing");
   
@@ -881,7 +881,7 @@ int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TO
       for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != repair->number); shop_nr++);
 
       if (shop_nr >= shop_index.size()) {
-	vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  number);
+	vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") % repair->number);
 	return FALSE;
       }
       
