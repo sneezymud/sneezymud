@@ -3972,7 +3972,11 @@ void Descriptor::add_comment(const char *who, const char *msg)
   }
   sprintf(buf, "****** Comment on %s", sstring(who).lower().c_str());
   
-  mynote->postMe(character, buf, FindBoardInRoom(8, "board"));
+  *character += *mynote;
+
+  character->doAt(fmt("8 post note %s") % buf, false);
+
+  //  mynote->postMe(character, buf, FindBoardInRoom(8, "board"));
 
 }
 

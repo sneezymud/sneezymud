@@ -193,13 +193,14 @@ void board_reset_board(boardStruct *b)
   return;
 }
 
-boardStruct *FindBoardInRoom(int room, const char *arg)
+boardStruct *FindBoardInRoom(TBeing *ch, const char *arg)
 {
   char boardname[MAX_INPUT_LENGTH];
   char newarg[256];  
   TThing *o;
   boardStruct *nb;
   TRoom *rp;
+  int room=ch->in_room;
 
   strcpy(newarg,arg);
   one_argument(newarg, boardname);
@@ -207,9 +208,21 @@ boardStruct *FindBoardInRoom(int room, const char *arg)
   if (!(rp = real_roomp(room)))
     return NULL;
 
+  for (o = ch->getStuff(); o; o = o->nextThing) {
+    TObj *to = dynamic_cast<TObj *>(o);
+    if (to && to->spec == SPEC_BOARD) {
+      for (nb = board_list; nb; nb = nb->next) {
+        if (nb->Rnum == o->number)
+          return (nb);
+      }
+      vlogf(LOG_PROC, fmt("Uh oh! Board with proc, but not in board list in room %d") %  room);
+      return NULL;
+    }
+  }
+
+
   for (o = rp->getStuff(); o; o = o->nextThing) {
     TObj *to = dynamic_cast<TObj *>(o);
-    //    if (to && to->spec == SPEC_BOARD && isname(boardname, to->name)) {
     if (to && to->spec == SPEC_BOARD) {
       for (nb = board_list; nb; nb = nb->next) {
         if (nb->Rnum == o->number)
@@ -250,7 +263,7 @@ int TBoard::boardHandler(TBeing *ch, cmdTypeT cmd, const char *arg)
   if (!ch || (cmd >= MAX_CMD_LIST))
     return FALSE;
 
-  if (!(nb = FindBoardInRoom(ch->in_room, arg)))
+  if (!(nb = FindBoardInRoom(ch, arg)))
     return FALSE;
 
   if (!ch->desc)
