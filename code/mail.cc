@@ -1,6 +1,7 @@
 #include "stdsneezy.h"
 #include "mail.h"
 #include "database.h"
+#include "shop.h"
 
 // may not exceed NAME_SIZE (15) chars
 static const char * const SNEEZY_ADMIN = "SneezyMUD Administration";
@@ -66,21 +67,19 @@ int postmaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj
     return FALSE;               /* so mobs don't get caught here */
 
   switch (cmd) {
+    case CMD_WHISPER:
+      return shopWhisper(ch, myself, find_shop_nr(myself->number), arg);    
     case CMD_MAIL: 
       ch->postmasterSendMail(arg, myself);
       return TRUE;
-      break;
     case CMD_CHECK: 
       ch->postmasterCheckMail(myself);
       return TRUE;
-      break;
     case CMD_RECEIVE:
       ch->postmasterReceiveMail(myself);
       return TRUE;
-      break;
     default:
       return FALSE;
-      break;
   }
 }
 
@@ -97,7 +96,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
 {
   char recipient[100], *tmp;
   charFile st;
-  int i, imm = FALSE;
+  int i, imm = FALSE, amt, shop_nr=find_shop_nr(me->number);
 
 // added this check - bat
   if (!mail_ok(this))
@@ -137,14 +136,18 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
       return;
     }
 
-    if(getMoney() < FACTION_STAMP_PRICE && !imm){
-      me->doTell(fname(name), fmt("Bulk mailing costs %d talens.") % FACTION_STAMP_PRICE);
+    amt = (int)((float)FACTION_STAMP_PRICE * shop_index[shop_nr].getProfitBuy(NULL, this));
+
+    if(getMoney() < amt && !imm){
+      me->doTell(fname(name), fmt("Bulk mailing costs %d talens.") % amt);
       me->doTell(fname(name), "...which I see you can't afford.");
       return;
     }
   } else {
-    if (getMoney() < STAMP_PRICE && !imm) {
-      me->doTell(fname(name), fmt("A stamp costs %d talens.") % STAMP_PRICE);
+    amt = (int)((float)STAMP_PRICE * shop_index[shop_nr].getProfitBuy(NULL, this));
+
+    if (getMoney() < amt && !imm) {
+      me->doTell(fname(name), fmt("A stamp costs %d talens.") % amt);
       me->doTell(fname(name), "...which I see you can't afford.");
       return;
     }
@@ -152,9 +155,10 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
 
   act("$n starts to write some mail.", TRUE, this, 0, 0, TO_ROOM);
   if (!imm) {
-    me->doTell(fname(name), fmt("I'll take %d talens for the stamp.") %
-	       (strcmp(recipient, "faction")?STAMP_PRICE:FACTION_STAMP_PRICE));
-    addToMoney(-(strcmp(recipient, "faction")?STAMP_PRICE:FACTION_STAMP_PRICE), GOLD_HOSPITAL);
+    me->doTell(fname(name), fmt("I'll take %d talens for the stamp.") % amt);
+    giveMoney(me, amt, GOLD_SHOP);
+    shoplog(shop_nr, this, me, recipient, amt, "mailing");
+
   } else if (isImmortal()) {
     me->doTell(fname(name), "Since you're high and mighty, I'll waive the fee.");
   } else {

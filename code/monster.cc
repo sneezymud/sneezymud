@@ -548,7 +548,7 @@ bool TMonster::isShopkeeper() const {
      spec==SPEC_LOAN_SHARK || spec==SPEC_BANKER ||
      spec==SPEC_DOCTOR     || spec==SPEC_DIVMAN ||
      spec==SPEC_ATTUNER    || spec==SPEC_ENGRAVER ||
-     spec==SPEC_SHARPENER)
+     spec==SPEC_SHARPENER  || spec==SPEC_POSTMASTER)
     return true;
 
   return false;
