@@ -4007,6 +4007,7 @@ void TTool::describeObjectSpecifics(const TBeing *ch) const
                   "almost gone")))))));
 }
 
+
 void TObj::describeMe(TBeing *ch) const
 {
   char buf[80], buf2[256];
@@ -4036,34 +4037,11 @@ void TObj::describeMe(TBeing *ch) const
     } else 
       ch->sendTo("It can't be rented.\n\r");
 #endif
-    int volume = getVolume();
-    volume = ((volume >= 100) ? volume/100 * 100 :
-              ((volume >= 10) ? volume/10 * 10 : volume));
 
     // weight >= 1.0
     float wgt = getTotalWeight(TRUE);
-    int volumeTmp, yards = 0;
-    int feet = 0;
-    int inches;
-    char volumeBuf[256] = "\0";
 
-    volumeTmp = volume;
-    if (volumeTmp > CUBIC_INCHES_PER_YARD) {
-      yards = volume/CUBIC_INCHES_PER_YARD;
-      volumeTmp = volume % CUBIC_INCHES_PER_YARD;
-      sprintf(volumeBuf, "%d cubic yard%s, ", yards, (yards == 1) ? "" : "s");
-    }
-    if (volumeTmp > CUBIC_INCHES_PER_FOOT) {
-      feet = volumeTmp/CUBIC_INCHES_PER_FOOT;
-      volumeTmp = volume % CUBIC_INCHES_PER_FOOT;
-      sprintf(volumeBuf + strlen(volumeBuf), "%d cubic %s, ", feet, (yards == 1) ? "foot" : "feet");
-    }
-    if ((inches = volumeTmp))
-      sprintf(volumeBuf + strlen(volumeBuf), "%d cubic inch%s", inches, (inches == 1) ? "" : "es");
-    if (!volume) {
-      // this only kicks in if no volume
-      sprintf(volumeBuf + strlen(volumeBuf), "0 cubic inches");
-    }
+    sstring volumeBuf = volumeDisplay(getVolume());
 
     if (compareWeights(wgt, 1.0) != 1) 
       ch->sendTo(fmt("It weighs about %d pound%s and occupies roughly %s.\n\r") % 
