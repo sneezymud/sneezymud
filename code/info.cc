@@ -3721,6 +3721,11 @@ void TBeing::doLimbs(const sstring & argument)
     }
   }
 
+  if (v == this)
+    strcpy(who, "your");
+  else
+    strncpy(who, v->hshr(), 5);
+
   if (!found)
     sendTo(fmt("All %s limbs are perfectly healthy!\n\r") % who);
 }
