@@ -249,10 +249,7 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       act("$n buys $p.", TRUE, ch, this, keeper, TO_NOTVICT);
     }
 
-    ch->addToMoney(-price, GOLD_COMM);
-
-    if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY))
-      keeper->addToMoney(price, GOLD_COMM);
+    ch->giveMoney(keeper, price, GOLD_COMM);
   } else {
     // this happens with sub zero weight components
     vlogf(LOG_BUG, fmt("Bogus num %d in buyMe component at %d.  wgt=%.2f") %  num % ch->in_room % getWeight());
@@ -400,9 +397,8 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 
     sellReducePrice(ch, keeper, obj2, price);
 
-    if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY))
-      keeper->addToMoney(-price, GOLD_COMM);
-    ch->addToMoney(price, GOLD_COMM);
+    keeper->giveMoney(ch, price, GOLD_COMM);
+
     keeper->doTell(ch->getName(), fmt("Thanks, here's your %d talen%s.") %
 		   price, (price > 1 ? "s" : ""));
     act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);

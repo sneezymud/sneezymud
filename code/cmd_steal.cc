@@ -144,8 +144,7 @@ static int steal(TBeing * thief, TBeing * victim)
     gold = min(5000, gold);
     LogDam(thief, SKILL_STEAL,gold);
     if (gold > 0) {
-      thief->addToMoney(gold, GOLD_INCOME);
-      victim->addToMoney(-gold, GOLD_INCOME);
+      victim->giveMoney(thief, gold, GOLD_INCOME);
       
       thief->sendTo(fmt("You have just stolen %d talen%s from %s.\n\r") % gold % 
             ((gold > 1) ? "s" : "") % victim->getName());

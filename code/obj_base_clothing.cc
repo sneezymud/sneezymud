@@ -661,10 +661,7 @@ bool TBaseClothing::isPluralItem() const
 
 void TBaseClothing::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
-  ch->addToMoney(-cost, GOLD_SHOP_ARMOR);
-  if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY)) {
-    keeper->addToMoney(cost, GOLD_SHOP_ARMOR);
-  }
+  ch->giveMoney(keeper, cost, GOLD_SHOP_ARMOR);
 
   shoplog(shop_nr, ch, keeper, getName(), cost, "buying");
 
@@ -680,9 +677,7 @@ void TBaseClothing::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_
 
 void TBaseClothing::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
-  ch->addToMoney(cost, GOLD_SHOP_ARMOR);
-  if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY))
-    keeper->addToMoney(-cost, GOLD_SHOP_ARMOR);
+  keeper->giveMoney(ch, cost, GOLD_SHOP_ARMOR);
 
   shoplog(shop_nr, ch, keeper, getName(), -cost, "selling");
 

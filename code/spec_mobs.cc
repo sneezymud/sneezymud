@@ -63,6 +63,7 @@
 #include "corporation.h"
 #include "shopowned.h"
 #include "pathfinder.h"
+#include "shop.h"
 
 const int GET_MOB_SPE_INDEX(int d)
 {
@@ -304,8 +305,7 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     }
     if (cmd == CMD_BUY) {
       if (ch->getMoney() >= type) {
-        ch->addToMoney(-type, GOLD_SHOP);
-        myself->addToMoney(type, GOLD_SHOP);
+        ch->giveMoney(myself, type, GOLD_SHOP);
       } else {
         ch->sendTo("You don't have that much money.\n\r");
         fclose(fp);
@@ -6337,6 +6337,8 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   static div_struct *job;
 
   switch (cmd) {
+    case CMD_WHISPER:
+      return shopWhisper(ch, me, find_shop_nr(me->number), arg);
     case CMD_GENERIC_DESTROYED:
       delete (div_struct *) me->act_ptr;
       me->act_ptr = NULL;
@@ -6476,7 +6478,11 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       }
       sprintf(buf, "Thanks for your business, I'll take your %d talens payment in advance!", cost);
       me->doSay(buf);
-      ch->addToMoney(-cost, GOLD_HOSPITAL);
+      ch->giveMoney(me, cost, GOLD_SHOP);
+      shoplog(find_shop_nr(me->number), ch, me, item->getName(), 
+	      cost, "divinating");
+
+
       ch->sendTo(COLOR_BASIC, fmt("%s concentrates deeply on %s.\n\r") % me->getName() % item->getName());
       ch->sendTo(fmt("%s conjures up a cloud of smoke.\n\rInside the cloud of smoke you see...\n\r") % me->getName());
       ch->statObjForDivman(item);

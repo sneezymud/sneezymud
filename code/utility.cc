@@ -1579,6 +1579,20 @@ bool TRoom::roomIsEmpty(bool ignore_imms) const
   return TRUE;
 }
 
+void TBeing::giveMoney(TBeing *ch, int money, moneyTypeT type)
+{
+  if(money < 0){
+    vlogf(LOG_BUG, fmt("%s just tried to give negative money (%i) to %s") %
+	  getName() % money % ch->getName());
+    return;
+  }
+    
+
+  addToMoney(-money, type);
+  ch->addToMoney(money, type);
+}
+
+
 void TBeing::addToMoney(int money, moneyTypeT type)
 {
   int lev = 0;

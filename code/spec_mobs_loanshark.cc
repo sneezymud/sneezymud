@@ -247,8 +247,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 	       getPenalty(shop_nr, ch->getName()));
 
 
-      me->addToMoney(-amt, GOLD_SHOP);
-      ch->addToMoney(amt, GOLD_SHOP);
+      me->giveMoney(ch, amt, GOLD_SHOP);
       buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
       me->saveItems(buf);
 

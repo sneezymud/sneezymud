@@ -342,8 +342,7 @@ static int getRepairItem(TBeing *repair, TBeing *buyer, int ticket, TNote *obj)
 
   obj_index[fixed_obj->getItemIndex()].addToNumber(-1);
   fixed_obj->setStructPoints(fixed_obj->maxFix(repair, DEPRECIATION_YES));
-  buyer->addToMoney(-tmp_cost, GOLD_REPAIR);
-  repair->addToMoney(tmp_cost, GOLD_REPAIR); 
+  buyer->giveMoney(repair, tmp_cost, GOLD_REPAIR);
   
   *buyer += *fixed_obj;
   buyer->doSave(SILENT_YES);

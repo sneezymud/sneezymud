@@ -231,24 +231,32 @@ void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
     return;
   }
 
-  me->doTell(ch->getName(), fmt("Ok, you are depositing %i gold.") % gold);
-  ch->addToMoney(-gold, GOLD_XFER);
-  corp.setMoney(corp.getMoney() + gold);
-  corp.corpLog(ch->getName(), "deposit", gold);
-  
+  // find the banker
   shop_nr=corp.getBank();
   for(banker=character_list;banker;banker=banker->next){
     if(banker->number==shop_index[shop_nr].keeper)
       break;
   }
 
-  if(banker){
-    banker->addToMoney(gold, GOLD_XFER);
-    dynamic_cast<TMonster *>(banker)->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-    shoplog(shop_nr, ch, dynamic_cast<TMonster *>(banker), "talens", gold, "corporate deposit");
-  } else
-    vlogf(LOG_BUG, fmt("couldn't find banker for shop_nr=%i, gold=%i!") % 
-	  shop_nr % gold);
+  if(!banker){
+    vlogf(LOG_BUG, fmt("couldn't find banker for shop %i!") % shop_nr);
+    me->doTell(ch->getName(), "I couldn't find the bank!  Tell a god!");
+    return;
+  }
+
+  me->doTell(ch->getName(), fmt("Ok, you are depositing %i gold.") % gold);
+
+  // transfer
+  ch->giveMoney(banker, gold, GOLD_XFER);
+
+  corp.setMoney(corp.getMoney() + gold);
+  corp.corpLog(ch->getName(), "deposit", gold);
+  
+  // save
+  dynamic_cast<TMonster *>(banker)->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+
+  // log
+  shoplog(shop_nr, ch, dynamic_cast<TMonster *>(banker), "talens", gold, "corporate deposit");
 
   me->doTell(ch->getName(), fmt("Your balance is %i.") % corp.getMoney());
 }
@@ -296,7 +304,8 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
   int tmp=corp.getMoney();
 
   if(tmp < gold){
-    me->doTell(ch->getName(), fmt("Your corporation only has %i talens.") % tmp);
+    me->doTell(ch->getName(), fmt("Your corporation only has %i talens.") % 
+	       tmp);
     return;
   }
 
@@ -306,18 +315,17 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
     if(banker->number==shop_index[shop_nr].keeper)
       break;
   }
-
-  if(banker){
-    bank_amt=banker->getMoney();
-    shoplog(shop_nr, ch, dynamic_cast<TMonster *>(banker), "talens", -gold, "corporate withdrawal");
-  } else {
+  
+  if(!banker){
     vlogf(LOG_BUG, fmt("couldn't find banker for shop_nr=%i!") % shop_nr);
-    me->doTell(ch->getName(), "serious problem!");
+    me->doTell(ch->getName(), "I couldn't find the bank, tell a god!");
     return;
   }
+  
+  bank_amt=banker->getMoney();
 
   if(bank_amt < gold){
-    me->doTell(ch->getName(), "I'm afraid your bank has overextended itself, and doesn't have your cash available write now.");
+    me->doTell(ch->getName(), "I'm afraid your bank has overextended itself, and doesn't have your cash available right now.");
     return;
   }
 
@@ -325,12 +333,14 @@ void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
   corp.setMoney(corp.getMoney() - gold);
   corp.corpLog(ch->getName(), "withdrawal", -gold);
 
-  ch->addToMoney(gold, GOLD_XFER);
-  banker->addToMoney(-gold, GOLD_XFER);
-   dynamic_cast<TMonster *>(banker)->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
+  banker->giveMoney(ch, gold, GOLD_XFER);
+
+  dynamic_cast<TMonster *>(banker)->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 
   me->doTell(ch->getName(), fmt("Ok, here is %i talens.") % gold);
   me->doTell(ch->getName(), fmt("Your balance is %i.") % (tmp-gold));
+
+  shoplog(shop_nr, ch, dynamic_cast<TMonster *>(banker), "talens", -gold, "corporate withdrawal");
 }
 
 

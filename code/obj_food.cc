@@ -992,10 +992,7 @@ void TFood::nukeFood()
 
 void TFood::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
-  ch->addToMoney(-cost, GOLD_SHOP_FOOD);
-  if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY)) {
-    keeper->addToMoney(cost, GOLD_SHOP_FOOD);
-  }
+  ch->giveMoney(keeper, cost, GOLD_SHOP_FOOD);
 
   shoplog(shop_nr, ch, keeper, getName(), cost, "buying");
 
@@ -1011,9 +1008,7 @@ void TFood::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 
 void TFood::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
-  ch->addToMoney(cost, GOLD_SHOP_FOOD);
-  if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY))
-    keeper->addToMoney(-cost, GOLD_SHOP_FOOD);
+  keeper->giveMoney(ch, cost, GOLD_SHOP_FOOD);
 
   shoplog(shop_nr, ch, keeper, getName(), -cost, "selling");
 

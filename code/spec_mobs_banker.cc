@@ -74,8 +74,7 @@ int bankWithdraw(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, in
   }
 
   teller->doTell(ch->getName(), "Thank you.");
-  ch->addToMoney(money, GOLD_XFER);
-  myself->addToMoney(-money, GOLD_XFER);
+  myself->giveMoney(ch, money, GOLD_XFER);
   myself->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
   
   
@@ -114,8 +113,7 @@ int bankDeposit(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, int
   }
   
   teller->doTell(ch->getName(), "Thank you.");
-  ch->addToMoney(-money, GOLD_XFER);
-  myself->addToMoney(money, GOLD_XFER);
+  ch->giveMoney(myself, money, GOLD_XFER);
   myself->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
   
   db.query("update shopownedbank set talens=talens+%i where player_id=%i and shop_nr=%i", money, ch->getPlayerID(), shop_nr);
@@ -175,8 +173,7 @@ int bankBuyAccount(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, 
   }
   
   db.query("insert into shopownedbank (player_id, shop_nr, talens) values (%i, %i, 0)", ch->getPlayerID(), shop_nr);
-  ch->addToMoney(-100, GOLD_XFER);
-  myself->addToMoney(100, GOLD_XFER);
+  ch->giveMoney(myself, 100, GOLD_XFER);
   shoplog(shop_nr, ch, myself, "talens", 100, "new account");
   myself->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
   

@@ -351,8 +351,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
               return TRUE;
             }
             int cashCost = min(ch->getMoney(), cost);
-            ch->addToMoney(-cashCost, GOLD_HOSPITAL);
-	    me->addToMoney(cashCost, GOLD_HOSPITAL);
+	    ch->giveMoney(me, cashCost, GOLD_HOSPITAL);
 	    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
 		    cashCost, "regenerating");
@@ -386,8 +385,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
                 return TRUE;
               } else {
                 int cashCost = min(ch->getMoney(), cost);
-                ch->addToMoney(-cashCost, GOLD_HOSPITAL);
-		me->addToMoney(cashCost, GOLD_HOSPITAL);
+		ch->giveMoney(me, cashCost, GOLD_HOSPITAL);
 		me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 		shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
 			cashCost, "mending");
@@ -419,8 +417,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             return TRUE;
           } else {
             int cashCost = min(ch->getMoney(), cost);
-            ch->addToMoney(-cashCost, GOLD_HOSPITAL);
-	    me->addToMoney(cashCost, GOLD_HOSPITAL);
+	    ch->giveMoney(me, cashCost, GOLD_HOSPITAL);
 	    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
 		    cashCost, "healing");
@@ -448,8 +445,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             return TRUE;
           } else {
             int cashCost = min(ch->getMoney(), cost);
-            ch->addToMoney(-cashCost, GOLD_HOSPITAL);
-	    me->addToMoney(cashCost, GOLD_HOSPITAL);
+	    ch->giveMoney(me, cashCost, GOLD_HOSPITAL);
 	    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
 		    cashCost, "expelling");
@@ -492,8 +488,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	      return TRUE;
 	    } else {
 	      int cashCost = min(ch->getMoney(), cost);
-	      ch->addToMoney(-cashCost, GOLD_HOSPITAL);
-	      me->addToMoney(cashCost, GOLD_HOSPITAL);
+	      ch->giveMoney(me, cashCost, GOLD_HOSPITAL);
 	      me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 	      shoplog(shop_nr, ch, me, DiseaseInfo[affToDisease(*aff)].name, 
 		      cashCost, "disease");
@@ -522,8 +517,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
               return TRUE;
             } else {
               int cashCost = min(ch->getMoney(), cost);
-              ch->addToMoney(-cashCost, GOLD_HOSPITAL);
-	      me->addToMoney(cashCost, GOLD_HOSPITAL);
+	      ch->giveMoney(me, cashCost, GOLD_HOSPITAL);
 	      me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 	      shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
 		      cashCost, "blindness");
@@ -552,11 +546,34 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 {
   TThing *t;
-  TBeing *healed;
-  int num, cost;
+  TBeing *healed, *doctor;
+  int num, cost, shop_nr=-1;
 
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
+
+  // find the doctor
+  switch(rp->number){
+    case 416:
+      shop_nr=144; // gh
+      break;
+    case 1353:
+      shop_nr=147; // bm
+      break;
+    case 3736:
+      shop_nr=145; // logrus
+      break;
+  }
+  for(doctor=character_list;shop_nr>=0 && doctor;doctor=doctor->next){
+    if(doctor->number==shop_index[shop_nr].keeper)
+      break;
+  }
+  
+  if(!doctor){
+    vlogf(LOG_BUG, fmt("couldn't find doctor for shop_nr=%i!") % shop_nr);
+    return FALSE;
+  }
+
 
   for (t = rp->getStuff(); t; t = t->nextThing) {
     healed = dynamic_cast<TBeing *>(t);
@@ -598,21 +615,44 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
         healed->sendTo("The hospital works wonders on your body.\n\r");
         healed->addToHit(num);
         healed->sendTo(fmt("The charge for the healing is %d talens.\n\r") % cost);
-        healed->addToMoney(-cost, GOLD_HOSPITAL);
+        healed->giveMoney(doctor, cost, GOLD_HOSPITAL);
+	shoplog(shop_nr, healed, dynamic_cast<TMonster *>(doctor), "healing", 
+		cost, "healing");
       }
     }
   }
   return FALSE;
 }
 
-int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
+int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 {
   char buf[256];
-  int opt, cost;
+  int opt, cost, shop_nr=-1;
   wearSlotT i;
+  TBeing *doctor;
 
   if (!ch || dynamic_cast<TMonster *>(ch))
     return FALSE;
+
+  // find the doctor
+  switch(rp->number){
+    case 418:
+      shop_nr=144; // gh
+      break;
+  }
+
+  for(doctor=character_list;shop_nr>=0 && doctor;doctor=doctor->next){
+    if(doctor->number==shop_index[shop_nr].keeper)
+      break;
+  }
+
+  
+  if(!doctor){
+    vlogf(LOG_BUG, fmt("couldn't find doctor for shop_nr=%i!") % shop_nr);
+    ch->sendTo("Couldn't find the doctor, tell a god!");
+    return FALSE;
+  }
+
 
   cost = 150 * ch->GetMaxLevel();
   if (cmd == CMD_LIST) {
@@ -633,7 +673,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
       return TRUE;
     }
     if ((opt >= 1) && (opt <= 3)) {
-      ch->addToMoney(-cost, GOLD_HOSPITAL);
+      ch->giveMoney(doctor, cost, GOLD_HOSPITAL);
 
       switch (opt) {
         case 1:
@@ -648,6 +688,8 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
 
           // this was added due to fighting in/near the hospitals
           ch->addToWait(combatRound(6));
+	  shoplog(shop_nr, ch, dynamic_cast<TMonster *>(doctor), 
+		  "hit points", cost, "full heal");
           break;
         case 2:
           ch->setMana(ch->manaLimit());
@@ -656,6 +698,8 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
 
           // this was added due to fighting in/near the hospitals
           ch->addToWait(combatRound(6));
+	  shoplog(shop_nr, ch, dynamic_cast<TMonster *>(doctor),
+		  "mana", cost, "full heal");
           break;
         case 3:
           ch->setLifeforce(500);
@@ -664,6 +708,8 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
 
           // this was added due to fighting in/near the hospitals
           ch->addToWait(combatRound(6));
+	  shoplog(shop_nr, ch, dynamic_cast<TMonster *>(doctor), 
+		  "life force", cost, "full heal");
           break;
         default:
           ch->sendTo("That's not available at THIS hospital!\n\r");

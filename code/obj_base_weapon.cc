@@ -1628,10 +1628,7 @@ sstring TBaseWeapon::getNameForShow(bool useColor, bool useName, const TBeing *c
 
 void TBaseWeapon::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
-  ch->addToMoney(-cost, GOLD_SHOP_WEAPON);
-  if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY)) {
-    keeper->addToMoney(cost, GOLD_SHOP_WEAPON);
-  }
+  ch->giveMoney(keeper, cost, GOLD_SHOP_WEAPON);
 
   shoplog(shop_nr, ch, keeper, getName(), cost, "buying");
 
@@ -1647,9 +1644,7 @@ void TBaseWeapon::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr
 
 void TBaseWeapon::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
 {
-  ch->addToMoney(cost, GOLD_SHOP_WEAPON);
-  if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY))
-    keeper->addToMoney(-cost, GOLD_SHOP_WEAPON);
+  keeper->giveMoney(ch, cost, GOLD_SHOP_WEAPON);
 
   shoplog(shop_nr, ch, keeper, getName(), -cost, "selling");
 

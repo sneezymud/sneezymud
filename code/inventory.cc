@@ -842,9 +842,7 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
       act("$n gives some money to $N.", 1, this, 0, vict, TO_NOTVICT);
     }
 
-    if (!hasWizPower(POWER_GOD))
-      addToMoney(-amount, GOLD_XFER);
-    vict->addToMoney(amount, GOLD_XFER);
+    giveMoney(vict, amount, GOLD_XFER);
 
     saveChar(ROOM_AUTO_RENT);
     vict->saveChar(ROOM_AUTO_RENT);
