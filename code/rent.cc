@@ -3257,12 +3257,12 @@ float old_ac_lev = mob->getACLevel();
     }
 
     mob->setLifeforce(9000);
-    mob->setMana(10);
-    mob->setMaxMana(10);
+    mob->setMana(mob->manaLimit());
     mob->setPiety(mob->pietyLimit());
-
-    mob->setMaxMove(50);
     mob->setMove(mob->moveLimit());
+
+    //    mob->setMaxMana(10);
+    //    mob->setMaxMove(50);
   
     if (fscanf(fp, " %d ", &tmp) != 1) {
       vlogf(LOG_BUG, "Error reading follower data (%s mobs %d) (13)", arg, num);
