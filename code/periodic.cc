@@ -17,6 +17,7 @@
 #include "obj_opal.h"
 #include "obj_seethru.h"
 #include "obj_plant.h"
+#include "obj_egg.h"
 
 // this function gets called ever 120 pulse (30 secs?)
 // it should randomly load a deity and/or extract extra deitys
@@ -1291,6 +1292,7 @@ int TObj::objectTickUpdate(int pulse)
 {
   TBeing *ch = NULL;
   TThing *t;
+  TEgg *egg;
   int rc;
 
   if (!name) {
@@ -1429,6 +1431,32 @@ int TObj::objectTickUpdate(int pulse)
     }
   }
   
+  // Incubate eggs
+  if ((egg = dynamic_cast<TEgg *>(this))) {
+    if (egg->getEggTouched()) {
+      int myTimer=egg->eggIncubate();
+      TRoom *rp;
+
+      if (!(rp = roomp)) {
+        if (!(rp = parent->roomp)) {
+          rp = parent->parent->roomp;
+        }
+      }
+
+      if (myTimer == 1) {
+        if (rp) {
+          sendrpf(rp, "%s begins to wiggle from within.\n\r", good_cap(shortDescr).c_str());
+        }
+      } else if (myTimer <= 0) {
+        if (rp && !(rp->isRoomFlag(ROOM_NO_MOB))) {
+          egg->hatch(rp);
+          egg->makeScraps();
+          return DELETE_THIS;
+        }
+      }
+    }
+  }
+
   // this relies on fact that:
   // weatherAndTime() and objectTickUpdate both trigger off of !tick_update
   // from socket.cc.  weatherAndTime has already been called

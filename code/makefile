@@ -239,7 +239,7 @@ LIBOBJ =obj_armor.o		obj_light.o		\
 	obj_jewelry.o		obj_worn.o		\
 	obj_key.o		obj.o			\
 	obj_casino_chip.o	obj_poison.o            \
-	obj_handgonne.o
+	obj_handgonne.o         obj_egg.o
 
 LIBOBJ := $(sort $(addprefix $(OBJDIR), $(LIBOBJ)))
 
@@ -3628,7 +3628,7 @@ objs/create_objs.o: obj_base_container.h obj_trash.h obj_book.h obj_trap.h
 objs/create_objs.o: obj_portal.h obj_seethru.h obj_arrow.h obj_base_weapon.h
 objs/create_objs.o: obj_gun.h obj_general_weapon.h obj_base_clothing.h
 objs/create_objs.o: obj_magic_item.h obj_potion.h obj_base_cup.h obj_scroll.h
-objs/create_objs.o: obj_staff.h obj_wand.h
+objs/create_objs.o: obj_staff.h obj_wand.h obj_egg.h obj_food.h
 objs/create_rooms.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/create_rooms.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/create_rooms.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -3862,6 +3862,7 @@ objs/db.o: obj_armor_wand.h obj_wand.h obj_magic_item.h obj_jewelry.h
 objs/db.o: obj_other_obj.h obj_potion.h obj_scroll.h obj_staff.h
 objs/db.o: obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
 objs/db.o: obj_vehicle.h obj_casino_chip.h obj_poison.h obj_handgonne.h
+objs/db.o: obj_egg.h
 objs/disc_adventuring.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_adventuring.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_adventuring.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -9663,6 +9664,46 @@ objs/obj_drug_container.o: obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/obj_drug_container.o: being.h person.h monster.h account.h extern.h
 objs/obj_drug_container.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/obj_drug_container.o: materials.h colorstring.h obj_drug_container.h
+objs/obj_egg.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/obj_egg.o: /usr/include/stddef.h /usr/include/machine/ansi.h
+objs/obj_egg.o: /usr/include/math.h /usr/include/sys/cdefs.h stdsneezy.h
+objs/obj_egg.o: /usr/include/g++/cstdio /usr/include/stdio.h
+objs/obj_egg.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/obj_egg.o: /usr/include/g++/ctime /usr/include/time.h
+objs/obj_egg.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/obj_egg.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
+objs/obj_egg.o: /usr/include/machine/endian.h /usr/include/g++/cctype
+objs/obj_egg.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/obj_egg.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/obj_egg.o: /usr/include/g++/cstring /usr/include/string.h
+objs/obj_egg.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/obj_egg.o: /usr/include/errno.h /usr/include/g++/string
+objs/obj_egg.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
+objs/obj_egg.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/obj_egg.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/obj_egg.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/obj_egg.o: /usr/include/g++/libio.h /usr/include/g++/iterator
+objs/obj_egg.o: /usr/include/g++/stl_relops.h /usr/include/g++/stl_iterator.h
+objs/obj_egg.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
+objs/obj_egg.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
+objs/obj_egg.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/obj_egg.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
+objs/obj_egg.o: /usr/include/g++/new.h /usr/include/g++/new
+objs/obj_egg.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/obj_egg.o: /usr/include/g++/stl_uninitialized.h
+objs/obj_egg.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
+objs/obj_egg.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
+objs/obj_egg.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
+objs/obj_egg.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
+objs/obj_egg.o: /usr/include/g++/sstream low.h enum.h spells.h structs.h
+objs/obj_egg.o: parse.h immunity.h discipline.h spell2.h argument.h db.h
+objs/obj_egg.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/obj_egg.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/obj_egg.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
+objs/obj_egg.o: create.h thing.h room.h obj.h spec_objs.h connect.h
+objs/obj_egg.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/obj_egg.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
+objs/obj_egg.o: colorstring.h obj_food.h obj_egg.h
 objs/obj_expandable_container.o: stdsneezy.h /usr/include/g++/cstdio
 objs/obj_expandable_container.o: /usr/include/stdio.h
 objs/obj_expandable_container.o: /usr/include/sys/cdefs.h
@@ -11999,7 +12040,8 @@ objs/periodic.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/periodic.o: materials.h colorstring.h combat.h mail.h disc_monk.h
 objs/periodic.o: obj_component.h obj_player_corpse.h obj_base_corpse.h
 objs/periodic.o: obj_base_container.h obj_opal.h obj_seethru.h obj_plant.h
-objs/periodic.o: obj_expandable_container.h obj_open_container.h
+objs/periodic.o: obj_expandable_container.h obj_open_container.h obj_egg.h
+objs/periodic.o: obj_food.h
 objs/pets.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/pets.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/pets.o: /usr/include/g++/cstdlib /usr/include/stdlib.h

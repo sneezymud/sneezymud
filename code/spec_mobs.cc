@@ -1106,6 +1106,42 @@ int poisonHit(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   return TRUE;
 }
 
+int poisonBite(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
+{
+  TBeing *vict;
+
+  if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
+    return FALSE;
+  if (!(vict = myself->fight()))
+    return FALSE;
+  if (!vict->sameRoom(*myself))
+    return FALSE;
+  if (vict->isImmune(IMMUNE_POISON, 20))
+    return FALSE;
+  if (vict->affectedBySpell(SPELL_POISON))
+    return FALSE;
+
+  if (::number(0,9))
+    return FALSE;
+
+  affectedData aff;
+  aff.type = SPELL_POISON;
+  aff.level = myself->GetMaxLevel();
+  aff.duration = (aff.level) * UPDATES_PER_MUDHOUR;
+  aff.modifier = -20;
+  aff.location = APPLY_STR;
+  aff.bitvector = AFF_POISON;
+
+  act("$n bares $s fangs and bites $N hard!", 0, myself, 0, vict, TO_NOTVICT);
+  act("$n bares $s fangs and bites you hard!", 0, myself, 0, vict, TO_VICT);
+
+  act("$N has been poisoned!", 0, myself, 0, vict, TO_NOTVICT);
+  vict->sendTo("You've been poisoned!\n\r");
+  vict->affectTo(&aff);
+
+  return TRUE;
+}
+
 // These are {MobVNum, ToRoom, ChanceOfSwallow, ChanceOfDeath}
 // if ChanceOfDeath == -1 then they cannot die from this mob.
 const int SWALLOWER_TO_ROOM_PROC[][4] = {
@@ -7786,6 +7822,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "konastis's guard", konastisGuard},
   {FALSE, "hold'em player", holdemPlayer},
   {FALSE, "postman", postman},
+  {TRUE, "poison bite", poisonBite},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

@@ -26,6 +26,7 @@ class TBaseLight;
 class TDrug;
 class TDrugContainer;
 class TFood;
+class TEgg;
 class TPen;
 class TOpal;
 class TPortal;

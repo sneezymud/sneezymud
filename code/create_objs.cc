@@ -34,6 +34,7 @@ extern "C" {
 #include "obj_scroll.h"
 #include "obj_staff.h"
 #include "obj_wand.h"
+#include "obj_egg.h"
 
 static void update_obj_menu(const TBeing *ch, const TObj *obj)
 {
@@ -2146,6 +2147,68 @@ void change_bed_value1(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT ty
   o->changeBedValue1(ch, arg, type);
 }
 
+void change_egg_value1(TBeing *ch, TEgg *o, const char *arg, editorEnterTypeT type)
+{
+  int loc_update;
+
+  if (type != ENTER_CHECK) {
+    if (!*arg || (*arg == '\n')) {
+      ch->specials.edit = CHANGE_OBJ_VALUES;
+      change_obj_values(ch, o, "", ENTER_CHECK);
+      return;
+    }
+  }
+  loc_update = convertTo<int>(arg);
+
+  switch (ch->specials.edit) {
+    case CHANGE_EGG_VALUE1:
+      switch (loc_update) {
+	case 1:
+	  ch->sendTo(VT_HOMECLR);
+	  ch->sendTo("Set whether touched.\n\r--> ");
+	  ch->specials.edit = CHANGE_EGG_TOUCHED;
+	  return;
+	case 2:
+	  ch->sendTo(VT_HOMECLR);
+	  ch->sendTo("Enter new food fill value.\n\r--> ");
+	  ch->specials.edit = CHANGE_EGG_FILL;
+	  return;
+      }
+      break;
+    case CHANGE_EGG_TOUCHED:
+      if (type != ENTER_CHECK) {
+        if ((loc_update < 0) || (loc_update > 1)) {
+          ch->sendTo("Please enter 0 or 1.\n\r");
+          return;
+        }
+        o->setEggTouched(loc_update);
+        ch->specials.edit = CHANGE_EGG_VALUE1;
+        change_egg_value1(ch, o, "", ENTER_CHECK);
+        return;
+      }
+      break;
+    case CHANGE_EGG_FILL:
+      if (type != ENTER_CHECK) {
+        if ((loc_update < 0) || (loc_update > 24)) {
+          ch->sendTo("Please enter a number between 0 and 24.\n\r");
+          return;
+        }
+        o->setFoodFill(loc_update);
+        ch->specials.edit = CHANGE_EGG_VALUE1;
+        change_egg_value1(ch, o, "", ENTER_CHECK);
+        return;
+      }
+      break;
+    default:
+      return;
+  }
+  ch->sendTo(VT_HOMECLR);
+  ch->sendTo("1) Touched flag (0 = false, 1 = true).\n\r");
+  ch->sendTo("2) Amount of food.\n\r");
+  ch->sendTo(VT_CURSPOS, 10, 1);
+  ch->sendTo("Enter your choice to modify.\n\r--> ");
+}
+
 void change_portal_value1(TBeing *ch, TPortal *o, const char *arg, editorEnterTypeT type)
 {
   int loc_update;
@@ -2658,6 +2721,11 @@ void obj_edit(TBeing *ch, const char *arg)
     case CHANGE_MAGICITEM_LEARNEDNESS:
     case CHANGE_MAGICITEM_VALUE1:
       change_magicitem_value1(ch, ch->desc->obj, arg, ENTER_REENTRANT);
+      return;
+    case CHANGE_EGG_VALUE1:
+    case CHANGE_EGG_TOUCHED:
+    case CHANGE_EGG_FILL:
+      change_egg_value1(ch, dynamic_cast<TEgg *>(ch->desc->obj), arg, ENTER_REENTRANT);
       return;
     case CHANGE_PORTAL_VALUE1:
     case CHANGE_PORTAL_VNUM:

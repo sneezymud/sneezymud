@@ -607,6 +607,11 @@ void assign_item_info()
 				    "Damage Level * 4 and Damage Precision", 10000, 0,
 				    "Bit flags", 2147483647, 0,
 				    "Ammo type", AMMO_LEAD_SHOT, AMMO_LEAD_SHOT);
+  ItemInfo[ITEM_EGG] = new itemInfo("Egg","an egg",
+     "Special: Touched; Number of hours filled", 0, 0,
+     "Incubation period", 500, 0,
+     "VNum of mob to hatch", 2147483647, 0,
+     "1 = Poisoned, 2 = Spoiled, 3 = both", 3, 0);
   
 };
 

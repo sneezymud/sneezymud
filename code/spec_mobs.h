@@ -160,7 +160,8 @@ const int SPEC_LOTTERY_REDEEMER   =175;
 const int SPEC_KONASTIS_GUARD     =176;
 const int SPEC_HOLDEM_PLAYER      =177;
 const int SPEC_POSTMAN            =178;
-const int NUM_MOB_SPECIALS        =179;
+const int SPEC_POISON_BITE        =179;
+const int NUM_MOB_SPECIALS        =180;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

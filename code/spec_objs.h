@@ -28,7 +28,7 @@ const int SPEC_SHOPINFO_BOARD  =    94;
 const int SPEC_HIGHROLLERS_BOARD = 96;
 const int SPEC_FACTIONSCORE_BOARD = 97;
 
-const int NUM_OBJ_SPECIALS = 150;
+const int NUM_OBJ_SPECIALS = 151;
 
 struct TObjSpecs {
   bool assignable;

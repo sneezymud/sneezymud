@@ -2,17 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: create.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/09/28 22:14:10  lapsos
-// Added code for mobile strings.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -30,13 +19,15 @@ extern void change_component_value4(TBeing *, TObj *, const char *, editorEnterT
 extern void change_portal_value1(TBeing *, TPortal *, const char *, editorEnterTypeT);
 extern void change_portal_value3(TBeing *, TPortal *, const char *, editorEnterTypeT);
 extern void change_portal_value4(TBeing *, TPortal *, const char *, editorEnterTypeT);
-extern void change_chest_value2(TBeing *, TRealContainer *, const char *, editorEnterTypeT);
+extern void change_chest_value2(TBeing *, TOpenContainer *, const char *, editorEnterTypeT);
 extern void change_magicitem_value1(TBeing *, TObj *, const char *, editorEnterTypeT);
 extern void change_bed_value1(TBeing *, TObj *, const char *, editorEnterTypeT);
 extern void change_trap_value2(TBeing *, TObj *, const char *, editorEnterTypeT);
 extern void change_trap_value3(TBeing *, TObj *, const char *, editorEnterTypeT);
 extern void change_weapon_value1(TBeing *, TObj *, const char *, editorEnterTypeT);
-
+extern void change_weapon_value2(TBeing *, TObj *, const char *, editorEnterTypeT);
+extern void change_weapon_value3(TBeing *, TObj *, const char *, editorEnterTypeT);
+extern void change_egg_value1(TBeing *, TEgg *, const char *, editorEnterTypeT);
 
 
 enum editorChangeTypeT {
@@ -180,6 +171,12 @@ enum editorChangeTypeT {
      CHANGE_WEAPON_VALUE1,
      CHANGE_WEAPON_MAX_SHARP,
      CHANGE_WEAPON_SHARP,
+     CHANGE_WEAPON_VALUE2,
+     CHANGE_WEAPON_DAMAGE_LEV,
+     CHANGE_WEAPON_TYPE,
+     CHANGE_WEAPON_VALUE3,
+     CHANGE_WEAPON_DAMAGE_PREC,
+     CHANGE_WEAPON_QUALITY,
      CHANGE_OBJ_SPEC,
      CHANGE_OBJ_MAX_EXIST,
      CHANGE_MAGICITEM_VALUE1,
@@ -252,6 +249,9 @@ enum editorChangeTypeT {
      SEDIT_DELETE,
      SEDIT_MODIFY,
      SEDIT_DISPLAY,
+     CHANGE_EGG_VALUE1,
+     CHANGE_EGG_TOUCHED,
+     CHANGE_EGG_FILL
 };
 
 #endif
