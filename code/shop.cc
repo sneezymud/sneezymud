@@ -2329,6 +2329,10 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       if(/* !(access & SHOPACCESS_OWNER) && */ !(access & SHOPACCESS_SELL)){
 	sprintf(buf, "%s Sorry, you don't have access to do that.", ch->getName());
 	myself->doTell(buf);
+	sprintf(buf, "%s And remember, when you do sell this shop, I won't pay you for the inventory.", ch->getName());
+	myself->doTell(buf);
+	sprintf(buf, "%s I'll just give you the money I have on me, but nothing for the inventory.", ch->getName());
+	myself->doTell(buf);	
 	return FALSE;
       }
 
@@ -2353,12 +2357,16 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	}
       }
 
+#if 0
       for(tt=myself->getStuff();tt;tt=tt->nextThing){
 	o=dynamic_cast<TObj *>(tt);
 	value+=o->obj_flags.cost;
       }
+#endif
+
       value+=myself->getMoney();
       ch->setMoney(ch->getMoney()+value);
+
 
       saveGovMoney("shop purchase", -value);      
 
