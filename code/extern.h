@@ -451,6 +451,7 @@ extern void closeQueue();
 extern void mudSendMessage(int, int, const char *);
 extern void recvTextHandler(const char *);
 extern void mudRecvMessage();
+extern const sstring RandomWord();
 }
 
 // these needs C++ linkage to avoid conflict with functions in stdlib
