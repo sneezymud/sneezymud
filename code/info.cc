@@ -430,9 +430,7 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
     return newDescr;
   }
 
-  vlogf(LOG_BUG, "autoFormatDesc: before garble");
   garbled = garble(regStr, getCond(DRUNK));
-  vlogf(LOG_BUG, "autoFormatDesc: after garble");
 
   vector <sstring> words;
   vector <sstring>::iterator iter;
