@@ -4981,6 +4981,12 @@ void TBeing::doSpells(const char *argument)
       {wristpouch2, WIZ_LEV_COMP_WRIST         }
   };
 
+
+  if (hasClass(CLASS_SHAMAN) && !isImmortal()) {
+    sendTo("Perhaps looking at rituals is what you need to do?\n\r");
+    return;
+  }
+
   if (!(d = desc))
     return;
 
@@ -5212,6 +5218,12 @@ void TBeing::doRituals(const char *argument)
       {wristpouch, RIT_LEV_COMP_WRIST         },
       {wristpouch2, RIT_LEV_COMP_WRIST         }
   };
+
+  if (!hasClass(CLASS_SHAMAN) && !isImmortal()) {
+    sendTo("You aren't a Shaman, therefore you have no use for rituals.\n\r");
+    sendTo("Perhaps using the SPELLS command is what you want.\n\r");
+    return;
+  }
 
   if (!(d = desc))
     return;
