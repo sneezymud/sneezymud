@@ -2294,14 +2294,14 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       arg = one_argument(arg, buf2);
 
       if(*buf2){ // set value
-	db.query("delete from shopownedaccess where shop_nr=%i and upper(name)=('%s')", shop_nr, buf);
+	db.query("delete from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf);
 
 	if(atoi(buf2) != 0)
 	  db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf, atoi(buf2));
 
       } else {
 	if(*buf){
-	  db.query("select name, access from shopownedaccess where shop_nr=%i and upper(name)=('%s')", shop_nr, buf);
+	  db.query("select name, access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf);
 	} else {
 	  db.query("select name, access from shopownedaccess where shop_nr=%i order by access", shop_nr);
 	}
