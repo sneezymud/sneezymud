@@ -368,6 +368,8 @@ void logPermaDeathDied(TBeing *ch, TBeing *killer)
   if(killer)
     dbquery(TRUE, &res, "sneezy", "permadeath", "update permadeath set killer='%s' where name='%s'", killer->getName(), ch->name);
 
+  dbquery(TRUE, &res, "sneezy", "permadeath", "update permadeath set level=%i where name='%s'", ch->GetMaxLevel(), ch->name);
+
   mysql_free_result(res);
 }
 

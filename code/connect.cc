@@ -5917,9 +5917,11 @@ int Descriptor::doAccountStuff(char *arg)
       }
       
 #endif      
-      
+
       writeToQ("Deleting a character will result in total deletion and\n\r");
-      writeToQ("equipment loss. Enter your password to verify or hit enter\n\r");
+      writeToQ("equipment loss.  Also, if you character is a perma death\n\r");
+      writeToQ("character, you may lose your place on the perma death\n\r");
+      writeToQ("monument.  Enter your password to verify or hit enter\n\r");
       writeToQ("to return to the account menu system\n\r-> ");
       EchoOff();
       strcpy(delname, lower(arg).c_str());
