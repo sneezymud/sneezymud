@@ -1447,6 +1447,9 @@ int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent, checkImmun
   aff.duration *= (100 - getImmunity(IMMUNE_BLEED));
   aff.duration /= 100;
 
+  if(hasQuestBit(TOG_IS_HEMOPHILIAC))
+    aff.duration=PERMANENT_DURATION;
+
   affectTo(&aff);
   disease_start(this, &aff);
 

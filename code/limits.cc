@@ -185,6 +185,9 @@ short int TBeing::moveLimit() const
 
   iMax += points.maxMove;        /* move bonus */
 
+  if(hasQuestBit(TOG_IS_ASTHMATIC))
+    iMax /= 2;
+
   return (iMax);
 }
 

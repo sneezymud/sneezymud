@@ -56,17 +56,41 @@ static const char * const TER_GNOME_HELP = "help/territory help gnome";
 static const char * const TER_OGRE_HELP = "help/territory help ogre";
 static const char * const TER_HOBBIT_HELP = "help/territory help hobbit";
 
-const int MAX_TRAITS=2;
+const int MAX_TRAITS=10;
+
+
+//  {TOG_IS_DEAF, 0, "deaf (not implemented)",   // not implemented
+//   "Your eardrums have been damaged and you are unable to hear."},
+//  {TOG_IS_NECROPHOBIC, 0, "necrophobia (not implemented)", // not implemented
+//   "You have necrophobia and are terrified at the sight of dead things."},
+//  {TOG_IS_ALCOHOLIC, 0, "alcoholic (not implemented)", // not implemented
+//   "You are a recovering alcoholic and have trouble resisting alcohol."}
 
 struct {
   int tog, points;
   sstring name, desc;
 } traits[MAX_TRAITS+1] = {
   {0,0}, 
-  {TOG_IS_COWARD, 1, "cowardly", 
+  {TOG_IS_COWARD, 10, "cowardly", 
    "You flee combat if you get below 1/2 hit points."},
-  {TOG_IS_BLIND, 1, "blind",
-   "Your vision has been damaged and you are permanently blind."}
+  {TOG_IS_BLIND, 6, "blind",
+   "Your vision has been damaged and you are permanently blind."},
+  {TOG_IS_MUTE, 1, "mute",
+   "Your throatbox has been damaged and you are unable to speak."},
+  {TOG_IS_ASTHMATIC, 6, "asthma",
+   "You have asthma and thus are easily winded."},
+  {TOG_IS_NARCOLEPTIC, 3, "narcolepsy",
+   "You have narcolepsy and fall asleep uncontrollably."},
+  {TOG_IS_COMBUSTIBLE, 3, "combustible",
+   "You are prone to spontaneous combustion."},
+  {TOG_IS_HEMOPHILIAC, 3, "hemophiliac",
+   "You have hemophilia and your wounds do not clot naturally."},
+  {TOG_IS_AMBIDEXTROUS, -6, "ambidextrous",
+   "You are ambidextrous and are equally skilled with both hands."},
+  {TOG_IS_HEALTHY, -3, "healthy",
+   "You are particularly healthy and resistant to disease."},
+  {TOG_HAS_NIGHTVISION, -10, "nightvision",
+   "You have excellent nightvision."},
 };
 
 			  

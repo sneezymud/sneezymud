@@ -79,6 +79,9 @@ void TPerson::resetChar()
   desc->point_roll = 0;
   visionBonus = 0;
 
+  if(hasQuestBit(TOG_HAS_NIGHTVISION))
+    visionBonus+=2;
+
   if (getRace() == RACE_OGRE)
     setMaterial(MAT_OGRE_HIDE);
   else

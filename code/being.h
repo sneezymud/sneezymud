@@ -849,6 +849,9 @@ class TBeing : public TThing {
     wearSlotT getSecondaryLeg() const;
 
     bool isAmbidextrous() const {
+      if(hasQuestBit(TOG_IS_AMBIDEXTROUS))
+	return true;
+
       return ((getStat(STAT_CURRENT, STAT_DEX) > 180) ||
 		(race->getRace() == RACE_HOBBIT));
     }

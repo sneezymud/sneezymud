@@ -387,8 +387,20 @@ const int TOG_HAS_CATLEAP                      = 277;
 
 const int TOG_IS_COWARD                        = 278;
 const int TOG_IS_BLIND                         = 279;
+const int TOG_IS_MUTE                          = 280;
+const int TOG_IS_DEAF                          = 281;
+const int TOG_IS_ASTHMATIC                     = 282;
+const int TOG_IS_NECROPHOBIC                   = 283;
+const int TOG_IS_NARCOLEPTIC                   = 284;
+const int TOG_IS_COMBUSTIBLE                   = 285;
+const int TOG_IS_HEMOPHILIAC                   = 286;
+const int TOG_IS_AMBIDEXTROUS                  = 287;
+const int TOG_IS_HEALTHY                       = 288;
+const int TOG_HAS_NIGHTVISION                  = 289;
+const int TOG_IS_ALCOHOLIC                     = 290;
 
-const int MAX_TOG_INDEX       = 280;  // move and change
+
+const int MAX_TOG_INDEX       = 291;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 

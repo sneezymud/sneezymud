@@ -187,6 +187,17 @@ byte TBeing::getImmunity(immuneTypeT type) const
       return imm;
     }
   }
+  if(hasQuestBit(TOG_IS_HEALTHY) && type==IMMUNE_DISEASE){
+    imm=immunities.immune_arr[type]+75;
+    if(imm){
+      if (imm < -100)
+	imm=-100;
+      if (imm > 100)
+	imm=100;
+      
+      return imm;
+    }
+  }
 
   return immunities.immune_arr[type];
 }

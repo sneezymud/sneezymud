@@ -614,6 +614,35 @@ int TBeing::updateTickStuff()
         return DELETE_THIS;
       }
     }
+
+    if(hasQuestBit(TOG_IS_COMBUSTIBLE) && !::number(0,99)){
+      rc = flameEngulfed();
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+	return DELETE_THIS;
+    }
+
+
+    if(hasQuestBit(TOG_IS_NARCOLEPTIC) && awake() && !::number(0,99)){
+      affectedData af;
+      af.type = AFFECT_DUMMY;
+      af.level = 1;
+      af.duration = 30;
+      af.modifier = 0;
+      af.location = APPLY_NONE;
+      af.bitvector = AFF_SLEEP;
+      affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
+      
+      if (getPosition() > POSITION_SLEEPING) {
+	if (riding) {
+	  rc = fallOffMount(riding, POSITION_STANDING);
+	  if (IS_SET_DELETE(rc, DELETE_THIS))
+	    return DELETE_THIS;
+	}
+	doSleep("");
+      }
+    }
+
+
     if (desc && (desc->character != this))
       vlogf(LOG_BUG, fmt("bad desc in updateTickStuff() (%s)(%s)") %
 	    (name ? getName() : "unknown") % 

@@ -314,6 +314,11 @@ int TBeing::doSay(const sstring &arg)
   if (applySoundproof())
     return FALSE;
 
+  if(hasQuestBit(TOG_IS_MUTE)){
+    sendTo("You're mute, you can't talk.\n\r");
+    return FALSE;
+  }
+
   if (isDumbAnimal()) {
     sendTo("You are a dumb animal; you can't talk!\n\r");
     return FALSE;
@@ -521,6 +526,12 @@ void TBeing::doShout(const char *arg)
     sendTo("You can't shout!!\n\r");
     return;
   }
+
+  if(hasQuestBit(TOG_IS_MUTE)){
+    sendTo("You're mute, you can't talk.\n\r");
+    return;
+  }
+
   if (isDumbAnimal()) {
     sendTo("You are a dumb animal; you can't talk!\n\r");
     return;
@@ -596,6 +607,11 @@ void TBeing::doGrouptell(const sstring &arg)
 
   if (applySoundproof())
     return;
+
+  if(hasQuestBit(TOG_IS_MUTE)){
+    sendTo("You're mute, you can't talk.\n\r");
+    return;
+  }
 
   if (isDumbAnimal()) {
     sendTo("You are a dumb animal; you can't talk!\n\r");
@@ -928,6 +944,11 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   if (!isImmortal() && applySoundproof())
     return FALSE;
 
+  if(hasQuestBit(TOG_IS_MUTE)){
+    sendTo("You're mute, you can't talk.\n\r");
+    return FALSE;
+  }
+
   if (isDumbAnimal()) {
     sendTo("You are a dumb animal; you can't talk!\n\r");
     return FALSE;
@@ -1095,6 +1116,12 @@ int TBeing::doWhisper(const sstring &arg)
   }
   if (applySoundproof())
     return FALSE;
+
+  if(hasQuestBit(TOG_IS_MUTE)){
+    sendTo("You're mute, you can't talk.\n\r");
+    return FALSE;
+  }
+
   if (isDumbAnimal()) {
     sendTo("Beasts don't talk.\n\r");
     return FALSE;
@@ -1176,6 +1203,11 @@ int TBeing::doAsk(const sstring &arg)
   }
   if (applySoundproof())
     return FALSE;
+  if(hasQuestBit(TOG_IS_MUTE)){
+    sendTo("You're mute, you can't talk.\n\r");
+    return FALSE;
+  }
+
   if (isDumbAnimal()) {
     sendTo("Beasts don't talk.\n\r");
     return FALSE;
@@ -1314,6 +1346,8 @@ bool TBeing::canSpeak()
   if (checkSoundproof())
     return FALSE;
   if (isDumbAnimal())
+    return FALSE;
+  if(hasQuestBit(TOG_IS_MUTE))
     return FALSE;
 
   // this is modified from hasDisease().
