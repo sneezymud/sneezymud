@@ -65,7 +65,6 @@ bool WizInvis = FALSE;
 bool WizShout = FALSE;
 bool WizGoto = FALSE;
 bool AllowPcMobs = TRUE;    // PCs with same name as mob allowed?
-bool TurboMode = FALSE;      // bumps pulse-actions at 2x speed
 bool Lapspeak = FALSE; // Heh. 
 bool Twink = FALSE; // combat twink fun stuff
 bool timeQueries = false; // store db query speeds THIS IS SLOW
@@ -350,7 +349,6 @@ void TPerson::doToggle(const char *arg2)
       sendTo(COLOR_BASIC, "Clients           : %s  | ", on_or_off(Clients));
       sendTo(COLOR_BASIC, "PCs w/mob names   : %s\n\r",on_or_off(AllowPcMobs));
       sendTo(COLOR_BASIC, "Sleep offensive   : %s  | ", on_or_off(Sleep));
-      sendTo(COLOR_BASIC, "Turbo mode        : %s  | ", on_or_off(TurboMode));
       sendTo(COLOR_BASIC, "Gravity           : %s\n\r", on_or_off(Gravity));
       sendTo(COLOR_BASIC, "Allow Wiz-Invis   : %s  | ", on_or_off(WizInvis));
       sendTo(COLOR_BASIC, "Nuke Inactive     : %s  | ", on_or_off(nuke_inactive_mobs));
@@ -994,16 +992,6 @@ void TPerson::doToggle(const char *arg2)
     for (zone = 1; zone < zone_table.size(); zone++) {
       zone_table[zone].zone_value = (nuke_inactive_mobs ? 1 : -1);
     }
-
-  } else if (is_abbrev(arg, "turbomode") && hasWizPower(POWER_TOGGLE)) {
-    if (strcmp(getName(), "Batopr") && strcmp(getName(), "Dash")) {
-      sendTo("Please contact a coder if the game speed is not correct.\n\r");
-      return;
-    }
-
-    TurboMode = !TurboMode;
-    sendTo("You have now %s turbo mode.\n\r", TurboMode ? "activated" : "deactivated");
-    vlogf(LOG_MISC, "%s has turned turbomode mode %s.", getName(), TurboMode ? "on" : "off");
   } else {
     sendTo("Unrecognized toggle.  Try toggle with no arguments for a list.\n\r");
     return;

@@ -47,21 +47,21 @@ TSocket *gSocket;
 long timeTill = 0;
 Descriptor *descriptor_list = NULL, *next_to_process; 
 
-static void timediff(struct timeval *a, struct timeval *b, struct timeval *rslt)
+struct timeval timediff(struct timeval *a, struct timeval *b)
 {
-  struct timeval tmp;
+  struct timeval tmp, rslt;
 
   tmp = *a;
 
-  if ((rslt->tv_usec = tmp.tv_usec - b->tv_usec) < 0) {
-    rslt->tv_usec += 1000000;
+  if ((rslt.tv_usec = tmp.tv_usec - b->tv_usec) < 0) {
+    rslt.tv_usec += 1000000;
     --(tmp.tv_sec);
   }
-  if ((rslt->tv_sec = tmp.tv_sec - b->tv_sec) < 0) {
-    rslt->tv_usec = 0;
-    rslt->tv_sec = 0;
+  if ((rslt.tv_sec = tmp.tv_sec - b->tv_sec) < 0) {
+    rslt.tv_usec = 0;
+    rslt.tv_sec = 0;
   }
-  return;
+  return rslt;
 }
 
 void TSocket::addNewDescriptorsDuringBoot(sstring tStString)
@@ -395,6 +395,7 @@ int TSocket::gameLoop()
   time_t lagtime_t = time(0);
   TVehicle *vehicle;
   int vehiclepulse = 0;
+  sstring str;
 
 #ifndef SOLARIS
   int mask;
@@ -407,9 +408,6 @@ int TSocket::gameLoop()
   opt_time.tv_sec = 0;
   gettimeofday(&last_time, NULL);
 
-#if 0
-  maxdesc = m_sock;
-#endif
   avail_descs = 150;		
 
 #ifndef SOLARIS
@@ -480,8 +478,9 @@ int TSocket::gameLoop()
     ////////////////////////////////////////////
     // check out the time 
     gettimeofday(&now, NULL);
-    timediff(&now, &last_time, &timespent);
-    timediff(&opt_time, &timespent, &timeout);
+    timespent=timediff(&now, &last_time);
+    timeout=timediff(&opt_time, &timespent);
+
     last_time.tv_sec = now.tv_sec + timeout.tv_sec;
     last_time.tv_usec = now.tv_usec + timeout.tv_usec;
     if (last_time.tv_usec >= 1000000) {
@@ -569,29 +568,16 @@ int TSocket::gameLoop()
     // setup the pulse boolean flags
     ////////////////////////////////////////////
     pulse++;
-    if (!TurboMode) {
-      teleport = (pulse % PULSE_TELEPORT);
-      combat = (pulse % PULSE_COMBAT);
-      drowning = (pulse % PULSE_DROWNING);
-      special_procs = (pulse % PULSE_SPEC_PROCS);
-      update_stuff = (pulse % PULSE_NOISES);
-      pulse_mudhour = (pulse % PULSE_MUDHOUR);
-      mobstuff = (pulse % PULSE_MOBACT);
-      pulse_tick = (pulse % PULSE_UPDATE);
-      quickpulse = (pulse % ONE_SECOND/5);
-      wayslowpulse = (pulse % (PULSE_MUDHOUR * 12));
-    } else {
-      teleport = (pulse % (PULSE_TELEPORT/2));
-      combat = (pulse % (PULSE_COMBAT/2));
-      drowning = (pulse % (PULSE_DROWNING/2));
-      special_procs = (pulse % (PULSE_SPEC_PROCS/2));
-      update_stuff = (pulse % (PULSE_NOISES/2));
-      pulse_mudhour = (pulse % (PULSE_MUDHOUR/2));
-      mobstuff = (pulse % (PULSE_MOBACT/2));
-      pulse_tick = (pulse % (PULSE_UPDATE/2));
-      quickpulse = (pulse % ONE_SECOND/10);
-      wayslowpulse = (pulse % (PULSE_MUDHOUR * 24));
-    }
+    teleport = (pulse % PULSE_TELEPORT);
+    combat = (pulse % PULSE_COMBAT);
+    drowning = (pulse % PULSE_DROWNING);
+    special_procs = (pulse % PULSE_SPEC_PROCS);
+    update_stuff = (pulse % PULSE_NOISES);
+    pulse_mudhour = (pulse % PULSE_MUDHOUR);
+    mobstuff = (pulse % PULSE_MOBACT);
+    pulse_tick = (pulse % PULSE_UPDATE);
+    quickpulse = (pulse % ONE_SECOND/5);
+    wayslowpulse = (pulse % (PULSE_MUDHOUR * 12));
 
     ////////////////////////////////////////////
     ////////////////////////////////////////////

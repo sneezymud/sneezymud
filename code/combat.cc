@@ -1862,7 +1862,7 @@ int TBeing::hit(TBeing *target, int pulse)
 
   // this function is called by perform_violence and other functions
   // that start a fight or call combat each round
-  int len_rnd = (PULSE_COMBAT / (TurboMode ? 2 : 1));
+  int len_rnd = PULSE_COMBAT;
 
   // This will eventually be replaced by limb code.  At least some of it.
   // Instead of arbitrarily choosing how many attacks, it will cycle through
@@ -4714,7 +4714,7 @@ void perform_violence(int pulse)
   // simply passing "pulse" (rather then "tmp_pulse" to hit()
   // oh yeah, have to make call to perform_violence done every "pulse" too
   // it was spammy and confusing as hell though.
-  for (tmp_pulse=0; tmp_pulse < (PULSE_COMBAT / (TurboMode ? 2 : 1)); tmp_pulse++) {
+  for (tmp_pulse=0; tmp_pulse < PULSE_COMBAT; tmp_pulse++) {
 
     for (ch = gCombatList; ch; ch = gCombatNext) {
       gCombatNext = ch->next_fighting;

@@ -56,7 +56,6 @@ extern bool QuestCode;
 extern bool QuestCode2;
   extern bool QuestCode3;
   extern bool QuestCode4;
-extern bool TurboMode;
 extern bool Shutdown;
 extern long timeTill;
 extern time_t Uptime;

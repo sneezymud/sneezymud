@@ -1878,7 +1878,7 @@ char ISNEWL(char ch)
 
 int combatRound(double n)
 {
-  return (int) (n * PULSE_COMBAT / (TurboMode ? 2 : 1));
+  return (int) (n * PULSE_COMBAT);
 }
 
 bool TBeing::checkBusy(const sstring &buf="")
@@ -1903,7 +1903,7 @@ bool TBeing::checkBusy(const sstring &buf="")
   sendTo(" (Roughly %d round%s to go)\n\r", tmpnum, (tmpnum > 1) ? "s" : "");
 #else
   float tmpnum = (hitsPerRound ? (cantHit/hitsPerRound) : 1000000); 
-  tmpnum *= PULSE_COMBAT / (TurboMode ? 2 : 1);
+  tmpnum *= PULSE_COMBAT;
   tmpnum /= ONE_SECOND;
 
   sendTo(" (Roughly %.1f seconds to go)\n\r", tmpnum);

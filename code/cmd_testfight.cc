@@ -358,8 +358,8 @@ static void fastFight()
 
     // check out the time
     gettimeofday(&now, NULL);
-    timediff(&now, &last_time, &timespent);
-    timediff(&opt_time, &timespent, &timeout);
+    timespent=timediff(&now, &last_time);
+    timeout=timediff(&opt_time, &timespent);
     last_time.tv_sec = now.tv_sec + timeout.tv_sec;
     last_time.tv_usec = now.tv_usec + timeout.tv_usec;
     if (last_time.tv_usec >= 1000000) {
