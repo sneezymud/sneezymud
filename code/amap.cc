@@ -411,15 +411,24 @@ void check_rooms(int MAXROOMS){
 
 
 
-void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY=2)
+void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool sideways)
 {
   NODE *t;
   int minx=0, maxx=0, miny=0, maxy=0, mapsize=0, mapwidth, mapheight, loc;
   int newloc, cellx, celly;
   char *mapdata, buff[256], *newmap;
-  int i=0, j, k, l;
+  int i=0, j, k, l, tmp;
   FILE *out=fopen("imageout.raw", "wb");
   const int CELLSIZE=3;
+
+  if(sideways){
+    for(t=head;t;t=t->next){
+      tmp=t->y;
+      t->y=t->z;
+      t->z=tmp;
+    }
+  }
+
 
   for(t=head;t;t=t->next){
     if(t->z<MINLEVEL || t->z>MAXLEVEL) continue;
@@ -506,7 +515,7 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY=2)
 
   fwrite(newmap, mapsize, 1, out);
   fclose(out);
-  sprintf(buff, "/usr/local/bin/rawtoppm -rgb %i %i imageout.raw | /usr/local/bin/pnmflip -tb | /usr/local/bin/ppmtogif > imageout.gif", mapwidth, mapheight);
+  sprintf(buff, "/usr/local/bin/rawtoppm -rgb %i %i imageout.raw | /usr/local/bin/pnmflip -tb | /usr/local/bin/ppmtogif > %s", mapwidth, mapheight, outputfile.c_str());
   printf("%s\n", buff);
   system(buff);
   system("rm -f imageout.raw");
@@ -553,6 +562,10 @@ void usage(){
   printf("                    using the q option with this as well\n");
   printf("  -q              - quiet mode, useful for slow connections\n");
   printf("  -h <head room>  - specify the 0,0,0 coordinate room\n");
+  printf("  -x              - make a sideways map with y and z swapped\n");
+  printf("  -z <z range>    - specify the z range to map, default -10,20\n");
+  printf("  -o <file>       - specify the image output file default is\n");
+  printf("                    imageout.gif in the current directory\n");
   printf("  -r <room range> - a list of room numbers to map, in the same\n");
   printf("                    format as the other tools.\n");
   printf("                    MUST BE THE LAST ARGUMENT\n");
@@ -571,14 +584,14 @@ int main(int argc, char **argv)
   FILE *tiny;
   FILE *zone=fopen("/mud/code/lib/tinyworld.zon", "rt");
   NODE *last=NULL, *t;
-  int SCALEBY=2, rcount, ch;
+  int SCALEBY=2, rcount, ch, zmax=20, zmin=-10, tmp;
   vector <int> roomrange_t;
   map <int, bool> roomrange;
-  bool use_range=false, checkrooms_p=false, quiet=false;
+  bool use_range=false, checkrooms_p=false, quiet=false, sideways=false;
   int headroom=100;
-  sstring infile="/mud/code/lib/tinyworld.wld";
+  sstring infile="/mud/code/lib/tinyworld.wld", buf, outputfile="imageout.gif";
 
-  while ((ch = getopt(argc, argv, "r:f:s:ch:q")) != -1){
+  while ((ch = getopt(argc, argv, "r:f:s:ch:qz:o:x")) != -1){
     switch (ch) {
       case 'r':
 	parse_num_args(argc-optind+1, argv+optind-1, roomrange_t);
@@ -604,6 +617,20 @@ int main(int argc, char **argv)
 	break;
       case 'q':
 	quiet=true;
+	break;
+      case 'z':
+	buf=optarg;
+	tmp=buf.find_first_of(',', 0);
+	zmin=convertTo<int>(buf.substr(0, tmp));
+	zmax=convertTo<int>(buf.substr(tmp+1, buf.size()-tmp));
+	printf("Using z range of %i to %i\n", zmin, zmax);
+	break;
+      case 'o':
+	outputfile=optarg;
+	printf("Outputting image file to %s\n", outputfile.c_str());
+	break;
+      case 'x':
+	sideways=true;
 	break;
       case '?':
       default:
@@ -676,7 +703,7 @@ int main(int argc, char **argv)
   if(checkrooms_p)
     check_rooms(rcount);
     
-  createmap(-10,20,SCALEBY);
+  createmap(zmin, zmax, SCALEBY, outputfile, sideways);
 
   t=head;
   while(t){
