@@ -194,7 +194,7 @@ bool findCorpse::isTarget(int room) const
 
   TThing *t;
   for (t = rp->getStuff(); t; t = t->nextThing) {
-    if (!dynamic_cast<TBaseCorpse *>(t))
+    if (!dynamic_cast<TBaseCorpse *>(t) || t->getStuff())
       continue;
     return TRUE;
   }
