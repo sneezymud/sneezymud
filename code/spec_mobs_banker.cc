@@ -240,10 +240,17 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
   } else if(cmd==CMD_BALANCE){
     return bankBalance(ch, myself, myself, shop_nr);
   } else if(cmd==CMD_WITHDRAW){
-    money=convertTo<int>(arg);
+    if(!strcmp(arg, "all"))
+      money=ch->getBank();
+    else
+      money=convertTo<int>(arg);
+
     return bankWithdraw(ch, myself, myself, shop_nr, money);
   } else if(cmd==CMD_DEPOSIT){
-    money=convertTo<int>(arg);
+    if(!strcmp(arg, "all"))
+      money=ch->getMoney();
+    else
+      money=convertTo<int>(arg);
     return bankDeposit(ch, myself, myself, shop_nr, money);
   }
   
@@ -329,10 +336,16 @@ int bankRoom(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   } else if(cmd==CMD_BALANCE){
     return bankBalance(ch, banker, teller, shop_nr);
   } else if(cmd==CMD_WITHDRAW){
-    money=convertTo<int>(arg);
+    if(!strcmp(arg, "all"))
+      money=ch->getBank();
+    else
+      money=convertTo<int>(arg);
     return bankWithdraw(ch, banker, teller, shop_nr, money);
   } else if(cmd==CMD_DEPOSIT){
-    money=convertTo<int>(arg);
+    if(!strcmp(arg, "all"))
+      money=ch->getMoney();
+    else
+      money=convertTo<int>(arg);
     return bankDeposit(ch, banker, teller, shop_nr, money);
   }
 
