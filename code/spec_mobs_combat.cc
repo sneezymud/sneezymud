@@ -968,15 +968,21 @@ int paralyzeGaze(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   if (::number(0,10))
     return FALSE;
 
-  if (v->isAffected(AFF_PARALYSIS) || 
-      v->isImmune(IMMUNE_PARALYSIS)) {
-    return FALSE;
-  }
-
   act("$n fixes $N with a penetrating gaze.", 
               TRUE, myself, NULL, v, TO_NOTVICT);
   act("$n fixes you with a penetrating gaze.  Suddenly, you have trouble moving.", TRUE, myself, NULL, v, TO_VICT);
   act("You fix $N with a penetrating gaze.", TRUE, myself, NULL, v, TO_CHAR);
+
+  if (v->isAffected(AFF_PARALYSIS) || 
+      v->isImmune(IMMUNE_PARALYSIS)) {
+    act("Your immunity saves you.", false, v, 0, 0, TO_VICT);
+    act("$n's immunity saves $m.", false, v, 0, 0, TO_ROOM);
+    return FALSE;
+  } else {
+    act("Suddenly, $N has trouble moving!", TRUE, myself, NULL, v, TO_NOTVICT);
+    act("Suddenly, you have trouble moving!", TRUE, myself, NULL, v, TO_VICT);
+    act("Suddenly, $N has trouble moving!", TRUE, myself, NULL, v, TO_CHAR);
+  }
 
   if(!v->isImmortal()){
     aff.type = SPELL_PARALYZE;
