@@ -7667,6 +7667,32 @@ int fillBucket (TBeing *me, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   return TRUE;
 }
     
+int statueArmTwist(TBeing *me, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  if (cmd != CMD_TWIST)
+    return FALSE;
+  sstring buf = sstring(arg);
+  TObj *packet = NULL;
+  if (buf.word(0) == "arm" && buf.word(1) == "off") {
+    if (!(packet = read_object(15969, VIRTUAL))) {
+      vlogf(LOG_PROC, fmt("Error reading object 15969 in proc statueArmTwist"));
+      return TRUE;
+    }
+    act("You manage to move the arm of the statue a bit.", TRUE, me, o, 0, TO_CHAR);
+    act("$n fiddles with the arm of the statue.", TRUE, me, o, 0, TO_ROOM);
+    act(fmt("%s falls out of the join between the arm and the statue.") % 
+        packet->getName(), TRUE, me, o, 0, TO_CHAR);
+    act(fmt("%s falls out of the join between the arm and the statue.") % 
+        packet->getName(), TRUE, me, o, 0, TO_ROOM);
+    *me->roomp += *packet;
+    act("The statue was not well made and starts to crumble as you watch.", TRUE, me, 0, 0, TO_CHAR);
+    act("The statue was not well made and starts to crumble as you watch.", TRUE, me, 0, 0, TO_ROOM);
+    o->makeScraps();
+    delete o;
+    return TRUE;
+  }
+  return FALSE;
+}
 //MARKER: END OF SPEC PROCS
 
 
@@ -7827,5 +7853,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "sweeps split join", sweepsSplitJoin},
   {FALSE, "graffiti maker", graffitiMaker}, // 135
   {FALSE, "graffiti object", graffitiObject},
+  {FALSE, "statue arm twist", statueArmTwist},
   {FALSE, "last proc", bogusObjProc}
 };

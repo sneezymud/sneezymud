@@ -1851,6 +1851,76 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         }
       }
       break;
+    case 15986:
+      if (cmd != CMD_PRESS)
+        return FALSE;
+      if (!strcasecmp(buf, "button")) {
+        ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_DEF,
+            "",
+            "",
+            "You push a button and a staircase folds out of the wall.",
+            "$n pushes a button and a staircase folds out of the wall.",
+            "A staircase folds out of the wall.",
+            "You push a button and a staircase folds into the wall.",
+            "$n pushes a button and a staircase folds into the wall.",
+            "A staircase folds into the wall."
+        );
+        return TRUE;
+      }
+      break;
+    case 15996:
+      if (cmd != CMD_PRESS)
+        return FALSE;
+      if (!strcasecmp(buf, "button")) {
+        ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_DEF,
+            "",
+            "",
+            "You push a button and a staircase folds out of the wall.",
+            "$n pushes a button and a staircase folds out of the wall.",
+            "A staircase folds out of the wall.",
+            "You push a button and a staircase folds into the wall.",
+            "$n pushes a button and a staircase folds into the wall.",
+            "A staircase folds into the wall."
+        );
+        return TRUE;
+      }
+      break;
+    case 15984:
+      if (cmd != CMD_PRESS)
+        return FALSE;
+      if (!strcasecmp(buf, "button")) {
+        ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_DEF,
+            "",
+            "",
+            "You push a button and a staircase folds out of the wall.",
+            "$n pushes a button and a staircase folds out of the wall.",
+            "A staircase folds out of the wall.",
+            "You push a button and a staircase folds into the wall.",
+            "$n pushes a button and a staircase folds into the wall.",
+            "A staircase folds into the wall."
+        );
+        return TRUE;
+      }
+      break;
+    case 15992:
+      if (cmd != CMD_PRESS)
+        return FALSE;
+      if (!strcasecmp(buf, "button")) {
+        ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_DEF,
+            "",
+            "",
+            "You push a button and a staircase folds out of the wall.",
+            "$n pushes a button and a staircase folds out of the wall.",
+            "A staircase folds out of the wall.",
+            "You push a button and a staircase folds into the wall.",
+            "$n pushes a button and a staircase folds into the wall.",
+            "A staircase folds into the wall."
+        );
+        return TRUE;
+      }
+      break;
+
+ 
     case 16238:
       if ((cmd != CMD_PUSH) && (cmd!= CMD_PULL))
         return FALSE;
