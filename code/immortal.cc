@@ -298,6 +298,7 @@ void TPerson::doToggle(const char *arg2)
 
     sendTo(COLOR_BASIC, "Anonymous         : %s\n\r", on_or_off(isPlayerAction(PLR_ANONYMOUS)));
 
+
     sendTo(COLOR_BASIC, "\n\r<c>Terminal Toggles<1>\n\r");
     sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
     sendTo(COLOR_BASIC, "Screensize        : <G>%-3i<1>    |    ", desc->screen_size);
@@ -305,9 +306,13 @@ void TPerson::doToggle(const char *arg2)
 	   ansi()?"ansi":(vt100()?"vt100":"none"));
     sendTo(COLOR_BASIC, "Boss Mode         : %s    |    ", on_or_off(IS_SET(desc->account->flags, ACCOUNT_BOSS)));
     sendTo(COLOR_BASIC, "MSP Sound         : %s\n\r", on_or_off(IS_SET(desc->account->flags, ACCOUNT_MSP)));
-    sendTo(COLOR_BASIC, "Account Terminal  : <G>%-5s<1>\n\r", 
+    sendTo(COLOR_BASIC, "Account Terminal  : <G>%-5s<1>    |    ", 
 	   (desc->account->term == TERM_ANSI)?"ansi":
 	   ((desc->account->term == TERM_VT100)?"vt100":"none"));
+    sendTo(COLOR_BASIC, "Allow Pinging     : %s\n\r", on_or_off(isPlayerAction(PLR_PING)));
+
+
+
     
 
 
@@ -362,6 +367,16 @@ void TPerson::doToggle(const char *arg2)
 
     return;
 
+  } else if(is_abbrev(arg, "ping")){
+    if (isPlayerAction(PLR_PING)){
+      remPlayerAction(PLR_PING);
+      act("You will no longer be pinged by the mud.",
+	  FALSE, this, 0, 0, TO_CHAR);
+    } else {
+      addPlayerAction(PLR_PING);
+      act("You will now be pinged by the mud.",
+	  FALSE, this, 0, 0, TO_CHAR);
+    }
   } else if(is_abbrev(arg, "immortal") && GetMaxLevel() >= GOD_LEVEL1){
     if (GetMaxLevel() <= MAX_MORT)
       return;

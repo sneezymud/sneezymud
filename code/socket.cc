@@ -1014,7 +1014,7 @@ int TSocket::gameLoop()
 
 
       for (d = descriptor_list; d; d = d->next) {
-        if (d->host){
+        if (d->host && d->character && d->character->isPlayerAction(PLR_PING)){
 	  fprintf(p, "%s\n", d->host);
 	}
       }
