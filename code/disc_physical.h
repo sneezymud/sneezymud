@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_physical.h,v $
+// Revision 5.1.1.3  2000/11/11 10:21:01  jesus
+// added powermove skill
+//
 // Revision 5.1.1.2  2000/10/26 05:43:34  jesus
 // dual wield for warriors
 //
@@ -29,6 +32,7 @@ class CDPhysical : public CDiscipline
 public:
     CSkill skDoorbash;
     CSkill skDualWieldWarrior;
+    CSkill skPowerMove;
     CSkill skDeathstroke;
 
     CDPhysical();
