@@ -42,15 +42,15 @@ const char *read_delete(const char *recipient, const char *recipient_formatted)
     return "error!";
 
 
-  ssprintf(buf, " * * * * %s Mail System * * * *\n\r"
-          "Date: %s\n\r"
-          "  To: %s\n\r"
-          "From: %s\n\r\n\r"
-	  "%s",
-          MUD_NAME, 
-          db.getColumn(1),
-          recipient_formatted,
-          db.getColumn(0), db.getColumn(2));
+  ssprintf(buf,
+	   "The letter has a date stamped in the corner: %s\n\r\n\r"
+           "%s,\n\r"
+           "%s\n\r"
+           "Signed, %s\n\r\n\r",
+	   db.getColumn(1),
+	   recipient_formatted,
+	   db.getColumn(2), 
+	   db.getColumn(0));
 
   db.query("delete from mail where mailid=%s", db.getColumn(3));
   
@@ -196,7 +196,7 @@ void TBeing::postmasterCheckMail(TMonster *me)
 void TBeing::postmasterReceiveMail(TMonster *me)
 {
   char buf[200], recipient[100], *tmp;
-  TObj *note;
+  TObj *note, *envelope;
   const char *msg;
 
   _parse_name(getName(), recipient);
@@ -237,11 +237,11 @@ void TBeing::postmasterReceiveMail(TMonster *me)
 #endif
     note->swapToStrung();
     delete [] note->name;
-    note->name = mud_str_dup("mail paper letter");
+    note->name = mud_str_dup("letter mail");
     delete [] note->shortDescr;
-    note->shortDescr = mud_str_dup("a piece of mail"); 
+    note->shortDescr = mud_str_dup("<o>a handwritten <W>letter<1>"); 
     delete [] note->getDescr();
-    note->setDescr(mud_str_dup("Someone has left a piece of mail here."));
+    note->setDescr(mud_str_dup("A wrinkled <W>letter<1> lies here."));
     delete [] note->action_description;
     msg = read_delete(recipient, getName());
     note->action_description = new char[strlen(msg)];
@@ -249,7 +249,14 @@ void TBeing::postmasterReceiveMail(TMonster *me)
     if (!note->action_description)
       note->action_description = mud_str_dup("Mail system buggy, please report!!  Error #8.\n\r");
 
-    *this += *note;
+
+    if (!(envelope = read_object(124, VIRTUAL))) {
+      vlogf(LOG_BUG, "Couldn't load object 124!");
+      return;
+    }
+    
+    *envelope += *note;
+    *this += *envelope;
 
     // parse the action_desc and get the "from"
     char namebuf[24];
@@ -265,12 +272,12 @@ void TBeing::postmasterReceiveMail(TMonster *me)
       }
     }
 
-    sprintf(buf, "$n gives you a piece of mail%s%s%s.", 
+    sprintf(buf, "$n gives you $p%s%s%s.", 
         *namebuf ? " (from " : "",
         *namebuf ? namebuf : "",
         *namebuf ? ")" : "");
-    act(buf, FALSE, me, 0, this, TO_VICT);
-    act("$N gives $n a piece of mail.", FALSE, this, 0, me, TO_ROOM);
+    act(buf, FALSE, me, envelope, this, TO_VICT);
+    act("$N gives $n $p.", FALSE, this, envelope, me, TO_ROOM);
   }
 }
 
