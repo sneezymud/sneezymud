@@ -2099,24 +2099,26 @@ int Descriptor::nanny(const char *arg)
       } else if(*arg == '/'){
 	go_back_menu(connected);
       } else if(*arg == 'E' || *arg == 'e'){
-	int limit=(bonus_points.total/4) + (bonus_points.total>0?1:-1);
+        if (bonus_points.total) {
+  	  int limit=(bonus_points.total/4) + (bonus_points.total>0?1:-1);
 
-	bonus_points.combat+=limit;
-	bonus_points.total-=limit;
+	  bonus_points.combat+=limit;
+	  bonus_points.total-=limit;
 
-	bonus_points.combat2+=limit;
-	bonus_points.total-=limit;
+	  bonus_points.combat2+=limit;
+	  bonus_points.total-=limit;
 
-	bonus_points.learn+=limit;
-	bonus_points.total-=limit;
+  	  bonus_points.learn+=limit;
+	  bonus_points.total-=limit;
 
-	bonus_points.util+=limit;
-	bonus_points.total-=limit;
+	  bonus_points.util+=limit;
+	  bonus_points.total-=limit;
 
-	if(bonus_points.total != 0){
-	  bonus_points.util+=bonus_points.total;
-	  bonus_points.total=0;
-	}
+	  if(bonus_points.total != 0){
+	    bonus_points.util+=bonus_points.total;
+	    bonus_points.total=0;
+	  }
+        }
 
 	connected = CON_QCLASS;
 	sendClassList(FALSE);
