@@ -51,9 +51,6 @@ void BaccaratGame::stay(TBeing *ch)
 {
   sstring log_msg;
 
-  vlogf(LOG_PEEL, "bet_type=%i, player=%i, dealer=%i",
-	bet_type, handValue(player), handValue(dealer));
-
   // dealer plays
   if((bet_type==0 && handValue(dealer)<=5) || 
      (bet_type==1 && handValue(dealer)>5)){
