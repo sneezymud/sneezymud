@@ -351,7 +351,7 @@ const char * const TBeing::getProfName() const
       buf += "/";
     }
   }
-  buf.erase(buf.size()-2, buf.size()-1); // take off that trailing /
+  buf.erase(buf.size()-1, buf.size()); // take off that trailing /
 
   return buf.c_str();
 }
