@@ -28,6 +28,12 @@ void TBeing::doDrive(string arg)
     return;
   }
 
+  if(!vehicle->roomp){
+    sendTo("This vehicle is located in the void!  You can't drive it now!\n\r");
+    return;
+  }
+
+
   arg=lower(arg);
   arg=one_argument(arg, buf);
 
@@ -40,7 +46,11 @@ void TBeing::doDrive(string arg)
   // we do this so that directions can be parsed first BUT if no
   // direction is entered we can fall through to non-keys commands
   for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){
-    if(is_abbrev(buf, dirs[dir])){
+    if(is_abbrev(buf, dirs[dir]) ||
+       (dirs[dir]=="northwest" && buf=="nw") ||
+       (dirs[dir]=="southwest" && buf=="sw") ||
+       (dirs[dir]=="northeast" && buf=="ne") ||
+       (dirs[dir]=="southeast" && buf=="se")){
       if(!has_key(this, vehicle->getPortalKey())){
 	sendTo("You need the keys to drive this vehicle!\n\r");
 	return;
