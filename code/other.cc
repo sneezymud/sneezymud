@@ -652,10 +652,6 @@ void TPerson::doTitle(const char *argument)
   for (; isspace(*argument); argument++);
 
   if (*argument) {
-    if (strlen(argument) > 79) {
-      sendTo("Title size is limited to 80 or less characters.\n\r");
-      return;
-    }
     string str = argument;
 
     // Basic name sake checks
@@ -675,6 +671,16 @@ void TPerson::doTitle(const char *argument)
         str.replace(str.find("<F>"), 3, "");
       }
     }
+
+
+    string stmp=nameColorString(this, desc, str.c_str(), NULL, COLOR_BASIC, FALSE);
+    stmp=stripColorCodes(stmp);
+
+    if (strlen(stmp.c_str()) > 79) {
+      sendTo("Title size is limited to 80 or less characters.\n\r");
+      return;
+    }    
+
     delete [] title;
     title = mud_str_dup(str.c_str());
 
