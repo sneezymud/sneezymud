@@ -13,6 +13,11 @@
 const int VEHICLE_NONE = 0;
 const int VEHICLE_BOAT = 1;
 
+const int FAST_SPEED = 50;
+const int MED_SPEED = 25;
+const int SLOW_SPEED = 10;
+
+
 class TVehicle : public TPortal {
  private:
   dirTypeT dir;
@@ -32,7 +37,7 @@ class TVehicle : public TPortal {
   virtual itemTypeT itemType() const { return ITEM_VEHICLE; }
   unsigned char getPortalType() const;
   char getPortalNumCharges() const;
-  void driveSpeed(TBeing *, sstring);
+  void driveSpeed(TBeing *, int);
   void driveDir(TBeing *, dirTypeT);
   void vehiclePulse(int);
   void driveStatus(TBeing *);

@@ -88,20 +88,30 @@ void TBeing::doDrive(sstring arg)
   }
 		   
   // authenticated commands
-  if(is_abbrev(buf, "fast") || is_abbrev(buf, "medium") || 
-     is_abbrev(buf, "slow") || is_abbrev(buf, "stop")){
+  int speed=convertTo<int>(buf);
+  if(speed || (is_abbrev(buf, "fast") || is_abbrev(buf, "medium") || 
+	       is_abbrev(buf, "slow") || is_abbrev(buf, "stop"))){
     if(!has_key(this, vehicle->getPortalKey())){
       sendTo("You need the keys to drive this vehicle!\n\r");
       return;
     }
 
-    vehicle->driveSpeed(this, buf);
+    if(is_abbrev(buf, "fast"))
+      speed=FAST_SPEED;
+    else if(is_abbrev(buf, "medium"))
+      speed=MED_SPEED;
+    else if(is_abbrev(buf, "slow"))
+      speed=SLOW_SPEED;
+    else if(is_abbrev(buf, "stop"))
+      speed=0;
+
+    vehicle->driveSpeed(this, speed);
     return;
   }
 
 
   sendTo("Syntax: drive <direction>\n\r");
-  sendTo("        drive <fast|medium|slow|stop>\n\r");
+  sendTo("        drive <fast|medium|slow|stop|speednum>\n\r");
   sendTo("        drive <exit|look|close|lock>\n\r");
 }
 
