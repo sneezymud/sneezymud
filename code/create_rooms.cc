@@ -2961,7 +2961,7 @@ void RoomLoad(TBeing *ch, int start, int end, bool useSecond)
         sendrpf(rp, tStString.c_str());
 
         while ((t = rp->stuff)) {
-          (*t)--;
+          --(*t);
           *rp2 += *t;
         }
         delete rp;
