@@ -899,7 +899,7 @@ int fly(TBeing * caster, TBeing * victim, int, affectedData * aff, byte bKnown)
   }
 }
 
-static void weightCorrectDuration(const TBeing *victim, affectedData *aff)
+void weightCorrectDuration(const TBeing *victim, affectedData *aff)
 {
   aff->duration = (int) (aff->duration * 170.0 / victim->getWeight());
 }

@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_air.h,v $
+// Revision 5.2  2002/11/29 20:03:24  peel
+// added prototype for weightCorrectDuration
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -89,5 +95,8 @@ private:
     int protectionFromAir(TBeing *, TBeing *);
     void protectionFromAir(TBeing *, TBeing *, TMagicItem *);
     int protectionFromAir(TBeing *, TBeing *, int, byte);
+
+    void weightCorrectDuration(const TBeing *, affectedData *);
+
 #endif
 
