@@ -976,6 +976,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	corpse->canBeSeen = v->canBeSeen;
 	corpse->setVolume(1);
 	corpse->setMaterial(MAT_BONE);
+	corpse->obj_flags.cost=50;
 	      
 	act("$p goes flying through the air and bounces once before it rolls to a stop.",TRUE,v,corpse,0,TO_ROOM, ANSI_RED);
 	*v->roomp += *corpse;
