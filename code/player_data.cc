@@ -1669,8 +1669,7 @@ void TBeing::loadTitle()
   ssprintf(buf, "player/%c/%s.title", LOWER(name[0]), lower(name).c_str());
 
   if (!(fp = fopen(buf.c_str(), "r"))) {
-    vlogf(LOG_FILE, "Unable to open file (%s) for loading title (%d)",
-          buf.c_str(), errno);
+    //    vlogf(LOG_FILE, "Unable to open file (%s) for loading title (%d)", buf.c_str(), errno);
     tp->setTitle(true);
     return;
   }
