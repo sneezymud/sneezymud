@@ -45,7 +45,7 @@ bool shopData::isOwned(){
   bool owned;
   TDatabase db("sneezy");
   
-  db.query("select * from shopownedaccess where shop_nr=%i", shop_nr);
+  db.query("select 1 from shopownedaccess where shop_nr=%i", shop_nr);
 
   if(!db.fetchRow())
     owned=false;

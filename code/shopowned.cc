@@ -86,7 +86,8 @@ void TShopOwned::showInfo()
 {
   TThing *tt;
   TObj *o;
-  int count=0, value=0, price=0, discount=100, tmp=0;
+  int count=0, value=0, tmp=0;
+  //  int price=0, discount=100;
   unsigned int i=0;
   char buf[256];
   int volume=0;
@@ -98,9 +99,10 @@ void TShopOwned::showInfo()
       ++count;
       volume+=o->getVolume();
       value+=o->obj_flags.cost;
-      price+=o->shopPrice(1, shop_nr, -1, &discount);
+      // shopPrice does db queries, it tends to be too slow here
+      //      price+=o->shopPrice(1, shop_nr, -1, &discount);
     }
-    keeper->doTell(ch->getName(), "I have %i talens and %i items worth %i talens and selling for %i talens.", keeper->getMoney(), count, value, price);
+    keeper->doTell(ch->getName(), "I have %i talens and %i items worth %i talens and selling for approximately %i talens.", keeper->getMoney(), count, value, (int)(value * shop_index[shop_nr].profit_buy));
     keeper->doTell(ch->getName(), "My inventory takes up %i cubic inches of space.", volume);
     
     keeper->doTell(ch->getName(), "That puts my total value at %i talens.",
