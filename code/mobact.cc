@@ -3711,6 +3711,8 @@ int TMonster::factionAggroCheck()
   TPerson *tmp_ch;
   int rc;
 
+  // if the mob is neither cult or brother, or is a cult or brother
+  // but not in their hometown, then don't aggro
   if((!isCult() && !isBrother()) ||
      (isCult() && !inLogrus()) ||
      (isBrother() && !inBrightmoon())){
@@ -3766,6 +3768,16 @@ int TMonster::factionAggroCheck()
 	      break;
 	  }
 	} else if(isCult() && tmp_ch->isSnake()){
+	  // check for trade pass that prevents aggro first
+	  TObj *pass;
+	  for(TThing *t=tmp_ch->getStuff();t;t=t->nextThing){
+	    if((pass=dynamic_cast<TObj *>(t)) && pass->objVnum()==8879){
+	      if(!::number(0,4))
+		doEmote("checks your papers carefully and then lets you pass.");
+	      return FALSE;
+	    }
+	  }
+
 	  switch(::number(0,3)){
 	    case 0:
 	      doSay("You are not welcome, manipulator.");
