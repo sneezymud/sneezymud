@@ -1,6 +1,8 @@
 #ifndef __PATHFINDER_H
 #define __PATHFINDER_H
 
+#include <deque>
+
 class TPathTarget {
  public:
   virtual bool isTarget(int) const {
@@ -78,6 +80,25 @@ class findWater : public TPathTarget {
 
 
 
+
+class pathData {
+  public:
+    int room;
+    dirTypeT direct;
+    int source;
+    bool checked;
+    int distance;
+    pathData() : 
+      room(0), direct(DIR_NONE), source(0), checked(false), distance(0) {}
+    pathData(int r, dirTypeT d, int s, bool c, int dist) : 
+      room(r), direct(d), source(s), checked(c), distance(dist) {}
+    pathData(pathData *pd) :
+      room(pd->room), direct(pd->direct), source(pd->source),
+      checked(pd->checked), distance(pd->distance) {}
+};
+
+
+
 class TPathFinder {
  private:
   TPathTarget pt;
@@ -91,6 +112,8 @@ class TPathFinder {
   int dist;
 
  public:
+  deque <pathData *> path;
+
   void setRange(int);
   void setThruDoors(bool t){ thru_doors=t; }
   void setStayZone(bool t){ stay_zone=t; }
@@ -105,20 +128,7 @@ class TPathFinder {
   TPathFinder();
   TPathFinder(int depth);
 
-};
-
-
-
-
-class pathData {
-  public:
-    dirTypeT direct;
-    int source;
-    bool checked;
-    int distance;
-    pathData() : direct(DIR_NONE), source(0), checked(false), distance(0) {}
-    pathData(dirTypeT d, int s, bool c, int dist) : 
-      direct(d), source(s), checked(c), distance(dist) {}
+  ~TPathFinder();
 };
 
 

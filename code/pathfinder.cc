@@ -180,6 +180,13 @@ bool findWater::isTarget(int room) const
 
 ///////////
 
+TPathFinder::~TPathFinder()
+{
+  deque<pathData *>::iterator it;
+  for(it=path.begin();it!=path.end();++it){
+    delete *it;
+  }
+}
 
 TPathFinder::TPathFinder()
 {
@@ -221,7 +228,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
   // create this room as a starting point
 
   map<int, pathData *>path_map;
-  path_map[here] = new pathData(DIR_NONE, -1, false, 0);
+  path_map[here] = new pathData(here, DIR_NONE, -1, false, 0);
 
   map<int, pathData *>::const_iterator CI;
   bool found=true;
@@ -281,9 +288,14 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	    // found our target, walk our list backwards
 	    dest = exitp->to_room;
 	    dist = distance;
+	    
+	    path.push_front(new pathData(exitp->to_room, dir,
+					 CI->first, false, distance+1));
 
 	    pd = CI->second;
 	    for (;;) {
+	      path.push_front(new pathData(pd));
+
 	      if (pd->source == -1) {
 		// clean up allocated memory
 		for (CI = path_map.begin(); CI != path_map.end(); ++CI)
@@ -296,7 +308,8 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	    }
 	  }
 	  // it's not our target, and we don't have this room yet
-	  path_map[exitp->to_room] = new pathData(dir, CI->first, false, distance+1);
+	  path_map[exitp->to_room] = new pathData(exitp->to_room, dir, 
+						 CI->first, false, distance+1);
 	  found=true;
 	}
       }
@@ -311,7 +324,8 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
           TPortal *tp = dynamic_cast<TPortal *>(t);
           if (!tp) 
             continue;
-          dir++;   // increment portal
+	  // dirTypeT ++ wraps around - stupid
+	  dir = (dirTypeT) (dir + 1);
           if (tp->isPortalFlag(EX_LOCKED | EX_CLOSED))
             continue;
           int tmp_room = tp->getTarget();   // next room
@@ -337,21 +351,29 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
 	    dest = tmp_room;
 	    dist = distance;
 
+	    path.push_front(new pathData(tmp_room, dir,
+					 CI->first, false, distance+1));
+
             pd = CI->second;
+	    dirTypeT tmpdir=dir;
             for (;;) {
+	      path.push_front(new pathData(pd));
               if (pd->source == -1) {
                 // clean up allocated memory
                 for (CI = path_map.begin(); CI != path_map.end(); ++CI)
                   delete CI->second;
 
-                return dir;
+                return tmpdir;
               }
-              dir = pd->direct;
+              tmpdir = pd->direct;
               pd = path_map[pd->source];
             }
           }
+
           // it's not our target, and we don't have this room yet
-          path_map[tmp_room] = new pathData(dir, CI->first, false, distance+1);
+          path_map[tmp_room] = new pathData(tmp_room, dir, CI->first, 
+					    false, distance+1);
+
 	  found=true;
         }  // stuff in room
       }
