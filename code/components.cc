@@ -54,6 +54,116 @@ void assign_component_placement()
      HOUR_SUNSET, -1, -1, -1, -1, -1, -1,
      "<p>$p slowly fades out of existence!<1>", ""));
 
+  // cheval
+  component_placement.push_back(compPlace(6101, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_PLACE, 20, 65,
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+  component_placement.push_back(compPlace(6101, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
+     "<k>$p skitters away into the night.<1>", ""));
+  component_placement.push_back(compPlace(6101, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     "<k>$p flips over and flies away.<1>", ""));
+  component_placement.push_back(compPlace(6104, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_PLACE, 20, 65,
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+  component_placement.push_back(compPlace(6104, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
+     "<k>$p skitters away into the night.<1>", ""));
+  component_placement.push_back(compPlace(6104, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     "<k>$p flips over and flies away.<1>", ""));
+  component_placement.push_back(compPlace(6108, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_PLACE, 20, 65,
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+  component_placement.push_back(compPlace(6108, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
+     "<k>$p skitters away into the night.<1>", ""));
+  component_placement.push_back(compPlace(6108, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     "<k>$p flips over and flies away.<1>", ""));
+  component_placement.push_back(compPlace(6200, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_PLACE, 20, 65,
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+  component_placement.push_back(compPlace(6200, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
+     "<k>$p skitters away into the night.<1>", ""));
+  component_placement.push_back(compPlace(6200, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     "<k>$p flips over and flies away.<1>", ""));
+
+  component_placement.push_back(compPlace(6205, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_PLACE, 20, 65,
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+  component_placement.push_back(compPlace(6205, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
+     "<k>$p skitters away into the night.<1>", ""));
+  component_placement.push_back(compPlace(6205, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     "<k>$p flips over and flies away.<1>", ""));
+
+  component_placement.push_back(compPlace(6211, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_PLACE, 20, 65,
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+  component_placement.push_back(compPlace(6211, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
+     "<k>$p skitters away into the night.<1>", ""));
+  component_placement.push_back(compPlace(6211, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     "<k>$p flips over and flies away.<1>", ""));
+  component_placement.push_back(compPlace(6220, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_PLACE, 20, 65,
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<WEATHER_RAINY),
+     "<k>$p stupidly dives into the ground and lands on it's back.<1>" ,""));
+  component_placement.push_back(compPlace(6220, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
+     "<k>$p skitters away into the night.<1>", ""));
+  component_placement.push_back(compPlace(6220, -1, MOB_NONE, 
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     -1, -1, -1, -1, -1, -1, ~(1<<WEATHER_RAINY),
+     "<k>$p flips over and flies away.<1>", ""));
+
+
 // color spray
   component_placement.push_back(compPlace(11328, -1, MOB_NONE, 
      COMP_COLOR_SPRAY,

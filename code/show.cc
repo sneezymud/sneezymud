@@ -630,8 +630,7 @@ static void describeSpellEffects(const TBeing *me, const TBeing *ch, bool verbos
 	strcat(bufspell, "several");
       else
 	strcat(bufspell, "a great many");
-
-      strcat(bufspell, " magical effects.");
+      strcat(bufspell, " effects.");
       act(bufspell, FALSE, me, 0, ch, TO_VICT);
     }
   }
