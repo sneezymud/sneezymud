@@ -141,10 +141,16 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
     }
 
     // sendrpf(COLOR_NONE, roomp, "keyword_no=[%d]\n\r", keyword_no);
-    if ((keyword_no == -1) && (argument.empty())) {
-      keyword_no = 8;
-      // sendrpf(COLOR_NONE, roomp, "keyword_no=[%d]\n\r", keyword_no);
-      arg2 = stripColorCodes(argument);
+    if (keyword_no == -1) {
+      if (argument.empty()) {
+        keyword_no = 8;
+        // sendrpf(COLOR_NONE, roomp, "keyword_no=[%d]\n\r", keyword_no);
+        arg2 = stripColorCodes(argument);
+      } else {
+        keyword_no = 7;
+        // sendrpf(COLOR_NONE, roomp, "keyword_no=[%d]\n\r", keyword_no);
+        arg2 = stripColorCodes(argument);
+      }
     }
     // sendrpf(COLOR_NONE, roomp, "arg2=[%s]\n\r", arg2.c_str());
     found = FALSE;
