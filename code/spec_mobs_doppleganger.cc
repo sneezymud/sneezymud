@@ -97,9 +97,10 @@ TBeing * dopplegangerFindTarget(TRoom *tRoom)
 int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, TObj *tObj)
 {
   mimicStructure *tJob = NULL;
-  TBeing         *tSucker/*,
-                 *tPatsy,
-                 *tPatsyB*/;
+  TBeing         *tSucker,
+                 *tPatsy;
+  followData     *tFollowerA,
+                 *tFollowerB;
 
   if (!tMyself)
     return FALSE;
@@ -148,9 +149,9 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
 
           tSucker->stopTask();
         } else if (tSucker->followers) {
-	  /*
-          for (tPatsy = tSucker->followers; tPatsy; tPatsy = tPatsyB) {
-            tPatsyB = tPatsy->next;
+          for (tFollowerA = tSucker->followers; tFollowerA; tFollowerA = tFollowerB) {
+            tFollowerB = tFollowerA->next;
+            tPatsy = tFollowerA->follower;
 
             if (tPatsy->isPc() && !tPatsy->isAffected(AFF_CHARM)) {
               act("You stop following $n seeing that there is now a pair of them.",
@@ -158,7 +159,6 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
               tPatsy->stopFollower(TRUE);
             }
           }
-	  */
         }
       }
 
