@@ -2582,6 +2582,8 @@ int TBeing::hits(TBeing *v, int mod)
 
   int roll = ::number(0,999);
 
+  sendTo("roll=%i\n\r", roll);
+  
   if (roll < 50)
     return GUARANTEED_SUCCESS;
   else if (roll >= 950)
@@ -3628,7 +3630,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 
 
     if (result == GUARANTEED_SUCCESS)
-      mess_sent = critSuccessChance(vict, weapon, &part_hit, w_type, &dam, -1);
+      mess_sent = critSuccessChance(vict, weapon, &part_hit, w_type, &dam);
 
     if (IS_SET_DELETE(mess_sent, DELETE_VICT)) {
       // we killed them, so increment crit-kill counter

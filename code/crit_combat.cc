@@ -417,18 +417,13 @@ void TBeing::critHitEqDamage(TBeing *v, TThing *obj, int eqdam)
   }
 }
 
+
 // This will just be a big ass case statement based on random diceroll 
 // returns DELETE_VICT if v dead
 // mod is -1 from generic combat, mod == crit desired from immortal command.
-int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, spellNumT wtype, int *dam, int mod)
+int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, spellNumT wtype, int *dam, int mod=-1)
 {
-  int num, dicenum, dexstat, new_wtype, i;
-  char buf[256], buf2[256];
-  wearSlotT new_slot;
-  affectedData af;
-  TThing *obj = NULL;
-  int rc;
-  sstring limbStr;
+  int crit_num, dicenum, crit_chance, new_wtype;
 
   if (isAffected(AFF_ENGAGER))
     return FALSE;
@@ -440,9 +435,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
   if (dynamic_cast<TGun *>(weapon))
     return FALSE;
 
-
   if ((mod == -1) && v->isImmune(getTypeImmunity(wtype), 0))
     return FALSE;
+
+  if(mod>100){
+    vlogf(LOG_BUG, "critSuccessChance called with mod>100 (%i)", mod);
+    return FALSE;
+  }
+
 #if 1
   if (mod == -1 && v->affectedBySpell(AFFECT_DUMMY)) {
     affectedData *an = NULL;
@@ -456,19 +456,14 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
     v->affectFrom(AFFECT_DUMMY);
   }
 #endif
+
   // get wtype back so it fits in array  
   new_wtype = wtype - TYPE_HIT;
 
-  if (mod == -1) {
-    stats.combat_crit_suc++;
 
-    num = ::number(1, 300);
-    num += getSkillValue(SKILL_TACTICS) - MAX_SKILL_LEARNEDNESS;  // this is negative unless fully learned
-    if (num <=0)
-      return FALSE;
-  } else 
-    num = mod;
+  stats.combat_crit_suc++;
 
+  // determine dice roll for crit, modified by skill(s)
   if(doesKnowSkill(SKILL_CRIT_HIT) && isPc()){
     dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_CRIT_HIT)*950)));
   } else if(doesKnowSkill(SKILL_POWERMOVE) && isPc()){
@@ -476,1688 +471,1634 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
   } else 
     dicenum = dice(1, 100000);    // This was 10k under 3.x - Bat
 
-
-  dexstat = plotStat(STAT_CURRENT, STAT_DEX, 10, 100, 63) - 2*getCond(DRUNK);
-  dexstat = (int)((double)(dexstat * plotStat(STAT_CURRENT, STAT_KAR, 80, 125, 100)) / 100.0);
   if (isImmortal())
     dicenum /= 10;
 
-  if ((mod != -1) || 
-       dicenum <= (dexstat * (50 + GetMaxLevel() - v->GetMaxLevel()))) {
-    if (mod == -1) {
-      stats.combat_crit_suc_pass++;
-      if (desc)
-        desc->career.crit_hits++;
-      if (v->desc)
-        v->desc->career.crit_hits_suff++;
-    }
+  // begin with dexterity
+  crit_chance = plotStat(STAT_CURRENT, STAT_DEX, 10, 100, 63);
 
-    // critical hitting gets damage boost as well
-    if(doesKnowSkill(SKILL_CRIT_HIT))
-      *dam = (int)(*dam * ((getSkillValue(SKILL_CRIT_HIT)/100.0)+1.0));
+  // drunkeness reduces chance
+  crit_chance -= 2 * getCond(DRUNK);
 
+  // factor in karma
+  crit_chance *= plotStat(STAT_CURRENT, STAT_KAR, 80, 125, 100);
+  crit_chance /= 100;
 
-    // play the crit-hit sound
-    // boost the priority so that this sound will trump normal combat sounds
-    soundNumT snd = pickRandSound(SOUND_CRIT_01, SOUND_CRIT_43);
-    playsound(snd, SOUND_TYPE_COMBAT, 100, 45, 1);
-
-    if (pierceType(wtype)) {
-      // Do pierce crit 
-      if (num <= 33) {
-        // double damage 
-        *dam <<= 1;
-        sprintf(buf, 
-   "You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!",
-             v->describeBodySlot(*part_hit).c_str(),
-             (weapon ? "$o" : getMyRace()->getBodyLimbPierce().c_str()));
-        act(buf, FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
-        sprintf(buf,
-   "$n strikes your %s exceptionally well, sinking $s %s deep into your flesh!",
-             v->describeBodySlot(*part_hit).c_str(),
-             (weapon ? "$o" : getMyRace()->getBodyLimbPierce().c_str()));
-        act(buf, FALSE, this, weapon, v, TO_VICT, ANSI_RED);
-        sprintf(buf, 
-   "$n strikes $N's %s exceptionally well, sinking $s %s deep into $N's flesh!",
-             v->describeBodySlot(*part_hit).c_str(),
-             (weapon ? "$o" : getMyRace()->getBodyLimbPierce().c_str()));
-        act(buf, FALSE, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
-        return (ONEHIT_MESS_CRIT_S);
-      } else if (num <= 66) {
-        // triple damage 
-        sprintf(buf, 
-    "You critically strike $N's %s, sinking your %s deep into $S flesh!",
-             v->describeBodySlot(*part_hit).c_str(),
-             (weapon ? "$o" : getMyRace()->getBodyLimbPierce().c_str()));
-        act(buf, FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
-        sprintf(buf, 
-    "$n critically strikes your %s, sinking $s %s deep into your flesh!",
-             v->describeBodySlot(*part_hit).c_str(),
-             (weapon ? "$o" : getMyRace()->getBodyLimbPierce().c_str()));
-        act(buf, FALSE, this, weapon, v, TO_VICT, ANSI_RED);
-        sprintf(buf, "$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!",
-             v->describeBodySlot(*part_hit).c_str(),
-             (weapon ? "$o" : getMyRace()->getBodyLimbPierce().c_str()));
-        act(buf, FALSE, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
-        *dam *= 3;
-        return (ONEHIT_MESS_CRIT_S);
-      } else {
-        // better stuff 
-        limbStr =  (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbPierce());
-        switch (num) {
-          case 67:
-            if (!v->hasPart(WEAR_NECK))
-              return 0;
-            *part_hit = WEAR_NECK;
-            if ((obj = v->equipment[WEAR_NECK])) {
-              v->sendTo(COLOR_OBJECTS, "Your %s saves you from a punctured larynx!\n\r",
-                fname(obj->name).c_str());
-              for (i=1;i<5;i++)
-                if (v->equipment[WEAR_NECK])
-                  v->damageItem(this,WEAR_NECK,wtype,weapon,*dam);
-              return ONEHIT_MESS_CRIT_S;
-            }
-            // intentional drop through
-          case 68:
-            // Punctured Larnyx, can't speak 
-            if (!v->hasPart(WEAR_NECK))
-              return 0;
-            if (v->hasDisease(DISEASE_VOICEBOX))
-              return 0;
-            sprintf(buf, 
-    "You pop your %s into $N's throat, puncturing $S voice box!", 
-                     limbStr.c_str());
-            act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-            sprintf(buf, 
-    "$n pops $s %s into your throat, puncturing your voice box!",
-                     limbStr.c_str());
-            act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-            sprintf(buf, "$n pops $s %s into $N's throat, puncturing $S voice box!",
-                     limbStr.c_str());
-            act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-            for (i=1;i<5;i++)
-              if (v->equipment[WEAR_NECK])
-                v->damageItem(this,WEAR_NECK,wtype,weapon,*dam);
-            af.type = AFFECT_DISEASE;
-            af.level = 0;   // has to be 0 for doctor to treat
-            af.duration = PERMANENT_DURATION;
-            af.modifier = DISEASE_VOICEBOX;
-            af.location = APPLY_NONE;
-            af.bitvector = AFF_SILENT;
-            v->affectTo(&af);
-            *part_hit = WEAR_NECK;
-            if (desc)
-              desc->career.crit_voice++;
-            if (v->desc)
-              v->desc->career.crit_voice_suff++;
-            return ONEHIT_MESS_CRIT_S;
-          case 69:
-          case 70:
-            // Struct in eye, blinded with new blind type 
-            if (v->hasDisease(DISEASE_EYEBALL))
-              return 0;
-            if (!v->hasPart(WEAR_HEAD))
-              return 0;
-            sprintf(buf, 
-    "You pop your %s into $N's eyes, gouging them out and blinding $M!",
-                 limbStr.c_str());
-            act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-            sprintf(buf, 
-    "$n pops $s %s into your eyes and The World goes DARK!",
-                 limbStr.c_str());
-            act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-            sprintf(buf, "$n pops $s %s into $N's eyes, gouging them out and blinding $M!",
-                 limbStr.c_str());
-            act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-            act("$n's eyeballs fall from $s sockets!",TRUE,v,0,0,TO_ROOM);
-            v->makeOtherPart(NULL,"eyeballs");
-            af.type = AFFECT_DISEASE;
-            af.level = 0;   // has to be 0 for doctor to treat
-            af.duration = PERMANENT_DURATION;
-            af.modifier = DISEASE_EYEBALL;
-            af.location = APPLY_NONE;
-            af.bitvector = AFF_BLIND;
-            v->affectTo(&af);
-            v->rawBlind(GetMaxLevel(), af.duration, SAVE_NO);
-            *part_hit = WEAR_HEAD;
-            if (desc)
-              desc->career.crit_eye_pop++;
-            if (v->desc)
-              v->desc->career.crit_eye_pop_suff++;
-            return ONEHIT_MESS_CRIT_S;
-          case 71:
-            if (!v->hasPart(WEAR_LEGS_R))
-              return 0;
-            if (!v->isHumanoid())
-              return 0;
-              if ((obj = v->equipment[WEAR_LEGS_R])) {
-                v->sendTo(COLOR_OBJECTS, "Your %s saves you from losing a tendon!\n\r",
-                  fname(obj->name).c_str());
-                for (i=1;i<5;i++)
-                  if (v->equipment[WEAR_LEGS_R])
-                    v->damageItem(this,WEAR_LEGS_R,wtype,weapon,*dam);
-                *part_hit = WEAR_LEGS_R;
-                return ONEHIT_MESS_CRIT_S;
-              }
-              // an intentional drop through
-            case 72:
-              // strike lower leg, rip tendons, vict at -25% move. 
-              if (!v->hasPart(WEAR_LEGS_R))
-                return 0;
-              if (!v->isHumanoid())
-                return 0;
-              sprintf(buf, 
-    "Your %s rips through $N's tendon on $S lower leg!",
-                 limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s rips through the tendon in your lower leg.",
-                 limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s rips into $N, tearing the tendon in $S lower leg.", 
-                 limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->setMove(v->getMove()/4);
-              for (i = 1; i < 5; i++) {
-                if (v->equipment[WEAR_LEGS_R])
-                  v->damageItem(this,WEAR_LEGS_R,wtype,weapon,*dam);
-	      }
-              *part_hit = WEAR_LEGS_R;
-              rc = damageLimb(v,WEAR_LEGS_R,weapon,dam);
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              return ONEHIT_MESS_CRIT_S;
-            case 73:
-              if (!v->hasPart(WEAR_BACK))
-                return 0;
-              if ((obj = v->equipment[WEAR_BACK])) {
-                v->sendTo(COLOR_OBJECTS, "Your %s saves you from a gory wound!\n\r",
-                  fname(obj->name).c_str());
-                for (i=1;i<5;i++)
-                  if (v->equipment[WEAR_BACK])
-                    v->damageItem(this,WEAR_BACK,wtype,weapon,*dam);
-                *part_hit = WEAR_BACK;
-                return ONEHIT_MESS_CRIT_S;
-              }
-            case 74:
-              // Side wound, vict stunned 6 rounds. 
-              if (!v->hasPart(WEAR_BACK))
-                return 0;
-              strcpy(buf2,v->hssh());
-              sprintf(buf, 
-    "You plunge your %s deep into $N's side, stunning $M!",
-                 limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n plunges $s %s deep into your side.  The agony makes you forget about the fight.",
-                 limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n plunges $s %s deep into $N's side, stunning $M.",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              for (i=1;i<5;i++)
-                if (v->equipment[WEAR_BACK])
-                  v->damageItem(this,WEAR_BACK,wtype,weapon,*dam); 
-              v->cantHit += v->loseRound(6);
-              rc = dislodgeWeapon(v,weapon,WEAR_BACK);
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              *part_hit = WEAR_BACK;
-              return ONEHIT_MESS_CRIT_S;
-            case 75:
-            case 76:
-              // Strike in back of head. If no helm, vict dies. 
-              if (!v->hasPart(WEAR_HEAD))
-                return 0;
-              if ((obj = v->equipment[WEAR_HEAD])) {
-                sprintf(buf, 
-    "You try to thrust your %s into the back of $N's head.",
-                    limbStr.c_str());
-                act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-                sprintf(buf, "Unfortunately, $p saves $M from a hideous death!");
-                act(buf, FALSE, this, obj, v, TO_CHAR);
-                sprintf(buf, 
-    "$n tries to thrust $s %s into the back of your head.",
-                    limbStr.c_str());
-                act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-                sprintf(buf,
-                   "But $p saves you from a hideous death!");
-                act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
-                sprintf(buf, "$n tries plunging $s %s into the back of $N's head, but $p saves $M.",
-                    limbStr.c_str());
-                act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
-                for (i=1;i<5;i++)
-                  if (v->equipment[WEAR_HEAD])
-                    v->damageItem(this,WEAR_HEAD,wtype,weapon,*dam);
-                rc = dislodgeWeapon(v,weapon,WEAR_HEAD);
-                if (IS_SET_DELETE(rc, DELETE_VICT))
-                  return DELETE_VICT;
-                *part_hit = WEAR_HEAD;
-                rc = damageLimb(v,WEAR_HEAD,weapon,dam);
-                if (IS_SET_DELETE(rc, DELETE_VICT))
-                  return DELETE_VICT;
-                return ONEHIT_MESS_CRIT_S;
-              } else {
-                sprintf(buf, 
-    "You thrust your %s into the back of $N's head causing an immediate death.",
-                    limbStr.c_str());
-                act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-                sprintf(buf, 
-    "$n's %s tears into the back of your unprotected head.",
-                    limbStr.c_str());
-                act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-                sprintf(buf,"The world goes black and dark...");
-                act(buf, FALSE, this, 0, v, TO_VICT, ANSI_BLACK);
-                sprintf(buf, "$n thrusts $s %s deep into the back of $N's unprotected head, causing an immediate death.", 
-                    limbStr.c_str());
-                act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-                rc = dislodgeWeapon(v,weapon,WEAR_HEAD);
-                if (IS_SET_DELETE(rc, DELETE_VICT))
-                  return DELETE_VICT;
-                applyDamage(v, (20 * v->hitLimit()),wtype);
-                *part_hit = WEAR_HEAD;
-                if (desc)
-                  desc->career.crit_cranial_pierce++;
-                if (v->desc)
-                  v->desc->career.crit_cranial_pierce_suff++;
-                return DELETE_VICT;
-              }
-              return FALSE;   // not possible, but just in case
-            case 77:
-            case 78:
-              // Strike shatters elbow in weapon arm. Arm broken 
-              new_slot = v->getSecondaryArm();
-              if (!v->hasPart(new_slot))
-                return 0;
-              if (!v->isHumanoid())
-                return FALSE;
-              sprintf(buf, 
-    "$N blocks your %s with $S arm.  However the force shatters $S elbow!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s is blocked by your arm.  Unfortunately your elbow is shattered!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s shatters $N's elbow!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->damageArm(FALSE,PART_BROKEN);
-              if (desc)
-                desc->career.crit_broken_bones++;
-              if (v->desc)
-                v->desc->career.crit_broken_bones_suff++;
-              *part_hit = new_slot;
-              rc = damageLimb(v,new_slot,weapon,dam);
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              return ONEHIT_MESS_CRIT_S;
-            case 79:
-              new_slot = v->getPrimaryHand();
-              if (!v->hasPart(new_slot))
-                return 0;
-              if (!v->isHumanoid())
-                return 0;
-              if ((obj = v->equipment[v->getPrimaryWrist()])) {
-                act("Your $o just saved you from losing your hand!",TRUE,v,obj,0,TO_CHAR, ANSI_PURPLE);
-                act("You nearly sever $N's hand, but $S $o saved $M!",TRUE,this,obj,v,TO_CHAR);
-                *part_hit = v->getPrimaryWrist();
-                return ONEHIT_MESS_CRIT_S;
-              }
-            case 80:
-              // Sever weapon arm at hand 
-              if (!v->hasPart(v->getPrimaryHand()))
-                return 0;
-              if (!v->isHumanoid())
-                return 0;
-              sprintf(buf, 
-    "Your %s severs $N's hand at $S wrist!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s severs your arm below the wrist!", 
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s severs $N's hand at the wrist!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->makePartMissing(v->getPrimaryHand(), FALSE);
-              v->rawBleed(v->getPrimaryWrist(), PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-              v->woundedHand(TRUE);
-              *part_hit = v->getPrimaryHand();
-              if (desc)
-                desc->career.crit_sev_limbs++;
-              if (v->desc)
-                v->desc->career.crit_sev_limbs_suff++;
-              return ONEHIT_MESS_CRIT_S;
-            case 81:
-              if (!v->hasPart(WEAR_BODY))
-                return 0;
-              if ((obj = v->equipment[WEAR_BODY])) {
-                v->sendTo(COLOR_OBJECTS, "Your %s saves you from a punctured lung!\n\r",
-                  fname(obj->name).c_str());
-                for (i=1;i<9;i++)
-                  if (v->equipment[WEAR_BODY])
-                    v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
-                *part_hit = WEAR_BODY;
-                return ONEHIT_MESS_CRIT_S;
-              }
-            case 82:
-              // Punctured lungs. Can't breathe. Dies if not healed quickly 
-              if (v->hasDisease(DISEASE_LUNG))
-                return 0;
-              sprintf(buf, "Your %s plunges into $N's chest puncturing a lung!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-              "$n's %s plunges into your chest and punctures a lung!!!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s plunges into $N's chest.\n\rA hiss of air escapes $S punctured lung!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              af.type = AFFECT_DISEASE;
-              af.level = 0;   // has to be 0 for doctor to treat
-              af.duration = PERMANENT_DURATION;
-              af.modifier = DISEASE_LUNG;
-              af.location = APPLY_NONE;
-              af.bitvector = AFF_SILENT;
-              v->affectTo(&af);
-              rc = dislodgeWeapon(v,weapon,WEAR_BODY);
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              v->sendTo("You won't be able to speak or breathe until you get that punctured lung fixed!!!\n\r");
-              *part_hit = WEAR_BODY;
-              if (desc)
-                desc->career.crit_lung_punct++;
-              if (v->desc)
-                v->desc->career.crit_lung_punct_suff++;
-              return ONEHIT_MESS_CRIT_S;
-            case 83:
-            case 84:
-              if (!v->hasPart(WEAR_BODY))
-                return 0;
-              if ((obj = v->equipment[WEAR_BODY])) {
-                v->sendTo(COLOR_OBJECTS, "Your %s saves you from a kidney wound!\n\r",
-                  fname(obj->name).c_str());
-                for (i=1;i<7;i++)
-                  if (v->equipment[WEAR_BODY])
-                    v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
-                *part_hit = WEAR_BODY;
-                return ONEHIT_MESS_CRIT_S;
-              }
-            case 85:
-             // punctured kidney causes infection
-              if (!v->hasPart(WEAR_BODY))
-                return 0;
-              sprintf(buf, 
-    "You puncture $N's kidney with your %s and cause an infection!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s tears into your kidney; the pain is AGONIZING and an infection has started!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s punctures $N's kidney!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-
-              if (desc)
-                desc->career.crit_kidney++;
-              if (v->desc)
-                v->desc->career.crit_kidney_suff++;
-
-              rc = dislodgeWeapon(v,weapon,WEAR_BODY);
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              v->rawInfect(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-              *part_hit = WEAR_BODY;
-              return ONEHIT_MESS_CRIT_S;
-            case 86:
-            case 87:
-             // stomach wound.  causes death 5 mins later if not healed.
-              if (!v->hasPart(WEAR_BODY))
-                return 0;
-              if (v->hasDisease(DISEASE_STOMACH))
-                return 0;
-              sprintf(buf, 
-    "You plunge your %s into $N's stomach, opening up $S gullet!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s tears into your stomach and exposes your intestines!!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s tears into $N's stomach exposing intestines!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->rawInfect(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-              if (v->hasPart(WEAR_WAISTE))
-                v->rawInfect(WEAR_WAISTE, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-              af.type = AFFECT_DISEASE;
-              af.level = 0;   // for doctor to heal
-              af.duration = PERMANENT_DURATION;
-              af.modifier = DISEASE_STOMACH;
-              v->affectTo(&af);
-              *part_hit = WEAR_WAISTE;
-              if (desc)
-                desc->career.crit_eviscerate++;
-              if (v->desc)
-                v->desc->career.crit_eviscerate_suff++;
-
-              return ONEHIT_MESS_CRIT_S;
-            case 88:
-            case 89:
-              // abdominal wound
-              // You plunge your %s into $N's abdoman and tear out causing a shower of blood
-
-            case 90:
-            case 91:
-            case 92:
-            case 93:
-            case 94:
-            case 95:
-            case 96:
-            case 97:
-            case 98:
-            case 99:
-              return FALSE;
-              break;
-            case 100:
-              sprintf(buf, 
-    "You sink your %s between $N's eyes, causing an immediate death!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n sinks $s %s right between your eyes, causing an immediate death!",
-                    limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n sinks $s %s smack between $N's eyes, causing an immediate death!",
-                             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_ROOM);
-              applyDamage(v, (20 * v->hitLimit()),wtype);
-              *part_hit = WEAR_HEAD;
-              if (desc)
-                desc->career.crit_cranial_pierce++;
-              if (v->desc)
-                v->desc->career.crit_cranial_pierce_suff++;
-              return DELETE_VICT;
-            default:
-              break;
-          }
-        }
-    } else if (slashType(wtype)) {
-        // Do slash crit
-        sstring limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbSlash());
-        if (num <= 33) {
-             // double damage 
-          *dam <<= 1;
-          sprintf(buf, 
-    "You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!",
-             v->describeBodySlot(*part_hit).c_str(),
-             limbStr.c_str());
-          act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-          sprintf(buf, 
-    "$n strikes your %s exceptionally well, sinking $s %s deep into your flesh!",
-             v->describeBodySlot(*part_hit).c_str(),
-             limbStr.c_str());
-          act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-          sprintf(buf, "$n strikes $N's %s exceptionally well, sinking $s %s deep into $N's flesh!",
-             v->describeBodySlot(*part_hit).c_str(),
-             limbStr.c_str());
-          act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-          return (ONEHIT_MESS_CRIT_S);
-        } else if (num <= 66) {
-          // triple damage
-          sprintf(buf, 
-    "You critically strike $N's %s, sinking your %s deep into $S flesh!",
-             v->describeBodySlot(*part_hit).c_str(),
-             limbStr.c_str());
-          act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-          sprintf(buf, 
-    "$n critically strikes your %s, sinking $s %s deep into your flesh!",
-             v->describeBodySlot(*part_hit).c_str(),
-             limbStr.c_str());
-          act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-          sprintf(buf, "$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!",
-             v->describeBodySlot(*part_hit).c_str(),
-             limbStr.c_str());
-          act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-          *dam *= 3;
-          return (ONEHIT_MESS_CRIT_S);
-        } else {
-          // better stuff 
-          if ((num == 83 || num == 84) && wtype == TYPE_CLEAVE)
-            num = 85;  // axes don't impale
-          switch (num) {
-            case 67:
-             // sever finger-r
-              if (!v->hasPart(WEAR_FINGER_R))
-                return 0;
-              sprintf(buf, 
-    "Your %s severs $N's %s and sends it flying!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_FINGER_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s severs your %s and sends it flying!!  OH THE PAIN!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_FINGER_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s severs $N's %s and sends it flying!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_FINGER_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->makePartMissing(WEAR_FINGER_R, FALSE);
-              v->rawBleed(WEAR_HAND_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-              *part_hit = WEAR_FINGER_R;
-              if (desc)
-                desc->career.crit_sev_limbs++;
-              if (v->desc)
-                v->desc->career.crit_sev_limbs_suff++;
-              return ONEHIT_MESS_CRIT_S;
-            case 68:
-             // sever finger-l
-              if (!v->hasPart(WEAR_FINGER_L))
-                return 0;
-              sprintf(buf, 
-    "Your %s severs $N's %s and sends it flying!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_FINGER_L).c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s severs your %s and sends it flying!!  OH THE PAIN!",
-             limbStr.c_str(),
-                   v->describeBodySlot(WEAR_FINGER_L).c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s severs $N's %s and sends it flying!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_FINGER_L).c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->makePartMissing(WEAR_FINGER_L, FALSE);
-              v->rawBleed(WEAR_HAND_L, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-              *part_hit = WEAR_FINGER_L;
-              if (desc)
-                desc->career.crit_sev_limbs++;
-              if (v->desc)
-                v->desc->career.crit_sev_limbs_suff++;
-              return ONEHIT_MESS_CRIT_S;
-            case 69:
-            case 70:
-              if (!v->hasPart(WEAR_HAND_R))
-                return 0;
-              if (!v->isHumanoid())
-                return 0;
-              if ((obj = v->equipment[WEAR_WRIST_R])) {
-                v->sendTo(COLOR_OBJECTS, "Your %s saves you from losing your %s!\n\r",
-                  fname(obj->name).c_str(), v->describeBodySlot(WEAR_HAND_R).c_str());
-                for (i=1;i<5;i++)
-                  if (v->equipment[WEAR_WRIST_R])
-                    v->damageItem(this,WEAR_WRIST_R,wtype,weapon,*dam);
-                *part_hit = WEAR_HAND_R;
-                return ONEHIT_MESS_CRIT_S;
-              }
-            case 71:
-             // sever hand-r at wrist
-              if (!v->hasPart(WEAR_HAND_R))
-                return 0;
-              if (!v->isHumanoid())
-                return 0;
-              sprintf(buf, 
-    "Your %s severs $N's %s and sends it flying!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_HAND_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s severs your %s and sends it flying!!  OH THE PAIN!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_HAND_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s severs $N's %s and sends it flying!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_HAND_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->makePartMissing(WEAR_HAND_R, FALSE);
-              v->rawBleed(WEAR_WRIST_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-              v->woundedHand(v->isRightHanded());
-              *part_hit = WEAR_WRIST_R;
-              if (desc)
-                desc->career.crit_sev_limbs++;
-              if (v->desc)
-                v->desc->career.crit_sev_limbs_suff++;
-              return ONEHIT_MESS_CRIT_S;
-            case 72:
-            case 73:
-              if (!v->hasPart(WEAR_WRIST_L))
-                return 0;
-              if (!v->isHumanoid())
-                return 0;
-              if ((obj = v->equipment[WEAR_WRIST_L])) {
-                v->sendTo(COLOR_OBJECTS, "Your %s saves you from losing a hand!\n\r",
-                  fname(obj->name).c_str());
-                for (i=1;i<5;i++)
-                  if (v->equipment[WEAR_WRIST_L])
-                    v->damageItem(this,WEAR_WRIST_L,wtype,weapon,*dam);
-                *part_hit = WEAR_WRIST_L;
-                return ONEHIT_MESS_CRIT_S;
-              }
-            case 74:
-             // sever hand-l at wrist
-              if (!v->hasPart(WEAR_HAND_L))
-                return 0;
-              if (!v->isHumanoid())
-                return 0;
-              sprintf(buf, 
-    "Your %s severs $N's %s and sends it flying!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_HAND_L).c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s severs your %s and sends it flying!!  OH THE PAIN!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_HAND_L).c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s severs $N's %s and sends it flying!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_HAND_L).c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->makePartMissing(WEAR_HAND_L, FALSE);
-              v->rawBleed(WEAR_WRIST_L, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-              v->woundedHand(!v->isRightHanded());
-              *part_hit = WEAR_WRIST_L;
-              if (desc)
-                desc->career.crit_sev_limbs++;
-              if (v->desc)
-                v->desc->career.crit_sev_limbs_suff++;
-              return ONEHIT_MESS_CRIT_S;
-            case 75:
-            case 76:
-             // cleave arm at shoulder
-              if (!v->hasPart(WEAR_ARM_R))
-                return 0;
-              if (!v->isHumanoid())
-                return 0;
-              sprintf(buf, 
-    "Your %s severs $N's %s and sends it flying!",
-             limbStr.c_str(),
-                   v->describeBodySlot(WEAR_ARM_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s severs your %s and sends it flying!!  OH THE PAIN!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_ARM_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s severs $N's %s and sends it flying!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_ARM_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->makePartMissing(WEAR_ARM_R, FALSE);
-              v->rawBleed(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-              v->woundedHand(v->isRightHanded());
-              *part_hit = WEAR_ARM_R;
-              if (desc)
-                desc->career.crit_sev_limbs++;
-              if (v->desc)
-                v->desc->career.crit_sev_limbs_suff++;
-              return ONEHIT_MESS_CRIT_S;
-            case 77:
-            case 78:
-             // cleave l-arm at shoulder
-              if (!v->hasPart(WEAR_ARM_L))
-                return 0;
-              if (!v->isHumanoid())
-                return 0;
-              sprintf(buf, "Your %s severs $N's %s and sends it flying!",
-             limbStr.c_str(),
-                   v->describeBodySlot(WEAR_ARM_L).c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s severs your %s and sends it flying!!  OH THE PAIN!",
-             limbStr.c_str(),
-                   v->describeBodySlot(WEAR_ARM_L).c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s severs $N's %s and sends it flying!",
-             limbStr.c_str(),
-                    v->describeBodySlot(WEAR_ARM_L).c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->makePartMissing(WEAR_ARM_L, FALSE);
-              v->rawBleed(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-              v->woundedHand(!v->isRightHanded());
-              *part_hit = WEAR_ARM_L;
-              if (desc)
-                desc->career.crit_sev_limbs++;
-              if (v->desc)
-                v->desc->career.crit_sev_limbs_suff++;
-              return ONEHIT_MESS_CRIT_S;
-            case 79:
-            case 80:
-             // sever leg: foot missing, leg useless
-              if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA)) {
-                if (!v->hasPart(WEAR_FOOT_R))
-                  return 0;
-                sprintf(buf, 
-      "Your %s severs $N's %s and sends it flying!",
-               limbStr.c_str(),
-                      v->describeBodySlot(WEAR_FOOT_R).c_str());
-                act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-                sprintf(buf, 
-      "$n's %s severs your %s!!  OH THE PAIN!",
-               limbStr.c_str(),
-                      v->describeBodySlot(WEAR_FOOT_R).c_str());
-                act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-                sprintf(buf, "$n's %s severs $N's %s and sends it flying!",
-                 limbStr.c_str(),
-                      v->describeBodySlot(WEAR_FOOT_R).c_str());
-                act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-                v->makePartMissing(WEAR_FOOT_R, FALSE);
-                v->addToLimbFlags(WEAR_LEGS_R, PART_USELESS);
-                if ((obj = v->equipment[WEAR_LEGS_R])) {
-		  /*
-                  obj->makeScraps();
-                  delete obj;
-                  obj = NULL;
-		  */
-		  // Just do big damage to the item.  It'll scrap if the damage
-		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(v, obj, (::number(-35,-22)));
-                }
-                v->rawBleed(WEAR_LEGS_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-                *part_hit = WEAR_LEGS_R;
-                if (desc)
-                  desc->career.crit_sev_limbs++;
-                if (v->desc)
-                  v->desc->career.crit_sev_limbs_suff++;
-                return ONEHIT_MESS_CRIT_S;
-              }
-            case 81:
-            case 82:
-             // sever other leg: foot missing, leg useless
-              if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
-                  v->hasPart(WEAR_FOOT_L)) {
-                sprintf(buf, 
-      "Your %s severs $N's %s and sends it flying!",
-               limbStr.c_str(),
-                      v->describeBodySlot(WEAR_FOOT_L).c_str());
-                act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-                sprintf(buf, 
-      "$n's %s severs your %s!!  OH THE PAIN!",
-               limbStr.c_str(),
-                      v->describeBodySlot(WEAR_FOOT_L).c_str());
-                act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-                sprintf(buf, "$n's %s severs $N's %s and sends it flying!",
-               limbStr.c_str(),
-                    v->describeBodySlot(WEAR_FOOT_L).c_str());
-                act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-                v->makePartMissing(WEAR_FOOT_L, FALSE);
-                v->addToLimbFlags(WEAR_LEGS_L, PART_USELESS);
-                if ((obj = v->equipment[WEAR_LEGS_L])) {
-		  /*
-                  obj->makeScraps();
-                  delete obj;
-                  obj = NULL;
-		  */
-		  // Just do big damage to the item.  It'll scrap if the damage
-		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(v, obj, (::number(-35,-22)));
-                }
-                v->rawBleed(WEAR_LEGS_L, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-                *part_hit = WEAR_LEGS_L;
-                if (desc)
-                  desc->career.crit_sev_limbs++;
-                if (v->desc)
-                  v->desc->career.crit_sev_limbs_suff++;
-                return ONEHIT_MESS_CRIT_S;
-              }
-            case 83:
-            case 84:
-             // impale with weapon
-              if (!v->hasPart(WEAR_BODY))
-                return 0;
-              sprintf(buf, 
-    "You stick your %s through $N's body, impaling $M!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s is thrust through your torso, impaling you!!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf,
-    "$n thrusts $s %s deep into $N's torso, impaling $M!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              if (desc)
-                desc->career.crit_impale++;
-              if (v->desc)
-                v->desc->career.crit_impale_suff++;
-              rc = dislodgeWeapon(v, weapon, WEAR_BODY);
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              rc = applyDamage(v, v->hitLimit()/2,DAMAGE_IMPALE);
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              *part_hit = WEAR_BODY;
-              return ONEHIT_MESS_CRIT_S;
-            case 85:
-            case 86:
-              if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
-                  v->hasPart(WEAR_WAISTE) &&
-                  (obj = v->equipment[WEAR_WAISTE])) {
-                sprintf(buf, 
-    "You attempt to cleave $N in two with your %s, but $p saves $M from a hideous fate.",
-             limbStr.c_str());
-                act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
-                sprintf(buf, 
-    "$n tries to cleave you in two with $s %s, but $p saves you thankfully!",
-             limbStr.c_str());
-                act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
-                sprintf(buf, "$n attempts to cleave $N in two with $s %s! Thankfully $p saves $M!",
-             limbStr.c_str());
-                act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
-		/*
-                obj->makeScraps();
-                delete obj;
-                obj = NULL;
-		*/
-		// Just do big damage to the item.  It'll scrap if the damage
-		// is more than the eq can handle. angus 08/2003
-		critHitEqDamage(v, obj, (::number(-55,-40)));
-
-                *part_hit = WEAR_WAISTE;
-                rc = damageLimb(v,WEAR_WAISTE,weapon,dam);
-                if (IS_SET_DELETE(rc, DELETE_VICT))
-                  return DELETE_VICT;
-                return ONEHIT_MESS_CRIT_S;
-              }
-              // if no girth, its going into next critSuccess...
-            case 87:
-            case 88:
-              // cleave in two
-              if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA)) {
-                if (!weapon && ((getHeight()*3) < v->getHeight()) &&
-                    !isDiabolic() && !isLycanthrope()) {
-                  sprintf(buf,
-        "With a mighy warcry, you almost cleave $N in two with your %s.",
-                  limbStr.c_str());
-                  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-                  sprintf(buf,
-        "$n unleashes a mighty warcry and slashes you HARD down the center with $s %s!",
-                  limbStr.c_str());
-                  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-                  sprintf(buf,
-        "$n gives a mighty warcry and slashes $N down the center with $s %s!",
-                  limbStr.c_str());
-                  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-                  if ((obj = v->equipment[WEAR_WAISTE])) {
-		    /*
-                    obj->makeScraps();
-                    delete obj;
-                    obj = NULL;
-		    */
-		    // Just do big damage to the item.  It'll scrap if the
-		    // damage is more than the eq can handle. angus 08/2003
-		    critHitEqDamage(v, obj, (::number(-45,-30)));
-                  }
-                  *part_hit = WEAR_WAISTE;
-                  if (desc)
-                    desc->career.crit_cleave_two++;
-                  if (v->desc)
-                    v->desc->career.crit_cleave_two_suff++;
-                  return applyDamage(v, GetMaxLevel()*3, DAMAGE_HACKED);
-                } else {
-                  sprintf(buf, 
-        "With a mighty warcry, you cleave $N in two with your %s.",
-                  limbStr.c_str());
-                  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-                  sprintf(buf, 
-        "$n unleashes a mighty warcry before cleaving you in two with $s %s!",
-                  limbStr.c_str());
-                  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-                  sprintf(buf, "$n gives a mighty warcry and cleaves $N in two with $s %s!",
-                  limbStr.c_str());
-                  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-                  if ((obj = v->equipment[WEAR_WAISTE])) {
-		    /*
-                    obj->makeScraps();
-                    delete obj;
-                    obj = NULL;
-		    */
-		    // Just do big damage to the item.  It'll scrap if the
-		    // damage is more than the eq can handle. angus 08/2003
-		    critHitEqDamage(v, obj, (::number(-45,-30)));
-                  }
-                  applyDamage(v, 20 * v->hitLimit(),DAMAGE_HACKED);
-                  *part_hit = WEAR_WAISTE;
-                  if (desc)
-                    desc->career.crit_cleave_two++;
-                  if (v->desc)
-                    v->desc->career.crit_cleave_two_suff++;
-                  return DELETE_VICT;
-                }
-              }
-            case 89:
-            case 90:
-              // slice torso from gullet to groin
-              if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA)) {
-                sprintf(buf, 
-      "With your %s, you slice $N from gullet to groin disembowling $M!",
-               limbStr.c_str());
-                act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-                sprintf(buf, 
-      "$n's %s slices you from gullet to groin, disembowling you!",
-               limbStr.c_str());
-                act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-                sprintf(buf, "$n's %s slices into $N from gullet to groin, disembowling $M!",
-               limbStr.c_str());
-                act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-                if ((obj = v->equipment[WEAR_BODY])) {
-		  /*
-                  obj->makeScraps();
-                  delete obj;
-                  obj = NULL;
-		  */
-		  // Just do big damage to the item.  It'll scrap if the damage
-		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(v, obj, (::number(-105,-80)));
-                }
-                applyDamage(v, 20 * v->hitLimit(),DAMAGE_DISEMBOWLED_HR);
-                *part_hit = WEAR_BODY;
-                if (desc)
-                  desc->career.crit_disembowel++;
-                if (v->desc)
-                  v->desc->career.crit_disembowel_suff++;
-                return DELETE_VICT;
-              }
-            case 91:
-            case 92:
-	      if(v->getSex()==SEX_MALE && v->hasPart(WEAR_WAISTE) &&
-		 (!(obj = v->equipment[WEAR_WAISTE]) || !obj->isMetal())){
-		sprintf(buf, "With a deft swing of your %s, you sever $N's genitals.", limbStr.c_str());
-		act(buf,FALSE,this,obj,v,TO_CHAR,ANSI_ORANGE);
-		sprintf(buf, "$n deftly severs your genitals with $s %s!  OWWWWW!", limbStr.c_str());
-		act(buf,FALSE,this,obj,v,TO_VICT,ANSI_ORANGE);
-
-		if(obj){
-		  /*
-		  obj->makeScraps();
-		  delete obj;
-		  obj = NULL;
-		  */
-		  // Just do big damage to the item.  It'll scrap if the damage
-		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(v, obj, (::number(-45,-30)));
-		}
-
-		TCorpse *corpse;
-		char buf[256];
-		
-		corpse = new TCorpse();
-		corpse->name = mud_str_dup("genitalia");
-		
-		if (v->getMaterial() > MAT_GEN_MINERAL) {
-		  // made of mineral or metal
-		  sprintf(buf, "the mangled genitalia of %s", v->getName());
-		} else {
-		  sprintf(buf, "the bloody, mangled genitalia of %s", v->getName());
-		}
-		corpse->shortDescr = mud_str_dup(buf);
-		
-		if (v->getMaterial() > MAT_GEN_MINERAL) {
-		  // made of mineral or metal
-		  sprintf(buf, "The mangled, severed genitalia of %s is lying here.", v->getName());
-		} else {
-		  sprintf(buf, "The bloody, mangled, severed genitalia of %s is lying here.", v->getName());
-		}
-		corpse->setDescr(mud_str_dup(buf));
-		
-		corpse->setStuff(NULL);
-		corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
-		corpse->addCorpseFlag(CORPSE_NO_REGEN);
-		corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
-		corpse->setWeight(v->getWeight() / 32.0);
-		corpse->canBeSeen = v->canBeSeen;
-		corpse->setVolume(v->getVolume() * 2/100);
-		corpse->setMaterial(v->getMaterial());
-		
-		act("$p goes flying through the air and bounces once before it rolls to a stop.",TRUE,v,corpse,0,TO_ROOM, ANSI_RED);
-		*v->roomp += *corpse;
-
-		v->setSex(SEX_NEUTER);
-		v->rawBleed(WEAR_WAISTE, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-
-		if (desc)
-		  desc->career.crit_genitalia++;
-		
-		if (v->desc)
-		  v->desc->career.crit_genitalia_suff++;
-		
-                return ONEHIT_MESS_CRIT_S;
-	      }
-	      break;
-            case 93:
-            case 94:
-            case 95:
-            case 96:
-            case 97:
-              return FALSE;
-              break;
-            case 98:
-            case 99:
-	    case 100:
-              // decapitate if no neck armor
-              if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
-                  (obj = v->equipment[WEAR_NECK])) {
-                sprintf(buf, 
-    "You attempt to decapitate $N with your %s, but $p saves $M from a hideous fate.",
-             limbStr.c_str());
-                act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
-                sprintf(buf, 
-    "$n tries to decapitate you with $s %s, but $p saves you!",
-             limbStr.c_str());
-                act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
-                sprintf(buf, "$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!",
-             limbStr.c_str());
-                act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
-		/*
-                obj->makeScraps();
-                delete obj;
-                obj = NULL;
-		*/
-		// Just do big damage to the item.  It'll scrap if the damage
-		// is more than the eq can handle. angus 08/2003
-		critHitEqDamage(v, obj, (::number(-40,-25)));
-                *part_hit = WEAR_NECK;
-                rc = damageLimb(v,*part_hit,weapon,dam);
-                if (IS_SET_DELETE(rc, DELETE_VICT))
-                  return DELETE_VICT;
-                return ONEHIT_MESS_CRIT_S;
-              } else { // no collar
-              // if no collar, its going into next critSuccess...
-		// POW! He was deCAPITATED! 
-		act("$n strikes a fatal blow and cuts off $N's head!", FALSE, this, 0, v, TO_NOTVICT, ANSI_CYAN);
-		act("You strike a fatal blow and completely behead $N!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
-		act("$n strikes a fatal blow and completely beheads you!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
-		if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
-		    (obj = v->equipment[WEAR_NECK])) {
-		  /*
-		  obj->makeScraps();
-		  delete obj;
-		  obj = NULL;
-		  */
-		  // Just do big damage to the item.  It'll scrap if the damage
-		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(v, obj, (::number(-40,-25)));
-		}
-		v->makeBodyPart(WEAR_HEAD);
-		applyDamage(v, (20 * v->hitLimit()),DAMAGE_BEHEADED);
-		*part_hit = WEAR_NECK;
-		if (desc)
-		  desc->career.crit_beheads++;
-		
-		if (v->desc)
-		  v->desc->career.crit_beheads_suff++;
-		
-		return DELETE_VICT;
-	      }
-            default:
-              return FALSE;
-          }
-        }
-    } else if (bluntType(wtype)) {
-        // Do crush crit 
-      sstring limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbBlunt());
+  // factor in relative levels
+  crit_chance *= (50 + GetMaxLevel() - v->GetMaxLevel());
+  
+  if(mod == -1){
+    // check the roll versus the chance
+    if(dicenum > crit_chance)
+      return FALSE;
     
-        if (num <= 33) {
-          // double damage 
-          *dam <<= 1;
-	  if (Twink == 1) {
-	    sprintf(buf, "You strike $N exceptionally well, %s $S %s with your %s!",
-		    attack_hit_text_twink[new_wtype].hitting,
-		    v->describeBodySlot(*part_hit).c_str(),
-		    limbStr.c_str());
-	  } else {
-	    sprintf(buf, "You strike $N exceptionally well, %s $S %s with your %s!",
-		    attack_hit_text[new_wtype].hitting,
-		    v->describeBodySlot(*part_hit).c_str(),
-		    limbStr.c_str());
-	  }
-          act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-	  if (Twink == 1) {
-	    sprintf(buf, "$n strikes you exceptionally well, %s your %s with $s %s.",
-		    attack_hit_text_twink[new_wtype].hitting,
-		    v->describeBodySlot(*part_hit).c_str(),
-		    limbStr.c_str());
-	  } else {
-	    sprintf(buf, "$n strikes you exceptionally well, %s your %s with $s %s.",
-		    attack_hit_text[new_wtype].hitting,
-		    v->describeBodySlot(*part_hit).c_str(),
-		    limbStr.c_str());
-	  }
-          act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	  if (Twink == 1) {
-	    sprintf(buf, "$n strikes $N exceptionally well, %s $S %s with $s %s.",
-		    attack_hit_text_twink[new_wtype].hitting,
-		    v->describeBodySlot(*part_hit).c_str(), 
-		    limbStr.c_str());
-	  } else {
-	    sprintf(buf, "$n strikes $N exceptionally well, %s $S %s with $s %s.",
-		    attack_hit_text[new_wtype].hitting,
-		    v->describeBodySlot(*part_hit).c_str(), 
-		    limbStr.c_str());
-	  }
-          act(buf, TRUE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-          return (ONEHIT_MESS_CRIT_S);
-        } else if (num <= 66) {
-          // triple damage 
-          *dam *= 3;
-	  if (Twink == 1) {
-	    sprintf(buf, "You critically strike $N, %s $S %s with your %s!",
-		    attack_hit_text_twink[new_wtype].hitting,
-		    v->describeBodySlot(*part_hit).c_str(),
-		    limbStr.c_str());
-	  } else {
-	    sprintf(buf, "You critically strike $N, %s $S %s with your %s!",
-		    attack_hit_text[new_wtype].hitting,
-		    v->describeBodySlot(*part_hit).c_str(),
-		    limbStr.c_str());
-	  }
-          act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-	  if (Twink == 1) {
-	    sprintf(buf, "$n critically strikes you, %s your %s with $s %s.",
-		    attack_hit_text_twink[new_wtype].hitting,
-		    v->describeBodySlot(*part_hit).c_str(),
-		    limbStr.c_str());
-	  } else {
-	    sprintf(buf, "$n critically strikes you, %s your %s with $s %s.",
-		    attack_hit_text[new_wtype].hitting,
-		    v->describeBodySlot(*part_hit).c_str(),
-		    limbStr.c_str());
-	  }
-          act(buf, TRUE, this, 0, v, TO_VICT, ANSI_RED);
-	  if (Twink == 1) {
-	    sprintf(buf, "$n critically strikes $N, %s $S %s with $s %s.",
-		    attack_hit_text_twink[new_wtype].hitting,
-		    v->describeBodySlot(*part_hit).c_str(), 
-		    limbStr.c_str());
-	  } else {
-	    sprintf(buf, "$n critically strikes $N, %s $S %s with $s %s.",
-		    attack_hit_text[new_wtype].hitting,
-		    v->describeBodySlot(*part_hit).c_str(), 
-		    limbStr.c_str());
-	  }
-          act(buf, TRUE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-          return (ONEHIT_MESS_CRIT_S);
-        } else {
-          // better stuff 
-          switch (num) {
-            case 67:
-            case 68:
-             // crush finger
-              if (!v->hasPart(WEAR_FINGER_R))
-                return 0;
-              if (v->race->hasNoBones())
-                return 0;
-              if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
-                return 0;
-              sprintf(buf, 
-    "With your %s, you crush $N's %s!",
-             limbStr.c_str(),
-             v->describeBodySlot(WEAR_FINGER_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s crushes your %s!",
-             limbStr.c_str(),
-             v->describeBodySlot(WEAR_FINGER_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s crushes $N's %s!",
-                limbStr.c_str(),
-             v->describeBodySlot(WEAR_FINGER_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->addToLimbFlags(WEAR_FINGER_R, PART_BROKEN);
-              if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
-                  (obj = v->equipment[WEAR_FINGER_R])) {
-		/*
-                obj->makeScraps();
-                delete obj;
-                obj = NULL;
-		*/
-		// Just do big damage to the item.  It'll scrap if the damage
-		// is more than the eq can handle. angus 08/2003
-		critHitEqDamage(v, obj, (::number(-21,-15)));
-              }
-              *part_hit = WEAR_FINGER_R;
-              if (desc)
-                desc->career.crit_broken_bones++;
-              if (v->desc)
-                v->desc->career.crit_broken_bones_suff++;
-              rc = damageLimb(v,*part_hit,weapon,dam);
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              return ONEHIT_MESS_CRIT_S;
-            case 69:
-            case 70:
-             //shatter bones in 1 hand
-              if (!v->hasPart(WEAR_HAND_R))
-                return 0;
-              if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
-                return 0;
-              if (v->race->hasNoBones())
-                return 0;
-              sprintf(buf, 
-    "With your %s, you shatter the bones in $N's %s!",
-             limbStr.c_str(),
-               v->describeBodySlot(WEAR_HAND_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s shatters the bones in your %s!",
-             limbStr.c_str(),
-               v->describeBodySlot(WEAR_HAND_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s shatters the bones in $N's %s!",
-             limbStr.c_str(),
-               v->describeBodySlot(WEAR_HAND_R).c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->addToLimbFlags(WEAR_HAND_R, PART_BROKEN);
-              for (i=1;i<5;i++)
-                if (v->equipment[WEAR_HAND_R])
-                  v->damageItem(this,WEAR_HAND_R,wtype,weapon,*dam);
-              v->woundedHand(v->isRightHanded());
-              *part_hit = WEAR_HAND_R;
-              if (desc)
-                desc->career.crit_broken_bones++;
-              if (v->desc)
-                v->desc->career.crit_broken_bones_suff++;
-              rc = damageLimb(v,*part_hit,weapon,dam);
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              return ONEHIT_MESS_CRIT_S;
-            case 71:
-            case 72:
-             // shatter bones other hand
-              if (!v->hasPart(WEAR_HAND_L))
-                return 0;
-              if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
-                return 0;
-              if (v->race->hasNoBones())
-                return 0;
-              *part_hit = WEAR_HAND_L;
-              sprintf(buf, 
-    "With your %s, you shatter the bones in $N's %s!",
-             limbStr.c_str(),
-               v->describeBodySlot(WEAR_HAND_L).c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s shatters the bones in your %s!",
-             limbStr.c_str(),
-               v->describeBodySlot(WEAR_HAND_L).c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s shatters the bones in $N's %s!",
-                limbStr.c_str(),
-               v->describeBodySlot(WEAR_HAND_L).c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->addToLimbFlags(WEAR_HAND_L, PART_BROKEN);
-              v->woundedHand(!v->isRightHanded());
-              for (i=1;i<5;i++)
-                if (v->equipment[WEAR_HAND_L])
-                  v->damageItem(this,WEAR_HAND_L,wtype,weapon,*dam);
-              *part_hit = WEAR_HAND_L;
-              if (desc)
-                desc->career.crit_broken_bones++;
-              if (v->desc)
-                v->desc->career.crit_broken_bones_suff++;
-              rc = damageLimb(v,*part_hit,weapon,dam);
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              return ONEHIT_MESS_CRIT_S;
-            case 73:
-            case 74:
-             // break bones arm - broken
-              if (!v->hasPart(v->getPrimaryArm()))
-                return 0;
-              if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
-                return 0;
-              if (v->race->hasNoBones())
-                return 0;
-              *part_hit = v->getPrimaryArm();
-              sprintf(buf, 
-    "You shatter the bones in $N's forearm with your %s!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s shatters the bones in your forearm!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s shatters the bones in $N's forearm!",
-                limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->addToLimbFlags(v->getPrimaryArm(), PART_BROKEN);
-              for (i=1;i<5;i++)
-                if (v->equipment[v->getPrimaryArm()])
-                  v->damageItem(this,v->getPrimaryArm(),wtype,weapon,*dam);
-              *part_hit = v->getPrimaryArm();
-              if (desc)
-                desc->career.crit_broken_bones++;
-              if (v->desc)
-                v->desc->career.crit_broken_bones_suff++;
-              rc = damageLimb(v,*part_hit,weapon,dam);
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              return ONEHIT_MESS_CRIT_S;
-            case 75:
-            case 76:
-             // crush nerves arm - useless
-              new_slot = v->getPrimaryArm();
-              if (!v->slotChance(new_slot))
-                return 0;
-              sprintf(buf, 
-    "With your %s, you crush the nerves in $N's shoulder!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s crushes the nerves in your shoulder!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s crushes the nerves in $N's shoulder!",
-                limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->damageArm(TRUE,PART_USELESS);
-              *part_hit = new_slot;
-              if (desc)
-                desc->career.crit_crushed_nerve++;
-              if (v->desc)
-                v->desc->career.crit_crushed_nerve_suff++;
-              return ONEHIT_MESS_CRIT_S;
-            case 77:
-            case 78:
-             // break bones leg
-              if (!v->hasPart(WEAR_LEGS_L))
-                return 0;
-              if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
-                return 0;
-              if (v->race->hasNoBones())
-                return 0;
-              *part_hit = WEAR_LEGS_L;
-              sprintf(buf, 
-    "You shatter $N's femur with your %s!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s shatters your femur!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s shatters $N's femur!",
-                limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              *part_hit = WEAR_LEGS_L;
-              v->addToLimbFlags(WEAR_LEGS_L, PART_BROKEN);
-              for (i=1;i<5;i++)
-                if (v->equipment[WEAR_LEGS_L])
-                  v->damageItem(this,WEAR_LEGS_L,wtype,weapon,*dam);
-              rc = damageLimb(v,*part_hit,weapon,dam);
-              if (desc)
-                desc->career.crit_broken_bones++;
-              if (v->desc)
-                v->desc->career.crit_broken_bones_suff++;
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              return ONEHIT_MESS_CRIT_S;
-            case 79:
-            case 80:
-             // crush muscles in leg
-              if (!v->hasPart(WEAR_LEGS_L))
-                return 0;
-              *part_hit = WEAR_LEGS_L;
-              sprintf(buf, 
-    "With your %s, you crush the muscles in $N's leg!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s crushes the muscles in your leg!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s crushes the muscles in $N's leg!",
-                limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              *part_hit = WEAR_LEGS_L;
-              v->addToLimbFlags(WEAR_LEGS_L, PART_USELESS);
-              v->addToLimbFlags(WEAR_FOOT_L, PART_USELESS);
-              for (i=1;i<5;i++)
-                if (v->equipment[WEAR_LEGS_L])
-                  v->damageItem(this,WEAR_LEGS_L,wtype,weapon,*dam);
-              rc = damageLimb(v,*part_hit,weapon,dam);
+    // update crit stats
+    stats.combat_crit_suc_pass++;
+    if (desc)
+      desc->career.crit_hits++;
+    if (v->desc)
+      v->desc->career.crit_hits_suff++;
+    
+    // determine which crit to do, higher number = better crits
+    crit_num = ::number(1, 100);
+  } else {
+    // specified crit
+    crit_num = mod;
+  }
 
-              if (desc)
-                desc->career.crit_crushed_nerve++;
-              if (v->desc)
-                v->desc->career.crit_crushed_nerve_suff++;
+  // critical hitting gets damage boost as well
+  if(doesKnowSkill(SKILL_CRIT_HIT))
+    *dam = (int)(*dam * ((getSkillValue(SKILL_CRIT_HIT)/100.0)+1.0));
 
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              return ONEHIT_MESS_CRIT_S;
-            case 81:
-            case 82:
-             // head blow - stuns 10 rounds
-             // this is half, goes into next case for other half
-              if (!v->hasPart(WEAR_HEAD))
-                return 0;
-              *part_hit = WEAR_HEAD;
-              v->cantHit += v->loseRound(10);
-            case 83:
-            case 84:
-             // head blow - stuns 5 rounds
-              if (!v->hasPart(WEAR_HEAD))
-                return 0;
-              *part_hit = WEAR_HEAD;
-              sprintf(buf, 
-    "You slam $N's head massively with your %s!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s slams into your head and .. What?  who?  Where am I????",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s slams into $N's head, stunning $M completely!",
-                limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->cantHit += v->loseRound(5);
-              *part_hit = WEAR_HEAD;
-              for (i = 1;i < 5; i++) {
-                if (v->equipment[WEAR_HEAD]) {
-                  v->damageItem(this,WEAR_HEAD,wtype,weapon,*dam);
-                  if (v->cantHit > 0)
-                    v->cantHit -= v->loseRound(2);
-                }
-              }
-              rc = damageLimb(v,*part_hit,weapon,dam);
-              if (IS_SET_DELETE(rc, DELETE_VICT))
-                return DELETE_VICT;
-              return ONEHIT_MESS_CRIT_S;
-            case 85:
-            case 86:
-             //  shatter rib
-              if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
-                return 0;
-              if (v->race->hasNoBones())
-                return 0;
-              *part_hit = WEAR_BODY;
-              sprintf(buf, 
-    "With your %s, you slam $N's chest, breaking a rib!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s crushes your chest and shatters a rib!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s shatters one of $N's ribs!",
-                limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->addToLimbFlags(WEAR_BODY, PART_BROKEN);
-              if (desc)
-                desc->career.crit_broken_bones++;
-              if (v->desc)
-                v->desc->career.crit_broken_bones_suff++;
-              for (i=1;i<7;i++)
-                if (v->equipment[WEAR_BODY])
-                  v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
-              return ONEHIT_MESS_CRIT_S;
-            case 87:
-            case 88:
-             //  shatter rib - internal damage, death if not healed
-              if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
-                return 0;
-              if (v->race->hasNoBones())
-                return 0;
-              if (v->hasDisease(DISEASE_HEMORRAGE))
-                return 0;
-              *part_hit = WEAR_BODY;
-              sprintf(buf, 
-    "With your %s, you slam $N's chest, breaking a rib and causing internal damage!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-              sprintf(buf, 
-    "$n's %s crushes your chest, shatters a rib and causes internal bleeding!",
-             limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-              sprintf(buf, "$n's %s shatters one of $N's ribs!",
-                limbStr.c_str());
-              act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-              v->addToLimbFlags(WEAR_BODY, PART_BROKEN);
-              for (i=1;i<9;i++)
-                if (v->equipment[WEAR_BODY])
-                  v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
-              af.type = AFFECT_DISEASE;
-              af.level = 0;   // has to be 0 for doctor to treat
-              af.duration = PERMANENT_DURATION;
-              af.modifier = DISEASE_HEMORRAGE;
-              af.location = APPLY_NONE;
-              af.bitvector = 0;
-              v->affectTo(&af);
-              if (desc)
-                desc->career.crit_broken_bones++;
-              if (v->desc)
-                v->desc->career.crit_broken_bones_suff++;
-              return ONEHIT_MESS_CRIT_S;
-            case 89:
-            case 90:
-            case 91:
-            case 92:
-            case 93:
-            case 94:
-            case 95:
-	      return FALSE;
-            case 96:
-            case 97:
-	      sprintf(buf, "You swing your %s right into $N's face, sending a tooth flying.", limbStr.c_str());
-	      act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
-	      sprintf(buf, "$n's %s connects with your face, sending a tooth flying.", limbStr.c_str());
-	      act(buf, FALSE, this, obj, v, TO_VICT, ANSI_ORANGE);
-              sprintf(buf, "$n's %s connects with $N's face, sending a tooth flying.", limbStr.c_str());
-              act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
-	      	      
-	      TCorpse *corpse;
-	      char buf[256];
-	      
-	      corpse = new TCorpse();
-	      corpse->name = mud_str_dup("tooth");
-	      
-	      sprintf(buf, "<W>a <1><r>bloody<1><W> tooth of %s<1>", v->getName());
-	      corpse->shortDescr = mud_str_dup(buf);
-	      
-	      sprintf(buf, "<W>A <1><r>bloody<1><W> tooth lies here, having been knocked out of %s's mouth.<1>", v->getName());
-	      corpse->setDescr(mud_str_dup(buf));
-	      
-	      corpse->setStuff(NULL);
-	      corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
-	      corpse->addCorpseFlag(CORPSE_NO_REGEN);
-	      corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
-	      corpse->setWeight(0.1);
-	      corpse->canBeSeen = v->canBeSeen;
-	      corpse->setVolume(1);
-	      corpse->setMaterial(MAT_BONE);
-	      
-	      act("$p goes flying through the air and bounces once before it rolls to a stop.",TRUE,v,corpse,0,TO_ROOM, ANSI_RED);
-	      *v->roomp += *corpse;
+  // play the crit-hit sound
+  // boost the priority so that this sound will trump normal combat sounds
+  soundNumT snd = pickRandSound(SOUND_CRIT_01, SOUND_CRIT_43);
+  playsound(snd, SOUND_TYPE_COMBAT, 100, 45, 1);
 
-	      if (desc)
-		desc->career.crit_tooth++;
-	      
-	      if (v->desc)
-		v->desc->career.crit_tooth_suff++;
-      
-	      return ONEHIT_MESS_CRIT_S;
-	    case 98:
-	    case 99:
-	    case 100:
-	      // crush skull unless helmet
-	      if (!v->hasPart(WEAR_HEAD))
-		return 0;
-	      if ((obj = v->equipment[WEAR_HEAD])) {
-		sprintf(buf, 
-			"With a mighty blow, you crush $N's head with your %s. Unfortunately, $S $o saves $M.",
-			limbStr.c_str());
-		act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
-		sprintf(buf, 
-			"$n's %s strikes a mighty blow to your head crushing your $o!",
-			limbStr.c_str());
-		act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
-                sprintf(buf, "$n's %s strikes a mighty blow to $N's head, crushing $S $o!",
-			limbStr.c_str());
-                act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
-                if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA)) {
-		  /*
-                  obj->makeScraps();
-                  delete obj;
-                  obj = NULL;
-		  */
-		  // Just do big damage to the item.  It'll scrap if the damage
-		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(v, obj, (::number(-55,-40)));
-                }
-                *part_hit = WEAR_HEAD;
-                rc = damageLimb(v,*part_hit,weapon,dam);
-                if (IS_SET_DELETE(rc, DELETE_VICT))
-                  return DELETE_VICT;
-                return ONEHIT_MESS_CRIT_S;
-              } else { // no head gear
-		// crush skull
-		if (!v->hasPart(WEAR_HEAD))
-		  return 0;
-		sprintf(buf, 
-			"With your %s, you crush $N's skull, and $S brains ooze out!",
-			limbStr.c_str());
-		act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-		sprintf(buf, 
-			"$n's %s crushes your skull and The World goes dark!",
-			limbStr.c_str());
-		act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-		sprintf(buf, "$n's %s crushes $N's skull.  Brains ooze out as $E crumples!",
-			limbStr.c_str());
-		act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-		if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
-		    (obj = v->equipment[WEAR_HEAD])) {
-		  /*
-		  obj->makeScraps();
-		  delete obj;
-		  obj = NULL;
-		  */
-		  // Just do big damage to the item.  It'll scrap if the damage
-		  // is more than the eq can handle. angus 08/2003
-		  critHitEqDamage(v, obj, (::number(-55,-40)));
-		}
-		if (desc)
-		  desc->career.crit_crushed_skull++;
-
-		if (v->desc)
-		  v->desc->career.crit_crushed_skull_suff++;
-
-		applyDamage(v, (20 * v->hitLimit()),DAMAGE_CAVED_SKULL);
-		return DELETE_VICT;
-	      }
-            default:
-              return FALSE;
-              break;
-          }
-        }
-    }
+  if (pierceType(wtype)) {
+    return critPierce(v, weapon, part_hit, wtype, dam, crit_num);
+  } else if (slashType(wtype)) {
+    return critSlash(v, weapon, part_hit, wtype, dam, crit_num);
+  } else if (bluntType(wtype)) {
+    return critBlunt(v, weapon, part_hit, wtype, dam, crit_num);
+  } else {
+    vlogf(LOG_BUG, "unknown weapon type in critSuccessChance (%i)", wtype);
   }
   return FALSE;
+}
+
+int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
+		       spellNumT wtype, int *dam, int crit_num)
+{
+  sstring buf, limbStr;
+  TThing *obj=NULL;
+  int rc, i;
+  affectedData af;
+  wearSlotT new_slot;
+  int new_wtype = wtype - TYPE_HIT;
+
+  if(crit_num>100){
+    vlogf(LOG_BUG, "critBlunt called with crit_num>100 (%i)", crit_num);
+    crit_num=0;
+  }
+
+  // Do crush crit 
+  limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbBlunt());
+
+  if (crit_num <= 33) {
+    // double damage 
+    *dam *= 2;
+
+    ssprintf(buf, "You strike $N exceptionally well, %s $S %s with your %s!",
+	    attack_hit_text[new_wtype].hitting,
+	    v->describeBodySlot(*part_hit).c_str(),
+	    limbStr.c_str());
+    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+
+    ssprintf(buf, "$n strikes you exceptionally well, %s your %s with $s %s.",
+	    attack_hit_text[new_wtype].hitting,
+	    v->describeBodySlot(*part_hit).c_str(),
+	    limbStr.c_str());
+    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+
+    ssprintf(buf, "$n strikes $N exceptionally well, %s $S %s with $s %s.",
+	    attack_hit_text[new_wtype].hitting,
+	    v->describeBodySlot(*part_hit).c_str(), 
+	    limbStr.c_str());
+    act(buf, TRUE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+
+    return (ONEHIT_MESS_CRIT_S);
+  } else if (crit_num <= 66) {
+    // triple damage 
+    *dam *= 3;
+    
+    ssprintf(buf, "You critically strike $N, %s $S %s with your %s!",
+	    attack_hit_text[new_wtype].hitting,
+	    v->describeBodySlot(*part_hit).c_str(),
+	    limbStr.c_str());
+    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+
+    ssprintf(buf, "$n critically strikes you, %s your %s with $s %s.",
+	    attack_hit_text[new_wtype].hitting,
+	    v->describeBodySlot(*part_hit).c_str(),
+	    limbStr.c_str());
+    act(buf, TRUE, this, 0, v, TO_VICT, ANSI_RED);
+
+    ssprintf(buf, "$n critically strikes $N, %s $S %s with $s %s.",
+	    attack_hit_text[new_wtype].hitting,
+	    v->describeBodySlot(*part_hit).c_str(), 
+	    limbStr.c_str());
+    act(buf, TRUE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+
+    return (ONEHIT_MESS_CRIT_S);
+  } else {
+    // better stuff 
+    switch (crit_num) {
+      case 67:
+      case 68:
+	// crush finger
+	if (!v->hasPart(WEAR_FINGER_R))
+	  return 0;
+	if (v->race->hasNoBones())
+	  return 0;
+	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	  return 0;
+	ssprintf(buf, 
+		"With your %s, you crush $N's %s!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_FINGER_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s crushes your %s!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_FINGER_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s crushes $N's %s!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_FINGER_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->addToLimbFlags(WEAR_FINGER_R, PART_BROKEN);
+	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
+	    (obj = v->equipment[WEAR_FINGER_R]))
+	  critHitEqDamage(v, obj, (::number(-21,-15)));
+
+	*part_hit = WEAR_FINGER_R;
+	if (desc)
+	  desc->career.crit_broken_bones++;
+	if (v->desc)
+	  v->desc->career.crit_broken_bones_suff++;
+	rc = damageLimb(v,*part_hit,weapon,dam);
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	return ONEHIT_MESS_CRIT_S;
+      case 69:
+      case 70:
+	//shatter bones in 1 hand
+	if (!v->hasPart(WEAR_HAND_R))
+	  return 0;
+	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	  return 0;
+	if (v->race->hasNoBones())
+	  return 0;
+	ssprintf(buf, 
+		"With your %s, you shatter the bones in $N's %s!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_HAND_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s shatters the bones in your %s!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_HAND_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s shatters the bones in $N's %s!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_HAND_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->addToLimbFlags(WEAR_HAND_R, PART_BROKEN);
+	for (i=1;i<5;i++)
+	  if (v->equipment[WEAR_HAND_R])
+	    v->damageItem(this,WEAR_HAND_R,wtype,weapon,*dam);
+	v->woundedHand(v->isRightHanded());
+	*part_hit = WEAR_HAND_R;
+	if (desc)
+	  desc->career.crit_broken_bones++;
+	if (v->desc)
+	  v->desc->career.crit_broken_bones_suff++;
+	rc = damageLimb(v,*part_hit,weapon,dam);
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	return ONEHIT_MESS_CRIT_S;
+      case 71:
+      case 72:
+	// shatter bones other hand
+	if (!v->hasPart(WEAR_HAND_L))
+	  return 0;
+	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	  return 0;
+	if (v->race->hasNoBones())
+	  return 0;
+	*part_hit = WEAR_HAND_L;
+	ssprintf(buf, 
+		"With your %s, you shatter the bones in $N's %s!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_HAND_L).c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s shatters the bones in your %s!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_HAND_L).c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s shatters the bones in $N's %s!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_HAND_L).c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->addToLimbFlags(WEAR_HAND_L, PART_BROKEN);
+	v->woundedHand(!v->isRightHanded());
+	for (i=1;i<5;i++)
+	  if (v->equipment[WEAR_HAND_L])
+	    v->damageItem(this,WEAR_HAND_L,wtype,weapon,*dam);
+	*part_hit = WEAR_HAND_L;
+	if (desc)
+	  desc->career.crit_broken_bones++;
+	if (v->desc)
+	  v->desc->career.crit_broken_bones_suff++;
+	rc = damageLimb(v,*part_hit,weapon,dam);
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	return ONEHIT_MESS_CRIT_S;
+      case 73:
+      case 74:
+	// break bones arm - broken
+	if (!v->hasPart(v->getPrimaryArm()))
+	  return 0;
+	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	  return 0;
+	if (v->race->hasNoBones())
+	  return 0;
+	*part_hit = v->getPrimaryArm();
+	ssprintf(buf, 
+		"You shatter the bones in $N's forearm with your %s!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s shatters the bones in your forearm!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s shatters the bones in $N's forearm!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->addToLimbFlags(v->getPrimaryArm(), PART_BROKEN);
+	for (i=1;i<5;i++)
+	  if (v->equipment[v->getPrimaryArm()])
+	    v->damageItem(this,v->getPrimaryArm(),wtype,weapon,*dam);
+	*part_hit = v->getPrimaryArm();
+	if (desc)
+	  desc->career.crit_broken_bones++;
+	if (v->desc)
+	  v->desc->career.crit_broken_bones_suff++;
+	rc = damageLimb(v,*part_hit,weapon,dam);
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	return ONEHIT_MESS_CRIT_S;
+      case 75:
+      case 76:
+	// crush nerves arm - useless
+	new_slot = v->getPrimaryArm();
+	if (!v->slotChance(new_slot))
+	  return 0;
+	ssprintf(buf, 
+		"With your %s, you crush the nerves in $N's shoulder!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s crushes the nerves in your shoulder!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s crushes the nerves in $N's shoulder!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->damageArm(TRUE,PART_USELESS);
+	*part_hit = new_slot;
+	if (desc)
+	  desc->career.crit_crushed_nerve++;
+	if (v->desc)
+	  v->desc->career.crit_crushed_nerve_suff++;
+	return ONEHIT_MESS_CRIT_S;
+      case 77:
+      case 78:
+	// break bones leg
+	if (!v->hasPart(WEAR_LEGS_L))
+	  return 0;
+	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	  return 0;
+	if (v->race->hasNoBones())
+	  return 0;
+	*part_hit = WEAR_LEGS_L;
+	ssprintf(buf, 
+		"You shatter $N's femur with your %s!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s shatters your femur!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s shatters $N's femur!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	*part_hit = WEAR_LEGS_L;
+	v->addToLimbFlags(WEAR_LEGS_L, PART_BROKEN);
+	for (i=1;i<5;i++)
+	  if (v->equipment[WEAR_LEGS_L])
+	    v->damageItem(this,WEAR_LEGS_L,wtype,weapon,*dam);
+	rc = damageLimb(v,*part_hit,weapon,dam);
+	if (desc)
+	  desc->career.crit_broken_bones++;
+	if (v->desc)
+	  v->desc->career.crit_broken_bones_suff++;
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	return ONEHIT_MESS_CRIT_S;
+      case 79:
+      case 80:
+	// crush muscles in leg
+	if (!v->hasPart(WEAR_LEGS_L))
+	  return 0;
+	*part_hit = WEAR_LEGS_L;
+	ssprintf(buf, 
+		"With your %s, you crush the muscles in $N's leg!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s crushes the muscles in your leg!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s crushes the muscles in $N's leg!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	*part_hit = WEAR_LEGS_L;
+	v->addToLimbFlags(WEAR_LEGS_L, PART_USELESS);
+	v->addToLimbFlags(WEAR_FOOT_L, PART_USELESS);
+	for (i=1;i<5;i++)
+	  if (v->equipment[WEAR_LEGS_L])
+	    v->damageItem(this,WEAR_LEGS_L,wtype,weapon,*dam);
+	rc = damageLimb(v,*part_hit,weapon,dam);
+
+	if (desc)
+	  desc->career.crit_crushed_nerve++;
+	if (v->desc)
+	  v->desc->career.crit_crushed_nerve_suff++;
+
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	return ONEHIT_MESS_CRIT_S;
+      case 81:
+      case 82:
+	// head blow - stuns 10 rounds
+	// this is half, goes into next case for other half
+	if (!v->hasPart(WEAR_HEAD))
+	  return 0;
+	*part_hit = WEAR_HEAD;
+	v->cantHit += v->loseRound(10);
+      case 83:
+      case 84:
+	// head blow - stuns 5 rounds
+	if (!v->hasPart(WEAR_HEAD))
+	  return 0;
+	*part_hit = WEAR_HEAD;
+	ssprintf(buf, 
+		"You slam $N's head massively with your %s!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s slams into your head and .. What?  who?  Where am I????",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s slams into $N's head, stunning $M completely!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->cantHit += v->loseRound(5);
+	*part_hit = WEAR_HEAD;
+	for (i = 1;i < 5; i++) {
+	  if (v->equipment[WEAR_HEAD]) {
+	    v->damageItem(this,WEAR_HEAD,wtype,weapon,*dam);
+	    if (v->cantHit > 0)
+	      v->cantHit -= v->loseRound(2);
+	  }
+	}
+	rc = damageLimb(v,*part_hit,weapon,dam);
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	return ONEHIT_MESS_CRIT_S;
+      case 85:
+      case 86:
+	//  shatter rib
+	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	  return 0;
+	if (v->race->hasNoBones())
+	  return 0;
+	*part_hit = WEAR_BODY;
+	ssprintf(buf, 
+		"With your %s, you slam $N's chest, breaking a rib!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s crushes your chest and shatters a rib!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s shatters one of $N's ribs!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->addToLimbFlags(WEAR_BODY, PART_BROKEN);
+	if (desc)
+	  desc->career.crit_broken_bones++;
+	if (v->desc)
+	  v->desc->career.crit_broken_bones_suff++;
+	for (i=1;i<7;i++)
+	  if (v->equipment[WEAR_BODY])
+	    v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
+	return ONEHIT_MESS_CRIT_S;
+      case 87:
+      case 88:
+	//  shatter rib - internal damage, death if not healed
+	if (v->isImmune(IMMUNE_BONE_COND, *dam * 6))
+	  return 0;
+	if (v->race->hasNoBones())
+	  return 0;
+	if (v->hasDisease(DISEASE_HEMORRAGE))
+	  return 0;
+	*part_hit = WEAR_BODY;
+	ssprintf(buf, 
+		"With your %s, you slam $N's chest, breaking a rib and causing internal damage!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s crushes your chest, shatters a rib and causes internal bleeding!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s shatters one of $N's ribs!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->addToLimbFlags(WEAR_BODY, PART_BROKEN);
+	for (i=1;i<9;i++)
+	  if (v->equipment[WEAR_BODY])
+	    v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
+	af.type = AFFECT_DISEASE;
+	af.level = 0;   // has to be 0 for doctor to treat
+	af.duration = PERMANENT_DURATION;
+	af.modifier = DISEASE_HEMORRAGE;
+	af.location = APPLY_NONE;
+	af.bitvector = 0;
+	v->affectTo(&af);
+	if (desc)
+	  desc->career.crit_broken_bones++;
+	if (v->desc)
+	  v->desc->career.crit_broken_bones_suff++;
+	return ONEHIT_MESS_CRIT_S;
+      case 89:
+      case 90:
+      case 91:
+      case 92:
+      case 93:
+      case 94:
+      case 95:
+	return FALSE;
+      case 96:
+      case 97:
+	ssprintf(buf, "You swing your %s right into $N's face, sending a tooth flying.", limbStr.c_str());
+	act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, "$n's %s connects with your face, sending a tooth flying.", limbStr.c_str());
+	act(buf, FALSE, this, obj, v, TO_VICT, ANSI_ORANGE);
+	ssprintf(buf, "$n's %s connects with $N's face, sending a tooth flying.", limbStr.c_str());
+	act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+	      	      
+	TCorpse *corpse;
+	      
+	corpse = new TCorpse();
+	corpse->name = mud_str_dup("tooth");
+	      
+	ssprintf(buf, "<W>a <1><r>bloody<1><W> tooth of %s<1>", v->getName());
+	corpse->shortDescr = mud_str_dup(buf);
+	      
+	ssprintf(buf, "<W>A <1><r>bloody<1><W> tooth lies here, having been knocked out of %s's mouth.<1>", v->getName());
+	corpse->setDescr(mud_str_dup(buf));
+	      
+	corpse->setStuff(NULL);
+	corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
+	corpse->addCorpseFlag(CORPSE_NO_REGEN);
+	corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
+	corpse->setWeight(0.1);
+	corpse->canBeSeen = v->canBeSeen;
+	corpse->setVolume(1);
+	corpse->setMaterial(MAT_BONE);
+	      
+	act("$p goes flying through the air and bounces once before it rolls to a stop.",TRUE,v,corpse,0,TO_ROOM, ANSI_RED);
+	*v->roomp += *corpse;
+
+	if (desc)
+	  desc->career.crit_tooth++;
+	      
+	if (v->desc)
+	  v->desc->career.crit_tooth_suff++;
+      
+	return ONEHIT_MESS_CRIT_S;
+      case 98:
+      case 99:
+      case 100:
+	// crush skull unless helmet
+	if (!v->hasPart(WEAR_HEAD))
+	  return 0;
+	if ((obj = v->equipment[WEAR_HEAD])) {
+	  ssprintf(buf, 
+		  "With a mighty blow, you crush $N's head with your %s. Unfortunately, $S $o saves $M.",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
+	  ssprintf(buf, 
+		  "$n's %s strikes a mighty blow to your head crushing your $o!",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
+	  ssprintf(buf, "$n's %s strikes a mighty blow to $N's head, crushing $S $o!",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+	  if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA))
+	    critHitEqDamage(v, obj, (::number(-55,-40)));
+
+	  *part_hit = WEAR_HEAD;
+	  rc = damageLimb(v,*part_hit,weapon,dam);
+	  if (IS_SET_DELETE(rc, DELETE_VICT))
+	    return DELETE_VICT;
+	  return ONEHIT_MESS_CRIT_S;
+	} else { // no head gear
+	  // crush skull
+	  if (!v->hasPart(WEAR_HEAD))
+	    return 0;
+	  ssprintf(buf, 
+		  "With your %s, you crush $N's skull, and $S brains ooze out!",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	  ssprintf(buf, 
+		  "$n's %s crushes your skull and The World goes dark!",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	  ssprintf(buf, "$n's %s crushes $N's skull.  Brains ooze out as $E crumples!",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	  if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
+	      (obj = v->equipment[WEAR_HEAD]))
+	    critHitEqDamage(v, obj, (::number(-55,-40)));
+
+	  if (desc)
+	    desc->career.crit_crushed_skull++;
+
+	  if (v->desc)
+	    v->desc->career.crit_crushed_skull_suff++;
+
+	  applyDamage(v, (20 * v->hitLimit()),DAMAGE_CAVED_SKULL);
+	  return DELETE_VICT;
+	}
+      default:
+	vlogf(LOG_BUG, "crit_num=%i in critBlunt switch, shouldn't happen",
+	      crit_num);
+	break;
+    }
+  }
+  return 0;
+}
+
+int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
+		       spellNumT wtype, int *dam, int crit_num)
+{
+  sstring buf, limbStr;
+  TThing *obj=NULL;
+  int rc, i;
+  affectedData af;
+
+  if(crit_num>100){
+    vlogf(LOG_BUG, "critSlash called with crit_num>100 (%i)", crit_num);
+    crit_num=0;
+  }
+
+  // Do slash crit
+  limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbSlash());
+
+  if (crit_num <= 33) {
+    // double damage 
+    *dam *= 2;;
+
+    ssprintf(buf, "You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!", v->describeBodySlot(*part_hit).c_str(), limbStr.c_str());
+    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+
+    ssprintf(buf, "$n strikes your %s exceptionally well, sinking $s %s deep into your flesh!", v->describeBodySlot(*part_hit).c_str(), limbStr.c_str());
+    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+
+    ssprintf(buf, "$n strikes $N's %s exceptionally well, sinking $s %s deep into $N's flesh!", v->describeBodySlot(*part_hit).c_str(), limbStr.c_str());
+    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+
+    return (ONEHIT_MESS_CRIT_S);
+  } else if (crit_num <= 66) {
+    // triple damage
+    *dam *= 3;
+
+    ssprintf(buf, "You critically strike $N's %s, sinking your %s deep into $S flesh!", v->describeBodySlot(*part_hit).c_str(), limbStr.c_str());
+    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+
+    ssprintf(buf, "$n critically strikes your %s, sinking $s %s deep into your flesh!", v->describeBodySlot(*part_hit).c_str(), limbStr.c_str());
+    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+
+    ssprintf(buf, "$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!", v->describeBodySlot(*part_hit).c_str(), limbStr.c_str());
+    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+
+    return (ONEHIT_MESS_CRIT_S);
+  } else {
+    // better stuff 
+    if ((crit_num == 83 || crit_num == 84) && wtype == TYPE_CLEAVE)
+      crit_num = 85;  // axes don't impale
+
+    switch (crit_num) {
+      case 67:
+	// sever finger-r
+	if (!v->hasPart(WEAR_FINGER_R))
+	  return 0;
+	ssprintf(buf, 
+		"Your %s severs $N's %s and sends it flying!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_FINGER_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s severs your %s and sends it flying!!  OH THE PAIN!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_FINGER_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s severs $N's %s and sends it flying!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_FINGER_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->makePartMissing(WEAR_FINGER_R, FALSE);
+	v->rawBleed(WEAR_HAND_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	*part_hit = WEAR_FINGER_R;
+	if (desc)
+	  desc->career.crit_sev_limbs++;
+	if (v->desc)
+	  v->desc->career.crit_sev_limbs_suff++;
+	return ONEHIT_MESS_CRIT_S;
+      case 68:
+	// sever finger-l
+	if (!v->hasPart(WEAR_FINGER_L))
+	  return 0;
+	ssprintf(buf, 
+		"Your %s severs $N's %s and sends it flying!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_FINGER_L).c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s severs your %s and sends it flying!!  OH THE PAIN!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_FINGER_L).c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s severs $N's %s and sends it flying!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_FINGER_L).c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->makePartMissing(WEAR_FINGER_L, FALSE);
+	v->rawBleed(WEAR_HAND_L, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	*part_hit = WEAR_FINGER_L;
+	if (desc)
+	  desc->career.crit_sev_limbs++;
+	if (v->desc)
+	  v->desc->career.crit_sev_limbs_suff++;
+	return ONEHIT_MESS_CRIT_S;
+      case 69:
+      case 70:
+	if (!v->hasPart(WEAR_HAND_R))
+	  return 0;
+	if (!v->isHumanoid())
+	  return 0;
+	if ((obj = v->equipment[WEAR_WRIST_R])) {
+	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from losing your %s!\n\r",
+		    fname(obj->name).c_str(), v->describeBodySlot(WEAR_HAND_R).c_str());
+	  for (i=1;i<5;i++)
+	    if (v->equipment[WEAR_WRIST_R])
+	      v->damageItem(this,WEAR_WRIST_R,wtype,weapon,*dam);
+	  *part_hit = WEAR_HAND_R;
+	  return ONEHIT_MESS_CRIT_S;
+	}
+      case 71:
+	// sever hand-r at wrist
+	if (!v->hasPart(WEAR_HAND_R))
+	  return 0;
+	if (!v->isHumanoid())
+	  return 0;
+	ssprintf(buf, 
+		"Your %s severs $N's %s and sends it flying!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_HAND_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s severs your %s and sends it flying!!  OH THE PAIN!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_HAND_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s severs $N's %s and sends it flying!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_HAND_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->makePartMissing(WEAR_HAND_R, FALSE);
+	v->rawBleed(WEAR_WRIST_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	v->woundedHand(v->isRightHanded());
+	*part_hit = WEAR_WRIST_R;
+	if (desc)
+	  desc->career.crit_sev_limbs++;
+	if (v->desc)
+	  v->desc->career.crit_sev_limbs_suff++;
+	return ONEHIT_MESS_CRIT_S;
+      case 72:
+      case 73:
+	if (!v->hasPart(WEAR_WRIST_L))
+	  return 0;
+	if (!v->isHumanoid())
+	  return 0;
+	if ((obj = v->equipment[WEAR_WRIST_L])) {
+	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from losing a hand!\n\r",
+		    fname(obj->name).c_str());
+	  for (i=1;i<5;i++)
+	    if (v->equipment[WEAR_WRIST_L])
+	      v->damageItem(this,WEAR_WRIST_L,wtype,weapon,*dam);
+	  *part_hit = WEAR_WRIST_L;
+	  return ONEHIT_MESS_CRIT_S;
+	}
+      case 74:
+	// sever hand-l at wrist
+	if (!v->hasPart(WEAR_HAND_L))
+	  return 0;
+	if (!v->isHumanoid())
+	  return 0;
+	ssprintf(buf, 
+		"Your %s severs $N's %s and sends it flying!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_HAND_L).c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s severs your %s and sends it flying!!  OH THE PAIN!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_HAND_L).c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s severs $N's %s and sends it flying!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_HAND_L).c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->makePartMissing(WEAR_HAND_L, FALSE);
+	v->rawBleed(WEAR_WRIST_L, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	v->woundedHand(!v->isRightHanded());
+	*part_hit = WEAR_WRIST_L;
+	if (desc)
+	  desc->career.crit_sev_limbs++;
+	if (v->desc)
+	  v->desc->career.crit_sev_limbs_suff++;
+	return ONEHIT_MESS_CRIT_S;
+      case 75:
+      case 76:
+	// cleave arm at shoulder
+	if (!v->hasPart(WEAR_ARM_R))
+	  return 0;
+	if (!v->isHumanoid())
+	  return 0;
+	ssprintf(buf, 
+		"Your %s severs $N's %s and sends it flying!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_ARM_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s severs your %s and sends it flying!!  OH THE PAIN!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_ARM_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s severs $N's %s and sends it flying!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_ARM_R).c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->makePartMissing(WEAR_ARM_R, FALSE);
+	v->rawBleed(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	v->woundedHand(v->isRightHanded());
+	*part_hit = WEAR_ARM_R;
+	if (desc)
+	  desc->career.crit_sev_limbs++;
+	if (v->desc)
+	  v->desc->career.crit_sev_limbs_suff++;
+	return ONEHIT_MESS_CRIT_S;
+      case 77:
+      case 78:
+	// cleave l-arm at shoulder
+	if (!v->hasPart(WEAR_ARM_L))
+	  return 0;
+	if (!v->isHumanoid())
+	  return 0;
+	ssprintf(buf, "Your %s severs $N's %s and sends it flying!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_ARM_L).c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s severs your %s and sends it flying!!  OH THE PAIN!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_ARM_L).c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s severs $N's %s and sends it flying!",
+		limbStr.c_str(),
+		v->describeBodySlot(WEAR_ARM_L).c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->makePartMissing(WEAR_ARM_L, FALSE);
+	v->rawBleed(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	v->woundedHand(!v->isRightHanded());
+	*part_hit = WEAR_ARM_L;
+	if (desc)
+	  desc->career.crit_sev_limbs++;
+	if (v->desc)
+	  v->desc->career.crit_sev_limbs_suff++;
+	return ONEHIT_MESS_CRIT_S;
+      case 79:
+      case 80:
+	// sever leg: foot missing, leg useless
+	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA)) {
+	  if (!v->hasPart(WEAR_FOOT_R))
+	    return 0;
+	  ssprintf(buf, 
+		  "Your %s severs $N's %s and sends it flying!",
+		  limbStr.c_str(),
+		  v->describeBodySlot(WEAR_FOOT_R).c_str());
+	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	  ssprintf(buf, 
+		  "$n's %s severs your %s!!  OH THE PAIN!",
+		  limbStr.c_str(),
+		  v->describeBodySlot(WEAR_FOOT_R).c_str());
+	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	  ssprintf(buf, "$n's %s severs $N's %s and sends it flying!",
+		  limbStr.c_str(),
+		  v->describeBodySlot(WEAR_FOOT_R).c_str());
+	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	  v->makePartMissing(WEAR_FOOT_R, FALSE);
+	  v->addToLimbFlags(WEAR_LEGS_R, PART_USELESS);
+	  if ((obj = v->equipment[WEAR_LEGS_R]))
+	    critHitEqDamage(v, obj, (::number(-35,-22)));
+
+	  v->rawBleed(WEAR_LEGS_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	  *part_hit = WEAR_LEGS_R;
+	  if (desc)
+	    desc->career.crit_sev_limbs++;
+	  if (v->desc)
+	    v->desc->career.crit_sev_limbs_suff++;
+	  return ONEHIT_MESS_CRIT_S;
+	}
+      case 81:
+      case 82:
+	// sever other leg: foot missing, leg useless
+	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
+	    v->hasPart(WEAR_FOOT_L)) {
+	  ssprintf(buf, 
+		  "Your %s severs $N's %s and sends it flying!",
+		  limbStr.c_str(),
+		  v->describeBodySlot(WEAR_FOOT_L).c_str());
+	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	  ssprintf(buf, 
+		  "$n's %s severs your %s!!  OH THE PAIN!",
+		  limbStr.c_str(),
+		  v->describeBodySlot(WEAR_FOOT_L).c_str());
+	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	  ssprintf(buf, "$n's %s severs $N's %s and sends it flying!",
+		  limbStr.c_str(),
+		  v->describeBodySlot(WEAR_FOOT_L).c_str());
+	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	  v->makePartMissing(WEAR_FOOT_L, FALSE);
+	  v->addToLimbFlags(WEAR_LEGS_L, PART_USELESS);
+	  if ((obj = v->equipment[WEAR_LEGS_L]))
+	    critHitEqDamage(v, obj, (::number(-35,-22)));
+
+	  v->rawBleed(WEAR_LEGS_L, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	  *part_hit = WEAR_LEGS_L;
+	  if (desc)
+	    desc->career.crit_sev_limbs++;
+	  if (v->desc)
+	    v->desc->career.crit_sev_limbs_suff++;
+	  return ONEHIT_MESS_CRIT_S;
+	}
+      case 83:
+      case 84:
+	// impale with weapon
+	if (!v->hasPart(WEAR_BODY))
+	  return 0;
+	ssprintf(buf, 
+		"You stick your %s through $N's body, impaling $M!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s is thrust through your torso, impaling you!!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf,
+		"$n thrusts $s %s deep into $N's torso, impaling $M!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	if (desc)
+	  desc->career.crit_impale++;
+	if (v->desc)
+	  v->desc->career.crit_impale_suff++;
+	rc = dislodgeWeapon(v, weapon, WEAR_BODY);
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	rc = applyDamage(v, v->hitLimit()/2,DAMAGE_IMPALE);
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	*part_hit = WEAR_BODY;
+	return ONEHIT_MESS_CRIT_S;
+      case 85:
+      case 86:
+	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
+	    v->hasPart(WEAR_WAISTE) &&
+	    (obj = v->equipment[WEAR_WAISTE])) {
+	  ssprintf(buf, 
+		  "You attempt to cleave $N in two with your %s, but $p saves $M from a hideous fate.",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
+	  ssprintf(buf, 
+		  "$n tries to cleave you in two with $s %s, but $p saves you thankfully!",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
+	  ssprintf(buf, "$n attempts to cleave $N in two with $s %s! Thankfully $p saves $M!",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+
+	  critHitEqDamage(v, obj, (::number(-55,-40)));
+
+	  *part_hit = WEAR_WAISTE;
+	  rc = damageLimb(v,WEAR_WAISTE,weapon,dam);
+	  if (IS_SET_DELETE(rc, DELETE_VICT))
+	    return DELETE_VICT;
+	  return ONEHIT_MESS_CRIT_S;
+	}
+	// if no girth, its going into next critSuccess...
+      case 87:
+      case 88:
+	// cleave in two
+	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA)) {
+	  if (!weapon && ((getHeight()*3) < v->getHeight()) &&
+	      !isDiabolic() && !isLycanthrope()) {
+	    ssprintf(buf,
+		    "With a mighy warcry, you almost cleave $N in two with your %s.",
+		    limbStr.c_str());
+	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	    ssprintf(buf,
+		    "$n unleashes a mighty warcry and slashes you HARD down the center with $s %s!",
+		    limbStr.c_str());
+	    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	    ssprintf(buf,
+		    "$n gives a mighty warcry and slashes $N down the center with $s %s!",
+		    limbStr.c_str());
+	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	    if ((obj = v->equipment[WEAR_WAISTE]))
+	      critHitEqDamage(v, obj, (::number(-45,-30)));
+
+	    *part_hit = WEAR_WAISTE;
+	    if (desc)
+	      desc->career.crit_cleave_two++;
+	    if (v->desc)
+	      v->desc->career.crit_cleave_two_suff++;
+	    return applyDamage(v, GetMaxLevel()*3, DAMAGE_HACKED);
+	  } else {
+	    ssprintf(buf, 
+		    "With a mighty warcry, you cleave $N in two with your %s.",
+		    limbStr.c_str());
+	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	    ssprintf(buf, 
+		    "$n unleashes a mighty warcry before cleaving you in two with $s %s!",
+		    limbStr.c_str());
+	    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	    ssprintf(buf, "$n gives a mighty warcry and cleaves $N in two with $s %s!",
+		    limbStr.c_str());
+	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	    if ((obj = v->equipment[WEAR_WAISTE]))
+	      critHitEqDamage(v, obj, (::number(-45,-30)));
+
+	    applyDamage(v, 20 * v->hitLimit(),DAMAGE_HACKED);
+	    *part_hit = WEAR_WAISTE;
+	    if (desc)
+	      desc->career.crit_cleave_two++;
+	    if (v->desc)
+	      v->desc->career.crit_cleave_two_suff++;
+	    return DELETE_VICT;
+	  }
+	}
+      case 89:
+      case 90:
+	// slice torso from gullet to groin
+	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA)) {
+	  ssprintf(buf, 
+		  "With your %s, you slice $N from gullet to groin disembowling $M!",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	  ssprintf(buf, 
+		  "$n's %s slices you from gullet to groin, disembowling you!",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	  ssprintf(buf, "$n's %s slices into $N from gullet to groin, disembowling $M!",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	  if ((obj = v->equipment[WEAR_BODY]))
+	    critHitEqDamage(v, obj, (::number(-105,-80)));
+
+	  applyDamage(v, 20 * v->hitLimit(),DAMAGE_DISEMBOWLED_HR);
+	  *part_hit = WEAR_BODY;
+	  if (desc)
+	    desc->career.crit_disembowel++;
+	  if (v->desc)
+	    v->desc->career.crit_disembowel_suff++;
+	  return DELETE_VICT;
+	}
+      case 91:
+      case 92:
+	if(v->getSex()==SEX_MALE && v->hasPart(WEAR_WAISTE) &&
+	   (!(obj = v->equipment[WEAR_WAISTE]) || !obj->isMetal())){
+	  ssprintf(buf, "With a deft swing of your %s, you sever $N's genitals.", limbStr.c_str());
+	  act(buf,FALSE,this,obj,v,TO_CHAR,ANSI_ORANGE);
+	  ssprintf(buf, "$n deftly severs your genitals with $s %s!  OWWWWW!", limbStr.c_str());
+	  act(buf,FALSE,this,obj,v,TO_VICT,ANSI_ORANGE);
+
+	  if(obj)
+	    critHitEqDamage(v, obj, (::number(-45,-30)));
+
+	  TCorpse *corpse;
+		
+	  corpse = new TCorpse();
+	  corpse->name = mud_str_dup("genitalia");
+		
+	  if (v->getMaterial() > MAT_GEN_MINERAL) {
+	    // made of mineral or metal
+	    ssprintf(buf, "the mangled genitalia of %s", v->getName());
+	  } else {
+	    ssprintf(buf, "the bloody, mangled genitalia of %s", v->getName());
+	  }
+	  corpse->shortDescr = mud_str_dup(buf);
+		
+	  if (v->getMaterial() > MAT_GEN_MINERAL) {
+	    // made of mineral or metal
+	    ssprintf(buf, "The mangled, severed genitalia of %s is lying here.", v->getName());
+	  } else {
+	    ssprintf(buf, "The bloody, mangled, severed genitalia of %s is lying here.", v->getName());
+	  }
+	  corpse->setDescr(mud_str_dup(buf));
+		
+	  corpse->setStuff(NULL);
+	  corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
+	  corpse->addCorpseFlag(CORPSE_NO_REGEN);
+	  corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
+	  corpse->setWeight(v->getWeight() / 32.0);
+	  corpse->canBeSeen = v->canBeSeen;
+	  corpse->setVolume(v->getVolume() * 2/100);
+	  corpse->setMaterial(v->getMaterial());
+		
+	  act("$p goes flying through the air and bounces once before it rolls to a stop.",TRUE,v,corpse,0,TO_ROOM, ANSI_RED);
+	  *v->roomp += *corpse;
+
+	  v->setSex(SEX_NEUTER);
+	  v->rawBleed(WEAR_WAISTE, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+
+	  if (desc)
+	    desc->career.crit_genitalia++;
+		
+	  if (v->desc)
+	    v->desc->career.crit_genitalia_suff++;
+		
+	  return ONEHIT_MESS_CRIT_S;
+	}
+	break;
+      case 93:
+      case 94:
+      case 95:
+      case 96:
+      case 97:
+	return FALSE;
+	break;
+      case 98:
+      case 99:
+      case 100:
+	// decapitate if no neck armor
+	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
+	    (obj = v->equipment[WEAR_NECK])) {
+	  ssprintf(buf, 
+		  "You attempt to decapitate $N with your %s, but $p saves $M from a hideous fate.",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
+	  ssprintf(buf, 
+		  "$n tries to decapitate you with $s %s, but $p saves you!",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
+	  ssprintf(buf, "$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+
+	  critHitEqDamage(v, obj, (::number(-40,-25)));
+	  *part_hit = WEAR_NECK;
+	  rc = damageLimb(v,*part_hit,weapon,dam);
+	  if (IS_SET_DELETE(rc, DELETE_VICT))
+	    return DELETE_VICT;
+	  return ONEHIT_MESS_CRIT_S;
+	} else { // no collar
+	  // if no collar, its going into next critSuccess...
+	  // POW! He was deCAPITATED! 
+	  act("$n strikes a fatal blow and cuts off $N's head!", FALSE, this, 0, v, TO_NOTVICT, ANSI_CYAN);
+	  act("You strike a fatal blow and completely behead $N!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
+	  act("$n strikes a fatal blow and completely beheads you!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	  if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
+	      (obj = v->equipment[WEAR_NECK]))
+	    critHitEqDamage(v, obj, (::number(-40,-25)));
+
+	  v->makeBodyPart(WEAR_HEAD);
+	  applyDamage(v, (20 * v->hitLimit()),DAMAGE_BEHEADED);
+	  *part_hit = WEAR_NECK;
+	  if (desc)
+	    desc->career.crit_beheads++;
+		
+	  if (v->desc)
+	    v->desc->career.crit_beheads_suff++;
+		
+	  return DELETE_VICT;
+	}
+      default:
+	vlogf(LOG_BUG, "crit_num=%i in critSlash switch, shouldn't happen",
+	      crit_num);
+	break;
+    }
+  }
+  return 0;
+}
+
+int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
+		       spellNumT wtype, int *dam, int crit_num)
+{
+  sstring buf, weaponStr, limbStr;
+  TThing *obj=NULL;
+  int rc, i;
+  affectedData af;
+  wearSlotT new_slot;
+
+  weaponStr=(weapon ? "$o" : getMyRace()->getBodyLimbPierce());
+  
+  if(crit_num>100){
+    vlogf(LOG_BUG, "critPierce called with crit_num>100 (%i)", crit_num);
+    crit_num=0;
+  }
+
+  // Do pierce crit 
+  if (crit_num <= 33) {
+    // double damage 
+    *dam *= 2;
+
+    ssprintf(buf, "You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!", v->describeBodySlot(*part_hit).c_str(), weaponStr.c_str());
+    act(buf, FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
+
+    ssprintf(buf, "$n strikes your %s exceptionally well, sinking $s %s deep into your flesh!", v->describeBodySlot(*part_hit).c_str(), weaponStr.c_str());
+    act(buf, FALSE, this, weapon, v, TO_VICT, ANSI_RED);
+
+    ssprintf(buf, "$n strikes $N's %s exceptionally well, sinking $s %s deep into $N's flesh!", v->describeBodySlot(*part_hit).c_str(), weaponStr.c_str());
+    act(buf, FALSE, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
+
+    return (ONEHIT_MESS_CRIT_S);
+  } else if (crit_num <= 66) {
+    // triple damage 
+    *dam *= 3;
+
+    ssprintf(buf, "You critically strike $N's %s, sinking your %s deep into $S flesh!", v->describeBodySlot(*part_hit).c_str(), weaponStr.c_str());
+    act(buf, FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
+
+    ssprintf(buf, "$n critically strikes your %s, sinking $s %s deep into your flesh!", v->describeBodySlot(*part_hit).c_str(), weaponStr.c_str());
+    act(buf, FALSE, this, weapon, v, TO_VICT, ANSI_RED);
+
+    ssprintf(buf, "$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!", v->describeBodySlot(*part_hit).c_str(), weaponStr.c_str());
+    act(buf, FALSE, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
+
+    return (ONEHIT_MESS_CRIT_S);
+  } else {
+    // better stuff 
+    limbStr=(weapon ? fname(weapon->name) : getMyRace()->getBodyLimbPierce());
+
+    switch (crit_num) {
+      case 67:
+	if (!v->hasPart(WEAR_NECK))
+	  return 0;
+	*part_hit = WEAR_NECK;
+	if ((obj = v->equipment[WEAR_NECK])) {
+	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from a punctured larynx!\n\r",
+		    fname(obj->name).c_str());
+	  for (i=1;i<5;i++)
+	    if (v->equipment[WEAR_NECK])
+	      v->damageItem(this,WEAR_NECK,wtype,weapon,*dam);
+	  return ONEHIT_MESS_CRIT_S;
+	}
+	// intentional drop through
+      case 68:
+	// Punctured Larnyx, can't speak 
+	if (!v->hasPart(WEAR_NECK))
+	  return 0;
+	if (v->hasDisease(DISEASE_VOICEBOX))
+	  return 0;
+	ssprintf(buf, 
+		"You pop your %s into $N's throat, puncturing $S voice box!", 
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n pops $s %s into your throat, puncturing your voice box!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n pops $s %s into $N's throat, puncturing $S voice box!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	for (i=1;i<5;i++)
+	  if (v->equipment[WEAR_NECK])
+	    v->damageItem(this,WEAR_NECK,wtype,weapon,*dam);
+	af.type = AFFECT_DISEASE;
+	af.level = 0;   // has to be 0 for doctor to treat
+	af.duration = PERMANENT_DURATION;
+	af.modifier = DISEASE_VOICEBOX;
+	af.location = APPLY_NONE;
+	af.bitvector = AFF_SILENT;
+	v->affectTo(&af);
+	*part_hit = WEAR_NECK;
+	if (desc)
+	  desc->career.crit_voice++;
+	if (v->desc)
+	  v->desc->career.crit_voice_suff++;
+	return ONEHIT_MESS_CRIT_S;
+      case 69:
+      case 70:
+	// Struct in eye, blinded with new blind type 
+	if (v->hasDisease(DISEASE_EYEBALL))
+	  return 0;
+	if (!v->hasPart(WEAR_HEAD))
+	  return 0;
+	ssprintf(buf, 
+		"You pop your %s into $N's eyes, gouging them out and blinding $M!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n pops $s %s into your eyes and The World goes DARK!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n pops $s %s into $N's eyes, gouging them out and blinding $M!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	act("$n's eyeballs fall from $s sockets!",TRUE,v,0,0,TO_ROOM);
+	v->makeOtherPart(NULL,"eyeballs");
+	af.type = AFFECT_DISEASE;
+	af.level = 0;   // has to be 0 for doctor to treat
+	af.duration = PERMANENT_DURATION;
+	af.modifier = DISEASE_EYEBALL;
+	af.location = APPLY_NONE;
+	af.bitvector = AFF_BLIND;
+	v->affectTo(&af);
+	v->rawBlind(GetMaxLevel(), af.duration, SAVE_NO);
+	*part_hit = WEAR_HEAD;
+	if (desc)
+	  desc->career.crit_eye_pop++;
+	if (v->desc)
+	  v->desc->career.crit_eye_pop_suff++;
+	return ONEHIT_MESS_CRIT_S;
+      case 71:
+	if (!v->hasPart(WEAR_LEGS_R))
+	  return 0;
+	if (!v->isHumanoid())
+	  return 0;
+	if ((obj = v->equipment[WEAR_LEGS_R])) {
+	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from losing a tendon!\n\r",
+		    fname(obj->name).c_str());
+	  for (i=1;i<5;i++)
+	    if (v->equipment[WEAR_LEGS_R])
+	      v->damageItem(this,WEAR_LEGS_R,wtype,weapon,*dam);
+	  *part_hit = WEAR_LEGS_R;
+	  return ONEHIT_MESS_CRIT_S;
+	}
+	// an intentional drop through
+      case 72:
+	// strike lower leg, rip tendons, vict at -25% move. 
+	if (!v->hasPart(WEAR_LEGS_R))
+	  return 0;
+	if (!v->isHumanoid())
+	  return 0;
+	ssprintf(buf, 
+		"Your %s rips through $N's tendon on $S lower leg!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s rips through the tendon in your lower leg.",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s rips into $N, tearing the tendon in $S lower leg.", 
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->setMove(v->getMove()/4);
+	for (i = 1; i < 5; i++) {
+	  if (v->equipment[WEAR_LEGS_R])
+	    v->damageItem(this,WEAR_LEGS_R,wtype,weapon,*dam);
+	}
+	*part_hit = WEAR_LEGS_R;
+	rc = damageLimb(v,WEAR_LEGS_R,weapon,dam);
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	return ONEHIT_MESS_CRIT_S;
+      case 73:
+	if (!v->hasPart(WEAR_BACK))
+	  return 0;
+	if ((obj = v->equipment[WEAR_BACK])) {
+	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from a gory wound!\n\r",
+		    fname(obj->name).c_str());
+	  for (i=1;i<5;i++)
+	    if (v->equipment[WEAR_BACK])
+	      v->damageItem(this,WEAR_BACK,wtype,weapon,*dam);
+	  *part_hit = WEAR_BACK;
+	  return ONEHIT_MESS_CRIT_S;
+	}
+      case 74:
+	// Side wound, vict stunned 6 rounds. 
+	if (!v->hasPart(WEAR_BACK))
+	  return 0;
+	ssprintf(buf, 
+		"You plunge your %s deep into $N's side, stunning $M!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n plunges $s %s deep into your side.  The agony makes you forget about the fight.",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n plunges $s %s deep into $N's side, stunning $M.",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	for (i=1;i<5;i++)
+	  if (v->equipment[WEAR_BACK])
+	    v->damageItem(this,WEAR_BACK,wtype,weapon,*dam); 
+	v->cantHit += v->loseRound(6);
+	rc = dislodgeWeapon(v,weapon,WEAR_BACK);
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	*part_hit = WEAR_BACK;
+	return ONEHIT_MESS_CRIT_S;
+      case 75:
+      case 76:
+	// Strike in back of head. If no helm, vict dies. 
+	if (!v->hasPart(WEAR_HEAD))
+	  return 0;
+	if ((obj = v->equipment[WEAR_HEAD])) {
+	  ssprintf(buf, 
+		  "You try to thrust your %s into the back of $N's head.",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	  ssprintf(buf, "Unfortunately, $p saves $M from a hideous death!");
+	  act(buf, FALSE, this, obj, v, TO_CHAR);
+	  ssprintf(buf, 
+		  "$n tries to thrust $s %s into the back of your head.",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	  ssprintf(buf,
+		  "But $p saves you from a hideous death!");
+	  act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
+	  ssprintf(buf, "$n tries plunging $s %s into the back of $N's head, but $p saves $M.",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+	  for (i=1;i<5;i++)
+	    if (v->equipment[WEAR_HEAD])
+	      v->damageItem(this,WEAR_HEAD,wtype,weapon,*dam);
+	  rc = dislodgeWeapon(v,weapon,WEAR_HEAD);
+	  if (IS_SET_DELETE(rc, DELETE_VICT))
+	    return DELETE_VICT;
+	  *part_hit = WEAR_HEAD;
+	  rc = damageLimb(v,WEAR_HEAD,weapon,dam);
+	  if (IS_SET_DELETE(rc, DELETE_VICT))
+	    return DELETE_VICT;
+	  return ONEHIT_MESS_CRIT_S;
+	} else {
+	  ssprintf(buf, 
+		  "You thrust your %s into the back of $N's head causing an immediate death.",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	  ssprintf(buf, 
+		  "$n's %s tears into the back of your unprotected head.",
+		  limbStr.c_str());
+	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	  ssprintf(buf,"The world goes black and dark...");
+	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_BLACK);
+	  ssprintf(buf, "$n thrusts $s %s deep into the back of $N's unprotected head, causing an immediate death.", 
+		  limbStr.c_str());
+	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	  rc = dislodgeWeapon(v,weapon,WEAR_HEAD);
+	  if (IS_SET_DELETE(rc, DELETE_VICT))
+	    return DELETE_VICT;
+	  applyDamage(v, (20 * v->hitLimit()),wtype);
+	  *part_hit = WEAR_HEAD;
+	  if (desc)
+	    desc->career.crit_cranial_pierce++;
+	  if (v->desc)
+	    v->desc->career.crit_cranial_pierce_suff++;
+	  return DELETE_VICT;
+	}
+	return FALSE;   // not possible, but just in case
+      case 77:
+      case 78:
+	// Strike shatters elbow in weapon arm. Arm broken 
+	new_slot = v->getSecondaryArm();
+	if (!v->hasPart(new_slot))
+	  return 0;
+	if (!v->isHumanoid())
+	  return FALSE;
+	ssprintf(buf, 
+		"$N blocks your %s with $S arm.  However the force shatters $S elbow!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s is blocked by your arm.  Unfortunately your elbow is shattered!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s shatters $N's elbow!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->damageArm(FALSE,PART_BROKEN);
+	if (desc)
+	  desc->career.crit_broken_bones++;
+	if (v->desc)
+	  v->desc->career.crit_broken_bones_suff++;
+	*part_hit = new_slot;
+	rc = damageLimb(v,new_slot,weapon,dam);
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	return ONEHIT_MESS_CRIT_S;
+      case 79:
+	new_slot = v->getPrimaryHand();
+	if (!v->hasPart(new_slot))
+	  return 0;
+	if (!v->isHumanoid())
+	  return 0;
+	if ((obj = v->equipment[v->getPrimaryWrist()])) {
+	  act("Your $o just saved you from losing your hand!",TRUE,v,obj,0,TO_CHAR, ANSI_PURPLE);
+	  act("You nearly sever $N's hand, but $S $o saved $M!",TRUE,this,obj,v,TO_CHAR);
+	  *part_hit = v->getPrimaryWrist();
+	  return ONEHIT_MESS_CRIT_S;
+	}
+      case 80:
+	// Sever weapon arm at hand 
+	if (!v->hasPart(v->getPrimaryHand()))
+	  return 0;
+	if (!v->isHumanoid())
+	  return 0;
+	ssprintf(buf, 
+		"Your %s severs $N's hand at $S wrist!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s severs your arm below the wrist!", 
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s severs $N's hand at the wrist!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->makePartMissing(v->getPrimaryHand(), FALSE);
+	v->rawBleed(v->getPrimaryWrist(), PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	v->woundedHand(TRUE);
+	*part_hit = v->getPrimaryHand();
+	if (desc)
+	  desc->career.crit_sev_limbs++;
+	if (v->desc)
+	  v->desc->career.crit_sev_limbs_suff++;
+	return ONEHIT_MESS_CRIT_S;
+      case 81:
+	if (!v->hasPart(WEAR_BODY))
+	  return 0;
+	if ((obj = v->equipment[WEAR_BODY])) {
+	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from a punctured lung!\n\r",
+		    fname(obj->name).c_str());
+	  for (i=1;i<9;i++)
+	    if (v->equipment[WEAR_BODY])
+	      v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
+	  *part_hit = WEAR_BODY;
+	  return ONEHIT_MESS_CRIT_S;
+	}
+      case 82:
+	// Punctured lungs. Can't breathe. Dies if not healed quickly 
+	if (v->hasDisease(DISEASE_LUNG))
+	  return 0;
+	ssprintf(buf, "Your %s plunges into $N's chest puncturing a lung!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s plunges into your chest and punctures a lung!!!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s plunges into $N's chest.\n\rA hiss of air escapes $S punctured lung!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	af.type = AFFECT_DISEASE;
+	af.level = 0;   // has to be 0 for doctor to treat
+	af.duration = PERMANENT_DURATION;
+	af.modifier = DISEASE_LUNG;
+	af.location = APPLY_NONE;
+	af.bitvector = AFF_SILENT;
+	v->affectTo(&af);
+	rc = dislodgeWeapon(v,weapon,WEAR_BODY);
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	v->sendTo("You won't be able to speak or breathe until you get that punctured lung fixed!!!\n\r");
+	*part_hit = WEAR_BODY;
+	if (desc)
+	  desc->career.crit_lung_punct++;
+	if (v->desc)
+	  v->desc->career.crit_lung_punct_suff++;
+	return ONEHIT_MESS_CRIT_S;
+      case 83:
+      case 84:
+	if (!v->hasPart(WEAR_BODY))
+	  return 0;
+	if ((obj = v->equipment[WEAR_BODY])) {
+	  v->sendTo(COLOR_OBJECTS, "Your %s saves you from a kidney wound!\n\r",
+		    fname(obj->name).c_str());
+	  for (i=1;i<7;i++)
+	    if (v->equipment[WEAR_BODY])
+	      v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
+	  *part_hit = WEAR_BODY;
+	  return ONEHIT_MESS_CRIT_S;
+	}
+      case 85:
+	// punctured kidney causes infection
+	if (!v->hasPart(WEAR_BODY))
+	  return 0;
+	ssprintf(buf, 
+		"You puncture $N's kidney with your %s and cause an infection!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s tears into your kidney; the pain is AGONIZING and an infection has started!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s punctures $N's kidney!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+
+	if (desc)
+	  desc->career.crit_kidney++;
+	if (v->desc)
+	  v->desc->career.crit_kidney_suff++;
+
+	rc = dislodgeWeapon(v,weapon,WEAR_BODY);
+	if (IS_SET_DELETE(rc, DELETE_VICT))
+	  return DELETE_VICT;
+	v->rawInfect(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	*part_hit = WEAR_BODY;
+	return ONEHIT_MESS_CRIT_S;
+      case 86:
+      case 87:
+	// stomach wound.  causes death 5 mins later if not healed.
+	if (!v->hasPart(WEAR_BODY))
+	  return 0;
+	if (v->hasDisease(DISEASE_STOMACH))
+	  return 0;
+	ssprintf(buf, 
+		"You plunge your %s into $N's stomach, opening up $S gullet!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n's %s tears into your stomach and exposes your intestines!!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n's %s tears into $N's stomach exposing intestines!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	v->rawInfect(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	if (v->hasPart(WEAR_WAISTE))
+	  v->rawInfect(WEAR_WAISTE, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+	af.type = AFFECT_DISEASE;
+	af.level = 0;   // for doctor to heal
+	af.duration = PERMANENT_DURATION;
+	af.modifier = DISEASE_STOMACH;
+	v->affectTo(&af);
+	*part_hit = WEAR_WAISTE;
+	if (desc)
+	  desc->career.crit_eviscerate++;
+	if (v->desc)
+	  v->desc->career.crit_eviscerate_suff++;
+
+	return ONEHIT_MESS_CRIT_S;
+      case 88:
+      case 89:
+	// abdominal wound
+	// You plunge your %s into $N's abdoman and tear out causing a shower of blood
+
+      case 90:
+      case 91:
+      case 92:
+      case 93:
+      case 94:
+      case 95:
+      case 96:
+      case 97:
+      case 98:
+      case 99:
+	return FALSE;
+	break;
+      case 100:
+	ssprintf(buf, 
+		"You sink your %s between $N's eyes, causing an immediate death!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	ssprintf(buf, 
+		"$n sinks $s %s right between your eyes, causing an immediate death!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	ssprintf(buf, "$n sinks $s %s smack between $N's eyes, causing an immediate death!",
+		limbStr.c_str());
+	act(buf, FALSE, this, 0, v, TO_ROOM);
+	applyDamage(v, (20 * v->hitLimit()),wtype);
+	*part_hit = WEAR_HEAD;
+	if (desc)
+	  desc->career.crit_cranial_pierce++;
+	if (v->desc)
+	  v->desc->career.crit_cranial_pierce_suff++;
+	return DELETE_VICT;
+      default:
+	vlogf(LOG_BUG, "crit_num=%i in critPierce switch, shouldn't happen",
+	      crit_num);
+	break;
+    }
+  }
+  return 0;
 }

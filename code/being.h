@@ -1506,7 +1506,10 @@ class TBeing : public TThing {
     int throatSlitHit(TBeing *, TThing *);
     int critFailureChance(TBeing *, TThing *, spellNumT);
     void critHitEqDamage(TBeing *, TThing *, int);
-    int critSuccessChance(TBeing *, TThing *, wearSlotT *, spellNumT, int *, int);
+    int critSuccessChance(TBeing *, TThing *, wearSlotT *, spellNumT, int *, int=-1);
+    int critPierce(TBeing *, TThing *, wearSlotT *, spellNumT, int *, int);
+    int critSlash(TBeing *, TThing *, wearSlotT *, spellNumT, int *, int);
+    int critBlunt(TBeing *, TThing *, wearSlotT *, spellNumT, int *, int);
     int numValidSlots();
     int checkShield(TBeing *, TThing *, wearSlotT, spellNumT, int);
     int getWeaponDam(const TBeing *, const TThing *, primaryTypeT) const;
