@@ -1485,6 +1485,10 @@ class TBeing : public TThing {
     int getAgiReaction() const;
     int getConShock() const;
     float getConHpModifier() const;
+    float getDexMod() const;
+    float getSpeMod() const;
+    float getAgiMod() const;
+    float getBraMod() const;
     void combatFatigue(TThing *);
     int weaponCheck(TBeing *v, TThing *o, spellNumT type, int dam);
     virtual void reconcileHelp(TBeing *, double) { return; }

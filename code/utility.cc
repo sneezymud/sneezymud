@@ -1888,11 +1888,14 @@ bool TBeing::checkBusy(const char *buf)
 float TBeing::lagAdjust(lag_t orig_lag)
 {
   // basically, take a fixed amount of "orig_lag", and adjust it for speed
-  float min_lag = 0.80 * orig_lag;
-  float max_lag = 1.25 * orig_lag;
+  //  float min_lag = 0.80 * orig_lag;
+  //  float max_lag = 1.25 * orig_lag;
 
   // remember that the min_lag should be held by max-stat, and vice-versa
-  float act_lag = plotStat(STAT_CURRENT, STAT_SPE, max_lag, min_lag, (float) orig_lag);
+  //  float act_lag = plotStat(STAT_CURRENT, STAT_SPE, max_lag, min_lag, (float) orig_lag);
+
+  float act_lag = (float)(orig_lag) / getSpeMod();
+  // this does the same thing, just uses the standardized formulas - dash
 
   act_lag = max(act_lag, (float) 0.0);
   return act_lag;

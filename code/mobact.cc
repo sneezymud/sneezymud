@@ -3469,6 +3469,8 @@ int TMonster::mobileActivity(int pulse)
       return TRUE;
   }
   // trigger spec_procs
+#if 1
+  // should do this in socket.cc
   if (spec && !(pulse %(2 * PULSE_MOBACT)) && !noSpecials) {
     rc = checkSpec(this, CMD_GENERIC_PULSE, "", NULL);
     if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
@@ -3476,6 +3478,7 @@ int TMonster::mobileActivity(int pulse)
     else if (rc)
       return TRUE;
   }
+#endif
 
   if (!awake() || desc || IS_SET(specials.act, ACT_POLYSELF))
     return FALSE;

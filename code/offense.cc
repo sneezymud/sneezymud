@@ -1997,9 +1997,13 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
     // from balance note, want high speed to hit 5/4 more, and low to hit 4/5
     // as much
     if (fx > 0.0)
-      fx = fx * plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
+      fx *= getSpeMod();
+    //  this is the same - note we DIVIDE instead of multiply since we want a lower number as the bonus
+    //  fx = fx * plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
     if (fy > 0.0)
-      fy = fy * plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
+      fy *= getSpeMod();
+    //  ditto above - dash
+    //  fy = fy * plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
 #endif
 
     // Monk PCS
@@ -2054,9 +2058,13 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
     // from balance note, want high speed to hit 5/4 more, and low to hit 4/5
     // as much
     if (fx > 0.0)
-      fx = fx * plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
+      fx *= getSpeMod();
+    //  this is the same - note we DIVIDE instead of multiply since we want a lower number as the bonus
+    //  fx = fx * plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
     if (fy > 0.0)
-      fy = fy * plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
+      fy *= getSpeMod();
+    //  ditto above - dash
+    //  fy = fy * plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
 
     // non-monk PCs
   }

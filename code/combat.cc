@@ -856,8 +856,9 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
     // *dam -= (int) v->getConHpModifier();
 
     if (*dam) {
-      *dam *= v->plotStat(STAT_CURRENT, STAT_BRA, 125, 80, 100);
-      *dam /= 100;
+      //      *dam *= v->plotStat(STAT_CURRENT, STAT_BRA, 125, 80, 100);
+      //      *dam /= 100;
+      *dam = (int)((float)*dam / v->getBraMod());
     }
 
     if (isPc() && v->isPc() && (roomp->isRoomFlag(ROOM_ARENA) || (inPkZone() && cutPeelPkDam())))
@@ -1635,7 +1636,8 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
       skill = SKILL_BAREHAND_PROF;
       // skill2 = SKILL_BAREHAND_SPEC;
       strcpy(buf, "Barehand");
-      statDam = (getStrDamModifier() + getDexDamModifier()) / 2;
+      statDam = getStrDamModifier();
+  //      statDam = (getStrDamModifier() + getDexDamModifier()) / 2;
     } else if (wielded->isBluntWeapon()) {
       skill = SKILL_BLUNT_PROF;
       // skill2 = SKILL_BLUNT_SPEC;
@@ -1645,13 +1647,15 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
       skill = SKILL_PIERCE_PROF;
       // skill2 = SKILL_PIERCE_SPEC;
       strcpy(buf, "Pierce");
-      statDam = getStrDamModifier() + (2 * getDexDamModifier());
+      statDam = getStrDamModifier();
+      //      statDam = getStrDamModifier() + (2 * getDexDamModifier());
       statDam /= 3;
     } else if (wielded->isSlashWeapon()) {
       skill = SKILL_SLASH_PROF;
       // skill2 = SKILL_SLASH_SPEC;
       strcpy(buf, "Slash");
-      statDam = getStrDamModifier() + getDexDamModifier();
+      statDam = getStrDamModifier();
+      //      statDam = getStrDamModifier() + getDexDamModifier();
       statDam /= 2;
     }
     wepLearn = max((GetMaxLevel() *2), (int) getSkillValue(skill));
@@ -2180,7 +2184,10 @@ int TBeing::attackRound(const TBeing * target) const
   // 1 pt of bonus = 0.18%
   // 75% rate would be extra 15% would be 83.3 pts
   // 48% rate would be loss of 12% would be 66.67 pts 
-  bonus += (int) plotStat(STAT_CURRENT, STAT_DEX, -67, 84, 0);
+  //bonus += (int) plotStat(STAT_CURRENT, STAT_DEX, -67, 84, 0);
+
+  // this does the same thing - just uses the standardized function - dash
+  bonus += (int)(335 * getDexMod() - 335);
 
   // thaco adjustment
   // +10 hitroll should let me fight evenly with L+1 mob
@@ -2379,7 +2386,8 @@ int TBeing::defendRound(const TBeing * attacker) const
   // 75% rate would be extra 15% would be 83.3 pts
   // 48% rate would be loss of 12% would be 66.67 pts 
   if (!spelltask)
-    bonus += (int) plotStat(STAT_CURRENT, STAT_AGI, -67, 84, 0);
+    bonus += (int)( 335 * getAgiMod() - 335); // this does the same thing, just uses standard formulas
+    //bonus += (int) plotStat(STAT_CURRENT, STAT_AGI, -67, 84, 0);
 
   // Check if you can see your target. (penalty)
   if (attacker && !canSee(attacker)){

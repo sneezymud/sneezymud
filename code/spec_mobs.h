@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.14  2002/02/24 18:09:56  dash
+// added getDexMod, getBraMod, getAgiMod, getSpeMod for stat stuff
+// tweaked bounty hunters alot
+//
 // Revision 5.13  2002/02/20 20:33:42  jesus
 // Took out all the class_mage_thief stuff and added a shaman healing disc in its place
 //
@@ -304,6 +308,8 @@ class bounty_hunt_struct
 
   // improved intelligence
   bool warned;
+  bool singletarg;
+  bool missionaccomplished;
 
   private:
     bounty_hunt_struct() {} // prevent use

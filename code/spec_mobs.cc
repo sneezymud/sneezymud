@@ -6661,11 +6661,11 @@ int scaredKid(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
       myself->doMove(CMD_WEST);
       break;
     case 27480:
-      act("$n charges through the undergrowth, glancing over $s shoulder.", FALSE, myself, 0, 0, TO_ROOM);
+      act("$n runs toward the small wooden bridge to the northwest.", FALSE, myself, 0, 0, TO_ROOM);
       myself->doMove(CMD_NW);
       break;
     case 27481:
-      act("$n runs toward the small wooden bridge to the northwest.", FALSE, myself, 0, 0, TO_ROOM);
+      act("$n charges through the undergrowth, glancing over $s shoulder.", FALSE, myself, 0, 0, TO_ROOM);
       myself->doMove(CMD_WEST);
       break;
     case 27483:

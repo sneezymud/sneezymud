@@ -215,7 +215,7 @@ int TSocket::gameLoop()
   Descriptor *point;
   int pulse = 0;
   int teleport, combat, drowning, special_procs, update_stuff;
-  int pulse_tick, pulse_mudhour, mobstuff, quickpulse;
+  int pulse_tick, pulse_mudhour, mobstuff, quickpulse, wayslowpulse;
   TBeing *tmp_ch, *temp;
   TObj *obj, *next_thing;
   static int sent = 0;
@@ -367,6 +367,7 @@ int TSocket::gameLoop()
       mobstuff = (pulse % PULSE_MOBACT);
       pulse_tick = (pulse % PULSE_UPDATE);
       quickpulse = (pulse % ONE_SECOND/5);
+      wayslowpulse = (pulse % (PULSE_MUDHOUR * 12));
     } else {
       teleport = (pulse % (PULSE_TELEPORT/2));
       combat = (pulse % (PULSE_COMBAT/2));
@@ -377,6 +378,35 @@ int TSocket::gameLoop()
       mobstuff = (pulse % (PULSE_MOBACT/2));
       pulse_tick = (pulse % (PULSE_UPDATE/2));
       quickpulse = (pulse % ONE_SECOND/10);
+      wayslowpulse = (pulse % (PULSE_MUDHOUR * 24));
+    }
+
+    if(!wayslowpulse) {
+      for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
+        temp = tmp_ch->next; 
+	int i;
+	TThing *repot, *repot2;
+	TObj *repoo;
+	for (i = MIN_WEAR;i < MAX_WEAR;i++) {
+	  if (!(repot = tmp_ch->equipment[i]) || !(repoo = dynamic_cast<TObj *>(repot)))
+	    continue;
+	  
+	
+	  repoCheckForRent(tmp_ch, repoo, false);
+	  
+	  
+	  
+	}
+	for (repot = tmp_ch->getStuff(); repot; repot = repot2) {
+	  repot2 = repot->nextThing;
+	  repoo = dynamic_cast<TObj *>(repot);
+	  if (!repoo)
+	    continue;
+	  
+	  repoCheckForRent(tmp_ch, repoo, false);
+	}
+	
+      }
     }
 
     if (!pulse_tick) {
@@ -605,7 +635,21 @@ int TSocket::gameLoop()
 	if (!number(0, 100))
 	  tmp_ch->checkWeatherConditions();
 #endif
+#if 0
+        if (!special_procs) {
+          if (tmp_ch->spec) {
+            rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_PULSE, "", NULL);
+            if (IS_SET_DELETE(rc, DELETE_THIS)) {
+              if (!tmp_ch) continue;
 
+              temp = tmp_ch->next;
+              delete tmp_ch;
+              tmp_ch = NULL;
+              continue;
+            }
+          }
+        }
+#endif
         if (!drowning) {
           rc = tmp_ch->checkDrowning();
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -789,6 +833,7 @@ int TSocket::gameLoop()
             continue;
           }
         }
+
         if (!quickpulse) {
           if (tmp_ch->spec) {
             rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_QUICK_PULSE, "", NULL);
