@@ -1187,7 +1187,7 @@ const struct material_type_numbers material_nums[200] =
   {50, 65, 70, 25, 2,  92, 53, 100, -1, 1, 0, 0, 60, 0, 0, NULL, "Pumice"},
 // slash susc, blunt susc, fire susc, pierce susc,
 // hardness, water susc, fall susc, float weight, noise, vol_mult, conduct
-// flammability, acid_susc, price, availability, repair proc, mat_name 
+// flammability, acid_susc, price, base commod vnum, repair proc, mat_name 
   {50, 25, 4, 40, 12, 30, 36, 3, -1, 3, 0, 0, 25, 0, 0, NULL,"Laminate"},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, NULL,""},
@@ -1249,7 +1249,7 @@ const struct material_type_numbers material_nums[200] =
   {70, 0, 100, 75, 10, 33, 0, 50, -2, 4, 0, 750, 0,   0,   0, NULL,"Hemp"},
 // slash susc, blunt susc, fire susc, pierce susc,
 // hardness, water susc, fall susc, float weight, noise, vol_mult, conduct
-// flammability, acid_susc, price, avail, repair proc, mat_name 
+// flammability, acid_susc, price, base commod vnum, repair proc, mat_name 
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   0, NULL,""},
@@ -1276,15 +1276,15 @@ const struct material_type_numbers material_nums[200] =
   {5, 50, 8, 20, 50, 0, 39, 0, 10, 1, 0, 0, 31,   0,   0, NULL,"Jeweled"},
   {10, 60, 10, 24, 48, 0, 39, 0, 10, 1, 1, 0, 31,   0,   0, NULL,"Runed"},
   {25, 45, 0, 25, 60, 0, 39, 0, 13, 1, 0, 0, 31,   0,   0, NULL,"Crystal"},
-  {1, 12, 0, 5, 100, 0, 0, 0, 14, 1, 0, 0, 21,   0,   0, NULL,"Diamond"},
+  {1, 12, 0, 5, 100, 0, 0, 0, 14, 1, 0, 0, 21,   18182,   517, NULL,"Diamond"},
   {10, 30, 0, 10, 50, 0, 39, 0, 10, 1, 0, 0, 24,   0,   0, NULL,"Ebony"},
-  {3, 15, 0, 3, 75, 0, 0, 0, 10, 1, 0, 0, 31,   0,   0, NULL,"Emerald"},
+  {3, 15, 0, 3, 75, 0, 0, 0, 10, 1, 0, 0, 31,   4033,   516, NULL,"Emerald"},
   {21, 20, 0, 21, 50, 0, 39, 0, 10, 1, 0, 0, 31,   0,   0, NULL,"Ivory"},
-  {21, 20, 0, 21, 50, 0, 39, 0, 10, 1, 0, 0, 31,   0,   0, NULL,"Obsidian"},
+  {21, 20, 0, 21, 50, 0, 39, 0, 10, 1, 0, 0, 31,   1333,   65, NULL,"Obsidian"},
   {21, 20, 0, 21, 50, 0, 39, 0, 10, 1, 0, 0, 31,   0,   0, NULL,"Onyx"},
   {11, 18, 0, 11, 60, 0, 39, 0, 10, 1, 0, 0, 31,   0,   0, NULL,"Opal"},
-  {2, 56, 0, 2, 80, 0, 39, 0, 10, 1, 0, 0, 31,   0,   0, NULL,"Ruby"},
-  {5, 47, 0, 5, 70, 0, 39, 0, 10, 1, 0, 0, 31,   0,   0, NULL,"Sapphire"},
+  {2, 56, 0, 2, 80, 0, 39, 0, 10, 1, 0, 0, 31,   9091,   515, NULL,"Ruby"},
+  {5, 47, 0, 5, 70, 0, 39, 0, 10, 1, 0, 0, 31,   1500,   0, NULL,"Sapphire"},
   {6, 20, 0, 6, 90, 0, 79, 0, 10, 1, 0, 0, 31,   0,   0, NULL,"Marble"},
   {8, 24, 0, 8, 95, 0, 99, 0, 10, 1, 0, 0, 31,   0,   0, NULL,"Stone"},
   {15, 40, 0, 15, 40, 0, 39, 0, 8, 1, 0, 0, 83,   0,   0, NULL,"Skull/bone"},
@@ -1301,7 +1301,7 @@ const struct material_type_numbers material_nums[200] =
   {1, 12, 0, 5, 100, 0, 0, 0, 14, 1, 0, 0, 21,   0,   0, NULL,"Corundum"},
 // slash susc, blunt susc, fire susc, pierce susc,
 // hardness, water susc, fall susc, float weight, noise, vol_mult, conduct
-// flammability, acid_susc, price, avail, repair proc, mat_name 
+// flammability, acid_susc, price, base commod vnum, repair proc, mat_name 
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   0, NULL,""},
@@ -1326,37 +1326,37 @@ const struct material_type_numbers material_nums[200] =
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   0, NULL,""},
   {0, 50, 0, 20, 55, 101, 101, 0, 20, 1, 1, 0, 70,   0,   0, repairMetal,"Generic metal"},
-  {0, 75, 0, 20, 45, 101, 101, 0, 20, 1, 1, 0, 70,   0,   0, repairMetal,"Copper"},
+  {0, 75, 0, 20, 45, 101, 101, 0, 20, 1, 1, 0, 70,   5,   52, repairMetal,"Copper"},
   {0, 70, 0, 15, 55, 101, 101, 0, 15, 1, 1, 0, 70,   0,   0, repairMetal,"Scale"},
   {0, 60, 0, 12, 55, 101, 101, 0, 16, 1, 1, 0, 70,   0,   0, repairMetal,"Banded"},
   {0, 75, 0, 20, 55, 101, 101, 0, 30, 1, 1, 0, 70,   0,   0, repairMetal,"Chain"},	
   {0, 60, 0, 0,  65, 101, 101, 0, 35, 1, 1, 0, 70,   0,   0, repairMetal,"Plate"},
-  {0, 70, 0, 10, 50, 101, 101, 0, 25, 1, 1, 0, 70,   0,   0, repairMetal,"Bronze"},
-  {0, 79, 0, 5,  50, 101, 101, 0, 25, 1, 1, 0, 70,   0,   0, repairMetal,"Brass"},
-  {0, 50, 0, 0,  60, 101, 101, 0, 27, 1, 1, 0, 70,   0,   0, repairMetal,"Iron"},
-  {0, 45, 0, 0,  63, 101, 101, 0, 33, 1, 1, 0, 70,   0,   0, repairMetal,"Steel"},
-  {0, 40, 0, 0,  65, 101, 101, 0, 23, 1, 1, 0, 50,   0,   0, repairMetal,"Mithril"},
-  {0, 40, 0, 0,  70, 101, 101, 0, 29, 1, 1, 0, 45,   0,   0, repairMetal,"Admantium"},
-  {0, 50, 0, 0,  50, 101, 101, 0, 35, 1, 1, 0, 70,   0,   0, repairMetal,"Silver"},
-  {0, 50, 0, 2,  49, 101, 101, 0, 35, 1, 1, 0, 70,   0,   0, repairMetal,"Gold"},
-  {0, 50, 0, 0,  50, 101, 101, 0, 39, 1, 1, 0, 70,   0,   0, repairMetal,"Platinum"},
-  {0, 25, 0, 0,  65, 101,  51, 0, 31, 1, 1, 0, 70,   0,   0, repairMetal,"Titanium"},
-  {0, 80, 0, 30, 43, 101, 101, 0, 34, 1, 1, 0, 70,   0,   0, repairMetal,"Aluminum"},
+  {0, 70, 0, 10, 50, 101, 101, 0, 25, 1, 1, 0, 70,   91,   64, repairMetal,"Bronze"},
+  {0, 79, 0, 5,  50, 101, 101, 0, 25, 1, 1, 0, 70,   33,   60, repairMetal,"Brass"},
+  {0, 50, 0, 0,  60, 101, 101, 0, 27, 1, 1, 0, 70,   50,   62, repairMetal,"Iron"},
+  {0, 45, 0, 0,  63, 101, 101, 0, 33, 1, 1, 0, 70,   83,   53, repairMetal,"Steel"},
+  {0, 40, 0, 0,  65, 101, 101, 0, 23, 1, 1, 0, 50,   1500,   57, repairMetal,"Mithril"},
+  {0, 40, 0, 0,  70, 101, 101, 0, 29, 1, 1, 0, 45,   909,   59, repairMetal,"Admantium"},
+  {0, 50, 0, 0,  50, 101, 101, 0, 35, 1, 1, 0, 70,   110,   51, repairMetal,"Silver"},
+  {0, 50, 0, 2,  49, 101, 101, 0, 35, 1, 1, 0, 70,   300,   50, repairMetal,"Gold"},
+  {0, 50, 0, 0,  50, 101, 101, 0, 39, 1, 1, 0, 70,   455,   55, repairMetal,"Platinum"},
+  {0, 25, 0, 0,  65, 101,  51, 0, 31, 1, 1, 0, 70,   667,   56, repairMetal,"Titanium"},
+  {0, 80, 0, 30, 43, 101, 101, 0, 34, 1, 1, 0, 70,   1,   63, repairMetal,"Aluminum"},
   {0, 55, 0, 42, 55, 101, 101, 0, 30, 1, 1, 0, 70,   0,   0, repairMetal,"Ringmail"},
   {20, 70, 0, 42, 35, 101, 101, 0, 15, 1, 0, 0, 40,   0,   0, repairMetal,"Gnomemail"},
-  {0, 50, 0, 0, 55, 101, 101, 0, 30, 1, 1, 0, 42,   0,   0, repairMetal,"Electrum"},
-  {30, 20, 5, 20, 55, 101, 101, 0, 37, 1, 1, 0, 10,   0,   0, repairMetal,"Athanor"},
-  {0, 85, 0, 0, 40, 101, 101, 0, 33, 1, 1, 0, 77,   0,   0, repairMetal, "Tin"},
+  {0, 50, 0, 0, 55, 101, 101, 0, 30, 1, 1, 0, 42,   107,   54, repairMetal,"Electrum"},
+  {30, 20, 5, 20, 55, 101, 101, 0, 37, 1, 1, 0, 10,   1429,   58, repairMetal,"Athanor"},
+  {0, 85, 0, 0, 40, 101, 101, 0, 33, 1, 1, 0, 77,   3,   61, repairMetal, "Tin"},
   {0, 47, 0, 3, 47, 101, 101, 0, 35, 1, 1, 0, 70,   0,   0, repairMetal,"Tungstan"},
   {0, 50, 0, 20, 65, 101, 101, 0, 10, 1, 1, 0, 70,   0,   0, repairMetal,"Admintite"},
-  {0, 25, 0,  0, 50,   0,  25, 0, 10, 1, 0, 0, 89,   0,   0, repairMetal, "Terbium"},
-  {0, 40, 0, 0,  65, 101, 101, 0, 23, 1, 1, 0, 50,   0,   0, repairMetal,"Mithril"},
-  {0, 45, 0, 0,  63, 101, 101, 0, 33, 1, 1, 0, 70,   0,   0, repairMetal,"Steel"},
+  {0, 25, 0,  0, 50,   0,  25, 0, 10, 1, 0, 0, 89,   90,   0, repairMetal, "Terbium"},
+  {0, 40, 0, 0,  65, 101, 101, 0, 23, 1, 1, 0, 50,   1500,   0, repairMetal,"Mithril"},
+  {0, 45, 0, 0,  63, 101, 101, 0, 33, 1, 1, 0, 70,   83,   53, repairMetal,"Steel"},
   //these previous two types are duplicates, of previous metals. Smile and nod.
   {0, 0, 0, 0, 55, 0, 0, 0, 0, 1, 0, 0, 0,   0,   0, NULL,""},
 // slash susc, blunt susc, fire susc, pierce susc,
 // hardness, water susc, fall susc, float weight, noise, vol_mult, conduct
-// flammability, acid_susc, price, avail, repair proc, mat_name 
+// flammability, acid_susc, price, base commod vnum, repair proc, mat_name 
 };
 
 // this is how blunt/sharp/pointy weapon is
