@@ -1332,10 +1332,11 @@ void bootZones(void)
 
   for(it=files.begin();it!=files.end();++it){
     zoneData zd;
-    zd.bootZone((*it).first);
-    zd.renumCmd();
-    zd.zone_nr=zon++;
-    zone_table.push_back(zd);
+    if(zd.bootZone((*it).first)){
+      zd.renumCmd();
+      zd.zone_nr=zon++;
+      zone_table.push_back(zd);
+    }
   }
 }
 
