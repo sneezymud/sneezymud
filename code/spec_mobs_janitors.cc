@@ -178,6 +178,7 @@ int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   TObj *obj = NULL;
   int rc;
   char buf[256];  
+  bool trashpile=false;
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
@@ -195,10 +196,18 @@ int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     if (myself->inRoom() == ROOM_DONATION)
       break;
 
-    if (!okForJanitor(myself, obj))
+    if(obj->objVnum()==GENERIC_TRASH_PILE && obj->getStuff())
+      trashpile=true;
+
+    if (!trashpile && !okForJanitor(myself, obj))
       continue;
-    
-    if (dynamic_cast<TPool *>(obj)){
+
+    if(trashpile){
+      sprintf(buf, "$n empties out $p.");
+      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      myself->doGet("all trash-pile");
+      trashpile=false;
+    } else if (dynamic_cast<TPool *>(obj)){
       sprintf(buf, "$n mops up $p.");
       act(buf, FALSE, myself, obj, 0, TO_ROOM);
       delete obj;
@@ -252,6 +261,7 @@ int prisonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
   int rc;
   char buf[256];  
   int DUMP=31905;
+  bool trashpile=false;
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
@@ -272,10 +282,18 @@ int prisonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
     if(obj->objVnum() == 26688)
       continue;
 
-    if (!okForJanitor(myself, obj))
+    if(obj->objVnum()==GENERIC_TRASH_PILE && obj->getStuff())
+      trashpile=true;
+
+    if (!trashpile && !okForJanitor(myself, obj))
       continue;
 
-    if (dynamic_cast<TPool *>(obj)){
+    if(trashpile){
+      sprintf(buf, "$n empties out $p.");
+      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      myself->doGet("all trash-pile");
+      trashpile=false;
+    } else if (dynamic_cast<TPool *>(obj)){
       sprintf(buf, "$n mops up $p.");
       act(buf, FALSE, myself, obj, 0, TO_ROOM);
       delete obj;
@@ -317,6 +335,7 @@ int amberJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj 
   int rc;
   char buf[256];  
   int DUMP=33281;
+  bool trashpile=false;
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
@@ -334,10 +353,18 @@ int amberJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj 
     if (myself->inRoom() == DUMP)
       break;
 
-    if (!okForJanitor(myself, obj))
+    if(obj->objVnum()==GENERIC_TRASH_PILE && obj->getStuff())
+      trashpile=true;
+
+    if (!trashpile && !okForJanitor(myself, obj))
       continue;
 
-    if (dynamic_cast<TPool *>(obj)){
+    if(trashpile){
+      sprintf(buf, "$n empties out $p.");
+      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      myself->doGet("all trash-pile");
+      trashpile=false;
+    } else if (dynamic_cast<TPool *>(obj)){
       sprintf(buf, "$n mops up $p.");
       act(buf, FALSE, myself, obj, 0, TO_ROOM);
       delete obj;
@@ -378,6 +405,7 @@ int brightmoonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, 
   char buf[256];  
   int DUMP=1385;
   bool trashcan=false;
+  bool trashpile=false;
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
@@ -398,10 +426,18 @@ int brightmoonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, 
     if(obj->objVnum()==OBJ_BM_TRASHCAN && obj->getStuff())
       trashcan=true;
 
-    if (!trashcan && !okForJanitor(myself, obj))
+    if(obj->objVnum()==GENERIC_TRASH_PILE && obj->getStuff())
+      trashpile=true;
+
+    if (!trashcan && !trashpile && !okForJanitor(myself, obj))
       continue;
 
-    if(trashcan){
+    if(trashpile){
+      sprintf(buf, "$n empties out $p.");
+      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      myself->doGet("all trash-pile");
+      trashpile=false;
+    } else if(trashcan){
       sprintf(buf, "$n empties out $p.");
       act(buf, FALSE, myself, obj, 0, TO_ROOM);
       myself->doGet("all trashcan");
