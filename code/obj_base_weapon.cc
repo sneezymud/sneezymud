@@ -13,7 +13,8 @@
 #include "obj_arrow.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
-
+#include "shopowned.h"
+#include "corporation.h"
 
 TBaseWeapon::TBaseWeapon() :
   TObj(),
@@ -1633,6 +1634,21 @@ void TBaseWeapon::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr
   }
 
   shoplog(shop_nr, ch, keeper, getName(), cost, "buying");
+
+  if(shop_index[shop_nr].isOwned()){
+    TShopOwned tso(shop_nr, keeper, ch);
+    
+    if(tso.getDividend()){
+      int div=(int)((double)cost * tso.getDividend());
+      
+      keeper->addToMoney(-div, GOLD_SHOP_WEAPON);
+      shoplog(shop_nr, ch, keeper, getName(), -div, "dividend");
+      
+      TCorporation corp(tso.getCorpID());
+      corp.setMoney(corp.getMoney() + div);
+    }
+  }
+
 }
 
 void TBaseWeapon::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)

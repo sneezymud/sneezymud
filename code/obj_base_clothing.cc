@@ -6,7 +6,7 @@
 #include "shop.h"
 #include "obj_base_clothing.h"
 #include "shopowned.h"
-
+#include "corporation.h"
 
 TBaseClothing::TBaseClothing() :
   TObj()
@@ -667,6 +667,21 @@ void TBaseClothing::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_
   }
 
   shoplog(shop_nr, ch, keeper, getName(), cost, "buying");
+
+  if(shop_index[shop_nr].isOwned()){
+    TShopOwned tso(shop_nr, keeper, ch);
+    
+    if(tso.getDividend()){
+      int div=(int)((double)cost * tso.getDividend());
+      
+      keeper->addToMoney(-div, GOLD_SHOP_ARMOR);
+      shoplog(shop_nr, ch, keeper, getName(), -div, "dividend");
+      
+      TCorporation corp(tso.getCorpID());
+      corp.setMoney(corp.getMoney() + div);
+    }
+  }
+
 }
 
 void TBaseClothing::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)

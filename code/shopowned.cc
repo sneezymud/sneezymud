@@ -69,6 +69,35 @@ TShopOwned::TShopOwned(int shop_nr, TMonster *keeper, TBeing *ch) :
 }
 
 
+void TShopOwned::setDividend(sstring arg)
+{
+  TDatabase db(DB_SNEEZY);
+
+  if(!hasAccess(SHOPACCESS_DIVIDEND)){
+    keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
+    return;
+  }
+
+  double f=convertTo<double>(arg);
+
+  db.query("update shopowned set dividend=%f where shop_nr=%i", f, shop_nr);
+
+  keeper->doTell(ch->getName(), fmt("Ok, the dividend percentage has been set to %f.") % f);
+}
+
+double TShopOwned::getDividend()
+{
+  TDatabase db(DB_SNEEZY);
+  db.query("select dividend from shopowned where shop_nr=%i", shop_nr);
+  
+  if(db.fetchRow())
+    return convertTo<double>(db["dividend"]);
+  
+  return 0.0;
+}
+
+
+
 int TShopOwned::getCorpID()
 {
   TDatabase db(DB_SNEEZY);
@@ -130,7 +159,10 @@ void TShopOwned::showInfo()
     
     keeper->doTell(ch->getName(), fmt("That puts my total value at %i talens.") %
 		   (keeper->getMoney()+value));
-  }    
+    
+    keeper->doTell(ch->getName(), fmt("My corporate dividend kickback is %f.") % getDividend());
+
+  }
 
   if(!isOwned()){
     keeper->doTell(ch->getName(), "This shop is for sale, however the King charges a sales tax and an ownership fee.");

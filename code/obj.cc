@@ -1,5 +1,7 @@
 #include "stdsneezy.h"
 #include "shop.h"
+#include "shopowned.h"
+#include "corporation.h"
 
 bool TObj::isPluralItem() const
 {
@@ -470,8 +472,21 @@ void TObj::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
   ch->addToMoney(-cost, GOLD_SHOP);
   if (!IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_INFINITE_MONEY))
     keeper->addToMoney(cost, GOLD_SHOP);
-    
   shoplog(shop_nr, ch, keeper, getName(), cost, "buying");
+
+  if(shop_index[shop_nr].isOwned()){
+    TShopOwned tso(shop_nr, keeper, ch);
+    
+    if(tso.getDividend()){
+      int div=(int)((double)cost * tso.getDividend());
+      
+      keeper->addToMoney(-div, GOLD_SHOP);
+      shoplog(shop_nr, ch, keeper, getName(), -div, "dividend");
+      
+      TCorporation corp(tso.getCorpID());
+      corp.setMoney(corp.getMoney() + div);
+    }
+  }
 }
 
 void TObj::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)

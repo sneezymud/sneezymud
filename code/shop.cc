@@ -2050,6 +2050,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     
     if(!strcmp(buf, "info")){ /////////////////////////////////////////
       tso.showInfo();
+    } else if(!strcmp(buf, "dividend")){
+      tso.setDividend(arg);
     } else if(!strcmp(buf, "setrates")){ //////////////////////////////////
       tso.setRates(arg);
     } else if(!strcmp(buf, "buy")){ /////////////////////////////////

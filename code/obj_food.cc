@@ -16,6 +16,8 @@
 #include "obj_base_cup.h"
 #include "disc_aegis.h"
 #include "disc_shaman_armadillo.h"
+#include "shopowned.h"
+#include "corporation.h"
 
 #define DRINK_DEBUG 0
 
@@ -996,6 +998,21 @@ void TFood::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
   }
 
   shoplog(shop_nr, ch, keeper, getName(), cost, "buying");
+
+  if(shop_index[shop_nr].isOwned()){
+    TShopOwned tso(shop_nr, keeper, ch);
+    
+    if(tso.getDividend()){
+      int div=(int)((double)cost * tso.getDividend());
+      
+      keeper->addToMoney(-div, GOLD_SHOP_FOOD);
+      shoplog(shop_nr, ch, keeper, getName(), -div, "dividend");
+      
+      TCorporation corp(tso.getCorpID());
+      corp.setMoney(corp.getMoney() + div);
+    }
+  }
+
 }
 
 void TFood::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)

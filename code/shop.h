@@ -15,7 +15,8 @@ const unsigned int SHOPACCESS_RATES   = (1<<2);
 const unsigned int SHOPACCESS_GIVE    = (1<<3);
 const unsigned int SHOPACCESS_SELL    = (1<<4);
 const unsigned int SHOPACCESS_ACCESS  = (1<<5);
-const unsigned int SHOPACCESS_LOGS  = (1<<6);
+const unsigned int SHOPACCESS_LOGS    = (1<<6);
+const unsigned int SHOPACCESS_DIVIDEND= (1<<7);
 
 const char * const SHOP_FILE =     "tinyworld.shp";
 const char * const SHOPFILE_PATH = "mobdata/shops";

@@ -57,8 +57,6 @@ int TCorporation::getMoney()
 
   db.query("select gold from corporation where corp_id=%i", corp_id);
 
-  vlogf(LOG_PEEL, "gold=%s", db["gold"].c_str());
-  
   if(db.fetchRow())
     return convertTo<int>(db["gold"]);
   else

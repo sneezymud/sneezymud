@@ -13,6 +13,7 @@
 #include "obj_open_container.h"
 #include "obj_component.h"
 #include "shopowned.h"
+#include "corporation.h"
 
 vector<compPlace>component_placement(0);
 vector<compInfo>CompInfo(0);
@@ -2944,6 +2945,22 @@ void TComponent::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
   }
 
   shoplog(shop_nr, ch, keeper, getName(), cost, "buying");
+
+
+  if(shop_index[shop_nr].isOwned()){
+    TShopOwned tso(shop_nr, keeper, ch);
+    
+    if(tso.getDividend()){
+      int div=(int)((double)cost * tso.getDividend());
+      
+      keeper->addToMoney(-div, GOLD_SHOP_COMPONENTS);
+      shoplog(shop_nr, ch, keeper, getName(), -div, "dividend");
+      
+      TCorporation corp(tso.getCorpID());
+      corp.setMoney(corp.getMoney() + div);
+    }
+  }
+
 }
 
 void TComponent::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
