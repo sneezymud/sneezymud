@@ -3717,8 +3717,8 @@ void Descriptor::show_string(const char *the_input, showNowT showNow, allowRepla
       break;
     if ((lines/lines_per_page + 1) < cur_page)
       continue;
-    if (!i && isspace(*chk))
-      continue;
+//    if (!i && isspace(*chk))
+//      continue;
       
     // some redundant code from colorString()
     if ((*chk == '<') && (*(chk +2) == '>')) {
