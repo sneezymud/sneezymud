@@ -1072,7 +1072,7 @@ int TBeing::updateHalfTickStuff()
             // get addicted right off the bat.  Multiply by 10 for a little
             // extra precision.
 	    severity=(desc->drugs[i].total_consumed / 
-		      ((hours_last-hours_first)+24)) * 10;
+		      (max(hours_last-hours_first, (unsigned int) 24*7)+24)) * 10;
 
 	    // old formula, not sure why I did this?
 	    //	    severity=(desc->drugs[i].total_consumed / hours_first) * hours_last;

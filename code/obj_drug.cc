@@ -300,21 +300,21 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 	}
 
 	switch(consumed){
-	  case 0:
+	  case 0: case 1:
 	    act("You feel a little light-headed.",TRUE,ch,0,0,TO_CHAR);
 	    break;
-	  case 3:
+	  case 4:
 	    act("You can feel the pipeweed taking affect.",
 		TRUE,ch,0,0,TO_CHAR);
 	    break;
-	  case 6:
+	  case 7:
 	    act("You feel pretty buzzed.",TRUE,ch,0,0,TO_CHAR);
 	    break;
 	  default:
 	    act("You're really buzzed now.  Smoking any more might be a bad idea.",
 		TRUE,ch,0,0,TO_CHAR);
 	    break;
-	  case 1: case 2: case 4: case 5: case 7: case 8:
+	  case 2: case 3: case 5: case 6: case 8: case 9:
 	    break;
 	}
       }
@@ -386,7 +386,7 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
 	aff.type = AFFECT_DRUG;
 	aff.bitvector = 0;
 	aff.modifier2 = drug;
-	aff.modifier = -5;
+	aff.modifier = -severity;
 	aff.duration = PULSE_MUDHOUR;
 	aff.location = APPLY_FOC;
 
