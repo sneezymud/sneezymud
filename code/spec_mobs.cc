@@ -6482,13 +6482,17 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       shoplog(find_shop_nr(me->number), ch, me, item->getName(), 
 	      cost, "divinating");
 
-
       ch->sendTo(COLOR_BASIC, fmt("%s concentrates deeply on %s.\n\r") % me->getName() % item->getName());
       ch->sendTo(fmt("%s conjures up a cloud of smoke.\n\rInside the cloud of smoke you see...\n\r") % me->getName());
       ch->statObjForDivman(item);
       sprintf(buf, "Thank you, %s, for your business! Please come again!", ch->getName());
       me->doSay(buf);
       me->doGive(ch,item,GIVE_FLAG_IGN_DEX_TEXT);
+
+
+      me->saveChar(ROOM_AUTO_RENT);
+      ch->saveChar(ROOM_AUTO_RENT);
+
       return TRUE;
     default:
       return FALSE;
