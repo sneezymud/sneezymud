@@ -2401,7 +2401,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
       break;
     case LIQ_POT_FEATHERY_DESCENT:
     case LIQ_POT_FEATHERY_DESCENT2:
-      featheryDescent(ch,vict);
+      featheryDescent(ch,vict,level,learn);
       break;
     case LIQ_POT_DETECT_MAGIC:
       detectMagic(ch,vict,level,learn);

@@ -808,16 +808,17 @@ int featheryDescent(TBeing * caster, TBeing * victim, int, affectedData * aff, b
 
 void featheryDescent(TBeing * caster, TBeing *victim, TMagicItem * obj)
 {
-  affectedData aff;
-  int level;
-  int ret;
+  featheryDescent(caster, victim, obj->getMagicLevel()/3,obj->getMagicLearnedness());
+}
 
-  level = obj->getMagicLevel();
+void featheryDescent(TBeing *caster, TBeing *victim, int level, int learn)
+{
+  affectedData aff;
+  int ret;
 
   aff.type = SPELL_FEATHERY_DESCENT;
   aff.level = level;
-  // duration from the obj is 1/3 that of naturally cast
-  aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
+  aff.duration = (aff.level) * UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -827,7 +828,7 @@ void featheryDescent(TBeing * caster, TBeing *victim, TMagicItem * obj)
     return;
   }
 
-  ret = featheryDescent(caster,victim,level,&aff,obj->getMagicLearnedness());
+  ret = featheryDescent(caster,victim,level,&aff,learn);
 
   if (IS_SET(ret, SPELL_SUCCESS)) {
     act("$N seems lighter on $S feet!", FALSE, caster, NULL, victim, TO_NOTVICT);

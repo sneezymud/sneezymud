@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_air.h,v $
+// Revision 5.3  2003/01/13 17:37:21  peel
+// fixed feathery descent function for potions
+//
 // Revision 5.2  2002/11/29 20:03:24  peel
 // added prototype for weightCorrectDuration
 //
@@ -63,6 +66,7 @@ private:
     int tornado(TBeing *, int, byte, int);
     int castTornado(TBeing *);
  
+    void featheryDescent(TBeing *, TBeing *, int, int);
     void featheryDescent(TBeing *, TBeing *, TMagicItem *);
     int featheryDescent(TBeing *, TBeing *, int, affectedData *, byte);
     int castFeatheryDescent(TBeing *, TBeing *);
