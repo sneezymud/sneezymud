@@ -2851,6 +2851,7 @@ void buildCommandArray(void)
   commandArray[CMD_PSAY] = new commandInfo("psay", POSITION_RESTING, 0);
   commandArray[CMD_PTELL] = new commandInfo("ptell", POSITION_RESTING, 0);
   commandArray[CMD_PSHOUT] = new commandInfo("pshout", POSITION_RESTING, 0);
+  commandArray[CMD_TELEVISION] = new commandInfo("television", POSITION_RESTING, 0);
 }
 
 bool _parse_name(const char *arg, char *name)

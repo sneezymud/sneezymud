@@ -251,6 +251,11 @@ void TPerson::resetChar()
     affectModify(af->location, (unsigned) af->modifier,
               (unsigned) af->modifier2, af->bitvector, TRUE, SILENT_YES);
   }
+
+  if(doesKnowSkill(SKILL_TELE_SIGHT))
+    SET_BIT(specials.affectedBy, AFF_SENSE_LIFE);
+
+
   if (isImmortal()) {
     setHit(hitLimit());
     setMana(manaLimit());

@@ -203,6 +203,11 @@ time_info_data *TBeing::age() const
   player_age.year += getBaseAge();
   player_age.year += age_mod;
 
+  if(isPc() && doesKnowSkill(SKILL_MIND_PRESERVATION)){
+    player_age.year = (sh_int)((float)player_age.year * (float)
+              ((100.0 - (getSkillValue(SKILL_MIND_PRESERVATION)/5.0))/100.0));
+  }
+
   return (&player_age);
 }
 
