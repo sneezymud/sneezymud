@@ -548,7 +548,7 @@ void bootHomes(void)
   MYSQL_ROW row, row2;
 
   
-  if((rc=dbquery(&res, "sneezy", "bootHomes(1)", "select plan, plot_start, plot_end, keynum from homeplots"))){
+  if((rc=dbquery(&res, "sneezy", "bootHomes(1)", "select plan, plot_start, plot_end, keynum from homeplots where homeowner is not null"))){
     if(rc==-1)
       vlogf(LOG_BUG, "Database error in bootHomes");
     return;
@@ -613,13 +613,14 @@ void bootHomes(void)
 	  } else {
 	    // external exit, make a door and lock it
 	    TRoom *outside=real_roomp(dest->dir_option[dir]->to_room);
+	    
 	    dirTypeT dir_outside=DIR_NORTH;
 
 	    switch(dir){
 	      case DIR_NORTH: dir_outside=DIR_SOUTH; break;
 	      case DIR_EAST: dir_outside=DIR_WEST; break;
 	      case DIR_SOUTH: dir_outside=DIR_NORTH; break;
-	      case DIR_WEST: dir_outside=DIR_WEST; break;
+	      case DIR_WEST: dir_outside=DIR_EAST; break;
 	      case DIR_UP: dir_outside=DIR_DOWN; break;
 	      case DIR_DOWN: dir_outside=DIR_UP; break;
 	      case DIR_NORTHEAST: dir_outside=DIR_SOUTHWEST; break;
