@@ -230,9 +230,9 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
     case CMD_GENERIC_PULSE:
       for (tThing = tRoom->stuff; tThing; tThing = tThing->nextThing)
         if ((tPerson = dynamic_cast<TBeing *>(tThing))) {
-          tPerson->setMove(tPerson->getMove());
+          tPerson->setMove(tPerson->getMaxMove());
 
-          if (tPerson->isPc()) {
+          if (tPerson->isPc() && !tPerson->isImmortal()) {
             tPerson->setCond(FULL, 20);
             tPerson->setCond(THIRST, 24);
 
