@@ -1343,7 +1343,7 @@ const struct material_type_numbers material_nums[200] =
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   0, NULL,""},
-  {50, 50, 50, 50, 50, 0, 59, 0, 10, 1, 0, 0, 31,   205,   0, NULL,"generic mineral"},
+  {50, 50, 50, 50, 50, 0, 59, 0, 10, 1, 0, 0, 31,   205,   0, repairCrystal,"generic mineral"},
   {5, 50, 8, 20, 50, 0, 39, 0, 10, 1, 0, 0, 31,   9652,   0, repairCrystal,"jeweled"},
   {10, 60, 10, 24, 48, 0, 39, 0, 10, 1, 1, 0, 31,   3331,   0, repairMagical,"runed"},
   {25, 45, 0, 25, 60, 0, 39, 0, 13, 1, 0, 0, 31,   65,   0, repairCrystal,"crystal"},

@@ -155,7 +155,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
   sstring tStNewArg(""), buf, bufname;
   size_t tVar = 0;
 
-
   for (; isspace(*argument); argument++);
 
   tStNewArg = argument;
@@ -797,6 +796,9 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           break;
         case CMD_ACCESS:
           doAccess(newarg);
+          break;
+        case CMD_CLONE:
+          doClone(newarg);
           break;
         case CMD_REPLACE:
           doReplace(newarg);
@@ -2627,6 +2629,7 @@ void buildCommandArray(void)
   commandArray[CMD_SHARPEN] = new commandInfo("sharpen", POSITION_SITTING, 0);
   commandArray[CMD_KISS] = new commandInfo("kiss", POSITION_RESTING, 0);
   commandArray[CMD_ACCESS] = new commandInfo("access", POSITION_RESTING, GOD_LEVEL1);
+  commandArray[CMD_CLONE] = new commandInfo("clone", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_MOTD] = new commandInfo("motd", POSITION_DEAD, 0);
   commandArray[CMD_REPLACE] = new commandInfo("replace", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_LIMBS] = new commandInfo("limbs", POSITION_SLEEPING, 0);

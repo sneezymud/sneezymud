@@ -1853,6 +1853,7 @@ class TBeing : public TThing {
     virtual void doCutlink(const char *);
     virtual void doInvis(const char *);
     virtual void doVisible(const char *, bool);
+    virtual void doClone(const sstring &);
     virtual void doAccess(const sstring &);
     void doWizlock(const char *);
     void doFlag(const char *);

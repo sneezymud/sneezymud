@@ -593,6 +593,7 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
       (item.item_number >= 8837 && item.item_number <= 8850) || //dark grey
       (item.item_number >= 9600 && item.item_number <= 9611) || //whale
       (item.item_number == 9624) || // whale hood
+      (item.item_number == 27109) || // hawk ring
       (item.item_number >= 10490 && item.item_number <= 10062) || //emerald
       (item.item_number >= 10600 && item.item_number <= 10611) || //sylvanplate
       (item.item_number >= 10620 && item.item_number <= 10631) || //sylvansilk
@@ -4362,5 +4363,113 @@ rentObjAffData::rentObjAffData() :
   modifier2(0),
   bitvector(0)
 {
+}
+
+
+// based in part on void TPerson::loadRent()
+void TBeing::doClone(const sstring &arg)
+{
+  sstring ch_name = arg.word(0);
+  sstring arg2 = arg.word(1);
+  int mob_num = convertTo<int>(arg2);
+  TMonster *mob;
+  charFile st1;
+  rentHeader st2;
+  int ci, num_read = 0;
+  FILE *fp;
+
+  if (!isImmortal())
+    return;
+
+  if(ch_name.empty() || arg2.empty()) {
+    sendTo("Syntax: clone <playername> <mobvnum>\n\r");
+    return;
+  }
+
+  if(!load_char(ch_name, &st1)) {
+    sendTo("Can't find that player file.\n\r");
+    return;
+  }
+
+  for(ci = 0;ci <= RANGER_LEVEL_IND;ci++) {
+    if(st1.level[ci] > GetMaxLevel()) {
+      sendTo("You can't clone a player of higher level than you.\n\r");
+      return;
+    }
+  }
+  
+  if (!(mob = read_mobile(mob_num, VIRTUAL))) {
+    sendTo("Mob not found\n\r");
+    return;
+  }
+  thing_to_room(mob, in_room);
+  mob->swapToStrung();
+  
+
+  delete [] mob->name;
+  sstring tmpstr = st1.name;
+  tmpstr += " [clone]";
+  mob->name = mud_str_dup(tmpstr);
+  delete [] mob->shortDescr;
+  mob->shortDescr = mud_str_dup(st1.name);
+  delete [] mob->player.longDescr;
+  tmpstr = st1.name;
+  tmpstr += " is standing here.";
+  mob->player.longDescr = mud_str_dup(tmpstr);
+  delete [] mob->getDescr();
+  if(*st1.description)
+  {
+    mob->setDescr(st1.description);
+  } else mob->setDescr(NULL);
+  
+  mob->setSex(sexTypeT(st1.sex));
+  mob->setHeight(st1.height);
+  mob->setWeight(st1.weight);
+  
+  
+  // open player rent file
+  sstring buf = fmt ("rent/%c/%s") % LOWER(ch_name.c_str()[0]) % ch_name.lower().c_str();
+  if (!(fp = fopen(buf.c_str(), "r+b"))) {
+    sendTo("Rent file could not be opened.  Your clone stands naked before you.\n\r");
+    fclose(fp);
+    return;
+  }
+  memset(&st2, 0, sizeof(rentHeader));
+  if (fread(&st2, sizeof(rentHeader), 1, fp) != 1) {
+    vlogf(LOG_BUG, "Error while reading %s's rent file header.  Your clone stands naked before you.", ch_name.c_str());
+    fclose(fp);
+    return;
+  }
+  if (objsFromStore(NULL, &num_read, mob, NULL, fp, st2.version, false)) {
+    vlogf(LOG_BUG, "Error while reading %s's objects in doClone.  Your clone stands naked before you.", ch_name.c_str());
+    fclose(fp);
+    return;
+  }
+  
+  // be sure to close the FILE * before doing the saveRent
+  fclose(fp);
+
+
+  // reverse object order
+  TThing *tmp2 = mob->getStuff();
+  TThing *t2;
+  mob->setStuff(NULL);
+  TObj *o;
+  while (tmp2) {
+    if ((o = dynamic_cast<TObj *>(tmp2)))
+    {
+      o->addObjStat(ITEM_NORENT);
+    } else vlogf(LOG_BUG, "did not add no-rent flag to %s when cloning", 
+        tmp2->name);
+    t2 = tmp2->nextThing;
+    tmp2->nextThing = mob->getStuff();
+    mob->setStuff(tmp2);
+    tmp2 = t2;
+  }
+
+  // add NO RENT to the objects, don't want them falling into PC hands permanently
+
+  sendTo("Your clone appears before you.\n\r");
+  return;
 }
 

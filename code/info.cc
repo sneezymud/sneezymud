@@ -2124,6 +2124,7 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
     case CMD_MEDIT:
       return POWER_MEDIT;
       break;
+    case CMD_CLONE:
     case CMD_ACCESS:
       return POWER_ACCESS;
       break;

@@ -367,6 +367,7 @@ enum cmdTypeT {
      CMD_SHARPEN,
      CMD_KILL,
      CMD_ACCESS,
+     CMD_CLONE,
      CMD_MOTD,
      CMD_REPLACE,
      CMD_LIMBS,
