@@ -1327,7 +1327,7 @@ int TBeing::flameEngulfed()
     if (!(t = equipment[i]) || !(obj = dynamic_cast<TObj *>(t))) 
       continue;
     
-    res = obj->burnObject(this, max(5, 100 - getImmunity(IMMUNE_HEAT)));
+    res = obj->burnObject(this, getImmunity(IMMUNE_HEAT)?1:50);
     if (IS_SET_DELETE(res, DELETE_THIS)) {
       delete obj;
       obj = NULL;
@@ -1341,7 +1341,7 @@ int TBeing::flameEngulfed()
     if (!obj)
       continue;
 
-    res = obj->burnObject(this, max(5, 90 - getImmunity(IMMUNE_HEAT)));
+    res = obj->burnObject(this, getImmunity(IMMUNE_HEAT)?1:50);
     if (IS_SET_DELETE(res, DELETE_THIS)) {
       delete obj;
       obj = NULL;
@@ -1487,7 +1487,7 @@ int TBeing::frostEngulfed()
     if (!(t = equipment[i]) || !(obj = dynamic_cast<TObj *>(t)))
       continue;
     
-    res = obj->freezeObject(this, max(5, 100 - getImmunity(IMMUNE_COLD)));
+    res = obj->freezeObject(this, getImmunity(IMMUNE_COLD)?1:50);
     if (IS_SET_DELETE(res, DELETE_THIS)) {
       delete obj;
       obj = NULL;
@@ -1500,7 +1500,7 @@ int TBeing::frostEngulfed()
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
-    res = obj->freezeObject(this, max(5, 90 - getImmunity(IMMUNE_COLD)));
+    res = obj->freezeObject(this, getImmunity(IMMUNE_COLD)?1:50);
     if (IS_SET_DELETE(res, DELETE_THIS)) {
       delete obj;
       obj = NULL;
@@ -1584,7 +1584,7 @@ int TBeing::acidEngulfed()
   for (i = MIN_WEAR;i < MAX_WEAR;i++) {
     if (!(t = equipment[i]) || !(obj = dynamic_cast<TObj *>(t)))
       continue;
-    res = obj->meltObject(this, max(5, 100 - getImmunity(IMMUNE_ACID)));
+    res = obj->meltObject(this, getImmunity(IMMUNE_ACID)?1:50);
     if (IS_SET_ONLY(res, DELETE_THIS)) {
       delete obj;
       obj = NULL;
@@ -1595,7 +1595,7 @@ int TBeing::acidEngulfed()
     obj = dynamic_cast<TObj *>(t);
     if (!obj)
       continue;
-    res = obj->meltObject(this, max(5, 100 - getImmunity(IMMUNE_ACID)));
+    res = obj->meltObject(this, getImmunity(IMMUNE_ACID)?1:50);
     if (IS_SET_ONLY(res, DELETE_THIS)) {
       delete obj;
       obj = NULL;
