@@ -5996,8 +5996,8 @@ void TBeing::doAccount(const char *arg)
 
       // bat is mostly gone, and i need to remove the imm flag on a retired
       // account, so i'm adding myself. - dash
-      if (strcmp(getName(), "Batopr") && strcmp(getName(), "Dash")) {
-        sendTo("Only Batopr should be doing this.\n\r");
+      if (strcmp(getName(), "Batopr") && strcmp(getName(), "Jesus") && strcmp(getName(), "Damescena") && strcmp(getName(), "Peel") && strcmp(getName(), "Dash")) {
+        sendTo("Sorry you suck too much to do this.\n\r");
         return;
       }
   
