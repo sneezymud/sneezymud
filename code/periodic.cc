@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: periodic.cc,v $
+// Revision 1.6  1999/09/26 17:04:13  lapsos
+// Fixed problem with elementals not draining mana from enthral.
+//
 // Revision 1.5  1999/09/22 17:08:49  peel
 // Minor changes to smoke
 //
@@ -1020,37 +1023,39 @@ int TBeing::updateHalfTickStuff()
     else if (roomp && (roomp->getSectorType() == SECT_JUNGLE) &&
         (getPosition() > POSITION_STUNNED) && is_daytime())
       sendTo("The jungle humidity causes you to sweat uncontrollably.\n\r");
-    else if (roomp && (getPosition() > POSITION_STUNNED) && (drunk < 15) &&
-               !roomp->isRoomFlag(ROOM_NO_HEAL) &&
-               has_healthy_body(this)) {
-      int mana_bump = manaGain(), mana_max = manaLimit(), mana_cur = getMana();
-      if (foodReject || (drunk > 15)) {
-        mana_bump = ::number(1,3);
-        if (!foodReject) {
-          addToHit(1);
-          sendTo("Your condition prevents your body's full recovery.\n\r");
-        } else 
-          sendTo("Your condition takes its toll on your body.\n\r"); 
-      } else if(!berserk_noheal)
-        addToHit(hitGain());
+    else if (roomp && (getPosition() > POSITION_STUNNED)) {
+      // At the end of this if we do the elemental 'drain' checks.  Regardless of
+      // the following 3 conditions we Always want that check to occure.
+      if (!roomp->isRoomFlag(ROOM_NO_HEAL) && (drunk < 15) && has_healthy_body(this)) {
+        int mana_bump = manaGain(), mana_max = manaLimit(), mana_cur = getMana();
+        if (foodReject || (drunk > 15)) {
+          mana_bump = ::number(1,3);
+          if (!foodReject) {
+            addToHit(1);
+            sendTo("Your condition prevents your body's full recovery.\n\r");
+          } else 
+            sendTo("Your condition takes its toll on your body.\n\r"); 
+        } else if(!berserk_noheal)
+          addToHit(hitGain());
       
-      addToPiety(pietyGain(0.0));
-      if ((hasClass(CLASS_RANGER) || hasClass(CLASS_SHAMAN) || hasClass(CLASS_MAGIC_USER)) && 
-            (stone = find_biggest_powerstone(this)) && 
-            (mana_bump + mana_cur >= mana_max)) {
-        addToMana(mana_max - mana_cur);
+        addToPiety(pietyGain(0.0));
+        if ((hasClass(CLASS_RANGER) || hasClass(CLASS_SHAMAN) || hasClass(CLASS_MAGIC_USER)) && 
+              (stone = find_biggest_powerstone(this)) && 
+              (mana_bump + mana_cur >= mana_max)) {
+          addToMana(mana_max - mana_cur);
         
-        if (stone->psGetMana() != stone->psGetMaxMana()) {
-          stone->psAddMana(mana_bump - (mana_max - mana_cur));
-            stone->psSetMana(min(stone->psGetMana(), stone->psGetMaxMana()));
-          if (stone->psGetMana() != stone->psGetMaxMana())
-            sprintf(buf, "Your $o turn$Q whiter.");
-          else
-            sprintf(buf, "Your $o $q now a solid white.");
-          act(buf, TRUE, this, stone, 0, TO_CHAR);
-        }
-      } else
-        addToMana(mana_bump);
+          if (stone->psGetMana() != stone->psGetMaxMana()) {
+            stone->psAddMana(mana_bump - (mana_max - mana_cur));
+              stone->psSetMana(min(stone->psGetMana(), stone->psGetMaxMana()));
+            if (stone->psGetMana() != stone->psGetMaxMana())
+              sprintf(buf, "Your $o turn$Q whiter.");
+            else
+              sprintf(buf, "Your $o $q now a solid white.");
+            act(buf, TRUE, this, stone, 0, TO_CHAR);
+          }
+        } else
+          addToMana(mana_bump);
+      }
 
        // Check charms *AFTER* the periodic gain
        // if gain is 50, and cost if 65, players will see themselves losing
