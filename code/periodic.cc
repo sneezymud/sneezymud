@@ -1564,7 +1564,7 @@ int TObj::updateBurning(void)
 	TObj *to=dynamic_cast<TObj *>(tt);
 
 	if(to && !to->isObjStat(ITEM_BURNING) && 
-	   material_nums[to->getMaterial()].flammability >0 &&
+	   material_nums[this->getMaterial()].flammability >0 &&
 	   (::number(0,100) < chance)){
 	  act("The <Y>fire<1> spreads to $n and it begins to <r>burn<1>!",
 	      FALSE, to, 0, 0, TO_ROOM);	  
