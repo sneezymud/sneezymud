@@ -1132,6 +1132,14 @@ void buildComponentArray()
     "$n flings $p at $mself.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_VAMPIRIC_TOUCH,
+    "You consume $p and spit it on $N.",
+    "$n consumes $p and spits it on $N.",
+    "$n consumes $p and spits it on you.",                       
+    "You consume $p and accidentally swallow it.",
+    "$n consumes $p and swallows it down.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_ATOMIZE,
     "You blow $p at $N.",
     "$n blow $p at $N.",

@@ -880,6 +880,10 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDTraps *) cd)->skSetTrapsGren;
 
 
+    case SPELL_ROOT_CONTROL:  //               340
+      return &((CDNature *) cd)->skRootControl;
+    case SPELL_LIVING_VINES:  //               348
+      return &((CDNature *) cd)->skLivingVines;
 
 // SHAMAN CLASS
 
@@ -887,22 +891,20 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // disc_shaman
 
-    case SPELL_AQUATIC_BLAST: 
-      return &((CDShamanFrog *) cd)->skAquaticBlast;
-    case SPELL_AQUALUNG: 
-      return &((CDShamanArmadillo *) cd)->skAqualung;
+    case SPELL_VAMPIRIC_TOUCH: // 480
+      return &((CDShaman *) cd)->skVampiricTouch;
     case SPELL_SHIELD_OF_MISTS: 
       return &((CDShaman *) cd)->skShieldOfMists;
     case SKILL_SACRIFICE: 
       return &((CDShaman *) cd)->skSacrifice;
-    case SPELL_ROOT_CONTROL:  //               340
-      return &((CDNature *) cd)->skRootControl;
-    case SPELL_LIVING_VINES:  //               348
-      return &((CDNature *) cd)->skLivingVines;
     case SPELL_ENTHRALL_SPECTRE:
       return &((CDShaman *) cd)->skEnthrallSpectre;
     case SPELL_ENTHRALL_GHAST:
       return &((CDShaman *) cd)->skEnthrallGhast;
+    case SPELL_AQUATIC_BLAST: 
+      return &((CDShamanFrog *) cd)->skAquaticBlast;
+    case SPELL_AQUALUNG: 
+      return &((CDShamanArmadillo *) cd)->skAqualung;
     case SPELL_ENTHRALL_GHOUL:
       return &((CDShamanControl *) cd)->skEnthrallGhoul;
     case SPELL_ENTHRALL_DEMON:
@@ -942,8 +944,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 // disc_alchemy_shaman
 // disc_draining
 
-      case SPELL_VAMPIRIC_TOUCH: // 480
-        return &((CDShaman *) cd)->skVampricTouch;
       case SPELL_LIFE_LEECH: // 481
         return &((CDShaman *) cd)->skLifeLeech;
 

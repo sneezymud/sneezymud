@@ -888,11 +888,95 @@ void TBeing::doSacrifice(const char *arg)
   tobj->sacrificeMe(this, arg);
 }
 
+int vampiricTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+{
+  if (victim->isImmortal()) {
+    act("You can't touch a god in that manner!",
+             FALSE, caster, NULL, victim, TO_CHAR);
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
+  int num = ::number(1,30);
+  int num2 = ::number(1,16);
+  int num3 = ::number(1,30);
 
+  if (bSuccess(caster, bKnown,SPELL_VAMPIRIC_TOUCH)) {
+    act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("You groan in pain as life is drawn from your body!", FALSE, caster, NULL, victim, TO_VICT);
+    victim->addToHit(-num);
+    caster->addToHit(num2);
+    caster->addToLifeforce(num3);
+    return SPELL_SUCCESS;
+  } else {
+    switch (critFail(caster, SPELL_VAMPIRIC_TOUCH)) {
+      case CRIT_F_HITSELF:
+      case CRIT_F_HITOTHER:
+        CF(SPELL_VAMPIRIC_TOUCH);
+        act("$n's body glows a dark, evil-looking red!", 
+               FALSE, caster, NULL, NULL, TO_ROOM);
+        act("You sang the invokation incorrectly! The ancestors are EXTREMELY pissed!", 
+               FALSE, caster, NULL, NULL, TO_CHAR);
+        victim->addToHit(num);
+        caster->addToHit(-num);
+        return SPELL_CRIT_FAIL;
+      case CRIT_F_NONE:
+        break;
+    }
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
 
+int vampiricTouch(TBeing *caster, TBeing *victim)
+{
+  if (!bPassShamanChecks(caster, SPELL_VAMPIRIC_TOUCH, victim))
+    return FALSE;
 
+  lag_t rounds = discArray[SPELL_VAMPIRIC_TOUCH]->lag;
+  taskDiffT diff = discArray[SPELL_VAMPIRIC_TOUCH]->task;
 
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_VAMPIRIC_TOUCH, diff, 1, "", rounds, caster->in_room, 0, 
+0,TRUE, 
+0);
 
+  return TRUE; 
+}
 
+int castVampiricTouch(TBeing *caster, TBeing *victim)
+{
+  int ret,level;
+  int rc = 0;
 
+  level = caster->getSkillLevel(SPELL_VAMPIRIC_TOUCH);
+  int bKnown = caster->getSkillValue(SPELL_VAMPIRIC_TOUCH);
 
+  ret=vampiricTouch(caster,victim,level,bKnown, caster->getAdvLearning(SPELL_VAMPIRIC_TOUCH));
+  if (ret == SPELL_SUCCESS) {
+  } else {
+    if (ret==SPELL_CRIT_FAIL) {
+    } else {
+    }
+  }
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
+int vampiricTouch(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
+{
+  int tRc = FALSE,
+      tReturn;
+
+  tReturn = vampiricTouch(tMaster, tSucker, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), 0);
+
+  if (IS_SET(tReturn, VICTIM_DEAD))
+    ADD_DELETE(tRc, DELETE_VICT);
+
+  if (IS_SET(tReturn, CASTER_DEAD))
+    ADD_DELETE(tRc, DELETE_THIS);
+
+  return tRc;
+}

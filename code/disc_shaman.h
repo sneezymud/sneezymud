@@ -1,17 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_shaman.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
 
 #ifndef __DISC_SHAMAN_H
 #define __DISC_SHAMAN_H
@@ -21,41 +7,49 @@
 class CDShaman : public CDiscipline
 {
 public:
-    CSkill skRootControl;
-    CSkill skCacaodemon;
+    CSkill skSacrifice;
+    CSkill skShieldOfMists;
+    CSkill skEnthrallSpectre;
+    CSkill skEnthrallGhast;
     CSkill skVoodoo;
-    CSkill skControlUndead;
-    CSkill skLivingVines;
+    CSkill skVampiricTouch;
+    CSkill skLifeLeech;
     CSkill skResurrection;
     CSkill skDancingBones;
     CDShaman()
       : CDiscipline(),
-      skRootControl(),
-      skCacaodemon(),
+      skSacrifice(),
+      skShieldOfMists(),
+      skEnthrallSpectre(),
+      skEnthrallGhast(),
       skVoodoo(),
-      skControlUndead(),
-      skLivingVines(),
+      skVampiricTouch(),
+      skLifeLeech(),
       skResurrection(),
       skDancingBones() { 
     }
     CDShaman(const CDShaman &a)
       : CDiscipline(a),
-      skRootControl(a.skRootControl),
-      skCacaodemon(a.skCacaodemon),
+      skSacrifice(a.skSacrifice),
+      skShieldOfMists(a.skShieldOfMists),
+      skEnthrallSpectre(a.skEnthrallSpectre),
+      skEnthrallGhast(a.skEnthrallGhast),
       skVoodoo(a.skVoodoo),
-      skControlUndead(a.skControlUndead),
-      skLivingVines(a.skLivingVines),
+      skVampiricTouch(a.skVampiricTouch),
+      skLifeLeech(a.skLifeLeech),
       skResurrection(a.skResurrection),
       skDancingBones(a.skDancingBones) {
     }
     CDShaman & operator=(const CDShaman &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skRootControl = a.skRootControl;
-      skCacaodemon = a.skCacaodemon;
+      skSacrifice = a.skSacrifice;
+      skShieldOfMists = a.skShieldOfMists;
+      skEnthrallSpectre = a.skEnthrallSpectre;
+      skEnthrallGhast = a.skEnthrallGhast;
       skVoodoo = a.skVoodoo;
-      skControlUndead = a.skControlUndead;
-      skLivingVines = a.skLivingVines;
+      skVampiricTouch = a.skVampiricTouch;
+      skLifeLeech = a.skLifeLeech;
       skResurrection = a.skResurrection;
       skDancingBones = a.skDancingBones;
       return *this;
@@ -65,13 +59,6 @@ public:
 private:
 };
 
-    int createGolem(TBeing *);
-    int createGolem(TBeing *, int, int, int, byte);
-
-    void controlUndead(TBeing *, TBeing *);
-    void controlUndead(TBeing *, TBeing *, TMagicItem *);
-    int controlUndead(TBeing *, TBeing *, int, byte);
-
     int voodoo(TBeing *, TObj *);
     int voodoo(TBeing *, TObj *, TMagicItem *);
     int voodoo(TBeing *, TObj *, int, byte);
@@ -80,12 +67,28 @@ private:
     int dancingBones(TBeing *, TObj *, TMagicItem *);
     int dancingBones(TBeing *, TObj *, int, byte);
 
-    void cacaodemon(TBeing *, const char *);
-    int cacaodemon(TBeing *, const char *, int, byte);
+    int enthrallSpectre(TBeing * caster, int level, byte bKnown);
+    int enthrallSpectre(TBeing * caster);
+    int castEnthrallSpectre(TBeing * caster);
+
+    int enthrallGhast(TBeing * caster, int level, byte bKnown);
+    int enthrallGhast(TBeing * caster);
+    int castEnthrallGhast(TBeing * caster);
 
     int resurrection(TBeing *, TObj *);
     int resurrection(TBeing *, TObj *, TMagicItem *);
     int resurrection(TBeing *, TObj *, int, byte);
 
+    int vampiricTouch(TBeing *, TBeing *);
+    int castVampiricTouch(TBeing *, TBeing *);
+    int vampiricTouch(TBeing *, TBeing *, int, byte, int);
+    int vampiricTouch(TBeing *, TBeing *, TMagicItem *);
+
+    int shieldOfMists(TBeing *, TBeing *);
+    int castShieldOfMists(TBeing *, TBeing *);
+    void shieldOfMists(TBeing *, TBeing *, TMagicItem *);
+    int shieldOfMists(TBeing *, TBeing *, int, byte);
+
+    void sacrifice(TBeing *, TBaseCorpse *);
 #endif
 

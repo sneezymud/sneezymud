@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_azruzi.h,v $
+// Revision 5.2  2001/05/06 14:39:15  jesus
+// rewrote vampiric touch spell fo shaman
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -21,21 +27,19 @@
 class CDAzruzi : public CDiscipline
 {
 public:
-    CSkill skVampiricTouch;
     CSkill skLifeLeech;
 
     CDAzruzi()
       : CDiscipline(),
-        skVampiricTouch(), skLifeLeech() {
+        skLifeLeech() {
     }
     CDAzruzi(const CDAzruzi &a)
       : CDiscipline(a),
-        skVampiricTouch(a.skVampiricTouch), skLifeLeech(a.skLifeLeech) {
+        skLifeLeech(a.skLifeLeech) {
     }
     CDAzruzi & operator=(const CDAzruzi &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skVampiricTouch = a.skVampiricTouch;
       skLifeLeech = a.skLifeLeech;
       return *this;
     }
@@ -45,7 +49,6 @@ public:
 private:
 };
 
-    void vampiricTouch(TBeing *, TBeing *);
     void lifeLeech(TBeing *);
 
 #endif

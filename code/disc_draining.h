@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_draining.h,v $
+// Revision 5.2  2001/05/06 14:39:15  jesus
+// rewrote vampiric touch spell fo shaman
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -21,23 +27,19 @@
 class CDDraining : public CDiscipline
 {
 public:
-    CSkill skVampiricTouch;
     CSkill skLifeLeech;
 
     CDDraining()
       : CDiscipline(),
-      skVampiricTouch(),
       skLifeLeech() {
     }
     CDDraining(const CDDraining &a)
       : CDiscipline(a),
-      skVampiricTouch(a.skVampiricTouch),
       skLifeLeech(a.skLifeLeech) {
     }
     CDDraining & operator=(const CDDraining &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skVampiricTouch = a.skVampiricTouch;
       skLifeLeech = a.skLifeLeech;
       return *this;
     }
@@ -46,7 +48,6 @@ public:
 private:
 };
 
-    void vampiricTouch(TBeing *, TBeing *);
     void lifeLeech(TBeing *);
 
 #endif
