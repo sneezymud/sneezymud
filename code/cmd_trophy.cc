@@ -41,10 +41,15 @@ void TTrophy::setName(string n){
 void TTrophy::addToCount(int vnum, double add){
   if(vnum==-1 || vnum==0 || getMyName()==""){ return; }
 
-  db->query("insert ignore into trophy values ('%s', %i, 0)",
+  db->query("select * from trophy where name='%s' and mobvnum=%i",
 	    getMyName().c_str(), vnum);
-  db->query("update trophy set count=count+%f where name='%s' and mobvnum=%i",
-	    add, getMyName().c_str(), vnum);
+  if(!db->fetchRow()){
+    db->query("insert into trophy values ('%s', %i, %f)",
+	      getMyName().c_str(), vnum, add);
+  } else {
+    db->query("update trophy set count=count+%f where name='%s' and mobvnum=%i",
+	      add, getMyName().c_str(), vnum);
+  }
 }
 
 

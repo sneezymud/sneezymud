@@ -174,7 +174,7 @@ void doStocks(){
   float price, prevprice, amt;
   TDatabase db("sneezy");
 
-  db.query("select si.shop_nr, si.talens, si.price, sum(so.shares) from stockinfo si left join stockowners so on si.ticker=so.ticker group by si.shop_nr");
+  db.query("select si.shop_nr, si.talens, si.price, sum(so.shares) from stockinfo si left join stockowners so on si.ticker=so.ticker group by si.shop_nr, si.talens, si.price");
 
   while(db.fetchRow()){
     shop_nr=atoi(db.getColumn(0));

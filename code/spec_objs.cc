@@ -5349,7 +5349,7 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 
   TDatabase db("sneezy");
 
-  db.query("select name, count(*) c from trophy group by name order by c desc limit 10");
+  db.query("select name, count(*) from trophy group by name order by count(*) desc limit 10");
   
   if(!db.isResults()){
     ch->sendTo("The board is empty.\n\r");
@@ -5508,7 +5508,7 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 
   /////////////////////////////
   // shop types
-  db.query("select type, count(*) c from shoptype group by type order by c desc");
+  db.query("select type, count(*) from shoptype group by type order by count(*) desc");
   ch->sendTo("\n\rThe number of shops that deal in each commodity are:\n\r");
   
   while(db.fetchRow()){
