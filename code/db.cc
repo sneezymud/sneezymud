@@ -3083,7 +3083,7 @@ void countMobWealth(){
     if(dynamic_cast<TMonster *>(tmp_ch)){
       if(tmp_ch->spec != SPEC_SHOPKEEPER){
 	wealth+=tmp_ch->getMoney();
-      } else if(!shopOwned(find_shopnr(tmp_ch->number))){
+      } else if(!shop_index[find_shopnr(tmp_ch->number)].isOwned()){
 	shopwealth+=tmp_ch->getMoney();
       }
     }

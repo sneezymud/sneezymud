@@ -3437,7 +3437,7 @@ int TMonster::mobileActivity(int pulse)
       return FALSE;
     }
     
-    if(shopOwned(shop_nr)){
+    if(shop_index[shop_nr].isOwned()){
 
 #if 0
       setMoney(getMoney()-100);

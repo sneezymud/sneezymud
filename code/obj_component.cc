@@ -3072,7 +3072,7 @@ void TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     }
   }
 
-  if (shop_producing(this, tShop)) {
+  if (shop_index[tShop].isProducing(this)) {
     if (!(tObj = read_object(number, REAL))) {
       vlogf(LOG_MISC, "Shop producing unlimited of an item not in db!  [%d]", number);
       return;
@@ -3236,7 +3236,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop)
 
   --(*this);
 
-  if (shop_producing(this, tShop)) {
+  if (shop_index[tShop].isProducing(this)) {
     delete this;
   } else
     *tKeeper += *this;

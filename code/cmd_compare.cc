@@ -39,7 +39,7 @@ TObj * findShopObjForCompare(TBeing *ch, string StObject)
                       (shop_index[shop_nr].keeper != (tThing)->number); shop_nr++);
 
     if (shop_nr >= shop_index.size() ||
-        !is_ok(dynamic_cast<TMonster *>(tThing), ch, shop_nr))
+        !shop_index[shop_nr].willTradeWith(dynamic_cast<TMonster *>(tThing), ch))
       continue;
 
     TThing *tObj = searchLinkedListVis(ch, tString, tThing->getStuff());

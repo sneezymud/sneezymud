@@ -48,6 +48,7 @@ extern void shoplog(int, TBeing *, TMonster *, const char *, int, const char *);
 
 class shopData {
   public:
+    int shop_nr;
     vector <int> producing;       /* Which item to produce (virtual)      */
     float profit_buy;             /* Factor to multiply cost with.        */
     float profit_sell;            /* Factor to multiply cost with.        */
@@ -68,6 +69,12 @@ class shopData {
     int open1, open2;             /* When does the shop open?       */
     int close1, close2;           /* When does the shop close?      */
 
+    bool isProducing(const TObj *item);
+    bool isOwned();
+    bool willTradeWith(TMonster *keeper, TBeing *ch);
+    bool willBuy(const TObj *item);
+
+
     shopData();
     ~shopData();
     shopData(const shopData &t);
@@ -75,7 +82,5 @@ class shopData {
 };
 
 extern bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int);
-extern bool shop_producing(const TObj *item, int shop_nr);
 extern void waste_shop_file(int shop_nr);
-extern bool shopOwned(int shop_nr);
 #endif

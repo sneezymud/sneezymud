@@ -175,7 +175,7 @@ void TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     return;
   }
   // Make sure it's an item we buy.
-  if (!trade_with(this, shop_nr)) {
+  if (!shop_index[shop_nr].willBuy(this)) {
     sprintf(Buf[0], shop_index[shop_nr].do_not_buy, ch->getName());
     keeper->doTell(Buf[0]);
     return;
@@ -183,7 +183,7 @@ void TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   nocName = getNameNOC(ch);
   // If it's a 'unit' item, then treat it as such.
   if (getUnits() > 0) {
-    if (num > getUnits() && !shop_producing(this, shop_nr)) {
+    if (num > getUnits() && !shop_index[shop_nr].isProducing(this)) {
       num = getUnits();
       sprintf(Buf[0], "%s I don't have that much of %s.  Here's the %d that I do have.",
 	      ch->getName(), nocName.c_str(), num);
@@ -211,11 +211,11 @@ void TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   }
   strcpy(Buf[1], shortDescr);
 
-  if (!shop_producing(this, shop_nr))
+  if (!shop_index[shop_nr].isProducing(this))
     --(*this);
 
   // more 'unit' special code.
-  if (getUnits() > 0 && !shop_producing(this, shop_nr)) {
+  if (getUnits() > 0 && !shop_index[shop_nr].isProducing(this)) {
     int num2 = getUnits() - num;
     if (num2) {
       setVolume(max(1, (int) (getVolume()/getUnits()*num2)));
@@ -248,7 +248,7 @@ void TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
     } else {
       // Must not have been a unit item, just give them the item in question.
-      if (!shop_producing(this, shop_nr))
+      if (!shop_index[shop_nr].isProducing(this))
         *ch += *this;
       else {
         obj2 = read_object(this->objVnum(), VIRTUAL);
@@ -349,7 +349,7 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   }
   if (will_not_buy(ch, keeper, this, shop_nr))
     return;
-  if (!trade_with(this, shop_nr)) {
+  if (!shop_index[shop_nr].willBuy(this)) {
     sprintf(Buf, shop_index[shop_nr].do_not_buy, ch->getName());
     keeper->doTell(Buf);
     return;
@@ -435,7 +435,7 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
     if (getUnits() > 0) {
       *keeper += *obj2;
       delete this;
-    } else if (!shop_producing(this, shop_nr))
+    } else if (!shop_index[shop_nr].isProducing(this))
       *keeper += *this;
   }
 
@@ -460,7 +460,7 @@ void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
   else
     price = sellPrice(shop_nr, 0, &discount);
 
-  if (!trade_with(this, shop_nr)) {
+  if (!shop_index[shop_nr].willBuy(this)) {
     sprintf(Buf, shop_index[shop_nr].do_not_buy, ch->getName());
     keeper->doTell(Buf);
     return;
@@ -501,7 +501,7 @@ const string TOrganic::shopList(const TBeing *ch, const char *arg,
   }
 
   if (getUnits() > 0) {
-    if (shop_producing(this, shop_nr)) {
+    if (shop_index[shop_nr].isProducing(this)) {
       strcpy(tString, "unlim");
       usePlural = true;
     } else {
@@ -509,7 +509,7 @@ const string TOrganic::shopList(const TBeing *ch, const char *arg,
       usePlural = (getUnits() > 1 ? true : false);
     }
   } else {
-    if (shop_producing(this, shop_nr))
+    if (shop_index[shop_nr].isProducing(this))
       strcpy(tString, "unlimited");
     else
       sprintf(tString, "%d", num);

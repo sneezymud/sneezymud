@@ -1497,7 +1497,7 @@ TObj *get_num_obj_in_list(TBeing *ch, int num, TThing *list, int shop_nr)
     if (to && ch->canSee(to)) {
       if ((to->obj_flags.cost >= 1) &&
           !to->isObjStat(ITEM_NEWBIE) &&
-          trade_with(to, shop_nr)) {
+          shop_index[shop_nr].willBuy(to)) {
         found = FALSE;
         for (k = 0; (k < cond_obj_vec.size() && !found); k++) {
           if (cond_obj_vec.size() > 0) {

@@ -41,7 +41,7 @@ vector<shop_pricing>ShopPriceIndex(0);
 // Batopr 1/21/99
 
 
-bool shopOwned(int shop_nr){
+bool shopData::isOwned(){
   bool owned;
   TDatabase db("sneezy");
   
@@ -91,7 +91,7 @@ int TObj::sellPrice(int shop_nr, int chr, int *discount)
   float profit_sell=shop_index[shop_nr].profit_sell;
   int cost;
 
-  if(shopOwned(shop_nr)){
+  if(shop_index[shop_nr].isOwned()){
     TDatabase db("sneezy");
 
     db.query("select profit_sell from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
@@ -124,7 +124,7 @@ int TObj::shopPrice(int num, int shop_nr, int chr, int *discount) const
   int cost;
   float profit_buy=shop_index[shop_nr].profit_buy;
   
-  if(shopOwned(shop_nr)){
+  if(shop_index[shop_nr].isOwned()){
     TDatabase db("sneezy");
 
     db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
@@ -146,7 +146,7 @@ int TObj::shopPrice(int num, int shop_nr, int chr, int *discount) const
   return cost;
 }
 
-bool is_ok(TMonster *keeper, TBeing *ch, int shop_nr)
+bool shopData::willTradeWith(TMonster *keeper, TBeing *ch)
 {
   int hmt = hourminTime();
   if (shop_index[shop_nr].open1 > hmt) {
@@ -182,7 +182,7 @@ bool is_ok(TMonster *keeper, TBeing *ch, int shop_nr)
   return TRUE;
 }
 
-bool trade_with(const TObj *item, int shop_nr)
+bool shopData::willBuy(const TObj *item)
 {
   int counter, max_trade;
   bool mat_ok=FALSE;
@@ -215,7 +215,7 @@ bool trade_with(const TObj *item, int shop_nr)
       return TRUE;
   }
 
-  if (shop_producing(item, shop_nr))
+  if (shop_index[shop_nr].isProducing(item))
     return TRUE;
 
   // if no produced/traded items are specified, but we do have a material
@@ -255,7 +255,7 @@ static void load_shop_file(TMonster *ch, int shop_nr)
 }
 
 
-bool shop_producing(const TObj *item, int shop_nr)
+bool shopData::isProducing(const TObj *item)
 {
   int counter, max_prod=0;
   TObj *o;
@@ -263,14 +263,14 @@ bool shop_producing(const TObj *item, int shop_nr)
   if (item->number < 0)
     return FALSE;
 
-  max_prod=shop_index[shop_nr].producing.size();
+  max_prod=producing.size();
 
   for (counter = 0; counter < max_prod; counter++) {
-    if (shop_index[shop_nr].producing[counter] <= -1)
+    if (producing[counter] <= -1)
       continue;
 
-    if (shop_index[shop_nr].producing[counter] == item->number) {
-      if (!(o = read_object(shop_index[shop_nr].producing[counter], REAL))) {
+    if (producing[counter] == item->number) {
+      if (!(o = read_object(producing[counter], REAL))) {
         vlogf(LOG_BUG, "Major problems with shopkeeper number %d and item number %d.", shop_nr, item->number);
         return FALSE;
       }
@@ -318,7 +318,7 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
 
   *argm = '\0';
 
-  if (!(is_ok(keeper, ch, shop_nr)))
+  if (!(shop_index[shop_nr].willTradeWith(keeper, ch)))
     return;
 
   only_argument(arg, argm);
@@ -392,7 +392,7 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     ch->sendTo("%s: You can't carry that much weight.\n\r", fname(name).c_str());
     return;
   }
-  if (shop_producing(this, shop_nr)) {
+  if (shop_index[shop_nr].isProducing(this)) {
     chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
     
     if (ch->doesKnowSkill(SKILL_SWINDLE)) {
@@ -585,12 +585,12 @@ void generic_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr)
     ch->sendTo("That's a prototype, no selling that!\n\r");
     return;
   }
-  if (shopOwned(shop_nr) && obj->isObjStat(ITEM_NORENT)){
+  if (shop_index[shop_nr].isOwned() && obj->isObjStat(ITEM_NORENT)){
     ch->sendTo("This shop is privately owned and we don't purchase non-rentable items.\n\r");
     return;
   }
 
-  if (!trade_with(obj, shop_nr)) {
+  if (!shop_index[shop_nr].willBuy(obj)) {
     char buf[256];
     sprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());
     keeper->doTell(buf);
@@ -671,7 +671,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   ch->logItem(this, CMD_SELL);
 
   --(*this);
-  if (!shop_producing(this, shop_nr)) {
+  if (!shop_index[shop_nr].isProducing(this)) {
     *keeper += *this;
   }
 
@@ -693,7 +693,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   owners = NULL;
 
 
-  if (shop_producing(this, shop_nr)) {
+  if (shop_index[shop_nr].isProducing(this)) {
     // unlimited item, so we just get the value of the item in talens
     keeper->addToMoney(this->obj_flags.cost, GOLD_SHOP);
     delete this;
@@ -840,7 +840,7 @@ bool TObj::fitsSellType(tObjectManipT tObjectManip,
       }
       break;
     case OBJMAN_ALL: // sell all
-      if (trade_with(this, tShop)) {
+      if (shop_index[tShop].willBuy(this)) {
         tCount++;
         return true;
       }
@@ -852,13 +852,13 @@ bool TObj::fitsSellType(tObjectManipT tObjectManip,
       }
       break;
     case OBJMAN_FIT: // sell all.fit
-      if (fitInShop("yes", ch) && trade_with(this, tShop)) {
+      if (fitInShop("yes", ch) && shop_index[tShop].willBuy(this)) {
         tCount++;
         return true;
       }
       break;
     case OBJMAN_NOFIT: // sell all.nofit
-      if (!fitInShop("yes", ch) && trade_with(this, tShop)) {
+      if (!fitInShop("yes", ch) && shop_index[tShop].willBuy(this)) {
         tCount++;
         return true;
       }
@@ -884,7 +884,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
   TThing *t, *t2;
   int rc, i;
 
-  if (!(is_ok(tKeeper, ch, shop_nr)))
+  if (!(shop_index[shop_nr].willTradeWith(tKeeper, ch)))
     return FALSE;
 
   only_argument(tString, argm);
@@ -1072,7 +1072,7 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   char argm[100], buf[512];
   TObj *temp1;
 
-  if (!(is_ok(keeper, ch, shop_nr)))
+  if (!(shop_index[shop_nr].willTradeWith(keeper, ch)))
     return;
 
   only_argument(arg, argm);
@@ -1105,7 +1105,7 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     keeper->doTell(buf);
     return;
   }
-  if (!(trade_with(temp1, shop_nr))) {
+  if (!(shop_index[shop_nr].willBuy(temp1))) {
     sprintf(buf, shop_index[shop_nr].do_not_buy, ch->name);
     keeper->doTell(buf);
     return;
@@ -1131,7 +1131,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
   willbuy=!sellMeCheck(ch, keeper);
 #endif
 
-  if (!trade_with(this, shop_nr)) {
+  if (!shop_index[shop_nr].willBuy(this)) {
     char buf[256];
     sprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());
     keeper->doTell(buf);
@@ -1199,7 +1199,7 @@ const string TObj::shopList(const TBeing *ch, const char *arg, int iMin, int iMa
 
   // display spells on things like scrolls
   // don't show the "level" of weaps/armor though
-  if (shop_producing(this, shop_nr) &&
+  if (shop_index[shop_nr].isProducing(this) &&
       dynamic_cast<const TMagicItem *>(this)) {
     sprintf(capbuf, "%s", getNameForShow(false, false, ch).c_str());
   } else
@@ -1307,7 +1307,7 @@ const string TObj::shopList(const TBeing *ch, const char *arg, int iMin, int iMa
     isWearable = true;
   } 
 
-  sprintf(buf4, "[%s]", (shop_producing(this, shop_nr) ? "Unlimited" : atbuf));
+  sprintf(buf4, "[%s]", (shop_index[shop_nr].isProducing(this) ? "Unlimited" : atbuf));
   found = FALSE;
   char equipCond[256];
   char equipColor[80];
@@ -1433,7 +1433,7 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
 
   *buf2 = '\0';
 
-  if (!is_ok(keeper, ch, shop_nr))
+  if (!shop_index[shop_nr].willTradeWith(keeper, ch))
     return;
 
   if (!ch->desc)
@@ -1550,12 +1550,12 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
 #if NO_DAMAGED_ITEMS_SHOP
           (i->getMaxStructPoints() == i->getStructPoints()) &&
 #endif
-          trade_with(i, shop_nr)) {
+          shop_index[shop_nr].willBuy(i)) {
         found = FALSE;
         for (k = 0; (k < cond_obj_vec.size() && !found); k++) {
           if (cond_obj_vec.size() > 0) {
             if (i->isSimilar(cond_obj_vec[k])) {
-              if (!shop_producing(cond_obj_vec[k], shop_nr)) {
+              if (!shop_index[shop_nr].isProducing(cond_obj_vec[k])) {
                 cond_tot_vec[k] += 1;
                 found = TRUE;
               } else {
@@ -1584,7 +1584,7 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
           continue;
         }
         // pawn shop shouldn't junk
-        if (shop_index[shop_nr].in_room != 562 || shopOwned(shop_nr)) {
+        if (shop_index[shop_nr].in_room != 562 || shop_index[shop_nr].isOwned()) {
           keeper->doSay("How did I get this piece of junk?!?!");
           rc = keeper->doJunk("", i);
           // doJunk might fail (cursed, etc), delete regardless
@@ -1663,7 +1663,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
   if (!*arg) 
     return FALSE;   // generic: look
 
-  if (!(is_ok(keeper, ch, shop_nr)) || !ch->desc)
+  if (!(shop_index[shop_nr].willTradeWith(keeper, ch)) || !ch->desc)
     return FALSE;
 
   TThing *t_temp1 = searchLinkedListVis(ch, arg, keeper->getStuff());
@@ -1681,7 +1681,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
     }
   }
   string str = "You examine ";
-  if (shop_producing(temp1, shop_nr)) {
+  if (shop_index[shop_nr].isProducing(temp1)) {
     str += temp1->getNameForShow(true, false, ch).c_str();
   } else
     str += temp1->getName();
@@ -1711,7 +1711,7 @@ static bool shopping_evaluate(const char *arg, TBeing *ch, TMonster *keeper, int
   if (!*arg) 
     return FALSE;   // generic: look
 
-  if (!(is_ok(keeper, ch, shop_nr)) || !ch->desc)
+  if (!(shop_index[shop_nr].willTradeWith(keeper, ch)) || !ch->desc)
     return FALSE;
 
   if (!(num = getabunch(arg, newarg)))
@@ -1812,7 +1812,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     return FALSE;
   }
 
-  //    if(shopOwned(shop_nr)){
+  //    if(shop_index[shop_nr].isOwned()){
   //   vlogf(LOG_PEEL, "shop_nr %i, charged tax", shop_nr);
   //    }
 
@@ -1894,8 +1894,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       TObj * obj = dynamic_cast<TObj *>(t);
       if (!obj)
         continue;
-      if (!::number(0,99) && !shop_producing(obj, shop_nr) &&
-	  !shopOwned(shop_nr)) {
+      if (!::number(0,99) && !shop_index[shop_nr].isProducing(obj) &&
+	  !shop_index[shop_nr].isOwned()) {
         // random recycling
         delete obj;
         continue;
@@ -1909,7 +1909,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       // this keeps ithe fixing limited by depreciation
       if (obj->getMaxStructPoints() >= 0 &&
           obj->getStructPoints() < obj->maxFix(NULL, DEPRECIATION_YES) &&
-	  !shopOwned(shop_nr)) {
+	  !shop_index[shop_nr].isOwned()) {
 #endif
         obj->addToStructPoints(1);
       }
@@ -1987,7 +1987,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     TThing *tt;
     int count=0, value=0, price=0, discount=100, tax=0;
     unsigned int access=0;
-    bool owned=shopOwned(shop_nr);
+    bool owned=shop_index[shop_nr].isOwned();
     unsigned int i, tmp;
     TObj *o;
     TDatabase db("sneezy");
@@ -2456,7 +2456,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
   TThing *tt;
   TObj *o;  
 
-  if(!shopOwned(shop_nr)){
+  if(!shop_index[shop_nr].isOwned()){
     return;
   }
 
@@ -2581,6 +2581,7 @@ void bootTheShops()
     shopData sd;
 
     shop_nr=atoi(db.getColumn(0));
+    sd.shop_nr=shop_nr;
     sd.no_such_item1 = mud_str_dup(db.getColumn(1));
     sd.no_such_item2 = mud_str_dup(db.getColumn(2));
     sd.do_not_buy = mud_str_dup(db.getColumn(3));

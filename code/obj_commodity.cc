@@ -109,7 +109,7 @@ void TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     vlogf(LOG_BUG, "Error: buy_treasure():shop.cc  obj not on keeper");
     return;
   }
-  if (!trade_with(this, shop_nr)) {
+  if (!shop_index[shop_nr].willBuy(this)) {
     sprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());
     keeper->doTell(buf);
     return;
@@ -195,7 +195,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   if (will_not_buy(ch, keeper, this, shop_nr))
     return;
 
-  if (!trade_with(this, shop_nr)) {
+  if (!shop_index[shop_nr].willBuy(this)) {
     sprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());
     keeper->doTell(buf);
     return;
@@ -286,7 +286,7 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
   strcpy(buf2, fname(name).c_str());
   price = sellPrice(shop_nr, 0, &discount);
 
-  if (!trade_with(this, shop_nr)) {
+  if (!shop_index[shop_nr].willBuy(this)) {
     sprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());
     keeper->doTell(buf);
     return;

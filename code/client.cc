@@ -1675,7 +1675,7 @@ void Descriptor::clientShoppingList(const char *argument, TMonster *keeper, int 
   bool hasComponents = false;
   char arg[256];
 
-  if (!is_ok(keeper, character, shop_nr))
+  if (!shop_index[shop_nr].willTradeWith(keeper, character))
     return;
 
   // Here we rip apart what they might have passed.  We do it
@@ -1766,12 +1766,12 @@ void Descriptor::clientShoppingList(const char *argument, TMonster *keeper, int 
 #if NO_DAMAGED_ITEMS_SHOP
           (i->getMaxStructPoints() == i->getStructPoints()) &&
 #endif
-          trade_with(i, shop_nr)) {
+          shop_index[shop_nr].willBuy(i)) {
         found = FALSE;
         for (k = 0; (k < cond_obj_vec.size() && !found); k++) {
           if (cond_obj_vec.size() > 0) {
             if (i->isSimilar(cond_obj_vec[k])) {
-              if (!shop_producing(cond_obj_vec[k], shop_nr)) {
+              if (!shop_index[shop_nr].isProducing(cond_obj_vec[k])) {
                 cond_tot_vec[k] += 1;
                 found = TRUE;
               } else {
