@@ -336,6 +336,7 @@ void TPerson::doToggle(const char *arg2)
 
       sendTo(COLOR_BASIC, "Auto Success      : %s\n\r", on_or_off(IS_SET(desc->autobits, AUTO_SUCCESS)));
 
+      sendTo(COLOR_BASIC, "Stealth Mode      : %s\n\r", on_or_off(isPlayerAction(PLR_STEALTH)));
 
 
       sendTo(COLOR_BASIC, "\n\r<c>Test Code Toggles<1>\n\r");
@@ -351,7 +352,20 @@ void TPerson::doToggle(const char *arg2)
       sendTo(COLOR_BASIC, "Quest code 2      : %s\n\r", on_or_off(QuestCode2));
     }
     return;
-    
+
+
+  } else if(is_abbrev(arg, "stealth")){
+    if (isPlayerAction(PLR_STEALTH)) {
+      sendTo("STEALTH mode OFF.\n\r");
+      remPlayerAction(PLR_STEALTH);
+      if (desc)
+	desc->clientf("%d|%d", CLIENT_STEALTH, FALSE);
+    } else {
+      sendTo("STEALTH mode ON.\n\r");
+      addPlayerAction(PLR_STEALTH);
+      if (desc)
+	desc->clientf("%d|%d", CLIENT_STEALTH, TRUE);
+    }
   } else if (is_abbrev(arg, "newbiehelper") ||
 	     is_abbrev(arg, "helper")) {
     if (isPlayerAction(PLR_NEWBIEHELP)) {
@@ -3927,29 +3941,6 @@ void TPerson::doNohassle(const char *argument)
     act("$E might object to that.. better not.", 0, this, 0, vict, TO_CHAR);
   else
     sendTo("The implementor won't let you set this on mortals...\n\r");
-}
-
-void TBeing::doStealth(const char *)
-{
-  return;
-}
-
-void TPerson::doStealth(const char *argument)
-{
-  if (powerCheck(POWER_STEALTH))
-    return;
-
-  if (isPlayerAction(PLR_STEALTH)) {
-    sendTo("STEALTH mode OFF.\n\r");
-    remPlayerAction(PLR_STEALTH);
-    if (desc)
-      desc->clientf("%d|%d", CLIENT_STEALTH, FALSE);
-  } else {
-    sendTo("STEALTH mode ON.\n\r");
-    addPlayerAction(PLR_STEALTH);
-    if (desc)
-      desc->clientf("%d|%d", CLIENT_STEALTH, TRUE);
-  }
 }
 
 void TBeing::doDeathcheck(const char *arg)

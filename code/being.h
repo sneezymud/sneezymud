@@ -1822,7 +1822,6 @@ class TBeing : public TThing {
     virtual void doCutlink(const char *);
     virtual void doInvis(const char *);
     virtual void doVisible(const char *, bool);
-    virtual void doStealth(const char *);
     virtual void doAccess(const char *);
     void doWizlock(const char *);
     void doFlag(const char *);

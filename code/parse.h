@@ -259,7 +259,6 @@ enum cmdTypeT {
      CMD_NOHASSLE,
      CMD_SYSTEM,
      CMD_PULL,
-     CMD_STEALTH,
      CMD_EDIT,
      CMD_SET,  // @set
      CMD_RSAVE,

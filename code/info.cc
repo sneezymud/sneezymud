@@ -1933,9 +1933,6 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
     case CMD_SYSTEM:
       return POWER_SYSTEM;
       break;
-    case CMD_STEALTH:
-      return POWER_STEALTH;
-      break;
     case CMD_SET:
       return POWER_SET;
       break;

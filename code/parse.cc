@@ -790,9 +790,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_STEAL:
           rc = doSteal(newarg, dynamic_cast<TBeing *>(vict));
           break;
-        case CMD_STEALTH:
-          doStealth(newarg);
-          break;
         case CMD_INVISIBLE:
           doInvis(newarg);
           break;
@@ -2577,7 +2574,6 @@ void buildCommandArray(void)
   commandArray[CMD_NOHASSLE] = new commandInfo("nohassle", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_SYSTEM]=new commandInfo("system", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_PULL] = new commandInfo("pull", POSITION_CRAWLING, 0);
-  commandArray[CMD_STEALTH]=new commandInfo("stealth",POSITION_DEAD,GOD_LEVEL1);
   commandArray[CMD_EDIT] = new commandInfo("edit", POSITION_DEAD, 0);
   commandArray[CMD_SET] = new commandInfo("@set", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_RSAVE] = new commandInfo("rsave", POSITION_DEAD, GOD_LEVEL1);
