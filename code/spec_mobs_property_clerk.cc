@@ -12,7 +12,7 @@ int propertyClerk(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
 
   if(cmd==CMD_LIST){
     if(arg.empty()){
-      db.query("select id, name from property");
+      db.query("select id, name from property order by id");
       
       while(db.fetchRow()){
 	me->doTell(ch->getName(), fmt("%-2i| %s") % 
