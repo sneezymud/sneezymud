@@ -2113,10 +2113,16 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   // -Cept they don't Enter shops, simply prevent them from dropping like before.
 
   if ((cmd == CMD_DROP) && (ch->in_room == shop_index[shop_nr].in_room)) {
-    // possible alternative would be to move dropped stuff to ROOM_DONATION
-    act("$N tells you, 'HEY!  Don't clutter up my shop'.",
-        FALSE, ch, 0, myself, TO_CHAR);
-    return TRUE;
+    TRoom * pRoom = real_roomp(ch->in_room);
+
+// This is just a quick fix so we can check it below.
+extern int grimhavenDump(TBeing *, cmdTypeT, const char *, TRoom *);
+
+    if (!pRoom || (pRoom->funct != grimhavenDump)) {
+      // possible alternative would be to move dropped stuff to ROOM_DONATION
+      act("$N tells you, 'HEY!  Don't clutter up my shop'.", FALSE, ch, 0, myself, TO_CHAR);
+      return TRUE;
+    }
   }
 #endif
 
