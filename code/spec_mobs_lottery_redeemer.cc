@@ -19,7 +19,6 @@ int lotteryRedeemer(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
   }
 
   for(int i=0;i<NUM_LOTTERY_PRIZES;++i){
-    vlogf(LOG_PEEL, "prize=%s, o=%s", prizes[i].name.c_str(), o->name);
     if(isname(prizes[i].name, o->name)){
       TObj *op=read_object(prizes[i].vnum, VIRTUAL);
       *ch += *op;
