@@ -1062,6 +1062,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_RESTORE_LIMB:
       case SPELL_KNIT_BONE:
       case SPELL_CLARITY:
+      case SPELL_SHADOW_WALK:
       case SPELL_SHIELD_OF_MISTS:
       case SKILL_RESCUE:
       case SKILL_SMYTHE:

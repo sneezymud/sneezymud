@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: being.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -237,7 +229,7 @@ const unsigned long AFF_HIDE              = (1<<20);       // 1048576
 const unsigned long AFF_SHOCKED           = (1<<21);       // 2097152
 const unsigned long AFF_CHARM             = (1<<22);       // 4194304
 const unsigned long AFF_UNDEF3            = (1<<23);       // 8388608
-const unsigned long AFF_UNDEF4            = (1<<24);       // 16777216
+const unsigned long AFF_SHADOW_WALK       = (1<<24);       // 16777216
 const unsigned long AFF_TRUE_SIGHT        = (1<<25);       // 33554432
 const unsigned long AFF_MUNCHING_CORPSE   = (1<<26);       // 67108864
 const unsigned long AFF_DRAGON_RIDE       = (1<<27);       // 134217728
@@ -248,16 +240,21 @@ const unsigned long AFF_AGGRESSOR         = (1<<30);       // 873741824 (set aut
 // these are used to pass deletion bitvectors through functions
 // it is used in same functions that return degree of damage done
 // these values are essentially negative
+//
+// damage is sometimes passed in same manner as deletes, so make sure
+// value for damage is always less than smallest DELETE value
+//
 // they are combinations of bits, IS_SET, REMOVE_BIT, SET_BIT can not be used
 // use IS_SET_DELETE, ADD_DELETE, REM_DELETE instead
-#if 1 
+//
+#if 0 
 const int DELETE_ITEM          = ((1<<5));
 const int DELETE_THIS          = ((1<<6));
 const int DELETE_VICT          = ((1<<7));
 const int ALREADY_DELETED      = ((1<<8));
 const int RET_STOP_PARSING     = ((1<<9));
 
-#elif 0
+#elif 1
 const int DELETE_ITEM          = ((1<<5) | (1<<29));
 const int DELETE_THIS          = ((1<<6) | (1<<29));
 const int DELETE_VICT          = ((1<<7) | (1<<29));
@@ -301,11 +298,12 @@ class playerData
 class Craps;
 class charFile;    // defined below
 
-class pointData {
-  public:
+class pointData { // NOTE: pointdata is saved directly into charfile SO YOU CAN NOT CHANGE THIS SHIT
+ public:// without charfile conversion or wipe or whatnot. 
    sh_int mana;         
    sh_int maxMana;
    double piety;
+   sh_int lifeforce;
    sh_int hit;   
    sh_int maxHit;      
    sh_int move;  
@@ -374,7 +372,10 @@ class factionData {
     TBeing *captiveOf;
     TBeing *target;
     factionTypeT type;          // actual affiliation
-    unsigned long actions;     // other stuff
+    unsigned long actions;
+    int align_ge;              // alignment on good/evil axis
+    int align_lc;              // alignment on chaotic/lawful axis
+    int whichfaction;
     factionData();
     factionData(const factionData &a);
     factionData & operator=(const factionData &a);
@@ -473,6 +474,17 @@ class spellTaskData {
     ~spellTaskData();
 };
 
+class spellStoreData {
+public:
+  spellTaskData *spelltask;
+  bool storing;
+
+  spellStoreData();
+  spellStoreData(const spellStoreData &a);
+  spellStoreData & operator=(const spellStoreData &a);
+  ~spellStoreData();
+};
+
 class taskData {
   public:
     taskTypeT task;
@@ -506,7 +518,7 @@ class TBeing : public TThing {
 
   private:
     double multAtt;
-    factionData faction;
+
     int heroNum;
   public:
     Craps * m_craps;
@@ -517,7 +529,7 @@ class TBeing : public TThing {
     attack_mode_t combatMode;      
 
   public:
-
+    factionData faction;
     CMasterDiscipline *discs;
     bool inPraying;
     bool inQuaffUse;
@@ -547,6 +559,7 @@ class TBeing : public TThing {
     followData *followers;
      
     spellTaskData *spelltask;
+    spellStoreData spellstore;
     taskData *task;      
     skillApplyData *skillApplys;
 
@@ -562,6 +575,9 @@ class TBeing : public TThing {
     virtual TThing& operator-- ();
 
     // VIRTUAL FUNCTIONS
+    virtual int editAverageMe(TBeing *, const char *);
+    virtual const char * getLongDesc() const;
+    virtual int chiMe(TBeing *);
     virtual const char *getName() const;
     virtual void remCastingList(TThing *);
     virtual roomDirData *exitDir(dirTypeT door) const;
@@ -577,6 +593,11 @@ class TBeing : public TThing {
     virtual bool hasWizPower(wizPowerT) const;
     virtual void setWizPower(wizPowerT);
     virtual void remWizPower(wizPowerT);
+
+    bool limitPowerCheck(cmdTypeT, int);
+    bool isGenericObj(int);
+    bool isGenericMob(int);
+
     virtual string yourDeity(spellNumT, personTypeT, const TBeing *who = NULL) const;
     virtual bool isPolice() const { return false; }
     virtual bool isDiurnal() const { return false; }
@@ -668,7 +689,7 @@ class TBeing : public TThing {
 
     bool invalidTarget(const TBeing *target) const;
     bool canFight(TBeing *);
-    bool canAttack(bool);
+    bool canAttack(primaryTypeT);
     int attackRound(const TBeing *target) const;
     int defendRound(const TBeing *attacker) const;
     int specialAttack(TBeing *target, spellNumT);
@@ -698,7 +719,7 @@ class TBeing : public TThing {
 
     int goDirection(dirTypeT); // for hunt?
     void fixClientPlayerLists(bool);
-    void gainExpPerHit(TBeing *, double);
+    void gainExpPerHit(TBeing *, double, int);
 
     void moneyCheck();
     int rideCheck(int);
@@ -807,7 +828,7 @@ class TBeing : public TThing {
     void blowCount(bool, float &, float &);
     bool checkBusy(const char *);
     float lagAdjust(lag_t);
-    void addSkillLag(spellNumT);
+    void addSkillLag(spellNumT, int rc);
     virtual void addToWait(int) { return; }
     virtual int getWait(void) const { return 0; }
     virtual void setWait(int) { return; }
@@ -838,8 +859,8 @@ class TBeing : public TThing {
     void affectRemove(affectedData *, silentTypeT = SILENT_NO);
     void affectFrom(spellNumT);
     void transformLimbsBack(const char *, wearSlotT, bool);
-    bool hasDisease(int) const;
-    void diseaseFrom(int);
+    bool hasDisease(diseaseTypeT) const;
+    void diseaseFrom(diseaseTypeT);
     int affectJoin(TBeing *, affectedData *, avgDurT, avgEffT, bool text = TRUE);
     void classSpecificStuff();
     virtual int hitGain() = 0;
@@ -950,13 +971,11 @@ class TBeing : public TThing {
     const string describeTransLimb(wearSlotT) const;
     const string describeTransBodySlot(wearSlotT) const;
     const string describeTransEquipSlot(wearSlotT) const;
-    void describeImmunities(TBeing *, int);
+    string describeImmunities(const TBeing *, int) const;
     void describeObject(const TThing *) const;
     string describeSharpness(const TThing *) const;
     string describePointiness(const TBaseWeapon *) const;
     string describeBluntness(const TBaseWeapon *) const;
-    void describeMaterial(const int);
-    void describeMaterial(const TThing *);
     void describeMaxStructure(const TObj *, int) const;
     void describeMaxSharpness(const TBaseWeapon *, int) const;
     void describeMaxBluntness(const TBaseWeapon *, int) const;
@@ -987,7 +1006,7 @@ class TBeing : public TThing {
     void listExits(const TRoom *) const;
     virtual bool listThingRoomMe(const TBeing *) const;
     void genericKillFix();
-    virtual int genericMovedIntoRoom(TRoom *, sh_int);
+    virtual int genericMovedIntoRoom(TRoom *, sh_int, checkFallingT = CHECK_FALL_YES);
     int genericItemCheck(TThing *);
     void genericEvaluateItem(const TThing *);
     void preKillCheck(bool rent = FALSE);
@@ -1029,6 +1048,8 @@ class TBeing : public TThing {
     int reconcilePiety(spellNumT, bool);
     int reconcileMana(spellNumT, bool, int = 0);
     int useMana(spellNumT);
+    int reconcileLifeforce(spellNumT, bool, int = 0);
+    int useLifeforce(spellNumT);
     double usePiety(spellNumT);
     int reconcileDamage(TBeing *, int, spellNumT);
     int doRent(const char *);
@@ -1053,7 +1074,13 @@ class TBeing : public TThing {
     int doDissect(const char *);
     int socialLimbBad(TBeing *, cmdTypeT);
     int doPray(const char *);
+    int preCastCheck();
+    int preDiscCheck(spellNumT);
     int doCast(const char *);
+    spellNumT parseSpellNum(char *);
+    int parseTarget(spellNumT, char *, TThing **ret);
+    int doTrigger(const char *);
+    int doStore(const char *);
     int passOut();
     int shieldAbsorbDamage(int);
     void chlorineRoom();
@@ -1081,7 +1108,7 @@ class TBeing : public TThing {
     virtual void failCharm(TBeing *) = 0;
     void failSleep(TBeing *);
     void failPara(TBeing *);
-    bool inGroup(const TBeing *) const;
+    bool inGroup(const TBeing &) const;
     int inCamp() const;
     int bumpHead(int *);
     virtual int bumpHeadDoor(roomDirData *, int *);
@@ -1089,13 +1116,13 @@ class TBeing : public TThing {
     bool willBumpHead(TRoom *) const;
     bool willBumpHeadDoor(roomDirData *, int *) const;
     void sendTrapMessage(const char *, trap_targ_t, int);
-    bool hasTrapComps(const char *, trap_targ_t, int);
-    int goofUpTrap(trap_t, trap_targ_t);
+    bool hasTrapComps(const char *, trap_targ_t, int, int *price = NULL);
+    int goofUpTrap(doorTrapT, trap_targ_t);
     int springTrap(TTrap *);
     int triggerTrap(TTrap *);
     int triggerDoorTrap(dirTypeT);
     int triggerPortalTrap(TPortal *);
-    int triggerContTrap(TRealContainer *);
+    int triggerContTrap(TOpenContainer *);
     int checkForMoveTrap(dirTypeT);
     int checkForInsideTrap(TThing *);
     int checkForGetTrap(TThing *);
@@ -1112,14 +1139,14 @@ class TBeing : public TThing {
     virtual bool addHated(TBeing *);
     virtual void setHunting(TBeing *) {}
     void throwGrenade(TTrap *, dirTypeT);
-    int getDoorTrapDam(trap_t);
-    int getContainerTrapDam(trap_t);
-    int getMineTrapDam(trap_t);
-    int getGrenadeTrapDam(trap_t);
-    int getDoorTrapLearn(trap_t);
-    int getContainerTrapLearn(trap_t);
-    int getMineTrapLearn(trap_t);
-    int getGrenadeTrapLearn(trap_t);
+    int getDoorTrapDam(doorTrapT);
+    int getContainerTrapDam(doorTrapT);
+    int getMineTrapDam(doorTrapT);
+    int getGrenadeTrapDam(doorTrapT);
+    int getDoorTrapLearn(doorTrapT);
+    int getContainerTrapLearn(doorTrapT);
+    int getMineTrapLearn(doorTrapT);
+    int getGrenadeTrapLearn(doorTrapT);
     bool canDoSummon() const;
     bool isSummonable() const;
     bool isTanking();
@@ -1142,6 +1169,7 @@ class TBeing : public TThing {
     bool canStomp(TBeing *, silentTypeT);
     bool canHeadbutt(TBeing *, silentTypeT);
     bool canBodyslam(TBeing *, silentTypeT);
+    bool canSpin(TBeing *, silentTypeT);
     bool canKick(TBeing *, silentTypeT);
     bool canKneestrike(TBeing *, silentTypeT);
     bool canGrapple(TBeing *, silentTypeT);
@@ -1269,10 +1297,12 @@ class TBeing : public TThing {
     void doScratch(const char *);
     void doPee(const char *);
     void doPoint(const char *);
+    int doJump(const char *);
     int doPick(const char *);
     int doSearch(const char *);
     int doSpy();
     int doDodge();
+    int doParry();
     int SpyCheck();
     int disarmTrap(const char *, TObj *);
     int detectTrap(const char *, int);
@@ -1288,6 +1318,7 @@ class TBeing : public TThing {
     void doButcher();
     int  doApplyHerbs(const char *);
     void doSkin(const char *);
+    void doSacrifice(const char *);
     void doWhittle(const char *);
     void doBload(const char *);
     void doPrerequisite(const char *, int);
@@ -1311,10 +1342,12 @@ class TBeing : public TThing {
     int doDeathstroke(const char *, TBeing *);
     void doBandage(const char *);
     int doBodyslam(const char *, TBeing *);
+    int doSpin(const char *, TBeing *);
     int doStomp(const char *, TBeing *);
     int doHeadbutt(const char *, TBeing *);
     int doKneestrike(const char *, TBeing *);
     int doDoorbash(const string &);
+    void doTranceOfBlades(const char *);
     void doAttune(const char *);
     void doSharpen(const char *);
     void doAdjust(const char *);
@@ -1359,7 +1392,7 @@ class TBeing : public TThing {
     int critSuccessChance(TBeing *, TThing *, wearSlotT *, spellNumT, int *, int);
     int numValidSlots();
     int checkShield(TBeing *, TThing *, wearSlotT, spellNumT, int);
-    int getWeaponDam(const TBeing *, const TThing *, bool) const;
+    int getWeaponDam(const TBeing *, const TThing *, primaryTypeT) const;
     virtual float getStrDamModifier() const;
     virtual float getDexDamModifier() const;
     int getDexReaction() const;
@@ -1370,11 +1403,13 @@ class TBeing : public TThing {
     int weaponCheck(TBeing *v, TThing *o, spellNumT type, int dam);
     virtual void reconcileHelp(TBeing *, double) { return; }
     virtual void reconcileHurt(TBeing *, double) { return; }
-    int oneHit(TBeing *, bool, TThing *, int, double);
+    int oneHit(TBeing *, primaryTypeT, TThing *, int, double);
     bool isHitableAggr(TBeing *);
     void normalHitMessage(TBeing *, TThing *, spellNumT, int, wearSlotT);
     int monkDodge(TBeing *, TThing *, int *, int, wearSlotT);
-    int damageItem(TBeing *, wearSlotT, spellNumT, TThing *, int);
+    int thiefDodge(TBeing *, TThing *, int *, int, wearSlotT);
+    int parryWarrior(TBeing *, TThing *, int *, int, wearSlotT);
+    int damageItem(TBeing *, wearSlotT, spellNumT, TThing *, int, const char * = NULL);
     int damageWeapon(TBeing *, wearSlotT, TThing **);
     void damageArm(bool, int);
     int acForEq() const;
@@ -1389,29 +1424,29 @@ class TBeing : public TThing {
     int setVictFighting(TBeing *, int dam = 0);
     void setFighting(TThing *, int, bool);
     int damageTrivia(TBeing *v, TThing *o, int dam, spellNumT type);
-    void doDamage(int, int);
-    int tellStatus(int, int, int);
+    void doDamage(int, spellNumT);
+    int tellStatus(int, bool, bool);
     int getActualDamage(TBeing *, TThing *, int, spellNumT);
-    int damageEm(int, string, int);
+    int damageEm(int, string, spellNumT);
     int skipImmortals(int) const;
     int applyDamage(TBeing *, int, spellNumT);
     int preProcDam(spellNumT, int) const;
     TBeing *findAnAttacker() const;
-    int damageEpilog(TBeing *, int);
+    int damageEpilog(TBeing *, spellNumT);
     void catchLostLink(TBeing *);
     void throwChar(TBeing *v, dirTypeT dir, bool throwerMove, silentTypeT silent, bool forceStand);
     bool checkPeaceful(const string &) const;
     bool checkPeacefulVictim(const string &, const TThing *) const;
     int extraDam(const TBeing *, const TBaseWeapon *) const;
-    void makeCorpse(int);
-    int die(int);
+    TThing * makeCorpse(spellNumT, TBeing * = NULL);
+    int die(spellNumT, TBeing * = NULL);
     int slotChance(wearSlotT num) const;
     void makeBodyPart(wearSlotT);
     void makeDiseasedPart(wearSlotT);
     void makeOtherPart(const char *, const char *);
     bool checkCut(TBeing *, wearSlotT, spellNumT, TThing *, int);
     bool checkPierced(TBeing *, wearSlotT, spellNumT, TThing *, int);
-    bool checkSmashed(TBeing *, wearSlotT, spellNumT, TThing *, int);
+    bool checkSmashed(TBeing *, wearSlotT, spellNumT, TThing *, int, const char * = NULL);
     int hit(TBeing *, int pulse = -1);
     bool canCounterMove(int);
     int trySpringleap(TBeing *);
@@ -1427,11 +1462,11 @@ class TBeing : public TThing {
     bool canUseEquipment(const TObj *, silentTypeT) const;
     bool canUseLimb(wearSlotT) const;
     bool canUseHand(bool) const;
-    bool canUseArm(bool) const;
-    bool canUseLeg(int) const;
+    bool canUseArm(primaryTypeT) const;
+    bool canUseLeg(primLegT) const;
     int checkPassWard(dirTypeT) const;
     bool canSwim(dirTypeT);
-    int rawKill(int);
+    int rawKill(spellNumT, TBeing * = NULL);
     bool validMove(dirTypeT);
     const char *movementType(bool) const;
     ubyte getMaxLimbHealth(wearSlotT) const;
@@ -1444,7 +1479,8 @@ class TBeing : public TThing {
     bool checkSlotPlayer() const;
     bool isSwimming() const;
     void doPeelPk(const char *);
-    int peelPkRespawn(TBeing *, int);
+    bool cutPeelPkDam() const;
+    int peelPkRespawn(TBeing *, spellNumT);
     bool inPkZone() const;
     void removeFromPeelPk(TBeing *);
 
@@ -1527,6 +1563,9 @@ class TBeing : public TThing {
     void addToMana(int mana);
     double getPercMana(void);
     void setMaxMana(int mana);
+    int getLifeforce() const;
+    void setLifeforce(int lifeforce);
+    void addToLifeforce(int lifeforce);
 
     TBeing *fight() const;
 
@@ -1581,6 +1620,7 @@ class TBeing : public TThing {
     bool isSameRace(const TBeing *ch) const;
     bool isGuildmaster() const;
     bool noMana(int mana) const;
+    bool noLifeforce(int lifeforce) const;
 #if FACTIONS_IN_USE
     bool percLess(double perc) const;
 #endif
@@ -1610,7 +1650,6 @@ class TBeing : public TThing {
     void doReport(const char *);
     virtual void doTitle(const char *);
     int doTithe();
-    int doLongDescr(const char *);
     void doMessage(const char *);
     int getTrainerPracs(const TBeing *, const TMonster *, classIndT, discNumT, int) const;
     int checkTrainDeny(const TBeing *, TMonster *, discNumT, int) const;
@@ -1652,8 +1691,9 @@ class TBeing : public TThing {
     void doExtinguish(const string &);
     void doLight(const string &);
     void doRefuel(const char *);
-    void doStop();
+    void doStop(const string);
     void doContinue(const char *);
+    void doFish(const char *);
     void doHistory();
     int  doCreate(const char *);
     int  ChargePulse(TBeing *ch);
@@ -1692,8 +1732,6 @@ class TBeing : public TThing {
     void doInfo(const char *);
     void doLog(const char *);
     void doHostlog(const char *);
-    void doBamfin(const char *);
-    void doBamfout(const char *);
     virtual void doShow(const char *);
     void doChecklog(const char *, int);
     void doDeathcheck(const char *);
@@ -1730,10 +1768,8 @@ class TBeing : public TThing {
     int doPut(const char *);
     int doKick(const char *, TBeing *);
     bool isSaveMob(const TBeing *) const;
-    bool isPet() const;
+    bool isPet(const unsigned int) const;
     bool isElemental() const;
-    bool isCharm() const;
-    bool isZombie() const;
     int doBash(const char *, TBeing *);
     virtual void doSnoop(const char *);
     virtual int doAt(const char *, bool);
@@ -1742,10 +1778,12 @@ class TBeing : public TThing {
     void doCls(bool);
     int doRemove(const char *, TThing *);
     void doSave(silentTypeT, const char * = NULL);
+    void doZonefile(const string &);
+    void doLoot(const string &);
     void saveChar(short int);
     int doFlee(const char *);
     int doDisarm(const char *, TThing *);
-    int dieReturn(const char *, int, int);
+    int dieReturn(const char *, spellNumT, int);
     void doReturn(const char *, wearSlotT, bool);
     int doWearOffReturn();
     int doHit(const char *, TBeing *);
@@ -1789,6 +1827,7 @@ class TBeing : public TThing {
     void doUnlock(const char *);
     void doLock(const char *);
     void doScore();
+    void doTrophy(const char *);
     void doWhozone();
     void doWho(const char *);
     void doTime(const char *);
@@ -1798,7 +1837,7 @@ class TBeing : public TThing {
     void doEquipment(const char *);
     void doOutfit(const char *);
     void doCredits();
-    void doNews();
+    void doNews(const char *);
     void doWizlist();
     void doWhere(const char *);
     void doLevels(const char *);
@@ -1813,7 +1852,7 @@ class TBeing : public TThing {
     void doMotd(const char *);
     void doLimbs(const string &);
     void describeLimbDamage(const TBeing *) const;
-    void describeAffects(TBeing *);
+    string describeAffects(TBeing *, showMeT) const;
     void doStand();
     void doCrawl();
     void doFollow(const char *);
@@ -1846,6 +1885,7 @@ class TBeing : public TThing {
     double getExpSharePerc() const;
     int genericRestore(restoreTypeT);
     void makeOutputPaged();
+    TThing * findArrow(const char *, silentTypeT) const;
 };
 
 #endif

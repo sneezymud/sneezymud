@@ -2,13 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_score.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -269,6 +262,7 @@ void TBeing::doScore()
               persfname(tbr).c_str(),
               tbr->isAffected(AFF_INVISIBLE) ? " (invisible)" : "");
 
+
           sendTo(COLOR_MOBS, Buf);
         } else
           sendTo("You are standing.\n\r");
@@ -286,5 +280,5 @@ void TBeing::doScore()
     sendTo("You are in wimpy mode, and will flee at %d hit points.\n\r", wimpy);
 
   describeLimbDamage(this);
-  describeAffects(this);
+  sendTo(describeAffects(this, SHOW_ME).c_str());
 }

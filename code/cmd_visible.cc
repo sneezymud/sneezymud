@@ -1,28 +1,11 @@
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
+//  SneezyMUD++ - All rights reserved, SneezyMUD Coding Team.
 //
-// $Log: cmd_visible.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
+//  "cmd_visible.cc"
+//  All functions and routines related to mortal invisibility control.
 //
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-/*****************************************************************************
-
-  SneezyMUD++ - All rights reserved, SneezyMUD Coding Team.
-
-  "cmd_visible.cc"
-  All functions and routines related to mortal invisibility control.
-
-  Created 8/05/99 - Lapsos(William A. Perrotto III)
-
-******************************************************************************/
+///////////////////////////////////
 
 #include "stdsneezy.h"
 
@@ -48,23 +31,39 @@ void TPerson::doVisible(const char *, bool tSilent)
   affectedData *tAffect;
   double        tDuration;
 
+  if (isAffected(AFF_SHADOW_WALK)) {
+    sendTo("You are shadow walking and can not solidify.\n\r");
+  }
   if (!isAffected(AFF_INVISIBLE)) {
     if (!tSilent)
-      sendTo("You are not invisble to begin with.\n\r");
+      sendTo("You are not invisible to begin with.\n\r");
+
     return;
   }
 
-  REMOVE_BIT(specials.affectedBy, AFF_INVISIBLE);
+  if (!doesKnowSkill(SPELL_INVISIBILITY) && ::number(0, 10)) {
+    sendTo("You fail to control the magic and lose the power of invisibility.\n\r");
+    act("$n quickly becomes visible.",
+        FALSE, this, NULL, NULL, TO_ROOM);
 
-  if (!tSilent) {
+    affectFrom(SPELL_INVISIBILITY);
+
+    if (IS_SET(specials.affectedBy, AFF_INVISIBLE))
+      REMOVE_BIT(specials.affectedBy, AFF_INVISIBLE);
+
+    return;
+  } else if (!tSilent) {
     sendTo("You focus and slowly become visible.\n\r");
     act("$n slowly becomes visible.",
         FALSE, this, NULL, NULL, TO_ROOM);
   }
 
+  if (IS_SET(specials.affectedBy, AFF_INVISIBLE))
+    REMOVE_BIT(specials.affectedBy, AFF_INVISIBLE);
+
   // The affect of 'holding back' the magic causes the time left
   // to be drained.
-  for (tAffect = affected; tAffect; tAffect = tAffect->next)
+  for (tAffect = affected; tAffect; tAffect = tAffect->next) {
     if (tAffect->type == SPELL_INVISIBILITY) {
       tDuration = (double) tAffect->duration * .025;
       tDuration = (double) tAffect->duration - tDuration;
@@ -72,6 +71,7 @@ void TPerson::doVisible(const char *, bool tSilent)
       tAffect->bitvector = 0;
       return;
     }
+  }
 }
 
 void TBeing::doMortalInvis(const char *)
@@ -106,7 +106,7 @@ void TPerson::doMortalInvis(const char *)
 
   // The affect of 're-releasing' the magic causes the time left
   // to be drained.
-  for (tAffect = affected; tAffect; tAffect = tAffect->next)
+  for (tAffect = affected; tAffect; tAffect = tAffect->next) {
     if (tAffect->type == SPELL_INVISIBILITY) {
       tDuration = (double) tAffect->duration * .025;
       tDuration = (double) tAffect->duration - tDuration;
@@ -114,4 +114,5 @@ void TPerson::doMortalInvis(const char *)
       tAffect->bitvector = AFF_INVISIBLE;
       return;
     }
+  }
 }

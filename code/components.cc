@@ -1470,6 +1470,14 @@ void buildComponentArray()
     "$n put a few drops of $p in $s eyes.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_SHADOW_WALK,
+    "",
+    "",
+    "",                       
+    "You drop $p to the ground and crush it under your feet.",
+    "$n drops $p to the ground and crushes it under $s feet.",
+    "",
+    ""));
 #if 1
   CompInfo.push_back(compInfo(SPELL_EARTHMAW,
 			      "You grind $p into the ground.",

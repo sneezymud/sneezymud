@@ -3920,6 +3920,15 @@ int TMonster::defendOther(TBeing &targ)
         found = TRUE;
       }
     }
+    if (!found) {
+      spell = SPELL_SHADOW_WALK;
+      if (!targ.affectedBySpell(spell) && 
+           doesKnowSkill(spell) && (getSkillValue(spell) > 70)) {
+        act("$n sings the words, 'Sneegy Bastich!'",
+                 TRUE, this, 0, 0, TO_ROOM);
+        found = TRUE;
+      }
+    }
     if (found) {
       if (IS_SET(discArray[spell]->targets, TAR_CHAR_ROOM)) {
         rc = doDiscipline(spell, targ.name);

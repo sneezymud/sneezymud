@@ -680,6 +680,8 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
       
       if (isAffected(AFF_INVISIBLE) || getInvisLevel() > MAX_MORT)
         strcat(buffer, " (invisible)");
+      if (isAffected(AFF_SHADOW_WALK))
+        strcat(buffer, " (shadow)");
       if (isPet(PETTYPE_THRALL))
         strcat(buffer, " (thrall)");
       if (isPet(PETTYPE_CHARM))
@@ -736,6 +738,8 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
               strcat(buffer, ch->pers(riding));
               if (tbr->isAffected(AFF_INVISIBLE))
                 strcat(buffer, " (invisible)");
+              if (tbr->isAffected(AFF_SHADOW_WALK))
+                strcat(buffer, " (shadow)");
               strcat(buffer, ".");
             } else if (tbr && tbr->horseMaster()) {
               if (ch == tbr->horseMaster())
@@ -746,6 +750,8 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
               strcat(buffer, ch->persfname(riding).c_str());
               if (tbr->isAffected(AFF_INVISIBLE))
                 strcat(buffer, " (invisible)");
+              if (tbr->isAffected(AFF_SHADOW_WALK))
+                strcat(buffer, " (shadow)");
               strcat(buffer, ".");
             } else
               strcat(buffer, " is standing here.");
@@ -1135,6 +1141,8 @@ void TBeing::show_me_mult_to_char(TBeing *ch, showModeT, unsigned int num) const
     cap(buffer);
     if (isAffected(AFF_INVISIBLE))
       strcat(buffer, " (invisible)");
+    if (isAffected(AFF_SHADOW_WALK))
+      strcat(buffer, " (shadow)");
     if (isPet(PETTYPE_THRALL))
       strcat(buffer, " (thrall)");
     if (isPet(PETTYPE_CHARM))

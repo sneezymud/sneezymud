@@ -2,28 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: utility.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/10/15 21:37:06  batopr
-// Added crash protection sanity check to TObj::canGetMe
-//
-// Revision 1.2  1999/10/07 15:27:27  batopr
-// Added case for GOLD_DUMP to addMoney
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//
-//      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "utility.cc" - Various utility functions.
-//
-//      Last major revision : August 1996
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -80,7 +59,7 @@ bool TBeing::canSeeWho(const TBeing *o) const
   if (!isImmortal() && (o->getInvisLevel() >= GOD_LEVEL1))
     return FALSE;   // link deads 
 
-  if (o->isAffected(AFF_INVISIBLE)) {
+  if (o->isAffected(AFF_INVISIBLE) || o->isAffected(AFF_SHADOW_WALK)) {
     if (o->isImmortal())
       return FALSE;
     if (!isAffected(AFF_DETECT_INVISIBLE))
@@ -130,7 +109,7 @@ int dice(int number, int size)
   int sum = 0;
 
   if (size < 0) {
-    vlogf(10, "Dice called with negative size!");
+    vlogf(LOG_BUG, "Dice called with negative size!");
     return 0;
   }
   if (!size)
@@ -180,8 +159,14 @@ void mudTimePassed(time_t t2, time_t t1, struct time_info_data *now)
 
   secs = (long) (t2 - t1);
 
-  now->hours = (secs / SECS_PER_MUD_HOUR) % 48;	
-  secs -= SECS_PER_MUD_HOUR * now->hours;
+  now->minutes = (secs / SECS_PER_UPDATE) % 4;	
+  secs -= SECS_PER_UPDATE * now->minutes;
+
+  // values are 0, 15, 30, 45...
+  now->minutes *= 15;
+
+  now->hours = (secs / SECS_PER_MUDHOUR) % 24;	
+  secs -= SECS_PER_MUDHOUR * now->hours;
 
   now->day = (secs / SECS_PER_MUD_DAY) % 28;	
   secs -= SECS_PER_MUD_DAY * now->day;
@@ -206,36 +191,33 @@ time_info_data *TBeing::age() const
   return (&player_age);
 }
 
-bool TBeing::inGroup(const TBeing *tbt) const
+bool TBeing::inGroup(const TBeing &tbt) const
 {
-  if (!tbt)
-    return FALSE;
-
-  if ((this == tbt) || 
-      (tbt == dynamic_cast<const TBeing *>(riding)) || 
-      (tbt == dynamic_cast<const TBeing *>(rider)))
+  if ((this == &tbt) || 
+      (&tbt == dynamic_cast<const TBeing *>(riding)) || 
+      (&tbt == dynamic_cast<const TBeing *>(rider)))
     return TRUE;
 
   if (!isAffected(AFF_GROUP))
     return FALSE;
 
-  TBeing *tbt2 = dynamic_cast<TBeing *>(tbt->rider);
-  if (tbt2 && inGroup(tbt2))
+  TBeing *tbt2 = dynamic_cast<TBeing *>(tbt.rider);
+  if (tbt2 && inGroup(*tbt2))
     return TRUE;
 
-  if (!tbt->isAffected(AFF_GROUP))
+  if (!tbt.isAffected(AFF_GROUP))
     return FALSE;
 
-  if (!master && !tbt->master)
+  if (!master && !tbt.master)
     return FALSE;
 
-  if (this == tbt->master)
+  if (this == tbt.master)
     return TRUE;
 
-  if (master == tbt)
+  if (master == &tbt)
     return TRUE;
 
-  if (master == tbt->master) {
+  if (master == tbt.master) {
     return TRUE;
   }
 
@@ -249,7 +231,7 @@ unsigned int TBeing::numberInGroupInRoom() const
 
   for (t = roomp->stuff; t; t = t->nextThing) {
     TBeing *tbt = dynamic_cast<TBeing *>(t);
-    if (tbt && inGroup(tbt))
+    if (tbt && inGroup(*tbt))
       count++;
   }
   return count;
@@ -445,6 +427,7 @@ int RecCompObjNum(const TObj *o, int obj_num)
 // all here, for easy centralizing.
 void BatoprsResetCharFlags(TBeing *ch)
 {
+#if 0
   // strip off free_deaths from 5.0 for 5.1
   affectedData *aff, *an;
   for (aff = ch->affected; aff; aff = an) {
@@ -467,10 +450,8 @@ void BatoprsResetCharFlags(TBeing *ch)
     ch->setQuestBit(TOG_FACTIONS_ELIGIBLE);
   }
     
-  extern void giveGodsTheirPowers(TBeing *ch);
-  giveGodsTheirPowers(ch);
-
   return;
+#endif
 }
 
 bool TBeing::nomagic(const char *msg_ch, const char *msg_rm) const
@@ -546,15 +527,46 @@ int TBeing::numClasses() const
   return x;
 }
 
-void vlogf(int severity, string errorMsg,...)
+void TPerson::logf(const char * tString, ...)
 {
-  vlogf(severity, errorMsg.c_str());
+  if (!tLogFile)
+    return;
+
+  va_list tAp;
+  char    tBuffer[256];
+  struct tm * tTime;
+  time_t      tCTime;
+
+  va_start(tAp, tString);
+  vsprintf(tBuffer, tString, tAp);
+  va_end(tAp);
+
+  tCTime = time(0);
+  tTime = localtime(&tCTime);
+
+  fprintf(tLogFile, "%4.4d|%2.2d%2.2d|%2.2d:%2.2d:%2.2d :: %s\n",
+          tTime->tm_year + 1900, tTime->tm_mon + 1, tTime->tm_mday,
+          tTime->tm_hour, tTime->tm_min, tTime->tm_sec, tBuffer);
+  fflush(tLogFile);
 }
 
-void vlogf(int severity, const char *errorMsg,...)
+void vlogf(const char * errorMsg, ...)
+{
+  va_list ap;
+  char tString[256];
+
+  va_start(ap, errorMsg);
+  vsprintf(tString, errorMsg, ap);
+  va_end(ap);
+
+  vlogf(LOG_MISC, errorMsg);
+}
+
+void vlogf(logTypeT tError, const char *errorMsg,...)
 {
   char message[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
   char buf[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
+  char name[MAX_NAME_LENGTH] = "\0";
   Descriptor *i;
   time_t lt;
   struct tm *this_time;
@@ -566,32 +578,88 @@ void vlogf(int severity, const char *errorMsg,...)
 
   lt = time(0);
   this_time = localtime(&lt);
-  if (severity == LOW_ERROR) {
-    sprintf(buf, "// L.O.W. Error:   %s \n\r", message); 
-    severity = 5;
 
-    fprintf(stderr,  "%2.2d%2.2d%2.2d|%2.2d:%2.2d:%2.2d :: L.O.W. Error: %s\n",
-         this_time->tm_year, this_time->tm_mon + 1, this_time->tm_mday,
-         this_time->tm_hour, this_time->tm_min, this_time->tm_sec, message);
-  } else {
-    sprintf(buf, "// %s", message);
-
-    fprintf(stderr,  "%2.2d%2.2d%2.2d|%2.2d:%2.2d:%2.2d :: %s\n",
-         this_time->tm_year, this_time->tm_mon + 1, this_time->tm_mday,
-         this_time->tm_hour, this_time->tm_min, this_time->tm_sec, message);
+  switch (tError) {
+    case LOG_LOW:
+      strcpy(buf, "L.O.W. Error: ");
+      break;
+    case LOG_CHEAT:
+      strcpy(buf, "Cheating: ");
+      break;
+    case LOG_BATOPR:
+      strcpy(buf, "Batopr: ");
+      strncpy(name, buf, strlen(buf)-2);
+      name[strlen(buf)-2]='\0';
+      break;
+    case LOG_BRUTIUS:
+      strcpy(buf, "Brutius: ");
+      strncpy(name, buf, strlen(buf)-2);
+      name[strlen(buf)-2]='\0';
+      break;
+    case LOG_COSMO:
+      strcpy(buf, "Cosmo: ");
+      strncpy(name, buf, strlen(buf)-2);
+      name[strlen(buf)-2]='\0';
+      break;
+    case LOG_LAPSOS:
+      strcpy(buf, "Lapsos: ");
+      strncpy(name, buf, strlen(buf)-2);
+      name[strlen(buf)-2]='\0';
+      break;
+    case LOG_PEEL:
+      strcpy(buf, "Peel: ");
+      strncpy(name, buf, strlen(buf)-2);
+      name[strlen(buf)-2]='\0';
+      break;
+    case LOG_JESUS:
+      strcpy(buf, "Jesus: ");
+      strncpy(name, buf, strlen(buf)-2);
+      name[strlen(buf)-2]='\0';
+      break;
+    case LOG_DASH:
+      strcpy(buf, "Dash: ");
+      strncpy(name, buf, strlen(buf)-2);
+      name[strlen(buf)-2]='\0';
+      break;
+    default:
+      buf[0] = '\0';
+      name[0] = '\0';
+      break;
   }
-  for (i = descriptor_list; i; i = i->next) {
-    if (!i->connected && i->character &&
-        ((i->character->hasWizPower(POWER_WIZNET_ALWAYS)) ||
-            ((i->character->GetMaxLevel() >= GOD_LEVEL1) && 
-            i->character->hasQuestBit(TOG_IMMORTAL_LOGS))) &&
-	(i->severity <= severity) && 
-        !(i->character->isPlayerAction(PLR_MAILING | PLR_BUGGING))) {
 
-      if (i->client) 
-        i->clientf("%d|%d|%s", CLIENT_LOG, severity, buf);
-      else 
-        i->character->sendTo(COLOR_LOGS, "%s\n\r", buf);
+  strcat(buf, message);
+
+  fprintf(stderr, "%4.4d|%2.2d%2.2d|%2.2d:%2.2d:%2.2d :: %s\n",
+          this_time->tm_year + 1900, this_time->tm_mon + 1, this_time->tm_mday,
+          this_time->tm_hour, this_time->tm_min, this_time->tm_sec, buf);
+
+  if (tError >= 0) {
+    for (i = descriptor_list; i; i = i->next) {
+      if (i->connected)
+        continue;
+
+      if (!i->character)
+        continue;
+
+      if (!i->character->hasWizPower(POWER_SETSEV))
+        continue;
+
+      if (tError == LOG_LOW && !i->character->hasWizPower(POWER_SETSEV_IMM))
+        continue;
+
+      if (!IS_SET(i->severity, 1<<tError))
+        continue;
+
+      if (name[0] && strcmp(name, i->character->name))
+        continue;
+
+      if (i->character->isPlayerAction(PLR_MAILING | PLR_BUGGING))
+        continue;
+ 
+      if (i->m_bIsClient)
+        i->clientf("%d|%d|%s", CLIENT_LOG, tError, buf);
+      else
+        i->character->sendTo(COLOR_LOGS, "// %s\n\r", buf);
     }
   }
 }
@@ -602,7 +670,7 @@ void dirwalk(const char *dir, void (*fcn) (const char *))
   DIR *dfd;
 
   if (!dir || !(dfd = opendir(dir))) {
-    vlogf(10, "Unable to dirwalk directory %s", dir);
+    vlogf(LOG_BUG, "Unable to dirwalk directory %s", dir);
     return;
   }
   while ((dp = readdir(dfd))) {
@@ -620,7 +688,7 @@ void dirwalk_fullname(const char *dir, void (*fcn) (const char *))
   DIR *dfd;
 
   if (!dir || !(dfd = opendir(dir))) {
-    vlogf(10, "Unable to dirwalk directory %s", dir);
+    vlogf(LOG_BUG, "Unable to dirwalk directory %s", dir);
     return;
   }
   while ((dp = readdir(dfd))) {
@@ -640,7 +708,7 @@ void dirwalk_subs_fullname(const char *dir, void (*fcn) (const char *))
   DIR *dfd;
 
   if (!dir || !(dfd = opendir(dir))) {
-    vlogf(10, "Unable to dirwalk_subs directory %s", dir);
+    vlogf(LOG_BUG, "Unable to dirwalk_subs directory %s", dir);
     return;
   }
   while ((dp = readdir(dfd))) {
@@ -669,7 +737,7 @@ bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
     if (parent) 
       r = parent->roomp;
     else {
-      forceCrash("Thing (%s) has no rp pointer in TThing::canSee", name);
+      forceCrash("Thing (%s) has no rp pointer in TBeing::canSeeMe", name);
       return FALSE;
     }
   }
@@ -686,7 +754,7 @@ bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
   if (this == ch)
     return TRUE;
 
-  if (isAffected(AFF_INVISIBLE)) {
+  if (isAffected(AFF_INVISIBLE) || isAffected(AFF_SHADOW_WALK)) {
     if (!ch->isAffected(AFF_DETECT_INVISIBLE))
       return FALSE;
   }
@@ -815,7 +883,7 @@ bool can_see_char_other_room(const TBeing *ch, TBeing *victim, TRoom *)
     if (victim->getInvisLevel() >= GOD_LEVEL1)
       return FALSE;
   }
-  if (victim->isAffected(AFF_INVISIBLE)) {
+  if (victim->isAffected(AFF_INVISIBLE) || victim->isAffected(AFF_SHADOW_WALK)) {
     if (!ch->isAffected(AFF_DETECT_INVISIBLE))
       return FALSE;
   }
@@ -900,7 +968,7 @@ int vsystem(char *buf)
 #endif
 
   if (!buf) {
-    vlogf(10, "vsystem called with NULL parameter.");
+    vlogf(LOG_BUG, "vsystem called with NULL parameter.");
     return FALSE;
   }
   strcpy(sh, "/bin/sh");
@@ -917,7 +985,7 @@ int vsystem(char *buf)
     _exit(-1);
   }
   if (pid < 0) {
-    vlogf(10, "Error in vsystem.  Fork failed.");
+    vlogf(LOG_BUG, "Error in vsystem.  Fork failed.");
     return FALSE;
   }
 #ifndef SUN
@@ -969,10 +1037,17 @@ void TBeing::fixLevels(int lev)
 
 bool should_be_logged(const TBeing *ch)
 {
+#if 1
+  if (ch->hasWizPower(POWER_WIZARD))
+    return false;
+
+  return true;
+#else
   if (!strcmp(ch->getName(), "Batopr"))
     return FALSE;
   else
     return TRUE;
+#endif
 }
 
 // I hate typing > x && < y  -  Russ 
@@ -989,7 +1064,7 @@ bool thingsInRoomVis(TThing *ch, TRoom *rp)
   TThing *o;
 
   if (!ch || !rp) {
-    vlogf(10, "thingsInRoomVis() called with NULL ch, or room!");
+    vlogf(LOG_BUG, "thingsInRoomVis() called with NULL ch, or room!");
     return FALSE;
   }
   for (o = rp->stuff; o; o = o->nextThing) {
@@ -1022,6 +1097,17 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
 
   if (!ch->canSee(this)) 
     return FALSE;
+
+  // This is a safty bit, mostly auto-done by the storage
+  // monitoring code.
+  if ((isname("[wizard]", name) ||
+       (parent && isname("[wizard]", parent->name))) &&
+      !ch->hasWizPower(POWER_WIZARD)) {
+    ch->sendTo("I'm afraid you are not permitted to touch this.");
+    vlogf(LOG_OBJ, "%s tried to pick up wizard set object %s",
+          ch->getNameNOC(ch).c_str(), getNameNOC(ch).c_str());
+    return FALSE;
+  }
 
   if (ch->isImmortal() || 
       (canWear(ITEM_TAKE) && !isObjStat(ITEM_PROTOTYPE))) {
@@ -1133,13 +1219,13 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
   max_followers += plotStat(STAT_CURRENT, STAT_CHA, 1, 19, 9);
 
   for(k = followers, count = 0; k; k = k->next) {
-    if (k->follower->isZombie()) {
+    if (k->follower->isPet(PETTYPE_THRALL)) {
       count += 1 + (k->follower->GetMaxLevel() / 10);
       tot_num++;
-    } else if (k->follower->isCharm()) {
+    } else if (k->follower->isPet(PETTYPE_CHARM)) {
       count += 2 + (k->follower->GetMaxLevel() / 10);
       tot_num++;
-    } else if (k->follower->isPet()) {
+    } else if (k->follower->isPet(PETTYPE_PET)) {
       count += 1 + (k->follower->GetMaxLevel() / 7);
       tot_num++;
     }
@@ -1163,10 +1249,7 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
 
 int TBeing::followTime() const
 {
-  if (!strcmp("cosmo", name)) 
-    return UPDATES_PER_TICK;
-
-  return (plotStat(STAT_CURRENT, STAT_CHA, 6, 36, 22) * UPDATES_PER_TICK);
+  return (plotStat(STAT_CURRENT, STAT_CHA, 6, 36, 22) * UPDATES_PER_MUDHOUR);
 }
 
 // a higher value = harder to see
@@ -1188,6 +1271,22 @@ int TThing::visibility() const
       if (tbt->roomp->isForestSector())
         cbs += 5;
     }
+
+  // shadowy eq
+    int eqbonus=0, j;
+    TObj *to;
+    for (j = MIN_WEAR; j < MAX_WEAR; j++) {
+      TThing *tt = tbt->equipment[j];
+      if((to=dynamic_cast<TObj *>(tt)) && to->isObjStat(ITEM_SHADOWY)){
+	// silly to use getVolume; that'd make ogres sneakier than elves
+	eqbonus+=race_vol_constants[j+1];
+      }
+    }
+    if(tbt->isAffected(AFF_SNEAK) || tbt->isAffected(AFF_HIDE))
+      cbs += (eqbonus/2000);
+    else
+      cbs += (eqbonus/6000);
+
   }
 
   if (roomp->isForestSector())
@@ -1214,21 +1313,23 @@ int TBeing::eyeSight(TRoom *rp) const
   if (!rp)
     rp = roomp;
 
-  vision += rp->getLight();
-
   if (isAffected(AFF_TRUE_SIGHT)) 
     vision += 25;
   
-  if (rp->getWeather() == WEATHER_RAINY)
-    vision -= 1;
-  else if (rp->getWeather() == WEATHER_SNOWY)
-    vision -= 2;
-  else if (rp->getWeather() == WEATHER_LIGHTNING)
-    vision -= 1;
+  if (rp) {
+    vision += rp->getLight();
 
-  // if they are indoors, the lighting of the room should be "subdued"
-  if (rp->isRoomFlag(ROOM_INDOORS))
-    vision -= rp->getLight() / 2;
+    if (rp->getWeather() == WEATHER_RAINY)
+      vision -= 1;
+    else if (rp->getWeather() == WEATHER_SNOWY)
+      vision -= 2;
+    else if (rp->getWeather() == WEATHER_LIGHTNING)
+      vision -= 1;
+  
+    // if they are indoors, the lighting of the room should be "subdued"
+    if (rp->isRoomFlag(ROOM_INDOORS))
+      vision -= rp->getLight() / 2;
+  }
 
   return vision;
 }
@@ -1438,31 +1539,12 @@ void TThing::addToCarriedVolume(int num)
   carried_volume += num;
 }
 
-bool TBeing::isCharm() const
-{
-  return (!isPc() && master && isAffected(AFF_CHARM) &&
-          affectedBySpell(SPELL_ENSORCER) &&
-          !isUndead());
-}
-
-bool TBeing::isZombie() const
-{
-  return (!isPc() &&  master && isAffected(AFF_CHARM) &&
-          isUndead());
-}
-
 bool TBeing::isElemental() const
 {
   int  mVn         = mobVnum();
   bool isElemental = (mVn == FIRE_ELEMENTAL  || mVn == WATER_ELEMENTAL ||
                         mVn == EARTH_ELEMENTAL || mVn == AIR_ELEMENTAL);
   return isElemental;
-}
-
-bool TBeing::isPet() const
-{
-  return (!isPc() && master && isAffected(AFF_CHARM) &&
-          !affectedBySpell(SPELL_ENSORCER));
 }
 
 // checks a room looking for pcs present

@@ -1933,6 +1933,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       case SPELL_SHIELD_OF_MISTS:
         shieldOfMists(this, ch);
         break;
+      case SPELL_SHADOW_WALK:
+	rc = shadowWalk(this, ch);
+	break;
       case SPELL_VOODOO:
           rc = voodoo(this, o);
         break;

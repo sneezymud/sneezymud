@@ -2510,6 +2510,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_CONTROL_UNDEAD:
       controlUndead(caster,victim,obj);
       break;
+    case SPELL_SHADOW_WALK:
+      shadowWalk(caster,victim,obj);
+      break;
     case SPELL_RESURRECTION:
       rc = resurrection(caster,target,obj);
       break;

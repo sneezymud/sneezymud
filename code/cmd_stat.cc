@@ -1330,6 +1330,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_STAVECHARGE:
       case SKILL_SACRIFICE:
       case SPELL_SHIELD_OF_MISTS:
+      case SPELL_SHADOW_WALK:
 #if 1
       case SPELL_EARTHMAW:
       case SPELL_CREEPING_DOOM:

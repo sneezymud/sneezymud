@@ -513,6 +513,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_ETHER_GATE:
     case SPELL_VAMPIRIC_TOUCH:
     case SPELL_LIFE_LEECH:
+    case SPELL_SHADOW_WALK:
     case SKILL_SKIN:
     case SKILL_WHITTLE:
     case SKILL_STAVECHARGE:

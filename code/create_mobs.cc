@@ -2,24 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: create_mobs.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/09/30 03:33:36  lapsos
-// Added code for mobile strings and the advanced menu stuff.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//   SneezyMUD           (c) 1993 SneezyMUD Coding Team.   All Rights Reserved.
-//
 //   create_mobs.cc : Online mobile creation/saving/loading for builders.
 //
 //////////////////////////////////////////////////////////////////////////
@@ -30,7 +12,6 @@ extern "C" {
 }
 
 #include "stdsneezy.h"
-#include "create.h"
 #include "mail.h"
 #include "combat.h"
 #include "statistics.h"
@@ -72,7 +53,7 @@ static bool isBadForAffectFlags(int update)
     case AFF_STUNNED:
     case AFF_SHOCKED:
     case AFF_UNDEF3:    
-    case AFF_UNDEF4:
+      //    case AFF_UNDEF4:
     case AFF_ENGAGER:
     case AFF_SCRYING:
     case AFF_WEB:
@@ -86,10 +67,10 @@ static bool isBadForAffectFlags(int update)
 static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
 {
   const char *mob_edit_menu_basic =
- " %s1)%s Name                         %s2)%s Short Description\n\r"
- " %s3)%s Long Description             %s4)%s Description\n\r"
- " %s5)%s Action flags                 %s6)%s Affect flags\n\r"
- " %s7)%s Faction                      %s8)%s Number of attacks\n\r"
+ " %s1)%s Name                        %s 2)%s Short Description\n\r"
+ " %s3)%s Long Description            %s 4)%s Description\n\r"
+ " %s5)%s Action flags                %s 6)%s Affect flags\n\r"
+ " %s7)%s Faction                     %s 8)%s Number of attacks\n\r"
  " %s9)%s Level                       %s10)%s Hitroll\n\r"
  "%s11)%s Armor Level                 %s12)%s HP Level\n\r"
  "%s13)%s Damage Level                %s14)%s Money constant\n\r"
@@ -123,9 +104,9 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
   if (IS_SET(ch->desc->autobits, AUTO_TIPS)) {
     char tStringOut[22][256];
 
-    strcpy(tStringOut[0], (tMon->name             ? tMon->name             : "Unknown"));
-    strcpy(tStringOut[1], (tMon->shortDescr       ? tMon->shortDescr       : "Unknown"));
-    strcpy(tStringOut[2], (tMon->player.longDescr ? tMon->player.longDescr : "Unknown"));
+    strcpy(tStringOut[0], (tMon->name ? tMon->name : "Unknown"));
+    strcpy(tStringOut[1], (tMon->shortDescr ? tMon->shortDescr : "Unknown"));
+    strcpy(tStringOut[2], (tMon->getLongDesc() ? tMon->getLongDesc() : "Unknown"));
     sprintf(tStringOut[3], "%d %3.2f", tMon->getFaction(), tMon->getPerc());
     sprintf(tStringOut[4], "%.1f", tMon->getMult());
     sprintf(tStringOut[5], "%d", tMon->GetMaxLevel());
@@ -142,7 +123,7 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
     strcpy(tStringOut[16], tMon->getProfName());
     int tHeight = (int)(tMon->getHeight() / 12);
     sprintf(tStringOut[17], "%d\'%d\" (%d)", tHeight, (tMon->getHeight() - (tHeight * 12)), tMon->getHeight());
-    sprintf(tStringOut[18], "%d (lbs)", tMon->getWeight());
+    sprintf(tStringOut[18], "%.0f (lbs)", tMon->getWeight());
     strcpy(tStringOut[19], ((tMon->spec < NUM_MOB_SPECIALS) ? (tMon->spec <= 0 ? "Proc: none" : mob_specials[GET_MOB_SPE_INDEX(tMon->spec)].name) : "Confused..."));
     sprintf(tStringOut[20], "%d", tMon->visionBonus);
     sprintf(tStringOut[21], "%d", tMon->canBeSeen);
@@ -153,7 +134,7 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
         strcat(tStringOut[tMsgIndex], "...");
       }
 
-    ch->sendTo(mob_edit_menu_advanced,
+    ch->sendTo(COLOR_MOBS, mob_edit_menu_advanced,
           ch->cyan()  , ch->norm(),                           tStringOut[0],
           ch->purple(), ch->norm(),                           tStringOut[1],
           ch->cyan()  , ch->norm(),                           tStringOut[2],
@@ -185,7 +166,7 @@ static void send_mob_menu(const TBeing *ch, const TMonster *tMon)
           ch->cyan()  , ch->norm(), ch->purple(), ch->norm(), tStringOut[21],
           ch->purple(), ch->norm(), ch->cyan()  , ch->norm());
   } else
-    ch->sendTo(mob_edit_menu_basic,
+    ch->sendTo(COLOR_MOBS, mob_edit_menu_basic,
           ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
           ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
           ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
@@ -261,6 +242,9 @@ static void TBeingLoad(TBeing *ch, int vnum)
   fclose(mob_f);
 
   mob->checkMobStats(TINYFILE_NO);
+
+  // Prevent super med mobs.
+  mob->setExp(0.0);
 }
 
 static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
@@ -270,13 +254,13 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   int j, k;
 
   if (!mob->name || !mob->getDescr() || 
-      !mob->shortDescr || !mob->player.longDescr) {
+      !mob->shortDescr || !mob->getLongDesc()) {
     ch->sendTo("Your mob is missing one or more strings.\n\r");
     ch->sendTo("Please update the follwing before saving:%s%s%s%s\n\r",
-               (mob->name             ? "" : " Name"),
-               (mob->getDescr()       ? "" : " Description"),
-               (mob->shortDescr       ? "" : " Short-Description"),
-               (mob->player.longDescr ? "" : " Long-Description"));
+               (mob->name                 ? "" : " Name"),
+               (mob->getDescr()           ? "" : " Description"),
+               (mob->shortDescr           ? "" : " Short-Description"),
+               (mob->getLongDesc() ? "" : " Long-Description"));
     return;
   }
 
@@ -310,9 +294,9 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   }
   temp[j] = '\0';
   fprintf(fp, "%s~\n", temp);
-  for (j = 0, k = 0; k <= (int) strlen(mob->player.longDescr); k++) {
-    if (mob->player.longDescr[k] != 13)
-      temp[j++] = mob->player.longDescr[k];
+  for (j = 0, k = 0; k <= (int) strlen(mob->getLongDesc()); k++) {
+    if (mob->getLongDesc()[k] != 13)
+      temp[j++] = mob->getLongDesc()[k];
   }
   temp[j] = '\0';
   fprintf(fp, "%s~\n", temp);
@@ -369,7 +353,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
     int tMarker = 0;
 
     if (tExDescr->description) {
-      for (int tPos = 0; tPos <= strlen(tExDescr->description); tPos++)
+      for (unsigned int tPos = 0; tPos <= strlen(tExDescr->description); tPos++)
         if (tExDescr->description[tPos] != 13)
           temp[tMarker++] = tExDescr->description[tPos];
 
@@ -451,6 +435,13 @@ static void medit(TBeing *ch, char *arg)
     ch->sendTo("Edit a PC? NEVER!!!\n\r");
     return;
   }
+
+  if (!ch->limitPowerCheck(CMD_MEDIT, mob->number)) {
+    ch->sendTo("You are not allowed to edit that monster.\n\r");
+    return;
+  }
+
+
   TMonster * mons = dynamic_cast<TMonster *>(mob);
   ch->specials.edit = MAIN_MENU;
   ch->desc->connected = CON_MEDITING;
@@ -493,7 +484,7 @@ static void medit(TBeing *ch, char *arg)
     if (k)
       k->next = mob->next;
     else {
-      vlogf(10, "Trying to remove ?? from character_list.");
+      vlogf(LOG_EDIT, "Trying to remove ?? from character_list.");
       abort();
     }
   }
@@ -612,7 +603,7 @@ static void change_mob_long_desc(TBeing *ch, TMonster *mob, editorEnterTypeT typ
   ch->sendTo(VT_HOMECLR);
 
   ch->sendTo("Current long description:\n\r");
-  ch->sendTo("%s", mob->player.longDescr);
+  ch->sendTo("%s", mob->getLongDesc());
   ch->sendTo("\n\r\n\rNew mob long description:\n\r");
   ch->sendTo("Terminate with a ~ ON A SEPERATE LINE. Press <ENTER> again to continue.\n\r");
   delete [] mob->player.longDescr;
@@ -1126,8 +1117,8 @@ static void change_mob_armor(TBeing *ch, TMonster *mob, const char *arg, editorE
     }
     new_armor = atof(arg);
 
-    if (new_armor < 0 || new_armor > 70.0) {
-      ch->sendTo("Please enter a number from 0.0 to 70.0.\n\r");
+    if (new_armor < 0 || new_armor > 127.0) {
+      ch->sendTo("Please enter a number from 0.0 to 127.0.\n\r");
       return;
     } else {
       mob->setACLevel(new_armor);
@@ -1144,7 +1135,7 @@ static void change_mob_armor(TBeing *ch, TMonster *mob, const char *arg, editorE
   ch->sendTo(VT_HOMECLR);
   ch->sendTo("Current mob AC Level: %.1f", mob->getACLevel());
   ch->sendTo(VT_CURSPOS, 5, 1);
-  ch->sendTo("AC Level should be from 0.0 to 70.0");
+  ch->sendTo("AC Level should be from 0.0 to 127.0");
   ch->sendTo(VT_CURSPOS, 6, 1);
   ch->sendTo("AC Level will give the mob the appropriate armor for that level.");
   ch->sendTo(VT_CURSPOS, 8, 1);
@@ -1163,8 +1154,8 @@ static void change_mob_hit_bonus(TBeing *ch, TMonster *mob, const char *arg, edi
     }
     new_bonus = atof(arg);
 
-    if (new_bonus < 0 || new_bonus > 70.0) {
-      ch->sendTo("Please enter a number from 0.0 to 70.0.\n\r");
+    if (new_bonus < 0 || new_bonus > 127.0) {
+      ch->sendTo("Please enter a number from 0.0 to 127.0.\n\r");
       return;
     } else {
       mob->setHPLevel(new_bonus);
@@ -1196,8 +1187,8 @@ static void change_mob_damage(TBeing *ch, TMonster *mob, const char *arg, editor
       return;
     }
     if (sscanf(arg, "%f+%d", &new_level, &new_precision) == 2) {
-      if ((new_level < 0) || (new_level > 70.0)) {
-        ch->sendTo("Damage Level must be between 0.0 and 70.0.\n\r");
+      if ((new_level < 0) || (new_level > 127.0)) {
+        ch->sendTo("Damage Level must be between 0.0 and 127.0.\n\r");
         return;
       }
       if ((new_precision < 0) || (new_precision > 100)) {
@@ -1225,7 +1216,7 @@ static void change_mob_damage(TBeing *ch, TMonster *mob, const char *arg, editor
   ch->sendTo(VT_CURSPOS, 4, 1);
   ch->sendTo("Please enter Damage Level and Precision in the form X+Y.");
   ch->sendTo(VT_CURSPOS, 5, 1);
-  ch->sendTo("X = the Damage Level (0.0 to 70.0).");
+  ch->sendTo("X = the Damage Level (0.0 to 127.0).");
   ch->sendTo(VT_CURSPOS, 6, 1);
       ch->sendTo("    Damage Level sets damage appropriate for that level of mob.");
   ch->sendTo(VT_CURSPOS, 7, 1);
@@ -1984,7 +1975,7 @@ positionTypeT mapFileToPos(int pos)
     case 12:
       return POSITION_FLYING;
     default:
-      vlogf(LOW_ERROR, "Undefined position (%d) in mapPosition(load)", pos);
+      vlogf(LOG_LOW, "Undefined position (%d) in mapPosition(load)", pos);
       return POSITION_STANDING;
   }
 }
@@ -2104,7 +2095,7 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
       setDamLevel(att);
       setDamPrecision(tmp3);
     } else {
-      vlogf(9, "Old style mob (%s).  Please fix AC/Dam/HP.", getName());
+      vlogf(LOG_EDIT, "Old style mob (%s).  Please fix AC/Dam/HP.", getName());
       oldStyle = true;
       setDamLevel(lvl);
       setDamPrecision(20);
@@ -2118,7 +2109,7 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
         // old format was %dd%d+%d, we read the first %d
         rc = fscanf(fp, "d%ld+%ld \n", &tmp, &tmp2);
         if (rc != 2)
-          vlogf(9, "Unable to self-correct old style mob (rc=%d)", rc);
+          vlogf(LOG_EDIT, "Unable to self-correct old style mob (rc=%d)", rc);
       }
     }
 
@@ -2130,7 +2121,7 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
 
     fscanf(fp, " %ld ", &tmp);
     if (tmp > 10) {
-      vlogf(9, "Old style mob (%s) for money constant.  Please reset money.", getName());
+      vlogf(LOG_EDIT, "Old style mob (%s) for money constant.  Please reset money.", getName());
       tmp = tmp * 10 / 4 / GetMaxLevel() / GetMaxLevel();
       tmp = min(max(1, (int) tmp), 10);
     }
@@ -2153,7 +2144,7 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
     statTypeT local_stat;
     fgets(buf, 255, fp);
     if (sscanf(buf, "%ld/%ld", &tmp, &tmp2) == 2) {
-      vlogf(8, "Old style mob loaded (%s).  converting characteristics",
+      vlogf(LOG_EDIT, "Old style mob loaded (%s).  converting characteristics",
               getName());
       for(local_stat=MIN_STAT;local_stat<MAX_STATS_USED;local_stat++) {
         setStat(STAT_CHOSEN, local_stat, 0);
@@ -2172,7 +2163,7 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
 
     if (getPosition() == POSITION_DEAD) {
       // can happen.  no legs and trying to set resting, etc
-      vlogf(LOW_ERROR, "Mob (%s) put in dead position during creation.",
+      vlogf(LOG_LOW, "Mob (%s) put in dead position during creation.",
           getName());
     }
 
@@ -2281,10 +2272,13 @@ void TBeing::doMedit(const char *)
 void TPerson::doMedit(const char *argument)
 {
   const char *tString = NULL;
-  int vnum, field, zGot, oValue, Diff = 0;
+  int vnum, field,/* zGot,*/ oValue, Diff = 0;
   float oFValue;
   TMonster *cMob = NULL;
-  string tStr;
+  string tStr,
+         tStString(""),
+         tStBuffer(""),
+         tStArg("");
   char string[256],
        mobile[80],
        Buf[256],
@@ -2294,10 +2288,61 @@ void TPerson::doMedit(const char *argument)
     sendTo("You have not been granted the power to edit mobs.\n\r");
     return;
   }
+
+  // Sanity check.
+  if (!desc)
+    return;
+
   bisect_arg(argument, &field, string, editor_types_medit);
 
-switch (field) {
+  switch (field) {
+    case 30:
+      if (!*string)
+        sendTo("Syntax: med resave <mobile>\n\r");
+      else if (!(cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, string, roomp->stuff))))
+        sendTo("Unable to find %s...Sorry...\n\r", string);
+      else if (cMob->getSnum() == cMob->mobVnum() && !hasWizPower(POWER_MEDIT_IMP_POWER))
+        sendTo("Unknown value on this mobile.  resave only usable on med loaded mobiles...\n\r");
+
+      else if (!limitPowerCheck(CMD_MEDIT, cMob->getSnum())) 
+	sendTo("You are not allowed to edit that monster.\n\r");
+
+      else {
+        sprintf(string, "%s %d", string, cMob->getSnum());
+        msave(this, string);
+      }
+      return;
+      break;
     case 1:        // save 
+#if 1
+      tStArg = string;
+      tStArg = two_arg(tStArg, tStString, tStBuffer);
+
+      if (tStString.empty() || tStBuffer.empty())
+        sendTo("Syntax: med save <mobile> <vnum>\n\r");
+      else {
+        if (is_abbrev(tStBuffer, "resave")) {
+          if (!hasWizPower(POWER_MEDIT_IMP_POWER))
+            sendTo("Syntax: med save <mobile> <vnum>\n\r");
+          else if (!(cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, tStString.c_str(), roomp->stuff))))
+            sendTo("Unable to find %s...Sorry...\n\r", tStString.c_str());
+          else if (cMob->getSnum() <= 0)
+            sendTo("That mobile has a bad snum.  Sorry.  Can not resave.\n\r");
+
+	  else if (!limitPowerCheck(CMD_MEDIT, cMob->getSnum()))
+	    sendTo("You are not allowed to edit that monster.\n\r");
+
+	  else {
+            sprintf(string, "%s %d", tStString.c_str(), cMob->getSnum());
+
+            msave(this, string);
+            doPurge(tStString.c_str());
+          }
+        } else
+          msave(this, string);
+      }
+
+#else
       // zGot, cMob, tString are additions for Mithros for:
       //   load mob 100
       //   **modify mob_100**
@@ -2321,6 +2366,7 @@ switch (field) {
       if (zGot == 1)
         doPurge(mobile);
       doSave(SILENT_YES);
+#endif
       return;
       break;
     case 2:        // load 
@@ -2329,12 +2375,13 @@ switch (field) {
         return;
       }
       if (!hasWizPower(POWER_MEDIT_LOAD_ANYWHERE)) {
-        if ((in_room == 9) || (in_room == 2))
+        if ((in_room == 9) || (in_room == 2) || (in_room == desc->office))
           TBeingLoad(this, vnum);
         else
-          sendTo("You must be in the lab(room 9) or lounge(room 2) to load mobs.\n\r");
+          sendTo("You must be in the lab(room 9), lounge(room 2) or office(room %d) to load mobs.\n\r", desc->office);
       } else
         TBeingLoad(this, vnum);
+
       return;
       break;
     case 3:        // modify 
@@ -2376,6 +2423,11 @@ switch (field) {
     return;
   }
 
+  if (!limitPowerCheck(CMD_MEDIT, cMob->getSnum())) {
+    sendTo("You are not allowed to edit that monster.\n\r");
+    return;
+  }
+
   switch (field) {
     case 6: // Name
       if (!*string) {
@@ -2406,11 +2458,11 @@ switch (field) {
     case 8: // Long Description
       if (!*string) {
         sendTo("You need to give me a long description.\n\r");
-        sendTo("Current Long is:\n\r%s\n\r", cMob->player.longDescr);
+        sendTo("Current Long is:\n\r%s\n\r", cMob->getLongDesc());
         return;
       }
       cMob->swapToStrung();
-      if (cMob->player.longDescr)
+      if (cMob->getLongDesc())
         delete [] cMob->player.longDescr;
       strcat(string, "\n\r");
       cMob->player.longDescr = mud_str_dup(string);
@@ -2694,12 +2746,12 @@ switch (field) {
       cMob->swapToStrung();
 
       if (is_abbrev(tTextLns[0], "long")) {
-        if (!cMob->player.longDescr) {
+        if (!cMob->getLongDesc()) {
           sendTo("Mobile doesn't have a long description, cannot use replace.\n\r");
           return;
         }
 
-        tStr = cMob->player.longDescr;
+        tStr = cMob->getLongDesc();
 
         if (tStr.find(tTextLns[1]) == string::npos) {
           sendTo("Couldn't find pattern in long description.\n\r");
@@ -2730,28 +2782,25 @@ switch (field) {
       }
       return;
       break;
+    case 31:
+      if (!*string)
+        sendTo("Syntax: med average <mobile> <level> <class(optional)>\n\r");
+      else
+        cMob->editAverageMe(this, string);
+      return;
+      break;
     default:
       sendTo("Syntax : med <type> <flags>\n\r");
       break;
   }
 }
 
-const char tMobStringShorts[][10] =
+const char * const tMobStringShorts[] =
   {"bamfin", "bamfout", "deathcry", "repop", "movein", "moveout"};
 
 static void change_mob_string_values(TBeing *ch, TMonster *tMob, const char *tString, editorEnterTypeT tEnterT)
 {
-  const char tMobStringValues[] =
-    "%s1%s) bamfin [diurnal/nocturnal enter world message\n\r%s<z>\n\r\n\r"
-    "%s2%s) bamfout [diurnal/nocturnal leave world message\n\r%s<z>\n\r\n\r"
-    "%s3%s) death cry [blood freezes message when mob dies]\n\r%s<z>\n\r\n\r"
-    "%s4%s) repop [when mob is added to the world initially]\n\r%s<z>\n\r\n\r"
-    "%s5%s) movein [message when mobile enters a room]\n\r%s<z>\n\r\n\r"
-    "%s6%s) moveout [message when mobile leaves a room]\n\r%s<z>\n\r\n\r";
-
-  int  tRow,
-       tUpdate;
-  char tBuffer[256];
+  int tUpdate;
   bool tHas = (tMob->ex_description ? true : false);
 
   if (tEnterT != ENTER_CHECK) {
@@ -2776,25 +2825,25 @@ static void change_mob_string_values(TBeing *ch, TMonster *tMob, const char *tSt
   ch->sendTo(VT_HOMECLR);
   ch->sendTo("Mobile affected by flags :\n\r\n\r");
 
-  ch->sendTo(COLOR_MOBS, tMobStringValues,
+  unsigned int iter;
+  for (iter = 0; iter < 6; iter++) {
+    const char * tMobStringValues[] = {
+      "%s1%s) bamfin [diurnal/nocturnal enter world message\n\r%s<z>\n\r\n\r",
+      "%s2%s) bamfout [diurnal/nocturnal leave world message\n\r%s<z>\n\r\n\r",
+      "%s3%s) death cry [blood freezes message when mob dies]\n\r%s<z>\n\r\n\r",
+      "%s4%s) repop [when mob is added to the world initially]\n\r%s<z>\n\r\n\r",
+      "%s5%s) movein [message when mobile enters a room]\n\r%s<z>\n\r\n\r",
+      "%s6%s) moveout [message when mobile leaves a room]\n\r%s<z>\n\r\n\r"
+    };
+
+    const char *exd = NULL;
+    if (tHas && tMob->ex_description) {
+      exd = tMob->ex_description->findExtraDesc(tMobStringShorts[iter]);
+    }
+    ch->sendTo(COLOR_MOBS, tMobStringValues[iter],
              ch->cyan(), ch->norm(),
-             ((tHas && tMob->ex_description  && tMob->ex_description->findExtraDesc("bamfin")) ?
-              tMob->ex_description->findExtraDesc("bamfin")   : "Empty"),
-             ch->cyan(), ch->norm(),
-             ((tHas && tMob->ex_description  && tMob->ex_description->findExtraDesc("bamfout")) ?
-              tMob->ex_description->findExtraDesc("bamfout")  : "Empty"),
-             ch->cyan(), ch->norm(),
-             ((tHas && tMob->ex_description  && tMob->ex_description->findExtraDesc("deathcry")) ?
-              tMob->ex_description->findExtraDesc("deathcry") : "Empty"),
-             ch->cyan(), ch->norm(),
-             ((tHas && tMob->ex_description  && tMob->ex_description->findExtraDesc("repop")) ?
-              tMob->ex_description->findExtraDesc("repop")    : "Empty"),
-             ch->cyan(), ch->norm(),
-             ((tHas && tMob->ex_description  && tMob->ex_description->findExtraDesc("movein")) ?
-              tMob->ex_description->findExtraDesc("movein")   : "Empty"),
-             ch->cyan(), ch->norm(),
-             ((tHas && tMob->ex_description  && tMob->ex_description->findExtraDesc("moveout")) ?
-              tMob->ex_description->findExtraDesc("moveout")  : "Empty"));
+             exd ? exd : "Empty");
+  }
 
   ch->sendTo(VT_CURSPOS, 21, 1);
   ch->sendTo("Select message type, <ENTER> to return to the main menu.\n\r--> ");
@@ -2837,7 +2886,10 @@ static void change_mob_string_enter(TBeing *ch, TMonster *tMob, const char *tStr
         break;
       }
 
-    tExLast = tExDesc;
+    if ((tExLast = tExDesc)) {
+      vlogf(LOG_EDIT, "Fell off end of mobile string entry.");
+      break;
+    }
   }
 
   ch->specials.edit = CHANGE_MOB_STRINGS;
@@ -3121,7 +3173,7 @@ void mob_edit(TBeing *ch, const char *arg)
       change_mob_string_enter(ch, ch->desc->mob, arg, 5);
       return;
     default:
-      vlogf(9, "Got to a bad spot in mob_edit");
+      vlogf(LOG_EDIT, "Got to a bad spot in mob_edit");
       return;
   }
 }
