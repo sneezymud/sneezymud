@@ -48,8 +48,10 @@ void relive(TBeing *ch, TBeing *vict)
   // Up to 50% exp back
   vict->addToExp(((vict->deathExp()/100)*ch->getSkillValue(SPELL_RELIVE)) / 2);
 
-  // 0-2 age added
-  vict->age_mod += ::number(0,2);
+  // 25% chance of having 1-3 years age added
+  if(!::number(0,3)){
+    vict->age_mod += ::number(1,3);
+  }
   
   corpse->objectDecay();
   delete corpse;
