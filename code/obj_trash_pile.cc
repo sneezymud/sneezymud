@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "obj_trash_pile.h"
+#include "pathfinder.h"
 
 const int MAX_TRASH_PILE_VOL=46656;
 
@@ -197,7 +198,8 @@ void TTrashPile::attractVermin()
   sstring buf;
   int mobvnum;
   int count=0;
-
+  TPathFinder path;
+  
   if(::number(0,999) || index<3 || !roomp)
     return;
 
@@ -210,6 +212,13 @@ void TTrashPile::attractVermin()
   if(count>11)
     return;
 
+  // see if there is a clear path outside, so we don't spawn in locked areas
+  // player homes, etc
+  path.setUsePortals(true);
+  path.setNoMob(false);
+  path.setThruDoors(true);
+  if(path.findPath(inRoom(), findOutdoors())==DIR_NONE)
+    return;
 
   switch(::number(3, max(8,index))){
     case 3: // rats
@@ -225,10 +234,11 @@ void TTrashPile::attractVermin()
       buf="%s starts sniffing around %s.\n\r";
       break;
     case 6: // vultures
+      if(roomp->isIndoorSector())
+	return;
       mobvnum=1468;
       buf="%s begins circling %s.\n\r";
       break;
-#if 0
     case 7: // bums
       mobvnum=1656;
       buf="%s starts rooting around in %s.\n\r";
@@ -237,7 +247,6 @@ void TTrashPile::attractVermin()
       mobvnum=6602;
       buf="%s starts rooting around in %s.\n\r";
       break;
-#endif
     default: // shouldn't happen, load a plague rat anyway
       mobvnum=5109;
       buf="%s starts sniffing around %s.\n\r";
@@ -249,6 +258,10 @@ void TTrashPile::attractVermin()
     vlogf(LOG_BUG, "couldn't load rat in attractVermin()");
     return;
   }
+  REMOVE_BIT(mob->specials.act, ACT_DIURNAL);
+  REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
+
+
   *roomp += *mob;
   sendrpf(COLOR_BASIC, roomp, buf.c_str(), 
 	  sstring(mob->getName()).cap().c_str(), getName());
