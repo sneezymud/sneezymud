@@ -614,7 +614,7 @@ void TBaseCup::sipMe(TBeing *ch)
     addToDrinkUnits(-1);
 
   if (!getDrinkUnits()) {    /* The last bit */
-    setDrinkType(LIQ_WATER);
+    //    setDrinkType(LIQ_WATER);
     remDrinkConFlags(DRINK_POISON);
   }
 }
