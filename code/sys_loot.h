@@ -7,6 +7,7 @@ struct TLootStructure {
 
   TLootStructure * tNext;
 };
+
 extern TLootStructure * tLoot;
 
 extern bool sysLootBoot();
