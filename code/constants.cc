@@ -999,6 +999,7 @@ const char * const connected_types[MAX_CON_STATUS] =
   "Hometown : ogre",
   "Hometown : hobbit",
   "Perma Death Choice",
+  "Multiplay Rules Prompt",
 };
 
 

@@ -3776,11 +3776,6 @@ void TBeing::doWipe(const char *argument)
       sendTo("You can only banish players less than your level.\n\r");
       return;
     }
-    if (!victim->isPlayerAction(PLR_BANISHED)) {
-      act("$N is not flagged banished.", false, this, 0, victim, TO_CHAR);
-      sendTo("Please explore the punishment of temporarily banishing the player\n\rbefore resorting to wiping first.\n\r");
-      return;
-    }
     sendTo("Ok.\n\r");
     sprintf(buf, "You hear a cry of anguish as %s screams in agony.\n\r", victim->getName());
     sprintf(buf + strlen(buf), "%s cackles in triumph as he utterly annihilates %s.\n\r", getName(), victim->getName());

@@ -949,6 +949,42 @@ int Descriptor::nanny(const char *arg)
   string str;
 
   switch (connected) {
+    case CON_MULTIWARN:
+      switch (*arg) {
+	case 'Y':
+	case 'y':
+	  writeToQ("\n\rOk, you have agreed to follow the rules concerning multiplay.\n\r");
+	  writeToQ("\n\r\n\r[Press return to continue]");
+	  break;
+	case 'N':
+	case 'n':
+	  writeToQ("\n\rI'm sorry, you MUST agree to the terms and conditions of our rules\n\r");
+	  writeToQ("before we allow you to play a character on SneezyMUD. Please reconsider\n\r");
+	  writeToQ("and come back soon!\n\r");
+	  return DELETE_THIS;
+	default:
+          writeToQ("\a\n\r");
+          writeToQ("*************************************************************************\n\r");
+          writeToQ("*  The characters within an account MUST NOT interact with each other,  *\n\r");
+          writeToQ("*  that means: No sharing of talens or equipment.  It is prohibited to  *\n\r");
+          writeToQ("*  use a character in your account to act as an agent in the retrieval  *\n\r");
+          writeToQ("*  of the corpse of another of your characters, or to reduce or         *\n\r");
+          writeToQ("*  eliminate a dangerous situation faced by another character in your   *\n\r");
+          writeToQ("*  account.  Infractions of this rule WILL RESULT in the ELIMINATION    *\n\r");
+          writeToQ("*  OF ALL CHARACTERS INVOLVED.                                          *\n\r");
+          writeToQ("*                                                                       *\n\r");
+          writeToQ("*  It is expected that you will familiarize yourself with the rules     *\n\r");
+          writeToQ("*  detailed in the help files. Be sure to read HELP RULES and all       *\n\r");
+          writeToQ("*  pertinant help files listed within.                                  *\n\r");
+          writeToQ("*************************************************************************\n\r");
+	  writeToQ("\n\r\n\r");
+	  writeToQ("Do you agree to the above terms and conditions regarding the rules? [Y/N]\n\r");
+	  writeToQ("--> ");
+	  return FALSE;
+      }
+      connected = CON_DISCLAIMER3;
+      break;
+      // jesus
     case CON_QRACE:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
       for (; isspace(*arg); arg++);
@@ -1093,7 +1129,7 @@ int Descriptor::nanny(const char *arg)
       str = colorString(character, this, str.c_str(), NULL, COLOR_BASIC,  false);
 
       writeToQ(str.c_str());
-      connected = CON_DISCLAIMER3;
+      connected = CON_MULTIWARN;
       break;
     case CON_DISCLAIMER3:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
@@ -3149,6 +3185,7 @@ void Descriptor::go_back_menu(connectStateT con_state)
     case CON_ACTDELCNF:
     case CON_EDITTING:
     case CON_DISCLAIMER:
+    case CON_MULTIWARN:
     case CON_TIME:
     case CON_CHARDELCNF:
     case CON_DISCLAIMER2:
@@ -6074,6 +6111,7 @@ int Descriptor::doAccountStuff(char *arg)
     case CON_CONN:
     case CON_EDITTING:
     case CON_DISCLAIMER:
+    case CON_MULTIWARN:
     case CON_DISCLAIMER2:
     case CON_DISCLAIMER3:
     case CON_STAT_LEARN:
