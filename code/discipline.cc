@@ -3705,7 +3705,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     if (doesKnowSkill(SKILL_KICK_MONK) && sknum == SKILL_KICK_MONK) {
       setQuestBit(TOG_ELIGIBLE_ADVANCED_KICKING);
 
-      sendTo(COLOR_BASIC, "<c>Perhaps your guildmaster could help you with <p>advanced kicking<c> now.<1>");
+      sendTo(COLOR_BASIC, "<c>Perhaps your guildmaster could help you with <p>advanced kicking<c> now.<1>\n\r");
     }
   } else if (getNatSkillValue(sknum) == getMaxSkillValue(sknum)) {
     if ((discArray[sknum]->comp_types & COMP_MATERIAL))
