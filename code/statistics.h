@@ -2,23 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: statistics.h,v $
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/10/14 02:28:46  batopr
-// *** empty log message ***
-//
-// Revision 1.2  1999/10/07 16:01:30  batopr
-// Shifted some gold statistics stuff to functions
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -191,6 +174,7 @@ extern long gold_statistics[MAX_MONEY_TYPE][GOD_LEVEL10];
 extern long gold_positive[MAX_MONEY_TYPE][GOD_LEVEL10];
 extern float gold_modifier[MAX_MONEY_TYPE];
 
+#if 0
 extern int getNetGold(moneyTypeT);
 extern unsigned int getPosGold(moneyTypeT);
 
@@ -200,5 +184,16 @@ extern int getNetGoldShops();
 extern unsigned int getPosGoldShops();
 extern int getNetGoldBudget();
 extern unsigned int getPosGoldBudget();
+#else
+extern float getNetGold(moneyTypeT);
+extern float getPosGold(moneyTypeT);
+
+extern float getNetGoldGlobal();
+extern float getPosGoldGlobal();
+extern float getNetGoldShops();
+extern float getPosGoldShops();
+extern float getNetGoldBudget();
+extern float getPosGoldBudget();
+#endif
 
 #endif
