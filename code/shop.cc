@@ -42,16 +42,6 @@ vector<shop_pricing>ShopPriceIndex(0);
 
 
 bool shopData::isOwned(){
-  bool owned;
-  TDatabase db("sneezy");
-  
-  db.query("select 1 from shopownedaccess where shop_nr=%i", shop_nr);
-
-  if(!db.fetchRow())
-    owned=false;
-  else
-    owned=true;
-
   return owned;
 }
 
@@ -2062,6 +2052,13 @@ void bootTheShops()
   TDatabase owned_db("sneezy");
   owned_db.query("select shop_nr, profit_buy, profit_sell from shopowned order by shop_nr");
   owned_db.fetchRow();
+
+
+  /****** is owned ******/
+  TDatabase isowned_db("sneezy");
+  isowned_db.query("select shop_nr from shopownedaccess where (access & 1)!=0 order by shop_nr");
+  isowned_db.fetchRow();
+
   
   TDatabase db("sneezy");
 
@@ -2096,6 +2093,13 @@ void bootTheShops()
     } else {
       sd.profit_buy=convertTo<float>(db.getColumn(17));
       sd.profit_sell=convertTo<float>(db.getColumn(18));
+    }
+
+    if(isowned_db.getColumn(0) && (convertTo<int>(owned_db.getColumn(0)))==shop_nr){
+      sd.owned=true;
+      isowned_db.fetchRow();
+    } else {
+      sd.owned=false;
     }
 
     while(type_db.getColumn(0) && convertTo<int>(type_db.getColumn(0))==shop_nr){

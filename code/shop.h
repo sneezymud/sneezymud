@@ -49,6 +49,7 @@ extern void shoplog(int, TBeing *, TMonster *, const char *, int, const char *);
 class shopData {
   public:
     int shop_nr;
+    bool owned;
     vector <int> producing;       /* Which item to produce (virtual)      */
     float profit_buy;             /* Factor to multiply cost with.        */
     float profit_sell;            /* Factor to multiply cost with.        */

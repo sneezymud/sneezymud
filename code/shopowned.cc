@@ -322,6 +322,7 @@ int TShopOwned::buyShop(){
   keeper->saveItems(buf);
   
   keeper->doTell(ch->getName(), "Congratulations, you now own this shop.");
+  shop_index[shop_nr].owned=true;
 
   return TRUE;
 }
@@ -355,6 +356,7 @@ int TShopOwned::sellShop(){
   shop_index[shop_nr].profit_sell=0.9;
   
   keeper->doTell(ch->getName(), "Ok, you no longer own this shop.");
+  shop_index[shop_nr].owned=false;
   
   return TRUE;
 }
