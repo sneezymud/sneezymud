@@ -103,21 +103,7 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
       c->sendTo("You tie your opponent up, with an excellent maneuver.\n\r");
       act("$n wrestles $N to the $g with an excellent maneuver.", TRUE, c, 0, victim, TO_NOTVICT);
       act("$n wrestles you to the $g.", TRUE, c, 0, victim, TO_VICT);
-#if 0
-//      c->cantHit += c->loseRound( 1 + level/ 12);
-//      victim->cantHit += victim->loseRound(3 + level/ 12);
-      if (::number(0,3))
-        c->cantHit += c->loseRound(3 + level/ 12);
-      c->addToWait(combatRound(2));
-      if (!::number(0,3))
-        victim->addToWait(combatRound(2));
-// Moved below
-      if (c->fight())
-        c->stopFighting();
-  
-      if (victim->fight())
-        victim->stopFighting();
-#endif
+
 
       // if eqipment worn on body is spiked, add a little extra 10-20-00, -dash
       if (((obj = c->equipment[WEAR_BODY]) &&
@@ -196,14 +182,13 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
         c->setCharFighting(victim);
         c->setVictFighting(victim);
       }
-      if (::number(0,3))
-        c->cantHit += c->loseRound(2 + level/ 12);
-      if (!::number(0,3))
-        victim->cantHit += victim->loseRound(2 + level/ 12);
+      c->cantHit += c->loseRound(4);
+      victim->cantHit += victim->loseRound(4);
+
       if (victim->spelltask) {
         victim->addToDistracted(1, FALSE);
       }
-      victim->addToWait(combatRound(1));
+      victim->addToWait(combatRound(5));
     }
   } else {
     c->cantHit += c->loseRound(5 - (min(level, 50)/ 12));
