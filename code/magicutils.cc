@@ -930,7 +930,6 @@ const char *what_does_it_open(const TKey *o)
 {
   int i, x, vnum;
   TRoom *rp;
-  TObj *k;
   roomDirData *ex;
 
   vnum = o->objVnum();
@@ -946,8 +945,8 @@ const char *what_does_it_open(const TKey *o)
       }
     }
   }
-  for (k = object_list; k; k = k->next)	{ // check if it opens an item 
-    TOpenContainer *trc = dynamic_cast<TOpenContainer *>(k);
+  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+    TOpenContainer *trc = dynamic_cast<TOpenContainer *>(*iter);
     if (trc) {
       if (trc->getKeyNum() == vnum)
 	return "a container";

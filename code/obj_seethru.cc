@@ -65,13 +65,15 @@ int TSeeThru::getTarget(int *isRandom) const
     const TObj *tObj;
     TRoom      *tRoom;
 
-    for (tObj = object_list; tObj; tObj = tObj->next)
+    for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+      tObj=*iter;
       if (tObj->objVnum() == tExitObject && tObj != this &&
           (tRoom = real_roomp(tObj->in_room)) &&
           !tRoom->isRoomFlag(ROOM_NO_PORTAL)) {
         tMatches++;
         tExitRoom = tObj->in_room;
       }
+    }
 
     if (tMatches <= 1) {
       if (isRandom)
@@ -85,12 +87,14 @@ int TSeeThru::getTarget(int *isRandom) const
 
     tExitRoom = ::number(1, tMatches);
 
-    for (tObj = object_list; tObj; tObj = tObj->next)
+    for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+      tObj=*iter;
       if (tObj->objVnum() == tExitObject &&
           (--tExitRoom <= 0) &&
           tObj != this && (tRoom = real_roomp(tObj->in_room)) &&
           !tRoom->isRoomFlag(ROOM_NO_PORTAL))
         return tObj->in_room;
+    }
 
     return tExitRoom;
   }

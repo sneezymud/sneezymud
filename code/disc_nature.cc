@@ -810,7 +810,9 @@ int treeWalk(TBeing * caster, const char * arg, int, byte bKnown)
     if (!(numx = get_number(&tmp)))
       numx = 1;
 
-    for (o = object_list; o; o = o->next) {
+    o=NULL;
+    for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+      o=*iter;
       if (o->treeMe(caster, tmp, numx, &j)) {
         rp = o->roomp;
         if (rp)

@@ -3522,9 +3522,11 @@ static void attuneStructSanityCheck(attune_struct *job)
     }
   }
   if (job->sym) {
-    TObj *tch;
-    for (tch = object_list; tch && tch != job->sym; tch = tch->next);
-    if (!tch) {
+    TObjIter iter;
+    for(iter=object_list.begin();
+	iter!=object_list.end() && (*iter) != job->sym;++iter);
+
+    if (iter==object_list.end()) {
       // chances are, what job->sym points at is deleted memory, so do NOT
       // reference it
       vlogf(LOG_PROC, "Attuner lost symbol being attuned.");
@@ -6985,8 +6987,8 @@ int trolleyBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
     return FALSE;
 
   // find the trolley
-  for(trolley=object_list;trolley;trolley=trolley->next){
-    if(trolley->objVnum() == trolleynum)
+  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+    if((*iter)->objVnum() == trolleynum)
       break;
   }
   if(!trolley)
@@ -7101,8 +7103,8 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
     return FALSE;
 
   // find the boat
-  for(boat=object_list;boat;boat=boat->next){
-    if(boat->objVnum() == boatnum)
+  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+    if((*iter)->objVnum() == boatnum)
       break;
   }
   if(!boat)
@@ -7233,8 +7235,8 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
     return FALSE;
 
   // find the elevator
-  for(elevator=object_list;elevator;elevator=elevator->next){
-    if(elevator->objVnum() == elevatornum)
+  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+    if((*iter)->objVnum() == elevatornum)
       break;
   }
   if(!elevator)

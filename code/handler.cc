@@ -1477,7 +1477,6 @@ TObj *get_num_obj_in_list(TBeing *ch, int num, TThing *list, int shop_nr)
 // search the entire world for an object, and return a pointer  
 TObj *get_obj(const char *name, exactTypeT exact)
 {
-  TObj *i;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
 
@@ -1486,11 +1485,13 @@ TObj *get_obj(const char *name, exactTypeT exact)
   if (!(numx = get_number(&tmp)))
     return (0);
 
-  for (i = object_list, j = 1; i && (j <= numx); i = i->next) {
-    if ((exact && is_exact_name(tmp, i->name)) ||
-        (!exact && isname(tmp, i->name))) {
+  j=1;
+  for(TObjIter iter=object_list.begin();
+      iter!=object_list.end() && (j <= numx); ++iter){
+    if ((exact && is_exact_name(tmp, (*iter)->name)) ||
+        (!exact && isname(tmp, (*iter)->name))) {
       if (j == numx)
-        return (i);
+        return (*iter);
       j++;
     }
   }
@@ -1501,11 +1502,9 @@ TObj *get_obj(const char *name, exactTypeT exact)
 // search the entire world for an object number, and return a pointer  
 TObj *get_obj_num(int nr)
 {
-  TObj *i;
-
-  for (i = object_list; i; i = i->next) {
-    if (i->number == nr)
-      return (i);
+  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+    if ((*iter)->number == nr)
+      return (*iter);
   }
   return (0);
 }
@@ -1993,7 +1992,6 @@ TThing *get_thing_on_list_vis(TBeing *ch, const char *name, TThing *list)
 
 TObj *get_obj_vis_world(TBeing *ch, const char *name, int *count, exactTypeT exact)
 {
-  TObj *i;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
 
@@ -2008,12 +2006,13 @@ TObj *get_obj_vis_world(TBeing *ch, const char *name, int *count, exactTypeT exa
   j = count ? *count : 1;
 
   // ok.. no luck yet. scan the entire obj list 
-  for (i = object_list; i && (j <= numx); i = i->next) {
-    if ((exact && is_exact_name(tmp, i->name)) ||
-        (!exact && isname(tmp, i->name))) {
-      if (ch->canSee(i)) {
+  for(TObjIter iter=object_list.begin();
+      iter!=object_list.end() && (j <= numx);++iter){
+    if ((exact && is_exact_name(tmp, (*iter)->name)) ||
+        (!exact && isname(tmp, (*iter)->name))) {
+      if (ch->canSee(*iter)) {
         if (j == numx)
-          return (i);
+          return (*iter);
         j++;
       }
     }

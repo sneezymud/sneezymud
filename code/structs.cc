@@ -329,20 +329,18 @@ TObj::TObj() :
   TThing(),
   obj_flags(), 
   action_description(NULL),
-  next(object_list),
   owners(NULL)
 {
   // change the default value here
   number = -1;
 
   objCount++;
-  object_list = this;
+  object_list.push_front(this);
 }
 
 TObj::~TObj() 
 {
   TThing *t = NULL;
-  TObj *temp1 = NULL;
 
   if (spec)
     checkSpec(NULL, CMD_GENERIC_DESTROYED, "", NULL);
@@ -396,18 +394,7 @@ TObj::~TObj()
     rider->dismount(new_pos);
   }
   
-  if (object_list == this)      
-    object_list = next;
-  else {
-    for (temp1 = object_list; temp1 && (temp1->next != this); 
-             temp1 = temp1->next);
-    if (temp1)
-      temp1->next = next;
-    else {
-      vlogf(LOG_BUG, "Couldn't find object in object list.");
-      vlogf(LOG_BUG, fmt("Object name : %s") %  getName());
-    }
-  }
+  object_list.remove(this);
 
   if (number >= 0) {
     mud_assert(number < (signed int) obj_index.size(), "~TObj: range (%d) beyond obj_index size (%d).  obj=[%s]", number, obj_index.size(), name);
@@ -1543,8 +1530,7 @@ TObj::TObj(const TObj &a) :
     action_description = a.action_description;
 
   objCount++;
-  next = object_list;
-  object_list = this;
+  object_list.push_front(this);
 
   owners = mud_str_dup(a.owners);
 }

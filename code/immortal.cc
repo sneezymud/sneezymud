@@ -4724,14 +4724,13 @@ void TBeing::doInfo(const char *arg)
       sendTo(fmt("  Bugs file accessed %d times.\n\r") % bug_used_num);
       sendTo(fmt("  Idea file accessed %d times.\n\r") % idea_used_num);
     } else if (is_abbrev(arg1, "objects")) {
-      TObj *o;
       int count[MAX_OBJ_TYPES], i=0, li=0, total=0;
       
       for(i=0;i<MAX_OBJ_TYPES;++i)
 	count[i]=0;
 
-      for(o=object_list;o;o=o->next)
-	count[o->itemType()]++;
+      for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter)
+	count[(*iter)->itemType()]++;
 
       // BUBBLESORT IS L33T!!!
       while(1){
@@ -4759,7 +4758,8 @@ void TBeing::doInfo(const char *arg)
       int i=1;
       sstring tbuf;
 
-      for(obj=object_list;obj;obj=obj->next){
+      for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+	obj=*iter;
 	if(obj->in_room == ROOM_NOWHERE && !obj->parent &&
 	   !obj->equippedBy && !obj->stuckIn && !obj->riding){
 	  tbuf=fmt("[%6i] %-17s\n\r") %

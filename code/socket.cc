@@ -802,9 +802,13 @@ int TMainSocket::characterPulse(TPulseList &pl, int realpulse)
 
 int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 {
-  TObj *next_thing;
   TVehicle *vehicle;
   int rc, count, retcount;
+  TObjIter iter;
+  TObj *obj;
+
+  if(!placeholder)
+    placeholder=read_object(1, VIRTUAL); // hairball, dummy object
 
   // note on this loop
   // it is possible that next_thing gets deleted in one of the sub funcs
@@ -815,18 +819,28 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
   // bogus after the function call.
 
   ++vehiclepulse;
-      
-  // we've already finished going through the object list, so start over
-  if(!obj)
-    obj=object_list;
 
+  // get an iterator for our placeholder
+  iter=find(object_list.begin(), object_list.end(), placeholder);
+    
   // we want to go through 1/12th of the object list every pulse
   // obviously the object count will change, so this is approximate.
   retcount=count=(int)((float)objCount/11.5);
 
-  for (; obj; obj = next_thing) {
-    next_thing = obj->next;
+  while((++iter)!=object_list.end()){
+    obj=(*iter);
 
+    // move placeholder forward
+    --iter;
+    object_list.erase(iter++);
+    if(++iter == object_list.end()){
+      object_list.push_front(placeholder);
+      iter=object_list.begin();
+    } else {
+      object_list.insert(iter, placeholder);
+      --iter;
+    }
+   
     if(!count--)
       break;
 
@@ -850,35 +864,26 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
     // about every 12 pulses, ie "combat" or "teleport" pulse
     rc = obj->detonateGrenade();
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      next_thing = obj->next;
       delete obj;
-      obj = NULL;
       continue;
     }
     rc = obj->checkFalling();
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      next_thing = obj->next;
       delete obj;
-      obj = NULL;
       continue;
     }
     rc = obj->riverFlow(realpulse);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      next_thing = obj->next;
       delete obj;
-      obj = NULL;
       continue;
     }
     if (obj->spec) {
       rc = obj->checkSpec(NULL, CMD_GENERIC_QUICK_PULSE, "", NULL);
       if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-	next_thing = obj->next;
 	delete obj;
-	obj = NULL;
 	continue;
       }
       if (rc) {
-	next_thing = obj->next;
 	continue;
       }
     }
@@ -889,20 +894,17 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
       if (obj->spec) {
 	rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
 	if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-	  next_thing = obj->next;
 	  delete obj;
 	  obj = NULL;
 	  continue;
 	}
 	if (rc) {
-	  next_thing = obj->next;
 	  continue;
 	}
       }
 
       rc = obj->updateBurning();
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
-	next_thing = obj->next;
 	delete obj;
 	obj = NULL;
 	continue;
@@ -922,15 +924,12 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
     if (pl.pulse_mudhour) { // 1440
       rc = obj->objectTickUpdate(realpulse);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
-	next_thing = obj->next;
 	delete obj;
 	obj = NULL;
 	continue;
       }
     }
-    next_thing = obj->next;
   } // object list
-
 
   return retcount-count;
 }
@@ -1404,7 +1403,7 @@ TSocket::~TSocket()
 TMainSocket::TMainSocket()
 {
   tmp_ch=NULL;
-  obj=NULL;
+  placeholder=NULL;
   vehiclepulse=0;
 }
 

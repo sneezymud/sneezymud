@@ -452,8 +452,8 @@ void TPerson::doShow(const char *argument)
   } else if (is_abbrev(buf, "trapped")) {
     sb += "Trapped Containers\n\r";
     sb += "-------------------------------------\n\r";
-    for (obj = object_list; obj; obj = obj->next) {
-      TOpenContainer *tc = dynamic_cast<TOpenContainer *>(obj);
+    for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+      TOpenContainer *tc = dynamic_cast<TOpenContainer *>(*iter);
       if (tc && tc->isContainerFlag(CONT_TRAPPED)) {
         do_where_thing(this, tc, FALSE, sb);
       }

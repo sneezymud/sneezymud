@@ -15,8 +15,13 @@
 
 extern vector<objIndexData>obj_index;
 
+typedef list<TObj *> TObjList;
+typedef list<TObj *>::iterator TObjIter;
+
+extern TObjList object_list;
+
 extern TObj *read_object(int nr, readFileTypeT type);
-extern TObj *object_list;
+
 
 // weight of 1 sip/unit of drink
 // 128 fl.oz = 1 gallon = 8.337 lb. (for water)
@@ -477,7 +482,6 @@ class TObj : public TThing {
     objAffData affected[MAX_OBJ_AFFECT];
 
     const char *action_description;      /* What to write when used          */
-    TObj *next;         /* For the object list              */
     const char * owners;
 
   protected:

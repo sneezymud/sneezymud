@@ -41,7 +41,9 @@ static TObj * findHuntedItem(const TBeing *ch, const char *arg, const TObj *stop
   }
   
   // now search for the vnums we cached
-  for (obj = object_list, last = NULL; obj; obj = obj->next) {
+  last=NULL;
+  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+    obj=*iter;
     if (vnums[obj->objVnum()]==1) {
       if (ch->canSee(obj))
 	if (!targ || !dynamic_cast<TBeing *>(obj->thingHolding()) || isname(targ, dynamic_cast<TBeing *>(obj->thingHolding())->name)) {
@@ -69,7 +71,9 @@ static TObj * findHuntedItem(const TBeing *ch, const char *arg, const TObj *stop
   }
 
   // now search for the vnums we cached
-  for (obj = object_list, last = NULL; obj; obj = obj->next) {
+  last=NULL;
+  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+    obj=*iter;
     if (vnums[obj->objVnum()]==1) {
       if (ch->canSee(obj))
 	last = obj;
@@ -487,7 +491,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 #if 0
 // the canSee check in findHuntedItem makes this flawed
 // we are able to walk entire list fairly fast, so this is not heavily needed
-      job->noneBeyond = object_list;  // nowhere in the list
+      job->noneBeyond = *(object_list.begin());  // nowhere in the list
 #endif
 
       // head home

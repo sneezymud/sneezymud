@@ -70,7 +70,7 @@ class TMainSocket {
  private:
   vector <int> m_sock;
   TBeing *tmp_ch;
-  TObj *obj;
+  TObj *placeholder;
   int vehiclepulse;
 
   struct timeval handleTimeAndSockets();

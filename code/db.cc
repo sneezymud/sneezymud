@@ -93,7 +93,8 @@ int top_of_world = 0;         // ref to the top element of world
 
 TRoom *room_db[WORLD_SIZE];
 
-TObj *object_list = 0;    // the global linked list of obj's 
+TObjList object_list; // the global linked list of obj's 
+
 TBeing *character_list = 0; // global l-list of chars          
 TMonster *pawnman = NULL;
 TPCorpse *pc_corpse_list = NULL;
@@ -445,7 +446,6 @@ void bootWorld(void)
 
   memset((char *) room_db, 0, sizeof(TRoom *) * WORLD_SIZE);
   character_list = NULL;
-  object_list = NULL;
 
   db.query("select * from room order by vnum asc");
   db_exits.query("select * from roomexit order by vnum asc");
@@ -2609,8 +2609,9 @@ bool zoneData::doGenericReset(void)
   bottom = zone_nr ? (zone_table[zone_nr - 1].top + 1) : 0;
   top = zone_table[zone_nr].top;
 
-  for (TObj *o=object_list; o; o = o->next)
-  {
+  TObj *o;
+  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+    o=*iter;
     if (o->objVnum() >= bottom && o->objVnum() <= top)
     {
       if (o->spec)
@@ -3072,8 +3073,9 @@ void generic_cleanup()
   while (character_list)
     delete character_list;
   // purge all objs
-  while(object_list)
-    delete object_list;
+  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+    delete *iter;
+
   // purge all rooms
   int ii;
   for (ii = 0; ii < WORLD_SIZE; ii++)

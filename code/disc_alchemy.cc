@@ -445,7 +445,8 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
     }
 
     caster->sendTo("The eyes of Fertuman look far and wide across the world and find:\n\r");
-    for (obj = object_list; obj && j; obj = obj->next) {
+    for(TObjIter iter=object_list.begin();iter!=object_list.end() && j;++iter){
+      obj=*iter;
       if (isname(mod_to_find, obj->getName())) {
       /* this should randomize display a bit */
         if (obj->isObjStat(ITEM_MAGIC)) {

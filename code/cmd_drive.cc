@@ -3,11 +3,10 @@
 
 TVehicle *findVehicle(TBeing *ch)
 {
-  TObj *o;
   TVehicle *v;
 
-  for(o=object_list;o;o=o->next){
-    if((v=dynamic_cast<TVehicle *>(o)) && v->getTarget() == ch->in_room)
+  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+    if((v=dynamic_cast<TVehicle *>(*iter)) && v->getTarget() == ch->in_room)
       return v;
   }
 

@@ -2738,7 +2738,8 @@ void TBeing::doWhere(const char *argument)
       (is_abbrev(tStArg, "engraved") || is_abbrev(tStArg, "owners"))) {
     count = 0;
 
-    for (k = object_list; k; k = k->next) {
+    for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+      k=*iter;
       if (!k->getName()) {
         vlogf(LOG_BUG, fmt("Item without a name in object_list (doWhere) looking for %s") %  namebuf);
         continue;
@@ -2913,7 +2914,8 @@ void TBeing::doWhere(const char *argument)
   }
 
   if (GetMaxLevel() > MAX_MORT) {
-    for (k = object_list; k; k = k->next) {
+    for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+      k=*iter;
       if (k->objVnum()!=-1 && vnums_notmatch[k->objVnum()])
 	continue;
 
