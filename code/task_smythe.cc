@@ -3,6 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.9  2002/06/13 04:39:20  peel
+// depreciation code was buggy, so I just removed it
+// probably ok for players to repair to brand new anyway, gies them an
+// advantage over repair shop
+//
 // Revision 5.8  2002/03/14 15:43:13  jesus
 // *** empty log message ***
 //
@@ -155,7 +160,7 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
       delete this;
       return;
     }
-    if (o->getMaxStructPoints() <= o->getStructPoints() - o->getDepreciation()) {
+    if (o->getMaxStructPoints() <= o->getStructPoints()) {
       act("$n finishes repairing $p and proudly smiles.", FALSE, ch, o, forge, TO_ROOM);
       act("You finish repairing $p and smile triumphantly.", FALSE, ch, o, forge, TO_CHAR);
       act("You let $p cool down.", FALSE, ch, o, 0, TO_CHAR);
