@@ -16,6 +16,8 @@
 - Started work on the first of my automated-games list.
   Sleeptag will now auto-control most of the old immortal
   stuff for game running.
+- Fixed up the Ghost Trap stuff.  Trouble was casting high bits
+  to an unsigned char.
 
 11-05-99 - Peel
 - Added checknroom, moveto and destination response script actions.
