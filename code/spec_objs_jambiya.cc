@@ -52,7 +52,7 @@ int weaponJambiyaSpecial(TBeing *tVictim, cmdTypeT tCmd, const char *tArg, TObj 
       !tVictim->isUndead() && tVictim->slotChance(WEAR_BACK) &&
       !tVictim->isImmune(IMMUNE_BLEED, tThief->GetMaxLevel()) &&
       !tVictim->isLimbFlags(WEAR_BACK, PART_BLEEDING)) {
-    sprintf(tToRoom, "Blood beings to pour from $n's %s!",
+    sprintf(tToRoom, "Blood begins to pour from $n's %s!",
             tVictim->describeBodySlot(WEAR_BACK).c_str());
     act(tToRoom, FALSE, tVictim, NULL, NULL, TO_ROOM);
     tVictim->rawBleed(WEAR_BACK, (tWeapon->getWeapDamLvl() * 3) + 100,
