@@ -127,7 +127,7 @@ static string garble(const char *arg, int chance)
 
 
 // may return DELETE_THIS
-int TBeing::doSay(const char *arg, ...)
+int TBeing::doSay(const char *arg)
 {
   char buf[MAX_INPUT_LENGTH + 40];
   char garbed[256];
@@ -138,15 +138,6 @@ int TBeing::doSay(const char *arg, ...)
   char capbuf[256];
   char tmpbuf[256], nameBuf[256], garbedBuf[256];
   Descriptor *d;
-  va_list ap;
-  char argbuf[MAX_STRING_LENGTH];
-
-  // do printf style format specifiers
-  // we point arg at the processed argument, so this is transparent to the
-  // rest of the code
-  va_start(ap, arg);
-  vsnprintf(argbuf, MAX_STRING_LENGTH, arg, ap);
-  arg=argbuf;
 
   if (desc)
     desc->talkCount = time(0);
