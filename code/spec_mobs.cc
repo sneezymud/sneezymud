@@ -6931,10 +6931,9 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   int cost;
   dirTypeT dir = DIR_NONE;
   roomDirData *exitp;
-  int i;
   TBeing *tbt = NULL;
   TThing *ttt;
-  TBaseWeapon *tobj;
+  string str;
 
   class div_struct {
     public:
@@ -7080,92 +7079,10 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       sprintf(buf, "Thanks for your business, I'll take your %d talens payment in advance!", cost);
       me->doSay(buf);
       ch->addToMoney(-cost, GOLD_HOSPITAL);
-      sprintf(buf, "I will now divinate %s.", item->shortDescr);
-      me->doSay(buf);
-      sprintf(buf, "It has a volume of %d.", item->getVolume());
-      me->doSay(buf);
-      sprintf(buf, "It weighs %.1f", item->getWeight());
-      me->doSay(buf);
-      sprintf(buf, "It has a value of %d talens.", item->obj_flags.cost);
-      me->doSay(buf);
-      me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
-      sprintf(buf, "It has %s as a special proceedure.", item->spec ? objSpecials[GET_OBJ_SPE_INDEX(item->spec)].name : "nothing");
-      me->doSay(buf);
-      for (i = 0; i < MAX_OBJ_AFFECT; i++) {
-	if (item->affected[i].location == APPLY_SPELL) {
-	  if (discArray[item->affected[i].modifier]) {
-	    sprintf(buf, "   Affects:  %s: %s by %ld ",
-		    apply_types[item->affected[i].location].name,
-		    discArray[item->affected[i].modifier]->name,
-		    item->affected[i].modifier2);
-	    me->doSay(buf);;
-	  } else
-	    vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", item->affected[i].modifier,
-		  item->getName());
-	} else if (item->affected[i].location == APPLY_DISCIPLINE) {
-	  if (discNames[item->affected[i].modifier].disc_num) {
-	    sprintf(buf, "   Affects:  %s: %s by %ld ",
-		    apply_types[item->affected[i].location].name,
-		    discNames[item->affected[i].modifier].practice,
-		    item->affected[i].modifier2);
-	    me->doSay(buf);
-	  } else
-	    vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", item->affected[i].modifier,
-		  item->getName());
-	} else if (item->affected[i].location == APPLY_IMMUNITY) {
-	  sprintf(buf, "   Affects:  %s: %s by %ld ",apply_types[item->affected[i].location].name,
-		  immunity_names[item->affected[i].modifier], item->affected[i].modifier2);
-	  me->doSay(buf);
-	} else if (item->affected[i].location != APPLY_NONE) {
-	  sprintf(buf, "   Affects:  %s by %ld ",apply_types[item->affected[i].location].name,
-		  item->affected[i].modifier);
-	  me->doSay(buf);
-	}
-      }                               
-      for (i = 0; i < MAX_SWING_AFFECT; i++) {
-	if (item->oneSwing[i].type != TYPE_UNDEFINED) {
-	  sprintf(buf, "   One-Swing Affect: %s ",
-		  affected_bits[item->oneSwing[i].bitvector]);
-	  me->doSay(buf);
-	  sprintf(buf, "        Effects: %s by %ld ",
-		  apply_types[item->oneSwing[i].location].name,
-		  item->oneSwing[i].modifier);
-	  me->doSay(buf);
-	}
-      }     
-      if (item->isBluntWeapon() || item->isPierceWeapon() || item->isSlashWeapon()) {
-	tobj = dynamic_cast<TBaseWeapon *>(item);
-	sprintf(buf, "It's maximum %s is %d", ((tobj->isBluntWeapon() ? "bluntness" : (tobj->isPierceWeapon() ? "pointiness" : "sharpness"))), tobj->getMaxSharp());
-	me->doSay(buf);
-	sprintf(buf, "It's current %s is %d", ((tobj->isBluntWeapon() ? "bluntness" : (tobj->isPierceWeapon() ? "pointiness" : "sharpness"))), tobj->getCurSharp()); 
-	me->doSay(buf);
-	sprintf(buf, "It has a Damage Level of %.2f", tobj->getWeapDamLvl() / 4.0);
-	me->doSay(buf);
-	sprintf(buf, "It has a Damage Deviation of %d", tobj->getWeapDamDev());
-	me->doSay(buf);
-	double base = tobj->baseDamage();
-	double flux = base * tobj->getWeapDamDev() / 10;
-	sprintf(buf, "It's damage when swung will be between %d and %d",
-		(int) (base - (int) flux),
-		(int) (base + (int) flux));
-	me->doSay(buf);
-	sprintf(buf, "It's average damage is about %d", (int) tobj->baseDamage());
-	me->doSay(buf);
-	sprintf(buf, "This weapon is of the %s type.",
-		attack_hit_text[(tobj->getWtype() - TYPE_MIN_HIT)].singular);
-	me->doSay(buf);
-      } else {
-	// skip and move on
-      }
-      for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
-	if(obj_index[item->getItemIndex()].virt <= zone_table[zone].top){
-	  sprintf(buf, "%s came from %s.", item->shortDescr, zone_table[zone].name);
-	  me->doSay(buf);
-          break;
-	}
-      }
-      // xxxxxxx
-      sprintf(buf, "Thank you for your business, Come again!");
+      ch->sendTo("%s concentrates deeply on %s.\n\r", me->getName(), item->getName());
+      ch->sendTo("%s conjours a cloud of smoke.\n\rInside the cloud of smoke you see...\n\r", me->getName());
+      ch->statObjForDivman(item);
+      sprintf(buf, "Thank you, %s, for your business! Please come again!", ch->getName());
       me->doSay(buf);
       strcpy(buf, item->name);
       add_bars(buf);

@@ -486,6 +486,117 @@ void TBeing::statObj(const TObj *j)
   return;
 }
 
+void TBeing::statObjForDivman(const TObj *j)
+{
+  char buf[256];
+  TThing *t;
+  int i;
+  string str;
+
+
+  for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
+    if(obj_index[j->getItemIndex()].virt <= zone_table[zone].top){
+      sprintf(buf, "The item is from %s\n\r", zone_table[zone].name);
+      break;
+    }    
+  }
+  str += buf;
+
+  str += "It can be worn on :";
+  sprintbit(j->obj_flags.wear_flags, wear_bits, buf);
+  str += buf;
+  str += "\n\r";
+
+  str += "The item sets the character bits :";
+  sprintbit(j->obj_flags.bitvector, affected_bits, buf);
+  str += buf;
+  str += "\n\r";
+
+  str += "It's extra flags are: ";
+  sprintbit(j->getObjStat(), extra_bits, buf);
+  str += buf;
+  str += "\n\r";
+
+  sprintf(buf, "It modifies can be seen by %d.\n\r", j->canBeSeen);
+  str += buf;
+
+  sprintf(buf, "It has a volume of %d, it weighs %.1f, and has a value of %d talens.\n\r",
+    j->getVolume(),
+    j->getWeight(), j->obj_flags.cost);
+  str += buf;
+
+  sprintf(buf, "It will decay in %d, and it's structure is %d/%d.\n\r",
+    j->obj_flags.decay_time,
+    j->getStructPoints(),
+    j->getMaxStructPoints());
+  str += buf;
+
+  sprintf(buf, "Light is modified by %3d and it is made of %s\n\r",
+       j->getLight(),  material_nums[j->getMaterial()].mat_name);
+  str += buf;
+
+  str += j->statObjInfo();
+
+  sprintf(buf, "\n\rIt has %s for a special proceedure.", j->spec ? objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name : "nothing added");;
+  str += buf;
+
+  if (!j->getStuff())
+    str += "Contains : Nothing\n\r";
+  else {
+    str += "Contains :\n\r";
+    for (t = j->getStuff(); t; t = t->nextThing) {
+      str += fname(t->name);
+      str += "\n\r";
+    }
+  }
+
+  str += "The item cann affect you by:\n\r";
+  for (i = 0; i < MAX_OBJ_AFFECT; i++) {
+    if (j->affected[i].location == APPLY_SPELL) {
+      if (discArray[j->affected[i].modifier]) {
+        sprintf(buf, "   Affects:  %s: %s by %ld\n\r",
+            apply_types[j->affected[i].location].name,
+            discArray[j->affected[i].modifier]->name,
+            j->affected[i].modifier2);
+        str += buf;
+      } else
+        vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", j->affected[i].modifier, 
+              j->getName());
+    } else if (j->affected[i].location == APPLY_DISCIPLINE) {
+     if (discNames[j->affected[i].modifier].disc_num) {
+        sprintf(buf, "   Affects:  %s: %s by %ld\n\r",
+            apply_types[j->affected[i].location].name,
+            discNames[j->affected[i].modifier].practice,
+            j->affected[i].modifier2);
+        str += buf;
+      } else
+        vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", j->affected[i].modifier,
+              j->getName());
+    } else if (j->affected[i].location == APPLY_IMMUNITY) {
+      sprintf(buf, "   Affects:  %s: %s by %ld\n\r",apply_types[j->affected[i].location].name,
+        immunity_names[j->affected[i].modifier], j->affected[i].modifier2);
+      str += buf;
+    } else if (j->affected[i].location != APPLY_NONE) {
+      sprintf(buf, "   Affects:  %s by %ld\n\r",apply_types[j->affected[i].location].name,
+        j->affected[i].modifier);
+      str += buf;
+    }
+  }
+  for (i = 0; i < MAX_SWING_AFFECT; i++) {
+    if (j->oneSwing[i].type != TYPE_UNDEFINED) {
+      sprintf(buf, "   One-Swing Affect: %s\n\r",
+           affected_bits[j->oneSwing[i].bitvector]);
+      str += buf;
+      sprintf(buf, "        Effects: %s by %ld\n\r",
+           apply_types[j->oneSwing[i].location].name, 
+           j->oneSwing[i].modifier);
+      str += buf;
+    }
+  }
+  desc->page_string(str.c_str());
+  return;
+}
+
 void TBeing::statBeing(TBeing *k)
 {
   affectedData *aff, *af2;

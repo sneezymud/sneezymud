@@ -1435,6 +1435,7 @@ class TBeing : public TThing {
     void statRoom(TRoom *);
     void statZone(const char *);
     void statObj(const TObj *);
+    void statObjForDivman(const TObj *);
     void statBeing(TBeing *);
     virtual void doChange(const char *);
     void lowRace(const char *);
