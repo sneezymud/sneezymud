@@ -1805,40 +1805,6 @@ int tormentor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *, TObj *)
   return TRUE;
 }
 
-int fighter(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
-{
-  int rc = 0;
-  TBeing *vict;
-
-  if ((cmd != CMD_MOB_COMBAT) || !ch->awake())
-    return (FALSE);
-
-  if (ch->getWait() > 0)
-    return FALSE;
-
-  if ((vict = ch->fight())) {
-    if (ch->getPosition() >= POSITION_SITTING) {
-      rc = ch->fighterMove(*vict);
-      if (IS_SET_DELETE(rc, DELETE_VICT)) {
-        delete vict;
-        vict = NULL;
-      }
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      if (rc)
-        return rc;
-    } else {
-      rc = ch->standUp();
-      if (rc)
-        return rc;
-    }
-
-    rc = ch->findABetterWeapon();
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-  }
-  return TRUE;
-}
 
 
 int StatTeller(TBeing *pch, cmdTypeT cmd, const char *, TMonster *, TObj *)
@@ -7498,7 +7464,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE, "janitor", janitor},        // 5 
   {FALSE, "tormentor", tormentor},
   {FALSE, "Trainer: air", CDGenericTrainer},
-  {TRUE, "fighter", fighter},
+  {TRUE, "BOGUS", bogus_mob_proc},
   {TRUE, "thrower mob", ThrowerMob},
   {TRUE, "swallower", Tyrannosaurus_swallower},                // 10 
   {TRUE, "bounty hunter", bounty_hunter},
