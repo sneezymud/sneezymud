@@ -3,6 +3,9 @@
 ## SneezyMUD - All rights reserved, SneezyMUD Coding Team
 ##
 ## $Log: makefile,v $
+## Revision 1.5  1999/10/07 21:11:58  batopr
+## *** empty log message ***
+##
 ## Revision 1.4  1999/10/07 14:30:47  batopr
 ## Added statistics.h for spec_rooms.o
 ##
@@ -297,6 +300,7 @@ $(OBJDIR)cmd_grapple.o: combat.h
 $(OBJDIR)cmd_headbutt.o: combat.h
 $(OBJDIR)cmd_quivpalm.o: combat.h
 $(OBJDIR)cmd_sedit.o: combat.h dirsort.h
+$(OBJDIR)cmd_set.o: statistics.h
 $(OBJDIR)cmd_stab.o: combat.h disease.h
 $(OBJDIR)cmd_steal.o: disc_looting.h
 $(OBJDIR)cmd_stomp.o: combat.h
