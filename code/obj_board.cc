@@ -378,7 +378,7 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
   }
   if (!ch->isImmortal() && me->objVnum()==FACT_BOARD_LOGRUS && 
       ch->getFaction()!=FACT_CULT){
-    ch->sendTo("This board is for the Order of Serpents only.\n\r");
+    ch->sendTo("This board is for the Cult of Logrus only.\n\r");
     return TRUE;
   }
   if (me->getBoardLevel() > ch->GetMaxLevel()) {
