@@ -488,6 +488,7 @@ int TMainSocket::gameLoop()
   sstring str;
   int count;
   struct timeval timespent;
+  bool doneStockHistory=false;
 
   avail_descs = 150;		
   
@@ -620,9 +621,13 @@ int TMainSocket::gameLoop()
 
     if(time_info.seconds==0 &&
        time_info.hours==0 &&
-       time_info.minutes==0){
+       time_info.minutes==0 &&
+       !doneStockHistory){
       // once per mud day hopefully
       updateStockHistory();
+      doneStockHistory=true;
+    } else {
+      doneStockHistory=false;
     }
 
     if (!combat){
