@@ -897,6 +897,40 @@ void TBeing::wipeChar(int)
   accStat.player_count--;
 }
 
+
+time_t lastAccountLogin(string name)
+{
+  string fileName = "account/";
+  fileName += LOWER(name[0]);
+  fileName += "/";
+  fileName +=  lower(name);
+  time_t ct = 0;
+
+  DIR *dfd;
+  struct dirent *dp;
+
+  if (!(dfd = opendir(fileName.c_str()))) {
+    vlogf(LOG_FILE, "Unable to walk directory for character listing (%s account)", name.c_str());
+    return 0;
+  }
+  while ((dp = readdir(dfd))) {
+    if (!strcmp(dp->d_name, "account") || !strcmp(dp->d_name, "comment") ||
+        !strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
+      continue;
+
+    charFile st;
+
+    load_char(dp->d_name, &st);
+
+    if(st.last_logon > ct)
+      ct=st.last_logon;
+  }
+  closedir(dfd);
+  return ct;
+}
+
+
+
 void do_the_player_stuff(const char *name)
 {
   char buf[128];
@@ -1117,48 +1151,38 @@ void do_the_player_stuff(const char *name)
       time_t ltime = time(0);
       tm *curtime;
       curtime = localtime(&ltime);
-      // don't delete files during school breaks */
-      // valid delete dates: jan 15 - may 15 sep 14 - dec 25
-      if ((curtime->tm_mon == 0 && curtime->tm_mday >=15) ||
-          (curtime->tm_mon == 1) ||   // february
-          (curtime->tm_mon == 2) ||   // march
-          (curtime->tm_mon == 3) ||   // april
-          (curtime->tm_mon == 4 && curtime->tm_mday < 15) ||
-          (curtime->tm_mon == 8 && curtime->tm_mday >= 14) ||
-          (curtime->tm_mon == 9) ||   // october
-          (curtime->tm_mon == 10) ||  // november
-          (curtime->tm_mon == 11 && curtime->tm_mday < 25) ||
-          rent_only_deletion) {
+      time_t lastlogin=lastAccountLogin(st.aname);
 
-        // This gives a player at least 3 weeks before delete occurs
-        // after a week, they get level days before wipe
-        if ((time(0) - st.last_logon) > (max((byte) 21, max_level) * SECS_PER_REAL_DAY)) {
-          if (!rent_only_deletion) {
-            vlogf(LOG_MISC, "%s (level %d) did not log in for %d days. Deleting.", 
-                name,
-                max_level, ((time(0) - st.last_logon)/SECS_PER_REAL_DAY));
-            wipePlayerFile(name);
-            sprintf(buf, "rm account/%c/%s/%s",
-                  LOWER(st.aname[0]), lower(st.aname).c_str(), lower(name).c_str());
-            vsystem(buf);
-            wipeRentFile(name);
-            wipeCorpseFile(lower(name).c_str());
-            return;
-          } else {
-            sprintf(buf, "rent/%c/%s", LOWER(name[0]), lower(name).c_str());
-            if ((fp = fopen(buf, "r"))) {
-              fclose(fp);
-              vlogf(LOG_MISC, "%s (level %d) did not log in for %d days. Deleting rent.",
-                name, max_level, ((time(0) - st.last_logon)/SECS_PER_REAL_DAY));
-              wipeRentFile(name);
-              wipeCorpseFile(lower(name).c_str());
-              sprintf(longbuf, "%s detected this character has been inactive for %ld days.  To avoid\n\r", MUD_NAME, ((time(0) - st.last_logon)/SECS_PER_REAL_DAY));
-              sprintf(longbuf + strlen(longbuf), "having equipment tied up on players that no longer play, players that have not\n\rconnected within a reasonable length of time have their rent files removed in\n\rorder for that equipment to go back into circulation.  Due to your inactivity,\n\ryour rent file has been wiped.  The %s administration apologizes\n\rfor any inconvenience this may cause.  Reimbursements for this eventuality\n\rare not typically granted since the item(s) in question have gone back into\n\rgeneral circulation, however an extremely basic set of equipment (newbie), and\n\rsimple adventuring supplies (lantern, food, drink) may be requested that you\n\rbe able to bootstrap your way back up the ladder.\n\r\n\rIf, however, you made arrangements prior to going inactive for things of\n\ryours to be preserved in stasis, then whatever deal was made at that time\n\rmay apply.  If such is the case, contact whichever 59+ immortal placed\n\ryour character into stasis.\n\r\n\rOn a final note, welcome back!\n\r", MUD_NAME);
-              autoMail(NULL, name, longbuf);
-            }
-          }
-          // rent_only deletion should fall through here
-        }
+      // This gives a player at least 3 months before delete occurs
+      if((time(0) - lastlogin) > (90 * SECS_PER_REAL_DAY)){
+	if (!rent_only_deletion) {
+	  vlogf(LOG_MISC, "%s (level %d) did not log in for %d days. Deleting.", 
+		name,
+		max_level, ((time(0) - lastlogin)/SECS_PER_REAL_DAY));
+	  wipePlayerFile(name);
+	  sprintf(buf, "rm account/%c/%s/%s",
+		  LOWER(st.aname[0]), lower(st.aname).c_str(), lower(name).c_str());
+	  vsystem(buf);
+	  wipeRentFile(name);
+	  wipeCorpseFile(lower(name).c_str());
+	  return;
+	} else {
+	  sprintf(buf, "rent/%c/%s", LOWER(name[0]), lower(name).c_str());
+	  if ((fp = fopen(buf, "r"))) {
+	    fclose(fp);
+	    vlogf(LOG_MISC, "%s (level %d) did not log in for %d days. Deleting rent.",
+		  name, max_level, ((time(0) - lastlogin)/SECS_PER_REAL_DAY));
+	    wipeRentFile(name);
+	    wipeCorpseFile(lower(name).c_str());
+
+	    sprintf(longbuf, "%s detected this character has been inactive for %ld days.  To avoid\n\r", MUD_NAME, ((time(0) - lastlogin)/SECS_PER_REAL_DAY));
+	    sprintf(longbuf + strlen(longbuf), "having equipment tied up on players that no longer play, players that have not\n\rconnected within a reasonable length of time have their rent files removed in\n\rorder for that equipment to go back into circulation.  Due to your inactivity,\n\ryour rent file has been wiped.  The %s administration apologizes\n\rfor any inconvenience this may cause.  Reimbursements for this eventuality\n\rare not typically granted since the item(s) in question have gone back into\n\rgeneral circulation, however an extremely basic set of equipment (newbie), and\n\rsimple adventuring supplies (lantern, food, drink) may be requested that you\n\rbe able to bootstrap your way back up the ladder.\n\r\n\rIf, however, you made arrangements prior to going inactive for things of\n\ryours to be preserved in stasis, then whatever deal was made at that time\n\rmay apply.  If such is the case, contact whichever 59+ immortal placed\n\ryour character into stasis.\n\r\n\rOn a final note, welcome back!\n\r", MUD_NAME);
+
+
+	    autoMail(NULL, name, longbuf);
+	  }
+	}
+	// rent_only deletion should fall through here
       }
     }
     if (max_level <= MAX_MORT)
@@ -2154,3 +2178,4 @@ int listAccount(string name, string &buf)
   closedir(dfd);
   return count;
 }
+

@@ -92,7 +92,7 @@ int init_game_stats(void)
   // Enabling this makes game look at player activity to decide
   // if deleting should occur.  This MUST be true for ANY form of
   // deleting to occur
-  auto_deletion = FALSE;
+  auto_deletion = TRUE;
 
   // This forces the deleting to ONLY be for rent files.  Otherwise,
   // both the rent file AND the player file will be deleted.  If neither
