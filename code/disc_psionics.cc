@@ -515,7 +515,7 @@ void TBeing::doTelevision(const char *arg)
     }
   }
 
-  if (vict->isImmortal()) {
+  if (vict->isImmortal() || vict->specials.act & ACT_IMMORTAL) {
     nothingHappens(SILENT_YES);
     act("Look through the eyes of an immortal?  I think not!",
         false, this, 0, 0, TO_CHAR);
