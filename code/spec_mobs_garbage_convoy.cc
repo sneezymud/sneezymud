@@ -5,11 +5,70 @@
 // logrus town square.  he picks up trash and the surplus and dumps and
 // drops it off in the logrus town square.
 
+//paths:
+
+/*
+CS to amber
+CS to surplus
+CS to brightmoon
+CS to logrus
+*/
+
+const int CART_VNUM = 33270;
+
+
+void dropAllCart(TMonster *myself, TObj *cart)
+{
+  for(int i=0;i<10 && cart->getStuff();++i){
+    myself->doGet("all cart");
+    myself->doDrop("all", NULL);
+  }
+}
+
+void putAllCart(TMonster *myself, TObj *cart)
+{
+  for(int i=0;i<10 && myself->roomp->getStuff();++i){
+    myself->doGet("all");
+    myself->doPut("all cart");
+  }
+}
+
+
+void moveCart(TMonster *mob, TObj *cart)
+{
+  --(*cart);
+  *mob->roomp += *cart;
+}
+
+TObj *findCart(TMonster *mob)
+{
+  TThing *t = NULL;
+  TObj *cart = NULL;
+
+  for (t = mob->roomp->getStuff(); t; t = t->nextThing) {
+    if (!(cart = dynamic_cast<TObj *>(t))) {
+      continue;
+    }
+    if (obj_index[cart->getItemIndex()].virt ==  CART_VNUM)
+      break;
+  }
+  if (!cart || obj_index[cart->getItemIndex()].virt != CART_VNUM) {
+    if(!(cart = read_object(CART_VNUM, VIRTUAL))){
+      vlogf(LOG_LOW, fmt("Error loading cart in spec_mobs_garbage_convoy.cc"));
+      return NULL;
+    }
+    *mob->roomp += *cart;
+  }
+  return cart;
+}
+  
+
+
 int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
   int rc;
   TThing *t=NULL;
-  TObj *o;
+  TObj *o, *cart;
   roomDirData *exitp;
   followData *f, *n;
   TBeing *vict;
@@ -28,25 +87,16 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     STATE_LOGRUS_TO_CS    // logrus to cs
   };
 
-  enum whichDumpT {
-    DUMP_BM,
-    DUMP_AMBER,
-    DUMP_LOGRUS,
-    DUMP_GH
-  };
-
   class hunt_struct {
     public:
       int cur_pos;
       int cur_path;
       hunt_stateT state;
-      whichDumpT which;
 
       hunt_struct() :
         cur_pos(0),
         cur_path(0),
-        state(STATE_BM_RETURNING),
-	which((whichDumpT)::number(DUMP_BM, DUMP_GH))
+        state(STATE_TO_CS)
       {
       }
       ~hunt_struct()
@@ -63,6 +113,8 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
   if ((cmd != CMD_GENERIC_PULSE &&
        cmd != CMD_GENERIC_QUICK_PULSE) || !myself->awake() || myself->fight())
     return FALSE;
+
+  cart=findCart(myself);
 
   // Not doing anything yet, time to start the convoy
   if (!myself->act_ptr) {
@@ -99,57 +151,72 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
       break;
     case STATE_TO_CS:
       if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
-	if(job->which == DUMP_BM){
-	  job->cur_path=1;
-	  job->cur_pos=0;
-	  job->state=STATE_TROLLEY_TO;
-	} else if(job->which == DUMP_LOGRUS){
+	if(!cart->getStuff()){
+	  switch(::number(0,3)){
+	    case 0:
+	      job->cur_path=1;
+	      job->cur_pos=0;
+	      job->state=STATE_TROLLEY_TO;
+	      break;
+	    case 1:
+	      job->cur_path=4;
+	      job->cur_pos=0;
+	      job->state=STATE_TO_AMBER_DUMP;
+	      break;
+	    case 2:
+	      job->cur_path=3;
+	      job->cur_pos=0;
+	      job->state=STATE_TO_GH_DUMP;
+	      break;
+	  }
+	} else {
 	  job->cur_path=6;
 	  job->cur_pos=0;
 	  job->state=STATE_TO_LOGRUS_DUMP;
-	} else if(job->which == DUMP_AMBER){
-	  job->cur_path=4;
-	  job->cur_pos=0;
-	  job->state=STATE_TO_AMBER_DUMP;
-	} else {
-	  job->cur_path=3;
-	  job->cur_pos=0;
-	  job->state=STATE_TO_GH_DUMP;
 	}
       }
       break;
     case STATE_TO_LOGRUS_DUMP:
       if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
-	myself->doDrop("all", NULL);
+	// we do this to distribute the junk around the plaza
+	if(::number(0,8)){
+	  myself->wanderAround();
+	  moveCart(myself, cart);
+	}
+
+	dropAllCart(myself, cart);
 
 	job->cur_path=7;
 	job->cur_pos=0;
 	job->state=STATE_LOGRUS_TO_CS;
-      }
+      } else
+	moveCart(myself, cart);
       break;
     case STATE_LOGRUS_TO_CS:
       if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
-	job->cur_path=3;
+	job->cur_path=0;
 	job->cur_pos=0;
-	job->state=STATE_TO_GH_DUMP;
-      }
+	job->state=STATE_TO_CS;
+      } else
+	moveCart(myself, cart);
       break;
     case STATE_TO_AMBER_DUMP:
       if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
-
-	myself->doGet("all");
+	putAllCart(myself, cart);
 
 	job->cur_path=5;
 	job->cur_pos=0;
 	job->state=STATE_AMBER_TO_CS;
-      }
+      } else
+	moveCart(myself, cart);      
       break;
     case STATE_AMBER_TO_CS:
       if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
-	job->cur_path=3;
+	job->cur_path=0;
 	job->cur_pos=0;
-	job->state=STATE_TO_GH_DUMP;
-      }
+	job->state=STATE_TO_CS;
+      } else
+	moveCart(myself, cart);
       break;
     case STATE_TROLLEY_TO:
       if(myself->inRoom()==ROOM_TROLLEY){
@@ -172,37 +239,40 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	    break;
 	  }
 	}
+	moveCart(myself, cart);
       }
       break;
     case STATE_BM_DELIVERING:
       if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
-	myself->doGet("all");
+	putAllCart(myself, cart);
 
 	job->cur_path=2;
 	job->cur_pos=0;
 	job->state=STATE_BM_RETURNING;
-      }
+      } else
+	moveCart(myself, cart);
       break;
     case STATE_BM_RETURNING:
       if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
 	job->cur_path=3;
 	job->cur_pos=0;
 	job->state=STATE_TROLLEY_RET;
-      }
+      } else
+	moveCart(myself, cart);
       break;
     case STATE_TROLLEY_RET:
       if(myself->inRoom()==ROOM_TROLLEY){
         exitp = myself->roomp->exitDir(DIR_NORTH);
 
 	if(exitp->to_room == ROOM_CS){
-	  rc=myself->goDirection(garbage_convoy_path[job->cur_path][job->cur_pos + 1].direction);
+	  rc=myself->goDirection(DIR_NORTH);
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	    return DELETE_THIS;
 	  }
 	  
 	  job->cur_pos=0;
-	  job->cur_path=3;
-	  job->state=STATE_TO_GH_DUMP;
+	  job->cur_path=0;
+	  job->state=STATE_TO_CS;
 	}
       } else {
 	for(t=myself->roomp->getStuff();t;t=t->nextThing){
@@ -211,6 +281,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	    break;
 	  }
 	}
+	moveCart(myself, cart);
       }
       break;
     case STATE_TO_GH_DUMP:
@@ -227,12 +298,13 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	delete static_cast<hunt_struct *>(myself->act_ptr);
 	myself->act_ptr = NULL;
 
-	myself->doGet("all");
+	putAllCart(myself, cart);
 
 	job->cur_pos=0;
 	job->cur_path=0;
 	job->state=STATE_TO_CS;
-      }
+      } else
+	moveCart(myself, cart);
       break;
   }
 
