@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: structs.cc,v $
+// Revision 1.3  1999/10/07 02:04:21  batopr
+// *** empty log message ***
+//
 // Revision 1.2  1999/09/28 19:06:03  lapsos
 // Owners will now ignore, totally, creators.
 //
@@ -2021,7 +2024,7 @@ affectedData::~affectedData()
 
 bool affectedData::canBeRenewed() const
 {
-  return renew >= 0 && duration <= renew;
+  return ((renew >= 0) && (duration <= renew));
 }
 
 bool affectedData::shouldGenerateText() const

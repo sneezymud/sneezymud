@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: handler.cc,v $
+// Revision 1.2  1999/10/07 02:03:43  batopr
+// *** empty log message ***
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -836,7 +839,6 @@ void TBeing::affectTo(affectedData *af, int renew, silentTypeT silent)
 
   affectChange(origamt, silent);
 }
-
 
 void TBeing::affectRemove(affectedData *af, silentTypeT silent)
 {
