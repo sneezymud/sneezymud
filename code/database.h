@@ -138,7 +138,7 @@ class TDatabaseConnection
       vlogf(LOG_DB, "Initializing database 'immortal'.");
       
       vlogf(LOG_DB, "Connecting to database.");
-      if(!(immodb=PQconnectdb("immortal"))){
+      if(!(immodb=PQconnectdb("dbname=immortal"))){
 	vlogf(LOG_DB, "Could not connect to database 'immortal'.");
 	return NULL;
       }
@@ -152,7 +152,7 @@ class TDatabaseConnection
       vlogf(LOG_DB, "Initializing database 'sneezyglobal'.");
       
       vlogf(LOG_DB, "Connecting to database.");
-      if(!(sneezyglobaldb=PQconnectdb("sneezyglobal"))){
+      if(!(sneezyglobaldb=PQconnectdb("dbname=sneezyglobal"))){
 	vlogf(LOG_DB, "Could not connect to database 'sneezyglobal'.");
 	return NULL;
       }
