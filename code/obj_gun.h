@@ -52,6 +52,8 @@ class TGun : public TGenWeapon {
     void setAmmo(TAmmo *a) { ammo=a; }
     TAmmo *getAmmo() const { return ammo; }
 
+
+    int shootMeBow(TBeing *, TBeing *, unsigned int, dirTypeT, int);
     virtual int suggestedPrice() const;
     virtual weaponT TGun::getWeaponType(int) const { return WEAPON_TYPE_SHOOT; }
     virtual itemTypeT itemType() const { return ITEM_GUN; }

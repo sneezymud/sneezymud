@@ -219,7 +219,10 @@ int TArrow::throwMe(TBeing *ch, dirTypeT, const char *)
 
 spellNumT TArrow::getWtype() const
 {
-  return TYPE_PIERCE;
+  if(objVnum() == 31864)
+    return TYPE_SHOOT;
+  else
+    return TYPE_PIERCE;
 }
 
 void TArrow::evaluateMe(TBeing *ch) const

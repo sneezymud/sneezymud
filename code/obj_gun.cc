@@ -9,7 +9,7 @@
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
-
+#include "range.h"
 
 enum ammoTypeT {
   AMMO_NONE = 0,                // 0
@@ -415,4 +415,72 @@ string TGun::showModifier(showModeT tMode, const TBeing *tBeing) const
                                                               
   return tString;                                             
 }
+
+int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir, int shoot_dist)
+{
+  TAmmo *ammo;
+  TObj *bullet;
+  char  buf[256];
+  
+  if (targ &&
+      ch->checkPeacefulVictim("They are in a peaceful room. You can't seem to fire the gun.\n\r", targ))
+    return FALSE;
+
+  if (targ && ch->noHarmCheck(targ))
+    return FALSE;
+
+  string capbuf, capbuf2;
+  
+  ch->addToWait(combatRound(2));
+  int rof=getROF();
+
+  while(rof--){
+    if(!(ammo=dynamic_cast<TAmmo *>(getAmmo())) || ammo->getRounds()<=0){
+      act("Click.  $N is out of ammunition.", TRUE, this, NULL, this, TO_CHAR);
+      // keep looping to simulate trigger pulls - looks cooler
+      continue;
+    }
+
+    // grab a bullet object and decrement gun ammo
+    bullet=read_object(31864, VIRTUAL);
+    ammo->setRounds(ammo->getRounds()-1);
+    dropSpentCasing(ch->roomp, ammo->getAmmoType());
+    
+    // send messages
+    capbuf = colorString(ch, ch->desc, bullet->getName(), NULL, COLOR_OBJECTS, TRUE);
+    capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
+    
+    if (targ)
+      ch->sendTo(COLOR_MOBS, "You shoot %s out of %s at %s.\n\r",
+		 good_uncap(capbuf).c_str(), good_uncap(capbuf2).c_str(),
+		 targ->getName());
+    else
+      ch->sendTo("You shoot %s out of %s.\n\r",
+		 good_uncap(capbuf).c_str(), 
+		 good_uncap(capbuf2).c_str());
+    
+    sprintf(buf, "$n points $p %swards, and shoots $N out of it.",
+	    dirs[dir]);
+    act(buf, FALSE, ch, this, bullet, TO_ROOM);
+    
+    // put the bullet in the room and then "throw" it
+    *ch->roomp += *bullet;    
+    
+    int rc = throwThing(bullet, dir, ch->in_room, &targ, shoot_dist, 10, ch);
+
+    // delete the bullet afterwards, arbitrary decision
+    // since they are arrow type and you usually don't find spent lead anyway
+    delete bullet;
+    bullet = NULL;
+
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      delete targ;
+      targ = NULL;
+      return FALSE;
+    }
+  }
+
+  return FALSE;
+}
+
 
