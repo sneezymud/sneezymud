@@ -22,4 +22,4 @@ class TTiming {
 
 
 
-#endif __TIMING_H
+#endif
