@@ -61,7 +61,11 @@ TMoney *create_money(int amount)
   TObj *obj;
   TMoney *money;
 
-  mud_assert(amount > 0, "ERROR: Try to create negative money.");
+  
+  if(amount<0){
+    vlogf(LOG_BUG, "ERROR: Try to create negative money (%i).", amount);
+    amount=1;
+  }
 
   obj = read_object(GENERIC_TALEN, VIRTUAL);
   money = dynamic_cast<TMoney *>(obj);
