@@ -346,6 +346,8 @@ enum liqTypeT {
      LIQ_LUBRICATION,
      LIQ_MAGICAL_ELIXIR,
      LIQ_URINE,
+     LIQ_POT_HEALING_GRASP,
+     LIQ_POT_CLEANSE,
      MAX_DRINK_TYPES     // move and change
 };
 extern liqTypeT & operator++(liqTypeT &, int);

@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_shaman_healing.h,v $
+// Revision 5.4  2003/09/05 17:06:41  peel
+// added two new potions
+// healing grasp and cleanse
+//
 // Revision 5.3  2002/11/21 02:48:56  jesus
 // added enliven spell and updated the fireball weapon proc a little
 //
@@ -60,7 +64,7 @@ private:
    void healingGrasp(TBeing *, TBeing *);
    int castHealingGrasp(TBeing *, TBeing *);
    void healingGrasp(TBeing *, TBeing *, TMagicItem *, spellNumT);
-   int healingGrasp(TBeing *, TBeing *, int, byte, spellNumT);
+   int healingGrasp(TBeing *, TBeing *, int, byte, spellNumT, int=0);
 
    int enliven(TBeing *, TBeing *, int, byte);
    void enliven(TBeing *, TBeing *, TMagicItem *);

@@ -2499,6 +2499,12 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
     case LIQ_POT_SLUMBER:
       slumber(ch,vict,level,learn);
       break;
+    case LIQ_POT_HEALING_GRASP:
+      healingGrasp(ch,vict,level,learn,SPELL_HEALING_GRASP);
+      break;
+    case LIQ_POT_CLEANSE:
+      cleanse(ch,vict,level,learn,SPELL_CLEANSE);
+      break;
     case LIQ_POT_MULTI1: // harm crit, infravision, armor
       harmCritical(ch,vict,level,learn,SPELL_HARM_CRITICAL,0);
       infravision(ch,vict,level,learn);
