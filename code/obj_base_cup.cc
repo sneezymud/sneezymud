@@ -425,7 +425,6 @@ void TBaseCup::updateDesc()
   }
 
   if(getDrinkUnits()<=0){
-    genericEmpty();
     liquid="an empty";
   } else {
     ssprintf(liquid, "a %s", DrinkInfo[getDrinkType()]->color);
