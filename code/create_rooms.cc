@@ -1261,16 +1261,17 @@ void TPerson::doEdit(const char *arg)
 	  tStr = "";
 	}
 
-	if (word.find_first_of(punctuation) != string::npos) { // word has punctuation
-	  word += " "; // so add extra spaces to the end.
-	  // note: this is sort of a hack, because words like sjdgh:jdsgh will trigger it...
-	  // but if they want to put crap like that in they can format it themselves, damnit.
-	}
-	if (line.length() + word.length() > 78) {// word is too long, end line and start on next
+
+	if ((line.length() - 1) + (word.length() - 1) > 80) {// word is too long, end line and start on next
 	  line += "\n\r";
 	  newDescr += line;
 	  line = word;
 	} else { // word fits ok on line
+	  if (word.find_first_of(punctuation) != string::npos) { // word has punctuation
+	    word += " "; // so add extra spaces to the end.
+	    // note: this is sort of a hack, because words like sjdgh:jdsgh will trigger it...
+	    // but if they want to put crap like that in they can format it themselves, damnit.
+	  }
 	  line += " ";
 	  line += word;
 	}
