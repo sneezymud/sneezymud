@@ -177,7 +177,8 @@ const int SPEC_STOCK_BROKER       =191;
 const int SPEC_BANKER             =192;
 const int SPEC_PRISON_JANITOR     =193;
 const int SPEC_CAT                =194;
-const int NUM_MOB_SPECIALS        =194;
+const int SPEC_TAXMAN             =195;
+const int NUM_MOB_SPECIALS        =195;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

@@ -7982,6 +7982,7 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 }
 
 
+extern int taxman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int banker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int stockBroker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int loanShark(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -8200,6 +8201,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "banker", banker},
   {FALSE, "prison janitor", prisonJanitor},
   {TRUE, "cat", cat},
+  {FALSE, "taxman", taxman}, // 195
 // replace non-zero, bogus_mob_procs above before adding
 };
 

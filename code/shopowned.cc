@@ -72,38 +72,47 @@ TShopOwned::TShopOwned(int shop_nr, TMonster *keeper, TBeing *ch) :
 
 void TShopOwned::chargeTax(TObj *o, int cost)
 {
-  int gh_tax_office=14; // shop number
-  
+  int tax_office;
+  TDatabase db(DB_SNEEZY);
+
   // no tax for messing with inventory if you own the shop
   if(hasAccess(SHOPACCESS_OWNER))
     return;
 
-  cost = (int)((float)cost * shop_index[gh_tax_office].getProfitBuy(o, ch));
+  db.query("select tax_nr from shopownedtax where shop_nr=%i", shop_nr);
+
+  // no entry, no tax
+  if(!db.fetchRow())
+    return;
+
+  tax_office=convertTo<int>(db["tax_nr"]);
+
+  cost = (int)((float)cost * shop_index[tax_office].getProfitBuy(o, ch));
   
   TBeing *t;
   for(t=character_list;t;t=t->next){
-    if(t->mobVnum()==mob_index[shop_index[gh_tax_office].keeper].virt)
+    if(t->mobVnum()==mob_index[shop_index[tax_office].keeper].virt)
       break;
   }
 
   TBeing *taxman;
   if(!t || !(taxman=dynamic_cast<TMonster *>(t))){
     vlogf(LOG_PEEL, fmt("taxman not found %i") % 
-	  shop_index[gh_tax_office].keeper);
+	  shop_index[tax_office].keeper);
     return;
   }
 
   keeper->giveMoney(taxman, cost, GOLD_SHOP);
   keeper->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
   dynamic_cast<TMonster *>(taxman)->saveItems(fmt("%s/%d") % 
-					      SHOPFILE_PATH % gh_tax_office);
+					      SHOPFILE_PATH % tax_office);
   
   shoplog(shop_nr, keeper, keeper, o->getName(), 
 	  -cost, "paying tax");
-  shoplog(gh_tax_office, keeper, dynamic_cast<TMonster *>(taxman),
+  shoplog(tax_office, keeper, dynamic_cast<TMonster *>(taxman),
 	  o->getName(), cost, "tax");
 
-  TShopOwned tso(gh_tax_office, dynamic_cast<TMonster *>(taxman), keeper);
+  TShopOwned tso(tax_office, dynamic_cast<TMonster *>(taxman), keeper);
   tso.doReserve();
 }
 
