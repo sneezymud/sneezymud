@@ -7195,8 +7195,10 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   cookie->assignFourValues(3,0,0,0); // 3 food value, no flags
   *ch += *cookie;  // give back to owner
 
-  ch->sendTo(COLOR_OBJECTS, "You tear open %s and pull out %s.\n\r",
-	     cookie->shortDescr, fortune->shortDescr);
+  ssprintf(buf, "$n tears open $p and pulls out %s.", fortune->shortDescr);
+  act(buf.c_str(),TRUE,ch,cookie,NULL, TO_ROOM,NULL);
+  ssprintf(buf, "You tear open $p and pull out %s.", fortune->shortDescr);
+  act(buf.c_str(),TRUE,ch,cookie,NULL, TO_CHAR,NULL);
 
   return true;
 }
