@@ -396,9 +396,9 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       // make 5 separate rolls so chr goes up amount based on learning
       for (i = 0; i < 5; i++)
         if (bSuccess(ch, ch->getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
-          chr += 0.02;
+          chr -= 0.02;
     }
-    chr = min((float)1.3,chr);
+    chr = max((float)1.0,chr);
 
     cost = shopPrice(1, shop_nr, chr, &discount);
 
@@ -454,9 +454,9 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       // make 5 separate rolls so chr goes up amount based on learning
       for (i = 0; i < 5; i++)
         if (bSuccess(ch, ch->getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
-          chr += 0.02;
+          chr -= 0.02;
     }
-    chr = min((float)1.3,chr);
+    chr = max((float)1.0,chr);
 
     cost = shopPrice(1, shop_nr, chr, &discount);
 
@@ -627,9 +627,9 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
     // make 5 separate rolls so chr goes up amount based on learning
     for (j = 0; j < 5; j++)
       if (bSuccess(ch, ch->getSkillValue(SKILL_SWINDLE), SKILL_SWINDLE))
-        chr += 0.02;
+        chr -= 0.02;
   }
-  chr = min((float)1.3,chr);
+  chr = max((float)1.0,chr);
 
 
   cost = sellPrice(shop_nr, chr, &discount);
@@ -1138,7 +1138,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
   chr = ch->getChaShopPenalty();
 
   // do not adjust for swindle on valueing, give them worst case price
-  chr = min((float)1.3,chr);
+  chr = max((float)1.0,chr);
 
   cost = sellPrice(shop_nr, chr, &discount);
 
@@ -1212,7 +1212,7 @@ const string TObj::shopList(const TBeing *ch, const char *arg, int iMin, int iMa
   }
   chr = ch->getChaShopPenalty();
   // do not adjust for swindle on list, give them worst case price
-  chr = min((float)1.3, chr);
+  chr = max((float)1.0, chr);
 
   cost = shopPrice(1, shop_nr, chr, &discount);
 
