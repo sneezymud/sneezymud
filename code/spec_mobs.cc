@@ -6469,6 +6469,7 @@ extern int paralyzeGaze(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int poisonBite(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 // misc external procs
+extern int paladinPatrol(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int taxman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int banker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int stockBroker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -6635,7 +6636,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE,"Trainer: spider", CDGenericTrainer},
   {FALSE,"Trainer: control", CDGenericTrainer},       // 140 
   {FALSE,"Trainer: ritualism", CDGenericTrainer},
-  {FALSE,"BOGUS", bogus_mob_proc},
+  {FALSE,"paladin patrol", paladinPatrol},
   {FALSE,"shaman guildmaster", GenericGuildMaster},
   {FALSE,"Trainer: combat", CDGenericTrainer},
   {FALSE,"Trainer: stealth", CDGenericTrainer},     // 145 
