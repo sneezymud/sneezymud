@@ -732,18 +732,28 @@ int TBeing::doPoisonWeapon(const char * argument)
   argument = one_argument(argument, namebuf);
 
   if(*namebuf){
-    if ((!(poison=searchLinkedListVis(this, namebuf, getStuff()))) &&
-	(!(poison=equipment[HOLD_RIGHT]) || !isname(namebuf, poison->name)) &&
-	(!(poison=equipment[HOLD_LEFT]) || !isname(namebuf, poison->name))){
-      sendTo("You can't find that poison.\n\r");
-      return FALSE;
+    if ((!(poison=searchLinkedListVis(this, namebuf, getStuff())))){
+      for(int m=WEAR_NOWHERE;m<MAX_WEAR;++m){
+	if((poison=equipment[m]) && isname(namebuf, poison->name))
+	  break;
+      }
+      
+      if(!poison){
+	sendTo("You can't find that poison.\n\r");
+	return FALSE;
+      }
     }
   } else {
-    if ((!(poison=searchLinkedListVis(this, "poison", getStuff()))) &&
-	(!(poison=equipment[HOLD_RIGHT]) || !isname("poison", poison->name)) &&
-	(!(poison=equipment[HOLD_LEFT]) || !isname("poison", poison->name))){
-      sendTo("You can't find any poison.\n\r");
-      return FALSE;
+    if ((!(poison=searchLinkedListVis(this, "poison", getStuff())))){
+      for(int m=WEAR_NOWHERE;m<MAX_WEAR;++m){
+	if((poison=equipment[m]) && isname("poison", poison->name))
+	  break;
+      }
+      
+      if(!poison){
+	sendTo("You can't find any poison.\n\r");
+	return FALSE;
+      }
     }
   }
 
