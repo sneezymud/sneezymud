@@ -3314,10 +3314,11 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 
   // handle ammunition
   TGun *gun;
-  if(weapon && (gun=dynamic_cast<TGun *>(weapon))){
+  if(weapon && (gun=dynamic_cast<TGun *>(weapon)) &&
+     !dynamic_cast<TMonster *>(this)){
     TAmmo *ammo;
-    if((ammo=dynamic_cast<TAmmo *>(gun->getAmmo()))
-       && ammo->getRounds()>0){
+    if((ammo=dynamic_cast<TAmmo *>(gun->getAmmo())) &&
+       ammo->getRounds()>0){
       ammo->setRounds(ammo->getRounds()-1);
       dropSpentCasing(roomp, ammo->getAmmoType());
     } else {

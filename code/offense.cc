@@ -1932,6 +1932,14 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
     fx = 0.60 * num;
     fy = 0.40 * num;
 
+    if((gun=dynamic_cast<TGun *>(prim))){
+      fx = gun->getROF();
+    }
+    if((gun=dynamic_cast<TGun *>(sec))){
+      fy = gun->getROF();
+    }
+    
+
     // MOBS
   } else if (hasClass(CLASS_MONK)) {
     // Monk PCS
