@@ -829,6 +829,7 @@ void ShowNewNews(TBeing * tBeing)
           tYear,
           tCount = 0;
   bool    tPosted = false;
+  sstring bufStr;
 
   // Report for the NEWS file
   if (!stat(NEWS_FILE, &tData))
@@ -848,7 +849,8 @@ void ShowNewNews(TBeing * tBeing)
             tBeing->sendTo("NEWS File Changes:\n\r");
           }
 
-          tBeing->sendTo("%s", tString);
+          bufStr = tString;
+          tBeing->sendTo("%s", bufStr.convertToCRLF().c_str());
 
           if (++tCount == 10) {
             tBeing->sendTo("...And there is more, SEE NEWS to see more.\n\r");
@@ -883,7 +885,8 @@ void ShowNewNews(TBeing * tBeing)
             tBeing->sendTo("Future NEWS File Changes:\n\r");
           }
 
-          tBeing->sendTo("%s", tString);
+          bufStr = tString;
+          tBeing->sendTo("%s", bufStr.convertToCRLF().c_str());
 
           if (++tCount == 10) {
             tBeing->sendTo("...And there is more, SEE NEWS to see more.\n\r");
@@ -917,7 +920,8 @@ void ShowNewNews(TBeing * tBeing)
             tBeing->sendTo("WIZNEWS File Changes:\n\r");
           }
 
-          tBeing->sendTo("%s", tString);
+          bufStr = tString;
+          tBeing->sendTo("%s", bufStr.convertToCRLF().c_str());
 
           if (++tCount == 10) {
             tBeing->sendTo("...And there is more, SEE WIZNEWS to see more.\n\r");

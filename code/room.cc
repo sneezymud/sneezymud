@@ -301,7 +301,8 @@ void TRoom::setDescr(char *tDescription)
 
 const char * TRoom::getDescr()
 {
-  return descr;
+  sstring tmp = descr;
+  return tmp.convertToCRLF().c_str();
 }
 
 bool TRoom::putInDb(int vnum)

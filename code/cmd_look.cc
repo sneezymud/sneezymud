@@ -582,9 +582,10 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                 totalFound++;
                 if (totalFound == iNum) {
                   if (roomp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
-                    desc->page_string(tmp_desc);
+                    // desc->page_string(tmp_desc);
+                    desc->page_string(autoFormatDesc(tmp_desc, false, true));
                   } else {
-                    desc->page_string(autoFormatDesc(tmp_desc, false));
+                    desc->page_string(autoFormatDesc(tmp_desc, false, false));
                   }
                   return;
                 }

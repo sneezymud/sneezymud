@@ -3363,3 +3363,19 @@ void TBeing::makeOutputPaged()
 
   desc->page_string(str);
 }
+
+const sstring sstring::convertToCRLF()
+{
+  sstring dosstr = "";
+  unsigned int len;
+
+  len = (*this).length();
+  for (unsigned int loc=0; loc < len; ++loc){
+    dosstr += (*this)[loc];
+    if ((*this)[loc] == '\n' && (*this)[loc-1] != '\r' &&
+      (loc+1) <= len && (*this)[loc+1] != '\r') {
+      dosstr += '\r';
+    }
+  }
+  return dosstr;
+}

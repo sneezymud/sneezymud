@@ -1991,4 +1991,3 @@ bool isanumber(const char *c)
       return FALSE;
   return TRUE;
 }
-

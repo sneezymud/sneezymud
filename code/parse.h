@@ -662,6 +662,7 @@ public:
   sstring() : string(){}
   sstring(const char *str) : string(str?str:"") {}
   sstring(const string &str) : string(str) {}
+  const sstring convertToCRLF();
 };
 
 
