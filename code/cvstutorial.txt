@@ -27,10 +27,10 @@ use another port if 6969 is being used.
 ---
 
 To do a code move:
-sneezymode
 cd /mud/code
 cvs update
 bmake
+sneezymode
 mvcode
 exit
 
