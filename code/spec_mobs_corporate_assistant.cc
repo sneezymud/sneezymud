@@ -1,7 +1,6 @@
 #include "stdsneezy.h"
 #include "database.h"
 
-
 int getAssets(int corp_id)
 {
   int value=0, keepernum=0;
@@ -46,23 +45,31 @@ sstring talenDisplay(int talens)
   return fmt("%i") % talens;
 }
 
-
 void corpListing(TBeing *ch, TMonster *me)
 {
   TDatabase db(DB_SNEEZY);
-  int corp_id=0;
+  int corp_id=0, val=0, gold=0, shopval=0;
+  multimap <int, sstring, std::greater<int> > m;
+  multimap <int, sstring, std::greater<int> >::iterator it;
   
-  db.query("select c.corp_id, c.name, sum(s.gold)+c.gold as gold from corporation c, shopowned so, shop s where c.corp_id=so.corp_id and so.shop_nr=s.shop_nr group by c.corp_id, c.name, c.gold order by gold desc");
+  db.query("select c.corp_id, c.name, sum(s.gold)+c.gold as gold, count(so.shop_nr) as shopcount from corporation c, shopowned so, shop s where c.corp_id=so.corp_id and so.shop_nr=s.shop_nr group by c.corp_id, c.name, c.gold order by gold desc");
   
-  me->doTell(ch->getName(), "I know about the following corporations:");
   while(db.fetchRow()){
     corp_id=convertTo<int>(db["corp_id"]);
-
-    me->doTell(ch->getName(), fmt("%-2i| %s - %s talens, %s in assets") % 
-	       corp_id % db["name"] % 
-	       talenDisplay(convertTo<int>(db["gold"])) % 
-	       talenDisplay(getAssets(corp_id)));
+    gold=convertTo<int>(db["gold"]);
+    shopval=convertTo<int>(db["shopcount"]) * 1000000;
+    val=gold+getAssets(corp_id)+shopval;
+   
+    m.insert(pair<int,sstring>(val,fmt("%-2i| %s - %s talens, %s in assets") %
+			       corp_id % db["name"] % 
+			       talenDisplay(gold) % 
+			       talenDisplay(getAssets(corp_id)+shopval)));
   }
+
+  me->doTell(ch->getName(), "I know about the following corporations:");
+
+  for(it=m.begin();it!=m.end();++it)
+    me->doTell(ch->getName(), (*it).second);
 }
 
 void corpSummary(TBeing *ch, TMonster *me, int corp_id)
