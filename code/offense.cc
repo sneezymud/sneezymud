@@ -2034,6 +2034,12 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
     if (fy > 0.0)
       fy += 0.5;
   }
+  if (affectedBySpell(SPELL_CELERITE) && getPosition() >= POSITION_STANDING) {
+    if (fx > 0.0)
+      fx += 0.5;
+    if (fy > 0.0)
+      fy += 0.5;
+  }
 
   // a penalty for attacking while on horseback
   if (dynamic_cast<TBeing *>(riding)) {
