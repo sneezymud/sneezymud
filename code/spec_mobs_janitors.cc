@@ -586,6 +586,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
   TThing *t=NULL;
   TObj *o, *cart;
   roomDirData *exitp;
+  const int DEBUG=0;
 
   enum hunt_stateT {
     STATE_NONE,
@@ -602,6 +603,24 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     STATE_TO_GH_DUMP,
     STATE_DUMP_TO_CS
   };
+
+
+  sstring hunt_text_stateT[] = {
+    "doing nothing",
+    "going to cs from gh surplus",
+    "waiting for trolley to bm",
+    "going to bm dump",
+    "going to bm fountain",
+    "waiting for trolley to gh",
+    "going to gh surplus",        // cs to gh surplus
+    "going to amber dump",  // cs to amber dump
+    "going to cs from amber",    // amber dump to cs
+    "going to logrus dump", // cs to logrus
+    "going to cs from logrus",    // logrus to cs
+    "going to gh dump",
+    "going to cs from gh dump"
+  };
+
 
   class hunt_struct {
     public:
@@ -655,8 +674,11 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     return FALSE;
 
   // speed
-  if(::number(0,2))
+  if(!DEBUG && ::number(0,2))
     return FALSE;
+
+  if(DEBUG)
+    myself->doSay(fmt("I am %s.") % hunt_text_stateT[job->state]);
 
   // now the actual actions
   switch(job->state){
@@ -666,7 +688,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
       job->state=STATE_TO_CS; 
       break;
     case STATE_TO_CS:
-      if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
 	if(!cart->getStuff()){
 	  switch(::number(0,3)){
 	    case 0:
@@ -698,7 +720,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	moveCart(myself, cart);
       break;
     case STATE_TO_GH_DUMP:
-      if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
 	dropAllCart(myself, cart);
 
 	job->cur_path=9;
@@ -708,7 +730,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	moveCart(myself, cart);
       break;
     case STATE_DUMP_TO_CS:
-      if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
 	job->cur_path=0;
 	job->cur_pos=0;
 	job->state=STATE_TO_CS;
@@ -716,7 +738,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	moveCart(myself, cart);
       break;
     case STATE_TO_LOGRUS_DUMP:
-      if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
 	putAllCart(myself, cart);
 
 	job->cur_path=7;
@@ -726,7 +748,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	moveCart(myself, cart);
       break;
     case STATE_LOGRUS_TO_CS:
-      if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
 	job->cur_path=0;
 	job->cur_pos=0;
 	job->state=STATE_TO_CS;
@@ -734,7 +756,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	moveCart(myself, cart);
       break;
     case STATE_TO_AMBER_DUMP:
-      if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
 	putAllCart(myself, cart);
 
 	job->cur_path=5;
@@ -744,7 +766,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	moveCart(myself, cart);      
       break;
     case STATE_AMBER_TO_CS:
-      if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
 	job->cur_path=0;
 	job->cur_pos=0;
 	job->state=STATE_TO_CS;
@@ -752,7 +774,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	moveCart(myself, cart);
       break;
     case STATE_TROLLEY_TO:
-      if(myself->inRoom()==ROOM_TROLLEY){
+      if(!myself->inRoom()==ROOM_TROLLEY){
         exitp = myself->roomp->exitDir(DIR_NORTH);
 
 	if(exitp->to_room == 1303){
@@ -776,7 +798,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
       moveCart(myself, cart);
       break;
     case STATE_BM_DELIVERING:
-      if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
 	putAllCart(myself, cart);
 
 	job->cur_path=2;
@@ -786,7 +808,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	moveCart(myself, cart);
       break;
     case STATE_BM_RETURNING:
-      if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
 	job->cur_path=3;
 	job->cur_pos=0;
 	job->state=STATE_TROLLEY_RET;
@@ -818,7 +840,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
       moveCart(myself, cart);
       break;
     case STATE_TO_GH_SURPLUS:
-      if(myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
+      if(!myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
 	putAllCart(myself, cart);
 
 	job->cur_pos=0;
