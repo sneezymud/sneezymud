@@ -152,8 +152,9 @@ const int SPEC_MONEY_TRAIN        =167;
 const int SPEC_ADVENTURER         =168;
 const int SPEC_TRAINER_IRON_BODY  =169;
 const int SPEC_TUDY               =170;
-const int SPEC_TATTOO_ARTIST      =171;
-const int NUM_MOB_SPECIALS        =172;
+const int SPEC_KAVOD_BARMAID      =171;
+const int SPEC_TATTOO_ARTIST      =172;
+const int NUM_MOB_SPECIALS        =173;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

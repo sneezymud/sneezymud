@@ -7301,8 +7301,8 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Adventurer", adventurer},
   {FALSE, "Trainer: iron body", CDGenericTrainer},
   {FALSE, "Tudy", tudy},
-  {FALSE, "tattoo artist", tattooArtist},
   {TRUE, "Barmaid", barmaid},
+  {FALSE, "tattoo artist", tattooArtist},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
