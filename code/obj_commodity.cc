@@ -226,7 +226,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
       keeper->addToMoney(-price, GOLD_COMM);
     }
     ch->addToMoney(price, GOLD_COMM);
-    keeper->doTell(ch->getName(), "Thanks, here's your %d talens.", price);
+    keeper->doTell(ch->getName(), fmt("Thanks, here's your %d talens.") % price);
     act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
             IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
