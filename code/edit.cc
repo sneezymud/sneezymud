@@ -89,8 +89,8 @@ void Descriptor::Edit(char *arg)
         connected = CON_PLYNG;
   
         EchoOn();
-        write(socket->sock, test, 4);
-        write(socket->sock, test2, 4);
+        write(socket->m_sock, test, 4);
+        write(socket->m_sock, test2, 4);
         break;
       case ('M' & 037):
         writeToQ("\n\r");
