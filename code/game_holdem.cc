@@ -17,6 +17,7 @@ bool TBeing::checkHoldem(bool inGame = false) const
 
 void HoldemGame::nextRound(TBeing *ch)
 {
+  nraises_round=0;
   switch(state){
     case STATE_NONE:
       break;
@@ -555,11 +556,18 @@ void HoldemGame::raise(TBeing *ch, const sstring &arg)
     ch->sendTo("It's not your turn.\n\r");
     return;
   }
+  
+  if(nraises_round>=3){
+    ch->sendTo("The maximum number of raises have already occurred.\n\r");
+    return;
+  }
+  nraises_round++;
+
 
   if(!arg.empty()){
     int amt=convertTo<int>(arg);
-    if(amt>5 || amt<1){
-      ch->sendTo("Usage: raise <optional amount, 1-5>\n\r");
+    if(amt>3 || amt<1){
+      ch->sendTo("Usage: raise <optional amount, 1-3>\n\r");
       return;
     } else {
       nraises+=amt;
