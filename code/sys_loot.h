@@ -10,7 +10,7 @@ struct TLootStructure {
 extern TLootStructure * tLoot;
 
 extern bool sysLootBoot();
-extern bool sysLootLoad(resetCom, TBeing *, TObj *, bool);
+extern bool sysLootLoad(resetCom &, TBeing *, TObj *, bool);
 extern bool isLegalLoot(itemTypeT);
 extern bool isLegalLoot(int);
 
