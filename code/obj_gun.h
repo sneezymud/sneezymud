@@ -91,7 +91,7 @@ class TGun : public TGenWeapon {
     void setFlags(int f) { flags=f; }
     int getFlags() const { return flags; }
     void addToFlags(int f) { flags=flags ^ f; }
-    void remFromFlags(int f) { flags=flags | f; }
+    void remFromFlags(int f) { flags &= ~f; }
 
     bool isSilenced() const { return flags & GUN_FLAG_SILENCED; }
     bool isCaseless() const { return flags & GUN_FLAG_CASELESS; }

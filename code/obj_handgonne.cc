@@ -85,9 +85,9 @@ int THandgonne::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirType
 
   // 1% backfire rate
   if(!::number(0,99)){
-    act("<r>Something goes wrong and $N explodes in your face!<1>",
+    act("<r>Something goes wrong and <1>$N<r> explodes in your face!<1>",
 	TRUE, ch, NULL, this, TO_CHAR);
-    act("<r>Something goes wrong and $N expodes in $n's face!<1>",
+    act("<r>Something goes wrong and <1>$N<r> expodes in $n's face!<1>",
 	TRUE, ch, NULL, this, TO_ROOM);
 
     addToFlags(GUN_FLAG_FOULED);

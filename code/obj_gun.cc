@@ -188,17 +188,22 @@ int TGun::suggestedPrice() const
 
 sstring TGun::statObjInfo() const
 {
-  char buf[256];
+  sstring buf, sbuf;
 
   TGenWeapon::statObjInfo();
 
   TAmmo *ammo=getAmmo();
-  sprintf(buf, "Rate of Fire: %i, Ammo Type: %s, Ammo: %i, Ammo Loaded: %s",
+  ssprintf(buf, "Rate of Fire: %i, Ammo Type: %s, Ammo: %i, Ammo Loaded: %s",
 	  getROF(), getAmmoDescr(getAmmoType()), (ammo?ammo->getRounds():0),
 	  (ammo?ammo->getName():"None"));
+  sbuf += buf;
 
-  sstring a(buf);
-  return a;
+  ssprintf(buf, "\n\rSilenced: %s  Caseless: %s  Clipless: %s  Fouled: %s",
+	   isSilenced()?"yes":"no", isCaseless()?"yes":"no", 
+	   isClipless()?"yes":"no", isFouled()?"yes":"no");
+  sbuf += buf;
+
+  return sbuf;
 }
 
 
@@ -281,13 +286,13 @@ TGun::~TGun()
 
 sstring TAmmo::statObjInfo() const
 {
-  char buf[256];
-  
-  sprintf(buf, "Ammo Type: %s, Rounds Remaining: %i",
-	  getAmmoDescr(getAmmoType()), getRounds());
+  sstring buf, sbuf;
 
-  sstring a(buf);
-  return a;
+  ssprintf(buf, "Ammo Type: %s, Rounds Remaining: %i",
+	  getAmmoDescr(getAmmoType()), getRounds());
+  sbuf += buf;
+
+  return sbuf;
 }
 
 TAmmo::TAmmo() :
