@@ -315,13 +315,20 @@ void bootDb(void)
   bootPulse("Creating Loot List.");
   sysLootBoot();
 
-  bootPulse("Resetting zones:", false);
   for (i = 0; i < zone_table.size(); i++) {
     char *s;
     int d, e;
     s = zone_table[i].name;
     d = (i ? (zone_table[i - 1].top + 1) : 0);
     e = zone_table[i].top;
+
+    if(i==0){
+      // all shopkeepers should load in zone 0
+      bootPulse("Loading shops.", false);
+    } else if(i==1){
+      bootPulse(NULL, true);
+      bootPulse("Resetting zones:", false);
+    }
 
     vlogf(LOG_MISC, "Performing boot-time reset of %s (rooms %d-%d).", s, d, e);
     zone_table[i].resetZone(TRUE);
