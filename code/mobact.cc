@@ -2284,6 +2284,20 @@ static spellNumT get_cleric_heal_spell(TMonster &ch, TBeing &targ)
       return SPELL_CURE_POISON;
   }
 
+  // cure disease
+  if(ch.doesKnowSkill(SPELL_CURE_DISEASE) &&
+     ch.getSkillValue(SPELL_CURE_DISEASE) > 33){
+    if(targ.hasDisease(DISEASE_COLD) ||
+       targ.hasDisease(DISEASE_FLU) ||
+       targ.hasDisease(DISEASE_FROSTBITE) ||
+       targ.hasDisease(DISEASE_LEPROSY) ||
+       targ.hasDisease(DISEASE_PLAGUE) ||
+       targ.hasDisease(DISEASE_SYPHILIS)){
+      return SPELL_CURE_DISEASE;
+    }
+  }
+
+
   // clot
   if(ch.doesKnowSkill(SPELL_CLOT) &&
      ch.getSkillValue(SPELL_CLOT) > 33){
@@ -4265,6 +4279,13 @@ vlogf(LOG_BUG, "Mob casting (2) spell %d on other with possibly bad target flags
       }
     }
 #endif
+
+    if(!found) {
+      spell = get_cleric_heal_spell(*this, targ);
+      if(spell != TYPE_UNDEFINED)
+	found=TRUE;
+    }
+
 
     if (found) {
       if (IS_SET(discArray[spell]->targets, TAR_CHAR_ROOM)) {
