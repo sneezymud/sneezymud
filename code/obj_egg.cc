@@ -316,7 +316,8 @@ void TEgg::hatch(TRoom *rp)
   act("With a final push, $n emerges from $p!",
     TRUE, mob, this, NULL, TO_ROOM);
 
-  if(!mob->isAffected(AFF_AGGRESSIVE) && parent && 
+ 
+  if(!IS_SET(mob->specials.act, ACT_AGGRESSIVE) && parent && 
      (ch=dynamic_cast<TBeing *>(parent)) && ch->isPc() &&
      mob->GetMaxLevel() < ch->GetMaxLevel() && 
      !ch->tooManyFollowers(mob, FOL_PET)){
