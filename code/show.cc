@@ -798,9 +798,7 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
             strcat(buffer, " is crawling here.");
             break;
           case POSITION_SITTING:
-            if(roomp->isWaterSector())
-              strcat(buffer, " is floating here.");
-            else if (riding) {
+            if (riding) {
               strcat(buffer, " is sitting on ");
               if (riding->getName())
                 strcat(buffer,ch->objs(riding));
