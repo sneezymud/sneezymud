@@ -23,8 +23,8 @@ O 0 634 1 582
 O 0 635 1 582
 
 M 0 594 1 582 * butler
-M 0 580 1 34183 * white cat
-M 0 580 1 34182 * kitten
+M 0 34183 1 580 * white cat
+M 0 34182 1 580 * kitten
 
 * windows
 O 0 627 1 581
