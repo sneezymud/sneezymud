@@ -10,6 +10,7 @@
 #include "stdsneezy.h"
 #include "shop.h"
 #include "obj_commodity.h"
+#include "shopowned.h"
 
 TCommodity::TCommodity() :
   TObj()
@@ -155,6 +156,10 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     ch->giveMoney(keeper, price, GOLD_COMM);
     shoplog(shop_nr, ch, keeper, obj2->getName(), price, "buying");
 
+    TShopOwned tso(shop_nr, keeper, ch);
+    tso.doReserve();
+
+
   } else {
     // this happens with sub zero weight components
     vlogf(LOG_BUG, fmt("Bogus num %d in buyMe component at %d.  wgt=%.2f") %  num % ch->in_room % getWeight());
@@ -220,6 +225,9 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 
     keeper->giveMoney(ch, price, GOLD_COMM);
     shoplog(shop_nr, ch, keeper, obj2->getName(), -price, "selling");
+
+    TShopOwned tso(shop_nr, keeper, ch);
+    tso.doReserve();
 
 
     keeper->doTell(ch->getName(), fmt("Thanks, here's your %d talens.") % price);
