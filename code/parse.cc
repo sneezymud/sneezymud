@@ -155,7 +155,17 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   sstring tStNewArg(""), buf, bufname;
   size_t tVar = 0;
  
-  tStNewArg = argument;
+  int i = 0;
+  tStNewArg += argument.word(i++);
+  while (true) {
+    sstring arg_word = argument.word(i++);
+    if (arg_word.empty()) {
+      break;
+    }
+
+    tStNewArg += " ";
+    tStNewArg += arg_word;
+  }
 
   // The pray code is extremely messed up so this is really
   // better put here until pray can get fixed.
@@ -163,7 +173,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   // This way is much like the old way but it verifies that the
   // "self"/"me"/"tank" word has a leading space and is the Last
   // word in the line.  This way ->me<-rcees doesn't trigger.
-  if (cmd == CMD_PRAY) {
+  if (cmd == CMD_PRAY || cmd == CMD_RECITE) {
     if ((tVar = tStNewArg.find(" self")) != sstring::npos &&
         !(tStNewArg.size() - tVar - 5))
       tStNewArg.replace(tStNewArg.find("self"), 4, getName());
@@ -194,11 +204,20 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       }
     }
 
-    newarg=tStNewArg;
-  } else if (argument.lower()=="self" || argument.lower()=="me")
-    newarg=getNameNOC(this);
-  else
-    newarg=argument;
+    newarg = tStNewArg;
+  } else if (cmd == CMD_CAST || cmd == CMD_SAY || cmd == CMD_SAY2 ||
+             cmd == CMD_SIGN || cmd == CMD_TELL || cmd == CMD_SHOUT ||
+             cmd == CMD_EMOTE || cmd == CMD_EMOTE2 || cmd == CMD_EMOTE3 ||
+             cmd == CMD_WHISPER || cmd == CMD_PTELL || cmd == CMD_PSAY ||
+             cmd == CMD_PSHOUT || cmd == CMD_ECHO || cmd == CMD_SYSTEM ||
+             cmd == CMD_GT || cmd == CMD_ASK || cmd == CMD_TITLE ||
+             cmd == CMD_MESSAGE || cmd == CMD_WIZNET || cmd == CMD_GROUP) {
+    newarg = argument;
+  } else if (tStNewArg.lower() == "self" || tStNewArg.lower() == "me") {
+    newarg = getNameNOC(this);
+  } else {
+    newarg = tStNewArg;
+  }
 
   if (typedIn && desc && dynamic_cast<TMonster *>(this)) 
     isPoly = TRUE;
@@ -510,7 +529,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 	rc = doTithe();
 	break;
       case CMD_ACCOUNT:
-	doAccount(newarg.c_str());
+	doAccount(newarg);
 	addToLifeforce(1);
 	break;
       case CMD_FILL:

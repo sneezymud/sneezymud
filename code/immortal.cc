@@ -5527,11 +5527,11 @@ void TBeing::doHeaven(const sstring &arg)
     weatherAndTime(1);
 }
 
-void TBeing::doAccount(const char *arg)
+void TBeing::doAccount(const sstring &arg)
 {
-  char namebuf[80];
+  sstring namebuf = "";
   DIR *dfd;
-  char buf2[256];
+  sstring my_arg, buf2;
   int count = 1;
   accountFile afp;
   FILE *fp;
@@ -5540,10 +5540,9 @@ void TBeing::doAccount(const char *arg)
   if (!desc)
     return;
 
-  *namebuf = '\0';
-  arg = one_argument(arg, namebuf);
+  my_arg = one_argument(arg, namebuf);
 
-  if (!namebuf || !*namebuf || (*namebuf == '.'))  {
+  if (namebuf.empty())  {
     sendTo("Syntax: account <account name>\n\r");
     return;
   }
@@ -5551,23 +5550,23 @@ void TBeing::doAccount(const char *arg)
   if (!hasWizPower(POWER_ACCOUNT)) {
     // person isn't an imm, only let them check their own account
     if (!desc->account || !desc->account->name ||
-        strcmp(desc->account->name, namebuf)) {
+        desc->account->name == namebuf) {
       sendTo("You may only check your own account.\n\r");
       sendTo("Syntax: account <account name>\n\r");
       return;
     }
   }
 
-  sprintf(buf2, "account/%c/%s", LOWER(namebuf[0]), sstring(namebuf).lower().c_str());
-  if (!(dfd = opendir(buf2))) {
+  buf2 = fmt("account/%c/%s") % namebuf.lower()[0] % namebuf.lower();
+  if (!(dfd = opendir(buf2.c_str()))) {
     sendTo("No account by that name exists.\n\r");
     sendTo("Syntax: account <account name>\n\r");
     sendTo("Please do not attempt to abbreviate the account name.\n\r");
     return;
   }
   closedir(dfd);
-  sprintf(buf2, "account/%c/%s/account", LOWER(namebuf[0]), sstring(namebuf).lower().c_str());
-  if (!(fp = fopen(buf2, "r+"))) {
+  buf2 = fmt("account/%c/%s/account") % namebuf.lower()[0] % namebuf.lower();
+  if (!(fp = fopen(buf2.c_str(), "r+"))) {
     sendTo("Cannot open account for player! Tell a coder!\n\r");
     return;
   }
@@ -5576,7 +5575,7 @@ void TBeing::doAccount(const char *arg)
 
   // only let imms do this
   if (hasWizPower(POWER_ACCOUNT)) {
-    arg = one_argument(arg, buf2);
+    my_arg = one_argument(arg, buf2);
     if (is_abbrev(buf2, "banished")) {
       if (IS_SET(afp.flags, ACCOUNT_BANISHED)) {
         REMOVE_BIT(afp.flags, ACCOUNT_BANISHED);
@@ -5596,11 +5595,11 @@ void TBeing::doAccount(const char *arg)
       if (IS_SET(afp.flags, ACCOUNT_EMAIL)) {
         REMOVE_BIT(afp.flags, ACCOUNT_EMAIL);
         sendTo(fmt("You have un-email-banished the %s account.\n\r") % afp.name);
-        vlogf(LOG_MISC, fmt("%s un-email-banished account '%s'") %  getName() % afp.name);
+        vlogf(LOG_MISC, fmt("%s un-email-banished account '%s'") % getName() % afp.name);
       } else {
         SET_BIT(afp.flags, ACCOUNT_EMAIL);
         sendTo(fmt("You have set the %s account email-banished.\n\r") % afp.name);
-        vlogf(LOG_MISC, fmt("%s email-banished account '%s'") %  getName() % afp.name);
+        vlogf(LOG_MISC, fmt("%s email-banished account '%s'") % getName() % afp.name);
       }
       
       rewind(fp);
@@ -5682,7 +5681,7 @@ void TBeing::doAccount(const char *arg)
 
   fclose(fp);
 
-  sprintf(buf2, "Account email address : %s%s%s\n\r", cyan(), afp.email, norm());
+  buf2 = fmt("Account email address : %s%s%s\n\r") % cyan() % afp.email % norm();
   str += buf2;
 
   char *tmstr = (char *) asctime(localtime(&afp.last_logon));
@@ -5711,14 +5710,15 @@ void TBeing::doAccount(const char *arg)
 
   // only let imms see comments
   if (hasWizPower(POWER_ACCOUNT)) {
-    sprintf(buf2, "account/%c/%s/comment", LOWER(namebuf[0]), sstring(namebuf).lower().c_str());
-    if ((fp = fopen(buf2, "r"))) {
-      while (fgets(buf2, 255, fp))
-        str += buf2;
+    buf2 = fmt("account/%c/%s/comment") % namebuf.lower()[0] % namebuf.lower();
+    if ((fp = fopen(buf2.c_str(), "r"))) {
+      char buf3[256];
+      while (fgets(buf3, 255, fp))
+        str += buf3;
       fclose(fp);
     }
   }
-  desc->page_string(str);
+  desc->page_string(str.toCRLF());
 
   return;
 }
