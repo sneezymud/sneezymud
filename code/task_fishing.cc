@@ -157,11 +157,13 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
     return FALSE; // returning FALSE lets command be interpreted
   }
 
+  TThing *ss=ch->getStuff();
+
   // find our bait here
-  t=findBait(ch->getStuff());
+  t=findBait(ss);
   
   int m=WEAR_NOWHERE;
-  while(!t){
+  while(!t && m<MAX_WEAR){
     ++m;
     t=findBait(ch->equipment[m]);
   }
