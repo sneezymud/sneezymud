@@ -3904,13 +3904,13 @@ int manaBurnRobe(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 
   } // end manaBurnRobe
 
-int healingNeckwear(TBeing *vict, cmdTypeT cmd, const char arg, TObj *o, TObj *) 
+int healingNeckwear(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
 {  
   TBeing *ch;
-  wearSlotT slot;
+ 
 
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
-    return FASE;
+    return FALSE;
 
   for (int i = 1; i < 5; i++) {
     if (ch->hasClass(CLASS_SHAMAN)) {
@@ -3953,9 +3953,10 @@ int healingNeckwear(TBeing *vict, cmdTypeT cmd, const char arg, TObj *o, TObj *)
     }
   }
 
-  if (cmd == CMD_GENERIC_PULSE) 
+  if (cmd == CMD_GENERIC_PULSE) {
     return DELETE_THIS;
-   
+  }
+  return FALSE;
 }
 
 
@@ -4773,6 +4774,4 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Mana Burn Robe", manaBurnRobe},
   {FALSE, "Chrism Item", healingNeckwear}
 };
-
-
 
