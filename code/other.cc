@@ -2299,7 +2299,7 @@ int TBeing::doQuaff(const char *argument)
 int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
 {
   int rc=0;
-  int level=30, learn=max(100, amt*20);
+  int level=max(30, amt*6), learn=max(100, amt*20);
   affectedData aff;
 
   switch(liq){
