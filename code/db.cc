@@ -119,9 +119,6 @@ FILE *obj_f = NULL;        // obj prototypes
 
 vector<TRoom *>roomspec_db(0);
 
-vector<TObj *>obj_cache(0);
-
-
 struct time_info_data time_info;        // the infomation about the time   
 struct weather_data weather_info;        // the infomation about the weather 
 class lag_data lag_info;
@@ -333,9 +330,6 @@ void bootDb(void)
       bootPulse(".", false);
   }
   bootPulse(NULL, true);
-
-  // after boot time object loading is minimal, so the cache isn't needed
-  obj_cache.clear();
 
   bootPulse("Performing playerfile maintenance and data extraction:",false);
   fixup_players();
@@ -1387,22 +1381,164 @@ TMonster *read_mobile(int nr, readFileTypeT type)
   return (mob);
 }
 
-
-int cache_object(int nr)
+#if !USE_SQL
+TObj *read_object(int nr, readFileTypeT type)
 {
-  int top;
+  TObj *obj = NULL;
+  int tmp = 0, i, rc;
+  int tmp2, tmp3, tmp4;
+  float tmpf;
+  char chk[50];
 
-  top = obj_cache.size();
-  
-  while(--top>=0){
-    if(obj_cache[top]->number == nr)
-      return top;
+  i = nr;
+  vlogf(LOG_FILE, "Checking object %d", nr);
+  if (type == VIRTUAL)
+    nr = real_object(nr);
+
+  // I changed this assert to just a log and NULL return - Russ 020997
+  // Because if someone has a bad object somehow in rent, it'll just "crash"
+  // in this assert over and over as they try to log in.
+  // Assert are usually only good for unrecoverable happenings. This
+  // is recoverable.
+  //mud_assert(nr >= 0 && nr < obj_index.size(), "read_object: bad nr %d", nr);
+
+  if ((nr < 0) || (nr >= (signed int) obj_index.size())) {
+    forceCrash( "read_object: bad nr %d (i = %d)", nr, i);
+    return NULL;
   }
 
-  return -1;
-}
+  fseek(obj_f, obj_index[nr].pos, 0);
 
-TObj *read_object(int nr, readFileTypeT type, bool cache=false)
+  // We allocated the names and strings in the indeces, don't do it again!
+  readStringNoAlloc(obj_f);
+  readStringNoAlloc(obj_f);
+  readStringNoAlloc(obj_f);
+  readStringNoAlloc(obj_f);
+
+  if (fscanf(obj_f, " %d ", &tmp) != 1) {
+    vlogf(LOG_MISC, "Unable to read item type in read_object");
+    forceCrash("bad obj read, (%s : %d)", obj_index[nr].name, nr);
+    return NULL;
+  }
+
+  obj = makeNewObj(mapFileToItemType(tmp));
+
+  obj->name = obj_index[nr].name;
+  obj->shortDescr = obj_index[nr].short_desc;
+  obj->setDescr(obj_index[nr].long_desc);
+  obj->action_description = obj_index[nr].description;
+
+  if (obj_index[nr].itemtype == MAX_OBJ_TYPES)
+    obj_index[nr].itemtype = tmp;
+  
+  fscanf(obj_f, " %d ", &tmp);
+  obj->setObjStat(tmp);
+  fscanf(obj_f, " %d ", &tmp);
+  obj->obj_flags.wear_flags = tmp;
+  if (obj_index[nr].where_worn == 0)
+    (obj_index[nr].where_worn = tmp);
+
+  fscanf(obj_f, " %d %d %d %d ", &tmp, &tmp2, &tmp3, &tmp4);
+  obj->assignFourValues(tmp, tmp2, tmp3, tmp4);
+
+  fscanf(obj_f, " %f ", &tmpf);
+  obj->setWeight(tmpf);
+  if (obj_index[nr].weight == (float) 0.0)
+    obj_index[nr].weight = (float) tmpf;
+  fscanf(obj_f, " %d ", &tmp);
+  obj->obj_flags.cost = tmp;
+  if (obj_index[nr].value == -99)
+    obj_index[nr].value = tmp;
+  fscanf(obj_f, " %d ", &tmp);
+  obj->canBeSeen = tmp;
+  fscanf(obj_f, " %d ", &tmp);
+  obj->spec = tmp;
+  if (obj_index[nr].spec == -99)
+    obj_index[nr].spec = tmp;
+  fscanf(obj_f, " %d ", &tmp);
+
+  // beta is used to test LOW loads, so don't let max_exist be a factor
+  obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : tmp);
+
+  if (obj_index[nr].max_exist == -99) {
+    obj_index[nr].max_exist = tmp;
+    // use 327 so we don't go over 32765 in calculation
+    if (obj_index[nr].max_exist < 327) {
+      obj_index[nr].max_exist *= (sh_int) (stats.max_exist * 100);
+      obj_index[nr].max_exist /= 100;
+    }
+    if (tmp)
+      obj_index[nr].max_exist = max(obj_index[nr].max_exist, (short int) (gamePort == BETA_GAMEPORT ? 9999 : 1));
+  }
+  fscanf(obj_f, " %d ", &tmp);
+  obj->setStructPoints(tmp);
+  fscanf(obj_f, " %d ", &tmp);
+  obj->setMaxStructPoints(tmp);
+  if (obj_index[nr].max_struct == -99)
+    (obj_index[nr].max_struct = tmp);
+  obj->setDepreciation(0);
+
+  fscanf(obj_f, " %d ", &tmp);
+  obj->obj_flags.decay_time = tmp;
+  fscanf(obj_f, " %d ", &tmp);
+  obj->setVolume(tmp);
+  fscanf(obj_f, " %d ", &tmp);
+  obj->setMaterial((ubyte) tmp);
+
+  obj->ex_description = obj_index[nr].ex_description;
+
+  while (fscanf(obj_f, " %s \n", chk), *chk == 'E') {
+    // We allocated the names and strings in the indeces, don't do it again!
+    readStringNoAlloc(obj_f);
+    readStringNoAlloc(obj_f);
+  }
+
+  for (i = 0; (i < MAX_OBJ_AFFECT) && (*chk == 'A'); i++) {
+    fscanf(obj_f, " %d ", &tmp);
+    obj->affected[i].location = mapFileToApply(tmp);
+    fscanf(obj_f, " %d ", &tmp);
+
+    if (obj->affected[i].location == APPLY_SPELL)
+      obj->affected[i].modifier = mapFileToSpellnum(tmp);
+    else
+      obj->affected[i].modifier = tmp;
+
+    fscanf(obj_f, " %d \n", &tmp);
+    obj->affected[i].modifier2 = tmp;
+    if (obj->affected[i].location == APPLY_LIGHT)
+      obj->addToLight(obj->affected[i].modifier);
+    obj->affected[i].type = TYPE_UNDEFINED;
+    obj->affected[i].level = 0;
+    obj->affected[i].bitvector = 0;
+    fscanf(obj_f, " %s \n", chk);
+  }
+
+  for (; (i < MAX_OBJ_AFFECT); i++) {
+    obj->affected[i].location = APPLY_NONE;
+    obj->affected[i].modifier = 0;
+    obj->affected[i].type = TYPE_UNDEFINED;
+    obj->affected[i].level = 0;
+    obj->affected[i].bitvector = 0;
+  }
+  obj->number = nr;
+
+  if (nr >= 0)
+    obj_index[nr].addToNumber(1);
+
+  obj->weightCorrection();
+
+  rc = obj->checkSpec(NULL, CMD_GENERIC_CREATED, "", NULL);
+  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    delete obj;
+    obj = NULL;
+    return NULL;
+  }
+
+  obj->checkObjStats();
+  return (obj);
+}
+#else
+TObj *read_object(int nr, readFileTypeT type)
 {
   TObj *obj = NULL;
   int i, rc, tmpcost;
@@ -1416,15 +1552,6 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
     forceCrash( "read_object: bad nr %d (i = %d)", nr, i);
     return NULL;
   }
-
-
-  if(cache && cache_object(nr)!=-1){
-    //    vlogf(LOG_PEEL, "using cached object - %s", obj_cache[cache_object(nr)]->shortDescr);
-    obj = makeNewObj(mapFileToItemType(obj_cache[cache_object(nr)]->itemType()));
-    *obj = *obj_cache[cache_object(nr)];
-    return obj;
-  }
-
 
   db.query("select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt);
   
@@ -1488,30 +1615,9 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
 
   obj->checkObjStats();
 
-  if(cache){
-    //    vlogf(LOG_PEEL, "caching object - %s", obj->shortDescr);
-    obj_cache.push_back(obj);
-    
-    // since we cached this object, we need to remove it from the object_list
-    // otherwise spec_procs will trigger and all that jazz
-    // downside is we have to loop through the object_list to unlink it
-    TObj *t=object_list;
-    if(t==obj){
-      object_list=obj->next;
-    } else {
-      for(;t;t=t->next){
-	if(t->next == obj){
-	  t->next=obj->next;
-	  break;
-	}
-      }
-    }
-    
-    return (read_object(nr, REAL, true));
-  } else {
-    return obj;
-  }
+  return (obj);
 }
+#endif
 
 void zoneData::closeDoors()
 {
@@ -2138,7 +2244,7 @@ void zoneData::resetZone(bool bootTime)
               continue;
             }
 
-            obj = read_object(rs.arg1, REAL, bootTime);
+            obj = read_object(rs.arg1, REAL);
             if (obj != NULL) {
               *rp += *obj;
               obj->onObjLoad();
@@ -2171,7 +2277,7 @@ void zoneData::resetZone(bool bootTime)
               continue;
             }
 
-            obj = read_object(rs.arg1, REAL, bootTime);
+            obj = read_object(rs.arg1, REAL);
             if (obj != NULL) {
               *rp += *obj;
               obj->onObjLoad();
@@ -2188,7 +2294,7 @@ void zoneData::resetZone(bool bootTime)
           break;
         case 'P':                
           if (obj_index[rs.arg1].number < obj_index[rs.arg1].max_exist) {
-            obj = read_object(rs.arg1, REAL, bootTime);
+            obj = read_object(rs.arg1, REAL);
             obj_to = get_obj_num(rs.arg3);
             if (obj_to && obj && dynamic_cast<TBaseContainer *>(obj_to)) {
               *obj_to += *obj;
@@ -2250,7 +2356,7 @@ void zoneData::resetZone(bool bootTime)
         case 'G':        
           mud_assert(rs.arg1 >= 0 && rs.arg1 < (signed int) obj_index.size(), "Range error (%d not in obj_index)  G command #%d in %s", rs.arg1, cmd_no, this->name);
           if (obj_index[rs.arg1].number < obj_index[rs.arg1].max_exist &&
-              (obj = read_object(rs.arg1, REAL, bootTime))) {
+              (obj = read_object(rs.arg1, REAL))) {
             *mob += *obj;
             obj->onObjLoad();
             mob->logItem(obj, CMD_LOAD);
@@ -2327,7 +2433,7 @@ void zoneData::resetZone(bool bootTime)
         case 'E':                
           if ((obj_index[rs.arg1].number < obj_index[rs.arg1].max_exist) &&
               (::number(0,99) < (int) (100 * stats.equip)) &&  
-              (obj = read_object(rs.arg1, REAL, bootTime))) {
+              (obj = read_object(rs.arg1, REAL))) {
             if (!mob) {
               vlogf(LOG_LOW, "no mob for 'E' command.  Obj (%s)", obj->getName());
               delete obj;
