@@ -170,7 +170,6 @@ O 0 35491 1 35492    a long wooden pew
 O 0 35494 1 35492    a small brass candelabra
 O 0 35489 1 35493    a straw pallet
 O 0 35496 1 35493    a simple wooden desk
-P 1 35497 1 35496         a key to the cell
 O 0 35494 1 35493    a small brass candelabra
 O 0 35493 1 35494    a large glass window
 O 0 35492 1 35494    a table
@@ -266,13 +265,14 @@ M 0 35424 1 35493       Father Crin
 M 0 35426 1 35494       Tanni
 M 0 35425 1 35495       Tigg
 M 0 35433 1 35496       Willy
-G 1 35482 9999           a small cyan candle
-G 1 35481 9999           a small blue candle
-G 1 35480 9999           a small golden candle
-G 1 35479 9999           a small white candle
-G 1 35478 9999           a small grey candle
-G 1 35477 9999           a small green candle
+G 1 35482 1           a small cyan candle
+G 1 35481 1           a small blue candle
+G 1 35480 1           a small golden candle
+G 1 35479 1           a small white candle
+G 1 35478 1           a small grey candle
+G 1 35477 1           a small green candle
 M 0 35429 1 35498       the jailor
+G 1 35497 1         a key to the cell
 M 0 35430 1 35499       a ghostly prisoner
 M 0 35430 1 35499       a ghostly prisoner
 S
