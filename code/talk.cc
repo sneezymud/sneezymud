@@ -645,7 +645,9 @@ void TBeing::doCommune(const sstring &arg)
     // "i think you guys ought to watch xxx, i suspect he is cheating"
 
     sendTo(fmt("You tell level %d+ gods: %s") % levnum %
-         colorString(this, desc, arg, NULL, COLOR_BASIC, TRUE, TRUE));
+         colorString(this, desc, 
+           arg.substr(arg.find_first_of(" "), arg.length()-1),
+            NULL, COLOR_BASIC, TRUE, TRUE));
   }
 
   for (i = descriptor_list; i; i = i->next) {
@@ -655,10 +657,11 @@ void TBeing::doCommune(const sstring &arg)
       } else
         critter = i->character;
 
-      sstring str = colorString(this, i, arg, NULL, COLOR_COMM, FALSE);
-      convertStringColor("<c>", str);
+      sstring str;
 
       if (!levnum) {
+        str = colorString(this, i, arg, NULL, COLOR_COMM, FALSE);
+        convertStringColor("<c>", str);
         if (critter->GetMaxLevel() >= GOD_LEVEL1 && WizBuild) {
           buf = fmt ("%s$n: %s%s%s") %
                  i->purple() % i->cyan() %
@@ -671,6 +674,11 @@ void TBeing::doCommune(const sstring &arg)
           act(buf, 0, this, 0, i->character, TO_VICT);
         }
       } else {
+        str = colorString(this, i, 
+          arg.substr(arg.find_first_of(" "), arg.length()-1),
+          NULL, COLOR_COMM, FALSE);
+        convertStringColor("<c>", str);
+        
         if (critter->GetMaxLevel() >= GOD_LEVEL1 && WizBuild &&
             critter->GetMaxLevel() >= levnum) {
           buf = fmt ("%s[builders] (level: %d) $n: %s%s%s") %
