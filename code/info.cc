@@ -4947,11 +4947,21 @@ void TBeing::sendRoomName(TRoom *rp) const
   unsigned int rFlags = rp->getRoomFlags();
   Descriptor *d = desc;
   char clientBuf[20];
+  sstring rFlagStr = "";
 
   if (!d)
     return;
 
   sprintf(clientBuf, "\200%d|", CLIENT_ROOMNAME);
+
+  rFlagStr = sstring((rFlags & ROOM_PEACEFUL) ? " [PEACEFUL]" : "") +
+             sstring((rFlags & ROOM_NO_HEAL) ? " [NOHEAL]" : "") +
+             sstring((rFlags & ROOM_HOSPITAL) ? " [HOSPITAL]" : "") +
+             sstring((rFlags & ROOM_ARENA) ? " [ARENA]" : "");
+
+  if (!rFlagStr.empty()) {
+    rFlagStr = "    " + rFlagStr;
+  }
 
   if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
     if (hasColorStrings(this, rp->getName(), 2)) {
@@ -4959,19 +4969,13 @@ void TBeing::sendRoomName(TRoom *rp) const
                 (d->m_bIsClient ? clientBuf : "") %
                 dynColorRoom(rp, 1, TRUE) %
                 norm() % red() % 
-                (((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
-                ((rFlags & ROOM_HOSPITAL) ? "     [HOSPITAL]" :
-                ((rFlags & ROOM_ARENA) ? "     [ARENA]" :
-                " ")))) % norm());
+                rFlagStr % norm());
     } else {
       sendTo(COLOR_ROOM_NAME,fmt("%s%s%s%s%s%s%s\n\r") % 
                 (d->m_bIsClient ? clientBuf : "") %
                 addColorRoom(rp, 1) %
                 rp->getName() % norm() % red() %  
-                (((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
-                ((rFlags & ROOM_HOSPITAL) ? "     [HOSPITAL]" :
-                ((rFlags & ROOM_ARENA) ? "     [ARENA]" :
-                " ")))) % norm());
+                rFlagStr % norm());
     }
   } else {
     if (hasColorStrings(this, rp->getName(), 2)) {
@@ -4979,18 +4983,12 @@ void TBeing::sendRoomName(TRoom *rp) const
               (d->m_bIsClient ? clientBuf : "") % purple() % 
               colorString(this, desc, rp->getName(), NULL, COLOR_NONE, FALSE) %
               red() %
-              (((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
-              ((rFlags & ROOM_HOSPITAL) ? "     [HOSPITAL]" :
-              ((rFlags & ROOM_HOSPITAL) ? "     [ARENA]" :
-             " ")))) % norm());
+              rFlagStr % norm());
     } else {
       sendTo(COLOR_BASIC,fmt("%s%s%s%s%s%s\n\r") % 
 	     (d->m_bIsClient ? clientBuf : "") % 
              purple() %rp->getName() % red() %
-             (((rFlags & ROOM_NO_HEAL) ? "     [NOHEAL]" :
-             ((rFlags & ROOM_HOSPITAL) ? "     [HOSPITAL]" :
-             ((rFlags & ROOM_HOSPITAL) ? "     [ARENA]" :
-             " ")))) % norm());
+             rFlagStr % norm());
     }
   }
   if (isImmortal() && (desc->prompt_d.type & PROMPT_BUILDER_ASSISTANT)) {
