@@ -1490,6 +1490,9 @@ void TRoom::saveItems(const sstring &)
   sstring filepath;
   ItemSave is;
 
+  if(!getStuff())
+    return;
+
   filepath = fmt("%s/%d") % ROOM_SAVE_PATH % number;
 
   if(!is.openFile(filepath)){
