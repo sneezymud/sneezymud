@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: thing.cc,v $
+// Revision 1.2  1999/09/16 22:14:37  peel
+// Disable immortal check for lighting things with flint and steel
+// ./
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -209,7 +213,7 @@ void TThing::peeOnMe(const TBeing *ch)
 
 void TThing::lightMe(TBeing *ch, silentTypeT)
 {
-  if(!ch->isImmortal() || !material_nums[getMaterial()].flammability){
+  if(!material_nums[getMaterial()].flammability){
     act("You can't light $p, it's not flammable!", FALSE, ch, this, 0, TO_CHAR);
     return;
   } else {
