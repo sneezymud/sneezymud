@@ -1,6 +1,7 @@
 #include "stdsneezy.h"
 #include "combat.h"
 #include "obj_symbol.h"
+#include "obj_potion.h"
 #include "pathfinder.h"
 
 static char	responseFile[32];
@@ -1194,8 +1195,31 @@ static void sstringTranslate(char *buf)
       vlogf(LOG_LOW, fmt("sstringTranslate(): bad vnum (%d)") %  obj_num);
       return;
     }
+    
+    int price;
+    if (obj_index[robj].itemtype == ITEM_POTION) {
+      TObj *obj = NULL;
+      obj = read_object(robj, REAL);
+      TPotion *pot = dynamic_cast<TPotion *>(obj);
+      if (obj) {
+        if (pot) {
+          price = pot->getValue();
+       } else {
+         price = 0;
+          vlogf(LOG_LOW, fmt("Error casting object as potion in response script: %s(%d)" ) % obj->getName() % robj);
+       }
+        delete obj;
+        obj = NULL;
+        pot = NULL;
+      } else {
+        price = 0;
+        vlogf(LOG_LOW, fmt("Error loading potion object in response script: %d" ) % robj);
+      }
 
-    int price = obj_index[robj].value;
+    } else {
+      price = obj_index[robj].value;
+    }
+    
     price += (int) (price * markup/100.0);
 
     char buf2[2048];

@@ -16,6 +16,7 @@ class TPotion : public TBaseCup {
     virtual itemTypeT itemType() const { return ITEM_POTION; }
     virtual int shopPrice(int, int, float) const;
     virtual int sellPrice(int, int, float);
+    virtual int getValue() const; 
     virtual int objectSell(TBeing *, TMonster *);
 
 

@@ -4090,7 +4090,7 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
               sendTo(COLOR_BASIC, fmt("%s - %s%s%s (%d)%s\n\r") % exits[door] % purple() %
                       rp->getNameNOC(this) % norm() % rp->number % slopedData);
             } else {
-              sendTo(COLOR_BASIC, fmt("%s - %s%s%s%s\n\r.\n\r") % exits[door] % purple() %
+              sendTo(COLOR_BASIC, fmt("%s - %s%s%s%s\n\r") % exits[door] % purple() %
                       rp->getNameNOC(this) % norm() % slopedData);
             }
             found = TRUE;

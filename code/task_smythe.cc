@@ -740,7 +740,7 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
         } else {
           act("$n focuses $s lifeforce, regrowing the damaged part of $p.", FALSE, ch, o, 0, TO_ROOM);
 	  act("You focus your lifeforce, regrowing the damaged part of $p.", FALSE, ch, o, 0, TO_CHAR);
-	  ch->addToLifeforce(::number(15,30));
+	  ch->addToLifeforce(-(::number(15,30)));
 	  if (ch->getLifeforce() < 30) {
 	    act("You are too low on lifeforce to continue operating on $p.", FALSE, ch, o, 0, TO_CHAR);
 	    act("$n looks pale, and stops operating on $p.", FALSE, ch, o, 0, TO_ROOM);

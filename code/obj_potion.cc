@@ -36,12 +36,13 @@ TPotion::~TPotion()
 
 int TPotion::sellPrice(int, int shop_nr, float)
 {
-  int cost_per;
+//  int cost_per;
   int price;
 
-  cost_per = DrinkInfo[getDrinkType()]->price;
-  price = (int) (getDrinkUnits() * cost_per * shop_index[shop_nr].profit_sell);
-
+//  cost_per = DrinkInfo[getDrinkType()]->price;
+//  price = (int) (getDrinkUnits() * cost_per * shop_index[shop_nr].profit_sell);
+  price = (int) (getValue() * shop_index[shop_nr].profit_sell);
+  
   if (obj_flags.cost <= 1) {
     price = max(0, price);
   } else {
@@ -53,17 +54,31 @@ int TPotion::sellPrice(int, int shop_nr, float)
 
 int TPotion::shopPrice(int num, int shop_nr, float) const
 {
-  int cost_per;
+//  int cost_per;
   int price;
 
-  cost_per = DrinkInfo[getDrinkType()]->price;
-  price = (int) (num * cost_per * getDrinkUnits() * shop_index[shop_nr].profit_buy);
+//  cost_per = DrinkInfo[getDrinkType()]->price;
+//  price = (int) (num * cost_per * getDrinkUnits() * shop_index[shop_nr].profit_buy);
+  price = (int) (num * getValue() * shop_index[shop_nr].profit_buy);
   price = max(1, price);
 
   return price;
 }
 
+int TPotion::getValue() const
+{
+  int cost_per, value;
+  cost_per = DrinkInfo[getDrinkType()]->price;
+  value = (int) (getDrinkUnits() * cost_per);
+  
+  if (obj_flags.cost <= 1) {
+    value = max(0, value);
+  } else {
+    value = max(1, value);  
+  }
 
+  return value;
+}
 
 int TPotion::objectSell(TBeing *ch, TMonster *keeper)
 {
