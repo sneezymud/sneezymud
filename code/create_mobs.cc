@@ -2737,7 +2737,7 @@ void TPerson::doMedit(const char *argument)
       break;
     case 29: // medit replace <long/desc> <"text"> <"text">
       /*
-      if (strcmp("Jesus", getName())) {
+      if (strcmp("Lapsos", getName())) {
         sendTo("Please don't use this option yet, it is still being tested.\n\r");
         return;
       }

@@ -35,7 +35,7 @@ int weaponManaDrainer(TBeing *tVictim, cmdTypeT tCmd, const char *, TObj *tObj, 
   if (!(ch = dynamic_cast<TBeing *>(tObj->equippedBy)))
     return FALSE;
 
-  if (!strcmp(ch->getName(), "Jesus") && ch->isImmortal())
+  if (!strcmp(ch->getName(), "Lapsos") && ch->isImmortal())
     forceSuccess = true;
 
   if (::number(0, 50) && !forceSuccess)

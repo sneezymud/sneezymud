@@ -2082,20 +2082,20 @@ int boulderRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
       continue;
     if (obj_index[rock->getItemIndex()].virt == BOULDER_ITEM) {
       found = 1;
-      //      vlogf(LOG_JESUS, "found assigned to 1");
+      //      vlogf(LOG_LAPSOS, "found assigned to 1");
       break;
     }
   }
 
   if (found == 1) {
-    //    vlogf(LOG_JESUS, fmt("!found so closing exit - found = %d") %  found);
+    //    vlogf(LOG_LAPSOS, fmt("!found so closing exit - found = %d") %  found);
     rp=real_roomp(4189);
     SET_BIT(rp->dir_option[DIR_DOWN]->condition, EX_CLOSED);
     rp=real_roomp(4284);
     REMOVE_BIT(rp->dir_option[DIR_UP]->condition, EX_CLOSED);
     return TRUE;
   } else {
-    //    vlogf(LOG_JESUS, fmt("found so opening exit - found = %d") %  found);
+    //    vlogf(LOG_LAPSOS, fmt("found so opening exit - found = %d") %  found);
     rp=real_roomp(4189);
     REMOVE_BIT(rp->dir_option[DIR_DOWN]->condition, EX_CLOSED);
     rp=real_roomp(4284);

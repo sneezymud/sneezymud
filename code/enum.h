@@ -558,9 +558,9 @@ enum logTypeT
   LOG_BATOPR  = 24, // Batopr only logs
   LOG_BRUTIUS = 25, // Brutius only logs
   LOG_COSMO   = 26, // Cosmo only logs
-  LOG_LAPSOS  = 32, // Lapsos only logs
+  LOG_LAPSOS  = 29, // Lapsos only logs
   LOG_PEEL    = 28,  // Peel only logs
-  LOG_JESUS   = 29,  // Jesus only
+  LOG_JESUS   = 32,  // Jesus only
   LOG_DASH    = 30, // Dash only
   LOG_ANGUS   = 31,  // Angus only
   LOG_MAROR   = 27 // Maror only logs

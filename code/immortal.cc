@@ -3832,14 +3832,14 @@ void TBeing::doSetsev(const char *arg)
 
       sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_COSMO)) ? "On" : "Off"));
-/*    } else if (is_abbrev(arg, "lapsos") && !strcmp(getName(), "Lapsos")) {
+    } else if (is_abbrev(arg, "lapsos") && !strcmp(getName(), "Lapsos")) {
       if ((d->severity & (1 << LOG_LAPSOS)))
         d->severity &= ~(1 << LOG_LAPSOS);
       else
         d->severity |= (1 << LOG_LAPSOS);
 
       sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
-             ((d->severity & (1 << LOG_LAPSOS)) ? "On" : "Off"));*/
+             ((d->severity & (1 << LOG_LAPSOS)) ? "On" : "Off"));
     } else if (is_abbrev(arg, "peel") && !strcmp(getName(), "Peel")) {
       if ((d->severity & (1 << LOG_PEEL)))
         d->severity &= ~(1 << LOG_PEEL);
@@ -3848,14 +3848,14 @@ void TBeing::doSetsev(const char *arg)
 
       sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
              ((d->severity & (1 << LOG_PEEL)) ? "On" : "Off"));
-    } else if (is_abbrev(arg, "jesus") && !strcmp(getName(), "Jesus")) {
+/*    } else if (is_abbrev(arg, "jesus") && !strcmp(getName(), "Jesus")) {
       if ((d->severity & (1 << LOG_JESUS)))
         d->severity &= ~(1 << LOG_JESUS);
       else
         d->severity |= (1 << LOG_JESUS);
 
       sendTo(fmt("Your Personal Log Messages are now %s\n\r") %
-             ((d->severity & (1 << LOG_JESUS)) ? "On" : "Off"));
+             ((d->severity & (1 << LOG_JESUS)) ? "On" : "Off"));*/
     } else if (is_abbrev(arg, "dash") && !strcmp(getName(), "Dash")) {
       if ((d->severity & (1 << LOG_DASH)))
         d->severity &= ~(1 << LOG_DASH);
@@ -5658,7 +5658,7 @@ void TBeing::doAccount(const char *arg)
 
       // bat is mostly gone, and i need to remove the imm flag on a retired
       // account, so i'm adding myself. - dash
-      if (strcmp(getName(), "Batopr") && strcmp(getName(), "Jesus") && strcmp(getName(), "Damescena") && strcmp(getName(), "Peel") && strcmp(getName(), "Dash")) {
+      if (strcmp(getName(), "Batopr") && strcmp(getName(), "Lapsos") && strcmp(getName(), "Damescena") && strcmp(getName(), "Peel") && strcmp(getName(), "Dash")) {
         sendTo("Sorry you suck too much to do this.\n\r");
         return;
       }

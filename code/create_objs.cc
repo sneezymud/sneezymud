@@ -842,7 +842,7 @@ void TPerson::doOEdit(const char *argument)
       break;
     case 20: // oedit replace <long/extra> <"extra"/"text"> <"text"> <"text">
       /*
-      if (strcmp("Jesus", getName())) {
+      if (strcmp("Lapsos", getName())) {
         sendTo("Please don't use this option yet, it is still being tested.\n\r");
         return;
       }

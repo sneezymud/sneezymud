@@ -160,7 +160,7 @@ int task_staveChargingCompLookup(TBeing *ch, bool tDestroy, int tSpell, int tCou
 void TBeing::doChargeStave(sstring tStString)
 {
   /*
-  if (strcmp("Jesus", getName()) != 0) {
+  if (strcmp("Lapsos", getName()) != 0) {
     sendTo("This command is still experimental.\n\r");
     return;
   }

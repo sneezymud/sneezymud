@@ -42,7 +42,7 @@ void TBeing::doZonefile(const sstring & tStArg)
   if (is_abbrev(tStString, "save")) {
     doSaveZoneFile(this, tStBuffer);
     return;
-  } else if (is_abbrev(tStString, "load") && !strcmp(getName(), "Jesus")) {
+  } else if (is_abbrev(tStString, "load") && !strcmp(getName(), "Lapsos")) {
     doLoadZoneFile(this, tStBuffer);
     return;
   }
