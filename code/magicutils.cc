@@ -384,17 +384,16 @@ TComponent *TBeing::findComponent(spellNumT spell) const
   item = NULL;
 
 // Let rangers have components anywhere if not fighting
-  if (hasClass(CLASS_RANGER)) {
+  if (hasClass(CLASS_SHAMAN)) {
+    ritlevel = getRitualismLevel();
+  } else if (hasClass(CLASS_RANGER)) {
     if (fight())
       wizlevel = WIZ_LEV_COMP_EITHER;
     else 
       wizlevel = WIZ_LEV_COMP_BELT;
-  } else if (hasClass(CLASS_SHAMAN)) {
-    ritlevel = getRitualismLevel();
   } else {
     wizlevel = getWizardryLevel();
   }
-
   if (isPc()) {
     if (wizlevel <= WIZ_LEV_COMP_PRIM_OTHER_FREE) {
       if (primary)
@@ -402,7 +401,23 @@ TComponent *TBeing::findComponent(spellNumT spell) const
       else
 	return NULL;
     }
+    if (ritlevel <= RIT_LEV_COMP_PRIM_OTHER_FREE) {
+      if (primary)
+	return comp_from_object(primary, spell);
+      else
+	return NULL;
+    }
     if (wizlevel <= WIZ_LEV_COMP_EITHER) {
+      if (primary || secondary) {
+        if (primary)
+	  item = comp_from_object(primary, spell);
+        if (!item && secondary)
+          item = comp_from_object(secondary, spell);
+        return item;
+      } else
+	return NULL;
+    }
+    if (ritlevel <= RIT_LEV_COMP_EITHER) {
       if (primary || secondary) {
         if (primary)
 	  item = comp_from_object(primary, spell);
@@ -427,24 +442,6 @@ TComponent *TBeing::findComponent(spellNumT spell) const
           }
         }
 	return item;
-      } else
-	return NULL;
-    }
-  }
-  if (isPc()) {
-    if (ritlevel <= RIT_LEV_COMP_PRIM_OTHER_FREE) {
-      if (primary)
-	return comp_from_object(primary, spell);
-      else
-	return NULL;
-    }
-    if (ritlevel <= RIT_LEV_COMP_EITHER) {
-      if (primary || secondary) {
-        if (primary)
-	  item = comp_from_object(primary, spell);
-        if (!item && secondary)
-          item = comp_from_object(secondary, spell);
-        return item;
       } else
 	return NULL;
     }
