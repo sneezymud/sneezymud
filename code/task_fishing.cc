@@ -349,8 +349,6 @@ void handleFishRespawning()
       tRoom->setFished(tRoom->getFished() - 1);
 
     if (tRoom->getFished() < 1) {
-      vlogf(LOG_LAPSOS, "...Expunging Room!");
-
       if (tIter == tLastGood) {
         mRoomsFished.erase(tIter);
         tIter = tLastGood = mRoomsFished.begin();
