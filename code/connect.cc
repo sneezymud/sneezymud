@@ -1903,7 +1903,6 @@ int Descriptor::nanny(const char *arg)
               connected = CON_QCLASS;
             }
             break;
-#ifdef CANSHAMAN
           case '8':
             if (canChooseClass(CLASS_SHAMAN)) {
               character->setClass(CLASS_SHAMAN);
@@ -1913,18 +1912,6 @@ int Descriptor::nanny(const char *arg)
               writeToQ("--> ");
               connected = CON_QCLASS;
             }
-            break;
-#endif
-          case '*':
-            if (canChooseClass(CLASS_SHAMAN)) {
-              character->setClass(CLASS_SHAMAN);
-              go2next = TRUE;
-            } else {
-              writeToQ(badClassMessage(CLASS_SHAMAN).c_str());
-              writeToQ("--> ");
-              connected = CON_QCLASS;
-            }
-	    vlogf(LOG_JESUS, "Shaman created in the %s account, please check.", account->name);
             break;
           case '~':
             return DELETE_THIS;
@@ -3917,13 +3904,6 @@ void Descriptor::sendClassList(int home)
   if (home) {
     writeToQ("Now you get to select your class.\n\r\n\r");
   }
-  ////////////////////////////////////////////////////////////////////
-  // BELOW IS CANSHAMAN - THIS IS TO BE ADDED TO THE MAKEFILE
-  // WHEN SHAMAN ARE OPENED OR CAN GET RID OF THE OLD VERSION
-  // BELOW
-  ////////////////////////////////////////////////////////////////////
-
-#ifdef CANSHAMAN
 
   strcpy(buf, "Please pick one of the following choices for your class.\n\r");
   strcat(buf, "An X in front of the selection means that you can pick this class.\n\r");
@@ -3934,19 +3914,6 @@ void Descriptor::sendClassList(int home)
   sprintf(buf + strlen(buf), "[%c] 3. Mage                     [%c] 4. Thief\n\r", CCC(this, CLASS_MAGIC_USER), CCC(this, CLASS_THIEF));
   sprintf(buf + strlen(buf), "[%c] 5. Deikhan                  [%c] 6. Monk\n\r", CCC(this, CLASS_DEIKHAN), CCC(this, CLASS_MONK));
   sprintf(buf + strlen(buf), "[%c] 7. Ranger                   [%c] 8. Shaman\n\r\n\r\n\r", CCC(this, CLASS_RANGER), CCC(this, CLASS_SHAMAN)); 
-
-#else
-  strcpy(buf, "Please pick one of the following choices for your class.\n\r");
-  strcat(buf, "An X in front of the selection means that you can pick this class.\n\r");
-  strcat(buf, "If there is no X, for some reason you can't choose the class.\n\r");
-  strcat(buf, "To see why you can't choose a selection, choose it and you will be\n\r");
-  strcat(buf, "given an error message telling you why you cannot select the class.\n\r\n\r");
-  sprintf(buf + strlen(buf), "[%c] 1. Warrior                  [%c] 2. Cleric\n\r", CCC(this, CLASS_WARRIOR), CCC(this, CLASS_CLERIC));
-  sprintf(buf + strlen(buf), "[%c] 3. Mage                     [%c] 4. Thief\n\r", CCC(this, CLASS_MAGIC_USER), CCC(this, CLASS_THIEF));
-  sprintf(buf + strlen(buf), "[%c] 5. Deikhan                  [%c] 6. Monk\n\r", CCC(this, CLASS_DEIKHAN), CCC(this, CLASS_MONK));
-  sprintf(buf + strlen(buf), "[%c] 7. Ranger\n\r\n\r\n\r", CCC(this, CLASS_RANGER)); 
-
-#endif
   strcat(buf, "There are advantages and disadvantages to each choice.\n\r");
   sprintf(buf + strlen(buf), "Type %s?%s to see a help file telling you these advantages and disadvantages.\n\r",
           red(), norm());
