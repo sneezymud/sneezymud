@@ -301,6 +301,8 @@ int TEgg::getMe(TBeing *ch, TThing *sub)
 void TEgg::hatch(TRoom *rp)
 {
   TMonster *mob;
+  TBeing *ch;
+  affectedData aff;
 
   if (!(mob = read_mobile(mobVNum, VIRTUAL))) {
     vlogf(LOG_BUG, "Problem loading monster in TEgg::hatch");
@@ -313,6 +315,30 @@ void TEgg::hatch(TRoom *rp)
     TRUE, mob, this, NULL, TO_ROOM);
   act("With a final push, $n emerges from $p!",
     TRUE, mob, this, NULL, TO_ROOM);
+
+  if(!mob->isAffected(AFF_AGGRESSOR) && parent && 
+     (ch=dynamic_cast<TBeing *>(parent)) && ch->isPc() &&
+     mob->GetMaxLevel() < ch->GetMaxLevel() && 
+     !ch->tooManyFollowers(mob, FOL_PET)){
+    // this code was cut and pasted from the pet buying code, sorry :(
+    mob->doAction(ch->name, CMD_STARE);
+
+    SET_BIT(mob->specials.affectedBy, AFF_CHARM);
+    ch->addFollower(mob);
+    mob->balanceMakeNPCLikePC();
+    
+    aff.type = AFFECT_PET;
+    aff.level = 0;
+    aff.duration  = PERMANENT_DURATION;
+    aff.location = APPLY_NONE;
+    aff.modifier = 0;   // to be used for elemental skill level
+    aff.bitvector = 0;
+
+    char * tmp = mud_str_dup(ch->name);
+    aff.be = (TThing *) tmp;
+
+    mob->affectTo(&aff, -1);
+  } 
 }
 
 int TEgg::eggIncubate()
