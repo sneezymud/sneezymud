@@ -292,6 +292,17 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Has Skill: Catleap", MOB_NONE},
   {"Trait: Coward", MOB_NONE},
   {"Trait: Blind", MOB_NONE},
+  {"Trait: Mute", MOB_NONE},
+  {"Trait: Deaf", MOB_NONE},
+  {"Trait: Asthmatic", MOB_NONE},
+  {"Trait: Necrophobic", MOB_NONE},
+  {"Trait: Narcoleptic", MOB_NONE},
+  {"Trait: Combustible", MOB_NONE},
+  {"Trait: Hemophiliac", MOB_NONE},
+  {"Trait: Ambidextrous", MOB_NONE},
+  {"Trait: Disease Resistant", MOB_NONE},
+  {"Trait: Nightvision", MOB_NONE},
+  {"Trait: Alcoholic", MOB_NONE},
   {"", MOB_NONE}, 
 };
 
