@@ -2202,11 +2202,11 @@ int stupidity(TBeing *caster, TBeing *victim, int level, byte bKnown)
   aff.location = APPLY_INT;
   aff.bitvector = 0;
 
-  // we'd like it to last about 5 minutes
-  aff.duration = 5 * UPDATES_PER_MUDHOUR / 2;
+  // we'd like it to last about 10 minutes
+  aff.duration = 10 * UPDATES_PER_MUDHOUR / 2;
 
   // let the affect be level dependant
-  aff.modifier = aff.level/4;
+  aff.modifier = -(aff.level/4);
 
   if (bSuccess(caster, bKnown, SPELL_STUPIDITY)) {
     ret = SPELL_SUCCESS;
