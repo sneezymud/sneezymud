@@ -1898,7 +1898,7 @@ void TBeing::wearNTear(void)
         }
       }
     } else if(hasPart((wearSlotT)i)) {
-      if(!::number(0,chance) && ::number(0,getCurLimbHealth((wearSlotT)i)) && GetMaxLevel() > 10) {
+      if(!::number(0,chance*2) && ::number(0,getCurLimbHealth((wearSlotT)i)) && GetMaxLevel() > 10) {
 	if (i == WEAR_LEGS_R || i == WEAR_LEGS_L || i == WEAR_EX_LEG_R || i == WEAR_EX_LEG_L) {
 	  act("<o>$n screams in pain, and stumbles to the ground holding $s knee.<1>",TRUE,this,NULL,0,TO_ROOM);
 	  act("<r>You scream in pain as you twist your knee and stumble to the ground.<1>",TRUE,this,NULL,0,TO_CHAR);
