@@ -3494,7 +3494,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     mod = attackRound(vict); // no defense against guns
 
     if(!gun->isSilenced())
-      roomp->getZone()->sendTo(fmt("A gunshot echoes in the distance.\n\r") % in_room);
+      roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r", in_room);
   }
 
 
