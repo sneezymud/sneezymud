@@ -440,7 +440,16 @@ int task_trap_arrow(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, 
     // Made it to end, set trap 
     arrow->setTrapLevel(ch->getArrowTrapDam(doorTrapT(ch->task->status)));
     arrow->setTrapDamType(doorTrapT(ch->task->status));
+
+    ch->sendTo("You have successfully constructed an arrow trap!\n\r");
+    int price;
+    ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_CONT, -1, &price);
+    
+    // set price on the trap to that of the components
+    arrow->obj_flags.cost = price;
+    
     ch->stopTask();
+
     return FALSE;
   }
 
