@@ -44,23 +44,25 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
       if (ch->task->timeLeft) {
         if (ch->task->timeLeft < (how_many * 2)) {
           ch->sendTo("You continue brewing your potion%s.\n\r",
-		     (how_many == 1 ? "" : "s"));
+		     (how_many <= 5 ? "" : "s"));
 	  ch->addToLifeforce(-resulting);
         } else {
 
           // brewing has finished
 	  for (i = MIN_WEAR; i < MAX_WEAR; i++) {
 	    if ((t = ch->equipment[i])) {
-	      if((potion_obj=dynamic_cast<TPotion *>(t)) && 
-		 potion_obj->getDrinkType() != LIQ_MAGICAL_ELIXIR){
-		potion_obj=NULL;
+	      if(!potion_obj){
+		if((potion_obj=dynamic_cast<TPotion *>(t)) &&
+		   potion_obj->getDrinkType() != LIQ_MAGICAL_ELIXIR)
+		  potion_obj=NULL;
 	      }
 	    }
 	  }
 	  for (t = ch->getStuff(); t; t = t->nextThing) {
-	    if((potion_obj=dynamic_cast<TPotion *>(t)) && 
-	       potion_obj->getDrinkType() != LIQ_MAGICAL_ELIXIR){
-	      potion_obj=NULL;
+	    if(!potion_obj){
+	      if((potion_obj=dynamic_cast<TPotion *>(t)) &&
+		 potion_obj->getDrinkType() != LIQ_MAGICAL_ELIXIR)
+		potion_obj=NULL;
 	    }
 	  }
 
@@ -73,7 +75,7 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
           if (bSuccess(ch, knowledge, SKILL_BREW)) {
             // successful brew, set learnedness to knowledge in the skill
             ch->sendTo("You successfully create your potion%s.\n\r",
-		       (how_many == 1 ? "" : "s"));
+		       (how_many <= 5 ? "" : "s"));
 	    
 	    potion_obj->setDrinkUnits(how_many);
 	    potion_obj->setDrinkType(spell_to_liq(which));
