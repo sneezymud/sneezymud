@@ -638,10 +638,13 @@ void TBeing::statBeing(TBeing *k)
       cyan(), norm(), k->manaLimit(),
       cyan(), norm(), buf2, cyan(), norm(), buf3);
   sprintf(buf2, "[%d]", ageHpMod(dynamic_cast<TPerson *>(k)));
-  sprintf(buf3, "[%f]", k->getConHpModifier());
-  sprintf(buf + strlen(buf), "%sEqHp  :%s [%3d]  %sAgeHp  :%s %-10s  %sConHpMod:%s %-10s\n\r",
-	  cyan(), norm(), eqHpBonus(dynamic_cast<TPerson *>(k)),
-	  cyan(), norm(), buf2, cyan(), norm(), buf3);
+
+  if(dynamic_cast<TPerson *>(k)){
+    sprintf(buf3, "[%f]", k->getConHpModifier());
+    sprintf(buf + strlen(buf), "%sEqHp  :%s [%3d]  %sAgeHp  :%s %-10s  %sConHpMod:%s %-10s\n\r",
+	    cyan(), norm(), eqHpBonus(dynamic_cast<TPerson *>(k)),
+	    cyan(), norm(), buf2, cyan(), norm(), buf3);
+  }
 
   sprintf(buf2, "[%d]", k->visibility());
   sprintf(buf3, "[%5.1f lbs]", k->getWeight());
