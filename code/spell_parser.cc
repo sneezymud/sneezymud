@@ -1553,6 +1553,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SPELL_PROTECTION_FROM_AIR:
       rc = protectionFromAir(this, ch);
       break;
+    case SPELL_DJALLA:
+      rc = djallasProtection(this, ch);
+      break;
     case SPELL_IDENTIFY:
       if (!o) {
         rc = identify(this,ch);

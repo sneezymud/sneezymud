@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.18  2001/06/14 10:55:44  jesus
+// djallas protection spell
+//
 // Revision 5.17  2001/06/13 18:37:05  jesus
 // 2 new spells for shaman
 // sense presence which is a copy of sense life with a different component
@@ -204,6 +207,7 @@ const int COMP_INTIMIDATE         =31327;
 const int COMP_RAZE               =31328;
 const int COMP_DETECT_SHADOW      =31329;
 const int COMP_SENSE_LIFE_SHAMAN  =31330;
+const int COMP_DJALLA             =31331;
 
 class compPlace
 {

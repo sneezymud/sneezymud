@@ -1521,3 +1521,78 @@ int castDetectShadow(TBeing *caster, TBeing *victim)
   }
   return TRUE;
 }
+
+int djallasProtection(TBeing *caster, TBeing *victim, int level, byte bKnown)
+{
+  affectedData aff, aff2, aff3, aff4;
+
+  aff.type = SPELL_DJALLA;
+  aff.level = level;
+  aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
+  aff.location = APPLY_IMMUNITY;
+  aff.modifier = IMMUNE_SUMMON;
+  aff2.location = APPLY_IMMUNITY;
+  aff2.modifier = IMMUNE_POISON;
+  aff3.location = APPLY_IMMUNITY;
+  aff3.modifier = IMMUNE_DRAIN;
+  aff4.location = APPLY_IMMUNITY;
+  aff4.modifier = IMMUNE_ENERGY;
+  aff.modifier2 = ((level * 2) / 3);
+  aff.bitvector = 0;
+ 
+  if (bSuccess(caster,bKnown,SPELL_DJALLA)) {
+    act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
+    act("You have been granted the protection of Djalla!", FALSE, victim, NULL, NULL, 
+TO_CHAR, ANSI_GREEN);
+    switch (critSuccess(caster, SPELL_DJALLA)) {
+      case CRIT_S_DOUBLE:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_KILL:
+        CS(SPELL_DJALLA);
+        aff.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
+        aff.modifier2 = (level * 2);
+        break;
+      case CRIT_S_NONE:
+        break;
+    }
+ 
+    if (caster != victim) 
+      aff.modifier2 /= 2;
+ 
+    victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+    caster->reconcileHelp(victim, discArray[SPELL_DJALLA]->alignMod);
+    return SPELL_SUCCESS;
+  } else {
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+void djallasProtection(TBeing *caster, TBeing *victim, TMagicItem * obj)
+{
+  djallasProtection(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+}
+
+int djallasProtection(TBeing *caster, TBeing *victim)
+{
+  if (!bPassShamanChecks(caster, SPELL_DJALLA, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_DJALLA]->lag;
+  taskDiffT diff = discArray[SPELL_DJALLA]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_DJALLA, diff, 1, "", rounds, 
+caster->in_room, 0, 0,TRUE, 0);
+  return TRUE;
+}
+
+int castDjallasProtection(TBeing *caster, TBeing *victim)
+{
+  int level = caster->getSkillLevel(SPELL_DJALLA);
+  int bKnown = caster->getSkillValue(SPELL_DJALLA);
+ 
+  int ret=djallasProtection(caster,victim,level,bKnown);
+  if (ret == SPELL_SUCCESS) {
+  } else {
+  }
+  return TRUE;
+}

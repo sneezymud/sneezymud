@@ -423,6 +423,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_TRAIL_SEEK:
     case SPELL_FAERIE_FIRE:
     case SPELL_FLAMING_FLESH:
+    case SPELL_DJALLA: // shaman
     case SPELL_PROTECTION_FROM_FIRE:
     case SPELL_PROTECTION_FROM_ELEMENTS:
     case SPELL_PROTECTION_FROM_EARTH:

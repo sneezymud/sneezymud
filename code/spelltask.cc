@@ -1126,6 +1126,7 @@ int TBeing::checkBadSpellCondition(TBeing *caster, int which)
    case SPELL_PLASMA_MIRROR:
    case SPELL_THORNFLESH:
    case SPELL_FAERIE_FOG:
+    case SPELL_DJALLA: // shaman
    case SPELL_PROTECTION_FROM_WATER:
    case SPELL_ARCTIC_BLAST:
    case SPELL_ICE_STORM:
@@ -1883,6 +1884,9 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         break;
    case SPELL_PROTECTION_FROM_WATER:
         rc = castProtectionFromWater(this, victim);
+        break;
+   case SPELL_DJALLA:
+        rc = castDjallasProtection(this, victim);
         break;
    case SPELL_GUSHER:
         rc = castGusher(this, victim);

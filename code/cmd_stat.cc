@@ -1068,6 +1068,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_ILLUMINATE:
       case SPELL_DETECT_MAGIC:
       case SPELL_MATERIALIZE:
+      case SPELL_DJALLA:
       case SPELL_PROTECTION_FROM_EARTH:
       case SPELL_PROTECTION_FROM_AIR:
       case SPELL_PROTECTION_FROM_FIRE:
