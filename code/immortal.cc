@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: immortal.cc,v $
+// Revision 1.9  1999/10/07 17:04:20  batopr
+// typo fix
+//
 // Revision 1.8  1999/10/07 16:15:43  batopr
 // Switched info gold stuff to using functios to get gold data
 //
@@ -4041,13 +4044,13 @@ void TBeing::doInfo(const char *arg)
       unsigned int tot_gold_rent = getPosGold(GOLD_RENT);
       unsigned int tot_gold_repair = getPosGold(GOLD_REPAIR);
       unsigned int tot_gold_hospital = getPosGold(GOLD_HOSPITAL);
-      unsigned int tot_gold_shop_sym = getPosGold(GOLD_SHOP_SYM);
-      unsigned int tot_gold_shop_weap = getPosGold(GOLD_SHOP_WEAP);
-      unsigned int tot_gold_shop_arm = getPosGold(GOLD_SHOP_ARM);
+      unsigned int tot_gold_shop_sym = getPosGold(GOLD_SHOP_SYMBOL);
+      unsigned int tot_gold_shop_weap = getPosGold(GOLD_SHOP_WEAPON);
+      unsigned int tot_gold_shop_arm = getPosGold(GOLD_SHOP_ARMOR);
       unsigned int tot_gold_shop_pet = getPosGold(GOLD_SHOP_PET);
-      unsigned int tot_gold_shop_comp = getPosGold(GOLD_SHOP_COMP);
+      unsigned int tot_gold_shop_comp = getPosGold(GOLD_SHOP_COMPONENTS);
       unsigned int tot_gold_shop_food = getPosGold(GOLD_SHOP_FOOD);
-      unsigned int tot_gold_shop_resp = getPosGold(GOLD_SHOP_RESP);
+      unsigned int tot_gold_shop_resp = getPosGold(GOLD_SHOP_RESPONSES);
       unsigned int tot_gold_gamble = getPosGold(GOLD_GAMBLE);
       unsigned int tot_gold_tithe = getPosGold(GOLD_TITHE);
       unsigned int tot_gold_allshops = getPosGoldShops();
