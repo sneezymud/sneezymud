@@ -262,6 +262,7 @@ sqladdobjs: objs/sqladdobjs.o lowlib
 	@echo \*\*\* Making Final Link: sqladdobjs
 	@$(CC) -o sqladdobjs objs/sqladdobjs.o objs/lowtools.o $(OBJ) $(LDFLAGS)
 	@/usr/bin/strip sqladdobjs
+	@/bin/cp -f sqladdobjs /mud/low/bin
 
 # make all low tools
 lowtools: sqladdobjs
