@@ -2,19 +2,14 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: board.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
 //
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __BOARD_H
-#define __BOARD_H
+#ifndef __OBJ_BOARD_H
+#define __OBJ_BOARD_H
+
+#include "obj.h"
 
 const unsigned int MAX_MSGS = 50; /* Max number of messages.          */
   
@@ -44,12 +39,34 @@ int board_display_msg(TBeing *ch, const char *arg, TBoard *, boardStruct *b);
 void board_reset_board(boardStruct *b);
 void board_load_board(boardStruct *b);
 void post_note_on_board(TBeing *ch, const char *arg, boardStruct *b);
-boardStruct *FindBoardInRoom(int room);
+boardStruct *FindBoardInRoom(int room, const char *arg);
 void OpenBoardFile(boardStruct *b);
 void InitABoard(TObj *obj);
 void DeleteABoard(TObj *obj);
 void InitBoards();
-extern int get_note_from_board(TBeing *, const char *, boardStruct *);
+extern int get_note_from_board(TBeing *, const char *, boardStruct *, TBoard *);
 extern boardStruct *board_list;
+
+class TBoard : public TObj {
+  private:
+    int board_level;
+  public:
+    virtual void assignFourValues(int, int, int, int);
+    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual itemTypeT itemType() const { return ITEM_BOARD; }
+    virtual string statObjInfo() const;
+
+    virtual void purgeMe(TBeing *);
+    virtual int boardHandler(TBeing *, cmdTypeT, const char *);
+
+    int getBoardLevel() const;
+    void setBoardLevel(int n);
+
+    TBoard();
+    TBoard(const TBoard &a);
+    TBoard & operator=(const TBoard &a);
+    virtual ~TBoard();
+};
+
 
 #endif
