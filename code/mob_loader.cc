@@ -211,28 +211,13 @@ void TMonster::thiefLootLoader()
   if(::number(0,3))
     return;
 
-  loot.push_back(907);
-  loot.push_back(909);
-  loot.push_back(910);
-  loot.push_back(912);
-  loot.push_back(915);
-  loot.push_back(916);
-  loot.push_back(917);
-  loot.push_back(918);
-  loot.push_back(919);
-  loot.push_back(921);
-  loot.push_back(922);
-  loot.push_back(923);
-  loot.push_back(926);
-  loot.push_back(927);
-  loot.push_back(932);
-  loot.push_back(933);
-  loot.push_back(934);
+  // thief trap stuff
+  for(int i=900;i<=934;++i)
+    loot.push_back(i);
 
   // make a list of the available poisons
   for(int i=31008;i<=31020;++i)
     loot.push_back(i);
-  loot.push_back(914);
 
   // pick one
   vnum=loot[::number(0, loot.size()-1)];
