@@ -55,7 +55,9 @@ int task_rest(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *, TOb
         }
       }
       ch->updatePos();
-      ch->task->status = 0;
+      if (ch->task) {
+        ch->task->status = 0;
+      }
       break;
   case CMD_ABORT:
   case CMD_STOP:
