@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: shop.cc,v $
+// Revision 1.3  1999/10/09 04:27:18  batopr
+// Added check for trade_with() to valueMe
+//
 // Revision 1.2  1999/10/08 04:32:32  batopr
 // Made shops throw chars in random direction when entering shop badly
 //
@@ -1118,6 +1121,13 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
 
   if (sellMeCheck(ch, keeper))
     return;
+  if (!trade_with(this, shop_nr)) {
+    char buf[256];
+    sprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());
+    keeper->doTell(buf);
+    return;
+  }
+
   chr = ch->plotStat(STAT_CURRENT, STAT_CHA, 3, 18, 13);
   // do not adjust for swindle on valueing, give them worst case price
   chr = min(18,chr);
