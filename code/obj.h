@@ -441,6 +441,7 @@ class TObj : public TThing {
 
     virtual void weightCorrection() {}
     virtual bool monkRestrictedItem(const TBeing *ch) const;
+    virtual bool shamanRestrictedItem(const TBeing *ch) const;
     virtual bool rangerRestrictedItem(const TBeing *ch) const;
     virtual void assignFourValues(int, int, int, int) = 0;
     virtual void getFourValues(int *, int *, int *, int *) const = 0;

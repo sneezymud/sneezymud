@@ -10,8 +10,8 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   int learning = ch->getSkillValue(SKILL_SACRIFICE);
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
   int percent = ::number(1, 100);
-  int factor = ::number(1, ch->getSkillValue(SKILL_SACRIFICE));
-  int factor2 = ((::number(1, ch->getSkillValue(SKILL_SACRIFICE)) / 10) * 6);
+  int factor = ::number(1, ch->getSkillValue(SKILL_SACRIFICE) / 2);
+  int factor2 = ((::number(1, ch->getSkillValue(SKILL_SACRIFICE)) / 10) * 3);
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;

@@ -2,20 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: obj_base_light.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
 //      "base_light.cc" - Methods for TBaseLight class
 //
 ///////////////////////////////////////////////////////////////////////////
@@ -98,6 +84,11 @@ int TBaseLight::getCurBurn() const
 }
 
 bool TBaseLight::monkRestrictedItem(const TBeing *) const
+{
+  return FALSE;
+}
+
+bool TBaseLight::shamanRestrictedItem(const TBeing *) const
 {
   return FALSE;
 }

@@ -421,6 +421,10 @@ int TBaseClothing::suggestedPrice() const
   if (!isObjStat(ITEM_ANTI_MONK) && !monkRestrictedItem(NULL))
     lev_mod = max(lev_mod, 10.0);
 
+  // shaman = hitrate of 90%
+  if (!isObjStat(ITEM_ANTI_SHAMAN) && !shamanRestrictedItem(NULL))
+    lev_mod = max(lev_mod, 10.0);
+
   // ranger = hitrate of 69%
   if (!isObjStat(ITEM_ANTI_RANGER) && !rangerRestrictedItem(NULL))
     lev_mod = max(lev_mod, 3.0);
