@@ -456,7 +456,7 @@ int TBeing::moveGain()
     stats.move_gained += gain;
   }
 
-  return (gain);
+  return ((gain * 4) / 3);
 }
 
 sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
