@@ -2245,7 +2245,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SKILL_SWITCH_OPP:
     case SKILL_BODYSLAM:
     case SKILL_SPIN:
-    case SKILL_DUAL_WIELD_WARRIOR:
+    case SKILL_DUAL_WIELD:
     case SKILL_KNEESTRIKE:
     case SKILL_SHOVE:
     case SKILL_POWERMOVE:
@@ -2256,23 +2256,17 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SKILL_DEATHSTROKE:
     case SKILL_TRANCE_OF_BLADES:
     case SKILL_HIKING:
-    case SKILL_KICK_RANGER:
     case SKILL_FORAGE:
     case SKILL_SEEKWATER:
     case SKILL_TRANSFORM_LIMB:
     case SKILL_BEAST_SOOTHER:
     case SKILL_TRACK:
-    case SKILL_BASH_RANGER:
-    case SKILL_RESCUE_RANGER:
     case SKILL_BEFRIEND_BEAST:
     case SKILL_TRANSFIX:
     case SKILL_SKIN:
     case SKILL_BUTCHER:
-    case SKILL_DUAL_WIELD:
     case SKILL_BEAST_SUMMON:
     case SKILL_BARKSKIN:
-    case SKILL_SWITCH_RANGER:
-    case SKILL_RETREAT_RANGER:
     case SKILL_BEAST_CHARM:
     case SKILL_CONCEALMENT:
     case SKILL_APPLY_HERBS:

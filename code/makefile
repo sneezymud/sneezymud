@@ -3335,6 +3335,8 @@ objs/cmd_zones.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
 objs/cmd_zones.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/cmd_zones.o: being.h person.h monster.h account.h extern.h handler.h
 objs/cmd_zones.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
+objs/cmd_zones.o: database.h /usr/local/include/libpq-fe.h
+objs/cmd_zones.o: /usr/local/include/postgres_ext.h cmd_trophy.h
 objs/color.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/color.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/color.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -6702,23 +6704,23 @@ objs/discipline.o: disc_deikhan_fight.h disc_deikhan_aegis.h
 objs/discipline.o: disc_deikhan_cures.h disc_deikhan_wrath.h disc_defense.h
 objs/discipline.o: disc_mounted.h disc_monk.h disc_iron_body.h
 objs/discipline.o: disc_meditation.h disc_leverage.h disc_mindbody.h
-objs/discipline.o: disc_fattacks.h disc_plants.h disc_ranger_fight.h
-objs/discipline.o: disc_shaman_alchemy.h disc_shaman_frog.h
-objs/discipline.o: disc_shaman_control.h disc_shaman_spider.h
-objs/discipline.o: disc_shaman_skunk.h disc_shaman_armadillo.h
-objs/discipline.o: disc_shaman_healing.h disc_ritualism.h disc_thief.h
-objs/discipline.o: disc_thief_fight.h disc_poisons.h disc_traps.h
-objs/discipline.o: disc_stealth.h disc_air.h disc_alchemy.h disc_earth.h
-objs/discipline.o: disc_fire.h disc_sorcery.h disc_spirit.h disc_water.h
-objs/discipline.o: disc_wrath.h disc_shaman.h disc_aegis.h disc_afflictions.h
-objs/discipline.o: disc_cures.h disc_hand_of_god.h disc_ranger.h
-objs/discipline.o: disc_deikhan.h disc_looting.h disc_murder.h disc_hth.h
-objs/discipline.o: disc_warrior.h disc_brawling.h disc_adventuring.h
-objs/discipline.o: disc_combat.h disc_wizardry.h disc_lore.h disc_theology.h
-objs/discipline.o: disc_faith.h disc_slash.h disc_blunt.h disc_pierce.h
-objs/discipline.o: disc_ranged.h disc_barehand.h disc_survival.h
-objs/discipline.o: disc_animal.h disc_nature.h disc_psionics.h
-objs/discipline.o: disc_adv_adventuring.h spelltask.h obj_symbol.h
+objs/discipline.o: disc_fattacks.h disc_plants.h disc_shaman_alchemy.h
+objs/discipline.o: disc_shaman_frog.h disc_shaman_control.h
+objs/discipline.o: disc_shaman_spider.h disc_shaman_skunk.h
+objs/discipline.o: disc_shaman_armadillo.h disc_shaman_healing.h
+objs/discipline.o: disc_ritualism.h disc_thief.h disc_thief_fight.h
+objs/discipline.o: disc_poisons.h disc_traps.h disc_stealth.h disc_air.h
+objs/discipline.o: disc_alchemy.h disc_earth.h disc_fire.h disc_sorcery.h
+objs/discipline.o: disc_spirit.h disc_water.h disc_wrath.h disc_shaman.h
+objs/discipline.o: disc_aegis.h disc_afflictions.h disc_cures.h
+objs/discipline.o: disc_hand_of_god.h disc_ranger.h disc_deikhan.h
+objs/discipline.o: disc_looting.h disc_murder.h disc_hth.h disc_warrior.h
+objs/discipline.o: disc_brawling.h disc_adventuring.h disc_combat.h
+objs/discipline.o: disc_wizardry.h disc_lore.h disc_theology.h disc_faith.h
+objs/discipline.o: disc_slash.h disc_blunt.h disc_pierce.h disc_ranged.h
+objs/discipline.o: disc_barehand.h disc_survival.h disc_animal.h
+objs/discipline.o: disc_nature.h disc_psionics.h disc_adv_adventuring.h
+objs/discipline.o: spelltask.h obj_symbol.h
 objs/disease.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disease.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disease.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -13867,19 +13869,19 @@ objs/skills.o: disc_smythe.h disc_deikhan_fight.h disc_deikhan_aegis.h
 objs/skills.o: disc_deikhan_cures.h disc_deikhan_wrath.h disc_defense.h
 objs/skills.o: disc_mounted.h disc_monk.h disc_iron_body.h disc_meditation.h
 objs/skills.o: disc_leverage.h disc_mindbody.h disc_fattacks.h disc_plants.h
-objs/skills.o: disc_ranger_fight.h disc_shaman_frog.h disc_shaman_healing.h
-objs/skills.o: disc_shaman_alchemy.h disc_shaman_control.h
-objs/skills.o: disc_shaman_spider.h disc_shaman_skunk.h disc_ritualism.h
-objs/skills.o: disc_thief.h disc_thief_fight.h disc_poisons.h disc_traps.h
-objs/skills.o: disc_stealth.h disc_air.h disc_alchemy.h disc_earth.h
-objs/skills.o: disc_fire.h disc_sorcery.h disc_spirit.h disc_water.h
-objs/skills.o: disc_wrath.h disc_aegis.h disc_shaman.h disc_afflictions.h
-objs/skills.o: disc_cures.h disc_hand_of_god.h disc_deikhan.h disc_ranger.h
-objs/skills.o: disc_looting.h disc_murder.h disc_hth.h disc_combat.h
-objs/skills.o: disc_adventuring.h disc_adv_adventuring.h disc_wizardry.h
-objs/skills.o: disc_lore.h disc_theology.h disc_faith.h disc_slash.h
-objs/skills.o: disc_blunt.h disc_pierce.h disc_ranged.h disc_barehand.h
-objs/skills.o: disc_brawling.h disc_warrior.h disc_survival.h disc_animal.h
+objs/skills.o: disc_shaman_frog.h disc_shaman_healing.h disc_shaman_alchemy.h
+objs/skills.o: disc_shaman_control.h disc_shaman_spider.h disc_shaman_skunk.h
+objs/skills.o: disc_ritualism.h disc_thief.h disc_thief_fight.h
+objs/skills.o: disc_poisons.h disc_traps.h disc_stealth.h disc_air.h
+objs/skills.o: disc_alchemy.h disc_earth.h disc_fire.h disc_sorcery.h
+objs/skills.o: disc_spirit.h disc_water.h disc_wrath.h disc_aegis.h
+objs/skills.o: disc_shaman.h disc_afflictions.h disc_cures.h
+objs/skills.o: disc_hand_of_god.h disc_deikhan.h disc_ranger.h disc_looting.h
+objs/skills.o: disc_murder.h disc_hth.h disc_combat.h disc_adventuring.h
+objs/skills.o: disc_adv_adventuring.h disc_wizardry.h disc_lore.h
+objs/skills.o: disc_theology.h disc_faith.h disc_slash.h disc_blunt.h
+objs/skills.o: disc_pierce.h disc_ranged.h disc_barehand.h disc_brawling.h
+objs/skills.o: disc_warrior.h disc_survival.h disc_animal.h
 objs/skills.o: disc_shaman_armadillo.h disc_nature.h disc_psionics.h
 objs/socket.o: /usr/include/g++/csignal /usr/include/signal.h
 objs/socket.o: /usr/include/sys/cdefs.h /usr/include/sys/_posix.h

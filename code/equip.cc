@@ -1070,13 +1070,6 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
               act(buf, FALSE, ch, o, this, TO_NOTVICT);
 
               equipChar(o, getPrimaryHold());
-#if 0
-// bad to do this here, we let them learn dual wield during combat
-              skill = getSkillNum(SKILL_DUAL_WIELD);
-              if (doesKnowSkill(skill) && dynamic_cast<TBaseWeapon *> (equipment[getSecondaryHold()])) {
-                learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, 100);
-              }
-#endif
               // If fighting, make them lose a round or two. 
               loseRoundWear(0.05, TRUE, TRUE);
             } else {

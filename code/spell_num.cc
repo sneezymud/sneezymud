@@ -445,8 +445,6 @@ int mapSpellnumToFile(spellNumT stt)
       return 239;
     case SKILL_HIKING:
       return 266;
-    case SKILL_KICK_RANGER:
-      return 267;
     case SKILL_FORAGE:
       return 268;
     case SKILL_SEEKWATER:
@@ -459,28 +457,18 @@ int mapSpellnumToFile(spellNumT stt)
       return 272;
     case SPELL_ROOT_CONTROL:
       return 273;
-    case SKILL_BASH_RANGER:
-      return 274;
-    case SKILL_RESCUE_RANGER:
-      return 276;
     case SKILL_BEFRIEND_BEAST:
       return 277;
     case SKILL_TRANSFIX:
       return 278;
     case SKILL_SKIN:
       return 279;
-    case SKILL_DUAL_WIELD:
-      return 280;
     case SPELL_LIVING_VINES:
       return 281;
     case SKILL_BEAST_SUMMON:
       return 282;
     case SKILL_BARKSKIN:
       return 283;
-    case SKILL_SWITCH_RANGER:
-      return 287;
-    case SKILL_RETREAT_RANGER:
-      return 288;
     case SPELL_STICKS_TO_SNAKES:
       return 292;
     case SPELL_STORMY_SKIES:
@@ -883,7 +871,7 @@ int mapSpellnumToFile(spellNumT stt)
       return 664;
     case SKILL_SPIN:
       return 665;
-    case SKILL_DUAL_WIELD_WARRIOR:
+    case SKILL_DUAL_WIELD:
       return 666;
     case SKILL_POWERMOVE:
       return 667;
@@ -1476,8 +1464,6 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_DEATHSTROKE;
     case 266:
       return SKILL_HIKING;
-    case 267:
-      return SKILL_KICK_RANGER;
     case 268:
       return SKILL_FORAGE;
     case 269:
@@ -1490,28 +1476,18 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_TRACK;
     case 273:
       return SPELL_ROOT_CONTROL;
-    case 274:
-      return SKILL_BASH_RANGER;
-    case 276:
-      return SKILL_RESCUE_RANGER;
     case 277:
       return SKILL_BEFRIEND_BEAST;
     case 278:
       return SKILL_TRANSFIX;
     case 279:
       return SKILL_SKIN;
-    case 280:
-      return SKILL_DUAL_WIELD;
     case 281:
       return SPELL_LIVING_VINES;
     case 282:
       return SKILL_BEAST_SUMMON;
     case 283:
       return SKILL_BARKSKIN;
-    case 287:
-      return SKILL_SWITCH_RANGER;
-    case 288:
-      return SKILL_RETREAT_RANGER;
     case 292:
       return SPELL_STICKS_TO_SNAKES;
     case 293:
@@ -1915,7 +1891,7 @@ spellNumT mapFileToSpellnum(int stt)
     case 665:
       return SKILL_SPIN;
     case 666:
-      return SKILL_DUAL_WIELD_WARRIOR;
+      return SKILL_DUAL_WIELD;
     case 667:
       return SKILL_POWERMOVE;
     case 668:

@@ -1753,7 +1753,7 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_PHYSICAL, CLASS_WARRIOR, "physical skills"},
   {DISC_SMYTHE, CLASS_WARRIOR, "smythe"},
   {DISC_RANGER, CLASS_RANGER, "ranger abilities"},
-  {DISC_RANGER_FIGHT, CLASS_RANGER, "fighting skills"},  //20
+  {DISC_BOGUS1, 0, "bogus1"},  //20
   {DISC_SHAMAN_ARMADILLO, CLASS_SHAMAN, "armadillo abilities"},
   {DISC_ANIMAL, CLASS_RANGER, "animals"},
   {DISC_PLANTS, CLASS_RANGER, "plants"},

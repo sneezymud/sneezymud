@@ -465,9 +465,6 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       // additionally, do faction percent modification for clerics
       dam = (int) (dam * percModifier());
       break;
-    case SKILL_KICK_RANGER:
-      dam = genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529, REDUCE_NO, !isPc(), TRIM_NO);
-      break;
     case SPELL_ROOT_CONTROL:
       // 4/3 factor added here due to save cutting into avg damage
       dam =  genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);

@@ -32,7 +32,6 @@
 #include "disc_mindbody.h"
 #include "disc_fattacks.h"
 #include "disc_plants.h"
-#include "disc_ranger_fight.h"
 #include "disc_shaman_frog.h"
 #include "disc_shaman_healing.h"
 #include "disc_shaman_alchemy.h"
@@ -532,7 +531,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // disc_physical
 
-    case SKILL_DUAL_WIELD_WARRIOR:  // needs to be moved   666
+    case SKILL_DUAL_WIELD:  // needs to be moved   666
       return &((CDPhysical *) cd)->skDualWieldWarrior;
     case SKILL_DOORBASH:
       return &((CDPhysical *) cd)->skDoorbash;
@@ -551,18 +550,10 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // CLASS RANGER
 
-    case SKILL_KICK_RANGER:  //                334
-      return &((CDRanger *) cd)->skKickRanger;
     case SKILL_BEAST_SOOTHER:  //              338
       return &((CDRanger *) cd)->skBeastSoother;
-    case SKILL_BASH_RANGER:  //                341
-      return &((CDRanger *) cd)->skBashRanger;
-    case SKILL_RESCUE_RANGER:  //              343
-      return &((CDRanger *) cd)->skRescueRanger;
     case SKILL_BEFRIEND_BEAST:  //             344
       return &((CDRanger *) cd)->skBefriendBeast;
-    case SKILL_DUAL_WIELD:  //                 347
-      return &((CDRanger *) cd)->skDualWield;
     case SKILL_BEAST_SUMMON:  //               349
       return &((CDRanger *) cd)->skBeastSummon;
     case SKILL_BARKSKIN:  //                   350
@@ -572,11 +563,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 
 // disc_fight_ranger
-
-    case SKILL_SWITCH_RANGER:  //              351
-      return &((CDRangerFight *) cd)->skSwitchRanger;      
-    case SKILL_RETREAT_RANGER:  //             352
-      return &((CDRangerFight *) cd)->skRetreatRanger;
 
 // disc_armadillo
 

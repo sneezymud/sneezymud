@@ -333,7 +333,6 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case SKILL_KICK_DEIKHAN:
       case SKILL_KICK_THIEF:
       case SKILL_KICK_MONK:
-      case SKILL_KICK_RANGER:
       case SKILL_KICK:
       case SKILL_SPRINGLEAP:
       case TYPE_KICK:
@@ -343,7 +342,6 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
         sprintf(buf, "The body of %s has had many vital organs disembowled from it.",getName());
         break;
       case SKILL_BASH_DEIKHAN:
-      case SKILL_BASH_RANGER:
       case SKILL_BASH:
       case SKILL_TRIP:
         sprintf(buf, "The corpse of %s has a broken nose from falling down too hard.",getName());
@@ -688,7 +686,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case SKILL_SHOVE:
       case SKILL_RETREAT:
       case SKILL_GRAPPLE:
-      case SKILL_DUAL_WIELD_WARRIOR:
+      case SKILL_DUAL_WIELD:
       case SKILL_DOORBASH:
       case SKILL_TRANCE_OF_BLADES:
       case SKILL_HIKING:
@@ -698,17 +696,13 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case SKILL_BEAST_SOOTHER:
       case SKILL_TRACK:
       case SPELL_ROOT_CONTROL:
-      case SKILL_RESCUE_RANGER:
       case SKILL_BEFRIEND_BEAST:
       case SKILL_TRANSFIX:
       case SKILL_SKIN:
       case SKILL_BUTCHER:
-      case SKILL_DUAL_WIELD:
       case SPELL_LIVING_VINES:
       case SKILL_BEAST_SUMMON:
       case SKILL_BARKSKIN:
-      case SKILL_SWITCH_RANGER:
-      case SKILL_RETREAT_RANGER:
       case SPELL_STICKS_TO_SNAKES:
       case SPELL_TREE_WALK:
       case SKILL_BEAST_CHARM:

@@ -1047,12 +1047,10 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_KICK_DEIKHAN:
       case SKILL_KICK_THIEF:
       case SKILL_KICK_MONK:
-      case SKILL_KICK_RANGER:
       case SKILL_KICK:
       case SKILL_SPRINGLEAP:
       case SKILL_DEATHSTROKE:
       case SKILL_BASH_DEIKHAN:
-      case SKILL_BASH_RANGER:
       case SKILL_BASH:
       case SPELL_BONE_BREAKER:
       case SPELL_PARALYZE:
@@ -1215,7 +1213,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_SACRIFICE:
       case SKILL_DISARM:
       case SKILL_PARRY_WARRIOR:
-      case SKILL_DUAL_WIELD_WARRIOR:
+      case SKILL_DUAL_WIELD:
       case SKILL_BERSERK:
       case SKILL_SWITCH_OPP:
       case SKILL_KNEESTRIKE:
@@ -1229,17 +1227,13 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_TRANSFORM_LIMB:
       case SKILL_BEAST_SOOTHER:
       case SPELL_ROOT_CONTROL:
-      case SKILL_RESCUE_RANGER:
       case SKILL_BEFRIEND_BEAST:
       case SKILL_TRANSFIX:
       case SKILL_SKIN:
       case SKILL_BUTCHER:
-      case SKILL_DUAL_WIELD:
       case SPELL_LIVING_VINES:
       case SKILL_BEAST_SUMMON:
       case SKILL_BARKSKIN:
-      case SKILL_SWITCH_RANGER:
-      case SKILL_RETREAT_RANGER:
       case SPELL_STICKS_TO_SNAKES:
       case SPELL_STORMY_SKIES:
       case SPELL_TREE_WALK:

@@ -349,7 +349,6 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SKILL_KICK_DEIKHAN:
     case SKILL_KICK_THIEF:
     case SKILL_KICK_MONK:
-    case SKILL_KICK_RANGER:
     case SKILL_KICK:
     case TYPE_KICK:
     case SKILL_CHOP:
@@ -369,7 +368,6 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case TYPE_SMITE:
     case TYPE_MAUL:
     case SKILL_BASH_DEIKHAN:
-    case SKILL_BASH_RANGER:
     case SKILL_BASH:
     case SKILL_BODYSLAM:
     case SKILL_SPIN:
@@ -636,10 +634,6 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SKILL_FORAGE:
     case SKILL_SEEKWATER:
     case SKILL_TRACK:
-    case SKILL_RESCUE_RANGER:
-    case SKILL_DUAL_WIELD:
-    case SKILL_SWITCH_RANGER:
-    case SKILL_RETREAT_RANGER:
     case SKILL_CONCEALMENT:
     case SKILL_DIVINATION:
     case SKILL_APPLY_HERBS:
@@ -730,7 +724,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SKILL_PENANCE:
     case SKILL_BLUNT_SPEC:
     case SKILL_BAREHAND_SPEC:
-    case SKILL_DUAL_WIELD_WARRIOR:
+    case SKILL_DUAL_WIELD:
     case SPELL_SHIELD_OF_MISTS:
     case SPELL_ENTHRALL_SPECTRE:
     case SPELL_ENTHRALL_GHAST:

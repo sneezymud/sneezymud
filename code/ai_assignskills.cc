@@ -134,14 +134,6 @@ void TBeing::assignSkillsClass()
     assignSkills(Class, prim, favorites);
   }
   
-  if (hasClass(CLASS_RANGER)){
-    Class=RANGER_LEVEL_IND;
-    prim=DISC_RANGER;
-    favorites.clear();
-    favorites.push_back(DISC_RANGER_FIGHT);
-    assignSkills(Class, prim, favorites);
-  }
-  
   if (hasClass(CLASS_SHAMAN)){
     Class=SHAMAN_LEVEL_IND;
     prim=DISC_SHAMAN;

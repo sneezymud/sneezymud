@@ -16,7 +16,6 @@ public:
 // Level 1
 
 // Level 3
-    CSkill skKickRanger;
 
 // Level 7
 
@@ -26,10 +25,8 @@ public:
 //Level 10
 
 // Level 12
-    CSkill skBashRanger;
 
 // level 14
-    CSkill skRescueRanger;
 
 //Level 15
     CSkill skBefriendBeast;
@@ -37,10 +34,8 @@ public:
 // Level 17
 
 // Level 18
-    CSkill skSwitchRanger;
 
 // Level 20
-    CSkill skDualWield;
 
 // Level 23
 
@@ -54,26 +49,16 @@ public:
 
     CDRanger()
       : CDiscipline(),
-      skKickRanger(),
       skBeastSoother(),
-      skBashRanger(),
-      skRescueRanger(),
       skBefriendBeast(),
-      skSwitchRanger(),
-      skDualWield(),
       skBeastSummon(),
       skBarkskin(),
       skRepairRanger() {
     }
     CDRanger(const CDRanger &a)
       : CDiscipline(a),
-      skKickRanger(a.skKickRanger),
       skBeastSoother(a.skBeastSoother),
-      skBashRanger(a.skBashRanger),
-      skRescueRanger(a.skRescueRanger),
       skBefriendBeast(a.skBefriendBeast),
-      skSwitchRanger(a.skSwitchRanger),
-      skDualWield(a.skDualWield),
       skBeastSummon(a.skBeastSummon),
       skBarkskin(a.skBarkskin), 
       skRepairRanger(a.skRepairRanger) {
@@ -81,13 +66,8 @@ public:
     CDRanger & operator=(const CDRanger &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skKickRanger = a.skKickRanger;
       skBeastSoother = a.skBeastSoother;
-      skBashRanger = a.skBashRanger;
-      skRescueRanger = a.skRescueRanger;
       skBefriendBeast = a.skBefriendBeast;
-      skSwitchRanger = a.skSwitchRanger;
-      skDualWield = a.skDualWield;
       skBeastSummon = a.skBeastSummon;
       skBarkskin = a.skBarkskin;
       skRepairRanger = a.skRepairRanger;

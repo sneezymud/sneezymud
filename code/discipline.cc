@@ -22,7 +22,6 @@
 #include "disc_mindbody.h"
 #include "disc_fattacks.h"
 #include "disc_plants.h"
-#include "disc_ranger_fight.h"
 #include "disc_shaman_alchemy.h"
 #include "disc_shaman_frog.h"
 #include "disc_shaman_control.h"
@@ -642,16 +641,6 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
           has_class = TRUE;
         }
       }
-      if (hasClass(CLASS_RANGER)) {
-        if (!has_class) {
-          spell_num = SKILL_KICK_RANGER;
-        }
-        if ((num2 = getSkillValue(SKILL_KICK_RANGER)) > num) {
-          spell_num = SKILL_KICK_RANGER;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
       if (hasClass(CLASS_THIEF)) {
         if (!has_class) {
           spell_num = SKILL_KICK_THIEF;
@@ -694,16 +683,6 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
           has_class = TRUE;
         }
       }
-      if (hasClass(CLASS_RANGER)) {
-        if (!has_class) {
-          spell_num = SKILL_BASH_RANGER;
-        }
-        if ((num2 = getSkillValue(SKILL_BASH_RANGER)) > num) {
-          spell_num = SKILL_BASH_RANGER;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
       return spell_num;
     case SKILL_TRIP:
       if (hasClass(CLASS_WARRIOR)) {
@@ -724,16 +703,6 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
         }
         if ((num2 = getSkillValue(SKILL_RETREAT_THIEF)) > num) {
           spell_num = SKILL_RETREAT_THIEF;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_RANGER)) {
-        if (!has_class) {
-          spell_num = SKILL_RETREAT_RANGER;
-        }
-        if ((num2 = getSkillValue(SKILL_RETREAT_RANGER)) > num) {
-          spell_num = SKILL_RETREAT_RANGER;
           num = num2;
           has_class = TRUE;
         }
@@ -800,16 +769,6 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
           has_class = TRUE;
         }
       }
-      if (hasClass(CLASS_RANGER)) {
-        if (!has_class) {
-          spell_num = SKILL_SWITCH_RANGER;
-        }
-        if ((num2 = getSkillValue(SKILL_SWITCH_RANGER)) > num) {
-          spell_num = SKILL_SWITCH_RANGER;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
       if (hasClass(CLASS_DEIKHAN)) {
         if (!has_class) {
           spell_num = SKILL_SWITCH_DEIKHAN;
@@ -838,16 +797,6 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
         }
         if ((num2 = getSkillValue(SKILL_RESCUE_DEIKHAN)) > num) {
           spell_num = SKILL_RESCUE_DEIKHAN;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_RANGER)) {
-        if (!has_class) {
-          spell_num = SKILL_RESCUE_RANGER;
-        }
-        if ((num2 = getSkillValue(SKILL_RESCUE_RANGER)) > num) {
-          spell_num = SKILL_RESCUE_RANGER;
           num = num2;
           has_class = TRUE;
         }
@@ -1621,22 +1570,12 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
       }
       return spell_num;
    case SKILL_DUAL_WIELD:
-      if (hasClass(CLASS_RANGER)) {
+      if (hasClass(CLASS_WARRIOR)) {
         if (!has_class) {
           spell_num = SKILL_DUAL_WIELD;
         }
         if ((num2 = getSkillValue(SKILL_DUAL_WIELD)) > num) {
           spell_num = SKILL_DUAL_WIELD;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_WARRIOR)) {
-        if (!has_class) {
-          spell_num = SKILL_DUAL_WIELD_WARRIOR;
-        }
-        if ((num2 = getSkillValue(SKILL_DUAL_WIELD_WARRIOR)) > num) {
-          spell_num = SKILL_DUAL_WIELD_WARRIOR;
           num = num2;
           has_class = TRUE;
         }
@@ -2584,7 +2523,6 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_SMYTHE] = new CDSmythe();
 
     discs->disc[DISC_RANGER] = new CDRanger();
-    discs->disc[DISC_RANGER_FIGHT] = new CDRangerFight();
     discs->disc[DISC_ANIMAL] = new CDAnimal();
     discs->disc[DISC_PLANTS] = new CDPlants();
     discs->disc[DISC_NATURE] = new CDNature();
@@ -2710,7 +2648,6 @@ void TBeing::assignDisciplinesClass()
   if (hasClass(CLASS_RANGER)) {
     if (!isPc()) {
       discs->disc[DISC_RANGER] = new CDRanger();
-      discs->disc[DISC_RANGER_FIGHT] = new CDRangerFight();
       discs->disc[DISC_ANIMAL] = new CDAnimal();
       discs->disc[DISC_PLANTS] = new CDPlants();
       discs->disc[DISC_SURVIVAL] = new CDSurvival();
@@ -3069,7 +3006,6 @@ int TBeing::getSkillLevel(spellNumT skill) const
       lev = getClassLevel(CLASS_MAGE);
       break;
     case DISC_RANGER: 
-    case DISC_RANGER_FIGHT:
     case DISC_PLANTS:
     case DISC_ANIMAL:
     case DISC_SURVIVAL:
@@ -3144,6 +3080,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_BAREHAND:
     case DISC_DEFENSE:
     case DISC_PSIONICS:
+    case DISC_BOGUS1:
       lev = GetMaxLevel();
       break;
     case MAX_DISCS:
