@@ -83,6 +83,7 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     newtile->name = mud_str_dup(buf5);
     newtile->shortDescr = mud_str_dup(buf6);
     act(buf4,TRUE,ch,NULL,NULL,TO_CHAR,NULL);
+    newtile->obj_flags.decay_time = o->obj_flags.decay_time;
       
     ch->equipChar(newtile, pos, SILENT_YES);
   } else {
@@ -252,6 +253,7 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
     tile2->swapToStrung();
     tile2->name = mud_str_dup(buf5);
     tile2->shortDescr = mud_str_dup(buf6);
+    tile2->obj_flags.decay_time = tile1->obj_flags.decay_time;
     
     if (!left)
     {

@@ -25,6 +25,7 @@ public:
   // other functions
   const bool hasDigit() const;
   const bool isNumber() const;
+  const bool isWord() const;
   const bool startsVowel() const;
 
 };

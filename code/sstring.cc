@@ -187,7 +187,14 @@ const bool sstring::isNumber() const
   return true;
 }
 
-
+const bool sstring::isWord() const
+{
+  for(unsigned int i=0;i<size();++i){
+    if (!isalpha((*this)[i]))
+      return false;
+  }
+  return true;
+}
 
 const bool sstring::startsVowel() const
 {

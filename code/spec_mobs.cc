@@ -7473,6 +7473,7 @@ int mimic(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mimic, TObj *)
 }  
 
 extern int fireman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int flaskPeddler(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int corporateAssistant(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int postman(TBeing *, cmdTypeT , const char *, TMonster *, TObj *);
 extern int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *, TObj *);
@@ -7674,6 +7675,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "fireman", fireman},
   {TRUE, "mimic", mimic},
   {TRUE, "archer", archer},
+  {FALSE, "peddler", flaskPeddler}, // 185
 // replace non-zero, bogus_mob_procs above before adding
 };
 

@@ -4,6 +4,8 @@
 #include "obj_quiver.h"
 #include "being.h"
 
+#define MAX_RANGE 3
+
 vector <TBow *> TBeing::getBows() 
 {
   TBow *temp = NULL;
@@ -93,13 +95,12 @@ TArrow *TBeing::autoGetAmmo(TBow *bow)
 }
 
 // returns TRUE for shot or restring, otherwise FALSE
+// DELETE_THIS and DELETE_OBJECT for a couple of calls
 int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 {
-  // "20" comes from 2 rounds x 5 quick_pulses/second (this is faster than
-  //   pc reload - may have to come back to it
-  // CMD_GENERIC_PULSE is less common and is used from the tracking tie-in
   if (cmd != CMD_GENERIC_PULSE) 
     return FALSE;
+  
   int rm = 0, new_rm = 0;
   TThing *t;
   const char *directions[][2] =
@@ -110,13 +111,14 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     {"west", "east"},
     {"up", "below"},
     {"down", "above"},
+    {"northeast", "southwest"},
     {"northwest", "southeast"},
     {"southeast", "northwest"},
     {"southwest", "northeast"}
   };
 
   sstring temp, buf;
-  int count, numsimilar;
+  int count = 0, numsimilar, range;
   int which;
   int Hi = 0, Hf = 0; //hp initial, hp final
   dirTypeT i;
@@ -124,16 +126,12 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   TBeing *tbt2 = NULL;
 
 
-// if I have ammo, then I don't want to fight straight up
-// if I'm aggro and in the same room as a Pc, or I hate a PC
-// in my room, flee out first
-
 // ammo check
   TBow *bow = NULL;
   TArrow *ammo = NULL;
   TArrow *tempArr = NULL;
-  vector <TBow *> bows = ch->getBows();
   unsigned int j;
+  vector <TBow *> bows = ch->getBows();
   for (j = 0; j < bows.size(); j++)
   {
     bow = bows[j];
@@ -145,45 +143,67 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       break;
     }
   }
-  
+
   if (!bow || (!ammo && !bow->getStuff()))
       return FALSE;
 
-// in same room check
+// if I have ammo, then I don't want to fight straight up
+// if I'm aggro and in the same room as a Pc, or I hate a PC
+// in my room, flee out first
+// only want to do this fleeing if they have a bow
   for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
     if ((tbt = dynamic_cast<TBeing *>(t))) {
-      if ((tbt->isPc() && IS_SET(ch->specials.act, ACT_AGGRESSIVE)) ||
-         ch->Hates(tbt, NULL))
+      if (tbt->isPc() && (IS_SET(ch->specials.act, ACT_AGGRESSIVE)) ||
+          ch->Hates(tbt, NULL))
         ch->doFlee("");
+      if (!ch->canSee(bow) || !ch->canSee(ammo)) // fled to darker spot
+      {
+        vector <TBow *> bows = ch->getBows();
+        for (j = 0; j < bows.size(); j++)
+        {
+          bow = bows[j];
+        if (bow->getStuff())
+            break;
+          if (!bow) vlogf(LOG_BUG, fmt("spec_mobs_archer.cc: archer: bow is null somehow"));
+          if (bow && (tempArr = ch->autoGetAmmo(bow))) {
+            ammo = tempArr;
+            break;
+          }
+        }
+        if (!bow || (!ammo && !bow->getStuff()))
+          return FALSE;
+      }
     }
   }
-
+ 
+  
+  tbt = NULL;
 // find target
   for (i = MIN_DIR; i <= (MAX_DIR - 1); i++) {
+// keep looking to max range
     rm = ch->in_room;
-    if (clearpath(rm, i)) {
-      
-      new_rm = real_roomp(rm)->dir_option[i]->to_room;
-      if (new_rm == rm || (real_roomp(rm)->isRoomFlag(ROOM_PEACEFUL)))
-       	continue;
-      else
-	      rm = new_rm;
-      
-      count = 0;
-
-      for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
-      	tbt = dynamic_cast<TBeing *>(t);
-      	if (!tbt || !tbt->isPc())
-	        continue;
-	      if (!ch->canSee(tbt))
+    for (range = 1; range <= MAX_RANGE; range++) {
+      if (clearpath(rm, i)) {
+        new_rm = real_roomp(rm)->dir_option[i]->to_room;
+        if (new_rm == rm || (real_roomp(rm)->isRoomFlag(ROOM_PEACEFUL)))
           continue;
-        if (!ch->Hates(tbt, NULL) && !IS_SET(ch->specials.act, ACT_AGGRESSIVE))
-          continue;
-
-	      //we have a mob we want to kick his ass
-	      count++;
+        else
+          rm = new_rm;
+        
+        count = 0;
+  
+        for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+          tbt = dynamic_cast<TBeing *>(t);
+          if (!tbt || !tbt->isPc())
+            continue;
+          if (!ch->canSee(tbt))
+            continue;
+          if (!ch->Hates(tbt, NULL) && !IS_SET(ch->specials.act, ACT_AGGRESSIVE))
+            continue;
+          //we have a room with a mob we are after
+          count++;
+        }
       }
-      
       if (count == 0)
 	      continue;
       
@@ -195,11 +215,10 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 	        continue;
 	      if (!ch->canSee(tbt))
           continue;
-        if (!ch->Hates(tbt, NULL))
+        if (!ch->Hates(tbt, NULL) && !IS_SET(ch->specials.act, ACT_AGGRESSIVE))
           continue;
-        if (!IS_SET(ch->specials.act, ACT_AGGRESSIVE))
-          continue;
-
+        count++;
+        
 	      if (count == which) // found victim
 	        break;
       }
@@ -234,10 +253,8 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       }
 
       numsimilar = max(numsimilar, 1);// sometimes we get 0 instead of 1 if there is only one in the room
-
       temp = add_bars(temp);
     // check for bow and ammo combination
-
 
     if (bow->isBowFlag(BOW_STRING_BROKE)) {
     
@@ -270,10 +287,9 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       
-      bow->bloadArrowBow(ch, ammo);
-    
+    bow->bloadArrowBow(ch, ammo);
     if(!(bow = dynamic_cast<TBow *>(ch->equipment[ch->getPrimaryHold()]))
-        && bow->getStuff())
+        || !bow->getStuff())
       return FALSE; // in case bload fails for some reason
     
     // shoot target and remove bow
@@ -281,17 +297,19 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   
     // text to character
         
-    buf = fmt("%s %d.%s 1") % directions[i][0] % numsimilar % temp;
+    buf = fmt("%s %d.%s %d") % directions[i][0] % numsimilar % temp % range;
 
     temp = tbt->getName();
   
+// too mean? removed for now - otherwise engage-all won't help you even
+// when he's out of arrows
     if (!ch->specials.hunting || ch->specials.hunting != tbt)
       ch->setHunting(tbt);
-    if (!ch->Hates(tbt, NULL))
-      ch->addHated(tbt);
+//    if (!ch->Hates(tbt, NULL))
+//      ch->addHated(tbt);
 
     if (!(ch->doShoot(buf.c_str())))
-      vlogf(LOG_BUG, fmt("spec_mobs_archer.cc: archer: error shooting bow"));
+      vlogf(LOG_BUG, fmt("spec_mobs_archer.cc: archer: error shooting bow with arguments: %s") % buf);
         
       t = ch->equipment[HOLD_LEFT];
       rc = ch->doRemove("", t);   

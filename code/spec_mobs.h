@@ -166,7 +166,8 @@ const int SPEC_RIDDLING_TREE      =181;
 const int SPEC_FIREMAN            =182;
 const int SPEC_MIMIC              =183;
 const int SPEC_ARCHER             =184;
-const int NUM_MOB_SPECIALS        =184;
+const int SPEC_FLASK_PEDDLER      =185;
+const int NUM_MOB_SPECIALS        =185;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
