@@ -980,6 +980,7 @@ int TMonster::fighterMove(TBeing &vict)
   bool offensive=FALSE;
   bool badspell=FALSE;
   spellTaskData *ts=NULL;
+  TBaseClothing *secHandCloth = dynamic_cast<TBaseClothing *>(vict.heldInSecHand());
 
   if (!awake())
     return FALSE;
@@ -1089,7 +1090,12 @@ int TMonster::fighterMove(TBeing &vict)
     return doTrip("", &vict);
   } else if (canDisarm(&vict, SILENT_YES) && 
              (getPosition() >= POSITION_CRAWLING) &&
-             (vict.heldInPrimHand() || vict.heldInSecHand())) {
+             (vict.heldInPrimHand() || 
+              (vict.heldInSecHand() && !secHandCloth) ||
+              (secHandCloth && !secHandCloth->isShield() )||
+          /// trying to account for disarm working 1/3 of time with shield
+          //    don't want to keep failing and landing on ass
+              (secHandCloth && secHandCloth->isShield() && !::number(0,2)))) {
     return doDisarm("", &vict);
   }
   return FALSE;
@@ -1098,7 +1104,7 @@ int TMonster::fighterMove(TBeing &vict)
 int TMonster::monkMove(TBeing &vict)
 {
   int num;
-
+  TBaseClothing *secHandCloth = dynamic_cast<TBaseClothing *>(vict.heldInSecHand());
   if (!awake())
     return FALSE;
 
@@ -1134,7 +1140,11 @@ int TMonster::monkMove(TBeing &vict)
     } else if ((num <= 7) &&
                canDisarm(&vict, SILENT_YES) &&
                (getPosition() >= POSITION_CRAWLING) &&
-               (vict.heldInPrimHand() || vict.heldInSecHand())) {
+               (vict.heldInPrimHand() || 
+                (vict.heldInSecHand() && !secHandCloth) ||
+                (secHandCloth && !secHandCloth->isShield() )||
+        /// trying to account for disarm working 1/3 of time with shield
+                (secHandCloth && secHandCloth->isShield() && !::number(0,2)))) {
       return doDisarm("", &vict);
     //else if (num <= 11 && (4 * getHit() < 3 * hitLimit()))
       //return doFeignDeath();
@@ -1173,6 +1183,7 @@ int TMonster::monkMove(TBeing &vict)
 
 int TMonster::thiefMove(TBeing &vict)
 {
+  TBaseClothing *secHandCloth = dynamic_cast<TBaseClothing *>(vict.heldInSecHand());
   if (!awake())
     return FALSE;
 
@@ -1189,7 +1200,12 @@ int TMonster::thiefMove(TBeing &vict)
   } else {
     if (canDisarm(&vict, SILENT_YES) && 
        (getPosition() >= POSITION_STANDING) &&
-       (vict.heldInPrimHand() || vict.heldInSecHand())) {
+       (vict.heldInPrimHand() ||
+            (vict.heldInSecHand() && !secHandCloth) ||
+            (secHandCloth && !secHandCloth->isShield() )||
+        /// trying to account for disarm working 1/3 of time with shield
+        //    don't want to keep failing and landing on ass
+            (secHandCloth && secHandCloth->isShield() && !::number(0,2)))) {
       return doDisarm("", &vict);
     }
   }

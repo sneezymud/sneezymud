@@ -7,6 +7,7 @@
 
 #include "stdsneezy.h"
 #include "combat.h"
+#include "obj_base_clothing.h"
 
 bool TBeing::canDisarm(TBeing *victim, silentTypeT silent)
 {
@@ -83,6 +84,16 @@ bool TBeing::canDisarm(TBeing *victim, silentTypeT silent)
     if (bothArmsHurt()) {
       if (!silent)
         act("You need working arms to disarm!", FALSE, this, 0, 0, TO_CHAR);
+      return FALSE;
+    }
+  }
+  TBaseClothing *shield = dynamic_cast<TBaseClothing *>(victim->heldInSecHand());
+  if (!victim->heldInPrimHand() && shield && shield->isShield()) {
+    if(!::number(0,2)) {
+      act("You catch the edge of $p's $N but fail to disarm it.",
+          FALSE, this, victim, victim->heldInSecHand(), TO_CHAR);
+      act("$n catches the edge of $p's $N but fails to disarm it.",
+          FALSE, this, victim, victim->heldInSecHand(), TO_ROOM);
       return FALSE;
     }
   }
