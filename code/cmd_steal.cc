@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_steal.cc,v $
+// Revision 1.2  1999/10/12 00:15:05  lapsos
+// Added block to prevent stealing from shopkeepers.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -65,6 +68,13 @@ static bool genericCanSteal(TBeing *thief, TBeing *victim)
 
   if (thief->isFlying()) {
     thief->sendTo("The fact that you are flying makes you a bit too conspicuous to steal.\n\r");
+    return FALSE;
+  }
+
+  if (victim->spec == SPEC_SHOPKEEPER && !is_imp) {
+    thief->sendTo("Oh, Bad Move.  Bad Move.\n\r");
+    vlogf(10, "%s just tried to steal from a shopkeeper! [%s]",
+          thief->getName(), victim->getName());
     return FALSE;
   }
 
