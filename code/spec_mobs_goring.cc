@@ -19,7 +19,7 @@ int tuskGoring(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tMyself, T
       !tMyself->awake() || tMyself->spelltask ||
       !tVictim || tVictim->riding ||
       tVictim->getPosition() > POSITION_STANDING ||
-      !tMyself->sameRoom(tVictim) || ::number(0, 19) ||
+      !tMyself->sameRoom(tVictim) || ::number(0, 7) ||
       tMyself->getPosition() < POSITION_STANDING)
     return FALSE;
 

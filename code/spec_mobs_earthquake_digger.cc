@@ -26,14 +26,14 @@ int tunnelerEarthquake(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tM
       tCmd != CMD_MOB_COMBAT)
     return FALSE;
 
-  if (tCmd == CMD_GENERIC_PULSE && !::number(0, 99) && !tMyself->fight()) {
+  if (tCmd == CMD_GENERIC_PULSE && !::number(0, 9) && !tMyself->fight()) {
     act("$n rams into the ground then thunders up somewhere else.",
         FALSE, tMyself, NULL, NULL, TO_ROOM);
 
     return FALSE;
   }
 
-  if (tCmd == CMD_MOB_COMBAT && !::number(0, 19) && tMyself->fight()) {
+  if (tCmd == CMD_MOB_COMBAT && !::number(0, 1) && tMyself->fight()) {
     int     tFighters = 0,
             tDamage;
     TThing *tThing,
