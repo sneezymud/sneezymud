@@ -607,8 +607,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 #endif
 // disc_plants
 
-    case SKILL_CONCEALMENT:  //                381
-      return &((CDPlants *) cd)->skConcealment;
     case SKILL_APPLY_HERBS:  //                382
       return &((CDPlants *) cd)->skApplyHerbs;
 #if 1
@@ -907,6 +905,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // disc_stealth
 
+    case SKILL_CONCEALMENT:  //                381
+      return &((CDStealth *) cd)->skConcealment;
     case SKILL_DISGUISE:  //                  499
       return &((CDStealth *) cd)->skDisguise;
 

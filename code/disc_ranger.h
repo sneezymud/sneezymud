@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_ranger.h,v $
+// Revision 5.5  2004/08/24 19:00:26  peel
+// moved concealment and track to thief and stealth discs, respectively
+//
 // Revision 5.4  2002/11/12 00:14:33  peel
 // added isBasic() and isFast() to CDiscipline
 // added isBasic() return true to each discipline that is a basic disc
@@ -155,8 +158,6 @@ public:
 
 private:
 };
-
-    int conceal(TBeing *, TBeing *);
 
 #endif
 

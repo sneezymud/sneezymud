@@ -230,7 +230,7 @@ LIBDISC=disc_adventuring.o  	disc_murder.o		\
 	disc_air.o		disc_pierce.o		\
 	disc_alchemy.o	 	disc_psionics.o		\
 	disc_animal.o	 	disc_ranged.o		\
-	disc_blunt.o	 	disc_ranger.o		\
+	disc_blunt.o	 	disc_stealth.o		\
 	disc_brawling.o	 	disc_shaman.o		\
 	disc_cleric.o	 	disc_shaman_alchemy.o	\
 	disc_combat.o	 	disc_shaman_armadillo.o	\
@@ -5605,56 +5605,6 @@ objs/disc_ranged.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/disc_ranged.o: person.h monster.h account.h extern.h handler.h
 objs/disc_ranged.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/disc_ranged.o: format.h disc_ranged.h obj_bow.h obj_tool.h
-objs/disc_ranger.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
-objs/disc_ranger.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
-objs/disc_ranger.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
-objs/disc_ranger.o: /usr/include/g++/ctime /usr/include/time.h
-objs/disc_ranger.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
-objs/disc_ranger.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
-objs/disc_ranger.o: /usr/include/machine/endian.h /usr/include/g++/cctype
-objs/disc_ranger.o: /usr/include/ctype.h /usr/include/runetype.h
-objs/disc_ranger.o: /usr/include/g++/cassert /usr/include/assert.h
-objs/disc_ranger.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_ranger.o: /usr/include/stdarg.h /usr/include/g++/cmath
-objs/disc_ranger.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
-objs/disc_ranger.o: /usr/include/math.h /usr/include/g++/cerrno
-objs/disc_ranger.o: /usr/include/errno.h /usr/include/g++/string
-objs/disc_ranger.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
-objs/disc_ranger.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
-objs/disc_ranger.o: /usr/include/g++/stl_config.h
-objs/disc_ranger.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
-objs/disc_ranger.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_ranger.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
-objs/disc_ranger.o: /usr/include/g++/stl_iterator.h
-objs/disc_ranger.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
-objs/disc_ranger.o: /usr/include/g++/stl_algobase.h
-objs/disc_ranger.o: /usr/include/g++/stl_pair.h
-objs/disc_ranger.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/disc_ranger.o: /usr/include/machine/limits.h
-objs/disc_ranger.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
-objs/disc_ranger.o: /usr/include/g++/new /usr/include/g++/exception
-objs/disc_ranger.o: /usr/include/g++/stl_construct.h
-objs/disc_ranger.o: /usr/include/g++/stl_uninitialized.h
-objs/disc_ranger.o: /usr/include/g++/stl_vector.h
-objs/disc_ranger.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
-objs/disc_ranger.o: /usr/include/g++/stl_tree.h
-objs/disc_ranger.o: /usr/include/g++/stl_function.h
-objs/disc_ranger.o: /usr/include/g++/stl_map.h
-objs/disc_ranger.o: /usr/include/g++/stl_multimap.h /usr/include/g++/list
-objs/disc_ranger.o: /usr/include/g++/stl_list.h /usr/include/g++/iostream
-objs/disc_ranger.o: /usr/include/g++/sstream /usr/include/g++/fstream
-objs/disc_ranger.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
-objs/disc_ranger.o: spells.h structs.h parse.h immunity.h discipline.h
-objs/disc_ranger.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
-objs/disc_ranger.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
-objs/disc_ranger.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
-objs/disc_ranger.o: task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/disc_ranger.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
-objs/disc_ranger.o: person.h monster.h account.h extern.h handler.h
-objs/disc_ranger.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/disc_ranger.o: format.h combat.h disc_ranger.h obj_portal.h
-objs/disc_ranger.o: obj_seethru.h pathfinder.h /usr/include/g++/deque
-objs/disc_ranger.o: /usr/include/g++/stl_deque.h
 objs/disc_shaman.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_shaman.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disc_shaman.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -6332,6 +6282,59 @@ objs/disc_spirit.o: person.h monster.h account.h extern.h handler.h
 objs/disc_spirit.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/disc_spirit.o: format.h combat.h spelltask.h disc_spirit.h
 objs/disc_spirit.o: obj_magic_item.h
+objs/disc_stealth.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
+objs/disc_stealth.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
+objs/disc_stealth.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/disc_stealth.o: /usr/include/g++/ctime /usr/include/time.h
+objs/disc_stealth.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/disc_stealth.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
+objs/disc_stealth.o: /usr/include/machine/endian.h /usr/include/g++/cctype
+objs/disc_stealth.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/disc_stealth.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/disc_stealth.o: /usr/include/g++/cstring /usr/include/string.h
+objs/disc_stealth.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/disc_stealth.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/disc_stealth.o: /usr/include/math.h /usr/include/g++/cerrno
+objs/disc_stealth.o: /usr/include/errno.h /usr/include/g++/string
+objs/disc_stealth.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
+objs/disc_stealth.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/disc_stealth.o: /usr/include/g++/stl_config.h
+objs/disc_stealth.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/disc_stealth.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
+objs/disc_stealth.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
+objs/disc_stealth.o: /usr/include/g++/stl_iterator.h
+objs/disc_stealth.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
+objs/disc_stealth.o: /usr/include/g++/stl_algobase.h
+objs/disc_stealth.o: /usr/include/g++/stl_pair.h
+objs/disc_stealth.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/disc_stealth.o: /usr/include/machine/limits.h
+objs/disc_stealth.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/disc_stealth.o: /usr/include/g++/new /usr/include/g++/exception
+objs/disc_stealth.o: /usr/include/g++/stl_construct.h
+objs/disc_stealth.o: /usr/include/g++/stl_uninitialized.h
+objs/disc_stealth.o: /usr/include/g++/stl_vector.h
+objs/disc_stealth.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/disc_stealth.o: /usr/include/g++/stl_tree.h
+objs/disc_stealth.o: /usr/include/g++/stl_function.h
+objs/disc_stealth.o: /usr/include/g++/stl_map.h
+objs/disc_stealth.o: /usr/include/g++/stl_multimap.h /usr/include/g++/list
+objs/disc_stealth.o: /usr/include/g++/stl_list.h /usr/include/g++/iostream
+objs/disc_stealth.o: /usr/include/g++/sstream /usr/include/g++/fstream
+objs/disc_stealth.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
+objs/disc_stealth.o: spells.h structs.h parse.h immunity.h discipline.h
+objs/disc_stealth.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
+objs/disc_stealth.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
+objs/disc_stealth.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
+objs/disc_stealth.o: task.h weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_stealth.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/disc_stealth.o: person.h monster.h account.h extern.h handler.h
+objs/disc_stealth.o: obj_money.h spec_mobs.h materials.h colorstring.h
+objs/disc_stealth.o: format.h games.h /usr/include/g++/algorithm
+objs/disc_stealth.o: /usr/include/g++/stl_tempbuf.h
+objs/disc_stealth.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
+objs/disc_stealth.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
+objs/disc_stealth.o: game_crazyeights.h game_drawpoker.h combat.h
+objs/disc_stealth.o: disc_thief.h obj_tool.h disc_stealth.h
 objs/disc_survival.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_survival.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_survival.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -6486,6 +6489,7 @@ objs/disc_thief.o: /usr/include/g++/stl_tempbuf.h /usr/include/g++/stl_algo.h
 objs/disc_thief.o: /usr/include/g++/stl_heap.h /usr/include/g++/deque
 objs/disc_thief.o: /usr/include/g++/stl_deque.h game_crazyeights.h
 objs/disc_thief.o: game_drawpoker.h combat.h disc_thief.h obj_tool.h
+objs/disc_thief.o: pathfinder.h obj_portal.h obj_seethru.h
 objs/disc_warrior.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_warrior.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disc_warrior.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -18833,6 +18837,7 @@ objs/task_trap.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/task_trap.o: being.h person.h monster.h account.h extern.h handler.h
 objs/task_trap.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
 objs/task_trap.o: obj_open_container.h obj_base_container.h obj_trap.h
+objs/task_trap.o: obj_arrow.h obj_base_weapon.h
 objs/task_whittle.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/task_whittle.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/task_whittle.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -19014,7 +19019,8 @@ objs/trap.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/trap.o: being.h person.h monster.h account.h extern.h handler.h
 objs/trap.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
 objs/trap.o: disc_looting.h obj_trap.h obj_portal.h obj_seethru.h
-objs/trap.o: obj_open_container.h obj_base_container.h
+objs/trap.o: obj_open_container.h obj_base_container.h obj_arrow.h
+objs/trap.o: obj_base_weapon.h
 objs/utility.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/utility.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/utility.o: /usr/include/g++/cstdlib /usr/include/stdlib.h

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_plants.h,v $
+// Revision 5.4  2004/08/24 19:00:26  peel
+// moved concealment and track to thief and stealth discs, respectively
+//
 // Revision 5.3  2001/07/05 21:25:54  peel
 // Trying to fix cvs
 // what a headache
@@ -31,21 +34,18 @@
 class CDPlants : public CDiscipline
 {
 public:
-    CSkill skConcealment;
     CSkill skApplyHerbs;
     CSkill skEarthmaw;
     CSkill skCreepingDoom;
 
     CDPlants()
       : CDiscipline(),
-      skConcealment(),
       skApplyHerbs(),
       skEarthmaw(),
       skCreepingDoom() {
     }
     CDPlants(const CDPlants &a)
       : CDiscipline(a),
-      skConcealment(a.skConcealment),
       skApplyHerbs(a.skApplyHerbs),
       skEarthmaw(a.skEarthmaw),
       skCreepingDoom(a.skCreepingDoom)  {
@@ -53,7 +53,6 @@ public:
     CDPlants & operator= (const CDPlants &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skConcealment = a.skConcealment;
       skApplyHerbs = a.skApplyHerbs;
       skEarthmaw = a.skEarthmaw;
       skCreepingDoom = a.skCreepingDoom;
