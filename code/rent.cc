@@ -4404,23 +4404,21 @@ void TBeing::doClone(const sstring &arg)
   }
   thing_to_room(mob, in_room);
   mob->swapToStrung();
-  
 
   delete [] mob->name;
-  sstring tmpstr = st1.name;
-  tmpstr += " [clone]";
-  mob->name = mud_str_dup(tmpstr);
+  mob->name = mud_str_dup(fmt("%s [clone]") % st1.name);
+
   delete [] mob->shortDescr;
   mob->shortDescr = mud_str_dup(st1.name);
+
   delete [] mob->player.longDescr;
-  tmpstr = st1.name;
-  tmpstr += " is standing here.";
-  mob->player.longDescr = mud_str_dup(tmpstr);
+  mob->player.longDescr = mud_str_dup(fmt("%s is standing here") % st1.name);
+
   delete [] mob->getDescr();
   if(*st1.description)
-  {
     mob->setDescr(st1.description);
-  } else mob->setDescr(NULL);
+  else 
+    mob->setDescr(NULL);
   
   mob->setSex(sexTypeT(st1.sex));
   mob->setHeight(st1.height);
@@ -4429,7 +4427,7 @@ void TBeing::doClone(const sstring &arg)
   
   
   // open player rent file
-  sstring buf = fmt ("rent/%c/%s") % LOWER(ch_name.c_str()[0]) % ch_name.lower().c_str();
+  sstring buf = fmt ("rent/%c/%s") % LOWER(ch_name[0]) % ch_name.lower();
   if (!(fp = fopen(buf.c_str(), "r+b"))) {
     sendTo("Rent file could not be opened.  Your clone stands naked before you.\n\r");
     fclose(fp);
@@ -4451,15 +4449,15 @@ void TBeing::doClone(const sstring &arg)
   fclose(fp);
 
 
-  // add NO RENT to the objects, don't want them falling into PC hands permanently
+  // add NO RENT to the objects, don't want them falling into PC 
+  // hands permanently
   wearSlotT ij;
   TObj *o;
-  for (ij = MIN_WEAR; ij < MAX_WEAR; ij++)
-  {
+  for (ij = MIN_WEAR; ij < MAX_WEAR; ij++){
     if((o = dynamic_cast<TObj *>(mob->equipment[ij])))
-    {
       o->addObjStat(ITEM_NORENT);
-    } else vlogf(LOG_BUG, "did not add no-rent flag to item in slot %d when cloning", (int) ij);
+    else 
+      vlogf(LOG_BUG, "did not add no-rent flag to item in slot %d when cloning", (int) ij);
   }
   
   TThing *tmp2 = mob->getStuff();
@@ -4467,10 +4465,11 @@ void TBeing::doClone(const sstring &arg)
 //  TThing *b1, *next;
   mob->setStuff(NULL);
   while (tmp2) {
-    if ((o = dynamic_cast<TObj *>(tmp2))) {
+    if ((o = dynamic_cast<TObj *>(tmp2)))
       o->addObjStat(ITEM_NORENT);
-    } else vlogf(LOG_BUG, "did not add no-rent flag to %s when cloning",
-        tmp2->name);
+    else 
+      vlogf(LOG_BUG, "did not add no-rent flag to %s when cloning", 
+	    tmp2->name);
 /*    if ((dynamic_cast<TBag *>(tmp2))) {
       for (b1 = tmp2->getStuff(); b1; next) 
       {
