@@ -201,7 +201,7 @@ int ladder(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     return TRUE;
   }
   if (vict->riding) {
-    vict->sendTo(COLOR_OBJECTS, fmt("You can't ride your %s on %s.\n\r") % fname(vict->riding->getName()) % o->getName());
+    act("You can't ride $N on $p", FALSE, vict, o, vict->riding, TO_CHAR);
     return TRUE;
   }
   if (vict->rider) {
