@@ -23,6 +23,11 @@ int TObj::objVnum() const
   return ((number < 0) ? -1 : obj_index[number].virt);
 }
 
+int TObj::getValue() const
+{
+  return obj_flags.cost;
+}
+
 bool TObj::isObjStat(unsigned int num) const
 {
   return (obj_flags.extra_flags & num) != 0;

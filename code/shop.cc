@@ -214,7 +214,7 @@ bool shopData::willBuy(const TObj *item)
   int counter, max_trade;
   bool mat_ok=FALSE;
 
-  if (item->obj_flags.cost < 1 || 
+  if (item->getValue() < 1 || 
       item->isObjStat(ITEM_NEWBIE) ||
       item->isObjStat(ITEM_PROTOTYPE))
     return FALSE;
@@ -339,7 +339,7 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     }
   }
 
-  if (temp1->obj_flags.cost <= 0) {
+  if (temp1->getValue() <= 0) {
     keeper->doTell(ch->name, shop_index[shop_nr].no_such_item1);
     delete temp1;
     temp1 = NULL;
@@ -387,7 +387,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     while (num-- > 0) {
       TObj *temp1;
 
-      if(keeper->getMoney() < obj_flags.cost){
+      if(keeper->getMoney() < getValue()){
 	keeper->doTell(ch->name, shop_index[shop_nr].missing_cash1);
 	break;
       }
@@ -419,8 +419,8 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       // for unlimited items, charge the shopkeeper for production
       if(!dynamic_cast<TCasinoChip *>(this) &&
 	 objVnum() != OBJ_LOTTERY_TICKET){
-	keeper->addToMoney(-obj_flags.cost, GOLD_SHOP);
-	shoplog(shop_nr, ch, keeper, temp1->getName(), -obj_flags.cost, "producing");
+	keeper->addToMoney(-getValue(), GOLD_SHOP);
+	shoplog(shop_nr, ch, keeper, temp1->getName(), -getValue(), "producing");
       }
 
       ch->logItem(temp1, CMD_BUY);
@@ -655,17 +655,17 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
     return;
   }
-  if (obj_flags.cost <= 1 || isObjStat(ITEM_NEWBIE)) {
+  
+  
+  if (getValue() <= 1 || isObjStat(ITEM_NEWBIE)) {
     keeper->doTell(ch->getName(), "I'm sorry, I don't buy valueless items.");
     return;
   }
   if (sellMeCheck(ch, keeper, num))
     return;
-
+  
   chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   chr = max((float)1.0,chr);
-
-
   cost = sellPrice(1, shop_nr, chr);
 
   if (getStructPoints() != getMaxStructPoints()) {
@@ -1594,7 +1594,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     if (!i)
       continue;
     if (ch->canSee(i)) {
-      if ((i->obj_flags.cost > 1) &&
+      if ((i->getValue() > 1) &&
           !i->isObjStat(ITEM_NEWBIE) &&
 #if NO_DAMAGED_ITEMS_SHOP
           (i->getMaxStructPoints() == i->getStructPoints()) &&
@@ -1939,9 +1939,9 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
       if(shop_nr==SHOP_DUMP && !::number(0,24)){
 	// this is the garbageman, he recycles items a lot
-	vlogf(LOG_OBJ, fmt("shop %s (%i) recycling %s for %i talens") %  myself->getName() % shop_nr % obj->getName() % (int)(obj->obj_flags.cost * shop_index[shop_nr].profit_sell));
-	myself->addToMoney((int)(obj->obj_flags.cost * shop_index[shop_nr].profit_sell), GOLD_SHOP);
-	shoplog(shop_nr, myself, myself, obj->getName(), (int)(obj->obj_flags.cost * shop_index[shop_nr].profit_sell), "recycling");
+	vlogf(LOG_OBJ, fmt("shop %s (%i) recycling %s for %i talens") %  myself->getName() % shop_nr % obj->getName() % (int)(obj->getValue() * shop_index[shop_nr].profit_sell));
+	myself->addToMoney((int)(obj->getValue() * shop_index[shop_nr].profit_sell), GOLD_SHOP);
+	shoplog(shop_nr, myself, myself, obj->getName(), (int)(obj->getValue() * shop_index[shop_nr].profit_sell), "recycling");
 	delete obj;
 	continue;
       }
@@ -2052,7 +2052,7 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
   for(tt=keeper->getStuff();tt;tt=tt->nextThing){
     ++count;
     o=dynamic_cast<TObj *>(tt);
-    value+=o->obj_flags.cost;
+    value+=o->getValue();
   }
   
   TDatabase db(DB_SNEEZY);
@@ -2225,8 +2225,8 @@ void processShopFiles(void)
 // adjusts the shop price based on structure
 int TObj::adjPrice() const
 {
-  int value = ((getMaxStructPoints() <= 0) ? obj_flags.cost :
-               (int) (obj_flags.cost * 
+  int value = ((getMaxStructPoints() <= 0) ? getValue() :
+               (int) (getValue() * 
                 getStructPoints() / getMaxStructPoints()));
 
   return value;

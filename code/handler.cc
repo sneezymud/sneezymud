@@ -1460,7 +1460,7 @@ TObj *get_num_obj_in_list(TBeing *ch, int num, TThing *list, int shop_nr)
   for (i = list; i; i = i->nextThing) {
     TObj *to = dynamic_cast<TObj *>(i);
     if (to && ch->canSee(to)) {
-      if ((to->obj_flags.cost >= 1) &&
+      if ((to->getValue() >= 1) &&
           !to->isObjStat(ITEM_NEWBIE) &&
           shop_index[shop_nr].willBuy(to)) {
         found = FALSE;

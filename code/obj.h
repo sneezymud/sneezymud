@@ -701,6 +701,7 @@ class TObj : public TThing {
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
     virtual void sellMeMoney(TBeing *, TMonster *, int, int);
     virtual int taskChargeMe(TBeing *, spellNumT, int &);
+    virtual int getValue() const; 
 };
 
 #endif
