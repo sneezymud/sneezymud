@@ -774,9 +774,10 @@ int TBeing::updateHalfTickStuff()
 	if (-10 > getHit()) {
 	  vlogf(LOG_MISC, "%s autokilled by excessive lifeforce drain at %s (%d)",
 		getName(), roomp ? roomp->getName() : "nowhere", inRoom());
-	  if (reconcileDamage(this, 1,DAMAGE_DRAIN) == -1)
+	  if (reconcileDamage(this, 1,DAMAGE_DRAIN) == -1) {
 	    die(DAMAGE_DRAIN);
 	    return DELETE_THIS;
+	  }
 	  doSave(SILENT_YES);
 	}
       } else {
