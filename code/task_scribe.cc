@@ -48,33 +48,21 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 		     (how_many == 1 ? "" : "s"));
 	  ch->addToMana(-resulting);
         } else {
-          unsigned int i;
-          for (i = 0; i < obj_index.size(); i++) {
-            if (obj_index[i].itemtype == ITEM_SCROLL) {
-              obj = read_object(i, REAL);
-              scroll_obj = dynamic_cast<TScroll *>(obj);
-              if ((scroll_obj->getSpell(0) == which) &&
-                  (scroll_obj->getSpell(1) == TYPE_UNDEFINED) &&
-                  (scroll_obj->getSpell(2) == TYPE_UNDEFINED)) {
-                break;
-              } else {
-                delete scroll_obj;
-                scroll_obj = NULL;
-              }
-            }
-          }
-          if (scroll_obj == NULL) {
-            obj = read_object(OBJ_GENERIC_SCROLL, VIRTUAL);
-            scroll_obj = dynamic_cast<TScroll *>(obj);
-            if (!scroll_obj) {
-              vlogf(LOG_BUG, "Error creating generic scroll for scribe skill.");
-              ch->sendTo("Serious error, tell a god what you did.\n\r");
-              return FALSE;
-            }
-            scroll_obj->setSpell(0,which);
-            scroll_obj->setSpell(1, TYPE_UNDEFINED);
-            scroll_obj->setSpell(2, TYPE_UNDEFINED);
-          }
+	  obj = read_object(OBJ_GENERIC_SCROLL, VIRTUAL);
+	  scroll_obj = dynamic_cast<TScroll *>(obj);
+	  if (!scroll_obj) {
+	    vlogf(LOG_BUG, "Error creating generic scroll for scribe skill.");
+	    ch->sendTo("Serious error, tell a god what you did.\n\r");
+	    return FALSE;
+	  }
+	  scroll_obj->swapToStrung();
+	  delete scroll_obj->name;
+	  sprintf(buf, "scroll crumpled scribed %s", discArray[which]->name);
+	  scroll_obj->name=mud_str_dup(buf);
+
+	  scroll_obj->setSpell(0,which);
+	  scroll_obj->setSpell(1, TYPE_UNDEFINED);
+	  scroll_obj->setSpell(2, TYPE_UNDEFINED);
           scroll_obj->setMagicLevel(ch->getClassLevel(CLASS_MAGE));
 
           if (bSuccess(ch, knowledge, SKILL_SCRIBE)) {
