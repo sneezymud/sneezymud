@@ -215,7 +215,7 @@ static int spin(TBeing *caster, TBeing *victim)
   int i = 0;
   int rc;
   int flycheck = ::number(1, 10);
-  const int SPIN_COST = 25;       // movement cost to spin
+  const int SPIN_COST = 13;       // movement cost to spin
 
   if (!caster->canSpin(victim, SILENT_NO))
     return FALSE;

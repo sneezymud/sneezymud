@@ -689,7 +689,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_SCUFF:
         case CMD_NOOGIE:
         case CMD_BRANDISH:
-        case CMD_TRIP:
         case CMD_DUCK:
         case CMD_BECKON:
         case CMD_WINCE:
@@ -1502,6 +1501,9 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_SPLIT:
           doSplit(newarg, true);
 	  addToLifeforce(1);
+          break;
+        case CMD_TRIP:
+          rc = doTrip(newarg, dynamic_cast<TBeing *>(vict));
           break;
         case CMD_SMITE:
           rc = doSmite(newarg, dynamic_cast<TBeing *>(vict));
@@ -2775,7 +2777,6 @@ void buildCommandArray(void)
   commandArray[CMD_SCUFF] = new commandInfo("scuff", POSITION_STANDING, 0);
   commandArray[CMD_NOOGIE] = new commandInfo("noogie", POSITION_STANDING, 0);
   commandArray[CMD_BRANDISH] = new commandInfo("brandish",POSITION_STANDING, 0);
-  commandArray[CMD_TRIP] = new commandInfo("trip", POSITION_STANDING, 0);
   commandArray[CMD_DUCK] = new commandInfo("duck", POSITION_RESTING, 0);
   commandArray[CMD_BECKON] = new commandInfo("beckon", POSITION_RESTING, 0);
   commandArray[CMD_WINCE] = new commandInfo("wince", POSITION_RESTING, 0);
@@ -2874,6 +2875,7 @@ void buildCommandArray(void)
   commandArray[CMD_PSYCRUSH] = new commandInfo("psycrush", POSITION_RESTING, 0);
   commandArray[CMD_KWAVE] = new commandInfo("kwave", POSITION_RESTING, 0);
   commandArray[CMD_PSIDRAIN] = new commandInfo("psidrain", POSITION_RESTING, 0);
+  commandArray[CMD_TRIP] = new commandInfo("trip", POSITION_FIGHTING, 0);
 }
 
 bool _parse_name(const char *arg, char *name)

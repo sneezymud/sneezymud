@@ -504,6 +504,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDWarrior *) cd)->skSwitch;
     case SKILL_KNEESTRIKE:
       return &((CDWarrior *) cd)->skKneestrike;
+    case SKILL_TRIP:
+      return &((CDWarrior *) cd)->skTrip;
 
 //disc_hth
 

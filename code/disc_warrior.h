@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_warrior.h,v $
+// Revision 5.2  2002/11/07 04:02:37  jesus
+// Added a trip skill for warriors
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -39,7 +45,7 @@ public:
     CSkill skSwitch;
 
     CSkill skKneestrike;
-
+    CSkill skTrip;
     CDWarrior()
       : CDiscipline(),
       skKick(),
@@ -50,7 +56,8 @@ public:
       skDisarm(),
       skBerserk(),
       skSwitch(),
-      skKneestrike() {
+      skKneestrike(),
+      skTrip() {
     }
     CDWarrior(const CDWarrior &a)
       : CDiscipline(a),
@@ -62,7 +69,8 @@ public:
       skDisarm(a.skDisarm),
       skBerserk(a.skBerserk),
       skSwitch(a.skSwitch),
-      skKneestrike(a.skKneestrike) {
+      skKneestrike(a.skKneestrike),
+      skTrip(a.skTrip) {
     }
     CDWarrior & operator=(const CDWarrior &a) {
       if (this == &a) return *this;
@@ -76,6 +84,7 @@ public:
       skBerserk = a.skBerserk;
       skSwitch = a.skSwitch;
       skKneestrike = a.skKneestrike;
+      skTrip = a.skTrip;
       return *this;
     }
     virtual ~CDWarrior() {}

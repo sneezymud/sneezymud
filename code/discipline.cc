@@ -704,6 +704,18 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
         }
       }
       return spell_num;
+    case SKILL_TRIP:
+      if (hasClass(CLASS_WARRIOR)) {
+        if (!has_class) {
+          spell_num = SKILL_TRIP;
+        }
+        if ((num2 = getSkillValue(SKILL_TRIP)) > num) {
+          spell_num = SKILL_TRIP;
+          num = num2;
+          has_class = TRUE;
+        }
+      }
+      return spell_num;
     case SKILL_RETREAT:
       if (hasClass(CLASS_THIEF)) {
         if (!has_class) {

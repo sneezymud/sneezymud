@@ -236,6 +236,7 @@ enum spellNumT {
 
      SKILL_KICK,
      SKILL_BASH,
+     SKILL_TRIP,
      SKILL_HEADBUTT,
      SKILL_RESCUE,
      SKILL_SMYTHE,

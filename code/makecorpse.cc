@@ -335,6 +335,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
       case SKILL_BASH_DEIKHAN:
       case SKILL_BASH_RANGER:
       case SKILL_BASH:
+      case SKILL_TRIP:
         sprintf(buf, "The corpse of %s has a broken nose from falling down too hard.",getName());
         break;
       case SPELL_BONE_BREAKER:

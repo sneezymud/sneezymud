@@ -1225,10 +1225,13 @@ class TBeing : public TThing {
     int slamIntoWall(roomDirData *);
     int bashFail(TBeing *, spellNumT);
     int bashSuccess(TBeing *, spellNumT);
+    int tripFail(TBeing *, spellNumT);
+    int tripSuccess(TBeing *, spellNumT);
     void bandage(TBeing *, wearSlotT);
     virtual int learnFromDoingUnusual(learnUnusualTypeT, spellNumT, int) = 0;
     virtual int learnFromDoing(spellNumT, silentTypeT, unsigned int) = 0;
     bool canBash(TBeing *, silentTypeT);
+    bool canTrip(TBeing *, silentTypeT);
     bool canDisarm(TBeing *, silentTypeT);
     bool canStomp(TBeing *, silentTypeT);
     bool canHeadbutt(TBeing *, silentTypeT);
@@ -1889,6 +1892,7 @@ class TBeing : public TThing {
     bool isPet(const unsigned int) const;
     bool isElemental() const;
     int doBash(const char *, TBeing *);
+    int doTrip(const char *, TBeing *);
     virtual void doSnoop(const char *);
     virtual int doAt(const char *, bool);
     void doPeek() const;

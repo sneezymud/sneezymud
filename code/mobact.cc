@@ -1011,6 +1011,10 @@ int TMonster::fighterMove(TBeing &vict)
         getPosition() > POSITION_SITTING &&
         canBash(&vict, SILENT_YES)) {
       return doBash("", &vict);
+    } else if (getSkillValue(SKILL_TRIP) > 33 &&
+        getPosition() > POSITION_SITTING &&
+        canTrip(&vict, SILENT_YES)) {
+      return doTrip("", &vict);
     }
     // in the event we get here, just fall through and do a damage attack
   }
@@ -1049,6 +1053,10 @@ int TMonster::fighterMove(TBeing &vict)
       canBash(&vict, SILENT_YES) &&
       (getPosition() >= POSITION_CRAWLING)) {
     return doBash("", &vict);
+  } else if (getSkillValue(SKILL_TRIP) > 33 &&
+      canTrip(&vict, SILENT_YES) &&
+      (getPosition() >= POSITION_CRAWLING)) {
+    return doTrip("", &vict);
   } else if (canDisarm(&vict, SILENT_YES) && 
              (getPosition() >= POSITION_CRAWLING) &&
              (vict.heldInPrimHand() || vict.heldInSecHand())) {

@@ -388,6 +388,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SKILL_BODYSLAM:
     case SKILL_SPIN:
     case DAMAGE_TRAP_BLUNT:
+    case SKILL_TRIP:
       bit = IMMUNE_BLUNT;
       break;
     case SPELL_POISON_DEIKHAN:

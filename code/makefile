@@ -277,7 +277,7 @@ LIBCMD =cmd_attribute.o		cmd_headbutt.o    	cmd_sedit.o	\
 	cmd_egotrip.o		cmd_rename.o      	cmd_who.o	\
 	cmd_feigndeath.o	cmd_rescue.o      	cmd_zonefile.o	\
 	cmd_get.o		cmd_save.o        	cmd_zones.o	\
-	cmd_grapple.o		cmd_score.o
+	cmd_grapple.o		cmd_score.o		cmd_trip.o
 LIBCMD := $(sort $(addprefix $(OBJDIR), $(LIBCMD)))
 
 LIBTASK=task_attune.o	       	task_sacrifice.o	\

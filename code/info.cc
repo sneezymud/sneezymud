@@ -974,6 +974,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_STOMP:
       case SPELL_BLAST_OF_FURY:
       case SKILL_CHI:
+      case SKILL_TRIP:
       case SPELL_FUMBLE:
       case SPELL_BLINDNESS:
       case SPELL_GARMULS_TAIL:

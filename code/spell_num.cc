@@ -962,7 +962,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 704;
     case SKILL_PSIDRAIN:
       return 705;
-
+    case SKILL_TRIP:
+      return 706;
 
     case AFFECT_DISEASE:
       return 2500;
@@ -1963,6 +1964,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_SMYTHE_ADVANCED;
     case 705:
       return SKILL_PSIDRAIN;
+    case 706:
+      return SKILL_TRIP;
 
     case 2500:
       return AFFECT_DISEASE;

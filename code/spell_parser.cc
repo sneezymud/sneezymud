@@ -2251,6 +2251,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case DAMAGE_KICK_SIDE:
     case TYPE_UNDEFINED:
     case SKILL_SCRIBE:
+    case SKILL_TRIP:
     case SKILL_KICK:
     case SKILL_BASH:
     case SKILL_HEADBUTT:
