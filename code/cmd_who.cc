@@ -147,8 +147,8 @@ void TBeing::doWho(const char *argument)
     //  7=Ranger        8=Shaman        e=Elf
     //  t=Hobbit        n=Gnome         u=Human
     //  r=Ogre          w=Dwarven       y=Not-Grouped
-    //  a=Account Name
-    const  char *tPerfMatches = "ilqhzpydgbosf12345678etnurwa";
+    //  a=Account Name  x=perma death
+    const  char *tPerfMatches = "ilqhzpydgbosf12345678etnurwax";
     char   tString[256],
            tBuffer[256]  = "\0",
            tOutput[1024] = "\0";
@@ -178,6 +178,7 @@ void TBeing::doWho(const char *argument)
               tSb += "[-] [d]linkdead [g]God [b]Builders [o]Mort [s]stats [f]action\n\r";
               tSb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
               tSb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r";
+              tSb += "[-] [x]Perma Death\n\r";              
 
               if (hasWizPower(POWER_WIZARD))
                 tSb += "[-] [a]ccount\n\r";
@@ -188,6 +189,7 @@ void TBeing::doWho(const char *argument)
               tSb += "[-] [z]seeks-group [p]groups [y]currently-not-grouped\n\r";
               tSb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
               tSb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
+              tSb += "[-] [x]Perma Death\n\r";
             }
 
             if (desc)
@@ -250,9 +252,17 @@ void TBeing::doWho(const char *argument)
             (!(tBits & (1 << 24)) || tBeing->getRace() == RACE_DWARF) &&
             (!(tBits & (1 << 25)) || tBeing->getRace() == RACE_OGRE) &&
             (!(tBits & (1 << 26)) || tBeing->getRace() == RACE_HOBBIT) &&
+	    (!(tBits & (1 << 28)) || tBeing->hasQuestBit(TOG_PERMA_DEATH_CHAR) &&
             (!*tBuffer || is_abbrev(tBuffer, tBeing->getName())) &&
             in_range(tBeing->GetMaxLevel(), tLow, tHigh)) {
           tOutput[0] = '\0';
+
+	  if(tBeing->hasQuestBit(TOG_PERMA_DEATH_CHAR)){
+	    vlogf(LOG_PEEL, "%s has bit", tBeing->name);
+	  } else {
+	    vlogf(LOG_PEEL, "%s does not have bit", tBeing->name);
+	  }
+
 
           if ((tBits & (1 << 0)) && isImmortal()) {
             sprintf(tString, "Idle:[%-3d] ", tBeing->getTimer());
@@ -434,6 +444,7 @@ void TBeing::doWho(const char *argument)
           sb += "[-] [d]linkdead [g]God [b]Builders [o]Mort [s]stats [f]action\n\r";
           sb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
           sb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
+	  sb += "[-] [x]Perma Death\n\r";
 
           if (hasWizPower(POWER_WIZARD))
             sb += "[-] [a]ccount\n\r";
@@ -444,6 +455,7 @@ void TBeing::doWho(const char *argument)
           sb += "[-] [z]seeks-group [p]groups [y]currently-not-grouped\n\r";
           sb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
           sb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
+	  sb += "[-] [x]Perma Death\n\r";
         }
         if (desc)
           desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
@@ -479,7 +491,8 @@ void TBeing::doWho(const char *argument)
               (!strchr(arg, 'u') || p->getRace() == RACE_HUMAN) &&
               (!strchr(arg, 'w') || p->getRace() == RACE_DWARF) &&
               (!strchr(arg, 'r') || p->getRace() == RACE_OGRE) &&
-              (!strchr(arg, 't') || p->getRace() == RACE_HOBBIT))) {
+              (!strchr(arg, 't') || p->getRace() == RACE_HOBBIT) &&
+	      (!strchr(arg, 'x') || p->hasQuestBit(TOG_PERMA_DEATH_CHAR)))) {
             if (p->isLinkdead() && isImmortal())
               sprintf(buf, "[%-12s] ", pers(p));
             else if (p->polyed == POLY_TYPE_SWITCH && isImmortal())

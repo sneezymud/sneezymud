@@ -1174,6 +1174,29 @@ int Descriptor::nanny(const char *arg)
         character = new TPerson(this);
         return FALSE;
       }
+
+
+      if(character->hasQuestBit(TOG_PERMA_DEATH_CHAR)){
+	character->loadCareerStats();
+	if(character->desc->career.deaths){
+
+	  writeToQ("That character is a perma death character and has died.\n\r");
+	  writeToQ("Name -> ");
+	  
+	  // copied from above
+	  character->desc = NULL;
+	  character->next = character_list;
+	  character_list = character;
+	  
+	  character->setRoom(ROOM_NOWHERE);
+	  
+	  delete character;
+	  character = new TPerson(this);
+	  return FALSE;
+	}
+      }
+
+
       for (k = descriptor_list; k; k = k->next) {
         if ((k->character != character) && k->character) {
           if (k->original) {
@@ -1936,8 +1959,9 @@ int Descriptor::nanny(const char *arg)
             break;
       }
       if (go2next) {
-        connected = CON_STATS_START;
-        sendStartStatList();
+        connected = CON_PERMA_DEATH;
+	writeToQ("Perma Death? [Y/N]\n\r");
+	writeToQ("--> ");
       }
       break;
     }
@@ -1967,6 +1991,28 @@ int Descriptor::nanny(const char *arg)
       }
       sendRaceList();
       connected = CON_QRACE;
+      break;
+    case CON_PERMA_DEATH:
+      switch (*arg) {
+	case 'Y':
+	case 'y':
+	  writeToQ("Ok, this will be a perma death character.\n\r");
+	  character->setQuestBit(TOG_PERMA_DEATH_CHAR);
+	  break;
+	case 'N':
+	case 'n':
+	  writeToQ("Ok, this will be a normal death character.\n\r");
+	  break;
+	default:
+          writeToQ("If you select the Perma Death option this character will only be able to die\n\r");
+          writeToQ("once.  After that, the character will no longer be accessible.  This option\n\r");
+	  writeToQ("is for experienced and/or insane players only.\n\r\n\r");
+	  writeToQ("Perma Death? [Y/N]\n\r");
+	  writeToQ("--> ");
+	  return FALSE;
+      }
+      connected = CON_STATS_START;
+      sendStartStatList();
       break;
     case CON_STATS_START:
       mud_assert(character != NULL, "Character NULL where it shouldn't be");
@@ -3058,6 +3104,10 @@ void Descriptor::go_back_menu(connectStateT con_state)
       connected = CON_STATS_START;
       break;
     case CON_STATS_START:
+      character->cls();
+      connected = CON_PERMA_DEATH;
+      break;
+    case CON_PERMA_DEATH:
       character->cls();
       connected = CON_QCLASS;
       sendClassList(FALSE);
@@ -6016,6 +6066,7 @@ int Descriptor::doAccountStuff(char *arg)
     case CON_STAT_UTIL:
     case CON_CREATE_DONE:
     case CON_STATS_START:
+    case CON_PERMA_DEATH:
     case CON_ENTER_DONE:
     case CON_STATS_RULES:
     case CON_STATS_RULES2:

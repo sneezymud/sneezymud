@@ -998,6 +998,7 @@ const char * const connected_types[MAX_CON_STATUS] =
   "Hometown : gnome",
   "Hometown : ogre",
   "Hometown : hobbit",
+  "Perma Death Choice",
 };
 
 

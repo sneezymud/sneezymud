@@ -76,6 +76,7 @@ enum connectStateT {
        CON_HOME_GNOME,
        CON_HOME_OGRE,
        CON_HOME_HOBBIT,
+       CON_PERMA_DEATH,
 // if adding more here, update connected_types array as well
        MAX_CON_STATUS,
 // these are intentionally higher than MAX_CON
