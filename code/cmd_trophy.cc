@@ -42,6 +42,7 @@ const char *describe_trophy_exp(float count)
 	   ((f >= 0.70) ? "<w>some<1>" : "<k>little<1>"))));
 }
 
+// this function is a little messy, I apologize
 void TBeing::doTrophy(const char *arg)
 {
   MYSQL_ROW row=NULL;
@@ -76,8 +77,6 @@ void TBeing::doTrophy(const char *arg)
 
       if(!row)
 	break;
-
-      vlogf(LOG_PEEL, "mob=%i, top=%i", atoi(row[0]), zd.top);
 
       // sometimes we get an entry of 0 for med mobs I think
       vnum=atoi(row[0]);
@@ -125,14 +124,6 @@ void TBeing::doTrophy(const char *arg)
       sb += buf;
 
       processrow=1; // ok to get the next row
-      
-#if 0
-    sprintf(buf, "%3d %-38.38s %4dm %4dm %6d-%-6d %3d %.1f\n\r", 
-	    zone, buf2, zd.lifespan, zd.age, bottom, zd.top, 
-	    zd.zone_value,
-	    (zd.num_mobs ? zd.mob_levels/zd.num_mobs : 0));
-    sb += buf;
-#endif
     }
 
     // we have some mobs for this zone, so do some tallies
