@@ -814,7 +814,7 @@ int conjureElemWater(TBeing * caster)
 	  (tp->getDrinkType() == LIQ_WATER ||
 	   tp->getDrinkType() == LIQ_SALTWATER ||
 	   tp->getDrinkType() == LIQ_HOLYWATER)) {
-	tp->setDrinkUnits(-100);
+	tp->addToDrinkUnits(-100);
 	found=1;
 	break;
       }
