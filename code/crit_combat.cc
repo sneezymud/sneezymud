@@ -759,13 +759,17 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	new_slot = v->getPrimaryArm();
 	if (!v->slotChance(new_slot))
 	  return 0;
-buf=fmt("With your %s, you crush the nerves in $N's shoulder!") %
+
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
+
+        buf=fmt("With your %s, you crush the nerves in $N's shoulder!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s crushes the nerves in your shoulder!") %
+        buf=fmt("$n's %s crushes the nerves in your shoulder!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s crushes the nerves in $N's shoulder!") %
+        buf=fmt("$n's %s crushes the nerves in $N's shoulder!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->damageArm(TRUE,PART_USELESS);
@@ -812,14 +816,18 @@ buf=fmt("$n's %s shatters $N's femur!") %
 	// crush muscles in leg
 	if (!v->hasPart(WEAR_LEGS_L))
 	  return 0;
+
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
+
 	*part_hit = WEAR_LEGS_L;
-buf=fmt("With your %s, you crush the muscles in $N's leg!") %
+        buf=fmt("With your %s, you crush the muscles in $N's leg!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s crushes the muscles in your leg!") %
+        buf=fmt("$n's %s crushes the muscles in your leg!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s crushes the muscles in $N's leg!") %
+        buf=fmt("$n's %s crushes the muscles in $N's leg!") %
 		limbStr;
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	*part_hit = WEAR_LEGS_L;
@@ -945,6 +953,9 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	return FALSE;
       case 96:
       case 97:
+        if (v->race->hasNoBones())
+          return 0;
+
 	buf = fmt("You swing your %s right into $N's face, sending a tooth flying.") % limbStr;
 	act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
 	buf = fmt("$n's %s connects with your face, sending a tooth flying.") % limbStr;
@@ -955,9 +966,11 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	TTrash *corpse;
 	      
 	corpse = new TTrash();
-  buf = fmt("tooth %s [%d]") % v->name % v_vnum;
-  if (dynamic_cast<TPerson *>(this))
-    buf = fmt("%s [%s]") % buf % getName();
+        buf = fmt("tooth %s [%d]") % v->name % v_vnum;
+
+        if (dynamic_cast<TPerson *>(this))
+          buf = fmt("%s [%s]") % buf % getName();
+
 	corpse->name = mud_str_dup(buf);
 	      
 	buf = fmt("<W>a <1><r>bloody<1><W> tooth of %s<1>") % v->getName();
@@ -990,36 +1003,52 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
       case 98:
       case 99:
       case 100:
-	if(doesKnowSkill(SKILL_CRIT_HIT) && !v->equipment[WEAR_BODY] &&
-	   v->hasPart(WEAR_BODY) && !weapon && 
-       	   bSuccess(this, getSkillValue(SKILL_CRIT_HIT), SKILL_CRIT_HIT) &&
-	   !::number(0,4)){
-	  // rip out heart instead of head crush whee fancy
-	  buf=fmt("With your %s, you reach into $N's chest and rip out $S heart!") %
-	    limbStr;
-	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-	  act("You hold the still beating heart above your head in triumph, as blood runs down your arm!",
-	      FALSE, this, 0, v, TO_CHAR, ANSI_RED);
-	  act("$n reaches into your chest and rips out your heart!",
-	      FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	  act("$n reaches into $N's chest and rips out $S heart!",
-	      FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	if (doesKnowSkill(SKILL_CRIT_HIT) && !v->equipment[WEAR_BODY] && v->hasPart(WEAR_BODY) && !weapon && bSuccess(this, getSkillValue(SKILL_CRIT_HIT), SKILL_CRIT_HIT) && !::number(0,4) && !IS_SET(v->specials.act, ACT_SKELETON)) {
 
+          // Rip out the heart instead of head crush whee fancy.
+          // ...But make it a bit fancier on ghosts, zombies and skeletons.
 
-	    TDrinkCon *corpse;
-	    
+          if (IS_SET(v->specials.act, ACT_GHOST)) {
+            buf = fmt("With your %s, you reach into $N's chest and rip out what you think is $S heart!") % limbStr;
+            act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+            act("You hold the ghostly organ above your head in triumph!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
+            act("$n reaches into your chest and rips out your heart!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
+            act("$n reaches into $N's chest and rips out what appears to be $S heart!", FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	  } else {
+	    buf = fmt("With your %s, you reach into $N's chest and rip out $S heart!") % limbStr;
+	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	    act("You hold the still beating heart above your head in triumph, as blood runs down your arm!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
+	    act("$n reaches into your chest and rips out your heart!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	    act("$n reaches into $N's chest and rips out $S heart!", FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+          }
+
+          if (IS_SET(v->specials.act, ACT_GHOST))
+            act("The ghostly heart of $N fades as quickly as you removed it.", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
+	  else {
+  	    TDrinkCon *corpse;
+
 	    corpse = new TDrinkCon();
-      buf = fmt("heart %s [%d]") % v->name % v_vnum;
-      if (dynamic_cast<TPerson *>(this))
-        buf = fmt("%s [%s]") % buf % getName();
-      corpse->name = mud_str_dup(buf);
+            buf = fmt("heart %s [%d]") % v->name % v_vnum;
+
+            if (dynamic_cast<TPerson *>(this))
+              buf = fmt("%s [%s]") % buf % getName();
+
+            corpse->name = mud_str_dup(buf);
+
+            if (IS_SET(v->specials.act, ACT_ZOMBIE)) {
+              buf = fmt("the putrid <r>heart<1> of %s") % v->getName();
+              corpse->shortDescr = mud_str_dup(buf);
+
+              buf = fmt("The putrid <r>heart<1> of %s lies here.") % v->getName();
+              corpse->setDescr(mud_str_dup(buf));
+	    } else {
+  	      buf = fmt("the lifeless <r>heart<1> of %s") % v->getName();
+	      corpse->shortDescr = mud_str_dup(buf);
 	    
-	    buf = fmt("the lifeless <r>heart<1> of %s") % v->getName();
-	    corpse->shortDescr = mud_str_dup(buf);
-	    
-	    buf = fmt("The lifeless <r>heart<1> of %s lies here.") % v->getName();
-	    corpse->setDescr(mud_str_dup(buf));
-	    
+	      buf = fmt("The lifeless <r>heart<1> of %s lies here.") % v->getName();
+	      corpse->setDescr(mud_str_dup(buf));
+	    }
+
 	    corpse->setStuff(NULL);
 	    corpse->obj_flags.wear_flags = ITEM_TAKE | ITEM_HOLD | ITEM_THROW;
 	    //	    corpse->addCorpseFlag(CORPSE_NO_REGEN);
@@ -1028,25 +1057,30 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	    corpse->canBeSeen = v->canBeSeen;
 	    corpse->setVolume(25);
 	    corpse->setMaterial(v->getMaterial());
-	    
+
 	    corpse->setDrinkConFlags(0);
 	    corpse->setMaxDrinkUnits(5);
 	    corpse->setDrinkUnits(5);
-	    corpse->setDrinkType(LIQ_BLOOD);
-	    
 
+            if (IS_SET(v->specials.act, ACT_ZOMBIE)) {
+              corpse->setDrinkType(LIQ_POISON_VIOLET_FUNGUS);
+              dropPool(9, LIQ_POISON_VIOLET_FUNGUS);
+            } else {
+	      corpse->setDrinkType(LIQ_BLOOD);
+              dropPool(9, LIQ_BLOOD);
+            }
 
 	    *this += *corpse;
-	    dropPool(9, LIQ_BLOOD);
+	  }
+
+	  if (desc)
+	    desc->career.crit_ripped_out_heart++;
 	    
-	    if (desc)
-	      desc->career.crit_ripped_out_heart++;
-	    
-	    if (v->desc)
-	      v->desc->career.crit_ripped_out_heart_suff++;
-	    
-	    applyDamage(v, (20 * v->hitLimit()),DAMAGE_RIPPED_OUT_HEART);
-	    return DELETE_VICT;
+	  if (v->desc)
+	    v->desc->career.crit_ripped_out_heart_suff++;
+
+	  applyDamage(v, (20 * v->hitLimit()),DAMAGE_RIPPED_OUT_HEART);
+	  return DELETE_VICT;
 	} else {
 	  // crush skull unless helmet
 	  if (!v->hasPart(WEAR_HEAD))
@@ -1164,25 +1198,27 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	// sever finger-r
 	if (!v->hasPart(WEAR_FINGER_R))
 	  return 0;
-buf=fmt("Your %s severs $N's %s and sends it flying!") %
-		limbStr %
-		v->describeBodySlot(WEAR_FINGER_R);
+
+        buf=fmt("Your %s severs $N's %s and sends it flying!") % limbStr % v->describeBodySlot(WEAR_FINGER_R);
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
-		limbStr %
-		v->describeBodySlot(WEAR_FINGER_R);
+
+        buf=fmt("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") % limbStr % v->describeBodySlot(WEAR_FINGER_R);
 	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n's %s severs $N's %s and sends it flying!") %
-		limbStr %
-		v->describeBodySlot(WEAR_FINGER_R);
+
+        buf=fmt("$n's %s severs $N's %s and sends it flying!") % limbStr % v->describeBodySlot(WEAR_FINGER_R);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+
 	v->makePartMissing(WEAR_FINGER_R, FALSE, this);
 	v->rawBleed(WEAR_HAND_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+
 	*part_hit = WEAR_FINGER_R;
+
 	if (desc)
 	  desc->career.crit_sev_limbs++;
+
 	if (v->desc)
 	  v->desc->career.crit_sev_limbs_suff++;
+
 	return ONEHIT_MESS_CRIT_S;
       case 68:
 	// sever finger-l
@@ -1508,7 +1544,7 @@ buf=fmt("$n gives a mighty warcry and cleaves $N in two with $s %s!") %
       case 89:
       case 90:
 	// slice torso from gullet to groin
-	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA)) {
+	if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) && !IS_SET(v->specials.act, ACT_SKELETON)) {
 buf=fmt("With your %s, you slice $N from gullet to groin disembowling $M!") %
 		  limbStr;
 	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
@@ -1531,8 +1567,7 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	}
       case 91:
       case 92:
-	if(v->getSex()==SEX_MALE && v->hasPart(WEAR_WAISTE) &&
-	   (!(obj = v->equipment[WEAR_WAISTE]) || !obj->isMetal())){
+	if (v->getSex()==SEX_MALE && v->hasPart(WEAR_WAISTE) && (!(obj = v->equipment[WEAR_WAISTE]) || !obj->isMetal()) && !IS_SET(v->specials.act, ACT_SKELETON) && !IS_SET(v->specials.act, ACT_GHOST)){
 	  buf = fmt("With a deft swing of your %s, you sever $N's genitals.") % limbStr;
 	  act(buf,FALSE,this,obj,v,TO_CHAR,ANSI_ORANGE);
 	  buf = fmt("$n deftly severs your genitals with $s %s!  OWWWWW!") % limbStr;
@@ -1699,7 +1734,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 
     switch (crit_num) {
       case 67:
-	if (!v->hasPart(WEAR_NECK))
+	if (!v->hasPart(WEAR_NECK) || IS_SET(v->specials.act, ACT_GHOST) || IS_SET(v->specials.act, ACT_SKELETON))
 	  return 0;
 	*part_hit = WEAR_NECK;
 	if ((obj = v->equipment[WEAR_NECK])) {
@@ -1713,7 +1748,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	// intentional drop through
       case 68:
 	// Punctured Larnyx, can't speak 
-	if (!v->hasPart(WEAR_NECK))
+	if (!v->hasPart(WEAR_NECK) || IS_SET(v->specials.act, ACT_GHOST) || IS_SET(v->specials.act, ACT_SKELETON))
 	  return 0;
 	if (v->hasDisease(DISEASE_VOICEBOX))
 	  return 0;
@@ -1744,7 +1779,9 @@ buf=fmt("$n pops $s %s into $N's throat, puncturing $S voice box!") %
 	return ONEHIT_MESS_CRIT_S;
       case 69:
       case 70:
-	// Struct in eye, blinded with new blind type 
+	// Struct in eye, blinded with new blind type
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
 	if (v->hasDisease(DISEASE_EYEBALL))
 	  return 0;
 	if (!v->hasPart(WEAR_HEAD))
@@ -1775,6 +1812,8 @@ buf=fmt("$n pops $s %s into $N's eyes, gouging them out and blinding $M!") %
 	  v->desc->career.crit_eye_pop_suff++;
 	return ONEHIT_MESS_CRIT_S;
       case 71:
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
 	if (!v->hasPart(WEAR_LEGS_R))
 	  return 0;
 	if (!v->isHumanoid())
@@ -1791,6 +1830,8 @@ buf=fmt("$n pops $s %s into $N's eyes, gouging them out and blinding $M!") %
 	// an intentional drop through
       case 72:
 	// strike lower leg, rip tendons, vict at -25% move. 
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
 	if (!v->hasPart(WEAR_LEGS_R))
 	  return 0;
 	if (!v->isHumanoid())
@@ -1966,6 +2007,8 @@ buf=fmt("$n's %s severs $N's hand at the wrist!") %
 	  v->desc->career.crit_sev_limbs_suff++;
 	return ONEHIT_MESS_CRIT_S;
       case 81:
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
 	if (!v->hasPart(WEAR_BODY))
 	  return 0;
 	if ((obj = v->equipment[WEAR_BODY])) {
@@ -1979,6 +2022,8 @@ buf=fmt("$n's %s severs $N's hand at the wrist!") %
 	}
       case 82:
 	// Punctured lungs. Can't breathe. Dies if not healed quickly 
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
 	if (v->hasDisease(DISEASE_LUNG))
 	  return 0;
 buf=fmt("Your %s plunges into $N's chest puncturing a lung!") %
@@ -2009,6 +2054,8 @@ buf=fmt("$n's %s plunges into $N's chest.\n\rA hiss of air escapes $S punctured 
 	return ONEHIT_MESS_CRIT_S;
       case 83:
       case 84:
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
 	if (!v->hasPart(WEAR_BODY))
 	  return 0;
 	if ((obj = v->equipment[WEAR_BODY])) {
@@ -2022,6 +2069,8 @@ buf=fmt("$n's %s plunges into $N's chest.\n\rA hiss of air escapes $S punctured 
 	}
       case 85:
 	// punctured kidney causes infection
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
 	if (!v->hasPart(WEAR_BODY))
 	  return 0;
 buf=fmt("You puncture $N's kidney with your %s and cause an infection!") %
@@ -2048,6 +2097,8 @@ buf=fmt("$n's %s punctures $N's kidney!") %
       case 86:
       case 87:
 	// stomach wound.  causes death 5 mins later if not healed.
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
 	if (!v->hasPart(WEAR_BODY))
 	  return 0;
 	if (v->hasDisease(DISEASE_STOMACH))
@@ -2094,6 +2145,8 @@ buf=fmt("$n's %s tears into $N's stomach exposing intestines!") %
 	return FALSE;
 	break;
       case 100:
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
 	buf=fmt("You sink your %s between $N's eyes, causing an immediate death!") %
 	  limbStr;
 	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
