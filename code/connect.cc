@@ -6514,8 +6514,8 @@ int TBeing::applyRentBenefits(int secs)
   setMove(min((int) moveLimit(), getMove() + (local_tics * moveGain())));
   setPiety(min(pietyLimit(), getPiety() + (local_tics * pietyGain(0.0))));
   setLifeforce(min(getLifeforce(), getLifeforce() + (local_tics * lfmod)));
-  if ((getLifeforce() + (local_tics * lfmod)) < 50)
-    setLifeforce(50);
+  //  if ((getLifeforce() + (local_tics * lfmod)) < 50)
+  //  setLifeforce(50);
   // THIS WILL NEED TO BE REVIEWED
 
  
