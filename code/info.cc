@@ -2058,6 +2058,9 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
     case CMD_CHECKLOG:
       return POWER_CHECKLOG;
       break;
+    case CMD_OFFICE:
+      return POWER_GOTO;
+      break;
     case CMD_LOGLIST:
       return POWER_LOGLIST;
       break;

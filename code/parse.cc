@@ -800,6 +800,9 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_CLONE:
           doClone(newarg);
           break;
+        case CMD_OFFICE:
+          doOffice(newarg);
+          break;
         case CMD_REPLACE:
           doReplace(newarg);
           break;
@@ -2629,6 +2632,7 @@ void buildCommandArray(void)
   commandArray[CMD_SHARPEN] = new commandInfo("sharpen", POSITION_SITTING, 0);
   commandArray[CMD_KISS] = new commandInfo("kiss", POSITION_RESTING, 0);
   commandArray[CMD_ACCESS] = new commandInfo("access", POSITION_RESTING, GOD_LEVEL1);
+  commandArray[CMD_OFFICE] = new commandInfo("office", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_CLONE] = new commandInfo("clone", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_MOTD] = new commandInfo("motd", POSITION_DEAD, 0);
   commandArray[CMD_REPLACE] = new commandInfo("replace", POSITION_DEAD, GOD_LEVEL1);

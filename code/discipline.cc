@@ -2899,6 +2899,7 @@ const char *skill_diff(byte num)
 // returns TRUE if this is lower lev then vict
 // returns 2 if vict is immortal
 // else is FALSE
+// COME BACK TO THIS - ADD SKILL FOR LEARNING IN ADVANCED DISCIPLINES - MAROR
 int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT silent)
 {
   // force success for immorts
@@ -2913,14 +2914,13 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
     return 2;
   }
 
-//  int advLearning = 0;
+  int advLearning = 0;
   // adjust lev for stuff here
   // this allows for casting spells over level
 // COSMO DISC MARKER - change to add in deikhan and shaman, ranger for casting
   skill = getSkillNum(skill);
   int level = GetMaxLevel();
   CDiscipline *cd;
-
   lev = level;
   switch (getDisciplineNumber(skill, FALSE)) {
     case DISC_MAGE:
@@ -2937,7 +2937,7 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
     case DISC_SURVIVAL:
       cd = getDiscipline(DISC_WIZARDRY);
       if (cd && cd->getLearnedness() > 0)
-        lev += 2 + (cd->getLearnedness() / 20);
+        lev += 2 + (cd->getLearnedness() / 34);
       break;
     case DISC_SHAMAN_HEALING:
     case DISC_SHAMAN_ARMADILLO:
@@ -2949,7 +2949,7 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
     case DISC_SHAMAN_SKUNK:
       cd = getDiscipline(DISC_RITUALISM);
       if (cd && cd->getLearnedness() > 0)
-        lev += 2 + (cd->getLearnedness() / 20);
+        lev += 2 + (cd->getLearnedness() / 34);
       break;
     case DISC_CURES:
     case DISC_AEGIS:
@@ -2962,46 +2962,80 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
     case DISC_DEIKHAN_AEGIS:
       cd = getDiscipline(DISC_FAITH);
       if (cd && cd->getLearnedness() > 0)
-        lev += 2 + (cd->getLearnedness() / 20);
+        lev += 2 + (cd->getLearnedness() / 34);
       break;
     case DISC_AFFLICTIONS:
       // a very special case so big mobs are especially vulnerble
       // basically means clerics rock vs mobs <= 100th level
       cd = getDiscipline(DISC_FAITH);
       if (cd && cd->getLearnedness() > 0)
-        lev += 2 + (cd->getLearnedness() / 20);
+        lev += 2 + (cd->getLearnedness() / 34);
       break;
     default:
       break;
   }
+/*
+  // Calculate aggregate learning of skills
+  // the problem with doing it this way is that it depends on people
+  // putting in enough skills to have a representative sample - Maror
+  discNumT assDiscNum = discArray[skill]->assDisc;
+  spellNumT i;
+  double basSum = 0, advSum = 0, basCount = 0, advCount = 0;
+  double basMean = 0, advMean = 0;
+  for (i = MIN_SPELL; i < MAX_SKILL; i++) {
+    if (hideThisSpell(i)) continue;
+    if (discArray[i]->assDisc != assDiscNum) continue;
+    if (!getDiscipline(discArray[i]->assDisc)) continue;
+    if (discArray[i]->assDisc == assDiscNum 
+         && getDiscipline(discArray[i]->disc)->isBasic()) {
+      basSum += getSkillValue(i);
+      basCount++;
+    } else if (discArray[i]->assDisc == assDiscNum) {
+      advSum += getSkillValue(i);
+      advCount++;
+    }
+  }
+  if (basCount > 0) { basMean = basSum / basCount; } else basMean = 0;
+  if (advCount > 0) { advMean = advSum / advCount; } else advMean = 0;
+*/
+  double bonus = 0;
 
-
-  // this is crazy atm - disabled for reconsideration - Maror
-/*  
   if (discArray[skill]->disc != discArray[skill]->assDisc) {
     CDiscipline * assDisc = getDiscipline(discArray[skill]->assDisc);
     if (assDisc) {
-      // do not reward for just spending pracs here
-//      advLearning = getAdvLearning(skill);
-//      lev += (level * advLearning) / 200;
-      advLearning = getAdvDoLearning(skill);
-      lev += (level * advLearning) / 200;
+      advLearning = getAdvLearning(skill);
+      bonus += advLearning;
+//      advLearning = getAdvDoLearning(skill);
+//      bonus += (level * advLearning) / 200;
     }                      
   } 
-*/
   
   // make the chance at equal level 90%
   // still always works on something more than 3 levels lower than you
   double halfLev = 6;
   double startLev = 1;  // number of levels below current where this takes effect
   // same level = 85%, level + 10 = 16%
+  
+  // add a bonus for training in skills
+
+/*  halfLev += basMean / 50 + advMean / 20; // add up to 6 levels to double time
+  startLev -= basMean / 50 + advMean / 50; // boost success guarantee up to 4
+  */
+
+  halfLev += bonus / 16.7; // up to 6
+  startLev -= bonus / 25; // up to 4
+
+  
   double levelDiff = (double) vict->GetMaxLevel() - (double) lev + startLev;
   int chance = (int) (10000 * exp(-levelDiff / halfLev ));
-  if (chance < 0) chance = 10001; //roll over of int
+  if (chance < 0) chance = 10001; //roll over of integer
   int roll = ::number(1,10000);
   if (levelDiff >= 0 && chance > roll) {
     if (!silent) {
-      act("You are unable to get past $N's defenses.", FALSE, this, 0, vict, TO_CHAR);
+      if(isname("Sephie", name)) {
+        act("Other clerics can do it, dunno what's wrong with you.", FALSE, this, 0, vict, TO_CHAR);
+      } else 
+        act("You are unable to get past $N's defenses.", FALSE, this, 0, vict, TO_CHAR);
       act("$n is unable to get past $N's defenses.", TRUE, this, 0, vict, TO_ROOM);
     }
     return TRUE;

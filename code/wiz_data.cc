@@ -133,3 +133,37 @@ void TPerson::wizFileSave()
   fwrite(&saveData, sizeof(wizSaveData), 1, fp);   
   fclose(fp);
 }
+
+
+void TBeing::doOffice(sstring arg)
+{
+  FILE *fp;
+  sstring buf, buf2, buf3;
+  Descriptor *d = NULL;
+  wizSaveData saveData;
+
+  // don't use isImmortal, save always
+  if (!(GetMaxLevel() > MAX_MORT) || !(d = desc) || !hasWizPower(POWER_GOTO))
+    return;
+
+  if (arg == "") {
+    sendTo("You must supply a name as an argument (case-sensitive).\n\r");
+    return;
+  }
+
+  buf = fmt("immortals/%s/wizdata") % arg;
+  fp = fopen(buf.c_str(), "r");
+  if (!fp) {
+	  sendTo(fmt("Unable to open file for %s (case sensitive!).\n\r") % arg);
+    return;
+  }
+  if (fread(&saveData, sizeof(saveData), 1, fp) != 1) {
+    vlogf(LOG_BUG, fmt("Corrupt wiz save file for %s") % arg);
+    fclose(fp);
+    return;
+  } 
+  fclose(fp);
+  buf3 = fmt ("The office of %s is %d.\n\r") % arg % saveData.office;
+  sendTo(buf3);
+}
+
