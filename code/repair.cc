@@ -899,7 +899,7 @@ int repairMagical(TBeing *ch, TObj *o)
 
 int repairRock(TBeing *ch, TObj *o)
 {
-  if (!ch->doesKnowSkill(SKILL_REPAIR_CLERIC) || !ch->doesKnowSkill(SKILL_REPAIR_RANGER)) {
+  if (!ch->doesKnowSkill(SKILL_REPAIR_MAGE) && !ch->doesKnowSkill(SKILL_REPAIR_RANGER)) {
     ch->sendTo("You really don't know enough about repairing rocks.\n\r");
     return FALSE;
   }
@@ -912,7 +912,7 @@ int repairRock(TBeing *ch, TObj *o)
 
 int repairCrystal(TBeing *ch, TObj *o)
 {
-  if (!ch->doesKnowSkill(SKILL_SMYTHE_ADVANCED) || !ch->doesKnowSkill(SKILL_REPAIR_THIEF)) {
+  if (!ch->doesKnowSkill(SKILL_SMYTHE_ADVANCED) && !ch->doesKnowSkill(SKILL_REPAIR_THIEF)) {
     ch->sendTo("You really don't know enough about repairing crystalline materials.\n\r");
     return FALSE;
   }
@@ -925,7 +925,7 @@ int repairCrystal(TBeing *ch, TObj *o)
 
 int repairHide(TBeing *ch, TObj *o)
 {
-  if (!ch->doesKnowSkill(SKILL_REPAIR_RANGER) || !ch->doesKnowSkill(SKILL_REPAIR_MONK)) {
+  if (!ch->doesKnowSkill(SKILL_REPAIR_RANGER) && !ch->doesKnowSkill(SKILL_REPAIR_MONK)) {
     ch->sendTo("You really don't know enough about mending hides.\n\r");
     return FALSE;
   }
@@ -951,7 +951,7 @@ int repairGeneric(TBeing *ch, TObj *o)
 
 int repairSpiritual(TBeing *ch, TObj *o)
 {
-  if (!ch->doesKnowSkill(SKILL_REPAIR_CLERIC) || !ch->doesKnowSkill(SKILL_REPAIR_DEIKHAN)) {
+  if (!ch->doesKnowSkill(SKILL_REPAIR_CLERIC) && !ch->doesKnowSkill(SKILL_REPAIR_DEIKHAN)) {
     ch->sendTo("You really don't know enough about repairing holy items.\n\r");
     return FALSE;
   }

@@ -7051,45 +7051,66 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   if ((myself->getCarriedWeight()/myself->carryWeightLimit()) * 100.0 > 25 || 
       (myself->getCarriedVolume()/myself->carryVolumeLimit()) * 100.0 > 25) {
-    act("$N carries the empty glasses behind the counter and washes them.",FALSE, myself, 0, 0, TO_ROOM);
-    for(t=myself->getStuff();t;t=t->nextThing){
+    act("$n carries the empty glasses behind the counter and washes them.",FALSE, myself, 0, 0, TO_ROOM);
+    t= myself->getStuff();
+    while(t) {
       if((glass=dynamic_cast<TBaseCup *>(t))){
-	delete glass;
-	glass = NULL;
-	myself->addToWait(2);
+	t=t->nextThing;
+	--(*glass);
+        delete glass;
+        glass = NULL;
+        myself->addToWait(2);
+      } else {
+	t=t->nextThing;
       }
+      
     }
-    myself->addToWait(20);
+    myself->addToWait(50);
     return TRUE;
   }
   
   for(t=myself->roomp->getStuff();t;t=t->nextThing){
     if((table=dynamic_cast<TTable *>(t))){
       
-      for(t2=table->getStuff();t2;t2=t2->nextThing){
+      for(t2=table->rider;t2;t2=t2->nextRider){
 	if((glass=dynamic_cast<TBaseCup *>(t2))){
-	  vlogf(LOG_DASH, "Barmaid: found  %s with %d units left.", glass->getName(), glass->getDrinkUnits());
+	  //	  vlogf(LOG_DASH, "Barmaid: found  %s with %d units left.", glass->getName(), glass->getDrinkUnits());
 	  if (glass->getDrinkUnits() <= 0) {
-	    vlogf(LOG_DASH, "Barmaid: found empty %s on %s.", glass->getName(), table->getName());
-	    glass->getMe(myself, table);
-	    myself->addToWait(5);
+	    //	    vlogf(LOG_DASH, "Barmaid: found empty %s on %s.", glass->getName(), table->getName());
+
+	    glass->dismount(POSITION_DEAD);
+	    //	    --(*glass);
+	    *myself += *glass;
+	    act("$n gets $p from $P.",FALSE, myself, glass, table, TO_ROOM);
+	    act("$n carefully balances the empty glass on $s tray.",FALSE, myself, glass, 0, TO_ROOM);
+	    act("You get $p from $P.",FALSE, myself, glass, table, TO_CHAR);
+	    act("You carefully balance the empty glass on your tray.",FALSE, myself, glass, 0, TO_CHAR);
+	    myself->addToWait(20);
 	    return TRUE;
 	  }
 	}
       }
     } else if ((glass=dynamic_cast<TBaseCup *>(t))){
-      vlogf(LOG_DASH, "Barmaid: found  %s with %d units left.", glass->getName(), glass->getDrinkUnits());
+      //      vlogf(LOG_DASH, "Barmaid: found  %s with %d units left.", glass->getName(), glass->getDrinkUnits());
       if(glass->getDrinkUnits() <= 0) {
-	vlogf(LOG_DASH, "Barmaid: found empty  %s.", glass->getName());
-	glass->getMe(myself, NULL);
-	myself->addToWait(10);
+	//	vlogf(LOG_DASH, "Barmaid: found empty  %s.", glass->getName());
+	--(*glass);
+	*myself += *glass;
+	act("$n gets $p.",FALSE, myself, glass, 0, TO_ROOM);
+	act("$n carefully balances the empty glass on $s tray.",FALSE, myself, glass, 0, TO_ROOM);
+	act("You get $p.",FALSE, myself, glass, 0, TO_CHAR);
+        act("You carefully balance the empty glass on your tray.",FALSE, myself, glass, 0, TO_CHAR);
+
+
+	myself->addToWait(20);
 	return TRUE;
       }
     }
   }
   
   if (!::number(0,19)) {
-    act("$N flirts with some of the patrons." , FALSE, myself, myself, myself, TO_ROOM);
+    act("$n flirts with some of the patrons." , FALSE, myself, myself, myself, TO_ROOM);
+    myself->addToWait(20);
   }
 
   return TRUE;

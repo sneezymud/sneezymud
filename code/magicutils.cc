@@ -257,9 +257,10 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe)
       s == SPELL_VOODOO ||
       s == SPELL_RESURRECTION ||
       s == SPELL_DANCING_BONES) {
-    rc = checkDecharm(FORCE_NO, safe);
+    if(!isPc()) { rc = checkDecharm(FORCE_NO, safe);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
+    }
   }
 
   if (s == SPELL_GILLS_OF_FLESH) {
