@@ -2412,8 +2412,7 @@ void TBeing::doSit(const sstring & argument)
     return;
   }
 
-  if (roomp->isWaterSector() ||
-      roomp->isUnderwaterSector()) {
+  if (roomp->isUnderwaterSector()) {
     sendTo("You can't sit down in the water.\n\r");
     return;
   }
