@@ -1244,7 +1244,7 @@ int get_number(char **name)
         break;
       }
     }
-    return (atoi_safe(numx));
+    return (convertTo<int>(numx));
   }
   return 1;
 }

@@ -100,28 +100,28 @@ void TPerson::doChange(const char *argument)
   if (is_abbrev(argument, "questvar1")) {
     argument = one_argument(argument, buf);
     argument = one_argument(argument, buf);
-    int val = atoi_safe(buf);
+    int val = convertTo<int>(buf);
     QuestVar1 = val;
     sendTo("You have changed QuestVar1 to %d.", val);
     return;
   } else if (is_abbrev(argument, "questvar2")) {
     argument = one_argument(argument, buf);
     argument = one_argument(argument, buf);
-    int val = atoi_safe(buf);
+    int val = convertTo<int>(buf);
     QuestVar2 = val;
     sendTo("You have changed QuestVar2 to %d.", val);
     return;
   } else if (is_abbrev(argument, "questvar3")) {
     argument = one_argument(argument, buf);
     argument = one_argument(argument, buf);
-    int val = atoi_safe(buf);
+    int val = convertTo<int>(buf);
     QuestVar3 = val;
     sendTo("You have changed QuestVar3 to %d.", val);
     return;
   } else if (is_abbrev(argument, "questvar4")) {
     argument = one_argument(argument, buf);
     argument = one_argument(argument, buf);
-    int val = atoi_safe(buf);
+    int val = convertTo<int>(buf);
     QuestVar4 = val;
     sendTo("You have changed QuestVar4 to %d.", val);
     return;
@@ -132,7 +132,7 @@ void TPerson::doChange(const char *argument)
 
   if (*buf && *buf2 && hasWizPower(POWER_CHANGE)) {
     if (isdigit(*buf2)) {
-      if ((new_lev = atoi_safe(buf2)) > MAX_IMMORT) {
+      if ((new_lev = convertTo<int>(buf2)) > MAX_IMMORT) {
         sendTo("The new level can't be greater than %d.\n\r", MAX_IMMORT);
         return;
       }
@@ -511,7 +511,7 @@ void TPerson::doToggle(const char *arg2)
     if (is_abbrev(arg2, "max")) {
       sendTo("Setting Wimpy to Max(%d).\n\r", wimplimit - 1);
       num = wimplimit - 1;
-    } else if (is_abbrev(arg2, "off") || (num = atoi_safe(arg2)) <= 0) {
+    } else if (is_abbrev(arg2, "off") || (num = convertTo<int>(arg2)) <= 0) {
       sendTo("Turning wimpy mode off.\n\r");
       wimpy = 0;
       return;
@@ -604,7 +604,7 @@ void TPerson::doToggle(const char *arg2)
   } else if (is_abbrev(arg, "screensize")) {
     if (*arg2) {
       if (isdigit(*arg2)) {
-	desc->screen_size = min(128, atoi_safe(arg2));
+	desc->screen_size = min(128, convertTo<int>(arg2));
 	doCls(false);
 	sendTo("Your screensize has been set to: %d\n\r", desc->screen_size);
       } else {
@@ -1651,10 +1651,10 @@ int TPerson::doAt(const char *argument, bool isFarlook)
     sendTo("You must supply a room number or a name.\n\r");
     return FALSE;
   }
-  if ((atoi_safe(loc) && !strchr(loc, '.')) ||
+  if ((convertTo<int>(loc) && !strchr(loc, '.')) ||
       *loc == '0') {
     // this latter case is for "at 0 look"
-    loc_nr = atoi_safe(loc);
+    loc_nr = convertTo<int>(loc);
     if (!real_roomp(loc_nr)) {
       sendTo("No room exists with that number.\n\r");
       return FALSE;
@@ -1795,7 +1795,7 @@ int TBeing::doGoto(const string & argument)
   }
 
   if (isdigit(*buf.c_str()) && buf.find('.') == string::npos) {
-    loc_nr = atoi(buf);
+    loc_nr = convertTo<int>(buf);
     if (NULL == real_roomp(loc_nr)) {
       if (loc_nr < 0) {
         sendTo("No room exists with that number.\n\r");
@@ -2022,7 +2022,7 @@ void TPerson::doShutdown(const char *argument)
     Shutdown = 1;
   } else {
     if (isdigit(*arg)) {
-      num = atoi_safe(arg);
+      num = convertTo<int>(arg);
       if (num <= 0) {
         sendTo("Illegal number of minutes.\n\r");
         sendTo("Syntax : shutdown <minutes until shutdown>\n\r");
@@ -2867,7 +2867,7 @@ void TPerson::doLoad(const char *argument)
     count = 1;
 
   if (isdigit(*num))
-    numx = atoi_safe(num);
+    numx = convertTo<int>(num);
   else
     numx = -1;
 
@@ -3005,7 +3005,7 @@ void TPerson::doLoad(const char *argument)
       sendTo("Sorry, you are not high enough to do this yet.\n\r");
       return;
     }
-    loadSetEquipment((is_number(num) ? atoi_safe(num) : -1), num, 101);
+    loadSetEquipment((is_number(num) ? convertTo<int>(num) : -1), num, 101);
   } else
     sendTo("Usage: load (object|mobile|set) (number|name)\n\r       load room start [end]\n\r");
 }
@@ -3283,7 +3283,7 @@ void TPerson::doPurge(const char *argument)
         return;
       }
 
-      zone = atoi_safe(argument);
+      zone = convertTo<int>(argument);
 
       if (zone <= 0 || zone >= zone_table.size()) {
         sendTo("Syntax: purge zone <zone #>\n\r");
@@ -3420,10 +3420,10 @@ void TPerson::doPurge(const char *argument)
           sendTo("purge room start [end]\n\r");
           return;
         }
-        range[0] = atoi_safe(name_buf);
+        range[0] = convertTo<int>(name_buf);
         argument = one_argument(argument, name_buf);
         if (isdigit(*name_buf))
-          range[1] = atoi_safe(name_buf);
+          range[1] = convertTo<int>(name_buf);
         else
           range[1] = range[0];
     
@@ -5139,10 +5139,10 @@ void TBeing::doInfo(const char *arg)
 
       buf += "\n\rGold Income/Outlay statistics:\n\r\n\r";
 
-      if (arg && *arg && (atoi_safe(arg) < 1 || atoi_safe(arg) > MAX_IMMORT))
+      if (arg && *arg && (convertTo<int>(arg) < 1 || convertTo<int>(arg) > MAX_IMMORT))
         buf += "...Invalid Level Specified...\n\r\n\r";
 
-      for (j = ((arg && *arg) ? (atoi_safe(arg) - 1) : 0); j < MAX_IMMORT; j++) {
+      for (j = ((arg && *arg) ? (convertTo<int>(arg) - 1) : 0); j < MAX_IMMORT; j++) {
         if (j < 0)
           break;
 
@@ -5405,7 +5405,7 @@ void TBeing::doInfo(const char *arg)
         sendTo("You cannot access that information at your level.\n\r");
         return;
       }
-      int which = atoi_safe(arg);
+      int which = convertTo<int>(arg);
       if (which < MIN_DISC || which >= MAX_DISCS) {
         sendTo("Syntax: info discipline <disc #>\n\r");
         return;
@@ -5443,7 +5443,7 @@ void TBeing::doInfo(const char *arg)
       spellNumT which;
 
       if (is_number(arg1)) {
-        which = spellNumT(atoi_safe(arg1));
+        which = spellNumT(convertTo<int>(arg1));
 
         if (which < MIN_SPELL || which >= MAX_SKILL) {
           sendTo("Syntax: info skills <skill #:%d - %d>\n\r", MIN_SPELL, (MAX_SKILL + 1));
@@ -5594,7 +5594,7 @@ void TBeing::doInfo(const char *arg)
         sendTo("You cannot access that information at your level.\n\r");
         return;
       }
-      int which = atoi_safe(arg);
+      int which = convertTo<int>(arg);
       if (which < MIN_DISC || which >= MAX_DISCS) {
         sendTo("Syntax: info mobskills <disc #>\n\r");
         return;
@@ -5626,7 +5626,7 @@ void TBeing::doInfo(const char *arg)
         sendTo("You cannot access that information at your level.\n\r");
         return;
       }
-      int which = atoi_safe(arg);
+      int which = convertTo<int>(arg);
       if (which < MIN_DISC || which >= MAX_DISCS) {
         sendTo("Syntax: info immskills <disc #>\n\r");
         return;
@@ -6246,7 +6246,7 @@ void TBeing::doResize(const char *arg)
   }
   if(!strcmp(charbuf, "race")){
     arg = one_argument(arg,racebuf);
-    race=atoi_safe(racebuf);
+    race=convertTo<int>(racebuf);
     if(race >= MAX_RACIAL_TYPES || race < 0){
       sendTo("Race number %i doesn't exist.\n\r", race);
       return;
@@ -6332,7 +6332,7 @@ void TBeing::doHeaven(string arg)
     return;
 
   one_argument(arg, buf); 
-  if (buf.empty() || !(num = atoi_safe(buf))) {
+  if (buf.empty() || !(num = convertTo<int>(buf))) {
     sendTo("Syntax: heaven <hours>\n\r");
     return;
   }
@@ -6591,9 +6591,9 @@ int TBeing::doCrit(string arg)
       sendTo("Syntax: crit {victim} <crit #>\n\r");
       return FALSE;
     }
-    mod = atoi_safe(name_buf);
+    mod = convertTo<int>(name_buf);
   } else 
-    mod = atoi_safe(arg);
+    mod = convertTo<int>(arg);
 
   if (vict->isImmortal() && (vict->GetMaxLevel() >= GetMaxLevel()) &&
       name_buf != "Batopr"){

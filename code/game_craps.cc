@@ -218,7 +218,7 @@ void TBeing::doBet(const char *arg)
     }
     if (*craps) {
       if (isdigit(*craps)) {
-	num = atoi_safe(craps);
+	num = convertTo<int>(craps);
 	if (num > getMoney()) {
 	  sendTo("You don't have that much to bet!\n\r");
 	  return;

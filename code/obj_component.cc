@@ -2095,9 +2095,9 @@ void buildComponentArray()
     exit(0);
   }
   while(db.fetchRow()){
-    vnum=atoi_safe(db.getColumn(0));
-    spell=mapFileToSpellnum(atoi_safe(db.getColumn(1)));
-    usage=atoi_safe(db.getColumn(2));
+    vnum=convertTo<int>(db.getColumn(0));
+    spell=mapFileToSpellnum(convertTo<int>(db.getColumn(1)));
+    usage=convertTo<int>(db.getColumn(2));
 
     if(spell != TYPE_UNDEFINED &&
        (((usage & COMP_SPELL) != 0))){
@@ -2350,7 +2350,7 @@ void TComponent::changeComponentValue4(TBeing *ch, const char *arg, editorEnterT
       return;
     }
   }
-  loc_update = atoi_safe(arg);
+  loc_update = convertTo<int>(arg);
 
   switch (loc_update) {
     case 1:
@@ -2697,7 +2697,7 @@ bool TComponent::splitMe(TBeing *ch, const char *tString)
   if (*tString)
     argument_parser(tString, tStString, tStBuffer);
 
-  if (!*tString || ((tCount = atoi_safe(tStBuffer)) <= 0)) {
+  if (!*tString || ((tCount = convertTo<int>(tStBuffer)) <= 0)) {
     ch->sendTo("Syntax: split <component> <charges>\n\r");
     return true;
   }

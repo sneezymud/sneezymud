@@ -321,7 +321,7 @@ void TPerson::doSet(const char *argument)
     }
     argument = one_argument(argument, namebuf);
     argument = one_argument(argument, parmstr);
-    parm = atoi_safe(parmstr);
+    parm = convertTo<int>(parmstr);
     cap(namebuf);
 
     if (strcmp("Noone", namebuf) && !load_char(namebuf, &st)) {
@@ -542,7 +542,7 @@ void TPerson::doSet(const char *argument)
       }     
     }
     spellNumT snt;
-    if ((i = atoi_safe(parmstr))) {
+    if ((i = convertTo<int>(parmstr))) {
       snt = spellNumT(i);
     } else {
       foundNum = FALSE;

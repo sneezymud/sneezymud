@@ -93,7 +93,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
         doTell(buf);
         return FALSE; // continue the script, even tho this is a 'dummy' trigger.
       }
-      value = atoi_safe(arg);
+      value = convertTo<int>(arg);
 
       if(value<0){
 	setMoney(getMoney()+(-value));
@@ -149,7 +149,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
         doTell(buf);
         return FALSE; // continue the script, even tho this is a 'dummy' trigger.
       }
-      value = atoi_safe(arg);
+      value = convertTo<int>(arg);
 
       if (value <= 0 || 
           ((rc = real_mobile(value)) <= 0)) {
@@ -181,7 +181,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       *roomp += *tMonster;
       return FALSE;
     case CMD_RESP_PERSONALIZE:
-      value = atoi_safe(arg);
+      value = convertTo<int>(arg);
 
       if (value <= 0 || (real_object(value) < 0)) {
         vlogf(LOG_MOB_RS, "Problem in script (5).  Trying to load %d on %s", value, getName());
@@ -191,7 +191,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       personalize_object(this, mob, value, -1);
       return FALSE;
     case CMD_RESP_RESIZE:
-      value = atoi_safe(arg);
+      value = convertTo<int>(arg);
 
       if (value <= 0 || (real_object(value) < 0)) {
         vlogf(LOG_MOB_RS, "Problem in script (6).  Trying to load %d on %s", value, getName(\
@@ -202,7 +202,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       resize_personalize_object(this, mob, value, -1);
       return FALSE;
     case CMD_RESP_TOGGLE:
-      value = atoi_safe(arg);
+      value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS, "Bad argument to response (%s) command %d.  (%s)",
                 name, cmd, arg);
@@ -218,7 +218,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
 
       return FALSE;
     case CMD_RESP_UNTOGGLE:
-      value = atoi_safe(arg);
+      value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS, "Bad argument to response (%s) special command %d.  (%s)",
                 name, cmd, arg);
@@ -231,7 +231,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       mob->remQuestBit(value);
       return FALSE;
     case CMD_RESP_CHECKTOG:
-      value = atoi_safe(arg);
+      value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS, "Bad argument to response (%s) special command %d.  (%s)",
                 name, cmd, arg);
@@ -242,7 +242,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
 
       return FALSE;
     case CMD_RESP_CHECKUNTOG:
-      value = atoi_safe(arg);
+      value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS, "Bad argument to response (%s) special command %d.  (%s)",
                 name, cmd, arg);
@@ -253,7 +253,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
 
       return FALSE;
     case CMD_RESP_CHECKMAX:
-      value = real_object(atoi_safe(arg));
+      value = real_object(convertTo<int>(arg));
       if (value <= 0 || value >= (signed)obj_index.size()) {
         vlogf(LOG_MOB_RS, "Bad argument to response (%s) special command %s.  (%s)",
               name, cmd, arg);
@@ -288,7 +288,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       break;
     case CMD_RESP_CODE_SEGMENT:
       // special xx
-      rc = specificCode(this, mob, atoi_safe(arg), respo);
+      rc = specificCode(this, mob, convertTo<int>(arg), respo);
       if (IS_SET_DELETE(rc, DELETE_THIS) ||
           IS_SET_DELETE(rc, DELETE_VICT)) {
         return rc;
@@ -341,21 +341,21 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
 #endif
       break;
     case CMD_RESP_CHECKROOM:
-      value = atoi_safe(arg);
+      value = convertTo<int>(arg);
 
       if ((in_room != value) && !inImperia())
         return RET_STOP_PARSING;
 
       break;
     case CMD_RESP_CHECKNROOM:
-      value = atoi_safe(arg);
+      value = convertTo<int>(arg);
 
       if ((in_room == value))
         return RET_STOP_PARSING;
 
       break;
     case CMD_RESP_CHECKZONE:
-      value = atoi_safe(arg);
+      value = convertTo<int>(arg);
 
       tRoom = real_roomp(value);
 
@@ -367,7 +367,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       value=0;
       for (rMem = resps->respMemory; rMem; rMem = rMem->next) {
 	if (rMem->cmd == CMD_RESP_DESTINATION){
-	  if(!(value=atoi_safe(rMem->args))){
+	  if(!(value=convertTo<int>(rMem->args))){
 	    // assume its a mob/pc name
 	    TBeing *hunted;
 	    for (hunted = character_list;hunted;hunted = hunted->next) {
@@ -614,8 +614,8 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
           // to give duplicate functionality to multiple commands.  That
           // is  Trigger#1 with checktog 1, and Trigger #2 with checktog 2
           // could both call the same package
-          said_int = atoi_safe(said);
-          arg_int = atoi_safe(respo->args);
+          said_int = convertTo<int>(said);
+          arg_int = convertTo<int>(respo->args);
           if (said_int != arg_int)
             break;
 
@@ -634,8 +634,8 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
           }
           break;
         case CMD_RESP_ROOM_ENTER:
-          said_int = atoi_safe(said);
-          arg_int = atoi_safe(respo->args);
+          said_int = convertTo<int>(said);
+          arg_int = convertTo<int>(respo->args);
           if (arg_int && said_int != arg_int) {
             break;
           }
@@ -659,7 +659,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
           }
           break;
         case CMD_GIVE:
-          if (!(value = atoi_safe(respo->args))) {
+          if (!(value = convertTo<int>(respo->args))) {
             vlogf(LOG_MOB_RS, "Bad arguments for %s for Give", getName());
             break; 
           }
@@ -693,7 +693,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
             // not an item I need *
           } else if (value < 0) {
             if (said && *said)
-              said_int = atoi_safe(said);
+              said_int = convertTo<int>(said);
             else
               said_int = 0;
 
@@ -702,7 +702,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
                  rMem; rMem = rMem->next) {
               if (rMem->cmd == CMD_GIVE && rMem->name &&
                   !strcmp(rMem->name, speaker->getNameNOC(speaker).c_str())) {
-                storedCash = atoi_safe(rMem->args);
+                storedCash = convertTo<int>(rMem->args);
 
                 if (rMem == resps->respMemory)
                   resps->respMemory = rMem->next;
@@ -790,9 +790,9 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
           strcpy(tString, said);
 
           if ((is_number(tString) ?
-               atoi_safe(said) == atoi(tStBuffer) :
+               convertTo<int>(said) == convertTo<int>(tStBuffer) :
                isname(said, tStArg.c_str()))) {
-            value = atoi_safe(tStString);
+            value = convertTo<int>(tStString);
 
             if (speaker->getMoney() < value) {
 

@@ -14,7 +14,7 @@ void comify(char *tString)
   int  strCount,
        charIndex = 0;
 
-  sprintf(tOldString, "%.0f", atof_safe(tString));
+  sprintf(tOldString, "%.0f", convertTo<float>(tString));
   strCount = strlen(tOldString);
   strcpy(tOldString, tString);
 

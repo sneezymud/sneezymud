@@ -238,7 +238,7 @@ int Descriptor::read_client(char *str2)
         return FALSE;
       }
       strcpy(buf, nextToken('|', 255, str2).c_str());
-      vers = atoi_safe(buf);
+      vers = convertTo<int>(buf);
       if (vers <= BAD_VERSION) {
         clientf("%d|Your client is an old version. The latest version is %d. Please upgrade! You can upgrade from http://sneezy.stanford.edu/client/client.html.|%d", CLIENT_ERROR, CURRENT_VERSION, ERR_BAD_VERSION);
         outputProcessing();
@@ -320,7 +320,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       if (!(rp = character->roomp))
         break;
 
-      rp->setSectorType((sectorTypeT) atoi_safe(buf));
+      rp->setSectorType((sectorTypeT) convertTo<int>(buf));
       break;
     case CLIENT_ROOMMAXCAP:
       if (!character)
@@ -335,7 +335,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       if (!(rp = character->roomp))
         break;
 
-      rp->setMoblim(atoi_safe(buf));
+      rp->setMoblim(convertTo<int>(buf));
       break;
     case CLIENT_ROOMHEIGHT:
       if (!character)
@@ -350,7 +350,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       if (!(rp = character->roomp))
         break;
 
-      rp->setRoomHeight(atoi_safe(buf));
+      rp->setRoomHeight(convertTo<int>(buf));
       break;
     case CLIENT_ROOMDESC: {
       char descrBuf[MAX_STRING_LENGTH];
@@ -425,7 +425,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       break;
     }
     case CLIENT_WHO:
-      notify = atoi(nextToken('|', 255, str2));
+      notify = convertTo<int>(nextToken('|', 255, str2));
       prompt_mode = -1;
       for (person = character_list; person; person = person->next) {
         if (person->isPc() && person->polyed == POLY_TYPE_NONE) {
@@ -676,7 +676,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       char apassword[256];
       char buf2[256];
       strcpy(aname, nextToken('|', 255, str2).c_str());
-      int iNew = atoi_safe(nextToken('|', 255, str2));
+      int iNew = convertTo<int>(nextToken('|', 255, str2));
       if (iNew) {
         if (bogusAccountName(buf)) {
           clientf("%d|0|%d", CLIENT_CHECKACCOUNTNAME, ERR_BADACCOUNT_NAME);
@@ -840,13 +840,13 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       }
       strcpy(account->email, email);
 
-      if (!*timezone || (atoi_safe(timezone) > 23) || (atoi_safe(timezone) < -23)) {
+      if (!*timezone || (convertTo<int>(timezone) > 23) || (convertTo<int>(timezone) < -23)) {
         clientf("%d|Invalid timezone please enter a number between 23 and -23!", CLIENT_ERROR);
         delete account;
         account = NULL;
         return FALSE;
       }
-      account->time_adjust = atoi_safe(timezone);
+      account->time_adjust = convertTo<int>(timezone);
 
       switch(*listserver) {
         case '1':
@@ -1444,7 +1444,7 @@ int Descriptor::clientCreateChar(char *arg)
 
   // Sex
   strcpy(dummy, nextToken('|', 1024, arg).c_str());
-  switch(atoi_safe(dummy)) { 
+  switch(convertTo<int>(dummy)) { 
     case 0:
       ch->setSex(SEX_MALE);
       break;
@@ -1458,7 +1458,7 @@ int Descriptor::clientCreateChar(char *arg)
 
   // Hands
   strcpy(dummy, nextToken('|', 1024, arg).c_str());
-  switch(atoi_safe(dummy)) {
+  switch(convertTo<int>(dummy)) {
     case 0:
       ch->addPlayerAction(PLR_RT_HANDED);
       break;
@@ -1468,7 +1468,7 @@ int Descriptor::clientCreateChar(char *arg)
   }
 
   // Race and Terrain
-  switch (atoi_safe(nextToken('|', 1024, arg))) {
+  switch (convertTo<int>(nextToken('|', 1024, arg))) {
     case 1:
       ch->setRace(RACE_HUMAN);
       switch (*(nextToken('|', 1024, arg).c_str())) {
@@ -1586,18 +1586,18 @@ int Descriptor::clientCreateChar(char *arg)
 
   //Stats
 
-  ch->chosenStats.values[STAT_STR] = atoi_safe(nextToken('|', 1024, arg));
-  ch->chosenStats.values[STAT_BRA] = atoi_safe(nextToken('|', 1024, arg));
-  ch->chosenStats.values[STAT_CON] = atoi_safe(nextToken('|', 1024, arg));
-  ch->chosenStats.values[STAT_DEX] = atoi_safe(nextToken('|', 1024, arg));
-  ch->chosenStats.values[STAT_AGI] = atoi_safe(nextToken('|', 1024, arg));
-  ch->chosenStats.values[STAT_INT] = atoi_safe(nextToken('|', 1024, arg));
-  ch->chosenStats.values[STAT_WIS] = atoi_safe(nextToken('|', 1024, arg)); 
-  ch->chosenStats.values[STAT_FOC] = atoi_safe(nextToken('|', 1024, arg));
-  ch->chosenStats.values[STAT_PER] = atoi_safe(nextToken('|', 1024, arg));
-  ch->chosenStats.values[STAT_CHA] = atoi_safe(nextToken('|', 1024, arg));
-  ch->chosenStats.values[STAT_KAR] = atoi_safe(nextToken('|', 1024, arg));
-  ch->chosenStats.values[STAT_SPE] = atoi_safe(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_STR] = convertTo<int>(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_BRA] = convertTo<int>(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_CON] = convertTo<int>(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_DEX] = convertTo<int>(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_AGI] = convertTo<int>(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_INT] = convertTo<int>(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_WIS] = convertTo<int>(nextToken('|', 1024, arg)); 
+  ch->chosenStats.values[STAT_FOC] = convertTo<int>(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_PER] = convertTo<int>(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_CHA] = convertTo<int>(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_KAR] = convertTo<int>(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_SPE] = convertTo<int>(nextToken('|', 1024, arg));
 
   // Check if everything sums to 0, if not send an error message. 
 
@@ -1712,10 +1712,10 @@ void Descriptor::clientShoppingList(const char *argument, TMonster *keeper, int 
     else if (is_number(stString)) {
       if (iMin == 999999) {
         iMin = 0;
-        iMax = atoi_safe(stString);
+        iMax = convertTo<int>(stString);
       } else if (iMin == 0) {
         iMin = iMax;
-        iMax = atoi_safe(stString);
+        iMax = convertTo<int>(stString);
       }
     } else if (*stString) 
       strcpy(arg, stString);

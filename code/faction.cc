@@ -1670,7 +1670,7 @@ void TBeing::doMakeLeader(const char *arg)
     sendTo("Syntax: makeleader <name> <leader slot>\n\r");
     return;
   }
-  which = atoi_safe(arg);
+  which = convertTo<int>(arg);
   /* Capitalize name and faction */
   cap(namebuf);
 
@@ -2294,7 +2294,7 @@ void TBeing::doAdjust(const char *arg)
         sendTo("Syntax: adjust caravan interval <interval>\n\r");
         return;
       }
-      amount = atoi_safe(tmpbuf2);
+      amount = convertTo<int>(tmpbuf2);
       if (amount < MIN_CARAVAN_INTERVAL  && amount != -1) {
         sendTo("You can't specify an interval less than %d.\n\r", MIN_CARAVAN_INTERVAL);
         return;
@@ -2310,7 +2310,7 @@ void TBeing::doAdjust(const char *arg)
         sendTo("Syntax: adjust caravan value <value>\n\r");
         return;
       }
-      amount = atoi_safe(tmpbuf2);
+      amount = convertTo<int>(tmpbuf2);
       if (amount <= 0) {
         sendTo("Caravans must transport something.\n\r");
         return;
@@ -2330,7 +2330,7 @@ void TBeing::doAdjust(const char *arg)
         sendTo("Syntax: adjust caravan defense <amount>\n\r");
         return;
       }
-      amount = atoi_safe(tmpbuf2);
+      amount = convertTo<int>(tmpbuf2);
       if (amount < 0) {
         sendTo("You can't spend a negative amount on defense.\n\r");
         return;

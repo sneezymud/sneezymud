@@ -1119,7 +1119,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
     return FALSE;
   }
   arg = one_argument(arg, pracbuf);
-  if (!*pracbuf || !(pracs = atoi_safe(pracbuf))) {
+  if (!*pracbuf || !(pracs = convertTo<int>(pracbuf))) {
     sprintf(buf,
          "Type \"practice %s <number> <class>\" to learn this discipline.", 
          TrainerInfo[offset].abbrev);

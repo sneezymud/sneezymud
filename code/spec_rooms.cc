@@ -260,7 +260,7 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
   for (; isspace(*arg); arg++);
 
   int money = 0;
-  money = atoi_safe(arg);
+  money = convertTo<int>(arg);
 
   if (cmd == CMD_DEPOSIT) {
     if (!ch->isPc() || dynamic_cast<TMonster *>(ch)) {

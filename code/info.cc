@@ -1723,12 +1723,12 @@ void TBeing::doTime(const char *argument)
 
   one_argument(argument, arg);
   if (*arg) {
-    if (!atoi_safe(arg) && strcmp(arg, "0")) {
+    if (!convertTo<int>(arg) && strcmp(arg, "0")) {
       sendTo("Present time differential is set to %d hours.\n\r", desc->account->time_adjust);
       sendTo("Syntax: time <difference>\n\r");
       return;
     }
-    desc->account->time_adjust = atoi_safe(arg);
+    desc->account->time_adjust = convertTo<int>(arg);
     sendTo("Your new time difference between your site and %s's will be: %d hours.\n\r", MUD_NAME, desc->account->time_adjust);
     desc->saveAccount();
     return;
@@ -1867,7 +1867,7 @@ down");
         sendTo("Syntax: weather month <num>\n\r");
         return;
       }
-      int num = atoi_safe(buffer);
+      int num = convertTo<int>(buffer);
       if (num <= 0 || num > 12) {
         sendTo("Syntax: weather month <num>\n\r");
         sendTo("<num> must be in range 1-12.\n\r");
@@ -1882,7 +1882,7 @@ down");
         sendTo("Syntax: weather moon <num>\n\r");
         return;
       }
-      int num = atoi_safe(buffer);
+      int num = convertTo<int>(buffer);
       if (num <= 0 || num > 32) {
         sendTo("Syntax: weather moon <num>\n\r");
         sendTo("<num> must be in range 1-32.\n\r");
@@ -2336,7 +2336,7 @@ void TBeing::doEquipment(const char *argument)
 
     db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
     while(db.fetchRow()){
-      tattoos[atoi_safe(db.getColumn(0))]=db.getColumn(1);
+      tattoos[convertTo<int>(db.getColumn(0))]=db.getColumn(1);
     }
 
     sendTo("You are using:\n\r");
@@ -2374,7 +2374,7 @@ void TBeing::doEquipment(const char *argument)
     if (victim) {
       db.query("select location, tattoo from tattoos where name='%s' order by location",victim->getName());
       while(db.fetchRow()){
-	tattoos[atoi_safe(db.getColumn(0))]=db.getColumn(1);
+	tattoos[convertTo<int>(db.getColumn(0))]=db.getColumn(1);
       }
 
       act("$N is using.", FALSE, this, 0, victim, TO_CHAR);
@@ -3167,7 +3167,7 @@ void TBeing::doWorld()
   //  db.query("select count(distinct mobvnum) from trophy");
   db.query("select count(*) from trophymob");
   if(db.fetchRow())
-    unkmobcount=atoi_safe(db.getColumn(0));
+    unkmobcount=convertTo<int>(db.getColumn(0));
 
   sprintf(buf, "Percent of distinct mobiles never killed: %s    %d%% (%i)%s\n\r",
 	  red(), 100-(int)(((float)unkmobcount/(float)activemobcount)*100), 
@@ -3349,7 +3349,7 @@ void TBeing::doClear(const char *argument)
     sendTo("Ok. All Aliases cleared\n\r");
     return;
   } else
-    i = atoi_safe(argument) - 1;
+    i = convertTo<int>(argument) - 1;
 
   if ((i > -1) && (i < 16)) {
     desc->alias[i].command[0] = '\0';

@@ -3197,7 +3197,7 @@ int ctoi(char c)
   char buf[5];
 
   sprintf(buf, "%c", c);
-  return atoi_safe(buf);
+  return convertTo<int>(buf);
 }
 
 // essentially, strips out multiple ' ' truncating to a single space
@@ -3326,25 +3326,6 @@ int stringncmp(const string str1, const string str2, unsigned int len)
 
   // trunc down to length and compare
   return string(str1, 0, len).compare(string(str2, 0, len));
-}
-
-int atoi_safe(const string arg){
-  if(arg.empty())
-    return 0;
-  
-  return atoi(arg.c_str());
-}
-
-double atof_safe(const string arg){
-  if(arg.empty())
-    return 0;
-
-  return atof(arg.c_str());
-}
-
-int atoi(const string &num)
-{
-  return atoi(num.c_str());
 }
 
 commandInfo::~commandInfo()

@@ -64,7 +64,7 @@ void TBeing::doTestCode(const char *arg)
 #if 0
   char arg1[256];
   arg = one_argument(arg, arg1);
-  int spell = atoi_safe(arg1);
+  int spell = convertTo<int>(arg1);
 
   if (spell < 0 || !discArray[spell]) {
     sendTo("Bad spell\n\r");
@@ -206,7 +206,7 @@ void TBeing::doTestCode(const char *arg)
 #endif
 #if 0
   one_argument(arg, tmpbuf);
-  i = atoi_safe(tmpbuf);
+  i = convertTo<int>(tmpbuf);
   if (i < 0 || i > 7)
     i = 0;
   calcNewPracs(i, FALSE);

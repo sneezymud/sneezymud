@@ -108,7 +108,7 @@ void TBed::changeBedValue1(TBeing *ch, const char *arg, editorEnterTypeT type)
       return;
     }
   }
-  update_num = atoi_safe(arg);
+  update_num = convertTo<int>(arg);
 
   switch (ch->specials.edit) {
     case CHANGE_BED_VALUE1:

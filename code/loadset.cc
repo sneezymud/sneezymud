@@ -250,14 +250,14 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
             listMissing = true;
           else  if (is_floatVal(tArg)) {
             if (tLevelMin == -1) {
-              tLevelMin = atof_safe(tArg);
+              tLevelMin = convertTo<float>(tArg);
 
               if (tLevelMin < 0 || tLevelMin > 50) {
                 sendTo("Invalid Min-Level.\n\r");
                 return;
               }
             } else {
-             tLevelMax = atof_safe(tArg);
+             tLevelMax = convertTo<float>(tArg);
 
               if (tLevelMax < 0 || tLevelMax > 50 || tLevelMax <= tLevelMin) {
                 sendTo("Invalid Max-Level.\n\r");
@@ -523,7 +523,7 @@ void TBeing::loadSetEquipment(int num, char *arg, int tChance)
     return;
 
   if (*tString && is_number(tString)) {
-    num        = atoi_safe(tString);
+    num        = convertTo<int>(tString);
     tString[0] = '\0';
   }
 
@@ -615,7 +615,7 @@ void loadSetClass::SetupLoadSetSuits()
       tArg = one_argument(tArg, tBuffer); // grab the <vnum> of the item.
 
       if (tPiece >= 0 && tPiece < LST_MAX && is_number(tBuffer))
-        equipment[tPiece] = atoi_safe(tBuffer);
+        equipment[tPiece] = convertTo<int>(tBuffer);
     }
 
     if (feof(suitFile)) {

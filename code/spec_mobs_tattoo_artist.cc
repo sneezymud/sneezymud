@@ -39,7 +39,7 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
   } else if(cmd==CMD_BUY){
     arg=one_argument(arg, buf);
 
-    if(!(i=atoi_safe(buf)) || i>ntattoos){
+    if(!(i=convertTo<int>(buf)) || i>ntattoos){
       myself->doTell(ch->getName(), "I don't understand, which tattoo do you want?");
       return FALSE;
     }

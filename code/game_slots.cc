@@ -264,7 +264,7 @@ void TBeing::doPlay(const char *arg)
       return;
     } else {
       if (isdigit(*options)) {
-	// int option = atoi_safe(options);
+	// int option = convertTo<int>(options);
 #if 0
 	m_craps->rollDice();
 #endif

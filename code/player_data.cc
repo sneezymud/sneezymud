@@ -1590,7 +1590,7 @@ void TBeing::doReset(string arg)
       sendTo("Zone 0-%d reset.\n\r", i-1);
       return;
     }
-    zone = atoi_safe(buf);
+    zone = convertTo<int>(buf);
     zone_table[zone].resetZone(FALSE);
     sendTo("Zone %d reset.\n\r", zone);
     return;

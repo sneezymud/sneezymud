@@ -553,35 +553,35 @@ void Race::initRace(const char *whichRace)
 #if 1
     // Build the natural immunity list.
     else if (!strncasecmp(keyword, "immune", 6)) {
-      naturalImmunities.setImmunity(keyword, atoi_safe(buf));
+      naturalImmunities.setImmunity(keyword, convertTo<int>(buf));
     }
 #endif
 
     // Base Statistics
     else if (!strcasecmp(keyword, "str"))
-      baseStats.set(STAT_STR, atoi_safe(buf));
+      baseStats.set(STAT_STR, convertTo<int>(buf));
     else if (!strcasecmp(keyword, "bra"))
-      baseStats.set(STAT_BRA,atoi_safe(buf));
+      baseStats.set(STAT_BRA,convertTo<int>(buf));
     else if (!strcasecmp(keyword, "con"))
-      baseStats.set(STAT_CON,atoi_safe(buf));
+      baseStats.set(STAT_CON,convertTo<int>(buf));
     else if (!strcasecmp(keyword, "dex"))
-      baseStats.set(STAT_DEX,atoi_safe(buf));
+      baseStats.set(STAT_DEX,convertTo<int>(buf));
     else if (!strcasecmp(keyword, "agi"))
-      baseStats.set(STAT_AGI,atoi_safe(buf));
+      baseStats.set(STAT_AGI,convertTo<int>(buf));
     else if (!strcasecmp(keyword, "int"))
-      baseStats.set(STAT_INT,atoi_safe(buf));
+      baseStats.set(STAT_INT,convertTo<int>(buf));
     else if (!strcasecmp(keyword, "wis"))
-      baseStats.set(STAT_WIS,atoi_safe(buf));
+      baseStats.set(STAT_WIS,convertTo<int>(buf));
     else if (!strcasecmp(keyword, "foc"))
-      baseStats.set(STAT_FOC,atoi_safe(buf));
+      baseStats.set(STAT_FOC,convertTo<int>(buf));
     else if (!strcasecmp(keyword, "per"))
-      baseStats.set(STAT_PER,atoi_safe(buf));
+      baseStats.set(STAT_PER,convertTo<int>(buf));
     else if (!strcasecmp(keyword, "cha"))
-      baseStats.set(STAT_CHA,atoi_safe(buf));
+      baseStats.set(STAT_CHA,convertTo<int>(buf));
     else if (!strcasecmp(keyword, "kar") )
-      baseStats.set(STAT_KAR,atoi_safe(buf));
+      baseStats.set(STAT_KAR,convertTo<int>(buf));
     else if (!strcasecmp(keyword, "spe"))
-      baseStats.set(STAT_SPE,atoi_safe(buf));
+      baseStats.set(STAT_SPE,convertTo<int>(buf));
     else if (!strcasecmp(keyword, "DISSECT_INFO")) {
       if (!tDissectItem[0].loadItem)
         sscanf(buf, " %d %d %d",

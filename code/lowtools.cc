@@ -20,8 +20,8 @@ bool parse_num_args(int argc, char **argv, vector<int> &vnums)
     npos=tmp.find("-");
 
     if(npos != string::npos){
-      s=atoi_safe(tmp.substr(0, npos));
-      e=atoi_safe(tmp.substr(npos+1, tmp.size()));
+      s=convertTo<int>(tmp.substr(0, npos));
+      e=convertTo<int>(tmp.substr(npos+1, tmp.size()));
       
       if(s==0 || e==0){
 	printf("Bad argument %s, aborting.\n", tmp.c_str());
@@ -35,7 +35,7 @@ bool parse_num_args(int argc, char **argv, vector<int> &vnums)
 	vnums.push_back(s++);
       }
     } else {
-      n=atoi_safe(tmp);
+      n=convertTo<int>(tmp);
 
       if(n==0){
 	printf("Bad argument %s, aborting.\n", tmp.c_str());

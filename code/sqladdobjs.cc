@@ -31,7 +31,7 @@ int main(int argc, char **argv)
       printf("Adding %i\n", vnums[t]);
       
       // fix strung and prototype bits
-      action_flag=atoi_safe(db_immo.getColumn(6));
+      action_flag=convertTo<int>(db_immo.getColumn(6));
       if(action_flag & (1<<2)){
 	action_flag=action_flag - (1<<2);
       }

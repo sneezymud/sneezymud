@@ -1094,7 +1094,7 @@ void TPerson::doLow(const char *arg)
 	   "Bonus       :","Cnt","Max","Min","Avg","Sum");
 
     while(db.fetchRow()){
-      switch(mapFileToApply(atoi_safe(db.getColumn(0)))){
+      switch(mapFileToApply(convertTo<int>(db.getColumn(0)))){
 	case APPLY_STR:
 	  sendTo("Strength    : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
 	  break;
@@ -1238,7 +1238,7 @@ void TBeing::lowRace(const char *arg)
   bool show_stat=true;
 
   arg = one_argument(arg, buf2);
-  race_num = atoi_safe(buf2);
+  race_num = convertTo<int>(buf2);
   if ((race_num < 0) || (race_num > MAX_RACIAL_TYPES)) {
     sendTo("Syntax: low race <racial index>\n\r");
     sendTo("See 'show race' for valid indices.\n\r");
@@ -1331,8 +1331,8 @@ void TBeing::lowTasks(const char *arg)
     str += "---------------------------------------------------------\n\r";
 
     while(db.fetchRow()){
-      id = atoi_safe(db.getColumn(0));
-      priority = atoi_safe(db.getColumn(2));
+      id = convertTo<int>(db.getColumn(0));
+      priority = convertTo<int>(db.getColumn(2));
       sprintf(buf, "%-4d| %d |  %-13s| %s (%s)\n\r", id, priority, db.getColumn(2), db.getColumn(3), db.getColumn(4));      
       str += buf;
     }
@@ -1348,7 +1348,7 @@ void TBeing::lowTasks(const char *arg)
       sendTo("Syntax: low tasks add <priority> <task>\n\r");
       return;
     } else {
-      priority = atoi_safe(buf);
+      priority = convertTo<int>(buf);
       if (priority < 0 || priority > 9) {
 	sendTo("Priority must be between 0 (highest) and 9 (lowest).\n\r");
 	return;
@@ -1360,7 +1360,7 @@ void TBeing::lowTasks(const char *arg)
 	if(!db.fetchRow()) {
 	  id = 0;
 	} else {
-	  id = atoi_safe(db.getColumn(0)) + 1;
+	  id = convertTo<int>(db.getColumn(0)) + 1;
 	}
         sprintf(temp, "insert into lowtasks (id, priority, assigned_to, task, status) values(%d, %d, '%s', '%s', '')", id, priority, getName(), arg);
         vlogf(LOG_DASH, "lowtask: %s", temp);
@@ -1378,7 +1378,7 @@ void TBeing::lowTasks(const char *arg)
       sendTo("Syntax: low tasks assign <task ID> <name>\n\r");
       return;
     } else {
-      id = atoi_safe(buf);
+      id = convertTo<int>(buf);
       sprintf(temp, "update lowtasks set assigned_to='%s' where id=%d", buf2, id);
       vlogf(LOG_DASH, "lowtask: %s", temp);
       db.query(temp);
@@ -1394,7 +1394,7 @@ void TBeing::lowTasks(const char *arg)
       sendTo("Syntax: low tasks status <task ID> <status>\n\r");
       return;
     } else {
-      id = atoi_safe(buf);
+      id = convertTo<int>(buf);
       sprintf(temp, "update lowtasks set status='%s' where id=%d", buf2, id);
       vlogf(LOG_DASH, "lowtask: %s", temp);
       db.query(temp);
@@ -1410,8 +1410,8 @@ void TBeing::lowTasks(const char *arg)
       sendTo("Syntax: low tasks priority <task ID> <priority>\n\r");
       return;
     } else {
-      id = atoi_safe(buf);
-      priority = atoi_safe(buf2);
+      id = convertTo<int>(buf);
+      priority = convertTo<int>(buf2);
       if (priority < 0 || priority > 9) {
         sendTo("Priority must be between 0 (highest) and 9 (lowest).\n\r");
         return;
@@ -1431,7 +1431,7 @@ void TBeing::lowTasks(const char *arg)
       sendTo("Syntax: low tasks delete <task ID>\n\r");
       return;
     } else {
-      id = atoi_safe(buf);
+      id = convertTo<int>(buf);
       
 
       sprintf(temp, "delete from lowtasks where id=%d", id);
@@ -1456,7 +1456,7 @@ void TBeing::lowMobs(const char *arg)
   int level;
   string str;
 
-  level = atoi_safe(arg);
+  level = convertTo<int>(arg);
   if ((level <= 0) || (level > 127)) {
     sendTo("Syntax: low mobs <level>\n\r");
     sendTo("Level must be between 1 and 127\n\r");
@@ -1617,7 +1617,7 @@ void TBeing::lowObjs(const char *arg)
     val_sort = TRUE;
   if (is_abbrev(buf2, "race")){
     one_argument(arg, buf2);
-    sort_race=atoi_safe(buf2);
+    sort_race=convertTo<int>(buf2);
 
     tmp=Races[sort_race]->getBaseMaleHeight()+
 	Races[sort_race]->getMaleHtNumDice();

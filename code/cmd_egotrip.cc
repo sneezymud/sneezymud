@@ -182,7 +182,7 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Syntax: egotrip crit <target> <crit>\n\r");
       return;
     }
-    int crit = atoi(whichcrit);
+    int crit = convertTo<int>(whichcrit);
     if (crit > 100 || crit < 1) {
       sendTo("Crit is outside of range. Must be 1-100.\n\r");
       sendTo("Syntax: egotrip crit <target> <crit>\n\r");

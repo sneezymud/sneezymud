@@ -81,7 +81,7 @@ void TBeing::doMortalQuest(const char *tArg)
 
     // check "immorts" for "quest real 3"
     if (is_abbrev(buf, "real")) {
-      int questNumber = atoi_safe(t2);
+      int questNumber = convertTo<int>(t2);
       if (questNumber < 0 || questNumber >= MAX_TOG_INDEX) {
         sendTo("Invalid quest value.\n\r");
         return;
@@ -97,7 +97,7 @@ void TBeing::doMortalQuest(const char *tArg)
     }
   }
 
-  int questNumber = atoi_safe(tArg);
+  int questNumber = convertTo<int>(tArg);
   unsigned int totFound = 0;
   int questRes = -1;
   char   questPath[256];

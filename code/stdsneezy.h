@@ -29,7 +29,8 @@
 #include <vector>
 #include <map>
 
-//#include </home/oldspasm/usr/include/mysql/mysql.h>
+#include <iostream>
+#include <sstream>
 
 #include "low.h"
 #include "enum.h"

@@ -1240,7 +1240,7 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
 
 
   if(cache && cache_object(nr)!=-1){
-    obj = makeNewObj(mapFileToItemType(atoi_safe(obj_cache[cache_object(nr)]->s[0])));
+    obj = makeNewObj(mapFileToItemType(convertTo<int>(obj_cache[cache_object(nr)]->s[0])));
     obj->number=nr;
     if (!obj->isObjStat(ITEM_STRUNG)) {
       obj->name = obj_index[nr].name;
@@ -1250,21 +1250,21 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
       obj->ex_description=obj_index[nr].ex_description;
     }
 
-    obj->setObjStat(atoi_safe(obj_cache[cache_object(nr)]->s[1]));
-    obj->obj_flags.wear_flags = atoi_safe(obj_cache[cache_object(nr)]->s[2]);
-    obj->assignFourValues(atoi_safe(obj_cache[cache_object(nr)]->s[3]), atoi_safe(obj_cache[cache_object(nr)]->s[4]), atoi_safe(obj_cache[cache_object(nr)]->s[5]), atoi_safe(obj_cache[cache_object(nr)]->s[6]));
-    obj->setWeight(atof_safe(obj_cache[cache_object(nr)]->s[7]));
-    obj->obj_flags.cost = atoi_safe(obj_cache[cache_object(nr)]->s[8]);
-    obj->canBeSeen = atoi_safe(obj_cache[cache_object(nr)]->s[9]);
-    obj->spec = atoi_safe(obj_cache[cache_object(nr)]->s[10]);
-    obj->setMaxStructPoints(atoi_safe(obj_cache[cache_object(nr)]->s[11]));
-    obj->setStructPoints(atoi_safe(obj_cache[cache_object(nr)]->s[12]));
+    obj->setObjStat(convertTo<int>(obj_cache[cache_object(nr)]->s[1]));
+    obj->obj_flags.wear_flags = convertTo<int>(obj_cache[cache_object(nr)]->s[2]);
+    obj->assignFourValues(convertTo<int>(obj_cache[cache_object(nr)]->s[3]), convertTo<int>(obj_cache[cache_object(nr)]->s[4]), convertTo<int>(obj_cache[cache_object(nr)]->s[5]), convertTo<int>(obj_cache[cache_object(nr)]->s[6]));
+    obj->setWeight(convertTo<float>(obj_cache[cache_object(nr)]->s[7]));
+    obj->obj_flags.cost = convertTo<int>(obj_cache[cache_object(nr)]->s[8]);
+    obj->canBeSeen = convertTo<int>(obj_cache[cache_object(nr)]->s[9]);
+    obj->spec = convertTo<int>(obj_cache[cache_object(nr)]->s[10]);
+    obj->setMaxStructPoints(convertTo<int>(obj_cache[cache_object(nr)]->s[11]));
+    obj->setStructPoints(convertTo<int>(obj_cache[cache_object(nr)]->s[12]));
     obj->setDepreciation(0);
-    obj->obj_flags.decay_time=atoi_safe(obj_cache[cache_object(nr)]->s[13]);
-    obj->setVolume(atoi_safe(obj_cache[cache_object(nr)]->s[14]));
-    obj->setMaterial(atoi_safe(obj_cache[cache_object(nr)]->s[15]));
+    obj->obj_flags.decay_time=convertTo<int>(obj_cache[cache_object(nr)]->s[13]);
+    obj->setVolume(convertTo<int>(obj_cache[cache_object(nr)]->s[14]));
+    obj->setMaterial(convertTo<int>(obj_cache[cache_object(nr)]->s[15]));
     // beta is used to test LOW loads, so don't let max_exist be a factor
-    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : atoi_safe(obj_cache[cache_object(nr)]->s[16]));
+    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : convertTo<int>(obj_cache[cache_object(nr)]->s[16]));
 
   } else {
     db.query("select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt);
@@ -1272,7 +1272,7 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
     if(!db.fetchRow())
       return NULL;
     
-    obj = makeNewObj(mapFileToItemType(atoi_safe(db.getColumn(0))));
+    obj = makeNewObj(mapFileToItemType(convertTo<int>(db.getColumn(0))));
     obj->number=nr;
     if (!obj->isObjStat(ITEM_STRUNG)) {
       obj->name = obj_index[nr].name;
@@ -1281,21 +1281,21 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
       obj->action_description = obj_index[nr].description;
       obj->ex_description=obj_index[nr].ex_description;
     }
-    obj->setObjStat(atoi_safe(db.getColumn(1)));
-    obj->obj_flags.wear_flags = atoi_safe(db.getColumn(2));
-    obj->assignFourValues(atoi_safe(db.getColumn(3)), atoi_safe(db.getColumn(4)), atoi_safe(db.getColumn(5)), atoi_safe(db.getColumn(6)));
-    obj->setWeight(atof_safe(db.getColumn(7)));
-    obj->obj_flags.cost = atoi_safe(db.getColumn(8));
-    obj->canBeSeen = atoi_safe(db.getColumn(9));
-    obj->spec = atoi_safe(db.getColumn(10));
-    obj->setMaxStructPoints(atoi_safe(db.getColumn(11)));
-    obj->setStructPoints(atoi_safe(db.getColumn(12)));
+    obj->setObjStat(convertTo<int>(db.getColumn(1)));
+    obj->obj_flags.wear_flags = convertTo<int>(db.getColumn(2));
+    obj->assignFourValues(convertTo<int>(db.getColumn(3)), convertTo<int>(db.getColumn(4)), convertTo<int>(db.getColumn(5)), convertTo<int>(db.getColumn(6)));
+    obj->setWeight(convertTo<float>(db.getColumn(7)));
+    obj->obj_flags.cost = convertTo<int>(db.getColumn(8));
+    obj->canBeSeen = convertTo<int>(db.getColumn(9));
+    obj->spec = convertTo<int>(db.getColumn(10));
+    obj->setMaxStructPoints(convertTo<int>(db.getColumn(11)));
+    obj->setStructPoints(convertTo<int>(db.getColumn(12)));
     obj->setDepreciation(0);
-    obj->obj_flags.decay_time=atoi_safe(db.getColumn(13));
-    obj->setVolume(atoi_safe(db.getColumn(14)));
-    obj->setMaterial(atoi_safe(db.getColumn(15)));
+    obj->obj_flags.decay_time=convertTo<int>(db.getColumn(13));
+    obj->setVolume(convertTo<int>(db.getColumn(14)));
+    obj->setMaterial(convertTo<int>(db.getColumn(15)));
     // beta is used to test LOW loads, so don't let max_exist be a factor
-    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : atoi_safe(db.getColumn(16)));
+    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : convertTo<int>(db.getColumn(16)));
   }
   
 

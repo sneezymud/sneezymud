@@ -69,7 +69,7 @@ int TObj::sellPrice(int shop_nr, float chr, int *discount)
     db.query("select profit_sell from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
 
     if(db.fetchRow())
-      profit_sell=atof_safe(db.getColumn(0));
+      profit_sell=convertTo<float>(db.getColumn(0));
     else {
       // ok, shop is owned and there is no ratio set for this specific object
       // so check keywords
@@ -77,7 +77,7 @@ int TObj::sellPrice(int shop_nr, float chr, int *discount)
 
       while(db.fetchRow()){
 	if(isname(db.getColumn(0), name)){
-	  profit_sell=atof_safe(db.getColumn(1));
+	  profit_sell=convertTo<float>(db.getColumn(1));
 	  break;
 	}
       }
@@ -116,7 +116,7 @@ int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
     db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
     
     if(db.fetchRow())
-      profit_buy=atof_safe(db.getColumn(0));
+      profit_buy=convertTo<float>(db.getColumn(0));
     else {
       // ok, shop is owned and there is no ratio set for this specific object
       // so check keywords
@@ -124,7 +124,7 @@ int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
       
       while(db.fetchRow()){
 	if(isname(db.getColumn(0), name)){
-	  profit_buy=atof_safe(db.getColumn(1));
+	  profit_buy=convertTo<float>(db.getColumn(1));
 	  break;
 	}
       }
@@ -330,7 +330,7 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
 
   tt = searchLinkedListVis(ch, argm, keeper->getStuff());
   if (!tt || !(temp1 = dynamic_cast<TObj *>(tt))) {
-    if (!(temp1 = get_num_obj_in_list(ch, atoi_safe(argm), keeper->getStuff(), shop_nr))) {
+    if (!(temp1 = get_num_obj_in_list(ch, convertTo<int>(argm), keeper->getStuff(), shop_nr))) {
       keeper->doTell(ch->name, shop_index[shop_nr].no_such_item1);
       return;
     }
@@ -1486,10 +1486,10 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
     } else if (is_number(stString)) {
       if (iMin == 999999) {
         iMin = 0;
-        iMax = atoi_safe(stString);
+        iMax = convertTo<int>(stString);
       } else if (iMin == 0) {
         iMin = iMax;
-        iMax = atoi_safe(stString);
+        iMax = convertTo<int>(stString);
       }
     } else if (*stString) {
       strcpy(arg, stString);
@@ -1664,7 +1664,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
     // in shopkeepers possession
     if (strchr(arg, '.'))
       return FALSE;
-    value = atoi_safe(arg);
+    value = convertTo<int>(arg);
     if (!value || 
     !(temp1 = get_num_obj_in_list(ch, value, keeper->getStuff(), shop_nr))) {
       // it's not one of my objects so see if the look thing is in room
@@ -1714,7 +1714,7 @@ static bool shopping_evaluate(const char *arg, TBeing *ch, TMonster *keeper, int
   TThing *t_temp1 = searchLinkedListVis(ch, newarg, keeper->getStuff());
   temp1 = dynamic_cast<TObj *>(t_temp1);
   if (!temp1) {
-    if (!(temp1 = get_num_obj_in_list(ch, atoi_safe(newarg), keeper->getStuff(), shop_nr))) {
+    if (!(temp1 = get_num_obj_in_list(ch, convertTo<int>(newarg), keeper->getStuff(), shop_nr))) {
       // it's not one of my objects so see if the look thing is in room
       return FALSE;
     }
@@ -2070,7 +2070,7 @@ void bootTheShops()
   while(db.fetchRow()){
     shopData sd;
 
-    shop_nr=atoi_safe(db.getColumn(0));
+    shop_nr=convertTo<int>(db.getColumn(0));
     sd.shop_nr=shop_nr;
     sd.no_such_item1 = mud_str_dup(db.getColumn(1));
     sd.no_such_item2 = mud_str_dup(db.getColumn(2));
@@ -2079,39 +2079,39 @@ void bootTheShops()
     sd.missing_cash2 = mud_str_dup(db.getColumn(5));
     sd.message_buy = mud_str_dup(db.getColumn(6));
     sd.message_sell = mud_str_dup(db.getColumn(7));
-    sd.temper1=atoi_safe(db.getColumn(8));
-    sd.temper2=atoi_safe(db.getColumn(9));
-    sd.keeper=real_mobile(atoi_safe(db.getColumn(10)));
-    sd.flags=atoi_safe(db.getColumn(11));
-    sd.in_room=atoi_safe(db.getColumn(12));
-    sd.open1=atoi_safe(db.getColumn(13));
-    sd.close1=atoi_safe(db.getColumn(14));
-    sd.open2=atoi_safe(db.getColumn(15));
-    sd.close2=atoi_safe(db.getColumn(16));
+    sd.temper1=convertTo<int>(db.getColumn(8));
+    sd.temper2=convertTo<int>(db.getColumn(9));
+    sd.keeper=real_mobile(convertTo<int>(db.getColumn(10)));
+    sd.flags=convertTo<int>(db.getColumn(11));
+    sd.in_room=convertTo<int>(db.getColumn(12));
+    sd.open1=convertTo<int>(db.getColumn(13));
+    sd.close1=convertTo<int>(db.getColumn(14));
+    sd.open2=convertTo<int>(db.getColumn(15));
+    sd.close2=convertTo<int>(db.getColumn(16));
 
-    if(owned_db.getColumn(0) && (atoi_safe(owned_db.getColumn(0)))==shop_nr){
-      sd.profit_buy=atof_safe(owned_db.getColumn(1));
-      sd.profit_sell=atof_safe(owned_db.getColumn(2));
+    if(owned_db.getColumn(0) && (convertTo<int>(owned_db.getColumn(0)))==shop_nr){
+      sd.profit_buy=convertTo<float>(owned_db.getColumn(1));
+      sd.profit_sell=convertTo<float>(owned_db.getColumn(2));
       owned_db.fetchRow();
     } else {
-      sd.profit_buy=atof_safe(db.getColumn(17));
-      sd.profit_sell=atof_safe(db.getColumn(18));
+      sd.profit_buy=convertTo<float>(db.getColumn(17));
+      sd.profit_sell=convertTo<float>(db.getColumn(18));
     }
 
-    while(type_db.getColumn(0) && atoi_safe(type_db.getColumn(0))==shop_nr){
-      sd.type.push_back(atoi_safe(type_db.getColumn(1)));
+    while(type_db.getColumn(0) && convertTo<int>(type_db.getColumn(0))==shop_nr){
+      sd.type.push_back(convertTo<int>(type_db.getColumn(1)));
       type_db.fetchRow();
     }
     sd.type.push_back(MAX_OBJ_TYPES);
     
-    while(producing_db.getColumn(0) && atoi_safe(producing_db.getColumn(0))==shop_nr){
-      sd.producing.push_back(real_object(atoi_safe(producing_db.getColumn(1))));
+    while(producing_db.getColumn(0) && convertTo<int>(producing_db.getColumn(0))==shop_nr){
+      sd.producing.push_back(real_object(convertTo<int>(producing_db.getColumn(1))));
       producing_db.fetchRow();
     }
     sd.producing.push_back(-1);
     
-    while(material_db.getColumn(0) && atoi_safe(material_db.getColumn(0))==shop_nr){
-      sd.mat_type.push_back(atoi_safe(material_db.getColumn(1)));
+    while(material_db.getColumn(0) && convertTo<int>(material_db.getColumn(0))==shop_nr){
+      sd.mat_type.push_back(convertTo<int>(material_db.getColumn(1)));
       material_db.fetchRow();
     }
     sd.mat_type.push_back(MAX_OBJ_TYPES);

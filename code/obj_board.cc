@@ -289,7 +289,7 @@ int board_display_msg(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
   if (strchr(numb, '.'))  // "read 2.mail"
     return FALSE;
 
-  if (!(msg = atoi_safe(numb)))   // "read 0"
+  if (!(msg = convertTo<int>(numb)))   // "read 0"
     return FALSE;
 
   if (!b->msg_num) {
@@ -593,7 +593,7 @@ int get_note_from_board(TBeing *ch, const char *arg, boardStruct *b, TBoard *tb)
   if (!*numb || !isdigit(*numb))
     return FALSE;
 
-  if (!(msg = atoi_safe(numb)))
+  if (!(msg = convertTo<int>(numb)))
     return FALSE;
 
   if (!b->msg_num) {

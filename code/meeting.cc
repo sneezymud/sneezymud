@@ -2,36 +2,8 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: meeting.cc,v $
-// Revision 5.4  2002/06/30 04:55:43  peel
-// added immortal to toggle
-//
-// Revision 5.3  2002/03/06 04:07:50  peel
-// added atoi_safe and atof_safe to check for NULL values
-// converted all the atoi and atof to the safe versions
-//
-// Revision 5.2  2001/09/07 07:07:35  peel
-// changed TThing->stuff to getStuff() and setStuff()
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
-
-///////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//      "meeting.cc" - Special procedures for mobiles.
-//
-///////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
 #include <deque>
@@ -197,7 +169,7 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
       *rc = true;
       return true;
     } else if (!strncasecmp(arg, " speech_time ", 13) && ch->isImmortal()) {
-      int sec_time = atoi_safe(&arg[13]);
+      int sec_time = convertTo<int>(&arg[13]);
       char buf[256];
       if (sec_time > 0)
         sprintf(buf, "Speech time is now limited to %d seconds.", sec_time);

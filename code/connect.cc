@@ -1051,7 +1051,7 @@ int Descriptor::nanny(const char *arg)
             break;
 	  case 'X':
 	    if(IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
-	      int racenum=atoi_safe((arg+1));
+	      int racenum=convertTo<int>((arg+1));
 	      character->setRace(race_t(racenum));
 	      character->cls();
 	      writeToQ("Ok, race set.\n\r\n\r");
@@ -2189,9 +2189,9 @@ int Descriptor::nanny(const char *arg)
         character->cls();
 
         // buf should have form -9s or whatever
-        // fortunately, atoi_safe will strip non signedness and numbers
+        // fortunately, convertTo<int> will strip non signedness and numbers
         // we do need to check for +s and make sure this is +1, -s == -1
-        if (!(amt = atoi_safe(buf)))
+        if (!(amt = convertTo<int>(buf)))
           amt = (*buf == '+' ? +1 : -1);
         character->sendTo("amount was: %d\n\r", amt);
         // Need to initialize buf or they can cheat 
@@ -2280,9 +2280,9 @@ int Descriptor::nanny(const char *arg)
         character->cls();
 
         // buf should have form -9s or whatever
-        // fortunately, atoi_safe will strip non signedness and numbers
+        // fortunately, convertTo<int> will strip non signedness and numbers
         // we do need to check for +s and make sure this is +1, -s == -1
-        if (!(amt = atoi_safe(buf)))
+        if (!(amt = convertTo<int>(buf)))
           amt = (*buf == '+' ? +1 : -1);
         character->sendTo("amount was: %d\n\r", amt);
 
@@ -2373,9 +2373,9 @@ int Descriptor::nanny(const char *arg)
         character->cls();
 
         // buf should have form -9s or whatever
-        // fortunately, atoi_safe will strip non signedness and numbers
+        // fortunately, convertTo<int> will strip non signedness and numbers
         // we do need to check for +s and make sure this is +1, -s == -1
-        if (!(amt = atoi_safe(buf)))
+        if (!(amt = convertTo<int>(buf)))
           amt = (*buf == '+' ? +1 : -1);
         character->sendTo("amount was: %d\n\r", amt);
 
@@ -2470,9 +2470,9 @@ int Descriptor::nanny(const char *arg)
         character->cls();
 
         // buf should have form -9s or whatever
-        // fortunately, atoi_safe will strip non signedness and numbers
+        // fortunately, convertTo<int> will strip non signedness and numbers
         // we do need to check for +s and make sure this is +1, -s == -1
-        if (!(amt = atoi_safe(buf)))
+        if (!(amt = convertTo<int>(buf)))
           amt = (*buf == '+' ? +1 : -1);
         character->sendTo("amount was: %d\n\r", amt);
 
@@ -3662,7 +3662,7 @@ bool Descriptor::page_file(const char *the_input)
       cur_page -= 2;
       cur_page = max((byte) 0, cur_page);
     } else if (isdigit(*buffer)) {
-      cur_page = max(min((int) tot_pages, atoi_safe(buffer)), 1) - 1;
+      cur_page = max(min((int) tot_pages, convertTo<int>(buffer)), 1) - 1;
     } else {
       delete [] pagedfile;
       pagedfile = NULL;
@@ -3773,7 +3773,7 @@ void Descriptor::show_string(const char *the_input, showNowT showNow, allowRepla
       cur_page -= 2;
       cur_page = max((byte) 0, cur_page);
     } else if (isdigit(*buf)) 
-      cur_page = max(min((int) tot_pages, atoi_safe(buf)), 1) - 1;
+      cur_page = max(min((int) tot_pages, convertTo<int>(buf)), 1) - 1;
     else {
       if (showstr_head) {
         delete [] showstr_head;
@@ -5170,12 +5170,12 @@ int Descriptor::doAccountStuff(char *arg)
       connected = CON_TIME;
       break;
     case CON_TIME:
-      if (!*arg || (atoi_safe(arg) > 23) || (atoi_safe(arg) < -23)) {
+      if (!*arg || (convertTo<int>(arg) > 23) || (convertTo<int>(arg) < -23)) {
         writeToQ("Please enter a number from -23 to 23\n\r");
         writeToQ("Time difference -> ");
         break;
       }
-      account->time_adjust = atoi_safe(arg);
+      account->time_adjust = convertTo<int>(arg);
 
       writeToQ("What is your terminal type? (A)nsi, [V]t100 (default), (N)one. -> ");
       connected = CON_TERM;

@@ -71,7 +71,7 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
     else
       tValue = (dynamic_cast<TObj *>(tThing))->objVnum();
   } else
-    tValue = atoi_safe(tStValue);
+    tValue = convertTo<int>(tStValue);
 
   sprintf(tString, "save %s %d", tStThing.c_str(), tValue);
 

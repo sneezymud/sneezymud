@@ -180,10 +180,10 @@ void updateStocks(){
   db.query("select si.shop_nr, si.talens, si.price, sum(so.shares) from stockinfo si left join stockowners so on si.ticker=so.ticker group by si.shop_nr, si.talens, si.price");
 
   while(db.fetchRow()){
-    shop_nr=atoi_safe(db.getColumn(0));
-    talens=atoi_safe(db.getColumn(1));
-    price=atof_safe(db.getColumn(2));
-    shares=atoi_safe(db.getColumn(3));
+    shop_nr=convertTo<int>(db.getColumn(0));
+    talens=convertTo<int>(db.getColumn(1));
+    price=convertTo<float>(db.getColumn(2));
+    shares=convertTo<int>(db.getColumn(3));
 
     prevprice=price;
 

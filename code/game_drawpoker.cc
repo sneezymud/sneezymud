@@ -216,7 +216,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
 
       if (is_number(tString)) {
         if (!anteSet) {
-          anteCost = atoi_safe(tString);
+          anteCost = convertTo<int>(tString);
 
           if (!in_range(anteCost, anteCosts[0], anteCosts[1])) {
             ch->sendTo("No luck slick.  Ante must be between: %d-%d\n\r",
@@ -227,7 +227,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
           anteSet = true;
         } else {
           int oldMax = bidCosts[1];
-          bidCosts[1] = atoi_safe(tString);
+          bidCosts[1] = convertTo<int>(tString);
 
           if (!in_range(bidCosts[1], bidCosts[0], oldMax)) {
             ch->sendTo("No luck slick.  Bid max must be between: %d-%d\n\r",
@@ -736,7 +736,7 @@ void DrawPokerGame::bet(const TBeing *ch, const char *tArg)
     return;
   }
 
-  newBet = atoi_safe(tArg);
+  newBet = convertTo<int>(tArg);
 
   if (ch->getMoney() < newBet) {
     ch->sendTo("You don't have that much to bet, so bugger off.\n\r");

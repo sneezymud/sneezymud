@@ -279,7 +279,7 @@ int TBeing::doDrop(const string argument, TThing *tng, bool forcedDrop)
     return FALSE;
   }
   if (!tng && is_number(arg.c_str())) {
-    amount = atoi_safe(arg);
+    amount = convertTo<int>(arg);
     if (!is_abbrev(arg2, "talens")) {
       sendTo("Sorry, you can't do that (yet)...\n\r");
       return FALSE;
@@ -553,7 +553,7 @@ int TBeing::doPut(const char *argument)
   if (*arg1) {
     if (*arg2) {
       if (is_number(arg1)) {
-        amount = atoi_safe(arg1);
+        amount = convertTo<int>(arg1);
         if (!is_abbrev(arg2, "talens")) {
           sendTo("Sorry, you can't do that (yet)...\n\r");
           return FALSE;
@@ -783,7 +783,7 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
 
   argument = one_argument(argument, obj_name);
   if (is_number(obj_name)) {
-    amount = atoi_safe(obj_name);
+    amount = convertTo<int>(obj_name);
     argument = one_argument(argument, arg);
     if (!is_abbrev(arg,"talens")) {
       sendTo("Syntax: give <amount> talens <person>\n\r");

@@ -273,7 +273,7 @@ void TPerson::doSEdit(const char *tArg)
         strcpy(tString, tStMobile.c_str());
 
         if (!tStArg.empty() && is_number(tString)) {
-          if ((tShift = atoi_safe(tString)) <= 0)
+          if ((tShift = convertTo<int>(tString)) <= 0)
             tShift = -1;
 
           tStInit = tStArg;
@@ -759,7 +759,7 @@ void seditDisplayResponse(TBeing *ch, resp *respIndex,
 
   if (respIndex->cmd == CMD_GIVE && ch->hasWizPower(POWER_SEDIT_IMP_POWER) &&
       respIndex->args && is_number(respIndex->args)) {
-    int tObjNum = real_object(atoi_safe(respIndex->args));
+    int tObjNum = real_object(convertTo<int>(respIndex->args));
 
     if (tObjNum < 0 || tObjNum > (signed int) obj_index.size())
       strcpy(tString, " [Unknown]");
@@ -810,7 +810,7 @@ void seditDisplayResponse(TBeing *ch, resp *respIndex,
       if ((tCmd->cmd == CMD_LOAD ||
            tCmd->cmd == CMD_RESP_CHECKLOAD) &&
           is_number(tCmd->args) && ch->hasWizPower(POWER_SEDIT_IMP_POWER)) {
-        int tObjNum = real_object(atoi_safe(tCmd->args));
+        int tObjNum = real_object(convertTo<int>(tCmd->args));
 
         if (tObjNum < 0 || tObjNum > (signed int) obj_index.size())
           strcpy(tString, " [Unknown]");
@@ -1319,7 +1319,7 @@ void seditDisplayMenuFull(TBeing *ch, TMonster *tMonster, const char *tArg, int 
 
         return;
       } else {
-        tCount = atoi_safe(tString);
+        tCount = convertTo<int>(tString);
 
         if (ch->specials.editFriend == 1)
           strcpy(tCommand, "-say");
@@ -1387,7 +1387,7 @@ void seditDisplayMenu(TBeing *ch, TMonster *tMonster, const char *tArg, int tTyp
     strcpy(tString, tStString.c_str());
 
     if (is_number(tString) && tString[0] != '0') {
-      if ((respIndex = seditFindResponse(respIndex, "", &tForm, atoi_safe(tString)))) {
+      if ((respIndex = seditFindResponse(respIndex, "", &tForm, convertTo<int>(tString)))) {
         seditDisplayResponse(ch, respIndex, true, 0);
         ch->sendTo("\n\r\n\r[Enter to Goto Main Menu/0 to see menu again]--> ");
       }

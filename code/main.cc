@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     if (!isdigit(*argv[pos])) {
       vlogf(LOG_MISC, "Usage: %s [-s] [-d pathname] [ port # ]\n", argv[0]);
       exit(0);
-    } else if ((gamePort = atoi_safe(argv[pos])) <= 1024) {
+    } else if ((gamePort = convertTo<int>(argv[pos])) <= 1024) {
       printf("Illegal port #\n");
       exit(0);
     }

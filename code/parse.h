@@ -657,4 +657,15 @@ extern char *cap(char *s);
 extern char *fread_string(FILE *);
 extern void trimString(string &);
 
+template<class T> T convertTo(const string &s)
+{
+  T x;
+  istringstream is(s);
+  if(!(is >> x)){
+    vlogf(LOG_BUG, "convertTo extraction failed on '%s'.", s.c_str());
+    x=0;
+  }
+  return x;
+}
+
 #endif
