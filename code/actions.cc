@@ -594,21 +594,55 @@ void TBeing::doPoop(void)
     return;
   }
 
-  if(!(obj=read_object(OBJ_PILE_OFFAL, VIRTUAL))){
-    vlogf(LOG_BUG, "problem loading offal in doPoop()");
-    return;
-  }
-
   if(equipment[WEAR_WAISTE]||equipment[WEAR_LEGS_R]||equipment[WEAR_LEGS_L]){
     sendTo("You can't go poop with pants or a belt on!\n\r");
     return;
   }
 
-  *this->roomp += *obj;
+  if(!(obj=read_object(OBJ_PILE_OFFAL, VIRTUAL))){
+    vlogf(LOG_BUG, "problem loading offal in doPoop()");
+    return;
+  }
+
   act("$n <o>defecates<z> on the $g.",
       TRUE, this, NULL, NULL, TO_ROOM);
   act("You <o>defecate<z> on the $g.",
       TRUE, this, NULL, NULL, TO_CHAR);
+
+  obj->setWeight(getCond(POOP)/10.0);
+  obj->setVolume(getCond(POOP));
+
+
+  int weightmod=1;
+
+  if(!::number(0,9)){
+    if(!::number(0,9)){
+      if(!::number(0,9)){
+	act("That really did <r>HURT<1>!",
+	    TRUE, this, NULL, NULL, TO_CHAR);
+	weightmod = 8;
+      } else {
+	act("You feel like you really nailed that one.",
+	    TRUE, this, NULL, NULL, TO_CHAR);
+	weightmod = 4;
+      }
+    } else {
+      act("Whoa, that was a big one!",
+	  TRUE, this, NULL, NULL, TO_CHAR);
+      weightmod = 2;
+    }
+  }
+  
+  obj->setWeight(obj->getWeight() * weightmod);
+  obj->setVolume(obj->getVolume() * weightmod);
+  
+
+  obj->setWeight(obj->getWeight() + ::number(0, (int)obj->getWeight()));
+  obj->setVolume(obj->getVolume() + ::number(0, obj->getVolume()));
+
+
+
+  *this->roomp += *obj;
 
   setCond(POOP, 0);
 
