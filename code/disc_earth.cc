@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_earth.cc,v $
+// Revision 1.3  1999/09/27 19:27:33  lapsos
+// added road and city as viable earth elements.
+//
 // Revision 1.2  1999/09/16 04:56:10  peel
 // Conjure earth elemental requires being in an earthy sector to work (!notRangerLandSector())
 //
@@ -905,7 +908,8 @@ int conjureElemEarth(TBeing * caster)
   if (!bPassMageChecks(caster, SPELL_CONJURE_EARTH, NULL))
     return FALSE;
 
-  if(caster->roomp->notRangerLandSector()){
+  if (caster->roomp->notRangerLandSector() &&
+      !caster->roomp->isCitySector() && !caster->roomp->isRoadSector()) {
     caster->sendTo("There doesn't seem to be enough earth here to conjure an earth elemental.\n\r");
     return FALSE;
   }
