@@ -35,19 +35,219 @@ void HoldemGame::nextRound(TBeing *ch)
     }
 }
 
+
+
+int HoldemGame::handValue(HoldemPlayer *hp){
+  // this code jacked and modified from fish.c by Roy T. Hashimoto
+  int i;/* loop variable */
+  int s_len = 0;/* straight length */
+  int sf_accum = 0;/* straight flush status */
+  int f_accum = 0x3333;/* flush status */
+  int state = 0;/* match state */
+  int rval = 0;/* return value */
+  int rank[13];
+  int c;
+  int t[4] = { 0x1, 0x2, 0x4, 0x8 };
+
+  /* spreads four bits into four nybbles for adding up flushes */
+  unsigned int f_table[] = {
+    0x0000, 0x0001, 0x0010, 0x0011,
+    0x0100, 0x0101, 0x0110, 0x0111,
+    0x1000, 0x1001, 0x1010, 0x1011,
+    0x1100, 0x1101, 0x1110, 0x1111,
+  };
+  
+  /*
+    finite state machine for matches (pairs, trips, etc.)
+    
+    m_table[current state][rank multiplicity] := next state
+    
+    There are six achieveable states (rags, one pair, two pair, trips,
+    full house, four of a kind) and 0-4 cards of any particular rank.
+    All hand ranks are included for a small time-for space tradeoff
+    in making the state value equal the return value.
+  */
+  int m_table[9][16] = {
+    {0, 0, 0, 1, 0, 1, 1, 3, 0, 1, 1, 3, 1, 3, 3, 7},
+    {1, 1, 1, 2, 1, 2, 2, 6, 1, 2, 2, 6, 2, 6, 6, 7},
+    {2, 2, 2, 2, 2, 2, 2, 6, 2, 2, 2, 6, 2, 6, 6, 7},
+    {3, 3, 3, 6, 3, 6, 6, 6, 3, 6, 6, 6, 6, 6, 6, 7},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7},
+    {7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  };
+
+
+  // initialize rank
+  for(i=0;i<13;++i) rank[i]=0;
+  for(i=0;i<5;++i){
+    c=((community[i]->getValAceHi()-2)*4) + community[i]->getSuit();
+
+    if(!(rank[c >> 2] & t[c & 3]))
+      rank[c >> 2] |= t[c & 3];
+  }
+  for(i=0;i<2;++i){
+    c=((hp->hand[i]->getValAceHi()-2)*4) + hp->hand[i]->getSuit();
+    
+    if(!(rank[c >> 2] & t[c & 3]))
+      rank[c >> 2] |= t[c & 3];
+  }
+
+
+  i = 13;
+  while ( i-- )
+    {
+      if ( !rank[i] )/* loop again if no instances */
+	{
+	  s_len = 0; /* the next card will not be contiguous */
+	  continue;
+	}
+
+
+      if ( ++s_len >= 5 )/* made a straight */
+	{
+	  int tmp;
+
+	  /* see if the suit matches the last four */
+	  if ( (tmp = rank[i] & sf_accum) &&
+	       (tmp &= sf_accum >> 4) &&
+	       (tmp &= sf_accum >> 8) &&
+	       (tmp & sf_accum >> 12) )
+	    {
+	      rval = 8;
+	      break;/* why look further? */
+	    }
+	  else if ( rval < 4 )
+	    rval = 4;
+	}
+      
+      /* remember the suit(s) of this rank */
+      sf_accum = (sf_accum << 4) | rank[i];
+
+      /*
+	The number of cards in a suit is incremented in
+	parallel here.  The result is held in 4 bits.  The
+	count starts at 3 so the test for the flush can be
+	made against the fourth bit (3+5=8, 1000b).
+      */
+      if ( ((f_accum += f_table[rank[i]]) & 0x8888) && rval < 5 )
+	{
+	  f_accum = 0;/* to avoid further success */
+	  rval = 5;
+	}
+
+      /* Run the state machine for the other hand rankings */
+      state = m_table[state][rank[i]];
+    }
+
+  /* special case aces (can be used high or low in straights) */
+  if ( rank[12] && ++s_len >= 5 )
+    {
+      int tmp;
+
+      if ( (tmp = rank[12] & sf_accum) &&
+	   (tmp &= sf_accum >> 4) &&
+	   (tmp &= sf_accum >> 8) &&
+	   (tmp & sf_accum >> 12) )
+	rval = 8;
+      else if ( rval < 4 )
+	rval = 4;
+    }
+
+  /* see if the state machine result is better than the other results */
+  if ( rval < state )
+    rval = state;
+
+  return rval;
+}
+
+
 void HoldemGame::showdown(TBeing *ch)
 {
+  int hands[MAX_HOLDEM_PLAYERS], highest=0;
+  vector <int> winners;
+  int i;
+  sstring buf, msg;
+
   if (!ch->checkHoldem())
     return;
-  
-  for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
+
+  if(playerCount() < 2){
+    act("$n wins by default.", TRUE, ch, 0, 0, TO_ROOM);
+    act("You win by default.", TRUE, ch, 0, 0, TO_CHAR);
+    payout(ch, bet);
+  } else {
+    for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
+      hands[i]=-1;
+      if(players[i]){
+	hands[i]=handValue(players[i]);
+      }
+    }
+    for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
+      if(hands[i] > hands[highest])
+	highest=i;
+    }
+    for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
+      if(hands[i] == hands[highest])
+	winners.push_back(i);
+    }
+    
+    switch(hands[highest]){
+      case 0:
+	msg="high card";
+	break;
+      case 1:
+	msg="a pair";
+	break;
+      case 2:
+	msg="two pair";
+	break;
+      case 3:
+	msg="three of a kind";
+	break;
+      case 4:
+	msg="a straight";
+	break;
+      case 5:
+	msg="a flush";
+	break;
+      case 6:
+	msg="full house";
+	break;
+      case 7:
+	msg="four of a kind";
+	break;
+      case 8:
+	msg="a straight flush";
+	break;
+      case 9:
+	msg="royal flush";
+	break;
+      default:
+	ssprintf(msg, "unknown: %i", hands[highest]);
+    }
+    
+    for(unsigned int p=0;p<winners.size();++p){
+      ssprintf(buf, "$n %s with %s!", 
+	       winners.size()>1?"ties":"wins", msg.c_str());
+      act(buf.c_str(), TRUE, players[winners[p]]->ch, 0, 0, TO_ROOM);
+      ssprintf(buf, "You %s with %s!", 
+	       winners.size()>1?"tie":"win", msg.c_str());
+      act(buf, TRUE, players[winners[p]]->ch, 0, 0, TO_CHAR);
+      payout(players[winners[p]]->ch, (int)(bet/winners.size()));
+    }
+  }
+
+
+  for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
     if(players[i]){
       players[i]->hand[0]=NULL;
       players[i]->hand[1]=NULL;
-
-      players[i]->ch->sendTo("The game is over, Peel wins!\n\r");
     }
   }
+
 
   better=0;
   bet=0;
@@ -113,11 +313,23 @@ int HoldemGame::playerCount()
   int count=0;
   
   for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
+    if(players[i])
+      ++count;
+  }
+  return count;
+}
+
+int HoldemGame::playerHandCount()
+{
+  int count=0;
+  
+  for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
     if(players[i] && players[i]->hand[0])
       ++count;
   }
   return count;
 }
+
 
 int HoldemGame::exitGame(const TBeing *ch)
 {
@@ -129,12 +341,12 @@ int HoldemGame::exitGame(const TBeing *ch)
       ch->sendTo("You leave the hold'em table.\n\r");
       delete players[i];
       players[i]=NULL;
-      return true;
+      break;
     }
   }
 
   if(playerCount() < 2){
-    state=STATE_NONE;
+    showdown(players[firstPlayer()]->ch);
   }
   
   return false;
@@ -220,6 +432,15 @@ void HoldemGame::call(TBeing *ch)
     ch->sendTo("You are not sitting at the table yet.\n\r");
     return;
   }
+  if(state==STATE_NONE){
+    ch->sendTo("Betting hasn't started.\n\r");
+    return;
+  }
+
+  if(playerCount() < 2){
+    ch->sendTo("You need at least two players.\n\r");
+    return;
+  }
 
   if(ch->name != players[better]->name){
     ch->sendTo("It's not your turn.\n\r");
@@ -239,20 +460,22 @@ void HoldemGame::call(TBeing *ch)
       }
       return;
     }
-    bet += chip->obj_flags.cost;
 
     (*chip)--;
     chipl.push_back(chip);
   }
 
   for(unsigned int i=0;i<chipl.size();++i){
+    ssprintf(buf, "$n calls with %s.", chipl[i]->getName());
+    act(buf, TRUE, ch, 0, 0, TO_ROOM);
+    ssprintf(buf, "You call with %s.", chipl[i]->getName());
+    act(buf, TRUE, ch, 0, 0, TO_CHAR);
+
+    bet += chip->obj_flags.cost;
+
     delete chipl[i];
   }
 
-  ssprintf(buf, "$n calls with %s.", chip->getName());
-  act(buf, TRUE, ch, 0, 0, TO_ROOM);
-  ssprintf(buf, "You call with %s.", chip->getName());
-  act(buf, TRUE, ch, 0, 0, TO_CHAR);
 
   ch->doSave(SILENT_YES);
    
@@ -276,6 +499,15 @@ void HoldemGame::raise(TBeing *ch)
 
   if (!isPlaying(ch)) {
     ch->sendTo("You are not sitting at the table yet.\n\r");
+    return;
+  }
+  if(state==STATE_NONE){
+    ch->sendTo("Betting hasn't started.\n\r");
+    return;
+  }
+
+  if(playerCount() < 2){
+    ch->sendTo("You need at least two players.\n\r");
     return;
   }
 
@@ -416,6 +648,16 @@ void HoldemGame::fold(TBeing *ch)
     ch->sendTo("You are not sitting at the table yet.\n\r");
     return;
   }
+  if(state==STATE_NONE){
+    ch->sendTo("Betting hasn't started.\n\r");
+    return;
+  }
+
+  if(playerCount() < 2){
+    ch->sendTo("You need at least two players.\n\r");
+    return;
+  }
+
   if(ch->name != players[better]->name){
     ch->sendTo("It's not your turn.\n\r");
     return;
@@ -424,7 +666,7 @@ void HoldemGame::fold(TBeing *ch)
   act("$n folds.", TRUE, players[better]->ch, 0, 0, TO_ROOM);
   act("You fold.", TRUE, players[better]->ch, 0, 0, TO_CHAR);
 
-  if(playerCount() == 2){
+  if(playerHandCount() == 2){
     players[better]->hand[0]=NULL;
     players[better]->hand[1]=NULL;
     showdown(players[firstPlayer()]->ch);
@@ -477,7 +719,7 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
   }
   
   bet = chip->obj_flags.cost;
-  last_bet = chip->name;
+  last_bet = chip->objVnum();
   nraises=1;
   ch->doSave(SILENT_YES);
   

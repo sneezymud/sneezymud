@@ -115,6 +115,8 @@ class Card {
   Card(cardSuitT, int);
   virtual ~Card(){};
 
+  cardSuitT getSuit() const;
+
   const char *getName() const;
   int getVal() const{
     return value;
@@ -379,19 +381,21 @@ class HoldemGame : public CardGame {
   int better;
   
   holdemStateT state;
-  sstring last_bet;
+  int last_bet;
   int nraises;
  public:
   HoldemGame(){
     state=STATE_NONE;
   }
 
+  int handValue(HoldemPlayer *);
   void nextRound(TBeing *ch);
   int nextPlayer(int);
   int lastPlayer();
   int firstPlayer();
   void linkPlayers();
   int playerCount();
+  int playerHandCount();
   bool enter(const TBeing *ch);
   int exitGame(const TBeing *ch);
   virtual void peek(const TBeing *) const;

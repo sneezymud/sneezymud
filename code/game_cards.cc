@@ -17,6 +17,10 @@ cardSuitT & operator++(cardSuitT &c, int)
   return c = (c == MAX_SUIT) ? MIN_SUIT : cardSuitT(c+1);
 }
 
+cardSuitT Card::getSuit() const {
+  return suit;
+}
+
 const char *Card::getName() const{
   sstring buf;
 
