@@ -12,8 +12,6 @@ int flaskPeddler(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *peddler, T
   }
   TObj *flask;
   sstring sarg = arg;
-  vector <sstring> args;
-  split_string(sarg, " ", args);
   
   int cost_mult = 1;
   if (is_abbrev(sarg.word(0), "small")) {

@@ -30,6 +30,7 @@
 const int SPEC_JANITOR           =5;
 const int SPEC_TORMENTOR         =6;
 const int SPEC_TRAINER_AIR       =7;
+const int SPEC_CHICKEN           =8;
 const int SPEC_BOUNTY_HUNTER   =11;
 const int SPEC_ALIGN_DEITY     =12;
 const int SPEC_ENGRAVER        =13;
@@ -167,7 +168,7 @@ const int SPEC_FIREMAN            =182;
 const int SPEC_MIMIC              =183;
 const int SPEC_ARCHER             =184;
 const int SPEC_FLASK_PEDDLER      =185;
-const int SPEC_CHICKEN            =186;
+const int SPEC_LIMB_DISPO         =186;
 const int NUM_MOB_SPECIALS        =186;
 
 extern const int GET_MOB_SPE_INDEX(int d);

@@ -300,7 +300,7 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_mobs_holdem_player.o	spec_mobs_postman.o		\
 	spec_mobs_corporate_assistant.o spec_mobs_fireman.o \
 	spec_objs_sweeps.o spec_mobs_archer.o \
-	spec_mobs_flaskPeddler.o
+	spec_mobs_flaskPeddler.o spec_mobs_limbDispo.o
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
 # list of our local shared libs
@@ -11202,7 +11202,8 @@ objs/obj_smoke.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
 objs/obj_smoke.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/obj_smoke.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_smoke.o: obj_money.h rent.h spec_mobs.h materials.h colorstring.h
-objs/obj_smoke.o: format.h obj_smoke.h
+objs/obj_smoke.o: format.h obj_smoke.h pathfinder.h /usr/include/g++/deque
+objs/obj_smoke.o: /usr/include/g++/stl_deque.h obj_portal.h obj_seethru.h
 objs/obj_spellbag.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_spellbag.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_spellbag.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -13897,6 +13898,66 @@ objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_heap.h
 objs/spec_mobs_holdem_player.o: /usr/include/g++/deque
 objs/spec_mobs_holdem_player.o: /usr/include/g++/stl_deque.h
 objs/spec_mobs_holdem_player.o: game_crazyeights.h game_drawpoker.h
+objs/spec_mobs_limbDispo.o: stdsneezy.h /usr/include/g++/cstdio
+objs/spec_mobs_limbDispo.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/spec_mobs_limbDispo.o: /usr/include/machine/ansi.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/ctime /usr/include/time.h
+objs/spec_mobs_limbDispo.o: /usr/include/sys/_posix.h
+objs/spec_mobs_limbDispo.o: /usr/include/sys/types.h
+objs/spec_mobs_limbDispo.o: /usr/include/sys/inttypes.h
+objs/spec_mobs_limbDispo.o: /usr/include/machine/types.h
+objs/spec_mobs_limbDispo.o: /usr/include/machine/endian.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/spec_mobs_limbDispo.o: /usr/include/runetype.h /usr/include/g++/cassert
+objs/spec_mobs_limbDispo.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/spec_mobs_limbDispo.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/string
+objs/spec_mobs_limbDispo.o: /usr/include/g++/std/bastring.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/cstddef /usr/include/stddef.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/std/straits.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/alloc.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_config.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_alloc.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/iostream.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/streambuf.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/libio.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/iterator
+objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_relops.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_iterator.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/std/bastring.cc
+objs/spec_mobs_limbDispo.o: /usr/include/g++/vector
+objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_algobase.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_pair.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/type_traits.h
+objs/spec_mobs_limbDispo.o: /usr/include/limits.h
+objs/spec_mobs_limbDispo.o: /usr/include/machine/limits.h
+objs/spec_mobs_limbDispo.o: /usr/include/sys/syslimits.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/new.h /usr/include/g++/new
+objs/spec_mobs_limbDispo.o: /usr/include/g++/exception
+objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_construct.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_uninitialized.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_vector.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_bvector.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_function.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_map.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/stl_multimap.h
+objs/spec_mobs_limbDispo.o: /usr/include/g++/iostream
+objs/spec_mobs_limbDispo.o: /usr/include/g++/sstream sstring.h low.h enum.h
+objs/spec_mobs_limbDispo.o: spells.h structs.h parse.h immunity.h
+objs/spec_mobs_limbDispo.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/spec_mobs_limbDispo.o: client.h response.h faction.h comm.h toggle.h
+objs/spec_mobs_limbDispo.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/spec_mobs_limbDispo.o: race.h skills.h disease.h trap.h task.h weather.h
+objs/spec_mobs_limbDispo.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/spec_mobs_limbDispo.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/spec_mobs_limbDispo.o: monster.h account.h extern.h handler.h
+objs/spec_mobs_limbDispo.o: obj_money.h rent.h spec_mobs.h materials.h
+objs/spec_mobs_limbDispo.o: colorstring.h format.h obj_base_corpse.h
+objs/spec_mobs_limbDispo.o: obj_base_container.h
 objs/spec_mobs_lottery_redeemer.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_lottery_redeemer.o: /usr/include/stdio.h
 objs/spec_mobs_lottery_redeemer.o: /usr/include/sys/cdefs.h
