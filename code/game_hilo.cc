@@ -3,9 +3,7 @@
 
 HiLoGame gHiLo;
 
-const float WIN_INIT=0.05;
-
-
+const float WIN_INIT=0.10;
 
 bool HiLoGame::enter(const TBeing *ch)
 {
