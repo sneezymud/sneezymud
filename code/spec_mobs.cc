@@ -7819,6 +7819,100 @@ int shippingOfficial(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
 }
 
 
+int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
+{
+  TBeing *tb;
+  vector <TBeing *> roompeople;
+
+  // on pet, purr, nuzzle
+  // random, rub against leg, nuzzle
+  // if someone is sitting on something, join them and nuzzle/lap etc
+  // if other cats, play
+  // if other cat leaves, chase
+
+  if(!me || !me->roomp || cmd!=CMD_GENERIC_PULSE)
+    return FALSE;
+
+  if(cmd==CMD_GENERIC_PULSE){
+    if(::number(0,49))
+      return FALSE;
+
+    switch(::number(0,8)){
+      case 0:
+	// clean
+	act("$n begins cleaning $mself.", TRUE, me, NULL, NULL, TO_ROOM);
+	break;
+      case 1:
+	// stare at something
+	if((me->roomp->isIndoorSector() || 
+	    me->roomp->isRoomFlag(ROOM_INDOORS))){
+	  act("$n stares intently at a spot on the $g.",
+	      TRUE, me, NULL, NULL, TO_ROOM);
+	} else {
+	  act("$n stares intently as a bird flies overhead.",
+	      TRUE, me, NULL, NULL, TO_ROOM);
+	}
+	break;
+      case 2:
+	// sprint out of room
+	me->doFlee("");
+	break;
+      case 3:
+	// rub against leg if player (if humanoid?)
+	for(TThing *t=me->roomp->getStuff();t;t=t->nextThing){
+	  if((tb=dynamic_cast<TBeing *>(t)) && tb->isHumanoid()){
+	    roompeople.push_back(tb);
+	  }
+	}
+	
+	if(roompeople.size()>0){
+	  tb=roompeople[::number(0,roompeople.size()-1)];
+	  act("$n rubs against $N's leg.",
+	      TRUE, me, NULL, tb, TO_NOTVICT);
+	  act("$n rubs against your leg.",
+	      TRUE, me, NULL, tb, TO_VICT);
+	}
+	break;
+      case 4:
+	// sleep
+	me->doSleep("");
+	break;
+      case 5: case 6: case 7: case 8:
+	// play with other cats
+        for(TThing *t=me->roomp->getStuff();t;t=t->nextThing){
+          if((tb=dynamic_cast<TBeing *>(t)) && 
+	     (tb->getRace() == RACE_FELINE) &&
+	     tb!=me){
+            roompeople.push_back(tb);
+          }
+        }
+
+        if(roompeople.size()>0){
+          tb=roompeople[::number(0,roompeople.size()-1)];
+
+	  switch(::number(0,3)){
+	    case 0:
+	      me->doAction(add_bars(tb->name), CMD_TACKLE);
+	      break;
+	    case 1:
+	      me->doAction(add_bars(tb->name), CMD_NUZZLE);
+	      break;
+	    case 2:
+	      me->doAction(add_bars(tb->name), CMD_LICK);
+	      break;
+	    case 3:
+	      me->doAction(add_bars(tb->name), CMD_BITE);
+	      break;
+	  }
+	}
+	break;
+    }
+  }
+    
+  return TRUE;
+}
+
+
 extern int banker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int stockBroker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int loanShark(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -8036,6 +8130,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "stock broker", stockBroker},
   {FALSE, "banker", banker},
   {FALSE, "prison janitor", prisonJanitor},
+  {TRUE, "cat", cat},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
