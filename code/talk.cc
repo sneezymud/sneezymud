@@ -132,13 +132,13 @@ static sstring garble(const char *arg, int chance)
 int TBeing::doSay(const sstring &arg)
 {
   char buf[MAX_INPUT_LENGTH + 40];
-  char garbed[256];
+  char garbed[MAX_INPUT_LENGTH];
   *buf = '\0';
   TThing *tmp, *tmp2;
   TBeing *mob = NULL;
   int rc;
-  char capbuf[256];
-  char tmpbuf[256], nameBuf[256], garbedBuf[256];
+  char capbuf[MAX_INPUT_LENGTH];
+  char tmpbuf[MAX_INPUT_LENGTH], nameBuf[MAX_INPUT_LENGTH], garbedBuf[MAX_INPUT_LENGTH];
   Descriptor *d;
 
   if (desc)
@@ -160,10 +160,10 @@ int TBeing::doSay(const sstring &arg)
   if (arg.empty())
     sendTo("Yes, but WHAT do you want to say?\n\r");
   else {
-    mud_str_copy(garbed, garble(arg.c_str(), getCond(DRUNK)).c_str(), 256);
+    mud_str_copy(garbed, garble(arg.c_str(), getCond(DRUNK)).c_str(), MAX_INPUT_LENGTH);
 
     if (hasDisease(DISEASE_DROWNING)) 
-      mud_str_copy(garbed, "Glub glub glub.", 256);
+      mud_str_copy(garbed, "Glub glub glub.", MAX_INPUT_LENGTH);
 
     sendTo(COLOR_COMM, "<g>You say, <z>\"%s%s\"\n\r", 
             colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE).c_str(), norm());
@@ -177,7 +177,7 @@ int TBeing::doSay(const sstring &arg)
       if (!(d = mob->desc) || mob == this || (mob->getPosition() <= POSITION_SLEEPING))
         continue;
 
-      mud_str_copy(capbuf, mob->pers(this), 256);
+      mud_str_copy(capbuf, mob->pers(this), MAX_INPUT_LENGTH);
       cap(capbuf);
       sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str()); 
 
