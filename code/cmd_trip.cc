@@ -121,6 +121,18 @@ bool TBeing::canTrip(TBeing *victim, silentTypeT silent)
     return FALSE;
   }
 
+  if (victim->getHeight() < 12) {
+    if (!silent)
+      sendTo("That creature has less ground clearance than the height of your foot.\n\r");
+    return FALSE;
+  }
+  
+  if (3*getHeight() < victim->getHeight()) {
+    if (!silent)
+      sendTo("Rule of thumb:  you can't trip someone when their kneecaps are higher than your eye level.\n\r");
+    return FALSE;
+  }
+
   return TRUE;
 }
 
@@ -153,6 +165,12 @@ static int trip(TBeing *c, TBeing *victim, spellNumT skill)
   // Make a level based adjustment - Brutius
   int level = c->getSkillLevel(skill);
   percent += 2*(level - victim->GetMaxLevel());
+
+  // things with more legs are tougher - Maror
+  if (victim->isFourLegged()) {
+    c->sendTo("The stability of this creature makes it more difficult to trip.\n\r");
+    percent -= 50;
+  }
 
   int bKnown = c->getSkillValue(skill);
   i = c->specialAttack(victim,skill);
