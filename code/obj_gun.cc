@@ -140,7 +140,7 @@ void gload_usage(TBeing *tb){
 
 void TBeing::doGload(string arg)
 {
-  char    arg1[128], arg2[128];
+  string arg1, arg2;
   string buf;
   TObj  *bow;
   TThing  *arrow;
@@ -149,15 +149,15 @@ void TBeing::doGload(string arg)
   int nargs;
   TBeing *tb;
 
-  nargs=scanf(arg.c_str(), "%s %s", arg1, arg2);
+  nargs=argument_parser(arg, arg1, arg2);
 
   if(nargs<1 || nargs>2){
     gload_usage(this);
     return;
   }
   
-  if(strcmp(arg1, "unload")){
-    generic_find(arg1, FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tb, &bow);
+  if(arg1 != "unload"){
+    generic_find(arg1.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tb, &bow);
     
     if(!bow || !(gun=dynamic_cast<TGun *>(bow))){
       gload_usage(this);
@@ -165,7 +165,7 @@ void TBeing::doGload(string arg)
     }
 
     if(nargs==1){
-      strcpy(arg2, getAmmoKeyword(gun->getAmmoType()));
+      arg2=getAmmoKeyword(gun->getAmmoType());
     } 
 
     if(!(arrow = searchLinkedListVis(this, arg2, getStuff())) ||
@@ -175,7 +175,7 @@ void TBeing::doGload(string arg)
     }
     
     if(gun->getAmmo()){
-      ssprintf(buf, "unload %s", arg1);
+      ssprintf(buf, "unload %s", arg1.c_str());
       doGload(buf);
       if(gun->getAmmo()){
 	sendTo("That gun is already loaded!\n\r");
@@ -195,7 +195,7 @@ void TBeing::doGload(string arg)
     act("$n loads $p into $N.", TRUE, this, ammo, gun, TO_ROOM);
     addToWait(combatRound(1));
   } else {
-    generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tb, &bow);
+    generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tb, &bow);
 
     if (!bow || !(gun=dynamic_cast<TGun *>(bow))){
       gload_usage(this);
