@@ -5405,9 +5405,9 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
     
   int i=1;
   do {
-    ch->sendTo(COLOR_BASIC, fmt("%i) %s has killed %i (%d%%) life forms.\n\r") % 
+    ch->sendTo(COLOR_BASIC, fmt("%i) %s has killed %i (%d%c) life forms.\n\r") % 
 	       i % db["name"] % convertTo<int>(db["count"]) % 
-	       (int)(((float)convertTo<int>(db["count"])/(float)activemobcount)*100));
+	       (int)(((float)convertTo<int>(db["count"])/(float)activemobcount)*100) % '%');
     ++i;
   } while(db.fetchRow());
 
@@ -6925,7 +6925,7 @@ int energyShield(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
     else if ( newcharge / 100 <= 9) buf="<g>green";
     else buf="<c>blue";
     
-    buf2 = fmt("The display panel on your $o glows %s<1> as it reads %d0%%.") % buf % (newcharge/100);
+    buf2 = fmt("The display panel on your $o glows %s<1> as it reads %d0%c.") % buf % (newcharge/100) % '%';
     act(buf2,TRUE,ch,generator,NULL,TO_CHAR,NULL);
     buf2 = fmt("The display panel on $n's $o glows %s<1>.") % buf;
     act(buf2,TRUE,ch,generator,NULL, TO_ROOM,NULL);
@@ -7031,7 +7031,7 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
       else if ( newcharge / 100 <= 9) buf="<g>green";
       else buf="<c>blue";
       
-      buf2 = fmt("The display panel on your $o glows %s<1> as it reads %d0%%.") % buf % (newcharge/100);
+      buf2 = fmt("The display panel on your $o glows %s<1> as it reads %d0%c.") % buf % (newcharge/100) % '%';
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       buf2 = fmt("The display panel on $n's $o glows %s<1>.") % buf;
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
@@ -7059,7 +7059,7 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
       act("$n presses the display button on $p.",TRUE,ch,o,NULL, TO_ROOM,NULL);
 
 
-      buf2 = fmt("The display panel on your $o glows %s<1> as it reads %d%%.") % buf % (charge/10);
+      buf2 = fmt("The display panel on your $o glows %s<1> as it reads %d%c.") % buf % (charge/10) % '%';
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       buf2 = fmt("The display panel on $n's $o glows %s<1>.") % buf;
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);

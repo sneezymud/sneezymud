@@ -2210,7 +2210,7 @@ void TBeing::doWizhelp()
       tLength = max(strlen(commandArray[i]->name), (unsigned) tLength);
   }
 
-  tString = fmt("%%-%ds") % (tLength + 1);
+  tString = fmt("%c-%ds") % '%' % (tLength + 1);
   tLength = (79 / tLength);
 
   sendTo("The following privileged commands are available:\n\r\n\r");
@@ -2396,9 +2396,9 @@ void TBeing::doInventory(const char *argument)
       list_in_heap(getStuff(), this, 0, 100);
 
       if (GetMaxLevel() > 10) {
-        sendTo(fmt("\n\r%3.f%% volume, %3.f%% weight.\n\r") %
-               (((float)getCarriedVolume() / (float)carryVolumeLimit()) * 100.0) %
-               (((float)getCarriedWeight() / (float)carryWeightLimit()) * 100.0));
+        sendTo(fmt("\n\r%3.f%c volume, %3.f%c weight.\n\r") %
+               (((float)getCarriedVolume() / (float)carryVolumeLimit()) * 100.0) % '%' %
+               (((float)getCarriedWeight() / (float)carryWeightLimit()) * 100.0) % '%');
       }
     } else {
       sendTo("It's pretty hard to take inventory when you can't see.\n\r");
@@ -3180,8 +3180,8 @@ void TBeing::doWorld()
   if(db.fetchRow())
     unkmobcount=convertTo<int>(db["count"]);
 
-  buf=fmt("Percent of distinct mobiles never killed: %s    %d%% (%i)%s\n\r") %
-    red() % (100-(int)(((float)unkmobcount/(float)activemobcount)*100)) % 
+  buf=fmt("Percent of distinct mobiles never killed: %s    %d%c (%i)%s\n\r") %
+    red() % (100-(int)(((float)unkmobcount/(float)activemobcount)*100)) % '%' %
     (activemobcount-unkmobcount) %
     norm();
   str += buf;

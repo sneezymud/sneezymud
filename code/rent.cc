@@ -2350,7 +2350,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, TThing *tList, int
     }
   }
 
-  tBuffer = fmt("%%-%ds : ") % (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str())));
+  tBuffer = fmt("%c-%ds : ") % '%' % (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str())));
 
   if (isRentable()) {
     tBuffer+="%5d talens/day";

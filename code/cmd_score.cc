@@ -20,7 +20,7 @@ void TBeing::doScore()
 	 green() % moveLimit() % norm());
 
   if (hasClass(CLASS_DEIKHAN) || hasClass(CLASS_CLERIC))
-    Buf = fmt("%s%.2f%%%% %spiety.\n\r") % cyan() % getPiety() % norm();
+    Buf = fmt("%s%.2f%c %spiety.\n\r") % cyan() % getPiety() % '%' % norm();
   else if (hasClass(CLASS_SHAMAN))
     Buf = fmt("%s%d %slifeforce.\n\r") % red() % getLifeforce() % norm();
   else

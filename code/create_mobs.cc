@@ -1463,7 +1463,7 @@ static void change_mob_immune(TBeing *ch, TMonster *mob, const char *arg, editor
   for (ij = MIN_IMMUNE;ij < MAX_IMMUNES; ij++) {
     if (mob->getImmunity(ij) == 0)
       continue;
-    ch->sendTo(fmt("%d%% %s to %s.\n\r") %mob->getImmunity(ij) % 
+    ch->sendTo(fmt("%d%c %s to %s.\n\r") %mob->getImmunity(ij) % '%' %
        "resistant" % immunity_names[ij]);
   }
   ch->sendTo(fmt(VT_CURSPOS) % 19 % 1);

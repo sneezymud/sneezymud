@@ -212,7 +212,7 @@ void TBeing::doTrophy(const sstring &arg)
 	}
       }
 
-      buf = fmt("You have killed %1.2f%% of mobs in this zone.\n\r") %((float)((float)active_zcount/(float)zcountt)*100.0);
+      buf = fmt("You have killed %1.2f%c of mobs in this zone.\n\r") %((float)((float)active_zcount/(float)zcountt)*100.0) % '%';
       sb += buf;
     }
 
@@ -239,7 +239,7 @@ void TBeing::doTrophy(const sstring &arg)
   buf = fmt("\n--\nTotal mobs: %i\n\r") % mcount;
   sb += buf;
   if(mcount>0){
-    buf = fmt("You have killed %1.2f%% of all mobs.\n\r") %((float)((float)mcount/(float)activemobcount)*100.0);
+    buf = fmt("You have killed %1.2f%c of all mobs.\n\r") %((float)((float)mcount/(float)activemobcount)*100.0) % '%';
     sb += buf;
   }
 

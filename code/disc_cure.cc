@@ -14,8 +14,8 @@ static void repHealing(TBeing *caster, TBeing *victim)
   sprintf(nameBuf,"%s",colorString(caster,caster->desc,nameBuf,NULL,COLOR_MOBS, TRUE).c_str());
 
   if (caster != victim) {
-    caster->sendTo(COLOR_SPELLS, fmt("%s looks to be at <r>%.1f%%<z> HP.\n\r") %
-       nameBuf % victim->getPercHit());
+    caster->sendTo(COLOR_SPELLS, fmt("%s looks to be at <r>%.1f%c<z> HP.\n\r") %
+       nameBuf % victim->getPercHit() % '%');
   }
 }
 

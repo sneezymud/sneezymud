@@ -480,9 +480,9 @@ void TBeing::doWho(const char *argument)
 		      if ((getFaction()==p->getFaction() &&
 			   p->GetMaxLevel() <= MAX_MORT) || isImmortal()) {
 #if FACTIONS_IN_USE
-			buf = fmt("%s[%s] %5.2f%%") % buf %
+			buf = fmt("%s[%s] %5.2f%c") % buf %
 			  FactionInfo[p->getFaction()].faction_name %
-			  p->getPerc();
+			  p->getPerc() % '%';
 #else
 			buf = fmt("%s[%s]") % buf %
 				FactionInfo[p->getFaction()].faction_name;
@@ -579,13 +579,13 @@ void TBeing::doWho(const char *argument)
   accStat.max_player_since_reboot = max(accStat.max_player_since_reboot, count);
   if (isImmortal()) {
     if (!listed)
-      buf = fmt("\n\rTotal players / Link dead [%d/%d] (%2.0f%%)\n\rMax since Reboot [%d]  Avg Players : [%.1f]\n\r") %
-	count % lcount % (((double) lcount / (int) count) * 100) % 
+      buf = fmt("\n\rTotal players / Link dead [%d/%d] (%2.0f%c)\n\rMax since Reboot [%d]  Avg Players : [%.1f]\n\r") %
+	count % lcount % (((double) lcount / (int) count) * 100) % '%' %
 	accStat.max_player_since_reboot %
 	(stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
     else
-      buf = fmt("\n\rTotal players / Link dead [%d/%d] (%2.0f%%)\n\rNumber Listed: %d  Max since Reboot [%d]  Avg Players : [%.1f]\n\r") %
-	count % lcount % (((double) lcount / (int) count) * 100) % listed %
+      buf = fmt("\n\rTotal players / Link dead [%d/%d] (%2.0f%c)\n\rNumber Listed: %d  Max since Reboot [%d]  Avg Players : [%.1f]\n\r") %
+	count % lcount % (((double) lcount / (int) count) * 100) % '%' % listed %
 	accStat.max_player_since_reboot %
 	(stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
   } else {

@@ -552,8 +552,8 @@ void TBeing::doAttribute(const char *arg)
 	     newfaction()->getName() % rank());
     } else {
 #if FACTIONS_IN_USE
-      sendTo(fmt("You are allied to %s, and have a %.4f%% rating.\n\r") %
-	     FactionInfo[getFaction()].faction_name, getPerc());
+      sendTo(fmt("You are allied to %s, and have a %.4f%c rating.\n\r") %
+	     FactionInfo[getFaction()].faction_name % getPerc() % '%');
 #else
       sendTo(fmt("You are allied to %s.\n\r") %
 	     FactionInfo[getFaction()].faction_name);
@@ -572,10 +572,10 @@ void TBeing::doAttribute(const char *arg)
   } else if (is_abbrev(cmdbuf, "condition")) {
     if (GetMaxLevel() > 10) {
       if (!isImmortal()) {
-        sendTo(fmt("You are carrying %3.f%% of your maximum weight capacity.\n\r") %
-          ((getCarriedWeight()/carryWeightLimit()) * 100.0));
-        sendTo(fmt("You are carrying %3.f%% of your maximum volume capacity.\n\r") %
-          ((float) ((float) getCarriedVolume()/(float) carryVolumeLimit()) * 100));
+        sendTo(fmt("You are carrying %3.f%c of your maximum weight capacity.\n\r") %
+          ((getCarriedWeight()/carryWeightLimit()) * 100.0) % '%');
+        sendTo(fmt("You are carrying %3.f%c of your maximum volume capacity.\n\r") %
+          ((float) ((float) getCarriedVolume()/(float) carryVolumeLimit()) * 100) % '%');
       } else {
         sendTo(fmt("You have %.1f lbs of equipment, and can carry up to %.1f lbs - %.1f spare lbs.\n\r") %
             getCarriedWeight() % carryWeightLimit() % 
@@ -626,8 +626,8 @@ void TBeing::doAttribute(const char *arg)
       mod=(int)(getStrDamModifier()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, fmt("Your strength gives you a %i%% damage %s.\n\r") %
-	       mod % ((mod>0)?"bonus":"penalty"));
+	sendTo(COLOR_MOBS, fmt("Your strength gives you a %i%c damage %s.\n\r") %
+	       mod % '%' % ((mod>0)?"bonus":"penalty"));
       } else {
 	sendTo(COLOR_MOBS, fmt("Your strength gives you %s damage %s.\n\r") %
 	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
@@ -637,8 +637,8 @@ void TBeing::doAttribute(const char *arg)
       mod=(int)(getBraMod()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, fmt("Your brawn gives you a %i%% damage absorption %s.\n\r") %
-	       mod % ((mod>0)?"bonus":"penalty"));
+	sendTo(COLOR_MOBS, fmt("Your brawn gives you a %i%c damage absorption %s.\n\r") %
+	       mod % '%' % ((mod>0)?"bonus":"penalty"));
       } else {
 	sendTo(COLOR_MOBS, fmt("Your brawn gives you %s damage absorption %s.\n\r") %
 	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
@@ -648,8 +648,8 @@ void TBeing::doAttribute(const char *arg)
       mod=(int)(getConHpModifier()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, fmt("Your constitution gives you a %i%% hit point %s.\n\r") %
-	       mod % ((mod>0)?"bonus":"penalty"));
+	sendTo(COLOR_MOBS, fmt("Your constitution gives you a %i%c hit point %s.\n\r") %
+	       mod % '%' % ((mod>0)?"bonus":"penalty"));
       } else {
 	sendTo(COLOR_MOBS, fmt("Your constitution gives you %s hit point %s.\n\r") %
 	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
@@ -660,8 +660,8 @@ void TBeing::doAttribute(const char *arg)
       mod=(int)(getDexMod()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, fmt("Your dexterity gives you a %i%% hitting %s.\n\r") %
-	       mod % ((mod>0)?"bonus":"penalty"));
+	sendTo(COLOR_MOBS, fmt("Your dexterity gives you a %i%c hitting %s.\n\r") %
+	       mod % '%' % ((mod>0)?"bonus":"penalty"));
       } else {
 	sendTo(COLOR_MOBS, fmt("Your dexterity gives you %s hitting %s.\n\r") %
 	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
@@ -671,8 +671,8 @@ void TBeing::doAttribute(const char *arg)
       mod=(int)(getAgiMod()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, fmt("Your agility gives you a %i%% armor class %s.\n\r") %
-	       mod % ((mod>0)?"bonus":"penalty"));
+	sendTo(COLOR_MOBS, fmt("Your agility gives you a %i%c armor class %s.\n\r") %
+	       mod % '%' % ((mod>0)?"bonus":"penalty"));
       } else {
 	sendTo(COLOR_MOBS, fmt("Your agility gives you %s armor class %s.\n\r") %
 	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
@@ -684,8 +684,8 @@ void TBeing::doAttribute(const char *arg)
       mod=(int)(getIntModForPracs()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, fmt("Your intelligence gives you a %i%% practice %s.\n\r") %
-	       mod % ((mod>0)?"bonus":"penalty"));
+	sendTo(COLOR_MOBS, fmt("Your intelligence gives you a %i%c practice %s.\n\r") %
+	       mod % '%' % ((mod>0)?"bonus":"penalty"));
       } else {
 	sendTo(COLOR_MOBS, fmt("Your intelligence gives you %s practice %s.\n\r") %
 	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
@@ -695,8 +695,8 @@ void TBeing::doAttribute(const char *arg)
       mod=(int)(getFocMod()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, fmt("Your focus gives you a %i%% skill success %s.\n\r") %
-	       mod % ((mod>0)?"bonus":"penalty"));
+	sendTo(COLOR_MOBS, fmt("Your focus gives you a %i%c skill success %s.\n\r") %
+	       mod % '%' % ((mod>0)?"bonus":"penalty"));
       } else {
 	sendTo(COLOR_MOBS, fmt("Your focus gives you %s skill success %s.\n\r") %
 	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
@@ -708,8 +708,8 @@ void TBeing::doAttribute(const char *arg)
       mod=-mod;
 	
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, fmt("Your charisma gives you a %i%% shop price %s.\n\r") %
-	       mod % ((mod>0)?"bonus":"penalty"));
+	sendTo(COLOR_MOBS, fmt("Your charisma gives you a %i%c shop price %s.\n\r") %
+	       mod % '%' % ((mod>0)?"bonus":"penalty"));
       } else {
 	sendTo(COLOR_MOBS, fmt("Your charisma gives you %s shop price %s.\n\r") %
 	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
@@ -719,8 +719,8 @@ void TBeing::doAttribute(const char *arg)
       mod=(int)(getSpeMod()*100)-100;
 
       if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, fmt("Your speed gives you a %i%% %s to your number of attacks.\n\r") %
-	       mod % ((mod>0)?"bonus":"penalty"));
+	sendTo(COLOR_MOBS, fmt("Your speed gives you a %i%c %s to your number of attacks.\n\r") %
+	       mod % '%' % ((mod>0)?"bonus":"penalty"));
       } else {
 	sendTo(COLOR_MOBS, fmt("Your speed gives you %s %s to your number of attacks.\n\r") %
 	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));

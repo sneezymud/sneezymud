@@ -2081,9 +2081,9 @@ void TBeing::doFactions(const sstring &arg)
     sbuf+=buf;
 
 #endif
-    buf = fmt("Your faction has %ld talens of wealth, and a tithe percentage of %.2f%%.\n\r") %
+    buf = fmt("Your faction has %ld talens of wealth, and a tithe percentage of %.2f%c.\n\r") %
 	     FactionInfo[which].faction_wealth %
-	     FactionInfo[which].faction_tithe;
+	     FactionInfo[which].faction_tithe % '%';
     sbuf+=buf;
   }
 #if 0

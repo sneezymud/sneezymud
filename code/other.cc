@@ -1594,37 +1594,37 @@ void TBeing::doGroup(const char *argument)
           tmp_share = splitShares(this, k);
 
           if (k->hasClass(CLASS_CLERIC) || k->hasClass(CLASS_DEIKHAN)) {
-            sendTo(fmt("%s%-15.15s%s [%s%.1f%%hp %.1f%%p. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
-              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) %
-              k->getPiety() % 
+            sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %.1f%cp. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) % '%' %
+              k->getPiety() % '%' %
               cap(namebuf) %
               (k != this ? "s" : "") %
               DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
               norm() % purple() %
               tmp_share % ((tmp_share == 1) ? "" : "s") %
-              k->getExpSharePerc() %
+		   k->getExpSharePerc() % '%' %
               norm());
           } else if (k->hasClass(CLASS_SHAMAN)) {
-            sendTo(fmt("%s%-15.15s%s [%s%.1f%%hp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
-              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) %
+            sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) % '%' %
               k->getLifeforce() % 
               cap(namebuf) %
               (k != this ? "s" : "") %
               DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
               norm() % purple() %
               tmp_share % ((tmp_share == 1) ? "" : "s") %
-              k->getExpSharePerc() %
+              k->getExpSharePerc() % '%' %
               norm());
           } else {
-            sendTo(fmt("%s%-15.15s%s [%s%.1f%%hp %.1f%%m. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
-              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) %
-              (((double) (k->getMana())) / ((double) k->manaLimit()) * 100) % 
+            sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %.1f%cm. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) % '%' %
+              (((double) (k->getMana())) / ((double) k->manaLimit()) * 100) % '%' %
               cap(namebuf) %
               (k != this ? "s" : "") %
               DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
               norm() % purple() %
               tmp_share % ((tmp_share == 1) ? "" : "s") % 
-              k->getExpSharePerc() %
+              k->getExpSharePerc() % '%' %
               norm());
           }
         } else 
@@ -1638,38 +1638,38 @@ void TBeing::doGroup(const char *argument)
           if (sameRoom(*f->follower)) { 
             if (f->follower->hasClass(CLASS_CLERIC) || 
                 f->follower->hasClass(CLASS_DEIKHAN))
-              sendTo(fmt("%s%-15.15s%s [%s%.1f%%hp %.1f%%p. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
-                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) %
-                f->follower->getPiety() %
+              sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %.1f%cp. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) % '%' %
+                f->follower->getPiety() % '%' %
                 cap(namebuf) %
                 (f->follower != this ? "s" : "") %
                 DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
                 norm() % purple() %
                 tmp_share % ((tmp_share == 1) ? "" : "s") % 
-                f->follower->getExpSharePerc() %
+                f->follower->getExpSharePerc() % '%' %
                 norm());
             else if (f->follower->hasClass(CLASS_SHAMAN))
-              sendTo(fmt("%s%-15.15s%s [%s%.1f%%hp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
-                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) %
+              sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() %
+                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) % '%' %
                 f->follower->getLifeforce() %
                 cap(namebuf) %
                 (f->follower != this ? "s" : "") %
                 DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
                 norm() % purple() %
                 tmp_share % ((tmp_share == 1) ? "" : "s") % 
-                f->follower->getExpSharePerc() %
+                f->follower->getExpSharePerc() % '%' %
                 norm());
 
             else {
-              sendTo(fmt("%s%-15.15s%s [%s%.1f%%hp %.1f%%m. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%% shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() % 
-                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) %
-                (((double) (f->follower->getMana())) / ((double) f->follower->manaLimit()) * 100) %
+              sendTo(fmt("%s%-15.15s%s [%s%.1f%chp %.1f%cm. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % cap(namebuf) % norm() % red() % 
+                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) % '%' %
+                (((double) (f->follower->getMana())) / ((double) f->follower->manaLimit()) * 100) % '%' %
                 cap(namebuf) %
                 (f->follower != this ? "s" : "") %
                 DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
                 norm() % purple() %
                 tmp_share % ((tmp_share == 1) ? "" : "s") % 
-                f->follower->getExpSharePerc() %
+                f->follower->getExpSharePerc() % '%' %
                 norm());
             }
           } else 

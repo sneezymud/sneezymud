@@ -472,9 +472,9 @@ void TOpenContainer::lookObj(TBeing *ch, int bits) const
   if (carryVolumeLimit() && carryWeightLimit()) {
     // moneypouches are occasionally overfilled, so we will just force the
     // info to look right...
-    ch->sendTo(fmt("%d%% full, %d%% loaded.\n\r") %
-      min(100, getCarriedVolume() * 100 / carryVolumeLimit()) %
-      min(100, (int) (getCarriedWeight() * 100.0 / carryWeightLimit())));
+    ch->sendTo(fmt("%d%c full, %d%c loaded.\n\r") %
+     min(100, getCarriedVolume() * 100 / carryVolumeLimit()) % '%' %
+     min(100, (int) (getCarriedWeight() * 100.0 / carryWeightLimit())) % '%');
   } else {
     vlogf(LOG_BUG, "Problem in look in for object: (%s:%d), check vol/weight limit", getName(), objVnum());
   }

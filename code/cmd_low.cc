@@ -983,8 +983,8 @@ static void compare2Mobs(TBeing *ch, TBeing *mob1, TBeing *mob2)
       num_hits++;
   }
   float hitRate = (float) num_hits / (float) tot_hits;
-  ch->sendTo(COLOR_MOBS, fmt("%s hits %s roughly %.2f%% of the time.\n\r") %
-    mob1->getName() % mob2->getName() % (hitRate * 100.0));
+  ch->sendTo(COLOR_MOBS, fmt("%s hits %s roughly %.2f%c of the time.\n\r") %
+    mob1->getName() % mob2->getName() % (hitRate * 100.0) % '%');
 
   double avg_dam = avgDam(mob1);
   float modDam = (float) (avg_dam * hitRate);

@@ -4806,8 +4806,8 @@ void TBeing::doInfo(const char *arg)
         if (ch->discs)
           ci++;
       }
-      sendTo(fmt("  Beings with initialized disciplines: %d of %d (%d%%)\n\r") % 
-            ci % j %  (ci * 100/ j));
+      sendTo(fmt("  Beings with initialized disciplines: %d of %d (%d%c)\n\r") % 
+            ci % j %  (ci * 100/ j) % '%');
 
     } else if (is_abbrev(arg1, "gold")) {
       buf.erase();
