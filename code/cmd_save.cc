@@ -97,10 +97,12 @@ void TBeing::doSave(silentTypeT silent, const char *tArg = NULL)
   if (!isPc())
     return;
 
+#if 0
   if (!desc) {
     vlogf(LOG_BUG, "%s tried to doSave while link dead.", getName());
     return;
   }
+#endif
 
   if (isImmortal()) {
     if (!tArg || !*tArg) {
