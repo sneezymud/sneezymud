@@ -482,7 +482,7 @@ class Descriptor
     void saveAccount();
     int doAccountMenu(const char *);
     void add_to_history_list(const char *);
-    int getFreeStat();
+    int getFreeStat(connectStateT);
     int nanny(const char *);
     void sendMotd(int);
     void go_back_menu(connectStateT);

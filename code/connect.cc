@@ -42,7 +42,7 @@ const int FORCE_LOW_INVSTE = 1;
 // character traits are things that players pick at character creation,
 // such as cowardice and blindness.  each trait gives the player a few
 // bonus points that can be spent on stats.
-const int ALLOW_TRAITS = 0;
+const int ALLOW_TRAITS = 1;
 
 static const char * const WIZLOCK_PASSWORD           = "motelvi";
 const char * const MUD_NAME      = "SneezyMUD";
@@ -998,29 +998,36 @@ void ShowNewNews(TBeing * tBeing)
 }
 
 
-int Descriptor::getFreeStat(){
-  // add the base chosen stats
-  int free_stat = -(character->chosenStats.values[STAT_STR] +
-		    character->chosenStats.values[STAT_CON] +
-		    character->chosenStats.values[STAT_BRA] +
-		    character->chosenStats.values[STAT_DEX] +
-		    character->chosenStats.values[STAT_AGI] +
-		    character->chosenStats.values[STAT_SPE] +
-		    character->chosenStats.values[STAT_INT] +
-		    character->chosenStats.values[STAT_FOC] +
-		    character->chosenStats.values[STAT_WIS] +
-		    character->chosenStats.values[STAT_PER] +
-		    character->chosenStats.values[STAT_KAR] +
-		    character->chosenStats.values[STAT_CHA]);
+int Descriptor::getFreeStat(connectStateT which){
+  int free_stat=0;
 
-  // add our bonus points
-  //  free_stat += bonus_points.total;
+  if(which==CON_STAT_COMBAT){
+    free_stat += bonus_points.combat;
+    free_stat -= (character->chosenStats.values[STAT_STR] +
+		  character->chosenStats.values[STAT_CON] +
+		  character->chosenStats.values[STAT_BRA]);
+  }
 
-  // subtract bonus points already used
-  free_stat += bonus_points.combat;
-  free_stat += bonus_points.combat2;
-  free_stat += bonus_points.learn;
-  free_stat += bonus_points.util;
+  if(which==CON_STAT_COMBAT2){
+    free_stat += bonus_points.combat2;
+    free_stat -= (character->chosenStats.values[STAT_DEX] +
+		  character->chosenStats.values[STAT_AGI] +
+		  character->chosenStats.values[STAT_SPE]);
+  }
+
+  if(which==CON_STAT_LEARN){
+    free_stat += bonus_points.learn;
+    free_stat -= (character->chosenStats.values[STAT_INT] +
+		  character->chosenStats.values[STAT_FOC] +
+		  character->chosenStats.values[STAT_WIS]);
+  }
+
+  if(which==CON_STAT_UTIL){
+    free_stat += bonus_points.util;
+    free_stat -= (character->chosenStats.values[STAT_PER] +
+		  character->chosenStats.values[STAT_KAR] +
+		  character->chosenStats.values[STAT_CHA]);
+  }
 
   return free_stat;
 }
@@ -2090,6 +2097,25 @@ int Descriptor::nanny(const char *arg)
       } else if(*arg == '/'){
 	go_back_menu(connected);
       } else if(*arg == 'E' || *arg == 'e'){
+	int limit=(bonus_points.total/4) + (bonus_points.total>0?1:-1);
+
+	bonus_points.combat+=limit;
+	bonus_points.total-=limit;
+
+	bonus_points.combat2+=limit;
+	bonus_points.total-=limit;
+
+	bonus_points.learn+=limit;
+	bonus_points.total-=limit;
+
+	bonus_points.util+=limit;
+	bonus_points.total-=limit;
+
+	if(bonus_points.total != 0){
+	  bonus_points.util+=bonus_points.total;
+	  bonus_points.total=0;
+	}
+
 	connected = CON_QCLASS;
 	sendClassList(FALSE);
       } else if(convertTo<int>(arg) < 1 || convertTo<int>(arg) > MAX_TRAITS){
@@ -2204,7 +2230,10 @@ int Descriptor::nanny(const char *arg)
 	  return FALSE;
       }
 
-      if(bonus_points.total != 0){
+      if(bonus_points.combat != 0 ||
+	 bonus_points.combat2 != 0 ||
+	 bonus_points.learn != 0 ||
+	 bonus_points.util != 0){
 	connected=CON_STATS_RULES;
 	sendStatRules(1);
       } else {
@@ -2297,7 +2326,7 @@ int Descriptor::nanny(const char *arg)
           break;
         }
       } else if (*buf == 'e' || *buf == 'E') {
-        free_stat = getFreeStat();
+        free_stat = getFreeStat(CON_STAT_COMBAT);
         if (free_stat != 0) {
           character->cls();
           writeToQ("You may only continue with 0 free points.\n\r");
@@ -2309,7 +2338,7 @@ int Descriptor::nanny(const char *arg)
           break;       
         }
       } else if (*buf == '/') {
-        free_stat = getFreeStat();
+        free_stat = getFreeStat(CON_STAT_COMBAT);
         if (free_stat != 0) {
           character->cls();
           writeToQ("You may only continue with 0 free points.\n\r");
@@ -2361,19 +2390,11 @@ int Descriptor::nanny(const char *arg)
         }
 
 	if(which == -1){
-	  if(((bonus_points.total + amt) < 0) ||
-	     ((bonus_points.combat - amt) < 0)){
-	    writeToQ("You don't have enough bonus points for that.\n\r");
-	    writeToQ("\n\rPress return....");
-	    break;
-	  }
-
 	  bonus_points.combat -= amt;
 	  bonus_points.total += amt;
 	} else {
 	  character->chosenStats.values[which] += amt;
 	}
-
       }
       if (connected == CON_STAT_COMBAT) {
         sendStatList(1, FALSE);
@@ -2411,7 +2432,7 @@ int Descriptor::nanny(const char *arg)
           break;
         }
       } else if (*buf == 'e' || *buf == 'E') {
-        free_stat = getFreeStat();
+        free_stat = getFreeStat(CON_STAT_COMBAT2);
 
         if (free_stat != 0) {
           character->cls();
@@ -2424,7 +2445,7 @@ int Descriptor::nanny(const char *arg)
           break;
         }
       } else if (*buf == '/') {
-        free_stat = getFreeStat();
+        free_stat = getFreeStat(CON_STAT_COMBAT2);
         if (free_stat != 0) {
           character->cls();
           writeToQ("You may only continue with 0 free points.\n\r");
@@ -2477,13 +2498,6 @@ int Descriptor::nanny(const char *arg)
           break;
         }
 	if(which == -1){
-	  if(((bonus_points.total + amt) < 0) ||
-	     ((bonus_points.combat2 - amt) < 0)){
-	    writeToQ("You don't have enough bonus points for that.\n\r");
-	    writeToQ("\n\rPress return....");
-	    break;
-	  }
-
 	  bonus_points.combat2 -= amt;
 	  bonus_points.total += amt;
 	} else {
@@ -2526,7 +2540,7 @@ int Descriptor::nanny(const char *arg)
           break;
         }
       } else if (*buf == 'e' || *buf == 'E') {
-        free_stat = getFreeStat();
+        free_stat = getFreeStat(CON_STAT_LEARN);
 
         if (free_stat != 0) {
           character->cls();
@@ -2539,7 +2553,7 @@ int Descriptor::nanny(const char *arg)
           break;
         }
       } else if (*buf == '/') {
-        free_stat = getFreeStat();
+        free_stat = getFreeStat(CON_STAT_LEARN);
         if (free_stat != 0) {
           character->cls();
           writeToQ("You may only continue with 0 free points.\n\r");
@@ -2592,13 +2606,6 @@ int Descriptor::nanny(const char *arg)
           break;
         }
 	if(which == -1){
-	  if(((bonus_points.total + amt) < 0) ||
-	     ((bonus_points.learn - amt) < 0)){
-	    writeToQ("You don't have enough bonus points for that.\n\r");
-	    writeToQ("\n\rPress return....");
-	    break;
-	  }
-
 	  bonus_points.learn -= amt;
 	  bonus_points.total += amt;
 	} else {
@@ -2645,7 +2652,7 @@ int Descriptor::nanny(const char *arg)
           break;
         }
       } else if (*buf == 'e' || *buf == 'E') {
-        free_stat = getFreeStat();
+        free_stat = getFreeStat(CON_STAT_UTIL);
 
         if (free_stat != 0) {
           character->cls();
@@ -2658,7 +2665,7 @@ int Descriptor::nanny(const char *arg)
           break;
         }
       } else if (*buf == '/') {
-        free_stat = getFreeStat();
+        free_stat = getFreeStat(CON_STAT_UTIL);
         if (free_stat != 0) {
           character->cls();
           writeToQ("You may only continue with 0 free points.\n\r");
@@ -2711,13 +2718,6 @@ int Descriptor::nanny(const char *arg)
           break;
         }
 	if(which == -1){
-	  if(((bonus_points.total + amt) < 0) ||
-	     ((bonus_points.util - amt) < 0)){
-	    writeToQ("You don't have enough bonus points for that.\n\r");
-	    writeToQ("\n\rPress return....");
-	    break;
-	  }
-
 	  bonus_points.util -= amt;
 	  bonus_points.total += amt;
 	} else {
@@ -3123,7 +3123,10 @@ void Descriptor::go_back_menu(connectStateT con_state)
     case CON_STAT_COMBAT:
       character->cls();
 
-      if(bonus_points.total != 0){
+      if(bonus_points.combat != 0 ||
+	 bonus_points.combat2 != 0 ||
+	 bonus_points.learn != 0 ||
+	 bonus_points.util != 0){
 	connected=CON_STATS_RULES;
 	sendStatRules(1);
       } else {
@@ -3163,7 +3166,10 @@ void Descriptor::go_back_menu(connectStateT con_state)
       connected = CON_STAT_UTIL;
       break;
     case CON_ENTER_DONE:
-      if(bonus_points.total != 0){
+      if(bonus_points.combat != 0 ||
+	 bonus_points.combat2 != 0 ||
+	 bonus_points.learn != 0 ||
+	 bonus_points.util != 0){
 	connected=CON_STATS_RULES;
 	sendStatRules(1);
       } else {
@@ -3513,21 +3519,12 @@ void Descriptor::sendStatList(int group, int)
       }
       writeToQ(buf);
 
-      if(ALLOW_TRAITS){
-	if (account->term == TERM_ANSI) {
-	  sprintf(buf,"e(%sX%s)%stra%s          [%3d]\n\r\n\r",
-		  cyan(), norm(), cyan(), norm(), bonus_points.total);
-	} else {
-	  sprintf(buf,"e(X)tra          [%3d]\n\r\n\r", bonus_points.total);
-	}
-	writeToQ(buf);
-      }
 
       writeToQ("(S)trength affects your ability to manipulate weight and your combat damage.\n\r");
       writeToQ("(B)rawn affects your ability to wear armor and your hardiness.\n\r");
       writeToQ("(C)onstitution affects your endurance and your life force.\n\r\n\r");
 
-      free_stat = getFreeStat();
+      free_stat = getFreeStat(CON_STAT_COMBAT);
 
       sprintf(buf, "You have %d free physical stat points.\n\r\n\r", free_stat);
       writeToQ(buf);
@@ -3588,23 +3585,12 @@ void Descriptor::sendStatList(int group, int)
       }
       writeToQ(buf);
 
-      if(ALLOW_TRAITS){
-	if (account->term == TERM_ANSI) {
-	  sprintf(buf,"e(%sX%s)%stra%s          [%3d]\n\r\n\r",
-		  cyan(), norm(), cyan(), norm(), bonus_points.total);
-	} else {
-	  sprintf(buf,"e(X)tra          [%3d]\n\r\n\r", bonus_points.total);
-	}
-	writeToQ(buf);
-	
-      }
-
       writeToQ("(I)ntelligence affects your maximum total learning.\n\r");
 
       writeToQ("(W)isdom affects how fast you will learn your skills.\n\r");
       writeToQ("(F)ocus affects the success rate of your skills.\n\r\n\r");
 
-      free_stat = getFreeStat();
+      free_stat = getFreeStat(CON_STAT_LEARN);
 
       sprintf(buf, "You have %d free mental stat points.\n\r\n\r", free_stat);
       writeToQ(buf);
@@ -3666,22 +3652,11 @@ void Descriptor::sendStatList(int group, int)
       }
       writeToQ(buf);
 
-
-      if(ALLOW_TRAITS){
-	if (account->term == TERM_ANSI) {
-	  sprintf(buf,"e(%sX%s)%stra%s          [%3d]\n\r\n\r",
-		  cyan(), norm(), cyan(), norm(), bonus_points.total);
-	} else {
-	  sprintf(buf,"e(X)tra          [%3d]\n\r\n\r", bonus_points.total);
-	}
-	writeToQ(buf);
-      }
-
       writeToQ("(P)erception affects your abilities to see and evaluate.\n\r");
       writeToQ("(C)harisma affects your ability to lead others including control pets.\n\r");
       writeToQ("(K)arma affects your luck.\n\r\n\r");
 
-      free_stat = getFreeStat();
+      free_stat = getFreeStat(CON_STAT_UTIL);
 
       sprintf(buf, "You have %d free utility stat points.\n\r\n\r", free_stat);
       writeToQ(buf);
@@ -3742,20 +3717,11 @@ void Descriptor::sendStatList(int group, int)
       }
       writeToQ(buf);
 
-      if(ALLOW_TRAITS){
-	if (account->term == TERM_ANSI) {
-	  sprintf(buf,"e(%sX%s)%stra%s          [%3d]\n\r\n\r",
-		  cyan(), norm(), cyan(), norm(), bonus_points.total);
-	} else {
-	  sprintf(buf,"e(X)tra          [%3d]\n\r\n\r", bonus_points.total);
-	}
-	writeToQ(buf);
-      }
-
       writeToQ("(D)exterity affects volume manipulation and offensive skill abilities.\n\r");
       writeToQ("(A)gility affects your defensive combat abilities.\n\r");
       writeToQ("(S)peed affects how fast you are able to do things.\n\r\n\r");
-      free_stat = getFreeStat();
+
+      free_stat = getFreeStat(CON_STAT_COMBAT2);
 
       sprintf(buf, "You have %d free physical stat points.\n\r\n\r", free_stat);
       writeToQ(buf);
@@ -3836,7 +3802,6 @@ void Descriptor::sendTraitsList()
   buf+="\n\r";
   buf+=fmt("Bonus points          [%3d]\n\r\n\r") % bonus_points.total;
 
-  buf+="There are advantages and disadvantages to each choice.\n\r";
   buf+=fmt("Type %s/%s to go back a menu to redo things.\n\r") % 
     red() % norm();
   buf+="(E)nd when you are done selecting traits.\n\r";
