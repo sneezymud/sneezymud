@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "stdsneezy.h"
+#include "obj_trash_pile.h"
 
 // what stage is moon in?  (0 - 31) 
 int moontype;
@@ -751,12 +752,36 @@ void doGlobalRoomStuff(void)
 {
   int i;
   TRoom *rp;
+  TTrashPile *pile;
+  int count=0;
+  TObj *o;
 
-  //weather noise
   for (i = 0; i < WORLD_SIZE; i++) {
     rp = real_roomp(i);
     if (!rp)
       continue;
+    
+    // trash pile creation
+    for(TThing *t=rp->getStuff();t;t=t->nextThing){
+      if((o=dynamic_cast<TObj *>(t)) && o->isTrash())
+	count++;
+
+      if(dynamic_cast<TTrashPile *>(t)){
+	count=0;
+	break;
+      }
+    }
+
+    if(count >= 9){
+      o=read_object(GENERIC_TRASH_PILE, VIRTUAL);
+      if(!(pile=dynamic_cast<TTrashPile *>(o))){
+	vlogf(LOG_BUG, "generic trash pile wasn't a trash pile!");
+	delete o;
+      } else 
+	*rp += *pile;
+    }
+
+    //weather noise
     if (rp->getWeather() == WEATHER_LIGHTNING) {
       if (!::number(0,9)) {
         TThing *in_room;

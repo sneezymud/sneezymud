@@ -942,8 +942,8 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
       }
 
       // trash piles
-      if(!::number(0,999) && obj->joinTrash())
-	continue;
+      if(!::number(0,999))
+	obj->joinTrash();
       
       TTrashPile *pile=dynamic_cast<TTrashPile *>(obj);
       if(pile){

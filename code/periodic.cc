@@ -225,12 +225,8 @@ int TBeing::riverFlow(int)
   return resCode;
 }
 
-bool TObj::joinTrash()
+bool TObj::isTrash()
 {
-  TTrashPile *pile=NULL;
-  TObj *o;
-
-  // check if this item is eligible to be trash
   if(isObjStat(ITEM_NOJUNK_PLAYER) || 
      !canWear(ITEM_TAKE) || 
      !roomp ||
@@ -240,21 +236,24 @@ bool TObj::joinTrash()
      isObjStat(ITEM_BURNING))
     return false;
 
-  // find a trash pile or form one if not found
+  return true;
+}
+
+bool TObj::joinTrash()
+{
+  TTrashPile *pile=NULL;
+
+  // check if this item is eligible to be trash
+  if(!isTrash())
+    return false;
+
+  // find a trash pile
   for(TThing *t=roomp->getStuff();t;t=t->nextThing){
     if((pile=dynamic_cast<TTrashPile *>(t)))
       break;
   }
-  if(!pile){
-    o=read_object(GENERIC_TRASH_PILE, VIRTUAL);
-    if(!(pile=dynamic_cast<TTrashPile *>(o))){
-      vlogf(LOG_BUG, "generic trash pile wasn't a trash pile!");
-      delete o;
-      return false;
-    }
-
-    *roomp += *pile;
-  }
+  if(!pile)
+    return false;
 
   sendrpf(COLOR_BASIC, roomp, "%s merges with %s.\n\r",
     sstring(this->getName()).cap().c_str(), pile->getName());
@@ -268,7 +267,7 @@ bool TObj::joinTrash()
   if(pile->roomp)
     pile->roomp->saveItems("");
   
-  return false;
+  return true;
 }
 
 
