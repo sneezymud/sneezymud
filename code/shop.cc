@@ -1916,13 +1916,6 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   if (cmd == CMD_EVALUATE) {
     return shopping_evaluate(arg, ch, myself, shop_nr);
   }
-  if (cmd == CMD_GIVE && arg) {
-    // log this but don't intercept it
-    // kinda klugey, whatever
-    myself->addToMoney(atoi(arg), GOLD_SHOP);
-    shoplog(shop_nr, ch, myself, "talens", atoi(arg), "giving");
-    myself->addToMoney(-atoi(arg), GOLD_SHOP);
-  }
 
 #if 0
   // the sweepers should be reasonably efficient about cleaning up, so this
@@ -2230,7 +2223,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	dbquery(NULL, "sneezy", "shop_keeper logs clear", "delete from shoplog where shop_nr=%i", shop_nr);
 	ch->sendTo("Done.\n\r");
       } else if(!strcmp(arg, " summaries")){
-	rc=dbquery(&res, "sneezy", "shop_keeper logs summaries", "select name, action, sum(talens) from shoplog where shop_nr=%i group by name, action", shop_nr);
+	rc=dbquery(&res, "sneezy", "shop_keeper logs summaries", "select name, action, sum(talens) tsum from shoplog where shop_nr=%i group by name, action order by tsum desc", shop_nr);
 
 	while((row=mysql_fetch_row(res))){
 	  sprintf(buf, "%-12.12s %-10.10s %8i\n\r", 
@@ -2242,7 +2235,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	//////////
 	sb += "\n\r";
 
-	rc=dbquery(&res, "sneezy", "shop_keeper logs summaries", "select item, action, sum(talens) from shoplog where shop_nr=%i group by item, action", shop_nr);
+	rc=dbquery(&res, "sneezy", "shop_keeper logs summaries", "select item, action, sum(talens) tsum from shoplog where shop_nr=%i group by item, action order by tsum desc", shop_nr);
 
 	while((row=mysql_fetch_row(res))){
 	  sprintf(buf, "%-32.32s %-10.10s %8i\n\r", 
@@ -2254,7 +2247,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	/////////
 	sb += "\n\r";
 
-	rc=dbquery(&res, "sneezy", "shop_keeper logs summaries", "select action, sum(talens) from shoplog where shop_nr=%i group by action", shop_nr);
+	rc=dbquery(&res, "sneezy", "shop_keeper logs summaries", "select action, sum(talens) tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
 
 	while((row=mysql_fetch_row(res))){
 	  sprintf(buf, "%-12.12s %8i\n\r", 
@@ -2483,7 +2476,7 @@ void bootTheShops()
     sd.open2=atoi(row[15]);
     sd.close2=atoi(row[16]);
 
-    if(owned_row && atoi(owned_row[0])==shop_nr){
+    if(owned_row && (atoi(owned_row[0])-1)==shop_nr){
       sd.profit_buy=atof(owned_row[1]);
       sd.profit_sell=atof(owned_row[2]);
       owned_row=mysql_fetch_row(owned_res);

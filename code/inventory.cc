@@ -1,24 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: inventory.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/10/07 06:37:27  peel
-// Closed containers that aren't set to be coseable can now be opened.
-//
-// Revision 1.2  1999/09/12 19:55:04  peel
-// Removed the volume penalty for having held items.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 //////////////////////////////////////////////////////////////////////
 //
 //    SneezyMUD - All rights reserved, SneezyMUD Coding Team
@@ -27,14 +6,11 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-extern "C" {
-#include <unistd.h>
-}
-
 #include "stdsneezy.h"
 #include "games.h"
 #include "statistics.h"
 #include "disc_looting.h"
+#include "shop.h"
 
 // watches rent in, rent out, dropped, etc
 #define VERBOSE_LOGS   1
@@ -43,7 +19,7 @@ extern "C" {
 
 void TThing::logMe(const TBeing *ch, const char *cmdbuf) const
 {
-  vlogf(-1, "%s%s%s %s.", 
+  vlogf(LOG_SILENT, "%s%s%s %s.", 
     (ch ? ch->getName() : ""),
     (ch ? " " : ""),
     cmdbuf, getName());
@@ -51,43 +27,12 @@ void TThing::logMe(const TBeing *ch, const char *cmdbuf) const
 
 void TObj::logMe(const TBeing *ch, const char *cmdbuf) const
 {
-  vlogf(-1, "%s%s%s %s. (max: %d, cur: %d)", 
+  vlogf(LOG_SILENT, "%s%s%s %s. (max: %d, cur: %d)", 
            (ch ? ch->getName() : ""),
            (ch ? " " : ""),
            cmdbuf, getName(),
            obj_index[getItemIndex()].max_exist,
            obj_index[getItemIndex()].number);
-}
-
-void TContainer::logMe(const TBeing *ch, const char *cmdbuf) const
-{
-  TObj::logMe(ch, cmdbuf);
-  
-  const char *last = NULL;
-  if(stuff)
-    last=stuff->getName();
-  int runcount=1;
-  TThing *t;
-  for (t = stuff; t; t = t->nextThing, ++runcount) {
-    if(!t->nextThing || strcmp(last, t->nextThing->getName())){
-      if(runcount>1){
-	vlogf(-1, "%s%s%s %s containing %s [%i].", 
-              (ch ? ch->getName() : ""),
-              (ch ? " " : ""),
-	      cmdbuf, getName(), t->getName(), runcount);
-      } else 
-	vlogf(-1, "%s%s%s %s containing %s.", 
-          (ch ? ch->getName() : ""),
-          (ch ? " " : ""),
-	  cmdbuf, getName(), t->getName());
-      runcount=0;
-      if(t->nextThing)
-        last=t->nextThing->getName();
-      else
-        last=t->getName();
-    } else
-      last=t->getName();
-  }
 }
 
 void TBeing::logItem(const TThing *obj, cmdTypeT cmd) const
@@ -191,7 +136,7 @@ int TPortal::openMe(TBeing *ch)
   }
   if (isPortalFlag( EX_TRAPPED) && ch->doesKnowSkill(SKILL_DETECT_TRAP)) {
     if (detectTrapObj(ch, this)) {
-      sprintf(buf, "You start to open $p, but then notice an insideous %s trap...", good_uncap(trap_types[getPortalTrapType()]).c_str());
+      sprintf(buf, "You start to open $p, but then notice an insidious %s trap...", good_uncap(trap_types[getPortalTrapType()]).c_str());
       act(buf, TRUE, ch, this, NULL, TO_CHAR);
       return FALSE;
     }
@@ -221,547 +166,6 @@ int TPortal::openMe(TBeing *ch)
 int TThing::openMe(TBeing *ch)
 {
   ch->sendTo("That's not a container.\n\r");
-  return FALSE;
-}
-
-int TRealContainer::openMe(TBeing *ch)
-{
-  char buf[256];
-
-  if (!isClosed()) {
-    ch->sendTo("But it's already open!\n\r");
-    return FALSE;
-  } else if (!isCloseable() && !isClosed()) {
-    ch->sendTo("You can't do that.\n\r");
-    return FALSE;
-  } else if (isContainerFlag(CONT_LOCKED)) {
-    ch->sendTo("It seems to be locked.\n\r");
-    return FALSE;
-  } else if (isContainerFlag(CONT_TRAPPED)) {
-    if (ch->doesKnowSkill(SKILL_DETECT_TRAP)) {
-      if (detectTrapObj(ch, this)) {
-        sprintf(buf, "You start to open $p, but then notice an insideous %s trap...",
-              good_uncap(trap_types[getContainerTrapType()]).c_str());
-        act(buf, TRUE, ch, this, NULL, TO_CHAR);
-        return FALSE;
-      }
-    }
-    act("You open $p.", TRUE, ch, this, NULL, TO_CHAR);
-    act("$n opens $p.", TRUE, ch, this, 0, TO_ROOM);
-    remContainerFlag(CONT_CLOSED);
-
-    int rc = ch->triggerContTrap(this);
-    int res = 0;
-    if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-      ADD_DELETE(res, DELETE_THIS);
-    }
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      ADD_DELETE(res, DELETE_VICT);
-    }
-    return res;
-  } else {
-    remContainerFlag(CONT_CLOSED);
-    act("You open $p.", TRUE, ch, this, NULL, TO_CHAR);
-    act("$n opens $p.", TRUE, ch, this, 0, TO_ROOM);
-    return TRUE;
-  }
-}
-
-void TThing::getMeFrom(TBeing *ch, TThing *t)
-{
-}
-
-void TPCorpse::getMeFrom(TBeing *ch, TThing *t)
-{
-  if (!checkOnLists()) {
-//    vlogf(5, "Something wrong with get from a corpse, corpse not set right %s (%s).", ch->getName(), getName());
-  } else {
-    if (stuff)
-      saveCorpseToFile();
-    else
-      removeCorpseFromList();
-  }
-}
-
-int TThing::getMe(TBeing *ch, TThing *sub)
-{
-  if (sub)
-    sub->getMeFrom(ch, this);
-
-  return FALSE;
-}
-
-int TTrap::getMe(TBeing *ch, TThing *sub)
-{
-  // do baseclass stuff for recusivity
-  int rc = TObj::getMe(ch, sub);
-  if (rc)
-    return rc;
-
-  extraDescription *ed, *ed2, *prev;
-
-  if (sub)
-    return FALSE;
-
-  // erase the trap setter
-  for (ed = ex_description, prev = ed; ed; ed = ed2) {
-    ed2 = ed->next;
-    if (!strcmp(ed->keyword, TRAP_EX_DESC)) {
-      if (ed == ex_description) {
-        // it is the first extra desc, move all pointers to next and delete
-        ex_description = ed2;
-        prev = ex_description;
-        delete ed;
-      } else {
-        // migrate prev's pointer to my next and delete me
-        prev->next = ed2;
-        delete ed;
-      }
-    } else
-      prev = ed;
-  }
-  return FALSE;
-}
-
-// procedures related to get 
-// might return DELETE_THIS for ch
-// might return DELETE_ITEM for obj
-// might return DELETE_VICT for sub
-// returns FALSE if get failed
-int get(TBeing *ch, TThing *ttt, TThing *sub)
-{
-  int rc = 0;
-
-  TMonster *monster = dynamic_cast<TMonster *>(ch);
-
-  if (monster && (monster->in_room == ROOM_DONATION))
-    return FALSE;
-
-  // redundant checks also done in doGet but allows code to call get() directly
-  if (!ch->hasHands() && !ch->isImmortal()) {
-    ch->sendTo("How do you expect to do that without any hands?!?\n\r");
-    return FALSE;
-  }
-  TObj *obj = dynamic_cast<TObj *>(ttt);
-  if (!obj) {
-    if (!ch->canGet(ttt, SILENT_NO))
-      return FALSE;
-  }
-  if (obj && obj->isObjStat(ITEM_ATTACHED)) {
-    if (!ch->isImmortal()) {
-      if (obj->canWear(ITEM_TAKE)) {
-        if (obj->riding) { 
-          ch->sendTo(COLOR_OBJECTS, "%s is attached to %s and is not currently getable.\n\r", obj->getName(), obj->riding->getName());
-        } else 
-          ch->sendTo(COLOR_OBJECTS, "%s is attached and is not currently getable.\n\r", obj->getName());
-      } else 
-        ch->sendTo(COLOR_OBJECTS, "%s is attached and is not getable.\n\r", obj->getName());
-      
-      return FALSE;
-    }
-  }
-
-  // this is mostly here to stop auto-loot kicking in while 'zerking
-  // do allow them to get a weapon if necessary (disarmed)
-  if (ch->isCombatMode(ATTACK_BERSERK)) {
-    if (sub || !dynamic_cast<TBaseWeapon *>(ttt)) {
-      ch->sendTo(COLOR_BASIC, "<r>You are way too blood crazed at the moment to be getting stuff.<1>\n\r");
-      return FALSE;
-    }
-  }
-
-  if (ch->getPosition() == POSITION_RESTING) {
-    ch->sendTo("You can't quite reach from here, so you sit up.\n\r");
-    ch->doSit("");
-  }
-
-  // this handles tables
-  if (!sub)
-    sub = ttt->riding;
-  else {
-    if (ttt->parent && ttt->parent != sub) {
-      // very bad
-      vlogf(10, "get(): obj (%s) gotten with parent (%s) and sub (%s)",
-          ttt->getName(), ttt->parent->getName(), sub->getName());
-    }
-  }
-
-  if (sub) {
-    if (sub->getObjFromMeCheck(ch)) 
-      return FALSE;
-    
-    // getting from a bag ought to cause some loss of attacks
-    if (ch->fight())
-      ch->cantHit += ch->loseRound(1 + ttt->getVolume() / 2250);
-
-    rc = ch->checkForInsideTrap(sub);
-    if (IS_SET_DELETE(rc, DELETE_ITEM | DELETE_THIS))
-      return DELETE_VICT | DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_ITEM))
-      return DELETE_VICT;
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (rc)
-      return FALSE;
-  
-    rc = ch->checkForGetTrap(ttt);
-    if (IS_SET_DELETE(rc, DELETE_ITEM | DELETE_THIS))
-      return DELETE_ITEM | DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_ITEM))
-      return DELETE_ITEM;
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (rc)
-      return FALSE;
-  
-    sub->getObjFromMeText(ch, ttt);
-
-    ch->logItem(ttt, CMD_GET);
-    ch->aiGet(ttt);
-    rc = ch->genericItemCheck(ttt);
-    if (IS_SET_DELETE(rc, DELETE_ITEM | DELETE_THIS))
-      return DELETE_ITEM | DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_ITEM))
-      return DELETE_ITEM;
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-
-  } else {
-    if (ttt->inRoom() == ROOM_NOWHERE)
-      ttt->setRoom(ch->inRoom());
-
-    rc = ch->checkForGetTrap(ttt);
-    if (IS_SET_DELETE(rc, DELETE_ITEM) && IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS | DELETE_ITEM;
-    if (IS_SET_DELETE(rc, DELETE_ITEM))
-      return DELETE_ITEM;
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (rc)
-      return FALSE;
-
-    --(*ttt);
-    *ch += *ttt;
-    TObj *tobj = dynamic_cast<TObj *>(ttt);
-    if (tobj && tobj->isObjStat(ITEM_ATTACHED)) {
-      act("You detach $p from its place and get it.", 0, ch, ttt, 0, TO_CHAR);
-      act("$n detachs $p from its place and gets it.", 1, ch, ttt, 0, TO_ROOM);
-    } else {
-      act("You get $p.", 0, ch, ttt, 0, TO_CHAR);
-      act("$n gets $p.", 1, ch, ttt, 0, TO_ROOM);
-    }
-    ch->logItem(ttt, CMD_GET);
-    ch->aiGet(ttt);
-    rc = ch->genericItemCheck(ttt);
-    if (IS_SET_DELETE(rc, DELETE_ITEM) ||
-        IS_SET_DELETE(rc, DELETE_THIS)) {
-      return rc;
-    }
-  }
-
-  rc = ttt->getMe(ch, sub);
-  if (IS_SET_DELETE(rc, DELETE_THIS)) 
-    return DELETE_ITEM;
-  else if (IS_SET_DELETE(rc, DELETE_VICT))
-    return DELETE_THIS;
-  else if (rc)  // stop parsing further
-    return TRUE;
-
-
-  rc = ttt->checkSpec(ch, CMD_OBJ_GOTTEN, NULL, sub);
-  if (IS_SET_DELETE(rc, DELETE_ITEM))
-    return DELETE_VICT;  // nuke sub
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_ITEM;  // nuke ttt
-  if (IS_SET_DELETE(rc, DELETE_VICT))
-    return DELETE_THIS;  // nuke ch
-  if (rc)
-    return TRUE;
-
-  return TRUE;
-}
-
-// might return DELETE_THIS (for traps)
-int TBeing::doGet(const char *argument)
-{
-  char arg1[160], arg2[160], capbuf[256], newarg[100];
-  char *tmp_desc = NULL, *tptr;
-  TObj *sub;
-  TThing *t;
-  bool found = FALSE, autoloot = FALSE;
-  int rc;
-  enum getTypeT {
-      GETNULL  ,
-      GETALL   ,
-      GETOBJ   ,
-      GETALLALL,
-      GETALLOBJ,
-      GETOBJALL,
-      GETOBJOBJ
-  };
-
-  int p;
-  getTypeT type = GETALLALL;
-
-  if((tptr=strstr(argument, "-autoloot"))!=NULL){
-    autoloot=TRUE;
-    *tptr='\0';
-  }
-
-  argument_interpreter(argument, arg1, arg2);
-
-  TMonster *monster = dynamic_cast<TMonster *>(this);
-
-  if (monster && (monster->in_room == ROOM_DONATION))
-    return FALSE;
-
-  if (checkHearts()) {
-    if (gHearts.get_pass(this, arg1))
-      return FALSE;
-  }
-  if (checkCrazyEights()) {
-    if (gEights.get(this, arg1))
-      return FALSE;
-  }
-  if (!hasHands() && !isImmortal()) {
-    sendTo("How do you expect to do that without any hands?!?\n\r");
-    return FALSE;
-  }
-  if (!*arg1)
-    type = GETNULL;
-
-  if (*arg1 && !*arg2) {
-    if (!strcasecmp(arg1, "all"))
-      type = GETALL;
-    else
-      type = GETOBJ;
-  }
-  if (*arg1 && *arg2) {
-    if (!strcasecmp(arg1, "all")) {
-      if (!strcasecmp(arg2, "all"))
-        type = GETALLALL;
-      else
-        type = GETALLOBJ;
-    } else {
-      if (!strcasecmp(arg2, "all"))
-        type = GETOBJALL;
-      else
-        type = GETOBJOBJ;
-    }
-  }
-  switch (type) {
-    case GETNULL:
-      sendTo("Get what?\n\r");
-      break;
-    case GETALL:
-      if (!thingsInRoomVis(this, roomp)) {
-        sendTo("You don't see anything to get!\n\r");
-        return FALSE;
-      }
-      if (getPosition() <= POSITION_SITTING) {
-        sendTo("You need to be standing to do that.\n\r");
-        if (!awake())
-          return FALSE;   // sleeping
-        doStand();
-
-        if (fight())
-          return FALSE;  // don't fall through
-      }
-      if (riding) {
-        sendTo("The things are spread around too much to get from horseback!\n\r");
-        return FALSE;
-      }
-      sendTo("You start picking up things from the room.\n\r");
-      act("$n starts picking up things from the room.",TRUE, this, 0, 0, TO_ROOM);
-      start_task(this, roomp->stuff, roomp, TASK_GET_ALL, "", 350, in_room, 0, 0, 0);
-
-      // this is a kludge, task_get still has a tiny delay on it
-      // this dumps around it and goes right to the guts
-      rc = (*(tasks[TASK_GET_ALL].taskf))
-          (this, CMD_TASK_CONTINUE, "", 0, roomp, 0);
-      if (IS_SET_ONLY(rc, DELETE_THIS)) 
-        return DELETE_THIS;
-      
-
-      break;
-    case GETOBJ:
-      if (!thingsInRoomVis(this, roomp)) {
-        sendTo("You don't see anything to get!\n\r");
-        return FALSE;
-      }
-      if (getall(arg1, newarg)) {
-        if (!searchLinkedListVis(this, newarg, roomp->stuff)) {
-          sendTo("There are no \"%s\"'s visible in this room.\n\r", newarg);
-          return FALSE;    
-        }
-        if (getPosition() <= POSITION_SITTING) {
-          sendTo("You need to be standing to do that.\n\r");
-          if (!awake())
-            return FALSE;   // sleeping
-          doStand();
-  
-          if (fight())
-            return FALSE;  // don't fall through
-        }
-        if (dynamic_cast<TBeing *>(riding)) {
-          sendTo("You can't get things from the room while mounted!\n\r");
-          return FALSE;
-        }
-        sendTo("You start picking up things from the room.\n\r");
-        act("$n starts picking up things from the room.",TRUE, this, 0, 0, TO_ROOM);
-        start_task(this, roomp->stuff, roomp, TASK_GET_ALL, newarg, 350, in_room, 0, 0 ,0);
-        // this is a kludge, task_get still has a tiny delay on it
-        // this dumps around it and goes right to the guts
-        rc = (*(tasks[TASK_GET_ALL].taskf))
-            (this, CMD_TASK_CONTINUE, "", 0, roomp, 0);
-        if (IS_SET_ONLY(rc, DELETE_THIS)) {
-          return DELETE_THIS;
-        }
-
-        break;
-      } else if ((p = getabunch(arg1, newarg))) {
-        if (!searchLinkedListVis(this, newarg, roomp->stuff)) {
-          sendTo("There are no \"%s\"'s visible in this room.\n\r", newarg);
-          return FALSE;
-        }
-        if (getPosition() <= POSITION_SITTING) {
-          sendTo("You need to be standing to do that.\n\r");
-          if (!awake())
-            return FALSE;   // sleeping
-          doStand();
- 
-          if (fight())
-            return FALSE;  // don't fall through
-        }
-        if (dynamic_cast<TBeing *>(riding)) {
-          sendTo("You can't get things from the room while mounted!\n\r");
-          return FALSE;
-        }
-        sendTo("You start picking up things from the room.\n\r");
-        act("$n starts picking up things from the room.",TRUE, this, 0, 0, TO_ROOM);
-        start_task(this, roomp->stuff, roomp, TASK_GET_ALL, newarg, 350, in_room, 0, p + 1, 0);
-        // this is a kludge, task_get still has a tiny delay on it
-        // this dumps around it and goes right to the guts
-        rc = (*(tasks[TASK_GET_ALL].taskf))
-            (this, CMD_TASK_CONTINUE, "", 0, roomp, 0);
-        if (IS_SET_ONLY(rc, DELETE_THIS)) {
-          return DELETE_THIS;
-        }
-
-        break;
-      }
-      if ((t = searchLinkedListVis(this, arg1, roomp->stuff))) {
-        if (canGet(t, SILENT_NO)) {
-          rc = get(this,t, NULL);
-          // get all has no lag, is this needed?
-          // addToWait(ONE_SECOND);
-          if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-            delete t;
-            t = NULL;
-          }
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            return DELETE_THIS;
-          }
-          found = TRUE;
-        }
-      } else {
-        if ((tmp_desc = roomp->ex_description->findExtraDesc(arg1)))
-          sendTo("You can't get a %s.\n\r", arg1);
-        else
-          sendTo("You don't see a %s here.\n\r", arg1);
-      }
-      break;
-    case GETALLALL:
-      sendTo("You must be joking?!\n\r");
-      break;
-    case GETALLOBJ:
-      if ((sub = get_obj_vis_accessible(this, arg2))) {
-        if (getPosition() <= POSITION_SITTING) {
-          sendTo("You need to be standing to do that.\n\r");
-          if (!awake())
-            return FALSE;   // sleeping
-          doStand();
- 
-          if (fight())
-            return FALSE;  // don't fall through
-        }
-        if (dynamic_cast<TBeing *>(riding) &&
-             (sub->inRoom() != ROOM_NOWHERE)) {
-          act("You can't get things from $p while mounted!", 
-               FALSE, this, sub, 0, TO_CHAR);
-          return FALSE;
-        }
-        rc = sub->getAllFrom(this, argument);
-        if (IS_SET_DELETE(rc, DELETE_VICT))
-          return DELETE_THIS;
-      } else {
-	if(autoloot==TRUE)
-	  sendTo("You do not see or have the corpse.\n\r");
-	else 
-	  sendTo("You do not see or have the %s.\n\r", arg2);
-        break;
-      }
-      break;
-    case GETOBJALL:
-      sendTo("You can't take a thing from multiple containers.\n\r");
-      break;
-    case GETOBJOBJ:
-      if ((sub = get_obj_vis_accessible(this, arg2))) {
-        rc = sub->getObjFrom(this, arg1, arg2);
-        if (IS_SET_DELETE(rc, DELETE_VICT))
-          return DELETE_THIS;
-        else if (rc)
-          return TRUE;
-      } else {
-	if(autoloot==TRUE)
-	  sendTo("You do not see or have the corpse.\n\r");
-	else
-	  sendTo("You do not see or have the %s.\n\r", arg2);
-        break;
-      }
-      if ((t = searchLinkedListVis(this, arg1, sub->stuff))) {
-        if (canGet(t, SILENT_NO)) {
-          rc = get(this, t, sub);
-          addToWait(ONE_SECOND);
-          if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-            delete t;
-            t = NULL;
-          }
-          if (IS_SET_DELETE(rc, DELETE_VICT)) {
-            delete sub;
-            sub = NULL;
-          }
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            return DELETE_THIS;
-          }
-          found = TRUE;
-        }
-      } else if ((t = get_thing_on_list_vis(this, arg1, sub->rider))) {
-        if (canGet(t, SILENT_NO)) {
-          rc = get(this, t, sub);
-          addToWait(ONE_SECOND);
-          if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-            delete t;
-            t = NULL;
-          }
-          if (IS_SET_DELETE(rc, DELETE_VICT)) {
-            delete sub;
-            sub = NULL;
-          }
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            return DELETE_THIS;
-          }
-          found = TRUE;
-        }
-      } else {
-        strcpy(capbuf, sub->getName());
-        sendTo(COLOR_OBJECTS, "%s does not contain the %s.\n\r", cap(capbuf), arg1);
-      }
-      break;
-  }
-  if (found == TRUE)
-    doSave(SILENT_YES);
-
   return FALSE;
 }
 
@@ -888,9 +292,14 @@ int TBeing::doDrop(const char *argument, TThing *tng, bool forcedDrop)
 
     act("$n drops some money.", FALSE, this, 0, 0, TO_ROOM);
     if (!(money = create_money(amount))) {
-      vlogf(9, "Problem creating money");
+      vlogf(LOG_BUG, "Problem creating money");
       return FALSE;
     }
+    TPerson *tP;
+
+    if ((tP = dynamic_cast<TPerson *>(this)))
+      money->checkOwnersList(tP);
+
     *roomp += *money;
     addToMoney(-amount, GOLD_INCOME);
 
@@ -1061,7 +470,7 @@ int TBeing::doDrop(const char *argument, TThing *tng, bool forcedDrop)
   }
 }
 
-int TThing::putMeInto(TBeing *ch, TRealContainer *sub)
+int TThing::putMeInto(TBeing *ch, TOpenContainer *sub)
 {
   if (dynamic_cast<TSpellBag *>(sub)) {
     act("Sorry, $p can only hold spell components.",
@@ -1102,7 +511,7 @@ int put(TBeing *ch, TThing *obj, TThing *sub)
       
   } else {
     // no sub specified
-    vlogf(10, "put() called with no target.");
+    vlogf(LOG_BUG, "put() called with no target.");
     return 2;
   }
 }
@@ -1178,7 +587,28 @@ int TBeing::doPut(const char *argument)
         num = 1;
 
       if (!strcmp(arg1, "all")) {
-        if ((sub = get_obj_vis_accessible(this, arg2))) {
+     
+
+	sub = get_obj_vis_accessible(this, arg2);
+	
+	if (!sub) {
+	  TObj *tmpobj;
+	  TBeing *horse;
+	  int bits = generic_find(arg2, FIND_CHAR_ROOM, this, &horse, &tmpobj);
+	  if (bits)
+	    if (horse->isRideable() && horse->equipment[WEAR_BACK]) {
+	      TBaseContainer *saddlebag = dynamic_cast<TBaseContainer *>(horse->equipment[WEAR_BACK]);
+	      if (saddlebag && saddlebag->isSaddle()) {
+		sub = dynamic_cast<TObj *>(saddlebag);
+		act("You reach over to $N and open the $o on $s back.",FALSE,this,saddlebag,horse,TO_CHAR);
+		act("$n reaches over to $N and opens the $o on $s back.",FALSE,this,saddlebag,horse,TO_NOTVICT);
+		act("$n reaches over to you and opens the $o on your back.",FALSE,this,saddlebag,horse,TO_VICT);
+	      }
+	    }
+	}
+
+        if (sub) {
+
           for (t = stuff, i = 0; t; t = t2) {
             t2 = t->nextThing;
             if (t == sub || !canSee(t)) {
@@ -1222,7 +652,7 @@ int TBeing::doPut(const char *argument)
           sendTo("You don't have the '%s'.\n\r", arg1);
           return FALSE;
         }
-
+	bool firsttimeround=TRUE;
         for (t = stuff, i = 0, j = 1; t && i < num; t = t2) {
           t2 = t->nextThing;
           obj = dynamic_cast<TObj *>(t);
@@ -1231,8 +661,28 @@ int TBeing::doPut(const char *argument)
               j++;
               continue;
             }
-            if ((sub = dynamic_cast<TObj *>( get_obj_vis_accessible(this, arg2)))) {
-              rc = put(this, obj, sub);
+	    sub = dynamic_cast<TObj *>( get_obj_vis_accessible(this, arg2));
+	    if (!sub) {
+	      TObj *tmpobj;
+	      TBeing *horse;
+	      int bits = generic_find(arg2, FIND_CHAR_ROOM, this, &horse, &tmpobj);
+	      if (bits)
+		if (horse->isRideable() && horse->equipment[WEAR_BACK]) {
+		  TBaseContainer *saddlebag = dynamic_cast<TBaseContainer *>(horse->equipment[WEAR_BACK]);
+		  if (saddlebag && saddlebag->isSaddle()) {
+		    sub = dynamic_cast<TObj *>(saddlebag);
+		    if (firsttimeround) {
+		      act("You reach over to $N and open the $o on $s back.",FALSE,this,saddlebag,horse,TO_CHAR);
+		      act("$n reaches over to $N and opens the $o on $s back.",FALSE,this,saddlebag,horse,TO_NOTVICT);
+		      act("$n reaches over to you and opens the $o on your back.",FALSE,this,saddlebag,horse,TO_VICT);
+		      firsttimeround = FALSE;
+		    }
+		  }
+		}
+	    }
+	  
+	    if (sub) {
+	      rc = put(this, obj, sub);
               i++;  // acknowledge the attempt
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete obj;
@@ -1276,11 +726,11 @@ int TBeing::doGiveObj(TBeing *victim, TThing *obj, giveTypeT flags)
   char arg[256]; 
  
   if (!victim || !obj) {
-    vlogf(5, "Bad give in doGiveObj");
+    vlogf(LOG_BUG, "Bad give in doGiveObj");
     return FALSE;
   }
   if (!*victim->name) {
-    vlogf(5, "Bad give names in doGiveObj");
+    vlogf(LOG_BUG, "Bad give names in doGiveObj");
     return FALSE;
   }
 
@@ -1306,6 +756,14 @@ static int genericGiveDrop(TBeing *ch, TObj *obj)
   rc = ch->doDrop("", obj);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
+
+  // Yet another kludge, maybe mob can not see the obj to drop it
+  // (which might explain why the give failed too...)
+  if (obj->parent == ch) {
+    // we still have the obj
+    (*obj)--;
+    *ch->roomp += *obj;
+  }
   return FALSE;
 }
 
@@ -1388,14 +846,30 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
     saveChar(ROOM_AUTO_RENT);
     vict->saveChar(ROOM_AUTO_RENT);
     if ((vict->getMoney() > 500000) && (amount > 100000))
-      vlogf(10,"%s gave %d talens to %s.", getName(), amount, vict->getName());
+      vlogf(LOG_MISC,"%s gave %d talens to %s.", getName(), amount, vict->getName());
 
     if (!vict->isPc()) {
+      // log if it's an owned shopkeeper
+      if(vict->spec &&
+	 !strcmp(mob_specials[GET_MOB_SPE_INDEX(vict->spec)].name, 
+		 "shop keeper")){
+	unsigned int shop_nr;
+	for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (vict)->number); shop_nr++);
+	
+	if(shopOwned(shop_nr)){
+	  shoplog(shop_nr, this, dynamic_cast<TMonster *>(vict), "talens", amount, "giving");
+	}
+      }
+      
+      // check reponses
       sprintf(buf, "%d", amount);
       rc = dynamic_cast<TMonster *>(vict)->checkResponses(this, NULL, buf, CMD_GIVE);
+      TMonster *tMob;
+
       if (rc) {
         // giving money is a trigger, delete the money
         vict->addToMoney(-amount, GOLD_XFER);
+
 
         // fix the statistics
         // add it back to xfer, take it out out reqshop
@@ -1404,8 +878,26 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
           gold_statistics[GOLD_SHOP_RESPONSES][GetMaxLevel()-1] -= amount;
           // since -amount < 0, I need do nothing to gold_positive
         }
-        // vict is known to be an NPC, so need not worry about statistics there
+      } else if (!vict->isPc() && (tMob = dynamic_cast<TMonster *>(vict)) &&
+                   (mob_index[tMob->getMobIndex()].max_exist > 1) &&
+                   !IS_SET(tMob->specials.act, ACT_SENTINEL)) {
+          // vict is known to be an NPC, so need not worry about statistics
+          // Let's have a little fun.
+          // If mob and isn't sentinal...
+
+          if ((amount           >= (vict->GetMaxLevel() * 1000)) ||
+              (vict->getMoney() >= (vict->GetMaxLevel() * 1000))) {
+            act("$N stares at $n and smiles.",
+                TRUE, this, NULL, vict, TO_ROOM);
+            act("$N stares at you and smiles, I think they like you.",
+                TRUE, this, NULL, vict, TO_CHAR);
+            act("$n leaves to make use of their new found cash.",
+                TRUE, vict, NULL, NULL, TO_ROOM);
+
+            ADD_DELETE(rc, DELETE_THIS);
+          }
       }
+
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete vict;
         vict = NULL;
@@ -1416,8 +908,10 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
         delete obj;
         obj = NULL;
         doSave(SILENT_YES);
+
         if (vict)
           vict->doSave(SILENT_YES);
+
         REM_DELETE(rc, DELETE_ITEM);
         return rc;
       }
@@ -1425,13 +919,17 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
         return DELETE_THIS;
     }
 
-    rc = vict->checkSpec(this, CMD_MOB_GIVEN_COINS, arg, (TObj *) amount);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      delete vict;
-      vict = NULL;
+    if (vict) {
+      rc = vict->checkSpec(this, CMD_MOB_GIVEN_COINS, arg, (TObj *) amount);
+
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        delete vict;
+        vict = NULL;
+      }
+
+      if (IS_SET_DELETE(rc, DELETE_VICT))
+        return DELETE_THIS;
     }
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_THIS;
     return FALSE;
   } else {
     argument = one_argument(argument, vict_name);
@@ -1578,7 +1076,7 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
               return DELETE_THIS;
           }
         } else 
-          vlogf(5, "Bad flags in doGive (%s)", getName());
+          vlogf(LOG_BUG, "Bad flags in doGive (%s)", getName());
         
         doSave(SILENT_YES);
         if (vict)
@@ -1589,10 +1087,10 @@ int TBeing::doGive(const char *argument, giveTypeT flags)
         if (obj->obj_flags.cost >= 100) {
           switch (CheckStorageChar(this, vict)) {
             case 1:
-              vlogf(3, "Storage Character %s giving %s to %s",getName(),obj->getName(),vict->getName());
+              vlogf(LOG_MISC, "Storage Character %s giving %s to %s",getName(),obj->getName(),vict->getName());
               break;
             case 2:
-              vlogf(3, "Storage Character %s w/low KAR giving %s to %s w/high KAR",getName(), obj->getName(),vict->getName());
+              vlogf(LOG_MISC, "Storage Character %s w/low KAR giving %s to %s w/high KAR",getName(), obj->getName(),vict->getName());
               break;
             case 0:
             default:
@@ -1835,100 +1333,11 @@ int TObj::getAllFrom(TBeing *ch, const char *argument)
   return FALSE;
 }
 
-int TContainer::getAllFrom(TBeing *ch, const char *argument)
-{
-  int rc;
-
-  act("You start getting items from $p.", TRUE, ch, this, NULL, TO_CHAR);
-  act("$n starts getting items from $p.", TRUE, ch, this, NULL, TO_ROOM);
-  start_task(ch, ch->roomp->stuff, ch->roomp, TASK_GET_ALL, argument, 350, ch->in_room, 0, 0, 0);
-  // this is a kludge, task_get still has a tiny delay on it
-  // this dumps around it and goes right to the guts
-  rc = (*(tasks[TASK_GET_ALL].taskf))
-        (ch, CMD_TASK_CONTINUE, "", 0, ch->roomp, 0);
-  if (IS_SET_DELETE(rc, DELETE_THIS)) 
-    return DELETE_VICT;
-  return FALSE;
-}
-
 // return TRUE will stop the get
 int TObj::getObjFrom(TBeing *ch, const char *, const char *)
 {
   act("$p is not a container.", FALSE, ch, this, 0, TO_CHAR);
   return TRUE;
-}
-
-int TContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
-{
-  char newarg[100], capbuf[256];
-  int rc;
-  int p;
-
-  if (getall(arg1, newarg)) {
-    if (!searchLinkedListVis(ch, newarg, stuff)) {
-      ch->sendTo(COLOR_OBJECTS, "There are no \"%s\"'s visible in %s.\n\r",newarg, getName());
-      return TRUE;
-    }
-    if (ch->getPosition() <= POSITION_SITTING) {
-      ch->sendTo("You need to be standing to do that.\n\r");
-      if (!ch->awake())
-        return TRUE;   // sleeping
-      ch->doStand();
- 
-      if (ch->fight())
-        return TRUE;  // don't fall through
-    }
-    if (dynamic_cast<TBeing *>(ch->riding) && (in_room != ROOM_NOWHERE)) {
-      act("You can't get things from $p while mounted!", 
-             FALSE, ch, this, 0, TO_CHAR);
-      return TRUE;
-    }
-    sprintf(capbuf, "%s %s", newarg, arg2);
-    act("You start getting items from $p.", TRUE, ch, this, NULL, TO_CHAR);
-    act("$n starts getting items from $p.", TRUE, ch, this, NULL, TO_ROOM);
-
-    start_task(ch, ch->roomp->stuff, ch->roomp, TASK_GET_ALL, capbuf, 350, ch->in_room, 1, 0, 0);
-    // this is a kludge, task_get still has a tiny delay on it
-    // this dumps around it and goes right to the guts
-    rc = (*(tasks[TASK_GET_ALL].taskf))
-          (ch, CMD_TASK_CONTINUE, "", 0, ch->roomp, 0);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      return DELETE_VICT;
-    }
-    return TRUE;
-  } else if ((p = getabunch(arg1, newarg))) {
-    if (!searchLinkedListVis(ch, newarg, stuff)) {
-      ch->sendTo(COLOR_OBJECTS, "There are no \"%s\"'s visible in %s.\n\r",newarg, getName());
-      return TRUE;
-    }
-    if (ch->getPosition() <= POSITION_SITTING) {
-      ch->sendTo("You need to be standing to do that.\n\r");
-      if (!ch->awake())
-        return TRUE;   // sleeping
-      ch->doStand();
- 
-      if (ch->fight())
-        return TRUE;  // don't fall through
-    }
-    if (dynamic_cast<TBeing *>(ch->riding) && (ch->in_room != ROOM_NOWHERE)) {
-      act("You can't get things from $p while mounted!", 
-           FALSE, ch, this, 0, TO_CHAR);
-      return TRUE;
-    }
-    sprintf(capbuf, "%s %s", newarg, arg2);
-    act("You start getting items from $p.", TRUE, ch, this, NULL, TO_CHAR);
-    act("$n starts getting items from $p.", TRUE, ch, this, NULL, TO_ROOM);
-    start_task(ch, ch->roomp->stuff, ch->roomp, TASK_GET_ALL, capbuf, 350, ch->in_room, 0, p + 1, 0);
-    // this is a kludge, task_get still has a tiny delay on it
-    // this dumps around it and goes right to the guts
-    rc = (*(tasks[TASK_GET_ALL].taskf))
-        (ch, CMD_TASK_CONTINUE, "", 0, ch->roomp, 0);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      return DELETE_VICT;
-    }
-    return TRUE;
-  }
-  return FALSE;
 }
 
 int TTable::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
@@ -2011,28 +1420,7 @@ int TThing::putSomethingInto(TBeing *ch, TThing *)
   return 2;
 }
 
-int TRealContainer::putSomethingInto(TBeing *ch, TThing *obj)
-{
-  int rc = obj->putSomethingIntoContainer(ch, this);
-
-  int ret = 0;
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    ret |= DELETE_ITEM;
-  if (IS_SET_DELETE(rc, DELETE_ITEM))
-    ret |= DELETE_THIS;
-  if (IS_SET_DELETE(rc, DELETE_VICT))
-    ret |= DELETE_VICT;
-
-  return ret;
-}
-
-int TContainer::putSomethingIntoContainer(TBeing *ch, TRealContainer *cont)
-{
-  act("Containers can't hold other containers.", FALSE, ch, cont,this, TO_CHAR);
-  return FALSE;
-}
-
-int TObj::putSomethingIntoContainer(TBeing *ch, TRealContainer *cont)
+int TObj::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
 {
   if (isObjStat(ITEM_NODROP)) {
     act("You can't let go of $N, it must be CURSED!", 
@@ -2046,7 +1434,7 @@ int TObj::putSomethingIntoContainer(TBeing *ch, TRealContainer *cont)
 // DELETE_THIS = this
 // DELETE_VICT = ch
 // DELETE_ITEM = cont
-int TThing::putSomethingIntoContainer(TBeing *ch, TRealContainer *cont)
+int TThing::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
 {
   int rc;
 
@@ -2253,37 +1641,12 @@ void TQuiver::putMoneyInto(TBeing *ch, int)
   ch->sendTo("You can't put money into that.\n\r");
 }
 
-void TRealContainer::putMoneyInto(TBeing *ch, int amount)
-{
-  if (isClosed()) {
-    act("$p is closed.", FALSE, ch, this, 0, TO_CHAR);
-    return;
-  }
-  ch->sendTo("OK.\n\r");
-
-  act("$n puts some money into $p.", FALSE, ch, this, 0, TO_ROOM);
-  *this += *create_money(amount);
-  ch->addToMoney(-amount, GOLD_INCOME);
-  if (ch->fight())
-    ch->addToWait(combatRound(1 + amount/5000));
-  ch->doSave(SILENT_YES);
-}
-
 bool TThing::getObjFromMeCheck(TBeing *)
 {
   return FALSE;
 }
 
-bool TRealContainer::getObjFromMeCheck(TBeing *ch)
-{
-  if (isClosed()) {
-    act("$P must be opened first.", 1, ch, 0, this, TO_CHAR);
-    return TRUE;
-  }
-  return FALSE;
-}
-
-void TTable::getObjFromMeText(TBeing *ch, TThing *obj)
+void TTable::getObjFromMeText(TBeing *ch, TThing *obj, getTypeT, bool)
 {
   TBeing *tbt = dynamic_cast<TBeing *>(obj);
   positionTypeT new_pos = POSITION_DEAD;
@@ -2303,7 +1666,7 @@ void TTable::getObjFromMeText(TBeing *ch, TThing *obj)
   }
 }
 
-void TThing::getObjFromMeText(TBeing *ch, TThing *obj)
+void TThing::getObjFromMeText(TBeing *ch, TThing *obj, getTypeT, bool)
 {
   --(*obj);
   *ch += *obj;
@@ -2365,6 +1728,12 @@ int TBeing::doDonate(const char *argument)
   char arg[256], newarg[256];
   int num;
   int p;
+  char buf[256];
+  // this next if controls if people can donate or not - dash
+#if 1
+  sendTo("The donate command has been disabled.\n\r");
+  return FALSE;
+#endif
 
   only_argument(argument, arg);
   if (!*arg) {
@@ -2421,18 +1790,27 @@ int TBeing::doDonate(const char *argument)
       }
     }
 
-    act("You donate $p.", false, this, t_o, NULL, TO_CHAR);
-    act("$n donates $p.", false, this, t_o, NULL, TO_ROOM);
+    if (o && (o->obj_flags.cost <= 0 || o->isObjStat(ITEM_NORENT))) {
+      act("$p has no real long term value, so you junk it instead.",
+          FALSE, this, o, NULL, TO_CHAR);
+      doJunk("", o);
+    } else {
+      act("You donate $p.", false, this, t_o, NULL, TO_CHAR);
+      act("$n donates $p.", false, this, t_o, NULL, TO_ROOM);
 
-    logItem(t_o, CMD_DONATE);
-    for (t = t_o->stuff; t; t = t->nextThing)
-      logItem(t, CMD_DONATE);
+      logItem(t_o, CMD_DONATE);
+      for (t = t_o->stuff; t; t = t->nextThing)
+        logItem(t, CMD_DONATE);
 
-    --(*t_o);
-    thing_to_room(t_o, ROOM_DONATION);
+      --(*t_o);
+      thing_to_room(t_o, ROOM_DONATION);
+      sprintf(buf,"A small portal appears for an instant, dropping %s in the room.\n\r",t_o->getName());
+      sendToRoom(COLOR_OBJECTS,buf, ROOM_DONATION);
+    }
 
     if (num > 0)
       num--;
+
     count++;
   }
 
