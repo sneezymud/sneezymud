@@ -692,19 +692,6 @@ TThing& TThing::operator += (TThing& t)
       if (i == m || !(tMoney = dynamic_cast<TMoney *>(i)))
         continue;
 
-      rp = NULL;
-
-      if (!(rp = roomp)) {
-        if (parent) {
-          rp = parent->roomp;
-        } else {
-          if (!(rp = tMoney->roomp)) {
-            if (tMoney->parent) {
-              rp = tMoney->parent->roomp;
-            }
-          }
-        }
-      }
       // set m to the full amount
       m->setMoney(m->getMoney() + tMoney->getMoney());
 
