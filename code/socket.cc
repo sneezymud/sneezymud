@@ -635,10 +635,10 @@ int TSocket::gameLoop()
 	if (!number(0, 100))
 	  tmp_ch->checkWeatherConditions();
 #endif
-#if 0
+#if 1
         if (!special_procs) {
           if (tmp_ch->spec) {
-            rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_PULSE, "", NULL);
+	    rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_PULSE, "", NULL);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               if (!tmp_ch) continue;
 

@@ -149,6 +149,9 @@ int TMonster::checkSpec(TBeing *t, cmdTypeT cmd, const char *arg, TThing *t2)
 {
   int rc;
 
+  //  if (cmd == CMD_GENERIC_PULSE && spec == SPEC_BOUNTY_HUNTER)
+  //    vlogf(LOG_DASH, "Bounty Hunter spec %d on %s called with CMD_GENERIC_PULSE (checkSpec)", spec, getName());
+
   if(inRoom() == ROOM_NOCTURNAL_STORAGE)
     return FALSE;
   // if we move them to hell, it's probably cause there is a problem with

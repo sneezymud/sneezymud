@@ -1381,7 +1381,7 @@ void TBeing::lowTasks(const char *arg)
       return;
     }
     return;
-  } else if (is_abbrev(buf, "priority")) {
+  } else if (is_abbrev(buf, "status")) {
     arg = one_argument(arg, buf);
     arg = one_argument(arg, buf2);
     if (!*buf || !*buf2) {
