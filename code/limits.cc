@@ -1090,12 +1090,14 @@ void TFood::findSomeFood(TFood **last_good, TBaseContainer **last_cont, TBaseCon
 
 void TBeing::gainCondition(condTypeT condition, int value)
 {
-  int intoxicated, i = 0;
+  int intoxicated, i = 0, loopchk=0;
   char buf[160], tmpbuf[40], buf2[256];
   TThing *t = NULL;
 
   if (getCond(condition) == -1)        // No change 
     return;
+
+  loopchk=getCond(condition);
 
   intoxicated = (getCond(DRUNK) > 0);
 
@@ -1166,6 +1168,11 @@ void TBeing::gainCondition(condTypeT condition, int value)
   }
   if (amt)
     return;
+
+  // this should prevent auto-eat loops
+  if(getCond(condition) == loopchk)
+    return;
+
 
   // beyond here, auto eat
 
