@@ -2073,20 +2073,31 @@ int castEthrealGate(TBeing *caster, TObj *obj)
 
 void TBeing::doScribe(const char *arg)
 {
-  char buf[256];
+  char argm[MAX_INPUT_LENGTH], newarg[MAX_INPUT_LENGTH];
+  sstring buf;
   TComponent *comp_gen, *comp_spell, *comp_scribe;
   TThing *t;
   spellNumT which = TYPE_UNDEFINED;
   int i;
+  int want_num = 1;
 
-  for (;arg && *arg && isspace(*arg); arg++);
+  *argm = '\0';
+  strcpy(argm, arg);
 
-  if (!*arg || !arg) {
+  if ((want_num = getabunch(argm, newarg))) {
+    strcpy(argm, newarg);
+  } else {
+    want_num = 1;
+  }
+
+  // for (;arg && *arg && isspace(*arg); arg++);
+
+  if (!*argm || !argm) {
     sendTo("You need to specify a scroll type to scribe!\n\r");
     return;
   }
-  if (((which = searchForSpellNum(arg, EXACT_YES)) < MIN_SPELL) &&
-      ((which = searchForSpellNum(arg, EXACT_NO)) < MIN_SPELL)) {
+  if (((which = searchForSpellNum(argm, EXACT_YES)) < MIN_SPELL) &&
+      ((which = searchForSpellNum(argm, EXACT_NO)) < MIN_SPELL)) {
     sendTo("You can't scribe a scroll of that type.\n\r");
     return;
   }
@@ -2143,26 +2154,55 @@ void TBeing::doScribe(const char *arg)
 
   // trash all items first
   int how_many = comp_scribe->getComponentCharges();
+  how_many = min(how_many, comp_spell->getComponentCharges());
+  how_many = min(how_many, comp_gen->getComponentCharges());
 
-  sprintf(buf, "You begin to scribe %d scrolls of %s.", 
-         how_many, discArray[which]->name);
-  act(buf, FALSE, this, 0, 0, TO_CHAR);
-  sprintf(buf, "$n begins to scribe a scroll.");
-  act(buf, FALSE, this, 0, 0, TO_ROOM);
+  if (how_many >= want_num) {
+    how_many = want_num;
+    ssprintf(buf, "You begin to scribe %d scroll%s of %s.", 
+           how_many, (how_many == 1 ? "" : "s"), discArray[which]->name);
+    act(buf, FALSE, this, 0, 0, TO_CHAR);
+  } else {
+    ssprintf(buf, "You only have enough to begin to scribe %d scroll%s of %s.", 
+           how_many, (how_many == 1 ? "" : "s"), discArray[which]->name);
+    act(buf, FALSE, this, 0, 0, TO_CHAR);
+  }
+  if (how_many > 1) {
+    ssprintf(buf, "$n begins to scribe some scrolls.");
+    act(buf, FALSE, this, 0, 0, TO_ROOM);
+  } else {
+    ssprintf(buf, "$n begins to scribe a scroll.");
+    act(buf, FALSE, this, 0, 0, TO_ROOM);
+  }
 
-  delete comp_gen;
-  comp_gen = NULL;
+  ssprintf(buf, "You use up %d charge%s of $p.",
+          how_many, (how_many == 1 ? "" : "s"));
+  act(buf, FALSE, this, comp_gen, 0, TO_CHAR);
+  comp_gen->addToComponentCharges(-how_many);
+  if (comp_gen->getComponentCharges() <= 0) {
+    ssprintf(buf, "$p is consumed in the process.");
+    act(buf, FALSE, this, comp_gen, 0, TO_CHAR);
+    delete comp_gen;
+    comp_gen = NULL;
+  }
 
-  sprintf(buf, "$p is consumed in the process.");
+  ssprintf(buf, "You use up %d charge%s of $p.",
+          how_many, (how_many == 1 ? "" : "s"));
   act(buf, FALSE, this, comp_scribe, 0, TO_CHAR);
-  delete comp_scribe;
-  comp_scribe = NULL;
+  comp_scribe->addToComponentCharges(-how_many);
+  if (comp_scribe->getComponentCharges() <= 0) {
+    ssprintf(buf, "$p is consumed in the process.");
+    act(buf, FALSE, this, comp_scribe, 0, TO_CHAR);
+    delete comp_scribe;
+    comp_scribe = NULL;
+  }
   
-  sprintf(buf, "You use up one charge of $p.");
+  ssprintf(buf, "You use up %d charge%s of $p.",
+          how_many, (how_many == 1 ? "" : "s"));
   act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
-  comp_spell->addToComponentCharges(-1);
+  comp_spell->addToComponentCharges(-how_many);
   if (comp_spell->getComponentCharges() <= 0) {
-    sprintf(buf, "$p is consumed in the process.");
+    ssprintf(buf, "$p is consumed in the process.");
     act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
     delete comp_spell;
     comp_spell = NULL;

@@ -15,6 +15,7 @@
 #include "shopowned.h"
 #include "obj_casino_chip.h"
 #include "spec_objs_lottery_ticket.h"
+#include "obj_component.h"
 
 vector<shopData>shop_index(0);
 int cached_shop_nr;
@@ -56,7 +57,7 @@ bool shopData::isOwned(){
 
 
 // this is the price the shop will buy an item for
-int TObj::sellPrice(int shop_nr, float chr, int *discount)
+int TObj::sellPrice(int, int shop_nr, float chr, int *discount)
 {
   float profit_sell=shop_index[shop_nr].profit_sell;
   int cost;
@@ -282,7 +283,7 @@ static void load_shop_file(TMonster *ch, int shop_nr)
       // item has not been sold in quite awhile
       // fake a sell/buy to A) reset the discount timer and B) reduce the price
       obj->recalcShopData(TRUE, price);
-      price = obj->sellPrice(shop_nr, -1, &discount);
+      price = obj->sellPrice(1, shop_nr, -1, &discount);
       obj->recalcShopData(FALSE, price);
     }
   }
@@ -587,7 +588,7 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
   }
 
   int discount=100;
-  if(temp1->sellPrice(shop_nr, -1, &discount) < 0){
+  if(temp1->sellPrice(1, shop_nr, -1, &discount) < 0){
     keeper->doTell(ch->getName(), "You'd have to pay me to buy that!");
     return TRUE;
   }
@@ -596,7 +597,7 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
 }
 
 
-bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper) const
+bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
 {
   int total = 0;
   TThing *t;
@@ -634,8 +635,10 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper) const
   return FALSE;
 }
 
-void generic_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr)
+void generic_num_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr, int num)
 {
+  TComponent *tComp = dynamic_cast<TComponent *>(obj);
+
   if (obj->isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
     return;
@@ -651,11 +654,42 @@ void generic_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr)
   if (will_not_buy(ch, keeper, obj, shop_nr)) 
     return;
   
-  obj->sellMe(ch, keeper, shop_nr);
+  if (tComp) {
+    tComp->sellMe(ch, keeper, shop_nr, num);
+  } else {
+    obj->sellMe(ch, keeper, shop_nr, 1);
+  }
   // obj may be invalid here
 }
 
-void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
+void generic_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr)
+{
+  TComponent *tComp = dynamic_cast<TComponent *>(obj);
+
+  if (obj->isObjStat(ITEM_NODROP)) {
+    ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
+    return;
+  }
+  if (obj->isObjStat(ITEM_PROTOTYPE)) {
+    ch->sendTo("That's a prototype, no selling that!\n\r");
+    return;
+  }
+  if (!shop_index[shop_nr].willBuy(obj)) {
+    keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
+    return;
+  }
+  if (will_not_buy(ch, keeper, obj, shop_nr)) 
+    return;
+  
+  if (tComp) {
+    tComp->sellMe(ch, keeper, shop_nr, 1);
+  } else {
+    obj->sellMe(ch, keeper, shop_nr, 1);
+  }
+  // obj may be invalid here
+}
+
+void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 {
   int cost;
   sstring buf;
@@ -671,14 +705,14 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
     keeper->doTell(buf);
     return;
   }
-  if (sellMeCheck(ch, keeper))
+  if (sellMeCheck(ch, keeper, num))
     return;
 
   chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   chr = max((float)1.0,chr);
 
 
-  cost = sellPrice(shop_nr, chr, &discount);
+  cost = sellPrice(1, shop_nr, chr, &discount);
 
   if (getStructPoints() != getMaxStructPoints()) {
     cost *= 6;    /* base deduction of 60% */
@@ -923,11 +957,12 @@ bool TObj::fitsSellType(tObjectManipT tObjectManip,
 
 int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_nr)
 {
-  char argm[100];
+  char argm[MAX_INPUT_LENGTH], newarg[MAX_INPUT_LENGTH];
   sstring buf;
   TObj *temp1 = NULL;
   TThing *t, *t2;
-  int rc, i;
+  int rc = 0, i;
+  int num = 1;
 
   if (!(shop_index[shop_nr].willTradeWith(tKeeper, ch)))
     return FALSE;
@@ -939,6 +974,12 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
     tKeeper->doTell(buf);
     return FALSE;
   }
+
+  if ((num = getabunch(argm, newarg)))
+    strcpy(argm, newarg);
+
+  if (!num)
+    num = 1;
 
   if (0 && gamePort != PROD_GAMEPORT) {
     sstring         tStString("");
@@ -1038,7 +1079,14 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
         if (!ch->awake())
           break;
 
-        rc = t->componentSell(ch, tKeeper, shop_nr, NULL);
+        TComponent *temp2 = dynamic_cast<TComponent *>(t);
+        if (temp2) {
+          if (num > 1) {
+            rc = temp2->componentNumSell(ch, tKeeper, shop_nr, NULL, num);
+          } else {
+            rc = temp2->componentSell(ch, tKeeper, shop_nr, NULL);
+          }
+        }
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
           t = NULL;
@@ -1054,7 +1102,14 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
         if (!ch->awake())
           break;
 
-        rc = t->componentSell(ch, tKeeper, shop_nr, NULL);
+        TComponent *temp2 = dynamic_cast<TComponent *>(t);
+        if (temp2) {
+          if (num > 1) {
+            rc = temp2->componentNumSell(ch, tKeeper, shop_nr, NULL, num);
+          } else {
+            rc = temp2->componentSell(ch, tKeeper, shop_nr, NULL);
+          }
+        }
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
           t = NULL;
@@ -1102,20 +1157,27 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
   }
   TThing *t_temp1 = searchLinkedListVis(ch, argm, ch->getStuff());
   temp1 = dynamic_cast<TObj *>(t_temp1);
+  TComponent *temp2 = dynamic_cast<TComponent *>(temp1);
+
   if (!temp1) {
     tKeeper->doTell(ch->getName(), shop_index[shop_nr].no_such_item2);
     return FALSE;
   }
-  generic_sell(ch, tKeeper, temp1, shop_nr);
+  if (temp2) {
+    temp2->componentNumSell(ch, tKeeper, shop_nr, NULL, num);
+  } else {
+    generic_sell(ch, tKeeper, temp1, shop_nr);
+  }
 
   return FALSE;
 }
 
 void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
 {
-  char argm[100];
+  char argm[MAX_INPUT_LENGTH], newarg[MAX_INPUT_LENGTH];
   sstring buf;
   TObj *temp1;
+  int num = 1;
 
   if (!(shop_index[shop_nr].willTradeWith(keeper, ch)))
     return;
@@ -1126,19 +1188,41 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     ssprintf(buf, "%s What do you want me to evaluate??", ch->name);
     keeper->doTell(buf);
     return;
-  } else if (is_abbrev(argm, "all.components")) {
+  }
+  
+  if ((num = getabunch(argm, newarg)))
+    strcpy(argm, newarg);
+
+  if (!num)
+    num = 1;
+
+  if (is_abbrev(argm, "all.components")) {
     TThing *t, *t2;
     int i;
     for (i = MIN_WEAR; i < MAX_WEAR; i++) {
       if (!(t = ch->equipment[i]))
         continue;
 
-      t->componentValue(ch, keeper, shop_nr, NULL);
+      TComponent *temp2 = dynamic_cast<TComponent *>(t);
+      if (temp2) {
+        if (num > 1) {
+          temp2->componentNumValue(ch, keeper, shop_nr, NULL, num);
+        } else {
+          temp2->componentValue(ch, keeper, shop_nr, NULL);
+        }
+      }
     }
     for (t = ch->getStuff(); t; t = t2) {
       t2 = t->nextThing;
 
-      t->componentValue(ch, keeper, shop_nr, NULL);
+      TComponent *temp2 = dynamic_cast<TComponent *>(t);
+      if (temp2) {
+        if (num > 1) {
+          temp2->componentNumValue(ch, keeper, shop_nr, NULL, num);
+        } else {
+          temp2->componentValue(ch, keeper, shop_nr, NULL);
+        }
+      }
     }
     return;
   }
@@ -1156,10 +1240,15 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   if (will_not_buy(ch, keeper, temp1, shop_nr)) 
     return;
   
-  temp1->valueMe(ch, keeper, shop_nr);
+  TComponent *temp2 = dynamic_cast<TComponent *>(temp1);
+  if (temp2) {
+    temp2->valueMe(ch, keeper, shop_nr, num);
+  } else {
+    temp1->valueMe(ch, keeper, shop_nr, 1);
+  }
 }
 
-void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
+void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 {
   float chr;
   int cost;
@@ -1168,10 +1257,10 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
   int willbuy=0;
   
 #if 0
-  if (sellMeCheck(ch, keeper))
+  if (sellMeCheck(ch, keeper, num))
     return;
 #else
-  willbuy=!sellMeCheck(ch, keeper);
+  willbuy=!sellMeCheck(ch, keeper, num);
 #endif
 
   if (!shop_index[shop_nr].willBuy(this)) {
@@ -1184,7 +1273,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
   // do not adjust for swindle on valueing, give them worst case price
   chr = max((float)1.0,chr);
 
-  cost = sellPrice(shop_nr, chr, &discount);
+  cost = sellPrice(1, shop_nr, chr, &discount);
 
   if (obj_index[getItemIndex()].max_exist <= 10) {
     ssprintf(buf, "%s Wow!  This is one of those limited items.", ch->name);
@@ -1237,6 +1326,7 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
   int discount = 100;
   bool isWearable = false;
   const TGenWeapon * tWeapon = dynamic_cast<const TGenWeapon *>(this);
+  const TComponent *tComp = dynamic_cast<const TComponent *>(this);
 
   // display spells on things like scrolls
   // don't show the "level" of weaps/armor though
@@ -1348,7 +1438,15 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
     isWearable = true;
   } 
 
-  sprintf(buf4, "[%s]", (shop_index[shop_nr].isProducing(this) ? "Unlimited" : atbuf));
+  if (tComp) {
+    if (shop_index[shop_nr].isProducing(this)) {
+      sprintf(buf4, "[%s]", "Unlimited");
+    } else {
+      sprintf(buf4, "[%d]", tComp->getComponentCharges());
+    }
+  } else {
+    sprintf(buf4, "[%s]", (shop_index[shop_nr].isProducing(this) ? "Unlimited" : atbuf));
+  }
   found = FALSE;
   char equipCond[256];
   char equipColor[80];
@@ -1560,9 +1658,9 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
   }
   if (!found)
     if (!hasComponents || gamePort == PROD_GAMEPORT)
-      sb += "     Item Name                            Condition  Price    Number\n\r";
+      sb += "     Item Name                            Condition Price     Number\n\r";
     else
-      sb += "     Iten Name                            Charges Spell\n\r";
+      sb += "     Item Name                            Condition Price     Number\n\r";
 
   found = FALSE;
   sb += "-------------------------------------------------------------------------------\n\r";

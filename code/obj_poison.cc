@@ -34,7 +34,7 @@ TPoison::~TPoison()
 
 
 
-int TPoison::sellPrice(int shop_nr, float, int *)
+int TPoison::sellPrice(int, int shop_nr, float, int *)
 {
   int cost_per;
   int price;

@@ -183,7 +183,7 @@ void TBow::sstringMeBow(TBeing *ch, TThing *sstring)
   sstring->sstringMeString(ch, this);
 }
 
-bool TBow::sellMeCheck(TBeing *ch, TMonster *keeper) const
+bool TBow::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
 {
   int total = 0;
   TThing *t;

@@ -94,7 +94,7 @@ void TArrow::setArrowHeadMat(unsigned char newArrowHeadMat)
   arrowHeadMat = newArrowHeadMat;
 }
 
-bool TArrow::sellMeCheck(TBeing *ch, TMonster *keeper) const
+bool TArrow::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
 {
   int total = 0;
   TThing *t;

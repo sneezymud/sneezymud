@@ -27,11 +27,11 @@ class TOrganic : public TObj {
     virtual void describeObjectSpecifics(const TBeing *) const;
     virtual bool splitMe(TBeing *, const sstring &);
     virtual void lightMe(TBeing *, silentTypeT);
-    virtual int  sellPrice(int, float, int *);
+    virtual int  sellPrice(int, int, float, int *);
     virtual int  shopPrice(int, int, float, int *) const;
     virtual int buyMe(TBeing *, TMonster *, int, int);
-    virtual void sellMe(TBeing *ch, TMonster *, int);
-    virtual void valueMe(TBeing *, TMonster *, int);
+    virtual void sellMe(TBeing *ch, TMonster *, int, int);
+    virtual void valueMe(TBeing *, TMonster *, int, int);
     virtual const sstring shopList(const TBeing *, const sstring &, int, int, int, int, int, unsigned long int) const;
     virtual int sellHidenSkin(TBeing *, TMonster *, int, TThing *);
     void setOType(organicTypeT);

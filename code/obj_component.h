@@ -314,9 +314,11 @@ class TComponent : public TObj {
     virtual void findComp(TComponent **, spellNumT);
     virtual void decayMe();
     virtual int objectSell(TBeing *, TMonster *);
-    virtual bool sellMeCheck(TBeing *, TMonster *) const;
+    virtual bool sellMeCheck(TBeing *, TMonster *, int) const;
     virtual int componentSell(TBeing *, TMonster *, int, TThing *);
+    virtual int componentNumSell(TBeing *, TMonster *, int, TThing *, int);
     virtual int componentValue(TBeing*, TMonster *, int, TThing *);
+    virtual int componentNumValue(TBeing*, TMonster *, int, TThing *, int);
     virtual int getShopPrice(int *) const;
     virtual void recalcShopData(int, int);
     virtual int rentCost() const;
@@ -326,8 +328,11 @@ class TComponent : public TObj {
     virtual void objMenu(const TBeing *) const;
     double priceMultiplier() const;
     virtual int noteMeForRent(sstring &, TBeing *, TThing *, int *);
-    virtual void sellMe(TBeing *, TMonster *, int);
+    virtual void sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1);
     virtual int buyMe(TBeing *, TMonster *, int, int);
+    virtual void valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1);
+    virtual int shopPrice(int, int, float, int *) const;
+    virtual int sellPrice(int, int, float, int *);
 
     int getComponentCharges() const;
     void setComponentCharges(int n);
@@ -339,6 +344,7 @@ class TComponent : public TObj {
     void addComponentType(unsigned int num);
     void remComponentType(unsigned int num);
     bool isComponentType(unsigned int num) const;
+    int pricePerUnit() const;
 
     TComponent();
     TComponent(const TComponent &a);

@@ -18,7 +18,7 @@ class TCasinoChip : public TObj {
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_CASINO_CHIP; }
     virtual int shopPrice(int, int, float, int *) const;
-    virtual int sellPrice(int, float, int *);
+    virtual int sellPrice(int, int, float, int *);
 
     TCasinoChip();
     TCasinoChip(const TCasinoChip &a);

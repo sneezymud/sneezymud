@@ -633,7 +633,7 @@ class TObj : public TThing {
     virtual void changeComponentValue4(TBeing *, const char *, editorEnterTypeT) {}
     virtual void boottimeInit() {}
     virtual void decayMe();
-    virtual bool sellMeCheck(TBeing *, TMonster *) const;
+    virtual bool sellMeCheck(TBeing *, TMonster *, int) const;
     virtual void recalcShopData(int, int) {}
     virtual bool fitsSellType(tObjectManipT, TBeing *, TMonster *, sstring, itemTypeT, int &, int);
     virtual int treeMe(TBeing *, const char *, int, int*);
@@ -642,12 +642,12 @@ class TObj : public TThing {
     virtual void changeBedValue1(TBeing *, const char *, editorEnterTypeT) {}
     virtual void changeMagicItemValue1(TBeing *, const char *, editorEnterTypeT) {}
     virtual int buyMe(TBeing *, TMonster *, int, int);
-    virtual void sellMe(TBeing *, TMonster *, int);
-    virtual void valueMe(TBeing *, TMonster *, int);
+    virtual void sellMe(TBeing *, TMonster *, int, int);
+    virtual void valueMe(TBeing *, TMonster *, int, int);
     virtual const sstring shopList(const TBeing *, const sstring &, int, int, int, int, int, unsigned long int) const;
     virtual void makeScraps();
     virtual int shopPrice(int, int, float, int *) const;
-    virtual int sellPrice(int, float, int *);
+    virtual int sellPrice(int ,int, float, int *);
     virtual void divinateMe(TBeing *) const;
     virtual int copyMe(TBeing *, byte);
     virtual int changeItemVal2Check(TBeing *, int);

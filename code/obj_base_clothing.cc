@@ -553,7 +553,7 @@ int TBaseClothing::scavengeMe(TBeing *ch, TObj **best_o)
   return FALSE;
 }
 
-bool TBaseClothing::sellMeCheck(TBeing *ch, TMonster *keeper) const
+bool TBaseClothing::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
 {
   int total = 0;
   TThing *t;

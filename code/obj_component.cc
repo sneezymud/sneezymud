@@ -2210,11 +2210,11 @@ void TComponent::changeObjValue4(TBeing *ch)
   return;
 }
 
-bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper) const
+bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
 {
   int total = 0;
   TThing *t;
-  char buf[256];
+  sstring buf;
   unsigned int shop_nr;
 
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
@@ -2231,7 +2231,7 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper) const
     max_num=tso.getMaxNum(this);
 
   if(max_num == 0){
-    sprintf(buf, "%s I don't wish to buy any of those right now.", ch->name);
+    ssprintf(buf, "%s I don't wish to buy any of those right now.", ch->name);
     keeper->doTell(buf);
     return TRUE;
   }
@@ -2241,14 +2241,50 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper) const
     if ((t->number == number) &&
 	(t->getName() && getName() &&
 	 !strcmp(t->getName(), getName()))) {
-      total += 1;
-      if (total >= max_num) {
-	sprintf(buf, "%s I already have plenty of those.", ch->getName());
-	keeper->doTell(buf);
-	return TRUE;
+      if (TComponent *c = dynamic_cast<TComponent *>(t)) {
+        total += c->getComponentCharges();
+        break;
       }
     }
   }
+  if (total >= max_num) {
+    ssprintf(buf, "%s I already have plenty of %s.", ch->getName(), getName());
+    keeper->doTell(buf);
+    return TRUE;
+  } else if (total + num > max_num) {
+    ssprintf(buf, "%s I'll buy no more than %d charge%s of %s.", ch->getName(), max_num - total, (max_num - total > 1 ? "s" : ""), getName());
+    keeper->doTell(buf);
+    return FALSE;
+  }
+
+  return FALSE;
+}
+
+// returns DELETE_THIS, VICT (ch), ITEM(sub)
+int TComponent::componentNumSell(TBeing *ch, TMonster *keeper, int shop_nr, TThing *sub, int num)
+{
+  int rc;
+
+  if (equippedBy)
+    *ch += *ch->unequip(eq_pos);
+
+  if (sub) {
+    rc = get(ch, this, sub, GETOBJOBJ, true);
+    if (IS_SET_DELETE(rc, DELETE_ITEM))
+      return DELETE_THIS;
+
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_ITEM;
+
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_VICT;
+
+    if (!parent || dynamic_cast<TBeing *>(parent)) {
+      // failed on volume or sumthing
+      generic_num_sell(ch, keeper, this, shop_nr, num);
+    }
+  } else
+    generic_num_sell(ch, keeper, this, shop_nr, num);
 
   return FALSE;
 }
@@ -2282,8 +2318,33 @@ int TComponent::componentSell(TBeing *ch, TMonster *keeper, int shop_nr, TThing 
   return FALSE;
 }
 
-int TComponent::componentValue(TBeing *ch, TMonster *keeper, int shop_nr,
-TThing *sub)
+int TComponent::componentNumValue(TBeing *ch, TMonster *keeper, int shop_nr, TThing *sub, int num)
+{
+  int rc;
+
+  if (equippedBy)
+    *ch += *ch->unequip(eq_pos);
+
+  if (sub) {
+    rc = get(ch, this, sub, GETOBJOBJ, true);
+    if (IS_SET_DELETE(rc, DELETE_ITEM))
+      return DELETE_THIS;
+
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_ITEM;
+
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_VICT;
+
+    if (!parent || dynamic_cast<TBeing *>(parent)) 
+      valueMe(ch, keeper, shop_nr, num);
+  } else
+    valueMe(ch, keeper, shop_nr, num);
+
+  return FALSE;
+}
+
+int TComponent::componentValue(TBeing *ch, TMonster *keeper, int shop_nr, TThing *sub)
 {
   int rc;
 
@@ -2721,7 +2782,7 @@ int TComponent::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
   mud_assert(parent == cont, "Bizarre situation in putSomethig int (%d)", rc);
 
   // Enable for !prod for re-introduction.
-  if (true) {
+  if (false) {
     TThing *t;
     TComponent *tComp;
 
@@ -2932,8 +2993,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   int        tCost,
           tDiscount = 100,
           tValue = 0;
-  double  tCount;
-  char    tString[256];
+  sstring tString;
   TObj   *tObj;
 
   if ((ch->getCarriedVolume() + getTotalVolume()) > ch->carryVolumeLimit()) {
@@ -2949,11 +3009,10 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
   tChr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   tChr   = max((float)1.0, tChr);
-  tCount = ((double) tNum / (double) getComponentCharges());
-  tCost  = (int) ((double) shopPrice(1, tShop, tChr, &tDiscount) * tCount);
+  tCost  = (int) shopPrice(tNum, tShop, tChr, &tDiscount);
 
   if ((ch->getMoney() < tCost) && !ch->hasWizPower(POWER_GOD)) {
-    sprintf(tString, shop_index[tShop].missing_cash2, ch->getName());
+    ssprintf(tString, shop_index[tShop].missing_cash2, ch->getName());
     tKeeper->doTell(tString);
 
     switch (shop_index[tShop].temper1) {
@@ -2975,40 +3034,28 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     }
 
     tObj->purchaseMe(ch, tKeeper, tCost, tShop);
+    tKeeper->doTell(ch->name, shop_index[tShop].message_buy, tCost);
+
+    ch->sendTo(COLOR_OBJECTS, "You now have %s (*%d charges).\n\r",
+            sstring(getName()).uncap().c_str(), tNum);
+    act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
     *ch += *tObj;
     ch->logItem(tObj, CMD_BUY);
     tValue++;
     tObj->recalcShopData(TRUE, tCost);
   } else {
-    TThing     *tThing;
-    TComponent *tComp;
+    int charges = getComponentCharges();
 
-    for (tThing = tKeeper->getStuff(); tThing; tThing = tThing->nextThing) {
-      // Basically find another component of the same type that is:
-      // Same VNum.
-      // Has a cost greater than 0 (ignore comps from leveling)
-      if (tThing == this || !(tComp = dynamic_cast<TComponent *>(tThing)) ||
-          (tComp->objVnum() != objVnum()) || tComp->obj_flags.cost <= 0 ||
-          obj_flags.cost <= 0)
-        continue;
-
-      // We have more than one of the same comp, let's merge them.
-      addToComponentCharges(tComp->getComponentCharges());
-      obj_flags.cost += tComp->obj_flags.cost;
-      --(*tComp);
-      delete tComp;
-    }
-
-    if (tNum > getComponentCharges()) {
-      sprintf(tString, "%s I don't have %d charges of that component.  Here %s the %d I do have.",
-              ch->getName(), tNum, ((getComponentCharges() > 2) ? "are" : "is"),
-              getComponentCharges());
+    if (tNum > charges) {
+      ssprintf(tString, "%s I don't have %d charges of %s.  Here %s the %d I do have.",
+              ch->getName(), tNum, getName(), ((charges > 2) ? "are" : "is"),
+              charges);
       tKeeper->doTell(tString);
-      tNum  = getComponentCharges();
-      tCost = shopPrice(1, tShop, tChr, &tDiscount);
+      tNum  = charges;
+      tCost = shopPrice(tNum, tShop, tChr, &tDiscount);
     }
 
-    if (getComponentCharges() == tNum) {
+    if (charges == tNum) {
       tObj = this;
       --(*tObj);
     } else {
@@ -3017,90 +3064,111 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
         return -1;
       }
 
-      TComponent *tComponent;
+      if (TComponent *tComponent = dynamic_cast<TComponent *>(tObj)) {
+        int cost_per;
 
-      if ((tComponent = dynamic_cast<TComponent *>(tObj))) {
+        cost_per = tComponent->pricePerUnit();
         tComponent->setComponentCharges(tNum);
-      }
+        addToComponentCharges(-tNum);
 
-      addToComponentCharges(-tNum);
-      tObj->obj_flags.cost = tCost;
-      obj_flags.cost -= tCost;
+        tComponent->obj_flags.cost = tNum * cost_per;
+        obj_flags.cost = getComponentCharges() * cost_per;
+      }
     }
 
     tObj->purchaseMe(ch, tKeeper, tCost, tShop);
+    tKeeper->doTell(ch->name, shop_index[tShop].message_buy, tCost);
+
+    ch->sendTo(COLOR_OBJECTS, "You now have %s (*%d charges).\n\r",
+            sstring(getName()).uncap().c_str(), tNum);
+    act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
+
     *ch += *tObj;
     ch->logItem(tObj, CMD_BUY);
     tValue++;
     tObj->recalcShopData(TRUE, tCost);
 
-    sprintf(tString, "%s/%d", SHOPFILE_PATH, tShop);
+    ssprintf(tString, "%s/%d", SHOPFILE_PATH, tShop);
     tKeeper->saveItems(tString);
   }
 
   if (!tValue)
     return -1;
 
-  sprintf(tString, shop_index[tShop].message_buy,
-          ch->getName(), tCost);
-  tKeeper->doTell(tString);
-
-  ch->sendTo(COLOR_OBJECTS, "You now have %s (*%d charges).\n\r",
-          sstring(getName()).uncap().c_str(), tNum);
-  act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
   ch->doSave(SILENT_YES);
 
   return tCost;
 }
 
-void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop)
+void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
 {
   if (false) {
-    TObj::sellMe(ch, tKeeper, tShop);
+    TObj::sellMe(ch, tKeeper, tShop, 1);
     return;
   }
 
-  char tString[256];
+  sstring buf;
   float  tChr;
   int     tCost,
        tDiscount = 100;
 
   if (!shop_index[tShop].profit_sell) {
-    sprintf(tString, shop_index[tShop].do_not_buy, ch->getName());
-    tKeeper->doTell(tString);
+    ssprintf(buf, shop_index[tShop].do_not_buy, ch->getName());
+    tKeeper->doTell(buf);
     return;
   }
 
   if (obj_flags.cost <= 1 || isObjStat(ITEM_NEWBIE)) {
-    sprintf(tString, "%s I'm sorry, I don't buy valueless items.", ch->getName());
-    tKeeper->doTell(tString);
+    ssprintf(buf, "%s I'm sorry, I don't buy valueless items.", ch->getName());
+    tKeeper->doTell(buf);
     return;
   }
 
-  if (sellMeCheck(ch, tKeeper))
+  if (sellMeCheck(ch, tKeeper, num))
     return;
 
+  TShopOwned tso(tShop, tKeeper, ch);
+  int max_num = 50;
+  int total = 0;
+
+  if(tso.isOwned())
+    max_num=tso.getMaxNum(this);
+
+  for (TThing *t = tKeeper->getStuff(); t; t = t->nextThing) {
+    if ((t->number == number) &&
+	(t->getName() && getName() &&
+	 !strcmp(t->getName(), getName()))) {
+      if (TComponent *c = dynamic_cast<TComponent *>(t)) {
+        total += c->getComponentCharges();
+        break;
+      }
+    }
+  }
+  if (total + num > max_num) {
+    num = max_num - total;
+  }
+
+  num = min(num, getComponentCharges());
   tChr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   tChr   = max((float)1.0, tChr);
-  tCost  = max(1, sellPrice(tShop, tChr, &tDiscount));
+  tCost  = max(1, sellPrice(num, tShop, tChr, &tDiscount));
 
   if (tKeeper->getMoney() < tCost) {
-    sprintf(tString, shop_index[tShop].missing_cash1, ch->getName());
-    tKeeper->doTell(tString);
+    ssprintf(buf, shop_index[tShop].missing_cash1, ch->getName());
+    tKeeper->doTell(buf);
     return;
   }
 
   if (obj_index[getItemIndex()].max_exist <= 10) {
-    sprintf(tString, "%s Wow!  This is one of those limited items.", ch->getName());
-    tKeeper->doTell(tString);
-    sprintf(tString, "%s You should really think about auctioning it.", ch->getName());
-    tKeeper->doTell(tString);
+    ssprintf(buf, "%s Wow!  This is one of those limited items.", ch->getName());
+    tKeeper->doTell(buf);
+    ssprintf(buf, "%s You should really think about auctioning it.", ch->getName());
+    tKeeper->doTell(buf);
   }
 
   act("$n sells $p.", FALSE, ch, this, 0, TO_ROOM);
 
-  sprintf(tString, shop_index[tShop].message_sell, ch->getName(), tCost);
-  tKeeper->doTell(tString);
+  tKeeper->doTell(ch->getName(), shop_index[tShop].message_sell,tCost);
 
   ch->sendTo(COLOR_OBJECTS, "The shopkeeper now has %s.\n\r", sstring(getName()).uncap().c_str());
   ch->logItem(this, CMD_SELL);
@@ -3111,24 +3179,123 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop)
   if (ch->isAffected(AFF_GROUP) && ch->desc &&
            IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
           (ch->master || ch->followers)) {
-    sprintf(tString, "%d", tCost);
-    ch->doSplit(tString, false);
+    ssprintf(buf, "%d", tCost);
+    ch->doSplit(buf.c_str(), false);
   }
 
-  // exception to the eq-sharing log, if person sells item to shop as char#1
-  // permit them to buy it as char#2
-  // this means the "owners" log should be reset on sell
-  delete [] owners;
-  owners = NULL;
+  if (num == getComponentCharges()) {
+    // exception to the eq-sharing log, if person sells item to shop as char#1
+    // permit them to buy it as char#2
+    // this means the "owners" log should be reset on sell
+    delete [] owners;
+    owners = NULL;
 
-  --(*this);
+    --(*this);
 
-  if (shop_index[tShop].isProducing(this)) {
-    delete this;
-  } else
-    *tKeeper += *this;
+    if (shop_index[tShop].isProducing(this)) {
+      delete this;
+    } else
+      *tKeeper += *this;
+  } else {
+    int tValue = 0;
+    // double tCost = 0.0;
+    TComponent *tComponent;
 
-  sprintf(tString, "%s/%d", SHOPFILE_PATH, tShop);
-  tKeeper->saveItems(tString);
+    if ((tValue = real_object(objVnum())) < 0 || tValue > (signed) obj_index.size() ||
+        !(tComponent = dynamic_cast<TComponent *>(read_object(tValue, REAL)))) {
+      ch->sendTo(COLOR_OBJECTS, "For some reason %s resists being partially sold.\n\r", getName());
+      return;
+    }
+    int cost_per = 0;
+
+    cost_per = tComponent->pricePerUnit();
+    tComponent->setComponentCharges(num);
+    addToComponentCharges(-num);
+
+    tComponent->obj_flags.cost = num * cost_per;
+    obj_flags.cost = getComponentCharges() * cost_per;
+
+    /*
+    tCost = ((double) (num / (double) getComponentCharges()));
+
+    tComponent->setComponentCharges(num);
+    addToComponentCharges(-num);
+
+    tComponent->obj_flags.cost = (int) ((double) obj_flags.cost * tCost + 0.5);
+    obj_flags.cost -= tComponent->obj_flags.cost;
+    */
+
+    *tKeeper += *tComponent;
+  }
+
+  ssprintf(buf, "%s/%d", SHOPFILE_PATH, tShop);
+  tKeeper->saveItems(buf);
   ch->doSave(SILENT_YES);
+}
+
+int TComponent::sellPrice(int num, int shop_nr, float, int *)
+{
+  int cost_per;
+  int price;
+
+  cost_per = pricePerUnit();
+  num = min(num, getComponentCharges());
+  price = (int) (num * cost_per * shop_index[shop_nr].profit_sell);
+
+  if (obj_flags.cost <= 1) {
+    price = max(0, price);
+  } else {
+    price = max(1, price);
+  }
+
+  return price;
+}
+
+int TComponent::shopPrice(int num, int shop_nr, float, int *) const
+{
+  int cost_per;
+  int price;
+
+  cost_per = pricePerUnit();
+  price = (int) (num * cost_per * shop_index[shop_nr].profit_buy);
+  price = max(1, price);
+
+  return price;
+}
+
+int TComponent::pricePerUnit() const
+{
+  int charges = getComponentCharges();
+  int price = (int) (charges ? (obj_flags.cost / charges) + 0.5 : 0);
+
+  if (obj_flags.cost) {
+    price = max(price, 1);
+  }
+
+  return price;
+}
+
+void TComponent::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
+{
+  int price;
+  sstring buf;
+  int discount = 100;
+  int willbuy = 0;
+
+  willbuy=!sellMeCheck(ch, keeper, num);
+  price = sellPrice(num, shop_nr, -1, &discount);
+
+  if (!shop_index[shop_nr].willBuy(this)) {
+    ssprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());
+    keeper->doTell(buf);
+    return;
+  }
+
+  if (willbuy) {
+    ssprintf(buf, "%s I'll give you %d talens for %s!", ch->getName(), price, getName());
+  } else {
+    ssprintf(buf, "%s Normally, I'd give you %d talens for %s!", ch->getName(), price, getName());
+  }
+  keeper->doTell(buf);
+  return;
 }

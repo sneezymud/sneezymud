@@ -190,7 +190,7 @@ void TGenWeapon::lowCheck()
   TBaseWeapon::lowCheck();
 }
 
-bool TGenWeapon::sellMeCheck(TBeing *ch, TMonster *keeper) const
+bool TGenWeapon::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
 {
   int total = 0;
   TThing *t;

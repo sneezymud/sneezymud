@@ -105,7 +105,7 @@ void TOrganic::lightMe(TBeing *ch, silentTypeT iSilent)
 }
 
 // Determine Sell[PC selling] value
-int TOrganic::sellPrice(int shop_nr, float, int *)
+int TOrganic::sellPrice(int, int shop_nr, float, int *)
 {
 #if 1
   int price;
@@ -318,21 +318,20 @@ static void sellReducePrice(const TBeing *ch, TBeing *keeper, const TOrganic *ob
 }
 
 // This function deals with the selling of TOrganic stuff.
-void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
+void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 {
   TThing   *t;
   TOrganic *obj2 = NULL;
-  int  num = 1,
-       price,
+  int  price,
        found = 0,
        discount;
   char Buf[256];
 
   if (getUnits() > 0)
     price = min(shopPrice(max(1, getUnits()), shop_nr, -1, &discount),
-                sellPrice(shop_nr, -1, &discount));
+                sellPrice(1, shop_nr, -1, &discount));
   else
-    price = sellPrice(shop_nr, -1, &discount);
+    price = sellPrice(1, shop_nr, -1, &discount);
 
   if (isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
@@ -445,7 +444,7 @@ void TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
 }
 
 // Used by the value command
-void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
+void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
 {
   int  price,
        discount = 0;
@@ -455,9 +454,9 @@ void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
 
   if (getUnits() > 0)
     price = min(shopPrice(max(1, getUnits()), shop_nr, -1, &discount),
-                sellPrice(shop_nr, -1, &discount));
+                sellPrice(1, shop_nr, -1, &discount));
   else
-    price = sellPrice(shop_nr, -1, &discount);
+    price = sellPrice(1, shop_nr, -1, &discount);
 
   if (!shop_index[shop_nr].willBuy(this)) {
     sprintf(Buf, shop_index[shop_nr].do_not_buy, ch->getName());

@@ -115,7 +115,7 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
             s2->setSpell(2, scroll_obj->getSpell(2));
             s2->setMagicLevel(scroll_obj->getMagicLevel());
             s2->setMagicLearnedness(scroll_obj->getMagicLearnedness());
-	    s2->addObjStat(ITEM_NORENT);
+	    // s2->addObjStat(ITEM_NORENT);
 	    s2->obj_flags.cost = s2->suggestedPrice();
             *ch += *s2;
           }

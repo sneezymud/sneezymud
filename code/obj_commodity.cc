@@ -68,7 +68,7 @@ void TCommodity::lowCheck()
   TObj::lowCheck();
 }
 
-int TCommodity::sellPrice(int shop_nr, float, int *)
+int TCommodity::sellPrice(int num, int shop_nr, float, int *)
 {
   int cost_per;
   int price;
@@ -173,7 +173,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   return price;
 }
 
-void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
+void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 {
   TThing *t;
   TCommodity *obj2 = NULL;
@@ -182,7 +182,7 @@ void TCommodity::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   int discount = 100;
 
   strcpy(buf2, fname(name).c_str());
-  price = sellPrice(shop_nr, -1, &discount);
+  price = sellPrice(1, shop_nr, -1, &discount);
 
   if (isObjStat(ITEM_NODROP)) {
     ch->sendTo("You can't let go of it, it must be CURSED!\n\r");
@@ -273,18 +273,18 @@ int TCommodity::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing *ba
     }
   }
 
-  sellMe(ch, keeper, shop_nr);
+  sellMe(ch, keeper, shop_nr, 1);
   return FALSE;
 }
 
-void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
+void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int)
 {
   int price;
   char buf[256], buf2[80];
   int discount = 100;
 
   strcpy(buf2, fname(name).c_str());
-  price = sellPrice(shop_nr, -1, &discount);
+  price = sellPrice(1, shop_nr, -1, &discount);
 
   if (!shop_index[shop_nr].willBuy(this)) {
     sprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());
