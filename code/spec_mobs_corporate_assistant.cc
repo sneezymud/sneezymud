@@ -52,7 +52,7 @@ void corpListing(TBeing *ch, TMonster *me)
   TDatabase db(DB_SNEEZY);
   int corp_id=0;
   
-  db.query("select c.corp_id, c.name, sum(s.gold) as gold from corporation c, shopowned so, shop s where c.corp_id=so.corp_id and so.shop_nr=s.shop_nr group by c.corp_id, c.name order by gold desc");
+  db.query("select c.corp_id, c.name, sum(s.gold)+c.gold as gold from corporation c, shopowned so, shop s where c.corp_id=so.corp_id and so.shop_nr=s.shop_nr group by c.corp_id, c.name, c.gold order by gold desc");
   
   me->doTell(ch->getName(), "I know about the following corporations:");
   while(db.fetchRow()){
@@ -68,7 +68,7 @@ void corpListing(TBeing *ch, TMonster *me)
 void corpSummary(TBeing *ch, TMonster *me, int corp_id)
 {
   TDatabase db(DB_SNEEZY);
-  int value=0, gold=0, shopcount=0;
+  int value=0, gold=0, shopcount=0, bank=0;
   sstring buf;
 
   if(!corp_id){
@@ -76,7 +76,7 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
     return;
   }
   
-  db.query("select c.name, sum(s.gold) as gold, count(s.shop_nr) as shops from corporation c, shopowned so, shop s where c.corp_id=so.corp_id and c.corp_id=%i and so.shop_nr=s.shop_nr group by c.corp_id, c.name order by c.corp_id", corp_id);
+  db.query("select c.name, sum(s.gold) as gold, c.gold as bank, count(s.shop_nr) as shops from corporation c, shopowned so, shop s where c.corp_id=so.corp_id and c.corp_id=%i and so.shop_nr=s.shop_nr group by c.corp_id, c.name, c.gold order by c.corp_id", corp_id);
   
   if(!db.fetchRow()){
     me->doTell(ch->getName(), "I don't have any information for that corporation.");
@@ -86,10 +86,13 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   me->doTell(ch->getName(), fmt("%-3i| %s") %
 	     corp_id % db["name"]);
 
+  bank=convertTo<int>(db["bank"]);
   gold=convertTo<int>(db["gold"]);
   value=getAssets(corp_id);
   shopcount=convertTo<int>(db["shops"]);
-
+  
+  me->doTell(ch->getName(), fmt("Bank Talens: %12s") %
+	     (fmt("%i") % bank).comify());
   me->doTell(ch->getName(), fmt("Talens:      %12s") % 
 	     (fmt("%i") % gold).comify());
   me->doTell(ch->getName(), fmt("Assets:      %12s") % 
@@ -97,7 +100,7 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   me->doTell(ch->getName(), fmt("Shops (x1M): %12s") % 
 	     (fmt("%i") % (shopcount*1000000)).comify());
   me->doTell(ch->getName(), fmt("Total value: %12s") %
-	     (fmt("%i") % (gold+value+(shopcount * 1000000))).comify());
+	     (fmt("%i") % (bank+gold+value+(shopcount * 1000000))).comify());
 
 
   // officers
@@ -130,32 +133,184 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
 }
 
 
-int corporateAssistant(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
+void corpDeposit(TBeing *ch, TMonster *me, int gold, sstring arg)
 {
-  if(cmd != CMD_LIST || !ch || !me)
+  TDatabase db(DB_SNEEZY);
+  int corp_id=0;
+
+  db.query("select corp_id from corpaccess where lower(name)='%s'",
+	   sstring(ch->getName()).lower().c_str());
+
+  if(arg.empty()){
+    if(db.fetchRow())
+      corp_id=convertTo<int>(db["corp_id"]);
+
+    if(db.fetchRow()){
+      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
+      return;
+    }
+  } else {
+    if(convertTo<int>(arg) == 0){
+      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
+      return;
+    }
+
+    while(db.fetchRow()){
+      if(convertTo<int>(db["corp_id"]) == convertTo<int>(arg)){
+	corp_id=convertTo<int>(arg);
+	break;
+      }
+    }
+  }
+
+  if(!corp_id){
+      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to deposit the money for.");
+      return;
+  }
+
+  if(ch->getMoney() < gold){
+    me->doTell(ch->getName(), "You don't have that many talens.");
+    return;
+  }
+
+  me->doTell(ch->getName(), fmt("Ok, you are depositing %i gold.") % gold);
+  ch->addToMoney(-gold, GOLD_XFER);
+  db.query("update corporation set gold=gold+%i where corp_id=%i",
+	   gold, corp_id);
+  db.query("select gold from corporation where corp_id=%i", corp_id);
+  db.fetchRow();
+
+  me->doTell(ch->getName(), fmt("Your balance is %s.") % db["gold"]);
+}
+
+
+void corpWithdraw(TBeing *ch, TMonster *me, int gold, sstring arg)
+{
+  TDatabase db(DB_SNEEZY);
+  int corp_id=0;
+
+  db.query("select corp_id from corpaccess where lower(name)='%s'",
+	   sstring(ch->getName()).lower().c_str());
+
+  if(arg.empty()){
+    if(db.fetchRow())
+      corp_id=convertTo<int>(db["corp_id"]);
+
+    if(db.fetchRow()){
+      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to withdraw the money from.");
+      return;
+    }
+  } else {
+    if(convertTo<int>(arg) == 0){
+      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to withdraw the money from.");
+      return;
+    }
+
+    while(db.fetchRow()){
+      if(convertTo<int>(db["corp_id"]) == convertTo<int>(arg)){
+	corp_id=convertTo<int>(arg);
+	break;
+      }
+    }
+  }
+
+  if(!corp_id){
+      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to withdraw the money from.");
+      return;
+  }
+
+  db.query("select gold from corporation where corp_id=%i", corp_id);
+  db.fetchRow();
+
+  int tmp=convertTo<int>(db["gold"]);
+
+  if(tmp < gold){
+    me->doTell(ch->getName(), fmt("Your corporation only has %i talens.") % tmp);
+    return;
+  }
+
+  db.query("update corporation set gold=gold-%i", gold);
+
+  ch->addToMoney(gold, GOLD_XFER);
+
+  me->doTell(ch->getName(), fmt("Ok, here is %i talens.") % gold);
+  me->doTell(ch->getName(), fmt("Your balance is %i.") % (tmp-gold));
+}
+
+
+void corpBalance(TBeing *ch, TMonster *me, sstring arg)
+{
+  TDatabase db(DB_SNEEZY);
+  int corp_id=0;
+
+  db.query("select corp_id from corpaccess where lower(name)='%s'",
+	   sstring(ch->getName()).lower().c_str());
+
+  if(arg.empty()){
+    if(db.fetchRow())
+      corp_id=convertTo<int>(db["corp_id"]);
+
+    if(db.fetchRow()){
+      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to withdraw the money from.");
+      return;
+    }
+  } else {
+    if(convertTo<int>(arg) == 0){
+      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to withdraw the money from.");
+      return;
+    }
+
+    while(db.fetchRow()){
+      if(convertTo<int>(db["corp_id"]) == convertTo<int>(arg)){
+	corp_id=convertTo<int>(arg);
+	break;
+      }
+    }
+  }
+
+  if(!corp_id){
+      me->doTell(ch->getName(), "You must specify the ID of the corporation you wish to withdraw the money from.");
+      return;
+  }
+
+  db.query("select gold from corporation where corp_id=%i", corp_id);
+  db.fetchRow();
+
+  me->doTell(ch->getName(), fmt("Your balance is %s.") % db["gold"]);
+
+
+}
+
+
+int corporateAssistant(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, TObj *)
+{
+  if(!ch || !me)
     return FALSE;
 
   TDatabase db(DB_SNEEZY);
   int tmp=0;
-  sstring buf;
+  sstring buf, arg=argument;
 
-  // list short summary of all corporations
-  if(!*arg){
-    corpListing(ch, me);
-    return true;
-  }
-
-  // list details of a specific corporation
-  if(*arg){
-    if((tmp=convertTo<int>(arg))){
+  if(cmd==CMD_LIST){
+    if(arg.empty()){
+      // list short summary of all corporations
+      corpListing(ch, me);
+    } else if(!arg.empty()){
+      // list details of a specific corporation
+      tmp=convertTo<int>(arg);
       corpSummary(ch, me, tmp);
     }
+  } else if(cmd==CMD_DEPOSIT){
+    tmp=convertTo<int>(arg);
+    corpDeposit(ch, me, tmp, arg.word(2));
+  } else if(cmd==CMD_WITHDRAW){
+    tmp=convertTo<int>(arg);
+    corpWithdraw(ch, me, tmp, arg.word(2));
+  } else if(cmd==CMD_BALANCE){
+    corpBalance(ch, me, arg);
+  } else
+    return false;
 
 
-    return true;
-  }    
-
-
-
-  return TRUE;
+  return true;
 }
