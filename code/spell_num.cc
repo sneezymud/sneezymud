@@ -936,8 +936,10 @@ int mapSpellnumToFile(spellNumT stt)
       return 695;
     case SKILL_REPAIR_MAGE:
       return 696;
+    /*
     case SKILL_REPAIR_RANGER:
       return 697;
+    */
     case SKILL_REPAIR_DEIKHAN:
       return 698;
     case SKILL_REPAIR_CLERIC:
@@ -1939,8 +1941,10 @@ spellNumT mapFileToSpellnum(int stt)
 
     case 696:
       return SKILL_REPAIR_MAGE;
+    /*
     case 697:
       return SKILL_REPAIR_RANGER;
+    */
     case 698:
       return SKILL_REPAIR_DEIKHAN;
     case 699:

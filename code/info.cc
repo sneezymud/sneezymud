@@ -1201,7 +1201,6 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_RESCUE:
       case SKILL_SMYTHE:
       case SKILL_REPAIR_MAGE:
-      case SKILL_REPAIR_RANGER:
       case SKILL_REPAIR_MONK:
       case SKILL_REPAIR_CLERIC:
       case SKILL_REPAIR_DEIKHAN:

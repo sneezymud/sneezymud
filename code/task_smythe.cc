@@ -843,15 +843,15 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	return FALSE;
       }
 
-      learning = ch->getSkillValue(SKILL_REPAIR_RANGER);
-      didSucceed = bSuccess(ch, learning, SKILL_REPAIR_RANGER);
+      learning = ch->getSkillValue(SKILL_REPAIR_MONK);
+      didSucceed = bSuccess(ch, learning, SKILL_REPAIR_MONK);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
       if (ch->task->status && didSucceed || !ch->task->status) {
 	
 	if (ch->getRace() == RACE_ELVEN) {
-	  ch->addToMove(min(-1, ::number(-5,-15) + ::number(1,((ch->getSkillValue(SKILL_REPAIR_RANGER) / 20))) + 2));
+	  ch->addToMove(min(-1, ::number(-5,-15) + ::number(1,((ch->getSkillValue(SKILL_REPAIR_MONK) / 20))) + 2));
 	} else {
-	  ch->addToMove(min(-1, ::number(-5,-15) + ::number(1,((ch->getSkillValue(SKILL_REPAIR_RANGER) / 20)))));
+	  ch->addToMove(min(-1, ::number(-5,-15) + ::number(1,((ch->getSkillValue(SKILL_REPAIR_MONK) / 20)))));
 	}
 	if (ch->getMove() < 10) {
 	  act("You are much too tired to continue regenerating $p.", FALSE, ch, o, 0, TO_CHAR);
@@ -918,7 +918,7 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
 	  percent -= ch->getDexReaction() * 3;
 	
-	if (percent < ch->getSkillValue(SKILL_REPAIR_RANGER))
+	if (percent < ch->getSkillValue(SKILL_REPAIR_MONK))
 	  o->addToStructPoints(1);
 	else
 	  o->addToStructPoints(-1);
@@ -1145,13 +1145,9 @@ int task_repair_rock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
   }
 
   spellNumT skill;
-  if (ch->getSkillValue(SKILL_REPAIR_MAGE) > ch->getSkillValue(SKILL_REPAIR_RANGER)) {
-    skill = SKILL_REPAIR_MAGE;
-    maxrepair = 80;
-  } else {
-    skill = SKILL_REPAIR_RANGER;
-    maxrepair = 66;
-  }
+  skill = SKILL_REPAIR_MAGE;
+  maxrepair = 80;
+
   if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
 
@@ -1453,13 +1449,9 @@ int task_mend_hide(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   }
 
   spellNumT skill;
-  if (ch->getSkillValue(SKILL_REPAIR_RANGER) > ch->getSkillValue(SKILL_REPAIR_MONK)) {
-    skill = SKILL_REPAIR_RANGER;
-    maxrepair = 85;
-  } else {
-    skill = SKILL_REPAIR_MONK;
-    maxrepair = 66;
-  }
+  skill = SKILL_REPAIR_MONK;
+  maxrepair = 85;
+
   if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
 

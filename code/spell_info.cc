@@ -719,8 +719,6 @@ void buildSpellArray()
 
   discArray[SKILL_BARKSKIN] = new spellInfo(SPELL_RANGER, DISC_RANGER, DISC_PLANTS, "barkskin", TASK_EASY, LAG_3, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM| TAR_FIGHT_SELF, SYMBOL_STRESS_0, "Your skin loses its barklike qualities.", "$n's skin loses its barklike qualities.", "Your skin seems slightly less like bark.", "$n's skin seems slightly less like wood.", START_1, LEARN_10, START_DO_20, LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.04, COMP_VERBAL | COMP_GESTURAL | COMP_MATERIAL | COMP_MATERIAL_END, TOG_HAS_BARKSKIN);
 
-  discArray[SKILL_REPAIR_RANGER] = new spellInfo(SKILL_RANGER, DISC_RANGER, DISC_SMYTHE, "ranger repair", TASK_NORMAL, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_3, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
-
 
 // disc_fight_ranger
 

@@ -1069,7 +1069,7 @@ int repairDead(TBeing *ch, TObj *o)
 
 int repairOrganic(TBeing *ch, TObj *o)
 {
-  if (!ch->doesKnowSkill(SKILL_REPAIR_RANGER)) {
+  if (!ch->doesKnowSkill(SKILL_REPAIR_MONK)) {
     ch->sendTo("You really don't know enough about repairing organic materials.\n\r");
     return FALSE;
   }
@@ -1095,7 +1095,7 @@ int repairMagical(TBeing *ch, TObj *o)
 
 int repairRock(TBeing *ch, TObj *o)
 {
-  if (!ch->doesKnowSkill(SKILL_REPAIR_MAGE) && !ch->doesKnowSkill(SKILL_REPAIR_RANGER)) {
+  if (!ch->doesKnowSkill(SKILL_REPAIR_MAGE) && !ch->doesKnowSkill(SKILL_REPAIR_MONK)) {
     ch->sendTo("You really don't know enough about repairing rocks.\n\r");
     return FALSE;
   }
@@ -1121,7 +1121,7 @@ int repairCrystal(TBeing *ch, TObj *o)
 
 int repairHide(TBeing *ch, TObj *o)
 {
-  if (!ch->doesKnowSkill(SKILL_REPAIR_RANGER) && !ch->doesKnowSkill(SKILL_REPAIR_MONK)) {
+  if (!ch->doesKnowSkill(SKILL_REPAIR_MONK)) {
     ch->sendTo("You really don't know enough about mending hides.\n\r");
     return FALSE;
   }

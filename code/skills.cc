@@ -557,8 +557,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDRanger *) cd)->skBeastSummon;
     case SKILL_BARKSKIN:  //                   350
       return &((CDRanger *) cd)->skBarkskin;
-    case SKILL_REPAIR_RANGER:
-      return &((CDRanger *) cd)->skRepairRanger;
 
 
 // disc_fight_ranger
