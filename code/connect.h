@@ -474,7 +474,7 @@ class Descriptor
     bool start_page_file(const char *, const char *);
     bool canChooseClass(int, bool multi = FALSE, bool triple = FALSE);
     int client_nanny(char *);
-    void writeToQ(const char *arg);
+    void writeToQ(const sstring &arg);
     void clientf(const char *msg,...);
     bool page_file(const char *);
     void page_string(const sstring &, showNowT = SHOWNOW_NO, allowReplaceT allow = ALLOWREP_NO);

@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     if(!parse_num_args(argc-2, argv+2, vnums))
       exit(0);
    
-    ssprintf(where, "where vnum in (");
+    where="where vnum in (";
     for (i=0;i<vnums.size()-1;i++){
       ssprintf(where, "%s%i,", where.c_str(),vnums[i]);
       ssprintf(grep, "%sVALUES \\(%i,|",grep.c_str(), vnums[i]);
@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     immortal="";
     if(!parse_num_args(argc-1, argv+1, vnums))
       exit(0);
-    ssprintf(where, "where vnum in (");
+    where="where vnum in (";
     for (i=0;i<vnums.size()-1;i++){
       ssprintf(where, "%s%i,", where.c_str(),vnums[i]);
       ssprintf(grep, "%sVALUES \\(%i,|",grep.c_str(), vnums[i]);

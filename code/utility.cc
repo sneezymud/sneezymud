@@ -621,8 +621,7 @@ void vlogf(const char * errorMsg, ...)
 void vlogf(logTypeT tError, const char *errorMsg,...)
 {
   char message[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
-  char buf[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
-  char name[MAX_NAME_LENGTH] = "\0";
+  sstring buf, name;
   Descriptor *i;
   time_t lt;
   struct tm *this_time;
@@ -637,55 +636,46 @@ void vlogf(logTypeT tError, const char *errorMsg,...)
 
   switch (tError) {
     case LOG_LOW:
-      strcpy(buf, "L.O.W. Error: ");
+      buf = "L.O.W. Error: ";
       break;
     case LOG_CHEAT:
-      strcpy(buf, "Cheating: ");
+      buf = "Cheating: ";
       break;
     case LOG_BATOPR:
-      strcpy(buf, "Batopr: ");
-      strncpy(name, buf, strlen(buf)-2);
-      name[strlen(buf)-2]='\0';
+      name = "Batopr";
+      ssprintf(buf, "%s: ", name.c_str());
       break;
     case LOG_BRUTIUS:
-      strcpy(buf, "Brutius: ");
-      strncpy(name, buf, strlen(buf)-2);
-      name[strlen(buf)-2]='\0';
+      name = "Brutius";
+      ssprintf(buf, "%s: ", name.c_str());
       break;
     case LOG_COSMO:
-      strcpy(buf, "Cosmo: ");
-      strncpy(name, buf, strlen(buf)-2);
-      name[strlen(buf)-2]='\0';
+      name = "Cosmo";
+      ssprintf(buf, "%s: ", name.c_str());
       break;
     case LOG_LAPSOS:
-      strcpy(buf, "Lapsos: ");
-      strncpy(name, buf, strlen(buf)-2);
-      name[strlen(buf)-2]='\0';
+      name = "Lapsos";
+      ssprintf(buf, "%s: ", name.c_str());
       break;
     case LOG_PEEL:
-      strcpy(buf, "Peel: ");
-      strncpy(name, buf, strlen(buf)-2);
-      name[strlen(buf)-2]='\0';
+      name = "Peel";
+      ssprintf(buf, "%s: ", name.c_str());
       break;
     case LOG_JESUS:
-      strcpy(buf, "Jesus: ");
-      strncpy(name, buf, strlen(buf)-2);
-      name[strlen(buf)-2]='\0';
+      name = "Jesus";
+      ssprintf(buf, "%s: ", name.c_str());
       break;
     case LOG_DASH:
-      strcpy(buf, "Dash: ");
-      strncpy(name, buf, strlen(buf)-2);
-      name[strlen(buf)-2]='\0';
+      name = "Dash";
+      ssprintf(buf, "%s: ", name.c_str());
       break;
     case LOG_MAROR:
-      strcpy(buf, "Maror: ");
-      strncpy(name, buf, strlen(buf)-2);
-      name[strlen(buf)-2]='\0';
+      name = "Maror";
+      ssprintf(buf, "%s: ", name.c_str());
       break;
     case LOG_DB:
-      strcpy(buf, "Database: ");
-      strncpy(name, buf, strlen(buf)-2);
-      name[strlen(buf)-2]='\0';
+      name = "Database";
+      ssprintf(buf, "%s: ", name.c_str());
       break;
     default:
       buf[0] = '\0';
@@ -693,11 +683,11 @@ void vlogf(logTypeT tError, const char *errorMsg,...)
       break;
   }
 
-  strcat(buf, message);
+  buf += message;
 
   fprintf(stderr, "%4.4d|%2.2d%2.2d|%2.2d:%2.2d:%2.2d :: %s\n",
           this_time->tm_year + 1900, this_time->tm_mon + 1, this_time->tm_mday,
-          this_time->tm_hour, this_time->tm_min, this_time->tm_sec, buf);
+          this_time->tm_hour, this_time->tm_min, this_time->tm_sec, buf.c_str());
 
   if (tError >= 0) {
     for (i = descriptor_list; i; i = i->next) {
@@ -716,16 +706,16 @@ void vlogf(logTypeT tError, const char *errorMsg,...)
       if (!IS_SET(i->severity, 1<<tError))
         continue;
 
-      if (name[0] && strcmp(name, i->character->name))
+      if (name[0] && name==i->character->name)
         continue;
 
       if (i->character->isPlayerAction(PLR_MAILING | PLR_BUGGING))
         continue;
  
       if (i->m_bIsClient)
-        i->clientf("%d|%d|%s", CLIENT_LOG, tError, buf);
+        i->clientf("%d|%d|%s", CLIENT_LOG, tError, buf.c_str());
       else
-        i->character->sendTo(COLOR_LOGS, "// %s\n\r", buf);
+        i->character->sendTo(COLOR_LOGS, "// %s\n\r", buf.c_str());
     }
   }
 }
@@ -1024,24 +1014,27 @@ bool TBeing::makesNoise() const
 // vsystem - do a system command without duplicating the core image. 
 //   This should save a lot of CPU time considering the mud can be
 //  over 10 megs in size.  - SG                                    
-int vsystem(char *buf)
+int vsystem(const sstring &buf)
 {
   extern char **environ;
   int pid;
   char sh[64];
   char *prog;
   char tmp[64];
-  char * argv[4];
+  char *argv[4], buf2[MAX_STRING_LENGTH];
 #ifndef SUN
   int *status = NULL;
 #else
   union wait status;
 #endif
 
-  if (!buf) {
+
+  if (buf.empty()) {
     vlogf(LOG_BUG, "vsystem called with NULL parameter.");
     return FALSE;
   }
+  strcpy(buf2, buf.c_str());
+
   strcpy(sh, "/bin/sh");
   if (!(prog = strrchr(sh, '/')))
     prog = sh;
@@ -1049,7 +1042,7 @@ int vsystem(char *buf)
   argv[0] = prog;
   strcpy(tmp, "-c");
   argv[1] = tmp;
-  argv[2] = buf;
+  argv[2] = buf2;
   argv[3] = NULL;
   if (!(pid = vfork())) {
     execve(sh, argv, environ);

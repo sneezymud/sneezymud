@@ -2316,8 +2316,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, TThing *tList, int
 {
   int         tCost    = 0,
               lCount   = 0;
-  char        tString[256],
-              tBuffer[256];
+  sstring tString, tBuffer;
   TThing     *tMarker;
   bool        hasPrior = false;
   TComponent *tObj;
@@ -2356,45 +2355,45 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, TThing *tList, int
     }
   }
 
-  sprintf(tBuffer, "%%-%ds : ", (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str()))));
+  ssprintf(tBuffer, "%%-%ds : ", (30 + (strlen(getName()) - strlen(getNameNOC(ch).c_str()))));
 
   if (isRentable()) {
-    strcat(tBuffer, "%5d talens/day");
+    tBuffer+="%5d talens/day";
     *tCount = *tCount + 1;
     lCount++;
     tCost = (max(0, rentCost()) * lCount);
 #ifdef FREE_RENT
     if(max_exist > LIMITED_RENT_ITEM) tCost = 0;
 #endif
-    sprintf(tString, tBuffer, getName(), tCost);
+    ssprintf(tString, tBuffer.c_str(), getName(), tCost);
     if (FreeRent) {
       if (lCount == 1)
-	strcat(tString, "\n\r");
+	tString+="\n\r";
       else {
-	sprintf(tBuffer, "  x%3d\n\r", lCount);
-	strcat(tString, tBuffer);
+	ssprintf(tBuffer, "  x%3d\n\r", lCount);
+	tString+=tBuffer;
       }
     } else {
       
       if (lCount == 1)
-	strcat(tString, "\n\r");
+	tString+="\n\r";
       else {
-	sprintf(tBuffer, "  [%5dx%3d]\n\r", max(0, rentCost()), lCount);
-	strcat(tString, tBuffer);
+	ssprintf(tBuffer, "  [%5dx%3d]\n\r", max(0, rentCost()), lCount);
+	tString+=tBuffer;
       }
     }
     //sprintf(tString, "%-30s : %5d talens/day  [x%3d]\n\r", getName(), tCost, lCount);
     tStString += tString;
   } else {
-    strcat(tBuffer, "NOT RENTABLE");
+    tBuffer+="NOT RENTABLE";
     lCount++;
-    sprintf(tString, tBuffer, getName());
+    ssprintf(tString, tBuffer.c_str(), getName());
 
     if (lCount == 1)
-      strcat(tString, "\n\r");
+      tString+="\n\r";
     else {
-      sprintf(tBuffer, "      [x%3d]\n\r", lCount);
-      strcat(tString, tBuffer);
+      ssprintf(tBuffer, "      [x%3d]\n\r", lCount);
+      tString+=tBuffer;
     }
 
     //sprintf(tString, "%-30s : NOT RENTABLE  x%3d\n\r", getName(), lCount);

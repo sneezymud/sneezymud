@@ -434,8 +434,7 @@ void TBeing::doGamestats(const sstring &arg)
            ((tot_blows - tot_hits) == 0 ? 0.0 : 
               (100.0 * stats.combat_crit_fail_pass / (tot_blows - tot_hits))));
     str += buf;
-    ssprintf(buf, "\n\r");
-    str += buf;
+    str += "\n\r";
     ssprintf(buf, "Mobiles have tried to aggro : %d times.\n\r", stats.aggro_attempts);
     str += buf;
     ssprintf(buf, "Mobiles have aggro'd        : %d times.\n\r", stats.aggro_successes);

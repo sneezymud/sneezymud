@@ -41,10 +41,9 @@ void Descriptor::menuWho()
 {
   TBeing *person;
   char buf[256];
-  char buf2[256];
-  char send[4096] = "\0";
+  sstring buf2, send;
 
-  strcpy(send, "\n\r");
+  send="\n\r";
 
   for (person = character_list; person; person = person->next) {
     if (person->isPc() && person->polyed == POLY_TYPE_NONE) {
@@ -52,13 +51,12 @@ void Descriptor::menuWho()
           (person->getInvisLevel() < GOD_LEVEL1)) {
         person->parseTitle(buf, this);
 
-        sprintf(buf2, "%s", colorString(person, this, buf, NULL, COLOR_BASIC, FALSE).c_str());
-        strcat(buf2, "\n\r");
-        strcat(send, buf2);
+        ssprintf(buf2, "%s\n\r", colorString(person, this, buf, NULL, COLOR_BASIC, FALSE).c_str());
+	send += buf2;
       }
     }
   }
-  strcat(send, "\n\r");
+  send += "\n\r";
   writeToQ(send);
   writeToQ("[Press return to continue]\n\r");
 }
@@ -601,7 +599,7 @@ void TBeing::doWhozone()
 {
   Descriptor *d;
   TRoom *rp = NULL;
-  char buf[256];
+  sstring sbuf, buf;
   TBeing *person = NULL;
   int count = 0;
 
@@ -610,11 +608,14 @@ void TBeing::doWhozone()
     if (!d->connected && canSee(d->character) &&
         (rp = real_roomp((person = (d->original ? d->original : d->character))->in_room)) &&
         (rp->getZoneNum() == roomp->getZoneNum())) {
-      sprintf(buf, "%-25s - %s ", person->getName(), rp->name);
-      if (GetMaxLevel() > MAX_MORT)
-        sprintf(buf + strlen(buf), "[%d]", person->in_room);
-      strcat(buf, "\n\r");
-      sendTo(COLOR_BASIC, buf);
+      ssprintf(buf, "%-25s - %s ", person->getName(), rp->name);
+      sbuf+=buf;
+      if (GetMaxLevel() > MAX_MORT){
+        ssprintf(buf, "[%d]", person->in_room);
+	sbuf+=buf;
+      }
+      buf += "\n\r";
+      sendTo(COLOR_BASIC, buf.c_str());
       count++;
     }
   }

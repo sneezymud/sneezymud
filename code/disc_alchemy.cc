@@ -188,8 +188,7 @@ static sstring identifyBeingStuff(const TBeing *caster, TBeing *victim, showMeT 
 
   str += "Affected by: ";
 
-  sprintbit(victim->specials.affectedBy, affected_bits, buf);
-  str += buf;
+  str += sprintbit(victim->specials.affectedBy, affected_bits);;
   str += "\n\r";
 
   str += caster->describeAffects(victim, show);
@@ -254,20 +253,20 @@ void TObj::divinateMe(TBeing *caster) const
 
 int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
 {
-  char buf[256];
+  sstring buf;
   int i, found = FALSE;
 
   if (bSuccess(caster, bKnown, SPELL_DIVINATION)) {
-    strcpy(buf, obj->shortDescr);
-    caster->sendTo(COLOR_OBJECTS, "Your mind analyzes %s...\n\r", uncap(buf));
+    buf=obj->shortDescr;
+    caster->sendTo(COLOR_OBJECTS, "Your mind analyzes %s...\n\r", good_uncap(buf).c_str());
 
     caster->sendTo("%s\n\r", obj->statObjInfo().c_str());
 
     obj->divinateMe(caster);
 
     caster->sendTo("It will give you following abilities when equipped:  ");
-    sprintbit(obj->obj_flags.bitvector, affected_bits, buf);
-    strcat(buf, "\n\r");
+    buf=sprintbit(obj->obj_flags.bitvector, affected_bits);
+    buf+="\n\r";
     caster->sendTo(buf);
     found = FALSE;
     for (i = 0; i < MAX_OBJ_AFFECT; i++) {
@@ -637,7 +636,7 @@ int TThing::powerstoneMe(TBeing *caster, int, byte)
 int TOpal::powerstoneMe(TBeing *caster, int, byte bKnown)
 {
   int str;
-  char buf[256];
+  sstring buf;
 
   if ((psGetStrength() == psGetCarats()) || (psGetConsecFails() >= 2)) {
     // But the thing was already maxed out 
@@ -678,8 +677,8 @@ int TOpal::powerstoneMe(TBeing *caster, int, byte bKnown)
       // init the four values
       psSetMana(0);
       psSetConsecFails(0);
-      strcpy(buf, name);
-      strcat(buf, " stone powerstone power");
+      buf=name;
+      buf+=" stone powerstone power";
       swapToStrung();
       delete [] name;
       name = mud_str_dup(buf);

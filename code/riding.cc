@@ -104,7 +104,7 @@ bool TBeing::hasSaddle() const
 int TMonster::lookForHorse()
 {
   int rc;
-  char buf[256];
+  sstring buf;
   TThing *t;
   TBeing *horse = NULL;
 
@@ -137,14 +137,14 @@ int TMonster::lookForHorse()
   if (tbt) {
     if (tbt->getPosition() < POSITION_SLEEPING) {
     } else if (tbt->getPosition() == POSITION_SLEEPING) {
-      sprintf(buf,"order %s wake",fname(tbt->name).c_str());
-      rc = addCommandToQue(buf);
+      ssprintf(buf,"order %s wake",fname(tbt->name).c_str());
+      rc = addCommandToQue(buf.c_str());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     } else if (tbt->getPosition() <= POSITION_SITTING) {
-      sprintf(buf,"order %s stand",fname(tbt->name).c_str());
-      rc = addCommandToQue(buf);
+      ssprintf(buf,"order %s stand",fname(tbt->name).c_str());
+      rc = addCommandToQue(buf.c_str());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
@@ -152,9 +152,9 @@ int TMonster::lookForHorse()
 
     /* don't look for another horse, but make mount assist me */
     if (fight() && !tbt->fight()) {
-      sprintf(buf,"order %s hit ",fname(tbt->name).c_str());
-      strcat(buf,fname(fight()->name).c_str());
-      rc = addCommandToQue(buf);
+      ssprintf(buf,"order %s hit ",fname(tbt->name).c_str());
+      buf += fname(fight()->name);
+      rc = addCommandToQue(buf.c_str());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;

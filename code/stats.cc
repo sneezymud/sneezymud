@@ -95,14 +95,13 @@ const sstring Stats::printStatHeader() const
 
 const sstring Stats::printRawStats(const TBeing *) const
 {
-  char rawStats[256];
-
-  *rawStats = '\0';
+  sstring rawStats, buf;
 
   for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-    sprintf(rawStats + strlen(rawStats), " %3d ", get(stat));
+    ssprintf(buf, " %3d ", get(stat));
+    rawStats += buf;
   }
-  strcat(rawStats, "\n\r");
+  rawStats += "\n\r";
 
   return rawStats;
 }

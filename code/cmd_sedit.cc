@@ -469,12 +469,12 @@ FILE * seditVerifyDirTree(TBeing *ch, char *tArg = NULL,
                           bool tWrite = false, bool isSilent = false)
 {
   FILE *tFile;
-  char tPath[256];
+  sstring tPath;
 
-  sprintf(tPath, "immortals/%s/mobs", ch->getNameNOC(ch).c_str());
+  ssprintf(tPath, "immortals/%s/mobs", ch->getNameNOC(ch).c_str());
 
-  if (!(tFile = fopen(tPath, "r"))) {
-    if (mkdir(tPath, 0770)) {
+  if (!(tFile = fopen(tPath.c_str(), "r"))) {
+    if (mkdir(tPath.c_str(), 0770)) {
       if (!isSilent)
         ch->sendTo("Unable to open/create a mobile directory for you.\n\r");
 
@@ -486,10 +486,10 @@ FILE * seditVerifyDirTree(TBeing *ch, char *tArg = NULL,
   if (tFile)
     fclose(tFile);
 
-  strcat(tPath, "/scripts");
+  tPath+="/scripts";
 
-  if (!(tFile = fopen(tPath, "r"))) {
-    if (mkdir(tPath, 0770)) {
+  if (!(tFile = fopen(tPath.c_str(), "r"))) {
+    if (mkdir(tPath.c_str(), 0770)) {
       if (!isSilent)
         ch->sendTo("Unable to open/create a script directory for you.\n\r");
 
@@ -502,10 +502,10 @@ FILE * seditVerifyDirTree(TBeing *ch, char *tArg = NULL,
     fclose(tFile);
 
   if (tArg && *tArg) {
-    strcat(tPath, "/");
-    strcat(tPath, tArg);
+    tPath+="/";
+    tPath+=tArg;
 
-    if ((tFile = fopen(tPath, (tWrite ? "w" : "r"))))
+    if ((tFile = fopen(tPath.c_str(), (tWrite ? "w" : "r"))))
       return tFile;
   }
 

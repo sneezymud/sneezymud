@@ -51,7 +51,7 @@ void PokerGame::stay(TBeing *ch)
 {
   sstring log_msg;
 
-  ssprintf(log_msg, "You are dealt:\n\r");
+  log_msg="You are dealt:\n\r";
   ch->sendTo(COLOR_BASIC, log_msg);
   act("$n is dealt", TRUE, ch, 0, 0, TO_ROOM);
 
@@ -303,7 +303,7 @@ void PokerGame::Bet(TBeing *ch, const sstring &arg)
     if (deck_inx > 10)
       poker_shuffle(ch);
 
-    ssprintf(log_msg, "You are dealt:\n\r");
+    log_msg="You are dealt:\n\r";
     ch->sendTo(COLOR_BASIC, log_msg);
     act("$n is dealt:", TRUE, ch, 0, 0, TO_ROOM);
 
@@ -367,7 +367,7 @@ void PokerGame::peek(const TBeing *ch)
     ch->sendTo("You are not playing a game.\n\r");
     return;
   }
-  ssprintf(log_msg, "You peek at your hand:\n\r");
+  log_msg="You peek at your hand:\n\r";
   ch->sendTo(COLOR_BASIC, log_msg);
 
   for(int i=0;i<5;++i){

@@ -444,38 +444,31 @@ int TShopOwned::setAccess(sstring arg)
       
       if(access>=SHOPACCESS_LOGS){
 	access-=SHOPACCESS_LOGS;
-	ssprintf(buf2, " logs");
-	buf+=buf2;
+	buf+=" logs";
       }
       if(access>=SHOPACCESS_ACCESS){
 	access-=SHOPACCESS_ACCESS;
-	ssprintf(buf2, " access");
-	buf+=buf2;
+	buf+=" access";
       }
       if(access>=SHOPACCESS_SELL){
 	access-=SHOPACCESS_SELL;
-	ssprintf(buf2, " sell");
-	buf+=buf2;
+	buf+=" sell";
       }
       if(access>=SHOPACCESS_GIVE){
 	access-=SHOPACCESS_GIVE;
-	ssprintf(buf2, " give");
-	buf+=buf2;
+	buf+=" give";
       }
       if(access>=SHOPACCESS_RATES){
 	access-=SHOPACCESS_RATES;
-	ssprintf(buf2, " rates");
-	buf+=buf2;
+	buf+=" rates";
       }
       if(access>=SHOPACCESS_INFO){
 	access-=SHOPACCESS_INFO;
-	ssprintf(buf2, " info");
-	buf+=buf2;
+	buf+=" info";
       }
       if(access>=SHOPACCESS_OWNER){
 	access-=SHOPACCESS_OWNER;
-	ssprintf(buf2, " owner");
-	buf+=buf2;
+	buf+=" owner";
       }
       
       keeper->doTell(buf);
@@ -548,8 +541,7 @@ int TShopOwned::doLogs(sstring arg)
     sb += "\n\r";
     int profit=0, loss=0;
     
-    ssprintf(buf, "<r>Sales Balance<1>\n\r");
-    sb += buf;
+    sb+="<r>Sales Balance<1>\n\r";
     
     db.query("select sum(talens) as talens from shoplog where shop_nr=%i and talens > 0 and action != 'receiving' and action != 'giving'", shop_nr);
     
@@ -574,8 +566,7 @@ int TShopOwned::doLogs(sstring arg)
     sb += "\n\r";
     profit=loss=0;
     
-    ssprintf(buf, "<r>Gross Balance<1>\n\r");
-    sb += buf;
+    sb+="<r>Gross Balance<1>\n\r";
     
     db.query("select sum(talens) as talens from shoplog where shop_nr=%i and talens > 0",
 	     shop_nr);

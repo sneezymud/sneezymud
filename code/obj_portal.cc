@@ -123,8 +123,7 @@ sstring TPortal::statObjInfo() const
           getTarget(), getPortalNumCharges(), getPortalType());
   tStString += tString;
   tStString += "Portal Flags: ";
-  sprintbit(getPortalFlags(), exit_bits, tString);
-  tStString += tString;
+  tStString += sprintbit(getPortalFlags(), exit_bits);;
   sprintf(tString, "\n\rKey: %d, Trap Type: %s, Trap Dam: %d",
           getPortalKey(), trap_types[getPortalTrapType()], getPortalTrapDam());
   tStString += tString;

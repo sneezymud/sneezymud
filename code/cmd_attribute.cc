@@ -481,7 +481,7 @@ const char *statBonusDescr(int percent)
 
 void TBeing::doAttribute(const char *arg)
 {
-  char buf[512], buf2[512], cmdbuf[256];
+  sstring buf, buf2, cmdbuf;
   struct time_info_data playing_time;
   struct time_info_data birth_data;
   int day;
@@ -491,7 +491,7 @@ void TBeing::doAttribute(const char *arg)
     return;
 
   one_argument(arg, cmdbuf);
-  if (!*cmdbuf) {
+  if (cmdbuf.empty()) {
     sendTo("Syntax: attribute <personal | condition | statistics | reset>\n\r");
     return;
   }
@@ -518,12 +518,12 @@ void TBeing::doAttribute(const char *arg)
 
     day = birth_data.day + 1;        // day in [1..35] 
 
-    sprintf(buf, "You were born on the %s of %s, in the year %d P.S.\n\r",
+    ssprintf(buf, "You were born on the %s of %s, in the year %d P.S.\n\r",
           numberAsString(day).c_str(),
           month_name[birth_data.month], birth_data.year);
     sendTo(buf);
 
-    sprintf(buf, "You grew up as %s %s and began adventuring at the age of %d.\n\r",
+    ssprintf(buf, "You grew up as %s %s and began adventuring at the age of %d.\n\r",
       (startsVowel(home_terrains[player.hometerrain]) ? "an" : "a"),
       home_terrains[player.hometerrain], getBaseAge());
     sendTo(buf);
@@ -533,10 +533,10 @@ void TBeing::doAttribute(const char *arg)
     if (!age()->month && !age()->day)
       sendTo(" It's your birthday today.\n\r");
 
-    strcpy(buf, "Your social flags are: ");
-    sprintbit(desc->plr_act, attr_player_bits, buf2);
-    strcat(buf, buf2);
-    strcat(buf, "\n\r");
+    buf="Your social flags are: ";
+    buf2=sprintbit(desc->plr_act, attr_player_bits);
+    buf+=buf2;
+    buf+="\n\r";
     sendTo(buf);
     if (TestCode5) {
       sendTo(COLOR_BASIC, "You are a member of %s<1>, and have a rank of %s<1>.\n\r",
@@ -765,7 +765,7 @@ void TBeing::doAttribute(const char *arg)
     if (fight())
       act("You are fighting $N.", FALSE, this, NULL, fight(), TO_CHAR);
     else if (task) {
-      sprintf(buf, "You are %s.\n\r", tasks[task->task].name);
+      ssprintf(buf, "You are %s.\n\r", tasks[task->task].name);
       sendTo(buf);
     } else {
       TBeing *tbr;
@@ -784,27 +784,27 @@ void TBeing::doAttribute(const char *arg)
           break;
         case POSITION_SLEEPING:
           if (riding) {
-            sprintf(buf, "You are sleeping on ");
+            buf="You are sleeping on ";
             if (riding->getName())
-              strcat(buf,objs(riding));
+              buf+=objs(riding);
             else
-              strcat(buf, "A bad object");
+              buf+="A bad object";
   
-            strcat(buf,".\n\r");
+            buf+=".\n\r";
           } else
-            sprintf(buf, "You are sleeping.\n\r");
+            buf="You are sleeping.\n\r";
           sendTo(buf);
           break;
         case POSITION_RESTING:
           if (riding) {
-            sprintf(buf, "You are resting on ");
+            buf="You are resting on ";
             if (riding->getName())
-              strcat(buf,objs(riding));
+              buf+=objs(riding);
             else
-              strcat(buf, "A horse with a bad short description, BUG THIS!");
-            strcat(buf,".\n\r");
+              buf+="A horse with a bad short description, BUG THIS!";
+            buf+=".\n\r";
           } else
-            sprintf(buf, "You are resting.\n\r");
+            buf="You are resting.\n\r";
           sendTo(buf);
             break;
         case POSITION_CRAWLING:
@@ -812,14 +812,14 @@ void TBeing::doAttribute(const char *arg)
           break;
         case POSITION_SITTING:
           if (riding) {
-            strcpy(buf, "You are sitting on ");
+            buf="You are sitting on ";
             if (riding->getName())
-              strcat(buf,objs(riding));
+              buf+=objs(riding);
             else
-              strcat(buf, "A bad object!");
-            strcat(buf,".\n\r");
+              buf+="A bad object!";
+            buf+=".\n\r";
           } else
-            strcpy(buf, "You are sitting.\n\r");
+            buf="You are sitting.\n\r";
           sendTo(buf);
           break;
         case POSITION_FLYING:
@@ -835,12 +835,12 @@ void TBeing::doAttribute(const char *arg)
         case POSITION_MOUNTED:
           tbr = dynamic_cast<TBeing *>(riding);
           if (tbr && tbr->horseMaster() == this) {
-            strcpy(buf, "You are here, riding ");
-            strcat(buf, pers(tbr));
-            strcat(buf, ".\n\r");
+            buf="You are here, riding ";
+            buf+=pers(tbr);
+            buf+=".\n\r";
             sendTo(COLOR_MOBS, buf);
           } else if (tbr) {
-            sprintf(buf, "You are here, also riding on %s's %s%s.\n\r",
+            ssprintf(buf, "You are here, also riding on %s's %s%s.\n\r",
                 pers(tbr->horseMaster()),
                 persfname(tbr).c_str(),
                 tbr->isAffected(AFF_INVISIBLE) ? " (invisible)" : "");
@@ -904,7 +904,7 @@ void TBeing::doAttribute(const char *arg)
       }
     }
   } else if (is_abbrev(cmdbuf, "reset")) {
-    if (!strcmp("reset", cmdbuf))
+    if (cmdbuf=="reset")
       desc->session.setToZero();
     else {
       sendTo("This is a critical thing.  It resets all of your current session statis.\n\r");

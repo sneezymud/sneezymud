@@ -351,7 +351,7 @@ int board_display_msg(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
 
 int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
 {
-  char buf[MAX_STRING_LENGTH];
+  sstring buf, sbuf;
   char boardname[MAX_INPUT_LENGTH];
   char flagsbuf[MAX_INPUT_LENGTH];
 
@@ -387,16 +387,18 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
   }
   act("$n studies the board.", TRUE, ch, 0, 0, TO_ROOM);
 
-  strcpy(buf, "This is a bulletin board. You can POST notes or READ/GET notes.\n\r");
-  strcat(buf, "To view the latest message first, LOOK BOARD REVERSE\n\r");
+  buf ="This is a bulletin board. You can POST notes or READ/GET notes.\n\r";
+  buf+="To view the latest message first, LOOK BOARD REVERSE\n\r";
 
   if (!b->msg_num)
-    strcat(buf, "The board is empty.\n\r");
+    buf+="The board is empty.\n\r";
   else if (b->msg_num == 1)
-    sprintf(buf + strlen(buf), "There is 1 message on the board.\n\r");
-  else
-    sprintf(buf + strlen(buf), "There are %u messages on the board.\n\r",
+    buf += "There is 1 message on the board.\n\r";
+  else {
+    ssprintf(sbuf, "There are %u messages on the board.\n\r",
 	    b->msg_num);
+    buf += sbuf;
+  }
 
   if (!reverse) {
     unsigned int i;
@@ -425,9 +427,10 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
       *(tmp-1) = '\0';
       strcpy(name_sstring, tmp);
 
-      sprintf(buf + strlen(buf), "%s%-2d%s : %s%s %s%s %s%s%s\n\r", 
+      ssprintf(sbuf, "%s%-2d%s : %s%s %s%s %s%s%s\n\r", 
               ch->cyan(), i + 1, ch->norm(), ch->green(), date_sstring,
               ch->purple(), head_sstring, ch->orange(), name_sstring, ch->norm());
+      buf += sbuf;
     }
   } else {
     int i;
@@ -445,9 +448,10 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
       *(tmp-1) = '\0';
       strcpy(name_sstring, tmp);
 
-      sprintf(buf + strlen(buf), "%s%-2d%s : %s%s %s%s %s%s%s\n\r", 
+      ssprintf(sbuf, "%s%-2d%s : %s%s %s%s %s%s%s\n\r", 
               ch->cyan(), i + 1, ch->norm(), ch->green(), date_sstring,
               ch->purple(), head_sstring, ch->orange(), name_sstring, ch->norm());
+      buf += sbuf;
     }
   }
 

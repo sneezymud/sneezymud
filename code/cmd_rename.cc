@@ -40,8 +40,9 @@ static void renamePersonalizeFix(TThing *t, const char * orig_name, const char *
 
 void TBeing::doNameChange(const char *argument)
 {
-  char orig_name[80], new_name[80], tmpbuf[160], tmp_name[80];
+  char orig_name[80], new_name[80], tmp_name[80];
   char tmpbuf2[160], arg[80];
+  sstring tmpbuf;
   TBeing *vict;
   FILE *fp;
 
@@ -105,7 +106,7 @@ void TBeing::doNameChange(const char *argument)
     mons->swapToStrung();
 
     //  Remake the pet's name.  
-    sprintf(tmpbuf, "%s %s", mons->name, new_name);
+    ssprintf(tmpbuf, "%s %s", mons->name, new_name);
     delete [] mons->name;
     mons->name = mud_str_dup(tmpbuf);
 
@@ -113,16 +114,16 @@ void TBeing::doNameChange(const char *argument)
     sprintf(tmpbuf2, mons->getName());
     one_argument(tmpbuf2, arg);
     if (!strcmp(arg, "a") || !strcmp(arg, "an"))
-      sprintf(tmpbuf, "\"%s\", the %s", good_cap(new_name).c_str(), 
+      ssprintf(tmpbuf, "\"%s\", the %s", good_cap(new_name).c_str(), 
              one_argument(tmpbuf2, arg));
     else
-      sprintf(tmpbuf, "\"%s\", %s", good_cap(new_name).c_str(), mons->getName());
+      ssprintf(tmpbuf, "\"%s\", %s", good_cap(new_name).c_str(), mons->getName());
 
     delete [] mons->shortDescr;
     mons->shortDescr = mud_str_dup(tmpbuf);
 
     // remake the long desc
-    strcat(tmpbuf, " is here.\n\r");
+    tmpbuf += " is here.\n\r";
     delete [] mons->player.longDescr;
     mons->player.longDescr = mud_str_dup(tmpbuf);
 
@@ -153,8 +154,8 @@ void TBeing::doNameChange(const char *argument)
   }
   
   // check for corspse file
-  sprintf(tmpbuf, "corpses/%s", lower(orig_name).c_str());
-  if ((fp = fopen(tmpbuf, "r"))) {
+  ssprintf(tmpbuf, "corpses/%s", lower(orig_name).c_str());
+  if ((fp = fopen(tmpbuf.c_str(), "r"))) {
     fclose(fp);
     sendTo("That player has a corpse file.\n\r");
     return;
@@ -175,22 +176,21 @@ void TBeing::doNameChange(const char *argument)
 	   tmp_name, orig_name);
 
 
-  sprintf(tmpbuf, "account/%c/%s", LOWER(vict->desc->account->name[0]),
-                  lower(vict->desc->account->name).c_str());
-  sprintf(tmpbuf + strlen(tmpbuf), "/%s", lower(orig_name).c_str());
-  if (unlink(tmpbuf) != 0)
-    vlogf(LOG_FILE, "error in unlink (11) (%s) %d", tmpbuf, errno);
+  ssprintf(tmpbuf, "account/%c/%s/%s", LOWER(vict->desc->account->name[0]),
+                  lower(vict->desc->account->name).c_str(), lower(orig_name).c_str());
+  if (unlink(tmpbuf.c_str()) != 0)
+    vlogf(LOG_FILE, "error in unlink (11) (%s) %d", tmpbuf.c_str(), errno);
   
   if (vict->GetMaxLevel() > MAX_MORT) {
-    sprintf(tmpbuf, "mv immortals/%s/ immortals/%s/",
+    ssprintf(tmpbuf, "mv immortals/%s/ immortals/%s/",
             orig_name, cap(tmp_name));
     vsystem(tmpbuf);
   }
 
   vict->doSave(SILENT_NO);
-  sprintf(tmpbuf, "The World shall now know %s as %s.",cap(orig_name),
+  ssprintf(tmpbuf, "The World shall now know %s as %s.",cap(orig_name),
        vict->getName());
-  doSystem(tmpbuf);
+  doSystem(tmpbuf.c_str());
   vict->fixClientPlayerLists(FALSE);
 
   // OK, now for some fun

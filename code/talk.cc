@@ -748,7 +748,7 @@ int TBeing::doTell(const sstring &name, const char *fmt, ...)
 int TBeing::doTell(const sstring &arg, bool visible)
 {
   TBeing *vict;
-  char name[100], capbuf[256], message[MAX_INPUT_LENGTH + 40];
+  sstring name, capbuf, message;
   int rc;
 
   if (isAffected(AFF_SILENT)) {
@@ -767,16 +767,17 @@ int TBeing::doTell(const sstring &arg, bool visible)
     sendTo("What a dumb master you have, charmed mobiles can't tell.\n\r");
     return FALSE;
   }
-  half_chop(arg.c_str(), name, message);
+  message=arg;
+  one_argument(message, name);
 
-  if (!*name || !*message) {
+  if(name.empty() || message.empty()){
     sendTo("Whom do you wish to tell what??\n\r");
     return FALSE;
   } else if (!(vict = get_pc_world(this, name, EXACT_YES, INFRA_NO, visible))) {
     if (!(vict = get_pc_world(this, name, EXACT_NO, INFRA_NO, visible))) {
       if (!(vict = get_char_vis_world(this, name, NULL, EXACT_YES))) {
         if (!(vict = get_char_vis_world(this, name, NULL, EXACT_NO))) {
-          sendTo("You fail to tell to '%s'\n\r", name);
+          sendTo("You fail to tell to '%s'\n\r", name.c_str());
           return FALSE;
         }
       }
@@ -846,22 +847,22 @@ int TBeing::doTell(const sstring &arg, bool visible)
        !isImmortal() && !vict->isImmortal())
     garbed = "Glub glub glub.";
 
-  mud_str_copy(capbuf, vict->pers(this), 256);  // Use Someone for tells (invis gods, etc)
+  capbuf=vict->pers(this);
 
-  char garbedBuf[256];
-  char nameBuf[256];
+  sstring garbedBuf, nameBuf;
+
   if (vict->hasColor()) {
     if (hasColorStrings(NULL, capbuf, 2)) {
       if (IS_SET(vict->desc->plr_color, PLR_COLOR_MOBS)) {
-        sprintf(nameBuf, "%s", colorString(vict, vict->desc, cap(capbuf), NULL, COLOR_MOBS, FALSE).c_str());
+        ssprintf(nameBuf, "%s", colorString(vict, vict->desc, good_cap(capbuf), NULL, COLOR_MOBS, FALSE).c_str());
       } else {
-        sprintf(nameBuf, "<p>%s<z>", colorString(vict, vict->desc, cap(capbuf), NULL, COLOR_NONE, FALSE).c_str());
+        ssprintf(nameBuf, "<p>%s<z>", colorString(vict, vict->desc, good_cap(capbuf), NULL, COLOR_NONE, FALSE).c_str());
       }
     } else {
-      sprintf(nameBuf, "<p>%s<z>", cap(capbuf));
+      ssprintf(nameBuf, "<p>%s<z>", good_cap(capbuf).c_str());
     }
   } else {
-    sprintf(nameBuf, "%s", cap(capbuf));
+    ssprintf(nameBuf, "%s", good_cap(capbuf).c_str());
   }
 
   sendTo(COLOR_COMM, "<G>You tell %s<z>, \"%s\"\n\r", vict->getName(), colorString(this, desc, garbed.c_str(), NULL, COLOR_BASIC, FALSE).c_str());
@@ -873,14 +874,14 @@ int TBeing::doTell(const sstring &arg, bool visible)
 
   if(vict->isImmortal() && drunkNum>0){
     vict->sendTo(COLOR_COMM, "%s drunkenly tells you, \"<c>%s<z>\"\n\r",
-		 nameBuf, garbed.c_str());
+		 nameBuf.c_str(), garbed.c_str());
   } else {
     vict->sendTo(COLOR_COMM, "%s tells you, \"<c>%s<z>\"\n\r",
-		 nameBuf, garbed.c_str());
+		 nameBuf.c_str(), garbed.c_str());
   }
 
   TDatabase db(DB_SNEEZY);
-  db.query("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())", cap(capbuf), vict->getName(), garbed.c_str());
+  db.query("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())", good_cap(capbuf).c_str(), vict->getName(), garbed.c_str());
 
   // this is probably too slow, cron job or something would be better
   //  db.query("delete from tellhistory where tellto='%s' and telltime not in (select telltime from tellhistory where tellto='%s' order by telltime desc limit 25)", vict->getName(), vict->getName());
@@ -889,7 +890,7 @@ int TBeing::doTell(const sstring &arg, bool visible)
 
   Descriptor *d = vict->desc;
   if (d->m_bIsClient) {
-    sprintf(garbedBuf, "<c>%s<z>", garbed.c_str());
+    ssprintf(garbedBuf, "<c>%s<z>", garbed.c_str());
     d->clientf("%d|%s|%s", CLIENT_TELL,
         colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
         colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE).c_str());
@@ -912,11 +913,11 @@ int TBeing::doTell(const sstring &arg, bool visible)
 
 
 // returns DELETE_THIS if this should be toasted
-int TBeing::doWhisper(const char *arg)
+int TBeing::doWhisper(const sstring &arg)
 {
   TBeing *vict, *bOther = NULL;
   TThing *bThing;
-  char name[100], message[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH];
+  sstring name, message, buf;
   int rc;
 
   if (isAffected(AFF_SILENT)) {
@@ -930,9 +931,10 @@ int TBeing::doWhisper(const char *arg)
     sendTo("Beasts don't talk.\n\r");
     return FALSE;
   }
-  half_chop(arg, name, message);
+  message=arg;
+  one_argument(message, name);
 
-  if (!*name || !*message) {
+  if (name.empty() || message.empty()){
     sendTo("Whom do you want to whisper to.. and what??\n\r");
     return FALSE;
   }
@@ -946,10 +948,10 @@ int TBeing::doWhisper(const char *arg)
     return FALSE;
   }
 
-  char garbed[256];
-  mud_str_copy(garbed, garble(message, getCond(DRUNK)), 256);
+  sstring garbed;
+  garbed= garble(message, getCond(DRUNK));
 
-  sprintf(buf, "$n whispers to you, \"%s\"", colorString(this, vict->desc, garbed, NULL, COLOR_COMM, TRUE).c_str());
+  ssprintf(buf, "$n whispers to you, \"%s\"", colorString(this, vict->desc, garbed, NULL, COLOR_COMM, TRUE).c_str());
 
   act(buf, TRUE, this, 0, vict, TO_VICT);
   sendTo(COLOR_MOBS, "You whisper to %s, \"%s\"\n\r", vict->getName(), colorString(this, desc,garbed, NULL, COLOR_BASIC, FALSE).c_str());
@@ -966,7 +968,7 @@ int TBeing::doWhisper(const char *arg)
         bOther->GetMaxLevel() >= GetMaxLevel() &&
         bOther != this && bOther != vict &&
         !bOther->isImmortal() && !isImmortal() && !vict->isImmortal()) {
-      sprintf(buf, "$n whispers to %s, \"%s\"",
+      ssprintf(buf, "$n whispers to %s, \"%s\"",
               vict->getName(),
               colorString(this, bOther->desc, garbed, NULL, COLOR_COMM, TRUE).c_str());
       act(buf, TRUE, this, 0, bOther, TO_VICT);

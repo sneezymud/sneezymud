@@ -4026,7 +4026,7 @@ void Descriptor::show_string(const char *the_input, showNowT showNow, allowRepla
   writeToQ(buffer);
 }
 
-void Descriptor::writeToQ(const char *arg) 
+void Descriptor::writeToQ(const sstring &arg) 
 {
   output.putInQ(arg);
 }

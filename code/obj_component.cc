@@ -2472,12 +2472,12 @@ void TComponent::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 
 sstring TComponent::statObjInfo() const
 {
-  char buf[256];
+  sstring buf, sbuf;
 
   if (getComponentSpell() <= TYPE_UNDEFINED) {
-    sprintf(buf, "UNKNOWN/BOGUS spell\n\r");
+    buf = "UNKNOWN/BOGUS spell\n\r";
   } else {
-    sprintf(buf, "Spell for : %d (%s)\n\r",
+    ssprintf(buf, "Spell for : %d (%s)\n\r",
       getComponentSpell(),
       (discArray[getComponentSpell()] &&
        discArray[getComponentSpell()]->name) ? 
@@ -2486,17 +2486,18 @@ sstring TComponent::statObjInfo() const
   }
 
   if (isComponentType(COMP_DECAY))
-    strcat(buf, "Component will decay.\n\r");
+    buf += "Component will decay.\n\r";
   if (isComponentType(COMP_SPELL))
-    strcat(buf, "Component is for spell casting.\n\r");
+    buf += "Component is for spell casting.\n\r";
   if (isComponentType(COMP_POTION))
-    strcat(buf, "Component is for brewing.\n\r");
+    buf += "Component is for brewing.\n\r";
   if (isComponentType(COMP_SCRIBE))
-    strcat(buf, "Component is for scribing.\n\r");
+    buf += "Component is for scribing.\n\r";
 
-  sprintf(buf + strlen(buf), "Current Uses : %d, Max Uses : %d",
+  ssprintf(sbuf, "Current Uses : %d, Max Uses : %d",
       getComponentCharges(),
       getComponentMaxCharges());
+  buf+=sbuf;
 
   sstring a(buf);
   return a;
@@ -2945,84 +2946,6 @@ TThing & TComponent::operator -- ()
   return *this;
 }
 
-const sstring TComponent::shopList(const TBeing *ch, const sstring &tArg,
-                                  int iMin, int iMax, int num,
-                                  int shop_nr, int k, unsigned long int FitT) const
-{
-  if (true)
-    return TObj::shopList(ch, tArg, iMin, iMax, num, shop_nr, k, FitT);
-
-  char        tString[256],
-              tStObj[256],
-              tStSpell[256];
-  int         tCost,
-              tDiscount,
-              tCharges = 0,
-              tLearn;
-  TThing     *tThing;
-  TComponent *tComp;
-  TBeing     *tKeeper = NULL;
-
-  sprintf(tStObj, getNameNOC(ch).c_str());
-
-  if (strlen(tStObj) > 29) {
-    tStObj[26] = '\0';
-    strcat(tStObj, "...");
-  }
-
-  for (tThing = real_roomp(shop_index[shop_nr].in_room)->getStuff();
-       tThing; tThing = tThing->nextThing)
-    if ((tKeeper = dynamic_cast<TBeing *>(tThing)) &&
-        shop_index[shop_nr].keeper == tKeeper->mobVnum() &&
-        !tKeeper->isPc())
-      break;
-
-  if (!tKeeper) {
-    vlogf(LOG_MISC, "TComponent::shopList called by non-existant keeper.");
-    return "";
-  }
-
-  for (tThing = tKeeper->getStuff(); tThing; tThing = tThing->nextThing)
-    if ((tComp = dynamic_cast<TComponent *>(tThing)) &&
-        tComp->objVnum() == objVnum())
-      tCharges += tComp->getComponentCharges();
-
-  tCost = (shopPrice(1, shop_nr,
-                     min((float)1.3, ch->getChaShopPenalty()),
-                     &tDiscount) / getComponentCharges());
-
-  tLearn = ch->getSkillValue(SKILL_EVALUATE);
-
-  if (ch->hasClass(CLASS_RANGER)) {
-    tLearn *= ch->getClassLevel(CLASS_RANGER);
-    tLearn /= 200;
-  } else {
-    tLearn *= ch->getSkillValue(SPELL_IDENTIFY);
-    tLearn /= 100;
-  }
-
-  if (tLearn > 10) {
-    strcpy(tStSpell, discArray[getComponentSpell()]->name);
-
-    if (strlen(tStSpell) > 29) {
-      tStSpell[26] = '\0';
-      strcat(tStSpell, "...");
-    }
-  } else
-    strcpy(tStSpell, "*You have no idea*");
-
-  sprintf(tString, "[%2d] %-31s %-6d%s [%-3d] %s\n\r",
-          (k + 1), cap(tStObj), tCost,
-          (tDiscount < 100 ? "(*)" : "   "),
-          tCharges, tStSpell);
-
-  if (((FitT & (1 << 0)) == 0 || fitInShop("", ch)) &&
-      (tArg.empty() || isname(tArg, name)) &&
-      (iMin == 999999 || (tCost >= iMin && tCost <= iMax)))
-    return tString;
-
-  return "";
-}
 
 int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 {

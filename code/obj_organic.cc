@@ -487,42 +487,42 @@ const sstring TOrganic::shopList(const TBeing *ch, const sstring &arg,
                                 int min_amt, int max_amt, int num,
                                 int shop_nr, int k, unsigned long int) const
 {
-  char Buf[2][256];
-  char tString[256];
+  sstring Buf[2], tString;
   bool usePlural = false;
   int cost = shopPrice(num, shop_nr, -1, &num);
 
-  sprintf(Buf[1], "%s", shortDescr);
+  ssprintf(Buf[1], "%s", shortDescr);
 
-  if (strlen(Buf[1]) > 31) {
-    Buf[1][28] = '\0';
-    strcat(Buf[1], "...");
+  if (Buf[1].length() > 31) {
+    Buf[1] = Buf[1].substr(0,28);
+    Buf[1]+="...";
   }
 
   if (getUnits() > 0) {
     if (shop_index[shop_nr].isProducing(this)) {
-      strcpy(tString, "unlim");
+      tString = "unlim";
       usePlural = true;
     } else {
-      sprintf(tString, "%5d", getUnits());
+      ssprintf(tString, "%5d", getUnits());
       usePlural = (getUnits() > 1 ? true : false);
     }
   } else {
     if (shop_index[shop_nr].isProducing(this))
-      strcpy(tString, "unlimited");
+      tString = "unlimited";
     else
-      sprintf(tString, "%d", num);
+      ssprintf(tString, "%d", num);
 
     usePlural = (cost > 1 ? true : false);
   }
 
   if (getUnits() > 0)
-    sprintf(Buf[0], "[%2d] %-31s  <Z>: %s unit%c %5d talen%c (per unit)\n\r",
-            k + 1, Buf[1], tString, (usePlural ? 's' : ' '),
+    ssprintf(Buf[0], "[%2d] %-31s  <Z>: %s unit%c %5d talen%c (per unit)\n\r",
+            k + 1, Buf[1].c_str(), tString.c_str(), (usePlural ? 's' : ' '),
             cost, (cost > 1 ? 's' : ' '));
   else
-    sprintf(Buf[0], "[%2d] %-31s  <Z>:             %5d talen%c [%s]\n\r",
-            k + 1, Buf[1], cost, (usePlural ? 's' : ' '),tString);
+    ssprintf(Buf[0], "[%2d] %-31s  <Z>:             %5d talen%c [%s]\n\r",
+	     k + 1, Buf[1].c_str(), cost, (usePlural ? 's' : ' '),
+	     tString.c_str());
 
   if (arg.empty() && min_amt == 999999)     // everything
     // specific item

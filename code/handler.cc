@@ -1754,11 +1754,11 @@ TBeing *get_char_vis_direction(const TBeing *ch, char *name, dirTypeT dir, unsig
   return NULL;
 }
 
-TBeing *get_pc_world(const TBeing *ch, const char *name, exactTypeT exact, infraTypeT infra, bool visible)
+TBeing *get_pc_world(const TBeing *ch, const sstring &name, exactTypeT exact, infraTypeT infra, bool visible)
 {
   TBeing *i;
 
-  if (!*name)
+  if (name.empty())
     return NULL;
 
   for (i = character_list; i; i = i->next) {

@@ -55,19 +55,17 @@ void TNote::showMe(TBeing *ch) const
 //   say that none of this is my mess.  - SG 
 void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
 {
-  char buffer[10000];
-  char buf[256];
-  char capbuf[256];
+  sstring buffer, buf, capbuf;
 
   if (mode == SHOW_MODE_DESC_PLUS && getDescr()) {
     if (roomp && roomp->isWaterSector() && 
         !isObjStat(ITEM_HOVER) &&
         !isObjStat(ITEM_FLOAT) &&
         !objVnum() == GENERIC_FLARE ) {
-      sprintf(buffer, "%s is floating here.", getName());
-      cap(buffer);
+      ssprintf(buffer, "%s is floating here.", getName());
+      buffer=good_cap(buffer);
     } else {
-      sprintf(capbuf, "%s", addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_OBJECTS).c_str());
+      ssprintf(capbuf, "%s", addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_OBJECTS).c_str());
       sstring cStrbuf = capbuf;
       while (cStrbuf.find("$$g") != sstring::npos)
         cStrbuf.replace(cStrbuf.find("$$g"), 3,
@@ -75,15 +73,13 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
       while (cStrbuf.find("$g") != sstring::npos)
         cStrbuf.replace(cStrbuf.find("$g"), 2,
                         (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
-      strcpy(capbuf, cStrbuf.c_str());
-      cap(capbuf);
-      strcpy(buffer, colorString(ch, ch->desc, capbuf, NULL, COLOR_OBJECTS, TRUE).c_str());
+      capbuf=good_cap(cStrbuf);
+      buffer=colorString(ch, ch->desc, capbuf, NULL, COLOR_OBJECTS, TRUE);
     }
   } else if ((mode == SHOW_MODE_SHORT_PLUS || 
               mode == SHOW_MODE_SHORT_PLUS_INV ||
               mode == SHOW_MODE_SHORT) && getName()) {
-    strcpy(buffer, getName());
-    cap(buffer);
+    buffer=good_cap(getName());
   } else if (mode == SHOW_MODE_TYPE) {
     showMe(ch);
     return;
@@ -91,45 +87,51 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
     buffer[0] = '\0';// we need this before we start doing strcat
   
   // this is an item-type-specific modifier
-  strcat(buffer, showModifier(mode, ch).c_str());
+  buffer += showModifier(mode, ch);
 
   if (isObjStat(ITEM_INVISIBLE))
-    strcat(buffer, " (invisible)");
-  if (isObjStat(ITEM_MAGIC) && ch->isAffected(AFF_DETECT_MAGIC))
-    sprintf(buffer + strlen(buffer), " %s(blue aura)%s", ch->cyan(), ch->norm());
-  if (isObjStat(ITEM_GLOW))
-    sprintf(buffer + strlen(buffer), " %s(glowing)%s", ch->orange(), ch->norm());
+    buffer += " (invisible)";
+  if (isObjStat(ITEM_MAGIC) && ch->isAffected(AFF_DETECT_MAGIC)){
+    ssprintf(buf, " %s(blue aura)%s", ch->cyan(), ch->norm());
+    buffer += buf;
+  }
+  if (isObjStat(ITEM_GLOW)){
+    ssprintf(buf, " %s(glowing)%s", ch->orange(), ch->norm());
+    buffer += buf;
+  }
   if (isObjStat(ITEM_SHADOWY))
-    strcat(buffer, " (shadowy)");
+    buffer += " (shadowy)";
   if (isObjStat(ITEM_HOVER))
-    strcat(buffer, " (hovering)");
+    buffer += " (hovering)";
   if (isObjStat(ITEM_HUM))
-    strcat(buffer, " (humming)");
-  if (isObjStat(ITEM_BURNING))
-    sprintf(buffer + strlen(buffer), " %s(burning)%s", ch->red(), ch->norm());
-  if (isObjStat(ITEM_CHARRED))
-    sprintf(buffer + strlen(buffer), " %s(charred)%s", ch->blackBold(), ch->norm());
+    buffer += " (humming)";
+  if (isObjStat(ITEM_BURNING)){
+    ssprintf(buf, " %s(burning)%s", ch->red(), ch->norm());
+    buffer += buf;
+  }
+  if (isObjStat(ITEM_CHARRED)){
+    ssprintf(buf, " %s(charred)%s", ch->blackBold(), ch->norm());
+    buffer += buf;
+  }
 
 
   if (parent && dynamic_cast<TObj *>(parent)) {
-    strcpy(capbuf, parent->getName());
-    sprintf(buf, " (in %s)", uncap(capbuf));
-    strcat(buffer, buf);
+    ssprintf(buf, " (in %s)", good_uncap(parent->getName()).c_str());
+    buffer += buf;
   }
   if (riding) {
-    strcpy(capbuf, ch->objs(riding));
-    sprintf(buf, " (on %s)", uncap(capbuf));
-    strcat(buffer, buf);
+    ssprintf(buf, " (on %s)", good_uncap(ch->objs(riding)).c_str());
+    buffer += buf;
   }
   if (dynamic_cast<const TTable *>(this) && rider) {
-    strcat(buffer, "\n\r");
+    buffer += "\n\r";
     ch->sendTo(buffer);
     list_thing_on_heap(rider, ch, false);
     return;
   }
-  if (*buffer)
-    strcat(buffer, "\n\r");
-  sprintf(buf, "%s",colorString(ch, ch->desc, buffer, NULL, COLOR_OBJECTS, TRUE).c_str());
+  if (!buffer.empty())
+    buffer += "\n\r";
+  ssprintf(buf, "%s",colorString(ch, ch->desc, buffer, NULL, COLOR_OBJECTS, TRUE).c_str());
 //  ch->sendTo(COLOR_OBJECTS, buffer);
 //  COSMO_COLOR
   ch->sendTo(buf);
@@ -137,18 +139,14 @@ void TObj::show_me_to_char(TBeing *ch, showModeT mode) const
 
 void TObj::show_me_mult_to_char(TBeing *ch, showModeT mode, unsigned int num) const
 {
-  char buffer[MAX_STRING_LENGTH];
-  char tmp[80];
-  char capbuf[256];
+  sstring buffer, tmp, capbuf;
 
-  buffer[0] = '\0';
-
-  // uses page sstring (needs desc), so don't bother unless PC
+  // uses page string (needs desc), so don't bother unless PC
   if (!ch->desc)
     return;
 
   if (mode == SHOW_MODE_DESC_PLUS && getDescr()) {
-    sprintf(capbuf, "%s", addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_OBJECTS).c_str());
+    ssprintf(capbuf, "%s", addNameToBuf(ch, ch->desc, this, getDescr(), COLOR_OBJECTS).c_str());
     sstring cStrbuf = capbuf;
     while (cStrbuf.find("$$g") != sstring::npos)
       cStrbuf.replace(cStrbuf.find("$$g"), 3, 
@@ -156,11 +154,11 @@ void TObj::show_me_mult_to_char(TBeing *ch, showModeT mode, unsigned int num) co
     while (cStrbuf.find("$g") != sstring::npos)
       cStrbuf.replace(cStrbuf.find("$g"), 2,
                       (roomp ? roomp->describeGround().c_str() : "TELL A GOD"));
-    strcpy(capbuf, cStrbuf.c_str());
-    strcpy(buffer, capbuf);
+    capbuf=cStrbuf;
+    buffer=capbuf;
   } else if (getName() && (mode == SHOW_MODE_SHORT_PLUS ||
           mode == SHOW_MODE_SHORT_PLUS_INV || mode == SHOW_MODE_SHORT)) {
-    strcpy(buffer, getName());
+    buffer=getName();
   } else if (mode == SHOW_MODE_TYPE) {
     showMe(ch);
   }
@@ -169,46 +167,52 @@ void TObj::show_me_mult_to_char(TBeing *ch, showModeT mode, unsigned int num) co
       mode == SHOW_MODE_SHORT_PLUS_INV ||
       mode == SHOW_MODE_TYPE ||
       mode == SHOW_MODE_PLUS) {
-    strcat(buffer, showModifier(mode, ch).c_str());
+    buffer += showModifier(mode, ch);
 
     if (isObjStat(ITEM_INVISIBLE)) 
-      strcat(buffer, " (invisible)");
-    if (isObjStat(ITEM_MAGIC) && ch->isAffected(AFF_DETECT_MAGIC)) 
-      sprintf(buffer + strlen(buffer), " %s(glowing blue)%s", ch->cyan(), ch->norm());
+      buffer += " (invisible)";
+    if (isObjStat(ITEM_MAGIC) && ch->isAffected(AFF_DETECT_MAGIC)) {
+      ssprintf(tmp, " %s(glowing blue)%s", ch->cyan(), ch->norm());
+      buffer += tmp;
+    }
     
-    if (isObjStat(ITEM_GLOW)) 
-      sprintf(buffer + strlen(buffer), " %s(glowing)%s", ch->orange(), ch->norm());
+    if (isObjStat(ITEM_GLOW)) {
+      ssprintf(tmp, " %s(glowing)%s", ch->orange(), ch->norm());
+      buffer += tmp;
+    }
     
     if (isObjStat(ITEM_SHADOWY))
-      strcat(buffer, " (shadowy)");
+      buffer += " (shadowy)";
     if (isObjStat(ITEM_HOVER))
-      strcat(buffer, " (hovering)");
+      buffer += " (hovering)";
 
     if (isObjStat(ITEM_HUM)) 
-      strcat(buffer, " (humming)");
-    if (isObjStat(ITEM_BURNING))
-      sprintf(buffer + strlen(buffer), " %s(burning)%s", ch->red(), ch->norm());
-    if (isObjStat(ITEM_CHARRED))
-      sprintf(buffer + strlen(buffer), " %s(charred)%s", ch->blackBold(), ch->norm());
+      buffer += " (humming)";
+    if (isObjStat(ITEM_BURNING)){
+      ssprintf(tmp, " %s(burning)%s", ch->red(), ch->norm());
+      buffer += tmp;
+    }
+    if (isObjStat(ITEM_CHARRED)){
+      ssprintf(tmp, " %s(charred)%s", ch->blackBold(), ch->norm());
+      buffer += tmp;
+    }
     
   }
   if (num > 1) {
-    sprintf(tmp, " [%d]", num);
-    strcat(buffer, tmp);
+    ssprintf(tmp, " [%d]", num);
+    buffer += tmp;
   }
-  if (parent && dynamic_cast<TObj *>(parent)) {
-    strcpy(capbuf, parent->getName());
-    sprintf(tmp, " (in %s)", uncap(capbuf));
-    strcat(buffer, tmp);
+  if (parent && dynamic_cast<TObj *>(parent)) {    
+    ssprintf(tmp, " (in %s)", good_uncap(parent->getName()).c_str());
+    buffer += tmp;
   }
   if (riding) {
-    strcpy(capbuf, ch->objs(riding));
-    sprintf(tmp, " (on %s)", uncap(capbuf));
-    strcat(buffer, tmp);
+    ssprintf(tmp, " (on %s)", good_uncap(ch->objs(riding)).c_str());
+    buffer += tmp;
   }
-  strcat(buffer, "\n\r");
-  cap(buffer);
-  sprintf(buffer, "%s",colorString(ch, ch->desc, buffer, NULL, COLOR_OBJECTS, TRUE).c_str());
+  buffer += "\n\r";
+  buffer=good_cap(buffer);
+  ssprintf(buffer, "%s",colorString(ch, ch->desc, buffer, NULL, COLOR_OBJECTS, TRUE).c_str());
   ch->desc->page_string(buffer);
 }
 

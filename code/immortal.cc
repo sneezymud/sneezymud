@@ -4430,8 +4430,7 @@ void TPerson::doAccess(const char *arg)
     ssprintf(tmpbuf, "\tRace: %s\n\r", RaceNames[st.race]);
     buf+=tmpbuf;
 
-    ssprintf(tmpbuf, "Stats  :[Str][Bra][Con][Dex][Agi][Int][Wis][Foc][Per][Cha][Kar][Spe]\n\r");
-    buf+=tmpbuf;
+    buf+="Stats  :[Str][Bra][Con][Dex][Agi][Int][Wis][Foc][Per][Cha][Kar][Spe]\n\r";
 
     ssprintf(tmpbuf, "Chosen : %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d\n\r",
            st.stats[STAT_STR],
@@ -4466,18 +4465,15 @@ void TPerson::doAccess(const char *arg)
 
     ssprintf(arg2, "%s/account", arg1.c_str());
     if (!(fp = fopen(arg2.c_str(), "r"))) {
-      ssprintf(tmpbuf, "Cannot open account for player! Tell a coder!\n\r");
-      buf+=tmpbuf;
+      buf+="Cannot open account for player! Tell a coder!\n\r";
     } else {
       fread(&afp, sizeof(afp), 1, fp);
       fclose(fp);
     } 
     if ((afp.flags & ACCOUNT_IMMORTAL) &&
           !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
-      ssprintf(tmpbuf, "Account name: ***, Account email address : ***\n\r");
-      buf+=tmpbuf;
-      ssprintf(tmpbuf, "Account flagged immortal.  Remaining Information Restricted.\n\r");
-      buf+=tmpbuf;
+      buf+="Account name: ***, Account email address : ***\n\r";
+      buf+="Account flagged immortal.  Remaining Information Restricted.\n\r";
     } else {
       ssprintf(tmpbuf, "Account name: %s%s%s, Account email address : %s%s%s\n\r", cyan(), afp.name, norm(), cyan(), afp.email, norm());
       buf+=tmpbuf;

@@ -23,7 +23,7 @@ extern void cleanCharBuf(char *);
 extern int split_string(const sstring &str, const sstring &sep, vector<sstring> &argv);
 extern void sendrp_exceptf(TRoom *, TBeing *, const char *,...);
 extern const char *how_good(int);
-extern void sprintbit(unsigned long, const char * const [], char *);
+extern sstring sprintbit(unsigned long, const char * const []);
 extern bool is_exact_spellname(const sstring &, const sstring &);
 extern bool is_exact_name(const sstring &, const sstring &);
 extern int get_number(char **);
@@ -128,7 +128,7 @@ extern int resize_personalize_object(TBeing *deity, TBeing *, int virt, int deca
 extern bool safe_to_save_shop_stuff(TMonster *);
 extern bool safe_to_be_in_system(const char *cp);
 extern void sprinttype(int type, const char * const names[], char *result);
-extern int vsystem(char *);
+extern int vsystem(const sstring &);
 extern bool load_char(const sstring &name, charFile *);
 extern int game_loop(int s);
 extern bool safe_to_be_in_system_filepath(const char *);

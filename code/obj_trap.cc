@@ -331,17 +331,20 @@ void TTrap::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 
 sstring TTrap::statObjInfo() const
 {
-  char buf[256];
+  sstring sbuf, buf;
 
-  sprintf(buf, "Trap level: %d, damage type: %s (%d), charges: %d\n\r",
+  ssprintf(buf, "Trap level: %d, damage type: %s (%d), charges: %d\n\r",
            getTrapLevel(),
            trap_types[getTrapDamType()],
            getTrapDamType(),
            getTrapCharges());
-  sprintf(buf + strlen(buf), "Trap effect type: ");
-           sprintbit(getTrapEffectType(), trap_effects, buf + strlen(buf));
+  sbuf += buf;
 
-  sstring a(buf);
+  sbuf+="Trap effect type: ";
+  
+  sbuf += sprintbit(getTrapEffectType(), trap_effects);
+
+  sstring a(sbuf);
   return a;
 }
 

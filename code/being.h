@@ -1963,7 +1963,7 @@ class TBeing : public TThing {
     sstring garble(const sstring &, int);
     void doLook(const char *, cmdTypeT, TThing *specific = NULL);
     void doShout(const char *);
-    int doWhisper(const char *);
+    int doWhisper(const sstring &);
     int doTell(const sstring &, const char *, ...);
     int doTell(const sstring &, bool visible = TRUE);
     int doClientMessage(const char *);

@@ -299,8 +299,6 @@ class TComponent : public TObj {
     virtual itemTypeT itemType() const { return ITEM_COMPONENT; }
     virtual sstring statObjInfo() const;
     virtual sstring getNameForShow(bool, bool, const TBeing *) const;
-    virtual const sstring shopList(const TBeing *, const sstring &, int, int, int, int, int, unsigned long int) const;
-
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
     virtual void sellMeMoney(TBeing *, TMonster *, int, int);
     virtual bool objectRepair(TBeing *, TMonster *, silentTypeT);

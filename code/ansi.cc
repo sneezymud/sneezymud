@@ -143,11 +143,11 @@ bool TBeing::hasColorVt() const
 
 const sstring TBeing::ansi_color_bold(const char *s) const
 {
-  char buf[80];
+  sstring buf;
 
   if (hasColor()) {
-    strcpy(buf, bold());
-    strcat(buf, s);
+    buf = bold();
+    buf += s;
   } else if (hasColorVt()) {
       return "";
 //    return VT_BOLDTEX;
@@ -233,7 +233,7 @@ const sstring TBeing::doColorSub() const
 
 const sstring TBeing::ansi_color_bold(const char *s, unsigned int ans_color) const
 {
-  char buf[80];
+  sstring buf;
   int repFound = FALSE;
 
 
@@ -252,8 +252,8 @@ const sstring TBeing::ansi_color_bold(const char *s, unsigned int ans_color) con
     }
   } else {
     if (hasColor()) {
-      strcpy(buf, bold());
-      strcat(buf, s);
+      buf = bold();
+      buf += s;
     } else if (hasColorVt()) {
       if (ans_color == COLOR_BOLD) {
         return VT_BOLDTEX;
@@ -618,11 +618,11 @@ const sstring Descriptor::doColorSub() const
 
 const sstring Descriptor::ansi_color_bold(const char *s) const
 {
-  char buf[80];
+  sstring buf;
 
   if (hasColor()) {
-    strcpy(buf, bold());
-    strcat(buf, s);
+    buf = bold();
+    buf += s;
   } else if (hasColorVt()) 
     return "";
   else 
@@ -633,7 +633,7 @@ const sstring Descriptor::ansi_color_bold(const char *s) const
 
 const sstring Descriptor::ansi_color_bold(const char *s, unsigned int color) const
 {
-  char buf[80];
+  sstring buf;
   int repFound = FALSE;
 
   if (IS_SET(plr_colorOff, color)) 
@@ -648,8 +648,8 @@ const sstring Descriptor::ansi_color_bold(const char *s, unsigned int color) con
     }
   } else {
     if (hasColor()) {
-      strcpy(buf, bold());
-      strcat(buf, s);
+      buf = bold();
+      buf += s;
     } else if (hasColorVt()) {
       if (color == COLOR_BOLD) 
         return VT_BOLDTEX;

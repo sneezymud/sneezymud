@@ -2999,27 +2999,25 @@ int TBeing::addCommandToQue(const char *msg)
   return FALSE;
 }
 
-void sprintbit(unsigned long vektor, const char * const names[], char *result)
+sstring sprintbit(unsigned long vektor, const char * const names[])
 {
   long nr;
-
-  *result = '\0';
+  sstring result;
 
   for (nr = 0; vektor; vektor >>= 1) {
     if (IS_SET(vektor, (unsigned long) 1L))
-      if (*names[nr] == '\n') {
-        //strcat(result, "UNDEFINED");
-        //strcat(result, " ");
-      } else if (*names[nr]) {
-        strcat(result, names[nr]);
-        strcat(result, " ");
+      if (*names[nr]) {
+	result += names[nr];
+	result += " ";
       }
     if (*names[nr] != '\n')
       nr++;
   }
 
-  if (!*result)
-    strcat(result, "NOBITS");
+  if (result.empty())
+    result="NOBITS";
+
+  return result;
 }
 
 void sprinttype(int type, const char * const names[], char *result)

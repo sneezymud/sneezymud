@@ -626,7 +626,7 @@ int TBeing::dieReturn(const char *, spellNumT dam_type, int cmd)
 bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *weapon, int dam)
 {
   byte sharp;
-  char buf[256], buf3[128];
+  sstring buf, buf3, sbuf;
   TThing *t;
   TBeing *temp;
 
@@ -666,12 +666,12 @@ bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *w
         item = NULL;
       } else {
         if (weapon)
-          strcpy(buf3, objn(weapon).c_str());
+	  buf3=objn(weapon);
 
-        sprintf(buf, "Your %s$o%s $q %scut%s by $N's %s!",
+        ssprintf(buf, "Your %s$o%s $q %scut%s by $N's %s!",
                 blue(), norm(),
                 purple(), norm(),
-        (weapon ? buf3 : ch->getMyRace()->getBodyLimbSlash().c_str()));
+        (weapon ? buf3.c_str() : ch->getMyRace()->getBodyLimbSlash().c_str()));
         act(buf, FALSE, this, item, ch, TO_CHAR);
 
         for (t = roomp->getStuff(); t; t = t->nextThing) {
@@ -679,13 +679,15 @@ bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *w
           if (!temp || (temp == this))
             continue;
 
-          strcpy(buf, "$n's $o $q cut by ");
-          sprintf(buf + strlen(buf), "%s%s ",
+	  buf="$n's $o $q cut by ";
+          ssprintf(sbuf, "%s%s ",
               (temp != ch ? temp->pers(ch) : "your"),
               (temp != ch ? "'s" : "") );
-          strcat(buf, (weapon ? temp->objn(weapon).c_str() :
-                 ch->getMyRace()->getBodyLimbSlash().c_str()));
-          strcat(buf, "!\n\r");
+	  buf+=sbuf;
+	  buf +=(weapon ? temp->objn(weapon) :
+		 ch->getMyRace()->getBodyLimbSlash());
+	  buf += "!\n\r";
+
           act(buf, TRUE, this, item, temp, TO_VICT);
         }
       }
@@ -699,7 +701,7 @@ bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *w
 bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *weapon, int dam, const char * altPart)
 {
   int sharp;
-  char buf[256], buf3[128];
+  sstring buf, buf3, sbuf;
   TThing *t;
   TBeing *temp;
 
@@ -738,11 +740,11 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
         item = NULL;
       } else {
         if (weapon)
-          strcpy(buf3, fname(weapon->name).c_str());
-        sprintf(buf, "Your %s$o%s $q %ssmashed%s by $N's %s!",
+          buf3=fname(weapon->name);
+        ssprintf(buf, "Your %s$o%s $q %ssmashed%s by $N's %s!",
                 blue(), norm(),
                 purple(), norm(),
-        	(altPart ? altPart : (weapon ? buf3 :  ch->getMyRace()->getBodyLimbBlunt().c_str())));
+        	(altPart ? altPart : (weapon ? buf3.c_str() :  ch->getMyRace()->getBodyLimbBlunt().c_str())));
         act(buf, FALSE, this, item, ch, TO_CHAR);
 
         for (t = roomp->getStuff(); t; t = t->nextThing) {
@@ -750,18 +752,19 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
           if (!temp || (temp == this))
             continue;
 
-          strcpy(buf, "$n's $o $q smashed by ");
-          sprintf(buf + strlen(buf), "%s%s ",
+          buf = "$n's $o $q smashed by ";
+          ssprintf(sbuf, "%s%s ",
               (temp != ch ? temp->pers(ch) : "your"),
               (temp != ch ? "'s" : "") );
+	  buf += sbuf;
           if (altPart) {
-            strcat(buf, colorString(temp, temp->desc, altPart, NULL, COLOR_OBJECTS, FALSE).c_str());
+            buf += colorString(temp, temp->desc, altPart, NULL, COLOR_OBJECTS, FALSE);
           } else if (weapon) {
-            strcat(buf, colorString(temp, temp->desc, temp->objn(weapon).c_str(), NULL, COLOR_OBJECTS, FALSE).c_str());
+            buf += colorString(temp, temp->desc, temp->objn(weapon).c_str(), NULL, COLOR_OBJECTS, FALSE);
           } else {
-            strcat(buf, ch->getMyRace()->getBodyLimbBlunt().c_str());
+            buf += ch->getMyRace()->getBodyLimbBlunt();;
           }
-          strcat(buf, "!\n\r");
+          buf += "!\n\r";
           act(buf, TRUE, this, item, temp, TO_VICT);
         }
       }
@@ -775,7 +778,7 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
 bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *weapon, int dam)
 {
   byte sharp;
-  char buf[256], buf3[128];
+  sstring buf, buf3, sbuf;
   TThing *t;
   TBeing *temp;
 
@@ -815,11 +818,11 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
         item = NULL;
       } else {
         if (weapon)
-          strcpy(buf3, fname(weapon->name).c_str());
-        sprintf(buf, "Your %s$o%s $q %spierced%s by $N's %s!",
+          buf3=fname(weapon->name);
+        ssprintf(buf, "Your %s$o%s $q %spierced%s by $N's %s!",
                 blue(), norm(),
                 purple(), norm(),
-        (weapon ? buf3 :  ch->getMyRace()->getBodyLimbPierce().c_str()));
+        (weapon ? buf3.c_str() :  ch->getMyRace()->getBodyLimbPierce().c_str()));
         act(buf, TRUE, this, item, ch, TO_CHAR);
 
         for (t = roomp->getStuff(); t; t = t->nextThing) {
@@ -827,13 +830,14 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
           if (!temp || (temp == this))
             continue;
 
-          strcpy(buf, "$n's $o $q pierced by ");
-          sprintf(buf + strlen(buf), "%s%s ",
+          buf="$n's $o $q pierced by ";
+          ssprintf(sbuf, "%s%s ",
               (temp != ch ? temp->pers(ch) : "your"),
               (temp != ch ? "'s" : "") );
-          strcat(buf, (weapon ? temp->objn(weapon).c_str() :
-                 ch->getMyRace()->getBodyLimbPierce().c_str()));
-          strcat(buf, "!\n\r");
+	  buf+=sbuf;
+          buf+= (weapon ? temp->objn(weapon) :
+                 ch->getMyRace()->getBodyLimbPierce());
+          buf+="!\n\r";
           act(buf, TRUE, this, item, temp, TO_VICT);
         }
       }

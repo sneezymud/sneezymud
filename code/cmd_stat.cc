@@ -177,8 +177,7 @@ void TBeing::statRoom(TRoom *rmp)
 
   str += "Room flags: ";
 
-  sprintbit((long) rmp->getRoomFlags(), room_bits, buf2);
-  str += buf2;
+  str += sprintbit((long) rmp->getRoomFlags(), room_bits);;
   str += "\n\r";
 
   str += "Description:\n\r";
@@ -286,9 +285,8 @@ void TBeing::statRoom(TRoom *rmp)
          rmp->dir_option[dir]->to_room);
       str += buf2;
       if (rmp->dir_option[dir]->door_type != DOOR_NONE) {
-        sprintbit(rmp->dir_option[dir]->condition, exit_bits, buf3);
         sprintf(buf2, "Weight : %d      Exit Flags : %s\n\rKeywords : %s\n\r",
-              rmp->dir_option[dir]->weight, buf3, rmp->dir_option[dir]->keyword);
+              rmp->dir_option[dir]->weight, sprintbit(rmp->dir_option[dir]->condition, exit_bits).c_str(), rmp->dir_option[dir]->keyword);
         str += buf2;
         if ((rmp->dir_option[dir]->key > 0) || 
              (rmp->dir_option[dir]->lock_difficulty >= 0)) {
@@ -378,18 +376,15 @@ void TBeing::statObj(const TObj *j)
   }
 
   str += "Can be worn on :";
-  sprintbit(j->obj_flags.wear_flags, wear_bits, buf);
-  str += buf;
+  str += sprintbit(j->obj_flags.wear_flags, wear_bits);
   str += "\n\r";
 
   str += "Set char bits  :";
-  sprintbit(j->obj_flags.bitvector, affected_bits, buf);
-  str += buf;
+  str += sprintbit(j->obj_flags.bitvector, affected_bits);
   str += "\n\r";
 
   str += "Extra flags: ";
-  sprintbit(j->getObjStat(), extra_bits, buf);
-  str += buf;
+  str += sprintbit(j->getObjStat(), extra_bits);
   str += "\n\r";
 
   sprintf(buf, "Can be seen : %d\n\r", j->canBeSeen);
@@ -504,18 +499,15 @@ void TBeing::statObjForDivman(const TObj *j)
   str += "\n\r";
 
   str += "It can be worn on: ";
-  sprintbit(j->obj_flags.wear_flags, wear_bits, buf);
-  str += buf;
+  str += sprintbit(j->obj_flags.wear_flags, wear_bits);
   str += ".\n\r";
 
   str += "The item sets the character bits: ";
-  sprintbit(j->obj_flags.bitvector, affected_bits, buf);
-  str += buf;
+  str += sprintbit(j->obj_flags.bitvector, affected_bits);
   str += ".\n\r";
 
   str += "It's extra flags are: ";
-  sprintbit(j->getObjStat(), extra_bits, buf);
-  str += buf;
+  str += sprintbit(j->getObjStat(), extra_bits);
   str += ".\n\r";
 
   sprintf(buf, "%s modifies can be seen by %d.\n\r", j->shortDescr, j->canBeSeen);
@@ -907,8 +899,7 @@ void TBeing::statBeing(TBeing *k)
 
     strcat(buf, "NPC flags: ");
     if (km->specials.act) {
-      sprintbit(km->specials.act, action_bits, buf2);
-      strcat(buf, buf2);
+      strcat(buf, sprintbit(km->specials.act, action_bits).c_str());
       strcat(buf, "\n\r");
     } else {
       strcat(buf, "None\n\r");
@@ -921,8 +912,7 @@ void TBeing::statBeing(TBeing *k)
   } 
   if (k->desc) {
     strcat(buf, "\n\rFlags (Specials Act): ");
-    sprintbit(k->desc->plr_act, player_bits, buf2);
-    strcat(buf, buf2);
+    strcat(buf, sprintbit(k->desc->plr_act, player_bits).c_str());
     strcat(buf, "\n\r");
   }
 
@@ -1053,9 +1043,8 @@ void TBeing::statBeing(TBeing *k)
     }
   }
 
-  sprintbit(k->specials.affectedBy, affected_bits, buf2);
   strcat(buf, "Affected by: ");
-  strcat(buf, buf2);
+  strcat(buf, sprintbit(k->specials.affectedBy, affected_bits).c_str());
   strcat(buf, "\n\r");
 
   strcat(buf, "\n\rBody part          Hth Max Flgs StuckIn\n\r");
@@ -1581,7 +1570,7 @@ void TBeing::statBeing(TBeing *k)
             apply_types[aff->location].name, aff->modifier);
         sprintf(buf + strlen(buf), "     Expires in %6d updates, Bits set ",
           aff->duration);
-        sprintbit(aff->bitvector, affected_bits, buf2);
+        strcpy(buf2, sprintbit(aff->bitvector, affected_bits).c_str());
         strcat(buf2, "\n\r");
         strcat(buf, buf2);
 
@@ -1703,7 +1692,7 @@ void TBeing::statBeing(TBeing *k)
                     apply_types[aff->location].name, aff->modifier);
         sprintf(buf + strlen(buf), "     Expires in %6d updates, Bits set ",
                     aff->duration);
-        sprintbit(aff->bitvector, affected_bits, buf2);
+        strcpy(buf2, sprintbit(aff->bitvector, affected_bits).c_str());
         strcat(buf2, "\n\r");
         strcat(buf, buf2);
         break;
@@ -1714,7 +1703,7 @@ void TBeing::statBeing(TBeing *k)
                 apply_types[aff->location].name, aff->modifier);
         sprintf(buf + strlen(buf), "     Expires in %6d updates, Bits set ",
                 aff->duration);
-        sprintbit(aff->bitvector, affected_bits, buf2);
+        strcpy(buf2, sprintbit(aff->bitvector, affected_bits).c_str());
         strcat(buf2, "\n\r");
         strcat(buf, buf2);
         break;

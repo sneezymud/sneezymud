@@ -501,247 +501,244 @@ void bootWorld(void)
 void TRoom::colorRoom(int title, int full)
 {
   int len, place = 0, letter;
-  char buf[MAX_STRING_LENGTH], argument[MAX_STRING_LENGTH];
-  char buf2[10] = "";
-  char buf3[10] = "";
-
+  sstring buf, argument, buf2, buf3;
 
   if (title == 1) {
-    strcpy(argument, name);
+    argument=name;
   } else if (title == 2) {
-    strcpy(argument, getDescr());
+    argument=getDescr();
   } else {
     return;
   }
 // Found had to initialize with this logic and too tired to figure out why
-  strcpy(buf3, "<z>");
+  buf3="<z>";
 
   switch (getSectorType()) {
     case SECT_SUBARCTIC:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, "<p>");
+      buf2 = "<P>";
+      buf3 = "<p>";
       break;
     case SECT_ARCTIC_WASTE:
-      strcpy(buf2, "<w>");
-      strcpy(buf3, "<W>");
+      buf2 = "<w>";
+      buf3 = "<W>";
       break;
     case SECT_ARCTIC_CITY:
-      strcpy(buf2, "<C>");
+      buf2 = "<C>";
       break;
     case SECT_ARCTIC_ROAD:
-      strcpy(buf2, "<W>");
+      buf2 = "<W>";
       break;
     case SECT_TUNDRA:
-      strcpy(buf2, "<o>");
-      strcpy(buf3, "<g>");
+      buf2 = "<o>";
+      buf3 = "<g>";
       break;
     case SECT_ARCTIC_MOUNTAINS:
-      strcpy(buf2, "<o>");
-      strcpy(buf3, "<W>");
+      buf2 = "<o>";
+      buf3 = "<W>";
       break;
     case SECT_ARCTIC_FOREST:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<W>");
+      buf2 = "<G>";
+      buf3 = "<W>";
       break;
     case SECT_ARCTIC_MARSH:
-      strcpy(buf2, "<B>");
-      strcpy(buf3, "<p>");
+      buf2 = "<B>";
+      buf3 = "<p>";
       break;
     case SECT_ARCTIC_RIVER_SURFACE:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<c>");
+      buf2 = "<C>";
+      buf3 = "<c>";
       break;
     case SECT_ICEFLOW:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<W>");
+      buf2 = "<C>";
+      buf3 = "<W>";
       break;
     case SECT_COLD_BEACH:
-      strcpy(buf2, "<p>");
-      strcpy(buf3, "<P>");
+      buf2 = "<p>";
+      buf3 = "<P>";
       break;
     case SECT_SOLID_ICE:
-      strcpy(buf2, "<c>");
-      strcpy(buf3, "<C>");
+      buf2 = "<c>";
+      buf3 = "<C>";
       break;
     case SECT_ARCTIC_BUILDING:
-      strcpy(buf2, "<p>");
+      buf2 = "<p>";
       break;
     case SECT_ARCTIC_CAVE:
-      strcpy(buf2, "<c>");
-      strcpy(buf3, "<k>");
+      buf2 = "<c>";
+      buf3 = "<k>";
       break;
     case SECT_ARCTIC_ATMOSPHERE:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<C>");
+      buf2 = "<C>";
+      buf3 = "<C>";
       break;
     case SECT_ARCTIC_CLIMBING:
     case SECT_ARCTIC_FOREST_ROAD:
-      strcpy(buf2, "<p>");
+      buf2 = "<p>";
     case SECT_PLAINS:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<g>");
+      buf2 = "<G>";
+      buf3 = "<g>";
       break;
     case SECT_TEMPERATE_CITY:
     case SECT_TEMPERATE_ROAD:
-      strcpy(buf2, "<p>");
+      buf2 = "<p>";
       break;
     case SECT_GRASSLANDS:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<g>");
+      buf2 = "<G>";
+      buf3 = "<g>";
       break;
     case SECT_TEMPERATE_HILLS:
-      strcpy(buf2, "<o>");
-      strcpy(buf3, "<g>");
+      buf2 = "<o>";
+      buf3 = "<g>";
       break;
     case SECT_TEMPERATE_MOUNTAINS:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<o>");
+      buf2 = "<G>";
+      buf3 = "<o>";
       break;
     case SECT_TEMPERATE_FOREST:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<g>");
+      buf2 = "<G>";
+      buf3 = "<g>";
       break;
     case SECT_TEMPERATE_SWAMP:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, "<p>");
+      buf2 = "<P>";
+      buf3 = "<p>";
       break;
     case SECT_TEMPERATE_OCEAN:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<c>");
+      buf2 = "<C>";
+      buf3 = "<c>";
       break;
     case SECT_TEMPERATE_RIVER_SURFACE:
-      strcpy(buf2, "<B>");
-      strcpy(buf3, "<b>");
+      buf2 = "<B>";
+      buf3 = "<b>";
       break;
     case SECT_TEMPERATE_UNDERWATER:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<b>");
+      buf2 = "<C>";
+      buf3 = "<b>";
       break;
     case SECT_TEMPERATE_CAVE:
-      strcpy(buf2, "<o>");
-      strcpy(buf3, "<k>");
+      buf2 = "<o>";
+      buf3 = "<k>";
       break;
     case SECT_TEMPERATE_ATMOSPHERE:
-      strcpy(buf2, "<G>");
+      buf2 = "<G>";
       break;
     case SECT_TEMPERATE_CLIMBING:
-      strcpy(buf2, "<G>");
+      buf2 = "<G>";
       break;
     case SECT_TEMPERATE_FOREST_ROAD:
-      strcpy(buf2, "<g>");
+      buf2 = "<g>";
       break;
     case SECT_DESERT:
     case SECT_SAVANNAH:
-      strcpy(buf2, "<y>");
-      strcpy(buf3, "<o>");
+      buf2 = "<y>";
+      buf3 = "<o>";
       break;
     case SECT_VELDT:
-      strcpy(buf2, "<g>");
-      strcpy(buf3, "<o>");
+      buf2 = "<g>";
+      buf3 = "<o>";
       break;
     case SECT_TROPICAL_CITY:
-      strcpy(buf2, "<G>");
+      buf2 = "<G>";
       break;
     case SECT_TROPICAL_ROAD:
-      strcpy(buf2, "<g>");
+      buf2 = "<g>";
       break;
     case SECT_JUNGLE:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, "<g>");
+      buf2 = "<P>";
+      buf3 = "<g>";
       break;
     case SECT_RAINFOREST:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<g>");
+      buf2 = "<G>";
+      buf3 = "<g>";
       break;
     case SECT_TROPICAL_HILLS:
-      strcpy(buf2, "<R>");
-      strcpy(buf3, "<g>");
+      buf2 = "<R>";
+      buf3 = "<g>";
       break;
     case SECT_TROPICAL_MOUNTAINS:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, "<p>");
+      buf2 = "<P>";
+      buf3 = "<p>";
       break;
     case SECT_VOLCANO_LAVA:
-      strcpy(buf2, "<y>");
-      strcpy(buf3, "<R>");
+      buf2 = "<y>";
+      buf3 = "<R>";
       break;
     case SECT_TROPICAL_SWAMP:
-      strcpy(buf2, "<G>");
-      strcpy(buf3, "<g>");
+      buf2 = "<G>";
+      buf3 = "<g>";
       break;
     case SECT_TROPICAL_OCEAN:
-      strcpy(buf2, "<b>");
-      strcpy(buf3, "<c>");
+      buf2 = "<b>";
+      buf3 = "<c>";
       break;
     case SECT_TROPICAL_RIVER_SURFACE:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<B>");
+      buf2 = "<C>";
+      buf3 = "<B>";
       break;
     case SECT_TROPICAL_UNDERWATER:
-      strcpy(buf2, "<B>");
-      strcpy(buf3, "<b>");
+      buf2 = "<B>";
+      buf3 = "<b>";
       break;
     case SECT_TROPICAL_BEACH:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, "<y>");
+      buf2 = "<P>";
+      buf3 = "<y>";
       break;
     case SECT_TROPICAL_BUILDING:
-      strcpy(buf2, "<p>");
+      buf2 = "<p>";
       break;
     case SECT_TROPICAL_CAVE:
-      strcpy(buf2, "<P>");
-      strcpy(buf3, "<k>");
+      buf2 = "<P>";
+      buf3 = "<k>";
       break;
     case SECT_TROPICAL_ATMOSPHERE:
-      strcpy(buf2, "<P>");
+      buf2 = "<P>";
       break;
     case SECT_TROPICAL_CLIMBING:
-      strcpy(buf2, "<P>");
+      buf2 = "<P>";
       break;
     case SECT_RAINFOREST_ROAD:
-      strcpy(buf2, "<P>");
+      buf2 = "<P>";
       break;
     case SECT_ASTRAL_ETHREAL:
-      strcpy(buf2, "<C>");
-      strcpy(buf3, "<c>");
+      buf2 = "<C>";
+      buf3 = "<c>";
       break;
     case SECT_SOLID_ROCK:
-      strcpy(buf2, "<k>");
-      strcpy(buf3, "<w>");
+      buf2 = "<k>";
+      buf3 = "<w>";
       break;
     case SECT_FIRE:
-      strcpy(buf2, "<y>");
-      strcpy(buf3, "<R>");
+      buf2 = "<y>";
+      buf3 = "<R>";
       break;
     case SECT_INSIDE_MOB:
-      strcpy(buf2, "<R>");
-      strcpy(buf3, "<r>");
+      buf2 = "<R>";
+      buf3 = "<r>";
       break;
     case SECT_FIRE_ATMOSPHERE:
-      strcpy(buf2, "<y>");
-      strcpy(buf3, "<R>");
+      buf2 = "<y>";
+      buf3 = "<R>";
       break;
     case MAX_SECTOR_TYPES:
     case SECT_TEMPERATE_BEACH:
     case SECT_TEMPERATE_BUILDING:
     case SECT_MAKE_FLY:
-      strcpy(buf2, "<p>");
+      buf2 = "<p>";
       break;
   }
-  memset(buf, '\0', sizeof(buf));
+  buf="";
   if (title == 1) {
-    if (buf2) {
-      strcpy(buf, buf2);
+    if (!buf2.empty()) {
+      buf = buf2;
       place = 3;
     }
   } else if (title == 2) {
-    if (buf3) {
-      strcpy(buf, buf3);
+    if (!buf3.empty()) {
+      buf = buf3;
       place = 3;
     }
   }
 
-  len = strlen(argument);
+  len = argument.length();
   for(letter=0; letter <= len; letter++, place++) {
     if (letter < 2) {
       buf[place] = argument[letter];
@@ -754,13 +751,13 @@ void TRoom::colorRoom(int title, int full)
         case 'Z':
           buf[place] = argument[letter];
           if (title == 1) {
-            if (buf2) {
-              strcat(buf, buf2);
+            if (!buf2.empty()) {
+	      buf += buf2;
               place +=3;
             }
           } else if (title == 2) {
-            if (buf3) {
-              strcat(buf, buf3);
+            if (!buf3.empty()) {
+	      buf += buf3;
               place +=3;
             }
           } else {
@@ -776,7 +773,7 @@ void TRoom::colorRoom(int title, int full)
   }
 
 
-  strcat(buf, "<1>");
+  buf += "<1>";
   if (title == 1) {
     delete [] name;
     name = mud_str_dup(buf);

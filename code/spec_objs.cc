@@ -5851,9 +5851,9 @@ int frostArmor(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
       , 0, v, o, 0, TO_CHAR);
 
   if(savedby){
-    ssprintf(buf, "<k>Luckily, $s <1>$o<k> is not conductive and saves $m from harm.<1>");
+    buf="<k>Luckily, $s <1>$o<k> is not conductive and saves $m from harm.<1>";
     act(buf, 0, v, savedby, 0, TO_ROOM);
-    ssprintf(buf, "<k>Luckily, your <1>$o<k> is not conductive and saves you from harm.<1>");
+    buf="<k>Luckily, your <1>$o<k> is not conductive and saves you from harm.<1>";
     act(buf, 0, v, savedby, 0, TO_CHAR);
   } else {
     dam = ::number(2, 10);
@@ -6917,10 +6917,10 @@ int energyShield(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
   }
   
   if ((charge-1) / 100 != (newcharge-1) / 100 || (newcharge == 1000 && charge < 1000)) {
-    if (newcharge / 100 <= 3) ssprintf(buf, "<r>red");
-    else if ( newcharge / 100 <= 6) ssprintf(buf, "<Y>yellow");
-    else if ( newcharge / 100 <= 9) ssprintf(buf, "<g>green");
-    else ssprintf(buf, "<c>blue");
+    if (newcharge / 100 <= 3) buf="<r>red";
+    else if ( newcharge / 100 <= 6) buf="<Y>yellow";
+    else if ( newcharge / 100 <= 9) buf="<g>green";
+    else buf="<c>blue";
     
     ssprintf(buf2, "The display panel on your $o glows %s<1> as it reads %d0%%.", buf.c_str(), newcharge/100);
     act(buf2,TRUE,ch,generator,NULL,TO_CHAR,NULL);
@@ -7023,10 +7023,10 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
 
     }
     if ((charge-1) / 100 != (newcharge-1) / 100 || (newcharge == 1000 && charge < 1000)) {
-      if (newcharge / 100 <= 3) ssprintf(buf, "<r>red");
-      else if ( newcharge / 100 <= 6) ssprintf(buf, "<Y>yellow");
-      else if ( newcharge / 100 <= 9) ssprintf(buf, "<g>green");
-      else ssprintf(buf, "<c>blue");
+      if (newcharge / 100 <= 3) buf="<r>red";
+      else if ( newcharge / 100 <= 6) buf="<Y>yellow";
+      else if ( newcharge / 100 <= 9) buf="<g>green";
+      else buf="<c>blue";
       
       ssprintf(buf2, "The display panel on your $o glows %s<1> as it reads %d0%%.", buf.c_str(), newcharge/100);
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -7044,10 +7044,10 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
      
       sscanf(o->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
       
-      if (charge / 100 <= 3) ssprintf(buf, "<r>red");
-      else if (charge / 100 <= 6) ssprintf(buf, "<Y>yellow");
-      else if (charge / 100 <= 9) ssprintf(buf, "<g>green");
-      else ssprintf(buf, "<c>blue");
+      if (charge / 100 <= 3) buf="<r>red";
+      else if (charge / 100 <= 6) buf="<Y>yellow";
+      else if (charge / 100 <= 9) buf="<g>green";
+      else buf="<c>blue";
 
 
       act("You press the display button on $p.",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -7136,9 +7136,9 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
       act("$n presses a button on $s <W>forearm guard<1>.",TRUE,ch,o,NULL, TO_ROOM,NULL);
       
       
-      ssprintf(buf2, "The display panel on your <W>forearm guard<1> flips open, revealing a row of lights.");
+      buf2="The display panel on your <W>forearm guard<1> flips open, revealing a row of lights.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "A panel on $n's <W>forearm guard<1> flips open, revealing a row of lights.");
+      buf2="A panel on $n's <W>forearm guard<1> flips open, revealing a row of lights.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
       ssprintf(buf2, "The light representing the first stim is %s.", (charge >= 1000 ? "<B>lit<1>" : "<k>dim<1>"));
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -7150,11 +7150,11 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       ssprintf(buf2, "The light representing the fifth stim is %s.", (charge >= 200 ? "<R>lit<1>" : "<k>dim<1>"));
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "$n glances quickly at the panel before flipping it closed again.");
+      buf2="$n glances quickly at the panel before flipping it closed again.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
       ssprintf(buf2, "The charging LED on your <W>forearm guard<1> is currently %s<1>.", (isOn ? "<P>on<1>" : "<k>off<1>"));
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "You quickly flip the display panel closed again.");
+      buf2="You quickly flip the display panel closed again.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
 
       
@@ -7165,7 +7165,7 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
       act("$n presses a button on $s <W>forearm guard<1>.",TRUE,ch,o,NULL, TO_ROOM,NULL);
       
       if (charge < 200) {
-	ssprintf(buf2, "Nothing seems to happen.");
+	buf2="Nothing seems to happen.";
 	act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       } else {
       
@@ -7237,64 +7237,64 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
   if (newcharge != charge) {
     // for display lights turning on  
     if (newcharge >= 200 && charge < 200) {
-      ssprintf(buf2, "The <k>first<1> LED on your <W>forearm guard<1> begins to <R>glow<1>.");
+      buf2="The <k>first<1> LED on your <W>forearm guard<1> begins to <R>glow<1>.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <R>glow<1>.");
+      buf2="One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <R>glow<1>.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge >= 400 && charge < 400) {
-      ssprintf(buf2, "The <k>second<1> LED on your <W>forearm guard<1> begins to <Y>glow<1>.");
+      buf2="The <k>second<1> LED on your <W>forearm guard<1> begins to <Y>glow<1>.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <Y>glow<1>.");
+      buf2="One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <Y>glow<1>.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge >= 600 && charge < 600) {
-      ssprintf(buf2, "The <k>third<1> LED on your <W>forearm guard<1> begins to <G>glow<1>.");
+      buf2="The <k>third<1> LED on your <W>forearm guard<1> begins to <G>glow<1>.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <G>glow<1>.");
+      buf2="One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <G>glow<1>.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge >= 800 && charge < 800) {
-      ssprintf(buf2, "The <k>fourth<1> LED on your <W>forearm guard<1> begins to <C>glow<1>.");
+      buf2="The <k>fourth<1> LED on your <W>forearm guard<1> begins to <C>glow<1>.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <C>glow<1>.");
+      buf2="One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <C>glow<1>.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge == 1000 && charge < 1000) {
-      ssprintf(buf2, "The <k>fifth<1> LED on your <W>forearm guard<1> begins to <B>glow<1>.");
+      buf2="The <k>fifth<1> LED on your <W>forearm guard<1> begins to <B>glow<1>.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <B>glow<1>.");
+      buf2="One of the <k>lights<1> on $n's <W>forearm guard<1> begins to <B>glow<1>.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     // for display lights turning off
     if (newcharge < 200 && charge >= 200) {
-      ssprintf(buf2, "The <R>first<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      buf2="The <R>first<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "One of the <R>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      buf2="One of the <R>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge < 400 && charge >= 400) {
-      ssprintf(buf2, "The <Y>second<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      buf2="The <Y>second<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "One of the <Y>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      buf2="One of the <Y>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge < 600 && charge >= 600) {
-      ssprintf(buf2, "The <G>third<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      buf2="The <G>third<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "One of the <G>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      buf2="One of the <G>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge < 800 && charge >= 800) {
-      ssprintf(buf2, "The <C>fourth<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      buf2="The <C>fourth<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "One of the <C>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      buf2="One of the <C>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
     }
     if (newcharge < 1000 && charge >= 1000) {
-      ssprintf(buf2, "The <B>fifth<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.");
+      buf2="The <B>fifth<1> LED on your <W>forearm guard<1> stops <k>glowing<1>.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "One of the <B>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.");
+      buf2="One of the <B>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
       
     }

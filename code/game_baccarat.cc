@@ -215,7 +215,7 @@ void BaccaratGame::Bet(TBeing *ch, const sstring &arg)
     for(int i=0;i<3;++i)
       player[i]=dealer[i]=0;
 
-    ssprintf(log_msg, "You are dealt:\n\r");
+    log_msg="You are dealt:\n\r";
     ch->sendTo(COLOR_BASIC, log_msg);
     act("$n is dealt:", TRUE, ch, 0, 0, TO_ROOM);
 
@@ -324,7 +324,7 @@ void BaccaratGame::Bet(TBeing *ch, const sstring &arg)
       act("\n\r", TRUE, ch, 0, 0, TO_ROOM);
 
       ch->sendTo("It's a tie, you push.\n\r");
-      ssprintf(log_msg, "It's a tie, $n pushes.");
+      log_msg="It's a tie, $n pushes.";
       act(log_msg, TRUE, ch, 0, 0, TO_ROOM);      
       payout(ch, bet);
     } else
@@ -345,7 +345,7 @@ void BaccaratGame::peek(const TBeing *ch)
     ch->sendTo("You are not playing a game.\n\r");
     return;
   }
-  ssprintf(log_msg, "You peek at your hand:\n\r");
+  log_msg="You peek at your hand:\n\r";
   ch->sendTo(COLOR_BASIC, log_msg);
 
   for(int i=0;i<3;++i){

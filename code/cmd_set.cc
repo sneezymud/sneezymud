@@ -1093,8 +1093,7 @@ mob->getName());
       return;
     }
     mob->setLimbFlags(slot, parm2);
-    sprintbit(parm2, body_flags, buf);
-    sendTo(COLOR_MOBS, "You just set the following flags on %s's %s: %s\n\r", mob->getName(), mob->describeBodySlot(slot).c_str(), buf);
+    sendTo(COLOR_MOBS, "You just set the following flags on %s's %s: %s\n\r", mob->getName(), mob->describeBodySlot(slot).c_str(), sprintbit(parm2, body_flags).c_str());
   } else if (is_abbrev(field, "office")) {
     if (sscanf(parmstr, "%d", &parm) != 1) {
       sendTo("Syntax: @set office <char name> <office number>\n\r");

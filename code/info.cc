@@ -1715,7 +1715,7 @@ void TBeing::describeLimbDamage(const TBeing *ch) const
 
 void TBeing::doTime(const char *argument)
 {
-  char buf[100], arg[160];
+  sstring buf, arg;
   int weekday, day, tmp2;
 
   if (!desc) {
@@ -1724,8 +1724,8 @@ void TBeing::doTime(const char *argument)
   }
 
   one_argument(argument, arg);
-  if (*arg) {
-    if (!convertTo<int>(arg) && strcmp(arg, "0")) {
+  if (!arg.empty()) {
+    if (!convertTo<int>(arg) && arg!="0"){
       sendTo("Present time differential is set to %d hours.\n\r", desc->account->time_adjust);
       sendTo("Syntax: time <difference>\n\r");
       return;
@@ -1735,13 +1735,13 @@ void TBeing::doTime(const char *argument)
     desc->saveAccount();
     return;
   }
-  sprintf(buf, "It is %s, on ",
+  ssprintf(buf, "It is %s, on ",
           hmtAsString(hourminTime()).c_str());
 
   weekday = ((28 * time_info.month) + time_info.day + 1) % 7;        // 28 days in a month 
 
-  strcat(buf, weekdays[weekday]);
-  strcat(buf, "\n\r");
+  buf += weekdays[weekday];
+  buf += "\n\r";
   sendTo(buf);
 
   day = time_info.day + 1;        // day in [1..28] 
@@ -1751,22 +1751,22 @@ void TBeing::doTime(const char *argument)
            month_name[time_info.month], time_info.year);
 
   tmp2 = sunTime(SUN_TIME_RISE);
-  sprintf(buf, "The sun will rise today at:   %s.\n\r",
+  ssprintf(buf, "The sun will rise today at:   %s.\n\r",
        hmtAsString(tmp2).c_str());
   sendTo(buf);
 
   tmp2 = sunTime(SUN_TIME_SET);
-  sprintf(buf, "The sun will set today at:    %s.\n\r",
+  ssprintf(buf, "The sun will set today at:    %s.\n\r",
        hmtAsString(tmp2).c_str());
   sendTo(buf);
 
   tmp2 = moonTime(MOON_TIME_RISE);
-  sprintf(buf, "The moon will rise today at:  %s    (%s).\n\r",
+  ssprintf(buf, "The moon will rise today at:  %s    (%s).\n\r",
        hmtAsString(tmp2).c_str(), moonType());
   sendTo(buf);
 
   tmp2 = moonTime(MOON_TIME_SET);
-  sprintf(buf, "The moon will set today at:   %s.\n\r",
+  ssprintf(buf, "The moon will set today at:   %s.\n\r",
        hmtAsString(tmp2).c_str());
   sendTo(buf);
 
@@ -2087,8 +2087,7 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
 
 void TBeing::doWizhelp()
 {
-  char      buf[MAX_STRING_LENGTH],
-            tString[MAX_STRING_LENGTH];
+  sstring sbuf, buf, tString;
   int       no,
             tLength = 2;
   unsigned int i;
@@ -2108,16 +2107,14 @@ void TBeing::doWizhelp()
       tLength = max(strlen(commandArray[i]->name), (unsigned) tLength);
   }
 
-  sprintf(tString, "%%-%ds", (tLength + 1));
+  ssprintf(tString, "%%-%ds", (tLength + 1));
   tLength = (79 / tLength);
 
   sendTo("The following privileged commands are available:\n\r\n\r");
 
-  *buf = '\0';
-
   if ((tPower = wizPowerFromCmd(CMD_AS)) == MAX_POWER_INDEX ||
       hasWizPower(tPower))
-    sprintf(buf, tString, "as");
+    ssprintf(buf, tString.c_str(), "as");
 
   for (no = 2, i = 0; i < MAX_CMD_LIST; i++) {
     if (!commandArray[i])
@@ -2128,16 +2125,17 @@ void TBeing::doWizhelp()
         ((tPower = wizPowerFromCmd(cmdTypeT(i))) == MAX_POWER_INDEX ||
          hasWizPower(tPower))) {
 
-      sprintf(buf + strlen(buf), tString, commandArray[i]->name);
+      ssprintf(sbuf, tString.c_str(), commandArray[i]->name);
+      buf += sbuf;
 
       if (!(no % (tLength - 1)))
-        strcat(buf, "\n\r");
+	buf += "\n\r";
 
       no++;
     }
   }
 
-  strcat(buf, "\n\r      Check out HELP GODS (or HELP BUILDERS) for an index of help files.\n\r");
+  buf += "\n\r      Check out HELP GODS (or HELP BUILDERS) for an index of help files.\n\r";
   desc->page_string(buf);
 }
 

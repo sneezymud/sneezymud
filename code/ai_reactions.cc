@@ -213,7 +213,7 @@ int TMonster::aiFag(TBeing *homo,int self)
 
 int TMonster::aiInsultDoer(TBeing *vict)
 {
-  char buf[255], buf2[255], buf3[40];
+  sstring buf, buf2, buf3;
   ubyte insult = 1;
   int say_this = TRUE;
 
@@ -224,28 +224,28 @@ int TMonster::aiInsultDoer(TBeing *vict)
   if (!::number(0,3)) {
     switch (::number(1,10)) {
       case 1:
-        strcpy(buf2,"weak");
+        buf2 = "weak";
         break;
       case 2:
-        strcpy(buf2,"stupid");
+        buf2 = "stupid";
         break;
       case 3:
-        strcpy(buf2,"idiotic");
+        buf2 = "idiotic";
         break;
       case 4:
-        strcpy(buf2,"ugly");
+        buf2 = "ugly";
         break;
       case 5:
-        strcpy(buf2,"clumsy");
+        buf2 = "clumsy";
         break;
       case 6:
-        strcpy(buf2,"wimpy");
+        buf2 = "wimpy";
         break;
       case 7:
-	strcpy(buf2,"faggy");
+	buf2 = "faggy";
 	break;    
       default:
-        strcpy(buf2, "gutless");
+        buf2 =  "gutless";
         break;
     }
   } else {
@@ -259,139 +259,139 @@ int TMonster::aiInsultDoer(TBeing *vict)
 			vict->getStat(STAT_CURRENT,STAT_CON)) &&
 	(vict->getStat(STAT_CURRENT,STAT_BRA) <=
 			vict->getStat(STAT_CURRENT,STAT_CHA)))
-      strcpy(buf2,"weak");
+      buf2 = "weak";
     else if ((vict->getStat(STAT_CURRENT, STAT_INT) <= vict->getStat(STAT_CURRENT, STAT_WIS)) && 
              (vict->getStat(STAT_CURRENT, STAT_INT) <= vict->getStat(STAT_CURRENT, STAT_AGI)) && 
              (vict->getStat(STAT_CURRENT, STAT_INT) <= vict->getStat(STAT_CURRENT, STAT_CON)) && 
              (vict->getStat(STAT_CURRENT, STAT_INT) <= vict->getStat(STAT_CURRENT, STAT_CHA)))
-      strcpy(buf2,"stupid");
+      buf2 = "stupid";
     else if ((vict->getStat(STAT_CURRENT, STAT_WIS) <= vict->getStat(STAT_CURRENT, STAT_AGI)) && 
              (vict->getStat(STAT_CURRENT, STAT_WIS) <= vict->getStat(STAT_CURRENT, STAT_CON)) &&
              (vict->getStat(STAT_CURRENT, STAT_WIS) <= vict->getStat(STAT_CURRENT, STAT_CHA)))
-      strcpy(buf2,"idiotic");
+      buf2 = "idiotic";
     else if ((vict->getStat(STAT_CURRENT, STAT_AGI) <= vict->getStat(STAT_CURRENT, STAT_CON)) &&
              (vict->getStat(STAT_CURRENT, STAT_AGI) <= vict->getStat(STAT_CURRENT, STAT_CHA)))
-      strcpy(buf2,"clumsy");
+      buf2 = "clumsy";
     else if (vict->getStat(STAT_CURRENT, STAT_CON) <= vict->getStat(STAT_CURRENT, STAT_CHA))
-      strcpy(buf2,"wimpy");
+      buf2 = "wimpy";
     else
-      strcpy(buf2,"ugly");
+      buf2 = "ugly";
   }
   switch (::number(1,22)) {
     case 1:
-      strcpy(buf3,"bastich");
+      buf3 = "bastich";
       break;
     case 2:
-      strcpy(buf3,"dork");
+      buf3 = "dork";
       break;
     case 3:
-      strcpy(buf3,"wanker");
+      buf3 = "wanker";
       break;
     case 4:
-      strcpy(buf3,"jank");
+      buf3 = "jank";
       break;
     case 5:
-      strcpy(buf3,"boogerdin");
+      buf3 = "boogerdin";
       break;
     case 6:
-      strcpy(buf3,"bumblenocker");
+      buf3 = "bumblenocker";
       break;
     case 7:
-      strcpy(buf3,"putz");
+      buf3 = "putz";
       break;
     case 8:
-      strcpy(buf3,"pucknut");
+      buf3 = "pucknut";
       break;
     case 9:
-      strcpy(buf3,"goober");
+      buf3 = "goober";
       break;
     case 10:
-      strcpy(buf3,"humpertin");
+      buf3 = "humpertin";
       break;
     case 11:
-      strcpy(buf3,"muttonhead");
+      buf3 = "muttonhead";
       break;
     case 12:
-      strcpy(buf3,"retard");
+      buf3 = "retard";
       break;
     case 13:
-      strcpy(buf3,"rat-bastard");
+      buf3 = "rat-bastard";
       break;
     case 14:
-      strcpy(buf3,"smacktapper");
+      buf3 = "smacktapper";
       break;
     case 15:
-      strcpy(buf3,"dinkknocker");
+      buf3 = "dinkknocker";
       break;
     case 16:
-      strcpy(buf3,"scum of the earth");
+      buf3 = "scum of the earth";
       break;
     case 17:
-      strcpy(buf3,"jackass");
+      buf3 = "jackass";
       break;   
     case 18:
-      strcpy(buf3,"hunk of DiqMeat");
+      buf3 = "hunk of DiqMeat";
       break;         
     default:
-      strcpy(buf3,"freak of nature");
+      buf3 = "freak of nature";
       break;
   }
   switch (::number(1,21)) {
     case 1:
-      sprintf(buf, "You %s %s",buf2, buf3);
+      ssprintf(buf, "You %s %s",buf2.c_str(), buf3.c_str());
       break;
     case 2:
-      sprintf(buf, "Goddamn %s %s",buf2, buf3);
+      ssprintf(buf, "Goddamn %s %s",buf2.c_str(), buf3.c_str());
       break;
     case 3:
-      sprintf(buf, "Damn %s", buf3);
+      ssprintf(buf, "Damn %s", buf3.c_str());
       break;
     case 4:
-      sprintf(buf, "Piece of doo-doo");
+      buf="Piece of doo-doo";
       break;
     case 5:
-      sprintf(buf, "Janky %s",buf3);
+      ssprintf(buf, "Janky %s",buf3.c_str());
       break;
     case 6:
-      sprintf(buf, "Dude, you got some heinous weenie-dog breath");
+      buf="Dude, you got some heinous weenie-dog breath";
       break;
     case 7:
-      sprintf(buf, "%s", buf3);
+      buf=buf3;
       break;
     case 8:
-      sprintf(buf, "Mangy %s",buf3);
+      ssprintf(buf, "Mangy %s",buf3.c_str());
       break;
     case 9:
-      sprintf(buf, "Faggot");
+      buf="Faggot";
       break;
     case 10:
-      sprintf(buf, "Hey dirt-for-brains, bite me");
+      buf="Hey dirt-for-brains, bite me";
       break;
     case 11:
       if (getRace() != vict->getRace()) {
-        sprintf(buf, "All %s are faeries", vict->getMyRace()->getProperName().c_str());
+        ssprintf(buf, "All %s are faeries", vict->getMyRace()->getProperName().c_str());
         break;
       } // else fall through
     case 12:
-      strcpy(buf, "You call that a face, the back of my horse is better looking");
+      buf = "You call that a face, the back of my horse is better looking";
       break;
     case 13:
-      strcpy(buf, "I bet your mother doesn't even know your father's name");
+      buf = "I bet your mother doesn't even know your father's name";
       break;
     case 14:
-      strcpy(buf, "Where'd you get that equipment?  I've seen better stuff in a dump");
+      buf = "Where'd you get that equipment?  I've seen better stuff in a dump";
       break;
     case 15:
-      sprintf(buf, "Hey %s, is it true your IQ is the same as your shoe size", fname(vict->name).c_str());
+      ssprintf(buf, "Hey %s, is it true your IQ is the same as your shoe size", fname(vict->name).c_str());
       break;
     case 16:
-      strcpy(buf, "The only reason you were born is your dad could run faster than your mom");
+      buf = "The only reason you were born is your dad could run faster than your mom";
       break;
     case 17:
-      strcpy(buf, "You smell worse than a troll's outhouse");
+      buf = "You smell worse than a troll's outhouse";
       break;
     case 18:
-      strcpy(buf,"I could have been your father if I'd've had change for a talen");
+      buf = "I could have been your father if I'd've had change for a talen";
       break;
     case 19:
       say_this = FALSE;
@@ -401,7 +401,7 @@ int TMonster::aiInsultDoer(TBeing *vict)
           FALSE, this, 0, vict, TO_VICT);
       break;
     case 20:
-      strcpy(buf, "The best part of you rolled down the back of a horses leg!");
+    buf = "The best part of you rolled down the back of a horses leg!";
       break;  
     default:
       return FALSE;
@@ -409,11 +409,11 @@ int TMonster::aiInsultDoer(TBeing *vict)
 
   if (canSpeak() && say_this) {
     for (insult=1; insult <= ::number(1,5); insult++)
-      strcat(buf,"!");
+      buf += "!";
 
-    sprintf(buf2,"$n looks at you and says, \"%s\"",buf);
+    ssprintf(buf2,"$n looks at you and says, \"%s\"",buf.c_str());
     act(buf2,TRUE,this,0,vict,TO_VICT);
-    sprintf(buf2,"$n looks at $N and says, \"%s\"",buf);
+    ssprintf(buf2,"$n looks at $N and says, \"%s\"",buf.c_str());
     act(buf2,TRUE,this,0,vict,TO_NOTVICT);
   }
 
@@ -673,7 +673,7 @@ int TMonster::aiMobHappy(TBeing *doer)
 // watch some porn flicks then fill some of these case statements out
 int TMonster::aiMudSex(TBeing *doer)
 {
-  char buf[160];
+  sstring buf;
 
   if (doer->isRealUgly()) {
     return aiMudSexRepulsed(doer);
@@ -720,11 +720,11 @@ int TMonster::aiMudSex(TBeing *doer)
       doSay("Come to me, I want you!");
       break;
     case 12:
-      sprintf(buf,"%s Will you still respect me in the morning?",fname(doer->name).c_str());
+      ssprintf(buf,"%s Will you still respect me in the morning?",fname(doer->name).c_str());
       doAsk(buf);
       break;
     case 13:
-      sprintf(buf,"%s I love you for your body.",fname(doer->name).c_str());
+      ssprintf(buf,"%s I love you for your body.",fname(doer->name).c_str());
       doWhisper(buf);
       break;
     default:
