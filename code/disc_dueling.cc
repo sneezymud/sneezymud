@@ -10,7 +10,7 @@
 #include "range.h"
 #include "disease.h"
 #include "combat.h"
-#include "disc_hth.h"
+#include "disc_dueling.h"
 #include "obj_base_weapon.h"
 
 int TBeing::doShove(const char *argument, TBeing *vict)
@@ -159,7 +159,7 @@ int shove(TBeing *caster, TBeing * victim, char * direction, spellNumT skill)
     caster->sendTo("You need to give a direction to shove.\n\r");
     return FALSE;
   }
-  if (bSuccess(caster, bKnown+ percent, skill)) {
+  if (caster->bSuccess(bKnown+ percent, skill)) {
     if (victim->doesKnowSkill(SKILL_COUNTER_MOVE)) {
       if (min((int)victim->GetMaxLevel(),100) > percent) {
         act("$N deftly resists your shove attempt.", 
@@ -254,7 +254,7 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
   // call the learnFrom stuff
   if (trance) {
     int val = (int)(((float) v->getSkillValue(SKILL_TRANCE_OF_BLADES) * 0.70) + 30);
-    if (bSuccess(v,val, SKILL_TRANCE_OF_BLADES)) {
+    if (v->bSuccess(val, SKILL_TRANCE_OF_BLADES)) {
       *dam = 0;
       // base 30% chance combined with the base 50% chance gives us a 15%-50% block rate
       // not sure if this is the proper way to do this, but it works. - dash
@@ -285,7 +285,7 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
       return TRUE;
     }
   } else {
-    if (bSuccess(v, v->getSkillValue(SKILL_PARRY_WARRIOR), SKILL_PARRY_WARRIOR)) {
+    if (v->bSuccess(SKILL_PARRY_WARRIOR)) {
       *dam = 0;
       if (Twink == 1) {
 	sprintf(buf, "You %s $n's %s at your %s.", type,
@@ -345,7 +345,7 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
 
   // check bSuccess after above check, so that we limit how often we
   // call the learnFrom stuff
-  if (bSuccess(v, v->getSkillValue(SKILL_PARRY_WARRIOR), SKILL_PARRY_WARRIOR)) {
+  if (bSuccess(v, SKILL_PARRY_WARRIOR)) {
     *dam = 0;
 
     strcpy(type, "parry");

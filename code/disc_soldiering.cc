@@ -6,9 +6,9 @@
 
 
 #include "stdsneezy.h"
-#include "disc_physical.h"
+#include "disc_soldiering.h"
 
-CDPhysical::CDPhysical() :
+CDSoldiering::CDSoldiering() :
       CDiscipline(),
       skDoorbash(),
       skDualWieldWarrior(),
@@ -17,7 +17,7 @@ CDPhysical::CDPhysical() :
 {
 }
 
-CDPhysical::CDPhysical(const CDPhysical &a) :
+CDSoldiering::CDSoldiering(const CDSoldiering &a) :
       CDiscipline(a),
       skDoorbash(a.skDoorbash),
       skDualWieldWarrior(a.skDualWieldWarrior),
@@ -26,7 +26,7 @@ CDPhysical::CDPhysical(const CDPhysical &a) :
 {
 }
 
-CDPhysical & CDPhysical::operator=(const CDPhysical &a)
+CDSoldiering & CDSoldiering::operator=(const CDSoldiering &a)
 {
   if (this == &a) return *this;
   CDiscipline::operator=(a);
@@ -37,7 +37,7 @@ CDPhysical & CDPhysical::operator=(const CDPhysical &a)
   return *this;
 }
 
-CDPhysical::~CDPhysical()
+CDSoldiering::~CDSoldiering()
 {
 }
 

@@ -15,7 +15,7 @@
 #include "stdsneezy.h"
 #include "obj_tool.h"
 
-void TTool::findSmytheTools(TTool **forge, TTool **anvil)
+void TTool::findBlacksmithingTools(TTool **forge, TTool **anvil)
 {
   if (!*forge && getToolType() == TOOL_FORGE)
     *forge = this;
@@ -23,7 +23,7 @@ void TTool::findSmytheTools(TTool **forge, TTool **anvil)
     *anvil = this;
 }
 
-int smythe_tools_in_room(int room, TTool **forge, TTool **anvil)
+int blacksmithing_tools_in_room(int room, TTool **forge, TTool **anvil)
 {
   TRoom *rp;
   TThing *t;
@@ -32,7 +32,7 @@ int smythe_tools_in_room(int room, TTool **forge, TTool **anvil)
     return FALSE;
 
   for (t = rp->getStuff(); t; t = t->nextThing) {
-    t->findSmytheTools(forge, anvil);
+    t->findBlacksmithingTools(forge, anvil);
   }
   return (*forge && *anvil);
 }
@@ -354,36 +354,36 @@ int TBeing::get_spirit_tools(TTool **altar, TTool **brush, TTool **resin)
 }
 
 
-void smythe_stop(TBeing *ch)
+void blacksmithing_stop(TBeing *ch)
 {
   if (ch->getPosition() < POSITION_SITTING) {
-    act("You stop smything, and look about confused.  Are you missing something?",
+    act("You stop blacksmithing, and look about confused.  Are you missing something?",
          FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops smything, and looks about confused and embarrassed.",
+    act("$n stops blacksmithing, and looks about confused and embarrassed.",
         FALSE, ch, 0, 0, TO_ROOM);
   }
   ch->stopTask();
 }
 
-void TThing::smythePulse(TBeing *ch, TObj *)
+void TThing::blacksmithingPulse(TBeing *ch, TObj *)
 {
-  smythe_stop(ch);
+  blacksmithing_stop(ch);
 }
 
 
-void TTool::smythePulse(TBeing *ch, TObj *o)
+void TTool::blacksmithingPulse(TBeing *ch, TObj *o)
 {
   TTool *forge = NULL, *anvil = NULL;
   int percent;
   int movemod = ::number(10,25);
-  int movebonus = ::number(1,((ch->getSkillValue(SKILL_SMYTHE) / 10)));
+  int movebonus = ::number(1,((ch->getSkillValue(SKILL_BLACKSMITHING) / 10)));
   const int HEATING_TIME = 3;
 
   // sanity check
   if ((getToolType() != TOOL_HAMMER) ||
-      !smythe_tools_in_room(ch->in_room, &forge, &anvil) ||
+      !blacksmithing_tools_in_room(ch->in_room, &forge, &anvil) ||
       (ch->getPosition() < POSITION_RESTING)) {
-    smythe_stop(ch);
+    blacksmithing_stop(ch);
     return;
   }
 
@@ -444,7 +444,7 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
     if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
       percent -= ch->getDexReaction() * 3;
 
-    if (percent < ch->getSkillValue(SKILL_SMYTHE))
+    if (percent < ch->getSkillValue(SKILL_BLACKSMITHING))
       o->addToStructPoints(1);
     else
       o->addToStructPoints(-1);
@@ -462,10 +462,10 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
 }
 
 
-// generic smythe: generic metal (150) through steel (176)
+// generic blacksmithing: generic metal (150) through steel (176)
 // tools: forge (in room), hammer (in primary), tongs? (in secondary)
 
-int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
+int task_blacksmithing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
   TThing *t;
   TTool *forge = NULL, *anvil = NULL, *hammer = NULL, *tongs = NULL;
@@ -483,7 +483,7 @@ int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 
   // sanity check
   if (ch->isLinkdead() || (ch->in_room < 0) || !o || !isname(ch->task->orig_arg, o->name)) {
-    smythe_stop(ch);
+    blacksmithing_stop(ch);
     return FALSE;  // returning FALSE lets command be interpreted
   }
   if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
@@ -493,7 +493,7 @@ int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
   switch (cmd) {
     case CMD_TASK_CONTINUE:
       if (!ch->get_metal_tools(&forge, &anvil, &hammer, &tongs) || (ch->getPosition() < POSITION_RESTING)) {
-	smythe_stop(ch);
+	blacksmithing_stop(ch);
 	return FALSE;
       }
 
@@ -506,15 +506,15 @@ int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 	return FALSE;
       }
 
-      learning = ch->getSkillValue(SKILL_SMYTHE);
-      didSucceed = bSuccess(ch, learning, SKILL_SMYTHE);
+      learning = ch->getSkillValue(SKILL_BLACKSMITHING);
+      didSucceed = ch->bSuccess(learning, SKILL_BLACKSMITHING);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
 
       if (ch->task->status && didSucceed || !ch->task->status) {
 	if (ch->getRace() == RACE_DWARF) {
-	  ch->addToMove(min(-1, ::number(-10,-25) + ::number(1,((ch->getSkillValue(SKILL_SMYTHE) / 10))) + 4));
+	  ch->addToMove(min(-1, ::number(-10,-25) + ::number(1,((ch->getSkillValue(SKILL_BLACKSMITHING) / 10))) + 4));
 	} else {
-	  ch->addToMove(min(-1, ::number(-10,-25) + ::number(1,((ch->getSkillValue(SKILL_SMYTHE) / 10)))));
+	  ch->addToMove(min(-1, ::number(-10,-25) + ::number(1,((ch->getSkillValue(SKILL_BLACKSMITHING) / 10)))));
 	}
 
 	if (ch->getMove() < 10) {
@@ -561,7 +561,7 @@ int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 	  if ((percent = ::number(1, 101)) != 101)    // 101 is complete failure
 	    percent -= ch->getDexReaction() * 3;
 
-	  if (percent < ch->getSkillValue(SKILL_SMYTHE))
+	  if (percent < ch->getSkillValue(SKILL_BLACKSMITHING))
 	    o->addToStructPoints(1);
 	  else
 	    o->addToStructPoints(-1);
@@ -634,7 +634,7 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 
   // sanity check
   if (ch->isLinkdead() || (ch->in_room < 0) || !o || !isname(ch->task->orig_arg, o->name)) {
-    smythe_stop(ch);
+    blacksmithing_stop(ch);
     return FALSE;  // returning FALSE lets command be interpreted
   }
   if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
@@ -643,7 +643,7 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
   switch (cmd) {
     case CMD_TASK_CONTINUE:
       if (!ch->get_dead_tools(&operatingtable, &scalpel, &forceps) || (ch->getPosition() < POSITION_RESTING)) {
-        smythe_stop(ch);
+        blacksmithing_stop(ch);
         return FALSE;
       }
 
@@ -657,7 +657,7 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
       }
 
       learning = ch->getSkillValue(SKILL_REPAIR_SHAMAN);
-      didSucceed = bSuccess(ch, learning, SKILL_REPAIR_SHAMAN);
+      didSucceed = ch->bSuccess(learning, SKILL_REPAIR_SHAMAN);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
 
       if (ch->task->status && didSucceed || !ch->task->status) { 
@@ -775,7 +775,7 @@ int task_repair_wood(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 
   // sanity check
   if (ch->isLinkdead() || (ch->in_room < 0) || !o || !isname(ch->task->orig_arg, o->name)) {
-    smythe_stop(ch);
+    blacksmithing_stop(ch);
     return FALSE;  // returning FALSE lets command be interpreted
   }
   if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
@@ -785,7 +785,7 @@ int task_repair_wood(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
     case CMD_TASK_CONTINUE:
       if (!ch->get_wood_tools(&ladle, &soil) || (ch->getPosition() < POSITION_RESTING)
 	  || !ch->roomp->isForestSector()) {
-	smythe_stop(ch);
+	blacksmithing_stop(ch);
 	return FALSE;
       }
 
@@ -799,7 +799,7 @@ int task_repair_wood(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
       }
 
       learning = ch->getSkillValue(SKILL_REPAIR_MONK);
-      didSucceed = bSuccess(ch, learning, SKILL_REPAIR_MONK);
+      didSucceed = ch->bSuccess(learning, SKILL_REPAIR_MONK);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
       if (ch->task->status && didSucceed || !ch->task->status) {
 	
@@ -939,7 +939,7 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 
   // sanity check
   if (ch->isLinkdead() || (ch->in_room < 0) || !o || !isname(ch->task->orig_arg, o->name)) {
-    smythe_stop(ch);
+    blacksmithing_stop(ch);
     return FALSE;  // returning FALSE lets command be interpreted
   }
   if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
@@ -949,7 +949,7 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
     case CMD_TASK_CONTINUE:
       if (!ch->get_shell_tools(&ladle, &oils) || (ch->getPosition() < POSITION_RESTING)
 	  || !ch->roomp->isWaterSector()) {
-	smythe_stop(ch);
+	blacksmithing_stop(ch);
 	return FALSE;
       }
 
@@ -963,7 +963,7 @@ int task_repair_organic(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
       }
 
       learning = ch->getSkillValue(SKILL_REPAIR_MONK);
-      didSucceed = bSuccess(ch, learning, SKILL_REPAIR_MONK);
+      didSucceed = ch->bSuccess(learning, SKILL_REPAIR_MONK);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
       if (ch->task->status && didSucceed || !ch->task->status) {
 	
@@ -1104,7 +1104,7 @@ int task_repair_magical(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 
   // sanity check
   if (ch->isLinkdead() || (ch->in_room < 0) || !o || !isname(ch->task->orig_arg, o->name)) {
-    smythe_stop(ch);
+    blacksmithing_stop(ch);
     return FALSE;  // returning FALSE lets command be interpreted
   }
   if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
@@ -1113,7 +1113,7 @@ int task_repair_magical(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
   switch (cmd) {
     case CMD_TASK_CONTINUE:
       if (!ch->get_magic_tools(&pentagram, &runes, &energy) || (ch->getPosition() < POSITION_RESTING)) {
-        smythe_stop(ch);
+        blacksmithing_stop(ch);
         return FALSE;
       }
 
@@ -1127,7 +1127,7 @@ int task_repair_magical(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
       }
 
       learning = ch->getSkillValue(SKILL_REPAIR_MAGE);
-      didSucceed = bSuccess(ch, learning, SKILL_REPAIR_MAGE);
+      didSucceed = ch->bSuccess(learning, SKILL_REPAIR_MAGE);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
 
       if (ch->task->status && didSucceed || !ch->task->status) {
@@ -1257,7 +1257,7 @@ int task_repair_rock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 
   // sanity check
   if (ch->isLinkdead() || (ch->in_room < 0) || !o || !isname(ch->task->orig_arg, o->name)) {
-    smythe_stop(ch);
+    blacksmithing_stop(ch);
     return FALSE;  // returning FALSE lets command be interpreted
   }
 
@@ -1273,7 +1273,7 @@ int task_repair_rock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 
       if (!ch->get_rock_tools(&pentagram, &chisel, &silica) || (ch->getPosition() < POSITION_RESTING)) {
 
-        smythe_stop(ch);
+        blacksmithing_stop(ch);
         return FALSE;
       }
 
@@ -1287,7 +1287,7 @@ int task_repair_rock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
       }
 
       learning = ch->getSkillValue(skill);
-      didSucceed = bSuccess(ch, learning, skill);
+      didSucceed = ch->bSuccess(learning, skill);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
 
       if (ch->task->status && didSucceed || !ch->task->status) {       
@@ -1395,7 +1395,7 @@ int task_repair_rock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 //                ruby (111), sapphire (112), amethyst (119), mica (120), quartz (124), corundum (126)
 // tools: a workbench (room), a loupe (primary), a pair of needle nosed pliers (secondary)
 
-int task_smythe_advanced(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
+int task_blacksmithing_advanced(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
 
   TThing *t;
@@ -1414,16 +1414,16 @@ int task_smythe_advanced(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoo
 
   // sanity check
   if (ch->isLinkdead() || (ch->in_room < 0) || !o || !isname(ch->task->orig_arg, o->name)) {
-    smythe_stop(ch);
+    blacksmithing_stop(ch);
     return FALSE;  // returning FALSE lets command be interpreted
   }
 
   spellNumT skill;
-  if (ch->getSkillValue(SKILL_REPAIR_THIEF) > ch->getSkillValue(SKILL_SMYTHE_ADVANCED)) {
+  if (ch->getSkillValue(SKILL_REPAIR_THIEF) > ch->getSkillValue(SKILL_BLACKSMITHING_ADVANCED)) {
     skill = SKILL_REPAIR_THIEF;
     maxrepair = 85;
   } else {
-    skill = SKILL_SMYTHE_ADVANCED;
+    skill = SKILL_BLACKSMITHING_ADVANCED;
     maxrepair = 70;
   }
   if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
@@ -1434,7 +1434,7 @@ int task_smythe_advanced(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoo
 
       if (!ch->get_gemmed_tools(&workbench, &loupe, &pliers) || (ch->getPosition() < POSITION_RESTING)) {
 
-        smythe_stop(ch);
+        blacksmithing_stop(ch);
         return FALSE;
       }
 
@@ -1448,7 +1448,7 @@ int task_smythe_advanced(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoo
       }
 
       learning = ch->getSkillValue(skill);
-      didSucceed = bSuccess(ch, learning, skill);
+      didSucceed = ch->bSuccess(learning, skill);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
 
       if (ch->task->status && didSucceed || !ch->task->status) {       
@@ -1561,7 +1561,7 @@ int task_mend_hide(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 
   // sanity check
   if (ch->isLinkdead() || (ch->in_room < 0) || !o || !isname(ch->task->orig_arg, o->name)) {
-    smythe_stop(ch);
+    blacksmithing_stop(ch);
     return FALSE;  // returning FALSE lets command be interpreted
   }
 
@@ -1577,7 +1577,7 @@ int task_mend_hide(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 
       if (!ch->get_leather_tools(&punch, &cording) || (ch->getPosition() < POSITION_RESTING)) {
 
-        smythe_stop(ch);
+        blacksmithing_stop(ch);
         return FALSE;
       }
 
@@ -1589,7 +1589,7 @@ int task_mend_hide(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       }
 
       learning = ch->getSkillValue(skill);
-      didSucceed = bSuccess(ch, learning, skill);
+      didSucceed = ch->bSuccess(learning, skill);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
 
       if (ch->task->status && didSucceed || !ch->task->status) {       
@@ -1724,7 +1724,7 @@ int task_repair_spiritual(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
 
   // sanity check
   if (ch->isLinkdead() || (ch->in_room < 0) || !o || !isname(ch->task->orig_arg, o->name)) {
-    smythe_stop(ch);
+    blacksmithing_stop(ch);
     return FALSE;  // returning FALSE lets command be interpreted
   }
 
@@ -1744,7 +1744,7 @@ int task_repair_spiritual(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
 
       if (!ch->get_spirit_tools(&altar, &brush, &resin) || (ch->getPosition() < POSITION_RESTING)) {
 
-        smythe_stop(ch);
+        blacksmithing_stop(ch);
         return FALSE;
       }
 
@@ -1758,7 +1758,7 @@ int task_repair_spiritual(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
       }
 
       learning = ch->getSkillValue(skill);
-      didSucceed = bSuccess(ch, learning, skill);
+      didSucceed = ch->bSuccess(learning, skill);
       ch->task->calcNextUpdate(pulse, 2 * PULSE_MOBACT);
 
       if (ch->task->status && didSucceed || !ch->task->status) {       
