@@ -101,6 +101,10 @@ int postman(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   if(cmd!=CMD_GENERIC_PULSE || !me)
     return false;
 
+  // Don't let them move, or even hunt, if they are out cold.
+  if (!me->awake())
+    return false;
+
   // wander around the world randomly
   if(!::number(0,9))
      me->randomHunt();
@@ -110,7 +114,6 @@ int postman(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 
   if(!me)
     return false;
-
 
   // search for post bag
   for(TThing *tt=me->getStuff();tt;tt=tt->nextThing){
