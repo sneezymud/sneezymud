@@ -427,7 +427,7 @@ int TPortal::enterMe(TBeing *ch)
     }
   }
   int iCharges = getPortalNumCharges();
-  if (iCharges) {
+  if (iCharges>=1) {
     if (iCharges == 1) {        /* last use */
       act("Silently, $n fades from view.", TRUE, this, 0, 0, TO_ROOM);
       return DELETE_THIS;
@@ -440,7 +440,7 @@ int TPortal::enterMe(TBeing *ch)
   TPortal *otherport = findMatchingPortal();
   if (otherport) {
     int iCharges = otherport->getPortalNumCharges();
-    if (iCharges) {
+    if (iCharges>=1) {
       if (iCharges == 1) {        /* last use */
         act("Silently, $n fades from view.", TRUE, otherport, 0, 0, TO_ROOM);
         delete otherport;
