@@ -3002,7 +3002,7 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
   if (levelDiff >= 0 && chance > roll) {
     if (!silent) {
       act("You are unable to get past $N's defenses.", FALSE, this, 0, vict, TO_CHAR);
-      act("$n is unable to get past $N's defenses.", TRUE, this, 0, 0, TO_ROOM);
+      act("$n is unable to get past $N's defenses.", TRUE, this, 0, vict, TO_ROOM);
     }
     return TRUE;
   }
