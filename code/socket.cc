@@ -399,9 +399,9 @@ int TSocket::gameLoop()
       //      vlogf(LOG_DASH, "Updating who table for port %d", gamePort);
       int count = 0;
       for (p = character_list; p; p = p->next) {
-	if (p->isPc() && p->polyed == POLY_TYPE_NONE && !(p->getInvisLevel() > MAX_MORT)) {
+	if (p->isPc() && p->polyed == POLY_TYPE_NONE) {
 	  if ((p2 = dynamic_cast<TPerson *>(p))) {
-	    db.query("insert into wholist (name, title, port) VALUES('%s', '%s', %i)", p2->getName(), p2->title,  gamePort);
+	    db.query("insert into wholist (name, title, port, invis) VALUES('%s', '%s', %i, %i)", p2->getName(), p2->title,  gamePort, (p->getInvisLevel() >MAX_MORT)?1:0);
 	    count++;
 	  }
 	}

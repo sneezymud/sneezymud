@@ -9,6 +9,7 @@
 #include "stdsneezy.h"
 #include "statistics.h"
 #include "games.h"
+#include "database.h"
 
 void TBeing::parseTitle(char *arg, Descriptor *)
 {
@@ -147,7 +148,10 @@ void TBeing::doWho(const char *argument)
   string sb;
   int which1 = 0;
   int which2 = 0;
-
+  TDatabase db("sneezyglobal");
+  string stmp;
+  unsigned int pos;
+		  
   for (; isspace(*argument); argument++);
 
   sb += "Players: (Add -? for online help)\n\r--------\n\r";
@@ -261,6 +265,7 @@ void TBeing::doWho(const char *argument)
           if ((canSeeWho(p) &&
               (!strchr(arg, 'g') || (p->GetMaxLevel() >= GOD_LEVEL1)) &&
               (!strchr(arg, 'b') || (p->GetMaxLevel() >= GOD_LEVEL1)) &&
+              (!strchr(arg, 'c') || (p->GetMaxLevel() >= GOD_LEVEL1)) &&
               (!strchr(arg, 'q') || (p->inQuest())) &&
               (!strchr(arg, 'o') || (p->GetMaxLevel() <= MAX_MORT)) &&
               (!strchr(arg, 'z') || (p->isPlayerAction(PLR_SEEKSGROUP))) &&
@@ -328,6 +333,22 @@ void TBeing::doWho(const char *argument)
                   }
                   idle = TRUE;
                   break;
+		case 'c':
+		  db.query("select title, port, name from wholist order by port");
+		  
+		  ssprintf(buf, "%s\n\r", buf.c_str());
+		  
+		  while(db.fetchRow()){
+		    stmp=db.getColumn(0);
+		    
+		    if((pos=stmp.find("<n>")) != string::npos)
+		      stmp.replace(pos,3,db.getColumn(2));
+
+		    ssprintf(buf, "%s[%s] %s<1>\n\r", buf.c_str(),
+			     db.getColumn(1), stmp.c_str());
+		  }
+		  
+		  break;
                 case 'l':
                 case 'y':
                   if (!level) {
