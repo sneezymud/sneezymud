@@ -804,11 +804,13 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 {
   TVehicle *vehicle;
   int rc, count, retcount;
-  TObjIter iter;
   TObj *obj;
 
-  if(!placeholder)
+  if(!placeholder){
     placeholder=read_object(1, VIRTUAL); // hairball, dummy object
+    // get an iterator for our placeholder
+    iter=find(object_list.begin(), object_list.end(), placeholder);
+  }
 
   // note on this loop
   // it is possible that next_thing gets deleted in one of the sub funcs
@@ -820,9 +822,7 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 
   ++vehiclepulse;
 
-  // get an iterator for our placeholder
-  iter=find(object_list.begin(), object_list.end(), placeholder);
-    
+
   // we want to go through 1/12th of the object list every pulse
   // obviously the object count will change, so this is approximate.
   retcount=count=(int)((float)objCount/11.5);

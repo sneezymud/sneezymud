@@ -71,6 +71,7 @@ class TMainSocket {
   vector <int> m_sock;
   TBeing *tmp_ch;
   TObj *placeholder;
+  TObjIter iter;
   int vehiclepulse;
 
   struct timeval handleTimeAndSockets();
