@@ -594,11 +594,9 @@ void TBeing::doGrouptell(const sstring &arg)
   }
 }
 
-void TBeing::doCommune(const char *arg)
+void TBeing::doCommune(const sstring &arg)
 {
-  char buf[256];
-  char buf2[256];
-  char wizbuf[256];
+  sstring buf, buf2, wizbuf;
   Descriptor *i;
   TBeing *critter;
   int levnum = 0;
@@ -612,21 +610,17 @@ void TBeing::doCommune(const char *arg)
     }
   }
 
-  for (; isspace(*arg); arg++);
-
-  if (!*arg) {
+  if (arg.empty()) {
     sendTo("Communing among the gods is fine, but WHAT?\n\r");
     return;
   }
-  if (*arg == '@') {
-    one_argument(arg, buf2);
-    mud_str_copy(buf2, &buf2[1],256);  // skip the @
+
+  if (arg.word(0)[0] == '@' && arg.word(0).length() >= 2) {
+    buf2 = arg.word(0).substr(1,arg.word(0).length() -1);
     levnum = convertTo<int>(buf2);
     if (levnum > 0) {
       // only a properly formatted sstring should be changed
-      arg = one_argument(arg, buf2);
-      for (; isspace(*arg); arg++);
-      if (!*arg) {
+      if (arg.word(1).empty()) {
         sendTo(fmt("You need to tell level %d gods something!?!\n\r") % levnum);
         return;
       }
@@ -637,8 +631,9 @@ void TBeing::doCommune(const char *arg)
   if (!levnum) {
     sendTo(fmt("You tell the gods: %s") %
          colorString(this, desc, arg, NULL, COLOR_BASIC, TRUE, TRUE));
-    sprintf(wizbuf, "[%sPort:%d%s] %s%s:%s %s%s%s\n\r", red(), gamePort, norm(), purple(), getName(), norm(), cyan(), arg, norm());
-    mudMessage(this, 16, wizbuf);
+    wizbuf = fmt("[%sPort:%d%s] %s%s:%s %s%s%s\n\r") % red() % gamePort % norm()
+      % purple() % getName() % norm() % cyan() % arg % norm();
+    mudMessage(this, 16, wizbuf.c_str());
   } else {
     if (levnum <= MAX_MORT) {
       sendTo(fmt("Hey dummy, all the gods are at least level %d.\n\r") %
@@ -665,28 +660,28 @@ void TBeing::doCommune(const char *arg)
 
       if (!levnum) {
         if (critter->GetMaxLevel() >= GOD_LEVEL1 && WizBuild) {
-          sprintf(buf, "%s$n: %s%s%s",
-                 i->purple(), i->cyan(),
-                 str.c_str(), i->norm());
+          buf = fmt ("%s$n: %s%s%s") %
+                 i->purple() % i->cyan() %
+                 str % i->norm();
           act(buf, 0, this, 0, i->character, TO_VICT);
         } else if (critter->hasWizPower(POWER_WIZNET_ALWAYS)) {
-          sprintf(buf, "[nobuilders] %s$n: %s%s%s",
-                 i->purple(), i->cyan(),
-                 str.c_str(), i->norm());
+          buf = fmt("[nobuilders] %s$n: %s%s%s") %
+                 i->purple() % i->cyan() %
+                 str % i->norm();
           act(buf, 0, this, 0, i->character, TO_VICT);
         }
       } else {
         if (critter->GetMaxLevel() >= GOD_LEVEL1 && WizBuild &&
             critter->GetMaxLevel() >= levnum) {
-          sprintf(buf, "%s[builders] (level: %d) $n: %s%s%s",
-                 i->purple(), levnum, i->cyan(),
-                 str.c_str(), i->norm());
+          buf = fmt ("%s[builders] (level: %d) $n: %s%s%s") %
+                 i->purple() % levnum % i->cyan() %
+                 str % i->norm();
           act(buf, 0, this, 0, i->character, TO_VICT);
         } else if (critter->hasWizPower(POWER_WIZNET_ALWAYS) &&
                    critter->GetMaxLevel() >= levnum) {
-          sprintf(buf, "%s(level: %d) $n: %s%s%s", 
-                 i->purple(), levnum, i->cyan(),
-                 str.c_str(), i->norm());
+          buf = fmt("%s(level: %d) $n: %s%s%s") % 
+                 i->purple() % levnum % i->cyan() %
+                 str % i->norm();
           act(buf, 0, this, 0, i->character, TO_VICT);
         }
       }

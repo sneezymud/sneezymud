@@ -1802,7 +1802,7 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
 {
   int i;
   unsigned int pos;
-  char aliasbuf[256], arg1[512], arg2[1024];
+  char aliasbuf[1024], arg1[1024], arg2[1024];
   sstring argument;
   sstring whitespace=" \f\n\r\t\v";
 
