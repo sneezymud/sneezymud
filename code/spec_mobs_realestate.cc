@@ -1,7 +1,6 @@
 #include "stdsneezy.h"
 #include "database.h"
 
-extern bool bootHome(int, int, int, int, int, int, bool);
 
 int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
 {
@@ -191,10 +190,12 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
       keynum=atoi_safe(db.getColumn(3));
       flip=atoi_safe(db.getColumn(4));    
       rotate=atoi_safe(db.getColumn(5));
-      
+
+#if 0      
       if(!bootHome(plan_i, plot_start, plot_end, keynum, flip, rotate, TRUE)){
 	vlogf(LOG_BUG, "bootHome failed");
       }
+#endif
     }
   }
 

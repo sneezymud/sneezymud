@@ -130,7 +130,6 @@ class lag_data lag_info;
 // local procedures
 static void bootZones(void);
 static void bootWorld(void);
-static void bootHomes(void);
 static void renum_zone_table(void);
 static void reset_time(void);
 
@@ -257,10 +256,6 @@ void bootDb(void)
   unsigned int i;
   bootPulse("Loading rooms:", false);
   bootWorld();
-  bootPulse(NULL, true);
-
-  bootPulse("Loading homes:", false);
-  bootHomes();
   bootPulse(NULL, true);
 
   bootPulse("Building suitset information.");
@@ -549,136 +544,6 @@ dirTypeT rotate_dir(dirTypeT dir, int rotate){
   return dir;
 }
 
-
-bool bootHome(int plan_i, int plot_start, int plot_end, 
-	      int keynum, int flip, int rotate, bool copy_objs=FALSE)
-{
-  int template_start=0, template_end=0, template_i=0;
-  int plot_i;
-  TRoom *src, *dest;
-  TDatabase db("sneezy");
-
-  db.query("select template_start, template_end from homeplans where plan=%i", plan_i);
-  if(!db.fetchRow())
-    return FALSE;
-    
-  template_start=atoi_safe(db.getColumn(0));
-  template_end=atoi_safe(db.getColumn(1));
-  
-  plot_i=plot_start;
-  for(template_i=template_start;template_i<=template_end;++template_i){
-    bootPulse(".", false);
-    
-    src=real_roomp(template_i);
-    dest=real_roomp(plot_i);
-    
-    if (dest->getDescr())
-      delete [] dest->descr;
-    dest->descr = mud_str_dup(src->getDescr());
-    
-    if (dest->name)
-      delete [] dest->name;
-    dest->name = mud_str_dup(src->name);
-    
-    dest->setRoomFlags(src->getRoomFlags());
-    dest->setSectorType(src->getSectorType());
-    dest->setRoomHeight(src->getRoomHeight());
-    dest->setMoblim(src->getMoblim());
-    
-    dirTypeT realdir;
-    
-    // copy exits now
-    for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){	
-      realdir=flip_dir(dir, flip);
-      realdir=rotate_dir(realdir, rotate);
-      
-      if(src->dir_option[dir]){ // if the template has this exit, copy it
-	dest->dir_option[realdir]->door_type =
-	  src->dir_option[dir]->door_type;
-	dest->dir_option[realdir]->condition =
-	  src->dir_option[dir]->condition;
-	dest->dir_option[realdir]->lock_difficulty =
-	  src->dir_option[dir]->lock_difficulty;
-	dest->dir_option[realdir]->weight =
-	  src->dir_option[dir]->weight;
-	dest->dir_option[realdir]->key =
-	  src->dir_option[dir]->key;
-      } else if(dest->dir_option[realdir]){
-	TRoom *outside=real_roomp(dest->dir_option[realdir]->to_room);
-	
-	// if the template doesn't have the exit, then remove it from dest
-	if((dest->dir_option[realdir]->to_room >= plot_start &&
-	    dest->dir_option[realdir]->to_room <= plot_end) ||
-	   !outside->isRoomFlag(ROOM_INDOORS)){
-	  
-	  dest->dir_option[realdir]=NULL;
-	  // delete?
-	} else { // unless it goes outside, in which case make a door
-	  // external exit, make a door and lock it
-	  
-	  dirTypeT dir_outside=flip_dir(realdir, FLIP_ALL);
-	  
-	  // do outside room
-	  outside->dir_option[dir_outside]->door_type=DOOR_DOOR;
-	  outside->dir_option[dir_outside]->condition=EX_CLOSED + EX_LOCKED;
-	  outside->dir_option[dir_outside]->lock_difficulty=100;
-	  outside->dir_option[dir_outside]->weight=5;
-	  outside->dir_option[dir_outside]->key=keynum;
-	  
-	  if(outside->dir_option[dir_outside]->keyword)
-	    delete [] outside->dir_option[dir_outside]->keyword;
-	  outside->dir_option[dir_outside]->keyword=mud_str_dup("door");
-	  
-	  // do inside room
-	  dest->dir_option[realdir]->door_type=DOOR_DOOR;
-	  dest->dir_option[realdir]->condition=EX_CLOSED + EX_LOCKED;
-	  dest->dir_option[realdir]->lock_difficulty=100;
-	  dest->dir_option[realdir]->weight=5;
-	  dest->dir_option[realdir]->key=keynum;
-	  
-	  if(dest->dir_option[realdir]->keyword)
-	    delete [] dest->dir_option[realdir]->keyword;
-	  dest->dir_option[realdir]->keyword=mud_str_dup("door");
-	  
-	}
-      }
-    }
-    
-    // copy objects now
-    if(copy_objs){
-      for(TThing *t=src->getStuff();t;t=t->nextThing){
-	TObj *obj=read_object(t->number, REAL);
-	*dest+=*obj;
-      }
-    }
-    
-    ++plot_i;
-  }
-  
-  return TRUE;
-}
-
-
-void bootHomes(void)
-{
-  int plot_start=0, plot_end=0, plan_i=0, keynum=0, flip, rotate;
-  TDatabase db("sneezy");
-
-  db.query("select plan, plot_start, plot_end, keynum, flip, rotate from homeplots where homeowner is not null");
-  
-  while(db.fetchRow()){
-    plan_i=atoi_safe(db.getColumn(0));
-    plot_start=atoi_safe(db.getColumn(1));
-    plot_end=atoi_safe(db.getColumn(2));
-    keynum=atoi_safe(db.getColumn(3));
-    flip=atoi_safe(db.getColumn(4));    
-    rotate=atoi_safe(db.getColumn(5));
-
-    if(!bootHome(plan_i, plot_start, plot_end, keynum, flip, rotate)){
-      vlogf(LOG_BUG, "bootHome failed");
-    }
-  }
-}
 
 void TRoom::colorRoom(int title, int full)
 {
