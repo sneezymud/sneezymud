@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: statistics.cc,v $
+// Revision 1.10  1999/10/14 00:48:50  batopr
+// minor fix
+//
 // Revision 1.9  1999/10/14 00:38:21  batopr
 // Added the saving/loading of stats.equip from file
 //
@@ -80,7 +83,7 @@ int init_game_stats(void)
   stats.absorb_damage_divisor[MOB_STAT] = 2;
   stats.absorb_damage_divisor[PC_STAT] = 4;
 
-  stats.equip = 0.7;   // this affects the load rate of things
+  //stats.equip = 0.7;   // this affects the load rate of things
   stats.max_exist = 1.0;  // this affects the MAX number of a thing allowed
 
   // 1.40 resulted in 16-20 days playtime to L50
@@ -184,7 +187,7 @@ int init_game_stats(void)
           gold_modifier[j] = 1.0;
     }
 
-    if (fscanf(fp, "%f\n", &stats.equip) != 1) {
+    if (fscanf(fp, " %f\n", &stats.equip) != 1) {
       vlogf(5, "bad value for equipment load rate");
     }
 
