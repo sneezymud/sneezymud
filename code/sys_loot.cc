@@ -85,6 +85,7 @@ bool sysLootBoot()
 {
   TObj           * tObj       = NULL;
   TMagicItem     * tMagicItem = NULL;
+  TPotion *pot=NULL;
 
   int tLevel = 0;
 
@@ -102,7 +103,6 @@ bool sysLootBoot()
       switch (obj_index[tOIndex].itemtype) { // Set tLevel
         case ITEM_WAND:
         case ITEM_STAFF:
-        case ITEM_POTION:
         case ITEM_SCROLL:
           if (!(tMagicItem = dynamic_cast<TMagicItem *>(tObj))) {
             vlogf(LOG_BUG, "Screwup in Loot Loader: %s", tObj->getName());
@@ -112,6 +112,14 @@ bool sysLootBoot()
             tLevel = tMagicItem->getMagicLevel();
 
           break;
+        case ITEM_POTION:
+	  if(!(pot = dynamic_cast<TPotion *>(tObj))){
+	    vlogf(LOG_BUG, "Screwup in Loot Loader (potion): %s", tObj->getName());
+	    delete tObj;
+	    tObj = NULL;
+	  } else
+	    tLevel = pot->getDrinkUnits();
+	  break;
         default:
           vlogf(LOG_BUG, "sysLootBoot Error: Unrecognized Type: %d",
                 obj_index[tOIndex].virt);
