@@ -533,7 +533,7 @@ void TBeing::doShout(const char *arg)
   }
 }
 
-void TBeing::doGrouptell(const char *arg)
+void TBeing::doGrouptell(const sstring &arg)
 {
   sstring buf, garbed;
   followData *f;
@@ -562,9 +562,7 @@ void TBeing::doGrouptell(const char *arg)
   if (!(k = master))
     k = this;
 
-  for (; isspace(*arg); arg++);
-
-  if (!*arg) {
+  if (arg.empty()) {
     sendTo("Grouptell is a good command, but you need to tell your group SOMEthing!\n\r");
     return;
   } else {

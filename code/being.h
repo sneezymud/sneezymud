@@ -1976,7 +1976,7 @@ class TBeing : public TThing {
     int doClientMessage(const char *);
     int doAsk(const sstring &);
     void doSign(const sstring &);
-    void doGrouptell(const char *);
+    void doGrouptell(const sstring &);
     void doWrite(const char *);
     void doExamine(const char *, TThing *specific = NULL);
     void doRead(const char *);
