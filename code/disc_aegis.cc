@@ -72,8 +72,8 @@ void relive(TBeing *ch, TBeing *vict)
     corpse->objectDecay();
     delete corpse;
   } else {
-    act("You are unable to convice $d to let $p relive $s experiences.", 
-	FALSE, ch, NULL, NULL, TO_CHAR);
+    act("You are unable to convince $d to let $p relive $s experiences.", 
+	FALSE, ch, NULL, vict, TO_CHAR);
     ch->deityIgnore(SILENT_YES);
     return;
   }
