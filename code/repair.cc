@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: repair.cc,v $
+// Revision 1.4  1999/09/30 17:36:49  batopr
+// added statistics.h
+//
 // Revision 1.3  1999/09/30 17:30:46  batopr
 // Made repair price take gold_modifier[GOLD_REPAIR] into account
 //
@@ -20,6 +23,7 @@
 #include <sys/stat.h>
 
 #include "stdsneezy.h"
+#include "statistics.h"
 
 int counter_done;  // Global variable used to count # of done items/repairman 
 int counter_work;  // Global variable used to count # of undone items/man 
