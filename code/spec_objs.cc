@@ -7209,7 +7209,7 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
     ch->unequip(o->eq_pos);
   --(*o);  // remove from owner
   *cookie = *o;  // TObj assignment, copy values
-  delete o; // remove old object
+  //  delete o; // remove old object
   cookie->assignFourValues(3,0,0,0); // 3 food value, no flags
   cookie->swapToStrung();
 
@@ -7221,7 +7221,7 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   ssprintf(buf, "You tear open $p and pull out %s.", fortune->shortDescr);
   act(buf.c_str(),TRUE,ch,cookie,NULL, TO_CHAR,NULL);
 
-  return true;
+  return DELETE_ITEM;
 }
 
 
