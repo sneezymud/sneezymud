@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disease.cc,v $
+// Revision 1.2  1999/10/08 18:31:04  peel
+// Disease spreading no longer logged
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -103,6 +106,7 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
     if ((af->type != AFFECT_DISEASE && !v->affectedBySpell(af->type)) ||
         (af->type == AFFECT_DISEASE && !v->hasDisease(af->modifier))) {
 
+#if 0
       vlogf(0, "%s (%s:%d) spreading from %s to %s at %d",
              af->type == AFFECT_DISEASE ? "Disease" : "Spell",
              af->type == AFFECT_DISEASE ? 
@@ -110,6 +114,7 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
                  discArray[af->type]->name,
              af->type == AFFECT_DISEASE ? af->modifier : af->type,
              ch->getName(), v->getName(), ch->inRoom());
+#endif
 
       v->affectTo(af, TRUE);
       if (af->type == AFFECT_DISEASE)
