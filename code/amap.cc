@@ -182,7 +182,7 @@ NODE *read_room(TDatabase *db, TDatabase *dbexits)
   } while(!isEnabled(tmp->num));
 
   
-  strcpy(tmp->name, (*db)["name"]);
+  strcpy(tmp->name, (*db)["name"].c_str());
 
   // parse sector type
   tmp->sector=convertTo<int>((*db)["sector"]);

@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     db_immo.query("select vnum,name,short_desc,long_desc,action_desc,type,action_flag,wear_flag,val0,val1,val2,val3,weight,price,can_be_seen,spec_proc,max_exist,max_struct,cur_struct,decay,volume,material from obj where owner='%s' and vnum=%i", immortal.c_str(), vnums[t]);
     
     if(db_immo.fetchRow()){
-      printf("Adding %i ('%s')\n", vnums[t], db_immo["short_desc"]);
+      printf("Adding %i ('%s')\n", vnums[t], db_immo["short_desc"].c_str());
       
       // fix strung and prototype bits
       action_flag=convertTo<int>(db_immo["action_flag"]);
@@ -43,17 +43,17 @@ int main(int argc, char **argv)
 
       db_beta.query("delete from obj where vnum=%i", vnums[t]);
       db_beta.query("insert into obj values(%s, '%s', '%s', '%s', '%s', %s, %i, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-		    db_immo["vnum"], db_immo["name"],
-		    db_immo["short_desc"], db_immo["long_desc"], 
-		    db_immo["action_desc"], db_immo["type"],
-		    action_flag, db_immo["wear_flag"],
-		    db_immo["val0"], db_immo["val1"], 
-		    db_immo["val2"], db_immo["val3"],
-		    db_immo["weight"], db_immo["price"],
-		    db_immo["can_be_seen"], db_immo["spec_proc"], 
-		    db_immo["max_exist"], db_immo["max_struct"],
-		    db_immo["cur_struct"], db_immo["decay"],
-		    db_immo["volume"], db_immo["material"]);
+		    db_immo["vnum"].c_str(), db_immo["name"].c_str(),
+		    db_immo["short_desc"].c_str(), db_immo["long_desc"].c_str(), 
+		    db_immo["action_desc"].c_str(), db_immo["type"].c_str(),
+		    action_flag, db_immo["wear_flag"].c_str(),
+		    db_immo["val0"].c_str(), db_immo["val1"].c_str(), 
+		    db_immo["val2"].c_str(), db_immo["val3"].c_str(),
+		    db_immo["weight"].c_str(), db_immo["price"].c_str(),
+		    db_immo["can_be_seen"].c_str(), db_immo["spec_proc"].c_str(), 
+		    db_immo["max_exist"].c_str(), db_immo["max_struct"].c_str(),
+		    db_immo["cur_struct"].c_str(), db_immo["decay"].c_str(),
+		    db_immo["volume"].c_str(), db_immo["material"].c_str());
 
 
     } else {
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     db_immo.query("select vnum, type, mod1, mod2 from objaffect where owner='%s' and vnum=%i", immortal.c_str(), vnums[t]);
 
     while(db_immo.fetchRow()){
-      db_beta.query("insert into objaffect values(%s, %s, %s, %s)", db_immo["vnum"], db_immo["type"], db_immo["mod1"], db_immo["mod2"]);
+      db_beta.query("insert into objaffect values(%s, %s, %s, %s)", db_immo["vnum"].c_str(), db_immo["type"].c_str(), db_immo["mod1"].c_str(), db_immo["mod2"].c_str());
     }      
 
     
@@ -76,7 +76,7 @@ int main(int argc, char **argv)
     db_immo.query("select vnum, name, description from objextra where owner='%s' and vnum=%i", immortal.c_str(), vnums[t]);
 
     while(db_immo.fetchRow()){
-      db_beta.query("insert into objextra values(%s, '%s', '%s')", db_immo["vnum"], db_immo["name"], db_immo["description"]);
+      db_beta.query("insert into objextra values(%s, '%s', '%s')", db_immo["vnum"].c_str(), db_immo["name"].c_str(), db_immo["description"].c_str());
     }
 
   }
