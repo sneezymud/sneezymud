@@ -967,6 +967,10 @@ void do_the_player_stuff(const char *name)
   if (strlen(name) > 6 && !strcmp(&name[strlen(name) - 8], ".faction"))
     return;
 
+  // skip title data
+  if (strlen(name) > 6 && !strcmp(&name[strlen(name) - 6], ".title"))
+    return;
+
 
   // skip wizpowers data if there was an error up above.
   if (strlen(name) > 9 && !strcmp(&name[strlen(name) - 9], ".wizpower")) {
