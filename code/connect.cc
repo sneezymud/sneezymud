@@ -4677,7 +4677,6 @@ const string Descriptor::badClassMessage(int Class, bool multi, bool triple)
   }
 
   if (Class & CLASS_MONK) {
-    strcat(buf, "Monks temporarily Disabled.\n\r");
   }
   if (Class & CLASS_WARRIOR) {
   }
@@ -4694,8 +4693,6 @@ const string Descriptor::badClassMessage(int Class, bool multi, bool triple)
       strcat(buf, "Ogre's don't have the sensitivity to become Rangers.\n\r");
   }
   if (Class & CLASS_SHAMAN) {
-    strcat(buf, "Shaman class is not currently supported.\n\r");
-
   }
   if (Class & CLASS_THIEF) {
   }
@@ -6657,6 +6654,8 @@ int TBeing::applyRentBenefits(int secs)
   setMana(min((int) manaLimit(), getMana() + (local_tics * manaGain())));
   setMove(min((int) moveLimit(), getMove() + (local_tics * moveGain())));
   setPiety(min(pietyLimit(), getPiety() + (local_tics * pietyGain(0.0))));
+  setLifeforce(min(50, getLifeforce()));
+  // THIS WILL NEED TO BE REVIEWED
  
   wearSlotT ij;
   for (ij=MIN_WEAR;ij < MAX_WEAR; ij++) {

@@ -33,6 +33,7 @@ void TBeing::initDescStuff(charFile *st)
     d->screen_size = st->screen;
     d->last.hit = getHit();
     d->last.mana = getMana();
+    d->last.lifeforce = getLifeforce();
     d->last.piety = getPiety();
     d->last.move = getMove();
     d->last.exp = getExp();
@@ -257,6 +258,7 @@ void TPerson::resetChar()
   if (isImmortal()) {
     setHit(hitLimit());
     setMana(manaLimit());
+    setLifeforce(9000);
     setMove(moveLimit());
     setPiety(pietyLimit());
   }

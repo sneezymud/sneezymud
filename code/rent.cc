@@ -3167,6 +3167,7 @@ float old_ac_lev = mob->getACLevel();
       mob->setDamPrecision(tmp);
     }
 
+    mob->setLifeforce(9000);
     mob->setMana(10);
     mob->setMaxMana(10);
     mob->setPiety(mob->pietyLimit());

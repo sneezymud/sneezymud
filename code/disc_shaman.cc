@@ -877,7 +877,7 @@ void TBeing::doSacrifice(const char *arg)
   }
 
   tobj = heldInPrimHand();
-  if (tobj != heldInPrimHand()) {
+  if (!(tobj = heldInPrimHand())) {
     sendTo("You must be holding a totem in your primary hand to perform the ritual.\n\r");
     return;
   }
