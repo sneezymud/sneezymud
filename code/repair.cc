@@ -285,7 +285,10 @@ TObj *loadRepairItem(TBeing *repair, int ticket,
   }
   
   // read the object data
-  obj=raw_read_item(fp, version);
+  ItemLoad il;
+  il.fp=fp;
+  il.version=version;
+  obj=il.raw_read_item();
   fclose(fp);
 
   return obj;

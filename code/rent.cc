@@ -477,17 +477,41 @@ void ItemSave::writeFooter()
   fwrite(&i, sizeof(i), 1, fp);
 }
 
+bool ItemLoad::readHeader()
+{
+  return (fread(&st, sizeof(rentHeader), 1, fp)==1);
+
+}
+
 bool ItemSave::writeHeader()
 {
   return (fwrite(&st, sizeof(rentHeader), 1, fp)==1);
 }
 
-void ItemSave::writeVersion()
+bool ItemSave::writeVersion()
 {
   // prepare the rent file header and write it out
-  fwrite(&st.version, sizeof(st.version), 1, fp);
+  return (fwrite(&st.version, sizeof(st.version), 1, fp)==1);
 }
 
+ItemLoad::ItemLoad()
+{
+  memset(&st, 0, sizeof(rentHeader));
+  fp=NULL;
+}
+
+ItemLoad::~ItemLoad()
+{
+  if(fp)
+    fclose(fp);
+}
+
+bool ItemLoad::readVersion()
+{
+  if (fread(&version, sizeof(version), 1, fp) != 1)
+    return false;
+  return true;
+}
 
 ItemSave::ItemSave()
 {
@@ -509,6 +533,16 @@ bool ItemSave::openFile(const sstring &filepath)
   }
   return true;
 }
+
+
+bool ItemLoad::openFile(const sstring &filepath)
+{
+  if (!(fp = fopen(filepath.c_str(), "r+b"))) {
+    return false;
+  }
+  return true;
+}
+
 
 bool ItemSave::raw_write_item(TObj *o)
 {
@@ -595,7 +629,7 @@ bool ItemSave::raw_write_item(TObj *o)
   return TRUE;
 }
 
-TObj *raw_read_item(FILE *fp, unsigned char version)
+TObj *ItemLoad::raw_read_item()
 {
   rentObject item;
   int j;
@@ -836,7 +870,7 @@ static bool immortalityNukeCheck(TBeing *ch, TObj * new_obj, bool corpse)
 }
 
 // read a list of items and their contents from storage 
-static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE * fp, unsigned char version, bool corpse)
+bool ItemLoad::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, bool corpse)
 {
   signed char slot;
   TObj *new_obj;
@@ -857,7 +891,7 @@ static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE
       return FALSE;
     if (parent) {
       if (slot == NORMAL_SLOT) {
-        if ((new_obj = raw_read_item(fp, version))) {
+        if ((new_obj = raw_read_item())) {
           (*numread)++;
           if (ch)
             ch->logItem(new_obj, CMD_WEST);  // rent in
@@ -865,7 +899,7 @@ static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE
 
           *parent += *new_obj;
 
-          if (objsFromStore(new_obj, numread, ch, r, fp, version, corpse)) {
+          if (objsFromStore(new_obj, numread, ch, r, corpse)) {
             vlogf(LOG_BUG, "Error in objsFromStore (1)");
             return TRUE;  // ERROR occured 
           }
@@ -896,7 +930,7 @@ static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE
         vlogf(LOG_BUG, "Error in objsFromStore (4)");
         return TRUE;
       } else if (slot >= 0) {
-        if ((new_obj = raw_read_item(fp, version))) {
+        if ((new_obj = raw_read_item())) {
           (*numread)++;
           if (ch)
             ch->logItem(new_obj, CMD_WEST);  // rent in
@@ -913,7 +947,7 @@ static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE
             vlogf(LOG_BUG, fmt("Room %d has invalid slot #.") %  
 		  ((r) ? r->number : -99));
 
-          if (objsFromStore(new_obj, numread, ch, r, fp, version, corpse)) {
+          if (objsFromStore(new_obj, numread, ch, r, corpse)) {
             vlogf(LOG_BUG, "Error in objsFromStore (5)");
             return TRUE;  // ERROR occured 
           }
@@ -928,7 +962,7 @@ static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE
           return TRUE;
         }
       } else if (slot == NORMAL_SLOT) {
-        if ((new_obj = raw_read_item(fp, version))) {
+        if ((new_obj = raw_read_item())) {
           if (ch)
             ch->logItem(new_obj, CMD_WEST);  // rent in
 	  obj_index[new_obj->number].addToNumber(-1);
@@ -940,7 +974,7 @@ static bool objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, FILE
             thing_to_room(new_obj, r->number);
           else
             vlogf(LOG_BUG, "Yikes!  An object was read with no destination in objsFromStore()!");
-          if (objsFromStore(new_obj, numread, ch, r, fp, version, FALSE)) {
+          if (objsFromStore(new_obj, numread, ch, r, FALSE)) {
             vlogf(LOG_BUG, "Error in objsFromStore (7)");
             return TRUE;            // ERROR occured 
           }
@@ -1454,12 +1488,11 @@ void TRoom::loadItems()
 {
   sstring filepath;
   int num_read;
-  FILE *fp;
   int reset;
-  unsigned char version;
+  ItemLoad il;
 
   filepath = fmt("%s/%d") % ROOM_SAVE_PATH % number;
-  if (!(fp = fopen(filepath.c_str(), "r+b"))) 
+  if(!il.openFile(filepath))
     return;
   
   reset = isRoomFlag(ROOM_SAVE_ROOM);
@@ -1468,15 +1501,14 @@ void TRoom::loadItems()
   if (reset)
     removeRoomFlagBit(ROOM_SAVE_ROOM);
 
-  if (fread(&version, sizeof(version), 1, fp) != 1) {
-    vlogf(LOG_BUG, fmt("Error while reading version from %s.") %  filepath);
-    fclose(fp);
+  if(!il.readVersion()){
+    vlogf(LOG_BUG, fmt("Error while reading version from %s.") % filepath);
     if (reset)
       setRoomFlagBit(ROOM_SAVE_ROOM);
     return;
   }
 
-  objsFromStore(NULL, &num_read, NULL, this, fp, version, false);
+  il.objsFromStore(NULL, &num_read, NULL, this, false);
   if (reset)
     setRoomFlagBit(ROOM_SAVE_ROOM);
 
@@ -1500,7 +1532,6 @@ void TRoom::loadItems()
 
     if (!tBag) {
       vlogf(LOG_LOW, "Storage: Failed to create Junk Bag.");
-      fclose(fp);
       return;
     }
 
@@ -1704,7 +1735,6 @@ void TRoom::loadItems()
     }
   }
 
-  fclose(fp);
 }
 
 void updateSavedRoom(const char *tfname)
@@ -1869,7 +1899,6 @@ void TPCorpse::addCorpseToLists()
 void TBeing::assignCorpsesToRooms() 
 {
   #if 1 
-  rentHeader st;
   TRoom *rp = NULL, *rp2 = NULL;
   TThing *tmp;
   TPCorpse *corpse = NULL;
@@ -1880,9 +1909,9 @@ void TBeing::assignCorpsesToRooms()
 //  char buf3[80];
   int num_read = 0;
   bool reset = FALSE;
-  FILE *fp;
   FILE *playerFile;
   memset(buf, '\0', sizeof(buf));
+  ItemLoad il;
 
   sprintf(buf, "corpses/%s", sstring(name).lower().c_str());
   rp = real_roomp(ROOM_CORPSE_STORAGE);
@@ -1891,26 +1920,24 @@ void TBeing::assignCorpsesToRooms()
 //  sprintf(buf, "rent/%c/%s", LOWER(tmp->name[0]), tmp->name.lower());
 
 
-  if (!(fp = fopen(buf, "r+b"))) {
+  if(!il.openFile(buf))
     return;
-  }
+
   sprintf(buf, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
   if (!(playerFile = fopen(buf, "r"))) {
-    fclose(fp);
     wipeCorpseFile(sstring(name).lower().c_str());
   } 
   fclose(playerFile);
 
   if (GetMaxLevel() > MAX_MORT) {
-    fclose(fp);
     vlogf(LOG_BUG, fmt("An immortal had a corpse saved (%s).") %  getName());
     wipeCorpseFile(sstring(name).lower().c_str());
     return;
   }
-  memset(&st, 0, sizeof(rentHeader));
-  if (fread(&st, sizeof(rentHeader), 1, fp) != 1) {
-    vlogf(LOG_BUG, fmt("Error while reading %s's corpse file header.") %  getName());
-    fclose(fp);
+
+  if(!il.readHeader()){
+    vlogf(LOG_BUG, fmt("Error while reading %s's corpse file header.") %
+	  getName());
     return;
   }
 
@@ -1920,7 +1947,7 @@ void TBeing::assignCorpsesToRooms()
   if (reset)
     rp->removeRoomFlagBit(ROOM_SAVE_ROOM);
 
-  if (objsFromStore(NULL, &num_read, NULL, rp, fp, st.version, TRUE)) {
+  if (il.objsFromStore(NULL, &num_read, NULL, rp, TRUE)) {
     vlogf(LOG_BUG, fmt("Error while reading %s's corpse file. Prepare for reimb!") % getName());
     if (reset)
       rp->setRoomFlagBit(ROOM_SAVE_ROOM);
@@ -1928,7 +1955,6 @@ void TBeing::assignCorpsesToRooms()
   }
   if (reset)
     rp->setRoomFlagBit(ROOM_SAVE_ROOM);
-  fclose(fp);
 
   for (tmp = rp->getStuff(); tmp;) {
     corpse = dynamic_cast<TPCorpse *>(tmp);
@@ -2118,21 +2144,18 @@ void TPerson::saveRent(objCost *cost, bool d, int msgStatus)
 // this is used to load the items a shopkeeper has
 void TMonster::loadItems(const sstring &filepath)
 {
-  FILE *fp;
   int num_read = 0;
-  unsigned char version;
+  ItemLoad il;
 
-  if (!(fp = fopen(filepath.c_str(), "r+b")))
+  if(!il.openFile(filepath))
     return;
 
-  if (fread(&version, sizeof(unsigned char), 1, fp) != 1) {
+  if(!il.readVersion()){
     vlogf(LOG_BUG, fmt("Error while reading version from %s.") %  filepath);
-    fclose(fp);
     return;
   }
 
-  objsFromStore(NULL, &num_read, this, NULL, fp, version, FALSE);
-  fclose(fp);
+  il.objsFromStore(NULL, &num_read, this, NULL, FALSE);
 }
 
 TObj *TBeing::findMostExpensiveItem()
@@ -2222,14 +2245,13 @@ void TBeing::moneyCheck()
 // Somewhere in here, we need to call race->makeBody().
 void TPerson::loadRent()
 {
-  rentHeader st;
   int num_read = 0, timegold, gone, amt;
   TObj *i = NULL;
   char buf[256], wizbuf[256];
-  FILE *fp;
   objCost cost;
   TPerson *tmp;
   sstring lbuf;
+  ItemLoad il;
 
   if (desc && desc->original)
     tmp = desc->original;
@@ -2244,7 +2266,7 @@ void TPerson::loadRent()
 
   sprintf(buf, "rent/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
 
-  if (!(fp = fopen(buf, "r+b"))) {
+  if(!il.openFile(buf)){
     if (should_be_logged(this)) {
       vlogf(LOG_PIO, fmt("%s has no equipment.") %  getName());
       vlogf(LOG_PIO, fmt("Loading %s [%d talens/%d bank/%.2f xps/no items/%d age-mod/no rent]") %  
@@ -2252,56 +2274,54 @@ void TPerson::loadRent()
     }
     return;
   }
-  memset(&st, 0, sizeof(rentHeader));
-  if (fread(&st, sizeof(rentHeader), 1, fp) != 1) {
+  if(!il.readHeader()){
     vlogf(LOG_BUG, fmt("Error while reading %s's rent file header.") %  getName());
-    fclose(fp);
     return;
   }
-  if (objsFromStore(NULL, &num_read, this, NULL, fp, st.version, false)) {
+  if (il.objsFromStore(NULL, &num_read, this, NULL, false)) {
     vlogf(LOG_BUG, fmt("Error while reading %s's objects. Prepare for reimb!") % getName());
-    fclose(fp);
     return;
   }
-  if (strcmp(name, st.owner))
-    vlogf(LOG_BUG, fmt("  %s just got %s's objects!") %  getName() % st.owner);
+  if (strcmp(name, il.st.owner))
+    vlogf(LOG_BUG, fmt("  %s just got %s's objects!") %
+	  getName() % il.st.owner);
 
 #if 0
   // A nice idea, but the two are now out of synch since the rent header
   // has number of my items plus mob follower's items.
-  if (st.number != num_read) {
-    vlogf(LOG_BUG, fmt("Error while reading %s's objects.  %d in rent file, only %d loaded.") %  getName() % st.number % num_read);
-    fclose(fp);
+  if (il.st.number != num_read) {
+    vlogf(LOG_BUG, fmt("Error while reading %s's objects.  %d in rent file, only %d loaded.") %  getName() % il.st.number % num_read);
     return;
   }
 #endif
 
   // Three hour grace period after crash or autorent. 
-  if (!FreeRent && in_room == ROOM_NOWHERE && (st.first_update+ 3*SECS_PER_REAL_HOUR > time(0))) {
+  if (!FreeRent && in_room == ROOM_NOWHERE && 
+      (il.st.first_update+ 3*SECS_PER_REAL_HOUR > time(0))) {
     vlogf(LOG_PIO, "Character reconnecting inside grace period.");
     sendTo("You connected within the autorent grace period.\n\r");
   } else {
     if (in_room == ROOM_NOWHERE) {
       vlogf(LOG_PIO, "Char reconnecting after autorent");
-      applyAutorentPenalties(time(0) - st.first_update);
+      applyAutorentPenalties(time(0) - il.st.first_update);
     } else {
       // char was rented
-      applyRentBenefits(time(0) - st.first_update);
+      applyRentBenefits(time(0) - il.st.first_update);
     }
 
-    gone = st.original_gold - st.gold_left;
-    timegold = (int) (((float) ((float) st.total_cost/(float) SECS_PER_REAL_DAY)) * (time(0) - st.last_update));
+    gone = il.st.original_gold - il.st.gold_left;
+    timegold = (int) (((float) ((float) il.st.total_cost/(float) SECS_PER_REAL_DAY)) * (time(0) - il.st.last_update));
     // this is a kludge cuz total is going negative sometimes somehow - Bat 
     if (timegold < 0) {
-      vlogf(LOG_BUG,fmt("ERROR: timegold rent charged negative for %s.") % st.owner);
-      vlogf(LOG_BUG,fmt("ERROR: %s   daily cost: %d timegold: %d") % st.owner %st.total_cost %timegold);
-      vlogf(LOG_BUG,fmt("ERROR: %s   current time: %d, update time: %d") % st.owner %time(0) %st.last_update);
-      vlogf(LOG_BUG,fmt("ERROR: %s   time differential: int: %d") % st.owner %(time(0) - st.last_update));
+      vlogf(LOG_BUG,fmt("ERROR: timegold rent charged negative for %s.") % il.st.owner);
+      vlogf(LOG_BUG,fmt("ERROR: %s   daily cost: %d timegold: %d") % il.st.owner %il.st.total_cost %timegold);
+      vlogf(LOG_BUG,fmt("ERROR: %s   current time: %d, update time: %d") % il.st.owner %time(0) %il.st.last_update);
+      vlogf(LOG_BUG,fmt("ERROR: %s   time differential: int: %d") % il.st.owner %(time(0) - il.st.last_update));
       timegold = 0;
     }
     vlogf(LOG_PIO, fmt("%s ran up charges of %d since last update, %d total charges") %  getName() % timegold % (gone + timegold));
 
-    int total_rent=(timegold + gone)>st.total_cost?st.total_cost:(timegold + gone);
+    int total_rent=(timegold + gone)>il.st.total_cost?il.st.total_cost:(timegold + gone);
     if (!FreeRent)
       sendTo(fmt("You ran up charges of %d talen%s in rent.\n\r") % total_rent %      (((total_rent) == 1) ? "" : "s"));
     addToMoney(-(total_rent), GOLD_RENT);
@@ -2310,7 +2330,7 @@ void TPerson::loadRent()
    // NOTE:  I realize we can give out gold doing this, but my guess 
    // the only way barring bugs is via timeshifting.   
 
-    st.first_update = st.last_update = time(0);
+    il.st.first_update = il.st.last_update = time(0);
 
     if (getMoney() < 0) {
       addToMoney(points.bankmoney, GOLD_XFER);
@@ -2334,7 +2354,7 @@ void TPerson::loadRent()
         // to achieve a delta, which can only be explained by "followers"
         objCost curCost;
         recepOffer(NULL, &curCost);
-        int diff = st.total_cost - curCost.total_cost;
+        int diff = il.st.total_cost - curCost.total_cost;
         if (diff > 0) {
           vlogf(LOG_PIO, fmt("%s had followers taken by rent.") %  getName());
           addToMoney(diff, GOLD_SHOP);
@@ -2393,11 +2413,8 @@ void TPerson::loadRent()
     }
   }
   vlogf(LOG_PIO, fmt("Loading %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d rent]") %  
-       getName() % getMoney() % getBank() % getExp() % st.number % 
-       age_mod % st.total_cost);
-
-  // be sure to close the FILE * before doing the saveRent
-  fclose(fp);
+       getName() % getMoney() % getBank() % getExp() % il.st.number % 
+       age_mod % il.st.total_cost);
 
   // silly kludge
   // because of the way the "stuff" list is saved, it essentially reverses
@@ -3474,7 +3491,10 @@ float old_ac_lev = mob->getACLevel();
           break;
         fp2_open = true;
       }
-      if (tmp != -1 && (new_obj = raw_read_item(fp2, version))) {
+      ItemLoad il;
+      il.fp=fp2;
+      il.version=version;
+      if (tmp != -1 && (new_obj = il.raw_read_item())) {
         if (ch) {
           vlogf(LOG_SILENT, fmt("%s's %s rent-retrieving: (%s : %d)") %  arg % mob->getName() % new_obj->getName() % new_obj->objVnum());
           mob->equipChar(new_obj, mapped_slot, SILENT_YES);
@@ -3508,7 +3528,10 @@ float old_ac_lev = mob->getACLevel();
           break;
         fp2_open = true;
       }
-      if ((new_obj = raw_read_item(fp2, version))) {
+      ItemLoad il;
+      il.fp=fp2;
+      il.version=version;
+      if ((new_obj = il.raw_read_item())) {
         if (ch) {
           vlogf(LOG_SILENT, fmt("%s's %s rent-retrieving: (%s : %d)") %  arg % mob->getName() % new_obj->getName() % new_obj->objVnum());
           *mob += *new_obj;
@@ -4485,9 +4508,8 @@ void TBeing::doClone(const sstring &arg)
   int mob_num = convertTo<int>(arg2);
   TMonster *mob;
   charFile st1;
-  rentHeader st2;
   int ci, num_read = 0;
-  FILE *fp;
+  ItemLoad il;
 
   if (!isImmortal())
     return;
@@ -4539,26 +4561,19 @@ void TBeing::doClone(const sstring &arg)
   
   // open player rent file
   sstring buf = fmt ("rent/%c/%s") % LOWER(ch_name[0]) % ch_name.lower();
-  if (!(fp = fopen(buf.c_str(), "r+b"))) {
+  if (!il.openFile(buf)){
     sendTo("Rent file could not be opened.  Your clone stands naked before you.\n\r");
     return;
   }
-  memset(&st2, 0, sizeof(rentHeader));
-  if (fread(&st2, sizeof(rentHeader), 1, fp) != 1) {
+  if(!il.readHeader()){
     vlogf(LOG_BUG, fmt("Error while reading %s's rent file header.  Your clone stands naked before you.") %  ch_name);
-    fclose(fp);
     return;
   }
-  if (objsFromStore(NULL, &num_read, mob, NULL, fp, st2.version, false)) {
+  if (il.objsFromStore(NULL, &num_read, mob, NULL, false)) {
     vlogf(LOG_BUG, fmt("Error while reading %s's objects in doClone.  Your clone stands naked before you.") %  ch_name);
-    fclose(fp);
     return;
   }
   
-  // be sure to close the FILE * before doing the saveRent
-  fclose(fp);
-
-
   // add NO RENT to the objects, don't want them falling into PC 
   //   hands permanently
   // ALSO - junk notes, and increase object number for these loads (since

@@ -80,6 +80,24 @@ class rentHeader {
     rentHeader();
 };
 
+class ItemLoad {
+ public:
+  FILE *fp;
+  rentHeader st;
+  unsigned char version;
+
+  bool openFile(const sstring &);
+
+  bool readVersion();
+  bool readHeader();
+
+  bool objsFromStore(TObj *, int *, TBeing *, TRoom *, bool);
+  TObj *raw_read_item();
+
+  ItemLoad();
+  ~ItemLoad();
+};
+
 
 class ItemSave {
   FILE *fp;
@@ -90,7 +108,7 @@ class ItemSave {
   bool openFile(const sstring &);
   void setFile(FILE *);
 
-  void writeVersion();
+  bool writeVersion();
   bool writeHeader();
   void writeFooter();
 
@@ -101,8 +119,5 @@ class ItemSave {
   ~ItemSave();
 };
 
-
-
-extern TObj *raw_read_item(FILE * fp, unsigned char version);
 
 #endif
