@@ -284,6 +284,10 @@ const int RET_STOP_PARSING     = ((1<<9) | (1<<31));
 // those will cause BAD!!! memory corruptions
 const int MAX_NAME_LENGTH = 80;
 
+// parts of speech
+const int POS_OBJECT            = 1;
+const int POS_SUBJECT           = 2;
+
 class playerData
 {
   public:
@@ -668,6 +672,7 @@ class TBeing : public TThing {
     virtual bool isShopkeeper() const { return false; }
     virtual int pourWaterOnMe(TBeing *, TObj *);
     virtual int getSnum() const { return (snum > -1 ? snum : mobVnum()); };
+    virtual sstring thirdPerson(const int);
     // END VIRTUAL FUNCTIONS
 
     // INLINE FUNCTIONS

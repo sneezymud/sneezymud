@@ -1572,3 +1572,28 @@ bool TBeing::checkObjUsed(TObj *obj) {
   return FALSE;
 
 }
+
+sstring TBeing::thirdPerson(const int pos)
+{
+  if (pos == POS_OBJECT) {
+    switch (getSex()) {
+      case SEX_MALE:
+        return "his";
+      case SEX_FEMALE:
+        return "her";
+      default:
+        return "its";
+    }
+  } else if (pos == POS_SUBJECT) {
+    switch (getSex()) {
+      case SEX_MALE:
+        return "he";
+      case SEX_FEMALE:
+        return "she";
+      default:
+        return "it";
+    }
+  }
+  vlogf(LOG_BUG, fmt("thirdPerson called on %s in strange circumstance") % name);
+  return "???";
+}

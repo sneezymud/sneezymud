@@ -897,9 +897,11 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
               (vict->getMoney() >= (vict->GetMaxLevel() * 1000))) {
             act("$N stares at $n and smiles.",
                 TRUE, this, NULL, vict, TO_ROOM);
-            act("$N stares at you and smiles, I think they like you.",
+            act(fmt("$N stares at you and smiles, I think %s likes you.")
+                % thirdPerson(POS_SUBJECT),
                 TRUE, this, NULL, vict, TO_CHAR);
-            act("$n leaves to make use of their new found cash.",
+            act(fmt("$n leaves to make use of %s new found cash.")
+                % thirdPerson(POS_OBJECT),
                 TRUE, vict, NULL, NULL, TO_ROOM);
 
             ADD_DELETE(rc, DELETE_THIS);
