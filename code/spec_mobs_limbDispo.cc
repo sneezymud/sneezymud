@@ -76,7 +76,8 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
   }
     
 
-  if(!is_abbrev(sarg.word(1), "cart")) {
+  if(!is_abbrev(sarg.word(1), "cart") &&
+      !(is_abbrev(sarg.word(1), "in") && is_abbrev(sarg.word(2), "cart"))) {
     return FALSE;
   }
   
@@ -132,23 +133,36 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
   mob->doSay(stmp);
   
   ch->addToMoney(FEE, GOLD_SHOP_RESPONSES);
-/* LOGGING OFF  (Next time:  add logging of mob level, use database)
-  sstring partname = bodypart->getName();
+/* LOGGING ON  (Next time:  add logging of mob level, use database)
+ */
+  sstring partname = bodypart->name;
+  vector <sstring> partinfo;
+  split_string(partname, " []\n\r\t", partinfo);
+  sstring chopper = partinfo.back();
+  vlogf(LOG_MAROR, fmt("%d, %s, %s, %s") % partinfo.size() % partinfo.front()
+      % partinfo.back() % chopper.length());
+  while(chopper.length() == 0 and partinfo.size() > 0) {
+    partinfo.erase(partinfo.end()-1);
+    chopper = partinfo.back();
+  }
+  if (chopper.isNumber())
+    chopper = "UNKNOWN";
+  vlogf(LOG_BUG, fmt("limb chopper was %s") % chopper);
   if (partname.find("diseased") == sstring::npos &&
       partname.find("corpse of a") == sstring::npos &&
       partname.find("pile of dust") == sstring::npos ){
     time_t lt = time(0);
-    sstring buf = fmt("%s deposited by %s at %s") % bodypart->getName()
+    sstring buf = fmt("%s chopped by %s, deposited by %s at %s") 
+      % bodypart->getName() % chopper
       % ch->getName() % asctime(localtime(&lt));
     autoMail(NULL, "bump", buf.c_str());
     vlogf(LOG_MAROR, fmt("%s") % buf);
   }
-*/
   delete bodypart;
   bodypart=NULL;
 
   sstring resp;
-  switch(::number(1,10)) {
+  switch(::number(1,11)) {
     case 1:
     case 2:
     case 3:
@@ -170,6 +184,8 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
     case 9:
       resp = "Hey!  That came from a good friend of mine!";
       break;
+    case 10:
+      resp = "Whoa!  That's a whopper!";
     default:
       resp = "Seen a lot of those this week, I have.";
       break;

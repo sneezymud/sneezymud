@@ -550,6 +550,13 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
   affectedData af;
   wearSlotT new_slot;
   int new_wtype = wtype - TYPE_HIT;
+  int v_vnum;
+  TMonster * vmob;
+
+  if ((vmob = dynamic_cast<TMonster *>(v)))
+    v_vnum = vmob->number >= 0 ? mob_index[vmob->getMobIndex()].virt : -1;
+  else
+    v_vnum = -2;
 
   if(crit_num>100){
     vlogf(LOG_BUG, fmt("critBlunt called with crit_num>100 (%i)") %  crit_num);
@@ -948,7 +955,10 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	TTrash *corpse;
 	      
 	corpse = new TTrash();
-	corpse->name = mud_str_dup("tooth");
+  buf = fmt("tooth %s [%d]") % v->name % v_vnum;
+  if (dynamic_cast<TPerson *>(this))
+    buf = fmt("%s [%s]") % buf % getName();
+	corpse->name = mud_str_dup(buf);
 	      
 	buf = fmt("<W>a <1><r>bloody<1><W> tooth of %s<1>") % v->getName();
 	corpse->shortDescr = mud_str_dup(buf);
@@ -999,7 +1009,10 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	    TDrinkCon *corpse;
 	    
 	    corpse = new TDrinkCon();
-	    corpse->name = mud_str_dup("heart");
+      buf = fmt("heart %s [%d]") % v->name % v_vnum;
+      if (dynamic_cast<TPerson *>(this))
+        buf = fmt("%s [%s]") % buf % getName();
+      corpse->name = mud_str_dup(buf);
 	    
 	    buf = fmt("the lifeless <r>heart<1> of %s") % v->getName();
 	    corpse->shortDescr = mud_str_dup(buf);
@@ -1097,13 +1110,18 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 {
   sstring buf, limbStr;
   TThing *obj=NULL;
-  int rc, i;
+  int rc, i, v_vnum;
   affectedData af;
+  TMonster *vmob;
 
   if(crit_num>100){
     vlogf(LOG_BUG, fmt("critSlash called with crit_num>100 (%i)") %  crit_num);
     crit_num=0;
   }
+  if ((vmob = dynamic_cast<TMonster *>(v)))
+    v_vnum = vmob->number >= 0 ? mob_index[vmob->getMobIndex()].virt : -1;
+  else
+    v_vnum = -2;
 
   // Do slash crit
   limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbSlash());
@@ -1526,7 +1544,10 @@ buf=fmt("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	  TCorpse *corpse;
 		
 	  corpse = new TCorpse();
-	  corpse->name = mud_str_dup("genitalia");
+    buf = fmt("genitalia %s [%d]") % v->name % v_vnum;
+    if (dynamic_cast<TPerson *>(this)) 
+      buf = fmt("%s [%s]") % buf % getName();
+    corpse->name = mud_str_dup(buf);
 		
 	  if (v->getMaterial() > MAT_GEN_MINERAL) {
 	    // made of mineral or metal

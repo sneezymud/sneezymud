@@ -266,10 +266,21 @@ void TBeing::makeBodyPart(wearSlotT pos)
 {
   TCorpse *corpse;
   char buf[256];
+  sstring sbuf;
+  int v_vnum;
+  TMonster *vmob;
+  TPerson *opp = dynamic_cast<TPerson *>(fight());
 
+  if ((vmob = dynamic_cast<TMonster *>(this)))
+    v_vnum = vmob->number >= 0 ? mob_index[vmob->getMobIndex()].virt : -1;
+  else
+    v_vnum = -2;
+    
   corpse = new TCorpse();
-  sprintf(buf, "%s", describeBodySlot(pos).c_str());
-  corpse->name = mud_str_dup(buf);
+  sbuf = fmt("%s [%d]") % describeBodySlot(pos) % v_vnum;
+  if (opp)
+    sbuf = fmt("%s [%s]") % sbuf % opp->getName();
+  corpse->name = mud_str_dup(sbuf);
   
   if (getMaterial() > MAT_GEN_MINERAL) {
     // made of mineral or metal
@@ -308,9 +319,22 @@ void TBeing::makeOtherPart(const char *single, const char *part)
 {
   TCorpse *corpse;
   char buf[128];
-
+  sstring sbuf;
+  int v_vnum;
+  TMonster *vmob;
+  TPerson *opp = dynamic_cast<TPerson *>(fight());
+  
+  if ((vmob = dynamic_cast<TMonster *>(this)))
+    v_vnum = vmob->number >= 0 ? mob_index[vmob->getMobIndex()].virt : -1;
+  else
+    v_vnum = -2;
+    
   corpse = new TCorpse();
-  corpse->name = mud_str_dup(single ? single : part);
+  sbuf = fmt("%s [%d]") % (single ? single : part) % v_vnum;
+  if (opp)
+    sbuf = fmt("%s [%s]") % sbuf % opp->getName();
+  corpse->name = mud_str_dup(sbuf);
+
   sprintf(buf, "%s's bloody %s", getName(),single ? single : part);
   corpse->shortDescr = mud_str_dup(buf);
 

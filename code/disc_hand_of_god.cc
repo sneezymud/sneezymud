@@ -720,6 +720,9 @@ int heroesFeast(TBeing * caster, int, byte bKnown, spellNumT spell)
 {
   TBeing *tch = NULL;
   TThing *t;
+  sstring name = caster->getName();
+  int gain = 16, hitgain = 1;
+  sstring message = "You partake of a magnificent feast!";
 
   if (bSuccess(caster, bKnown, caster->getPerc(), spell)) {
     for (t = caster->roomp->getStuff(); t; t = t->nextThing) {
@@ -728,14 +731,60 @@ int heroesFeast(TBeing * caster, int, byte bKnown, spellNumT spell)
         continue;
       if (tch->inGroup(*caster) && (tch->getPosition() > POSITION_SLEEPING)) 
       {
-        tch->sendTo("You partake of a magnificent feast!\n\r");
+        if(isname("Merkaba", name)) {
+          switch(::number(1,20)) {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+              message = "You partake of <r>slices of meatloaf drenched in ketchup<z> with <W>warm milk<z>.\n\rAgain.";
+              break;
+            case 8:
+            case 9:
+            case 10:
+              message = "You feast on a HUGE <G>pollo verde burrito<z> with extra <g>cilantro<z>.  It's just\n\rtoo much to finish it all!";
+              break;
+            case 11:
+            case 12:
+            case 13:
+              message = "You partake of a heart-warming feast consisting of <K>corned beef<z>, <g>cabbage<z>, and\n\ra <o>measure of ale<z>!";
+              break;
+            case 14:
+            case 15:
+              message = "You find your magical meal of <W>icecod<z> and <y>pigsnout<z> <g>orcfish<z> on a bed of\n\r<g>seaweed<z> with <b>fresh truffles<z> on the side, accompanied by <c>fresh spring\n\rwater<z>, very satisfying!";
+              break;
+            case 16:
+            case 17:
+              message = "You enjoy <r>Steak Diane<z> smothered in <p>Silverstone red wine<z> topped with\n\r<k>Shiitake mushrooms<z>!";
+              break;
+            case 18:
+              message = "You partake of a strengthening repast of <g>dragon haunch<z> with <k>potatoes<z> and \n\r<g>greens<z>, and <p>spiced red wine<z>!";
+              gain *= 2;
+              hitgain *= 2;
+              break;
+            case 19:
+              message = "A meal of <P>shrimp<z> and <B>seahorse<z> <G>gumbo<z> now fills your tummy.  You feel ready to\n\rkill again!";
+              gain *= 2;
+              hitgain *= 2;
+              break;
+            case 20:
+              message = "You feel invigorated by a hearty meal of <c>aarakocra eggs<z>, <o>fried squash<z>, and\n\r<Y>spinefuit<z>, accompanied by a nice <y>pear ice wine<z> (completely free of <K>hobbit\n\rfoot hairs<z>)!";
+              gain *= 3;
+              hitgain *= 3;
+              break;
+          }
+        }
+        act(message, false, tch, 0, 0, TO_CHAR);
       
         if (tch->getCond(FULL) >= 0)
-          tch->gainCondition(FULL, 16);
+          tch->gainCondition(FULL, gain);
         if (tch->getCond(THIRST) >= 0)
-          tch->gainCondition(THIRST, 16);
+          tch->gainCondition(THIRST, gain);
         if (tch->getHit() < tch->hitLimit())
-          tch->addToHit(1);
+          tch->addToHit(hitgain);
         caster->reconcileHelp(tch, discArray[spell]->alignMod);
       }
     }
@@ -752,11 +801,11 @@ int heroesFeast(TBeing * caster, int, byte bKnown, spellNumT spell)
             tch->sendTo("You feel weakened! Something went horribly wrong!\n\r");
 
             if (tch->getCond(FULL) >= 0)
-              tch->gainCondition(FULL, -5);
+              tch->gainCondition(FULL, -gain/2);
             if (tch->getCond(THIRST) >= 0)
-              tch->gainCondition(THIRST, -5);
+              tch->gainCondition(THIRST, -gain/2);
             if (tch->getHit() > 1)
-              tch->addToHit(-1);
+              tch->addToHit(-hitgain);
           }
         }
         return SPELL_CRIT_FAIL;
