@@ -5735,7 +5735,8 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     // find a john
     for(t=myself->roomp->getStuff(); t && !found; t=t->nextThing){
       if((tmons=dynamic_cast<TMonster *>(t))){
-	if(tmons!=myself && tmons->isHumanoid() &&
+	if(tmons!=myself && tmons->isHumanoid() && !tmons->isShopkeeper() &&
+      !IS_SET(tmons->specials.act, ACT_SENTINEL) &&
 	   (tmons->getSex()!=SEX_NEUTER && tmons->getSex()!=myself->getSex())){
 	  found=1;
 	  break;
