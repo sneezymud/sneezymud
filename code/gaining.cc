@@ -817,7 +817,7 @@ void TPerson::raiseLevel(classIndT Class, TMonster *gm)
 
     // may as well still give them the hp in case we want to switch back
     // just don't announce it
-#if NEW_HP
+#if !NEW_HP
     sendTo("You gain %i hitpoints!\n\r", points.maxHit-maxhit);
 #endif
 
