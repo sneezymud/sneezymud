@@ -133,7 +133,7 @@ LDFLAGS +=-pg #              gprof mapping
 endif
 #LDFLAGS +=-fhandle-exceptions
 # postgresql database lib
-LDFLAGS +=-lpq++
+#LDFLAGS +=-lpq++
 
 
 ###############################################################################
