@@ -322,7 +322,7 @@ int TBeing::doPSay(const char *arg){
       if (!(mob = dynamic_cast<TBeing *>(tmp)))
         continue;
 
-      if (!(d = mob->desc) || mob == this || (mob->getPosition() < POSITION_SLEEPING))
+      if (!(d = mob->desc) || mob == this)
         continue;
 
       mud_str_copy(capbuf, mob->pers(this), 256);
@@ -378,7 +378,7 @@ int TBeing::doPSay(const char *arg){
       if (!mob)
         continue;
 
-      if (mob == this || (mob->getPosition() < POSITION_SLEEPING))
+      if (mob == this)
         continue;
 
       if (isPc() && !mob->isPc()) { 

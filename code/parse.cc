@@ -2861,9 +2861,9 @@ void buildCommandArray(void)
   commandArray[CMD_STORE] = new commandInfo("store", POSITION_STANDING, GOD_LEVEL1);
   commandArray[CMD_ZONEFILE] = new commandInfo("zonefile", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_LOOT] = new commandInfo("loot", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_PSAY] = new commandInfo("psay", POSITION_RESTING, 0);
-  commandArray[CMD_PTELL] = new commandInfo("ptell", POSITION_RESTING, 0);
-  commandArray[CMD_PSHOUT] = new commandInfo("pshout", POSITION_RESTING, 0);
+  commandArray[CMD_PSAY] = new commandInfo("psay", POSITION_DEAD, 0);
+  commandArray[CMD_PTELL] = new commandInfo("ptell", POSITION_DEAD, 0);
+  commandArray[CMD_PSHOUT] = new commandInfo("pshout", POSITION_DEAD, 0);
   commandArray[CMD_TELEVISION] = new commandInfo("television", POSITION_RESTING, 0);
   commandArray[CMD_MINDFOCUS] = new commandInfo("mindfocus", POSITION_RESTING, 0);
   commandArray[CMD_PSIBLAST] = new commandInfo("psiblast", POSITION_RESTING, 0);
