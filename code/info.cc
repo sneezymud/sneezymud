@@ -1061,6 +1061,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_THORNFLESH:
       case SPELL_ETHER_GATE:
       case SPELL_HEAL_LIGHT:
+      case SPELL_HEALING_GRASP:
       case SPELL_CREATE_FOOD:
       case SPELL_CREATE_WATER:
       case SPELL_ARMOR:

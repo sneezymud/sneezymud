@@ -487,6 +487,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_STORMY_SKIES:
     case SPELL_TREE_WALK:
     case SKILL_BARKSKIN:
+    case SPELL_HEALING_GRASP:
     case SPELL_HEAL_LIGHT_DEIKHAN:
     case SPELL_HEAL_SERIOUS_DEIKHAN:
     case SPELL_HEAL_CRITICAL_DEIKHAN:

@@ -1073,6 +1073,7 @@ int TBeing::checkBadSpellCondition(TBeing *caster, int which)
     case SPELL_ENTHRALL_GHOUL: // shaman 
     case SPELL_ENTHRALL_GHAST: // shaman 
     case SPELL_ENTHRALL_DEMON: // shaman 
+    case SPELL_HEALING_GRASP: // shaman
     case SPELL_CREATE_WOOD_GOLEM:
     case SPELL_CREATE_ROCK_GOLEM:
     case SPELL_CREATE_IRON_GOLEM:
@@ -1866,6 +1867,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         } else
           vlogf(LOG_BUG, "SPELL_PROTECTION_FROM_EARTH called with null obj");
         break;
+    case SPELL_HEALING_GRASP:
+      if (!o)
+	rc = castHealingGrasp(this,victim);
+      else
+	vlogf(LOG_BUG,"SPELL_HEALING_GRASP called with null obj");
+      break;
     case SPELL_FLATULENCE:
       if (!o) {
 	rc = castFlatulence(this);

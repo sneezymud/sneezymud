@@ -610,6 +610,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SPELL_ETHER_GATE:
       case SPELL_CLARITY:
       case SPELL_HEAL_LIGHT:
+      case SPELL_HEALING_GRASP:
       case SPELL_CREATE_FOOD:
       case SPELL_CREATE_WATER:
       case SPELL_ARMOR:

@@ -3,6 +3,13 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_shaman_healing.h,v $
+// Revision 5.2  2002/02/20 23:02:19  jesus
+// healing grasp spell for shaman
+// in the new healing disc for shaman
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -21,15 +28,21 @@
 class CDShamanHealing : public CDiscipline
 {
 public:
+
+    CSkill skHealingGrasp;
+
     CDShamanHealing()
-      : CDiscipline() {
+      : CDiscipline(),
+      skHealingGrasp() {
     }
     CDShamanHealing(const CDShamanHealing &a)
-      : CDiscipline(a) {
+      : CDiscipline(a),
+      skHealingGrasp(a.skHealingGrasp) {
     }
     CDShamanHealing & operator=(const CDShamanHealing &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
+      skHealingGrasp = a.skHealingGrasp;
       return *this;
     }
     virtual ~CDShamanHealing() {}
@@ -37,6 +50,9 @@ public:
 
 private:
 };
-
+   void healingGrasp(TBeing *, TBeing *);
+   int castHealingGrasp(TBeing *, TBeing *);
+   void healingGrasp(TBeing *, TBeing *, TMagicItem *, spellNumT);
+   int healingGrasp(TBeing *, TBeing *, int, byte, spellNumT);
 
 #endif

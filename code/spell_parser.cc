@@ -2018,6 +2018,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       case SPELL_EXPEL_DEIKHAN:
           expel(this, ch);
         break;
+      case SPELL_HEALING_GRASP:
+        healingGrasp(this, ch);
+        break;
       case SPELL_CONTROL_UNDEAD:
 	controlUndead(this, ch);
         break;

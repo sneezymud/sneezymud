@@ -2019,6 +2019,14 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     // area affect
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
     }
+    spell = SPELL_HEALING_GRASP;
+    if (!::number(0, 3) &&
+           (cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the invokation, 'Ahhh...that's better...'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
   } else if (best_disc == DISC_SHAMAN_CONTROL) {
     // area affect
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {

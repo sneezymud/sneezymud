@@ -397,6 +397,9 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       // additionally, do faction percent modification for clerics
       dam = (int) (dam * percModifier());
       break;
+    case SPELL_HEALING_GRASP:
+      dam = genericDam(victim, skill, DISC_CLERIC, level, adv_learn, 2.50, REDUCE_NO, !isPc(), TRIM_YES);
+      break;
     case SKILL_KICK_THIEF:
     case SKILL_GARROTTE:
     case SKILL_STABBING:

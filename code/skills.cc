@@ -999,6 +999,11 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SKILL_BREW: // 405
       return &((CDShamanAlchemy *) cd)->skBrew;
 
+      // healing abilities---------------------------
+
+    case SPELL_HEALING_GRASP:
+      return &((CDShamanHealing *) cd)->skHealingGrasp;
+
       // ritualism
 
     case SKILL_RITUALISM:

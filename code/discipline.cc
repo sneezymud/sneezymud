@@ -961,6 +961,17 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
         }
       }
       return spell_num;
+    case SPELL_HEALING_GRASP:
+      if (hasClass(CLASS_SHAMAN)) {
+        if (!has_class) {
+          spell_num = SPELL_HEALING_GRASP;
+        }
+        if ((num2 = getSkillValue(SPELL_HEALING_GRASP)) > num) {
+          spell_num = SPELL_HEALING_GRASP;
+          num = num2;
+          has_class = TRUE;
+        }
+      }
     case SPELL_HEAL_LIGHT:
       if (hasClass(CLASS_CLERIC)) {
         if (!has_class) {

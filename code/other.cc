@@ -2810,6 +2810,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_SHADOW_WALK:
       shadowWalk(caster,victim,obj);
       break;
+    case SPELL_HEALING_GRASP:
+      healingGrasp(caster,victim,obj, spell);
+      break;
     case SPELL_RESURRECTION:
       resurrection(caster,obj);
       break;
