@@ -2370,14 +2370,14 @@ void TBeing::doTransformDrop(wearSlotT slot)
   TObj *tmp = NULL;
 
   if (equipment[slot]) {
-    TThing *t_tmp = unequip(slot);
-    tmp = dynamic_cast<TObj *>(t_tmp);
+    tmp = dynamic_cast<TObj *>(equipment[slot]);
   }
 
   if (tmp) {
     if (slot == HOLD_RIGHT || slot == HOLD_LEFT) {
       act("You hear a small grinding sound coming from your new limb as something drops to the $g.", TRUE,this,0,0,TO_CHAR);
       act("You hear a grinding sound coming from $n and something drops to the $g.", TRUE,this,0,0,TO_ROOM);
+      unequip(slot);
       *roomp += *tmp;
       return;
     } else {
@@ -2405,6 +2405,7 @@ void TBeing::doTransformDrop(wearSlotT slot)
           } else {
             act("You hear a small grinding sound coming from your new limb as something drops to the $g.", TRUE,this,0,0,TO_CHAR);
             act("You hear a grinding sound coming from $n and something drops to the $g.", TRUE,this,0,0,TO_ROOM);
+	    unequip(slot);
             *roomp += *tmp;
           }
           return;
