@@ -251,27 +251,32 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
         k = this;
 
 
+      // count number of people in the group that are in the
+      // same room as the leader (includes leader)
       for (f = k->followers; f; f = f->next) {
 	if (inGroup(*f->follower) && sameRoom(*f->follower)) {
 	  groupcount++;
 	}
       }
 
+      // get the percentage of damage done to the mobs total hit points
+      // and divide by the number of people in the group
       trophyperc=(double)(((double)dam/(double)(v->hitLimit()+11))/groupcount);
 
+      // add that percentage to the leaders trophy count
       if(!isImmortal())
 	k->trophy->addToCount(v->mobVnum(), trophyperc);
 
+      // add that percentage to each group members trophy count
       for (f = k->followers; f; f = f->next) {
 	if (f->follower->isPc() && inGroup(*f->follower) && 
-	    sameRoom(*f->follower)) {
+	    sameRoom(*f->follower) && !isImmortal()) {
 	  f->follower->trophy->addToCount(v->mobVnum(), trophyperc);
 	}
       }      
-
     }
 
-
+    
     percent = ((double) dam / (double) (v->getHit() + 11));
 
     if (percent < 0)
