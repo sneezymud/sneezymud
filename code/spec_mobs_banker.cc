@@ -117,6 +117,7 @@ int bankBuyAccount(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, 
   ch->addToMoney(-100, GOLD_XFER);
   myself->addToMoney(100, GOLD_XFER);
   shoplog(shop_nr, ch, myself, "talens", 100, "new account");
+  myself->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
   
   teller->doTell(ch->getName(), "Your account is now open and ready for use.");
   
@@ -159,7 +160,7 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 		     talenDisplay(convertTo<int>(db["talens"])));
     }
 
-    db.query("select count(*) as c, sum(talens) as t from shopownedbank");
+    db.query("select count(*) as c, sum(talens) as t from shopownedbank where shop_nr=%i", shop_nr);
 
     if(db.fetchRow()){
       myself->doTell(ch->getName(), fmt("%i accounts, %s talens.") %
@@ -206,7 +207,11 @@ int bankRoom(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   switch(rp->number){
     case 31751: 
     case 31756:
+    case 2351:
       tmp=31750;
+      break;
+    case 1295:
+      tmp=1295;
       break;
   }
 
@@ -223,7 +228,11 @@ int bankRoom(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   switch(rp->number){
     case 31751: 
     case 31756:
-      tmp=31751;
+    case 2351:
+      tmp=31765;
+      break;
+    case 1295:
+      tmp=1295;
       break;
   }
 
