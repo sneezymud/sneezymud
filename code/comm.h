@@ -46,7 +46,7 @@ const int PULSE_TICK        =1;
 // - 7200 pulses take 2744 secs : Bat 01/12/00  (avg load, 1 day uptime)
 
 const int ONE_SECOND        =4;
-const int PULSE_MOBACT      =ONE_SECOND * 4; // boosted from 3 to 4 7-1-01
+const int PULSE_MOBACT      =ONE_SECOND * 3;
 const int PULSE_TELEPORT    =ONE_SECOND * 3;
 const int PULSE_COMBAT      =ONE_SECOND * 3;
 const int PULSE_DROWNING    =ONE_SECOND * 9;
