@@ -984,18 +984,15 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	   v->hasPart(WEAR_BODY) && !weapon && 
        	   bSuccess(this, getSkillValue(SKILL_CRIT_HIT), SKILL_CRIT_HIT)){
 	  // rip out heart instead of head crush whee fancy
-buf=fmt("With your %s, you reach into $N's chest and rip out $S heart!") %
-		     limbStr;
-	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=fmt("You hold the still beating heart above your head in triumph, as blood runs down your arm!") %
-		     limbStr;
-	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_RED);
-buf=fmt("$n reaches into your chest and rips out your heart!") %
-		     limbStr;
-	    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=fmt("$n reaches into $N's chest and rips out $S heart!") %
-		     limbStr;
-	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	  buf=fmt("With your %s, you reach into $N's chest and rip out $S heart!") %
+	    limbStr;
+	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+	  act("You hold the still beating heart above your head in triumph, as blood runs down your arm!",
+	      FALSE, this, 0, v, TO_CHAR, ANSI_RED);
+	  act("$n reaches into your chest and rips out your heart!",
+	      FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	  act("$n reaches into $N's chest and rips out $S heart!",
+	      FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
 
 	    TDrinkCon *corpse;
