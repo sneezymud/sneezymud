@@ -40,7 +40,7 @@ else
   endif
   set dateTime = "$monthTime $dayTime"
 endif
-echo "Reviewing for: '$dateTime'"
+echo "Reviewing for changes since: '$dateTime'"
 
 foreach file (*.cc *.h makefile README)
   set revLine = `rlog -N -d"$dateTime<" $file | grep "selected revisions"`
