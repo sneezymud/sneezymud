@@ -158,40 +158,35 @@ int sticksToSnakes(TBeing * caster, TBeing * victim, int level, byte bKnown)
   }
 }
 
-
-int sticksToSnakes(TBeing * caster, TBeing * victim, TMagicItem * obj)
+void sticksToSnakes(TBeing *caster, TBeing *victim, TMagicItem * obj)
 {
-  int ret = 0;
-  int rc=0;
-
-  ret=sticksToSnakes(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
-  if (IS_SET(ret, SPELL_SUCCESS)) {
-  } else if (IS_SET(ret,SPELL_CRIT_FAIL)) {
-  } else {
-    }
-  if (IS_SET(ret, VICTIM_DEAD))
-    ADD_DELETE(rc, DELETE_VICT);
-  if (IS_SET(ret, CASTER_DEAD))
-    ADD_DELETE(rc, DELETE_THIS);
-    return rc;
+  sticksToSnakes(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
 }
 
-int sticksToSnakes(TBeing * caster, TBeing * victim)
+int sticksToSnakes(TBeing *caster, TBeing *victim)
 {
-  int level,ret;
-  int rc = 0;
+  taskDiffT diff;
 
-  if (!bPassMageChecks(caster, SPELL_STICKS_TO_SNAKES, victim)) 
-    return FALSE;
+    if (!bPassShamanChecks(caster, SPELL_STICKS_TO_SNAKES, victim))
+       return FALSE;
+
+     lag_t rounds = discArray[SPELL_STICKS_TO_SNAKES]->lag;
+     diff = discArray[SPELL_STICKS_TO_SNAKES]->task;
+
+     start_cast(caster, victim, NULL, caster->roomp, SPELL_STICKS_TO_SNAKES, diff, 1, "", 
+rounds, caster->in_room, 0, 0,TRUE, 0);
+      return TRUE;
+}
+
+int castSticksToSnakes(TBeing *caster, TBeing *victim)
+{
+  int ret,level;
 
   level = caster->getSkillLevel(SPELL_STICKS_TO_SNAKES);
   int bKnown = caster->getSkillValue(SPELL_STICKS_TO_SNAKES);
 
-  ret=sticksToSnakes(caster, victim, level, bKnown);
-  if (IS_SET(ret, CASTER_DEAD))
-    ADD_DELETE(rc, DELETE_THIS);
-  return rc;
-
+  ret=sticksToSnakes(caster,victim,level,bKnown);
+    return TRUE;
 }
 
 // END STICKS TO SNAKES

@@ -343,6 +343,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       break;
     case SPELL_DEATHWAVE:
     case SPELL_DISTORT:
+    case SPELL_STICKS_TO_SNAKES:
     case SPELL_SOUL_TWIST:
     case SPELL_SQUISH:
     case SPELL_CARDIAC_STRESS:

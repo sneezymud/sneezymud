@@ -2412,6 +2412,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_MYSTIC_DARTS:
       rc = mysticDarts(caster,victim,obj);
       break;
+    case SPELL_STICKS_TO_SNAKES:
+      sticksToSnakes(caster,victim,obj);
+      break;
     case SPELL_DISTORT:
       rc = distort(caster,victim,obj);
       break;
@@ -2694,9 +2697,6 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       break;
     case SPELL_RAZE:
       rc = raze(caster,victim,obj);
-      break;
-    case SPELL_STICKS_TO_SNAKES:
-      sticksToSnakes(caster,victim,obj);
       break;
     case SPELL_LICH_TOUCH:
       rc = lichTouch(caster,victim,obj);

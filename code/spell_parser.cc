@@ -1682,6 +1682,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SPELL_STUNNING_ARROW:
       rc = stunningArrow(this, ch);
       break;
+    case SPELL_STICKS_TO_SNAKES:
+      sticksToSnakes(this, ch);
+      break;
     case SPELL_DISTORT:
       rc = distort(this, ch);
       break;
@@ -2066,9 +2069,6 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
           rc = barkskin(this, ch);
         break;
 #endif
-      case SPELL_STICKS_TO_SNAKES:
-          sticksToSnakes(this, ch);
-        break;
       case SPELL_ROOT_CONTROL:
           rootControl(this, ch);
         break;

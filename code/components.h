@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.23  2001/06/17 23:21:34  jesus
+// sticks to snakes update
+//
 // Revision 5.22  2001/06/17 01:39:38  jesus
 // death wave spell
 // comp load changes for shaman
@@ -178,6 +181,7 @@ const int COMP_BREATH_SARAHAGE  =272;
 const int COMP_INFRAVISION      =273;
 const int COMP_ENHANCE_WEAPON   =274;
 const int COMP_FLIGHT           =275;
+const int COMP_STICKS_TO_SNAKES =284;
 const int COMP_PROT_EARTH       =293;
 const int COMP_TRANSFORM_LIMB   =298;
 #if 0

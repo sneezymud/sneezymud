@@ -1277,6 +1277,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_AQUALUNG:
     case SPELL_CARDIAC_STRESS:
     case SPELL_DEATHWAVE:
+    case SPELL_STICKS_TO_SNAKES:
     case SPELL_DISTORT: // shaman
     case SPELL_LICH_TOUCH: // shaman
     case SPELL_VAMPIRIC_TOUCH: // shaman
@@ -2065,6 +2066,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
           rc = castMysticDarts(this, victim);
         else
           vlogf(LOG_BUG, "SPELL_MYSTIC_DARTS called with null obj");
+        break;
+     case SPELL_STICKS_TO_SNAKES:
+        if (!o) 
+          rc = castSticksToSnakes(this, victim);
+        else
+          vlogf(LOG_BUG, "SPELL_STICKS_TO_SNAKES called with null obj");
         break;
       case SPELL_DISTORT:
         if (!o) 

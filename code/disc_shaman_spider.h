@@ -47,7 +47,8 @@ private:
     int controlUndead(TBeing *, TBeing *, int, byte);
 
     int sticksToSnakes(TBeing *, TBeing *);
-    int sticksToSnakes(TBeing *, TBeing *, TMagicItem *);
+    void sticksToSnakes(TBeing *, TBeing *, TMagicItem *);
+    int castSticksToSnakes(TBeing *, TBeing *);
     int sticksToSnakes(TBeing *, TBeing *, int, byte);
 
     int clarity(TBeing *, TBeing *);
