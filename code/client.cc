@@ -474,6 +474,28 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       return DELETE_THIS;
       break;
     case CLIENT_CONNECTED:
+      if(character->hasQuestBit(TOG_PERMA_DEATH_CHAR)){
+	character->loadCareerStats();
+	if(character->desc->career.deaths){
+	  
+	  writeToQ("That character is a perma death character and has died.\n\r");
+	  writeToQ("Name -> ");
+	  
+	  // copied from above
+	  character->desc = NULL;
+	  character->next = character_list;
+	  character_list = character;
+	  
+	  character->setRoom(ROOM_NOWHERE);
+	  
+	  delete character;
+	  character = new TPerson(this);
+	  return FALSE;
+	}
+      }
+
+
+
       for (k = descriptor_list; k; k = k2) {
         k2 = k->next;
         if (this == k)
