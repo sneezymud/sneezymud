@@ -13,8 +13,64 @@
 // setrates <default> <prime> <term> default
 // profit_buy = defaulting rate, profit_sell=prime rate
 
-// setrates <X> <Y> <unused> loanrate
+// setrates <X> <Y> <term> loanrate
 // X * (lvl ** Y)
+
+
+double getPenalty(unsigned int shop_nr, const sstring &name)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select profit_buy from shopownedplayer where player='%s' and shop_nr=%i", name.c_str(), shop_nr);
+  
+  if(db.fetchRow())
+    return convertTo<double>(db["profit_buy"]);
+  else {
+    db.query("select profit_buy from shopowned where shop_nr=%i", shop_nr);
+
+    if(db.fetchRow())
+      return convertTo<double>(db["profit_buy"]);
+  }
+
+  return shop_index[shop_nr].profit_buy;
+}
+
+double getRate(unsigned int shop_nr, const sstring &name)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select profit_sell from shopownedplayer where player='%s' and shop_nr=%i", name.c_str(), shop_nr);
+  
+  if(db.fetchRow())
+    return convertTo<double>(db["profit_sell"]);
+  else {
+    db.query("select profit_sell from shopowned where shop_nr=%i", shop_nr);
+
+    if(db.fetchRow())
+      return convertTo<double>(db["profit_sell"]);
+  }
+
+  return shop_index[shop_nr].profit_sell;
+}
+
+int getTerm(unsigned int shop_nr, const sstring &name)
+{
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select max_num from shopownedplayer where player='%s' and shop_nr=%i", name.c_str(), shop_nr);
+  
+  if(db.fetchRow())
+    return convertTo<int>(db["max_num"]);
+  else {
+    db.query("select term from shopownedloanrate where shop_nr=%i", shop_nr);
+    
+    if(db.fetchRow())
+      return convertTo<int>(db["term"]);
+  }
+
+  return 12;
+}
+
 
 
 // granted = time_t value of real time that loan was granted
@@ -75,7 +131,9 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
   TShopOwned tso(shop_nr, me, ch);
 
-  db.query("select x, y, term from shopownedloanrate where shop_nr=%i",
+  
+
+  db.query("select x, y from shopownedloanrate where shop_nr=%i",
 	   shop_nr);
   if(!db.fetchRow()){
     vlogf(LOG_DB, fmt("couldn't find loanrate table for shop %i") % shop_nr);
@@ -85,7 +143,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
   double X=convertTo<double>(db["x"]);
   double Y=convertTo<double>(db["y"]);
-  int term=convertTo<int>(db["term"]);
+  int term=getTerm(shop_nr, ch->getName());
   int amt=(int)(pow(ch->GetMaxLevel(), X) / pow(50, X) * Y);
   
   ////////////////////////////
@@ -133,10 +191,10 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     } else {
       me->doSay(fmt("I can extend you a loan for %i talens.") % amt);
       me->doSay(fmt("A monthly cumulative interest rate of %.2f%c will apply.") % 
-		(shop_index[shop_nr].profit_sell * 100) % '%');
+		(getRate(shop_nr, ch->getName()) * 100) % '%');
       me->doSay(fmt("The term length I can offer is %i months.") % term);
       me->doSay(fmt("If you default on the loan, you will be charged an additional %.2f%c.") %
-		(shop_index[shop_nr].profit_buy * 100) % '%');
+		(getPenalty(shop_nr, ch->getName()) * 100) % '%');
       me->doSay("Do \"buy loan\" to take out the loan.");
     }
     return true;
@@ -158,8 +216,8 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
     db.query("insert into shopownedloans values (%i, %i, %i, %i, %i, %f, %f)",
     	     shop_nr, ch->getPlayerID(), amt, time(NULL),
-	     term, shop_index[shop_nr].profit_sell, 
-	     shop_index[shop_nr].profit_buy);
+	     term, getRate(shop_nr, ch->getName()), 
+	     getPenalty(shop_nr, ch->getName()));
 
 
     me->addToMoney(-amt, GOLD_SHOP);
@@ -196,7 +254,8 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 	db.query("update shopownedloans set amt=%i where player_id=%i",
 		 principle, ch->getPlayerID());
 
-	me->doSay(fmt("Thanks for the payment.  You still owe %i on the principle.") % principle);
+	me->doSay(fmt("Thanks for the payment.  You paid down the principle by %i talens, the rest went to interest.") % (int)(perc*coins));
+
 	shoplog(shop_nr, ch, me, "talens", -amt, "receiving");
       }
     } else {
