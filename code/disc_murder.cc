@@ -162,7 +162,7 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
     return FALSE;
   }
   // *** Start of Test Tank-Target Backstab Code  -Lapsos
-  if ((!argument || !*argument) && isAffected(AFF_GROUP)) {
+  if (!*argument && isAffected(AFF_GROUP)) {
     if (master)
       GLeader = master;
     else

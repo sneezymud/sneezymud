@@ -2674,7 +2674,7 @@ int TMonster::takeFirstHit(TBeing &vict)
 	    //            addSkillLag(SKILL_BACKSTAB, 0);
 
 	    // lets not have automatic success
-	    rc=doBackstab(NULL, v2);
+	    rc=doBackstab("", v2);
 
 
             if (IS_SET_DELETE(rc, DELETE_VICT)) {
