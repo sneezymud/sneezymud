@@ -7161,6 +7161,11 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
     return FALSE;
   }
 
+  if(!has_key(myself, vehicle->getPortalKey())){
+    return FALSE;
+  }
+
+
   // wait until we have passengers before we leave the docks
   if(boat->in_room == 15150 && timer<=0 && vehicle->getSpeed()==0){
     for(tt=boatroom->getStuff();tt;tt=tt->nextThing){
