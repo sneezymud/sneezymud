@@ -88,11 +88,11 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
 	    if(wohlin_learn>90 && ::number(0, 100) <= (wohlin_learn-90)){
 	      if(ch->getCond(THIRST)<=2){
 		ch->sendTo("You don't feel quite so thirsty.\n\r");
-		ch->gainCondition(THIRST, 1);
+		ch->gainCondition(THIRST, 2);
 	      }
 	      if(ch->getCond(FULL)<=2){
 		ch->sendTo("You don't feel quite so hungry.\n\r");
-		ch->gainCondition(FULL, 1);
+		ch->gainCondition(FULL, 2);
 	      }
 	    }	    
 	    
