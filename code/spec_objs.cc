@@ -4506,6 +4506,12 @@ int travelGear(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
 int dualStyleWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
+
+  // this code is for weapons with more than one damage type
+  // it utilizes two 'styles' that can be changed with the switch <weapon> command
+  // to favor one or the other damage types
+  // dash - may 2001
+
   TGenWeapon *weap = dynamic_cast<TGenWeapon *>(o);
   if (!weap)
     return FALSE;
