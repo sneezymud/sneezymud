@@ -7104,14 +7104,14 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 int gardener(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 {
   TThing *t;
-  //  static unsigned int pulse;
+  static unsigned int pulse;
 
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
-  //  ++pulse;
-  //  if(pulse%75)
-  //    return FALSE;
+  ++pulse;
+  if(pulse%150)
+    return FALSE;
 
   if (ch->task)
     return FALSE;

@@ -31,7 +31,7 @@ void TBeing::doPlant(const char *arg)
     if(dynamic_cast<TPlant *>(tcount))
       ++count;
   }
-  if(count>=7){
+  if(count>=8){
     sendTo("There isn't any room for more plants in here.\n\r");
     return;
   }
