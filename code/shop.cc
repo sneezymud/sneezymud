@@ -98,28 +98,71 @@ int TObj::sellPrice(int shop_nr, float chr, int *discount)
 int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
 {
   int cost;
-  float profit_buy=shop_index[shop_nr].profit_buy;
+  float profit_buy=-1;
+  static int cached_shop_nr=-1;
+  static map <int,float> ratios;
+  static map <string,float> matches;
+  map <string,float>::iterator iter;
+  TDatabase db("sneezy");
+
+  // we do this caching so that if we get the shopPrice on many items at once
+  // (list) it doesn't have to query for each one
+  // overhead is that with one at a time shopPrices (value/sell/buy) may
+  // rebuild the cache needlessly.  On the upside, when you've got someone
+  // doing value/buy/sell in a shop, they're likely to do a list pretty soon
+  // as well, and then we'll have the cache ready.
+  if(cached_shop_nr != shop_nr){
+    cached_shop_nr=shop_nr;
+    ratios.clear();
+    matches.clear();
+    
+    db.query("select obj_nr, profit_buy from shopownedratios where shop_nr=%i",
+	     shop_nr);
+    while(db.fetchRow())
+      ratios[convertTo<int>(db.getColumn("obj_nr"))]=convertTo<float>(db.getColumn("profit_buy"));
+
+    db.query("select match, profit_buy from shopownedmatch where shop_nr=%i",
+	     shop_nr);
+    while(db.fetchRow())
+      matches[db.getColumn("match")]=convertTo<float>(db.getColumn("profit_buy"));
+  }
+
 
   if(shop_index[shop_nr].isOwned()){  
-    TDatabase db("sneezy");
+    if(cached_shop_nr==shop_nr){
+      profit_buy=ratios[objVnum()];
+    } else {
+      db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
+      if(db.fetchRow())
+	profit_buy=convertTo<float>(db.getColumn(0));
+    }
+
     
-    db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
-    
-    if(db.fetchRow())
-      profit_buy=convertTo<float>(db.getColumn(0));
-    else {
+    if(profit_buy==-1){
       // ok, shop is owned and there is no ratio set for this specific object
       // so check keywords
-      db.query("select match, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
+      if(cached_shop_nr==shop_nr){
+	for(iter=matches.begin();iter!=matches.end();++iter){
+	  if(isname((*iter).first, name)){
+	    profit_buy=(*iter).second;
+	    break;
+	  }
+	}
+      } else {
+	db.query("select match, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
       
-      while(db.fetchRow()){
-	if(isname(db.getColumn(0), name)){
-	  profit_buy=convertTo<float>(db.getColumn(1));
-	  break;
+	while(db.fetchRow()){
+	  if(isname(db.getColumn(0), name)){
+	    profit_buy=convertTo<float>(db.getColumn(1));
+	    break;
+	  }
 	}
       }
     }
   }
+
+  if(profit_buy == -1)
+    profit_buy=shop_index[shop_nr].profit_buy;
     
   if (chr != -1)
     cost = (int) ((adjPrice(discount) * profit_buy) * chr);
@@ -131,6 +174,7 @@ int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
 
   return cost;
 }
+
 
 bool shopData::willTradeWith(TMonster *keeper, TBeing *ch)
 {
