@@ -1937,7 +1937,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       if (!obj)
         continue;
 
-      if(shop_nr==SHOP_DUMP && !x::number(0,24)){
+      if(shop_nr==SHOP_DUMP && !::number(0,24)){
 	// this is the garbageman, he recycles items a lot
 	vlogf(LOG_OBJ, "shop %s (%i) recycling %s for %i talens", myself->getName(), shop_nr, obj->getName(), (int)(obj->obj_flags.cost * 0.75));	
 	myself->addToMoney((int)(obj->obj_flags.cost * 0.75), GOLD_SHOP);
