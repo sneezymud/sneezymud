@@ -29,6 +29,8 @@ vector<shop_pricing>ShopPriceIndex(0);
 #define IMMORTEQTEST 1
 #define FLUX_SHOP_DEBUG     0
 
+const unsigned int SHOP_DUMP = 124;
+
 // A note on gold_modifier[GOLD_SHOP] :
 // This is a global variable used to keep economy in check
 // it serves as a multiplier to raise/lower the price a shop buys an item
@@ -1934,9 +1936,20 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       TObj * obj = dynamic_cast<TObj *>(t);
       if (!obj)
         continue;
+
+      if(shop_nr==SHOP_DUMP && !x::number(0,24)){
+	// this is the garbageman, he recycles items a lot
+	vlogf(LOG_OBJ, "shop %s (%i) recycling %s for %i talens", myself->getName(), shop_nr, obj->getName(), (int)(obj->obj_flags.cost * 0.75));	
+	myself->addToMoney((int)(obj->obj_flags.cost * 0.75), GOLD_SHOP);
+	delete obj;
+	continue;
+      }
+
+
       if (!::number(0,99) && !shop_index[shop_nr].isProducing(obj) &&
 	  !shop_index[shop_nr].isOwned()) {
         // random recycling
+	vlogf(LOG_OBJ, "shop %s (%i) recycling %s", myself->getName(), shop_nr, obj->getName());
         delete obj;
         continue;
       }
