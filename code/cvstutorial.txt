@@ -1,0 +1,46 @@
+Do 'cvs update' periodically to keep your dev code in sync with the
+production code.  This will merge in other coders changes with your
+dev code.  You should try and do this pretty frequently.
+
+---
+
+When you are ready to move your changes into production, do 'cvs
+commit'.
+
+---
+
+If you fucked up a file and want to discard your version, simply
+remove it and do 'cvs update' to checkout the production version.
+
+---
+
+To compile your own dev code:
+rm file.mak ; make >& file.mak &
+
+To boot your dev mud:
+./sneezy.2 6969 >& file &
+
+I'll probably update bmake and alboot to work with the dev
+environments, right now you have to do it manually.  You may have to
+use another port if 6969 is being used.
+
+---
+
+To do a code move:
+sneezymode
+cd /mud/code
+cvs update
+bmake
+mvcode
+exit
+
+---
+
+Do not ever edit the code in /mud/code.  It is only a snapshot of the
+production code, for compiling.
+
+---
+
+CVS has many other options and abilities.  Try 'cvs help' for more
+details.  Also: http://cvshome.org/docs/manual/cvs.html
+
