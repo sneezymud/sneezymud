@@ -5297,6 +5297,61 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
   return TRUE;
 }
 
+int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
+{
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+  int rc, found=0;
+  TThing *o;
+  TObj *to;
+
+  if(cmd != CMD_LOOK)
+    return FALSE;
+
+  for (o = ch->roomp->getStuff(); o; o = o->nextThing) {
+    to = dynamic_cast<TObj *>(o);
+    if (to && to->spec == SPEC_TROPHY_BOARD &&
+	isname(arg, to->name)){
+      found=1;
+      break;
+    }
+  }
+
+  if(!found)
+    return FALSE;
+
+
+  if((rc=dbquery(TRUE, &res, "sneezy", "trophyBoard", "select name, count(*) c from trophy group by name order by c desc limit 10"))){
+    if(rc==-1)
+      vlogf(LOG_BUG, "Database error in trophyBoard");
+    else {
+      ch->sendTo("The board is empty.\n\r");
+      return TRUE;
+    }
+      
+    return FALSE;
+  }
+
+  ch->sendTo("You examine the board:\n\r");
+  ch->sendTo("------------------------------------------------------------\n\r");
+  ch->sendTo("-  According to the research of the shaman guildmaster,    -\n\r");
+  ch->sendTo("-  these people have done a wider range of death bringing  -\n\r");
+  ch->sendTo("-  than any other.                                         -\n\r");
+  ch->sendTo("------------------------------------------------------------\n\r");
+
+  int i=1;
+  while((row=mysql_fetch_row(res))){
+    ch->sendTo(COLOR_BASIC, "%i) %s has killed %i life forms.\n\r", i, row[0], atoi(row[1]));
+    ++i;
+  }
+
+
+  mysql_free_result(res);
+
+  return TRUE;
+}
+
+
 // Dash stuff - dec 2001
 
 int force(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
@@ -5480,16 +5535,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Splintered Club", splinteredClub}, // 90 
   {FALSE, "Suffocation Glove", suffGlove},
   {FALSE, "Force", force},
+  {FALSE, "trophy board", trophyBoard},
   {FALSE, "last proc", bogusObjProc}
 };
-
-
-
-
-
-
-
-
-
-
-
