@@ -1632,7 +1632,7 @@ bool okForJanitor(TMonster *myself, TObj *obj)
   // pc corpses can't be res'd, so can't be looted
   // also give pcs a moment to loot
   if (corpse && (corpse->getCorpseFlags() == 0) &&
-      (corpse->obj_flags.decay_time <= MAX_NPC_CORPSE_TIME - 3)) {
+      (corpse->obj_flags.decay_time <= MAX_NPC_CORPSE_TIME - 1)) {
     if (corpse->stuff) {
       TThing *t3, *t4;
       for (t3 = corpse->stuff; t3; t3 = t4) {
