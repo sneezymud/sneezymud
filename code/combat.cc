@@ -4906,7 +4906,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
   TBeing *real_master;
   followData *f;
   TBeing *tank;
-  const int EXP_DEBUG=0;
+  const int EXP_DEBUG=1;
 
   // no exp from players
   if (!v || v->isPc())
