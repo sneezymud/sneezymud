@@ -4899,151 +4899,97 @@ static int FRACT(TBeing *ch, TBeing *v)
 
 
    
-#define EXP_DEBUG      0 
 void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
 {
-  double no_levels = 0;
+  double exp_shares = 0;
   double tmp_exp, tmp_perc;
   TBeing *real_master;
   followData *f;
   TBeing *tank;
+  const int EXP_DEBUG=0;
 
-  if (v->isPc())
+  // no exp from players
+  if (!v || v->isPc())
     return;
 
-  // Player is ok, go on and start 
   double exp = v->getExp();
-
   double exp_received = (exp * percent);
 
-  int fract = FRACT(this, v);
-#if EXP_DEBUG
-  vlogf(LOG_COMBAT, fmt("FRACT is %d") %  fract);
-#endif
-
-  // new formula (Cos)
   // find out who the tank is
-
   if (v->fight()) 
     tank = v->fight();
   else 
     tank = this;
 
-  if (!isAffected(AFF_GROUP)) {
-    if (v && tank && tank == this) {
-      // I am tanking so give me experience
-    } else if (!tank->isPc() && !tank->master) {
-      // tank is a true npc not a pc, a pet, or a charmie
-      // I deserve experience
-    } else {
-      // else no experience/take the mobs exp
-#if EXP_DEBUG
-      vlogf(LOG_COMBAT,fmt("%s destroyed %d xp of %s's.") %  getName() % exp_received % v->getName());
-#endif
-      gain_exp(v, -exp_received, -1);
-      return;
-    }
-
-    // give the experience to solo pc and take from mob
-#if EXP_DEBUG
-    vlogf(LOG_COMBAT, fmt("%s got %d.  perc  %f, %s lost %d") % getName() %exp_received * fract / 100 % percent % v->getName() % exp_received);
-#endif
-    gain_exp(this, exp_received * fract/ 100, dam*10000/v->hitLimit());
-    gain_exp(v, -exp_received, -1);
+  if(!tank)
     return;
 
-  } else { // grouped
-    if (numberInGroupInRoom() == 1) {
-      // I am the only groupmember in the room
-      if (tank && (tank == this || inGroup(*tank))) {
-        // I am tanking so I can get experience.
-      } else if (!tank->isPc() && !tank->master) {
-        // tank is a true npc not a pc, a pet, or a charmie
-        // I can get experience/grouped mobs are taken care of above
-      } else {
-        // else no experience for me
-#if EXP_DEBUG
-        vlogf(LOG_COMBAT, fmt("%s destroyed %d xp of %s's.") %  getName() % exp_received % v->getName());
-#endif
-        gain_exp(v, -exp_received, -1);
-        return;
-      }
-      // give and take the experience
-#if EXP_DEBUG
-      vlogf(LOG_COMBAT, fmt("%s got %d.  perc  %f, %s lost %d") % getName() %exp_received * fract / 100 % percent % v->getName() % exp_received);
-#endif
-      gain_exp(this, exp_received * fract/ 100, dam*10000/v->hitLimit());
-      gain_exp(v, -exp_received, -1 );
-      return;
-    } else {  //more than one in my group in room
-      if (tank && (tank == this || inGroup(*tank))) {
-        // my group is tanking so my group can get experience.
-      } else if (!tank->isPc() && !tank->master){
-        // tank is a true npc not a pc, a pet, or a charmie
-        // my group can get experience
-      } else {
-        // else no experience for my groupmembers
-        gain_exp(v, -exp_received, -1);
-        return;
-      }
-      // take the experience from the mob /split will take place below
-#if EXP_DEBUG
-      vlogf(LOG_COMBAT, fmt("%s lost %d.  perc  %f, %s's group got exp") % v->getName() %exp_received % percent % getName() % exp_received);
-#endif
-      gain_exp(v, -exp_received, -1 );
-    }
-  }
-  // Anything below here is for splitting experience when there is more
-  // than one of my group in the room.  Solo experience was given above
-  // and cases that give no experiecne have already returned
-  // Thus we know the Pc is grouped and has groupmates in room Cos
-  // Figure up the group's total level, and use that for giving out exps
+  // take the exp from the mob
+  gain_exp(v, -exp_received, -1 );
 
+  if(EXP_DEBUG)
+    vlogf(LOG_COMBAT, fmt("gainExpPerHit: removed %f exp from %s (hitter: %s)") %
+	  exp_received % v->getName() % getName());
+
+  // I am the only groupmember in the room
+  if (tank == this || inGroup(*tank)) {
+    // I am tanking so I can get experience.
+  } else if (!tank->isPc() && !tank->master) {
+    // tank is a true npc not a pc, a pet, or a charmie
+    // I can get experience/grouped mobs are taken care of above
+  } else {
+    // else no experience for me
+    return;
+  }
+
+  // find out who my master is, myself or something else
   if (!(real_master = master))
     real_master = this;
 
+  // add the masters group share in if around
   if (inGroup(*real_master) && sameRoom(*real_master))
-    no_levels = real_master->getExpShare();
+    exp_shares = real_master->getExpShare();
   else
-    no_levels = 0;
+    exp_shares = 0;
 
+  // add in the rest of the groups exp shares if they're around
   for (f = real_master->followers; f; f = f->next) {
     if (inGroup(*f->follower) && sameRoom(*f->follower))
-        no_levels += f->follower->getExpShare();
+      exp_shares += f->follower->getExpShare();
   }
 
-#if EXP_DEBUG
-    vlogf(LOG_COMBAT, fmt("shares %d") %  no_levels);
-#endif
+  // work out the exp share per level
+  if (exp_shares) {
+    tmp_exp = (double) (exp_received / (double) exp_shares);
+    tmp_perc = (double) (percent / (double) exp_shares);
+  } else {
+    tmp_exp = 0;
+    tmp_perc = 0;
+  }
 
-    if (no_levels) {
-      tmp_exp = (double) (exp_received / (double) no_levels);
-      tmp_perc = (double) (percent / (double) no_levels);
-    } else {
-      tmp_exp = 0;
-      tmp_perc = 0;
-    }
+  if(EXP_DEBUG)
+    vlogf(LOG_COMBAT, fmt("gainExpPerHit: exp_shares=%f, tmp_exp=%f, tmp_perc=%f") %
+	  exp_shares % tmp_exp % tmp_perc);
+
     
-#if EXP_DEBUG
-  vlogf(LOG_COMBAT, fmt("one share %10.10f") %  tmp_exp);
-#endif
-
   // Gain exp for master if in room with ch
   if (sameRoom(*real_master) && inGroup(*real_master)) {
     exp_received = (tmp_exp * real_master->getExpShare());
-    gain_exp(real_master, exp_received * fract/ 100, dam*10000/v->hitLimit());
-#if EXP_DEBUG
-    vlogf(LOG_COMBAT, fmt("%s got %d.  perc  %f, %s lost %d") % real_master->getName() %exp_received * fract / 100 % percent % v->getName() % exp_received);
-#endif
+    exp_received *= (FRACT(real_master, v) / 100);
+    gain_exp(real_master, exp_received, dam*10000/v->hitLimit());
+    if(EXP_DEBUG)
+      vlogf(LOG_COMBAT, fmt("gainExpPerHit: %s gained %f exp") %
+	    real_master->getName() % exp_received);
   }
   // Gain exp for followers if in room with ch
   for (f = real_master->followers; f; f = f->next) {
     if (inGroup(*f->follower) && sameRoom(*f->follower)) {
       exp_received = (tmp_exp * f->follower->getExpShare());
-      gain_exp(f->follower, exp_received * fract/ 100, dam*10000/v->hitLimit());
-#if EXP_DEBUG
-      vlogf(LOG_COMBAT, fmt("%s got %d.  perc  %f, %s lost %d") % f->follower->getName() %exp_received * fract / 100 % percent % v->getName() % exp_received);
-#endif
+      exp_received *= (FRACT(f->follower, v) / 100);
+      gain_exp(f->follower, exp_received, dam*10000/v->hitLimit());
+      if(EXP_DEBUG)
+	vlogf(LOG_COMBAT, fmt("gainExpPerHit: %s gained %f exp") %
+	      f->follower->getName() % exp_received);
     }
   }
 }
