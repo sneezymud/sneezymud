@@ -925,9 +925,9 @@ void objAffData::checkForBadness(TObj *obj)
       (location != APPLY_MOVE) &&
       (location != APPLY_ARMOR)) {
     if (!obj->isObjStat(ITEM_MAGIC))
-      vlogf(LOG_LOW,"obj (%s:%d) should be set magic due to %s:%d",
+      vlogf(LOG_LOW,"obj (%s:%d) should be set magic due to %s",
             obj->getName(), obj->objVnum(), 
-            apply_types[location].name, location);
+            apply_types[location].name);
   }
   if (location == APPLY_SPELL &&
       (modifier < 0 ||
