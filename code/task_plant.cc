@@ -2,7 +2,6 @@
 #include "obj_tool.h"
 #include "obj_plant.h"
 
-
 void TBeing::doPlant(const char *arg)
 {
   TThing *t;
@@ -20,7 +19,14 @@ void TBeing::doPlant(const char *arg)
     sendTo("You need to specify some seeds to plant.\n\r");
     return;
   }
-  
+
+  if(roomp->isFallSector() || roomp->isWaterSector() || 
+     roomp->isIndoorSector()){
+    sendTo("You can't plant anything here.\n\r");
+    return;
+  }
+
+
   sendTo("You begin to plant some seeds.\n\r");
   start_task(this, t, NULL, TASK_PLANT, "", 2, inRoom(), 0, 0, 5);
 }

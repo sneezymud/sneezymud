@@ -2061,15 +2061,21 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	      shop_index[shop_nr].profit_sell);
       myself->doTell(buf);
 
-      sprintf(buf, "%s I deal in", ch->getName());
-      for(i=0;i<shop_index[shop_nr].type.size();++i){
-	tmp=shop_index[shop_nr].type[i];
-	if(tmp != MAX_OBJ_TYPES && (int) tmp != -1)
-	  sprintf(buf+strlen(buf), " %s,",
-		  ItemInfo[tmp]->name);
+      if(shop_index[shop_nr].type.size()<=1){
+	sprintf(buf, "%s I only sell things, I do not buy anything.",
+		ch->getName());
+	myself->doTell(buf);
+      } else {
+	sprintf(buf, "%s I deal in", ch->getName());
+	for(i=0;i<shop_index[shop_nr].type.size();++i){
+	  tmp=shop_index[shop_nr].type[i];
+	  if(tmp != MAX_OBJ_TYPES && (int) tmp != -1)
+	    sprintf(buf+strlen(buf), " %s,",
+		    ItemInfo[tmp]->name);
+	}
+	buf[strlen(buf)-1]='\0';
+	myself->doTell(buf);
       }
-      buf[strlen(buf)-1]='\0';
-      myself->doTell(buf);
 
     } else if(!strcmp(buf, "set")){ //////////////////////////////////
       if(!(access & SHOPACCESS_OWNER) && !(access & SHOPACCESS_PROFITS)){
