@@ -6897,7 +6897,7 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
   if(vehicle->getDir() != i)
     myself->doDrive(dirs[i]);
 
-  myself->doDrive("10");
+  myself->doDrive("20");
 
   return TRUE;
 }
