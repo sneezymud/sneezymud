@@ -2544,7 +2544,8 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill)
   int defense = target->defendRound(this);
   int mod = offense - defense;
 
-  if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL) {
+  if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL || 
+     skill == SKILL_RANGED_PROF) {
     // other surprise attacks should be added here
     if(target->isWary())
       mod /= 4;
