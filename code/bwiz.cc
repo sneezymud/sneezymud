@@ -9,12 +9,8 @@
 #include "connect.h"
 
 #define WIZ_KEY_FILE "/mud/prod/lib/IPC_Wiznet"
-#define MAIN_PORT 7900
-#define BUILD_PORT 8900
 #define WIZNET_FORMAT "%s %s"
-#define MAX_STRING_LENGTH 4096
-#define MAX_INPUT_LENGTH 1024
-#define MAX_MSGBUF_LENGTH 2048
+#define MAX_MSGBUF_LENGTH 256
 
 int my_ipc_id, other_ipc_id;
 
@@ -32,17 +28,17 @@ int openQueue()
   
   if (qid==-2) {
     extern int gamePort;
-    if (gamePort==MAIN_PORT) {
-      my_ipc_id = MAIN_PORT;
-      other_ipc_id = BUILD_PORT;
+    if (gamePort==PROD_GAMEPORT) {
+      my_ipc_id = PROD_GAMEPORT;
+      other_ipc_id = BUILDER_GAMEPORT;
     } else {
-      my_ipc_id = BUILD_PORT;
-      other_ipc_id = MAIN_PORT;
+      my_ipc_id = BUILDER_GAMEPORT;
+      other_ipc_id = PROD_GAMEPORT;
     }
     keyval = ftok(WIZ_KEY_FILE, 'm');
   }
-  if ((qid = msgget(keyval, IPC_CREAT|0660)) == -1) {
-    vlogf(LOG_BUG, "Unable to msgget keyval %d.", keyval);
+  if ((qid = msgget(keyval, IPC_CREAT|0666)) == -1) {
+    vlogf(LOG_BUG, "Unable to msgget keyval %d, errno: %d.", keyval, errno);
     return -1;
   }
   if (oldqid!=qid) {
@@ -62,9 +58,6 @@ void mudSendMessage(int mtype, int ctype, const char *arg)
 {
   struct mud_msgbuf qbuf;
   int ret;
-  
-  // this is locking is up
-  return;
   
   if (openQueue()<0)
     return;
