@@ -1367,38 +1367,6 @@ void TBeing::sendSkillsList(discNumT which)
       } else if (wiz_lev >= DEV_LEV_NO_MANTRA) {
         strcpy(how_long, "\tsymbol=any hand or neck; pray silently; no gestures");
       }
-    } else if (i == SKILL_DISGUISE) {
-      int tSL = getDiscipline(getDisciplineNumber(SKILL_DISGUISE, FALSE))->getLearnedness();
-
-      strcpy(how_long, "\n\r\t");
-
-      for (int tCount = 0; tCount < MaxDisguiseType; tCount++) {
-        if (DisguiseList[tCount].learning > tSL ||
-            DisguiseList[tCount].level    > GetMaxLevel())
-          continue;
-
-        if ((signed) DisguiseList[tCount].tRace != RACE_NORACE)
-          continue;
-
-        if ((isname("male", DisguiseList[tCount].name) &&
-             getSex() != SEX_MALE) ||
-            (isname("female", DisguiseList[tCount].name) &&
-             getSex() != SEX_FEMALE))
-          continue;
-
-        string tStArg(DisguiseList[tCount].name),
-               tStRes("");
-
-        one_argument(tStArg, tStRes);
-
-        if (strlen(how_long) != 3)
-          strcat(how_long, ", ");
-
-        strcat(how_long, tStRes.c_str());
-      }
-
-      if (strlen(how_long) == 3)
-        strcpy(how_long, " ");
     } else if (i == SPELL_SHAPESHIFT) {
       int tSL = getDiscipline(getDisciplineNumber(SPELL_SHAPESHIFT, FALSE))->getLearnedness();
 

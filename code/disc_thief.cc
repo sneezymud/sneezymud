@@ -404,10 +404,6 @@ int TBeing::doDisguise(const char *arg)
   }
   one_argument(arg, name_buf);
 
-  if (!*name_buf){
-    sendTo("If you want to disguise yourself as nothing at all, try hide!??\n\r");
-    return FALSE;
-  }
   rc = disguise(this, name_buf);
   if (rc)
     addSkillLag(SKILL_DISGUISE, rc);
@@ -466,7 +462,7 @@ struct PolyType DisguiseList[LAST_DISGUISE_MOB] =
 
 int disguise(TBeing *caster, char * buffer)
 {
-  int i, duration;
+  int i, duration, column=0;
   TMonster *mob;
   char buf[256];
   affectedData aff;
@@ -479,7 +475,9 @@ int disguise(TBeing *caster, char * buffer)
     return SPELL_FAIL;
   }
 
-#if 1
+  if(!*buffer)
+    caster->sendTo("You know how to apply the following disguises:\n\r");
+
   // Find not only the first match but the first match that
   // also works out in comparision to the thief.
   for (i = 0; (i < LAST_DISGUISE_MOB); i++) {
@@ -500,19 +498,26 @@ int disguise(TBeing *caster, char * buffer)
     if (DisguiseList[i].learning > caster->getSkillValue(SKILL_DISGUISE))
       continue;
 
-    if (!isname(buffer, DisguiseList[i].name))
+    if(!*buffer){
+      caster->sendTo("%-25s", DisguiseList[i].name);
+      if((column++)==2){
+	caster->sendTo("\n\r");
+	column=0;
+      }
+      continue;
+    } else if (!isname(buffer, DisguiseList[i].name))
       continue;
 
     break;
   }
-#else
-  for (i = 0; 
-        ((i < LAST_DISGUISE_MOB) && (!is_abbrev(buffer,DisguiseList[i].name)));
-        i++);
-#endif
+
+  if(!*buffer){
+    caster->sendTo("\n\r");
+    return FALSE;
+  }
 
   if (i >= LAST_DISGUISE_MOB) {
-    caster->sendTo("You havn't a clue where to start on that one.\n\r");
+    caster->sendTo("You haven't a clue where to start on that one.\n\r");
     return FALSE;
   }
 
