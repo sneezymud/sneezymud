@@ -251,8 +251,6 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
         k = this;
 
 
-      vlogf(LOG_PEEL, "got here");
-
       for (f = k->followers; f; f = f->next) {
 	if (inGroup(*f->follower) && sameRoom(*f->follower)) {
 	  groupcount++;
