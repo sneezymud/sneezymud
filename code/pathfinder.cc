@@ -282,10 +282,10 @@ bool findLeper::isTarget(int room) const
   rp = real_roomp(room);
 
   for (t = rp->getStuff(); t; t = t->nextThing) {
-    TBeing *ch = dynamic_cast<TBeing *>(t);
-    if (!ch || ch->isPc())
+    TMonster *leper = dynamic_cast<TMonster *>(t);
+    if (!leper)
       continue;
-    if (ch->hasDisease(DISEASE_LEPROSY))
+    if (leper->hasDisease(DISEASE_LEPROSY) || leper->spec==SPEC_LEPER)
       return true;
   }
   return false;
