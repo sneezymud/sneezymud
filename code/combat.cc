@@ -4672,6 +4672,8 @@ static int FRACT(TBeing *ch, TBeing *v)
       fract=(int)(fract*trophy_exp_mod(atof(row[1])));
 #endif
     }
+
+    mysql_free_result(res);
   }
 
 
