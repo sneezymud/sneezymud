@@ -53,12 +53,15 @@ int HoldemGame::handValue(HoldemPlayer *hp){
   for(i=0;i<4;++i)
     flush[i]=0;
 
-  for(i=0;i<2;++i)
-    rank[hp->hand[i]->getSuit()][hp->hand[i]->getValAceHi()]=1;
+  for(i=0;i<2;++i){
+    if(hp->hand[i])
+      rank[hp->hand[i]->getSuit()][hp->hand[i]->getValAceHi()]=1;
+  }
   
-  for(i=0;i<5;++i)
-    rank[community[i]->getSuit()][community[i]->getValAceHi()]=1;
-
+  for(i=0;i<5;++i){
+    if(community[i])
+      rank[community[i]->getSuit()][community[i]->getValAceHi()]=1;
+  }
   
   for(i=0;i<15;++i){
     if(!rank[0][i] && !rank[1][i] && !rank[2][i] && !rank[3][i]){
@@ -73,7 +76,7 @@ int HoldemGame::handValue(HoldemPlayer *hp){
 	score[0]=i;
 
       // check for flush
-      if((flush[j]+=rank[j][i]) > 5){
+      if((flush[j]+=rank[j][i]) >= 5){
 	score[5]=i;
 	// flush
       }
@@ -154,7 +157,7 @@ void HoldemGame::showdown(TBeing *ch)
   } else {
     for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
       hands[i]=-1;
-      if(players[i]){
+      if(players[i] && players[i]->hand[0]){
 	hands[i]=handValue(players[i]);
 
 	act("$n's hand was:", FALSE, players[i]->ch, 0, 0, TO_ROOM);
@@ -327,11 +330,16 @@ int HoldemGame::playerHandCount()
 
 int HoldemGame::exitGame(const TBeing *ch)
 {
+  bool was_better=false;
+
   if (!ch->checkHoldem())
     return false;
 
   for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
     if(players[i] && players[i]->name == ch->name){
+      if(players[i]->name == players[better]->name)
+	was_better=true;
+
       ch->sendTo("You leave the hold'em table.\n\r");
       delete players[i];
       players[i]=NULL;
@@ -341,6 +349,15 @@ int HoldemGame::exitGame(const TBeing *ch)
 
   if(playerHandCount() == 1){
     showdown(players[firstPlayer()]->ch);
+  } else if(was_better && state!=STATE_NONE){
+    int tmp=-1;
+    if((tmp=nextBetter(better))!=-1){
+      better=tmp;
+      act("The bet moves to $n.", FALSE, players[better]->ch, 0, 0, TO_ROOM);
+      players[better]->ch->sendTo(COLOR_BASIC, "You can <c>raise<1>, <c>fold<1> or <c>call<1>.\n\r");
+    } else {
+      nextRound(players[better]->ch);
+    }
   }
   
   return false;
@@ -370,8 +387,9 @@ bool HoldemGame::isPlaying(const TBeing *ch) const
 HoldemPlayer *HoldemGame::getPlayer(const sstring &name) const
 {
   for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
-    if(players[i] && players[i]->name == name)
+    if(players[i] && players[i]->name == name){
       return players[i];
+    }
   }
 
   return NULL;
@@ -397,7 +415,7 @@ void HoldemGame::peek(const TBeing *ch) const
 
   HoldemPlayer *tmp = getPlayer(ch->name);
 
-  if(!tmp->hand[0] || !tmp->hand[1]){
+  if(tmp->hand[0] && tmp->hand[1]){
     ch->sendTo(COLOR_BASIC, "You peek at your hand:\n\r");
     ch->sendTo(COLOR_BASIC, "%s\n\r", tmp->hand[0]->getName());
     ch->sendTo(COLOR_BASIC, "%s\n\r", tmp->hand[1]->getName());
@@ -526,7 +544,7 @@ void HoldemGame::raise(TBeing *ch)
   ssprintf(buf, "$n raises with %s. [%i]", 
 	   chipl[0]->getName(), chipl.size());
   act(buf, FALSE, ch, 0, 0, TO_ROOM);
-  ssprintf(buf, "You raises with %s. [%i]", 
+  ssprintf(buf, "You raise with %s. [%i]", 
 	   chipl[0]->getName(), chipl.size());
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
   bet += chip->obj_flags.cost * chipl.size();

@@ -390,6 +390,10 @@ class HoldemGame : public CardGame {
     state=STATE_NONE;
   }
 
+  HoldemPlayer *getBetter(){return players[better];}
+  int getNRaises(){ return nraises;}
+  int getLastBet(){return last_bet;}
+  holdemStateT getState(){return state;}
   int handValue(HoldemPlayer *);
   void nextRound(TBeing *ch);
   int nextBetter(int);

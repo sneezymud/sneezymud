@@ -158,7 +158,8 @@ const int SPEC_ELEVATOR_OP        =173;
 const int SPEC_ELEVATOR_GUARD     =174;
 const int SPEC_LOTTERY_REDEEMER   =175;
 const int SPEC_KONASTIS_GUARD     =176;
-const int NUM_MOB_SPECIALS        =177;
+const int SPEC_HOLDEM_PLAYER      =177;
+const int NUM_MOB_SPECIALS        =178;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

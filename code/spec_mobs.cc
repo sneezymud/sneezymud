@@ -7581,6 +7581,89 @@ int konastisGuard(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
 }
 
 
+int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
+{
+  if(cmd != CMD_GENERIC_QUICK_PULSE)
+    return false;
+
+  if (!me->checkHoldem(true))
+    return false;
+
+  if(!gHoldem.isPlaying(me)){
+    gHoldem.enter(me);
+    return false;
+  }
+
+  HoldemPlayer *hp=gHoldem.getPlayer(me->name);
+
+  if(gHoldem.getBetter() != hp)
+    return false;
+
+  int handval=gHoldem.handValue(hp);
+  TObj *chip;
+  vector <TObj *> chipl;
+
+  if(gHoldem.getLastBet()){
+    for(int i=0;i<gHoldem.getNRaises();++i){
+      chip=read_object(gHoldem.getLastBet(), VIRTUAL);
+      *me += *chip;
+      chipl.push_back(chip);
+    }
+  } else {
+    return false;
+  }
+
+  switch(gHoldem.getState()){
+    case STATE_NONE:
+      break;
+    case STATE_DEAL:
+      if(handval > 15 && ::number(0,1)){
+	me->doRaise("",CMD_RAISE);
+	return true;
+      } else if((hp->hand[0]->getValAceHi() >= 10) &&
+		(hp->hand[1]->getValAceHi() >= 10)){
+	if(::number(0, 4)){
+	  me->doStay();
+	  return true;
+	} else {
+	  me->doRaise("",CMD_RAISE);
+	  return true;
+	}
+      } else if(::number(0,2)){
+	me->doCall("");
+	return true;
+      }
+      break;
+    case STATE_FLOP:
+      if(handval > 30 && ::number(0,1)){
+	me->doRaise("", CMD_RAISE);
+	return true;
+      } else if(handval > 15 || !::number(0,4)){
+	me->doCall("");
+	return true;
+      }
+      break;
+    case STATE_TURN:
+    case STATE_RIVER:
+      if(handval > 45 && ::number(0,1)){
+	me->doRaise("",CMD_RAISE);
+	return true;
+      } else if(handval > 15 || !::number(0,4)){
+	me->doCall("");
+	return true;
+      }
+      break;
+    }
+
+  for(unsigned int i=0;i<chipl.size();++i){
+    (*chipl[i])--;
+    delete chipl[i];
+  }
+  
+  me->doFold("");
+  return true;
+}
+
 
 extern int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
 extern int tudy(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
@@ -7772,6 +7855,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "commodity maker", commodMaker}, // 175
   {FALSE, "lottery redeemer", lotteryRedeemer},
   {FALSE, "konastis's guard", konastisGuard},
+  {FALSE, "hold'em player", holdemPlayer},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
