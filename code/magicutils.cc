@@ -1,25 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: magicutils.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/10/10 20:48:29  batopr
-// Fixed crash bug in rawSummon
-//
-// Revision 1.2  1999/10/09 04:20:55  batopr
-// rawSummon has disturbMeditation now
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//
+// magicutils.cc
 
 #include "stdsneezy.h"
 #include "disease.h"
@@ -47,7 +26,7 @@ void TMonster::balanceMakeNPCLikePC()
 
   // modify damage capacity
   float daml = getDamLevel();
-  daml /= conv_num;
+  daml /= (conv_num * 1.5);
   setDamLevel(daml);
 
   // leave AC alone, should be OK
@@ -262,7 +241,17 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe)
   if (discArray[s]->fadeAwayRoom)
     act(discArray[s]->fadeAwayRoom, TRUE, this, 0, 0, TO_ROOM);
 
-  if (s == SPELL_ENSORCER) {
+  if (s == SPELL_ENSORCER ||
+      s == SPELL_CONJURE_AIR ||
+      s == SPELL_CONJURE_EARTH ||
+      s == SPELL_CONJURE_FIRE ||
+      s == SPELL_CONJURE_WATER ||
+      s == SPELL_CREATE_GOLEM ||
+      s == SPELL_CONTROL_UNDEAD ||
+      s == SPELL_VOODOO ||
+      s == SPELL_CACAODEMON ||
+      s == SPELL_RESURRECTION ||
+      s == SPELL_DANCING_BONES) {
     rc = checkDecharm(FORCE_NO, safe);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -317,16 +306,16 @@ int TBeing::checkDecharm(forceTypeT force, safeTypeT safe)
     }
     if (!isElemental) {
       if (m) {
-        act("$n looks elated as you release $m into The World.",
+        act("$n looks elated as you release $m into the world.",
             TRUE, this, NULL, m, TO_VICT);
-        act("$n looks elated as $e is released into The World.",
+        act("$n looks elated as $e is released into the world.",
             TRUE, this, NULL, m, TO_NOTVICT);
-        act("You feel free as your master releases you into The World.",
+        act("You feel free as your master releases you into the world.",
             TRUE, this, NULL, m, TO_CHAR);
       } else {
-        act("$n is released into The World.",
+        act("$n is released into the world.",
             TRUE, this, NULL, NULL, TO_ROOM);
-        act("You are released into The World.",
+        act("You are released into the world.",
             TRUE, this, NULL, NULL, TO_CHAR);
       }
       return FALSE;
@@ -366,7 +355,7 @@ TComponent *comp_from_object(TThing *item, spellNumT spell)
 
   item->findComp(&ret, spell);
 
-  TRealContainer *trc = dynamic_cast<TRealContainer *>(item);
+  TOpenContainer *trc = dynamic_cast<TOpenContainer *>(item);
   if (trc && trc->isClosed())
     return ret;
 
@@ -380,13 +369,14 @@ TComponent *comp_from_object(TThing *item, spellNumT spell)
 // This only returns components that are for spell-casting
 TComponent *TBeing::findComponent(spellNumT spell) const
 {
-  TThing *primary, *secondary, *belt, *inventory;
+  TThing *primary, *secondary, *belt, *juju, *inventory;
   TComponent *item;
   wizardryLevelT wizlevel = WIZ_LEV_NONE;
 
   primary = heldInPrimHand();
   secondary = heldInSecHand();
   belt = equipment[WEAR_WAISTE];
+  juju = equipment[WEAR_NECK];
   inventory = stuff;
   item = NULL;
 
@@ -436,13 +426,15 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 	return NULL;
     }
   }
-  if (primary || secondary || belt || inventory) {
+  if (primary || secondary || belt || juju || inventory) {
     if (primary)
       item = comp_from_object(primary, spell);
     if (!item && secondary)
       item = comp_from_object(secondary, spell);
     if (!item && belt)
       item = comp_from_object(belt, spell);
+    if (!item && juju)
+      item = comp_from_object(juju, spell);
     if (!item && inventory) {
       TThing *t;
       for (t = stuff; t && !item; t = t->nextThing) {
@@ -492,13 +484,13 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
   for (i=0; (i<CompInfo.size()) && (o->getComponentSpell() != CompInfo[i].spell_num);i++);
 
   if (i>= CompInfo.size()) {
-    vlogf(9,"useComponent had problem finding component for %s",
+    vlogf(LOG_BUG,"useComponent had problem finding component for %s",
         o->getName());
     sendTo("Uh oh, something bogus happened.\n\r");
     return FALSE;
   }
   if (o->isPersonalized() && !isname(getName(), o->name)) {
-    vlogf(10, "Mage %s using component %s that was personalized but not theirs!!! Reprimand at once.", getName(), o->name); 
+    vlogf(LOG_MISC, "Mage %s using component %s that was personalized but not theirs!!! Reprimand at once.", getName(), o->name); 
     sendTo("You can't use a component that is personalized for someone else!");
     return FALSE;
   }
@@ -514,7 +506,7 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
       act(CompInfo[i].to_self, TRUE, this, o, 0, TO_CHAR);
       act(CompInfo[i].to_room, TRUE, this, o, 0, TO_ROOM);
     } else {
-      vlogf(10, "Bad component string.  component %d  (1)", i);
+      vlogf(LOG_BUG, "Bad component string.  component %d  (1)", i);
     }
   } else {
     if (*CompInfo[i].to_self && 
@@ -522,7 +514,7 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
       act(CompInfo[i].to_self, TRUE, this, o, 0, TO_CHAR);
       act(CompInfo[i].to_room, TRUE, this, o, 0, TO_ROOM);
     } else {
-      vlogf(10, "Bad component string.  component %d  (2)", i);
+      vlogf(LOG_BUG, "Bad component string.  component %d  (2)", i);
     }
   }
 
@@ -570,7 +562,7 @@ int TBeing::useComponentObj(TComponent *o, TObj *targ, checkOnlyT checkOnly)
   for (i=0; (i<CompInfo.size()) && (o->getComponentSpell() != CompInfo[i].spell_num);i++);
 
   if (i>= CompInfo.size()) {
-    vlogf(9,"useComponent had problem finding component for %s",
+    vlogf(LOG_BUG,"useComponent had problem finding component for %s",
         o->shortDescr);
     sendTo("Uh oh, something bogus happened.\n\r");
     return FALSE;
@@ -586,10 +578,10 @@ int TBeing::useComponentObj(TComponent *o, TObj *targ, checkOnlyT checkOnly)
       act(CompInfo[i].to_caster, TRUE, this, o, targ, TO_CHAR);
       act(CompInfo[i].to_other, TRUE, this, o, targ, TO_ROOM);
     } else {
-      vlogf(10, "Bad component string.  component %d  (3)", i);
+      vlogf(LOG_BUG, "Bad component string.  component %d  (3)", i);
     }
   } else {
-    vlogf(10, "Bad component string.  component %d  (4)", i);
+    vlogf(LOG_BUG, "Bad component string.  component %d  (4)", i);
   }
 
   if (o->getComponentCharges() > 1)
@@ -606,24 +598,6 @@ int TBeing::useComponentObj(TComponent *o, TObj *targ, checkOnlyT checkOnly)
     spelltask->component = TRUE;
   
   return 1;
-}
-
-void TContainer::powerstoneCheck(TOpal **topMax)
-{
-  TThing *t;
-
-  for (t = stuff; t; t = t->nextThing) {
-    t->powerstoneCheck(topMax);
-  }
-}
-
-void TContainer::powerstoneCheckCharged(TOpal **topMax)
-{
-  TThing *t;
-
-  for (t = stuff; t; t = t->nextThing) {
-    t->powerstoneCheckCharged(topMax);
-  }
 }
 
 TOpal *find_biggest_charged_powerstone(TBeing *ch)
@@ -644,16 +618,6 @@ TOpal *find_biggest_charged_powerstone(TBeing *ch)
     t->powerstoneCheckCharged(&stone);
   }
   return stone;
-}
-
-
-void TContainer::powerstoneMostMana(int *topMax)
-{
-  TThing *t;
-
-  for (t = stuff; t; t = t->nextThing) {
-    t->powerstoneMostMana(topMax);
-  }
 }
 
 int TBeing::mostPowerstoneMana() const
@@ -691,8 +655,38 @@ const char *describe_level(int n)
     return "extremely high level";
 }
 
-const char *describe_damage(int n)
+const char *describe_damage(int n, const TBeing *tBeing)
 {
+#if 1
+  if (!tBeing)
+    return "a perfect amount";
+
+  int tDiff = n - tBeing->GetMaxLevel();
+
+  if (tDiff < -20)
+    return "a horrid amount";
+  else if (tDiff < -15)
+    return "a sad amount";
+  else if (tDiff < -10)
+    return "a pathetic amount";
+  else if (tDiff < -5)
+    return "a decent amount";
+  else if (tDiff <= -1)
+    return "a near perfect amount";
+  else if (tDiff == 0)
+    return "a Perfect amount";
+  else if (tDiff <= 2)
+    return "a near perfect amount"; // This and -1 is where we confuse them.
+  else if (tDiff < 5)
+    return "a good amount";
+  else if (tDiff < 10)
+    return "a really good amount";
+  else if (tDiff < 15)
+    return "an extremely good amount";
+  else
+    return "way too much of an amount";
+
+#else
   if (n < 3)
     return "a trivial amount";
   else if (n < 8)
@@ -709,6 +703,7 @@ const char *describe_damage(int n)
     return "an awesome amount";
   else
     return "a unexplainable amount";
+#endif
 }
 
 const char *describe_armor(int n)
@@ -771,7 +766,7 @@ const char *what_does_it_open(const TKey *o)
     }
   }
   for (k = object_list; k; k = k->next)	{ // check if it opens an item 
-    TRealContainer *trc = dynamic_cast<TRealContainer *>(k);
+    TOpenContainer *trc = dynamic_cast<TOpenContainer *>(k);
     if (trc) {
       if (trc->getKeyNum() == vnum)
 	return "a container";
@@ -800,7 +795,7 @@ int TBeing::rawSummon(TBeing *v)
   act("$n has summoned you!", FALSE, this, NULL, v, TO_VICT);
   v->doLook("", CMD_LOOK);
 
-  if (!v->isPc() && (v->GetMaxLevel() > GetMaxLevel() + 3)) {
+  if (!v->isPc() && (v->GetMaxLevel() > GetMaxLevel())) {
     act("$N struggles, and all of $S items are destroyed!", TRUE, this, NULL, v, TO_CHAR);
     for (j = MIN_WEAR; j < MAX_WEAR; j++) {    // remove objects from victim 
       if (v->equipment[j] && 
@@ -847,8 +842,7 @@ int TBeing::rawSummon(TBeing *v)
   act("$n is exhausted from interplanar travel.", FALSE, v, NULL, NULL, TO_ROOM);
 
   // summon newbie to aggro zone far from GH, allow us to check for it
-  if (v->isPc())
-    vlogf(-1, "%s summoned %s to %s (%d)",
+  vlogf(LOG_SILENT, "%s summoned %s to %s (%d)",
           getName(), v->getName(), roomp->getName(), inRoom());
 
   if (v->riding) {
@@ -875,7 +869,7 @@ int TBeing::rawSummon(TBeing *v)
         act("$n sneers at $N. Uh oh...there's gonna be a RUMBLE!", 
              1, tmp, NULL, this, TO_NOTVICT);
 
-        rc = dynamic_cast<TMonster *>(tmp)->takeFirstHit(this);
+        rc = dynamic_cast<TMonster *>(tmp)->takeFirstHit(*this);
         if (IS_SET_DELETE(rc, DELETE_VICT)) {
           return DELETE_THIS;
         } else if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -926,6 +920,8 @@ int TThing::genericTeleport(silentTypeT silent, bool keepZone)
     if (rp->isRoomFlag(ROOM_PRIVATE))
       continue;
     if (rp->isRoomFlag(ROOM_HAVE_TO_WALK))
+      continue;
+    if (rp->isRoomFlag(ROOM_DEATH))
       continue;
     if (rp->isFlyingSector())
       continue;
@@ -996,6 +992,18 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
       break;
     case SPELL_CONJURE_WATER:
       level = (int) (1.0 * level);
+      break;
+    case SPELL_ENTHRALL_SPECTRE:
+      level = (int) (0.7 * level);
+      break;
+    case SPELL_ENTHRALL_GHAST:
+      level = (int) (0.7 * level);
+      break;
+    case SPELL_ENTHRALL_GHOUL:
+      level = (int) (0.8 * level);
+      break;
+    case SPELL_ENTHRALL_DEMON:
+      level = (int) (0.8 * level);
       break;
     default:
       forceCrash("Bad spellNumT (%d) to elementalFix", spell);
@@ -1118,6 +1126,11 @@ int TBeing::rawSleep(int level, int duration, int crit, saveTypeT save)
   aff.duration *= crit;
   aff.duration /= (save ? 2 : 1);
 
+  // we've already applied a raw immunity check to prevent entirely
+  // however, let immunities also decrease duration
+  aff.duration *= (100 - getImmunity(IMMUNE_SLEEP));
+  aff.duration /= 100;
+
   affectTo(&aff);
 
   if (getPosition() > POSITION_SLEEPING) {
@@ -1137,6 +1150,16 @@ int TBeing::rawSleep(int level, int duration, int crit, saveTypeT save)
   }
   setPosition(POSITION_SLEEPING);
 
+  // stop all fighting me too
+  TThing *t;
+  for (t = roomp->stuff; t; t = t->nextThing) {
+    TBeing *ch = dynamic_cast<TBeing *>(t);
+    if (!ch)
+      continue;
+    if (ch->fight() == this)
+      ch->stopFighting();
+  }
+ 
   return FALSE;
 }
 
@@ -1182,27 +1205,34 @@ int TBeing::dropBloodLimb(wearSlotT limb)
 // assumes you have already checked for immunites, etc
 int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent, checkImmunityT immcheck)
 {
-  affectedData af;
+  affectedData aff;
   char buf[256];
 
   mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR && 
              pos != HOLD_RIGHT && pos != HOLD_LEFT &&
              slotChance(pos), "Bogus slot on raw bleed");
 
+  // not sure what this is for???
   if (immcheck) {
     if (isImmune(IMMUNE_BLEED,
         duration == PERMANENT_DURATION ? 100 : (duration - 100)/6))
       return FALSE;
   }
 
-  af.type = AFFECT_DISEASE;
-  af.level = pos;
-  af.duration = duration;
-  af.location = APPLY_NONE;
-  af.modifier = DISEASE_BLEEDING;
-  af.bitvector = 0;
-  affectTo(&af);
-  disease_start(this, &af);
+  aff.type = AFFECT_DISEASE;
+  aff.level = pos;
+  aff.duration = duration;
+  aff.location = APPLY_NONE;
+  aff.modifier = DISEASE_BLEEDING;
+  aff.bitvector = 0;
+
+  // we've already applied a raw immunity check to prevent entirely
+  // however, let immunities also decrease duration
+  aff.duration *= (100 - getImmunity(IMMUNE_BLEED));
+  aff.duration /= 100;
+
+  affectTo(&aff);
+  disease_start(this, &aff);
 
   dropBloodLimb(pos);
 
@@ -1219,7 +1249,7 @@ int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent, checkImmun
 // assumes you have already checked for immunities, etc
 int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent, checkImmunityT immcheck)
 {
-  affectedData af;
+  affectedData aff;
   char buf[256];
 
   if (immcheck) {
@@ -1228,14 +1258,20 @@ int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent, checkImmu
       return FALSE;
   }
 
-  af.type = AFFECT_DISEASE;
-  af.level = pos;
-  af.duration = duration;
-  af.modifier = DISEASE_INFECTION;
-  af.location = APPLY_NONE;
-  af.bitvector = 0;
-  affectTo(&af);
-  disease_start(this, &af);
+  aff.type = AFFECT_DISEASE;
+  aff.level = pos;
+  aff.duration = duration;
+  aff.modifier = DISEASE_INFECTION;
+  aff.location = APPLY_NONE;
+  aff.bitvector = 0;
+
+  // we've already applied a raw immunity check to prevent entirely
+  // however, let immunities also decrease duration
+  aff.duration *= (100 - getImmunity(IMMUNE_DISEASE));
+  aff.duration /= 100;
+
+  affectTo(&aff);
+  disease_start(this, &aff);
 
   if (!silent) {
     sendTo("Your %s has become totally infected!\n\r", describeBodySlot(pos).c_str());
@@ -1252,7 +1288,7 @@ void TBeing::spellMessUp(spellNumT spell)
   int type = 0;
 
   if (!discArray[spell] || !*discArray[spell]->name) {
-    vlogf(5,"Bad spell/skill number in spellMessUp %d", spell);
+    vlogf(LOG_BUG,"Bad spell/skill number in spellMessUp %d", spell);
     return;
   }
 
@@ -1285,7 +1321,7 @@ void TBeing::spellMessUp(spellNumT spell)
     case DISC_DEIKHAN:
       type = 1;
     default:
-      vlogf(7, "Undefined spell (%d) in spellMessUp", spell);
+      vlogf(LOG_BUG, "Undefined spell (%d) in spellMessUp", spell);
       return;
   }
 #endif
@@ -1400,15 +1436,12 @@ void TBeing::nothingHappens(silentTypeT silent_caster) const
                  FALSE, this, NULL, NULL, TO_ROOM);
       break;
     case 4:
-#if 0
-// bitching and moaning from PCs - removed for time being
       if (!silent_caster)
         act("Nope, nuh uh, nada, zip, the big mage fizzle.",
                  FALSE, this, NULL, NULL, TO_CHAR);
       act("Chant, chant, wave hands, wave hands, mages suck.",
                  FALSE, this, NULL, NULL, TO_ROOM);
       break;
-#endif
     case 5:
       if (!silent_caster)
         act("Damn!  Missed again.",
@@ -1495,9 +1528,9 @@ void TBeing::nothingHappens(silentTypeT silent_caster) const
       break;
     case 17:
       if (!silent_caster)
-        act("You manage to produce a bouquet of illusionary flowers.",
+        act("DAMN! Screwed up again!.",
                  FALSE, this, NULL, NULL, TO_CHAR);
-      act("$n's magic has produced a bouquet of illusionary flowers.",
+      act("Chant...Chant...Wave hands...Wave hands...Mages suck!",
                  FALSE, this, NULL, NULL, TO_ROOM);
       break;
   }
@@ -1531,23 +1564,23 @@ bool genericBless(TBeing *c, TBeing *v, int level, bool crit)
 
   aff1.type = SPELL_BLESS;
   aff1.level = level;
-  aff1.duration = (1 + level) * UPDATES_PER_TICK;
+  aff1.duration = (1 + level) * UPDATES_PER_MUDHOUR;
   aff1.location = APPLY_SPELL_HITROLL;
   aff1.modifier = 10;
   aff1.bitvector = 0;
 
   aff2.type = aff1.type;
   aff2.level = level;
-  aff2.duration = (1 + level) * UPDATES_PER_TICK;
+  aff2.duration = (1 + level) * UPDATES_PER_MUDHOUR;
   aff2.location = APPLY_IMMUNITY;
   aff2.modifier = IMMUNE_NONMAGIC;
   aff2.modifier2 = 5;
   aff2.bitvector = 0;
 
   if (crit) {
-    aff1.duration += 9 * UPDATES_PER_TICK;
+    aff1.duration += 9 * UPDATES_PER_MUDHOUR;
     aff1.modifier = 2;
-    aff2.duration += 9 * UPDATES_PER_TICK;
+    aff2.duration += 9 * UPDATES_PER_MUDHOUR;
     aff2.modifier2 *= 2;
   }
 
@@ -1565,7 +1598,7 @@ bool genericBless(TBeing *c, TBeing *v, int level, bool crit)
   return success;
 }
 
-void genericDisease(TBeing *v, int level)
+void genericDisease(TBeing *vict, int level)
 {
   // assumes check for isImmune already made
   affectedData aff;
@@ -1577,23 +1610,29 @@ void genericDisease(TBeing *v, int level)
 
   if (level < 30) {
     if (50 + level < ::number(0,99)) {
-      aff.duration = level * UPDATES_PER_TICK / 3;
+      aff.duration = level * UPDATES_PER_MUDHOUR / 3;
       aff.modifier = DISEASE_FLU;
     } else {
       aff.modifier = DISEASE_COLD;
-      aff.duration = level * UPDATES_PER_TICK / 3;
+      aff.duration = level * UPDATES_PER_MUDHOUR / 3;
     }
   } else {
     if (20 + level < ::number(0,99)) {
-      aff.duration = level * UPDATES_PER_TICK / 3;
+      aff.duration = level * UPDATES_PER_MUDHOUR / 3;
       aff.modifier = DISEASE_LEPROSY;
     } else {
       aff.modifier = DISEASE_FLU;
-      aff.duration = level * UPDATES_PER_TICK / 3;
+      aff.duration = level * UPDATES_PER_MUDHOUR / 3;
     }
   }
-  v->affectTo(&aff);
-  disease_start(v, &aff);
+
+  // we've already applied a raw immunity check to prevent entirely
+  // however, let immunities also decrease duration
+  aff.duration *= (100 - vict->getImmunity(IMMUNE_DISEASE));
+  aff.duration /= 100;
+
+  vict->affectTo(&aff);
+  disease_start(vict, &aff);
 }
 
 void genericCurse(TBeing *c, TBeing *v, int level, spellNumT spell)
@@ -1602,7 +1641,7 @@ void genericCurse(TBeing *c, TBeing *v, int level, spellNumT spell)
 
   aff1.type = spell;
   aff1.level = level;
-  aff1.duration = 24 * UPDATES_PER_TICK;    /* 1/2 mud day */
+  aff1.duration = 12 * UPDATES_PER_MUDHOUR;
   aff1.bitvector = AFF_CURSE;
   aff1.location = APPLY_SPELL_HITROLL;
   aff1.modifier = - min(5, level/3);

@@ -2,17 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: low.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/09/15 22:22:37  peel
-// Set vnum for GENERIC_SMOKE to smoke dummy object.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -153,6 +142,7 @@ const short int ITEM_MOONGATE       = 5891;
 const short int OBJ_MINELIFT_UP    =  7085;
 const short int OBJ_MINELIFT_DOWN  =  7086;
 const short int OBJ_TALISMAN        = 9700;
+const short int OBJ_PILE_OFFAL      = 10030;  // horse poop, etc...
 const short int ITEM_RAINBOW_BRIDGE1 = 10041;
 const short int ITEM_RAINBOW_BRIDGE2 = 10042;
 const short int OBJ_HERALD          = 10543;
@@ -267,12 +257,15 @@ const short int MOB_RANGER_LORD    =3415;
 const short int MOB_SULTRESS	   =3459;
 const short int MOB_PETGUY_LOG     =3707;
 const short int MOB_ASSASSIN	   =3857;
+const short int MOB_SHAMAN_BULLY   =4304;
+const short int MOB_CHIEF_AARAKOCRA =4745;
 const short int MOB_ROC            =4791;
 const short int MOB_DRAGON_GOLD    =4796;
 const short int MOB_RALIKI         =4822 ;
 const short int MOB_PHOENIX        =4847;
 const short int MOB_DRAGON_BRONZE  =4858;
 const short int MOB_SNAKE          =5112;
+const short int MOB_RAT_KING       =5131;
 const short int MOB_HOBBIT_ADVENTURER     =5347;
 const short int MOB_OVERLORD	   =5443;
 const short int MOB_MARCUS	   =5555;
@@ -308,6 +301,7 @@ const short int MOB_CHEETAH        =8511;
 const short int MOB_ELEPHANT       =8525;
 const short int MOB_MEDICINE_MAN   =8677;
 const short int MOB_PETGUY_AMB     =8701;
+const short int MOB_RANGER_AMBER   =8704;
 const short int MOB_DWARVEN_AMBASSADOR =8784;
 const short int MOB_LENGE_MERCHANT =8796;
 const short int MOB_YOLA	   =9148;
@@ -317,6 +311,7 @@ const short int MOB_RAULDOPLIC     =9322;
 const short int MOB_ABNOR	   =9326;
 const short int MOB_GRIZWALD	   =9331;
 const short int MOB_MOAT_MONSTER   =9700;
+const short int MOB_CLERIC_VOLCANO =9727;
 const short int MOB_ASH            =9954;
 const short int MOB_FREEZING_MIST  =10022;
 const short int MOB_GERSARD        =10119;
@@ -367,6 +362,7 @@ const short int MOB_SEA_LION       =20430;
 const short int MOB_AQUATIC_DRAGON =22517;
 const short int MOB_SPIRIT_OF_WARRIOR =22518;
 const short int MOB_LOGRUS_INITIATION = 22713;
+const short int MOB_CLERIC_ARDEN   =23209;
 const short int MOB_DRAGON_CLOUD   =23633;
 const short int MOB_LORTO	   =28876;
 const short int MOB_HERMIT_GHPARK  =25404;
@@ -376,10 +372,22 @@ const short int MOB_GNOME_CHILD    =22419;
 const short int MOB_GNOME_FARMHAND =22421;
 const short int MOB_JOHN_RUSTLER   =22427;
 const short int MOB_CALDONIA       =24100;
-
+const short int MOB_ELDERLY_SHAMAN =30701;
+const short int MOB_CHIEF_MALE_VILLAGER =30702;
+const short int MOB_ANCESTOR_SPIRIT_APPARATION =30713;
+const short int THRALL_SPECTRE     =31300;
+const short int THRALL_GHAST       =31301;
+const short int THRALL_GHOUL       =31302;
+const short int THRALL_DEMON       =31303;
+const short int MOB_JUJU_BUNNY     =4497;
+const short int MOB_JUJU_MARE      =31307;
+const short int MOB_JUJU_TETRARCH  =15104;
 
 
 #endif
+
+
+
 
 
 

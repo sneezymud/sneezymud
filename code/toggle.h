@@ -2,13 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: toggle.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -138,6 +131,7 @@ const int TOG_DEVASTATOR_CHEAT_NESMUM = 79;
 
 const int TOG_SPELL_READ_MAGIC = 80;
 
+const int TOG_DEVASTATOR_KILL_ABNOR = 87; // before toggle 63 chronologically
 const int TOG_DEVASTATOR_HAS_DEVASTATOR = 96;
 
 //Toggles for the Spirit of the Warrior Quest
@@ -210,6 +204,19 @@ const int TOG_MONK_GREEN_STARTED    = 152;
 const int TOG_MONK_GREEN_FALLING    = 153;
 const int TOG_MONK_GREEN_FALLEN     = 154;
 const int TOG_MONK_GREEN_OWNED      = 156;
+
+const int TOG_MONK_RED_ELIGIBLE     = 81;
+const int TOG_STARTED_MONK_RED      = 82;
+const int TOG_FINISHED_MONK_RED     = 83;
+const int TOG_HAS_MONK_RED          = 84;
+
+const int TOG_MONK_BLACK_ELIGIBLE   = 215;
+const int TOG_MONK_BLACK_STARTED    = 216;
+const int TOG_MONK_BLACK_FINISHED   = 217;
+const int TOG_MONK_BLACK_OWNED      = 218;
+
+
+const int TOG_GAVE_ESSENCE_RAT_KING = 155; // non-monk toggle reused per request
 
 const int TOG_MAGE_BELT_ELIGIBLE    = 157;
 const int TOG_MAGE_BELT_STARTED     = 158;
@@ -287,14 +294,28 @@ const int TOG_FACTIONS_ELIGIBLE     = 213;
 
 const int TOG_BOUGHT_CALDONIA_SHOT  = 214;
 
+// Warrior lvl 40 quest
+
+const int TOG_ELIGIBLE_WARRIOR_L41 = 219; //f
+const int TOG_KILL_SHAMAN = 220; // c
+const int TOG_KILL_CHIEF = 221;
+const int TOG_GAVE_HEAD_CHIEF = 222; // d
+const int TOG_FINISHED_WARRIOR_L41 = 223; //b
+
+// Shaman level 15 juju bag quest
+
+const int TOG_ELIGABLE_JUJU = 224;
+const int TOG_GET_THONG = 225;
+const int TOG_MARE_HIDE = 226;
+const int TOG_GET_SINEW = 227;
+const int TOG_GET_BEADS = 228;
+const int TOG_DONE_JUJU = 229;
+
+
 // please recycle these toggles before assigning new ones
-const int TOG_IMMORTAL_SHOW = 81;
-const int TOG_IMMORTAL_LOW =  82;
-const int TOG_IMMORTAL_OED =  83;
-const int TOG_IMMORTAL_LOAD =  84;
 const int TOG_IMMORTAL_STAT =  85;
 const int TOG_IMMORTAL_LOGS =  86;
-const int TOG_IMMORTAL_BLANK_1 = 87; //toggles 87-96 are blank
+                                     //toggles 88-96 are blank
 const int TOG_IMMORTAL_BLANK_2 = 88; //reserved for later immortal toggles
 const int TOG_IMMORTAL_BLANK_3 = 89;
 const int TOG_IMMORTAL_BLANK_4 = 90;
@@ -304,13 +325,14 @@ const int TOG_IMMORTAL_BLANK_7 = 93;
 const int TOG_IMMORTAL_BLANK_8 = 94;
 const int TOG_IMMORTAL_BLANK_9 = 95;
 const int TOG_IMMORTAL_BLANK_10 = 96;
-const int TOG_MONK_GREEN_FINISHED   = 155;
 // end recycle
 
-const int MAX_TOG_INDEX       = 215;  // move and change
+const int MAX_TOG_INDEX       = 230;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 
 #endif
+
+
 
 

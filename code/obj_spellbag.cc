@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: obj_spellbag.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -64,16 +56,18 @@ bool TSpellBag::lowCheckSlots(silentTypeT silent)
 {
   // spellbags should be (take hold) or (take waist) or (take hold waiste)
   // no other combos allowed, although permit the throw flag too
+  // neck for juju
 
   unsigned int value = obj_flags.wear_flags;
   REMOVE_BIT(value, ITEM_THROW);
   REMOVE_BIT(value, ITEM_TAKE);
   REMOVE_BIT(value, ITEM_HOLD);
   REMOVE_BIT(value, ITEM_WEAR_WAISTE);
+  REMOVE_BIT(value, ITEM_WEAR_NECK);
 
   if (value != 0) {
     if (!silent)
-      vlogf(LOW_ERROR, "spellbag (%s) with bad wear slots: %d",
+      vlogf(LOG_LOW, "spellbag (%s) with bad wear slots: %d",
                  getName(), value);
     return true;
   }
@@ -104,3 +98,27 @@ void TSpellBag::findSomeComponent(TComponent **comp_gen, TComponent **comp_spell
     t->findSomeComponent(comp_gen, comp_spell, comp_brew, which, type);
 }
 
+void TSpellBag::getObjFromMeText(TBeing *tBeing, TThing *tThing, getTypeT tType, bool tFirst)
+{
+  --(*tThing);
+  *tBeing += *tThing;
+
+#if 1
+  act("You take $p from $P.",
+      FALSE, tBeing, tThing, this, TO_CHAR);
+  act("$n takes $p from $P.",
+      TRUE, tBeing, tThing, this, TO_ROOM);
+#else
+  if (tType == GETNULL || tType == GETALL || tType == GETOBJ || tType == GETOBJOBJ) {
+    act("You take $p from $P.",
+        FALSE, tBeing, tThing, this, TO_CHAR);
+    act("$n takes $p from $P.",
+        TRUE, tBeing, tThing, this, TO_ROOM);
+  } else if (tFirst) {
+    act("You begin to take from $p.",
+        FALSE, tBeing, this, NULL, TO_CHAR);
+    act("$n begins to take things from $p.",
+        FALSE, tBeing, this, NULL, TO_CHAR);
+  }
+#endif
+}

@@ -2,21 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: toggle.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//  SneezyMUD : toggle.cc
-// 
+//  toggle.cc
 //  Basic Toggle information
 //
 //////////////////////////////////////////////////////////////////////////
@@ -72,49 +58,49 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Silverclaw Quest: find silver dragon", MOB_DRAGON_SILVER},
   {"Silverclaw Quest: find Raliki", MOB_RALIKI},
   {"Silverclaw Quest: kill Raliki", MOB_RALIKI}, // 45 
-  {"Holy Devastator Quest:  find Ben", MOB_CREED}, 
+  {"Holy Devastator Quest:  find Miser Ben", MOB_CREED},
   {"Holy Devastator Quest:  took bribe", MOB_MISER_BEN},
   {"Holy Devastator Quest:  find opal", MOB_CREED},
   {"Holy Devastator Quest:  do riddle", MOB_CREED},
-  {"Holy Devastator Quest:  kill Ben", MOB_MISER_BEN},  // 50
-  {"Holy Devastator Quest:  find med", MOB_SPARTAGUS}, 
-  {"Holy Devastator Quest:  find crucifix", MOB_MEDICINE_MAN},
+  {"Holy Devastator Quest:  killed Miser Ben", MOB_MISER_BEN},  // 50
+  {"Holy Devastator Quest:  find medicine man", MOB_SPARTAGUS},
+  {"Holy Devastator Quest:  searching for crucifix", MOB_MEDICINE_MAN},
   {"Holy Devastator Quest:  found crucifix", MOB_PRIEST_HOLY},
   {"Holy Devastator Quest:  gave crucifix", MOB_MEDICINE_MAN},
-  {"Holy Devastator Quest:  kill pc", MOB_SPARTAGUS}, // 55
-  {"Holy Devastator Quest:  got wine", MOB_WORKER_WINERY}, 
-  {"Holy Devastator Quest:  do riddle2", MOB_TAILLE},
-  {"Holy Devastator Quest:  find sword", MOB_OVERLORD},
-  {"Holy Devastator Quest:  find ring", MOB_TAILLE},
-  {"Holy Devastator Quest:  forfeit vin", MOB_GRIZWALD}, // 60
-  {"Holy Devastator Quest:  nodeal", MOB_GANGMEMBER_GIBBETT},
-  {"Holy Devastator Quest:  took deal", MOB_GANGMEMBER_GIBBETT},
-  {"Holy Devastator Quest:  got info", MOB_ABNOR},
-  {"Holy Devastator Quest:  get flower", MOB_POACHER},
-  {"Holy Devastator Quest:  do riddle2", MOB_ASSASSIN}, // 65
-  {"Holy Devastator Quest:  find Lorto", MOB_YOLA}, 
-  {"Holy Devastator Quest:  a lie", MOB_LORTO},
-  {"Holy Devastator Quest:  find Sult", MOB_ABNOR},
-  {"Holy Devastator Quest:  find Bara", MOB_JAQUIN},
-  {"Holy Devastator Quest:  gave dress", MOB_BARARAKNA}, // 70
-  {"Holy Devastator Quest:  find Sloth", MOB_SULTRESS}, 
-  {"Holy Devastator Quest:  can get Devastator", MOB_NESMUM}, 
+  {"Holy Devastator Quest:  killed Spartagus", MOB_SPARTAGUS}, // 55
+  {"Holy Devastator Quest:  got wine", MOB_WORKER_WINERY},
+  {"Holy Devastator Quest:  answered Taille's riddle", MOB_TAILLE},
+  {"Holy Devastator Quest:  seaching for great sword <r>*Natural Load*<1>", MOB_OVERLORD},
+  {"Holy Devastator Quest:  find polished wooden ring <r>*Natural Load*<1>", MOB_TAILLE},
+  {"Holy Devastator Quest:  forfeit vindicator", MOB_GRIZWALD}, // 60
+  {"Holy Devastator Quest:  did not take gang member's deal", MOB_GANGMEMBER_GIBBETT},
+  {"Holy Devastator Quest:  took gang member's deal", MOB_GANGMEMBER_GIBBETT},
+  {"Holy Devastator Quest:  got deikhan shield info", MOB_ABNOR},
+  {"Holy Devastator Quest:  get flower <r>*Natural Load*<1>", MOB_POACHER},
+  {"Holy Devastator Quest:  answered assassin's riddle", MOB_ASSASSIN}, // 65
+  {"Holy Devastator Quest:  find Lorto", MOB_YOLA},
+  {"Holy Devastator Quest:  deceived Lorto", MOB_LORTO},
+  {"Holy Devastator Quest:  find Sultress", MOB_ABNOR},
+  {"Holy Devastator Quest:  find Bararakna", MOB_JAQUIN},
+  {"Holy Devastator Quest:  received dress of rites", MOB_BARARAKNA}, // 70
+  {"Holy Devastator Quest:  find Sloth", MOB_SULTRESS},
+  {"Holy Devastator Quest:  can get Devastator", MOB_NESMUM},
   {"Holy Devastator Quest:  cheat Miser Ben", MOB_MISER_BEN},
   {"Holy Devastator Quest:  cheat Spartagus", MOB_SPARTAGUS},
   {"Holy Devastator Quest:  cheat Marcus", MOB_MARCUS},    //75
   {"Holy Devastator Quest:  cheat Taille", MOB_TAILLE},
   {"Holy Devastator Quest:  cheat Abnor", MOB_ABNOR},
   {"Holy Devastator Quest:  cheat Sultress", MOB_SULTRESS},
-  {"Holy Devastator Quest:  cheat Nesmum", MOB_NESMUM}, 
+  {"Holy Devastator Quest:  cheat Nesmum", MOB_NESMUM},
   {"Has Skill:  Read Magic", MOB_NONE},  //80
-  {"Immortal Skill: Show", MOB_NONE},
-  {"Immortal Skill: Low", MOB_NONE},
-  {"Immortal Skill: Oed", MOB_NONE},
-  {"Immortal Skill: Load", MOB_NONE},
+  {"Monk Red Quest: Is Eligible", MOB_MONK_GM_LEVEL50},
+  {"Monk Red Quest: Started Quest", MOB_MONK_GM_LEVEL50},
+  {"Monk Red Quest: Finished Quest", MOB_NONE},
+  {"Monk Red Quest: Has Sash", MOB_MONK_GM_LEVEL50},
   {"Immortal Skill: Stat", MOB_NONE},     //85
   {"Immortal Skill: Logs", MOB_NONE},
-  {"", MOB_NONE},          // toggles 87-96 are open for future immortal toggles
-  {"", MOB_NONE},
+  {"Holy Devastator Quest:  find Abnor", MOB_GRIZWALD},
+  {"", MOB_NONE},       // toggles 88-96 are open for future immortal toggles
   {"", MOB_NONE},
   {"", MOB_NONE},   //90
   {"", MOB_NONE},
@@ -181,7 +167,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Monk Green Quest: started", MOB_MONK_GM_LEVEL40},
   {"Monk Green Quest: falling", MOB_NONE},
   {"Monk Green Quest: fallen", MOB_NONE},
-  {"", MOB_NONE}, // 155
+  {"Rat King Quest: Gave Essence to Rat King", MOB_RAT_KING}, // 155
   {"Monk Green Quest: owned", MOB_MONK_GM_LEVEL40},
   {"Mage Belt Quest: eligible", MOB_NONE},
   {"Mage Belt Quest: started", MOB_MAGE_GM_LEVEL15},
@@ -221,26 +207,50 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Mage Robe Quest: getting metal",  MOB_SIMON_SPELLCRAFTER},
   {"Mage Robe Quest: getting fabric", MOB_SIMON_SPELLCRAFTER},
   {"Mage Robe Quest: has mage robe", MOB_SIMON_SPELLCRAFTER},
-  {"", MOB_NONE}, // 195-212 reserved for Ranger Lvl 21 Quest
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"", MOB_NONE}, //200
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"", MOB_NONE}, //205
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"", MOB_NONE},
-  {"", MOB_NONE}, //210
-  {"", MOB_NONE},
-  {"", MOB_NONE},
+  {"Ranger L21 Quest: Eligible", MOB_NONE},  //195
+  {"Ranger L21 Quest: Started", MOB_RANGER_AMBER},
+  {"Ranger L21 Quest: Killed Volcano Cleric", MOB_NONE},
+  {"Ranger L21 Quest: Failed to kill Volcano Cleric", MOB_NONE},
+  {"Ranger L21 Quest: Proving self L21A", MOB_RANGER_AMBER},
+  {"Ranger L21 Quest: Seeking Arden Cleric", MOB_RANGER_AMBER},  //200
+  {"Ranger L21 Quest: Killed Arden Cleric", MOB_NONE},
+  {"Ranger L21 Quest: Failed to kill Arden Cleric", MOB_NONE},
+  {"Ranger L21 Quest: Proving self L21B", MOB_RANGER_AMBER},
+  {"Ranger L21 Quest: Seeking Aarakocra Chief", MOB_RANGER_AMBER},
+  {"Ranger L21 Quest: Talked to Aarakocra Chief", MOB_CHIEF_AARAKOCRA},  //205
+  {"Ranger L21 Quest: Got feathers", MOB_CHIEF_AARAKOCRA},
+  {"Ranger L21 Quest: Seeking two rabbit skins", MOB_RANGER_AMBER},
+  {"Ranger L21 Quest: Gave one rbbit skin", MOB_RANGER_AMBER},
+  {"Ranger L21 Quest: Seeking Bullywug Oil", MOB_RANGER_AMBER},
+  {"Ranger L21 Quest: Seeking Bandits in Bullywug", MOB_SHAMAN_BULLY},  //210
+  {"Ranger L21 Quest: Got Bullywug Oil", MOB_SHAMAN_BULLY},
+  {"Ranger L21 Quest: Finished Ranger L21 Quest", MOB_RANGER_AMBER},
   {"Faction Membership: eligible", MOB_NONE},
   {"Caldonia: bought her a shot of whisky", MOB_CALDONIA},
-  {"", MOB_NONE}, //215
+  {"", MOB_NONE},  // 215
+  {"", MOB_NONE},
+  {"", MOB_NONE},
+  {"", MOB_NONE},
+  {"Warrior L40 Quest: Eligable", MOB_NONE},                  
+  {"Warrior L40 Quest: Started", MOB_CHIEF_MALE_VILLAGER}, //220
+  {"Warrior L40 Quest: Killing Chief", MOB_ELDERLY_SHAMAN},
+  {"Warrior L40 Quest: Killing Shaman", MOB_ELDERLY_SHAMAN},
+  {"Warrior L40 Quest: Finished Warrior", MOB_CHIEF_MALE_VILLAGER},
+  {"Shaman L15 Juju: Eligable", MOB_NONE},
+  {"Shaman L15 Juju: Get Thong", MOB_JUJU_BUNNY},
+  {"Shaman L15 Juju: Get Mare Hide", MOB_JUJU_MARE},
+  {"Shaman L15 Juju: Get Sinew", MOB_NONE},
+  {"Shaman L15 Juju: Get Beaded Necklace", MOB_JUJU_TETRARCH},
+  {"Shaman L15 Juju: Has Juju", MOB_NONE},
+  {"", MOB_NONE}, 
 };
+
+
+
+
+
+
+
+
+
 

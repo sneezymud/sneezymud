@@ -535,7 +535,23 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
 	setQuestBit(TOG_MONK_BLACK_ELIGIBLE);
       }
       break;
-
+    case SHAMAN_LEVEL_IND:
+      if (getLevel(Class)>=15 &&
+            !hasQuestBit(TOG_ELIGABLE_JUJU) &&
+            !hasQuestBit(TOG_GET_THONG) &&
+            !hasQuestBit(TOG_MARE_HIDE) &&
+            !hasQuestBit(TOG_GET_SINEW) &&
+            !hasQuestBit(TOG_GET_BEADS) &&
+            !hasQuestBit(TOG_DONE_JUJU)) {
+	if(!silent){
+	  gm->doAction(name, CMD_BEAM);
+	  gm->doSay("Congratulations! You have earned the right to make a juju bag.");
+	  gm->doSay("It will aid in your communications with the loa as well as store components.");
+	  gm->doSay("Say 'juju bag' if you want more information on this quest.");
+	}
+	setQuestBit(TOG_ELIGABLE_JUJU);
+      }
+      break;
     case MAGE_LEVEL_IND:
       if (getLevel(Class)>=10 &&
             !hasQuestBit(TOG_MAGE_BELT_ELIGIBLE) &&
