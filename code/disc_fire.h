@@ -104,6 +104,7 @@ private:
 
     int protectionFromFire(TBeing *, TBeing *);
     int castProtectionFromFire(TBeing *, TBeing *);
+    void protectionFromFire(TBeing *, TBeing *, TMagicItem *);
     int protectionFromFire(TBeing *, TBeing *, int, byte);
 
 #endif
