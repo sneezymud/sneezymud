@@ -245,12 +245,11 @@ void TBaseClothing::setDefArmorLevel(float lev)
 
   armorPercs(&ac_perc, &str_perc);
 
-  new_acVal = (((lev * 25) * ac_perc) + ((NEWBIE_AC * ac_perc) +
-               (isPaired() ? 1.0 : 0.5)));
+  new_acVal = (((lev * 25) * ac_perc) + ((NEWBIE_AC * ac_perc))) * (isPaired() ? 2.0 : 1.0);
 
   new_strVal = (((lev * 1.1) / sqrt(BODY_STR / str_perc)) +
-                ((NEWBIE_STR * sqrt(str_perc / BODY_STR)) +
-                (isPaired() ? 1.0 : 0.5)));
+                ((NEWBIE_STR * sqrt(str_perc / BODY_STR)))) * 
+                (isPaired() ? 2.0 : 1.0);
 
   new_acVal  = min(1000.0, max(-1000.0, new_acVal ));
   new_strVal = min( 100.0, max(    0.0, new_strVal));

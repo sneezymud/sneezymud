@@ -1756,11 +1756,11 @@ int pager(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *ob2)
       ch->sendTo("You must have it equipped to use it!\n\r");
     else if (job->isOn) {
       act("$n discretely turns off $s $o.", TRUE, ch, o, 0, TO_ROOM);
-      ch->sendTo("You turn off your $o, trying to be very discrete about it.\n\r", fname(o->getName()).c_str());
+      ch->sendTo("You turn off your %s, trying to be very discrete about it.\n\r", fname(o->getName()).c_str());
       job->isOn = FALSE;
     } else {
       act("$n turns on $s $o, causing it to beep obnoxiously.", FALSE, ch, o, 0, TO_ROOM);
-      ch->sendTo("You turn on your $o, producing a series of annoying beeps.\n\r", fname(o->getName()).c_str());
+      ch->sendTo("You turn on your %s, producing a series of annoying beeps.\n\r", fname(o->getName()).c_str());
       job->isOn = TRUE;
     }
     return TRUE;
@@ -1801,7 +1801,7 @@ int ear_muffs(TBeing *, cmdTypeT cmd, const char *, TObj *o, TObj *ob2)
     // cast down and then up since ob2 is really a TBeing
     TThing *ttt = ob2;
     TBeing *tb = dynamic_cast<TBeing *>(ttt);
-    if (tb->isImmortal()) {
+    if (!tb->isImmortal()) {
       tb->sendTo("You fail.  Perhaps they are busy?\n\r");
       return TRUE;
     }
@@ -5625,6 +5625,328 @@ int force(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 }
 
+
+int frostSpear(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+
+  TBeing *ch;
+  
+  int rc, dam;
+
+  ch = genericWeaponProcCheck(vict, cmd, o, 3);
+  if (ch) {
+
+    
+    dam = ::number(4,10);
+    if (dam < 8) {
+      act("$p becomes covered with ice and freezes $n.",
+	  0, vict, o, 0, TO_ROOM, ANSI_CYAN);
+      act("$p becomes covered with ice and freezes you.",
+	  0, vict, o, 0, TO_CHAR, ANSI_CYAN);
+    } else {
+      act("$p becomes covered with ice and sends a violent chill through $n.",
+	  0, vict, o, 0, TO_ROOM, ANSI_BLUE);
+      act("$p becomes covered with ice and sends a violent chill through you.",
+	  0, vict, o, 0, TO_CHAR, ANSI_BLUE);
+    }
+    
+    rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
+    if (rc == -1)
+      return DELETE_VICT;
+    return TRUE;
+
+  }
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
+    char buf[256], buf2[256];
+    TBeing *vict = NULL;
+    arg = one_argument(arg, buf);
+    arg = one_argument(arg, buf2);
+    
+    if(!strcmp(buf, "chill") && !strcmp(buf2, "out")) {
+      if(ch->checkObjUsed(o)) {
+        act("You cannot use $p's powers again this soon.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return FALSE;
+      }
+      
+      if(!(vict = ch->fight())) {
+	act("You cannot use $p's powers unless you are fighting.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return FALSE;
+      }
+      
+      ch->addObjUsed(o, UPDATES_PER_MUDHOUR * 24);
+      
+      act("The point of $n's $o glows <b>a cold blue<1> as $e growls a <p>word of power<1>.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("$n steps back and points $p at $N!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+      act("<c>An incredibly cold ray erupts from $n's <b>$o<c>, and strikes $N full on!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+      act("$n steps back and points $p at you!  Uh oh!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+      act("<c>An incredibly cold ray erupts from $n's <b>$o<c>, and strikes you full on!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+      act("The point of your $o glows <b>a cold blue<1> as you growls, '<p>chill out<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("You step back and point $p at $N!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+      act("<c>An incredibly cold ray erupts from your <b>$o<c>, and strikes $N full on!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+      
+      
+      int dam = ::number(10,60);
+      rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
+      if (rc == -1)
+	return DELETE_VICT;
+      
+      return TRUE;
+    }
+
+  }
+  return FALSE;
+  
+}
+
+
+int iceStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+
+  TBeing *ch;
+
+  int rc, dam;
+
+  ch = genericWeaponProcCheck(vict, cmd, o, 3);
+  if (ch) {
+
+
+    dam = ::number(4,10);
+    if (dam < 8) {
+      act("$p becomes covered with ice and freezes $n.",
+          0, vict, o, 0, TO_ROOM, ANSI_CYAN);
+      act("$p becomes covered with ice and freezes you.",
+          0, vict, o, 0, TO_CHAR, ANSI_CYAN);
+    } else {
+      act("$p becomes covered with ice and sends a violent chill through $n.",
+          0, vict, o, 0, TO_ROOM, ANSI_BLUE);
+      act("$p becomes covered with ice and sends a violent chill through you.",
+          0, vict, o, 0, TO_CHAR, ANSI_BLUE);
+    }
+
+    rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
+    if (rc == -1)
+      return DELETE_VICT;
+    return TRUE;
+
+  }
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
+    char buf[256], buf2[256];
+    TBeing *vict = NULL;
+    arg = one_argument(arg, buf);
+    arg = one_argument(arg, buf2);
+
+    if(!strcmp(buf, "chill") && !strcmp(buf2, "out")) {
+      if(ch->checkObjUsed(o)) {
+        act("You cannot use $p's powers again this soon.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return FALSE;
+      }
+
+      if(!(vict = ch->fight())) {
+        act("You cannot use $p's powers unless you are fighting.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return FALSE;
+      }
+
+      ch->addObjUsed(o, UPDATES_PER_MUDHOUR * 24);
+
+      act("$n's $o glows <b>a cold blue<1> as $e growls a <p>word of power<1>.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("$n steps back and points $p at $N!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+      act("<b>An incredibly cold ray erupts from $n's <c>$o<b>, and strikes $N full on!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+      act("$n steps back and points $p at you!  Uh oh!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+      act("<b>An incredibly cold ray erupts from $n's <c>$o<b>, and strikes you full on!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+      act("Your $o glows <b>a cold blue<1> as you growls, '<p>chill out<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("You step back and point $p at $N!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+      act("<b>An incredibly cold ray erupts from your <c>$o<b>, and strikes $N full on!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+
+
+      int dam = ::number(10,60);
+      rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
+      if (rc == -1)
+        return DELETE_VICT;
+      
+      return TRUE;
+    }
+
+  }
+  return FALSE;
+
+}
+
+
+int frostArmor(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
+{
+  TBeing *ch;
+  int rc, dam;
+  wearSlotT t;
+  TObj *savedby=NULL;
+  char buf[256];
+
+  if(cmd != CMD_OBJ_BEEN_HIT || !v || !o)
+    return FALSE;
+  if(::number(0, 3))
+    return FALSE;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if (weapon && !material_nums[weapon->getMaterial()].conductivity)
+    savedby=weapon;
+  t=((!weapon || (weapon->eq_pos==HOLD_RIGHT))?WEAR_HAND_R:WEAR_HAND_L);
+  if(v->equipment[t] &&
+     !material_nums[v->equipment[t]->getMaterial()].conductivity)
+    savedby=dynamic_cast<TObj *>(v->equipment[t]);
+
+  act("$p <b>glows a cold blue<1> and <c>freezes<1> $n!<1>"
+      , 0, v, o, 0, TO_ROOM);
+  act("$p <b>glows a cold blue<1> and <c>freezes<1> you!<1>"
+      , 0, v, o, 0, TO_CHAR);
+
+  if(savedby){
+    sprintf(buf, "<k>Luckily, $s <1>$o<k> is not conductive and saves $m from harm.<1>");
+    act(buf, 0, v, savedby, 0, TO_ROOM);
+    sprintf(buf, "<k>Luckily, your <1>$o<k> is not conductive and saves you from harm.<1>");
+    act(buf, 0, v, savedby, 0, TO_CHAR);
+  } else {
+    dam = ::number(2, 10);
+
+    rc = ch->reconcileDamage(v, dam, DAMAGE_FROST);
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
+  }
+
+  return TRUE;
+}
+
+int arcticHeart(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TBeing *ch;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
+    char buf[256], buf2[256];
+    arg = one_argument(arg, buf);
+    arg = one_argument(arg, buf2);
+    if(!strcmp(buf, "blizzard") && !strcmp(buf2, "soul")) {
+      
+      if(ch->checkObjUsed(o)) {
+        act("You cannot use $p's powers again this soon.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return FALSE;
+      }
+
+      ch->addObjUsed(o, UPDATES_PER_MUDHOUR * 12);
+
+      act("$n grips $p in one hand, and utters the word, '<b>blizzard soul<1>'.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("<c>The $o glows for a moment, and a powerful <b>chill<1><c>runs through the room.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("You grip $p in one hand, and utter the word, '<b>blizzard soul<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("<c>The $o glows for a moment, and a powerful <b>chill<1><c>runs through the room.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+
+
+      changeWeatherT change = WEATHER_CHANGE_NONE;
+      weather_info.change = -10;
+      weather_info.pressure = 960;
+      AlterWeather(&change);
+
+      
+      ch->addToWait(combatRound(3));
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+
+int blizzardRing(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  int rc;
+
+  TBeing *ch;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
+    char buf[256], buf2[256];
+    arg = one_argument(arg, buf);
+    arg = one_argument(arg, buf2);
+    if(!strcmp(buf, "cold") && !strcmp(buf2, "shoulder")) {
+      if(ch->checkObjUsed(o)) {
+        act("You cannot use $p's powers again this soon.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return FALSE;
+      }
+
+      ch->addObjUsed(o, UPDATES_PER_MUDHOUR * 24);
+
+      act("$n's $o glows <b>a cold blue<1> as $e yells a <p>word of power<1>.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("<c>The air around <1>$n<c> seems to waver, then becomes <B>extremely cold<1><c>!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("<c>A blast of frigid air radiates from <1>$n<c>!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
+
+
+      act("Your $o glows <b>a cold blue<1> as you yell the word '<p>cold shoulder<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("<c>The air around you seems to waver, then becomes <B>extremely cold<1><c>!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("<c>A blast of frigid air radiates from you<c>!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+
+      TThing *t;
+      TBeing *vict = NULL;
+
+      for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
+        vict = dynamic_cast<TBeing *>(t);
+        if (!vict)
+          continue;
+        if (vict->fight() != ch)
+          continue;
+
+        if (vict->riding) {
+          act("The blast of <c>fro<b>zen <c>air<1> knocks $N from $S mount!",
+              TRUE,ch,o,vict,TO_CHAR,NULL);
+          act("The blast of <c>fro<b>zen <c>air<1> knocks $N from $S mount!",
+              TRUE,ch,o,vict,TO_NOTVICT,NULL);
+          act("<o>The blast of <c>fro<b>zen <c>air<1> knocks you from your mount!<1>",
+              TRUE,ch,o,vict,TO_VICT,NULL);
+          vict->dismount(POSITION_RESTING);
+
+        }
+        act("The blast of <c>fro<b>zen <c>air<1> from your $o slams $N into the $g, stunning $M!",
+            TRUE,ch,o,vict,TO_CHAR,NULL);
+        act("The blast of <c>fro<b>zen <c>air<1> from $n's $o slams $N into the $g, stunning $M!",
+            TRUE,ch,o,vict,TO_NOTVICT,NULL);
+        act("The blast of <c>fro<b>zen <c>air<1> from $n's $o slams you into the $g, stunning you!",
+            TRUE,ch,o,vict,TO_VICT,NULL);
+
+	int dam = ::number(10,60);
+	rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
+	if (rc == -1)
+	  return DELETE_VICT;
+
+
+
+        affectedData aff;
+
+        aff.type = SKILL_DOORBASH;
+        aff.duration = ONE_SECOND;
+        aff.bitvector = AFF_STUNNED;
+        vict->affectTo(&aff, -1);
+        if (vict->fight())
+          vict->stopFighting();
+      }
+      if (ch->fight())
+        ch->stopFighting();
+      return TRUE;
+    }
+  }
+  return FALSE;
+
+}
+
+
+
 int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 {
   int found=0;
@@ -6282,7 +6604,12 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "ghostly shiv", ghostlyShiv},
   {FALSE, "hammer set: peke", HSPeke},
   {FALSE, "hammer set: copsi", HSCopsi},
-  {FALSE, "hammer set: pendant", HSPendant},
+  {FALSE, "hammer set: pendant", HSPendant}, //110
+  {FALSE, "blizzard ring", blizzardRing}, 
+  {FALSE, "frost spear", frostSpear},
+  {FALSE, "ice staff", iceStaff},
+  {FALSE, "heart of the arctic", arcticHeart},
+  {FALSE, "frost armor", frostArmor}, // 115
   {FALSE, "last proc", bogusObjProc}
 };
 
