@@ -556,7 +556,7 @@ objs/actions.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/actions.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/actions.o: materials.h colorstring.h format.h obj_pool.h obj_base_cup.h
 objs/actions.o: obj_plant.h obj_expandable_container.h obj_open_container.h
-objs/actions.o: obj_base_container.h disc_sorcery.h
+objs/actions.o: obj_base_container.h disc_sorcery.h liquids.h
 objs/ai_assignskills.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/ai_assignskills.o: /usr/include/c++/3.4/bits/c++config.h
 objs/ai_assignskills.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -4379,7 +4379,8 @@ objs/cmd_look.o: /usr/include/c++/3.4/deque
 objs/cmd_look.o: /usr/include/c++/3.4/bits/stl_deque.h
 objs/cmd_look.o: /usr/include/c++/3.4/bits/deque.tcc game_crazyeights.h
 objs/cmd_look.o: game_drawpoker.h obj_base_corpse.h obj_base_container.h
-objs/cmd_look.o: obj_table.h obj_book.h obj_base_cup.h
+objs/cmd_look.o: obj_table.h obj_book.h obj_base_cup.h obj_drinkcon.h
+objs/cmd_look.o: liquids.h
 objs/cmd_low.o: /usr/include/c++/3.4/cmath
 objs/cmd_low.o: /usr/include/c++/3.4/bits/c++config.h
 objs/cmd_low.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -8891,6 +8892,7 @@ objs/db.o: obj_other_obj.h obj_potion.h obj_scroll.h obj_staff.h
 objs/db.o: obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
 objs/db.o: obj_vehicle.h obj_casino_chip.h obj_poison.h obj_handgonne.h
 objs/db.o: obj_egg.h obj_cannon.h obj_tooth_necklace.h obj_trash_pile.h
+objs/db.o: liquids.h
 objs/disc_adv_adventuring.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/disc_adv_adventuring.o: /usr/include/c++/3.4/bits/c++config.h
 objs/disc_adv_adventuring.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -11915,7 +11917,7 @@ objs/disc_murder.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/disc_murder.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/disc_murder.o: format.h combat.h spelltask.h disc_murder.h obj_tool.h
 objs/disc_murder.o: obj_general_weapon.h obj_base_weapon.h obj_base_cup.h
-objs/disc_murder.o: obj_arrow.h
+objs/disc_murder.o: obj_drinkcon.h obj_arrow.h liquids.h
 objs/disc_nature.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/disc_nature.o: /usr/include/c++/3.4/bits/c++config.h
 objs/disc_nature.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -17665,8 +17667,9 @@ objs/info.o: /usr/local/include/postgres_ext.h shop.h skillsort.h
 objs/info.o: obj_open_container.h obj_base_container.h obj_corpse.h
 objs/info.o: obj_base_corpse.h obj_bow.h obj_symbol.h obj_food.h obj_tool.h
 objs/info.o: obj_trap.h obj_arrow.h obj_base_weapon.h obj_general_weapon.h
-objs/info.o: obj_base_cup.h obj_base_clothing.h obj_magic_item.h obj_potion.h
-objs/info.o: obj_scroll.h obj_staff.h obj_wand.h
+objs/info.o: obj_base_cup.h obj_drinkcon.h obj_base_clothing.h
+objs/info.o: obj_magic_item.h obj_potion.h obj_scroll.h obj_staff.h
+objs/info.o: obj_wand.h liquids.h
 objs/inventory.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/inventory.o: /usr/include/c++/3.4/bits/c++config.h
 objs/inventory.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -17994,6 +17997,113 @@ objs/limits.o: /usr/include/c++/3.4/bits/stl_deque.h
 objs/limits.o: /usr/include/c++/3.4/bits/deque.tcc game_crazyeights.h
 objs/limits.o: game_drawpoker.h obj_base_container.h obj_food.h obj_bed.h
 objs/limits.o: obj_drinkcon.h obj_base_cup.h obj_opal.h
+objs/liquids.o: stdsneezy.h /usr/include/c++/3.4/cstdio
+objs/liquids.o: /usr/include/c++/3.4/bits/c++config.h
+objs/liquids.o: /usr/include/c++/3.4/bits/os_defines.h
+objs/liquids.o: /usr/include/c++/3.4/cstddef /usr/include/stddef.h
+objs/liquids.o: /usr/include/sys/cdefs.h /usr/include/sys/_null.h
+objs/liquids.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+objs/liquids.o: /usr/include/stdio.h /usr/include/c++/3.4/cstdlib
+objs/liquids.o: /usr/include/stdlib.h /usr/include/c++/3.4/ctime
+objs/liquids.o: /usr/include/time.h /usr/include/sys/timespec.h
+objs/liquids.o: /usr/include/sys/types.h /usr/include/machine/endian.h
+objs/liquids.o: /usr/include/sys/select.h /usr/include/sys/_sigset.h
+objs/liquids.o: /usr/include/sys/_timeval.h /usr/include/c++/3.4/cctype
+objs/liquids.o: /usr/include/ctype.h /usr/include/_ctype.h
+objs/liquids.o: /usr/include/c++/3.4/cassert /usr/include/assert.h
+objs/liquids.o: /usr/include/c++/3.4/cstring /usr/include/string.h
+objs/liquids.o: /usr/include/strings.h /usr/include/stdarg.h
+objs/liquids.o: /usr/include/c++/3.4/cmath
+objs/liquids.o: /usr/include/c++/3.4/bits/cpp_type_traits.h
+objs/liquids.o: /usr/include/math.h /usr/include/machine/_limits.h
+objs/liquids.o: /usr/include/c++/3.4/bits/cmath.tcc
+objs/liquids.o: /usr/include/c++/3.4/cerrno /usr/include/errno.h
+objs/liquids.o: /usr/include/c++/3.4/string
+objs/liquids.o: /usr/include/c++/3.4/bits/stringfwd.h
+objs/liquids.o: /usr/include/c++/3.4/bits/char_traits.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_algobase.h
+objs/liquids.o: /usr/include/c++/3.4/climits /usr/include/limits.h
+objs/liquids.o: /usr/include/sys/limits.h /usr/include/sys/syslimits.h
+objs/liquids.o: /usr/include/c++/3.4/new /usr/include/c++/3.4/exception
+objs/liquids.o: /usr/include/c++/3.4/iosfwd
+objs/liquids.o: /usr/include/c++/3.4/bits/c++locale.h
+objs/liquids.o: /usr/include/c++/3.4/clocale /usr/include/locale.h
+objs/liquids.o: /usr/include/c++/3.4/bits/c++io.h
+objs/liquids.o: /usr/include/c++/3.4/bits/gthr.h
+objs/liquids.o: /usr/include/c++/3.4/bits/gthr-default.h
+objs/liquids.o: /usr/include/pthread.h /usr/include/sys/time.h
+objs/liquids.o: /usr/include/sys/signal.h /usr/include/machine/signal.h
+objs/liquids.o: /usr/include/machine/trap.h /usr/include/sched.h
+objs/liquids.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/liquids.o: /usr/include/c++/3.4/bits/postypes.h
+objs/liquids.o: /usr/include/c++/3.4/cwchar /usr/include/wchar.h
+objs/liquids.o: /usr/include/stdint.h /usr/include/machine/_stdint.h
+objs/liquids.o: /usr/include/c++/3.4/bits/functexcept.h
+objs/liquids.o: /usr/include/c++/3.4/exception_defines.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_pair.h
+objs/liquids.o: /usr/include/c++/3.4/bits/type_traits.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_iterator_base_types.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_iterator_base_funcs.h
+objs/liquids.o: /usr/include/c++/3.4/bits/concept_check.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_iterator.h
+objs/liquids.o: /usr/include/c++/3.4/debug/debug.h
+objs/liquids.o: /usr/include/c++/3.4/memory
+objs/liquids.o: /usr/include/c++/3.4/bits/allocator.h
+objs/liquids.o: /usr/include/c++/3.4/bits/c++allocator.h
+objs/liquids.o: /usr/include/c++/3.4/ext/new_allocator.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_construct.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_uninitialized.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_raw_storage_iter.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_function.h
+objs/liquids.o: /usr/include/c++/3.4/bits/basic_string.h
+objs/liquids.o: /usr/include/c++/3.4/bits/atomicity.h
+objs/liquids.o: /usr/include/c++/3.4/bits/atomic_word.h
+objs/liquids.o: /usr/include/c++/3.4/algorithm
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_algo.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_heap.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_tempbuf.h
+objs/liquids.o: /usr/include/c++/3.4/bits/basic_string.tcc
+objs/liquids.o: /usr/include/c++/3.4/vector
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_vector.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_bvector.h
+objs/liquids.o: /usr/include/c++/3.4/bits/vector.tcc /usr/include/c++/3.4/map
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_tree.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_map.h
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_multimap.h
+objs/liquids.o: /usr/include/c++/3.4/list
+objs/liquids.o: /usr/include/c++/3.4/bits/stl_list.h
+objs/liquids.o: /usr/include/c++/3.4/bits/list.tcc
+objs/liquids.o: /usr/include/c++/3.4/iostream /usr/include/c++/3.4/ostream
+objs/liquids.o: /usr/include/c++/3.4/ios
+objs/liquids.o: /usr/include/c++/3.4/bits/localefwd.h
+objs/liquids.o: /usr/include/c++/3.4/bits/ios_base.h
+objs/liquids.o: /usr/include/c++/3.4/bits/locale_classes.h
+objs/liquids.o: /usr/include/c++/3.4/streambuf
+objs/liquids.o: /usr/include/c++/3.4/bits/streambuf.tcc
+objs/liquids.o: /usr/include/c++/3.4/bits/basic_ios.h
+objs/liquids.o: /usr/include/c++/3.4/bits/streambuf_iterator.h
+objs/liquids.o: /usr/include/c++/3.4/bits/locale_facets.h
+objs/liquids.o: /usr/include/c++/3.4/cwctype /usr/include/wctype.h
+objs/liquids.o: /usr/include/c++/3.4/bits/basic_ios.tcc
+objs/liquids.o: /usr/include/c++/3.4/bits/ostream.tcc
+objs/liquids.o: /usr/include/c++/3.4/locale
+objs/liquids.o: /usr/include/c++/3.4/bits/locale_facets.tcc
+objs/liquids.o: /usr/include/c++/3.4/limits /usr/include/c++/3.4/typeinfo
+objs/liquids.o: /usr/include/c++/3.4/istream
+objs/liquids.o: /usr/include/c++/3.4/bits/istream.tcc
+objs/liquids.o: /usr/include/c++/3.4/sstream
+objs/liquids.o: /usr/include/c++/3.4/bits/sstream.tcc
+objs/liquids.o: /usr/include/c++/3.4/fstream
+objs/liquids.o: /usr/include/c++/3.4/bits/basic_file.h
+objs/liquids.o: /usr/include/c++/3.4/bits/fstream.tcc sstring.h low.h enum.h
+objs/liquids.o: spells.h structs.h parse.h immunity.h discipline.h spell2.h
+objs/liquids.o: db.h ansi.h cmd_dissect.h client.h response.h faction.h
+objs/liquids.o: comm.h toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/liquids.o: body.h race.h skills.h disease.h trap.h task.h weather.h
+objs/liquids.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
+objs/liquids.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
+objs/liquids.o: account.h extern.h handler.h obj_money.h spec_mobs.h
+objs/liquids.o: materials.h colorstring.h format.h liquids.h
 objs/loadset.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/loadset.o: /usr/include/c++/3.4/bits/c++config.h
 objs/loadset.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -21177,7 +21287,8 @@ objs/obj_base_cup.o: disease.h trap.h task.h weather.h sound.h create.h
 objs/obj_base_cup.o: thing.h room.h obj.h spec_objs.h connect.h obj_drug.h
 objs/obj_base_cup.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/obj_base_cup.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
-objs/obj_base_cup.o: colorstring.h format.h obj_base_cup.h
+objs/obj_base_cup.o: colorstring.h format.h obj_base_cup.h obj_drinkcon.h
+objs/obj_base_cup.o: liquids.h
 objs/obj_base_light.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/obj_base_light.o: /usr/include/c++/3.4/bits/c++config.h
 objs/obj_base_light.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -22625,7 +22736,7 @@ objs/obj_cookware.o: charfile.h being.h person.h monster.h paths.h account.h
 objs/obj_cookware.o: extern.h handler.h obj_money.h spec_mobs.h materials.h
 objs/obj_cookware.o: colorstring.h format.h obj_cookware.h
 objs/obj_cookware.o: obj_open_container.h obj_base_container.h obj_pool.h
-objs/obj_cookware.o: obj_base_cup.h
+objs/obj_cookware.o: obj_base_cup.h liquids.h
 objs/obj_corpse.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/obj_corpse.o: /usr/include/c++/3.4/bits/c++config.h
 objs/obj_corpse.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -23427,7 +23538,8 @@ objs/obj_flame.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/obj_flame.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/obj_flame.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
 objs/obj_flame.o: obj_fuel.h obj_organic.h obj_trash.h obj_tool.h obj_flame.h
-objs/obj_flame.o: obj_base_light.h obj_light.h obj_drinkcon.h obj_base_cup.h
+objs/obj_flame.o: obj_base_light.h obj_light.h liquids.h obj_drinkcon.h
+objs/obj_flame.o: obj_base_cup.h
 objs/obj_food.o: /usr/include/c++/3.4/cmath
 objs/obj_food.o: /usr/include/c++/3.4/bits/c++config.h
 objs/obj_food.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -23536,7 +23648,7 @@ objs/obj_food.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/obj_food.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/obj_food.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/obj_food.o: materials.h colorstring.h format.h shop.h obj_food.h
-objs/obj_food.o: obj_base_cup.h obj_pool.h disc_aegis.h
+objs/obj_food.o: obj_base_cup.h liquids.h obj_pool.h disc_aegis.h
 objs/obj_food.o: disc_shaman_armadillo.h shopowned.h corporation.h
 objs/obj_fuel.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/obj_fuel.o: /usr/include/c++/3.4/bits/c++config.h
@@ -23876,7 +23988,7 @@ objs/obj_general_weapon.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/obj_general_weapon.o: monster.h paths.h account.h extern.h handler.h
 objs/obj_general_weapon.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/obj_general_weapon.o: format.h obj_general_weapon.h obj_base_weapon.h
-objs/obj_general_weapon.o: obj_gun.h shop.h shopowned.h
+objs/obj_general_weapon.o: obj_gun.h shop.h shopowned.h liquids.h
 objs/obj_gun.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/obj_gun.o: /usr/include/c++/3.4/bits/c++config.h
 objs/obj_gun.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -25762,6 +25874,7 @@ objs/obj_poison.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/obj_poison.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/obj_poison.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
 objs/obj_poison.o: obj_base_container.h obj_poison.h obj_base_cup.h shop.h
+objs/obj_poison.o: liquids.h
 objs/obj_pool.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/obj_pool.o: /usr/include/c++/3.4/bits/c++config.h
 objs/obj_pool.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -25870,6 +25983,7 @@ objs/obj_pool.o: sound.h create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/obj_pool.o: obj_drug.h charfile.h being.h person.h monster.h paths.h
 objs/obj_pool.o: account.h extern.h handler.h obj_money.h spec_mobs.h
 objs/obj_pool.o: materials.h colorstring.h format.h obj_pool.h obj_base_cup.h
+objs/obj_pool.o: liquids.h
 objs/obj_portal.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/obj_portal.o: /usr/include/c++/3.4/bits/c++config.h
 objs/obj_portal.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -26089,7 +26203,7 @@ objs/obj_potion.o: person.h monster.h paths.h account.h extern.h handler.h
 objs/obj_potion.o: obj_money.h spec_mobs.h materials.h colorstring.h format.h
 objs/obj_potion.o: obj_base_container.h obj_potion.h obj_base_cup.h shop.h
 objs/obj_potion.o: database.h /usr/local/include/libpq-fe.h
-objs/obj_potion.o: /usr/local/include/postgres_ext.h
+objs/obj_potion.o: /usr/local/include/postgres_ext.h liquids.h
 objs/obj_quiver.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/obj_quiver.o: /usr/include/c++/3.4/bits/c++config.h
 objs/obj_quiver.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -28517,8 +28631,8 @@ objs/offense.o: /usr/include/c++/3.4/bits/deque.tcc game_crazyeights.h
 objs/offense.o: game_drawpoker.h combat.h obj_spellbag.h
 objs/offense.o: obj_expandable_container.h obj_open_container.h
 objs/offense.o: obj_base_container.h obj_base_weapon.h obj_gun.h
-objs/offense.o: obj_general_weapon.h obj_base_cup.h obj_base_clothing.h
-objs/offense.o: obj_bag.h
+objs/offense.o: obj_general_weapon.h obj_base_cup.h obj_drinkcon.h
+objs/offense.o: obj_base_clothing.h obj_bag.h liquids.h
 objs/oldlimbs.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/oldlimbs.o: /usr/include/c++/3.4/bits/c++config.h
 objs/oldlimbs.o: /usr/include/c++/3.4/bits/os_defines.h
@@ -35395,7 +35509,7 @@ objs/spec_objs.o: obj_drinkcon.h obj_base_cup.h obj_potion.h obj_staff.h
 objs/spec_objs.o: obj_magic_item.h obj_wand.h disc_fire.h obj_note.h
 objs/spec_objs.o: pathfinder.h /usr/include/c++/3.4/deque
 objs/spec_objs.o: /usr/include/c++/3.4/bits/stl_deque.h
-objs/spec_objs.o: /usr/include/c++/3.4/bits/deque.tcc
+objs/spec_objs.o: /usr/include/c++/3.4/bits/deque.tcc liquids.h
 objs/spec_objs_ballot_box.o: stdsneezy.h /usr/include/c++/3.4/cstdio
 objs/spec_objs_ballot_box.o: /usr/include/c++/3.4/bits/c++config.h
 objs/spec_objs_ballot_box.o: /usr/include/c++/3.4/bits/os_defines.h
