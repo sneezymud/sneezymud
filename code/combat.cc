@@ -2548,12 +2548,12 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill)
      skill == SKILL_RANGED_PROF) {
     // other surprise attacks should be added here
     if(target->isWary())
-      mod /= 4;
+      mod -= 300;
     else {
       target->makeWary();
-      
     }
   }
+
   return hits(target, mod);
 }
 
