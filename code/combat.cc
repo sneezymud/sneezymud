@@ -4815,8 +4815,16 @@ static int FRACT(TBeing *ch, TBeing *v)
   fract=100;
 
   // modify for trophy now
-  if(ch->isPc() && !v->isPc()){
-    fract=(int)(fract*ch->trophy->getExpModVal(ch->trophy->getCount(v->mobVnum()), v->mobVnum()));
+  if(!v->isPc()){
+    float count;
+
+    if(ch->isPc()){
+      count=ch->trophy->getCount(v->mobVnum());
+      fract=(int)(fract*ch->trophy->getExpModVal(count, v->mobVnum()));
+    } else if(!ch->isPc() && ch->master && ch->master->isPc()){
+      count=ch->master->trophy->getCount(v->mobVnum());
+      fract=(int)(fract*ch->master->trophy->getExpModVal(count, v->mobVnum()));
+    }
   }
 
 
