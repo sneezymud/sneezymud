@@ -293,10 +293,14 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	    act("$n doesn't catch anything.",
 		TRUE, ch, NULL, 0, TO_ROOM);
 
+            // Don't reveal to the fisherman that there isn't any more fish
+            // in the room.
+            /*
 	    if(rp->getFished()>10){
 	      act("This place seems all fished out.",
 		  FALSE, ch, NULL, 0, TO_CHAR);
 	    }
+            */
 	  }
 	  ch->stopTask();
           break;
