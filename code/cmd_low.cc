@@ -535,17 +535,6 @@ double TMonster::determineExp()
   // arbitrary increase in exp because sneezy is so hard - bat 9-12-96
   d_exp *= stats.xp_modif;
 
-  // skip spec procs (trainers) where level is sometimes used to determine
-  // how special proc works
-  // also skip the "testmobs"
-  if (!UtilProcs(spec) && !GuildProcs(spec) && !isTestmob()) {
-    // correct true level to that of the "real_level"
-    real_level += 0.5;
-    real_level = max((float) 1.0, real_level);
-    int iRealLevel = (int) real_level;
-    fixLevels(iRealLevel);
-  }
-
   return (d_exp);
 }
 
