@@ -161,6 +161,49 @@ void TNote::thingDumped(TBeing *ch, int *)
   delete this;
 }
 
+int grimhavenDump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
+{
+  TThing *t, *t2;
+  TRoom *roomp;
+
+  if(cmd!=CMD_GENERIC_PULSE)
+    return FALSE;
+
+  if(!(roomp=real_roomp(18975))){
+    vlogf(LOG_BUG, "couldn't find sewage pipe in grimhavenDump!");
+    return FALSE;
+  }
+    
+
+  for (t = rp->getStuff(); t; t = t2) {
+    t2 = t->nextThing;
+    
+    // Only objs get nuked
+    TObj *obj = dynamic_cast<TObj *>(t);
+    if (!obj)
+      continue;
+    
+    // portals should not be nuked
+    if (dynamic_cast<TPortal *>(obj))
+      continue;
+    
+    if (obj->isObjStat(ITEM_NOJUNK_PLAYER))
+      continue;
+    
+    // nor should flares
+    if (obj->objVnum() == GENERIC_FLARE)
+      continue;
+    
+    sendrpf(rp, "A %s slides down the chute into the disposal pipe below.\n\r", fname(obj->name).c_str());
+    
+    obj->logMe(NULL, "Dump nuking");
+    
+    --(*obj);
+    *roomp += *obj;
+  }
+  return FALSE;
+}
+
 int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 {
   TThing *t, *t2;
@@ -2225,7 +2268,7 @@ void assign_rooms(void)
     {553, oft_frequented_room},
     {556, oft_frequented_room},
     {563, Donation},
-    {600, dump},
+    {600, grimhavenDump},
     {757, oft_frequented_room},
     {758, oft_frequented_room},
     {761, oft_frequented_room},

@@ -224,6 +224,10 @@ bool TObj::willFloat()
       isObjStat(ITEM_FLOAT))
     return TRUE;
 
+  // grimhaven sewer pipe - high pressure!
+  if(inRoom()==18982 || inRoom()==27250)
+    return TRUE;
+
   return FALSE;
 }
 
