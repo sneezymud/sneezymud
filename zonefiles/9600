@@ -12,14 +12,14 @@ D 0 9622 2 2                   Smuggler's Sleeping Area -> Secret Room
 D 0 9624 0 2                   Secret Room -> Smuggler's Sleeping Area
 
 *Remove these portal loads once Ship "moves" via code loaded portals
-O 0 9617 1 9611                Portal from Arden Dock into Ship
-O 0 9620 1 9612                Portal from Ship to Arden Dock
+O 0 9617 1 9611                 Portal from Arden Dock into Ship
+O 0 9620 1 9612                 Portal from Ship to Arden Dock
 
-O 0 9613 1 9600                a wall safe
+O 0 9613 1 9600                 a wall safe
 ? 0 15 0 P
 P 1 9624 4 9613                     a whale skin hood inside a wall safe
 
-O 0 9614 1 9603                a small wooden crate
+O 0 9614 1 9603                 a small wooden crate
 ? 0 5 0 P
 P 1 1559 9999 9614                  bright red scroll-small crate
 ? 0 5 0 P
@@ -37,12 +37,12 @@ P 1 12206 9999 9614                 rice paper scroll-small crate
 ? 0 50 0 P
 P 1 9622 9999 9614                  large moldy key-small crate
 
-O 0 9614 1 9603                a small wooden crate
-O 0 11434 9999 9618            a row of bunk beds
-O 0 6609 9999 9619             a large bunk-bed
-O 0 11434 9999 9621            a row of bunk beds
-O 0 11434 9999 9622            a row of bunk beds
-O 0 9612 9999 9624             a moldy chest
+O 0 9614 1 9603                 a small wooden crate
+O 0 11434 1 9618             a row of bunk beds
+O 0 6609 1 9619              a large bunk-bed
+O 0 11434 1 9621             a row of bunk beds
+O 0 11434 1 9622             a row of bunk beds
+O 0 9612 1 9624              a moldy chest
 ? 0 5 0 P
 P 1 9615 4 9612                     razor edged bone sliver-moldy chest
 ? 0 5 0 P

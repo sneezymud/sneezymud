@@ -12,20 +12,20 @@ D 0 24758 0 1
 D 0 24761 4 1 Trapdoor up to Mucluck's hut
 D 0 24762 5 1
 *Objects section, load once at boot time
-O 0 24700 1 24717 longberry bushes and berries
+O 0 24700 1 24717  longberry bushes and berries
 P 1 24703 1 24700
-O 0 24700 1 24718
+O 0 24700 1 24718 
 P 1 24703 1 24700
-O 0 24700 1 24727
+O 0 24700 1 24727 
 P 1 24703 1 24700
-O 0 24700 1 24729
+O 0 24700 1 24729 
 P 1 24703 1 24700
-O 0 24703 2 24717
-O 0 24701 1 24737 rocknut trees and nuts
+O 0 24703 1 24717 
+O 0 24701 1 24737  rocknut trees and nuts
 P 1 24706 1 24701
-O 0 24701 1 24738
+O 0 24701 1 24738 
 P 1 24706 1 24701
-O 0 24701 1 24742
+O 0 24701 1 24742 
 P 1 24706 1 24701
 B 0 24704 1 24702 blue lilies
 B 0 24704 2 24703
@@ -44,35 +44,35 @@ B 0 24705 1 24712
 B 0 24705 2 24746
 B 0 24705 1 24752
 B 0 24705 1 24751
-O 0 24702 1 24701 varicolored vines
-O 0 24702 1 24730
-O 0 24702 1 24731
-O 0 24702 1 24756
-O 0 24702 1 24714
-O 0 24702 2 24715
-O 0 24702 1 24716
-O 0 24702 1 24719
-O 0 24702 1 24744
-O 0 24702 1 24745
-O 0 24702 2 24769
-O 0 24702 1 24764
+O 0 24702 1 24701  varicolored vines
+O 0 24702 1 24730 
+O 0 24702 1 24731 
+O 0 24702 1 24756 
+O 0 24702 1 24714 
+O 0 24702 1 24715 
+O 0 24702 1 24716 
+O 0 24702 1 24719 
+O 0 24702 1 24744 
+O 0 24702 1 24745 
+O 0 24702 1 24769 
+O 0 24702 1 24764 
 B 0 24707 1 24766 spinefruit
 B 0 24707 1 24763
 ** Other objects lying around
-O 0 1370 1 24728 raft
-O 0 17101 1 24738 campfire
-O 0 17101 1 24717 campfire
-O 0 24771 1 24767 still
-O 0 24765 1 24762 shelf
+O 0 1370 1 24728  raft
+O 0 17101 1 24738  campfire
+O 0 17101 1 24717  campfire
+O 0 24771 1 24767  still
+O 0 24765 1 24762  shelf
 ? 0 50 0 P
 P 1 24761 1 24765 clear potion with clumps
 ? 0 50 0 P
 P 1 24762 1 24765 purple potion
-O 0 24766 1 24762 candelabra
-O 0 24767 1 24762 bed
-O 0 24768 1 24762 ogre sleeping pad
-O 0 24760 1 24762 short-legged table
-O 0 24719 1 24711 lily queen's throne
+O 0 24766 1 24762  candelabra
+O 0 24767 1 24762  bed
+O 0 24768 1 24762  ogre sleeping pad
+O 0 24760 1 24762  short-legged table
+O 0 24719 1 24711  lily queen's throne
 * loading mobs and equipment
 M 0 24700 1 24762 Mucluck
 H 1 1 2 hates humans

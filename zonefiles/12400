@@ -16,25 +16,25 @@ D 0 13499 3 1
 D 0 12509 5 1           ; Door to Castaway on Island
 D 0 12400 4 1
 
-O 0 12452 1 12752	; Map in a Bottle
+O 0 12452 1 12752 	; Map in a Bottle
 
-O 0 12453 100 12452	; Wood Planks
-O 0 12453 100 12541	; Wood Planks
-O 0 12453 100 13021	; Wood Planks
+O 0 12453 1 12452 	; Wood Planks
+O 0 12453 1 12541 	; Wood Planks
+O 0 12453 1 13021 	; Wood Planks
 
-O 0 12455 300 12441	; Fancy Shell
-O 0 12455 300 12796	; Fancy Shell
-O 0 12455 300 12534	; Fancy Shell
-O 0 12455 300 12923	; Fancy Shell
+O 0 12455 1 12441 	; Fancy Shell
+O 0 12455 1 12796 	; Fancy Shell
+O 0 12455 1 12534 	; Fancy Shell
+O 0 12455 1 12923 	; Fancy Shell
 
-O 0 12456 300 12798	; Cracked Shell
-O 0 12456 300 12795	; Cracked Shell
-O 0 12456 300 12858	; Cracked Shell
-O 0 12456 300 12979	; Cracked Shell
-O 0 12456 300 13408	; Cracked Shell
-O 0 12456 300 12671	; Cracked Shell
+O 0 12456 1 12798 	; Cracked Shell
+O 0 12456 1 12795 	; Cracked Shell
+O 0 12456 1 12858 	; Cracked Shell
+O 0 12456 1 12979 	; Cracked Shell
+O 0 12456 1 13408 	; Cracked Shell
+O 0 12456 1 12671 	; Cracked Shell
 
-O 0 12457 1 12438	; Large Metal Chest
+O 0 12457 1 12438 	; Large Metal Chest
 T 1 3 0				; Sleep Trap the Chest
 P 1 13787 1 12457               ; red stone for a quest
 P 1 12459 1 12457		; Kassdedra's Treasure

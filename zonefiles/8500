@@ -13,46 +13,46 @@ D 0 8515 3 1
 D 0 8515 2 1			A Small Hut
 D 0 8532 0 1			
 
-O 0 8503 3 8655			Watering Hole
-O 0 8503 3 8649			Watering Hole
-O 0 8503 3 8504			Watering Hole
+O 0 8503 1 8655 			Watering Hole
+O 0 8503 1 8649 			Watering Hole
+O 0 8503 1 8504 			Watering Hole
 
-O 0 8500 60 8501		Grass
-O 0 8500 60 8539 		Grass
-O 0 8500 60 8524		Grass
-O 0 8500 60 8543		Grass
-O 0 8500 60 8511		Grass
-O 0 8500 60 8546		Grass
-O 0 8500 60 8531		Grass
-O 0 8500 60 8569		Grass
-O 0 8500 60 8588		Grass
-O 0 8500 60 8556		Grass
-O 0 8500 60 8578		Grass
-O 0 8500 60 8596		Grass
-O 0 8500 60 8581		Grass
-O 0 8500 60 8600		Grass
-O 0 8500 60 8602		Grass
-O 0 8500 60 8638		Grass
-O 0 8500 60 8610		Grass
-O 0 8500 60 8644		Grass
-O 0 8500 60 8629		Grass
-O 0 8500 60 8665		Grass
-O 0 8500 60 8631		Grass
-O 0 8500 60 8649		Grass
-O 0 8500 60 8668		Grass
-O 0 8500 60 8652		Grass
-O 0 8500 60 8672		Grass
-O 0 8500 60 8641		Grass
-O 0 8500 60 8630		Grass
+O 0 8500 1 8501 		Grass
+O 0 8500 1 8539  		Grass
+O 0 8500 1 8524 		Grass
+O 0 8500 1 8543 		Grass
+O 0 8500 1 8511 		Grass
+O 0 8500 1 8546 		Grass
+O 0 8500 1 8531 		Grass
+O 0 8500 1 8569 		Grass
+O 0 8500 1 8588 		Grass
+O 0 8500 1 8556 		Grass
+O 0 8500 1 8578 		Grass
+O 0 8500 1 8596 		Grass
+O 0 8500 1 8581 		Grass
+O 0 8500 1 8600 		Grass
+O 0 8500 1 8602 		Grass
+O 0 8500 1 8638 		Grass
+O 0 8500 1 8610 		Grass
+O 0 8500 1 8644 		Grass
+O 0 8500 1 8629 		Grass
+O 0 8500 1 8665 		Grass
+O 0 8500 1 8631 		Grass
+O 0 8500 1 8649 		Grass
+O 0 8500 1 8668 		Grass
+O 0 8500 1 8652 		Grass
+O 0 8500 1 8672 		Grass
+O 0 8500 1 8641 		Grass
+O 0 8500 1 8630 		Grass
 
-O 0 8518 6 8520			Bad Grass
-O 0 8518 6 8575			Bad Grass
-O 0 8518 6 8640			Bad Grass
-O 0 8518 6 8669			Bad Grass
+O 0 8518 1 8520 			Bad Grass
+O 0 8518 1 8575 			Bad Grass
+O 0 8518 1 8640 			Bad Grass
+O 0 8518 1 8669 			Bad Grass
 
-O 0 8517 1 8683			Portal
-O 0 8515 1 8683			Goblet
-O 0 8516 1 8683			Dish
+O 0 8517 1 8683 			Portal
+O 0 8515 1 8683 			Goblet
+O 0 8516 1 8683 			Dish
 
 ? 0 5 0 M
 M 1 8500 1 8620                  Terrasque - 5% load

@@ -5,10 +5,9 @@ Aedion - Zutanji Village~
 D 0 9504 0 1          door to temple
 D 0 9516 2 1
 
-O 0 9505 1 9504       zutanji statue
-O 0 9506 1 9522       bamboo bucket
-O 0 9507 2 9524       bamboo stool
-O 0 9507 2 9524
+O 0 9505 1 9504        zutanji statue
+O 0 9506 1 9522        bamboo bucket
+O 0 9507 2 9524        bamboo stool
 
 A 0 9517 9524
 M 0 9501 1 -99        young student

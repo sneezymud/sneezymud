@@ -13,36 +13,36 @@ D 0 17182 3 1
 D 0 17183 2 1
 D 0 17184 0 1
 
-O 0 11835 9999 17182         portal
-O 0 17100 9999 17149         nest small
+O 0 11835 1 17182          portal
+O 0 17100 1 17149          nest small
 P 1 10740 9999 17100         wire ring
-O 0 17101 9999 17100         smoldering campfire
-O 0 17102 9999 17110         Stone well
-O 0 10500 9999 17112         campfire large
-O 0 17101 9999 17119
-O 0 10500 9999 17122
-O 0 10500 9999 17127
-O 0 17101 9999 17131
-O 0 17101 9999 17136
-O 0 10500 9999 17146
-O 0 10500 9999 17150
-O 0 17101 9999 17157
-O 0 17104 9999 17127         Haycock
-O 0 17105 9999 17197         Nest Owlbears
+O 0 17101 1 17100          smoldering campfire
+O 0 17102 1 17110          Stone well
+O 0 10500 1 17112          campfire large
+O 0 17101 1 17119 
+O 0 10500 1 17122 
+O 0 10500 1 17127 
+O 0 17101 1 17131 
+O 0 17101 1 17136 
+O 0 10500 1 17146 
+O 0 10500 1 17150 
+O 0 17101 1 17157 
+O 0 17104 1 17127          Haycock
+O 0 17105 1 17197          Nest Owlbears
 P 1 845 9999  17105          light yellow potion-Feathery Descent
-O 0 17106 9999 17195         Large Hive
+O 0 17106 1 17195          Large Hive
 P 1 813 9999 17106           torn scroll-recall
-O 0 17107 9999 17184         Desk-jeweled
-O 0 17108 9999 17184         Bookcase
+O 0 17107 1 17184          Desk-jeweled
+O 0 17108 1 17184          Bookcase
 P 1 814 9999 17108           scroll-color spray
 P 1 1301 9999 17108          scroll-mystic darts 
 P 1 17117 9999 17108         Blue book (Birth of Overlords)
 P 1 17118 9999 17108         Orange book (Gunderi's quest)
-O 0 17109 9999 17183         Altar of Zelpth
+O 0 17109 1 17183          Altar of Zelpth
 P 1 503   9999 17109         Symbol Aluminum
-O 0 17120 9999 17183         Pew-large-ogre
-O 0 11135 9999 17182         Basin
-O 0 26 9999 17182            Bed-large
+O 0 17120 1 17183          Pew-large-ogre
+O 0 11135 1 17182          Basin
+O 0 26 1 17182             Bed-large
 M 0 17176 1 7839              Exhausted Human (quest mob)
 M 0 17105 1 17183 183         Tulaver-monk ogre
 H 1 2 1

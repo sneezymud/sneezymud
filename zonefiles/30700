@@ -23,29 +23,29 @@ X 4 17 30729
 X 5 14 30726            defines the dynamic set of tooled armor (cape and armbands) 
 X 5 12 30731
 X 5 13 30731
-O 0 30747 20 30706    a small hooded lantern.
-O 0 30713 1 30706    the chief's chair
-O 0 30720 10 30707    A small table
-O 0 30715 20 30709    a hollowed out skull lantern
-O 0 30715 20 30710    a hollowed out skull lantern
-O 0 30715 20 30711    a hollowed out skull lantern
-O 0 30715 20 30712    a hollowed out skull lantern
-O 0 30715 20 30713    a hollowed out skull lantern
-O 0 30715 20 30714    a hollowed out skull lantern
-O 0 30720 5 30716    A small table
-O 0 30715 20 30717    a hollowed out skull lantern
-O 0 30715 20 30719    a hollowed out skull lantern
-O 0 30715 20 30720    a hollowed out skull lantern
-O 0 30715 20 30721    a hollowed out skull lantern
-O 0 30715 20 30733    a hollowed out skull lantern
-O 0 30724 1 30733       a simple well
-O 0 30715 20 30740    a hollowed out skull lantern
-O 0 30715 20 30741    a hollowed out skull lantern
-O 0 30715 20 30744    a hollowed out skull lantern
-O 0 30715 20 30747    a hollowed out skull lantern
-O 0 30721 1 30748    a low table
+O 0 30747 1 30706     a small hooded lantern.
+O 0 30713 1 30706     the chief's chair
+O 0 30720 1 30707     A small table
+O 0 30715 1 30709     a hollowed out skull lantern
+O 0 30715 1 30710     a hollowed out skull lantern
+O 0 30715 1 30711     a hollowed out skull lantern
+O 0 30715 1 30712     a hollowed out skull lantern
+O 0 30715 1 30713     a hollowed out skull lantern
+O 0 30715 1 30714     a hollowed out skull lantern
+O 0 30720 1 30716     A small table
+O 0 30715 1 30717     a hollowed out skull lantern
+O 0 30715 1 30719     a hollowed out skull lantern
+O 0 30715 1 30720     a hollowed out skull lantern
+O 0 30715 1 30721     a hollowed out skull lantern
+O 0 30715 1 30733     a hollowed out skull lantern
+O 0 30724 1 30733        a simple well
+O 0 30715 1 30740     a hollowed out skull lantern
+O 0 30715 1 30741     a hollowed out skull lantern
+O 0 30715 1 30744     a hollowed out skull lantern
+O 0 30715 1 30747     a hollowed out skull lantern
+O 0 30721 1 30748     a low table
 P 1 30723 1 30721    a small potted cactus
-O 0 30715 20 30749    a hollowed out skull lantern
+O 0 30715 1 30749     a hollowed out skull lantern
 B 0 30719 1 30712    a small sign
 B 0 30718 1 30713    a small sign
 B 0 30716 1 30714    A small sign

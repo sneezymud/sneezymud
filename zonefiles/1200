@@ -4,8 +4,8 @@ Araxus - The Town of Brightmoon~
 
 M 0 1389 1 1293        Fisherman (shark quest)
 M 0 1250 1 1352        medic
-O 0 1300 1 1366       flame of galek
-O 0 1202 1 1303       Sewer Entrance Grate
+O 0 1300 1 1366        flame of galek
+O 0 1202 1 1303        Sewer Entrance Grate
 
 D 0 1205   0    1 ; Farm Gate
 D 0 1208   0    2 ; Farmhouse
@@ -124,7 +124,7 @@ D 0 1393   9    1 ; ""
 D 0 1393   3    1 ; ""
 D 0 1370   2    1 ; Arena
 
-O 0 104 9999 1364    Window in Huma's Beastiary
+O 0 104 1 1364     Window in Huma's Beastiary
 V 1 0 1397                    looking into room 1397
 
 M 0 1300 2 1218 ; Paladin Guard Gate
@@ -326,17 +326,17 @@ O 0 1201  43 1284 ; ""
 O 0 1201  44 1285 ; ""
 O 0 1201  45 1286 ; ""
 O 0 1201  46 1287 ; ""
-O 0 1298 1 1298 ; Portal : Post Office & Bulliten Boards
-O 0 1299 1 1299 ; Portal : City Dump
-O 0 1341 1 1340 ; Cell Window 
+O 0 1298 1 1298  ; Portal : Post Office & Bulliten Boards
+O 0 1299 1 1299  ; Portal : City Dump
+O 0 1341 1 1340  ; Cell Window 
 O 0 1342   1 1340 ; Cell Window
 O 0 1343   1 1340 ; Cell Window
 O 0 1385   1 1385 ; Portal : Portal Room
 O 0 1386   1 1386 ; Portal : Portal Room
-O 0 1387 1 1387 ; Galek board
-O 0 3089 11 1387 ; Dispenser
-O 0 3099 2 1389 ; Mortal Board lev 25+
-O 0 3089 11 1389 ; Dispenser
+O 0 1387 1 1387  ; Galek board
+O 0 3089 1 1387  ; Dispenser
+O 0 3099 1 1389  ; Mortal Board lev 25+
+O 0 3089 1 1389  ; Dispenser
 M 0 1304 1 1221           Fong Chun Monk (quest mob skill advancedkicking)
 S
 

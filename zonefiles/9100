@@ -20,15 +20,13 @@ D 0 9248 2 1	Door to Circes House
 D 0 9249 0 1
 D 0 9249 1 1	Door to Circes Bedroom
 D 0 9250 3 1
-O 0 9114 99 9114	Opalescent Shell
-O 0 9116 1 9116		Dirty Well
-O 0 9118 2 9118		Coconut Palm
-O 0 9182 99 9118	Coconut
-O 0 9182 99 9118	Coconut
-O 0 9182 99 9118	Coconut
-O 0 9118 2 9110		Coconut Palm
-O 0 9182 99 9110	Coconut
-O 0 9133 1 9133		Old Wooden Chest
+O 0 9114 1 9114 	Opalescent Shell
+O 0 9116 1 9116 		Dirty Well
+O 0 9118 1 9118 		Coconut Palm
+O 0 9182 3 9118 	Coconut
+O 0 9118 1 9110 		Coconut Palm
+O 0 9182 1 9110 	Coconut
+O 0 9133 1 9133 		Old Wooden Chest
 P 1 16159 1 9133        5000 talens 
 M 0 9100 2 9100		Wiry Fisherman
 M 0 9100 2 9100		Wiry Fisherman

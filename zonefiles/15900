@@ -21,68 +21,55 @@ D 0 15948 6 1
 D 0 15936 5 1		Teaching Room
 D 0 15948 4 1
 
-O 0 15900 9999 15900	 Stone Well    ::: Portal->15901
-O 0 15901 9999 15904	 Quick Sand    ::: Portal->15905
-O 0 15906 9999 15911	 Stone Table   ::: -
-O 0 15904 9999 15911	 Stone Couch   ::: -
-O 0 15907 9999 15911	 Stone Chest   ::: Key(11)
+O 0 15900 1 15900 	 Stone Well    ::: Portal->15901
+O 0 15901 1 15904 	 Quick Sand    ::: Portal->15905
+O 0 15906 1 15911 	 Stone Table   ::: -
+O 0 15904 1 15911 	 Stone Couch   ::: -
+O 0 15907 1 15911 	 Stone Chest   ::: Key(11)
 P 1 15908 9999 15907	 	Stone Staff   ::: Heal-Light
-O 0 15905 9999 15911	 Stone Bed     ::: -
-O 0 15902 9999 15911	 Tapestry 1    ::: -
-O 0 15903 9999 15911	 Tapestry 2    ::: -
-O 0 15909 9999 15911	 Stone Torch   ::: Light_1
-O 0 15910 9999 15914	 Stone Ring    ::: +4 Age
-O 0 15912 9999 15913 	 Gauno         ::: -   
-O 0 15912 9999 15917 	   " 
-O 0 15912 9999 15918 	   "
-O 0 15912 9999 15928	   "
-O 0 15913 9999 15935	 Water Spring  ::: Water Source
-O 0 15914 9999 15936 	 Black Sphere  ::: light_2
-O 0 15914 9999 15937 
-O 0 15914 9999 15938 
-O 0 15914 9999 15939 
-O 0 15914 9999 15941 
-O 0 15914 9999 15942 
-O 0 15914 9999 15943 
-O 0 15914 9999 15944 
-O 0 15914 9999 15945 
-O 0 15914 9999 15946 
-O 0 15914 9999 15947 
-O 0 15914 9999 15948	 
-O 0 15915 9999 15940	 Black Candle  ::: light_3
-O 0 15916 9999 15937     Hay Bed       ::: -
-O 0 15916 9999 15938 
-O 0 15916 9999 15939 
-O 0 15916 9999 15941	
-O 0 15917 9999 15936 	 Onyx Chair    ::: -
-O 0 15917 9999 15936 
-O 0 15917 9999 15936 
-O 0 15917 9999 15936 
-O 0 15917 9999 15936 
-O 0 15917 9999 15936 
-O 0 15917 9999 15936 
-O 0 15917 9999 15936 
-O 0 15917 9999 15936 
-O 0 15917 9999 15936	
-O 0 15920 9999 15936	 Onyx Desk     ::: Key(21)
-O 0 15919 9999 15936	 Onyx Chest    ::: Key(21)
-O 0 15918 9999 15936	 Onyx Bed      ::: -
-O 0 15922 9999 15938	 Black Cross   ::: Viewing
-O 0 15926 9999 15946	 Weapons Rack  ::: Empty
-O 0 15924 9999 15946	 Wooden Desk   ::: -
-O 0 15925 9999 15946 	 Wooden Chair  ::: -
-O 0 15925 9999 15946 
-O 0 15925 9999 15946 
-O 0 15925 9999 15946 
-O 0 15925 9999 15946	
+O 0 15905 1 15911 	 Stone Bed     ::: -
+O 0 15902 1 15911 	 Tapestry 1    ::: -
+O 0 15903 1 15911 	 Tapestry 2    ::: -
+O 0 15909 1 15911 	 Stone Torch   ::: Light_1
+O 0 15910 1 15914 	 Stone Ring    ::: +4 Age
+O 0 15912 1 15913  	 Gauno         ::: -   
+O 0 15912 1 15917  	   " 
+O 0 15912 1 15918  	   "
+O 0 15912 1 15928 	   "
+O 0 15913 1 15935 	 Water Spring  ::: Water Source
+O 0 15914 1 15936  	 Black Sphere  ::: light_2
+O 0 15914 1 15937  
+O 0 15914 1 15938  
+O 0 15914 1 15939  
+O 0 15914 1 15941  
+O 0 15914 1 15942  
+O 0 15914 1 15943  
+O 0 15914 1 15944  
+O 0 15914 1 15945  
+O 0 15914 1 15946  
+O 0 15914 1 15947  
+O 0 15914 1 15948 	 
+O 0 15915 1 15940 	 Black Candle  ::: light_3
+O 0 15916 1 15937      Hay Bed       ::: -
+O 0 15916 1 15938  
+O 0 15916 1 15939  
+O 0 15916 1 15941 	
+O 0 15917 10 15936  	 Onyx Chair    ::: -
+O 0 15920 1 15936 	 Onyx Desk     ::: Key(21)
+O 0 15919 1 15936 	 Onyx Chest    ::: Key(21)
+O 0 15918 1 15936 	 Onyx Bed      ::: -
+O 0 15922 1 15938 	 Black Cross   ::: Viewing
+O 0 15926 1 15946 	 Weapons Rack  ::: Empty
+O 0 15924 1 15946 	 Wooden Desk   ::: -
+O 0 15925 5 15946  	 Wooden Chair  ::: -
 ? 0 20 0 O
-O 1 15928 9999 15914	 Potion        ::: Heal-Light
+O 1 15928 1 15914 	 Potion        ::: Heal-Light
 ? 0 20 0 O
-O 1 15929 9999 15914	 Wand          ::: Refresh
+O 1 15929 1 15914 	 Wand          ::: Refresh
 ? 0 43 0 O
-O 1 15930 9999 15914	 Dagger        ::: -
+O 1 15930 1 15914 	 Dagger        ::: -
 ? 0 20 0 O
-O 1 15931 9999 15914	 Scroll        ::: Cure Blindness
+O 1 15931 1 15914 	 Scroll        ::: Cure Blindness
 
 M 0 15900 1 15911 	 Staphiner
 F 1 2 2			   Fear elf

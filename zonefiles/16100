@@ -41,60 +41,58 @@ D 0 16130 6 1
 D 0 16129 0 1          Altar room to Cleric's quarters (close)
 D 0 16132 2 1
 
-O 0 16100 1 16121      staircases in tower
-O 0 16101 1 16128
-O 0 16102 1 16128
-O 0 16103 1 16135
-O 0 16104 1 16142      staircase in tavern/inn
-O 0 16105 1 16141
-O 0 16106 1 16149      windows
-O 0 16107 1 16140
-O 0 16108 1 16145
-O 0 16109 1 16145
-O 0 16110 1 16132
-O 0 16114 1 16129      altar
-O 0 3318 9999 16129       torchiere
-O 0 3318 9999 16144       torchiere
-O 0 3318 9999 16142       torchiere
-O 0 3318 9999 16149       torchiere
-O 0 3318 9999 16141       torchiere
-O 0 3318 9999 16130       torchiere
-O 0 3318 9999 16132       torchiere
-O 0 16115 1 16135      flag
-O 0 16116 1 16121      trophy (balrog head)
-O 0 16117 1 16128      trophy (orc standard)
-O 0 16122 1 16127      gold rimmed mirror (portal to cityguard barracks)
-O 0 16111 1 16130      bed
-O 0 16112 1 16130      onyx table
-O 0 16113 1 16132      pallet
-O 0 6607 1 16131       large wooden desk
-O 0 10203 1 16131      cot bunk
-O 0 10758 1 16131      solid oak chair
-O 0 23650 2 16119      oil lamp
-O 0 3318 9999 16131       torchiere
-O 0 3318 9999 16120       torchiere
-O 0 3318 9999 16121
-O 0 3318 9999 16122
-O 0 3318 9999 16123
-O 0 3318 9999 16124
-O 0 3318 9999 16125
-O 0 3318 9999 16126
-O 0 3318 9999 16128
-O 0 3318 2 16133
-O 0 10203 5 16120      cot bunk
-O 0 10203 5 16123
-O 0 10203 5 16124
-O 0 10203 5 16125
-O 0 701 2 16122        military dining table
-O 0 3305 4 16122       wooden bench
-O 0 15408 2 16142      oak table
-O 0 10758 8 16142      solid oak chair
-O 0 15408 2 16149      oak table
-O 0 10758 8 16149      solid oak chair
-O 0 151 16 16124                         Anvil
-O 0 151 16 16124                         Anvil
-O 0 152 16 16124                         Forge
-O 0 152 16 16124                         Forge
+O 0 16100 1 16121       staircases in tower
+O 0 16101 1 16128 
+O 0 16102 1 16128 
+O 0 16103 1 16135 
+O 0 16104 1 16142       staircase in tavern/inn
+O 0 16105 1 16141 
+O 0 16106 1 16149       windows
+O 0 16107 1 16140 
+O 0 16108 1 16145 
+O 0 16109 1 16145 
+O 0 16110 1 16132 
+O 0 16114 1 16129       altar
+O 0 3318 1 16129        torchiere
+O 0 3318 1 16144        torchiere
+O 0 3318 1 16142        torchiere
+O 0 3318 1 16149        torchiere
+O 0 3318 1 16141        torchiere
+O 0 3318 1 16130        torchiere
+O 0 3318 1 16132        torchiere
+O 0 16115 1 16135       flag
+O 0 16116 1 16121       trophy (balrog head)
+O 0 16117 1 16128       trophy (orc standard)
+O 0 16122 1 16127       gold rimmed mirror (portal to cityguard barracks)
+O 0 16111 1 16130       bed
+O 0 16112 1 16130       onyx table
+O 0 16113 1 16132       pallet
+O 0 6607 1 16131        large wooden desk
+O 0 10203 1 16131       cot bunk
+O 0 10758 1 16131       solid oak chair
+O 0 23650 1 16119       oil lamp
+O 0 3318 1 16131        torchiere
+O 0 3318 1 16120        torchiere
+O 0 3318 1 16121 
+O 0 3318 1 16122 
+O 0 3318 1 16123 
+O 0 3318 1 16124 
+O 0 3318 1 16125 
+O 0 3318 1 16126 
+O 0 3318 1 16128 
+O 0 3318 1 16133 
+O 0 10203 1 16120       cot bunk
+O 0 10203 1 16123 
+O 0 10203 1 16124 
+O 0 10203 1 16125 
+O 0 701 1 16122         military dining table
+O 0 3305 1 16122        wooden bench
+O 0 15408 1 16142       oak table
+O 0 10758 1 16142       solid oak chair
+O 0 15408 1 16149       oak table
+O 0 10758 1 16149       solid oak chair
+O 0 151 2 16124                          Anvil
+O 0 152 2 16124                          Forge
 
 M 0 16108 1 16145      tavern cook
 M 0 16109 1 16147      Rasmin Lighttoes

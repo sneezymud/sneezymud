@@ -9,10 +9,10 @@ D 0 10542 0 1
 D 0 10541 0 1    	Small Pasture gate
 D 0 10546 2 1
 
-O 0 27108 9999 10541    Worn Dagger - drelik quest
-O 0 10501 1 10548	Plank
-O 0 10521 1 10548	Hole
-O 0 10502 1 10511	Wineskin
+O 0 27108 1 10541     Worn Dagger - drelik quest
+O 0 10501 1 10548 	Plank
+O 0 10521 1 10548 	Hole
+O 0 10502 1 10511 	Wineskin
 M 0 7872 1 10548        Vicious Wolf - mage robe quest
 
 M 0 10500 1 10545  	Donkey

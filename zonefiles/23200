@@ -2,18 +2,18 @@
 Omen - Arden Forest~
 23299 35 2 1
 
-O 0 23226 1 23226	 tree bridge, north side
-O 0 23232 1 23232	 west entrance to anthill
-O 0 23234 1 23258        empty waste barrel in arden forest
-O 0 23235 1 23294        dissected pegasus corpse in arden cleric's abode
-O 0 23246 1 23246	 tree bridge, south side
-O 0 23268 1 23268	 east entrance to anthill
-O 0 23280 1 23280	 water trickle during rain
-O 0 23280 2 23281	 water trickle during rain
-O 0 23280 3 23282	 water trickle during rain
-O 0 23280 4 23283	 water trickle during rain
-O 0 23284 1 23284	 door into mystic shack
-O 0 23288 1 23288	 door out of mystic shack
+O 0 23226 1 23226 	 tree bridge, north side
+O 0 23232 1 23232 	 west entrance to anthill
+O 0 23234 1 23258         empty waste barrel in arden forest
+O 0 23235 1 23294         dissected pegasus corpse in arden cleric's abode
+O 0 23246 1 23246 	 tree bridge, south side
+O 0 23268 1 23268 	 east entrance to anthill
+O 0 23280 1 23280 	 water trickle during rain
+O 0 23280 1 23281 	 water trickle during rain
+O 0 23280 1 23282 	 water trickle during rain
+O 0 23280 1 23283 	 water trickle during rain
+O 0 23284 1 23284 	 door into mystic shack
+O 0 23288 1 23288 	 door out of mystic shack
 
 M 0 23200 1 23200	 wild elf (10)
 ? 0 4 0 E

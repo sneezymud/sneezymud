@@ -111,166 +111,144 @@ D 0 14381 5 2
 D 0 14368 1 1             Secret Door 2 to L50 Thief GM
 D 0 14369 3 1
 
-O 0 14362 999 14369       Desk - GM's Office
-O 0 14375 999 14369       Fireplace - GM's Office
-O 0 14379 999 14369       Chair - GM's Office
-O 0 14385 999 14369       Hurricane Lamp
-O 0 14385 999 14369
+O 0 14362 1 14369        Desk - GM's Office
+O 0 14375 1 14369        Fireplace - GM's Office
+O 0 14379 1 14369        Chair - GM's Office
+O 0 14385 2 14369        Hurricane Lamp
 
-O 0 14353 999 14405		Wine Aging Barrel
-O 0 14360 999 14363		Ambassador's Bed
-O 0 14361 999 14361		Chandelier - Foyer
-O 0 14361 999 14362		           - Office
-O 0 14361 999 14363		           - Bedroom
-O 0 14362 999 14362		Desk - Ambassador
-O 0 14362 999 14374		     - Shirrif
-O 0 14362 999 14384		     - Burgermeister
-O 0 14364 999 14364		Light - Clerk
-O 0 14365 999 14363		Wardrobe Cabinet
-O 0 14370 999 14370		Pew
-O 0 14370 999 14370		
-O 0 14371 999 14371		Altar
-O 0 14372 999 14370		Candelabra - Pews
-O 0 14372 999 14370		           - Pews
-O 0 14372 999 14371		           - Altar
-O 0 14372 999 14371		           - Altar
-O 0 14375 999 14330		Fireplace - Farmburrow 1
-O 0 14375 999 14340			  - Farmburrow 2
-O 0 14375 999 14362		          - Ambassador Office
-O 0 14375 999 14363		          - Ambassador Bedroom
-O 0 14375 999 14365			  - Burrow 1
-O 0 14375 999 14373			  - Burrow 2
-O 0 14375 999 14375			  - Burrow 3
-O 0 14375 999 14377		          - Tavern
-O 0 14375 999 14382			  - Burrow 4
-O 0 14375 999 14430			  - Mage House
-O 0 14375 999 14432			  - Burrow 5
-O 0 14376 999 14330		Rug	- Farmburrow 1
-O 0 14376 999 14340			- Farmburrow 2
-O 0 14376 999 14365			- Burrow 1
-O 0 14376 999 14373			- Burrow 2
-O 0 14376 999 14375			- Burrow 3
-O 0 14376 999 14382			- Burrow 4
-O 0 14376 999 14430			- Mage House
-O 0 14376 999 14432			- Burrow 5
-O 0 14377 999 14330		Table	- Farmburrow 1
-O 0 14377 999 14340			- Farmburrow 2
-O 0 14377 999 14365			- Burrow 1
-O 0 14377 999 14373			- Burrow 2
-O 0 14377 999 14375			- Burrow 3
-O 0 14377 999 14377			- Tavern
-O 0 14377 999 14377			- Tavern
-O 0 14377 999 14378			- Deck
-O 0 14377 999 14378			- Deck
-O 0 14377 999 14382			- Burrow 4
-O 0 14377 999 14430			- Mage House
-O 0 14377 999 14432			- Burrow 5
-O 0 14378 999 14377		Stool	- Tavern
-O 0 14378 999 14377			- Tavern
-O 0 14378 999 14378			- Deck
-O 0 14378 999 14378			- Deck
-O 0 14379 999 14330		Chair	- Farmburrow 1
-O 0 14379 999 14340			- Farmburrow 2
-O 0 14379 999 14365			- Burrow 1
-O 0 14379 999 14373			- Burrow 2
-O 0 14379 999 14375			- Burrow 3
-O 0 14379 999 14377			- Tavern
-O 0 14379 999 14377			- Tavern
-O 0 14379 999 14382			- Burrow 4
-O 0 14379 999 14430			- Mage House
-O 0 14379 999 14432			- Burrow 5
-O 0 14380 999 14330		Bed	- Farmburrow 1
-O 0 14380 999 14340			- Farmburrow 2
-O 0 14380 999 14365			- Burrow 1
-O 0 14380 999 14373			- Burrow 2
-O 0 14380 999 14375			- Burrow 3
-O 0 14380 999 14382			- Burrow 4
-O 0 14380 999 14430			- Mage House
-O 0 14380 999 14432			- Burrow 5
-O 0 14381 999 14329		Fruit Basket
+O 0 14353 1 14405 		Wine Aging Barrel
+O 0 14360 1 14363 		Ambassador's Bed
+O 0 14361 1 14361 		Chandelier - Foyer
+O 0 14361 1 14362 		           - Office
+O 0 14361 1 14363 		           - Bedroom
+O 0 14362 1 14362 		Desk - Ambassador
+O 0 14362 1 14374 		     - Shirrif
+O 0 14362 1 14384 		     - Burgermeister
+O 0 14364 1 14364 		Light - Clerk
+O 0 14365 1 14363 		Wardrobe Cabinet
+O 0 14370 2 14370 		Pew
+O 0 14371 1 14371 		Altar
+O 0 14372 2 14370 		Candelabra - Pews
+O 0 14372 2 14371 		           - Altar
+O 0 14375 1 14330 		Fireplace - Farmburrow 1
+O 0 14375 1 14340 			  - Farmburrow 2
+O 0 14375 1 14362 		          - Ambassador Office
+O 0 14375 1 14363 		          - Ambassador Bedroom
+O 0 14375 1 14365 			  - Burrow 1
+O 0 14375 1 14373 			  - Burrow 2
+O 0 14375 1 14375 			  - Burrow 3
+O 0 14375 1 14377 		          - Tavern
+O 0 14375 1 14382 			  - Burrow 4
+O 0 14375 1 14430 			  - Mage House
+O 0 14375 1 14432 			  - Burrow 5
+O 0 14376 1 14330 		Rug	- Farmburrow 1
+O 0 14376 1 14340 			- Farmburrow 2
+O 0 14376 1 14365 			- Burrow 1
+O 0 14376 1 14373 			- Burrow 2
+O 0 14376 1 14375 			- Burrow 3
+O 0 14376 1 14382 			- Burrow 4
+O 0 14376 1 14430 			- Mage House
+O 0 14376 1 14432 			- Burrow 5
+O 0 14377 1 14330 		Table	- Farmburrow 1
+O 0 14377 1 14340 			- Farmburrow 2
+O 0 14377 1 14365 			- Burrow 1
+O 0 14377 1 14373 			- Burrow 2
+O 0 14377 1 14375 			- Burrow 3
+O 0 14377 2 14377 			- Tavern
+O 0 14377 2 14378 			- Deck
+O 0 14377 1 14382 			- Burrow 4
+O 0 14377 1 14430 			- Mage House
+O 0 14377 1 14432 			- Burrow 5
+O 0 14378 2 14377 		Stool	- Tavern
+O 0 14378 2 14378 			- Deck
+O 0 14379 1 14330 		Chair	- Farmburrow 1
+O 0 14379 1 14340 			- Farmburrow 2
+O 0 14379 1 14365 			- Burrow 1
+O 0 14379 1 14373 			- Burrow 2
+O 0 14379 1 14375 			- Burrow 3
+O 0 14379 2 14377 			- Tavern
+O 0 14379 1 14382 			- Burrow 4
+O 0 14379 1 14430 			- Mage House
+O 0 14379 1 14432 			- Burrow 5
+O 0 14380 1 14330 		Bed	- Farmburrow 1
+O 0 14380 1 14340 			- Farmburrow 2
+O 0 14380 1 14365 			- Burrow 1
+O 0 14380 1 14373 			- Burrow 2
+O 0 14380 1 14375 			- Burrow 3
+O 0 14380 1 14382 			- Burrow 4
+O 0 14380 1 14430 			- Mage House
+O 0 14380 1 14432 			- Burrow 5
+O 0 14381 1 14329 		Fruit Basket
 P 1 14344 999 14381		   Put an apple in the basket
 P 1 14344 999 14381		   Put an apple in the basket
 P 1 14344 999 14381		   Put an apple in the basket
-O 0 14382 999 14333		Haypile 
-O 0 14382 999 14343		        
-O 0 14383 999 14335		Scarecrow
-O 0 14383 999 14345
-O 0 14384 999 14334		Well Pump
-O 0 14384 999 14344
-O 0 14385 999 14330		Hurricane Lamp
-O 0 14385 999 14333
-O 0 14385 999 14339
-O 0 14385 999 14339
-O 0 14385 999 14340
-O 0 14385 999 14343
-O 0 14385 999 14365
-O 0 14385 999 14372
-O 0 14385 999 14372
-O 0 14385 999 14373
-O 0 14385 999 14373
-O 0 14385 999 14374
-O 0 14385 999 14374
-O 0 14385 999 14375
-O 0 14385 999 14376
-O 0 14385 999 14377
-O 0 14385 999 14380
-O 0 14385 999 14380
-O 0 14385 999 14381
-O 0 14385 999 14381
-O 0 14385 999 14382
-O 0 14385 999 14384
-O 0 14385 999 14384
-O 0 14385 999 14385
-O 0 14385 999 14385
-O 0 14385 999 14401
-O 0 14385 999 14401
-O 0 14385 999 14402
-O 0 14385 999 14402
-O 0 14385 999 14403
-O 0 14385 999 14403
-O 0 14385 999 14430
-O 0 14385 999 14431
-O 0 14385 999 14431
-O 0 14385 999 14432
-O 0 14386 999 14313		North Window
+O 0 14382 1 14333 		Haypile 
+O 0 14382 1 14343 		        
+O 0 14383 1 14335 		Scarecrow
+O 0 14383 1 14345 
+O 0 14384 1 14334 		Well Pump
+O 0 14384 1 14344 
+O 0 14385 1 14330 		Hurricane Lamp
+O 0 14385 1 14333 
+O 0 14385 2 14339 
+O 0 14385 1 14340 
+O 0 14385 1 14343 
+O 0 14385 1 14365 
+O 0 14385 2 14372 
+O 0 14385 2 14373 
+O 0 14385 2 14374 
+O 0 14385 1 14375 
+O 0 14385 1 14376 
+O 0 14385 1 14377 
+O 0 14385 2 14380 
+O 0 14385 2 14381 
+O 0 14385 1 14382 
+O 0 14385 2 14384 
+O 0 14385 2 14385 
+O 0 14385 2 14401 
+O 0 14385 2 14402 
+O 0 14385 2 14403 
+O 0 14385 1 14430 
+O 0 14385 2 14431 
+O 0 14385 1 14432 
+O 0 14386 1 14313 		North Window
 V 1 0 14330				looking into room 14330
-O 0 14386 999 14330	
-O 0 14386 999 14340		
+O 0 14386 1 14330 	
+O 0 14386 1 14340 		
 V 1 0 14315				looking into room 14315
-O 0 14386 999 14345		
+O 0 14386 1 14345 		
 V 1 0 14340				looking into room 14340
-O 0 14386 999 14365		
+O 0 14386 1 14365 		
 V 1 0 14459				looking into room 14459
-O 0 14386 999 14477		
+O 0 14386 1 14477 		
 V 1 0 14382				looking into room 14382
-O 0 14387 999 14315		South Window
+O 0 14387 1 14315 		South Window
 V 1 0 14340				looking into room 14340
-O 0 14387 999 14330		
-O 0 14387 999 14335		
+O 0 14387 1 14330 		
+O 0 14387 1 14335 		
 V 1 0 14330				looking into room 14330
-O 0 14387 999 14340		
+O 0 14387 1 14340 		
 V 1 0 14345				looking into room 14345
-O 0 14387 999 14382		
+O 0 14387 1 14382 		
 V 1 0 14477				looking into room 14477
-O 0 14387 999 14459		
+O 0 14387 1 14459 		
 V 1 0 14365				looking into room 14365
-O 0 14388 999 14330		East Window
-O 0 14388 999 14460		
+O 0 14388 1 14330 		East Window
+O 0 14388 1 14460 		
 V 1 0 14365				looking into room 14365
-O 0 14389 999 14312		West Window
+O 0 14389 1 14312 		West Window
 V 1 0 14330				looking into room 14330
-O 0 14389 999 14362		
+O 0 14389 1 14362 		
 V 1 0 14462				looking into room 14462
-O 0 14389 999 14363		
+O 0 14389 1 14363 		
 V 1 0 14461				looking into room 14461
-O 0 14389 999 14365		
+O 0 14389 1 14365 		
 V 1 0 14460				looking into room 14460
-O 0 14392 999 14308		Welcome Sign
-O 0 14392 999 14412
-O 0 14392 999 14421
-O 0 14393 100 14386		Raft
-O 0 14396 999 14429		Garden Bench
-O 0 14396 999 14429		
+O 0 14392 1 14308 		Welcome Sign
+O 0 14392 1 14412 
+O 0 14392 1 14421 
+O 0 14393 1 14386 		Raft
+O 0 14396 2 14429 		Garden Bench
 
 M 0 31313 1 14393
 E 1 31346 10 19

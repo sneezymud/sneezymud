@@ -18,18 +18,18 @@ D 0 20897 1 2         secret to Goroth's lair
 D 0 20898 3 2
 
 
-O 0 20891 1 20885     melted plow
+O 0 20891 1 20885      melted plow
 
-O 0 20892 1 20879     petrified othoram corpse
+O 0 20892 1 20879      petrified othoram corpse
 
-O 0 20893 1 20882     make-shift watermill
+O 0 20893 1 20882      make-shift watermill
 
-O 0 20894 1 20878     irrigation ditches
-O 0 20894 1 20879     irrigation ditches
-O 0 20894 1 20880     irrigation ditches
-O 0 20894 1 20881     irrigation ditches
+O 0 20894 1 20878      irrigation ditches
+O 0 20894 1 20879      irrigation ditches
+O 0 20894 1 20880      irrigation ditches
+O 0 20894 1 20881      irrigation ditches
 
-O 0 20896 1 20898     sturdy stone chest (invisible)
+O 0 20896 1 20898      sturdy stone chest (invisible)
 ? 0 25 0 P
 P 1 20897 10 20896      crystal orb held in a stone dragon forearm/claw staff
 ? 0 25 0 P

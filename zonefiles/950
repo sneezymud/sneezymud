@@ -8,8 +8,8 @@ D 0 1045 6 1
 D 0 1165 1 1                  Secret from Prison to faded path
 D 0 994 3 1
 
-O 0 27309 9999 1168           Broken Crate
-O 0 25505 9999 1172           Broken Wagon Wheel
+O 0 27309 1 1168            Broken Crate
+O 0 25505 1 1172            Broken Wagon Wheel
 
 M 0 1000 1 1007               Large Thief
 Y 0 104 3                     black cloth set

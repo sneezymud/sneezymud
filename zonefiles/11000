@@ -61,139 +61,122 @@ D 0 11068 8 1
 D 0 11077 0 1		Vault
 D 0 11070 2 1
 
-O 0 11066 9999 11013	A green and black lamppost
-O 0 11066 9999 11014    A green and black lamppost
-O 0 11066 9999 11015    A green and black lamppost
-O 0 11066 9999 11016    A green and black lamppost
-O 0 11066 9999 11017    A green and black lamppost
-O 0 11066 9999 11018    A green and black lamppost
-O 0 11066 9999 11019    A green and black lamppost
-O 0 11066 9999 11020    A green and black lamppost
-O 0 11066 9999 11021    A green and black lamppost
-O 0 11066 9999 11022    A green and black lamppost
-O 0 11066 9999 11023    A green and black lamppost
-O 0 11066 9999 11024    A green and black lamppost
-O 0 11066 9999 11025    A green and black lamppost
-O 0 11066 9999 11026    A green and black lamppost
-O 0 11066 9999 11037    A green and black lamppost
-O 0 11066 9999 11038    A green and black lamppost
-O 0 11066 9999 11051    A green and black lamppost
-O 0 11066 9999 11080    A green and black lamppost
-O 0 11062 1 11000	A malachite obelisk
-O 0 11070 5 11052	A diamond chandelier
-O 0 11070 5 11065       A diamond chandelier
-O 0 11070 5 11066       A diamond chandelier
-O 0 11070 5 11067       A diamond chandelier
-O 0 11070 5 11068       A diamond chandelier
-O 0 11073 6 11068	A diamond throne
-O 0 11075 5 11072	Fake full-length mirror
-O 0 11078 5 11072	Mirror Window
-O 0 11067 50 11078	Wooden guard bunk
-O 0 11067 50 11078      Wooden guard bunk
-O 0 11067 50 11078      Wooden guard bunk
-O 0 11067 50 11078      Wooden guard bunk
-O 0 11068 50 11064	Silken elite bunk
-O 0 11068 50 11064      Silken elite bunk
-O 0 11068 50 11064      Silken elite bunk
-O 0 11068 50 11064      Silken elite bunk
-O 0 11069 10 11028	A luxuriant fur rug
-O 0 11069 10 11032      A luxuriant fur rug
-O 0 11069 10 11052      A luxuriant fur rug 
-O 0 11069 10 11069      A luxuriant fur rug
-O 0 11069 10 11072      A luxuriant fur rug
-O 0 11069 10 11073      A luxuriant fur rug
-O 0 11069 10 11075      A luxuriant fur rug
-O 0 11069 10 11092      A luxuriant fur rug
-O 0 11074 10 11069      A enormous silk bed
-O 0 11074 10 11072      A enormous silk bed
-O 0 11074 10 11073      A enormous silk bed
-O 0 11074 10 11075      A enormous silk bed
-O 0 11076 5 11042	A white telescope
-O 0 11077 5 11042	A black telescope
-O 0 11085 5 11086	Portal Brightmoon
-O 0 11086 5 11085	Portal Logrus
-O 0 11087 5 11086	Portal Grimhaven
-O 0 11088 5 11085	Portal Amber
-O 0 11089 5 11086	Portal Elf
-O 0 11090 5 11085	Portal Dwarf
-O 0 11091 5 11086	Portal Kalysia
-O 0 11092 5 11085	Portal Veldt
-O 0 11079 5 11034	Ruined window
-O 0 11084 5 11006	Hole in the earth window
-O 0 11080 5 11042	Window Vialle
-O 0 11081 5 11042	Window Madoka
-O 0 11082 5 11042	Window Center Square
-O 0 11083 5 11042	Window Decimus
-O 0 3302 9999 11053     A wall torch
-O 0 3302 9999 11054     A wall torch
-O 0 3302 9999 11055     A wall torch
-O 0 3302 9999 11056     A wall torch
-O 0 3302 9999 11057     A wall torch
-O 0 3302 9999 11058     A wall torch
-O 0 3302 9999 11059     A wall torch
-O 0 3302 9999 11060     A wall torch
-O 0 3302 9999 11061     A wall torch
-O 0 3302 9999 11062     A wall torch
-O 0 3302 9999 11063     A wall torch
-O 0 3302 9999 11064     A wall torch
-O 0 3302 9999 11045     A wall torch
-O 0 3302 9999 11043     A wall torch
-O 0 3302 9999 11078     A wall torch
-O 0 3302 9999 11079     A wall torch
-O 0 3318 9999 11075     A torchiere
-O 0 3318 9999 11073     A torchiere
-O 0 3318 9999 11069     A torchiere
-O 0 3318 9999 11072     A torchiere
-O 0 3318 9999 11077     A torchiere
-O 0 3309 9999 11075     A silk pillow
-O 0 3309 9999 11073     A silk pillow
-O 0 3309 9999 11069     A silk pillow
-O 0 3309 9999 11072     A silk pillow
-O 0 3344 9999 11077     A tapestry
-O 0 3344 9999 11068     A tapestry
-O 0 3344 9999 11069     A tapestry
-O 0 3344 9999 11072     A tapestry
-O 0 3344 9999 11073     A tapestry
-O 0 3344 9999 11075     A tapestry
-O 0 3306 9999 11028     Trash
-O 0 3306 9999 11023     Trash
-O 0 3306 9999 11037     Trash
-O 0 10030 9999 11028	Shit
-O 0 3301 9999 11004     A flickering ball of light
-O 0 3301 9999 11003     A flickering ball of light
-O 0 3301 9999 11002     A flickering ball of light
-O 0 3301 9999 11001     A flickering ball of light
-O 0 3301 9999 11000     A flickering ball of light
-O 0 11064 10 11028	A wooden table
-O 0 11065 50 11028	A wooden chair
-O 0 11065 50 11028	A wooden chair
-O 0 11063 10 11031	A marble table
-O 0 11072 50 11031	A silk chair
-O 0 11072 50 11031	A silk chair
-O 0 11059 10 11031	Athanor anvil
-O 0 11065 50 11092	A wooden chair
-O 0 11071 50 11092	A platinum table
-O 0 11071 50 11065	A platinum table
-O 0 11071 50 11066	A platinum table
-O 0 11071 50 11067	A platinum table
-O 0 11072 50 11065      A silk chair
-O 0 11072 50 11065      A silk chair
-O 0 11072 50 11066      A silk chair
-O 0 11072 50 11066      A silk chair
-O 0 11072 50 11067      A silk chair
-O 0 11072 50 11067      A silk chair
-O 0 11063 50 11077	A marble table
-O 0 11072 50 11077	A silk chair
-O 0 11072 50 11077	A silk chair
-O 0 11064 10 11039	A wooden table
-O 0 11064 10 11039	A wooden table
-O 0 11065 50 11039	A wooden chair
-O 0 11065 50 11039      A wooden chair
-O 0 11065 50 11039      A wooden chair
-O 0 11065 50 11039      A wooden chair
-O 0 11065 50 11039      A wooden chair
-O 0 11049 10 11052	A crystal wine fountain
-O 0 11049 10 11037	A crystal wine fountain
+O 0 11066 1 11013 	A green and black lamppost
+O 0 11066 1 11014     A green and black lamppost
+O 0 11066 1 11015     A green and black lamppost
+O 0 11066 1 11016     A green and black lamppost
+O 0 11066 1 11017     A green and black lamppost
+O 0 11066 1 11018     A green and black lamppost
+O 0 11066 1 11019     A green and black lamppost
+O 0 11066 1 11020     A green and black lamppost
+O 0 11066 1 11021     A green and black lamppost
+O 0 11066 1 11022     A green and black lamppost
+O 0 11066 1 11023     A green and black lamppost
+O 0 11066 1 11024     A green and black lamppost
+O 0 11066 1 11025     A green and black lamppost
+O 0 11066 1 11026     A green and black lamppost
+O 0 11066 1 11037     A green and black lamppost
+O 0 11066 1 11038     A green and black lamppost
+O 0 11066 1 11051     A green and black lamppost
+O 0 11066 1 11080     A green and black lamppost
+O 0 11062 1 11000 	A malachite obelisk
+O 0 11070 1 11052 	A diamond chandelier
+O 0 11070 1 11065        A diamond chandelier
+O 0 11070 1 11066        A diamond chandelier
+O 0 11070 1 11067        A diamond chandelier
+O 0 11070 1 11068        A diamond chandelier
+O 0 11073 1 11068 	A diamond throne
+O 0 11075 1 11072 	Fake full-length mirror
+O 0 11078 1 11072 	Mirror Window
+O 0 11067 4 11078       Wooden guard bunk
+O 0 11068 4 11064       Silken elite bunk
+O 0 11069 1 11028 	A luxuriant fur rug
+O 0 11069 1 11032       A luxuriant fur rug
+O 0 11069 1 11052       A luxuriant fur rug 
+O 0 11069 1 11069       A luxuriant fur rug
+O 0 11069 1 11072       A luxuriant fur rug
+O 0 11069 1 11073       A luxuriant fur rug
+O 0 11069 1 11075       A luxuriant fur rug
+O 0 11069 1 11092       A luxuriant fur rug
+O 0 11074 1 11069       A enormous silk bed
+O 0 11074 1 11072       A enormous silk bed
+O 0 11074 1 11073       A enormous silk bed
+O 0 11074 1 11075       A enormous silk bed
+O 0 11076 1 11042 	A white telescope
+O 0 11077 1 11042 	A black telescope
+O 0 11085 1 11086 	Portal Brightmoon
+O 0 11086 1 11085 	Portal Logrus
+O 0 11087 1 11086 	Portal Grimhaven
+O 0 11088 1 11085 	Portal Amber
+O 0 11089 1 11086 	Portal Elf
+O 0 11090 1 11085 	Portal Dwarf
+O 0 11091 1 11086 	Portal Kalysia
+O 0 11092 1 11085 	Portal Veldt
+O 0 11079 1 11034 	Ruined window
+O 0 11084 1 11006 	Hole in the earth window
+O 0 11080 1 11042 	Window Vialle
+O 0 11081 1 11042 	Window Madoka
+O 0 11082 1 11042 	Window Center Square
+O 0 11083 1 11042 	Window Decimus
+O 0 3302 1 11053      A wall torch
+O 0 3302 1 11054      A wall torch
+O 0 3302 1 11055      A wall torch
+O 0 3302 1 11056      A wall torch
+O 0 3302 1 11057      A wall torch
+O 0 3302 1 11058      A wall torch
+O 0 3302 1 11059      A wall torch
+O 0 3302 1 11060      A wall torch
+O 0 3302 1 11061      A wall torch
+O 0 3302 1 11062      A wall torch
+O 0 3302 1 11063      A wall torch
+O 0 3302 1 11064      A wall torch
+O 0 3302 1 11045      A wall torch
+O 0 3302 1 11043      A wall torch
+O 0 3302 1 11078      A wall torch
+O 0 3302 1 11079      A wall torch
+O 0 3318 1 11075      A torchiere
+O 0 3318 1 11073      A torchiere
+O 0 3318 1 11069      A torchiere
+O 0 3318 1 11072      A torchiere
+O 0 3318 1 11077      A torchiere
+O 0 3309 1 11075      A silk pillow
+O 0 3309 1 11073      A silk pillow
+O 0 3309 1 11069      A silk pillow
+O 0 3309 1 11072      A silk pillow
+O 0 3344 1 11077      A tapestry
+O 0 3344 1 11068      A tapestry
+O 0 3344 1 11069      A tapestry
+O 0 3344 1 11072      A tapestry
+O 0 3344 1 11073      A tapestry
+O 0 3344 1 11075      A tapestry
+O 0 3306 1 11028      Trash
+O 0 3306 1 11023      Trash
+O 0 3306 1 11037      Trash
+O 0 10030 1 11028 	Shit
+O 0 3301 1 11004      A flickering ball of light
+O 0 3301 1 11003      A flickering ball of light
+O 0 3301 1 11002      A flickering ball of light
+O 0 3301 1 11001      A flickering ball of light
+O 0 3301 1 11000      A flickering ball of light
+O 0 11064 1 11028 	A wooden table
+O 0 11065 2 11028 	A wooden chair
+O 0 11063 1 11031 	A marble table
+O 0 11072 2 11031 	A silk chair
+O 0 11059 1 11031 	Athanor anvil
+O 0 11065 1 11092 	A wooden chair
+O 0 11071 1 11092 	A platinum table
+O 0 11071 1 11065 	A platinum table
+O 0 11071 1 11066 	A platinum table
+O 0 11071 1 11067 	A platinum table
+O 0 11072 2 11065       A silk chair
+O 0 11072 2 11066       A silk chair
+O 0 11072 2 11067       A silk chair
+O 0 11063 1 11077 	A marble table
+O 0 11072 2 11077 	A silk chair
+O 0 11064 2 11039 	A wooden table
+O 0 11065 5 11039       A wooden chair
+O 0 11049 1 11052 	A crystal wine fountain
+O 0 11049 1 11037 	A crystal wine fountain
 
 ? 0 5 0 B
 B 1 23649 9999 11070	A pile of coins

@@ -35,110 +35,78 @@ D 0 9548 2 1		9548 Manager's Office
 D 0 9549 0 1		9549 Hall
 
 *		Objects
-O 0 1201 9999 9525	9525 Lift		Torch
-O 0 9528 9999 9525				Rope & Pulley
-O 0 1201 9999 9526	9526 Hall		Torch
-O 0 1201 9999 9527	9527 Hall		Torch
-O 0 1201 9999 9528	9528 Hall		Torch
-O 0 1201 9999 9530	9530 Set Builders	Torch
-O 0 9530 9999 9530				Back Drop
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 9529 9999 9530				Piece of Lumber
-O 0 1201 9999 9531	9531 Prop Builders	Torch
-O 0 9533 9999 9531				Shelves
-O 0 9531 9999 9531				Desk
-O 0 9532 9999 9531				Workbench
-O 0 9534 9999 9531				Smelter
-O 0 1201 9999 9532	9532 Hall		Torch
-O 0 1201 9999 9533	9533 Dressing Room	Torch
-O 0 26859 9999 9533				Bench
-O 0 26859 9999 9533				Bench
-O 0 1201 9999 9534	9534 Storage		Torch
-O 0 15300 9999 9534				Shelves
+O 0 1201 1 9525 	9525 Lift		Torch
+O 0 9528 1 9525 				Rope & Pulley
+O 0 1201 1 9526 	9526 Hall		Torch
+O 0 1201 1 9527 	9527 Hall		Torch
+O 0 1201 1 9528 	9528 Hall		Torch
+O 0 1201 1 9530 	9530 Set Builders	Torch
+O 0 9530 1 9530 				Back Drop
+O 0 9529 18 9530 				Piece of Lumber
+O 0 1201 1 9531 	9531 Prop Builders	Torch
+O 0 9533 1 9531 				Shelves
+O 0 9531 1 9531 				Desk
+O 0 9532 1 9531 				Workbench
+O 0 9534 1 9531 				Smelter
+O 0 1201 1 9532 	9532 Hall		Torch
+O 0 1201 1 9533 	9533 Dressing Room	Torch
+O 0 26859 2 9533 				Bench
+O 0 1201 1 9534 	9534 Storage		Torch
+O 0 15300 1 9534 				Shelves
 P 1 9540 9999 15300					Trash
 P 1 9540 9999 15300					Trash
 P 1 9540 9999 15300					Trash
-O 0 9538 9999 9534				Blue Pot
+O 0 9538 1 9534 				Blue Pot
 P 1 9539 9999 9538					Blue Paint
-O 0 9536 9999 9534				Red Pot
+O 0 9536 1 9534 				Red Pot
 P 1 9537 9999 9536					Red Paint
-O 0 9530 9999 9534				Back Drop
-O 0 9530 9999 9534				Back Drop
-O 0 9530 9999 9534				Back Drop
-O 0 9530 9999 9534				Back Drop
-O 0 1201 9999 9535	9535 Starlet Room	Torch
-O 0 9561 9999 9535				Couch
-O 0 9525 9999 9535				Table
-O 0 14365 9999 9535				Wardrobe
-O 0 9526 9999 9535				Trunk
-O 0 9541 9999 9535				Roses
-O 0 16221 9999 9535				chair
-O 0 1201 9999 9536	9536 Wardrobe		Torch
-O 0 10762 9999 9536				Wardrobe
+O 0 9530 4 9534 				Back Drop
+O 0 1201 1 9535 	9535 Starlet Room	Torch
+O 0 9561 1 9535 				Couch
+O 0 9525 1 9535 				Table
+O 0 14365 1 9535 				Wardrobe
+O 0 9526 1 9535 				Trunk
+O 0 9541 1 9535 				Roses
+O 0 16221 1 9535 				chair
+O 0 1201 1 9536 	9536 Wardrobe		Torch
+O 0 10762 1 9536 				Wardrobe
 V 0 1 5                                          Set to non-lockable
 V 0 2 -1                                         Set to no key
-O 0 14378 9999 9536				Stool
-O 0 1201 9999 9537	9537 Hall		Torch
-O 0 1201 9999 9538	9538 Make Up		Torch
-O 0 14378 9999 9538				Stool
-O 0 9543 9999 9538				Chest
+O 0 14378 1 9536 				Stool
+O 0 1201 1 9537 	9537 Hall		Torch
+O 0 1201 1 9538 	9538 Make Up		Torch
+O 0 14378 1 9538 				Stool
+O 0 9543 1 9538 				Chest
 P 1 24435 9999 9543					Brush
-O 0 9542 9999 9538				Chair
-O 0 1201 9999 9539	9539 Star's Room	Torch
-O 0 9561 9999 9539				Couch
-O 0 9525 9999 9539				Table
-O 0 14365 9999 9539				Wardrobe
-O 0 9526 9999 9539				Trunk
-O 0 16221 9999 9539				chair
-O 0 1201 9999 9540	9540 Hall		Torch
-O 0 1201 9999 9541	9541 Hall		Torch
-O 0 1201 9999 9542	9542 Hall		Torch
-O 0 1201 9999 9543	9543 Hall		Torch
-O 0 1201 9999 9544	9544 Hall		Torch
-O 0 1201 9999 9545	9545 Hall		Torch
-O 0 1201 9999 9546	9546 Kitchen		Torch
-O 0 9544 9999 9546				Fire Pit
-O 0 9546 9999 9546				Hook
+O 0 9542 1 9538 				Chair
+O 0 1201 1 9539 	9539 Star's Room	Torch
+O 0 9561 1 9539 				Couch
+O 0 9525 1 9539 				Table
+O 0 14365 1 9539 				Wardrobe
+O 0 9526 1 9539 				Trunk
+O 0 16221 1 9539 				chair
+O 0 1201 1 9540 	9540 Hall		Torch
+O 0 1201 1 9541 	9541 Hall		Torch
+O 0 1201 1 9542 	9542 Hall		Torch
+O 0 1201 1 9543 	9543 Hall		Torch
+O 0 1201 1 9544 	9544 Hall		Torch
+O 0 1201 1 9545 	9545 Hall		Torch
+O 0 1201 1 9546 	9546 Kitchen		Torch
+O 0 9544 1 9546 				Fire Pit
+O 0 9546 1 9546 				Hook
 P 1 27306 9999 9546					Pot
-O 0 9545 9999 9546				Shelf
-O 0 26864 9999 9546				Table
-O 0 26864 9999 9546				Table
-O 0 1201 9999 9547	9547 Commisary		Torch
-O 0 451 9999 9547					Table
-O 0 451 9999 9547					Table
-O 0 451 9999 9547					Table
-O 0 451 9999 9547					Table
+O 0 9545 1 9546 				Shelf
+O 0 26864 2 9546 				Table
+O 0 1201 1 9547 	9547 Commisary		Torch
+O 0 451 4 9547 					Table
 P 1 480 9999 451						Urn
-O 0 16221 9999 9547				Chair
-O 0 16221 9999 9547				Chair
-O 0 16221 9999 9547				Chair
-O 0 16221 9999 9547				Chair
-O 0 16221 9999 9547				Chair
-O 0 16221 9999 9547				Chair
-O 0 1201 9999 9548	9548 Manager's Office	Torch
-O 0 16227 9999 9548				Chair
-O 0 20003 9999 9548				Desk
-O 0 9547 9999 9548				File
-O 0 9548 9999 9548				Poster
-O 0 9548 9999 9548				Poster
-O 0 9548 9999 9548				Poster
-O 0 1201 9999 9549	9549 Hall		Torch
+O 0 16221 6 9547 				Chair
+O 0 1201 1 9548 	9548 Manager's Office	Torch
+O 0 16227 1 9548 				Chair
+O 0 20003 1 9548 				Desk
+O 0 9547 1 9548 				File
+O 0 9548 3 9548 				Poster
+O 0 1201 1 9549 	9549 Hall		Torch
 
 *	MOBILES
 M 0 9526 1 9546		chef gnome

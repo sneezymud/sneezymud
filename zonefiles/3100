@@ -15,31 +15,28 @@ D 0 3198 3 2            Door into west cell
 D 0 3197 1 2
 D 0 3179 3 1            Door into dressing room
 D 0 3178 1 1
-O 0 3130 1 3101         Sign
-O 0 3131 1 3102         Sign
-O 0 3132 1 3177         Window
-O 0 3133 1 3168         Bar
+O 0 3130 1 3101          Sign
+O 0 3131 1 3102          Sign
+O 0 3132 1 3177          Window
+O 0 3133 1 3168          Bar
 P 1 3134 5 3133           Ale
-O 0 3135 1 3100         Bed
-O 0 3139 1 3206         Sign
-O 0 3140 1 3206         Gibbet
-O 0 3141 1 3156         Sign
-O 0 3142 1 3166         Sign
-O 0 3143 3 3158         Table
-O 0 3143 3 3167         Table
-O 0 3143 3 3168         Table
-O 0 3144 7 3158         Chair
-O 0 3144 7 3158         Chair
-O 0 3144 7 3167         Chair
-O 0 3144 7 3167         Chair
-O 0 3144 7 3168         Chair
-O 0 3144 7 3168         Chair
-O 0 3144 7 3198         Chair
-O 0 3145 1 3198         Desk
-O 0 3146 1 3238         Throne
-O 0 3147 1 3285         Stone
-O 0 3148 1 3169         Gravestone
-O 0 3149 1 3149         Sign
+O 0 3135 1 3100          Bed
+O 0 3139 1 3206          Sign
+O 0 3140 1 3206          Gibbet
+O 0 3141 1 3156          Sign
+O 0 3142 1 3166          Sign
+O 0 3143 1 3158          Table
+O 0 3143 1 3167          Table
+O 0 3143 1 3168          Table
+O 0 3144 2 3158          Chair
+O 0 3144 2 3167          Chair
+O 0 3144 2 3168          Chair
+O 0 3144 1 3198          Chair
+O 0 3145 1 3198          Desk
+O 0 3146 1 3238          Throne
+O 0 3147 1 3285          Stone
+O 0 3148 1 3169          Gravestone
+O 0 3149 1 3149          Sign
 M 0 3101 1 3178         Tuck the Bandit
 ? 0 2 0 E
 E 1 3102 1 4             Skimpy Suit
@@ -139,7 +136,7 @@ M 0 3116 9 3103         sister
 ? 0 20 0 E
 E 1 3116 36 4            Nun Robe
 ? 0 10 0 O
-O 1 3122 18 3103           Hassock
+O 1 3122 1 3103            Hassock
 M 0 3117 1 3187         Will Wavepyke
 ? 0 20 0 E
 E 1 3117 50 4            shirt

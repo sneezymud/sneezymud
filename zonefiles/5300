@@ -54,16 +54,14 @@ D 0 5376 3 1
 D 0 5376 7 1
 D 0 5375 2 1
 D 0 5375 8 1
-O 0 152 16 5424        Forge
-O 0 152 16 5424        Forge
-O 0 151 16 5424        Anvil
-O 0 151 16 5424        Anvil
-O 0 5494 9999 5428    Pot Poison
-O 0 5494 9999 5494    Pot Poison
-O 0 10935 9999 5414   Spring water
-O 0 5458 9999 5498    Brownie Throne
-O 0 5411 9999 5456    Throne silver pixie
-O 0 7718 9999 5353    Pool/fountain
+O 0 152 2 5424         Forge
+O 0 151 2 5424         Anvil
+O 0 5494 1 5428     Pot Poison
+O 0 5494 1 5494     Pot Poison
+O 0 10935 1 5414    Spring water
+O 0 5458 1 5498     Brownie Throne
+O 0 5411 1 5456     Throne silver pixie
+O 0 7718 1 5353     Pool/fountain
 O 0 5500  1   5500    Tyrog coffin/Window
 O 0 5499  1   5499    Kinji/Window
 O 0 5498  1   5498    Ferin/Window
@@ -75,14 +73,14 @@ O 0 5460  1   5460    Stone Chest
 P 1 11116 1   5460       Large Gem
 O 0 701  9999 5520    Table Military
 O 0 26   9999 5495    Bed Ogre
-O 0 5362 9999 5362    Altar
-O 0 10762 9999 5372   Wardrob
-O 0 5372 9999 5372    Oak table
-O 0 5373 9999 5373    Window
-O 0 5380 9999 5380    Window
-O 0 20015 9999 5461   Large pile talens
-O 0 5462 9999 5461    Pile Armor
-O 0 5463 9999 5461    Sword of death
+O 0 5362 1 5362     Altar
+O 0 10762 1 5372    Wardrob
+O 0 5372 1 5372     Oak table
+O 0 5373 1 5373     Window
+O 0 5380 1 5380     Window
+O 0 20015 1 5461    Large pile talens
+O 0 5462 1 5461     Pile Armor
+O 0 5463 1 5461     Sword of death
 
 M 0 5347 1 5347     Hobbit Quest
 

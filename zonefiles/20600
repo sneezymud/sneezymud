@@ -37,94 +37,87 @@ D 0 20662 7 1
 D 0 20667 8 1  se pasture gate
 D 0 20668 7 1
 
-O 0 20629 1 20600     thin hide sleeping mat in guard's tent
-O 0 20629 1 20653     in a tent
-O 0 20629 2 20653
-O 0 20629 1 20657     
-O 0 20629 2 20657
-O 0 20629 1 20661     in apprentice's tent
-O 0 20629 1 20664     in a tent
-O 0 20629 2 20664
-O 0 20629 1 20665
-O 0 20629 2 20665
+O 0 20629 1 20600      thin hide sleeping mat in guard's tent
+O 0 20629 2 20653      in a tent
+O 0 20629 2 20657      
+O 0 20629 1 20661      in apprentice's tent
+O 0 20629 2 20664      in a tent
+O 0 20629 2 20665 
 
-O 0 20630 1 20654     thick hide sleeping mat in chief's tent
-O 0 20630 2 20654
-O 0 20630 1 20662     in shaman's tent
+O 0 20630 2 20654      thick hide sleeping mat in chief's tent
+O 0 20630 1 20662      in shaman's tent
 
-O 0 20631 1 20605     painted rocks along path
-O 0 20631 1 20606
-O 0 20631 1 20607
-O 0 20631 1 20608
-O 0 20631 1 20609
-O 0 20631 1 20610
-O 0 20631 1 20611
-O 0 20631 1 20612
-O 0 20631 1 20614
+O 0 20631 1 20605      painted rocks along path
+O 0 20631 1 20606 
+O 0 20631 1 20607 
+O 0 20631 1 20608 
+O 0 20631 1 20609 
+O 0 20631 1 20610 
+O 0 20631 1 20611 
+O 0 20631 1 20612 
+O 0 20631 1 20614 
 
-O 0 20632 1 20611     reed torches outside meeting hall
-O 0 20632 2 20611
-O 0 20632 1 20612     outside chief's meeting tent and hunter's tent
-O 0 20632 2 20612
-O 0 20632 1 20655     in chief's meeting tent
-O 0 20632 1 20656     in hunter's tent
-O 0 20632 1 20658     in meeting tent
-O 0 20632 1 20659
-O 0 20632 1 20660
+O 0 20632 2 20611      reed torches outside meeting hall
+O 0 20632 2 20612      outside chief's meeting tent and hunter's tent
+O 0 20632 1 20655      in chief's meeting tent
+O 0 20632 1 20656      in hunter's tent
+O 0 20632 1 20658      in meeting tent
+O 0 20632 1 20659 
+O 0 20632 1 20660 
 
-O 0 20633 1 20600     small cookfire in guard's tent
-O 0 20633 1 20653     in a tent
-O 0 20633 1 20654     in chief's tent
-O 0 20633 1 20657     in a tent
-O 0 20633 1 20661     in apprentice's tent
-O 0 20633 1 20662     in shaman's tent
-O 0 20633 1 20664     in a tent
-O 0 20633 1 20665
+O 0 20633 1 20600      small cookfire in guard's tent
+O 0 20633 1 20653      in a tent
+O 0 20633 1 20654      in chief's tent
+O 0 20633 1 20657      in a tent
+O 0 20633 1 20661      in apprentice's tent
+O 0 20633 1 20662      in shaman's tent
+O 0 20633 1 20664      in a tent
+O 0 20633 1 20665 
 
-O 0 20634 1 20611     small make-shift raft near springs
+O 0 20634 1 20611      small make-shift raft near springs
 
-O 0 20647 1 20620     ancient white oak
+O 0 20647 1 20620      ancient white oak
 
-O 0 20648 1 20627     window down canyon river
+O 0 20648 1 20627      window down canyon river
 V 1 0 20469              change room window looks into
-O 0 20648 1 20628
+O 0 20648 1 20628 
 V 1 0 20470
-O 0 20648 1 20629
+O 0 20648 1 20629 
 V 1 0 20471
-O 0 20648 1 20630
+O 0 20648 1 20630 
 V 1 0 20580
-O 0 20648 1 20631
+O 0 20648 1 20631 
 V 1 0 20579
-O 0 20648 1 20632
+O 0 20648 1 20632 
 V 1 0 20474
-O 0 20648 1 20633
+O 0 20648 1 20633 
 V 1 0 20475
-O 0 20648 1 20634
+O 0 20648 1 20634 
 V 1 0 20478
-O 0 20648 1 20635
+O 0 20648 1 20635 
 V 1 0 20569
-O 0 20648 1 20636
+O 0 20648 1 20636 
 V 1 0 20569
-O 0 20648 1 20637
+O 0 20648 1 20637 
 V 1 0 20488
-O 0 20648 1 20638
+O 0 20648 1 20638 
 V 1 0 20445
-O 0 20648 1 20639
+O 0 20648 1 20639 
 V 1 0 20444
-O 0 20648 1 20640
+O 0 20648 1 20640 
 V 1 0 20443
-O 0 20648 1 20641
+O 0 20648 1 20641 
 V 1 0 20442
-O 0 20648 1 20642
+O 0 20648 1 20642 
 V 1 0 20441
-O 0 20648 1 20643
+O 0 20648 1 20643 
 V 1 0 20440
-O 0 20648 1 20644
+O 0 20648 1 20644 
 V 1 0 20563
 
-O 0 135 1 20622       window down into terraqu shaman's hut
+O 0 135 1 20622        window down into terraqu shaman's hut
 V 1 0 20590             
-O 0 138 1 20622       window southeast looking in front of terraqu shaman's hut
+O 0 138 1 20622        window southeast looking in front of terraqu shaman's hut
 V 1 0 20461
 
 ? 0 60 0 M

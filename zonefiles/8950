@@ -5,24 +5,20 @@ Therias - Arabian Caravan Camp~
 D 0 8969 5 1       A Strange Corner of the Lake -> An Uncomfortably Warm Cavern 
 D 0 8972 4 1       An Uncomfortably Warm Cavern -> A Strange Corner of the Lake 
 
-O 0 8962 9999 8950             the ramp to the cage (ladder proc)
-O 0 8962 9999 8973
+O 0 8962 1 8950              the ramp to the cage (ladder proc)
+O 0 8962 1 8973 
 
-O 0 8950 9999 8972             a flying carpet 
-O 0 8952 9999 8969             an exit object
-O 0 8964 9999 8952             a sitting stone 
-O 0 8964 9999 8952             
-O 0 8964 9999 8952              
-O 0 8965 9999 8954             a brass oil lamp 
-O 0 8965 9999 8957              
-O 0 8965 9999 8960              
-O 0 8965 9999 8961             
-O 0 8965 9999 8971              
-O 0 8965 9999 8971              
-O 0 8965 9999 8971              
-O 0 8967 9999 8971             a large pillow 
-O 0 8968 9999 8956             a lone tessian lily 
-O 0 8970 9999 8974             a pile of rocks 
+O 0 8950 1 8972              a flying carpet 
+O 0 8952 1 8969              an exit object
+O 0 8964 3 8952              a sitting stone 
+O 0 8965 1 8954              a brass oil lamp 
+O 0 8965 1 8957               
+O 0 8965 1 8960               
+O 0 8965 1 8961              
+O 0 8965 3 8971               
+O 0 8967 1 8971              a large pillow 
+O 0 8968 1 8956              a lone tessian lily 
+O 0 8970 1 8974              a pile of rocks 
 P 1 8963 9999 8970                  a tarnished gold key
 ? 0 80 0 P
 P 1 35 9999 8970                    some talens  

@@ -2,74 +2,70 @@
 Saint - Caves of the Ancients~
 3399 25 2 1
 
-O 0 20027 1 3343        Chest (kraegin)
+O 0 20027 1 3343         Chest (kraegin)
 ? 0 10 0 P
 P 1 3346 5 20027	  Gleaming Necklace 
 ? 0 10 0 P
 P 1 3349 5 20027	  Ivory-hilted Poinard
 
-O 0 3318 9999 3394      Torchiere
-O 0 3318 9999 3394      Torchiere
-O 0 3318 9999 3396      Torchiere
-O 0 3318 9999 3396	Torchiere
+O 0 3318 2 3394       Torchiere
+O 0 3318 2 3396       Torchiere
 
-O 0 3302 6 3356         Wall Torch
-O 0 3302 6 3357        	Wall Torch
-O 0 3302 6 3358         Wall Torch
-O 0 3302 6 3359         Wall Torch
-O 0 3302 6 3360         Wall Torch
-O 0 3302 6 3398		Wall Torch
+O 0 3302 1 3356          Wall Torch
+O 0 3302 1 3357         	Wall Torch
+O 0 3302 1 3358          Wall Torch
+O 0 3302 1 3359          Wall Torch
+O 0 3302 1 3360          Wall Torch
+O 0 3302 1 3398 		Wall Torch
 
-O 0 3301 5 3302		Flickering Ball of Light
-O 0 3301 5 3306         Flickering Ball of Light
-O 0 3301 5 3310         Flickering Ball of Light
-O 0 3301 5 3314         Flickering Ball of Light
-O 0 3301 5 3318		Flickering Ball of Light
+O 0 3301 1 3302 		Flickering Ball of Light
+O 0 3301 1 3306          Flickering Ball of Light
+O 0 3301 1 3310          Flickering Ball of Light
+O 0 3301 1 3314          Flickering Ball of Light
+O 0 3301 1 3318 		Flickering Ball of Light
 
-O 0 3303 1 3343		Emerald Portal
+O 0 3303 1 3343 		Emerald Portal
 
-O 0 3305 3 3365		Wooden Bench
-O 0 3305 3 3362		Wooden Bench
-O 0 3305 3 3368		Wooden Bench
+O 0 3305 1 3365 		Wooden Bench
+O 0 3305 1 3362 		Wooden Bench
+O 0 3305 1 3368 		Wooden Bench
 
-O 0 3306 3 3375		Pile of Refuse
-O 0 3306 3 3376		Pile of Refuse
-O 0 3306 3 3377		Pile of Refuse
+O 0 3306 1 3375 		Pile of Refuse
+O 0 3306 1 3376 		Pile of Refuse
+O 0 3306 1 3377 		Pile of Refuse
 
-O 0 3307 2 3378		Cask
+O 0 3307 1 3378 		Cask
 P 1 404 999 3307              food inside cask
 P 1 404 999 3307              food inside cask
 
-O 0 3308 2 3379		Crate
+O 0 3308 1 3379 		Crate
 P 1 3328 29 3308             workglove inside crate
 P 1 3366 99 3308             whiskey inside crate
 
-O 0 3309 6 3394         Giant Pillow
-O 0 3309 6 3394         Giant Pillow
-O 0 3309 6 3396         Giant Pillow
-O 0 3309 6 3396         Giant Pillow
-O 0 3309 6 3392         Giant Pillow
+O 0 3309 2 3394          Giant Pillow
+O 0 3309 2 3396          Giant Pillow
+O 0 3309 1 3392          Giant Pillow
 
-O 0 3309 6 3374		Giant Pillow
+O 0 3309 1 3374 		Giant Pillow
 
-O 0 3319 2 3372		Ashtray
-O 0 3319 2 3385		Ashtray
+O 0 3319 1 3372 		Ashtray
+O 0 3319 1 3385 		Ashtray
 
-O 0 3341 2 3366		Glass Case
+O 0 3341 1 3366 		Glass Case
 
-O 0 3342 1 3365		Grey Glass Case
+O 0 3342 1 3365 		Grey Glass Case
 P 1 27110 1 3342         Spellbook - Kalus Quest
 
-O 0 3343 1 3365		Blue Glass Case
+O 0 3343 1 3365 		Blue Glass Case
 
-O 0 3341 2 3364		Glass Case
+O 0 3341 1 3364 		Glass Case
 
-O 0 3344 6 3364         Tapestry
-O 0 3344 6 3365         Tapestry
-O 0 3344 6 3366         Tapestry
-O 0 3344 6 3367         Tapestry
-O 0 3344 6 3368         Tapestry
-O 0 3344 6 3369		Tapestry
+O 0 3344 1 3364          Tapestry
+O 0 3344 1 3365          Tapestry
+O 0 3344 1 3366          Tapestry
+O 0 3344 1 3367          Tapestry
+O 0 3344 1 3368          Tapestry
+O 0 3344 1 3369 		Tapestry
 
 D 0 3334 0 1	Cell Door
 D 0 3336 2 1

@@ -6,14 +6,14 @@ D 0 12041 5 1     Panel casino
 D 0 11848 4 1
 D 0 12023 1 1     East Gate
 
-O 0 17182 9999 11835     portal to ogre camp
-O 0 11906 9999 11906     portal
-O 0 11834 9999 11834     well putrid
-O 0 11878 10 11878       circle iron
-O 0 11878 10 11880
-O 0 7509 9999 11882      winerack
+O 0 17182 1 11835      portal to ogre camp
+O 0 11906 1 11906      portal
+O 0 11834 1 11834      well putrid
+O 0 11878 1 11878        circle iron
+O 0 11878 1 11880 
+O 0 7509 1 11882       winerack
 P 1 7512 1 7509          potion heal/wine
-O 0 6600 9999 11819
+O 0 6600 1 11819 
 P 1 12012 1 6600         steelheart sword
 
 M 0 11801 1 11884        Noctagon

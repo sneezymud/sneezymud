@@ -19,123 +19,113 @@ D 0 9071 3 1                   West Colonnade Balcony -> Cleric Quarter's
 D 0 9072 3 1                   West Colonnade Balcony -> The Cathedral Library
 D 0 9073 0 2                   West Attic Landing -> The Attic
 
-O 0 1443 1 9055                ceiling opening
-O 0 1443 1 9057
+O 0 1443 1 9055                 ceiling opening
+O 0 1443 1 9057 
 V 1 0 -16768143
-O 0 1444 1 9070                floor opening
-O 0 1444 1 9073
+O 0 1444 1 9070                 floor opening
+O 0 1444 1 9073 
 V 1 0 -16768159
 
-O 0 9051 9999 9050             a flickering wrought iron torch
-O 0 9050 1 9050                a iron-strapped oak barrel
-O 0 9052 9999 9051             a cluttered desk
-O 0 9079 9999 9052             a table
-O 0 9069 9999 9052             a small cot
-O 0 9055 9999 9053             a antique cherry wood table
-O 0 9066 9999 9053             a painting
-O 0 9057 9999 9053             a plush oak chair
-O 0 9065 9999 9054             an ornate highback chair
-O 0 9056 9999 9054             an ornate table
-O 0 9059 9999 9054             a bed with a huge canopy
-O 0 9054 9999 9055             a flickering torch
-O 0 9054 9999 9056             a flickering torch
-O 0 9054 9999 9057             a flickering torch
-O 0 9064 9999 9058             a table
-O 0 9064 9999 9058             a table
-O 0 9064 9999 9058             a table
-O 0 9058 9999 9058             a stiff bed
-O 0 9058 9999 9058             a stiff bed
-O 0 9058 9999 9058             a stiff bed
-O 0 9082 9999 9058             a wooden chest
+O 0 9051 1 9050              a flickering wrought iron torch
+O 0 9050 1 9050                 a iron-strapped oak barrel
+O 0 9052 1 9051              a cluttered desk
+O 0 9079 1 9052              a table
+O 0 9069 1 9052              a small cot
+O 0 9055 1 9053              a antique cherry wood table
+O 0 9066 1 9053              a painting
+O 0 9057 1 9053              a plush oak chair
+O 0 9065 1 9054              an ornate highback chair
+O 0 9056 1 9054              an ornate table
+O 0 9059 1 9054              a bed with a huge canopy
+O 0 9054 1 9055              a flickering torch
+O 0 9054 1 9056              a flickering torch
+O 0 9054 1 9057              a flickering torch
+O 0 9064 3 9058              a table
+O 0 9058 3 9058              a stiff bed
+O 0 9082 1 9058              a wooden chest
 ? 0 25 0 L
 L 1 16 25 0 1                    random loot
-O 0 9082 9999 9058             a wooden chest
+O 0 9082 1 9058              a wooden chest
 ? 0 25 0 L
 L 1 16 25 0 1                    random loot
-O 0 9082 9999 9058             a wooden chest
+O 0 9082 1 9058              a wooden chest
 ? 0 25 0 L
 L 1 16 25 0 1                    random loot
-O 0 9077 9999 9058             a rug
-O 0 9064 9999 9059             a table
-O 0 9064 9999 9059             a table
-O 0 9064 9999 9059             a table
-O 0 9058 9999 9059             a stiff bed
-O 0 9058 9999 9059             a stiff bed
-O 0 9058 9999 9059             a stiff bed
-O 0 9060 9999 9059             a wooden chest
+O 0 9077 1 9058              a rug
+O 0 9064 3 9059              a table
+O 0 9058 3 9059              a stiff bed
+O 0 9060 1 9059              a wooden chest
 ? 0 25 0 L
 L 1 16 25 0 1                    random loot
-O 0 9060 9999 9059             a wooden chest
+O 0 9060 1 9059              a wooden chest
 ? 0 25 0 L
 L 1 16 25 0 1                    random loot
-O 0 9060 9999 9059             a wooden chest
+O 0 9060 1 9059              a wooden chest
 ? 0 25 0 L
 L 1 16 25 0 1                    random loot
-O 0 9077 9999 9059             a rug
-O 0 9062 9999 9060             a wooden book cart
-O 0 9058 9999 9061             a stiff bed
-O 0 9069 9999 9061             a small cot
-O 0 9069 9999 9061             a small cot
-O 0 9069 9999 9061             a small cot
-O 0 9054 9999 9062             a flickering torch
-O 0 9054 9999 9063             a flickering torch
-O 0 9051 9999 9064             a flickering wrought iron torch
-O 0 9054 9999 9065             a flickering torch
-O 0 9054 9999 9067             a flickering torch
-O 0 9054 9999 9068             a flickering torch
-O 0 9054 9999 9069             a flickering torch
-O 0 9054 9999 9070             a flickering torch
-O 0 9054 9999 9071             a flickering torch
-O 0 9054 9999 9072             a flickering torch
-O 0 9054 9999 9073             a flickering torch
+O 0 9077 1 9059              a rug
+O 0 9062 1 9060              a wooden book cart
+O 0 9058 1 9061              a stiff bed
+O 0 9069 3 9061              a small cot
+O 0 9054 1 9062              a flickering torch
+O 0 9054 1 9063              a flickering torch
+O 0 9051 1 9064              a flickering wrought iron torch
+O 0 9054 1 9065              a flickering torch
+O 0 9054 1 9067              a flickering torch
+O 0 9054 1 9068              a flickering torch
+O 0 9054 1 9069              a flickering torch
+O 0 9054 1 9070              a flickering torch
+O 0 9054 1 9071              a flickering torch
+O 0 9054 1 9072              a flickering torch
+O 0 9054 1 9073              a flickering torch
 
-O 0 9083 50 9051               a mop
+O 0 9083 1 9051                a mop
 B 0 9063 1 9051                a wooden mop bucket
-O 0 9080 9999 9052             a solid oak bookcase
+O 0 9080 1 9052              a solid oak bookcase
 P 1 9075 9999 9080               Daily thoughts - solid oak bookcase
 P 1 9070 9999 9080               Demon Guide - solid oak bookcase
 P 1 9071 9999 9080               Carnal Knowledge - solid oak bookcase
 P 1 9072 9999 9080               Priest, Harlot & Midget - solid oak bookcase
 P 1 9074 9999 9080               Mezan, Attuning Weapons - solid oak bookcase
 P 1 9073 9999 9080               clergy, hear me ROAR!! - solid oak bookcase
-O 0 9061 9999 9060             a solid oak bookcase
-O 0 1439 9999 9054             the stained glass window onto the street below
+O 0 9061 1 9060              a solid oak bookcase
+O 0 1439 1 9054              the stained glass window onto the street below
 V 1 0 112
-O 0 1426 9999 9055             the colonnade down into the nave.
+O 0 1426 1 9055              the colonnade down into the nave.
 V 1 0 757
-O 0 1440 9999 9056             the colonnade down into the nave.
+O 0 1440 1 9056              the colonnade down into the nave.
 V 1 0 757
-O 0 1429 9999 9057             the colonnade down into the nave.
+O 0 1429 1 9057              the colonnade down into the nave.
 V 1 0 757
-O 0 1439 9999 9058             the stained glass window onto the street below
+O 0 1439 1 9058              the stained glass window onto the street below
 V 1 0 116
-O 0 1425 9999 9065             the colonnade down into the nave.
+O 0 1425 1 9065              the colonnade down into the nave.
 V 1 0 767           
-O 0 1428 9999 9065             the colonnade down into the nave.
+O 0 1428 1 9065              the colonnade down into the nave.
 V 1 0 762
-O 0 1424 9999 9067             the colonnade down into the nave.
+O 0 1424 1 9067              the colonnade down into the nave.
 V 1 0 767
-O 0 1427 9999 9067             the colonnade down into the nave.
+O 0 1427 1 9067              the colonnade down into the nave.
 V 1 0 762
-O 0 1424 9999 9068             the colonnade down into the nave.
+O 0 1424 1 9068              the colonnade down into the nave.
 V 1 0 762
-O 0 1426 9999 9068             the colonnade down into the nave.
+O 0 1426 1 9068              the colonnade down into the nave.
 V 1 0 767
-O 0 1427 9999 9068             the colonnade down into the nave.
+O 0 1427 1 9068              the colonnade down into the nave.
 V 1 0 757
-O 0 1424 9999 9069             the colonnade down into the nave.
+O 0 1424 1 9069              the colonnade down into the nave.
 V 1 0 757
-O 0 1426 9999 9069             the colonnade down into the nave.
+O 0 1426 1 9069              the colonnade down into the nave.
 V 1 0 762
-O 0 1425 9999 9071             the colonnade down into the nave.
+O 0 1425 1 9071              the colonnade down into the nave.
 V 1 0 757
-O 0 1429 9999 9071             the colonnade down into the nave.
+O 0 1429 1 9071              the colonnade down into the nave.
 V 1 0 762
-O 0 1425 9999 9072             the colonnade down into the nave.
+O 0 1425 1 9072              the colonnade down into the nave.
 V 1 0 762
-O 0 1428 9999 9072             the colonnade down into the nave.
+O 0 1428 1 9072              the colonnade down into the nave.
 V 1 0 757
-O 0 1429 9999 9072             the colonnade down into the nave.
+O 0 1429 1 9072              the colonnade down into the nave.
 V 1 0 767
 
 

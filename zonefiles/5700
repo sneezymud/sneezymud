@@ -75,39 +75,37 @@ D 0 5881 0 2            Door into Tactics room
 D 0 5882 2 2
 D 0 5887 7 2            Door into arcane tower
 D 0 5888 8 2
-O 0 5700 15 5700         Bush
-O 0 5700 15 5703         Bush
+O 0 5700 1 5700          Bush
+O 0 5700 1 5703          Bush
 P 1 5701 20 5700         Berries
-O 0 5700 15 5704         Bush
+O 0 5700 1 5704          Bush
 P 1 5701 20 5700         Berries
-O 0 5700 15 5701         Bush
+O 0 5700 1 5701          Bush
 P 1 5701 5 5700          Berries
-O 0 5700 15 5709         Bush
-O 0 5700 15 5718         Bush
-O 0 5700 15 5720         Bush
-O 0 5700 15 5720         Bush
-O 0 5700 15 5720         Bush
-O 0 5702 2 5705          Table
-O 0 5703 10 5705         Candles
-O 0 5703 10 5706         Candles
-O 0 5704 2 5706         Cabinet
+O 0 5700 1 5709          Bush
+O 0 5700 1 5718          Bush
+O 0 5700 3 5720          Bush
+O 0 5702 1 5705           Table
+O 0 5703 1 5705          Candles
+O 0 5703 1 5706          Candles
+O 0 5704 1 5706          Cabinet
 P 1 5701 20 5704         Berries
-O 0 5702 2 5732          Table
-O 0 5748 1 5731          Safe
+O 0 5702 1 5732           Table
+O 0 5748 1 5731           Safe
 P 1 813 9999 5748        recall scroll 
-O 0 5749 1 5731          Bed
-O 0 5700 15 5736         Bush
-O 0 3 9999 5750          Fountain
-O 0 5704 2 5776         Cabinet
+O 0 5749 1 5731           Bed
+O 0 5700 1 5736          Bush
+O 0 3 1 5750           Fountain
+O 0 5704 1 5776          Cabinet
 P 1 7523 9999 5704         paralyze wand
 ? 0 45 0 O
-O 0 5738 20 5844         stratian plate armor
+O 0 5738 1 5844          stratian plate armor
 ? 0 5 0 O
-O 1 5737 12 5844         wearable holy symbol 
-O 0 3 9999 5854          Fountain
-O 0 5751 2 5896          chair
-O 0 5751 2 5897          chair
-O 0 5723 1 5729          Tablet
+O 1 5737 1 5844          wearable holy symbol 
+O 0 3 1 5854           Fountain
+O 0 5751 1 5896           chair
+O 0 5751 1 5897           chair
+O 0 5723 1 5729           Tablet
 M 0 5700 2 5719          Aurian Deer
 M 0 5700 2 5703          Aurian Deer
 M 0 5701 2 5710          Red-Crested Hawk

@@ -2,7 +2,7 @@
 Raistlin - Dwarven Mines and Temple~
 2299 40 2 1
 
-O 0 2277 1 2199    -50 light
+O 0 2277 1 2199     -50 light
 
 D 0 2108 5 1   ; Secret Door to southern temple entrance
 D 0 2199 4 1
@@ -480,21 +480,21 @@ G 1 2184 1 		Key on Chain
 G 1 2185 1		Heavy Book
 
 ? 0 5 0 O
-O 1 7500 1 2275	    Ancient Holy Symbol
-O 0 2143 1 2224	    Smooth Onyx Altar
+O 1 7500 1 2275 	    Ancient Holy Symbol
+O 0 2143 1 2224 	    Smooth Onyx Altar
 
-O 0 28 9999 2252	Generic Dwarven bed
-O 0 28 9999 2253	Generic Dwarven bed
-O 0 28 9999 2254	Generic Dwarven bed
-O 0 28 9999 2255	Generic Dwarven bed
-O 0 28 9999 2269	Generic Dwarven bed
-O 0 28 9999 2270	Generic Dwarven bed
-O 0 28 9999 2271	Generic Dwarven bed
-O 0 28 9999 2272	Generic Dwarven bed
-O 0 28 9999 2273	Generic Dwarven bed
-O 0 28 9999 2275	Generic Dwarven bed
-O 0 28 9999 2276	Generic Dwarven bed
-O 0 28 9999 2184	Generic Dwarven bed
+O 0 28 1 2252 	Generic Dwarven bed
+O 0 28 1 2253 	Generic Dwarven bed
+O 0 28 1 2254 	Generic Dwarven bed
+O 0 28 1 2255 	Generic Dwarven bed
+O 0 28 1 2269 	Generic Dwarven bed
+O 0 28 1 2270 	Generic Dwarven bed
+O 0 28 1 2271 	Generic Dwarven bed
+O 0 28 1 2272 	Generic Dwarven bed
+O 0 28 1 2273 	Generic Dwarven bed
+O 0 28 1 2275 	Generic Dwarven bed
+O 0 28 1 2276 	Generic Dwarven bed
+O 0 28 1 2184 	Generic Dwarven bed
 S
 
 

@@ -5,31 +5,29 @@ Saint - T'ir Na Z'goth/Drow cave~
 D 0 9958 4 1                    Secret door to Warrior Level40  Gm
 D 0 7800 5 1
 
-O 0 9901 15 9932	Fungus
-O 0 9901 15 9931	Fungus
-O 0 9901 15 9931	Fungus
-O 0 9901 15 9929	Fungus
-O 0 9901 15 9928	Fungus
-O 0 9901 15 9947	Fungus
-O 0 9901 15 9935	Fungus
-O 0 9901 15 9940	Fungus
-O 0 9901 15 9948	Fungus
-O 0 9901 15 9953	Fungus
-O 0 9901 15 9952	Fungus
-O 0 9901 15 9975	Fungus
-O 0 9901 15 9974	Fungus
+O 0 9901 1 9932 	Fungus
+O 0 9901 2 9931 	Fungus
+O 0 9901 1 9929 	Fungus
+O 0 9901 1 9928 	Fungus
+O 0 9901 1 9947 	Fungus
+O 0 9901 1 9935 	Fungus
+O 0 9901 1 9940 	Fungus
+O 0 9901 1 9948 	Fungus
+O 0 9901 1 9953 	Fungus
+O 0 9901 1 9952 	Fungus
+O 0 9901 1 9975 	Fungus
+O 0 9901 1 9974 	Fungus
 
 O 0 9902  1 9962	Fire
 
-O 0 9903 1 9998	Torch
-O 0 9903 2 9997	Torch
-O 0 9903 3 9944	Torch
-O 0 9903 4 9959	Torch
+O 0 9903 1 9998 	Torch
+O 0 9903 1 9997 	Torch
+O 0 9903 1 9944 	Torch
+O 0 9903 1 9959 	Torch
 
-O 0 9919 1 9999	Stone Tablet
+O 0 9919 1 9999 	Stone Tablet
 
-O 0 9973 2 9899   High-Backed Padded Obsidian Chair
-O 0 9973 2 9899   High-Backed Padded Obsidian Chair
+O 0 9973 2 9899    High-Backed Padded Obsidian Chair
 
 *On The Wall 9928-9958
 M 0 9900 1 9928 	Drow Priestess

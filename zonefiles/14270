@@ -34,314 +34,314 @@ D 0 14299 2 1      A Desecrated Burial Vault -> A Decorated Tomb
 D 0 14299 3 1      A Desecrated Burial Vault -> A Small Entry Chamber
 
 
-O 0 14272 9999 14281           a decayed wooden coffin
+O 0 14272 1 14281            a decayed wooden coffin
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14272              putrid corpse
-O 0 14272 9999 14282           a decayed wooden coffin
+O 0 14272 1 14282            a decayed wooden coffin
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14272              dried corpse
-O 0 14272 9999 14282           a decayed wooden coffin
+O 0 14272 1 14282            a decayed wooden coffin
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14272              putrid corpse
-O 0 14272 9999 14283           a decayed wooden coffin
+O 0 14272 1 14283            a decayed wooden coffin
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14272              dried corpse
-O 0 14272 9999 14283           a decayed wooden coffin
+O 0 14272 1 14283            a decayed wooden coffin
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14272              putrid corpse
-O 0 14272 9999 14284           a decayed wooden coffin
+O 0 14272 1 14284            a decayed wooden coffin
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14272              dried corpse
 
-O 0 14273 9999 14291           a crumbling stone coffin
+O 0 14273 1 14291            a crumbling stone coffin
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14273              putrid corpse
-O 0 14273 9999 14292           a crumbling stone coffin
+O 0 14273 1 14292            a crumbling stone coffin
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14273              dried corpse
-O 0 14273 9999 14292           a crumbling stone coffin
+O 0 14273 1 14292            a crumbling stone coffin
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14273              putrid corpse
-O 0 14273 9999 14293           a crumbling stone coffin
+O 0 14273 1 14293            a crumbling stone coffin
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14273              dried corpse
-O 0 14273 9999 14294           a crumbling stone coffin
+O 0 14273 1 14294            a crumbling stone coffin
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14273              putrid corpse
-O 0 14273 9999 14295           a crumbling stone coffin
+O 0 14273 1 14295            a crumbling stone coffin
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14273              dried corpse
-O 0 14273 9999 14295           a crumbling stone coffin
+O 0 14273 1 14295            a crumbling stone coffin
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14273              putrid corpse
-O 0 14273 9999 14296           a crumbling stone coffin
+O 0 14273 1 14296            a crumbling stone coffin
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14273              dried corpse
 
-O 0 14274 9999 14288           a crumbling marble coffin
+O 0 14274 1 14288            a crumbling marble coffin
 ? 0 15 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14274              dried corpse
-O 0 14274 9999 14288           a crumbling marble coffin
+O 0 14274 1 14288            a crumbling marble coffin
 ? 0 15 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14274              putrid corpse
-O 0 14274 9999 14288           a crumbling marble coffin
+O 0 14274 1 14288            a crumbling marble coffin
 ? 0 15 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14274              dried corpse
-O 0 14274 9999 14290           a crumbling marble coffin
+O 0 14274 1 14290            a crumbling marble coffin
 ? 0 15 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14274              putrid corpse
-O 0 14274 9999 14290           a crumbling marble coffin
+O 0 14274 1 14290            a crumbling marble coffin
 ? 0 15 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14274              dried corpse
 
-O 0 14275 9999 14297           a cracked crystal coffin
+O 0 14275 1 14297            a cracked crystal coffin
 ? 0 15 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14275              putrid corpse
-O 0 14275 9999 14297           a cracked crystal coffin
+O 0 14275 1 14297            a cracked crystal coffin
 ? 0 15 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14275              dried corpse
-O 0 14275 9999 14299           a cracked crystal coffin
+O 0 14275 1 14299            a cracked crystal coffin
 ? 0 15 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14275              putrid corpse
-O 0 14275 9999 14299           a cracked crystal coffin
+O 0 14275 1 14299            a cracked crystal coffin
 ? 0 15 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14275              dried corpse
 
-O 0 14276 9999 14299           a runed crystal coffin
+O 0 14276 1 14299            a runed crystal coffin
 ? 0 20 0 L
 L 1 20 30 0 1                    random loot
 ? 0 50 0 P
 P 1 14271 1 14276                   Tome of Artifacts - Volume I
 
-O 0 14277 9999 14274           a stone niche
+O 0 14277 1 14274            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14274           a stone niche
+O 0 14277 1 14274            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14274           a stone niche
+O 0 14277 1 14274            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14274           a stone niche
+O 0 14277 1 14274            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14275           a stone niche
+O 0 14277 1 14275            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14275           a stone niche
+O 0 14277 1 14275            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14275           a stone niche
+O 0 14277 1 14275            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14275           a stone niche
+O 0 14277 1 14275            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14276           a stone niche
+O 0 14277 1 14276            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14276           a stone niche
+O 0 14277 1 14276            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14276           a stone niche
+O 0 14277 1 14276            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14276           a stone niche
+O 0 14277 1 14276            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14276           a stone niche
+O 0 14277 1 14276            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14277           a stone niche
+O 0 14277 1 14277            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14277           a stone niche
+O 0 14277 1 14277            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14277           a stone niche
+O 0 14277 1 14277            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14278           a stone niche
+O 0 14277 1 14278            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14277              putrid corpse
-O 0 14277 9999 14278           a stone niche
+O 0 14277 1 14278            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14277              putrid corpse
-O 0 14277 9999 14278           a stone niche
+O 0 14277 1 14278            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14277              putrid corpse
-O 0 14277 9999 14279           a stone niche
+O 0 14277 1 14279            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14277              putrid corpse
-O 0 14277 9999 14279           a stone niche
+O 0 14277 1 14279            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14277              putrid corpse
-O 0 14277 9999 14280           a stone niche
+O 0 14277 1 14280            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14277              putrid corpse
-O 0 14277 9999 14280           a stone niche
+O 0 14277 1 14280            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14277              putrid corpse
-O 0 14277 9999 14280           a stone niche
+O 0 14277 1 14280            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14277              putrid corpse
-O 0 14277 9999 14281           a stone niche
+O 0 14277 1 14281            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14277              putrid corpse
-O 0 14277 9999 14281           a stone niche
+O 0 14277 1 14281            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14282           a stone niche
+O 0 14277 1 14282            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14277              putrid corpse
-O 0 14277 9999 14282           a stone niche
+O 0 14277 1 14282            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14283           a stone niche
+O 0 14277 1 14283            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14277              putrid corpse
-O 0 14277 9999 14283           a stone niche
+O 0 14277 1 14283            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14283           a stone niche
+O 0 14277 1 14283            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14277              putrid corpse
-O 0 14277 9999 14284           a stone niche
+O 0 14277 1 14284            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5139 9999 14277              dried corpse
-O 0 14277 9999 14284           a stone niche
+O 0 14277 1 14284            a stone niche
 ? 0 5 0 L
 L 1 20 30 0 1                    random loot
 P 1 5138 9999 14277              putrid corpse
 
-O 0 14278 9999 14291           a marble lined niche
+O 0 14278 1 14291            a marble lined niche
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
-O 0 14278 9999 14291           a marble lined niche
+O 0 14278 1 14291            a marble lined niche
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
-O 0 14278 9999 14292           a marble lined niche
+O 0 14278 1 14292            a marble lined niche
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
-O 0 14278 9999 14292           a marble lined niche
+O 0 14278 1 14292            a marble lined niche
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
-O 0 14278 9999 14293           a marble lined niche
+O 0 14278 1 14293            a marble lined niche
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
-O 0 14278 9999 14294           a marble lined niche
+O 0 14278 1 14294            a marble lined niche
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
-O 0 14278 9999 14295           a marble lined niche
+O 0 14278 1 14295            a marble lined niche
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
-O 0 14278 9999 14295           a marble lined niche
+O 0 14278 1 14295            a marble lined niche
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
-O 0 14278 9999 14296           a marble lined niche
+O 0 14278 1 14296            a marble lined niche
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
-O 0 14278 9999 14296           a marble lined niche
+O 0 14278 1 14296            a marble lined niche
 ? 0 10 0 L
 L 1 20 30 0 1                    random loot
 
-O 0 14279 9999 14274           a carved wooden coffer
+O 0 14279 1 14274            a carved wooden coffer
 ? 0 30 0 L
 L 1 20 30 0 1                    random loot
-O 0 14279 9999 14276           a carved wooden coffer
+O 0 14279 1 14276            a carved wooden coffer
 ? 0 30 0 L
 L 1 20 30 0 1                    random loot
-O 0 14279 9999 14278           a carved wooden coffer
+O 0 14279 1 14278            a carved wooden coffer
 ? 0 30 0 L
 L 1 20 30 0 1                    random loot
-O 0 14279 9999 14278           a carved wooden coffer
+O 0 14279 1 14278            a carved wooden coffer
 ? 0 30 0 L
 L 1 20 30 0 1                    random loot
-O 0 14279 9999 14279           a carved wooden coffer
+O 0 14279 1 14279            a carved wooden coffer
 ? 0 30 0 L
 L 1 20 30 0 1                    random loot
-O 0 14279 9999 14280           a carved wooden coffer
+O 0 14279 1 14280            a carved wooden coffer
 ? 0 30 0 L
 L 1 20 30 0 1                    random loot
 
-O 0 14280 9999 14288           a marble coffer
+O 0 14280 1 14288            a marble coffer
 ? 0 35 0 L
 L 1 20 30 0 1                    random loot
 ? 0 5 0 P
 P 1 14117 15 14280                bloodstone inlaid scepter
-O 0 14280 9999 14290           a marble coffer
+O 0 14280 1 14290            a marble coffer
 ? 0 35 0 L
 L 1 20 30 0 1                    random loot
 ? 0 5 0 P
 P 1 14117 15 14280                bloodstone inlaid scepter
-O 0 14280 9999 14290           a marble coffer
+O 0 14280 1 14290            a marble coffer
 ? 0 35 0 L
 L 1 20 30 0 1                    random loot
 ? 0 5 0 P
 P 1 14117 15 14280                bloodstone inlaid scepter
 
-O 0 14281 9999 14297           a jeweled coffer
+O 0 14281 1 14297            a jeweled coffer
 ? 0 40 0 L
 L 1 20 30 0 1                    random loot
-O 0 14281 9999 14297           a jeweled coffer
+O 0 14281 1 14297            a jeweled coffer
 ? 0 40 0 L
 L 1 20 30 0 1                    random loot
-O 0 14281 9999 14299           a jeweled coffer
+O 0 14281 1 14299            a jeweled coffer
 ? 0 40 0 L
 L 1 20 30 0 1                    random loot
 

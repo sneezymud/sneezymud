@@ -13,26 +13,26 @@ D 0 10671 4 1     Before a Gigantic Elm -> Platform high in the trees
 D 0 10680 5 1     Platform high in the trees -> Before a Gigantic Elm
 D 0 10681 4 1     Beneath the lake -> Arden Lake
 
-O 0 10680 9999 10693           a quiver
+O 0 10680 1 10693            a quiver
 P 1 3414 9999 10680                 a long hunting arrow inside a quiver
 P 1 3414 9999 10680                 a long hunting arrow inside a quiver
 P 1 3414 9999 10680                 a long hunting arrow inside a quiver
 
-O 0 10680 9999 10694           a quiver
+O 0 10680 1 10694            a quiver
 P 1 308 9999 10680                  a small steel arrow inside a quiver
 P 1 308 9999 10680                  a small steel arrow inside a quiver
 P 1 308 9999 10680                  a small steel arrow inside a quiver
 
-O 0 10685 5 10668              a Kings Throne
-O 0 10686 1 10668              a wooden chair
-O 0 10693 5 10655              a circle of stones
+O 0 10685 1 10668               a Kings Throne
+O 0 10686 1 10668               a wooden chair
+O 0 10693 1 10655               a circle of stones
 
-O 0 10694 1 10689              a golden chest with iron strapping
+O 0 10694 1 10689               a golden chest with iron strapping
 P 1 10683 9999 10694                Shorenjin's treasure
 
-O 0 10695 1 10689              the corpse of the elven prince Ronat
+O 0 10695 1 10689               the corpse of the elven prince Ronat
 
-O 0 10699 1 10670              a huge marble stone
+O 0 10699 1 10670               a huge marble stone
 
 
 M 0 10600 20 10646             a lake elf

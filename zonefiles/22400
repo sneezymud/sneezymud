@@ -43,79 +43,66 @@ D 0 22443 2 2
 D 0 22444 3 2
 D 0 22445 1 2
 
-O 0 22404 1 22439         Priestess chest
+O 0 22404 1 22439          Priestess chest
 ? 0 20 0 P
 P 1 22407 5 22404            The book of wisdom in her chest
 
-O 0 22405 1 22441       Gnife of Gnomekind
+O 0 22405 1 22441        Gnife of Gnomekind
 
-O 0 22406 1 22423       Gnome Charm
+O 0 22406 1 22423        Gnome Charm
 
-O 0 22420 1 22482       Gnome Sign
+O 0 22420 1 22482        Gnome Sign
 
-O 0 22437 1 22491       Edge of a Shallow Pond
-O 0 22437 1 22492
-O 0 22437 1 22493
-O 0 22437 1 22494
+O 0 22437 1 22491        Edge of a Shallow Pond
+O 0 22437 1 22492 
+O 0 22437 1 22493 
+O 0 22437 1 22494 
 
-O 0 22438 1 22462       Slot in a Hunter's Blind (window)
+O 0 22438 1 22462        Slot in a Hunter's Blind (window)
 
-O 0 29 9999 22422	Generic gnome bed
-O 0 29 9999 22424	Generic gnome bed
-O 0 29 9999 22426	Generic gnome bed
-O 0 29 9999 22428	Generic gnome bed
-O 0 29 9999 22439	Generic gnome bed
-O 0 29 9999 22438	Generic gnome bed
-O 0 29 9999 22442	Generic gnome bed
-O 0 29 9999 22447	Generic gnome bed
+O 0 29 1 22422 	Generic gnome bed
+O 0 29 1 22424 	Generic gnome bed
+O 0 29 1 22426 	Generic gnome bed
+O 0 29 1 22428 	Generic gnome bed
+O 0 29 1 22439 	Generic gnome bed
+O 0 29 1 22438 	Generic gnome bed
+O 0 29 1 22442 	Generic gnome bed
+O 0 29 1 22447 	Generic gnome bed
 
-O 0 700 9999 22448	Bunks in gnome barracks
+O 0 700 1 22448 	Bunks in gnome barracks
 V 1 1 42		   Set bed size for 42" users
-O 0 700 9999 22448	Bunks in gnome barracks
+O 0 700 1 22448 	Bunks in gnome barracks
 V 1 1 42		   Set bed size for 42" users
 
-O 0 22428 9999 22461   Hearth Cookfire
-O 0 22428 9999 22477   
-O 0 22428 9999 22495   
-O 0 22428 9999 22496   
-O 0 22428 9999 22497   
+O 0 22428 1 22461    Hearth Cookfire
+O 0 22428 1 22477    
+O 0 22428 1 22495    
+O 0 22428 1 22496    
+O 0 22428 1 22497    
 
-O 0 22429 9999 22420   Embedded Glowstone
-O 0 22429 9999 22422   
-O 0 22429 9999 22422   
-O 0 22429 9999 22423   
-O 0 22429 9999 22424   
-O 0 22429 9999 22424   
-O 0 22429 9999 22426   
-O 0 22429 9999 22426   
-O 0 22429 9999 22428   
-O 0 22429 9999 22428   
-O 0 22429 9999 22429   
-O 0 22429 9999 22430   
-O 0 22429 9999 22430   
-O 0 22429 9999 22431   
-O 0 22429 9999 22432   
-O 0 22429 9999 22433   
-O 0 22429 9999 22434   
-O 0 22429 9999 22436   
-O 0 22429 9999 22436   
-O 0 22429 9999 22437   
-O 0 22429 9999 22437   
-O 0 22429 9999 22438   
-O 0 22429 9999 22438   
-O 0 22429 9999 22439   
-O 0 22429 9999 22439   
-O 0 22429 9999 22440   
-O 0 22429 9999 22440   
-O 0 22429 9999 22441   
-O 0 22429 9999 22442   
-O 0 22429 9999 22442   
-O 0 22429 9999 22447   
-O 0 22429 9999 22447   
-O 0 22429 9999 22448   
-O 0 22429 9999 22448   
-O 0 22429 9999 22449   
-O 0 22429 9999 22450   
+O 0 22429 1 22420    Embedded Glowstone
+O 0 22429 2 22422    
+O 0 22429 1 22423    
+O 0 22429 2 22424    
+O 0 22429 2 22426    
+O 0 22429 2 22428    
+O 0 22429 1 22429    
+O 0 22429 2 22430    
+O 0 22429 1 22431    
+O 0 22429 1 22432    
+O 0 22429 1 22433    
+O 0 22429 1 22434    
+O 0 22429 2 22436    
+O 0 22429 2 22437    
+O 0 22429 2 22438    
+O 0 22429 2 22439    
+O 0 22429 2 22440    
+O 0 22429 1 22441    
+O 0 22429 2 22442    
+O 0 22429 2 22447    
+O 0 22429 2 22448    
+O 0 22429 1 22449    
+O 0 22429 1 22450    
 
 M 0 22400 1 22414        Gnome Peasant - M
 M 0 22400 1 22405        

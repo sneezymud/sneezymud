@@ -12,13 +12,13 @@ D 0 30999 3 1
 
 D 0 30975 4 1 # exit beneath temple altar
 
-O 0 30988 9999 30979 # glass boules for light
-O 0 30988 9999 30980
-O 0 30988 9999 30988
-O 0 30988 9999 30981
+O 0 30988 1 30979  # glass boules for light
+O 0 30988 1 30980 
+O 0 30988 1 30988 
+O 0 30988 1 30981 
 
-O 0 30999 9999 30999 # waste can, storage room
-O 0 30998 9999 30999 # shelves
+O 0 30999 1 30999  # waste can, storage room
+O 0 30998 1 30999  # shelves
 P 1 30984 9999 30998 # fireworks
 P 1 30984 9999 30998
 P 1 30984 9999 30998
@@ -39,30 +39,26 @@ P 1 30997 9999 30998
 P 1 30997 9999 30998
 P 1 30997 9999 30998
 P 1 30997 9999 30998
-O 0 30997 9999 30999
-O 0 30997 9999 30999
-O 0 30997 9999 30999
-O 0 30997 9999 30999
+O 0 30997 4 30999 
 
-O 0 30998 9999 30998 # shelves, records room
-O 0 30998 9999 30998
-O 0 30996 9999 30998 # table
+O 0 30998 2 30998  # shelves, records room
+O 0 30996 1 30998  # table
 P 1 30985 9999 30996 # moleskin history
-O 0 30997 9999 30998 # chair
+O 0 30997 1 30998  # chair
 
-O 0 30996 9999 30978 # table
+O 0 30996 1 30978  # table
 B 0 30993 9999 30978 # incense, decays in 30
 
-O 0 30981 9999 30996 # sarcophagus
+O 0 30981 1 30996  # sarcophagus
 P 1 30982 9999 30981 # desiccated corpse
 
-O 0 30981 9999 30995 # sarcophagus
+O 0 30981 1 30995  # sarcophagus
 P 1 30982 9999 30981 # desiccated corpse
 
-O 0 30981 9999 30994 # sarcophagus
+O 0 30981 1 30994  # sarcophagus
 P 1 30982 9999 30981 # desiccated corpse
 
-O 0 30994 9999 30993 # sarcophagus with proc
+O 0 30994 1 30993  # sarcophagus with proc
 
 X 1 19 30983 # fork
 X 1 18 30978 # shield

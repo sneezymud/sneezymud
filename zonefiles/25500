@@ -87,25 +87,25 @@ D 0 25588 3 1
 D 0 25587 2 1	Inn - south
 D 0 25591 0 1
 
-O 0 25500 1 25602	Fire (offering) pit
-O 0 25501 1 25649	altar
+O 0 25500 1 25602 	Fire (offering) pit
+O 0 25501 1 25649 	altar
 *P 1 512 9999 25501
-O 0 25504 1 25655	vortex
-O 0 25505 9999 25503	Broken wheel
-O 0 25505 9999 25505
-O 0 25506 9999 25522	Bench
-O 0 25507 9999 25522	Racks
-O 0 6612 9999 25601	large Fire Pit
-O 0 25508 9999 25656	West slit
-O 0 25509 9999 25656	East slit
-O 0 25510 9999 25656	North slit
-O 0 25511 9999 25656	South slit
-O 0 17108 9999 25597	Bookcase
-O 0 25512 9999 25598	Torture rack
-O 0 25513 9999 25599	Torture rack
-O 0 25514 9999 25596	Torture rack
-O 0 25551 1 25502	Roadsign
-O 0 25553 1 25664	Dais
+O 0 25504 1 25655 	vortex
+O 0 25505 1 25503 	Broken wheel
+O 0 25505 1 25505 
+O 0 25506 1 25522 	Bench
+O 0 25507 1 25522 	Racks
+O 0 6612 1 25601 	large Fire Pit
+O 0 25508 1 25656 	West slit
+O 0 25509 1 25656 	East slit
+O 0 25510 1 25656 	North slit
+O 0 25511 1 25656 	South slit
+O 0 17108 1 25597 	Bookcase
+O 0 25512 1 25598 	Torture rack
+O 0 25513 1 25599 	Torture rack
+O 0 25514 1 25596 	Torture rack
+O 0 25551 1 25502 	Roadsign
+O 0 25553 1 25664 	Dais
 P 1 25554 1 25553	  Emerald on dais
 
 M 0 25500 1 25507	Scorpion

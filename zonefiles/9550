@@ -23,41 +23,34 @@ D 0 9559 4 1
 D 0 9574 2 2		locked secret to ratking (5276) dif zone
 D 0 5276 0 2
 
-O 0 9550 9999 9559		guitar
-O 0 9551 9999 9559		black box
-O 0 9552 9999 9559		large pile pictures
-O 0 9553 9999 9557		blue portal 
-O 0 9554 9999 9557		red portal
-O 0 9555 9999 9557		transparent portal
-O 0 9556 9999 9557		brown portal
-O 0 9557 9999 9552		arena portal - entrance
-O 0 9558 9999 9555		arena portal - exit
-O 0 9559 9999 9552		hospital portal
-O 0 9560 9999 9550		Image portal exit training
-O 0 9560 9999 9551		
-O 0 9560 9999 9554		
-O 0 9560 9999 9553		
-O 0 9561 9999 9556		red velvet couch
-O 0 9561 9999 9558		
-O 0 9561 9999 9566		
-O 0 9561 9999 9568		
-O 0 9568 9999 9571		comfortable chair
-O 0 9568 9999 9571		
-O 0 9568 9999 9571		
-O 0 9568 9999 9571		
-O 0 9568 9999 9571		
-O 0 9568 9999 9571		
-O 0 9568 9999 9571		
-O 0 9568 9999 9571		
-O 0 9569 9999 9571		large table
+O 0 9550 1 9559 		guitar
+O 0 9551 1 9559 		black box
+O 0 9552 1 9559 		large pile pictures
+O 0 9553 1 9557 		blue portal 
+O 0 9554 1 9557 		red portal
+O 0 9555 1 9557 		transparent portal
+O 0 9556 1 9557 		brown portal
+O 0 9557 1 9552 		arena portal - entrance
+O 0 9558 1 9555 		arena portal - exit
+O 0 9559 1 9552 		hospital portal
+O 0 9560 1 9550 		Image portal exit training
+O 0 9560 1 9551 		
+O 0 9560 1 9554 		
+O 0 9560 1 9553 		
+O 0 9561 1 9556 		red velvet couch
+O 0 9561 1 9558 		
+O 0 9561 1 9566 		
+O 0 9561 1 9568 		
+O 0 9568 8 9571 		comfortable chair
+O 0 9569 1 9571 		large table
 P 1 413 9999 9569			put beer table
-O 0 9569 9999 9571		large table
+O 0 9569 1 9571 		large table
 P 1 412 9999 9569			put whiskey table
 P 1 412 9999 9569			
 P 1 412 9999 9569			
-O 0 9569 9999 9571		large table
-O 0 9570 9999 9574		rat bones
-O 0 9571 9999 9562		massive opal
+O 0 9569 1 9571 		large table
+O 0 9570 1 9574 		rat bones
+O 0 9571 1 9562 		massive opal
 
 B 0 9563 5 9559			Candy wrapper
 P 1 9564 9999 9563		put candy in wrapper

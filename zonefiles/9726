@@ -37,23 +37,23 @@ D 0 9784 0 2           Treasury
 D 0 9785 2 2
 D 0 9791 0 2           Prize-Keep
 D 0 9795 2 2
-O 0 9760 1 9737        Ancient Fountain
-O 0 9761 1 9749        Pool of Eternal Damnation
-O 0 9762 1 9791        Puddle of dark liquid
+O 0 9760 1 9737         Ancient Fountain
+O 0 9761 1 9749         Pool of Eternal Damnation
+O 0 9762 1 9791         Puddle of dark liquid
 
 ? 0 5 0 O
-O 1 9747 20 9785       A Huge Opal
+O 1 9747 1 9785        A Huge Opal
 
 ? 0 5 0 O
-O 1 9751 1 9785        A pile of coins (30000)
+O 1 9751 1 9785         A pile of coins (30000)
 
 ? 0 5 0 O
-O 0 815 5 9795         A Deep Blue Scroll
+O 0 815 1 9795          A Deep Blue Scroll
 ? 0 5 0 O
-O 0 9757 1 9795        A pile of coins (30000)
+O 0 9757 1 9795         A pile of coins (30000)
 
 ? 0 7 0 O
-O 1 9735 2 9795        A skull Amulet 
+O 1 9735 1 9795         A skull Amulet 
 
 M 0 9723 1 9743         Rexor
 ? 0 50 0 G

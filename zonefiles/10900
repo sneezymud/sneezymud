@@ -13,8 +13,8 @@ D 0 10915 8 1              ; Cabin Door
 D 0 10996 8 1              ; Sticks in Lake
 D 0 10997 7 1              ; Sticks in Lake
 
-O 0 17101 9999 10914         smoldering campfire (from ogre's)
-O 0 31357 1 10938
+O 0 17101 1 10914          smoldering campfire (from ogre's)
+O 0 31357 1 10938 
 M 0 31307 3 10978           ; Blue mare for juju quest
 M 0 10900 4 10923           ; Mockingbird
 M 0 10900 4 10954           ; Mockingbird
@@ -230,34 +230,34 @@ M 0 10923 1 10914            ; Orc Poacher
 
 M 0 10924 1 10982            ; gold miner
 
-O 0 10928 1 10915            ; Wooden Bed in Cabin
+O 0 10928 1 10915             ; Wooden Bed in Cabin
 ? 0 5 0 O
-O 1 10929 999 10915          ; Beeswax Candle in Cabin
-O 0 10934 2 10915            ; Fireplace in Cabin
-O 0 10930 1 10915            ; Rocking Chair in Cabin
+O 1 10929 1 10915           ; Beeswax Candle in Cabin
+O 0 10934 1 10915             ; Fireplace in Cabin
+O 0 10930 1 10915             ; Rocking Chair in Cabin
 ? 0 5 0 O
-O 1 10937 999 10915          ; Smoked Ham
-O 0 10935 9 10959            ; Spring in Camp Site
+O 1 10937 1 10915           ; Smoked Ham
+O 0 10935 1 10959             ; Spring in Camp Site
 ? 0 2 0 O
-O 1 10936 999 10981          ; Canoe outside Cabin
-O 0 10901 6 10966            ; Berry Bush
-O 0 10901 6 10975            ; Berry Bush
-O 0 10901 6 10966            ; Berry Bush
-O 0 10901 6 10975            ; Berry Bush
-O 0 10901 6 10966            ; Berry Bush
-O 0 10901 6 10975            ; Berry Bush
+O 1 10936 1 10981           ; Canoe outside Cabin
+O 0 10901 1 10966             ; Berry Bush
+O 0 10901 1 10975             ; Berry Bush
+O 0 10901 1 10966             ; Berry Bush
+O 0 10901 1 10975             ; Berry Bush
+O 0 10901 1 10966             ; Berry Bush
+O 0 10901 1 10975             ; Berry Bush
 ? 0 10 0 O
-O 1 10900 999 10966            ; Red & Black Berries
+O 1 10900 1 10966             ; Red & Black Berries
 ? 0 10 0 O
-O 1 10900 999 10975            ; Red & Black Berries
+O 1 10900 1 10975             ; Red & Black Berries
 ? 0 2 0 O
-O 1 10911 999 10966            ; Yellow Berries
+O 1 10911 1 10966             ; Yellow Berries
 ? 0 2 0 O
-O 1 10911 999 10975            ; Yellow Berries
+O 1 10911 1 10975             ; Yellow Berries
 ? 0 3 0 O
-O 1 10907 999 10962            ; Orange Berries
+O 1 10907 1 10962             ; Orange Berries
 ? 0 8 0 O
-O 1 10904 999 10941            ; Birds Nest
+O 1 10904 1 10941             ; Birds Nest
 ? 0 20 0 P
 P 1 10903 999 10904              ; Birds Egg
 ? 0 15 0 P
@@ -267,7 +267,7 @@ P 1 10903 999 10904              ; Birds Egg
 ? 0 5 0 P
 P 1 10903 999 10904              ; Birds Egg
 ? 0 8 0 O
-O 1 10904 999 10970            ; Birds Nest
+O 1 10904 1 10970             ; Birds Nest
 ? 0 20 0 P
 P 1 10903 999 10904              ; Birds Egg
 ? 0 15 0 P
@@ -277,7 +277,7 @@ P 1 10903 999 10904              ; Birds Egg
 ? 0 5 0 P
 P 1 10903 999 10904              ; Birds Egg
 ? 0 8 0 O
-O 1 10904 999 10930            ; Birds Nest
+O 1 10904 1 10930             ; Birds Nest
 ? 0 20 0 P
 P 1 10903 999 10904              ; Birds Egg
 ? 0 15 0 P
@@ -287,28 +287,28 @@ P 1 10903 999 10904              ; Birds Egg
 ? 0 5 0 P
 P 1 10903 999 10904              ; Birds Egg
 ? 0 10 0 O
-O 1 10905 999 10923            ; Pine Cone
+O 1 10905 1 10923             ; Pine Cone
 ? 0 10 0 O
-O 1 10905 999 10946            ; Pine Cone
+O 1 10905 1 10946             ; Pine Cone
 ? 0 10 0 O
-O 1 10905 999 10965            ; Pine Cone
+O 1 10905 1 10965             ; Pine Cone
 ? 0 8 0 O
-O 1 10908 4 10959              ; Pine Log
+O 1 10908 1 10959               ; Pine Log
 ? 0 7 0 O
-O 1 10909 999 10930            ; Aspen Leaf
+O 1 10909 1 10930             ; Aspen Leaf
 ? 0 7 0 O
-O 1 10909 999 10941            ; Aspen Leaf
+O 1 10909 1 10941             ; Aspen Leaf
 ? 0 7 0 O
-O 1 10909 999 10984            ; Aspen Leaf
+O 1 10909 1 10984             ; Aspen Leaf
 ? 0 5 0 O
-O 1 10910 999 10924            ; Pine Branch
+O 1 10910 1 10924             ; Pine Branch
 ? 0 5 0 O
-O 1 10910 999 10978            ; Pine Branch
+O 1 10910 1 10978             ; Pine Branch
 ? 0 6 0 O
-O 1 10912 999 10961            ; 4 Leaf Clover
+O 1 10912 1 10961             ; 4 Leaf Clover
 ? 0 8 0 O
-O 1 10913 999 10910            ; Small Rock
+O 1 10913 1 10910             ; Small Rock
 ? 0 8 0 O
-O 1 10913 999 10991            ; Small Rock
+O 1 10913 1 10991             ; Small Rock
 S
 

@@ -47,53 +47,51 @@ D 0 20556 9 2
 
 
 ? 0 40 0 O
-O 1 20405 1 20521		Algae Covered Chest - Teleport Trapped
+O 1 20405 1 20521 		Algae Covered Chest - Teleport Trapped
 ? 0 25 0 P
 P 1 20408 100 20405	Translucent Blue Scroll - Dispel Magic
 P 1 20411 1 20405		Vazir's Talen Horde
 
 ? 0 40 0 O
-O 1 20406 1 20521		Algae Covered Chest - Blade Trapped
+O 1 20406 1 20521 		Algae Covered Chest - Blade Trapped
 ? 0 25 0 P
 P 1 20409 5 20406		Small Blue Tinted Ring - Water Breath
 P 1 20412 1 20406		Vazir's Sapphire Hoard
 
 ? 0 40 0 O
-O 1 20407 1 20521		Algae Covered Chest - Poison Trapped
+O 1 20407 1 20521 		Algae Covered Chest - Poison Trapped
 ? 0 25 0 P
 P 1 20410 5 20407		Blue Glowing Shield - Water Resistance
 P 1 20413 1 20407		Vazir's Ameythyst Hoard
 
-O 0 20417 1 20521		Stone Carved Altar
+O 0 20417 1 20521 		Stone Carved Altar
 ? 0 60 0 P
 P 1 20418 10 20417	Talen Offering
 ? 0 60 0 P
 P 1 20419 10 20417	Gem Offering
 
-O 0 23 9999 20529		Generic Table in Guards Outpost
-O 0 20 9999 20529		Generic Chair in Guards Outpost
-O 0 20 9999 20529
-O 0 700 9999 20529	Miltary Cot/Bunk in Guards Outpost
-O 0 700 9999 20529
+O 0 23 1 20529 		Generic Table in Guards Outpost
+O 0 20 2 20529 		Generic Chair in Guards Outpost
+O 0 700 2 20529 	Miltary Cot/Bunk in Guards Outpost
 
 ? 0 10 0 O
-O 1 20460 10 20412	Dull Chunk of Ice (River Quest 1)
+O 1 20460 1 20412 	Dull Chunk of Ice (River Quest 1)
 ? 0 10 0 O
-O 1 20460 10 20413	
+O 1 20460 1 20413 	
 ? 0 10 0 O
-O 1 20460 10 20414
+O 1 20460 1 20414 
 ? 0 10 0 O
-O 1 20460 10 20564
+O 1 20460 1 20564 
 ? 0 10 0 O
-O 1 20460 10 20582
+O 1 20460 1 20582 
 ? 0 10 0 O
-O 1 20460 10 20585
+O 1 20460 1 20585 
 ? 0 10 0 O
-O 1 20460 10 20593
+O 1 20460 1 20593 
 ? 0 10 0 O
-O 1 20460 10 20594
+O 1 20460 1 20594 
 ? 0 10 0 O
-O 1 20460 10 20597
+O 1 20460 1 20597 
 
 A 0 20531 20561
 O 1 20474 5 -99		A Colorful Rock (River Quest 3)

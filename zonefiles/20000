@@ -1,21 +1,21 @@
 #20000
 Cosmo's Tournament zone (400 rooms)~
 20399 25 2 0
-O 0 29996 1 20000   quest board
-O 0 20002 1 20000     globe
-O 0 20003 1 20000    desk
+O 0 29996 1 20000    quest board
+O 0 20002 1 20000      globe
+O 0 20003 1 20000     desk
 M 0 20001 1 20001        homer
 
-O 0 20004 1 20001    display case
-O 0 20005 1 20001    display case
-O 0 20006 1 20001    display case
-O 0 20007 1 20001    display case
-O 0 20012 1 20001   vault
+O 0 20004 1 20001     display case
+O 0 20005 1 20001     display case
+O 0 20006 1 20001     display case
+O 0 20007 1 20001     display case
+O 0 20012 1 20001    vault
 
-O 0 20015 1 20002   pile of coins
-O 0 20014 1 20002   weapon pile
-O 0 20013 1 20002   treasure chest
-O 0 2805 2 20002     safe
+O 0 20015 1 20002    pile of coins
+O 0 20014 1 20002    weapon pile
+O 0 20013 1 20002    treasure chest
+O 0 2805 1 20002      safe
 
 D 0 20001 0 2
 D 0 20002 2 2

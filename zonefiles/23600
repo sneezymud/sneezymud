@@ -196,11 +196,11 @@ M 0 23605 2 23735
 M 0 23605 2 23741 
 M 0 23605 2 23749 
 
-O 0 27116 1 23732       Broken Lockpicks - Krak Quest
+O 0 27116 1 23732        Broken Lockpicks - Krak Quest
 
-O 0 23651 1 1058	arena sign
-O 0 23650 1 23655	oil lamp
-O 0 23641 1 23654	demon teddy
+O 0 23651 1 1058 	arena sign
+O 0 23650 1 23655 	oil lamp
+O 0 23641 1 23654 	demon teddy
 
 ? 0 1 0 B
 B 1 23642 1 23797	black disk [shield-wand]
@@ -226,10 +226,10 @@ B 1 23648 6 23797	opal large
 ? 0 1 0 B
 B 1 23649 1 23797	gold coins
 
-O 0 23660 1 23654    bed
-O 0 23661 2 23794    couch
-O 0 23662 1 23795    bed
-O 0 23663 1 23610    cot
+O 0 23660 1 23654     bed
+O 0 23661 1 23794     couch
+O 0 23662 1 23795     bed
+O 0 23663 1 23610     cot
 
 D 0 23616 3 1
 D 0 23613 1 1

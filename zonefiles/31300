@@ -1,8 +1,8 @@
 #31300
 Jesus - Player Kill Area~
 31399 30 2 1
-O 0 31399 1 10515       Shaman Hut
-O 0 31398 1 31399	Shaman door
+O 0 31399 1 10515        Shaman Hut
+O 0 31398 1 31399 	Shaman door
 M 0 31306 1 31399       shaman carver in hut (totem seller)
 *B 0 31300 12 31315
 *B 0 31300 12 31345

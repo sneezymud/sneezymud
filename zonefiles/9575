@@ -7,23 +7,18 @@ D 0 9575 9 1         Overlooking a Concealed Trail -> A Path Along a Thin Ledge
 D 0 9576 6 1         A Path Along a Thin Ledge -> Overlooking a Concealed Trail
 D 0 9581 0 1         At the Base of a Cliff -> Inside a Tent
 D 0 9582 2 1         Inside a Tent -> At the Base of a Cliff
-O 0 9590 9999 9575      the branches at the trail to the east
-O 0 9591 9999 9575      the branches at the trail to the north
-O 0 9588 1 9576         a tattered blue cape
-O 0 9589 9999 9587      a campfire
-O 0 8945 9999 9593      a spring of clear water
-O 0 9586 40 9579        a collapsible grappling hook
-O 0 9587 9999 9582      a fur-lined sleeping bag
-O 0 9587 9999 9582      a fur-lined sleeping bag
-O 0 9587 9999 9583      a fur-lined sleeping bag
-O 0 9587 9999 9583      a fur-lined sleeping bag
-O 0 9587 9999 9585      a fur-lined sleeping bag
-O 0 9587 9999 9585      a fur-lined sleeping bag
-O 0 9587 9999 9588      a fur-lined sleeping bag
-O 0 9587 9999 9590      a fur-lined sleeping bag
-O 0 9587 9999 9590      a fur-lined sleeping bag
-O 0 9587 9999 9591      a fur-lined sleeping bag
-O 0 9587 9999 9591      a fur-lined sleeping bag
+O 0 9590 1 9575       the branches at the trail to the east
+O 0 9591 1 9575       the branches at the trail to the north
+O 0 9588 1 9576          a tattered blue cape
+O 0 9589 1 9587       a campfire
+O 0 8945 1 9593       a spring of clear water
+O 0 9586 1 9579         a collapsible grappling hook
+O 0 9587 2 9582       a fur-lined sleeping bag
+O 0 9587 2 9583       a fur-lined sleeping bag
+O 0 9587 2 9585       a fur-lined sleeping bag
+O 0 9587 1 9588       a fur-lined sleeping bag
+O 0 9587 2 9590       a fur-lined sleeping bag
+O 0 9587 2 9591       a fur-lined sleeping bag
 
 X 1 5 9578              a wolf skull
 X 1 14 9579             a wolf skin mantle

@@ -2,41 +2,41 @@
 Dirk - Grimhaven Sewers~
 5299 25 2 1
 
-O 0 27112 9999 5276     Prayer Beads - Dreyfus Quest
+O 0 27112 1 5276      Prayer Beads - Dreyfus Quest
 
-O 0 152 16 5252        Forge
-O 0 151 16 5252        Anvil
+O 0 152 1 5252         Forge
+O 0 151 1 5252         Anvil
 
-O 0 5104 1 111          sewer grate
+O 0 5104 1 111           sewer grate
 V 1 0 -16772085
-O 0 5105 1 5131
+O 0 5105 1 5131 
 V 1 0 -16777105
-O 0 5104 1 137          sewer grate
+O 0 5104 1 137           sewer grate
 V 1 0 -16772100
-O 0 5105 1 5116
+O 0 5105 1 5116 
 V 1 0 -16777079
-O 0 5104 1 122          sewer grate
+O 0 5104 1 122           sewer grate
 V 1 0 -16772115
-O 0 5105 1 5101
+O 0 5105 1 5101 
 V 1 0 -16777094
-O 0 5104 1 185          sewer grate
+O 0 5104 1 185           sewer grate
 V 1 0 -16772070
-O 0 5105 1 5146
+O 0 5105 1 5146 
 V 1 0 -16777031
 
-O 0 5119 9999 5238      edible refuse
-O 0 5119 9999 5222
-O 0 5119 9999 5169
-O 0 5119 9999 5173
-O 0 5119 9999 5275
-O 0 5119 9999 5278
+O 0 5119 1 5238       edible refuse
+O 0 5119 1 5222 
+O 0 5119 1 5169 
+O 0 5119 1 5173 
+O 0 5119 1 5275 
+O 0 5119 1 5278 
 
-O 0 5120 9999 5276     edible refuse spoiled/poisoned
-O 0 5120 9999 5241
-O 0 5120 9999 5252
-O 0 5120 9999 5109
+O 0 5120 1 5276      edible refuse spoiled/poisoned
+O 0 5120 1 5241 
+O 0 5120 1 5252 
+O 0 5120 1 5109 
 
-O 0 5137 9999 5260     cocoon embedded in web
+O 0 5137 1 5260      cocoon embedded in web
 P 1 5139 9999 5137      decayed corpse
 ? 0 5 0 P
 P 1 5128 9999 5137      filthy dirk
@@ -46,7 +46,7 @@ P 1 5133 20 5137        flimsy bracelet
 P 1 10914 9999 5137     green scroll - ensorcer
 ? 0 3 0 P
 P 1 802 9999 5137       golden potion - heal critical
-O 0 5137 9999 5263     cocoon embedded in web
+O 0 5137 1 5263      cocoon embedded in web
 P 1 5139 9999 5137      decayed corpse
 ? 0 5 0 P
 P 1 5123 9999 5137      fur-lined cloak - dwarf
@@ -56,7 +56,7 @@ P 1 5121 9999 5137      barrel-lid shield
 P 1 5114 9999 5137      small slimy hammer
 ? 0 5 0 P
 P 1 5131 9999 5137      studded dog collar
-O 0 5137 9999 5270     cocoon embedded in web
+O 0 5137 1 5270      cocoon embedded in web
 P 1 5139 9999 5137      decayed corpse
 ? 0 5 0 P
 P 1 5130 9999 5137      rusty legging - ogre

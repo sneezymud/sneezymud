@@ -1,55 +1,55 @@
 #4475
 Dolgan/Jesus - Grimhaven East Gate Settlement~
 4699 30 2 1
-O 0 4600 9999 4514      a small lamppost
-O 0 4600 9999 4515      a small lamppost
-O 0 4600 9999 4516      a small lamppost
-O 0 4600 9999 4517      a small lamppost
-O 0 4600 9999 4520      a small lamppost
-O 0 4600 9999 4521      a small lamppost
-O 0 4600 9999 4522      a small lamppost
-O 0 4600 9999 4523      a small lamppost
-O 0 4600 9999 4524      a small lamppost
-O 0 4600 9999 4525      a small lamppost
-O 0 4600 9999 4526      a small lamppost
-O 0 4600 9999 4527      a small lamppost
-O 0 4600 9999 4528      a small lamppost
-O 0 4600 9999 4529      a small lamppost
-O 0 4600 9999 4530      a small lamppost
-O 0 4600 9999 4531      a small lamppost
-O 0 4600 9999 4538      a small lamppost
-O 0 4600 9999 4545      a small lamppost
-O 0 4600 9999 4552      a small lamppost
-O 0 4600 9999 4553      a small lamppost
-O 0 4600 9999 4557      a small lamppost
-O 0 4600 9999 4560      a small lamppost
-O 0 4600 9999 4564      a small lamppost
-O 0 4600 9999 4567      a small lamppost
-O 0 4600 9999 4569      a small lamppost
-O 0 4600 9999 4572      a small lamppost
-O 0 4600 9999 4579      a small lamppost
-O 0 4600 9999 4580      a small lamppost
-O 0 4600 9999 4595      a small lamppost
-O 0 4600 9999 4596      a small lamppost
-O 0 4600 9999 4597      a small lamppost
-O 0 4600 9999 4615      a small lamppost
-O 0 4600 9999 4616      a small lamppost
-O 0 4600 9999 4617      a small lamppost
-O 0 4600 9999 4618      a small lamppost
-O 0 4600 9999 4623      a small lamppost
-O 0 4600 9999 4625      a small lamppost
-O 0 4600 9999 4628      a small lamppost
-O 0 4600 9999 4631      a small lamppost
-O 0 4600 9999 4652      a small lamppost
-O 0 4600 9999 4658      a small lamppost
-O 0 4600 9999 4665      a small lamppost
-O 0 4600 9999 4668      a small lamppost
-O 0 4600 9999 4674      a small lamppost
-O 0 4600 9999 4678      a small lamppost
-O 0 4600 9999 4679      a small lamppost
-O 0 4600 9999 4680      a small lamppost
-O 0 4600 9999 4681      a small lamppost
-O 0 4600 9999 4682      a small lamppost
+O 0 4600 1 4514       a small lamppost
+O 0 4600 1 4515       a small lamppost
+O 0 4600 1 4516       a small lamppost
+O 0 4600 1 4517       a small lamppost
+O 0 4600 1 4520       a small lamppost
+O 0 4600 1 4521       a small lamppost
+O 0 4600 1 4522       a small lamppost
+O 0 4600 1 4523       a small lamppost
+O 0 4600 1 4524       a small lamppost
+O 0 4600 1 4525       a small lamppost
+O 0 4600 1 4526       a small lamppost
+O 0 4600 1 4527       a small lamppost
+O 0 4600 1 4528       a small lamppost
+O 0 4600 1 4529       a small lamppost
+O 0 4600 1 4530       a small lamppost
+O 0 4600 1 4531       a small lamppost
+O 0 4600 1 4538       a small lamppost
+O 0 4600 1 4545       a small lamppost
+O 0 4600 1 4552       a small lamppost
+O 0 4600 1 4553       a small lamppost
+O 0 4600 1 4557       a small lamppost
+O 0 4600 1 4560       a small lamppost
+O 0 4600 1 4564       a small lamppost
+O 0 4600 1 4567       a small lamppost
+O 0 4600 1 4569       a small lamppost
+O 0 4600 1 4572       a small lamppost
+O 0 4600 1 4579       a small lamppost
+O 0 4600 1 4580       a small lamppost
+O 0 4600 1 4595       a small lamppost
+O 0 4600 1 4596       a small lamppost
+O 0 4600 1 4597       a small lamppost
+O 0 4600 1 4615       a small lamppost
+O 0 4600 1 4616       a small lamppost
+O 0 4600 1 4617       a small lamppost
+O 0 4600 1 4618       a small lamppost
+O 0 4600 1 4623       a small lamppost
+O 0 4600 1 4625       a small lamppost
+O 0 4600 1 4628       a small lamppost
+O 0 4600 1 4631       a small lamppost
+O 0 4600 1 4652       a small lamppost
+O 0 4600 1 4658       a small lamppost
+O 0 4600 1 4665       a small lamppost
+O 0 4600 1 4668       a small lamppost
+O 0 4600 1 4674       a small lamppost
+O 0 4600 1 4678       a small lamppost
+O 0 4600 1 4679       a small lamppost
+O 0 4600 1 4680       a small lamppost
+O 0 4600 1 4681       a small lamppost
+O 0 4600 1 4682       a small lamppost
 D 0 4500 3 1         Guard Substation -> Grimhaven Outer Pathway
 D 0 4529 2 2         Grimhaven Marketplace -> Animal Paddock
 D 0 4536 0 2         Animal Paddock -> Grimhaven Marketplace
@@ -65,25 +65,25 @@ D 0 4662 0 1         Warehouse -> Loading Dock
 D 0 4668 2 1         Warehouse Road -> New Warehouse
 D 0 4669 4 2         Warehouse -> Warehouse Loft
 D 0 4677 0 1         New Warehouse -> Warehouse Road
-O 0 4500 9999 4496      a bed
-O 0 4499 9999 4497      a bed of nails
-O 0 4500 9999 4498      a bed
-O 0 4498 1 4499         a small table
-O 0 4498 1 4505         a small table
-O 0 4506 9999 4505      a couch
-O 0 4498 1 4506         a small table
-O 0 4506 9999 4506      a couch
-O 0 4506 9999 4512      a couch
-O 0 4498 1 4512         a small table
-O 0 4498 1 4513         a small table
-O 0 4482 2 4673         a magical lift
-O 0 4484 1 4673         the fire wagon
-O 0 4481 2 4673         a fireman's pole
-O 0 4481 2 4649         a fireman's pole
-O 0 4475 9999 4683      a large copper brewing vat
-O 0 4475 9999 4684      a large copper brewing vat
-O 0 4475 9999 4693      a large copper brewing vat
-O 0 4475 9999 4694      a large copper brewing vat
+O 0 4500 1 4496       a bed
+O 0 4499 1 4497       a bed of nails
+O 0 4500 1 4498       a bed
+O 0 4498 1 4499          a small table
+O 0 4498 1 4505          a small table
+O 0 4506 1 4505       a couch
+O 0 4498 1 4506          a small table
+O 0 4506 1 4506       a couch
+O 0 4506 1 4512       a couch
+O 0 4498 1 4512          a small table
+O 0 4498 1 4513          a small table
+O 0 4482 1 4673          a magical lift
+O 0 4484 1 4673          the fire wagon
+O 0 4481 1 4673          a fireman's pole
+O 0 4481 1 4649          a fireman's pole
+O 0 4475 1 4683       a large copper brewing vat
+O 0 4475 1 4684       a large copper brewing vat
+O 0 4475 1 4693       a large copper brewing vat
+O 0 4475 1 4694       a large copper brewing vat
 M 0 4496 1 4496         Bambi
 E 1 4496 9999 19          a sticky whip [hold-left]
 M 0 4497 1 4497         Bunny

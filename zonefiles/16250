@@ -17,10 +17,9 @@ D 0 16263 0 1
 D 0 16264 2 1   
 D 0 16264 0 1 
 D 0 16266 2 1 
-O 0 15405 9999 16250 Rocking chair 
-O 0 1858 9999 16250 tree ebony dark
-O 0 1858 9999 16250
-O 0 16290 9999 16250 skull human cracked
+O 0 15405 1 16250  Rocking chair 
+O 0 1858 2 16250  tree ebony dark
+O 0 16290 1 16250  skull human cracked
 M 0 16250 1 16250 Vivian 
 ? 0 2 0 E
 E 1 16261 20 18 tooth dragon sacrificial 

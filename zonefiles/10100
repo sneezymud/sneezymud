@@ -8,50 +8,50 @@ D 0 10129 3 1		gamepath west - secret door
 D 0 10130 1 1
 D 0 10111 4 1		elf tree - secret door
 
-O 0 10100 1 10129		impassable tree
-O 0 10100 2 10100		impassable tree
-O 0 10100 3 10101		impassable tree
-O 0 10100 4 10102		impassable tree
-O 0 10100 5 10103		impassable tree
-O 0 10100 6 10139		impassable tree
-O 0 10100 7 10104		impassable tree
-O 0 10100 8 10105		impassable tree
-O 0 10100 9 10106		impassable tree
-O 0 10100 10 10107		impassable tree
-O 0 10100 11 10108		impassable tree
-O 0 10100 12 10109		impassable tree
-O 0 10100 13 10110		impassable tree
-O 0 10100 14 10112		impassable tree
-O 0 10100 15 10113		impassable tree
-O 0 10100 16 10114		impassable tree
-O 0 10100 17 10115		impassable tree
-O 0 10100 18 10116		impassable tree
-O 0 10100 19 10117		impassable tree
-O 0 10100 20 10118		impassable tree
-O 0 10100 21 10119		impassable tree
-O 0 10100 22 10120		impassable tree
-O 0 10100 23 10121		impassable tree
-O 0 10100 24 10122		impassable tree
-O 0 10100 25 10124		impassable tree
-O 0 10101 1 10106		elm tree
-O 0 10102 1 10139		blocking tree
-O 0 10103 1 10119		hickory tree
-O 0 10108 1 10110		acorn
-O 0 10108 2 10104		acorn
-O 0 10108 3 10126		acorn
+O 0 10100 1 10129 		impassable tree
+O 0 10100 1 10100 		impassable tree
+O 0 10100 1 10101 		impassable tree
+O 0 10100 1 10102 		impassable tree
+O 0 10100 1 10103 		impassable tree
+O 0 10100 1 10139 		impassable tree
+O 0 10100 1 10104 		impassable tree
+O 0 10100 1 10105 		impassable tree
+O 0 10100 1 10106 		impassable tree
+O 0 10100 1 10107 		impassable tree
+O 0 10100 1 10108 		impassable tree
+O 0 10100 1 10109 		impassable tree
+O 0 10100 1 10110 		impassable tree
+O 0 10100 1 10112 		impassable tree
+O 0 10100 1 10113 		impassable tree
+O 0 10100 1 10114 		impassable tree
+O 0 10100 1 10115 		impassable tree
+O 0 10100 1 10116 		impassable tree
+O 0 10100 1 10117 		impassable tree
+O 0 10100 1 10118 		impassable tree
+O 0 10100 1 10119 		impassable tree
+O 0 10100 1 10120 		impassable tree
+O 0 10100 1 10121 		impassable tree
+O 0 10100 1 10122 		impassable tree
+O 0 10100 1 10124 		impassable tree
+O 0 10101 1 10106 		elm tree
+O 0 10102 1 10139 		blocking tree
+O 0 10103 1 10119 		hickory tree
+O 0 10108 1 10110 		acorn
+O 0 10108 1 10104 		acorn
+O 0 10108 1 10126 		acorn
 *P 1 10113 1 10110		copper cup
 *P 1 10113 2 10110		copper cup
 *P 1 10113 3 10110		copper cup
-O 0 10111 1 10111		elf tree
-O 0 10130 1 10130		pond
-O 0 10131 1 10131		pond
-O 0 10132 1 10132		pond
-O 0 10134 1 10134		pond
-O 0 10136 1 10136		pond
-O 0 10137 1 10137		pond
-O 0 10138 1 10138		pond
-O 0 10133 1 10133		shrubbery
-O 0 10133 2 10135		shrubbery
+O 0 10111 1 10111 		elf tree
+O 0 10130 1 10130 		pond
+O 0 10131 1 10131 		pond
+O 0 10132 1 10132 		pond
+O 0 10134 1 10134 		pond
+O 0 10136 1 10136 		pond
+O 0 10137 1 10137 		pond
+O 0 10138 1 10138 		pond
+O 0 10133 1 10133 		shrubbery
+O 0 10133 1 10135 		shrubbery
 
 M 0 10100 1 10132 		nymph type1
 ? 0 40 0 E

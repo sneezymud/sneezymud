@@ -15,46 +15,37 @@ D 0 31090 3 1		Posthouse main gate
 D 0 31088 1 1
 
 
-O 0 31098 9999 31099	large boulder - Unynia's cave
-O 0 31097 9999 31099	small boulder
-O 0 31099 9999 31099	smooth boulder
+O 0 31098 1 31099 	large boulder - Unynia's cave
+O 0 31097 1 31099 	small boulder
+O 0 31099 1 31099 	smooth boulder
 
-O 0 31098 9999 31097	large boulder - in the gully
-O 0 31097 9999 31095	small boulder
+O 0 31098 1 31097 	large boulder - in the gully
+O 0 31097 1 31095 	small boulder
 
 
 
-O 0 31085 9999 31093	fireplace - Back room of Posthouse
+O 0 31085 1 31093 	fireplace - Back room of Posthouse
 P 1 31083 9999 31085	yew log, in fireplace
 P 1 31083 9999 31085	yew log, in fireplace
-O 0 31088 9999 31093	chandelier
+O 0 31088 1 31093 	chandelier
 V 1 3 1			to light the chandelier
-O 0 31086 9999 31093	table
-O 0 31087 9999 31093	bench
-O 0 31087 9999 31093	bench
+O 0 31086 1 31093 	table
+O 0 31087 2 31093 	bench
 
-O 0 31092 9999 31092	window (overlooks marble sign on sloping road) - Front room of Posthouse
-O 0 31088 9999 31092	chandelier
+O 0 31092 1 31092 	window (overlooks marble sign on sloping road) - Front room of Posthouse
+O 0 31088 1 31092 	chandelier
 V 1 3 1			to light the chandelier
-O 0 31084 9999 31092	stove
-O 0 31086 9999 31092	table
-O 0 31087 9999 31092	bench
-O 0 31087 9999 31092	bench
+O 0 31084 1 31092 	stove
+O 0 31086 1 31092 	table
+O 0 31087 2 31092 	bench
 
-O 0 31082 9999 31090	rowan tree - Posthouse yard
-O 0 31083 9999 31090	yew logs
-O 0 31083 9999 31090
-O 0 31083 9999 31090
-O 0 31083 9999 31090
+O 0 31082 1 31090 	rowan tree - Posthouse yard
+O 0 31083 4 31090 	yew logs
 B 0 31083 9999 31090	feed the log pile
-O 0 31090 9999 31090	water trough
+O 0 31090 1 31090 	water trough
 
-O 0 31080 9999 31091	bed of alfalfa - Posthouse stable
-O 0 31091 9999 31091	bales of alfalfa
-O 0 31091 9999 31091
-O 0 31091 9999 31091
-O 0 31091 9999 31091
-O 0 31091 9999 31091
+O 0 31080 1 31091 	bed of alfalfa - Posthouse stable
+O 0 31091 5 31091 	bales of alfalfa
 
 A 0 31057 31072		Drossway Road, mid-section
 O 0 31050 9999 -99	broken down cart

@@ -7,13 +7,13 @@ D 0 24796 0 1        A Dark Passageway -> A Dark Passageway
 D 0 24797 2 1        A Dark Passageway -> A Dark Passageway
 D 0 24798 3 1        A Dark Room Carved in the Dirt -> A Dark Cavern
 D 0 24799 4 1        A Dark Passageway -> A Small Hut
-O 0 24778 1 24778    a straw mat
-O 0 24775 5 24779       a small fire
-O 0 24775 5 24782       a small fire
-O 0 24775 5 24789       a small fire
-O 0 24775 5 24795       a small fire
-O 0 24775 5 24798       a small fire
-O 0 9317 1 24798        a dark altar
+O 0 24778 1 24778     a straw mat
+O 0 24775 1 24779        a small fire
+O 0 24775 1 24782        a small fire
+O 0 24775 1 24789        a small fire
+O 0 24775 1 24795        a small fire
+O 0 24775 1 24798        a small fire
+O 0 9317 1 24798         a dark altar
 P 1 31325 9999 9317       a black beetle
 P 1 31334 9999 9317       a cockroach
 P 1 31305 9999 9317       a rose stem

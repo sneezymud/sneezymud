@@ -11,15 +11,15 @@ D 0 10050 8 2		Door out of Cargo Bay
 D 0 10053 9 2		Door into Cargo Bay
 D 0 10054 6 2		Door out of Cargo Bay
 
-O 0 10020 2 10086	Utchen's Tombstone
-O 0 10021 2 10085	Asuka's Tombstone
-O 0 10030 9999 10073	A piece of offal
-O 0 10030 9999 10068	A piece of offal
-O 0 10037 9999 10039	Head of Lettuce
-O 0 10038 9999 10061	Carrot
-O 0 10030 9999 10070    A piece of offal(EXTRA 3)	   
-O 0 10037 9999 10061    Head of Lettuce
-O 0 10038 9999 10039    Carrot
+O 0 10020 1 10086 	Utchen's Tombstone
+O 0 10021 1 10085 	Asuka's Tombstone
+O 0 10030 1 10073 	A piece of offal
+O 0 10030 1 10068 	A piece of offal
+O 0 10037 1 10039 	Head of Lettuce
+O 0 10038 1 10061 	Carrot
+O 0 10030 1 10070     A piece of offal(EXTRA 3)	   
+O 0 10037 1 10061     Head of Lettuce
+O 0 10038 1 10039     Carrot
 
 M 0 10000 1 10081 	Isamu
 ? 0 3 0 E

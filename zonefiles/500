@@ -51,63 +51,40 @@ D 0 549 2 1
 D 0 535 0 1		blastproof door
 D 0 532 2 1
 
-O 0 521 5 509		potter's wheel
-O 0 522 9999 503	silvery cauldron
-O 0 523 9999 528	meditation pillow
-O 0 523 9999 528
-O 0 524 9999 505	school desk
-O 0 524 9999 505
-O 0 524 9999 509
-O 0 524 9999 509
-O 0 524 9999 511
-O 0 524 9999 511
-O 0 524 9999 519
-O 0 524 9999 519
-O 0 524 9999 525
-O 0 524 9999 533
-O 0 524 9999 533
-O 0 524 9999 533
-O 0 524 9999 533
-O 0 524 9999 533
-O 0 524 9999 533
-O 0 524 9999 535
-O 0 524 9999 535
-O 0 524 9999 537
-O 0 524 9999 537
-O 0 524 9999 538
-O 0 524 9999 538
-O 0 524 9999 538
-O 0 524 9999 538
-O 0 524 9999 538
-O 0 524 9999 538
-O 0 524 9999 547
-O 0 524 9999 547
-O 0 524 9999 547
-O 0 524 9999 547
-O 0 525 9999 530	comfortable chair
-O 0 526 9999 503	statue of gold chipmunk
-O 0 527 9999 504	statue of stone squirrel
-O 0 529 9999 529	vibrating bed
-O 0 530 2 531		swirling portal
-O 0 531 2 530		shimmering portal
-O 0 532 9999 538	simple wooden podium
+O 0 521 1 509 		potter's wheel
+O 0 522 1 503 	silvery cauldron
+O 0 523 2 528 	meditation pillow
+O 0 524 2 505 	school desk
+O 0 524 2 509 
+O 0 524 2 511 
+O 0 524 2 519 
+O 0 524 1 525 
+O 0 524 6 533 
+O 0 524 2 535 
+O 0 524 2 537 
+O 0 524 6 538 
+O 0 524 4 547 
+O 0 525 1 530 	comfortable chair
+O 0 526 1 503 	statue of gold chipmunk
+O 0 527 1 504 	statue of stone squirrel
+O 0 529 1 529 	vibrating bed
+O 0 530 1 531 		swirling portal
+O 0 531 1 530 		shimmering portal
+O 0 532 1 538 	simple wooden podium
 P 1 528 5 532		voice amplifier
-O 0 533 9999 528	stick of incense
-O 0 533 9999 528
-O 0 533 9999 528
-O 0 533 9999 528
-O 0 534 9999 529	guildmaster's jacuzzi
-O 0 535 9999 529	bottle of firebreather 200
-O 0 536 2 531		magic mirror
-O 0 537 9999 531	window red
-O 0 538 9999 531	window orange
-O 0 539 9999 531	window yellow
-O 0 540 9999 531	window green
-O 0 541 9999 531	window blue
-O 0 542 9999 531	window indigo
-O 0 543 9999 531	window violet
-O 0 544 9999 531	window floor
-O 0 545 9999 531	window walls
+O 0 533 4 528 	stick of incense
+O 0 534 1 529 	guildmaster's jacuzzi
+O 0 535 1 529 	bottle of firebreather 200
+O 0 536 1 531 		magic mirror
+O 0 537 1 531 	window red
+O 0 538 1 531 	window orange
+O 0 539 1 531 	window yellow
+O 0 540 1 531 	window green
+O 0 541 1 531 	window blue
+O 0 542 1 531 	window indigo
+O 0 543 1 531 	window violet
+O 0 544 1 531 	window floor
+O 0 545 1 531 	window walls
 
 M 0 69 1 514		exiled mage
 M 0 500 1 502		mage apprentice

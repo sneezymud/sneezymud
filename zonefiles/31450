@@ -3,7 +3,7 @@ Angus - A Trail through the Parnithian Mountains~
 31479 25 2 1
 D 0 31459 0 1 Shelter
 D 0 31475 2 1
-O 0 31451 9999 31475 cupboard
+O 0 31451 1 31475  cupboard
 P 1 10217 9999 31451   hard tack in cupboard
 M 0 31450 1 31475 weary traveler
 A 0 31450 31474

@@ -74,35 +74,35 @@ M 0 3416 1 3460     ; Shracknir in his cave
 G 1 6 999          ;    give a bag
 P 1 3426 1 6       ;      put gwarthir in bag  
 M 0 3418 1 3463     ; put the horse by the pond 
-O 0 3400 4 3401    ; purple mushroom 
-O 0 3400 4 3415    ; purple mushroom
-O 0 3400 4 3442    ; purple mushroom
-O 0 3400 4 3448    ; purple mushroom
-O 0 3401 4 3405    ; brown mushroom (poisoned)
-O 0 3401 4 3416    ; brown mushroom (poisoned)
-O 0 3401 4 3426    ; brown mushroom (poisoned)
-O 0 3401 4 3454    ; brown mushroom (poisoned)
-O 0 3402 4 3408    ; venison
-O 0 3402 4 3421    ; venison
-O 0 3402 4 3436    ; venison
-O 0 3402 4 3455    ; venison
-O 0 3403 1 3455    ; stone
-O 0 3408 3 3408    ; armor branch
-O 0 3408 3 3427    ; armor branch
-O 0 3408 3 3412    ; armor branch
-O 0 3417 2 3438    ; stoneskinn branch
-O 0 3417 2 3472    ; stoneskinn branch
-O 0 3418 5 3403    ; normal branch
-O 0 3418 5 3425    ; normal branch
-O 0 3418 5 3471    ; normal branch
-O 0 3418 5 3457    ; normal branch
-O 0 3418 5 3446    ; normal branch
-O 0 3420 2 3460    ; +mana log 
-O 0 3420 2 3480    ; +mana log
-O 0 3421 5 3410    ; normal log
-O 0 3421 5 3434    ; normal log
-O 0 3421 5 3458    ; normal log
-O 0 3421 5 3463    ; normal log
-O 0 3421 5 3473    ; normal log
+O 0 3400 1 3401     ; purple mushroom 
+O 0 3400 1 3415     ; purple mushroom
+O 0 3400 1 3442     ; purple mushroom
+O 0 3400 1 3448     ; purple mushroom
+O 0 3401 1 3405     ; brown mushroom (poisoned)
+O 0 3401 1 3416     ; brown mushroom (poisoned)
+O 0 3401 1 3426     ; brown mushroom (poisoned)
+O 0 3401 1 3454     ; brown mushroom (poisoned)
+O 0 3402 1 3408     ; venison
+O 0 3402 1 3421     ; venison
+O 0 3402 1 3436     ; venison
+O 0 3402 1 3455     ; venison
+O 0 3403 1 3455     ; stone
+O 0 3408 1 3408     ; armor branch
+O 0 3408 1 3427     ; armor branch
+O 0 3408 1 3412     ; armor branch
+O 0 3417 1 3438     ; stoneskinn branch
+O 0 3417 1 3472     ; stoneskinn branch
+O 0 3418 1 3403     ; normal branch
+O 0 3418 1 3425     ; normal branch
+O 0 3418 1 3471     ; normal branch
+O 0 3418 1 3457     ; normal branch
+O 0 3418 1 3446     ; normal branch
+O 0 3420 1 3460     ; +mana log 
+O 0 3420 1 3480     ; +mana log
+O 0 3421 1 3410     ; normal log
+O 0 3421 1 3434     ; normal log
+O 0 3421 1 3458     ; normal log
+O 0 3421 1 3463     ; normal log
+O 0 3421 1 3473     ; normal log
 S
 

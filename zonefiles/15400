@@ -15,15 +15,15 @@ D 0 15430 0 1
 D 0 15447 2 1 secret rocks
 D 0 15448 0 1
 
-O 0 15400 1 15423 well
-O 0 15401 1 15447 rope
-O 0 15408 1 15430 table
-O 0 15405 2 15430 chairs-rocking
-O 0 15409 1 15430 stove
+O 0 15400 1 15423  well
+O 0 15401 1 15447  rope
+O 0 15408 1 15430  table
+O 0 15405 1 15430  chairs-rocking
+O 0 15409 1 15430  stove
 P 1 15410 1 15409 	burning logs in stove
-O 0 15411 1 15432 bed
-O 0 15413 1 15425 plow
-O 0 15407 5 15431 toy horse
+O 0 15411 1 15432  bed
+O 0 15413 1 15425  plow
+O 0 15407 1 15431  toy horse
 
 M 0 15401 1 15404  Isander
 ? 0 7 0 E

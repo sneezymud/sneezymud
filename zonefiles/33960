@@ -19,50 +19,31 @@ D 0 34029 2 1        An Overgrown Trail -> An Overgrown Trail
 D 0 34030 0 1        An Overgrown Trail -> An Overgrown Trail
 D 0 34031 4 1        An Overgrown Trail -> An Overgrown Trail
 D 0 34032 5 1        An Overgrown Trail -> An Overgrown Trail
-O 0 33966 9999 33986    a signpost
-O 0 20 9999 34015       a chair
-O 0 20 9999 34015       a chair
-O 0 23 9999 34015       a table
-O 0 14385 9999 34018    a hurricane lamp
-O 0 14385 9999 449    a hurricane lamp * moved to 449 re. short int
-O 0 14385 9999 34020    a hurricane lamp
-O 0 23 9999 34021       a table
-O 0 23 9999 34021       a table
-O 0 23 9999 34021       a table
-O 0 20 9999 34021       a chair
-O 0 20 9999 34021       a chair
-O 0 20 9999 34021       a chair
-O 0 20 9999 34021       a chair
-O 0 20 9999 34021       a chair
-O 0 20 9999 34021       a chair
-O 0 20 9999 34021       a chair
-O 0 20 9999 34021       a chair
-O 0 14385 9999 34021    a hurricane lamp
-O 0 23 9999 34022       a table
-O 0 23 9999 34022       a table
-O 0 23 9999 34022       a table
-O 0 20 9999 34022       a chair
-O 0 20 9999 34022       a chair
-O 0 20 9999 34022       a chair
-O 0 20 9999 34022       a chair
-O 0 20 9999 34022       a chair
-O 0 20 9999 34022       a chair
-O 0 20 9999 34022       a chair
-O 0 20 9999 34022       a chair
-O 0 14385 9999 34022    a hurricane lamp
-O 0 20 9999 34023       a chair
-O 0 22 9999 34023       a bed
-O 0 14385 9999 34023    a hurricane lamp
-O 0 14385 9999 34024    a hurricane lamp
-O 0 22 9999 34025       a bed
-O 0 20 9999 34025       a chair
-O 0 14385 9999 34025    a hurricane lamp
-O 0 14385 9999 34026    a hurricane lamp
-O 0 20 9999 34027       a chair
-O 0 22 9999 34027       a bed
-O 0 14385 9999 34027    a hurricane lamp
-O 0 33960 1 34033       a tent
-O 0 33961 1 34034       a tent flap
+O 0 33966 1 33986     a signpost
+O 0 20 2 34015        a chair
+O 0 23 1 34015        a table
+O 0 14385 1 34018     a hurricane lamp
+O 0 14385 1 449     a hurricane lamp * moved to 449 re. short int
+O 0 14385 1 34020     a hurricane lamp
+O 0 23 3 34021        a table
+O 0 20 8 34021        a chair
+O 0 14385 1 34021     a hurricane lamp
+O 0 23 3 34022        a table
+O 0 20 8 34022        a chair
+O 0 14385 1 34022     a hurricane lamp
+O 0 20 1 34023        a chair
+O 0 22 1 34023        a bed
+O 0 14385 1 34023     a hurricane lamp
+O 0 14385 1 34024     a hurricane lamp
+O 0 22 1 34025        a bed
+O 0 20 1 34025        a chair
+O 0 14385 1 34025     a hurricane lamp
+O 0 14385 1 34026     a hurricane lamp
+O 0 20 1 34027        a chair
+O 0 22 1 34027        a bed
+O 0 14385 1 34027     a hurricane lamp
+O 0 33960 1 34033        a tent
+O 0 33961 1 34034        a tent flap
 M 0 33970 2 34010       a hired guardsman
 Y 0 9 1
 Y 0 10 1

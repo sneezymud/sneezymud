@@ -2,12 +2,12 @@
 Omen - Gnome Antrider Tunnels~
 23399 35 2 1
 
-O 0 23310 1 23310 	western portal out (to arden)
-O 0 23328 1 23328 	eastern portal out (to arden)
-O 0 23315 1 23315	 pool of water (3)
-O 0 23315 2 23317
-O 0 23315 3 23355
-O 0 23361 1 23361 	queen's throne
+O 0 23310 1 23310  	western portal out (to arden)
+O 0 23328 1 23328  	eastern portal out (to arden)
+O 0 23315 1 23315 	 pool of water (3)
+O 0 23315 1 23317 
+O 0 23315 1 23355 
+O 0 23361 1 23361  	queen's throne
 
 B 0 23337 12 23302	Fungus (edible)
 B 0 23337 12 23337

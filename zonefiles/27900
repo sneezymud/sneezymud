@@ -39,139 +39,138 @@ D 0 28026 1 1
 D 0 28470 3 1                  inside a shack
 D 0 28469 1 1 
 
-O 0 27911 55 27900             a mine lantern
-O 0 27911 55 27901             a mine lantern
-O 0 27911 55 27902             a mine lantern
-O 0 27911 55 27903             a mine lantern
-O 0 27911 55 27904             a mine lantern
-O 0 27911 55 27906             a mine lantern
-O 0 27911 55 27907             a mine lantern
-O 0 27911 55 27908             a mine lantern
-O 0 27911 55 27909             a mine lantern
-O 0 27911 55 27910             a mine lantern
-O 0 27911 55 27911             a mine lantern
-O 0 27911 55 27912             a mine lantern
-O 0 27911 55 27913             a mine lantern
-O 0 27911 55 27914             a mine lantern
-O 0 27911 55 27915             a mine lantern
-O 0 27911 55 27916             a mine lantern
-O 0 27911 55 27917             a mine lantern
-O 0 27911 55 27918             a mine lantern
-O 0 27911 55 27919             a mine lantern
-O 0 27911 55 27920             a mine lantern
-O 0 27911 55 27921             a mine lantern
-O 0 27911 55 27922             a mine lantern
-O 0 27911 55 27923             a mine lantern
-O 0 27911 55 27924             a mine lantern
-O 0 27911 55 27929             a mine lantern
-O 0 27911 55 27937             a mine lantern
-O 0 27911 55 27938             a mine lantern
-O 0 27911 55 27939             a mine lantern
-O 0 27911 55 27940             a mine lantern
-O 0 27911 55 27941             a mine lantern
-O 0 27911 55 27942             a mine lantern
-O 0 27911 55 27943             a mine lantern
-O 0 27911 55 27944             a mine lantern
-O 0 27911 55 27945             a mine lantern
-O 0 27911 55 27945             a mine lantern
-O 0 27911 55 27946             a mine lantern
-O 0 27911 55 27947             a mine lantern
-O 0 27911 55 27948             a mine lantern
-O 0 27911 55 27949             a mine lantern
-O 0 27911 55 27950             a mine lantern
-O 0 27911 55 27951             a mine lantern
-O 0 27911 55 27952             a mine lantern
-O 0 27911 55 27953             a mine lantern
-O 0 27911 55 27954             a mine lantern
-O 0 27911 55 27955             a mine lantern
-O 0 27911 55 27956             a mine lantern
-O 0 27911 55 27957             a mine lantern
-O 0 27911 55 27958             a mine lantern
-O 0 27911 55 27959             a mine lantern
-O 0 27911 55 27960             a mine lantern
-O 0 27911 55 27961             a mine lantern
-O 0 27911 55 27962             a mine lantern
-O 0 27911 55 27963             a mine lantern
-O 0 27921 8 27973              a hammock
-O 0 27919 3 27991              a large stone chest
+O 0 27911 1 27900              a mine lantern
+O 0 27911 1 27901              a mine lantern
+O 0 27911 1 27902              a mine lantern
+O 0 27911 1 27903              a mine lantern
+O 0 27911 1 27904              a mine lantern
+O 0 27911 1 27906              a mine lantern
+O 0 27911 1 27907              a mine lantern
+O 0 27911 1 27908              a mine lantern
+O 0 27911 1 27909              a mine lantern
+O 0 27911 1 27910              a mine lantern
+O 0 27911 1 27911              a mine lantern
+O 0 27911 1 27912              a mine lantern
+O 0 27911 1 27913              a mine lantern
+O 0 27911 1 27914              a mine lantern
+O 0 27911 1 27915              a mine lantern
+O 0 27911 1 27916              a mine lantern
+O 0 27911 1 27917              a mine lantern
+O 0 27911 1 27918              a mine lantern
+O 0 27911 1 27919              a mine lantern
+O 0 27911 1 27920              a mine lantern
+O 0 27911 1 27921              a mine lantern
+O 0 27911 1 27922              a mine lantern
+O 0 27911 1 27923              a mine lantern
+O 0 27911 1 27924              a mine lantern
+O 0 27911 1 27929              a mine lantern
+O 0 27911 1 27937              a mine lantern
+O 0 27911 1 27938              a mine lantern
+O 0 27911 1 27939              a mine lantern
+O 0 27911 1 27940              a mine lantern
+O 0 27911 1 27941              a mine lantern
+O 0 27911 1 27942              a mine lantern
+O 0 27911 1 27943              a mine lantern
+O 0 27911 1 27944              a mine lantern
+O 0 27911 2 27945              a mine lantern
+O 0 27911 1 27946              a mine lantern
+O 0 27911 1 27947              a mine lantern
+O 0 27911 1 27948              a mine lantern
+O 0 27911 1 27949              a mine lantern
+O 0 27911 1 27950              a mine lantern
+O 0 27911 1 27951              a mine lantern
+O 0 27911 1 27952              a mine lantern
+O 0 27911 1 27953              a mine lantern
+O 0 27911 1 27954              a mine lantern
+O 0 27911 1 27955              a mine lantern
+O 0 27911 1 27956              a mine lantern
+O 0 27911 1 27957              a mine lantern
+O 0 27911 1 27958              a mine lantern
+O 0 27911 1 27959              a mine lantern
+O 0 27911 1 27960              a mine lantern
+O 0 27911 1 27961              a mine lantern
+O 0 27911 1 27962              a mine lantern
+O 0 27911 1 27963              a mine lantern
+O 0 27921 1 27973               a hammock
+O 0 27919 1 27991               a large stone chest
 ? 1 5 0 P
 P 1 28052 1 27919                the drakkalan
-O 0 27919 3 27991              a large stone chest
+O 0 27919 1 27991               a large stone chest
 ? 1 5 0 P
 P 1 27913 1 27919                icy death   
-O 0 27919 3 27991              a large stone chest
+O 0 27919 1 27991               a large stone chest
 P 1 27936 1 27919                treasure-talens
-O 0 27911 55 28010             a mine lantern
-O 0 27911 55 28011             a mine lantern
-O 0 27921 8 28023              a hammock
-O 0 27921 8 28027              a hammock
-O 0 27921 8 28028              a hammock
-O 0 27915 1 28041              a warning sign
-O 0 27909 1 28041              a medium hoist
-O 0 27910 1 28041              a large hoist
-O 0 27908 1 28041              a small hoist
-O 0 27902 15 28063             a window
-O 0 27903 9 28063              a stone fireplace
-O 0 27904 9 28063              a huge bed
-O 0 27901 25 28064             a cistern
-O 0 27901 25 28065             a cistern
-O 0 27901 25 28066             a cistern
-O 0 27901 25 28067             a cistern
-O 0 27902 15 28068             a window
-O 0 27901 25 28068             a cistern
-O 0 27903 9 28069              a stone fireplace
-O 0 27902 15 28069             a window
-O 0 27904 9 28069              a huge bed
-O 0 27901 25 28070             a cistern
-O 0 27901 25 28071             a cistern
-O 0 27901 25 28072             a cistern
-O 0 27901 25 28073             a cistern
-O 0 27902 15 28074             a window
-O 0 27903 9 28074              a stone fireplace
-O 0 27904 9 28074              a huge bed
-O 0 27902 15 28075             a window
-O 0 27903 9 28075              a stone fireplace
-O 0 27904 9 28075              a huge bed
-O 0 27901 25 28076             a cistern
-O 0 27901 25 28077             a cistern
-O 0 27901 25 28078             a cistern
-O 0 27901 25 28079             a cistern
-O 0 27902 15 28080             a window
-O 0 27903 9 28080              a stone fireplace
-O 0 27904 9 28080              a huge bed
-O 0 27903 9 28081              a stone fireplace
-O 0 27902 15 28081             a window
-O 0 27904 9 28081              a huge bed
-O 0 27901 25 28082             a cistern
-O 0 27901 25 28083             a cistern
-O 0 27901 25 28084             a cistern
-O 0 27901 25 28085             a cistern
-O 0 27902 15 28086             a window
-O 0 27904 9 28086              a huge bed
-O 0 27903 9 28086              a stone fireplace
-O 0 27934 1 28091              a decaying corpse
-O 0 27921 8 28097              a hammock
-O 0 27934 3 28323              a decaying corpse
-O 0 27934 3 28346              a decaying corpse
-O 0 27934 3 28361              a decaying corpse
-O 0 27901 25 28450             a cistern
-O 0 27902 15 28450             a window
-O 0 27904 9 28450              a huge bed
-O 0 27901 25 28451             a cistern
-O 0 27902 15 28451             a window
-O 0 27907 1 28452              a nasty looking iron maiden
-O 0 27906 1 28452              a brazier
-O 0 27921 8 28465              a hammock
-O 0 27921 8 28466              a hammock
-O 0 27921 8 28470              a hammock
-O 0 27902 15 28487             a window
-O 0 27901 25 28487             a cistern
-O 0 27902 15 28488             a window
-O 0 27901 25 28488             a cistern
-O 0 27905 2 28488              a large tapestry
-O 0 27902 15 28489             a window
-O 0 27905 2 28489              a large tapestry
-O 0 27901 25 28489             a cistern
+O 0 27911 1 28010              a mine lantern
+O 0 27911 1 28011              a mine lantern
+O 0 27921 1 28023               a hammock
+O 0 27921 1 28027               a hammock
+O 0 27921 1 28028               a hammock
+O 0 27915 1 28041               a warning sign
+O 0 27909 1 28041               a medium hoist
+O 0 27910 1 28041               a large hoist
+O 0 27908 1 28041               a small hoist
+O 0 27902 1 28063              a window
+O 0 27903 1 28063               a stone fireplace
+O 0 27904 1 28063               a huge bed
+O 0 27901 1 28064              a cistern
+O 0 27901 1 28065              a cistern
+O 0 27901 1 28066              a cistern
+O 0 27901 1 28067              a cistern
+O 0 27902 1 28068              a window
+O 0 27901 1 28068              a cistern
+O 0 27903 1 28069               a stone fireplace
+O 0 27902 1 28069              a window
+O 0 27904 1 28069               a huge bed
+O 0 27901 1 28070              a cistern
+O 0 27901 1 28071              a cistern
+O 0 27901 1 28072              a cistern
+O 0 27901 1 28073              a cistern
+O 0 27902 1 28074              a window
+O 0 27903 1 28074               a stone fireplace
+O 0 27904 1 28074               a huge bed
+O 0 27902 1 28075              a window
+O 0 27903 1 28075               a stone fireplace
+O 0 27904 1 28075               a huge bed
+O 0 27901 1 28076              a cistern
+O 0 27901 1 28077              a cistern
+O 0 27901 1 28078              a cistern
+O 0 27901 1 28079              a cistern
+O 0 27902 1 28080              a window
+O 0 27903 1 28080               a stone fireplace
+O 0 27904 1 28080               a huge bed
+O 0 27903 1 28081               a stone fireplace
+O 0 27902 1 28081              a window
+O 0 27904 1 28081               a huge bed
+O 0 27901 1 28082              a cistern
+O 0 27901 1 28083              a cistern
+O 0 27901 1 28084              a cistern
+O 0 27901 1 28085              a cistern
+O 0 27902 1 28086              a window
+O 0 27904 1 28086               a huge bed
+O 0 27903 1 28086               a stone fireplace
+O 0 27934 1 28091               a decaying corpse
+O 0 27921 1 28097               a hammock
+O 0 27934 1 28323               a decaying corpse
+O 0 27934 1 28346               a decaying corpse
+O 0 27934 1 28361               a decaying corpse
+O 0 27901 1 28450              a cistern
+O 0 27902 1 28450              a window
+O 0 27904 1 28450               a huge bed
+O 0 27901 1 28451              a cistern
+O 0 27902 1 28451              a window
+O 0 27907 1 28452               a nasty looking iron maiden
+O 0 27906 1 28452               a brazier
+O 0 27921 1 28465               a hammock
+O 0 27921 1 28466               a hammock
+O 0 27921 1 28470               a hammock
+O 0 27902 1 28487              a window
+O 0 27901 1 28487              a cistern
+O 0 27902 1 28488              a window
+O 0 27901 1 28488              a cistern
+O 0 27905 1 28488               a large tapestry
+O 0 27902 1 28489              a window
+O 0 27905 1 28489               a large tapestry
+O 0 27901 1 28489              a cistern
 
 B 0 27912 1 27921              a chunk of terbium
 B 0 27912 1 27941              a chunk of terbium

@@ -15,69 +15,69 @@ D 0 16314 2 2        A Small Animal Cage -> A Small Pathway
 D 0 16315 2 2        A Small Animal Cage -> A Small Pathway
 D 0 16316 2 2        A Small Animal Cage -> A Small Pathway
 D 0 16342 6 2        A Dressing Room -> A Small Pathway
-O 0 16347 1 16301        a banner sign
-O 0 15210 26 16311      a small pile of straw
-O 0 16348 26 16312      a small pile of straw
-O 0 16348 26 16313      a small pile of straw
-O 0 16348 26 16314      a small pile of straw
-O 0 16348 26 16315      a small pile of straw
-O 0 16348 26 16316      a small pile of straw
-O 0 16346 9999 16317    a small light
-O 0 16346 9999 16318    a small light
-O 0 16346 9999 16319    a small light
-O 0 16346 9999 16320    a small light
-O 0 16348 26 16320      a small pile of straw
-O 0 16346 9999 16321    a small light
-O 0 16348 26 16321      a small pile of straw
-O 0 16346 9999 16322    a small light
-O 0 16348 26 16322      a small pile of straw
-O 0 16346 9999 16323    a small light
-O 0 16348 26 16323      a small pile of straw
-O 0 16346 9999 16324    a small light
-O 0 16348 26 16324      a small pile of straw
-O 0 16346 9999 16325    a small light
-O 0 16348 26 16325      a small pile of straw
-O 0 16346 9999 16326    a small light
-O 0 16348 26 16326      a small pile of straw
-O 0 16346 9999 16327    a small light
-O 0 16348 26 16327      a small pile of straw
-O 0 16346 9999 16328    a small light
-O 0 16348 26 16328      a small pile of straw
-O 0 16346 9999 16329    a small light
-O 0 16348 26 16329      a small pile of straw
-O 0 16346 9999 16330    a small light
-O 0 16348 26 16330      a small pile of straw
-O 0 16346 9999 16331    a small light
-O 0 16348 26 16331      a small pile of straw
-O 0 16346 9999 16332    a small light
-O 0 16348 26 16332      a small pile of straw
-O 0 16346 9999 16333    a small light
-O 0 16348 26 16333      a small pile of straw
-O 0 16346 9999 16334    a small light
-O 0 16348 26 16334      a small pile of straw
-O 0 16346 9999 16335    a small light
-O 0 16348 26 16335      a small pile of straw
-O 0 16346 9999 16336    a small light
-O 0 16348 26 16336      a small pile of straw
-O 0 16346 9999 16337    a small light
-O 0 16348 26 16337      a small pile of straw
-O 0 16346 9999 16338    a small light
-O 0 16348 26 16338      a small pile of straw
-O 0 16346 9999 16339    a small light
-O 0 16348 26 16339      a small pile of straw
-O 0 16346 9999 16340    a small light
-O 0 16348 26 16340      a small pile of straw
-O 0 16346 9999 16341    a small light
-O 0 16348 26 16341      a small pile of straw
-O 0 1200 9999 16342     a wall lamp
-O 0 16346 9999 16343    a small light
-O 0 16346 9999 16344    a small light
-O 0 16346 9999 16345    a small light
-O 0 16346 9999 16346    a small light
-O 0 16346 9999 16347    a small light
-O 0 16346 9999 16348    a small light
-O 0 1200 9999 16349     a wall lamp
-O 0 20003 9999 16349    a long cluttered desk
+O 0 16347 1 16301         a banner sign
+O 0 15210 1 16311       a small pile of straw
+O 0 16348 1 16312       a small pile of straw
+O 0 16348 1 16313       a small pile of straw
+O 0 16348 1 16314       a small pile of straw
+O 0 16348 1 16315       a small pile of straw
+O 0 16348 1 16316       a small pile of straw
+O 0 16346 1 16317     a small light
+O 0 16346 1 16318     a small light
+O 0 16346 1 16319     a small light
+O 0 16346 1 16320     a small light
+O 0 16348 1 16320       a small pile of straw
+O 0 16346 1 16321     a small light
+O 0 16348 1 16321       a small pile of straw
+O 0 16346 1 16322     a small light
+O 0 16348 1 16322       a small pile of straw
+O 0 16346 1 16323     a small light
+O 0 16348 1 16323       a small pile of straw
+O 0 16346 1 16324     a small light
+O 0 16348 1 16324       a small pile of straw
+O 0 16346 1 16325     a small light
+O 0 16348 1 16325       a small pile of straw
+O 0 16346 1 16326     a small light
+O 0 16348 1 16326       a small pile of straw
+O 0 16346 1 16327     a small light
+O 0 16348 1 16327       a small pile of straw
+O 0 16346 1 16328     a small light
+O 0 16348 1 16328       a small pile of straw
+O 0 16346 1 16329     a small light
+O 0 16348 1 16329       a small pile of straw
+O 0 16346 1 16330     a small light
+O 0 16348 1 16330       a small pile of straw
+O 0 16346 1 16331     a small light
+O 0 16348 1 16331       a small pile of straw
+O 0 16346 1 16332     a small light
+O 0 16348 1 16332       a small pile of straw
+O 0 16346 1 16333     a small light
+O 0 16348 1 16333       a small pile of straw
+O 0 16346 1 16334     a small light
+O 0 16348 1 16334       a small pile of straw
+O 0 16346 1 16335     a small light
+O 0 16348 1 16335       a small pile of straw
+O 0 16346 1 16336     a small light
+O 0 16348 1 16336       a small pile of straw
+O 0 16346 1 16337     a small light
+O 0 16348 1 16337       a small pile of straw
+O 0 16346 1 16338     a small light
+O 0 16348 1 16338       a small pile of straw
+O 0 16346 1 16339     a small light
+O 0 16348 1 16339       a small pile of straw
+O 0 16346 1 16340     a small light
+O 0 16348 1 16340       a small pile of straw
+O 0 16346 1 16341     a small light
+O 0 16348 1 16341       a small pile of straw
+O 0 1200 1 16342      a wall lamp
+O 0 16346 1 16343     a small light
+O 0 16346 1 16344     a small light
+O 0 16346 1 16345     a small light
+O 0 16346 1 16346     a small light
+O 0 16346 1 16347     a small light
+O 0 16346 1 16348     a small light
+O 0 1200 1 16349      a wall lamp
+O 0 20003 1 16349     a long cluttered desk
 M 0 16323 5 16318      a male spectator
 ? 0 99 0 G
 G 1 8932 9999          a pineapple

@@ -21,11 +21,11 @@ D 0 25435 0 1
 D 0 25416 0 1           Gate
 D 0 25424 2 1
 *D 0 25403 3 1           Gate
-O 0 3305 9999 25400
-O 0 3305 9999 25417
-O 0 3305 9999 25403
-O 0 3305 9999 25414     Bench wooden
-O 0 25491 9999 25491    Portal to  eastern stettlement newbie place
+O 0 3305 1 25400 
+O 0 3305 1 25417 
+O 0 3305 1 25403 
+O 0 3305 1 25414      Bench wooden
+O 0 25491 1 25491     Portal to  eastern stettlement newbie place
 M 0 25400 1 25447           Centaurian Guard
 M 0 25400 1 25437 
 M 0 25400 1 25442 

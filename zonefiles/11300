@@ -23,60 +23,52 @@ D 0 11437 9 1
 D 0 11452 5 1		; sand on the beach
 D 0 11453 4 1
 
-O 0 27121 9999 11451    ; transulcent gown - elvish banshee quest
+O 0 27121 1 11451     ; transulcent gown - elvish banshee quest
 
-O 0 22 9999 11330	; bed
-O 0 23 9999 11464	; table
-O 0 230 9999 11360	; rusty nail
-O 0 230 9999 11360
-O 0 3301 9999 11343	; light ball
-O 0 3301 9999 11344
-O 0 3318 9999 11330	; torchiere
-O 0 5101 9999 11309	; broom
-O 0 6800 9999 11307	; wall torch
-O 0 6800 9999 11307
-O 0 6800 9999 11309
-O 0 6800 9999 11397
-O 0 6800 9999 11398
-O 0 6800 9999 11407
-O 0 6800 9999 11420
-O 0 6800 9999 11420
-O 0 6800 9999 11434
-O 0 6800 9999 11435
-O 0 6800 9999 11436
-O 0 10116 9999 11329	; wooden chair
-O 0 10116 9999 11330
-O 0 10116 9999 11398
-O 0 10116 9999 11467	; chair
-O 0 11467 9999 11329	; desk
-O 0 11467 9999 11467
-O 0 10205 9999 11309	; table
-O 0 10216 9999 11330	; cupboard
-O 0 10758 9999 11309	; chair
-O 0 11313 1 11313	; sluice portal to 11345
-O 0 11327 1 11327	; crevice portal to 11328
-O 0 11328 1 11328	; crevice portal to 11327
-O 0 11330 1 11330	; picture
-O 0 11344 9999 11344	; stone bed
-O 0 11345 1 11345	; sluice portal to 11313
-O 0 11403 1 11398	; map
-O 0 11402 9999 11398	; stone desk
-O 0 11348 999 11348	; gray potion (teleport)
+O 0 22 1 11330 	; bed
+O 0 23 1 11464 	; table
+O 0 230 2 11360 	; rusty nail
+O 0 3301 1 11343 	; light ball
+O 0 3301 1 11344 
+O 0 3318 1 11330 	; torchiere
+O 0 5101 1 11309 	; broom
+O 0 6800 2 11307 	; wall torch
+O 0 6800 1 11309 
+O 0 6800 1 11397 
+O 0 6800 1 11398 
+O 0 6800 1 11407 
+O 0 6800 2 11420 
+O 0 6800 1 11434 
+O 0 6800 1 11435 
+O 0 6800 1 11436 
+O 0 10116 1 11329 	; wooden chair
+O 0 10116 1 11330 
+O 0 10116 1 11398 
+O 0 10116 1 11467 	; chair
+O 0 11467 1 11329 	; desk
+O 0 11467 1 11467 
+O 0 10205 1 11309 	; table
+O 0 10216 1 11330 	; cupboard
+O 0 10758 1 11309 	; chair
+O 0 11313 1 11313 	; sluice portal to 11345
+O 0 11327 1 11327 	; crevice portal to 11328
+O 0 11328 1 11328 	; crevice portal to 11327
+O 0 11330 1 11330 	; picture
+O 0 11344 1 11344 	; stone bed
+O 0 11345 1 11345 	; sluice portal to 11313
+O 0 11403 1 11398 	; map
+O 0 11402 1 11398 	; stone desk
+O 0 11348 1 11348 	; gray potion (teleport)
 ? 0 50 0 O
-O 0 11348 999 11348
-O 0 11349 1 11348	; parchment ancient
-O 0 11434 9999 11434    ; bunk beds
-O 0 11434 9999 11434
-O 0 11434 9999 11435
-O 0 11434 9999 11435
-O 0 11434 9999 11436
-O 0 11434 9999 11436
-O 0 11437 9999 11437	; weapon rack
-O 0 805 999 11453	; cyan potion (fly)
-O 0 805 999 11453
-O 0 805 999 11453
+O 0 11348 1 11348 
+O 0 11349 1 11348 	; parchment ancient
+O 0 11434 2 11434     ; bunk beds
+O 0 11434 2 11435 
+O 0 11434 2 11436 
+O 0 11437 1 11437 	; weapon rack
+O 0 805 3 11453 	; cyan potion (fly)
 
-O 0 11401 1 11398	; weapon case
+O 0 11401 1 11398 	; weapon case
 ? 0 2 0 P
 P 1 11399 1 11401		; Hammer of Caradhras
 

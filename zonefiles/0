@@ -38,16 +38,16 @@ M 0 211 1 215
 
 *O 0 1 1 13	  END OF QUEST LOADS
 
-O 0 561 1 415      Repair object loads
-O 0 561 1 426
-O 0 577 1 500
-O 0 577 1 504
-O 0 577 1 516
-O 0 577 1 518
-O 0 577 1 532
-O 0 577 1 549
-O 0 585 1 503
-O 0 2345 1 772    End of repair objects.
+O 0 561 1 415       Repair object loads
+O 0 561 1 426 
+O 0 577 1 500 
+O 0 577 1 504 
+O 0 577 1 516 
+O 0 577 1 518 
+O 0 577 1 532 
+O 0 577 1 549 
+O 0 585 1 503 
+O 0 2345 1 772     End of repair objects.
 
 M 0 29903 1 200      orc trader
 G 1 29901 9999		Kitten pie

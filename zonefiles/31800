@@ -198,17 +198,17 @@ A 0 31800 31899
 M 0 31838 9999 -99
 
 
-O 0 31802 9999 31800    the bleached white bones of a dead fisherman
+O 0 31802 1 31800     the bleached white bones of a dead fisherman
 P 1 31805 9999 31802      a pair of rugged hip-waders for fishing
-O 0 31802 9999 31824    the bleached white bones of a dead fisherman
+O 0 31802 1 31824     the bleached white bones of a dead fisherman
 P 1 13871 9999 31802      a pair of rugged hip-waders for fishing
 P 1 13873 9999 31802      a fishing hat
-O 0 31802 9999 31845    the bleached white bones of a dead fisherman
+O 0 31802 1 31845     the bleached white bones of a dead fisherman
 P 1 31805 9999 31802      a pair of rugged hip-waders for fishing
 P 1 31803 9999 31802      a fishing hat
 P 1 13865 9999 31802      a fly fishing rod
 P 1 13845 9999 31802      a fly lure and some bait
-O 0 31801 9999 31855    an old tacklebox
+O 0 31801 1 31855     an old tacklebox
 P 1 31807 9999 31801      an ancient dwarven fishing pole
 P 1 31806 9999 31801      a strange looking lure
 P 1 31806 9999 31801      a strange looking lure
@@ -222,7 +222,7 @@ P 1 13842 9999 31801      a jig lure with some bait
 P 1 13851 9999 31801      a can of grubs
 P 1 13852 9999 31801      a can of crayfish tails
 P 1 13848 9999 31801      a can of minnows
-O 0 31802 9999 31855    the bleached white bones of a dead fisherman
+O 0 31802 1 31855     the bleached white bones of a dead fisherman
 P 1 13867 9999 31802      an elite deepsea fishing rod
 P 1 31805 9999 31802      a pair of rugged hip-waders for fishing
 P 1 31803 9999 31802      a fishing hat

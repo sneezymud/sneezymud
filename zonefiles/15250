@@ -7,37 +7,34 @@ D 0 15293 1 1
 D 0 15278 2 1                Ivy Secret (close)
 D 0 15280 0 1
 
-O 0 15287 9999 15275     Hollowed out log portal to Graveyard
-O 0 15250 1 15250        Plank portal out of zone
-O 0 15273 1 15273        Spytower portal
-O 0 15283 1 15283        Ladder out of Spytower portal
-O 0 15276 1 15276        Tent portal
-O 0 15284 1 15284        Flap portal out of Tent
+O 0 15287 1 15275      Hollowed out log portal to Graveyard
+O 0 15250 1 15250         Plank portal out of zone
+O 0 15273 1 15273         Spytower portal
+O 0 15283 1 15283         Ladder out of Spytower portal
+O 0 15276 1 15276         Tent portal
+O 0 15284 1 15284         Flap portal out of Tent
 
 ? 0 10 0 O
-O 0 15255 9999 15250     Rusty Sledgehammer, for Amber Quest?
-O 0 15264 1 15264        Cooking Grill in center of camp
+O 0 15255 1 15250      Rusty Sledgehammer, for Amber Quest?
+O 0 15264 1 15264         Cooking Grill in center of camp
 P 1 15265 3 15264        Meat on grill
-O 0 15262 3 15262        Moss covered stones (load 3)
-O 0 15262 3 15262
-O 0 15262 3 15262
-O 0 15261 2 15261        Game Racks (in 2 rooms)
+O 0 15262 3 15262         Moss covered stones (load 3)
+O 0 15261 1 15261         Game Racks (in 2 rooms)
 P 1 15260 2 15261        Meat on rack (on both racks)
-O 0 15261 2 15260
+O 0 15261 1 15260 
 P 1 15260 2 15261
-O 0 15286 7 15286        Bed of Needles (7 places)
-O 0 15286 7 15284    
-O 0 15286 7 15268
-O 0 15286 7 15268
-O 0 15286 7 15265
-O 0 15286 7 15263
-O 0 15286 7 15266
-O 0 15270 1 15283        Window to river
-O 0 15271 1 15283        Window to GH
-O 0 15275 1 15275        'Window' through trees (3 types, 3 places)
-O 0 15274 1 15277
-O 0 15278 1 15278
-O 0 15282 1 15282         Raft hidden in clearing
+O 0 15286 1 15286         Bed of Needles (7 places)
+O 0 15286 1 15284     
+O 0 15286 2 15268 
+O 0 15286 1 15265 
+O 0 15286 1 15263 
+O 0 15286 1 15266 
+O 0 15270 1 15283         Window to river
+O 0 15271 1 15283         Window to GH
+O 0 15275 1 15275         'Window' through trees (3 types, 3 places)
+O 0 15274 1 15277 
+O 0 15278 1 15278 
+O 0 15282 1 15282          Raft hidden in clearing
 
 M 0 15260 1 15260           Gnome poacher load (2)
 ? 0 5 0 G                        possible skinning knife load

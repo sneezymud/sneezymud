@@ -24,41 +24,41 @@ D 0 10197 3 1
 D 0 10155 1 1		10198 - elf house
 D 0 10198 3 1
 
-O 0 10109 1 10155		spyhole type1
-O 0 10110 1 10181		druid altar
-O 0 10112 1 10175		log seat
-O 0 10112 2 10176		log seat
-O 0 10112 3 10177		log seat
-O 0 10112 4 10178		log seat
-O 0 10112 5 10179		log seat
-O 0 10112 6 10180		log seat
-O 0 10114 1 10165		spyhole type2
-O 0 10115 1 10170		balcony railing
-O 0 10116 1 10171		wooden chair
-O 0 10116 2 10172		wooden chair
-O 0 10116 3 10174		wooden chair
-O 0 10117 1 10172		couch
-O 0 10118 2 10173		fern
-O 0 10118 3 10193		fern
-O 0 10118 4 10197		fern
-O 0 10119 1 10173		cot/bed
-O 0 10120 1 10171		desk
-O 0 10121 1 10171		bookcase
-O 0 10122 1 10174		table
-O 0 10123 2 10174		sink basin
-O 0 10199 1 10171		window
-O 0 10199 2 10172		window
-O 0 10199 3 10173		window
-O 0 10199 4 10174		window
-O 0 10199 5 10190		window
-O 0 10199 6 10191		window
-O 0 10199 7 10192		window
-O 0 10199 8 10193		window
-O 0 10199 9 10194		window
-O 0 10199 10 10195		window
-O 0 10199 11 10196		window
-O 0 10199 12 10197		window
-O 0 10199 13 10198		window
+O 0 10109 1 10155 		spyhole type1
+O 0 10110 1 10181 		druid altar
+O 0 10112 1 10175 		log seat
+O 0 10112 1 10176 		log seat
+O 0 10112 1 10177 		log seat
+O 0 10112 1 10178 		log seat
+O 0 10112 1 10179 		log seat
+O 0 10112 1 10180 		log seat
+O 0 10114 1 10165 		spyhole type2
+O 0 10115 1 10170 		balcony railing
+O 0 10116 1 10171 		wooden chair
+O 0 10116 1 10172 		wooden chair
+O 0 10116 1 10174 		wooden chair
+O 0 10117 1 10172 		couch
+O 0 10118 1 10173 		fern
+O 0 10118 1 10193 		fern
+O 0 10118 1 10197 		fern
+O 0 10119 1 10173 		cot/bed
+O 0 10120 1 10171 		desk
+O 0 10121 1 10171 		bookcase
+O 0 10122 1 10174 		table
+O 0 10123 1 10174 		sink basin
+O 0 10199 1 10171 		window
+O 0 10199 1 10172 		window
+O 0 10199 1 10173 		window
+O 0 10199 1 10174 		window
+O 0 10199 1 10190 		window
+O 0 10199 1 10191 		window
+O 0 10199 1 10192 		window
+O 0 10199 1 10193 		window
+O 0 10199 1 10194 		window
+O 0 10199 1 10195 		window
+O 0 10199 1 10196 		window
+O 0 10199 1 10197 		window
+O 0 10199 1 10198 		window
 
 M 0 10109 1 10140 		elf commoner type1 male
 H 1 2 3				  hate dwarf

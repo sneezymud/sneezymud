@@ -11,172 +11,172 @@ D 0 9082 2 2                   Upper North Steeple Tower -> A Dangerous Catwalk
 D 0 9085 3 1                   Parapet Wall -> The Attic
 D 0 9090 1 1                   Parapet Wall -> The Attic
 
-O 0 1441 1 9082                ceiling trapdoor
-O 0 1442 1 9092                floor trapdoor
-O 0 1445 1 9081                gap in catwalk ropes
-O 0 1446 1 9081                hole through catwalk ropes
-O 0 1447 1 9077                opening through catwalk ropes
-O 0 1447 1 9080                
+O 0 1441 1 9082                 ceiling trapdoor
+O 0 1442 1 9092                 floor trapdoor
+O 0 1445 1 9081                 gap in catwalk ropes
+O 0 1446 1 9081                 hole through catwalk ropes
+O 0 1447 1 9077                 opening through catwalk ropes
+O 0 1447 1 9080                 
 
-O 0 9054 9999 9082             a flickering torch
-O 0 9054 9999 9092             a flickering torch
+O 0 9054 1 9082              a flickering torch
+O 0 9054 1 9092              a flickering torch
 
 ? 0 35 0 O
-O 1 9090 1 9095        chance of portal going to Noctagon
+O 1 9090 1 9095         chance of portal going to Noctagon
 V 1 0 -16765332
 ? 0 5 0 O
-O 1 9090 1 9095        chance of portal going to Medusa
+O 1 9090 1 9095         chance of portal going to Medusa
 V 1 0 -16765382
 ? 0 5 0 O
-O 1 9090 1 9095        chance of portal going to Siren
+O 1 9090 1 9095         chance of portal going to Siren
 V 1 0 -16764342
 ? 0 5 0 O
-O 1 9090 1 9095        chance of portal going to Nemesis
+O 1 9090 1 9095         chance of portal going to Nemesis
 V 1 0 -16765387
 ? 0 5 0 O
-O 1 9090 1 9095        chance of portal going to Minotaur
+O 1 9090 1 9095         chance of portal going to Minotaur
 V 1 0 -16767427
 ? 0 5 0 O
-O 1 9090 1 9095        chance of portal going to Kalaysia
+O 1 9090 1 9095         chance of portal going to Kalaysia
 V 1 0 -16762968
 ? 0 5 0 O
-O 1 9090 1 9095        chance of portal going to Obsidian Keep
+O 1 9090 1 9095         chance of portal going to Obsidian Keep
 V 1 0 -16766445
 ? 0 5 0 O
-O 1 9090 1 9095        chance of portal going to Shracknir
+O 1 9090 1 9095         chance of portal going to Shracknir
 V 1 0 -16773756
 ? 0 5 0 O
-O 1 9090 1 9095        chance of portal going to Cavern of the Well
+O 1 9090 1 9095         chance of portal going to Cavern of the Well
 V 1 0 -16761273
 ? 0 5 0 O
-O 1 9090 1 9095        chance of portal going to Octopus
+O 1 9090 1 9095         chance of portal going to Octopus
 V 1 0 -16748331
 ? 0 5 0 O
-O 1 9090 1 9095        chance of portal going to LH Keep
+O 1 9090 1 9095         chance of portal going to LH Keep
 V 1 0 -16773978
 ? 0 5 0 O
-O 1 9090 1 9095        chance of portal going to Sewage
+O 1 9090 1 9095         chance of portal going to Sewage
 V 1 0 -16761916
 
-O 0 9090 1 9095        default to Noctagon in case all others fail
+O 0 9090 1 9095         default to Noctagon in case all others fail
 V 1 0 -16765332
 
-O 0 9054 9999 9096             a flickering torch
-O 0 9054 9999 9097             a flickering torch
+O 0 9054 1 9096              a flickering torch
+O 0 9054 1 9097              a flickering torch
 
-O 0 1435 9999 9074             the crenellation down on to the street
+O 0 1435 1 9074              the crenellation down on to the street
 V 1 0 157
-O 0 1433 9999 9074             the crenellation down on to the street
+O 0 1433 1 9074              the crenellation down on to the street
 V 1 0 156
-O 0 1436 9999 9074             the crenellation down on to the street
+O 0 1436 1 9074              the crenellation down on to the street
 V 1 0 155
-O 0 1425 9999 9075             the colonnade down into the nave.
+O 0 1425 1 9075              the colonnade down into the nave.
 V 1 0 757 
-O 0 1429 9999 9075             the colonnade down into the nave.
+O 0 1429 1 9075              the colonnade down into the nave.
 V 1 0 762
-O 0 1429 9999 9076             the colonnade down into the nave.
+O 0 1429 1 9076              the colonnade down into the nave.
 V 1 0 767
-O 0 1425 9999 9076             the colonnade down into the nave.
+O 0 1425 1 9076              the colonnade down into the nave.
 V 1 0 762
-O 0 1428 9999 9076             the colonnade down into the nave.
+O 0 1428 1 9076              the colonnade down into the nave.
 V 1 0 757
-O 0 1428 9999 9077             the colonnade down into the nave.
+O 0 1428 1 9077              the colonnade down into the nave.
 V 1 0 762
-O 0 1424 9999 9078             the colonnade down into the nave.
+O 0 1424 1 9078              the colonnade down into the nave.
 V 1 0 757
-O 0 1426 9999 9078             the colonnade down into the nave.
+O 0 1426 1 9078              the colonnade down into the nave.
 V 1 0 762
-O 0 1426 9999 9079             the colonnade down into the nave.
+O 0 1426 1 9079              the colonnade down into the nave.
 V 1 0 767
-O 0 1424 9999 9079             the colonnade down into the nave.
+O 0 1424 1 9079              the colonnade down into the nave.
 V 1 0 762
-O 0 1427 9999 9079             the colonnade down into the nave.
+O 0 1427 1 9079              the colonnade down into the nave.
 V 1 0 757
-O 0 1427 9999 9080             the colonnade down into the nave.
+O 0 1427 1 9080              the colonnade down into the nave.
 V 1 0 762
-O 0 1430 9999 9081             the slats in the bridge
+O 0 1430 1 9081              the slats in the bridge
 V 1 0 767
-O 0 1435 9999 9083             the crenellation down on to the street
+O 0 1435 1 9083              the crenellation down on to the street
 V 1 0 156
-O 0 1433 9999 9083             the crenellation down on to the street
+O 0 1433 1 9083              the crenellation down on to the street
 V 1 0 155
-O 0 1436 9999 9083             the crenellation down on to the street
+O 0 1436 1 9083              the crenellation down on to the street
 V 1 0 154
-O 0 1436 9999 9084             the crenellation down on to the street
+O 0 1436 1 9084              the crenellation down on to the street
 V 1 0 117 
-O 0 1433 9999 9084             the crenellation down on to the street
+O 0 1433 1 9084              the crenellation down on to the street
 V 1 0 154
-O 0 1432 9999 9084             the crenellation down on to the street
+O 0 1432 1 9084              the crenellation down on to the street
 V 1 0 116
-O 0 1437 9999 9084             the crenellation down on to the street
+O 0 1437 1 9084              the crenellation down on to the street
 V 1 0 115
-O 0 1435 9999 9084             the crenellation down on to the street
+O 0 1435 1 9084              the crenellation down on to the street
 V 1 0 155
-O 0 1437 9999 9085             the crenellation down on to the street
+O 0 1437 1 9085              the crenellation down on to the street
 V 1 0 170
-O 0 1434 9999 9085             the crenellation down on to the street
+O 0 1434 1 9085              the crenellation down on to the street
 V 1 0 169
-O 0 1438 9999 9085             the crenellation down on to the street
+O 0 1438 1 9085              the crenellation down on to the street
 V 1 0 168
-O 0 1436 9999 9086             the crenellation down on to the street
+O 0 1436 1 9086              the crenellation down on to the street
 V 1 0 113
-O 0 1432 9999 9086             the crenellation down on to the street
+O 0 1432 1 9086              the crenellation down on to the street
 V 1 0 112
-O 0 1437 9999 9086             the crenellation down on to the street
+O 0 1437 1 9086              the crenellation down on to the street
 V 1 0 100
-O 0 1434 9999 9086             the crenellation down on to the street
+O 0 1434 1 9086              the crenellation down on to the street
 V 1 0 170
-O 0 1438 9999 9086             the crenellation down on to the street
+O 0 1438 1 9086              the crenellation down on to the street
 V 1 0 169
-O 0 1438 9999 9087             the crenellation down on to the street
+O 0 1438 1 9087              the crenellation down on to the street
 V 1 0 166
-O 0 1434 9999 9087             the crenellation down on to the street
+O 0 1434 1 9087              the crenellation down on to the street
 V 1 0 167
-O 0 1437 9999 9087             the crenellation down on to the street
+O 0 1437 1 9087              the crenellation down on to the street
 V 1 0 168
-O 0 1437 9999 9088             the crenellation down on to the street
+O 0 1437 1 9088              the crenellation down on to the street
 V 1 0 169
-O 0 1434 9999 9088             the crenellation down on to the street
+O 0 1434 1 9088              the crenellation down on to the street
 V 1 0 168
-O 0 1438 9999 9088             the crenellation down on to the street
+O 0 1438 1 9088              the crenellation down on to the street
 V 1 0 167
-O 0 1435 9999 9089             the crenellation down on to the street
+O 0 1435 1 9089              the crenellation down on to the street
 V 1 0 163
-O 0 1431 9999 9089             the crenellation down on to the street
+O 0 1431 1 9089              the crenellation down on to the street
 V 1 0 164
-O 0 1438 9999 9089             the crenellation down on to the street
+O 0 1438 1 9089              the crenellation down on to the street
 V 1 0 165
-O 0 1434 9999 9089             the crenellation down on to the street
+O 0 1434 1 9089              the crenellation down on to the street
 V 1 0 166
-O 0 1437 9999 9089             the crenellation down on to the street
+O 0 1437 1 9089              the crenellation down on to the street
 V 1 0 167
-O 0 1435 9999 9090             the crenellation down on to the street
+O 0 1435 1 9090              the crenellation down on to the street
 V 1 0 158
-O 0 1433 9999 9090             the crenellation down on to the street
+O 0 1433 1 9090              the crenellation down on to the street
 V 1 0 157
-O 0 1436 9999 9090             the crenellation down on to the street
+O 0 1436 1 9090              the crenellation down on to the street
 V 1 0 156
-O 0 1438 9999 9091             the crenellation down on to the street
+O 0 1438 1 9091              the crenellation down on to the street
 V 1 0 161
-O 0 1431 9999 9091             the crenellation down on to the street
+O 0 1431 1 9091              the crenellation down on to the street
 V 1 0 160
-O 0 1435 9999 9091             the crenellation down on to the street
+O 0 1435 1 9091              the crenellation down on to the street
 V 1 0 159
-O 0 1433 9999 9091             the crenellation down on to the street
+O 0 1433 1 9091              the crenellation down on to the street
 V 1 0 158
-O 0 1436 9999 9091             the crenellation down on to the street
+O 0 1436 1 9091              the crenellation down on to the street
 V 1 0 157
-O 0 1438 9999 9098             the crenellation down on to the street
+O 0 1438 1 9098              the crenellation down on to the street
 V 1 0 162
-O 0 1431 9999 9098             the crenellation down on to the street
+O 0 1431 1 9098              the crenellation down on to the street
 V 1 0 161
-O 0 1435 9999 9098             the crenellation down on to the street
+O 0 1435 1 9098              the crenellation down on to the street
 V 1 0 160
-O 0 1435 9999 9099             the crenellation down on to the street
+O 0 1435 1 9099              the crenellation down on to the street
 V 1 0 162
-O 0 1431 9999 9099             the crenellation down on to the street
+O 0 1431 1 9099              the crenellation down on to the street
 V 1 0 163
-O 0 1438 9999 9099             the crenellation down on to the street
+O 0 1438 1 9099              the crenellation down on to the street
 V 1 0 164
 
 M 0 9077 2 9076                a ghostly priest

@@ -17,55 +17,49 @@ D 0 6143 5 1
 D 0 6148 1 1  King's chambers
 D 0 6149 3 1
 
-O 0 33 1 6156           generic chest in wizard's lair
+O 0 33 1 6156            generic chest in wizard's lair
 V 1 2 6134                change to key 6134
 ? 0 25 0 L
 L 1 13 24 0 1             random loot
 
-O 0 33 1 6149           generic chest in prince's quarters
+O 0 33 1 6149            generic chest in prince's quarters
 V 1 2 6113                change to key 6113
 ? 0 25 0 L
 L 1 13 24 0 1             random loot
 
-O 0 33 1 6125           generic chest in kinslayer's grotto
+O 0 33 1 6125            generic chest in kinslayer's grotto
 V 1 2 6135                change to key 6135
 ? 0 25 0 L
 L 1 13 24 0 1             random loot
 
-O 0 15210 1 6131        straw sleeping mat in noble dwelling
-O 0 15210 1 6132        noble dwelling
+O 0 15210 1 6131         straw sleeping mat in noble dwelling
+O 0 15210 1 6132         noble dwelling
 
-O 0 27 1 6149           bed in King's Chamber
+O 0 27 1 6149            bed in King's Chamber
 
-O 0 6132 1 6128         cracked cistern (fountain) in large chamber
+O 0 6132 1 6128          cracked cistern (fountain) in large chamber
 
-O 0 6131 1 6112         dim flickering wall torch at Intersection
-O 0 6131 1 6115         altar
-O 0 6131 2 6115         altar
-O 0 6131 1 6116         alcove
-O 0 6131 1 6117         alcove
-O 0 6131 1 6125         kinslayer
-O 0 6131 1 6128         stone chamber
-O 0 6131 2 6128         stone chamber
-O 0 6131 1 6129         commons
-O 0 6131 2 6129         
-O 0 6131 1 6130         
-O 0 6131 2 6130         
-O 0 6131 1 6131         dwelling
-O 0 6131 1 6132
-O 0 6131 1 6133         dining hall
-O 0 6131 2 6133
-O 0 6131 1 6134         kitchen
-O 0 6131 1 6144         wizard's workshop
-O 0 6131 1 6145         hall
-O 0 6131 1 6146         hall
-O 0 6131 1 6147         hall
-O 0 6131 1 6148         throne
-O 0 6131 2 6148
-O 0 6131 1 6149         prince's quarters
-O 0 6131 1 6150         library
-O 0 6131 1 6156         wizard's lair
-O 0 6136 1 6158
+O 0 6131 1 6112          dim flickering wall torch at Intersection
+O 0 6131 2 6115          altar
+O 0 6131 1 6116          alcove
+O 0 6131 1 6117          alcove
+O 0 6131 1 6125          kinslayer
+O 0 6131 2 6128          stone chamber
+O 0 6131 2 6129          commons
+O 0 6131 2 6130          
+O 0 6131 1 6131          dwelling
+O 0 6131 1 6132 
+O 0 6131 2 6133          dining hall
+O 0 6131 1 6134          kitchen
+O 0 6131 1 6144          wizard's workshop
+O 0 6131 1 6145          hall
+O 0 6131 1 6146          hall
+O 0 6131 1 6147          hall
+O 0 6131 2 6148          throne
+O 0 6131 1 6149          prince's quarters
+O 0 6131 1 6150          library
+O 0 6131 1 6156          wizard's lair
+O 0 6136 1 6158 
 
 M 0 6100 1 6112         pantathian guard
 G 1 1213 9999

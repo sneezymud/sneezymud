@@ -47,7 +47,7 @@ D 0 15951 7 1
 * TODO: these bookshelves should randomly load some books from the game
 *       make sure they are non-quest, and only books (not magic items)
 
-O 0 15982 33 15982 bookshelves for top floor
+O 0 15982 1 15982  bookshelves for top floor
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -56,7 +56,7 @@ P 1 27327 1 15982    moldy tome
 P 1 29912 1 15982    serpent
 
 
-O 0 15982 33 15982
+O 0 15982 1 15982 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -64,7 +64,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29912 1 15982    serpent
 
-O 0 15982 33 15982
+O 0 15982 1 15982 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -72,7 +72,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29913 1 15982    logrus
 
-O 0 15982 33 15978
+O 0 15982 1 15978 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -80,7 +80,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 30985 1 15982    moleskin history
 
-O 0 15982 33 15978
+O 0 15982 1 15978 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -88,7 +88,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29912 1 15982    serpent
 
-O 0 15982 33 15978
+O 0 15982 1 15978 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -96,7 +96,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29913 1 15982    logrus
 
-O 0 15982 33 15979
+O 0 15982 1 15979 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -104,7 +104,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 10730 1 15982    the properties of light (book simple)
 
-O 0 15982 33 15979
+O 0 15982 1 15979 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -112,7 +112,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29912 1 15982    serpent
 
-O 0 15982 33 15979
+O 0 15982 1 15979 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -120,7 +120,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 8442 1 15982     tattered book
 
-O 0 15982 33 15983
+O 0 15982 1 15983 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -128,7 +128,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29913 1 15982    logrus
 
-O 0 15982 33 15983
+O 0 15982 1 15983 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -136,7 +136,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29912 1 15982    serpent
 
-O 0 15982 33 15983
+O 0 15982 1 15983 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -144,7 +144,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 9070 1 15982
 
-O 0 15982 33 15984
+O 0 15982 1 15984 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -152,7 +152,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 9071 1 15982
 
-O 0 15982 33 15984
+O 0 15982 1 15984 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -160,7 +160,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 9072 1 15982
 
-O 0 15982 33 15984
+O 0 15982 1 15984 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -168,7 +168,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29913 1 15982    logrus
 
-O 0 15982 33 15985
+O 0 15982 1 15985 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -176,7 +176,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29912 1 15982    serpent
 
-O 0 15982 33 15985
+O 0 15982 1 15985 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -184,7 +184,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 9073 1 15982
 
-O 0 15982 33 15985
+O 0 15982 1 15985 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -192,7 +192,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 9074 1 15982
 
-O 0 15982 33 15988
+O 0 15982 1 15988 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -200,7 +200,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29912 1 15982    serpent
 
-O 0 15982 33 15988
+O 0 15982 1 15988 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -208,7 +208,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29913 1 15982    logrus
 
-O 0 15982 33 15988
+O 0 15982 1 15988 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -216,7 +216,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 17117 1 15982
 
-O 0 15982 33 15989
+O 0 15982 1 15989 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -224,7 +224,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29912 1 15982    serpent
 
-O 0 15982 33 15989
+O 0 15982 1 15989 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -232,7 +232,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29912 1 15982    serpent
 
-O 0 15982 33 15989
+O 0 15982 1 15989 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -240,7 +240,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29913 1 15982    logrus
 
-O 0 15982 33 15990
+O 0 15982 1 15990 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -248,7 +248,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 17118 1 15982
 
-O 0 15982 33 15990
+O 0 15982 1 15990 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -256,7 +256,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29912 1 15982    serpent
 
-O 0 15982 33 15990
+O 0 15982 1 15990 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -264,7 +264,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29912 1 15982    serpent
 
-O 0 15982 33 15991
+O 0 15982 1 15991 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -272,7 +272,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 8442 1 15982     tattered book
 
-O 0 15982 33 15991
+O 0 15982 1 15991 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -280,7 +280,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 29913 1 15982    logrus
 
-O 0 15982 33 15991
+O 0 15982 1 15991 
 ? 0 50 0 P
 P 1 29910 1 15982    eyes of elyon
 ? 0 50 0 P
@@ -288,7 +288,7 @@ P 1 27327 1 15982    moldy tome
 ? 0 50 0 P
 P 1 31781 1 15982
 
-O 0 15982 33 15986  bookshelves in the vault
+O 0 15982 1 15986   bookshelves in the vault
 ? 0 2 0 P
 P 1 812 1 15982		  identify scroll
 ? 0 2 0 P
@@ -320,7 +320,7 @@ P 1 31375 1 15982   granite fists
 ? 0 10 0 P
 P 1 1487 1 15982    parchment
 
-O 0 15982 33 15986
+O 0 15982 1 15986 
 ? 0 2 0 P
 P 1 812 1 15982		  identify scroll
 ? 0 2 0 P
@@ -352,7 +352,7 @@ P 1 31375 1 15982   granite fists
 ? 0 10 0 P
 P 1 1487 1 15982    parchment
 
-O 0 15982 33 15986
+O 0 15982 1 15986 
 ? 0 2 0 P
 P 1 812 1 15982		  identify scroll
 ? 0 2 0 P
@@ -384,7 +384,7 @@ P 1 31375 1 15982   granite fists
 ? 0 10 0 P
 P 1 1487 1 15982    parchment
 
-O 0 15986 1 15986  chest in the vault
+O 0 15986 1 15986   chest in the vault
 ? 0 4 0 P
 P 1 15985 1 15986	4% ancient musty tome
 ? 0 4 0 P
@@ -395,72 +395,40 @@ P 1 813 1 15986		4% torn scroll
 P 1 4422 1 15986		4% galvanize
 
 
-O 0 15975 1 15986  large stone safe (with quest item)
+O 0 15975 1 15986   large stone safe (with quest item)
 P 1 15972 1 15975	quest item: Brightmoon defense plans
 
 
-O 0 15957 45 15980  desks for the top floor
-O 0 15957 45 15987
+O 0 15957 1 15980   desks for the top floor
+O 0 15957 1 15987 
 
-O 0 15957 45 15975  desks for the bottom floor
-O 0 15957 45 15975
-O 0 15957 45 15975
-O 0 15957 45 15975
+O 0 15957 4 15975   desks for the bottom floor
 
-O 0 15957 45 15976
-O 0 15957 45 15976
-O 0 15957 45 15976
-O 0 15957 45 15976
+O 0 15957 4 15976 
 
-O 0 15957 45 15977
-O 0 15957 45 15977
-O 0 15957 45 15977
-O 0 15957 45 15977
+O 0 15957 4 15977 
 
-O 0 15957 45 15969
-O 0 15957 45 15969
-O 0 15957 45 15969
-O 0 15957 45 15969
+O 0 15957 4 15969 
 
-O 0 15957 45 15970
-O 0 15957 45 15970
-O 0 15957 45 15970
-O 0 15957 45 15970
+O 0 15957 4 15970 
 
-O 0 15957 45 15971
-O 0 15957 45 15971
-O 0 15957 45 15971
-O 0 15957 45 15971
+O 0 15957 4 15971 
 
-O 0 15957 45 15972
-O 0 15957 45 15972
-O 0 15957 45 15972
-O 0 15957 45 15972
+O 0 15957 4 15972 
 
-O 0 15957 45 15964
-O 0 15957 45 15964
-O 0 15957 45 15964
-O 0 15957 45 15964
+O 0 15957 4 15964 
 
-O 0 15957 45 15957
-O 0 15957 45 15957
-O 0 15957 45 15957
-O 0 15957 45 15957
+O 0 15957 4 15957 
 
-O 0 15957 45 15958
-O 0 15957 45 15958
-O 0 15957 45 15958
-O 0 15957 45 15958
+O 0 15957 4 15958 
 
-O 0 15957 45 15963
-O 0 15957 45 15963
-O 0 15957 45 15963
+O 0 15957 3 15963 
 
-O 0 15956 1 15963  desk with secret writing (has to be 1.desk so it stacks w/others)
+O 0 15956 1 15963   desk with secret writing (has to be 1.desk so it stacks w/others)
 
-O 0 15958 1 15958  window for bottom floor looking east
+O 0 15958 1 15958   window for bottom floor looking east
 
-O 0 15971 1 15971  window for bottom floor looking south
+O 0 15971 1 15971   window for bottom floor looking south
 
 * Control max exist on this to keep it from multiplying
 B 0 15974 1 15974  gaelik statue
@@ -470,15 +438,15 @@ B 0 15974 1 15974  gaelik statue
 *	is a secret compartment inside the statue with the item inside.
 
 
-O 0 15965 1 15965  portal for toolshed
+O 0 15965 1 15965   portal for toolshed
 
-O 0 15995 1 15995  exit portal for toolshed
+O 0 15995 1 15995   exit portal for toolshed
 
-O 0 15960 1 15960  courtyard fountain
+O 0 15960 1 15960   courtyard fountain
 
-O 0 15959 1 15959  courtyard bench
+O 0 15959 1 15959   courtyard bench
 
-O 0 15966 1 15966  courtyard bench with secret writing
+O 0 15966 1 15966   courtyard bench with secret writing
 
 * TODO: Book of power
 * Note: want to add incantation procs to this
@@ -489,51 +457,51 @@ O 0 15966 1 15966  courtyard bench with secret writing
 *       being cast on the person, and 15% getting faerie fire.
 *       the chance of a good result goes up with the more money you
 *       place on the book before incanting (which dissapears when cast)
-O 0 15999 1 15997  Marukalia, the Book of Power
+O 0 15999 1 15997   Marukalia, the Book of Power
 
 
 ****************
 *****Lights*****
 ****************
 
-O 0 15970 34 15956 first floor glowing orbs
-O 0 15970 34 15955
-O 0 15970 34 15954
-O 0 15970 34 15953
-O 0 15970 34 15952
-O 0 15970 34 15957
-O 0 15970 34 15958
-O 0 15970 34 15962
-O 0 15970 34 15963
-O 0 15970 34 15964
-O 0 15970 34 15967
-O 0 15970 34 15968
-O 0 15970 34 15969
-O 0 15970 34 15970
-O 0 15970 34 15971
-O 0 15970 34 15972
-O 0 15970 34 15973
-O 0 15970 34 15974
-O 0 15970 34 15975
-O 0 15970 34 15976
-O 0 15970 34 15977
+O 0 15970 1 15956  first floor glowing orbs
+O 0 15970 1 15955 
+O 0 15970 1 15954 
+O 0 15970 1 15953 
+O 0 15970 1 15952 
+O 0 15970 1 15957 
+O 0 15970 1 15958 
+O 0 15970 1 15962 
+O 0 15970 1 15963 
+O 0 15970 1 15964 
+O 0 15970 1 15967 
+O 0 15970 1 15968 
+O 0 15970 1 15969 
+O 0 15970 1 15970 
+O 0 15970 1 15971 
+O 0 15970 1 15972 
+O 0 15970 1 15973 
+O 0 15970 1 15974 
+O 0 15970 1 15975 
+O 0 15970 1 15976 
+O 0 15970 1 15977 
 
-O 0 15970 34 15978 second floor glowing orbs
-O 0 15970 34 15979
-O 0 15970 34 15980
-O 0 15970 34 15981
-O 0 15970 34 15982
-O 0 15970 34 15983
-O 0 15970 34 15984
-O 0 15970 34 15985
+O 0 15970 1 15978  second floor glowing orbs
+O 0 15970 1 15979 
+O 0 15970 1 15980 
+O 0 15970 1 15981 
+O 0 15970 1 15982 
+O 0 15970 1 15983 
+O 0 15970 1 15984 
+O 0 15970 1 15985 
 
-O 0 15970 34 15987
-O 0 15970 34 15988
-O 0 15970 34 15989
-O 0 15970 34 15990
-O 0 15970 34 15991
+O 0 15970 1 15987 
+O 0 15970 1 15988 
+O 0 15970 1 15989 
+O 0 15970 1 15990 
+O 0 15970 1 15991 
 
-O 0 14300 34 15995 load Dolgan's glowing stone for the shed
+O 0 14300 1 15995  load Dolgan's glowing stone for the shed
 
 ****************
 ******Mobs******

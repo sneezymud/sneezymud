@@ -2,7 +2,7 @@
 Damian - Private Cemetary~
 27249 30 2 1
 
-O 0 8721 9999 27242     sconce
+O 0 8721 1 27242      sconce
 D 0 27201 0 1        	cemetary gate
 D 0 27202 2 1
 D 0 27211 0 1       	tool shed 
@@ -28,26 +28,20 @@ D 0 27245 1 1
 D 0 27245 2 1           panel shroud
 D 0 27247 0 1
 
-O 0 27206 1 27230            chair
-O 0 27205 1 27205            bush
-O 0 27205 2 27203
-O 0 27205 3 27204
-O 0 27205 4 27209
-O 0 27230 1 27230            desk
-O 0 27211 1 27211            tombstone
-O 0 27211 2 27208
-O 0 27211 3 27206
-O 0 27231 1 27231            bench
-O 0 27249 1 27249            iron rack
-O 0 27217 1 27217            casket
-O 0 27217 2 27217
-O 0 27217 3 27217
-O 0 27217 4 27217
-O 0 27217 5 27242            caskets (casket room)
-O 0 27217 6 27242
-O 0 27217 7 27242
-O 0 27217 8 27242
-O 0 27240 1 27240            underwater chest
+O 0 27206 1 27230             chair
+O 0 27205 1 27205             bush
+O 0 27205 1 27203 
+O 0 27205 1 27204 
+O 0 27205 1 27209 
+O 0 27230 1 27230             desk
+O 0 27211 1 27211             tombstone
+O 0 27211 1 27208 
+O 0 27211 1 27206 
+O 0 27231 1 27231             bench
+O 0 27249 1 27249             iron rack
+O 0 27217 4 27217             casket
+O 0 27217 4 27242             caskets (casket room)
+O 0 27240 1 27240             underwater chest
 P 1 27238 9999 27240      	bronze potion in chest (2)
 P 1 27238 9999 27240
 

@@ -5,7 +5,7 @@ Minion - The Pattern~
 D 0 3038 1 2          PATTERN DOOR
 D 0 3039 3 2
 
-O 0 3039 1 3099       PERMANENT PORTAL (the way out)
+O 0 3039 1 3099        PERMANENT PORTAL (the way out)
 
 M 0 3016 1 3038       PATTERN GUARD
 G 1 3038 999              key

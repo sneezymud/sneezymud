@@ -21,7 +21,7 @@ D 0 28839 0 1
 D 0 28802 0 2
 D 0 28803 3 3
 
-O 0 28811 1 28800	SIGN OF WARNING
+O 0 28811 1 28800 	SIGN OF WARNING
 M 0 28815 1 28802 	Temple Guardian
 G 1 28802 10
 ? 0 2 0 E
@@ -106,7 +106,7 @@ G 1 28808 1           Chest Key
 E 1 28803 5 10          Ruby Gauntlet
 ? 0 1 0 E
 E 1 28801 5 7           ruby legging 
-O 0 28807 1 28864       Ruby Chest
+O 0 28807 1 28864        Ruby Chest
 ? 0 65 0 P
 P 1 28810 1 28807       Put Ruby rod in chest
 M 0 28803 1 28861       Rabid Bat

@@ -757,97 +757,85 @@ M 0 10728 1 10747    ; Treasure Guard [a]
 Y 0 29 2			; Obsidian-Plate Set
 
 
-O 0 10763 2 10792   ; Solid Oak Bed
+O 0 10763 1 10792    ; Solid Oak Bed
 
-O 0 10762 2 10792   ; Solid Oak Wardrobe
+O 0 10762 1 10792    ; Solid Oak Wardrobe
 ? 0 30 0 P
 P 1 10746 2 10762   ; Gray Silk Shirt
-O 0 10757 2 10785   ; Solid Oak Desk
+O 0 10757 1 10785    ; Solid Oak Desk
 ? 0 30 0 P
 P 1 10781 2 10757   ; Gold Tipped Quill
 
-O 0 10760 10 10785   ; Plush Oak Chair
-O 0 10760 10 10785
-O 0 10764 2 10791   ; Oak Bed w/ Canopy
-O 0 10760 10 10809   ; Plush Oak Chair
-O 0 10760 10 10809   
-O 0 10763 2 10808   ; Solid Oak Bed
-O 0 10762 2 10808   ; Solid Oak Wardrobe
-O 0 10759 4 10818   ; Solid Oak Table
-O 0 10758 7 10818   ; Solid Oak Chair
-O 0 10758 7 10818
-O 0 10758 7 10818
-O 0 10759 4 10817   ; Solid Oak Table
-O 0 10758 7 10817   ; Solid Oak Chair
-O 0 10758 7 10817
-O 0 10758 7 10817
-O 0 10759 4 10810   ; Solid Oak Table
-O 0 10760 10 10810   ; Plush Oak Chair
-O 0 10760 10 10810
-O 0 10760 10 10810
-O 0 10759 4 10811   ; Solid Oak Table
-O 0 10760 10 10811   ; Plush Oak Chair
-O 0 10760 10 10811
-O 0 10760 10 10811
+O 0 10760 2 10785    ; Plush Oak Chair
+O 0 10764 1 10791    ; Oak Bed w/ Canopy
+O 0 10760 2 10809    ; Plush Oak Chair
+O 0 10763 1 10808    ; Solid Oak Bed
+O 0 10762 1 10808    ; Solid Oak Wardrobe
+O 0 10759 1 10818    ; Solid Oak Table
+O 0 10758 3 10818    ; Solid Oak Chair
+O 0 10759 1 10817    ; Solid Oak Table
+O 0 10758 3 10817    ; Solid Oak Chair
+O 0 10759 1 10810    ; Solid Oak Table
+O 0 10760 3 10810    ; Plush Oak Chair
+O 0 10759 1 10811    ; Solid Oak Table
+O 0 10760 3 10811    ; Plush Oak Chair
 
-O 0 10757 2 10812   ; Solid Oak Desk
+O 0 10757 1 10812    ; Solid Oak Desk
 ? 0 30 0 P
 P 1 10781 2 10757   ; Gold Tipped Quill
-O 0 10758 7 10812   ; Solid Oak Chair
+O 0 10758 1 10812    ; Solid Oak Chair
 
-O 0 10764 2 10812   ; Oak Bed w/ Canopy
+O 0 10764 1 10812    ; Oak Bed w/ Canopy
 
-O 0 10780 2 10795   ; Solid Oak Chest
+O 0 10780 1 10795    ; Solid Oak Chest
 T 1 2 6   ; 6d8 Blade Trap
 ? 0 30 0 P
 P 1 10713 2 10780   ; Obsidian Sliver
 
-O 0 10780 2 10802   ; Solid Oak Chest
+O 0 10780 1 10802    ; Solid Oak Chest
 T 1 6 6   ; 6d8 Fire Trap
 ? 0 30 0 P
 P 1 10718 2 10780   ; Obsidian Shaft (Arrow)
 
-O 0 10765 4 10798   ; Blood-Soaked Pillow
-O 0 10765 4 10798  
-O 0 10765 4 10826  
-O 0 10765 4 10826
-O 0 10766 2 10810   ; Silk Pillow w/ Black Lace
-O 0 10766 2 10811
-O 0 10738 5 10738   ; Torch Stub
-O 0 10738 5 10726   ; Torch Stub
-O 0 10738 5 10761   ; Torch Stub
-O 0 10738 5 10758   ; Torch Stub
-O 0 10738 5 10797   ; Torch Stub
-O 0 10731 2 10779   ; Bowl
-O 0 10731 2 10740  
+O 0 10765 2 10798    ; Blood-Soaked Pillow
+O 0 10765 2 10826   
+O 0 10766 1 10810    ; Silk Pillow w/ Black Lace
+O 0 10766 1 10811 
+O 0 10738 1 10738    ; Torch Stub
+O 0 10738 1 10726    ; Torch Stub
+O 0 10738 1 10761    ; Torch Stub
+O 0 10738 1 10758    ; Torch Stub
+O 0 10738 1 10797    ; Torch Stub
+O 0 10731 1 10779    ; Bowl
+O 0 10731 1 10740   
 ? 0 10 0 O
-O 1 10732 1 10755   ; Blanket
+O 1 10732 1 10755    ; Blanket
 ? 0 10 0 O
-O 1 10730 2 10765   ; Simple Book
+O 1 10730 1 10765    ; Simple Book
 ? 0 20 0 O
-O 1 10754 1 10771   ; Broken Broom Handle
+O 1 10754 1 10771    ; Broken Broom Handle
 ? 0 10 0 O
-O 1 10756 1 10763   ; Small Mirror Shard
+O 1 10756 1 10763    ; Small Mirror Shard
 ? 0 20 0 O
-O 1 10755 1 10732   ; Rancid Meat Bone
+O 1 10755 1 10732    ; Rancid Meat Bone
 ? 0 20 0 O
-O 1 10745 2 10816   ; Gray Silk Shirt
+O 1 10745 1 10816    ; Gray Silk Shirt
 ? 0 20 0 O
-O 1 10746 2 10816   ; Gray Silk Pants
+O 1 10746 1 10816    ; Gray Silk Pants
 ? 0 20 0 O
-O 1 10767 2 10819   ; Gray Silk Gown
+O 1 10767 1 10819    ; Gray Silk Gown
 ? 0 10 0 O
-O 1 10736 1 10722   ; Small Globe of Light
+O 1 10736 1 10722    ; Small Globe of Light
 
 ? 0 50 0 O
-O 0 10798 1 10747		; Obsidian Chest (normal)
+O 0 10798 1 10747 		; Obsidian Chest (normal)
 V 1 1 6229021	; No-Pick, 95 hp Energy Trap
 V 1 2 -1		; No Key
 ? 0 30 0 P
 P 1 10702 5 10798   ; Runed Obsidian Sword
 
 ? 0 50 0 O
-O 0 10798 1 10747		; Obsidian Chest (normal)
+O 0 10798 1 10747 		; Obsidian Chest (normal)
 V 1 1 6555165	; No-Pick, 100 hp Fire Trap
 V 1 2 10799		; Key 10799
 ? 0 30 0 P
@@ -858,17 +846,17 @@ P 1 10718 10 10798   ; Obsidian Shaft (Arrow)
 P 1 10718 10 10798   ; Obsidian Shaft (Arrow)
 
 ? 0 50 0 O
-O 0 10798 1 10747		; Obsidian Chest (normal)
+O 0 10798 1 10747 		; Obsidian Chest (normal)
 V 1 1 2845		; No-Pick, Teleport Trap
 V 1 2 10800		; Key 10800
 ? 0 30 0 P
 P 1 10752 3 10798   ; Obsidian Battle Axe
 
-O 0 10789 1 10747   ; Obsidian Chest [obsquest1]
+O 0 10789 1 10747    ; Obsidian Chest [obsquest1]
 P 1 10788 1 10789   ; Obsidian Scepter [obsquest1]
 
 ? 0 50 0 O
-O 0 10798 1 10747		; Obsidian Chest (normal)
+O 0 10798 1 10747 		; Obsidian Chest (normal)
 V 1 1 3932701	; 60 hp Blade Trap
 V 1 2 -1		; No Key
 ? 0 30 0 P
@@ -877,58 +865,58 @@ P 1 804 9999 10798	; Platinum Potion
 P 1 823 9999 10798	; Vermilion Potion
 
 ? 0 50 0 O
-O 0 10798 1 10747		; Obsidian Chest (normal)
+O 0 10798 1 10747 		; Obsidian Chest (normal)
 V 1 1 1968159	; No-Pick, 30hp Disease Trap
 V 1 2 10803		; Non-Loading Key 10803, but in DB for Quests
 * ? 0 30 0 P
 * P 1 29992 10 10798	; Youth Potion - Key does not load in game.
 
 ? 0 50 0 O
-O 0 10798 1 10747		; Obsidian Chest (normal)
+O 0 10798 1 10747 		; Obsidian Chest (normal)
 V 1 1 3932701	; 60 hp Blade Trap
 V 1 2 -1		; No Key
 ? 0 30 0 P
 P 1 12466 10 10798	; Meteor Swarm Scroll
 P 1 7518 9999 10798	; BarkSkin Scroll
 
-O 0 10795 1 10809		; Obsidian Coffer [obsquest2]
+O 0 10795 1 10809 		; Obsidian Coffer [obsquest2]
 P 1 10794 1 10795		; Obsidian Signet [obsquest2]
 
 
-O 0 10801 9999 10800	; Glass-Block Window
+O 0 10801 1 10800 	; Glass-Block Window
 V 1 0 7081	;look into room 7081
 
-O 0 10801 9999 10801	; Glass-Block Window
+O 0 10801 1 10801 	; Glass-Block Window
 V 1 0 7082	;look into room 7082
 
-O 0 10801 9999 10804	; Glass-Block Window
+O 0 10801 1 10804 	; Glass-Block Window
 V 1 0 7094	;look into room 7094
 
-O 0 10801 9999 10805	; Glass-Block Window
+O 0 10801 1 10805 	; Glass-Block Window
 V 1 0 7097	;look into room 7097
 
-O 0 10801 9999 10824	; Glass-Block Window
+O 0 10801 1 10824 	; Glass-Block Window
 V 1 0 7095	;look into room 7095
 
-O 0 10801 9999 10825	; Glass-Block Window
+O 0 10801 1 10825 	; Glass-Block Window
 V 1 0 7096	;look into room 7096
 
-O 0 10801 9999 10828	; Glass-Block Window
+O 0 10801 1 10828 	; Glass-Block Window
 V 1 0 7105	;look into room 7105
 
-O 0 10801 9999 10829	; Glass-Block Window
+O 0 10801 1 10829 	; Glass-Block Window
 V 1 0 7108	;look into room 7108
 
-O 0 10802 9999 10838	; Archerer's Opening
+O 0 10802 1 10838 	; Archerer's Opening
 V 1 0 7106	;look into room 7106
 
-O 0 10802 9999 10839	; Archerer's Opening
+O 0 10802 1 10839 	; Archerer's Opening
 V 1 0 7107	;look into room 7107
 
-O 0 10802 9999 10840	; Archerer's Opening
+O 0 10802 1 10840 	; Archerer's Opening
 V 1 0 7112	;look into room 7112
 
-O 0 10802 9999 10841	; Archerer's Opening
+O 0 10802 1 10841 	; Archerer's Opening
 V 1 0 7115	;look into room 7115
 S
 
