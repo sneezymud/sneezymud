@@ -1897,29 +1897,25 @@ void sendToFaction(factionTypeT fnum, const char *who, const char *arg)
 }
 
 
-void TBeing::doSend(const char *arg)
+void TBeing::doSend(string arg)
 { 
   factionTypeT fnum = getFaction();
-  char buf2[MAX_INPUT_LENGTH];
+  string msg, faction, new_arg;
 
   // allow immortals to send to any faction via "send snake mess"
   bool wizSent = false;
   if (isImmortal()) {
-    char buf[MAX_INPUT_LENGTH];
-    const char *b3;
-    b3 = one_argument(arg, buf);
-    factionTypeT fnum2 = factionNumber(buf);
+    new_arg = one_argument(arg, faction);
+    factionTypeT fnum2 = factionNumber(faction.c_str());
     if (fnum2 != FACT_UNDEFINED) {
       fnum = fnum2;
       wizSent = true;
-      for (;b3 && *b3 && isspace(*b3); b3++);
-      mud_str_copy(buf2, b3, MAX_INPUT_LENGTH);
+      msg = new_arg;
+      msg.erase(0,1);
     }
   }
-  if (!wizSent) {
-    for (;arg && *arg && isspace(*arg); arg++);
-    mud_str_copy(buf2, arg, MAX_INPUT_LENGTH);
-  }
+  if (!wizSent)
+    msg=arg;
 
 #if 0
   if ((getFactionAuthority(fnum,FACT_LEADER_SLOTS - 1) <= 0) &&
@@ -1979,7 +1975,7 @@ void TBeing::doSend(const char *arg)
     return;
   }
 
-  if (!*buf2) {
+  if (msg.empty()) {
     sendTo("What message do you wish to send?\n\r");
     sendTo("Syntax: send <message>\n\r");
     return;
@@ -1990,7 +1986,7 @@ void TBeing::doSend(const char *arg)
   addToWait(combatRound(0.5));
 
 
-  sendToFaction(fnum, getName(), buf2);
+  sendToFaction(fnum, getName(), msg.c_str());
 }
 
 void TBeing::doRelease(const string & arg)

@@ -138,10 +138,10 @@ void gload_usage(TBeing *tb){
 }
 
 
-void TBeing::doGload(const char *arg)
+void TBeing::doGload(string arg)
 {
-  char    arg1[128],
-          arg2[128], buf[256];
+  char    arg1[128], arg2[128];
+  string buf;
   TObj  *bow;
   TThing  *arrow;
   TGun *gun;
@@ -149,7 +149,7 @@ void TBeing::doGload(const char *arg)
   int nargs;
   TBeing *tb;
 
-  nargs=sscanf(arg, "%s %s", arg1, arg2);
+  nargs=scanf(arg.c_str(), "%s %s", arg1, arg2);
 
   if(nargs<1 || nargs>2){
     gload_usage(this);
@@ -175,7 +175,7 @@ void TBeing::doGload(const char *arg)
     }
     
     if(gun->getAmmo()){
-      sprintf(buf, "unload %s", arg1);
+      ssprintf(buf, "unload %s", arg1);
       doGload(buf);
       if(gun->getAmmo()){
 	sendTo("That gun is already loaded!\n\r");
@@ -218,8 +218,6 @@ void TBeing::doGload(const char *arg)
     } else {
       --(*arrow);
       *this += *arrow;
-      //      arrow->nextThing=getStuff();
-      //      setStuff(arrow);
       
       act("You unload $N.", TRUE, this, ammo, gun, TO_CHAR);
       act("$n unloads $N.", TRUE, this, ammo, gun, TO_ROOM);

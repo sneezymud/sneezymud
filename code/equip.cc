@@ -2038,19 +2038,19 @@ bool TObj::rangerRestrictedItem(const TBeing *ch) const
   return TRUE;
 }
 
-int TBeing::doUnsaddle(const char *arg)
+int TBeing::doUnsaddle(string arg)
 {
   TThing *saddle;
   TBeing *horse;
 
-  for (; isspace(*arg); arg++);
+  vlogf(LOG_PEEL, "'%s'", arg.c_str());
 
-  if (!*arg) {
+  if (arg.empty()) {
     sendTo("Syntax: unsaddle <horse>\n\r");
     return FALSE;
   }
-  if (!(horse = get_char_room_vis(this, arg))) {
-    sendTo("You don't see '%s' here.\n\r", arg);
+  if (!(horse = get_char_room_vis(this, arg.c_str()))) {
+    sendTo("You don't see '%s' here.\n\r", arg.c_str());
     return FALSE;
   }
   if (!horse->isRideable()) {

@@ -3,10 +3,15 @@
 #include "database.h"
 #include "shop.h"
 
-bool sameAccount2(const char *buf, int shop_nr){
+
+// this function relies on the fact that the db will return rows in the order
+// that they were created, chronologically.  I'm not sure if this is defined
+// behavior or not, so if it stops working, you need to put a timestamp value
+// into the table and sort by that
+bool sameAccount(string buf, int shop_nr){
   charFile st, stthis;
 
-  load_char(buf, &stthis);
+  load_char(buf.c_str(), &stthis);
 
   TDatabase db("sneezy");
 
@@ -27,8 +32,6 @@ bool sameAccount2(const char *buf, int shop_nr){
   return FALSE;
 }
 
-
-
 int TShopOwned::getPurchasePrice(int talens, int value){
   return (int)(((talens+value)*1.15)+1000000);
 }
@@ -43,7 +46,7 @@ int getShopAccess(int shop_nr, TBeing *ch){
   if(db.fetchRow())
     access=atoi_safe(db.getColumn(0));
   
-  if(sameAccount2(ch->getName(), shop_nr) && !ch->isImmortal() && access){
+  if(sameAccount(ch->getName(), shop_nr) && !ch->isImmortal() && access){
     ch->sendTo("Another character in your account has permissions at this shop, so this character can not use the ownership functions.\n\r");
     access=0;
   }
@@ -87,9 +90,8 @@ void TShopOwned::showInfo()
   TThing *tt;
   TObj *o;
   int count=0, value=0, tmp=0;
-  //  int price=0, discount=100;
   unsigned int i=0;
-  char buf[256];
+  string buf;
   int volume=0;
 
   // if not owned, or owned and has "owner" or "info"
@@ -128,15 +130,13 @@ void TShopOwned::showInfo()
     keeper->doTell(ch->getName(), 
 		   "I only sell things, I do not buy anything.");
   } else {
-    sprintf(buf, "%s I deal in", ch->getName());
+    ssprintf(buf, "%s I deal in", ch->getName());
     for(i=0;i<shop_index[shop_nr].type.size();++i){
       tmp=shop_index[shop_nr].type[i];
       if(tmp != MAX_OBJ_TYPES && (int) tmp != -1)
-	sprintf(buf+strlen(buf), " %s,",
-		ItemInfo[tmp]->name);
+	ssprintf(buf, "%s %s,", buf.c_str(), ItemInfo[tmp]->name);
     }
-    buf[strlen(buf)-1]='\0';
-    keeper->doTell(buf);
+    keeper->doTell(buf.c_str());
   }
 }
 
@@ -292,7 +292,7 @@ int TShopOwned::setRates(string arg)
 int TShopOwned::buyShop(){
   int value=0;
   TDatabase db("sneezy");
-  char buf[256];
+  string buf;
   TThing *tt;
   TObj *o;
 
@@ -318,7 +318,8 @@ int TShopOwned::buyShop(){
   
   db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, ch->getName(),  SHOPACCESS_OWNER);
   
-  keeper->saveItems(buf);
+  ssprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
+  keeper->saveItems(buf.c_str());
   
   keeper->doTell(ch->getName(), "Congratulations, you now own this shop.");
 
@@ -360,8 +361,8 @@ int TShopOwned::sellShop(){
 
 
 
-int TShopOwned::giveMoney(const char *arg){
-  char buf[256];
+int TShopOwned::giveMoney(string arg){
+  string buf;
 
   if(!hasAccess(SHOPACCESS_GIVE)){
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
@@ -369,7 +370,7 @@ int TShopOwned::giveMoney(const char *arg){
   }
   
   arg = one_argument(arg, buf);
-  int amount=atoi_safe(buf);
+  int amount=atoi_safe(buf.c_str());
 
   if(amount<=0){
     keeper->doAction(ch->getName(), CMD_SLAP);
@@ -385,9 +386,9 @@ int TShopOwned::giveMoney(const char *arg){
     
     shoplog(shop_nr, ch, keeper, "talens", amount, "receiving");
     
-    sprintf(buf, "$n gives you %d talen%s.\n\r", amount,
+    ssprintf(buf, "$n gives you %d talen%s.\n\r", amount,
 	    (amount == 1) ? "" : "s");
-    act(buf, TRUE, keeper, NULL, ch, TO_VICT);
+    act(buf.c_str(), TRUE, keeper, NULL, ch, TO_VICT);
     act("$n gives some money to $N.", 1, keeper, 0, ch, TO_NOTVICT);
   } else {
     keeper->doTell(ch->getName(), "I don't have that many talens.");
@@ -397,9 +398,9 @@ int TShopOwned::giveMoney(const char *arg){
   return TRUE;
 }
 
-int TShopOwned::setAccess(const char *arg)
+int TShopOwned::setAccess(string arg)
 {
-  char buf[256], buf2[256];
+  string buf, buf2;
   TDatabase db("sneezy");
   unsigned int access;
 
@@ -411,56 +412,62 @@ int TShopOwned::setAccess(const char *arg)
   arg = one_argument(arg, buf);
   arg = one_argument(arg, buf2);
   
-  if(*buf2){ // set value
-    db.query("delete from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf);
+  if(buf2.empty()){ // set value
+    db.query("delete from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf.c_str());
     
-    if(atoi_safe(buf2) != 0)
-      db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf, atoi_safe(buf2));
+    if(atoi_safe(buf2.c_str()) != 0)
+      db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf.c_str(), atoi_safe(buf2.c_str()));
     
   } else {
-    if(*buf){
-      db.query("select name, access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf);
+    if(buf.empty()){
+      db.query("select name, access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf.c_str());
     } else {
       db.query("select name, access from shopownedaccess where shop_nr=%i order by access", shop_nr);
     }
     while(db.fetchRow()){
       access=atoi_safe(db.getColumn(1));
       
-      sprintf(buf2, "%s Access for %s is set to %i, commands/abilities:", ch->getName(),
-	      db.getColumn(0), access);
+      ssprintf(buf, "%s Access for %s is set to %i, commands/abilities:",
+	       ch->getName(), db.getColumn(0), access);
       
       if(access>=SHOPACCESS_LOGS){
 	access-=SHOPACCESS_LOGS;
-	sprintf(buf2+strlen(buf2), " logs");
+	ssprintf(buf2, " logs");
+	buf+=buf2;
       }
       if(access>=SHOPACCESS_ACCESS){
 	access-=SHOPACCESS_ACCESS;
-	sprintf(buf2+strlen(buf2), " access");
+	ssprintf(buf2, " access");
+	buf+=buf2;
       }
       if(access>=SHOPACCESS_SELL){
 	access-=SHOPACCESS_SELL;
-	sprintf(buf2+strlen(buf2), " sell");
+	ssprintf(buf2, " sell");
+	buf+=buf2;
       }
       if(access>=SHOPACCESS_GIVE){
 	access-=SHOPACCESS_GIVE;
-	sprintf(buf2+strlen(buf2), " give");
+	ssprintf(buf2, " give");
+	buf+=buf2;
       }
       if(access>=SHOPACCESS_RATES){
 	access-=SHOPACCESS_RATES;
-	sprintf(buf2+strlen(buf2), " rates");
+	ssprintf(buf2, " rates");
+	buf+=buf2;
       }
       if(access>=SHOPACCESS_INFO){
 	access-=SHOPACCESS_INFO;
-	sprintf(buf2+strlen(buf2), " info");
+	ssprintf(buf2, " info");
+	buf+=buf2;
       }
       if(access>=SHOPACCESS_OWNER){
 	access-=SHOPACCESS_OWNER;
-	sprintf(buf2+strlen(buf2), " owner");
+	ssprintf(buf2, " owner");
+	buf+=buf2;
       }
       
-      keeper->doTell(buf2);
+      keeper->doTell(buf.c_str());
     }
-    
   }
   
   return TRUE;
@@ -469,7 +476,7 @@ int TShopOwned::setAccess(const char *arg)
 
 
 
-int TShopOwned::doLogs(const char *arg)
+int TShopOwned::doLogs(string arg)
 {
   TDatabase db("sneezy");
   string buf;
@@ -479,11 +486,11 @@ int TShopOwned::doLogs(const char *arg)
     return FALSE;
   }
   string sb;
-  
-  if(!strcmp(arg, " clear")){
+
+  if(arg==" clear"){
     db.query("delete from shoplog where shop_nr=%i", shop_nr);
     ch->sendTo("Done.\n\r");
-  } else if(!strcmp(arg, " summaries")){
+  } else if(arg==" summaries"){
     db.query("select name, action, sum(talens) as tsum from shoplog where shop_nr=%i group by name, action order by tsum desc", shop_nr);
     
     ssprintf(buf, "<r>%-12.12s %-10.10s %s<1>\n\r",
@@ -586,7 +593,7 @@ int TShopOwned::doLogs(const char *arg)
     /////////
     if (ch->desc)
       ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
-  } else if(!strcmp(arg, " balance")){
+  } else if(arg==" balance"){
     db.query("select action, sum(talens) as tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
     
     ssprintf(buf, "<r>%-12.12s %s<1>\n\r", 
@@ -630,11 +637,8 @@ int TShopOwned::doLogs(const char *arg)
     if (ch->desc)
       ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
   } else {
-    if(*arg){
-      while (*arg && isspace(*arg))
-	arg++;
-
-      db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' and upper(name)=upper('%s') order by logtime desc, action desc", shop_nr, arg);      
+    if(!arg.empty()){
+      db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' and upper(name)=upper('%s') order by logtime desc, action desc", shop_nr, arg.c_str());      
     } else {
       db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' order by logtime desc, action desc", shop_nr);
     }    

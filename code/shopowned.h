@@ -18,9 +18,9 @@ class TShopOwned {
   int setRates(string);
   int buyShop();
   int sellShop();
-  int giveMoney(const char *);
-  int setAccess(const char *);
-  int doLogs(const char *);
+  int giveMoney(string);
+  int setAccess(string);
+  int doLogs(string);
 
   TShopOwned(int, TMonster *, TBeing *);
   ~TShopOwned();

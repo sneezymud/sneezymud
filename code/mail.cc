@@ -4,7 +4,6 @@
 
 // may not exceed NAME_SIZE (15) chars
 static const char * const SNEEZY_ADMIN = "SneezyMUD Administration";
-static const char * const DEAD_LETTER_GOD = "Damescena";
 
 
 bool has_mail(const char *recipient)

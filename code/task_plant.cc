@@ -2,13 +2,13 @@
 #include "obj_tool.h"
 #include "obj_plant.h"
 
-void TBeing::doPlant(const char *arg)
+void TBeing::doPlant(string arg)
 {
   TThing *t;
   TTool *flintsteel;
   int count, found=0;
 
-  if ((t = searchLinkedListVis(this, arg, getStuff(), &count))){
+  if ((t = searchLinkedListVis(this, arg.c_str(), getStuff(), &count))){
     if((flintsteel=dynamic_cast<TTool *>(t))){
       if(flintsteel->getToolType() == TOOL_SEED){
 	found=1;

@@ -2,37 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: task_lightfire.cc,v $
-// Revision 5.4  2002/01/16 05:40:29  peel
-// added plants
-//
-// Revision 5.3  2002/01/10 00:45:49  peel
-// more splitting up of obj2.h
-//
-// Revision 5.2  2001/09/07 07:07:35  peel
-// changed TThing->stuff to getStuff() and setStuff()
-//
-// Revision 5.1.1.2  2000/10/18 18:20:38  dash
-// fixed some typos in the lightfire messages.
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD 4.0 - All rights reserved, SneezyMUD Coding Team
-//      "task.cc" - All functions related to tasks that keep mobs/PCs busy
-//
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
@@ -45,10 +14,8 @@ int task_lightfire(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   TTool *flintsteel=NULL;
   int found=0;
 
-  if (ch->utilityTaskCommand(cmd) ||
-      ch->nobrainerTaskCommand(cmd))
+  if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
-
 
   // basic tasky safechecking
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) || !obj){

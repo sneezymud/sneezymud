@@ -1,12 +1,12 @@
 #include "stdsneezy.h"
 #include "obj_tool.h"
 
-void TBeing::doFish(const char *direction){
+void TBeing::doFish(string direction){
   TRoom *rp;
   roomDirData *exitp;
   const int ROOM_FISHING_SHACK=31818;
 
-  if(!(exitp = exitDir(getDirFromChar(direction))) || !direction){
+  if(!(exitp=exitDir(getDirFromChar(direction.c_str()))) || direction.empty()){
     rp=roomp;
   } else {
     if(!exitp->to_room || !(rp = real_roomp(exitp->to_room))){

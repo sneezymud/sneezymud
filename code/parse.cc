@@ -293,23 +293,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
       }
     } else {
       ch = ((desc && desc->original) ? desc->original : this);
-#if 1
       if (should_be_logged(ch) && ch->isPc()){
-
-#else
-      if ((ch->GetMaxLevel() > MAX_MORT && ch->isPc()) &&
-        (strcmp(ch->name, "Batopr") &&
-         strcmp(ch->name, "Cosmo") &&
-         strcmp(ch->name, "Dolgan") &&
-         strcmp(ch->name, "Kriebly") &&
-         strcmp(ch->name, "Jesus") &&
-         strcmp(ch->name, "Marsh") &&
-         strcmp(ch->name, "Spawn") &&
-         strcmp(ch->name, "Brutius") &&
-	 strcmp(ch->name, "Peel") &&
-	 strcmp(ch->name, "Damescena"))) {
-#endif
-
         TPerson * tPerson = dynamic_cast<TPerson *>(ch);
 
         if (ch == this) {
@@ -1295,7 +1279,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doBload(newarg);
           break;
 	case CMD_GLOAD:
-	  doGload(newarg);
+	  doGload(tmpstring);
 	  break;
         case CMD_THROW:
           doThrow(newarg);
@@ -1429,7 +1413,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
 	case CMD_FISH:
-	  doFish(newarg);
+	  doFish(tmpstring);
 	  addToLifeforce(1);
 	  break;
         case CMD_LOW:
@@ -1526,7 +1510,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           doTan();
           break;
 	case CMD_PLANT:
-	  doPlant(newarg);
+	  doPlant(tmpstring);
 	  break;
 	case CMD_COOK:
 	  doCook(tmpstring);

@@ -56,33 +56,6 @@ bool shopData::isOwned(){
 }
 
 
-// this function relies on the fact that mysql will return rows in the order
-// that they were created, chronologically.  I'm not sure if this is defined
-// behavior or not, so if it stops working, you need to put a timestamp value
-// into the table and sort by that
-bool sameAccount(const char *buf, int shop_nr){
-  charFile st, stthis;
-
-  load_char(buf, &stthis);
-
-  TDatabase db("sneezy");
-
-  db.query("select name from shopownedaccess where shop_nr=%i", shop_nr);
-
-  while(db.fetchRow()){
-    if (!load_char(db.getColumn(0), &st))
-      continue;
-
-    if(!strcmp(stthis.aname, st.aname)){
-      if(!strcmp(lower(buf).c_str(), lower(db.getColumn(0)).c_str()))
-	return FALSE;
-      else
-	return TRUE;
-    }
-  }
-
-  return FALSE;
-}
 
 // this is the price the shop will buy an item for
 int TObj::sellPrice(int shop_nr, float chr, int *discount)

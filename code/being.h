@@ -1334,7 +1334,7 @@ class TBeing : public TThing {
     void doNewMember(const char *);
     void doRMember(const char *);
     void doDisband();
-    void doSend(const char *);
+    void doSend(string);
     void doHelp(const char *);
     int doEncamp();
     int doSoothBeast(const char *);
@@ -1394,13 +1394,13 @@ class TBeing : public TThing {
     int  doApplyHerbs(const char *);
     void doSkin(const char *);
     void doButcher(const char *);
-    void doPlant(const char *);
+    void doPlant(string);
     void doCook(string);
     void doDrive(string);
     void doSacrifice(const char *);
     void doWhittle(const char *);
     void doBload(const char *);
-    void doGload(const char *);
+    void doGload(string);
     void doPrerequisite(const char *, int);
     void doBrew(const char *);
     void doScribe(const char *);
@@ -1793,7 +1793,7 @@ class TBeing : public TThing {
     void doGroup(const char *);
     int doRecite(const char *);
     int doUse(const char *);
-    int doUnsaddle(const char *);
+    int doUnsaddle(string);
     int doSaddle(const char *);
     int doChop(const char *, TBeing *);
     int doHurl(const char *, TBeing *);
@@ -1805,7 +1805,7 @@ class TBeing : public TThing {
     void doRefuel(const char *);
     void doStop(const string);
     void doContinue(const char *);
-    void doFish(const char *);
+    void doFish(string);
     void doHistory();
     int  doCreate(const char *);
     int  ChargePulse(TBeing *ch);
