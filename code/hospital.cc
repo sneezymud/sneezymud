@@ -391,6 +391,8 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 		me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 		shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
 			cashCost, "mending");
+		TShopOwned tso(shop_nr, me, ch);
+		tso.doReserve();
 
                 buf=fmt("$n waves $s hands, utters many magic phrases and touches $N's %s!") % ch->describeBodySlot(i);
                 act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
@@ -423,6 +425,8 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
 		    cashCost, "healing");
+	    TShopOwned tso(shop_nr, me, ch);
+	    tso.doReserve();
 
             buf=fmt("$n waves $s hands, utters many magic phrases and touches $N's %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
@@ -451,6 +455,8 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
 		    cashCost, "expelling");
+	    TShopOwned tso(shop_nr, me, ch);
+	    tso.doReserve();
 
             buf=fmt("$n skillfully removes $p from $N's %s!") % ch->describeBodySlot(i);
             act(buf, TRUE, me, stuck, ch, TO_NOTVICT);
@@ -494,6 +500,8 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	      me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 	      shoplog(shop_nr, ch, me, DiseaseInfo[affToDisease(*aff)].name, 
 		      cashCost, "disease");
+	      TShopOwned tso(shop_nr, me, ch);
+	      tso.doReserve();
 	      
 	      act("$n waves $s hands, utters many magic phrases and touches $N!", TRUE, me, NULL, ch, TO_NOTVICT);
 	      act("$n waves $s hands, utters many magic phrases and touches you!", TRUE, me, NULL, ch, TO_VICT);
@@ -523,6 +531,8 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	      me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
 	      shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
 		      cashCost, "blindness");
+	      TShopOwned tso(shop_nr, me, ch);
+	      tso.doReserve();
 
               act("$n waves $s hands, utters many magic phrases and touches $N!", TRUE, me, NULL, ch, TO_NOTVICT);
               act("$n waves $s hands, utters many magic phrases and touches you!", TRUE, me, NULL, ch, TO_VICT);
@@ -620,6 +630,8 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
         healed->giveMoney(doctor, cost, GOLD_HOSPITAL);
 	shoplog(shop_nr, healed, dynamic_cast<TMonster *>(doctor), "healing", 
 		cost, "healing");
+	TShopOwned tso(shop_nr, dynamic_cast<TMonster *>(doctor), healed);
+	tso.doReserve();
       }
     }
   }
