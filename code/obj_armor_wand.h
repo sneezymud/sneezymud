@@ -10,7 +10,6 @@
 
 #include "obj_armor.h"
 #include "obj_wand.h"
-#include "obj_armor_wand.h"
 
 class TArmorWand : public virtual TArmor, public virtual TWand
 {
