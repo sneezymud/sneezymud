@@ -5844,7 +5844,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
   const int nhomes=4, homes[nhomes]={340, 339, 338, 337};
   TThing *t=NULL;
   TMonster *tmons=NULL;
-  char *hookername, *johnname, tmp[256];
+  sstring hookername, johnname, tmp;
 
    enum hookerStateT {
     STATE_NONE,
@@ -5936,11 +5936,11 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     return FALSE;
   }
     	  
-  hookername=mud_str_dup(myself->name);
-  strcpy(hookername, add_bars(hookername).c_str());
-  johnname=mud_str_dup(job->john->name);
-  strcpy(johnname, add_bars(johnname).c_str());
-  
+  hookername=myself->name;
+  hookername=add_bars(hookername);
+  johnname=job->john->name;
+  johnname=add_bars(johnname);
+
   switch(job->state){
     case STATE_NONE:
       break;
@@ -5975,7 +5975,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	job->state=STATE_ASKPRICE;
       break;
     case STATE_REJECT1:
-      switch(::number(0,3)){
+      switch(::number(0,4)){
 	case 0:
 	  job->john->doAction("", CMD_SNICKER);
 	  job->john->doSay("Yeah, right.  As if.");
@@ -5991,6 +5991,12 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	case 3:
 	  job->john->doSay("Not me sexy, why pay when I get it for free in the pasture?");
 	  job->john->doAction("", CMD_CHUCKLE);
+	  break;
+	case 4:
+	  job->john->doSay("Wait, is that my wife I see down the street?!?");
+	  job->john->doSay("I'm out of here!");
+	  job->john->doFlee();
+	  break;
       }
       job->john=NULL;
       job->state=STATE_NONE;
@@ -6019,8 +6025,8 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	  job->john->doAction("", CMD_GIGGLE);	  
 	  break;
 	case 4:
-	  sprintf(tmp, "%s Do you swallow?", hookername);
-	  job->john->doWhisper(tmp);
+	  ssprintf(tmp, "%s Do you swallow?", hookername.c_str());
+	  job->john->doWhisper(tmp.c_str());
 	  myself->doEmote("looks startled and almost chokes.");
 	  myself->doAction(johnname, CMD_SLAP);
 	  job->john->doAction(hookername, CMD_GRIN);
@@ -6030,7 +6036,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
       job->state=STATE_TELLPRICE;
       break;
     case STATE_TELLPRICE:
-      switch(::number(0,1)){
+      switch(::number(0,2)){
 	case 0:
 	  myself->doSay("It will cost you...");
 	  myself->doEmote("grins evilly revealing pointed teeth and her eyes turn <r>red<1>!");
@@ -6044,6 +6050,14 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	  myself->doAction(johnname, CMD_PONDER);
 	  myself->doSay("Maybe we can work out a payment plan or something.");
 	  break;
+	case 2:
+	  myself->doSay("Don't worry sailor, I'm sure you can afford it.");
+	  myself->doAction(johnname, CMD_PET);
+	  break;
+	case 3:
+	  myself->doSay("For the service I provide, the cost is quite reasonable, I assure you.");
+	  myself->doAction(johnname, CMD_MASSAGE);
+	  break;
       }
 
       if(::number(0,1))
@@ -6052,7 +6066,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	job->state=STATE_ACCEPT;
       break;
     case STATE_REJECT2:
-      switch(::number(0,1)){
+      switch(::number(0,3)){
 	case 0:
 	  job->john->doSay("Hell, for that price I could just get married.");
 	  job->john->doAction("", CMD_CACKLE);
@@ -6063,12 +6077,21 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	  job->john->doSay("Er, I mean, um.");
 	  job->john->doEmote("turns away quickly.");
 	  break;
+	case 2:
+	  job->john->doSay("How about I mail you a check?  No?  Damn.");
+	  job->john->doAction("", CMD_SULK);
+	  break;
+	case 3:
+	  job->john->doSay("Wait, is that my wife I see down the street?!?");
+	  job->john->doSay("I'm out of here!");
+	  job->john->doFlee();
+	  break;
       }
       job->john=NULL;
       job->state=STATE_NONE;
       break;
     case STATE_ACCEPT:
-      switch(::number(0,2)){
+      switch(::number(0,3)){
 	case 0:
 	  job->john->doSay("Excellent.  You take Grimhaven Express right?");
 	  break;
@@ -6081,8 +6104,11 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	  job->john->doAction("", CMD_DROOL);
 	  job->john->doSay("Me Tarzan, you cheap whore.");
 	  break;
+	case 3:
+	  job->john->doSay("Alright, but you better not have crabs or anything.");
+	  break;
       }
-      job->john->doFollow(hookername);
+      job->john->doFollow(hookername.c_str());
       job->state=STATE_WALKING;
       break;
     case STATE_WALKING:
@@ -6138,14 +6164,12 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 	if(myself->act_ptr){
 	  delete static_cast<hunt_struct *>(myself->act_ptr);
 	  myself->act_ptr = NULL;
+	  return DELETE_THIS;
 	}
-	delete myself;
       }
       break;
   }
   
-  delete hookername;
-  delete johnname;
   return FALSE;
 }
 
