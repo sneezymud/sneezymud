@@ -555,6 +555,7 @@ int TBeing::die(spellNumT dam_type, TBeing *tKiller = NULL)
   if (rp) {
     if (isPc() && !rp->isRoomFlag(ROOM_ARENA) && !skip_death) {
       int val_num = ::number(0,3);
+      if (GetMaxLevel() <= 10) val_num = 0;
       vlogf(LOG_COMBAT,"%s died and lost %.2f exp (age +%d).  Before death: %.2f exp and %d talens.",
                getName(), deathExp(), val_num, getExp(),getMoney());
       //      vlogf(LOG_COMBAT,"Average skill loss: %f", deathSkillLoss());

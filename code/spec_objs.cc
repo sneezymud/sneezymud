@@ -5984,9 +5984,9 @@ int symbolBlindingLight(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj
     
     ch->doSay("Oh Blinding Light!");
     ch->doSay("Oh Light That Blinds!");
-    ch->doSay("Look Out For Me!");
     ch->doSay("I Cannot See!");
-    
+    ch->doSay("Look Out For Me!");    
+
     act("<Y>$n<Y>'s $o suddenly starts to glow and quickly becomes unbearably bright!<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
     act("<Y>Your $o suddenly starts to glow and quickly becomes unbearably bright!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
     
