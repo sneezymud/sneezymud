@@ -3268,6 +3268,15 @@ sstring nextToken(char delim, unsigned int maxSize, char *str)
   return retbuf;
 }
 
+char *mud_str_dup(const char *buf)
+{
+  if (!buf)
+    return NULL;
+  
+  return mud_str_dup((sstring) buf);
+}
+
+
 char * mud_str_dup(const sstring &buf)
 {
   char *tmp = NULL;
