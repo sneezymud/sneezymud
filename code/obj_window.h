@@ -23,7 +23,7 @@ class TWindow : public TSeeThru {
     virtual void showMe(TBeing *) const;
 
     virtual void lookObj(TBeing *, int) const;
-    virtual void describeMe(const TBeing *) const {}
+    virtual void describeMe(TBeing *) const {}
     virtual bool listThingRoomMe(const TBeing *) const;
     virtual void show_me_mult_to_char(TBeing *, showModeT, unsigned int) const;
     virtual void show_me_to_char(TBeing *, showModeT) const;

@@ -583,7 +583,7 @@ class TObj : public TThing {
     virtual int scavengeMe(TBeing *, TObj **);
     virtual int illuminateMe(TBeing *, int, byte);
     virtual int personalizedCheck(TBeing *);
-    virtual void describeMe(const TBeing *) const;
+    virtual void describeMe(TBeing *) const;
     virtual void giveToRepair(TMonster *, TBeing *, int *);
     int maxFix(const TBeing *, depreciationTypeT) const;
     int repairPrice(const TBeing *, const TBeing *, depreciationTypeT) const;

@@ -3692,31 +3692,22 @@ void TBeing::doLimbs(const string & argument)
 
 void TBeing::genericEvaluateItem(const TThing *obj)
 {
-  obj->evaluateMe(this);
+  int learn = getSkillValue(SKILL_EVALUATE);
+  if (learn <= 0) {
+    sendTo("You are not sufficiently knowledgeable about evaluation.\n\r");
+    return;
+  }
+
+  describeObject(obj);
 }
 
 void TThing::evaluateMe(TBeing *ch) const
 {
-  int learn;
-
-  learn = ch->getSkillValue(SKILL_EVALUATE);
-  if (learn <= 0) {
-    ch->sendTo("You are not sufficiently knowledgeable about evaluation.\n\r");
-    return;
-  }
-
-  act("$p has little practical value in a fight.", false, ch, this, 0, TO_CHAR);
 }
 
 void TMagicItem::evaluateMe(TBeing *ch) const
 {
-  int learn;
-
-  learn = ch->getSkillValue(SKILL_EVALUATE);
-  if (learn <= 0) {
-    ch->sendTo("You are not sufficiently knowledgeable about evaluation.\n\r");
-    return;
-  }
+  int learn = ch->getSkillValue(SKILL_EVALUATE);
 
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
 
@@ -3731,14 +3722,6 @@ void TMagicItem::evaluateMe(TBeing *ch) const
     learn *= ch->getSkillValue(SPELL_IDENTIFY);
     learn /= 100;
   }
-  if (learn <= 0) {
-    ch->sendTo("You lack the knowledge to identify that item of magic.\n\r");
-    return;
-  }
-  ch->sendTo(COLOR_OBJECTS, "You evaluate the magical powers of %s...\n\r\n\r",
-         getName()); 
-
-  ch->describeObject(this);
 
   if (learn > 10) 
     ch->describeMagicLevel(this, learn);
@@ -3773,7 +3756,6 @@ void TBeing::doEvaluate(const char *argument)
       return;
     }
 
-    describeRoomLight();
 
     if (!roomp) {
       sendTo("You have no idea where you are do you...\n\r");
@@ -3975,7 +3957,7 @@ void TTool::describeObjectSpecifics(const TBeing *ch) const
                   "almost gone")))))));
 }
 
-void TObj::describeMe(const TBeing *ch) const
+void TObj::describeMe(TBeing *ch) const
 {
   char buf[80], buf2[256];
   char capbuf[256];
@@ -4077,9 +4059,10 @@ void TObj::describeMe(const TBeing *ch) const
       sendTo("A monogram on it indicates it belongs to %s.\n\r", name_buf);
   }
   describeObjectSpecifics(ch);
+  evaluateMe(ch);
 }
 
-void TBeing::describeObject(const TThing *t) const
+void TBeing::describeObject(const TThing *t)
 {
   t->describeMe(this);
 }
@@ -4406,7 +4389,7 @@ void TBeing::describeArmor(const TBaseClothing *obj, int learn)
   else if (tDiff <= -1)
     tStLevel = "a near perfect amount";
   else if (tDiff == 0)
-    tStLevel = "a Perfect amount";
+    tStLevel = "a perfect amount";
   else if (tDiff <= 2)
     tStLevel = "a near perfect amount"; // This and -1 is where we confuse them
   else if (tDiff < 5)

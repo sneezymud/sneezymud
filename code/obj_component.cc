@@ -2628,10 +2628,8 @@ void TComponent::evaluateMe(TBeing *ch) const
   int learn;
 
   learn = ch->getSkillValue(SKILL_EVALUATE);
-  if (learn <= 0) {
-    ch->sendTo("You are not sufficiently knowledgeable about evaluation.\n\r");
-    return;
-  }
+
+  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
 
   // adjust for knowledge about magic stuff
   if (ch->hasClass(CLASS_RANGER)) {
@@ -2641,14 +2639,6 @@ void TComponent::evaluateMe(TBeing *ch) const
     learn *= ch->getSkillValue(SPELL_IDENTIFY);
     learn /= 100;
   }
-  if (learn <= 0) {
-    ch->sendTo("You lack the knowledge to identify that item of magic.\n\r");
-    return;
-  }
-  ch->sendTo(COLOR_OBJECTS, "You evaluate the magical powers of %s...\n\r\n\r",
-             getName());
-
-  ch->describeObject(this);
 
   if (learn > 10)
     ch->describeComponentSpell(this, learn);

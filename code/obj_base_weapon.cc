@@ -1243,17 +1243,8 @@ void TBaseWeapon::evaluateMe(TBeing *ch) const
   int learn = ch->getSkillValue(SKILL_EVALUATE);
   const TGenWeapon *tgen = dynamic_cast<const TGenWeapon *>(this);
 
-  if (learn <= 0) {
-    ch->sendTo("You are not sufficiently knowledgeable about evaluation.\n\r");
-    return;
-  }
-
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
 
-  ch->sendTo(COLOR_OBJECTS, "You evaluate %s for its battle-worthiness...\n\r\n\r",
-       getName());
-
-  ch->describeObject(this);
   ch->describeNoise(this, learn);
 
   if (learn > 5)

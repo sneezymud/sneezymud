@@ -257,7 +257,7 @@ class TThing {
     virtual int divineMe(TBeing *, int, byte);
     virtual void postMe(TBeing *, const char *, boardStruct *);
     virtual void giveToRepairNote(TMonster *, TBeing *, int *) {}
-    virtual void describeMe(const TBeing *) const {}
+    virtual void describeMe(TBeing *) const {}
 
     // ch can not be const, due to windowLook
     virtual void showMe(TBeing *) const;

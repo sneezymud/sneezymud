@@ -287,15 +287,8 @@ void TSymbol::evaluateMe(TBeing *ch) const
   int learn;
 
   learn = ch->getSkillValue(SKILL_EVALUATE);
-  if (learn <= 0) {
-    ch->sendTo("You are not sufficiently knowledgeable about evaluation.\n\r");
-    return;
-  }
 
-  ch->sendTo(COLOR_OBJECTS, "You evaluate the spiritual powers of %s...\n\r\n\r",
-             getName());
-
-  ch->describeObject(this);
+  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
 
   if (learn > 10)
     ch->describeSymbolOunces(this, learn);

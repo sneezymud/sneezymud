@@ -610,6 +610,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
 
         describeWeather(in_room);	
 	describeRoomLight();
+	//	doEvaluate("room");
         listExits(roomp);
 
         if (dynamic_cast<TPerson *>(this)) {

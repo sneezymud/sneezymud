@@ -24,7 +24,7 @@ class TNote : public TObj {
 
     virtual void postMe(TBeing *, const char *, boardStruct *);
     virtual int personalizedCheck(TBeing *) { return FALSE; }
-    virtual void describeMe(const TBeing *) const {}
+    virtual void describeMe(TBeing *) const {}
     virtual void writeMeNote(TBeing *, TPen *);
     virtual void thingDumped(TBeing *, int *);
     virtual int objectSell(TBeing *, TMonster *);
