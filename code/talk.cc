@@ -851,7 +851,7 @@ int TBeing::doTell(const char *arg, bool visible)
             nameBuf, garbed.c_str());
 
   TDatabase db("sneezy");
-  db.query("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())", nameBuf, vict->getName(), garbed.c_str());
+  db.query("insert into tellhistory (tellfrom, tellto, tell, telltime) values ('%s', '%s', '%s', now())", cap(capbuf), vict->getName(), garbed.c_str());
 
   // this is probably too slow, cron job or something would be better
   //  db.query("delete from tellhistory where tellto='%s' and telltime not in (select telltime from tellhistory where tellto='%s' order by telltime desc limit 25)", vict->getName(), vict->getName());
