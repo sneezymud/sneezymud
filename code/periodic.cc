@@ -1289,88 +1289,6 @@ int TObj::objectTickUpdate(int pulse)
     }
   }
 
-  if (isObjStat(ITEM_BURNING)){
-    // we calculate the number of structure points per cubic inch
-    // flammability is the number of ci's that burn per tick
-    // so struct per ci * flam is how much we lose per tick
-    // suppose we have a wooden staff, 4000 volume, 20 structure and 500
-    // flammability, (20/4000)=.005, .005*500 = 2.5, 20/2.5 = 8
-    // so it will burn for approx 8 rounds
-    int burnamount = (int)((double)((double)getMaxStructPoints()/getVolume())*
-			       material_nums[getMaterial()].flammability);
-    burnamount=max(1, burnamount);
-
-    if((t = equippedBy) || (t = parent)){
-      ch = dynamic_cast<TBeing *>(t);
-    } else
-      ch = NULL;
-
-    dropSmoke(::number(1,5));
-
-    switch(::number(0, 3)){
-      case 0:
-	if(ch){
-	  act("Your $o crackles merrily as it <r>burns<1> down.",
-	      FALSE, ch, this, 0, TO_CHAR);
-	  act("$n's $o crackles merrily as it <r>burns<1> down.",
-	      FALSE, ch, this, 0, TO_ROOM);
-	} else 
-	  act("$n crackles merrily as it <r>burns<1> down.",
-	      FALSE, this, 0, 0, TO_ROOM);
-	break;
-      case 1:
-	if(ch){
-	  act("Your $o <r>burns<1> away steadily.",
-	      FALSE, ch, this, 0, TO_CHAR);
-	  act("$n's $o <r>burns<1> away steadily.",
-	      FALSE, ch, this, 0, TO_ROOM);
-	} else
-	  act("$n <r>burns<1> away steadily.",
-	      FALSE, this, 0, 0, TO_ROOM);
-	break;
-      case 2:
-	if(ch){
-	  act("<k>Smoke<1> billows forth from $o as it <r>burns<1>.",
-	      FALSE, ch, this, 0, TO_CHAR);
-	  act("<k>Smoke<1> billows forth from $n's $o as it <r>burns<1>.",
-	      FALSE, ch, this, 0, TO_ROOM);
-	} else
-	  act("<k>Smoke<1> billows forth from $n as it <r>burns<1>.",
-	      FALSE, this, 0, 0, TO_ROOM);
-	break;
-      case 3:
-	if(ch){
-	  act("Your $o <Y>flares<1> up momentarily as it <r>burns<1>.",
-	      FALSE, ch, this, 0, TO_CHAR);
-	  act("$n's $o <Y>flares<1> up momentarily as it <r>burns<1>.",
-	      FALSE, ch, this, 0, TO_ROOM);
-	} else
-	  act("$n <Y>flares<1> up momentarily as it <r>burns<1>.",
-	      FALSE, this, 0, 0, TO_ROOM);
-	break;
-      default:
-	// nothing
-	break;
-    }
-
-    if(equippedBy && ch){
-      act("Your $o burns you!",
-	  FALSE, ch, this, 0, TO_CHAR);
-      ch->reconcileDamage(ch, ::number(1,7), DAMAGE_FIRE);
-    }
-
-    // we let non-flammable things burn, but we don't 'decay' them
-    if(material_nums[getMaterial()].flammability){
-      addToStructPoints(-burnamount);
-      
-      if (getStructPoints() <= 0) {
-	remBurning(ch);
-	makeScraps();
-	return DELETE_THIS;
-      }
-    }
-  }
-
   if (obj_flags.decay_time > -1) {
     // updateCharObjects takes care of worn, carried It decrements decay
     // but does NOT delete the obj
@@ -1452,6 +1370,116 @@ int TObj::objectTickUpdate(int pulse)
 
   return FALSE;
 }
+
+
+int TObj::updateBurning(void)
+{
+  TBeing *ch;
+  TThing *t;
+
+  if (isObjStat(ITEM_BURNING) && ::number(0,1)){
+    // we calculate the number of structure points per cubic inch
+    // flammability is the number of ci's that burn per tick
+    // so struct per ci * flam is how much we lose per tick
+    // suppose we have a wooden staff, 4000 volume, 20 structure and 500
+    // flammability, (20/4000)=.005, .005*500 = 2.5, 20/2.5 = 8
+    // so it will burn for approx 8 rounds
+    int burnamount = (int)((double)((double)getMaxStructPoints()/getVolume())*
+			       material_nums[getMaterial()].flammability);
+    burnamount=max(1, burnamount);
+
+    if((t = equippedBy) || (t = parent)){
+      ch = dynamic_cast<TBeing *>(t);
+    } else
+      ch = NULL;
+
+    dropSmoke(::number(1,5));
+
+    switch(::number(0, 3)){
+      case 0:
+	if(ch){
+	  act("Your $o crackles merrily as it <r>burns<1> down.",
+	      FALSE, ch, this, 0, TO_CHAR);
+	  act("$n's $o crackles merrily as it <r>burns<1> down.",
+	      FALSE, ch, this, 0, TO_ROOM);
+	} else 
+	  act("$n crackles merrily as it <r>burns<1> down.",
+	      FALSE, this, 0, 0, TO_ROOM);
+	break;
+      case 1:
+	if(ch){
+	  act("Your $o <r>burns<1> away steadily.",
+	      FALSE, ch, this, 0, TO_CHAR);
+	  act("$n's $o <r>burns<1> away steadily.",
+	      FALSE, ch, this, 0, TO_ROOM);
+	} else
+	  act("$n <r>burns<1> away steadily.",
+	      FALSE, this, 0, 0, TO_ROOM);
+	break;
+      case 2:
+	if(ch){
+	  act("<k>Smoke<1> billows forth from $o as it <r>burns<1>.",
+	      FALSE, ch, this, 0, TO_CHAR);
+	  act("<k>Smoke<1> billows forth from $n's $o as it <r>burns<1>.",
+	      FALSE, ch, this, 0, TO_ROOM);
+	} else
+	  act("<k>Smoke<1> billows forth from $n as it <r>burns<1>.",
+	      FALSE, this, 0, 0, TO_ROOM);
+	break;
+      case 3:
+	if(ch){
+	  act("Your $o <Y>flares<1> up momentarily as it <r>burns<1>.",
+	      FALSE, ch, this, 0, TO_CHAR);
+	  act("$n's $o <Y>flares<1> up momentarily as it <r>burns<1>.",
+	      FALSE, ch, this, 0, TO_ROOM);
+	} else
+	  act("$n <Y>flares<1> up momentarily as it <r>burns<1>.",
+	      FALSE, this, 0, 0, TO_ROOM);
+	break;
+      default:
+	// nothing
+	break;
+    }
+
+    if(equippedBy && ch){
+      act("Your $o burns you!",
+	  FALSE, ch, this, 0, TO_CHAR);
+      ch->reconcileDamage(ch, ::number(1,7), DAMAGE_FIRE);
+    }
+
+    // we let non-flammable things burn, but we don't 'decay' them
+    if(material_nums[getMaterial()].flammability){
+      addToStructPoints(-burnamount);
+      
+      if (getStructPoints() <= 0) {
+	remBurning(ch);
+	makeScraps();
+	return DELETE_THIS;
+      }
+    }
+
+    // spread to other items
+    TRoom *tr=real_roomp(this->in_room);
+    
+    if(tr && tr->stuff){
+      for(TThing *tt=tr->stuff;tt;tt=tt->nextThing){
+	int cf=40; // chance factor: flammability/cf = percent chance
+	int chance=(int)(material_nums[tt->getMaterial()].flammability/cf);
+	TObj *to=dynamic_cast<TObj *>(tt);
+
+	if(to && !to->isObjStat(ITEM_BURNING) && (::number(0,100) < chance)){
+	  act("The <Y>fire<1> spreads to $n and it begins to <r>burn<1>!",
+	      FALSE, to, 0, 0, TO_ROOM);	  
+	  to->setBurning(NULL);
+	}
+      }
+    }
+  }
+
+  return FALSE;
+}
+
+
 
 void do_check_mail()
 {

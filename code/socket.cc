@@ -483,6 +483,15 @@ int TSocket::gameLoop()
             }
           }
         }
+	if (!quickpulse) {
+	  rc = obj->updateBurning();
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            next_thing = obj->next;
+            delete obj;
+            obj = NULL;
+	    continue;
+          }
+	}	
 	if (!pulse_mudhour) {
 	  rc = obj->objectTickUpdate(pulse);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {

@@ -1340,8 +1340,10 @@ int TObj::burnObject(TBeing *ch, int perc)
     if(::number(0,100) < (int)(0.050*(double)material_nums[getMaterial()].flammability) &&
        !isObjStat(ITEM_BURNING) && !isObjStat(ITEM_PAIRED)){
       setBurning(ch);
-      sprintf(buf, "Your $o start$Q to burn!\a");
-      act(buf,TRUE,ch,this,0,TO_CHAR);
+      if(ch){
+	sprintf(buf, "Your $o start$Q to burn!\a");
+	act(buf,TRUE,ch,this,0,TO_CHAR);
+      }
     }
 
     return TRUE;
@@ -1712,7 +1714,7 @@ void TBeing::flameRoom()
   for (t = roomp->stuff; t; t = t2) {
     t2 = t->nextThing;
     obj = dynamic_cast<TObj *>(t);
-    if (!obj || !obj->canWear(ITEM_TAKE))
+    if (!obj)
       continue;
 
     rc = obj->burnObject(NULL, 100);

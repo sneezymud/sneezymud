@@ -367,6 +367,7 @@ class TObj : public TThing {
     // END INLINE FUNCTIONS
 
     int objectTickUpdate(int);
+    int updateBurning(void);
     bool isObjStat(unsigned int num) const;
     unsigned int getObjStat() const;
     void swapToStrung();
