@@ -107,7 +107,6 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
           sprintf(buf, "You now have %d potion%s of %s.\n\r",
 		  how_many, (how_many == 1 ? "" : "s"), discArray[which]->name);
           ch->sendTo(buf);
-	  vlogf(LOG_MISC, "%s has just brewed %d potion%s of %s", ch->getName(), how_many, (how_many == 1 ? "" : "s"), discArray[which]->name);
           act("$n finishes brewing.", FALSE, ch, 0, 0, TO_ROOM);
 
           while ((--how_many) > 0) {

@@ -2047,7 +2047,6 @@ int castEthrealGate(TBeing *caster, TObj *obj)
   return FALSE;
 }
 
-#define SCRIBE_DEBUG    1
 void TBeing::doScribe(const char *arg)
 {
   char buf[256];
@@ -2089,24 +2088,14 @@ void TBeing::doScribe(const char *arg)
     sendTo("You seem to be lacking a parchment.\n\r");
     return;
   }
-#if SCRIBE_DEBUG
-  vlogf(LOG_MISC, "Generic comp: %s", comp_gen->getName());
-#endif
   if (!comp_spell) {
     sendTo("You seem to be lacking the spell component.\n\r");
     return;
   }
-#if SCRIBE_DEBUG
-  vlogf(LOG_MISC, "spell comp: %s", comp_spell->getName());
-#endif
   if (!comp_scribe) {
     sendTo("You seem to be lacking the scribe component.\n\r");
     return;
   }
-#if SCRIBE_DEBUG
-  vlogf(LOG_MISC, "scribe comp: %s", comp_scribe->getName());
-#endif
-
   if (!doesKnowSkill(SKILL_SCRIBE)) {
     sendTo("You lack any knowledge of how to scribe scrolls.\n\r");
     return;

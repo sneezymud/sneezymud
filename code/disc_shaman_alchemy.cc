@@ -7,7 +7,6 @@
 
 
 
-#define BREW_DEBUG    1
 void TBeing::doBrew(const char *arg)
 {
   char buf[256];
@@ -104,4 +103,16 @@ void TBeing::doBrew(const char *arg)
 
   return;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

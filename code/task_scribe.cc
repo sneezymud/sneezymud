@@ -99,7 +99,6 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
           sprintf(buf, "You now have %d scroll%s of %s.\n\r",
 		  how_many, (how_many == 1 ? "" : "s"), discArray[which]->name);
           ch->sendTo(buf);
-	  vlogf(LOG_MISC, "%s has just scribed %d scroll%s of %s", ch->getName(), how_many, (how_many == 1 ? "" : "s"), discArray[which]->name);
           act("$n finishes scribing.", FALSE, ch, 0, 0, TO_ROOM);
 
           while ((--how_many) > 0) {
