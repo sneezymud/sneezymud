@@ -60,7 +60,7 @@ TObj * findForCompare(TBeing *ch, string StObject)
   TThing    *tObj;
 
   if (!(tObj = get_thing_in_equip(ch, StObject.c_str(), ch->equipment, &tSlot, TRUE, &tCount)))
-    if (!(tObj = searchLinkedListVis(ch, StObject.c_str(), ch->getStuff(), &tCount)))
+    if (!(tObj = searchLinkedListVis(ch, StObject, ch->getStuff(), &tCount)))
       if (!(tObj = findShopObjForCompare(ch, StObject)))
         return NULL;
 

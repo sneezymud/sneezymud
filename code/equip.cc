@@ -2118,7 +2118,7 @@ int TBeing::doSaddle(string arg)
     return FALSE;
   }
 
-  if (!(t = searchLinkedListVis(this, arg2.c_str(), getStuff()))) {
+  if (!(t = searchLinkedListVis(this, arg2, getStuff()))) {
     sendTo("You don't seem to have the '%s'.\n\r", arg2.c_str());
     return FALSE;
   }

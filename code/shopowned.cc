@@ -177,7 +177,7 @@ int TShopOwned::setRates(string arg)
     } else {
       // find item in inventory matching keywords in arg
       // get vnum, then store in db
-      TThing *tt = searchLinkedListVis(ch, buf.c_str(), keeper->getStuff());
+      TThing *tt = searchLinkedListVis(ch, buf, keeper->getStuff());
       
       if(!tt){
 	keeper->doTell(ch->getName(), "I don't have that item.");
@@ -263,7 +263,7 @@ int TShopOwned::setRates(string arg)
   } else { ////////////////////////////////////////////////////////////////
     // find item in inventory matching keywords in arg
     // get vnum, then store in db
-    TThing *tt = searchLinkedListVis(ch, buf.c_str(), keeper->getStuff());
+    TThing *tt = searchLinkedListVis(ch, buf, keeper->getStuff());
     
     if(!tt){
       keeper->doTell(ch->getName(), "I don't have that item.");

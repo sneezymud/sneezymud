@@ -8,7 +8,7 @@ void TBeing::doPlant(string arg)
   TTool *seeds;
   int found=0, count;  
 
-  if ((t = searchLinkedListVis(this, arg.c_str(), getStuff(), NULL))){
+  if ((t = searchLinkedListVis(this, arg, getStuff(), NULL))){
     if((seeds=dynamic_cast<TTool *>(t))){
       if(seeds->getToolType() == TOOL_SEED){
 	found=1;

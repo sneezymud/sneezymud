@@ -594,7 +594,7 @@ void TBeing::doPee(string argument)
 
       if (!arg.empty() && generic_find(arg.c_str(), FIND_OBJ_INV | FIND_OBJ_ROOM, this, &tmp_char, &o)) 
        	o->peeMe(this);	
-    } else if((t = searchLinkedListVis(this, arg.c_str(),roomp->getStuff()))){
+    } else if((t = searchLinkedListVis(this, arg,roomp->getStuff()))){
       t->peeOnMe(this);
     }
   } else {

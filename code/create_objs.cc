@@ -726,7 +726,7 @@ void TPerson::doOEdit(const char *argument)
         if (is_abbrev(tStBuffer, "resave")) {
           if (!hasWizPower(POWER_OEDIT_IMP_POWER))
             sendTo("Syntax: oed save <object> <vnum>\n\r");
-          else if (!(cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, tStString.c_str(), getStuff()))))
+          else if (!(cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, tStString, getStuff()))))
             sendTo("Unable to find %s...Sorry...\n\r", tStString.c_str());
           else if (cObj->getSnum() <= 0)
             sendTo("That object has a bad snum.  Sorry.  Can not resave.\n\r");

@@ -59,7 +59,7 @@ const unsigned int FIND_OBJ_EQUIP     =(1<<5);
 const unsigned int FIND_OBJ_COMM      =(1<<6);
 const unsigned int FIND_ROOM_EXTRA    =(1<<7);
 
-extern TThing *searchLinkedListVis(const TBeing *ch, const char *name, TThing *list, int *num = NULL, thingTypeT x = TYPETHING);
+extern TThing *searchLinkedListVis(const TBeing *ch, string name, TThing *list, int *num = NULL, thingTypeT x = TYPETHING);
 
 extern TThing *searchLinkedList(const char * name, TThing *list, thingTypeT x = TYPETHING);
 extern TThing *searchLinkedList(const string & name, TThing *list, thingTypeT x = TYPETHING);

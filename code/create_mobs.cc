@@ -2330,7 +2330,7 @@ void TPerson::doMedit(const char *argument)
         if (is_abbrev(tStBuffer, "resave")) {
           if (!hasWizPower(POWER_MEDIT_IMP_POWER))
             sendTo("Syntax: med save <mobile> <vnum>\n\r");
-          else if (!(cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, tStString.c_str(), roomp->getStuff()))))
+          else if (!(cMob = dynamic_cast<TMonster *>(searchLinkedListVis(this, tStString, roomp->getStuff()))))
             sendTo("Unable to find %s...Sorry...\n\r", tStString.c_str());
           else if (cMob->getSnum() <= 0)
             sendTo("That mobile has a bad snum.  Sorry.  Can not resave.\n\r");

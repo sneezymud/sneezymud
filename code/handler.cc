@@ -1964,13 +1964,13 @@ TThing *get_thing_on_list_getable(TBeing *ch, const char *name, TThing *list)
   return NULL;
 }
 
-TThing *searchLinkedListVis(const TBeing *ch, const char *name, TThing *list, int *count, thingTypeT type)
+TThing *searchLinkedListVis(const TBeing *ch, string name, TThing *list, int *count, thingTypeT type)
 {
   TThing *i, *t;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
 
-  strcpy(tmpname, name);
+  strcpy(tmpname, name.c_str());
   tmp = tmpname;
 
   if (!(numx = get_number(&tmp)))
