@@ -2,22 +2,6 @@
 ##
 ## SneezyMUD - All rights reserved, SneezyMUD Coding Team
 ##
-## $Log: makefile,v $
-## Revision 1.5  1999/10/07 21:11:58  batopr
-## *** empty log message ***
-##
-## Revision 1.4  1999/10/07 14:30:47  batopr
-## Added statistics.h for spec_rooms.o
-##
-## Revision 1.3  1999/09/30 17:37:43  batopr
-## added statistics.h for repair.o
-##
-## Revision 1.2  1999/09/13 15:38:44  batopr
-## removed rewrite file from make
-##
-## Revision 1.1  1999/09/12 17:26:35  sneezy
-## Initial revision
-##
 ##########################################################################
 
 ###############################################################################
@@ -86,17 +70,17 @@ endif
 #CFLAGS +=-frtti
 # These are valid, but removed for insure
 ifndef USEINSURE
-#CFLAGS +=-Wall                  # all rec. warnings shown (includes all above)
-#CFLAGS +=-Wpointer-arith        # looks for things that depend on sizeof()
-#CFLAGS +=-Wcast-qual            # Warns about using casting to remove const
-#CFLAGS +=-Wcast-align           # a pointer cast changes alignment
-#CFLAGS +=-Wwrite-strings        # looks for formal const char* sent to char*
-#CFLAGS +=-Wconversion           # bad conversions
-#CFLAGS +=-Wstrict-prototypes    # functions declared sans argument types
-#CFLAGS +=-Wmissing-prototypes   # global functions without a prototype
-#CFLAGS +=-Wmissing-declarations # global function without a declaration
-#CFLAGS +=-Wnested-externs       # extern found within a func
-#CFLAGS +=-Woverloaded-virtual   # virtual without a declaration in base class
+CFLAGS +=-Wall                  # all rec. warnings shown (includes all above)
+CFLAGS +=-Wpointer-arith        # looks for things that depend on sizeof()
+CFLAGS +=-Wcast-qual            # Warns about using casting to remove const
+CFLAGS +=-Wcast-align           # a pointer cast changes alignment
+CFLAGS +=-Wwrite-strings        # looks for formal const char* sent to char*
+CFLAGS +=-Wconversion           # bad conversions
+CFLAGS +=-Wstrict-prototypes    # functions declared sans argument types
+CFLAGS +=-Wmissing-prototypes   # global functions without a prototype
+CFLAGS +=-Wmissing-declarations # global function without a declaration
+CFLAGS +=-Wnested-externs       # extern found within a func
+CFLAGS +=-Woverloaded-virtual   # virtual without a declaration in base class
 CFLAGS +=-Werror                # turns a warning into an error
 endif
 # **** Aggregates are bad, but are sometimes necessary.  We use them though.
