@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_help.cc,v $
+// Revision 1.2  1999/09/29 02:35:21  lapsos
+// Fixed a typo.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -377,6 +380,8 @@ void TBeing::doHelp(const char *arg)
       sprintf(buf2, "  %s(%d) (%d) %s", purple(), discArray[skill]->startLearnDo, discArray[skill]->amtLearnDo, norm());
       str += buf2;
     }
+
+    str += "\n\r";
 
     if (discArray[skill]->holyStrength) {
 #if 0
