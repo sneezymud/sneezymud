@@ -619,7 +619,7 @@ void TBeing::doCommune(const sstring &arg)
     buf2 = arg.word(0).substr(1,arg.word(0).length() -1);
     levnum = convertTo<int>(buf2);
     if (levnum > 0) {
-      // only a properly formatted sstring should be changed
+      // only a properly formatted string should be changed
       if (arg.word(1).empty()) {
         sendTo(fmt("You need to tell level %d gods something!?!\n\r") % levnum);
         return;
@@ -646,7 +646,7 @@ void TBeing::doCommune(const sstring &arg)
 
     sendTo(fmt("You tell level %d+ gods: %s") % levnum %
          colorString(this, desc, 
-           arg.substr(arg.find_first_of(" "), arg.length()-1),
+           arg.substr(arg.find_first_of(" ")+1, arg.length()-1),
             NULL, COLOR_BASIC, TRUE, TRUE));
   }
 
