@@ -58,6 +58,7 @@
 #include "obj_table.h"
 #include "obj_drinkcon.h"
 #include "obj_vehicle.h"
+#include "obj_casino_chip.h"
 #include "games.h"
 
 #include <fstream.h>
@@ -7580,11 +7581,30 @@ int konastisGuard(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
   return false;
 }
 
+void deleteChips(TMonster *me)
+{
+  vector <TThing *> chipl;
+  TCasinoChip *chip;
+
+  for(TThing *t=me->getStuff();t;t=t->nextThing){
+    if((chip=dynamic_cast<TCasinoChip *>(t))){
+      chipl.push_back(t);
+    }
+  }
+
+  for(unsigned int i=0;i<chipl.size();++i){
+    (*chipl[i])--;
+    delete chipl[i];
+  }
+}
+
 
 int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
   if(cmd != CMD_GENERIC_QUICK_PULSE)
     return false;
+  
+  deleteChips(me);
 
   if (!me->checkHoldem(true))
     return false;
@@ -7645,13 +7665,12 @@ int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
       break;
     case STATE_TURN:
     case STATE_RIVER:
-      if(handval > 45 && ::number(0,1)){
+      if(handval > 45 && ::number(0,1))
 	me->doRaise("",CMD_RAISE);
-	return true;
-      } else if(handval > 15 || !::number(0,4)){
+      else if(handval > 15 || !::number(0,4))
 	me->doCall("");
-	return true;
-      }
+      deleteChips(me);
+      return true;
       break;
     }
 
