@@ -2171,6 +2171,12 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
         false, ch, o, vict, TO_VICT, ANSI_CYAN);
     act("A bar from $n's $o swings around and meets $N's flesh flush at its slightly-hollowed end.",
         false, ch, o, vict, TO_NOTVICT, ANSI_CYAN);
+    if (vict->getRace() == RACE_GNOME) {
+      act("You scream like a stuck pig and start to cry like a little baby.",
+          false, vict, o, 0, TO_CHAR, ANSI_BLUE_BOLD);
+      act("$n screams like a stuck pig and starts to cry like a little baby.",
+          false, vict, o, 0, TO_ROOM, ANSI_BLUE_BOLD);
+    }
     
     if (!o->isObjStat(ITEM_HUM) && !vict->isImmune(IMMUNE_SKIN_COND)) { 
       // if it's not humming/glowing - low damage proc
@@ -2182,6 +2188,8 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
           false, ch, o, vict, TO_NOTVICT, ANSI_RED);
       
       dmg = ::number(1,max(1,int(ch->getWeaponDam(vict, o, hand) / 10)));
+      if (vict->getRace() == RACE_GNOME)
+        dmg += dmg/2;
       if (ch->reconcileDamage(vict, dmg, DAMAGE_NORMAL) == -1) {
         return DELETE_VICT;
       }
@@ -2204,6 +2212,8 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
 
           
         dmg = ::number(1,max(1,ch->getWeaponDam(vict, o, hand)));
+      if (vict->getRace() == RACE_GNOME)
+        dmg += dmg/2;
        if (ch->reconcileDamage(vict, dmg, DAMAGE_NORMAL) == -1) {
           return DELETE_VICT;
         }
@@ -2221,6 +2231,8 @@ int gnomeTenderizer(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
         if (ch->sameRoom(*tmp_victim) && (ch != tmp_victim) &&
             (!tmp_victim->isImmortal())) {
           dmg = ::number(1,max(1,ch->getWeaponDam(tmp_victim, o, hand)));
+      if (vict->getRace() == RACE_GNOME)
+        dmg += dmg/2;
           if (ch->inGroup(*tmp_victim)) {
             // protect group members
             act("You feel a deep silence descend around you.",
