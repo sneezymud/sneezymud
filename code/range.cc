@@ -1598,25 +1598,6 @@ void TBeing::doBload(const char *arg)
   if(dynamic_cast<TGun *>(bow)){
     sendTo("Use gload to load a gun.\n\r");
     return;
-
-    TGun *gun=dynamic_cast<TGun *>(bow);
-    
-    if(gun->getAmmo()){
-      sendTo("That gun is already loaded!\n\r");
-      return;
-    }
-
-    arrow = searchLinkedListVis(this, arg2, getStuff());
-
-    if (dynamic_cast<TAmmo *>(arrow)){
-      --(*arrow);
-      gun->setAmmo(dynamic_cast<TAmmo *>(arrow));
-
-      act("You load $p into $N.", TRUE, this, arrow, bow, TO_CHAR);
-      act("$n loads $p into $N.", TRUE, this, arrow, bow, TO_ROOM);
-      addToWait(combatRound(1));
-    } else
-      sendTo("You seem to have run out of '%s's.\n\r", arg2);
   } else {
     arrow = findArrow(arg2, SILENT_NO);
 
