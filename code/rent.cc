@@ -4440,7 +4440,6 @@ void TBeing::doClone(const sstring &arg)
   sstring buf = fmt ("rent/%c/%s") % LOWER(ch_name[0]) % ch_name.lower();
   if (!(fp = fopen(buf.c_str(), "r+b"))) {
     sendTo("Rent file could not be opened.  Your clone stands naked before you.\n\r");
-    fclose(fp);
     return;
   }
   memset(&st2, 0, sizeof(rentHeader));
