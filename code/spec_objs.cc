@@ -5510,7 +5510,7 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   db.fetchRow();
   int nshops=convertTo<int>(db["count"]);
 
-  db.query("select count(distinct shop_nr) as count from shopownedaccess");
+  db.query("select count(distinct shop_nr) as count from shopowned");
   int nowned=0;
   if(db.fetchRow())
     nowned=convertTo<int>(db["count"]);
