@@ -113,7 +113,7 @@ void TBeing::doNameChange(const char *argument)
     sprintf(tmpbuf2, mons->getName());
     one_argument(tmpbuf2, arg);
     if (!strcmp(arg, "a") || !strcmp(arg, "an"))
-      sprintf(tmpbuf, "\"%s\", the%s", good_cap(new_name).c_str(), 
+      sprintf(tmpbuf, "\"%s\", the %s", good_cap(new_name).c_str(), 
              one_argument(tmpbuf2, arg));
     else
       sprintf(tmpbuf, "\"%s\", %s", good_cap(new_name).c_str(), mons->getName());
