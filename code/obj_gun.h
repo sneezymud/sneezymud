@@ -54,7 +54,11 @@ class TGun : public TGenWeapon {
     int getROF() const { return rof; }
     void setAmmoType(int a) { ammotype=a; }
     int getAmmoType() const { return ammotype; }
-    void setAmmo(TAmmo *a) { ammo=a; }
+    void setAmmo(TAmmo *a) { 
+      ammo=a; 
+      if(ammo)
+	ammo->parent=this;
+    }
     TAmmo *getAmmo() const { return ammo; }
     void setRounds(int);
     int getRounds() const;
