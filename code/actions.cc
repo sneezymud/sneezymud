@@ -635,7 +635,7 @@ void TBeing::doPoop(void)
     }
   }
   
-  obj->setWeight(obj->getWeight() * weightmod);
+  obj->setWeight(obj->getWeight() * (float)weightmod);
   obj->setVolume(obj->getVolume() * weightmod);
   
 
