@@ -608,7 +608,7 @@ void Race::initRace(const char *whichRace)
 // COSMO STRING
 //  delete buf_sstring;
   fclose(raceFile);
-  vlogf(LOG_FILE, "Racefile fclose.");
+  //  vlogf(LOG_FILE, "Racefile fclose.");
 
 }
 
