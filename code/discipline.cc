@@ -1271,6 +1271,18 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
         }
       }
       return spell_num;
+    case SKILL_THROATSLIT:
+      if (hasClass(CLASS_THIEF)) {
+        if (!has_class) {
+          spell_num = SKILL_THROATSLIT;
+        }
+        if ((num2 = getSkillValue(SKILL_THROATSLIT)) > num) {
+          spell_num = SKILL_THROATSLIT;
+          num = num2;
+          has_class = TRUE;
+        }
+      }
+      return spell_num;
     case SPELL_CREATE_WATER:
       if (hasClass(CLASS_CLERIC)) {
         if (!has_class) 

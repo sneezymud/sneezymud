@@ -29,6 +29,7 @@ struct weapon_type_numbers
   bool cantrip;
   bool canentangle;
   bool unused1;
+  //  bool canthroatslit; possibly should replace an unused one?
   bool unused2;
   bool unused3;
   bool unused4;

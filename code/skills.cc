@@ -844,6 +844,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // disc_murder
 
+    case SKILL_THROATSLIT:
+      return &((CDMurder *) cd)->skThroatSlit;
     case SKILL_GARROTTE:  //                  501
       return &((CDMurder *) cd)->skGarrotte;
 

@@ -419,6 +419,9 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SKILL_BACKSTAB:
         sprintf(buf, "A big gaping wound is in the center of %s's back.", getName());
         break;
+      case SKILL_THROATSLIT:
+        sprintf(buf, "The corpse of %s's throat has been sliced from ear to ear.", getName());
+        break;
       case DAMAGE_DISEMBOWLED_HR:
         sprintf(buf, "The corpse of %s has been disembowled with a slash from gullet to groin!",getName());
         break;

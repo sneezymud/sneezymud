@@ -102,6 +102,8 @@ bool willBreakHide(cmdTypeT tCmd, bool isPre)
   switch (tCmd) {
     case CMD_BACKSTAB:
       return (isPre ? false : true);
+    case CMD_SLIT:
+      return (isPre ? false : true);
 
     case CMD_LOOK:
     case CMD_SCORE:
@@ -1476,6 +1478,9 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_BACKSTAB:
           rc = doBackstab(newarg, dynamic_cast<TBeing *>(vict));
           break;
+        case CMD_SLIT:
+          rc = doThroatSlit(newarg, dynamic_cast<TBeing *>(vict));
+          break;
         case CMD_HIDE:
           rc = doHide();
           break;
@@ -1855,6 +1860,8 @@ int TBeing::parseCommand(const char *orig_arg, bool typedIn)
   }
 
   if (IS_SET(specials.affectedBy, AFF_HIDE) && cmd != CMD_BACKSTAB)
+    REMOVE_BIT(specials.affectedBy,AFF_HIDE);
+  if (IS_SET(specials.affectedBy, AFF_HIDE) && cmd != CMD_SLIT)
     REMOVE_BIT(specials.affectedBy,AFF_HIDE);
 
   if (getCaptiveOf()) {
@@ -2494,6 +2501,7 @@ void buildCommandArray(void)
   commandArray[CMD_SNEAK] = new commandInfo("sneak", POSITION_CRAWLING, 0);
   commandArray[CMD_HIDE] = new commandInfo("hide", POSITION_STANDING, 0);
   commandArray[CMD_BACKSTAB]=new commandInfo("backstab", POSITION_STANDING, 0);
+  commandArray[CMD_SLIT]=new commandInfo("slit", POSITION_STANDING, 0);
   commandArray[CMD_PICK] = new commandInfo("pick", POSITION_SITTING, 0);
   commandArray[CMD_STEAL] = new commandInfo("steal", POSITION_STANDING, 0);
   commandArray[CMD_BASH] = new commandInfo("bash", POSITION_FIGHTING, 0);

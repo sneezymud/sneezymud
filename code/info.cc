@@ -968,6 +968,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_GARROTTE:
       case SKILL_STABBING:
       case SKILL_BACKSTAB:
+      case SKILL_THROATSLIT:
       case SKILL_HEADBUTT:
       case SKILL_STOMP:
       case SPELL_BLAST_OF_FURY:
@@ -4167,7 +4168,7 @@ void TBeing::describeOtherFeatures(const TGenWeapon *obj, int learn) const
       sendTo(COLOR_OBJECTS, "%s seems small enough to be used for stabbing.\n\r",
              cap(capbuf));
     if (obj->canBackstab())
-      sendTo(COLOR_OBJECTS, "%s seems small enough to be used for backstabbing.\n\r",
+      sendTo(COLOR_OBJECTS, "%s seems small enough to be used for backstabbing or throat slitting.\n\r",
              cap(capbuf));
   }
 }

@@ -191,6 +191,7 @@ enum cmdTypeT {
      CMD_SNEAK,
      CMD_HIDE,
      CMD_BACKSTAB,
+     CMD_SLIT,
      CMD_PICK,
      CMD_STEAL,
      CMD_BASH,

@@ -407,6 +407,10 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SKILL_BACKSTAB:
       dam = genericDam(victim, skill, DISC_THIEF, level, adv_learn, 2.00, REDUCE_NO, !isPc(), TRIM_NO);
       break;
+      // made this slightly higher than backstab since it is in an advanced discipline
+    case SKILL_THROATSLIT:
+      dam = genericDam(victim, skill, DISC_THIEF, level, adv_learn, 2.05, REDUCE_NO, !isPc(), TRIM_NO);
+      break;
     case SKILL_KICK_DEIKHAN:
       dam =  genericDam(victim, skill, DISC_DEIKHAN, level, adv_learn, 0.639, REDUCE_NO, !isPc(), TRIM_NO);
       // additionally, do faction percent modification for deikhan

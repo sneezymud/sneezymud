@@ -356,6 +356,355 @@ int backstab(TBeing *thief, TBeing * victim)
   return TRUE;
 }
 
+//////////////////////////////////////////////////////////////////
+// Throat slitting: Meant to be an advanced form of backstabbing
+/////////////////// not to replace backstab but to enhance the
+/////////////////// flavor of the thief class by giving them 
+/////////////////// something else that looks different without
+/////////////////// making the class overpowered skillwise
+/////////////////////////////////////////////////////////////////
+
+static void playThroatSlit(const TRoom *rp)
+{
+  // using backstab sounds since they seem appropriate to this skill too
+  soundNumT snd = pickRandSound(SOUND_BACKSTAB_01, SOUND_BACKSTAB_02);
+  rp->playsound(snd, SOUND_TYPE_COMBAT);
+}
+
+const int TS_MSG_DEATH_MAX = 4; // (tMessagesDeath / 2) - 1
+const int TS_MSG_NONDT_MAX = 4; // (tMessagesNonDeath / 2) - 1
+
+int TBeing::throatSlitHit(TBeing *victim, TThing *obj)
+{
+  int i, d;
+
+  const char *tMessagesDeath[] =
+  {
+    "You slice $N's throat with your $o, instantly killing $M.",
+    "$n slices $N's throat with $s $o, instantly killing $M.",
+
+    "You slit $N's throat and $E falls lifeless as blood sprays everywhere!",
+    "Blood sprays everywhere as $n slices into $N's throat, killing $M!",
+
+    "$N's eyes roll back into $S head as you murder $M with your $o!",
+    "$N's eyes roll back into $S head as $n murders $M with $s $o!",
+
+    "Your $o is stained with blood as you easily slice into $N's throat, killing $M.",
+    "$n's $o is stained with blood as $e effortlessly slices into $N's throat, killing $M.",
+
+    "Blood sprays from $N's neck as you slice into $S throat, killing $M.",
+    "Blood sprays from $N's neck as $n slices into $N's throat, killing $M.",
+
+    "$N slowly collapses into a puddle of $S own blood.",
+    "$N slowly collapses into a puddle of $S own blood as $n slits $N's throat, killing $M."
+  };
+  const char *tMessagesNonDeath[] =
+  {
+    "You slit $N's throat, surprisingly, $N isn't dead!",
+    "$n expertly uses $s $o to slit $N's throat!",
+
+    "Blood stains your hand as you slice into $N's throat.",
+    "Blood splatters the ground as $n slices into $N's throat.",
+
+    "$N's eyes widen in rage, as $E feels your $o slicing $S throat!",
+    "$N's eyes widen in rage, as $E feels $n's $o slicing $S throat!",
+
+    "Blood sprays from $N's neck as you slice into $S throat.",
+    "Blood spurts from $N's neck as $n slices into $S throat.",
+
+    "$N gurgles and chokes as you slice into $S throat!",
+    "$N gurgles and chokes as $n slices into $S throat!",
+
+    "$N chokes on $S own blood as you slit $S throat!",
+    "$N chokes on $S own blood as $n slits $S throat!",
+  };
+
+  d = getSkillDam(victim, SKILL_THROATSLIT, getSkillLevel(SKILL_THROATSLIT), getAdvLearning(SKILL_THROATSLIT));
+
+  if ((i = specialAttack(victim, SKILL_THROATSLIT)) || (i == GUARANTEED_SUCCESS)) {
+    if (victim->getPosition() > POSITION_DEAD) {
+      if (!(d = getActualDamage(victim, obj, d, SKILL_THROATSLIT))) {
+        act("You try to slit $N's throat, but you can't penetrate $S thick skin!",  FALSE, this, obj, victim, TO_CHAR);
+        act("$n tries to slit your throat, but your neck is too strong.", FALSE, this, obj, victim, TO_VICT);
+        act("$n tries to slit $N's throat, but $N seems unaffected.",  FALSE, this, obj, victim, TO_NOTVICT);
+      } else if (willKill(victim, d, SKILL_THROATSLIT, FALSE)) {
+        playThroatSlit(roomp);
+	victim->dropPool(20, LIQ_BLOOD);
+        if (victim->isUndead()) {
+          act("$N shakes and then collapses as you slit $S throat.",
+              FALSE, this, obj, victim, TO_CHAR);
+          act("$N shakes and then collapses as $n slits $N's throat.",
+              FALSE, this, obj, victim, TO_NOTVICT);
+        } else {
+          int tMessageChoice = (::number(0, TS_MSG_DEATH_MAX) * 2);
+
+          if (!tMessagesDeath[tMessageChoice])
+            tMessageChoice = 0;
+
+          act(tMessagesDeath[tMessageChoice],
+              FALSE, this, obj, victim, TO_CHAR);
+          act(tMessagesDeath[tMessageChoice + 1],
+              FALSE, this, obj, victim, TO_NOTVICT);
+        }
+
+        act("You suddenly fall over dead as $n slices your throat!  R.I.P...",
+            FALSE, this, obj, victim, TO_VICT);
+      } else {
+        playThroatSlit(roomp);
+	victim->dropPool(20, LIQ_BLOOD);
+
+        if (victim->isUndead()) {
+          act("$N coughs and shivers as you slit $S throat.",
+              FALSE, this, obj, victim, TO_CHAR);
+          act("$n slits $N's throat, making $M cough and shiver...",
+              FALSE, this, obj, victim, TO_NOTVICT);
+        } else {
+          int tMessageChoice = (::number(0, TS_MSG_NONDT_MAX) * 2);
+
+          if (!tMessagesNonDeath[tMessageChoice])
+            tMessageChoice = 0;
+
+          act(tMessagesNonDeath[tMessageChoice],
+              FALSE, this, obj, victim, TO_CHAR);
+          act(tMessagesNonDeath[tMessageChoice + 1],
+              FALSE, this, obj, victim, TO_NOTVICT);
+        }
+
+        act("$n sneaks up behind you and cuts your throat!",
+            FALSE, this, obj, victim, TO_VICT);
+      }
+    }
+  } else {
+    act("$N quickly avoids your feeble murder attempt.",
+        FALSE, this, obj, victim, TO_CHAR);
+    act("$n tried to slice your throat, but you were too quick for $m.",
+        FALSE, this, obj, victim, TO_VICT);
+    act("$n tried to slit $N's throat, but has failed miserably.",
+        FALSE, this, obj, victim, TO_NOTVICT);
+
+    d = 0;
+  }
+
+  if (reconcileDamage(victim, d, SKILL_THROATSLIT) == -1)
+    return DELETE_VICT;
+
+  victim->addHated(this);
+
+
+  return 0;
+}
+
+int TBeing::doThroatSlit(const char *argument, TBeing *vict)
+{
+  TBeing *victim=NULL, *GLeader=NULL;
+  followData *FDt;
+  char namebuf[256] = "\0";
+  int rc;
+
+  if (!doesKnowSkill(SKILL_THROATSLIT)) {
+    sendTo("You know nothing about murder.\n\r");
+    return FALSE;
+  }
+  if (checkBusy(NULL)) {
+    return FALSE;
+  }
+  // *** Start of Test Tank-Target Backstab Code  -Lapsos
+  if (!*argument && isAffected(AFF_GROUP)) {
+    if (master)
+      GLeader = master;
+    else
+      GLeader = this;
+
+    if (GLeader != this && sameRoom(*GLeader) && GLeader->fight())
+      victim = GLeader->fight();
+    else {
+      for (FDt = GLeader->followers; FDt; FDt = FDt->next) {
+        if (!sameRoom(*FDt->follower))
+          continue;
+
+        if (FDt->follower == this)
+	  continue;
+
+        if (!FDt->follower->isAffected(AFF_GROUP))
+          continue;
+
+        if ((victim = FDt->follower->fight())) 
+          break;
+      }
+
+      if (victim && !sameRoom(*victim))
+        victim = NULL;
+    }
+  }
+
+  if (!vict && !victim) {
+    if (*argument)
+      only_argument(argument, namebuf);
+
+    if (!(victim = get_char_room_vis(this, namebuf))) {
+      sendTo("Slit who's throat?\n\r");
+      return FALSE;
+    }
+  }
+
+  if (vict && !victim)
+    victim = vict;
+  // *** End of Test Tank-Target Backstab Code  -Lapsos
+
+  if (!sameRoom(*victim)) {
+    sendTo("That person isn't around.\n\r");
+    return FALSE;
+  }
+
+  if ((rc = throatSlit(this, victim))) {
+    if (!victim->isPc())
+      dynamic_cast<TMonster *>(victim)->US(25);
+    addSkillLag(SKILL_THROATSLIT, rc);
+  }
+
+  if (IS_SET_DELETE(rc, DELETE_VICT)) {
+    if (vict)
+      return rc;
+
+    delete victim;
+    victim = NULL;
+    REM_DELETE(rc, DELETE_VICT);
+  }
+
+  TGenWeapon * obj = dynamic_cast<TGenWeapon *>(heldInPrimHand());
+
+  if (obj &&
+      obj->checkSpec(victim, CMD_SLIT, "-special-", this) == DELETE_VICT) {
+    delete victim;
+    victim = NULL;
+  } 
+
+  return rc;
+}
+
+int throatSlit(TBeing *thief, TBeing * victim)
+{
+  int base = 0;
+  int level;
+  int rc = 0;
+
+  if (thief->checkPeaceful("You cannot murder in a peaceful room!\n\t"))
+    return FALSE;
+
+  if (victim == thief) {
+    thief->sendTo("How can you sneak up on yourself?\n\r");
+    return FALSE;
+  }
+  TGenWeapon * obj = dynamic_cast<TGenWeapon *>(thief->heldInPrimHand());
+  if (!obj) {
+    thief->sendTo("You need to wield a weapon, to make it a success.\n\r");
+    return FALSE;
+  }
+  if (3*thief->getHeight() < 2*victim->getHeight() && !(thief->isFlying())) {
+    thief->sendTo("You don't stand a chance, that creature is too tall.\n\r");
+    return FALSE;
+  }
+
+  if (thief->riding) {
+    thief->sendTo("You cannot attempt murder in that way while mounted!\n\r");
+    return FALSE;
+  }
+  if (dynamic_cast<TBeing *>(victim->riding)) {
+    thief->sendTo("You can't reach their throat from here!\n\r");
+    return FALSE;
+  }
+  if (dynamic_cast<TBeing *>(victim->rider)) {
+    act("Unfortunately, $N's throat is not accessable.",
+           false, thief, victim->rider, victim, TO_CHAR);
+    return FALSE;
+  }
+  if (thief->noHarmCheck(victim))
+    return FALSE;
+
+  if (thief->attackers) {
+    thief->sendTo("There's no way to reach their neck while you're fighting!\n\r");
+    return FALSE;
+  }
+  if (!obj->canBackstab() || dynamic_cast<TGun *>(obj)) {
+    act("You can't use $p to slice anyone's throat.", false, thief, obj, NULL, TO_CHAR);
+    act("You should try a weapon that is used for backstabbing.", false, thief, NULL, NULL, TO_CHAR);
+    return FALSE;
+  }
+
+  if (thief->fight()) {
+    thief->sendTo("You're too busy!\n\r");
+    return FALSE;
+  }
+  thief->reconcileHurt(victim, 0.04);
+
+  if (thief->makesNoise() && victim->awake()) {
+    act("$n's armor makes too much noise, and $N is able to avoid $n's murder attempt.",
+        FALSE, thief, 0, victim, TO_NOTVICT);
+    act("You make too much noise, and $N hears you and avoids you totally.",
+        FALSE, thief, 0, victim, TO_CHAR);
+    act("You hear $n's armor, and quickly dodge $s attempt to murder you.",
+        FALSE, thief, 0, victim, TO_VICT);
+    thief->reconcileDamage(victim, 0,SKILL_THROATSLIT);
+    victim->addHated(thief);
+    return TRUE;
+  }
+  if (victim->awake() && victim->canSee(thief) &&
+      !victim->isPc() && dynamic_cast<TMonster *>(victim)->isSusp()) {
+    act("You almost succeed, but $E senses you coming at the last moment.",
+        FALSE, thief, 0, victim, TO_CHAR);
+    act("$n attempts to murder you, but you sense $m coming.",
+        FALSE, thief, 0, victim, TO_VICT);
+    act("$n attempts to murder $N, but $N senses $m coming.",
+        FALSE, thief, 0, victim, TO_NOTVICT);
+    thief->reconcileDamage(victim, 0, SKILL_THROATSLIT);
+    victim->addHated(thief);
+    return TRUE;
+  }
+  if ((!thief->isAffected(AFF_INVISIBLE) ||
+       victim->isAffected(AFF_DETECT_INVISIBLE)) &&
+      victim->canSee(thief) &&
+      !thief->isAffected(AFF_SNEAK) &&
+      !thief->isAffected(AFF_HIDE) &&
+      victim->awake()) {
+    act("$N notices you walking up behind $M, apparently you were not sneaking and visible...",FALSE,thief,0,victim,TO_CHAR);
+    act("$n makes a pathetic attempt at $N's life.", FALSE, thief, 0, victim, TO_NOTVICT);
+    act("You totally fail your attempt at $N's life.", FALSE, thief, 0, victim, TO_CHAR);
+    act("You quickly dodge $n's pathetic attempt to kill you.", FALSE, thief, 0, victim, TO_VICT);
+
+    thief->reconcileDamage(victim, 0,SKILL_THROATSLIT);
+    victim->addHated(thief);
+    return TRUE;
+  }
+  if (victim->fight())
+    base = 0;
+  else
+    base = 4;
+
+  level = thief->getSkillLevel(SKILL_THROATSLIT);
+  int bKnown = thief->getSkillValue(SKILL_THROATSLIT);
+
+  if ((bSuccess(thief, bKnown, SKILL_THROATSLIT) || !victim->awake())) {
+    thief->setSpellHitroll(thief->getSpellHitroll() + base);
+    rc = thief->throatSlitHit(victim, obj);
+    thief->setSpellHitroll(thief->getSpellHitroll() - base);
+    if (IS_SET_DELETE(rc, DELETE_VICT)) 
+      return DELETE_VICT;
+    
+    victim->addHated(thief);
+  } else {
+    act("$n makes a pathetic attempt at $N's life.", FALSE, thief, 0, victim, TO_NOTVICT);
+    act("You pathetically fail to slit $N's throat.", FALSE, thief, 0, victim, TO_CHAR);
+    act("You quickly dodge $n's pathetic attempt to slit your throat.", FALSE, thief, 0, victim, TO_VICT);
+    if (thief->reconcileDamage(victim, 0,SKILL_THROATSLIT) == -1)
+      return DELETE_VICT;
+
+    victim->addHated(thief);
+  }
+  return TRUE;
+}
+
+//////////
+
 int TBeing::doPoisonWeapon(const char * argument)
 {
   TThing *obj;

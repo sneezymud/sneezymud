@@ -1468,6 +1468,7 @@ class TBeing : public TThing {
     virtual void doSet(const char *);
     virtual void doNohassle(const char *);
     int backstabHit(TBeing *, TThing *);
+    int throatSlitHit(TBeing *, TThing *);
     int critFailureChance(TBeing *, TThing *, spellNumT);
     int critSuccessChance(TBeing *, TThing *, wearSlotT *, spellNumT, int *, int);
     int numValidSlots();
@@ -1734,6 +1735,7 @@ class TBeing : public TThing {
     void doSysViewoutput();
     int doSubterfuge(const char *);
     int doBackstab(const char *, TBeing *);
+    int doThroatSlit(const char *, TBeing *);
     void doGuard(const char *);
     void doSplit(const char *, bool);
     void doReply(const char *);

@@ -1493,6 +1493,11 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
         FitT |= (1 << 20);
         FitT |= (1 <<  2);
       }
+    } else if (is_abbrev(stString, "slit")) {
+      if ((ch->hasClass(CLASS_THIEF) && ch->doesKnowSkill(SKILL_THROATSLIT)) || ch->isImmortal()) {
+        FitT |= (1 << 20);
+        FitT |= (1 <<  2);
+      }
     } else if (is_number(stString)) {
       if (iMin == 999999) {
         iMin = 0;
