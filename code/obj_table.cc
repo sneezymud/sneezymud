@@ -124,11 +124,13 @@ void TTable::examineObj(TBeing *ch) const
 
 bool TTable::canGetMeDeny(const TBeing *ch, silentTypeT silent) const
 {
+#if 0
   if (!ch->isImmortal()) {
     if (!silent)
       ch->sendTo("Sorry, you aren't meant to be a furniture mover.\n\r");
     return true;
   }
+#endif
   return false;
 }
 

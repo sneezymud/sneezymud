@@ -477,11 +477,13 @@ int TBed::mobPulseBed(TMonster *mob)
 
 bool TBed::canGetMeDeny(const TBeing *ch, silentTypeT silent) const
 {
+#if 0
   if (!ch->isImmortal()) {
     if (!silent)
       ch->sendTo("Sorry, you aren't meant to be a furniture mover.\n\r");
     return TRUE;
   }
+#endif
   return FALSE;
 }
 
