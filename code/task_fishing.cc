@@ -272,6 +272,9 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	    act("$n reels in $p!",
 		TRUE, ch, fish, 0, TO_ROOM);
 	  } else {
+	    if(fish)
+	      delete fish;
+
 	    act("You didn't catch anything.",
 		FALSE, ch, NULL, 0, TO_CHAR);
 	    act("$n doesn't catch anything.",
