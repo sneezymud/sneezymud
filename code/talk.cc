@@ -1038,7 +1038,7 @@ int TBeing::doWhisper(const sstring &arg)
     return FALSE;
   }
   message=arg;
-  one_argument(message, name);
+  message=one_argument(message, name);
 
   if (name.empty() || message.empty()){
     sendTo("Whom do you want to whisper to.. and what??\n\r");
