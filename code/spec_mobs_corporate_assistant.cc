@@ -36,18 +36,25 @@ int getAssets(int corp_id)
 void corpListing(TBeing *ch, TMonster *me)
 {
   TDatabase db(DB_SNEEZY);
-  int corp_id=0, val=0, gold=0, shopval=0;
+  int corp_id=0, val=0, gold=0, shopval=0, bankowner=0, bankgold=0;
   multimap <int, sstring, std::greater<int> > m;
   multimap <int, sstring, std::greater<int> >::iterator it;
 
-  db.query("select c.corp_id, c.name, sum(s.gold)+b.talens as gold, count(so.shop_nr) as shopcount from shopowned so, shop s, corporation c left outer join shopownedcorpbank b on (b.corp_id=c.corp_id) where c.bank=b.shop_nr and c.corp_id=so.corp_id and so.shop_nr=s.shop_nr group by c.corp_id, c.name, b.talens order by gold desc");
+  db.query("select c.corp_id, c.name, sum(s.gold) as gold, b.talens as bankgold, count(so.shop_nr) as shopcount, sob.corp_id as bankowner from shopowned sob, shopowned so, shop s, corporation c left outer join shopownedcorpbank b on (b.corp_id=c.corp_id) where sob.shop_nr=c.bank and c.bank=b.shop_nr and c.corp_id=so.corp_id and so.shop_nr=s.shop_nr group by c.corp_id, c.name, b.talens, sob.corp_id order by gold desc");
   
   while(db.fetchRow()){
     corp_id=convertTo<int>(db["corp_id"]);
     gold=convertTo<int>(db["gold"]);
+    bankgold=convertTo<int>(db["bankgold"]);
     shopval=convertTo<int>(db["shopcount"]) * 1000000;
     val=gold+getAssets(corp_id)+shopval;
+    bankowner=convertTo<int>(db["bankowner"]);
    
+    // if we don't own the bank, record our gold that's in the bank
+    // otherwise we end up counting it twice
+    if(bankowner!=corp_id)
+      gold += bankgold;
+
     m.insert(pair<int,sstring>(val,fmt("%-2i| <r>%s<1>") % corp_id % db["name"]));
     m.insert(pair<int,sstring>(val,fmt("  | %s talens, %s in assets") %
 			       talenDisplay(gold) % 
@@ -117,7 +124,7 @@ void corpLogs(TBeing *ch, TMonster *me, sstring arg)
 void corpSummary(TBeing *ch, TMonster *me, int corp_id)
 {
   TDatabase db(DB_SNEEZY);
-  int value=0, gold=0, shopcount=0, banktalens=0, bank=4;
+  int value=0, gold=0, shopcount=0, banktalens=0, bank=4, bankowner=0;
   sstring buf;
   TRoom *tr=NULL;
 
@@ -128,7 +135,7 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
   }
   
 
-  db.query("select c.name, sum(s.gold) as gold, b.talens as banktalens, count(s.shop_nr) as shops, bank from corporation c left outer join shopownedcorpbank b on (c.corp_id=b.corp_id), shopowned so, shop s where c.corp_id=so.corp_id and c.corp_id=%i and so.shop_nr=s.shop_nr group by c.corp_id, c.name, b.talens, c.bank order by c.corp_id", corp_id);
+  db.query("select c.name, sum(s.gold) as gold, b.talens as banktalens, count(s.shop_nr) as shops, bank, sob.corp_id as bankowner from shopowned sob, corporation c left outer join shopownedcorpbank b on (c.corp_id=b.corp_id), shopowned so, shop s where sob.shop_nr=c.bank and c.corp_id=so.corp_id and c.corp_id=%i and so.shop_nr=s.shop_nr group by c.corp_id, c.name, b.talens, c.bank, sob.corp_id order by c.corp_id", corp_id);
   
   if(!db.fetchRow()){
     me->doTell(ch->getName(), "I don't have any information for that corporation.");
@@ -139,10 +146,15 @@ void corpSummary(TBeing *ch, TMonster *me, int corp_id)
 	     corp_id % db["name"]);
 
   bank=convertTo<int>(db["bank"]);
+  bankowner=convertTo<int>(db["bankowner"]);
   banktalens=convertTo<int>(db["banktalens"]);
   gold=convertTo<int>(db["gold"]);
   value=getAssets(corp_id);
   shopcount=convertTo<int>(db["shops"]);
+
+  // we own the bank, so don't count our money twice
+  if(bankowner == corp_id)
+    gold -= banktalens;
   
   me->doTell(ch->getName(), fmt("Bank Talens: %12s") %
 	     (fmt("%i") % banktalens).comify());
