@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_testcode.cc,v $
+// Revision 1.5  1999/10/08 19:27:55  batopr
+// *** empty log message ***
+//
 // Revision 1.4  1999/10/08 19:26:54  batopr
 // Added stuff for calculating money equilibrium
 //
@@ -76,7 +79,7 @@ void TBeing::doTestCode(const char *arg)
   int posNoInc = budgPosNew - posIncAct;
   int posDes = (int) (budgDrainNew * 1.02);
   int posIncDes = posDes - posNoInc;
-  float old_inc_factor = gold_modifier[GOLD_INCOME]
+  float old_inc_factor = gold_modifier[GOLD_INCOME];
   float new_inc_factor = posIncDes / posIncAct * old_inc_factor;
   sendTo("Theoretical income quilibrium modifier: %.2f\n\r", new_inc_factor);
 #endif
