@@ -302,6 +302,8 @@ int TShopOwned::sellShop(){
   db.query("delete from shopownedaccess where shop_nr=%i", shop_nr);
   
   db.query("delete from shopownedratios where shop_nr=%i", shop_nr);
+
+  db.query("delete from shopownematch where shop_nr=%i", shop_nr);
   
   value+=keeper->getMoney();
   ch->setMoney(ch->getMoney()+value);

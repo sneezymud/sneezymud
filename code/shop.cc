@@ -97,6 +97,18 @@ int TObj::sellPrice(int shop_nr, float chr, int *discount)
 
     if(db.fetchRow())
       profit_sell=atof_safe(db.getColumn(0));
+    else {
+      // ok, shop is owned and there is no ratio set for this specific object
+      // so check keywords
+      db.query("select match, profit_sell from shopownedmatch where shop_nr=%i", shop_nr);
+
+      while(db.fetchRow()){
+	if(isname(db.getColumn(0), name)){
+	  profit_sell=atof_safe(db.getColumn(1));
+	  break;
+	}
+      }
+    }
   }
 
   if (chr != -1 && chr!=0)
@@ -124,14 +136,28 @@ int TObj::shopPrice(int num, int shop_nr, float chr, int *discount) const
 {
   int cost;
   float profit_buy=shop_index[shop_nr].profit_buy;
-  
-  TDatabase db("sneezy");
 
-  db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
-  
-  if(db.fetchRow())
-    profit_buy=atof_safe(db.getColumn(0));
-
+  if(shop_index[shop_nr].isOwned()){  
+    TDatabase db("sneezy");
+    
+    db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
+    
+    if(db.fetchRow())
+      profit_buy=atof_safe(db.getColumn(0));
+    else {
+      // ok, shop is owned and there is no ratio set for this specific object
+      // so check keywords
+      db.query("select match, profit_buy from shopownedmatch where shop_nr=%i", shop_nr);
+      
+      while(db.fetchRow()){
+	if(isname(db.getColumn(0), name)){
+	  profit_buy=atof_safe(db.getColumn(1));
+	  break;
+	}
+      }
+    }
+  }
+    
   if (chr != -1)
     cost = (int) ((adjPrice(discount) * profit_buy) * chr);
   else
