@@ -323,8 +323,8 @@ getName());
 
 int TBaseCorpse::chiMe(TBeing *tLunatic)
 {
-  int     tMana  = ::number(10, 30),
-          bKnown = tLunatic->getSkillLevel(SKILL_CHI);
+  int tMana  = ::number(10, 30),
+      bKnown = tLunatic->getSkillLevel(SKILL_CHI);
   //  TThing *tThing;
 
   if (tLunatic->getMana() < tMana) {
@@ -336,15 +336,18 @@ int TBaseCorpse::chiMe(TBeing *tLunatic)
   if (dynamic_cast<TPCorpse *>(this) ||
       !bSuccess(tLunatic, bKnown, SKILL_CHI) ||
       getCorpseLevel() > tLunatic->GetMaxLevel()) {
-    act("You attempt to nuke $p, but it resists you.",
+    act("You attempt to nuke $p, but fail to control the chi.",
         FALSE, tLunatic, this, NULL, TO_CHAR);
     return true;
   }
 
-  act("You focus your chi and set $p ablaze!",
-      FALSE, tLunatic, this, NULL, TO_CHAR);
-  act("$n stares at $p which suddenly bursts into flames!",
-      TRUE, tLunatic, this, NULL, TO_ROOM);
+  if (isObjStat(ITEM_BURNING)) {
+    act("You focus your chi and cause $p to flair up violently, if only for a second.", FALSE, tLunatic, this, NULL, TO_CHAR);
+    act("$n stares at $p causing it to flair up violently!", TRUE, tLunatic, this, NULL, TO_ROOM);
+  } else {
+    act("You focus your chi and set $p ablaze!", FALSE, tLunatic, this, NULL, TO_CHAR);
+    act("$n stares at $p which suddenly bursts into flames!", TRUE, tLunatic, this, NULL, TO_ROOM);
+  }
 
   if(material_nums[getMaterial()].flammability){
     setBurning(tLunatic);}
