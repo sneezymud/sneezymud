@@ -212,6 +212,7 @@ const ush_int CLASS_SHAMAN       = (1<<4);   // 16
 const ush_int CLASS_DEIKHAN      = (1<<5);   // 32
 const ush_int CLASS_MONK         = (1<<6);   // 64
 const ush_int CLASS_RANGER       = (1<<7);   // 128
+const ush_int CLASS_NINJA        = (1<<8);   // 256;
 
 /* Bitvector for 'affected_by' */
 const unsigned long AFF_BLIND             = (1<<0);        // 1
@@ -395,22 +396,12 @@ class factionData {
 
 class pracData {
   public:
-    sh_int mage;
-    sh_int cleric;
-    sh_int thief;
-    sh_int warrior;
-    sh_int shaman;
-    sh_int deikhan;
-    sh_int ranger;
-    sh_int monk;
-    sh_int bard;
-    sh_int temp;
-    sh_int temp2;
-
-    pracData();
-    pracData(const pracData &a);
-    pracData & operator=(const pracData &a);
-    ~pracData();
+  sh_int prac[MAX_SAVED_CLASSES];
+  
+  pracData();
+  pracData(const pracData &a);
+  pracData & operator=(const pracData &a);
+  ~pracData();
 };
 
 class bodyPartsDamage {
@@ -878,7 +869,9 @@ class TBeing : public TThing {
     virtual void parseTitle(char *, Descriptor *);
     int onlyClass(int) const;
     int getClassNum(const char *, exactTypeT);
+    int getClassNum(classIndT);
     classIndT getClassIndNum(const char *, exactTypeT);
+    classIndT getClassIndNum(ush_int, exactTypeT);
     bool hasClass(const char *, exactTypeT) const;
     bool hasClass(ush_int, exactTypeT = EXACT_NO) const;
     void setQuaffUse(bool tmp) { inQuaffUse = tmp; }

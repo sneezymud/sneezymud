@@ -179,6 +179,34 @@ int TBeing::getClassNum(const char *arg, exactTypeT exact)
   return which;
 }
 
+int TBeing::getClassNum(classIndT arg)
+{
+  int which = 0;
+
+  if(arg==MAGE_LEVEL_IND)
+    which = CLASS_MAGIC_USER;
+  else if (arg==CLERIC_LEVEL_IND)
+    which = CLASS_CLERIC;
+  else if (arg==WARRIOR_LEVEL_IND)
+    which = CLASS_WARRIOR;
+  else if (arg==THIEF_LEVEL_IND)
+    which = CLASS_THIEF;
+  else if (arg==DEIKHAN_LEVEL_IND)
+    which = CLASS_DEIKHAN;
+  else if (arg==SHAMAN_LEVEL_IND)
+    which = CLASS_SHAMAN;
+  else if (arg==RANGER_LEVEL_IND)
+    which = CLASS_RANGER;
+  else if (arg==MONK_LEVEL_IND)
+    which = CLASS_MONK;
+  else {
+    return FALSE;
+  }
+
+  return which;
+}
+
+
 classIndT TBeing::getClassIndNum(const char *arg, exactTypeT exact)
 {
   int which = getClassNum(arg, exact);
@@ -206,6 +234,35 @@ classIndT TBeing::getClassIndNum(const char *arg, exactTypeT exact)
 
   return res;
 }
+
+
+classIndT TBeing::getClassIndNum(ush_int which, exactTypeT exact)
+{
+  classIndT res = MIN_CLASS_IND;
+
+  if (which == CLASS_MAGE)
+    res = MAGE_LEVEL_IND;
+  else if (which == CLASS_CLERIC)
+    res = CLERIC_LEVEL_IND;
+  else if (which == CLASS_WARRIOR)
+    res = WARRIOR_LEVEL_IND;
+  else if (which == CLASS_THIEF)
+    res = THIEF_LEVEL_IND;
+  else if (which == CLASS_RANGER)
+    res = RANGER_LEVEL_IND;
+  else if (which == CLASS_DEIKHAN)
+    res = DEIKHAN_LEVEL_IND;
+  else if (which == CLASS_SHAMAN)
+    res = SHAMAN_LEVEL_IND;
+  else if (which == CLASS_MONK)
+    res = MONK_LEVEL_IND;
+  else {
+    forceCrash("unknown class result");
+  }
+
+  return res;
+}
+
 
 bool TBeing::hasClass(const char *arg, exactTypeT exact) const
 {

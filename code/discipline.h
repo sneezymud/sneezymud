@@ -196,6 +196,7 @@ struct class_info
   sstring name;
   discNumT base_disc;
   discNumT sec_disc;
+  double prac_tweak;
 };
       
 #endif

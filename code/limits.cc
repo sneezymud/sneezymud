@@ -509,44 +509,12 @@ int getAdvancedPracs(TBeing *ch){
 double TBeing::pracsPerLevel(classIndT Class, bool forceBasic)
 {
   double num;
-  double class_tweak = 0.50;
 
   // class_tweak is what percentage of advanced discs they should be able to
   // learn.  0.50 would let them learn half of their advanced discs, or 50%
   // in each advanced disc.  This includes "fast" discs like weapon specs.
-  switch (Class) {
-    case MAGE_LEVEL_IND:
-      class_tweak = 0.43;
-      break;
-    case CLERIC_LEVEL_IND:
-      class_tweak = 0.47;
-      break;
-    case WARRIOR_LEVEL_IND:
-      class_tweak = 0.47;
-      break;
-    case THIEF_LEVEL_IND:
-      class_tweak = 0.41;
-      break;
-    case DEIKHAN_LEVEL_IND:
-      class_tweak = 0.44;
-      break;
-    case MONK_LEVEL_IND:
-      class_tweak = 0.44;
-      break;
-    case RANGER_LEVEL_IND:
-      class_tweak = 0.46;
-      break;
-    case SHAMAN_LEVEL_IND:
-      class_tweak = 0.39;
-      break;
-    case UNUSED1_LEVEL_IND:
-    case UNUSED2_LEVEL_IND:
-    case UNUSED3_LEVEL_IND:
-    case MAX_SAVED_CLASSES:
-      vlogf(LOG_BUG,"Got to a bad spot in calcNewPracs(), bad class");
-      break;
-  }
-
+  double class_tweak=classInfo[Class].prac_tweak;
+  
   // what level player should finish basic at (200 pracs)
   double avbasic = 30.0; 
 
@@ -608,64 +576,19 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
 
 void TBeing::setPracs(sh_int prac, classIndT Class)
 {
-  switch (Class) {
-    case MAGE_LEVEL_IND:
-      practices.mage = prac;
-      break;
-    case CLERIC_LEVEL_IND:
-      practices.cleric = prac;
-      break;
-    case THIEF_LEVEL_IND:
-      practices.thief = prac;
-      break;
-    case WARRIOR_LEVEL_IND:
-      practices.warrior = prac;
-      break;
-    case DEIKHAN_LEVEL_IND:
-      practices.deikhan = prac;
-      break;
-    case RANGER_LEVEL_IND:
-      practices.ranger = prac;
-      break;
-    case MONK_LEVEL_IND:
-      practices.monk = prac;
-      break;
-    case SHAMAN_LEVEL_IND:
-      practices.shaman = prac;
-      break;
-    case UNUSED1_LEVEL_IND:
-    case UNUSED2_LEVEL_IND:
-    case UNUSED3_LEVEL_IND:
-    case MAX_SAVED_CLASSES:
-      vlogf(LOG_BUG, "Bad class in setPracs");
-  }
+  if(Class >= MAX_CLASSES)
+    vlogf(LOG_BUG, "Bad class in setPracs");
+  else
+    practices.prac[Class]=prac;
 }
 
 sh_int TBeing::getPracs(classIndT Class)
 {
-  switch (Class) {
-    case MAGE_LEVEL_IND:
-      return practices.mage;
-    case CLERIC_LEVEL_IND:
-      return practices.cleric;
-    case THIEF_LEVEL_IND:
-      return practices.thief;
-    case WARRIOR_LEVEL_IND:
-      return practices.warrior;
-    case DEIKHAN_LEVEL_IND:
-      return practices.deikhan;
-    case RANGER_LEVEL_IND:
-      return practices.ranger;
-    case MONK_LEVEL_IND:
-      return practices.monk;
-    case SHAMAN_LEVEL_IND:
-      return practices.shaman;
-    case UNUSED1_LEVEL_IND:
-    case UNUSED2_LEVEL_IND:
-    case UNUSED3_LEVEL_IND:
-    case MAX_SAVED_CLASSES:
-      forceCrash("Bad class in getPracs");
-  }
+  if(Class >= MAX_CLASSES)
+    forceCrash("Bad class in getPracs");
+  else
+    return practices.prac[Class];
+
   return 0;
 }
 

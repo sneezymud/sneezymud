@@ -3863,90 +3863,12 @@ void TBeing::doRestore(const char *argument)
     }
     //ok we found them in the list, num holds how many practices they need
     pracs = min(pracs,(int)victim->getLevel(victim->bestClass())); // cap at 1/lev
-    switch (victim->bestClass()) {
-      case MAGE_LEVEL_IND:
-        victim->practices.mage += pracs;
-        break;
-      case CLERIC_LEVEL_IND:
-        victim->practices.cleric += pracs;
-        break;
-      case WARRIOR_LEVEL_IND:
-        victim->practices.warrior += pracs;
-        break;
-      case THIEF_LEVEL_IND:
-        victim->practices.thief += pracs;
-        break;
-      case DEIKHAN_LEVEL_IND:
-        victim->practices.deikhan += pracs;
-        break;
-      case MONK_LEVEL_IND:
-        victim->practices.monk += pracs;
-        break;
-      case RANGER_LEVEL_IND:
-        victim->practices.ranger += pracs;
-        break;
-      case SHAMAN_LEVEL_IND:
-        victim->practices.shaman += pracs;
-        break;
-
-      default:
-
-        return;
-    }
+    victim->practices.prac[victim->bestClass()]+=pracs;
 
     victim->sendTo("Congratulations, you've been reimbursed %d practices!\n\r",pracs);
     sendTo("Reimbursing %s %d practices.\n\r",victim->getName(),pracs);
 
     
-#if 0
-    // this use to check for god level, so probabl yneeds a power
-    sendTo("Not fully converted yet.  Bug Cosmo\n\r");
-    return;
-
-    int pracs = 0;
-      sendTo("Bug that restore practices formula isn't fixed-tell Cosmo.\n\r");
-      vlogf(LOG_MISC,"Tell Cosmo that the restore Practices formula isn't fixed");
-      return;
-    if (!victim->isSingleClass()) {
-      sendTo("Restoring practices on multi-class characters is not supported.\n\r");
-      return;
-    }
-    discNumT das;
-    for (das = MIN_DISC; das < MAX_DISCS; das++) {
-      CDiscipline *cd = victim->getDiscipline(das);
-      if (cd && cd->getLearnedness()) {
-        pracs += cd->getLearnedness();
-        cd->setLearnedness(0);
-        for (j = 0; j < 40; j++) {
-          if (discArray[(das*40 + j)] && *discArray[(das*40 + j)]->name) {
-            victim->setSkillValue(das*40+j, 0);
-            victim->setNatSkillValue(das*40+j, 0);
-          }
-        }
-      }
-    }
-    if (victim->hasClass(CLASS_MAGIC_USER))
-      victim->practices.mage += pracs;
-    if (victim->hasClass(CLASS_CLERIC))
-      victim->practices.cleric += pracs;
-    if (victim->hasClass(CLASS_WARRIOR))
-      victim->practices.warrior += pracs;
-    if (victim->hasClass(CLASS_THIEF))
-      victim->practices.thief += pracs;
-    if (victim->hasClass(CLASS_MONK))
-      victim->practices.monk += pracs;
-    if (victim->hasClass(CLASS_RANGER))
-      victim->practices.ranger += pracs;
-    if (victim->hasClass(CLASS_DEIKHAN))
-      victim->practices.deikhan += pracs;
-    if (victim->hasClass(CLASS_SHAMAN))
-      victim->practices.shaman += pracs;
-
-    victim->doSave(SILENT_YES);
-    victim->doPractice("");
-    sendTo("Practices reset.\n\r");
-    return;
-#endif
   } else {
     sendTo("Syntax : restore <character> <partial | full | pracs>\n\r");
     return;

@@ -617,36 +617,15 @@ mob->getName());
       vlogf(LOG_MISC, "%s just tried to set %s's practices to a number > 100!", getName(), mob->getName());
       return;
     }
-    switch (parm2) {
-      case MAGE_LEVEL_IND:
-        mob->practices.mage = parm;
-        break;
-      case CLERIC_LEVEL_IND:
-        mob->practices.cleric = parm;
-        break;
-      case WARRIOR_LEVEL_IND:
-        mob->practices.warrior = parm;
-        break;
-      case THIEF_LEVEL_IND:
-        mob->practices.thief = parm;
-        break;
-      case DEIKHAN_LEVEL_IND:
-        mob->practices.deikhan = parm;
-        break;
-      case MONK_LEVEL_IND:
-        mob->practices.monk = parm;
-        break;
-      case RANGER_LEVEL_IND:
-        mob->practices.ranger = parm;
-        break;
-      case SHAMAN_LEVEL_IND:
-        mob->practices.shaman = parm;
-        break;
 
-      default:
-        sendTo("Invalid class number.\n\r");
-        return;
+    if(parm2 >= MAX_CLASSES){
+      sendTo("Invalid class number.\n\r");
+      return;
+    } else {
+      mob->practices.prac[parm2]=parm;
     }
+
+
     sendTo(COLOR_MOBS, "Setting %s's %s practices to %d.\n\r", mob->getName(), classInfo[parm2].name.c_str(), parm);
   } else if (is_abbrev(field, "level")) {
     if (sscanf(parmstr, "%d", &parm) != 1) {

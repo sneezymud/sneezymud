@@ -795,36 +795,19 @@ void TBeing::doNotHere() const
   sendTo("Sorry, but you cannot do that here!\n\r");
 }
 
-static const sstring describe_practices(const TBeing *ch)
+static const sstring describe_practices(TBeing *ch)
 {
   char buf[1024];
 
   *buf = '\0';
 
-  if (ch->hasClass(CLASS_MAGIC_USER) || ch->practices.mage)
-    sprintf(buf + strlen(buf), "You have %d mage practice%s left.\n\r", 
-          ch->practices.mage, ((ch->practices.mage == 1) ? "" : "s"));
-  if (ch->hasClass(CLASS_CLERIC) || ch->practices.cleric)
-    sprintf(buf + strlen(buf), "You have %d cleric practice%s left.\n\r",
-          ch->practices.cleric, ((ch->practices.cleric== 1) ? "" : "s"));
-  if (ch->hasClass(CLASS_WARRIOR) || ch->practices.warrior)
-    sprintf(buf + strlen(buf), "You have %d warrior practice%s left.\n\r",
-          ch->practices.warrior, ((ch->practices.warrior== 1) ? "" : "s"));
-  if (ch->hasClass(CLASS_THIEF) || ch->practices.thief)
-    sprintf(buf + strlen(buf), "You have %d thief practice%s left.\n\r",
-          ch->practices.thief, ((ch->practices.thief== 1) ? "" : "s"));
-  if (ch->hasClass(CLASS_DEIKHAN) || ch->practices.deikhan)
-    sprintf(buf + strlen(buf), "You have %d deikhan practice%s left.\n\r",
-          ch->practices.deikhan, ((ch->practices.deikhan == 1) ? "" : "s"));
-  if (ch->hasClass(CLASS_RANGER) || ch->practices.ranger)
-    sprintf(buf + strlen(buf), "You have %d ranger practice%s left.\n\r",
-          ch->practices.ranger, ((ch->practices.ranger == 1) ? "" : "s"));
-  if (ch->hasClass(CLASS_MONK) || ch->practices.monk)
-    sprintf(buf + strlen(buf), "You have %d monk practice%s left.\n\r",
-          ch->practices.monk, ((ch->practices.monk == 1) ? "" : "s"));
-  if (ch->hasClass(CLASS_SHAMAN) || ch->practices.shaman)
-    sprintf(buf + strlen(buf), "You have %d shaman practice%s left.\n\r",
-          ch->practices.shaman, ((ch->practices.shaman == 1) ? "" : "s"));
+  for(int i=0;i<MAX_CLASSES;i++){
+    if(ch->hasClass(ch->getClassNum((classIndT)i)) || ch->practices.prac[i]){
+      sprintf(buf + strlen(buf), "You have %d %s practice%s left.\n\r", 
+	      ch->practices.prac[i], classInfo[i].name.c_str(), 
+	      ((ch->practices.prac[i] == 1) ? "" : "s"));
+    }
+  }
 
   return buf;
 }
