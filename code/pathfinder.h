@@ -114,6 +114,14 @@ class findWater : public TPathTarget {
   bool isTarget(int) const;
 };
 
+// findLeper() = find a leper
+class findLeper : public TPathTarget {
+ public:
+  findLeper();
+  bool isTarget(int) const;
+
+};
+
 
 
 

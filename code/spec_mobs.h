@@ -185,7 +185,8 @@ const int SPEC_BRIGHTMOON_JANITOR =198;
 const int SPEC_GARBAGE_CONVOY     =199;
 const int SPEC_SIGNMAKER          =200;
 const int SPEC_BUTLER             =201;
-const int NUM_MOB_SPECIALS        =201;
+const int SPEC_LEPER_HUNTER       =202;
+const int NUM_MOB_SPECIALS        =202;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

@@ -6480,6 +6480,7 @@ extern int poisonBite(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int propertyClerk(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int signMaker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int paladinPatrol(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int leperHunter(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int taxman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int banker(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int loanShark(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -6705,6 +6706,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "garbage convoy", garbageConvoy},
   {FALSE, "signmaker", signMaker},
   {TRUE, "butler", receptionist},
+  {FALSE, "leper hunter", leperHunter}
 // replace non-zero, bogus_mob_procs above before adding
 };
 
