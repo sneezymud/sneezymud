@@ -6916,10 +6916,10 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
 static int divCost(TObj *obj)
 {
-  const float REGISTRATION_FEE = 1.1;
+  const float FEE = 0.8;
   int cost;
 
-  cost = (int) (REGISTRATION_FEE * (obj->obj_flags.cost));
+  cost = (int) (FEE * (obj->obj_flags.cost));
 
   return cost;
 }

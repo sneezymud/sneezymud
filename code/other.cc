@@ -4171,3 +4171,324 @@ void TBeing::makeWary()
   affectTo(&aff);
 
 }
+
+
+void TBeing::doRoll(TBeing *v, dirTypeT tdir)
+{
+  int rc;
+  TBeing *heap_ptr[50];
+  int i, heap_top, heap_tot[50], result;
+  followData *k, *n;
+  char buf[256];
+  int or, oldroom;
+  TRoom *rp;
+
+  
+  if (v == this) {
+    sendTo("You can't roll yourself!\n\r");
+    sendTo("Syntax : roll <person> <direction>\n\r");
+    return;
+  }
+  if (v->getPosition() > POSITION_SLEEPING) {
+    sendTo("You can't roll someone who is conscious.\n\r");
+    return;
+  }
+  if (v->riding) {
+    act("You can't roll them off the $o.",TRUE,this,v->riding,0,TO_CHAR);
+    return;
+  }
+  if (v->rider) {
+    sendTo("Sorry, you can't roll creatures carrying other creatures.\n\r");
+    return;
+  }
+
+
+  // v-weight > 5 * free carry weight
+  if (compareWeights(v->getTotalWeight(TRUE),
+          (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
+    act("You strain with all your might to roll $N out of the room but fail.",
+        TRUE, this, NULL, v, TO_CHAR);
+    act("$n strains with all $s might to roll $N out of the room buts fails.",
+        TRUE, this, NULL, v, TO_ROOM);
+    return;
+  }
+
+  sprintf(buf, "%i", tdir);
+  rc = roomp->checkSpec(this, CMD_ROOM_ATTEMPTED_EXIT, buf, roomp);
+  if(rc==TRUE) // not allowed to move
+    return;
+
+  // We can drag now. Do necessary checks and make it so. - Brutius 
+  sprintf(buf, "You roll $N %s.", dirs[tdir]);
+  act(buf, TRUE, this, NULL, v, TO_CHAR);
+  sprintf(buf, "$n rolls $N %s.", dirs[tdir]);
+  act(buf, TRUE, this, NULL, v, TO_ROOM);
+  oldroom = v->in_room;
+  or = v->roomp->dir_option[tdir]->to_room;
+  rp = real_roomp(or);
+  --(*v);
+  --(*this);
+  *rp += *this;
+  *rp += *v;
+  act("$n enters the room rolling $N!", TRUE, this, NULL, v, TO_ROOM);
+
+  if (v->followers) {
+    heap_top = 0;
+    for (k = v->followers; k; k = n) {
+      n = k->next;
+      if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
+          (k->follower->getPosition() >= POSITION_CRAWLING)) {
+        sprintf(buf, "You follow $N as $E is rolled out of the room.");
+        act(buf, FALSE, k->follower, NULL, v, TO_CHAR);
+        if (k->follower->followers) {
+          rc = k->follower->moveGroup(tdir);
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            delete k->follower;
+            k->follower = NULL;
+            continue;
+          }
+        } else {
+          if ((result = k->follower->rawMove(tdir))) {
+            if (IS_SET_DELETE(result, DELETE_THIS)) {
+              delete k->follower;
+              k->follower = NULL;
+              continue;
+            }
+            AddToCharHeap(heap_ptr, &heap_top, heap_tot, k->follower);
+          }
+        }
+      }
+    }
+    for (i = 0; i < heap_top; i++) {
+      if (heap_tot[i] > 1)
+        rc = heap_ptr[i]->displayGroupMove(tdir, oldroom, heap_tot[i]);
+      else
+        rc = heap_ptr[i]->displayOneMove(tdir, oldroom);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        delete heap_ptr[i];
+        heap_ptr[i] = NULL;
+      }
+    }
+  }
+  if (followers) {
+    heap_top = 0;
+    for (k = followers; k; k = n) {
+      n = k->next;
+      if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
+          (k->follower->getPosition() >= POSITION_CRAWLING)) {
+        sprintf(buf, "You follow $N as $E rolls $p out of the room.");
+        act(buf, FALSE, k->follower, v, this, TO_CHAR); 
+        if (k->follower->followers) {
+          rc = k->follower->moveGroup(tdir);
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            delete k->follower;
+            k->follower = NULL;
+            continue;
+          }
+        } else {
+          if ((result = k->follower->rawMove(tdir))) {
+            if (IS_SET_DELETE(result, DELETE_THIS)) {
+              delete k->follower;
+              k->follower = NULL;
+              continue;
+            }
+            AddToCharHeap(heap_ptr, &heap_top, heap_tot, k->follower);
+          }
+        }
+      }
+    }
+    for (i = 0; i < heap_top; i++) {
+      if (heap_tot[i] > 1)
+        rc = heap_ptr[i]->displayGroupMove(tdir, oldroom, heap_tot[i]);
+      else
+        rc = heap_ptr[i]->displayOneMove(tdir, oldroom);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        delete heap_ptr[i];
+        heap_ptr[i] = NULL;
+      }
+    }
+  }
+
+  doLook("", CMD_LOOK);
+  addToMove(-10);
+  addToWait(combatRound(1));
+}
+
+void TBeing::doRoll(TObj *o, dirTypeT tdir)
+{
+  TBeing *heap_ptr[50];
+  int i, heap_top, heap_tot[50], result;
+  followData *k, *n;
+  char buf[256];
+  int oldroom, or, rc;
+  TRoom *rp;
+
+  if(!o) return;
+  if (!isImmortal()) {
+    if(!o->canWear(ITEM_TAKE)) {
+      act("$N : You can't roll that.\n\r", TRUE, this, NULL, o, TO_CHAR);
+      return;
+    }
+    if (dynamic_cast<TTrap *>(o)) {
+      act("$N : Yeah right.\n\r", TRUE, this, NULL, o, TO_CHAR);
+      return;
+    }
+  }
+  if(o->rider){
+    act("$N : Occupied.\n\r", TRUE, this, NULL, o, TO_CHAR);
+    return;
+  }
+
+  if (compareWeights(o->getTotalWeight(TRUE),
+	      (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
+    act("You strain with all your might to roll $N out of the room but fail.",
+	TRUE, this, NULL, o, TO_CHAR);
+    act("$n strains with all $s might to roll $N out of the room buts fails.",
+        TRUE, this, NULL, o, TO_ROOM);
+    return;
+  }
+
+  sprintf(buf, "%i", tdir);
+  rc = roomp->checkSpec(this, CMD_ROOM_ATTEMPTED_EXIT, buf, roomp);
+  if(rc==TRUE) // not allowed to move
+    return;
+
+
+  sprintf(buf, "You roll $N %s.", dirs[tdir]);
+  act(buf, TRUE, this, NULL, o, TO_CHAR);
+  sprintf(buf, "$n rolls $N %s.", dirs[tdir]);
+  act(buf, TRUE, this, NULL, o, TO_ROOM);
+  oldroom = o->in_room;
+  or = o->roomp->dir_option[tdir]->to_room;
+  rp = real_roomp(or);
+  --(*o);
+  --(*this);
+  *rp += *this;
+  *rp += *o;
+  act("$n enters the room rolling $N!", TRUE, this, NULL, o, TO_ROOM);
+  TPCorpse *tmpcorpse = dynamic_cast<TPCorpse *>(o);
+  if (tmpcorpse) {
+    tmpcorpse->setRoomNum(or);
+    tmpcorpse->saveCorpseToFile();
+  }
+  if (followers) {
+    heap_top = 0;
+    for (k = followers; k; k = n) {
+      n = k->next;
+      if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
+          (k->follower->getPosition() >= POSITION_CRAWLING)) {
+        sprintf(buf, "You follow $N as $E rolls $p out of the room.");
+        act(buf, FALSE, k->follower, o, this, TO_CHAR); 
+        if (k->follower->followers) {
+          rc = k->follower->moveGroup(tdir);
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            delete k->follower;
+            k->follower = NULL;
+            continue;
+          }
+        } else {
+          if ((result = k->follower->rawMove(tdir))) {
+            if (IS_SET_DELETE(result, DELETE_THIS)) {
+              delete k->follower;
+              k->follower = NULL;
+              continue;
+            }
+            AddToCharHeap(heap_ptr, &heap_top, heap_tot, k->follower);
+          }
+        }
+      }
+    }
+    for (i = 0; i < heap_top; i++) {
+      if (heap_tot[i] > 1)
+        rc = heap_ptr[i]->displayGroupMove(tdir, oldroom, heap_tot[i]);
+      else
+        rc = heap_ptr[i]->displayOneMove(tdir, oldroom);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        delete heap_ptr[i];
+        heap_ptr[i] = NULL;
+      }
+    }
+  }
+
+
+  doLook("", CMD_LOOK);
+  addToMove(-10);
+  addToWait(combatRound(1));
+}
+
+void TBeing::doRoll(const char *arg)
+{
+  char caName[128], dir[128];
+  TBeing *v;
+  dirTypeT tdir;
+  unsigned int bits;
+  roomDirData *exitp;
+  TObj *o;
+  const char *syntax="Syntax : roll <object|person> <direction>\n\r";
+
+  two_arg(arg, caName, dir);
+
+  if (!*caName || !*dir) {
+    sendTo(syntax);
+    return;
+  }
+
+  bits = generic_find(caName, FIND_CHAR_ROOM | FIND_OBJ_ROOM, this, &v, &o);
+
+  if(!bits){
+    sendTo("You see nothing by that name to roll!\n\r");
+    sendTo(syntax);
+    return;
+  } else {
+    if (riding) {
+      sendTo("You have to dismount first.\n\r");
+      return;
+    }
+    if (!hasHands() || bothArmsHurt()) {
+      sendTo("You need working arms and hands to roll things.\n\r");
+      return;
+    }
+    if (getMove() < 20) {
+      sendTo("You don't have the necessary movement to roll anything!\n\r");
+      return;
+    }
+    tdir = getDirFromChar(dir);
+    if (tdir == DIR_NONE) {
+      sendTo("No such direction!\n\r");
+      sendTo(syntax);
+      return;
+    }
+    if (equipment[HOLD_LEFT] || equipment[HOLD_RIGHT]) {
+      sendTo("Roll something with your hands full!?!\n\r");
+      return;
+    }
+    if (isSwimming()) {
+      sendTo("You can't roll while swimming.\n\r");
+      return;
+    }
+  } 
+
+  exitp = exitDir(tdir);
+
+  if (!exit_ok(exitp, NULL) || IS_SET(exitp->condition, EX_CLOSED)) {
+    sendTo("You are blocked from rolling %s.\n\r", dirs[tdir]);
+    sendTo(syntax);
+    return;
+  }
+  if (!validMove(tdir)) 
+    return;
+  
+  if(bits==FIND_CHAR_ROOM){
+    doRoll(v, tdir);
+  } else if(bits==FIND_OBJ_ROOM){
+    doRoll(o, tdir);
+  } else {
+    // not reached
+    sendTo("You see nothing by that name to roll!\n\r");
+    sendTo(syntax);
+    return;
+  }
+
+  return;
+}
+

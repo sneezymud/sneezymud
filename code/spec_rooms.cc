@@ -1917,47 +1917,45 @@ int waterfallRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 int boulderRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
 {
   TRoom *rp;
-  TObj *to = NULL;
-  TThing *t = NULL, *t2 = NULL;
-  static int pulse;
+  TThing *t = NULL;
+  TThing *t2 = NULL;
+  TObj *rock;
   int found = 0;
+  static unsigned int pulse;
 
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
   ++pulse;
-  if(pulse%10)
+  if(pulse%150)
     return FALSE;
 
-  for (t = roomp->getStuff(); t; t = t2) {
+  for (t = roomp->getStuff();t;t = t2) {
     t2 = t->nextThing;
-    if(!(to=dynamic_cast<TObj *>(t)))
+    if (!(rock=dynamic_cast<TObj *>(t)))
       continue;
-    if(obj_index[to->getItemIndex()].virt == BOULDER_ITEM) {
+    if (obj_index[rock->getItemIndex()].virt == BOULDER_ITEM) {
       found = 1;
-      break;
-    }
-  }
-  for (t = roomp->getStuff(); t; t = t2) {
-    t2 = t->nextThing;
-    if(!(to=dynamic_cast<TObj *>(t)))
-      continue;
-    if (!(t2 = dynamic_cast<TObj *>(read_object(4181, VIRTUAL)))) {
-      found = 1;
+      //      vlogf(LOG_JESUS, "found assigned to 1");
       break;
     }
   }
 
-  if (!found) {
-    rp=real_roomp(4189);
-    REMOVE_BIT(rp->dir_option[DIR_DOWN]->condition, EX_CLOSED);
-  } else {
+  if (found == 1) {
+    //    vlogf(LOG_JESUS, "!found so closing exit - found = %d", found);
     rp=real_roomp(4189);
     SET_BIT(rp->dir_option[DIR_DOWN]->condition, EX_CLOSED);
+    rp=real_roomp(4284);
+    REMOVE_BIT(rp->dir_option[DIR_UP]->condition, EX_CLOSED);
+    return TRUE;
+  } else {
+    //    vlogf(LOG_JESUS, "found so opening exit - found = %d", found);
+    rp=real_roomp(4189);
+    REMOVE_BIT(rp->dir_option[DIR_DOWN]->condition, EX_CLOSED);
+    rp=real_roomp(4284);
+    REMOVE_BIT(rp->dir_option[DIR_UP]->condition, EX_CLOSED);
+    return TRUE;
   }
-  rp=real_roomp(4284);
-  REMOVE_BIT(rp->dir_option[DIR_UP]->condition, EX_CLOSED);
-  return TRUE;
 }
 
 

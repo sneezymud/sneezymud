@@ -1784,6 +1784,9 @@ class TBeing : public TThing {
     void doDrag(const char *);
     void doCommand(const char *);
     int doAssist(const char *, TBeing *, bool flags = FALSE);
+    void doRoll(TBeing *, dirTypeT);
+    void doRoll(TObj *, dirTypeT);
+    void doRoll(const char *);
     void doWimpy(const char *);
     void doEcho(const char *);
     void doHighfive(const char *);

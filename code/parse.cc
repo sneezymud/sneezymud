@@ -401,6 +401,9 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_DRAG:
           doDrag(newarg);
           break;
+        case CMD_MOVE:
+          doRoll(newarg);
+          break;
         case CMD_DISSECT:
           rc = doDissect(newarg);
 	  addToLifeforce(1);
@@ -503,7 +506,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_TWIST:
         case CMD_PRESS:
         case CMD_PUSH:
-        case CMD_MOVE:
         case CMD_SELL:
         case CMD_VALUE:
         case CMD_OFFER:
@@ -2695,6 +2697,7 @@ void buildCommandArray(void)
   commandArray[CMD_RMEMBER] = new commandInfo("rmember", POSITION_DEAD, 0);
   commandArray[CMD_HISTORY] = new commandInfo("history", POSITION_SLEEPING, 0);
   commandArray[CMD_DRAG] = new commandInfo("drag", POSITION_STANDING, 0);
+  commandArray[CMD_MOVE] = new commandInfo("move", POSITION_STANDING, 0);
   commandArray[CMD_MEDITATE] = new commandInfo("meditate", POSITION_RESTING, 0);
   commandArray[CMD_SCRATCH] = new commandInfo("scratch", POSITION_RESTING, 0);
   commandArray[CMD_CHEER] = new commandInfo("cheer", POSITION_RESTING, 0);
@@ -2723,7 +2726,6 @@ void buildCommandArray(void)
   commandArray[CMD_EXEC] = new commandInfo("exec", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_LOW] = new commandInfo("low", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_PUSH] = new commandInfo("push",POSITION_RESTING,0);
-  commandArray[CMD_MOVE] = new commandInfo("move",POSITION_RESTING,0);
   commandArray[CMD_RESIZE] = new commandInfo("resize",POSITION_RESTING,GOD_LEVEL1);
   commandArray[CMD_DISBAND] = new commandInfo("disband",POSITION_DEAD,0);
   commandArray[CMD_LIFT] = new commandInfo("lift",POSITION_CRAWLING,0);
