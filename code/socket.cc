@@ -172,42 +172,44 @@ void TSocket::addNewDescriptorsDuringBoot(string tStString)
 void doStocks(){
   MYSQL_RES *stockinfo_res;
   MYSQL_ROW stockinfo_row;
-  int rc;
-  float price, prevprice, volatility, uptrend, downtrend, range;
+  int rc, shop_nr, talens, shares;
+  float price, prevprice, amt;
 
-  if((rc=dbquery(TRUE, &stockinfo_res, "sneezy", "doStocks", "select ticker, price, prevprice, volatility, uptrend, downtrend from stockinfo"))){
+  if((rc=dbquery(TRUE, &stockinfo_res, "sneezy", "doStocks", "select si.shop_nr, si.talens, si.price, sum(so.shares) from stockinfo si left join stockowners so on si.ticker=so.ticker group by si.shop_nr"))){
     if(rc==-1)
       vlogf(LOG_BUG, "Database error in doStocks");
     return;
   }
 
   while((stockinfo_row=mysql_fetch_row(stockinfo_res))){
-    price=atof(stockinfo_row[1]);
-    prevprice=atof(stockinfo_row[2]);
-    volatility=atof(stockinfo_row[3]);
-    uptrend=atof(stockinfo_row[4]);
-    downtrend=atof(stockinfo_row[5]);
-
-    range=(::number(-100000, 100000))/100000.0; // -1 to 1, 5 digit precision
-    range *= volatility;
-
-    if(prevprice<price && range>0){
-      range *= uptrend;
-    } else if(prevprice>price && range<0){
-      range *= downtrend;
-    }
+    shop_nr=atoi(stockinfo_row[0]);
+    talens=atoi(stockinfo_row[1]);
+    price=atof(stockinfo_row[2]);
+    shares=atoi(stockinfo_row[3]);
 
     prevprice=price;
-    price+=range;
-    
-    if(price<0)
-      price=0;
+
+    amt=((float)talens/(10000.0+(float)shares))-price;
+    if(amt<0)
+      amt-=(amt*2);
+
+    if(amt>0.25)
+      amt=((float)::number(10,25)/100.0);
+
+    if(((float)talens/(10000.0+(float)shares))>price){
+      price+=amt;
+    } else if(((float)talens/(10000.0+(float)shares))<price){
+      price-=amt;
+    }
+
+    vlogf(LOG_PEEL, "%i: %f -> %f (%f)",
+	  shop_nr, prevprice, price, amt);
 
 
-    dbquery(TRUE, NULL, "sneezy", "doStocks2", "insert into stockhistory (ticker, price) values ('%s', %f)", stockinfo_row[0], price);
-    dbquery(TRUE, NULL, "sneezy", "doStocks3", "update stockinfo set price=%f, prevprice=%f where ticker='%s'", price, prevprice, stockinfo_row[0]);
+    dbquery(TRUE, NULL, "sneezy", "doStocks3", "update stockinfo set price=%f where shop_nr=%i", price, shop_nr);
 
-    //    vlogf(LOG_PEEL, "%s: %f -> %f (%f)", stockinfo_row[0], prevprice, price, range);
+
+    //    dbquery(TRUE, NULL, "sneezy", "doStocks2", "insert into stockhistory (ticker, price) values ('%s', %f)", stockinfo_row[0], price);
   }
 
 }

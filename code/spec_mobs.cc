@@ -6714,7 +6714,8 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
   if(cmd != CMD_LIST &&
      cmd != CMD_BUY &&
-     cmd != CMD_SELL)
+     cmd != CMD_SELL &&
+     cmd != CMD_VALUE)
     return FALSE;
 
   arg = one_argument(arg, buf2);
@@ -6748,7 +6749,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	myself->doTell(buf);
 
       } else {
-	if((rc=dbquery(FALSE, &res, "sneezy", "stockBroker(1)", "select ticker, price, description from stockinfo where upper('%s')=ticker", buf2))){
+	if((rc=dbquery(FALSE, &res, "sneezy", "stockBroker(1)", "select ticker, price from stockinfo where upper('%s')=ticker", buf2))){
 	  if(rc==-1)
 	    vlogf(LOG_BUG, "Database error in stockBroker");
 	  return FALSE;
@@ -6762,8 +6763,8 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	sprintf(buf, "%s, %s - %s talens per share.",
 		fname(ch->name).c_str(), row[0], row[1]);
 	myself->doTell(buf);
-	sprintf(buf, "%s, %s", fname(ch->name).c_str(), row[2]);
-	myself->doTell(buf);
+	//	sprintf(buf, "%s, %s", fname(ch->name).c_str(), row[2]);
+	//	myself->doTell(buf);
       }
     } else {
       // generic list
@@ -6823,7 +6824,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     else 
       return FALSE;
 
-    if((rc=dbquery(FALSE, &res, "sneezy", "stockBroker(2)", "select ticker, price from stockinfo where upper('%s')=ticker", buf2))){
+    if((rc=dbquery(FALSE, &res, "sneezy", "stockBroker(2)", "select ticker, price, talens from stockinfo where upper('%s')=ticker", buf2))){
       if(rc==-1)
 	vlogf(LOG_BUG, "Database error in stockBroker");
       return FALSE;
@@ -6837,7 +6838,10 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     // row[1] price
     // num amount to buy
 
-    if(ch->getMoney() < ((float)num*atof(row[1]))){
+    float modprice=atof(row[1])*(float)num;
+    modprice*=1.01;
+
+    if(ch->getMoney() < modprice){
       sprintf(buf, "%s, You can't afford that.", fname(ch->name).c_str());
       myself->doTell(buf);
       return TRUE;
@@ -6849,8 +6853,10 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       return TRUE;
     }
     
-    ch->addToMoney(-((float)num * atof(row[1])), GOLD_GAMBLE);
-    ch->addToMoney(-((float)num * atof(row[1]) * 0.10), GOLD_GAMBLE);
+    ch->addToMoney(-modprice, GOLD_GAMBLE);
+
+    dbquery(FALSE, &res, "sneezy", "stockBroker", "update stockinfo set talens=talens+%i", (int)(modprice/1.01));
+    
 
     if((rc=dbquery(FALSE, &res, "sneezy", "stockBroker(2)", "select 1 from stockowners where owner='%s' and ticker='%s'", ch->getName(), row[0]))){
       if(rc==-1 || !mysql_fetch_row(res)){
@@ -6860,9 +6866,8 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     
     dbquery(TRUE, &res, "sneezy", "stockBroker(4)", "update stockowners set shares=shares+%i where owner='%s' and ticker='%s'", num, ch->getName(), row[0]);
 
-    sprintf(buf, "%s, Ok, you just purchased %i shares of %s, for a price of %f, plus my 10%% commission of %f.",
-	    fname(ch->name).c_str(), num, row[0], (float)num * atof(row[1]),
-	    (float)num * atof(row[1]) * 0.10);
+    sprintf(buf, "%s, Ok, you just purchased %i shares of %s, for a price of %f.",
+	    fname(ch->name).c_str(), num, row[0], modprice);
     myself->doTell(buf);
 
     return TRUE;
@@ -6904,18 +6909,66 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     }
 
     ch->addToMoney(((float)num * atof(row[1])), GOLD_GAMBLE);
-    ch->addToMoney(-((float)num * atof(row[1]) * 0.10), GOLD_GAMBLE);
+
+    dbquery(FALSE, &res, "sneezy", "stockBroker", "update stockinfo set talens=talens-%i", (int)(((float)num * atof(row[1]))));
+    
+
     
     dbquery(FALSE, &res, "sneezy", "stockBroker(6)", "update stockowners set shares=shares-%i where owner='%s' and ticker='%s'",
 	    num, ch->getName(), row[0]);
 
-    sprintf(buf, "%s, Ok, you just sold %i shares of %s, for a price of %f, minus my 10%% commission of %f.",
+    sprintf(buf, "%s, Ok, you just sold %i shares of %s, for a price of %f, minus my 1%% commission of %f.",
 	    fname(ch->name).c_str(), num, row[0], (float)num * atof(row[1]),
-	    (float)num * atof(row[1]) * 0.10);
+	    (float)num * atof(row[1]) * 0.01);
     myself->doTell(buf);
     
     
     
+    return TRUE;
+  } else if(cmd==CMD_VALUE){
+    char tmpname[80] = "\0";
+    char *bptr=buf2;
+    
+    sscanf(bptr, "%d*%s", &num, tmpname);
+    if (tmpname[0] == '\0')
+      return FALSE;
+    if (num < 1)
+      num=0;
+
+    while (*bptr != '*')
+      bptr++;
+    
+    bptr++;
+
+    if(num)
+      strcpy(buf2, bptr);
+    else 
+      return FALSE;
+
+    if((rc=dbquery(FALSE, &res, "sneezy", "stockBroker(2)", "select ticker, price, talens from stockinfo where upper('%s')=ticker", buf2))){
+      if(rc==-1)
+	vlogf(LOG_BUG, "Database error in stockBroker");
+      return FALSE;
+    }
+    
+    if(!(row=mysql_fetch_row(res))){
+      return FALSE;
+    }
+
+    if(atof(row[1]) < 1){
+      sprintf(buf, "%s, Because of government regulations, I can't sell stock that is worth less than 1 talen per share.", fname(ch->name).c_str());
+      myself->doTell(buf);
+      return TRUE;
+    }
+
+    float modprice=atof(row[1]);
+    modprice*=1.01;
+
+    sprintf(buf, "%s, %i shares of %s would cost %i talens.",
+	    fname(ch->name).c_str(), num, row[0], (int)((float)num*modprice));
+
+    myself->doTell(buf);
+
     return TRUE;
   }
 

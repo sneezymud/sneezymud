@@ -442,7 +442,6 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       temp1->purchaseMe(ch, keeper, cost, shop_nr);
       // for unlimited items, charge the shopkeeper for production
       keeper->addToMoney(-obj_flags.cost, GOLD_SHOP);
-      
 
       ch->logItem(temp1, CMD_BUY);
       count++;
@@ -2552,6 +2551,16 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
     }
   }
   mysql_free_result(res);      
+
+  if(!strcmp(action, "buying")){
+    if((dbquery(TRUE, &res, "sneezy", "shop_keeper", "update stockinfo set talens=talens+%i where shop_nr=%i", (int)((float)cost*0.05), shop_nr))){
+      vlogf(LOG_BUG, "Database error in shop_keeper");
+    }
+  } else if(!strcmp(action, "selling")){
+    if((dbquery(TRUE, &res, "sneezy", "shop_keeper", "update stockinfo set talens=talens-%i where shop_nr=%i", (int)((float)cost*0.05), shop_nr))){
+      vlogf(LOG_BUG, "Database error in shop_keeper");
+    }
+  }
 
 }
 
