@@ -1,6 +1,10 @@
 #include "stdsneezy.h"
 #include "games.h"
 
+// this is a good example of how not to write code
+// no need to thank me - peel
+
+
 HoldemGame gHoldem;
 
 
@@ -235,6 +239,16 @@ void HoldemGame::showdown(TBeing *ch)
 	       winners.size()>1?"tie":"win", msg.c_str());
       act(buf, FALSE, players[winners[p]]->ch, 0, 0, TO_CHAR);
       payout(players[winners[p]]->ch, (int)(bet/winners.size()), last_bet);
+    }
+  }
+
+  for(i=1;i<MAX_HOLDEM_PLAYERS;++i){
+    if(players[i] && players[i]->ch && players[i]->ch->isPc()){
+      act("The button moves to $n.",
+	  FALSE, players[i]->ch, 0, 0, TO_ROOM);
+      act("The button moves to you.",
+	  FALSE, players[i]->ch, 0, 0, TO_CHAR);
+      break;
     }
   }
 
