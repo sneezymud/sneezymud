@@ -61,11 +61,11 @@ void doBlind(TBeing *ch, TBeing *vict, TObj *o)
   if (!::number(0, max(10, (int)(tWeap->weaponLevel() +
                                  (vict->GetMaxLevel() -
                                   ch->GetMaxLevel()))))) {
-    act("A Seering light shines from $p, blinding $N.",
+    act("A searing light shines from $p, blinding $N.",
         FALSE, ch, o, vict, TO_CHAR);
-    act("$n shields $s eyes as a seering light shines from $p, blinding $N.",
+    act("$n shields $s eyes as a searing light shines from $p, blinding $N.",
         FALSE, ch, o, vict, TO_NOTVICT);
-    act("The world goes white then black as a seering light shines from $n's $p.",
+    act("The world goes white then black as a searing light shines from $n's $p.",
         FALSE, ch, o, vict, TO_VICT);
 
     int       tDuration = (int)(tWeap->weaponLevel() * UPDATES_PER_MUDHOUR);

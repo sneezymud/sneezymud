@@ -869,7 +869,7 @@ int TBeing::doTell(const char *arg, bool visible)
   if (vict->desc && (vict->isPlayerAction(PLR_AFK) || (IS_SET(vict->desc->autobits, AUTO_AFK) && (vict->getTimer() >= 5)))) 
     act("$N appears to be away from $S terminal at the moment.", TRUE, this, 0, vict, TO_CHAR);
  
-  disturbMeditation(vict);
+  //  disturbMeditation(vict);
   return FALSE;
 }
 
