@@ -1194,7 +1194,8 @@ int chrism(TBeing *caster, TObj **obj, int, const char * name, byte bKnown)
       num = CHRISM_PRICE / obj_index[numberx].value;
     else
       num = 250;
-    num = min(25, ::number(1,num));
+    num = 1;
+    // only one at a time
 
     bool grabbed = false;
     for (i = 0; i < num; i++) {
