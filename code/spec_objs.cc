@@ -7060,7 +7060,7 @@ int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if(cmd != CMD_GENERIC_QUICK_PULSE && cmd != CMD_POINT)
     return false;
   
-  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+  if (!o || !(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
 
   if((cmd == CMD_GENERIC_QUICK_PULSE) && !::number(0,1)){
