@@ -1,19 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: actions.cc,v $
-// Revision 5.1  1999/10/16 04:43:45  batopr
-// new version
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
-//
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 //     "actions.cc" - All social functions and routines
@@ -115,22 +101,24 @@ class socialMessg {
     }
 };
 
-char *fread_action(FILE *fl)
+char *fread_action(FILE *fl) return rslt(NULL)
 {
-  char buf[MAX_STRING_LENGTH], *rslt;
+  char buf[MAX_STRING_LENGTH];
 
   for (;;) {
     fgets(buf, MAX_STRING_LENGTH, fl);
+
     if (feof(fl)) {
-      vlogf(10, "Fread_action - unexpected EOF.");
+      vlogf(LOG_FILE, "Fread_action - unexpected EOF.");
       exit(0);
     }
+
     if (*buf == '#')
-      return (0);
+      return NULL;
     else {
       *(buf + strlen(buf) - 1) = '\0';
       rslt = mud_str_dup(buf);
-      return (rslt);
+      return;
     }
   }
 }
@@ -147,11 +135,14 @@ void bootSocialMessages(void)
     perror("bootSocialMessages");
     exit(0);
   }
+
   for (;;) {
     fscanf(fl, " %s ", buf);
     cmdTypeT tmp = searchForCommandNum(buf);
+
     if (tmp >= MAX_CMD_LIST)
       break;
+
     fscanf(fl, " %d ", &hide);
     fscanf(fl, " %d \n", &min_pos);
 
@@ -187,13 +178,12 @@ void bootSocialMessages(void)
 }
 
 // returns DELETE_THIS
-int TBeing::doAction(const string & argument, cmdTypeT cmd)
+int TBeing::doAction(const string & argument, cmdTypeT cmd) return rc(0)
 {
   char buf[MAX_INPUT_LENGTH];
   TBeing *vict;
   TMonster *tmp = NULL;
   TThing *t, *t2;
-  int rc;
 
   if (fight() || riding) {
     switch(cmd) {
@@ -321,10 +311,12 @@ int TBeing::doAction(const string & argument, cmdTypeT cmd)
 
   map<int, socialMessg>::const_iterator CT;
   CT = soc_mess_list.find(cmd);
+
   if (CT == soc_mess_list.end()) {
     sendTo("That action is not supported.\n\r");
     return FALSE;
   }
+
   socialMessg action = CT->second;
 
   if (action.char_found)
@@ -371,12 +363,15 @@ int TBeing::doAction(const string & argument, cmdTypeT cmd)
         break;  
     }
   }
+
   if (!roomp)
     return FALSE;
+
   if (!*buf) {
     sendTo(action.char_no_arg);
     sendTo("\n\r");
     act(action.others_no_arg, action.hide, this, 0, 0, TO_ROOM);
+
     for (t = roomp->stuff; t; t = t2) {
       t2 = t->nextThing;
       tmp = dynamic_cast<TMonster *>(t);
@@ -384,33 +379,46 @@ int TBeing::doAction(const string & argument, cmdTypeT cmd)
         continue;
 
       rc = tmp->aiSocialSwitch(this, NULL, cmd, TARGET_NONE);
+
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete tmp;
         tmp = NULL;
       }
+
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return DELETE_THIS;
     }
+
     return FALSE;
   }
-  if (!(vict = get_char_room_vis(this, buf))) {
+
+  if ((vict = get_char_room_vis(this, buf, NULL, EXACT_YES))) {
+  } else if ((vict = get_char_room_vis(this, buf))) {
+  } else {
     sendTo(action.not_found);
     sendTo("\n\r");
-  } else if (vict == this) {
+    return FALSE;
+  }
+
+  if (vict == this) {
     sendTo(action.char_auto);
     sendTo("\n\r");
     act(action.others_auto, action.hide, this, 0, 0, TO_ROOM);
+
     for (t = roomp->stuff; t; t = t2) {
       t2 = t->nextThing;
       tmp = dynamic_cast<TMonster *>(t);
+
       if (!tmp)
         continue;
 
       rc = tmp->aiSocialSwitch(this, NULL, cmd, TARGET_SELF);
+
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete tmp;
         tmp = NULL;
       }
+
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return DELETE_THIS;
     }
@@ -420,14 +428,18 @@ int TBeing::doAction(const string & argument, cmdTypeT cmd)
     else {
       if (socialLimbBad(vict,cmd))
         return FALSE;
+
       act(action.char_found, 0, this, 0, vict, TO_CHAR);
       act(action.others_found, action.hide, this, 0, vict, TO_NOTVICT);
       act(action.vict_found, action.hide, this, 0, vict, TO_VICT);
+
       for (t = roomp->stuff; t; t = t2) {
         t2 = t->nextThing;
         tmp = dynamic_cast<TMonster *>(t);
+
         if (!tmp)
           continue;
+
         if (tmp == vict)
           rc = tmp->aiSocialSwitch(this, NULL, cmd, TARGET_MOB);
         else
@@ -437,11 +449,13 @@ int TBeing::doAction(const string & argument, cmdTypeT cmd)
           delete tmp;
           tmp = NULL;
         }
+
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_THIS;
       }
     } 
   }
+
   return FALSE;
 }
 
@@ -528,7 +542,7 @@ void TPool::peeMe(const TBeing *ch)
   act("$n smiles happily as $e pisses into $p.", TRUE, ch, this, NULL, TO_ROOM);
   act("You smile happily as you piss into $p.",  TRUE, ch, this, NULL, TO_CHAR); 
 
-  if(getDrinkType() == LIQ_WATER){
+  if (getDrinkType() == LIQ_WATER) {
     act("$e turns water to wine!", TRUE, ch, this, NULL, TO_ROOM);
     act("You turn water to wine!", TRUE, ch, this, NULL, TO_CHAR);
     setDrinkType(LIQ_RED_WINE);
@@ -543,7 +557,7 @@ void TBeing::doPee(const char *argument)
   TBeing *tmp_char;
   char arg[200], arg2[200], buf[200];
   int j, k;
-  liqTypeT liquid=MAX_DRINK_TYPES;
+  liqTypeT liquid=MAX_DRINK_TYPES, i;
 
   if (powerCheck(POWER_PEE))
     return;
@@ -553,15 +567,16 @@ void TBeing::doPee(const char *argument)
 
   only_argument(argument, arg);
 
-    liqTypeT i;
   for (i = MIN_DRINK_TYPES; i < MAX_DRINK_TYPES; i++) {
-    for (j = 0,k = 0;DrinkInfo[i]->name[j];++j){
+    for (j = 0,k = 0;DrinkInfo[i]->name[j];++j) {
       if (DrinkInfo[i]->name[j] == '<')
-	j+=3;
+	j += 3;
+
       buf[k] = DrinkInfo[i]->name[j];
       ++k;
     }
-    if (is_abbrev(arg, buf)){
+
+    if (is_abbrev(arg, buf)) {
       liquid = i;
       break;
     }
@@ -609,6 +624,24 @@ void TBeing::doPoint(const char *arg)
     return;
   }
 
+  // point in a direction
+  dirTypeT dir = getDirFromChar(arg);
+  if (dir != DIR_NONE) {
+    sendTo("You point %s%s%s%s.\n\r", 
+        buf ? "your " : "",
+        buf ? buf : "",
+        buf ? " " : "",
+        dirs_to_blank[dir]);
+    sprintf(holdBuf, "$n points %s%s%s%s.", 
+        buf ? "$s " : "",
+        buf ? buf : "",
+        buf ? " " : "",
+        dirs_to_blank[dir]);
+    act(holdBuf, false, this, NULL, NULL, TO_ROOM);
+    return;
+  }
+
+  // point at someone
   for (t = roomp->stuff; t; t = t->nextThing) {
     if (isname(arg, t->name)) {
       obj = dynamic_cast<TObj *>(t);
