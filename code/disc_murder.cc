@@ -902,17 +902,21 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
   int level;
   int duration;
   string s;
+  spellNumT skill=SKILL_POISON_ARROW;
 
+  if(ch->doesKnowSkill(SKILL_POISON_WEAPON))
+    skill=SKILL_POISON_WEAPON;
+    
   if (getDrinkUnits() <= 0) {
     act("$p seems not to have anything in it.",
        TRUE, ch, this, 0, TO_CHAR);
     return FALSE;
   }
-  level = ch->getSkillValue (SKILL_POISON_WEAPON) / 2;
-  int bKnown = ch->getSkillValue (SKILL_POISON_WEAPON);
+  level = ch->getSkillValue (skill) / 2;
+  int bKnown = ch->getSkillValue (skill);
 
   duration = (level << 2) * UPDATES_PER_MUDHOUR;
-  if (bSuccess(ch, bKnown, SKILL_POISON_WEAPON)) {
+  if (bSuccess(ch, bKnown, skill)) {
     for (j = 0; j < MAX_SWING_AFFECT; j++) {
       if (weapon->isPoisoned()) {
         ch->sendTo("That weapon is already affected by poison!\n\r");
@@ -929,7 +933,7 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
 	     DrinkInfo[getDrinkType()]->name);
     act(s.c_str(), FALSE, ch, weapon, NULL, TO_ROOM);
   } else {
-    if(critFail(ch, SKILL_POISON_WEAPON) != CRIT_F_NONE){
+    if(critFail(ch, skill) != CRIT_F_NONE){
       act("You slip up and cut yourself with $p!", 
 	  FALSE, ch, weapon, NULL, TO_CHAR);
       act("$n slips up and cuts $mself with $p!",
