@@ -132,6 +132,8 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
   if(gHoldem.getBetter() != hp)
     return false;
 
+
+
   int handval=gHoldem.handValue(hp);
   TObj *chip;
   vector <TObj *> chipl;
@@ -155,46 +157,58 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
     return false;
   }
 
+
   switch(gHoldem.getState()){
     case STATE_NONE:
       break;
     case STATE_DEAL:
-      if(handval > 15 && ::number(0,1)){
-	gHoldem.raise(me, "");
-	return true;
-      } else if((hp->hand[0]->getValAceHi() >= 10) &&
-		(hp->hand[1]->getValAceHi() >= 10)){
-	if(::number(0, 4)){
-	  me->doStay();
+      // if someone raised before the flop
+      if(gHoldem.getNRaises() > 1){
+	// if we have a couple of high cards, we'll call once in awhile
+	if((hp->hand[0]->getValAceHi() >= 10) &&
+	   (hp->hand[1]->getValAceHi() >= 10) && !::number(0,2)){
+	  gHoldem.call(me);
+	  return true;
+	} else if(handval > 15){
+	  // or if we have a pair we'll call
+	  gHoldem.call(me);
 	  return true;
 	} else {
-	  gHoldem.raise(me, "");
-	  return true;
+	  // but otherwise fold
+	  gHoldem.fold(me);
 	}
-      } else if(::number(0,2)){
-	gHoldem.call(me);
-	return true;
       }
+      
+      // by default we call to see the flop
+      gHoldem.call(me);
+      return true;
       break;
     case STATE_FLOP:
       if(handval > 30 && ::number(0,1)){
 	gHoldem.raise(me, "");
 	return true;
-      } else if(handval > 15 || !::number(0,4)){
+      } else if(handval > 15 || !::number(0,3)){
 	gHoldem.call(me);
 	return true;
       }
+      
+      // no hand, may as well fold
+      gHoldem.fold(me);
+      return true;
       break;
     case STATE_TURN:
     case STATE_RIVER:
-      if(handval > 45 && ::number(0,1))
+      if(handval > 45){
 	gHoldem.raise(me, "");
-      else if(handval > 15 || !::number(0,4))
+      } else if(handval > 15){
 	gHoldem.call(me);
-      else
+      } else {
 	gHoldem.fold(me);
+      }
+
       if(hpi->free_chips)
 	deleteChips(me);
+
       return true;
       break;
   }
