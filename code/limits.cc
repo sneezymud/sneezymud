@@ -10,6 +10,7 @@ extern "C" {
 #include "obj_food.h"
 #include "obj_bed.h"
 #include "obj_drinkcon.h"
+#include "obj_opal.h"
 
 #if 0
 static const sstring ClassTitles(const TBeing *ch)
@@ -155,6 +156,10 @@ short int TPerson::manaLimit() const
 
   if(hasQuestBit(TOG_PSIONICIST))
     iMax += getDiscipline(DISC_PSIONICS)->getLearnedness();
+
+  TOpal *stone = find_biggest_charged_powerstone(this);
+  if(stone)
+    iMax += stone->psGetMaxMana();
 
   iMax += points.maxMana;        /* bonus mana */
 
