@@ -64,6 +64,8 @@ TObj *catch_a_fish(TRoom *rp){
     fish->setVolume(fish->getWeight()*200);
   }
 
+  rp->setFished(rp->getFished()+1);
+
   return fish;
 }
 
@@ -190,7 +192,8 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
   
 	  if(bSuccess(ch, ch->getSkillValue(SKILL_FISHING), SKILL_FISHING) &&
 	     (catchchance<(baitchance+polechance)) &&
-	     (fish=catch_a_fish(rp))){
+	     (fish=catch_a_fish(rp)) &&
+	     (::number(5,10) > rp->getFished())){
             *ch += *fish;
 
 	    act("You reel in $p!",
@@ -202,6 +205,11 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 		FALSE, ch, NULL, 0, TO_CHAR);
 	    act("$n doesn't catch anything.",
 		TRUE, ch, NULL, 0, TO_ROOM);
+
+	    if(rp->getFished()>10){
+	      act("This place seems all fished out.",
+		  FALSE, ch, NULL, 0, TO_CHAR);
+	    }
 	  }
 	  ch->stopTask();
           break;

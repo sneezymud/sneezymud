@@ -1,30 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: spec_rooms.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.5  1999/10/07 17:46:13  batopr
-// dump now records money as GOLD_DUMP
-//
-// Revision 1.4  1999/10/07 14:29:13  batopr
-// Added statistics.cch
-//
-// Revision 1.3  1999/10/07 14:26:27  batopr
-// Made dump take global money modifiers into account
-//
-// Revision 1.2  1999/09/25 09:39:38  peel
-// Made the checks for monk green sash quest more lenient
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
@@ -73,7 +46,8 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   switch (rp->number) {
     case ROOM_KINDRED_INN:
     case ROOM_GREEN_DRAGON_INN:
-      if ((time_info.hours >= 38) && (time_info.hours <= 44)) {
+      // enter between 7PM and 10PM
+      if ((time_info.hours >= 19) && (time_info.hours <= 22)) {
         q = ::number(1, 2);
         for (i = 1; i <= q; i++) {
           if (::number(0,10))
@@ -92,7 +66,7 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     case ROOM_PEW3:
     case ROOM_PEW4:
       if (!((time_info.day + 1) % 7) &&  // on Sunday
-          (time_info.hours == 20)) {  // at 10
+          (time_info.hours == 10)) {  // at 10
         for (i = 1; i <= 8; i++) {
           if (::number(0,9))
             continue;
@@ -106,7 +80,8 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       }
       break;
     case ROOM_TOP_OF_TREE:
-      if ((time_info.month == 3) && (time_info.day == 3) && (time_info.hours == 24)) {
+      // april 4th at noon
+      if ((time_info.month == 3) && (time_info.day == 3) && (time_info.hours == 12)) {
         int rom = real_mobile(MOB_SONGBIRD);
         if (mob_index[rom].number > 100)
           break;
@@ -121,7 +96,7 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       }
       break;
     default:
-      vlogf(10, "Room %d has an oft_frequented_room() with no code for it.",
+      vlogf(LOG_PROC, "Room %d has an oft_frequented_room() with no code for it.",
                rp->number);
       break;
   }
@@ -190,16 +165,26 @@ int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   if (cmd == CMD_GENERIC_PULSE) {
     for (t = rp->stuff; t; t = t2) {
       t2 = t->nextThing;
-      if (!dynamic_cast<TObj *>(t))
-        continue;
-      if (dynamic_cast<TPortal *>(t))
-        continue;
-      sendrpf(rp, "A %s vanishes in a puff of smoke.\n\r", fname(t->name).c_str());
 
-      t->logMe(NULL, "Dump nuking");
+      // Only objs get nuked
+      TObj *obj = dynamic_cast<TObj *>(t);
+      if (!obj)
+        continue;
 
-      delete t;
-      t = NULL;
+      // portals should not be nuked
+      if (dynamic_cast<TPortal *>(obj))
+        continue;
+
+      // nor should flares
+      if (obj->objVnum() == GENERIC_FLARE)
+        continue;
+
+      sendrpf(rp, "A %s vanishes in a puff of smoke.\n\r", fname(obj->name).c_str());
+
+      obj->logMe(NULL, "Dump nuking");
+
+      delete obj;
+      obj = NULL;
     }
     return FALSE;
   } else if (cmd != CMD_DROP)
@@ -226,11 +211,11 @@ int dump(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     act("$n has been rewarded for good citizenship.", TRUE, ch, 0, 0, TO_ROOM);
 
     if (ch->GetMaxLevel() < 3)
-      gain_exp(ch, min(0.010, value/1000.0));
+      gain_exp(ch, min(0.010, value/1000.0), -1);
     else { 
       // take the global income modifier into account, in times of drought, we
       // don't want folks resorting to using the dump to get their money
-      value = (int) (value * gold_modifier[GOLD_INCOME]);
+      value = (int) (value * gold_modifier[GOLD_INCOME].getVal());
       ch->addToMoney(value, GOLD_DUMP);
     }
   }
@@ -345,7 +330,7 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
       FactionInfo[ch->getFaction()].faction_wealth += money;
       ch->addToMoney(-money, GOLD_TITHE);
       ch->sendTo("You withdraw %d talens from the faction treasury.\n\r", -money);
-      vlogf(-1, "%s tithe withdraw %d talens from %s", ch->getName(), -money, FactionInfo[ch->getFaction()].faction_name);
+      vlogf(LOG_SILENT, "%s tithe withdraw %d talens from %s", ch->getName(), -money, FactionInfo[ch->getFaction()].faction_name);
       return TRUE;
     } else if (money < 0) {
       ch->sendTo("Only a faction's leader may withdraw from the faction's treasury.\n\r");
@@ -362,7 +347,7 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
       FactionInfo[ch->getFaction()].faction_wealth += money;
       ch->addToMoney(-money, GOLD_TITHE);
       ch->sendTo("You tithe %d talen%s to the faction treasury.\n\r", money, (money == 1 ? "" : "s"));
-      vlogf(-1, "%s tithe deposit %d talens to %s", ch->getName(), money, FactionInfo[ch->getFaction()].faction_name);
+      vlogf(LOG_SILENT, "%s tithe deposit %d talens to %s", ch->getName(), money, FactionInfo[ch->getFaction()].faction_name);
       ch->sendTo("Your deities thank you.\n\r");
       return TRUE;
     }
@@ -413,7 +398,6 @@ int Donation(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   return FALSE;
 }
 
-
 int pools_of_chaos_and_cleansing(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
 {
   int rc;
@@ -445,7 +429,7 @@ int pools_of_chaos_and_cleansing(TBeing *ch, cmdTypeT cmd, const char *arg, TRoo
 	ch->sendTo("As you step into the pool, you feel your vision disappear.\n\r");
 	act("$n looks around blindly as $e steps into the pool.", TRUE, ch, NULL, NULL, TO_ROOM);
 
-        ch->rawBlind(50, 25 * UPDATES_PER_TICK, SAVE_YES);
+        ch->rawBlind(50, 24 * UPDATES_PER_MUDHOUR, SAVE_YES);
 	return TRUE;
       case 3:
 	ch->sendTo("As you step into the pool, you feel yourself magically moved.\n\r");
@@ -896,7 +880,7 @@ int wierdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   TObj *obj;
 
   if (mobnum < 0) {
-    vlogf(5, "Bogus mob specified in wierdCircle.");
+    vlogf(LOG_PROC, "Bogus mob specified in wierdCircle.");
     return FALSE;
   }
 
@@ -907,7 +891,7 @@ int wierdCircle(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         return FALSE;   // already loaded
 
       if (!(mob = read_mobile(mobnum, REAL))) {
-        vlogf(9, "bad load of mob in wierdCircle");
+        vlogf(LOG_PROC, "bad load of mob in wierdCircle");
         return FALSE;
       }
       *rp += *mob;
@@ -1098,7 +1082,7 @@ int genericSlide(TThing *t, TRoom *rp)
       thing_to_room(t, 20594);
       break;
     default:
-      vlogf(5, "Bogus room for generic slide %d", rp->number);
+      vlogf(LOG_PROC, "Bogus room for generic slide %d", rp->number);
       thing_to_room(t, ROOM_VOID);
   }
 
@@ -1178,7 +1162,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
   if (ch && cmd < MAX_CMD_LIST) {
     if (rp->number != ch->in_room) {
-      vlogf(5,"char %s not in proper room (SecretPortalDoors)",ch->getName());
+      vlogf(LOG_PROC,"char %s not in proper room (SecretPortalDoors)",ch->getName());
       return FALSE;
     }
     one_argument(arg,buf);
@@ -1200,7 +1184,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       }
 
       if (!(portal = read_object(OBJ_MINELIFT_DOWN, VIRTUAL))) {
-        vlogf(5, "Problem loading object in SecretPortal. (%d)", OBJ_MINELIFT_DOWN);
+        vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", OBJ_MINELIFT_DOWN);
         ch->sendTo("Serious problem, contact a god.\n\r");
         return FALSE;
       }
@@ -1232,14 +1216,14 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     case 7268:
       if (cmd == CMD_GENERIC_PULSE) {
         // automatic shift change at 6AM and 6PM
-        if (time_info.hours != 12 && time_info.hours != 36)
+        if (time_info.hours != 6 && time_info.hours != 18)
           return FALSE;
 
         if (obj_index[real_object(7214)].number)
           return TRUE;
   
         if (!(portal = read_object(7214, VIRTUAL))) {
-          vlogf(5, "Problem loading object in SecretPortal. (%d)", 7214);
+          vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", 7214);
           ch->sendTo("Serious problem, contact a god.\n\r");
           return FALSE;
         }
@@ -1248,7 +1232,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
         // load into other room
         if (!(portal = read_object(7215, VIRTUAL))) {
-          vlogf(5, "Problem loading object in SecretPortal. (%d)", 7215);
+          vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", 7215);
           ch->sendTo("Serious problem, contact a god.\n\r");
           return FALSE;
         }
@@ -1271,7 +1255,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         act("$n lowers the drawbridge.", false, ch, 0, 0, TO_ROOM);
 
         if (!(portal = read_object(rob, REAL))) {
-          vlogf(5, "Problem loading object in SecretPortal. (%d)", 7214);
+          vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", 7214);
           ch->sendTo("Serious problem, contact a god.\n\r");
           return FALSE;
         }
@@ -1279,7 +1263,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
         // load into other room
         if (!(portal = read_object(7215, VIRTUAL))) {
-          vlogf(5, "Problem loading object in SecretPortal. (%d)", 7215);
+          vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", 7215);
           ch->sendTo("Serious problem, contact a god.\n\r");
           return FALSE;
         }
@@ -1343,7 +1327,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       }
 
       if (!(portal = read_object(OBJ_MINELIFT_UP, VIRTUAL))) {
-        vlogf(5, "Problem loading object in SecretPortal. (%d)", OBJ_MINELIFT_DOWN);
+        vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", OBJ_MINELIFT_DOWN);
         ch->sendTo("Serious problem, contact a god.\n\r");
         return FALSE;
       }
@@ -1430,7 +1414,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       }
 
       if (!(portal = read_object(OBJ_FLAMING_PORTAL, VIRTUAL))) {
-        vlogf(5, "Problem loading object in SecretPortal. (%d)", OBJ_FLAMING_PORTAL);
+        vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", OBJ_FLAMING_PORTAL);
         ch->sendTo("Serious problem, contact a god.\n\r");
         return FALSE;
       }
@@ -1452,14 +1436,19 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     return FALSE;
 
   if(rp->number>=13755 && rp->number<=13771){
-    switch((time_info.hours/2)%12){
+    switch((time_info.hours)%12){
       case 0:
 	if(rp->getSectorType()!=SECT_TEMPERATE_RIVER_SURFACE){
 	  // send message here
 	  rp->setSectorType(SECT_TEMPERATE_RIVER_SURFACE);
 	}
 	break;
-      case 1: case 2: case 3: case 4: case 5: case 6:
+      case 1: 
+      case 2: 
+      case 3: 
+      case 4: 
+      case 5: 
+      case 6:
 	if(rp->getSectorType()!=SECT_TEMPERATE_UNDERWATER){
 	  // send message here
 	  rp->setSectorType(SECT_TEMPERATE_UNDERWATER);
@@ -1471,7 +1460,10 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	  rp->setSectorType(SECT_TEMPERATE_RIVER_SURFACE);
 	}
 	break;
-      case 8: case 9: case 10: case 11:
+      case 8: 
+      case 9: 
+      case 10: 
+      case 11:
 	if(rp->getSectorType()!=SECT_TEMPERATE_CAVE){
 	  // send message here
 	  rp->setSectorType(SECT_TEMPERATE_CAVE);
@@ -1479,14 +1471,17 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	break;
     }
   } else if(rp->number>=13738 && rp->number<=13754){
-    switch((time_info.hours/2)%12){
+    switch((time_info.hours)%12){
       case 1:
 	if(rp->getSectorType()!=SECT_TEMPERATE_RIVER_SURFACE){
 	  //send message here
 	  rp->setSectorType(SECT_TEMPERATE_RIVER_SURFACE);
 	}
 	break;
-      case 2: case 3: case 4: case 5:
+      case 2: 
+      case 3: 
+      case 4: 
+      case 5:
 	if(rp->getSectorType()!=SECT_TEMPERATE_UNDERWATER){
 	  // send message here
 	  rp->setSectorType(SECT_TEMPERATE_UNDERWATER);
@@ -1498,7 +1493,12 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	  rp->setSectorType(SECT_TEMPERATE_RIVER_SURFACE);
 	}
 	break;
-      case 7: case 8: case 9: case 10: case 11: case 0:
+      case 7: 
+      case 8: 
+      case 9: 
+      case 10: 
+      case 11: 
+      case 0:
 	if(rp->number<13740 &&
 	   rp->getSectorType()!=SECT_TEMPERATE_ATMOSPHERE){
 	  //send message here
@@ -1512,7 +1512,7 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     }
     return FALSE;
   } else if(rp->number==13773){
-    switch((time_info.hours/2)%12){
+    switch((time_info.hours)%12){
       case 2:
 	if(rp->getSectorType()!=SECT_TEMPERATE_RIVER_SURFACE){
 	  //send message here
@@ -1528,7 +1528,7 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     }
     return FALSE;
   } else if(rp->number==13772){
-    switch((time_info.hours/2)%12){
+    switch((time_info.hours)%12){
       case 2:
 	if(rp->getSectorType()!=SECT_TEMPERATE_RIVER_SURFACE){
 	  //send message here
@@ -1550,7 +1550,7 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     }
     return FALSE;
   } else if(rp->number==13731){
-    switch((time_info.hours/2)%12){
+    switch((time_info.hours)%12){
       case 3:
 	if(rp->getSectorType()!=SECT_TEMPERATE_RIVER_SURFACE){
 	  //send message here
@@ -1572,8 +1572,10 @@ int duergarWater(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
 int monkQuestProcLand(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
 {
+#if 0
   TMonster *tmon;
   TThing *t=NULL;
+#endif
 
   if(cmd!=CMD_ROOM_ENTERED)
     return FALSE;
@@ -1621,6 +1623,34 @@ int monkQuestProcFall(TBeing *ch, cmdTypeT cmd, const char *, TRoom *rp)
   return TRUE;
 }
 
+
+int BankTeleporter(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
+{
+  TBeing *mob, *boss;
+  int i=0;
+
+  if(cmd != CMD_GENERIC_PULSE || ::number(0,300))
+    return FALSE;
+
+
+  if(!isEmpty(223)){
+    boss = read_mobile(31753, VIRTUAL);
+    *rp += *boss;
+    SET_BIT(boss->specials.affectedBy, AFF_GROUP);
+
+    for(i=0;i<4;++i){
+      mob = read_mobile(31753+::number(0,3), VIRTUAL);
+      *rp += *mob;
+      boss->addFollower(mob);
+      SET_BIT(mob->specials.affectedBy, AFF_GROUP);
+    }
+  }
+
+
+  return TRUE;
+}
+
+
 extern int healing_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
 extern int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
 extern int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp);
@@ -1647,6 +1677,7 @@ void assign_rooms(void)
     {758, oft_frequented_room},
     {761, oft_frequented_room},
     {763, oft_frequented_room},
+    {774, SecretDoors},     // twist-lid for 2nd Floor Cathedral trapdoor
     {1295, bank},
     {1353, healing_room},
     {1385, dump},
@@ -1665,8 +1696,12 @@ void assign_rooms(void)
     {7266, SecretPortalDoors},
     {7268, SecretPortalDoors},
     {8756, bank},
+    {9050, SecretDoors},      // GH Cathedral Expansion secret doors
+    {9064, SecretDoors},
     {9390, SecretDoors},      // badlands brush
     {9391, SecretDoors},
+    {9581, SecretDoors},      // bandit camp doors
+    {9582, SecretDoors},
     {10020, monkQuestProcLand},
     {10111, SecretDoors},     // Batopr-elf doors
     {10144, SecretDoors},
@@ -1752,6 +1787,8 @@ void assign_rooms(void)
     {13773, duergarWater},
     {14152, SecretDoors},
     {14153, SecretDoors},
+    {14296, SecretDoors},
+    {14299, SecretDoors},
     {14302, SecretDoors},
     {14319, SecretDoors},
     {15257, SecretDoors},
@@ -1766,6 +1803,208 @@ void assign_rooms(void)
     {20593, slide},
     {20594, slide},
     {20597, slide},
+    {23400, sleepTagRoom},
+    {23401, sleepTagRoom},
+    {23402, sleepTagRoom},
+    {23403, sleepTagRoom},
+    {23404, sleepTagRoom},
+    {23405, sleepTagRoom},
+    {23406, sleepTagRoom},
+    {23407, sleepTagRoom},
+    {23408, sleepTagRoom},
+    {23409, sleepTagRoom},
+    {23410, sleepTagRoom},
+    {23411, sleepTagRoom},
+    {23412, sleepTagRoom},
+    {23413, sleepTagRoom},
+    {23414, sleepTagRoom},
+    {23415, sleepTagRoom},
+    {23416, sleepTagRoom},
+    {23417, sleepTagRoom},
+    {23418, sleepTagRoom},
+    {23419, sleepTagRoom},
+    {23420, sleepTagRoom},
+    {23421, sleepTagRoom},
+    {23422, sleepTagRoom},
+    {23423, sleepTagRoom},
+    {23424, sleepTagRoom},
+    {23425, sleepTagRoom},
+    {23426, sleepTagRoom},
+    {23427, sleepTagRoom},
+    {23428, sleepTagRoom},
+    {23429, sleepTagRoom},
+    {23430, sleepTagRoom},
+    {23431, sleepTagRoom},
+    {23432, sleepTagRoom},
+    {23433, sleepTagRoom},
+    {23434, sleepTagRoom},
+    {23435, sleepTagRoom},
+    {23436, sleepTagRoom},
+    {23437, sleepTagRoom},
+    {23438, sleepTagRoom},
+    {23439, sleepTagRoom},
+    {23440, sleepTagRoom},
+    {23441, sleepTagRoom},
+    {23442, sleepTagRoom},
+    {23443, sleepTagRoom},
+    {23444, sleepTagRoom},
+    {23445, sleepTagRoom},
+    {23446, sleepTagRoom},
+    {23447, sleepTagRoom},
+    {23448, sleepTagRoom},
+    {23449, sleepTagRoom},
+    {23450, sleepTagRoom},
+    {23451, sleepTagRoom},
+    {23452, sleepTagRoom},
+    {23453, sleepTagRoom},
+    {23454, sleepTagRoom},
+    {23455, sleepTagRoom},
+    {23456, sleepTagRoom},
+    {23457, sleepTagRoom},
+    {23458, sleepTagRoom},
+    {23459, sleepTagRoom},
+    {23460, sleepTagRoom},
+    {23461, sleepTagRoom},
+    {23462, sleepTagRoom},
+    {23463, sleepTagRoom},
+    {23464, sleepTagRoom},
+    {23465, sleepTagRoom},
+    {23466, sleepTagRoom},
+    {23467, sleepTagRoom},
+    {23468, sleepTagRoom},
+    {23469, sleepTagRoom},
+    {23470, sleepTagRoom},
+    {23471, sleepTagRoom},
+    {23472, sleepTagRoom},
+    {23473, sleepTagRoom},
+    {23474, sleepTagRoom},
+    {23475, sleepTagRoom},
+    {23476, sleepTagRoom},
+    {23477, sleepTagRoom},
+    {23478, sleepTagRoom},
+    {23479, sleepTagRoom},
+    {23480, sleepTagRoom},
+    {23481, sleepTagRoom},
+    {23482, sleepTagRoom},
+    {23483, sleepTagRoom},
+    {23484, sleepTagRoom},
+    {23485, sleepTagRoom},
+    {23486, sleepTagRoom},
+    {23487, sleepTagRoom},
+    {23488, sleepTagRoom},
+    {23489, sleepTagRoom},
+    {23490, sleepTagRoom},
+    {23491, sleepTagRoom},
+    {23492, sleepTagRoom},
+    {23493, sleepTagRoom},
+    {23494, sleepTagRoom},
+    {23495, sleepTagRoom},
+    {23496, sleepTagRoom},
+    {23497, sleepTagRoom},
+    {23498, sleepTagRoom},
+    {23499, sleepTagRoom},
+    {23500, sleepTagRoom},
+    {23501, sleepTagRoom},
+    {23502, sleepTagRoom},
+    {23503, sleepTagRoom},
+    {23504, sleepTagRoom},
+    {23505, sleepTagRoom},
+    {23506, sleepTagRoom},
+    {23507, sleepTagRoom},
+    {23508, sleepTagRoom},
+    {23509, sleepTagRoom},
+    {23510, sleepTagRoom},
+    {23511, sleepTagRoom},
+    {23512, sleepTagRoom},
+    {23513, sleepTagRoom},
+    {23514, sleepTagRoom},
+    {23515, sleepTagRoom},
+    {23516, sleepTagRoom},
+    {23517, sleepTagRoom},
+    {23518, sleepTagRoom},
+    {23519, sleepTagRoom},
+    {23520, sleepTagRoom},
+    {23521, sleepTagRoom},
+    {23522, sleepTagRoom},
+    {23523, sleepTagRoom},
+    {23524, sleepTagRoom},
+    {23525, sleepTagRoom},
+    {23526, sleepTagRoom},
+    {23527, sleepTagRoom},
+    {23528, sleepTagRoom},
+    {23529, sleepTagRoom},
+    {23530, sleepTagRoom},
+    {23531, sleepTagRoom},
+    {23532, sleepTagRoom},
+    {23533, sleepTagRoom},
+    {23534, sleepTagRoom},
+    {23535, sleepTagRoom},
+    {23536, sleepTagRoom},
+    {23537, sleepTagRoom},
+    {23538, sleepTagRoom},
+    {23539, sleepTagRoom},
+    {23540, sleepTagRoom},
+    {23541, sleepTagRoom},
+    {23542, sleepTagRoom},
+    {23543, sleepTagRoom},
+    {23544, sleepTagRoom},
+    {23545, sleepTagRoom},
+    {23546, sleepTagRoom},
+    {23547, sleepTagRoom},
+    {23548, sleepTagRoom},
+    {23549, sleepTagRoom},
+    {23550, sleepTagRoom},
+    {23551, sleepTagRoom},
+    {23552, sleepTagRoom},
+    {23553, sleepTagRoom},
+    {23554, sleepTagRoom},
+    {23555, sleepTagRoom},
+    {23556, sleepTagRoom},
+    {23557, sleepTagRoom},
+    {23558, sleepTagRoom},
+    {23559, sleepTagRoom},
+    {23560, sleepTagRoom},
+    {23561, sleepTagRoom},
+    {23562, sleepTagRoom},
+    {23563, sleepTagRoom},
+    {23564, sleepTagRoom},
+    {23565, sleepTagRoom},
+    {23566, sleepTagRoom},
+    {23567, sleepTagRoom},
+    {23568, sleepTagRoom},
+    {23569, sleepTagRoom},
+    {23570, sleepTagRoom},
+    {23571, sleepTagRoom},
+    {23572, sleepTagRoom},
+    {23573, sleepTagRoom},
+    {23574, sleepTagRoom},
+    {23575, sleepTagRoom},
+    {23576, sleepTagRoom},
+    {23577, sleepTagRoom},
+#if 0
+    {23578, sleepTagRoom},
+    {23579, sleepTagRoom},
+    {23580, sleepTagRoom},
+    {23581, sleepTagRoom},
+    {23582, sleepTagRoom},
+    {23583, sleepTagRoom},
+    {23584, sleepTagRoom},
+    {23585, sleepTagRoom},
+    {23586, sleepTagRoom},
+    {23587, sleepTagRoom},
+    {23588, sleepTagRoom},
+    {23589, sleepTagRoom},
+    {23590, sleepTagRoom},
+    {23591, sleepTagRoom},
+    {23592, sleepTagRoom},
+    {23593, sleepTagRoom},
+    {23594, sleepTagRoom},
+    {23595, sleepTagRoom},
+    {23596, sleepTagRoom},
+    {23597, sleepTagRoom},
+    {23598, sleepTagRoom},
+#endif
+    {23599, sleepTagControl},
     {27103, SecretDoors},
     {27104, SecretDoors},
     {27106, SecretDoors},
@@ -1796,6 +2035,7 @@ void assign_rooms(void)
     {27306, SecretDoors},
     {27828, SecretDoors},
     {27890, SecretDoors},
+    {31784, BankTeleporter},
     {-1, NULL},
   };
 
@@ -1808,6 +2048,6 @@ void assign_rooms(void)
       rp->funct = specials[i].proc;
       roomspec_db.push_back(rp);
     } else
-      vlogf(10, "assign_rooms: unknown room (%d)", specials[i].vnum);
+      vlogf(LOG_PROC, "assign_rooms: unknown room (%d)", specials[i].vnum);
   }
 }

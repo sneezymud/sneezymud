@@ -1237,7 +1237,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           rc = doJunk(newarg, dynamic_cast<TObj *>(vict));
           break;
 	case CMD_NOJUNK:
-	  rc = doNoJunk(newarg, dynamic_cast<TObj *>(vict));
+	  //	  rc = doNoJunk(newarg, dynamic_cast<TObj *>(vict));
 	  break;
         case CMD_KICK:
           rc = doKick(newarg, dynamic_cast<TBeing *>(vict));

@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: room.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -200,8 +192,16 @@ class TRoom : public TThing {
     int roomHeight;         // room height
     unsigned int roomFlags; // Bitvector os flags for room
     long descPos;           // File offset for the description.
+    int x, y, z;            // x,y,z location in the world
+    ubyte fished;           // how fished out the room is
 
   public:
+    TThing *tBornInsideMe;  // List of mobs born inside me.
+
+    void operator << (      TThing &); // Add a mob to the born list.
+    bool operator |= (const TThing &); // See if a mob is on the born list.
+    void operator >> (const TThing &); // Remove mob from the born list.
+
 //    WeatherStuff weather;   // not ready yet - bat
     roomDirData *dir_option[MAX_DIR]; // Exits
 
@@ -215,6 +215,7 @@ class TRoom : public TThing {
     void setDescr(long, char *);
     const char * getDescr();
 
+    virtual int chiMe(TBeing *);
     int checkPointroll();
     virtual void sendTo(colorTypeT, const char *, ...) const;
     virtual void sendTo(const char *, ...) const;
@@ -222,6 +223,7 @@ class TRoom : public TThing {
     void loadOne(FILE *, bool);
     void colorRoom(int, int);
     string daynightColorRoom() const;
+    virtual int getLight();
     void initLight();
     void initWeather();
     void updateWeather();
@@ -285,6 +287,31 @@ class TRoom : public TThing {
     unsigned int getRoomFlags() const {
       return roomFlags;
     }
+    int getXCoord() const {
+      return x;
+    }
+    int getYCoord() const {
+      return y;
+    }
+    int getZCoord() const {
+      return z;
+    }
+    void setXCoord(int newx) {
+      x=newx;
+    }
+    void setYCoord(int newy) {
+      y=newy;
+    }
+    void setZCoord(int newz) {
+      z=newz;
+    }
+    int getFished() const {
+      return fished;
+    }
+    void setFished(int newfished) {
+      fished=newfished;
+    }
+
 
     bool isCitySector() const;
     bool isRoadSector() const;
