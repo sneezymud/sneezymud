@@ -98,13 +98,13 @@ const char *TTrophy::getExpModDescr(float count)
 }
 
 // this function is a little messy, I apologize
-void TBeing::doTrophy(const char *arg)
+void TBeing::doTrophy(const string arg)
 {
   int mcount=0, vnum, header=0, zcount=0, bottom=0, zcountt=0;
-  int zonesearch=0, processrow=1, summary=0;
+  int zonesearch=0, processrow=1;
+  bool summary=false;
   float count;
-  char buf[256];
-  string sb;
+  string buf, sb, arg1, arg2;
   unsigned int zone;
 
   if(!isPc()){
@@ -114,18 +114,17 @@ void TBeing::doTrophy(const char *arg)
 
   TTrophy trophy(getName());
 
+  argument_parser(arg, arg1, arg2);
 
-  for (; isspace(*arg); arg++);
-
-  if(!strncmp(arg, "zone", 4)){
-    if(arg[4]){
-      for (; !isspace(*arg); arg++);
+  if(arg1=="zone"){
+    if(!arg2.empty()){
+      arg1=arg2;
       zonesearch=-1;
     } else {
       zonesearch=roomp->getZoneNum();
     }
-  } else if(!strncmp(arg, "summary", 7)){
-    summary=1;
+  } else if(arg1=="summary"){
+    summary=true;
   }
 
   TDatabase db("sneezy");
@@ -163,20 +162,20 @@ void TBeing::doTrophy(const char *arg)
       }
 
       if(zonesearch==-1){
-	if(*arg && !isname(arg, zd.name))
+	if(!isname(arg1, zd.name))
 	  continue;
       } else if(zonesearch>0){
 	if(zonesearch!=zd.zone_nr)
 	  continue;
       } else if(!summary){
-	if(*arg && !isname(arg, mob_index[rnum].name))
+	if(!isname(arg1, mob_index[rnum].name))
 	  continue;
       }
 
       // print the zone header if we haven't already
       // we do it here, so we can prevent printing headers for empty zones
       if(!header){
-	sprintf(buf, "\n--%s\n", zd.name);
+	ssprintf(buf, "\n--%s\n", zd.name);
 	sb += buf; 
 	header=1;
       }
@@ -184,7 +183,7 @@ void TBeing::doTrophy(const char *arg)
       count=atof_safe(db.getColumn(1));
 
       if(!summary){
-	sprintf(buf, "You will gain %s experience when fighting %s.\n\r", 
+	ssprintf(buf, "You will gain %s experience when fighting %s.\n\r", 
 		trophy.getExpModDescr(count),
 		mob_index[rnum].short_desc);
 	sb += buf;
@@ -198,7 +197,7 @@ void TBeing::doTrophy(const char *arg)
 
     // we have some mobs for this zone, so do some tallies
     if(header){
-      sprintf(buf, "Total mobs: %i\n\r", zcount);
+      ssprintf(buf, "Total mobs: %i\n\r", zcount);
       sb += buf;
 
       unsigned int objnx;
@@ -209,7 +208,7 @@ void TBeing::doTrophy(const char *arg)
 	}
       }
 
-      sprintf(buf, "You have killed %1.2f%% of mobs in this zone.\n\r",((float)((float)zcount/(float)zcountt)*100.0));
+      ssprintf(buf, "You have killed %1.2f%% of mobs in this zone.\n\r",((float)((float)zcount/(float)zcountt)*100.0));
       sb += buf;
     }
 
@@ -232,10 +231,10 @@ void TBeing::doTrophy(const char *arg)
 
 
 
-  sprintf(buf, "\n--\nTotal mobs: %i\n\r", mcount);
+  ssprintf(buf, "\n--\nTotal mobs: %i\n\r", mcount);
   sb += buf;
   if(mcount>0){
-    sprintf(buf, "You have killed %1.2f%% of all mobs.\n\r",((float)((float)mcount/(float)activemobcount)*100.0));
+    ssprintf(buf, "You have killed %1.2f%% of all mobs.\n\r",((float)((float)mcount/(float)activemobcount)*100.0));
     sb += buf;
   }
 
