@@ -140,6 +140,7 @@ endif
 # postgresql database lib
 #LDFLAGS +=-lpq++
 # mysql database lib
+LDFLAGS +=-L/home/oldspasm/usr/lib
 LDFLAGS +=-lmysqlclient
 
 ###############################################################################
