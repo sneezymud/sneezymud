@@ -5440,8 +5440,8 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
 
   i=1;
   while((row=mysql_fetch_row(res))){
-    ch->sendTo(COLOR_BASIC, "%i) %s has lost %s talens.\n\r", 
-	       i, row[0], row[1]);
+    ch->sendTo(COLOR_BASIC, "%i) %s has lost %i talens.\n\r", 
+	       i, row[0], abs(atoi(row[1])));
     ++i;
   }
 
