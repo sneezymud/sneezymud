@@ -371,7 +371,14 @@ enum spellNumT {
      SKILL_BLUR,
      SKILL_HURL,
      SKILL_SHOULDER_THROW,
-  
+     SKILL_IRON_FIST,
+     SKILL_IRON_FLESH,
+     SKILL_IRON_SKIN,
+     SKILL_IRON_BONES,
+     SKILL_IRON_MUSCLES,
+     SKILL_IRON_LEGS,
+     SKILL_IRON_WILL,
+
      // end of monk
      // start of thief
 

@@ -1523,6 +1523,13 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_MIND_PRESERVATION:
       case SKILL_TELEKINESIS:
       case SKILL_MANA:
+      case SKILL_IRON_FIST:
+      case SKILL_IRON_FLESH:
+      case SKILL_IRON_SKIN:
+      case SKILL_IRON_BONES:
+      case SKILL_IRON_MUSCLES:
+      case SKILL_IRON_LEGS:
+      case SKILL_IRON_WILL:
 #if 1
       case SPELL_EARTHMAW:
       case SPELL_CREEPING_DOOM:

@@ -2491,6 +2491,13 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SKILL_MIND_PRESERVATION:
     case SKILL_TELEKINESIS:
     case SKILL_MANA:
+    case SKILL_IRON_FIST:
+    case SKILL_IRON_FLESH:
+    case SKILL_IRON_SKIN:
+    case SKILL_IRON_BONES:
+    case SKILL_IRON_MUSCLES:
+    case SKILL_IRON_LEGS:
+    case SKILL_IRON_WILL:
         sendTo("Spell or discipline not yet implemented!\n\r");
         return FALSE;
   }

@@ -1621,6 +1621,13 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_KINETIC_WAVE:
       case SKILL_MIND_PRESERVATION:
       case SKILL_TELEKINESIS:
+      case SKILL_IRON_FIST:
+      case SKILL_IRON_FLESH:
+      case SKILL_IRON_SKIN:
+      case SKILL_IRON_BONES:
+      case SKILL_IRON_MUSCLES:
+      case SKILL_IRON_LEGS:
+      case SKILL_IRON_WILL:
         forceCrash("BOGUS AFFECT (%d) on %s.", aff->type, ch->getName());
         ch->affectRemove(aff);
         break;

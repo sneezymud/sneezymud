@@ -16,6 +16,7 @@
 #include "disc_defense.h"
 #include "disc_mounted.h"
 #include "disc_monk.h"
+#include "disc_iron_body.h"
 #include "disc_meditation.h"
 #include "disc_leverage.h"
 #include "disc_mindbody.h"
@@ -2588,6 +2589,7 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_LEVERAGE] = new CDLeverage();
     discs->disc[DISC_MINDBODY] = new CDMindBody();
     discs->disc[DISC_FOCUSED_ATTACKS] = new CDFAttacks();
+    discs->disc[DISC_IRON_BODY] = new CDIronBody();
 
     discs->disc[DISC_THIEF] = new CDThief();
     discs->disc[DISC_THIEF_FIGHT] = new CDThiefFight();
@@ -2779,6 +2781,7 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_FOCUSED_ATTACKS] = new CDFAttacks();
       discs->disc[DISC_BAREHAND] = new CDBarehand();
       discs->disc[DISC_DEFENSE] = new CDDefense();
+      discs->disc[DISC_IRON_BODY] = new CDIronBody();
     }
     getDiscipline(DISC_MONK)->ok_for_class |= CLASS_MONK;
     getDiscipline(DISC_MEDITATION_MONK)->ok_for_class |= CLASS_MONK;
@@ -2787,6 +2790,8 @@ void TBeing::assignDisciplinesClass()
     getDiscipline(DISC_FOCUSED_ATTACKS)->ok_for_class |= CLASS_MONK;
     getDiscipline(DISC_BAREHAND)->ok_for_class |= CLASS_MONK;
     getDiscipline(DISC_DEFENSE)->ok_for_class |= CLASS_MONK;
+    getDiscipline(DISC_IRON_BODY)->ok_for_class |= CLASS_MONK;
+
   }
 
   if (hasClass(CLASS_THIEF)) {
@@ -3622,6 +3627,13 @@ void TBeing::assignSkillsClass()
 	      found = TRUE;
 	      break;
 	    }
+  	  case 5:
+	    if ((cd = getDiscipline(DISC_IRON_BODY)) &&
+		cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
+	      raiseDiscOnce(DISC_IRON_BODY);
+	      found = TRUE;
+	      break;
+	    }
           default:
             break;
         }
@@ -4178,6 +4190,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_LEVERAGE:
     case DISC_MINDBODY:
     case DISC_FOCUSED_ATTACKS:
+    case DISC_IRON_BODY:
       lev = getClassLevel(CLASS_MONK);
       break;
     case DISC_SHAMAN:

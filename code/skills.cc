@@ -26,6 +26,7 @@
 #include "disc_defense.h"
 #include "disc_mounted.h"
 #include "disc_monk.h"
+#include "disc_iron_body.h"
 #include "disc_meditation.h"
 #include "disc_leverage.h"
 #include "disc_mindbody.h"
@@ -771,6 +772,22 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDMeditationMonk *) cd)->skVoplat;
     case SKILL_BLINDFIGHTING:
       return &((CDMeditationMonk *) cd)->skBlindfighting;
+
+// disc_iron_body
+    case SKILL_IRON_FIST:
+      return &((CDIronBody *) cd)->skIronFist;
+    case SKILL_IRON_FLESH:
+      return &((CDIronBody *) cd)->skIronFlesh;
+    case SKILL_IRON_SKIN:
+      return &((CDIronBody *) cd)->skIronSkin;
+    case SKILL_IRON_BONES:
+      return &((CDIronBody *) cd)->skIronBones;
+    case SKILL_IRON_MUSCLES:
+      return &((CDIronBody *) cd)->skIronMuscles;
+    case SKILL_IRON_LEGS:
+      return &((CDIronBody *) cd)->skIronLegs;
+    case SKILL_IRON_WILL:
+      return &((CDIronBody *) cd)->skIronWill;
 
 // disc_karoki
     case SKILL_SHOULDER_THROW:

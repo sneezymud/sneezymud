@@ -922,6 +922,20 @@ int mapSpellnumToFile(spellNumT stt)
       return 687;
     case SKILL_MANA:
       return 688;
+    case SKILL_IRON_FIST:
+      return 689;
+    case SKILL_IRON_FLESH:
+      return 690;
+    case SKILL_IRON_SKIN:
+      return 691;
+    case SKILL_IRON_BONES:
+      return 692;
+    case SKILL_IRON_MUSCLES:
+      return 693;
+    case SKILL_IRON_LEGS:
+      return 694;
+    case SKILL_IRON_WILL:
+      return 695;
 
     case AFFECT_DISEASE:
       return 2500;
