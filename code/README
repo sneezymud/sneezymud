@@ -1,3 +1,14 @@
+12-21-99 - Peel
+- I've been working on some mage stuff, 'store' and 'trigger' commands,
+  dealing with casting spells and such.  I alterated the doCast->doDiscipline
+  path significantly, modularizing things.  Possible breakage, but everything
+  looks ok so far.  Just a heads up so you know whats going on if anything
+  weird happens.
+- rewrote rcsls.csh as rcsls.pl.  This is an excellent example of why perl
+  is so popular.  The csh version is 26 lines and completes in about 25
+  seconds.  The perl version of the script is 6 lines and completes in
+  about 1.5 seconds.
+
 12-12-99 / 12-14-99 / 12-17-99 / 12-18-99 / 12-19-99 / 12-20-99 - Lapsos
 - Fixed a bug in @set blocka/blockb that was not setting the ending block.
 - Fixed a bug in stat that was displaying the stater's rooms and not the
