@@ -6,7 +6,6 @@
 #include "obj_base_corpse.h"
 #include "obj_tool.h"
 #include "obj_magic_item.h"
-#include "obj_corpse.h"
 
 // returns VICTIM_DEAD if corpse should be fried
 int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
@@ -1780,18 +1779,18 @@ int castEmbalm(TBeing *caster, TObj *corpse)
 
 int embalm(TBeing *caster, TObj *o, int level, byte bKnown)
 {
-  TCorpse *corpse;
+  TBaseCorpse *corpse;
 
   if(!bSuccess(caster, bKnown, SPELL_EMBALM)){
     caster->nothingHappens();
     return SPELL_FAIL;
   }
  
-  if(!(corpse=dynamic_cast<TCorpse *>(o))){
+  if(!(corpse=dynamic_cast<TBaseCorpse *>(o))){
     act("$N is not a corpse!  You can only embalm corpses.", 
 	FALSE, caster, NULL, o, TO_CHAR);
     act("$n looks momentarily befuddled.",
-	FALSE, caster, NULL, corpse, TO_NOTVICT);
+	FALSE, caster, NULL, corpse, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -1799,7 +1798,7 @@ int embalm(TBeing *caster, TObj *o, int level, byte bKnown)
     act("$N is not decaying and would not benefit from embalming.",
 	FALSE, caster, NULL, corpse, TO_CHAR);
     act("$n looks momentarily befuddled.",
-	FALSE, caster, NULL, corpse, TO_NOTVICT);
+	FALSE, caster, NULL, corpse, TO_ROOM);
     return SPELL_FAIL;
   }
   
