@@ -44,7 +44,7 @@ class charFile {
    ubyte hometerrain;
    sh_int load_room;            /* Which room to place char in  */
    sh_int body_health[MAX_HUMAN_WEAR];
-   sh_int p_type;
+   unsigned int p_type;
    sh_int bad_login;
    ush_int base_age;
    sh_int age_mod;

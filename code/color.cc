@@ -98,10 +98,10 @@ void TBeing::doPrompt(const char *arg)
     sprintf(string, "Hit        : (%s): H:%d\n\r", (tPrompts[0] ? "yes" : " no"), getHit());
     tStString += string;
 
-    sprintf(string, "Piety      : (%s): P:%.1f\n\r", (tPrompts[1] ? "yes" : " no"), getPiety());
+    sprintf(string, "Piety      : (%s): P:%.1f\n\r", (tPrompts[16] ? "yes" : " no"), getPiety());
     tStString += string;
 
-    sprintf(string, "Lifeforce  : (%s): LF:%d\n\r", (tPrompts[1] ? "yes" : " no"), getLifeforce());
+    sprintf(string, "Lifeforce  : (%s): LF:%d\n\r", (tPrompts[17] ? "yes" : " no"), getLifeforce());
     tStString += string;
 
     sprintf(string, "Mana       : (%s): M:%d\n\r", (tPrompts[1] ? "yes" : " no"), getMana());
