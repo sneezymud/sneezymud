@@ -967,145 +967,160 @@ void TBeing::assignSkillsShaman(){
 
 
 
-
 void TBeing::assignSkillsMage(){
-  int found = FALSE, num;
-  CDiscipline *cd;
+  int found = FALSE;
+  CDiscipline *cd, *mage, *combat, *favored=NULL;
+  discNumT favoredNum=DISC_NONE;
 
+  if(!(mage=getDiscipline(DISC_MAGE))){
+    vlogf(LOG_BUG, "%s didn't have mage discipline.", getName());
+    return;
+  }
 
-  // 2.  Now use practices
-  
+  if(!(combat=getDiscipline(DISC_COMBAT))){
+    vlogf(LOG_BUG, "%s didn't have combat discipline.", getName());
+    return;
+  }
+
   while (getPracs(MAGE_LEVEL_IND) > 0) {
     addPracs(-1, MAGE_LEVEL_IND);
     found = FALSE;
     
-    // 3. Get combat (tactics) up to some minimum
-    if ((cd = getDiscipline(DISC_COMBAT)) && 
-	cd->getLearnedness() < 15) {
+    // Get combat (tactics) up to a minimum
+    if(combat->getLearnedness() < 15) {
       raiseDiscOnce(DISC_COMBAT);
       continue;
-      // 4.  Check to see if Basic Discipline is Maxxed
-    } else if ((cd = getDiscipline(DISC_MAGE)) &&
-	       cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-      
-      // 5.  If combat has been maxxed, then put everything into basic
-      
-      
-      if ((cd = getDiscipline(DISC_COMBAT)) &&
-	  cd->getLearnedness() >= MAX_DISC_LEARNEDNESS) {
+    }
+
+    // start raising combat and mage until they are both maxed
+    bool combatDone=(combat->getLearnedness() >= MAX_DISC_LEARNEDNESS);
+    bool mageDone=(mage->getLearnedness() >= MAX_DISC_LEARNEDNESS);
+    
+    if(combatDone && !mageDone){
+      raiseDiscOnce(DISC_MAGE);
+      continue;
+    } else if(!combatDone && mageDone){
+      raiseDiscOnce(DISC_COMBAT);
+      continue;
+    } else if(!combatDone && !mageDone){
+      if(::number(0,1))
 	raiseDiscOnce(DISC_MAGE);
-	continue;
-	// 6.  If combat is not maxxed, then divide it evenly
-      } else {
-	if (::number(0,1)) {
-	  raiseDiscOnce(DISC_MAGE);
-	  continue;
-	} else {
-	  raiseDiscOnce(DISC_COMBAT);
-	  continue;
-	}
-      }
-      // 7.  Check to make sure that combat is maxxed before moving to spec
-    } else if ((cd = getDiscipline(DISC_COMBAT)) &&
-	       cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-      raiseDiscOnce(DISC_COMBAT);
+      else
+	raiseDiscOnce(DISC_COMBAT);
       continue;
-      // 8.  SPECIALIZATIONS NEXT.
-      
-      // 9.   IS there a favored Discipline
-      
-      //    COSMO MARK-- TO BE CODED (CHANGES TO MOB FILE REQUIRED)
-      
-      // 10.   Divide the learning into the specialites
-    } else {
-      
-      // 11.   First Favored Disciplines
-      //    Note that if a disc is maxxed it will drop to the next one
-      switch ((::number(1,6))) {
+    }
+    // fall through only if combat and mage are both maxed
+
+
+    // first, let's choose a favored disc, this is our "specialization"
+    if(!favored){
+      switch(::number(1,5)){
 	case 1:
-	  if ((cd = getDiscipline(DISC_SORCERY)) &&
-	      cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-	    raiseDiscOnce(DISC_SORCERY);
-	    found = TRUE;
-	    break;
-	  }
+	  favoredNum=DISC_SORCERY;
+	  break;
 	case 2:
-	  if ((cd = getDiscipline(DISC_FIRE)) &&
-	      cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-	    raiseDiscOnce(DISC_FIRE);
-	    found = TRUE;
-	    break;
-	  }
+	  favoredNum=DISC_FIRE;
+	  break;
 	case 3:
-	  if ((cd = getDiscipline(DISC_WATER)) &&
-	      cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-	    raiseDiscOnce(DISC_WATER);
-	    found = TRUE;
-	    break;
-	  }
+	  favoredNum=DISC_WATER;
+	  break;
 	case 4:
-	  if ((cd = getDiscipline(DISC_EARTH)) &&
-	      cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-	    raiseDiscOnce(DISC_EARTH);
-	    found = TRUE;
-	    break;
-	  }
+	  favoredNum=DISC_EARTH;
+	  break;
 	case 5:
-	  if ((cd = getDiscipline(DISC_AIR)) &&
-	      cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-	    raiseDiscOnce(DISC_AIR);
-	    found = TRUE;
-	    break;
-	  }
-	default:
+	  favoredNum=DISC_AIR;
 	  break;
       }
-      // 12.  Then remaining disciplines in order.
-      num = ::number(0,4);
-      if (found) {
-	continue;
-      } else if ((cd = getDiscipline(DISC_PIERCE)) &&
-		 cd->getLearnedness() < MAX_DISC_LEARNEDNESS && (num <= 0)) {
-	raiseDiscOnce(DISC_PIERCE);
-      } else if ((cd = getDiscipline(DISC_SPIRIT)) &&
-		 cd->getLearnedness() < MAX_DISC_LEARNEDNESS && (num <= 1)) {
-	raiseDiscOnce(DISC_SPIRIT);
-      } else if ((cd = getDiscipline(DISC_ALCHEMY)) &&
-		 cd->getLearnedness() < MAX_DISC_LEARNEDNESS && (num <= 2)) {
-	raiseDiscOnce(DISC_ALCHEMY);
-      } else if ((cd = getDiscipline(DISC_SORCERY)) &&
-		 cd->getLearnedness() < MAX_DISC_LEARNEDNESS && (num <= 3)) {
-	raiseDiscOnce(DISC_SORCERY);
-      } else if ((cd = getDiscipline(DISC_EARTH)) &&
-		 cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-	raiseDiscOnce(DISC_EARTH);
-      } else if ((cd = getDiscipline(DISC_FIRE)) &&
-		 cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-	raiseDiscOnce(DISC_FIRE);
-      } else if ((cd = getDiscipline(DISC_WATER)) &&
-		 cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-	raiseDiscOnce(DISC_WATER);
-      } else if ((cd = getDiscipline(DISC_AIR)) &&
-		 cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-	raiseDiscOnce(DISC_AIR);
-      } else if ((cd = getDiscipline(DISC_SPIRIT)) &&
-		 cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-	raiseDiscOnce(DISC_SPIRIT);
-      } else if ((cd = getDiscipline(DISC_PIERCE)) &&
-		 cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-	raiseDiscOnce(DISC_PIERCE);
-      } else if ((cd = getDiscipline(DISC_ALCHEMY)) &&
-		 cd->getLearnedness() < MAX_DISC_LEARNEDNESS) {
-	raiseDiscOnce(DISC_ALCHEMY);
-      } else {
-        // what disc is left?
-	// this logs a lot for high level mobs
-	//          vlogf(LOG_BUG, "Mob (%s) has maxxed all mage disciplines (assignDisc", getName());
-	break;
+      
+      if(!(favored = getDiscipline(favoredNum))){
+	vlogf(LOG_BUG, "%s didn't have discipline %i.", getName(), favoredNum);
+	return;
       }
     }
+
+    // learn our favored disc up a bit
+    if(favored->getLearnedness() < 75){
+      raiseDiscOnce(favoredNum);
+      continue;
+    }
+
+
+    // now just raise stuff randomly
+    // if something is maxed, we just fall through to the next thing
+    switch(::number(0,10)){
+      case 0:
+	if((cd = getDiscipline(DISC_PIERCE)) &&
+	   cd->getLearnedness() < MAX_DISC_LEARNEDNESS){
+	  raiseDiscOnce(DISC_PIERCE);
+	  continue;
+	}
+      case 1:
+	if((cd = getDiscipline(DISC_SPIRIT)) &&
+	   cd->getLearnedness() < MAX_DISC_LEARNEDNESS){
+	  raiseDiscOnce(DISC_SPIRIT);
+	  continue;
+	}
+      case 2:
+	if((cd = getDiscipline(DISC_ALCHEMY)) &&
+	   cd->getLearnedness() < MAX_DISC_LEARNEDNESS){
+	  raiseDiscOnce(DISC_ALCHEMY);
+	  continue;
+	}
+      case 3:
+	if((cd = getDiscipline(DISC_SORCERY)) &&
+	   cd->getLearnedness() < MAX_DISC_LEARNEDNESS){
+	  raiseDiscOnce(DISC_SORCERY);
+	  continue;
+	}
+      case 4:
+	if((cd = getDiscipline(DISC_EARTH)) &&
+	   cd->getLearnedness() < MAX_DISC_LEARNEDNESS){
+	  raiseDiscOnce(DISC_EARTH);
+	  continue;
+	}
+      case 5:
+	if((cd = getDiscipline(DISC_FIRE)) &&
+	   cd->getLearnedness() < MAX_DISC_LEARNEDNESS){
+	  raiseDiscOnce(DISC_FIRE);
+	  continue;
+	}
+      case 6:
+	if((cd = getDiscipline(DISC_WATER)) &&
+	   cd->getLearnedness() < MAX_DISC_LEARNEDNESS){
+	  raiseDiscOnce(DISC_WATER);
+	  continue;
+	}
+      case 7:
+	if((cd = getDiscipline(DISC_AIR)) &&
+	   cd->getLearnedness() < MAX_DISC_LEARNEDNESS){
+	  raiseDiscOnce(DISC_AIR);
+	  continue;
+	}
+      case 8:
+	if((cd = getDiscipline(DISC_SPIRIT)) &&
+	   cd->getLearnedness() < MAX_DISC_LEARNEDNESS){
+	  raiseDiscOnce(DISC_SPIRIT);
+	  continue;
+	}
+      case 9:
+	if((cd = getDiscipline(DISC_PIERCE)) &&
+	   cd->getLearnedness() < MAX_DISC_LEARNEDNESS){
+	  raiseDiscOnce(DISC_PIERCE);
+	  continue;
+	}
+      case 10:
+	if((cd = getDiscipline(DISC_ALCHEMY)) &&
+	   cd->getLearnedness() < MAX_DISC_LEARNEDNESS){
+	  raiseDiscOnce(DISC_ALCHEMY);
+	  continue;
+	}
+    }
+
+    // maxed all disciplines
+    break;
   }
 }
+
 
 
 
