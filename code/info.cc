@@ -1421,11 +1421,12 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
         }
         str += buf;
         break;
+      case AFFECT_WARY:
       case AFFECT_ORPHAN_PET:
         // no display
         break;
 
-      // cases beyond here are considered BOGUS
+      // cases beyond here are considered BOGUs
       case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:
       case LAST_BREATH_WEAPON:

@@ -1244,6 +1244,7 @@ int Descriptor::nanny(const char *arg)
             return DELETE_THIS;
           }
 #endif
+	  
           if (should_be_logged(character)) {
             objCost cost;
 
@@ -2900,6 +2901,12 @@ int TPerson::genericLoadPC()
     return DELETE_THIS;
 #endif
 
+  if (!TestCode1 && hasClass(CLASS_SHAMAN) && !isImmortal()) {
+    sendTo("Shaman playtesting is temporarily disabled.\n");
+    desc->outputProcessing();
+    return DELETE_THIS;
+  }
+    
   if (should_be_logged(this))
     vlogf(LOG_PIO, "Loading %s's equipment", name);
   resetChar();

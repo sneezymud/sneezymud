@@ -144,6 +144,7 @@ int TBeing::backstabHit(TBeing *victim, TThing *obj)
 
   victim->addHated(this);
 
+
   return 0;
 }
 

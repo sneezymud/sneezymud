@@ -262,6 +262,9 @@ int TMonster::hitGain()
   if (fight())
     gain = 0;
 
+  if (affectedBySpell(SKILL_CUDGEL))
+    gain = oldgain;
+
 
   TBed * tb = dynamic_cast<TBed *>(riding);
   if (tb)

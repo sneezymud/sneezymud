@@ -37,7 +37,7 @@ bool Silence = FALSE;
 bool Sleep = TRUE;
 
 // please document what each testcode does if you use it!!!!!
-bool TestCode1 = FALSE;       // unfinished code 
+bool TestCode1 = TRUE;       // This code disabled shaman login if it is FALSE - dash 6/6/01
   // code1 in use for tracking pulse/sec - batopr
 bool TestCode2 = false;       // unfinished code 
   // code2 in use, lets players see level on items

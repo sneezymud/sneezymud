@@ -1878,6 +1878,8 @@ class TBeing : public TThing {
     bool isTough() const;
     bool isUgly() const;
     bool isRealUgly() const;
+    bool isWary() const;
+    void makeWary();
     string displayExp() const;
     int hurtLimb(unsigned int, wearSlotT);
     int flightCheck();

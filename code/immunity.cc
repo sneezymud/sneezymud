@@ -690,6 +690,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case AFFECT_PLAYERLOOT:
     case AFFECT_HORSEOWNED:
     case AFFECT_GROWTH_POTION:
+    case AFFECT_WARY:
     case LAST_ODDBALL_AFFECT:
     case SKILL_ALCOHOLISM:
     case SKILL_FISHING:

@@ -3923,3 +3923,20 @@ void TBeing::doAfk()
   }
 }
 
+bool TBeing::isWary() const
+{
+  return affectedBySpell(AFFECT_WARY);  
+}
+
+void TBeing::makeWary()
+{
+  if (isPc())
+    return;
+  
+  affectedData aff;
+
+  aff.type = AFFECT_WARY;
+  aff.duration = 2 * UPDATES_PER_MUDHOUR;
+  affectTo(&aff);
+
+}
