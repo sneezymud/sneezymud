@@ -2096,13 +2096,12 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
 	  TObj *o=dynamic_cast<TObj *>(tt);
 
-	  // get the default profit buy/sell
-	  db.query("select profit_buy, profit_sell from shop where shop_nr=%i", shop_nr);
-	  db.fetchRow();
-
 	  // create the entry if it doesn't exist, use default profit buy/sell
 	  db.query("select 1 from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, o->objVnum());
 	  if(!db.fetchRow()){
+	    // get the default profit buy/sell
+	    db.query("select profit_buy, profit_sell from shop where shop_nr=%i", shop_nr);
+	    db.fetchRow();
 	    db.query("insert into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(buf), atof(db.getColumn(1)));
 	  } else {
 	    db.query("update shopownedratios set profit_buy=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum());
