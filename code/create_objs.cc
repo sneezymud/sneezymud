@@ -267,7 +267,7 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
 
   TDatabase db(DB_IMMORTAL);
 
-  db.query("delete from obj where vnum=%i", vnum);
+  //  db.query("delete from obj where vnum=%i", vnum);
   if(!db.query("insert into obj (vnum, name, short_desc, long_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, cur_struct, max_struct, decay, volume, material, owner, action_desc) values (%i, '%s', '%s', '%s', %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')", 
 	  vnum, o->name, o->shortDescr, o->getDescr(),o->itemType(), 
 	  o->getObjStat(), o->obj_flags.wear_flags, tmp1, tmp2, tmp3, tmp4, 
@@ -276,7 +276,8 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
 	  o->obj_flags.max_struct_points, o->obj_flags.decay_time, 
 		 o->getVolume(), o->getMaterial(), ch->name, 
 	       o->action_description?o->action_description:"")){
-    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+    ch->sendTo("Unable to save object.  Make sure that an object doesn't already exist in that slot.\n\r");
+    //    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
 
