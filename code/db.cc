@@ -236,6 +236,8 @@ void bootDb(void)
   bootPulse("Generating index tables for mobile file.");
   generate_mob_index();
 
+  vlogf(LOG_PEEL, "got here");
+
   bootPulse("Opening object file.");
   if (!(obj_f = fopen(OBJ_FILE, "r"))) {
     perror("boot");
@@ -1240,8 +1242,7 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
 
 
   if(cache && cache_object(nr)!=-1){
-    //    vlogf(LOG_PEEL, "using cached object - %s", obj_index[nr].short_desc);
-    obj = makeNewObj(mapFileToItemType(atoi_safe(obj_cache[cache_object(nr)]->s[0].c_str())));
+    obj = makeNewObj(mapFileToItemType(atoi_safe(obj_cache[cache_object(nr)]->s[0])));
     obj->number=nr;
     if (!obj->isObjStat(ITEM_STRUNG)) {
       obj->name = obj_index[nr].name;
@@ -1251,21 +1252,21 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
       obj->ex_description=obj_index[nr].ex_description;
     }
 
-    obj->setObjStat(atoi_safe(obj_cache[cache_object(nr)]->s[1].c_str()));
-    obj->obj_flags.wear_flags = atoi_safe(obj_cache[cache_object(nr)]->s[2].c_str());
-    obj->assignFourValues(atoi_safe(obj_cache[cache_object(nr)]->s[3].c_str()), atoi_safe(obj_cache[cache_object(nr)]->s[4].c_str()), atoi_safe(obj_cache[cache_object(nr)]->s[5].c_str()), atoi_safe(obj_cache[cache_object(nr)]->s[6].c_str()));
-    obj->setWeight(atof_safe(obj_cache[cache_object(nr)]->s[7].c_str()));
-    obj->obj_flags.cost = atoi_safe(obj_cache[cache_object(nr)]->s[8].c_str());
-    obj->canBeSeen = atoi_safe(obj_cache[cache_object(nr)]->s[9].c_str());
-    obj->spec = atoi_safe(obj_cache[cache_object(nr)]->s[10].c_str());
-    obj->setMaxStructPoints(atoi_safe(obj_cache[cache_object(nr)]->s[11].c_str()));
-    obj->setStructPoints(atoi_safe(obj_cache[cache_object(nr)]->s[12].c_str()));
+    obj->setObjStat(atoi_safe(obj_cache[cache_object(nr)]->s[1]));
+    obj->obj_flags.wear_flags = atoi_safe(obj_cache[cache_object(nr)]->s[2]);
+    obj->assignFourValues(atoi_safe(obj_cache[cache_object(nr)]->s[3]), atoi_safe(obj_cache[cache_object(nr)]->s[4]), atoi_safe(obj_cache[cache_object(nr)]->s[5]), atoi_safe(obj_cache[cache_object(nr)]->s[6]));
+    obj->setWeight(atof_safe(obj_cache[cache_object(nr)]->s[7]));
+    obj->obj_flags.cost = atoi_safe(obj_cache[cache_object(nr)]->s[8]);
+    obj->canBeSeen = atoi_safe(obj_cache[cache_object(nr)]->s[9]);
+    obj->spec = atoi_safe(obj_cache[cache_object(nr)]->s[10]);
+    obj->setMaxStructPoints(atoi_safe(obj_cache[cache_object(nr)]->s[11]));
+    obj->setStructPoints(atoi_safe(obj_cache[cache_object(nr)]->s[12]));
     obj->setDepreciation(0);
-    obj->obj_flags.decay_time=atoi_safe(obj_cache[cache_object(nr)]->s[13].c_str());
-    obj->setVolume(atoi_safe(obj_cache[cache_object(nr)]->s[14].c_str()));
-    obj->setMaterial(atoi_safe(obj_cache[cache_object(nr)]->s[15].c_str()));
+    obj->obj_flags.decay_time=atoi_safe(obj_cache[cache_object(nr)]->s[13]);
+    obj->setVolume(atoi_safe(obj_cache[cache_object(nr)]->s[14]));
+    obj->setMaterial(atoi_safe(obj_cache[cache_object(nr)]->s[15]));
     // beta is used to test LOW loads, so don't let max_exist be a factor
-    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : atoi_safe(obj_cache[cache_object(nr)]->s[16].c_str()));
+    obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : atoi_safe(obj_cache[cache_object(nr)]->s[16]));
 
   } else {
     db.query("select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt);

@@ -676,7 +676,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       char apassword[256];
       char buf2[256];
       strcpy(aname, nextToken('|', 255, str2).c_str());
-      int iNew = atoi_safe(nextToken('|', 255, str2).c_str());
+      int iNew = atoi_safe(nextToken('|', 255, str2));
       if (iNew) {
         if (bogusAccountName(buf)) {
           clientf("%d|0|%d", CLIENT_CHECKACCOUNTNAME, ERR_BADACCOUNT_NAME);
@@ -1468,7 +1468,7 @@ int Descriptor::clientCreateChar(char *arg)
   }
 
   // Race and Terrain
-  switch (atoi_safe(nextToken('|', 1024, arg).c_str())) {
+  switch (atoi_safe(nextToken('|', 1024, arg))) {
     case 1:
       ch->setRace(RACE_HUMAN);
       switch (*(nextToken('|', 1024, arg).c_str())) {
@@ -1586,18 +1586,18 @@ int Descriptor::clientCreateChar(char *arg)
 
   //Stats
 
-  ch->chosenStats.values[STAT_STR] = atoi_safe(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_BRA] = atoi_safe(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_CON] = atoi_safe(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_DEX] = atoi_safe(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_AGI] = atoi_safe(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_INT] = atoi_safe(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_WIS] = atoi_safe(nextToken('|', 1024, arg).c_str()); 
-  ch->chosenStats.values[STAT_FOC] = atoi_safe(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_PER] = atoi_safe(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_CHA] = atoi_safe(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_KAR] = atoi_safe(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_SPE] = atoi_safe(nextToken('|', 1024, arg).c_str());
+  ch->chosenStats.values[STAT_STR] = atoi_safe(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_BRA] = atoi_safe(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_CON] = atoi_safe(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_DEX] = atoi_safe(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_AGI] = atoi_safe(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_INT] = atoi_safe(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_WIS] = atoi_safe(nextToken('|', 1024, arg)); 
+  ch->chosenStats.values[STAT_FOC] = atoi_safe(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_PER] = atoi_safe(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_CHA] = atoi_safe(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_KAR] = atoi_safe(nextToken('|', 1024, arg));
+  ch->chosenStats.values[STAT_SPE] = atoi_safe(nextToken('|', 1024, arg));
 
   // Check if everything sums to 0, if not send an error message. 
 

@@ -265,7 +265,7 @@ void TBeing::postmasterReceiveMail(TMonster *me)
     note->setDescr(mud_str_dup("A wrinkled <W>letter<1> lies here."));
     delete [] note->action_description;
     msg = read_delete(recipient, getName(), from);
-    note->action_description = new char[strlen(msg.c_str())+1];
+    note->action_description = new char[msg.length()+1];
     strcpy(note->action_description, msg.c_str());
     if (!note->action_description)
       note->action_description = mud_str_dup("Mail system buggy, please report!!  Error #8.\n\r");

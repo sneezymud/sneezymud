@@ -383,8 +383,8 @@ void TBeing::doConceal(string argument)
   if (name_buf.empty()) {
     vict = this;
   } else {
-    if (is_abbrev(name_buf.c_str(), "off") || 
-	is_abbrev(name_buf.c_str(), "stop")) {
+    if (is_abbrev(name_buf, "off") || 
+	is_abbrev(name_buf, "stop")) {
       one_argument(argument, name_buf);
       if (!name_buf.empty()) {
         vict = get_char_room_vis(this, name_buf.c_str());

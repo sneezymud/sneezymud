@@ -1695,7 +1695,7 @@ int TPerson::doAt(const char *argument, bool isFarlook)
 
     tStArgument = argument_parser(tStArgument, tStString, tStBuffer);
 
-    if (!is_abbrev(tStString.c_str(), "yes")) {
+    if (!is_abbrev(tStString, "yes")) {
       sendTo("That room, or the creature's room you chose, is a particular room.\n\r");
       sendTo("To do this, do this: at %s yes %s %s %s\n\r", 
              loc, tStString.c_str(), tStBuffer.c_str(), tStArgument.c_str());
@@ -1837,7 +1837,7 @@ int TBeing::doGoto(const string & argument)
     return FALSE;
   }
 
-  if (isSpammyRoom(location) && !is_abbrev(tStString.c_str(), "yes")) {
+  if (isSpammyRoom(location) && !is_abbrev(tStString, "yes")) {
     sendTo("To enter this particular room you must do: goto %d yes\n\r", location);
     return FALSE;
   }
@@ -5579,7 +5579,7 @@ void TBeing::doInfo(const char *arg)
 
       one_argument(arg, arg1);
       if (*arg1 && is_abbrev(arg1, "note")) {
-        TNote *note = createNote(mud_str_dup(buf.c_str()));
+        TNote *note = createNote(mud_str_dup(buf));
         if (!note) {
           sendTo("No note created in doInfo, tell a God.\n\r");
           return;
@@ -6737,7 +6737,7 @@ int TBeing::doAsOther(const string tStString)
 
   tStOriginalName = getName();
   delete [] name;
-  name = mud_str_dup(good_cap(lower(tStNewName)).c_str());
+  name = mud_str_dup(good_cap(lower(tStNewName)));
   tStCommand += " ";
   tStCommand += tStArguments;
 
@@ -6747,7 +6747,7 @@ int TBeing::doAsOther(const string tStString)
   // senses but still a safty thing.
   if (this) {
     delete [] name;
-    name = mud_str_dup(tStOriginalName.c_str());
+    name = mud_str_dup(tStOriginalName);
   }
 
   return tRc;

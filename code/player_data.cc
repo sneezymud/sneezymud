@@ -1473,7 +1473,7 @@ void TBeing::doReset(string arg)
     sendTo("What do you want to reset?\n\r");
     return;
   }
-  if (is_abbrev(buf.c_str(), "practices")) {
+  if (is_abbrev(buf, "practices")) {
 #if 0
     
 #else
@@ -1536,7 +1536,7 @@ void TBeing::doReset(string arg)
     affectTo(&af);
     return;
 #endif
-  } else if (is_abbrev(buf.c_str(), "gold") && isImmortal()) {
+  } else if (is_abbrev(buf, "gold") && isImmortal()) {
     if (!hasWizPower(POWER_RESET)) {
       sendTo("You lack the power to reset.\n\r");
       return;
@@ -1544,7 +1544,7 @@ void TBeing::doReset(string arg)
     memset(&gold_statistics, 0, sizeof(gold_statistics));
     memset(&gold_positive, 0, sizeof(gold_positive));
     sendTo("Global statistics tracking gold (info gold) reset.\n\r");
-  } else if (is_abbrev(buf.c_str(), "shops") && isImmortal()) {
+  } else if (is_abbrev(buf, "shops") && isImmortal()) {
     if (!hasWizPower(POWER_RESET)) {
       sendTo("You lack the power to reset.\n\r");
       return;
@@ -1569,7 +1569,7 @@ void TBeing::doReset(string arg)
     sendTo("Shops reset.\n\r");
     sendTo("You may also want to do: \"purge shops\" to clear fluxuating prices.\n\r");
     return;
-  } else if (is_abbrev(buf.c_str(), "zone") && isImmortal()) {
+  } else if (is_abbrev(buf, "zone") && isImmortal()) {
     if (!hasWizPower(POWER_RESET)) {
       sendTo("You lack the power to reset.\n\r");
       return;
@@ -1583,18 +1583,18 @@ void TBeing::doReset(string arg)
       */
     }
     unsigned int i;
-    if (is_abbrev(buf.c_str(), "all")) {
+    if (is_abbrev(buf, "all")) {
       for (i= 0; i < zone_table.size(); i++) {
         zone_table[i].resetZone(FALSE);
       }
       sendTo("Zone 0-%d reset.\n\r", i-1);
       return;
     }
-    zone = atoi_safe(buf.c_str());
+    zone = atoi_safe(buf);
     zone_table[zone].resetZone(FALSE);
     sendTo("Zone %d reset.\n\r", zone);
     return;
-  } else if (is_abbrev(buf.c_str(), "levels") && isImmortal()) {
+  } else if (is_abbrev(buf, "levels") && isImmortal()) {
     if (!hasWizPower(POWER_RESET)) {
       sendTo("You lack the power to reset.\n\r");
       return;
@@ -1608,7 +1608,7 @@ void TBeing::doReset(string arg)
     }
     sendTo("Level stat information reset.\n\r");
     return;
-  } else if (is_abbrev(buf.c_str(), "logins") && isImmortal()) {
+  } else if (is_abbrev(buf, "logins") && isImmortal()) {
     if (!hasWizPower(POWER_RESET)) {
       sendTo("You lack the power to reset.\n\r");
       return;

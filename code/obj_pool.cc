@@ -223,7 +223,7 @@ void TPool::initPool(int amt, liqTypeT liq)
 	   stripColorCodes(DrinkInfo[liq]->name).c_str(),
 	   stripColorCodes(DrinkInfo[liq]->color).c_str());
   delete [] name;
-  name = mud_str_dup(buf.c_str());
+  name = mud_str_dup(buf);
   
   fillMeAmount(amt, liq);
 }

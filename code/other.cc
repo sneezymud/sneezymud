@@ -676,13 +676,13 @@ void TPerson::doTitle(const char *argument)
     string stmp=nameColorString(this, desc, str.c_str(), NULL, COLOR_BASIC, FALSE);
     stmp=stripColorCodes(stmp);
 
-    if (strlen(stmp.c_str()) > 79) {
+    if (stmp.length() > 79) {
       sendTo("Title size is limited to 80 or less characters.\n\r");
       return;
     }    
 
     delete [] title;
-    title = mud_str_dup(str.c_str());
+    title = mud_str_dup(str);
 
     sendTo("Your title has been set to : <%s>\n\r", str.c_str());
   } else {
@@ -893,25 +893,25 @@ void TBeing::doPractice(const char *argument)
       }
     }
 
-    tOutput += describe_practices(tC).c_str();
+    tOutput += describe_practices(tC);
     desc->page_string(tOutput);
 
     return;
   }
 
-  if (is_abbrev(tStName.c_str(), "hth") &&
+  if (is_abbrev(tStName, "hth") &&
       (tClass = discNames[DISC_HTH].class_num) &&
       hasClass(tClass)) {
     sendSkillsList(DISC_HTH);
     return;
   }
 
-  if (is_abbrev(tStName.c_str(), "class")) {
+  if (is_abbrev(tStName, "class")) {
     tStArg = one_argument(tStTemp, tStName);
 
     if (!tStName.empty())
       for (tClass = MIN_CLASSES; tClass < MAX_CLASSES; tClass++)
-        if (is_abbrev(tStName.c_str(), classNames[tClass].name))
+        if (is_abbrev(tStName, classNames[tClass].name))
           break;
 
     if (tClass >= MAX_CLASSES) {
@@ -941,24 +941,24 @@ void TBeing::doPractice(const char *argument)
       tOutput += tString;
     }
 
-    tOutput += describe_practices(tC).c_str();
+    tOutput += describe_practices(tC);
     desc->page_string(tOutput);
 
     return;
   }
 
-  if (is_abbrev(tStName.c_str(), "discipline")) {
+  if (is_abbrev(tStName, "discipline")) {
     tStArg = one_argument(tStTemp, tStName);
 
     if (!tStName.empty()) {
-      if (is_abbrev(tStName.c_str(), "hth"))
+      if (is_abbrev(tStName, "hth"))
         tStName = discNames[DISC_HTH].practice;
 
-      if (is_abbrev(tStName.c_str(), "fighting") ||
-          is_abbrev(tStName.c_str(), "alchemy") ||
-          is_abbrev(tStName.c_str(), "aegis") ||
-          is_abbrev(tStName.c_str(), "wrath") ||
-	  is_abbrev(tStName.c_str(), "cures")) {
+      if (is_abbrev(tStName, "fighting") ||
+          is_abbrev(tStName, "alchemy") ||
+          is_abbrev(tStName, "aegis") ||
+          is_abbrev(tStName, "wrath") ||
+	  is_abbrev(tStName, "cures")) {
         if ((tClass = getClassNum(tStArg.c_str(), EXACT_NO)))
           doPracDisc(tStArg.c_str(), tClass);
         else {
@@ -974,7 +974,7 @@ void TBeing::doPractice(const char *argument)
     return;
   }
 
-  if (is_abbrev(tStName.c_str(), "skill")) {
+  if (is_abbrev(tStName, "skill")) {
     tStArg = one_argument(tStTemp, tStName);
   }
   /*

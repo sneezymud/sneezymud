@@ -150,7 +150,7 @@ void SystemTask::CheckTask()
         string str;
         file_to_string(TMPFILE, str);
         // Create a note and put the output in it.
-        TNote * note = createNote(mud_str_dup(str.c_str()));
+        TNote * note = createNote(mud_str_dup(str));
         // Inform the requester and give them the note.
 	if (note) {
           *(top->owner) += *note;

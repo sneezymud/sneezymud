@@ -1673,7 +1673,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
   }
   string str = "You examine ";
   if (shop_index[shop_nr].isProducing(temp1)) {
-    str += temp1->getNameForShow(true, false, ch).c_str();
+    str += temp1->getNameForShow(true, false, ch);
   } else
     str += temp1->getName();
   str += " sold by $N.";

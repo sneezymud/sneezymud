@@ -201,7 +201,7 @@ int TShopOwned::setRates(string arg)
     argc++;
 
   arg = one_argument(arg, buf);
-  max_num = atoi_safe(buf.c_str());
+  max_num = atoi_safe(buf);
   if(buf != "")
     argc++;
   
@@ -370,7 +370,7 @@ int TShopOwned::giveMoney(string arg){
   }
   
   arg = one_argument(arg, buf);
-  int amount=atoi_safe(buf.c_str());
+  int amount=atoi_safe(buf);
 
   if(amount<=0){
     keeper->doAction(ch->getName(), CMD_SLAP);
@@ -415,8 +415,8 @@ int TShopOwned::setAccess(string arg)
   if(!buf2.empty()){ // set value
     db.query("delete from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf.c_str());
     
-    if(atoi_safe(buf2.c_str()) != 0)
-      db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf.c_str(), atoi_safe(buf2.c_str()));
+    if(atoi_safe(buf2) != 0)
+      db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf.c_str(), atoi_safe(buf2));
     
   } else {
     if(!buf.empty()){

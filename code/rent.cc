@@ -1620,9 +1620,9 @@ void TRoom::loadItems()
       delete [] tBag->name;
 
       tStString = "A bag containing various junk.";
-      tBag->setDescr(mud_str_dup(tStString.c_str()));
+      tBag->setDescr(mud_str_dup(tStString));
       tStString = "bag junk various [wizard]";
-      tBag->name = mud_str_dup(tStString.c_str());
+      tBag->name = mud_str_dup(tStString);
 
       *this += *tBag;
     }
@@ -2653,7 +2653,7 @@ void TBeing::makeRentNote(TBeing *recip)
   tStBuffer += "\n\r";
   tStBuffer += longBuf;
 
-  char *dummy = mud_str_dup(tStBuffer.c_str());
+  char *dummy = mud_str_dup(tStBuffer);
   TNote * note = createNote(dummy);
   if (!note) {
     return; 

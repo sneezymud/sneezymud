@@ -507,8 +507,8 @@ void TBaseCup::updateDesc()
       action_description = NULL;
     }
 
-    name=mud_str_dup(stripColorCodes(newname).c_str());
-    shortDescr=mud_str_dup(short_desc.c_str());
-    setDescr(mud_str_dup(long_desc.c_str()));
+    name=mud_str_dup(stripColorCodes(newname));
+    shortDescr=mud_str_dup(short_desc);
+    setDescr(mud_str_dup(long_desc));
   }
 }

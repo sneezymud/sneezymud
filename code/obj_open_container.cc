@@ -435,12 +435,12 @@ string TOpenContainer::compareMeAgainst(TBeing *ch, TObj *tObj)
   tWeightDiff = (tWeight1 - tWeight2);
   tMessage2   = compareDetermineMessage(15, tWeightDiff);
 
-  StString += good_cap(getName()).c_str();
+  StString += good_cap(getName());
   StString += sizeLevels[tMessage1];
   StString += tOpenContainer->getName();
   StString += ".\n\r";
 
-  StString += good_cap(getName()).c_str();
+  StString += good_cap(getName());
   StString += weightLevels[tMessage2];
   StString += tOpenContainer->getName();
   StString += ".\n\r";

@@ -625,7 +625,7 @@ bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve = false)
     }
 
     tmp += ch->getName();
-    owners = mud_str_dup(tmp.c_str());
+    owners = mud_str_dup(tmp);
   }
 
   // check contents too

@@ -332,7 +332,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
     ch->addToMoney(-cost, GOLD_REPAIR);
     job->cost = cost;
     job->char_name = mud_str_dup(ch->getName());
-    job->obj_name = mud_str_dup(fname(name).c_str());
+    job->obj_name = mud_str_dup(fname(name));
     --(*this);
     *me += *this;
     job->isBlunt = isBluntWeapon();

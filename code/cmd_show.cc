@@ -997,7 +997,7 @@ void TPerson::doShow(const char *argument)
              is_abbrev(tStItemType, ItemInfo[obj_index[tObjectIndex].itemtype]->name))) {
           strcpy(tBuffer, obj_index[tObjectIndex].short_desc);
 
-          if (strlen(colorString(this, desc, tBuffer, NULL, COLOR_NONE, TRUE).c_str()) > 40) {
+          if (colorString(this, desc, tBuffer, NULL, COLOR_NONE, TRUE).length() > 40) {
             tBuffer[38] = '\0';
             strcat(tBuffer, "...<z>");
           }

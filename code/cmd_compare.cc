@@ -136,7 +136,7 @@ string compareStructure(TObj *tObj1, TObj *tObj2, TBeing *ch)
 
   tMessage = compareDetermineMessage(15, tStructDiff);
 
-  StString += good_cap(tObj1->getName()).c_str();
+  StString += good_cap(tObj1->getName());
   StString += structureLevels[tMessage];
   StString += tObj2->getName();
   StString += ".\n\r";
@@ -165,7 +165,7 @@ string compareNoise(TObj *tObj1, TObj *tObj2, TBeing *ch)
 
   tMessage = compareDetermineMessage(3, tNoiseDiff);
 
-  StString += good_cap(tObj1->getName()).c_str();
+  StString += good_cap(tObj1->getName());
   StString += noiseLevels[tMessage];
   StString += tObj2->getName();
   StString += ".\n\r";
@@ -253,7 +253,7 @@ string TBaseWeapon::compareMeAgainst(TBeing *ch, TObj *tObj)
   StString += compareNoise(this, tWeapon, ch);
 
   if (ch->getSkillValue(SKILL_EVALUATE) > 35) {
-    StString += good_cap(getName()).c_str();
+    StString += good_cap(getName());
     StString += damageLevels[tMessage2];
     StString += tWeapon->getName();
     StString += ".\n\r";
@@ -261,17 +261,17 @@ string TBaseWeapon::compareMeAgainst(TBeing *ch, TObj *tObj)
 
   if (ch->getSkillValue(SKILL_EVALUATE) > 5)
     if (isBluntWeapon() && tWeapon->isBluntWeapon()) {
-      StString += good_cap(getName()).c_str();
+      StString += good_cap(getName());
       StString += bluntnessLevels[tMessage1];
       StString += tWeapon->getName();
       StString += ".\n\r";
     } else if (isSlashWeapon() && tWeapon->isSlashWeapon()) {
-      StString += good_cap(getName()).c_str();
+      StString += good_cap(getName());
       StString += sharpnessLevels[tMessage1];
       StString += tWeapon->getName();
       StString += ".\n\r";
     } else if (isPierceWeapon() && tWeapon->isPierceWeapon()) {
-      StString += good_cap(getName()).c_str();
+      StString += good_cap(getName());
       StString += pointednessLevels[tMessage1];
       StString += tWeapon->getName();
       StString += ".\n\r";
@@ -317,7 +317,7 @@ string TBaseClothing::compareMeAgainst(TBeing *ch, TObj *tObj)
   tMessage = compareDetermineMessage(5, tArmorDiff);
 
   if (ch->getSkillValue(SKILL_EVALUATE) > 50) {
-    StString += good_cap(getName()).c_str();
+    StString += good_cap(getName());
     StString += armorLevels[tMessage];
     StString += tClothing->getName();
     StString += ".\n\r";
@@ -367,7 +367,7 @@ string TBow::compareMeAgainst(TBeing *ch, TObj *tObj)
   tMessage = compareDetermineMessage(2, tRangeDiff);
 
   if (ch->getSkillValue(SKILL_EVALUATE) > 25) {
-    StString += good_cap(getName()).c_str();
+    StString += good_cap(getName());
     StString += rangeLevels[tMessage];
     StString += tBow->getName();
     StString += ".\n\r";
@@ -415,7 +415,7 @@ string TArrow::compareMeAgainst(TBeing *ch, TObj *tObj)
   string StString("");
 
   if (tBow) {
-    StString += good_cap(getName()).c_str();
+    StString += good_cap(getName());
 
     if (tBow->getArrowType() == getArrowType())
       StString += " is a perfect fit for ";
@@ -446,7 +446,7 @@ string TArrow::compareMeAgainst(TBeing *ch, TObj *tObj)
   tMessage2   = compareDetermineMessage(2, tDamageDiff);
 
   if (ch->getSkillValue(SKILL_EVALUATE) > 5) {
-    StString += good_cap(getName()).c_str();
+    StString += good_cap(getName());
     StString += sharpnessLevels[tMessage1];
     StString += tArrow->getName();
     StString += ".\n\r";
@@ -456,7 +456,7 @@ string TArrow::compareMeAgainst(TBeing *ch, TObj *tObj)
   StString += compareNoise(this, tArrow, ch);
 
   if (ch->getSkillValue(SKILL_EVALUATE) > 50) {
-    StString += good_cap(getName()).c_str();
+    StString += good_cap(getName());
     StString += damageLevels[tMessage2];
     StString += tArrow->getName();
     StString += ".\n\r";
@@ -496,7 +496,7 @@ string TFood::compareMeAgainst(TBeing *ch, TObj *tObj)
   tFillDiff = (tFill1 - tFill2);
   tMessage  = compareDetermineMessage(4, tFillDiff);
 
-  StString += good_cap(getName()).c_str();
+  StString += good_cap(getName());
   StString += fillLevels[tMessage];
   StString += tFood->getName();
   StString += ".\n\r";
@@ -552,7 +552,7 @@ string TSymbol::compareMeAgainst(TBeing *ch, TObj *tObj)
   tHolyWaterDiff = (tHolyWater1 - tHolyWater2);
   tMessage2      = compareDetermineMessage(30, tHolyWaterDiff);
 
-  StString += good_cap(getName()).c_str();
+  StString += good_cap(getName());
   StString += strengthLevels[tMessage1];
   StString += tSymbol->getName();
   StString += ".\n\r";
@@ -560,7 +560,7 @@ string TSymbol::compareMeAgainst(TBeing *ch, TObj *tObj)
   if (getSymbolFaction() == FACT_UNDEFINED &&
       tSymbol->getSymbolFaction() == FACT_UNDEFINED &&
       ch->getSkillValue(SKILL_EVALUATE) > 10) {
-    StString += good_cap(getName()).c_str();
+    StString += good_cap(getName());
     StString += holyWaterLevels[tMessage2];
     StString += tSymbol->getName();
     StString += ".\n\r";
@@ -599,7 +599,7 @@ string TBaseLight::compareMeAgainst(TBeing *ch, TObj *tObj)
   tLightDiff = (tLight1 - tLight2);
   tMessage    = compareDetermineMessage(3, tLightDiff);
 
-  StString += good_cap(getName()).c_str();
+  StString += good_cap(getName());
   StString += lightLevels[tMessage];
   StString += tLight->getName();
   StString += ".\n\r";
@@ -638,7 +638,7 @@ string TOpal::compareMeAgainst(TBeing *ch, TObj *tObj)
   tChargeDiff = (tCharge1 - tCharge2);
   tMessage    = compareDetermineMessage(3, tChargeDiff);
 
-  StString += good_cap(getName()).c_str();
+  StString += good_cap(getName());
   StString += chargeLevels[tMessage];
   StString += tOpal->getName();
   StString += ".\n\r";

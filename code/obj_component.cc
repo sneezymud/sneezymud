@@ -2689,7 +2689,7 @@ bool TComponent::splitMe(TBeing *ch, const char *tString)
   if (*tString)
     argument_parser(tString, tStString, tStBuffer);
 
-  if (!*tString || ((tCount = atoi_safe(tStBuffer.c_str())) <= 0)) {
+  if (!*tString || ((tCount = atoi_safe(tStBuffer)) <= 0)) {
     ch->sendTo("Syntax: split <component> <charges>\n\r");
     return true;
   }

@@ -2767,7 +2767,7 @@ void TPerson::doMedit(const char *argument)
         tStr.replace(tStr.find(tTextLns[1]), strlen(tTextLns[1]), tTextLns[2]);
 
         delete [] cMob->player.longDescr;
-        cMob->player.longDescr = mud_str_dup(tStr.c_str());
+        cMob->player.longDescr = mud_str_dup(tStr);
       } else {
         if (!cMob->descr) {
           sendTo("Mobile doesn't have a description, cannot use replace.\n\r");
@@ -2784,7 +2784,7 @@ void TPerson::doMedit(const char *argument)
         tStr.replace(tStr.find(tTextLns[1]), strlen(tTextLns[1]), tTextLns[2]);
 
         delete [] cMob->descr;
-        cMob->descr = mud_str_dup(tStr.c_str());
+        cMob->descr = mud_str_dup(tStr);
       }
       return;
       break;
@@ -2874,7 +2874,7 @@ static void change_mob_string_enter(TBeing *ch, TMonster *tMob, const char *tStr
       tExDesc->next = tMob->ex_description;
       tMob->ex_description = tExDesc;
       tExDesc->keyword = mud_str_dup(tMobStringShorts[tType]);
-      tExDesc->description = mud_str_dup(tStString.c_str());
+      tExDesc->description = mud_str_dup(tStString);
       break;
     } else if (tExDesc && !strcmp(tExDesc->keyword, tMobStringShorts[tType]))
       if (*tString == '`') {
@@ -2888,7 +2888,7 @@ static void change_mob_string_enter(TBeing *ch, TMonster *tMob, const char *tStr
         break;
       } else {
         delete [] tExDesc->description;
-        tExDesc->description = mud_str_dup(tStString.c_str());
+        tExDesc->description = mud_str_dup(tStString);
         break;
       }
 

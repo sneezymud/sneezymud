@@ -583,7 +583,7 @@ void seditLoad(TBeing *ch, TMonster *tMonster, string tStArg, bool isSilent = fa
 
   stSpaceOut(tStArg);
 
-  if (!tStArg.empty() && is_abbrev(tStArg.c_str(), "core")) {
+  if (!tStArg.empty() && is_abbrev(tStArg, "core")) {
     sprintf(tValue, "mobdata/responses/%d", tMonster->getSnum());
     tFile = fopen(tValue, "r");
   } else {
@@ -665,7 +665,7 @@ cmdTypeT seditCmdFromText(string tStString, bool checkMini)
   if (is_abbrev(tStString, "checkload"))
     return CMD_RESP_CHECKLOAD;
 
-  if (is_abbrev(tStString, "loadmob") && strlen(tStString.c_str()) > 4)
+  if (is_abbrev(tStString, "loadmob") && tStString.length() > 4)
     return CMD_RESP_LOADMOB;
 
   return searchForCommandNum(tStString.c_str());

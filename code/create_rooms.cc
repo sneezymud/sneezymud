@@ -908,7 +908,7 @@ void TPerson::doEdit(const char *arg)
       if (!tStString.empty()) {
         delete [] roomp->name;
         sendTo("New Room Title: %s\n\r", tStString.c_str());
-        roomp->name = mud_str_dup(tStString.c_str());
+        roomp->name = mud_str_dup(tStString);
 
         return;
       }
@@ -1150,7 +1150,7 @@ void TPerson::doEdit(const char *arg)
         tStr.replace(tStr.find(tTextLns[1]), strlen(tTextLns[1]), tTextLns[2]);
 
         delete [] roomp->descr;
-        roomp->descr = mud_str_dup(tStr.c_str());
+        roomp->descr = mud_str_dup(tStr);
       } else {
         for (ed = roomp->ex_description, s_type = 1; ed; ed = ed->next) {
           if (isname(tTextLns[1], ed->keyword)) {
@@ -1175,7 +1175,7 @@ void TPerson::doEdit(const char *arg)
         tStr.replace(tStr.find(tTextLns[2]), strlen(tTextLns[2]), tTextLns[3]);
 
         delete [] ed->description;
-        ed->description = mud_str_dup(tStr.c_str());
+        ed->description = mud_str_dup(tStr);
       }
       return;
       break;
@@ -1281,7 +1281,7 @@ void TPerson::doEdit(const char *arg)
      
 
       delete [] roomp->descr;
-      roomp->descr = mud_str_dup(newDescr.c_str());
+      roomp->descr = mud_str_dup(newDescr);
 
       sendTo("Room has been formatted.\n\r");
 
@@ -1347,7 +1347,7 @@ void TPerson::doRload(const char *argument)
     tStart = desc->blockbstart;
     tEnd   = desc->blockbend;
     tSec   = true;
-  } else if (is_abbrev(tStString.c_str(), "backup")) {
+  } else if (is_abbrev(tStString, "backup")) {
     string tStExtra(""),
            tStStandard("");
     bool   tStandard = false;
@@ -1356,14 +1356,14 @@ void TPerson::doRload(const char *argument)
 
     if (!tStExtra.empty()) {
       if (tStExtra[0] == '1') {
-        if (!tStStandard.empty() && is_abbrev(tStStandard.c_str(), "standard"))
+        if (!tStStandard.empty() && is_abbrev(tStStandard, "standard"))
           tStandard = true;
       } else if (tStExtra[0] == '2') {
         tSec = true;
 
-        if (!tStStandard.empty() && is_abbrev(tStStandard.c_str(), "standard"))
+        if (!tStStandard.empty() && is_abbrev(tStStandard, "standard"))
           tStandard = true;
-      } else if (is_abbrev(tStExtra.c_str(), "standard"))
+      } else if (is_abbrev(tStExtra, "standard"))
         tStandard = true;
       else {
         sendTo("Syntax: redit load backup <\"1\"/\"2\"/\"standard\"> <\"standard\">\n\r");
@@ -1426,15 +1426,15 @@ void TPerson::doRload(const char *argument)
     return;
   }
 
-  if (is_abbrev(stRoom.c_str(), "backup")) {
+  if (is_abbrev(stRoom, "backup")) {
     bool useStandard = false;
 
-    if ((!enRoom.empty()  && atoi_safe(enRoom.c_str())  == 2) ||
-        (!tString.empty() && atoi_safe(tString.c_str()) == 2))
+    if ((!enRoom.empty()  && atoi_safe(enRoom)  == 2) ||
+        (!tString.empty() && atoi_safe(tString) == 2))
       useSecond = true;
 
-    if ((!enRoom.empty()  && is_abbrev(enRoom.c_str(), "standard")) ||
-        (!tString.empty() && is_abbrev(tString.c_str(), "standard")))
+    if ((!enRoom.empty()  && is_abbrev(enRoom, "standard")) ||
+        (!tString.empty() && is_abbrev(tString, "standard")))
       useStandard = true;
 
     sprintf(tBuffer, "cp immortals/%s/rooms%s.bak%s immortals/%s/rooms%s",
@@ -1445,11 +1445,11 @@ void TPerson::doRload(const char *argument)
     return;
   }
 
-  if (!tString.empty() && atoi_safe(tString.c_str()) == 2)
+  if (!tString.empty() && atoi_safe(tString) == 2)
     useSecond = true;
 
-  start = atoi_safe(stRoom.c_str());
-  end   = atoi_safe(enRoom.c_str());
+  start = atoi_safe(stRoom);
+  end   = atoi_safe(enRoom);
 
   if ((start <= end) && (start != -1) && (end != -2))
     RoomLoad(this, start, end, useSecond);
@@ -3575,7 +3575,7 @@ void TPerson::doRsave(const char *argument)
     tStart = desc->blockbstart;
     tEnd   = desc->blockbend;
     tSec   = true;
-  } else if (is_abbrev(tStString.c_str(), "backup")) {
+  } else if (is_abbrev(tStString, "backup")) {
     if (tStBuffer.empty() || tStBuffer[0] == '1')
       sprintf(tString, "cp immortals/%s/rooms immortals/%s/rooms.bak2",
               getName(), getName());
@@ -3640,8 +3640,8 @@ void TPerson::doRsave(const char *argument)
     return;
   }
 
-  if (is_abbrev(stRoom.c_str(), "backup")) {
-    if (!enRoom.empty() && atoi_safe(enRoom.c_str()) == 2)
+  if (is_abbrev(stRoom, "backup")) {
+    if (!enRoom.empty() && atoi_safe(enRoom) == 2)
       useSecond = true;
 
     sprintf(tBuffer, "cp immortals/%s/rooms%s immortals/%s/rooms%s.bak2",
@@ -3651,11 +3651,11 @@ void TPerson::doRsave(const char *argument)
     return;
   }
 
-  if (!tString.empty() && atoi_safe(tString.c_str()) == 2)
+  if (!tString.empty() && atoi_safe(tString) == 2)
     useSecond = true;
 
-  start = atoi_safe(stRoom.c_str());
-  end   = atoi_safe(enRoom.c_str());
+  start = atoi_safe(stRoom);
+  end   = atoi_safe(enRoom);
 
   if ((start <= end) && (start != -1) && (end != -2)) {
     sprintf(tBuffer, "mv immortals/%s/rooms%s immortals/%s/rooms%s.bak",

@@ -306,6 +306,7 @@ void generate_mob_index()
         exit(0);
       }
 
+
       tmpi->virt = bc;
       tmpi->pos = ftell(mob_f);
 
@@ -314,6 +315,7 @@ void generate_mob_index()
       tmpi->short_desc = fread_string(mob_f);
       tmpi->long_desc = fread_string(mob_f);
       tmpi->description = fread_string(mob_f);
+
 
       int rc;
       long spac;

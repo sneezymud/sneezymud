@@ -3327,9 +3327,9 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
   if (cmd == CMD_LIST) {
     TWindow *tw = getFirstWindowInRoom(me);
 
-    string tellBuf = fname(ch->name).c_str();
+    string tellBuf = fname(ch->name);
     tellBuf += " Look through the ";
-    tellBuf += tw ? fname(tw->name).c_str() : "window";
+    tellBuf += tw ? fname(tw->name) : "window";
     tellBuf += " to see the pets!";
     me->doTell(tellBuf.c_str());
 
@@ -3345,9 +3345,9 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     if (!pet) {
       TWindow *tw = getFirstWindowInRoom(me);
 
-      string tellBuf = fname(ch->name).c_str();
+      string tellBuf = fname(ch->name);
       tellBuf += " Look through the ";
-      tellBuf += tw ? fname(tw->name).c_str() : "window";
+      tellBuf += tw ? fname(tw->name) : "window";
       tellBuf += " again, there is no such pet!";
       me->doTell(tellBuf.c_str());
 
@@ -3442,9 +3442,9 @@ a pet.", fname(ch->name).c_str());
     if (!pet) {
       TWindow *tw = getFirstWindowInRoom(me);
 
-      string tellBuf = fname(ch->name).c_str();
+      string tellBuf = fname(ch->name);
       tellBuf += " Look through the ";
-      tellBuf += tw ? fname(tw->name).c_str() : "window";
+      tellBuf += tw ? fname(tw->name) : "window";
       tellBuf += " again, there is no such pet!";
       me->doTell(tellBuf.c_str());
       return TRUE;
@@ -3493,9 +3493,9 @@ int stable_man(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 
     sprintf(buf, "%s Look through %s to see the mounts!",
             fname(ch->name).c_str(), tw ? fname(tw->name).c_str() : "window");
-    string tellBuf = fname(ch->name).c_str();
+    string tellBuf = fname(ch->name);
     tellBuf += " Look through the ";
-    tellBuf += tw ? fname(tw->name).c_str() : "window";
+    tellBuf += tw ? fname(tw->name) : "window";
     tellBuf += " to see the mounts!";
     me->doTell(tellBuf.c_str());
 
@@ -4923,7 +4923,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         job->cost = cost;
         job->char_name = new char[strlen(ch->getName()) + 1];
         strcpy(job->char_name, ch->getName());
-        job->obj_name = new char[strlen(fname(item->name).c_str()) + 1];
+        job->obj_name = new char[fname(item->name).length() + 1];
         strcpy(job->obj_name, fname(item->name).c_str());
         --(*item);
         *me += *item; 

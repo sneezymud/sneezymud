@@ -107,7 +107,7 @@ void TBeing::doMessage(const char *tArg)
         return;
       }
 
-      if (is_abbrev(tStString.c_str(), "default")) {
+      if (is_abbrev(tStString, "default")) {
         msgVariables(messageTypeT(tValue), "");
         sendTo("Message Type: %s set to default.\n\r",
                messageCommandTypes[(tValue - 1)]);

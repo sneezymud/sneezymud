@@ -792,7 +792,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
           if ((is_number(tString) ?
                atoi_safe(said) == atoi(tStBuffer) :
                isname(said, tStArg.c_str()))) {
-            value = atoi_safe(tStString.c_str());
+            value = atoi_safe(tStString);
 
             if (speaker->getMoney() < value) {
 

@@ -870,7 +870,7 @@ void TPerson::doOEdit(const char *argument)
         tStr.replace(tStr.find(tTextLns[1]), strlen(tTextLns[1]), tTextLns[2]);
 
         delete [] cObj->descr;
-        cObj->descr = mud_str_dup(tStr.c_str());
+        cObj->descr = mud_str_dup(tStr);
       } else {
         for (ed = cObj->ex_description, zGot = 1; ed; ed = ed->next) {
           if (isname(tTextLns[1], ed->keyword)) {
@@ -895,7 +895,7 @@ void TPerson::doOEdit(const char *argument)
         tStr.replace(tStr.find(tTextLns[2]), strlen(tTextLns[2]), tTextLns[3]);
 
         delete [] ed->description;
-        ed->description = mud_str_dup(tStr.c_str());
+        ed->description = mud_str_dup(tStr);
       }
       return;
       break;

@@ -685,7 +685,7 @@ int disguise(TBeing *caster, char * buffer)
     tStNewNameList += "]";
 
     delete [] mob->name;
-    mob->name = mud_str_dup(tStNewNameList.c_str());
+    mob->name = mud_str_dup(tStNewNameList);
   }
 
   /*

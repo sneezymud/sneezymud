@@ -3712,7 +3712,7 @@ bool Descriptor::page_file(const char *the_input)
 void Descriptor::page_string(const string strs, showNowT shownow, allowReplaceT allowRep)
 {
   delete [] showstr_head;
-  showstr_head = mud_str_dup(strs.c_str());
+  showstr_head = mud_str_dup(strs);
   mud_assert(showstr_head != NULL, "Bad alloc in page_string");
 
   cur_page = 0;
