@@ -4788,19 +4788,32 @@ void TBeing::doInfo(const char *arg)
 			      "unknown",
 			      "unknown",
 			      "unknown", "unknown"};
+      sstring cgroupnames[25]={"Pulse Procs",
+			       "Drowning",
+			       "Mobstuff",
+			       "Combat",
+			       "Half Tick",
+			       "Full Tick",
+			       "Vampires/Lycan",
+			       "Quick Pulse Procs",
+			       "Screen Update",
+			       "unknown", "unknown", "unknown", "unknown",
+			       "unknown", "unknown", "unknown", "unknown",
+			       "unknown", "unknown", "unknown", "unknown",
+			       "unknown", "unknown", "unknown", "unknown"};
 
       double total=0, tlist[25], ttotal=0;
+      int n=0;
       for(int i=0;i<25;++i){
-	for(int j=0;j<10;++j){
+	for(int j=0;j<100;++j){
 	  total += lag_info.laggroup[j][i];
 	}
-	total/=10;
+	total/=100;
 	tlist[i]=total;
 	ttotal+=total;
 	total=0;
       }
 
-      int n=0;
       for(int j=0;j<25;++j){
 	for(int i=0;i<25;++i){
 	  if(tlist[i]>=tlist[n])
@@ -4811,6 +4824,31 @@ void TBeing::doInfo(const char *arg)
 		 ((tlist[n]/ttotal)*100));
 	tlist[n]=0;
       }
+
+      sendTo("\n\rCharacter loop detail:\n\r");
+      total=ttotal=n=0;
+
+      for(int i=0;i<25;++i){
+	for(int j=0;j<100;++j){
+	  total += lag_info.claggroup[j][i];
+	}
+	total/=100;
+	tlist[i]=total;
+	ttotal+=total;
+	total=0;
+      }
+
+      for(int j=0;j<25;++j){
+	for(int i=0;i<25;++i){
+	  if(tlist[i]>=tlist[n])
+	    n=i;
+	}
+	if(cgroupnames[n]!="unknown")
+	  sendTo("%-20s: %8.4f    %2.2f%%\n\r",cgroupnames[n].c_str(),tlist[n],
+		 ((tlist[n]/ttotal)*100));
+	tlist[n]=0;
+      }
+      
     }
     else if (is_abbrev(arg1, "commands")) {
       sendTo("Command access information:\n\r");

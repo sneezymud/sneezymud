@@ -98,7 +98,8 @@ class lag_data
     time_t lagstart[10];
     time_t lagtime[10];
     unsigned long lagcount[10];
-    double laggroup[10][25];
+    double laggroup[100][25];
+    double claggroup[100][25];
 
   lag_data() :
     high(0),
@@ -111,9 +112,10 @@ class lag_data
     memset(&lagtime, 0, sizeof(lagtime));
     memset(&lagcount, 0, sizeof(lagcount));
 
-    for(int i=0;i<10;++i){
+    for(int i=0;i<100;++i){
       for(int j=0;j<25;++j){
 	laggroup[i][j]=0;
+	claggroup[i][j]=0;
       }
     }
   }
