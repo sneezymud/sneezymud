@@ -473,7 +473,7 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
       continue;
     
     if (o->affected[i].location != APPLY_NONE) {
-      if(!db.query("replace objaffect set type=%i, mod1=%ld, mod2=%ld, owner='%s', vnum=%i",
+      if(!db.query("replace objaffect set type=%i, mod1=%i, mod2=%i, owner='%s', vnum=%i",
 		 mapApplyToFile(o->affected[i].location), 
 		 applyTypeShouldBeSpellnum(o->affected[i].location) ? mapSpellnumToFile(spellNumT(o->affected[i].modifier)) : o->affected[i].modifier,
 		 o->affected[i].modifier2, ch->name, vnum)){
