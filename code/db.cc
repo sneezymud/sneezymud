@@ -600,40 +600,23 @@ dirTypeT rotate_dir(dirTypeT dir, int rotate){
 }
 
 
-void bootHomes(void)
+bool bootHome(int plan_i, int plot_start, int plot_end, 
+	      int keynum, int flip, int rotate, bool copy_objs=FALSE)
 {
-  return;
   int template_start=0, template_end=0, template_i=0;
-  int plot_start=0, plot_end=0, plot_i=0, plan_i=0, keynum=0;
+  int plot_i, rc;
   TRoom *src, *dest;
-  int rc, flip, rotate;
-  MYSQL_RES *res, *res2;
-  MYSQL_ROW row, row2;
+  MYSQL_RES *res2;
+  MYSQL_ROW row2;
 
-  // not ready yet
-  return;
 
-  if((rc=dbquery(&res, "sneezy", "bootHomes(1)", "select plan, plot_start, plot_end, keynum, flip, rotate from homeplots where homeowner is not null"))){
-    if(rc==-1)
-      vlogf(LOG_BUG, "Database error in bootHomes");
-    return;
-  }
-  
-  while((row=mysql_fetch_row(res))){
-    plan_i=atoi(row[0]);
-    plot_start=atoi(row[1]);
-    plot_end=atoi(row[2]);
-    keynum=atoi(row[3]);
-    flip=atoi(row[4]);    
-    rotate=atoi(row[5]);
-
-    if((rc=dbquery(&res2, "sneezy", "bootHomes(2)", "select template_start, template_end from homeplans where plan=%i", plan_i))){
+    if((rc=dbquery(&res2, "sneezy", "bootHome(1)", "select template_start, template_end from homeplans where plan=%i", plan_i))){
       if(rc==-1)
-	vlogf(LOG_BUG, "Database error in bootHomes");
-      return;
+	vlogf(LOG_BUG, "Database error in bootHome");
+      return FALSE;
     }
     if(!(row2=mysql_fetch_row(res2))){
-      return;
+      return FALSE;
     }
     
     template_start=atoi(row2[0]);
@@ -716,10 +699,46 @@ void bootHomes(void)
 	}
       }
       
+      // copy objects now
+      if(copy_objs){
+	for(TThing *t=src->stuff;t;t=t->nextThing){
+	  TObj *obj=read_object(t->number, REAL);
+	  *dest+=*obj;
+	}
+      }
+      
       ++plot_i;
     }
 
     mysql_free_result(res2);
+
+    return TRUE;
+}
+
+
+void bootHomes(void)
+{
+  int plot_start=0, plot_end=0, plan_i=0, keynum=0, flip, rotate, rc;
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+
+  if((rc=dbquery(&res, "sneezy", "bootHomes(1)", "select plan, plot_start, plot_end, keynum, flip, rotate from homeplots where homeowner is not null"))){
+    if(rc==-1)
+      vlogf(LOG_BUG, "Database error in bootHomes");
+    return;
+  }
+  
+  while((row=mysql_fetch_row(res))){
+    plan_i=atoi(row[0]);
+    plot_start=atoi(row[1]);
+    plot_end=atoi(row[2]);
+    keynum=atoi(row[3]);
+    flip=atoi(row[4]);    
+    rotate=atoi(row[5]);
+
+    if(!bootHome(plan_i, plot_start, plot_end, keynum, flip, rotate)){
+      vlogf(LOG_BUG, "bootHome failed");
+    }
   }
 
   mysql_free_result(res);
