@@ -89,13 +89,13 @@ void recvTextHandler(const char *str)
   Descriptor *d;
   char arg1[MAX_INPUT_LENGTH], arg2[MAX_INPUT_LENGTH], chname[MAX_INPUT_LENGTH];
   char buf[MAX_STRING_LENGTH-1];
-  int channel=-1, level=-1;
+  //  int channel=-1, level=-1;
 
   str = one_argument(str, arg1);
   str = one_argument(str, arg2);
   str = one_argument(str, chname);
-  channel = convertTo<int>(arg1);
-  level = convertTo<int>(arg2);
+  //  channel = convertTo<int>(arg1);
+  //  level = convertTo<int>(arg2);
 
   snprintf(buf, MAX_STRING_LENGTH, WIZNET_FORMAT, chname, str);
 
