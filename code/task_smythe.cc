@@ -2,74 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: task_smythe.cc,v $
-// Revision 5.16  2002/08/10 05:39:53  dash
-// smythe fix, backstab fix
-//
-// Revision 5.15  2002/07/14 04:46:41  dash
-// changes to cleric wrath spells
-//
-// Revision 5.14  2002/07/12 07:56:29  dash
-// fixed smythe
-//
-// Revision 5.13  2002/07/04 19:38:48  dash
-// repair cost changes, reenabled wearntear, lengthened repai times
-//
-// Revision 5.12  2002/07/04 18:34:11  dash
-// added new repair skills
-//
-// Revision 5.11  2002/06/13 23:06:40  peel
-// fixed another bug in object finding
-// probably needs to be redone
-//
-// Revision 5.10  2002/06/13 05:38:53  peel
-// fixed up smything a bit
-//
-// Revision 5.9  2002/06/13 04:39:20  peel
-// depreciation code was buggy, so I just removed it
-// probably ok for players to repair to brand new anyway, gies them an
-// advantage over repair shop
-//
-// Revision 5.8  2002/03/14 15:43:13  jesus
-// *** empty log message ***
-//
-// Revision 5.7  2002/03/14 15:30:38  jesus
-// *** empty log message ***
-//
-// Revision 5.6  2002/03/14 15:22:37  jesus
-// made move drain skill dependant
-//
-// Revision 5.5  2002/01/10 00:45:49  peel
-// more splitting up of obj2.h
-//
-// Revision 5.4  2001/09/25 12:44:43  jesus
-// smythe fix
-//
-// Revision 5.3  2001/09/07 07:07:35  peel
-// changed TThing->stuff to getStuff() and setStuff()
-//
-// Revision 5.2  2001/07/23 00:33:30  jesus
-// added goofers dust
-//
-// Revision 5.1.1.4  2000/12/21 20:15:35  jesus
-// *** empty log message ***
-//
-// Revision 5.1.1.3  2000/11/19 22:20:48  jesus
-// smythe update
-//
-// Revision 5.1.1.2  2000/11/19 13:44:19  jesus
-// smythe fixed
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -854,10 +786,6 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
       act("You stop trying to operate on $p.", FALSE, ch, o, 0, TO_CHAR);
       ch->sendTo("Isn't there a professional around here somewhere?\n\r");
       act("$n stops operating on $p.", FALSE, ch, o, 0, TO_ROOM);
-      if (ch->task->status > 0) {
-	act("You remove $p from $P.", FALSE, ch, o, operatingtable, TO_CHAR);
-	act("$n removes $p from $P.", FALSE, ch, o, operatingtable, TO_ROOM);
-      }
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -1181,10 +1109,6 @@ int task_repair_magical(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
       act("You stop trying to refocus the energy in $p.", FALSE, ch, o, 0, TO_CHAR);
       ch->sendTo("Isn't there an artificer around here somewhere?\n\r");
       act("$n stops regenerating $p.", FALSE, ch, o, 0, TO_ROOM);
-      if (ch->task->status > 0) {
-	act("You remove $p from $P.", FALSE, ch, o, pentagram, TO_CHAR);
-	act("$n removes $p from $P.", FALSE, ch, o, pentagram, TO_ROOM);
-      }
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -1345,10 +1269,6 @@ int task_repair_rock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
       act("You stop trying to reforming the crystals in $p.", FALSE, ch, o, 0, TO_CHAR);
       ch->sendTo("Isn't there an geologist around here somewhere?\n\r");
       act("$n stops reforming the crystals in $p.", FALSE, ch, o, 0, TO_ROOM);
-      if (ch->task->status > 0) {
-        act("You remove $p from $P.", FALSE, ch, o, pentagram, TO_CHAR);
-        act("$n removes $p from $P.", FALSE, ch, o, pentagram, TO_ROOM);
-      }
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -1496,10 +1416,6 @@ int task_smythe_advanced(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoo
       act("You stop trying to rearranging the gems in $p.", FALSE, ch, o, 0, TO_CHAR);
       ch->sendTo("Isn't there an jeweler around here somewhere?\n\r");
       act("$n stops rearranging the gems in $p.", FALSE, ch, o, 0, TO_ROOM);
-      if (ch->task->status > 0) {
-        act("You remove $p from $P.", FALSE, ch, o, workbench, TO_CHAR);
-        act("$n removes $p from $P.", FALSE, ch, o, workbench, TO_ROOM);
-      }
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -1823,8 +1739,6 @@ int task_repair_spiritual(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
       act("You stop trying to mending $p.", FALSE, ch, o, 0, TO_CHAR);
       ch->sendTo("Isn't there an priest around here somewhere?\n\r");
       act("$n stops mending $p.", FALSE, ch, o, 0, TO_ROOM);
-      act("You remove $p from $P.", FALSE, ch, o, altar, TO_CHAR);
-      act("$n removes $p from $P.", FALSE, ch, o, altar, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
