@@ -396,6 +396,7 @@ int TSocket::gameLoop()
   TVehicle *vehicle;
   int vehiclepulse = 0;
   sstring str;
+  int count;
 
 #ifndef SOLARIS
   int mask;
@@ -625,6 +626,8 @@ int TSocket::gameLoop()
     
     pulse++;
 
+    // undocumented beavior requires all pulses to be multiples of 12
+#if 0
     // quickpulse is ignored because it is too fast!
     quickpulse = (pulse % ONE_SECOND/5);           // 2
 
@@ -640,6 +643,18 @@ int TSocket::gameLoop()
     drowning = ((pulse+9) % PULSE_DROWNING);           // 36
     wayslowpulse = ((pulse+10) % (PULSE_MUDHOUR * 12)); // 17280
     // 11 - empty
+#endif
+
+    teleport = (pulse % PULSE_TELEPORT);
+    combat = (pulse % PULSE_COMBAT);
+    drowning = (pulse % PULSE_DROWNING);
+    special_procs = (pulse % PULSE_SPEC_PROCS);
+    update_stuff = (pulse % PULSE_NOISES);
+    pulse_mudhour = (pulse % PULSE_MUDHOUR);
+    mobstuff = (pulse % PULSE_MOBACT);
+    pulse_tick = (pulse % PULSE_UPDATE);
+    quickpulse = (pulse % ONE_SECOND/5);
+    wayslowpulse = (pulse % (PULSE_MUDHOUR * 12));
 
     ////////////////////////////////////////////
     ////////////////////////////////////////////
@@ -647,17 +662,6 @@ int TSocket::gameLoop()
     
     // interport communication
     mudRecvMessage();
-
-
-    // this is causing tons of lag for some reason
-    // ok i tried to fix this, switched the databases to one for each port. - dash 12/02
-
-    int count;
-    // update statistics in the database
-    if(!(pulse % (ONE_SECOND*30))) {
-      count=updateWholist();
-      updateUsagelogs(count);
-    }
 
     // send out repo mobs
     if(!wayslowpulse){
@@ -672,10 +676,14 @@ int TSocket::gameLoop()
       save_factions();
       save_newfactions();
       weatherAndTime(1);
+
+      count=updateWholist();
+      updateUsagelogs(count);
     }
 
-    if (!combat)
+    if (!combat){
       perform_violence(pulse);
+    }
 
     if (!pulse_mudhour) {
       // these are done per mud hour
@@ -696,13 +704,16 @@ int TSocket::gameLoop()
       checkGoldStats();
     }
 
-    if (!teleport || !special_procs || !pulse_mudhour) {
+    
+    if(!teleport){
+      for (unsigned int i = 0; i < zone_table.size(); i++)
+	zone_table[i].zone_value=zone_table[i].isEmpty()?1:-1;
+
       call_room_specials();
-// this is advanced weather stuff, do not activate - Bat
-#if 0 
-      if (!pulse_mudhour)
-        update_world_weather();
-#endif
+    }
+
+
+    if (!teleport){
       // note on this loop
       // it is possible that next_thing gets deleted in one of the sub funcs
       // we don't get acknowledgement of this in any way.
@@ -788,8 +799,7 @@ int TSocket::gameLoop()
               continue;
             }
           }
-        }
-	if (!quickpulse) {
+
 	  rc = obj->updateBurning();
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             next_thing = obj->next;
@@ -829,329 +839,305 @@ int TSocket::gameLoop()
     }
 
 
-    if (!combat || !mobstuff || !teleport || !drowning || !update_stuff || !pulse_tick) {
-      unsigned int i;
-      for (i = 0; i < zone_table.size(); i++) {
-	if (zone_table[i].isEmpty())
-	  zone_table[i].zone_value=1;
-	else{
-	  zone_table[i].zone_value=-1;
-	  //	  vlogf(LOG_PEEL, "zone %i not empty", i);
+    // note on this loop
+    // it is possible that temp gets deleted in one of the sub funcs
+    // we don't get acknowledgement of this in any way.
+    // to avoid problems this might cause, we reinitialize temp at
+    // the end (eg, before any deletes, or before we come back around)
+    // bottom line is that temp keeps getting set because it might be
+    // bogus after the function call.
+    for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
+      temp = tmp_ch->next;  // just for safety
+
+      if (tmp_ch->getPosition() == POSITION_DEAD) {
+	vlogf(LOG_BUG, "Error: dead creature (%s at %d) in character_list, removing.",
+	      tmp_ch->getName(), tmp_ch->in_room);
+	delete tmp_ch;
+	tmp_ch = NULL;
+	continue;
+      }
+      if ((tmp_ch->getPosition() < POSITION_STUNNED) &&
+	  (tmp_ch->getHit() > 0)) {
+	vlogf(LOG_BUG, "Error: creature (%s) with hit > 0 found with position < stunned",
+	      tmp_ch->getName());
+	vlogf(LOG_BUG, "Setting player to POSITION_STANDING");
+	tmp_ch->setPosition(POSITION_STANDING);
+      }
+
+      if (!special_procs) {
+	if (tmp_ch->spec) {
+	  rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_PULSE, "", NULL);
+	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	    if (!tmp_ch) continue;
+
+	    temp = tmp_ch->next;
+	    delete tmp_ch;
+	    tmp_ch = NULL;
+	    continue;
+	  }
 	}
       }
 
-      // note on this loop
-      // it is possible that temp gets deleted in one of the sub funcs
-      // we don't get acknowledgement of this in any way.
-      // to avoid problems this might cause, we reinitialize temp at
-      // the end (eg, before any deletes, or before we come back around)
-      // bottom line is that temp keeps getting set because it might be
-      // bogus after the function call.
-      for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
-	temp = tmp_ch->next;  // just for safety
-
-        if (tmp_ch->getPosition() == POSITION_DEAD) {
-          vlogf(LOG_BUG, "Error: dead creature (%s at %d) in character_list, removing.",
-               tmp_ch->getName(), tmp_ch->in_room);
-          delete tmp_ch;
-          tmp_ch = NULL;
-          continue;
-        }
-        if ((tmp_ch->getPosition() < POSITION_STUNNED) &&
-            (tmp_ch->getHit() > 0)) {
-          vlogf(LOG_BUG, "Error: creature (%s) with hit > 0 found with position < stunned",
-                    tmp_ch->getName());
-          vlogf(LOG_BUG, "Setting player to POSITION_STANDING");
-          tmp_ch->setPosition(POSITION_STANDING);
-        }
-#if 0
-// modified weather system do not use yet, BAT
-	if (!number(0, 100))
-	  tmp_ch->checkWeatherConditions();
-#endif
-#if 1
-        if (!special_procs) {
-          if (tmp_ch->spec) {
-	    rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_PULSE, "", NULL);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              if (!tmp_ch) continue;
-
-              temp = tmp_ch->next;
-              delete tmp_ch;
-              tmp_ch = NULL;
-              continue;
-            }
-          }
-        }
-#endif
-        if (!drowning) {
-          rc = tmp_ch->checkDrowning();
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            temp = tmp_ch->next;
-            delete tmp_ch;
-            tmp_ch = NULL;
-            continue;
-          }
-
-	  TMonster *tmon = dynamic_cast<TMonster *>(tmp_ch);
-	  if(tmon){
-	    tmon->checkResponses((tmon->opinion.random ? tmon->opinion.random : 
-			    (tmon->targ() ? tmon->targ() : tmon)),
-			   NULL, NULL, CMD_RESP_PULSE);
-
-	  }
-
-        }
-
-	if (!mobstuff) {
-          if (Gravity) {
-	    tmp_ch->checkSinking(tmp_ch->in_room);
-
-            rc = tmp_ch->checkFalling();
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              temp = tmp_ch->next;
-              delete tmp_ch;
-              tmp_ch = NULL;
-	      continue;
-            }
-          }
-	  if (!tmp_ch->isPc() && dynamic_cast<TMonster *>(tmp_ch) &&
-	      (zone_table[tmp_ch->roomp->getZoneNum()].zone_value!=1 || 
-	       tmp_ch->spec==SPEC_SHOPKEEPER)){
-	    rc = dynamic_cast<TMonster *>(tmp_ch)->mobileActivity(pulse);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              temp = tmp_ch->next;
-              delete tmp_ch;
-              tmp_ch = NULL;
-              continue;
-            }
-          }
-	  if (tmp_ch->task && (pulse >= tmp_ch->task->nextUpdate)) {
-	    TObj *tmper_obj = NULL;
-	    if (tmp_ch->task->obj) {
-	      tmper_obj = tmp_ch->task->obj; 
-	    } 
-	    rc = (*(tasks[tmp_ch->task->task].taskf))
-      (tmp_ch, CMD_TASK_CONTINUE, "", pulse, tmp_ch->task->room, tmp_ch->task->obj);
-	    if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-	      if (tmper_obj) {
-	        delete tmper_obj;
-	        tmper_obj = NULL;
-	      } else {
-	        vlogf(LOG_BUG, "bad item delete in gameloop -- task calling");
-	      }
-	    }
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              temp = tmp_ch->next;
-              delete tmp_ch;
-              tmp_ch = NULL;
-              continue;
-            }
-          }
-	}
-
-        if (!combat) {
-
-	  if (tmp_ch->isPc() && tmp_ch->desc && tmp_ch->GetMaxLevel() > MAX_MORT &&
-	      !tmp_ch->limitPowerCheck(CMD_GOTO, tmp_ch->roomp->number)
-	      && !tmp_ch->affectedBySpell(SPELL_POLYMORPH) &&
-	      !IS_SET(tmp_ch->specials.act, ACT_POLYSELF)) {
-	    char tmpbuf[256];
-	    strcpy(tmpbuf, "");
-	    tmp_ch->sendTo("An incredibly powerful force pulls you back into Imperia.\n\r");
-	    act("$n is pulled back whence $e came.", TRUE, tmp_ch, 0, 0, TO_ROOM);
-	    vlogf(LOG_BUG,"%s was wandering around the mortal world (R:%d) so moving to office.",
-		  tmp_ch->getName(), tmp_ch->roomp->number);
-	    
-	    if (!tmp_ch->hasWizPower(POWER_GOTO)) {
-	      tmp_ch->setWizPower(POWER_GOTO);
-	      tmp_ch->doGoto(tmpbuf);
-	      tmp_ch->remWizPower(POWER_GOTO);
-	    } else {
-	      tmp_ch->doGoto(tmpbuf);
-	    }
-	    act("$n appears in the room with a sheepish look on $s face.", TRUE, tmp_ch, 0, 0, TO_ROOM);
-	  }
-
-
-          if (tmp_ch->spelltask) {
-            rc = (tmp_ch->cast_spell(tmp_ch, CMD_TASK_CONTINUE, pulse));
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              temp = tmp_ch->next;
-              delete tmp_ch;
-              tmp_ch = NULL;
-              continue;
-            }
-          }
-
-          rc = tmp_ch->updateAffects();
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            // died in update (disease) 
-            temp = tmp_ch->next;
-            delete tmp_ch;
-            tmp_ch = NULL;
-            continue;
-          }
-
-	  // this was in hit(), makes more sense here I think
-	  if (tmp_ch->getMyRace()->hasTalent(TALENT_FAST_REGEN) &&
-	      (tmp_ch->getHit() < tmp_ch->hitLimit()) &&
-	      !::number(0, 10)){
-	    // mostly for trolls
-	    act("You regenerate slightly.", TRUE, tmp_ch, 0, 0, TO_CHAR);
-	    act("$n regenerates slightly.", TRUE, tmp_ch, 0, 0, TO_ROOM);
-	    tmp_ch->addToHit(::number(1,6));
-	  }
-
-          // soak up attack if not in combat
-          if ((tmp_ch->cantHit > 0) && !tmp_ch->fight())
-            tmp_ch->cantHit--;
-        }
-	if (!teleport) {
-	  rc = tmp_ch->riverFlow(pulse);
-	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            temp = tmp_ch->next;
-            delete tmp_ch;
-            tmp_ch = NULL;
-            continue;
-          }
-	  rc = tmp_ch->teleportRoomFlow(pulse);
-	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            temp = tmp_ch->next;
-            delete tmp_ch;
-            tmp_ch = NULL;
-            continue;
-          }
-	}
-        TMonster *tmon = dynamic_cast<TMonster *>(tmp_ch);
-	if (!update_stuff) {
-	  if (!number(0, 3) && !tmp_ch->isPc() && tmon)
-	    tmon->makeNoise();
-        }
-
-        if (!tmp_ch) {
-          forceCrash("how did we get to here: socket");
-          temp = tmp_ch->next;
-          continue;
-        }
-
-#if 0
-// this causes PC's to skip hlaf tick, why is it here?
-	if (!tmp_ch || !tmon || !tmp_ch->roomp) {
-          temp = tmp_ch->next;
+      if (!drowning) {
+	rc = tmp_ch->checkDrowning();
+	if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	  temp = tmp_ch->next;
+	  delete tmp_ch;
+	  tmp_ch = NULL;
 	  continue;
-        }
-#endif
-
-	if (!pulse_tick) {
-	  rc = tmp_ch->updateHalfTickStuff();
-	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
-	    if (!tmp_ch)
-	      continue;
-
-            temp = tmp_ch->next;
-            delete tmp_ch;
-            tmp_ch = NULL;
-            continue;
-          }
 	}
-	if (!pulse_mudhour) {
-	  rc = tmp_ch->updateTickStuff();
+
+	TMonster *tmon = dynamic_cast<TMonster *>(tmp_ch);
+	if(tmon){
+	  tmon->checkResponses((tmon->opinion.random ? tmon->opinion.random : 
+				(tmon->targ() ? tmon->targ() : tmon)),
+			       NULL, NULL, CMD_RESP_PULSE);
+
+	}
+
+      }
+
+      if (!mobstuff) {
+	if (Gravity) {
+	  tmp_ch->checkSinking(tmp_ch->in_room);
+
+	  rc = tmp_ch->checkFalling();
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            temp = tmp_ch->next;
-            if (!dynamic_cast<TBeing *>(tmp_ch)) {
-              // something may be corrupting tmp_ch below - bat 8-18-98
-              forceCrash("forced crash.  How did we get here?");
-            }
-            delete tmp_ch;
-            tmp_ch = NULL;
-            continue;
-          }
-        }
-	
-	// check for vampires in daylight
-	if(!quickpulse){
-	  if(!tmp_ch->roomp->isIndoorSector() && 
-	     !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
-	     sunIsUp()){
+	    temp = tmp_ch->next;
+	    delete tmp_ch;
+	    tmp_ch = NULL;
+	    continue;
+	  }
+	}
+	if (!tmp_ch->isPc() && dynamic_cast<TMonster *>(tmp_ch) &&
+	    (zone_table[tmp_ch->roomp->getZoneNum()].zone_value!=1 || 
+	     tmp_ch->spec==SPEC_SHOPKEEPER)){
+	  rc = dynamic_cast<TMonster *>(tmp_ch)->mobileActivity(pulse);
+	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	    temp = tmp_ch->next;
+	    delete tmp_ch;
+	    tmp_ch = NULL;
+	    continue;
+	  }
+	}
+	if (tmp_ch->task && (pulse >= tmp_ch->task->nextUpdate)) {
+	  TObj *tmper_obj = NULL;
+	  if (tmp_ch->task->obj) {
+	    tmper_obj = tmp_ch->task->obj; 
+	  } 
+	  rc = (*(tasks[tmp_ch->task->task].taskf))
+	    (tmp_ch, CMD_TASK_CONTINUE, "", pulse, tmp_ch->task->room, tmp_ch->task->obj);
+	  if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+	    if (tmper_obj) {
+	      delete tmper_obj;
+	      tmper_obj = NULL;
+	    } else {
+	      vlogf(LOG_BUG, "bad item delete in gameloop -- task calling");
+	    }
+	  }
+	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	    temp = tmp_ch->next;
+	    delete tmp_ch;
+	    tmp_ch = NULL;
+	    continue;
+	  }
+	}
+      }
+
+      if (!combat) {
+
+	if (tmp_ch->isPc() && tmp_ch->desc && tmp_ch->GetMaxLevel() > MAX_MORT &&
+	    !tmp_ch->limitPowerCheck(CMD_GOTO, tmp_ch->roomp->number)
+	    && !tmp_ch->affectedBySpell(SPELL_POLYMORPH) &&
+	    !IS_SET(tmp_ch->specials.act, ACT_POLYSELF)) {
+	  char tmpbuf[256];
+	  strcpy(tmpbuf, "");
+	  tmp_ch->sendTo("An incredibly powerful force pulls you back into Imperia.\n\r");
+	  act("$n is pulled back whence $e came.", TRUE, tmp_ch, 0, 0, TO_ROOM);
+	  vlogf(LOG_BUG,"%s was wandering around the mortal world (R:%d) so moving to office.",
+		tmp_ch->getName(), tmp_ch->roomp->number);
 	    
-	    if(tmp_ch->hasQuestBit(TOG_VAMPIRE)){
-	      act("<r>Exposure to sunlight causes your skin to ignite!<1>",
-		  FALSE, tmp_ch, NULL, NULL, TO_CHAR);
-	      act("<r>$n's skin ignites in flames as the sunlight shines on $m!<1>",
-		  FALSE, tmp_ch, NULL, NULL, TO_ROOM);
-	      
-	      rc=tmp_ch->reconcileDamage(tmp_ch, ::number(20,200), DAMAGE_FIRE);
-	      
-	      if(IS_SET_DELETE(rc, DELETE_THIS)) {
-		if (!tmp_ch) continue;
-		
-		temp = tmp_ch->next;
-		delete tmp_ch;
-		tmp_ch = NULL;
-		continue;
-	      }
-	    } else if(tmp_ch->hasQuestBit(TOG_BITTEN_BY_VAMPIRE) &&
-		      !::number(0,4)){
-	      act("Exposure to sunlight makes your skin itch.",
-		  FALSE, tmp_ch, NULL, NULL, TO_CHAR);
-	    }
+	  if (!tmp_ch->hasWizPower(POWER_GOTO)) {
+	    tmp_ch->setWizPower(POWER_GOTO);
+	    tmp_ch->doGoto(tmpbuf);
+	    tmp_ch->remWizPower(POWER_GOTO);
+	  } else {
+	    tmp_ch->doGoto(tmpbuf);
+	  }
+	  act("$n appears in the room with a sheepish look on $s face.", TRUE, tmp_ch, 0, 0, TO_ROOM);
+	}
+
+
+	if (tmp_ch->spelltask) {
+	  rc = (tmp_ch->cast_spell(tmp_ch, CMD_TASK_CONTINUE, pulse));
+	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	    temp = tmp_ch->next;
+	    delete tmp_ch;
+	    tmp_ch = NULL;
+	    continue;
 	  }
 	}
 
-	// lycanthrope transformation
-#if 0
-	if(!quickpulse){
-	  if(tmp_ch->hasQuestBit(TOG_LYCANTHROPE) &&
-	     !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE) &&
-	     moonType() == "full" && !sunIsUp()){
-	    lycanthropeTransform(tmp_ch);
-	  } else if(tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)){
-	    if(moonType() != "full" || sunIsUp()){
-	      tmp_ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
-	      tmp_ch->doReturn("", WEAR_NOWHERE, CMD_RETURN);
-	    } else if(!tmp_ch->fight() && tmp_ch->roomp && 
-		      !tmp_ch->roomp->isRoomFlag(ROOM_PEACEFUL) &&
-		      !::number(0,24)){
-	      tmp_ch->setCombatMode(ATTACK_BERSERK);
-	      tmp_ch->goBerserk(NULL);
+	rc = tmp_ch->updateAffects();
+	if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	  // died in update (disease) 
+	  temp = tmp_ch->next;
+	  delete tmp_ch;
+	  tmp_ch = NULL;
+	  continue;
+	}
+
+	// this was in hit(), makes more sense here I think
+	if (tmp_ch->getMyRace()->hasTalent(TALENT_FAST_REGEN) &&
+	    (tmp_ch->getHit() < tmp_ch->hitLimit()) &&
+	    !::number(0, 10)){
+	  // mostly for trolls
+	  act("You regenerate slightly.", TRUE, tmp_ch, 0, 0, TO_CHAR);
+	  act("$n regenerates slightly.", TRUE, tmp_ch, 0, 0, TO_ROOM);
+	  tmp_ch->addToHit(::number(1,6));
+	}
+
+	// soak up attack if not in combat
+	if ((tmp_ch->cantHit > 0) && !tmp_ch->fight())
+	  tmp_ch->cantHit--;
+      }
+      if (!teleport) {
+	rc = tmp_ch->riverFlow(pulse);
+	if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	  temp = tmp_ch->next;
+	  delete tmp_ch;
+	  tmp_ch = NULL;
+	  continue;
+	}
+	rc = tmp_ch->teleportRoomFlow(pulse);
+	if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	  temp = tmp_ch->next;
+	  delete tmp_ch;
+	  tmp_ch = NULL;
+	  continue;
+	}
+      }
+      TMonster *tmon = dynamic_cast<TMonster *>(tmp_ch);
+      if (!update_stuff) {
+	if (!number(0, 3) && !tmp_ch->isPc() && tmon)
+	  tmon->makeNoise();
+      }
+
+      if (!tmp_ch) {
+	forceCrash("how did we get to here: socket");
+	temp = tmp_ch->next;
+	continue;
+      }
+
+
+      if (!pulse_tick) {
+	rc = tmp_ch->updateHalfTickStuff();
+	if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	  if (!tmp_ch)
+	    continue;
+
+	  temp = tmp_ch->next;
+	  delete tmp_ch;
+	  tmp_ch = NULL;
+	  continue;
+	}
+      }
+      if (!pulse_mudhour) {
+	rc = tmp_ch->updateTickStuff();
+	if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	  temp = tmp_ch->next;
+	  if (!dynamic_cast<TBeing *>(tmp_ch)) {
+	    // something may be corrupting tmp_ch below - bat 8-18-98
+	    forceCrash("forced crash.  How did we get here?");
+	  }
+	  delete tmp_ch;
+	  tmp_ch = NULL;
+	  continue;
+	}
+      }
+	
+      // check for vampires in daylight
+      if(!quickpulse){
+	if(!tmp_ch->roomp->isIndoorSector() && 
+	   !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
+	   sunIsUp()){
+	    
+	  if(tmp_ch->hasQuestBit(TOG_VAMPIRE)){
+	    act("<r>Exposure to sunlight causes your skin to ignite!<1>",
+		FALSE, tmp_ch, NULL, NULL, TO_CHAR);
+	    act("<r>$n's skin ignites in flames as the sunlight shines on $m!<1>",
+		FALSE, tmp_ch, NULL, NULL, TO_ROOM);
+	      
+	    rc=tmp_ch->reconcileDamage(tmp_ch, ::number(20,200), DAMAGE_FIRE);
+	      
+	    if(IS_SET_DELETE(rc, DELETE_THIS)) {
+	      if (!tmp_ch) continue;
+		
+	      temp = tmp_ch->next;
+	      delete tmp_ch;
+	      tmp_ch = NULL;
+	      continue;
 	    }
+	  } else if(tmp_ch->hasQuestBit(TOG_BITTEN_BY_VAMPIRE) &&
+		    !::number(0,4)){
+	    act("Exposure to sunlight makes your skin itch.",
+		FALSE, tmp_ch, NULL, NULL, TO_CHAR);
 	  }
 	}
+      }
+
+      // lycanthrope transformation
+#if 0
+      if(!quickpulse){
+	if(tmp_ch->hasQuestBit(TOG_LYCANTHROPE) &&
+	   !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE) &&
+	   moonType() == "full" && !sunIsUp()){
+	  lycanthropeTransform(tmp_ch);
+	} else if(tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)){
+	  if(moonType() != "full" || sunIsUp()){
+	    tmp_ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
+	    tmp_ch->doReturn("", WEAR_NOWHERE, CMD_RETURN);
+	  } else if(!tmp_ch->fight() && tmp_ch->roomp && 
+		    !tmp_ch->roomp->isRoomFlag(ROOM_PEACEFUL) &&
+		    !::number(0,24)){
+	    tmp_ch->setCombatMode(ATTACK_BERSERK);
+	    tmp_ch->goBerserk(NULL);
+	  }
+	}
+      }
 #endif
 
 
-        if (!quickpulse) {
-          if (tmp_ch->spec) {
-            rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_QUICK_PULSE, "", NULL);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              if (!tmp_ch) continue;
+      if (!quickpulse) {
+	if (tmp_ch->spec) {
+	  rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_QUICK_PULSE, "", NULL);
+	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	    if (!tmp_ch) continue;
 	      
-	      temp = tmp_ch->next;
-              delete tmp_ch;
-              tmp_ch = NULL;
-              continue;
-            }
-          }
-        }
+	    temp = tmp_ch->next;
+	    delete tmp_ch;
+	    tmp_ch = NULL;
+	    continue;
+	  }
+	}
+      }
 
-        if (tmp_ch->desc && (tmp_ch->vt100() || tmp_ch->ansi())) {
-          time_t t1;
-          struct tm *tptr;
-          if ((t1 = time((time_t *) 0)) != -1) {
-            tptr = localtime(&t1);
-            if (tptr->tm_min != tmp_ch->desc->last.minute) {
-              tmp_ch->desc->last.minute = tptr->tm_min;
-              if (tmp_ch->ansi()) 
-                tmp_ch->desc->updateScreenAnsi(CHANGED_TIME);
-              else
-                tmp_ch->desc->updateScreenVt100(CHANGED_TIME);
-            }
-          }
-        }
-        temp = tmp_ch->next;
-      } // character_list
-    }
+      if (tmp_ch->desc && (tmp_ch->vt100() || tmp_ch->ansi())) {
+	time_t t1;
+	struct tm *tptr;
+	if ((t1 = time((time_t *) 0)) != -1) {
+	  tptr = localtime(&t1);
+	  if (tptr->tm_min != tmp_ch->desc->last.minute) {
+	    tmp_ch->desc->last.minute = tptr->tm_min;
+	    if (tmp_ch->ansi()) 
+	      tmp_ch->desc->updateScreenAnsi(CHANGED_TIME);
+	    else
+	      tmp_ch->desc->updateScreenVt100(CHANGED_TIME);
+	  }
+	}
+      }
+      temp = tmp_ch->next;
+    } // character_list
 
     if (!(pulse % 2399))
       do_check_mail();
