@@ -35,8 +35,7 @@ int stormySkies(TBeing * caster, TBeing * victim, int level, byte bKnown)
 
   caster->reconcileHurt(victim, discArray[SPELL_STORMY_SKIES]->alignMod);
   
-  int dam = caster->getSkillDam(victim, SPELL_STORMY_SKIES, 
-caster->getSkillLevel(SPELL_STORMY_SKIES), caster->getAdvLearning(SPELL_STORMY_SKIES));
+  int dam = caster->getSkillDam(victim, SPELL_STORMY_SKIES, caster->getSkillLevel(SPELL_STORMY_SKIES), caster->getAdvLearning(SPELL_STORMY_SKIES));
  
   if ((victim->roomp->getWeather() == WEATHER_RAINY) ||
      (victim->roomp->getWeather() == WEATHER_LIGHTNING)) {
@@ -167,11 +166,11 @@ int aquaticBlast(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
         !caster->isNotPowerful(victim, level, SPELL_AQUATIC_BLAST, SILENT_YES)) {
       CS(SPELL_AQUATIC_BLAST);
       dam *= 2;
-      act("A HUGE stream of water smacks into $N knocking $M over!",
+      act("A HUGE BLAST of water smacks into $N knocking $M over!",
           FALSE, caster, NULL, victim, TO_CHAR, ANSI_BLUE);
-      act("$n directs a HUGE stream of water at you, knocking you down!",
+      act("$n directs a HUGE BLAST of water at you, knocking you down!",
           FALSE, caster, NULL, victim, TO_VICT, ANSI_BLUE);
-      act("$n directs a HUGE stream of water in $N's direction, knocking $M over!",
+      act("$n directs a HUGE BLAST of water in $N's direction, knocking $M over!",
           FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
       victim->dropPool(50, LIQ_WATER);
 
@@ -190,22 +189,22 @@ int aquaticBlast(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
       victim->addToWait(combatRound(1));
     } else if (victim->isLucky(caster->spellLuckModifier(SPELL_AQUATIC_BLAST))) {
 
-      act("A tiny stream of water smacks into $N!",
+      act("A stream of water smacks into $N. Must have been a dud.",
           FALSE, caster, NULL, victim, TO_CHAR, ANSI_BLUE);
-      act("$n directs a tiny stream of water in your direction!",
+      act("$n directs a stream of water in your direction. Must have been a dud.",
           FALSE, caster, NULL, victim, TO_VICT, ANSI_BLUE);
-      act("$n directs a tiny stream of water in $N's direction!",
+      act("$n directs a stream of water in $N's direction. Must have been a dud.",
           FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
       victim->dropPool(10, LIQ_WATER);
 
       SV(SPELL_AQUATIC_BLAST);
       dam /= 2;
     } else {
-      act("A stream of water smacks into $N!",
+      act("A forceful blast of water smacks into $N!",
           FALSE, caster, NULL, victim, TO_CHAR, ANSI_BLUE);
-      act("$n directs a stream of water in your direction!",
+      act("$n directs a forceful blast of water in your direction!",
           FALSE, caster, NULL, victim, TO_VICT, ANSI_BLUE);
-      act("$n directs a stream of water in $N's direction!",
+      act("$n directs a forceful blast of water in $N's direction!",
           FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
       victim->dropPool(25, LIQ_WATER);
     }
@@ -218,9 +217,9 @@ int aquaticBlast(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
     act("$n just tried to attack you.", FALSE, caster, 0, victim, TO_VICT, ANSI_BLUE);
     if (critFail(caster, SPELL_AQUATIC_BLAST) == CRIT_F_HITSELF) {
       CF(SPELL_AQUATIC_BLAST);
-      act("You call forth a stream of water, but it leaves you all wet!",
+      act("You summon the powers of the frog, but it leaves you all wet!",
            FALSE, caster, NULL, 0, TO_CHAR, ANSI_BLUE);
-      act("$n calls forth a stream of water, but it leaves $m all wet!",
+      act("$n does something stupid makes $mself all wet!",
            FALSE, caster, NULL, 0, TO_ROOM, ANSI_BLUE);
       caster->dropPool(10, LIQ_WATER);
       if (caster->reconcileDamage(caster, dam, SPELL_AQUATIC_BLAST) == -1)
@@ -282,19 +281,16 @@ int aquaticBlast(TBeing * caster, TBeing * victim, TMagicItem * obj)
 
 static struct PolyType ShapeShiftList[] =
 {
-  {"gopher"   , 30,   1, 25401, DISC_SHAMAN, RACE_NORACE},
-  {"deer"     , 31,   1, 14105, DISC_SHAMAN, RACE_NORACE},
-  {"wolf"     , 35,  10,  3400, DISC_SHAMAN, RACE_NORACE},
-  {"snake"    , 37,  20,  3412, DISC_SHAMAN, RACE_NORACE},
-  {"moose"    , 39,  30, 10200, DISC_SHAMAN, RACE_NORACE},
-  {"dolphin"  , 40,  45, 12432, DISC_SHAMAN, RACE_NORACE},
-  {"bear"     , 42,  75,  3403, DISC_SHAMAN, RACE_NORACE},
-  {"crow"     , 44,  70, 14350, DISC_SHAMAN, RACE_NORACE},
-  {"shark"    , 40,  60, 12413, DISC_SHAMAN, RACE_NORACE},
-  {"hawk"     , 48, 100, 14440, DISC_SHAMAN, RACE_NORACE},
-  {"saberfish", 49,  80,  5503, DISC_SHAMAN, RACE_NORACE},
-  {"spider"   , 49,  80,  7717, DISC_SHAMAN, RACE_NORACE},
-  {"\n"        , -1,  -1,    -1, DISC_SHAMAN, RACE_NORACE}
+  {"chicken"   , 30,   1, 1213, DISC_SHAMAN_FROG, RACE_NORACE},
+  {"horsefly"     , 31,   1, 15420, DISC_SHAMAN_FROG, RACE_NORACE},
+  {"slug"     , 35,  10,  5126, DISC_SHAMAN_FROG, RACE_NORACE},
+  {"snake"    , 37,  20,  3412, DISC_SHAMAN_FROG, RACE_NORACE},
+  {"dolphin"  , 40,  45, 12432, DISC_SHAMAN_FROG, RACE_NORACE},
+  {"bear"     , 42,  75,  3403, DISC_SHAMAN_FROG, RACE_NORACE},
+  {"crow"     , 44,  70, 14350, DISC_SHAMAN_FROG, RACE_NORACE},
+  {"hawk"     , 48, 100, 14440, DISC_SHAMAN_FROG, RACE_NORACE},
+  {"spider"   , 49,  80,  7717, DISC_SHAMAN_FROG, RACE_NORACE},
+  {"\n"        , -1,  -1,    -1, DISC_SHAMAN_FROG, RACE_NORACE}
 };
 
 int shapeShift(TBeing *caster, int level, byte bKnown)
@@ -428,7 +424,7 @@ int shapeShift(TBeing *caster, int level, byte bKnown)
     REMOVE_BIT(mob->specials.act, ACT_DIURNAL);
     REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
 
-    mob->setMana(min((mob->getMana() - 15), 85));
+    mob->setLifeforce(min((mob->getLifeforce() - 15), 85));
     return SPELL_SUCCESS;
   } else {
     return SPELL_FAIL;
@@ -501,3 +497,15 @@ int castShapeShift(TBeing *caster)
 }
 
 // END SHAPESHIFT
+
+
+
+
+
+
+
+
+
+
+
+

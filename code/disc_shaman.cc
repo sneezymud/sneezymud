@@ -212,10 +212,12 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
     if (victim->isImmune(IMMUNE_CHARM, level)) {
       victim->setPosition(POSITION_STANDING);
       victim->doSay("Thank you");
+      delete corpse;
       return SPELL_FALSE;
     } else if (caster->tooManyFollowers(victim, FOL_ZOMBIE)) {
       act("$N refuses to enter a group the size of yours!", TRUE, caster, NULL, victim, TO_CHAR);
       act("$N refuses to enter a group the size of $n's!", TRUE, caster, NULL, victim, TO_ROOM);
+      delete corpse;
       return SPELL_FALSE;
     }
 

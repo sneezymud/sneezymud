@@ -60,17 +60,6 @@ void TBeing::setSpellEligibleToggle(TMonster *trainer, spellNumT spell, silentTy
       setQuestBit(TOG_ELIGIBLE_DUAL_WIELD);
       break;
       
-    case SPELL_SHAPESHIFT:
-      if (!silent && trainer) {
-        sprintf(buf,"%s However, before I train you in shapeshift, I must ask you to perform a small task to prove your worth.",
-                    fname(name).c_str());
-        trainer->doTell(buf);
-        sprintf(buf,"%s In order to prove you are ready for such knowledge, bring me some special clay.", fname(name).c_str());
-        trainer->doTell(buf);
-      }
-      setQuestBit(TOG_ELIGIBLE_SHAPE_SHIFT);
-      break;
-      
     case SPELL_FIREBALL:
       if (!silent && trainer) {
         sprintf(buf,"%s Alas, I do not have the knowledge to train you in fireball.",
