@@ -314,24 +314,23 @@ void TPerson::doToggle(const char *arg2)
 
 
     
-
-
-    sendTo(COLOR_BASIC, "\n\r<c>Immortal Toggles<1>\n\r");
-    sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
-    
-    if(getInvisLevel())
-      sendTo(COLOR_BASIC, "Invisibility      : <G>%-4i<1>   |    ", getInvisLevel());
-    else
-      sendTo(COLOR_BASIC, "Invisibility      : <R>off <1>   |    ");
-    
-    sendTo(COLOR_BASIC, "Auto Success      : %s\n\r", on_or_off(IS_SET(desc->autobits, AUTO_SUCCESS)));
-    
-    sendTo(COLOR_BASIC, "Stealth Mode      : %s    |    ", on_or_off(isPlayerAction(PLR_STEALTH)));
-
-    sendTo(COLOR_BASIC, "No Hassle         : %s\n\r", on_or_off(isPlayerAction(PLR_NOHASSLE)));
-
-    sendTo(COLOR_BASIC, "Immortality       : %s\n\r", on_or_off(isPlayerAction(PLR_IMMORTAL)));
-
+    if(isImmortal() || GetMaxLevel() >= GOD_LEVEL1){
+      sendTo(COLOR_BASIC, "\n\r<c>Immortal Toggles<1>\n\r");
+      sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
+      
+      if(getInvisLevel())
+	sendTo(COLOR_BASIC, "Invisibility      : <G>%-4i<1>   |    ", getInvisLevel());
+      else
+	sendTo(COLOR_BASIC, "Invisibility      : <R>off <1>   |    ");
+      
+      sendTo(COLOR_BASIC, "Auto Success      : %s\n\r", on_or_off(IS_SET(desc->autobits, AUTO_SUCCESS)));
+      
+      sendTo(COLOR_BASIC, "Stealth Mode      : %s    |    ", on_or_off(isPlayerAction(PLR_STEALTH)));
+      
+      sendTo(COLOR_BASIC, "No Hassle         : %s\n\r", on_or_off(isPlayerAction(PLR_NOHASSLE)));
+      
+      sendTo(COLOR_BASIC, "Immortality       : %s\n\r", on_or_off(isPlayerAction(PLR_IMMORTAL)));
+    }
     
 
 
