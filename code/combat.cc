@@ -3322,7 +3322,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
   // handle ammunition
   TGun *gun;
   if(weapon && (gun=dynamic_cast<TGun *>(weapon))){
-    if(dynamic_cast<TMonster *>(this)){
+    if(dynamic_cast<TMonster *>(this) && !master){
       // unlimited ammo for mobs
       dropSpentCasing(roomp, gun->getAmmoType());
     } else {
