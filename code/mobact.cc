@@ -448,7 +448,7 @@ int TMonster::hunt()
           return DELETE_THIS;
         return 1;
       }
-    } else if ((res = choose_exit_global(in_room, oldRoom, -2000)) > DIR_NONE) {
+    } else if ((res = choose_exit_global(in_room, oldRoom, 2000)) > DIR_NONE) {
       rc = goDirection(res);   // walk home
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;

@@ -491,7 +491,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 #endif
 
       // head home
-      dir = choose_exit_global(myself->inRoom(), myself->oldRoom, -2000);
+      dir = choose_exit_global(myself->inRoom(), myself->oldRoom, 2000);
       if (dir >= MIN_DIR) {
         rc = myself->goDirection(dir);
         if (IS_SET_DELETE(rc, DELETE_THIS))
