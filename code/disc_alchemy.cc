@@ -464,6 +464,11 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
 	// added to skip on items flagged with nolocate 8-28-2000 -jh
 	if (obj->isObjStat(ITEM_NOLOCATE))
 	  continue;
+
+	// this gets used too much for item hunting
+	if (obj->obj_flags.cost > 5000)
+	  continue;
+
 	if (obj->objVnum() == YOUTH_POTION ||
             obj->objVnum() == STATS_POTION ||
             obj->parent    == caster       ||
