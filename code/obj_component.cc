@@ -8,6 +8,7 @@
 
 #include "stdsneezy.h"
 #include "shop.h"
+#include "database.h"
 #include "obj_spellbag.h"
 #include "obj_open_container.h"
 #include "obj_component.h"
@@ -2062,18 +2063,16 @@ void buildComponentArray()
   unsigned int j;
   int vnum, usage;
   spellNumT spell;
-  MYSQL_RES *res;
-  MYSQL_ROW row;
+  TDatabase db("sneezy");
 
-  int retdb = dbquery(TRUE, &res, "sneezy", "buildComponentArray", "select vnum, val2, val3 from obj where type=%d", mapFileToItemType(ITEM_COMPONENT));
-  if (retdb) {
-    vlogf(LOG_BUG, "Terminal database error (buildComponentArray)!  ret=%d", retdb);
+  if(!db.query("select vnum, val2, val3 from obj where type=%i", mapFileToItemType(ITEM_COMPONENT))){
+    vlogf(LOG_BUG, "Terminal database error (buildComponentArray)!");
     exit(0);
   }
-  while((row=mysql_fetch_row(res))){
-    vnum=atoi(row[0]);
-    spell=mapFileToSpellnum(atoi(row[1]));
-    usage=atoi(row[2]);
+  while(db.fetchRow()){
+    vnum=atoi(db.getColumn(0));
+    spell=mapFileToSpellnum(atoi(db.getColumn(1)));
+    usage=atoi(db.getColumn(2));
 
     if(spell != TYPE_UNDEFINED &&
        (((usage & COMP_SPELL) != 0))){
@@ -2093,7 +2092,6 @@ void buildComponentArray()
     ci.usage = usage;
     CompIndex.push_back(ci);
   }
-  mysql_free_result(res);
 }
 
 TComponent::TComponent() :

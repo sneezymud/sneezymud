@@ -10,6 +10,7 @@
 #include "statistics.h"
 #include "mail.h"
 #include "shop.h"
+#include "database.h"
 #include "obj_player_corpse.h"
 #include "obj_bag.h"
 #include "obj_symbol.h"
@@ -1287,8 +1288,6 @@ void TMonster::saveItems(const char *filepath)
 
   if(spec==SPEC_SHOPKEEPER){
     unsigned int shop_nr;
-    int rc;
-    MYSQL_RES *res;
 
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);
     
@@ -1296,14 +1295,9 @@ void TMonster::saveItems(const char *filepath)
       vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", this->number);
       return;
     }
-    
-    if((rc=dbquery(TRUE, &res, "sneezy", "saveItems", "update shop set gold=%i where shop_nr=%i", getMoney(), shop_nr))){
-      if(rc==-1){
-	vlogf(LOG_BUG, "Database error in shop_keeper");
-	return;
-      }
-    }
-    mysql_free_result(res);
+
+    TDatabase db("sneezy");
+    db.query("update shop set gold=%i where shop_nr=%i", getMoney(), shop_nr);
   }
 }
 

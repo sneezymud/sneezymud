@@ -41,6 +41,7 @@ extern long random(void);
 #include "socket.h"
 #include "games.h"
 #include "mail.h"
+#include "database.h"
 #include "obj_seethru.h"
 
 bool TBeing::canSeeWho(const TBeing *o) const
@@ -1604,6 +1605,7 @@ void TBeing::addToMoney(int money, moneyTypeT type)
 {
   int lev = 0;
   int amount;
+  TDatabase db("sneezy");
 
   points.money += money;
  
@@ -1641,8 +1643,8 @@ void TBeing::addToMoney(int money, moneyTypeT type)
         reconcileHelp(NULL, -money * TITHE_FACTOR);
         break;
       case GOLD_GAMBLE:
-	dbquery(TRUE, NULL, "sneezy", "addToMoney", "insert ignore into gamblers values ('%s', %i)", getName(), 0);
-	dbquery(TRUE, NULL, "sneezy", "addToMoney", "update gamblers set money=money+%i where name='%s'", money, getName());
+	db.query("insert ignore into gamblers values ('%s', %i)", getName(), 0);
+	db.query("update gamblers set money=money+%i where name='%s'", money, getName());
 	// fall through
       case GOLD_REPAIR:
       case GOLD_SHOP:

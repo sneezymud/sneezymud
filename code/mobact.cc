@@ -12,6 +12,7 @@
 #include "statistics.h"
 #include "shop.h"
 #include "being.h"
+#include "database.h"
 #include "obj_spellbag.h"
 #include "obj_base_corpse.h"
 #include "obj_player_corpse.h"
@@ -3426,8 +3427,6 @@ int TMonster::mobileActivity(int pulse)
     }
     
     if(shopOwned(shop_nr)){
-      MYSQL_RES *res;
-      int rc;
 
 #if 0
       setMoney(getMoney()-100);
@@ -3437,22 +3436,11 @@ int TMonster::mobileActivity(int pulse)
 #endif
 
       if(getMoney()<0){
+	TDatabase db("sneezy");
 
-	if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopowned where shop_nr=%i", shop_nr))){
-	  if(rc){
-	    vlogf(LOG_BUG, "Database error in shop_keeper");
-	    return FALSE;
-	  }
-	}
-	mysql_free_result(res);
+	db.query("delete from shopowned where shop_nr=%i", shop_nr);
+	db.query("delete from shopownedaccess where shop_nr=%i", shop_nr);
 
-	if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopownedaccess where shop_nr=%i", shop_nr))){
-	  if(rc){
-	    vlogf(LOG_BUG, "Database error in shop_keeper");
-	    return FALSE;
-	  }
-	}
-	mysql_free_result(res);
 	vlogf(LOG_PEEL, "shop_nr %i, ran out of money and was reclaimed", shop_nr);
 
 	if(getMoney()<0)

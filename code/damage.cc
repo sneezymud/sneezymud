@@ -10,6 +10,7 @@
 #include "combat.h"
 #include "statistics.h"
 #include "obj_base_corpse.h"
+#include "database.h"
 
 // there is another one of these defines in combat.cc
 #define DAMAGE_DEFINE 0
@@ -132,26 +133,12 @@ int TBeing::reconcileDamage(TBeing *v, int dam, spellNumT how)
 
 
 void update_trophy(const char *name, int vnum, double add){
-  int rc;
-  char buf[256];
-  MYSQL_RES *res;
+  TDatabase db("sneezy");
 
   if(vnum==-1 || vnum==0 || !name){ return; }
-  
-  if((rc=dbquery(TRUE, &res, "sneezy", "update_trophy(1)", "insert ignore into trophy values ('%s', %i, 0)", name, vnum))){
-    if(rc==-1){
-      vlogf(LOG_BUG, "Database error in update_trophy");
-    }
-  }
-  mysql_free_result(res);
 
-  sprintf(buf, "update trophy set count=count+%f where name='%s' and mobvnum=%i", add, name, vnum);
-  if((rc=dbquery(TRUE, &res, "sneezy", "update_trophy(2)", buf))){
-    if(rc==-1)
-      vlogf(LOG_BUG, "Database error in update_trophy");
-  }
-
-  mysql_free_result(res);
+  db.query("insert ignore into trophy values ('%s', %i, 0)", name, vnum);
+  db.query("update trophy set count=count+%f where name='%s' and mobvnum=%i", add, name, vnum);
 }
 
 

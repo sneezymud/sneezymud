@@ -3,6 +3,7 @@
 #include "stdsneezy.h"
 #include "statistics.h"
 #include "obj_component.h"
+#include "database.h"
 
 
 // if logic changes, please change some of the duplicate code in pracsBetween()
@@ -792,27 +793,13 @@ void TPerson::advanceSelectDisciplines(TBeing *gm, classIndT Class, int numx, si
 
 
 void logPermaDeathLevel(TBeing *ch){
-  MYSQL_RES *res;
-  int rc;
-  
-  if((rc=dbquery(TRUE, &res, "sneezy", "permadeath", "replace into permadeath (name, level, killer, died) values ('%s', %i, 'no one', 0)", ch->name, ch->GetMaxLevel()))){
-    if(rc==-1){
-      vlogf(LOG_BUG, "Database error in logPermaDeathLevel");
-    }
-  }
-  mysql_free_result(res);
+  TDatabase db("sneezy");
+  db.query("replace into permadeath (name, level, killer, died) values ('%s', %i, 'no one', 0)", ch->name, ch->GetMaxLevel());
 }
 
 void clearPermaDeathLevel(TBeing *ch){
-  MYSQL_RES *res;
-  int rc;
-  
-  if((rc=dbquery(TRUE, &res, "sneezy", "permadeath", "delete from permadeath where name='%s'", ch->name))){
-    if(rc==-1){
-      vlogf(LOG_BUG, "Database error in logPermaDeathLevel");
-    }
-  }
-  mysql_free_result(res);
+  TDatabase db("sneezy");
+  db.query("delete from permadeath where name='%s'", ch->name);
 }
 
 

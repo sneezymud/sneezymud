@@ -15,6 +15,7 @@
 #include "disease.h"
 #include "mail.h"
 #include "shop.h"
+#include "database.h"
 #include "cmd_trophy.h"
 #include "obj_money.h"
 #include "obj_trash.h"
@@ -361,16 +362,14 @@ int TMonster::rawKill(spellNumT dmg_type, TBeing *tKiller)
 
 void logPermaDeathDied(TBeing *ch, TBeing *killer)
 {
-  MYSQL_RES *res;
+  TDatabase db("sneezy");
 
-  dbquery(TRUE, &res, "sneezy", "permadeath", "update permadeath set died=1 where name='%s'", ch->name);
+  db.query("update permadeath set died=1 where name='%s'", ch->name);
 
   if(killer)
-    dbquery(TRUE, &res, "sneezy", "permadeath", "update permadeath set killer='%s' where name='%s'", killer->getName(), ch->name);
+    db.query("update permadeath set killer='%s' where name='%s'", killer->getName(), ch->name);
 
-  dbquery(TRUE, &res, "sneezy", "permadeath", "update permadeath set level=%i where name='%s'", ch->GetMaxLevel(), ch->name);
-
-  mysql_free_result(res);
+  db.query("update permadeath set level=%i where name='%s'", ch->GetMaxLevel(), ch->name);
 }
 
 // always returns DELETE_THIS
@@ -4677,9 +4676,6 @@ double TBeing::getExpSharePerc() const
 // will always get 100-95 = 5% of real xp (13+ level diffrence)
 static int FRACT(TBeing *ch, TBeing *v)
 {
-  MYSQL_ROW row;
-  MYSQL_RES *res;
-  int rc;
   int fract=100;
 
 #if 0
@@ -4722,16 +4718,14 @@ static int FRACT(TBeing *ch, TBeing *v)
 
   // modify for trophy now
   if(ch->isPc() && !v->isPc()){
-    if((rc=dbquery(TRUE, &res, "sneezy", "consider/trophy", "select mobvnum, count from trophy where name='%s' and mobvnum=%i", ch->getName(), v->mobVnum()))){
-      if(rc!=1){
-	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
-	return fract;
-      }
-    } else if((row=mysql_fetch_row(res))){
-      fract=(int)(fract*trophy_exp_mod(atof(row[1])));
+    TDatabase db("sneezy");
+
+    if(!db.query("select mobvnum, count from trophy where name='%s' and mobvnum=%i", ch->getName(), v->mobVnum())){
+      ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     }
 
-    mysql_free_result(res);
+    if(db.fetchRow())
+      fract=(int)(fract*trophy_exp_mod(atof(db.getColumn(0))));
   }
 
 

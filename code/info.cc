@@ -17,6 +17,7 @@
 #include "combat.h"
 #include "statistics.h"
 #include "obj_component.h"
+#include "database.h"
 
 #include "skillsort.h"
 #include "obj_open_container.h"
@@ -2151,12 +2152,12 @@ void TPerson::doUsers(const char *argument)
             !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
         sprintf(line + strlen(line), "*** Information Concealed ***\n\r");
       } else {
-	MYSQL_RES *res;
-	MYSQL_ROW row;
-	
-	dbquery(TRUE, &res, "sneezy", "doUser", "select pingtime from pings where host='%s'", d->host);
-	if((row=mysql_fetch_row(res))){
-	  sprintf(buf2, "[%s](%s)", (d->host ? d->host : "????"), row[0]);
+	TDatabase db("sneezy");
+
+	db.query("select pingtime from pings where host='%s'", d->host);
+
+	if(db.fetchRow()){
+	  sprintf(buf2, "[%s](%s)", (d->host ? d->host : "????"), db.getColumn(0));
 	} else {
 	  sprintf(buf2, "[%s](???)", (d->host ? d->host : "????"));
 	}
@@ -2962,8 +2963,6 @@ void TBeing::doWorld()
   int i;
   string str;
   char buf[256];
-  MYSQL_RES *res;
-  MYSQL_ROW row;
 
   if (!desc)
     return;
@@ -3005,24 +3004,26 @@ void TBeing::doWorld()
 	  lag_info.low, norm());
   str += buf;
 
-  dbquery(TRUE, &res, "sneezy", "doWorld(1)", 
-	  "select pingtime from pings where host='%s'", desc->host);
-  if((row=mysql_fetch_row(res))){
+  TDatabase db("sneezy");
+
+  db.query("select pingtime from pings where host='%s'", desc->host);
+
+  if(db.fetchRow()){
     sprintf(buf, "%sNetwork Lag: Yours/Avg/High/Low      %s",
-	    blue(), row[0]);
+	    blue(), db.getColumn(0));
     str += buf;
-    dbquery(TRUE, &res, "sneezy", "doWorld(2)", 
-	    "select avg(pingtime), max(pingtime), min(pingtime) from pings");
-    if((row=mysql_fetch_row(res))){
-      sprintf(buf, "/%s/%s/%s%s\n\r", row[0], row[1], row[2], norm());
+
+    db.query("select avg(pingtime), max(pingtime), min(pingtime) from pings");
+
+    if(db.fetchRow()){
+      sprintf(buf, "/%s/%s/%s%s\n\r", db.getColumn(0), db.getColumn(1), 
+	      db.getColumn(2), norm());
       str += buf;
     } else {
       sprintf(buf, "/???/???/???%s\n\r", norm());
       str += buf;
     }
   }
-  mysql_free_result(res);
-
 
 
   sprintf(buf, "Total number of rooms in world:               %ld\n\r", 
@@ -3076,10 +3077,9 @@ void TBeing::doWorld()
 
   int unkmobcount=0;
 
-  dbquery(TRUE, &res, "sneezy", "doWorld", "select count(distinct mobvnum) from trophy");
-  row=mysql_fetch_row(res);
-  unkmobcount=atoi(row[0]);
-  mysql_free_result(res);
+  db.query("select count(distinct mobvnum) from trophy");
+  if(db.fetchRow())
+    unkmobcount=atoi(db.getColumn(0));
 
   sprintf(buf, "Percent of distinct mobiles never killed: %s    %d%% (%i)%s\n\r",
 	  red(), 100-(int)(((float)unkmobcount/(float)mob_index.size())*100), 

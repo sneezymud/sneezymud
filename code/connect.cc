@@ -5445,14 +5445,6 @@ int Descriptor::doAccountStuff(char *arg)
       autobits = 0;
       // remove trophy entries so they do not carry over if the character is recreated
       wipeTrophy(delname);
-
-      //if((rc=dbquery(TRUE, NULL, "sneezy", "doTrophy", "delete * from trophy where name='%s'", ch->name))==-1) {
-      //vlogf(LOG_BUG, "Database error for trophy character delete");
-      //}
-    
-
-
-
       wipePlayerFile(delname);  // handles corpses too
       wipeRentFile(delname);
       wipeFollowersFile(delname);

@@ -62,6 +62,7 @@
 
 #include "stdsneezy.h"
 #include "disease.h"
+#include "database.h"
 #include "obj_base_corpse.h"
 #include "obj_open_container.h"
 #include "obj_trap.h"
@@ -72,6 +73,8 @@
 #include "obj_potion.h"
 #include "obj_staff.h"
 #include "obj_wand.h"
+
+
 // CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye
 // returns DELETE_ITEM if t2 goes bye bye
@@ -5273,9 +5276,7 @@ int totemMask(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *weapon)
 
 int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 {
-  MYSQL_RES *res;
-  MYSQL_ROW row;
-  int rc, found=0;
+  int found=0;
   TThing *o;
   TObj *to;
 
@@ -5294,16 +5295,13 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
   if(!found)
     return FALSE;
 
+  TDatabase db("sneezy");
 
-  if((rc=dbquery(TRUE, &res, "sneezy", "permaDeathMonument", "select name, level, died, killer from permadeath order by level desc limit 10"))){
-    if(rc==-1)
-      vlogf(LOG_BUG, "Database error in permaDeathMonument");
-    else {
-      ch->sendTo("The plaque is empty.\n\r");
-      return TRUE;
-    }
-      
-    return FALSE;
+  db.query("select name, level, died, killer from permadeath order by level desc limit 10");
+
+  if(!db.isResults()){
+    ch->sendTo("The plaque is empty.\n\r");
+    return TRUE;
   }
 
   ch->sendTo("You examine the plaque:\n\r");
@@ -5313,17 +5311,15 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
   ch->sendTo("------------------------------------------------------------\n\r");
 
   int i=1;
-  while((row=mysql_fetch_row(res))){
-    if(atoi(row[2])==1){
-      ch->sendTo(COLOR_BASIC, "%i) %s perished bravely at level %s, killed by %s.\n\r", i, row[0], row[1], row[3]);
+  while(db.fetchRow()){
+    if(atoi(db.getColumn(2))==1){
+      ch->sendTo(COLOR_BASIC, "%i) %s perished bravely at level %s, killed by %s.\n\r", i, db.getColumn(0), db.getColumn(1), db.getColumn(3));
     } else {
-      ch->sendTo(COLOR_BASIC, "%i) %s lives on at level %s\n\r", i, row[0], row[1]);
+      ch->sendTo(COLOR_BASIC, "%i) %s lives on at level %s\n\r", i, db.getColumn(0), db.getColumn(1));
     }
     ++i;
   }
 
-
-  mysql_free_result(res);
 
   return TRUE;
 }
@@ -5331,9 +5327,7 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
 
 int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 {
-  MYSQL_RES *res;
-  MYSQL_ROW row;
-  int rc, found=0;
+  int found=0;
   TThing *o;
   TObj *to;
 
@@ -5352,16 +5346,13 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   if(!found)
     return FALSE;
 
+  TDatabase db("sneezy");
 
-  if((rc=dbquery(TRUE, &res, "sneezy", "trophyBoard", "select name, count(*) c from trophy group by name order by c desc limit 10"))){
-    if(rc==-1)
-      vlogf(LOG_BUG, "Database error in trophyBoard");
-    else {
-      ch->sendTo("The board is empty.\n\r");
-      return TRUE;
-    }
-      
-    return FALSE;
+  db.query("select name, count(*) c from trophy group by name order by c desc limit 10");
+  
+  if(!db.isResults()){
+    ch->sendTo("The board is empty.\n\r");
+    return TRUE;
   }
 
   ch->sendTo("You examine the board:\n\r");
@@ -5372,15 +5363,12 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   ch->sendTo("------------------------------------------------------------\n\r");
 
   int i=1;
-  while((row=mysql_fetch_row(res))){
+  while(db.fetchRow()){
     ch->sendTo(COLOR_BASIC, "%i) %s has killed %i (%d%%) life forms.\n\r", 
-	       i, row[0], atoi(row[1]), 
-	       (int)(((float)atoi(row[1])/(float)mob_index.size())*100));
+	       i, db.getColumn(0), atoi(db.getColumn(1)), 
+	       (int)(((float)atoi(db.getColumn(1))/(float)mob_index.size())*100));
     ++i;
   }
-
-
-  mysql_free_result(res);
 
   return TRUE;
 }
@@ -5388,9 +5376,7 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 
 int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 {
-  MYSQL_RES *res;
-  MYSQL_ROW row;
-  int rc, found=0;
+  int found=0;
   TThing *o;
   TObj *to;
 
@@ -5409,14 +5395,9 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
   if(!found)
     return FALSE;
 
+  TDatabase db("sneezy");
 
-  if((rc=dbquery(TRUE, &res, "sneezy", "highrollersBoard", "select name, money from gamblers where money > 0 order by money desc limit 10"))){
-    if(rc==-1){
-      vlogf(LOG_BUG, "Database error in highrollersBoard");
-      return FALSE;
-    }
-      
-  }
+  db.query("select name, money from gamblers where money > 0 order by money desc limit 10");
 
   ch->sendTo("You examine the board:\n\r");
   ch->sendTo("------------------------------------------------------------\n\r");
@@ -5424,38 +5405,22 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
   ch->sendTo("------------------------------------------------------------\n\r");
 
   int i=1;
-  while((row=mysql_fetch_row(res))){
+  while(db.fetchRow()){
     ch->sendTo(COLOR_BASIC, "%i) %s has won %s talens!\n\r", 
-	       i, row[0], row[1]);
+	       i, db.getColumn(0), db.getColumn(1));
     ++i;
   }
 
-
-  mysql_free_result(res);
-
-
-
-
-  if((rc=dbquery(TRUE, &res, "sneezy", "highrollersBoard", "select name, money from gamblers where money < 0 order by money limit 10"))){
-    if(rc==-1){
-      vlogf(LOG_BUG, "Database error in highrollersBoard");
-      return FALSE;
-    }
-  }
-
+  db.query("select name, money from gamblers where money < 0 order by money limit 10");
+  
   ch->sendTo(COLOR_BASIC, "\n\r");
 
   i=1;
-  while((row=mysql_fetch_row(res))){
+  while(db.fetchRow()){
     ch->sendTo(COLOR_BASIC, "%i) %s has lost %i talens.\n\r", 
-	       i, row[0], abs(atoi(row[1])));
+	       i, db.getColumn(0), abs(atoi(db.getColumn(1))));
     ++i;
   }
-
-
-  mysql_free_result(res);
-
-
 
   return TRUE;
 }
@@ -5463,9 +5428,7 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
 
 int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 {
-  MYSQL_RES *res;
-  MYSQL_ROW row;
-  int rc, found=0;
+  int found=0;
   TThing *o;
   TObj *to;
 
@@ -5491,135 +5454,78 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   ch->sendTo("------------------------------------------------------------\n\r");
 
   
+  TDatabase db("sneezy");
+
   //////////////////////////////////////
   // number of shops and owned status
   //
-  if((rc=dbquery(TRUE, &res, "sneezy", "shopinfoBoard", "select count(*) from shop"))){
-    if(rc==-1)
-      vlogf(LOG_BUG, "Database error in shopinfoBoard");
-    else {
-      ch->sendTo("The board is empty.\n\r");
-      return TRUE;
-    }
-      
-    return FALSE;
+  db.query("select count(*) from shop");
+
+  if(!db.isResults()){
+    ch->sendTo("The board is empty.\n\r");
+    return TRUE;
   }
-  row=mysql_fetch_row(res);
-  int nshops=atoi(row[0]);
-  mysql_free_result(res);
+  db.fetchRow();
+  int nshops=atoi(db.getColumn(0));
 
-  if((rc=dbquery(TRUE, &res, "sneezy", "shopinfoBoard", "select count(distinct shop_nr) from shopownedaccess"))){
-    if(rc==-1)
-      vlogf(LOG_BUG, "Database error in shopinfoBoard");
-    else {
-      ch->sendTo("The board is empty.\n\r");
-      return TRUE;
-    }
-      
-    return FALSE;
-  }
-  row=mysql_fetch_row(res);
-
-  ch->sendTo("There are %i shops, %s of which are privately owned.\n\r",
-	     nshops, row[0]);
-
-  mysql_free_result(res);
+  db.query("select count(distinct shop_nr) from shopownedaccess");
+  int nowned=0;
+  if(db.fetchRow())
+    nowned=atoi(db.getColumn(0));
+    
+  ch->sendTo("There are %i shops, %i of which are privately owned.\n\r",
+	     nshops, nowned);
 
   ////////////////////////////
   // broke shops
-  if((rc=dbquery(TRUE, &res, "sneezy", "shopinfoBoard", "select count(*) from shop where gold<100000"))){
-    if(rc==-1)
-      vlogf(LOG_BUG, "Database error in shopinfoBoard");
-    else {
-      ch->sendTo("The board is empty.\n\r");
-      return TRUE;
-    }
-      
-    return FALSE;
-  }
-  row=mysql_fetch_row(res);
+  db.query("select count(*) from shop where gold<100000");
 
-  ch->sendTo("%s shops have less than 100000 talens.\n\r", row[0]);
+  if(db.fetchRow())
+    ch->sendTo("%s shops have less than 100000 talens.\n\r", db.getColumn(0));
 
-  mysql_free_result(res);
 
   /////////////////////////////
   // average talens
-  if((rc=dbquery(TRUE, &res, "sneezy", "shopinfoBoard", "select round(avg(gold)) from shop"))){
-    if(rc==-1)
-      vlogf(LOG_BUG, "Database error in shopinfoBoard");
-    else {
-      ch->sendTo("The board is empty.\n\r");
-      return TRUE;
-    }
-      
-    return FALSE;
-  }
-  row=mysql_fetch_row(res);
+  db.query("select round(avg(gold)) from shop");
 
-  ch->sendTo("Average talens per shop is %s.\n\r", row[0]);
-
-  mysql_free_result(res);
+  if(db.fetchRow())
+    ch->sendTo("Average talens per shop is %s.\n\r", db.getColumn(0));
   
   ////////////////////////////
   // top ten shops
-  if((rc=dbquery(TRUE, &res, "sneezy", "shopinfoBoard", "select in_room, gold from shop order by gold desc limit 10"))){
-    if(rc==-1)
-      vlogf(LOG_BUG, "Database error in shopinfoBoard");
-    else {
-      ch->sendTo("The board is empty.\n\r");
-      return TRUE;
-    }
-      
-    return FALSE;
-  }
+  db.query("select in_room, gold from shop order by gold desc limit 10");
 
   TRoom *tr=NULL;
   int i=1;
   ch->sendTo("\n\rThe ten wealthiest shops are:\n\r");
-  while((row=mysql_fetch_row(res))){
-    tr=real_roomp(atoi(row[0]));
+  while(db.fetchRow()){
+    tr=real_roomp(atoi(db.getColumn(0)));
     ch->sendTo("%i) %s with %s talens.\n\r",
-	       i, tr->getName(), row[1]);
+	       i, tr->getName(), db.getColumn(1));
     ++i;
   }
 
-  mysql_free_result(res);
-
-
   /////////////////////////////
   // shop types
-  if((rc=dbquery(TRUE, &res, "sneezy", "shopinfoBoard", "select type, count(*) c from shoptype group by type order by c desc"))){
-    if(rc==-1)
-      vlogf(LOG_BUG, "Database error in shopinfoBoard");
-    else {
-      ch->sendTo("The board is empty.\n\r");
-      return TRUE;
-    }
-      
-    return FALSE;
-  }
-  
+  db.query("select type, count(*) c from shoptype group by type order by c desc");
   ch->sendTo("\n\rThe number of shops that deal in each commodity are:\n\r");
   
-  while((row=mysql_fetch_row(res))){
+  while(db.fetchRow()){
     ch->sendTo("[%2s] %-17s   ",
-	       row[1], ItemInfo[atoi(row[0])]->name);
+	       db.getColumn(1), ItemInfo[atoi(db.getColumn(0))]->name);
 
-    if((row=mysql_fetch_row(res))){
+    if(db.fetchRow()){
       ch->sendTo("[%2s] %-17s   ",
-		 row[1], ItemInfo[atoi(row[0])]->name);
+		 db.getColumn(1), ItemInfo[atoi(db.getColumn(0))]->name);
     }
 
-    if((row=mysql_fetch_row(res))){
+    if(db.fetchRow()){
       ch->sendTo("[%2s] %-17s   ",
-		 row[1], ItemInfo[atoi(row[0])]->name);
+		 db.getColumn(1), ItemInfo[atoi(db.getColumn(0))]->name);
     }
 
     ch->sendTo("\n\r");
   }
-
-  mysql_free_result(res);
 
   return TRUE;
 }

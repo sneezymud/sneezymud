@@ -10,6 +10,7 @@
 #include "stdsneezy.h"
 #include "statistics.h"
 #include "shop.h"
+#include "database.h"
 
 charList::charList() :
   name(NULL),
@@ -370,9 +371,6 @@ int TMonster::calculateGoldFromConstant()
 
   if (spec == SPEC_SHOPKEEPER){
     unsigned int shop_nr;
-    int rc;
-    MYSQL_RES *res;
-    MYSQL_ROW row;
 
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);
     
@@ -380,11 +378,12 @@ int TMonster::calculateGoldFromConstant()
       vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", this->number);
       return FALSE;
     }
+
+    TDatabase db("sneezy");
+    db.query("select gold from shop where shop_nr=%i", shop_nr);
     
-    rc=dbquery(TRUE, &res, "sneezy", "calculategoldfromquery", "select gold from shop where shop_nr=%i", shop_nr);
-    
-    if(rc!=-1 && (row=mysql_fetch_row(res))){
-      the_gold = atoi(row[0]);
+    if(db.fetchRow()){
+      the_gold = atoi(db.getColumn(0));
     } else {
       the_gold = 1000000;
       saveGovMoney("shop load wealth", 1000000);

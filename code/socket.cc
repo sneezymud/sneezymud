@@ -31,7 +31,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 
 #include "stdsneezy.h"
 #include "statistics.h"
-
+#include "database.h"
 #include "spelltask.h"
 #include "systemtask.h"
 #include "socket.h"
@@ -170,22 +170,17 @@ void TSocket::addNewDescriptorsDuringBoot(string tStString)
 
 
 void doStocks(){
-  MYSQL_RES *stockinfo_res;
-  MYSQL_ROW stockinfo_row;
-  int rc, shop_nr, talens, shares;
+  int shop_nr, talens, shares;
   float price, prevprice, amt;
+  TDatabase db("sneezy");
 
-  if((rc=dbquery(TRUE, &stockinfo_res, "sneezy", "doStocks", "select si.shop_nr, si.talens, si.price, sum(so.shares) from stockinfo si left join stockowners so on si.ticker=so.ticker group by si.shop_nr"))){
-    if(rc==-1)
-      vlogf(LOG_BUG, "Database error in doStocks");
-    return;
-  }
+  db.query("select si.shop_nr, si.talens, si.price, sum(so.shares) from stockinfo si left join stockowners so on si.ticker=so.ticker group by si.shop_nr");
 
-  while((stockinfo_row=mysql_fetch_row(stockinfo_res))){
-    shop_nr=atoi(stockinfo_row[0]);
-    talens=atoi(stockinfo_row[1]);
-    price=atof(stockinfo_row[2]);
-    shares=atoi(stockinfo_row[3]);
+  while(db.fetchRow()){
+    shop_nr=atoi(db.getColumn(0));
+    talens=atoi(db.getColumn(1));
+    price=atof(db.getColumn(2));
+    shares=atoi(db.getColumn(3));
 
     prevprice=price;
 
@@ -202,11 +197,10 @@ void doStocks(){
       price-=amt;
     }
 
+    db.query("update stockinfo set price=%f where shop_nr=%i", price, shop_nr);
 
-    dbquery(TRUE, NULL, "sneezy", "doStocks3", "update stockinfo set price=%f where shop_nr=%i", price, shop_nr);
 
-
-    //    dbquery(TRUE, NULL, "sneezy", "doStocks2", "insert into stockhistory (ticker, price) values ('%s', %f)", stockinfo_row[0], price);
+    //    db.query("insert into stockhistory (ticker, price) values ('%s', %f)", stockinfo_row[0], price);
   }
 
 }

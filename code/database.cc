@@ -63,6 +63,7 @@ bool TDatabase::query(const char *query,...){
   string buf;
   int fromlen=0, tolen=(512*2)+1;
   char *from=NULL, to[tolen], numbuf[32];
+  MYSQL_RES *restmp;
   
   // no db set yet
   if(!db)
@@ -113,10 +114,27 @@ bool TDatabase::query(const char *query,...){
     vlogf(LOG_DB, "%s", buf.c_str());
     return FALSE;
   }
-  res=mysql_store_result(db);
-  
+  restmp=mysql_store_result(db);
+
+  // if there is supposed to be some results from this query,
+  // free the previous results (if any) and assign the new results
+  // if there aren't supposed to be results (update, insert, delete, etc)
+  // then don't do anything with the results, they might still be used
+  if(mysql_field_count(db)){
+    if(res)
+      mysql_free_result(res);
+    res=restmp;
+  }
+
   //  if(res)
   //    vlogf(LOG_DB, "New query results stored.");
   
   return TRUE;
+}
+
+bool TDatabase::isResults(){
+  if(res && mysql_num_rows(res))
+    return TRUE;
+
+  return FALSE;
 }

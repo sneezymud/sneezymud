@@ -48,7 +48,10 @@
 // bool query(const char*,...) - This function sends a query to the database.
 // It takes a printf style format string as the arguments.  The allowed
 // specifiers are %s (char *), %i (int), %f (double) and %% (to print a %).
-// The arguments that are passed are escaped for the query.
+// The arguments that are passed are escaped for the query.  If the query
+// does not expect results (insert, update, delete, etc) then the results are
+// left as is.  You can do a select, then do an insert/update/delete and still
+// access the select's results.
 // Returns: TRUE if query was sent successfully, FALSE if there was an error
 // Ex: 
 // float weight=5.5;
@@ -72,7 +75,9 @@
 // db.fetchRow();
 // vnum=atoi(db.getColumn(0));
 // string short_desc = db.getColumn(1);
-
+//
+// bool isResults() - checks if there are results available
+// Returns: TRUE if results are there, FALSE if not
 
 class TDatabase
 {
@@ -85,6 +90,7 @@ class TDatabase
   bool query(const char *,...);
   bool fetchRow();
   char *getColumn(unsigned int);
+  bool isResults();
 
   TDatabase();
   TDatabase(string);

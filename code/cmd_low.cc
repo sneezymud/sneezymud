@@ -10,6 +10,7 @@
 #include "stdsneezy.h"
 #include "statistics.h"
 #include "combat.h"
+#include "database.h"
 #include "obj_player_corpse.h"
 #include "obj_smoke.h"
 #include "obj_arrow.h"
@@ -1076,63 +1077,55 @@ void TPerson::doLow(const char *arg)
     lowRace(arg);
     return;
   } else if (is_abbrev(buf, "statbonus")) {
-    int rc;
-    MYSQL_RES *res;
-    MYSQL_ROW row;
+    TDatabase db("sneezy");
+    db.query("select type, count(*), max(mod1), min(mod1), avg(mod1), sum(mod1) from objaffect group by type");
 
-    if((rc=dbquery(TRUE, &res, "sneezy", "low statbonus", "select type, count(*), max(mod1), min(mod1), avg(mod1), sum(mod1) from objaffect group by type"))){
-      if(rc==-1){
-	vlogf(LOG_BUG, "Database error in doLow");
-	return;
-      }
-    }
     sendTo("%13s %5s %5s %5s %10s %10s\n\r", 
 	   "Bonus       :","Cnt","Max","Min","Avg","Sum");
 
-    while((row=mysql_fetch_row(res))){
-      switch(mapFileToApply(atoi(row[0]))){
+    while(db.fetchRow()){
+      switch(mapFileToApply(atoi(db.getColumn(0)))){
 	case APPLY_STR:
-	  sendTo("Strength    : %5s %5s %5s %10s %10s\n\r", row[1], row[2], row[3], row[4], row[5]);
+	  sendTo("Strength    : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
 	  break;
 	case APPLY_BRA:
-	  sendTo("Brawn       : %5s %5s %5s %10s %10s\n\r", row[1], row[2], row[3], row[4], row[5]);
+	  sendTo("Brawn       : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
 	  break;
 	case APPLY_CON:
-	  sendTo("Constitution: %5s %5s %5s %10s %10s\n\r", row[1], row[2], row[3], row[4], row[5]);
+	  sendTo("Constitution: %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
 	  break;
 	case APPLY_DEX:
-	  sendTo("Dexterity   : %5s %5s %5s %10s %10s\n\r", row[1], row[2], row[3], row[4], row[5]);
+	  sendTo("Dexterity   : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
 	  break;
 	case APPLY_AGI:
-	  sendTo("Agility     : %5s %5s %5s %10s %10s\n\r", row[1], row[2], row[3], row[4], row[5]);
+	  sendTo("Agility     : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
 	  break;
 	case APPLY_INT:
-	  sendTo("Intelligence: %5s %5s %5s %10s %10s\n\r", row[1], row[2], row[3], row[4], row[5]);
+	  sendTo("Intelligence: %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
 	  break;
 	case APPLY_WIS:
-	  sendTo("Wisdom      : %5s %5s %5s %10s %10s\n\r", row[1], row[2], row[3], row[4], row[5]);
+	  sendTo("Wisdom      : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
 	  break;
 	case APPLY_FOC:
-	  sendTo("Focus       : %5s %5s %5s %10s %10s\n\r", row[1], row[2], row[3], row[4], row[5]);
+	  sendTo("Focus       : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
 	  break;
 	case APPLY_PER:
-	  sendTo("Perception  : %5s %5s %5s %10s %10s\n\r", row[1], row[2], row[3], row[4], row[5]);
+	  sendTo("Perception  : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
 	  break;
 	case APPLY_CHA:
-	  sendTo("Charisma    : %5s %5s %5s %10s %10s\n\r", row[1], row[2], row[3], row[4], row[5]);
+	  sendTo("Charisma    : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
 	  break;
 	case APPLY_KAR:
-	  sendTo("Karma       : %5s %5s %5s %10s %10s\n\r", row[1], row[2], row[3], row[4], row[5]);
+	  sendTo("Karma       : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
 	  break;
 	case APPLY_SPE:
-	  sendTo("Speed       : %5s %5s %5s %10s %10s\n\r", row[1], row[2], row[3], row[4], row[5]);
+	  sendTo("Speed       : %5s %5s %5s %10s %10s\n\r", db.getColumn(1), db.getColumn(2), db.getColumn(3), db.getColumn(4), db.getColumn(5));
 	  break;
 	default:
 	  break;
       }
     }
 
-    mysql_free_result(res);
   } else if (is_abbrev(buf, "statcharts")) {
     Stats st;
     string buf;
