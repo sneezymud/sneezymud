@@ -63,6 +63,7 @@ static int spell_fire_breath(byte level, TBeing *ch, TBeing *victim, int lag)
   act("$n blows an immense breath of fire towards you! <R>FIRE!!!<z>\a", FALSE, ch, NULL, victim, TO_VICT);
   if(!(dam=victim->shieldAbsorbDamage(dam))){
     act("You dodge out of the way, thankfully, avoiding all of the damage.",TRUE,ch, 0, victim, TO_VICT);
+    return 1;
   }
 
 #if 0
