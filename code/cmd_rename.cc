@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include "stdsneezy.h"
+#include "database.h"
 
 // this function gets a bit recursive, be careful
 static void renamePersonalizeFix(TThing *t, const char * orig_name, const char * new_name)
@@ -150,7 +151,7 @@ void TBeing::doNameChange(const char *argument)
     sendTo("That player already exists.\n\r");
     return;
   }
-
+  
   // check for corspse file
   sprintf(tmpbuf, "corpses/%s", lower(orig_name).c_str());
   if ((fp = fopen(tmpbuf, "r"))) {
@@ -165,6 +166,11 @@ void TBeing::doNameChange(const char *argument)
 
   wipePlayerFile(orig_name);
   wipeRentFile(orig_name);
+
+  // copy trophy over
+  TDatabase db("sneezy");
+  db.query("update trophy set name='%s' where name='%s'", tmp_name, orig_name);
+
 
   sprintf(tmpbuf, "account/%c/%s", LOWER(vict->desc->account->name[0]),
                   lower(vict->desc->account->name).c_str());
