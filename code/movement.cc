@@ -670,12 +670,12 @@ int TBeing::rawMove(dirTypeT dir)
       need_movement = 1;    
 
     // old people move harder
-    if (age()->year - getBaseAge() >= 50) {
+/*    if (age()->year - getBaseAge() >= 50) {
       need_movement += (age()->year - getBaseAge() - 50)/10;
       if (((age()->year - getBaseAge() - 50)%10) >= ::number(1,10))
         need_movement++;
     }
- 
+*/ 
     if (affectedBySpell(SPELL_HASTE) || affectedBySpell(SPELL_ACCELERATE) || affectedBySpell(SPELL_CHEVAL) || affectedBySpell(SPELL_CELERITE))
       need_movement = max(0, need_movement/2);
 

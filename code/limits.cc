@@ -34,6 +34,9 @@ static const sstring ClassTitles(const TBeing *ch)
 
 int graf(int age, int p0, int p1, int p2, int p3, int p4, int p5, int p6)
 {
+  // age disabled
+    return (int) (p2 + (((age - 30) * (p3 - p2)) / 15));        /* 30..44 */
+    
   if (age < 15)
     return (p0);
   else if (age <= 29)
@@ -99,9 +102,10 @@ float classHpPerLevel(const TPerson *tp){
 }
 
 int ageHpMod(const TPerson *tp){
-  if (!tp)
-    return 0;
+    // age disabled - graf modified to always return age 30-44
+  if (!tp) return 0;
   return graf((tp->age()->year - tp->getBaseAge() + 15), 2, 4, 17, 14, 8, 4, 3);
+  
 }
 
 
@@ -159,6 +163,9 @@ short int TPerson::manaLimit() const
 
 int TPerson::getMaxMove() const
 {
+  // age disabled
+  return 100 + 15 + GetTotLevel() +
+      plotStat(STAT_CURRENT, STAT_CON, 3, 18, 13);
   return 100 + age()->year - getBaseAge() + 15 + GetTotLevel() +
       plotStat(STAT_CURRENT, STAT_CON, 3, 18, 13);
 }
@@ -297,6 +304,7 @@ int TPerson::manaGain()
   if (!desc)
     return 0;
 
+    // age disabled - graf modified to always return age 30-44
   gain = graf((age()->year - getBaseAge() + 15), 2, 4, 6, 8, 10, 12, 14);
 
   // arbitrary multiplier
@@ -400,6 +408,7 @@ int TPerson::hitGain()
   if (fight())
     gain = 0;
   else {
+    // age disabled - graf modified to always return age 30-44
     gain = graf((age()->year - getBaseAge() + 15), 2, 4, 5, 9, 4, 3, 2);
     gain += 4;
     gain = (int)((double)(gain)*plotStat(STAT_CURRENT,STAT_CON,.80,1.25,1.00));

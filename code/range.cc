@@ -807,7 +807,7 @@ dirTypeT can_see_linear(const TBeing *ch, const TBeing *targ, int *rng, dirTypeT
   else if (height < 65)
     max_range -= 1;
 
-  if ((ch->age()->year - ch->getBaseAge() + 17) > 80)
+/*  if ((ch->age()->year - ch->getBaseAge() + 17) > 80)
     max_range -= 3;
   else if ((ch->age()->year - ch->getBaseAge() + 17) > 60)
     max_range -= 2;
@@ -815,7 +815,7 @@ dirTypeT can_see_linear(const TBeing *ch, const TBeing *targ, int *rng, dirTypeT
     max_range -= 1;
   else if ((ch->age()->year - ch->getBaseAge() + 17) < 20)
     max_range += 1;
-
+*/
 
   if ((ch->roomp->getWeather() == WEATHER_RAINY) ||
       (ch->roomp->getWeather() == WEATHER_LIGHTNING))
