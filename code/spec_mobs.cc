@@ -7486,6 +7486,7 @@ int adventurer(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 }
 
 
+extern int tudy(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
 extern int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
 extern int factionRegistrar(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int realEstateAgent(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7666,6 +7667,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Money Train", moneyTrain},
   {FALSE, "Adventurer", adventurer},
   {FALSE, "Trainer: iron body", CDGenericTrainer},
+  {FALSE, "Tudy", tudy},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

@@ -2,92 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: spec_mobs.h,v $
-// Revision 5.18  2002/04/26 06:23:34  peel
-// implemented iron body disc
-//
-// Revision 5.17  2002/04/08 22:52:52  peel
-// added adventurer proc
-//
-// Revision 5.16  2002/03/17 00:00:15  peel
-// added the money train
-//
-// Revision 5.15  2002/03/12 06:24:05  dash
-// fixes for repo
-//
-// Revision 5.14  2002/02/24 18:09:56  dash
-// added getDexMod, getBraMod, getAgiMod, getSpeMod for stat stuff
-// tweaked bounty hunters alot
-//
-// Revision 5.13  2002/02/20 20:33:42  jesus
-// Took out all the class_mage_thief stuff and added a shaman healing disc in its place
-//
-// Revision 5.12  2002/02/11 06:26:17  dash
-// *** empty log message ***
-//
-// Revision 5.11  2001/11/25 00:56:55  jesus
-// beginning of mage thief as a single class
-//
-// Revision 5.10  2001/10/29 00:59:43  jesus
-// added a divination shop
-// not really a shop and not kept in the database
-// mob proceedure and response script
-//
-// Revision 5.9  2001/10/15 22:51:11  peel
-// Added psionics
-// not finished yet
-//
-// Revision 5.8  2001/09/18 22:19:03  peel
-// Added grimhaven stock exchange
-// modified dbquery slightly, to allow specification of escaping or not
-// modified fishtracker topten output slightly
-//
-// Revision 5.7  2001/07/17 03:30:09  peel
-// switched to new hp system
-// also, temp practice adjustment code in, must boot once then remove
-//
-// Revision 5.6  2001/07/05 21:25:54  peel
-// Trying to fix cvs
-// what a headache
-//
-// Revision 5.5  2001/07/04 00:31:39  peel
-// added coroner proc
-//
-// Revision 5.4  2001/07/03 08:57:25  jesus
-// added ritualismLevelT
-// removed totemism disc
-// added ritualism disc
-// removed wizardry from shaman
-// added ritualism as a replacement
-// added a rituals command for spell and comp listing
-// took shaman out of dospells
-// now 2 seperate so gods can list seperatly
-//
-// Revision 5.3  2001/06/28 04:47:24  peel
-// added spec mob stub for realEstateAgent
-//
-// Revision 5.2  2001/06/18 04:31:00  peel
-// Added bankGuard proc
-//
-// Revision 5.1.1.4  2001/04/20 17:31:46  peel
-// added fishtracker proc stuff
-//
-// Revision 5.1.1.3  2001/02/01 22:17:13  jesus
-// shaman stuff
-//
-// Revision 5.1.1.2  1999/10/24 20:10:53  lapsos
-// Added new procs.
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -237,7 +151,8 @@ const int SPEC_BMARCHER           =166;
 const int SPEC_MONEY_TRAIN        =167;
 const int SPEC_ADVENTURER         =168;
 const int SPEC_TRAINER_IRON_BODY  =169;
-const int NUM_MOB_SPECIALS        =170;
+const int SPEC_TUDY               =170;
+const int NUM_MOB_SPECIALS        =171;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
