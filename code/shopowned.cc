@@ -70,6 +70,35 @@ TShopOwned::TShopOwned(int shop_nr, TMonster *keeper, TBeing *ch) :
   access=getShopAccess(shop_nr, ch);
 }
 
+void TShopOwned::chargeTax(TObj *o, int cost)
+{
+  int gh_tax_office=14; // shop number
+  
+  cost = (int)((float)cost * shop_index[gh_tax_office].getProfitBuy(o, ch));
+  
+  TBeing *t;
+  for(t=character_list;t;t=t->next){
+    if(t->mobVnum()==mob_index[shop_index[gh_tax_office].keeper].virt)
+      break;
+  }
+
+  TBeing *taxman;
+  if(!t || !(taxman=dynamic_cast<TMonster *>(t))){
+    vlogf(LOG_PEEL, fmt("taxman not found %i") % 
+	  shop_index[gh_tax_office].keeper);
+    return;
+  }
+
+  keeper->addToMoney(-cost, GOLD_SHOP);
+  taxman->addToMoney(cost, GOLD_SHOP);
+  
+  shoplog(shop_nr, keeper, keeper, o->getName(), 
+	  -cost, "paying tax");
+  shoplog(gh_tax_office, keeper, dynamic_cast<TMonster *>(taxman),
+	  o->getName(), cost, "tax");
+}
+
+
 
 void TShopOwned::setReserve(sstring arg)
 {
@@ -1081,9 +1110,9 @@ int TShopOwned::doLogs(sstring arg)
     ///////////////////////////////////////////////////////////////////////
   } else {
     if(!arg.empty()){
-      db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' and upper(name)=upper('%s') order by logtime desc, action desc", shop_nr, arg.c_str());      
+      db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and upper(name)=upper('%s') order by logtime desc, action desc", shop_nr, arg.c_str());      
     } else {
-      db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' order by logtime desc, action desc", shop_nr);
+      db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i order by logtime desc, action desc", shop_nr);
     }    
 
     while(db.fetchRow()){

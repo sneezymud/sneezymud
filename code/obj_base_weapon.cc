@@ -1640,6 +1640,7 @@ void TBaseWeapon::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr
     
     tso.doDividend(this, cost);
     tso.doReserve();
+    tso.chargeTax(this, cost);
   }
 
 }

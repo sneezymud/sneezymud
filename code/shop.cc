@@ -2098,10 +2098,6 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
   TThing *tt;
   TObj *o;  
 
-  if(!shop_index[shop_nr].isOwned() || !keeper){
-    return;
-  }
-
   for(tt=keeper->getStuff();tt;tt=tt->nextThing){
     ++count;
     o=dynamic_cast<TObj *>(tt);

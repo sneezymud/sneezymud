@@ -22,6 +22,7 @@ class TShopOwned {
   int getMinReserve();
   int getMaxReserve();
   void doReserve();
+  void chargeTax(TObj *, int);
 
   // repair specific
   double getQuality();

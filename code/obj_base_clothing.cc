@@ -673,6 +673,7 @@ void TBaseClothing::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_
 
     tso.doDividend(this, cost);
     tso.doReserve();
+    tso.chargeTax(this, cost);
   }
 
 }
