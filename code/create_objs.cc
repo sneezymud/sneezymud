@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: create_objs.cc,v $
+// Revision 1.2  1999/10/09 04:37:42  batopr
+// *** empty log message ***
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -30,6 +33,36 @@ extern "C" {
 #include "create.h"
 #include "components.h"
 #include "dirsort.h"
+
+static void update_obj_menu(const TBeing *ch, const TObj *obj)
+{
+  const char *obj_edit_menu = " 1) Name                         2) Short Description\n\r"
+" 3) Item Type                    4) Long Description\n\r"
+" 5) Weight                       6) Volume\n\r"
+" 7) Extra Flags                  8) Take Flags\n\r"
+" 9) Unused                      10) Cost/Value\n\r"
+"11) Four Values                 12) Decay time\n\r"
+"13) Max struct points           14) Struct points\n\r"
+"15) Extra Description           16) Material type\n\r"
+"17) Applys                      18) Can be seen\n\r"
+"19) Delete all extra descs      20) Change Object Special Proc\n\r"
+"21) Set item max_exist\n\r"
+"\n\r";
+
+  ch->sendTo(VT_HOMECLR);
+  ch->sendTo(VT_CURSPOS, 1, 1);
+  ch->sendTo("%sObject Name:%s %s", ch->cyan(), ch->norm(), obj->name);
+  ch->sendTo(VT_CURSPOS, 2, 1);
+  ch->sendTo("%sItem Type :%s %s", ch->purple(), ch->norm(), ItemInfo[obj->itemType()]->name);
+
+  // this possibly adds item-specific stuff on line 3
+  obj->objMenu(ch);
+
+  ch->sendTo(VT_CURSPOS, 6, 1);
+  ch->sendTo("Editing Menu:\n\r");
+  ch->sendTo(obj_edit_menu);
+  ch->sendTo("--> ");
+}
 
 // Loading/Saving functions are below 
 
@@ -278,36 +311,6 @@ static void ocreate(TBeing *ch)
 
   act("$n makes a dummy object.", TRUE, ch, tmp_obj, 0, TO_ROOM);
   ch->sendTo("You make a dummy object.\n\r");
-}
-
-static void update_obj_menu(const TBeing *ch, const TObj *obj)
-{
-  const char *obj_edit_menu = " 1) Name                         2) Short Description\n\r"
-" 3) Item Type                    4) Long Description\n\r"
-" 5) Weight                       6) Volume\n\r"
-" 7) Extra Flags                  8) Take Flags\n\r"
-" 9) Unused                      10) Cost/Value\n\r"
-"11) Four Values                 12) Decay time\n\r"
-"13) Max struct points           14) Struct points\n\r"
-"15) Extra Description           16) Material type\n\r"
-"17) Applys                      18) Can be seen\n\r"
-"19) Delete all extra descs      20) Change Object Special Proc\n\r"
-"21) Set item max_exist\n\r"
-"\n\r";
-
-  ch->sendTo(VT_HOMECLR);
-  ch->sendTo(VT_CURSPOS, 1, 1);
-  ch->sendTo("%sObject Name:%s %s", ch->cyan(), ch->norm(), obj->name);
-  ch->sendTo(VT_CURSPOS, 2, 1);
-  ch->sendTo("%sItem Type :%s %s", ch->purple(), ch->norm(), ItemInfo[obj->itemType()]->name);
-
-  // this possibly adds item-specific stuff on line 3
-  obj->objMenu(ch);
-
-  ch->sendTo(VT_CURSPOS, 6, 1);
-  ch->sendTo("Editing Menu:\n\r");
-  ch->sendTo(obj_edit_menu);
-  ch->sendTo("--> ");
 }
 
 static void oedit(TBeing *ch, const char *arg)
