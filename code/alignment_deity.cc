@@ -56,7 +56,7 @@ int personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
 // returns DELETE_THIS if deity went boom
 int resize_personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
 {
-  char buf[256];
+  sstring buf;
   TObj *obj;
   int rc;
 
@@ -65,7 +65,7 @@ int resize_personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
     return FALSE;
   }
   obj->obj_flags.decay_time = decay;
-  sprintf(buf, "This is the personalized object of %s", ch->getName());
+  buf=fmt("This is the personalized object of %s") % ch->getName();
 
   // resize
   wearSlotT slot = slot_from_bit(obj->obj_flags.wear_flags);
@@ -84,7 +84,7 @@ int resize_personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
   obj->action_description = mud_str_dup(buf);
 
   if (deity) {
-    sprintf(buf, "%s %s", fname(obj->name).c_str(), ch->getName());
+    buf=fmt("%s %s") % fname(obj->name) % ch->getName();
     *deity += *obj; 
     rc = deity->doGive(buf);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -93,7 +93,7 @@ int resize_personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
     *ch += *obj;
 
   if (obj->parent == deity) {
-    sprintf(buf, "You can't seem to carry it.  I'll just put it down here.");
+    buf="You can't seem to carry it.  I'll just put it down here.";
     deity->doSay(buf);
     rc = deity->doDrop("", obj);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -112,7 +112,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
 
 #if FACTIONS_IN_USE
   int percent;
-  char buf[128];
+  sstring buf;
   int rc;
 
   // I updated this for 4.x - bat
@@ -133,7 +133,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
   vlogf(LOG_FACT, fmt("%s had a percent of %d") %  ch->getName() % percent);
 
   if (number(10, 90) < percent) {
-    sprintf(buf, "%s, you have faithfully practiced your beliefs.", ch->getName());
+    buf=fmt("%s, you have faithfully practiced your beliefs.") % ch->getName();
     deity->doSay(buf);
     deity->doSay("Here is your reward.");
     // default will always do a nice thing, top ten do something great 
@@ -167,8 +167,8 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
       case 95:
         // 200 tick token and sanc and part restore. 
         deity->doSay("You are a paragon of virtue.");
-        sprintf(buf, "%s part", ch->getName());
-        deity->doRestore(buf);
+        buf=fmt("%s part") % ch->getName());
+        deity->doRestore(buf.c_str());
         if (!deity->doesKnowSkill(SPELL_SANCTUARY))
           deity->setSkillValue(SPELL_SANCTUARY,120);
 
@@ -180,8 +180,8 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
       case 97:
         // 200 tick token and sanc and full restore. 
         deity->doSay("You are virtually an avatar.");
-        sprintf(buf, "%s full", ch->getName());
-        deity->doRestore(buf);
+        buf=fmt("%s full") % ch->getName();
+        deity->doRestore(buf.c_str());
         if (!deity->doesKnowSkill(SPELL_SANCTUARY))
           deity->setSkillValue(SPELL_SANCTUARY,120);
 
@@ -192,8 +192,8 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
       case 98:
         // 250 tick token and sanc and full restore. 
         deity->doSay("You are virtually an avatar.");
-        sprintf(buf, "%s full", ch->getName());
-        deity->doRestore(buf);
+        buf=fmt("%s full") % ch->getName();
+        deity->doRestore(buf.c_str());
         if (!deity->doesKnowSkill(SPELL_SANCTUARY))
           deity->setSkillValue(SPELL_SANCTUARY,120);
 
@@ -204,8 +204,8 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
       case 99:
         // 300 tick token and sanc and full restore. 
         deity->doSay("You are virtually an avatar.");
-        sprintf(buf, "%s full", ch->getName());
-        deity->doRestore(buf);
+        buf=fmt("%s full") % ch->getName();
+        deity->doRestore(buf.c_str());
         if (!deity->doesKnowSkill(SPELL_SANCTUARY))
           deity->setSkillValue(SPELL_SANCTUARY,120);
 
@@ -216,8 +216,8 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
       case 100:
         // 500 tick token and sanc and full restore. 
         deity->doSay("You are an avatar of our beliefs.");
-        sprintf(buf, "%s full", ch->getName());
-        deity->doRestore(buf);
+        buf=fmt("%s full") % ch->getName();
+        deity->doRestore(buf.c_str());
         if (!deity->doesKnowSkill(SPELL_SANCTUARY))
           deity->setSkillValue(SPELL_SANCTUARY,120);
 
@@ -226,8 +226,8 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
           return DELETE_THIS;
         break;
       default:
-        sprintf(buf, "%s part", ch->getName());
-        deity->doRestore(buf);
+        buf=fmt("%s part") % ch->getName();
+        deity->doRestore(buf.c_str());
         break;
     }
     deity->doAction(ch->getName(), CMD_PAT);

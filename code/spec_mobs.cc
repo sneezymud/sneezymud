@@ -112,7 +112,7 @@ bool TMonster::isPolice() const
   
 int TMonster::npcSteal(TPerson *victim)
 {
-  char buf[160];
+  sstring buf;
   TThing *t;
 
   int tmp = getLevel(THIEF_LEVEL_IND);
@@ -145,8 +145,7 @@ int TMonster::npcSteal(TPerson *victim)
     if (getSkillValue(SKILL_STEAL) < tmp)
       setSkillValue(SKILL_STEAL, tmp);
 
-  sprintf(buf,"talens %s",fname(victim->name).c_str());
-  return doSteal(buf, victim);
+  return doSteal(fmt("talens %s") % fname(victim->name), victim);
 }
 
 // myself has the proc, ch just killed o
@@ -1461,7 +1460,7 @@ static int rob_blind(TBeing *ch, TBeing *vict)
 {
   // make all checks prohibiting stealing before coming in here
   TThing *t, *t2;
-  char name[80], buf[160];
+  sstring name, buf;
  
   if (ch->fight() || vict->fight())
     return FALSE;
@@ -1472,10 +1471,11 @@ static int rob_blind(TBeing *ch, TBeing *vict)
     t2 = t->nextThing;
     if (::number(0,4) || !ch->canSee(t))
       continue;
-    strcpy(name, fname(t->name).c_str());
-    sprintf(buf, "%s %s", name, fname(vict->name).c_str());
+    name=fname(t->name);
+    buf=fmt("%s %s") % name % fname(vict->name);
     if (ch->getRace() == RACE_HOBBIT) 
-      act("$n says, \"Hey $N, I'm just going to borrow your $o for a bit.\"", TRUE, ch, t, vict, TO_ROOM);
+      act("$n says, \"Hey $N, I'm just going to borrow your $o for a bit.\"",
+	  TRUE, ch, t, vict, TO_ROOM);
     
     return ch->doSteal(buf, vict);
   }
@@ -3136,7 +3136,7 @@ int dagger_thrower(TBeing *pch, cmdTypeT cmd, const char *, TMonster *me, TObj *
   TBeing *tmp_ch, *ch, *temp;
   int range;
   dirTypeT dir;
-  char buf[128];
+  sstring buf;
 
   if ((cmd != CMD_GENERIC_PULSE) || !pch->awake())
     return (FALSE);
@@ -3176,7 +3176,7 @@ int dagger_thrower(TBeing *pch, cmdTypeT cmd, const char *, TMonster *me, TObj *
           return FALSE;
         }
 
-        sprintf(buf, "%s %s %d", fname(dagger->name).c_str(), tmp_ch->name, 5);
+        buf=fmt("%s %s %d") % fname(dagger->name) % tmp_ch->name % 5;
         me->doThrow(buf);
         return TRUE;
       }

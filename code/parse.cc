@@ -876,7 +876,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
 	addToLifeforce(1);
 	break;
       case CMD_ASK:
-	rc = doAsk(newarg.c_str());
+	rc = doAsk(newarg);
 	addToLifeforce(1);
 	break;
       case CMD_WRITE:

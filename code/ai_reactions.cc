@@ -737,8 +737,6 @@ int TMonster::aiMudSex(TBeing *doer)
 // assumes doer and other are both opposite sexes and nobody's a eunich
 int TMonster::aiMudSexOther(TBeing *doer, TBeing *)
 {
-  char buf[160];
-
   US(2);
   DA(1);
   switch (::number(1,10)) {
@@ -746,8 +744,7 @@ int TMonster::aiMudSexOther(TBeing *doer, TBeing *)
       doSay("Hey you two, get a room!");
       break;
     case 2:
-      sprintf(buf,"%s Hey, how about a menage a trois?",fname(doer->name).c_str());
-      doAsk(buf);
+      doAsk(fmt("%s Hey, how about a menage a trois?") % fname(doer->name));
       break;
     case 3:
       doSay("OK, no public displays of affection please!");
@@ -929,18 +926,18 @@ int TMonster::aiWimpSwitch(TBeing *vict)
     // Just check to see if tank got a higher score, if so he blocked it.
     // Random was added Earlier so we just want to check ending values here.
     if (tSkill > mSkill) {
-      char oMessage[200];
+      sstring oMessage;
 
-      sprintf(oMessage, "%s attempts to switch to %s, but you block it.",
-              sstring(getName()).cap().c_str(), vict->getName());
+      oMessage=fmt("%s attempts to switch to %s, but you block it.") %
+	sstring(getName()).cap() % vict->getName();
       act(oMessage, TRUE, tank, 0, vict, TO_CHAR);
 
-      sprintf(oMessage, "%s attempts to switch to %s, but %s blocks it.",
-              sstring(getName()).cap().c_str(), vict->getName(), tank->getName());
+      oMessage=fmt("%s attempts to switch to %s, but %s blocks it.") %
+	sstring(getName()).cap() % vict->getName() % tank->getName();
       act(oMessage, TRUE, tank, 0, vict, TO_NOTVICT);
 
-      sprintf(oMessage, "%s attempts to switch to you, but %s blocks it.",
-              sstring(getName()).cap().c_str(), tank->getName());
+      oMessage=fmt("%s attempts to switch to you, but %s blocks it.") %
+	sstring(getName()).cap() % tank->getName();
       act(oMessage, TRUE, tank, 0, vict, TO_VICT);
 
       return FALSE;

@@ -312,7 +312,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
         vlogf(LOG_BUG, fmt("Error in doGive:%s%s Mob[%s]") % 
               (mob ? "" : " !mob") %
               (tThing ? "" : " !tThing") %
-              getNameNOC(this).c_str());
+              getNameNOC(this));
 
       if (tThing && tThing->parent == this && roomp) {
         doSay("Well I guess I'll just drop it here...");
