@@ -449,7 +449,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
     num = mod;
 
   if(doesKnowSkill(SKILL_CRIT_HIT) && isPc()){
-    dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_CRIT_HIT)*900)));
+    dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_CRIT_HIT)*950)));
   } else if(doesKnowSkill(SKILL_POWERMOVE) && isPc()){
     dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_POWERMOVE)*900)));
   } else 

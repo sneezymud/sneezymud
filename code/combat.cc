@@ -1552,11 +1552,6 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
 {
   int wepDam;
 
-  // from balance notes, we want monk barehand damage per hit to be roughly
-  // 56/15 * sqrt(level)
-  // we want to be pulling this stuff from the kubo skill which
-  // we roughly assume goes up linearly from L1-L30 : n = 10/3 * L
-  // similarly, kubo specializatio (meditation disc) covers L31-L40 linearly
   if (!ch->doesKnowSkill(SKILL_KUBO))
     wepDam = ::number(1,2);
   else {
@@ -1607,13 +1602,13 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
   
   if(ch->doesKnowSkill(SKILL_IRON_FIST) && 
      !ch->equipment[WEAR_HAND_R] && !ch->equipment[WEAR_HAND_L]){
-    // extra 0-4%
-    statDam += (ch->getSkillLevel(SKILL_IRON_FIST)/2500);
+    // extra 0-8.3%
+    statDam += (ch->getSkillLevel(SKILL_IRON_FIST)/1200);
   }
 
   if(ch->doesKnowSkill(SKILL_VOPLAT)){
-    // extra 0-5%
-    statDam += (ch->getSkillLevel(SKILL_VOPLAT)/2000);
+    // extra 0-10%
+    statDam += (ch->getSkillLevel(SKILL_VOPLAT)/1000);
   }
 
   int dam = (int) (wepDam * statDam);
@@ -1974,12 +1969,10 @@ int TBeing::hit(TBeing *target, int pulse)
     return FALSE;
 
   // monk stuff
-  // this is accounted for in balance discussion with a break-even point
-  // of 5% rate for blur.
   if (pulse >= 0 && !(pulse % len_rnd) &&
      !heldInPrimHand() && !heldInSecHand() &&
      doesKnowSkill(SKILL_BLUR) && 
-     ::number(0, 99) < 10 &&  // this makes it happen 10% of the time
+     ::number(0, 99) < 20 &&  // this makes it happen 20% of the time
      !isAffected(AFF_ENGAGER) && getMana()>=25 &&
      bSuccess(this, getSkillValue(SKILL_BLUR), SKILL_BLUR)) {
     // the number of extra swings use to be skill dependant too, but
@@ -3684,7 +3677,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
        
      if(doesKnowSkill(SKILL_CHAIN_ATTACK) &&   // must know the skill
 	 !weapon &&                             // must be barehanded
-	 (::number(0,99) < 5) &&                // only 5% of the time
+	 (::number(0,99) < 10) &&                // only 10% of the time
 	 getMana()>=10 &&                       // requires 10 mana
 	 bSuccess(this,getSkillValue(SKILL_CHAIN_ATTACK),SKILL_CHAIN_ATTACK)){
 	// successfully chain this attack
