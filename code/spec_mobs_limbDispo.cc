@@ -6,6 +6,7 @@
 
 const int CART_VNUM = 33313;
 const int CONTENTS_VNUM = 33314;
+const int FEE = 5;
 
 int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
 {
@@ -119,7 +120,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
     return TRUE;
   }
   
-  if (ch->getMoney() < 50) {
+  if (ch->getMoney() < FEE) {
     act("$n quickly covers over the cart.", TRUE, mob, NULL, 0, TO_ROOM);
     mob->doSay("If you can't afford my services, then you can carry it to the dump yourself.");
     return TRUE;
@@ -127,9 +128,10 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
   
   act("You put $p into $N's cart.", TRUE, ch, mob, bodypart, TO_CHAR);
   act("$n puts $p into $N's cart.", TRUE, ch, mob, bodypart, TO_ROOM); 
-  mob->doSay("That'll be 50 talens for clearing up your filth.");
+  sstring stmp = fmt("That'll be %d talens for clearing up your filth.") % FEE;
+  mob->doSay(stmp);
   
-  ch->addToMoney(-50, GOLD_SHOP_RESPONSES);
+  ch->addToMoney(-FEE, GOLD_SHOP_RESPONSES);
   
   time_t lt = time(0);
   sstring buf = fmt("%s deposited by %s at %s") % bodypart->getName()
