@@ -23,7 +23,7 @@ int deathMist(TBeing *caster, int level, byte bKnown)
 
 
   if (bSuccess(caster, bKnown, SPELL_DEATH_MIST)) {
-    caster->sendTo(fmt("A misty cloud escapes your open mouth.\n\r") %ANSI_GREEN);
+    caster->sendTo("<g>A misty cloud escapes your open mouth.<1>\n\r");
     act("$n opens $s mouth and a chilling green mist pours out.",
         TRUE,caster,0,0,TO_ROOM,ANSI_GREEN);
 
