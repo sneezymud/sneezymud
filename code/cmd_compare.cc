@@ -69,7 +69,7 @@ TObj * findForCompare(TBeing *ch, sstring StObject)
 
 void TBeing::doMortalCompare(const char *tArg)
 {
-  sstring     StObject1(""),
+  sstring    StObject1(""),
              StObject2(""),
              StString(tArg);
   TObj      *tObj1 = NULL,
@@ -95,6 +95,11 @@ void TBeing::doMortalCompare(const char *tArg)
   if (!(tObj1 = findForCompare(this, StObject1)) ||
       !(tObj2 = findForCompare(this, StObject2))) {
     sendTo("You cannot find at least one of those items.\n\r");
+    return;
+  }
+
+  if (tObj1 == tObj2) {
+    sendTo("For some strange reason you feel these items to be equal, strange isn't it...\n\r");
     return;
   }
 
