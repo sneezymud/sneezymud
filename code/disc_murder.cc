@@ -1,21 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_murder.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/10/09 04:23:03  batopr
-// Removed addHated from cudgel
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "disease.h"
 #include "combat.h"
@@ -28,10 +10,69 @@ static void playBackstab(const TRoom *rp)
   rp->playsound(snd, SOUND_TYPE_COMBAT);
 }
 
+const int BS_MSG_DEATH_MAX = 7; // (tMessagesDeath / 2) - 1
+const int BS_MSG_NONDT_MAX = 7; // (tMessagesNonDeath / 2) - 1
+
 // returns DELETE_VICT
 int TBeing::backstabHit(TBeing *victim, TThing *obj)
 {
   int i, d;
+
+  const char *tMessagesDeath[] =
+  {
+    "Your $o plunges deep into $N's upper back, killing $M.",
+    "$n plunges $s $o deep into $N's upper back, killing $M.",
+
+    "Your $o sinks deep into $N's lower back, killing $M.",
+    "$n sinks $s $o deep into $N's lower back, killing $M.",
+
+    "$N screams in extreme agony and then falls lifeless as you quickly place your $p into $S back.",
+    "$N screams in extreme agony and then falls lifeless as $n quickly places $s $p into $N's back.",
+
+    "Blood splatters you, as you thrust $p into $N's back, killing $M.",
+    "Blood splatters as $n thrusts $p into $N's back, killing $M.",
+
+    "Blood spurts from $N's mouth as you plunge $p in $S back, killing $M.",
+    "Blood spurts from $N's mouth as $n plunges $p in $S back, killing $M.",
+
+    "$N enters convulsions as you slip $p into $S spine, killing $M.",
+    "$N enters convulsions as $n slips $p into $S spine, killing $M.",
+
+    "$N coughs up some blood, and then falls dead, as you place $p in $S back.",
+    "$n sticks $p in $N's back; $N coughs up some blood, and then falls dead.",
+
+    "$N gets a blank look on $S face, then collapses, as you place your $o in $S back.",
+    "$N gets a black look on $S face, then collapses, as $n places $s $o in $S back.",
+
+    "$N collapses and begins to twitch as you place your $o in $S back, killing $M.",
+    "$N collapses and begins to twitch as $n places $s $o in $S back, killing $M."
+  };
+  const char *tMessagesNonDeath[] =
+  {
+    "Your $o plunges deep into $N's upper back.",
+    "$n plunges $s $o deep into $N's upper back.",
+
+    "Your $o sinks deep into $N's lower back.",
+    "$n sinks $s $o deep into $N's lower back.",
+
+    "Blood splatters you, as you thrust $p into $N's back.",
+    "Blood splatters as $n thrusts $p into $N's back.",
+
+    "Blood spurts from $N's mouth as you plunge $p in $S back.",
+    "Blood spurts from $N's mouth as $n plunges $p in $S back.",
+
+    "$N enters convulsions as you slip $p into $S spine.",
+    "$N enters convulsions as $n slips $p into $S spine.",
+
+    "$N coughs up some blood, as you place $p in $S back.",
+    "$n places $p in the back of $N, resulting in some strange noises and blood.",
+
+    "$N gets a blank look on $S face, then dances around madly, as you place your $o in $S back.",
+    "$N gets a blank look on $S face, then dances around madly, as $n places $s $o in $S back.",
+
+    "$N twitches wildly for a moment as you place your $o in $S back.",
+    "$N twitches wildly for a moment as $n places $s $o in $S back."
+  };
 
   d = getSkillDam(victim, SKILL_BACKSTAB, getSkillLevel(SKILL_BACKSTAB), getAdvLearning(SKILL_BACKSTAB));
 
@@ -45,101 +86,62 @@ int TBeing::backstabHit(TBeing *victim, TThing *obj)
         playBackstab(roomp);
 
         if (victim->isUndead()) {
-          act("$N coughs, shivers, and then falls dead as you place $p in $S back.", FALSE, this, obj, victim, TO_CHAR);
-          act("$n sticks $p in $N's back; $N coughs and shivers before collapsing.", FALSE, this, obj, victim, TO_NOTVICT);
+          act("$N coughs, shivers, then collapses as you place $p in $S back.",
+              FALSE, this, obj, victim, TO_CHAR);
+          act("$N coughs, shivers, then collapses as $N placs $p in $S back.",
+              FALSE, this, obj, victim, TO_NOTVICT);
         } else {
-          switch (::number(0,5)) {
-            case 0:
-              act("Your $o plunges deep into $N's upper back, killing $M.",
-                       FALSE, this, obj, victim, TO_CHAR);
-              act("$n plunges $s $o deep into $N's upper back, killing $M.",
-                       FALSE, this, obj, victim, TO_NOTVICT);
-              break;
-            case 1:
-              act("Your $o sinks deep into $N's lower back, killing $M.",
-                       FALSE, this, obj, victim, TO_CHAR);
-              act("$n sinks $s $o deep into $N's lower back, killing $M.",
-                       FALSE, this, obj, victim, TO_NOTVICT);
-              break;
-            case 2:
-              act("Blood splatters you, as you thrust $p into $N's back, killing $M.",
-                       FALSE, this, obj, victim, TO_CHAR);
-              act("Blood splatters as $n thrusts $p into $N's back, killing $M.",
-                       FALSE, this, obj, victim, TO_NOTVICT);
-              break;
-            case 3:
-              act("Blood spurts from $N's mouth as you plunge $p in $S back, killing $M.",
-                       FALSE, this, obj, victim, TO_CHAR);
-              act("Blood spurts from $N's mouth as $n plunges $p in $S back, killing $M.",
-                       FALSE, this, obj, victim, TO_NOTVICT);
-              break;
-            case 4:
-              act("$N enters convulsions as you slip $p into $S spine, killing $M.",
-                       FALSE, this, obj, victim, TO_CHAR);
-              act("$N enters convulsions as $n slips $p into $S spine, killing $M.",
-                       FALSE, this, obj, victim, TO_NOTVICT);
-              break;
-            default:
-              act("$N coughs up some blood, and then falls dead, as you place $p in $S back.", FALSE, this, obj, victim, TO_CHAR);
-              act("$n sticks $p in $N's back; $N coughs up some blood, and then falls dead.", FALSE, this, obj, victim, TO_NOTVICT);
-          }
+          int tMessageChoice = (::number(0, BS_MSG_DEATH_MAX) * 2);
+
+          if (!tMessagesDeath[tMessageChoice])
+            tMessageChoice = 0;
+
+          act(tMessagesDeath[tMessageChoice],
+              FALSE, this, obj, victim, TO_CHAR);
+          act(tMessagesDeath[tMessageChoice + 1],
+              FALSE, this, obj, victim, TO_NOTVICT);
         }
-        act("Suddenly, $n stabs you in the back!  RIP...", FALSE, this, obj, victim, TO_VICT);
+
+        act("Suddenly, $n stabs you in the back!  R.I.P...",
+            FALSE, this, obj, victim, TO_VICT);
       } else {
         playBackstab(roomp);
 
         if (victim->isUndead()) {
-          act("$N coughs and shivers as you place $p in $S back.", FALSE, this, obj, victim, TO_CHAR);
-          act("$n places $p in the back of $N; $N coughs and shivers...", FALSE, this, obj, victim, TO_NOTVICT);
+          act("$N coughs and shivers as you place $p in $S back.",
+              FALSE, this, obj, victim, TO_CHAR);
+          act("$n places $p in the back of $N; $N coughs and shivers...",
+              FALSE, this, obj, victim, TO_NOTVICT);
         } else {
-          switch (::number(0,5)) {
-            case 0:
-              act("Your $o plunges deep into $N's upper back.",
-                       FALSE, this, obj, victim, TO_CHAR);
-              act("$n plunges $s $o deep into $N's upper back.",
-                       FALSE, this, obj, victim, TO_NOTVICT);
-              break;
-            case 1:
-              act("Your $o sinks deep into $N's lower back.",
-                       FALSE, this, obj, victim, TO_CHAR);
-              act("$n sinks $s $o deep into $N's lower back.",
-                       FALSE, this, obj, victim, TO_NOTVICT);
-              break;
-            case 2:
-              act("Blood splatters you, as you thrust $p into $N's back.",
-                       FALSE, this, obj, victim, TO_CHAR);
-              act("Blood splatters as $n thrusts $p into $N's back.",
-                       FALSE, this, obj, victim, TO_NOTVICT);
-              break;
-            case 3:
-              act("Blood spurts from $N's mouth as you plunge $p in $S back.",
-                       FALSE, this, obj, victim, TO_CHAR);
-              act("Blood spurts from $N's mouth as $n plunges $p in $S back.",
-                       FALSE, this, obj, victim, TO_NOTVICT);
-              break;
-            case 4:
-              act("$N enters convulsions as you slip $p into $S spine.",
-                       FALSE, this, obj, victim, TO_CHAR);
-              act("$N enters convulsions as $n slips $p into $S spine.",
-                       FALSE, this, obj, victim, TO_NOTVICT);
-              break;
-            default:
-              act("$N coughs up some blood, as you place $p in $S back.", FALSE, this, obj, victim, TO_CHAR);
-              act("$n places $p in the back of $N, resulting in some strange noises and blood.", FALSE, this, obj, victim, TO_NOTVICT);
-              break;
-          }
+          int tMessageChoice = (::number(0, BS_MSG_NONDT_MAX) * 2);
+
+          if (!tMessagesNonDeath[tMessageChoice])
+            tMessageChoice = 0;
+
+          act(tMessagesNonDeath[tMessageChoice],
+              FALSE, this, obj, victim, TO_CHAR);
+          act(tMessagesNonDeath[tMessageChoice + 1],
+              FALSE, this, obj, victim, TO_NOTVICT);
         }
-        act("Suddenly, $n stabs you in the back!", FALSE, this, obj, victim, TO_VICT);
+
+        act("Suddenly, $n stabs you in the back!",
+            FALSE, this, obj, victim, TO_VICT);
       }
     }
   } else {
-    act("$N quickly avoids your backstab, and you nearly cut your finger.", FALSE, this, obj, victim, TO_CHAR);
-    act("$n tried to backstab you, but you avoid $m.", FALSE, this, obj, victim, TO_VICT);
-    act("$n tried to backstab $N, but nearly cut $s own finger.", FALSE, this, obj, victim, TO_NOTVICT);
+    act("$N quickly avoids your backstab, and you nearly cut your finger.",
+        FALSE, this, obj, victim, TO_CHAR);
+    act("$n tried to backstab you, but you avoid $m.",
+        FALSE, this, obj, victim, TO_VICT);
+    act("$n tried to backstab $N, but nearly cut $s own finger.",
+        FALSE, this, obj, victim, TO_NOTVICT);
+
     d = 0;
   }
-  if (reconcileDamage(victim, d,SKILL_BACKSTAB) == -1)
+
+  if (reconcileDamage(victim, d, SKILL_BACKSTAB) == -1)
     return DELETE_VICT;
+
   victim->addHated(this);
 
   return 0;
@@ -160,20 +162,34 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
     return FALSE;
   }
   // *** Start of Test Tank-Target Backstab Code  -Lapsos
-  if (!*argument && isAffected(AFF_GROUP)) {
+  if (!argument && !*argument && isAffected(AFF_GROUP)) {
     if (master)
       GLeader = master;
     else
       GLeader = this;
-    if (GLeader != this && sameRoom(GLeader) && GLeader->fight())
+
+    if (GLeader != this && sameRoom(*GLeader) && GLeader->fight())
       victim = GLeader->fight();
     else {
-      for(FDt = GLeader->followers;
-          (FDt && sameRoom(FDt->follower) && FDt->follower != this &&
-           !(victim = FDt->follower->fight()));
-          FDt = FDt->next);
+      for (FDt = GLeader->followers; FDt; FDt = FDt->next) {
+        if (!sameRoom(*FDt->follower))
+          continue;
+
+        if (FDt->follower == this)
+	  continue;
+
+        if (!FDt->follower->isAffected(AFF_GROUP))
+          continue;
+
+        if ((victim = FDt->follower->fight())) 
+          break;
+      }
+
+      if (victim && !sameRoom(*victim))
+        victim = NULL;
     }
   }
+
   if (!vict && !victim) {
     if (*argument)
       only_argument(argument, namebuf);
@@ -183,25 +199,38 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
       return FALSE;
     }
   }
+
   if (vict && !victim)
     victim = vict;
   // *** End of Test Tank-Target Backstab Code  -Lapsos
-  if (!sameRoom(victim)) {
+
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
+
   if ((rc = backstab(this, victim))) {
-    addSkillLag(SKILL_BACKSTAB);
     if (!victim->isPc())
       dynamic_cast<TMonster *>(victim)->US(25);
+    addSkillLag(SKILL_BACKSTAB, rc);
   }
+
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;
+
     delete victim;
     victim = NULL;
     REM_DELETE(rc, DELETE_VICT);
   }
+
+  TGenWeapon * obj = dynamic_cast<TGenWeapon *>(heldInPrimHand());
+
+  if (obj &&
+      obj->checkSpec(victim, CMD_BACKSTAB, "-special-", this) == DELETE_VICT) {
+    delete victim;
+    victim = NULL;
+  } 
 
   return rc;
 }
@@ -245,7 +274,7 @@ int backstab(TBeing *thief, TBeing * victim)
     return FALSE;
   }
   if (!obj->canBackstab()) {
-    act("You can't use $o to backstab.", false, thief, obj, NULL, TO_CHAR);
+    act("You can't use $p to backstab.", false, thief, obj, NULL, TO_CHAR);
     return FALSE;
   }
 
@@ -281,7 +310,9 @@ int backstab(TBeing *thief, TBeing * victim)
   if ((!thief->isAffected(AFF_INVISIBLE) ||
        victim->isAffected(AFF_DETECT_INVISIBLE)) &&
       victim->canSee(thief) &&
-      !thief->isAffected(AFF_SNEAK) && victim->awake()) {
+      !thief->isAffected(AFF_SNEAK) &&
+      !thief->isAffected(AFF_HIDE) &&
+      victim->awake()) {
     act("$N notices you walking up behind $M, apparently you were not sneaking and visible...",FALSE,thief,0,victim,TO_CHAR);
     act("$n makes a pathetic attempt at backstabbing $N.", FALSE, thief, 0, victim, TO_NOTVICT);
     act("You nearly cut yourself as you try to backstab $N.", FALSE, thief, 0, victim, TO_CHAR);
@@ -350,7 +381,7 @@ int TBeing::doPoisonWeapon(const char * argument)
 
   rc = poisonWeapon(this, obj);
   if (rc)
-    addSkillLag(SKILL_POISON_WEAPON);
+    addSkillLag(SKILL_POISON_WEAPON, rc);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   return rc;
@@ -384,9 +415,14 @@ int TTool::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
 
   addToToolUses(-1);
 
-  duration = (level << 2) * UPDATES_PER_TICK;
+  duration = (level << 2) * UPDATES_PER_MUDHOUR;
   if (bSuccess(ch, bKnown, SKILL_POISON_WEAPON)) {
-    for (j= 0; j < MAX_SWING_AFFECT; j++) {
+    for (j = 0; j < MAX_SWING_AFFECT; j++) {
+      if (weapon->oneSwing[j].type == SPELL_POISON) {
+        ch->sendTo("That weapon is already affected by poison!\n\r");
+        break;
+      }
+
       if (weapon->oneSwing[j].type == TYPE_UNDEFINED) {
         weapon->oneSwing[j].type = SPELL_POISON;
         weapon->oneSwing[j].bitvector = AFF_POISON;
@@ -455,8 +491,12 @@ int TBeing::doGarrotte(const char * argument, TBeing *vict)
       return FALSE;
     }
   }
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
+    return FALSE;
+  }
+  if (victim->isImmortal()) {
+    sendTo("Sorry....that shit don't fly anymore.\n\r");
     return FALSE;
   }
   if (victim->isUndead()) {
@@ -465,7 +505,7 @@ int TBeing::doGarrotte(const char * argument, TBeing *vict)
   }
   rc = garrotte(this, victim);
   if (rc)
-    addSkillLag(SKILL_GARROTTE);
+    addSkillLag(SKILL_GARROTTE, rc);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;
@@ -509,7 +549,7 @@ int TTool::garotteMe(TBeing *thief, TBeing *victim)
   int dam = thief->getSkillDam(victim, SKILL_GARROTTE, level, thief->getAdvLearning(SKILL_GARROTTE));
 
   if (this != (thief->unequip(thief->getPrimaryHold()))) {
-    vlogf(5, "Error in garotte");
+    vlogf(LOG_BUG, "Error in garotte");
   }
   if (bSuccess(thief, bKnown, SKILL_GARROTTE) || !victim->awake()) {
     affectedData aff;
@@ -525,6 +565,11 @@ int TTool::garotteMe(TBeing *thief, TBeing *victim)
     aff.modifier = DISEASE_GARROTTE;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_SILENT;
+
+    // we've made raw immunity check, but allow it to reduce effects too
+    aff.duration *= (100 - victim->getImmunity(IMMUNE_SUFFOCATION));
+    aff.duration /= 100;
+
     victim->affectTo(&aff);
 
   } else {
@@ -598,6 +643,7 @@ int TBeing::doCudgel(const char * argument, TBeing *vict)
     sendTo("You know nothing about cudgeling.\n\r");
     return FALSE;
   }
+
   if (checkBusy(NULL)) {
     return FALSE;
   }
@@ -609,13 +655,13 @@ int TBeing::doCudgel(const char * argument, TBeing *vict)
       return FALSE;
     }
   }
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
   rc = cudgel(this, victim);
   if (rc)
-    addSkillLag(SKILL_CUDGEL);
+    addSkillLag(SKILL_CUDGEL, rc);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;
@@ -636,9 +682,18 @@ int cudgel(TBeing *thief, TBeing *victim)
 
   TGenWeapon * obj = dynamic_cast<TGenWeapon *>(thief->heldInPrimHand());
 
-  if (!obj) {
-    thief->sendTo("You need to wield a weapon, to make it a success.\n\r");
-    return FALSE;
+  if (!obj || !obj->canCudgel()) {
+    // Allow high learndness to use offhand, for a cost.
+    if (bKnown >= 80) {
+      obj    = dynamic_cast<TGenWeapon *>(thief->heldInSecHand());
+      level  = max(1, (level - 10));
+      bKnown = max(1, (bKnown - 20));
+    }
+
+    if (!obj) {
+      thief->sendTo("You need to wield a weapon, to make it a success.\n\r");
+      return FALSE;
+    }
   }
 
   if (thief->riding) {
@@ -656,6 +711,29 @@ int cudgel(TBeing *thief, TBeing *victim)
 
   if (!obj->canCudgel()) {
     act("You can't use $o to cudgel.", false, thief, obj, NULL, TO_CHAR);
+    return FALSE;
+  }
+
+  // Jesus's fix for cudgel...cheesy as hell but oh well
+  if (!victim->isHumanoid()) {
+    thief->sendTo("You cannot cudgel that creature.\n\r");
+    return FALSE;
+  }
+
+  // Jesus's fix for cudgel...cheesy as hell but oh well
+  if (victim->isUndead()) {
+    thief->sendTo("You cannot cudgel a dead head.\n\r");
+    return FALSE;
+  }
+  // Jesus's fix for cudgel...cheesy as hell but oh well
+  if (victim->isFlying() && !(thief->isFlying())) {
+    thief->sendTo("You cannot cudgel them while they are flying.\n\r");
+    return FALSE;
+  }
+
+  // Jesus's fix for cudgel...cheesy as hell but oh well
+  if (3*thief->getHeight() < 2*victim->getHeight() && !(thief->isFlying())) {
+    thief->sendTo("You don't stand a chance at cudgeling a creature that tall.\n\r");
     return FALSE;
   }
 
@@ -696,7 +774,7 @@ int cudgel(TBeing *thief, TBeing *victim)
 
       affectedData aff;
       aff.type = SKILL_CUDGEL;
-      aff.duration = UPDATES_PER_TICK / 3;
+      aff.duration = UPDATES_PER_MUDHOUR / 3;
       aff.bitvector = AFF_STUNNED;
 
       victim->affectTo(&aff, -1);
