@@ -803,6 +803,18 @@ void logPermaDeathLevel(TBeing *ch){
   mysql_free_result(res);
 }
 
+void clearPermaDeathLevel(TBeing *ch){
+  MYSQL_RES *res;
+  int rc;
+  
+  if((rc=dbquery(TRUE, &res, "sneezy", "permadeath", "delete from permadeath where name='%s'", ch->name))){
+    if(rc==-1){
+      vlogf(LOG_BUG, "Database error in logPermaDeathLevel");
+    }
+  }
+  mysql_free_result(res);
+}
+
 
 void TPerson::raiseLevel(classIndT Class, TMonster *gm)
 {
@@ -887,6 +899,8 @@ void TPerson::raiseLevel(classIndT Class, TMonster *gm)
     
     if(hasQuestBit(TOG_PERMA_DEATH_CHAR)){
       logPermaDeathLevel(this);
+    } else {
+      clearPermaDeathLevel(this);
     }
 
 
