@@ -124,13 +124,14 @@ int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
     aff.type = AFFECT_THRALL;
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     mob->affectTo(&aff);
-
+    delete corpse;
     return SPELL_SUCCESS + VICTIM_DEAD;
   } else {
     act("You've created a monster; $N hates you!",
             FALSE, caster, NULL, mob, TO_CHAR);
     caster->setCharFighting(mob);
     caster->setVictFighting(mob);
+    delete corpse;
     return SPELL_FAIL + VICTIM_DEAD;
   }
 }
@@ -247,10 +248,12 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
             TRUE, caster, corpse, 0, TO_CHAR);
     act("With mystic power, $p is resurrected.", 
             TRUE, caster, corpse, 0, TO_ROOM);
+    delete corpse;
     return SPELL_SUCCESS;  // note, this indicates obj should go bye bye
   } else {
     act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    delete corpse;
     return SPELL_FAIL;
   }
 }
@@ -443,14 +446,14 @@ int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
     aff.type = AFFECT_THRALL;
     aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     mob->affectTo(&aff);
-
+    delete corpse;
     return SPELL_SUCCESS + VICTIM_DEAD;
-    vlogf(LOG_JESUS, "Someone succesfully casted Dancing Bones.");
   } else {
     act("You've created a monster; $N hates you!",
             FALSE, caster, NULL, mob, TO_CHAR);
     caster->setCharFighting(mob);
     caster->setVictFighting(mob);
+    delete corpse;
     return SPELL_FAIL + VICTIM_DEAD;
   }
 }
@@ -918,6 +921,10 @@ void TBeing::doSacrifice(const char *arg)
 
   tobj = heldInPrimHand();
   if (!(tobj = heldInPrimHand())) {
+    sendTo("You must be holding a totem in your primary hand to perform the ritual.\n\r");
+    return;
+  }
+  if ((tobj = heldInSecHand())) {
     sendTo("You must be holding a totem in your primary hand to perform the ritual.\n\r");
     return;
   }
