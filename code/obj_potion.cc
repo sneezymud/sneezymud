@@ -33,6 +33,30 @@ TPotion::~TPotion()
 }
 
 
+bool TPotion::isSimilar(const TThing *t) const
+{
+  const TPotion *pot = dynamic_cast<const TPotion *>(t);
+  if (!pot)
+    return FALSE;
+
+  if (!getDescr() || !pot->getDescr() ||
+      strcmp(getDescr(), pot->getDescr())){
+    return false;
+  }
+
+  if (!name || !pot->name ||
+      !is_exact_name(name, pot->name)){
+    return false;
+  }
+  
+  // not same if drink types are different, unless both are empty
+  if(getDrinkType() != pot->getDrinkType() &&
+     !(getDrinkUnits()==0 && getDrinkUnits()==0)){
+    return false;
+  }
+
+  return true;
+}
 
 int TPotion::sellPrice(int, int shop_nr, float, const TBeing *)
 {
