@@ -34,8 +34,8 @@ static const sstring ClassTitles(const TBeing *ch)
 
 int graf(int age, int p0, int p1, int p2, int p3, int p4, int p5, int p6)
 {
-  // age disabled
-    return (int) (p2 + (((age - 30) * (p3 - p2)) / 15));        /* 30..44 */
+  // age disabled - treat everyone as a 35 year old
+    return (int) (p2 + (((35 - 30) * (p3 - p2)) / 15));        /* 30..44 */
     
   if (age < 15)
     return (p0);
