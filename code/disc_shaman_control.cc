@@ -1,8 +1,158 @@
+////////////////////////////////////////////////////////////////////
+// 
+//  disc_shaman_control
+//
+///////////////////////////////////////////////////////////////////
+
 #include "stdsneezy.h"
 #include "disease.h"
 #include "combat.h"
 #include "disc_shaman.h"
 #include "spelltask.h"
+
+int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
+{
+  affectedData aff;
+  TThing *t, *n;
+  TMonster * victim;
+  TBaseCorpse *corpse;
+
+  if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
+    caster->sendTo("You can't resurrect something that's not a corpse!\n\r");
+    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    return SPELL_FAIL;
+  }
+
+  if (caster->getMoney() < 25000) {
+    caster->sendTo("You don't have enough talens to make the resurrection sacrifice.\n\r");
+    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    return SPELL_FAIL;
+  }
+  caster->addToMoney(-25000, GOLD_HOSPITAL);
+
+  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_RESURRECTION)) {
+    victim = read_mobile(corpse->getCorpseVnum(), VIRTUAL);
+    *caster->roomp += *victim;
+    victim->genericCharmFix();
+    victim->setHit(1);
+    victim->setPosition(POSITION_STUNNED);
+    act("$N slowly rises from the $g.", FALSE, caster, 0, victim, TO_ROOM);
+    caster->reconcileHelp(victim,discArray[SPELL_RESURRECTION]->alignMod);
+      
+    if (victim->isImmune(IMMUNE_CHARM, level)) {
+      victim->setPosition(POSITION_STANDING);
+      victim->doSay("Thank you");
+      delete corpse;
+      return SPELL_FALSE;
+    } else if (caster->tooManyFollowers(victim, FOL_ZOMBIE)) {
+      act("$N refuses to enter a group the size of yours!", TRUE, caster, NULL, victim, TO_CHAR);
+      act("$N refuses to enter a group the size of $n's!", TRUE, caster, NULL, victim, TO_ROOM);
+      delete corpse;
+      return SPELL_FALSE;
+    }
+
+    aff.type      = SPELL_RESURRECTION;
+    aff.duration = caster->followTime(); 
+    aff.duration = (int) (caster->percModifier() * aff.duration);
+    aff.modifier = 0;
+    aff.location = APPLY_NONE;
+    aff.bitvector = AFF_CHARM;
+
+    if (critSuccess(caster, SPELL_RESURRECTION)) {
+      CS(SPELL_RESURRECTION);
+      aff.duration *= 2;
+    }
+    victim->affectTo(&aff);
+
+    aff.type = AFFECT_THRALL;
+    aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
+    victim->affectTo(&aff);
+
+    caster->addFollower(victim);
+    victim->setCarriedWeight(0.0);
+    victim->setCarriedVolume(0);
+    for (t = corpse->stuff; t; t = n) {
+      n = t->nextThing;
+      --(*t);
+      *victim += *t;
+    }
+    act("With mystic power, $p is resurrected.", 
+            TRUE, caster, corpse, 0, TO_CHAR);
+    act("With mystic power, $p is resurrected.", 
+            TRUE, caster, corpse, 0, TO_ROOM);
+    delete corpse;
+    return SPELL_SUCCESS;  // note, this indicates obj should go bye bye
+  } else {
+    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_CHAR);
+    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    delete corpse;
+    return SPELL_FAIL;
+  }
+}
+
+void resurrection(TBeing *caster, TObj *obj, TMagicItem * obj_mi)
+{
+  int ret, level;
+
+  level = caster->getSkillLevel(SPELL_VOODOO);
+  int bKnown = caster->getSkillValue(SPELL_VOODOO);
+  act("You direct a strange beam of energy at $p.",
+          FALSE, caster, obj_mi, obj, TO_CHAR);
+  act("$n directs a strange beam of energy at $p.",
+          FALSE, caster, obj_mi, obj, TO_ROOM);
+  ret=resurrection(caster,obj,level,bKnown);
+}
+
+int castResurrection(TBeing * caster, TObj * obj)
+{
+  int ret, level;
+  TBaseCorpse *corpse;
+
+  if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
+    return FALSE;
+  }
+  if (dynamic_cast<TPCorpse *>(corpse)) {
+     /* corpse is a pc */
+    caster->sendTo("Resurrection of players is not currently supported.\n\r");
+    return FALSE;
+  }
+  if (corpse->getCorpseVnum() == -1) {
+     /* corpse is a MEDIT mob */
+    caster->sendTo("You can't resurrect that.\n\r");
+    return FALSE;
+  }
+  if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
+     /* corpse is a body part, pile of dust, etc */
+    caster->sendTo("There isn't enough left to resurrect.\n\r");
+    return FALSE;
+  }
+  act("You direct a strange beam of energy at $p.",
+          FALSE, caster, obj, 0, TO_CHAR);
+  act("$n directs a strange beam of energy at $p.",
+          FALSE, caster, obj, 0, TO_ROOM);
+
+  level = caster->getSkillLevel(SPELL_RESURRECTION);
+  int bKnown = caster->getSkillValue(SPELL_RESURRECTION);
+  ret=resurrection(caster,corpse,level,bKnown);
+  if (ret == SPELL_SUCCESS) {
+    return DELETE_ITEM;  // delete corpse
+  }
+  return TRUE;
+}
+
+int resurrection(TBeing * caster, TObj * obj)
+{
+  taskDiffT diff;
+
+  if (!bPassShamanChecks(caster, SPELL_RESURRECTION, obj))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_RESURRECTION]->lag;
+  diff = discArray[SPELL_RESURRECTION]->task;
+
+  start_cast(caster, NULL, obj, caster->roomp, SPELL_RESURRECTION, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+  return TRUE;
+}
 
 // ENTHRALL GHOUL
 

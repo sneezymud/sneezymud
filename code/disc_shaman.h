@@ -14,7 +14,6 @@ public:
     CSkill skVoodoo;
     CSkill skVampiricTouch;
     CSkill skLifeLeech;
-    CSkill skResurrection;
     CSkill skDancingBones;
     CDShaman()
       : CDiscipline(),
@@ -25,7 +24,6 @@ public:
       skVoodoo(),
       skVampiricTouch(),
       skLifeLeech(),
-      skResurrection(),
       skDancingBones() { 
     }
     CDShaman(const CDShaman &a)
@@ -37,7 +35,6 @@ public:
       skVoodoo(a.skVoodoo),
       skVampiricTouch(a.skVampiricTouch),
       skLifeLeech(a.skLifeLeech),
-      skResurrection(a.skResurrection),
       skDancingBones(a.skDancingBones) {
     }
     CDShaman & operator=(const CDShaman &a) {
@@ -50,7 +47,6 @@ public:
       skVoodoo = a.skVoodoo;
       skVampiricTouch = a.skVampiricTouch;
       skLifeLeech = a.skLifeLeech;
-      skResurrection = a.skResurrection;
       skDancingBones = a.skDancingBones;
       return *this;
     }
@@ -68,11 +64,6 @@ private:
     void dancingBones(TBeing *, TObj *, TMagicItem *);
     int dancingBones(TBeing *, TObj *);
     int castDancingBones(TBeing *, TObj *);
-
-    int resurrection(TBeing *, TObj *, int, byte);
-    void resurrection(TBeing *, TObj *, TMagicItem *);
-    int resurrection(TBeing *, TObj *);
-    int castResurrection(TBeing *, TObj *);
 
     int enthrallSpectre(TBeing * caster, int level, byte bKnown);
     int enthrallSpectre(TBeing * caster);
