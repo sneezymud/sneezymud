@@ -135,7 +135,7 @@ static void test_fight_start(bool same_time)
     }
 
     num_fighting++;
-    if (num_fighting >= 1000)
+    if (num_fighting >= 100)
       break;
   }
 
