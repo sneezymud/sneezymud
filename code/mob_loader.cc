@@ -645,6 +645,7 @@ void TMonster::shamanComponentLoader(void)
         case COMP_DETECT_SHADOW:
         case COMP_SHADOW_WALK:
         case COMP_CLARITY:
+	case COMP_CONTROL_UNDEAD:
         case COMP_CHEVAL:
           // these are also "utility" comps, but players have asked for a
           // slightly higher load rate on them

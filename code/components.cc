@@ -1354,6 +1354,14 @@ void buildComponentArray()
     "$n tosses $p into the pile of armor.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_CONTROL_UNDEAD,
+    "",                       
+    "",                       
+    "",
+    "You toss $p on the ground.",
+    "$n tosses $p on the ground.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_SHIELD_OF_MISTS,
     "You masticate $p and spit it at $N.",
     "$n masticates $p and spits it at $N.",

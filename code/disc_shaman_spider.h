@@ -42,7 +42,8 @@ public:
 private:
 };
 
-    void controlUndead(TBeing *, TBeing *);
+    int controlUndead(TBeing *, TBeing *);
+    int castControlUndead(TBeing *, TBeing *);
     void controlUndead(TBeing *, TBeing *, TMagicItem *);
     int controlUndead(TBeing *, TBeing *, int, byte);
 

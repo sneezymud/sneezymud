@@ -2000,6 +2000,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       case SPELL_EXPEL_DEIKHAN:
           expel(this, ch);
         break;
+      case SPELL_CONTROL_UNDEAD:
+	controlUndead(this, ch);
+        break;
       case SPELL_CLARITY:
         clarity(this, ch);
         break;
@@ -2041,9 +2044,6 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
         break;
       case SPELL_DANCING_BONES:
           rc = dancingBones(this, o);
-        break;
-      case SPELL_CONTROL_UNDEAD:
-          controlUndead(this, ch);
         break;
       case SPELL_RESURRECTION:
           rc = resurrection(this, o);

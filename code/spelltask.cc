@@ -1191,6 +1191,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_SILENCE:
     case SPELL_SLUMBER:
     case SPELL_STEALTH:
+    case SPELL_CONTROL_UNDEAD:
     case SPELL_ACCELERATE:
     case SPELL_CHEVAL: // shaman
     case SPELL_CELERITE:
@@ -1971,6 +1972,9 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
         break;
      case SPELL_CLARITY:
         castClarity(this, victim);
+        break;
+     case SPELL_CONTROL_UNDEAD:
+        castControlUndead(this, victim);
         break;
      case SPELL_SHAPESHIFT:
         rc = castShapeShift(this);

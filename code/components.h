@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.27  2001/06/25 09:38:02  jesus
+// control undead update for shaman
+//
 // Revision 5.26  2001/06/22 14:48:43  jesus
 // its about damn time someone wrote this
 //
@@ -245,6 +248,7 @@ const int COMP_SOUL_TWIST         =31335;
 const int COMP_DEATHWAVE          =31336;
 const int COMP_CELERITE           =31337;
 const int COMP_STUPIDITY          =31338;
+const int COMP_CONTROL_UNDEAD     =31339;
 
 class compPlace
 {

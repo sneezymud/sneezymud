@@ -296,40 +296,34 @@ int controlUndead(TBeing *caster,TBeing *victim,int level,byte bKnown)
   }
 }
 
-void controlUndead(TBeing * caster, TBeing * victim, TMagicItem *obj)
+void controlUndead(TBeing *caster, TBeing *victim, TMagicItem * obj)
 {
-  int ret;
-
-  if (caster != victim) {
-    act("$p attempts to bend $N to your will.",
-          FALSE, caster, obj, victim, TO_CHAR);
-    act("$p attempts to bend you to $n's will.",
-          FALSE, caster, obj, victim, TO_VICT);
-    act("$p attempts to bend $N to $n's will.",
-          FALSE, caster, obj, victim, TO_NOTVICT);
-  } else {
-    act("$p tries to get you to control yourself.",
-          FALSE, caster, obj, 0, TO_CHAR);
-    act("$p tries to get $n to control $mself.",
-          FALSE, caster, obj, 0, TO_ROOM);
-  }
- 
-  ret=controlUndead(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
- 
-  return;
+  controlUndead(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
 }
 
-void controlUndead(TBeing * caster, TBeing * victim)
+int castControlUndead(TBeing *caster, TBeing *victim)
 {
   int ret,level;
-
-  if (!bPassClericChecks(caster,SPELL_CONTROL_UNDEAD))
-    return;
 
   level = caster->getSkillLevel(SPELL_CONTROL_UNDEAD);
   int bKnown = caster->getSkillValue(SPELL_CONTROL_UNDEAD);
 
   ret=controlUndead(caster,victim,level,bKnown);
+    return TRUE;
+}
+
+int controlUndead(TBeing *caster, TBeing *victim)
+{
+  taskDiffT diff;
+
+    if (!bPassShamanChecks(caster, SPELL_CONTROL_UNDEAD, victim))
+       return FALSE;
+
+     lag_t rounds = discArray[SPELL_CONTROL_UNDEAD]->lag;
+     diff = discArray[SPELL_CONTROL_UNDEAD]->task;
+
+     start_cast(caster, victim, NULL, caster->roomp, SPELL_CONTROL_UNDEAD, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+      return TRUE;
 }
 
 // END CONTROL UNDEAD
