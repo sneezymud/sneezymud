@@ -609,8 +609,10 @@ void TBeing::doPoop(void)
   act("You <o>defecate<z> on the $g.",
       TRUE, this, NULL, NULL, TO_CHAR);
 
-  obj->setWeight(getCond(POOP)/10.0);
-  obj->setVolume(getCond(POOP));
+  if(isPc()){
+    obj->setWeight(getCond(POOP)/10.0);
+    obj->setVolume(getCond(POOP));
+  }
 
 
   int weightmod=1;
