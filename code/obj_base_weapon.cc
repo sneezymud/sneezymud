@@ -1520,6 +1520,10 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
 	// worst idea ever - peel
 
         d = get_range_actual_damage(ch, tb, this, d, damtype);
+	
+	if(isPoisoned())
+	  applyPoison(tb);
+	
 
 
 
