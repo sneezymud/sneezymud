@@ -1725,11 +1725,9 @@ int squish(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_lea
         }
         break;
     }
-
+    vlogf(LOG_JESUS, "Squish damage: %d victim: %s caster: %s.", dam, victim->getName(), caster->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_SQUISH) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
-    vlogf(LOG_JESUS, "Squish damage: %d victim: %s caster: %s.", dam, victim->getName(), 
-caster->getName());
     return SPELL_SUCCESS;
   } else {
     caster->setCharFighting(victim);
@@ -1866,11 +1864,9 @@ int distort(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
           dam /= 2;
         }
     }
-
+    vlogf(LOG_JESUS, "Distort damage: %d victim: %s caster: %s", dam, victim->getName(), caster->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_DISTORT) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
-    vlogf(LOG_JESUS, "Distort damage: %d victim: %s caster: %s", dam, victim->getName(), 
-caster->getName());
     return SPELL_SUCCESS;
   } else {
     switch (critFail(caster, SPELL_DISTORT)) {
@@ -1993,10 +1989,9 @@ int soulTwist(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
         }
     }
 
+    vlogf(LOG_JESUS, "Soul Twister damage: %d victim: %s caster: %s", dam, victim->getName(), caster->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_SOUL_TWIST) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
-    vlogf(LOG_JESUS, "Soul Twister damage: %d victim: %s caster: %s", dam, 
-victim->getName(), caster->getName());
     return SPELL_SUCCESS;
   } else {
     switch(critFail(caster, SPELL_SOUL_TWIST)) {

@@ -2,20 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_earth.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/09/27 19:27:33  lapsos
-// added road and city as viable earth elements.
-//
-// Revision 1.2  1999/09/16 04:56:10  peel
-// Conjure earth elemental requires being in an earthy sector to work (!notRangerLandSector())
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -68,7 +54,7 @@ int slingShot(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_
       }
     }
     victim->roomp->playsound(SOUND_SPELL_SLING_SHOT, SOUND_TYPE_MAGIC);
-
+    vlogf(LOG_JESUS, "Sling Shot damage: %d", dam);
     if (caster->reconcileDamage(victim, dam, SPELL_SLING_SHOT) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
@@ -156,6 +142,7 @@ int graniteFists(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
     }
 
     victim->roomp->playsound(SOUND_SPELL_GRANITE_FIST, SOUND_TYPE_MAGIC);
+    vlogf(LOG_JESUS, "Granite Fists damage: %d", dam);
 
     if (caster->reconcileDamage(victim, dam, SPELL_GRANITE_FISTS) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
@@ -234,7 +221,7 @@ int pebbleSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
       if (!vict)
         continue;
 
-      if (!caster->inGroup(vict) && !vict->isImmortal()) {
+      if (!caster->inGroup(*vict) && !vict->isImmortal()) {
         caster->reconcileHurt(vict, discArray[SPELL_PEBBLE_SPRAY]->alignMod);
         act("$n is pelted with pebbles!", FALSE, vict, NULL, NULL, TO_ROOM);
         act("You are pelted with pebbles!", FALSE, vict, NULL, NULL, TO_CHAR);
@@ -247,6 +234,7 @@ int pebbleSpray(TBeing * caster, int level, byte bKnown, int adv_learn)
         act("You dodge the pebbles!", TRUE, vict, NULL, NULL, TO_CHAR);
       }
     }
+    vlogf(LOG_JESUS, "Pebble Spray damage: %d", dam);
     return SPELL_SUCCESS;
   } else {
     if (critFail(caster, SPELL_PEBBLE_SPRAY)) {
@@ -311,7 +299,7 @@ int sandBlast(TBeing * caster, int level, byte bKnown, int adv_learn)
       if (!vict)
         continue;
 
-      if (!caster->inGroup(vict) && !vict->isImmortal()) {
+      if (!caster->inGroup(*vict) && !vict->isImmortal()) {
         caster->reconcileHurt(vict, discArray[SPELL_SAND_BLAST]->alignMod);
         act("$n is BLASTED with sand!", FALSE, vict, NULL, NULL, TO_ROOM);
         act("You are BLASTED with sand!", FALSE, vict, NULL, NULL, TO_CHAR);
@@ -337,7 +325,7 @@ int sandBlast(TBeing * caster, int level, byte bKnown, int adv_learn)
         if (!vict)
           continue;
 
-        if (caster->inGroup(vict) && caster != vict) {
+        if (caster->inGroup(*vict) && caster != vict) {
           caster->reconcileHurt(vict, discArray[SPELL_SAND_BLAST]->alignMod);
           act("$n is BLASTED with sand!", FALSE, vict, NULL, NULL, TO_ROOM);
           act("You are BLASTED with sand!", FALSE, vict, NULL, NULL, TO_CHAR);
@@ -415,7 +403,7 @@ int lavaStream(TBeing * caster, int level, byte bKnown, int adv_learn)
       if (!vict)
         continue;
 
-      if (!caster->inGroup(vict) && !vict->isImmortal()) {
+      if (!caster->inGroup(*vict) && !vict->isImmortal()) {
         caster->reconcileHurt(vict, discArray[SPELL_LAVA_STREAM]->alignMod);
         act("$n screams in agony as $e is burned by the lava!", 
               FALSE, vict, NULL, NULL, TO_ROOM);
@@ -427,6 +415,7 @@ int lavaStream(TBeing * caster, int level, byte bKnown, int adv_learn)
         }
       }
     }
+    vlogf(LOG_JESUS, "Lava Stream damage: %d", dam);
     return SPELL_SUCCESS;
   } else {
     if (critFail(caster, SPELL_LAVA_STREAM)) {
@@ -440,7 +429,7 @@ int lavaStream(TBeing * caster, int level, byte bKnown, int adv_learn)
         if (!vict)
           continue;
 
-        if (caster->inGroup(vict) && caster != vict && !vict->isImmortal()) {
+        if (caster->inGroup(*vict) && caster != vict && !vict->isImmortal()) {
           caster->reconcileHurt(vict, discArray[SPELL_LAVA_STREAM]->alignMod);
           act("$n screams in agony as $e is burned by the lava!", 
               FALSE, vict, NULL, NULL, TO_ROOM);
@@ -545,6 +534,7 @@ int meteorSwarm(TBeing * caster, TBeing * victim, int level, byte bKnown, int ad
     sprintf(buf, "$n calls forth %d meteors that blast you to smithereens!", num_meteors);
     act(buf, FALSE, caster, NULL, victim, TO_VICT);
     caster->reconcileHurt(victim,discArray[SPELL_METEOR_SWARM]->alignMod);
+    vlogf(LOG_JESUS, "Meteor Swarm damage: %d", damage);
     if (caster->reconcileDamage(victim, damage, SPELL_METEOR_SWARM) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
@@ -649,14 +639,14 @@ int stoneSkin(TBeing * caster, TBeing * victim, int level, byte bKnown)
     // ARMOR APPLY
     aff1.type = SPELL_STONE_SKIN;
     aff1.level = level;
-    aff1.duration = aff1.level * UPDATES_PER_TICK;
+    aff1.duration = aff1.level * UPDATES_PER_MUDHOUR;
     aff1.location = APPLY_ARMOR;
     aff1.modifier = -75;
 
     // PIERCE IMMUNITY
     aff2.type = SPELL_STONE_SKIN;
     aff2.level = level;
-    aff2.duration = aff2.level * UPDATES_PER_TICK;
+    aff2.duration = aff2.level * UPDATES_PER_MUDHOUR;
     aff2.location = APPLY_IMMUNITY;
     aff2.modifier = IMMUNE_PIERCE;
     aff2.modifier2 = 15;
@@ -676,8 +666,9 @@ int stoneSkin(TBeing * caster, TBeing * victim, int level, byte bKnown)
     if (caster != victim)
       aff1.modifier /= 5;
 
-    victim->affectTo(&aff1);
-    victim->affectTo(&aff2);
+    victim->affectJoin(caster, &aff1, AVG_DUR_NO, AVG_EFF_YES);
+    victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
+
     act("$n's skin turns to hard granite.", FALSE, victim, NULL, NULL, TO_ROOM);
     act("Your skin turns to hard granite.", FALSE, victim, NULL, NULL, TO_CHAR);
     return SPELL_SUCCESS;
@@ -741,7 +732,7 @@ int trailSeek(TBeing * caster, TBeing * victim, int level, byte bKnown)
 
     aff.type = SPELL_TRAIL_SEEK;
     aff.level = level;
-    aff.duration = aff.level * UPDATES_PER_TICK / 3;   /* short lived */
+    aff.duration = aff.level * UPDATES_PER_MUDHOUR / 3;   /* short lived */
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
@@ -844,12 +835,16 @@ int conjureElemEarth(TBeing * caster, int level, byte bKnown)
     if (victim->master)
       victim->stopFollower(TRUE);
 
-    aff.type = SPELL_ENSORCER;
+    aff.type = SPELL_CONJURE_EARTH;
     aff.level = level;
     aff.duration  = caster->followTime();
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_CHARM;
+    victim->affectTo(&aff);
+
+    aff.type = AFFECT_THRALL;
+    aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
 
     /* Add hp for higher levels - Russ */
@@ -878,10 +873,8 @@ int conjureElemEarth(TBeing * caster, int level, byte bKnown)
              TRUE, caster, NULL, victim, TO_ROOM);
       act("You've created a monster; $N hates you!",
              FALSE, caster, NULL, victim, TO_CHAR);
-      victim->affectFrom(SPELL_ENSORCER);
-      victim->developHatred(caster);
-      caster->setCharFighting(victim);
-      caster->setVictFighting(victim);
+      victim->affectFrom(SPELL_CONJURE_EARTH);
+      victim->affectFrom(AFFECT_THRALL);
       return SPELL_FAIL;
     }
     caster->addFollower(victim);
@@ -942,7 +935,7 @@ int protectionFromEarth(TBeing *caster, TBeing *victim, int level, byte bKnown)
  
   aff.type = SPELL_PROTECTION_FROM_EARTH;
   aff.level = level;
-  aff.duration = (3 + (level / 2)) * UPDATES_PER_TICK;
+  aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
   aff.location = APPLY_IMMUNITY;
   aff.modifier = IMMUNE_EARTH;
   aff.modifier2 = ((level * 2) / 3);
@@ -956,7 +949,7 @@ int protectionFromEarth(TBeing *caster, TBeing *victim, int level, byte bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_PROTECTION_FROM_EARTH);
-        aff.duration = (10 + (level / 2)) * UPDATES_PER_TICK;
+        aff.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
         aff.modifier2 = (level * 2);
         break;
       case CRIT_S_NONE:

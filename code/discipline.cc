@@ -92,15 +92,6 @@ static bool enforceVerbal(TBeing *ch, spellNumT spell)
       ch->sendTo("You are unable to chant the incantation!\n\r");
       return FALSE;
     }
-    if (ch->getWizardryLevel() >= WIZ_LEV_NO_MANTRA) {
-      act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
-      act("Although you no longer need to, you begin an incantation to facilitate your spell.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
-      return TRUE;
-    } else {
-      act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
-      act("You begin to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
-      return TRUE;
-    } 
     if (ch->getRitualismLevel() >= RIT_LEV_NO_MANTRA) {
       act("$n begins to dance and sing in an unfamiliar tongue.", TRUE, ch, 0, 0, TO_ROOM, ANSI_RED);
       act("You begin the rada song in the ancient tongue.", TRUE, ch, 0, 0, TO_CHAR, ANSI_RED);
@@ -110,6 +101,15 @@ static bool enforceVerbal(TBeing *ch, spellNumT spell)
       act("You begin to dance and sing your rada in the ancient tongue.", TRUE, ch, 0, 0, TO_CHAR, ANSI_RED);
       return TRUE;
     }
+    if (ch->getWizardryLevel() >= WIZ_LEV_NO_MANTRA) {
+      act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
+      act("Although you no longer need to, you begin an incantation to facilitate your spell.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
+      return TRUE;
+    } else {
+      act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
+      act("You begin to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
+      return TRUE;
+    } 
   } else 
     return TRUE;
 }
@@ -187,10 +187,10 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
       return TRUE;
     }
     if (ch->hasHands()) {
-      sprintf(msg, "$n traces a magical rune in the air with $s hands.");
-      act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE);
-      sprintf(msg, "You trace a magical rune in the air with your hands.");
-      act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_PURPLE);
+      sprintf(msg, "$n performs ritualistic gestures with $s hands.");
+      act(msg, FALSE, ch, NULL, NULL, TO_ROOM, ANSI_RED);
+      sprintf(msg, "You perform ritualistic gestures with both hands.");
+      act(msg, FALSE, ch, NULL, NULL, TO_CHAR, ANSI_RED);
       return TRUE;
     } else {
       act("You hop and wiggle about while creating the magical runes in the air...", FALSE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);

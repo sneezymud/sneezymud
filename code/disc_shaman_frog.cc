@@ -225,11 +225,10 @@ int aquaticBlast(TBeing * caster, TBeing * victim, int level, byte bKnown, int a
           FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
       victim->dropPool(25, LIQ_WATER);
     }
+    vlogf(LOG_JESUS, "Aquatic Blast Damage: %d victim: %s caster: %s", dam, victim->getName(), caster->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_AQUATIC_BLAST) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
-    vlogf(LOG_JESUS, "Aquatic Blast Damage: %d victim: %s caster: %s", dam, 
-victim->getName(), caster->getName());
   } else {
     caster->setCharFighting(victim);
     caster->setVictFighting(victim);
@@ -595,13 +594,10 @@ int deathWave(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_le
           dam /= 2;
         }
     }
-
+    vlogf(LOG_JESUS, "Death Wave Damage: %d victim: %s caster: %s", dam, victim->getName(), caster->getName());
     if (caster->reconcileDamage(victim, dam, SPELL_DEATHWAVE) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
-
     return SPELL_SUCCESS;
-    vlogf(LOG_JESUS, "Death Wave Damage: %d victim: %s caster: %s", dam, 
-victim->getName(), caster->getName());
   } else {
     switch (critFail(caster, SPELL_DEATHWAVE)) {
       case CRIT_F_HITSELF:

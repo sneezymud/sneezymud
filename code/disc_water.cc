@@ -141,6 +141,7 @@ int icyGrip(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_le
     act("$N shakes violently as your icy grip drains the strength from $S body!", FALSE, caster, NULL, victim, TO_CHAR, ANSI_BLUE);
     act("You shake violently as a deathly chill drains the strength from your body!", FALSE, caster, NULL, victim, TO_VICT, ANSI_BLUE);
     caster->reconcileHurt(victim, discArray[SPELL_ICY_GRIP]->alignMod);
+    vlogf(LOG_JESUS, "Icy Grip damage: %d [-20 strength also]", damage);
     if (caster->reconcileDamage(victim, damage, SPELL_ICY_GRIP) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
@@ -628,6 +629,7 @@ int tsunami(TBeing * caster, int level, byte bKnown, int adv_learn)
             act("You are leveled by the wave!", FALSE, caster, NULL, tmp_victim, TO_VICT, ANSI_BLUE);
             tmp_victim->setPosition(POSITION_SITTING);
           }
+	  vlogf(LOG_JESUS, "Tsunami damage: %d", damage);
           if (caster->reconcileDamage(tmp_victim, damage, SPELL_TSUNAMI) == -1) {
             delete tmp_victim;
             tmp_victim = NULL;
@@ -1147,6 +1149,7 @@ int gusher(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_lea
           FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
       victim->dropPool(25, LIQ_WATER);
     }
+    vlogf(LOG_JESUS, "Gusher damage: %d", dam);
     if (caster->reconcileDamage(victim, dam, SPELL_GUSHER) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
