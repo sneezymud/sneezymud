@@ -436,6 +436,11 @@ void TMonster::setHPFromHPLevel()
   double sanct_modifier = (100.0 / (100.0 - min(99.0, (double) getProtection())));
   amt = (int) (amt / sanct_modifier);
 
+  if (amt >= 32768) {
+    vlogf(LOG_DASH, "mob %s had hp overflow problem with %d hp, capping at 32767.", getName(), amt);
+    amt = 32767;
+  }
+
   setMaxHit(amt);
   setHit(hitLimit());
 }
