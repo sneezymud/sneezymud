@@ -1868,8 +1868,7 @@ void TBeing::doWeather(const char *arg)
     if (roomp->getWeather() == WEATHER_SNOWY)
       strcpy(buf,"It is snowing");
     else if (roomp->getWeather() == WEATHER_LIGHTNING)
-      strcpy(buf,"The sky is lit by flashes of lightning as a heavy rain pours
-down");
+      strcpy(buf,"The sky is lit by flashes of lightning as a heavy rain pours down");
     else if (roomp->getWeather() == WEATHER_RAINY)
       strcpy(buf,"It is raining");
     else if (roomp->getWeather() == WEATHER_CLOUDY)
