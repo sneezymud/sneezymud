@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_deikhan.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -50,7 +42,7 @@ int synostodweomer(TBeing *caster, TBeing *v, int level, byte bKnown)
     if (!caster->isImmortal()) {
       aff.type = AFFECT_SKILL_ATTEMPT;
       aff.location = APPLY_NONE;
-      aff.duration = 168 * UPDATES_PER_TICK;;
+      aff.duration = 168 * UPDATES_PER_MUDHOUR;
       aff.bitvector = 0;
       aff.modifier = SPELL_SYNOSTODWEOMER;
       caster->affectTo(&aff, -1);
@@ -72,7 +64,7 @@ int synostodweomer(TBeing *caster, TBeing *v, int level, byte bKnown)
 
     aff.type = SPELL_SYNOSTODWEOMER;
     aff.level = level;
-    aff.duration  = 2 * UPDATES_PER_TICK;;
+    aff.duration  = 2 * UPDATES_PER_MUDHOUR;
     aff.modifier = hitp;
     aff.location = APPLY_HIT;
     aff.bitvector = 0;
@@ -101,6 +93,9 @@ int synostodweomer(TBeing *caster, TBeing *v)
 {
   int level, ret;
   int rc = 0;
+
+  caster->sendTo("The synostodweomer prayer has been disabled due to a crash bug.\n\r");
+  return FALSE;
 
   if (!bPassClericChecks(caster,SPELL_SYNOSTODWEOMER))
      return FALSE;
@@ -167,7 +162,7 @@ int TBeing::doLayHands(const char *arg)
 
   // Prevent back-to-back attempts
   aff.type = AFFECT_SKILL_ATTEMPT;
-  aff.duration = 2 * UPDATES_PER_TICK;
+  aff.duration = 2 * UPDATES_PER_MUDHOUR;
   aff.modifier = SKILL_LAY_HANDS;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -204,7 +199,7 @@ int TBeing::doLayHands(const char *arg)
 
     // success prevents from working for 12 hours
     aff.type = SKILL_LAY_HANDS;
-    aff.duration = 24 * UPDATES_PER_TICK;
+    aff.duration = 24 * UPDATES_PER_MUDHOUR;
     aff.location = APPLY_NONE;
     aff.modifier = 0;
     aff.bitvector = 0;
@@ -227,7 +222,7 @@ int TBeing::doSmite(const char *arg, TBeing *victim)
     sendTo("You know nothing about smiting.\n\r");
     return FALSE;
   }
-  only_argument(arg, tmp);
+  strcpy(tmp, arg);
   if (!(vict = victim)) {
     if (!(vict = get_char_room_vis(this,tmp))) {
       if (!(vict = fight())) {
@@ -237,7 +232,7 @@ int TBeing::doSmite(const char *arg, TBeing *victim)
     }
   }
 
-  if (!sameRoom(vict)) {
+  if (!sameRoom(*vict)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
@@ -245,7 +240,7 @@ int TBeing::doSmite(const char *arg, TBeing *victim)
     return FALSE;
   rc = smite(this, vict);
   if (rc)
-    addSkillLag(SKILL_SMITE);
+    addSkillLag(SKILL_SMITE, rc);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (victim)
       return rc;

@@ -26,7 +26,7 @@ int TBeing::doTurn(const char *argument, TBeing *vict)
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
 
-  only_argument(argument, caName);
+  strcpy(caName, argument);
 
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, caName))) {

@@ -199,7 +199,7 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
 
   if (!vict && !victim) {
     if (*argument)
-      only_argument(argument, namebuf);
+      strcpy(namebuf, argument);
 
     if (!(victim = get_char_room_vis(this, namebuf))) {
       sendTo("Backstab whom?\n\r");
@@ -540,7 +540,7 @@ int TBeing::doThroatSlit(const char *argument, TBeing *vict)
 
   if (!vict && !victim) {
     if (*argument)
-      only_argument(argument, namebuf);
+      strcpy(namebuf, argument);
 
     if (!(victim = get_char_room_vis(this, namebuf))) {
       sendTo("Slit who's throat?\n\r");
@@ -988,7 +988,7 @@ int TBeing::doGarrotte(const char * argument, TBeing *vict)
   if (checkBusy(NULL)) {
     return FALSE;
   }
-  only_argument(argument, namebuf);
+  strcpy(namebuf, argument);
 
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, namebuf))) {
@@ -1152,7 +1152,7 @@ int TBeing::doCudgel(const char * argument, TBeing *vict)
   if (checkBusy(NULL)) {
     return FALSE;
   }
-  only_argument(argument, namebuf);
+  strcpy(namebuf, argument);
 
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, namebuf))) {

@@ -103,7 +103,7 @@ void BjGame::Bet(TBeing *ch, const char *arg)
       ch->sendTo("You can't change your bet now.\n\r");
       return;
     }
-    only_argument(arg, coin_str);
+    strcpy(coin_str, arg);
     if (!*coin_str) {
       ch->sendTo("Bet which chip?\n\r");
       return;

@@ -104,7 +104,7 @@ int TBeing::doSoothBeast(const char *argument)
     return FALSE;
   }
 
-  only_argument(argument, namebuf);
+  strcpy(namebuf, argument);
   if (!(victim = get_char_room_vis(this, namebuf))) {
     sendTo("Sooth what?\n\r");
     return FALSE;
@@ -153,7 +153,7 @@ int TBeing::doBefriendBeast(const char *argument)
   TBeing *victim = NULL;
   char namebuf[256];
 
-  only_argument(argument, namebuf);
+  strcpy(namebuf, argument);
   if (!(victim = get_char_room_vis(this, namebuf))) {
     sendTo("Befriend what?\n\r");
     return FALSE;
@@ -200,7 +200,7 @@ int TBeing::doSkySpirit(const char *argument)
   }
 
   if (argument && *argument) {
-    only_argument(argument, tTarget);
+    strcpy(tTarget, argument);
     generic_find(tTarget, FIND_CHAR_ROOM, this, &victim, &tObj);
   } else {
     if (!fight()) {
@@ -415,7 +415,7 @@ int TBeing::doCharmBeast(const char *argument)
   TBeing *victim = NULL;
   char namebuf[256];
 
-  only_argument(argument, namebuf);
+  strcpy(namebuf, argument);
   if (!(victim = get_char_room_vis(this, namebuf))) {
     sendTo("Charm what?\n\r");
     return FALSE;
@@ -525,7 +525,7 @@ int TBeing::doTransfix(const char *argument)
     return FALSE;
   }
 
-  only_argument(argument, namebuf);
+  strcpy(namebuf, argument);
   if (!(victim = get_char_room_vis(this, namebuf))) {
     sendTo("Transfix what?\n\r");
     return FALSE;

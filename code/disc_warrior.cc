@@ -106,7 +106,7 @@ void TBeing::doRepair(const char *arg)
   char v_name[MAX_INPUT_LENGTH];
   TThing *obj;
 
-  only_argument(arg, v_name);
+  strcpy(v_name, arg);
 
   if (!*v_name) {
     sendTo("What is it you intend to repair?\n\r");

@@ -45,7 +45,7 @@ void TTool::sstringMeString(TBeing *ch, TBow *bow)
   }
 }
 
-void TBeing::doRestring(sstring argument)
+void TBeing::doRestring(const sstring &argument)
 {
   TThing *bow = NULL;
   TThing *bstr = NULL;

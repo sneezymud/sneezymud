@@ -143,7 +143,7 @@ bool willBreakHide(cmdTypeT tCmd, bool isPre)
   return true;
 }
 
-extern int handleMobileResponse(TBeing *, cmdTypeT, const char *);
+extern int handleMobileResponse(TBeing *, cmdTypeT, const sstring &);
 
 // returns DELETE_THIS if this should be nuked
 // returns DELETE_VICT if vict should be nuked
@@ -469,18 +469,18 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_LIST:
-          if ((rc = handleMobileResponse(this, cmd, newarg)))
+          if ((rc = handleMobileResponse(this, cmd, stringarg)))
             break;
 
           doList(newarg);
 	  addToLifeforce(1);
           break;
         case CMD_RENT:
-          rc = doRent(newarg);
+          rc = doRent(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_BUY:
-          if ((rc = handleMobileResponse(this, cmd, newarg)))
+          if ((rc = handleMobileResponse(this, cmd, stringarg)))
 	  addToLifeforce(1);
             break;
         case CMD_TWIST:
@@ -2015,7 +2015,6 @@ sstring one_argument(sstring argument, sstring & first_arg)
   bgin = 0;
 
   do {
- //   sstring whitespace = " \n\r";
     bgin = argument.find_first_not_of(whitespace);
     look_at = argument.find_first_of(whitespace, bgin);
 
@@ -2034,19 +2033,9 @@ sstring one_argument(sstring argument, sstring & first_arg)
       argument = "";
     }
   } while (fill_word(first_arg.c_str()));
-// COSMO STRING
-//  delete a2;
-//  delete whitespace;
+
   return argument;
 }
-
-void only_argument(const char *argument, char *dest)
-{
-  while (*argument && isspace(*argument))
-    argument++;
-  strcpy(dest, argument);
-}
-
 
 
 bool is_abbrev(const char *arg1, const char *arg2, multipleTypeT multiple, exactTypeT exact)

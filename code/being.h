@@ -1120,15 +1120,15 @@ class TBeing : public TThing {
     int useLifeforce(spellNumT);
     double usePiety(spellNumT);
     int reconcileDamage(TBeing *, int, spellNumT);
-    int doRent(const char *);
-    void doRestring(sstring);
+    int doRent(const sstring &);
+    void doRestring(const sstring &);
     void doRelease(const sstring &);
     void doCapture(const sstring &);
     void doCompare(const char *);
     void doMortalCompare(const char *);
     void doTestFight(const char *);
     void doList(const char *);
-    void doFactions(const char *);
+    void doFactions(const sstring &);
     void doClients();
     int doCrit(sstring);
     void incorrectCommand() const;

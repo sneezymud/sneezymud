@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_stomp.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -240,7 +232,7 @@ int TBeing::doStomp(const char *argument, TBeing *vict)
   TBeing *victim;
   char name_buf[256];
   
-  only_argument(argument, name_buf);
+  strcpy(name_buf, argument);
   
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, name_buf))) {
@@ -250,13 +242,13 @@ int TBeing::doStomp(const char *argument, TBeing *vict)
       }
     }
   }
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
   rc = stomp(this, victim);
   if (rc)
-    addSkillLag(SKILL_STOMP);
+    addSkillLag(SKILL_STOMP, rc);
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)

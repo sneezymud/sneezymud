@@ -323,7 +323,7 @@ int TBeing::doAction(const sstring & argument, cmdTypeT cmd) return rc(0)
   socialMessg action = CT->second;
 
   if (action.char_found)
-    only_argument(argument.c_str(), buf);
+    strcpy(buf, argument.c_str());
   else
     *buf = '\0';
 
@@ -474,7 +474,7 @@ void TBeing::doInsult(const char *argument)
   char arg[MAX_INPUT_LENGTH];
   TBeing *victim;
 
-  only_argument(argument, arg);
+  strcpy(arg, argument);
 
   if (*arg) {
     if (!(victim = get_char_room_vis(this, arg))) 
@@ -521,8 +521,8 @@ void TBeing::doScratch(const char *argument)
 
   if (in_room < 0)
     return;
-
-  only_argument(argument, arg);
+  
+  strcpy(arg, argument);
 
   if (!strcasecmp(arg, "leg")) {
     act("$n vigorously scratches $s leg!", TRUE, this, 0, 0, TO_ROOM);

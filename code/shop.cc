@@ -353,7 +353,7 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   if (!(shop_index[shop_nr].willTradeWith(keeper, ch)))
     return;
 
-  only_argument(arg, argm);
+  strcpy(argm, arg);
   if (!*argm) {
     keeper->doTell(ch->name, "What do you want to buy??");
     return;
@@ -930,7 +930,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
   if (!(shop_index[shop_nr].willTradeWith(tKeeper, ch)))
     return FALSE;
 
-  only_argument(tString, argm);
+  strcpy(argm, tString);
 
   if (!*argm) {
     ssprintf(buf, "%s What do you want to sell??", ch->getName());
@@ -1118,7 +1118,7 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
   if (!(shop_index[shop_nr].willTradeWith(keeper, ch)))
     return;
 
-  only_argument(arg, argm);
+  strcpy(argm, arg);
 
   if (!*argm) {
     ssprintf(buf, "%s What do you want me to evaluate??", ch->name);
@@ -1983,7 +1983,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   }
   if ((cmd == CMD_KILL) || (cmd == CMD_HIT)) {
     char argm[MAX_INPUT_LENGTH];
-    only_argument(arg, argm);
+    strcpy(argm, arg);
 
     if ((myself) == get_char_room(argm, ch->in_room)) {
       shopping_kill(arg, (ch), myself, shop_nr);

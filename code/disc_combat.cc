@@ -17,7 +17,7 @@ void TBeing::doSharpen(const char *argument)
   char name_buf[256];
   TThing *obj;
 
-  only_argument(argument, name_buf);
+  strcpy(name_buf, argument);
 
   if (!doesKnowSkill(SKILL_SHARPEN)) {
     sendTo("You know nothing about sharpening weapons.\n\r");
@@ -80,7 +80,7 @@ void TBeing::doDull(const char *argument)
   char name_buf[256];
   TThing *obj;
  
-  only_argument(argument, name_buf);
+  strcpy(name_buf, argument);
  
   if (!doesKnowSkill(SKILL_DULL)) {
     sendTo("You know nothing about dulling weapons.\n\r");

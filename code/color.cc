@@ -545,7 +545,7 @@ void TPerson::doColor(const char *buf)
     return;
   } 
   buf = one_argument(buf, arg);
-  only_argument(buf, arg2);
+  strcpy(arg2, buf);
 
   if (!*arg) {
     for (i = 0;i < (MAX_PLR_COLOR - 1);i++) {

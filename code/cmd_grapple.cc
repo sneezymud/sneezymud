@@ -226,7 +226,7 @@ int TBeing::doGrapple(const char *argument, TBeing *vict)
   if (checkBusy(NULL)) {
     return FALSE;
   }
-  only_argument(argument, name_buf);
+  strcpy(name_buf, argument);
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, name_buf)))  {
       if (!(victim = fight())) {

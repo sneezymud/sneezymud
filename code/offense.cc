@@ -224,7 +224,7 @@ int TBeing::doEngagedHit(const char *argument, TBeing *vict)
     return FALSE;
   }
 
-  only_argument(argument, arg);
+  strcpy(arg, argument);
 
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, arg, NULL, EXACT_NO, INFRA_YES))) {
@@ -305,7 +305,7 @@ int TBeing::doEngage(const char *argument, TBeing *vict)
 
 // target setting
 
-  only_argument(argument, arg);
+  strcpy(arg, argument);
 
   if (vict) {
     victim = vict;
@@ -465,7 +465,7 @@ int TBeing::doKill(const char *argument, TBeing *vict)
     return doHit(argument, vict);
   }
 
-  only_argument(argument, arg);
+  strcpy(arg, argument);
 
   if (!(v = vict)) {
     if (!(v = get_char_room_vis(this, arg, NULL, EXACT_NO, INFRA_YES))) {
@@ -1048,7 +1048,7 @@ int TBeing::doAssist(const char *argument, TBeing *vict, bool flags)
   if (checkPeaceful("No one should need assistance here.\n\r"))
     return FALSE;
 
-  only_argument(argument, v_name);
+  strcpy(v_name, argument);
 
   if (!(v = vict)) {
     if (!(v = get_char_room_vis(this, v_name, NULL, EXACT_NO, INFRA_YES))) {

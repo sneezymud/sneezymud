@@ -288,7 +288,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h)
 
   if (cmd == CMD_RIDE || cmd == CMD_MOUNT) {
     if (!(horse = h)) {
-      only_argument(arg, caName);
+      strcpy(caName, arg);
       if (!(horse = get_char_room_vis(this, caName, NULL, EXACT_NO, INFRA_YES))) {
         sendTo("Mount what?\n\r");
         return FALSE;

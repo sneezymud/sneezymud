@@ -2685,7 +2685,7 @@ void TBeing::doWhere(const char *argument)
   if (powerCheck(POWER_WHERE))
     return;
 
-  only_argument(argument, namebuf);
+  strcpy(namebuf, argument);
   argument_parser(tStString, tStArg, tStName);
 
   if (hasWizPower(POWER_WIZARD) && (GetMaxLevel() > MAX_MORT) &&
@@ -3583,7 +3583,7 @@ void TBeing::doLimbs(const sstring & argument)
 
 
   if(!argument.empty()) {
-    only_argument(argument.c_str(), buf);
+    strcpy(buf, argument.c_str());
     if (!(v = get_char_room_vis(this, buf))) {
       if (!(v = fight())) {
 	sendTo("Check whose limbs?\n\r");
@@ -3746,7 +3746,7 @@ void TBeing::doEvaluate(const char *argument)
   int count = 0,
       rNatureCount = 0;
 
-  only_argument(argument, arg);
+  strcpy(arg, argument);
   if (!arg || !*arg) {
     sendTo("Evaluate what?\n\r");
     return;

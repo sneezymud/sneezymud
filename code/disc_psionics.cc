@@ -623,7 +623,7 @@ TBeing *psiAttackChecks(TBeing *caster, spellNumT sk, const char *tString){
 
 
   if (tString && *tString){
-    only_argument(tString, tTarget);
+    strcpy(tTarget, tString);
     generic_find(tTarget, FIND_CHAR_ROOM, caster, &tVictim, &tobj);
   } else if (caster->fight()) {
     tVictim = caster->fight();

@@ -368,7 +368,7 @@ int TBeing::doBash(const char *argument, TBeing *vict)
 
   spellNumT skill = getSkillNum(SKILL_BASH);
 
-  only_argument(argument, name_buf);
+  strcpy(name_buf, argument);
 
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, name_buf))) {

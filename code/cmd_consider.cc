@@ -17,7 +17,7 @@ void TBeing::doConsider(const char *argument)
   char namebuf[256];
   int diff=0;
 
-  only_argument(argument, namebuf);
+  strcpy(namebuf, argument);
 
   if (is_abbrev(namebuf, "self"))
     strcpy(namebuf, getNameNOC(this).c_str());

@@ -239,7 +239,7 @@ int TBeing::doChop(const char *arg, TBeing *vict)
     return FALSE;
   }
 
-  only_argument(arg, v_name);
+  strcpy(v_name, arg);
 
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, v_name))) {

@@ -440,7 +440,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
   return rc;
 }
 
-bool TMonster::checkResponsesPossible(cmdTypeT tCmd, const char *tSaid, TBeing *tBeing)
+bool TMonster::checkResponsesPossible(cmdTypeT tCmd, const sstring &tSaid, TBeing *tBeing)
 {
   if (desc || !resps || !resps->respList || !tBeing->isPc() || fight())
     return false;
@@ -461,7 +461,7 @@ bool TMonster::checkResponsesPossible(cmdTypeT tCmd, const char *tSaid, TBeing *
   for (tResp = resps->respList; tResp; tResp = tResp->next)
     if (tResp->cmd == tCmd)
       if (tCmd == CMD_SAY) {
-        if (strcasestr(tSaid, tResp->args))
+        if (strcasestr(tSaid.c_str(), tResp->args))
           return true;
       } else
         return true;
@@ -469,7 +469,7 @@ bool TMonster::checkResponsesPossible(cmdTypeT tCmd, const char *tSaid, TBeing *
   return false;
 }
 
-int handleMobileResponse(TBeing *tBeing, cmdTypeT tCmd, const char *tString)
+int handleMobileResponse(TBeing *tBeing, cmdTypeT tCmd, const sstring &tString)
 {
   if (!tBeing->roomp || tCmd <= 0 || tCmd >= MAX_CMD_LIST )
     return FALSE;
@@ -500,7 +500,7 @@ int handleMobileResponse(TBeing *tBeing, cmdTypeT tCmd, const char *tString)
   return FALSE;
 }
 
-int TMonster::checkResponses(TBeing *tBeing, TThing *tThing, const char *tSaid, cmdTypeT tCmd)
+int TMonster::checkResponses(TBeing *tBeing, TThing *tThing, const sstring &tSaid, cmdTypeT tCmd)
 {
   if (!checkResponsesPossible(tCmd, tSaid, tBeing))
     return FALSE;
@@ -550,7 +550,7 @@ int TMonster::checkResponses(TBeing *tBeing, TThing *tThing, const char *tSaid, 
 // returns DELETE_VICT if speaker has died
 // returns DELETE_ITEM (for give) if TARG should go away
 //     NOTE, strip "this" of the item first
-int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char *said, cmdTypeT trig_cmd)
+int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const sstring &said, cmdTypeT trig_cmd)
 {
   sstring parsedArgs;
   resp *respo;
@@ -593,7 +593,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
         case CMD_SAY:
         case CMD_WHISPER:
         case CMD_ASK:
-          if (strcasestr(said, respo->args)) {
+          if (strcasestr(said.c_str(), respo->args)) {
             for( cmd = respo->cmds; cmd != 0; cmd=cmd->next) {
               parsedArgs = parseResponse( speaker, cmd->args);
               found = TRUE;
@@ -692,7 +692,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
             }
             // not an item I need *
           } else if (value < 0) {
-            if (said && *said)
+            if (!said.empty())
               said_int = convertTo<int>(said);
             else
               said_int = 0;
@@ -752,7 +752,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
           }
           break;
         case CMD_LIST:
-          if (strcasestr(said, respo->args)) {
+          if (strcasestr(said.c_str(), respo->args)) {
             for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
               parsedArgs = parseResponse(speaker, cmd->args);
               found = TRUE;
@@ -787,7 +787,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
           // Format: buy { "cost item name";
           //     Ex: buy { "1000 1 smoked-ham";
           argument_parser(respo->args, tStString, tStBuffer, tStArg);
-          strcpy(tString, said);
+          strcpy(tString, said.c_str());
 
           if ((is_number(tString) ?
                convertTo<int>(said) == convertTo<int>(tStBuffer) :

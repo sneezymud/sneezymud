@@ -285,7 +285,7 @@ int TBeing::doSpin(const char *argument, TBeing *vict)
   TBeing *victim;
   char name_buf[256];
   
-  only_argument(argument, name_buf);
+  strcpy(name_buf, argument);
   
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, name_buf))) {

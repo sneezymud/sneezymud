@@ -280,7 +280,7 @@ int TBeing::doDrink(const char *argument)
   TObj *temp;
   int rc;
 
-  only_argument(argument, buf);
+  strcpy(buf, argument);
   if (fight()) {
     sendTo("You are too busy fending off your foes!\n\r");
     return FALSE;

@@ -479,9 +479,9 @@ class TMonster : public TBeing {
     }
     virtual void purgeMe(TBeing *);
     void loadResponses(int);
-    bool checkResponsesPossible(cmdTypeT, const char *, TBeing *);
-    int  checkResponses(TBeing*, TThing *, const char *, cmdTypeT);
-    int  checkResponsesReal(TBeing*, TThing *, const char *, cmdTypeT);
+    bool checkResponsesPossible(cmdTypeT, const sstring &, TBeing *);
+    int  checkResponses(TBeing*, TThing *, const sstring &, cmdTypeT);
+    int  checkResponsesReal(TBeing*, TThing *, const sstring &, cmdTypeT);
     resp *readCommand(FILE *fp);
     void createWealth();
     int dynamicComponentLoader(spellNumT, int);

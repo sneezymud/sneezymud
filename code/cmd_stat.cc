@@ -1918,7 +1918,7 @@ void TPerson::doStat(const char *argument)
   tmp_arg = one_argument(tmp_arg, buf);
   tmp_arg = one_argument(tmp_arg, skbuf);
   tmp_arg = one_argument(tmp_arg, namebuf);
-  only_argument(argument, arg1);
+  strcpy(arg1, argument);
 
   if (!*arg1) {
     sendTo("Stats on who or what?\n\r");

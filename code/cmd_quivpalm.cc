@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_quivpalm.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -83,7 +75,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     act("$n touches $N, but $E ignores it.", 
          FALSE, c, NULL, v, TO_NOTVICT);
     aff.type = AFFECT_SKILL_ATTEMPT;
-    aff.duration = 10 * UPDATES_PER_TICK;
+    aff.duration = 10 * UPDATES_PER_MUDHOUR;
     aff.modifier = SKILL_QUIV_PALM;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
@@ -110,7 +102,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     }
 
     aff.type = SKILL_QUIV_PALM;
-    aff.duration = 168 * UPDATES_PER_TICK;
+    aff.duration = 84 * UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
@@ -122,7 +114,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     c->sendTo("The vibrations fade ineffectively.\n\r");
 
     aff.type = AFFECT_SKILL_ATTEMPT;
-    aff.duration = 10 * UPDATES_PER_TICK;
+    aff.duration = 10 * UPDATES_PER_MUDHOUR;
     aff.modifier = SKILL_QUIV_PALM;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
@@ -145,7 +137,7 @@ int TBeing::doQuiveringPalm(const char *arg, TBeing *vict)
     return FALSE;
   }
 
-  only_argument(arg, v_name);
+  strcpy(v_name, arg);
 
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, v_name))) {
@@ -155,7 +147,7 @@ int TBeing::doQuiveringPalm(const char *arg, TBeing *vict)
       }
     }
   }
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
@@ -165,7 +157,7 @@ int TBeing::doQuiveringPalm(const char *arg, TBeing *vict)
   }
   rc = quiveringPalm(this, victim);
   if (rc)
-    addSkillLag(SKILL_QUIV_PALM);
+    addSkillLag(SKILL_QUIV_PALM, rc);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;

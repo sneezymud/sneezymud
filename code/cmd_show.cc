@@ -550,7 +550,7 @@ void TPerson::doShow(const char *argument)
     // If we gave no zone, lets Auto-select our present one.
     // Else find the one the player wants.
     if (*argument) {
-      only_argument(argument, zonenum);
+      strcpy(zonenum, argument);
       sscanf(zonenum, "%i", &zone);
     } else
       zone = roomp->getZoneNum();
@@ -601,7 +601,7 @@ void TPerson::doShow(const char *argument)
       sendTo("You lack the power to show mob information.\n\r");
       return;
     }
-    only_argument(argument, zonenum);
+    strcpy(zonenum, argument);
 
     if (is_abbrev(zonenum, "pets")) {
       sb += "Pet                            Master\n\r";
@@ -820,7 +820,7 @@ void TPerson::doShow(const char *argument)
       sb += buf;
     }
   } else if (is_abbrev(buf, "rooms")) {
-    only_argument(argument, zonenum);
+    strcpy(zonenum, argument);
 
     sb += "VNUM  rnum type         name [BITS]\n\r";
     if (is_abbrev(zonenum, "death"))
@@ -873,7 +873,7 @@ void TPerson::doShow(const char *argument)
   } else if (is_abbrev(buf, "materials")) {
     int matnum=-1, i;
 
-    only_argument(argument, buf2);
+    strcpy(buf2, argument);
     if(*buf2){  
       // one material
       for(i=0;i<200;++i){

@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_bodyslam.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -80,7 +72,7 @@ bool TBeing::canBodyslam(TBeing *victim, silentTypeT silent)
       sendTo("You are too busy fending off other attackers!\n\r");
     return FALSE;
   }
-  if (!canUseArm(TRUE) || !canUseArm(FALSE)) {
+  if (!canUseArm(HAND_PRIMARY) || !canUseArm(HAND_SECONDARY)) {
     if (!silent)
       sendTo("You need two working arms to bodyslam someone.\n\r");
     return FALSE;
@@ -306,7 +298,7 @@ int TBeing::doBodyslam(const char *argument, TBeing *vict)
   TBeing *victim;
   char name_buf[256];
   
-  only_argument(argument, name_buf);
+  strcpy(name_buf, argument);
   
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, name_buf))) {
@@ -316,7 +308,7 @@ int TBeing::doBodyslam(const char *argument, TBeing *vict)
       }
     }
   }
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
@@ -337,7 +329,7 @@ int TBeing::doBodyslam(const char *argument, TBeing *vict)
   }
   rc = bodyslam(this, victim);
   if (rc)
-    addSkillLag(SKILL_BODYSLAM);
+    addSkillLag(SKILL_BODYSLAM, rc);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;

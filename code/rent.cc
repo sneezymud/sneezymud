@@ -4239,14 +4239,10 @@ void TPerson::saveToggles()
     unlink(caFilebuf);
 }
 
-int TBeing::doRent(const char *argument)
+int TBeing::doRent(const sstring &argument)
 {
-  char arg[256];
-
-  only_argument(argument, arg);
-
-  if (arg && *arg) {
-    if (is_abbrev(arg, "credit")) {
+  if (!argument.empty()) {
+    if (is_abbrev(argument, "credit")) {
       int lev;
       sstring sb;
       char buf[256];

@@ -1756,7 +1756,7 @@ int TBeing::doDonate(const char *argument)
   return FALSE;
 #endif
 
-  only_argument(argument, arg);
+  strcpy(arg, argument);
   if (!*arg) {
     sendTo("Donate what?\n\r");
     return FALSE;

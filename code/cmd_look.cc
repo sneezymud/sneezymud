@@ -121,7 +121,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
     }
   } else {
     // we use only_arg so we pick up "at" from "look at the window"
-    only_argument(argument, arg1);
+    strcpy(arg1, argument);
 
     // then we start using one_argument so we will munch "the" in above example
     if (!strncmp(arg1, "at", 2) && isspace(arg1[2])) {

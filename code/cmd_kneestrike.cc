@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_kneestrike.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -129,25 +121,31 @@ static int kneestrikeMiss(TBeing *c, TBeing *v, int type)
 	FALSE, c, 0, v, TO_VICT);
   } break;
   case 1:{ // monk counter move
-    act("$N grabs your knee, rises into the air, then plants a kick on your forehead.",
+    act("$N grabs your knee, and hits you in the side with a powerful roundhouse kick.",
         FALSE, c, 0, v, TO_CHAR);
-    act("You grab $n's knee, rise into the air, then plant a kick on their forehead.",
+    act("You grab $n's knee, and use the opening to hit $m in the side with a powerful roundhouse kick.",
         FALSE, c, 0, v, TO_VICT);
-    act("$N grabs $n's knee, rises into the air, then plants a kick on their forehead.",
+    act("$N grabs $n's knee, and hit $m in the side with a powerful roundhouse kick.",
         FALSE, c, 0, v, TO_NOTVICT);
 
     // do 1/2 the dam we would have done to caster
     // yes, I mean to use caster below since vict doesn't have this skill...
     int dam = c->getSkillDam(v, SKILL_KNEESTRIKE, c->getSkillLevel(SKILL_KNEESTRIKE), c->getAdvLearning(SKILL_KNEESTRIKE)) / 2;
 
-    c->sendTo("Who?  What?!?  Where am I?\n\r");
+    c->sendTo("Ooof! That knocked some wind out of you.\n\r");
     c->cantHit += v->loseRound(0.25);
     c->addToWait(combatRound(0.25));
     TObj *item;
     if ((item = dynamic_cast<TObj *>(v->equipment[v->getPrimaryFoot()])))
-      if (item->isSpiked())
+      if (item->isSpiked() || item->isObjStat(ITEM_SPIKED)) {
+
+	act("The spikes on your $o sink into $N's side.", FALSE, v, item, c, TO_CHAR);
+	act("The spikes on $n's $o sink into $N's side.", FALSE, v, item, c, TO_NOTVICT);
+	act("The spikes on $n's $o sink into your side, OW!", FALSE, v, item, c, TO_VICT);
+
         if (v->reconcileDamage(c, dam*0.15, TYPE_STAB) == -1)
           return DELETE_THIS;
+      }
     if (v->reconcileDamage(c, dam, DAMAGE_KICK_HEAD) == -1)
       return DELETE_THIS;
   } break;
@@ -171,7 +169,7 @@ static int kneestrikeMiss(TBeing *c, TBeing *v, int type)
 static int kneestrikeHit(TBeing *c, TBeing *victim)
 {
   int rc = 0;
-  TThing *item;
+  TObj *item;
   int h_dam = 1;
   int caster_hgt, victim_hgt;
   int i;
@@ -378,15 +376,20 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
   
   // apply damage to caster if no leg eq
   caster_pos = (::number(0,1) ? WEAR_LEGS_L : WEAR_LEGS_R);
-  if (!(item = c->equipment[caster_pos])) {
+  if (!(item = dynamic_cast<TObj *>(c->equipment[caster_pos]))) {
     rc = c->damageLimb(c, caster_pos, 0, &h_dam);
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_THIS;
-  } else if(item->isSpiked()){
+  } else if(item->isSpiked() || item->isObjStat(ITEM_SPIKED)){
     spikeddam=(int) (dam*0.15);
+    
+    act("The spikes on your $o sink into $N.", FALSE, c, item, victim, TO_CHAR);
+    act("The spikes on $n's $o sink into $N.", FALSE, c, item, victim, TO_NOTVICT);
+    act("The spikes on $n's $o sink into you.", FALSE, c, item, victim, TO_VICT);
+
   } else {
   // apply damage to victim if no eq on targetted spot
-    if (!(item = victim->equipment[pos])) {
+    if (!(item = dynamic_cast<TObj *>(victim->equipment[pos]))) {
       rc = c->damageLimb(victim, pos, 0, &h_dam);
       if (IS_SET_DELETE(rc, DELETE_VICT))
 	return DELETE_VICT;
@@ -455,7 +458,7 @@ int TBeing::doKneestrike(const char *argument, TBeing *vict)
   TBeing *v;
   char name_buf[256];
   
-  only_argument(argument, name_buf);
+  strcpy(name_buf, argument);
   
   if (!(v = vict)) {
     if (!(v = get_char_room_vis(this, name_buf))) {
@@ -465,13 +468,13 @@ int TBeing::doKneestrike(const char *argument, TBeing *vict)
       }
     }
   }
-  if (!sameRoom(v)) {
+  if (!sameRoom(*v)) {
     sendTo("That person doesn't seem to be around.\n\r");
     return FALSE;
   }
   rc = kneestrike(this, v);
   if (rc) 
-    addSkillLag(SKILL_KNEESTRIKE);
+    addSkillLag(SKILL_KNEESTRIKE, rc);
 
   if (IS_SET_ONLY(rc, DELETE_VICT)) {
     if (vict)

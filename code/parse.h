@@ -15,7 +15,6 @@ void argument_interpreter(const char *, char *, char *);
 void argument_interpreter(sstring, sstring &, sstring &);
 extern const char *one_argument(const char *argument, char *first_arg);
 extern sstring one_argument(sstring argument, sstring & first_arg);
-void only_argument(const char *argument, char *dest);
 
 class commandInfo {
   public:

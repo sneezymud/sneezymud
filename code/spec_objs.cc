@@ -1293,7 +1293,7 @@ int bowl_of_blood(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
   char buf[MAX_INPUT_LENGTH];
 
   if (cmd == CMD_DRINK) {        
-    only_argument(arg, buf);
+    strcpy(buf, arg);
     if (!isname(buf, me->getName()))
       return FALSE;
 

@@ -2774,7 +2774,7 @@ void TBeing::doFollow(const char *argument)
   char caName[160];
   TBeing *leader;
 
-  only_argument(argument, caName);
+  strcpy(caName, argument);
 
   if (rider)
     return;

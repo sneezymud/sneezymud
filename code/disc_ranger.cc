@@ -14,7 +14,7 @@ void TBeing::doTrack(const char *argument)
   TThing *t = NULL;
   char buf[256]="\0\0\0", buf2[256]="\0\0\0";
 
-  only_argument(argument, namebuf);
+  strcpy(namebuf, argument);
  
   if (!*namebuf && !specials.hunting) {
     sendTo("You need to search for SOMEONE.\n\r");

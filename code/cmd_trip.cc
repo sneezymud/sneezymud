@@ -259,7 +259,7 @@ int TBeing::doTrip(const char *argument, TBeing *vict)
 
   spellNumT skill = getSkillNum(SKILL_TRIP);
 
-  only_argument(argument, name_buf);
+  strcpy(name_buf, argument);
 
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, name_buf))) {

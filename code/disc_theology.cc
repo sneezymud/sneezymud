@@ -18,7 +18,7 @@ void TBeing::doAttune(const char *argument)
   char name_buf[256];
   TThing *obj;
 
-  only_argument(argument, name_buf);
+  strcpy(name_buf, argument);
 
   if (!*name_buf) {
     sendTo("What is it you intend to attune?\n\r");

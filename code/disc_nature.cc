@@ -296,7 +296,7 @@ int TBeing::doTransform(const char *argument)
     return FALSE;
   }
 
-  only_argument(argument, buffer);
+  strcpy(buffer, argument);
 
   for(i = 0; i < LAST_TRANSFORM_LIMB; i++) {
     if (is_abbrev(buffer,TransformLimbList[i].name)) {
@@ -541,7 +541,7 @@ int TBeing::doBarkskin(const char *argument)
   if (!argument) {
     victim = this;
   } else {
-    only_argument(argument, namebuf);
+    strcpy(namebuf, argument);
     if (!(victim = get_char_room_vis(this, namebuf))) {
       sendTo("Apply barkskin to what?\n\r");
       return FALSE;
@@ -974,7 +974,7 @@ int TBeing::doEarthmaw(const char *argument)
   }
 
   if (argument && *argument) {
-    only_argument(argument, tTarget);
+    strcpy(tTarget, argument);
     generic_find(tTarget, FIND_CHAR_ROOM, this, &victim, &tObj);
   } else {
     if (!fight()) {

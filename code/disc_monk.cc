@@ -427,7 +427,7 @@ int TBeing::doChi(const char *tString, TThing *tSucker)
   }
 
   if (tString && *tString)
-    only_argument(tString, tTarget);
+    strcpy(tTarget, tString);
   else {
     if (!fight()) {
 #if 1
@@ -503,7 +503,7 @@ int TBeing::doChi(const char *argument, TThing *target)
     return FALSE;
   }
 
-  only_argument(argument, name_buf);
+  strcpy(name_buf, argument);
 
   if (!strcmp(argument, "all")) {
     if (getDiscipline(DISC_MEDITATION_MONK)->getLearnedness() < 25) {

@@ -244,7 +244,7 @@ int TBeing::doDeathstroke(const char *argument, TBeing *vict)
     sendTo("You know nothing about making deathstrokes.\n\r");
     return FALSE;
   }
-  only_argument(argument, v_name);
+  strcpy(v_name, argument);
   
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, v_name))) {

@@ -435,7 +435,7 @@ int TBeing::doSmoke(const char *argument)
   //  return FALSE;
   
 
-  only_argument(argument, arg);
+  strcpy(arg, argument);
 
   if(!*arg || !(t=get_thing_char_using(this, arg, 0, FALSE, FALSE))){
     sendTo("Smoke what?\n\r");

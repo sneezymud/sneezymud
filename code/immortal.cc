@@ -1548,7 +1548,7 @@ void TPerson::doTrans(const char *argument)
   // causes me to be one of the trans victims.
   TRoom *rp = roomp;
 
-  only_argument(argument, buf);
+  strcpy(buf, argument);
   if (!*buf)
     sendTo("Whom do you wish to transfer?\n\r");
   else if (strcmp("all", buf)) {
@@ -2079,7 +2079,7 @@ void TPerson::doSnoop(const char *argument)
   if (powerCheck(POWER_SNOOP))
     return;
 
-  only_argument(argument, arg);
+  strcpy(arg, argument);
 
   if (!*arg) {
     sendTo("Snoop whom?\n\r");
@@ -2424,7 +2424,7 @@ void TBeing::transformLimbsBack(const char * buffer, wearSlotT limb, bool cmd)
   wearSlotT slot;
   char argument[256];
 
-  only_argument(buffer, argument);
+  strcpy(argument, buffer);
 
 // only do if a limb isn't specificed but one wants to read an armgument
   if (!limb) {
@@ -2658,7 +2658,7 @@ void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell)
   char argument[80];
   TRoom *rp = NULL;
 
-  only_argument(buffer, argument);
+  strcpy(argument, buffer);
 
   if (!limb && argument) {
     if (hasTransformedLimb()) {
@@ -2866,7 +2866,7 @@ void TPerson::doLoad(const char *argument)
 
   argument = one_argument(argument, type);
 
-  only_argument(argument, num);
+  strcpy(num, argument);
 
   if ((count = getabunch(num, newarg)))
     strcpy(num, newarg);
@@ -5896,7 +5896,7 @@ void TBeing::doLog(const char *argument)
   if (!isPc())
     return;
 
-  only_argument(argument, name_buf);
+  strcpy(name_buf, argument);
 
   if (!*name_buf) {
     sendTo("Put who into the logfile?\n\r");

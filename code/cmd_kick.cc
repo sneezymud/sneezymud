@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_kick.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -84,7 +76,7 @@ bool TBeing::canKick(TBeing *victim, silentTypeT silent)
     return FALSE;
   }
 
-  if (isAffected(AFF_CHARM) && (master == victim)) {
+  if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && (master == victim)) {
     act("$N is just such a good friend, you simply can't hit $M.", FALSE, 
         this, 0, victim, TO_CHAR);
     return FALSE;
@@ -304,9 +296,14 @@ static int kickHit(TBeing *caster, TBeing *victim, int score, int level, spellNu
 
   item = dynamic_cast<TObj *>(caster->equipment[caster->getPrimaryFoot()]);
   if (item)
-    if (item->isSpiked())
+    if (item->isSpiked() || item->isObjStat(ITEM_SPIKED)) {
+      act("The spikes on your $o sink into $N.", FALSE, caster, item, victim, TO_CHAR);
+      act("The spikes on $n's $o sink into $N.", FALSE, caster, item, victim, TO_NOTVICT);
+      act("The spikes on $n's $o sink into you.", FALSE, caster, item, victim, TO_VICT);
+
       if(caster->reconcileDamage(victim, dam*0.15, TYPE_STAB) == -1)
 	return DELETE_VICT;
+    }
 
   if (caster->reconcileDamage(victim, dam,dam_type) == -1)
     return DELETE_VICT;
@@ -379,7 +376,7 @@ int TBeing::doKick(const char *argument, TBeing *vict)
   TBeing *victim;
   char namebuf[256];
 
-  only_argument(argument, namebuf);
+  strcpy(namebuf, argument);
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, namebuf))) {
       if (!(victim = fight())) {
@@ -389,14 +386,14 @@ int TBeing::doKick(const char *argument, TBeing *vict)
     }
   }
 
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
   spellNumT skill = getSkillNum(SKILL_KICK);
   rc = kick(this,victim, skill);
   if (rc)
-    addSkillLag(skill);
+    addSkillLag(skill, rc);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;

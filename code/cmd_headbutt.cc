@@ -2,13 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_headbutt.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+// cmd_headbutt.cc : The headbutt command
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -81,7 +75,7 @@ bool TBeing::canHeadbutt(TBeing *victim, silentTypeT silent)
       sendTo("You can't get close enough to them to headbutt!\n\r");
     return FALSE;
   }
-  if (getPosHeight() > (victim->getPosHeight() + 7)) {
+  if ((int) (getPosHeight() * 0.9) > victim->getPosHeight()) {
     if (victim->getPosition() < POSITION_STANDING) {
       if (!silent)
         sendTo("That might work, but your victim seems to be on the %s.\n\r", roomp->describeGround().c_str());
@@ -247,7 +241,7 @@ static int headbuttHit(TBeing *c, TBeing *victim)
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_THIS;
   } else {
-    if (item->isSpiked())
+    if (item->isSpiked() || item->isObjStat(ITEM_SPIKED))
       spikeddam=(int) (dam*0.15);
     if (c->dentItem(victim, item, 1, WEAR_HEAD) == DELETE_ITEM) {
       delete item;
@@ -255,10 +249,13 @@ static int headbuttHit(TBeing *c, TBeing *victim)
     }
   }
 
-  if(spikeddam)
+  if(spikeddam) {
+    act("The spikes on your $o sink into $N.", FALSE, c, item, victim, TO_CHAR);
+    act("The spikes on $n's $o sink into $N.", FALSE, c, item, victim, TO_NOTVICT);
+    act("The spikes on $n's $o sink into you.", FALSE, c, item, victim, TO_VICT);
     if ((rc = c->reconcileDamage(victim, spikeddam,TYPE_STAB)) == -1)
       return DELETE_VICT;
-
+  }
   if ((rc = c->reconcileDamage(victim, dam,dam_type)) == -1)
     return DELETE_VICT;
 
@@ -307,7 +304,7 @@ int TBeing::doHeadbutt(const char *argument, TBeing *vict)
   TBeing *v;
   char name_buf[256];
   
-  only_argument(argument, name_buf);
+  strcpy(name_buf, argument);
   
   if (!(v = vict)) {
     if (!(v = get_char_room_vis(this, name_buf))) {
@@ -317,13 +314,13 @@ int TBeing::doHeadbutt(const char *argument, TBeing *vict)
       }
     }
   }
-  if (!sameRoom(v)) {
+  if (!sameRoom(*v)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
   rc = headbutt(this, v);
   if (rc)
-    addSkillLag(SKILL_HEADBUTT);
+    addSkillLag(SKILL_HEADBUTT, rc);
 
   if (IS_SET_ONLY(rc, DELETE_VICT)) {
     if (vict)

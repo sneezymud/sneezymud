@@ -557,7 +557,7 @@ int TBeing::doStab(const char * argument, TBeing *vict)
   if (checkBusy(NULL)) {
     return FALSE;
   }
-  only_argument(argument, namebuf);
+  strcpy(namebuf, argument);
 
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, namebuf))) {
