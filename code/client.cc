@@ -1408,7 +1408,7 @@ lower(account->name).c_str());
 int Descriptor::clientCreateChar(char *arg)
 {
   char dummy[1024];
-  char tmp_name[256];
+  char tmp_name[256], wizbuf[256];
 
   TPerson *ch;
   strcpy(dummy, nextToken('|', 20, arg).c_str());
@@ -1631,6 +1631,8 @@ int Descriptor::clientCreateChar(char *arg)
   ch->affectTotal();
   vlogf(LOG_PIO, "%s [%s] new player.", ch->getName(), host);
   clientf("%d", CLIENT_NEWCHAR);
+  sprintf(wizbuf, "[%sINTERPORT INFO%s] New player %s just created on port %d.\n\r", ch->cyan(), ch->norm(), ch->getName(), gamePort);
+  ch->mudMessage(ch, 16, wizbuf); 
 
   enum connectStateT oldconnected = connected;
   connected = CON_PLYNG;

@@ -1850,6 +1850,8 @@ int Descriptor::nanny(const char *arg)
       character->convertAbilities();
       character->affectTotal();
       vlogf(LOG_PIO, "%s [%s] new player.", character->getName(), host);
+      sprintf(wizbuf, "[%sINTERPORT INFO%s] New Character %s created on port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
+      character->mudMessage(character, 16, wizbuf);
 
       character->saveChar(ROOM_AUTO_RENT);
       accStat.player_count++;
