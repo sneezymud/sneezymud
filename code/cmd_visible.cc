@@ -16,10 +16,14 @@ void TBeing::doVisible(const char *, bool)
 
 void TPerson::doVisible(const char *, bool tSilent)
 {
+
+  /*
   if (getPosition() < POSITION_STANDING) {
     sendTo("You must be standing to do this.\n\r");
     return;
   }
+  */  // abusable
+
 
   /*
   if (task || spelltask || fight()) {
