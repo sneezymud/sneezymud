@@ -83,6 +83,7 @@ const int SPEC_TRAINER_RANGED   =85;
 const int SPEC_QUAKETUNNELER    =86;
 const int SPEC_TRAINER_DEIKHAN  =87;
 const int SPEC_LAMPBOY          =96;
+const int SPEC_LEPER            =97;
 const int SPEC_AIR_MAGI         =98;
 const int SPEC_WATER_MAGI       =99;
 const int SPEC_EARTH_MAGI      =100;
