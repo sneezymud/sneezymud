@@ -4039,7 +4039,13 @@ int chippedTooth(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   rc = ch->applyDamage(ch, ::number(1,5), DAMAGE_NORMAL);
   act("OWWIE!! You feel like you've chipped a tooth on $p!", 0, ch, o, 0, TO_CHAR);
   act("$n cringes in pain as $e bites into $p.", 0, ch, o, 0, TO_ROOM);
+  delete o;
+  if (IS_SET_DELETE(rc, DELETE_VICT)) {
+    delete ch;
+    ch = NULL;
+  }
   return TRUE;
+
 }
 
 int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
