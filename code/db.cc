@@ -2201,21 +2201,22 @@ void zoneData::resetZone(bool bootTime)
           break;
 
         case 'O':                
-          if ((bootTime) && (obj_index[rs.arg1].getNumber() < 
-                 obj_index[rs.arg1].max_exist)) {
-            if (rs.arg3 != ZONE_ROOM_RANDOM) 
-              rp = real_roomp(rs.arg3);
-            else {
-              rp = random_room;
-              random_room = NULL;
-            }
-            if (!rp) {
-              vlogf(LOG_LOW, fmt("No room (%d) in O command (%d).  cmd=%d, zone=%d") %  rs.arg3 % rs.arg1 % cmd_no % zone_nr);
-              last_cmd = 0;
-              objload = 0;
-              continue;
-            }
+	  if(bootTime){
+	    // check conditions
+	    if (rs.arg3 != ZONE_ROOM_RANDOM) 
+	      rp = real_roomp(rs.arg3);
+	    else {
+	      rp = random_room;
+	      random_room = NULL;
+	    }
 
+	    if (!rp) {
+	      vlogf(LOG_LOW, fmt("No room (%d) in O command (%d).  cmd=%d, zone=%d") %  rs.arg3 % rs.arg1 % cmd_no % zone_nr);
+	      last_cmd = 0;
+	      objload = 0;
+	      continue;
+	    }
+	    
 	    count=0;
 	    for(t=rp->getStuff();t;t=t->nextThing){
 	      TObj *o = dynamic_cast<TObj *>(t);
@@ -2229,22 +2230,29 @@ void zoneData::resetZone(bool bootTime)
               continue;
             }
 
-            obj = read_object(rs.arg1, REAL);
-            if (obj != NULL) {
-              *rp += *obj;
-              obj->onObjLoad();
-              last_cmd = 1;
-              objload = TRUE;
-            } else {
-              vlogf(LOG_LOW, fmt("No obj (%d) in O command (room=%d).  cmd=%d, zone=%d") %  rs.arg1 % rs.arg3 % cmd_no % zone_nr);
-              objload = FALSE;
-              last_cmd = 0;
-            }
-          } else {
-            objload = FALSE;
-            last_cmd = 0;
-          }
-          break;
+	    // load the objects
+	    for(;count<rs.arg2;++count){
+	      if(obj_index[rs.arg1].getNumber() < 
+		 obj_index[rs.arg1].max_exist){
+		obj = read_object(rs.arg1, REAL);
+
+		if (obj != NULL) {
+		  *rp += *obj;
+		  obj->onObjLoad();
+		  last_cmd = 1;
+		  objload = TRUE;
+		} else {
+		  vlogf(LOG_LOW, fmt("No obj (%d) in O command (room=%d).  cmd=%d, zone=%d") %  rs.arg1 % rs.arg3 % cmd_no % zone_nr);
+		  objload = FALSE;
+		  last_cmd = 0;
+		}
+	      }
+	    }
+	  } else {
+	    objload = FALSE;
+	    last_cmd = 0;
+	  }
+	  break;
         case 'B':               
           if (obj_index[rs.arg1].getNumber() <
                  obj_index[rs.arg1].max_exist) {
