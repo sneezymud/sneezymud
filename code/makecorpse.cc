@@ -288,6 +288,8 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
         break;
       case SPELL_ENERGY_DRAIN:
       case SPELL_LICH_TOUCH:
+      case SPELL_VAMPIRIC_TOUCH:
+      case SPELL_LIFE_LEECH:
       case SPELL_SYNOSTODWEOMER:
       case DAMAGE_DRAIN:
       case SPELL_HARM_DEIKHAN:
@@ -770,8 +772,6 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SPELL_RESURRECTION:
       case SPELL_VOODOO:
       case SKILL_BREW:
-      case SPELL_VAMPIRIC_TOUCH:
-      case SPELL_LIFE_LEECH:
       case SKILL_TURN:
       case SKILL_SIGN:
       case SKILL_SWIM:
