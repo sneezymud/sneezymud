@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: rent.h,v $
+// Revision 5.4  2002/06/14 02:15:40  peel
+// changed rent item limit to 10k from 1k
+//
 // Revision 5.3  2002/06/13 05:00:59  peel
 // updated rent file version, woops
 //
@@ -37,7 +40,7 @@ const int CURRENT_RENT_VERSION     =9;
 // 8        5.2 : June 4 2002 : shuffled 4vals for weapons
 
 // This was 200, but i see no technical reason to not be able to increase it
-const int MAX_OBJ_SAVE =1000 ;     
+const int MAX_OBJ_SAVE =10000;     
 
 class objCost { 
   public:
