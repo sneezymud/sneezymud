@@ -379,7 +379,10 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     ch->sendTo(fmt("%s: You can't carry that much weight.\n\r") % fname(name));
     return -1;
   }
-  if (shop_index[shop_nr].isProducing(this)) {
+  
+  if (shop_index[shop_nr].isProducing(this) &&
+      number_objects_in_list(this, (TObj *) keeper->getStuff()) <= 1){
+
     chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
     chr = max((float)1.0,chr);
 
@@ -699,10 +702,7 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   ch->logItem(this, CMD_SELL);
 
   --(*this);
-  if (!shop_index[shop_nr].isProducing(this)) {
-    *keeper += *this;
-  }
-
+  *keeper += *this;
 
   sellMeMoney(ch, keeper, cost, shop_nr);
 
@@ -720,15 +720,6 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   owners = NULL;
 
 
-  if (shop_index[shop_nr].isProducing(this)){
-    // unlimited item, so we just get the value of the item in talens
-    if(!dynamic_cast<TCasinoChip *>(this) &&
-       objVnum() != OBJ_LOTTERY_TICKET){
-      keeper->addToMoney(this->obj_flags.cost, GOLD_SHOP);
-      shoplog(shop_nr, ch, keeper, getName(), this->obj_flags.cost, "wholesale");
-    }
-    delete this;
-  }
 #if NO_DAMAGED_ITEMS_SHOP
   else if (getStructPoints() != getMaxStructPoints()) {
     // delete it as its "scrap"
@@ -1378,7 +1369,7 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
   } 
 
   if (tComp) {
-    if (shop_index[shop_nr].isProducing(this)) {
+    if (shop_index[shop_nr].isProducing(this)){
       sprintf(buf4, "[%s]", "Unlimited");
     } else {
       sprintf(buf4, "[%d]", tComp->getComponentCharges());
@@ -1617,14 +1608,8 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
         for (k = 0; (k < cond_obj_vec.size() && !found); k++) {
           if (cond_obj_vec.size() > 0) {
             if (i->isSimilar(cond_obj_vec[k])) {
-              if (!shop_index[shop_nr].isProducing(cond_obj_vec[k])) {
-                cond_tot_vec[k] += 1;
-                found = TRUE;
-              } else {
-                delete i;
-                i = NULL;
-                found = TRUE;
-              }
+	      cond_tot_vec[k] += 1;
+	      found = TRUE;
             }
           }
         }
