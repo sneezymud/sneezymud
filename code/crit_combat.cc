@@ -629,9 +629,10 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
                  limbStr.c_str());
               act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
               v->setMove(v->getMove()/4);
-              for (i=1;i<5;i++)
+              for (i = 1; i < 5; i++) {
                 if (v->equipment[WEAR_LEGS_R])
                   v->damageItem(this,WEAR_LEGS_R,wtype,weapon,*dam);
+	      }
               *part_hit = WEAR_LEGS_R;
               rc = damageLimb(v,WEAR_LEGS_R,weapon,dam);
               if (IS_SET_DELETE(rc, DELETE_VICT))
