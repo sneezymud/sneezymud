@@ -1247,35 +1247,36 @@ void TPerson::doLow(const sstring &argument)
 
 void TBeing::lowPath(const sstring &arg)
 {
-  dirTypeT dir, lastdir=DIR_NONE;
-  sstring buf;
+  dirTypeT dir;
   int here=in_room;
   int target=convertTo<int>(arg.word(0));
   TPathFinder path;
 
-  path.setUsePortals(false);
-  //  path.setNoMob(false);
+  //path.setUsePortals(false);
 
-  path.findPath(here, findRoom(target));
-  sendTo(fmt("Distance: %i\n\r") % path.getDist());
-
-  // trace a path there and spit out room nums
-  while((dir=path.findPath(here, findRoom(target))) >= 0){
-    if(lastdir==DIR_NONE)
-      buf="NONE";
-    else
-      buf=dirs[lastdir];
-
-    sendTo(fmt("{DIR_%s, %i},\n\r") % buf.upper() % here);
-    here=real_roomp(here)->dir_option[dir]->to_room;
-
-    lastdir=dir;
+  if(path.findPath(here, findRoom(target)) == DIR_NONE){
+    sendTo("No path found, trying again going through no-mob rooms.\n\r");
+    path.setNoMob(false);
+    if(path.findPath(here, findRoom(target)) == DIR_NONE){
+      sendTo("No path found.\n\r");
+      return;
+    }
   }
 
-  sendTo(fmt("{DIR_%s, %i},\n\r") % sstring(dirs[lastdir]).upper() % here);
+  sendTo(fmt("Distance: %i\n\r") % path.getDist());
 
-  sendTo("{DIR_NONE, -1}\n\r");
   
+  for(unsigned int i=0;i<path.path.size();++i){
+    dir=path.path[i]->direct;
+
+    if(dir >= MAX_DIR){
+      sendTo(fmt("{%i, %i},\n\r") % dir % path.path[i]->room);
+    } else {
+      sendTo(fmt("{DIR_%s, %i},\n\r") % 
+	     (dir<0?"NONE":sstring(dirs[dir]).upper()) %
+	     path.path[i]->room);
+    }
+  }
 }
 
 
