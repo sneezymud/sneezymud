@@ -1059,11 +1059,11 @@ int TSocket::gameLoop()
 	   !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)
            && !tmp_ch->isLinkdead() &&
            
-	   moonType() == "full" && !sunIsUp()) {
+	   moonType() == "full" && !sunIsUp() && moonIsUp()) {
 	  lycanthropeTransform(tmp_ch);
           continue;
 	} else if(tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)){
-	  if(moonType() != "full" || sunIsUp()){
+	  if(moonType() != "full" || sunIsUp() || !moonIsUp()){
 	    tmp_ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
 	    tmp_ch->doReturn("", WEAR_NOWHERE, CMD_RETURN);
             continue;
