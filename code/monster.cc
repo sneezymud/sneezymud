@@ -14,6 +14,7 @@
 
 charList::charList() :
   name(NULL),
+  iHateStrength(0),
   next(NULL)
 {
 }
@@ -21,6 +22,7 @@ charList::charList() :
 charList::charList(const charList &a)
 {
   name = mud_str_dup(a.name);
+  iHateStrength = a.iHateStrength;
 
   if (a.next)
     next = new charList(*a.next);
@@ -33,6 +35,7 @@ charList & charList::operator=(const charList &a)
   if (this == &a) return *this;
 
   name = mud_str_dup(a.name);
+  iHateStrength = a.iHateStrength;
 
   charList *c, *n;
   for (c = next; c; c = n) {

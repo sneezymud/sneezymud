@@ -65,8 +65,15 @@ bool TMonster::addHated(TBeing *hatee)
       return FALSE;
 
     charList *list = new charList();
-    list->name = mud_str_dup(hatee->name);
-    list->next = hates.clist;
+    list->name          = mud_str_dup(hatee->name);
+    list->next          = hates.clist;
+
+    /*
+      Times: (Game Hours)
+        Default Maximum Hate: 219 hours ( (50 + 50 + 5) * (250 / 120) = 218.75 )
+        Default Minimum Hate:   2 hours ( ( 1 +  1 + 5) * ( 30 / 120) =   1.75 )
+     */
+    list->iHateStrength = (long)((GetMaxLevel() + hatee->GetMaxLevel() + 5) * ((double)getStat(STAT_CURRENT, STAT_FOC) / 120.0));
     hates.clist = list;
 
     SET_BIT(specials.act, ACT_HATEFUL);

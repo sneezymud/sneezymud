@@ -26,6 +26,7 @@ const zoneHateT MIN_HATE = OP_SEX;
 class charList {
   public:
   const char *name;
+  long iHateStrength;
   charList *next;
 
   charList();

@@ -1137,6 +1137,26 @@ int TMainSocket::gameLoop()
       recalcFactionPower();
       pulseLog("recalcFactionPower", t, pulse);
 
+      pulseLog("Dealing with mob hate.", t, pulse);
+      TBeing * b = NULL;
+
+      for (b = character_list; b; b = b->next) {
+        TMonster *tmons = dynamic_cast<TMonster *>(b);
+        charList *list;
+
+        if (tmons && IS_SET(tmons->hatefield, HATE_CHAR) && tmons->hates.clist)
+          for (list = tmons->hates.clist; list; list = list->next)
+            if (list->name) {
+              list->iHateStrength--;
+
+              if (list->iHateStrength <= 0) {
+                vlogf(LOG_LAPSOS, fmt("%s no longer hates %s") % tmons->getName() % list->name);
+
+                tmons->remHated(NULL, list->name);
+              }
+            }
+      }
+
       // adjust zones for nuking
       if (nuke_inactive_mobs){
 	nukeInactiveMobs();
