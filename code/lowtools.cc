@@ -1,5 +1,7 @@
 #include "stdsneezy.h"
 #include "database.h"
+#include <iostream.h>
+#include <fstream.h>
 
 // parses args like "13700-13780 13791 13798"
 bool parse_num_args(int argc, char **argv, vector<int> &vnums)
@@ -48,3 +50,57 @@ bool parse_num_args(int argc, char **argv, vector<int> &vnums)
   return true;
 }
 
+
+map <sstring,sstring> parse_data_file(const sstring &file, int num)
+{
+  ifstream ifile(file.c_str());
+  sstring buf, name, val, type;
+  map <sstring,sstring> values;
+  unsigned int loc;
+
+  values["vnum"]="EOM";
+      
+  while(num--){
+    while(getline(ifile, buf)){
+      if(buf[0]=='-'){
+	values["DATATYPE"]=buf.substr(2);
+	break;
+      }
+    }
+  }
+
+
+  while(getline(ifile, buf)){
+    if(buf[0]=='-')
+      break;
+
+    if(!isalpha(buf[0]))
+      continue;
+
+    if((loc=buf.find_first_of("~"))!=sstring::npos){
+      name=buf.substr(0, loc);
+      val="";
+      
+      while(getline(ifile, buf) && buf.find_first_of("~")==sstring::npos){
+	val+=buf;
+	val+="\n";
+      }
+    } else {
+      if((loc=buf.find_first_of(":"))==sstring::npos)
+	continue;
+      
+      name=buf.substr(0, loc);
+      val=buf.substr(loc+1);
+    }
+
+    if(val.find_first_not_of(" ")==sstring::npos){
+      val="";
+    } else {
+      val=val.substr(val.find_first_not_of(" "));
+    }
+
+    values[name]=val;
+  }
+
+  return values;
+}
