@@ -7055,16 +7055,17 @@ int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   string target,argument=arg, buf;
   TObj *fish;
   TBeing *ch;
-  int amt=5;
+  int amt=20;
 
-  if(cmd != CMD_GENERIC_PULSE && cmd != CMD_POINT)
+  if(cmd != CMD_GENERIC_QUICK_PULSE && cmd != CMD_POINT)
     return false;
 
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
 
-  if(cmd == CMD_GENERIC_PULSE){
-    if(o->getStructPoints()>amt && ch->getMove()<(ch->getMaxMove()-amt)){
+  if((cmd == CMD_GENERIC_QUICK_PULSE) && !::number(0,1)){
+    if(ch->getMove()<(ch->moveLimit()-amt) && o->getStructPoints()>1){
+      amt=min(amt, o->getStructPoints()-1);
       o->setStructPoints(o->getStructPoints()-amt);
       o->setMaxStructPoints(o->getMaxStructPoints()-amt);
       ch->addToMove(amt);
@@ -7076,7 +7077,7 @@ int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     }
   }
   
-  if(cmd == CMD_POINT){
+  if(cmd == CMD_POINT && o->getMaxStructPoints()<100){
     argument=one_argument(argument,target);
 
     if(!(fish=generic_find_obj(target.c_str(),FIND_OBJ_INV|FIND_OBJ_ROOM, ch))){
@@ -7097,8 +7098,8 @@ int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 
     delete fish;
-    o->setMaxStructPoints(o->getMaxStructPoints()+10);
-    o->setStructPoints(o->getStructPoints()+10);
+    o->setMaxStructPoints(o->getMaxStructPoints()+5);
+    o->setStructPoints(o->getStructPoints()+5);
     
 
     return true;
