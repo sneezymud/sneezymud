@@ -157,7 +157,7 @@ short int TPerson::manaLimit() const
   if(hasQuestBit(TOG_PSIONICIST))
     iMax += getDiscipline(DISC_PSIONICS)->getLearnedness();
 
-  TOpal *stone = find_biggest_charged_powerstone(this);
+  TOpal *stone = find_biggest_powerstone(this);
   if(stone)
     iMax += stone->psGetMaxMana();
 

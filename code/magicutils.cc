@@ -796,25 +796,6 @@ int TBeing::useComponentObj(TComponent *o, TObj *targ, checkOnlyT checkOnly)
   return 1;
 }
 
-TOpal *find_biggest_charged_powerstone(const TBeing *ch)
-{
-  TOpal *stone = NULL;
-  TThing *t;
-  int i;
-
-  // Check through char's equipment 
-  for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    if (!(t = ch->equipment[i]))
-      continue;
-
-    t->powerstoneCheckCharged(&stone);
-  }
-  // Check through char's inventory 
-  for (t = ch->getStuff(); t; t = t->nextThing) {
-    t->powerstoneCheckCharged(&stone);
-  }
-  return stone;
-}
 
 int TBeing::mostPowerstoneMana() const
 {

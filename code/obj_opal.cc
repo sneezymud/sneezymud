@@ -130,7 +130,7 @@ void TOpal::describeObjectSpecifics(const TBeing *ch) const
     ch->sendTo(COLOR_OBJECTS, "Is is at full strength.\n\r");
 }
 
-TOpal *find_biggest_powerstone(TBeing *ch)
+TOpal *find_biggest_powerstone(const TBeing *ch)
 {
   TOpal *stone = NULL;
   TThing *t;
