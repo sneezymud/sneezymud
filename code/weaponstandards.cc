@@ -1,4 +1,3 @@
-// last weapon - sword, cutlass
 
 
 
