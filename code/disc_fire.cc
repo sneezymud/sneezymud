@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_fire.cc,v $
+// Revision 1.4  1999/09/16 05:05:12  peel
+// Typo
+//
 // Revision 1.3  1999/09/16 05:04:16  peel
 // Conjure fire elemental now extinguishes the fire source.
 //
@@ -1335,7 +1338,7 @@ int conjureElemFire(TBeing *caster)
   if (!bPassMageChecks(caster, SPELL_CONJURE_FIRE, NULL))
     return FALSE;
 
-  for(t=caster->roomp->stuff;t;t=t->nextStuff){
+  for(t=caster->roomp->stuff;t;t=t->nextThing){
     if((tl=dynamic_cast<TLight *>(t)) &&
        tl->isLit()){
       t->putLightOut();
