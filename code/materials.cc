@@ -1,23 +1,17 @@
 //////////////////////////////////////////////////////////////////////////
 //
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
+// Copyright (c) 1996, SneezyMUD Coding Team
+// All rights reserved.
+//
+// "materials.cc" - Various functions related to materials.
 //
 // $Log: materials.cc,v $
+// Revision 1.2  1999/09/13 13:52:13  batopr
+// *** empty log message ***
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
 //
 //////////////////////////////////////////////////////////////////////////
-
-
-//
-//      SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//      "materials.cc" - Various functions related to materials.
-//
-//      Last major revision : August 1996
-//
-//////////////////////////////////////////////////////////////////////////
-
 
 #include "stdsneezy.h"
 #include "statistics.h"
