@@ -6805,6 +6805,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
   return TRUE;
 }
 
+extern int factionRegistrar(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
 extern int grimhavenPosse(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 
@@ -6968,6 +6969,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE,"Fish Tracker", fishTracker},
   {FALSE, "Bank Guard", bankGuard},               // 155
   {FALSE, "Real Estate Agent", realEstateAgent},
+  {FALSE, "Faction Registrar", factionRegistrar},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: extern.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -25,6 +17,9 @@ extern "C" {
 // disabled functions
 extern int max_stat(race_t, statTypeT);
 extern int min_stat(race_t, statTypeT);
+#endif
+#if USE_SQL
+int dbquery(MYSQL_RES **res, const char *, const char *, const char *,...);
 #endif
 extern wearSlotT slot_from_bit(int);
 extern void cleanCharBuf(char *);
@@ -53,6 +48,8 @@ extern bool TestCode1;
 extern bool TestCode2;
 extern bool TestCode3;
 extern bool TestCode4;
+extern bool TestCode5;
+extern bool TestCode6;  
 extern bool Silence;
 extern bool WizBuild;
 extern bool Gravity;
@@ -73,6 +70,9 @@ extern bool getall(const char *, char *);
 extern int getabunch(const char *, char *);
 extern bool is_number(char *);
 extern void bisect_arg(const char *, int *, char *, const char * const array[]);
+
+  extern const char * heraldcolors[];
+  extern const char * heraldcodes[];
 extern const char * const card_names[14];
 extern const char * const scandirs[];
 extern const char * const home_terrains[];
@@ -138,7 +138,7 @@ extern void change_hands(TBeing *, const char *);
 extern void SwitchStuff(TBeing *, TBeing *);
 extern void DisguiseStuff(TBeing *, TBeing *);
 extern void CreateOneRoom(int);
-extern void gain_exp(TBeing *, double gain);
+extern void gain_exp(TBeing *, double gain, int rawdamage);
 extern int check_sinking_obj(TObj *obj, int room);
 extern int ctoi(char c);
 extern void update_time(void);
@@ -234,7 +234,7 @@ extern bool GuildProcs(int);
 extern void deityCheck(int);
 extern void apocCheck();
 
-extern void list_char_in_room(const TBeing *list, const TBeing *ch);
+extern void list_char_in_room(TThing *list, TBeing *ch);
 
 // ch can not be const due to listMe()
 extern void list_thing_in_room(const TThing *list, TBeing *ch);
@@ -248,7 +248,7 @@ extern bool pierceType(spellNumT);
 extern bool bluntType(spellNumT);
 extern bool slashType(spellNumT);
 extern int generic_dispel_magic(TBeing *, TBeing *, int, immortalTypeT, safeTypeT = SAFE_NO);
-extern bool file_to_string(const char *name, string &buf, bool concat = false);
+extern bool file_to_string(const char *name, string &buf, concatT concat = CONCAT_NO);
 extern const char *skill_diff(byte);
 extern immuneTypeT getTypeImmunity(spellNumT type);
 extern TPCorpse *pc_corpse_list;
@@ -301,7 +301,7 @@ dirTypeT find_path(int, int (*predicate) (int, void *), void *, int, bool, int *
 extern bool exit_ok(roomDirData *, TRoom **);
 extern spellNumT searchForSpellNum(const char *arg, exactTypeT exact);
 extern bool thingsInRoomVis(TThing *, TRoom *);
-extern int get(TBeing *, TThing *, TThing *);
+extern int get(TBeing *, TThing *, TThing *, getTypeT, bool);
 extern void portal_flag_change(TPortal *, unsigned int, const char *, setRemT); 
 extern const string numberAsString(int);
 extern void loadShopPrices(void);
@@ -327,20 +327,6 @@ extern int getWeather(int);
 extern const char *describeTime();
 extern void mudTimePassed(time_t t2, time_t t1, time_info_data *);
 extern void realTimePassed(time_t t2, time_t t1, time_info_data *);
-extern void weatherAndTime(int);
-extern struct weather_data weather_info;
-extern void anotherHour();
-extern void weatherChange();
-extern void GetMonth(int);
-extern unsigned char moontype;
-extern void sunriseAndSunset();
-extern int sunRise();
-extern int sunSet();
-extern int moonRise();
-extern int moonSet();
-extern bool moonIsUp();
-extern bool sunIsUp();
-extern const char * moonType();
 extern void assign_item_info();
 extern void assignTerrainInfo();
 extern int gamePort;   // the port we are running on
@@ -437,6 +423,7 @@ extern void comify(char *);
 extern bool checkAttuneUsage(TBeing *, int *, int *, TVial **, TSymbol *);
 extern const string getWizPowerName(wizPowerT); 
 extern void setWizPowers(const TBeing *, TBeing *, const char *);
+extern void remWizPowers(const TBeing *, TBeing *, const char *);
 extern void assign_drink_types();
 extern void assign_drug_info();
 extern drugTypeT mapFileToDrug(int);
@@ -448,6 +435,13 @@ extern void stSpaceOut(string &);
 extern bool has_key(TBeing *ch, int key);
 extern int bogusAccountName(const char *arg);
 extern const char *LimbHealth(double a);
+extern doorTrapT mapFileToDoorTrap(int);
+extern int mapDoorTrapToFile(doorTrapT);
+extern int age_mod_for_stat(int age_num, statTypeT whichStat);
+extern string describeDuration(const TBeing *, int);
+extern bool is_ok(TMonster *, TBeing *, int);
+extern int compareDetermineMessage(const int tDrift, const int tValue);
+extern bool in_range(int, int, int);
 }
 
 // these needs C++ linkage to avoid conflict with functions in stdlib

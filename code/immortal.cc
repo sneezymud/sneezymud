@@ -45,6 +45,10 @@ bool TestCode3 = true;       // unfinished code
   // code3 in use, hiding new spell
 bool TestCode4 = true;       // unfinished code 
   // code4 in use, hiding new spell
+bool TestCode5 = false;
+  // code5 is to disable/enable certain aspects of the new faction code - dash 6/24/01
+bool TestCode6 = false;
+  // not in use
 
 bool NewbiePK = FALSE;
 bool QuestCode = false;       // spec-procs for quests 
@@ -222,6 +226,8 @@ void TPerson::doToggle(const char *arg)
     sendTo("Test code #2      : %s\n\r", TestCode2 ? "in-use" : "deactivated");
     sendTo("Test code #3      : %s\n\r", TestCode3 ? "in-use" : "deactivated");
     sendTo("Test code #4      : %s\n\r", TestCode4 ? "in-use" : "deactivated");
+    sendTo("Test code #5      : %s\n\r", TestCode5 ? "in-use" : "deactivated");
+    sendTo("Test code #6      : %s\n\r", TestCode6 ? "in-use" : "deactivated");
     sendTo("Quest code        : %s\n\r", QuestCode ? "active" : "deactivated");
     sendTo("Quest code 2      : %s\n\r", QuestCode2 ? "active" : "deactivated");
     return;
@@ -306,7 +312,29 @@ void TPerson::doToggle(const char *arg)
 #endif
     TestCode4 = ! TestCode4;
     sendTo("TestCode #4 is now %s.\n\r", TestCode4 ? "in use" : "off");
-    vlogf(LOG_MISC,"%s has %s TestCode #4.",getName(),TestCode4 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,"%s has %s TestCode #5.",getName(),TestCode4 ? "enabled" : "disabled");
+  } else if (is_abbrev(arg, "testcode5")) {
+#if 1
+    // if you are using testcode, change this so we don't collide usages
+    if (strcmp(name, "Dash")) {
+      sendTo("Sorry, this is only for Dash's use in testing.\n\r");
+      return;
+    }
+#endif
+    TestCode5 = ! TestCode5;
+    sendTo("TestCode #5 is now %s.\n\r", TestCode5 ? "in use" : "off");
+    vlogf(LOG_MISC,"%s has %s TestCode #5.",getName(),TestCode5 ? "enabled" : "disabled");
+  } else if (is_abbrev(arg, "testcode6")) {
+#if 0
+    // if you are using testcode, change this so we don't collide usages
+    if (strcmp(name, "Batopr")) {
+      sendTo("Sorry, this is only for Batopr's use in testing.\n\r");
+      return;
+    }
+#endif
+    TestCode6 = ! TestCode6;
+    sendTo("TestCode #6 is now %s.\n\r", TestCode6 ? "in use" : "off");
+    vlogf(LOG_MISC,"%s has %s TestCode #6.",getName(),TestCode6 ? "enabled" : "disabled");
   } else if (is_abbrev(arg, "questcode")) {
     QuestCode = !QuestCode;
     sendTo("Questcode is now %s.\n\r", QuestCode ? "in use" : "off");
@@ -6064,6 +6092,7 @@ static bool isSanctionedCommand(cmdTypeT tCmd)
   switch (tCmd) {
     case CMD_MEDIT:
     case CMD_OEDIT:
+    case CMD_FEDIT:
     case CMD_SEDIT:
     case CMD_REDIT:
     case CMD_RLOAD:

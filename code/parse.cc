@@ -1242,6 +1242,21 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_EDIT:
           doEdit(newarg);
           break;
+	case CMD_FADD:
+	  add_faction(newarg);
+	  break;
+	case CMD_FEDIT:
+	  edit_faction(newarg);
+	  break;
+	case CMD_JOIN:
+	  doJoin(newarg);
+	  break;
+	case CMD_DEFECT:
+	  doDefect(newarg);
+	  break;
+	case CMD_RECRUIT:
+	  doRecruit(newarg);
+	  break;
         case CMD_RLOAD:
           doRload(newarg);
           break;
@@ -2602,6 +2617,11 @@ void buildCommandArray(void)
   commandArray[CMD_CHANGE] = new commandInfo("change", POSITION_RESTING, 0);
   commandArray[CMD_REDIT]=new commandInfo("redit", POSITION_DEAD, GOD_LEVEL1); 
   commandArray[CMD_OEDIT] = new commandInfo("oedit", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_FEDIT] = new commandInfo("fedit", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_FADD]  = new commandInfo("fadd", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_JOIN] = new commandInfo("join", POSITION_RESTING, 0);
+  commandArray[CMD_DEFECT] = new commandInfo("defect", POSITION_RESTING, 0);
+  commandArray[CMD_RECRUIT] = new commandInfo("recruit", POSITION_RESTING, 0);
   commandArray[CMD_MEDIT] = new commandInfo("medit", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_DODGE] = new commandInfo("dodge", POSITION_FIGHTING, 0);
   commandArray[CMD_PARRY] = new commandInfo("parry", POSITION_FIGHTING, 0);

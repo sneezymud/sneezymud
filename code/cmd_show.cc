@@ -1076,6 +1076,9 @@ void TPerson::doShow(const char *argument)
           delete tComponent;
           tComponent = NULL;
         }
+  } else if (is_abbrev(buf, "newfactions")) {
+    for (; isspace(*argument); argument++);
+    show_faction(mud_str_dup(argument));
   } else {
     sb += "Usage:\n\r";
     sb += "  show zones (<zonename> | \"disabled\")\n\r";
@@ -1090,6 +1093,7 @@ void TPerson::doShow(const char *argument)
     sb += "  show materials (<material number>)\n\r";
     sb += "  show created <materialize/spontaneous> <itemtype>\n\r";
     sb += "  show components <spellname>\n\r";
+    sb += "  show factions [<faction name> | <faction ID>]\n\r";
   }
 
   if (desc)

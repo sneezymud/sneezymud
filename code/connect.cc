@@ -1263,6 +1263,7 @@ int Descriptor::nanny(const char *arg)
           act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
           tmp_ch->loadCareerStats();
 	  tmp_ch->loadDrugStats();
+	  tmp_ch->loadFactionStats();
           if (tmp_ch->getHit() < 0) 
             dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
           
@@ -1376,6 +1377,7 @@ int Descriptor::nanny(const char *arg)
               act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
               tmp_ch->loadCareerStats();
               tmp_ch->loadDrugStats();
+	      tmp_ch->loadFactionStats();
               if (tmp_ch->getHit() < 0) 
                 dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
               
@@ -2986,8 +2988,8 @@ int TPerson::genericLoadPC()
         rp = real_roomp(26);
       else if (!strcmp(name, "Dolgan"))
         rp = real_roomp(27);
-      else if (!strcmp(name, "Mithros"))
-        rp = real_roomp(28);
+//      else if (!strcmp(name, "Mithros"))
+//        rp = real_roomp(28);
       else if (!strcmp(name, "Armaggedon"))
         rp = real_roomp(30);
       else if (!strcmp(name, "Onslaught"))
@@ -3079,6 +3081,7 @@ int TPerson::genericLoadPC()
   loadFollowers();
   loadCareerStats();
   loadDrugStats();
+  loadFactionStats();
 
   stats.logins++;
   save_game_stats();

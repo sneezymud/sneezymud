@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: faction.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -35,7 +27,35 @@ enum offTypeT {
     OFF_HELP
 };
 
+enum deityTypeT {
+  DEITY_NONE,
+  DEITY_MEZAN,
+  DEITY_LUNA,
+  DEITY_SASUKEY,
+  DEITY_SINSUKEY,
+  DEITY_ICON,
+  DEITY_ELYON,
+  DEITY_JEVON,
+  DEITY_OMNON,
+  DEITY_MENANON,
+  DEITY_AMANA,
+  DEITY_MALSHYRA,
+  DEITY_SHROUD ,
+  DEITY_LESPRIT,
+  DEITY_TALANA ,
+  DEITY_SALUREL,
+  MAX_DEITIES
+};
+
+
+const int FACTION_CREATE_LEVEL = 25;
+
+
 const int FACT_LEADER_SLOTS  = 4; // leader = 0, 3 subleaders
+const int NUM_MAX_RANK       =10; // 0-9, ranks
+const int DEFAULT_RANKS      =3;
+const int MAX_FACT_ID        =200; // maximum factions
+const int MAX_FACT_COLORS    = 3;
 
 // caravan flags
 const unsigned int CARAVAN_DEST_GH            = (1<<0);
@@ -56,8 +76,100 @@ const unsigned short CAR_AMBER_HOME   = 8713;
 const int MIN_CARAVAN_INTERVAL        = 10;
 const int CARAVAN_TRADE               = 100;
 
+// bits for new faction flags / faction rank permissions
+
+const unsigned int FACT_ACTIVE                = (1<<0); 
+const unsigned int FACT_LOCKED                = (1<<1);
+const unsigned int FACT_OPEN_RECRUITMENT      = (1<<2);
+const unsigned int FACT_HIDDEN                = (1<<3);
+const unsigned int FACT_HIDE_MEMBERS          = (1<<4);
+const unsigned int FACT_HIDE_LEADERS          = (1<<5);
+const unsigned int FACT_HIDE_RANKS            = (1<<6);
+
+const unsigned int PERM_RECRUIT               = (1<<0); // R
+const unsigned int PERM_PROMOTE               = (1<<1); // P
+const unsigned int PERM_TREASURER             = (1<<2); // T
+const unsigned int PERM_EDIT                  = (1<<3); // E
+const unsigned int PERM_LOCK                  = (1<<4); // L
+const unsigned int PERM_AMBASSADOR            = (1<<5); // A
+const unsigned int PERM_SCRIBE                = (1<<6); // S
+
+const int RELATION_NONE = 0;
+const int RELATION_PEACE = 1;
+const int RELATION_WAR = -1;
+
+// new faction class - dash 2001
+
+class TRelation {
+ public:
+  int targ_fact;
+  int relation;
+};
+
+class TFaction {
+ public:
+  char * proper_name;
+  int ID;
+  char * slang_name;
+  char * keywords;
+  char * password;
+  char * rank[NUM_MAX_RANK];
+  unsigned int permissions[NUM_MAX_RANK];
+  unsigned int flags;
+  int treasury;
+  int ranks;
+  int alignx;
+  int aligny;
+  int actx;
+  int acty;
+  double power;
+  int colors[3];
+  deityTypeT patron;
+  vector<TRelation *>relations;
+  
+ public:
+  int getRelation(int);
+  int getRelation(TFaction *);
+  void setRelation(int, int);
+  void setRelation(TFaction *, int);
+  const char * getName() {return (proper_name) ? proper_name : "(null)";}
+  const char * getShortName() {return (slang_name) ? slang_name : "(null)";}
+
+
+
+  TFaction() {
+    int i;
+    relations.clear();
+    proper_name = NULL;
+    slang_name = NULL;
+    keywords = NULL;
+    password = NULL;
+
+    for(i = 0; i < NUM_MAX_RANK; i++) {
+      rank[i] = NULL;
+    }
+  }
+  ~TFaction() {
+    int i;
+    relations.clear();
+    if (proper_name)
+      delete [] proper_name;
+    if (slang_name)
+      delete [] slang_name;
+    if (keywords)
+      delete [] keywords;
+    if (password)
+      delete [] password;
+
+    for(i = 0; i < NUM_MAX_RANK; i++) {
+      if (rank[i])
+	delete [] rank[i];
+    }
+  }
+};
+
 class TFactionInfo {
-  public:
+ public:
   char * faction_name;
   char * leader[FACT_LEADER_SLOTS];
   char * faction_password;
@@ -95,39 +207,39 @@ extern const char * CaravanDestination(int);
 
 const char * const FACTION_FILE      = "faction/faction_info";
 const char * const FACTION_BAK       = "faction/faction_info.bak";
+const char * const NEWFACT_FILE      = "faction/newfactions";
+const char * const NEWFACT_BAK       = "faction/newfactions.bak";
+
 
 const char * const FACT_LIST_BROTHER   = "faction/fact_list.1";
 const char * const FACT_LIST_CULT      = "faction/fact_list.2";
 const char * const FACT_LIST_SNAKE     = "faction/fact_list.3";
+
+const int FACT_BOARD_BROTHER=1387;
+const int FACT_BOARD_SERPENT=8878;
   
 // the amount of faction % help received for donating 1 talen to your faction
 const float TITHE_FACTOR   = (0.0003);
 
-enum deityTypeT {
-     DEITY_NONE,
-     DEITY_MEZAN,
-     DEITY_LUNA,
-     DEITY_SASUKEY,
-     DEITY_SINSUKEY,
-     DEITY_ICON,
-     DEITY_ELYON,
-     DEITY_JEVON,
-     DEITY_OMNON,
-     DEITY_MENANON,
-     DEITY_AMANA,
-     DEITY_MALSHYRA,
-     DEITY_SHROUD ,
-     DEITY_LESPRIT,
-     DEITY_TALANA ,
-     DEITY_SALUREL,
-     MAX_DEITIES
-};
 
 enum personTypeT {
     FIRST_PERSON,
     SECOND_PERSON,
     THIRD_PERSON
 };
+
+// new faction functions
+//extern int add_faction(const char *);
+//extern int edit_faction(const char *);
+extern int load_newfactions();
+extern void save_newfactions();
+extern int get_unused_ID();
+extern TFaction * get_faction(const char *);
+extern TFaction * get_faction_by_ID(int);
+extern TFaction * get_faction_by_keywords(const char *);
+extern char * display_permission(unsigned int);
+extern char * display_faction_flags(unsigned int);
+// end new faction functions
 
 extern int load_factions();
 extern void save_factions();

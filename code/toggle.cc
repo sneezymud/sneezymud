@@ -237,11 +237,13 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Warrior L40 Quest: Killing Shaman", MOB_ELDERLY_SHAMAN},
   {"Warrior L40 Quest: Finished Warrior", MOB_CHIEF_MALE_VILLAGER},
   {"Shaman L15 Juju: Eligable", MOB_NONE},
-  {"Shaman L15 Juju: Get Thong", MOB_JUJU_BUNNY},
+  {"Shaman L15 Juju: Get Thong", MOB_JUJU_BUNNY}, //225
   {"Shaman L15 Juju: Get Mare Hide", MOB_JUJU_MARE},
   {"Shaman L15 Juju: Get Sinew", MOB_NONE},
   {"Shaman L15 Juju: Get Beaded Necklace", MOB_JUJU_TETRARCH},
   {"Shaman L15 Juju: Has Juju", MOB_NONE},
+  {"Faction: Has paid registration fee", MOB_FACTION_REGISTRAR},
+  {"Faction: Has created a faction", MOB_FACTION_REGISTRAR},
   {"", MOB_NONE}, 
 };
 

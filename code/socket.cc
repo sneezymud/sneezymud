@@ -214,7 +214,7 @@ int TSocket::gameLoop()
     if (!point->m_bIsClient)
       point->sendLogin("1");
 
-  //  time_t ticktime = time(0);
+  time_t ticktime = time(0);
 
   while (!Shutdown) {
     if (timeTill  && (timeTill <= time(0))) {
@@ -346,6 +346,7 @@ int TSocket::gameLoop()
       deityCheck(FALSE);
       apocCheck();
       save_factions();
+      save_newfactions();
 
       weatherAndTime(1);
     }
@@ -770,15 +771,15 @@ int TSocket::gameLoop()
     }
 
 
-    //if (pulse >= 2400) {
-    //  unsigned int secs = time(0) - ticktime;
-    //  ticktime = time(0);
+    if (pulse >= 2400) {
+      unsigned int secs = time(0) - ticktime;
+      ticktime = time(0);
 
-    //      if (TestCode1) {
-    //	vlogf(LOG_MISC, "2400 pulses took %ld seconds.  ONE_SEC=%.3f pulses", secs, 2400.0/(float) secs);
-    //      }
-    //      pulse = 0;
-    // }
+      if (TestCode6) {
+    	vlogf(LOG_MISC, "2400 pulses took %ld seconds.  ONE_SEC=%.3f pulses", secs, 2400.0/(float) secs);
+      }
+      pulse = 0;
+    }
 
 
     systask->CheckTask();

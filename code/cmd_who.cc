@@ -114,6 +114,17 @@ static const string getWhoLevel(const TBeing *ch, TBeing *p)
       tmpstring += " ";
 
     sprintf(tempbuf, "Level:[%s] ", tmpstring.c_str());
+    TFaction *f = NULL;
+    if((f = p->newfaction()) && TestCode5) {
+      if (f->ID && (IS_SET(f->flags, FACT_ACTIVE) || ch->isImmortal()) &&
+	  (!IS_SET(f->flags, FACT_HIDDEN) || ch->newfaction() == p->newfaction() || ch->isImmortal())) {
+	sprintf(tempbuf, "%s %s[<1>%s%s]<1>", tempbuf,
+		heraldcodes[p->newfaction()->colors[0]],
+		p->newfaction()->getName(),
+		heraldcodes[p->newfaction()->colors[0]]);
+      }
+    }
+       
   }
 
   return tempbuf;
@@ -554,17 +565,38 @@ void TBeing::doWho(const char *argument)
                   if (!align) {
                     // show factions of everyone to immorts
                     // mortal version will show non-imms that are in same fact
-                    if ((getFaction()==p->getFaction() &&
-                         p->GetMaxLevel() <= MAX_MORT) || isImmortal())
+                    if(TestCode5) {
+		      TFaction *f = NULL;
+		      if((f = p->newfaction()) && TestCode5) {
+
+			if (f->ID && (IS_SET(f->flags, FACT_ACTIVE) || isImmortal()) &&
+			    (!IS_SET(f->flags, FACT_HIDDEN) 
+			     || newfaction() == p->newfaction() || isImmortal())) {
+			  sprintf(buf + strlen(buf), "%s[<1>%s%s]<1> %s[<1>%s%s]<1>",
+				  heraldcodes[p->newfaction()->colors[0]],
+				  p->newfaction()->getName(),
+				  heraldcodes[p->newfaction()->colors[0]],
+				  heraldcodes[p->newfaction()->colors[1]],
+                                  p->rank(),
+                                  heraldcodes[p->newfaction()->colors[1]]);
+			}
+		      }
+		      
+
+		    } else {
+		      if ((getFaction()==p->getFaction() &&
+			   p->GetMaxLevel() <= MAX_MORT) || isImmortal()) {
 #if FACTIONS_IN_USE
-                      sprintf(buf + strlen(buf), "[%s] %5.2f%%", 
-                        FactionInfo[p->getFaction()].faction_name,
-                        p->getPerc());
+			sprintf(buf + strlen(buf), "[%s] %5.2f%%", 
+				FactionInfo[p->getFaction()].faction_name,
+				p->getPerc());
 #else
-                      sprintf(buf + strlen(buf), "[%s]", 
-                        FactionInfo[p->getFaction()].faction_name);
+			sprintf(buf + strlen(buf), "[%s]", 
+				FactionInfo[p->getFaction()].faction_name);
 #endif
-                  }
+		      }
+		    }
+		  }
                   align = TRUE;
                   break;
                 case 's':

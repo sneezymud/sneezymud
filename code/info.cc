@@ -1409,6 +1409,25 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
         str += buf;
         break;
 
+      case AFFECT_DEFECTED:
+	if (ch == this) 
+	  sprintf(buf, "You recently defected from your faction.\n\r\ttime left : %s\n\r",
+		  describeDuration(this, aff->duration).c_str());
+	else
+	  sprintf(buf, "Recently defected from a faction.\n\r");
+	str += buf;
+	break;
+      case AFFECT_OFFER:
+	if (ch == this) {
+	  TFaction *f = NULL;
+	  f = get_faction_by_ID(aff->modifier);
+	  if (!f) break;
+	  sprintf(buf, "You received an offer to join %s. (Good for %s.)\n\r",
+		  f->getName(), describeDuration(this, aff->duration).c_str());
+	} else
+	  sprintf(buf, "Received and offer to join a faction.\n\r");
+	str += buf;
+	break;
       case AFFECT_COMBAT:
         // no display
         break;

@@ -478,6 +478,7 @@ void TBeing::statBeing(TBeing *k)
   char buf2[256];
   char buf3[256];
   TBeing *x1;
+  TFaction *f = NULL;
   const TMonster *km = dynamic_cast<const TMonster *>(k);
   char *birth, *logon;
   char birth_buf[40], logon_buf[40];
@@ -660,17 +661,23 @@ void TBeing::statBeing(TBeing *k)
     sprintf(buf + strlen(buf), "Prim attacks: %.2f, Off attacks: %.2f\n\r",
           fx, fy);
   }
-
-  sprintf(buf + strlen(buf), "%sFaction :%s %s,   %sFaction Percent :%s %.4f\n\r",
-    cyan(), norm(), FactionInfo[k->getFaction()].faction_name,
-    cyan(), norm(), k->getPerc());
+  if (TestCode5) {
+    sprintf(buf + strlen(buf), "%sFaction :%s %s%s,   %sRank :%s %s%s\n\r",
+	    cyan(), norm(), k->newfaction()->getName(), norm(),
+	    cyan(), norm(), k->rank(), norm());
+  } else {
+    
+    sprintf(buf + strlen(buf), "%sFaction :%s %s,   %sFaction Percent :%s %.4f\n\r",
+	    cyan(), norm(), FactionInfo[k->getFaction()].faction_name,
+	    cyan(), norm(), k->getPerc());
 #if FACTIONS_IN_USE
-  sprintf(buf + strlen(buf), "%sPerc_0 :%s %.4f   %sPerc_1 :%s %.4f   %sPerc_2 :%s %.4f   %sPerc_3 :%s %.4f\n\r",
-    cyan(), norm(), k->getPercX(FACT_NONE),
-    cyan(), norm(), k->getPercX(FACT_BROTHERHOOD),
-    cyan(), norm(), k->getPercX(FACT_CULT),
-    cyan(), norm(), k->getPercX(FACT_SNAKE));
+    sprintf(buf + strlen(buf), "%sPerc_0 :%s %.4f   %sPerc_1 :%s %.4f   %sPerc_2 :%s %.4f   %sPerc_3 :%s %.4f\n\r",
+	    cyan(), norm(), k->getPercX(FACT_NONE),
+	    cyan(), norm(), k->getPercX(FACT_BROTHERHOOD),
+	    cyan(), norm(), k->getPercX(FACT_CULT),
+	    cyan(), norm(), k->getPercX(FACT_SNAKE));
 #endif
+  }
 //  sprintf(buf + strlen(buf), "%sFaction :%s %s\n\r",
 //    cyan(), norm(), FactionInfo[k->getFaction()].faction_name);
 
@@ -1517,6 +1524,24 @@ void TBeing::statBeing(TBeing *k)
 	sprintf(buf + strlen(buf), "State: Wary\n\r");
 	sprintf(buf + strlen(buf), "     Decreases chance of multiple cudgels\n\r");
 	break;
+
+      case AFFECT_DEFECTED:
+	sprintf(buf + strlen(buf), "Player recently defected from a faction.\n\r");
+	sprintf(buf + strlen(buf), "     Expires in %6d updates.\n\r", aff->duration);
+	break;
+	
+      case AFFECT_OFFER:
+ 
+	f = get_faction_by_ID(aff->modifier);
+	if (!f) {
+	  vlogf(LOG_FACT, "char had faction offer from non-existant faction in cmd_stat");
+	  break;
+	}
+	sprintf(buf + strlen(buf), "Received offer to join %s (%d).\n\r",f->getName(), f->ID);
+	sprintf(buf + strlen(buf), "     Expires in %6d updates.\n\r", aff->duration);
+	break;
+	
+		
 
       case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:

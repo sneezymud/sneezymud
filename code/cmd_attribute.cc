@@ -487,15 +487,18 @@ void TBeing::doAttribute(const char *arg)
     strcat(buf, buf2);
     strcat(buf, "\n\r");
     sendTo(buf);
-
+    if (TestCode5) {
+      sendTo(COLOR_BASIC, "You are a member of %s<1>, and have a rank of %s<1>.\n\r",
+	     newfaction()->getName(), rank());
+    } else {
 #if FACTIONS_IN_USE
-    sendTo("You are allied to %s, and have a %.4f%% rating.\n\r",
-          FactionInfo[getFaction()].faction_name, getPerc());
+      sendTo("You are allied to %s, and have a %.4f%% rating.\n\r",
+	     FactionInfo[getFaction()].faction_name, getPerc());
 #else
-    sendTo("You are allied to %s.\n\r",
-          FactionInfo[getFaction()].faction_name);
+      sendTo("You are allied to %s.\n\r",
+	     FactionInfo[getFaction()].faction_name);
 #endif
-
+    }
 #if SPEEF_MAKE_BODY
     vlogf(LOG_MISC, "Attribute argument: %s",cmdbuf);
     if(body)

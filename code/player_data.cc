@@ -670,9 +670,11 @@ void TPerson::loadFromSt(charFile *st)
   for (ij = MIN_FACTION; ij < MAX_FACTIONS; ij++)
     setPercX(st->f_percx[ij], ij);
 #endif
+#if 0
   faction.whichfaction = st->whichfaction;
   faction.align_ge = st->align_ge;
   faction.align_lc = st->align_lc;;
+#endif
 
   mud_assert(st->f_type >= MIN_FACTION && st->f_type < MAX_FACTIONS, "bad faction");
   setFaction(factionTypeT(st->f_type));
@@ -868,7 +870,7 @@ void TBeing::saveChar(sh_int load_room)
 
   // save career stats, saves info on desc, no need to use tmp
   saveCareerStats();
-
+  saveFactionStats();
   saveDrugStats();
 
 
@@ -928,6 +930,11 @@ void do_the_player_stuff(const char *name)
   // skip drug data
   if (strlen(name) > 6 && !strcmp(&name[strlen(name) - 6], ".drugs"))
     return;
+
+  // skip faction data
+  if (strlen(name) > 6 && !strcmp(&name[strlen(name) - 8], ".faction"))
+    return;
+
 
   // skip wizpowers data if there was an error up above.
   if (strlen(name) > 9 && !strcmp(&name[strlen(name) - 9], ".wizpower")) {

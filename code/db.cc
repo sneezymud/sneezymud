@@ -143,6 +143,12 @@ void bootDb(void)
     vlogf(LOG_MISC, "Bad loading of factions.");
     exit(0);
   }
+#if 1
+  if (!load_newfactions()) {
+    vlogf(LOG_MISC, "Bad loading of new factions.");
+    exit(0);
+  }
+#endif
 
   lockmess.erase();
 
@@ -596,6 +602,7 @@ dirTypeT rotate_dir(dirTypeT dir, int rotate){
 
 void bootHomes(void)
 {
+  return;
   int template_start=0, template_end=0, template_i=0;
   int plot_start=0, plot_end=0, plot_i=0, plan_i=0, keynum=0;
   TRoom *src, *dest;

@@ -41,6 +41,7 @@ const short int ROOM_WARD_1            = 13142;
 const short int ROOM_WARD_2            = 9734;
 const short int ROOM_TREE_BRIDGE       = 15277;
 const short int ROOM_SLEEPTAG_CONTROL  = 23599;
+const short int ROOM_FACTION_BUREAU    = 395;
 
 // ------------------------- OBJS
 
@@ -378,7 +379,7 @@ const short int THRALL_DEMON       =31303;
 const short int MOB_JUJU_BUNNY     =4497;
 const short int MOB_JUJU_MARE      =31307;
 const short int MOB_JUJU_TETRARCH  =15104;
-
+const short int MOB_FACTION_REGISTRAR = 360;
 
 #endif
 

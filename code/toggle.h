@@ -327,7 +327,10 @@ const int TOG_IMMORTAL_BLANK_9 = 95;
 const int TOG_IMMORTAL_BLANK_10 = 96;
 // end recycle
 
-const int MAX_TOG_INDEX       = 230;  // move and change
+const int TOG_HAS_PAID_FACT_FEE = 230;
+const int TOG_HAS_CREATED_FACTION = 231;
+
+const int MAX_TOG_INDEX       = 232;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 

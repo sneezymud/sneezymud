@@ -933,6 +933,10 @@ int mapSpellnumToFile(spellNumT stt)
       return 2522;
     case AFFECT_WARY:
       return 2523;
+    case AFFECT_DEFECTED:
+      return 2524;
+    case AFFECT_OFFER:
+      return 2525;
     case SPELL_FIRE_BREATH:
     case SPELL_CHLORINE_BREATH:
     case SPELL_FROST_BREATH:

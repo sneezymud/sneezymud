@@ -2,25 +2,9 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: client.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
+//      "client.cc" - All functions and routines related to client/server 
 //
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//      "client.cc" - All functions and routines related toclient/server 
-//
-//      The client/server protocol coded by Russ Russell, Februrary 1994,
-//      Changed to c++ October 1994
-//      Last revision, August 2, 1999.
+//      The client/server protocol coded by Russ Russell
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -50,13 +34,13 @@ void Descriptor::clientf(const char *msg,...)
   // with other text and missed by the client interpreter Russ - 061299
   outputProcessing();
 
-  if (client) {
+  if (m_bIsClient) {
     if (msg) {
       va_start(ap, msg);
       vsprintf(messageBuffer, msg, ap);
       va_end(ap);
       sprintf(tmp, "\200%s\n", messageBuffer);
-      (&output)->putInQ(tmp);
+      output.putInQ(tmp);
     }
   }
 }
@@ -74,7 +58,7 @@ void TRoom::clientf(const char *msg, ...)
     sprintf(tmp, "\200%s\n", messageBuffer);
   }
   for (t = stuff; t; t = t->nextThing) {
-    if (t->isPc() && t->desc && t->desc->client)
+    if (t->isPc() && t->desc && t->desc->m_bIsClient)
       t->sendTo(tmp);
   } 
 }
@@ -139,13 +123,13 @@ void Descriptor::send_client_prompt(int, int update)
   if (connected || !(ch = character))
     return;
 
-  if (ch->fight() && ch->awake() && ch->sameRoom(ch->fight())) {
+  if (ch->fight() && ch->awake() && ch->sameRoom(*ch->fight())) {
     ratio=min(10, max(0, ((ch->fight()->getHit() * 9) / ch->fight()->hitLimit())));
     strcpy(c_name, ch->persfname(ch->fight()).c_str());
     strcpy(cond, prompt_mesg[ratio]);
     tank = ch->fight()->fight();
     if (tank) {
-      if (ch->sameRoom(tank)) {
+      if (ch->sameRoom(*tank)) {
         strcpy(t_name, ch->persfname(tank).c_str());
         ratio = min(10, max(0, ((tank->getHit() * 9) / tank->hitLimit())));
         strcpy(t_cond, prompt_mesg[ratio]);
@@ -153,11 +137,13 @@ void Descriptor::send_client_prompt(int, int update)
     }
     clientf("%d|%s|%s|%s|%s", CLIENT_FIGHT, c_name, cond, t_name, t_cond);
   }
-  if ((update & CHANGED_MANA) || (update & CHANGED_PIETY)) {
+  if ((update & CHANGED_MANA) || (update & CHANGED_PIETY) || (update & CHANGED_LIFEFORCE)) {
     char manaBuf[80], maxManaBuf[80];
     if (ch->hasClass(CLASS_CLERIC) || ch->hasClass(CLASS_DEIKHAN)) {
       sprintf(manaBuf, "%.1f", ch->getPiety());
       strcpy(maxManaBuf, "100");
+    } else if (ch->hasClass(CLASS_SHAMAN)) {
+      sprintf(manaBuf, "%d", ch->getLifeforce());
     } else {
       sprintf(manaBuf, "%d", ch->getMana());
       sprintf(maxManaBuf, "%d", ch->manaLimit());
@@ -189,11 +175,8 @@ void Descriptor::send_client_prompt(int, int update)
     clientf("%d|%d", CLIENT_POS, ch->getPosition());
 
   if (update & CHANGED_MUD) {
-    int tmp_num = (time_info.hours / 2);
-    clientf("%d|%2d:%s %s", CLIENT_MUDTIME,
-          (!(tmp_num % 12) ? 12 : (tmp_num % 12)),
-          (!(time_info.hours % 2) ? "00" : "30"),
-          ((time_info.hours >= 24) ? "PM" : "AM"));
+    clientf("%d|%s", CLIENT_MUDTIME,
+       hmtAsString(hourminTime()).c_str());
 
   }
   //prompt_mode = -1;
@@ -218,7 +201,8 @@ void Descriptor::send_client_exits()
   clientf("%d|%d|%d", CLIENT_EXITS, bits, ch->isImmortal());
 }
 
-// returns DELETE_THIS
+// returns DELETE_THIS to delete the descriptor
+// returns DELETE_VICT if the desc->character should be toasted
 int Descriptor::read_client(char *str2)
 {
   Descriptor *k, *k2;
@@ -231,13 +215,14 @@ int Descriptor::read_client(char *str2)
 
   strcpy(buf, nextToken('|', 255, str2).c_str());
   if (sscanf(buf, "%d", &type) != 1) {
-    vlogf(9, "Incorrect type (%s) in read_client", buf);
+    vlogf(LOG_CLIENT, "Incorrect type (%s) in read_client", buf);
     return FALSE;
   }
   switch (type) {
     case CLIENT_INIT:
+      m_bIsClient = TRUE;
+
       if (!Clients) {
-        client = TRUE;
         clientf("%d|Clients not allowed at this time. Try later!|%d", 
                 CLIENT_ERROR, ERR_NOT_ALLOWED);
         outputProcessing();
@@ -245,7 +230,6 @@ int Descriptor::read_client(char *str2)
       }
       if (WizLock) {
         // this may need better handling to let wizs in, but, oh well
-        client = TRUE;
         clientf("%d|The mud is presently Wizlocked.|%d", 
                 CLIENT_ERROR, ERR_NOT_ALLOWED);
         if (!lockmess.empty())
@@ -255,7 +239,6 @@ int Descriptor::read_client(char *str2)
       }
       strcpy(buf, nextToken('|', 255, str2).c_str());
       vers = atoi(buf);
-      client = TRUE;
       if (vers <= BAD_VERSION) {
         clientf("%d|Your client is an old version. The latest version is %d. Please upgrade! You can upgrade from http://sneezy.stanford.edu/client/client.html.|%d", CLIENT_ERROR, CURRENT_VERSION, ERR_BAD_VERSION);
         outputProcessing();
@@ -268,9 +251,9 @@ int Descriptor::read_client(char *str2)
       while ((&output)->takeFromQ(dummy));
       if (account) {
         if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) 
-          vlogf(0, "Client Connection from *****Masked*****");
+          vlogf(LOG_PIO, "Client Connection from *****Masked*****");
         else 
-          vlogf(0, "Client Connection from %s", host);
+          vlogf(LOG_PIO, "Client Connection from %s", host);
       }
       break;
     case CLIENT_ROOM: {
@@ -572,9 +555,9 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
             objCost cost;
 
             if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) 
-              vlogf(0, "%s[*masked*] has reconnected (client)  (account: *masked*).", ch->getName());
+              vlogf(LOG_PIO, "%s[*masked*] has reconnected (client)  (account: *masked*).", ch->getName());
             else 
-              vlogf(0, "%s[%s] has reconnected (client)  (account: %s).", ch->getName(), host, account->name);
+              vlogf(LOG_PIO, "%s[%s] has reconnected (client)  (account: %s).", ch->getName(), host, account->name);
 
             ch->recepOffer(NULL, &cost);
             dynamic_cast<TPerson *>(ch)->saveRent(&cost, FALSE, 1);
@@ -582,6 +565,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
           act("$n has reconnected.", TRUE, ch, 0, 0, TO_ROOM);
           ch->loadCareerStats();
           ch->loadDrugStats();
+	  ch->loadFactionStats();
           if (ch->getHit() < 0) 
             dynamic_cast<TPerson *>(ch)->autoDeath();
 
@@ -619,28 +603,34 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       clientCreateChar(str2);
       break;
     case CLIENT_NORMAL:
-      if (character->isCombatMode(ATTACK_BERSERK)) {
-        character->sendTo("You are berserking.\n\r");
-        break;
+      if (character) {
+        if (character->isCombatMode(ATTACK_BERSERK)) {
+          character->sendTo("You are berserking.\n\r");
+          break;
+        }
+        character->sendTo("Setting attack mode to %snormal%s\n\r", character->redBold(), character->norm());
+        character->setCombatMode(ATTACK_NORMAL);
       }
-      character->sendTo("Setting attack mode to %snormal%s\n\r", character->redBold(), character->norm());
-      character->setCombatMode(ATTACK_NORMAL);
       break;
     case CLIENT_OFFENSIVE:
-      if (character->isCombatMode(ATTACK_BERSERK)) {
-        character->sendTo("You are berserking.\n\r");
-        break;
+      if (character) {
+        if (character->isCombatMode(ATTACK_BERSERK)) {
+          character->sendTo("You are berserking.\n\r");
+          break;
+        }
+        character->sendTo("Setting attack mode to %soffensive%s\n\r", character->redBold(), character->norm());
+        character->setCombatMode(ATTACK_OFFENSE);
       }
-      character->sendTo("Setting attack mode to %soffensive%s\n\r", character->redBold(), character->norm());
-      character->setCombatMode(ATTACK_OFFENSE);
       break;
     case CLIENT_DEFENSIVE:
-      if (character->isCombatMode(ATTACK_BERSERK)) {
-        character->sendTo("You are berserking.\n\r");
-        break;
+      if (character) {
+        if (character->isCombatMode(ATTACK_BERSERK)) {
+          character->sendTo("You are berserking.\n\r");
+          break;
+        }
+        character->sendTo("Setting attack mode to %sdefensive%s\n\r", character->redBold(), character->norm());
+        character->setCombatMode(ATTACK_DEFENSE);
       }
-      character->sendTo("Setting attack mode to %sdefensive%s\n\r", character->redBold(), character->norm());
-      character->setCombatMode(ATTACK_DEFENSE);
       break;
     case CLIENT_CHECKCHARNAME:
       strcpy(buf, nextToken('|', 255, str2).c_str());
@@ -715,14 +705,47 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
           clientf("%d|0|%d", CLIENT_CHECKACCOUNTNAME, ERR_BADACCOUNT_PASSWORD);
         }
         if (IS_SET(account->flags, ACCOUNT_BANISHED)) {
+          writeToQ("Your account has been flagged banished.\n\r");
+          sprintf(buf, "If you do not know the reason for this, contact %s\n\r",
+                MUDADMIN_EMAIL);
+          writeToQ(buf);
+          outputProcessing();
+          return DELETE_THIS;
         }
         if (IS_SET(account->flags, ACCOUNT_EMAIL)) {
+          writeToQ("The email account you entered for your account is thought to be bogus.\n\r");
+          sprintf(buf, "You entered an email address of: %s\n\r", account->email);
+          writeToQ(buf);
+          sprintf(buf,"To regain access to your account, please send an email\n\rto: %s\n\r",
+              MUDADMIN_EMAIL);
+          writeToQ(buf);
+          writeToQ("Indicate the name of your account, and the reason for the wrong email address.\n\r");
+          outputProcessing();
+          return DELETE_THIS;
         }
         // let's yank the password out of their history list
         strcpy(history[0], "");
 
-        if (WizLock) {
+        if (WizLock && !IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
+          writeToQ("The game is currently wiz-locked.\n\r^G^G^G^G^G");
+          if (!lockmess.empty()) {
+            page_string(lockmess.c_str(), SHOWNOW_YES);
+          } else {
+            FILE *signFile;
+  
+            if ((signFile = fopen(SIGN_MESS, "r"))) {
+              fclose(signFile);
+              string iostring;
+              file_to_string(SIGN_MESS, iostring);
+              page_string(iostring.c_str(), SHOWNOW_YES);
+            }
+          }
+          // we ought to allow for them to enter the password here, but oh well
+
+          outputProcessing();
+          return DELETE_THIS;
         }
+
         account->status = TRUE;
         if (!IS_SET(account->flags, ACCOUNT_BOSS)) {
         }
@@ -730,8 +753,124 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       }
       break;
     }
+    case CLIENT_NEWACCOUNT: {
+      char aname[256];
+      char apassword[256];
+      char email[256];
+      char timezone[256];
+      char listserver[256];
+      static char *crypted;
+
+      strcpy(aname, nextToken('|', 255, str2).c_str());
+      strcpy(apassword, nextToken('|', 255, str2).c_str());
+      strcpy(email, nextToken('|', 255, str2).c_str());
+      strcpy(timezone, nextToken('|', 255, str2).c_str());
+      strcpy(listserver, nextToken('|', 255, str2).c_str());
+
+      account = new TAccount;
+      // Does account exist or is it a bogus name? This function will return TRUE is so
+      if (checkForAccount(aname, TRUE)) {
+        clientf("%d|Account name already exists! Please try another.", CLIENT_ERROR);
+        delete account;
+        account = NULL;
+	return FALSE;
+      } 
+      if (strlen(aname) >= 10) {
+        clientf("%d|Account name must be less than 10 characters! Try another name please.", CLIENT_ERROR);
+        delete account;
+        account = NULL;
+        return FALSE;
+      }
+      strcpy(account->name, aname);
+
+      if (strlen(apassword) < 5) {
+        clientf("%d|Password must be longer than 5 characters.", CLIENT_ERROR);
+        delete account;
+        account = NULL;
+        return FALSE;
+      } else if (strlen(apassword) > 10) {
+        clientf("%d|Password must be shorter than 10 characters.", CLIENT_ERROR);
+        delete account;
+        account = NULL;
+        return FALSE;
+      }
+      if (!hasDigit(apassword)) {
+        clientf("%d|Password must contain at least 1 numerical digit.", CLIENT_ERROR);
+        delete account;
+        account = NULL;
+        return FALSE;
+      }
+      crypted =(char *) crypt(apassword, account->name);
+      strncpy(account->passwd, crypted, 10);
+      *(account->passwd + 10) = '\0';
+
+      if (illegalEmail(email, this, SILENT_YES)) {
+        clientf("%d|The email address you entered failed validity tests, please try another one.", CLIENT_ERROR);
+        delete account;
+        account = NULL;
+        return FALSE;
+      }
+      strcpy(account->email, email);
+
+      if (!*timezone || (atoi(timezone) > 23) || (atoi(timezone) < -23)) {
+        clientf("%d|Invalid timezone please enter a number between 23 and -23!", CLIENT_ERROR);
+        delete account;
+        account = NULL;
+        return FALSE;
+      }
+      account->time_adjust = atoi(timezone);
+
+      switch(*listserver) {
+        case '1':
+          sprintf(buf,  "/usr/lib/sendmail -f%s russrussell@icqmail.com < listserver.temp", account->email);      
+          vsystem(buf);                                                                                           
+          break;                                                                                                  
+        case '2':                                                                                                 
+          break;                                                                                                  
+      }                                                                                                           
+      // Account term
+      account->term = TERM_NONE;
+
+      // Save all information
+      FILE *fp;
+      char buf[256], buf2[256];
+      accountFile afp;
+
+      sprintf(buf, "account/%c/%s/account", LOWER(account->name[0]), lower(account->name).c_str());
+      if (!(fp = fopen(buf, "w"))) {
+        sprintf(buf2, "account/%c/%s", LOWER(account->name[0]), lower(account->name).c_str());
+        if (mkdir(buf2, 0770)) {
+          vlogf(LOG_CLIENT, "Can't make directory for saveAccount (%s)", lower(account->name).c_str());
+          return FALSE;
+        }
+        if (!(fp = fopen(buf, "w"))) {
+          vlogf(LOG_CLIENT, "Big problems in saveAccount (s)", lower(account->name).c_str());
+          return FALSE;
+        }
+      }
+      // If we get here, fp should be valid
+      memset(&afp, '\0', sizeof(afp));
+    
+      strcpy(afp.email, account->email);
+      strcpy(afp.passwd, account->passwd);
+      strcpy(afp.name, account->name);
+    
+      afp.birth = account->birth;
+      afp.term = account->term;
+      afp.time_adjust = account->time_adjust;
+      afp.flags = account->flags;
+    
+      fwrite(&afp, sizeof(accountFile), 1, fp);
+      fclose(fp);
+    
+      accStat.account_number++;
+    
+      vlogf(LOG_MISC, "New Client Account: '%s' with email '%s'", account->name, account->email);
+      clientf("%d|1", CLIENT_CHECKACCOUNTNAME);
+      break;
+    } 
     default:
-      vlogf(9, "Bad type in read_client (%d)", type);
+      vlogf(LOG_CLIENT, "Bad type in read_client (%d)", type);
       break;
   }
   return TRUE;
@@ -814,8 +953,17 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
   }
   account->status = TRUE;
 
+#if 1
+  // the non-client side presumes that character is ALWAYS newed and then
+  // loadFromSt done.  Some events (especially if swapping from one char
+  // to another) rely on this.  So...
+  delete character;
+  
+  character = new TPerson(this);
+#else
   if (!character) 
     character = new TPerson(this);
+#endif
   
   if (_parse_name(charname, tmp_name)) {
     clientf("%d|No such character exists! Reenter character name or create a new character.|%d", CLIENT_ERROR, tmp_name, ERR_BAD_NAME);
@@ -987,10 +1135,10 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
         objCost cost;
 
         if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
-          vlogf(0, "%s[*masked*] has reconnected (client 2)  (account: *masked*).",
+          vlogf(LOG_PIO, "%s[*masked*] has reconnected (client 2)  (account: *masked*).",
                 character->getName());
         } else {
-          vlogf(0, "%s[%s] has reconnected (client 2)  (account: %s).",
+          vlogf(LOG_PIO, "%s[%s] has reconnected (client 2)  (account: %s).",
                      character->getName(), host, account->name);
         }
 
@@ -1000,6 +1148,7 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
       act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
       tmp_ch->loadCareerStats();
       tmp_ch->loadDrugStats();
+      tmp_ch->loadFactionStats();
       if (tmp_ch->getHit() < 0) 
         dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
       
@@ -1023,10 +1172,10 @@ new account.|%d", CLIENT_ERROR, account->name, ERR_BAD_NAME);
   }
   if (should_be_logged(character)) {
     if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
-      vlogf(0, "%s[*masked*] has connected (client)  (account: *masked*).",
+      vlogf(LOG_PIO, "%s[*masked*] has connected (client)  (account: *masked*).",
             character->getName());
     } else {
-      vlogf(0, "%s[%s] has connected (client)  (account: %s).",
+      vlogf(LOG_PIO, "%s[%s] has connected (client)  (account: %s).",
                  character->getName(), host, account->name);
     }
   }
@@ -1058,7 +1207,7 @@ void TBeing::fixClientPlayerLists(bool lost)
   char buf[256] = "\0";
 
   for (d = descriptor_list; d; d = d->next) {
-    if (!d->client || !d->character)
+    if (!d->m_bIsClient || !d->character)
       continue;
 
     if (isLinkdead() && d->character->isImmortal()) 
@@ -1084,7 +1233,7 @@ void TBeing::fixClientPlayerLists(bool lost)
       }
     }
   }
-  if (desc && desc->client) {
+  if (desc && desc->m_bIsClient) {
     desc->account->term = TERM_NONE;
     remPlayerAction(PLR_VT100);
     remPlayerAction(PLR_ANSI);
@@ -1111,10 +1260,16 @@ void processStringForClient(string &sb)
 
 int TBeing::doClientMessage(const char *arg)
 {
+  
+
   if (!desc)
      return FALSE;
 
-  if (!desc->client && GetMaxLevel() <= MAX_MORT) {
+  sendTo("Clientmessage has been disabled, doing shout instead.\n\r");
+  doShout(arg);
+  return TRUE;
+
+  if (!desc->m_bIsClient && GetMaxLevel() <= MAX_MORT && strcmp("Dash", getName())) {
     sendTo("This command is only available for users of the SneezyMUD client (http://sneezy.stanford.edu/client).\n\r");
     return FALSE;
   }
@@ -1124,7 +1279,7 @@ int TBeing::doClientMessage(const char *arg)
   // I dont want immortals or anyone non client getting these
   // message, PLEASE DONT EDIT
   for (i = descriptor_list; i; i = i->next) {
-    if ((b = i->character) && (b != this) && !i->connected && i->client)
+    if ((b = i->character) && (b != this) && !i->connected && (i->m_bIsClient || !strcmp("Dash", getName())))
       b->sendTo(COLOR_COMM, "<p>CLIENT<1> (%s): %s\n\r", getName(), arg);  
   }
   sendTo(COLOR_COMM, "<p>CLIENT<1>: %s\n\r", arg);
@@ -1169,12 +1324,12 @@ lower(account->name).c_str());
     sprintf(buf2, "account/%c/%s", LOWER(account->name[0]),
 lower(account->name).c_str());
     if (mkdir(buf2, 0770)) {
-      vlogf(10, "Can't make directory for saveAccount (%s)",
+      vlogf(LOG_CLIENT, "Can't make directory for saveAccount (%s)",
 lower(account->name).c_str());
       return FALSE;
     }
     if (!(fp = fopen(buf, "w"))) {
-      vlogf(10, "Big problems in saveAccount (s)",
+      vlogf(LOG_CLIENT, "Big problems in saveAccount (s)",
 lower(account->name).c_str());
       return FALSE;
     }
@@ -1194,7 +1349,9 @@ lower(account->name).c_str());
   fwrite(&afp, sizeof(accountFile), 1, fp);
   fclose(fp);
 
-  account_number++;
+  accStat.account_number++;
+
+  vlogf(LOG_MISC, "New Client Account: '%s' with email '%s'", account->name, account->email);
 
   return TRUE;
 }
@@ -1423,13 +1580,13 @@ int Descriptor::clientCreateChar(char *arg)
 
   ch->convertAbilities();
   ch->affectTotal();
-  vlogf(9, "%s [%s] new player.", ch->getName(), host);
+  vlogf(LOG_PIO, "%s [%s] new player.", ch->getName(), host);
   clientf("%d", CLIENT_NEWCHAR);
 
   enum connectStateT oldconnected = connected;
   connected = CON_PLYNG;
   ch->desc = this;
-  player_count++;
+  accStat.player_count++;
 
   dynamic_cast<TPerson *>(ch)->doStart();
   ch->saveChar(ROOM_AUTO_RENT);
@@ -1615,14 +1772,14 @@ void Descriptor::clientShoppingList(const char *argument, TMonster *keeper, int 
     strcpy(buf2, "Nothing!\n\r");
     sb += buf2;
 
-    page_string(sb.c_str(), 0, TRUE);
+    page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
 
     keeper->autoCreateShop(shop_nr);
     sprintf(buf2, "%s/%d", SHOPFILE_PATH, shop_nr);
     keeper->saveItems(buf2);
     return;
   }
-  page_string(sb.c_str(), 0, TRUE);
+  page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
   return;
 }
 

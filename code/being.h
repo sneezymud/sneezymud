@@ -377,6 +377,7 @@ class factionData {
     int align_ge;              // alignment on good/evil axis
     int align_lc;              // alignment on chaotic/lawful axis
     int whichfaction;
+    int rank;                  // rank in the newfaction system
     factionData();
     factionData(const factionData &a);
     factionData & operator=(const factionData &a);
@@ -1282,6 +1283,8 @@ class TBeing : public TThing {
     void loadCareerStats();
     void saveDrugStats();
     void loadDrugStats();
+    void saveFactionStats();
+    void loadFactionStats();
     bool saveFollowers(bool);
     bool loadFollowers();
     void goThroughPortalMsg(const TPortal *) const;
@@ -1380,6 +1383,19 @@ class TBeing : public TThing {
     int doTurn(const char *, TBeing *);
     virtual void doMedit(const char *);
     virtual void doSEdit(const char *);
+    void edit_faction(const char *);
+    void show_faction(const char *);
+    void add_faction(const char *);
+    void doJoin(const char *);
+    void doRecruit(const char *);
+    void doDefect(const char *);
+    bool hasOffer(TFaction *);
+    void removeOffers();
+    void addOffer(TFaction *);
+    bool recentlyDefected();
+    void setDefected();
+
+
     int doMendLimb(const char *);
     void doYoginsa();
     void doMeditate();
@@ -1642,6 +1658,12 @@ class TBeing : public TThing {
       heroNum = num;
     }
     void addToHero(int num);
+    // new faction functions - dash
+    TFaction * newfaction() const;
+    const char * rank();
+    bool canCreateFaction(bool);
+    bool hasPermission(unsigned int);
+
     factionTypeT getFaction() const;
     void setFaction(factionTypeT num);
     double getPerc() const;

@@ -1219,6 +1219,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case AFFECT_HORSEOWNED:
     case AFFECT_GROWTH_POTION:
     case AFFECT_WARY:
+    case AFFECT_DEFECTED:
+    case AFFECT_OFFER:
     case LAST_ODDBALL_AFFECT:
       break;
   }

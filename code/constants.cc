@@ -1857,6 +1857,49 @@ const char * const trap_effects[MAX_TRAP_EFF] =
   "Thrown_armed_3",
 };
 
+
+const char * heraldcodes[] =
+{
+  "<1>", // "none",
+  "<b>", // "blue",
+  "<r>", // "red",
+  "<g>", // "green",
+  "<W>", // "white",
+  "<p>", // "purple",
+  "<c>", // "cyan",
+  "<o>", // "orange",
+  "<Y>", // "yellow",
+  "<k>", // "gray",
+  "<R>", // "boldred",
+  "<G>", // "boldgreen",
+  "<B>", // "boldblue",
+  "<P>", // "boldpurple",
+  "<C>", // "boldcyan",
+  "<1>"  // "\n"
+};
+
+
+const char * heraldcolors[] =
+{
+  "none",
+  "blue",
+  "red",
+  "green",
+  "white",
+  "purple",
+  "cyan",
+  "orange",
+  "yellow",
+  "gray",
+  "boldred",
+  "boldgreen",
+  "boldblue",
+  "boldpurple",
+  "boldcyan",
+  "\n"
+};
+
+
 // some factors from stdsneezy.h
 const int PROD_GAMEPORT = 7900;
 const int BETA_GAMEPORT = 5678;
