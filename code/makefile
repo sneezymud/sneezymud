@@ -9,7 +9,6 @@
 ###############################################################################
 NAME = sneezy.2
 VERSION_FILE = lib/txt/version.new
-NAME2 = sneezy.insure
 
 ###############################################################################
 #                                Type-Defines                                 #
@@ -18,15 +17,9 @@ NAME2 = sneezy.insure
 # CC = checkerg++
 # CC = /usr/pubsw/bin/g++
 # GPROFF=1    # Use with care, mud stays up for about 45 minutes with this on.
-# USEINSURE=1 # Uncomment this if you uncomment the CC = insure above
 # USECRYPT=1  # Uncomment to have all the crypt stuff
-# BATOPR = 1    # Uncomment to test something Batopr is testing
 
-ifdef USEINSURE
-  CC = insure
-else
-  CC = /usr/bin/g++
-endif
+CC = /usr/bin/g++
 
 ###############################################################################
 #                    Base Values (Do Not Modify/Add Here)                     #
@@ -38,7 +31,6 @@ CFLAGS = # empty
 #                                   CFLAGS                                    #
 ###############################################################################
 # CFLAGS +=-static      # link statically
-# CFLAGS +=-Zvm         # insure verbose mode (spamy)
 ifdef GPROFF
 CFLAGS +=-pg            # add gprof mapping
 endif
@@ -51,28 +43,13 @@ CFLAGS +=-g             # debugger
 CFLAGS +=-DLINUX        # compiling on Linux
 # CFLAGS +=-DSLOW       # compiling on a slow processor machine
 CFLAGS +=-DFAST         # compiling on a fast processor machine
+CFLAGS +=-O4            # optimize code
+OBJDIR = objs/
 
-ifdef BATOPR
-#  CFLAGS +=-O4            # optimize code
-  OBJDIR = bat_objs/
-else
-  ifdef USEINSURE
-#    CFLAGS +=-O4            # optimize code
-#  with the current .psrc file the O4 flag is ignored
-#  see the Parasoft Manual for details
-
-    OBJDIR = insure_objs/
-  else
-    CFLAGS +=-O4            # optimize code
-    OBJDIR = objs/
-  endif
-endif
 
 #CFLAGS +=-O3           # optimize code
 #CFLAGS +=-fhandle-exceptions
 #CFLAGS +=-frtti
-# These are valid, but removed for insure
-ifndef USEINSURE
 CFLAGS +=-Wall                  # all rec. warnings shown (includes all above)
 CFLAGS +=-Wpointer-arith        # looks for things that depend on sizeof()
 CFLAGS +=-Wcast-qual            # Warns about using casting to remove const
@@ -85,7 +62,7 @@ CFLAGS +=-Wmissing-declarations # global function without a declaration
 CFLAGS +=-Wnested-externs       # extern found within a func
 CFLAGS +=-Woverloaded-virtual   # virtual without a declaration in base class
 CFLAGS +=-Werror                # turns a warning into an error
-endif
+
 # **** Aggregates are bad, but are sometimes necessary.  We use them though.
 # CFLAGS +=-Waggregate-return # checks for structures passed on the stack
 # **** disabled as is invalid warning on LINUX (?)
@@ -130,7 +107,7 @@ LDFLAGS +=/usr/lib/libcrypt.a
 # LDFLAGS +=-Bdynamic -lcrypt
 # LDFLAGS +=-Bstatic -lcrypt
 LDFLAGS +=-lcrypt
-LDFLAGS +=/usr/pubsw/lib/libcrypt.a # enable for insight
+#LDFLAGS +=/usr/pubsw/lib/libcrypt.a # enable for insight
 else
 LDFLAGS +=/usr/lib/libcrypt.a # enable for insight
 endif
@@ -327,14 +304,8 @@ LIBS =	libmisc.so libcmd.so libspec.so libobj.so libtask.so libdisc.so \
 PRODLIBS := $(sort $(addprefix /mud/prod/objs/, $(LIBS)))
 LIBS := $(sort $(addprefix $(OBJDIR), $(LIBS)))
 
-ifdef USEINSURE
-all: $(NAME2)
-#insure.o
-#(CC) -o jjb insure.o $(LDFLAGS)
-
-else
 all: $(LIBS) $(NAME)
-endif
+
 
 # normal executable
 $(NAME) : $(OBJDIR)main.o
@@ -344,15 +315,6 @@ $(NAME) : $(OBJDIR)main.o
 	@echo "`date`" > $(VERSION_FILE)
 	@echo \*\*\* Make Process Complete
 	@echo "`date`"
-
-$(NAME2) : main.o
-	@echo \*\*\* Making Final Link: $(NAME2)
-	@$(CC) -o $(NAME2) $(OBJDIR)main.o $(LDFLAGS)
-	@rm -f $(VERSION_FILE)
-	@echo "`date`" > $(VERSION_FILE)
-	@echo \*\*\* Insure Compile Process Complete
-	@echo "`date`"
-
 
 ### these are our dynamic libraries
 $(OBJDIR)libmisc.so:	$(LIBMISC)
