@@ -1,5 +1,21 @@
 #18725
-Peel - Grimhaven Financial District~
-18749 25 2 0
+Peel - Pleasant Acres~
+18749 25 2 1
+
+D 0 18728 0 1        A Shady Trail -> Inside A Thicket
+D 0 18728 3 1        A Shady Trail -> A Dusty Shack
+D 0 18729 0 2        A Dusty Shack -> A Barn
+D 0 18729 1 1        A Dusty Shack -> A Shady Trail
+D 0 18730 2 2        A Barn -> A Dusty Shack
+D 0 18731 0 2        Inside A Thicket -> A Small Field
+D 0 18731 2 1        Inside A Thicket -> A Shady Trail
+D 0 18732 2 2        A Small Field -> Inside A Thicket
+D 0 18738 3 1        A Small Field -> A Small Field
+D 0 18741 1 1        A Small Field -> A Small Field
+
+
+M 0 18725 1 18731   guard
+M 0 18726 1 18730   lazy
+
 S
 
