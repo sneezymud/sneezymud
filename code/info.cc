@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: info.cc,v $
+// Revision 1.6  1999/10/12 03:00:08  batopr
+// Fixed renew display prob in describeAffect
+//
 // Revision 1.5  1999/10/07 17:20:21  batopr
 // Changed check on aff->renew in describeAffects
 //
@@ -3108,7 +3111,7 @@ void TBeing::describeAffects(TBeing *ch)
         continue;
       else if (discArray[aff->type]) {
         if ((ch == this) && strcmp(discArray[aff->type]->name, "sneak")) {
-          if (aff->renew >= 0) {
+          if (aff->renew < 0) {
             sendTo("Affected : '%s'\t: Approx. Duration : %s\n\r",
                  discArray[aff->type]->name,
                  describeDuration(this, aff->duration).c_str());
