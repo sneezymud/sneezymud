@@ -41,6 +41,7 @@
 #include "obj_scroll.h"
 #include "obj_staff.h"
 #include "obj_wand.h"
+#include "liquids.h"
 
 sstring describeDuration(const TBeing *ch, int dur)
 {

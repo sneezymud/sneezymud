@@ -13,6 +13,7 @@
 #include "obj_book.h"
 #include "obj_base_cup.h"
 #include "obj_drinkcon.h"
+#include "liquids.h"
 
 void TBaseCup::lookObj(TBeing *ch, int) const
 {

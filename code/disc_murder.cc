@@ -9,7 +9,7 @@
 #include "obj_base_cup.h"
 #include "obj_drinkcon.h"
 #include "obj_arrow.h"
-
+#include "liquids.h"
 
 static void playBackstab(const TRoom *rp)
 {

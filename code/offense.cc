@@ -17,6 +17,7 @@
 #include "obj_drinkcon.h"
 #include "obj_base_clothing.h"
 #include "obj_bag.h"
+#include "liquids.h"
 
 // DELETE_THIS implies this needs to be deleted
 int TBeing::doHit(const sstring &argument, TBeing *vict)

@@ -11,6 +11,7 @@
 #include "stdsneezy.h"
 #include "obj_base_cup.h"
 #include "obj_drinkcon.h"
+#include "liquids.h"
 
 TBaseCup::TBaseCup() :
   TObj(),
