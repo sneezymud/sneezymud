@@ -1693,7 +1693,7 @@ int TPerson::doAt(const char *argument, bool isFarlook)
            tStString(""),
            tStBuffer("");
 
-    tStArgument = two_arg(tStArgument, tStString, tStBuffer);
+    tStArgument = argument_parser(tStArgument, tStString, tStBuffer);
 
     if (!is_abbrev(tStString.c_str(), "yes")) {
       sendTo("That room, or the creature's room you chose, is a particular room.\n\r");
@@ -1764,7 +1764,7 @@ int TBeing::doGoto(const string & argument)
 
   string buf,
          tStString;
-  two_arg(argument, buf, tStString);
+  argument_parser(argument, buf, tStString);
 
   if (buf.empty()) {
     char tString[10];
@@ -2147,7 +2147,7 @@ void TPerson::doSwitch(const char *argument)
   if (powerCheck(POWER_SWITCH))
     return;
 
-  two_arg(tStArg, tStMobile, tStBuffer);
+  argument_parser(tStArg, tStMobile, tStBuffer);
 
   doLoadCmd = is_abbrev(tStMobile, "load");
 
@@ -4271,8 +4271,9 @@ void TBeing::doAccess(const char *)
 
 void TPerson::doAccess(const char *arg)
 {
-  char arg1[256], arg2[256], npasswd[128], pass[20];
-  char buf[MAX_STRING_LENGTH];
+  string arg1, arg2, buf, tmpbuf;
+  char npasswd[128], pass[20];
+  char filebuf[MAX_STRING_LENGTH];
   char *birth, *tmstr, birth_buf[40];
   charFile st;
   int which, lev, Class, ci;
@@ -4302,17 +4303,17 @@ void TPerson::doAccess(const char *arg)
   if (!isImmortal())
     return;
 
-  arg = two_arg(arg, arg1, arg2);
+  argument_parser(arg, arg1, arg2);
 
-  if (!*arg1) {
+  if(arg1.empty()){
     sendTo("Syntax: access <player> (<changes>)\n\r");
     return;
   }
-  if (!load_char(arg1, &st)) {
+  if (!load_char(arg1.c_str(), &st)) {
     sendTo("Can't find that player file.\n\r");
     return;
   }
-  if (*arg2) {
+  if(!arg2.empty()){
     for(ci = 0;ci <= RANGER_LEVEL_IND;ci++) {
       if (st.level[ci] > GetMaxLevel()) {
         sendTo("You can't access a player a higher level than you.\n\r");
@@ -4320,8 +4321,8 @@ void TPerson::doAccess(const char *arg)
       }
     }
   }
-  if (*arg2) {
-    if (get_pc_world(this, arg1, EXACT_YES)) {
+  if(!arg2.empty()){
+    if (get_pc_world(this, arg1.c_str(), EXACT_YES)) {
       sendTo("That player is online. Better not mess with the player file.\n\r");
       return;
     }
@@ -4330,7 +4331,7 @@ void TPerson::doAccess(const char *arg)
       sendTo("Low level god syntax : access <player>\n\r");
       return;
     }
-    if ((which = old_search_block(arg2, 0, strlen(arg2), access_args, 0)) == -1) {
+    if ((which = old_search_block(arg2.c_str(), 0, arg2.length(), access_args, 0)) == -1) {
       sendTo("Syntax : access <player> <changes/flags>\n\r");
       return;
     }
@@ -4353,9 +4354,9 @@ void TPerson::doAccess(const char *arg)
           vlogf(LOG_MISC, "Ran into problems (#1) saving file in doAccess()");
           return;
         }
-        sprintf(arg1, "account/%c/%s", LOWER(st.aname[0]), lower(st.aname).c_str());
-        sprintf(arg2, "%s/account", arg1);
-        if (!(fp = fopen(arg2, "r+"))) 
+        ssprintf(arg1, "account/%c/%s", LOWER(st.aname[0]), lower(st.aname).c_str());
+        ssprintf(arg2, "%s/account", arg1.c_str());
+        if (!(fp = fopen(arg2.c_str(), "r+"))) 
           sendTo("Cannot open account for player! Tell a coder!\n\r");
         else {
           fread(&afp, sizeof(afp), 1, fp);
@@ -4393,9 +4394,9 @@ void TPerson::doAccess(const char *arg)
         return;
     }
   } else {
-    *buf = '\0';
-    sprintf(buf + strlen(buf), "Name : <p>%s<1>, Sex : <c>%d<1>, Screensize : <c>%d<1>, Weight <c>%.2f<1>, Height <c>%d<1>\n\r",
+    ssprintf(tmpbuf, "Name : <p>%s<1>, Sex : <c>%d<1>, Screensize : <c>%d<1>, Weight <c>%.2f<1>, Height <c>%d<1>\n\r",
          st.name, st.sex, st.screen, st.weight, st.height);
+    buf+=tmpbuf;
     birth = asctime(localtime(&(st.birth)));
     *(birth + strlen(birth) - 1) = '\0';
     strcpy(birth_buf, birth);
@@ -4404,17 +4405,25 @@ void TPerson::doAccess(const char *arg)
     tmstr = (char *) asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
 
-    sprintf(buf + strlen(buf), "Last login : %s%s%s, Last Host : %s%s%s\n\rFirst Login : %s%s%s\n\r", 
+    ssprintf(tmpbuf, "Last login : %s%s%s, Last Host : %s%s%s\n\rFirst Login : %s%s%s\n\r", 
         green(), tmstr, norm(),
         green(), st.lastHost, norm(),
         cyan(), birth_buf, norm());
-    sprintf(buf + strlen(buf), "Playing time : %d days, %d hours.\n\r", playing_time.day, playing_time.hours);
-    sprintf(buf + strlen(buf), "User Levels: M%d C%d W%d T%d A%d D%d K%d R%d",st.level[0],st.level[1],st.level[2],st.level[3],st.level[4],st.level[5],st.level[6],st.level[7]);
-    sprintf(buf + strlen(buf), "\tRace: %s\n\r", RaceNames[st.race]);
+    buf+=tmpbuf;
 
-    sprintf(buf + strlen(buf), "Stats  :[Str][Bra][Con][Dex][Agi][Int][Wis][Foc][Per][Cha][Kar][Spe]\n\r");
+    ssprintf(tmpbuf, "Playing time : %d days, %d hours.\n\r", playing_time.day, playing_time.hours);
+    buf+=tmpbuf;
 
-    sprintf(buf + strlen(buf), "Chosen : %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d\n\r",
+    ssprintf(tmpbuf, "User Levels: M%d C%d W%d T%d A%d D%d K%d R%d",st.level[0],st.level[1],st.level[2],st.level[3],st.level[4],st.level[5],st.level[6],st.level[7]);
+    buf+=tmpbuf;
+
+    ssprintf(tmpbuf, "\tRace: %s\n\r", RaceNames[st.race]);
+    buf+=tmpbuf;
+
+    ssprintf(tmpbuf, "Stats  :[Str][Bra][Con][Dex][Agi][Int][Wis][Foc][Per][Cha][Kar][Spe]\n\r");
+    buf+=tmpbuf;
+
+    ssprintf(tmpbuf, "Chosen : %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d\n\r",
            st.stats[STAT_STR],
            st.stats[STAT_BRA],
            st.stats[STAT_CON],
@@ -4427,33 +4436,41 @@ void TPerson::doAccess(const char *arg)
            st.stats[STAT_CHA],
            st.stats[STAT_KAR],
            st.stats[STAT_SPE]);
+    buf+=tmpbuf;
 
-    sprintf(buf + strlen(buf), "Gold:  %d,    Bank:  %d,   Exp:  %.3f\n\r",
+    ssprintf(tmpbuf, "Gold:  %d,    Bank:  %d,   Exp:  %.3f\n\r",
           st.money, st.bankmoney, st.exp);
-    sprintf(buf + strlen(buf), "Height:  %d,    Weight:  %.1f\n\r",
-          st.height, st.weight);
+    buf+=tmpbuf;
 
-    sprintf(arg1, "account/%c/%s", LOWER(st.aname[0]), lower(st.aname).c_str());
-    sprintf(arg2, "%s/comment", arg1);
-    if ((fp = fopen(arg2, "r"))) {
-      while (fgets(arg2, 255, fp))
-        sprintf(buf + strlen(buf), arg2);
+    ssprintf(tmpbuf, "Height:  %d,    Weight:  %.1f\n\r",
+          st.height, st.weight);
+    buf+=tmpbuf;
+
+    ssprintf(arg1, "account/%c/%s", LOWER(st.aname[0]), lower(st.aname).c_str());
+    ssprintf(arg2, "%s/comment", arg1.c_str());
+    if ((fp = fopen(arg2.c_str(), "r"))) {
+      while (fgets(filebuf, 255, fp))
+	buf+=filebuf;
       fclose(fp);
     }
 
-    sprintf(arg2, "%s/account", arg1);
-    if (!(fp = fopen(arg2, "r"))) 
-      sprintf(buf + strlen(buf), "Cannot open account for player! Tell a coder!\n\r");
-    else {
+    ssprintf(arg2, "%s/account", arg1.c_str());
+    if (!(fp = fopen(arg2.c_str(), "r"))) {
+      ssprintf(tmpbuf, "Cannot open account for player! Tell a coder!\n\r");
+      buf+=tmpbuf;
+    } else {
       fread(&afp, sizeof(afp), 1, fp);
       fclose(fp);
     } 
     if ((afp.flags & ACCOUNT_IMMORTAL) &&
           !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
-      sprintf(buf + strlen(buf), "Account name: ***, Account email address : ***\n\r");
-      sprintf(buf + strlen(buf), "Account flagged immortal.  Remaining Information Restricted.\n\r");
+      ssprintf(tmpbuf, "Account name: ***, Account email address : ***\n\r");
+      buf+=tmpbuf;
+      ssprintf(tmpbuf, "Account flagged immortal.  Remaining Information Restricted.\n\r");
+      buf+=tmpbuf;
     } else {
-      sprintf(buf + strlen(buf), "Account name: %s%s%s, Account email address : %s%s%s\n\r", cyan(), afp.name, norm(), cyan(), afp.email, norm());
+      ssprintf(tmpbuf, "Account name: %s%s%s, Account email address : %s%s%s\n\r", cyan(), afp.name, norm(), cyan(), afp.email, norm());
+      buf+=tmpbuf;
 
       string lStr = "";
       if (IS_SET(afp.flags, ACCOUNT_BANISHED))
@@ -4462,9 +4479,9 @@ void TPerson::doAccess(const char *arg)
         lStr += "<R><f>Account is email-banished<z>\n\r";
 
       listAccount(afp.name, lStr);
-      strcat(buf, lStr.c_str());
+      buf+=lStr;
     }
-    desc->page_string(buf);
+    desc->page_string(buf.c_str());
     return;
   }
 }
@@ -6694,7 +6711,7 @@ int TBeing::doAsOther(const string tStString)
   int      tRc = FALSE;
   cmdTypeT tCmd;
 
-  tStArguments = two_arg(tStString, tStNewName, tStCommand);
+  tStArguments = argument_parser(tStString, tStNewName, tStCommand);
 
   tCmd = searchForCommandNum(tStCommand.c_str());
 

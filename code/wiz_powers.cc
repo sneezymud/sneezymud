@@ -445,7 +445,7 @@ void TPerson::doPowers(const char *argument) const
 
   memset(&wizPowerList, 0, sizeof(wizPowerList));
 
-  two_arg(argument, tStName, tStPower);
+  argument_parser(argument, tStName, tStPower);
 
   if (!tStName.empty()) {
     ch = get_pc_world(this, tStName.c_str(), EXACT_YES);

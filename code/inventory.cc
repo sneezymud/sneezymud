@@ -262,9 +262,9 @@ void TTrap::dropMe(TBeing *ch, showMeT, showRoomT showroom)
 }
 
 // returns DELETE_THIS, or DELETE_OBJ (tng)
-int TBeing::doDrop(const char *argument, TThing *tng, bool forcedDrop)
+int TBeing::doDrop(const string argument, TThing *tng, bool forcedDrop)
 {
-  char arg[256], arg2[256];
+  string arg, arg2;
   char  newarg[256], buf[256], *buf2;
   TThing *t, *n, *tmp = NULL, *temp = NULL;
   int amount, p = 0, num = 0;
@@ -272,15 +272,13 @@ int TBeing::doDrop(const char *argument, TThing *tng, bool forcedDrop)
   TMoney *money;
   int rc = 0, count = 0, numx = 0;
 
-  for (; isspace(*argument); argument++);
+  argument_parser(argument, arg, arg2);
 
-  two_arg(argument, arg, arg2);
-
-  if (!arg && !*arg && !tng) {
+  if(arg.empty() && !tng){
     sendTo("Drop what?!?\n\r");
     return FALSE;
   }
-  if (!tng && is_number(arg)) {
+  if (!tng && is_number(arg.c_str())) {
     amount = atoi_safe(arg);
     if (!is_abbrev(arg2, "talens")) {
       sendTo("Sorry, you can't do that (yet)...\n\r");
@@ -322,7 +320,7 @@ int TBeing::doDrop(const char *argument, TThing *tng, bool forcedDrop)
 
     return FALSE;
   }
-  if (!tng && !strcasecmp(arg, "all")) {
+  if (!tng && lower(arg)=="all"){
     for (t = getStuff(); t; t = n) {
       n = t->nextThing;
       if (t->canDrop()) {
@@ -355,15 +353,15 @@ int TBeing::doDrop(const char *argument, TThing *tng, bool forcedDrop)
     doSave(SILENT_YES);
     return FALSE;
   } else {
-    if (getall(arg, newarg)) {
+    if (getall(arg.c_str(), newarg)) {
       num = -1;
-      strcpy(arg, newarg);
-    } else if ((p = getabunch(arg, newarg))) {
+      arg=newarg;
+    } else if ((p = getabunch(arg.c_str(), newarg))) {
       num = p;
-      strcpy(arg, newarg);
+      arg=newarg;
     } else
       num = 1;
-    strcpy(buf, arg);
+    strcpy(buf, arg.c_str());
     buf2 = buf;
     numx = get_number(&buf2);
     while (num != 0) {

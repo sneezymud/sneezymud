@@ -3381,7 +3381,7 @@ void TBeing::doLight(const string & argument)
   int num;
   string arg1, arg2;
 
-  two_arg(argument, arg1, arg2);
+  argument_parser(argument, arg1, arg2);
 
   strcpy(tmpname, arg1.c_str());
   tmp = tmpname;
@@ -3462,7 +3462,7 @@ void TBeing::doExtinguish(const string & argument)
   int num;
   string arg1, arg2;
 
-  two_arg(argument, arg1, arg2);
+  argument_parser(argument, arg1, arg2);
 
   strcpy(tmpname, arg1.c_str());
   tmp = tmpname;
@@ -3953,9 +3953,9 @@ void TBeing::doDrag(TObj *o, dirTypeT tdir)
   addToWait(combatRound(1));
 }
 
-void TBeing::doDrag(const char *arg)
+void TBeing::doDrag(const string arg)
 {
-  char caName[128], dir[128];
+  string caName, dir;
   TBeing *v;
   dirTypeT tdir;
   unsigned int bits;
@@ -3963,14 +3963,14 @@ void TBeing::doDrag(const char *arg)
   TObj *o;
   const char *syntax="Syntax : drag <object|person> <direction>\n\r";
 
-  two_arg(arg, caName, dir);
+  argument_parser(arg, caName, dir);
 
-  if (!*caName || !*dir) {
+  if(caName.empty() || dir.empty()){
     sendTo(syntax);
     return;
   }
 
-  bits = generic_find(caName, FIND_CHAR_ROOM | FIND_OBJ_ROOM, this, &v, &o);
+  bits = generic_find(caName.c_str(), FIND_CHAR_ROOM | FIND_OBJ_ROOM, this, &v, &o);
 
   if(!bits){
     sendTo("You see nothing by that name to drag!\n\r");
@@ -4524,9 +4524,9 @@ void TBeing::doRoll(TObj *o, dirTypeT tdir)
   addToWait(combatRound(1));
 }
 
-void TBeing::doRoll(const char *arg)
+void TBeing::doRoll(const string arg)
 {
-  char caName[128], dir[128];
+  string caName, dir;
   TBeing *v;
   dirTypeT tdir;
   unsigned int bits;
@@ -4534,14 +4534,14 @@ void TBeing::doRoll(const char *arg)
   TObj *o;
   const char *syntax="Syntax : roll <object|person> <direction>\n\r";
 
-  two_arg(arg, caName, dir);
+  argument_parser(arg, caName, dir);
 
-  if (!*caName || !*dir) {
+  if(caName.empty() || dir.empty()){
     sendTo(syntax);
     return;
   }
 
-  bits = generic_find(caName, FIND_CHAR_ROOM | FIND_OBJ_ROOM, this, &v, &o);
+  bits = generic_find(caName.c_str(), FIND_CHAR_ROOM | FIND_OBJ_ROOM, this, &v, &o);
 
   if(!bits){
     sendTo("You see nothing by that name to roll!\n\r");

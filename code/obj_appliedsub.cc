@@ -68,20 +68,19 @@ void TASubstance::describeObjectSpecifics(const TBeing *ch) const
 {
 }
 
-int TBeing::doApplyHerbs(const char *tArg)
+int TBeing::doApplyHerbs(const string tArg)
 {
   TBeing      *vict   = NULL;
   TThing      *tArrow = NULL;
   TASubstance *asHerb = NULL;
   int          tValue,
                nRc;
-  char         tStHerb[256],
-               tStVict[256],
-               tStPart[256];
+  string       tStHerb,
+               tStVict,
+               tStPart;
   wearSlotT    tSlot;
 
-  tArg = two_arg(tArg, tStHerb, tStPart);
-  only_argument(tArg, tStVict);
+  argument_parser(tArg, tStHerb, tStPart, tStVict);
 
   // Temp return until all the apply code is finished and tested.
   return FALSE;
@@ -97,14 +96,14 @@ int TBeing::doApplyHerbs(const char *tArg)
     return FALSE;
   }
 
-  if (!*tStHerb || !*tStPart) {
+  if(tStHerb.empty() || tStPart.empty()){
     sendTo("Syntax: apply <herb> <limb> <target>\n\r");
     return FALSE;
   }
 
-  if (!*tStVict || !strcmp(tStVict, "self"))
+  if(tStVict.empty() || tStVict=="self"){
     vict = this;
-  else if (!(vict = get_char_room_vis(this, tStVict))) {
+  } else if (!(vict = get_char_room_vis(this, tStVict.c_str()))) {
     if (!(tArrow = searchLinkedListVis(this, tStVict, getStuff()))) {
       sendTo("You do not see that here, perhaps you were seeing things?\n\r");
       return FALSE;
@@ -116,7 +115,7 @@ int TBeing::doApplyHerbs(const char *tArg)
     return FALSE;
   }
 
-  if ((tValue = old_search_block(tStPart, 0, strlen(tStPart), bodyParts, 0)) <= 0) {
+  if ((tValue = old_search_block(tStPart.c_str(), 0, tStPart.length(), bodyParts, 0)) <= 0) {
     sendTo("Unfortunatly you cannot find that body part.\n\r");
     return FALSE;
   }

@@ -1353,7 +1353,7 @@ class TBeing : public TThing {
     void stopmusic();
     void doPlay(const char *);
     void doSort(const char *) const;
-    void doGamestats(const char *);
+    void doGamestats(const string);
     void doScan(const char *);
     int dislodgeWeapon(TBeing *, TThing *, wearSlotT);
     void doInsult(const char *);
@@ -1391,7 +1391,7 @@ class TBeing : public TThing {
     void doForage();
     void doTan();
     void doButcher();
-    int  doApplyHerbs(const char *);
+    int  doApplyHerbs(const string);
     void doSkin(const char *);
     void doButcher(const char *);
     int doPlant(string);
@@ -1435,7 +1435,7 @@ class TBeing : public TThing {
     void doReset(string);
     void doResize(const char *);
     int doDeathstroke(const char *, TBeing *);
-    void doBandage(const char *);
+    void doBandage(const string);
     int doBodyslam(const char *, TBeing *);
     int doSpin(const char *, TBeing *);
     int doStomp(const char *, TBeing *);
@@ -1815,12 +1815,12 @@ class TBeing : public TThing {
     int getPartMinHeight(int) const;
     void doDrag(TBeing *, dirTypeT);
     void doDrag(TObj *, dirTypeT);
-    void doDrag(const char *);
+    void doDrag(const string);
     void doCommand(const char *);
     int doAssist(const char *, TBeing *, bool flags = FALSE);
     void doRoll(TBeing *, dirTypeT);
     void doRoll(TObj *, dirTypeT);
-    void doRoll(const char *);
+    void doRoll(const string);
     void doEcho(const char *);
     void doHighfive(const char *);
     virtual void doToggle(const char *);
@@ -1889,7 +1889,7 @@ class TBeing : public TThing {
     int doTripleKick(const char *, int, TBeing *);
 #endif
 
-    int doDrop(const char *, TThing *, bool forceDrop = FALSE);
+    int doDrop(const string, TThing *, bool forceDrop = FALSE);
     int doGet(const char *);
     void doGrab(const char *);
     int doPut(const char *);
@@ -1904,7 +1904,7 @@ class TBeing : public TThing {
     void doPeek() const;
     int doAction(const string &, cmdTypeT);
     void doCls(bool);
-    int doRemove(const char *, TThing *);
+    int doRemove(const string, TThing *);
     void doSave(silentTypeT, const char * = NULL);
     void doZonefile(const string &);
     void doLoot(const string &);
@@ -1962,10 +1962,10 @@ class TBeing : public TThing {
     void doWho(const char *);
     void doTime(const char *);
     void doWizhelp();
-    virtual void doUsers(const char *);
+    virtual void doUsers(const string);
     void doInventory(const char *);
     void doEquipment(const char *);
-    void doOutfit(const char *);
+    void doOutfit(const string);
     void doCredits();
     void doNews(const char *);
     void doWizlist();

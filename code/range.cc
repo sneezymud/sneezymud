@@ -1509,7 +1509,7 @@ int TBeing::unloadBow(const char *arg)
       !bow->getStuff() || !dynamic_cast<TArrow *>(bow->getStuff()))
     return FALSE;
  
-  //two_arg(arg, arg1, arg2);
+  //argument_parser(arg, arg1, arg2);
  
   //if (!is_abbrev(arg1, "arrow") || !is_abbrev(arg2, "bow"))
     //return FALSE;

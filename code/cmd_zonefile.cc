@@ -35,7 +35,7 @@ void TBeing::doZonefile(const string & tStArg)
 #endif
   }
 
-  two_arg(tStArg, tStString, tStBuffer);
+  argument_parser(tStArg, tStString, tStBuffer);
 
   if (is_abbrev(tStString, "save")) {
     doSaveZoneFile(this, tStBuffer);

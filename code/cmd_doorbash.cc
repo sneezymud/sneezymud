@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: cmd_doorbash.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 #include "combat.h"
 #include "disc_warrior.h"
@@ -39,11 +24,14 @@ int TBeing::slamIntoWall(roomDirData * exitp)
   if (reconcileDamage(this, (::number(1, 10) * 2), DAMAGE_COLLISION) == -1)
     return DELETE_THIS;
 
-  affectedData aff;
-  aff.type = SKILL_DOORBASH;
-  aff.duration = UPDATES_PER_TICK;
-  aff.bitvector = AFF_STUNNED;
-  affectTo(&aff, -1);
+  if (!isImmortal()) {
+    affectedData aff;
+
+    aff.type = SKILL_DOORBASH;
+    aff.duration = 2 * UPDATES_PER_MUDHOUR / 3;
+    aff.bitvector = AFF_STUNNED;
+    affectTo(&aff, -1);
+  }
 
 #if 0
   addToWait(combatRound(12));
@@ -78,7 +66,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
   }
   
   if (!(exitp = caster->exitDir(dir))) {
-    vlogf(10, "bad exit in doorbash (2)");
+    vlogf(LOG_BUG, "bad exit in doorbash (2)");
     return FALSE;
   }
 
@@ -91,7 +79,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
 
   if (dir == DIR_UP) {
     if (rp->isAirSector() && !caster->isFlying()) {
-      caster->sendTo("You woould need to be flying to go there!\n\r");
+      caster->sendTo("You would need to be flying to go there!\n\r");
       return FALSE;
     }
   }
@@ -174,7 +162,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         return DELETE_THIS;
       }
-      caster->sendTo("Aarrggh!  You've triggered some insideous door-trap!\n\r");
+      caster->sendTo("Aarrggh!  You've triggered some insidious door-trap!\n\r");
     }
     exitp->destroyDoor(dir, room);
     if (caster->reconcileDamage(caster, dam, SKILL_DOORBASH) == -1)
@@ -221,7 +209,7 @@ int TBeing::doDoorbash(const string & argument)
   }
   string type;
   string direction;
-  two_arg(argument, type, direction);
+  argument_parser(argument, type, direction);
           
   if (type.empty()) {
     sendTo("You must specify a direction.\n\r");
@@ -239,7 +227,7 @@ TO_CHAR);
   }
   if (!ok || !(exitp = exitDir(dir)))
   {
-    vlogf(10, "Bad exit in doorbash!");
+    vlogf(LOG_BUG, "Bad exit in doorbash!");
     return FALSE;
   }
   rc = doorbash(this, dir);
@@ -247,7 +235,7 @@ TO_CHAR);
     return DELETE_THIS;
 
   if (rc)
-    addSkillLag(SKILL_DOORBASH);
+    addSkillLag(SKILL_DOORBASH, rc);
 
   return rc;
 }

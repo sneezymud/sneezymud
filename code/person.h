@@ -77,7 +77,7 @@ class TPerson : public TBeing {
     void saveRent(objCost *, bool, int);
     void loadRent();
 
-    virtual void doUsers(const char *);
+    virtual void doUsers(const string);
     virtual void doToggle(const char *);
     virtual void doInvis(const char *);
     virtual void doVisible(const char *, bool);

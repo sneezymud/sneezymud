@@ -70,7 +70,7 @@ extern const char *DescAttacks(double a);
 extern int MountEgoCheck(TBeing *, TBeing *);
 extern bool getall(const char *, char *);
 extern int getabunch(const char *, char *);
-extern bool is_number(char *);
+extern bool is_number(const char *);
 extern void bisect_arg(const char *, int *, char *, const char * const array[]);
 
   extern const char * heraldcolors[];

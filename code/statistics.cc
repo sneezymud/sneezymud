@@ -296,18 +296,16 @@ void save_game_stats(void)
   }
 }
 
-void TBeing::doGamestats(const char *arg)
+void TBeing::doGamestats(const string arg)
 {
-  char buf[256], buf2[256];
+  string buf, buf2;
   int lev, i;
   string str;
 
   if (powerCheck(POWER_GAMESTATS))
     return;
 
-  arg = two_arg(arg, buf, buf2);
-
-  if (!buf || !*buf) {
+  if(buf.empty()){
     sendTo("Syntax: gamestats <combat | equipment | level | trivia | statistics>\n\r");
     return;
   } else if (is_abbrev(buf, "attributes")) {
@@ -315,130 +313,130 @@ void TBeing::doGamestats(const char *arg)
     double plot1 = 0;
     double plot2 = 0;
     double curve;
-    if (!buf2 || !*buf2)
+    if(buf2.empty()){
       curve = 1.4;
-    else
+    } else
       curve = atof_safe(buf2);
     for(int tmpint = 5; tmpint <= 205; tmpint += 5) {
       setStat(STAT_CURRENT, STAT_STR, tmpint);
       plot1 = plotStat(STAT_CURRENT, STAT_STR, .80, 1.25, 1.00, curve);
       plot2 = plotStat(STAT_CURRENT, STAT_STR, 0.0, 100.0, 50.0, curve);
-      sprintf(buf, "Stat Value: %5.2f     Plot1: %5.2f    Plot2: %5.2f%%\n\r", (double)tmpint, plot1, plot2);
-      sendTo(buf);
+      ssprintf(buf, "Stat Value: %5.2f     Plot1: %5.2f    Plot2: %5.2f%%\n\r", (double)tmpint, plot1, plot2);
+      sendTo(buf.c_str());
     }
     setStat(STAT_CURRENT, STAT_STR, temp_stat);
     return;
   } else if (is_abbrev(buf, "combat")) {
     int tot_dam = stats.damage[PC_STAT] + stats.damage[MOB_STAT];
-    sprintf(buf, "Total damage taken  : %d\n\r", tot_dam);
+    ssprintf(buf, "Total damage taken  : %d\n\r", tot_dam);
     str += buf;
 
-    sprintf(buf, "\tMob damage taken    : %ld   (%5.2f%%)\n\r", 
+    ssprintf(buf, "\tMob damage taken    : %ld   (%5.2f%%)\n\r", 
          stats.damage[MOB_STAT], (tot_dam ? (100.0 * stats.damage[MOB_STAT] / tot_dam) : 0));
     str += buf;
-    sprintf(buf, "\tPC  damage taken    : %ld   (%5.2f%%)\n\r", 
+    ssprintf(buf, "\tPC  damage taken    : %ld   (%5.2f%%)\n\r", 
          stats.damage[PC_STAT], (tot_dam ? (100.0 * stats.damage[PC_STAT] / tot_dam) : 0));
     str += buf;
 
     tot_dam = stats.combat_damage[PC_STAT] + stats.combat_damage[MOB_STAT];
-    sprintf(buf, "Combat damage only  : %d\n\r", tot_dam);
+    ssprintf(buf, "Combat damage only  : %d\n\r", tot_dam);
     str += buf;
-    sprintf(buf, "\tMob combat damage taken    : %ld   (%5.2f%%)\n\r", 
+    ssprintf(buf, "\tMob combat damage taken    : %ld   (%5.2f%%)\n\r", 
          stats.combat_damage[MOB_STAT], (tot_dam ? (100.0 * stats.combat_damage[MOB_STAT] / tot_dam) : 0));
     str += buf;
-    sprintf(buf, "\tPC combat damage taken     : %ld   (%5.2f%%)\n\r", 
+    ssprintf(buf, "\tPC combat damage taken     : %ld   (%5.2f%%)\n\r", 
          stats.combat_damage[PC_STAT], (tot_dam ? (100.0 * stats.combat_damage[PC_STAT] / tot_dam) : 0));
     str += buf;
 
     int tot_ac = stats.ac_absorb[MOB_STAT] + stats.ac_absorb[PC_STAT];
-    sprintf(buf, "AC  damage absorbed : %d\n\r", tot_ac);
+    ssprintf(buf, "AC  damage absorbed : %d\n\r", tot_ac);
     str += buf;
 
     int mob_dam = stats.ac_absorb[MOB_STAT] + stats.combat_damage[MOB_STAT];
-    sprintf(buf, "\tMob AC absorb       : %ld   (%5.2f%% of all abs) (%5.2f%% of mob ComDam)\n\r", 
+    ssprintf(buf, "\tMob AC absorb       : %ld   (%5.2f%% of all abs) (%5.2f%% of mob ComDam)\n\r", 
         stats.ac_absorb[MOB_STAT], tot_ac ? stats.ac_absorb[MOB_STAT] * 100.0 / tot_ac : 0,
         mob_dam ? stats.ac_absorb[MOB_STAT] * 100.0 / mob_dam : 0);
     str += buf;
 
     int pc_dam = stats.ac_absorb[PC_STAT] + stats.combat_damage[PC_STAT];
-    sprintf(buf, "\tPC AC absorb        : %ld   (%5.2f%% of all abs) (%5.2f%% of PC ComDam)\n\r", 
+    ssprintf(buf, "\tPC AC absorb        : %ld   (%5.2f%% of all abs) (%5.2f%% of PC ComDam)\n\r", 
         stats.ac_absorb[PC_STAT], tot_ac ? stats.ac_absorb[PC_STAT] * 100.0 / tot_ac : 0,
         pc_dam ? stats.ac_absorb[PC_STAT] * 100.0 / pc_dam : 0);
     str += buf;
-    sprintf(buf, "Current absorbtion constants : TBeing %d, PC %d\n\r\n\r",
+    ssprintf(buf, "Current absorbtion constants : TBeing %d, PC %d\n\r\n\r",
 	  stats.absorb_damage_divisor[MOB_STAT],
            stats.absorb_damage_divisor[PC_STAT]);
     str += buf;
 
     long tot_blows = stats.combat_blows[PC_STAT] + stats.combat_blows[MOB_STAT];
-    sprintf(buf, "Total Combat blows        : %ld\n\r", tot_blows);
+    ssprintf(buf, "Total Combat blows        : %ld\n\r", tot_blows);
     str += buf;
-    sprintf(buf, "\tMob combat blows           : %ld   (%5.2f%%)\n\r", 
+    ssprintf(buf, "\tMob combat blows           : %ld   (%5.2f%%)\n\r", 
          stats.combat_blows[MOB_STAT], (tot_blows ? (100.0 * stats.combat_blows[MOB_STAT] / tot_blows) : 0));
     str += buf;
-    sprintf(buf, "\tPC combat blows            : %ld   (%5.2f%%)\n\r", 
+    ssprintf(buf, "\tPC combat blows            : %ld   (%5.2f%%)\n\r", 
          stats.combat_blows[PC_STAT], (tot_blows ? (100.0 * stats.combat_blows[PC_STAT] / tot_blows) : 0));
     str += buf;
 
     long tot_hits = stats.combat_hits[PC_STAT] + stats.combat_hits[MOB_STAT];
-    sprintf(buf, "Total Combat hits         : %ld  (%5.2f%%)\n\r", 
+    ssprintf(buf, "Total Combat hits         : %ld  (%5.2f%%)\n\r", 
                tot_hits, (tot_blows == 0 ? 0.0 : (100.0 * tot_hits / tot_blows)));
     str += buf;
-    sprintf(buf, "\tMob combat hits            : %ld   (%5.2f%%)  (%5.2f%% hit rate)\n\r", 
+    ssprintf(buf, "\tMob combat hits            : %ld   (%5.2f%%)  (%5.2f%% hit rate)\n\r", 
          stats.combat_hits[MOB_STAT], (tot_hits ? (100.0 * stats.combat_hits[MOB_STAT] / tot_hits) : 0),
         stats.combat_blows[MOB_STAT] ? stats.combat_hits[MOB_STAT] * 100.0 / stats.combat_blows[MOB_STAT] : 0);
     str += buf;
-    sprintf(buf, "\tPC combat hits             : %ld   (%5.2f%%)  (%5.2f%% hit rate)\n\r", 
+    ssprintf(buf, "\tPC combat hits             : %ld   (%5.2f%%)  (%5.2f%% hit rate)\n\r", 
          stats.combat_hits[PC_STAT], (tot_hits ? (100.0 * stats.combat_hits[PC_STAT] / tot_hits) : 0),
         stats.combat_blows[PC_STAT] ? stats.combat_hits[PC_STAT] * 100.0 / stats.combat_blows[PC_STAT] : 0);
     str += buf;
 
     int tot_lev = stats.combat_level[PC_STAT] + stats.combat_level[MOB_STAT];
-    sprintf(buf, "Average Combat level      : %5.2f\n\r", 
+    ssprintf(buf, "Average Combat level      : %5.2f\n\r", 
          (tot_blows ?  ((double) tot_lev / (double) tot_blows) : 0.0));
     str += buf;
-    sprintf(buf, "\tMob combat level           : %5.2f\n\r", 
+    ssprintf(buf, "\tMob combat level           : %5.2f\n\r", 
          (stats.combat_blows[MOB_STAT] ?  ((double) stats.combat_level[MOB_STAT] / (double) stats.combat_blows[MOB_STAT]) : 0.0));
     str += buf;
-    sprintf(buf, "\tPC combat level            : %5.2f\n\r", 
+    ssprintf(buf, "\tPC combat level            : %5.2f\n\r", 
          (stats.combat_blows[PC_STAT] ?  ((double) stats.combat_level[PC_STAT] / (double) stats.combat_blows[PC_STAT]) : 0.0));
     str += buf;
 
-    sprintf(buf, "Average Combat damage     : %5.2f\n\r", 
+    ssprintf(buf, "Average Combat damage     : %5.2f\n\r", 
          (tot_hits ?  ((double) tot_dam / (double) tot_hits) : 0.0));
     str += buf;
-    sprintf(buf, "\tMob avg. combat dam.       : %5.2f\n\r", 
+    ssprintf(buf, "\tMob avg. combat dam.       : %5.2f\n\r", 
          (stats.combat_hits[MOB_STAT] ?  ((double) stats.combat_damage[MOB_STAT] / (double) stats.combat_hits[MOB_STAT]) : 0.0));
     str += buf;
-    sprintf(buf, "\tPC avg. combat dam.        : %5.2f\n\r", 
+    ssprintf(buf, "\tPC avg. combat dam.        : %5.2f\n\r", 
          (stats.combat_hits[PC_STAT] ?  ((double) stats.combat_damage[PC_STAT] / (double) stats.combat_hits[PC_STAT]) : 0.0));
     str += buf;
 
-    sprintf(buf, "Total crit-success checks : %ld  (%5.2f%% of hits)\n\r",
+    ssprintf(buf, "Total crit-success checks : %ld  (%5.2f%% of hits)\n\r",
            stats.combat_crit_suc,
            (tot_hits == 0 ? 0.0 : 
               (100.0 * stats.combat_crit_suc / tot_hits)));
     str += buf;
-    sprintf(buf, "Total crit-fail checks    : %ld  (%5.2f%% of misses)\n\r",
+    ssprintf(buf, "Total crit-fail checks    : %ld  (%5.2f%% of misses)\n\r",
            stats.combat_crit_fail,
            ((tot_blows - tot_hits) == 0 ? 0.0 : 
                (100.0 * stats.combat_crit_fail / (tot_blows - tot_hits))));
     str += buf;
-    sprintf(buf, "Total crit-success passes : %ld  (%5.2f%% of hits)\n\r", 
+    ssprintf(buf, "Total crit-success passes : %ld  (%5.2f%% of hits)\n\r", 
             stats.combat_crit_suc_pass,
            (tot_hits == 0 ? 0.0 : 
               (100.0 * stats.combat_crit_suc_pass / tot_hits)));
     str += buf;
-    sprintf(buf, "Total crit-fail passes    : %ld  (%5.2f%% of misses)\n\r", 
+    ssprintf(buf, "Total crit-fail passes    : %ld  (%5.2f%% of misses)\n\r", 
             stats.combat_crit_fail_pass,
            ((tot_blows - tot_hits) == 0 ? 0.0 : 
               (100.0 * stats.combat_crit_fail_pass / (tot_blows - tot_hits))));
     str += buf;
-    sprintf(buf, "\n\r");
+    ssprintf(buf, "\n\r");
     str += buf;
-    sprintf(buf, "Mobiles have tried to aggro : %d times.\n\r", stats.aggro_attempts);
+    ssprintf(buf, "Mobiles have tried to aggro : %d times.\n\r", stats.aggro_attempts);
     str += buf;
-    sprintf(buf, "Mobiles have aggro'd        : %d times.\n\r", stats.aggro_successes);
+    ssprintf(buf, "Mobiles have aggro'd        : %d times.\n\r", stats.aggro_successes);
     str += buf;
     if (desc)
       desc->page_string(str.c_str(), SHOWNOW_NO, ALLOWREP_YES);
@@ -469,7 +467,7 @@ void TBeing::doGamestats(const char *arg)
         stats.piety_gained_attempts);
     return;
   } else if (is_abbrev(buf, "levels")) {
-    if (!buf2 || !*buf2) {
+    if(buf2.empty()){
       sendTo("Syntax : gamestats levels <level>\n\r");
       return;
     }

@@ -75,7 +75,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
 {
   TThing *t, *t2;
   TObj *o;
-  char buf1[256], buf2[256];
+  string buf1, buf2;
   int rc;
   TObj *sub = NULL;
 
@@ -94,8 +94,8 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
   }
   switch (cmd) {
   case CMD_TASK_CONTINUE:
-      two_arg(ch->task->orig_arg, buf1, buf2);
-      if (!*buf2) {
+      argument_parser(ch->task->orig_arg, buf1, buf2);
+      if(buf2.empty()){
         if (!thingsInRoomVis(ch, rp)) {
           ch->sendTo("You don't see anything else!\n\r");
           ch->stopTask();
@@ -237,11 +237,11 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
         return TRUE;
       } else {
         // get all bag
-        sub = get_obj_vis_accessible(ch, buf2);
+        sub = get_obj_vis_accessible(ch, buf2.c_str());
 	if (!sub) {
 	  TBeing *horse;
 	  TObj *tmpobj;
-      	  int bits = generic_find(buf2, FIND_CHAR_ROOM, ch, &horse, &tmpobj);
+      	  int bits = generic_find(buf2.c_str(), FIND_CHAR_ROOM, ch, &horse, &tmpobj);
 	  if (bits)
 	    if (horse->isRideable() && horse->equipment[WEAR_BACK]) {
 	      TBaseContainer *saddlebag = dynamic_cast<TBaseContainer *>(horse->equipment[WEAR_BACK]);
@@ -250,21 +250,21 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
 	    }
 	}
 	if (!sub) {
-	  ch->sendTo("The %s is no longer accessible.\n\r", buf2);
+	  ch->sendTo("The %s is no longer accessible.\n\r", buf2.c_str());
 	  ch->stopTask();
 	  ch->doSave(SILENT_YES);
 	  return FALSE;
 	}
         
         if (ch->task->flags) {
-          if (!ch->anythingGetable(sub, buf1)) {
+          if (!ch->anythingGetable(sub, buf1.c_str())) {
             act("You can get no more from $p", TRUE, ch, sub, NULL, TO_CHAR);
             ch->stopTask();
             getTaskStop(sub);
             ch->doSave(SILENT_YES);
             return FALSE;
           }
-          while ((t = get_thing_in_list_getable(ch, buf1, sub->getStuff()))) {
+          while ((t = get_thing_in_list_getable(ch, buf1.c_str(), sub->getStuff()))) {
             if (--(ch->task->flags) > 0) {
               rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
@@ -297,7 +297,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               return FALSE;
             }
           }
-          while ((t = get_thing_on_list_getable(ch, buf1, sub->rider))) {
+          while ((t = get_thing_on_list_getable(ch, buf1.c_str(), sub->rider))) {
             if (--(ch->task->flags) > 0) {
               rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
@@ -328,7 +328,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
             }
           }
 
-          if (!ch->anythingGetable(sub, buf1)) {
+          if (!ch->anythingGetable(sub, buf1.c_str())) {
             act("You can get no more from $p", TRUE, ch, sub, NULL, TO_CHAR);
             ch->stopTask();
             getTaskStop(sub);
@@ -337,7 +337,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
           }
         } else {
           if (ch->task->status) {
-            while ((t = get_thing_in_list_getable(ch, buf1, sub->getStuff()))) {
+            while ((t = get_thing_in_list_getable(ch, buf1.c_str(), sub->getStuff()))) {
               rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
@@ -363,7 +363,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
               }
             }
 
-            while ((t = get_thing_on_list_getable(ch, buf1, sub->rider))) {
+            while ((t = get_thing_on_list_getable(ch, buf1.c_str(), sub->rider))) {
               rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;

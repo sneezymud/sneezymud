@@ -1338,7 +1338,7 @@ void TPerson::doRload(const char *argument)
     return;
 
   stSpaceOut(tStArg);
-  tStArg = two_arg(tStArg, tStString, tStBuffer);
+  tStArg = argument_parser(tStArg, tStString, tStBuffer);
 
   if (tStString.empty() || tStString[0] == '1') {
     tStart = desc->blockastart;
@@ -1352,7 +1352,7 @@ void TPerson::doRload(const char *argument)
            tStStandard("");
     bool   tStandard = false;
 
-    two_arg(tStBuffer, tStExtra, tStStandard);
+    argument_parser(tStBuffer, tStExtra, tStStandard);
 
     if (!tStExtra.empty()) {
       if (tStExtra[0] == '1') {
@@ -1419,7 +1419,7 @@ void TPerson::doRload(const char *argument)
   }
 
   tString = argument;
-  tString = two_arg(tString, stRoom, enRoom);
+  tString = argument_parser(tString, stRoom, enRoom);
 
   if (stRoom.empty() || enRoom.empty()) {
     sendTo("Syntax: rload <first-room> <last-room>\n\r");
@@ -3566,7 +3566,7 @@ void TPerson::doRsave(const char *argument)
     return;
 
   stSpaceOut(tStArg);
-  tStArg = two_arg(tStArg, tStString, tStBuffer);
+  tStArg = argument_parser(tStArg, tStString, tStBuffer);
 
   if (tStString.empty() || tStString[0] == '1') {
     tStart = desc->blockastart;
@@ -3633,7 +3633,7 @@ void TPerson::doRsave(const char *argument)
   }
 
   tString = argument;
-  tString = two_arg(tString, stRoom, enRoom);
+  tString = argument_parser(tString, stRoom, enRoom);
 
   if (stRoom.empty() || enRoom.empty()) {
     sendTo("Syntax: rsave <first-room> <last-room>\n\r");

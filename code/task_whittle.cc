@@ -303,7 +303,7 @@ void task_whittleSetupObject(TBeing *ch, TObj *tObj, TOrganic *tWood, int tIndex
     tObj->swapToStrung();
 
     tStString = tWood->getName();
-    two_arg(tStString, tStPost, tStWood);
+    argument_parser(tStString, tStPost, tStWood);
     tStObject = whittleItems[tIndex].getName(true);
 
     sprintf(tString, "%s %s %s<z>",
@@ -611,7 +611,7 @@ void TBeing::doWhittle(const char *tArg)
   int         tIndex     = -1;
   TGenWeapon *tWeapon = dynamic_cast<TGenWeapon *>(heldInPrimHand());
 
-  tStString = two_arg(tStString, tStObject, tStWood);
+  tStString = argument_parser(tStString, tStObject, tStWood);
 
   if (tStObject.empty()) {
     sendTo("Syntax: whittle <object> <wood>\n\r");
@@ -788,11 +788,11 @@ string taskWhittleEntry::getName(bool showSecond)
          tStExcess("");
 
   if (showSecond) {
-    tStString = two_arg(tStString, tStName, tStExcess);
-    //    tStString = two_arg(tStString, tStName, tStExcess);
+    tStString = argument_parser(tStString, tStName, tStExcess);
+    //    tStString = argument_parser(tStString, tStName, tStExcess);
     strcpy(tName, tStExcess.c_str());
   } else {
-    two_arg(tStString, tStName, tStExcess);
+    argument_parser(tStString, tStName, tStExcess);
     strcpy(tName, tStName.c_str());
   }
 

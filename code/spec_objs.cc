@@ -1708,7 +1708,7 @@ int lightning_hammer(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 {
-  char objbuf[160], targbuf[160];
+  string objbuf, targbuf;
   TBeing *target;
   char buf[256];
   TRoom *rp;
@@ -1720,8 +1720,9 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     return FALSE;
 
   if (cmd == CMD_REMOVE) {
-    one_argument(arg, objbuf);
-    if (!*objbuf || !isname(objbuf, me->getName())) {
+    argument_parser(arg, objbuf);
+
+    if(objbuf.empty() || !isname(objbuf, me->getName())){
       return FALSE;
     }
 
@@ -1743,9 +1744,10 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     return DELETE_THIS;
   }
 
-  two_arg(arg, objbuf, targbuf);
+  argument_parser(arg, objbuf, targbuf);
 
-  if (!*objbuf || !isname(objbuf, me->getName()) || !*targbuf)
+
+  if (objbuf.empty() || !isname(objbuf, me->getName()) || targbuf.empty())
     return FALSE;
 
   if (me->equippedBy)
@@ -1762,14 +1764,14 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 
     // cause it to target the thrower  :)
     ch->sendTo("A malicious force intervenes.\n\r");
-    strcpy(targbuf, ch->getName());
+    targbuf=ch->getName();
   }
 
   act("With a mighty heave, you toss $p straight up.",
        FALSE, ch, me, 0, TO_CHAR);
   act("With a mighty heave, $n tosses $p straight up.",
        FALSE, ch, me, 0, TO_ROOM);
-  if (!(target = get_char_vis(ch, targbuf, NULL))) {
+  if (!(target = get_char_vis(ch, targbuf.c_str(), NULL))) {
     *(ch->roomp) += *me;
     act("$n falls to the $g.", TRUE, me, 0, 0, TO_ROOM);
     return TRUE;

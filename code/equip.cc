@@ -1533,9 +1533,9 @@ int TBeing::remove(TThing *obj, TBeing *ch)
 }
 
 // DELETE_THIS
-int TBeing::doRemove(const char *argument, TThing *obj)
+int TBeing::doRemove(const string argument, TThing *obj)
 {
-  char arg1[128], buf[256];
+  string arg1, buf;
   TThing *o = NULL;
   TBeing *ch;
   int res, count = 0;
@@ -1547,13 +1547,13 @@ int TBeing::doRemove(const char *argument, TThing *obj)
     sendTo("How do you expect to do that without any hands?!?\n\r");
     return FALSE;
   }
-  if (unloadBow(argument))
+  if (unloadBow(argument.c_str()))
     return TRUE;
 
-  two_arg(argument, arg1, buf);
+  argument_parser(argument, arg1, buf);
 
-  if (*arg1 || obj) {
-    if (!strcmp(arg1, "all")) {
+  if (!arg1.empty() || obj) {
+    if (arg1=="all"){
       if (getPosition() == POSITION_RESTING) {
         sendTo("You sit up in order to remove things more easily.\n\r");
         doSit("");
@@ -1601,7 +1601,7 @@ int TBeing::doRemove(const char *argument, TThing *obj)
       return TRUE;
     }
     int slot_i;
-    if ((slot_i = old_search_block(arg1, 0, strlen(arg1), bodyParts, 0)) > 0) {
+    if ((slot_i = old_search_block(arg1.c_str(), 0, arg1.length(), bodyParts, 0)) > 0) {
       slot = wearSlotT(--slot_i);
       if (!slotChance(slot)) {
         sendTo("Unfortunately, you don't have that limb.\n\r");
@@ -1634,10 +1634,10 @@ int TBeing::doRemove(const char *argument, TThing *obj)
         return FALSE;
       }
     }
-    if (!buf || !*buf) {
+    if(buf.empty()){
       if (!(o = obj)) {
-        if (!(o = get_thing_in_equip(this, arg1, equipment, &j, TRUE, &count))) {
-          if (!(o = get_thing_stuck_in_vis(this, arg1, &j, &count, this))) {
+        if (!(o = get_thing_in_equip(this, arg1.c_str(), equipment, &j, TRUE, &count))) {
+          if (!(o = get_thing_stuck_in_vis(this, arg1.c_str(), &j, &count, this))) {
             sendTo("That item is nowhere on your body!\n\r");
             return FALSE;
           }
@@ -1654,12 +1654,12 @@ int TBeing::doRemove(const char *argument, TThing *obj)
       }
       if (o->stuckIn) {
         if (carryVolumeLimit() > getCarriedVolume()) {
-          sprintf(buf, "You rip $p out of your %s.",
+          ssprintf(buf, "You rip $p out of your %s.",
                      describeBodySlot(j=o->eq_stuck).c_str());
-          act(buf, FALSE, this, o, 0, TO_CHAR);
-          sprintf(buf, "$n rips $p out of $s %s.",
+          act(buf.c_str(), FALSE, this, o, 0, TO_CHAR);
+          ssprintf(buf, "$n rips $p out of $s %s.",
                      describeBodySlot(j).c_str());
-          act(buf, FALSE, this, o, 0, TO_ROOM);
+          act(buf.c_str(), FALSE, this, o, 0, TO_ROOM);
   
           // If fighting, make them lose a round or two.
           loseRoundWear((double) o->getVolume() / 2250, TRUE, TRUE);
@@ -1699,8 +1699,8 @@ int TBeing::doRemove(const char *argument, TThing *obj)
         }
       }
     } else {
-      if (!(ch = get_char_room_vis(this, buf))) {
-        sendTo("You don't see '%s' here.\n\r", buf);
+      if (!(ch = get_char_room_vis(this, buf.c_str()))) {
+        sendTo("You don't see '%s' here.\n\r", buf.c_str());
         return FALSE;
       }
       if (! ((ch->master == this && ch->isAffected(AFF_CHARM)) ||
@@ -1711,8 +1711,8 @@ int TBeing::doRemove(const char *argument, TThing *obj)
         return FALSE;
       }
       if (!(o = obj)) {
-        if (!(o = get_thing_in_equip(this, arg1, ch->equipment, &j, TRUE, &count))) {
-          if (!(o = get_thing_stuck_in_vis(this, arg1, &j, &count, ch))) {
+        if (!(o = get_thing_in_equip(this, arg1.c_str(), ch->equipment, &j, TRUE, &count))) {
+          if (!(o = get_thing_stuck_in_vis(this, arg1.c_str(), &j, &count, ch))) {
             act("That item is nowhere on $N's body,", 
                      FALSE, this, 0, ch, TO_CHAR);
             return FALSE;
@@ -1742,15 +1742,15 @@ int TBeing::doRemove(const char *argument, TThing *obj)
           sendTo("You aren't able to carry that much weight.\n\r");
           return FALSE;
         }
-        sprintf(buf, "You rip $p out of $N's %s.",
+        ssprintf(buf, "You rip $p out of $N's %s.",
                    ch->describeBodySlot(j = o->eq_stuck).c_str());
-        act(buf, FALSE, this, o, ch, TO_CHAR);
-        sprintf(buf, "$n rips $p out of $N's %s.",
+        act(buf.c_str(), FALSE, this, o, ch, TO_CHAR);
+        ssprintf(buf, "$n rips $p out of $N's %s.",
                     ch->describeBodySlot(j).c_str());
-        act(buf, FALSE, this, o, ch, TO_NOTVICT);
-        sprintf(buf, "$n rips $p out of your %s.",
+        act(buf.c_str(), FALSE, this, o, ch, TO_NOTVICT);
+        ssprintf(buf, "$n rips $p out of your %s.",
                    ch->describeBodySlot(j).c_str());
-        act(buf, FALSE, this, o, ch, TO_VICT);
+        act(buf.c_str(), FALSE, this, o, ch, TO_VICT);
 
         // If fighting, make them lose a round or two.
         loseRoundWear((double) o->getVolume() / 2250, TRUE, TRUE);
@@ -2236,26 +2236,26 @@ float TBeing::maxWieldWeight(const TThing *obj, handTypeT hands) const
   return maxval;
 }
 
-void TBeing::doOutfit(const char *arg)
+void TBeing::doOutfit(const string arg)
 {
-  char buf[256], buf2[256];
+  string buf, buf2;
   TBeing *mob;
   TObj *obj;
   int rc;
 
-  two_arg(arg, buf, buf2);
-  if (!buf || !*buf || !buf2 || !*buf2) {
+  argument_parser(arg, buf, buf2);
+  if(buf.empty() || buf2.empty()){
     sendTo("Syntax: outfit <thing> <person>\n\r");
     return;
   }
-  obj = get_obj_vis_accessible(this, buf);
+  obj = get_obj_vis_accessible(this, buf.c_str());
   if (!obj || (obj && obj->equippedBy)) {
-    sendTo("You can't seem to find '%s'.\n\r", buf);
+    sendTo("You can't seem to find '%s'.\n\r", buf.c_str());
     sendTo("Syntax: outfit <thing> <person>\n\r");
     return;
   }
-  if (!(mob = get_char_room_vis(this, buf2))) {
-    sendTo("%s: No one by that name here.\n\r", buf);
+  if (!(mob = get_char_room_vis(this, buf2.c_str()))) {
+    sendTo("%s: No one by that name here.\n\r", buf.c_str());
     sendTo("Syntax: outfit <thing> <person>\n\r");
     return;
   }

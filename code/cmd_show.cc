@@ -974,7 +974,7 @@ void TPerson::doShow(const char *argument)
            tStType(""),
            tStItemType("");
 
-    tStArgument = two_arg(tStArgument, tStType, tStItemType);
+    tStArgument = argument_parser(tStArgument, tStType, tStItemType);
 
     if (tStType.empty() ||
         (!is_abbrev(tStType, "materialize") &&
@@ -1393,7 +1393,7 @@ void TPerson::doShow(string tStString)
            tStSecond(""),
            tStRemain("");
 
-    tStRemain = two_arg(tStArg, tStFirst, tStSecond);
+    tStRemain = argument_parser(tStArg, tStFirst, tStSecond);
 
     switch (tSelection) {
       case  1: // zones

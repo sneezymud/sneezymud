@@ -130,7 +130,7 @@ void TBeing::doTestCode(const char *arg)
 #if 0
   string str1, str2, strret;
   string strin = "this is input";
-  strret = two_arg(strin, str1, str2);
+  strret = argument_parser(strin, str1, str2);
   sendTo("in: '%s'\n\r", strin.c_str());
   sendTo("1: '%s'\n\r", str1.c_str());
   sendTo("2: '%s'\n\r", str2.c_str());

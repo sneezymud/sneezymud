@@ -21,7 +21,7 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
   char    tString[256];
   TThing *tThing;
 
-  tStArg = two_arg(tStArg, tStThing, tStValue);
+  tStArg = argument_parser(tStArg, tStThing, tStValue);
 
   if (!ch->isImmortal() || !ch->desc || !ch->isPc())
     return;

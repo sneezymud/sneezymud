@@ -49,7 +49,7 @@ int search_block(const char *arg, const char * const *list, bool exact)
 }
 
 
-int old_search_block(char *argument, int bgin, int length, const char * const * list, bool mode)
+int old_search_block(const char *argument, int bgin, int length, const char * const * list, bool mode)
 {
   int guess, search;
   bool found;
@@ -1953,7 +1953,7 @@ void argument_interpreter(string argument, string &first_arg, string &second_arg
   one_argument(st, second_arg);
 }
 
-bool is_number(char *str)
+bool is_number(const char *str)
 {
   int look_at;
 
@@ -2138,56 +2138,6 @@ void half_chop(const char *string, char *arg1, char *arg2)
   *arg1 = '\0';
   for (; isspace(*string); string++);
   for (; (*arg2 = *string); string++, arg2++);
-}
-
-const char *two_arg(const char *str, char *arg1, char *arg2)
-{
-  string t1 = str, t2, t3, t4;
-  t4 = two_arg(t1, t2, t3);
-  strcpy(arg1, t2.c_str());
-  strcpy(arg2, t3.c_str());
-
-  // return a pointer into the original argument
-  if (t4.empty())
-    return &str[strlen(str)];
-  else {
-    char *tmp = strstr(str, arg1);
-    tmp = strstr(tmp, arg2);
-    return strstr(tmp, t4.c_str());
-  }
-}
-
-const string two_arg(const string &str, string &arg1, string &arg2)
-{
-  string whitespace = " \n\r";
-
-  string::size_type n1 = str.find_first_not_of(whitespace);
-  string::size_type n2 = str.find_first_of(whitespace, n1);
-  if (n1 != string::npos && n2 != string::npos) {
-    arg1 = str.substr(n1, n2 - n1);
-
-    string::size_type n3 = str.find_first_not_of(whitespace, n2);
-    string::size_type n4 = str.find_first_of(whitespace, n3);
-
-    if (n3 != string::npos && n4 != string::npos) {
-      // two args found, with extra stuff after
-      arg2 = str.substr(n3, n4-n3);
-      return string(str, n4);
-    } else {
-      if (n3 != string::npos) // two args, no extra
-        arg2 = string(str, n3);
-      else  // one arg, with trailing whitespace
-        arg2 = "";
-      return "";
-    }
-  } else {
-    if (n1 != string::npos) // one arg, no trailing whitespace
-      arg1 = string(str, n1);
-    else // noargs
-      arg1 = "";
-    arg2 = "";
-    return "";
-  }
 }
 
 char *add_bars(char *string)

@@ -14,7 +14,7 @@
 #endif
 
 int search_block(const char *arg, const char * const *, bool);
-int old_search_block(char *, int, int, const char * const *, bool);
+int old_search_block(const char *, int, int, const char * const *, bool);
 void argument_interpreter(const char *, char *, char *);
 void argument_interpreter(string, string &, string &);
 extern const char *one_argument(const char *argument, char *first_arg);
@@ -655,8 +655,6 @@ extern bool is_abbrev(const string &, const string &, multipleTypeT multiple = M
 extern char *uncap(char *s);
 extern char *cap(char *s);
 extern char *fread_string(FILE *);
-extern const char *two_arg(const char *, char *, char *);
-extern const string two_arg(const string &, string &, string &);
 extern void trimString(string &);
 
 #endif

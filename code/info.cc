@@ -2139,18 +2139,18 @@ void TBeing::doWizhelp()
   desc->page_string(buf);
 }
 
-void TBeing::doUsers(const char *)
+void TBeing::doUsers(const string)
 {
   sendTo("Dumb monsters can't use the users command!\n\r");
 }
 
-void TPerson::doUsers(const char *argument)
+void TPerson::doUsers(const string argument)
 {
   char line[200], buf2[100], buf3[100], buf4[10];
   Descriptor *d;
   int count = 0;
   string sb;
-  char arg1[MAX_INPUT_LENGTH], arg2[MAX_INPUT_LENGTH];
+  string arg1, arg2;
   TBeing *k = NULL;
 
   if (powerCheck(POWER_USERS))
@@ -2158,11 +2158,11 @@ void TPerson::doUsers(const char *argument)
 
   const char USERS_HEADER[] = "\n\rName              Hostname                           Connected  Account Name\n\r--------------------------------------------------------------------------------\n\r";
 
-  argument = two_arg(argument, arg1, arg2);
+  argument_parser(argument, arg1, arg2);
 
   *line = '\0';
 
-  if (!*arg1 || !arg1) {
+  if(arg1.empty()){
     sb += USERS_HEADER;
 
     for (d = descriptor_list; d; d = d->next) {
@@ -2205,14 +2205,14 @@ void TPerson::doUsers(const char *argument)
       desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
     return;
   } else if (is_abbrev(arg1, "site")) {
-    if (!*arg2 || !arg2) {
+    if(arg2.empty()){
       sendTo("Syntax : users site <sitename>\n\r");
       return;
     } else {
-      sendTo("\n\rPlayers online from %s:\n\r\n\r", arg2);
+      sendTo("\n\rPlayers online from %s:\n\r\n\r", arg2.c_str());
       sendTo(USERS_HEADER);
       for (d = descriptor_list; d; d = d->next) {
-        if (d->host && strcasestr(d->host, arg2)) {
+        if (d->host && strcasestr(d->host, arg2.c_str())) {
           if (d->character && d->character->getName()) {
             if (!d->connected && !canSeeWho(d->character))
               continue;
@@ -2243,8 +2243,8 @@ void TPerson::doUsers(const char *argument)
       sendTo("No players online from that site.\n\r");
       return;
     }
-  } else if ((k = get_pc_world(this, arg1, EXACT_YES)) ||
-             (k = get_pc_world(this, arg1, EXACT_NO))) {
+  } else if ((k = get_pc_world(this, arg1.c_str(), EXACT_YES)) ||
+             (k = get_pc_world(this, arg1.c_str(), EXACT_NO))) {
     if (k->desc) {
       // don't let newbie gods blab who imm's mortals are
       if (k->desc->account && IS_SET(k->desc->account->flags, ACCOUNT_IMMORTAL) && 
@@ -2684,7 +2684,7 @@ void TBeing::doWhere(const char *argument)
     return;
 
   only_argument(argument, namebuf);
-  two_arg(tStString, tStArg, tStName);
+  argument_parser(tStString, tStArg, tStName);
 
   if (hasWizPower(POWER_WIZARD) && (GetMaxLevel() > MAX_MORT) &&
       (is_abbrev(tStArg, "engraved") || is_abbrev(tStArg, "owners"))) {

@@ -301,7 +301,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       break;
     case CMD_GIVE:
 #if 0
-      tStArgument = two_arg(tStArgument, tStObj, tStSucker);
+      tStArgument = argument_parser(tStArgument, tStObj, tStSucker);
       TThing *tThing = searchLinkedList(tStObj, stuff, TYPEOBJ);
 
       if (mob && tThing && canSee(mob))
@@ -323,7 +323,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const char *arg, TBeing *mob, cons
       rc = doGive(arg, GIVE_FLAG_DROP_ON_FAIL);
       // the force drop shit is lame, so another safety check here. give SHOULD return 
       // FALSE if it failed, soooo... i'm gonna throw in a little hack -dash
-      tStArgument = two_arg(tStArgument, tStObj, tStSucker);
+      tStArgument = argument_parser(tStArgument, tStObj, tStSucker);
       if (!rc) {
 	TThing *tThing = searchLinkedList(tStObj, getStuff(), TYPEOBJ);
 	if (tThing && tThing->parent == this && roomp) {
@@ -786,7 +786,7 @@ int TMonster::checkResponsesReal(TBeing *speaker, TThing *resp_targ, const char 
         case CMD_BUY:
           // Format: buy { "cost item name";
           //     Ex: buy { "1000 1 smoked-ham";
-          tStArg = two_arg(respo->args, tStString, tStBuffer);
+          tStArg = argument_parser(respo->args, tStString, tStBuffer);
           strcpy(tString, said);
 
           if ((is_number(tString) ?

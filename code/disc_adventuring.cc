@@ -91,14 +91,14 @@ void TBeing::bandage(TBeing *victim,wearSlotT slot)
   }
 }
 
-void TBeing::doBandage(const char *arg)
+void TBeing::doBandage(const string arg)
 {
   TBeing *vict;
   wearSlotT slot;
   int band_num, count;
-  char buf[128], buf2[128];
+  string buf, buf2;
 
-  arg = two_arg(arg, buf, buf2);
+  argument_parser(arg, buf, buf2);
 
   if (!hasHands() || affectedBySpell(AFFECT_TRANSFORMED_ARMS) ||
                      affectedBySpell(AFFECT_TRANSFORMED_HANDS)) {
@@ -111,9 +111,9 @@ void TBeing::doBandage(const char *arg)
     return;
   }
   // Auto-Target the bandager.
-  if (!*buf || !buf)
+  if(buf.empty()){
     vict = this;
-  else if (!(vict = get_char_room_vis(this, buf))) {
+  } else if (!(vict = get_char_room_vis(this, buf.c_str()))) {
     sendTo("Syntax : Bandage <person> <location>\n\r");
     return;
   }
@@ -125,7 +125,7 @@ void TBeing::doBandage(const char *arg)
 
   // Auto-Find bleeding limbs.
   int tmpi;
-  if (!*buf2 || !buf2) {
+  if(buf2.empty()){
     for (tmpi = 0; (tmpi < MAX_WEAR) &&
                    !vict->isLimbFlags(wearSlotT(tmpi), PART_BLEEDING); tmpi++);
 
@@ -137,7 +137,7 @@ void TBeing::doBandage(const char *arg)
     slot = wearSlotT(tmpi);
   } else {
     int tmpi;
-    if ((tmpi = old_search_block(buf2, 0, strlen(buf2), bodyParts, 0)) <= 0) {
+    if ((tmpi = old_search_block(buf2.c_str(), 0, buf2.length(), bodyParts, 0)) <= 0) {
       sendTo("You must pick a correct body part to bandage!\n\r");
       return;
     }
@@ -149,8 +149,8 @@ void TBeing::doBandage(const char *arg)
     return;
   }
   if (vict->isLimbFlags(slot, PART_BANDAGED)) {
-    sprintf(buf, "$N's %s is already bandaged!", vict->describeBodySlot(slot).c_str());
-    act(buf, FALSE, this, NULL, vict, TO_CHAR);
+    ssprintf(buf, "$N's %s is already bandaged!", vict->describeBodySlot(slot).c_str());
+    act(buf.c_str(), FALSE, this, NULL, vict, TO_CHAR);
     return;
   }
   switch (slot) {
@@ -201,8 +201,8 @@ void TBeing::doBandage(const char *arg)
     } else {
       if (bSuccess(this,  getSkillValue(SKILL_BANDAGE), SKILL_BANDAGE)) {
         if (band_num > 1) {
-          sprintf(buf,"You quickly combine %d bandages into one big enough to bandage that part.\n\r",band_num);
-          sendTo(buf);
+          ssprintf(buf,"You quickly combine %d bandages into one big enough to bandage that part.\n\r",band_num);
+          sendTo(buf.c_str());
         }
         bandage(vict,slot);
       } else {
