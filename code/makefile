@@ -301,7 +301,7 @@ DISC_HEADS   = disc_adventuring.h disc_aegis.h disc_afflictions.h \
                disc_smythe.h disc_sorcery.h \
                disc_spirit.h disc_stealth.h disc_survival.h   \
                disc_mindbody.h disc_theology.h disc_thief.h  \
-               disc_thief_fight.h disc_totem.h disc_traps.h  \
+               disc_thief_fight.h disc_traps.h  \
                disc_warrior.h disc_water.h disc_wrath.h
 
 $(OBJDIR)%.o : %.cc $(GEN_HEADS)

@@ -916,7 +916,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SPELL_CONTROL_UNDEAD: // 403
       return &((CDShamanSpider *) cd)->skControlUndead;
     case SPELL_RESURRECTION: // 404
-      return &((CDShaman *) cd)->skResurrection;
+      return &((CDShamanControl *) cd)->skResurrection;
     case SPELL_VOODOO: // 405
       return &((CDShaman *) cd)->skVoodoo;
     case SPELL_THORNFLESH:
