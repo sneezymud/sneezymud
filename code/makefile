@@ -188,7 +188,7 @@ LIBSYS := $(sort $(addprefix $(OBJDIR), $(LIBSYS)))
 LIBGAME=game_blackjack.o  game_crazyeights.o  game_hearts.o	\
 	game_cards.o      game_drawpoker.o    game_poker.o	\
 	game_craps.o      game_gin.o          game_slots.o	\
-	games.o
+	game_hilo.o	  games.o
 
 LIBGAME := $(sort $(addprefix $(OBJDIR), $(LIBGAME)))
 

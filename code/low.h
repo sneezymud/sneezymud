@@ -36,6 +36,7 @@ const short int ROOM_DUMP              = 3700;
 const short int ROOM_PETS_LOG          = 3738;
 const short int ROOM_TICKET_DESTINATION= 6969;
 const short int ROOM_PETS_AMB          = 7804;
+const short int ROOM_HILO              = 2359;
 const short int ROOM_BLACKJACK         = 2360;
 const short int ROOM_HEARTS            = 8417;
 const short int ROOM_WARD_1            = 13142;

@@ -178,6 +178,17 @@ void TBeing::doStay()
       return;
     }
     gBj.stay(this);
+  } else if(checkHiLo()){
+    if ((inx = gHiLo.index(this)) < 0){
+      sendTo("You are not sitting at the table yet.\n\r");
+      return;
+    }
+    
+    if(!gHiLo.check_for_bet()) {
+      sendTo("You are not playing a game.\n\r");
+      return;
+    }
+    gHiLo.stay(this);
   } else
     sendTo("So you think you are in a casino?\n\r");
 }

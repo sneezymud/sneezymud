@@ -2356,6 +2356,10 @@ static bool sitCasinoEnter(const TBeing *ch)
     if (!gBj.enter(ch))
       return true;
   }
+  if (ch->checkHiLo(true)) {
+    if (!gHiLo.enter(ch))
+      return true;
+  }
   if (ch->checkHearts(true)) {
     if (!gHearts.enter(ch))
       return true;
@@ -2374,6 +2378,7 @@ static bool sitCasinoEnter(const TBeing *ch)
       return true;
     }
   }
+
   return false;
 }
 
@@ -3544,6 +3549,10 @@ bool TBeing::removeAllCasinoGames() const
   if (checkBlackjack())
     if (gBj.index(this) >= 0)
       gBj.exitGame(this);
+
+  if (checkHiLo())
+    if (gHiLo.index(this) >= 0)
+      gHiLo.exitGame(this);
 
   if (gGin.check(this))
     if (gGin.index(this) >= 0)

@@ -223,9 +223,34 @@ class HeartsGame : public CardGame {
     int ACROSS(const TBeing *) const;
 };
 
+
+class HiLoGame : public CardGame {
+ private:
+  int card;
+  bool inuse;
+  int deck_inx;
+  float win_perc;
+  sstring name;
+ public:
+  bool enter(const TBeing *ch);
+  virtual void peek(const TBeing *) const;
+  void BetHi(TBeing *, int);
+  void BetLo(TBeing *, int);
+  void Bet(TBeing *ch, const sstring &arg);
+  void hilo_shuffle(const TBeing *ch);
+  void stay(TBeing *ch);
+  int check_for_bet() {
+    return bet;
+  }
+  int exitGame(const TBeing *ch);
+  virtual int index(const TBeing *) const;
+};
+
+
 extern GinGame gGin;
 extern HeartsGame gHearts;
 extern BjGame gBj;
+extern HiLoGame gHiLo;
 
 /* craps_options */
 
