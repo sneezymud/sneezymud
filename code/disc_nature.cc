@@ -202,6 +202,13 @@ int transformLimb(TBeing * caster, const char * buffer, int level, byte bKnown)
 int vampireTransform(TBeing *ch)
 {
   TMonster *mob;
+
+  if (!ch->isPc() || IS_SET(ch->specials.act, ACT_POLYSELF) ||
+      ch->polyed != POLY_TYPE_NONE){
+    act("You are already transformed into another shape.",
+	TRUE, ch, NULL, NULL, TO_CHAR);
+    return FALSE;
+  }
   
   if (!(mob = read_mobile(13749, VIRTUAL))) {
     ch->sendTo("It didn't seem to work.\n\r");
