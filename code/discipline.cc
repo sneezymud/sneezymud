@@ -1852,6 +1852,9 @@ static bool bSucCounter(TBeing *caster, skillUseClassT skillType, spellNumT spel
             case SPELL_CASTER:
               caster->sendTo(COLOR_SPELLS, "<c>Your fighting distracts you and you feel your casting skills failing you.<1>\n\r");
               break;
+            case SPELL_DANCER:
+              caster->sendTo(COLOR_SPELLS, "<c>Your fighting distracts your ritual.<1>\n\r");
+              break;
             case SPELL_PRAYER:
               caster->sendTo(COLOR_SPELLS, "<c>Your fighting distracts you from your prayer.<1>\n\r");
               break;
@@ -2466,13 +2469,13 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_STEALTH] = new CDStealth();
     discs->disc[DISC_TRAPS] = new CDTraps();
 
-    discs->disc[DISC_SHAMAN] = new CDShaman();
-    discs->disc[DISC_SHAMAN_FROG] = new CDShamanFrog();
     discs->disc[DISC_SHAMAN_ALCHEMY] = new CDShamanAlchemy();
-    discs->disc[DISC_SHAMAN_SKUNK] = new CDShamanSkunk();
     discs->disc[DISC_SHAMAN_ARMADILLO] = new CDShamanArmadillo();
-    discs->disc[DISC_SHAMAN_SPIDER] = new CDShamanSpider();
     discs->disc[DISC_SHAMAN_CONTROL] = new CDShamanControl();
+    discs->disc[DISC_SHAMAN_FROG] = new CDShamanFrog();
+    discs->disc[DISC_SHAMAN_SKUNK] = new CDShamanSkunk();
+    discs->disc[DISC_SHAMAN_SPIDER] = new CDShamanSpider();
+    discs->disc[DISC_SHAMAN] = new CDShaman();
     discs->disc[DISC_TOTEM] = new CDTotem();
 
     discs->disc[DISC_WIZARDRY] = new CDWizardry();
@@ -2721,7 +2724,7 @@ void TBeing::assignSkillsClass()
     cd->setLearnedness(value);
     freebies += value/3;
   }
-  if (hasClass(CLASS_MAGE) || hasClass(CLASS_SHAMAN)) {
+  if (hasClass(CLASS_MAGE)) {
     if ((cd = getDiscipline(DISC_WIZARDRY))) {
       value = min((3*(GetMaxLevel())), 100);
       cd->setNatLearnedness(value);
@@ -2729,6 +2732,13 @@ void TBeing::assignSkillsClass()
       freebies += value/3;
     }
     if ((cd = getDiscipline(DISC_LORE))) {
+      value = min((3*(GetMaxLevel())), 100);
+      cd->setNatLearnedness(value);
+      cd->setLearnedness(value);
+      freebies += value/3;
+    }
+  } else if (hasClass(CLASS_SHAMAN)) {
+    if ((cd = getDiscipline(DISC_WIZARDRY))) {
       value = min((3*(GetMaxLevel())), 100);
       cd->setNatLearnedness(value);
       cd->setLearnedness(value);
@@ -4022,14 +4032,16 @@ int TBeing::getSkillLevel(spellNumT skill) const
       lev = getClassLevel(CLASS_SHAMAN);
       break;
     case DISC_WIZARDRY:
-    case DISC_LORE:
-// if multiclass allowed this will work
       if (hasClass(CLASS_MAGIC_USER)) {
         lev = getClassLevel(CLASS_MAGIC_USER);
         break;
       } else {
         lev = getClassLevel(CLASS_SHAMAN);
       }
+      break;
+    case DISC_LORE:
+// if multiclass allowed this will work
+      lev = getClassLevel(CLASS_MAGIC_USER);
       break;
     case DISC_THEOLOGY:
     case DISC_FAITH:
@@ -4039,7 +4051,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
       } else {
         lev = getClassLevel(CLASS_DEIKHAN);
       }
-        break;
+      break;
     case DISC_ADVENTURING:
     case DISC_COMBAT:
     case DISC_SLASH:
