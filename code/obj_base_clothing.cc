@@ -692,6 +692,7 @@ void TBaseClothing::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop
     TShopOwned tso(shop_nr, keeper, ch);
 
     tso.doReserve();
+    tso.chargeTax(this, cost);  
   }
 }
 
