@@ -495,68 +495,68 @@ int TShopOwned::doLogs(sstring arg)
   if(arg==" clear"){
     db.query("delete from shoplog where shop_nr=%i", shop_nr);
     ch->sendTo("Done.\n\r");
-  } else if(arg==" summaries"){
-    db.query("select name, action, sum(talens) as tsum from shoplog where shop_nr=%i group by name, action order by tsum desc", shop_nr);
-    
-    ssprintf(buf, "<r>%-12.12s %-10.10s %s<1>\n\r",
-	     "Person", "Action", "Total Talens");
-    sb += buf;
-
-    while(db.fetchRow()){
-      ssprintf(buf, "%-12.12s %-10.10s %8i\n\r", 
-	      db.getColumn(0), db.getColumn(1), convertTo<int>(db.getColumn(2)));
+  } else if(arg==" summaries" || arg==" balance"){
+    if(arg==" summaries"){
+      db.query("select name, action, sum(talens) as tsum from shoplog where shop_nr=%i group by name, action order by tsum desc", shop_nr);
+      
+      ssprintf(buf, "<r>%-12.12s %-10.10s %s<1>\n\r",
+	       "Person", "Action", "Total Talens");
       sb += buf;
-    }
-    
-    
-    //////////
-    sb += "\n\r";
-    
-    db.query("select item, action, sum(talens) as tsum from shoplog where shop_nr=%i group by item, action order by tsum desc", shop_nr);
-
-    ssprintf(buf, "<r>%-26.26s %-10.10s %s<1>\n\r",
-	     "Item", "Action" ,"Total Talens");
-    sb += buf;
-    
-    while(db.fetchRow()){
-      ssprintf(buf, "%-32.32s %-10.10s %8i\n\r", 
-	      db.getColumn(0), db.getColumn(1), convertTo<int>(db.getColumn(2)));
+      
+      while(db.fetchRow()){
+	ssprintf(buf, "%-12.12s %-10.10s %8i\n\r", 
+		 db.getColumn(0), db.getColumn(1), convertTo<int>(db.getColumn(2)));
+	sb += buf;
+      }
+      
+      //////////
+      sb += "\n\r";
+      
+      db.query("select item, action, sum(talens) as tsum from shoplog where shop_nr=%i group by item, action order by tsum desc", shop_nr);
+      
+      ssprintf(buf, "<r>%-26.26s %-10.10s %s<1>\n\r",
+	       "Item", "Action" ,"Total Talens");
       sb += buf;
+      
+      while(db.fetchRow()){
+	ssprintf(buf, "%-32.32s %-10.10s %8i\n\r", 
+		 db.getColumn(0), db.getColumn(1), convertTo<int>(db.getColumn(2)));
+	sb += buf;
+      }
+
+      sb += "\n\r";
     }
-    
-    
-    /////////
-    sb += "\n\r";
+ 
     
     db.query("select action, sum(talens) as tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
     
     ssprintf(buf, "<r>%-12.12s %s<1>\n\r",
 	     "Action", "Total Talens");
     sb += buf;
-
+    
     while(db.fetchRow()){
       ssprintf(buf, "%-12.12s %8i\n\r", 
-	      db.getColumn(0), convertTo<int>(db.getColumn(1)));
+	       db.getColumn(0), convertTo<int>(db.getColumn(1)));
       sb += buf;
     }
-
+    
     /////////
     sb += "\n\r";
     int profit=0, loss=0;
     
     ssprintf(buf, "<r>Sales Balance<1>\n\r");
     sb += buf;
-
+    
     db.query("select sum(talens) from shoplog where shop_nr=%i and talens > 0 and action != 'receiving' and action != 'giving'", shop_nr);
     
     if(db.fetchRow())
       profit=convertTo<int>(db.getColumn(0));
-
+    
     ssprintf(buf, "%-15.15s %i\n\r", "Sales Profit", profit);
     sb += buf;
-
+    
     db.query("select sum(talens) from shoplog where shop_nr=%i and talens < 0 and action != 'receiving' and action != 'giving'", shop_nr);
-
+    
     if(db.fetchRow())
       loss=convertTo<int>(db.getColumn(0));
     
@@ -565,13 +565,11 @@ int TShopOwned::doLogs(sstring arg)
     
     ssprintf(buf, "%-15.15s %i\n\r", "Sales Income", profit+loss);
     sb += buf;
-
-
+    
     /////////
     sb += "\n\r";
     profit=loss=0;
     
-
     ssprintf(buf, "<r>Gross Balance<1>\n\r");
     sb += buf;
     
@@ -582,7 +580,7 @@ int TShopOwned::doLogs(sstring arg)
     
     ssprintf(buf, "%-15.15s %i\n\r", "Gross Profit", profit);
     sb += buf;
-
+    
     db.query("select sum(talens) from shoplog where shop_nr=%i and talens < 0",
 	     shop_nr);
     if(db.fetchRow())
@@ -593,54 +591,11 @@ int TShopOwned::doLogs(sstring arg)
     
     ssprintf(buf, "%-15.15s %i\n\r", "Net Income", profit+loss);
     sb += buf;
-
     
     /////////
     if (ch->desc)
       ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
-  } else if(arg==" balance"){
-    db.query("select action, sum(talens) as tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
-    
-    ssprintf(buf, "<r>%-12.12s %s<1>\n\r", 
-	     "Action", "Total Talens");
-    sb += buf;
-
-    while(db.fetchRow()){
-      ssprintf(buf, "%-12.12s %8i\n\r", 
-	      db.getColumn(0), convertTo<int>(db.getColumn(1)));
-      sb += buf;
-    }
-
-    /////////
-    sb += "\n\r";
-    int profit=0, loss=0;
-
-    ssprintf(buf, "<r>Balance Sheet<1>\n\r");
-    sb += buf;
-    
-    db.query("select sum(talens) from shoplog where shop_nr=%i and talens > 0",
-	     shop_nr);
-    if(db.fetchRow())
-      profit=convertTo<int>(db.getColumn(0));
-    
-    ssprintf(buf, "%-15.15s %i\n\r", "Gross Profit", profit);
-    sb += buf;
-
-    db.query("select sum(talens) from shoplog where shop_nr=%i and talens < 0",
-	     shop_nr);
-    if(db.fetchRow())
-      loss=convertTo<int>(db.getColumn(0));
-    
-    ssprintf(buf, "%-15.15s %i\n\r", "Gross Loss", loss);
-    sb += buf;
-    
-    ssprintf(buf, "%-15.15s %i\n\r", "Net Income", profit+loss);
-    sb += buf;
-
-    
-    /////////
-    if (ch->desc)
-      ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
+    ///////////////////////////////////////////////////////////////////////
   } else {
     if(!arg.empty()){
       db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' and upper(name)=upper('%s') order by logtime desc, action desc", shop_nr, arg.c_str());      
