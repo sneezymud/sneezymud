@@ -7496,7 +7496,61 @@ int shopWhisper(TBeing *ch, TMonster *myself, int shop_nr, const char *arg)
   return TRUE;
 }
 
+int mimic(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mimic, TObj *)
+{
+  if (cmd != CMD_SAY && cmd != CMD_SHOUT && cmd != CMD_WHISPER)
+    return FALSE;
 
+  sstring sarg = arg;
+  sstring target, buf;
+  one_argument(sarg, target);
+
+  if (isname(target, mimic->name) || isname(ch->name, mimic->name) ) {
+      return FALSE;
+  }
+  
+  vlogf(LOG_MAROR, "1");
+  bool snicker = FALSE;
+  if ( sarg.lower().find("i'm") != sstring::npos ||
+        sarg.lower().find("i am") != sstring::npos)
+  {
+    snicker = TRUE;
+  }
+  
+  vlogf(LOG_MAROR, "2, FALSE %d, snicker %d", FALSE, snicker);
+  vlogf(LOG_MAROR, "%s, %s, %s", arg, target.c_str(), sarg.c_str());
+  if (cmd == CMD_WHISPER) {
+    ch->doWhisper(arg);
+    buf = fmt ("%s psssst") % target.c_str(); 
+    if (snicker) {
+      mimic->doAction("", CMD_SNICKER);
+    } else
+      mimic->doWhisper(buf.c_str());
+    return TRUE;
+  }
+
+  if (cmd == CMD_SAY) {
+    ch->doSay(arg);
+    if (snicker) {
+      mimic->doAction("", CMD_SNICKER);
+    } else
+      mimic->doSay(arg);
+    return TRUE;
+  }
+
+  if (cmd == CMD_SHOUT) {
+    ch->doShout(arg);
+    if (snicker) {
+      mimic->doAction("", CMD_SNICKER);
+    } else
+      mimic->doShout(arg);
+    return TRUE;
+  }
+  vlogf(LOG_MAROR, "3");
+
+  return FALSE;
+
+}  
 
 extern int fireman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int corporateAssistant(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7698,6 +7752,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {TRUE, "poison bite", poisonBite}, // 180
   {FALSE, "riddling tree", riddlingTree},
   {FALSE, "fireman", fireman},
+  {TRUE, "mimic", mimic},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

@@ -2983,6 +2983,12 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SKILL_BEAST_SOOTHER:
       rc = beastSoother(caster, victim, obj);
       break;
+    case SPELL_DIVINATION:
+      if (!target) {
+        rc = divinationBeing(caster, victim);
+      } else 
+        rc = divinationObj(caster, target);
+      break;
     default:
       vlogf(LOG_BUG,"Object (%s) with uncoded spell (%d)!", obj->getName(), spell);
       break;
