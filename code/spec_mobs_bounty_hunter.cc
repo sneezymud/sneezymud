@@ -1116,6 +1116,10 @@ void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
 
 void repoCheck(TMonster *mob, int rnum)
 {
+
+  //players still complain like mad.  taking it out again - dash 9/15/02
+  return;
+
 #if REPO_MOBS
   char buf[160],buf2[160];
   int cur_num = obj_index[rnum].number;
