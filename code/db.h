@@ -111,7 +111,7 @@ class zoneData
     void closeDoors(void);
     void logError(char, const char *, int, int);
     void nukeMobs(void);
-
+    void sendTo(string, int exclude_room=-1);
 
     vector<resetCom>cmd;          // command table for reset
   

@@ -2299,6 +2299,22 @@ void zoneData::resetZone(bool bootTime)
   this->age = 0;
 }
 
+// echos a string to every room in the zone except exclude_room
+void zoneData::sendTo(string s, int exclude_room=-1)
+{
+  TBeing *tmp_victim, *temp;
+  
+  for (tmp_victim = character_list; tmp_victim; tmp_victim = temp) {
+    temp = tmp_victim->next;
+    
+    if(tmp_victim->roomp->getZoneNum() == zone_nr &&
+       tmp_victim->in_room != exclude_room){
+      tmp_victim->sendTo(s.c_str());
+    }
+  }
+}
+
+
 // for use in resetZone; return TRUE if zone 'nr' is free of PC's  
 bool zoneData::isEmpty(void)
 {
