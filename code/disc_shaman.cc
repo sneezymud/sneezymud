@@ -1866,8 +1866,8 @@ int distort(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_lear
 
   caster->reconcileHurt(victim, discArray[SPELL_DISTORT]->alignMod);
 
-  if (victim->isImmune(IMMUNE_DRAIN, level)) { 
-    act("$N is immune to draining!", FALSE, caster, NULL, victim, TO_CHAR);
+  if (victim->isImmune(IMMUNE_ENERGY, level)) { 
+    act("$N is immune to energy and thaumaturgy!", FALSE, caster, NULL, victim, TO_CHAR);
     act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
     return SPELL_FAIL;
