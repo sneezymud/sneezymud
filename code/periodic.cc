@@ -234,6 +234,7 @@ bool TObj::isTrash()
      roomp->isWaterSector() ||
      roomp->isAirSector() ||
      isObjStat(ITEM_BURNING) ||
+     isname("log commodity wood", getName()) ||
      dynamic_cast<TBaseCorpse *>(this))
     return false;
 
