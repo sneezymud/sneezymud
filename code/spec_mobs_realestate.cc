@@ -40,7 +40,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
       
       mysql_free_result(res);
     } else if(!*buf2){
-      if((rc=dbquery(&res, "sneezy", "realEstateAgent(1)", "select plottype, plotnum from homeplots where homeowner is null"))){
+      if((rc=dbquery(&res, "sneezy", "realEstateAgent(1)", "select plottype, plotnum from homeplots where homeowner is null order by plottype, plotnum"))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in realEstateAgent");
 	return FALSE;
