@@ -59,6 +59,7 @@ extern bool QuestCode2;
 extern bool Shutdown;
 extern long timeTill;
 extern time_t Uptime;
+extern bool fireInGrimhaven;
 extern int clearpath(int room, dirTypeT direc);
 extern const char *DescDamage(double dam);
 extern const char *DescMoves(double a);

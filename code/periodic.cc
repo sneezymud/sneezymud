@@ -1474,6 +1474,26 @@ int TObj::updateBurning(void)
   TThing *t;
 
   if (isObjStat(ITEM_BURNING) && ::number(0,1)){
+    // this is for the fireman proc, it tells them that they need to
+    // look for a fire.
+    if(inGrimhaven()){
+      if(!fireInGrimhaven){
+	TRoom *rp;
+	for(unsigned int zone = 0; zone < zone_table.size(); zone++) {
+	  if((rp=real_roomp(zone_table[zone].top)) && rp->inGrimhaven()){
+	    zone_table[zone].sendTo("<R>Loud firebells begin clanging in the distance!<1>\n\r", 4673);
+	  }
+	}
+	
+	if((rp=real_roomp(4673))){
+	  rp->sendTo(COLOR_BASIC, "<R>The firebells begin to clang hysterically!<1>\n\r");
+	}
+
+      }
+
+      fireInGrimhaven=true;
+    }
+
     // we calculate the number of structure points per cubic inch
     // flammability is the number of ci's that burn per tick
     // so struct per ci * flam is how much we lose per tick

@@ -2,6 +2,9 @@
 #include "obj_base_corpse.h"
 #include "pathfinder.h"
 
+// yuck, global variable, seems to be the only way to do it
+bool fireInGrimhaven=false;
+
 // returns DELETE_THIS
 int goToFirehouse(TBeing *myself)
 {
@@ -38,6 +41,9 @@ static int findAFire(TMonster *myself)
   int rc;
   TPathFinder path;
 
+  if(!fireInGrimhaven)
+    return FALSE;
+
   // findFire only works in grimhaven, so really we only need a limited range
   // if no fire is found, they'll just head back to the fire station in GH
   path.setRange(50);
@@ -49,6 +55,18 @@ static int findAFire(TMonster *myself)
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
     return TRUE;
+  } else {
+    TRoom *rp;
+    for(unsigned int zone = 0; zone < zone_table.size(); zone++) {
+      if((rp=real_roomp(zone_table[zone].top)) && rp->inGrimhaven()){
+	zone_table[zone].sendTo("<R>The firebells in the distance stop clanging.<1>\n\r", 4673);
+      }
+    }
+    if((rp=real_roomp(4673))){
+      rp->sendTo(COLOR_BASIC, "<R>The firebells stop clanging.<1>\n\r");
+    }
+
+    fireInGrimhaven=false;
   }
   return FALSE;
 }
@@ -63,12 +81,12 @@ int fireman(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   TThing *t, *t2;
   TObj *obj = NULL;
   int rc;
-  int room=4673;
+  int firehouse=4673;
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
 
-  if(myself->inRoom() != room){
+  if(myself->inRoom() != firehouse){
     for (t = myself->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
       
@@ -76,26 +94,35 @@ int fireman(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	continue;
       
       if (obj->isObjStat(ITEM_BURNING)){
+	// this might seem silly, but if you've got like 10 firemen in a
+	// room, it looks dumb to have them extinguish 10 fires at the
+        // same time.
+	if(::number(0,4))
+	  return FALSE;
+
 	if(myself->getRace() == RACE_CANINE){
 	  act("$n barks excitedly at the fire and runs around in circles.", 
 	      0, myself, 0, 0, TO_ROOM);
 	} else {
 	  t->extinguishMe(myself);
-	}
 	
-	switch(::number(0,3)){
-	  case 0:
-	    myself->doSay("Whew that was a close one!");
-	    break;
-	  case 1:
-	    myself->doSay("Is there an arsonist around here?!");
-	    myself->doAction("", CMD_PEER);
-	    break;
-	  case 2:
-	    myself->doSay("Good thing that didn't spread.");
-	    break;
+	  switch(::number(0,5)){
+	    case 0:
+	      myself->doSay("Whew that was a close one!");
+	      break;
+	    case 1:
+	      myself->doSay("Is there an arsonist around here?!");
+	      myself->doAction("", CMD_PEER);
+	      break;
+	    case 2:
+	      myself->doSay("Good thing that didn't spread.");
+	      break;
+	    case 3:
+	      myself->doSay("I didn't need those eyebrows anyway.");
+	      break;
+	  }
 	}
-	break;
+	return TRUE;
       }
     }
   }
