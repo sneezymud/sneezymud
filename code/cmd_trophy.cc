@@ -86,7 +86,7 @@ float TTrophy::getExpModVal(float count)
   t5=(double)(max(t4*100, min_mod*100)/100);
   t5=(double)(min(t5*100, max_mod*100)/100);
 
-  //  vlogf(LOG_PEEL, "%f %f %f %f %f", t1, t2, t3, t4, t5);
+  //  vlogf(LOG_PEEL, fmt("%f %f %f %f %f") %  t1 % t2 % t3 % t4 % t5);
 
   return t5;
 }
@@ -167,8 +167,8 @@ void TBeing::doTrophy(const sstring &arg)
 
       int rnum = real_mobile(convertTo<int>(db["mobvnum"]));
       if (rnum < 0) {
-	vlogf(LOG_BUG, "DoTrophy detected bad mobvnum=%d for name='%s'", 
-	      convertTo<int>(db["mobvnum"]), per->getName());
+	vlogf(LOG_BUG, fmt("DoTrophy detected bad mobvnum=%d for name='%s'") %  
+	      convertTo<int>(db["mobvnum"]) % per->getName());
 	continue;
       }
 

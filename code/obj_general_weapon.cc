@@ -171,20 +171,20 @@ float TThing::blowCountSplitter(const TBeing *, bool) const
 void TGenWeapon::lowCheck()
 {
   if ((int) getWeight() < 1)
-    vlogf(LOG_LOW,"weapon %s has a bad weight set.",
+    vlogf(LOG_LOW,fmt("weapon %s has a bad weight set.") % 
              getName());
 
   if ((getVolume() <= 800) && (getWeight() < 3))
     if (!canWear(ITEM_THROW) && !dynamic_cast<TGun *>(this))
-      vlogf(LOG_LOW,"weapon %s probably needs to be set throwable.",
+      vlogf(LOG_LOW,fmt("weapon %s probably needs to be set throwable.") % 
               getName());
 
   if (getWeaponType() == WEAPON_TYPE_NONE)
-    vlogf(LOG_LOW,"weapon %s needs a weapon_type defined",
+    vlogf(LOG_LOW,fmt("weapon %s needs a weapon_type defined") % 
              getName());
 
   if (!isBluntWeapon() && !isSlashWeapon() && !isPierceWeapon())
-    vlogf(LOG_LOW,"weapon %s has bogus type apparently.",
+    vlogf(LOG_LOW,fmt("weapon %s has bogus type apparently.") % 
              getName());
 
   TBaseWeapon::lowCheck();
@@ -199,7 +199,7 @@ bool TGenWeapon::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", (keeper)->number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  (keeper)->number);
     return FALSE;
   }
   

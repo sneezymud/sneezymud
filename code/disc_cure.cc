@@ -52,7 +52,7 @@ static void adjustHealHp(const TBeing *caster, int &hp, int durat)
   } else if (caster->spelltask) {
     // on other rounds, divy up the other half equally
     if (durat <= 1) {
-      vlogf(LOG_BUG, "Problem with hitpoint/rounds formula in heal spells, caster is %s", caster->getName());
+      vlogf(LOG_BUG, fmt("Problem with hitpoint/rounds formula in heal spells, caster is %s") %  caster->getName());
      durat = 2;
     }
     hp /= (durat-1)*2;

@@ -3182,7 +3182,7 @@ void CreateOneRoom(int loc_nr)
     for (z = 0; rp->number > zone_table[z].top && z < zone_table.size(); z++);
 
     if (z >= zone_table.size()) {
-      vlogf(LOG_EDIT, "Room %d is outside of any zone.\n", rp->number);
+      vlogf(LOG_EDIT, fmt("Room %d is outside of any zone.\n") %  rp->number);
       z--;
     }
     rp->setZoneNum(z);
@@ -3230,7 +3230,7 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
     for (z = 0; number > zone_table[z].top && z < zone_table.size(); z++);
 
     if (z >= zone_table.size()) {
-      vlogf(LOG_EDIT, "Room %d is outside of any zone.\n", number);
+      vlogf(LOG_EDIT, fmt("Room %d is outside of any zone.\n") %  number);
       exit(0);
     }
     zone = &zone_table[z];
@@ -3282,11 +3282,11 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
         new_descr = new extraDescription();
         new_descr->keyword = fread_string(fl);
         if (!new_descr->keyword || !*new_descr->keyword)
-          vlogf(LOG_EDIT, "No keyword in room %d\n", number);
+          vlogf(LOG_EDIT, fmt("No keyword in room %d\n") %  number);
 
         new_descr->description = fread_string(fl);
         if (!new_descr->description || !*new_descr->description)
-          vlogf(LOG_LOW, "No desc in room %d\n", number);
+          vlogf(LOG_LOW, fmt("No desc in room %d\n") %  number);
 
         new_descr->next = ex_description;
         ex_description = new_descr;
@@ -3296,7 +3296,7 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
         roomCount++;
         return;
       default:
-        vlogf(LOG_EDIT, "Unknown auxiliary code `%s' in room load of #%d", chk, number);
+        vlogf(LOG_EDIT, fmt("Unknown auxiliary code `%s' in room load of #%d") %  chk % number);
         break;
     }
   }
@@ -3323,7 +3323,7 @@ void TRoom::initLight()
         found = TRUE;
     }
     if (!found) {
-      vlogf(LOG_EDIT, "Room (%s:%d) missing expected window.  Resetting.", name, number);
+      vlogf(LOG_EDIT, fmt("Room (%s:%d) missing expected window.  Resetting.") %  name % number);
       setHasWindow(FALSE);
     }
     setLight(best);
@@ -3628,7 +3628,7 @@ void room_edit(TBeing *ch, const char *arg)
       ChangeExitSlopedStatus(rp, ch, arg, ENTER_REENTRANT);
       return;
     default:
-      vlogf(LOG_EDIT, "Got to bad spot in room_edit (Error: %d)",ch->specials.edit);
+      vlogf(LOG_EDIT, fmt("Got to bad spot in room_edit (Error: %d)") % ch->specials.edit);
       return;
   }
 }

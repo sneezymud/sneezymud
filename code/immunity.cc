@@ -73,7 +73,7 @@ immuneTypeT Immunities::convert(const sstring & immunity) const
   if (!immunity.compare("IMMUNE_UNUSED2"))
     return IMMUNE_UNUSED2;
 
-  vlogf(LOG_BUG, "Unknown immunity '%s', in convert()", immunity.c_str());
+  vlogf(LOG_BUG, fmt("Unknown immunity '%s', in convert()") %  immunity);
   return IMMUNE_NONE;
 }
 

@@ -873,7 +873,7 @@ int weatherArmor(TBeing *, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
 int TObj::foodItemUsed(TBeing *ch, const char *)
 {
-  vlogf(LOG_LOW, "Undefined item (%s) with special proc: foodItem", getName());
+  vlogf(LOG_LOW, fmt("Undefined item (%s) with special proc: foodItem") %  getName());
   act("Oily black smoke pours from $p as something goes wrong.",
       TRUE, ch, this, 0, TO_CHAR);
   act("Oily black smoke pours from $p as something goes wrong.",
@@ -1490,7 +1490,7 @@ int vending_machine2(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *o
       return TRUE;
     }
     else if (!(drinkobj = read_object(result, VIRTUAL))) {
-      vlogf(LOG_PROC, "Damn vending machine couldn't read drink, obj %d.  DASH!!!", result);
+      vlogf(LOG_PROC, fmt("Damn vending machine couldn't read drink, obj %d.  DASH!!!") %  result);
       return TRUE;
     }
     else {
@@ -1511,8 +1511,8 @@ int dagger_of_death(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   if (cmd == CMD_OBJ_STUCK_IN) {
     if (o->eq_stuck == WEAR_HEAD) {
-      vlogf(LOG_PROC, "%s killed by ITEM:dagger-of-death at %s (%d)",
-            ch->getName(), ch->roomp->getName(), ch->inRoom());
+      vlogf(LOG_PROC, fmt("%s killed by ITEM:dagger-of-death at %s (%d)") % 
+            ch->getName() % ch->roomp->getName() % ch->inRoom());
 
       rc = ch->die(DAMAGE_NORMAL);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -2175,8 +2175,8 @@ int mysteryPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 int bogusObjProc(TBeing *, cmdTypeT, const char *, TObj *me, TObj *)
 {
   if (me)
-    vlogf(LOG_PROC, "WARNING:  %s is running around with a bogus spec_proc #%d",
-       me->getName(), me->spec);
+    vlogf(LOG_PROC, fmt("WARNING:  %s is running around with a bogus spec_proc #%d") % 
+       me->getName() % me->spec);
   else
     vlogf(LOG_PROC, "WARNING: indeterminate obj has bogus spec_proc");
   return FALSE;
@@ -3531,7 +3531,7 @@ int keyInKnife(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
  
   if (!(key = read_object(17211, VIRTUAL))) {
-    vlogf(LOG_PROC, "Key in Knife -- bad read of object (%s)", ch->getName());
+    vlogf(LOG_PROC, fmt("Key in Knife -- bad read of object (%s)") %  ch->getName());
     return FALSE;
   }
  
@@ -3583,7 +3583,7 @@ int teleportVial(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     --(*ch);
     delete o;  
     *newRoom += *ch;
-    vlogf(LOG_PROC, "TELEPORT VIAL: %s transfered to room #%d", ch->getName(), targetroom);
+    vlogf(LOG_PROC, fmt("TELEPORT VIAL: %s transfered to room #%d") %  ch->getName() % targetroom);
     act("$n appears in the room with a puff of smoke.<1>",TRUE,ch,o,NULL,TO_ROOM,NULL);
     ch->doLook("", CMD_LOOK);
     ch->addToWait(combatRound(2));
@@ -4863,8 +4863,8 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
       break;
     default:
       ch->sendTo("Uh. This switchtrack shouldn't be here. Tell a god or something?");
-      //      vlogf(LOG_PROC, "%s tried to operate a switchtrack (%d) in room with no switchtrack code (%d)",
-      //	    ch->getName(), myself->objVnum, where);
+      //      vlogf(LOG_PROC, fmt("%s tried to operate a switchtrack (%d) in room with no switchtrack code (%d)") % 
+      //	    ch->getName() % myself->objVnum % where);
     }
     sprintf(buf,"<k>You force the $o into alignment with the %s tunnel.<1>",arg2);
     act(buf, TRUE, ch, myself, NULL, TO_CHAR);
@@ -5064,9 +5064,9 @@ int dualStyleWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *
   spectype_struct *weapspec = NULL;
   if (cmd == CMD_GENERIC_CREATED || !(weapspec = static_cast<spectype_struct *>(o->act_ptr))) {
     o->act_ptr = new spectype_struct();
-    vlogf(LOG_PROC, "obj (%s) with dualstyle proc ... attempting to alocate.", o->getName());
+    vlogf(LOG_PROC, fmt("obj (%s) with dualstyle proc ... attempting to alocate.") %  o->getName());
     if (!(weapspec = static_cast<spectype_struct *>(o->act_ptr))) {
-      vlogf(LOG_PROC, "obj (%s) with dualstyle proc had no memory alocated, investigate.", o->getName());
+      vlogf(LOG_PROC, fmt("obj (%s) with dualstyle proc had no memory alocated, investigate.") %  o->getName());
       return FALSE;
     }
     weapspec->type1 = weap->getWeaponType();
@@ -6376,7 +6376,7 @@ int starfiresheath(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 	    *ch2->roomp += *ch2->unequip(sword->eq_pos);
 	  } else {
-	    vlogf(LOG_BUG, "starfire proc trying to unequip %s in slot -1 on %s", sword->getName(),
+	    vlogf(LOG_BUG, fmt("starfire proc trying to unequip %s in slot -1 on %s") %  sword->getName() %
 		  sword->equippedBy->getName());
 	    return FALSE;
 	  }
@@ -6734,13 +6734,13 @@ int weaponUnmaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   TThing *t;
 
   if (!vict->hasPart(slot)) {
-    vlogf(LOG_COMBAT, "BOGUS SLOT trying to be made PART_MISSING: %d on %s",
-	  slot, vict->getName());
+    vlogf(LOG_COMBAT, fmt("BOGUS SLOT trying to be made PART_MISSING: %d on %s") % 
+	  slot % vict->getName());
     return FALSE;
   }
   if (!vict->roomp) {
     // bat 8-16-96, mob could be dead, this is a bug
-    vlogf(LOG_COMBAT, "!roomp for target (%s) of makePartMissing().", vict->getName());
+    vlogf(LOG_COMBAT, fmt("!roomp for target (%s) of makePartMissing().") %  vict->getName());
     return FALSE;
   }
 

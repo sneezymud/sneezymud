@@ -70,7 +70,7 @@ void TBeing::displayHelpFile(char *helppath, char *namebuf){
 
   // find the last modified time on the file
   if (stat(helppath, &timestat)) {
-    vlogf(LOG_BUG,"bad call to help function %s, rebuilding indices", namebuf);
+    vlogf(LOG_BUG,fmt("bad call to help function %s, rebuilding indices") %  namebuf);
     buildHelpIndex();
     sendTo("There was an error, try again.\n\r");
     return;
@@ -181,7 +181,7 @@ void TBeing::doHelp(const char *arg)
         namebuf[j] = UPPER(namebuf[j]);
 
       if (stat(helppath, &timestat)) {
-	vlogf(LOG_BUG,"bad call to help function %s, rebuilding indices", namebuf);
+	vlogf(LOG_BUG,fmt("bad call to help function %s, rebuilding indices") %  namebuf);
 	buildHelpIndex();
 	sendTo("There was an error, try again.\n\r");
 	return;
@@ -223,7 +223,7 @@ void TBeing::doHelp(const char *arg)
       for (j = 0;namebuf[j] != '\0';j++)
         namebuf[j] = UPPER(namebuf[j]);
       if (stat(helppath, &timestat)) {
-	vlogf(LOG_BUG,"bad call to help function %s, rebuilding indices", namebuf);
+	vlogf(LOG_BUG,fmt("bad call to help function %s, rebuilding indices") %  namebuf);
 	buildHelpIndex();
 	sendTo("There was an error, try again.\n\r");
 	return;
@@ -297,7 +297,7 @@ void TBeing::doHelp(const char *arg)
     for (j = 0;namebuf[j] != '\0';j++)
       namebuf[j] = UPPER(namebuf[j]);
     if (stat(helppath, &timestat)) {
-      vlogf(LOG_BUG,"bad call to help function %s, rebuilding indices", namebuf);
+      vlogf(LOG_BUG,fmt("bad call to help function %s, rebuilding indices") %  namebuf);
       buildHelpIndex();
       sendTo("There was an error, try again.\n\r");
       return;
@@ -338,12 +338,12 @@ void TBeing::doHelp(const char *arg)
 
     skill = snt;
     if (skill >= MAX_SKILL) {
-      vlogf(LOG_BUG,"Bogus spell help file: %s", spellIndex[i]);
+      vlogf(LOG_BUG,fmt("Bogus spell help file: %s") %  spellIndex[i]);
       return;
     }
     skill = getSkillNum(skill);
     if (skill < 0) {
-      vlogf(LOG_BUG,"Bogus spell help file: %s", spellIndex[i]);
+      vlogf(LOG_BUG,fmt("Bogus spell help file: %s") %  spellIndex[i]);
       return;
     }
     disc_num = getDisciplineNumber(skill, FALSE);
@@ -358,7 +358,7 @@ void TBeing::doHelp(const char *arg)
         str += buf2;
       }
     } else {
-      vlogf(LOG_BUG, "Bad skill %d to getDisciplineNumber in doHelp", skill);
+      vlogf(LOG_BUG, fmt("Bad skill %d to getDisciplineNumber in doHelp") %  skill);
     }
     str += purple();
     str += "\n\rSpecialization   : ";
@@ -419,7 +419,7 @@ void TBeing::doHelp(const char *arg)
 		sstring(obj_index[real_object(CompInfo[comp].comp_num)].short_desc).cap().c_str());
         str += buf2;
       } else
-        vlogf(LOG_BUG, "Problem in help file for skill=%d, comp=%d.  (component definition)", skill, comp);
+        vlogf(LOG_BUG, fmt("Problem in help file for skill=%d, comp=%d.  (component definition)") %  skill % comp);
     } else {
       sprintf(buf2, "\n\r%sSpell Component  :%s NONE\n\r", purple(), norm());
       str += buf2;
@@ -587,7 +587,7 @@ void TBeing::doHelp(const char *arg)
       namebuf[j] = UPPER(namebuf[j]);
 
     if (stat(helppath, &timestat)) {
-      vlogf(LOG_BUG,"bad call to help function %s, rebuilding indices", namebuf);
+      vlogf(LOG_BUG,fmt("bad call to help function %s, rebuilding indices") %  namebuf);
       buildHelpIndex();
       sendTo("There was an error, try again.\n\r");
       return;
@@ -630,7 +630,7 @@ void TBeing::doHelp(const char *arg)
     skill = snt;
 
     if (skill >= MAX_SKILL) {
-      vlogf(LOG_BUG,"Bogus skill help file: %s", skillIndex[i]);
+      vlogf(LOG_BUG,fmt("Bogus skill help file: %s") %  skillIndex[i]);
       return;
     }
     disc_num = getDisciplineNumber(skill, FALSE);
@@ -645,7 +645,7 @@ void TBeing::doHelp(const char *arg)
         str += buf2;
       }
     } else 
-      vlogf(LOG_BUG, "Bad disc for skill %d in doHelp()", skill);
+      vlogf(LOG_BUG, fmt("Bad disc for skill %d in doHelp()") %  skill);
     
     str += purple();
     str += "\n\rSpecialization   : ";

@@ -123,7 +123,7 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
       return;
     }
     sprintf(buf + strlen(buf), "Apparently, %s is blank.\n\r", getName());
-    vlogf(LOG_FILE, "Object %d has no book file!", vnum);
+    vlogf(LOG_FILE, fmt("Object %d has no book file!") %  vnum);
     ch->desc->page_string(buf);
     return;
   }

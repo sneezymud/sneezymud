@@ -364,7 +364,7 @@ int TPortal::enterMe(TBeing *ch)
     // to do something VERY crual to them for this.
 
     ch->sendTo("Something goes wrong as you enter the portal and you feel torn through the astral plane!\n\r");
-    vlogf(LOG_CHEAT, "Player using Portal created by other player in same account! (%s)",
+    vlogf(LOG_CHEAT, fmt("Player using Portal created by other player in same account! (%s)") % 
           ch->getName());
     rc = ch->genericTeleport(SILENT_NO, true);
 
@@ -473,8 +473,8 @@ TPortal * TPortal::findMatchingPortal() const
   TRoom *rp;
 
   if (!(rp = real_roomp(getTarget()))) {
-    vlogf(LOG_BUG, "Bad portal (%s) with destination to NULL room! %d",
-          getName(), getTarget());
+    vlogf(LOG_BUG, fmt("Bad portal (%s) with destination to NULL room! %d") % 
+          getName() % getTarget());
     return NULL;
   }
   if (inRoom() < 0)

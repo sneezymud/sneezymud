@@ -181,7 +181,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
   }
 
   if ((dealerNum = index(ch)) < 0) {
-    vlogf(LOG_BUG, "%s got into DrawPoker::deal without being at the poker table!",
+    vlogf(LOG_BUG, fmt("%s got into DrawPoker::deal without being at the poker table!") % 
           ch->getName());
     return;
   }
@@ -208,7 +208,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
   anteCost     = anteCosts[0];
 
   if (*tArg) {
-    vlogf(LOG_LAPSOS, "DrawPoker::deal [%s]", tArg);
+    vlogf(LOG_LAPSOS, fmt("DrawPoker::deal [%s]") %  tArg);
 
     do {
       half_chop(tArg, tString, tBuffer);
@@ -487,8 +487,8 @@ int DrawPokerGame::exitGame(const TBeing *ch)
          *ch6 = NULL;
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(LOG_BUG, "%s left a poker table %s wasn't at!",
-          ch->getName(), ch->hssh());
+    vlogf(LOG_BUG, fmt("%s left a poker table %s wasn't at!") % 
+          ch->getName() % ch->hssh());
     return FALSE;
   }
 
@@ -1016,9 +1016,9 @@ int DrawPokerGame::findWinner(int *PlyWin1, int *PlyWin2, int *PlyWin3,
     if (handHighs[playerIndex][0] == -1)
       handHighs[playerIndex][0] = getHighCard(playerIndex, 0);
 
-    vlogf(LOG_LAPSOS, "DrawPoker::S:%d F:%d 2:%d 2x2:%d 3:%d 4:%d H1:%d H2:%d Ply:%d",
-          hasStraight, hasFlush, hasTwoPair, hasSecondTwoPair, hasThreePair, hasFourPair,
-          handHighs[playerIndex][0], handHighs[playerIndex][1], playerIndex);
+    vlogf(LOG_LAPSOS, fmt("DrawPoker::S:%d F:%d 2:%d 2x2:%d 3:%d 4:%d H1:%d H2:%d Ply:%d") % 
+          hasStraight % hasFlush % hasTwoPair % hasSecondTwoPair % hasThreePair % hasFourPair %
+          handHighs[playerIndex][0] % handHighs[playerIndex][1] % playerIndex);
 
     if (hasStraight && hasFlush) {
       if (CARD_NUM(handHighs[playerIndex][0]) == 14)
@@ -1274,7 +1274,7 @@ void DrawPokerGame::settleUp(const TBeing *ch, bool doOutputs)
 
   tChar = get_char_room(names[index(ch)], ROOM_DRAWPOKER);
   if (!tChar) {
-    vlogf(LOG_BUG, "WHOA, lost player in drawpoker [%s][index=%d][name=%s]", ch->getName(), index(ch), names[index(ch)]);
+    vlogf(LOG_BUG, fmt("WHOA, lost player in drawpoker [%s][index=%d][name=%s]") %  ch->getName() % index(ch) % names[index(ch)]);
     return;
   }
 

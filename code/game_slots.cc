@@ -332,12 +332,12 @@ void spin_slot(TBeing *ch)
   bits = generic_find("slot", FIND_OBJ_ROOM, ch, &tmp_char, &slot);
 
   if(bits != FIND_OBJ_ROOM){
-    vlogf(LOG_BUG, "No slot machine in room %d", ch->in_room);
+    vlogf(LOG_BUG, fmt("No slot machine in room %d") %  ch->in_room);
     return;
   }
 
   if(ch->desc->bet.slot==0){
-    vlogf(LOG_BUG, "slot bet was 0 in room %s", ch->in_room);
+    vlogf(LOG_BUG, fmt("slot bet was 0 in room %s") %  ch->in_room);
     return;
   }
 

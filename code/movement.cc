@@ -36,7 +36,7 @@ void TBeing::goThroughPortalMsg(const TPortal *o) const
 
   type = o->getPortalType();
   if (type > MAX_PORTAL_TYPE) {
-    vlogf(LOG_BUG, "%s has illegal portal type of %d.", o->shortDescr, type);
+    vlogf(LOG_BUG, fmt("%s has illegal portal type of %d.") %  o->shortDescr % type);
     type = 0;
   }
   if (riding) {
@@ -66,7 +66,7 @@ void TBeing::exitFromPortalMsg(const TPortal *o) const
   }
   type = o2->getPortalType();
   if (type > MAX_PORTAL_TYPE) {
-    vlogf(LOG_BUG, "%s has illegal portal type of %d.", o2->shortDescr, type);
+    vlogf(LOG_BUG, fmt("%s has illegal portal type of %d.") %  o2->shortDescr % type);
     type = 0;
   }
   if (riding) {
@@ -146,13 +146,13 @@ bool TBeing::validMove(dirTypeT cmd)
       return FALSE;
     }
     if (!sameRoom(*riding) && (riding->horseMaster() == this)) {
-      vlogf(LOG_BUG, "mount/rider in different rooms: (%s, %s) %d %d", 
-            getName(), riding->getName(), inRoom(), riding->inRoom());
+      vlogf(LOG_BUG, fmt("mount/rider in different rooms: (%s, %s) %d %d") %  
+            getName() % riding->getName() % inRoom() % riding->inRoom());
       dismount(POSITION_STANDING);
     }
     if (tbt && !tbt->master) {
-      vlogf(LOG_BUG, "Bogus riding situation (no master for %s).  setting to %s",
-          tbt->getName(), getName());
+      vlogf(LOG_BUG, fmt("Bogus riding situation (no master for %s).  setting to %s") % 
+          tbt->getName() % getName());
       tbt->master = this;
     }
   }
@@ -206,8 +206,8 @@ bool TBeing::validMove(dirTypeT cmd)
         return FALSE;
       }
     } else {
-      vlogf(LOG_LOW, "Problematic door: rm %d dir %d (closed with no-name?)",
-            inRoom(), cmd);
+      vlogf(LOG_LOW, fmt("Problematic door: rm %d dir %d (closed with no-name?)") % 
+            inRoom() % cmd);
       notLegalMove();
       return FALSE;
     }
@@ -294,7 +294,7 @@ int TBeing::checkPassWard(dirTypeT cmd) const
   rp = in_room;
 
    if (!rp || !(in_room == rp)) {
-     vlogf(LOG_BUG,"Bad room in checkPassWard: %s in %d", getName(), rp);
+     vlogf(LOG_BUG,fmt("Bad room in checkPassWard: %s in %d") %  getName() % rp);
      sendTo("Please bug what you just tried to do.\n\r");
      return FALSE;
    }
@@ -1028,7 +1028,9 @@ int TBeing::moveGroup(dirTypeT dir)
         // bat - 11/19/99
         if (tft->master != this) {
           // this happens, but I guess it's safe to just ignore
-          vlogf(LOG_BUG, "ERROR: Bad critter looping through moveGroup()! (this=[%s], badguy=[%s], master=[%s])", getName(), tft->getName() ? tft->getName() : "NoName", tft->master ? tft->master->getName() : "NoMaster");
+          vlogf(LOG_BUG, fmt("ERROR: Bad critter looping through moveGroup()! (this=[%s], badguy=[%s], master=[%s])") %  getName() % 
+		(tft->getName() ? tft->getName() : "NoName") % 
+		(tft->master ? tft->master->getName() : "NoMaster"));
           continue;
         }
 
@@ -1271,7 +1273,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
       vlogf(LOG_BUG, "NULL getName in NULL rp in displayMove()");
       return FALSE;
     }
-    vlogf(LOG_BUG, "NULL rp in displayMove!  (%s)(%d)", getName(), was_in);
+    vlogf(LOG_BUG, fmt("NULL rp in displayMove!  (%s)(%d)") %  getName() % was_in);
     return FALSE;
   }
   strcpy(how, movementType(FALSE).c_str());
@@ -1481,8 +1483,8 @@ int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in,
     }
   }    
   if (rp->isRoomFlag(ROOM_DEATH) && !isImmortal()) {
-    vlogf(LOG_MISC, "%s killed by DEATHTRAP at %s (%d)",
-          getName(), roomp->getName(), inRoom());
+    vlogf(LOG_MISC, fmt("%s killed by DEATHTRAP at %s (%d)") % 
+          getName() % roomp->getName() % inRoom());
     die(DAMAGE_NORMAL);
     return DELETE_THIS;
   }
@@ -2850,7 +2852,7 @@ void TBeing::setPosition(positionTypeT pos)
   if (dynamic_cast<TBeing *>(riding) && 
       (pos != POSITION_FIGHTING) && (pos != POSITION_MOUNTED)) {
     // for debug
-    vlogf(LOG_BUG, "Mounted person (%s) set to new position (%s:%d).", getName(), position_types[pos].c_str(), pos);
+    vlogf(LOG_BUG, fmt("Mounted person (%s) set to new position (%s:%d).") %  getName() % position_types[pos] % pos);
     dismount(POSITION_STANDING);
   }
   if (!hasLegs()) {
@@ -3484,7 +3486,7 @@ int TBeing::doMortalGoto(const sstring & argument)
   } else {
     int rn = real_mobile(targ_ch);
     if (rn < 0) {
-      vlogf(LOG_BUG, "Error in goto for mob %s", arg.c_str());
+      vlogf(LOG_BUG, fmt("Error in goto for mob %s") %  arg);
       return FALSE;
     }
     ch = get_char_num(rn);

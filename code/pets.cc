@@ -79,32 +79,32 @@ bool TBeing::isPet(const unsigned int bv) const
   rc = mobVnum();
 
   if (mobVnum() < 0) {
-    vlogf(LOG_BUG, "Attempt to reload a prototype in ReloadNPCAsNew.  Trying to reload %s.",getName ());
+    vlogf(LOG_BUG, fmt("Attempt to reload a prototype in ReloadNPCAsNew.  Trying to reload %s.") % getName ());
     return FALSE;
   }
 
 
   if (rc <= 0 || ((numx = real_mobile(rc)) <= 0)) {
-    vlogf(LOG_BUG, "Problem in ReloadNPCAsNew (ERR 1).  Trying to reload %s.",getName ());
+    vlogf(LOG_BUG, fmt("Problem in ReloadNPCAsNew (ERR 1).  Trying to reload %s.") % getName ());
     return FALSE;
   }
 
   if (numx < 0 || numx >= (signed int) mob_index.size()) {
-    vlogf(LOG_BUG, "Problem in ReloadNPCAsNew (ERR 2).  Trying to reload %s.",getName ());
+    vlogf(LOG_BUG, fmt("Problem in ReloadNPCAsNew (ERR 2).  Trying to reload %s.") % getName ());
     return FALSE;
   }
 
   if (!(newMob = read_mobile(rc, REAL))) {
-    vlogf(LOG_BUG, "Problem in ReloadNPCAsNew (ERR 3).  Trying to reload %s.",getName ());
+    vlogf(LOG_BUG, fmt("Problem in ReloadNPCAsNew (ERR 3).  Trying to reload %s.") % getName ());
     return FALSE;
   }
   if (newMob->isShopkeeper()){
-    vlogf(LOG_BUG, "Problem in ReloadNPCAsNew (ERR 4).  Trying to reload shopkeepere-%s.",getName ());
+    vlogf(LOG_BUG, fmt("Problem in ReloadNPCAsNew (ERR 4).  Trying to reload shopkeepere-%s.") % getName ());
     delete newMob;
     return FALSE;
   }
   if (mob_index[rc].spec == SPEC_NEWBIE_EQUIPPER) {
-    vlogf(LOG_BUG, "Problem in ReloadNPCAsNew (ERR 5).  Trying to reload newbieHelper -%s.",getName ());
+    vlogf(LOG_BUG, fmt("Problem in ReloadNPCAsNew (ERR 5).  Trying to reload newbieHelper -%s.") % getName ());
     delete newMob;
     return FALSE;
   }
@@ -132,8 +132,8 @@ int TBeing::getAffectedDataFromType(spellNumT whichAff, double whichField)
     return 0;
 
   if (numAffs > 1) {
-    vlogf(LOG_BUG, "Somehow %s has 2 affectedDatas with same type (%d)",
-          getName(), whichAff);
+    vlogf(LOG_BUG, fmt("Somehow %s has 2 affectedDatas with same type (%d)") % 
+          getName() % whichAff);
   }
 
   /* **Commented out so code could be compiled**
@@ -199,7 +199,7 @@ bool TBeing::doRetrainPet(const char *argument, TBeing *vict)
 
 // no room
   if (!(rp = roomp)) {
-    vlogf(LOG_BUG, "%s was in doRetrainPet without a roomp", getName());
+    vlogf(LOG_BUG, fmt("%s was in doRetrainPet without a roomp") %  getName());
     return FALSE;
   }
 
@@ -316,7 +316,7 @@ bool TMonster::restorePetToPc(TBeing *ch)
         FALSE, ch, NULL, this, TO_CHAR);
     if (affectedBySpell(AFFECT_ORPHAN_PET)) {
       affectFrom(AFFECT_ORPHAN_PET); 
-      vlogf(LOG_BUG, "A non pet with AFFECT_ORPHAN_PET (%s).", getName());
+      vlogf(LOG_BUG, fmt("A non pet with AFFECT_ORPHAN_PET (%s).") %  getName());
     }
     return FALSE;
   }

@@ -191,7 +191,7 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                 }
               } else {
                 sendTo("You see nothing special.\n\r");
-                vlogf(LOG_BUG, "Bad room exit in room %d", in_room);
+                vlogf(LOG_BUG, fmt("Bad room exit in room %d") %  in_room);
               }
             }
 

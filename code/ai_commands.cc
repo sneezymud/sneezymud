@@ -2876,7 +2876,7 @@ void TBeing::aiGet(TThing *obj)
     return;
   }
   if (!roomp) {
-    vlogf(LOG_MOB, "%s without a roomp in aiGet", getName());
+    vlogf(LOG_MOB, fmt("%s without a roomp in aiGet") %  getName());
     return;
   }
   for (tmp = roomp->getStuff(); tmp; tmp = tmp->nextThing) {

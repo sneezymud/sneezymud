@@ -63,7 +63,7 @@ TMoney *create_money(int amount)
 
   
   if(amount<0){
-    vlogf(LOG_BUG, "ERROR: Try to create negative money (%i).", amount);
+    vlogf(LOG_BUG, fmt("ERROR: Try to create negative money (%i).") %  amount);
     amount=1;
   }
 
@@ -198,7 +198,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
   }
 
   if (ch->getMoney() > 500000 && (amount > 100000))
-    vlogf(LOG_MISC, "%s just got %d talens", ch->getName(), amount);
+    vlogf(LOG_MISC, fmt("%s just got %d talens") %  ch->getName() % amount);
 
   for (t = ch->roomp->getStuff(); t; t = t->nextThing) {
     TBeing *tb = dynamic_cast<TBeing *>(t);

@@ -211,7 +211,7 @@ int TBeing::track(TBeing *vict)
   char buf2[256];
 
   if (!vict && !isSW) {
-    vlogf(LOG_BUG, "Problem in track() %s", getName());
+    vlogf(LOG_BUG, fmt("Problem in track() %s") %  getName());
     return TRUE;
   }
   if (roomp && !isImmortal() && 

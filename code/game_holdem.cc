@@ -328,7 +328,7 @@ void HoldemGame::linkPlayers()
       if(players[i] && players[j] && players[i]->name == players[j]->name){
 	if((++count) > 1){
 	  // this entry is in here more than once!
-	  //	  vlogf(LOG_PEEL, "duplicate entry, removing player %s", players[i]->name.c_str());
+	  //	  vlogf(LOG_PEEL, fmt("duplicate entry, removing player %s") %  players[i]->name);
 	  delete players[i];
 
 	}

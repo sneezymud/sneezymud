@@ -4,7 +4,7 @@
 bool TBeing::hasQuestBit(int value) const
 {
   if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(LOG_BUG, "Bad check of hasQuestBit(%d)", value);
+    vlogf(LOG_BUG, fmt("Bad check of hasQuestBit(%d)") %  value);
     return FALSE;
   }
 
@@ -15,7 +15,7 @@ bool TBeing::hasQuestBit(int value) const
 void TBeing::setQuestBit(int value)
 {
   if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(LOG_BUG, "Bad check of setQuestBit(%d)", value);
+    vlogf(LOG_BUG, fmt("Bad check of setQuestBit(%d)") %  value);
     return;
   }
 
@@ -26,7 +26,7 @@ void TBeing::setQuestBit(int value)
 void TBeing::remQuestBit(int value)
 {
   if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(LOG_BUG, "Bad check of remQuestBit(%d)", value);
+    vlogf(LOG_BUG, fmt("Bad check of remQuestBit(%d)") %  value);
     return;
   }
 
@@ -37,7 +37,7 @@ void TBeing::remQuestBit(int value)
 bool TPerson::hasQuestBit(int value) const
 {
   if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(LOG_BUG, "Bad check of hasQuestBit(%d)", value);
+    vlogf(LOG_BUG, fmt("Bad check of hasQuestBit(%d)") %  value);
     return FALSE;
   }
 
@@ -47,7 +47,7 @@ bool TPerson::hasQuestBit(int value) const
 void TPerson::setQuestBit(int value)
 {
   if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(LOG_BUG, "Bad check of setQuestBit(%d)", value);
+    vlogf(LOG_BUG, fmt("Bad check of setQuestBit(%d)") %  value);
     return;
   }
 
@@ -57,7 +57,7 @@ void TPerson::setQuestBit(int value)
 void TPerson::remQuestBit(int value)
 {
   if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(LOG_BUG, "Bad check of remQuestBit(%d)", value);
+    vlogf(LOG_BUG, fmt("Bad check of remQuestBit(%d)") %  value);
     return;
   }
 

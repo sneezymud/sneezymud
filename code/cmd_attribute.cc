@@ -560,7 +560,7 @@ void TBeing::doAttribute(const char *arg)
 #endif
     }
 #if SPEEF_MAKE_BODY
-    vlogf(LOG_MISC, "Attribute argument: %s",cmdbuf);
+    vlogf(LOG_MISC, fmt("Attribute argument: %s") % cmdbuf);
     if(body)
       body->showBody(this);
     else

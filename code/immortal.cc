@@ -824,35 +824,45 @@ void TBeing::doToggle(const char *arg2)
   } else if (is_abbrev(arg, "silence") && hasWizPower(POWER_TOGGLE)) {
     Silence = !Silence;
     sendTo(fmt("You have now %s shouting.\n\r") % (Silence ? "disallowed" : "allowed"));
-    vlogf(LOG_MISC, "%s has turned player shouting %s.", getName(), Silence ? "off" : "on");
+    vlogf(LOG_MISC, fmt("%s has turned player shouting %s.") %  getName() % 
+	  (Silence ? "off" : "on"));
   } else if (is_abbrev(arg, "gravity") && hasWizPower(POWER_TOGGLE)) {
     Gravity = !Gravity;
-    sendTo(fmt("You have now turned gravity %s.\n\r") % (!Gravity ? "off" : "on"));
-    vlogf(LOG_MISC, "%s has turned gravity %s.", getName(), (!Gravity ? "off" : "on"));
+    sendTo(fmt("You have now turned gravity %s.\n\r") % 
+	   (!Gravity ? "off" : "on"));
+    vlogf(LOG_MISC, fmt("%s has turned gravity %s.") %  getName() % 
+	  (!Gravity ? "off" : "on"));
   } else if (is_abbrev(arg, "sleep") && hasWizPower(POWER_TOGGLE)) {
     Sleep = !Sleep;
     sendTo(fmt("You have now turned offensive sleep %s.\n\r") % (!Sleep ? "off": "on"));
-    vlogf(LOG_MISC, "%s has turned offensive sleep %s.", getName(), !Sleep ? "off"   : "on");
+    vlogf(LOG_MISC, fmt("%s has turned offensive sleep %s.") %  getName() % 
+	  (!Sleep ? "off"   : "on"));
   } else if (is_abbrev(arg, "wiznet") && hasWizPower(POWER_TOGGLE)) {
     WizBuild = ! WizBuild;
     sendTo(fmt("Builders can now %s the wiznet.\n\r") % (WizBuild ? "hear" : "not hear"));
-    vlogf(LOG_MISC,"%s has turned wiznet %s for builders.",getName(),WizBuild ? "on" : "off");
+    vlogf(LOG_MISC,fmt("%s has turned wiznet %s for builders.") % getName() %
+	  (WizBuild ? "on" : "off"));
   } else if (is_abbrev(arg, "wizgoto") && hasWizPower(POWER_TOGGLE)) {
     WizGoto = ! WizGoto;
     sendTo(fmt("Immortals can now %s the enabled zones.\n\r") % (WizGoto ? "goto" : "not goto"));
-    vlogf(LOG_MISC,"%s has turned goto %s for immortals.",getName(),WizGoto ? "on" : "off");
+    vlogf(LOG_MISC,fmt("%s has turned goto %s for immortals.") % getName() %
+	  (WizGoto ? "on" : "off"));
   } else if (is_abbrev(arg, "wizshout") && hasWizPower(POWER_TOGGLE)) {
     WizShout = ! WizShout;
-    sendTo(fmt("Immortals can now %s.\n\r") % (WizShout ? "shout" : "not shout"));
-    vlogf(LOG_MISC,"%s has turned shout %s for immortals.",getName(),WizShout ? "on" : "off");
+    sendTo(fmt("Immortals can now %s.\n\r") % 
+	   (WizShout ? "shout" : "not shout"));
+    vlogf(LOG_MISC,fmt("%s has turned shout %s for immortals.") % getName() %
+	  (WizShout ? "on" : "off"));
   } else if (is_abbrev(arg, "lapspeak") && hasWizPower(POWER_TOGGLE)) {
     Lapspeak = ! Lapspeak;
     sendTo(fmt("Lapspeak is now %s.\n\r") % (Lapspeak ? "on" : "off"));
-    vlogf(LOG_MISC,"%s has turned Lapspeak %s.",getName(),Lapspeak ? "on" : "off");
+    vlogf(LOG_MISC,fmt("%s has turned Lapspeak %s.") % getName() %
+	  (Lapspeak ? "on" : "off"));
   } else if (is_abbrev(arg, "twink") && hasWizPower(POWER_TOGGLE)) {
     Twink = ! Twink;
     sendTo(fmt("Twink combat mode is now %s.\n\r") % (Twink ? "on" : "off"));
-    vlogf(LOG_MISC,"%s has turned Twink combat mode %s.",getName(),Twink ? "on" : "off");
+    vlogf(LOG_MISC,fmt("%s has turned Twink combat mode %s.") % getName() %
+	  (Twink ? "on" : "off"));
   } else if (is_abbrev(arg, "wizinvis") && hasWizPower(POWER_TOGGLE)) {
     if (!isImmortal() || !hasWizPower(POWER_TOGGLE_INVISIBILITY)) {
       sendTo("Invisibility use has been restricted due to overuse.\n\r");
@@ -860,11 +870,13 @@ void TBeing::doToggle(const char *arg2)
     }
     WizInvis = ! WizInvis;
     sendTo(fmt("Immortals can now %s invisible.\n\r") % (WizInvis ? "go" : "not go"));
-    vlogf(LOG_MISC,"%s has turned invisibility %s.",getName(),WizInvis? "on" : "off");
+    vlogf(LOG_MISC,fmt("%s has turned invisibility %s.") % getName() %
+	  (WizInvis? "on" : "off"));
   } else if ((is_abbrev(arg, "newbiePK") || is_abbrev(arg, "newbiepk"))  && hasWizPower(POWER_TOGGLE)) {
       NewbiePK = ! NewbiePK;
       sendTo(fmt("Newbie Pk toggle is now %s.\n\r") % (NewbiePK ? "in use" : "off"));
-      vlogf(LOG_MISC,"%s has now %s newbie pk.",getName(),NewbiePK ? "enabled" : "disabled");
+      vlogf(LOG_MISC,fmt("%s has now %s newbie pk.") % getName() %
+	    (NewbiePK ? "enabled" : "disabled"));
       if (NewbiePK)
         vlogf(LOG_MISC,"Newbies can now be killed by anyone.");
   } else if (is_abbrev(arg, "testcode1") && hasWizPower(POWER_TOGGLE)) {
@@ -877,7 +889,8 @@ void TBeing::doToggle(const char *arg2)
 #endif
     TestCode1 = ! TestCode1;
     sendTo(fmt("TestCode #1 (pulse timing) is now %s.\n\r") % (TestCode1 ? "in use" : "off"));
-    vlogf(LOG_MISC,"%s has %s TestCode #1 (pulse timing).",getName(),TestCode1 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,fmt("%s has %s TestCode #1 (pulse timing).") % getName() %
+	  (TestCode1 ? "enabled" : "disabled"));
   } else if (is_abbrev(arg, "testcode2") && hasWizPower(POWER_TOGGLE)) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
@@ -888,7 +901,8 @@ void TBeing::doToggle(const char *arg2)
 #endif
     TestCode2 = ! TestCode2;
     sendTo(fmt("TestCode #2 is now %s.\n\r") % (TestCode2 ? "in use" : "off"));
-    vlogf(LOG_MISC,"%s has %s TestCode #2.",getName(),TestCode2 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,fmt("%s has %s TestCode #2.") % getName() %
+	  (TestCode2 ? "enabled" : "disabled"));
   } else if (is_abbrev(arg, "testcode3") && hasWizPower(POWER_TOGGLE)) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
@@ -899,7 +913,8 @@ void TBeing::doToggle(const char *arg2)
 #endif
     TestCode3 = ! TestCode3;
     sendTo(fmt("TestCode #3 is now %s.\n\r") % (TestCode3 ? "in use" : "off"));
-    vlogf(LOG_MISC,"%s has %s TestCode #3.",getName(),TestCode3 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,fmt("%s has %s TestCode #3.") % getName() %
+	  (TestCode3 ? "enabled" : "disabled"));
   } else if (is_abbrev(arg, "testcode4") && hasWizPower(POWER_TOGGLE)) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
@@ -910,7 +925,8 @@ void TBeing::doToggle(const char *arg2)
 #endif
     TestCode4 = ! TestCode4;
     sendTo(fmt("TestCode #4 is now %s.\n\r") % (TestCode4 ? "in use" : "off"));
-    vlogf(LOG_MISC,"%s has %s TestCode #5.",getName(),TestCode4 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,fmt("%s has %s TestCode #5.") % getName() %
+	  (TestCode4 ? "enabled" : "disabled"));
   } else if (is_abbrev(arg, "testcode5") && hasWizPower(POWER_TOGGLE)) {
 #if 1
     // if you are using testcode, change this so we don't collide usages
@@ -921,7 +937,8 @@ void TBeing::doToggle(const char *arg2)
 #endif
     TestCode5 = ! TestCode5;
     sendTo(fmt("TestCode #5 is now %s.\n\r") % (TestCode5 ? "in use" : "off"));
-    vlogf(LOG_MISC,"%s has %s TestCode #5.",getName(),TestCode5 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,fmt("%s has %s TestCode #5.") % getName() %
+	  (TestCode5 ? "enabled" : "disabled"));
   } else if (is_abbrev(arg, "testcode6") && hasWizPower(POWER_TOGGLE)) {
 #if 0
     // if you are using testcode, change this so we don't collide usages
@@ -932,42 +949,49 @@ void TBeing::doToggle(const char *arg2)
 #endif
     TestCode6 = ! TestCode6;
     sendTo(fmt("TestCode #6 is now %s.\n\r") % (TestCode6 ? "in use" : "off"));
-    vlogf(LOG_MISC,"%s has %s TestCode #6.",getName(),TestCode6 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,fmt("%s has %s TestCode #6.") % getName() %
+	  (TestCode6 ? "enabled" : "disabled"));
     
   } else if (is_abbrev(arg, "questcode") && hasWizPower(POWER_TOGGLE)) {
     QuestCode = !QuestCode;
     sendTo(fmt("Questcode is now %s.\n\r") % (QuestCode ? "in use" : "off"));
-    vlogf(LOG_MISC,"%s has %s questcode.",getName(),QuestCode ? "enabled" : "disabled");
+    vlogf(LOG_MISC,fmt("%s has %s questcode.") % getName() %
+	  (QuestCode ? "enabled" : "disabled"));
 
   } else if ((is_abbrev(arg, "questcode2") || is_abbrev(arg, "quest2")) && hasWizPower(POWER_TOGGLE)) {
     QuestCode2 = !QuestCode2;
     sendTo(fmt("Questcode 2 is now %s.\n\r") % (QuestCode2 ? "in use" : "off"));
-    vlogf(LOG_MISC,"%s has %s questcode 2.",getName(),QuestCode2 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,fmt("%s has %s questcode 2.") % getName() %
+	  (QuestCode2 ? "enabled" : "disabled"));
 
   } else if ((is_abbrev(arg, "questcode3") || is_abbrev(arg, "quest3")) && hasWizPower(POWER_TOGGLE)) {
     QuestCode3 = !QuestCode3;
     sendTo(fmt("Questcode 3 is now %s.\n\r") % (QuestCode3 ? "in use" : "off"));
-    vlogf(LOG_MISC,"%s has %s questcode 3.",getName(),QuestCode3 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,fmt("%s has %s questcode 3.") % getName() %
+	  (QuestCode3 ? "enabled" : "disabled"));
 
   } else if ((is_abbrev(arg, "questcode4") || is_abbrev(arg, "quest4")) && hasWizPower(POWER_TOGGLE)) {
     QuestCode4 = !QuestCode4;
     sendTo(fmt("Questcode 4 is now %s.\n\r") % (QuestCode4 ? "in use" : "off"));
-    vlogf(LOG_MISC,"%s has %s questcode 4.",getName(),QuestCode4 ? "enabled" : "disabled");
+    vlogf(LOG_MISC,fmt("%s has %s questcode 4.") % getName() %
+	  (QuestCode4 ? "enabled" : "disabled"));
 
   } else if(is_abbrev(arg, "timequeries") && hasWizPower(POWER_TOGGLE)){
     timeQueries = !timeQueries;
     sendTo(fmt("DB query timing is now %s.\n\r") % (timeQueries ? "activated" : "deactivated"));
-    vlogf(LOG_MISC,"%s has %s DB query timing.",getName(),timeQueries ? "enabled" : "disabled");
+    vlogf(LOG_MISC,fmt("%s has %s DB query timing.") % getName() %
+	  (timeQueries ? "enabled" : "disabled"));
   } else if (is_abbrev(arg, "pcmobs") && hasWizPower(POWER_TOGGLE)) {
     AllowPcMobs = !AllowPcMobs;
     sendTo(fmt("You have now %s mob-named pcs.\n\r") %
               (AllowPcMobs ? "allowed" : "disallowed"));
-    vlogf(LOG_MISC, "%s has turned mob/pcs mode %s.", getName(), 
-              AllowPcMobs ? "on" : "off");
+    vlogf(LOG_MISC, fmt("%s has turned mob/pcs mode %s.") %  getName() % 
+              (AllowPcMobs ? "on" : "off"));
   } else if (is_abbrev(arg, "clients") && hasWizPower(POWER_TOGGLE)) {
     Clients = !Clients;
     sendTo(fmt("You have now %s clients.\n\r") % (Clients ? "allowed" : "disallowed"));
-    vlogf(LOG_MISC, "%s has turned client mode %s.", getName(), Clients ? "on" : "off");
+    vlogf(LOG_MISC, fmt("%s has turned client mode %s.") %  getName() % 
+	  (Clients ? "on" : "off"));
 
     if (!Clients) {
       sendTo("Severing current client connections.\n\r");
@@ -986,8 +1010,8 @@ void TBeing::doToggle(const char *arg2)
     nuke_inactive_mobs = !nuke_inactive_mobs;
     sendTo(fmt("Mobs in inactive zones are now %s.\n\r") % 
 	   (nuke_inactive_mobs ? "nuked" : "preserved"));
-    vlogf(LOG_MISC, "%s has turned nuke mode %s.", getName(),
-             nuke_inactive_mobs ? "on" : "off");
+    vlogf(LOG_MISC, fmt("%s has turned nuke mode %s.") %  getName() %
+             (nuke_inactive_mobs ? "on" : "off"));
     unsigned int zone;
     for (zone = 1; zone < zone_table.size(); zone++) {
       zone_table[zone].zone_value = (nuke_inactive_mobs ? 1 : -1);
@@ -1025,7 +1049,7 @@ void TBeing::doWizlock(const char *argument)
       sendTo("It's already on!\n\r");
     else {
       sendTo("WizLock is now on.\n\r");
-      vlogf(LOG_MISC, "WizLock was turned on by %s.", getName());
+      vlogf(LOG_MISC, fmt("WizLock was turned on by %s.") %  getName());
       WizLock = TRUE;
     }
   } else if (!strcmp(buf, "off")) {
@@ -1033,7 +1057,7 @@ void TBeing::doWizlock(const char *argument)
       sendTo("It's already off!\n\r");
     else {
       sendTo("WizLock is now off.\n\r");
-      vlogf(LOG_MISC, "WizLock was turned off by %s.", getName());
+      vlogf(LOG_MISC, fmt("WizLock was turned off by %s.") %  getName());
       WizLock = FALSE;
     }
   } else if (!strcmp(buf, "add")) {
@@ -1054,7 +1078,7 @@ void TBeing::doWizlock(const char *argument)
       }
     }
     strcpy(hostlist[numberhosts], buf);
-    vlogf(LOG_MISC, "%s has added host %s to the access denied list.", getName(), hostlist[numberhosts]);
+    vlogf(LOG_MISC, fmt("%s has added host %s to the access denied list.") %  getName() % hostlist[numberhosts]);
     numberhosts++;
     return;
   } else if (!strcmp(buf, "rem")) {
@@ -1077,7 +1101,7 @@ void TBeing::doWizlock(const char *argument)
       if (!strncmp(hostlist[a], buf, length)) {
     for (b = a; b <= numberhosts; b++)
       strcpy(hostlist[b], hostlist[b + 1]);
-    vlogf(LOG_MISC, "%s has removed host %s from the access denied list.", getName(), buf);
+    vlogf(LOG_MISC, fmt("%s has removed host %s from the access denied list.") %  getName() % buf);
     numberhosts--;
     return;
       }
@@ -1103,7 +1127,7 @@ void TBeing::doWizlock(const char *argument)
         return;
       } else {
         lockmess = note->action_description;
-        vlogf(LOG_MISC, "%s added a wizlock message.", getName());
+        vlogf(LOG_MISC, fmt("%s added a wizlock message.") %  getName());
         sendTo("The wizlock message is now:\n\r");
         sendTo(lockmess);
         return;
@@ -1240,11 +1264,11 @@ TO_CHAR);
       victim->remPlayerAction(PLR_BANISHED);
       act("You just removed $N's banished flag", FALSE, this, 0, victim, TO_CHAR);
       victim->sendTo("Your banishment flag has been removed.\n\r");
-      vlogf(LOG_MISC, "%s removed %s's banish flag.", getName(), victim->getName());
+      vlogf(LOG_MISC, fmt("%s removed %s's banish flag.") %  getName() % victim->getName());
     } else {
       victim->addPlayerAction(PLR_BANISHED);
       act("You just set $N's banished flag.", FALSE, this, 0, victim, TO_CHAR);
-      vlogf(LOG_MISC, "%s banished %s.", getName(), victim->getName());
+      vlogf(LOG_MISC, fmt("%s banished %s.") %  getName() % victim->getName());
       victim->sendTo("Your banishment flag has just been activated!\n\r");
     }
   } else if (is_abbrev(buf2, "solo")) {
@@ -1561,7 +1585,7 @@ void TPerson::doTrans(const char *argument)
 	return;
       }
       // used to track down: XXX trans'd me outta inn and got me killed!
-      vlogf(LOG_SILENT, "%s transferring %s from %d to %d.", getName(), victim->getName(), victim->inRoom(), inRoom());
+      vlogf(LOG_SILENT, fmt("%s transferring %s from %d to %d.") %  getName() % victim->getName() % victim->inRoom() % inRoom());
 
       act("$n disappears in a cloud of smoke.", FALSE, victim, 0, 0, TO_ROOM);
       --(*victim);
@@ -2095,7 +2119,7 @@ void TPerson::doSnoop(const char *argument)
       if (desc->snoop.snooping->desc)
     desc->snoop.snooping->desc->snoop.snoop_by = 0;
       else
-    vlogf(LOG_MISC, "Caught %s snooping %s who didn't have a descriptor!", name, desc->snoop.snooping->name);
+    vlogf(LOG_MISC, fmt("Caught %s snooping %s who didn't have a descriptor!") %  name % desc->snoop.snooping->name);
 
       desc->snoop.snooping = 0;
     }
@@ -2593,7 +2617,7 @@ void TBeing::transformLimbsBack(const char * buffer, wearSlotT limb, bool cmd)
         if (isLimbFlags(slot, PART_TRANSFORMED)) {
           found = TRUE;
           if (isLimbFlags(slot, PART_MISSING))
-           vlogf(LOG_MISC, "%s has both a missing and a transformed limb", getName());
+           vlogf(LOG_MISC, fmt("%s has both a missing and a transformed limb") %  getName());
         remLimbFlags(slot, PART_TRANSFORMED);
         }
       }
@@ -2783,7 +2807,7 @@ void TPerson::doForce(const char *argument)
     }
   } else if (!strcmp("all", name_buf)) {
     // force all 
-    vlogf(LOG_MISC, "%s just forced all to '%s'", getName(), to_force);
+    vlogf(LOG_MISC, fmt("%s just forced all to '%s'") %  getName() % to_force);
     for (i = descriptor_list; i; i = i->next) {
       if ((vict = i->character) && (i->character != this) && !i->connected) {
         if ((GetMaxLevel() <= vict->GetMaxLevel()) && dynamic_cast<TPerson *>(vict))
@@ -3279,7 +3303,7 @@ void TPerson::doPurge(const char *argument)
     if ((vict = get_char_room_vis(this, name_buf))) {
       if (vict->isShopkeeper()) {    // shopkeeper 
         sendTo("Be glad Brutius put this catch in for shopkeepers.\n\r");
-        vlogf(LOG_MISC, "%s just tried to purge a shopkeeper.", getName());
+        vlogf(LOG_MISC, fmt("%s just tried to purge a shopkeeper.") %  getName());
         return;
       }
       if (vict->isPc() && 
@@ -3938,12 +3962,12 @@ void TBeing::doNoshout(const sstring &argument)
       vict->sendTo("You can shout again.\n\r");
       sendTo("NOSHOUT removed.\n\r");
       vict->remPlayerAction(PLR_GODNOSHOUT);
-      vlogf(LOG_MISC,"%s had noshout removed by %s",vict->getName(), getName());
+      vlogf(LOG_MISC,fmt("%s had noshout removed by %s") % vict->getName() % getName());
     } else if (hasWizPower(POWER_NOSHOUT)) {
       vict->sendTo("The gods take away your ability to shout!\n\r");
       sendTo("NOSHOUT set.\n\r");
       vict->addPlayerAction(PLR_GODNOSHOUT);
-      vlogf(LOG_MISC,"%s had noshout set by %s",vict->getName(), getName());
+      vlogf(LOG_MISC,fmt("%s had noshout set by %s") % vict->getName() % getName());
     } else
       sendTo("Sorry, you can't do that.\n\r");
   } else {
@@ -4172,7 +4196,7 @@ void TBeing::doWipe(const char *argument)
          LOWER(st.aname[0]), sstring(st.aname).lower().c_str(), sstring(namebuf).lower().c_str());
 
   if (unlink(buf) != 0)
-    vlogf(LOG_FILE, "error in unlink (7) (%s) %d", buf, errno);
+    vlogf(LOG_FILE, fmt("error in unlink (7) (%s) %d") %  buf % errno);
 
   sendTo(fmt("Removing: %s\n\r") % buf);
 }
@@ -4285,7 +4309,7 @@ void TPerson::doAccess(const sstring &arg)
           fclose(fp);
         } 
         sendTo("Password changed successfully.\n\r");
-        vlogf(LOG_MISC, "%s changed password on %s account", getName(), st.aname);
+        vlogf(LOG_MISC, fmt("%s changed password on %s account") %  getName() % st.aname);
         return;
       case 5:
         if (sscanf(arg.c_str(), "%d %d", &lev, &Class) != 2) {
@@ -4461,8 +4485,8 @@ void TBeing::doReplace(const sstring &argument)
     fclose(fp);
 
     // log this event so we can see if item duplication (etc.) is caused by it.
-    vlogf(LOG_FILE, "%s replacing %s's %s file.",
-       getName(), arg1.c_str(), dir2);
+    vlogf(LOG_FILE, fmt("%s replacing %s's %s file.") % 
+       getName() % arg1.c_str() % dir2);
 
     sprintf(buf, "cp -r %s/%s/%c/%s %s/%c/%s", 
 	    dir, dir2, arg1[0], arg1.c_str(), dir2, arg1[0], arg1.c_str());
@@ -5621,12 +5645,12 @@ static void TimeTravel(const char *ch)
     return;
 
   if (!(fp = fopen(fileName, "r+b"))) {
-    vlogf(LOG_MISC, "Error updating %s's rent file!", ch);
+    vlogf(LOG_MISC, fmt("Error updating %s's rent file!") %  ch);
     return;
   }
 
   if (fread(&h, sizeof(h), 1, fp) != 1) {
-    vlogf(LOG_MISC, "  Cannot read rent file header for %s", ch);
+    vlogf(LOG_MISC, fmt("  Cannot read rent file header for %s") %  ch);
     fclose(fp);
     return;
   }
@@ -5640,15 +5664,15 @@ static void TimeTravel(const char *ch)
     h.last_update = time(0);
     unsigned int amt = h.total_cost * delta / SECS_PER_REAL_DAY;
     h.gold_left += amt;
-    vlogf(LOG_SILENT, "Crediting %s with %u gold for downtime. (left=%d)",
-        ch, amt, h.gold_left);
+    vlogf(LOG_SILENT, fmt("Crediting %s with %u gold for downtime. (left=%d)") % 
+        ch % amt % h.gold_left);
   } else
-    vlogf(LOG_SILENT, "TimeTravel for %s done as update-advance only. (left=%d)",
-        ch, h.gold_left);
+    vlogf(LOG_SILENT, fmt("TimeTravel for %s done as update-advance only. (left=%d)") % 
+        ch % h.gold_left);
 
   rewind(fp);
   if (fwrite(&h, sizeof(h), 1, fp) != 1) {
-    vlogf(LOG_MISC, "Cannot write updated rent file header for %s", h.owner);
+    vlogf(LOG_MISC, fmt("Cannot write updated rent file header for %s") %  h.owner);
     fclose(fp);
     return;
   }
@@ -5678,7 +5702,7 @@ void TBeing::doTimeshift(const char *arg)
       return;
     }
 #endif
-    vlogf(LOG_MISC,"%s moving time back %d minutes.",getName(),deltatime);
+    vlogf(LOG_MISC,fmt("%s moving time back %d minutes.") % getName() %deltatime);
     dirwalk("rent/a",TimeTravel);
     dirwalk("rent/b",TimeTravel);
     dirwalk("rent/c",TimeTravel);
@@ -5854,7 +5878,7 @@ void TBeing::doHostlog(const char *argument)
       }
     }
     strcpy(hostLogList[numberLogHosts], buf);
-    vlogf(LOG_MISC, "%s has added host %s to the hostlog list.", getName(), hostLogList[numberLogHosts]);
+    vlogf(LOG_MISC, fmt("%s has added host %s to the hostlog list.") %  getName() % hostLogList[numberLogHosts]);
     numberLogHosts++;
     return;
   } else if (!strcmp(buf, "rem")) {
@@ -5877,7 +5901,7 @@ void TBeing::doHostlog(const char *argument)
       if (!strncmp(hostLogList[a], buf, length)) {
         for (b = a; b <= numberLogHosts; b++)
           strcpy(hostLogList[b], hostLogList[b + 1]);
-        vlogf(LOG_MISC, "%s has removed host %s from the hostlog list.", getName(), buf);
+        vlogf(LOG_MISC, fmt("%s has removed host %s from the hostlog list.") %  getName() % buf);
         numberLogHosts--;
         return;
       }
@@ -6073,7 +6097,7 @@ void TBeing::doSysChecklog(const sstring &arg)
  
   // If we don't trust these people why even have the command?
   if (!hasWizPower(POWER_WIZARD))
-    vlogf(LOG_MISC, "%s checklogging: '%s'", getName(), tString);
+    vlogf(LOG_MISC, fmt("%s checklogging: '%s'") %  getName() % tString);
 }
 
 void TBeing::doSysViewoutput() 
@@ -6338,11 +6362,11 @@ void TBeing::doAccount(const char *arg)
       if (IS_SET(afp.flags, ACCOUNT_BANISHED)) {
         REMOVE_BIT(afp.flags, ACCOUNT_BANISHED);
         sendTo(fmt("You have unbanished the %s account.\n\r") % afp.name);
-        vlogf(LOG_MISC, "%s unbanished account '%s'", getName(), afp.name);
+        vlogf(LOG_MISC, fmt("%s unbanished account '%s'") %  getName() % afp.name);
       } else {
         SET_BIT(afp.flags, ACCOUNT_BANISHED);
         sendTo(fmt("You have set the %s account banished.\n\r") % afp.name);
-        vlogf(LOG_MISC, "%s banished account '%s'", getName(), afp.name);
+        vlogf(LOG_MISC, fmt("%s banished account '%s'") %  getName() % afp.name);
       }
       
       rewind(fp);
@@ -6353,11 +6377,11 @@ void TBeing::doAccount(const char *arg)
       if (IS_SET(afp.flags, ACCOUNT_EMAIL)) {
         REMOVE_BIT(afp.flags, ACCOUNT_EMAIL);
         sendTo(fmt("You have un-email-banished the %s account.\n\r") % afp.name);
-        vlogf(LOG_MISC, "%s un-email-banished account '%s'", getName(), afp.name);
+        vlogf(LOG_MISC, fmt("%s un-email-banished account '%s'") %  getName() % afp.name);
       } else {
         SET_BIT(afp.flags, ACCOUNT_EMAIL);
         sendTo(fmt("You have set the %s account email-banished.\n\r") % afp.name);
-        vlogf(LOG_MISC, "%s email-banished account '%s'", getName(), afp.name);
+        vlogf(LOG_MISC, fmt("%s email-banished account '%s'") %  getName() % afp.name);
       }
       
       rewind(fp);
@@ -6423,11 +6447,11 @@ void TBeing::doAccount(const char *arg)
       if (IS_SET(afp.flags, ACCOUNT_IMMORTAL)) {
         REMOVE_BIT(afp.flags, ACCOUNT_IMMORTAL);
         sendTo(fmt("You un-flag the %s account immortal.\n\r") % afp.name);
-        vlogf(LOG_MISC, "%s making account='%s' non-immortal", getName(), afp.name);
+        vlogf(LOG_MISC, fmt("%s making account='%s' non-immortal") %  getName() % afp.name);
       } else {
         SET_BIT(afp.flags, ACCOUNT_IMMORTAL);
         sendTo(fmt("You flag the %s account as immortal.\n\r") % afp.name);
-        vlogf(LOG_MISC, "%s making account='%s' immortal", getName(), afp.name);
+        vlogf(LOG_MISC, fmt("%s making account='%s' immortal") %  getName() % afp.name);
       }
       
       rewind(fp);
@@ -6731,8 +6755,8 @@ int TBeing::doAs(const char *arg)
   // this is event where rc == DELETE_THIS
   // handle this by forcing a return
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
-    vlogf(LOG_BUG, "doAs(): %s somehow killed self: %s",
-            desc->original->getName(), arg);
+    vlogf(LOG_BUG, fmt("doAs(): %s somehow killed self: %s") % 
+            desc->original->getName() % arg);
     sendTo("Please don't do things that will cause your original character to be destroyed.\n\r");
     remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
     doReturn("", WEAR_NOWHERE, CMD_RETURN);

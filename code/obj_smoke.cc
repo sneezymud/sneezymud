@@ -177,17 +177,17 @@ int TThing::dropSmoke(int amt)
 // hence this setup instead.
     int robj = real_object(GENERIC_SMOKE);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, "dropSmoke(): No object (%d) in database!", GENERIC_SMOKE);
+      vlogf(LOG_BUG, fmt("dropSmoke(): No object (%d) in database!") %  GENERIC_SMOKE);
       return false;
     }
 
     if (!(obj = read_object(robj, REAL))) {
-      vlogf(LOG_LOW, "Error, No GENERIC_SMOKE  (%d)", GENERIC_SMOKE);
+      vlogf(LOG_LOW, fmt("Error, No GENERIC_SMOKE  (%d)") %  GENERIC_SMOKE);
       return FALSE;
     }
 #else
     if (!(obj = read_object(GENERIC_SMOKE, VIRTUAL))) {
-      vlogf(LOG_LOW, "Error, No GENERIC_SMOKE  (%d)", GENERIC_SMOKE);
+      vlogf(LOG_LOW, fmt("Error, No GENERIC_SMOKE  (%d)") %  GENERIC_SMOKE);
       return FALSE;
     }
 #endif

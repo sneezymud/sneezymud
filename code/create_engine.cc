@@ -233,14 +233,14 @@ void EndCreateEngine(CreateEngineMethods Method, int ceLevel, TBeing *ch, TObj *
 
       if (AppliedCreate[ceLevel]->CompReward == -1) {
         ch->sendTo("All your work goes for naught, it seems that someone forget to set the item.\n\r");
-        vlogf(LOG_JESUS, "AppliedCreate[%d]->CompReward is -1, fix please.", ceLevel);
+        vlogf(LOG_JESUS, fmt("AppliedCreate[%d]->CompReward is -1, fix please.") %  ceLevel);
         return;
       }
 
       TObj *FinalObject;
       if (!(FinalObject = read_object(AppliedCreate[ceLevel]->CompReward, REAL))) {
         ch->sendTo("Problem loading the final object, tell a god immediatly.\n\r");
-        vlogf(LOG_JESUS, "AppliedCreate->CompReward doesn't exist! [%d]", AppliedCreate[ceLevel]->CompReward);
+        vlogf(LOG_JESUS, fmt("AppliedCreate->CompReward doesn't exist! [%d]") %  AppliedCreate[ceLevel]->CompReward);
         return;
       }
 
@@ -251,7 +251,7 @@ void EndCreateEngine(CreateEngineMethods Method, int ceLevel, TBeing *ch, TObj *
     case CEM_ALCHEMIST:
       break;
     default:
-      vlogf(LOG_JESUS, "EndCreateEngine called with invalid Method [%d]", Method);
+      vlogf(LOG_JESUS, fmt("EndCreateEngine called with invalid Method [%d]") %  Method);
   }
 }
 
@@ -311,7 +311,7 @@ void StartCreateEngine(CreateEngineMethods Method, int ceLevel, TBeing *ch,
     case CEM_ALCHEMIST:
       break;
     default:
-      vlogf(LOG_JESUS, "StartCreateEngine called with invalid Method [%d]", Method);
+      vlogf(LOG_JESUS, fmt("StartCreateEngine called with invalid Method [%d]") %  Method);
   }
 }
 
@@ -465,7 +465,7 @@ int task_createEngine(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *
               nRc = appliedSubstanceCreateIchor(ch, cmd, pulse, obj);
               break;
             default:
-              vlogf(LOG_JESUS, "task_createEngine/CEM_APPLIED with invalid Level [%d]", ch->task->flags);
+              vlogf(LOG_JESUS, fmt("task_createEngine/CEM_APPLIED with invalid Level [%d]") %  ch->task->flags);
               ch->sendTo("Something went wrong, tell a coder what you did.\n\r");
               ch->stopTask();
               if (ch->act_ptr) {
@@ -481,7 +481,7 @@ int task_createEngine(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *
           ch->stopTask();
           break;
         default:
-          vlogf(LOG_JESUS, "task_createEngine called with invalid Method [%d]", ch->task->status);
+          vlogf(LOG_JESUS, fmt("task_createEngine called with invalid Method [%d]") %  ch->task->status);
           ch->sendTo("Something went wrong, tell a coder what you did.\n\r");
           if (ch->act_ptr) {
             delete static_cast<appliedCreate_struct *>(ch->act_ptr);

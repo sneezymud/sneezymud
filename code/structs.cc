@@ -90,7 +90,7 @@ TBeing::~TBeing()
       if (eq_stuck > WEAR_NOWHERE) {
         stuckIn->setStuckIn(eq_stuck, NULL);
       } else {
-        vlogf(LOG_BUG, "Extract on stuck in items %s in slot -1 on %s", name, 
+        vlogf(LOG_BUG, fmt("Extract on stuck in items %s in slot -1 on %s") %  name % 
                stuckIn->name);
         return;
       }
@@ -98,7 +98,7 @@ TBeing::~TBeing()
       if (eq_pos > WEAR_NOWHERE) {
         dynamic_cast<TBeing *>(equippedBy)->unequip(eq_pos);
       } else {
-        vlogf(LOG_BUG, "Extract on equipped item %s in slot -1 on %s", name, 
+        vlogf(LOG_BUG, fmt("Extract on equipped item %s in slot -1 on %s") %  name % 
                 equippedBy->name);
         return;
       }
@@ -270,7 +270,7 @@ TBeing::~TBeing()
   } else { // has to have both a desc and a desc->connected
     for (k = character_list; (k); k = k->next) {
       if (k == this)
-        vlogf(LOG_BUG, "%s (being) deleted without removal from character_list connected = (%d)", getName(), desc->connected);
+        vlogf(LOG_BUG, fmt("%s (being) deleted without removal from character_list connected = (%d)") %  getName() % desc->connected);
     }
   }
   //  setArmor(1000);
@@ -368,7 +368,7 @@ TObj::~TObj()
     if (eq_stuck > WEAR_NOWHERE) {
       stuckIn->setStuckIn(eq_stuck, NULL);
     } else {
-      vlogf(LOG_BUG, "Extract on stuck in items %s in slot -1 on %s", name, 
+      vlogf(LOG_BUG, fmt("Extract on stuck in items %s in slot -1 on %s") %  name % 
              stuckIn->name);
       return;
     }
@@ -376,7 +376,7 @@ TObj::~TObj()
     if (eq_pos > WEAR_NOWHERE) {
       dynamic_cast<TBeing *>(equippedBy)->unequip(eq_pos);
     } else {
-      vlogf(LOG_BUG, "Extract on equipped item %s in slot -1 on %s", name, 
+      vlogf(LOG_BUG, fmt("Extract on equipped item %s in slot -1 on %s") %  name % 
               equippedBy->name);
       return;
     }
@@ -405,7 +405,7 @@ TObj::~TObj()
       temp1->next = next;
     else {
       vlogf(LOG_BUG, "Couldn't find object in object list.");
-      vlogf(LOG_BUG, "Object name : %s", getName());
+      vlogf(LOG_BUG, fmt("Object name : %s") %  getName());
     }
   }
 
@@ -598,8 +598,8 @@ bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve = false)
             tLost += tHave;
           }
 
-          vlogf(LOG_CHEAT, "CHEATING!  Money (%d) being picked up by %s when dropped by %s.  Lost:%d",
-                tTalens->getMoney(), ch->getName(), indiv, tLost);
+          vlogf(LOG_CHEAT, fmt("CHEATING!  Money (%d) being picked up by %s when dropped by %s.  Lost:%d") % 
+                tTalens->getMoney() % ch->getName() % indiv % tLost);
 
           tTalens->setMoney(0);
         } else {
@@ -608,7 +608,7 @@ bool TObj::checkOwnersList(const TPerson *ch, bool tPreserve = false)
           // don't spam us with silly "quill transferred!" logs
           // Let's also ditch the "lantern" and key logs  -Lapsos
           if (obj_flags.cost > 100 || isRentable())
-            vlogf(LOG_CHEAT, "CHEATING!  Item (%s:%d) transferred to %s when previously owned by %s.   owners=[%s %s]", getName(), objVnum(), ch->getName(), indiv, owners, ch->getName());
+            vlogf(LOG_CHEAT, fmt("CHEATING!  Item (%s:%d) transferred to %s when previously owned by %s.   owners=[%s %s]") %  getName() % objVnum() % ch->getName() % indiv % owners % ch->getName());
 
           // because of where this gets called (operator+=), deleting would be
           // bad due to requirements to check for it occuring all over the place.
@@ -664,7 +664,7 @@ TThing& TBeing::operator += (TThing& t)
   // Thing being put into is a TBeing
   if (dynamic_cast<TBeing *>(&t)) {
     // Thing being put in is a TBeing - Russ 07/01/96
-    vlogf(LOG_BUG, "warning, Being put into Being :%s into %s.", t.getName(), getName());
+    vlogf(LOG_BUG, fmt("warning, Being put into Being :%s into %s.") %  t.getName() % getName());
   }
 #endif
 
@@ -950,7 +950,7 @@ TThing& TThing::operator -- ()
 
   } else {
     // guaranteed crash
-    vlogf(LOG_BUG, "Bogus call to TThing operator--, %s", getName());
+    vlogf(LOG_BUG, fmt("Bogus call to TThing operator--, %s") %  getName());
   }
 
   // set the obj 
@@ -1076,7 +1076,7 @@ TThing::~TThing()
   }
 
   if (act_ptr) {
-    vlogf(LOG_BUG, "Memory leaked: act_ptr on %s", getName()); 
+    vlogf(LOG_BUG, fmt("Memory leaked: act_ptr on %s") %  getName()); 
 #if 0
     delete act_ptr;
     act_ptr = NULL;
@@ -1238,7 +1238,7 @@ specialData::~specialData()
 void TThing::mount(TThing *ch)
 {
   if (riding) {
-    vlogf(LOG_BUG, "%s already riding in call to mount()", getName());
+    vlogf(LOG_BUG, fmt("%s already riding in call to mount()") %  getName());
     return;
   }
   // update linked list info
@@ -1254,8 +1254,8 @@ void TThing::mount(TThing *ch)
     else if (ttab->parent && dynamic_cast<TBeing *>(ttab->parent)) {
       // damn gods screwing around!
       // light on a table held by a person.  Do nothing for this case
-      vlogf(LOG_BUG, "Possible lighting error due to table being mounted in bad state.  (Room=%d, heldBy=%s)", 
-              ttab->parent->inRoom(), ttab->parent->getName());
+      vlogf(LOG_BUG, fmt("Possible lighting error due to table being mounted in bad state.  (Room=%d, heldBy=%s)") %  
+              ttab->parent->inRoom() % ttab->parent->getName());
     } else 
       vlogf(LOG_BUG, "Potential lighting screw up involving tables.");
   }

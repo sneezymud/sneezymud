@@ -221,7 +221,7 @@ void TBeing::postmasterReceiveMail(TMonster *me)
 // hence this setup instead.
     int robj = real_object(GENERIC_NOTE);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, "postmasterReceiveMail(): No object (%d) in database!", 
+      vlogf(LOG_BUG, fmt("postmasterReceiveMail(): No object (%d) in database!") %  
             GENERIC_NOTE);
       return;
     }

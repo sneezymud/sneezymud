@@ -577,30 +577,13 @@ void TPerson::logf(const char * tString, ...)
   fflush(tLogFile);
 }
 
-void vlogf(const char * errorMsg, ...)
+
+void vlogf(logTypeT tError, const sstring &errorMsg)
 {
-  va_list ap;
-  char tString[256];
-
-  va_start(ap, errorMsg);
-  vsprintf(tString, errorMsg, ap);
-  va_end(ap);
-
-  vlogf(LOG_MISC, errorMsg);
-}
-
-void vlogf(logTypeT tError, const char *errorMsg,...)
-{
-  char message[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
   sstring buf, name;
   Descriptor *i;
   time_t lt;
   struct tm *this_time;
-  va_list ap;
-
-  va_start(ap, errorMsg);
-  vsprintf(message, errorMsg, ap);
-  va_end(ap);
 
   lt = time(0);
   this_time = localtime(&lt);
@@ -658,7 +641,7 @@ void vlogf(logTypeT tError, const char *errorMsg,...)
       break;
   }
 
-  buf += message;
+  buf += errorMsg;
 
   fprintf(stderr, "%4.4d|%2.2d%2.2d|%2.2d:%2.2d:%2.2d :: %s\n",
           this_time->tm_year + 1900, this_time->tm_mon + 1, this_time->tm_mday,
@@ -701,7 +684,7 @@ void dirwalk(const sstring &dir, void (*fcn) (const char *))
   DIR *dfd;
 
   if (dir.empty() || !(dfd = opendir(dir.c_str()))) {
-    vlogf(LOG_BUG, "Unable to dirwalk directory %s", dir.c_str());
+    vlogf(LOG_BUG, fmt("Unable to dirwalk directory %s") % dir);
     return;
   }
   while ((dp = readdir(dfd))) {
@@ -719,7 +702,7 @@ void dirwalk_fullname(const char *dir, void (*fcn) (const char *))
   DIR *dfd;
 
   if (!dir || !(dfd = opendir(dir))) {
-    vlogf(LOG_BUG, "Unable to dirwalk directory %s", dir);
+    vlogf(LOG_BUG, fmt("Unable to dirwalk directory %s") % dir);
     return;
   }
   while ((dp = readdir(dfd))) {
@@ -739,7 +722,7 @@ void dirwalk_subs_fullname(const char *dir, void (*fcn) (const char *))
   DIR *dfd;
 
   if (!dir || !(dfd = opendir(dir))) {
-    vlogf(LOG_BUG, "Unable to dirwalk_subs directory %s", dir);
+    vlogf(LOG_BUG, fmt("Unable to dirwalk_subs directory %s") % dir);
     return;
   }
   while ((dp = readdir(dfd))) {
@@ -768,7 +751,7 @@ bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
     if (parent) 
       r = parent->roomp;
     else {
-      vlogf(LOG_BUG, "Thing (%s) has no rp pointer in TBeing::canSeeMe", name);
+      vlogf(LOG_BUG, fmt("Thing (%s) has no rp pointer in TBeing::canSeeMe") % name);
       return FALSE;
     }
   }
@@ -1127,8 +1110,8 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
        (parent && isname("[wizard]", parent->name))) &&
       !ch->hasWizPower(POWER_WIZARD)) {
     ch->sendTo("I'm afraid you are not permitted to touch this.");
-    vlogf(LOG_OBJ, "%s tried to pick up wizard set object %s",
-          ch->getNameNOC(ch).c_str(), getNameNOC(ch).c_str());
+    vlogf(LOG_OBJ, fmt("%s tried to pick up wizard set object %s") %
+          ch->getNameNOC(ch) % getNameNOC(ch));
     return FALSE;
   }
 
@@ -1266,9 +1249,9 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
   else if (type == FOL_PET)
     count += 1 + (pet->GetMaxLevel() / 7);
 
-  //  vlogf(LOG_DASH, "tooManyFollowers(): %s has %d followers & %d count with max of %d.", getName(), tot_num, count, max_followers);
-  //  vlogf(LOG_DASH, "tooManyFollowers(): %d = (%d + %d) / 20", max_followers, GetMaxLevel(),
-  //plotStat(STAT_CURRENT, STAT_CHA, -15, 15, 0));
+  //  vlogf(LOG_DASH, fmt("tooManyFollowers(): %s has %d followers & %d count with max of %d.") %  getName() % tot_num % count % max_followers);
+  //  vlogf(LOG_DASH, fmt("tooManyFollowers(): %d = (%d + %d) / 20") %  max_followers % GetMaxLevel() %
+  //plotStat(STAT_CURRENT % STAT_CHA % -15 % 15 % 0));
 
   //  if (count > max_count)
   //  return TRUE;

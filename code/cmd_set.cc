@@ -268,7 +268,7 @@ void TPerson::doSet(const char *argument)
 #if 0
         mob->sendTo(fmt("You have been granted the following Wiz-Power: %s\n\r") %
                 getWizPowerName(wpt).c_str());
-        vlogf(LOG_MISC, "%s given %s by %s", mob->getName(), getWizPowerName(wpt).c_str(), getName());
+        vlogf(LOG_MISC, fmt("%s given %s by %s") %  mob->getName() % getWizPowerName(wpt) % getName());
 #endif
         mob->doSave(SILENT_NO);
       } else {
@@ -277,7 +277,7 @@ void TPerson::doSet(const char *argument)
 #if 0
         mob->sendTo(fmt("The following Wiz-Power has been revoked: %s\n\r") %
                 getWizPowerName(wpt).c_str());
-        vlogf(LOG_MISC, "%s had %s revoked by %s", mob->getName(), getWizPowerName(wpt).c_str(), getName());
+        vlogf(LOG_MISC, fmt("%s had %s revoked by %s") %  mob->getName() % getWizPowerName(wpt) % getName());
 #endif
       }
     } else {
@@ -342,9 +342,9 @@ void TPerson::doSet(const char *argument)
       return;
     }
 
-    vlogf(LOG_FACT, "Leader slot %d for faction %s changed.", parm,
+    vlogf(LOG_FACT, fmt("Leader slot %d for faction %s changed.") %  parm %
            FactionInfo[faction_num].faction_name);
-    vlogf(LOG_FACT, "Changed from %s to %s.",FactionInfo[faction_num].leader[parm],
+    vlogf(LOG_FACT, fmt("Changed from %s to %s.") % FactionInfo[faction_num].leader[parm] %
            namebuf);
     sendTo(fmt("You have set %s's leader %d to %s.\n\r") %
            FactionInfo[faction_num].faction_name % parm % namebuf);
@@ -530,12 +530,12 @@ void TPerson::doSet(const char *argument)
     }
 #endif
 
-//    vlogf(LOG_MISC, "parmstr is %s, argument is %s", parmstr, argument);
+//    vlogf(LOG_MISC, fmt("parmstr is %s, argument is %s") %  parmstr % argument);
     while (sscanf(argument, "%d", &parm2) != 1) {
       argument = one_argument(argument, buf);
       sprintf(buf2," %s",buf);
       strcat(parmstr,buf2);
- //     vlogf(LOG_MISC,"parmstr is %s, argument is %s, buf is %s, parm2 is %s, buf2 is %s", parmstr, argument, buf, parm2, buf2);
+ //     vlogf(LOG_MISC,fmt("parmstr is %s, argument is %s, buf is %s, parm2 is %s, buf2 is %s") %  parmstr % argument % buf % parm2 % buf2);
       if (!argument || !strcmp(argument,"")) {
         sendTo("Syntax: @set skill <char name> <skill> <value>\n\r");
         return;
@@ -614,7 +614,7 @@ mob->getName());
     }
     if ((parm > 100) && !hasWizPower(POWER_SET_IMP_POWER)) {
       sendTo("Over 100 practices?!?!?! Woah!\n\r");
-      vlogf(LOG_MISC, "%s just tried to set %s's practices to a number > 100!", getName(), mob->getName());
+      vlogf(LOG_MISC, fmt("%s just tried to set %s's practices to a number > 100!") %  getName() % mob->getName());
       return;
     }
 
@@ -746,7 +746,7 @@ mob->getName());
 
       // log this because changing race *may* cause some equipment problems
       // due to wearability, etc.
-      vlogf(LOG_MISC, "%s being changed to the %s race by %s", mob->getName(), mob->getMyRace()->getSingularName().c_str(), getName());
+      vlogf(LOG_MISC, fmt("%s being changed to the %s race by %s") %  mob->getName() % mob->getMyRace()->getSingularName() % getName());
 
       // oh yeah, may as well avoid equipment problems too  :)
       wearSlotT ij;

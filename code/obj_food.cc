@@ -40,9 +40,9 @@ void TBaseCup::weightChangeObject(float wgt_amt)
                (-wgt_amt + obj_index[getItemIndex()].weight)) == 1) {
 #if DRINK_DEBUG
     // this happens sometimes because of that stupid roundoff error in floats
-    vlogf(LOG_BUG, "Attempt to reduce %s below its empty weight", getName());
-    vlogf(LOG_BUG, "weight: %f, adjust: %f, base: %f", getWeight(), 
-         -wgt_amt, obj_index[getItemIndex()].weight);
+    vlogf(LOG_BUG, fmt("Attempt to reduce %s below its empty weight") %  getName());
+    vlogf(LOG_BUG, fmt("weight: %f, adjust: %f, base: %f") %  getWeight() % 
+         -wgt_amt % obj_index[getItemIndex()].weight);
 #endif
     wgt_amt = -(getWeight() - obj_index[getItemIndex()].weight);
   }
@@ -72,7 +72,7 @@ void TBaseCup::weightChangeObject(float wgt_amt)
     mount(tmp);
   } else {
     // if object (pool) is changing in weight at load time, this is ok
-    //vlogf(LOG_BUG, "Unknown attempt to subtract weight from an object. (weightChangeObject) obj=%s", getName());
+    //vlogf(LOG_BUG, fmt("Unknown attempt to subtract weight from an object. (weightChangeObject) obj=%s") %  getName());
 
     addToWeight(wgt_amt);
   }
@@ -83,12 +83,12 @@ void TBaseCup::weightChangeObject(float wgt_amt)
   if (compareWeights(getWeight(), max_amt) == -1) {
 #if DRINK_DEBUG
     // this happens, silly float round off
-    vlogf(LOG_BUG, "DRINK: Bad weight change on %s.  Location %s", getName(),
+    vlogf(LOG_BUG, fmt("DRINK: Bad weight change on %s.  Location %s") %  getName() %
            (in_room != ROOM_NOWHERE ? roomp->getName() :
            (equippedBy ? equippedBy->getName() :
            parent->getName())));
-    vlogf(LOG_BUG, "DRINK: Orig: %.1f, change %.1f, now %.1f, max %.1f, sips: %d", 
-        sweight, wgt_amt, getWeight(), max_amt, getMaxDrinkUnits());
+    vlogf(LOG_BUG, fmt("DRINK: Orig: %.1f, change %.1f, now %.1f, max %.1f, sips: %d") %  
+        sweight % wgt_amt % getWeight() % max_amt % getMaxDrinkUnits());
     vlogf(LOG_BUG, "DRINK: resetting");
 #endif
     if ((tmp = parent)) {
@@ -905,28 +905,28 @@ int TFood::suggestedPrice() const
 void TFood::lowCheck()
 {
   if (getFoodFill() <= 0)
-        vlogf(LOG_LOW,"food (%s) with bad fills value.", getName());
+        vlogf(LOG_LOW,fmt("food (%s) with bad fills value.") %  getName());
 
   int vModified = suggestedPrice();
   if (vModified != obj_flags.cost) {
-    vlogf(LOG_LOW, "food (%s:%d) with bad price.  Should be: %d.",
-          getName(), objVnum(), vModified);
+    vlogf(LOG_LOW, fmt("food (%s:%d) with bad price.  Should be: %d.") % 
+          getName() % objVnum() % vModified);
     obj_flags.cost = vModified;
   }
   if (obj_flags.decay_time < 0 && !isObjStat(ITEM_MAGIC)) {
-    vlogf(LOG_LOW, "food (%s:%d) with bad decay.  Should be magic or decay.",
-          getName(), objVnum());
+    vlogf(LOG_LOW, fmt("food (%s:%d) with bad decay.  Should be magic or decay.") % 
+          getName() % objVnum());
   }
 
   if ((vModified = (getFoodFill() * 10)) != getVolume()) {
-    vlogf(LOG_LOW, "food (%s) with bad volume.  Should be: %d.",
-          getName(), vModified);
+    vlogf(LOG_LOW, fmt("food (%s) with bad volume.  Should be: %d.") % 
+          getName() % vModified);
     setVolume(vModified);
   }
 #if 0
   if ((vModified = (int) (getFoodFill() / 12)) != getWeight()) {
-    vlogf(LOG_LOW, "food (%s) with bad weight.  Should be: %d",
-          getName(), vModified);
+    vlogf(LOG_LOW, fmt("food (%s) with bad weight.  Should be: %d") % 
+          getName() % vModified);
     setWeight(vModified);
   }
 #endif

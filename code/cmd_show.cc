@@ -61,7 +61,7 @@ static void show_room_zone(int rnum, TRoom *rp, sstring &, struct
     srzs->blank = 0;
   }
   if (!rp->name) {
-    vlogf(LOG_BUG, "room %d's name is screwed!\n\r", rp->number);
+    vlogf(LOG_BUG, fmt("room %d's name is screwed!\n\r") %  rp->number);
     return;
   } else if (1 == sscanf(rp->name, "%d", &srzs->lastblank) && srzs->lastblank
 	     == rp->number) {
@@ -1455,7 +1455,7 @@ void TPerson::doShow(sstring tStString)
         ShopFights();
         break;
       default:
-        vlogf(LOG_BUG, "Unregistered entry in show: %d", tSelection);
+        vlogf(LOG_BUG, fmt("Unregistered entry in show: %d") %  tSelection);
         break;
     }
   } else {

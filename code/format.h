@@ -25,7 +25,10 @@ template <class T> sstring fmt::doFormat(const sstring &fmt, const T &x)
 
   if(strlen(buf) == MAX_STRING_LENGTH - 1){
     vlogf(LOG_BUG, "fmt::doFormat(): buffer reached MAX_STRING_LENGTH");
-    vlogf(LOG_BUG, "fmt::doFormat(): buffer=%.70s...", buf);
+
+    // can't use fmt here of course
+    vlogf(LOG_BUG, sstring("fmt::doFormat(): buffer=")+
+	  sstring(buf).substr(70));
   }
 
   return (sstring) buf;
@@ -71,7 +74,7 @@ template <class T> fmt & fmt::operator %(const T &x)
   }
 
   if(!found)
-    vlogf(LOG_BUG,"format passed argument with no format specifier, output=%s",
+    vlogf(LOG_BUG,fmt("format passed argument with no format specifier, output=%s") % 
 	  output.c_str());
 
   this->assign(output);

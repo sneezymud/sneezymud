@@ -82,7 +82,7 @@ void MakeNoise(int room, const char *local_snd, const char *distant_snd)
     }
   }
   if (!rp) {
-    vlogf(LOG_MISC, "Testing log: No rp in MakeNoise for %s", ((ch->name) ? ch->name : "null"));
+    vlogf(LOG_MISC, fmt("Testing log: No rp in MakeNoise for %s") %  ((ch->name) ? ch->name : "null"));
     return;
   }
   for (door = MIN_DIR; door < MAX_DIR; door++) {

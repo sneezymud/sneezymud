@@ -544,7 +544,7 @@ void TBeing::doSplit(const char *argument, bool tell)
     }
     sendTo(fmt("%d talens divided in %d shares of %d talens.\n\r") % amount % no_members % (amount / no_members));
     if ((GetMaxLevel() > MAX_MORT) && (no_members > 1))
-      vlogf(LOG_MISC, "%s was kind enough to share %d talens with others...", getName(), amount);
+      vlogf(LOG_MISC, fmt("%s was kind enough to share %d talens with others...") %  getName() % amount);
   } else {
     int count = 0;
     TThing *obj2;
@@ -566,7 +566,7 @@ void TBeing::doReport(const char *argument)
   TBeing *targ = NULL;
 
   if (!roomp) {
-    vlogf(LOG_BUG, "Person %s in bad room in doReport!", getName());
+    vlogf(LOG_BUG, fmt("Person %s in bad room in doReport!") %  getName());
     return;
   }
   if (applySoundproof())
@@ -723,8 +723,8 @@ int TPerson::doQuit2()
   }
   if (getPosition() < POSITION_STUNNED) {
     sendTo("You die before your time!\n\r");
-    vlogf(LOG_MISC, "%s killed by quitting while incapacitated at %s (%d)",
-          getName(), roomp->getName(), inRoom());
+    vlogf(LOG_MISC, fmt("%s killed by quitting while incapacitated at %s (%d)") % 
+          getName() % roomp->getName() % inRoom());
     rc = die(DAMAGE_NORMAL);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -734,7 +734,7 @@ int TPerson::doQuit2()
 
   act("Goodbye, friend.. Come back soon!", FALSE, this, 0, 0, TO_CHAR);
   act("$n has left the game.", TRUE, this, 0, 0, TO_ROOM);
-  vlogf(LOG_PIO, "%s quit the game.", getName());
+  vlogf(LOG_PIO, fmt("%s quit the game.") %  getName());
   if (!isImmortal() && getMoney()) {
     *roomp += *create_money(getMoney());
     addToMoney(-getMoney(), GOLD_INCOME);
@@ -889,7 +889,7 @@ void TBeing::doPractice(const char *argument)
       if (!strcmp(disc_names[i], "Psionic Abilities"))
 	continue;
       if (!(cd = getDiscipline(i))) {
-        vlogf(LOG_BUG, "Somehow %s was not assigned a discipline (%d), used prac class (%d).",getName(), i, which);
+        vlogf(LOG_BUG, fmt("Somehow %s was not assigned a discipline (%d), used prac class (%d).") % getName() % i % which);
       }
       if ((discNames[i].class_num == 0) || (IS_SET(discNames[i].class_num, which))) {
         if (cd && cd->getLearnedness() >= 0) {
@@ -1041,7 +1041,7 @@ void TBeing::sendSkillsList(discNumT which)
     i = sortDiscVec[j].theSkill;
     das = getDisciplineNumber(i, FALSE);
     if (das == DISC_NONE) {
-      vlogf(LOG_BUG, "Bad disc for skill %d in doPractice", i);
+      vlogf(LOG_BUG, fmt("Bad disc for skill %d in doPractice") %  i);
       continue;
     }
     cd = getDiscipline(das);
@@ -1317,7 +1317,7 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
 
   das = getDisciplineNumber(skNum, FALSE);
   if (das == DISC_NONE) {
-    vlogf(LOG_BUG, "Bad disc for skill %d in doPracSkill", skNum);
+    vlogf(LOG_BUG, fmt("Bad disc for skill %d in doPracSkill") %  skNum);
     return;
   }
   cd = getDiscipline(das);
@@ -2486,7 +2486,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
   if (!IS_SET(discArray[spell]->targets, TAR_IGNORE | TAR_AREA)) {
 
     if (!victim && !target) {
-      vlogf(LOG_BUG, "Bad targetting in doObjSpell() %d", spell);
+      vlogf(LOG_BUG, fmt("Bad targetting in doObjSpell() %d") %  spell);
       return 0;
     }
 
@@ -2990,7 +2990,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
         rc = divinationObj(caster, target);
       break;
     default:
-      vlogf(LOG_BUG,"Object (%s) with uncoded spell (%d)!", obj->getName(), spell);
+      vlogf(LOG_BUG,fmt("Object (%s) with uncoded spell (%d)!") %  obj->getName() % spell);
       break;
   }
   return rc;
@@ -3080,7 +3080,7 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
     spellNumT the_spell = getSpell(i);
     if (the_spell >= MIN_SPELL) {
       if (!discArray[the_spell]) {
-        vlogf(LOG_BUG,"doRecite called spell (%d) that doesnt exist! - Don't do that!", the_spell);
+        vlogf(LOG_BUG,fmt("doRecite called spell (%d) that doesnt exist! - Don't do that!") %  the_spell);
         continue;
       }
       if ((discArray[the_spell]->targets & TAR_VIOLENT) &&
@@ -4003,7 +4003,7 @@ void Descriptor::send_bug(const char *type, const char *msg)
       return;
     }
   } else {
-    vlogf(LOG_BUG, "Bogus type (%s) in send_bug.", type);
+    vlogf(LOG_BUG, fmt("Bogus type (%s) in send_bug.") %  type);
     return;
   }
   fputs(buf, fp);

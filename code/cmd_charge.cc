@@ -165,8 +165,8 @@ vict->getName());
       //   didCrit = true;
     }
 	
-    // vlogf(LOG_MISC, "Charge Damage Formula [%s][%.2f / %.2f|%d / %s]", ch->getName(),
-    //      newDam, crossValue, initialDamage, (didCrit ? "Critical" : "Normal"));
+    // vlogf(LOG_MISC, fmt("Charge Damage Formula [%s][%.2f / %.2f|%d / %s]") %  ch->getName() %
+    //      newDam % crossValue % initialDamage % (didCrit ? "Critical" : "Normal"));
     //  }
 #endif
 

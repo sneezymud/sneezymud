@@ -171,7 +171,7 @@ int TBeing::dropPool(int amt, liqTypeT liq)
 // hence this setup instead.
     int robj = real_object(GENERIC_POOL);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, "dropPool(): No object (%d) in database!", GENERIC_POOL);
+      vlogf(LOG_BUG, fmt("dropPool(): No object (%d) in database!") %  GENERIC_POOL);
       return false;
     }
 

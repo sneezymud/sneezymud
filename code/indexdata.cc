@@ -342,7 +342,7 @@ void generate_mob_index()
       rc = fscanf(mob_f, "%ld %ld %ld %f %c %f\n",
          &spac, &spaf, &fac, &facp, &let, &mult);
       if (rc != 6) {
-        vlogf(LOG_BUG, "Error during mobIndexSetup(1) %d", bc);
+        vlogf(LOG_BUG, fmt("Error during mobIndexSetup(1) %d") %  bc);
         exit(0);
       }
 
@@ -358,7 +358,7 @@ void generate_mob_index()
       rc = fscanf(mob_f, "%ld %ld %ld %f %f %f+%d \n",
           &Class, &lev, &hitr, &arm, &hp, &daml, &damp);
       if (rc != 7) {
-        vlogf(LOG_BUG, "Error during mobIndexSetup(2) %d (rc=%d)", bc, rc);
+        vlogf(LOG_BUG, fmt("Error during mobIndexSetup(2) %d (rc=%d)") %  bc % rc);
         exit(0);
       }
 
@@ -374,7 +374,7 @@ void generate_mob_index()
       rc = fscanf(mob_f, "%ld %ld %ld %ld \n",
           &mon, &race, &wgt, &hgt);
       if (rc != 4) {
-        vlogf(LOG_BUG, "Error during mobIndexSetup(3) %d", bc);
+        vlogf(LOG_BUG, fmt("Error during mobIndexSetup(3) %d") %  bc);
         exit(0);
       }
 
@@ -393,7 +393,7 @@ void generate_mob_index()
       rc = fscanf(mob_f, "%ld %ld %ld %ld \n",
           &mpos, &dpos, &sex, &spec);
       if (rc != 4) {
-        vlogf(LOG_BUG, "Error during mobIndexSetup(4) %d", bc);
+        vlogf(LOG_BUG, fmt("Error during mobIndexSetup(4) %d") %  bc);
         exit(0);
       }
 
@@ -411,7 +411,7 @@ void generate_mob_index()
       rc = fscanf(mob_f, "%ld %ld %ld %ld \n",
           &mat, &cbs, &vis, &maxe);
       if (rc != 4) {
-        vlogf(LOG_BUG, "Error during mobIndexSetup(5) %d", bc);
+        vlogf(LOG_BUG, fmt("Error during mobIndexSetup(5) %d") %  bc);
         exit(0);
       }
 
@@ -456,7 +456,7 @@ void generate_mob_index()
 
       // setup for next critter
     if (fgets(buf, sizeof(buf)-1, mob_f) == NULL) {
-      vlogf(LOG_BUG, "Error during mobIndexSetup(6) %d", bc);
+      vlogf(LOG_BUG, fmt("Error during mobIndexSetup(6) %d") %  bc);
       exit(0);
     }
   }

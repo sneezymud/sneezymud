@@ -820,7 +820,7 @@ int portal(TBeing * caster, const char * portalroom, int level, byte bKnown)
 
   if (!rp || !location) {
     caster->sendTo("You can't seem to portal to that location.\n\r");
-    //    vlogf(LOG_BUG, "Attempt to portal to room %d",location);
+    //    vlogf(LOG_BUG, fmt("Attempt to portal to room %d") % location);
     return SPELL_FAIL;
   }
 

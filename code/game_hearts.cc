@@ -92,7 +92,7 @@ void HeartsGame::deal(TBeing *ch)
   TBeing *left = NULL, *across = NULL, *right = NULL;
 
   if ((which = index(ch)) < 0) {
-    vlogf(LOG_BUG, "%s got into HeartsGame::deal without being at the hearts table!", ch->getName());
+    vlogf(LOG_BUG, fmt("%s got into HeartsGame::deal without being at the hearts table!") %  ch->getName());
     return;
   }
   if (game) {
@@ -256,7 +256,7 @@ int HeartsGame::exitGame(const TBeing *ch)
   TBeing *left = NULL, *across = NULL, *right = NULL;
 
   if ((which = index(ch)) < 0) {
-    vlogf(LOG_BUG, "%s left a hearts table %s wasn't at!", ch->getName(), ch->hssh());
+    vlogf(LOG_BUG, fmt("%s left a hearts table %s wasn't at!") %  ch->getName() % ch->hssh());
     return FALSE;
   }
   ch->sendTo("You leave the hearts table.\n\r");
@@ -322,7 +322,7 @@ int HeartsGame::new_deal()
         countx += 13;
     }
     if (!in_range(tricks[i][4], 0, 3)) {
-       vlogf(LOG_BUG, "Bad number in HeartsGame::new_deal for winner of trick! (%d)", tricks[i][4]);
+       vlogf(LOG_BUG, fmt("Bad number in HeartsGame::new_deal for winner of trick! (%d)") %  tricks[i][4]);
        return FALSE;
     }
     scores[tricks[i][4]] += countx;
@@ -507,7 +507,7 @@ void HeartsGame::pass(TBeing *ch, const char *arg)
   for (; isspace(*arg); arg++);
 
   if ((which = index(ch)) < 0) {
-    vlogf(LOG_BUG, "%s got into hearts_pass without being at the hearts table!\n\r", ch->getName());
+    vlogf(LOG_BUG, fmt("%s got into hearts_pass without being at the hearts table!\n\r") %  ch->getName());
     return;
   }
   if (!passing || !canpass[which]) {

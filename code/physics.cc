@@ -86,7 +86,7 @@ bool TBeing::canClimb()
           IS_SET(roomp->dir_option[DIR_DOWN]->condition, EX_CLOSED)) {
         return TRUE;
       } else {
-        vlogf(LOG_BUG,"%s falling from room %d with no down dir.",getName(), in_room);
+        vlogf(LOG_BUG,fmt("%s falling from room %d with no down dir.") % getName() % in_room);
         return TRUE;
       }
     } else if (!riding) {
@@ -484,7 +484,7 @@ int TObj::checkFalling()
     }
   }
   if (count >= 100) {
-    vlogf(LOG_BUG, "Air room %d is screwed.  Tell Brutius.", in_room);
+    vlogf(LOG_BUG, fmt("Air room %d is screwed.  Tell Brutius.") %  in_room);
     return FALSE;
   }
   return TRUE;
@@ -606,7 +606,7 @@ int TBeing::checkFalling()
     --(*this);
   
     if (!(rp = real_roomp(new_room = rp->dir_option[DIR_DOWN]->to_room))) {
-      vlogf(LOG_BUG, "illegal room number for falling - %d", rp->dir_option[DIR_DOWN]->to_room);
+      vlogf(LOG_BUG, fmt("illegal room number for falling - %d") %  rp->dir_option[DIR_DOWN]->to_room);
       thing_to_room(this, ROOM_VOID);
       return FALSE;
     }
@@ -728,7 +728,7 @@ rp->isFlyingSector())) {
     }
   }
   if (count >= 100) {
-    vlogf(LOG_BUG, "Air room %d is screwed.  Tell Brutius.", in_room);
+    vlogf(LOG_BUG, fmt("Air room %d is screwed.  Tell Brutius.") %  in_room);
     if (!isImmortal()) {
       fallKill();
       return DELETE_THIS;
@@ -764,8 +764,8 @@ int TBeing::checkDrowning()
     }
     updatePos();
     if (getHit() < -10) {
-      vlogf(LOG_MISC, "%s killed by drowning at %s (%d)",
-          getName(), roomp->getName(), inRoom());
+      vlogf(LOG_MISC, fmt("%s killed by drowning at %s (%d)") % 
+          getName() % roomp->getName() % inRoom());
 
       if (!desc)
         setMoney(0);

@@ -13,7 +13,7 @@ bool TBeing::powerCheck(wizPowerT wpt) const
 
 bool TBeing::limitPowerCheck(cmdTypeT cmd, int vnum) {
   if (!desc) {
-    vlogf(LOG_BUG,"%s got to limitPowerCheck() without desc, very bad.", getName());
+    vlogf(LOG_BUG,fmt("%s got to limitPowerCheck() without desc, very bad.") %  getName());
     return TRUE; // if we return FALSE here it could cause a crash
   }
   if (hasWizPower(POWER_NO_LIMITS))
@@ -71,8 +71,8 @@ bool TBeing::limitPowerCheck(cmdTypeT cmd, int vnum) {
         return TRUE;
       break;
     default:
-      vlogf(LOG_DASH, "%s called limits check with undefined command type (%d)",
-	    getName(), (int)cmd);
+      vlogf(LOG_DASH, fmt("%s called limits check with undefined command type (%d)") % 
+	    getName() % (int)cmd);
       break;
   }
   return FALSE;
@@ -330,7 +330,7 @@ void TBeing::remWizPower(wizPowerT)
 bool TPerson::hasWizPower(wizPowerT value) const
 {
   if (value >= MAX_POWER_INDEX) {
-    vlogf(LOG_BUG, "Bad check of hasWizPower(%d)", value);
+    vlogf(LOG_BUG, fmt("Bad check of hasWizPower(%d)") %  value);
     return FALSE;
   }
 
@@ -352,7 +352,7 @@ bool TPerson::hasWizPower(wizPowerT value) const
 void TPerson::setWizPower(wizPowerT value)
 {
   if (value >= MAX_POWER_INDEX) {
-    vlogf(LOG_BUG, "Bad check of setWizPower(%d)", value);
+    vlogf(LOG_BUG, fmt("Bad check of setWizPower(%d)") %  value);
     return;
   }
 
@@ -362,7 +362,7 @@ void TPerson::setWizPower(wizPowerT value)
 void TPerson::remWizPower(wizPowerT value)
 {
   if (value >= MAX_POWER_INDEX) {
-    vlogf(LOG_BUG, "Bad check of remWizPower(%d)", value);
+    vlogf(LOG_BUG, fmt("Bad check of remWizPower(%d)") %  value);
     return;
   }
 

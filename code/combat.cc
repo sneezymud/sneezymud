@@ -194,14 +194,14 @@ void TBeing::goBerserk(TBeing *cur)
   if (!isCombatMode(ATTACK_BERSERK))
     return;
   if (fight()) {
-    vlogf(LOG_COMBAT, "Whoa, %s was fighting when it tried to goBerserk",getName());
+    vlogf(LOG_COMBAT, fmt("Whoa, %s was fighting when it tried to goBerserk") % getName());
     return;
   }
   if (getPosition() <= POSITION_SLEEPING)
     return;
 
   if (checkPeaceful("")) {
-    vlogf(LOG_COMBAT, "Hmmm, %s was berserking in a peaceful room.",getName());
+    vlogf(LOG_COMBAT, fmt("Hmmm, %s was berserking in a peaceful room.") % getName());
     setCombatMode(ATTACK_NORMAL);
     return;
   }
@@ -356,7 +356,7 @@ void TBeing::updatePos()
     setPosition(newPos);
     doSave(SILENT_YES);
   } else {
-    vlogf(LOG_COMBAT, "Bad position in update position for %s", getName());
+    vlogf(LOG_COMBAT, fmt("Bad position in update position for %s") %  getName());
     setPosition(POSITION_STUNNED);
   }
 #else
@@ -521,15 +521,15 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
   preKillCheck();
 
   if (isShopkeeper() && number >= 0) {
-    vlogf(LOG_COMBAT, "Shopkeeper [%s] was just killed.  Find out how!", getName());
+    vlogf(LOG_COMBAT, fmt("Shopkeeper [%s] was just killed.  Find out how!") %  getName());
 
     unsigned int shop_nr;
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != number); shop_nr++);
 
     if (shop_nr >= shop_index.size()) 
-      vlogf(LOG_MISC, "Warning... shop # for mobile %d (real nr) not found.", number);
+      vlogf(LOG_MISC, fmt("Warning... shop # for mobile %d (real nr) not found.") %  number);
     else {
-      vlogf(LOG_COMBAT, "Deleting shopkeeper file for shop #%d.", shop_nr);
+      vlogf(LOG_COMBAT, fmt("Deleting shopkeeper file for shop #%d.") %  shop_nr);
       waste_shop_file(shop_nr);
     }
   }
@@ -587,15 +587,15 @@ int TBeing::die(spellNumT dam_type, TBeing *tKiller = NULL)
     if (isPc() && !rp->isRoomFlag(ROOM_ARENA) && !skip_death) {
       int val_num = ::number(0,3);
       if (GetMaxLevel() <= 10) val_num = 0;
-      vlogf(LOG_COMBAT,"%s died and lost %.2f exp (age +%d).  Before death: %.2f exp and %d talens.",
-               getName(), deathExp(), val_num, getExp(),getMoney());
-      //      vlogf(LOG_COMBAT,"Average skill loss: %f", deathSkillLoss());
+      vlogf(LOG_COMBAT,fmt("%s died and lost %.2f exp (age +%d).  Before death: %.2f exp and %d talens.") % 
+               getName() % deathExp() % val_num % getExp() %getMoney());
+      //      vlogf(LOG_COMBAT,fmt("Average skill loss: %f") %  deathSkillLoss());
       age_mod += val_num;
       gain_exp(this, -deathExp(), -1);
       exp_lost=deathExp();
     }
   } else {
-    vlogf(LOG_COMBAT, "Death called with ch (%s) in ROOM_NOWHERE!", getName());
+    vlogf(LOG_COMBAT, fmt("Death called with ch (%s) in ROOM_NOWHERE!") %  getName());
     gain_exp(this, -deathExp(), -1);
     exp_lost=deathExp();
   }
@@ -654,7 +654,7 @@ bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *w
   else
     sharp = sharpness[wtype];
 
-//  vlogf(LOG_COMBAT, "tear: susc: %d, sharp: %d, struct: %d, dam: %d", material_nums[item->getMaterial()].cut_susc, sharp, item->getStructPoints(), dam);
+//  vlogf(LOG_COMBAT, fmt("tear: susc: %d, sharp: %d, struct: %d, dam: %d") %  material_nums[item->getMaterial()].cut_susc % sharp % item->getStructPoints() % dam);
   if (item->willTear(sharp)) {
 //  vlogf(LOG_COMBAT, "torn");
     int chance = item->getStructPoints() / dam;
@@ -726,7 +726,7 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
   else
     sharp = sharpness[wtype];
 
-//    vlogf(LOG_COMBAT, "dent: susc: %d, sharp: %d, struct: %d, dam: %d", material_nums[item->getMaterial()].smash_susc, sharp, item->getStructPoints(), dam);
+//    vlogf(LOG_COMBAT, fmt("dent: susc: %d, sharp: %d, struct: %d, dam: %d") %  material_nums[item->getMaterial()].smash_susc % sharp % item->getStructPoints() % dam);
   if (item->willDent(sharp)) {
 //  vlogf(LOG_COMBAT, "dented");
     int chance = item->getStructPoints() / dam;
@@ -803,7 +803,7 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
   else
     sharp = sharpness[wtype];
 
-//  vlogf(LOG_COMBAT, "pierce: susc: %d, sharp: %d, struct: %d, dam: %d", material_nums[item->getMaterial()].pierced_susc, sharp, item->getStructPoints(), dam);
+//  vlogf(LOG_COMBAT, fmt("pierce: susc: %d, sharp: %d, struct: %d, dam: %d") %  material_nums[item->getMaterial()].pierced_susc % sharp % item->getStructPoints() % dam);
   if (item->willPuncture(sharp)) {
 //  vlogf(LOG_COMBAT, "puncted");
     int chance = item->getStructPoints() / dam;
@@ -1036,7 +1036,7 @@ void TObj::makeScraps()
         if (ch->roomp)
           *ch->roomp += *x;
         else
-          vlogf(LOG_COMBAT,"EquippedBy without a roomp %s", ch->getName());
+          vlogf(LOG_COMBAT,fmt("EquippedBy without a roomp %s") %  ch->getName());
       }
     }
   }
@@ -1052,7 +1052,7 @@ void TObj::makeScraps()
     act(buf, TRUE, ch, this, NULL, TO_ROOM);
     act(buf2, FALSE, ch, this, NULL, TO_CHAR, ANSI_RED);
 
-    vlogf(LOG_COMBAT, "%s's %s just scrapped.", ch->getName(), getName());
+    vlogf(LOG_COMBAT, fmt("%s's %s just scrapped.") %  ch->getName() % getName());
   } else {
     if ((parent && (tmp = parent->equippedBy)) || (tmp = parent))  {
       if (isMineral()) {
@@ -1077,7 +1077,7 @@ void TObj::makeScraps()
         sprintf(buf, "$n is destroyed.");
       act(buf, TRUE, this, NULL, NULL, TO_ROOM);
     } else 
-      vlogf(LOG_COMBAT, "Something in make scraps isnt in a room %s.", getName());
+      vlogf(LOG_COMBAT, fmt("Something in make scraps isnt in a room %s.") %  getName());
   }
   
   o = new TTrash();
@@ -1150,7 +1150,7 @@ static void absorb_damage(TBeing *v, wearSlotT part_hit, int *dam)
   stats.ac_absorb[v->isPc() ? PC_STAT : MOB_STAT] += abs;
 
 #if DEBUG
-  vlogf(LOG_COMBAT, "Debug : Damage went from %d to %d with armor absorption!", *dam, (*dam - abs));
+  vlogf(LOG_COMBAT, fmt("Debug : Damage went from %d to %d with armor absorption!") %  *dam % (*dam - abs));
 #endif
   *dam -= abs;
 }
@@ -1233,8 +1233,8 @@ void TBeing::setFighting(TThing *vict, int dam, bool inFight)
     return;
 
   if (fight()) {
-    vlogf(LOG_COMBAT, "Fighting character (%s) set to fighting another. (%s)",
-       getName(), tbv->getName());
+    vlogf(LOG_COMBAT, fmt("Fighting character (%s) set to fighting another. (%s)") % 
+       getName() % tbv->getName());
     return;
   }
 
@@ -1341,7 +1341,7 @@ void TBeing::checkForQuestTog(TBeing *vict)
       vict->affectTo(&af, -1);
       vict->doTell(getName(), "You have acted honorably in attacking me.");
       vict->doTell(getName(), "Let this fight be to the death!");
-//      vlogf(LOG_COMBAT, "Setting quest bit for %d on %s vs %s", bitnum, vict->getName(), getName());
+//      vlogf(LOG_COMBAT, fmt("Setting quest bit for %d on %s vs %s") %  bitnum % vict->getName() % getName());
       // some specials stun the critter so it doesn't start fighting.
       // we need to set them fighting so that if char stuns and flees
       // it acknowledges as a no good attack.
@@ -1395,7 +1395,7 @@ void TBeing::sendCheatMessage(char *cheater)
       doTell(nameBuf, "An honorable ranger would allow me to heal completely before attacking again.");
       break;
     default:
-      vlogf(LOG_COMBAT, "Somehow got to getCheatMessage without a valid toggle bit %s.", getName());
+      vlogf(LOG_COMBAT, fmt("Somehow got to getCheatMessage without a valid toggle bit %s.") %  getName());
       break;
   }
 }
@@ -1411,8 +1411,8 @@ void TBeing::stopFighting()
 
   if (!fight()) {
     REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
-    //vlogf(LOG_COMBAT, "Character (%s) not fighting at invocation of stopFighting", getName());
-    vlogf(LOG_BUG, "Character (%s) not fighting at invocation of stopFighting", getName());
+    //vlogf(LOG_COMBAT, fmt("Character (%s) not fighting at invocation of stopFighting") %  getName());
+    vlogf(LOG_BUG, fmt("Character (%s) not fighting at invocation of stopFighting") %  getName());
     if (desc && (cantHit > 0)) {
       sendTo("You finish orienting yourself.\n\r");
       cantHit = 0;
@@ -1441,7 +1441,7 @@ void TBeing::stopFighting()
       // combat stopped for some other reason
       // ie, mob fled, got paralyzed, teleported, etc.
       if (awake()) {
-        vlogf(LOG_COMBAT, "Removing Solo Combat Affect from: %s", getName());
+        vlogf(LOG_COMBAT, fmt("Removing Solo Combat Affect from: %s") %  getName());
         sprintf(nameBuf, "%s", fname(af->be->name).c_str());
         sendCheatMessage(nameBuf);
         affectRemove(af);
@@ -1457,7 +1457,7 @@ void TBeing::stopFighting()
     fight()->attackers--;
 
   if(fight()->attackers < 0){
-    vlogf(LOG_COMBAT, "too few people attacking. %d", fight()->attackers);
+    vlogf(LOG_COMBAT, fmt("too few people attacking. %d") %  fight()->attackers);
     fight()->attackers = 0;
   }
 
@@ -1614,7 +1614,7 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
   dam = (int) (dam * stats.damage_modifier);
 
 #if DAMAGE_DEBUG
-  vlogf(LOG_COMBAT, "MONK %s (%d %s) barehand dam = %d , wep = %d roll = %d, stats = %.2f", ch->getName(), ch->GetMaxLevel(), ch->getProfName().c_str(), dam, wepDam, rollDam, statDam);
+  vlogf(LOG_COMBAT, fmt("MONK %s (%d %s) barehand dam = %d , wep = %d roll = %d, stats = %.2f") %  ch->getName() % ch->GetMaxLevel() % ch->getProfName() % dam % wepDam % rollDam % statDam);
 #endif
 
   return (dam);
@@ -1783,7 +1783,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     dam = max(1, dam);
 
 #if DAMAGE_DEBUG
-    vlogf(LOG_COMBAT, "PLAYER %s (%d %s) %s dam = %d , wep = %d bon = %d roll = %d, stats = %.2f skill = %d", getName(), GetMaxLevel(), getProfName().c_str(), buf, dam, wepDam, bonusDam, rollDam, statDam, wepLearn);
+    vlogf(LOG_COMBAT, fmt("PLAYER %s (%d %s) %s dam = %d , wep = %d bon = %d roll = %d, stats = %.2f skill = %d") %  getName() % GetMaxLevel() % getProfName() % buf % dam % wepDam % bonusDam % rollDam % statDam % wepLearn);
 #endif
 
   } else {
@@ -1795,7 +1795,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     wepDam = max(wepDam, 1);
     dam = wepDam + bonusDam + rollDam;
 #if DAMAGE_DEBUG
-    vlogf(LOG_COMBAT, "MOB %s (%d %s) dam = %d , wep = %d bon = %d roll = %d.", getName(), GetMaxLevel(), getProfName().c_str(), dam, wepDam, bonusDam, rollDam);
+    vlogf(LOG_COMBAT, fmt("MOB %s (%d %s) dam = %d , wep = %d bon = %d roll = %d.") %  getName() % GetMaxLevel() % getProfName() % dam % wepDam % bonusDam % rollDam);
 #endif
 
   }
@@ -2043,7 +2043,7 @@ int TBeing::hit(TBeing *target, int pulse)
 
   int myLevel = GetMaxLevel();
   if ((desc || target->desc) && isImmortal())
-    vlogf(LOG_COMBAT, "hitter = %s (level %d) targ = %s (level = %d) mod = %d, offense = %d, defense = %d", getName(), myLevel, target->getName(), tarLevel, mod, offense, defense);
+    vlogf(LOG_COMBAT, fmt("hitter = %s (level %d) targ = %s (level = %d) mod = %d, offense = %d, defense = %d") %  getName() % myLevel % target->getName() % tarLevel % mod % offense % defense);
 #endif
 
   o = heldInPrimHand();
@@ -3334,8 +3334,8 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       // potentially they have gone linkdead or something
       // lets check for the obvious cheat
       if (vict->desc->connected == CON_WRITING) {
-        vlogf(LOG_COMBAT, "%s using editing trick to prevent combat with %s at room %d",
-              vict->getName(), getName(), vict->in_room);
+        vlogf(LOG_COMBAT, fmt("%s using editing trick to prevent combat with %s at room %d") % 
+              vict->getName() % getName() % vict->in_room);
  
         // grab their stuff if they were REALLY cheating
 	if(!vict->affectedBySpell(AFFECT_PLAYERLOOT) &&
@@ -3631,7 +3631,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     if (!vict->isImmortal())
       dam = max(dam, 1);
 #if 0
-    vlogf(LOG_COMBAT, "DAMAGE %d (%s) After getActualDamage and absorb.", dam, getName());  
+    vlogf(LOG_COMBAT, fmt("DAMAGE %d (%s) After getActualDamage and absorb.") %  dam % getName());  
 #endif
 
     if (!IS_SET_DELETE(mess_sent, ONEHIT_MESS_CRIT_S) &&
@@ -3870,7 +3870,7 @@ int TBeing::numValidSlots()
       count++;
   }
   if (!count) {
-    vlogf(LOG_COMBAT, "ch->numValidSlots returned 0 for %s. Setting to 1.", getName());
+    vlogf(LOG_COMBAT, fmt("ch->numValidSlots returned 0 for %s. Setting to 1.") %  getName());
     count = 1;
   }
   return (count);
@@ -3936,7 +3936,7 @@ bool TBeing::canFight(TBeing *target)
   TThing *t;
 
   if (roomp && roomp->isRoomFlag(ROOM_PEACEFUL)) {
-    vlogf(LOG_COMBAT, "hit() called in PEACEFUL room.  %s hitting %s", getName(), target->getName());
+    vlogf(LOG_COMBAT, fmt("hit() called in PEACEFUL room.  %s hitting %s") %  getName() % target->getName());
     stopFighting();
     return FALSE;
   }
@@ -3944,7 +3944,7 @@ bool TBeing::canFight(TBeing *target)
     return FALSE;
 
   if (!sameRoom(*target)) {
-    vlogf(LOG_COMBAT, "NOT in same room when fighting : %s, %s", name, target->name);
+    vlogf(LOG_COMBAT, fmt("NOT in same room when fighting : %s, %s") %  name % target->name);
     if (fight())
       stopFighting();
     return FALSE;
@@ -4046,7 +4046,7 @@ bool TBeing::damDetailsOk(const TBeing *vict, int dam, bool ranged) const
 int TBeing::setCharFighting(TBeing *vict, int dam)
 {
   if (!vict) {
-    vlogf(LOG_BUG, "No victim in call to setCharFighting! (%s)", getName());
+    vlogf(LOG_BUG, fmt("No victim in call to setCharFighting! (%s)") %  getName());
     sendTo("Something bad happened, tell a god what you did!\n\r");
     return -1;
   }
@@ -4292,7 +4292,7 @@ void TBeing::catchLostLink(TBeing *vict)
   *buf = '\0';
 
   act("$n is rescued by divine forces.", TRUE, vict, 0, 0, TO_ROOM);
-  vlogf(LOG_COMBAT, "%s lost link while fighting %s (%d)", vict->getName(), getName(), in_room);
+  vlogf(LOG_COMBAT, fmt("%s lost link while fighting %s (%d)") %  vict->getName() % getName() % in_room);
 
   vict->specials.was_in_room = vict->in_room;
   if (vict->in_room != ROOM_NOWHERE)
@@ -4302,7 +4302,7 @@ void TBeing::catchLostLink(TBeing *vict)
 
   if (((vict->getHit() < (vict->hitLimit() / 2)) ||
      vict->isCombatMode(ATTACK_BERSERK)) && (vict->GetMaxLevel() <= MAX_MORT)) {
-    vlogf(LOG_COMBAT, "Creating link-loss bag for %s", vict->getName());
+    vlogf(LOG_COMBAT, fmt("Creating link-loss bag for %s") %  vict->getName());
     ct = time(0);
     tmstr = asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
@@ -4651,10 +4651,10 @@ int TBeing::objDamage(spellNumT damtype, int amnt, TThing *t)
   if (getPosition() == POSITION_DEAD) {
     if ((dynamic_cast<TPerson *>(this) || (desc && desc->original)) && roomp && roomp->name) {
       if (desc && desc->original && desc->original != this) {
-        vlogf(LOG_COMBAT, "%s killed by %s at %s (polyed as a %s)", desc->original->getName(), (t ? t->getName() : "a door"), roomp->getName(), getName());
+        vlogf(LOG_COMBAT, fmt("%s killed by %s at %s (polyed as a %s)") %  desc->original->getName() % (t ? t->getName() : "a door") % roomp->getName() % getName());
       } else {
-        vlogf(LOG_COMBAT, "%s killed by %s at %s", getName(), 
-            (t ? t->getName() : "a door"), roomp->getName());
+        vlogf(LOG_COMBAT, fmt("%s killed by %s at %s") %  getName() % 
+            (t ? t->getName() : "a door") % roomp->getName());
       }
       if (desc) 
         desc->career.deaths++;
@@ -4687,7 +4687,7 @@ void perform_violence(int pulse)
     for (ch = gCombatList; ch; ch = gCombatNext) {
       gCombatNext = ch->next_fighting;
       if (!(vict = ch->fight())) {
-        vlogf(LOG_COMBAT, "%s is not fighting in perform_violence!  *BUG BRUTIUS*", ch->getName());
+        vlogf(LOG_COMBAT, fmt("%s is not fighting in perform_violence!  *BUG BRUTIUS*") %  ch->getName());
         continue;
       }
       if (!ch->roomp || ch == vict) {
@@ -4831,7 +4831,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
 
   int fract = FRACT(this, v);
 #if EXP_DEBUG
-  vlogf(LOG_COMBAT, "FRACT is %d", fract);
+  vlogf(LOG_COMBAT, fmt("FRACT is %d") %  fract);
 #endif
 
   // new formula (Cos)
@@ -4851,7 +4851,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
     } else {
       // else no experience/take the mobs exp
 #if EXP_DEBUG
-      vlogf(LOG_COMBAT,"%s destroyed %d xp of %s's.", getName(), exp_received, v->getName());
+      vlogf(LOG_COMBAT,fmt("%s destroyed %d xp of %s's.") %  getName() % exp_received % v->getName());
 #endif
       gain_exp(v, -exp_received, -1);
       return;
@@ -4859,7 +4859,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
 
     // give the experience to solo pc and take from mob
 #if EXP_DEBUG
-    vlogf(LOG_COMBAT, "%s got %d.  perc  %f, %s lost %d",getName(),exp_received * fract / 100, percent, v->getName(), exp_received);
+    vlogf(LOG_COMBAT, fmt("%s got %d.  perc  %f, %s lost %d") % getName() %exp_received * fract / 100 % percent % v->getName() % exp_received);
 #endif
     gain_exp(this, exp_received * fract/ 100, dam*10000/v->hitLimit());
     gain_exp(v, -exp_received, -1);
@@ -4876,14 +4876,14 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
       } else {
         // else no experience for me
 #if EXP_DEBUG
-        vlogf(LOG_COMBAT, "%s destroyed %d xp of %s's.", getName(), exp_received, v->getName());
+        vlogf(LOG_COMBAT, fmt("%s destroyed %d xp of %s's.") %  getName() % exp_received % v->getName());
 #endif
         gain_exp(v, -exp_received, -1);
         return;
       }
       // give and take the experience
 #if EXP_DEBUG
-      vlogf(LOG_COMBAT, "%s got %d.  perc  %f, %s lost %d",getName(),exp_received * fract / 100, percent, v->getName(), exp_received);
+      vlogf(LOG_COMBAT, fmt("%s got %d.  perc  %f, %s lost %d") % getName() %exp_received * fract / 100 % percent % v->getName() % exp_received);
 #endif
       gain_exp(this, exp_received * fract/ 100, dam*10000/v->hitLimit());
       gain_exp(v, -exp_received, -1 );
@@ -4901,7 +4901,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
       }
       // take the experience from the mob /split will take place below
 #if EXP_DEBUG
-      vlogf(LOG_COMBAT, "%s lost %d.  perc  %f, %s's group got exp",v->getName(),exp_received, percent, getName(), exp_received);
+      vlogf(LOG_COMBAT, fmt("%s lost %d.  perc  %f, %s's group got exp") % v->getName() %exp_received % percent % getName() % exp_received);
 #endif
       gain_exp(v, -exp_received, -1 );
     }
@@ -4926,7 +4926,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
   }
 
 #if EXP_DEBUG
-    vlogf(LOG_COMBAT, "shares %d", no_levels);
+    vlogf(LOG_COMBAT, fmt("shares %d") %  no_levels);
 #endif
 
     if (no_levels) {
@@ -4938,7 +4938,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
     }
     
 #if EXP_DEBUG
-  vlogf(LOG_COMBAT, "one share %10.10f", tmp_exp);
+  vlogf(LOG_COMBAT, fmt("one share %10.10f") %  tmp_exp);
 #endif
 
   // Gain exp for master if in room with ch
@@ -4946,7 +4946,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
     exp_received = (tmp_exp * real_master->getExpShare());
     gain_exp(real_master, exp_received * fract/ 100, dam*10000/v->hitLimit());
 #if EXP_DEBUG
-    vlogf(LOG_COMBAT, "%s got %d.  perc  %f, %s lost %d",real_master->getName(),exp_received * fract / 100, percent, v->getName(), exp_received);
+    vlogf(LOG_COMBAT, fmt("%s got %d.  perc  %f, %s lost %d") % real_master->getName() %exp_received * fract / 100 % percent % v->getName() % exp_received);
 #endif
   }
   // Gain exp for followers if in room with ch
@@ -4955,7 +4955,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
       exp_received = (tmp_exp * f->follower->getExpShare());
       gain_exp(f->follower, exp_received * fract/ 100, dam*10000/v->hitLimit());
 #if EXP_DEBUG
-      vlogf(LOG_COMBAT, "%s got %d.  perc  %f, %s lost %d",f->follower->getName(),exp_received * fract / 100, percent, v->getName(), exp_received);
+      vlogf(LOG_COMBAT, fmt("%s got %d.  perc  %f, %s lost %d") % f->follower->getName() %exp_received * fract / 100 % percent % v->getName() % exp_received);
 #endif
     }
   }
@@ -4991,7 +4991,7 @@ int TBeing::setDistracted(int amt, int flags)
   if (!spelltask)
     return FALSE;
   if (amt < 0) {
-    vlogf(LOG_COMBAT, "something set a negative number to distract made 0 %s", getName());
+    vlogf(LOG_COMBAT, fmt("something set a negative number to distract made 0 %s") %  getName());
     amt = 0;
   }
   if (!flags) {
@@ -5039,7 +5039,7 @@ void TThing::remCastingList(TThing *obj)
     tmp_ch = ch->next_caster;
 
     if (!ch->spelltask) {
-//      vlogf(LOG_COMBAT, "Somehow, %s object was being cast on by someone (%s) who had no spelltask.", obj->getName(), ch->getName());
+//      vlogf(LOG_COMBAT, fmt("Somehow, %s object was being cast on by someone (%s) who had no spelltask.") %  obj->getName() % ch->getName());
       continue;
     }
 
@@ -5064,11 +5064,11 @@ void TBeing::remCastingList(TThing *v)
   for (ch = v->getCaster(); ch; ch = tmp_ch) {
     tmp_ch = ch->next_caster;
     if (!ch->spelltask) { 
-      vlogf(LOG_COMBAT, "Somehow, %s was being cast on by someone (%s) who had no spelltask.", v->getName(), ch->getName()); 
+      vlogf(LOG_COMBAT, fmt("Somehow, %s was being cast on by someone (%s) who had no spelltask.") %  v->getName() % ch->getName()); 
       continue;
     }
     if (!ch->spelltask->victim) { 
-      vlogf(LOG_COMBAT, "Somehow, %s was being cast on by someone (%s) who had no casting target.", v->getName(), ch->getName()); 
+      vlogf(LOG_COMBAT, fmt("Somehow, %s was being cast on by someone (%s) who had no casting target.") %  v->getName() % ch->getName()); 
     }
     ch->spelltask->victim = NULL;
     ch->next_caster = NULL;
@@ -5146,13 +5146,13 @@ void TBeing::makePartMissing(wearSlotT slot, bool diseased)
   TThing *t;
 
   if (!hasPart(slot)) {
-    vlogf(LOG_COMBAT, "BOGUS SLOT trying to be made PART_MISSING: %d on %s",
-         slot, getName());
+    vlogf(LOG_COMBAT, fmt("BOGUS SLOT trying to be made PART_MISSING: %d on %s") % 
+         slot % getName());
     return;
   }
   if (!roomp) {
     // bat 8-16-96, mob could be dead, this is a bug 
-    vlogf(LOG_COMBAT, "!roomp for target (%s) of makePartMissing().", getName());
+    vlogf(LOG_COMBAT, fmt("!roomp for target (%s) of makePartMissing().") %  getName());
     return;
   }
   if (!diseased)
@@ -5371,13 +5371,13 @@ void TBeing::genericKillFix(void)
   int rc = generic_dispel_magic(NULL, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
   int rc2 = genericChaseSpirits(NULL, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    vlogf(LOG_BUG, "Multiple deaths (%s in room %d) occurred!",
-         getName(), inRoom());
+    vlogf(LOG_BUG, fmt("Multiple deaths (%s in room %d) occurred!") % 
+         getName() % inRoom());
   }
 
   if (IS_SET_DELETE(rc2, DELETE_VICT)) {
-    vlogf(LOG_BUG, "Multiple deaths (%s in room %d) occurred!",
-         getName(), inRoom());
+    vlogf(LOG_BUG, fmt("Multiple deaths (%s in room %d) occurred!") % 
+         getName() % inRoom());
   }
 
   if (getCond(THIRST) >= 0)
@@ -5467,9 +5467,9 @@ double TBeing::deathSkillLoss()
     setSkillValue(i, max(amt, 1));
     setNatSkillValue(i, amt);
 
-    vlogf(LOG_COMBAT, "skill loss %s (%d) = %d,  %d->%d", 
-	  discArray[i]->name, i, preskill-amt,
-	  preskill, getRawNatSkillValue(i));
+    vlogf(LOG_COMBAT, fmt("skill loss %s (%d) = %d,  %d->%d") %  
+	  discArray[i]->name % i % (preskill-amt) %
+	  preskill % getRawNatSkillValue(i));
   }
   affectTotal();
 

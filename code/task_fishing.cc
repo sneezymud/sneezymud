@@ -63,7 +63,7 @@ TObj *catch_a_fish(TRoom *rp){
   const int icefishes[]={13875, 13876, 13877, 13878, 13879, 618, 619};
   float weightmod=(((float)(::number(0,100))-50.0)/100.0)+1.0;  // plus or minus 30%
 
-  //  vlogf(LOG_PEEL, "weightmod=%f", weightmod);
+  //  vlogf(LOG_PEEL, fmt("weightmod=%f") %  weightmod);
 
   if(!::number(0,99)){  // 1 in 100
     // big one
@@ -255,8 +255,8 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	  catchchance=::number(1,100);
 	  
 
-	  //	  vlogf(LOG_PEEL, "fishing: baitcost=%i, bait=%i, pole=%i, catch=%i",
-	  //	bait->obj_flags.cost, baitchance, polechance, catchchance);
+	  //	  vlogf(LOG_PEEL, fmt("fishing: baitcost=%i, bait=%i, pole=%i, catch=%i") % 
+	  //	bait->obj_flags.cost % baitchance % polechance % catchchance);
   
 	  if((bSuccess(ch, ch->getSkillValue(SKILL_FISHING), SKILL_FISHING) ||
 	      (!ch->doesKnowSkill(SKILL_FISHING) && !::number(0,99))) &&

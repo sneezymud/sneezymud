@@ -542,12 +542,12 @@ void TBed::lowCheck()
 {
   if (canWear(ITEM_TAKE) && getVolume() <= 3000 && getWeight() <= 10 &&
       getRegen() >= 3)
-    vlogf(LOG_LOW, "Portable bed (%s) with excessive regen rates!",
+    vlogf(LOG_LOW, fmt("Portable bed (%s) with excessive regen rates!") % 
              getName());
 
 #if 0
   if (canWear(ITEM_TAKE)) {
-    vlogf(LOG_LOW, "Bed (%s) set to be portable.",
+    vlogf(LOG_LOW, fmt("Bed (%s) set to be portable.") % 
                 getName());
   }
 #endif

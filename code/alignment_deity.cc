@@ -141,7 +141,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
   percent = (int) d_percent;
   percent = min(max(0, percent), 100);
 
-  vlogf(LOG_FACT, "%s had a percent of %d", ch->getName(), percent);
+  vlogf(LOG_FACT, fmt("%s had a percent of %d") %  ch->getName() % percent);
 
   if (number(10, 90) < percent) {
     sprintf(buf, "%s, you have faithfully practiced your beliefs.", ch->getName());
@@ -149,7 +149,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
     deity->doSay("Here is your reward.");
     // default will always do a nice thing, top ten do something great 
     int num = ::number(percent, 100);
-    vlogf(LOG_FACT, "reward loop val=%d", num);
+    vlogf(LOG_FACT, fmt("reward loop val=%d") %  num);
     switch (num) {
       case 90:
         // Nice token that decays in 100 ticks. 
@@ -247,7 +247,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
     deity->doSay(buf);
     deity->doSay("Here is your punishment");
     int num = number(0, percent);
-    vlogf(LOG_FACT, "punishment loop val=%d", num);
+    vlogf(LOG_FACT, fmt("punishment loop val=%d") %  num);
     switch (num) {
        // default sucks, but not as bad as the 10 lowest ones. 
       case 0:
@@ -448,8 +448,8 @@ int alignment_deity(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
         d2 = d->next;
         if ((tmp_ch = d->character) && !d->connected) {
           if (!number(0, 30)) {
-            vlogf(LOG_FACT, "%s in room %d reward/punishing %s",
-                me->getName(), room, tmp_ch->getName());
+            vlogf(LOG_FACT, fmt("%s in room %d reward/punishing %s") % 
+                me->getName() % room % tmp_ch->getName());
             simple_deity_poof(me, tmp_ch->inRoom());
 
             int rc = reward_or_punish(me, tmp_ch);

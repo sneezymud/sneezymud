@@ -52,7 +52,7 @@ void TBeing::wizFileRead()
     if (!fp) {	// no immort directory 
       if (mkdir(buf2.c_str(), 0770)) {
 	sendTo("Unable to create a wizard directory for you.\n\r");
-	vlogf(LOG_FILE, "Unable to create a wizard directory for %s.", getName());
+	vlogf(LOG_FILE, fmt("Unable to create a wizard directory for %s.") %  getName());
       } else
 	sendTo("Wizard directory created...\n\r");
     } else
@@ -61,7 +61,7 @@ void TBeing::wizFileRead()
     return;
   }
   if (fread(&saveData, sizeof(saveData), 1, fp) != 1) {
-    vlogf(LOG_BUG, "Corrupt wiz save file for %s", getName());
+    vlogf(LOG_BUG, fmt("Corrupt wiz save file for %s") %  getName());
     fclose(fp);
     return;
   } 
@@ -75,7 +75,7 @@ void TBeing::wizFileRead()
   d->blockbend   = saveData.blockbend;
 
   if (should_be_logged(this))
-    vlogf(LOG_IIO, "Loaded %s's wizard file.", getName());
+    vlogf(LOG_IIO, fmt("Loaded %s's wizard file.") %  getName());
 
   TPerson * tPerson = dynamic_cast<TPerson *>(this);
 
@@ -85,7 +85,7 @@ void TBeing::wizFileRead()
     tString = fmt("immortals/%s/logfile") % name;
 
     if (!(tPerson->tLogFile = fopen(tString.c_str(), "a")))
-      vlogf(LOG_FILE, "Unable to open Log File for %s", name);
+      vlogf(LOG_FILE, fmt("Unable to open Log File for %s") %  name);
     else
       tPerson->logf("Logging in...");
   }

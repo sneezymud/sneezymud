@@ -192,7 +192,7 @@ bool TBow::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", (keeper)->number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  (keeper)->number);
     return FALSE;
   }
   
@@ -270,7 +270,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     act("$p isn't loaded with an arrow!", FALSE, ch, this, 0, TO_CHAR);
 
     if (getStuff() && !dynamic_cast<TArrow *>(getStuff())) {
-      vlogf(LOG_BUG, "Bow loaded with something not an arrow. [%s]", ch->getName());
+      vlogf(LOG_BUG, fmt("Bow loaded with something not an arrow. [%s]") %  ch->getName());
       TThing *tThing = getStuff();
       --(*tThing);
       delete tThing;

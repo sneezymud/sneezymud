@@ -199,7 +199,7 @@ int TBaseCorpse::dissectMe(TBeing *caster)
   }
   if (!(obj = read_object(num, VIRTUAL))) {
     caster->sendTo("Serious problem in dissect.\n\r");
-    vlogf(LOG_OBJ, "Bad call to read_object in dissect, num %d", num);
+    vlogf(LOG_OBJ, fmt("Bad call to read_object in dissect, num %d") %  num);
     return FALSE;
   }
   int bKnown = caster->getSkillValue(SKILL_DISSECT);

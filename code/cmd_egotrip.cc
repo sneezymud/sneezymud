@@ -113,7 +113,7 @@ void TBeing::doEgoTrip(const char *arg)
       if (rc)
         found = true;
     }
-    vlogf(LOG_MISC, "%s egotripped deities", getName());
+    vlogf(LOG_MISC, fmt("%s egotripped deities") %  getName());
     if (!found)
       sendTo("No deities in The World.\n\r");
     return;
@@ -124,7 +124,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
 
-    vlogf(LOG_MISC, "%s egotripped bless", getName());
+    vlogf(LOG_MISC, fmt("%s egotripped bless") %  getName());
     Descriptor *d;
     for (d = descriptor_list; d; d = d->next) {
       if (d->connected != CON_PLYNG)
@@ -152,7 +152,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
 
-    vlogf(LOG_MISC, "%s egotripped sanctuary", getName());
+    vlogf(LOG_MISC, fmt("%s egotripped sanctuary") %  getName());
     Descriptor *d;
     for (d = descriptor_list; d; d = d->next) {
       if (d->connected != CON_PLYNG)
@@ -180,7 +180,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
 
-    vlogf(LOG_MISC, "%s is egotrippin and now everyone is stupid", getName());
+    vlogf(LOG_MISC, fmt("%s is egotrippin and now everyone is stupid") %  getName());
     Descriptor *d;
     for (d = descriptor_list; d; d = d->next) {
       if (d->connected != CON_PLYNG)
@@ -202,7 +202,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
 
-    vlogf(LOG_MISC, "%s has enlivened the game", getName());
+    vlogf(LOG_MISC, fmt("%s has enlivened the game") %  getName());
     Descriptor *d;
     for (d = descriptor_list; d; d = d->next) {
       if (d->connected != CON_PLYNG)
@@ -255,7 +255,7 @@ void TBeing::doEgoTrip(const char *arg)
     aff.modifier2 = crit;
     ch->affectTo(&aff);
     sendTo(fmt("It looks like some bad luck will befall %s before too long. Heh, heh, heh.\n\r") %ch->getName());
-    vlogf(LOG_MISC, "%s egotrip critted %s with crit #%d", getName(), ch->getName(), crit);
+    vlogf(LOG_MISC, fmt("%s egotrip critted %s with crit #%d") %  getName() % ch->getName() % crit);
     return;
   } else if (is_abbrev(argument, "blast")) {
     sstring target;
@@ -270,7 +270,7 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Syntax: egotrip blast <target>\n\r");
       return;
     }
-    vlogf(LOG_MISC, "%s egotrip blasted %s", getName(), ch->getName());
+    vlogf(LOG_MISC, fmt("%s egotrip blasted %s") %  getName() % ch->getName());
     if (ch->isPc() && ch->isImmortal() &&
         ch->GetMaxLevel() > GetMaxLevel()) {
       sendTo("Shame Shame, you shouldn't do that.\n\r");
@@ -322,7 +322,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
     
-    vlogf(LOG_MISC, "%s egotrip damned %s", getName(), ch->getName());
+    vlogf(LOG_MISC, fmt("%s egotrip damned %s") %  getName() % ch->getName());
     if (ch->isPc() && ch->isImmortal() &&
         ch->GetMaxLevel() > GetMaxLevel()) {
       sendTo("Shame Shame, you shouldn't do that.\n\r");
@@ -393,7 +393,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
 
-    vlogf(LOG_MISC, "%s egotripped cleanse", getName());
+    vlogf(LOG_MISC, fmt("%s egotripped cleanse") %  getName());
 
     TBeing       *tBeing;
     affectedData *tAff = NULL,

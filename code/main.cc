@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 	vlogf(LOG_MISC, "Suppressing assignment of special routines.");
 	break;
       default:
-	vlogf(LOG_MISC, "Unknown option -% in argument sstring.", *(argv[pos] + 1));
+	vlogf(LOG_MISC, fmt("Unknown option -% in argument sstring.") %  *(argv[pos] + 1));
 	break;
     }
     pos++;
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 
   if (pos < argc) {
     if (!isdigit(*argv[pos])) {
-      vlogf(LOG_MISC, "Usage: %s [-s] [-d pathname] [ port # ]\n", argv[0]);
+      vlogf(LOG_MISC, fmt("Usage: %s [-s] [-d pathname] [ port # ]\n") %  argv[0]);
       exit(0);
     } else if ((gamePort = convertTo<int>(argv[pos])) <= 1024) {
       printf("Illegal port #\n");
@@ -68,13 +68,13 @@ int main(int argc, char *argv[])
   }
   Uptime = time(0);
 
-  vlogf(LOG_MISC, "Running %s on port %d.", MUD_NAME, gamePort);
+  vlogf(LOG_MISC, fmt("Running %s on port %d.") %  MUD_NAME % gamePort);
 
   if (chdir(dir) < 0) {
     perror("chdir");
     exit(0);
   }
-  vlogf(LOG_MISC, "Using %s as data directory.", dir);
+  vlogf(LOG_MISC, fmt("Using %s as data directory.") %  dir);
 
   srandom(time(0));
 

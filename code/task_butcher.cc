@@ -159,7 +159,7 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
     // hence this setup instead.
     int robj = real_object(GENERIC_STEAK);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, "butcherPulse: No object (%d) in database!", GENERIC_STEAK);
+      vlogf(LOG_BUG, fmt("butcherPulse: No object (%d) in database!") %  GENERIC_STEAK);
       return false;
     }
     item = read_object(robj, REAL);

@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: newbie.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 ////////////////////////////////////////////////////////////////////////// 
 //
 //      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
@@ -50,7 +35,7 @@ void TBeing::doNewbieEqLoad(race_t num, ush_int num2, bool initNum)
     raceNum = num;
     classNum = num2;
   } else {
-    vlogf(5, "Something called doNewbieEqLoad when it shouldnt %s", getName());
+    vlogf(LOG_BUG, fmt("Something called doNewbieEqLoad when it shouldnt %s") %  getName());
     return;
   }
 

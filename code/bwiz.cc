@@ -38,11 +38,11 @@ int openQueue()
     keyval = ftok(WIZ_KEY_FILE, 'm');
   }
   if ((qid = msgget(keyval, IPC_CREAT|0666)) == -1) {
-    vlogf(LOG_BUG, "Unable to msgget keyval %d, errno: %d.", keyval, errno);
+    vlogf(LOG_BUG, fmt("Unable to msgget keyval %d, errno: %d.") %  keyval % errno);
     return -1;
   }
   if (oldqid!=qid) {
-    vlogf(LOG_BUG, "msgget successful, qid: %d, keyval: %d", qid, keyval);
+    vlogf(LOG_BUG, fmt("msgget successful, qid: %d, keyval: %d") %  qid % keyval);
     oldqid = qid;
   }
   return 1;
@@ -70,7 +70,7 @@ void mudSendMessage(int mtype, int ctype, const char *arg)
   qbuf.mtype = mtype;
   
   if ((ret = msgsnd(qid, (struct msgbuf *)&qbuf, strlen(qbuf.mtext)+1, 0)) == -1)
-    vlogf(LOG_BUG, "mudSendMessage: errno: %d ret: %d", errno, ret);
+    vlogf(LOG_BUG, fmt("mudSendMessage: errno: %d ret: %d") %  errno % ret);
 }
 
 void TBeing::mudMessage(TBeing *ch, int channel, const char *arg)
@@ -119,6 +119,6 @@ void mudRecvMessage()
     recvTextHandler(qbuf.mtext);
   
   if (ret==-1 && errno!=ENOMSG)
-    vlogf(LOG_BUG, "mudRecvMessage: errno: %d ret: %d", errno, ret);
+    vlogf(LOG_BUG, fmt("mudRecvMessage: errno: %d ret: %d") %  errno % ret);
 }
 

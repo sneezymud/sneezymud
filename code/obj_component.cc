@@ -669,7 +669,7 @@ void do_components(int situ)
 
   for (i = 0; i < component_placement.size(); i++) {
     if ((value = real_object(component_placement[i].number)) < 0) {
-      vlogf(LOG_MISC, "Bad component (%d, %d)", i, component_placement[i].number);
+      vlogf(LOG_MISC, fmt("Bad component (%d, %d)") %  i % component_placement[i].number);
       continue;
     }
 
@@ -917,10 +917,10 @@ void do_components(int situ)
           } // else no room
         } // end of for loop
       } else {
-        vlogf(LOG_MISC, "No direction specified on component placement (%d)", i);
+        vlogf(LOG_MISC, fmt("No direction specified on component placement (%d)") %  i);
       }
     } else {
-      vlogf(LOG_MISC, "No room specified on component placement (%d)", i);
+      vlogf(LOG_MISC, fmt("No room specified on component placement (%d)") %  i);
     }
   }
 }
@@ -2221,7 +2221,7 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num) const
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", (keeper)->number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  (keeper)->number);
     return FALSE;
   }
   
@@ -2542,7 +2542,7 @@ bool TComponent::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 void TComponent::lowCheck()
 {
   if (!isname("component", name)) {
-    vlogf(LOG_LOW, "Component without COMPONENT in name (%s : %d)", getName(), objVnum());
+    vlogf(LOG_LOW, fmt("Component without COMPONENT in name (%s : %d)") %  getName() % objVnum());
   }
   int sp = suggestedPrice();
   // added the 2 vnums of the flask and parchment so they dont throw price error
@@ -2550,8 +2550,8 @@ void TComponent::lowCheck()
     return;
   }
   if ((obj_flags.cost != sp)) {
-    vlogf(LOG_LOW, "component (%s:%d) with bad price %d should be %d.",
-          getName(), objVnum(), obj_flags.cost, sp);
+    vlogf(LOG_LOW, fmt("component (%s:%d) with bad price %d should be %d.") % 
+          getName() % objVnum() % obj_flags.cost % sp);
     obj_flags.cost = sp;
   }
 
@@ -3033,7 +3033,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
   if (shop_index[tShop].isProducing(this)) {
     if (!(tObj = read_object(number, REAL))) {
-      vlogf(LOG_MISC, "Shop producing unlimited of an item not in db!  [%d]", number);
+      vlogf(LOG_MISC, fmt("Shop producing unlimited of an item not in db!  [%d]") %  number);
       return -1;
     }
 
@@ -3060,7 +3060,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
       --(*tObj);
     } else {
       if (!(tObj = read_object(number, REAL))) {
-        vlogf(LOG_MISC, "Shop with item not in db!  [%d]", number);
+        vlogf(LOG_MISC, fmt("Shop with item not in db!  [%d]") %  number);
         return -1;
       }
 

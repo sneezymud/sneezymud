@@ -77,7 +77,7 @@ int TMonster::addHatred(zoneHateT parm_type, int parm)
     case OP_SEX:
       SET_BIT(hatefield, HATE_SEX);
       if (parm != SEX_MALE && parm != SEX_FEMALE && parm != SEX_NEUTER) {
-        vlogf(LOG_BUG, "bad parm to adHatred-sex for %s : %d", getName(), parm);
+        vlogf(LOG_BUG, fmt("bad parm to adHatred-sex for %s : %d") %  getName() % parm);
         parm = 0;
       }
       hates.sex = sexTypeT(parm);
@@ -86,7 +86,7 @@ int TMonster::addHatred(zoneHateT parm_type, int parm)
       if (!IS_SET(hatefield, HATE_RACE))
 	SET_BIT(hatefield, HATE_RACE);
       if (parm < RACE_NORACE || parm >= MAX_RACIAL_TYPES) {
-        vlogf(LOG_BUG, "Bad parm to addHatred-race for %s : %d", getName(), parm);
+        vlogf(LOG_BUG, fmt("Bad parm to addHatred-race for %s : %d") %  getName() % parm);
         parm = 0;
       }
       hates.race = race_t(parm);
@@ -117,7 +117,7 @@ int TMonster::addHatred(zoneHateT parm_type, int parm)
     case OP_UNUSED2:
     case OP_CHAR:
     case MAX_HATE:
-      vlogf(LOG_LOW, "Bad use of Hate flags on %s", getName());
+      vlogf(LOG_LOW, fmt("Bad use of Hate flags on %s") %  getName());
       return TRUE;
   }
   if (!IS_SET(specials.act, ACT_HATEFUL)) {
@@ -333,7 +333,7 @@ int TMonster::addFears(zoneHateT parm_type, int parm)
       if (!IS_SET(fearfield, FEAR_SEX))
 	SET_BIT(fearfield, FEAR_SEX);
       if (parm != SEX_MALE && parm != SEX_FEMALE && parm != SEX_NEUTER) {
-        vlogf(LOG_BUG, "bad parm to addFears-sex for %s : %d", getName(), parm);
+        vlogf(LOG_BUG, fmt("bad parm to addFears-sex for %s : %d") %  getName() % parm);
         parm = 0;
       }
       fears.sex = sexTypeT(parm);
@@ -342,7 +342,7 @@ int TMonster::addFears(zoneHateT parm_type, int parm)
       if (!IS_SET(fearfield, FEAR_RACE))
 	SET_BIT(fearfield, FEAR_RACE);
       if (parm < RACE_NORACE || parm >= MAX_RACIAL_TYPES) {
-        vlogf(LOG_BUG, "Bad parm to addFears-race for %s : %d", getName(), parm);
+        vlogf(LOG_BUG, fmt("Bad parm to addFears-race for %s : %d") %  getName() % parm);
         parm = 0;
       }
       fears.race = race_t(parm);
@@ -373,7 +373,7 @@ int TMonster::addFears(zoneHateT parm_type, int parm)
     case OP_UNUSED2:
     case OP_CHAR:
     case MAX_HATE:
-      vlogf(LOG_LOW, "Bad use of Fear flags on %s", getName());
+      vlogf(LOG_LOW, fmt("Bad use of Fear flags on %s") %  getName());
       return TRUE;
   }
   SET_BIT(specials.act, ACT_AFRAID);

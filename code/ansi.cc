@@ -219,7 +219,7 @@ const sstring TBeing::doColorSub() const
             break;
           default:
             return "";
-            vlogf(LOG_BUG, "Problem in color substituting (%s)", getName());
+            vlogf(LOG_BUG, fmt("Problem in color substituting (%s)") %  getName());
             break;
         }
         return buf;

@@ -61,8 +61,7 @@ typedef short int sh_int;
 typedef unsigned short int ush_int;
 typedef signed char byte;
 
-extern void vlogf(const char *, ...);
-extern void vlogf(logTypeT, const char *, ...);
+extern void vlogf(logTypeT, const sstring &);
 extern char * mud_str_dup(const char *buf);
 extern char * mud_str_dup(const sstring &buf);
 extern char * mud_str_copy(char *dest, const sstring &src, size_t n);

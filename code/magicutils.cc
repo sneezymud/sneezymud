@@ -680,13 +680,13 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
   for (i=0; (i<CompInfo.size()) && (o->getComponentSpell() != CompInfo[i].spell_num);i++);
 
   if (i>= CompInfo.size()) {
-    vlogf(LOG_BUG,"useComponent had problem finding component for %s",
+    vlogf(LOG_BUG,fmt("useComponent had problem finding component for %s") % 
         o->getName());
     sendTo("Uh oh, something bogus happened.\n\r");
     return FALSE;
   }
   if (o->isPersonalized() && !isname(getName(), o->name)) {
-    vlogf(LOG_MISC, "Mage %s using component %s that was personalized but not theirs!!! Reprimand at once.", getName(), o->name); 
+    vlogf(LOG_MISC, fmt("Mage %s using component %s that was personalized but not theirs!!! Reprimand at once.") %  getName() % o->name); 
     sendTo("You can't use a component that is personalized for someone else!");
     return FALSE;
   }
@@ -702,7 +702,7 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
       act(CompInfo[i].to_self, TRUE, this, o, 0, TO_CHAR);
       act(CompInfo[i].to_room, TRUE, this, o, 0, TO_ROOM);
     } else {
-      vlogf(LOG_BUG, "Bad component sstring.  component %d  (1)", i);
+      vlogf(LOG_BUG, fmt("Bad component sstring.  component %d  (1)") %  i);
     }
   } else {
     if (*CompInfo[i].to_self && 
@@ -710,7 +710,7 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
       act(CompInfo[i].to_self, TRUE, this, o, 0, TO_CHAR);
       act(CompInfo[i].to_room, TRUE, this, o, 0, TO_ROOM);
     } else {
-      vlogf(LOG_BUG, "Bad component sstring.  component %d  (2)", i);
+      vlogf(LOG_BUG, fmt("Bad component sstring.  component %d  (2)") %  i);
     }
   }
 
@@ -758,7 +758,7 @@ int TBeing::useComponentObj(TComponent *o, TObj *targ, checkOnlyT checkOnly)
   for (i=0; (i<CompInfo.size()) && (o->getComponentSpell() != CompInfo[i].spell_num);i++);
 
   if (i>= CompInfo.size()) {
-    vlogf(LOG_BUG,"useComponent had problem finding component for %s",
+    vlogf(LOG_BUG,fmt("useComponent had problem finding component for %s") % 
         o->shortDescr);
     sendTo("Uh oh, something bogus happened.\n\r");
     return FALSE;
@@ -774,10 +774,10 @@ int TBeing::useComponentObj(TComponent *o, TObj *targ, checkOnlyT checkOnly)
       act(CompInfo[i].to_caster, TRUE, this, o, targ, TO_CHAR);
       act(CompInfo[i].to_other, TRUE, this, o, targ, TO_ROOM);
     } else {
-      vlogf(LOG_BUG, "Bad component sstring.  component %d  (3)", i);
+      vlogf(LOG_BUG, fmt("Bad component sstring.  component %d  (3)") %  i);
     }
   } else {
-    vlogf(LOG_BUG, "Bad component sstring.  component %d  (4)", i);
+    vlogf(LOG_BUG, fmt("Bad component sstring.  component %d  (4)") %  i);
   }
 
   if (o->getComponentCharges() > 1)
@@ -1038,8 +1038,8 @@ int TBeing::rawSummon(TBeing *v)
   act("$n is exhausted from interplanar travel.", FALSE, v, NULL, NULL, TO_ROOM);
 
   // summon newbie to aggro zone far from GH, allow us to check for it
-  vlogf(LOG_SILENT, "%s summoned %s to %s (%d)",
-          getName(), v->getName(), roomp->getName(), inRoom());
+  vlogf(LOG_SILENT, fmt("%s summoned %s to %s (%d)") % 
+          getName() % v->getName() % roomp->getName() % inRoom());
 
   if (v->riding) {
     rc = v->riding->genericMovedIntoRoom(roomp, -1);
@@ -1231,7 +1231,7 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
       level = (int) (1.0 * level);
       break;
     default:
-      vlogf(LOG_BUG, "Bad spellNumT (%d) to elementalFix", spell);
+      vlogf(LOG_BUG, fmt("Bad spellNumT (%d) to elementalFix") %  spell);
       break;
   }
   // correct the level
@@ -1516,7 +1516,7 @@ void TBeing::spellMessUp(spellNumT spell)
   int type = 0;
 
   if (!discArray[spell] || !*discArray[spell]->name) {
-    vlogf(LOG_BUG,"Bad spell/skill number in spellMessUp %d", spell);
+    vlogf(LOG_BUG,fmt("Bad spell/skill number in spellMessUp %d") %  spell);
     return;
   }
 
@@ -1549,7 +1549,7 @@ void TBeing::spellMessUp(spellNumT spell)
     case DISC_DEIKHAN:
       type = 1;
     default:
-      vlogf(LOG_BUG, "Undefined spell (%d) in spellMessUp", spell);
+      vlogf(LOG_BUG, fmt("Undefined spell (%d) in spellMessUp") %  spell);
       return;
   }
 #endif

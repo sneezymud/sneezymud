@@ -994,7 +994,7 @@ void seditList(TBeing *ch)
   sprintf(tString, "immortals/%s/mobs/scripts", ch->getNameNOC(ch).c_str());
 
   if (!(tDirInfo = opendir(tString))) {
-    vlogf(LOG_EDIT, "Unable to dirwalk directory %s", tString);
+    vlogf(LOG_EDIT, fmt("Unable to dirwalk directory %s") %  tString);
     return;
   }
 
@@ -1048,7 +1048,7 @@ void seditPurge(TBeing *ch)
   sprintf(tString, "immortals/%s/mobs/scripts", ch->getNameNOC(ch).c_str());
 
   if (!(tDirInfo = opendir(tString))) {
-    vlogf(LOG_EDIT, "Unable to dirwalk directory %s", tString);
+    vlogf(LOG_EDIT, fmt("Unable to dirwalk directory %s") %  tString);
     return;
   }
 
@@ -1154,7 +1154,7 @@ void seditCore(TBeing *ch, char *tArg)
       seditDisplayMenu(ch, ch->desc->mob, tArg, 0);
       break;
     default:
-      vlogf(LOG_EDIT, "Got to bad place in seditCore() [%d]", ch->specials.edit);
+      vlogf(LOG_EDIT, fmt("Got to bad place in seditCore() [%d]") %  ch->specials.edit);
       break;
   }
 }

@@ -201,7 +201,7 @@ int Descriptor::read_client(char *str2)
 
   strcpy(buf, nextToken('|', 255, str2).c_str());
   if (sscanf(buf, "%d", &type) != 1) {
-    vlogf(LOG_CLIENT, "Incorrect type (%s) in read_client", buf);
+    vlogf(LOG_CLIENT, fmt("Incorrect type (%s) in read_client") %  buf);
     return FALSE;
   }
   switch (type) {
@@ -240,7 +240,7 @@ int Descriptor::read_client(char *str2)
         if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) 
           vlogf(LOG_PIO, "Client Connection from *****Masked*****");
         else 
-          vlogf(LOG_PIO, "Client Connection from %s", host);
+          vlogf(LOG_PIO, fmt("Client Connection from %s") %  host);
       }
       break;
     case CLIENT_ROOM: {
@@ -565,9 +565,9 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
             objCost cost;
 
             if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) 
-              vlogf(LOG_PIO, "%s[*masked*] has reconnected (client)  (account: *masked*).", ch->getName());
+              vlogf(LOG_PIO, fmt("%s[*masked*] has reconnected (client)  (account: *masked*).") %  ch->getName());
             else 
-              vlogf(LOG_PIO, "%s[%s] has reconnected (client)  (account: %s).", ch->getName(), host, account->name);
+              vlogf(LOG_PIO, fmt("%s[%s] has reconnected (client)  (account: %s).") %  ch->getName() % host % account->name);
 
             ch->recepOffer(NULL, &cost);
             dynamic_cast<TPerson *>(ch)->saveRent(&cost, FALSE, 1);
@@ -853,11 +853,11 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       if (!(fp = fopen(buf, "w"))) {
         sprintf(buf2, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
         if (mkdir(buf2, 0770)) {
-          vlogf(LOG_CLIENT, "Can't make directory for saveAccount (%s)", sstring(account->name).lower().c_str());
+          vlogf(LOG_CLIENT, fmt("Can't make directory for saveAccount (%s)") %  sstring(account->name).lower());
           return FALSE;
         }
         if (!(fp = fopen(buf, "w"))) {
-          vlogf(LOG_CLIENT, "Big problems in saveAccount (s)", sstring(account->name).lower().c_str());
+          vlogf(LOG_CLIENT, fmt("Big problems in saveAccount (s)") %  sstring(account->name).lower());
           return FALSE;
         }
       }
@@ -878,12 +878,12 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
     
       accStat.account_number++;
     
-      vlogf(LOG_MISC, "New Client Account: '%s' with email '%s'", account->name, account->email);
+      vlogf(LOG_MISC, fmt("New Client Account: '%s' with email '%s'") %  account->name % account->email);
       clientf(fmt("%d|1") % CLIENT_CHECKACCOUNTNAME);
       break;
     } 
     default:
-      vlogf(LOG_CLIENT, "Bad type in read_client (%d)", type);
+      vlogf(LOG_CLIENT, fmt("Bad type in read_client (%d)") %  type);
       break;
   }
   return TRUE;
@@ -1170,11 +1170,11 @@ new account.|%d") % CLIENT_ERROR % account->name % ERR_BAD_NAME);
         objCost cost;
 
         if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
-          vlogf(LOG_PIO, "%s[*masked*] has reconnected (client 2)  (account: *masked*).",
+          vlogf(LOG_PIO, fmt("%s[*masked*] has reconnected (client 2)  (account: *masked*).") % 
                 character->getName());
         } else {
-          vlogf(LOG_PIO, "%s[%s] has reconnected (client 2)  (account: %s).",
-                     character->getName(), host, account->name);
+          vlogf(LOG_PIO, fmt("%s[%s] has reconnected (client 2)  (account: %s).") % 
+                     character->getName() % host % account->name);
         }
         character->recepOffer(NULL, &cost);
         dynamic_cast<TPerson *>(character)->saveRent(&cost, FALSE, 1);
@@ -1207,11 +1207,11 @@ new account.|%d") % CLIENT_ERROR % account->name % ERR_BAD_NAME);
   }
   if (should_be_logged(character)) {
     if (IS_SET(account->flags, ACCOUNT_IMMORTAL)) {
-      vlogf(LOG_PIO, "%s[*masked*] has connected (client)  (account: *masked*).",
+      vlogf(LOG_PIO, fmt("%s[*masked*] has connected (client)  (account: *masked*).") % 
             character->getName());
     } else {
-      vlogf(LOG_PIO, "%s[%s] has connected (client)  (account: %s).",
-                 character->getName(), host, account->name);
+      vlogf(LOG_PIO, fmt("%s[%s] has connected (client)  (account: %s).") % 
+                 character->getName() % host % account->name);
     }
     if (character->isImmortal()) {
       sprintf(wizbuf, "[%sINTERPORT INFO%s] %s has just reconnected to port %d.\n\r", character->cyan(), character->norm(), character->getName(), gamePort);
@@ -1357,12 +1357,12 @@ sstring(account->name).lower().c_str());
     sprintf(buf2, "account/%c/%s", LOWER(account->name[0]),
 sstring(account->name).lower().c_str());
     if (mkdir(buf2, 0770)) {
-      vlogf(LOG_CLIENT, "Can't make directory for saveAccount (%s)",
+      vlogf(LOG_CLIENT, fmt("Can't make directory for saveAccount (%s)") % 
 sstring(account->name).lower().c_str());
       return FALSE;
     }
     if (!(fp = fopen(buf, "w"))) {
-      vlogf(LOG_CLIENT, "Big problems in saveAccount (s)",
+      vlogf(LOG_CLIENT, fmt("Big problems in saveAccount (s)") % 
 sstring(account->name).lower().c_str());
       return FALSE;
     }
@@ -1384,7 +1384,7 @@ sstring(account->name).lower().c_str());
 
   accStat.account_number++;
 
-  vlogf(LOG_MISC, "New Client Account: '%s' with email '%s'", account->name, account->email);
+  vlogf(LOG_MISC, fmt("New Client Account: '%s' with email '%s'") %  account->name % account->email);
 
   return TRUE;
 }
@@ -1612,7 +1612,7 @@ int Descriptor::clientCreateChar(char *arg)
 
   ch->convertAbilities();
   ch->affectTotal();
-  vlogf(LOG_PIO, "%s [%s] new player.", ch->getName(), host);
+  vlogf(LOG_PIO, fmt("%s [%s] new player.") %  ch->getName() % host);
   clientf(fmt("%d") % CLIENT_NEWCHAR);
   sprintf(wizbuf, "[%sINTERPORT INFO%s] New player %s just created on port %d.\n\r", ch->cyan(), ch->norm(), ch->getName(), gamePort);
   ch->mudMessage(ch, 16, wizbuf); 

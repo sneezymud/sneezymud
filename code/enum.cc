@@ -83,7 +83,7 @@ int mapApplyToFile(applyTypeT att)
     case MAX_APPLY_TYPES:
       break;
   }
-  vlogf(LOG_BUG, "Unknown apply in mapApplyToFile (%d)", att);
+  vlogf(LOG_BUG, fmt("Unknown apply in mapApplyToFile (%d)") %  att);
   return 0;
 }
 
@@ -169,7 +169,7 @@ applyTypeT mapFileToApply(int att)
     default:
       break;
   }
-  vlogf(LOG_BUG, "Unknown apply in mapFileToApply. (%d)", att);
+  vlogf(LOG_BUG, fmt("Unknown apply in mapFileToApply. (%d)") %  att);
   return APPLY_NONE;
 }
 
@@ -695,7 +695,7 @@ sectorTypeT mapFileToSector(int num)
     case 65:
       return SECT_MAKE_FLY;
     default:
-      vlogf(LOG_BUG, "Bad num (%d) in file to sector", num);
+      vlogf(LOG_BUG, fmt("Bad num (%d) in file to sector") %  num);
       return SECT_ASTRAL_ETHREAL;
   }
 }
@@ -826,7 +826,7 @@ int mapSectorToFile(sectorTypeT sec)
     case MAX_SECTOR_TYPES:
       break;
   }
-  vlogf(LOG_BUG, "Bad sec (%d) in file to sector", sec);
+  vlogf(LOG_BUG, fmt("Bad sec (%d) in file to sector") %  sec);
   return -1;
 }
 
@@ -1063,7 +1063,7 @@ int mapWizPowerToFile(wizPowerT att)
     case MAX_POWER_INDEX:
       break;
   }
-  vlogf(LOG_BUG, "Bad power (%d) in mapWizPowerToFile", att);
+  vlogf(LOG_BUG, fmt("Bad power (%d) in mapWizPowerToFile") %  att);
   return -1;
 }
 
@@ -1295,7 +1295,7 @@ wizPowerT mapFileToWizPower(int att)
     default:
       break;
   }
-  vlogf(LOG_BUG, "Unknown power (%d) in mapFileToWizPower", att);
+  vlogf(LOG_BUG, fmt("Unknown power (%d) in mapFileToWizPower") %  att);
   return MAX_POWER_INDEX;
 }
 
@@ -1316,7 +1316,7 @@ int mapDrugToFile(drugTypeT d)
     case MAX_DRUG:
       break;
   }
-  vlogf(LOG_BUG, "Bad drug to mapDrugToFile %d", d);
+  vlogf(LOG_BUG, fmt("Bad drug to mapDrugToFile %d") %  d);
   return -1;
 }
 
@@ -1332,7 +1332,7 @@ drugTypeT mapFileToDrug(int d)
     default:
       break;
   }
-  vlogf(LOG_BUG, "Bad drug to mapFileToDrug %d", d);
+  vlogf(LOG_BUG, fmt("Bad drug to mapFileToDrug %d") %  d);
   return MAX_DRUG;
 }
 
@@ -1373,7 +1373,7 @@ doorTrapT mapFileToDoorTrap(int dt)
       return DOOR_TRAP_PEBBLE;
   }
 
-  vlogf(LOG_BUG, "Bad value (%d) in mapFileToDoorTrap", dt);
+  vlogf(LOG_BUG, fmt("Bad value (%d) in mapFileToDoorTrap") %  dt);
   return MAX_TRAP_TYPES;
 }
 
@@ -1416,6 +1416,6 @@ int mapDoorTrapToFile(doorTrapT dt)
       break;
   }
 
-  vlogf(LOG_BUG, "Bad value (%d) in mapDoorTrapToFile", dt);
+  vlogf(LOG_BUG, fmt("Bad value (%d) in mapDoorTrapToFile") %  dt);
   return -1;
 }

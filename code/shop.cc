@@ -277,7 +277,7 @@ bool shopData::isProducing(const TObj *item)
 
     if (producing[counter] == item->number) {
       if (!(o = read_object(producing[counter], REAL))) {
-        vlogf(LOG_BUG, "Major problems with shopkeeper number %d and item number %d.", shop_nr, item->number);
+        vlogf(LOG_BUG, fmt("Major problems with shopkeeper number %d and item number %d.") %  shop_nr % item->number);
         return FALSE;
       }
       if (o->getName() && item->getName() && !strcmp(o->getName(), item->getName())) {
@@ -569,7 +569,7 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", (keeper)->number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  (keeper)->number);
     return FALSE;
   }
   
@@ -1681,7 +1681,7 @@ void TMonster::autoCreateShop(int shop_nr)
   if (getStuff())  // just can't see the shopkeepers inventory so lists nada?
     return;
 
-  vlogf(LOG_MISC,"Creating a new shopfile for %s (shop #%d)",getName(),shop_nr);
+  vlogf(LOG_MISC,fmt("Creating a new shopfile for %s (shop #%d)") % getName() %shop_nr);
   doSay("Whoops, I seem to have run out of everything.");
   doSay("One moment while I go back and get some more stuff.");
   act("$n slips quickly into the storeroom.",0, this, 0, 0, TO_ROOM);
@@ -1824,8 +1824,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       if((tbt=dynamic_cast<TBeing *>(t)) && 
 	 tbt->getTimer()>1 && !tbt->isImmortal()){
         if ((tbt->master) && tbt->master->inRoom() == tbt->inRoom()) {
-          //vlogf(LOG_DASH, "saving %s from loitering code, master is %s, room is (%d == %d)",tbt->getName(),
-          //      tbt->master->getName(), tbt->inRoom(), tbt->master->inRoom());
+          //vlogf(LOG_DASH, fmt("saving %s from loitering code, master is %s, room is (%d == %d)") % tbt->getName() %
+          //      tbt->master->getName() % tbt->inRoom() % tbt->master->inRoom());
 	  continue;
 	}
 	myself->doSay("Hey, no loitering!  Make room for the other customers.");
@@ -1854,19 +1854,19 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (myself)->number); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", (myself)->number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  (myself)->number);
     return FALSE;
   }
 
   //    if(shop_index[shop_nr].isOwned()){
-  //   vlogf(LOG_PEEL, "shop_nr %i, charged tax", shop_nr);
+  //   vlogf(LOG_PEEL, fmt("shop_nr %i, charged tax") %  shop_nr);
   //    }
 
 
 
   if (cmd == CMD_GENERIC_INIT) {
     if (!myself->isUnique()) {
-      vlogf(LOG_BUG, "Warning!  %s attempted to be loaded, when not unique.", myself->getName());
+      vlogf(LOG_BUG, fmt("Warning!  %s attempted to be loaded, when not unique.") %  myself->getName());
       return TRUE;
     } else
       return FALSE;
@@ -1943,7 +1943,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
       if(shop_nr==SHOP_DUMP && !::number(0,24)){
 	// this is the garbageman, he recycles items a lot
-	vlogf(LOG_OBJ, "shop %s (%i) recycling %s for %i talens", myself->getName(), shop_nr, obj->getName(), (int)(obj->obj_flags.cost * shop_index[shop_nr].profit_sell));
+	vlogf(LOG_OBJ, fmt("shop %s (%i) recycling %s for %i talens") %  myself->getName() % shop_nr % obj->getName() % (int)(obj->obj_flags.cost * shop_index[shop_nr].profit_sell));
 	myself->addToMoney((int)(obj->obj_flags.cost * shop_index[shop_nr].profit_sell), GOLD_SHOP);
 	shoplog(shop_nr, myself, myself, obj->getName(), (int)(obj->obj_flags.cost * shop_index[shop_nr].profit_sell), "recycling");
 	delete obj;
@@ -1954,7 +1954,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       if (!::number(0,99) && !shop_index[shop_nr].isProducing(obj) &&
 	  !shop_index[shop_nr].isOwned()) {
         // random recycling
-	vlogf(LOG_OBJ, "shop %s (%i) recycling %s", myself->getName(), shop_nr, obj->getName());
+	vlogf(LOG_OBJ, fmt("shop %s (%i) recycling %s") %  myself->getName() % shop_nr % obj->getName());
         delete obj;
         continue;
       }
@@ -2178,13 +2178,13 @@ bool safe_to_save_shop_stuff(TMonster *ch)
 {
 
   if (mob_index[ch->getMobIndex()].getNumber() < 1) {
-     vlogf(LOG_BUG, "Shopkeeper #%d got safe_to_save_shop_stuff called when none in world!",
+     vlogf(LOG_BUG, fmt("Shopkeeper #%d got safe_to_save_shop_stuff called when none in world!") % 
             mob_index[ch->getMobIndex()].virt);
     ch->doSay("I'm not functioning properly.  Tell a god to check the logs, case 1.");
     return FALSE;
   }
   if (mob_index[ch->getMobIndex()].getNumber() > 1) {
-    vlogf(LOG_BUG, "More than one shopkeeper #%d in world.  Now the shop won't work!",
+    vlogf(LOG_BUG, fmt("More than one shopkeeper #%d in world.  Now the shop won't work!") % 
           mob_index[ch->getMobIndex()].virt);
     ch->doSay("I'm not functioning properly.  Tell a god to check the logs, case 2.");
     return FALSE;
@@ -2205,17 +2205,17 @@ void processShopFile(const char *cFname)
   }
   sprintf(fileName, "%s/%s", SHOPFILE_PATH, cFname);
   if (!(fp = fopen(fileName, "r"))) {
-    vlogf(LOG_BUG, "  Error opening the shop file for shop #%s", cFname);
+    vlogf(LOG_BUG, fmt("  Error opening the shop file for shop #%s") %  cFname);
     return;
   }
   if (fread(&ucVersion, sizeof(ucVersion), 1, fp) != 1) {
-    vlogf(LOG_BUG, "Error reading version from %s.", fileName);
+    vlogf(LOG_BUG, fmt("Error reading version from %s.") %  fileName);
     fclose(fp);
     return;
   }
 
   if (!noteLimitedItems(fp, fileName, ucVersion, FALSE))
-    vlogf(LOG_BUG, "  Unable to count limited items in file  %s", fileName);
+    vlogf(LOG_BUG, fmt("  Unable to count limited items in file  %s") %  fileName);
   fclose(fp);
 }
 

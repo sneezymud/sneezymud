@@ -102,7 +102,7 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       }
       break;
     default:
-      vlogf(LOG_PROC, "Room %d has an oft_frequented_room() with no code for it.",
+      vlogf(LOG_PROC, fmt("Room %d has an oft_frequented_room() with no code for it.") % 
                rp->number);
       break;
   }
@@ -354,7 +354,7 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
       FactionInfo[ch->getFaction()].faction_wealth += money;
       ch->addToMoney(-money, GOLD_TITHE);
       ch->sendTo(fmt("You withdraw %d talens from the faction treasury.\n\r") % -money);
-      vlogf(LOG_SILENT, "%s tithe withdraw %d talens from %s", ch->getName(), -money, FactionInfo[ch->getFaction()].faction_name);
+      vlogf(LOG_SILENT, fmt("%s tithe withdraw %d talens from %s") %  ch->getName() % -money % FactionInfo[ch->getFaction()].faction_name);
       return TRUE;
     } else if (money < 0) {
       ch->sendTo("Only a faction's leader may withdraw from the faction's treasury.\n\r");
@@ -376,7 +376,7 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
       FactionInfo[ch->getFaction()].faction_wealth += money;
       ch->addToMoney(-money, GOLD_TITHE);
       ch->sendTo(fmt("You tithe %d talen%s to the faction treasury.\n\r") % money % (money == 1 ? "" : "s"));
-      vlogf(LOG_SILENT, "%s tithe deposit %d talens to %s", ch->getName(), money, FactionInfo[ch->getFaction()].faction_name);
+      vlogf(LOG_SILENT, fmt("%s tithe deposit %d talens to %s") %  ch->getName() % money % FactionInfo[ch->getFaction()].faction_name);
       ch->sendTo("Your deities thank you.\n\r");
       return TRUE;
     }
@@ -1111,7 +1111,7 @@ int genericSlide(TThing *t, TRoom *rp)
       thing_to_room(t, 20594);
       break;
     default:
-      vlogf(LOG_PROC, "Bogus room for generic slide %d", rp->number);
+      vlogf(LOG_PROC, fmt("Bogus room for generic slide %d") %  rp->number);
       thing_to_room(t, ROOM_VOID);
   }
 
@@ -1191,7 +1191,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
   if (ch && cmd < MAX_CMD_LIST) {
     if (rp->number != ch->in_room) {
-      vlogf(LOG_PROC,"char %s not in proper room (SecretPortalDoors)",ch->getName());
+      vlogf(LOG_PROC,fmt("char %s not in proper room (SecretPortalDoors)") % ch->getName());
       return FALSE;
     }
     one_argument(arg,buf);
@@ -1213,7 +1213,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       }
 
       if (!(portal = read_object(OBJ_MINELIFT_DOWN, VIRTUAL))) {
-        vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", OBJ_MINELIFT_DOWN);
+        vlogf(LOG_PROC, fmt("Problem loading object in SecretPortal. (%d)") %  OBJ_MINELIFT_DOWN);
         ch->sendTo("Serious problem, contact a god.\n\r");
         return FALSE;
       }
@@ -1252,7 +1252,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
           return TRUE;
   
         if (!(portal = read_object(7214, VIRTUAL))) {
-          vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", 7214);
+          vlogf(LOG_PROC, fmt("Problem loading object in SecretPortal. (%d)") %  7214);
           ch->sendTo("Serious problem, contact a god.\n\r");
           return FALSE;
         }
@@ -1261,7 +1261,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
         // load into other room
         if (!(portal = read_object(7215, VIRTUAL))) {
-          vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", 7215);
+          vlogf(LOG_PROC, fmt("Problem loading object in SecretPortal. (%d)") %  7215);
           ch->sendTo("Serious problem, contact a god.\n\r");
           return FALSE;
         }
@@ -1284,7 +1284,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         act("$n lowers the drawbridge.", false, ch, 0, 0, TO_ROOM);
 
         if (!(portal = read_object(rob, REAL))) {
-          vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", 7214);
+          vlogf(LOG_PROC, fmt("Problem loading object in SecretPortal. (%d)") %  7214);
           ch->sendTo("Serious problem, contact a god.\n\r");
           return FALSE;
         }
@@ -1292,7 +1292,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
         // load into other room
         if (!(portal = read_object(7215, VIRTUAL))) {
-          vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", 7215);
+          vlogf(LOG_PROC, fmt("Problem loading object in SecretPortal. (%d)") %  7215);
           ch->sendTo("Serious problem, contact a god.\n\r");
           return FALSE;
         }
@@ -1356,7 +1356,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       }
 
       if (!(portal = read_object(OBJ_MINELIFT_UP, VIRTUAL))) {
-        vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", OBJ_MINELIFT_DOWN);
+        vlogf(LOG_PROC, fmt("Problem loading object in SecretPortal. (%d)") %  OBJ_MINELIFT_DOWN);
         ch->sendTo("Serious problem, contact a god.\n\r");
         return FALSE;
       }
@@ -1443,7 +1443,7 @@ int SecretPortalDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       }
 
       if (!(portal = read_object(OBJ_FLAMING_PORTAL, VIRTUAL))) {
-        vlogf(LOG_PROC, "Problem loading object in SecretPortal. (%d)", OBJ_FLAMING_PORTAL);
+        vlogf(LOG_PROC, fmt("Problem loading object in SecretPortal. (%d)") %  OBJ_FLAMING_PORTAL);
         ch->sendTo("Serious problem, contact a god.\n\r");
         return FALSE;
       }
@@ -1580,7 +1580,7 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     }
   }
 
-  //  vlogf(LOG_PEEL, "the knot: did exits for room %i", rp->number);
+  //  vlogf(LOG_PEEL, fmt("the knot: did exits for room %i") %  rp->number);
 
   done[n]=true;
   return TRUE;
@@ -1820,7 +1820,7 @@ int BankVault(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
       tb->sendTo(COLOR_BASIC, "<G>Acidic gas shoots out of small holes in the ceiling.<1>\n\r");
       tb->sendTo(COLOR_BASIC, "<r>It burns your skin and you choke uncontrollably!<1>\n\r");
 
-      vlogf(LOG_PEEL, "Bank: %s caught in vault", tb->getName());
+      vlogf(LOG_PEEL, fmt("Bank: %s caught in vault") %  tb->getName());
 
       if (tb->reconcileDamage(tb, ::number(20,50), DAMAGE_TRAP_POISON) == -1)
 	return DELETE_VICT;
@@ -1934,8 +1934,8 @@ int dayGateRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
       break;
     }
   }
-  //vlogf(LOG_DASH, "daygate proc: found: %s", found ? "true" : "false");
-  //vlogf(LOG_DASH, "daygate proc: hmt: %d  suntime: %d", hourminTime(), sunTime(SUN_TIME_DAY));
+  //vlogf(LOG_DASH, fmt("daygate proc: found: %s") %  found ? "true" : "false");
+  //vlogf(LOG_DASH, fmt("daygate proc: hmt: %d  suntime: %d") %  hourminTime() % sunTime(SUN_TIME_DAY));
   if (hourminTime() > 50   || hourminTime() < 46) {
     // code to remove gate
     if (found && to) {
@@ -2099,14 +2099,14 @@ int boulderRoom(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
   }
 
   if (found == 1) {
-    //    vlogf(LOG_JESUS, "!found so closing exit - found = %d", found);
+    //    vlogf(LOG_JESUS, fmt("!found so closing exit - found = %d") %  found);
     rp=real_roomp(4189);
     SET_BIT(rp->dir_option[DIR_DOWN]->condition, EX_CLOSED);
     rp=real_roomp(4284);
     REMOVE_BIT(rp->dir_option[DIR_UP]->condition, EX_CLOSED);
     return TRUE;
   } else {
-    //    vlogf(LOG_JESUS, "found so opening exit - found = %d", found);
+    //    vlogf(LOG_JESUS, fmt("found so opening exit - found = %d") %  found);
     rp=real_roomp(4189);
     REMOVE_BIT(rp->dir_option[DIR_DOWN]->condition, EX_CLOSED);
     rp=real_roomp(4284);
@@ -2602,6 +2602,6 @@ void assign_rooms(void)
       rp->funct = specials[i].proc;
       roomspec_db.push_back(rp);
     } else
-      vlogf(LOG_PROC, "assign_rooms: unknown room (%d)", specials[i].vnum);
+      vlogf(LOG_PROC, fmt("assign_rooms: unknown room (%d)") %  specials[i].vnum);
   }
 }

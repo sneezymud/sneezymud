@@ -225,7 +225,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
   if (hasClass(CLASS_SHAMAN)) {
     if (isPc()) {
       if (-10 > getHit()) {
-	vlogf(LOG_MISC, "Half-tick force updated for %s (Shaman).", getName());
+	vlogf(LOG_MISC, fmt("Half-tick force updated for %s (Shaman).") %  getName());
 	sendTo("The loa are disappointed in your state of life.\n\r");
 	updateHalfTickStuff();
 	doSave(SILENT_YES);
@@ -285,24 +285,24 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         TPerson * tPerson = dynamic_cast<TPerson *>(ch);
 
         if (ch == this) {
-          vlogf(LOG_SILENT, "%s (%i):%s %s", name, in_room, commandArray[cmd]->name, newarg);
+          vlogf(LOG_SILENT, fmt("%s (%i):%s %s") %  name % in_room % commandArray[cmd]->name % newarg);
 
           if (tPerson)
             tPerson->logf("%s:%s %s", name, commandArray[cmd]->name, newarg);
         } else {
-          vlogf(LOG_SILENT, "%s (%s) (%i):%s %s", name, desc->original->name, 
-                in_room, commandArray[cmd]->name, newarg);
+          vlogf(LOG_SILENT, fmt("%s (%s) (%i):%s %s") %  name % desc->original->name % 
+                in_room % commandArray[cmd]->name % newarg);
 
           if (tPerson)
             tPerson->logf("%s:%s %s", name,
                            commandArray[cmd]->name, newarg);
         }
       } else if (ch->isPc() && ch->isPlayerAction(PLR_LOGGED))
-        vlogf(LOG_SILENT, "%s %s%s", name, commandArray[cmd]->name, newarg);
+        vlogf(LOG_SILENT, fmt("%s %s%s") %  name % commandArray[cmd]->name % newarg);
       else if (numberLogHosts && desc) {
         for (int a = 0; a < numberLogHosts; a++) {
           if (strcasestr(desc->host, hostLogList[a]))
-            vlogf(LOG_SILENT, "%s %s%s", name, commandArray[cmd]->name, newarg);
+            vlogf(LOG_SILENT, fmt("%s %s%s") %  name % commandArray[cmd]->name % newarg);
         }
       }
 
@@ -2247,7 +2247,7 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
     rc = roomp->checkSpec(this, cmd, arg, NULL);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       // delete room?
-      vlogf(LOG_BUG, "checkSpec indicated delete room (%d)", in_room);
+      vlogf(LOG_BUG, fmt("checkSpec indicated delete room (%d)") %  in_room);
     }
     if (IS_SET_ONLY(rc, DELETE_VICT))
       return DELETE_THIS;
@@ -3176,7 +3176,7 @@ char *mud_str_copy(char *dest, const sstring &src, size_t n)
 
   if(src.length() > n){
     dest[n-1]='\0';
-    vlogf(LOG_BUG, "mud_str_copy: source sstring too long.  Truncated to: %s", dest);
+    vlogf(LOG_BUG, fmt("mud_str_copy: source sstring too long.  Truncated to: %s") %  dest);
   }
 
   return dest;

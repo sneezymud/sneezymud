@@ -553,7 +553,7 @@ void loadSetClass::SetupLoadSetSuits()
   bool    hasSuit = false;
 
   if (!(suitFile = fopen(suitFilePath, "r"))) {
-    vlogf(LOG_FILE, "Unable to open '%s' for reading.", suitFilePath);
+    vlogf(LOG_FILE, fmt("Unable to open '%s' for reading.") %  suitFilePath);
     return;
   }
 

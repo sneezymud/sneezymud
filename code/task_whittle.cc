@@ -216,7 +216,7 @@ void task_whittlePulse(TBeing *ch, TArrow *tArrow, whittlePulseT tWhitLevel)
       tArrow->setWeapDamDev(tTemp);
       break;
     default:
-      vlogf(LOG_BUG, "task_shittlePulse(TArrow) called with invalid tWhitLevel.  [%d]",
+      vlogf(LOG_BUG, fmt("task_shittlePulse(TArrow) called with invalid tWhitLevel.  [%d]") % 
             tWhitLevel);
       break;
   }
@@ -267,7 +267,7 @@ void task_whittlePulse(TBeing *ch, TBow *tBow, whittlePulseT tWhitLevel)
       tBow->setMaxRange((tValue + tBow->getMaxRange()));
       break;
     default:
-      vlogf(LOG_BUG, "task_shittlePulse(TBow) called with invalid tWhitLevel.  [%d]",
+      vlogf(LOG_BUG, fmt("task_shittlePulse(TBow) called with invalid tWhitLevel.  [%d]") % 
             tWhitLevel);
       break;
   }
@@ -414,7 +414,7 @@ bool task_whittleCreateNew(TBeing *ch, sstring tStWood, int tIndex)
 
     if (!(ch->task->obj = read_object(real_object(whittleItems[tIndex].itemVnum), REAL))) {
       ch->sendTo("Something bad happened.  Tell a god.\n\r");
-      vlogf(LOG_BUG, "Player in whittle got to item that doesn't exist!  [%d]",
+      vlogf(LOG_BUG, fmt("Player in whittle got to item that doesn't exist!  [%d]") % 
             whittleItems[tIndex].itemVnum);
       return false;
     }
@@ -826,9 +826,9 @@ void taskWhittleEntry::operator()(sstring tString, int newtClass,
     weiSize *= 1.10;
     weaSize = max(400.0, ((volSize + weiSize) / 10));
 
-    vlogf(LOG_MISC, "Adding Whittle: [%.1f %d : %.1f] [%.1f %.1f : %.1f]",
-          volSize, tObj->getVolume(), (tObj->getVolume() * 1.10),
-          weiSize, tObj->getWeight(), (tObj->getWeight() * 1.10));
+    vlogf(LOG_MISC, fmt("Adding Whittle: [%.1f %d : %.1f] [%.1f %.1f : %.1f]") % 
+          volSize % tObj->getVolume() % (tObj->getVolume() * 1.10) %
+          weiSize % tObj->getWeight() % (tObj->getWeight() * 1.10));
 
     valid = true;
     delete tObj;

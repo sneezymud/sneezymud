@@ -1242,8 +1242,8 @@ int TBeing::triggerTrap(TTrap *o)
 
       return TRUE;
     default:
-      vlogf(LOG_BUG, "Unknown trap type %d in triggerTrap (%s:%d)", 
-         o->getTrapDamType(), o->getName(), o->objVnum());
+      vlogf(LOG_BUG, fmt("Unknown trap type %d in triggerTrap (%s:%d)") %  
+         o->getTrapDamType() % o->getName() % o->objVnum());
       return TRUE;
   }
 
@@ -2426,7 +2426,7 @@ bool TBeing::hasTrapComps(const char *type, trap_targ_t targ, int amt, int *pric
       item3 = ST_ATHANOR;
     }
   } else {
-    vlogf(LOG_MISC, "Bad call to hasTrapComps() : %s", type);
+    vlogf(LOG_MISC, fmt("Bad call to hasTrapComps() : %s") %  type);
     return FALSE;
   }
   item1 = real_object(item1);
@@ -3262,8 +3262,8 @@ void TBeing::sendTrapMessage(const char *type, trap_targ_t targ, int num)
     }
   }
 
-  vlogf(LOG_BUG, "Bad trap type (%s, %d, %d) with character %s", 
-             type, targ, num, getName());
+  vlogf(LOG_BUG, fmt("Bad trap type (%s, %d, %d) with character %s") %  
+             type % targ % num % getName());
   return;
 }
 

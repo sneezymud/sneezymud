@@ -212,7 +212,7 @@ void sendToRoom(colorTypeT color, const char *text, int room)
   TThing *i;
 
   if (!real_roomp(room)) {
-    vlogf(LOG_MISC, "BOGUS room %d in sendToRoom", room);
+    vlogf(LOG_MISC, fmt("BOGUS room %d in sendToRoom") %  room);
     return;
   }
   if (text) {
@@ -231,7 +231,7 @@ void sendToRoom(const char *text, int room)
   TThing *i;
 
   if (!real_roomp(room)) {
-    vlogf(LOG_MISC, "BOGUS room %d in sendToRoom", room);
+    vlogf(LOG_MISC, fmt("BOGUS room %d in sendToRoom") %  room);
     return;
   }
   if (text) {
@@ -358,7 +358,7 @@ void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing
 
   if (!t1) {
     vlogf(LOG_MISC, "There is no char in coloract TOCHAR.");
-    vlogf(LOG_MISC, "%s", str.c_str());
+    vlogf(LOG_MISC, fmt("%s") %  str);
     return;
   }
 
@@ -367,13 +367,13 @@ void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing
 
   if (!t3) {
     if (type == TO_VICT) {
-      vlogf(LOG_MISC, "There is no victim in coloract TOVICT %s is char.", t1->getName());
-      vlogf(LOG_MISC, "%s", str.c_str());
+      vlogf(LOG_MISC, fmt("There is no victim in coloract TOVICT %s is char.") %  t1->getName());
+      vlogf(LOG_MISC, fmt("%s") %  str);
       return;
     } else if (type == TO_NOTVICT) {
       type = TO_ROOM;
-      vlogf(LOG_MISC, "There is no victim in coloract TONOTVICT %s is char.", t1->getName());
-      vlogf(LOG_MISC, "%s", str.c_str());
+      vlogf(LOG_MISC, fmt("There is no victim in coloract TONOTVICT %s is char.") %  t1->getName());
+      vlogf(LOG_MISC, fmt("%s") %  str);
     }
   }
 
@@ -510,7 +510,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 
   if (!t1) {
     vlogf(LOG_MISC, "There is no char in act() TOCHAR.");
-    vlogf(LOG_MISC, "%s", str.c_str());
+    vlogf(LOG_MISC, fmt("%s") %  str);
     return;
   }
   if (!t1->roomp) 
@@ -518,13 +518,13 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 
   if (!t3) {
     if (type == TO_VICT) {
-      vlogf(LOG_MISC, "There is no victim in act() TOVICT %s is char.", t1->getName());
-      vlogf(LOG_MISC, "%s", str.c_str());
+      vlogf(LOG_MISC, fmt("There is no victim in act() TOVICT %s is char.") %  t1->getName());
+      vlogf(LOG_MISC, fmt("%s") %  str);
       return;
     } else if (type == TO_NOTVICT) {
       type = TO_ROOM;
-      vlogf(LOG_MISC, "There is no victim in act() TONOTVICT %s is char.", t1->getName());
-      vlogf(LOG_MISC, "%s", str.c_str());
+      vlogf(LOG_MISC, fmt("There is no victim in act() TONOTVICT %s is char.") %  t1->getName());
+      vlogf(LOG_MISC, fmt("%s") %  str);
     }
   }
   if (type == TO_VICT) 
@@ -579,7 +579,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	    case 'P':
 	    case 'N':
               if (!t3) {
-                vlogf(LOG_BUG, "Bad act P or N. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act P or N. '%s'") %  str);
                 return;
               }
               tbtt = dynamic_cast<const TBeing *>(t3);
@@ -622,7 +622,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
               break;
 	    case 'G':
               if (!t3) {
-                vlogf(LOG_BUG, "Bad act G. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act G. '%s'") %  str);
                 return;
               }
               i = t3->roomp->describeGround().c_str();
@@ -634,7 +634,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
             
 	    case 'D':
               if (!t3) {
-                vlogf(LOG_BUG, "Bad act D. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act D. '%s'") %  str);
                 return;
               }
               i = t3->yourDeity(your_deity_val, ((to == t3) ? FIRST_PERSON : (strlen(buf) == 0 ? THIRD_PERSON : SECOND_PERSON))).c_str();
@@ -642,7 +642,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
             case 'q':
               // is/are based on plurality of $o, $p
               if (!obj) {
-                vlogf(LOG_BUG, "Bad act q. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act q. '%s'") %  str);
                 return;
               }
               tobj = dynamic_cast<const TObj *>(obj);
@@ -654,7 +654,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
             case 'Q':
               // a verb modifier so can do "$o look$Q happy" for plurality
               if (!obj) {
-                vlogf(LOG_BUG, "Bad act Q. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act Q. '%s'") %  str);
                 return;
               }
               tobj = dynamic_cast<const TObj *>(obj);
@@ -666,7 +666,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
             case 'r':
               // is/are based on plurality of $n
               if (!t1) {
-                vlogf(LOG_BUG, "Bad act r. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act r. '%s'") %  str);
                 return;
               }
               tobj = dynamic_cast<const TObj *>(t1);
@@ -678,7 +678,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
             case 'R':
               // a verb modifier so can do "$n look$Q happy" for plurality
               if (!t1) {
-                vlogf(LOG_BUG, "Bad act R. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act R. '%s'") %  str);
                 return;
               }
               tobj = dynamic_cast<const TObj *>(t1);
@@ -695,7 +695,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      break;
 	    case 'M':
               if (!t3) {
-                vlogf(LOG_BUG, "Bad act M. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act M. '%s'") %  str);
                 return;
               }
               if ((type == TO_CHAR) && (t1 == t3)) 
@@ -713,7 +713,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      break;
 	    case 'S':
               if (!t3) {
-                vlogf(LOG_BUG, "Bad act S. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act S. '%s'") %  str);
                 return;
               }
               if (to->canSee(t3))
@@ -729,7 +729,7 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      break;
 	    case 'E':
               if (!t3) {
-                vlogf(LOG_BUG, "Bad act E. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act E. '%s'") %  str);
                 return;
               }
               if (to->canSee(t3))
@@ -739,21 +739,21 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      break;
 	    case 'o':
               if (!obj) {
-                vlogf(LOG_BUG, "Bad act o. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act o. '%s'") %  str);
                 return;
               }
 	      i = dynamic_cast<const TBeing *>(obj) ? to->persfname(obj).c_str() : to->objn(obj).c_str();
 	      break;
 	    case 'O':
               if (!t3) {
-                vlogf(LOG_BUG, "Bad act O. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act O. '%s'") %  str);
                 return;
               }
 	      i = dynamic_cast<const TBeing *>(t3) ? to->persfname(t3).c_str() : to->objn(t3).c_str();
 	      break;
 	    case 'p':
               if (!obj) {
-                vlogf(LOG_BUG, "Bad act p. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act p. '%s'") %  str);
                 return;
               }
               tbtt = dynamic_cast<const TBeing *>(obj);
@@ -767,28 +767,28 @@ void act(const sstring &str, bool hide, const TThing *t1, const TThing *obj, con
 	      break;
 	    case 'a':
               if (!obj) {
-                vlogf(LOG_BUG, "Bad act a. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act a. '%s'") %  str);
                 return;
               }
 	      i = obj->sana();
 	      break;
 	    case 'A':
               if (!t3) {
-                vlogf(LOG_BUG, "Bad act A. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act A. '%s'") %  str);
                 return;
               }
 	      i = t3->sana();
 	      break;
 	    case 'T':
               if (!t3) {
-                vlogf(LOG_BUG, "Bad act T. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act T. '%s'") %  str);
                 return;
               }
 	      i = (const char *) t3;
 	      break;
 	    case 'F':
               if (!t3) {
-                vlogf(LOG_BUG, "Bad act F. '%s'", str.c_str());
+                vlogf(LOG_BUG, fmt("Bad act F. '%s'") %  str);
                 return;
               }
 	      i = fname((const char *) t3).c_str();
@@ -853,7 +853,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
     return;
 
   if (!ch->vt100()) {
-    vlogf(LOG_MISC, "%s in updateScreenVt100 and not vt (%d)",ch->getName(),update);
+    vlogf(LOG_MISC, fmt("%s in updateScreenVt100 and not vt (%d)") % ch->getName() %update);
     return;
   }
 
@@ -970,7 +970,7 @@ void Descriptor::updateScreenAnsi(unsigned int update)
     return;
 
   if (!ch->ansi()) {
-    vlogf(LOG_MISC, "%s in updateScreenAnsi and not ansi (%d)",ch->getName(), update);
+    vlogf(LOG_MISC, fmt("%s in updateScreenAnsi and not ansi (%d)") % ch->getName() % update);
     return;
   }
 

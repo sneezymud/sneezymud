@@ -53,16 +53,16 @@ sstring TCommodity::statObjInfo() const
 void TCommodity::lowCheck()
 {
   if (!isname("commodity", name)) {
-    vlogf(LOG_LOW, "raw material without COMMODITY in name (%s : %d)",
-               getName(), objVnum());
+    vlogf(LOG_LOW, fmt("raw material without COMMODITY in name (%s : %d)") % 
+               getName() % objVnum());
   }
   if (!numUnits()) {
-    vlogf(LOG_LOW, "raw material needs weight above 0.0 (%s : %d)",
-               getName(), objVnum());
+    vlogf(LOG_LOW, fmt("raw material needs weight above 0.0 (%s : %d)") % 
+               getName() % objVnum());
   }
   if (!pricePerUnit()) {
-    vlogf(LOG_LOW, "raw material needs price above 0 (%s : %d)",
-               getName(), objVnum());
+    vlogf(LOG_LOW, fmt("raw material needs price above 0 (%s : %d)") % 
+               getName() % objVnum());
   }
 
   TObj::lowCheck();
@@ -159,7 +159,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
     }
   } else {
     // this happens with sub zero weight components
-    vlogf(LOG_BUG, "Bogus num %d in buyMe component at %d.  wgt=%.2f", num, ch->in_room, getWeight());
+    vlogf(LOG_BUG, fmt("Bogus num %d in buyMe component at %d.  wgt=%.2f") %  num % ch->in_room % getWeight());
   }
 
   sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);

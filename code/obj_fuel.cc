@@ -136,7 +136,7 @@ void TFuel::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 void TFuel::lowCheck()
 {
   if (getCurFuel() > getMaxFuel())
-    vlogf(LOG_LOW,"fuel %s had more current fuel than max.", getName());
+    vlogf(LOG_LOW,fmt("fuel %s had more current fuel than max.") %  getName());
 
   TObj::lowCheck();
 }

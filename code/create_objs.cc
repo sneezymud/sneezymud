@@ -2761,7 +2761,7 @@ void obj_edit(TBeing *ch, const char *arg)
       change_arrow_value4(ch, dynamic_cast<TArrow *>(ch->desc->obj), arg, ENTER_REENTRANT);
       return;
     default:
-      vlogf(LOG_EDIT, "Got to bad spot in obj_edit.  char: %s   case: %d",ch->getName(),ch->specials.edit);
+      vlogf(LOG_EDIT, fmt("Got to bad spot in obj_edit.  char: %s   case: %d") % ch->getName() %ch->specials.edit);
       return;
   }
 }
@@ -2881,7 +2881,7 @@ void generic_dirlist(const char *buf, const TBeing *ch)
   DIR *dfd;
 
   if (!(dfd = opendir(buf))) {
-    vlogf(LOG_FILE, "Unable to dirwalk directory %s", buf);
+    vlogf(LOG_FILE, fmt("Unable to dirwalk directory %s") %  buf);
     return;
   }
   unsigned int totcnt = 0;
@@ -3107,7 +3107,7 @@ void TObj::describeTreasure(const char *arg,int num, int price)
   char buf[160];
 
   if (num == 0) {
-    vlogf(LOG_EDIT, "Bogus obj in describeTreasure, %s, %s", arg, getName());
+    vlogf(LOG_EDIT, fmt("Bogus obj in describeTreasure, %s, %s") %  arg % getName());
     return;  
   } else if (num <= 2) 
     sprintf(type,"bit");

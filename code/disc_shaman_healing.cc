@@ -39,7 +39,7 @@ static void adjustHealHp2(const TBeing *caster, int &hp, int durat)
     hp = max(3,hp);
   } else if (caster->spelltask) {
     if (durat <= 1) {
-      vlogf(LOG_BUG, "Problem with hitpoint/rounds formula in shaman heals, caster is %s", caster->getName());
+      vlogf(LOG_BUG, fmt("Problem with hitpoint/rounds formula in shaman heals, caster is %s") %  caster->getName());
      durat = 2;
     }
     hp /= (durat-1)*2;

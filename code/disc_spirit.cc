@@ -221,8 +221,8 @@ int slumber(TBeing *caster, TBeing *victim, int level, byte bKnown)
         caster->sendTo("You can not use that staff here.\n\r");
         return SPELL_FAIL;
       }
-      vlogf(LOG_MISC, "Sleep Tag Staff: %s just got slept by %s",
-               victim->getName(), caster->getName());
+      vlogf(LOG_MISC, fmt("Sleep Tag Staff: %s just got slept by %s") % 
+               victim->getName() % caster->getName());
       rc = victim->rawSleep(level, (4 + level/2) * UPDATES_PER_MUDHOUR, crit, save);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         return SPELL_SUCCESS | VICTIM_DEAD;

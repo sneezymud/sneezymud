@@ -255,7 +255,7 @@ int TOrganic::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       keeper->addToMoney(price, GOLD_COMM);
   } else {
     // this happens with sub zero weight components
-    vlogf(LOG_BUG, "Bogus num %d in buyMe component at %d.  wgt=%.2f", num, ch->in_room, getWeight());
+    vlogf(LOG_BUG, fmt("Bogus num %d in buyMe component at %d.  wgt=%.2f") %  num % ch->in_room % getWeight());
   }
 
   sprintf(Buf[0], "%s/%d", SHOPFILE_PATH, shop_nr);

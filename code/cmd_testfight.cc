@@ -48,11 +48,11 @@ static void test_fight_start(bool same_time)
   tot2 = 0;
   iter2 = 0;
 
-  vlogf(LOG_MISC, "Testing mob %d vs %d.   %s", mob1_num, mob2_num,
-      same_time ? "Same time fight" : "mob1 hitting");
+  vlogf(LOG_MISC, fmt("Testing mob %d vs %d.   %s") %  mob1_num % mob2_num %
+      (same_time ? "Same time fight" : "mob1 hitting"));
 
   if (changed_class)
-    vlogf(LOG_MISC, "Creating mob %d as class %d", mob1_num, changed_class);
+    vlogf(LOG_MISC, fmt("Creating mob %d as class %d") %  mob1_num % changed_class);
 
   int vnum;
   for (vnum = 0; vnum < WORLD_SIZE; vnum++) {
@@ -149,11 +149,11 @@ static void repTheStats()
   float perc1 = (float) left1 * 100.0 * iTot / (float) tot1 / (float) iter1;
   float perc2 = (float) left2 * 100.0 * iTot / (float) tot2 / (float) iter2;
 
-  vlogf(LOG_MISC, "m1(%d): %lu/%lu (%.4f%%)(%d) : m2(%d): %lu/%lu (%.4f%%)(%d)",
-        mob1_num, left1, tot1,
-        perc1, iter1,
-        mob2_num, left2, tot2,
-        perc2, iter2);
+  vlogf(LOG_MISC, fmt("m1(%d): %lu/%lu (%.4f%%)(%d) : m2(%d): %lu/%lu (%.4f%%)(%d)") % 
+        mob1_num % left1 % tot1 %
+        perc1 % iter1 %
+        mob2_num % left2 % tot2 %
+        perc2 % iter2);
 
   FILE *fp;
   fp = fopen("testfight.log", "a+");
@@ -226,13 +226,13 @@ void test_fight_death(TBeing *ch, TBeing *v, int mod)
   num_fighting--;
   
 #if 0
-  vlogf(LOG_MISC, "Test fight in room %d: %s beat %s by %.2f%% (%d)",
-     ch->in_room, v->getName(), ch->getName(), v->getPercHit(), num_fighting);
+  vlogf(LOG_MISC, fmt("Test fight in room %d: %s beat %s by %.2f%% (%d)") % 
+     ch->in_room % v->getName() % ch->getName() % v->getPercHit() % num_fighting);
 #else
   if (!(num_fighting%100) ||
       (!(num_fighting/100) && !(num_fighting%10)) ||
       (!(num_fighting/10))) {
-      vlogf(LOG_MISC, "There are %d fights remaining (%d to %d).", num_fighting, iter1, iter2);
+      vlogf(LOG_MISC, fmt("There are %d fights remaining (%d to %d).") %  num_fighting % iter1 % iter2);
   }
 #endif
 

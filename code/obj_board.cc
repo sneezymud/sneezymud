@@ -76,7 +76,7 @@ void OpenBoardFile(boardStruct *b)
   }
   if (!b->file) {
     perror("OpenBoardFile(fopen)");
-    vlogf(LOG_FILE, "Fatal, since could not open \"%s\"", b->filename);
+    vlogf(LOG_FILE, fmt("Fatal, since could not open \"%s\"") %  b->filename);
     exit(0);
   }
 }
@@ -215,7 +215,7 @@ boardStruct *FindBoardInRoom(int room, const char *arg)
         if (nb->Rnum == o->number)
           return (nb);
       }
-      vlogf(LOG_PROC, "Uh oh! Board with proc, but not in board list in room %d", room);
+      vlogf(LOG_PROC, fmt("Uh oh! Board with proc, but not in board list in room %d") %  room);
       return NULL;
     }
   }
@@ -230,7 +230,7 @@ int board(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 int TObj::boardHandler(TBeing *, cmdTypeT cmd, const char *)
 {
   if (cmd != CMD_GENERIC_DESTROYED) {
-    vlogf(LOG_PROC, "board handler with non-board (%s) cmd=%d", getName(), cmd);
+    vlogf(LOG_PROC, fmt("board handler with non-board (%s) cmd=%d") %  getName() % cmd);
   } else {
     // this msg comes in ~TObj() so we will never be a TBoard when we get it.
     DeleteABoard(this);

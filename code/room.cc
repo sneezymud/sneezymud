@@ -377,7 +377,7 @@ void TRoom::operator << (TThing &tThing)
   // creates forward-linked list
   for (tList = tBornInsideMe; tList->nextBorn; tList = tList->nextBorn) {
     if (&tThing == tList) {
-      vlogf(LOG_BUG, "Mob already in born list being added again. [%s]", tThing.getName());
+      vlogf(LOG_BUG, fmt("Mob already in born list being added again. [%s]") %  tThing.getName());
       return;
     }
   }
@@ -417,7 +417,7 @@ void TRoom::operator >> (const TThing &tThing)
     tLast = tList;
   }
 
-  vlogf(LOG_BUG, "Attempt to remove mob from born list that isn't in born list! [%s]", tThing.getName());
+  vlogf(LOG_BUG, fmt("Attempt to remove mob from born list that isn't in born list! [%s]") %  tThing.getName());
 }
 
 

@@ -83,7 +83,7 @@ void TBeing::doDefect(const char * args) {
   if(!strcmp(buf, "yes")) {
     sprintf(buf, "You have defected from %s.\n\r", newfaction()->getName());
     sendTo(COLOR_BASIC, buf);
-    vlogf(LOG_FACT, "%s defected from %s.", getName(), newfaction()->getName());
+    vlogf(LOG_FACT, fmt("%s defected from %s.") %  getName() % newfaction()->getName());
     faction.whichfaction = 0;
     faction.rank = 0;
     saveFactionStats();
@@ -268,7 +268,7 @@ void TBeing::add_faction(const char * args) {
     faction.rank = 0; // leader slot
     saveFactionStats();
   }  
-  vlogf(LOG_FACT, "%s founded a new faction: [%s] (%d)", getName(), f->keywords, f->ID);
+  vlogf(LOG_FACT, fmt("%s founded a new faction: [%s] (%d)") %  getName() % f->keywords % f->ID);
   save_newfactions();
   return;
 }
@@ -849,7 +849,7 @@ void TBeing::edit_faction(const char * args) {
 
 void TBeing::show_faction(const char * args) {
 #if 0
-  vlogf(LOG_DASH, "show_faction() called with args = %s", args);
+  vlogf(LOG_DASH, fmt("show_faction() called with args = %s") %  args);
 #endif
   char buf[4096];
   if (args && strcmp(args, "showallfactions")) {
@@ -1008,7 +1008,7 @@ void TFaction::setRelation(int target, int state) {
 TFaction * get_faction(const char *args) {
   int num = 0;
   int count = 0;
-  vlogf(LOG_DASH, "get_faction called with args = '%s'", args);
+  vlogf(LOG_DASH, fmt("get_faction called with args = '%s'") %  args);
   count = sscanf(args,"%d", &num);
   if(count)
     return get_faction_by_ID(num);
@@ -1107,17 +1107,17 @@ void TBeing::saveFactionStats()
   sprintf(buf, "player/%c/%s.faction", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(buf, "w"))) {
-    vlogf(LOG_FILE, "Unable to open file (%s) for saving faction stats. (%d)", buf, errno);
+    vlogf(LOG_FILE, fmt("Unable to open file (%s) for saving faction stats. (%d)") %  buf % errno);
     return;
   }
   if(!get_faction_by_ID(faction.whichfaction)) {
-    vlogf(LOG_FACT, "%s had bad faction during saveFactionStats() ... making unaffiliated", getName());
+    vlogf(LOG_FACT, fmt("%s had bad faction during saveFactionStats() ... making unaffiliated") %  getName());
     faction.whichfaction = 0;
     faction.rank = 0;
   }
 
   if(faction.rank < 0 || faction.rank >= newfaction()->ranks) {
-    vlogf(LOG_FACT, "%s had bad rank - setting to lowest in faction.", getName());
+    vlogf(LOG_FACT, fmt("%s had bad rank - setting to lowest in faction.") %  getName());
     faction.rank = newfaction()->ranks - 1;
   }
   fprintf(fp, "%u\n",
@@ -1127,7 +1127,7 @@ void TBeing::saveFactionStats()
   fprintf(fp,"%d %d\n", faction.align_ge, faction.align_lc);
 
   if (fclose(fp))
-    vlogf(LOG_FILE, "Problem closing %s's faction stats", name);
+    vlogf(LOG_FILE, fmt("Problem closing %s's faction stats") %  name);
 }
 
 //this loads the faction data for the PLAYER
@@ -1150,30 +1150,30 @@ void TBeing::loadFactionStats()
 
   if (fscanf(fp, "%d\n",
 	     &current_version) != 1) {
-    vlogf(LOG_BUG, "Bad data in faction stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in faction stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
 
   if (fscanf(fp, "%d %d\n", &num1, &num2) != 2) {
-    vlogf(LOG_BUG, "Bad data in factionss stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in factionss stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
   faction.whichfaction = num1;
   if(!get_faction_by_ID(faction.whichfaction)) {
-    vlogf(LOG_FACT, "%s had bad faction during loadFactionStats() ... making unaffiliated", getName());
+    vlogf(LOG_FACT, fmt("%s had bad faction during loadFactionStats() ... making unaffiliated") %  getName());
     faction.whichfaction = 0;
     faction.rank = 0;
   }
   faction.rank = num2;
   if(faction.rank < 0 || faction.rank >= newfaction()->ranks) {
-    vlogf(LOG_FACT, "%s had bad rank during loadFactionStats - setting to lowest in faction.", getName());
+    vlogf(LOG_FACT, fmt("%s had bad rank during loadFactionStats - setting to lowest in faction.") %  getName());
     faction.rank = newfaction()->ranks - 1;
   }
 
   if (fscanf(fp, "%d %d\n", &num3, &num4) != 2) {
-    vlogf(LOG_BUG, "Bad data in factionss stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in factionss stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -1201,7 +1201,7 @@ int load_newfactions() {
   while(fp) {
     TFaction *f = new TFaction;
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: %d", line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
       fclose(fp);
       return FALSE;
     }
@@ -1211,7 +1211,7 @@ int load_newfactions() {
     sscanf(buf, "#%d\n\r", &i1);
     f->ID = i1;
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: %d", line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1223,7 +1223,7 @@ int load_newfactions() {
     sscanf(buf, "keywords: %[a-zA-Z '<>]\n\r", c1);
     f->keywords = mud_str_dup(c1);
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: %d", line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1234,7 +1234,7 @@ int load_newfactions() {
     sscanf(buf, "name: %[a-zA-Z '<>]\n\r", c1);
     f->proper_name = mud_str_dup(c1);
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: %d", line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1246,7 +1246,7 @@ int load_newfactions() {
     sscanf(buf, "shortname: %[a-zA-Z '<>]\n\r", c1);
     f->slang_name = mud_str_dup(c1);
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: %d", line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1255,7 +1255,7 @@ int load_newfactions() {
     sscanf(buf, "password: %s\n\r", c1);
     f->password = mud_str_dup(c1);
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: %d", line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1268,7 +1268,7 @@ int load_newfactions() {
     f->flags = (unsigned int)(i3);
     f->power = f1;
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: %d", line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1282,7 +1282,7 @@ int load_newfactions() {
     f->acty = i4;
 
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: %d", line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1295,7 +1295,7 @@ int load_newfactions() {
     f->colors[2] = i3;
 
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: %d", line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1306,7 +1306,7 @@ int load_newfactions() {
     f->patron = deityTypeT(i1);
     for(int j = 0; j < NUM_MAX_RANK; j++) {
       if(fgets(buf, 256, fp) == NULL) {
-	vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: %d", line);
+	vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
 
 	fclose(fp);
 	return FALSE;
@@ -1320,7 +1320,7 @@ int load_newfactions() {
     }
     TRelation *r;
     if(fgets(buf, 256, fp) == NULL) {
-      vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: %d", line);
+      vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
 
       fclose(fp);
       return FALSE;
@@ -1335,7 +1335,7 @@ int load_newfactions() {
       r->relation = i2;
       f->relations.push_back(r);
       if(fgets(buf, 256, fp) == NULL) {
-	vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: %d", line);
+	vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: %d") %  line);
 
         fclose(fp);
         return FALSE;
@@ -1377,7 +1377,7 @@ int load_factions()
       break;
     if (sscanf(buf,"#%d\n\r",&num) == 1) {   //   new faction
       if (fgets(buf,256,fp) == NULL) {
-        vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: faction %d",num);
+        vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: faction %d") % num);
         fclose(fp);
         return FALSE;
       }
@@ -1393,7 +1393,7 @@ int load_factions()
 
       for (j = 0; j < FACT_LEADER_SLOTS;j++) {
         if (fgets(buf,256,fp) == NULL) {
-          vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: faction %d",num);
+          vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: faction %d") % num);
           fclose(fp);
           return FALSE;
         }
@@ -1403,7 +1403,7 @@ int load_factions()
         strcpy(FactionInfo[i].leader[j],buf);
       }
       if (fgets(buf,256,fp) == NULL) {
-        vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE: faction %d",num);
+        vlogf(LOG_FILE,fmt("ERROR: bogus line in FACTION_FILE: faction %d") % num);
         fclose(fp);
         return FALSE;
       }
@@ -1415,7 +1415,7 @@ int load_factions()
       factionTypeT ij;
       for (ij = MIN_FACTION; ij < MAX_FACTIONS; ij++) {
         if (fscanf(fp, "%f %f\n", &num1, &num2) != 2) {
-          vlogf(LOG_FILE, "ERROR: bogus faction array faction (%d) (j=%2)",i,ij);
+          vlogf(LOG_FILE, fmt("ERROR: bogus faction array faction (%d) (j=%2)") % i %ij);
           fclose(fp);
           return FALSE;
         }
@@ -1423,13 +1423,13 @@ int load_factions()
         FactionInfo[i].faction_array[ij][1] = (double) num2;
       }
       if (fscanf(fp, "%f\n", &num1) != 1) {
-        vlogf(LOG_FILE, "ERROR: bogus setting of faction power for faction(%d)",i);
+        vlogf(LOG_FILE, fmt("ERROR: bogus setting of faction power for faction(%d)") % i);
         fclose(fp);
         return FALSE;
       }
       FactionInfo[i].faction_power = (double) num1;
       if (fscanf(fp, "%ld %f\n", &ln, &num1) != 2) {
-        vlogf(LOG_FILE, "ERROR: bogus setting of faction wealth/tithe for faction(%d)",i);
+        vlogf(LOG_FILE, fmt("ERROR: bogus setting of faction wealth/tithe for faction(%d)") % i);
         fclose(fp);
         return FALSE;
       }
@@ -1437,7 +1437,7 @@ int load_factions()
       FactionInfo[i].faction_tithe = (double) num1;
 
       if (fscanf(fp, "%d %d %d %d\n", &inum1, &inum2, &inum3, &inum4) != 4) {
-        vlogf(LOG_FILE, "ERROR: bogus setting of faction caravan info 1 for faction(%d)",i);
+        vlogf(LOG_FILE, fmt("ERROR: bogus setting of faction caravan info 1 for faction(%d)") % i);
         fclose(fp);
         return FALSE;
       }
@@ -1447,7 +1447,7 @@ int load_factions()
       FactionInfo[i].caravan_defense = inum4;
 
       if (fscanf(fp, "%d %d %u\n", &inum1, &inum2, &uinum) != 3) {
-        vlogf(LOG_FILE, "ERROR: bogus setting of faction caravan info 2 for faction(%d)",i);
+        vlogf(LOG_FILE, fmt("ERROR: bogus setting of faction caravan info 2 for faction(%d)") % i);
         fclose(fp);
         return FALSE;
       }
@@ -1672,9 +1672,9 @@ void TBeing::doMakeLeader(const char *arg)
     sendTo("Syntax: makeleader <name> <leader slot>\n\r");
     return;
   } else {
-    vlogf(LOG_FACT,"Leader slot %d for faction %s changed.",which,
+    vlogf(LOG_FACT,fmt("Leader slot %d for faction %s changed.") % which %
            FactionInfo[fnum].faction_name);
-    vlogf(LOG_FACT,"Changed from %s to %s.",FactionInfo[fnum].leader[which],
+    vlogf(LOG_FACT,fmt("Changed from %s to %s.") % FactionInfo[fnum].leader[which] %
            namebuf);
     sendTo(fmt("You have set %s's leader %d to %s.\n\r") % 
            FactionInfo[fnum].faction_name % which % namebuf);
@@ -1748,7 +1748,7 @@ void TBeing::doNewMember(const char *arg)
         FactionInfo[fnum].faction_name);
   sendTo(COLOR_MOBS, fmt("You have added %s to the %s.\n\r") % vict->getName() %
         FactionInfo[fnum].faction_name);
-  vlogf(LOG_FACT, "Newmember: %s adding %s to %s.",getName(),vict->getName(),
+  vlogf(LOG_FACT, fmt("Newmember: %s adding %s to %s.") % getName() %vict->getName() %
         FactionInfo[fnum].faction_name); 
 }
 
@@ -1807,7 +1807,7 @@ void TBeing::doRMember(const char *arg)
         FactionInfo[fnum].faction_name);
   sendTo(COLOR_MOBS, fmt("You have removed %s from the %s.\n\r") % vict->getName() %
         FactionInfo[fnum].faction_name);
-  vlogf(LOG_FACT, "RMember: %s removing %s from %s.",getName(),vict->getName(),
+  vlogf(LOG_FACT, fmt("RMember: %s removing %s from %s.") % getName() %vict->getName() %
         FactionInfo[fnum].faction_name);
 }
   
@@ -1834,7 +1834,7 @@ void TBeing::doDisband()
     }
   }
   sendTo(fmt("You have disbanded from %s.\n\r") %FactionInfo[fnum].faction_name);
-  vlogf(LOG_FACT,"Disband: %s left %s.",getName(),FactionInfo[fnum].faction_name);
+  vlogf(LOG_FACT,fmt("Disband: %s left %s.") % getName() %FactionInfo[fnum].faction_name);
   setFaction(FACT_NONE);
 #if FACTIONS_IN_USE
   setPerc(0.0);
@@ -2256,8 +2256,8 @@ void TBeing::doAdjust(const char *arg)
       sendTo("Please specify a new faction name.\n\r");
       return;
     }
-    vlogf(LOG_FACT, "Faction name changed from %s to %s.\n\r",
-          oldname, arg);
+    vlogf(LOG_FACT, fmt("Faction name changed from %s to %s.\n\r") % 
+          oldname % arg);
     sendTo(fmt("You change the name of the faction from %s to %s.\n\r") %
           oldname % arg);
     sendTo("Remember to update factionNumber() in faction.cc with the new abbreviations.\n\r");
@@ -2800,8 +2800,8 @@ void TPerson::reconcileHelp(TBeing *victim, double amp)
   abso = value * amp;
 
 #ifdef ALIGN_STUFF 
-  vlogf(LOG_MISC, "align thing: value %2.6f, amp %2.6f abso  %2.6f, %10.10s (%d) vs %10.10s (%d)",
-       value, amp, abso, getName(), getFaction(), victim->getName(),
+  vlogf(LOG_MISC, fmt("align thing: value %2.6f, amp %2.6f abso  %2.6f, %10.10s (%d) vs %10.10s (%d)") % 
+       value % amp % abso % getName() % getFaction() % victim->getName() %
        victim->getFaction());
 #endif
 
@@ -2822,9 +2822,9 @@ void TPerson::reconcileHelp(TBeing *victim, double amp)
 
   setPerc(avg - (0.33*sigma));
 #ifdef ALIGN_STUFF
-  vlogf(LOG_MISC, "avg %2.6f    sigma %2.6f", avg, sigma);
-  vlogf(LOG_MISC,"real %2.6f    0: %2.6f    1: %2.6f    2: %2.6f    3: %2.6f",
-     getPerc(), getPercX(FACT_NONE), getPercX(FACT_BROTHERHOOD), getPercX(FACT_CULT), getPercX(FACT_SNAKE)); 
+  vlogf(LOG_MISC, fmt("avg %2.6f    sigma %2.6f") %  avg % sigma);
+  vlogf(LOG_MISC,fmt("real %2.6f    0: %2.6f    1: %2.6f    2: %2.6f    3: %2.6f") % 
+     getPerc() % getPercX(FACT_NONE) % getPercX(FACT_BROTHERHOOD) % getPercX(FACT_CULT) % getPercX(FACT_SNAKE)); 
 #endif
 
   // adjust faction pool
@@ -2904,7 +2904,7 @@ const char * CaravanDestination(int which)
     case CARAVAN_CUR_DEST_AMBER:
       return "Amber";
     default:
-      vlogf(LOG_BUG, "CaravanDestination had an i of %d (which %d)", i, which);
+      vlogf(LOG_BUG, fmt("CaravanDestination had an i of %d (which %d)") %  i % which);
       vlogf(LOG_BUG, "bad carvan");
       return "unknown";
   }
@@ -2959,7 +2959,7 @@ void launch_caravans()
         break;
       case MAX_FACTIONS:
       case FACT_UNDEFINED:
-        vlogf(LOG_BUG, "Bad faction (%d) in LaunchCaravans", i);
+        vlogf(LOG_BUG, fmt("Bad faction (%d) in LaunchCaravans") %  i);
         break;
     }
   }

@@ -41,7 +41,7 @@ int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)
     return SPELL_FAIL;
   }
   if (!(mob = read_mobile(corpse->getCorpseVnum(), VIRTUAL))) {
-    vlogf(LOG_BUG, "FAILED Load!!  No mob (%d)", corpse->getCorpseVnum());
+    vlogf(LOG_BUG, fmt("FAILED Load!!  No mob (%d)") %  corpse->getCorpseVnum());
     caster->sendTo("Something screwed up.  Tell a god.\n\r");
     act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
@@ -218,7 +218,7 @@ int dancingBones(TBeing * caster, TObj * obj, int level, byte bKnown)
     return SPELL_FAIL;
   }
   if (!(mob = read_mobile(corpse->getCorpseVnum(), VIRTUAL))) {
-    vlogf(LOG_BUG, "FAILED Load!!  No mob (%d)", corpse->getCorpseVnum());
+    vlogf(LOG_BUG, fmt("FAILED Load!!  No mob (%d)") %  corpse->getCorpseVnum());
     caster->sendTo("Something screwed up.  Tell a god.\n\r");
     act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;

@@ -460,7 +460,7 @@ void TBeing::statObj(const TObj *j)
             j->affected[i].modifier2);
         str += buf;
       } else
-        vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", j->affected[i].modifier, 
+        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  j->affected[i].modifier % 
               j->getName());
     } else if (j->affected[i].location == APPLY_DISCIPLINE) {
      if (discNames[j->affected[i].modifier].disc_num) {
@@ -470,7 +470,7 @@ void TBeing::statObj(const TObj *j)
             j->affected[i].modifier2);
         str += buf;
       } else
-        vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", j->affected[i].modifier,
+        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  j->affected[i].modifier %
               j->getName());
     } else if (j->affected[i].location == APPLY_IMMUNITY) {
       sprintf(buf, "   Affects:  %s: %s by %ld\n\r",apply_types[j->affected[i].location].name,
@@ -561,7 +561,7 @@ void TBeing::statObjForDivman(const TObj *j)
             j->affected[i].modifier2);
         str += buf;
       } else
-        vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", j->affected[i].modifier, 
+        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  j->affected[i].modifier % 
               j->getName());
     } else if (j->affected[i].location == APPLY_DISCIPLINE) {
      if (discNames[j->affected[i].modifier].disc_num) {
@@ -571,7 +571,7 @@ void TBeing::statObjForDivman(const TObj *j)
             j->affected[i].modifier2);
         str += buf;
       } else
-        vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", j->affected[i].modifier,
+        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  j->affected[i].modifier %
               j->getName());
     } else if (j->affected[i].location == APPLY_IMMUNITY) {
       sprintf(buf, "   Affects:  %s: %s by %ld.\n\r",apply_types[j->affected[i].location].name,
@@ -1562,7 +1562,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_SKY_SPIRIT:
 #endif
         if (!discArray[aff->type]) {
-          vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", aff->type, k->getName());
+          vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  aff->type % k->getName());
           k->affectRemove(aff);
           break;
         }
@@ -1853,7 +1853,7 @@ void TBeing::statBeing(TBeing *k)
       case TYPE_SHOOT:
       case TYPE_UNDEFINED:
       case TYPE_MAX_HIT:
-        vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", aff->type, k->getName());
+        vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  aff->type % k->getName());
         k->affectRemove(aff);
         break;
     }

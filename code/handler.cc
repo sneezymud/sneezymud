@@ -234,7 +234,7 @@ void TBeing::remSkillApply(spellNumT skillNum, sbyte amt)
   skillApplyData *temp = NULL, *temp2 = NULL;
  
   if (!skillApplys) {
-    vlogf(LOG_BUG, "Somehow, remSkillApply was called with no skillApplys (%s) (%d)", getName(), skillNum);
+    vlogf(LOG_BUG, fmt("Somehow, remSkillApply was called with no skillApplys (%s) (%d)") %  getName() % skillNum);
     return;
   }
   for (temp = skillApplys; temp; temp = temp2) {
@@ -260,7 +260,7 @@ void TBeing::remSkillApply(spellNumT skillNum, sbyte amt)
 
         // sanity
         if (temp->amount)
-          vlogf(LOG_BUG, "Somehow, remSkillApply had a last apply that didnt bring affect to 0 (%s) (%d)", getName(), skillNum);
+          vlogf(LOG_BUG, fmt("Somehow, remSkillApply had a last apply that didnt bring affect to 0 (%s) (%d)") %  getName() % skillNum);
 
         delete temp;
       }
@@ -269,7 +269,7 @@ void TBeing::remSkillApply(spellNumT skillNum, sbyte amt)
   }
 
   // !temp....
-  vlogf(LOG_BUG, "Somehow, skillApplys had no skill to remove in remSkillApply (%s) (%d)", getName(), skillNum); 
+  vlogf(LOG_BUG, fmt("Somehow, skillApplys had no skill to remove in remSkillApply (%s) (%d)") %  getName() % skillNum); 
 }
 
 void TBeing::affectModify(applyTypeT loc, long mod, long mod2, unsigned long bitv, bool add, silentTypeT silent)
@@ -298,7 +298,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, unsigned long bit
       return;
     case APPLY_SPELL:
       if (!discArray[mod]) {
-        vlogf(LOG_BUG, "ILLEGAL skill (%d) on being %s.  Ignoring.", mod, getName());
+        vlogf(LOG_BUG, fmt("ILLEGAL skill (%d) on being %s.  Ignoring.") %  mod % getName());
         return;
       }
       if (add) {
@@ -310,7 +310,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, unsigned long bit
     case APPLY_DISCIPLINE: {
       discNumT dnt = mapFileToDisc(mod);
       if ((dnt == DISC_NONE) || !discNames[dnt].disc_num) {
-        vlogf(LOG_BUG, "ILLEGAL Discipline (%d) on being %s.  Ignoring.", mod, getName());
+        vlogf(LOG_BUG, fmt("ILLEGAL Discipline (%d) on being %s.  Ignoring.") %  mod % getName());
         return;
       }
       if (!(cd = getDiscipline(dnt))) {
@@ -450,7 +450,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, unsigned long bit
     case MAX_APPLY_TYPES:
       break;
   }
-  vlogf(LOG_BUG, "Unknown apply adjust attempt (::affectModify()) %s loc: %d.", getName(), loc);
+  vlogf(LOG_BUG, fmt("Unknown apply adjust attempt (::affectModify()) %s loc: %d.") %  getName() % loc);
   vlogf(LOG_BUG, "how'd this happen");
 }
 
@@ -518,7 +518,7 @@ void TBeing::affectTotal()
 #if 0
     // this appears to happen.  I think during polymorphing
     if (isPc() && (GetMaxLevel() > 1)) 
-      vlogf(LOG_BUG,"PC in affectTotal without discs %s", getName());
+      vlogf(LOG_BUG,fmt("PC in affectTotal without discs %s") %  getName());
 #endif
   } else {
 
@@ -584,7 +584,7 @@ void TBeing::affectTotal()
 
       discNumT das = getDisciplineNumber(num, FALSE);
       if (das == DISC_NONE) {
-        vlogf(LOG_BUG, "Bad disc for skill %d in affectTotal()", num);
+        vlogf(LOG_BUG, fmt("Bad disc for skill %d in affectTotal()") %  num);
         continue;
       }
       if (isImmortal()) {
@@ -813,8 +813,8 @@ void TBeing::affectRemove(affectedData *af, silentTypeT silent)
   int origamt = specials.affectedBy;
 
   if (!affected) {
-    vlogf(LOG_BUG, "Affect removed from char (%s) without affect", getName());
-    vlogf(LOG_BUG, "Location : %d, Modifier %d, Bitvector %d", af->location, af->modifier, af->bitvector);
+    vlogf(LOG_BUG, fmt("Affect removed from char (%s) without affect") %  getName());
+    vlogf(LOG_BUG, fmt("Location : %d, Modifier %d, Bitvector %d") %  af->location % af->modifier % af->bitvector);
     return;
   } else
     affectModify(af->location, af->modifier, af->modifier2, af->bitvector, FALSE, silent);
@@ -982,7 +982,7 @@ void thing_to_room(TThing *ch, int room)
   TRoom *rp;
 
   if (!(rp = real_roomp(room))) {
-    vlogf(LOG_BUG, "thing_to_room() called with bogus room: %d", room);
+    vlogf(LOG_BUG, fmt("thing_to_room() called with bogus room: %d") %  room);
     room = 0;
     rp = real_roomp(room);
   }
@@ -1002,7 +1002,7 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
   mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR, "pos in equip_char(%s %s %d) was out of range!!", getName(), obj->name, pos);
 
   if (equipment[pos]) {
-    vlogf(LOG_BUG, "equip_char(%s %s %d) called with position already equipped!", getName(), obj->name, pos);
+    vlogf(LOG_BUG, fmt("equip_char(%s %s %d) called with position already equipped!") %  getName() % obj->name % pos);
     return;
   }
   if (obj->parent) {
@@ -1107,7 +1107,7 @@ TThing *TBeing::pulloutObj(wearSlotT numx, bool safe, int *res)
   *res = 0;
 
   if (!(o = getStuckIn(numx))) {
-    vlogf(LOG_BUG, "pulloutObj() called with no stuck in object for pos %d on char %s!", numx, getName());
+    vlogf(LOG_BUG, fmt("pulloutObj() called with no stuck in object for pos %d on char %s!") %  numx % getName());
     return NULL;
   }
   setStuckIn(numx, NULL);
@@ -2364,13 +2364,13 @@ void TBeing::addCaptive(TBeing *ch)
     return;
 
   if (ch->getCaptiveOf()) {
-    vlogf(LOG_BUG, "addCaptive : trying to add captive (%s) to (%s) when they were already captured.",
-      ch->getName(), getName());
+    vlogf(LOG_BUG, fmt("addCaptive : trying to add captive (%s) to (%s) when they were already captured.") % 
+      ch->getName() % getName());
     return;
   }
   if (getCaptiveOf()) {
-    vlogf(LOG_BUG, "addCaptive : trying to add captive (%s) to (%s) who is also captive.",
-      ch->getName(), getName());
+    vlogf(LOG_BUG, fmt("addCaptive : trying to add captive (%s) to (%s) who is also captive.") % 
+      ch->getName() % getName());
     return;
   }
 
@@ -2391,7 +2391,7 @@ void TBeing::remCaptive(TBeing *ch)
   }
 
   if (!ch->getCaptiveOf()) {
-    vlogf(LOG_BUG,"remCaptive : trying to remove %s when not a captive.", ch->getName());
+    vlogf(LOG_BUG,fmt("remCaptive : trying to remove %s when not a captive.") %  ch->getName());
     return;
   }
   last = NULL;
@@ -2400,8 +2400,8 @@ void TBeing::remCaptive(TBeing *ch)
       break;
   }
   if (!t) {
-    vlogf(LOG_BUG,"remCaptive could not find %s in captive list of %s.",
-      ch->getName(), getName());
+    vlogf(LOG_BUG,fmt("remCaptive could not find %s in captive list of %s.") % 
+      ch->getName() % getName());
     return;
   }  
   if (!last) {
@@ -2430,7 +2430,7 @@ void mud_assert(int parm, const char *errorMsg,...)
   vsprintf(message, errorMsg, ap);
   va_end(ap);
 
-  vlogf(LOG_BUG, "ASSERTION FAILED: %s", message);
+  vlogf(LOG_BUG, fmt("ASSERTION FAILED: %s") %  message);
   abort();    // force a crash
 }
 

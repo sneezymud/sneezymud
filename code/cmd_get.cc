@@ -21,7 +21,7 @@ void TThing::getMeFrom(TBeing *ch, TThing *t)
 void TPCorpse::getMeFrom(TBeing *ch, TThing *t)
 {
   if (!checkOnLists()) {
-//    vlogf(LOG_BUG, "Something wrong with get from a corpse, corpse not set right %s (%s).", ch->getName(), getName());
+//    vlogf(LOG_BUG, fmt("Something wrong with get from a corpse, corpse not set right %s (%s).") %  ch->getName() % getName());
   } else {
     if (getStuff())
       saveCorpseToFile();
@@ -128,8 +128,8 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
   else {
     if (ttt->parent && ttt->parent != sub) {
       // very bad
-      vlogf(LOG_BUG, "get(): obj (%s) gotten with parent (%s) and sub (%s)",
-          ttt->getName(), ttt->parent->getName(), sub->getName());
+      vlogf(LOG_BUG, fmt("get(): obj (%s) gotten with parent (%s) and sub (%s)") % 
+          ttt->getName() % ttt->parent->getName() % sub->getName());
     }
   }
 

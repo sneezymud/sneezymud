@@ -149,12 +149,12 @@ void TWand::lowCheck()
          !discArray[curspell]->minLifeforce && 
          !discArray[curspell]->minPiety)) ||
       (getDisciplineNumber(curspell, FALSE) == DISC_NONE)))) {
-    vlogf(LOG_LOW, "wand (%s:%d) has messed up spell(%d)",
-         getName(), objVnum(), curspell);
+    vlogf(LOG_LOW, fmt("wand (%s:%d) has messed up spell(%d)") % 
+         getName() % objVnum() % curspell);
     if ((curspell < TYPE_UNDEFINED) || (curspell >= MAX_SKILL))
       vlogf(LOG_LOW, "bogus range");
     else if (!discArray[curspell])
-      vlogf(LOG_LOW, "bogus spell, %d", curspell);
+      vlogf(LOG_LOW, fmt("bogus spell, %d") %  curspell);
     else if ((!discArray[curspell]->minMana && !discArray[curspell]->minLifeforce && 
       !discArray[curspell]->minPiety))
       vlogf(LOG_LOW, "non-spell");
@@ -162,8 +162,8 @@ void TWand::lowCheck()
   if (curspell > TYPE_UNDEFINED &&
       discArray[curspell]->targets & TAR_CHAR_WORLD) {
     // spells that use this setting are not a good choice for obj spells
-    vlogf(LOG_LOW, "Obj (%s : %d) had spell that shouldn't be on objs (%s : %d)" ,
-        getName(), objVnum(), discArray[curspell]->name, curspell);
+    vlogf(LOG_LOW, fmt("Obj (%s : %d) had spell that shouldn't be on objs (%s : %d)") %
+        getName() % objVnum() % discArray[curspell]->name % curspell);
   }
 
   TMagicItem::lowCheck();
@@ -209,7 +209,7 @@ int TWand::useMe(TBeing *ch, const char * argument)
 
   the_spell = getSpell();
   if (!discArray[the_spell]) {
-    vlogf(LOG_BUG,"doUse (%s) called spell (%d) that does not exist! - Don't do that!", getName(), getSpell());
+    vlogf(LOG_BUG,fmt("doUse (%s) called spell (%d) that does not exist! - Don't do that!") %  getName() % getSpell());
     return FALSE;
   }
 

@@ -115,15 +115,15 @@ void TBaseContainer::logMe(const TBeing *ch, const char *cmdbuf) const
   for (t = getStuff(); t; t = t->nextThing, ++runcount) {
     if(!t->nextThing || strcmp(last, t->nextThing->getName())){
       if(runcount>1){
-        vlogf(LOG_SILENT, "%s%s%s %s containing %s [%i].",    
-              (ch ? ch->getName() : ""),                      
-              (ch ? " " : ""),                                
-              cmdbuf, getName(), t->getName(), runcount);     
+        vlogf(LOG_SILENT, fmt("%s%s%s %s containing %s [%i].") %     
+              (ch ? ch->getName() : "") %                      
+              (ch ? " " : "") %                                
+              cmdbuf % getName() % t->getName() % runcount);     
       } else                                                  
-        vlogf(LOG_SILENT, "%s%s%s %s containing %s.",         
-          (ch ? ch->getName() : ""),                          
-          (ch ? " " : ""),                                    
-          cmdbuf, getName(), t->getName());                   
+        vlogf(LOG_SILENT, fmt("%s%s%s %s containing %s.") %          
+          (ch ? ch->getName() : "") %                          
+          (ch ? " " : "") %                                    
+          cmdbuf % getName() % t->getName());                   
       runcount=0;                                             
       if(t->nextThing)
         last=t->nextThing->getName();
@@ -153,7 +153,7 @@ int TBaseContainer::getAllFrom(TBeing *ch, const char *argument)
     tAff.type     = AFFECT_PLAYERLOOT;
     tAff.duration = (24 * UPDATES_PER_MUDHOUR);
     ch->affectJoin(ch, &tAff, AVG_DUR_NO, AVG_EFF_NO);
-    vlogf(LOG_CHEAT, "Adding PLoot Flag To: %s (1)", ch->getName());
+    vlogf(LOG_CHEAT, fmt("Adding PLoot Flag To: %s (1)") %  ch->getName());
   }
   */
 
@@ -206,7 +206,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       tAff.type     = AFFECT_PLAYERLOOT;
       tAff.duration = (24 * UPDATES_PER_MUDHOUR);
       ch->affectJoin(ch, &tAff, AVG_DUR_NO, AVG_EFF_NO);
-      vlogf(LOG_CHEAT, "Adding PLoot Flag To: %s (2)", ch->getName());
+      vlogf(LOG_CHEAT, fmt("Adding PLoot Flag To: %s (2)") %  ch->getName());
     }
     */
 
@@ -255,7 +255,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       tAff.type     = AFFECT_PLAYERLOOT;
       tAff.duration = (24 * UPDATES_PER_MUDHOUR);
       ch->affectJoin(ch, &tAff, AVG_DUR_NO, AVG_EFF_NO);
-      vlogf(LOG_CHEAT, "Adding PLoot Flag To: %s (3)", ch->getName());
+      vlogf(LOG_CHEAT, fmt("Adding PLoot Flag To: %s (3)") %  ch->getName());
     }
     */
 

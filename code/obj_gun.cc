@@ -42,7 +42,7 @@ void TGun::dropSpentCasing(TRoom *roomp){
 
   int robj = real_object(13874);
   if (robj < 0 || robj >= (signed int) obj_index.size()) {
-    vlogf(LOG_BUG, "dropSpentCasing(): No object (%d) in database!", 13874);
+    vlogf(LOG_BUG, fmt("dropSpentCasing(): No object (%d) in database!") %  13874);
     return;
   }
   

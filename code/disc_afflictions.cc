@@ -210,7 +210,7 @@ void poison(TBeing * caster, TObj * obj)
   if (ret == SPELL_SUCCESS) {
     act("You succeed in poisoning $p.", TRUE, caster, obj, 0, TO_CHAR);
     caster->deityIgnore(SILENT_YES);  // intentional  :)
-    vlogf(LOG_MISC, "%s poisoned %s.", caster->getName(), obj->getName());
+    vlogf(LOG_MISC, fmt("%s poisoned %s.") %  caster->getName() % obj->getName());
   } else {
     caster->deityIgnore();
   }
@@ -224,7 +224,7 @@ int poison(TBeing * caster, TObj * target, TMagicItem *obj, spellNumT spell)
   if (ret == SPELL_SUCCESS) {
     act("You succeed in poisoning $p.", TRUE, caster, obj, 0, TO_CHAR);
     caster->deityIgnore(SILENT_YES);
-    vlogf(LOG_MISC, "%s poisoned %s.", caster->getName(), obj->getName());
+    vlogf(LOG_MISC, fmt("%s poisoned %s.") %  caster->getName() % obj->getName());
   } else {
     caster->deityIgnore();
   }

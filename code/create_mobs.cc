@@ -1971,7 +1971,7 @@ positionTypeT mapFileToPos(int pos)
     case 12:
       return POSITION_FLYING;
     default:
-      vlogf(LOG_LOW, "Undefined position (%d) in mapPosition(load)", pos);
+      vlogf(LOG_LOW, fmt("Undefined position (%d) in mapPosition(load)") %  pos);
       return POSITION_STANDING;
   }
 }
@@ -2091,7 +2091,7 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
       setDamLevel(att);
       setDamPrecision(tmp3);
     } else {
-      vlogf(LOG_EDIT, "Old style mob (%s).  Please fix AC/Dam/HP.", getName());
+      vlogf(LOG_EDIT, fmt("Old style mob (%s).  Please fix AC/Dam/HP.") %  getName());
       oldStyle = true;
       setDamLevel(lvl);
       setDamPrecision(20);
@@ -2105,7 +2105,7 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
         // old format was %dd%d+%d, we read the first %d
         rc = fscanf(fp, "d%ld+%ld \n", &tmp, &tmp2);
         if (rc != 2)
-          vlogf(LOG_EDIT, "Unable to self-correct old style mob (rc=%d)", rc);
+          vlogf(LOG_EDIT, fmt("Unable to self-correct old style mob (rc=%d)") %  rc);
       }
     }
     
@@ -2119,7 +2119,7 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
 
     fscanf(fp, " %ld ", &tmp);
     if (tmp > 10) {
-      vlogf(LOG_EDIT, "Old style mob (%s) for mone y constant.  Please reset money.", getName());
+      vlogf(LOG_EDIT, fmt("Old style mob (%s) for mone y constant.  Please reset money.") %  getName());
       // using calc_level here isn't ideal, because it won't end up
       // being the final level for guildmasters and such folks,
       // but it's fine for now and better than using the level set
@@ -2146,7 +2146,7 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
     statTypeT local_stat;
     fgets(buf, 255, fp);
     if (sscanf(buf, "%ld/%ld", &tmp, &tmp2) == 2) {
-      vlogf(LOG_EDIT, "Old style mob loaded (%s).  converting characteristics",
+      vlogf(LOG_EDIT, fmt("Old style mob loaded (%s).  converting characteristics") % 
               getName());
       for(local_stat=MIN_STAT;local_stat<MAX_STATS_USED;local_stat++) {
         setStat(STAT_CHOSEN, local_stat, 0);
@@ -2165,7 +2165,7 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
 
     if (getPosition() == POSITION_DEAD) {
       // can happen.  no legs and trying to set resting, etc
-      vlogf(LOG_LOW, "Mob (%s) put in dead position during creation.",
+      vlogf(LOG_LOW, fmt("Mob (%s) put in dead position during creation.") % 
           getName());
     }
 

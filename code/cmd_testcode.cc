@@ -170,7 +170,7 @@ void TBeing::doTestCode(const char *arg)
         (i == CMD_PENANCE) || (i == CMD_TRACEROUTE) ||
         (i == CMD_MID) || (i == CMD_LOGLIST) || (i == CMD_BRUTTEST))
       continue;
-    vlogf(LOG_MISC, "%s : con %d", commandArray[i]->name, desc->connected);
+    vlogf(LOG_MISC, fmt("%s : con %d") %  commandArray[i]->name % desc->connected);
     doCommand(i, "", NULL, FALSE);
     if (note) {
       char *tmp = note->action_description;

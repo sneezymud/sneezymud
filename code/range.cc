@@ -176,7 +176,7 @@ vlogf(LOG_BUG, buf);
   act("$n throws $p!", TRUE, ch, this, 0, TO_ROOM);
   tmp = ch->unequip(ch->getPrimaryHold());
   if (!tmp) {
-    vlogf(LOG_BUG, "Bad unequip in throwThing (%s : %s)", getName(), ch->getName());
+    vlogf(LOG_BUG, fmt("Bad unequip in throwThing (%s : %s)") %  getName() % ch->getName());
     ch->sendTo("Something real bad happened.  Talk to a god.\n\r");
     return FALSE;
   }
@@ -488,18 +488,18 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
         resCode = TRUE;
         d = min(max(0, (int) (getWeight() - 5)), 10);
 #if RANGE_DEBUG
-        vlogf(LOG_BUG, "Range debug: (2) dam ping 1: %d", d);
+        vlogf(LOG_BUG, fmt("Range debug: (2) dam ping 1: %d") %  d);
 #endif
 // don't do this or we wind up with acorns killing people
 //        d *= mdist - range + 1;  // modify for point blank range - bat
 #if RANGE_DEBUG
-        vlogf(LOG_BUG, "Range debug: (2) dam ping 3: %d", d);
+        vlogf(LOG_BUG, fmt("Range debug: (2) dam ping 3: %d") %  d);
 #endif
         TObj *tobj = dynamic_cast<TObj *>(this);
         if (tobj) {
           d = get_range_actual_damage(ch, tbt, tobj, d, TYPE_HIT);
 #if RANGE_DEBUG
-          vlogf(LOG_BUG, "Range debug: (2) dam ping 4: %d", d);
+          vlogf(LOG_BUG, fmt("Range debug: (2) dam ping 4: %d") %  d);
 #endif
 
           if (::number(1, d) <= tobj->getStructPoints() &&
@@ -513,8 +513,8 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
             }
           }
 #if RANGE_DEBUG
-          vlogf(LOG_BUG, "Range debug: (2) %s damaging %s with %s for %d dam",
-                 ch->getName(), tbt->getName(), tobj->getName(), d);
+          vlogf(LOG_BUG, fmt("Range debug: (2) %s damaging %s with %s for %d dam") % 
+                 ch->getName() % tbt->getName() % tobj->getName() % d);
 #endif
           if (ch->reconcileDamage(tbt, d, getWtype()) == -1) {
             if (true_targ) {
@@ -758,7 +758,7 @@ int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int m
     *(real_roomp(from)) += *t;
   }
   if (!rp) {
-    vlogf(LOG_BUG, "%s thrown into non-existant room #%d", capbuf, from);
+    vlogf(LOG_BUG, fmt("%s thrown into non-existant room #%d") %  capbuf % from);
     --(*t);
     thing_to_room(t, ROOM_VOID);
     return FALSE;
@@ -924,7 +924,7 @@ int clearpath(int room, dirTypeT dir)
     return FALSE;
 
   if (!real_roomp(rp->dir_option[dir]->to_room)) {
-    vlogf(LOG_BUG, "Range function done in room with bad exit. (%d) Dir:[%d]", room, dir);
+    vlogf(LOG_BUG, fmt("Range function done in room with bad exit. (%d) Dir:[%d]") %  room % dir);
     return FALSE;
   }
   if (IS_SET(rp->dir_option[dir]->condition, EX_CLOSED))

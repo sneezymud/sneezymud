@@ -418,7 +418,7 @@ static void sendWeatherMessage(weatherMessT num)
             }
             break;
           default:
-            vlogf(LOG_BUG, "Bad num %d sent to sendWeatherMessage", num);
+            vlogf(LOG_BUG, fmt("Bad num %d sent to sendWeatherMessage") %  num);
             break;
         }
 
@@ -782,7 +782,7 @@ void TBeing::describeWeather(int room)
  
   rp = real_roomp(room);
   if (!rp) {
-    vlogf(LOG_BUG, "No roomp for room %d in describeWeather for %s", room, getName());
+    vlogf(LOG_BUG, fmt("No roomp for room %d in describeWeather for %s") %  room % getName());
     return;
   }
   wth = rp->getWeather();

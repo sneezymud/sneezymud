@@ -158,7 +158,7 @@ int TMonster::checkSpec(TBeing *t, cmdTypeT cmd, const char *arg, TThing *t2)
   int rc;
 
   //  if (cmd == CMD_GENERIC_PULSE && spec == SPEC_BOUNTY_HUNTER)
-  //    vlogf(LOG_DASH, "Bounty Hunter spec %d on %s called with CMD_GENERIC_PULSE (checkSpec)", spec, getName());
+  //    vlogf(LOG_DASH, fmt("Bounty Hunter spec %d on %s called with CMD_GENERIC_PULSE (checkSpec)") %  spec % getName());
 
   if(inRoom() == ROOM_NOCTURNAL_STORAGE)
     return FALSE;
@@ -311,7 +311,7 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 
   sprintf(caFilebuf, "mobdata/rumors/%d", myself->mobVnum());
   if ((fp = fopen(caFilebuf, "r")) == NULL) {
-    vlogf(LOG_LOW, "Missing rumor file (%s) (%d)", caFilebuf, errno);
+    vlogf(LOG_LOW, fmt("Missing rumor file (%s) (%d)") %  caFilebuf % errno);
     return FALSE;
   }
 
@@ -320,13 +320,13 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
   } while (*buf == '#');
 
   if (sscanf(buf, "%d %d\n", &type, &room) != 2) {
-    vlogf(LOG_LOW, "Bad rumor format line 1 (%s) %s", caFilebuf);
+    vlogf(LOG_LOW, fmt("Bad rumor format line 1 (%s) %s") %  caFilebuf);
     fclose(fp);
     return FALSE;
   }
     
   if (!type) {
-    vlogf(LOG_LOW, "Bad rumor type (%s) %s", caFilebuf, buf);
+    vlogf(LOG_LOW, fmt("Bad rumor type (%s) %s") %  caFilebuf % buf);
     fclose(fp);
     return FALSE;
   }
@@ -348,7 +348,7 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     }
 
     if (!numrumors) {
-      vlogf(LOG_LOW, "No rumors (%s)", caFilebuf);
+      vlogf(LOG_LOW, fmt("No rumors (%s)") %  caFilebuf);
       fclose(fp);
       return FALSE;
     }
@@ -400,7 +400,7 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
       // the next (2nd) line contains the sstring we should say
       do {
         if (!fgets(buf, 255, fp)) {
-          vlogf(LOG_LOW, "Missing sstring for list (%s)", caFilebuf);
+          vlogf(LOG_LOW, fmt("Missing sstring for list (%s)") %  caFilebuf);
           fclose(fp);
           return TRUE;
         }
@@ -416,7 +416,7 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     // don't count the "list" line
     do {
       if (!fgets(buf, 255, fp)) {
-        vlogf(LOG_LOW, "Missing sstring for list (%s)", caFilebuf);
+        vlogf(LOG_LOW, fmt("Missing sstring for list (%s)") %  caFilebuf);
         fclose(fp);
         return TRUE;
       }
@@ -430,7 +430,7 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     }
 
     if (!numrumors) {
-      vlogf(LOG_LOW, "No rumors (%s)", caFilebuf);
+      vlogf(LOG_LOW, fmt("No rumors (%s)") %  caFilebuf);
       fclose(fp);
       return FALSE;
     }
@@ -713,15 +713,15 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
         af.duration = 4 * UPDATES_PER_MUDHOUR;
       ch->affectTo(&af);
     }
-    vlogf(LOG_MISC,"%s was given newbie gear by %s case %d", ch->getName(), me->getName(), request);
+    vlogf(LOG_MISC,fmt("%s was given newbie gear by %s case %d") %  ch->getName() % me->getName() % request);
     if (me->desc) {
-      vlogf(LOG_MISC, "Switched god used newbieEquip  %s by %s", ch->getName() , me->getName());
+      vlogf(LOG_MISC, fmt("Switched god used newbieEquip  %s by %s") %  ch->getName()  % me->getName());
     }
   } else if (found == 1) {
     me->doTell(ch->getName(), "You just used my service.  Come back later and only if you haven't gotten other help.");
     return TRUE;
   } else {
-    vlogf(LOG_BUG, "Somehow something got through equipNewbie %s by %s", ch->getName(), me->getName());
+    vlogf(LOG_BUG, fmt("Somehow something got through equipNewbie %s by %s") %  ch->getName() % me->getName());
   }
   return TRUE;
 }
@@ -1165,8 +1165,8 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   if (targetSwallower == -1 ||
       targetSwallower >= MAX_SWALLOWER_TO_ROOM) {
-    vlogf(LOG_PROC, "Mobile in belimus() proc that isn't hard coded.  [%s] [%d]",
-          myself->getName(), myself->mobVnum());
+    vlogf(LOG_PROC, fmt("Mobile in belimus() proc that isn't hard coded.  [%s] [%d]") % 
+          myself->getName() % myself->mobVnum());
     return FALSE;
   }
 
@@ -1198,9 +1198,9 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     thing_to_room(tmp, SWALLOWER_TO_ROOM_PROC[targetSwallower][1]);
     act("$n's mawed corpse arrives tumbling down $N's throat!",
         FALSE, tmp, 0, myself, TO_ROOM);
-    vlogf(LOG_PROC, "%s killed by belimus-swallow[%s] at %s (%d)",
-          tmp->getName(), myself->getName(),
-          tmp->roomp->getName(), tmp->inRoom());
+    vlogf(LOG_PROC, fmt("%s killed by belimus-swallow[%s] at %s (%d)") % 
+          tmp->getName() % myself->getName() %
+          tmp->roomp->getName() % tmp->inRoom());
 
     rc = tmp->die(DAMAGE_EATTEN);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -1230,9 +1230,9 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     vict->sendTo(fmt("%s chomps down upon you, biting you in two!!!!\n\r") % myself->getName());
     act("$n's mawed corpse arrives tumbling down $N's throat!",
         FALSE, vict, 0, myself, TO_ROOM);
-    vlogf(LOG_PROC, "%s killed by Belimus-swallow[%s] at %s (%d)",
-          vict->getName(), myself->getName(),
-          vict->roomp->getName(), vict->inRoom());
+    vlogf(LOG_PROC, fmt("%s killed by Belimus-swallow[%s] at %s (%d)") % 
+          vict->getName() % myself->getName() %
+          vict->roomp->getName() % vict->inRoom());
     rc = vict->die(DAMAGE_EATTEN);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete vict;
@@ -2306,8 +2306,8 @@ int Tyrannosaurus_swallower(TBeing *ch, cmdTypeT cmd, const char *, TMonster *my
 
           ch->roomp->playsound(SOUND_CHEWED_UP, SOUND_TYPE_NOISE);
 
-          vlogf(LOG_PROC, "%s killed by being swallowed at %s (%d)",
-              targ->getName(), targ->roomp->getName(), targ->inRoom());
+          vlogf(LOG_PROC, fmt("%s killed by being swallowed at %s (%d)") % 
+              targ->getName() % targ->roomp->getName() % targ->inRoom());
           rc = targ->die(DAMAGE_EATTEN);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete targ;
@@ -2698,7 +2698,7 @@ int lamp_lighter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     }
 
     // trace along entire route and see if I can correct
-    // vlogf(LOG_PROC, "Lampboy got lost ip: path: %d, pos: %d, room: %d, should: %d", job->cur_path, job->cur_pos, myself->in_room, lamp_path_pos[job->cur_path][job->cur_pos].cur_room);
+    // vlogf(LOG_PROC, fmt("Lampboy got lost ip: path: %d, pos: %d, room: %d, should: %d") %  job->cur_path % job->cur_pos % myself->in_room % lamp_path_pos[job->cur_path][job->cur_pos].cur_room);
     job->cur_pos = -1;
     do {
       job->cur_pos += 1;
@@ -2708,7 +2708,7 @@ int lamp_lighter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
  
     act("$n seems to have gotten a little bit lost.",0, myself, 0, 0, TO_ROOM);
     act("$n goes to ask directions.", 0, myself, 0, 0, TO_ROOM);
-    //vlogf(LOG_PROC, "Lampboy got lost: path: %d, pos: %d", job->cur_path, myself->in_room);
+    //vlogf(LOG_PROC, fmt("Lampboy got lost: path: %d, pos: %d") %  job->cur_path % myself->in_room);
     if (myself->riding)
       myself->dismount(POSITION_STANDING);
     --(*myself);
@@ -3014,7 +3014,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       if (!ok)
         return DELETE_THIS;
     } else {
-      vlogf(LOG_PROC, "Bogus room load of caravan (%d)", myself->in_room);
+      vlogf(LOG_PROC, fmt("Bogus room load of caravan (%d)") %  myself->in_room);
       return DELETE_THIS;
     }
     FactionInfo[faction].caravan_attempts++;
@@ -3088,7 +3088,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
     // trace along entire route and see if I can correct
 #if 1
-    vlogf(LOG_PROC, "Caravan got lost ip: path: %d, pos: %d, room: %d, should: %d", job->cur_path, job->cur_pos, myself->in_room, caravan_path_pos[job->cur_path][job->cur_pos].cur_room);
+    vlogf(LOG_PROC, fmt("Caravan got lost ip: path: %d, pos: %d, room: %d, should: %d") %  job->cur_path % job->cur_pos % myself->in_room % caravan_path_pos[job->cur_path][job->cur_pos].cur_room);
 #endif
     job->cur_pos = -1;
     do {
@@ -3100,7 +3100,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     act("$n seems to have gotten a little bit lost.",0, myself, 0, 0, TO_ROOM);
     act("$n goes to ask directions.", 0, myself, 0, 0, TO_ROOM);
 #if 1
-    vlogf(LOG_PROC, "Caravan got lost: path: %d, pos: %d", job->cur_path, myself->in_room);
+    vlogf(LOG_PROC, fmt("Caravan got lost: path: %d, pos: %d") %  job->cur_path % myself->in_room);
 #endif
     if (myself->riding)
       myself->dismount(POSITION_STANDING);
@@ -3201,7 +3201,7 @@ int dagger_thrower(TBeing *pch, cmdTypeT cmd, const char *, TMonster *me, TObj *
 // hence this setup instead.
         int robj = real_object(GENERIC_DAGGER);
         if (robj < 0 || robj >= (signed int) obj_index.size()) {
-          vlogf(LOG_BUG, "dagger_thrower(): No object (%d) in database!",
+          vlogf(LOG_BUG, fmt("dagger_thrower(): No object (%d) in database!") % 
                 GENERIC_DAGGER);
           return FALSE;
         }
@@ -3217,7 +3217,7 @@ int dagger_thrower(TBeing *pch, cmdTypeT cmd, const char *, TMonster *me, TObj *
         if (!me->equipment[HOLD_RIGHT])
           me->equipChar(dagger, HOLD_RIGHT);
         else {
-          vlogf(LOG_BUG, "Dagger_thrower problem: equipped right hand.  %s at %d", me->getName(), me->inRoom());
+          vlogf(LOG_BUG, fmt("Dagger_thrower problem: equipped right hand.  %s at %d") %  me->getName() % me->inRoom());
           delete dagger;
           return FALSE;
         }
@@ -3650,7 +3650,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
     job->hasJob = TRUE;
     job->pc = ch;
     job->sym = this;
-    vlogf(LOG_SILENT, "%s gave %s to be attuned.", ch->getName(), getName());
+    vlogf(LOG_SILENT, fmt("%s gave %s to be attuned.") %  ch->getName() % getName());
     --(*this);
     *me += *this;
 //    setSymbolCurStrength(getSymbolMaxStrength());
@@ -3695,7 +3695,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     return FALSE;
   } else if (cmd == CMD_GENERIC_CREATED) {
     if (!me->hasClass(CLASS_CLERIC) && !me->hasClass(CLASS_DEIKHAN)) {
-      vlogf(LOG_LOW, "Attuner %s is not a deikhan or cleric.", me->getName());
+      vlogf(LOG_LOW, fmt("Attuner %s is not a deikhan or cleric.") %  me->getName());
     }
     if (!(me->act_ptr = new attune_struct())) {
       perror("failed new of attuner.");
@@ -3705,7 +3705,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   }
 
   if (!(job = (attune_struct *) me->act_ptr)) {
-    vlogf(LOG_PROC,"ATTUNER PROC ERROR/MobPulse: terminating (hopefully) cmd=%d", cmd);
+    vlogf(LOG_PROC,fmt("ATTUNER PROC ERROR/MobPulse: terminating (hopefully) cmd=%d") %  cmd);
     return FALSE;
   }
 
@@ -3716,9 +3716,9 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     if (job->sym || job->pc || job->wait || 
                     job->cost || (job->faction > FACT_UNDEFINED)) {
       if (job->pc && job->pc->name)
-        vlogf(LOG_PROC, "Attuner (%s) seems to have a bad job structure (case 1) see %s.", me->getName(), job->pc->getName());
+        vlogf(LOG_PROC, fmt("Attuner (%s) seems to have a bad job structure (case 1) see %s.") %  me->getName() % job->pc->getName());
       else
-        vlogf(LOG_PROC, "Attuner (%s) seems to have a bad job structure (case 1A).", me->getName());
+        vlogf(LOG_PROC, fmt("Attuner (%s) seems to have a bad job structure (case 1A).") %  me->getName());
       job->clearAttuneData();
       return TRUE;
     }
@@ -3727,9 +3727,9 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
                   (job->sym && !*job->sym->name) ||
                   (job->pc && !*job->pc->name))) {
     if (job->pc && *job->pc->name) {
-      vlogf(LOG_PROC, "Attuner (%s) seems to have a bad job structure (case 2) see %s.", me->getName(), job->pc->getName());
+      vlogf(LOG_PROC, fmt("Attuner (%s) seems to have a bad job structure (case 2) see %s.") %  me->getName() % job->pc->getName());
     } else {
-      vlogf(LOG_PROC, "Attuner (%s) seems to have a bad job structure (case 2A).", me->getName());
+      vlogf(LOG_PROC, fmt("Attuner (%s) seems to have a bad job structure (case 2A).") %  me->getName());
     }
     job->clearAttuneData();
     me->doStand();
@@ -3783,7 +3783,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
       if (!found) {
         me->doSay("Ack, I lost the symbol somehow! Tell a god immediately!");
-        vlogf(LOG_PROC, "Attuner (%s) seems to have lost %s's %s.", me->getName(), job->pc->getName(), job->sym->getName());
+        vlogf(LOG_PROC, fmt("Attuner (%s) seems to have lost %s's %s.") %  me->getName() % job->pc->getName() % job->sym->getName());
         job->clearAttuneData();
         me->doStand();
         return FALSE;
@@ -4217,8 +4217,8 @@ int flu_giver(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 int bogus_mob_proc(TBeing *, cmdTypeT, const char *, TMonster *me, TObj *)
 {
   if (me)
-    vlogf(LOG_PROC, "WARNING:  %s is running around with a bogus spec_proc #%d",
-       me->name, me->spec);
+    vlogf(LOG_PROC, fmt("WARNING:  %s is running around with a bogus spec_proc #%d") % 
+       me->name % me->spec);
   else
     vlogf(LOG_PROC, "WARNING: indeterminate mob has bogus spec_proc");
   return FALSE;
@@ -4699,7 +4699,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
           if (!(ts = searchLinkedList(job->obj_name, me->getStuff())) ||
               !(final = dynamic_cast<TObj *>(ts))) {
             me->doSay("Ack, I lost the item somehow! Tell a god immediately!  ");
-            vlogf(LOG_PROC,"engraver lost his engraving item (%s)",final->name);
+            vlogf(LOG_PROC,fmt("engraver lost his engraving item (%s)") % final->name);
             return FALSE;
           }
           final->swapToStrung();
@@ -5512,7 +5512,7 @@ int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
         job->cur_path = 0;
         job->cur_pos = 0;
       } else {
-        vlogf(LOG_PROC,"Error: hobbit emissary hunted undefined target. (%s)",
+        vlogf(LOG_PROC,fmt("Error: hobbit emissary hunted undefined target. (%s)") % 
           job->hunted_victim);
         delete [] job->hunted_victim;
         job->hunted_victim = NULL;
@@ -5558,7 +5558,7 @@ int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
 
       act("$n seems to have gotten a little bit lost.",0, myself, 0, 0, TO_ROOM);
       act("$n goes to ask directions.", 0, myself, 0, 0, TO_ROOM);
-      //vlogf(LOG_PROC, "Hobbit got lost: path: %d, pos: %d", job->cur_path, myself->in_room);
+      //vlogf(LOG_PROC, fmt("Hobbit got lost: path: %d, pos: %d") %  job->cur_path % myself->in_room);
       if (myself->riding)
         myself->dismount(POSITION_STANDING);
       --(*myself);
@@ -6181,7 +6181,7 @@ int bankGuard(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
     return FALSE;
 
   vict=victims[::number(0,v-1)];
-  vlogf(LOG_PEEL, "bank guard hunting %s", vict->getName());
+  vlogf(LOG_PEEL, fmt("bank guard hunting %s") %  vict->getName());
   myself->setHunting(vict);
   myself->addHated(vict);
   
@@ -6525,7 +6525,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   if (nobow) {
     //    vlogf(LOG_DASH, "archer loading a new bow");
     if (!(bow = dynamic_cast<TBow *>(read_object(bownum, VIRTUAL)))) {
-      vlogf(LOG_PROC, "Archer couldn't load his bow %d.  DASH!!!", bownum);
+      vlogf(LOG_PROC, fmt("Archer couldn't load his bow %d.  DASH!!!") %  bownum);
       return TRUE;
     }
     strcpy(temp, bow->name);
@@ -6542,7 +6542,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     //    vlogf(LOG_DASH, "archer loading an arrow");
 
     if (!(arrow = read_object(arrownum, VIRTUAL))) {
-      vlogf(LOG_PROC, "Archer couldn't load his arrow %d.  DASH!!!", arrownum);
+      vlogf(LOG_PROC, fmt("Archer couldn't load his arrow %d.  DASH!!!") %  arrownum);
       return TRUE;
     }
     *bow += *arrow;
@@ -6668,7 +6668,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       }
 
       sprintf(buf, "%s %d.%s 1", directions[i][0], numsimilar, temp);
-      //      vlogf(LOG_DASH, "Brightmoon Defense: %s shooting at %s (%d.%s)", ch->getName(), tbt->getName(), numsimilar, temp);
+      //      vlogf(LOG_DASH, fmt("Brightmoon Defense: %s shooting at %s (%d.%s)") %  ch->getName() % tbt->getName() % numsimilar % temp);
 
       strcpy(temp, tbt->getName());
 
@@ -6677,8 +6677,8 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       Hf = tbt->getHit();
 
 #if 1
-      //      vlogf(LOG_DASH, "archer debug: %d->%d, temp/name: (%s)/(%s), tbt?: %s",
-      //    Hi, Hf, temp, (tbt->getName() ? tbt->getName() : "(NULL)"), (tbt ? "exists" : "(NULL)"));
+      //      vlogf(LOG_DASH, fmt("archer debug: %d->%d, temp/name: (%s)/(%s), tbt?: %s") % 
+      //    Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(NULL)") % (tbt ? "exists" : "(NULL)"));
 #endif
       if (!tbt->getName()) {
         switch(::number(1,7)) {
@@ -6849,9 +6849,9 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       
       for(t2=table->rider;t2;t2=t2->nextRider){
 	if((glass=dynamic_cast<TBaseCup *>(t2))){
-	  //	  vlogf(LOG_DASH, "Barmaid: found  %s with %d units left.", glass->getName(), glass->getDrinkUnits());
+	  //	  vlogf(LOG_DASH, fmt("Barmaid: found  %s with %d units left.") %  glass->getName() % glass->getDrinkUnits());
 	  if (glass->getDrinkUnits() <= 0) {
-	    //	    vlogf(LOG_DASH, "Barmaid: found empty %s on %s.", glass->getName(), table->getName());
+	    //	    vlogf(LOG_DASH, fmt("Barmaid: found empty %s on %s.") %  glass->getName() % table->getName());
 
 	    glass->dismount(POSITION_DEAD);
 	    //	    --(*glass);
@@ -6866,9 +6866,9 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	}
       }
     } else if ((glass=dynamic_cast<TBaseCup *>(t))){
-      //      vlogf(LOG_DASH, "Barmaid: found  %s with %d units left.", glass->getName(), glass->getDrinkUnits());
+      //      vlogf(LOG_DASH, fmt("Barmaid: found  %s with %d units left.") %  glass->getName() % glass->getDrinkUnits());
       if(glass->getDrinkUnits() <= 0) {
-	//	vlogf(LOG_DASH, "Barmaid: found empty  %s.", glass->getName());
+	//	vlogf(LOG_DASH, fmt("Barmaid: found empty  %s.") %  glass->getName());
 	--(*glass);
 	*myself += *glass;
 	act("$n gets $p.",FALSE, myself, glass, 0, TO_ROOM);
@@ -7398,8 +7398,8 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
   
   // which riddle are we using this boot
   whichRiddle = Uptime % riddles.size();
-  vlogf(LOG_MAROR, "riddle = %s",riddles[whichRiddle].c_str());
-  vlogf(LOG_MAROR, "answer = %s", answers[whichRiddle].c_str());
+  vlogf(LOG_MAROR, fmt("riddle = %s") % riddles[whichRiddle]);
+  vlogf(LOG_MAROR, fmt("answer = %s") %  answers[whichRiddle]);
 
   if (cmd == CMD_TELL && sarg.lower().find(answers[whichRiddle]) != 
       sstring::npos) {
@@ -7519,8 +7519,8 @@ int mimic(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mimic, TObj *)
     snicker = TRUE;
   }
   
-  vlogf(LOG_MAROR, "2, FALSE %d, snicker %d", FALSE, snicker);
-  vlogf(LOG_MAROR, "%s, %s, %s", arg, target.c_str(), sarg.c_str());
+  vlogf(LOG_MAROR, fmt("2, FALSE %d, snicker %d") %  FALSE % snicker);
+  vlogf(LOG_MAROR, fmt("%s, %s, %s") %  arg % target % sarg);
   if (cmd == CMD_WHISPER) {
     ch->doWhisper(arg);
     buf = fmt ("%s psssst") % target; 

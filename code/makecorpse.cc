@@ -30,15 +30,15 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
     // character was in void
     // bleeding, infected, etc can cause this
 
-    vlogf(LOG_BUG, "Character: %s in void when corpse made.  Being moved to room #%d.", getName(), specials.was_in_room);
+    vlogf(LOG_BUG, fmt("Character: %s in void when corpse made.  Being moved to room #%d.") %  getName() % specials.was_in_room);
     --(*this);
     rp = real_roomp(specials.was_in_room);
     *rp += *this;
   }
 
   if (isPc() && !desc && !affectedBySpell(AFFECT_PLAYERKILL)) {
-    vlogf(LOG_BUG, "Character: %s with no link when creating corpse in rm %d", getName(), in_room);
-    vlogf(LOG_BUG, "%s corpse generated in room %d to avoid possible duplication", getName(), ROOM_STORAGE);
+    vlogf(LOG_BUG, fmt("Character: %s with no link when creating corpse in rm %d") %  getName() % in_room);
+    vlogf(LOG_BUG, fmt("%s corpse generated in room %d to avoid possible duplication") %  getName() % ROOM_STORAGE);
     --(*this);
     rp = real_roomp(ROOM_STORAGE);
     *rp += *this;
@@ -996,8 +996,8 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
     *roomp += *gen_corpse;
     rp = roomp;
   } else {
-    vlogf(LOG_BUG, "%s had NULL roomp pointer, moved to room %d.",
-          getName(), ROOM_STORAGE);
+    vlogf(LOG_BUG, fmt("%s had NULL roomp pointer, moved to room %d.") % 
+          getName() % ROOM_STORAGE);
 
     rp = real_roomp(ROOM_STORAGE);
     *rp += *gen_corpse;
@@ -1046,7 +1046,7 @@ void TBaseCorpse::setupDissectionObjects()
                    (Races[getCorpseRace()]->tDissectItem[1].loadItem ? 1 : 0) : -1);
 
   if (tPossible > -1) {
-    vlogf(LOG_LAPSOS, "setupDissectionObjects: tPossible(%d)", tPossible);
+    vlogf(LOG_LAPSOS, fmt("setupDissectionObjects: tPossible(%d)") %  tPossible);
 
     tPossible = ::number(0, tPossible);
 

@@ -68,7 +68,7 @@ int limb_heal_price(TBeing *ch, wearSlotT pos)
     case MAX_WEAR:
       break;
   }
-  vlogf(LOG_BUG, "Bad pos (%d) in limb_heal_price for %s!", pos, ch->getName());
+  vlogf(LOG_BUG, fmt("Bad pos (%d) in limb_heal_price for %s!") %  pos % ch->getName());
   return (basenum * 10);
 }
 
@@ -77,7 +77,7 @@ int limb_expel_price(TBeing *ch, wearSlotT pos)
   TThing *stuck;
 
   if (!(stuck = ch->getStuckIn(pos))) {
-    vlogf(LOG_BUG, "VERY BAD! limb_expel_price called with pos(%d) char(%s) with no item stuck in!", pos, ch->getName());
+    vlogf(LOG_BUG, fmt("VERY BAD! limb_expel_price called with pos(%d) char(%s) with no item stuck in!") %  pos % ch->getName());
     return (-1);
   }
   return stuck->expelPrice(ch, pos);
@@ -85,7 +85,7 @@ int limb_expel_price(TBeing *ch, wearSlotT pos)
 
 int TThing::expelPrice(const TBeing *ch, int pos) const
 {
-  vlogf(LOG_BUG, "Somehow %s got something besides a weapon/arrow stuck in them pos(%d)", ch->getName(), pos);
+  vlogf(LOG_BUG, fmt("Somehow %s got something besides a weapon/arrow stuck in them pos(%d)") %  ch->getName() % pos);
   return (1000000);
 }
 
@@ -148,7 +148,7 @@ int limb_wound_price(TBeing *ch, wearSlotT pos, unsigned short int wound)
     case HOLD_LEFT:
       break;
   }
-  vlogf(LOG_BUG, "Bad pos (%d) in limb_wound_price!", pos);
+  vlogf(LOG_BUG, fmt("Bad pos (%d) in limb_wound_price!") %  pos);
   return (1000000);
 }
 
@@ -199,7 +199,7 @@ int limb_regen_price(TBeing *ch, wearSlotT pos)
     case HOLD_LEFT:
       break;
   }
-  vlogf(LOG_BUG, "Bad pos (%d) in limb_regen_price!", pos);
+  vlogf(LOG_BUG, fmt("Bad pos (%d) in limb_regen_price!") %  pos);
   return (1000000);
 }
 
@@ -578,7 +578,7 @@ int healing_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
             thing_to_room(healed, 3710);
             break;
           default:
-            vlogf(LOG_PROC, "Undefined room %d in healing_room", healed->in_room);
+            vlogf(LOG_PROC, fmt("Undefined room %d in healing_room") %  healed->in_room);
         }
       } else {
         healed->sendTo("The hospital works wonders on your body.\n\r");

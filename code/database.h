@@ -26,7 +26,7 @@
 //
 // while(db.fetchRow()){
 //   if(atoi(db["price"]) > 10000){
-//     vlogf(LOG_BUG, "item %s had value of %s", db["vnum"], db["price"]);
+//     vlogf(LOG_BUG, fmt("item %s had value of %s") %  db["vnum"] % db["price"]);
 //   }
 //   sendTo("%s %s", db["vnum"], db["short_desc"]);
 // }
@@ -128,12 +128,12 @@ class TDatabaseConnection
 	dbconnectstr="dbname=sneezybeta";
       }
             
-      vlogf(LOG_DB, "Initializing database '%s'.",
+      vlogf(LOG_DB, fmt("Initializing database '%s'.") % 
 	    dbconnectstr);
       
       vlogf(LOG_DB, "Connecting to database.");
       if(!(sneezydb=PQconnectdb(dbconnectstr))){
-	vlogf(LOG_DB, "Could not connect to database '%s'.",
+	vlogf(LOG_DB, fmt("Could not connect to database '%s'.") % 
 	      dbconnectstr);
 	return NULL;
       }

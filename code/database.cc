@@ -48,7 +48,7 @@ void TDatabase::setDB(dbTypeT tdb){
       db=database_connection.getSneezyProdDB();
       break;
     default:
-      vlogf(LOG_DB, "Unknown database dbTypeT %i", tdb);
+      vlogf(LOG_DB, fmt("Unknown database dbTypeT %i") %  tdb);
       db=NULL;
   }
 }
@@ -76,7 +76,7 @@ const sstring TDatabase::operator[] (const sstring &s) const
   int i=PQfnumber(res, s.c_str());
 
   if(i < 0){
-    vlogf(LOG_DB, "TDatabase::operator[%s] - invalid column name", s.c_str());
+    vlogf(LOG_DB, fmt("TDatabase::operator[%s] - invalid column name") %  s);
     return empty;
   } else {
     return PQgetvalue(res, row, i);
@@ -127,8 +127,8 @@ bool TDatabase::query(const char *query,...)
 	  buf += "%";
 	  break;
 	default:
-	  vlogf(LOG_DB, "query - bad format specifier - %c", *query);
-	  vlogf(LOG_DB, "%s", qsave);
+	  vlogf(LOG_DB, fmt("query - bad format specifier - %c") %  *query);
+	  vlogf(LOG_DB, fmt("%s") %  qsave);
 	  return FALSE;
       }
     } else {
@@ -140,8 +140,8 @@ bool TDatabase::query(const char *query,...)
   if(!(restmp=PQexec(db, buf.c_str())) ||
      (PQresultStatus(restmp) != PGRES_COMMAND_OK &&
       PQresultStatus(restmp) != PGRES_TUPLES_OK)){
-    vlogf(LOG_DB, "query failed: %s", PQresStatus(PQresultStatus(restmp)));
-    vlogf(LOG_DB, "%s", buf.c_str());
+    vlogf(LOG_DB, fmt("query failed: %s") %  PQresStatus(PQresultStatus(restmp)));
+    vlogf(LOG_DB, fmt("%s") %  buf);
     return FALSE;
   }
 

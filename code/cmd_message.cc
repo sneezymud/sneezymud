@@ -398,7 +398,7 @@ void TMessages::operator()(messageTypeT tValue, sstring tStString)
       break;
     case MSG_ERROR:
     case MSG_MAX:
-      vlogf(LOG_BUG, "TMessages::operator()(int, sstring) got invalid tValue.  [%d]",
+      vlogf(LOG_BUG, fmt("TMessages::operator()(int, sstring) got invalid tValue.  [%d]") % 
             tValue);
   }
 }
@@ -535,7 +535,7 @@ sstring TMessages::operator[](messageTypeT tValue) const
       return tMessages.msgLongDescr;
       break;
     default:
-      vlogf(LOG_BUG, "TMessages::operator[](int) got invalid tValue.  [%d]",
+      vlogf(LOG_BUG, fmt("TMessages::operator[](int) got invalid tValue.  [%d]") % 
             tValue);
   }
 

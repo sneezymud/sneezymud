@@ -20,7 +20,7 @@ void TBeing::rawUnlockDoor(roomDirData * exitp, dirTypeT door)
       back->to_room == in_room) {
     REMOVE_BIT(back->condition, EX_LOCKED);
   } else
-    vlogf(LOG_LOW, "Inconsistent door locks in rooms %d->%d", in_room, exitp->to_room);
+    vlogf(LOG_LOW, fmt("Inconsistent door locks in rooms %d->%d") %  in_room % exitp->to_room);
 }
 
 // returns direction of door
@@ -143,7 +143,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
   soundNumT snd = SOUND_OFF;
 
   if (!(rp = roomp))
-    vlogf(LOG_BUG, "NULL rp in rawOpenDoor() for %s.", getName());
+    vlogf(LOG_BUG, fmt("NULL rp in rawOpenDoor() for %s.") %  getName());
 
   exitp = rp->dir_option[dir];
   if (exitp->condition & EX_DESTROYED) {
@@ -390,7 +390,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
   soundNumT snd = SOUND_OFF;
  
   if (!(rp = roomp))
-    vlogf(LOG_BUG, "NULL rp in rawCloseDoor() for %s.", getName());
+    vlogf(LOG_BUG, fmt("NULL rp in rawCloseDoor() for %s.") %  getName());
  
   exitp = rp->dir_option[dir];
   if (IS_SET(exitp->condition, EX_DESTROYED)) {
@@ -667,12 +667,12 @@ void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
   successResT open = SUCCESS_OPEN;
  
   if (!(rp = roomp)) {
-    vlogf(LOG_BUG, "NULL rp in openUniqueDoor() for %s.", getName());
+    vlogf(LOG_BUG, fmt("NULL rp in openUniqueDoor() for %s.") %  getName());
     return;
   }
 
   if (!(exitp = rp->dir_option[dir])) {
-    vlogf(LOG_BUG, "Bogus exit in openUniqueDoor() for %s (%d).", getName(), dir);
+    vlogf(LOG_BUG, fmt("Bogus exit in openUniqueDoor() for %s (%d).") %  getName() % dir);
     return;
   }
 
@@ -865,7 +865,7 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
     return FALSE;
 
   if (rp->number != ch->in_room) {
-    vlogf(LOG_BUG,"char %s not in proper room (SecretDoors)",ch->getName());
+    vlogf(LOG_BUG,fmt("char %s not in proper room (SecretDoors)") % ch->getName());
     return FALSE;
   }
 
@@ -2172,7 +2172,7 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       }
       break;
     default:
-      vlogf(LOG_LOW, "Unsupported room (%d) in secretDoors", rp->number);
+      vlogf(LOG_LOW, fmt("Unsupported room (%d) in secretDoors") %  rp->number);
       return FALSE;
   }
   return FALSE;

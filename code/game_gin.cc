@@ -30,7 +30,7 @@ void GinGame::deal(TBeing *ch)
   TBeing *ch1, *ch2;
 
   if ((which = index(ch)) < 0) {
-    vlogf(LOG_BUG, "%s got into GinGame::deal without being at the gin table!\n\r", ch->getName());
+    vlogf(LOG_BUG, fmt("%s got into GinGame::deal without being at the gin table!\n\r") %  ch->getName());
     return;
   }
   if (game) {
@@ -172,7 +172,7 @@ int GinGame::exitGame(const TBeing *ch)
   int which, i;
 
   if ((which = index(ch)) < 0) {
-    vlogf(LOG_BUG,  "%s left a gin table he wasn't at!", ch->getName());
+    vlogf(LOG_BUG, fmt("%s left a gin table he wasn't at!") % ch->getName());
     return FALSE;
   }
   other = get_char_room(names[!which], GIN_TABLE);
@@ -302,7 +302,7 @@ void GinGame::win(TBeing *ch)
   char buf[256];
 
   if ((which = index(ch)) < 0) {
-    vlogf(LOG_BUG, "%s got into GinGame::win() while not at a gin table!", ch->getName());
+    vlogf(LOG_BUG, fmt("%s got into GinGame::win() while not at a gin table!") %  ch->getName());
     return;
   }
   if (!(other = get_char_room(names[!which], GIN_TABLE))) {
@@ -326,7 +326,7 @@ void GinGame::win_hand(TBeing *ch)
   char buf[256];
 
   if ((which = index(ch)) < 0) {
-    vlogf(LOG_BUG, "%s got into GinGame::win() while not at a gin table!", ch->getName());
+    vlogf(LOG_BUG, fmt("%s got into GinGame::win() while not at a gin table!") %  ch->getName());
     return;
   }
   if (!(other = get_char_room(names[!which], GIN_TABLE))) {
@@ -350,7 +350,7 @@ void GinGame::gin(TBeing *ch)
   char buf[256];
 
   if ((which = index(ch)) < 0) {
-    vlogf(LOG_BUG, "%s got into gin() while not at a gin table!", ch->getName());
+    vlogf(LOG_BUG, fmt("%s got into gin() while not at a gin table!") %  ch->getName());
     return;
   }
   if (!(other = get_char_room(names[!which], GIN_TABLE))) {
@@ -390,7 +390,7 @@ void GinGame::knock(TBeing *ch, int low)
   char buf[256];
 
   if ((which = index(ch)) < 0) {
-    vlogf(LOG_BUG, "%s got into () while not at a gin table!", ch->getName());
+    vlogf(LOG_BUG, fmt("%s got into () while not at a gin table!") %  ch->getName());
     return;
   }
   if (!(other = get_char_room(names[!which], GIN_TABLE))) {
@@ -615,7 +615,7 @@ int GinGame::can_knock_or_gin(TBeing *ch)
   Hand hand;
 
   if ((which = index(ch)) < 0) {
-    vlogf(LOG_BUG, "%s got into can_knock_or_gin without being at the gin table!", ch->getName());
+    vlogf(LOG_BUG, fmt("%s got into can_knock_or_gin without being at the gin table!") %  ch->getName());
     return -1;
   }
   total = total_not_in_book(hands[which], &hand);

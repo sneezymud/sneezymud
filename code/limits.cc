@@ -52,7 +52,7 @@ void TPerson::setMaxHit(int newhit)
 {
   // TPerson hit points are dynamic now, so this shouldn't happen
   // unless an immortal uses @set
-  vlogf(LOG_BUG, "TPerson::setMaxHit() got called on %s", getName());
+  vlogf(LOG_BUG, fmt("TPerson::setMaxHit() got called on %s") %  getName());
   points.maxHit = newhit;  
 }
 
@@ -91,7 +91,7 @@ float classHpPerLevel(const TPerson *tp){
  }
 
  if(!hpgain){
-    vlogf(LOG_BUG, "No class in classHpPerLevel() for %s", tp->getName());
+    vlogf(LOG_BUG, fmt("No class in classHpPerLevel() for %s") %  tp->getName());
     hpgain=7.0;
  } 
 
@@ -563,8 +563,8 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
   }
   
   if(isPc()) {
-    vlogf(LOG_DASH, "%s gaining %d pracs roll = %d (%d + %4.2f) lev: %d", getName(),
-	  prac, roll, (int)temp, num, getLevel(Class));
+    vlogf(LOG_DASH, fmt("%s gaining %d pracs roll = %d (%d + %4.2f) lev: %d") %  getName() %
+	  prac % roll % (int)temp % num % getLevel(Class));
   }
 
   return prac;
@@ -805,7 +805,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
       // verifies first timers get the practices they deserve - dash
       // oct 2003
       if (ch->getMaxExp() == 0) {
-	vlogf(LOG_DASH, "%s getting exp checked: MaxExp %.2f, Exp %.2f, Current Level Exp %.2f", ch->getMaxExp(), ch->getExp(), getExpClassLevel(Class,50), curr);
+	vlogf(LOG_DASH, fmt("%s getting exp checked: MaxExp %.2f, Exp %.2f, Current Level Exp %.2f") %  ch->getMaxExp() % ch->getExp() % getExpClassLevel(Class, 50) % curr);
 	ch->setExp(min(ch->getExp(), getExpClassLevel(Class,50)));
 	ch->setMaxExp(curr);
       }
@@ -834,7 +834,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
 	    // if this exp step is past our max exp and is under the exp
 	    // we've gained, then get a prac
 	    if(t_exp > exp && t_exp <= new_exp){
-	      vlogf(LOG_PEEL, "%s gaining practice (current): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f", ch->getName(), t_curr, t_peak, delta_exp, exp, new_exp, t_exp); ;
+	      vlogf(LOG_PEEL, fmt("%s gaining practice (current): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % t_exp); ;
 	      gain_pracs++;
 	    }
 	  }
@@ -843,7 +843,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
 	  if(new_exp >= peak){
 	    // roll for extra prac
 	    if(::number(1,(int)delta_exp) < (delta_exp - (t_peak - t_exp))){
-	      vlogf(LOG_PEEL, "%s gaining practice (threshold): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f", ch->getName(), t_curr, t_peak, delta_exp, exp, new_exp);
+	      vlogf(LOG_PEEL, fmt("%s gaining practice (threshold): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp);
 	      gain_pracs++;
 	    }
 	  }
@@ -874,7 +874,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
 
 	  for(double j=t_curr;j<=new_exp && j<=t_peak;j+=delta_exp){
 	    if(j > exp && j < new_exp){
-	      vlogf(LOG_PEEL, "%s gaining practice (next): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f", ch->getName(), t_curr, t_peak, delta_exp, exp, new_exp, t_exp); ;
+	      vlogf(LOG_PEEL, fmt("%s gaining practice (next): t_curr=%f, t_peak=%f, delta_exp=%f, exp=%f, new_exp=%f, t_exp=%f") %  ch->getName() % t_curr % t_peak % delta_exp % exp % new_exp % t_exp); ;
 	      gain_pracs++;
 	    }
 	  }
@@ -1142,7 +1142,7 @@ int TBeing::checkIdling()
       if (in_room != ROOM_NOWHERE)
         --(*this);
 
-      vlogf(LOG_SILENT, "%s booted from game for inactivity.", getName());
+      vlogf(LOG_SILENT, fmt("%s booted from game for inactivity.") %  getName());
       thing_to_room(this, ROOM_DUMP);
 
       // this would be done by ~TPerson

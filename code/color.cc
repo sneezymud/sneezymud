@@ -538,7 +538,7 @@ void TPerson::doColor(const char *buf)
   int toggle = TRUE;
 
   if (!desc) {
-    vlogf(LOG_BUG, "Something without a desc (%s) is trying to set a colorLevel", getName());
+    vlogf(LOG_BUG, fmt("Something without a desc (%s) is trying to set a colorLevel") %  getName());
     return;
   }
   if (!isPc()) {

@@ -48,7 +48,7 @@ int TBeing::useMana(spellNumT spl)
   spl = getSkillNum(spl);
   discNumT das = getDisciplineNumber(spl, FALSE);
   if (das == DISC_NONE) {
-    vlogf(LOG_BUG, "useMana() with bad discipline for spell=%d", spl);
+    vlogf(LOG_BUG, fmt("useMana() with bad discipline for spell=%d") %  spl);
     return 0;
   }
 
@@ -74,7 +74,7 @@ int TBeing::useLifeforce(spellNumT spl)
   spl = getSkillNum(spl);
   discNumT das = getDisciplineNumber(spl, FALSE);
   if (das == DISC_NONE) {
-    vlogf(LOG_BUG, "useLifeforce() with bad discipline for spell=%d", spl);
+    vlogf(LOG_BUG, fmt("useLifeforce() with bad discipline for spell=%d") %  spl);
     return 0;
   }
   temp = discArray[spl]->minLifeforce;
@@ -102,7 +102,7 @@ double TBeing::usePiety(spellNumT spl)
   spl = getSkillNum(spl);
   discNumT das = getDisciplineNumber(spl, FALSE);
   if (das == DISC_NONE) {
-    vlogf(LOG_BUG, "usePiety() with bad discipline for spell=%d", spl);
+    vlogf(LOG_BUG, fmt("usePiety() with bad discipline for spell=%d") %  spl);
     return 0;
   }
 
@@ -154,7 +154,7 @@ void TBeing::stopFollower(bool remove, stopFollowerT textLimits) // default argu
     if (roomp) {
       affectTo(&aff, -1);
     } else {
-      vlogf(LOG_BUG, "%s having AFFECT_ORPHAN_PET without a roomp  in stop follower, master is %s", getName(), master->getName());
+      vlogf(LOG_BUG, fmt("%s having AFFECT_ORPHAN_PET without a roomp  in stop follower, master is %s") %  getName() % master->getName());
     }
     // take charm off so text is sent
     REMOVE_BIT(specials.affectedBy, AFF_CHARM | AFF_GROUP);
@@ -226,8 +226,8 @@ void TBeing::addFollower(TBeing *foll, bool textLimits) // default argument
              *followIndex;
 
   if (foll->master) {
-    vlogf(LOG_BUG, "add_folower error: this: %s, leader %s, master %s.", 
-          foll->getName(), getName(), foll->master->getName());
+    vlogf(LOG_BUG, fmt("add_folower error: this: %s, leader %s, master %s.") %  
+          foll->getName() % getName() % foll->master->getName());
     foll->master = NULL;
   }
   foll->master = this;
@@ -433,7 +433,7 @@ int TBeing::reconcilePiety(spellNumT spl, bool checking)
 // this is possible.
 // spell is only denied if piety < min-piety for spell
 // distraction or bad wizardry could require more piety than min-piety
-//     vlogf(LOG_BUG, "%s (spell=%s(%d)) Failed the second of two consecutive prefligh_piety() tests.", getName(), discArray[spl]->name, spl);
+//     vlogf(LOG_BUG, fmt("%s (spell=%s(%d)) Failed the second of two consecutive prefligh_piety() tests.") %  getName() % discArray[spl]->name % spl);
     if (checking) 
       return FALSE;
 
@@ -473,7 +473,7 @@ int TBeing::reconcileMana(spellNumT spl, bool checking, int mana)
 // this is possible.
 // spell is only denied if mana < min-mana for spell
 // distraction or bad wizardry could require more mana than min-mana
-//      vlogf(LOG_BUG, "%s (spell=%s(%d)) Failed the second of two consecutive preflight_mana() tests.", getName(), discArray[spl]->name, spl);
+//      vlogf(LOG_BUG, fmt("%s (spell=%s(%d)) Failed the second of two consecutive preflight_mana() tests.") %  getName() % discArray[spl]->name % spl);
       if (checking) {
         return FALSE;
       } else {
@@ -615,7 +615,7 @@ static void badCastSyntax(const TBeing *ch, spellNumT which)
     tars += (tars.empty() ? "object" : " | object");
 
   if (tars.empty()) {
-    vlogf(LOG_BUG, "Unknown targets for spell %d", which);
+    vlogf(LOG_BUG, fmt("Unknown targets for spell %d") %  which);
     tars += "???";
   }
 
@@ -1439,7 +1439,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
   char arg[256];
 
   if (!discArray[which]) {
-    vlogf(LOG_BUG, "doDiscipline called with null discArray[] (%d) (%s)", which, getName());
+    vlogf(LOG_BUG, fmt("doDiscipline called with null discArray[] (%d) (%s)") %  which % getName());
     return FALSE;
   }
 

@@ -45,8 +45,8 @@ void TBaseClothing::lowCheck()
   // warn about prices that are WAY too high though too
   if ((ap > obj_flags.cost || ap < obj_flags.cost-200) && !isSaddle()) {
 #endif
-    vlogf(LOG_LOW, "base_clothing (%s:%d) has a bad price (%d).  should be (%d)",
-         getName(), objVnum(), obj_flags.cost, ap);
+    vlogf(LOG_LOW, fmt("base_clothing (%s:%d) has a bad price (%d).  should be (%d)") % 
+         getName() % objVnum() % obj_flags.cost % ap);
     obj_flags.cost = ap;
   }
 
@@ -54,14 +54,14 @@ void TBaseClothing::lowCheck()
     float amt = -(float) itemAC();
 
     if ((20*getWeight()) < amt)
-      vlogf(LOG_LOW, "shield %s has a bad weight.  should be (%.1f)",
-           getName(), amt/20.0+.1);
+      vlogf(LOG_LOW, fmt("shield %s has a bad weight.  should be (%.1f)") % 
+           getName() % (amt/20.0+0.1));
   } else {
     if (canWear(ITEM_HOLD)) {
       int amt = -itemAC();
       if (amt)
-        vlogf(LOG_LOW, "Holdable item (%s:%d) with AC that was not a shield.",
-            getName(), objVnum());
+        vlogf(LOG_LOW, fmt("Holdable item (%s:%d) with AC that was not a shield.") % 
+            getName() % objVnum());
     }
   }
 
@@ -73,8 +73,8 @@ void TBaseClothing::lowCheck()
   if (ui != ITEM_HOLD) {
     int num = CountBits(ui) - 1;
     if (num < 0) {
-      vlogf(LOG_LOW, "Base Clothing (%s:%d) with insufficient wearability.",
-            getName(), objVnum());
+      vlogf(LOG_LOW, fmt("Base Clothing (%s:%d) with insufficient wearability.") % 
+            getName() % objVnum());
     }
   }
   TObj::lowCheck();
@@ -215,7 +215,7 @@ void TBaseClothing::armorPercs(double *ac_perc, double *str_perc) const
     *ac_perc  = 0.25;
     *str_perc = 0.07;
   } else {
-    vlogf(LOG_LOW, "Item %s needs a definition of where worn", getName());
+    vlogf(LOG_LOW, fmt("Item %s needs a definition of where worn") %  getName());
     *ac_perc = 0.01;
     *str_perc = 0.01;
   }
@@ -366,7 +366,7 @@ int TBaseClothing::armorPriceStruct(armorLevT type, double *lev) const
   // double it since cost = 2 * rent
   price *= 2;
 
-// vlogf(LOG_MISC, "ac_lev: %.2f, str_lev: %.2f, price: %d", ac_lev, str_lev, price);
+// vlogf(LOG_MISC, fmt("ac_lev: %.2f, str_lev: %.2f, price: %d") %  ac_lev % str_lev % price);
 
   return price;
 }
@@ -430,7 +430,7 @@ int TBaseClothing::suggestedPrice() const
   double modif = (lev + lev_mod) * max(20.0, (lev + lev_mod)) /
                 max(1.0, (lev * max(20.0, lev)));
   modif = min(1.25, modif);
-// vlogf(LOG_MISC, "%s had a wearability modifier of %.3f (%.3f)", getName(), modif, lev_mod);
+// vlogf(LOG_MISC, fmt("%s had a wearability modifier of %.3f (%.3f)") %  getName() % modif % lev_mod);
   price = (int) (price * modif);
 #endif
   
@@ -562,7 +562,7 @@ bool TBaseClothing::sellMeCheck(TBeing *ch, TMonster *keeper, int) const
   for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != (keeper)->number); shop_nr++);
 
   if (shop_nr >= shop_index.size()) {
-    vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", (keeper)->number);
+    vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  (keeper)->number);
     return FALSE;
   }
   
@@ -610,8 +610,8 @@ void TBaseClothing::describeObjectSpecifics(const TBeing *ch) const
       buf += ".";
       act(buf, FALSE, ch, this, 0, TO_CHAR);
     } else {
-      vlogf(LOG_LOW, "Base Clothing (%s:%d) with insufficient wearability.",
-            getName(), objVnum());
+      vlogf(LOG_LOW, fmt("Base Clothing (%s:%d) with insufficient wearability.") % 
+            getName() % objVnum());
     }
   }
 }

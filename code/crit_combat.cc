@@ -441,7 +441,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
     return FALSE;
 
   if(mod>100){
-    vlogf(LOG_BUG, "critSuccessChance called with mod>100 (%i)", mod);
+    vlogf(LOG_BUG, fmt("critSuccessChance called with mod>100 (%i)") %  mod);
     return FALSE;
   }
 
@@ -536,7 +536,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
   } else if (bluntType(wtype)) {
     return critBlunt(v, weapon, part_hit, wtype, dam, crit_num);
   } else {
-    vlogf(LOG_BUG, "unknown weapon type in critSuccessChance (%i)", wtype);
+    vlogf(LOG_BUG, fmt("unknown weapon type in critSuccessChance (%i)") %  wtype);
   }
   return FALSE;
 }
@@ -552,7 +552,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
   int new_wtype = wtype - TYPE_HIT;
 
   if(crit_num>100){
-    vlogf(LOG_BUG, "critBlunt called with crit_num>100 (%i)", crit_num);
+    vlogf(LOG_BUG, fmt("critBlunt called with crit_num>100 (%i)") %  crit_num);
     crit_num=0;
   }
 
@@ -1084,7 +1084,7 @@ buf=fmt("$n's %s crushes $N's skull.  Brains ooze out as $E crumples!") %
 	  }
 	}
       default:
-	vlogf(LOG_BUG, "crit_num=%i in critBlunt switch, shouldn't happen",
+	vlogf(LOG_BUG, fmt("crit_num=%i in critBlunt switch, shouldn't happen") % 
 	      crit_num);
 	break;
     }
@@ -1101,7 +1101,7 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
   affectedData af;
 
   if(crit_num>100){
-    vlogf(LOG_BUG, "critSlash called with crit_num>100 (%i)", crit_num);
+    vlogf(LOG_BUG, fmt("critSlash called with crit_num>100 (%i)") %  crit_num);
     crit_num=0;
   }
 
@@ -1619,7 +1619,7 @@ buf=fmt("$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!") %
 	  return DELETE_VICT;
 	}
       default:
-	vlogf(LOG_BUG, "crit_num=%i in critSlash switch, shouldn't happen",
+	vlogf(LOG_BUG, fmt("crit_num=%i in critSlash switch, shouldn't happen") % 
 	      crit_num);
 	break;
     }
@@ -1639,7 +1639,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
   weaponStr=(weapon ? "$o" : getMyRace()->getBodyLimbPierce());
   
   if(crit_num>100){
-    vlogf(LOG_BUG, "critPierce called with crit_num>100 (%i)", crit_num);
+    vlogf(LOG_BUG, fmt("critPierce called with crit_num>100 (%i)") %  crit_num);
     crit_num=0;
   }
 
@@ -2090,7 +2090,7 @@ buf=fmt("$n's %s tears into $N's stomach exposing intestines!") %
 	  v->desc->career.crit_cranial_pierce_suff++;
 	return DELETE_VICT;
       default:
-	vlogf(LOG_BUG, "crit_num=%i in critPierce switch, shouldn't happen",
+	vlogf(LOG_BUG, fmt("crit_num=%i in critPierce switch, shouldn't happen") % 
 	      crit_num);
 	break;
     }

@@ -1125,8 +1125,8 @@ int TMonster::monkMove(TBeing &vict)
           dirTypeT hurlDir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
 
           if (this->canGo(hurlDir)) {
-            vlogf(LOG_ANGUS, "monkMove: %s hurling %s, dir= %i", name,
-                  vict.name, hurlDir);
+            vlogf(LOG_ANGUS, fmt("monkMove: %s hurling %s, dir= %i") %  name %
+                  vict.name % hurlDir);
             return aiHurl(hurlDir, &vict);
           }
         }
@@ -2188,7 +2188,7 @@ int TMonster::mageMove(TBeing &vict)
     return FALSE;
 
   if (getPosition() < POSITION_STANDING) {
-    vlogf(LOG_BUG, "%s was not standing in mageMove vs %s.", getName(), vict.getName());
+    vlogf(LOG_BUG, fmt("%s was not standing in mageMove vs %s.") %  getName() % vict.getName());
     return FALSE;
   }
 
@@ -2224,7 +2224,7 @@ int TMonster::mageMove(TBeing &vict)
     if (IS_SET(discArray[spell]->targets, TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
       return doDiscipline(spell, "");
     }
-    vlogf(LOG_BUG, "Mob casting (1) spell %d on self with possibly bad target flags for spell", spell);
+    vlogf(LOG_BUG, fmt("Mob casting (1) spell %d on self with possibly bad target flags for spell") %  spell);
     return doDiscipline(spell, name);
   } else {
     return doDiscipline(spell, vict.name);
@@ -2258,7 +2258,7 @@ int TMonster::shamanMove(TBeing &vict)
     return FALSE;
 
   if (getPosition() < POSITION_STANDING) {
-    vlogf(LOG_BUG, "%s was not standing in shamanMove vs %s.", getName(), vict.getName());
+    vlogf(LOG_BUG, fmt("%s was not standing in shamanMove vs %s.") %  getName() % vict.getName());
     return FALSE;
   }
 
@@ -2294,7 +2294,7 @@ int TMonster::shamanMove(TBeing &vict)
     if (IS_SET(discArray[spell]->targets, TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
       return doDiscipline(spell, "");
     }
-    vlogf(LOG_BUG, "Shaman Mob casting (1) spell %d on self with possibly bad target flags for spell", spell);
+    vlogf(LOG_BUG, fmt("Shaman Mob casting (1) spell %d on self with possibly bad target flags for spell") %  spell);
     return doDiscipline(spell, name);
   } else {
     return doDiscipline(spell, vict.name);
@@ -3002,13 +3002,13 @@ int TMonster::clerMove(TBeing &vict)
     }
     
     if (spell != TYPE_UNDEFINED && t) {
-      //      vlogf(LOG_MISC, "%s HEALING %s, spell %i", name, t->name, spell);
+      //      vlogf(LOG_MISC, fmt("%s HEALING %s, spell %i") %  name % t->name % spell);
       return doDiscipline(spell, t->name);
     }
   } else if (isAffected(AFF_CHARM) && (tank=vict.fight()) && tank != this && tank == master) {
     spell = get_cleric_heal_spell(*this, *(t=tank));
     if (spell != TYPE_UNDEFINED && t) {
-      //      vlogf(LOG_MISC, "%s HEALING %s, spell %i", name, t->name, spell);
+      //      vlogf(LOG_MISC, fmt("%s HEALING %s, spell %i") %  name % t->name % spell);
       return doDiscipline(spell, t->name);
     }
   }
@@ -3024,7 +3024,7 @@ int TMonster::clerMove(TBeing &vict)
     if (IS_SET(discArray[spell]->targets, TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
       return doDiscipline(spell, "");
     }
-    vlogf(LOG_BUG, "Mob invoking (1) prayer %d on self with possibly bad target flags for spell", spell);
+    vlogf(LOG_BUG, fmt("Mob invoking (1) prayer %d on self with possibly bad target flags for spell") %  spell);
     return doDiscipline(spell, name);
   } else {
     return doDiscipline(spell, vict.name);
@@ -3361,8 +3361,8 @@ int TMonster::mobileActivity(int pulse)
   if (isAquatic() && (specials.zone != 1) && (mobVnum() >= 0) &&
      !(roomp->isWaterSector() || roomp->isUnderwaterSector()) &&
      !inImperia()) {
-    vlogf(LOG_MISC, "Fish (%s), found out of water in %s (%d)! Destroying!", 
-           getName(), roomp->getName(), in_room);
+    vlogf(LOG_MISC, fmt("Fish (%s), found out of water in %s (%d)! Destroying!") %  
+           getName() % roomp->getName() % in_room);
     return DELETE_THIS;
   }
   // assign old room if not set
@@ -3560,7 +3560,7 @@ int TMonster::mobileActivity(int pulse)
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != number); shop_nr++);
     
     if (shop_nr >= shop_index.size()) {
-      vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", number);
+      vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  number);
       return FALSE;
     }
     
@@ -3582,7 +3582,7 @@ int TMonster::mobileActivity(int pulse)
 	db.query("delete from shopowned where shop_nr=%i", shop_nr);
 	db.query("delete from shopownedaccess where shop_nr=%i", shop_nr);
 
-	vlogf(LOG_PEEL, "shop_nr %i, ran out of money and was reclaimed", shop_nr);
+	vlogf(LOG_PEEL, fmt("shop_nr %i, ran out of money and was reclaimed") %  shop_nr);
 
 	if(getMoney()<0)
 	  setMoney(0);
@@ -4265,8 +4265,8 @@ int TMonster::findABetterWeapon()
         // skip training gear
         if (tobj && tobj->objVnum() == WEAPON_T_DAGGER)
           return FALSE;
-        vlogf(LOG_LOW,"%s (%d) removed %s (%d : base=%.2f) as hands are better.",
-                  getName(), mobVnum(), tobj->getName(), tobj->objVnum(), tobj->baseDamage());
+        vlogf(LOG_LOW,fmt("%s (%d) removed %s (%d : base=%.2f) as hands are better.") % 
+                  getName() % mobVnum() % tobj->getName() % tobj->objVnum() % tobj->baseDamage());
 
         return TRUE;
       }
@@ -4353,7 +4353,7 @@ int TMonster::defendOther(TBeing &targ)
       if (IS_SET(discArray[spell]->targets, TAR_CHAR_ROOM)) {
         rc = doDiscipline(spell, targ.name);
       } else {
-vlogf(LOG_BUG, "Shaman Mob casting (2) spell %d on other with possibly bad target flags for spell", spell);
+vlogf(LOG_BUG, fmt("Shaman Mob casting (2) spell %d on other with possibly bad target flags for spell") %  spell);
         rc = doDiscipline(spell, "");
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4377,7 +4377,7 @@ vlogf(LOG_BUG, "Shaman Mob casting (2) spell %d on other with possibly bad targe
       if (IS_SET(discArray[spell]->targets, TAR_CHAR_ROOM)) {
         rc = doDiscipline(spell, targ.name);
       } else {
-vlogf(LOG_BUG, "Mob casting (2) spell %d on other with possibly bad target flags for spell", spell);
+vlogf(LOG_BUG, fmt("Mob casting (2) spell %d on other with possibly bad target flags for spell") %  spell);
         rc = doDiscipline(spell, "");
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4427,7 +4427,7 @@ vlogf(LOG_BUG, "Mob casting (2) spell %d on other with possibly bad target flags
       if (IS_SET(discArray[spell]->targets, TAR_CHAR_ROOM)) {
         rc = doDiscipline(spell, targ.name);
       } else {
-vlogf(LOG_BUG, "Mob invoking (2) prayer %d on other with possibly bad target flags for spell", spell);
+vlogf(LOG_BUG, fmt("Mob invoking (2) prayer %d on other with possibly bad target flags for spell") %  spell);
         rc = doDiscipline(spell, "");
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4458,7 +4458,7 @@ vlogf(LOG_BUG, "Mob invoking (2) prayer %d on other with possibly bad target fla
       if (IS_SET(discArray[spell]->targets, TAR_CHAR_ROOM)) {
         rc = doDiscipline(spell, targ.name);
       } else {
-vlogf(LOG_BUG, "Mob invoking (3) prayer %d on other with possibly bad target flags for spell", spell);
+vlogf(LOG_BUG, fmt("Mob invoking (3) prayer %d on other with possibly bad target flags for spell") %  spell);
         rc = doDiscipline(spell, "");
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4483,7 +4483,7 @@ vlogf(LOG_BUG, "Mob invoking (3) prayer %d on other with possibly bad target fla
         else
           rc = doDiscipline(spell, targ.name);
       } else {
-vlogf(LOG_BUG, "Mob casting (3) spell %d on other with possibly bad target flags for spell", spell);
+vlogf(LOG_BUG, fmt("Mob casting (3) spell %d on other with possibly bad target flags for spell") %  spell);
         if (spell == SKILL_BARKSKIN)
           rc = doBarkskin(targ.name);
         else
@@ -4583,7 +4583,7 @@ int TMonster::defendSelf(int)
       for (k = followers;k; k = k2) {
 	k2 = k->next;
 	if (!(ch = k->follower) || !dynamic_cast<TBeing *>(ch)) {
-	  vlogf(LOG_BUG, "Non-TBeing in followers of %s", getName());
+	  vlogf(LOG_BUG, fmt("Non-TBeing in followers of %s") %  getName());
 	  break;
 	}
 	if (ch->isAffected(AFF_CHARM) && sameRoom(*ch)) {
@@ -4680,7 +4680,7 @@ int TMonster::defendSelf(int)
       if (IS_SET(discArray[spell]->targets, TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
         rc = doDiscipline(spell, "");
       } else {
-	vlogf(LOG_BUG, "Shaman Mob casting (4) spell %d on self with possibly bad target flags for spell", spell);
+	vlogf(LOG_BUG, fmt("Shaman Mob casting (4) spell %d on self with possibly bad target flags for spell") %  spell);
         rc = doDiscipline(spell, name);
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4786,7 +4786,7 @@ int TMonster::defendSelf(int)
 	for (k = followers;k; k = k2) {
 	  k2 = k->next;
 	  if (!(ch = k->follower) || !dynamic_cast<TBeing *>(ch)) {
-	    vlogf(LOG_BUG, "Non-TBeing in followers of %s", getName());
+	    vlogf(LOG_BUG, fmt("Non-TBeing in followers of %s") %  getName());
 	    break;
 	  }
 	  if (ch->isCharm() && sameRoom(*ch)){
@@ -4858,7 +4858,7 @@ int TMonster::defendSelf(int)
       if (IS_SET(discArray[spell]->targets, TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
         rc = doDiscipline(spell, "");
       } else {
-vlogf(LOG_BUG, "Mob casting (4) spell %d on self with possibly bad target flags for spell", spell);
+vlogf(LOG_BUG, fmt("Mob casting (4) spell %d on self with possibly bad target flags for spell") %  spell);
         rc = doDiscipline(spell, name);
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4918,7 +4918,7 @@ vlogf(LOG_BUG, "Mob casting (4) spell %d on self with possibly bad target flags 
       if (IS_SET(discArray[spell]->targets, TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
         rc = doDiscipline(spell, "");
       } else {
-vlogf(LOG_BUG, "Mob invoking (4) prayer %d on self with possibly bad target flags for spell", spell);
+vlogf(LOG_BUG, fmt("Mob invoking (4) prayer %d on self with possibly bad target flags for spell") %  spell);
         rc = doDiscipline(spell, name);
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4949,7 +4949,7 @@ vlogf(LOG_BUG, "Mob invoking (4) prayer %d on self with possibly bad target flag
       if (IS_SET(discArray[spell]->targets, TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
         rc = doDiscipline(spell, "");
       } else {
-vlogf(LOG_BUG, "Mob invoking (5) prayer %d on self with possibly bad target flags for spell", spell);
+vlogf(LOG_BUG, fmt("Mob invoking (5) prayer %d on self with possibly bad target flags for spell") %  spell);
         rc = doDiscipline(spell, name);
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4992,7 +4992,7 @@ vlogf(LOG_BUG, "Mob invoking (5) prayer %d on self with possibly bad target flag
 	else
           rc = doDiscipline(spell, "");
       } else {
-vlogf(LOG_BUG, "Mob casting (5) spell %d on self with possibly bad target flags for spell", spell);
+vlogf(LOG_BUG, fmt("Mob casting (5) spell %d on self with possibly bad target flags for spell") %  spell);
         if (spell == SKILL_BARKSKIN)
           rc = doBarkskin(name);
 	else if(spell == SKILL_TRANSFORM_LIMB)

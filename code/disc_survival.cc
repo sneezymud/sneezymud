@@ -781,7 +781,7 @@ int TBeing::doEncamp()
 int encamp(TBeing * caster)
 {
   if (!caster || !caster->isPc()) {
-    vlogf(LOG_BUG, "Non-PC in encamp() call.  %s", caster->getName());
+    vlogf(LOG_BUG, fmt("Non-PC in encamp() call.  %s") %  caster->getName());
     return FALSE;
   }
 

@@ -279,7 +279,7 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
                 discArray[obj->affected[i].modifier]->name %
                 obj->affected[i].modifier2);
           else
-            vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", obj->affected[i].modifier,
+            vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  obj->affected[i].modifier %
                   obj->getName());
         } else if (obj->affected[i].location == APPLY_DISCIPLINE) {
           if (discNames[obj->affected[i].modifier].practice)
@@ -288,7 +288,7 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
                 discNames[obj->affected[i].modifier].practice %
                 obj->affected[i].modifier2);
           else
-            vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", obj->affected[i].modifier,
+            vlogf(LOG_BUG, fmt("BOGUS AFFECT (%d) on %s") %  obj->affected[i].modifier %
                   obj->getName());
 
         } else if (obj->affected[i].location == APPLY_IMMUNITY) {
@@ -331,8 +331,8 @@ int castDivinationObj(TBeing *caster, const TObj *obj)
 {
   if (caster->GetMaxLevel() > MAX_MORT && !caster->hasWizPower(POWER_WIZARD)) {
     caster->sendTo("Shame, Shame.  You shouldn't do this...\n\r");
-    vlogf(LOG_CHEAT, "%s used Divination Object on: %s",
-          caster->getName(), obj->getName());
+    vlogf(LOG_CHEAT, fmt("%s used Divination Object on: %s") % 
+          caster->getName() % obj->getName());
     return FALSE;
   }
 
@@ -394,8 +394,8 @@ int castDivinationBeing(TBeing *caster, TBeing * victim)
 {
   if (caster->GetMaxLevel() > MAX_MORT && !caster->hasWizPower(POWER_WIZARD)) {
     caster->sendTo("Shame, Shame.  You shouldn't do this...\n\r");
-    vlogf(LOG_CHEAT, "%s used Divination Being on: %s",
-          caster->getName(), victim->getName());
+    vlogf(LOG_CHEAT, fmt("%s used Divination Being on: %s") % 
+          caster->getName() % victim->getName());
     return FALSE;
   }
 
@@ -593,7 +593,7 @@ int eyesOfFertuman(TBeing *caster, const char * tofind)
   if (caster->GetMaxLevel() > MAX_MORT &&
       caster->GetMaxLevel() < commandArray[CMD_WHERE]->minLevel) {
     caster->sendTo("You are unable to locate things at your level.\n\r");
-    vlogf(LOG_CHEAT, "%s using %s to locate '%s'", caster->getName(), discArray[SPELL_EYES_OF_FERTUMAN]->name, tofind);
+    vlogf(LOG_CHEAT, fmt("%s using %s to locate '%s'") %  caster->getName() % discArray[SPELL_EYES_OF_FERTUMAN]->name % tofind);
     return FALSE;
   }
 

@@ -35,7 +35,7 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
   }
 
   if (!ch->roomp) {
-    vlogf(LOG_BUG, "Player doing save without a room!  [%s]", ch->getName());
+    vlogf(LOG_BUG, fmt("Player doing save without a room!  [%s]") %  ch->getName());
     return;
   }
 
@@ -101,7 +101,7 @@ void TBeing::doSave(silentTypeT silent, const char *tArg = NULL)
 
 #if 0
   if (!desc) {
-    vlogf(LOG_BUG, "%s tried to doSave while link dead.", getName());
+    vlogf(LOG_BUG, fmt("%s tried to doSave while link dead.") %  getName());
     return;
   }
 #endif

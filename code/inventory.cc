@@ -33,19 +33,19 @@
 
 void TThing::logMe(const TBeing *ch, const char *cmdbuf) const
 {
-  vlogf(LOG_SILENT, "%s%s%s %s.", 
-    (ch ? ch->getName() : ""),
-    (ch ? " " : ""),
-    cmdbuf, getName());
+  vlogf(LOG_SILENT, fmt("%s%s%s %s.") %  
+    (ch ? ch->getName() : "") %
+    (ch ? " " : "") %
+    cmdbuf % getName());
 }
 
 void TObj::logMe(const TBeing *ch, const char *cmdbuf) const
 {
-  vlogf(LOG_SILENT, "%s%s%s %s. (max: %d, cur: %d)", 
-           (ch ? ch->getName() : ""),
-           (ch ? " " : ""),
-           cmdbuf, getName(),
-           obj_index[getItemIndex()].max_exist,
+  vlogf(LOG_SILENT, fmt("%s%s%s %s. (max: %d, cur: %d)") %  
+           (ch ? ch->getName() : "") %
+           (ch ? " " : "") %
+           cmdbuf % getName() %
+           obj_index[getItemIndex()].max_exist %
            obj_index[getItemIndex()].getNumber());
 }
 
@@ -853,7 +853,7 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
     saveChar(ROOM_AUTO_RENT);
     vict->saveChar(ROOM_AUTO_RENT);
     if ((vict->getMoney() > 500000) && (amount > 100000))
-      vlogf(LOG_MISC,"%s gave %d talens to %s.", getName(), amount, vict->getName());
+      vlogf(LOG_MISC,fmt("%s gave %d talens to %s.") %  getName() % amount % vict->getName());
 
     if (!vict->isPc()) {
       // log if it's an owned shopkeeper
@@ -1099,7 +1099,7 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
               return DELETE_THIS;
           }
         } else 
-          vlogf(LOG_BUG, "Bad flags in doGive (%s)", getName());
+          vlogf(LOG_BUG, fmt("Bad flags in doGive (%s)") %  getName());
         
         doSave(SILENT_YES);
         if (vict)
@@ -1110,10 +1110,10 @@ int TBeing::doGive(const sstring &oarg, giveTypeT flags)
         if (obj->obj_flags.cost >= 100) {
           switch (CheckStorageChar(this, vict)) {
             case 1:
-              vlogf(LOG_MISC, "Storage Character %s giving %s to %s",getName(),obj->getName(),vict->getName());
+              vlogf(LOG_MISC, fmt("Storage Character %s giving %s to %s") % getName() %obj->getName() %vict->getName());
               break;
             case 2:
-              vlogf(LOG_MISC, "Storage Character %s w/low KAR giving %s to %s w/high KAR",getName(), obj->getName(),vict->getName());
+              vlogf(LOG_MISC, fmt("Storage Character %s w/low KAR giving %s to %s w/high KAR") % getName() % obj->getName() %vict->getName());
               break;
             case 0:
             default:
@@ -1724,7 +1724,7 @@ void TPerson::dropItemsToRoom(safeTypeT ok, dropNukeT actually_nuke)
         // quit calls this with ok=true before deleting
         // idle-timeout moves player to dump, and does ok=true call
         if (!ok)
-          vlogf(LOG_BUG, "%s had objects going to room somehow.  Investigate immediately.  Tell Batopr!", getName());
+          vlogf(LOG_BUG, fmt("%s had objects going to room somehow.  Investigate immediately.  Tell Batopr!") %  getName());
 
         if (actually_nuke) {
           // this is mostly a handler for idle-time-out

@@ -50,7 +50,7 @@ void TKey::lowCheck()
 {
   if ((obj_flags.cost >= 0) && isRentable() &&
            (obj_flags.decay_time <= 0))
-    vlogf(LOG_LOW, "rentable key (%s)!", getName());
+    vlogf(LOG_LOW, fmt("rentable key (%s)!") %  getName());
 
   TObj::lowCheck();
 }

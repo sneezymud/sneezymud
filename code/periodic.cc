@@ -55,7 +55,7 @@ void deityCheck(int)
         vlogf(LOG_BUG,"Big 'Ol bug in deityCheck()");
         return;
       }
-      vlogf(LOG_BUG,"Purging the deity in room #%d",deity->in_room);
+      vlogf(LOG_BUG,fmt("Purging the deity in room #%d") % deity->in_room);
       delete deity;
       deity = NULL;
     }
@@ -146,7 +146,7 @@ int TBeing::riverFlow(int)
 
   dirTypeT rd = roomp->getRiverDir();
   if ((rd < MIN_DIR) || (rd >= MAX_DIR)) {
-    vlogf(LOG_BUG, "Illegal river direction (%d) in room %d", rd, inRoom());
+    vlogf(LOG_BUG, fmt("Illegal river direction (%d) in room %d") %  rd % inRoom());
     return FALSE;
   }
 
@@ -343,8 +343,8 @@ int TBeing::teleportRoomFlow(int pulse)
   }
 
   if (!(dest = real_roomp(roomp->getTeleTarg()))) {
-    vlogf(LOG_BUG, "Invalid teleTarg room (%d) to room (%d)", 
-             inRoom(), roomp->getTeleTarg());
+    vlogf(LOG_BUG, fmt("Invalid teleTarg room (%d) to room (%d)") %  
+             inRoom() % roomp->getTeleTarg());
     return FALSE;
   }
   tmprp = roomp;  // char_from_room will set roomp to NULL
@@ -554,20 +554,21 @@ int TBeing::updateTickStuff()
 
     rc = checkIdling();
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      vlogf(LOG_SILENT, "updateTickStuff: %s (desc) caught idling", getName());
+      vlogf(LOG_SILENT, fmt("updateTickStuff: %s (desc) caught idling") %  getName());
       return DELETE_THIS;
     }
 
     if (getCond(DRUNK) > 15) {
       rc = passOut();
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        vlogf(LOG_SILENT, "updateTickStuff: %s passed out", getName());
+        vlogf(LOG_SILENT, fmt("updateTickStuff: %s passed out") %  getName());
         return DELETE_THIS;
       }
     }
     if (desc && (desc->character != this))
-      vlogf(LOG_BUG, "bad desc in updateTickStuff() (%s)(%s)", (name ? getName() :
-"unknown"), desc->character ? desc->character->name ? desc->character->getName() : "unknown" : "no char");
+      vlogf(LOG_BUG, fmt("bad desc in updateTickStuff() (%s)(%s)") %
+	    (name ? getName() : "unknown") % 
+	    (desc->character ? desc->character->name ? desc->character->getName() : "unknown" : "no char"));
     if (desc && vt100())
       desc->updateScreenVt100(CHANGED_MUD);
     else if (desc && ansi())
@@ -581,12 +582,12 @@ int TBeing::updateTickStuff()
     if (getTimer() > 15 && GetMaxLevel() <= MAX_MORT) {
       // mortals get 15 mins
       nukeLdead(this);
-      vlogf(LOG_SILENT, "updateTickStuff: %s (ldead) idled", getName());
+      vlogf(LOG_SILENT, fmt("updateTickStuff: %s (ldead) idled") %  getName());
       return DELETE_THIS;
     } else if (getTimer() > 60) {
       // imms get an hour
       nukeLdead(this);
-      vlogf(LOG_SILENT, "updateTickStuff: %s (ldead-imm) idled", getName());
+      vlogf(LOG_SILENT, fmt("updateTickStuff: %s (ldead-imm) idled") %  getName());
       return DELETE_THIS;
     }
   } else if (desc && desc->original) {
@@ -619,7 +620,7 @@ int TBeing::updateTickStuff()
           if (isAnElemental) {
             rc = checkDecharm(FORCE_YES);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              vlogf(LOG_SILENT, "updateTickStuff: %s decharmed", getName());
+              vlogf(LOG_SILENT, fmt("updateTickStuff: %s decharmed") %  getName());
               return DELETE_THIS;
             }
             return 0;
@@ -628,11 +629,11 @@ int TBeing::updateTickStuff()
                 TRUE, this, NULL, NULL, TO_ROOM);
             j = die(DAMAGE_NORMAL);
             if (IS_SET_DELETE(j, DELETE_THIS)) {
-              vlogf(LOG_SILENT, "updateTickStuff: %s died naturally", getName());
+              vlogf(LOG_SILENT, fmt("updateTickStuff: %s died naturally") %  getName());
               return DELETE_THIS;
             }
           }
-          vlogf(LOG_SILENT, "updateTickStuff: %s died (2) naturally", getName());
+          vlogf(LOG_SILENT, fmt("updateTickStuff: %s died (2) naturally") %  getName());
           return DELETE_THIS;
         }
       }
@@ -690,16 +691,16 @@ int TBeing::updateBodyParts()
       if (isLimbFlags(i, PART_MISSING)) {
         setLimbFlags(i, PART_MISSING);   // get rid of superfluous flags
         if (i == WEAR_HEAD) {
-          vlogf(LOG_BUG, "%s killed by lack of a head at %s (%d)",
-            getName(), roomp->getName(), inRoom());
+          vlogf(LOG_BUG, fmt("%s killed by lack of a head at %s (%d)") % 
+            getName() % roomp->getName() % inRoom());
 
           rc = die(DAMAGE_BEHEADED);
           if (IS_SET_ONLY(rc, DELETE_THIS))
             return DELETE_THIS;
         }
         if ((i == WEAR_BODY) || (i == WEAR_NECK) || (i == WEAR_BACK)) {
-          vlogf(LOG_BUG, "%s killed by lack of a critical body spot (%d:1) at %s (%d)",
-            getName(), i, roomp->getName(), inRoom());
+          vlogf(LOG_BUG, fmt("%s killed by lack of a critical body spot (%d:1) at %s (%d)") % 
+            getName() % i % roomp->getName() % inRoom());
           rc = die(DAMAGE_NORMAL);
           if (IS_SET_ONLY(rc, DELETE_THIS))
             return DELETE_THIS;
@@ -727,15 +728,15 @@ int TBeing::updateBodyParts()
     if (isLimbFlags(i, PART_MISSING)) {
       setLimbFlags(i, PART_MISSING);   // get rid of superfluous flags
       if (i == WEAR_HEAD) {
-        vlogf(LOG_BUG, "%s killed by lack of a head at %s (%d)",
-            getName(), roomp->getName(), inRoom());
+        vlogf(LOG_BUG, fmt("%s killed by lack of a head at %s (%d)") % 
+            getName() % roomp->getName() % inRoom());
         rc = die(DAMAGE_BEHEADED);
         if (IS_SET_ONLY(rc, DELETE_THIS))
           return DELETE_THIS;
       }
       if ((i == WEAR_BODY) || (i == WEAR_NECK) || (i == WEAR_BACK)) {
-        vlogf(LOG_BUG, "%s killed by lack of a critical body spot (i:2) at %s (%d)",
-            getName(), i, roomp->getName(), inRoom());
+        vlogf(LOG_BUG, fmt("%s killed by lack of a critical body spot (i:2) at %s (%d)") % 
+            getName() % i % roomp->getName() % inRoom());
         rc = die(DAMAGE_NORMAL);
         if (IS_SET_ONLY(rc, DELETE_THIS))
           return DELETE_THIS;
@@ -792,8 +793,8 @@ int TBeing::updateHalfTickStuff()
 	  updatePos();
 	}
 	if (-10 > getHit()) {
-	  vlogf(LOG_MISC, "%s autokilled by excessive lifeforce drain at %s (%d)",
-		getName(), roomp ? roomp->getName() : "nowhere", inRoom());
+	  vlogf(LOG_MISC, fmt("%s autokilled by excessive lifeforce drain at %s (%d)") % 
+		getName() % (roomp ? roomp->getName() : "nowhere") % inRoom());
 	  if (reconcileDamage(this, 1,DAMAGE_DRAIN) == -1) {
 	    die(DAMAGE_DRAIN);
 	    return DELETE_THIS;
@@ -840,7 +841,7 @@ int TBeing::updateHalfTickStuff()
   
   if (isFlying()) {
     if (!canFly() && roomp && !roomp->isFlyingSector()) {
-      vlogf(LOG_BUG, "Somehow %s was position fly and was not in flying sector", getName());
+      vlogf(LOG_BUG, fmt("Somehow %s was position fly and was not in flying sector") %  getName());
       sendTo("You stop flying around in the air.\n\r");
       setPosition(POSITION_STANDING);
     }
@@ -850,14 +851,14 @@ int TBeing::updateHalfTickStuff()
     if (!riding && !isFlying()) {
       setPosition(POSITION_FLYING);
       sendTo("You start to fly up in the air.\n\r");
-      vlogf(LOG_BUG, "Somehow %s was not flying in flying sector", getName());
+      vlogf(LOG_BUG, fmt("Somehow %s was not flying in flying sector") %  getName());
     } else if (riding && !tbr) {
       dismount(POSITION_FLYING);
       sendTo("You start to fly up in the air.\n\r");
     } else if (tbr && !tbr->isFlying()) {
       tbr->setPosition(POSITION_FLYING);
       sendTo("Your mount starts to fly up in the air.\n\r");
-      vlogf(LOG_BUG, "Somehow %s was not flying in flying sector", getName());
+      vlogf(LOG_BUG, fmt("Somehow %s was not flying in flying sector") %  getName());
     }
   }
   if (roomp && (zone_table[roomp->getZoneNum()].enabled == TRUE) && 
@@ -884,15 +885,15 @@ int TBeing::updateHalfTickStuff()
         if (is_daytime()) {
           if (loadRoom == ROOM_NOCTURNAL_STORAGE) {
             return DELETE_THIS;
-            vlogf(LOG_BUG, "NOC:DIU: %s has oldRoom equal to %d", getName(), loadRoom);
+            vlogf(LOG_BUG, fmt("NOC:DIU: %s has oldRoom equal to %d") %  getName() % loadRoom);
           }
           if (!loadRoom || (loadRoom == ROOM_NOWHERE)) {
-            vlogf(LOG_BUG, "NOC:DIU: %s was %s.", getName(),
+            vlogf(LOG_BUG, fmt("NOC:DIU: %s was %s.") %  getName() %
                   (!loadRoom ? "without loadRoom" : "in room nowhere"));
             return DELETE_THIS;
           }
           if (!(room = real_roomp(loadRoom))) {
-            vlogf(LOG_BUG, "NOC:DIU: %s was in a room that no longer exists.", getName());
+            vlogf(LOG_BUG, fmt("NOC:DIU: %s was in a room that no longer exists.") %  getName());
             return DELETE_THIS;
           }
           --(*this);
@@ -957,15 +958,15 @@ int TBeing::updateHalfTickStuff()
         } else {
           if (loadRoom == ROOM_NOCTURNAL_STORAGE) {
             return DELETE_THIS;
-            vlogf(LOG_BUG, "NOC:DIU: %s has oldRoom equal to %d", getName(), loadRoom);
+            vlogf(LOG_BUG, fmt("NOC:DIU: %s has oldRoom equal to %d") %  getName() % loadRoom);
           }
           if (!loadRoom || (loadRoom == ROOM_NOWHERE)) {
-            vlogf(LOG_BUG, "NOC:DIU: %s was %s.", getName(),
+            vlogf(LOG_BUG, fmt("NOC:DIU: %s was %s.") %  getName() %
                   (!loadRoom ? "without loadRoom" : "in room nowhere"));
             return DELETE_THIS;
           }
           if (!(room = real_roomp(loadRoom))) {
-            vlogf(LOG_BUG, "NOC:DIU: %s was in a room that no longer exists.", getName());
+            vlogf(LOG_BUG, fmt("NOC:DIU: %s was in a room that no longer exists.") %  getName());
             return DELETE_THIS;
           }
           --(*this);
@@ -1030,7 +1031,7 @@ int TBeing::updateHalfTickStuff()
  
  // VERY TEMP FIX 10/99 -- COS
   if (!roomp) {
-    vlogf(LOG_BUG, "%s has no roomp in updateHalf tick. Try to find", getName());
+    vlogf(LOG_BUG, fmt("%s has no roomp in updateHalf tick. Try to find") %  getName());
       return FALSE;
   }
 
@@ -1155,8 +1156,8 @@ int TBeing::updateHalfTickStuff()
           foodReject = TRUE;
           updatePos();
           if (points.hit < -10) {
-            vlogf(LOG_MISC, "%s killed by starvation at %s (%d)",
-                getName(), roomp ? roomp->getName() : "nowhere", inRoom());
+            vlogf(LOG_MISC, fmt("%s killed by starvation at %s (%d)") % 
+                getName() % (roomp ? roomp->getName() : "nowhere") % inRoom());
             rc = die(DAMAGE_STARVATION);
             if (IS_SET_ONLY(rc, DELETE_THIS))
               return DELETE_THIS;
@@ -1295,7 +1296,7 @@ int TObj::objectTickUpdate(int pulse)
   int rc;
 
   if (!name) {
-    vlogf(LOG_BUG, "Object with NULL name in objectTickUpdate() : %d", objVnum());
+    vlogf(LOG_BUG, fmt("Object with NULL name in objectTickUpdate() : %d") %  objVnum());
     return DELETE_THIS;
   }
 
@@ -1763,8 +1764,8 @@ int TBeing::bumpHead(int *iHeight)
     return FALSE;
   
   if (!isPc() && !inImperia() && master && isAffected(AFF_CHARM))
-    vlogf(LOG_LOW,"Being (%s) (height %d) in small room (#%d)(roof: %d)",
-           getName(), getPosHeight(), roomp->number, *iHeight); 
+    vlogf(LOG_LOW,fmt("Being (%s) (height %d) in small room (#%d)(roof: %d)") % 
+           getName() % getPosHeight() % roomp->number % *iHeight); 
 
   int num = max(0,(getPosHeight() - *iHeight));
   if (::number(0, num) && (!isPc() || desc)) {
@@ -1790,7 +1791,7 @@ void TBeing::checkCharmMana()
   for (k = followers;k; k = k2) {
     k2 = k->next;
     if (!(ch = k->follower) || !dynamic_cast<TBeing *>(ch)) {
-      vlogf(LOG_BUG, "Non-Tbeing in followers of %s", getName());
+      vlogf(LOG_BUG, fmt("Non-Tbeing in followers of %s") %  getName());
       return;
     }
     bool ischarm = isPet(PETTYPE_CHARM);

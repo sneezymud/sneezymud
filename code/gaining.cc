@@ -756,7 +756,7 @@ void TPerson::raiseLevel(classIndT Class)
   int maxhit;
 
   if (getExp() < getExpClassLevel(Class, getLevel(Class) + 1)){
-    vlogf(LOG_BUG, "raiseLevel() called on %s when exp too low", getName());
+    vlogf(LOG_BUG, fmt("raiseLevel() called on %s when exp too low") %  getName());
     return;
   }
 
@@ -1003,7 +1003,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
       break;
     }
     if (TrainerInfo[offset].spec == -1) {
-      vlogf(LOG_BUG, "TrainerMob lacked setup in TrainerInfo array (%s)", 
+      vlogf(LOG_BUG, fmt("TrainerMob lacked setup in TrainerInfo array (%s)") %  
              me->getName());
       return FALSE;
     }
@@ -1179,7 +1179,7 @@ int TBeing::checkDoneBasic(TBeing *ch, classIndT accclass, int guild, int amount
       bas = ch->getDiscipline(DISC_THIEF)->getNatLearnedness();
       break;
     default:
-      vlogf(LOG_BUG,"Wierd case in checkDoneBasic %d", accclass);
+      vlogf(LOG_BUG,fmt("Wierd case in checkDoneBasic %d") %  accclass);
   }
 
   if (amountCheck) {
@@ -1357,7 +1357,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
     }
     
     if(!found){
-      vlogf(LOG_BUG, "Bad case in gaining pre requisites (%d) (%s)", accclass, ch->getName());
+      vlogf(LOG_BUG, fmt("Bad case in gaining pre requisites (%d) (%s)") %  accclass % ch->getName());
       ch->sendTo("Bug that you got this at the gain trainer.");
       return TRUE;
     }
@@ -1403,7 +1403,7 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
   int tOldSL2 = ch->getDiscipline(getDisciplineNumber(SPELL_SHAPESHIFT, FALSE))->getLearnedness();
 
   if (pracs <= 0) {
-    vlogf(LOG_BUG, "Bogus pracs used %s (%d)", ch->getName(), ch->in_room);
+    vlogf(LOG_BUG, fmt("Bogus pracs used %s (%d)") %  ch->getName() % ch->in_room);
     return TRUE;
   }
 
@@ -1494,7 +1494,7 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
         }
       } else if (ch->doesKnowSkill(i)) {
         if ((discArray[i]->start <=final) && (ch->getRawSkillValue(i) < 0)) {
-          vlogf(LOG_BUG, "%s: ch->doesKnowSkill %s (%d) with no actual learning..could be array change or bug", ch->getName(), discArray[i]->name, i);
+          vlogf(LOG_BUG, fmt("%s: ch->doesKnowSkill %s (%d) with no actual learning..could be array change or bug") %  ch->getName() % discArray[i]->name % i);
           ch->setNatSkillValue(i, 1);
           ch->setSkillValue(i, 1);
         }
@@ -1950,7 +1950,7 @@ void TBeing::pracPath(TMonster *gm, classIndT Class)
       sprintf(buf, "You need to use these practices at your basic %s trainer or you could pursue a weapon specialization.", gm->getProfName().c_str());
     }
   } else {
-    vlogf(LOG_BUG, "Bad case in pracPath for %s", getName());
+    vlogf(LOG_BUG, fmt("Bad case in pracPath for %s") %  getName());
     sendTo("Please bug that there is a bad place in guildmaster instructions.");
     return;
   }

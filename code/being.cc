@@ -1179,7 +1179,7 @@ sexTypeT TBeing::getSex() const
 void TBeing::setSexUnsafe(int sex)
 {
   if (sex < SEX_NEUTER || sex > SEX_FEMALE) {
-    vlogf(LOG_LOW, "Bad sex on %s during set (%d)", getName(), sex);
+    vlogf(LOG_LOW, fmt("Bad sex on %s during set (%d)") %  getName() % sex);
     sex = 0;
   }
 
@@ -1313,8 +1313,8 @@ sh_int TBeing::getArmor() const
 
 void TBeing::setArmor(sh_int armor)
 {
-  vlogf(LOG_PEEL, "Something called setArmor(%i) on %s",
-	armor, getName());
+  vlogf(LOG_PEEL, fmt("Something called setArmor(%i) on %s") % 
+	armor % getName());
 
   //  points.armor = armor;
 }

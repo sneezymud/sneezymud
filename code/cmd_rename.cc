@@ -25,8 +25,8 @@ static void renamePersonalizeFix(TThing *t, const char * orig_name, const char *
     if ((sscanf(buf, "This is the personalized object of %s.", persbuf)) == 1) {
       if (!strcmp(persbuf, orig_name)) {
         // we are personalized already, so not bothering to swap to strung again
-        vlogf(LOG_MISC, "Personalized object (%s) on %s, being restrung.",
-           obj->getName(), new_name);
+        vlogf(LOG_MISC, fmt("Personalized object (%s) on %s, being restrung.") % 
+           obj->getName() % new_name);
         sprintf(buf, "This is the personalized object of %s", new_name);
         delete [] obj->action_description;
         obj->action_description = mud_str_dup(buf);
@@ -179,7 +179,7 @@ void TBeing::doNameChange(const char *argument)
     sstring(vict->desc->account->name).lower() % sstring(orig_name).lower();
 
   if (unlink(tmpbuf.c_str()) != 0)
-    vlogf(LOG_FILE, "error in unlink (11) (%s) %d", tmpbuf.c_str(), errno);
+    vlogf(LOG_FILE, fmt("error in unlink (11) (%s) %d") %  tmpbuf % errno);
   
   if (vict->GetMaxLevel() > MAX_MORT) {
     tmpbuf=fmt("mv immortals/%s/ immortals/%s/") % orig_name % sstring(tmp_name).cap();

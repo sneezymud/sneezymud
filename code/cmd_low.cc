@@ -673,74 +673,84 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
   if (getLongDesc() && (strlen(getLongDesc()) > 2) &&
       ((getLongDesc()[strlen(getLongDesc()) - 1] != '\r') ||
       (getLongDesc()[strlen(getLongDesc()) - 2] != '\n'))) {
-    vlogf(LOG_LOW, "%s (%d) has bad format of longDescr",
-          getName(), mobVnum());
+    vlogf(LOG_LOW, fmt("%s (%d) has bad format of longDescr") % 
+          getName() % mobVnum());
   }
   if (getDescr() && (strlen(getDescr()) > 2) &&
       ((getDescr()[strlen(getDescr()) - 1] != '\r') ||
       (getDescr()[strlen(getDescr()) - 2] != '\n'))) {
-    vlogf(LOG_LOW, "%s (%d) has bad format of descr",
-          getName(), mobVnum());
+    vlogf(LOG_LOW, fmt("%s (%d) has bad format of descr") % 
+          getName() % mobVnum());
   }
   if (strchr(name, '(') || strchr(name, ')')) {
-    vlogf(LOG_LOW, "%s (%d) has illegal parenthetical in name",
-          getName(), mobVnum());
+    vlogf(LOG_LOW, fmt("%s (%d) has illegal parenthetical in name") % 
+          getName() % mobVnum());
   }
   if ((s = strchr(name, '['))) {
     for (s++;*s != ']';s++) {
       if (isalnum(*s) || *s == '_' || *s == '/')
         continue;
-      vlogf(LOG_LOW, "%s (%d) lacked contiguity in braces (%c)",
-            getName(), mobVnum(), *s);
+      vlogf(LOG_LOW, fmt("%s (%d) lacked contiguity in braces (%c)") % 
+            getName() % mobVnum() % *s);
     }
   }
 #if 0
   if (strlen(getName()) > MAX_NAME_LENGTH-1) {
-    vlogf(LOG_LOW, "%s (%d) had excessive mob name length.",
-         getName(), mobVnum());
+    vlogf(LOG_LOW, fmt("%s (%d) had excessive mob name length.") % 
+         getName() % mobVnum());
   }
 #endif
 
   
   if (forReal == TINYFILE_YES) {
     if (IS_SET(specials.act, ACT_STRINGS_CHANGED))
-      vlogf(LOG_LOW, "%s (%d) strung-mob bit (%d) set", getName(), mobVnum(), ACT_STRINGS_CHANGED);
+      vlogf(LOG_LOW, fmt("%s (%d) strung-mob bit (%d) set") %  getName() % mobVnum() % ACT_STRINGS_CHANGED);
   }
   if (IS_SET(specials.act, ACT_DISGUISED))
-    vlogf(LOG_LOW, "%s disguise bit (%d)  set", getName(), ACT_DISGUISED);
+    vlogf(LOG_LOW, fmt("%s disguise bit (%d)  set") %  getName() % ACT_DISGUISED);
   if (IS_SET(specials.act, ACT_HATEFUL))
-    vlogf(LOG_LOW, "%s hateful bit (%d) set", getName(), ACT_HATEFUL);
+    vlogf(LOG_LOW, fmt("%s hateful bit (%d) set") %  getName() % ACT_HATEFUL);
   if (IS_SET(specials.act, ACT_AFRAID))
-    vlogf(LOG_LOW, "%s afraid bit (%d) set", getName(), ACT_AFRAID);
+    vlogf(LOG_LOW, fmt("%s afraid bit (%d) set") %  getName() % ACT_AFRAID);
   if (IS_SET(specials.act, ACT_HUNTING))
-    vlogf(LOG_LOW, "%s hunting bit (%d) set", getName(), ACT_HUNTING);
+    vlogf(LOG_LOW, fmt("%s hunting bit (%d) set") %  getName() % ACT_HUNTING);
   if (IS_SET(specials.act, ACT_GUARDIAN))
-    vlogf(LOG_LOW, "%s guardian bit (%d) set", getName(), ACT_GUARDIAN);
+    vlogf(LOG_LOW, fmt("%s guardian bit (%d) set") %  getName() % ACT_GUARDIAN);
 
   if (getImmunity(IMMUNE_BLUNT) < 0)
-    vlogf(LOG_LOW,"mob (%s:%d) with susc blunt.", getName(), mobVnum());
+    vlogf(LOG_LOW,fmt("mob (%s:%d) with susc blunt.") %
+	  getName() % mobVnum());
   if (getImmunity(IMMUNE_PIERCE) < 0)
-    vlogf(LOG_LOW,"mob (%s:%d) with susc pierce.", getName(), mobVnum());
+    vlogf(LOG_LOW,fmt("mob (%s:%d) with susc pierce.") %
+	  getName() % mobVnum());
   if (getImmunity(IMMUNE_SLASH) < 0)
-    vlogf(LOG_LOW,"mob (%s:%d) with susc slash.", getName(), mobVnum());
+    vlogf(LOG_LOW,fmt("mob (%s:%d) with susc slash.") %
+	  getName() % mobVnum());
   if (getImmunity(IMMUNE_NONMAGIC) < 0)
-    vlogf(LOG_LOW,"mob (%s:%d) with susc non-magic.", getName(), mobVnum());
+    vlogf(LOG_LOW,fmt("mob (%s:%d) with susc non-magic.") %
+	  getName() % mobVnum());
 
   if (isAffected(AFF_SLEEP)) 
-    vlogf(LOG_LOW, "mob (%s:%d) with AFF_SLEEP (%d) set.", getName(), mobVnum(), AFF_SLEEP);
+    vlogf(LOG_LOW, fmt("mob (%s:%d) with AFF_SLEEP (%d) set.") %
+	  getName() % mobVnum() % AFF_SLEEP);
   if (isAffected(AFF_CHARM) && !master) 
-    vlogf(LOG_LOW, "mob (%s:%d) with AFF_CHARM (%d) and no master set.", getName(), mobVnum(), AFF_CHARM); 
+    vlogf(LOG_LOW, fmt("mob (%s:%d) with AFF_CHARM (%d) and no master set.") %
+	  getName() % mobVnum() % AFF_CHARM); 
 #if 0
   if (isAffected(AFF_STUNNED)) 
-    vlogf(LOG_LOW, "mob (%s:%d) with AFF_STUNNED set. make %d", getName(), mobVnum(), specials.affectedBy & ~AFF_STUNNED);
+    vlogf(LOG_LOW, fmt("mob (%s:%d) with AFF_STUNNED set. make %d") %
+	  getName() % mobVnum() % (specials.affectedBy & ~AFF_STUNNED));
 #endif
   if (isAffected(AFF_SHOCKED)) 
-    vlogf(LOG_LOW, "mob (%s:%d) with AFF_SHOCKED set. make %d", getName(), mobVnum(), specials.affectedBy & ~AFF_SHOCKED);
+    vlogf(LOG_LOW, fmt("mob (%s:%d) with AFF_SHOCKED set. make %d") %  
+	  getName() % mobVnum() % (specials.affectedBy & ~AFF_SHOCKED));
   if (isAffected(AFF_SYPHILIS)) 
-    vlogf(LOG_LOW, "mob (%s:%d) with AFF_SYPHILIS (%d) set.", getName(), mobVnum(), AFF_SYPHILIS);
+    vlogf(LOG_LOW, fmt("mob (%s:%d) with AFF_SYPHILIS (%d) set.") %
+	  getName() % mobVnum() % AFF_SYPHILIS);
 #ifdef JEEZ
   if (isAffected(AFF_UNDEF4)) 
-    vlogf(LOG_LOW, "mob (%s:%d) with AFF_UNDEF4 (%d) set.", getName(), mobVnum(), AFF_UNDEF4);
+    vlogf(LOG_LOW, fmt("mob (%s:%d) with AFF_UNDEF4 (%d) set.") %
+	  getName() % mobVnum() % AFF_UNDEF4);
 #endif
   sumstat = getStat(STAT_CHOSEN, STAT_STR) +
             getStat(STAT_CHOSEN, STAT_BRA) +
@@ -748,16 +758,16 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
             getStat(STAT_CHOSEN, STAT_DEX) +
             getStat(STAT_CHOSEN, STAT_CON);
   if (sumstat > 0) {
-    vlogf(LOG_LOW,"mob (%s, %d) with excessive physical stats (%d).",
-                getName(), mobVnum(), sumstat);
+    vlogf(LOG_LOW,fmt("mob (%s, %d) with excessive physical stats (%d).") % 
+                getName() % mobVnum() % sumstat);
   }
 
   sumstat = getStat(STAT_CHOSEN, STAT_INT) +
             getStat(STAT_CHOSEN, STAT_WIS) +
             getStat(STAT_CHOSEN, STAT_FOC);
   if (sumstat > 0) {
-    vlogf(LOG_LOW,"mob (%s, %d) with excessive mental stats (%d).",
-                getName(), mobVnum(), sumstat);
+    vlogf(LOG_LOW,fmt("mob (%s, %d) with excessive mental stats (%d).") % 
+                getName() % mobVnum() % sumstat);
   }
 
   sumstat = getStat(STAT_CHOSEN, STAT_CHA) +
@@ -765,28 +775,28 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
             getStat(STAT_CHOSEN, STAT_SPE) +
             getStat(STAT_CHOSEN, STAT_PER);
   if (sumstat > 0) {
-    vlogf(LOG_LOW,"mob (%s, %d) with excessive utility stats (%d).",
-                getName(), mobVnum(), sumstat);
+    vlogf(LOG_LOW,fmt("mob (%s, %d) with excessive utility stats (%d).") % 
+                getName() % mobVnum() % sumstat);
   }
 
   if (!isSingleClass())
-    vlogf(LOG_LOW,"multiclass mob: %s",getName());
+    vlogf(LOG_LOW,fmt("multiclass mob: %s") % getName());
 
   /*
   // Leave this disabled.  With the new tBorn code it is now outdated.
   if (!IS_SET(specials.act, ACT_SENTINEL) && max_exist > 100) {
-    vlogf(LOG_LOW,"non-sentinel mob (%s : %d) with excessive max exist (%d)",
-       getName(), mobVnum(), max_exist);
+    vlogf(LOG_LOW,fmt("non-sentinel mob (%s : %d) with excessive max exist (%d)") % 
+       getName() % mobVnum() % max_exist);
   }
   */
   if (isShopkeeper() && !IS_SET(specials.act, ACT_IMMORTAL)) {
     // have a lot of gold, and otherwise might get killed
-    vlogf(LOG_LOW, "Shopkeeper (%s:%d) needs to be set immortal(%d).",
-         getName(), mobVnum(), ACT_IMMORTAL);
+    vlogf(LOG_LOW, fmt("Shopkeeper (%s:%d) needs to be set immortal(%d).") % 
+         getName() % mobVnum() % ACT_IMMORTAL);
   }
 
   if (isWinged() && isAffected(AFF_FLYING)) {
-    vlogf(LOG_LOW, "Winged mob (%s:%d) given magical flight too.  Probably bad", getName(), mobVnum());
+    vlogf(LOG_LOW, fmt("Winged mob (%s:%d) given magical flight too.  Probably bad") %  getName() % mobVnum());
   }
 }
 
@@ -800,35 +810,35 @@ void TObj::checkObjStats()
   if (getDescr() && (strlen(getDescr()) > 2) &&
       (getDescr()[strlen(getDescr()) - 1] == '\r') &&
       (getDescr()[strlen(getDescr()) - 2] == '\n')) {
-    vlogf(LOG_LOW, "%s (%d) has bad format of longDescr",
-          getName(), objVnum());
+    vlogf(LOG_LOW, fmt("%s (%d) has bad format of longDescr") % 
+          getName() % objVnum());
   }
   if (strchr(name, '(') || strchr(name, ')')) {
-    vlogf(LOG_LOW, "%s (%d) has illegal parenthetical in name",
-          getName(), objVnum());
+    vlogf(LOG_LOW, fmt("%s (%d) has illegal parenthetical in name") % 
+          getName() % objVnum());
   }
   if ((s = strchr(name, '['))) {
     for (s++;*s != ']';s++) {
       if (isalnum(*s) || *s == '_' || *s == '/')
         continue;
-      vlogf(LOG_LOW, "%s (%d) lacked contiguity in braces (%c)",
-            getName(), objVnum(), *s);
+      vlogf(LOG_LOW, fmt("%s (%d) lacked contiguity in braces (%c)") % 
+            getName() % objVnum() % *s);
     }
   }
   if (strlen(getName()) > MAX_NAME_LENGTH-1) {
-    vlogf(LOG_LOW, "%s (%d) had excessive obj name length.",
-         getName(), objVnum());
+    vlogf(LOG_LOW, fmt("%s (%d) had excessive obj name length.") % 
+         getName() % objVnum());
   }
   
 
   if (isObjStat(ITEM_PROTOTYPE)) {
-    vlogf(LOG_LOW, "Item %s had a prototype flag. Get rid of it in tinyworld file!\n\rRemoving bit for object going into game.", getName());
+    vlogf(LOG_LOW, fmt("Item %s had a prototype flag. Get rid of it in tinyworld file!\n\rRemoving bit for object going into game.") %  getName());
     remObjStat(ITEM_PROTOTYPE);
   }
 
   // TPool sstrings itself during constructor, so bypass this
   if (isObjStat(ITEM_STRUNG) && !dynamic_cast<TPool *>(this) && !dynamic_cast<TSmoke *>(this) && !dynamic_cast<TBaseCup *>(this)) {
-    vlogf(LOG_LOW, "Item %s has been set strung, fix! (%d)", getName(), objVnum());
+    vlogf(LOG_LOW, fmt("Item %s has been set strung, fix! (%d)") %  getName() % objVnum());
     remObjStat(ITEM_STRUNG);
   }
 
@@ -839,8 +849,8 @@ void TObj::checkObjStats()
        (tmp>=50 && tmp < (50+MAX_MAT_NATURE)) ||
        (tmp>=100 && tmp < (100+MAX_MAT_MINERAL)) ||
        (tmp>=150 && tmp < (150+MAX_MAT_METAL))))
-    vlogf(LOG_LOW, "Illegal material type %d for %s!",
-         tmp, getName());
+    vlogf(LOG_LOW, fmt("Illegal material type %d for %s!") % 
+         tmp % getName());
 
   for (i=0; i<MAX_OBJ_AFFECT;i++) {
     affected[i].checkForBadness(this);
@@ -856,7 +866,7 @@ void TObj::checkObjStats()
   }
   if (isObjStat(ITEM_GLOW)) {
     if (isObjStat(ITEM_SHADOWY))
-      vlogf(LOG_LOW,"obj %s is glowing and shadowy.",
+      vlogf(LOG_LOW,fmt("obj %s is glowing and shadowy.") % 
                getName());
     addGlowEffects();
   }
@@ -869,10 +879,10 @@ void TObj::checkObjStats()
         affected[i].modifier = -(1 + getVolume()/3000);
         addToLight(affected[i].modifier);
         if (affected[i].modifier < -6 && canWear(ITEM_TAKE))
-          vlogf(LOG_LOW,"Mega shadow on %s",getName());
+          vlogf(LOG_LOW,fmt("Mega shadow on %s") % getName());
         break;
       } else if (i==(MAX_OBJ_AFFECT-1))
-        vlogf(LOG_LOW,"obj %s has too many affects to set shadow on it.",
+        vlogf(LOG_LOW,fmt("obj %s has too many affects to set shadow on it.") % 
                getName());
     }
 #endif
@@ -881,14 +891,14 @@ void TObj::checkObjStats()
     if (isObjStat(ITEM_NOPURGE) && (objVnum() != CRAPS_DICE)) {
       TPCorpse *tmpcorpse = dynamic_cast<TPCorpse *>(this);
       if (!tmpcorpse)
-        vlogf(LOG_LOW,"item takeable and !purge (%s)", getName());
+        vlogf(LOG_LOW,fmt("item takeable and !purge (%s)") %  getName());
     }
 
   lowCheckSlots(SILENT_NO);
 
   
   if(getMaxStructPoints()<getStructPoints()){
-    vlogf(LOG_LOW, "obj %s had greater struct than max struct.", getName());
+    vlogf(LOG_LOW, fmt("obj %s had greater struct than max struct.") %  getName());
   }
 
 }
@@ -911,7 +921,7 @@ void objAffData::checkForBadness(TObj *obj)
   }
 
   if (isIllegal)
-    vlogf(LOG_LOW,"%s has an unassignable affect",obj->getName());
+    vlogf(LOG_LOW,fmt("%s has an unassignable affect") % obj->getName());
 
   // changes to this list should also be added to dispelMagic()
   if ((location != APPLY_NONE) && 
@@ -923,16 +933,16 @@ void objAffData::checkForBadness(TObj *obj)
       (location != APPLY_MOVE) &&
       (location != APPLY_ARMOR)) {
     if (!obj->isObjStat(ITEM_MAGIC))
-      vlogf(LOG_LOW,"obj (%s:%d) should be set magic due to %s",
-            obj->getName(), obj->objVnum(), 
+      vlogf(LOG_LOW,fmt("obj (%s:%d) should be set magic due to %s") % 
+            obj->getName() % obj->objVnum() % 
             apply_types[location].name);
   }
   if (location == APPLY_SPELL &&
       (modifier < 0 ||
        modifier >= MAX_SKILL ||
        !discArray[modifier])) {
-    vlogf(LOG_LOW,"obj (%s:%d) trying to set skill %d that is not defined.  REMOVING IT!",
-          obj->getName(), obj->objVnum(), modifier);
+    vlogf(LOG_LOW,fmt("obj (%s:%d) trying to set skill %d that is not defined.  REMOVING IT!") % 
+          obj->getName() % obj->objVnum() % modifier);
     // this would be bad, remove it
     removeIt = true;
   }
@@ -940,8 +950,8 @@ void objAffData::checkForBadness(TObj *obj)
       (modifier < 0 ||
        modifier >= MAX_DISCS ||
        !discNames[modifier].disc_num)) {
-    vlogf(LOG_LOW,"obj (%s:%d) trying to set discipline %d that is not defined",
-         obj->getName(), obj->objVnum(), modifier);
+    vlogf(LOG_LOW,fmt("obj (%s:%d) trying to set discipline %d that is not defined") % 
+         obj->getName() % obj->objVnum() % modifier);
     // this would be bad, remove it
     removeIt = true;
   }
@@ -1293,14 +1303,14 @@ void TBeing::lowRace(const char *arg)
         delete mob;
         mob = NULL;
       } else 
-        vlogf(LOG_BUG,"BOGUS LOAD of mob %d",mobnum);
+        vlogf(LOG_BUG,fmt("BOGUS LOAD of mob %d") % mobnum);
     }
     if (mob_index[mobnum].race != race_num)
       continue;
     if (UtilProcs(mob_index[mobnum].spec))
       continue;
     if (!(mob = read_mobile(mobnum, REAL))) {
-      vlogf(LOG_BUG,"Error during doLowRace in mob rnum %d",mobnum);
+      vlogf(LOG_BUG,fmt("Error during doLowRace in mob rnum %d") % mobnum);
       continue;     
     }
     strcpy(namebuf2, mob->getName());
@@ -1345,11 +1355,11 @@ void TBeing::lowTasks(const sstring &oarg)
     arg = one_argument(arg, buf);
     if(buf.empty()){
       temp="select id, priority, assigned_to, task, status from lowtasks order by priority";
-      vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+      vlogf(LOG_DASH, fmt("lowtask: %s") %  temp);
       db.query(temp.c_str());
     } else {
       temp=fmt("select id, priority, assigned_to, task, status from lowtasks where assign_to='%s' order by priority") % buf;
-      vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+      vlogf(LOG_DASH, fmt("lowtask: %s") %  temp);
       db.query(temp.c_str());
 
     }
@@ -1382,7 +1392,7 @@ void TBeing::lowTasks(const sstring &oarg)
 	return;
       } else {
 	temp="select id from lowtasks order by id desc";
-	vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+	vlogf(LOG_DASH, fmt("lowtask: %s") %  temp);
 	db.query(temp.c_str());
 
 	if(!db.fetchRow()) {
@@ -1391,7 +1401,7 @@ void TBeing::lowTasks(const sstring &oarg)
 	  id = convertTo<int>(db["id"]) + 1;
 	}
         temp=fmt("insert into lowtasks (id, priority, assigned_to, task, status) values(%d, %d, '%s', '%s', '')") % id % priority % getName() % arg;
-        vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+        vlogf(LOG_DASH, fmt("lowtask: %s") %  temp);
         db.query(temp.c_str());
 
 	sendTo("New task inserted into list.\n\r");
@@ -1409,7 +1419,7 @@ void TBeing::lowTasks(const sstring &oarg)
       id = convertTo<int>(buf);
       temp=fmt("update lowtasks set assigned_to='%s' where id=%d") %
 	buf2 % id;
-      vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+      vlogf(LOG_DASH, fmt("lowtask: %s") %  temp);
       db.query(temp.c_str());
 
       sendTo("Task assignment updated.\n\r");
@@ -1425,7 +1435,7 @@ void TBeing::lowTasks(const sstring &oarg)
     } else {
       id = convertTo<int>(buf);
       temp=fmt("update lowtasks set status='%s' where id=%d") % buf2 % id;
-      vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+      vlogf(LOG_DASH, fmt("lowtask: %s") %  temp);
       db.query(temp.c_str());
       
       sendTo("Task status updated.\n\r");
@@ -1446,7 +1456,7 @@ void TBeing::lowTasks(const sstring &oarg)
         return;
       } else {
 	temp=fmt("update lowtasks set priority=%d where id=%d") %priority %id;
-	vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+	vlogf(LOG_DASH, fmt("lowtask: %s") %  temp);
 	db.query(temp.c_str());
 
 	sendTo("Task priority updated.\n\r");
@@ -1463,7 +1473,7 @@ void TBeing::lowTasks(const sstring &oarg)
       id = convertTo<int>(buf);
 
       temp=fmt("delete from lowtasks where id=%d") % id;
-      vlogf(LOG_DASH, "lowtask: %s", temp.c_str());
+      vlogf(LOG_DASH, fmt("lowtask: %s") %  temp);
       db.query(temp.c_str());
 
       sendTo("Task deleted.\n\r");
@@ -1506,13 +1516,13 @@ void TBeing::lowMobs(const char *arg)
         delete mob;
         mob = NULL;
       } else 
-        vlogf(LOG_BUG,"BOGUS LOAD of mob %d",mobnum);
+        vlogf(LOG_BUG,fmt("BOGUS LOAD of mob %d") % mobnum);
     if (mob_index[mobnum].level != level)
       continue;
     if (UtilProcs(mob_index[mobnum].spec))
       continue;
     if (!(mob = read_mobile(mobnum, REAL))) {
-      vlogf(LOG_BUG,"Error during doLowMobs in mob rnum %d",mobnum);
+      vlogf(LOG_BUG,fmt("Error during doLowMobs in mob rnum %d") % mobnum);
       continue;     
     }
 
@@ -1545,11 +1555,11 @@ bool lowObjSort::operator() (const int &x, const int &y) const
   // if armor is same, sort in descending struct order
 
   if (x < 0 || x >= (int) obj_index.size()) {
-    vlogf(LOG_BUG, "Bogus value for x: %d in lowObjSort", x);
+    vlogf(LOG_BUG, fmt("Bogus value for x: %d in lowObjSort") %  x);
     return false;
   }
   if (y < 0 || y >= (int) obj_index.size()) {
-    vlogf(LOG_BUG, "Bogus value for y: %d in lowObjSort", y);
+    vlogf(LOG_BUG, fmt("Bogus value for y: %d in lowObjSort") %  y);
     return false;
   }
 
@@ -1674,7 +1684,7 @@ void TBeing::lowObjs(const char *arg)
 
     if(sort_race){
       if (!(obj = read_object(objnum, REAL))) {
-	vlogf(LOG_BUG,"Error in doLow::lowObjs.  real obj %d", objnum);
+	vlogf(LOG_BUG,fmt("Error in doLow::lowObjs.  real obj %d") %  objnum);
 	continue;
       }
       
@@ -1707,12 +1717,12 @@ void TBeing::lowObjs(const char *arg)
   str += buf2;
   for (objnum = 0; objnum < objList.size(); objnum++) {
     if (!(obj = read_object(objList[objnum], REAL))) {
-      vlogf(LOG_BUG,"Error in doLow::lowObjs.  real obj %d", objList[objnum]);
+      vlogf(LOG_BUG,fmt("Error in doLow::lowObjs.  real obj %d") %  objList[objnum]);
       return;
     }
     TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
     if (!tbc) {
-      vlogf(LOG_BUG,"Error in doLow::lowObjs.  Non-clothing (%d)", objList[objnum]);
+      vlogf(LOG_BUG,fmt("Error in doLow::lowObjs.  Non-clothing (%d)") %  objList[objnum]);
       delete obj;
     }
     int size_per = 100;
@@ -1799,10 +1809,10 @@ bool lowWeapSort::operator() (const int &x, const int &y) const
     y_obj = dynamic_cast<TBaseWeapon *>(obj);
 
   if (!x_obj || !y_obj) {
-    vlogf(LOG_BUG, "Error in lowWeapSort(): x: %s, y: %s, x=%d, y=%d",
-        x_obj ? "true" : "false",
-        y_obj ? "true" : "false",
-        x, y);
+    vlogf(LOG_BUG, fmt("Error in lowWeapSort(): x: %s, y: %s, x=%d, y=%d") % 
+        (x_obj ? "true" : "false") %
+        (y_obj ? "true" : "false") %
+        x % y);
     delete x_obj;
     delete y_obj;
     return false;
@@ -1874,7 +1884,7 @@ void TBeing::lowWeaps(const char *arg)
         (blunt  && tbw->isBluntWeapon()) ||
         (pierce && tbw->isPierceWeapon()) ||
         (slash  && tbw->isSlashWeapon())) {
-      vlogf(LOG_SILENT, "Pushing Back Object: %d:%d", objnum, obj->objVnum());
+      vlogf(LOG_SILENT, fmt("Pushing Back Object: %d:%d") %  objnum % obj->objVnum());
       objList.push_back(objnum);
     }
 
@@ -1897,7 +1907,7 @@ void TBeing::lowWeaps(const char *arg)
   for (objnum = 0; objnum < objList.size(); objnum++) {
     TBaseWeapon * weap = dynamic_cast<TBaseWeapon *>(read_object(objList[objnum], REAL));
     if (!(weap)) {
-      vlogf(LOG_BUG,"Error in doLow::lowWeaps.  real obj %d",objList[objnum]);
+      vlogf(LOG_BUG,fmt("Error in doLow::lowWeaps.  real obj %d") % objList[objnum]);
       return;
     }
     sprintf(buf2, "%s%5d %-20.20s %4s: %4.1f %4d %5.2f %6d %5d %6d %6d %4d%s\n\r", 

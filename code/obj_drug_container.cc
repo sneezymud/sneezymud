@@ -199,7 +199,7 @@ void TDrugContainer::lowCheck()
   for (i=0; i<MAX_OBJ_AFFECT;i++) {
     if (affected[i].location == APPLY_LIGHT) {
       if (!getLit())
-        vlogf(LOG_LOW,"item %s was defined apply-light.",getName());
+        vlogf(LOG_LOW,fmt("item %s was defined apply-light.") % getName());
     }
   }
 }

@@ -194,10 +194,10 @@ void TBaseCup::pourMeOut(TBeing *ch)
 void TBaseCup::lowCheck()
 {
   if (getMaxDrinkUnits() < getDrinkUnits())
-    vlogf(LOG_LOW, "drinkcon %s  maxdrinks < current drinks.",
+    vlogf(LOG_LOW, fmt("drinkcon %s  maxdrinks < current drinks.") % 
          getName());
   if (isDrinkConFlag(DRINK_PERM) && canWear(ITEM_TAKE))
-    vlogf(LOG_LOW, "drinkcon %s  takeable and permanent container.",
+    vlogf(LOG_LOW, fmt("drinkcon %s  takeable and permanent container.") % 
          getName());
 
   TObj::lowCheck();
@@ -218,7 +218,7 @@ void TBaseCup::assignFourValues(int x1, int x2, int x3, int x4)
   setDrinkConFlags((unsigned) x4);
 
   if (x3 < MIN_DRINK_TYPES || x3 >= MAX_DRINK_TYPES) {
-    vlogf(LOG_OBJ, "Bad parm (%d) for drink type on %s", x3, getName());
+    vlogf(LOG_OBJ, fmt("Bad parm (%d) for drink type on %s") %  x3 % getName());
     x3 = MIN_DRINK_TYPES;
   }
   setDrinkType(liqTypeT(x3));

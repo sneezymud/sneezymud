@@ -193,18 +193,18 @@ void TOpenContainer::describeContains(const TBeing *ch) const
 void TOpenContainer::lowCheck()
 {
   if (carryWeightLimit() <= 0.0) {
-    vlogf(LOG_LOW, "Container (%s) with bad weight limit (%5.2f).",
-            getName(), carryWeightLimit());
+    vlogf(LOG_LOW, fmt("Container (%s) with bad weight limit (%5.2f).") % 
+            getName() % carryWeightLimit());
   }
   if (carryVolumeLimit() <= 0) {
-    vlogf(LOG_LOW, "Container (%s) with bad volume limit (%d).",
-            getName(), carryVolumeLimit());
+    vlogf(LOG_LOW, fmt("Container (%s) with bad volume limit (%d).") % 
+            getName() % carryVolumeLimit());
   }
 
   if (isContainerFlag(CONT_TRAPPED)) {
     if (getContainerTrapType() == DOOR_TRAP_NONE) {
-      vlogf(LOG_LOW, "Container (%s:%d) trapped with no trap type.  Removing.",
-           getName(), objVnum());
+      vlogf(LOG_LOW, fmt("Container (%s:%d) trapped with no trap type.  Removing.") % 
+           getName() % objVnum());
       remContainerFlag(CONT_TRAPPED);
     }
   }
@@ -476,7 +476,7 @@ void TOpenContainer::lookObj(TBeing *ch, int bits) const
      min(100, getCarriedVolume() * 100 / carryVolumeLimit()) % '%' %
      min(100, (int) (getCarriedWeight() * 100.0 / carryWeightLimit())) % '%');
   } else {
-    vlogf(LOG_BUG, "Problem in look in for object: (%s:%d), check vol/weight limit", getName(), objVnum());
+    vlogf(LOG_BUG, fmt("Problem in look in for object: (%s:%d), check vol/weight limit") %  getName() % objVnum());
   }
   list_in_heap(getStuff(), ch, 0, 100);
 

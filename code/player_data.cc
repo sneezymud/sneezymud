@@ -41,7 +41,7 @@ void TBeing::initDescStuff(charFile *st)
     d->last.money = getMoney();
     d->bad_login = st->bad_login;
   } else {
-    vlogf(LOG_BUG, "Big ole problems. Player reconnected with no player file (%s)!", getName());
+    vlogf(LOG_BUG, fmt("Big ole problems. Player reconnected with no player file (%s)!") %  getName());
     return;
   }
   if (st->plr_act & PLR_STEALTH)
@@ -137,7 +137,7 @@ void TPerson::resetChar()
   classIndT ij;
   for (ij = MIN_CLASS_IND; ij < MAX_CLASSES; ij++) {
     if (getLevel(ij) > MAX_IMMORT) {
-      vlogf(LOG_BUG, "%s was above level %d in class %d! Setting level to 1.\n\r", name, MAX_IMMORT, ij);
+      vlogf(LOG_BUG, fmt("%s was above level %d in class %d! Setting level to 1.\n\r") %  name % MAX_IMMORT % ij);
       setLevel(ij, 1);
       calcMaxLevel();
     }
@@ -183,10 +183,10 @@ void TPerson::resetChar()
     setMoney(0);
 
   if (getBank() > GetMaxLevel() * 10000)
-    vlogf(LOG_PIO, "%s has %d talens in bank.", getName(), getBank());
+    vlogf(LOG_PIO, fmt("%s has %d talens in bank.") %  getName() % getBank());
 
   if (getMoney() > GetMaxLevel() * 10000)
-    vlogf(LOG_PIO, "%s has %d talens.", getName(), getMoney());
+    vlogf(LOG_PIO, fmt("%s has %d talens.") %  getName() % getMoney());
 
   if (isPc() && hasWizPower(POWER_GOD)) {
     statTypeT iStat;
@@ -266,9 +266,9 @@ void TPerson::resetChar()
   }
 
   if (isPc() && isPlayerAction(PLR_LOGGED))
-    vlogf(LOG_PIO, "%s has LOG bit set.", getName());
+    vlogf(LOG_PIO, fmt("%s has LOG bit set.") %  getName());
   if (isPc() && isPlayerAction(PLR_GODNOSHOUT))
-    vlogf(LOG_PIO, "%s has GOD-NOSHOUT bit set.", getName());
+    vlogf(LOG_PIO, fmt("%s has GOD-NOSHOUT bit set.") %  getName());
 
   // DO NOT SAVE HERE - doStart makes assumptions
 }
@@ -327,7 +327,7 @@ void TPerson::storeToSt(charFile *st)
   if (desc && desc->account) 
     strcpy(st->aname, desc->account->name);
   else {
-    vlogf(LOG_BUG, "storeToSt for %s with no account info", getName());
+    vlogf(LOG_BUG, fmt("storeToSt for %s with no account info") %  getName());
   }
 
   wearSlotT ij;
@@ -373,7 +373,7 @@ void TPerson::storeToSt(charFile *st)
   }
 
   if ((j >= MAX_AFFECT) && af && af->next)
-    vlogf(LOG_BUG, "WARNING: (%s) OUT OF STORE ROOM FOR AFFECTED TYPES!!!", getName());
+    vlogf(LOG_BUG, fmt("WARNING: (%s) OUT OF STORE ROOM FOR AFFECTED TYPES!!!") %  getName());
 
   // Save the discipline learning
   // unused disc_learning values should be 0 from charFile ctor
@@ -632,8 +632,8 @@ void TPerson::loadFromSt(charFile *st)
     CDiscipline *tmpCD;
     byte dl = st->disc_learning[mapDiscToFile(dnt)];
     if (dl > MAX_DISC_LEARNEDNESS) {
-      vlogf(LOG_BUG, "disc %d on %s pfile with learning %d.  ERROR",
-             dnt, getName(), dl);
+      vlogf(LOG_BUG, fmt("disc %d on %s pfile with learning %d.  ERROR") % 
+             dnt % getName() % dl);
     }
     tmpCD = getDiscipline(dnt);
     if (tmpCD) {
@@ -646,8 +646,8 @@ void TPerson::loadFromSt(charFile *st)
       tmpCD->setLearnedness(tmpCD->getNatLearnedness());
       if (!(tmpCD->ok_for_class) && (GetMaxLevel() <= MAX_MORT) &&
                                    (tmpCD->getLearnedness() > 0)) {
-        vlogf(LOG_BUG, "disc %d on %s with learning %d.  ERROR",
-             dnt, getName(), tmpCD->getLearnedness());
+        vlogf(LOG_BUG, fmt("disc %d on %s with learning %d.  ERROR") % 
+             dnt % getName() % tmpCD->getLearnedness());
       }
     }
   }
@@ -823,7 +823,7 @@ void TBeing::saveChar(sh_int load_room)
       for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);
     
       if (shop_nr >= shop_index.size()) {
-	vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", this->number);
+	vlogf(LOG_BUG, fmt("Warning... shop # for mobile %d (real nr) not found.") %  this->number);
 	return;
       }
       
@@ -859,11 +859,11 @@ void TBeing::saveChar(sh_int load_room)
     dynamic_cast<TPerson *>(tmp)->storeToSt(&st);
 
   if (!desc || !desc->account) {
-    vlogf(LOG_BUG, "Character %s has no account in saveChar()!!!  Save aborted.", getName());
+    vlogf(LOG_BUG, fmt("Character %s has no account in saveChar()!!!  Save aborted.") %  getName());
     return;
   }
   if (!desc->account->name[0]) {
-    vlogf(LOG_BUG, "Character %s has a NULL account name! Save aborted.", getName());
+    vlogf(LOG_BUG, fmt("Character %s has a NULL account name! Save aborted.") %  getName());
     return;
   }
   if (!tmp) { 
@@ -877,7 +877,7 @@ void TBeing::saveChar(sh_int load_room)
   mud_assert(fl != NULL, "Failed fopen in save char: %s", buf);
   fwrite(&st, sizeof(charFile), 1, fl);
   if (fclose(fl) != 0) 
-    vlogf(LOG_BUG, "Problem closing %s's charFile", name);
+    vlogf(LOG_BUG, fmt("Problem closing %s's charFile") %  name);
 
   // Make a hard link to player directory of actual file in account
   // Directory. This is done for easy access by load_char and other
@@ -914,7 +914,7 @@ void TBeing::wipeChar(int)
        LOWER(desc->account->name[0]), sstring(desc->account->name).lower().c_str(), sstring(name).lower().c_str());
 
     if (unlink(abuf) != 0)
-      vlogf(LOG_FILE, "error in unlink (9) (%s) %d", abuf, errno);
+      vlogf(LOG_FILE, fmt("error in unlink (9) (%s) %d") %  abuf % errno);
   }
 
   removePlayerFile();
@@ -939,7 +939,7 @@ time_t lastAccountLogin(sstring name)
   struct dirent *dp;
 
   if (!(dfd = opendir(fileName.c_str()))) {
-    vlogf(LOG_FILE, "Unable to walk directory for character listing (%s account)", name.c_str());
+    vlogf(LOG_FILE, fmt("Unable to walk directory for character listing (%s account)") %  name);
     return 0;
   }
   while ((dp = readdir(dfd))) {
@@ -1054,34 +1054,34 @@ void do_the_player_stuff(const char *name)
 
             fclose(fp);
           } else
-            vlogf(LOG_FILE, "Unable to re-open [%s] for wizlist.", name);
+            vlogf(LOG_FILE, fmt("Unable to re-open [%s] for wizlist.") %  name);
         }
       }
 #endif
 
       if (tLevel == 1) {
-        // vlogf(LOG_MISC, "Adding Creator: %s", longbuf);
+        // vlogf(LOG_MISC, fmt("Adding Creator: %s") %  longbuf);
         tmp = new char[strlen(wiz->buf1) + strlen(longbuf) + 3];
         sprintf(tmp, "%s %s", wiz->buf1, longbuf);
         delete [] wiz->buf1;
         wiz->buf1 = tmp;
       } else if (tLevel == 2) {
-        // vlogf(LOG_MISC, "Adding God: %s", longbuf);
+        // vlogf(LOG_MISC, fmt("Adding God: %s") %  longbuf);
         tmp = new char[strlen(wiz->buf2) + strlen(longbuf) + 3];
         sprintf(tmp, "%s %s", wiz->buf2, longbuf);
         delete [] wiz->buf2;
         wiz->buf2 = tmp;
       } else if (tLevel == 3) {
-        // vlogf(LOG_MISC, "Adding Demigod: %s", longbuf);
+        // vlogf(LOG_MISC, fmt("Adding Demigod: %s") %  longbuf);
         tmp = new char[strlen(wiz->buf3) + strlen(longbuf) + 3];
         sprintf(tmp, "%s %s", wiz->buf3, longbuf);
         delete [] wiz->buf3;
         wiz->buf3 = tmp;
       } else if (!isGagged)
-        vlogf(LOG_BUG, "%s has powerfile but doesn't have a power title.", longbuf);
+        vlogf(LOG_BUG, fmt("%s has powerfile but doesn't have a power title.") %  longbuf);
 
     } else
-      vlogf(LOG_FILE, "Error opening [%s] for wizlist checking.", name);
+      vlogf(LOG_FILE, fmt("Error opening [%s] for wizlist checking.") %  name);
 
     return;
   }
@@ -1094,65 +1094,65 @@ void do_the_player_stuff(const char *name)
       max_level = max(max_level, st.level[i]);
 
     if (sstring(st.name).lower() != name){
-      vlogf(LOG_BUG, "%s had a corrupt st.name (%s). Moving player file.", st.name, name);
+      vlogf(LOG_BUG, fmt("%s had a corrupt st.name (%s). Moving player file.") %  st.name % name);
       handleCorrupted(name, st.aname);
       return;
     } else if (strlen(st.description) > 500) {
-      vlogf(LOG_BUG, "%s had a corrupt st.description. Moving player file.", name);
+      vlogf(LOG_BUG, fmt("%s had a corrupt st.description. Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
     } else if (strlen(st.lastHost) > 40) {
-      vlogf(LOG_BUG, "%s had a corrupt st.lastHost. Moving player file.", name);
+      vlogf(LOG_BUG, fmt("%s had a corrupt st.lastHost. Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
     } else if (strlen(st.hpColor) > 20) {
-      vlogf(LOG_BUG, "%s had a corrupt st.hpColor. Moving player file.", name);
+      vlogf(LOG_BUG, fmt("%s had a corrupt st.hpColor. Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
     } else if (strlen(st.manaColor) > 20) {
-      vlogf(LOG_BUG, "%s had a corrupt st.manaColor. Moving player file.", name);
+      vlogf(LOG_BUG, fmt("%s had a corrupt st.manaColor. Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
     } else if (strlen(st.moveColor) > 20) {
-      vlogf(LOG_BUG, "%s had a corrupt st.moveColor. Moving player file.", name);
+      vlogf(LOG_BUG, fmt("%s had a corrupt st.moveColor. Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
     } else if (strlen(st.moneyColor) > 20) {
-      vlogf(LOG_BUG, "%s had a corrupt st.moneyColor. Moving player file.", name);
+      vlogf(LOG_BUG, fmt("%s had a corrupt st.moneyColor. Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
     } else if (strlen(st.oppColor) > 20) {
-      vlogf(LOG_BUG, "%s had a corrupt st.oppColor. Moving player file.", name);
+      vlogf(LOG_BUG, fmt("%s had a corrupt st.oppColor. Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
     } else if (strlen(st.roomColor) > 20) {
-      vlogf(LOG_BUG, "%s had a corrupt st.roomColor. Moving player file.", name);
+      vlogf(LOG_BUG, fmt("%s had a corrupt st.roomColor. Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
     } else if (strlen(st.expColor) > 20) {
-      vlogf(LOG_BUG, "%s had a corrupt st.expColor. Moving player file.", name);
+      vlogf(LOG_BUG, fmt("%s had a corrupt st.expColor. Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
     } else if (strlen(st.tankColor) > 20) {
-      vlogf(LOG_BUG, "%s had a corrupt st.tankColor. Moving player file.", name);
+      vlogf(LOG_BUG, fmt("%s had a corrupt st.tankColor. Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
     } else if (strlen(st.pietyColor) > 20) {
-      vlogf(LOG_BUG, "%s had a corrupt st.pietyColor. Moving player file.", name);
+      vlogf(LOG_BUG, fmt("%s had a corrupt st.pietyColor. Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
     } else if (strlen(st.lifeforceColor) > 20) {
-      vlogf(LOG_BUG, "%s had a corrupt st.lifeforceColor. Moving player file.", name);
+      vlogf(LOG_BUG, fmt("%s had a corrupt st.lifeforceColor. Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
 #if 0
     } else if ((max_level <= MAX_MORT) && ((st.money < 0) || (st.money > 2500000000))) {
-      vlogf(LOG_BUG, "%s had a bad talens number(< 0 or > 25billion). Moving player file.", name);
+      vlogf(LOG_BUG, fmt("%s had a bad talens number(< 0 or > 25billion). Moving player file.") %  name);
       handleCorrupted(name, st.aname);
       return;
 #endif
     } else if (st.f_type < MIN_FACTION || st.f_type >= MAX_FACTIONS) {
-      vlogf(LOG_BUG, "%s had a bad faction(%d). Moving player file.", name, st.f_type);
+      vlogf(LOG_BUG, fmt("%s had a bad faction(%d). Moving player file.") %  name % st.f_type);
       handleCorrupted(name, st.aname);
       return;
     }
@@ -1189,9 +1189,9 @@ void do_the_player_stuff(const char *name)
       // This gives a player at least 3 months before delete occurs
       if((time(0) - lastlogin) > (90 * SECS_PER_REAL_DAY)){
 	if (!rent_only_deletion) {
-	  vlogf(LOG_MISC, "%s (level %d) did not log in for %d days. Deleting.", 
-		name,
-		max_level, ((time(0) - lastlogin)/SECS_PER_REAL_DAY));
+	  vlogf(LOG_MISC, fmt("%s (level %d) did not log in for %d days. Deleting.") %  
+		name %
+		max_level % ((time(0) - lastlogin)/SECS_PER_REAL_DAY));
 	  wipePlayerFile(name);
 	  sprintf(buf, "rm account/%c/%s/%s",
 		  LOWER(st.aname[0]), sstring(st.aname).lower().c_str(), sstring(name).lower().c_str());
@@ -1203,8 +1203,8 @@ void do_the_player_stuff(const char *name)
 	  sprintf(buf, "rent/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
 	  if ((fp = fopen(buf, "r"))) {
 	    fclose(fp);
-	    vlogf(LOG_MISC, "%s (level %d) did not log in for %d days. Deleting rent.",
-		  name, max_level, ((time(0) - lastlogin)/SECS_PER_REAL_DAY));
+	    vlogf(LOG_MISC, fmt("%s (level %d) did not log in for %d days. Deleting rent.") % 
+		  name % max_level % ((time(0) - lastlogin)/SECS_PER_REAL_DAY));
 	    wipeRentFile(name);
 	    wipeCorpseFile(sstring(name).lower().c_str());
 
@@ -1223,7 +1223,7 @@ void do_the_player_stuff(const char *name)
 
     return;
   } else {
-    vlogf(LOG_FILE, "Problems loading %s player file in dirwalk of do_the_player_stuff()!", name);
+    vlogf(LOG_FILE, fmt("Problems loading %s player file in dirwalk of do_the_player_stuff()!") %  name);
     return;
   }
 }
@@ -1429,8 +1429,8 @@ void fixup_players(void)
 
   bootPulse(NULL, true);
 
-  vlogf(LOG_FILE, "7-Day:  There are %d active players in %d active accounts.", accStat.active_player7, accStat.active_account7);
-  vlogf(LOG_FILE, "30-Day: There are %d active players in %d active accounts.", accStat.active_player30, accStat.active_account30);
+  vlogf(LOG_FILE, fmt("7-Day:  There are %d active players in %d active accounts.") %  accStat.active_player7 % accStat.active_account7);
+  vlogf(LOG_FILE, fmt("30-Day: There are %d active players in %d active accounts.") %  accStat.active_player30 % accStat.active_account30);
   return;
 }
 
@@ -1676,15 +1676,15 @@ void TBeing::saveTitle()
   buf = fmt("player/%c/%s.title") % LOWER(name[0]) % sstring(name).lower();
 
   if (!(fp = fopen(buf.c_str(), "w"))) {
-    vlogf(LOG_FILE, "Unable to open file (%s) for saving title (%d)", 
-	  buf.c_str(), errno);
+    vlogf(LOG_FILE, fmt("Unable to open file (%s) for saving title (%d)") %  
+	  buf.c_str() % errno);
     return;
   }
 
   fprintf(fp,"%s\n", tp->title);
   
   if (fclose(fp)) 
-      vlogf(LOG_FILE, "Problem closing %s's saveTitle", name);
+      vlogf(LOG_FILE, fmt("Problem closing %s's saveTitle") %  name);
 
 }
 
@@ -1701,13 +1701,13 @@ void TBeing::loadTitle()
   buf = fmt("player/%c/%s.title") % LOWER(name[0]) % sstring(name).lower();
 
   if (!(fp = fopen(buf.c_str(), "r"))) {
-    //    vlogf(LOG_FILE, "Unable to open file (%s) for loading title (%d)", buf.c_str(), errno);
+    //    vlogf(LOG_FILE, fmt("Unable to open file (%s) for loading title (%d)") %  buf % errno);
     tp->setTitle(true);
     return;
   }
 
   if (fscanf(fp, "%[^\n]", inbuf) != 1){
-    vlogf(LOG_BUG, "Bad data in drugs stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in drugs stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -1716,7 +1716,7 @@ void TBeing::loadTitle()
   tp->title = mud_str_dup(inbuf);
 
   if (fclose(fp))
-    vlogf(LOG_FILE, "Problem closing %s's loadTitle", name);
+    vlogf(LOG_FILE, fmt("Problem closing %s's loadTitle") %  name);
 }
 
 
@@ -1742,7 +1742,7 @@ void TBeing::saveDrugStats()
   sprintf(buf, "player/%c/%s.drugs", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(buf, "w"))) {
-    vlogf(LOG_FILE, "Unable to open file (%s) for saving drug stats. (%d)", buf, errno);
+    vlogf(LOG_FILE, fmt("Unable to open file (%s) for saving drug stats. (%d)") %  buf % errno);
     return;
   }
 
@@ -1767,7 +1767,7 @@ void TBeing::saveDrugStats()
 
 
   if (fclose(fp)) 
-      vlogf(LOG_FILE, "Problem closing %s's saveDrugStats", name);
+      vlogf(LOG_FILE, fmt("Problem closing %s's saveDrugStats") %  name);
 
 }
 
@@ -1812,7 +1812,7 @@ void TBeing::loadDrugStats()
 
   if (fscanf(fp, "%d\n", 
       &current_version) != 1) {
-    vlogf(LOG_BUG, "Bad data in drugs stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in drugs stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -1820,7 +1820,7 @@ void TBeing::loadDrugStats()
   while (fscanf(fp, "%u\n", &i) == 1){
     if (fscanf(fp, "%u %u %u %u %u %u\n", 
 	       &num1, &num2, &num3, &num4, &num5, &num6) != 6) {
-      vlogf(LOG_BUG, "Bad data in drugs stat read (%s)", getName());
+      vlogf(LOG_BUG, fmt("Bad data in drugs stat read (%s)") %  getName());
       fclose(fp);
       return;
     }
@@ -1833,7 +1833,7 @@ void TBeing::loadDrugStats()
 
     if (fscanf(fp, "%u %u %u %u %u %u\n", 
 	       &num1, &num2, &num3, &num4, &num5, &num6) != 6) {
-      vlogf(LOG_BUG, "Bad data in drugs stat read (%s)", getName());
+      vlogf(LOG_BUG, fmt("Bad data in drugs stat read (%s)") %  getName());
       fclose(fp);
       return;
     }
@@ -1846,7 +1846,7 @@ void TBeing::loadDrugStats()
 
     if (fscanf(fp, "%u %u\n", 
 	       &num1, &num2) != 2) {
-      vlogf(LOG_BUG, "Bad data in drugs stat read (%s)", getName());
+      vlogf(LOG_BUG, fmt("Bad data in drugs stat read (%s)") %  getName());
       fclose(fp);
       return;
     }
@@ -1883,7 +1883,7 @@ void TBeing::saveCareerStats()
   sprintf(buf, "player/%c/%s.career", LOWER(name[0]), sstring(name).lower().c_str());
 
   if (!(fp = fopen(buf, "w"))) {
-    vlogf(LOG_BUG, "Unable to open file (%s) for saving career stats. (%d)", buf, errno);
+    vlogf(LOG_BUG, fmt("Unable to open file (%s) for saving career stats. (%d)") %  buf % errno);
     return;
   }
 
@@ -1975,7 +1975,7 @@ void TBeing::saveCareerStats()
 	  desc->career.crit_ripped_out_heart_suff);
 
   if (fclose(fp)) 
-      vlogf(LOG_BUG, "Problem closing %s's saveCareerStats", name);
+      vlogf(LOG_BUG, fmt("Problem closing %s's saveCareerStats") %  name);
   
 }
 
@@ -2005,20 +2005,20 @@ void TBeing::loadCareerStats()
 
   if (fscanf(fp, "%d\n", 
       &current_version) != 1) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
   if (current_version <= 9) {
     // we've done a player wipe so this should never happen
-    vlogf(LOG_BUG, "Bad data for cur vers(%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data for cur vers(%s)") %  getName());
     fclose(fp);
     return;
   }
 
   if (fscanf(fp, "%u %u\n", 
       &num1, &num2) != 2) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2028,7 +2028,7 @@ void TBeing::loadCareerStats()
 if (current_version < 15) {
   if (fscanf(fp, "%u %lu\n", 
       &num1, &lu_num2) != 2) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2037,7 +2037,7 @@ if (current_version < 15) {
 } else {
   if (fscanf(fp, "%u %f\n", 
       &num1, &f_num1) != 2) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2050,7 +2050,7 @@ if (current_version < 16) {
 
   if (fscanf(fp, "%u %u %u\n", 
       &num1, &num2, &num3) != 3) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2060,7 +2060,7 @@ if (current_version < 16) {
 
   if (fscanf(fp, "%u %u\n", 
       &num1, &num2) != 2) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2069,7 +2069,7 @@ if (current_version < 16) {
 
   if (fscanf(fp, "%u %u %u %u %u\n", 
       &num1, &num2, &num3, &num4, &num5) != 5) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2081,7 +2081,7 @@ if (current_version < 16) {
 
   if (fscanf(fp, "%u %u %u %u %u\n", 
       &num1, &num2, &num3, &num4, &num5) != 5) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2093,7 +2093,7 @@ if (current_version < 16) {
 
   if (fscanf(fp, "%u %u %u %u\n", 
       &num1, &num2, &num3, &num4) != 4) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2104,7 +2104,7 @@ if (current_version < 16) {
 
   if (fscanf(fp, "%u %u\n", 
       &num1, &num2) != 2) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2113,7 +2113,7 @@ if (current_version < 16) {
 
   if (fscanf(fp, "%u %u %u %u\n", 
       &num1, &num2, &num3, &num4) != 4) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2124,7 +2124,7 @@ if (current_version < 16) {
 
   if (fscanf(fp, "%u %u %u %u\n", 
       &num1, &num2, &num3, &num4) != 4) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2136,7 +2136,7 @@ if (current_version < 16) {
   if (current_version >= 14) {
     if (fscanf(fp, "%u %u %u %u\n", 
 	       &num1, &num2, &num3, &num4) != 4) {
-      vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+      vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
       fclose(fp);
       return;
     }
@@ -2149,7 +2149,7 @@ if (current_version < 16) {
   if (current_version >= 17) {
     if (fscanf(fp, "%u %u\n",
 	       &num1, &num2) !=2){
-      vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+      vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
       fclose(fp);
       return;
     }
@@ -2159,7 +2159,7 @@ if (current_version < 16) {
 
   if (fscanf(fp, "%u %u\n", 
       &num1, &num2) != 2) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2168,7 +2168,7 @@ if (current_version < 16) {
 
   if (fscanf(fp, "%u %u\n", 
       &num1, &num2) != 2) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2177,7 +2177,7 @@ if (current_version < 16) {
 
   if (fscanf(fp, "%u %u %u %u\n", 
       &num1, &num2, &num3, &num4) != 4) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2189,7 +2189,7 @@ if (current_version < 16) {
   for (i = 0; i < MAX_ATTACK_MODE_TYPE; i++) {
     if (fscanf(fp, "%u %u %u %u\n", 
         &num1, &num2, &num3, &num4) != 4) {
-      vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+      vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
       fclose(fp);
       return;
     }
@@ -2201,7 +2201,7 @@ if (current_version < 16) {
 
   if (fscanf(fp, "%u %u\n", 
       &num1, &num2) != 2) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2211,7 +2211,7 @@ if (current_version < 16) {
 if (current_version >= 11) {
   if (fscanf(fp, "%lu %lu\n", 
       &lu_num1, &lu_num2) != 2) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2221,7 +2221,7 @@ if (current_version >= 11) {
   
 if (current_version >= 12) {
   if (fscanf(fp, "%u %u\n", &num1, &num2) != 2) {
-    vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+    vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
     return;
   }
@@ -2237,7 +2237,7 @@ if (current_version < 13) {
 
  if (current_version >= 18){
    if(fscanf(fp, "%u %u\n", &num1, &num2) != 2){
-     vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+     vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
      fclose(fp);
      return;
    }
@@ -2247,7 +2247,7 @@ if (current_version < 13) {
 
  if(current_version == 19){
    if(fscanf(fp, "%u %u\n", &num1, &num2) != 2){
-     vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+     vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
      fclose(fp);
      return;
    }
@@ -2257,7 +2257,7 @@ if (current_version < 13) {
 
  if(current_version >= 20){
    if(fscanf(fp, "%u %u\n", &num1, &num2) != 2){
-     vlogf(LOG_BUG, "Bad data in career stat read (%s)", getName());
+     vlogf(LOG_BUG, fmt("Bad data in career stat read (%s)") %  getName());
      fclose(fp);
      return;
    }
@@ -2281,7 +2281,7 @@ int listAccount(sstring name, sstring &buf)
   int count = 0;
 
   if (!(dfd = opendir(fileName.c_str()))) {
-    vlogf(LOG_FILE, "Unable to walk directory for character listing (%s account)", name.c_str());
+    vlogf(LOG_FILE, fmt("Unable to walk directory for character listing (%s account)") %  name);
     return 0;
   }
   buf += "The following characters are in the ";

@@ -1009,8 +1009,8 @@ int TMonster::aiShoveReact(TBeing *doer, bool worked, dirTypeT dir)
     rc = goDirection(rev_dir[dir]);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       // we're not checking for death, log an error
-      vlogf(LOG_MOB_AI, "error in shove react (%s shoving %d)",  
-          doer->getName(), dir);
+      vlogf(LOG_MOB_AI, fmt("error in shove react (%s shoving %d)") %   
+          doer->getName() % dir);
       return DELETE_THIS;
     }
   }

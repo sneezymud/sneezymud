@@ -212,7 +212,7 @@ TThing * TThing::dismount(positionTypeT pos)
 
   if (!riding) {
     // use this to find out where this is called from
-    vlogf(LOG_BUG, "%s not riding in call to dismount().", getName());
+    vlogf(LOG_BUG, fmt("%s not riding in call to dismount().") %  getName());
     return NULL;
   }
   if (riding->rider == this)
@@ -648,7 +648,7 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
     }
     return TRUE;
   }
-  vlogf(LOG_BUG, "Undefined call to doMount.  cmd = %d", cmd);
+  vlogf(LOG_BUG, fmt("Undefined call to doMount.  cmd = %d") %  cmd);
   return TRUE;
 }
 

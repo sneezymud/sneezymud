@@ -355,7 +355,7 @@ void TFFlame::updateFlameInfo()
       lFound = true;
     }
   if (!lFound)
-    vlogf(LOG_BUG, "TFFlame object with No extra slots for lighting [%s].",
+    vlogf(LOG_BUG, fmt("TFFlame object with No extra slots for lighting [%s].") % 
           (shortDescr ? shortDescr : "BAD OBJECT!"));
 }
 
@@ -595,7 +595,7 @@ void TBeing::igniteObject(const char *argument, TThing *fObj)
 
   // must be new, so lets create it and make sure it got created.
   if (!(newFlame = new TFFlame())) {
-    vlogf(LOG_BUG, "Was unable to allocate for new Flame item.  User[%s]", getName());
+    vlogf(LOG_BUG, fmt("Was unable to allocate for new Flame item.  User[%s]") %  getName());
     sendTo("Something bad occured, tell a god.\n\r");
     return;
   }
