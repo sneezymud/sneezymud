@@ -225,9 +225,9 @@ void TSmoke::decayMe()
   if (volume <= 0)
     setVolume(0);
   else if (volume < 25)
-    addToVolume((roomp->isIndoorSector() ? -1 : -3));
+    addToVolume((roomp->isIndoorSector() ? -5 : -8));
   else // large smokes evaporate faster
-    addToVolume((roomp->isIndoorSector() ? -(volume/25) : -(volume/15))); 
+    addToVolume((roomp->isIndoorSector() ? -(volume/15) : -(volume/8))); 
 
   if (getVolume() < 0)
     setVolume(0);
