@@ -2999,7 +2999,7 @@ int max_stat(race_t race, statTypeT iStat)
 // This will put a command into player's command que.
 // for mobs, it causes instanteous execution (no que)
 // will return DELETE_THIS if this should be deleted
-int TBeing::addCommandToQue(const char *msg)
+int TBeing::addCommandToQue(const sstring &msg)
 {
   int rc;
 

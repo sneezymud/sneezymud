@@ -353,7 +353,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             int cashCost = min(ch->getMoney(), cost);
 	    ch->giveMoney(me, cashCost, GOLD_HOSPITAL);
 	    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
+	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i), 
 		    cashCost, "regenerating");
 	    TShopOwned tso(shop_nr, me, ch);
 	    tso.doReserve();
@@ -389,7 +389,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
                 int cashCost = min(ch->getMoney(), cost);
 		ch->giveMoney(me, cashCost, GOLD_HOSPITAL);
 		me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-		shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
+		shoplog(shop_nr, ch, me, ch->describeBodySlot(i), 
 			cashCost, "mending");
 		TShopOwned tso(shop_nr, me, ch);
 		tso.doReserve();
@@ -423,7 +423,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             int cashCost = min(ch->getMoney(), cost);
 	    ch->giveMoney(me, cashCost, GOLD_HOSPITAL);
 	    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
+	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i), 
 		    cashCost, "healing");
 	    TShopOwned tso(shop_nr, me, ch);
 	    tso.doReserve();
@@ -453,7 +453,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             int cashCost = min(ch->getMoney(), cost);
 	    ch->giveMoney(me, cashCost, GOLD_HOSPITAL);
 	    me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
+	    shoplog(shop_nr, ch, me, ch->describeBodySlot(i), 
 		    cashCost, "expelling");
 	    TShopOwned tso(shop_nr, me, ch);
 	    tso.doReserve();
@@ -529,7 +529,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
               int cashCost = min(ch->getMoney(), cost);
 	      ch->giveMoney(me, cashCost, GOLD_HOSPITAL);
 	      me->saveItems(fmt("%s/%d") % SHOPFILE_PATH % shop_nr);
-	      shoplog(shop_nr, ch, me, ch->describeBodySlot(i).c_str(), 
+	      shoplog(shop_nr, ch, me, ch->describeBodySlot(i), 
 		      cashCost, "blindness");
 	      TShopOwned tso(shop_nr, me, ch);
 	      tso.doReserve();

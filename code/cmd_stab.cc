@@ -63,18 +63,14 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
   bool tKill = tThief->willKill(tSucker, tDamage, tDamageType, FALSE);
 
   sstring tStLimb(tSucker->describeBodySlot(tLimb));
-
-  char tStringChar[256],
-       tStringVict[256],
-       tStringOthr[256],
-       tStringMess[256] = "\0";
+  sstring tStringChar, tStringVict, tStringOthr, tStringMess;
 
   if (tLimb == WEAR_HEAD && !(rand() % 99) && !tSucker->hasDisease(DISEASE_EYEBALL)) {
     affectedData tAff;
 
-    sprintf(tStringChar, "You glance $N's eyes with your $o, slicing them wide open!");
-    sprintf(tStringVict, "$n glances your eyes with $s $o, slicing them wide open!  YOUR BLIND!");
-    sprintf(tStringOthr, "$n glances $N's eyes with $s $o, slicing them wide open!");
+    tStringChar="You glance $N's eyes with your $o, slicing them wide open!";
+    tStringVict="$n glances your eyes with $s $o, slicing them wide open!  YOUR BLIND!";
+    tStringOthr="$n glances $N's eyes with $s $o, slicing them wide open!";
 
     tAff.type      = AFFECT_DISEASE;
     tAff.level     = 0;
@@ -86,26 +82,26 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
     tSucker->rawBlind(tThief->GetMaxLevel(), tAff.duration, SAVE_NO);
   } else switch (::number(0, 5)) {
     case 0:
-      sprintf(tStringChar, "You thrust your $o into $N's %s!", tStLimb.c_str());
-      sprintf(tStringVict, "$n thrusts $s $o into your %s!", tStLimb.c_str());
-      sprintf(tStringOthr, "$n thrusts $s $o into $N's %s!", tStLimb.c_str());
+      tStringChar=fmt("You thrust your $o into $N's %s!") % tStLimb;
+      tStringVict=fmt("$n thrusts $s $o into your %s!") % tStLimb;
+      tStringOthr=fmt("$n thrusts $s $o into $N's %s!") % tStLimb;
       break;
 
     case 1:
-      sprintf(tStringChar, "You stab $N in $S %s!", tStLimb.c_str());
-      sprintf(tStringVict, "$n stabs you in your %s!", tStLimb.c_str());
-      sprintf(tStringOthr, "$n stabs $N in $S %s!", tStLimb.c_str());
+      tStringChar=fmt("You stab $N in $S %s!") % tStLimb;
+      tStringVict=fmt("$n stabs you in your %s!") % tStLimb;
+      tStringOthr=fmt("$n stabs $N in $S %s!") % tStLimb;
       break;
 
     case 2:
-      sprintf(tStringChar, "You gouge $N in $S %s!", tStLimb.c_str());
-      sprintf(tStringVict, "$n gouges you in your %s!", tStLimb.c_str());
-      sprintf(tStringOthr, "$n gouges $N in $S %s!", tStLimb.c_str());
+      tStringChar=fmt("You gouge $N in $S %s!") % tStLimb;
+      tStringVict=fmt("$n gouges you in your %s!") % tStLimb;
+      tStringOthr=fmt("$n gouges $N in $S %s!") % tStLimb;
 
     default:
-      sprintf(tStringChar, "You puncture $N's %s with your $o!", tStLimb.c_str());
-      sprintf(tStringVict, "$n punctures your %s with $s $o!", tStLimb.c_str());
-      sprintf(tStringOthr, "$n punctures $N's %s with $s $o!", tStLimb.c_str());
+      tStringChar=fmt("You puncture $N's %s with your $o!") % tStLimb;
+      tStringVict=fmt("$n punctures your %s with $s $o!") % tStLimb;
+      tStringOthr=fmt("$n punctures $N's %s with $s $o!") % tStLimb;
       break;
   }
 
@@ -117,70 +113,73 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
     switch (tLimb) {
       case WEAR_HEAD:
         if (tDamageType == SKILL_STABBING) {
-          sprintf(tStringChar, "Your weapon sinks DEEP into $N's skull!");
-          sprintf(tStringVict, "$n's weapon sinks DEEP into your skull!");
-          sprintf(tStringOthr, "$n's weapon sinks DEEP into $N's skull!");
+          tStringChar="Your weapon sinks DEEP into $N's skull!";
+          tStringVict="$n's weapon sinks DEEP into your skull!";
+	  tStringOthr="$n's weapon sinks DEEP into $N's skull!";
         } else {
-          sprintf(tStringChar, "You cause $N's skull to cave in!");
-          sprintf(tStringVict, "$n caused your skull to cave in!");
-          sprintf(tStringOthr, "$n caused $N's skull to cave in!");
-          sprintf(tStringMess, "You get a good look at $N's grey matter...");
+          tStringChar="You cause $N's skull to cave in!";
+          tStringVict="$n caused your skull to cave in!";
+          tStringOthr="$n caused $N's skull to cave in!";
+          tStringMess="You get a good look at $N's grey matter...";
         }
 
         break;
 
       case WEAR_NECK:
         if (tDamageType == SKILL_STABBING) {
-          sprintf(tStringChar, "You slice $N's neck wide open!");
-          sprintf(tStringVict, "$n slices your neck wide open!");
-          sprintf(tStringOthr, "$n slices $N's neck wide open!");
-          sprintf(tStringMess, "Blood spews forth from $N's severed jugular!");
+          tStringChar="You slice $N's neck wide open!";
+          tStringVict="$n slices your neck wide open!";
+          tStringOthr="$n slices $N's neck wide open!";
+          tStringMess="Blood spews forth from $N's severed jugular!";
         } else {
-          sprintf(tStringChar, "You sever $N at the neck!");
-          sprintf(tStringVict, "$n severs you at the neck!");
-          sprintf(tStringOthr, "$n severs $N at the neck!");
-          sprintf(tStringMess, "Blood gushes from $N's neck!");
+          tStringChar="You sever $N at the neck!";
+          tStringVict="$n severs you at the neck!";
+          tStringOthr="$n severs $N at the neck!";
+          tStringMess="Blood gushes from $N's neck!";
         }
 
         break;
 
       case WEAR_BODY:
         if (!(rand() % 9)) {
-          sprintf(tStringChar, "You thrust $p DEEP into $N's gut!");
-          sprintf(tStringVict, "$n thusts $p DEEP into your gut, good thing you are dead now!");
-          sprintf(tStringOthr, "$n thrusts $p DEEP into $N's gut!");
+          tStringChar="You thrust $p DEEP into $N's gut!";
+          tStringVict="$n thusts $p DEEP into your gut, good thing you are dead now!";
+          tStringOthr="$n thrusts $p DEEP into $N's gut!";
         } else {
-          sprintf(tStringChar, "You plunge $p DEEP into $N's chest, you can feel $S heart slow then stop through your weapon");
-          sprintf(tStringVict, "$n plunges $p DEEP into your chest, piercing your heart!");
-          sprintf(tStringOthr, "$n plunges $p DEEP into $N's chest, looks like he nailed them in the heart!");
-          sprintf(tStringMess, "Blood spews forth from the stab wound!");
+          tStringChar="You plunge $p DEEP into $N's chest, you can feel $S heart slow then stop through your weapon";
+          tStringVict="$n plunges $p DEEP into your chest, piercing your heart!";
+          tStringOthr="$n plunges $p DEEP into $N's chest, looks like he nailed them in the heart!";
+          tStringMess="Blood spews forth from the stab wound!";
         }
 
         break;
 
       case WEAR_WAISTE:
-        sprintf(tStringChar, "You slice $N from love handle to love handle!");
-        sprintf(tStringVict, "$n slices you from love handle to love handle!");
-	sprintf(tStringOthr, "$n slices $N from love handle to love handle!");
+        tStringChar="You slice $N from love handle to love handle!";
+        tStringVict="$n slices you from love handle to love handle!";
+	tStringOthr="$n slices $N from love handle to love handle!";
         break;
 
       case WEAR_BACK:
         if (!(rand() % 9) && !tSucker->raceHasNoBones()) {
-          sprintf(tStringChar, "You rake $p down $N's back, slicing the spine!");
-          sprintf(tStringVict, "$n rakes $p down your back, slicing your spine!");
-          sprintf(tStringOthr, "$n rakes $p down the back, slicing their spine!");
+          tStringChar="You rake $p down $N's back, slicing the spine!";
+          tStringVict="$n rakes $p down your back, slicing your spine!";
+          tStringOthr="$n rakes $p down the back, slicing their spine!";
         } else {
-          sprintf(tStringChar, "You carve a rather nice hole in $N's back!");
-          sprintf(tStringVict, "$n carves you a good sized hole in your back!");
-          sprintf(tStringOthr, "$n carves $N a good sized hole in the back!");
+          tStringChar="You carve a rather nice hole in $N's back!";
+          tStringVict="$n carves you a good sized hole in your back!";
+          tStringOthr="$n carves $N a good sized hole in the back!";
         }
 
         break;
 
       default:
-        sprintf(tStringChar, "Your stab to $N's %s ceases their existence!", tStLimb.c_str());
-        sprintf(tStringVict, "$n stabs you in your %s, ceasing your existence!", tStLimb.c_str());
-        sprintf(tStringOthr, "$n stabs $N in $S %s, ceasing their existence!", tStLimb.c_str());
+        tStringChar=fmt("Your stab to $N's %s ceases their existence!") %
+	  tStLimb;
+        tStringVict=fmt("$n stabs you in your %s, ceasing your existence!") %
+	  tStLimb;
+        tStringOthr=fmt("$n stabs $N in $S %s, ceasing their existence!") %
+	  tStLimb;
         break;
     }
 
@@ -254,9 +253,12 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
           } else if (!tSucker->isLimbFlags(tLimb, PART_INFECTED))
             if (!::number(0, 9) &&
                 tSucker->rawInfect(tLimb, tDuration, SILENT_YES, CHECK_IMMUNITY_YES)) {
-              sprintf(tStringChar, "Your stab to $N's %s infects it!", tStLimb.c_str());
-              sprintf(tStringVict, "Your %s gets infected from $n's stab!", tStLimb.c_str());
-              sprintf(tStringOthr, "$N's %s gets infected from $n's stab!", tStLimb.c_str());
+              tStringChar=fmt("Your stab to $N's %s infects it!") %
+		tStLimb;
+              tStringVict=fmt("Your %s gets infected from $n's stab!") %
+		tStLimb;
+              tStringOthr=fmt("$N's %s gets infected from $n's stab!") %
+		tStLimb;
 	      
               act(tStringChar, FALSE, tThief, NULL, tSucker, TO_CHAR);
               act(tStringVict, FALSE, tThief, NULL, tSucker, TO_VICT);
@@ -285,9 +287,9 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
       // Legs   :  1 (can not be whacked)
       // Fingers: -4 (can     be whacked)
       if (::number(tNewSever, 500) <= 0 && !tSucker->isLucky(tSucker->GetMaxLevel())) {
-        sprintf(tStringChar, "You slice $N's %s right off!", tStLimb.c_str());
-        sprintf(tStringVict, "$n slices your %s right off!", tStLimb.c_str());
-        sprintf(tStringOthr, "$n slices $N's %s right off!", tStLimb.c_str());
+        tStringChar=fmt("You slice $N's %s right off!") % tStLimb;
+        tStringVict=fmt("$n slices your %s right off!") % tStLimb;
+        tStringOthr="$n slices $N's %s right off!") % tStLimb;
 
         tSucker->makePartMissing(tLimb, false, tThief);
 

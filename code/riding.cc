@@ -141,13 +141,13 @@ int TMonster::lookForHorse()
     if (tbt->getPosition() < POSITION_SLEEPING) {
     } else if (tbt->getPosition() == POSITION_SLEEPING) {
       buf = fmt("order %s wake") %fname(tbt->name);
-      rc = addCommandToQue(buf.c_str());
+      rc = addCommandToQue(buf);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     } else if (tbt->getPosition() <= POSITION_SITTING) {
       buf = fmt("order %s stand") %fname(tbt->name);
-      rc = addCommandToQue(buf.c_str());
+      rc = addCommandToQue(buf);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
@@ -157,7 +157,7 @@ int TMonster::lookForHorse()
     if (fight() && !tbt->fight()) {
       buf = fmt("order %s hit ") %fname(tbt->name);
       buf += fname(fight()->name);
-      rc = addCommandToQue(buf.c_str());
+      rc = addCommandToQue(buf);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;

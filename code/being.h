@@ -897,7 +897,7 @@ class TBeing : public TThing {
 
     void checkForStr(silentTypeT);
     void doAfk();
-    int addCommandToQue(const char *);
+    int addCommandToQue(const sstring &);
     int loseRoundWear(double, bool randomize = TRUE, bool check = FALSE);
     int loseRound(double, bool x = TRUE, bool check = FALSE);
     void blowCount(bool, float &, float &);

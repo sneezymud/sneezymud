@@ -50,7 +50,7 @@ extern map <sstring,float> matches_cache;
 extern TObj *loadRepairItem(TBeing *, int, long &, int &, unsigned char &);
 
 
-extern void shoplog(int, TBeing *, TMonster *, const char *, int, const char *);
+extern void shoplog(int, TBeing *, TMonster *, const sstring &, int, const sstring &);
 extern unsigned int find_shop_nr(int);
 
 

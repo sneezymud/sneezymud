@@ -3668,7 +3668,7 @@ int TMonster::mobileActivity(int pulse)
 	    if((o=dynamic_cast<TObj *>(t))){
 	      tname=o->getName();
 	      o->thingDumped(this, &value);
-	      shoplog(shop_nr, this, this, tname.c_str(), value, "dumped");
+	      shoplog(shop_nr, this, this, tname, value, "dumped");
 	      setMoney(getMoney()+value);
 	      found=true;
 	      break;
