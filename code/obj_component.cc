@@ -3012,8 +3012,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   tCost  = (int) shopPrice(tNum, tShop, tChr, &tDiscount);
 
   if ((ch->getMoney() < tCost) && !ch->hasWizPower(POWER_GOD)) {
-    ssprintf(tString, shop_index[tShop].missing_cash2, ch->getName());
-    tKeeper->doTell(tString);
+    tKeeper->doTell(ch->name, shop_index[tShop].missing_cash2);
 
     switch (shop_index[tShop].temper1) {
       case 0:
@@ -3025,6 +3024,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
       default:
         break;
     }
+    return -1;
   }
 
   if (shop_index[tShop].isProducing(this)) {
@@ -3154,8 +3154,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
   tCost  = max(1, sellPrice(num, tShop, tChr, &tDiscount));
 
   if (tKeeper->getMoney() < tCost) {
-    ssprintf(buf, shop_index[tShop].missing_cash1, ch->getName());
-    tKeeper->doTell(buf);
+    tKeeper->doTell(ch->name, shop_index[tShop].missing_cash1);
     return;
   }
 
