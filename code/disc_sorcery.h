@@ -2,26 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_sorcery.h,v $
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.5  1999/10/06 22:13:58  batopr
-// *** empty log message ***
-//
-// Revision 1.4  1999/09/27 00:38:17  lapsos
-// *** empty log message ***
-//
-// Revision 1.2  1999/09/27 00:08:28  lapsos
-// added atomize(TB, TB, TMagicItem) for doObjSpell code.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -96,6 +76,7 @@ private:
     int energyDrain(TBeing *, TBeing *);
     int castEnergyDrain(TBeing *, TBeing *);
     int energyDrain(TBeing *, TBeing *, int, byte, int);
+    int energyDrain(TBeing *, TBeing *, TMagicItem *);
 
     int acidBlast(TBeing *);
     int castAcidBlast(TBeing *);
