@@ -233,7 +233,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
   // deikhan = 0.639
   // monk    = 0.683
   // ranger  = 0.529
-  // shaman  = 2.250
+  // shaman  = 2.150
 
   // some global modifications
   // saving throw: c.f. balance.

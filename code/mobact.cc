@@ -2527,6 +2527,14 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
         return spell;
       }
     }
+    spell = SPELL_PILLAR_SALT;
+    if (!::number(0, 6) &&
+         ch.doesKnowSkill(spell) && 
+           (cutoff < discArray[spell]->start) &&
+         (ch.getSkillValue(spell) > 33)) {
+      act("$n utters, \"How about a little salt for your wounds!\"", TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
     spell = ch.getSkillNum(SPELL_CALL_LIGHTNING);
     if (!::number(0, 6) && 
          vict.outside() &&
@@ -2547,7 +2555,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_PILLAR_SALT;
-    if (!::number(0, 3) &&
+    if (!::number(0, 6) &&
          ch.doesKnowSkill(spell) && 
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
