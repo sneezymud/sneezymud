@@ -78,7 +78,7 @@ void TBeing::doScore()
   if (hasClass(CLASS_DEIKHAN))
     hpgain = 7.5;
   
-  if (hasClass(CLASS_MAGIC_USER) || hasClass(CLASS_SHAMAN))
+  if (hasClass(CLASS_MAGE) || hasClass(CLASS_SHAMAN))
     hpgain = 7.5;
   
   if (hasClass(CLASS_CLERIC) || hasClass(CLASS_THIEF))
@@ -92,7 +92,7 @@ void TBeing::doScore()
   newmax += 21; // level 1 base hp
 
   if(getSkillValue(SKILL_DEFENSE)<100 ||
-     hasClass(CLASS_MAGIC_USER) || hasClass(CLASS_SHAMAN) ||
+     hasClass(CLASS_MAGE) || hasClass(CLASS_SHAMAN) ||
      hasClass(CLASS_CLERIC) || hasClass(CLASS_THIEF)){
     sprintf(Buf, "You would have %s%d%s max hp with the new system.\n\r",
 	    red(), (int) newmax, norm());

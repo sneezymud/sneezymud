@@ -2944,54 +2944,6 @@ extern void comify(char *);
 
 void TBeing::doLevels(const char *argument)
 {
-#if 0
-  int       tIndex,
-            tValueA,
-            tValueB,
-            tValueC,
-            tValueD,
-            tDents[4];
-  char      tString[256],
-            tBuffer[256];
-  sstring    tStString("");
-  classIndT tClass     = MAGE_LEVEL_IND;
-  bool      tRemaining = false;
-
-  if (argument && *argument && is_abbrev(argument, "left"))
-    tRemaining = true;
-
-  for (tIndex = 1; tIndex <= (MAX_MORT / 4) + 1; tIndex++) {
-    tValueA = (int) getExpClassLevel(tClass, (tDents[0] = (tIndex + 0 * (MAX_MORT / 4 + 1))));
-    tValueB = (int) getExpClassLevel(tClass, (tDents[1] = (tIndex + 1 * (MAX_MORT / 4 + 1))));
-    tValueC = (int) getExpClassLevel(tClass, (tDents[2] = (tIndex + 2 * (MAX_MORT / 4 + 1))));
-    tValueD = (int) getExpClassLevel(tClass, (tDents[3] = (tIndex + 3 * (MAX_MORT / 4 + 1))));
-
-    if (tRemaining) {
-      tValueA = max(0, ((int) getExp() - tValueA));
-      tValueB = max(0, ((int) getExp() - tValueB));
-      tValueC = max(0, ((int) getExp() - tValueC));
-      tValueD = max(0, ((int) getExp() - tValueD));
-    }
-
-    for (int tTemp = 0; tTemp < 4; tTemp++)
-      if (tDents[tTemp] <= MAX_MORT) {
-        sprintf(tBuffer, "%d", tValueA);
-        comify(tBuffer);
-        sprintf(tString, "%s[%2d]%s %s%13s%s",
-                cyan(), tDents[tTemp], norm(),
-                (tRemaining ? (tValueA ? orange() : green()) :
-                 ((tDents[tTemp] > GetMaxLevel()) ? orange() : green())),
-                tString, norm());
-        tStString += tString;
-      }
-    tStString += "\n\r";
-  }
-
-  tStString += "\n\r";
-
-  if (desc)
-    desc->page_string(tStString, SHOWNOW_NO, ALLOWREP_YES);
-#else
   int i;
   classIndT Class;
 // int RaceMax;
@@ -3109,7 +3061,6 @@ void TBeing::doLevels(const char *argument)
   if (desc)
     desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
   return;
-#endif
 }
 
 void TBeing::doWorld()
@@ -4288,7 +4239,7 @@ void TBeing::describeMaxPointiness(const TBaseWeapon *obj, int learn) const
 
   if (!hasClass(CLASS_THIEF) && !hasClass(CLASS_WARRIOR) && 
       !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_RANGER) &&
-      !hasClass(CLASS_SHAMAN) && !hasClass(CLASS_MAGIC_USER))
+      !hasClass(CLASS_SHAMAN) && !hasClass(CLASS_MAGE))
     learn /= 3;
 
   int maxsharp = GetApprox(obj->getMaxSharp(), learn);
@@ -4694,7 +4645,7 @@ void TBeing::describeBowRange(const TBow *obj, int learn)
 
 void TBeing::describeMagicLevel(const TMagicItem *obj, int learn) const
 {
-  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
+  if (!hasClass(CLASS_MAGE) && !hasClass(CLASS_CLERIC) &&
       !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN))
     return;
 
@@ -4727,7 +4678,7 @@ const sstring numberAsString(int num)
 
 void TBeing::describeMagicLearnedness(const TMagicItem *obj, int learn) const
 {
-  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
+  if (!hasClass(CLASS_MAGE) && !hasClass(CLASS_CLERIC) &&
       !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN))
     return;
 
@@ -4740,7 +4691,7 @@ void TBeing::describeMagicLearnedness(const TMagicItem *obj, int learn) const
 
 void TBeing::describeMagicSpell(const TMagicItem *obj, int learn)
 {
-  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
+  if (!hasClass(CLASS_MAGE) && !hasClass(CLASS_CLERIC) &&
       !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN))
     return;
 
@@ -4872,7 +4823,7 @@ void TBeing::describeComponentUseage(const TComponent *obj, int) const
 
 void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
 {
-  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
+  if (!hasClass(CLASS_MAGE) && !hasClass(CLASS_CLERIC) &&
       !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN))
     learn /= 3;
 
@@ -4906,7 +4857,7 @@ void TBeing::describeComponentDecay(const TComponent *obj, int learn) const
 
 void TBeing::describeComponentSpell(const TComponent *obj, int learn) const
 {
-  if (!hasClass(CLASS_MAGIC_USER) && !hasClass(CLASS_CLERIC) &&
+  if (!hasClass(CLASS_MAGE) && !hasClass(CLASS_CLERIC) &&
       !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN) && !hasClass(CLASS_SHAMAN))
     learn /= 3;
 

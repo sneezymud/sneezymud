@@ -1565,8 +1565,8 @@ int Descriptor::clientCreateChar(char *arg)
       }
       break;
     case '3':
-      if (canChooseClass(CLASS_MAGIC_USER)) {
-        ch->setClass(CLASS_MAGIC_USER);
+      if (canChooseClass(CLASS_MAGE)) {
+        ch->setClass(CLASS_MAGE);
       } else {
       }
       break;

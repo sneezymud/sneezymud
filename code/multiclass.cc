@@ -11,7 +11,7 @@ int NumClasses(int Class)
 {
   int tot = 0;
 
-  if (Class & CLASS_MAGIC_USER)
+  if (Class & CLASS_MAGE)
       tot++;
 
   if (Class & CLASS_WARRIOR)
@@ -136,74 +136,32 @@ int TBeing::getClassNum(const char *arg, exactTypeT exact)
   int which = 0;
 
   if (exact) {
-    if (!strcmp(arg, "mage") || !strcmp(arg, "magicuser"))
-      which = CLASS_MAGIC_USER;
-     else if (!strcmp(arg, "cleric"))
-       which = CLASS_CLERIC;
-     else if (!strcmp(arg, "warrior"))
-       which = CLASS_WARRIOR;
-     else if (!strcmp(arg, "thief"))
-       which = CLASS_THIEF;
-     else if (!strcmp(arg, "deikhan"))
-       which = CLASS_DEIKHAN;
-     else if (!strcmp(arg, "shaman"))
-       which = CLASS_SHAMAN;
-     else if (!strcmp(arg, "ranger"))
-       which = CLASS_RANGER;
-     else if (!strcmp(arg, "monk"))
-       which = CLASS_MONK;
-     else {
-       return FALSE;
-     }
-  } else {
-    if (is_abbrev(arg, "mage") || is_abbrev(arg, "magicuser"))
-      which = CLASS_MAGIC_USER;
-    else if (is_abbrev(arg, "cleric"))
-      which = CLASS_CLERIC;
-    else if (is_abbrev(arg, "warrior"))
-      which = CLASS_WARRIOR;
-    else if (is_abbrev(arg, "thief"))
-      which = CLASS_THIEF;
-    else if (is_abbrev(arg, "deikhan"))
-      which = CLASS_DEIKHAN;
-    else if (is_abbrev(arg, "shaman"))
-      which = CLASS_SHAMAN;
-    else if (is_abbrev(arg, "ranger"))
-      which = CLASS_RANGER;
-    else if (is_abbrev(arg, "monk"))
-      which = CLASS_MONK;
-    else {
-      return FALSE;
+    for(int i=0;i<MAX_CLASSES;++i){
+      if(!strcmp(arg, classInfo[i].name.c_str())){
+	which=classInfo[i].class_num;
+	break;
+      }
     }
+      
+    if(!which)
+      return FALSE;
+  } else {
+    for(int i=0;i<MAX_CLASSES;++i){
+      if(is_abbrev(arg, classInfo[i].name)){
+	which=classInfo[i].class_num;
+	break;
+      }
+    }
+      
+    if(!which)
+      return FALSE;
   }
   return which;
 }
 
 int TBeing::getClassNum(classIndT arg)
 {
-  int which = 0;
-
-  if(arg==MAGE_LEVEL_IND)
-    which = CLASS_MAGIC_USER;
-  else if (arg==CLERIC_LEVEL_IND)
-    which = CLASS_CLERIC;
-  else if (arg==WARRIOR_LEVEL_IND)
-    which = CLASS_WARRIOR;
-  else if (arg==THIEF_LEVEL_IND)
-    which = CLASS_THIEF;
-  else if (arg==DEIKHAN_LEVEL_IND)
-    which = CLASS_DEIKHAN;
-  else if (arg==SHAMAN_LEVEL_IND)
-    which = CLASS_SHAMAN;
-  else if (arg==RANGER_LEVEL_IND)
-    which = CLASS_RANGER;
-  else if (arg==MONK_LEVEL_IND)
-    which = CLASS_MONK;
-  else {
-    return FALSE;
-  }
-
-  return which;
+  return classInfo[arg].class_num;
 }
 
 
@@ -212,23 +170,14 @@ classIndT TBeing::getClassIndNum(const char *arg, exactTypeT exact)
   int which = getClassNum(arg, exact);
   classIndT res = MIN_CLASS_IND;
 
-  if (which == CLASS_MAGE)
-    res = MAGE_LEVEL_IND;
-  else if (which == CLASS_CLERIC)
-    res = CLERIC_LEVEL_IND;
-  else if (which == CLASS_WARRIOR)
-    res = WARRIOR_LEVEL_IND;
-  else if (which == CLASS_THIEF)
-    res = THIEF_LEVEL_IND;
-  else if (which == CLASS_RANGER)
-    res = RANGER_LEVEL_IND;
-  else if (which == CLASS_DEIKHAN)
-    res = DEIKHAN_LEVEL_IND;
-  else if (which == CLASS_SHAMAN)
-    res = SHAMAN_LEVEL_IND;
-  else if (which == CLASS_MONK)
-    res = MONK_LEVEL_IND;
-  else {
+  for(int i=0;i<MAX_CLASSES;++i){
+    if(classInfo[i].class_num==which){
+      res=classInfo[i].class_lev_num;
+      break;
+    }
+  }
+      
+  if(res==MIN_CLASS_IND) {
     forceCrash("unknown class result");
   }
 
@@ -240,23 +189,14 @@ classIndT TBeing::getClassIndNum(ush_int which, exactTypeT exact)
 {
   classIndT res = MIN_CLASS_IND;
 
-  if (which == CLASS_MAGE)
-    res = MAGE_LEVEL_IND;
-  else if (which == CLASS_CLERIC)
-    res = CLERIC_LEVEL_IND;
-  else if (which == CLASS_WARRIOR)
-    res = WARRIOR_LEVEL_IND;
-  else if (which == CLASS_THIEF)
-    res = THIEF_LEVEL_IND;
-  else if (which == CLASS_RANGER)
-    res = RANGER_LEVEL_IND;
-  else if (which == CLASS_DEIKHAN)
-    res = DEIKHAN_LEVEL_IND;
-  else if (which == CLASS_SHAMAN)
-    res = SHAMAN_LEVEL_IND;
-  else if (which == CLASS_MONK)
-    res = MONK_LEVEL_IND;
-  else {
+  for(int i=0;i<MAX_CLASSES;++i){
+    if(classInfo[i].class_num==which){
+      res=classInfo[i].class_lev_num;
+      break;
+    }
+  }
+      
+  if(res==MIN_CLASS_IND) {
     forceCrash("unknown class result");
   }
 
@@ -266,48 +206,28 @@ classIndT TBeing::getClassIndNum(ush_int which, exactTypeT exact)
 
 bool TBeing::hasClass(const char *arg, exactTypeT exact) const
 {
-  int which;
+  int which=0;
 
   if (exact) {
-    if (!strcmp(arg, "mage") || !strcmp(arg, "magicuser"))
-      which = CLASS_MAGIC_USER;
-     else if (!strcmp(arg, "cleric"))
-       which = CLASS_CLERIC;
-     else if (!strcmp(arg, "warrior"))
-       which = CLASS_WARRIOR;
-     else if (!strcmp(arg, "thief"))
-       which = CLASS_THIEF;
-     else if (!strcmp(arg, "deikhan"))
-       which = CLASS_DEIKHAN;
-     else if (!strcmp(arg, "shaman"))
-       which = CLASS_SHAMAN;
-     else if (!strcmp(arg, "ranger"))
-       which = CLASS_RANGER;
-     else if (!strcmp(arg, "monk"))
-       which = CLASS_MONK;
-     else {
-       return FALSE;
-     }
-  } else {
-    if (is_abbrev(arg, "mage") || is_abbrev(arg, "magicuser"))
-      which = CLASS_MAGIC_USER;
-    else if (is_abbrev(arg, "cleric"))
-      which = CLASS_CLERIC;
-    else if (is_abbrev(arg, "warrior"))
-      which = CLASS_WARRIOR;
-    else if (is_abbrev(arg, "thief"))
-      which = CLASS_THIEF;
-    else if (is_abbrev(arg, "deikhan"))
-      which = CLASS_DEIKHAN;
-    else if (is_abbrev(arg, "shaman"))
-      which = CLASS_SHAMAN;
-    else if (is_abbrev(arg, "ranger"))
-      which = CLASS_RANGER;
-    else if (is_abbrev(arg, "monk"))
-      which = CLASS_MONK;
-    else {
-      return FALSE;
+    for(int i=0;i<MAX_CLASSES;++i){
+      if(!strcmp(arg, classInfo[i].name.c_str())){
+	which=classInfo[i].class_num;
+	break;
+      }
     }
+      
+    if(!which)
+      return FALSE;
+  } else {
+    for(int i=0;i<MAX_CLASSES;++i){
+      if(is_abbrev(arg, classInfo[i].name)){
+	which=classInfo[i].class_num;
+	break;
+      }
+    }
+      
+    if(!which)
+      return FALSE;
   }
 
   if (getClass() & which)
@@ -371,7 +291,7 @@ int TBeing::GetTotLevel() const
 
 void TPerson::startLevels()
 {
-  if (hasClass(CLASS_MAGIC_USER))
+  if (hasClass(CLASS_MAGE))
     advanceLevel(MAGE_LEVEL_IND);
 
   if (hasClass(CLASS_CLERIC))
@@ -486,13 +406,13 @@ classIndT & operator++(classIndT &c, int)
 
 const char * const TBeing::getProfName() const
 {
-  if (hasClass(CLASS_MAGIC_USER | CLASS_WARRIOR | CLASS_THIEF, EXACT_YES))
+  if (hasClass(CLASS_MAGE | CLASS_WARRIOR | CLASS_THIEF, EXACT_YES))
     return "Mage/Warrior/Thief";
-  else if (hasClass(CLASS_MAGIC_USER | CLASS_WARRIOR, EXACT_YES))
+  else if (hasClass(CLASS_MAGE | CLASS_WARRIOR, EXACT_YES))
     return "Mage/Warrior";
-  else if (hasClass(CLASS_MAGIC_USER | CLASS_THIEF, EXACT_YES))
+  else if (hasClass(CLASS_MAGE | CLASS_THIEF, EXACT_YES))
     return "Mage/Thief";
-  else if (hasClass(CLASS_MAGIC_USER, EXACT_YES))
+  else if (hasClass(CLASS_MAGE, EXACT_YES))
     return "Mage";
   else if (hasClass(CLASS_CLERIC | CLASS_WARRIOR | CLASS_THIEF, EXACT_YES))
     return "Cleric/Warrior/Thief";
@@ -522,16 +442,16 @@ const char * const TBeing::getProfName() const
 
 const char * const TBeing::getProfAbbrevName() const
 {
-  if (hasClass(CLASS_MAGIC_USER | CLASS_WARRIOR | CLASS_CLERIC | CLASS_MONK | CLASS_THIEF, EXACT_YES))
+  if (hasClass(CLASS_MAGE | CLASS_WARRIOR | CLASS_CLERIC | CLASS_MONK | CLASS_THIEF, EXACT_YES))
     return "Thief";
 
-  if (hasClass(CLASS_MAGIC_USER | CLASS_WARRIOR | CLASS_THIEF, EXACT_YES))
+  if (hasClass(CLASS_MAGE | CLASS_WARRIOR | CLASS_THIEF, EXACT_YES))
     return "M/W/T";
-  else if (hasClass(CLASS_MAGIC_USER | CLASS_WARRIOR, EXACT_YES))
+  else if (hasClass(CLASS_MAGE | CLASS_WARRIOR, EXACT_YES))
     return "M/W";
-  else if (hasClass(CLASS_MAGIC_USER | CLASS_THIEF, EXACT_YES))
+  else if (hasClass(CLASS_MAGE | CLASS_THIEF, EXACT_YES))
     return "M/T";
-  else if (hasClass(CLASS_MAGIC_USER, EXACT_YES))
+  else if (hasClass(CLASS_MAGE, EXACT_YES))
     return "Mage";
   else if (hasClass(CLASS_CLERIC | CLASS_WARRIOR | CLASS_THIEF, EXACT_YES))
     return "C/W/T";

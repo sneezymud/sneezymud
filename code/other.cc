@@ -1063,28 +1063,20 @@ void TBeing::doPractice(const char *argument)
   if (is_abbrev(arg, "class")) {
     int which = 0;
     argument = one_argument(argument, arg);
-    if (is_abbrev(arg, "mage") ||
-        is_abbrev(arg, "magicuser"))
-      which = CLASS_MAGIC_USER;
-    else if (is_abbrev(arg, "cleric"))
-      which = CLASS_CLERIC;
-    else if (is_abbrev(arg, "warrior"))
-      which = CLASS_WARRIOR;
-    else if (is_abbrev(arg, "thief"))
-      which = CLASS_THIEF;
-    else if (is_abbrev(arg, "deikhan"))
-      which = CLASS_DEIKHAN;
-    else if (is_abbrev(arg, "shaman"))
-      which = CLASS_SHAMAN;
-    else if (is_abbrev(arg, "ranger"))
-      which = CLASS_RANGER;
-    else if (is_abbrev(arg, "monk"))
-      which = CLASS_MONK;
-    else {
+
+    for(int j=0;j<MAX_CLASSES;++j){
+      if(is_abbrev(arg, classInfo[j].name)){
+	which=classInfo[j].class_num;
+	break;
+      }
+    }
+
+    if(!which){
       sendTo("That is not a valid class.\n\r");
       sendTo("Syntax: practice class <class>.\n\r");
       return;
     }
+
     sprintf(buf, "The following disciplines are valid:\n\r");
     for (i=MIN_DISC; i < MAX_DISCS; i++) {
       if (!strcmp(disc_names[i], "unused")) 

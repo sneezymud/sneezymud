@@ -653,7 +653,7 @@ int TBeing::doPray(const char *argument)
   }
   if (!isImmortal() && 
          (!hasClass(CLASS_CLERIC) && !hasClass(CLASS_DEIKHAN))) {
-    if (hasClass(CLASS_MAGIC_USER)) {
+    if (hasClass(CLASS_MAGE)) {
       sendTo("Mages can't pray for spells, they cast!\n\r");
       return FALSE;
     } else if (hasClass(CLASS_WARRIOR)) {
@@ -1136,7 +1136,7 @@ int TBeing::preCastCheck()
   }
 
 
-  if (!isImmortal() && !hasClass(CLASS_MAGIC_USER | CLASS_RANGER | CLASS_SHAMAN)) {
+  if (!isImmortal() && !hasClass(CLASS_MAGE | CLASS_RANGER | CLASS_SHAMAN)) {
     if (hasClass(CLASS_CLERIC)) {
       sendTo("Clerics can't cast spells, they pray!\n\r");
       return FALSE;

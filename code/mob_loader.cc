@@ -36,7 +36,7 @@ void loadRepairItems(TMonster *tmons)
 
 
   if(tmons->GetMaxLevel() > 40) {
-    if(tmons->hasClass(CLASS_MAGIC_USER)) {
+    if(tmons->hasClass(CLASS_MAGE)) {
       tool = 576;
       tool2 = 580;
       tool3 = 582;
@@ -74,7 +74,7 @@ void loadRepairItems(TMonster *tmons)
       tool2 = 2349;
     } 
   } else if(tmons->GetMaxLevel() > 15) {
-    if(tmons->hasClass(CLASS_MAGIC_USER)) {
+    if(tmons->hasClass(CLASS_MAGE)) {
       tool = 575;
       tool2 = 579;
       tool3 = 581;
@@ -186,7 +186,7 @@ void TMonster::createWealth(void)
     thiefLootLoader();
   if (hasClass(CLASS_SHAMAN))
     shamanComponentLoader();
-  if (hasClass(CLASS_MAGIC_USER))
+  if (hasClass(CLASS_MAGE))
     mageComponentLoader();
   if (hasClass(CLASS_RANGER))
     rangerComponentLoader();

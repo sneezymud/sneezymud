@@ -191,12 +191,14 @@ struct pc_class_names_data
 
 struct class_info
 {
+  bool enabled;
   classIndT class_lev_num;
   int class_num;
   sstring name;
   discNumT base_disc;
   discNumT sec_disc;
   double prac_tweak;
+  double hp_per_level;
 };
       
 #endif

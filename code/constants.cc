@@ -851,14 +851,32 @@ APP_type apply_types[MAX_APPLY_TYPES] =
 
 const struct class_info classInfo[MAX_CLASSES] =
 {
-  {MAGE_LEVEL_IND, CLASS_MAGE, "mage", DISC_MAGE, DISC_LORE, 0.43},
-  {CLERIC_LEVEL_IND, CLASS_CLERIC, "cleric", DISC_CLERIC, DISC_THEOLOGY, 0.47},
-  {WARRIOR_LEVEL_IND, CLASS_WARRIOR, "warrior", DISC_WARRIOR, DISC_NONE, 0.47},
-  {THIEF_LEVEL_IND, CLASS_THIEF, "thief", DISC_THIEF, DISC_NONE, 0.41},
-  {SHAMAN_LEVEL_IND, CLASS_SHAMAN, "shaman", DISC_SHAMAN, DISC_NONE, 0.39},
-  {DEIKHAN_LEVEL_IND, CLASS_DEIKHAN, "deikhan", DISC_DEIKHAN, DISC_THEOLOGY, 0.44},
-  {MONK_LEVEL_IND, CLASS_MONK, "monk", DISC_MONK, DISC_NONE, 0.44},
-  {RANGER_LEVEL_IND, CLASS_RANGER, "ranger", DISC_RANGER, DISC_NONE, 0.46}
+  {true, MAGE_LEVEL_IND, CLASS_MAGE, "mage", 
+   DISC_MAGE, DISC_LORE, 0.43, 7.5},
+
+  {true, CLERIC_LEVEL_IND, CLASS_CLERIC, "cleric",
+   DISC_CLERIC, DISC_THEOLOGY, 0.47, 8},
+
+  {true, WARRIOR_LEVEL_IND, CLASS_WARRIOR, "warrior",
+   DISC_WARRIOR, DISC_NONE, 0.47, 8.5},
+
+  {true, THIEF_LEVEL_IND, CLASS_THIEF, "thief",
+   DISC_THIEF, DISC_NONE, 0.41, 8},
+
+  {true, SHAMAN_LEVEL_IND, CLASS_SHAMAN, "shaman",
+   DISC_SHAMAN, DISC_NONE, 0.39, 7.5},
+
+  {true, DEIKHAN_LEVEL_IND, CLASS_DEIKHAN, "deikhan",
+   DISC_DEIKHAN, DISC_THEOLOGY, 0.44, 7.5},
+
+  {true, MONK_LEVEL_IND, CLASS_MONK, "monk",
+   DISC_MONK, DISC_NONE, 0.44, 5.5},
+
+  {true, RANGER_LEVEL_IND, CLASS_RANGER, "ranger",
+   DISC_RANGER, DISC_NONE, 0.46, 7},
+
+  {false, NINJA_LEVEL_IND, CLASS_NINJA, "ninja",
+   DISC_MONK, DISC_THIEF, 0.50, 7}
 };
 
 
@@ -1710,14 +1728,14 @@ const char * const auto_name[MAX_AUTO] =
 // COSMO CLASS MARKER
 const struct disc_names_data discNames[MAX_DISCS] =
 {
-  {DISC_MAGE, CLASS_MAGIC_USER, "mage abilities"},   // 0 
-  {DISC_AIR, CLASS_MAGIC_USER, "air magic"},         // 1
-  {DISC_ALCHEMY, CLASS_MAGIC_USER, "alchemy"},
-  {DISC_EARTH, CLASS_MAGIC_USER, "earth magic"},
-  {DISC_FIRE, CLASS_MAGIC_USER, "fire magic"},
-  {DISC_SORCERY, CLASS_MAGIC_USER, "sorcery"},        // 5
-  {DISC_SPIRIT, CLASS_MAGIC_USER, "spirit magic"},
-  {DISC_WATER, CLASS_MAGIC_USER, "water magic"},
+  {DISC_MAGE, CLASS_MAGE, "mage abilities"},   // 0 
+  {DISC_AIR, CLASS_MAGE, "air magic"},         // 1
+  {DISC_ALCHEMY, CLASS_MAGE, "alchemy"},
+  {DISC_EARTH, CLASS_MAGE, "earth magic"},
+  {DISC_FIRE, CLASS_MAGE, "fire magic"},
+  {DISC_SORCERY, CLASS_MAGE, "sorcery"},        // 5
+  {DISC_SPIRIT, CLASS_MAGE, "spirit magic"},
+  {DISC_WATER, CLASS_MAGE, "water magic"},
   {DISC_CLERIC, CLASS_CLERIC, "clerical abilities"},
   {DISC_WRATH, CLASS_CLERIC, "wrath of the deities"},
   {DISC_AFFLICTIONS, CLASS_CLERIC, "afflictions"},   // 10
@@ -1741,15 +1759,15 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_DEIKHAN_AEGIS, CLASS_DEIKHAN, "aegis"},
   {DISC_DEIKHAN_CURES, CLASS_DEIKHAN, "cures"},
   {DISC_DEIKHAN_WRATH, CLASS_DEIKHAN, "wrath of the deities"},  // 30
-  {DISC_MONK, CLASS_MONK, "monk abilities"},
+  {DISC_MONK, CLASS_MONK | CLASS_NINJA, "monk abilities"},
   {DISC_MEDITATION_MONK, CLASS_MONK, "meditation/internal abilities"},
   {DISC_LEVERAGE, CLASS_MONK, "balance and leverage skill"},
   {DISC_MINDBODY, CLASS_MONK, "mind and body control"},
-  {DISC_FOCUSED_ATTACKS, CLASS_MONK, "focused attacks"},
-  {DISC_BAREHAND, CLASS_MONK, "barehand"},
-  {DISC_THIEF, CLASS_THIEF, "thief abilities"},          // 40
+  {DISC_FOCUSED_ATTACKS, CLASS_MONK | CLASS_NINJA, "focused attacks"},
+  {DISC_BAREHAND, CLASS_MONK | CLASS_NINJA, "barehand"},
+  {DISC_THIEF, CLASS_THIEF | CLASS_NINJA, "thief abilities"},          // 40
   {DISC_THIEF_FIGHT, CLASS_THIEF, "fighting skills"},
-  {DISC_MURDER, CLASS_THIEF, "murder"},
+  {DISC_MURDER, CLASS_THIEF | CLASS_NINJA, "murder"},
   {DISC_LOOTING, CLASS_THIEF, "looting"},
   {DISC_POISONS, CLASS_THIEF, "poisons"},
   {DISC_STEALTH, CLASS_THIEF, "stealth"},               // 45
@@ -1765,7 +1783,7 @@ const struct disc_names_data discNames[MAX_DISCS] =
   {DISC_FAITH, CLASS_CLERIC | CLASS_DEIKHAN, "faith"},  // 55
   {DISC_SLASH, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN , "slash"},
   {DISC_BLUNT, CLASS_WARRIOR | CLASS_CLERIC | CLASS_DEIKHAN | CLASS_SHAMAN, "blunt"},                              
-  {DISC_PIERCE, CLASS_WARRIOR | CLASS_THIEF | CLASS_RANGER | CLASS_MAGE | CLASS_SHAMAN, "pierce"},
+  {DISC_PIERCE, CLASS_WARRIOR | CLASS_THIEF | CLASS_RANGER | CLASS_MAGE | CLASS_SHAMAN | CLASS_NINJA, "pierce"},
   {DISC_RANGED, CLASS_RANGER, "ranged"},
   {DISC_COMBAT, 0, "combat"},                           // 60
   {DISC_ADVENTURING, 0, "adventuring"},                  

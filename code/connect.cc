@@ -1909,109 +1909,41 @@ int Descriptor::nanny(const char *arg)
       for (; isspace(*arg); arg++);
       character->setClass(0);
       count = 0;
-      switch (*arg) {
-        case '1':
-          if (canChooseClass(CLASS_WARRIOR)) {
-              character->setClass(CLASS_WARRIOR);
-              go2next = TRUE;
-          } else {
-            writeToQ(badClassMessage(CLASS_WARRIOR).c_str());
-            writeToQ("--> ");
-            connected = CON_QCLASS;
-          }
-          break;
-        case '2':
-          if (canChooseClass(CLASS_CLERIC)) {
-            character->setClass(CLASS_CLERIC);
-              go2next = TRUE;
-          } else {
-            writeToQ(badClassMessage(CLASS_CLERIC).c_str());
-            writeToQ("--> ");
-            connected = CON_QCLASS;
-          }
-          break;
-          case '3':
-            if (canChooseClass(CLASS_MAGIC_USER)) {
-              character->setClass(CLASS_MAGIC_USER);
-              go2next = TRUE;
-            } else {
-              writeToQ(badClassMessage(CLASS_MAGIC_USER).c_str());
-              writeToQ("--> ");
-                     connected = CON_QCLASS;
-            }
-            break;
-          case '4':
-            if (canChooseClass(CLASS_THIEF)) {
-              character->setClass(CLASS_THIEF);
-              go2next = TRUE;
-            } else {
-                writeToQ(badClassMessage(CLASS_THIEF).c_str());
-              writeToQ("--> ");
-              connected = CON_QCLASS;
-            }
-            break;
-          case '5':
-            if (canChooseClass(CLASS_DEIKHAN)) {
-              character->setClass(CLASS_DEIKHAN);
-              go2next = TRUE;
-            } else {
-              writeToQ(badClassMessage(CLASS_DEIKHAN).c_str());
-              writeToQ("--> ");
-              connected = CON_QCLASS;
-            }
-            break;
-          case '6':
-            if (canChooseClass(CLASS_MONK)) {
-              character->setClass(CLASS_MONK);
-              go2next = TRUE;
-            } else {
-              writeToQ(badClassMessage(CLASS_MONK).c_str());
-              writeToQ("--> ");
-              connected = CON_QCLASS;
-            }
-            break;
-          case '7':
-            if (canChooseClass(CLASS_RANGER)) {
-              character->setClass(CLASS_RANGER);
-              go2next = TRUE;
-            } else {
-              writeToQ(badClassMessage(CLASS_RANGER).c_str());
-              writeToQ("--> ");
-              connected = CON_QCLASS;
-            }
-            break;
-          case '8':
-            if (canChooseClass(CLASS_SHAMAN)) {
-              character->setClass(CLASS_SHAMAN);
-              go2next = TRUE;
-            } else {
-              writeToQ(badClassMessage(CLASS_SHAMAN).c_str());
-              writeToQ("--> ");
-              connected = CON_QCLASS;
-            }
-            break;
-          case '~':
-            return DELETE_THIS;
-          case '/':
-            go_back_menu(connected);
-            break;
-          case '?':
-            character->cls();
-            file_to_sstring(CLASSHELP, str);
-            character->fullscreen();
 
-      // swap color sstrings
-      str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
-
-            page_string(str, SHOWNOW_YES);
-            connected = CON_QCLASS;
-            break;
-          default:
-            character->cls();
-            sendClassList(FALSE);
-            connected = CON_QCLASS;
-            break;
+      if(*arg == '~'){
+	return DELETE_THIS;
+      } else if(*arg == '/'){
+	go_back_menu(connected);
+      } else if(*arg == '?'){
+	character->cls();
+	file_to_sstring(CLASSHELP, str);
+	character->fullscreen();
+	
+	// swap color sstrings
+	str = colorString(character, this, str, NULL, COLOR_BASIC,  false);
+	
+	page_string(str, SHOWNOW_YES);
+	connected = CON_QCLASS;
+      } else if(convertTo<int>(arg) < 1 || convertTo<int>(arg) > MAX_CLASSES){
+	character->cls();
+	sendClassList(FALSE);
+	connected = CON_QCLASS;
+      } else {
+	for(int i=0;i<MAX_CLASSES;++i){
+	  if((convertTo<int>(arg)-1) == i){
+	    if(canChooseClass(classInfo[i].class_num)){
+	      character->setClass(classInfo[i].class_num);
+	      go2next = TRUE;
+	    } else {
+	      writeToQ(badClassMessage(classInfo[i].class_num).c_str());
+	      writeToQ("--> ");
+	      connected = CON_QCLASS;
+	    }
+	  }
+	}
       }
+
+
       if (go2next) {
         connected = CON_PERMA_DEATH;
 	writeToQ("If you select the Perma Death option this character will only be able to die\n\r");
@@ -3471,35 +3403,50 @@ static const char CCC(Descriptor *d, int Class, int multi = FALSE, int triple = 
 
 void Descriptor::sendClassList(int home)
 {
-  char buf[MAX_STRING_LENGTH];
-
-  *buf = '\0';
+  sstring buf, sbuf;
+  int i;
 
   if (home) {
     writeToQ("Now you get to select your class.\n\r\n\r");
   }
 
-  strcpy(buf, "Please pick one of the following choices for your class.\n\r");
-  strcat(buf, "An X in front of the selection means that you can pick this class.\n\r");
-  strcat(buf, "If there is no X, for some reason you can't choose the class.\n\r");
-  strcat(buf, "To see why you can't choose a selection, choose it and you will be\n\r");
-  strcat(buf, "given an error message telling you why you cannot select the class.\n\r\n\r");
-  sprintf(buf + strlen(buf), "[%c] 1. Warrior                  [%c] 2. Cleric\n\r", CCC(this, CLASS_WARRIOR), CCC(this, CLASS_CLERIC));
-  sprintf(buf + strlen(buf), "[%c] 3. Mage                     [%c] 4. Thief\n\r", CCC(this, CLASS_MAGIC_USER), CCC(this, CLASS_THIEF));
-  sprintf(buf + strlen(buf), "[%c] 5. Deikhan                  [%c] 6. Monk\n\r", CCC(this, CLASS_DEIKHAN), CCC(this, CLASS_MONK));
-  sprintf(buf + strlen(buf), "[%c] 7. Ranger                   [%c] 8. Shaman\n\r\n\r\n\r", CCC(this, CLASS_RANGER), CCC(this, CLASS_SHAMAN)); 
+  
+  sbuf="Please pick one of the following choices for your class.\n\r";
+  sbuf+="An X in front of the selection means that you can pick this class.\n\r";
+  sbuf+="If there is no X, for some reason you can't choose the class.\n\r";
+  sbuf+="To see why you can't choose a selection, choose it and you will be\n\r";
+  sbuf+="given an error message telling you why you cannot select the class.\n\r\n\r";
+  for(i=0;i<MAX_CLASSES;++i){
+    if(!classInfo[i].enabled)
+      continue;
+
+    ssprintf(buf, "[%c] %i. %-24s", CCC(this, classInfo[i].class_num), i+1,
+	     classInfo[i].name.cap().c_str());
+    sbuf+=buf;
+
+    if(i%2)
+      sbuf+="\n\r";
+
+  }
+
+  sbuf += "\n\r";
+
   //////////////////////////////////////////////////////////////////
   // Add multi hybrids in in succession later ie. A B C....
   //////////////////////////////////////////////////////////////////
-  strcat(buf, "There are advantages and disadvantages to each choice.\n\r");
-  sprintf(buf + strlen(buf), "Type %s?%s to see a help file telling you these advantages and disadvantages.\n\r",
+  
+  sbuf += "There are advantages and disadvantages to each choice.\n\r";
+  ssprintf(buf, "Type %s?%s to see a help file telling you these advantages and disadvantages.\n\r",
           red(), norm());
-  sprintf(buf + strlen(buf), "Type %s/%s to go back a menu to redo things.\n\r",
+  sbuf += buf;
+  ssprintf(buf, "Type %s/%s to go back a menu to redo things.\n\r",
           red(), norm());
-  sprintf(buf + strlen(buf), "Type %s~%s to disconnect.\n\r\n\r--> ",
+  sbuf += buf;
+  ssprintf(buf, "Type %s~%s to disconnect.\n\r\n\r--> ",
           red(), norm());
+  sbuf += buf;
 
-  writeToQ(buf);
+  writeToQ(sbuf);
 
   return;
 }
@@ -3543,44 +3490,23 @@ bool Descriptor::canChooseClass(int Class, bool multi, bool triple)
       return FALSE;
   }
 
-  if (Class & CLASS_MONK) {
-    return TRUE;
+  for(int i=0;i<MAX_CLASSES;++i){
+    if(classInfo[i].class_num == Class &&
+       classInfo[i].enabled==false){
+      return FALSE;
+    }
   }
 
-  if (Class & CLASS_WARRIOR) {
-    return TRUE;
-  }
-
-  if (Class & CLASS_MAGIC_USER) {
-    return TRUE;
-  }
-
-  if (Class & CLASS_CLERIC) {
-    return TRUE;
-  }
-
-  if (Class & CLASS_SHAMAN) {
-    return TRUE;
-  }
-
-  if (Class &CLASS_DEIKHAN) {
-    return TRUE;
-  }
 
   if (Class & CLASS_RANGER) {
     if (ch->getRace() == RACE_OGRE)
       return FALSE;
     if (rangerTerrainDeny(ch))
       return FALSE;
-    return TRUE;
-  }
-
-  if (Class & CLASS_THIEF) {
-    return TRUE;
   }
 
 
-  return FALSE;
+  return TRUE;
 }
 
 bool Descriptor::start_page_file(const char *fpath, const char *errormsg)
@@ -4108,26 +4034,21 @@ const sstring Descriptor::badClassMessage(int Class, bool multi, bool triple)
     return (buf);
   }
 
-  if (Class & CLASS_MONK) {
+  for(int i=0;i<MAX_CLASSES;++i){
+    if(classInfo[i].class_num == Class &&
+       classInfo[i].enabled == false){
+      strcat(buf, "This class is not currently enabled for play.\n\r");
+      break;
+    }
   }
-  if (Class & CLASS_WARRIOR) {
-  }
-  if (Class & CLASS_MAGIC_USER) {
-  }
-  if (Class & CLASS_CLERIC) {
-  }
-  if (Class & CLASS_DEIKHAN) {
-  }
+
   if (Class & CLASS_RANGER) {
     if (rangerTerrainDeny(ch))
       strcat(buf, "Rangers must come from a wilderness background.\n\r");
     if (ch->getRace() == RACE_OGRE)
       strcat(buf, "Ogre's don't have the sensitivity to become Rangers.\n\r");
   }
-  if (Class & CLASS_SHAMAN) {
-  }
-  if (Class & CLASS_THIEF) {
-  }
+
   return (buf);
 }
 

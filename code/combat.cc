@@ -4828,43 +4828,10 @@ static int FRACT(TBeing *ch, TBeing *v)
 {
   int fract=100;
 
-#if 0
-  int diff_levs = ch->GetMaxLevel() - v->GetMaxLevel();
-  int level_cut = 3;
-
-  if (ch->hasClass(CLASS_WARRIOR) ||
-      ch->hasClass(CLASS_DEIKHAN) ||
-      ch->hasClass(CLASS_MONK))
-    level_cut = 3;
-  else if (ch->hasClass(CLASS_RANGER) ||
-           ch->hasClass(CLASS_THIEF))
-    level_cut = 4;
-  else if (ch->hasClass(CLASS_CLERIC))
-    level_cut = 5;
-  else if (ch->hasClass(CLASS_MAGE) || ch->hasClass(CLASS_SHAMAN))
-    level_cut = 6;
-
-  if (diff_levs <= level_cut) {
-    fract=100;
-  } else {
-    // scale the diff_levs based on level
-    // what testing revealed was that a 10 lev diff at level 50 (50v40) was
-    // equiv to a 7 level diff at level 20 (20v13)
-    // I'm basically going to allow normalizing by adding (50-lev)/10 to
-    // diff_levs.  (add 5 to do good rounding)
-    diff_levs += (MAX_MORT - ch->GetMaxLevel() + 5)/10;
-    
-    diff_levs -= level_cut;
-    diff_levs = max(0, diff_levs);
-    
-    fract=( 100 - (min(95, diff_levs * diff_levs)));
-  }
-#else
   // the new exp curve doubles xp based on double the difficulty
   // this should mean that plowing (killing easy mobs for high fraction
   // of xp that mob of same level yields) is no longer possible.
   fract=100;
-#endif;
 
   // modify for trophy now
   if(ch->isPc() && !v->isPc()){

@@ -422,7 +422,7 @@ int TFFlame::igniteMessage(TBeing *ch) const
   if (ch->isImmortal()) {
     sprintf(Buf[0], "You stare at some fire wood, causing it to ignite!\n\r");
     sprintf(Buf[1], "$n stares at some fire wood, causing it to burst into flames!\n\r");
-  } else if (ch->hasClass(CLASS_MAGIC_USER)) {
+  } else if (ch->hasClass(CLASS_MAGE)) {
     if (ch->doesKnowSkill(SPELL_FLAMING_SWORD) && ch->getMana() > 13) {
       sprintf(Buf[0], "You create a minor sword of flame and slash some fire wood with it.\n\r");
       sprintf(Buf[1], "$n creates a minor sword of flame and slashes some fire wood with it.");
@@ -472,7 +472,7 @@ int TFFlame::igniteMessage(TBeing *ch) const
     sprintf(Buf[0], "You spark your flint and steel against some fire wood, igniting it.\n\r");
     sprintf(Buf[1], "$n sparks some flint and steel against some fire wood, igniting it.\n\r");
   } else {
-    if (ch->hasClass(CLASS_MAGIC_USER))
+    if (ch->hasClass(CLASS_MAGE))
       ch->addToMana(-mana);
     else {
       double piety = mana;
@@ -542,7 +542,7 @@ void TFFlame::addFlameToMe(TBeing *ch, const char *argument, TThing *fObj, bool 
       return;
     }
     if (ePower > 1) {
-      if (ch->hasClass(CLASS_MAGIC_USER))
+      if (ch->hasClass(CLASS_MAGE))
         setMagBV(TFFLAME_MAGHEAT);
       else if (ch->hasClass(CLASS_CLERIC) || ch->hasClass(CLASS_DEIKHAN))
         setMagBV(TFFLAME_MAGLIGHT);

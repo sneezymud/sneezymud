@@ -2657,7 +2657,7 @@ void TBeing::assignDisciplinesClass()
     return;
   }
 
-  if (hasClass(CLASS_MAGIC_USER)) {
+  if (hasClass(CLASS_MAGE)) {
     if (!isPc()) {
       discs->disc[DISC_MAGE] = new CDMage();
       discs->disc[DISC_AIR] = new CDAir();
@@ -2672,17 +2672,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_PIERCE] = new CDPierce();
 
     }
-    getDiscipline(DISC_MAGE)->ok_for_class  |= CLASS_MAGIC_USER;
-    getDiscipline(DISC_AIR)->ok_for_class  |= CLASS_MAGIC_USER;
-    getDiscipline(DISC_ALCHEMY)->ok_for_class |= CLASS_MAGIC_USER;
-    getDiscipline(DISC_EARTH)->ok_for_class |= CLASS_MAGIC_USER;
-    getDiscipline(DISC_FIRE)->ok_for_class  |= CLASS_MAGIC_USER;
-    getDiscipline(DISC_SORCERY)->ok_for_class |= CLASS_MAGIC_USER;
-    getDiscipline(DISC_SPIRIT)->ok_for_class |= CLASS_MAGIC_USER;
-    getDiscipline(DISC_WATER)->ok_for_class |= CLASS_MAGIC_USER;
-    getDiscipline(DISC_WIZARDRY)->ok_for_class |= CLASS_MAGIC_USER;
-    getDiscipline(DISC_LORE)->ok_for_class |= CLASS_MAGIC_USER;
-    getDiscipline(DISC_PIERCE)->ok_for_class |= CLASS_MAGIC_USER;
   }
 
   if (hasClass(CLASS_CLERIC)) {
@@ -2697,15 +2686,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_FAITH] = new CDFaith();
       discs->disc[DISC_THEOLOGY] = new CDTheology();
     }
-    getDiscipline(DISC_CLERIC)->ok_for_class |= CLASS_CLERIC;
-    getDiscipline(DISC_WRATH)->ok_for_class |= CLASS_CLERIC;
-    getDiscipline(DISC_AEGIS)->ok_for_class |= CLASS_CLERIC;
-    getDiscipline(DISC_AFFLICTIONS)->ok_for_class |= CLASS_CLERIC;
-    getDiscipline(DISC_CURES)->ok_for_class |= CLASS_CLERIC;
-    getDiscipline(DISC_HAND_OF_GOD)->ok_for_class |= CLASS_CLERIC;
-    getDiscipline(DISC_BLUNT)->ok_for_class |= CLASS_CLERIC;
-    getDiscipline(DISC_FAITH)->ok_for_class |= CLASS_CLERIC;
-    getDiscipline(DISC_THEOLOGY)->ok_for_class |= CLASS_CLERIC;
   }
 
   if (hasClass(CLASS_WARRIOR)) {
@@ -2720,16 +2700,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_PIERCE] = new CDPierce();
       discs->disc[DISC_DEFENSE] = new CDDefense();
     }
-    getDiscipline(DISC_WARRIOR)->ok_for_class |= CLASS_WARRIOR;
-    getDiscipline(DISC_HTH)->ok_for_class |= CLASS_WARRIOR;
-    getDiscipline(DISC_BRAWLING)->ok_for_class |= CLASS_WARRIOR;
-    getDiscipline(DISC_PHYSICAL)->ok_for_class |= CLASS_WARRIOR;
-    getDiscipline(DISC_SMYTHE)->ok_for_class |= CLASS_WARRIOR;
-    getDiscipline(DISC_BLUNT)->ok_for_class |= CLASS_WARRIOR;
-    getDiscipline(DISC_SLASH)->ok_for_class |= CLASS_WARRIOR;
-    getDiscipline(DISC_PIERCE)->ok_for_class |= CLASS_WARRIOR;
-    getDiscipline(DISC_DEFENSE)->ok_for_class |= CLASS_WARRIOR;
-
   }
 
   if (hasClass(CLASS_RANGER)) {
@@ -2745,16 +2715,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_PIERCE] = new CDPierce();
       discs->disc[DISC_DEFENSE] = new CDDefense();
     }
-    getDiscipline(DISC_RANGER)->ok_for_class |= CLASS_RANGER;
-    getDiscipline(DISC_NATURE)->ok_for_class |= CLASS_RANGER;
-    getDiscipline(DISC_RANGER_FIGHT)->ok_for_class |= CLASS_RANGER;
-    getDiscipline(DISC_ANIMAL)->ok_for_class |= CLASS_RANGER;
-    getDiscipline(DISC_PLANTS)->ok_for_class |= CLASS_RANGER;
-    getDiscipline(DISC_SURVIVAL)->ok_for_class |= CLASS_RANGER;
-    getDiscipline(DISC_SLASH)->ok_for_class |= CLASS_RANGER;
-    getDiscipline(DISC_RANGED)->ok_for_class |= CLASS_RANGER;
-    getDiscipline(DISC_PIERCE)->ok_for_class |= CLASS_RANGER;
-    getDiscipline(DISC_DEFENSE)->ok_for_class |= CLASS_RANGER;
   }
 
   if (hasClass(CLASS_DEIKHAN)) {
@@ -2771,17 +2731,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_SLASH] = new CDSlash();
       discs->disc[DISC_DEFENSE] = new CDDefense();
     }
-    getDiscipline(DISC_DEIKHAN)->ok_for_class |= CLASS_DEIKHAN;
-    getDiscipline(DISC_DEIKHAN_FIGHT)->ok_for_class |= CLASS_DEIKHAN;
-    getDiscipline(DISC_MOUNTED)->ok_for_class |= CLASS_DEIKHAN;
-    getDiscipline(DISC_DEIKHAN_AEGIS)->ok_for_class |= CLASS_DEIKHAN;
-    getDiscipline(DISC_DEIKHAN_CURES)->ok_for_class |= CLASS_DEIKHAN;
-    getDiscipline(DISC_DEIKHAN_WRATH)->ok_for_class |= CLASS_DEIKHAN;
-    getDiscipline(DISC_FAITH)->ok_for_class |= CLASS_DEIKHAN;
-    getDiscipline(DISC_THEOLOGY)->ok_for_class |= CLASS_DEIKHAN;
-    getDiscipline(DISC_BLUNT)->ok_for_class |= CLASS_DEIKHAN;
-    getDiscipline(DISC_SLASH)->ok_for_class |= CLASS_DEIKHAN;
-    getDiscipline(DISC_DEFENSE)->ok_for_class |= CLASS_DEIKHAN;
   }
 
   if (hasClass(CLASS_MONK)) {
@@ -2795,15 +2744,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_DEFENSE] = new CDDefense();
       discs->disc[DISC_IRON_BODY] = new CDIronBody();
     }
-    getDiscipline(DISC_MONK)->ok_for_class |= CLASS_MONK;
-    getDiscipline(DISC_MEDITATION_MONK)->ok_for_class |= CLASS_MONK;
-    getDiscipline(DISC_LEVERAGE)->ok_for_class |= CLASS_MONK;
-    getDiscipline(DISC_MINDBODY)->ok_for_class |= CLASS_MONK;
-    getDiscipline(DISC_FOCUSED_ATTACKS)->ok_for_class |= CLASS_MONK;
-    getDiscipline(DISC_BAREHAND)->ok_for_class |= CLASS_MONK;
-    getDiscipline(DISC_DEFENSE)->ok_for_class |= CLASS_MONK;
-    getDiscipline(DISC_IRON_BODY)->ok_for_class |= CLASS_MONK;
-
   }
 
   if (hasClass(CLASS_THIEF)) {
@@ -2819,15 +2759,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_PIERCE] = new CDPierce();
       discs->disc[DISC_SLASH] = new CDSlash();
     }
-    getDiscipline(DISC_THIEF)->ok_for_class |= CLASS_THIEF;
-    getDiscipline(DISC_THIEF_FIGHT)->ok_for_class |= CLASS_THIEF;
-    getDiscipline(DISC_MURDER)->ok_for_class |= CLASS_THIEF;
-    getDiscipline(DISC_LOOTING)->ok_for_class |= CLASS_THIEF;
-    getDiscipline(DISC_POISONS)->ok_for_class |= CLASS_THIEF;
-    getDiscipline(DISC_STEALTH)->ok_for_class |= CLASS_THIEF;
-    getDiscipline(DISC_TRAPS)->ok_for_class |= CLASS_THIEF;
-    getDiscipline(DISC_PIERCE)->ok_for_class |= CLASS_THIEF;
-    getDiscipline(DISC_SLASH)->ok_for_class |= CLASS_THIEF;
   }
 
   if (hasClass(CLASS_SHAMAN)) {
@@ -2844,18 +2775,16 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_BLUNT] = new CDBash();
       discs->disc[DISC_PIERCE] = new CDPierce();
     }
-    getDiscipline(DISC_SHAMAN)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_RITUALISM)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_SHAMAN_HEALING)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_SHAMAN_ALCHEMY)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_SHAMAN_ARMADILLO)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_SHAMAN_CONTROL)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_SHAMAN_FROG)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_SHAMAN_SKUNK)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_SHAMAN_SPIDER)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_BLUNT)->ok_for_class |= CLASS_SHAMAN;
-    getDiscipline(DISC_PIERCE)->ok_for_class |= CLASS_SHAMAN;
   }
+
+  for(int i=0;i<MAX_DISCS;++i){
+    if(hasClass(discNames[i].class_num) && i!=DISC_PSIONICS){
+      getDiscipline((discNumT)i)->ok_for_class |= discNames[i].class_num;
+    }
+  }
+
+
+
   // fix the mobs learnednesses
   if (isPc())
     return;
@@ -3092,7 +3021,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_FIRE:
     case DISC_EARTH:
     case DISC_SORCERY:
-      lev = getClassLevel(CLASS_MAGIC_USER);
+      lev = getClassLevel(CLASS_MAGE);
       break;
     case DISC_RANGER: 
     case DISC_RANGER_FIGHT:
@@ -3146,10 +3075,10 @@ int TBeing::getSkillLevel(spellNumT skill) const
       lev = getClassLevel(CLASS_SHAMAN);
       break;
     case DISC_WIZARDRY:
-      lev = getClassLevel(CLASS_MAGIC_USER);
+      lev = getClassLevel(CLASS_MAGE);
       break;
     case DISC_LORE:
-      lev = getClassLevel(CLASS_MAGIC_USER);
+      lev = getClassLevel(CLASS_MAGE);
       break;
     case DISC_THEOLOGY:
     case DISC_FAITH:
@@ -3213,9 +3142,9 @@ CDiscipline * TBeing::getDiscipline(discNumT n) const
     return NULL;
   }
 
-  if (discs)
+  if (discs){
     return discs->disc[n];
-  else {
+  } else {
     mud_assert(0,
     "TBeing had no CMasterDiscipline. '%s'", getName() ? getName() : "NoName");
 

@@ -941,13 +941,13 @@ struct TRAININFO {
 
 TRAININFO TrainerInfo[] =
 {
-  {SPEC_TRAINER_AIR, "air", "the art of Air Magic", DISC_AIR, CLASS_MAGIC_USER},
-  {SPEC_TRAINER_ALCHEMY, "alchemy", "the art of Alchemy", DISC_ALCHEMY, CLASS_MAGIC_USER},
-  {SPEC_TRAINER_EARTH, "earth", "the art of Earth Magic", DISC_EARTH, CLASS_MAGIC_USER},
-  {SPEC_TRAINER_FIRE, "fire", "the art of Fire Magic", DISC_FIRE, CLASS_MAGIC_USER},
-  {SPEC_TRAINER_SORCERY, "sorcery", "the art of Sorcery", DISC_SORCERY, CLASS_MAGIC_USER},
-  {SPEC_TRAINER_SPIRIT, "spirit", "the art of Spirit Magic", DISC_SPIRIT, CLASS_MAGIC_USER},
-  {SPEC_TRAINER_WATER, "water", "the art of Water Magic", DISC_WATER, CLASS_MAGIC_USER},
+  {SPEC_TRAINER_AIR, "air", "the art of Air Magic", DISC_AIR, CLASS_MAGE},
+  {SPEC_TRAINER_ALCHEMY, "alchemy", "the art of Alchemy", DISC_ALCHEMY, CLASS_MAGE},
+  {SPEC_TRAINER_EARTH, "earth", "the art of Earth Magic", DISC_EARTH, CLASS_MAGE},
+  {SPEC_TRAINER_FIRE, "fire", "the art of Fire Magic", DISC_FIRE, CLASS_MAGE},
+  {SPEC_TRAINER_SORCERY, "sorcery", "the art of Sorcery", DISC_SORCERY, CLASS_MAGE},
+  {SPEC_TRAINER_SPIRIT, "spirit", "the art of Spirit Magic", DISC_SPIRIT, CLASS_MAGE},
+  {SPEC_TRAINER_WATER, "water", "the art of Water Magic", DISC_WATER, CLASS_MAGE},
   {SPEC_TRAINER_WRATH, "wrath", "the Wrath of the Deities", DISC_WRATH, CLASS_CLERIC},
   {SPEC_TRAINER_AFFLICTIONS, "afflictions", "the Art of Afflictions", DISC_AFFLICTIONS, CLASS_CLERIC},
   {SPEC_TRAINER_CURE, "cures", "the Healing Arts", DISC_CURES, CLASS_CLERIC},
@@ -956,14 +956,14 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_LOOTING, "looting", "Looting and Plundering", DISC_LOOTING, CLASS_THIEF},
   {SPEC_TRAINER_MURDER, "murder", "about Deadly Murder", DISC_MURDER, CLASS_THIEF},
   {SPEC_TRAINER_HAND_TO_HAND, "hth", "Hand-to-Hand Combat", DISC_HTH, CLASS_WARRIOR},
-  {SPEC_TRAINER_ADVENTURING, "adventuring", "Adventurers' Lore", DISC_ADVENTURING, CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN},
-  {SPEC_TRAINER_COMBAT, "combat", "Combat Skills", DISC_COMBAT, CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN},
+  {SPEC_TRAINER_ADVENTURING, "adventuring", "Adventurers' Lore", DISC_ADVENTURING, CLASS_MAGE | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN},
+  {SPEC_TRAINER_COMBAT, "combat", "Combat Skills", DISC_COMBAT, CLASS_MAGE | CLASS_CLERIC | CLASS_THIEF | CLASS_WARRIOR | CLASS_MONK | CLASS_RANGER | CLASS_DEIKHAN | CLASS_SHAMAN},
   {SPEC_TRAINER_WARRIOR, "warrior", "the Ways of the Warrior", DISC_WARRIOR, CLASS_WARRIOR},
-  {SPEC_TRAINER_WIZARDRY, "wizardry", "Wizardry", DISC_WIZARDRY, CLASS_MAGIC_USER},
+  {SPEC_TRAINER_WIZARDRY, "wizardry", "Wizardry", DISC_WIZARDRY, CLASS_MAGE},
   {SPEC_TRAINER_FAITH, "faith", "Faith", DISC_FAITH, CLASS_CLERIC | CLASS_DEIKHAN},
   {SPEC_TRAINER_SLASH, "slash", "Slash Specialization", DISC_SLASH, CLASS_WARRIOR | CLASS_RANGER | CLASS_THIEF | CLASS_DEIKHAN},
   {SPEC_TRAINER_BLUNT, "blunt", "Blunt Specialization", DISC_BLUNT, CLASS_WARRIOR | CLASS_CLERIC | CLASS_DEIKHAN | CLASS_SHAMAN},
-  {SPEC_TRAINER_PIERCE, "pierce", "Pierce Specialization", DISC_PIERCE, CLASS_WARRIOR | CLASS_THIEF | CLASS_MAGIC_USER | CLASS_RANGER | CLASS_SHAMAN},
+  {SPEC_TRAINER_PIERCE, "pierce", "Pierce Specialization", DISC_PIERCE, CLASS_WARRIOR | CLASS_THIEF | CLASS_MAGE | CLASS_RANGER | CLASS_SHAMAN},
   {SPEC_TRAINER_RANGED, "ranged", "Ranged Specialization", DISC_RANGED, CLASS_RANGER},
   {SPEC_TRAINER_DEIKHAN, "deikhan", "the Ways of the Deikhan", DISC_DEIKHAN, CLASS_DEIKHAN},
   {SPEC_TRAINER_BRAWLING, "brawling", "Brawling Moves", DISC_BRAWLING, CLASS_WARRIOR},
@@ -1003,7 +1003,7 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_RANGER_FIGHT, "fighting", "Fighting Skills for Rangers", DISC_RANGER_FIGHT, CLASS_RANGER},
   {SPEC_TRAINER_STEALTH, "stealth", "about Stealthiness", DISC_STEALTH, CLASS_THIEF},
   {SPEC_TRAINER_TRAPS, "traps", "about Locks and Traps", DISC_TRAPS, CLASS_THIEF},
-  {SPEC_TRAINER_LORE, "lore", "about Magic Lores", DISC_LORE, CLASS_MAGIC_USER},
+  {SPEC_TRAINER_LORE, "lore", "about Magic Lores", DISC_LORE, CLASS_MAGE},
  {SPEC_TRAINER_THEOLOGY, "theology", "about Theology", DISC_THEOLOGY, CLASS_CLERIC | CLASS_DEIKHAN},
   {SPEC_TRAINER_DEFENSE, "defense", "about Defense", DISC_DEFENSE, CLASS_WARRIOR | CLASS_RANGER | CLASS_DEIKHAN | CLASS_MONK},
   {SPEC_TRAINER_PSIONICS, "psionics", "about psionics", DISC_PSIONICS, CLASS_WARRIOR | CLASS_RANGER | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_THIEF | CLASS_SHAMAN},
@@ -1024,7 +1024,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
   char discbuf[128];
   int var;
   discNumT discipline;
-  classIndT accclass;
+  classIndT accclass=(classIndT)-1;
 
   if (cmd == CMD_GENERIC_PULSE)
     dynamic_cast<TMonster *>(ch)->aiMaintainCalm();
@@ -1086,7 +1086,7 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
       accclass = THIEF_LEVEL_IND;
   else if (var == CLASS_CLERIC)
       accclass = CLERIC_LEVEL_IND;
-  else if (var == CLASS_MAGIC_USER)
+  else if (var == CLASS_MAGE)
       accclass = MAGE_LEVEL_IND;
   else if (var == CLASS_DEIKHAN)
       accclass = DEIKHAN_LEVEL_IND;
@@ -1107,25 +1107,15 @@ int CDGenericTrainer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TO
     me->doSay(buf);
     return TRUE;
   } else {
-    if ((is_abbrev(classbuf, "mage") || is_abbrev(classbuf, "magicuser")) &&
-         ch->hasClass(CLASS_MAGIC_USER))
-      accclass = MAGE_LEVEL_IND;
-    else if ((is_abbrev(classbuf, "cleric")) && ch->hasClass(CLASS_CLERIC))
-      accclass = CLERIC_LEVEL_IND;
-    else if ((is_abbrev(classbuf, "thief")) && ch->hasClass(CLASS_THIEF))
-      accclass = THIEF_LEVEL_IND;
-    else if ((is_abbrev(classbuf, "warrior") || (is_abbrev(classbuf, "fighter")))
-           && ch->hasClass(CLASS_WARRIOR))
-      accclass = WARRIOR_LEVEL_IND;
-    else if ((is_abbrev(classbuf, "deikhan")) && ch->hasClass(CLASS_DEIKHAN))
-      accclass = DEIKHAN_LEVEL_IND;
-    else if ((is_abbrev(classbuf, "ranger")) && ch->hasClass(CLASS_RANGER))
-      accclass = RANGER_LEVEL_IND;
-    else if ((is_abbrev(classbuf, "monk")) && ch->hasClass(CLASS_MONK))
-      accclass = MONK_LEVEL_IND;
-    else if ((is_abbrev(classbuf, "shaman")) && ch->hasClass(CLASS_SHAMAN))
-      accclass = SHAMAN_LEVEL_IND;
-    else {
+    for(int i=0;i<MAX_CLASSES;++i){
+      if(is_abbrev(classbuf, classInfo[i].name) &&
+	 ch->hasClass(classInfo[i].class_num)){
+	accclass = classInfo[i].class_lev_num;
+	break;
+      }
+    }
+
+    if(accclass==-1) {
       act("$n growls, \"Get real, $N. I'm not an idiot!\"", 
                    FALSE, me, 0, ch, TO_ROOM);
       return TRUE;

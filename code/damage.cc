@@ -283,7 +283,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 
     if (willKill(v, dam, dmg_type, TRUE)) {
       // Mages can no longer kill themselves with crit failures...Russ 09/28/98
-      if (hasClass(CLASS_MAGIC_USER) && (dmg_type >= 0) && (dmg_type <= 125)) 
+      if (hasClass(CLASS_MAGE) && (dmg_type >= 0) && (dmg_type <= 125)) 
         dam = v->getHit() - ::number(1, 10);  
       else
         dam = 11 + v->getHit();

@@ -82,24 +82,20 @@ int baseHp()
 float classHpPerLevel(const TPerson *tp){
  float hpgain=0;
 
-  if (tp->hasClass(CLASS_MONK))
-    hpgain = 5.5; 
-  else if (tp->hasClass(CLASS_RANGER))
-    hpgain = 7.0;
-  else if (tp->hasClass(CLASS_DEIKHAN))
-    hpgain = 7.5;
-  else if (tp->hasClass(CLASS_MAGIC_USER) || tp->hasClass(CLASS_SHAMAN))
-    hpgain = 7.5;
-  else if (tp->hasClass(CLASS_CLERIC) || tp->hasClass(CLASS_THIEF))
-    hpgain = 8;
-  else if (tp->hasClass(CLASS_WARRIOR))
-    hpgain = 8.5;
-  else {
+
+ for(int i=0;i<MAX_CLASSES;++i){
+   if(tp->hasClass(classInfo[i].class_num)){
+     hpgain = classInfo[i].hp_per_level;
+     break;
+   }
+ }
+
+ if(!hpgain){
     vlogf(LOG_BUG, "No class in classHpPerLevel() for %s", tp->getName());
     hpgain=7.0;
-  }
+ } 
 
-  return hpgain;
+ return hpgain;
 }
 
 int ageHpMod(const TPerson *tp){
@@ -144,7 +140,7 @@ short int TPerson::manaLimit() const
 {
   int iMax = 100;
 
-  if (hasClass(CLASS_MAGIC_USER)){
+  if (hasClass(CLASS_MAGE)){
     iMax += getSkillValue(SKILL_MANA) * 3;
 
     //    iMax += getLevel(MAGE_LEVEL_IND) * 6;
@@ -309,7 +305,7 @@ int TPerson::manaGain()
   // at L50, mage has 400 mana, think we want 20
   gain *= 4;
 
-  if (hasClass(CLASS_MAGIC_USER))
+  if (hasClass(CLASS_MAGE))
     gain += gain;
 
   gain += race->getManaMod();
@@ -1302,7 +1298,7 @@ int TBeing::hpGainForClass(classIndT Class) const
   int hpgain = 0;
 
   // add for classes first
-  if (hasClass(CLASS_MAGIC_USER) && Class == MAGE_LEVEL_IND)
+  if (hasClass(CLASS_MAGE) && Class == MAGE_LEVEL_IND)
     hpgain += ::number(3,7); // old 2,8
 
   if (hasClass(CLASS_CLERIC) && Class == CLERIC_LEVEL_IND)

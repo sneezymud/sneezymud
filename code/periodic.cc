@@ -1195,7 +1195,7 @@ int TBeing::updateHalfTickStuff()
       
         addToPiety(pietyGain(0.0));
 
-        if ((hasClass(CLASS_RANGER) || hasClass(CLASS_MAGIC_USER)) && 
+        if ((hasClass(CLASS_RANGER) || hasClass(CLASS_MAGE)) && 
               (stone = find_biggest_powerstone(this)) && 
               (mana_bump + mana_cur >= mana_max)) {
           addToMana(mana_max - mana_cur);

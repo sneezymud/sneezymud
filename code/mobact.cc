@@ -865,7 +865,7 @@ int TMonster::senseWimps()
         score -= 150;
 
       // take out them nasty mages that cast on me
-      if (tmp_victim->hasClass(CLASS_MAGIC_USER))
+      if (tmp_victim->hasClass(CLASS_MAGE))
         score -= 200;
 
       if (tmp_victim->hasClass(CLASS_SHAMAN))
@@ -977,7 +977,7 @@ int TMonster::fighterMove(TBeing &vict)
 	continue;
       }
       if (t && t->isAffected(AFF_GROUP) && 
-	  t->hasClass(CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_SHAMAN) &&
+	  t->hasClass(CLASS_MAGE | CLASS_CLERIC | CLASS_SHAMAN) &&
 	  (badspell || !::number(0,4)) &&
 	  canBash(t, SILENT_YES) && getPosition() > POSITION_SITTING){
 	return doBash("", t);
@@ -986,7 +986,7 @@ int TMonster::fighterMove(TBeing &vict)
   }
   
   //distinguish between fighting a caster and a non-caster
-  if (vict.hasClass(CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_SHAMAN) &&
+  if (vict.hasClass(CLASS_MAGE | CLASS_CLERIC | CLASS_SHAMAN) &&
       vict.getPosition() > POSITION_SITTING) {
     // caster
     // knock uhm over or we are toast!
@@ -1095,7 +1095,7 @@ int TMonster::monkMove(TBeing &vict)
 #endif
     num = ::number(1, 14);
     if ((num <= 2 ||
-        ((vict.hasClass(CLASS_MAGIC_USER) ||
+        ((vict.hasClass(CLASS_MAGE) ||
           vict.hasClass(CLASS_CLERIC) &&
           vict.hasClass(CLASS_SHAMAN)) &&
          vict.getPosition() > POSITION_SITTING)) &&
@@ -3123,7 +3123,7 @@ int TMonster::classStuff(TBeing &vict)
     return deikhanMove(vict);
   else if (hasClass(CLASS_RANGER))
     return rangMove(vict);
-  else if (hasClass(CLASS_MAGIC_USER))
+  else if (hasClass(CLASS_MAGE))
     return mageMove(vict);
   else if (hasClass(CLASS_CLERIC))
     return clerMove(vict);
@@ -3516,7 +3516,7 @@ int TMonster::mobileActivity(int pulse)
     if(hasClass(CLASS_WARRIOR) && isAffected(AFF_GROUP) &&
        (vict=fight()) && (tmp_ch=vict->fight()) && 
        tmp_ch != this && inGroup(*tmp_ch) &&
-       (tmp_ch->hasClass(CLASS_MAGIC_USER | CLASS_CLERIC | CLASS_THIEF) ||
+       (tmp_ch->hasClass(CLASS_MAGE | CLASS_CLERIC | CLASS_THIEF) ||
 	((tmp_ch->getHit()*100)/tmp_ch->hitLimit())<50)){
       if (!::number(0,2)) {
 	act("$n has rescued you!",FALSE,this,0,tmp_ch,TO_VICT);
@@ -4362,7 +4362,7 @@ vlogf(LOG_BUG, "Shaman Mob casting (2) spell %d on other with possibly bad targe
     }
   }
 
-  if (hasClass(CLASS_MAGIC_USER)) {
+  if (hasClass(CLASS_MAGE)) {
     if (!found) {
       spell = SPELL_SORCERERS_GLOBE;
       if (!targ.affectedBySpell(spell) && 
@@ -4688,7 +4688,7 @@ int TMonster::defendSelf(int)
       return TRUE;
     }
   }
-  if (hasClass(CLASS_MAGIC_USER)) {
+  if (hasClass(CLASS_MAGE)) {
     if (!found) {
       spell = SPELL_SORCERERS_GLOBE;
       if (!affectedBySpell(spell) && 

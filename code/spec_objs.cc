@@ -2902,7 +2902,7 @@ int newbieHelperWProc(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TOb
             if (!ch->hasClass(CLASS_MONK))
             ch->sendTo("%s:    goto weapon    : Weapon Shop    [Swords/Daggers/Clubs]\n\r",
                        o->getName());
-            if (!ch->hasClass(CLASS_MONK) && !ch->hasClass(CLASS_MAGIC_USER))
+            if (!ch->hasClass(CLASS_MONK) && !ch->hasClass(CLASS_MAGE))
             ch->sendTo("%s:    goto armor     : Armor Shop     [Metallic Armor]\n\r",
                        o->getName());
             ch->sendTo("%s:    goto food      : Food Shop      [Provisions/Rations/Bread]\n\r",
@@ -2912,7 +2912,7 @@ int newbieHelperWProc(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TOb
                        o->getName());
             ch->sendTo("%s:    goto commodity : Commodity Shop [bits of tin/ingots of copper]\n\r",
                        o->getName());
-            if (ch->hasClass(CLASS_MAGIC_USER) || ch->hasClass(CLASS_RANGER))
+            if (ch->hasClass(CLASS_MAGE) || ch->hasClass(CLASS_RANGER))
             ch->sendTo("%s:    goto component : Component Shop [Mage Spell Components]\n\r",
                        o->getName());
             ch->sendTo("%s:    goto doctor    : Doctor         [Heal bleeding Wounds]\n\r",

@@ -81,7 +81,7 @@ void TBeing::doTrack(const char *argument)
     dist *= 2;
   else if (hasClass(CLASS_WARRIOR))
     dist /= 2;
-  else if (hasClass(CLASS_MAGIC_USER))
+  else if (hasClass(CLASS_MAGE))
     dist += getLevel(MAGE_LEVEL_IND);
   else
     dist = dist;

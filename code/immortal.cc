@@ -3611,7 +3611,7 @@ void TPerson::doStart()
   if (hasClass(CLASS_CLERIC)) 
     personalize_object(NULL, this, 500, -1);
   
-  if (hasClass(CLASS_MAGIC_USER))
+  if (hasClass(CLASS_MAGE))
     personalize_object(NULL, this, 321, -1);
 
   if (hasClass(CLASS_SHAMAN)) {

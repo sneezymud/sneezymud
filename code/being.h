@@ -203,7 +203,6 @@ typedef struct _app_typ {
 extern APP_type apply_types[MAX_APPLY_TYPES];
 
 /* 'class' for PC's */
-const ush_int CLASS_MAGIC_USER   = (1<<0);   // 1
 const ush_int CLASS_MAGE         = (1<<0);   // 1
 const ush_int CLASS_CLERIC       = (1<<1);   // 2
 const ush_int CLASS_WARRIOR      = (1<<2);   // 4

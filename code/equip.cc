@@ -19,7 +19,7 @@ int GetItemClassRestrictions(const TObj *obj)
   int total = 0;
 
   if (obj->isObjStat(ITEM_ANTI_MAGE))
-    total += CLASS_MAGIC_USER;
+    total += CLASS_MAGE;
   if (obj->isObjStat(ITEM_ANTI_THIEF))
     total += CLASS_THIEF;
   if (obj->isObjStat(ITEM_ANTI_FIGHTER))
@@ -42,7 +42,7 @@ bool IsRestricted(ush_int mask, ush_int Class)
 {
   ush_int i;
 
-  for (i = CLASS_MAGIC_USER; i <= CLASS_THIEF; i *= 2) {
+  for (i = CLASS_MAGE; i <= CLASS_THIEF; i *= 2) {
     if (IS_SET(i, mask) && !IS_SET(i, Class))
       mask -= i;
   }
@@ -153,7 +153,7 @@ bool TBeing::canUseEquipment(const TObj *o, silentTypeT silent, wearKeyT key=WEA
     if (tbc && !isPc()) {
       double al = tbc->armorLevel(ARMOR_LEV_REAL);
       double mod = 0;
-      if (hasClass(CLASS_MAGIC_USER))
+      if (hasClass(CLASS_MAGE))
         mod = max(mod, 10.0);
       if (hasClass(CLASS_CLERIC))
         mod = max(mod, 20.0/3);

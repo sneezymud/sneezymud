@@ -1082,7 +1082,7 @@ bool TObj::shouldntBeShown(wearSlotT pos) const
 
 void TBeing::fixLevels(int lev)
 {
-  if (hasClass(CLASS_MAGIC_USER))
+  if (hasClass(CLASS_MAGE))
     setLevel(MAGE_LEVEL_IND, lev);
   if (hasClass(CLASS_CLERIC))
     setLevel(CLERIC_LEVEL_IND, lev);

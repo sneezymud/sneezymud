@@ -155,7 +155,7 @@ static ubyte credit_factor(const TBeing *ch)
 double getLevMod(unsigned short int Class, unsigned int lev)
 {
   double lev_mod = 0;  // warriors is 0.0
-  if (IS_SET(Class, CLASS_MAGIC_USER))
+  if (IS_SET(Class, CLASS_MAGE))
     lev_mod = max(lev_mod, 10.0);
   if (IS_SET(Class, CLASS_CLERIC))
     lev_mod = max(lev_mod, 7.0);
@@ -209,7 +209,7 @@ unsigned int rent_credit(ush_int Class, unsigned int orig_lev, unsigned int numC
   num += min((int) orig_lev * 50, 1000);
 
   // make some allowances for other items a class might need as "appropriate"
-  if (IS_SET(Class, CLASS_MAGIC_USER)) {
+  if (IS_SET(Class, CLASS_MAGE)) {
     // allowance for components
     // basically, give them spare capacity for 20 kills
     // c.f. balance notes for more discussion

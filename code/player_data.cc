@@ -127,7 +127,7 @@ void TPerson::resetChar()
       setSkillValue(SKILL_RIDE,50);
     }
   }
-  if (hasClass(CLASS_CLERIC) || hasClass(CLASS_SHAMAN) || hasClass(CLASS_MAGIC_USER) || (race->getRace() == RACE_ELVEN)) {
+  if (hasClass(CLASS_CLERIC) || hasClass(CLASS_SHAMAN) || hasClass(CLASS_MAGE) || (race->getRace() == RACE_ELVEN)) {
     if (!hasQuestBit(TOG_SPELL_READ_MAGIC)) {
       setQuestBit(TOG_SPELL_READ_MAGIC);
     }

@@ -424,7 +424,7 @@ if (!isTestmob()) {
   // warrior test mob, and change its class, It will now beat an L17, but
   // lose to the L18 warrior test mobs.
   double class_adjust = 0.0;
-  if (hasClass(CLASS_MAGIC_USER | CLASS_SHAMAN)) {
+  if (hasClass(CLASS_MAGE | CLASS_SHAMAN)) {
     // data taken by Batopr 2/2/99
     double mage_array[] = { 0.00,  // L0
       -0.02, 0.01, -0.07, -0.07, -0.12,  // L5
