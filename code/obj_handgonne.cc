@@ -296,7 +296,7 @@ int task_handgonne_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 
   shot=dynamic_cast<TAmmo *>(t);
 
-  if(!shot){
+  if(!shot && !handgonne->getAmmo()){
     ch->sendTo("You need to have some shot.\n\r");
     ch->stopTask();
     return FALSE;
