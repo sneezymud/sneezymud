@@ -3910,7 +3910,7 @@ int healingHead ( TBeing *vict, cmdTypeT cmd, const char arg, TObj *o, TObj * ) 
   wearSlotT slot;
 
   if (!(ch = dynamic_cast<TBeing *> (o->equippedBy)))
-    return FASE;
+    return FALSE;
 
   for (int i = 1; i < 5; i++) {
   
