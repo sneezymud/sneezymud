@@ -171,6 +171,7 @@ bool TVehicle::isAllowedPath(int rnum)
       for(int i=0;elevator[i]!=-1;++i)
 	if(rnum==elevator[i])
 	  return true;
+      break;
     default:
       return true;
   }
