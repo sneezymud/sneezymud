@@ -5748,7 +5748,7 @@ int iceStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       act("<b>An incredibly cold ray erupts from $n's <c>$o<b>, and strikes $N full on!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
       act("$n steps back and points $p at you!  Uh oh!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
       act("<b>An incredibly cold ray erupts from $n's <c>$o<b>, and strikes you full on!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
-      act("Your $o glows <b>a cold blue<1> as you growls, '<p>chill out<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("Your $o glows <b>a cold blue<1> as you growl, '<p>chill out<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
       act("You step back and point $p at $N!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
       act("<b>An incredibly cold ray erupts from your <c>$o<b>, and strikes $N full on!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
 
