@@ -2158,12 +2158,12 @@ void TBeing::doScribe(const char *arg)
 
   if (how_many >= want_num) {
     how_many = want_num;
-    ssprintf(buf, "You begin to scribe %d scroll%s of %s.", 
-           how_many, (how_many == 1 ? "" : "s"), discArray[which]->name);
+    buf = fmt("You begin to scribe %d scroll%s of %s.") %
+      how_many % (how_many == 1 ? "" : "s") % discArray[which]->name;
     act(buf, FALSE, this, 0, 0, TO_CHAR);
   } else {
-    ssprintf(buf, "You only have enough to begin to scribe %d scroll%s of %s.", 
-           how_many, (how_many == 1 ? "" : "s"), discArray[which]->name);
+    buf = fmt("You only have enough to begin to scribe %d scroll%s of %s.") %
+      how_many % (how_many == 1 ? "" : "s") % discArray[which]->name;
     act(buf, FALSE, this, 0, 0, TO_CHAR);
   }
   if (how_many > 1) {
@@ -2174,8 +2174,8 @@ void TBeing::doScribe(const char *arg)
     act(buf, FALSE, this, 0, 0, TO_ROOM);
   }
 
-  ssprintf(buf, "You use up %d charge%s of $p.",
-          how_many, (how_many == 1 ? "" : "s"));
+  buf = fmt("You use up %d charge%s of $p.") %
+    how_many % (how_many == 1 ? "" : "s");
   act(buf, FALSE, this, comp_gen, 0, TO_CHAR);
   comp_gen->addToComponentCharges(-how_many);
   if (comp_gen->getComponentCharges() <= 0) {
@@ -2185,8 +2185,8 @@ void TBeing::doScribe(const char *arg)
     comp_gen = NULL;
   }
 
-  ssprintf(buf, "You use up %d charge%s of $p.",
-          how_many, (how_many == 1 ? "" : "s"));
+  buf = fmt("You use up %d charge%s of $p.") %
+    how_many % (how_many == 1 ? "" : "s");
   act(buf, FALSE, this, comp_scribe, 0, TO_CHAR);
   comp_scribe->addToComponentCharges(-how_many);
   if (comp_scribe->getComponentCharges() <= 0) {
@@ -2196,8 +2196,8 @@ void TBeing::doScribe(const char *arg)
     comp_scribe = NULL;
   }
   
-  ssprintf(buf, "You use up %d charge%s of $p.",
-          how_many, (how_many == 1 ? "" : "s"));
+  buf = fmt("You use up %d charge%s of $p.") %
+          how_many % (how_many == 1 ? "" : "s");
   act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
   comp_spell->addToComponentCharges(-how_many);
   if (comp_spell->getComponentCharges() <= 0) {

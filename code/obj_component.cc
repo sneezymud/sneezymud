@@ -2517,9 +2517,9 @@ sstring TComponent::statObjInfo() const
   if (getComponentSpell() <= TYPE_UNDEFINED) {
     buf = "UNKNOWN/BOGUS spell\n\r";
   } else {
-    ssprintf(buf, "Spell for : %d (%s)\n\r",
-      getComponentSpell(),
-      (discArray[getComponentSpell()] &&
+    buf = fmt("Spell for : %d (%s)\n\r") %
+      getComponentSpell() %
+      ((discArray[getComponentSpell()] &&
        discArray[getComponentSpell()]->name) ? 
        discArray[getComponentSpell()]->name :
        "UNKNOWN/BOGUS");
@@ -2534,8 +2534,7 @@ sstring TComponent::statObjInfo() const
   if (isComponentType(COMP_SCRIBE))
     buf += "Component is for scribing.\n\r";
 
-  ssprintf(sbuf, "Charges left : %d",
-      getComponentCharges());
+  sbuf = fmt("Charges left : %d") % getComponentCharges();
   buf+=sbuf;
 
   sstring a(buf);
@@ -3047,9 +3046,9 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     int charges = getComponentCharges();
 
     if (tNum > charges) {
-      ssprintf(tString, "%s I don't have %d charges of %s.  Here %s the %d I do have.",
-              ch->getName(), tNum, getName(), ((charges > 2) ? "are" : "is"),
-              charges);
+      tString = fmt("%s I don't have %d charges of %s.  Here %s the %d I do have.") %
+	ch->getName() % tNum % getName() % ((charges > 2) ? "are" : "is") %
+	charges;
       tKeeper->doTell(tString);
       tNum  = charges;
       tCost = shopPrice(tNum, tShop, tChr, &tDiscount);
@@ -3113,7 +3112,7 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num = 1)
        tDiscount = 100;
 
   if (!shop_index[tShop].profit_sell) {
-    ssprintf(buf, shop_index[tShop].do_not_buy, ch->getName());
+    buf = fmt(shop_index[tShop].do_not_buy) % ch->getName();
     tKeeper->doTell(buf);
     return;
   }
@@ -3285,7 +3284,7 @@ void TComponent::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   price = sellPrice(num, shop_nr, -1, &discount);
 
   if (!shop_index[shop_nr].willBuy(this)) {
-    ssprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());
+    buf = fmt(shop_index[shop_nr].do_not_buy) % ch->getName();
     keeper->doTell(buf);
     return;
   }

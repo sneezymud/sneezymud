@@ -990,9 +990,9 @@ sstring hmtAsString(int hmt)
   int minute = hmt%4 * 15;
 
   sstring buf;
-  ssprintf(buf, "%d:%2.2d %s",
-     (!(hour % 12) ? 12 : hour%12),
-     minute,
-     (hour >= 12) ? "PM" : "AM");
+  buf = fmt("%d:%2.2d %s") %
+    (!(hour % 12) ? 12 : hour%12) %
+    minute %
+    ((hour >= 12) ? "PM" : "AM");
   return buf;
 }

@@ -248,11 +248,11 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
       
       switch (ch->task->timeLeft) {
 	case 5:
-	  ssprintf(buf, "You clear out the barrel of %s.",
-		   cannon->shortDescr);
+	  buf = fmt("You clear out the barrel of %s.") %
+		   cannon->shortDescr;
 	  act(buf, FALSE, ch, powder, cannon, TO_CHAR);
-	  ssprintf(buf, "$n clears out the barrel of %s.",
-		   cannon->shortDescr);
+	  buf = fmt("$n clears out the barrel of %s.") %
+		   cannon->shortDescr;
 	  act(buf, FALSE, ch, powder, cannon, TO_ROOM);
 
 	  ch->task->timeLeft--;
@@ -268,12 +268,12 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
 	    delete powder;
 	  }
 
-	  ssprintf(buf, "You pour some powder from $p into %s.",
-		   cannon->shortDescr);
+	  buf = fmt("You pour some powder from $p into %s.") %
+		   cannon->shortDescr;
 	  act(buf, FALSE, ch, powder, 0, TO_CHAR);
 
-	  ssprintf(buf, "$n pour some powder from $p into %s.",
-		   cannon->shortDescr);
+	  buf = fmt("$n pour some powder from $p into %s.") %
+		   cannon->shortDescr;
           act(buf, FALSE, ch, powder, 0, TO_ROOM);
           ch->task->timeLeft--;
           break;

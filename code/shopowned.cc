@@ -395,8 +395,8 @@ int TShopOwned::giveMoney(sstring arg){
     
     shoplog(shop_nr, ch, keeper, "talens", amount, "receiving");
     
-    ssprintf(buf, "$n gives you %d talen%s.\n\r", amount,
-	    (amount == 1) ? "" : "s");
+    buf = fmt("$n gives you %d talen%s.\n\r") % amount %
+      ((amount == 1) ? "" : "s");
     act(buf, TRUE, keeper, NULL, ch, TO_VICT);
     act("$n gives some money to $N.", 1, keeper, 0, ch, TO_NOTVICT);
   } else {
@@ -441,8 +441,8 @@ int TShopOwned::setAccess(sstring arg)
     while(db.fetchRow()){
       access=convertTo<int>(db["access"]);
       
-      ssprintf(buf, "%s Access for %s is set to %i, commands/abilities:",
-	       ch->getName(), db["name"], access);
+      buf = fmt("%s Access for %s is set to %i, commands/abilities:") %
+	       ch->getName() % db["name"] % access;
       
       if(access>=SHOPACCESS_LOGS){
 	access-=SHOPACCESS_LOGS;
@@ -505,8 +505,8 @@ int TShopOwned::doLogs(sstring arg)
       sb += buf;
       
       while(db.fetchRow()){
-	ssprintf(buf, "%10i %-65.65s\n\r",
-		 convertTo<int>(db["tsum"]), db["name"]);
+	buf = fmt("%10i %-65.65s\n\r") %
+	  convertTo<int>(db["tsum"]) % db["name"];
 	sb += buf;
       }
       
@@ -519,8 +519,8 @@ int TShopOwned::doLogs(sstring arg)
       sb += buf;
       
       while(db.fetchRow()){
-	ssprintf(buf, "%10i %-65.65s\n\r", 
-		 convertTo<int>(db["tsum"]), db["item"]);
+	buf = fmt("%10i %-65.65s\n\r") %
+	  convertTo<int>(db["tsum"]) % db["item"];
 	sb += buf;
       }
 
@@ -529,13 +529,13 @@ int TShopOwned::doLogs(sstring arg)
     
     db.query("select action, sum(talens) as tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
     
-    ssprintf(buf, "<r>%-12.12s %s<1>\n\r",
-	     "Action", "Total Talens");
+    buf = fmt("<r>%-12.12s %s<1>\n\r") %
+      "Action" % "Total Talens";
     sb += buf;
     
     while(db.fetchRow()){
-      ssprintf(buf, "%-12.12s %8i\n\r", 
-	       db["action"], convertTo<int>(db["tsum"]));
+      buf = fmt("%-12.12s %8i\n\r") %
+	db["action"] % convertTo<int>(db["tsum"]);
       sb += buf;
     }
     
@@ -604,8 +604,9 @@ int TShopOwned::doLogs(sstring arg)
       buf = fmt("%s  Talens: %8i  Value: %8i  Total: %8i\n\r") % db["logtime"] % convertTo<int>(db["shoptalens"]) % convertTo<int>(db["shopvalue"]) % (convertTo<int>(db["shopvalue"])+convertTo<int>(db["shoptalens"]));
       sb += buf;
       
-      ssprintf(buf, "%-12.12s %-10.10s %-32.32s for %8i talens.\n\r\n\r",
-	      db["name"], db["action"], db["item"], convertTo<int>(db["talens"]));
+      buf = fmt("%-12.12s %-10.10s %-32.32s for %8i talens.\n\r\n\r") %
+	db["name"] % db["action"] % db["item"] %
+	convertTo<int>(db["talens"]);
       sb += buf;
     }
     

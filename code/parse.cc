@@ -754,7 +754,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	  addToLifeforce(1);
           break;
         case CMD_SYSTEM:
-          doSystem(newarg);
+          doSystem(stringarg);
 	  addToLifeforce(1);
           break;
         case CMD_TRANSFER:

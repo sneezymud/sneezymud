@@ -85,8 +85,8 @@ void TBeing::doBrew(const char *arg)
   // trash all items first
   int how_many = comp_gen->getDrinkUnits();
 
-  ssprintf(buf, "You begin to brew %d ounces of %s.", 
-         how_many, discArray[which_spell]->name);
+  buf=fmt("You begin to brew %d ounces of %s.") %
+    how_many % discArray[which_spell]->name;
   act(buf, FALSE, this, 0, 0, TO_CHAR);
   buf="$n begins to brew a potion.";
   act(buf, FALSE, this, 0, 0, TO_ROOM);

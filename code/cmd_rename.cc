@@ -114,8 +114,8 @@ void TBeing::doNameChange(const char *argument)
     sprintf(tmpbuf2, mons->getName());
     one_argument(tmpbuf2, arg);
     if (!strcmp(arg, "a") || !strcmp(arg, "an"))
-      ssprintf(tmpbuf, "\"%s\", the %s", sstring(new_name).cap().c_str(), 
-             one_argument(tmpbuf2, arg));
+      tmpbuf=fmt("\"%s\", the %s") % sstring(new_name).cap() %
+	one_argument(tmpbuf2, arg);
     else
       tmpbuf = fmt("\"%s\" % %s") % sstring(new_name).cap() % mons->getName();
 
@@ -175,22 +175,21 @@ void TBeing::doNameChange(const char *argument)
   db.query("update player set name='%s' where name='%s'", 
 	   tmp_name, orig_name);
 
+  tmpbuf=fmt("account/%c/%s/%s") % LOWER(vict->desc->account->name[0]) %
+    sstring(vict->desc->account->name).lower() % sstring(orig_name).lower();
 
-  ssprintf(tmpbuf, "account/%c/%s/%s", LOWER(vict->desc->account->name[0]),
-                  sstring(vict->desc->account->name).lower().c_str(), sstring(orig_name).lower().c_str());
   if (unlink(tmpbuf.c_str()) != 0)
     vlogf(LOG_FILE, "error in unlink (11) (%s) %d", tmpbuf.c_str(), errno);
   
   if (vict->GetMaxLevel() > MAX_MORT) {
-    ssprintf(tmpbuf, "mv immortals/%s/ immortals/%s/",
-            orig_name, cap(tmp_name));
+    tmpbuf=fmt("mv immortals/%s/ immortals/%s/") % orig_name % cap(tmp_name);
     vsystem(tmpbuf);
   }
 
   vict->doSave(SILENT_NO);
-  ssprintf(tmpbuf, "The World shall now know %s as %s.",cap(orig_name),
-       vict->getName());
-  doSystem(tmpbuf.c_str());
+  tmpbuf=fmt("The World shall now know %s as %s.") % cap(orig_name) %
+    vict->getName();
+  doSystem(tmpbuf);
   vict->fixClientPlayerLists(FALSE);
 
   // OK, now for some fun

@@ -55,8 +55,8 @@ int lotteryTicket(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if(which==0){
     buf="This ticket is a loser.\n\r";
   } else {
-    ssprintf(buf, "This ticket is a winner!  The prize is %s.\n\r",
-	     obj_index[real_object(prizes[which].vnum)].short_desc);
+    buf = fmt("This ticket is a winner!  The prize is %s.\n\r") %
+	     obj_index[real_object(prizes[which].vnum)].short_desc;
   }
 
   act("$n scratches off $p.",

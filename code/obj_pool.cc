@@ -219,9 +219,9 @@ void TPool::initPool(int amt, liqTypeT liq)
   canBeSeen = 1;
   setMaterial(MAT_WATER);
 
-  ssprintf(buf, "pool puddle %s %s", 
-	   stripColorCodes(DrinkInfo[liq]->name).c_str(),
-	   stripColorCodes(DrinkInfo[liq]->color).c_str());
+  buf = fmt("pool puddle %s %s") %
+    stripColorCodes(DrinkInfo[liq]->name) %
+    stripColorCodes(DrinkInfo[liq]->color);
   delete [] name;
   name = mud_str_dup(buf);
   

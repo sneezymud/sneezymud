@@ -45,27 +45,6 @@ extern long random(void);
 #include "obj_seethru.h"
 
 
-// sprintf for sstring class
-// this should be safe to use, truncates at MAX_STRING_LENGTH chars
-int ssprintf(sstring &s, const char *fmt, ...){
-  va_list ap;
-  char buf[MAX_STRING_LENGTH];
-  int ret;
-
-  va_start(ap, fmt);
-  ret=vsnprintf(buf, MAX_STRING_LENGTH, fmt, ap);
-
-  if(strlen(buf) == MAX_STRING_LENGTH - 1){
-    vlogf(LOG_BUG, "ssprintf(): buffer reached MAX_STRING_LENGTH");
-    vlogf(LOG_BUG, "ssprintf(): buffer=%.70s...", buf);
-  }
-
-  s = buf;
-
-  return ret;
-}
-
-
 bool TBeing::canSeeWho(const TBeing *o) const
 {
   if (inRoom() < 0 || o->inRoom() < 0 || !o || !o->roomp)
@@ -1435,12 +1414,12 @@ int TBeing::bumpHeadDoor(roomDirData *exitp, int *height)
   if (!willBumpHeadDoor(exitp, height))
     return FALSE;
 
-  ssprintf(doorbuf, exitp->getName().c_str());
+  doorbuf=exitp->getName();
   if (::number(1, 300) > plotStat(STAT_CURRENT, STAT_AGI, 30, 180, 110)) {
     sendTo(fmt("You bump your head as you go through the %s.  OUCH!\n\r") %
 	   doorbuf.uncap().c_str());
-    ssprintf(buf, "$n bumps $s head on the %s.  That had to hurt.",
-	     doorbuf.uncap().c_str());
+    buf = fmt("$n bumps $s head on the %s.  That had to hurt.") %
+	     doorbuf.uncap();
     act(buf,TRUE, this, 0,0,TO_ROOM);
     // Lets do some head-gear checks to see if gear can absorb or negate damage
     // Very simple to start - Brutius - 12-31-95

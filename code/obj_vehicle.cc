@@ -330,8 +330,7 @@ void TVehicle::driveStatus(TBeing *ch)
 
   buf = fmt("$p is pointing to the %s.\n\r") % dirs[getDir()];
   act(buf, 0, ch, this, 0, TO_CHAR);
-  ssprintf(buf, "$p is traveling at a %i speed.\n\r",
-	   getSpeed());
+  buf = fmt("$p is traveling at a %i speed.\n\r") % getSpeed();
   act(buf, 0, ch, this, 0, TO_CHAR);
 }
 

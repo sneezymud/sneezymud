@@ -101,12 +101,12 @@ void TCookware::pourMeIntoDrink2(TBeing *ch, TBaseCup *from)
 
   // let them know
   sstring buf;
-  ssprintf(buf, "You pour %s into %s.\n\r",
-	   DrinkInfo[from->getDrinkType()]->name, ch->objs(this));
+  buf = fmt("You pour %s into %s.\n\r") %
+    DrinkInfo[from->getDrinkType()]->name % ch->objs(this);
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
 
-  ssprintf(buf, "$n pours %s into %s.\n\r",
-	   DrinkInfo[from->getDrinkType()]->name, ch->objs(this));
+  buf = fmt("$n pours %s into %s.\n\r") %
+    DrinkInfo[from->getDrinkType()]->name % ch->objs(this);
   act(buf, TRUE, ch, 0, 0, TO_ROOM);
 
   

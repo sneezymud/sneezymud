@@ -1854,7 +1854,7 @@ class TBeing : public TThing {
     virtual void doAccess(const sstring &);
     void doWizlock(const char *);
     void doFlag(const char *);
-    void doSystem(const char *);
+    void doSystem(const sstring &);
     void doWiznews();
     void doNoshout(const sstring &);
     int doHide();

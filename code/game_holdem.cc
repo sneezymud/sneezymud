@@ -248,11 +248,11 @@ void HoldemGame::showdown(TBeing *ch)
     msg=handValToStr(hands[highest]);
     
     for(unsigned int p=0;p<winners.size();++p){
-      ssprintf(buf, "$n %s with %s!", 
-	       winners.size()>1?"ties":"wins", msg.c_str());
-      act(buf.c_str(), FALSE, players[winners[p]]->ch, 0, 0, TO_ROOM);
-      ssprintf(buf, "You %s with %s!", 
-	       winners.size()>1?"tie":"win", msg.c_str());
+      buf = fmt("$n %s with %s!") %
+	       (winners.size()>1?"ties":"wins") % msg;
+      act(buf, FALSE, players[winners[p]]->ch, 0, 0, TO_ROOM);
+      buf = fmt("You %s with %s!") %
+	       (winners.size()>1?"tie":"win") % msg;
       act(buf, FALSE, players[winners[p]]->ch, 0, 0, TO_CHAR);
       payout(players[winners[p]]->ch, (int)(bet/winners.size()), last_bet);
     }
@@ -599,20 +599,20 @@ void HoldemGame::call(TBeing *ch)
       act("$n goes all in!", FALSE, ch, 0, 0, TO_ROOM);
       act("You go all in!", FALSE, ch, 0, 0, TO_CHAR);
     } else {
-      ssprintf(buf, "$n goes all in %s! [%i]", 
-	       chipl[0]->getName(), chipl.size());
+      buf = fmt("$n goes all in %s! [%i]") %
+	chipl[0]->getName() % chipl.size();
       act(buf, FALSE, ch, 0, 0, TO_ROOM);
-      ssprintf(buf, "You go all in %s! [%i]", 
-	       chipl[0]->getName(), chipl.size());
+      buf = fmt("You go all in %s! [%i]") %
+	chipl[0]->getName() % chipl.size();
       act(buf, FALSE, ch, 0, 0, TO_CHAR);
       bet += chipl[0]->obj_flags.cost * chipl.size();
     }
   } else {
-    ssprintf(buf, "$n calls with %s. [%i]", 
-	     chipl[0]->getName(), chipl.size());
+    buf = fmt("$n calls with %s. [%i]") %
+	     chipl[0]->getName() % chipl.size();
     act(buf, FALSE, ch, 0, 0, TO_ROOM);
-    ssprintf(buf, "You call with %s. [%i]", 
-	     chipl[0]->getName(), chipl.size());
+    buf = fmt("You call with %s. [%i]") %
+	     chipl[0]->getName() % chipl.size();
     act(buf, FALSE, ch, 0, 0, TO_CHAR);
     bet += chipl[0]->obj_flags.cost * chipl.size();
   }    
@@ -691,11 +691,11 @@ void HoldemGame::raise(TBeing *ch, const sstring &arg)
     chipl.push_back(chip);
   }
 
-  ssprintf(buf, "$n raises with %s. [%i]", 
-	   chipl[0]->getName(), chipl.size());
+  buf = fmt("$n raises with %s. [%i]") %
+	   chipl[0]->getName() % chipl.size();
   act(buf, FALSE, ch, 0, 0, TO_ROOM);
-  ssprintf(buf, "You raise with %s. [%i]", 
-	   chipl[0]->getName(), chipl.size());
+  buf = fmt("You raise with %s. [%i]") %
+	   chipl[0]->getName() % chipl.size();
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
   bet += chip->obj_flags.cost * chipl.size();
 

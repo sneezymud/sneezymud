@@ -262,12 +262,12 @@ int task_handgonne_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom
 	    delete powder;
 	  }
 
-	  ssprintf(buf, "You pack some powder from $p into %s.",
-		   handgonne->shortDescr);
+	  buf = fmt("You pack some powder from $p into %s.") %
+		   handgonne->shortDescr;
 	  act(buf, FALSE, ch, powder, 0, TO_CHAR);
 
-	  ssprintf(buf, "$n packs some powder from $p into %s.",
-		   handgonne->shortDescr);
+	  buf = fmt("$n packs some powder from $p into %s.") %
+		   handgonne->shortDescr;
           act(buf, TRUE, ch, powder, 0, TO_ROOM);
           ch->task->timeLeft--;
           break;

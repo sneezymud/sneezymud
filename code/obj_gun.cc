@@ -194,14 +194,14 @@ sstring TGun::statObjInfo() const
   TGenWeapon::statObjInfo();
 
   TAmmo *ammo=getAmmo();
-  ssprintf(buf, "Rate of Fire: %i, Ammo Type: %s, Ammo: %i, Ammo Loaded: %s",
-	  getROF(), getAmmoDescr(getAmmoType()), (ammo?ammo->getRounds():0),
-	  (ammo?ammo->getName():"None"));
+  buf = fmt("Rate of Fire: %i, Ammo Type: %s, Ammo: %i, Ammo Loaded: %s") %
+    getROF() % getAmmoDescr(getAmmoType()) % (ammo?ammo->getRounds():0) %
+    (ammo?ammo->getName():"None");
   sbuf += buf;
 
-  ssprintf(buf, "\n\rSilenced: %s  Caseless: %s  Clipless: %s  Fouled: %s",
-	   isSilenced()?"yes":"no", isCaseless()?"yes":"no", 
-	   isClipless()?"yes":"no", isFouled()?"yes":"no");
+  buf = fmt("\n\rSilenced: %s  Caseless: %s  Clipless: %s  Fouled: %s") %
+	   (isSilenced()?"yes":"no") % (isCaseless()?"yes":"no") %
+	   (isClipless()?"yes":"no") % (isFouled()?"yes":"no");
   sbuf += buf;
 
   return sbuf;
@@ -289,8 +289,8 @@ sstring TAmmo::statObjInfo() const
 {
   sstring buf, sbuf;
 
-  ssprintf(buf, "Ammo Type: %s, Rounds Remaining: %i",
-	  getAmmoDescr(getAmmoType()), getRounds());
+  buf = fmt("Ammo Type: %s, Rounds Remaining: %i") %
+	  getAmmoDescr(getAmmoType()) % getRounds();
   sbuf += buf;
 
   return sbuf;

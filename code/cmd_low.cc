@@ -1095,8 +1095,8 @@ void TPerson::doLow(const sstring &arg)
 	   "Bonus       :" %"Cnt" %"Max" %"Min" %"Avg" %"Sum");
 
     while(db.fetchRow()){
-      ssprintf(buf, "%5s %5s %5s %10s %10s", db["count"],
-	       db["max"], db["nin"], db["avg"], db["sum"]);
+      buf = fmt("%5s %5s %5s %10s %10s") % db["count"] % db["max"] %
+	db["min"] % db["avg"] % db["sum"];
 
       switch(mapFileToApply(convertTo<int>(db["type"]))){
 	case APPLY_STR:
@@ -1237,20 +1237,17 @@ void TPerson::doLow(const sstring &arg)
 void TBeing::lowPath(const sstring &arg)
 {
   dirTypeT dir, lastdir=DIR_NORTH;
-  sstring buf1, buf2;
+  sstring buf2;
   int room=in_room;
 
   // arg = path <vnum>
   // trace a path there and spit out room nums
 
-  buf1=arg.word(0);
   buf2=arg.word(1);
 
   while((dir=find_path(room, is_target_room_p, 
 		       (void *)convertTo<int>(buf2), -5000, false)) >= 0){
-    ssprintf(buf1, "{DIR_%s, %i},\n\r", 
-	     sstring(dirs[lastdir]).upper().c_str(), room);
-    sendTo(buf1);
+    sendTo(fmt("{DIR_%s, %i},\n\r") % sstring(dirs[lastdir]).upper() % room);
 
     room=real_roomp(room)->dir_option[dir]->to_room;
     lastdir=dir;

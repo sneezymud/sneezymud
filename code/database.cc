@@ -172,8 +172,8 @@ bool TDatabase::query(const char *query,...)
       buf += *query++;
     }
 
-    ssprintf(buf, "insert into querytimes values ('%s', %f)",
-	     buf.c_str(), t.getElapsed());
+    buf = fmt("insert into querytimes values ('%s', %f)") % 
+      buf % t.getElapsed();
     
     PQexec(db, buf.c_str());
   }

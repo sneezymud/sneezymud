@@ -395,8 +395,7 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
   else if (b->msg_num == 1)
     buf += "There is 1 message on the board.\n\r";
   else {
-    ssprintf(sbuf, "There are %u messages on the board.\n\r",
-	    b->msg_num);
+    sbuf = fmt("There are %u messages on the board.\n\r") % b->msg_num;
     buf += sbuf;
   }
 
@@ -427,9 +426,10 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
       *(tmp-1) = '\0';
       strcpy(name_sstring, tmp);
 
-      ssprintf(sbuf, "%s%-2d%s : %s%s %s%s %s%s%s\n\r", 
-              ch->cyan(), i + 1, ch->norm(), ch->green(), date_sstring,
-              ch->purple(), head_sstring, ch->orange(), name_sstring, ch->norm());
+      sbuf = fmt("%s%-2d%s : %s%s %s%s %s%s%s\n\r") %
+	ch->cyan() % (i + 1) % ch->norm() % ch->green() % date_sstring %
+	ch->purple() % head_sstring % ch->orange() % name_sstring % 
+	ch->norm();
       buf += sbuf;
     }
   } else {
@@ -448,9 +448,10 @@ int board_show_board(TBeing *ch, const char *arg, TBoard *me, boardStruct *b)
       *(tmp-1) = '\0';
       strcpy(name_sstring, tmp);
 
-      ssprintf(sbuf, "%s%-2d%s : %s%s %s%s %s%s%s\n\r", 
-              ch->cyan(), i + 1, ch->norm(), ch->green(), date_sstring,
-              ch->purple(), head_sstring, ch->orange(), name_sstring, ch->norm());
+      sbuf = fmt("%s%-2d%s : %s%s %s%s %s%s%s\n\r") %
+	ch->cyan() % (i + 1) % ch->norm() % ch->green() % date_sstring %
+	ch->purple() % head_sstring % ch->orange() % name_sstring %
+	ch->norm();
       buf += sbuf;
     }
   }

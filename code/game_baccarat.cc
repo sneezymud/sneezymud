@@ -352,8 +352,8 @@ void BaccaratGame::peek(const TBeing *ch)
 
   for(int i=0;i<3;++i){
     if(player[i]){
-      ssprintf(log_msg, "%s (down)\n\r",
-	       pretty_card_printout(ch, player[i]).c_str());
+      log_msg = fmt("%s (down)\n\r") %
+	       pretty_card_printout(ch, player[i]);
       ch->sendTo(COLOR_BASIC, log_msg);
     }
   }    

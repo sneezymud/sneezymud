@@ -7740,8 +7740,8 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
     sayRiddle = fmt("<c>$n says,<z> \"%s\"") % riddles[whichRiddle];
     act(sayRiddle, TRUE, tree, NULL, ch, TO_ROOM);
     sstring askForClue;
-    ssprintf(askForClue, "<c>$n says,<z> \"You'll have to <g>tell<z> me the answer if you hope to pass.  I'll give you %d %s to guess.\"", 
-      chancesLeft, (chancesLeft != 1) ? "chances" : "chance");
+    askForClue = fmt("<c>$n says,<z> \"You'll have to <g>tell<z> me the answer if you hope to pass.  I'll give you %d %s to guess.\"") %
+      chancesLeft % ((chancesLeft != 1) ? "chances" : "chance");
     act(askForClue, TRUE, tree, NULL, ch, TO_ROOM);
   }
  // control response to other tells to the tree 
@@ -7759,8 +7759,8 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
         TRUE, tree, NULL, ch, TO_ROOM);
       tree->doAction("",CMD_SNICKER); 
       sstring stateChancesLeft;
-      ssprintf(stateChancesLeft, "<c>$n says,<z> \"There's a good chance of that, at least.  You have %d %s left, so you'd best stop fooling around.\"", 
-        chancesLeft, (chancesLeft != 1) ? "chances" : "chance");
+      stateChancesLeft = fmt("<c>$n says,<z> \"There's a good chance of that, at least.  You have %d %s left, so you'd best stop fooling around.\"") %
+        chancesLeft % ((chancesLeft != 1) ? "chances" : "chance");
       act(stateChancesLeft, TRUE, tree, NULL, ch, TO_ROOM);
     } else {
       act("<c>$n says,<z> \"I gave plenty of chances.  I still am not sure whether to mourn my friend or pity your kind its ignorance, but I'm certainly not letting anyone in.\"",

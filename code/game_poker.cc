@@ -343,8 +343,8 @@ void PokerGame::discard(TBeing *ch, sstring arg)
     
     ch->sendTo(COLOR_BASIC, fmt("You discard %s.\n\r") %
 	       pretty_card_printout(ch, card[i]).c_str());
-    ssprintf(buf, "$n discards %s.",
-	     pretty_card_printout(ch, card[i]).c_str());
+    buf = fmt("$n discards %s.") %
+      pretty_card_printout(ch, card[i]);
     act(buf, TRUE, ch, 0, 0, TO_ROOM);
 
     card[i]=0;
@@ -371,8 +371,8 @@ void PokerGame::peek(const TBeing *ch)
 
   for(int i=0;i<5;++i){
     if(card[i]){
-      ssprintf(log_msg, "%i) %s\n\r", i+1, 
-	       pretty_card_printout(ch, card[i]).c_str());
+      log_msg = fmt("%i) %s\n\r") % (i+1) %
+	pretty_card_printout(ch, card[i]);
       ch->sendTo(COLOR_BASIC, log_msg);
     }
   }    

@@ -759,9 +759,8 @@ void TBeing::doPoint(const sstring &arg)
   dirTypeT dir = getDirFromChar(arg);
   if (dir != DIR_NONE) {
     sendTo(fmt("You point your %s %s.\n\r") % buf % dirs_to_blank[dir]);
-    ssprintf(holdBuf, "$n points $s %s %s.", 
-	    buf.c_str(), dirs_to_blank[dir]);
-    act(holdBuf, false, this, NULL, NULL, TO_ROOM);
+    act(fmt("$n points $s %s %s.") % buf % dirs_to_blank[dir],
+	false, this, NULL, NULL, TO_ROOM);
     return;
   }
 

@@ -1841,8 +1841,7 @@ void TBeing::doTime(const char *argument)
     desc->saveAccount();
     return;
   }
-  ssprintf(buf, "It is %s, on ",
-          hmtAsString(hourminTime()).c_str());
+  buf = fmt("It is %s, on ") % hmtAsString(hourminTime());
 
   weekday = ((28 * time_info.month) + time_info.day + 1) % 7;        // 28 days in a month 
 
@@ -1857,23 +1856,21 @@ void TBeing::doTime(const char *argument)
            month_name[time_info.month] % time_info.year);
 
   tmp2 = sunTime(SUN_TIME_RISE);
-  ssprintf(buf, "The sun will rise today at:   %s.\n\r",
-       hmtAsString(tmp2).c_str());
+  buf = fmt("The sun will rise today at:   %s.\n\r") % hmtAsString(tmp2);
   sendTo(buf);
 
   tmp2 = sunTime(SUN_TIME_SET);
-  ssprintf(buf, "The sun will set today at:    %s.\n\r",
-       hmtAsString(tmp2).c_str());
+  buf = fmt("The sun will set today at:    %s.\n\r") % hmtAsString(tmp2);
   sendTo(buf);
 
   tmp2 = moonTime(MOON_TIME_RISE);
-  ssprintf(buf, "The moon will rise today at:  %s    (%s).\n\r",
-       hmtAsString(tmp2).c_str(), moonType().c_str());
+  buf = fmt("The moon will rise today at:  %s    (%s).\n\r") %
+       hmtAsString(tmp2) % moonType();
   sendTo(buf);
 
   tmp2 = moonTime(MOON_TIME_SET);
-  ssprintf(buf, "The moon will set today at:   %s.\n\r",
-       hmtAsString(tmp2).c_str());
+  buf = fmt("The moon will set today at:   %s.\n\r") %
+       hmtAsString(tmp2);
   sendTo(buf);
 
   time_t ct;
@@ -2220,7 +2217,7 @@ void TBeing::doWizhelp()
 
   if ((tPower = wizPowerFromCmd(CMD_AS)) == MAX_POWER_INDEX ||
       hasWizPower(tPower))
-    ssprintf(buf, tString.c_str(), "as");
+    buf = fmt(tString) % "as";
 
   for (no = 2, i = 0; i < MAX_CMD_LIST; i++) {
     if (!commandArray[i])
@@ -2231,7 +2228,7 @@ void TBeing::doWizhelp()
         ((tPower = wizPowerFromCmd(cmdTypeT(i))) == MAX_POWER_INDEX ||
          hasWizPower(tPower))) {
 
-      ssprintf(sbuf, tString.c_str(), commandArray[i]->name);
+      sbuf = fmt(tString) % commandArray[i]->name;
       buf += sbuf;
 
       if (!(no % (tLength - 1)))

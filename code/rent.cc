@@ -2362,7 +2362,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, TThing *tList, int
 #ifdef FREE_RENT
     if(max_exist > LIMITED_RENT_ITEM) tCost = 0;
 #endif
-    ssprintf(tString, tBuffer.c_str(), getName(), tCost);
+    tString = fmt(tBuffer) % getName() % tCost;
     if (FreeRent) {
       if (lCount == 1)
 	tString+="\n\r";
@@ -2384,7 +2384,7 @@ int TComponent::noteMeForRent(sstring &tStString, TBeing *ch, TThing *tList, int
   } else {
     tBuffer+="NOT RENTABLE";
     lCount++;
-    ssprintf(tString, tBuffer.c_str(), getName());
+    tString=fmt(tBuffer) % getName();
 
     if (lCount == 1)
       tString+="\n\r";

@@ -1816,8 +1816,8 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
   if (!ch->hasClass(Class)) {
     sstring buf;
 
-    ssprintf(buf, "$n growls, \"Go away, $N.  You're no %s!\"",
-	     classInfo[cit].name.c_str());
+    buf = fmt("$n growls, \"Go away, $N.  You're no %s!\"") %
+	     classInfo[cit].name;
     act(buf, FALSE, me, 0, ch, TO_ROOM);
 
     return TRUE;

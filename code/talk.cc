@@ -171,9 +171,7 @@ sstring TBeing::garble(const sstring &arg, int chance) const
       if(isupper(word[0]))
 	latin[0]=tolower(word[0]);
 
-      ssprintf(latin, "%s%cay", 
-	       latin.substr(1,latin.length()-1).c_str(),
-	       latin[0]);
+      latin = fmt("%s%cay") % latin.substr(1,latin.length()-1) % latin[0];
     }
 
     if(isupper(word[0]))
@@ -308,8 +306,8 @@ int TBeing::doSay(const sstring &arg)
 			tmpbuf % garbed % mob->norm());
 	  }
 	  if (d->m_bIsClient) {
-	    ssprintf(garbedBuf, "%s", 
-		     colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
+	    garbedBuf = fmt("%s") %
+	      colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
 	    d->clientf("%d|%s|%s", CLIENT_SAY, tmpbuf.c_str(), garbedBuf.c_str());
 	  }
 	} else {
@@ -322,8 +320,8 @@ int TBeing::doSay(const sstring &arg)
 	  }
 	  if (d->m_bIsClient) {
 	    nameBuf = fmt("<c>%s<z>") % tmpbuf;
-	    ssprintf(garbedBuf, "%s", 
-		     colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
+	    garbedBuf = fmt("%s") %
+	      colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
 	    d->clientf("%d|%s|%s", CLIENT_SAY, 
 		       colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
 		       garbedBuf.c_str());
@@ -339,8 +337,8 @@ int TBeing::doSay(const sstring &arg)
 	}
 	if (d->m_bIsClient) {
 	  nameBuf = fmt("<c>%s<z>") % tmpbuf;
-	  ssprintf(garbedBuf, "%s",
-		   colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
+	  garbedBuf = fmt("%s") %
+	    colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE);
 	  d->clientf("%d|%s|%s", CLIENT_SAY,
 		     colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE).c_str(),
 		     garbedBuf.c_str());
@@ -1074,9 +1072,9 @@ int TBeing::doWhisper(const sstring &arg)
         bOther->GetMaxLevel() >= GetMaxLevel() &&
         bOther != this && bOther != vict &&
         !bOther->isImmortal() && !isImmortal() && !vict->isImmortal()) {
-      ssprintf(buf, "$n whispers to %s, \"%s\"",
-              vict->getName(),
-              colorString(this, bOther->desc, garbed, NULL, COLOR_COMM, TRUE).c_str());
+      buf = fmt("$n whispers to %s, \"%s\"") %
+              vict->getName() %
+	colorString(this, bOther->desc, garbed, NULL, COLOR_COMM, TRUE);
       act(buf, TRUE, this, 0, bOther, TO_VICT);
     }
   }

@@ -35,8 +35,8 @@ void HiLoGame::BetHi(TBeing *ch, const Card *new_card)
     win_perc*=2;
     ch->sendTo(fmt("You win!  Your winnings are now at %i talens.\n\r") %
 	       (int)((float)bet * (1.0 + win_perc)));
-    ssprintf(buf, "$n wins!  $n's winnings are now at %i talens.",
-	       (int)((float)bet * (1.0 + win_perc)));
+    buf = fmt("$n wins!  $n's winnings are now at %i talens.") %
+	       (int)((float)bet * (1.0 + win_perc));
     act(buf, TRUE, ch, 0, 0, TO_ROOM);    
     observerReaction(ch, GAMBLER_HILO_BET);
 
@@ -62,8 +62,8 @@ void HiLoGame::BetLo(TBeing *ch, const Card *new_card)
     win_perc*=2;
     ch->sendTo(fmt("You win!  Your winnings are now at %i talens.\n\r") %
 	       (int)((float)bet * (1.0 + win_perc)));
-    ssprintf(buf, "$n wins!  $n's winnings are now at %i talens.",
-	       (int)((float)bet * (1.0 + win_perc)));
+    buf = fmt("$n wins!  $n's winnings are now at %i talens.") %
+	       (int)((float)bet * (1.0 + win_perc));
     act(buf, TRUE, ch, 0, 0, TO_ROOM);    
     observerReaction(ch, GAMBLER_HILO_BET);
 

@@ -32,8 +32,9 @@ sstring randommessage(sstring from)
   int r=0;
   for(int i=0;i < ::number(1,3);++i){
     r=::number(0,sentences.size()-1);
-    ssprintf(buf, sentences[r].c_str(), 
-	     RandomWord().c_str(), RandomWord().c_str(), RandomWord().c_str());
+    buf=sentences[r];
+    while(buf.find("%s")!=sstring::npos)
+      buf = fmt(buf) % RandomWord();
     msg += buf;
     msg += " ";
     sentences.erase(&sentences[r]);

@@ -530,15 +530,12 @@ void TBeing::doAttribute(const char *arg)
 
     day = birth_data.day + 1;        // day in [1..35] 
 
-    ssprintf(buf, "You were born on the %s of %s, in the year %d P.S.\n\r",
-          numberAsString(day).c_str(),
-          month_name[birth_data.month], birth_data.year);
-    sendTo(buf);
+    sendTo(fmt("You were born on the %s of %s, in the year %d P.S.\n\r") %
+	   numberAsString(day) % month_name[birth_data.month]%birth_data.year);
 
-    ssprintf(buf, "You grew up as %s %s and began adventuring at the age of %d.\n\r",
-	     sstring(home_terrains[player.hometerrain]).startsVowel() ? "an" : "a",
-      home_terrains[player.hometerrain], getBaseAge());
-    sendTo(buf);
+    sendTo(fmt("You grew up as %s %s and began adventuring at the age of %d.\n\r") %
+	   (sstring(home_terrains[player.hometerrain]).startsVowel()?"an":"a")%
+	   home_terrains[player.hometerrain] % getBaseAge());
 
     sendTo(fmt("You are %d years and %d months old, %d inches tall, and you weigh %d lbs.\n\r") %
         age()->year % age()->month % getHeight() % (int) getWeight());
@@ -852,11 +849,10 @@ void TBeing::doAttribute(const char *arg)
             buf+=".\n\r";
             sendTo(COLOR_MOBS, buf);
           } else if (tbr) {
-            ssprintf(buf, "You are here, also riding on %s's %s%s.\n\r",
-                pers(tbr->horseMaster()),
-                persfname(tbr).c_str(),
-                tbr->isAffected(AFF_INVISIBLE) ? " (invisible)" : "");
-            sendTo(COLOR_MOBS, buf);
+            sendTo(COLOR_MOBS,
+		   fmt("You are here, also riding on %s's %s%s.\n\r") %
+		   pers(tbr->horseMaster()) % persfname(tbr) %
+		   (tbr->isAffected(AFF_INVISIBLE) ? " (invisible)" : ""));
           } else {
             sendTo("You are standing.\n\r");
           }

@@ -722,8 +722,8 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
       cost /= getMaxStructPoints();
     }
 #if NO_DAMAGED_ITEMS_SHOP
-    ssprintf(buf, "%s It's been damaged, but I guess I can buy it as scrap.", 
-                 fname(ch->name).c_str());
+    buf = fmt("%s It's been damaged, but I guess I can buy it as scrap.") %
+      fname(ch->name);
     keeper->doTell(buf);
 #endif
   }
@@ -995,8 +995,7 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
     tObjectManip = ObjectManipType(argm, tStString, tItemType);
 
     if (tObjectManip == OBJMAN_NULL) {
-        ssprintf(buf, "%s And what is it you want to sell??",
-                ch->getName());
+      buf = fmt("%s And what is it you want to sell??") % ch->getName();
         tKeeper->doTell(buf);
     }
 
@@ -1289,8 +1288,8 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     cost *= getStructPoints();
     cost /= getMaxStructPoints();
 #if NO_DAMAGED_ITEMS_SHOP
-    ssprintf(buf, "%s It's been damaged, but I guess I can buy it as scrap.", 
-             fname(ch->name).c_str());
+    buf = fmt("%s It's been damaged, but I guess I can buy it as scrap.") %
+             fname(ch->name);
     keeper->doTell(buf);
 #endif
   }
@@ -1994,8 +1993,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
          (myself->in_room == shop_index[shop_nr].in_room)) {
     if (dynamic_cast<TBeing *>(ch->riding)) {
       sstring buf;
-      ssprintf(buf, "Hey, get that damn %s out of my shop!", 
-          fname(ch->riding->name).c_str());
+      buf = fmt("Hey, get that damn %s out of my shop!") %
+          fname(ch->riding->name);
       myself->doSay(buf);
       act("You throw $N out.", FALSE, myself, 0, ch, TO_CHAR);
       act("$n throws you out of $s shop.", FALSE, myself, 0, ch, TO_VICT);

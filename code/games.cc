@@ -62,18 +62,16 @@ void payout(TBeing *ch, int talens, int chip_vnum=0)
 
   for(iter=chipout.begin();iter!=chipout.end();++iter){
     if((*iter).second > 1){
-      ssprintf(buf, "You receive %s. [%i]",
-	       (*iter).first.c_str(), (*iter).second);
+      buf = fmt("You receive %s. [%i]") %
+	       (*iter).first % (*iter).second;
       act(buf, FALSE, ch, 0, 0, TO_CHAR);
-      ssprintf(buf, "$n receives %s. [%i]", 
-	       (*iter).first.c_str(), (*iter).second);
+      buf = fmt("$n receives %s. [%i]") %
+	       (*iter).first % (*iter).second;
       act(buf, FALSE, ch, 0, 0, TO_ROOM);
     } else {
-      ssprintf(buf, "You receive %s.",
-	       (*iter).first.c_str());
+      buf = fmt("You receive %s.") % (*iter).first;
       act(buf, FALSE, ch, 0, 0, TO_CHAR);
-      ssprintf(buf, "$n receives %s.", 
-	       (*iter).first.c_str());
+      buf = fmt("$n receives %s.") % (*iter).first;
       act(buf, FALSE, ch, 0, 0, TO_ROOM);
     }
   }

@@ -282,7 +282,6 @@ extern int setsockopt(int, int, int, const char *, int);
 extern int getsockopt(int, int, int, char *buf, int *);
 #endif
 
-int ssprintf(sstring &, const char *, ...);
 void   doGlobalRoomStuff(void);
 extern const int spec_skill_array[50];
 unsigned int CountBits(unsigned int);

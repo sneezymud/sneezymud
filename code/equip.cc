@@ -1629,11 +1629,11 @@ int TBeing::doRemove(const sstring &argument, TThing *obj)
       }
       if (o->stuckIn) {
         if (carryVolumeLimit() > getCarriedVolume()) {
-          ssprintf(buf, "You rip $p out of your %s.",
-                     describeBodySlot(j=o->eq_stuck).c_str());
+          buf = fmt("You rip $p out of your %s.") % 
+	    describeBodySlot(j=o->eq_stuck);
           act(buf, FALSE, this, o, 0, TO_CHAR);
-          ssprintf(buf, "$n rips $p out of $s %s.",
-                     describeBodySlot(j).c_str());
+          buf = fmt("$n rips $p out of $s %s.") %
+                     describeBodySlot(j);
           act(buf, FALSE, this, o, 0, TO_ROOM);
   
           // If fighting, make them lose a round or two.
@@ -1717,14 +1717,14 @@ int TBeing::doRemove(const sstring &argument, TThing *obj)
           sendTo("You aren't able to carry that much weight.\n\r");
           return FALSE;
         }
-        ssprintf(buf, "You rip $p out of $N's %s.",
-                   ch->describeBodySlot(j = o->eq_stuck).c_str());
+        buf = fmt("You rip $p out of $N's %s.") %
+                   ch->describeBodySlot(j = o->eq_stuck);
         act(buf, FALSE, this, o, ch, TO_CHAR);
-        ssprintf(buf, "$n rips $p out of $N's %s.",
-                    ch->describeBodySlot(j).c_str());
+        buf = fmt("$n rips $p out of $N's %s.") %
+                    ch->describeBodySlot(j);
         act(buf, FALSE, this, o, ch, TO_NOTVICT);
-        ssprintf(buf, "$n rips $p out of your %s.",
-                   ch->describeBodySlot(j).c_str());
+        buf = fmt("$n rips $p out of your %s.") %
+                   ch->describeBodySlot(j);
         act(buf, FALSE, this, o, ch, TO_VICT);
 
         // If fighting, make them lose a round or two.

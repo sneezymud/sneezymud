@@ -184,9 +184,8 @@ void TBeing::doTrophy(const sstring &arg)
       count=convertTo<float>(db["count"]);
 
       if(!summary){
-	ssprintf(buf, "You will gain %s experience when fighting %s.\n\r", 
-		trophy.getExpModDescr(count),
-		mob_index[rnum].short_desc);
+	buf = fmt("You will gain %s experience when fighting %s.\n\r") %
+		    trophy.getExpModDescr(count) % mob_index[rnum].short_desc;
 	sb += buf;
       }
 

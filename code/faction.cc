@@ -2104,43 +2104,39 @@ void TBeing::doFactions(const sstring &arg)
 
   if (which != FACT_NONE) {
 #if 0
-    ssprintf(buf, "Your faction has a potency of: %.2f, which is %s.\n\r",
-      FactionInfo[which].faction_power,
+    buf = fmt("Your faction has a potency of: %.2f, which is %s.\n\r") %
+      FactionInfo[which].faction_power %
       ((FactionInfo[which].faction_power == avg_faction_power) ? "average" :
        ((FactionInfo[which].faction_power > avg_faction_power) ?
-          "above average" :"below average")));
+          "above average" :"below average"));
     sbuf+=buf;
 
 #endif
-    ssprintf(buf, "Your faction has %ld talens of wealth, and a tithe percentage of %.2f%%.\n\r",
-	     FactionInfo[which].faction_wealth,
-	     FactionInfo[which].faction_tithe);
+    buf = fmt("Your faction has %ld talens of wealth, and a tithe percentage of %.2f%%.\n\r") %
+	     FactionInfo[which].faction_wealth %
+	     FactionInfo[which].faction_tithe;
     sbuf+=buf;
   }
 #if 0
   if (which != FACT_NONE || isImmortal()) {
-    ssprintf(buf,
-            "\n\rOne of your faction's caravans departed %d hour%s ago bound for %s.\n\r",
-            FactionInfo[which].caravan_counter / 2,
-            (FactionInfo[which].caravan_counter / 2 == 1 ? "" : "s"),
-            CaravanDestination(-which-1));
+    buf =fmt("\n\rOne of your faction's caravans departed %d hour%s ago bound for %s.\n\r") %
+      (FactionInfo[which].caravan_counter / 2) %
+      (FactionInfo[which].caravan_counter / 2 == 1 ? "" : "s") %
+      CaravanDestination(-which-1);
     sbuf+=buf;
-    ssprintf(buf, 
-            "It was carrying %d talens of goods, and paid %d talens for defenders.\n\r",
-            FactionInfo[which].caravan_value,
-            FactionInfo[which].caravan_defense);
+    buf=fmt("It was carrying %d talens of goods, and paid %d talens for defenders.\n\r") %
+            FactionInfo[which].caravan_value %
+            FactionInfo[which].caravan_defense;
     sbuf+=buf;
 
     if (FactionInfo[which].caravan_interval != -1) {
-      ssprintf(buf, 
-            "The next caravan is scheduled to leave in %d hour%s.\n\r",
-            (FactionInfo[which].caravan_interval -
-            FactionInfo[which].caravan_counter)/2,
+      buf=fmt("The next caravan is scheduled to leave in %d hour%s.\n\r") %
             ((FactionInfo[which].caravan_interval -
+	      FactionInfo[which].caravan_counter)/2) %
+            (((FactionInfo[which].caravan_interval -
             FactionInfo[which].caravan_counter)/2 == 1 ? "" : "s"));
       sbuf+=buf;
-      ssprintf(buf,
-            "Currently, caravan destinations are: ");
+      buf="Currently, caravan destinations are: ";
       sbuf+=buf;
 
       if (IS_SET(FactionInfo[which].caravan_flags, CARAVAN_DEST_GH)){
@@ -2168,37 +2164,36 @@ void TBeing::doFactions(const sstring &arg)
     } else {
       sbuf += "At this time, no caravans are scheduled.\n\r";
     }
-    ssprintf(buf, 
-            "Your faction has sent %d caravan%s, and %d of them have arrived successfully.\n\r",
-            FactionInfo[which].caravan_attempts,
-            (FactionInfo[which].caravan_attempts == 1 ? "" : "s"),
-            FactionInfo[which].caravan_successes);
+    buf=fmt("Your faction has sent %d caravan%s, and %d of them have arrived successfully.\n\r") %
+            FactionInfo[which].caravan_attempts %
+            (FactionInfo[which].caravan_attempts == 1 ? "" : "s") %
+            FactionInfo[which].caravan_successes;
     sbuf+=buf;
   }
 
   sbuf += "\n\rContribution ratios:\n\r";
   factionTypeT i;
   for (i = MIN_FACTION;i < MAX_FACTIONS; i++) {
-    ssprintf(buf, "     %-25.25s : helping: %4.1f     harming: %4.1f\n\r",
-            FactionInfo[i].faction_name,
-            FactionInfo[which].faction_array[i][OFF_HELP],
-            FactionInfo[which].faction_array[i][OFF_HURT]);
+    buf = fmt("     %-25.25s : helping: %4.1f     harming: %4.1f\n\r") %
+            FactionInfo[i].faction_name %
+            FactionInfo[which].faction_array[i][OFF_HELP] %
+            FactionInfo[which].faction_array[i][OFF_HURT];
     sbuf += buf;
   }
 #endif
 
   if (which != FACT_NONE) {
-    ssprintf(buf, "%-50.50s:     %-20.20s\n\r",
-          factionLeaderTitle(which, 0).c_str(), FactionInfo[which].leader[0]);
+    buf = fmt("%-50.50s:     %-20.20s\n\r") %
+      factionLeaderTitle(which, 0) % FactionInfo[which].leader[0];
     sbuf += buf;
-    ssprintf(buf, "%-50.50s:        %-20.20s\n\r",
-          factionLeaderTitle(which, 1).c_str(), FactionInfo[which].leader[1]);
+    buf = fmt("%-50.50s:        %-20.20s\n\r") %
+      factionLeaderTitle(which, 1) % FactionInfo[which].leader[1];
     sbuf += buf;
-    ssprintf(buf, "%-50.50s:        %-20.20s\n\r",
-          factionLeaderTitle(which, 2).c_str(), FactionInfo[which].leader[2]);
+    buf = fmt("%-50.50s:        %-20.20s\n\r") %
+          factionLeaderTitle(which, 2) % FactionInfo[which].leader[2];
     sbuf += buf;
-    ssprintf(buf, "%-50.50s:        %-20.20s\n\r",
-          factionLeaderTitle(which, 3).c_str(), FactionInfo[which].leader[3]);
+    buf = fmt("%-50.50s:        %-20.20s\n\r") %
+      factionLeaderTitle(which, 3) % FactionInfo[which].leader[3];
     sbuf += buf;
 
     char factname[8];
@@ -2224,8 +2219,8 @@ void TBeing::doFactions(const sstring &arg)
 	       factname);
 
       while(db.fetchRow()){
-	ssprintf(buf, "      %-10.10s    Level: %s\n\r",
-		db["name"], db["level"]);
+	buf = fmt("      %-10.10s    Level: %s\n\r") %
+		db["name"] % db["level"];
 	sbuf+=buf;
       }
     }

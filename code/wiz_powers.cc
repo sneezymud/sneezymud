@@ -456,9 +456,9 @@ void TPerson::doPowers(const sstring &argument) const
       FILE *tFile;
       unsigned int tValue;
 
-      ssprintf(tStPath, "player/%c/%s.wizpower",
-              LOWER((tStName.c_str())[0]),
-              tStName.lower().c_str());
+      tStPath = fmt("player/%c/%s.wizpower") %
+	LOWER((tStName.c_str())[0]) %
+	tStName.lower();
 
       if ((tFile = fopen(tStPath.c_str(), "r"))) {
         sendTo("Player not logged in but file found.  Reading in...\n\r");
@@ -482,9 +482,9 @@ void TPerson::doPowers(const sstring &argument) const
       wizPowerList[tWizPower] = ch->hasWizPower(tWizPower);
   }
 
-  ssprintf(tString, "%s%s Wiz-Powers:\n\r",
-          (ch == this ? "Your" : (ch ? ch->getName() : tStName.c_str())),
-          (ch == this ? "" : "'s"));
+  tString = fmt("%s%s Wiz-Powers:\n\r") %
+    (ch == this ? "Your" : (ch ? ch->getName() : tStName)) %
+    (ch == this ? "" : "'s");
   tStString += tString;
 
   for (tWizPower = MIN_POWER_INDEX; tWizPower < MAX_POWER_INDEX; tWizPower++) {
@@ -494,10 +494,10 @@ void TPerson::doPowers(const sstring &argument) const
         (is_number(tString) && convertTo<int>(tStPower) == (tWizPower + 1)) ||
         (!is_number(tString) &&
          is_abbrev(tStPower, getWizPowerName(tWizPower)))) {
-      ssprintf(tString, "%3d.) [%c] %-25.25s",
-              (tWizPower + 1),
-              (wizPowerList[tWizPower] ? '*' : ' '),
-              getWizPowerName(tWizPower).c_str());
+      tString = fmt("%3d.) [%c] %-25.25s") %
+              (tWizPower + 1) %
+              (wizPowerList[tWizPower] ? '*' : ' ') %
+              getWizPowerName(tWizPower);
       tStString += tString;
 
       if ((tWizPower % 2) || !tStPower.empty())

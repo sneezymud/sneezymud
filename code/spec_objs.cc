@@ -261,8 +261,7 @@ int warMaker(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
         }
       }
     } else if (o->parent && dynamic_cast<TObj *>(o->parent)) {
-      ssprintf(buf, "Something grumbles 'Damnit, I'm %s.  Let me out of here.  It's dark.'\n\r",
-              o->shortDescr);
+      buf = fmt("Something grumbles 'Damnit, I'm %s.  Let me out of here.  It's dark.'\n\r") % o->shortDescr;
       sendToRoom(buf.c_str(), roomOfObject(o));
     } else if (o->parent) {
       act("$n's $o begs $m to wield it.", 1, o->parent, o, NULL, TO_ROOM);
@@ -672,8 +671,7 @@ int weaponBreaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   buf = fmt("$n hits $N's %s hard with $s $p.") % limb;
   act(buf, FALSE, ch, o, vict, TO_NOTVICT, ANSI_ORANGE);
 
-  ssprintf(buf, "You hear a muffled SNAP as $n clutches $s %s in extreme pain!"
-, limb);
+  buf = fmt("You hear a muffled SNAP as $n clutches $s %s in extreme pain!") % limb;
   act(buf, FALSE, vict, NULL, NULL, TO_ROOM, ANSI_ORANGE);
 
   vict->dropWeapon(slot);
@@ -706,23 +704,21 @@ int weaponDisruption(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   spellNumT w_type = o->getWtype();
   obj_act("hums softly which quickly becomes a high pitched whine.",
             ch,o,vict, ANSI_ORANGE);
-  ssprintf(buf,"$n's $p screams with power as $e swings it at your %s!",
-     vict->describeBodySlot(part).c_str());
+  buf = fmt("$n's $p screams with power as $e swings it at your %s!") %
+    vict->describeBodySlot(part);
   act(buf,TRUE,ch,o,vict,TO_VICT,ANSI_RED);
-  ssprintf(buf,"$n's $p screams with power as $e swings it at $N's %s!",
-     vict->describeBodySlot(part).c_str());
+  buf = fmt("$n's $p screams with power as $e swings it at $N's %s!") %
+    vict->describeBodySlot(part);
   act(buf,TRUE,ch,o,vict,TO_NOTVICT,ANSI_ORANGE);
-  ssprintf(buf,"Your $p screams with power as you swing it at $N's %s!",
-     vict->describeBodySlot(part).c_str());
+  buf = fmt("Your $p screams with power as you swing it at $N's %s!") %
+     vict->describeBodySlot(part);
   act(buf,TRUE,ch,o,vict,TO_CHAR,ANSI_GREEN);
 
-  ssprintf(buf,
-    "A soft WOMPF! is heard as $p releases a shock wave into $n's %s!",
-       (obj ? obj->getName() : (vict->isHumanoid() ? "skin" : "hide")));
+  buf=fmt("A soft WOMPF! is heard as $p releases a shock wave into $n's %s!") %
+    (obj ? obj->getName() : (vict->isHumanoid() ? "skin" : "hide"));
   act(buf, TRUE, vict,o,0,TO_ROOM,ANSI_ORANGE);
-  ssprintf(buf,
-    "A soft WOMPF! is heard as $p releases a shock wave into your %s!",
-       (obj ? obj->getName() : (vict->isHumanoid() ? "skin" : "hide")));
+  buf=fmt("A soft WOMPF! is heard as $p releases a shock wave into your %s!") %
+    (obj ? obj->getName() : (vict->isHumanoid() ? "skin" : "hide"));
   act(buf, TRUE, vict,o,0,TO_CHAR,ANSI_RED);
   
   if (obj)
@@ -1800,8 +1796,8 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
        ch->sendTo(fmt("Unable to find path.  dir=%d, answer=%d\n\r") % dir % answer);
       return TRUE;
     }
-    ssprintf(buf, "With blinding speed, $n streaks out of the room %s.",
-             dirs_to_blank[dir]);
+    buf = fmt("With blinding speed, $n streaks out of the room %s.") %
+             dirs_to_blank[dir];
     act(buf, TRUE, me, 0, 0, TO_ROOM);
   
     if (!(rp = real_roomp(me->exitDir(dir)->to_room))) {
@@ -1810,8 +1806,8 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     --(*me);
     *rp += *me;
 
-    ssprintf(buf, "With blinding speed, $n streaks into the room from the %s.",
-             dirs[rev_dir[dir]]);
+    buf = fmt("With blinding speed, $n streaks into the room from the %s.") %
+             dirs[rev_dir[dir]];
     act(buf, TRUE, me, 0, 0, TO_ROOM);
   }
 
@@ -6774,8 +6770,7 @@ int weaponUnmaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   buf = fmt("$n's $o glows with a <g>sickly light<1> as it strikes $N's %s!") % limb;
   act(buf, FALSE, ch, o, vict, TO_NOTVICT, NULL);
 
-  ssprintf(buf, "$N looks down in terror as $S %s turns to <o>soft clay<1> before $S eyes!\n\r<o>A lump of clay falls to the ground.<1>"
-	  , limb);
+  buf = fmt("$N looks down in terror as $S %s turns to <o>soft clay<1> before $S eyes!\n\r<o>A lump of clay falls to the ground.<1>") % limb;
   act(buf, FALSE, vict, NULL, vict, TO_ROOM, NULL);
 
   vict->dropWeapon(slot);
@@ -7231,8 +7226,9 @@ int stimPack(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TObj *weapon)
 
       buf2 = fmt("The charging LED on your $o turns %s<1>.") % (isOn ? "<P>on<1>" : "<k>off<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
-      ssprintf(buf2, "A little %s on $n's <W>forearm guard<1> %s.", 
-	      (isOn ? "<k>light<1>" : "<P>light<1>"), (isOn ? "turns <P>on<1>" : "goes <k>out<1>"));
+      buf2 = fmt("A little %s on $n's <W>forearm guard<1> %s.") %
+	(isOn ? "<k>light<1>" : "<P>light<1>") % 
+	(isOn ? "turns <P>on<1>" : "goes <k>out<1>");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
       
       sprintf(o->name, "forearm-guard guard plastic lights stim wristband [on_%d] [charge_%d]", isOn, newcharge);

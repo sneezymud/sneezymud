@@ -52,15 +52,8 @@ sstring read_delete(const char *recipient, const char *recipient_formatted, sstr
 
   from=db["mailfrom"];
 
-  ssprintf(buf,
-	   "The letter has a date stamped in the corner: %s\n\r\n\r"
-           "%s,\n\r"
-           "%s\n\r"
-           "Signed, %s\n\r\n\r",
-	   db["timesent"],
-	   recipient_formatted,
-	   db["content"], 
-	   db["mailfrom"]);
+  buf=fmt("The letter has a date stamped in the corner: %s\n\r\n\r%s,\n\r%s\n\rSigned, %s\n\r\n\r") %
+    db["timesent"] % recipient_formatted % db["content"] % db["mailfrom"];
 
   db.query("delete from mail where mailid=%s", db["mailid"]);
   

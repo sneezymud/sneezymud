@@ -3420,9 +3420,8 @@ void Descriptor::sendClassList(int home)
     if(!classInfo[i].enabled)
       continue;
 
-    ssprintf(buf, "[%c] %i. %-24s", CCC(this, classInfo[i].class_num), i+1,
-	     classInfo[i].name.cap().c_str());
-    sbuf+=buf;
+    sbuf+=fmt("[%c] %i. %-24s") % CCC(this, classInfo[i].class_num) %
+      (i+1) % classInfo[i].name.cap();
 
     if(i%2)
       sbuf+="\n\r";
@@ -3436,14 +3435,12 @@ void Descriptor::sendClassList(int home)
   //////////////////////////////////////////////////////////////////
   
   sbuf += "There are advantages and disadvantages to each choice.\n\r";
-  ssprintf(buf, "Type %s?%s to see a help file telling you these advantages and disadvantages.\n\r",
-          red(), norm());
+  buf = fmt("Type %s?%s to see a help file telling you these advantages and disadvantages.\n\r") % red() % norm();
   sbuf += buf;
-  ssprintf(buf, "Type %s/%s to go back a menu to redo things.\n\r",
-          red(), norm());
+  buf = fmt("Type %s/%s to go back a menu to redo things.\n\r") % 
+    red() % norm();
   sbuf += buf;
-  ssprintf(buf, "Type %s~%s to disconnect.\n\r\n\r--> ",
-          red(), norm());
+  buf = fmt("Type %s~%s to disconnect.\n\r\n\r--> ") % red() % norm();
   sbuf += buf;
 
   writeToQ(sbuf);

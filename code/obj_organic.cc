@@ -515,13 +515,12 @@ const sstring TOrganic::shopList(const TBeing *ch, const sstring &arg,
   }
 
   if (getUnits() > 0)
-    ssprintf(Buf[0], "[%2d] %-31s  <Z>: %s unit%c %5d talen%c (per unit)\n\r",
-            k + 1, Buf[1].c_str(), tString.c_str(), (usePlural ? 's' : ' '),
-            cost, (cost > 1 ? 's' : ' '));
+    Buf[0] = fmt("[%2d] %-31s  <Z>: %s unit%c %5d talen%c (per unit)\n\r") %
+      (k + 1) % Buf[1] % tString % (usePlural ? 's' : ' ') %
+      cost % (cost > 1 ? 's' : ' ');
   else
-    ssprintf(Buf[0], "[%2d] %-31s  <Z>:             %5d talen%c [%s]\n\r",
-	     k + 1, Buf[1].c_str(), cost, (usePlural ? 's' : ' '),
-	     tString.c_str());
+    Buf[0] = fmt("[%2d] %-31s  <Z>:             %5d talen%c [%s]\n\r") %
+      (k + 1) % Buf[1] % cost % (usePlural ? 's' : ' ') % tString;
 
   if (arg.empty() && min_amt == 999999)     // everything
     // specific item
@@ -606,8 +605,7 @@ bool TOrganic::splitMe(TBeing *ch, const sstring &argument)
   }
   ch->sendTo(COLOR_OBJECTS, fmt("You split %s into %d pieces.\n\r") %
              shortDescr % num);
-  ssprintf(Buf, "$n splits %s into %d pieces.",
-          shortDescr, num);
+  Buf = fmt("$n splits %s into %d pieces.") % shortDescr % num;
   act(Buf, TRUE, ch, 0, 0, TO_ROOM);
 
   // Lets get the users Weight&Volume so we can decide if the new hide goes on the

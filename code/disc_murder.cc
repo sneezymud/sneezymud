@@ -926,11 +926,9 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
 
     weapon->setPoison(getDrinkType());
     
-    ssprintf(s, "You coat $p with %s.",
-	     DrinkInfo[getDrinkType()]->name);
+    s = fmt("You coat $p with %s.") % DrinkInfo[getDrinkType()]->name;
     act(s, FALSE, ch, weapon, NULL, TO_CHAR);
-    ssprintf(s, "$n coats $p with %s.",
-	     DrinkInfo[getDrinkType()]->name);
+    s = fmt("$n coats $p with %s.") % DrinkInfo[getDrinkType()]->name;
     act(s, FALSE, ch, weapon, NULL, TO_ROOM);
   } else {
     if(critFail(ch, skill) != CRIT_F_NONE){
@@ -951,11 +949,9 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
     } else {
       weapon->setPoison(LIQ_WATER);
       
-      ssprintf(s, "You coat $p with %s.",
-	       DrinkInfo[getDrinkType()]->name);
+      s = fmt("You coat $p with %s.") % DrinkInfo[getDrinkType()]->name;
       act(s, FALSE, ch, weapon, NULL, TO_CHAR);
-      ssprintf(s, "$n coats $p with %s.",
-	       DrinkInfo[getDrinkType()]->name);
+      s = fmt("$n coats $p with %s.") % DrinkInfo[getDrinkType()]->name;
       act(s, FALSE, ch, weapon, NULL, TO_ROOM);
     }
   }

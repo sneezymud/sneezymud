@@ -89,9 +89,9 @@ void TBeing::doEgoTrip(const char *arg)
     act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_ROOM);
     act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_CHAR);
 
-    ssprintf(buf, "%s suddenly appears out of a swirling mist.",
-	     sstring(next_tmp_obj->shortDescr).cap().c_str());
-    sendToRoom(buf.c_str(), next_tmp_obj->roomp->number);
+    sendToRoom((fmt("%s suddenly appears out of a swirling mist.") %
+	       sstring(next_tmp_obj->shortDescr).cap()).c_str(), 
+	       next_tmp_obj->roomp->number);
 
     return;
   } else if (is_abbrev(argument, "deity")) {

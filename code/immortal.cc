@@ -217,20 +217,20 @@ void TBeing::doHighfive(const sstring &argument)
       if (tch->isImmortal() && isImmortal()) {
         switch(::number(1,3)) {
           case 1:
-            ssprintf(mess, "Time stops for a moment as %s and %s high five.\n\r",
-        name, tch->name);
+            mess = fmt("Time stops for a moment as %s and %s high five.\n\r") %
+	      name % tch->name;
             break;
           case 2:
-            ssprintf(mess, "Thunder booms and lightning streaks across the heavens as %s and %s high five.\n\r",
-        name, tch->name);
-            break;
+            mess = fmt("Thunder booms and lightning streaks across the heavens as %s and %s high five.\n\r") %
+	      name % tch->name;
+	    break;
           case 3:
-            ssprintf(mess, "The world shakes as %s and %s high five.\n\r",
-        name, tch->name);
+            mess = fmt("The world shakes as %s and %s high five.\n\r") %
+	      name % tch->name;
             break;
           default:
-            ssprintf(mess, "Time stops for a moment as %s and %s high five.\n\r",
-        name, tch->name);
+            mess = fmt("Time stops for a moment as %s and %s high five.\n\r") %
+	      name % tch->name;
             break;
         }
         descriptor_list->worldSend(mess, this);
@@ -1495,23 +1495,22 @@ const char *getSockOptString(int s, int opt)
 }
 
 
-void TBeing::doSystem(const char *argument)
+void TBeing::doSystem(const sstring &argument)
 {
-  char buf[256];
+  sstring buf;
 
   if (powerCheck(POWER_SYSTEM))
     return;
 
-  for (; isspace(*argument); argument++);
-
-  if(!(*argument)) {
+  if(argument.empty()){
     sendTo("You usually system something.\n\r");
     return;
   } else if (!hasWizPower(POWER_WIZARD)) {
-    sprintf(buf, "The following is an official message from %s:\n\r   %s\n\r",getName(),argument);
+    buf=fmt("The following is an official message from %s:\n\r   %s\n\r") %
+      getName() % argument;
     descriptor_list->worldSend(buf, this);
   } else {
-    sprintf(buf, "%s\n\r", argument);
+    buf=fmt("%s\n\r") % argument;
     descriptor_list->worldSend(buf, this);
   } 
 }
@@ -4337,8 +4336,8 @@ void TPerson::doAccess(const sstring &arg)
         return;
     }
   } else {
-    ssprintf(tmpbuf, "Name : <p>%s<1>, Sex : <c>%d<1>, Screensize : <c>%d<1>, Weight <c>%.2f<1>, Height <c>%d<1>\n\r",
-         st.name, st.sex, st.screen, st.weight, st.height);
+    tmpbuf=fmt("Name : <p>%s<1>, Sex : <c>%d<1>, Screensize : <c>%d<1>, Weight <c>%.2f<1>, Height <c>%d<1>\n\r") %
+      st.name % st.sex % st.screen % st.weight % st.height;
     buf+=tmpbuf;
     birth = asctime(localtime(&(st.birth)));
     *(birth + strlen(birth) - 1) = '\0';
@@ -4348,10 +4347,10 @@ void TPerson::doAccess(const sstring &arg)
     tmstr = (char *) asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
 
-    ssprintf(tmpbuf, "Last login : %s%s%s, Last Host : %s%s%s\n\rFirst Login : %s%s%s\n\r", 
-        green(), tmstr, norm(),
-        green(), st.lastHost, norm(),
-        cyan(), birth_buf, norm());
+    tmpbuf = fmt("Last login : %s%s%s, Last Host : %s%s%s\n\rFirst Login : %s%s%s\n\r") %
+        green() % tmstr % norm() %
+        green() % st.lastHost % norm() %
+        cyan() % birth_buf % norm();
     buf+=tmpbuf;
 
     tmpbuf = fmt("Playing time : %d days, %d hours.\n\r") % playing_time.day % playing_time.hours;
@@ -4365,27 +4364,27 @@ void TPerson::doAccess(const sstring &arg)
 
     buf+="Stats  :[Str][Bra][Con][Dex][Agi][Int][Wis][Foc][Per][Cha][Kar][Spe]\n\r";
 
-    ssprintf(tmpbuf, "Chosen : %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d\n\r",
-           st.stats[STAT_STR],
-           st.stats[STAT_BRA],
-           st.stats[STAT_CON],
-           st.stats[STAT_DEX],
-           st.stats[STAT_AGI],
-           st.stats[STAT_INT],
-           st.stats[STAT_WIS],
-           st.stats[STAT_FOC],
-           st.stats[STAT_PER],
-           st.stats[STAT_CHA],
-           st.stats[STAT_KAR],
-           st.stats[STAT_SPE]);
+    tmpbuf = fmt("Chosen : %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d  %3d\n\r") %
+      st.stats[STAT_STR] %
+      st.stats[STAT_BRA] %
+      st.stats[STAT_CON] %
+      st.stats[STAT_DEX] %
+      st.stats[STAT_AGI] %
+      st.stats[STAT_INT] %
+      st.stats[STAT_WIS] %
+      st.stats[STAT_FOC] %
+      st.stats[STAT_PER] %
+      st.stats[STAT_CHA] %
+      st.stats[STAT_KAR] %
+      st.stats[STAT_SPE];
     buf+=tmpbuf;
 
-    ssprintf(tmpbuf, "Gold:  %d,    Bank:  %d,   Exp:  %.3f\n\r",
-          st.money, st.bankmoney, st.exp);
+    tmpbuf = fmt("Gold:  %d,    Bank:  %d,   Exp:  %.3f\n\r") %
+          st.money % st.bankmoney % st.exp;
     buf+=tmpbuf;
 
-    ssprintf(tmpbuf, "Height:  %d,    Weight:  %.1f\n\r",
-          st.height, st.weight);
+    tmpbuf = fmt("Height:  %d,    Weight:  %.1f\n\r") %
+          st.height % st.weight;
     buf+=tmpbuf;
 
     arg1 = fmt("account/%c/%s") % LOWER(st.aname[0]) % sstring(st.aname).lower();
@@ -4726,8 +4725,8 @@ void TBeing::doInfo(const char *arg)
 	if(count[li]==-1)
 	  break;
 
-	ssprintf(buf,"%s[%6i] %-17s\n\r", 
-		 buf.c_str(),count[li], ItemInfo[li]->name);
+	buf = fmt("%s[%6i] %-17s\n\r") %
+		buf % count[li] % ItemInfo[li]->name;
 	count[li]=-1;
       }
 
@@ -4742,8 +4741,8 @@ void TBeing::doInfo(const char *arg)
       for(obj=object_list;obj;obj=obj->next){
 	if(obj->in_room == ROOM_NOWHERE && !obj->parent &&
 	   !obj->equippedBy && !obj->stuckIn && !obj->riding){
-	  ssprintf(tbuf,"[%6i] %-17s\n\r",
-		   i++, obj->getNameNOC(this).c_str());
+	  tbuf=fmt("[%6i] %-17s\n\r") %
+		   i++ % obj->getNameNOC(this);
 	  buf+=tbuf;
 	}
       }
@@ -4753,8 +4752,8 @@ void TBeing::doInfo(const char *arg)
       for(tb=character_list;tb;tb=tb->next){
 	if(tb->in_room == ROOM_NOWHERE && !tb->parent &&
 	   !tb->equippedBy && !tb->stuckIn && !tb->riding){
-	  ssprintf(tbuf,"[%6i] %-17s\n\r",
-		   i++, tb->getNameNOC(this).c_str());
+	  tbuf =fmt("[%6i] %-17s\n\r") %
+	    i++ % tb->getNameNOC(this);
 	  buf+=tbuf;
 	}	
       }
