@@ -219,8 +219,6 @@ int TObj::personalizedCheck(TBeing *ch)
   if (action_description && strcmp(action_description, "")) {
     strcpy(capbuf, action_description);
     
-    vlogf(LOG_PEEL, "capbuf='%s'", capbuf);
-
     if ((sscanf(capbuf, "This is the personalized object of %s.", namebuf)) != 1) {
       vlogf(LOG_BUG, "Bad personalized item (on %s) with bad action description...extracting from world.", ch->getName());
       return DELETE_THIS;
