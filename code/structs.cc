@@ -703,6 +703,7 @@ TThing& TThing::operator += (TThing& t)
               (t.inRoom() == ROOM_AUTO_RENT)),
       "TThing += with t.inRoom()");
 
+#if 0
   TComponent *c = dynamic_cast<TComponent *>(&t);
   if (c) {
     TThing *i;
@@ -729,7 +730,6 @@ TThing& TThing::operator += (TThing& t)
             rp = tComp->roomp;
         }
       }
-      vlogf(LOG_ANGUS, "TThing::operator+= found component to merge!");
       if (rp) {
         sstring str = sstring(c->shortDescr);
         sendrpf(COLOR_BASIC, rp, "%s glows brightly and merges with %s.\n\r", str.cap().c_str(), str.c_str());
@@ -740,6 +740,7 @@ TThing& TThing::operator += (TThing& t)
       delete tComp;
     }
   }
+#endif
   return *this;
 }
 
