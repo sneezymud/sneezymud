@@ -266,8 +266,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
       double trophyperc;
 
       for (f = followers; f; f = f->next) {
-	if (f->follower->isPc() && 
-	    inGroup(*f->follower) && sameRoom(*f->follower)) {
+	if (inGroup(*f->follower) && sameRoom(*f->follower)) {
 	  groupcount++;
 	}
       }
