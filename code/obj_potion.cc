@@ -87,6 +87,24 @@ liqTypeT spell_to_liq(spellNumT which)
   switch(which){
     case SPELL_CELERITE:
       return LIQ_POT_CELERITE;
+    case SPELL_SHIELD_OF_MISTS:
+      return LIQ_POT_SHIELD_OF_MISTS;
+    case SPELL_SENSE_LIFE_SHAMAN:
+      return LIQ_POT_SENSE_PRESENCE;
+    case SPELL_CHEVAL:
+      return LIQ_POT_CHEVAL;
+    case SPELL_DJALLA:
+      return LIQ_POT_DJALLAS_PROTECTION;
+    case SPELL_LEGBA:
+      return LIQ_POT_LEGBAS_GUIDANCE;
+    case SPELL_DETECT_SHADOW:
+      return LIQ_POT_DETECT_SHADOW;
+    case SPELL_CLARITY:
+      return LIQ_POT_CLARITY;
+    case SPELL_BLOOD_BOIL:
+      return LIQ_POT_BOILING_BLOOD;
+    case SPELL_STUPIDITY:
+      return LIQ_POT_STUPIDITY;
     default:
       return LIQ_WATER;
   }
