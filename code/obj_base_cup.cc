@@ -254,12 +254,12 @@ string TBaseCup::statObjInfo() const
 {
   char buf[256];
 
-  sprintf(buf, "Max-contains : %d     Contains : %d\n\rPoisoned : %s   Permanent : %s   Spillable : %s\n\rLiquid : %s",
+  sprintf(buf, "Max-contains : %d     Contains : %d\n\rPoisoned : %s   Permanent : %s   Spillable : %s\n\rLiquid : %s (%i)",
           getMaxDrinkUnits(), getDrinkUnits(),
           (isDrinkConFlag(DRINK_POISON) ? "true" : "false"),
           (isDrinkConFlag(DRINK_PERM) ? "true" : "false"),
           (isDrinkConFlag(DRINK_SPILL) ? "true" : "false"),
-          DrinkInfo[getDrinkType()]->name);
+          DrinkInfo[getDrinkType()]->name, getDrinkType());
 
   string a(buf);
   return a;
