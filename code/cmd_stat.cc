@@ -2,7 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-//      "stat_command.cc" - The stat command
+//      "cmd_stat.cc" - The stat command
 //  
 //////////////////////////////////////////////////////////////////////////
 
@@ -179,6 +179,11 @@ void TBeing::statRoom(TRoom *rmp)
 
   str += sprintbit((long) rmp->getRoomFlags(), room_bits);;
   str += "\n\r";
+
+  str += "Room flag bit vector: ";
+
+  sprintf(buf2, "%d\n\r", (unsigned int) rmp->getRoomFlags());
+  str += buf2;
 
   str += "Description:\n\r";
   if (rmp->getDescr())
