@@ -417,10 +417,23 @@ void list_char_to_char(TBeing *list, TBeing *ch, int)
   }
 }
 
+bool wordHasPunctuation(const sstring &s)
+{
+  sstring t, punctuation = ".!?;:"; 
+  size_t last_char = 0;
+
+  t = s;
+
+  // check if the stripped word ends with punctuation
+  t += " ";
+  last_char = t.find_last_not_of(" ");
+
+  return (t.find_first_of(punctuation, last_char) != t.npos);
+}
+
 sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
 {
   sstring line, garbled;
-  sstring punctuation = ".!?;:"; 
 
   sstring newDescr = "";
   size_t swlen = 0, llen_diff = 0;
@@ -445,41 +458,42 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
   for(iter=words.begin(); iter!=words.end(); ++iter){
     sstring word, stripped_word;
 
-    // count the number of unprintable characters in each word
     word = *iter;
+
+    // count the number of unprintable characters in each word
     stripped_word = stripColorCodes(word);
     swlen = stripped_word.length();
+
+    // add the length difference to the total difference for the current line
     llen_diff += word.length() - swlen;
 
+    // if the word is too long to fit on the current line
     if ((line.length() + 1) + (word.length() + 1) >= (80 + llen_diff)) {
-      size_t last_char = 0;
 
       if (iter!=words.end()) {
         line += "\n\r";
       }
+
+      // then start a new line
       newDescr += line;
 
-      // check if the word ends with punctuation
-      stripped_word += " ";
-      last_char = stripped_word.find_last_not_of(" ");
-
-      if (stripped_word.find_first_of(punctuation, last_char) !=
-          stripped_word.npos) {
-        word += " "; // and add an extra space to the end.
+      // check if the stripped word ends with punctuation
+      if (wordHasPunctuation(stripped_word)) {
+        word += " "; // and add an extra space to the end of the original word
       }
+
       line = word;
+      // we just started a new line, so reset the line length difference
+      // to that of the word minus stripped word
       llen_diff = word.length() - swlen;
-    } else { // word fits ok on line
-      size_t last_char = 0;
 
-      // check if the word ends with punctuation
-      stripped_word += " ";
-      last_char = stripped_word.find_last_not_of(" ");
+    } else { // word fits ok on the current line
 
-      if (stripped_word.find_first_of(punctuation, last_char) !=
-          stripped_word.npos) {
-        word += " "; // and add an extra space to the end.
+      // check if the stripped word ends with punctuation
+      if (wordHasPunctuation(stripped_word)) {
+        word += " "; // and add an extra space to the end of the original word
       }
+
       // if the length of the stripped word > 0
       // and the previous word was a real word, then append a space to the
       // line before appending the word.
