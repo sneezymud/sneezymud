@@ -5124,11 +5124,3 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "perma death monument", permaDeathMonument},
   {FALSE, "last proc", bogusObjProc}
 };
-
-
-
-
-
-
-
-

@@ -62,19 +62,19 @@ TObj *catch_a_fish(TRoom *rp){
 
   if(!::number(0,99)){  // 1 in 100
     // big one
-    weightmod = 2 + (::number(0,100)/100); // 2-3
+    weightmod = 2 + ((float)::number(0,100)/100.0); // 2-3
     
     if(!::number(0,99)){ // 1 in 10000
       // real big one
-      weightmod = 3 + (::number(0,100)/100); // 3-4
+      weightmod = 3 + ((float)::number(0,100)/100.0); // 3-4
 
       if(!::number(0,99)){ // 1 in 1000000
 	// REAL big one
-	weightmod = 4 + (::number(0,100)/100); // 4-5
+	weightmod = 4 + ((float)::number(0,100)/100.0); // 4-5
 
 	if(!::number(0,99)){ // 1 in 100000000
 	  // freak of nature
-	  weightmod = 5 + (::number(0,500)/100); // 5-10
+	  weightmod = 5 + ((float)::number(0,500)/100.0); // 5-10
 	}
       }
     }
