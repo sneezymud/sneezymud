@@ -1898,6 +1898,9 @@ void TBeing::wearNTear(void)
         }
       }
     } else if(hasPart((wearSlotT)i)) {
+      if(getRace()== RACE_HOBBIT)
+	return; // hobbits have tough feet
+
       if(!::number(0,chance*2) && ::number(0,getCurLimbHealth((wearSlotT)i)) && GetMaxLevel() > 10) {
 	int amount = 0;
 	if(doesKnowSkill(SKILL_IRON_SKIN)){
@@ -1908,21 +1911,13 @@ void TBeing::wearNTear(void)
 	  }
 	}
 	
-	if (i == WEAR_LEGS_R || i == WEAR_LEGS_L || i == WEAR_EX_LEG_R || i == WEAR_EX_LEG_L) {
-	  act("<o>$n screams in pain, and stumbles to the ground holding $s knee.<1>",TRUE,this,NULL,0,TO_ROOM);
-	  act("<r>You scream in pain as you twist your knee and stumble to the ground.<1>",TRUE,this,NULL,0,TO_CHAR);
-	  act("Maybe you should be wearing something on your leg?",TRUE,this,NULL,0,TO_CHAR);
-	} 
-	if (i == WEAR_FOOT_R || i == WEAR_FOOT_L || i == WEAR_EX_FOOT_R || i == WEAR_EX_FOOT_L) {
-	  if (getRace()== RACE_HOBBIT)
-	    return; // hobbits, wearing no shoes, are skilled at walking without them.
-          act("<o>$n screams in pain, and stumbles to the ground holding $s ankle.<1>",TRUE,this,NULL,0,TO_ROOM);
-          act("<r>You scream in pain as you twist your ankle and stumble to the ground.<1>",TRUE,this,NULL,0,TO_CHAR);
-          act("Maybe you should be wearing something on your foot?",TRUE,this,NULL,0,TO_CHAR);
+	if (i == WEAR_FOOT_R || i == WEAR_FOOT_L || 
+	    i == WEAR_EX_FOOT_R || i == WEAR_EX_FOOT_L) {
+          act("<r>Your feet are getting sore from walking around barefoot.<1>",
+	      TRUE,this,NULL,0,TO_CHAR);
         }
-	setPosition(POSITION_SITTING);
-	//	hurtLimb(getMaxLimbHealth((wearSlotT)i)/2, (wearSlotT)i);
-	// commented out due to the mass player complaints about this bit.
+	
+	hurtLimb(getMaxLimbHealth((wearSlotT)i)/10, (wearSlotT)i);
 	return;
       }
     }
