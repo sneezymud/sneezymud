@@ -709,7 +709,7 @@ void TBeing::doSign(const char *arg)
 }
 
 // uses printf style arguments
-int TBeing::doTell(const char *name, const char *fmt, ...)
+int TBeing::doTell(const sstring &name, const char *fmt, ...)
 {
   va_list ap;
   char buf[MAX_STRING_LENGTH];
@@ -718,14 +718,14 @@ int TBeing::doTell(const char *name, const char *fmt, ...)
   vsnprintf(buf, MAX_STRING_LENGTH, fmt, ap);
 
   sstring sbuf;
-  ssprintf(sbuf, "%s %s", name, buf);
+  ssprintf(sbuf, "%s %s", name.c_str(), buf);
   
-  return doTell(sbuf.c_str());
+  return doTell(sbuf);
 }
 
 // returns DELETE_THIS on death of this
 // triggerSpecOnPerson prevents this from being constant
-int TBeing::doTell(const char *arg, bool visible)
+int TBeing::doTell(const sstring &arg, bool visible)
 {
   TBeing *vict;
   char name[100], capbuf[256], message[MAX_INPUT_LENGTH + 40];
@@ -747,7 +747,7 @@ int TBeing::doTell(const char *arg, bool visible)
     sendTo("What a dumb master you have, charmed mobiles can't tell.\n\r");
     return FALSE;
   }
-  half_chop(arg, name, message);
+  half_chop(arg.c_str(), name, message);
 
   if (!*name || !*message) {
     sendTo("Whom do you wish to tell what??\n\r");
@@ -1105,7 +1105,7 @@ void TBeing::doReply(const sstring &arg)
   }
 
   ssprintf(buf, "%s %s", add_bars(desc->last_teller).c_str(), arg.c_str());
-  doTell(buf.c_str(), FALSE);
+  doTell(buf, FALSE);
 }
 
 bool TBeing::canSpeak()

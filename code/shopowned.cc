@@ -136,7 +136,7 @@ void TShopOwned::showInfo()
       if(tmp != MAX_OBJ_TYPES && (int) tmp != -1)
 	ssprintf(buf, "%s %s,", buf.c_str(), ItemInfo[tmp]->name);
     }
-    keeper->doTell(buf.c_str());
+    keeper->doTell(buf);
   }
 }
 
@@ -471,7 +471,7 @@ int TShopOwned::setAccess(sstring arg)
 	buf+=buf2;
       }
       
-      keeper->doTell(buf.c_str());
+      keeper->doTell(buf);
     }
   }
   

@@ -377,7 +377,7 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
   if (will_not_repair(buyer, repair, valued, SILENT_NO))
     return;
 
-  repair->doTell(fname(buyer->name).c_str(),
+  repair->doTell(fname(buyer->name),
      "It'll cost you %d talens to repair %s to a status of %s.", 
      (valued->repairPrice(repair, buyer, DEPRECIATION_NO)),
      valued->getName(), 
@@ -386,8 +386,8 @@ void repairman_value(const char *arg, TMonster *repair, TBeing *buyer)
   when_ready = ct + repair_time(valued);
   ready = asctime(localtime(&when_ready));
   *(ready + strlen(ready) - 9) = '\0';
-  repair->doTell(fname(buyer->name).c_str(), "I can have it ready by %s.", ready);
-  repair->doTell(fname(buyer->name).c_str(), "That's %s.",  secsToString(when_ready-ct).c_str());
+  repair->doTell(fname(buyer->name), "I can have it ready by %s.", ready);
+  repair->doTell(fname(buyer->name), "That's %s.",  secsToString(when_ready-ct).c_str());
 }
 
 // returns DELETE_THIS if buyer goes poof

@@ -71,7 +71,7 @@ int TPotion::objectSell(TBeing *ch, TMonster *keeper)
 
   if(!DrinkInfo[getDrinkType()]->potion){
     ssprintf(buf, "%s Hey, that's not a potion!.", ch->getName());
-    keeper->doTell(buf.c_str());
+    keeper->doTell(buf);
     return TRUE;
   }
 

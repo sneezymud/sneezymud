@@ -142,7 +142,7 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 {
   TTool *bait=NULL;
   TThing *t=NULL, *tpole=NULL;
-  char buf[256];
+  sstring buf;
   TObj *fish=NULL, *pole=NULL;
   int baitmax=1000, baitchance=0;
   int polemax=5000, polechance=0;
@@ -235,11 +235,11 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	  }
 
 
-	  snprintf(buf, 256, "You bait %s with $p.", pole->shortDescr);
-	  act(buf, FALSE, ch, bait, 0, TO_CHAR);
+	  ssprintf(buf, "You bait %s with $p.", pole->shortDescr);
+	  act(buf.c_str(), FALSE, ch, bait, 0, TO_CHAR);
 
-	  snprintf(buf, 256, "$n baits %s with $p.", pole->shortDescr);
-          act(buf, TRUE, ch, bait, 0, TO_ROOM);
+	  ssprintf(buf, "$n baits %s with $p.", pole->shortDescr);
+          act(buf.c_str(), TRUE, ch, bait, 0, TO_ROOM);
           ch->task->timeLeft--;
           break;
 	case 1:
@@ -255,10 +255,8 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	  catchchance=::number(1,100);
 	  
 
-#if 0
-	  vlogf(LOG_PEEL, "fishing: baitcost=%i, bait=%i, pole=%i, catch=%i",
-		bait->obj_flags.cost, baitchance, polechance, catchchance);
-#endif	
+	  //	  vlogf(LOG_PEEL, "fishing: baitcost=%i, bait=%i, pole=%i, catch=%i",
+	  //	bait->obj_flags.cost, baitchance, polechance, catchchance);
   
 	  if((bSuccess(ch, ch->getSkillValue(SKILL_FISHING), SKILL_FISHING) ||
 	      (!ch->doesKnowSkill(SKILL_FISHING) && !::number(0,99))) &&

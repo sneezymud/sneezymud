@@ -3333,7 +3333,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     tellBuf += " Look through the ";
     tellBuf += tw ? fname(tw->name) : "window";
     tellBuf += " to see the pets!";
-    me->doTell(tellBuf.c_str());
+    me->doTell(tellBuf);
 
     sprintf(buf, "%s If you see something you'd like, VALUE <mob> and I'll tell you the price.", ch->getName());
     me->doTell(buf);
@@ -3351,7 +3351,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       tellBuf += " Look through the ";
       tellBuf += tw ? fname(tw->name) : "window";
       tellBuf += " again, there is no such pet!";
-      me->doTell(tellBuf.c_str());
+      me->doTell(tellBuf);
 
       return TRUE;
     }
@@ -3448,7 +3448,7 @@ a pet.", fname(ch->name).c_str());
       tellBuf += " Look through the ";
       tellBuf += tw ? fname(tw->name) : "window";
       tellBuf += " again, there is no such pet!";
-      me->doTell(tellBuf.c_str());
+      me->doTell(tellBuf);
       return TRUE;
     }
     int petLevel = pet->GetMaxLevel();
@@ -3499,7 +3499,7 @@ int stable_man(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     tellBuf += " Look through the ";
     tellBuf += tw ? fname(tw->name) : "window";
     tellBuf += " to see the mounts!";
-    me->doTell(tellBuf.c_str());
+    me->doTell(tellBuf);
 
     return TRUE;
   }
