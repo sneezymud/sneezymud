@@ -4267,6 +4267,73 @@ int switchtrack(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *myself, TObj *)
 }
 
 
+int berserkerWeap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  TBeing *ch;
+  int rc, dam;
+  affectedData af;
+
+
+  ch = genericWeaponProcCheck(vict, cmd, o, 8);
+  if (!ch)
+    return FALSE;
+  if(ch->hasClass(CLASS_WARRIOR) && ch->doesKnowSkill(SKILL_BERSERK)) {
+    if(ch->isCombatMode(ATTACK_BERSERK) || !ch->isPc()) {
+      act("<o>Your blood boils and you feel your wrath being amplified by $p.<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+      dam = ch->getSkillValue(SKILL_BERSERK) / 5 + 2;
+      if (ch->getRace() == RACE_OGRE)
+	dam +=5;
+      if (dam > 21) {
+	act("<r>Your $o releases a HUGE burst of concentrated fury upon $N<1><r>!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+	act("<r>$n clenches $s teeth as $s $o releases a HUGE burst of fury upon $N.<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+	act("<o>$n clenches $s teeth as $s $o releases a HUGE burst of fury upon you!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+      } else {
+	act("<r>Your $o releases a burst of concentrated fury upon $N<1><r>!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+	act("<r>$n clenches $s teeth as $s $o releases a burst of fury upon $N.<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+	act("<o>$n clenches $s teeth as $s $o releases a burst of fury upon you!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+      }
+
+      rc = ch->reconcileDamage(vict, dam, DAMAGE_HACKED);
+      if (IS_SET_DELETE(rc, DELETE_VICT))
+	return DELETE_VICT;
+      return TRUE;
+
+
+    } else if (ch->isPc() && !::number(1,15)) {
+     
+      ch->setCombatMode(ATTACK_BERSERK);
+     
+      act("<r>$p<r> amplifies your wrath, and you launch into a blood rage!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+      act("<r>$p<r> amplifies $n's wrath, and $e launches into a blood rage!<1>",TRUE,ch,o,vict,TO_ROOM,NULL);
+
+      act("You go berserk!",TRUE,ch,0,0,TO_CHAR);
+      act("$n goes berserk!", TRUE, ch,0,0,TO_ROOM);
+
+      if(ch->getHit() > (ch->hitLimit()/2)){
+	af.type = SKILL_BERSERK;
+	af.modifier = ::number(ch->getSkillValue(SKILL_BERSERK),
+			       ch->getSkillValue(SKILL_BERSERK)*2);
+	af.level = ch->GetMaxLevel();
+	//      af.duration = ch->getSkillValue(SKILL_BERSERK);;
+	af.duration = PERMANENT_DURATION;
+	af.location = APPLY_HIT;
+	af.bitvector = 0;
+	ch->affectTo(&af, -1);
+
+	af.location = APPLY_CURRENT_HIT;
+	ch->affectTo(&af, -1);
+
+	ch->sendTo("Berserking increases your ability to withstand damage!\n\r");
+      }
+
+      if (!ch->fight())
+	ch->goBerserk(NULL);
+    }
+  } 
+
+  return FALSE;
+
+}
 
 
 //MARKER: END OF SPEC PROCS
@@ -4352,6 +4419,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Mine Cart", minecart},
   {FALSE, "Switchtrack", switchtrack},
   {FALSE, "vorpal", vorpal},
+  {TRUE, "Berserker Weapon", berserkerWeap}// 70
+
 };
 
 
