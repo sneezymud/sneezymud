@@ -111,7 +111,7 @@ class TDatabase
 class TDatabaseConnection
 {
   PGconn *sneezydb, *immodb, *sneezyglobaldb, *sneezybetadb, *sneezybuilderdb;
-  PGconn *sneezyproddb;
+  //  PGconn *sneezyproddb;
 
  public:
   PGconn *getSneezyDB(){
@@ -142,11 +142,11 @@ class TDatabaseConnection
 
   PGconn *getSneezyProdDB(){
     if(!sneezyproddb){
-      vlogf(LOG_DB, "Initializing database 'sneezyprod'.");
+      vlogf(LOG_DB, "Initializing database 'sneezy'.");
       
       vlogf(LOG_DB, "Connecting to database.");
-      if(!(sneezyproddb=PQconnectdb("dbname=sneezyprod"))){
-	vlogf(LOG_DB, "Could not connect to database 'sneezyprod'.");
+      if(!(sneezyproddb=PQconnectdb("dbname=sneezy"))){
+	vlogf(LOG_DB, "Could not connect to database 'sneezy'.");
 	return NULL;
       }
     }
