@@ -60,6 +60,46 @@ void TBeing::doScore()
             green(), manaLimit(), norm());
   sendTo(Buf);
 
+  // Peel test info
+  // x = avg hp per level for this class
+  // y = 35/100
+  // hp = x * (y * defense)
+
+  float hpgain=0;
+  
+  if (hasClass(CLASS_MAGIC_USER) || hasClass(CLASS_MONK) || 
+      hasClass(CLASS_SHAMAN))
+    hpgain = 5.5;
+  
+  if (hasClass(CLASS_CLERIC) || hasClass(CLASS_THIEF))
+    hpgain = 6;
+  
+  if (hasClass(CLASS_RANGER))
+    hpgain = 7.0;
+
+  if (hasClass(CLASS_DEIKHAN))
+    hpgain = 7.5;
+  
+  if (hasClass(CLASS_WARRIOR))
+    hpgain = 8.5;
+
+  float defense_amt=((35.0/100.0) * (float) getSkillValue(SKILL_DEFENSE));
+  float newmax = (hpgain * defense_amt) * (float) getConHpModifier();
+
+  if(GetMaxLevel()<=35){
+    sprintf(Buf, "You would have %s%d%s max hp with the new system.\n\r",
+	    red(), (int) newmax, norm());
+    sendTo(Buf);
+  } else {
+    sprintf(Buf, "You would have %s%d%s to %s%d%s max hp with the new system.\n\r",
+	    red(), (int) newmax, norm(),
+	    red(), (int)(newmax + ((hpgain * 15.0) * (float) getConHpModifier())), norm());
+    sendTo(Buf);
+  }
+
+  // end Peel test info
+
+
   sendTo("You are %s.\n\r", DescMoves((((double) getMove()) / ((double)
          moveLimit()))));
 
