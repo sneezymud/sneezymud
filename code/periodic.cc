@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: periodic.cc,v $
+// Revision 1.3  1999/09/17 06:23:35  peel
+// tidied up soome of the burning code
+//
 // Revision 1.2  1999/09/17 04:53:59  peel
 // Added smoke clouds to burning things
 //
@@ -1199,7 +1202,7 @@ int TObj::objectTickUpdate(int pulse)
     } else
       ch = NULL;
 
-    roomp->dropSmoke(::number(1,6));
+    dropSmoke(::number(1,6));
 
     switch(::number(0, 4)){
       case 0:
