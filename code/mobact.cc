@@ -3172,19 +3172,18 @@ int TMonster::mobileActivity(int pulse)
       
       shoplog(shop_nr, this, this, "talens", 25, "paying tax");
 
-
       if(getMoney()<0){
 	MYSQL_RES *res;
 	int rc;
 
-	if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopowned where shop_nr=%i", shop_nr+1))){
+	if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopowned where shop_nr=%i", shop_nr))){
 	  if(rc){
 	    vlogf(LOG_BUG, "Database error in shop_keeper");
 	    return FALSE;
 	  }
 	}
 	
-	if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopownedaccess where shop_nr=%i", shop_nr+1))){
+	if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopownedaccess where shop_nr=%i", shop_nr))){
 	  if(rc){
 	    vlogf(LOG_BUG, "Database error in shop_keeper");
 	    return FALSE;

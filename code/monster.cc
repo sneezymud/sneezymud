@@ -2,26 +2,14 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: monster.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/10/01 14:36:47  batopr
-// reenabled gold modifier
-//
-// Revision 1.2  1999/09/22 19:00:22  cosmo
-// Temporarily Removed the gold modifier GOLD_INCOME, till we can evalute
-// why it dropped to .1 and if thats a good thing.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+//   monster.cc : functions of the TMonster class
 //
 //////////////////////////////////////////////////////////////////////////
 
 
 #include "stdsneezy.h"
 #include "statistics.h"
+#include "shop.h"
 
 charList::charList() :
   name(NULL),
@@ -165,6 +153,7 @@ TMonster::TMonster() :
   fears(),
   persist(0), 
   oldRoom(ROOM_NOWHERE),
+  brtRoom(ROOM_NOWHERE),
   hatefield(0),
   fearfield(0),
   moneyConst(0),
@@ -184,7 +173,8 @@ TMonster::TMonster(const TMonster &a) :
   hates(a.hates),
   fears(a.fears),
   persist(a.persist), 
-  oldRoom(a.oldRoom), 
+  oldRoom(a.oldRoom),
+  brtRoom(a.brtRoom),
   hatefield(a.hatefield),
   fearfield(a.fearfield),
   moneyConst(a.moneyConst),
@@ -218,6 +208,7 @@ TMonster & TMonster::operator=(const TMonster &a)
   fears = a.fears;
   persist = a.persist;
   oldRoom = a.oldRoom;
+  brtRoom = a.brtRoom;
   hatefield = a.hatefield;
   fearfield = a.fearfield;
   moneyConst = a.moneyConst;
@@ -308,7 +299,7 @@ TMonster::~TMonster()
     char *tc = mud_str_dup(getDescr());
     setDescr(tc);
     shortDescr = mud_str_dup(shortDescr);
-    player.longDescr = mud_str_dup(player.longDescr);
+    player.longDescr = mud_str_dup(getLongDesc());
 
     if (ex_description)
       ex_description = new extraDescription(*ex_description);
@@ -318,21 +309,26 @@ TMonster::~TMonster()
   mobCount--;
 // Looking for bugs below--cos 8/98
   if (getDescr() && getDescr() == mob_index[getMobIndex()].description) { 
-    vlogf(5, "TMonster delete: after allocation, monster still had shared string (%s) : descr", getName());
-    vlogf(5, "New Alloc: %s: shared descr is: %s", (didAloc ? "True" : "False"), getDescr());
+    vlogf(LOG_BUG, "TMonster delete: after allocation, monster still had shared string (%s) : descr", getName());
+    vlogf(LOG_BUG, "New Alloc: %s: shared descr is: %s", (didAloc ? "True" : "False"), getDescr());
   }
   if (name && name == mob_index[getMobIndex()].name) 
-    vlogf(5, "TMonster delete: after allocation, monster still had shared string (%s) : name", getName());
+    vlogf(LOG_BUG, "TMonster delete: after allocation, monster still had shared string (%s) : name", getName());
 
   if (shortDescr && shortDescr == mob_index[getMobIndex()].short_desc) 
-    vlogf(5, "TMonster delete: after allocation, monster still had shared string (%s) : short", getName());
+    vlogf(LOG_BUG, "TMonster delete: after allocation, monster still had shared string (%s) : short", getName());
 
-  if (player.longDescr && player.longDescr == mob_index[getMobIndex()].long_desc)
-    vlogf(5, "TMonster delete: after allocation, monster still had shared string (%s) : long", getName());
+  if (getLongDesc() && player.longDescr == mob_index[getMobIndex()].long_desc)
+    vlogf(LOG_BUG, "TMonster delete: after allocation, monster still had shared string (%s) : long", getName());
 
-// Just a placemarker end of desctructor
-  int test;
-  test = 0;
+  TRoom *tRoom;
+
+  if (brtRoom == ROOM_NOWHERE)
+    ; // Do nothing.  This triggers on immortal loaded mobs so is cool.
+  else if (!(tRoom = real_roomp(brtRoom)))
+    vlogf(LOG_BUG, "Mobile being destroyed with empty birth room! [%s]", getName());
+  else
+    *tRoom >> *this;
 }
 
 byte TMonster::getTimer() const
@@ -370,10 +366,41 @@ int TMonster::calculateGoldFromConstant()
   double the_gold = rlev * max(20.0,rlev) * moneyConst * 7.5 / 10;
 
   // adjust for global gold modifier...
-  the_gold *= gold_modifier[GOLD_INCOME];
+  the_gold *= gold_modifier[GOLD_INCOME].getVal();
 
-  if (spec == SPEC_SHOPKEEPER)
-    the_gold = 1000000;
+  if (spec == SPEC_SHOPKEEPER){
+    unsigned int shop_nr;
+    int rc;
+    MYSQL_RES *res;
+    MYSQL_ROW row;
+
+    for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);
+    
+    if (shop_nr >= shop_index.size()) {
+      vlogf(LOG_BUG, "Warning... shop # for mobile %d (real nr) not found.", this->number);
+      return FALSE;
+    }
+    
+    if((rc=dbquery(&res, "sneezy", "calculateGoldFromQuery", "select * from shopownedaccess where shop_nr=%i", shop_nr))==-1){
+      vlogf(LOG_BUG, "Database error in shop_keeper");
+      return FALSE;
+    }
+    if((row=mysql_fetch_row(res))){
+      mysql_free_result(res);
+      if((rc=dbquery(&res, "sneezy", "CalculateGoldFromQuery", "select gold from shopowned where shop_nr=%i", shop_nr))){
+	if(rc==-1){
+	  vlogf(LOG_BUG, "Database error in shop_keeper");
+	  return FALSE;
+	}
+      }
+      row=mysql_fetch_row(res);
+      
+      the_gold = atoi(row[0]);
+      
+      mysql_free_result(res);
+    } else
+      the_gold = 1000000;
+  }
 
   setMoney((int) the_gold);
   return FALSE;
@@ -406,7 +433,14 @@ void TMonster::setHPFromHPLevel()
   else
     amt = (int) (4.5 * getHPLevel());
 
-  amt += (int) (11 * getHPLevel());
+#ifdef SNEEZY2000
+  if(getHPLevel()<=70)
+    amt += (int) (11 * getHPLevel());
+  else
+    amt += (int) ((11 * ((getHPLevel()-70) * (getHPLevel() - 70)) / 150) * getHPLevel());
+#else
+    amt += (int) (11 * getHPLevel());
+#endif
 
   // balance stuff:
   // HP for mobs should roughly balance with damage for PCs
@@ -503,7 +537,7 @@ int TMonster::lookForEngaged(const TBeing *ch)
       continue;
     if (tbt->fight() == this) {
       // I'm a smart mob, and, oh look, tbt is engaged with me...
-      int rc = takeFirstHit(tbt);
+      int rc = takeFirstHit(*tbt);
       if (IS_SET_DELETE(rc, DELETE_VICT)) {
         delete tbt;
         tbt = NULL;

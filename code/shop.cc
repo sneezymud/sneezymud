@@ -40,7 +40,7 @@ bool shopOwned(int shop_nr){
   MYSQL_RES *res;
   MYSQL_ROW row;
   
-  if((rc=dbquery(&res, "sneezy", "shopOwned", "select * from shopownedaccess where shop_nr=%i", shop_nr+1))==-1){
+  if((rc=dbquery(&res, "sneezy", "shopOwned", "select * from shopownedaccess where shop_nr=%i", shop_nr))==-1){
     vlogf(LOG_BUG, "Database error in shop_keeper");
     return FALSE;
   }
@@ -1930,7 +1930,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     if(!is_abbrev(buf, myself->getName()))
       return FALSE;
 
-    if((rc=dbquery(&res, "sneezy", "shop_keeper", "select access from shopownedaccess where shop_nr=%i and name='%s'", shop_nr+1, ch->getName()))==-1){
+    if((rc=dbquery(&res, "sneezy", "shop_keeper", "select access from shopownedaccess where shop_nr=%i and name='%s'", shop_nr, ch->getName()))==-1){
       vlogf(LOG_BUG, "Database error in shop_keeper");
       return FALSE;
     }
@@ -2000,7 +2000,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
 	shop_index[shop_nr].profit_buy=atof(arg);
 
-	if((rc=dbquery(&res, "sneezy", "shop_keeper", "update shopowned set profit_buy=%f where shop_nr=%i", shop_index[shop_nr].profit_buy, shop_nr+1))){
+	if((rc=dbquery(&res, "sneezy", "shop_keeper", "update shopowned set profit_buy=%f where shop_nr=%i", shop_index[shop_nr].profit_buy, shop_nr))){
 	  if(rc==-1){
 	    vlogf(LOG_BUG, "Database error in shop_keeper");
 	    return FALSE;
@@ -2013,7 +2013,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       } else if(!strcmp(buf, "profit_sell")){ 
 	shop_index[shop_nr].profit_sell=atof(arg);
 
-	if((rc=dbquery(&res, "sneezy", "shop_keeper", "update shopowned set profit_sell=%f where shop_nr=%i", shop_index[shop_nr].profit_sell, shop_nr+1))){
+	if((rc=dbquery(&res, "sneezy", "shop_keeper", "update shopowned set profit_sell=%f where shop_nr=%i", shop_index[shop_nr].profit_sell, shop_nr))){
 	  if(rc==-1){
 	    vlogf(LOG_BUG, "Database error in shop_keeper");
 	    return FALSE;
@@ -2057,13 +2057,13 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       ch->setMoney(ch->getMoney()-value);
       
 
-      if((rc=dbquery(&res, "sneezy", "shop_keeper", "insert into shopowned (shop_nr, profit_buy, profit_sell) values (%i, %f, %f)", shop_nr+1, shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell))){
+      if((rc=dbquery(&res, "sneezy", "shop_keeper", "insert into shopowned (shop_nr, profit_buy, profit_sell) values (%i, %f, %f)", shop_nr, shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in shop_keeper");
 	return FALSE;
       }
 
-      if((rc=dbquery(&res, "sneezy", "shop_keeper", "insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr+1, ch->getName(), SHOPACCESS_OWNER))){
+      if((rc=dbquery(&res, "sneezy", "shop_keeper", "insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, ch->getName(), SHOPACCESS_OWNER))){
 	if(rc==-1)
 	  vlogf(LOG_BUG, "Database error in shop_keeper");
 	return FALSE;
@@ -2082,14 +2082,14 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	return FALSE;
       }
 
-      if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopowned where shop_nr=%i", shop_nr+1))){
+      if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopowned where shop_nr=%i", shop_nr))){
 	if(rc){
 	  vlogf(LOG_BUG, "Database error in shop_keeper");
 	  return FALSE;
 	}
       }
 
-      if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopownedaccess where shop_nr=%i", shop_nr+1))){
+      if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopownedaccess where shop_nr=%i", shop_nr))){
 	if(rc){
 	  vlogf(LOG_BUG, "Database error in shop_keeper");
 	  return FALSE;
@@ -2147,18 +2147,18 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       arg = one_argument(arg, buf2);
 
       if(*buf2){ // set value
-	if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopownedaccess where shop_nr=%i and name='%s'", shop_nr+1, buf))){
+	if((rc=dbquery(&res, "sneezy", "shop_keeper", "delete from shopownedaccess where shop_nr=%i and name='%s'", shop_nr, buf))){
 	  if(rc==-1)
 	    vlogf(LOG_BUG, "Database error in shop_keeper");
 	  return FALSE;
 	}
-	if((rc=dbquery(&res, "sneezy", "shop_keeper", "insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr+1, buf, atoi(buf2)))){
+	if((rc=dbquery(&res, "sneezy", "shop_keeper", "insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf, atoi(buf2)))){
 	  if(rc==-1)
 	    vlogf(LOG_BUG, "Database error in shop_keeper");
 	  return FALSE;
 	}
       } else if(*buf){
-	if((rc=dbquery(&res, "sneezy", "shop_keeper", "select access from shopownedaccess where shop_nr=%i and name='%s'", shop_nr+1, buf))==-1){
+	if((rc=dbquery(&res, "sneezy", "shop_keeper", "select access from shopownedaccess where shop_nr=%i and name='%s'", shop_nr, buf))==-1){
 	  vlogf(LOG_BUG, "Database error in shop_keeper");
 	  return FALSE;
 	}
@@ -2282,7 +2282,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 }
 
 void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int cost, const char *action){
-  int rc, value=0;
+  int rc, value=0, count=0;
   MYSQL_RES *res;
   TThing *tt;
   TObj *o;  
@@ -2292,12 +2292,13 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
   }
 
   for(tt=keeper->stuff;tt;tt=tt->nextThing){
+    ++count;
     o=dynamic_cast<TObj *>(tt);
     value+=o->obj_flags.cost;
   }
 
 
-  if((rc=dbquery(&res, "sneezy", "shoplog", "insert ignore into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now())", shop_nr, ch->getName(), action, name, cost, keeper->getMoney(), value))){
+  if((rc=dbquery(&res, "sneezy", "shoplog", "insert ignore into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch->getName(), action, name, cost, keeper->getMoney(), value, count))){
     if(rc==-1){
       vlogf(LOG_BUG, "Database error in shoplog");
     }
@@ -2470,7 +2471,7 @@ void bootTheShops()
     sd.open2=atoi(row[15]);
     sd.close2=atoi(row[16]);
 
-    if(owned_row && (atoi(owned_row[0])-1)==shop_nr){
+    if(owned_row && (atoi(owned_row[0]))==shop_nr){
       sd.profit_buy=atof(owned_row[1]);
       sd.profit_sell=atof(owned_row[2]);
       owned_row=mysql_fetch_row(owned_res);
