@@ -6856,7 +6856,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       return TRUE;
     }
     
-    ch->addToMoney(-modprice, GOLD_GAMBLE);
+    ch->addToMoney(-modprice, GOLD_COMM);
 
     dbquery(FALSE, &res, "sneezy", "stockBroker", "update stockinfo set talens=talens+%i", (int)(modprice/1.01));
     
@@ -6911,7 +6911,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       return TRUE;
     }
 
-    ch->addToMoney(((float)num * atof(row[1])), GOLD_GAMBLE);
+    ch->addToMoney(((float)num * atof(row[1])), GOLD_COMM);
 
     dbquery(FALSE, &res, "sneezy", "stockBroker", "update stockinfo set talens=talens-%i", (int)(((float)num * atof(row[1]))));
     
