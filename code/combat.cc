@@ -5378,8 +5378,9 @@ double TBeing::deathExp()
   double amt;
   // 4.1        : 30 * and mini(xp/4, amt)
   // 4.5 (beta) : 50 * and mini(4*xp/10, amt)
-  amt = 30.0 * mob_exp((float) GetMaxLevel());
-  amt = min( 1*getExp()/4,  amt);
+  // 5.2        : 25 * and mini(xp/5, amt)
+  amt = 25.0 * mob_exp((float) GetMaxLevel());
+  amt = min( 1*getExp()/5,  amt);
 
   return amt;
 }
