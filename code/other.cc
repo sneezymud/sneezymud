@@ -1154,12 +1154,11 @@ void TBeing::sendSkillsList(discNumT which)
         strcpy(how_long, "\tsymbol=any hand or neck; pray silently; no gestures");
       }
     } else if (i == SPELL_SHAPESHIFT) {
-      int tSL = getDiscipline(getDisciplineNumber(SPELL_SHAPESHIFT, FALSE))->getLearnedness();
 
       strcpy(how_long, "\n\r\t");
       strcpy(how_long, "\n\r\tYou may ShapeShift into the following creatures:\n\r\t");
       for (int tCount = 0; tCount < MaxShapeShiftType; tCount++) {
-        if (ShapeShiftList[tCount].learning > tSL ||
+        if (ShapeShiftList[tCount].learning > getSkillValue(SPELL_SHAPESHIFT) ||
             ShapeShiftList[tCount].level    > GetMaxLevel())
           continue;
 
