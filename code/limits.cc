@@ -56,6 +56,24 @@ void TPerson::setMaxHit(int newhit)
 #endif
 }
 
+int eqHpBonus(const TPerson *ch)
+{
+  wearSlotT i;
+  int j, total=0;
+  TObj *o;
+
+  for (i = MIN_WEAR; i < MAX_WEAR; i++) {
+    for(j=0;j<MAX_OBJ_AFFECT;++j){
+      if(ch->equipment[i] &&
+	 (o=dynamic_cast<TObj *>(ch->equipment[i])) &&
+	 o->affected[j].location == APPLY_HIT){
+	total+=o->affected[j].modifier;
+      }
+    }
+  }
+  return total;
+}
+
 
 short int TPerson::hitLimit() const
 {
@@ -89,6 +107,8 @@ short int TPerson::hitLimit() const
   float newmax = 21; // level 1 base hp
   newmax += ((hpgain * defense_amt) * (float) getConHpModifier());
   newmax += ((hpgain * adefense_amt) * (float) getConHpModifier());
+
+  newmax += eqHpBonus(this);
 
   return (int) newmax;
 #else
