@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_afflictions.cc,v $
+// Revision 1.2  1999/09/30 11:47:00  lapsos
+// Fixed loop bug And unchecked paralyze bug in paralyzeLimb.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1832,7 +1835,7 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv
   char buf[256], limb[256];
   wearSlotT slot;
 
-  if (caster->canParalyzeLimb(victim, SILENT_NO))
+  if (!caster->canParalyzeLimb(victim, SILENT_NO))
     return SPELL_FAIL;
 
   if (caster->isNotPowerful(victim, level, SPELL_PARALYZE_LIMB, SILENT_NO)) 
