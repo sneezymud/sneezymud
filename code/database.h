@@ -1,6 +1,96 @@
 #ifndef __DATABASE_H
 #define __DATABASE_H
 
+// TDatabase is a class for interacting with the mysql database.
+//
+// You should always use local instances of TDatabase, do not use a pointer
+// and the new operator.  The local instance will clean up after itself in
+// its destructor when it goes out of scope.  All of the functions are safe
+// to use even on failures, so if you do not do any error checking, the worst
+// than can happen is that you won't get any results.  On error, TDatabase
+// will send LOG_DB vlogf's and return the appropriate value (false or NULL).
+//
+// Usage example:
+//
+// #include "database.h"
+//
+// float weight=5.5;
+// char name[]="blade";
+// int vnum=10000;
+//
+// TDatabase db("sneezy");
+// db.query("select vnum, price, short_desc from obj where weight<%f and
+// name like '%%%s%%' and vnum>%i", weight, name, vnum);
+//
+// while(db.fetchRow()){
+//   if(atoi(db.getColumn(1)) > 10000){
+//     vlogf(LOG_BUG, "item %s had value of %s",
+//           db.getColumn(0), db.getColumn(1));
+//   }
+//   sendTo("%s %s", db.getColumn(0), db.getColumn(2));
+// }
+//
+//
+// Documentation:
+//
+// TDatabase(string) - The initializer takes the name of the database you 
+// want to use as an argument.  Allowable databases are "sneezy" and 
+// "immortal".
+// Returns: TDatabase (initializer)
+// Ex: TDatabase db("sneezy");
+//
+// bool setDB(string) - This function sets the database that the instance 
+// will use, and is generally called from the constructor rather than directly.
+// Allowable databases are "sneezy" and "immortal".  
+// Returns: nothing (void)
+// Ex: db.setDB("immortal");
+//
+// bool query(const char*,...) - This function sends a query to the database.
+// It takes a printf style format string as the arguments.  The allowed
+// specifiers are %s (char *), %i (int), %f (double) and %% (to print a %).
+// The arguments that are passed are escaped for the query.
+// Returns: TRUE if query was sent successfully, FALSE if there was an error
+// Ex: 
+// float weight=5.5;
+// char name[]="blade";
+// int vnum=10000;
+// db.query("select vnum, short_desc from obj where weight<%f and
+// name like '%%%s%%' and vnum>%i", weight, name, vnum);
+//
+// bool fetchRow() - Makes the next row of results available via getColumn.
+// Returns: FALSE if no results or no more rows available.
+// Ex:
+// while(db.fetchRow(){
+//   printf("%s", db.getColumn(0));
+// }
+//
+// char *getColumn(unsigned int) - Returns a column out of the current row of
+// the result set.  The memory returned does not have to be freed.
+// Returns: A char * to the result column or NULL if no results are available.
+// Ex:
+// db.query("select vnum, short_desc from obj");
+// db.fetchRow();
+// vnum=atoi(db.getColumn(0));
+// string short_desc = db.getColumn(1);
+
+
+class TDatabase
+{
+  MYSQL_RES *res;
+  MYSQL_ROW row;
+  MYSQL *db;
+  
+ public:
+  void setDB(string);
+  bool query(const char *,...);
+  bool fetchRow();
+  char *getColumn(unsigned int);
+
+  TDatabase();
+  TDatabase(string);
+  ~TDatabase();
+};
+
 // maintain instances of sneezydb and immodb
 class TDatabaseConnection
 {
@@ -56,21 +146,6 @@ class TDatabaseConnection
 
 
 
-class TDatabase
-{
-  MYSQL_RES *res;
-  MYSQL_ROW row;
-  MYSQL *db;
-  
- public:
-  void setDB(string);
-  bool fetchRow();
-  char *getColumn(unsigned int);
-  bool query(const char *,...);
-
-  TDatabase();
-  TDatabase(string);
-  ~TDatabase();
-};
-
 #endif
+
+

@@ -7,6 +7,7 @@
 
 #include "stdsneezy.h"
 #include "cmd_trophy.h"
+#include "database.h"
 
 float trophy_exp_mod(float count)
 {
@@ -45,9 +46,7 @@ const char *describe_trophy_exp(float count)
 // this function is a little messy, I apologize
 void TBeing::doTrophy(const char *arg)
 {
-  MYSQL_ROW row=NULL;
-  MYSQL_RES *res;
-  int rc, mcount=0, vnum, header=0, zcount=0, bottom=0, zcountt=0;
+  int mcount=0, vnum, header=0, zcount=0, bottom=0, zcountt=0;
   int zonesearch=0, processrow=1, summary=0;
   float count;
   char buf[256];
@@ -72,20 +71,21 @@ void TBeing::doTrophy(const char *arg)
     summary=1;
   }
 
-  rc=dbquery(TRUE, &res, "sneezy", "doTrophy", "select mobvnum, count from trophy where name='%s' order by mobvnum", getName());
+  TDatabase db("sneezy");
+  db.query("select mobvnum, count from trophy where name='%s' order by mobvnum", getName());
 
   for (zone = 0; zone < zone_table.size(); zone++) {
     zoneData &zd = zone_table[zone];
     
     while(1){
-      if(processrow)
-	row=mysql_fetch_row(res);
-
-      if(!row)
-	break;
+      if(processrow){
+	if(!db.fetchRow()){
+	  break;
+	}
+      }
 
       // sometimes we get an entry of 0 for med mobs I think
-      vnum=atoi(row[0]);
+      vnum=atoi(db.getColumn(0));
       if(vnum==0){
 	continue;
       }
@@ -98,10 +98,10 @@ void TBeing::doTrophy(const char *arg)
 	processrow=1;
       }
 
-      int rnum = real_mobile(atoi(row[0]));
+      int rnum = real_mobile(atoi(db.getColumn(0)));
       if (rnum < 0) {
 	vlogf(LOG_BUG, "DoTrophy detected bad mobvnum=%d for name='%s'", 
-	      atoi(row[0]), getName());
+	      atoi(db.getColumn(0)), getName());
 	continue;
       }
 
@@ -124,7 +124,7 @@ void TBeing::doTrophy(const char *arg)
 	header=1;
       }
 
-      count=atof(row[1]);
+      count=atof(db.getColumn(1));
 
       if(!summary){
 	sprintf(buf, "You will gain %s experience when fighting %s.\n\r", 
@@ -174,8 +174,6 @@ void TBeing::doTrophy(const char *arg)
   if (desc)
     desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
     
-  mysql_free_result(res);
-
 
   return;
 }
@@ -183,5 +181,6 @@ void TBeing::doTrophy(const char *arg)
 
 
 void wipeTrophy(const char *name){
-  dbquery(TRUE, NULL, "sneezy", "wipeTrophy", "delete from trophy where name='%s'", name);
+  TDatabase db("sneezy");
+  db.query("delete from trophy where name='%s'", name);
 }

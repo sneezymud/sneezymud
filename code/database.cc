@@ -9,7 +9,7 @@ TDatabase::TDatabase() :
   row(NULL),
   db(NULL)
 {
-  vlogf(LOG_DB, "constructor");
+  //  vlogf(LOG_DB, "constructor");
 }
 
 TDatabase::TDatabase(string tdb) :
@@ -18,12 +18,12 @@ TDatabase::TDatabase(string tdb) :
   db(NULL)
 {
   setDB(tdb);
-  vlogf(LOG_DB, "constructor setDB");
+  //  vlogf(LOG_DB, "constructor setDB");
 }
 
 TDatabase::~TDatabase(){
   mysql_free_result(res);
-  vlogf(LOG_DB, "query results freed");
+  //  vlogf(LOG_DB, "query results freed");
 }
 
 void TDatabase::setDB(string tdb){
@@ -62,7 +62,7 @@ bool TDatabase::query(const char *query,...){
   va_list ap;
   string buf;
   int fromlen=0, tolen=(512*2)+1;
-  char *from=NULL, to[tolen], lastch=0, numbuf[32];
+  char *from=NULL, to[tolen], numbuf[32];
   
   // no db set yet
   if(!db)
@@ -70,7 +70,7 @@ bool TDatabase::query(const char *query,...){
   
   va_start(ap, query);
   do {
-    if(*query=='%' && lastch!='\\'){
+    if(*query=='%'){
       query++;
       switch(*query){
 	case 's':
@@ -95,6 +95,9 @@ bool TDatabase::query(const char *query,...){
 	  snprintf(numbuf, strlen(numbuf)-1, "%f", va_arg(ap, double));
 	  buf += numbuf;
 	  break;
+	case '%':
+	  buf += "%";
+	  break;
 	default:
 	  vlogf(LOG_DB, "query - bad format specifier");
 	  return FALSE;
@@ -102,7 +105,6 @@ bool TDatabase::query(const char *query,...){
     } else {
       buf += *query;
     }
-    lastch=*query;
   } while(*query++);
   va_end(ap);
   
@@ -113,8 +115,8 @@ bool TDatabase::query(const char *query,...){
   }
   res=mysql_store_result(db);
   
-  if(res)
-    vlogf(LOG_DB, "New query results stored.");
+  //  if(res)
+  //    vlogf(LOG_DB, "New query results stored.");
   
   return TRUE;
 }

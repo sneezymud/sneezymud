@@ -10,6 +10,7 @@
 
 #include "stdsneezy.h"
 #include "cmd_trophy.h"
+#include "database.h"
 
 void TBeing::doConsider(const char *argument)
 {
@@ -151,33 +152,18 @@ void TBeing::doConsider(const char *argument)
     sendTo("There are better ways to suicide.\n\r");
 
 #ifdef SNEEZY2000
-  MYSQL_ROW row;
-  MYSQL_RES *res;
-  int rc;
-  float count;
+  float count=0.0;
+  TDatabase db("sneezy");
 
-  if((rc=dbquery(TRUE, &res, "sneezy", "consider/trophy", "select mobvnum, count from trophy where name='%s' and mobvnum=%i", getName(), tmon->mobVnum()))){
-    if(rc!=1){
-      sendTo("Database error!  Talk to a coder ASAP.\n\r");
-      return;
-    }
-  } else if((row=mysql_fetch_row(res))){
-    count=atof(row[1]);
-    sendTo(COLOR_BASIC, "You will gain %s experience when fighting %s.\n\r", 
-	   describe_trophy_exp(count),
-	    namebuf);
-  } else {
-    sendTo(COLOR_BASIC, "You will gain %s experience when fighting %s.\n\r",
-	   describe_trophy_exp(0.0),
-	   namebuf);
-  }
+  db.query("select mobvnum, count from trophy where name='%s' and mobvnum=%i", getName(), tmon->mobVnum());
 
+  if(db.fetchRow())
+    count=atof(db.getColumn(1));
 
-  mysql_free_result(res);
+  sendTo(COLOR_BASIC, "You will gain %s experience when fighting %s.\n\r", 
+	 describe_trophy_exp(count),
+	 namebuf);
 #endif
-
-
-
 
   if (getDiscipline(DISC_ADVENTURING)) {
     int learn = 0;
