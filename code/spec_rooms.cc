@@ -62,6 +62,7 @@ int oft_frequented_room(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
              continue;
           mob = read_mobile(rmob, REAL);
           *rp += *mob;
+	  *rp << *mob;
           act("$n saunters into the bar anticipating $s first ale of the evening.", FALSE, mob, NULL, NULL, TO_ROOM);
         }
       }
