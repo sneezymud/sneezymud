@@ -7050,6 +7050,66 @@ int energyShieldGenerator(TBeing *v, cmdTypeT cmd, const char *arg, TObj *o, TOb
 }
 
 
+int finnsGaff(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  string target,argument=arg, buf;
+  TObj *fish;
+  TBeing *ch;
+  int amt=5;
+
+  if(cmd != CMD_GENERIC_PULSE && cmd != CMD_POINT)
+    return false;
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if(cmd == CMD_GENERIC_PULSE){
+    if(o->getStructPoints()>amt && ch->getMove()<(ch->getMaxMove()-amt)){
+      o->setStructPoints(o->getStructPoints()-amt);
+      o->setMaxStructPoints(o->getMaxStructPoints()-amt);
+      ch->addToMove(amt);
+      act("You feel refreshed as your $o begins to exude a stinky fish smell.",
+	  TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("$n looks refreshed as $p begins to exude a stinky fish smell.",
+	  TRUE,ch,o,NULL, TO_ROOM,NULL);
+      return true;
+    }
+  }
+  
+  if(cmd == CMD_POINT){
+    argument=one_argument(argument,target);
+
+    if(!(fish=generic_find_obj(target.c_str(),FIND_OBJ_INV|FIND_OBJ_ROOM, ch))){
+      act("You don't see that anywhere!", TRUE,ch,o,NULL,TO_CHAR,NULL);
+      return false;
+    }
+
+    ssprintf(buf, "$n points $p at %s.", fish->shortDescr);
+    act(buf.c_str(),TRUE,ch,o,NULL, TO_ROOM,NULL);
+    ssprintf(buf, "You point $p at %s.", fish->shortDescr);
+    act(buf.c_str(),TRUE,ch,o,NULL, TO_CHAR,NULL);
+
+    ssprintf(buf, "$p makes panicked fishy noises as its lifeforce is absorbed by %s!", o->shortDescr);
+    act(buf.c_str(), TRUE,ch,fish,NULL,TO_ROOM,NULL);
+    ssprintf(buf, "$p makes panicked fishy noises as its lifeforce is absorbed by %s!", o->shortDescr);
+    act(buf.c_str(), TRUE,ch,fish,NULL,TO_CHAR,NULL);
+
+
+
+    delete fish;
+    o->setMaxStructPoints(o->getMaxStructPoints()+10);
+    o->setStructPoints(o->getStructPoints()+10);
+    
+
+    return true;
+  }
+
+
+  return false;
+}
+
+
+
 //MARKER: END OF SPEC PROCS
 
 
@@ -7195,5 +7255,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "BOGUS", bogusObjProc},
   {TRUE, "Fireball Weapon", fireballWeapon}, //125
   {FALSE, "Fire Shield", fireArmor},
+  {FALSE, "Finns Gaff", finnsGaff},
   {FALSE, "last proc", bogusObjProc}
 };
