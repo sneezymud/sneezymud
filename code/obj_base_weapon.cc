@@ -1504,9 +1504,6 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
 	if(isPoisoned())
 	  applyPoison(tb);
 	
-
-
-
         if (c->roomp && !c->roomp->isRoomFlag(ROOM_ARENA)) {
           if (::number(1, d) <= getStructPoints()) {
             addToStructPoints(-1);

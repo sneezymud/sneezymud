@@ -337,7 +337,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
       *ch->roomp += *the_arrow;
       return DELETE_THIS;
     } else {
-      ch->sendTo("Your bowsstring snaps! It will need repair before further use!\n\r");
+      ch->sendTo("Your bowstring snaps! It will need repair before further use!\n\r");
       addToStructPoints(-1);
       addBowFlags(BOW_STRING_BROKE);
 

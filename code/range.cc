@@ -273,7 +273,7 @@ int get_range_actual_damage(TBeing *ch, TBeing *victim, TObj *o, int dam, spellN
     if (dynamic_cast<TArrow *>(o)) {
       // shot objects are here
       // ranged spec basically allows arrow to do extra damage...
-      q = 50;
+      q = 100;
       q += (ch->getSkillValue(SKILL_RANGED_PROF)/2); // 50%-100% damage
       q += (ch->getSkillValue(SKILL_RANGED_SPEC)/2); // 100%-150% damage
 
@@ -369,7 +369,6 @@ bool hitInnocent(const TBeing *ch, const TThing *thing, const TThing *vict)
   // size of target
   num = vict->getHeight();
   num *= vict->getWeight();
-  num *= 2.35;
   num /= 1000;
   // num should be on order of 15 - 70
 
