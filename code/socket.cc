@@ -1073,6 +1073,7 @@ int TSocket::gameLoop()
 	}
 
 	// lycanthrope transformation
+#if 0
 	if(!quickpulse){
 	  if(tmp_ch->hasQuestBit(TOG_LYCANTHROPE) &&
 	     !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE) &&
@@ -1090,6 +1091,7 @@ int TSocket::gameLoop()
 	    }
 	  }
 	}
+#endif
 
 
         if (!quickpulse) {
