@@ -23,6 +23,8 @@ enum ammoTypeT {
   AMMO_556MM_RIFLE,             // 12
   AMMO_762MM_RIFLE,             // 13
   AMMO_30CAL_RIFLE,             // 14
+  AMMO_FLECHETTE,               // 15
+  AMMO_LAW,                     // 16
   AMMO_MAX
 };
 
@@ -43,6 +45,8 @@ const char *shelldesc [] =
   "5.56mm rifle",               // 12
   "7.62mm rifle",               // 13
   "30cal rifle",                // 14
+  "flechette",                  // 15
+  "LAW rocket",                 // 16
 };
 
 const char *shellkeyword [] = 
@@ -61,7 +65,9 @@ const char *shellkeyword [] =
   "45calRifle",                 // 11
   "556mmRifle",                 // 12
   "762mmRifle",                 // 13
-  "30calRifle"                  // 14
+  "30calRifle",                  // 14
+  "flechette",                   // 15
+  "lawrocket",
 };
 
 
@@ -217,6 +223,17 @@ void TBeing::doGload(const char *arg)
 }
 
 
+int TGun::suggestedPrice() const
+{
+  int pricetmp=TBaseWeapon::suggestedPrice();
+
+  pricetmp *= getROF();
+  pricetmp /= 10;
+
+  return pricetmp;
+}
+
+
 
 string TGun::statObjInfo() const
 {
@@ -357,7 +374,13 @@ void TAmmo::setRounds(int r) {
   if(r<=0){
     char buf[256];
     sprintf(buf, "%s empty", name);
-    delete [] name;
+
+    if(isObjStat(ITEM_STRUNG)){
+      delete [] name;
+    } else {
+      swapToStrung();
+    }
+
     name=mud_str_dup(buf);
   }
 
