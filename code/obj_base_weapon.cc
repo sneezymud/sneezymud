@@ -1452,11 +1452,24 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
       if (!ch->isImmortal() &&
             (!(i = ch->specialAttack(tb, SKILL_RANGED_PROF)) ||
             i == GUARANTEED_FAILURE)) {
-        act("$n dodges out of the way of $p.", FALSE, tb, this, NULL, TO_ROOM);
-        tb->sendTo("You dodge out of its way.\n\r");
-        if (!ch->sameRoom(*tb))
-          act("In the distance, $N dodges out of the way of $p.",
-                 TRUE,ch,this,tb,TO_CHAR);
+	if(::number(0,1)){
+	  act("$n dodges out of the way of $p.",
+	      FALSE, tb, this, NULL, TO_ROOM);
+	  tb->sendTo("You dodge out of its way.\n\r");
+	  if (!ch->sameRoom(*tb))
+	    act("In the distance, $N dodges out of the way of $p.",
+		TRUE,ch,this,tb,TO_CHAR);
+	} else {
+	  act("$n dives behind some cover, avoiding $p.", 
+	      FALSE, tb, this, NULL, TO_ROOM);
+	  tb->sendTo("You dive behind some cover avoiding it.\n\r");
+	  if (!ch->sameRoom(*tb))
+	    act("In the distance, $N dives behind some cover, avoiding $p.",
+		TRUE,ch,this,tb,TO_CHAR);
+	}
+
+
+
 	if (spec) checkSpec(tb, CMD_ARROW_DODGED, "", NULL);
         resCode = FALSE;
         if (!tb->isPc())
