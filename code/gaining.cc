@@ -321,8 +321,8 @@ void TPerson::setSelectToggles(TBeing *gm, classIndT Class, silentTypeT silent)
           sprintf(buf, "Congratulations, %s.", getName());
           gm->doSay(buf);
           gm->doSay("Your achievements have earned you the right to quest for a holy avenger.");
-           gm->doSay("Seek out the Bishop of Brightmoon and ask him about an avenger quest.");
-         }
+          gm->doSay("Seek out the Bishop of Brightmoon and ask him about an avenger quest.");
+        }
         setQuestBit(TOG_AVENGER_ELIGIBLE);
       }
 
@@ -1796,11 +1796,10 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
   if (generic_trainer_stuff(me, ch))
     return TRUE;
 
-
   if (ch->getLevel(cit) < (me->GetMaxLevel()/2)){
     TPerson *tp;
 
-    if((tp=dynamic_cast<TPerson *>(ch)))
+    if ((tp = dynamic_cast<TPerson *>(ch)))
       tp->setSelectToggles(me, cit, SILENT_NO);
 
     me->doSay("Let me give you a little advice...");
@@ -1808,9 +1807,15 @@ int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, 
 
   } else if (ch->getLevel(cit) < MAX_MORT)
     act("$n sighs, \"I cannot teach you, $N.  You MUST find your next guildmaster.\"", FALSE, me, 0, ch, TO_ROOM);
-  else
-    act("$n beams, \"No one can teach you anymore in this, $N\"",
-        FALSE, me, NULL, ch, TO_ROOM);
+
+  else {
+    TPerson *tp;
+
+    act("$n beams, \"No one can teach you anymore in this, $N\"", FALSE, me, NULL, ch, TO_ROOM);
+
+    if ((tp = dynamic_cast<TPerson *>(ch)))
+      tp->setSelectToggles(me, cit, SILENT_NO);
+  }
 
   return TRUE;
 }
