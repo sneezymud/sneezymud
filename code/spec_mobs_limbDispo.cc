@@ -132,7 +132,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
   mob->doSay(stmp);
   
   ch->addToMoney(FEE, GOLD_SHOP_RESPONSES);
-  
+/* LOGGING OFF  (Next time:  add logging of mob level, use database)
   sstring partname = bodypart->getName();
   if (partname.find("diseased") == sstring::npos &&
       partname.find("corpse of a") == sstring::npos &&
@@ -143,7 +143,7 @@ int limbDispo(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mob, TObj *)
     autoMail(NULL, "bump", buf.c_str());
     vlogf(LOG_MAROR, fmt("%s") % buf);
   }
-  
+*/
   delete bodypart;
   bodypart=NULL;
 
