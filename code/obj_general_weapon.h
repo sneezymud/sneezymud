@@ -32,9 +32,9 @@ class TGenWeapon : public TBaseWeapon {
     int getWeaponFreq(int which) const;
     void setWeaponFreq(int n, int which=0);
 
-    bool canCudgel() const;
-    bool canBackstab() const;
-    bool canStab() const;
+    virtual bool canCudgel() const;
+    virtual bool canBackstab() const;
+    virtual bool canStab() const;
 
     TGenWeapon();
     TGenWeapon(const TGenWeapon &a);

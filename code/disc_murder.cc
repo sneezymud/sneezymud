@@ -6,7 +6,6 @@
 #include "obj_tool.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
-#include "obj_gun.h"
 
 
 static void playBackstab(const TRoom *rp)
@@ -279,7 +278,7 @@ int backstab(TBeing *thief, TBeing * victim)
     thief->sendTo("There's no way to reach that back while you're fighting!\n\r");
     return FALSE;
   }
-  if (!obj->canBackstab() || dynamic_cast<TGun *>(obj)) {
+  if (!obj->canBackstab()) {
     act("You can't use $p to backstab.", false, thief, obj, NULL, TO_CHAR);
     return FALSE;
   }
@@ -625,7 +624,7 @@ int throatSlit(TBeing *thief, TBeing * victim)
     thief->sendTo("There's no way to reach their neck while you're fighting!\n\r");
     return FALSE;
   }
-  if (!obj->canBackstab() || dynamic_cast<TGun *>(obj)) {
+  if (!obj->canBackstab()) {
     act("You can't use $p to slice anyone's throat.", false, thief, obj, NULL, TO_CHAR);
     act("You should try a weapon that is used for backstabbing.", false, thief, NULL, NULL, TO_CHAR);
     return FALSE;

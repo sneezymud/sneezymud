@@ -2985,7 +2985,6 @@ objs/cmd_stab.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/cmd_stab.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/cmd_stab.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/cmd_stab.o: materials.h combat.h obj_general_weapon.h obj_base_weapon.h
-objs/cmd_stab.o: obj_gun.h
 objs/cmd_stat.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_stat.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/cmd_stat.o: /usr/include/gnu/stubs.h
@@ -5748,7 +5747,7 @@ objs/disc_murder.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/disc_murder.o: monster.h account.h extern.h handler.h obj_money.h rent.h
 objs/disc_murder.o: spec_mobs.h materials.h combat.h spelltask.h
 objs/disc_murder.o: disc_murder.h obj_tool.h obj_general_weapon.h
-objs/disc_murder.o: obj_base_weapon.h obj_gun.h
+objs/disc_murder.o: obj_base_weapon.h
 objs/disc_nature.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_nature.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_nature.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -14197,7 +14196,9 @@ objs/shop.o: /usr/include/postgresql/postgres_ext.h statistics.h
 objs/shop.o: obj_spellbag.h obj_expandable_container.h obj_open_container.h
 objs/shop.o: obj_base_container.h obj_symbol.h obj_general_weapon.h
 objs/shop.o: obj_base_weapon.h obj_base_clothing.h obj_magic_item.h
-objs/shop.o: shopowned.h
+objs/shop.o: shopowned.h timing.h /usr/include/sys/time.h
+objs/shop.o: /usr/include/sys/select.h /usr/include/bits/select.h
+objs/shop.o: /usr/include/bits/sigset.h
 objs/shopowned.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/shopowned.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/shopowned.o: /usr/include/gnu/stubs.h

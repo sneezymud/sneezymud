@@ -56,6 +56,8 @@ class TGun : public TGenWeapon {
     int getFlags() const { return flags; }
     
 
+    bool canStab() const { return false; }
+    bool canBackstab() const { return false; }
     int shootMeBow(TBeing *, TBeing *, unsigned int, dirTypeT, int);
     virtual int suggestedPrice() const;
     virtual weaponT TGun::getWeaponType(int) const { return WEAPON_TYPE_SHOOT; }

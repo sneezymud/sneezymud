@@ -1,7 +1,6 @@
 #include "stdsneezy.h"
 #include "combat.h"
 #include "obj_general_weapon.h"
-#include "obj_gun.h"
 
 //#define ALLOW_STAB_SEVER
 #define USE_NEW_STAB
@@ -340,7 +339,7 @@ static int stab(TBeing *thief, TBeing * victim)
   if (thief->noHarmCheck(victim))
     return FALSE;
 
-  if (!obj->canStab() || dynamic_cast<TGun *>(obj)) {
+  if (!obj->canStab()){
     act("You can't use $o to stab.",  false, thief, obj, NULL, TO_CHAR);
     return FALSE;
   }
