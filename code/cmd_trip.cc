@@ -17,7 +17,7 @@ bool TBeing::canTrip(TBeing *victim, silentTypeT silent)
   spellNumT skill = getSkillNum(SKILL_TRIP);
   if (!doesKnowSkill(skill)) {
     if (!silent)
-      sendTo("You know nothing about triping.\n\r");
+      sendTo("You know nothing about tripping.\n\r");
     return FALSE;
   }
 

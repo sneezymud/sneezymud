@@ -79,7 +79,7 @@ void TBow::describeObjectSpecifics(const TBeing *ch) const
     ch->sendTo(COLOR_OBJECTS, "%s has no arrow ready.\n\r", good_cap(getName()).c_str());
 
   if (isBowFlag(BOW_STRING_BROKE))
-    act("$p has a broken sstring.", false, ch, this, 0, TO_CHAR);
+    act("$p has a broken string.", false, ch, this, 0, TO_CHAR);
   if (isBowFlag(BOW_CARVED))
     act("$p is carved.", false, ch, this, 0, TO_CHAR);
   if (isBowFlag(BOW_SCRAPED))
