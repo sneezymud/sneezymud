@@ -1,6 +1,7 @@
 #include "stdsneezy.h"
 #include "paths.h"
 #include "pathfinder.h"
+#include "obj_commodity.h"
 
 int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
@@ -163,7 +164,12 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
 	for(TThing *t=myself->getStuff();t;t=tnext){
 	  tnext=t->nextThing;
 	  --(*t);
-	  delete t;
+	  if(dynamic_cast<TCommodity *>(t) ||
+	     t->number == GENERIC_MONEYPOUCH){
+	    delete t;
+	  } else {
+	    *myself->roomp += *t;
+	  }
 	}
 	myself->setMoney(0);
 
@@ -178,7 +184,12 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
 	    for(TThing *t=tmons->getStuff();t;t=tnext){
 	      tnext=t->nextThing;
 	      --(*t);
-	      delete t;
+	      if(dynamic_cast<TCommodity *>(t) ||
+		 t->number == GENERIC_MONEYPOUCH){
+		delete t;
+	      } else {
+		*myself->roomp += *t;
+	      }
 	    }
 	    tmons->setMoney(0);
 	  }
