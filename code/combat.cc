@@ -1603,19 +1603,25 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
   // account for stats
   // float statDam = (ch->getStrDamModifier() + ch->getDexDamModifier()) / 2;
   float statDam = ch->getStrDamModifier(); // we already account for dex bonuses in tohit -dash
-  
+
   if(ch->doesKnowSkill(SKILL_IRON_FIST) && 
      !ch->equipment[WEAR_HAND_R] && !ch->equipment[WEAR_HAND_L]){
     // extra 0-8.3%
-    statDam += (ch->getSkillLevel(SKILL_IRON_FIST)/1200);
+    statDam += (ch->getSkillValue(SKILL_IRON_FIST)/1200.0);
   }
+
 
   if(ch->doesKnowSkill(SKILL_VOPLAT)){
     // extra 0-10%
-    statDam += (ch->getSkillLevel(SKILL_VOPLAT)/1000);
+    statDam += (ch->getSkillValue(SKILL_VOPLAT)/1000.0);
   }
 
   int dam = (int) (wepDam * statDam);
+
+  float tmp = ((wepDam * statDam) - dam) * 100;
+  if(tmp > ::number(0, 99)){
+    dam++;
+  }
 
   // add bonuses
   dam += rollDam;
