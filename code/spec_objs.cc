@@ -5364,11 +5364,24 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   ch->sendTo("-  than any other.                                         -\n\r");
   ch->sendTo("------------------------------------------------------------\n\r");
 
+  int activemobcount=0;
+  for (unsigned int mobnum = 0; mobnum < mob_index.size(); mobnum++) {
+    for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
+      if(mob_index[mobnum].virt <= zone_table[zone].top){
+	if(zone_table[zone].enabled)
+	  activemobcount++;
+	break;
+      }
+    }
+  }
+
+
+
   int i=1;
   while(db.fetchRow()){
     ch->sendTo(COLOR_BASIC, "%i) %s has killed %i (%d%%) life forms.\n\r", 
 	       i, db.getColumn(0), atoi_safe(db.getColumn(1)), 
-	       (int)(((float)atoi_safe(db.getColumn(1))/(float)mob_index.size())*100));
+	       (int)(((float)atoi_safe(db.getColumn(1))/(float)activemobcount)*100));
     ++i;
   }
 

@@ -219,12 +219,23 @@ void TBeing::doTrophy(const char *arg)
 
 
 
+  int activemobcount=0;
+  for (unsigned int mobnum = 0; mobnum < mob_index.size(); mobnum++) {
+    for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
+      if(mob_index[mobnum].virt <= zone_table[zone].top){
+	if(zone_table[zone].enabled)
+	  activemobcount++;
+	break;
+      }
+    }
+  }
+
 
 
   sprintf(buf, "\n--\nTotal mobs: %i\n\r", mcount);
   sb += buf;
   if(mcount>0){
-    sprintf(buf, "You have killed %1.2f%% of all mobs.\n\r",((float)((float)mcount/(float)mob_index.size())*100.0));
+    sprintf(buf, "You have killed %1.2f%% of all mobs.\n\r",((float)((float)mcount/(float)activemobcount)*100.0));
     sb += buf;
   }
 
