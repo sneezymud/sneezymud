@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: enum.h,v $
+// Revision 1.2  1999/10/07 15:26:38  batopr
+// Added GOLD_DUMP
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -327,6 +330,7 @@ enum moneyTypeT {
      GOLD_HOSPITAL,
      GOLD_GAMBLE,
      GOLD_RENT,
+     GOLD_DUMP,
      GOLD_TITHE,
      GOLD_SHOP_SYMBOL,
      GOLD_SHOP_WEAPON,
