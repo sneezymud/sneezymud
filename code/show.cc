@@ -704,6 +704,8 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
           strcat(buffer, " is here, casting a spell.");
         else if (((discArray[(spelltask->spell)])->typ) == SPELL_CLERIC) 
           strcat(buffer, " is here, reciting a prayer.");
+        else if (((discArray[(spelltask->spell)])->typ) == SPELL_SHAMAN) 
+          strcat(buffer, " is here, invoking a ritual.");
       } else if (fight()) {
         strcat(buffer, " is here, fighting ");
         if (fight() == ch)
