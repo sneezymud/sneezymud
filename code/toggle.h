@@ -350,7 +350,23 @@ const int TOG_PERMA_DEATH_CHAR                 = 247;
 
 const int TOG_PSIONICIST                       = 248;
 
-const int MAX_TOG_INDEX       = 249;  // move and change
+const int TOG_DRAGON_ARMOR_RED_SCALES          = 249;
+const int TOG_DRAGON_ARMOR_GREEN_SCALES        = 250;
+const int TOG_DRAGON_ARMOR_WHITE_SCALES        = 251;
+const int TOG_DRAGON_ARMOR_TUNGSTEN_SUIT       = 252;    
+const int TOG_DRAGON_ARMOR_HUGE_OPAL           = 253;
+const int TOG_DRAGON_ARMOR_DRAGON_BONE_1       = 254;
+const int TOG_DRAGON_ARMOR_DRAGON_BONE_2       = 255;
+const int TOG_DRAGON_ARMOR_DRAGON_BONE_3       = 256;
+const int TOG_DRAGON_ARMOR_DRAGON_BONE_4       = 257;
+const int TOG_DRAGON_ARMOR_DRAGON_BONE_5       = 258;
+const int TOG_DRAGON_ARMOR_ILLITHID_SINEW      = 259;
+const int TOG_DRAGON_ARMOR_THREAD_ELEMENT      = 260;
+const int TOG_DRAGON_ARMOR_TALENS              = 261;
+const int TOG_DRAGON_ARMOR_WARHAMMER           = 262;
+const int TOG_DRAGON_ARMOR_GAVE_SCALES         = 263;
+
+const int MAX_TOG_INDEX       = 264;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 
