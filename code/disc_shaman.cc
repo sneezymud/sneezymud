@@ -1695,6 +1695,13 @@ int squish(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_lea
 
   int dam = caster->getSkillDam(victim, SPELL_SQUISH, level, adv_learn);
 
+  if (victim->isImmune(IMMUNE_BONE_COND, level)) { 
+    act("$N is immune to bone ailments!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$N ignores $n's weak grasp!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
+    return SPELL_FAIL;
+  }
+
   caster->reconcileHurt(victim,discArray[SPELL_SQUISH]->alignMod);
 
   if (bSuccess(caster, bKnown, SPELL_SQUISH)) {
