@@ -887,6 +887,10 @@ int TMonster::findMyHorse()
   dirTypeT dir;
   int rc;
 
+  // this is here to prevent the endless horse create/fall to death scenario
+  if(roomp && roomp->isFallSector())
+    return FALSE;
+
   switch (spec) {
     case SPEC_HORSE_PESTILENCE:
       horse_num = APOC_PESTHORSE;
