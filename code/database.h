@@ -111,7 +111,7 @@ class TDatabase
 class TDatabaseConnection
 {
   PGconn *sneezydb, *immodb, *sneezyglobaldb, *sneezybetadb, *sneezybuilderdb;
-  //  PGconn *sneezyproddb;
+  PGconn *sneezyproddb;
 
  public:
   PGconn *getSneezyDB(){
