@@ -169,6 +169,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
   string tStNewArg("");
   size_t tVar = 0;
 
+
   for (; isspace(*argument); argument++);
 
   tStNewArg = argument;
@@ -235,6 +236,10 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
     sendTo("You are stunned, you can't do much of anything!\n\r");
     return FALSE;
   }
+
+  updatePos();
+  // ADDED THIS TO MAKE SURE POSITIONS ARE UPDATED ON SHAMAN
+
   if (1) {
     if ((commandArray[cmd]->minPosition >= POSITION_CRAWLING) && fight()){
       sendTo("You can't concentrate enough while fighting!\n\r");
@@ -1263,6 +1268,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           break;
         case CMD_PRACTICE:
           doPractice(newarg);
+	  addToLifeforce(1);
           break;
         case CMD_BLOAD:
           doBload(newarg);
