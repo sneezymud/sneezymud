@@ -65,7 +65,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
 
   c->reconcileDamage(v, 0,SKILL_QUIV_PALM);
 
-  if (v->hitLimit() > c->hitLimit() * 1.5 || 
+  if (v->getHit() > c->hitLimit() * 1.5 || 
         (c->isNotPowerful(v, level, SKILL_QUIV_PALM, SILENT_YES))) {
     SV(SKILL_QUIV_PALM);
     act("$N seems unaffected by the vibrations.", 
