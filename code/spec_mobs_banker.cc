@@ -56,6 +56,15 @@ int bankDeposit(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, int
     teller->doTell(ch->getName(), "Stupid monster can't bank here!");
     return TRUE;
   }
+
+  db.query("select talens from shopownedbank where shop_nr=%i and player_id=%i", shop_nr, ch->getPlayerID());
+
+  if(!db.fetchRow()){
+    teller->doTell(ch->getName(), "You don't have an account here.");
+    teller->doTell(ch->getName(), "To open an account, type 'buy account'.");
+    teller->doTell(ch->getName(), "The new account fee is 100 talens.");
+    return TRUE;
+  }
   
   if (money <= 0) {
     teller->doTell(ch->getName(), "Go away, you bother me.");
