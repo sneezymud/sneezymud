@@ -532,6 +532,7 @@ int TBeing::doPour(const char *argument)
     from_obj->pourMeOut(this);
     return FALSE;
   }
+
   TThing *t_to_obj = searchLinkedListVis(this, arg2, getStuff());
   if (!t_to_obj)
     t_to_obj = searchLinkedListVis(this, arg2, roomp->getStuff());

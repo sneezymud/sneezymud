@@ -611,9 +611,10 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
        size  = 0,
        rc    = 1;
   char Buf[256];
-  TDrinkCon *dContainer;
+  TBaseCup *dContainer;
 
-  if (!(dContainer = dynamic_cast<TDrinkCon *>(sObj)))
+
+  if (!(dContainer = dynamic_cast<TBaseCup *>(sObj)))
     return false; // let doPour continue its run, we don't do this.
 
   if ((size = dContainer->getDrinkUnits()) <= 0) {
@@ -631,6 +632,23 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
   }
 
   drunk = DrinkInfo[(type = dContainer->getDrinkType())]->drunk;
+
+  if(getPosition() <= POSITION_STUNNED){
+    // unconscious person, let's pour it in their mouth instead
+    sprintf(Buf, "You carefully pour %s into $N's mouth!", 
+	    DrinkInfo[type]->name);
+    act(Buf, TRUE, ch, 0, this, TO_CHAR);
+    sprintf(Buf, "$n just poured %s into your mouth.", DrinkInfo[type]->name);
+    act(Buf, TRUE, ch, 0, this, TO_VICT);
+    sprintf(Buf, "$n just poured %s into $N's mouth.", DrinkInfo[type]->name);
+    act(Buf, TRUE, ch, 0, this, TO_NOTVICT);
+    
+    setQuaffUse(TRUE);
+    dContainer->sipMe(this);
+    setQuaffUse(FALSE);
+
+    return true;
+  }
 
   sprintf(Buf, "You pour %s all over $N!", DrinkInfo[type]->name);
   act(Buf, TRUE, ch, 0, this, TO_CHAR);
