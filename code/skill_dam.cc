@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: skill_dam.cc,v $
+// Revision 1.2  1999/10/09 05:31:44  batopr
+// Added OUTDOOR_ONLY trigger for meteorswarm
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -241,7 +244,10 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
   // component
   // components that load naturally, or via dissect, are harder to find
   // then the more generic ones.  Make the use of these spells worthwhile
-  const double HARD_TO_FIND_COMPONENT = 1.2;
+  const double HARD_TO_FIND_COMPONENT = 1.2;  // arbitrary
+
+  // multiplier for spells that must be used outdoors
+  const double OUTDOOR_ONLY = 1.1;
 
   switch (skill) {
     case SKILL_KICK:
@@ -294,12 +300,19 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_INFERNO:
     case SPELL_HANDS_OF_FLAME:
     case SPELL_SLING_SHOT:
-    case SPELL_METEOR_SWARM:
     case SPELL_GRANITE_FISTS:
       // for normal success, these spells provide a "save" that cuts dam in
       // half.  That is, 50% chance of dam in half.  The average would be 75%
       // hence we multiply by 4/3 to get the desired result  
       dam = genericDam(victim, skill, DISC_MAGE, level, adv_learn, 2.05 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+      break;
+    case SPELL_METEOR_SWARM:
+      // for normal success, these spells provide a "save" that cuts dam in
+      // half.  That is, 50% chance of dam in half.  The average would be 75%
+      // hence we multiply by 4/3 to get the desired result  
+
+      // meteor has an outdoor-only limitation:
+      dam = genericDam(victim, skill, DISC_MAGE, level, adv_learn, 2.25 * HAS_SAVING_THROW * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_HARM:
     case SPELL_PILLAR_SALT:
