@@ -423,7 +423,6 @@ extern bool isInkComponent(int);
 extern bool isBrewComponent(int);
 extern wizPowerT mapFileToWizPower(int);
 extern int mapWizPowerToFile(wizPowerT);
-extern long room_file_pos[WORLD_SIZE];
 extern void comify(char *);
 extern bool checkAttuneUsage(TBeing *, int *, int *, TVial **, TSymbol *);
 extern const sstring getWizPowerName(wizPowerT); 

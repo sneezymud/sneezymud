@@ -86,7 +86,6 @@
 int top_of_world = 0;         // ref to the top element of world 
 
 TRoom *room_db[WORLD_SIZE];
-long  room_file_pos[WORLD_SIZE];
 
 TObj *object_list = 0;    // the global linked list of obj's 
 TBeing *character_list = 0; // global l-list of chars          
@@ -118,7 +117,6 @@ unsigned int total_help_number = 0;
 int faction_number = 0;
 
 FILE *mob_f = NULL;        // file containing mob prototypes  
-FILE *obj_f = NULL;        // obj prototypes                  
 
 vector<TRoom *>roomspec_db(0);
 
@@ -234,15 +232,10 @@ void bootDb(void)
     perror("boot");
     exit(0);
   }
-  // mob_f and obj_f must be open prior to here.
+  // mob_f must be open prior to here.
   bootPulse("Generating index tables for mobile file.");
   generate_mob_index();
 
-  bootPulse("Opening object file.");
-  if (!(obj_f = fopen(OBJ_FILE, "r"))) {
-    perror("boot");
-    exit(0);
-  }
   bootPulse("Generating index tables for object file.");
   generate_obj_index();
 
@@ -453,7 +446,6 @@ void bootWorld(void)
     allocate_room(virtual_nr);
     rp = real_roomp(virtual_nr);
     rp->loadOne(room_f, true);
-
 
 #if 0
 // modified weather stuff, not used yet, BAT
@@ -850,6 +842,8 @@ void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom = NULL)
     } else
       vlogf(LOG_LOW, "Secret door saved as open. (%d, %d)", room, dir);
   }
+
+
 }
 
 
@@ -2748,8 +2742,6 @@ void generic_cleanup()
   // no TThings exist anymore at this point
 
   // close up open handlers
-  if (obj_f)
-    fclose(obj_f);
   if (mob_f)
     fclose(mob_f);
 

@@ -1673,7 +1673,7 @@ static void ChangeRoomDesc(TRoom *rp, TBeing *ch, const char *, editorEnterTypeT
   ch->sendTo("\n\r\n\rNew Room Description:\n\r");
   ch->sendTo("(Terminate with a ~ on a NEW LINE. Press <C/R> again to continue)\n\r");
   delete [] rp->getDescr();
-  rp->setDescr(-1, NULL);
+  rp->setDescr(NULL);
   ch->desc->str = &rp->descr;
   ch->desc->max_str = MAX_STRING_LENGTH;
   return;
@@ -2914,7 +2914,7 @@ static void RoomSave(TBeing *ch, int start, int end, bool useSecond)
     x = 0;
 
     if (!rp->getDescr()) {
-      rp->setDescr(-1, mud_str_dup("Empty\n"));
+      rp->setDescr(mud_str_dup("Empty\n"));
     }
     for (k = 0; k <= (int) strlen(rp->getDescr()); k++) {
       if (rp->getDescr()[k] != 13)
@@ -3099,7 +3099,7 @@ void CreateOneRoom(int loc_nr)
   }
   sprintf(buf, "%d", loc_nr);
   rp->name = mud_str_dup(buf);
-  rp->setDescr(-1, mud_str_dup("Empty\n"));
+  rp->setDescr(mud_str_dup("Empty\n"));
 
   rp->initLight();
 
@@ -3131,12 +3131,8 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
 
   name = fread_string(fl);
 
-  if (tinyfile == true)
-    room_file_pos[number] = ftell(fl);
-  else 
-    room_file_pos[number] = -1;
 
-  setDescr(room_file_pos[number], fread_string(fl));
+  setDescr(fread_string(fl));
 
   if (!zone_table.empty()) {
     fscanf(fl, " %*d ");
@@ -3204,6 +3200,7 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
 
         new_descr->next = ex_description;
         ex_description = new_descr;
+
         break;
       case 'S':  // end of current room
         roomCount++;

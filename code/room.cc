@@ -9,10 +9,6 @@
 
 #include "stdsneezy.h"
 
-// Don't change this.  If it's set to .wld and someone Modifies the world
-// file it throws Everything out of whack.
-const char * const FPOS_WORLD_FILE = "tinywld.use";
-
 bool TRoom::isCitySector() const
 {
   switch (getSectorType()) {
@@ -299,48 +295,13 @@ byte TRoom::getRiverSpeed() const
 
 void TRoom::setDescr(char *tDescription)
 {
-  vlogf(LOG_BUG, "Defunct call to old Room setDescr.");
-  setDescr(-1, tDescription);
+  descr = tDescription;
 }
 
-void TRoom::setDescr(long fPos, char *tDescription)
-{
-  descPos = fPos;
-
-  if (fPos == -1 || (gamePort == PROD_GAMEPORT) || (gamePort == ALPHA_GAMEPORT))
-    descr = tDescription;
-  else if (descr) {
-    delete [] descr;
-    descr = NULL;
-  }
-}
 
 const char * TRoom::getDescr()
 {
-  char *roomDescription;
-
-  if (descr || descPos == -1 || gamePort == PROD_GAMEPORT || gamePort == ALPHA_GAMEPORT)
-    return descr;
-
-  //  vlogf(LOG_LAPSOS, "Reading Room Description from World File.");
-
-  FILE *tFileRoomDB;
-
-  if (!(tFileRoomDB = fopen(FPOS_WORLD_FILE, "r"))) {
-    vlogf(LOG_FILE, "World file not found.");
-    return ("Really Big Error Occured.\n\r");
-  }
-
-  if (fseek(tFileRoomDB, descPos, SEEK_SET) == -1) {
-    vlogf(LOG_FILE, "Error seeking location in World file to get description.");
-    fclose(tFileRoomDB);
-    return ("Really Big Error Occured.\n\r");
-  }
-
-  roomDescription = fread_string(tFileRoomDB);
-  fclose(tFileRoomDB);
-
-  return roomDescription;
+  return descr;
 }
 
 bool TRoom::putInDb(int vnum)
