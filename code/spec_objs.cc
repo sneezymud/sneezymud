@@ -3076,6 +3076,33 @@ int teleportRing(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
   return TRUE;
 }
 
+
+int teleportingObject(TBeing *, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
+  int rc;
+  TPortal *tp;
+
+  if(cmd!=CMD_GENERIC_PULSE && !::number(0,10))
+    return FALSE;
+
+  // don't teleport if it's a portal that is open
+  if((tp=dynamic_cast<TPortal *>(o)) && !tp->isPortalFlag(EX_CLOSED))
+    return FALSE;
+
+  tp->roomp->sendTo("%s flares up brightly and disappears.",
+		    o->getName());
+  
+  rc = o->genericTeleport(SILENT_YES, FALSE);
+  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    delete o;
+    o = NULL;
+  }
+
+  return TRUE;
+}
+
+
+
+
 int trolley(TBeing *, cmdTypeT cmd, const char *, TObj *myself, TObj *){  
   int *job=NULL, where=0, i;
   int path[]={-1, 100, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185,
@@ -7431,9 +7458,9 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   *ch += *cookie;
   *ch += *fortune;
-  //  *ch += *o; // have to put it back to return delete properly
-  delete o; // this doesn't actually delete it for some reason
-  // memory leak
+
+  // there is a memory leak here, o is just left hanging
+  // returning DELETE_ITEM doesn't work as it should.
 
   ssprintf(buf, "$n tears open $p and pulls out %s.", fortune->shortDescr);
   act(buf,TRUE,ch,cookie,NULL, TO_ROOM,NULL);
@@ -7585,7 +7612,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "spawning object: open", mobSpawnOpen},
   {FALSE, "Energy Shield: generator", energyShieldGenerator}, //120
   {FALSE, "Energy Shield: shield", energyShield},
-  {FALSE, "BOGUS", bogusObjProc},
+  {FALSE, "teleporting object", teleportingObject},
   {FALSE, "mystery potion", mysteryPotion},
   {FALSE, "fortune cookie", fortuneCookie},
   {TRUE, "Fireball Weapon", fireballWeapon}, //125
