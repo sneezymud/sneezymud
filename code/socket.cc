@@ -970,7 +970,7 @@ int TMainSocket::gameLoop()
   sstring str;
   int count;
   struct timeval timespent;
-  //  bool doneStockHistory=false;
+  bool doneStockHistory=false;
   TTiming t;
 
   avail_descs = 150;		
@@ -1018,21 +1018,20 @@ int TMainSocket::gameLoop()
       count=updateWholist();
       updateUsagelogs(count);
 
-      //      updateStocks();
+      updateStocks();
     }
 
-#if 0
     if(time_info.seconds==0 &&
        time_info.hours==0 &&
-       time_info.minutes==0 &&
-       !doneStockHistory){
-      // once per mud day hopefully
-      updateStockHistory();
-      doneStockHistory=true;
+       time_info.minutes==0){
+      if(!doneStockHistory){
+	// once per mud day hopefully
+	updateStockHistory();
+	doneStockHistory=true;
+      }
     } else {
       doneStockHistory=false;
     }
-#endif
 
     if (pl.combat){
       perform_violence(pulse);
