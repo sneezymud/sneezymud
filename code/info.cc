@@ -2927,7 +2927,7 @@ void TBeing::doWhere(const char *argument)
   if (GetMaxLevel() > MAX_MORT) {
     timer.start();
     for (k = object_list; k; k = k->next) {
-      if(timer.getElapsed() > 1.0){
+      if(timer.getElapsed() > 3.0){
 	sb += "Time limit elapsed, ending search prematurely.\n\r";
 	break;
       }
