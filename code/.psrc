@@ -1,6 +1,6 @@
 #insure++.compiler c gcc
-insure++.compiler_cpp g++
-insure++.linker g++
+insure++.compiler_cpp /usr/bin/g++
+insure++.linker /usr/bin/ld
 #insure++.compiler /usr/bin/g++
 #insure++.linker /usr/bin/g++
 insure++.temp_directory /tmp
@@ -20,7 +20,7 @@ insure++.report_banner off
 insure++.error_format  "%f:line %l, %d %t <%c>"
 
 # The shared libs are corrupt, so link insure statically
-# insure++.dynamic_linking off
+ insure++.dynamic_linking off
 
 insure++.summarize leaks outstanding
 insure++.ignore_wild on
