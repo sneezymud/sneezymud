@@ -85,8 +85,9 @@ void TBeing::doScore()
 
   float defense_amt=((35.0/100.0) * (float) getSkillValue(SKILL_DEFENSE));
   float newmax = (hpgain * defense_amt) * (float) getConHpModifier();
+  newmax += 21; // level 1 base hp
 
-  if(GetMaxLevel()<=35){
+  if(GetMaxLevel()<=35 || getSkillValue(SKILL_DEFENSE)<100){
     sprintf(Buf, "You would have %s%d%s max hp with the new system.\n\r",
 	    red(), (int) newmax, norm());
     sendTo(Buf);
