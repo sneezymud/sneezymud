@@ -48,6 +48,12 @@ void HiLoGame::BetHi(TBeing *ch, int new_card)
 	       (int)((float)bet * (1.0 + win_perc)));
     act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);    
     observerReaction(ch, GAMBLER_HILO_BET);
+
+    if(win_perc > 10){
+      ch->sendTo("You've reach the win limit.\n\r");
+      stay(ch);
+    }
+
   } else {
     ch->sendTo("You lose!\n\r");
     act("$n loses!", TRUE, ch, 0, 0, TO_ROOM);
@@ -69,6 +75,12 @@ void HiLoGame::BetLo(TBeing *ch, int new_card)
 	       (int)((float)bet * (1.0 + win_perc)));
     act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);    
     observerReaction(ch, GAMBLER_HILO_BET);
+
+    if(win_perc > 10){
+      ch->sendTo("You've reach the win limit.\n\r");
+      stay(ch);
+    }
+
   } else {
     ch->sendTo("You lose!\n\r");
     act("$n loses!", TRUE, ch, 0, 0, TO_ROOM);
