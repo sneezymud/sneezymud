@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_trance_of_blades.cc,v $
+// Revision 5.1  2001/01/09 20:00:32  batopr
+// *** empty log message ***
+//
 // Revision 1.2  2000/12/27 08:27:35  dash
 // added code for 'defensive trance' warrior skill
 //
