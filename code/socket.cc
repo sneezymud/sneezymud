@@ -539,7 +539,13 @@ int TSocket::gameLoop()
 	      TBeing *tb;
 	      if(!::number(0,4) && (tb=dynamic_cast<TBeing *>(t))){
 		tb->sendTo(COLOR_BASIC, "<r>The large amount of smoke in the room causes you to choke and cough!<1>\n\r");
-		tb->reconcileDamage(tb, ::number(3,11), DAMAGE_SUFFOCATION);
+		rc=tb->reconcileDamage(tb, ::number(3,11), DAMAGE_SUFFOCATION);
+
+		if (IS_SET_DELETE(rc, DELETE_VICT)) {
+		  delete tb;
+		  continue;
+		}
+
 	      }
 	    }
 	  }
