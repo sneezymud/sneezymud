@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_thief.h,v $
+// Revision 5.4  2004/08/24 19:48:15  peel
+// move track to thief discipline
+//
 // Revision 5.3  2002/11/12 00:14:33  peel
 // added isBasic() and isFast() to CDiscipline
 // added isBasic() return true to each discipline that is a basic disc
@@ -49,6 +52,7 @@ public:
     CSkill skCudgel;
     CSkill skHide;
     CSkill skDisarmThief;
+    CSkill skTrack;
 
     CSkill skRepairThief;
 
@@ -71,6 +75,7 @@ public:
       skCudgel(),
       skHide(),
       skDisarmThief(),
+      skTrack(),
       skRepairThief() {
     }
     CDThief(const CDThief &a)
@@ -92,6 +97,7 @@ public:
       skCudgel(a.skCudgel),
       skHide(a.skHide),
       skDisarmThief(a.skDisarmThief),
+      skTrack(a.skTrack),
       skRepairThief(a.skRepairThief) {
     }
     CDThief & operator=(const CDThief &a) {
@@ -114,6 +120,7 @@ public:
       skCudgel = a.skCudgel;
       skHide = a.skHide;
       skDisarmThief = a.skDisarmThief;
+      skTrack = a.skTrack;
       skRepairThief = a.skRepairThief;
       return *this;
     }

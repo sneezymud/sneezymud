@@ -562,8 +562,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDRanger *) cd)->skTransformLimb;
     case SKILL_BEAST_SOOTHER:  //              338
       return &((CDRanger *) cd)->skBeastSoother;
-    case SKILL_TRACK:  //                      339
-      return &((CDRanger *) cd)->skTrack;
     case SKILL_BASH_RANGER:  //                341
       return &((CDRanger *) cd)->skBashRanger;
     case SKILL_RESCUE_RANGER:  //              343
@@ -875,6 +873,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDThief *) cd)->skDisarmThief;
     case SKILL_REPAIR_THIEF:
       return &((CDThief *) cd)->skRepairThief;
+    case SKILL_TRACK:  //                      339
+      return &((CDThief *) cd)->skTrack;
 
 
 // disc_fighting_thief

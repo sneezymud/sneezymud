@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_ranger.h,v $
+// Revision 5.6  2004/08/24 19:48:15  peel
+// move track to thief discipline
+//
 // Revision 5.5  2004/08/24 19:00:26  peel
 // moved concealment and track to thief and stealth discs, respectively
 //
@@ -55,7 +58,6 @@ public:
     CSkill skBeastSoother;
 
 //Level 10
-    CSkill skTrack;
 
 // Level 12
     CSkill skBashRanger;
@@ -95,7 +97,6 @@ public:
       skSeekWater(),
       skTransformLimb(),
       skBeastSoother(),
-      skTrack(),
       skBashRanger(),
       skRescueRanger(),
       skBefriendBeast(),
@@ -116,7 +117,6 @@ public:
       skSeekWater(a.skSeekWater),
       skTransformLimb(a.skTransformLimb),
       skBeastSoother(a.skBeastSoother),
-      skTrack(a.skTrack),
       skBashRanger(a.skBashRanger),
       skRescueRanger(a.skRescueRanger),
       skBefriendBeast(a.skBefriendBeast),
@@ -138,7 +138,6 @@ public:
       skSeekWater = a.skSeekWater;
       skTransformLimb = a.skTransformLimb;
       skBeastSoother = a.skBeastSoother;
-      skTrack = a.skTrack;
       skBashRanger = a.skBashRanger;
       skRescueRanger = a.skRescueRanger;
       skBefriendBeast = a.skBefriendBeast;
