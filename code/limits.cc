@@ -980,8 +980,9 @@ void TBeing::gainCondition(condTypeT condition, int value)
 
 	// modify for SKILL_ALCOHOLISM
 	value = (int)((double) value * (double)(((double)(105 - getSkillValue(SKILL_ALCOHOLISM)) / 100)));
-
         break;
+      case PEE:
+      case POOP:
       case MAX_COND_TYPE:
         break;
     }
@@ -1005,13 +1006,16 @@ void TBeing::gainCondition(condTypeT condition, int value)
       case THIRST:
         sendTo("You begin to feel your mouth getting dry.\n\r");
         break;
-      case MAX_COND_TYPE:
       case DRUNK:
 	if(inRoom() >= 31800 && inRoom() <= 31899){    
 	  sendTo("As you begin to sober up, your grasp on this strange world begins to loosen.\n\r");
 	}
 
         break;
+      case PEE:
+      case POOP:
+      case MAX_COND_TYPE:
+	break;
     }
   }
   if (amt)

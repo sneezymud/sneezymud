@@ -343,6 +343,7 @@ enum liqTypeT {
      LIQ_POISON_ACACIA,
      LIQ_LUBRICATION,
      LIQ_MAGICAL_ELIXIR,
+     LIQ_URINE,
      MAX_DRINK_TYPES     // move and change
 };
 extern liqTypeT & operator++(liqTypeT &, int);
@@ -658,7 +659,7 @@ class TObj : public TThing {
     int meltObject(TBeing *, int);
     int freezeObject(TBeing *, int);
     virtual bool isRentable() const;
-    virtual void peeMe(const TBeing *);
+    virtual void peeMe(const TBeing *, liqTypeT);
     virtual bool engraveMe(TBeing *, TMonster *, bool);
     virtual void closeMe(TBeing *);
     virtual void lockMe(TBeing *);

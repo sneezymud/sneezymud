@@ -2454,7 +2454,7 @@ void buildCommandArray(void)
   commandArray[CMD_USE] = new commandInfo("use", POSITION_SITTING, 0);
   commandArray[CMD_WHERE] = new commandInfo("where", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_LEVELS] = new commandInfo("levels", POSITION_DEAD, 0);
-  commandArray[CMD_PEE] = new commandInfo("pee", POSITION_STANDING, GOD_LEVEL1);
+  commandArray[CMD_PEE] = new commandInfo("pee", POSITION_STANDING, 0);
   commandArray[CMD_EMOTE3] = new commandInfo(",", POSITION_RESTING, 0);
   commandArray[CMD_BEG] = new commandInfo("beg", POSITION_RESTING, 0);
   commandArray[CMD_BLEED] = new commandInfo("bleed", POSITION_RESTING, 0);

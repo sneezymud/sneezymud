@@ -1150,7 +1150,8 @@ specialData::specialData() :
   was_in_room(ROOM_NOWHERE),
   zone(-1)
 {
-  conditions[0] = conditions[1] = conditions[2] = 0;
+  for(int i=0;i<MAX_COND_TYPE;++i)
+    conditions[i]=0;
 }
 
 specialData::specialData(const specialData &a) :
@@ -1165,9 +1166,8 @@ specialData::specialData(const specialData &a) :
   was_in_room(a.was_in_room),
   zone(a.zone)
 {
-  conditions[0] = a.conditions[0];
-  conditions[1] = a.conditions[1];
-  conditions[2] = a.conditions[2];
+  for(int i=0;i<MAX_COND_TYPE;++i)
+    conditions[i]=a.conditions[i];
 }
 
 specialData & specialData::operator=(const specialData &a)
@@ -1181,9 +1181,8 @@ specialData & specialData::operator=(const specialData &a)
   edit = a.edit;
   editFriend = a.editFriend;
   last_direction = a.last_direction;
-  conditions[0] = a.conditions[0];
-  conditions[1] = a.conditions[1];
-  conditions[2] = a.conditions[2];
+  for(int i=0;i<MAX_COND_TYPE;++i)
+    conditions[i]=a.conditions[i];
   act = a.act;
   zone = a.zone;
   affectedBy = a.affectedBy;

@@ -542,21 +542,21 @@ void TBeing::doScratch(const char *argument)
   }
 }
 
-void TObj::peeMe(const TBeing *)
+void TObj::peeMe(const TBeing *, liqTypeT)
 {
 }
 
-void TPool::peeMe(const TBeing *ch)
+void TPool::peeMe(const TBeing *ch, liqTypeT liq)
 {
   act("$n smiles happily as $e pisses into $p.", TRUE, ch, this, NULL, TO_ROOM);
   act("You smile happily as you piss into $p.",  TRUE, ch, this, NULL, TO_CHAR); 
 
-  if (getDrinkType() == LIQ_WATER) {
+  if (ch->isImmortal() && getDrinkType() == LIQ_WATER) {
     act("$e turns water to wine!", TRUE, ch, this, NULL, TO_ROOM);
     act("You turn water to wine!", TRUE, ch, this, NULL, TO_CHAR);
     setDrinkType(LIQ_RED_WINE);
   } else 
-    fillMe(ch, LIQ_LEMONADE);
+    fillMe(ch, liq);
 }
 
 void TPlant::peeOnMe(const TBeing *ch)
@@ -564,15 +564,23 @@ void TPlant::peeOnMe(const TBeing *ch)
   act("$n smiles happily as $e pisses all over $p.", TRUE, ch, this, NULL, TO_ROOM);
   act("You smile happily as you piss all over $p.",  TRUE, ch, this, NULL, TO_CHAR); 
   
-  updateAge();
+  if(ch->isImmortal())
+    updateAge();
 }
 
 void TBeing::doPoop(void)
 {
   TObj *obj=NULL;
 
+#if 0
   if(isPc() && !isImmortal()){
     sendTo("Hey buddy, this isn't ScatMUD.  Mind your manners.\n\r");
+    return;
+  }
+#endif
+
+  if(getCond(POOP) <= 0){
+    sendTo("You don't have to go poop right now.\n\r");
     return;
   }
   
@@ -597,6 +605,8 @@ void TBeing::doPoop(void)
   act("You <o>defecate<z> on the $g.",
       TRUE, this, NULL, NULL, TO_CHAR);
 
+  setCond(POOP, 0);
+
   return;
 }
 
@@ -607,9 +617,7 @@ void TBeing::doPee(const sstring &argument)
   TBeing *tmp_char;
   sstring arg;
   liqTypeT liquid=MAX_DRINK_TYPES;
-
-  if (powerCheck(POWER_PEE))
-    return;
+  int amt=::number(1,10);
 
   if (in_room < 0)
     return;
@@ -617,9 +625,25 @@ void TBeing::doPee(const sstring &argument)
   //  argument=one_argument(argument, arg);
   arg=argument;
 
-  for(liquid=MIN_DRINK_TYPES;liquid<MAX_DRINK_TYPES;liquid++){
-    if(is_abbrev(arg, stripColorCodes(DrinkInfo[liquid]->name)))
-      break;
+  if (!hasWizPower(POWER_PEE)){
+    amt=getCond(PEE);
+    if(amt <= 0){
+      sendTo("You don't have to go pee right now.\n\r");
+      return;
+    }
+
+    liquid=LIQ_URINE;
+
+    if(getSex() == SEX_FEMALE && (equipment[WEAR_WAISTE] ||
+       equipment[WEAR_LEGS_R] || equipment[WEAR_LEGS_L])){
+      sendTo("You can't go pee with pants or a belt on!\n\r");
+      return;
+    }
+  } else {
+    for(liquid=MIN_DRINK_TYPES;liquid<MAX_DRINK_TYPES;liquid++){
+      if(is_abbrev(arg, stripColorCodes(DrinkInfo[liquid]->name)))
+	break;
+    }
   }
 
   if (!arg.empty() && liquid == MAX_DRINK_TYPES) {
@@ -627,15 +651,17 @@ void TBeing::doPee(const sstring &argument)
       arg.erase(0,3); // remove "in "
 
       if (!arg.empty() && generic_find(arg.c_str(), FIND_OBJ_INV | FIND_OBJ_ROOM, this, &tmp_char, &o)) 
-       	o->peeMe(this);	
+       	o->peeMe(this, liquid);	
     } else if((t = searchLinkedListVis(this, arg,roomp->getStuff()))){
       t->peeOnMe(this);
     }
   } else {
     act("$n quietly relieves $mself.  You are not amused.", TRUE, this, NULL, NULL, TO_ROOM);
     sendTo("You relieve yourself as stealthfully as possible.\n\r");
-    dropPool(::number(1,10), (liquid < 0 || liquid>=MAX_DRINK_TYPES) ? LIQ_LEMONADE : liquid);
+    dropPool(amt, (liquid < 0 || liquid>=MAX_DRINK_TYPES) ? LIQ_LEMONADE : liquid);
   }
+
+  setCond(PEE, 0);
 }
 
 void TBeing::doPoke(const sstring &arg)

@@ -761,6 +761,29 @@ void TBeing::doAttribute(const char *arg)
     else if (getCond(DRUNK) > 0)
       sendTo("You are feeling tipsy.\n\r");
 
+    if (getCond(PEE) >= 20)
+      sendTo("You are in danger of wetting yourself.\n\r");
+    else if (getCond(PEE) >= 15)
+      sendTo("You REALLY need to go pee.\n\r");
+    else if (getCond(PEE) >= 10)
+      sendTo("You need to go pee.\n\r");
+    else if (getCond(PEE) >= 4)
+      sendTo("You feel like you need to go pee.\n\r");
+    else if (getCond(PEE) > 0)
+      sendTo("You're going to have to go pee soon.\n\r");
+
+    if (getCond(POOP) >= 20)
+      sendTo("You are in danger of messing yourself.\n\r");
+    else if (getCond(POOP) >= 15)
+      sendTo("You've got a turtle head poking out.\n\r");
+    else if (getCond(POOP) >= 10)
+      sendTo("You need to go poop.\n\r");
+    else if (getCond(POOP) >= 4)
+      sendTo("You feel like you need to go poop.\n\r");
+    else if (getCond(POOP) > 0)
+      sendTo("You're going to have to go poop soon.\n\r");
+
+
     if (fight())
       act("You are fighting $N.", FALSE, this, NULL, fight(), TO_CHAR);
     else if (task) {

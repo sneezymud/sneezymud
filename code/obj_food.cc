@@ -730,11 +730,15 @@ void TBeing::foodNDrink(sectorTypeT sector, int modifier)
   food = max(0,food);
   thirst = max(0,thirst);
   drunk = max(0,drunk);
-  if ((::number(0,9) < 6) && !::number(0,food)) 
+  if ((::number(0,9) < 6) && !::number(0,food)){
     gainCondition(FULL, -1);
+    gainCondition(POOP, 1);
+  }
   
-  if ((::number(0,9) < 5) && !::number(0,thirst)) 
+  if ((::number(0,9) < 5) && !::number(0,thirst)){
     gainCondition(THIRST, -1);
+    gainCondition(PEE, 1);
+  }
   
   if ((::number(0,9) < 6) && !::number(0,drunk)) 
     gainCondition(DRUNK, -1);

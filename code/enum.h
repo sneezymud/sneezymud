@@ -314,6 +314,8 @@ enum condTypeT {
        DRUNK,    //        = 0;
        FULL,    //         = 1;
        THIRST,    //       = 2;
+       PEE,
+       POOP,
        MAX_COND_TYPE
 };
 const condTypeT MIN_COND = DRUNK;

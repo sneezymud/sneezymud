@@ -265,12 +265,12 @@ sstring TBaseCup::statObjInfo() const
   return a;
 }
 
-void TBaseCup::peeMe(const TBeing *ch)
+void TBaseCup::peeMe(const TBeing *ch, liqTypeT liq)
 {
   act("$n smiles happily as $e pisses into $p.", TRUE, ch, this, NULL, TO_ROOM);
   act("You smile happily as you piss into $p.", TRUE, ch, this, NULL, TO_CHAR);
 
-  fillMe(ch, LIQ_LEMONADE);
+  fillMe(ch, liq);
 }
 
 bool TBaseCup::poisonObject()

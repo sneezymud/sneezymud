@@ -760,6 +760,12 @@ void TBeing::statBeing(TBeing *k)
   sprintf(buf + strlen(buf), "%sThirst:%s [%3d]  %sHunger :%s %-10s  %sDrunk   :%s %-10s\n\r",
       cyan(), norm(), k->specials.conditions[THIRST],
       cyan(), norm(), buf2, cyan(), norm(), buf3);
+
+  sprintf(buf3, "[%d]", k->specials.conditions[POOP]);
+  sprintf(buf + strlen(buf), "%sPee   :%s [%3d]  %sPoop   :%s %-10s\n\r",
+	  cyan(), norm(), k->specials.conditions[PEE], 
+	  cyan(), norm(), buf3);
+
   sprintf(buf2, "[%d]", k->getArmor());
   sprintf(buf3, "[%d]", noise(k));
   sprintf(buf + strlen(buf), "%sLight :%s [%3d]  %sNoise  :%s %-10s  %sArmor   :%s %-10s\n\r",
