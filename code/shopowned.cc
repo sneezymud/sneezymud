@@ -189,6 +189,9 @@ void TShopOwned::doReserve()
   if(money < min){
     amt=even-money;
 
+    if(amt==0)
+      return;
+
     if(corp.getMoney() < amt)
       amt=corp.getMoney();
 
@@ -204,6 +207,10 @@ void TShopOwned::doReserve()
     shoplog(shop_nr, keeper, keeper, "talens", amt, "reserve");
   } else if(money > max){
     amt=money-even;
+
+    if(amt==0)
+      return;
+
 
     corp.setMoney(corp.getMoney() + amt);
     corp.corpLog(keeper->getName(), "reserve", amt);
