@@ -187,23 +187,23 @@ void loadRepairItems(TMonster *tmons)
 
 
   TObj *obj=NULL;
-  if (tool && !::number(0,19) && (obj = read_object(tool,VIRTUAL))){
+  if (tool && !::number(0,99) && (obj = read_object(tool,VIRTUAL))){
     *tmons += *obj;
     tmons->logItem(obj, CMD_LOAD);
   }
-  if (tool2 && !::number(0,19) && (obj = read_object(tool2,VIRTUAL))){
+  if (tool2 && !::number(0,99) && (obj = read_object(tool2,VIRTUAL))){
     *tmons += *obj;
     tmons->logItem(obj, CMD_LOAD);
   }
-  if (tool3 && !::number(0,19) && (obj = read_object(tool3,VIRTUAL))){
+  if (tool3 && !::number(0,99) && (obj = read_object(tool3,VIRTUAL))){
     *tmons += *obj;
     tmons->logItem(obj, CMD_LOAD);
   }
-  if (tool4 && !::number(0,19) && (obj = read_object(tool4,VIRTUAL))){
+  if (tool4 && !::number(0,99) && (obj = read_object(tool4,VIRTUAL))){
     *tmons += *obj;
     tmons->logItem(obj, CMD_LOAD);
   }
-  if (tool5 && !::number(0,19) && (obj = read_object(tool5,VIRTUAL))){
+  if (tool5 && !::number(0,99) && (obj = read_object(tool5,VIRTUAL))){
     *tmons += *obj;
     tmons->logItem(obj, CMD_LOAD);
   }
