@@ -36,7 +36,7 @@ const char *shelldesc [] =
   ".44cal Magnum",
   ".32cal ACP",
   ".50cal BMG",
-  "5.56mm NATO pistol" 
+  "5.56mm NATO pistol",
   "SS190",
   "9mm Parabellem rifle",
   ".45cal ACP rifle",  
