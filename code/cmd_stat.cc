@@ -1211,7 +1211,6 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_GARROTTE:
       case SKILL_STABBING:
       case SKILL_BACKSTAB:
-      case SKILL_BACKSTAB_MT:
       case SKILL_HEADBUTT:
       case SKILL_STOMP:
       case SPELL_BLAST_OF_FURY:
@@ -1350,6 +1349,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_BEFRIEND_BEAST:
       case SKILL_TRANSFIX:
       case SKILL_SKIN:
+      case SKILL_BUTCHER:
       case SKILL_DUAL_WIELD:
       case SPELL_LIVING_VINES:
       case SKILL_BEAST_SUMMON:

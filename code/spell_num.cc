@@ -914,7 +914,7 @@ int mapSpellnumToFile(spellNumT stt)
       return 683;
     case SKILL_TELEKINESIS:
       return 684;
-    case SKILL_BACKSTAB_MT:
+    case SKILL_BUTCHER:
       return 685;
 
 
@@ -1879,7 +1879,7 @@ spellNumT mapFileToSpellnum(int stt)
     case 684:
       return SKILL_TELEKINESIS;
     case 685:
-      return SKILL_BACKSTAB_MT;
+      return SKILL_BUTCHER;
 
     case 2500:
       return AFFECT_DISEASE;

@@ -268,6 +268,7 @@ enum spellNumT {
      SKILL_BEFRIEND_BEAST,
      SKILL_TRANSFIX,
      SKILL_SKIN,
+     SKILL_BUTCHER,
      SKILL_DUAL_WIELD,
      SPELL_LIVING_VINES,
      SKILL_BEAST_SUMMON,
@@ -466,12 +467,6 @@ enum spellNumT {
      SKILL_TELEKINESIS,
 
      // end of psionics
-
-  // mage thief
-
-     SKILL_BACKSTAB_MT,
-
-  // end mage thief
 
      // start of generic
 

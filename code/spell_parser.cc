@@ -2274,6 +2274,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SKILL_BEFRIEND_BEAST:
     case SKILL_TRANSFIX:
     case SKILL_SKIN:
+    case SKILL_BUTCHER:
     case SKILL_DUAL_WIELD:
     case SKILL_BEAST_SUMMON:
     case SKILL_BARKSKIN:
@@ -2336,7 +2337,6 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SKILL_KICK_THIEF:
     case SKILL_PICK_LOCK:
     case SKILL_BACKSTAB:
-    case SKILL_BACKSTAB_MT:
     case SKILL_SEARCH:
     case SKILL_SPY:
     case SKILL_SWITCH_THIEF:

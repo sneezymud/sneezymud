@@ -1622,6 +1622,8 @@ bool okForJanitor(TMonster *myself, TObj *obj)
   // nor sacrificing
   if (corpse && corpse->isCorpseFlag(CORPSE_SACRIFICE))
     return false;
+  if (corpse && corpse->isCorpseFlag(CORPSE_PC_BUTCHERING))
+    return false;
 
   // Dont let them loot pcorpses with stuff in it
   TPCorpse *tmpcorpse = dynamic_cast<TPCorpse *>(obj);

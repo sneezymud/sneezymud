@@ -1531,7 +1531,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
           rc = doApplyHerbs(newarg);
           break;
         case CMD_BUTCHER:
-          doButcher();
+          doButcher(newarg);
           break;
         case CMD_SKIN:
           doSkin(newarg);

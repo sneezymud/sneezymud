@@ -3,6 +3,13 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_ranger.h,v $
+// Revision 5.2  2001/12/15 04:26:52  jesus
+// added in butcher skill under adventuring disc
+// will add more descs for races as time goes on 30 of about 125 races supported
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -23,6 +30,7 @@ class CDRanger : public CDiscipline
 public:
 // Level 1
     CSkill skHiking;
+    CSkill skButcher;
 
 // Level 3
     CSkill skKickRanger;
@@ -68,6 +76,7 @@ public:
     CDRanger()
       : CDiscipline(),
       skHiking(),
+      skButcher(),
       skKickRanger(),
       skForage(),
       skSeekWater(),
@@ -87,6 +96,7 @@ public:
     CDRanger(const CDRanger &a)
       : CDiscipline(a),
       skHiking(a.skHiking),
+      skButcher(a.skButcher),
       skKickRanger(a.skKickRanger),
       skForage(a.skForage),
       skSeekWater(a.skSeekWater),
@@ -107,6 +117,7 @@ public:
       if (this == &a) return *this;
       CDiscipline::operator=(a);
       skHiking = a.skHiking;
+      skButcher = a.skButcher;
       skKickRanger = a.skKickRanger;
       skForage = a.skForage;
       skSeekWater = a.skSeekWater;

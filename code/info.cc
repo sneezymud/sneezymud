@@ -949,7 +949,6 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_GARROTTE:
       case SKILL_STABBING:
       case SKILL_BACKSTAB:
-      case SKILL_BACKSTAB_MT:
       case SKILL_HEADBUTT:
       case SKILL_STOMP:
       case SPELL_BLAST_OF_FURY:
@@ -1103,6 +1102,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_BEFRIEND_BEAST:
       case SKILL_TRANSFIX:
       case SKILL_SKIN:
+      case SKILL_BUTCHER:
       case SKILL_DUAL_WIELD:
       case SPELL_LIVING_VINES:
       case SKILL_BEAST_SUMMON:
@@ -3767,6 +3767,12 @@ void TCorpse::describeObjectSpecifics(const TBeing *ch) const
         FALSE, ch, this, 0, TO_CHAR);
   if (isCorpseFlag(CORPSE_NO_DISSECT))
     act("$p appears to have been dissected already.",
+        FALSE, ch, this, 0, TO_CHAR);
+  if (isCorpseFlag(CORPSE_NO_BUTCHER))
+    act("$p doesn't appear to have any meat left on it.",
+        FALSE, ch, this, 0, TO_CHAR);
+  else if (isCorpseFlag(CORPSE_HALF_BUTCHERED))
+    act("$p appears to have been half butchered.",
         FALSE, ch, this, 0, TO_CHAR);
 }
 

@@ -145,6 +145,7 @@ enum toolTypeT {
      TOOL_FLINTSTEEL,
      TOOL_TOTEM,
      TOOL_FISHINGBAIT,
+     TOOL_BUTCHER_KNIFE,
      MAX_TOOL_TYPE // move and change
 };
 const toolTypeT MIN_TOOL_TYPE = TOOL_WHETSTONE;
@@ -228,14 +229,17 @@ const unsigned int FOOD_POISON   = (1<<0);
 const unsigned int FOOD_SPOILED  = (1<<1);
 
 /* special addition for corpses */
-const unsigned int CORPSE_NO_REGEN      = (1<<0);
-const unsigned int CORPSE_NO_DISSECT    = (1<<1);
-const unsigned int CORPSE_NO_SKIN       = (1<<2);
-const unsigned int CORPSE_HALF_SKIN     = (1<<3);
-const unsigned int CORPSE_PC_SKINNING   = (1<<4);
-const unsigned int CORPSE_SACRIFICE     = (1<<5);
+const unsigned int CORPSE_NO_REGEN       = (1<<0);
+const unsigned int CORPSE_NO_DISSECT     = (1<<1);
+const unsigned int CORPSE_NO_SKIN        = (1<<2);
+const unsigned int CORPSE_HALF_SKIN      = (1<<3);
+const unsigned int CORPSE_PC_SKINNING    = (1<<4);
+const unsigned int CORPSE_SACRIFICE      = (1<<5);
+const unsigned int CORPSE_NO_BUTCHER     = (1<<6);
+const unsigned int CORPSE_HALF_BUTCHERED = (1<<7);
+const unsigned int CORPSE_PC_BUTCHERING  = (1<<8);
 
-const int MAX_CORPSE_FLAGS     = 6;  // move and change
+const int MAX_CORPSE_FLAGS     = 9;  // move and change
 
 /* for containers  - value[1] */
 

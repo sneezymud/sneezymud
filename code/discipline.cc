@@ -6,7 +6,6 @@
 #include "components.h"
 #include "combat.h"
 #include "disc_mage.h"
-#include "disc_mage_thief.h"
 #include "disc_cleric.h"
 #include "disc_physical.h"
 #include "disc_smythe.h"
@@ -1266,16 +1265,6 @@ spellNumT TBeing::getSkillNum(spellNumT spell_num) const
         }
         if ((num2 = getSkillValue(SKILL_BACKSTAB)) > num) {
           spell_num = SKILL_BACKSTAB;
-          num = num2;
-          has_class = TRUE;
-        }
-      }
-      if (hasClass(CLASS_MAGE_THIEF)) {
-        if (!has_class) {
-          spell_num = SKILL_BACKSTAB_MT;
-        }
-        if ((num2 = getSkillValue(SKILL_BACKSTAB_MT)) > num) {
-          spell_num = SKILL_BACKSTAB_MT;
           num = num2;
           has_class = TRUE;
         }
@@ -2607,7 +2596,6 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_DEFENSE] = new CDDefense();
  
     discs->disc[DISC_PSIONICS] = new CDPsionics();
-    discs->disc[DISC_MAGE_THIEF] = new CDMageThief();
 
     // only players get psionics
     if(hasQuestBit(TOG_PSIONICIST) || isImmortal())
@@ -2822,20 +2810,6 @@ void TBeing::assignDisciplinesClass()
     getDiscipline(DISC_BLUNT)->ok_for_class |= CLASS_SHAMAN;
     getDiscipline(DISC_PIERCE)->ok_for_class |= CLASS_SHAMAN;
   }
-  if (hasClass(CLASS_MAGE_THIEF)) {
-    if (!isPc()) {
-      discs->disc[DISC_MAGE_THIEF] = new CDMageThief();
-      discs->disc[DISC_WIZARDRY] = new CDWizardry();
-      discs->disc[DISC_LORE] = new CDLore();
-      discs->disc[DISC_PIERCE] = new CDPierce();
-
-    }
-    getDiscipline(DISC_MAGE_THIEF)->ok_for_class |= CLASS_MAGE_THIEF;
-    getDiscipline(DISC_WIZARDRY)->ok_for_class |= CLASS_MAGE_THIEF;
-    getDiscipline(DISC_LORE)->ok_for_class |= CLASS_MAGE_THIEF;
-    getDiscipline(DISC_PIERCE)->ok_for_class |= CLASS_MAGE_THIEF;
-  }
-
   // fix the mobs learnednesses
   if (isPc())
     return;

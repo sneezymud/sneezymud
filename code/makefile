@@ -181,7 +181,7 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	disc_cleric.o disc_combat.o disc_cure.o disc_deikhan.o \
 	disc_earth.o disc_fattacks.o disc_fire.o \
 	disc_hand_of_god.o disc_hth.o disc_leverage.o disc_looting.o \
-	disc_mage.o disc_mage_thief.o disc_meditation.o disc_mindbody.o disc_monk.o \
+	disc_mage.o disc_meditation.o disc_mindbody.o disc_monk.o \
 	disc_mounted.o disc_murder.o disc_physical.o disc_nature.o \
 	disc_pierce.o disc_ranged.o disc_ranger.o disc_shaman.o \
 	disc_shaman_alchemy.o disc_shaman_armadillo.o \
@@ -235,7 +235,7 @@ OBJ2 = game_gin.o handler.o game_hearts.o hospital.o immortal.o immunity.o \
 	statistics.o stats.o structs.o systemtask.o \
 	talk.o task.o task_attune.o task_lightfire.o task_fishing.o task_sacrifice.o task_scribe.o \
 	task_extinguish_my_ass.o \
-	task_skin.o task_trap.o task_brew.o task_meditate.o task_search.o \
+	task_skin.o task_butcher.o task_trap.o task_brew.o task_meditate.o task_search.o \
 	task_sleep.o task_charge.o task_penance.o task_seekwater.o \
 	task_smythe.o task_dull.o task_picklock.o task_sharpen.o \
 	task_spell_friends.o task_get.o task_rest.o task_sit.o task_track.o \
@@ -298,7 +298,7 @@ DISC_HEADS   = disc_adventuring.h disc_aegis.h disc_afflictions.h \
                disc_deikhan_wrath.h disc_earth.h  \
                disc_fire.h disc_hand_of_god.h disc_hth.h  \
                disc_leverage.h disc_fattacks.h disc_looting.h disc_lore.h  \
-               disc_mage.h disc_mage_thief.h disc_monk.h disc_murder.h  \
+               disc_mage.h disc_monk.h disc_murder.h  \
                disc_pierce.h disc_plants.h disc_physical.h \
                disc_poisons.h disc_ranged.h disc_ranger.h disc_nature.h \
                disc_ranger_fight.h disc_shaman.h disc_shaman_armadillo.h \
@@ -392,7 +392,6 @@ $(OBJDIR)disc_leverage.o: disc_leverage.h combat.h range.h
 $(OBJDIR)disc_fattacks.o: disc_fattacks.h combat.h
 $(OBJDIR)disc_looting.o: disc_looting.h combat.h
 $(OBJDIR)disc_mage.o: disc_mage.h
-$(OBJDIR)disc_mage_thief.o: disc_mage_thief.h
 $(OBJDIR)disc_monk.o: disc_monk.h combat.h
 $(OBJDIR)disc_mounted.o: disc_mounted.h
 $(OBJDIR)disc_murder.o: disc_murder.h combat.h spelltask.h

@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task.h,v $
+// Revision 5.4  2001/12/15 04:26:52  jesus
+// added in butcher skill under adventuring disc
+// will add more descs for races as time goes on 30 of about 125 races supported
+//
 // Revision 5.3  2001/07/05 21:25:54  peel
 // Trying to fix cvs
 // what a headache
@@ -82,6 +86,7 @@ extern int task_trance_of_blades(TBeing *, cmdTypeT, const char *, int, TRoom *,
 extern int task_sacrifice      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_fishing     (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_extinguish_my_ass (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
+extern int task_butchering      (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 
 typedef struct _tasks_entry {
   const char * const name;
@@ -123,6 +128,7 @@ enum taskTypeT {
      TASK_SACRIFICE,
      TASK_FISHING,
      TASK_EXTINGUISH_MY_ASS,
+     TASK_BUTCHER,
      NUM_TASKS  // keep this as max
 };
 
