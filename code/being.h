@@ -147,8 +147,9 @@ const unsigned int AUTO_HALFSPELL      = (1<<17);
 const unsigned int AUTO_LIMBS          = (1<<18);
 const unsigned int AUTO_TIPS           = (1<<19);
 const unsigned int AUTO_TROPHY         = (1<<20);
+const unsigned int AUTO_PG13           = (1<<21);
 
-const int MAX_AUTO        = 21;    // move and change
+const int MAX_AUTO        = 22;    // move and change
 
 const unsigned long PLR_BRIEF      = (1<<0);
 const unsigned long PLR_COMPACT    = (1<<1);
@@ -1984,6 +1985,7 @@ class TBeing : public TThing {
     sstring autoFormatDesc(const sstring &, bool) const;
     sstring dynColorRoom(TRoom *, int, bool) const;
     sstring garble(const sstring &, int) const;
+    sstring PG13filter(const sstring &)const;
     sstring blahblah(const sstring &) const;
     void doLook(const char *, cmdTypeT, TThing *specific = NULL);
     void doShout(const char *);

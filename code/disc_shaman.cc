@@ -1207,9 +1207,9 @@ TO_ROOM);
 int rombler(TBeing *caster, int, byte bKnown)
 {
   Descriptor *i;
-  const char *msg = caster->spelltask->orig_arg;
-
-  for (; isspace(*msg); msg++);
+  sstring msg = caster->spelltask->orig_arg;
+  sstring pgbuff;
+  //  for (; isspace(*msg); msg++);
 
   if (caster->isPc() && 
      ((caster->desc && 
@@ -1220,7 +1220,7 @@ int rombler(TBeing *caster, int, byte bKnown)
 
 
   if (bSuccess(caster, bKnown, SPELL_ROMBLER)) {
-    if (!*msg) {
+    if (msg.size() > 0) {
       caster->sendTo("Drumming without spirits to send is moot.\n\r");
       caster->nothingHappens(SILENT_YES);
     } else {
@@ -1232,7 +1232,12 @@ int rombler(TBeing *caster, int, byte bKnown)
               (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
               !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
 	  if (i->character->doesKnowSkill(SPELL_ROMBLER) || i->character->isImmortal()) {
-            i->character->sendTo(COLOR_SPELLS, fmt("<Y>%s<z> rombles, \"<o>%s%s\"\n\r") % caster->getName() %  msg % i->character->norm());
+            if(IS_SET(i->autobits, AUTO_PG13)){
+	      pgbuff = i->character->PG13filter(msg);
+	      i->character->sendTo(COLOR_SPELLS, fmt("<Y>%s<z> rombles, \"<o>%s%s\"\n\r") % caster->getName() % pgbuff % i->character->norm());
+	    }
+	    else
+	      i->character->sendTo(COLOR_SPELLS, fmt("<Y>%s<z> rombles, \"<o>%s%s\"\n\r") % caster->getName() %  msg % i->character->norm());
           } else {
 	    int num = ::number(0,3);
 	    if (num == 0) {

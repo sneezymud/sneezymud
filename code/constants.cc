@@ -941,6 +941,7 @@ const char * const player_bits[] =
   "",
   "Killable",
   "Anonymous",
+  "PG-13",
   "\n"
 };
 
@@ -977,6 +978,7 @@ const char * const attr_player_bits[] =
   "Tell-an-immort-you-saw-this (unused5)",
   "Killable",
   "Anonymous",
+  "PG-13",
   "\n"
 };
 
@@ -1584,7 +1586,6 @@ const char * const illegalnames[] =
   "*pimp",
   "*nigger",
   "*penis",
-  "*talen",
   "*crap",
   "ass",
   "jackmeoff",
@@ -1603,6 +1604,7 @@ const char * const illegalnames[] =
 
   // BASIC OBJECTS
   "*shield",
+  "*talen",
 
   // COLORS
   "gold",
@@ -1728,6 +1730,7 @@ const char * const auto_name[MAX_AUTO] =
   "Auto Limbs",
   "Tips",
   "Auto Trophy",
+  "PG13"
 };
 
 // disc_num, class_nums, practice

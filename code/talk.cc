@@ -121,6 +121,65 @@ sstring TBeing::blahblah(const sstring &arg) const
   return buf;
 }
 
+sstring TBeing::PG13filter(const sstring &arg) const
+{
+  sstring output, word, ilname;
+  unsigned int random;
+
+  for(int i=0; !arg.word(i).empty();++i) {
+    word = arg.word(i);
+    for(int j=0; j < 25; j++) {
+      ilname = illegalnames[j];
+      if(ilname[0] == '*')
+	ilname.erase(0, 1);
+      if((int)(word.find(ilname, 0)) >= 0) {
+	for(int k=0; k < (int)word.size(); k++)
+	  {
+	    random = ::number(9,0);
+	    random %= 10;
+	    switch(random){
+	      case 0:
+		word.replace(k,1,"!");
+		break;
+	      case 1:
+		word.replace(k,1,"@");
+		break;
+	      case 2:
+		word.replace(k,1,"#");
+		break;
+	      case 3:
+		word.replace(k,1,"$");
+		break;
+	      case 4:
+		word.replace(k,1,"%");
+		break;
+	      case 5:
+		word.replace(k,1,"^");
+		break;
+	      case 6:
+		word.replace(k,1,"&");
+		break;
+	      case 7:
+		word.replace(k,1,"*");
+		break;
+	      case 8: 
+		word.replace(k,1,"|");
+		break;
+	      case 9:
+		word.replace(k,1,"?");
+		break;
+	     }
+	  } 
+	break;
+      }
+    }
+    output += word;
+    output += ' ';
+  }
+  output.erase((output.length()-1), 1);
+  return (output);
+}
+
 // Make drunk people garble their words!
 sstring TBeing::garble(const sstring &arg, int chance) const
 {
@@ -242,11 +301,12 @@ int TBeing::doSay(const char *fmt, ...)
 // may return DELETE_THIS
 int TBeing::doSay(const sstring &arg)
 {
-  sstring buf, garbed, capbuf, tmpbuf, nameBuf, garbedBuf;
+  sstring buf, garbed, capbuf, tmpbuf, nameBuf, garbedBuf, pgbuf, pgstore;
   TThing *tmp, *tmp2;
   TBeing *mob = NULL;
   int rc;
   Descriptor *d;
+  int doneonce = 0;
 
   if (desc)
     desc->talkCount = time(0);
@@ -295,6 +355,14 @@ int TBeing::doSay(const sstring &arg)
     tmpbuf = fmt("%s") % colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE); 
     
     if (mob->isPc()) {
+      if(IS_SET(tmp->desc->autobits, AUTO_PG13)) {
+	pgbuf =  garbed;
+	if(doneonce == 0){
+	  doneonce = 1;
+	  pgstore = PG13filter(pgbuf);
+	}
+	garbed = pgstore;
+      }
       if (hasColorStrings(NULL, capbuf, 2)) {
 	if (IS_SET(mob->desc->plr_color, PLR_COLOR_MOBS)) {
 	  tmpbuf = fmt("%s") % colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE);
@@ -356,6 +424,10 @@ int TBeing::doSay(const sstring &arg)
 	d->clientf(fmt("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
 		   colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE));
       }
+    
+    if(IS_SET(tmp->desc->autobits, AUTO_PG13)){
+	garbed = pgbuf;
+      }
     }
   }
   
@@ -391,6 +463,7 @@ void Descriptor::sendShout(TBeing *ch, const char *arg)
   char capbuf[256];
   char namebuf[100];
   bool blah=false;
+ 
 
   for (i = descriptor_list; i; i = i->next) {
     if (i->connected != CON_PLYNG)
@@ -426,6 +499,8 @@ void Descriptor::sendShout(TBeing *ch, const char *arg)
       sstring argbuf = colorString(b, i, arg, NULL, COLOR_NONE, FALSE);
       sprintf(namebuf, "<g>%s<z>", sstring(capbuf).cap().c_str());
       sstring nameStr = colorString(b, i, namebuf, NULL, COLOR_NONE, FALSE);
+      if(IS_SET(i->autobits, AUTO_PG13)) 
+	argbuf = b->PG13filter(argbuf);
       if(hasColorStrings(NULL, capbuf, 2)) {
         if (IS_SET(b->desc->plr_color, PLR_COLOR_MOBS)) {
           sstring tmpbuf = colorString(b, i, sstring(capbuf).cap().c_str(), NULL, COLOR_MOBS, FALSE);
@@ -438,20 +513,20 @@ void Descriptor::sendShout(TBeing *ch, const char *arg)
           if (i->m_bIsClient)
             i->clientf(fmt("%d|%s|%s%s") % CLIENT_SHOUT % nameStr % argbuf);
 
-          b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap() % (blah ? "whines" : "shouts") % arg);
+          b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap() % (blah ? "whines" : "shouts") % argbuf);
         }
       } else {
         if (i->m_bIsClient)
           i->clientf(fmt("%d|%s|%s") % CLIENT_SHOUT % nameStr % argbuf);
 
-        b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap() % (blah ? "whines" : "shouts") % arg);
+        b->sendTo(COLOR_SHOUTS, fmt("<g>%s<z> %s, \"%s<1>\"\n\r") % sstring(capbuf).cap() % (blah ? "whines" : "shouts") % argbuf);
       }
     }
   }
 }
 void TBeing::doShout(const char *arg)
 {
-  char garbed[256];
+  char garbed[254];
 
   if (desc)
     desc->talkCount = time(0);
@@ -535,9 +610,10 @@ void TBeing::doShout(const char *arg)
 
 void TBeing::doGrouptell(const sstring &arg)
 {
-  sstring buf, garbed;
+  sstring buf, garbed, pgbuff, pgstore;
   followData *f;
   TBeing *k;
+  int substitute = 0;
 
   if (desc)
     desc->talkCount = time(0);
@@ -568,6 +644,9 @@ void TBeing::doGrouptell(const sstring &arg)
   } else {
     garbed = garble(arg, getCond(DRUNK));
 
+    if(k->desc && IS_SET(k->desc->autobits, AUTO_PG13))
+      garbed = PG13filter(garbed);
+
     convertStringColor("<r>", garbed);
 
     sendTo(fmt("You tell your group: %s%s%s\n\r") % red() % colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) % norm());
@@ -584,12 +663,21 @@ void TBeing::doGrouptell(const sstring &arg)
   }
   for (f = k->followers; f; f = f->next) {
     if ((f->follower != this) && f->follower->isAffected(AFF_GROUP) && !f->follower->checkSoundproof()) {
+      if (f->follower->desc && IS_SET(f->follower->desc->autobits, AUTO_PG13)){
+	pgbuff = garbed;
+	garbed = PG13filter(garbed);
+	substitute = 1;
+      }
       if (f->follower->desc && f->follower->desc->m_bIsClient) {
         f->follower->desc->clientf(fmt("%d|%s|%s") % CLIENT_GROUPTELL % getName() % 
           colorString(this, f->follower->desc, garbed, NULL, COLOR_NONE, FALSE));
       }
       buf = fmt("$n: %s%s%s") % f->follower->red() % colorString(this, f->follower->desc, garbed, NULL, COLOR_COMM, FALSE) % f->follower->norm();
       act(buf, 0, this, 0, f->follower, TO_VICT);
+      if(substitute) {
+	substitute = 0;
+	garbed = pgbuff;
+      }
     }
   }
 }
@@ -921,7 +1009,6 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
 
   if(vict->isImmortal() && drunkNum>0)
     garbed=message;
-
   rc = vict->triggerSpecialOnPerson(this, CMD_OBJ_TOLD_TO_PLAYER, garbed.c_str());
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete vict;
@@ -962,6 +1049,8 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   // the stuff we send to the teller.
   convertStringColor("<c>", garbed);
 
+  if(vict->desc && IS_SET(vict->desc->autobits, AUTO_PG13))
+    garbed = PG13filter(garbed);
   if(vict->isImmortal() && drunkNum>0){
     vict->sendTo(COLOR_COMM, fmt("%s drunkenly tells you, \"<c>%s<z>\"\n\r") %
 		 nameBuf % garbed);
@@ -1040,6 +1129,8 @@ int TBeing::doWhisper(const sstring &arg)
 
   sstring garbed;
   garbed= garble(message, getCond(DRUNK));
+  if(vict->desc && IS_SET(vict->desc->autobits, AUTO_PG13))
+    garbed = PG13filter(garbed);
 
   buf = fmt("$n whispers to you, \"%s\"") % colorString(this, vict->desc, garbed, NULL, COLOR_COMM, TRUE);
 

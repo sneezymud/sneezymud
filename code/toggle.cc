@@ -695,6 +695,14 @@ void TBeing::doToggle(const char *arg2)
       sendTo("From now on, you won't hear shouts.\n\r");
       SET_BIT(desc->autobits, AUTO_NOSHOUT);
     }
+  } else if (is_abbrev(arg, "noPG13") || is_abbrev(arg, "PG13")) {
+    if (IS_SET(desc->autobits, AUTO_PG13)) {
+      sendTo("You can now hear vulgarity again.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_PG13);
+    } else {
+      sendTo("From now on you won't hear vulgarity.\n\r");
+      SET_BIT(desc->autobits, AUTO_PG13);
+    }
   } else if (is_abbrev(arg, "noharm") || is_abbrev(arg, "harm")) {
     if (IS_SET(desc->autobits, AUTO_NOHARM) && (GetMaxLevel() >= 5)) {
       sendTo("You may now attack other players.\n\r");

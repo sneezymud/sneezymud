@@ -1723,6 +1723,7 @@ int telepathy(TBeing *caster, int, byte bKnown)
 {
   Descriptor *i;
   const char *msg = caster->spelltask->orig_arg;
+  sstring pgbuf;
 
   for (; isspace(*msg); msg++);
 
@@ -1750,6 +1751,12 @@ int telepathy(TBeing *caster, int, byte bKnown)
 	  //	  if (!strcmp(caster->name, "Frobozz") || !strcmp(caster->name, "Belannaer"))
 	  //	    i->character->sendTo(COLOR_SPELLS, fmt("The message is, \")I abused telepath % and I'm a loser!%s\"\n\r" % i->character->norm());
 	  //	  else
+	  if(IS_SET(i->autobits, AUTO_PG13)){
+	    pgbuf = msg;
+	    pgbuf = i->character->PG13filter(pgbuf);
+	    i->character->sendTo(COLOR_SPELLS, fmt("The message is, \"%s%s\"\n\r") % pgbuf % i->character->norm());
+	  }
+	  else
 	    i->character->sendTo(COLOR_SPELLS, fmt("The message is, \"%s%s\"\n\r") % msg % i->character->norm());
         }
       }
