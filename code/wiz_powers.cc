@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: wiz_powers.cc,v $
+// Revision 1.2  1999/10/12 04:10:12  lapsos
+// Added power <name> <power> single power display output.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -364,6 +367,59 @@ void TPerson::doPowers(const char *argument) const
   if (!desc)
     return;
 
+  string    tStName(""),
+            tStPower(""),
+            tStString("");
+  char      tString[MAX_INPUT_LENGTH];
+  const     TBeing *ch;
+  wizPowerT tWizPower;
+
+  two_arg(argument, tStName, tStPower);
+
+  if (!tStName.empty()) {
+    ch = get_pc_world(this, tStName.c_str(), EXACT_YES);
+
+    if (!ch)
+      ch = get_pc_world(this, tStName.c_str(), EXACT_NO);
+
+    if (!ch) {
+      sendTo("Unable to locate them anywhere in the world.\n\r");
+      return;
+    }
+  } else
+    ch = this;
+
+  sprintf(tString, "%s%s Wiz-Powers:\n\r",
+          (ch == this ? "Your" : ch->getName()),
+          (ch == this ? "" : "'s"));
+  tStString += tString;
+
+  for (tWizPower = MIN_POWER_INDEX; tWizPower < MAX_POWER_INDEX; tWizPower++) {
+    strcpy(tString, tStPower.c_str());
+
+    if (tStPower.empty() ||
+        (is_number(tString) && atoi(tStPower.c_str()) == (tWizPower + 1)) ||
+        (!is_number(tString) &&
+         is_abbrev(tStPower.c_str(), getWizPowerName(tWizPower).c_str()))) {
+      sprintf(tString, "%3d.) [%c] %-25.25s",
+              (tWizPower + 1),
+              (ch->hasWizPower(tWizPower) ? '*' : ' '),
+              getWizPowerName(tWizPower).c_str());
+      tStString += tString;
+
+      if ((tWizPower % 2) || !tStPower.empty())
+        tStString += "\n\r";
+      else
+        tStString += "      ";
+    }
+  }
+
+  if (!(tWizPower % 2))
+    tStString += "\n\r";
+
+  desc->page_string(tStString.c_str(), 0, true);  
+
+  /*
   char arg[MAX_INPUT_LENGTH];
   one_argument(argument, arg);  
 
@@ -402,6 +458,7 @@ void TPerson::doPowers(const char *argument) const
   str += "\n\r";
 
   desc->page_string(str.c_str(), 0, true);  
+  */
 }
 
 const string getWizPowerName(wizPowerT wpt)
