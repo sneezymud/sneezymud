@@ -562,7 +562,8 @@ enum cmdTypeT {
      CMD_PLANT,
      CMD_COOK,
      CMD_DRIVE,
-    MAX_CMD_LIST,  // Keep this as last command in regular list
+     CMD_PSIDRAIN,
+     MAX_CMD_LIST,  // Keep this as last command in regular list
 
        // a variety of "fake" commands used for a variety of purpsoses follow
        CMD_RESP_TOGGLE,

@@ -1175,7 +1175,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDPsionics *) cd)->skMindPreservation;
     case SKILL_TELEKINESIS:
       return &((CDPsionics *) cd)->skTelekinesis;
-
+    case SKILL_PSIDRAIN:
+      return &((CDPsionics *) cd)->skPsiDrain;
 
 
   // disc_combat

@@ -483,6 +483,7 @@ enum spellNumT {
      SKILL_KINETIC_WAVE,
      SKILL_MIND_PRESERVATION,
      SKILL_TELEKINESIS,
+     SKILL_PSIDRAIN,
 
      // end of psionics
 

@@ -19,7 +19,8 @@ CDPsionics::CDPsionics() :
   skPsyCrush(),
   skKineticWave(),
   skMindPreservation(),
-  skTelekinesis()
+  skTelekinesis(),
+  skPsiDrain()
 {
 }
 
@@ -34,7 +35,8 @@ CDPsionics::CDPsionics(const CDPsionics &a) :
   skPsyCrush(a.skPsyCrush),
   skKineticWave(a.skKineticWave),
   skMindPreservation(a.skMindPreservation),
-  skTelekinesis(a.skTelekinesis)
+  skTelekinesis(a.skTelekinesis),
+  skPsiDrain(a.skPsiDrain)
 {
 }
 
@@ -53,6 +55,7 @@ CDPsionics & CDPsionics::operator=(const CDPsionics &a)
   skKineticWave = a.skKineticWave;
   skMindPreservation = a.skMindPreservation;
   skTelekinesis = a.skTelekinesis;
+  skPsiDrain = a.skPsiDrain;
 
   return *this;
 }
@@ -919,6 +922,34 @@ int TBeing::doKwave(const char *tString){
     tVictim = NULL;
     REM_DELETE(rc, DELETE_VICT);
   }
+
+  return TRUE;
+}
+
+
+int TBeing::doPsidrain(const char *tString){
+  TBeing *tVictim=NULL;
+
+  if(!(tVictim=psiAttackChecks(this, SKILL_PSIDRAIN, tString)))
+    return FALSE;
+  
+  int bKnown=getSkillValue(SKILL_PSIDRAIN);
+
+  if (bSuccess(this, bKnown, SKILL_PSIDRAIN)) {
+    sendTo("owned etc\n\r");
+  } else {
+    psiAttackFailMsg(this, tVictim);
+  }
+
+#if 0
+  addSkillLag(SKILL_PSIDRAIN, rc);
+
+  if (IS_SET_ONLY(rc, DELETE_VICT)) {
+    delete tVictim;
+    tVictim = NULL;
+    REM_DELETE(rc, DELETE_VICT);
+  }
+#endif
 
   return TRUE;
 }

@@ -21,6 +21,7 @@ public:
   CSkill skKineticWave;
   CSkill skMindPreservation;
   CSkill skTelekinesis;
+  CSkill skPsiDrain;
   
     CDPsionics();
     CDPsionics(const CDPsionics &a);

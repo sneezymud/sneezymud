@@ -502,7 +502,10 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
       case SKILL_PSYCHIC_CRUSH:
 	sprintf(buf, "%s's corpse wears a death mask of pure terror.", getName());
 	break;
-    
+      case SKILL_PSIDRAIN:
+	sprintf(buf, "The head of %s's corpse is blackened and bears a look of grim terror.", getName());
+	break;
+
 #if 1
       case SPELL_EARTHMAW:
 	sprintf(buf, "The corpse of %s lies here half buried in the earth.", getName());
