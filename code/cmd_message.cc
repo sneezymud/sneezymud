@@ -20,8 +20,9 @@ messageTypeT & operator++ (messageTypeT &c, int)
 
 const char * messageCommandFormat =
 "Syntax: message <field> <message>
-\r\tmessage <field> default   -   will reset the type to the standard.
-\r\tmessage <field>  -  will display that fields current setting.
+\r\tmessage <field> default   -  resets the type to the standard.
+\r\tmessage <field>           -  displays that field's current setting.
+\r\tmessage list              -  lists fields and their current settings.
 ";
 
 const unsigned short int messageCommandSwitches[][3] =
@@ -89,7 +90,16 @@ void TBeing::doMessage(const char *tArg)
 
   if (tStCommand.empty())
     sendTo(messageCommandFormat);
-  else {
+  else if (tStCommand.word(0).lower() == "list") {
+    for (tValue = MSG_MIN; tValue < MSG_TYPE_MAX; tValue++ ) {
+      if (messageCommandSwitches[tValue][2] &&
+          hasWizPower(wizPowerT(messageCommandSwitches[tValue][2])))
+        sendTo(fmt("%-15s:  %s\n\r") % messageCommandTypes[tValue-1] %
+            msgVariables(messageTypeT(tValue), 
+              (TThing *)NULL, (const char *) NULL, false));
+    }
+    return;
+  } else {
     bisect_arg(tStCommand.c_str(), &tValue, tString, messageCommandTypes);
 
     if (tValue < 1 || tValue >= MSG_TYPE_MAX)
