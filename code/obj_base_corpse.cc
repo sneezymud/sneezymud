@@ -346,6 +346,12 @@ int TBaseCorpse::chiMe(TBeing *tLunatic)
   act("$n stares at $p which suddenly bursts into flames!",
       TRUE, tLunatic, this, NULL, TO_ROOM);
 
+  if(material_nums[getMaterial()].flammability){
+    setBurning(tLunatic);
+
+    return true;
+
+    /*
   while ((tThing = getStuff())) {
     --(*tThing);
 
@@ -362,4 +368,5 @@ int TBaseCorpse::chiMe(TBeing *tLunatic)
   }
 
   return DELETE_VICT;
+    */
 }
