@@ -1399,6 +1399,7 @@ const char * const body_flags[] =
   "useless",
   "leprosed",
   "transformed",
+  "syphilised",
   "\n"
 };
 

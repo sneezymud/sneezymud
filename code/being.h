@@ -184,7 +184,7 @@ const unsigned short int PART_USELESS      = (1<<7);
 const unsigned short int PART_LEPROSED     = (1<<8);
 const unsigned short int PART_TRANSFORMED  = (1<<9);
 const unsigned short int PART_ENTANGLED    = (1<<10);
-const unsigned short int PART_SYPHILIS    = (1<<11);
+const unsigned short int PART_SYPHILIS     = (1<<11);
 
 const int MAX_PARTS          = 12;       // move and change
 
