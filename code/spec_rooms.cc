@@ -1479,8 +1479,6 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   static bool done[24];
   int n=rp->number-30975, exitrnum=0;
 
-  vlogf(LOG_PEEL, "entering theKnot");
-  
   if(done[n] || cmd != CMD_GENERIC_PULSE)
     return FALSE;
   
@@ -1492,9 +1490,6 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 
     // if no exit, chance to add new one
     if(!rp->dir_option[d] && !::number(0,9)){
-      vlogf(LOG_PEEL, "found a direction: dir=%i, room=%i",
-	    d, rp->number);
-
       if(!(exitrnum=getRandomRoom()))
 	continue;
       
@@ -1502,9 +1497,6 @@ int theKnot(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
 	continue;
       
       rp->dir_option[d]->to_room = exitrnum;
-
-      vlogf(LOG_PEEL, "made new direction: from=%i to=%i",
-	    rp->number, exitrnum);
     }
   }
 
