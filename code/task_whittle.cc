@@ -117,7 +117,9 @@ void initWhittle()
                     -1, 99, 194, false, WHITTLE_INVOLVED);
   whittleItems[i++]("miniature-idol-gringar",
                     -1, 99, 195, false, WHITTLE_INVOLVED);
-
+  whittleItems[i++]("pole-fishingpole-very-nice", 
+                    -1, 60, 13862, false, WHITTLE_GENERAL);
+  
   whittleItems[i++]("elongated-strip strip wood", // For 'create splint' later on
                     -1, 30,  -1, false, WHITTLE_EASY);
 }
@@ -466,13 +468,15 @@ int checkForSlipup(TBeing *ch)
 // This process is supposed to take a TON of time.  Please keep it that way.
 int task_whittleObject(TBeing *ch, string tStWood)
 {
-  int    nRc = TRUE,
-         dRc;
+  int    nRc = TRUE;
+    // dRc;
   TArrow *tArrow = dynamic_cast<TArrow *>(ch->task->obj);
   TBow   *tBow   = dynamic_cast<TBow   *>(ch->task->obj);
 
-  if ((dRc = checkForSlipup(ch)) != FALSE)
-    return dRc;
+  //  Dash requested damage from whittle be removed
+  //
+  //  if ((dRc = checkForSlipup(ch)) != FALSE)
+  //  return dRc;
 
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_WHITTLE, 1);
 
