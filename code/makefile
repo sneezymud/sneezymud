@@ -152,7 +152,8 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 	cmd_deathstroke.o cmd_disarm.o cmd_dissect.o \
 	cmd_doorbash.o cmd_feigndeath.o cmd_grapple.o cmd_headbutt.o \
 	cmd_jump.o \
-	cmd_kick.o cmd_kneestrike.o cmd_look.o cmd_mend_limb.o cmd_message.o \
+	cmd_kick.o cmd_kneestrike.o cmd_look.o cmd_low.o \
+	cmd_mend_limb.o cmd_message.o \
 	cmd_news.o \
 	cmd_quest.o cmd_quivpalm.o cmd_rename.o cmd_rescue.o cmd_save.o \
 	cmd_score.o cmd_sedit.o cmd_set.o cmd_stab.o cmd_stat.o cmd_steal.o \
@@ -180,7 +181,7 @@ OBJ = actions.o ai_commands.o ai_reactions.o ai_responses.o ai_utility.o \
 
 OBJ2 = gin.o handler.o hearts.o help.o hospital.o immortal.o immunity.o \
 	indexdata.o info.o inventory.o jewelry.o key.o keyring.o light.o \
-	limbs.o limits.o loadset.o low.o luck.o magic_item.o magic_off.o \
+	limbs.o limits.o loadset.o luck.o magic_item.o magic_off.o \
 	magic_skills.o magicutils.o mail.o makecorpse.o materials.o \
 	meeting.o mob_loader.o mobact.o money.o monster.o movement.o \
 	multiclass.o newbie.o note.o obj.o offense.o oldlimbs.o oldrace.o \
@@ -303,6 +304,7 @@ $(OBJDIR)cmd_feigndeath.o: combat.h
 $(OBJDIR)cmd_grapple.o: combat.h
 $(OBJDIR)cmd_headbutt.o: combat.h
 $(OBJDIR)cmd_look.o: games.h
+$(OBJDIR)cmd_low.o: statistics.h combat.h
 $(OBJDIR)cmd_news.o: statistics.h
 $(OBJDIR)cmd_quivpalm.o: combat.h
 $(OBJDIR)cmd_sedit.o: combat.h dirsort.h
@@ -389,7 +391,6 @@ $(OBJDIR)info.o: skillsort.h
 $(OBJDIR)inventory.o: statistics.h disc_looting.h $(CASINO_HEADS)
 $(OBJDIR)limits.o: statistics.h games.h
 $(OBJDIR)loadset.o: loadset.h
-$(OBJDIR)low.o: statistics.h combat.h
 $(OBJDIR)magic_skills.o: combat.h
 $(OBJDIR)magicutils.o: components.h
 $(OBJDIR)mail.o: mail.h
