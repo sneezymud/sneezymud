@@ -231,6 +231,8 @@ P 1 838 9999 8722
 P 1 3013 9999 8722   heal/rem curse/cure pois pot ++
 P 1 3013 9999 8722
 
+M 0 8770 1 8770        tax collector
+
 M 0 8742 1 8742		sailors(3)
 ? 0 6 0 E
 E 1 8760 12 15         KILT

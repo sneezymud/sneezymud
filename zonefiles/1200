@@ -124,6 +124,8 @@ D 0 1393   9    1 ; ""
 D 0 1393   3    1 ; ""
 D 0 1370   2    1 ; Arena
 
+
+
 O 0 104 1 1364     Window in Huma's Beastiary
 V 1 0 1397                    looking into room 1397
 
@@ -217,6 +219,7 @@ G 1 1213 999          ; egg
 M 0 1213 1 1213  ; farm chicken
 G 1 1213 999          ; egg
 M 0 1292 1 1292  ; cat
+M 0 1398 1 1398  ; tax collector
 M 0 1295 1 1295  ; Ticket agent (ships etc)
 M 0 1334 1 1334  ; Tavern customer
 M 0 1334 1 1334  ; ""
