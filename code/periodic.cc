@@ -18,6 +18,7 @@
 #include "obj_seethru.h"
 #include "obj_plant.h"
 #include "obj_egg.h"
+#include "obj_trash_pile.h"
 
 // this function gets called ever 120 pulse (30 secs?)
 // it should randomly load a deity and/or extract extra deitys
@@ -223,6 +224,51 @@ int TBeing::riverFlow(int)
 
   return resCode;
 }
+
+bool TObj::joinTrash()
+{
+  TTrashPile *pile=NULL;
+  TObj *o;
+
+  // check if this item is eligible to be trash
+  if(isObjStat(ITEM_NOJUNK_PLAYER) || 
+     !canWear(ITEM_TAKE) || 
+     !roomp ||
+     getStuff() ||
+     roomp->isWaterSector() ||
+     roomp->isAirSector() ||
+     isObjStat(ITEM_BURNING))
+    return false;
+
+  // find a trash pile or form one if not found
+  for(TThing *t=roomp->getStuff();t;t=t->nextThing){
+    if((pile=dynamic_cast<TTrashPile *>(t)))
+      break;
+  }
+  if(!pile){
+    o=read_object(648, VIRTUAL);
+    if(!(pile=dynamic_cast<TTrashPile *>(o))){
+      vlogf(LOG_BUG, "generic trash pile wasn't a trash pile!");
+      delete o;
+      return false;
+    }
+
+    *roomp += *pile;
+  }
+
+  sendrpf(COLOR_BASIC, roomp, "%s merges with %s.\n\r",
+    sstring(this->getName()).cap().c_str(), pile->getName());
+
+  // add to trash pile
+  --(*this);
+  *pile += *this;
+
+  pile->updateDesc();
+  
+  return false;
+}
+
+
 
 int TObj::riverFlow(int)
 {

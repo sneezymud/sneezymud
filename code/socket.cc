@@ -940,7 +940,9 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	smoke->doChoke();
       }
 
-
+      // trash piles
+      if(!::number(0,999) && obj->joinTrash())
+	  continue;
     }
 
     if (pl.pulse_mudhour) { // 1440

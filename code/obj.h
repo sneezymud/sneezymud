@@ -592,6 +592,7 @@ class TObj : public TThing {
     bool willTear(int);
     bool willPuncture(int);
     virtual int riverFlow(int);
+    virtual bool joinTrash();
     virtual void onObjLoad();
     bool willFloat();
     int itemAC() const;
