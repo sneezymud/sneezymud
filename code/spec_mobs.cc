@@ -5767,7 +5767,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       // check for largest
       db.query("select weight, name from fishlargest where type='%s'", o->shortDescr);
 
-      if(!db.fetchRow() || (o->getWeight() > convertTo<int>(db.getColumn(0)))){
+      if(!db.fetchRow() || (o->getWeight() > convertTo<float>(db.getColumn(0)))){
 
 	sprintf(buf, "Oh my, you've broken %s's record!  This the largest %s I've seen, weighing in at %f!  Very nice! (%i talens)",
 		db.getColumn(1), o->shortDescr, o->getWeight(), (int)(o->getWeight()*100));
