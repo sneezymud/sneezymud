@@ -21,6 +21,11 @@ int TBeing::doLeap(const sstring &arg)
     return FALSE;
   }
   
+  if(arg.empty()){
+    sendTo("Which way do you want to leap?\n\r");
+    return FALSE;
+  }
+
   if(fight()){
     sendTo("You can't leap away while fighting!\n\r");
     return FALSE;
