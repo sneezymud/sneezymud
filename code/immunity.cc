@@ -833,6 +833,8 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SKILL_IRON_WILL:
     case SKILL_POISON_ARROW:
     case SKILL_PLANT:
+    case SPELL_EMBALM:
+
 #if 1
     case SPELL_EARTHMAW:
     case SPELL_CREEPING_DOOM:

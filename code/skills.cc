@@ -978,6 +978,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDShaman *) cd)->skEnthrallGhoul;
     case SKILL_REPAIR_SHAMAN:
       return &((CDShaman *) cd)->skRepairShaman;
+    case SPELL_EMBALM:
+      return &((CDShaman *) cd)->skEmbalm;
 
       // spider abilities----------------------
 

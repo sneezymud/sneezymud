@@ -473,7 +473,8 @@ enum spellNumT {
      SPELL_CLEANSE,
      SKILL_TURN,
      SPELL_HEALING_GRASP,
-  SKILL_REPAIR_SHAMAN,
+     SKILL_REPAIR_SHAMAN,
+     SPELL_EMBALM,
      // end of shaman
   
      // start of psionics

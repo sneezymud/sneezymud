@@ -890,6 +890,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
       case SKILL_IRON_WILL:
       case SKILL_PLANT:
       case SKILL_POISON_ARROW:
+      case SPELL_EMBALM:
         break;
     }
   }

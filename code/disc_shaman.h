@@ -30,8 +30,8 @@ public:
     CSkill skDjallasProtection;
     CSkill skLegbasGuidance;
     CSkill skDancingBones;
-
     CSkill skRepairShaman;
+    CSkill skEmbalm;
 
     CDShaman()
       : CDiscipline(),
@@ -58,7 +58,8 @@ public:
       skDjallasProtection(),
       skLegbasGuidance(),
       skDancingBones(),
-      skRepairShaman() { 
+      skRepairShaman(),
+      skEmbalm() { 
     }
     CDShaman(const CDShaman &a)
       : CDiscipline(a),
@@ -85,7 +86,8 @@ public:
       skDjallasProtection(a.skDjallasProtection),
       skLegbasGuidance(a.skLegbasGuidance),
       skDancingBones(a.skDancingBones),
-      skRepairShaman(a.skRepairShaman) {
+      skRepairShaman(a.skRepairShaman),
+      skEmbalm(a.skEmbalm){
     }
     CDShaman & operator=(const CDShaman &a) {
       if (this == &a) return *this;
@@ -114,6 +116,7 @@ public:
       skLegbasGuidance = a.skLegbasGuidance;
       skDancingBones = a.skDancingBones;
       skRepairShaman = a.skRepairShaman;
+      skEmbalm = a.skEmbalm;
       return *this;
     }
     virtual ~CDShaman() {}
@@ -234,5 +237,8 @@ private:
     int castFlatulence(TBeing *);
     int flatulence(TBeing *, int, byte, int);
 
+    int embalm(TBeing *, TBeing *);
+    int castEmbalm(TBeing *, TBeing *);
+    int embalm(TBeing *, TBeing *, int, byte, int);
 #endif
 
