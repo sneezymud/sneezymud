@@ -1085,10 +1085,6 @@ static void change_obj_short_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
   return;
 }
 
-static void update_values(TObj *)
-{
-}
-
 static void change_obj_type(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
 {
   itemTypeT update;
@@ -1136,7 +1132,6 @@ static void change_obj_type(TBeing *ch, TObj *o, const char *arg, editorEnterTyp
     delete o;
     ch->desc->obj = o2;
 
-    update_values(o2);
     ch->specials.edit = MAIN_MENU;
     update_obj_menu(ch, o2);
     return;
