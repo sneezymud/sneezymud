@@ -5938,6 +5938,7 @@ extern int weaponManaDrainer(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int weaponLightningRod(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int weaponJambiyaSpecial(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int deikhanSword(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int blackSun(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 
 
 // assign special procedures to objects
@@ -6047,5 +6048,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Sheath: Starfire", starfiresheath}, // 100
   {FALSE, "Teleport Rescue Item", teleportRescue},
   {FALSE, "Deikhan Sword", deikhanSword},
+  {FALSE, "black sun", blackSun},
   {FALSE, "last proc", bogusObjProc}
 };
