@@ -78,12 +78,11 @@ int TBeing::useLifeforce(spellNumT spl)
 // divide total LF/rounds for each spell if spell tasked
   if (IS_SET(discArray[spl]->comp_types, SPELL_TASKED) &&
       discArray[spl]->lag >= 0) {
-    rounds =  discArray[spl]->lag + 2;
+    rounds = discArray[spl]->lag + 2;
     return arrayLifeforce/rounds;
   } else {
     return arrayLifeforce;
   }
-  updatePos();
 }
 
 // END LIFEFORCE
@@ -1130,7 +1129,7 @@ int TBeing::preCastCheck()
   }
 
 
-  if (!isImmortal() && !hasClass(CLASS_MAGIC_USER | CLASS_RANGER)) {
+  if (!isImmortal() && !hasClass(CLASS_MAGIC_USER | CLASS_RANGER | CLASS_SHAMAN)) {
     if (hasClass(CLASS_CLERIC)) {
       sendTo("Clerics can't cast spells, they pray!\n\r");
       return FALSE;
@@ -1151,7 +1150,7 @@ int TBeing::preCastCheck()
       return FALSE;
     }
   }
-  if (nomagic("Sorry, this is a no-magic area.",""))
+  if (nomagic("Sorry, you can't do that in this area.",""))
     return FALSE;
 
   if (cantHit > 0) {
@@ -1284,7 +1283,7 @@ int TBeing::parseTarget(spellNumT which, char *n, TThing **ret)
     }
     if (!ok && (discArray[which]->targets & TAR_OBJ_EQUIP)) {
       for (int i = MIN_WEAR; i < MAX_WEAR && !ok; i++) {
-        if ((t = equipment[i]) && is_abbrev(n, t->name) &&
+        if ((t = equipment[i]) && is_abbrev(n, t->getName()) &&
             (o = dynamic_cast<TObj *>(t))) {
           ok = TRUE;
         }

@@ -413,7 +413,7 @@ int shieldOfMists(TBeing *caster, TBeing *victim)
 {
   taskDiffT diff;
 
-    if (!bPassMageChecks(caster, SPELL_SHIELD_OF_MISTS, victim))
+    if (!bPassShamanChecks(caster, SPELL_SHIELD_OF_MISTS, victim))
       return FALSE;
 
     lag_t rounds = discArray[SPELL_SHIELD_OF_MISTS]->lag;
@@ -528,7 +528,7 @@ int enthrallSpectre(TBeing * caster)
     return FALSE;
   }
 
-  if (!bPassMageChecks(caster, SPELL_ENTHRALL_SPECTRE, NULL))
+  if (!bPassShamanChecks(caster, SPELL_ENTHRALL_SPECTRE, NULL))
     return FALSE;
 
   lag_t rounds = discArray[SPELL_ENTHRALL_SPECTRE]->lag;
@@ -652,7 +652,7 @@ conditions!\n\r");
     return FALSE;
   }
 
-  if (!bPassMageChecks(caster, SPELL_ENTHRALL_GHAST, NULL))
+  if (!bPassShamanChecks(caster, SPELL_ENTHRALL_GHAST, NULL))
     return FALSE;
 
   lag_t rounds = discArray[SPELL_ENTHRALL_GHAST]->lag;
