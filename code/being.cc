@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: being.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -91,6 +83,7 @@ pointData::pointData() :
   mana(0),
   maxMana(0),
   piety(0.0),
+  lifeforce(0),
   hit(0),
   maxHit(0),
   move(0),
@@ -109,6 +102,7 @@ pointData::pointData(const pointData &a) :
   mana(a.mana),
   maxMana(a.maxMana),
   piety(a.piety),
+  lifeforce(a.lifeforce),
   hit(a.hit),
   maxHit(a.maxHit),
   move(a.move),
@@ -140,6 +134,7 @@ pointData & pointData::operator=(const pointData &a)
   hitroll = a.hitroll;
   damroll = a.damroll;
   piety = a.piety;
+  lifeforce = a.lifeforce;
   return *this;
 }
 
@@ -178,7 +173,10 @@ factionData::factionData() :
   captiveOf(NULL),
   target(NULL),
   type(FACT_UNDEFINED),
-  actions(0)
+  actions(0),
+  align_ge(0),
+  align_lc(0),
+  whichfaction(0)
 {
 #if FACTIONS_IN_USE
   for (int i = 0; i < MAX_FACTIONS; i++)
@@ -193,7 +191,10 @@ factionData::factionData(const factionData &a) :
   captiveOf(a.captiveOf),
   target(a.target),
   type(a.type), 
-  actions(a.actions)
+  actions(a.actions),
+  align_ge(a.align_ge),
+  align_lc(a.align_lc),
+  whichfaction(a.whichfaction)
 {
 #if FACTIONS_IN_USE
   for (int i = 0; i < MAX_FACTIONS; i++)
@@ -423,6 +424,32 @@ spellTaskData::~spellTaskData()
   orig_arg = NULL;
 }
 
+
+spellStoreData::spellStoreData() :
+  spelltask(NULL),
+  storing(FALSE)
+{
+}
+
+spellStoreData::spellStoreData(const spellStoreData &a) :
+  spelltask(a.spelltask),
+  storing(a.storing)
+{
+}
+
+spellStoreData & spellStoreData::operator=(const spellStoreData &a)
+{
+  if (this == &a) return *this;
+  spelltask=a.spelltask;
+  storing=a.storing;
+  return *this;
+}
+
+spellStoreData::~spellStoreData()
+{
+}
+
+
 charFile::charFile() :
   sex(SEX_MALE),
   race(0),
@@ -444,19 +471,43 @@ charFile::charFile() :
   wimpy(0),
   autobits(0),
   best_rent_credit(0),
-  points(),
+//  point data members
+  mana(0),
+  maxMana(0),
+  piety(0.0),
+  lifeforce(0),
+  hit(0),
+  maxHit(0),
+  move(0),
+  maxMove(0),
+  money(0),
+  bankmoney(0),
+  exp(0),
+  spellHitroll(0),
+  hitroll(0),
+  damroll(0),
+  armor(1000),
+// points(),
+// end pointData members
   fatigue(0),
   hero_num(0),
   f_percent(0),
   f_type(0),
   f_actions(0),
+  whichfaction(0),
+  align_ge(0),
+  align_lc(0),
   practices(),
   pColor(0),
   plr_act(0),
   flags(0),
   plr_color(0),
   plr_colorSub(COLOR_SUB_NONE),
-  plr_colorOff(0)
+  plr_colorOff(0),
+  temp1(-999),
+  temp2(-999),
+  temp3(-999),
+  temp4(-999)
 {
   classIndT cit;
   for (cit=MIN_CLASS_IND; cit < MAX_SAVED_CLASSES; cit++) {
@@ -772,10 +823,36 @@ void TBeing::setMaxMana(int mana)
   points.maxMana = mana;
 }
 
+// LIFEFORCE 
+
+int TBeing::getLifeforce() const
+{
+  return points.lifeforce;
+}
+
+void TBeing::setLifeforce(int lifeforce)
+{
+  points.lifeforce = lifeforce;
+}
+
+void TBeing::addToLifeforce(int lifeforce)
+{
+  points.lifeforce += lifeforce;
+  points.lifeforce = max((short int) 0, points.lifeforce);
+}
+
+bool TBeing::noLifeforce(int lifeforce) const
+{
+  return (points.lifeforce < lifeforce);
+}
+
+// END LIFEFORCE
+
 short int TBeing::manaLimit() const
 {
   return 100;
 }
+
 
 double TBeing::pietyLimit() const
 {
@@ -971,6 +1048,9 @@ void TBeing::setRace(race_t r)
 
 double TBeing::getExp() const
 {
+  if (snum > -1)
+    return 0;
+
   return points.exp;
 }
 
@@ -1067,9 +1147,10 @@ sexTypeT TBeing::getSex() const
 void TBeing::setSexUnsafe(int sex)
 {
   if (sex < SEX_NEUTER || sex > SEX_FEMALE) {
-    vlogf(10, "Bad sex on %s during set (%d)", getName(), sex);
+    vlogf(LOG_LOW, "Bad sex on %s during set (%d)", getName(), sex);
     sex = 0;
   }
+
   setSex(sexTypeT(sex));
 }
 
@@ -1122,6 +1203,12 @@ void TBeing::setArmor(sh_int armor)
 
 bool TBeing::isAffected(unsigned long bv) const
 {
+  if (!this) 
+    {
+      vlogf(LOG_BUG, "BAD - isAffected got called with this = null, investigate!");
+      return 0;
+    }
+ 
   return (specials.affectedBy & bv);
 }
 
@@ -1225,3 +1312,118 @@ void TBeing::peeOnMe(const TBeing *ch)
   act("You relieve yourself on $N's foot.", TRUE, ch, 0, this, TO_CHAR);
 }
 
+const char * TBeing::getLongDesc() const
+{
+  if (player.longDescr)
+    return player.longDescr;
+
+
+#if 1
+  if (msgVariables.tMessages.msgLongDescr &&
+      *msgVariables.tMessages.msgLongDescr)
+    return msgVariables.tMessages.msgLongDescr;
+#else
+  if (msgVariables == MSG_LONGDESCR &&
+      !msgVariables(MSG_LONGDESCR, (TThing *)NULL).empty())
+    return msgVariables(MSG_LONGDESCR, (TThing *)NULL).c_str();
+#endif
+
+  return NULL;
+}
+
+int TBeing::chiMe(TBeing *tLunatic)
+{
+  int bKnown  = tLunatic->getSkillValue(SKILL_CHI),
+      tDamage,
+      tMana;
+
+  if (tLunatic->getSkillValue(SKILL_CHI) < 50 ||
+      tLunatic->getDiscipline(DISC_MEDITATION_MONK)->getLearnedness() < 10) {
+    tLunatic->sendTo("I'm afraid you don't have the training to do this.\n\r");
+    return RET_STOP_PARSING;
+  }
+
+  if (tLunatic->checkPeaceful("You feel too peaceful to contemplate violence here.\n\r"))
+    return RET_STOP_PARSING;
+
+  if (tLunatic == this) {
+    tMana = 100 - ::number(1, getSkillValue(SKILL_CHI) / 2);
+    affectedData aff;
+
+    if (affectedBySpell(SKILL_CHI)) {
+      sendTo("You are already projecting your chi upon yourself.\n\r");
+      return FALSE;
+    }
+
+    if (bSuccess(this, bKnown, SKILL_CHI)) {
+      reconcileMana(TYPE_UNDEFINED, 0, tMana);
+
+      act("You close your eyes and concentrate for a moment, then begin radiating an intense <R>heat<1> from your body.", TRUE, this, NULL, NULL, TO_CHAR);
+      act("$n closes $s eyes in concentration, then begins radiating an intense <R>heat<1> from $s body.", TRUE, this, NULL, NULL, TO_ROOM);
+
+      aff.type      = SKILL_CHI;
+      aff.level     = bKnown;
+      aff.duration  = (3 + (bKnown / 2)) * UPDATES_PER_MUDHOUR;
+      aff.location  = APPLY_IMMUNITY;
+      aff.modifier  = IMMUNE_COLD;
+      aff.modifier2 = ((bKnown * 2) / 3);
+      aff.bitvector = 0;
+      affectTo(&aff, -1);
+    } else {
+      act("You are unable to focus your mind.",
+          TRUE, this, NULL, NULL, TO_CHAR);
+
+      if (getMana() >= 0)
+        reconcileMana(TYPE_UNDEFINED, 0, tMana/2);
+    }
+
+    return true;
+  }
+
+  if (this->isImmortal() || this->inGroup(*tLunatic))
+    return FALSE;
+
+  if (bSuccess(tLunatic, bKnown, SKILL_CHI)) {
+    tDamage = getSkillDam(this, SKILL_CHI,
+                          tLunatic->getSkillLevel(SKILL_CHI),
+                          tLunatic->getAdvLearning(SKILL_CHI));
+    tMana = ::number((tDamage / 2), tDamage);
+
+    if (tLunatic->getMana() < tMana) {
+      tLunatic->sendTo("You lack of the chi to do this.\n\r");
+      return RET_STOP_PARSING;
+    } else
+      tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
+
+    act("You unleash your chi upon $N!",
+        FALSE, tLunatic, NULL, this, TO_CHAR);
+
+    if (affectedBySpell(SKILL_CHI)) {
+      act("A bright <W>aura<1> flares up around $N, deflecting your attack and then striking back!\n\rYour vision goes <r>red<1> as the pain overwhelms you!", TRUE, tLunatic, NULL, this, TO_CHAR);
+      act("A bright <W>aura<1> flares up around $N, deflecting $n's chi attack and then striking back!", TRUE, tLunatic, NULL, this, TO_NOTVICT);
+      act("A bright <W>aura<1> flares up around you, deflecting $n's chi attack and then striking back!", TRUE, tLunatic, NULL, this, TO_VICT);
+
+      if (this->reconcileDamage(tLunatic, ::number((tDamage / 2), tDamage), SKILL_CHI) == -1)
+        return (DELETE_THIS | RET_STOP_PARSING);
+    } else {
+      act("...$N screws up $S face in agony.",
+          TRUE, tLunatic, NULL, this, TO_CHAR);
+      act("$n exerts $s <r>chi force<1> on you, causing extreme pain.",
+          TRUE, tLunatic, NULL, this, TO_VICT);
+      act("$N screws up $S face in agony.",
+          TRUE, tLunatic, NULL, this, TO_NOTVICT);
+
+      if (tLunatic->reconcileDamage(this, tDamage, SKILL_CHI) == -1)
+        return DELETE_VICT;
+    }
+  } else {
+    act("You fail to harm $N with your <r>blast of chi<z>!",
+        FALSE, tLunatic, NULL, this, TO_CHAR);
+    act("You escape $n's attempt to chi you!",
+        TRUE, tLunatic, NULL, this, TO_VICT);
+    act("$N avoids $n's attempt to chi them!",
+        TRUE, tLunatic, NULL, this, TO_NOTVICT);
+  }
+
+  return true;
+}

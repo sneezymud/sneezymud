@@ -1,27 +1,8 @@
+
 //////////////////////////////////////////////////////////////////////////
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disease.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.3  1999/10/12 00:06:40  lapsos
-// Prevented shopkeepers from getting diseases.
-//
-// Revision 1.2  1999/10/08 18:31:04  peel
-// Disease spreading no longer logged
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "disease.cc" - functions handling disease affects
 //
 ///////////////////////////////////////////////////////////////////////////
@@ -32,17 +13,21 @@
 //  use reconcileDamage to apply damage to victims.
 //  if victim dies, leave victim valid (do not delete) annd return a -1
 
-sbyte DISEASE_INDEX(sbyte d)
+diseaseTypeT affToDisease(affectedData &af)
 {
-  return ((d < 0) ? DISEASE_NULL : ((d >= MAX_DISEASE) ? DISEASE_NULL : d));
+  diseaseTypeT dtt = diseaseTypeT(af.modifier);
+  if (dtt < DISEASE_NULL || dtt >= MAX_DISEASE)
+    dtt = DISEASE_NULL;
+
+  return dtt;
 }
 
 int disease_start(TBeing *victim, affectedData *af)
 {
-  return (*(DiseaseInfo[DISEASE_INDEX(af->modifier)].code)) (victim, DISEASE_BEGUN, af);
+  return (*(DiseaseInfo[affToDisease(*af)].code)) (victim, DISEASE_BEGUN, af);
 }
 
-bool TBeing::hasDisease(int disease) const
+bool TBeing::hasDisease(diseaseTypeT disease) const
 {
   affectedData *aff;
 
@@ -55,7 +40,7 @@ bool TBeing::hasDisease(int disease) const
   return FALSE;
 }
 
-void TBeing::diseaseFrom(int disease)
+void TBeing::diseaseFrom(diseaseTypeT disease)
 {
   affectedData *aff, *anext;
 
@@ -72,12 +57,12 @@ void TBeing::diseaseFrom(int disease)
 
 int TBeing::diseaseStop(affectedData *af)
 {
-  return (*(DiseaseInfo[DISEASE_INDEX(af->modifier)].code)) (this, DISEASE_DONE, af);
+  return (*(DiseaseInfo[affToDisease(*af)].code)) (this, DISEASE_DONE, af);
 }
 
 int disease_null(TBeing *victim, int, affectedData *)
 {
-  vlogf(9, "WARNING:  %s has a bogus disease #%d affect.",
+  vlogf(LOG_BUG, "WARNING:  %s has a bogus disease #%d affect.",
 	((victim) ? victim->getName() : "A null pointer"));
   return FALSE;
 }
@@ -111,10 +96,10 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
       continue;
 
     if ((af->type != AFFECT_DISEASE && !v->affectedBySpell(af->type)) ||
-        (af->type == AFFECT_DISEASE && !v->hasDisease(af->modifier))) {
+        (af->type == AFFECT_DISEASE && !v->hasDisease(affToDisease(*af)))) {
 
 #if 0
-      vlogf(0, "%s (%s:%d) spreading from %s to %s at %d",
+      vlogf(LOG_MISC, "%s (%s:%d) spreading from %s to %s at %d",
              af->type == AFFECT_DISEASE ? "Disease" : "Spell",
              af->type == AFFECT_DISEASE ? 
                  DiseaseInfo[af->modifier].name : 
@@ -145,6 +130,7 @@ int TBeing::dummyFlu()
     case 2:
       sendTo("Your stomach churns uncomfortably.\n\r");
       doAction("",CMD_PUKE);
+      this->dropPool(10, LIQ_VOMIT);
       if (getPosition() <= POSITION_SLEEPING) {
         sendTo("Puking in your sleep has cause you to gag!\n\r");
         if ((rc = reconcileDamage(this, ::number(1,10) +15, DAMAGE_SUFFOCATION)) == -1)
@@ -346,7 +332,7 @@ int disease_numbed(TBeing *victim, int message, affectedData *af)
         victim->remLimbFlags(slot, PART_PARALYZED); 
                                                                             
       if (victim->getPosition() > POSITION_DEAD) {
-        victim->sendTo("You feel the life some back to your %s!\n\r", victim->describeBodySlot(slot).c_str());
+        victim->sendTo("You feel the life come back to your %s!\n\r", victim->describeBodySlot(slot).c_str());
       }
       break;                                                                    
     default:
@@ -673,9 +659,10 @@ int disease_suffocate(TBeing *victim, int message, affectedData *af)
 
   switch (message) {
     case DISEASE_PULSE:
-      if (::number(0,2))
+      if (::number(0,1))
         return FALSE;
-      dam = ::number(1,min((int) af->level,50));
+      dam = ::number(min((int) af->level,50)/2 + 1,min((int) af->level,50));
+      // narrowed this from 1-50 (at 50th) to 25-50 or so... the damage was very lame
       victim->sendTo("GASP! You can't breathe!\n\r");
       act("$n grabs $s throat and gasps, trying to breathe.",
                  TRUE,victim,0,0,TO_ROOM);
@@ -797,6 +784,7 @@ int disease_food_poison(TBeing *ch, int message, affectedData *)
           break;
         case 5:
           ch->doAction("",CMD_PUKE);
+	  ch->dropPool(10, LIQ_VOMIT); 
           if (ch->getPosition() <= POSITION_SLEEPING) {
             ch->sendTo("Puking in your sleep has cause you to gag!\n\r");
             if ((rc = ch->reconcileDamage(ch, ::number(1,10) +15, DAMAGE_SUFFOCATION)) == -1)

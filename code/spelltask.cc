@@ -108,6 +108,7 @@ void TBeing::stopCast(stopCastT messages)
     which = 2;
   }
 
+
   if (target) {
     if (!(ch = target->getCaster())) {
       vlogf(LOG_BUG, "%s doesnt have a casterList in stopCast(%s)",target->getName(),getName());
@@ -1038,6 +1039,12 @@ int TBeing::checkBadSpellCondition(TBeing *caster, int which)
       }
       return FALSE;
     case SPELL_ANTIGRAVITY:
+
+      // A) this is causing a crash
+      // B) i think we check for this on a per person in group basis at the end of a success.
+      // dash 05/26/01
+      // blah
+#if 0
       if ((caster == victim) || (caster->inGroup(*victim))) {
         if (victim->isAffected(AFF_FLYING) || 
             victim->isAffected(AFF_LEVITATING)) {
@@ -1047,6 +1054,7 @@ int TBeing::checkBadSpellCondition(TBeing *caster, int which)
         return TRUE;
         }
       }
+#endif
       return FALSE;
     case SPELL_FALCON_WINGS:
       if (victim->affectedBySpell(SPELL_LEVITATE) || victim->affectedBySpell(SPELL_FLY)) {

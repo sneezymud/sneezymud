@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_air.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -510,7 +502,7 @@ int dustStorm(TBeing * caster, int level, byte bKnown, int adv_learn)
       if (!tmp_victim)
         continue;
 
-      if (!caster->inGroup(tmp_victim) && caster != tmp_victim) {
+      if (!caster->inGroup(*tmp_victim) && caster != tmp_victim) {
         act("$N chokes on the dust!", FALSE, caster, NULL, tmp_victim, TO_NOTVICT);
         act("You choke on the dust!", FALSE, tmp_victim, NULL, NULL, TO_CHAR);
         caster->reconcileHurt(tmp_victim, discArray[SPELL_DUST_STORM]->alignMod);
@@ -533,7 +525,7 @@ int dustStorm(TBeing * caster, int level, byte bKnown, int adv_learn)
         if (!tmp_victim)
           continue;
 
-        if (caster->inGroup(tmp_victim) && caster != tmp_victim) {
+        if (caster->inGroup(*tmp_victim) && caster != tmp_victim) {
           act("$N chokes on the dust!", FALSE, caster, NULL, tmp_victim, TO_NOTVICT);
           act("You choke on the dust!", FALSE, tmp_victim, NULL, NULL, TO_CHAR);
           caster->reconcileHurt(tmp_victim, discArray[SPELL_DUST_STORM]->alignMod);
@@ -611,7 +603,7 @@ int tornado(TBeing * caster, int level, byte bKnown, int adv_learn)
 	continue;
 
       if (1) {
-        if (!caster->inGroup(tb) && !tb->isImmortal()) {
+        if (!caster->inGroup(*tb) && !tb->isImmortal()) {
           caster->reconcileHurt(tb, discArray[SPELL_TORNADO]->alignMod);
           act("$n is blasted by the force of the wind!", FALSE, t, NULL, 0, TO_ROOM);
           act("You are blasted by the force of the wind!", FALSE, tb, NULL, NULL, TO_CHAR);
@@ -678,7 +670,7 @@ int tornado(TBeing * caster, int level, byte bKnown, int adv_learn)
 	continue;
 
         if (1) {
-          if (caster->inGroup(tb)) {
+          if (caster->inGroup(*tb)) {
             caster->reconcileHurt(tb, discArray[SPELL_TORNADO]->alignMod);
             act("$n chokes on the dust!", FALSE, tb, NULL, 0, TO_ROOM);
             act("You choke on the dust!", FALSE, tb, NULL, NULL, TO_CHAR);
@@ -824,7 +816,7 @@ void featheryDescent(TBeing * caster, TBeing *victim, TMagicItem * obj)
   aff.type = SPELL_FEATHERY_DESCENT;
   aff.level = level;
   // duration from the obj is 1/3 that of naturally cast
-  aff.duration = (aff.level / 3) * UPDATES_PER_TICK;
+  aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -864,7 +856,7 @@ int castFeatheryDescent(TBeing * caster, TBeing * victim)
 
   aff.type = SPELL_FEATHERY_DESCENT;
   aff.level = level;
-  aff.duration = aff.level * UPDATES_PER_TICK;
+  aff.duration = aff.level * UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -920,7 +912,7 @@ void fly(TBeing * caster, TBeing *victim,  TMagicItem * obj)
 
   aff.type = SPELL_FLY;
   aff.level = level;
-  aff.duration = 1 * UPDATES_PER_TICK * level;
+  aff.duration = 1 * UPDATES_PER_MUDHOUR * level;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_FLYING;
@@ -962,7 +954,7 @@ int castFly(TBeing * caster, TBeing * victim)
 
   aff.type = SPELL_FLY;
   aff.level = level;
-  aff.duration = 3 * UPDATES_PER_TICK * level;
+  aff.duration = 3 * UPDATES_PER_MUDHOUR * level;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_FLYING;
@@ -989,7 +981,8 @@ int antigravity(TBeing *caster, int, affectedData *aff, byte bKnown)
 {
   TThing *t;
   TBeing *vict = NULL;
-
+  char buf[80];
+  
   if (bSuccess(caster, bKnown, SPELL_ANTIGRAVITY)) {
 
     switch (critSuccess(caster, SPELL_ANTIGRAVITY)) {
@@ -1006,9 +999,10 @@ int antigravity(TBeing *caster, int, affectedData *aff, byte bKnown)
       vict = dynamic_cast<TBeing *>(t);
       if (!vict)
         continue;
-      if ((caster == vict) || (caster->inGroup(vict))) {
+      if ((caster == vict) || (caster->inGroup(*vict))) {
         if (vict->isAffected(AFF_FLYING) || vict->isAffected(AFF_LEVITATING)) {
-          caster->sendTo("$n is already affected by an anti gravity spell!\n\r");
+          sprintf(buf, "%s is already affected by a flight spell of some sort!\n\r",vict->getName());
+	  caster->sendTo(buf);
           caster->nothingHappens(SILENT_YES);
           continue;
         }
@@ -1028,6 +1022,7 @@ int antigravity(TBeing *caster, int, affectedData *aff, byte bKnown)
 
 int antigravity(TBeing * caster)
 {
+
   if (!bPassMageChecks(caster, SPELL_ANTIGRAVITY, NULL))
     return FALSE;
 
@@ -1050,7 +1045,7 @@ int castAntigravity(TBeing * caster)
 
   aff.type = SPELL_LEVITATE;
   aff.level = level;
-  aff.duration = (caster->isImmortal() ? caster->GetMaxLevel() : 3) * UPDATES_PER_TICK;
+  aff.duration = (caster->isImmortal() ? caster->GetMaxLevel() : 3) * UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_LEVITATING;
@@ -1085,12 +1080,16 @@ int conjureElemAir(TBeing * caster, int level, byte bKnown)
     if (victim->master)
       victim->stopFollower(TRUE);
 
-    aff.type = SPELL_ENSORCER;
+    aff.type = SPELL_CONJURE_AIR;
     aff.level = level;
     aff.duration  = caster->followTime();
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_CHARM;
+    victim->affectTo(&aff);
+
+    aff.type = AFFECT_THRALL;
+    aff.be = static_cast<TThing *>((void *) mud_str_dup(caster->getName()));
     victim->affectTo(&aff);
 
     // Add hp for higher levels - Russ 
@@ -1119,10 +1118,8 @@ int conjureElemAir(TBeing * caster, int level, byte bKnown)
              TRUE, caster, NULL, victim, TO_ROOM);
       act("You've created a monster; $N hates you!",
              FALSE, caster, NULL, victim, TO_CHAR);
-      victim->affectFrom(SPELL_ENSORCER);
-      //victim->developHatred(caster);
-      //caster->setCharFighting(victim);
-      //caster->setVictFighting(victim);
+      victim->affectFrom(SPELL_CONJURE_AIR);
+      victim->affectFrom(AFFECT_THRALL);
     } else
       caster->addFollower(victim);
 
@@ -1183,7 +1180,7 @@ int levitate(TBeing * caster, TBeing * victim, int level, byte bKnown)
 
   aff.type = SPELL_LEVITATE;
   aff.level = level;
-  aff.duration = 3 * UPDATES_PER_TICK;
+  aff.duration = 3 * UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_LEVITATING;
@@ -1266,7 +1263,7 @@ int falconWings(TBeing * caster, TBeing * victim, int level, byte bKnown)
 
   aff.type = SPELL_FALCON_WINGS;
   aff.level = level;
-  aff.duration = 3 * UPDATES_PER_TICK;
+  aff.duration = 3 * UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_FLYING;
@@ -1356,7 +1353,7 @@ int protectionFromAir(TBeing *caster, TBeing *victim, int level, byte bKnown)
  
   aff.type = SPELL_PROTECTION_FROM_AIR;
   aff.level = level;
-  aff.duration = (3 + (level / 2)) * UPDATES_PER_TICK;
+  aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
   aff.location = APPLY_IMMUNITY;
   aff.modifier = IMMUNE_AIR;
   aff.modifier2 = ((level * 2) / 3);
@@ -1370,7 +1367,7 @@ int protectionFromAir(TBeing *caster, TBeing *victim, int level, byte bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_PROTECTION_FROM_AIR);
-        aff.duration = (10 + (level / 2)) * UPDATES_PER_TICK;
+        aff.duration = (10 + (level / 2)) * UPDATES_PER_MUDHOUR;
         aff.modifier2 = (level * 2);
         break;
       case CRIT_S_NONE:

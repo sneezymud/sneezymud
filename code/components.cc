@@ -2476,7 +2476,7 @@ bool isDissectComponent(int vnum)
     case COMP_FUMBLE:        // periodic loads
     case COMP_STONE_SKIN:        // periodic loads
     case COMP_STEALTH:        // periodic loads
-    case COMP_CLOUD_OF_CONCEAL:        // periodic loads
+      //case COMP_CLOUD_OF_CONCEAL:        // periodic loads
     case COMP_CONJURE_AIR:        // periodic loads
     case COMP_FLIGHT:        // periodic loads
     case COMP_HELLFIRE:        // periodic loads

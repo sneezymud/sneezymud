@@ -466,3 +466,4 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
 
   return dam;
 }
+
