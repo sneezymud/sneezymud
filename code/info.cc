@@ -3380,7 +3380,11 @@ string TObj::equip_condition(int amt) const
   else
     p = ((double) amt) / ((double) getMaxStructPoints());
 
-  if (p == 1) {
+  if(p > 1.0){
+    // shouldn't happen theoretically
+    string a("<W>better than new<1>");
+    return a;
+  } else if (p == 1) {
     string a("<C>brand new<1>");
     return a;
   } else if (p > .9) {
