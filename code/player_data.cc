@@ -817,7 +817,7 @@ void TBeing::saveChar(sh_int load_room)
 
   if (dynamic_cast<TMonster *>(this)) {
     // save money for shop keepers, if they're owned
-    if(spec==SPEC_SHOPKEEPER){
+    if(isShopkeeper()){
       unsigned int shop_nr;
     
       for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);

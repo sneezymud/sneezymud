@@ -3094,7 +3094,7 @@ void TMonster::purgeMe(TBeing *ch)
       ch->sendTo("You can not purge a polyed or switched mob.\n\r");
     return;
   }
-  if (spec == SPEC_SHOPKEEPER || spec == SPEC_SHARPENER || spec == SPEC_REPAIRMAN || spec == SPEC_ATTUNER) {
+  if (isShopkeeper() || spec == SPEC_SHARPENER || spec == SPEC_REPAIRMAN || spec == SPEC_ATTUNER) {
     if (ch)
       ch->sendTo("Boy that was close.\n\rBe glad Brutius put in a catch so you didn't purge the shopkeeper.\n\r");
     return;
@@ -3284,7 +3284,7 @@ void TPerson::doPurge(const char *argument)
     }
     TThing *t_obj;
     if ((vict = get_char_room_vis(this, name_buf))) {
-      if (vict->spec == SPEC_SHOPKEEPER) {    // shopkeeper 
+      if (vict->isShopkeeper()) {    // shopkeeper 
         sendTo("Be glad Brutius put this catch in for shopkeepers.\n\r");
         vlogf(LOG_MISC, "%s just tried to purge a shopkeeper.", getName());
         return;

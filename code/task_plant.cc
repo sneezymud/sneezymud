@@ -58,7 +58,7 @@ static bool genericCanPlantThief(TBeing *thief, TBeing *victim)
     return FALSE;
   }
 
-  if (victim->spec == SPEC_SHOPKEEPER && !is_imp) {
+  if (victim->isShopkeeper() && !is_imp) {
     thief->sendTo("Oh, Bad Move.  Bad Move.\n\r");
     vlogf(LOG_CHEAT, "%s just tried to plant on a shopkeeper! [%s]",
           thief->getName(), victim->getName());

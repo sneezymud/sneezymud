@@ -98,7 +98,7 @@ bool TBeing::isPet(const unsigned int bv) const
     vlogf(LOG_BUG, "Problem in ReloadNPCAsNew (ERR 3).  Trying to reload %s.",getName ());
     return FALSE;
   }
-  if (mob_index[rc].spec == SPEC_SHOPKEEPER) {
+  if (newMob->isShopkeeper()){
     vlogf(LOG_BUG, "Problem in ReloadNPCAsNew (ERR 4).  Trying to reload shopkeepere-%s.",getName ());
     delete newMob;
     return FALSE;

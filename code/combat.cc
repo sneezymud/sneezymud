@@ -463,7 +463,7 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
   if (desc)
     desc->outputProcessing();
 
-  if (spec == SPEC_SHOPKEEPER) {
+  if (isShopkeeper()) {
     vlogf(LOG_COMBAT, "Shopkeeper inventory being removed.");
 
     for (TThing *tThing = getStuff(); tThing; ) {
@@ -498,7 +498,7 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
   // anything calling, should delete this
   preKillCheck();
 
-  if (spec == SPEC_SHOPKEEPER && number >= 0) {
+  if (isShopkeeper() && number >= 0) {
     vlogf(LOG_COMBAT, "Shopkeeper [%s] was just killed.  Find out how!", getName());
 
     unsigned int shop_nr;

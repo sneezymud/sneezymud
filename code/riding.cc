@@ -116,6 +116,9 @@ int TMonster::lookForHorse()
   if (5*getHit() < 4*hitLimit())
     return FALSE;
 
+  if(isShopkeeper())
+    return FALSE;
+
   switch (spec) {
     // utilmobs already accounted for
     case SPEC_BOUNTY_HUNTER:

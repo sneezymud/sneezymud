@@ -779,7 +779,7 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
        getName(), mobVnum(), max_exist);
   }
   */
-  if (spec == SPEC_SHOPKEEPER && !IS_SET(specials.act, ACT_IMMORTAL)) {
+  if (isShopkeeper() && !IS_SET(specials.act, ACT_IMMORTAL)) {
     // have a lot of gold, and otherwise might get killed
     vlogf(LOG_LOW, "Shopkeeper (%s:%d) needs to be set immortal(%d).",
          getName(), mobVnum(), ACT_IMMORTAL);

@@ -92,7 +92,7 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
 
     // guess who shouldn't get diseases...
     if (v->spec == SPEC_HORSE_PESTILENCE ||
-        v->spec == SPEC_SHOPKEEPER ||
+        v->isShopkeeper() ||
         v->mobVnum() == APOC_PESTHORSE)
       continue;
 

@@ -463,6 +463,7 @@ class TMonster : public TBeing {
     virtual bool isNocturnal() const;
     virtual bool isDiurnal() const;
     virtual bool isPolice() const;
+    virtual bool isShopkeeper() const;
 
     virtual int getWait() const {
       return wait;

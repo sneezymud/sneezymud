@@ -470,7 +470,7 @@ int eyesOfFertuman(TBeing *caster, const char * tofind, int level, byte bKnown)
             obj->objVnum() == MYSTERY_POTION ||
 	    obj->objVnum() == LEARNING_POTION ||
             obj->parent    == caster       ||
-            (tMon && mob_index[tMon->getMobIndex()].spec == SPEC_SHOPKEEPER))
+            (tMon && tMon->isShopkeeper()))
 	  continue;
         //added to skip items on gods 10-19-00 -dash
 	if(dynamic_cast<TBeing *>(obj->parent) && dynamic_cast<TBeing *>(obj->parent)->isImmortal())

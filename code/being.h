@@ -664,6 +664,7 @@ class TBeing : public TThing {
     virtual bool isPolice() const { return false; }
     virtual bool isDiurnal() const { return false; }
     virtual bool isNocturnal() const { return false; }
+    virtual bool isShopkeeper() const { return false; }
     virtual int pourWaterOnMe(TBeing *, TObj *);
     virtual int getSnum() const { return (snum > -1 ? snum : mobVnum()); };
     // END VIRTUAL FUNCTIONS

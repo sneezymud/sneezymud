@@ -2462,6 +2462,8 @@ int TComponent::rentCost() const
 
 void TComponent::decayMe()
 {
+  TMonster *tm;
+
   if (obj_flags.decay_time <= 0)
     return;
 
@@ -2470,8 +2472,8 @@ void TComponent::decayMe()
     return;
 
   // don't decay if a shopkeeper has the comp
-  if (dynamic_cast<TMonster *>(parent) &&
-      parent->spec == SPEC_SHOPKEEPER)
+  if ((tm=dynamic_cast<TMonster *>(parent)) &&
+      tm->isShopkeeper())
     return;
 
   // decay if it doesn't have a parent (lying on the ground)

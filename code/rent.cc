@@ -1264,7 +1264,7 @@ void TMonster::saveItems(const sstring &filepath)
   fwrite(&i, sizeof(i), 1, fp);
   fclose(fp);
 
-  if(spec==SPEC_SHOPKEEPER){
+  if(isShopkeeper()){
     unsigned int shop_nr;
 
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);

@@ -3554,7 +3554,7 @@ int TMonster::mobileActivity(int pulse)
       bumpHead(&iHeight);
   }
 
-  if (spec==SPEC_SHOPKEEPER && !(pulse %(200*PULSE_MOBACT)) && !noSpecials){
+  if (isShopkeeper() && !(pulse %(200*PULSE_MOBACT)) && !noSpecials){
     unsigned int shop_nr;
     
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != number); shop_nr++);

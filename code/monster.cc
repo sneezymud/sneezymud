@@ -369,7 +369,7 @@ int TMonster::calculateGoldFromConstant()
   // adjust for global gold modifier...
   the_gold *= gold_modifier[GOLD_INCOME].getVal();
 
-  if (spec == SPEC_SHOPKEEPER){
+  if (isShopkeeper()){
     unsigned int shop_nr;
 
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);
@@ -539,4 +539,13 @@ int TMonster::lookForEngaged(const TBeing *ch)
     }
   }
   return FALSE;
+}
+
+
+
+bool TMonster::isShopkeeper() const {
+  if(spec==SPEC_SHOPKEEPER)
+    return true;
+
+  return false;
 }
