@@ -467,9 +467,9 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 
   // determine dice roll for crit, modified by skill(s)
   if(doesKnowSkill(SKILL_CRIT_HIT) && isPc()){
-    dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_CRIT_HIT)*950)));
+    dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_CRIT_HIT)*850)));
   } else if(doesKnowSkill(SKILL_POWERMOVE) && isPc()){
-    dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_POWERMOVE)*900)));
+    dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_POWERMOVE)*800)));
   } else if(dynamic_cast<TMonster *>(this)){
     // less crits for mobs
     dicenum = dice(1, 1000000);
