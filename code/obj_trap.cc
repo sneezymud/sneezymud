@@ -394,6 +394,18 @@ void TTrap::armGrenade(TBeing *ch)
   // a single time.
   // keep the wait-time < 3 or person can't escape a dropped grenade
   ch->addToWait(combatRound(1));
+
+  // run for it!
+  TThing *t;
+  TMonster *tm;
+
+  if(::number(0,1)){
+    for(t=ch->roomp->getStuff(); t; t=t->nextThing){
+      if((tm=dynamic_cast<TMonster *>(t))){
+	tm->doFlee("");
+      }
+    }
+  }
 }
 
 int TTrap::throwMe(TBeing *ch, dirTypeT dir, const char *)
