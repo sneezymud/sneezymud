@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_objs.cc,v $
+// Revision 1.2  1999/09/26 22:54:53  lapsos
+// Modifications to the wicked proc.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -2223,11 +2226,20 @@ int wickedDagger(TBeing *vict, cmdTypeT cmd, const char *, TObj *me, TObj *ch_ob
   int dam = ::number(1,2);
   spellNumT wtype = me->getWtype();
 
+  if (::number(0,10) || vict->getHit() <= 0 ||
+      (dynamic_cast<TBeing *>(dynamic_cast<TThing *>(ch_obj)))->getHit() <= 0)
+    return FALSE;
+
+  sendrpf(COLOR_OBJECTS, vict->roomp, "%s<k> sheds a light of iniquity.<z>",
+          (me->getName() ? me->getName() : "Bogus Object"));
+
   if (cmd == CMD_OBJ_MISS) {
     // victim = vict
     // swinger = ch_obj as TBeing, so must cast back to being
     TThing *ch_thing = ch_obj;
     TBeing *ch = dynamic_cast<TBeing *>(ch_thing);
+
+    ch->sendTo("You feel the life within you slowly ebb away.");
 
     // missing does dam to swinger
     int rc = ch->reconcileDamage(ch, dam, wtype);
@@ -2241,6 +2253,8 @@ int wickedDagger(TBeing *vict, cmdTypeT cmd, const char *, TObj *me, TObj *ch_ob
 
     // we can safely use equippedBy since ch takes no damage
     TBeing *ch = dynamic_cast<TBeing *>(me->equippedBy);
+
+    vict->sendTo("You feel the life within you slowly ebb away.");
 
     int rc = ch->reconcileDamage(vict, dam, wtype);
     if (rc == -1)
