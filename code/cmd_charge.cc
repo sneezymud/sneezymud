@@ -121,7 +121,7 @@ vict->getName());
       // don't have mount scatter
       if (ch->riding == tb)
         continue;
-      if (tb->fight() == vict) {
+      if ((tb->fight() == vict) && (tb != mount)) {
         // we have already validated that all attackers are in ch's group
         act("You scatter as $N charges!",
            FALSE, tb, 0, ch, TO_CHAR);
