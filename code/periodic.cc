@@ -743,7 +743,7 @@ int TBeing::updateHalfTickStuff()
   
 
   if (hasClass(CLASS_SHAMAN)) {
-    if (!isPc()) {
+    if (isPc()) {
       if (0 >= getLifeforce()) {
 	setLifeforce(0);
 	addToHit(-2);
