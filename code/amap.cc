@@ -4,7 +4,7 @@
 #include<string.h>
 #include<map>
 
-#define MAXROOMS 50000
+// this code is totally janky, but it gets the job done - peel
 
 //#define MINLEVEL -20
 //#define MAXLEVEL 10
@@ -117,7 +117,10 @@ public:
 
   NODE();
 
-} *head, *nodes[MAXROOMS];
+} *head;
+
+
+map <int, class NODE *> nodes;
 
 
 NODE::NODE()
@@ -151,7 +154,7 @@ S
  */
 
 NODE *find_node(int num){
-  if(num>MAXROOMS || num<0) 
+  if(num<0) 
     return NULL;
 
   return(nodes[num]);
@@ -349,6 +352,7 @@ char *itoa(int n){
   return(s);
 }
 
+#if 0
 void check_rooms(){
   int count=0;
   
@@ -408,10 +412,8 @@ void check_rooms(){
       }
     }
   }
-
-
 }
-
+#endif
 
 
 
@@ -444,9 +446,12 @@ void createmap(int MINLEVEL, int MAXLEVEL){
   mapdata=(char *) calloc(1, mapsize);
 
   for(t=head;t;t=t->next){
-    if(t->z<MINLEVEL || t->z>MAXLEVEL) continue;
+    if(t->z<MINLEVEL || t->z>MAXLEVEL)
+      continue;
+
     t->x+=abs(minx);
     t->y+=abs(miny);
+
     cellx=t->x*CELLSIZE;
     celly=t->y*CELLSIZE;
     loc=(mapwidth*celly)+cellx;
@@ -543,9 +548,6 @@ int main(int argc, char **argv){
   FILE *zone=fopen("/mud/code/lib/tinyworld.zon", "rt");
   NODE *last=NULL, *t;
   int i;
-
-  for(i=0;i<MAXROOMS;++i)
-    nodes[i]=NULL;
 
   makezonelist(zone);
 
