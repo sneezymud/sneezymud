@@ -297,7 +297,7 @@ void ObjLoad(TBeing *ch, int vnum)
 
   ch->sendTo("Loading saved object number %d\n\r", vnum);
 
-  o = makeNewObj(mapFileToItemType(atoi(db.getColumn(0))));
+  o = makeNewObj(mapFileToItemType(atoi_safe(db.getColumn(0))));
   o->snum   = vnum;
   o->number = -1;
 
@@ -305,21 +305,21 @@ void ObjLoad(TBeing *ch, int vnum)
   o->shortDescr = mud_str_dup(db.getColumn(2));
   o->setDescr(mud_str_dup(db.getColumn(3)));
 
-  o->setObjStat(atoi(db.getColumn(4)));
-  o->obj_flags.wear_flags = atoi(db.getColumn(5));
+  o->setObjStat(atoi_safe(db.getColumn(4)));
+  o->obj_flags.wear_flags = atoi_safe(db.getColumn(5));
 
-  o->assignFourValues(atoi(db.getColumn(6)), atoi(db.getColumn(7)), atoi(db.getColumn(8)), atoi(db.getColumn(9)));
+  o->assignFourValues(atoi_safe(db.getColumn(6)), atoi_safe(db.getColumn(7)), atoi_safe(db.getColumn(8)), atoi_safe(db.getColumn(9)));
 
-  o->setWeight(atof(db.getColumn(10)));
-  o->obj_flags.cost = atoi(db.getColumn(11));
-  o->canBeSeen = atoi(db.getColumn(12));
-  o->spec = atoi(db.getColumn(13));
-  o->obj_flags.max_struct_points = atoi(db.getColumn(14));
-  o->obj_flags.struct_points = atoi(db.getColumn(15));
-  o->obj_flags.decay_time = atoi(db.getColumn(16));
-  o->setVolume(atoi(db.getColumn(17)));
-  o->setMaterial(atoi(db.getColumn(18)));
-  o->max_exist = atoi(db.getColumn(19));
+  o->setWeight(atof_safe(db.getColumn(10)));
+  o->obj_flags.cost = atoi_safe(db.getColumn(11));
+  o->canBeSeen = atoi_safe(db.getColumn(12));
+  o->spec = atoi_safe(db.getColumn(13));
+  o->obj_flags.max_struct_points = atoi_safe(db.getColumn(14));
+  o->obj_flags.struct_points = atoi_safe(db.getColumn(15));
+  o->obj_flags.decay_time = atoi_safe(db.getColumn(16));
+  o->setVolume(atoi_safe(db.getColumn(17)));
+  o->setMaterial(atoi_safe(db.getColumn(18)));
+  o->max_exist = atoi_safe(db.getColumn(19));
   if(strcmp(db.getColumn(20), "")) o->action_description=mud_str_dup(db.getColumn(20));
   else o->action_description=NULL;
 
@@ -342,14 +342,14 @@ void ObjLoad(TBeing *ch, int vnum)
   db.query("select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum, ch->name);
 
   while(db.fetchRow()){
-    o->affected[i].location = mapFileToApply(atoi(db.getColumn(0)));
+    o->affected[i].location = mapFileToApply(atoi_safe(db.getColumn(0)));
 
     if (applyTypeShouldBeSpellnum(o->affected[i].location))
-      o->affected[i].modifier = mapFileToSpellnum(atoi(db.getColumn(1)));
+      o->affected[i].modifier = mapFileToSpellnum(atoi_safe(db.getColumn(1)));
     else
-      o->affected[i].modifier = atoi(db.getColumn(1));
+      o->affected[i].modifier = atoi_safe(db.getColumn(1));
  
-    o->affected[i].modifier2 = atoi(db.getColumn(2));
+    o->affected[i].modifier2 = atoi_safe(db.getColumn(2));
 
     if (o->affected[i].location == APPLY_LIGHT)
       o->addToLight(o->affected[i].modifier);
@@ -790,7 +790,7 @@ void TPerson::doOEdit(const char *argument)
 	vnum=-1;
 	while(db.fetchRow()){
 	  if(isname(string, db.getColumn(1))){
-	    vnum=atoi(db.getColumn(0));
+	    vnum=atoi_safe(db.getColumn(0));
 	    break;
 	  }
 	}
@@ -1217,7 +1217,7 @@ static void change_obj_weight(TBeing *ch, TObj *o, const char *arg, editorEnterT
       update_obj_menu(ch, o);
       return;
     }
-    new_weight = atof(arg);
+    new_weight = atof_safe(arg);
 
     if (new_weight < 0.0 || new_weight > 500000.0) {
       ch->sendTo("Please enter a number from 0.1 to 500000.0\n\r");
@@ -1245,7 +1245,7 @@ static void change_obj_volume(TBeing *ch, TObj *o, const char *arg, editorEnterT
       update_obj_menu(ch, o);
       return;
     }
-    new_vol = atoi(arg);
+    new_vol = atoi_safe(arg);
 
     if (new_vol < 0 || new_vol > 50000) {
       ch->sendTo("Please enter a number from 1-50000.\n\r");
@@ -1301,7 +1301,7 @@ static void change_obj_type(TBeing *ch, TObj *o, const char *arg, editorEnterTyp
       return;
     }
   }
-  int num = atoi(arg);
+  int num = atoi_safe(arg);
   num--;
 
   if (type != ENTER_CHECK) {
@@ -1367,7 +1367,7 @@ static void change_obj_cost(TBeing *ch, TObj *o, const char *arg, editorEnterTyp
       update_obj_menu(ch, o);
       return;
     }
-    new_cost = atoi(arg);
+    new_cost = atoi_safe(arg);
 
     if (new_cost < 0 || new_cost > 1000000) {
       ch->sendTo("Please enter a number from 1-1000000.\n\r");
@@ -1399,7 +1399,7 @@ static void change_obj_extra_flags(TBeing *ch, TObj *o, const char *arg, editorE
       return;
     }
   }
-  update = atoi(arg);
+  update = atoi_safe(arg);
   update--;
 
   if (type != ENTER_CHECK) {
@@ -1452,7 +1452,7 @@ static void change_obj_wear_flags(TBeing *ch, TObj *o, const char *arg, editorEn
       update_obj_menu(ch, o);
       return;
     }
-  update = atoi(arg);
+  update = atoi_safe(arg);
   update--;
 
   if (type != ENTER_CHECK) {
@@ -1497,7 +1497,7 @@ static void change_obj_max_struct_points(TBeing *ch, TObj *o, const char *arg, e
       update_obj_menu(ch, o);
       return;
     }
-    new_struct = atoi(arg);
+    new_struct = atoi_safe(arg);
 
     if (new_struct < -1 || new_struct > 100) {
       ch->sendTo("Please enter a number from 1-100.\n\r");
@@ -1525,7 +1525,7 @@ static void change_obj_max_exist(TBeing *ch, TObj *obj, const char *arg, editorE
       update_obj_menu(ch, obj);
       return;
     }
-    max_exist = atoi(arg);
+    max_exist = atoi_safe(arg);
     if (max_exist < 0 || max_exist > 9999) {
       ch->sendTo("Please enter a number from 0 to 9999.\n\r");
       return;
@@ -1720,7 +1720,7 @@ static void change_obj_struct_points(TBeing *ch, TObj *o, const char *arg, edito
       update_obj_menu(ch, o);
       return;
     }
-    new_struct = atoi(arg);
+    new_struct = atoi_safe(arg);
 
     if (new_struct < -1 || new_struct > 100) {
       ch->sendTo("Please enter a number from 1-100.\n\r");
@@ -1750,7 +1750,7 @@ void change_obj_values(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT ty
       return;
     }
   }
-  update = atoi(arg);
+  update = atoi_safe(arg);
   update--;
 
   o->getFourValues(&x1, &x2, &x3, &x4);
@@ -1906,7 +1906,7 @@ static void change_obj_decay(TBeing *ch, TObj *o, const char *arg, editorEnterTy
       update_obj_menu(ch, o);
       return;
     }
-    new_decay = atoi(arg);
+    new_decay = atoi_safe(arg);
 
     if (new_decay < -1 || new_decay > 10000) {
       ch->sendTo("Please enter a number from 1-10000.\n\r");
@@ -1935,7 +1935,7 @@ static void change_obj_mat_type(TBeing *ch, TObj *o, const char *arg, editorEnte
       update_obj_menu(ch, o);
       return;
     }
-    update = atoi(arg);
+    update = atoi_safe(arg);
     update--;
 
     switch (ch->specials.edit) {
@@ -2102,7 +2102,7 @@ static void change_obj_can_be_seen(TBeing *ch, TObj *o, const char *arg, editorE
       update_obj_menu(ch, o);
       return;
     }
-    new_seen = atoi(arg);
+    new_seen = atoi_safe(arg);
 
     if (new_seen < 0 || new_seen > 25) {
       ch->sendTo("Please enter a number from 0-25.\n\r");
@@ -2145,7 +2145,7 @@ static void change_obj_spec(TBeing *ch, TObj *obj, const char *arg, editorEnterT
       update_obj_menu(ch, obj);
       return;
     }
-    new_spec = atoi(arg);
+    new_spec = atoi_safe(arg);
     if (new_spec < 0 || new_spec > NUM_OBJ_SPECIALS) {
       ch->sendTo("Please enter a number from 0 to %d.\n\r", NUM_OBJ_SPECIALS);
       return;
@@ -2191,7 +2191,7 @@ void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorE
       return;
     }
   }
-  loc_update = atoi(arg);
+  loc_update = atoi_safe(arg);
 
   switch (ch->specials.edit) {
     case CHANGE_CHEST_VALUE2:
@@ -2362,7 +2362,7 @@ void change_portal_value1(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
       return;
     }
   }
-  loc_update = atoi(arg);
+  loc_update = atoi_safe(arg);
 
   switch (ch->specials.edit) {
     case CHANGE_PORTAL_VALUE1:
@@ -2431,7 +2431,7 @@ void change_portal_value3(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
       return;
     }
   }
-  loc_update = atoi(arg);
+  loc_update = atoi_safe(arg);
 
   switch (ch->specials.edit) {
     case CHANGE_PORTAL_VALUE3:
@@ -2524,7 +2524,7 @@ void change_portal_value4(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
       return;
     }
   }
-  loc_update = atoi(arg);
+  loc_update = atoi_safe(arg);
 
   switch (ch->specials.edit) {
     case CHANGE_PORTAL_VALUE4:
@@ -2597,7 +2597,7 @@ void change_arrow_value4(TBeing *ch, TArrow *o, const char *arg, editorEnterType
     }
   }
 
-  loc_update = atoi(arg);
+  loc_update = atoi_safe(arg);
 
   switch (ch->specials.edit) {
     case CHANGE_ARROW_VALUE4:
@@ -2666,7 +2666,7 @@ void obj_edit(TBeing *ch, const char *arg)
         ch->doCls(false);
       return;
     }
-    switch (atoi(arg)) {
+    switch (atoi_safe(arg)) {
       case 0:
         ch->specials.edit = MAIN_MENU;
 	update_obj_menu(ch, ch->desc->obj);
@@ -3092,7 +3092,7 @@ void TMagicItem::changeMagicItemValue1(TBeing *ch, const char *arg, editorEnterT
       return;
     }
   }
-  loc_update = atoi(arg);
+  loc_update = atoi_safe(arg);
  
   switch (ch->specials.edit) {
     case CHANGE_MAGICITEM_VALUE1:
@@ -3157,7 +3157,7 @@ void TTrap::changeTrapValue2(TBeing *ch, const char *arg, editorEnterTypeT type)
       return;
     }
   }
-  loc_update = atoi(arg);
+  loc_update = atoi_safe(arg);
   loc_update--;
 
   if (type != ENTER_CHECK) {
@@ -3202,7 +3202,7 @@ void TTrap::changeTrapValue3(TBeing *ch, const char *arg, editorEnterTypeT type)
       return;
     }
   }
-  loc_update = doorTrapT(atoi(arg) - 1);
+  loc_update = doorTrapT(atoi_safe(arg) - 1);
 
   if (type != ENTER_CHECK) {
     if (loc_update <= 0 || loc_update > MAX_TRAP_TYPES) {
@@ -3365,7 +3365,7 @@ int TBeing::editAverageMe(TBeing *tBeing, const char *tString)
 
   classIndT tClass;
   int tStr, tBra, tCon, tDex, tAgi, tInt, tWis, tFoc, tPer, tCha, tKar, tSpe;
-  double tLevel = atof(tStString.c_str());
+  double tLevel = atof_safe(tStString.c_str());
 
   if (tLevel <= 0 || tLevel > 60) {
     tBeing->sendTo("Level must be between 1 and 60.\n\r");
@@ -3579,7 +3579,7 @@ int TBaseWeapon::editAverageMe(TBeing *tBeing, const char *tString)
     return FALSE;
   }
 
-  double tLevel = atof(tString);
+  double tLevel = atof_safe(tString);
 
   if (tLevel <= 0.0 || tLevel > 60.0) {
     tBeing->sendTo("Level must be between 1 and 60.\n\r");
@@ -3620,7 +3620,7 @@ int TBaseClothing::editAverageMe(TBeing *tBeing, const char *tString)
     return FALSE;
   }
 
-  double tLevel = atof(tString);
+  double tLevel = atof_safe(tString);
 
   if (tLevel <= 0.0 || tLevel > 60.0) {
     tBeing->sendTo("Level must be between 1 and 60.\n\r");
@@ -3648,7 +3648,7 @@ void TGun::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnterTypeT 
       update_obj_menu(ch, o);
       return;
     }
-    new_rof = atoi(arg);
+    new_rof = atoi_safe(arg);
 
     if (new_rof < 1 || new_rof > 10) {
       ch->sendTo("Please enter a number from 0.1 to 500000.0\n\r");

@@ -465,7 +465,7 @@ void TBeing::doSplit(const char *argument, bool tell)
 
   if (is_number(buf)) {
     int amount = 0;
-    amount = atoi(buf);
+    amount = atoi_safe(buf);
     if (amount < 0) {
       sendTo("Sorry, you can't do that!\n\r");
       return;
@@ -1941,7 +1941,7 @@ void TBeing::doGroup(const char *argument)
       sendTo("Syntax: group share <target> <amount>\n\r");
       return;
     }
-    if ((amt = atoi(buf)) <= 0 || amt > 10) {
+    if ((amt = atoi_safe(buf)) <= 0 || amt > 10) {
       sendTo("Syntax: group share <target> <amount>\n\r");
       sendTo("Amount must be in range 1-10.\n\r");
       return;
@@ -3330,7 +3330,7 @@ void TBeing::doContinue(const char *argument)
       REMOVE_BIT(spelltask->flags, CASTFLAG_CAST_INDEFINITE);
       return;
     }
-    value = atoi(arg);    
+    value = atoi_safe(arg);    
     if (value < 1) {
       sendTo("You can not change your prayer in this manner.\n\r");
       return;

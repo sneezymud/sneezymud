@@ -110,7 +110,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
 	return TRUE;
       }
 
-      if(atoi(db.getColumn(0))<=0){
+      if(atoi_safe(db.getColumn(0))<=0){
 	sprintf(tellbuf, "%s, You don't own that plot!",
 		fname(ch->name).c_str());
 	myself->doTell(tellbuf);
@@ -131,7 +131,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
 	      fname(ch->name).c_str());
       myself->doTell(tellbuf);
       
-      TObj *obj=read_object(atoi(db.getColumn(0)), VIRTUAL);
+      TObj *obj=read_object(atoi_safe(db.getColumn(0)), VIRTUAL);
       *ch += *obj;
       act("$n gives you $p.", FALSE, myself, obj, ch, TO_VICT);
     } else {
@@ -145,7 +145,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
 	return TRUE;
       }
       
-      if(atoi(db.getColumn(0))<=0 || !*buf2 || !*buf){
+      if(atoi_safe(db.getColumn(0))<=0 || !*buf2 || !*buf){
 	sprintf(tellbuf, "%s, That plot or plan isn't available.",
 		fname(ch->name).c_str());
 	myself->doTell(tellbuf);
@@ -172,7 +172,7 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
 	      fname(ch->name).c_str());
       myself->doTell(tellbuf);
       
-      TObj *obj=read_object(atoi(db.getColumn(0)), VIRTUAL);
+      TObj *obj=read_object(atoi_safe(db.getColumn(0)), VIRTUAL);
       *ch += *obj;
       act("$n gives you $p.", FALSE, myself, obj, ch, TO_VICT);
       
@@ -185,12 +185,12 @@ int realEstateAgent(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
 	return TRUE;
       }
      
-      plan_i=atoi(db.getColumn(0));
-      plot_start=atoi(db.getColumn(1));
-      plot_end=atoi(db.getColumn(2));
-      keynum=atoi(db.getColumn(3));
-      flip=atoi(db.getColumn(4));    
-      rotate=atoi(db.getColumn(5));
+      plan_i=atoi_safe(db.getColumn(0));
+      plot_start=atoi_safe(db.getColumn(1));
+      plot_end=atoi_safe(db.getColumn(2));
+      keynum=atoi_safe(db.getColumn(3));
+      flip=atoi_safe(db.getColumn(4));    
+      rotate=atoi_safe(db.getColumn(5));
       
       if(!bootHome(plan_i, plot_start, plot_end, keynum, flip, rotate, TRUE)){
 	vlogf(LOG_BUG, "bootHome failed");

@@ -282,7 +282,7 @@ string showComponentTechnical(const int tValue)
         sprintf(tBuffer, "load %d;\n", tValue);
 
         if (!strcmp(tChar, tBuffer)) {
-          tMobNum = real_mobile(atoi(tDir->d_name));
+          tMobNum = real_mobile(atoi_safe(tDir->d_name));
 
           if (tMobNum < 0 || tMobNum > (signed) mob_index.size())
             strcpy(tString, "[Unknown]");
@@ -359,7 +359,7 @@ void TPerson::doShow(const char *argument)
       int raceIndex = -1;
 
       if (is_number(buf)) {
-        raceIndex = atoi(buf);
+        raceIndex = atoi_safe(buf);
 
         if (raceIndex > 0 && raceIndex < MAX_RACIAL_TYPES && Races[raceIndex]) {
           Races[raceIndex]->showTo(this);
@@ -373,7 +373,7 @@ void TPerson::doShow(const char *argument)
           }
       }
       /*
-      int raceIndex = atoi(buf);
+      int raceIndex = atoi_safe(buf);
       if (raceIndex < MAX_RACIAL_TYPES) {
         if ((raceIndex) && (Races[raceIndex])) {
           Races[raceIndex]->showTo(this);
@@ -499,7 +499,7 @@ void TPerson::doShow(const char *argument)
       tString = one_argument(tString, buf2);
 
       if (*buf && is_abbrev(buf, "type")) {
-        ubyte itemType = (unsigned char)(*buf2 ? atoi(buf2) : 0);
+        ubyte itemType = (unsigned char)(*buf2 ? atoi_safe(buf2) : 0);
 
         if (!hasWizPower(POWER_SHOW_TRUSTED)) {
           sb += "VNUM  rnum   names\n\r";
@@ -685,7 +685,7 @@ void TPerson::doShow(const char *argument)
       argument = one_argument(argument, buf2);
 
       if (*buf && is_abbrev(buf, "race")) {
-        top = (*buf2 ? atoi(buf2) : -1);
+        top = (*buf2 ? atoi_safe(buf2) : -1);
 
         if (!hasWizPower(POWER_SHOW_TRUSTED)) {
           sb += "VNUM  level class aff names\n\r";
@@ -859,7 +859,7 @@ void TPerson::doShow(const char *argument)
       }
 
       if(matnum==-1)
-	matnum=atoi(buf2);
+	matnum=atoi_safe(buf2);
 
       sb += describeMaterial(matnum);
     } else {
@@ -910,14 +910,14 @@ void TPerson::doShow(const char *argument)
               top = zone_table.size() - 1;
             }
           } else {
-            bottom = atoi(buf2);
+            bottom = atoi_safe(buf2);
             for (; isspace(*argument); argument++);
 
             if (!*argument)
               top = bottom;
             else {
               argument = one_argument(argument, buf2); // get 2nd <#>
-              top = atoi(buf2);
+              top = atoi_safe(buf2);
             }
           }
         } else {
@@ -1320,7 +1320,7 @@ string showComponentTechnical(const int tValue)
         sprintf(tBuffer, "load %d;\n", tValue);
 
         if (!strcmp(tChar, tBuffer)) {
-          tMobNum = real_mobile(atoi(tDir->d_name));
+          tMobNum = real_mobile(atoi_safe(tDir->d_name));
 
           if (tMobNum < 0 || tMobNum > (signed) mob_index.size())
             strcpy(tString, "[Unknown]");

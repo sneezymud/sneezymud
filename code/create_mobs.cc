@@ -644,7 +644,7 @@ static void change_mob_act_flags(TBeing *ch, TMonster *mob, const char *arg, edi
       update_mob_menu(ch, mob);
       return;
     }
-  update = atoi(arg);
+  update = atoi_safe(arg);
   update--;
 
   if (type != ENTER_CHECK) {
@@ -736,7 +736,7 @@ static void change_mob_affect_flags(TBeing *ch, TMonster *mob, const char *arg, 
       update_mob_menu(ch, mob);
       return;
     }
-  update = atoi(arg);
+  update = atoi_safe(arg);
   update--;
 
   if (type != ENTER_CHECK) {
@@ -781,7 +781,7 @@ static void change_mob_faction_percent(TBeing *ch, TMonster *mob, const char *ar
       update_mob_menu(ch, mob);
       return;
     }
-    new_faction = atoi(arg);
+    new_faction = atoi_safe(arg);
 
     if (new_faction < 0 || new_faction > 100) {
       ch->sendTo("Please enter a number from 0 to 100.\n\r");
@@ -809,7 +809,7 @@ static void change_mob_faction_type(TBeing *ch, TMonster *mob, const char *arg, 
       update_mob_menu(ch, mob);
       return;
     }
-    new_faction = atoi(arg);
+    new_faction = atoi_safe(arg);
 
     if (new_faction < MIN_FACTION || new_faction >= MAX_FACTIONS ) {
       ch->sendTo("Please enter a number from %d to %d.\n\r",
@@ -869,7 +869,7 @@ static void change_mob_level(TBeing *ch, TMonster *mob, const char *arg, editorE
       update_mob_menu(ch, mob);
       return;
     }
-    new_level = atoi(arg);
+    new_level = atoi_safe(arg);
 
     if (new_level < 1 || new_level > 100) {
       ch->sendTo("Please enter a number from 1 to 100.\n\r");
@@ -905,7 +905,7 @@ static void change_mob_thaco(TBeing *ch, TMonster *mob, const char *arg, editorE
       update_mob_menu(ch, mob);
       return;
     }
-    new_thaco = atoi(arg);
+    new_thaco = atoi_safe(arg);
 
     if (new_thaco < -50 || new_thaco > 50) {
       ch->sendTo("Please enter a number from -50 to 50.\n\r");
@@ -944,7 +944,7 @@ static void change_mob_class(TBeing *ch, TMonster *mob, const char *arg, editorE
       update_mob_menu(ch, mob);
       return;
     }
-  update = atoi(arg);
+  update = atoi_safe(arg);
   update--;
 
   if (type != ENTER_CHECK) {
@@ -990,7 +990,7 @@ static void change_mob_height(TBeing *ch, TMonster *mob, const char *arg, editor
       update_mob_menu(ch, mob);
       return;
     }
-    new_height = atoi(arg);
+    new_height = atoi_safe(arg);
 
     if (new_height < 1 || new_height > 10000) {
       ch->sendTo("Please enter a number from 1 to 10000.\n\r");
@@ -1020,7 +1020,7 @@ static void change_mob_weight(TBeing *ch, TMonster *mob, const char *arg, editor
       update_mob_menu(ch, mob);
       return;
     }
-    new_weight = atoi(arg);
+    new_weight = atoi_safe(arg);
 
     if (new_weight < 1 || new_weight > 100000) {
       ch->sendTo("Please enter a number from 1 to 100000.\n\r");
@@ -1048,7 +1048,7 @@ static void change_mob_vision(TBeing *ch, TMonster *mob, const char *arg, editor
       update_mob_menu(ch, mob);
       return;
     }
-    new_vision = atoi(arg);
+    new_vision = atoi_safe(arg);
 
     if (new_vision < -100 || new_vision > 100) {
       ch->sendTo("Please enter a number from -100 to 100.\n\r");
@@ -1083,7 +1083,7 @@ static void change_mob_cbs(TBeing *ch, TMonster *mob, const char *arg, editorEnt
       update_mob_menu(ch, mob);
       return;
     }
-    new_cbs = atoi(arg);
+    new_cbs = atoi_safe(arg);
 
     if (new_cbs < 0 || new_cbs > 10000) {
       ch->sendTo("Please enter a number from 1 to 10000.\n\r");
@@ -1114,7 +1114,7 @@ static void change_mob_armor(TBeing *ch, TMonster *mob, const char *arg, editorE
       update_mob_menu(ch, mob);
       return;
     }
-    new_armor = atof(arg);
+    new_armor = atof_safe(arg);
 
     if (new_armor < 0 || new_armor > 127.0) {
       ch->sendTo("Please enter a number from 0.0 to 127.0.\n\r");
@@ -1151,7 +1151,7 @@ static void change_mob_hit_bonus(TBeing *ch, TMonster *mob, const char *arg, edi
       update_mob_menu(ch, mob);
       return;
     }
-    new_bonus = atof(arg);
+    new_bonus = atof_safe(arg);
 
     if (new_bonus < 0 || new_bonus > 127.0) {
       ch->sendTo("Please enter a number from 0.0 to 127.0.\n\r");
@@ -1238,7 +1238,7 @@ static void change_mob_gold(TBeing *ch, TMonster *mob, const char *arg, editorEn
       update_mob_menu(ch, mob);
       return;
     }
-    new_gold = atoi(arg);
+    new_gold = atoi_safe(arg);
 
     if (new_gold < 0 || new_gold > 10) {
       ch->sendTo("Please enter a number from 0 to 10.\n\r");
@@ -1273,7 +1273,7 @@ static void change_mob_race(TBeing *ch, TMonster *mob, const char *arg, editorEn
       return;
     }
   }
-  update = atoi(arg);
+  update = atoi_safe(arg);
 
   if (type != ENTER_CHECK) {
     if (update <= 0 || update >= MAX_RACIAL_TYPES)
@@ -1314,7 +1314,7 @@ static void change_mob_def_pos(TBeing *ch, TMonster *mob, const char *arg, edito
       update_mob_menu(ch, mob);
       return;
     }
-    new_pos = atoi(arg);
+    new_pos = atoi_safe(arg);
 
     switch (new_pos) {
       case 1:
@@ -1362,7 +1362,7 @@ static void change_mob_sex(TBeing *ch, TMonster *mob, const char *arg, editorEnt
       update_mob_menu(ch, mob);
       return;
     }
-    new_sex = atoi(arg);
+    new_sex = atoi_safe(arg);
 
     if (new_sex < 0 || new_sex > 2) {
       ch->sendTo("Please enter 0, 1, or 2.\n\r");
@@ -1391,7 +1391,7 @@ static void change_mob_max_exist(TBeing *ch, TMonster *mob, const char *arg, edi
       update_mob_menu(ch, mob);
       return;
     }
-    max_exist = atoi(arg);
+    max_exist = atoi_safe(arg);
 
     if (max_exist < 0 || max_exist > 9999) {
       ch->sendTo("Please enter a number from 0 to 9999.\n\r");
@@ -1485,7 +1485,7 @@ static void change_mob_skin(TBeing *ch, TMonster *mob, const char *arg, editorEn
       update_mob_menu(ch, mob);
       return;
     }
-    update = atoi(arg);
+    update = atoi_safe(arg);
     update--;
 
     switch (ch->specials.edit) {
@@ -1602,7 +1602,7 @@ static void change_mob_stats(TBeing *ch, TMonster *mob, const char *arg, editorE
       update_mob_menu(ch, mob);
       return;
     }
-    update = atoi(arg);
+    update = atoi_safe(arg);
 
     switch (ch->specials.edit) {
       case CHANGE_MOB_STATS:
@@ -1865,7 +1865,7 @@ static void change_mob_spec(TBeing *ch, TMonster *mob, const char *arg, editorEn
       update_mob_menu(ch, mob);
       return;
     }
-    new_spec = atoi(arg);
+    new_spec = atoi_safe(arg);
 
     if (new_spec < 0 || new_spec > NUM_MOB_SPECIALS) {
       ch->sendTo("Please enter a number from 0 to %d.\n\r", NUM_MOB_SPECIALS);
@@ -1909,7 +1909,7 @@ static void change_mob_sounds(TBeing *ch, TMonster *mob, const char *arg, editor
       update_mob_menu(ch, mob);
       return;
     }
-    update = atoi(arg);
+    update = atoi_safe(arg);
 
     switch (update) {
       case 1:
@@ -2809,7 +2809,7 @@ static void change_mob_string_values(TBeing *ch, TMonster *tMob, const char *tSt
       return;
     }
 
-    tUpdate = atoi(tString);
+    tUpdate = atoi_safe(tString);
     tUpdate--;
 
     if (tUpdate < 0 || tUpdate > 5)
@@ -2916,7 +2916,7 @@ void mob_edit(TBeing *ch, const char *arg)
       return;
     }
 
-    switch (atoi(arg)) {
+    switch (atoi_safe(arg)) {
       case 0:
         update_mob_menu(ch, ch->desc->mob);
         return;

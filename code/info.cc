@@ -1691,12 +1691,12 @@ void TBeing::doTime(const char *argument)
 
   one_argument(argument, arg);
   if (*arg) {
-    if (!atoi(arg) && strcmp(arg, "0")) {
+    if (!atoi_safe(arg) && strcmp(arg, "0")) {
       sendTo("Present time differential is set to %d hours.\n\r", desc->account->time_adjust);
       sendTo("Syntax: time <difference>\n\r");
       return;
     }
-    desc->account->time_adjust = atoi(arg);
+    desc->account->time_adjust = atoi_safe(arg);
     sendTo("Your new time difference between your site and %s's will be: %d hours.\n\r", MUD_NAME, desc->account->time_adjust);
     desc->saveAccount();
     return;
@@ -1835,7 +1835,7 @@ down");
         sendTo("Syntax: weather month <num>\n\r");
         return;
       }
-      int num = atoi(buffer);
+      int num = atoi_safe(buffer);
       if (num <= 0 || num > 12) {
         sendTo("Syntax: weather month <num>\n\r");
         sendTo("<num> must be in range 1-12.\n\r");
@@ -1850,7 +1850,7 @@ down");
         sendTo("Syntax: weather moon <num>\n\r");
         return;
       }
-      int num = atoi(buffer);
+      int num = atoi_safe(buffer);
       if (num <= 0 || num > 32) {
         sendTo("Syntax: weather moon <num>\n\r");
         sendTo("<num> must be in range 1-32.\n\r");
@@ -3081,7 +3081,7 @@ void TBeing::doWorld()
   //  db.query("select count(distinct mobvnum) from trophy");
   db.query("select count(*) from trophymob");
   if(db.fetchRow())
-    unkmobcount=atoi(db.getColumn(0));
+    unkmobcount=atoi_safe(db.getColumn(0));
 
   sprintf(buf, "Percent of distinct mobiles never killed: %s    %d%% (%i)%s\n\r",
 	  red(), 100-(int)(((float)unkmobcount/(float)mob_index.size())*100), 
@@ -3263,7 +3263,7 @@ void TBeing::doClear(const char *argument)
     sendTo("Ok. All Aliases cleared\n\r");
     return;
   } else
-    i = atoi(argument) - 1;
+    i = atoi_safe(argument) - 1;
 
   if ((i > -1) && (i < 16)) {
     desc->alias[i].command[0] = '\0';

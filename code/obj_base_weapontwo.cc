@@ -753,7 +753,7 @@ void TBaseWeapon::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnte
       return;
     }
   }
-  update_num = atoi(arg);
+  update_num = atoi_safe(arg);
 
   switch (ch->specials.edit) {
     case CHANGE_WEAPON_VALUE1:

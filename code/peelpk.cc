@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: peelpk.cc,v $
+// Revision 5.8  2002/03/06 04:07:51  peel
+// added atoi_safe and atof_safe to check for NULL values
+// converted all the atoi and atof to the safe versions
+//
 // Revision 5.7  2002/01/10 05:56:59  peel
 // even more splitting up of obj2.h
 //
@@ -191,37 +195,37 @@ void TBeing::doPeelPk(const char *argument)
   }
   
   if(!strcmp(buf, "zones")){
-    if(atoi(buf2) > 4)
+    if(atoi_safe(buf2) > 4)
       sendTo("The number of zones has to be 4 or less\n\r");
     else 
-      peelPk.zones=atoi(buf2);
+      peelPk.zones=atoi_safe(buf2);
   } else if(!strcmp(buf, "zone")){
     half_chop(buf2, buf, buf2);
-    if((num=atoi(buf))>=peelPk.zones || num<0)
+    if((num=atoi_safe(buf))>=peelPk.zones || num<0)
       sendTo("The zone index must be from 0 to %i.\n\r", peelPk.zones-1);
     else
-      peelPk.zone[num]=atoi(buf2);
+      peelPk.zone[num]=atoi_safe(buf2);
   } else if(!strcmp(buf, "addzone")){
     if(peelPk.zones >= 4)
       sendTo("The number of zones has to be 4 or less\n\r");
     else
-      peelPk.zone[peelPk.zones++]=atoi(buf2);
+      peelPk.zone[peelPk.zones++]=atoi_safe(buf2);
   } else if(!strcmp(buf, "respawns")){
     half_chop(buf2, buf, buf2);
-    peelPk.respawns[atoi(buf)]=atoi(buf2);
+    peelPk.respawns[atoi_safe(buf)]=atoi_safe(buf2);
   } else if(!strcmp(buf, "respawn")){
     half_chop(buf2, buf, buf2);
-    j=atoi(buf);
+    j=atoi_safe(buf);
     half_chop(buf2, buf, buf2);
-    if((num=atoi(buf))>=peelPk.respawns[j]){
+    if((num=atoi_safe(buf))>=peelPk.respawns[j]){
       sendTo("The respawn index must be from 0 to %i.\n\r", peelPk.respawns[j]-1);
     } else
-      peelPk.respawn[j][num]=atoi(buf2);
+      peelPk.respawn[j][num]=atoi_safe(buf2);
   } else if(!strcmp(buf, "announce")){
-    peelPk.announce=atoi(buf2);
+    peelPk.announce=atoi_safe(buf2);
   } else if(!strcmp(buf, "addmember")){
     half_chop(buf2, buf, buf2);
-    num=atoi(buf);
+    num=atoi_safe(buf);
     for(i=0;i<PEELPK_TEAMSIZE;++i){
       if(!peelPk.teammembers[num][i]){
 
@@ -242,7 +246,7 @@ void TBeing::doPeelPk(const char *argument)
     }
   } else if(!strcmp(buf, "remmember")){
     half_chop(buf2, buf, buf2);
-    num=atoi(buf);
+    num=atoi_safe(buf);
 
     if (!generic_find(buf2, FIND_CHAR_WORLD, this,
 		      &b, &dummy)){
@@ -286,16 +290,16 @@ void TBeing::doPeelPk(const char *argument)
     }    
   } else if(!strcmp(buf, "holding")){
     half_chop(buf2, buf, buf2);
-    peelPk.holding[atoi(buf)]=atoi(buf2);
+    peelPk.holding[atoi_safe(buf)]=atoi_safe(buf2);
   } else if (!strcmp(buf, "cutdam")) {
     if (!strcmp(buf2, "on")) peelPk.cutdam = TRUE;
     else if (!strcmp(buf2, "off")) peelPk.cutdam = FALSE;
     else sendTo("syntax: peelpk cutdam <on | off>");
     sendTo("PkQuest: %s\n\r", (peelPk.cutdam)?"Damage cut by 50 percent":"No damage modification");
   } else if(!strcmp(buf, "respawnlag")){
-    peelPk.respawnlag=atoi(buf2);
+    peelPk.respawnlag=atoi_safe(buf2);
   } else if(!strcmp(buf, "settimer")){
-    peelPk.endtime=time(NULL)+atoi(buf2)*60;
+    peelPk.endtime=time(NULL)+atoi_safe(buf2)*60;
   } else if(!strcmp(buf, "checktime")){
     if(peelPk.endtime<=time(NULL) && peelPk.zones>0){
       peelPk.endtime=0;
@@ -317,7 +321,7 @@ void TBeing::doPeelPk(const char *argument)
 	     (peelPk.endtime-time(NULL))%60);
     }
   } else if(!strcmp(buf, "default_respawn")){
-    peelPk.default_respawn=atoi(buf2);
+    peelPk.default_respawn=atoi_safe(buf2);
   } else if(!strcmp(buf, "resetscore")){
     for(j=0;j<2;++j){
       for(i=0;i<PEELPK_TEAMSIZE;++i){

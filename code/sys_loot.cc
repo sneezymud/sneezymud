@@ -309,14 +309,14 @@ void TBeing::doLoot(const string & tStString)
 
       if (is_number(tString)) {
         if (tLevelMin == -1) {
-          tLevelMin = atoi((tStLevelMin = tStBuffer).c_str());
+          tLevelMin = atoi_safe((tStLevelMin = tStBuffer).c_str());
 
           if (tLevelMin < 0 || tLevelMin > 99) {
             sendTo("Incorrect Min Level.  (0-99)\n\r");
             return;
           }
         } else {
-          tLevelMax = atoi((tStLevelMax = tStBuffer).c_str());
+          tLevelMax = atoi_safe((tStLevelMax = tStBuffer).c_str());
 
           if (tLevelMax < 1 || tLevelMax > 100) {
             sendTo("Incorrect Max Level.  (1-100)\n\r");
@@ -434,8 +434,8 @@ void TBeing::doLoot(const string & tStString)
 
     resetCom tRs;
     tRs.if_flag = 1;
-    tRs.arg1 = atoi(tStLevelMin.c_str());
-    tRs.arg2 = atoi(tStLevelMax.c_str());
+    tRs.arg1 = atoi_safe(tStLevelMin.c_str());
+    tRs.arg2 = atoi_safe(tStLevelMax.c_str());
     tRs.arg3 = 0;
     tRs.arg4 = 0;
 

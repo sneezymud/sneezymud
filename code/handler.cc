@@ -1301,7 +1301,7 @@ int get_number(char **name)
         break;
       }
     }
-    return (atoi(numx));
+    return (atoi_safe(numx));
   }
   return 1;
 }

@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: meeting.cc,v $
+// Revision 5.3  2002/03/06 04:07:50  peel
+// added atoi_safe and atof_safe to check for NULL values
+// converted all the atoi and atof to the safe versions
+//
 // Revision 5.2  2001/09/07 07:07:35  peel
 // changed TThing->stuff to getStuff() and setStuff()
 //
@@ -190,7 +194,7 @@ static bool checkForSay(TBeing *ch, TMonster *myself, cmdTypeT cmd, const char *
       *rc = true;
       return true;
     } else if (!strncasecmp(arg, " speech_time ", 13) && ch->isImmortal()) {
-      int sec_time = atoi(&arg[13]);
+      int sec_time = atoi_safe(&arg[13]);
       char buf[256];
       if (sec_time > 0)
         sprintf(buf, "Speech time is now limited to %d seconds.", sec_time);

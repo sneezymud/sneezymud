@@ -276,11 +276,11 @@ void generate_obj_index()
       exit(0);
     }
     
-    tmpi->virt=atoi(db.getColumn(0));
+    tmpi->virt=atoi_safe(db.getColumn(0));
     tmpi->name=mud_str_dup(db.getColumn(1));
     tmpi->short_desc=mud_str_dup(db.getColumn(2));
     tmpi->long_desc=mud_str_dup(db.getColumn(3));
-    tmpi->max_exist=atoi(db.getColumn(4));
+    tmpi->max_exist=atoi_safe(db.getColumn(4));
 
     // use 327 so we don't go over 32765 in calculation
     if (tmpi->max_exist < 327) {
@@ -291,16 +291,16 @@ void generate_obj_index()
       tmpi->max_exist = max(tmpi->max_exist, (short int) (gamePort == BETA_GAMEPORT ? 9999 : 1));
     
 
-    tmpi->spec=atoi(db.getColumn(5));
-    tmpi->weight=atof(db.getColumn(6));
-    tmpi->max_struct=atoi(db.getColumn(7));
-    tmpi->where_worn=atoi(db.getColumn(8));
-    tmpi->itemtype=atoi(db.getColumn(9));
-    tmpi->value=atoi(db.getColumn(10));
+    tmpi->spec=atoi_safe(db.getColumn(5));
+    tmpi->weight=atof_safe(db.getColumn(6));
+    tmpi->max_struct=atoi_safe(db.getColumn(7));
+    tmpi->where_worn=atoi_safe(db.getColumn(8));
+    tmpi->itemtype=atoi_safe(db.getColumn(9));
+    tmpi->value=atoi_safe(db.getColumn(10));
     if(strcmp(db.getColumn(11), "")) tmpi->description=mud_str_dup(db.getColumn(11));
     else tmpi->description=NULL;
 
-    while(extra_db.getColumn(0) && atoi(extra_db.getColumn(0))==tmpi->virt){
+    while(extra_db.getColumn(0) && atoi_safe(extra_db.getColumn(0))==tmpi->virt){
       new_descr = new extraDescription();
       new_descr->keyword = mud_str_dup(extra_db.getColumn(1));
       new_descr->description = mud_str_dup(extra_db.getColumn(2));
@@ -311,15 +311,15 @@ void generate_obj_index()
     }
 
     i=0;
-    while(affect_db.getColumn(0) && atoi(affect_db.getColumn(0))==tmpi->virt){
-      tmpi->affected[i].location = mapFileToApply(atoi(affect_db.getColumn(1)));
+    while(affect_db.getColumn(0) && atoi_safe(affect_db.getColumn(0))==tmpi->virt){
+      tmpi->affected[i].location = mapFileToApply(atoi_safe(affect_db.getColumn(1)));
 
       if (tmpi->affected[i].location == APPLY_SPELL)
-	tmpi->affected[i].modifier = mapFileToSpellnum(atoi(affect_db.getColumn(2)));
+	tmpi->affected[i].modifier = mapFileToSpellnum(atoi_safe(affect_db.getColumn(2)));
       else
-	tmpi->affected[i].modifier = atoi(affect_db.getColumn(2));
+	tmpi->affected[i].modifier = atoi_safe(affect_db.getColumn(2));
       
-      tmpi->affected[i].modifier2 = atoi(affect_db.getColumn(3));
+      tmpi->affected[i].modifier2 = atoi_safe(affect_db.getColumn(3));
       tmpi->affected[i].type = TYPE_UNDEFINED;
       tmpi->affected[i].level = 0;
       tmpi->affected[i].bitvector = 0;      

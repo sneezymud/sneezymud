@@ -318,7 +318,7 @@ void TBeing::doGamestats(const char *arg)
     if (!buf2 || !*buf2)
       curve = 1.4;
     else
-      curve = atof(buf2);
+      curve = atof_safe(buf2);
     for(int tmpint = 5; tmpint <= 205; tmpint += 5) {
       setStat(STAT_CURRENT, STAT_STR, tmpint);
       plot1 = plotStat(STAT_CURRENT, STAT_STR, .80, 1.25, 1.00, curve);
@@ -473,7 +473,7 @@ void TBeing::doGamestats(const char *arg)
       sendTo("Syntax : gamestats levels <level>\n\r");
       return;
     }
-    lev = atoi(buf2);
+    lev = atoi_safe(buf2);
     if ((lev >= 0) && (lev < 70)) {
       sendTo("Mobile Deaths for level %d, %ld\n\r", lev, stats.deaths[lev][1]);
       sendTo("PC  Deaths for level %d, %ld\n\r", lev, stats.deaths[lev][0]);

@@ -1558,7 +1558,7 @@ void TBeing::doReset(const char *arg)
       sendTo("Zone 0-%d reset.\n\r", i-1);
       return;
     }
-    zone = atoi(buf);
+    zone = atoi_safe(buf);
     zone_table[zone].resetZone(FALSE);
     sendTo("Zone %d reset.\n\r", zone);
     return;

@@ -288,9 +288,9 @@ void TBeing::doLook(const char *argument, cmdTypeT cmd, TThing *specific)
                 char tempArg3[256];
                 if (tempArg)
                   tempArg = one_argument(tempArg, tempArg3);
-                if (*tempArg || !atoi(tempArg3)) {
+                if (*tempArg || !atoi_safe(tempArg3)) {
                    bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_EQUIP, this, &tmp_char, &o2);
-                } else if (atoi(tempArg3)) {
+                } else if (atoi_safe(tempArg3)) {
                   TObj * tempObj = NULL;
                   if ((tempObj = dynamic_cast<TBook *> (heldInPrimHand()))) {
                     o2 = tempObj;

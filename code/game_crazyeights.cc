@@ -515,7 +515,7 @@ void CrazyEightsGame::play(const TBeing *ch, const char *tArg)
   }
 
   tArg = one_argument(tArg, tString);
-  cardPlayed = atoi(tString);
+  cardPlayed = atoi_safe(tString);
 
   for (; isspace(*tArg); tArg++);
   if (*tArg)

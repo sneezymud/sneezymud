@@ -397,7 +397,7 @@ int repairman_give(const char *arg, TMonster *repair, TBeing *buyer)
 
   arg = one_argument(arg, obj_name);
 
-  if (atoi(obj_name) && (obj_name[1] != '.') && (obj_name[2] != '.')) {
+  if (atoi_safe(obj_name) && (obj_name[1] != '.') && (obj_name[2] != '.')) {
     strcpy(obj_amt, obj_name);
     arg = one_argument(arg, obj_name);
   } else

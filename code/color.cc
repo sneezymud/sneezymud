@@ -467,7 +467,7 @@ void TBeing::doTerminal(const char *argument)
     if (is_abbrev(term, "screensize")) {
       if (*screen) {
         if (isdigit(*screen)) {
-          desc->screen_size = min(128, atoi(screen));
+          desc->screen_size = min(128, atoi_safe(screen));
           doCls(false);
           sendTo("Done.\n\r");
         } else {

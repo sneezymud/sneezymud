@@ -457,6 +457,8 @@ extern void mudRecvMessage();
 // these needs C++ linkage to avoid conflict with functions in stdlib
 extern int remove(TBeing *, TThing *);
 extern int atoi(const string &);
+extern int atoi_safe(const char *);
+extern double atof_safe(const char *);
 extern int GetApprox(int, int);
 extern double GetApprox(double, int);
 

@@ -336,7 +336,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       me->doTell(buf);
       return TRUE;
     }
-    bought = atoi(arg);
+    bought = atoi_safe(arg);
 
     for (i = MIN_WEAR; i < MAX_WEAR; i++) {
       if (i == HOLD_RIGHT || i == HOLD_LEFT)
@@ -647,7 +647,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
     return TRUE;
   } else if (cmd == CMD_BUY) {        /* Buy */
     arg = one_argument(arg, buf);
-    opt = atoi(buf);
+    opt = atoi_safe(buf);
     if (cost > ch->getMoney()) {
       ch->sendTo("Sorry, no medicare, medicaid or insurance allowed.\n\r");
       return TRUE;

@@ -5313,7 +5313,7 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
 
   int i=1;
   while(db.fetchRow()){
-    if(atoi(db.getColumn(2))==1){
+    if(atoi_safe(db.getColumn(2))==1){
       ch->sendTo(COLOR_BASIC, "%i) %s perished bravely at level %s, killed by %s.\n\r", i, db.getColumn(0), db.getColumn(1), db.getColumn(3));
     } else {
       ch->sendTo(COLOR_BASIC, "%i) %s lives on at level %s\n\r", i, db.getColumn(0), db.getColumn(1));
@@ -5367,8 +5367,8 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   int i=1;
   while(db.fetchRow()){
     ch->sendTo(COLOR_BASIC, "%i) %s has killed %i (%d%%) life forms.\n\r", 
-	       i, db.getColumn(0), atoi(db.getColumn(1)), 
-	       (int)(((float)atoi(db.getColumn(1))/(float)mob_index.size())*100));
+	       i, db.getColumn(0), atoi_safe(db.getColumn(1)), 
+	       (int)(((float)atoi_safe(db.getColumn(1))/(float)mob_index.size())*100));
     ++i;
   }
 
@@ -5420,7 +5420,7 @@ int highrollersBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *
   i=1;
   while(db.fetchRow()){
     ch->sendTo(COLOR_BASIC, "%i) %s has lost %i talens.\n\r", 
-	       i, db.getColumn(0), abs(atoi(db.getColumn(1))));
+	       i, db.getColumn(0), abs(atoi_safe(db.getColumn(1))));
     ++i;
   }
 
@@ -5468,12 +5468,12 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
     return TRUE;
   }
   db.fetchRow();
-  int nshops=atoi(db.getColumn(0));
+  int nshops=atoi_safe(db.getColumn(0));
 
   db.query("select count(distinct shop_nr) from shopownedaccess");
   int nowned=0;
   if(db.fetchRow())
-    nowned=atoi(db.getColumn(0));
+    nowned=atoi_safe(db.getColumn(0));
     
   ch->sendTo("There are %i shops, %i of which are privately owned.\n\r",
 	     nshops, nowned);
@@ -5501,7 +5501,7 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   int i=1;
   ch->sendTo("\n\rThe ten wealthiest shops are:\n\r");
   while(db.fetchRow()){
-    tr=real_roomp(atoi(db.getColumn(0)));
+    tr=real_roomp(atoi_safe(db.getColumn(0)));
     ch->sendTo("%i) %s with %s talens.\n\r",
 	       i, tr->getName(), db.getColumn(1));
     ++i;
@@ -5514,16 +5514,16 @@ int shopinfoBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   
   while(db.fetchRow()){
     ch->sendTo("[%2s] %-17s   ",
-	       db.getColumn(1), ItemInfo[atoi(db.getColumn(0))]->name);
+	       db.getColumn(1), ItemInfo[atoi_safe(db.getColumn(0))]->name);
 
     if(db.fetchRow()){
       ch->sendTo("[%2s] %-17s   ",
-		 db.getColumn(1), ItemInfo[atoi(db.getColumn(0))]->name);
+		 db.getColumn(1), ItemInfo[atoi_safe(db.getColumn(0))]->name);
     }
 
     if(db.fetchRow()){
       ch->sendTo("[%2s] %-17s   ",
-		 db.getColumn(1), ItemInfo[atoi(db.getColumn(0))]->name);
+		 db.getColumn(1), ItemInfo[atoi_safe(db.getColumn(0))]->name);
     }
 
     ch->sendTo("\n\r");
@@ -5648,7 +5648,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     // get the number of members, we use this in a few places
     db.query("select count(*) from factionmembers where faction='%s'", factnames[i]);
     db.fetchRow();
-    int nmembers=atoi(db.getColumn(0));
+    int nmembers=atoi_safe(db.getColumn(0));
 #endif
 
     totalscore=0;
@@ -5660,7 +5660,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     float level=0;
     while(db.fetchRow()){
       if(db.getColumn(0)){
-	level=(float) atoi(db.getColumn(0));
+	level=(float) atoi_safe(db.getColumn(0));
 	score+=(int)(level * (level / 25.0));
       }
     }
@@ -5678,14 +5678,14 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
       float pounds=0.0;
 
       if(db.getColumn(0)){
-	pounds=atof(db.getColumn(0));
+	pounds=atof_safe(db.getColumn(0));
 	score=(int)(pounds/10000.0);
       }
     }
 
     db.query("select count(*) from fishlargest fl, factionmembers fm where  fl.name=fm.name and fm.faction='%s'", factnames[i]);
     if(db.fetchRow()){
-      score+=atoi(db.getColumn(0));
+      score+=atoi_safe(db.getColumn(0));
     }
 
     
@@ -5701,7 +5701,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     score=0;
 
     while(db.fetchRow()){
-      score += atoi(db.getColumn(1)) * atoi(db.getColumn(0));
+      score += atoi_safe(db.getColumn(1)) * atoi_safe(db.getColumn(0));
     }
     score /= 10000;
 
@@ -5715,7 +5715,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
     db.query("select count(distinct soa.shop_nr) from shopownedaccess soa, factionmembers fm where (soa.access & %i)>0 and upper(fm.name) = upper(soa.name) and fm.faction='%s'", SHOPACCESS_OWNER, factnames[i]);
     score=0;
     if(db.fetchRow()){
-      score=atoi(db.getColumn(0))*10;
+      score=atoi_safe(db.getColumn(0))*10;
 
       ch->sendTo(COLOR_BASIC, "<g>[<1>%3i<g>]<1> shops owned by faction members\n\r", 
 		 score, db.getColumn(0));

@@ -591,7 +591,7 @@ bool TOrganic::splitMe(TBeing *ch, const char *argument)
   argument = one_argument(argument, Buf); // Get the split count.
 
   if (is_number(Buf))
-    num = atoi(Buf);
+    num = atoi_safe(Buf);
 
   double Szmod = ((double) ch->GetMaxLevel()/2.0/100);
   nUnits     = (int) ((getUnits()*(.70+Szmod))/num);

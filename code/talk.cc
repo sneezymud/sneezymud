@@ -495,7 +495,7 @@ void TBeing::doCommune(const char *arg)
   if (*arg == '@') {
     one_argument(arg, buf2);
     mud_str_copy(buf2, &buf2[1],256);  // skip the @
-    levnum = atoi(buf2);
+    levnum = atoi_safe(buf2);
     if (levnum > 0) {
       // only a properly formatted string should be changed
       arg = one_argument(arg, buf2);

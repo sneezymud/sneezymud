@@ -94,8 +94,8 @@ void recvTextHandler(const char *str)
   str = one_argument(str, arg1);
   str = one_argument(str, arg2);
   str = one_argument(str, chname);
-  channel = atoi(arg1);
-  level = atoi(arg2);
+  channel = atoi_safe(arg1);
+  level = atoi_safe(arg2);
 
   snprintf(buf, MAX_STRING_LENGTH, WIZNET_FORMAT, chname, str);
 

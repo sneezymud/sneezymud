@@ -3296,7 +3296,7 @@ int ctoi(char c)
   char buf[5];
 
   sprintf(buf, "%c", c);
-  return atoi(buf);
+  return atoi_safe(buf);
 }
 
 // essentially, strips out multiple ' ' truncating to a single space
@@ -3418,6 +3418,20 @@ int stringncmp(const string str1, const string str2, unsigned int len)
 
   // trunc down to length and compare
   return string(str1, 0, len).compare(string(str2, 0, len));
+}
+
+int atoi_safe(const char *arg){
+  if(!arg)
+    return 0;
+  
+  return atoi(arg);
+}
+
+double atof_safe(const char *arg){
+  if(!arg)
+    return 0;
+
+  return atof(arg);
 }
 
 int atoi(const string &num)

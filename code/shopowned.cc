@@ -41,7 +41,7 @@ int getShopAccess(int shop_nr, TBeing *ch){
   db.query("select access from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, ch->getName());
   
   if(db.fetchRow())
-    access=atoi(db.getColumn(0));
+    access=atoi_safe(db.getColumn(0));
   
   if(sameAccount2(ch->getName(), shop_nr) && !ch->isImmortal() && access){
     ch->sendTo("Another character in your account has permissions at this shop, so this character can not use the ownership functions.\n\r");
@@ -149,8 +149,8 @@ int TShopOwned::setProfitBuy(const char *arg)
     db.query("select obj_nr, profit_buy, profit_sell from shopownedratios where shop_nr=%i", shop_nr);
     
     while(db.fetchRow()){
-      keeper->doTell(ch->getName(), "%f %f %s", atof(db.getColumn(1)), 
-		     atof(db.getColumn(2)), obj_index[real_object(atoi(db.getColumn(0)))].short_desc);
+      keeper->doTell(ch->getName(), "%f %f %s", atof_safe(db.getColumn(1)), 
+		     atof_safe(db.getColumn(2)), obj_index[real_object(atoi_safe(db.getColumn(0)))].short_desc);
     }
     
     return TRUE;
@@ -160,7 +160,7 @@ int TShopOwned::setProfitBuy(const char *arg)
     return TRUE;
   }
   
-  if(atof(buf)>5){
+  if(atof_safe(buf)>5){
     keeper->doTell(ch->getName(), "Because of fraud regulations, I can't set the profit_buy higher than 5!");
     return FALSE;
   }
@@ -185,15 +185,15 @@ int TShopOwned::setProfitBuy(const char *arg)
       // get the default profit buy/sell
       db.query("select profit_buy, profit_sell from shop where shop_nr=%i", shop_nr);
       db.fetchRow();
-      db.query("insert into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(buf), atof(db.getColumn(1)));
+      db.query("insert into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof_safe(buf), atof_safe(db.getColumn(1)));
     } else {
-      db.query("update shopownedratios set profit_buy=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum());
+      db.query("update shopownedratios set profit_buy=%f where shop_nr=%i and obj_nr=%i", atof_safe(buf), shop_nr, o->objVnum());
     }
     
     keeper->doTell(ch->getName(), "Ok, my profit_buy is now %f for %s.", 
-		   atof(buf), o->getName());
+		   atof_safe(buf), o->getName());
   } else { //////////////////////////////
-    shop_index[shop_nr].profit_buy=atof(buf);
+    shop_index[shop_nr].profit_buy=atof_safe(buf);
     
     db.query("update shopowned set profit_buy=%f where shop_nr=%i", shop_index[shop_nr].profit_buy, shop_nr);
     
@@ -223,9 +223,9 @@ int TShopOwned::setProfitSell(const char *arg)
     db.query("select obj_nr, profit_buy, profit_sell from shopownedratios where shop_nr=%i", shop_nr);
     
     while(db.fetchRow()){
-      keeper->doTell(ch->getName(), "%f %f %s", atof(db.getColumn(1)), 
-		     atof(db.getColumn(2)), 
-		     obj_index[real_object(atoi(db.getColumn(0)))].short_desc);
+      keeper->doTell(ch->getName(), "%f %f %s", atof_safe(db.getColumn(1)), 
+		     atof_safe(db.getColumn(2)), 
+		     obj_index[real_object(atoi_safe(db.getColumn(0)))].short_desc);
     }
     
     return TRUE;
@@ -256,15 +256,15 @@ int TShopOwned::setProfitSell(const char *arg)
       db.query("select profit_buy, profit_sell from shop where shop_nr=%i", shop_nr);
       db.fetchRow();
       
-      db.query("insert into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(db.getColumn(0)), atof(buf));
+      db.query("insert into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof_safe(db.getColumn(0)), atof_safe(buf));
     } else {
-      db.query("update shopownedratios set profit_sell=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum());
+      db.query("update shopownedratios set profit_sell=%f where shop_nr=%i and obj_nr=%i", atof_safe(buf), shop_nr, o->objVnum());
     }
     
     keeper->doTell(ch->getName(), "Ok, my profit_sell is now %f for %s.",
-		   atof(buf), o->getName());
+		   atof_safe(buf), o->getName());
   } else {
-    shop_index[shop_nr].profit_sell=atof(buf);
+    shop_index[shop_nr].profit_sell=atof_safe(buf);
     
     db.query("update shopowned set profit_sell=%f where shop_nr=%i", shop_index[shop_nr].profit_sell, shop_nr);
     
@@ -353,7 +353,7 @@ int TShopOwned::giveMoney(const char *arg){
   }
   
   arg = one_argument(arg, buf);
-  int amount=atoi(buf);
+  int amount=atoi_safe(buf);
   
   if(keeper->getMoney()>=amount){
     keeper->setMoney(keeper->getMoney()-amount);
@@ -392,8 +392,8 @@ int TShopOwned::setAccess(const char *arg)
   if(*buf2){ // set value
     db.query("delete from shopownedaccess where shop_nr=%i and upper(name)=upper('%s')", shop_nr, buf);
     
-    if(atoi(buf2) != 0)
-      db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf, atoi(buf2));
+    if(atoi_safe(buf2) != 0)
+      db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf, atoi_safe(buf2));
     
   } else {
     if(*buf){
@@ -402,7 +402,7 @@ int TShopOwned::setAccess(const char *arg)
       db.query("select name, access from shopownedaccess where shop_nr=%i order by access", shop_nr);
     }
     while(db.fetchRow()){
-      access=atoi(db.getColumn(1));
+      access=atoi_safe(db.getColumn(1));
       
       sprintf(buf2, "%s Access for %s is set to %i, commands/abilities:", ch->getName(),
 	      db.getColumn(0), access);
@@ -466,7 +466,7 @@ int TShopOwned::doLogs(const char *arg)
     
     while(db.fetchRow()){
       sprintf(buf, "%-12.12s %-10.10s %8i\n\r", 
-	      db.getColumn(0), db.getColumn(1), atoi(db.getColumn(2)));
+	      db.getColumn(0), db.getColumn(1), atoi_safe(db.getColumn(2)));
       sb += buf;
     }
     
@@ -478,7 +478,7 @@ int TShopOwned::doLogs(const char *arg)
     
     while(db.fetchRow()){
       sprintf(buf, "%-32.32s %-10.10s %8i\n\r", 
-	      db.getColumn(0), db.getColumn(1), atoi(db.getColumn(2)));
+	      db.getColumn(0), db.getColumn(1), atoi_safe(db.getColumn(2)));
       sb += buf;
     }
     
@@ -490,7 +490,7 @@ int TShopOwned::doLogs(const char *arg)
     
     while(db.fetchRow()){
       sprintf(buf, "%-12.12s %8i\n\r", 
-	      db.getColumn(0), atoi(db.getColumn(1)));
+	      db.getColumn(0), atoi_safe(db.getColumn(1)));
       sb += buf;
     }
     
@@ -502,11 +502,11 @@ int TShopOwned::doLogs(const char *arg)
     db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' order by logtime desc, shoptalens+shopvalue desc", shop_nr);
     
     while(db.fetchRow()){
-      sprintf(buf, "%s  Talens: %8i  Value: %8i  Total: %8i\n\r", db.getColumn(6), atoi(db.getColumn(4)), atoi(db.getColumn(5)), atoi(db.getColumn(4))+atoi(db.getColumn(5)));
+      sprintf(buf, "%s  Talens: %8i  Value: %8i  Total: %8i\n\r", db.getColumn(6), atoi_safe(db.getColumn(4)), atoi_safe(db.getColumn(5)), atoi_safe(db.getColumn(4))+atoi_safe(db.getColumn(5)));
       sb += buf;
       
       sprintf(buf, "%-12.12s %-10.10s %-32.32s for %8i talens.\n\r\n\r",
-	      db.getColumn(0), db.getColumn(1), db.getColumn(2), atoi(db.getColumn(3)));
+	      db.getColumn(0), db.getColumn(1), db.getColumn(2), atoi_safe(db.getColumn(3)));
       sb += buf;
     }
     

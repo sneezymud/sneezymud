@@ -238,7 +238,7 @@ int Descriptor::read_client(char *str2)
         return FALSE;
       }
       strcpy(buf, nextToken('|', 255, str2).c_str());
-      vers = atoi(buf);
+      vers = atoi_safe(buf);
       if (vers <= BAD_VERSION) {
         clientf("%d|Your client is an old version. The latest version is %d. Please upgrade! You can upgrade from http://sneezy.stanford.edu/client/client.html.|%d", CLIENT_ERROR, CURRENT_VERSION, ERR_BAD_VERSION);
         outputProcessing();
@@ -320,7 +320,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       if (!(rp = character->roomp))
         break;
 
-      rp->setSectorType((sectorTypeT) atoi(buf));
+      rp->setSectorType((sectorTypeT) atoi_safe(buf));
       break;
     case CLIENT_ROOMMAXCAP:
       if (!character)
@@ -335,7 +335,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       if (!(rp = character->roomp))
         break;
 
-      rp->setMoblim(atoi(buf));
+      rp->setMoblim(atoi_safe(buf));
       break;
     case CLIENT_ROOMHEIGHT:
       if (!character)
@@ -350,7 +350,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       if (!(rp = character->roomp))
         break;
 
-      rp->setRoomHeight(atoi(buf));
+      rp->setRoomHeight(atoi_safe(buf));
       break;
     case CLIENT_ROOMDESC: {
       char descrBuf[MAX_STRING_LENGTH];
@@ -675,7 +675,7 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       char apassword[256];
       char buf2[256];
       strcpy(aname, nextToken('|', 255, str2).c_str());
-      int iNew = atoi(nextToken('|', 255, str2).c_str());
+      int iNew = atoi_safe(nextToken('|', 255, str2).c_str());
       if (iNew) {
         if (bogusAccountName(buf)) {
           clientf("%d|0|%d", CLIENT_CHECKACCOUNTNAME, ERR_BADACCOUNT_NAME);
@@ -839,13 +839,13 @@ the client because the server double checks everything. Thanks. Brutius.\n\r");
       }
       strcpy(account->email, email);
 
-      if (!*timezone || (atoi(timezone) > 23) || (atoi(timezone) < -23)) {
+      if (!*timezone || (atoi_safe(timezone) > 23) || (atoi_safe(timezone) < -23)) {
         clientf("%d|Invalid timezone please enter a number between 23 and -23!", CLIENT_ERROR);
         delete account;
         account = NULL;
         return FALSE;
       }
-      account->time_adjust = atoi(timezone);
+      account->time_adjust = atoi_safe(timezone);
 
       switch(*listserver) {
         case '1':
@@ -1442,7 +1442,7 @@ int Descriptor::clientCreateChar(char *arg)
 
   // Sex
   strcpy(dummy, nextToken('|', 1024, arg).c_str());
-  switch(atoi(dummy)) { 
+  switch(atoi_safe(dummy)) { 
     case 0:
       ch->setSex(SEX_MALE);
       break;
@@ -1456,7 +1456,7 @@ int Descriptor::clientCreateChar(char *arg)
 
   // Hands
   strcpy(dummy, nextToken('|', 1024, arg).c_str());
-  switch(atoi(dummy)) {
+  switch(atoi_safe(dummy)) {
     case 0:
       ch->addPlayerAction(PLR_RT_HANDED);
       break;
@@ -1466,7 +1466,7 @@ int Descriptor::clientCreateChar(char *arg)
   }
 
   // Race and Terrain
-  switch (atoi(nextToken('|', 1024, arg).c_str())) {
+  switch (atoi_safe(nextToken('|', 1024, arg).c_str())) {
     case 1:
       ch->setRace(RACE_HUMAN);
       switch (*(nextToken('|', 1024, arg).c_str())) {
@@ -1584,18 +1584,18 @@ int Descriptor::clientCreateChar(char *arg)
 
   //Stats
 
-  ch->chosenStats.values[STAT_STR] = atoi(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_BRA] = atoi(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_CON] = atoi(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_DEX] = atoi(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_AGI] = atoi(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_INT] = atoi(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_WIS] = atoi(nextToken('|', 1024, arg).c_str()); 
-  ch->chosenStats.values[STAT_FOC] = atoi(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_PER] = atoi(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_CHA] = atoi(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_KAR] = atoi(nextToken('|', 1024, arg).c_str());
-  ch->chosenStats.values[STAT_SPE] = atoi(nextToken('|', 1024, arg).c_str());
+  ch->chosenStats.values[STAT_STR] = atoi_safe(nextToken('|', 1024, arg).c_str());
+  ch->chosenStats.values[STAT_BRA] = atoi_safe(nextToken('|', 1024, arg).c_str());
+  ch->chosenStats.values[STAT_CON] = atoi_safe(nextToken('|', 1024, arg).c_str());
+  ch->chosenStats.values[STAT_DEX] = atoi_safe(nextToken('|', 1024, arg).c_str());
+  ch->chosenStats.values[STAT_AGI] = atoi_safe(nextToken('|', 1024, arg).c_str());
+  ch->chosenStats.values[STAT_INT] = atoi_safe(nextToken('|', 1024, arg).c_str());
+  ch->chosenStats.values[STAT_WIS] = atoi_safe(nextToken('|', 1024, arg).c_str()); 
+  ch->chosenStats.values[STAT_FOC] = atoi_safe(nextToken('|', 1024, arg).c_str());
+  ch->chosenStats.values[STAT_PER] = atoi_safe(nextToken('|', 1024, arg).c_str());
+  ch->chosenStats.values[STAT_CHA] = atoi_safe(nextToken('|', 1024, arg).c_str());
+  ch->chosenStats.values[STAT_KAR] = atoi_safe(nextToken('|', 1024, arg).c_str());
+  ch->chosenStats.values[STAT_SPE] = atoi_safe(nextToken('|', 1024, arg).c_str());
 
   // Check if everything sums to 0, if not send an error message. 
 
@@ -1710,10 +1710,10 @@ void Descriptor::clientShoppingList(const char *argument, TMonster *keeper, int 
     else if (is_number(stString)) {
       if (iMin == 999999) {
         iMin = 0;
-        iMax = atoi(stString);
+        iMax = atoi_safe(stString);
       } else if (iMin == 0) {
         iMin = iMax;
-        iMax = atoi(stString);
+        iMax = atoi_safe(stString);
       }
     } else if (*stString) 
       strcpy(arg, stString);

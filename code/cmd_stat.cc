@@ -37,7 +37,7 @@ void TBeing::statZone(const char *zoneNumber)
 
     zNum = roomp->getZoneNum();
   } else
-    zNum = atoi(zoneNumber);
+    zNum = atoi_safe(zoneNumber);
 
   if (zNum < 0 || zNum >= (signed int) zone_table.size()) {
     sendTo("Zone number incorrect.\n\r");
@@ -1905,7 +1905,7 @@ void TPerson::doStat(const char *argument)
     }
 
     spellNumT snt;
-    if ((parm = atoi(namebuf))) {
+    if ((parm = atoi_safe(namebuf))) {
       snt = spellNumT(parm);
     } else {
       foundNum = FALSE;
@@ -2004,7 +2004,7 @@ void TPerson::doStat(const char *argument)
       return;
     }
 
-    discNumT dnt = mapFileToDisc(atoi(namebuf));
+    discNumT dnt = mapFileToDisc(atoi_safe(namebuf));
     if (dnt == DISC_NONE) {
       sendTo("Not a good discipline!\n\r");
       return;
@@ -2080,7 +2080,7 @@ void TPerson::doStat(const char *argument)
       unsigned int  tValue;
 
       if (hasWizPower(POWER_STAT_OBJECT) &&
-          ((tValue = real_object(atoi(arg1))) < obj_index.size()) &&
+          ((tValue = real_object(atoi_safe(arg1))) < obj_index.size()) &&
           tValue >= 0 && (tObj = read_object(tValue, REAL))) {
         statObj(tObj);
         delete tObj;
@@ -2090,7 +2090,7 @@ void TPerson::doStat(const char *argument)
       }
 
       if (hasWizPower(POWER_STAT_MOBILES) &&
-          ((tValue = real_mobile(atoi(arg1))) < mob_index.size()) &&
+          ((tValue = real_mobile(atoi_safe(arg1))) < mob_index.size()) &&
           tValue >= 0 && (tMonster = read_mobile(tValue, REAL))) {
         statBeing(tMonster);
         delete tMonster;

@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_charge.cc,v $
+// Revision 5.3  2002/03/06 04:07:51  peel
+// added atoi_safe and atof_safe to check for NULL values
+// converted all the atoi and atof to the safe versions
+//
 // Revision 5.2  2001/09/07 07:07:35  peel
 // changed TThing->stuff to getStuff() and setStuff()
 //
@@ -667,7 +671,7 @@ void startChargeTask(TBeing *ch, const char *tString)
   for (; isspace(*tArg); tArg++);
 
   if (*tArg) {
-    Distance = atoi(tArg);
+    Distance = atoi_safe(tArg);
 
     if (Distance <= 0) {
       ch->sendTo("That's funny, might we try it again?\n\r");

@@ -2043,7 +2043,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
     myself->doSay("HEY!  This is a no dragging zone!");
     return TRUE;
   } else
-    dir=dirTypeT(atoi(arg));
+    dir=dirTypeT(atoi_safe(arg));
 
   switch(myself->inRoom()){
     case 1024:
@@ -6200,7 +6200,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       db.query("select weight, name from fishlargest where type='%s'", o->shortDescr);
       db.fetchRow();
 
-      if(o->getWeight() > atoi(db.getColumn(0))){
+      if(o->getWeight() > atoi_safe(db.getColumn(0))){
 	db.query("update fishlargest set name='%s', weight=%f where type='%s'", ch->getName(), o->getWeight(), o->shortDescr);
 
 	sprintf(buf, "Oh my, you've broken %s's record!  This the largest %s I've seen, weighing in at %f!  Very nice! (%i talens)",
@@ -6240,7 +6240,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
 	while(db.fetchRow()){
 	  sprintf(buf, "%s caught %s weighing in at %f.",
-		  db.getColumn(0), db.getColumn(1), atof(db.getColumn(2)));
+		  db.getColumn(0), db.getColumn(1), atof_safe(db.getColumn(2)));
 	  myself->doSay(buf);
 	}      
       } else {
@@ -6252,7 +6252,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	
 	while(db.fetchRow()){
 	  sprintf(buf, "%s has %f pounds of fish and %i records.",
-		  db.getColumn(0), atof(db.getColumn(1)), atoi(db.getColumn(2)));
+		  db.getColumn(0), atof_safe(db.getColumn(1)), atoi_safe(db.getColumn(2)));
 	  myself->doSay(buf);
 	}      
       }
@@ -6722,11 +6722,11 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	myself->doTell(buf);
 
 	while(db.fetchRow()){
-	  if(atoi(db.getColumn(1))>0){
-	    count+=(int)(atof(db.getColumn(2))*atoi(db.getColumn(1)));
+	  if(atoi_safe(db.getColumn(1))>0){
+	    count+=(int)(atof_safe(db.getColumn(2))*atoi_safe(db.getColumn(1)));
 	    sprintf(buf, "%s, You own %s shares of %s, worth %f",
 		    fname(ch->name).c_str(), db.getColumn(1), db.getColumn(0),
-		    atof(db.getColumn(2))*atoi(db.getColumn(1)));
+		    atof_safe(db.getColumn(2))*atoi_safe(db.getColumn(1)));
 	    myself->doTell(buf);
 	  }
 	}
@@ -6809,7 +6809,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     // row[1] price
     // num amount to buy
 
-    float modprice=atof(db.getColumn(1))*(float)num;
+    float modprice=atof_safe(db.getColumn(1))*(float)num;
     modprice*=1.01;
 
     if(ch->getMoney() < modprice){
@@ -6818,7 +6818,7 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       return TRUE;
     }
 
-    if(atof(db.getColumn(1)) < 1){
+    if(atof_safe(db.getColumn(1)) < 1){
       sprintf(buf, "%s, Because of government regulations, I can't sell stock that is worth less than 1 talen per share.", fname(ch->name).c_str());
       myself->doTell(buf);
       return TRUE;
@@ -6866,21 +6866,21 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     if(!db.fetchRow())
       return FALSE;
     
-    if(atoi(db.getColumn(2)) < num){
+    if(atoi_safe(db.getColumn(2)) < num){
       sprintf(buf, "%s, You don't own enough shares of that stock.",
 	      fname(ch->name).c_str());
       myself->doTell(buf);
       return TRUE;
     }
 
-    ch->addToMoney(((float)num * atof(db.getColumn(1))), GOLD_COMM);
+    ch->addToMoney(((float)num * atof_safe(db.getColumn(1))), GOLD_COMM);
 
-    db.query("update stockinfo set talens=talens-%i", (int)(((float)num * atof(db.getColumn(1)))));
+    db.query("update stockinfo set talens=talens-%i", (int)(((float)num * atof_safe(db.getColumn(1)))));
     db.query("update stockowners set shares=shares-%i where owner='%s' and ticker='%s'", num, ch->getName(), db.getColumn(0));
 
     sprintf(buf, "%s, Ok, you just sold %i shares of %s, for a price of %f, minus my 1%% commission of %f.",
-	    fname(ch->name).c_str(), num, db.getColumn(0), (float)num * atof(db.getColumn(1)),
-	    (float)num * atof(db.getColumn(1)) * 0.01);
+	    fname(ch->name).c_str(), num, db.getColumn(0), (float)num * atof_safe(db.getColumn(1)),
+	    (float)num * atof_safe(db.getColumn(1)) * 0.01);
     myself->doTell(buf);
     
     
@@ -6911,13 +6911,13 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     if(!db.fetchRow())
       return FALSE;
 
-    if(atof(db.getColumn(1)) < 1){
+    if(atof_safe(db.getColumn(1)) < 1){
       sprintf(buf, "%s, Because of government regulations, I can't sell stock that is worth less than 1 talen per share.", fname(ch->name).c_str());
       myself->doTell(buf);
       return TRUE;
     }
 
-    float modprice=atof(db.getColumn(1));
+    float modprice=atof_safe(db.getColumn(1));
     modprice*=1.01;
 
     sprintf(buf, "%s, %i shares of %s would cost %i talens.",

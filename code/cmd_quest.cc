@@ -1,21 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: cmd_quest.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/09/27 14:12:24  lapsos
-// Fixed typo that was preventing execution.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 #include "stdsneezy.h"
 
 
@@ -35,7 +17,7 @@ void TBeing::remQuestBit(int)
 bool TPerson::hasQuestBit(int value) const
 {
   if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(6, "Bad check of hasQuestBit(%d)", value);
+    vlogf(LOG_BUG, "Bad check of hasQuestBit(%d)", value);
     return FALSE;
   }
 
@@ -45,7 +27,7 @@ bool TPerson::hasQuestBit(int value) const
 void TPerson::setQuestBit(int value)
 {
   if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(6, "Bad check of setQuestBit(%d)", value);
+    vlogf(LOG_BUG, "Bad check of setQuestBit(%d)", value);
     return;
   }
 
@@ -55,7 +37,7 @@ void TPerson::setQuestBit(int value)
 void TPerson::remQuestBit(int value)
 {
   if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(6, "Bad check of remQuestBit(%d)", value);
+    vlogf(LOG_BUG, "Bad check of remQuestBit(%d)", value);
     return;
   }
 
@@ -79,15 +61,15 @@ void TBeing::doMortalQuest(const char *tArg)
 
     // check "immorts" for "quest real 3"
     if (is_abbrev(buf, "real")) {
-      int questNumber = atoi(t2);
+      int questNumber = atoi_safe(t2);
       if (questNumber < 0 || questNumber >= MAX_TOG_INDEX) {
         sendTo("Invalid quest value.\n\r");
         return;
       }
 
       sprintf(questPath, "mobdata/responses/help/%d", questNumber);
-      if (file_to_string(questPath, tStString, true))
-        desc->page_string(tStString.c_str(), 0);
+      if (file_to_string(questPath, tStString))
+        desc->page_string(tStString.c_str());
       else
         sendTo("No such quest helpfile seems to exist.\n\r");
 
@@ -95,7 +77,7 @@ void TBeing::doMortalQuest(const char *tArg)
     }
   }
 
-  int questNumber = atoi(tArg);
+  int questNumber = atoi_safe(tArg);
   unsigned int totFound = 0;
   int questRes = -1;
   char   questPath[256];
@@ -124,8 +106,8 @@ void TBeing::doMortalQuest(const char *tArg)
   }
 
   sprintf(questPath, "mobdata/responses/help/%d", questRes);
-  if (file_to_string(questPath, tStString, true))
-    desc->page_string(tStString.c_str(), 0);
+  if (file_to_string(questPath, tStString))
+    desc->page_string(tStString.c_str());
   // else condition not needed, it should be valid based on above logic
 }
 

@@ -563,8 +563,8 @@ bool bootHome(int plan_i, int plot_start, int plot_end,
   if(!db.fetchRow())
     return FALSE;
     
-  template_start=atoi(db.getColumn(0));
-  template_end=atoi(db.getColumn(1));
+  template_start=atoi_safe(db.getColumn(0));
+  template_end=atoi_safe(db.getColumn(1));
   
   plot_i=plot_start;
   for(template_i=template_start;template_i<=template_end;++template_i){
@@ -668,12 +668,12 @@ void bootHomes(void)
   db.query("select plan, plot_start, plot_end, keynum, flip, rotate from homeplots where homeowner is not null");
   
   while(db.fetchRow()){
-    plan_i=atoi(db.getColumn(0));
-    plot_start=atoi(db.getColumn(1));
-    plot_end=atoi(db.getColumn(2));
-    keynum=atoi(db.getColumn(3));
-    flip=atoi(db.getColumn(4));    
-    rotate=atoi(db.getColumn(5));
+    plan_i=atoi_safe(db.getColumn(0));
+    plot_start=atoi_safe(db.getColumn(1));
+    plot_end=atoi_safe(db.getColumn(2));
+    keynum=atoi_safe(db.getColumn(3));
+    flip=atoi_safe(db.getColumn(4));    
+    rotate=atoi_safe(db.getColumn(5));
 
     if(!bootHome(plan_i, plot_start, plot_end, keynum, flip, rotate)){
       vlogf(LOG_BUG, "bootHome failed");
@@ -1567,27 +1567,27 @@ TObj *read_object(int nr, readFileTypeT type)
     return NULL;
   
 
-  obj = makeNewObj(mapFileToItemType(atoi(db.getColumn(0))));
+  obj = makeNewObj(mapFileToItemType(atoi_safe(db.getColumn(0))));
   obj->number=nr;
   obj->name = obj_index[nr].name;
   obj->shortDescr = obj_index[nr].short_desc;
   obj->setDescr(obj_index[nr].long_desc);
   obj->action_description = obj_index[nr].description;
-  obj->setObjStat(atoi(db.getColumn(1)));
-  obj->obj_flags.wear_flags = atoi(db.getColumn(2));
-  obj->assignFourValues(atoi(db.getColumn(3)), atoi(db.getColumn(4)), atoi(db.getColumn(5)), atoi(db.getColumn(6)));
-  obj->setWeight(atof(db.getColumn(7)));
-  obj->obj_flags.cost = atoi(db.getColumn(8));
-  obj->canBeSeen = atoi(db.getColumn(9));
-  obj->spec = atoi(db.getColumn(10));
-  obj->setMaxStructPoints(atoi(db.getColumn(11)));
-  obj->setStructPoints(atoi(db.getColumn(12)));
+  obj->setObjStat(atoi_safe(db.getColumn(1)));
+  obj->obj_flags.wear_flags = atoi_safe(db.getColumn(2));
+  obj->assignFourValues(atoi_safe(db.getColumn(3)), atoi_safe(db.getColumn(4)), atoi_safe(db.getColumn(5)), atoi_safe(db.getColumn(6)));
+  obj->setWeight(atof_safe(db.getColumn(7)));
+  obj->obj_flags.cost = atoi_safe(db.getColumn(8));
+  obj->canBeSeen = atoi_safe(db.getColumn(9));
+  obj->spec = atoi_safe(db.getColumn(10));
+  obj->setMaxStructPoints(atoi_safe(db.getColumn(11)));
+  obj->setStructPoints(atoi_safe(db.getColumn(12)));
   obj->setDepreciation(0);
-  obj->obj_flags.decay_time=atoi(db.getColumn(13));
-  obj->setVolume(atoi(db.getColumn(14)));
-  obj->setMaterial(atoi(db.getColumn(15)));
+  obj->obj_flags.decay_time=atoi_safe(db.getColumn(13));
+  obj->setVolume(atoi_safe(db.getColumn(14)));
+  obj->setMaterial(atoi_safe(db.getColumn(15)));
   // beta is used to test LOW loads, so don't let max_exist be a factor
-  obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : atoi(db.getColumn(16)));
+  obj->max_exist = (gamePort == BETA_GAMEPORT ? 9999 : atoi_safe(db.getColumn(16)));
   obj->ex_description=obj_index[nr].ex_description;
 
   for(i=0;i<MAX_OBJ_AFFECT;++i){

@@ -44,7 +44,7 @@ TObj * findShopObjForCompare(TBeing *ch, string StObject)
 
     TThing *tObj = searchLinkedListVis(ch, tString, tThing->getStuff());
     if (!tObj)
-      tObj = get_num_obj_in_list(ch, atoi(tString), tThing->getStuff(), shop_nr);
+      tObj = get_num_obj_in_list(ch, atoi_safe(tString), tThing->getStuff(), shop_nr);
 
     if (tObj)
       return (dynamic_cast<TObj *>(tObj));

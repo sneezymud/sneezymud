@@ -490,7 +490,7 @@ void TPerson::doPowers(const char *argument) const
     strcpy(tString, tStPower.c_str());
 
     if (tStPower.empty() ||
-        (is_number(tString) && atoi(tStPower.c_str()) == (tWizPower + 1)) ||
+        (is_number(tString) && atoi_safe(tStPower.c_str()) == (tWizPower + 1)) ||
         (!is_number(tString) &&
          is_abbrev(tStPower.c_str(), getWizPowerName(tWizPower).c_str()))) {
       sprintf(tString, "%3d.) [%c] %-25.25s",

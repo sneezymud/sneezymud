@@ -296,7 +296,7 @@ void TBeing::doTestFight(const char *arg)
     repTheStats();
     return;
   } else if (*cmob1 && is_abbrev(cmob1, "class")) {
-    changed_class = atoi(cmob2);
+    changed_class = atoi_safe(cmob2);
     sendTo("Changed class is now %d.\n\r", changed_class);
     return;
   }
@@ -310,8 +310,8 @@ void TBeing::doTestFight(const char *arg)
     repTheStats();
   }
 
-  mob1_num = atoi(cmob1);
-  mob2_num = atoi(cmob2);
+  mob1_num = atoi_safe(cmob1);
+  mob2_num = atoi_safe(cmob2);
 
   highNum = -1;
   lowNum = -1;

@@ -1207,7 +1207,7 @@ void TBeing::doWimpy(const char *arg)
   if (is_abbrev(buf, "max")) {
     sendTo("Setting Wimpy to Max(%d).\n\r", wimplimit - 1);
     num = wimplimit - 1;
-  } else if (is_abbrev(buf, "off") || (num = atoi(buf)) <= 0) {
+  } else if (is_abbrev(buf, "off") || (num = atoi_safe(buf)) <= 0) {
     sendTo("Turning wimpy mode off.\n\r");
     wimpy = 0;
     return;

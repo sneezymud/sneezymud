@@ -326,7 +326,7 @@ void TPerson::doEdit(const char *arg)
       half_chop(tBuf, Buf, tString);
 
       if (*tBuf && is_abbrev(tBuf, "copy")) {
-        int toRoom = atoi(tBuf);  // from the <to-room> block
+        int toRoom = atoi_safe(tBuf);  // from the <to-room> block
 
         if (strcmp(getName(), "Jesus") != 0) {
           sendTo("Don't use this option yet.  It is still under development.\n\r");
@@ -375,7 +375,7 @@ void TPerson::doEdit(const char *arg)
               return;
             }
 
-            if ((new_dir = atoi(Buf)) < MIN_DIR || new_dir >= MAX_DIR) {
+            if ((new_dir = atoi_safe(Buf)) < MIN_DIR || new_dir >= MAX_DIR) {
               sendTo("Direction must be between %d and %d.\n\r", MIN_DIR, (MAX_DIR - 1));
               return;
             }
@@ -751,7 +751,7 @@ void TPerson::doEdit(const char *arg)
         return;
       }
       while (*Buf && ++r_flags < 15) {
-        cRoom = atoi(Buf);
+        cRoom = atoi_safe(Buf);
 
         // Make sure room number is valid.  Must be a number, and between
         // 0 and WORLD_SIZE.
@@ -795,7 +795,7 @@ void TPerson::doEdit(const char *arg)
           // the next loop through.
           half_chop(tBuf, Buf, string);
           tBuf = string;
-          new_dir = atoi(Buf);
+          new_dir = atoi_safe(Buf);
           // Now we check the new room.
           if (is_number(Buf) && (new_dir > -1) && (new_dir < WORLD_SIZE)) {
             if (!(newrpTo = real_roomp(new_dir))) {
@@ -1020,7 +1020,7 @@ void TPerson::doEdit(const char *arg)
       r_flags = 0;
       // Loop while we got rooms to do.
       while (*Buf && ++r_flags < 15) {
-        cRoom = atoi(Buf);
+        cRoom = atoi_safe(Buf);
 
         // Make sure room number is valid.  Must be a number, and between
         // 0 and WORLD_SIZE, and we don't want to modify OUR room.
@@ -1356,8 +1356,8 @@ void TPerson::doRload(const char *argument)
   if (is_abbrev(stRoom.c_str(), "backup")) {
     bool useStandard = false;
 
-    if ((!enRoom.empty()  && atoi(enRoom.c_str())  == 2) ||
-        (!tString.empty() && atoi(tString.c_str()) == 2))
+    if ((!enRoom.empty()  && atoi_safe(enRoom.c_str())  == 2) ||
+        (!tString.empty() && atoi_safe(tString.c_str()) == 2))
       useSecond = true;
 
     if ((!enRoom.empty()  && is_abbrev(enRoom.c_str(), "standard")) ||
@@ -1372,11 +1372,11 @@ void TPerson::doRload(const char *argument)
     return;
   }
 
-  if (!tString.empty() && atoi(tString.c_str()) == 2)
+  if (!tString.empty() && atoi_safe(tString.c_str()) == 2)
     useSecond = true;
 
-  start = atoi(stRoom.c_str());
-  end   = atoi(enRoom.c_str());
+  start = atoi_safe(stRoom.c_str());
+  end   = atoi_safe(enRoom.c_str());
 
   if ((start <= end) && (start != -1) && (end != -2))
     RoomLoad(this, start, end, useSecond);
@@ -1404,7 +1404,7 @@ static void ChangeMaxCap(TRoom *rp, TBeing *ch, const char *arg, editorEnterType
 {
   int num;
 
-  num = atoi(arg);
+  num = atoi_safe(arg);
 
   if (type != ENTER_CHECK)
     if (!*arg || (*arg == '\n')) {
@@ -1431,7 +1431,7 @@ static void ChangeMaxCap(TRoom *rp, TBeing *ch, const char *arg, editorEnterType
 
 static void ChangeRoomHeight(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT type)
 {
-  int num = atoi(arg);
+  int num = atoi_safe(arg);
 
   if (type != ENTER_CHECK)
     if (!*arg || (*arg == '\n')) {
@@ -1474,7 +1474,7 @@ static void ChangeRoomFlags(TRoom *rp, TBeing *ch, const char *arg, editorEnterT
       return;
     }
   }
-  update = atoi(arg);
+  update = atoi_safe(arg);
   update--;
   if (type != ENTER_CHECK) {
     if (update < 0 || update >= MAX_ROOM_BITS)
@@ -1617,7 +1617,7 @@ static void ChangeRoomType(TRoom *rp, TBeing *ch, const char *arg, editorEnterTy
       update_room_menu(ch);
       return;
     }
-  update = atoi(arg);
+  update = atoi_safe(arg);
   update--;
 
   if (type != ENTER_CHECK) {
@@ -1800,7 +1800,7 @@ static void ChangeExitSlopedStatus(TRoom *rp, TBeing *ch, const char *arg, edito
       return;
     }
 
-    update = atoi(arg);
+    update = atoi_safe(arg);
 
     if (update != 9 && update != 10)
       return;
@@ -1874,7 +1874,7 @@ static void ChangeKeyNumber(TRoom *rp, TBeing *ch, const char *arg, editorEnterT
   }
 
   if (type != ENTER_CHECK) {
-    update = atoi(arg);
+    update = atoi_safe(arg);
 
     if (update < 0) {
       ch->sendTo("\n\rKey number must be greater than 0.\n\r");
@@ -1932,7 +1932,7 @@ static void ChangeExitLockDiff(TRoom *rp, TBeing *ch, const char *arg, editorEnt
   }
   if (type != ENTER_CHECK) {
     int diff;
-    diff = atoi(arg);
+    diff = atoi_safe(arg);
     if ((diff < 0) || (diff > 100)) {
       ch->sendTo("Please enter a number from 0 to 100.\n\r");
       return;
@@ -2027,7 +2027,7 @@ static void ChangeExitWeight(TRoom *rp, TBeing *ch, const char *arg, editorEnter
   if (type != ENTER_CHECK) {
     int weight;
 
-    weight = atoi(arg);
+    weight = atoi_safe(arg);
     if ((weight <= 0) || (weight > 50)) {
       ch->sendTo("Please enter a number between 1 and 50\n\r");
       return;
@@ -2280,7 +2280,7 @@ static void ChangeExitCondition(TRoom *rp, TBeing *ch, const char *arg, editorEn
       ChangeExitKeyword(rp, ch, "", ENTER_CHECK);
       return;
     }
-    update = atoi(arg);
+    update = atoi_safe(arg);
 
     if (update <= 0 || update >= MAX_DOOR_CONDITIONS)   
       return;
@@ -2390,7 +2390,7 @@ static void ChangeExitType(TRoom *rp, TBeing *ch, const char *arg, editorEnterTy
       return;
   }
   if (type != ENTER_CHECK) {
-    update = atoi(arg);
+    update = atoi_safe(arg);
     update--;
 
     if (update < DOOR_NONE || update >= MAX_DOOR_TYPES)
@@ -2546,7 +2546,7 @@ static void ChangeExitNumber(TRoom *rp, TBeing *ch, const char *arg, editorEnter
   if (type == ENTER_CHECK)
     return;
 
-  update = atoi(arg);
+  update = atoi_safe(arg);
 
   if (update < 0 || update > 39000) {
     ch->sendTo("\n\rRoom number must be between 0 and 39000.\n\r");
@@ -2616,7 +2616,7 @@ static void ChangeExitDir(TRoom *rp, TBeing *ch, const char *arg, editorEnterTyp
       update_room_menu(ch);
       return;
     }
-    update = atoi(arg) - 1;
+    update = atoi_safe(arg) - 1;
     if (update <= -1 || update > 9) {
       ChangeExitDir(rp, ch, "", ENTER_CHECK);
       return;
@@ -2690,7 +2690,7 @@ static void DeleteExit(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT 
       return;
     }
 
-    update = atoi(arg);
+    update = atoi_safe(arg);
     update--;
 
     if (update < MIN_DIR || update >= MAX_DIR)
@@ -3117,7 +3117,7 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
   while (fscanf(fl, "%s\n", chk) == 1) {
     switch (*chk) {
       case 'D': // Exits in a direction
-        setup_dir(fl, number, mapFileToDir(atoi(chk + 1)), this);
+        setup_dir(fl, number, mapFileToDir(atoi_safe(chk + 1)), this);
         break;
       case 'E': // Extra description
         new_descr = new extraDescription();
@@ -3291,7 +3291,7 @@ void room_edit(TBeing *ch, const char *arg)
         ch->doCls(false);
       return;
     }
-    switch (atoi(arg)) {
+    switch (atoi_safe(arg)) {
       case 0:
 	update_room_menu(ch);
 	return;
@@ -3568,7 +3568,7 @@ void TPerson::doRsave(const char *argument)
   }
 
   if (is_abbrev(stRoom.c_str(), "backup")) {
-    if (!enRoom.empty() && atoi(enRoom.c_str()) == 2)
+    if (!enRoom.empty() && atoi_safe(enRoom.c_str()) == 2)
       useSecond = true;
 
     sprintf(tBuffer, "cp immortals/%s/rooms%s immortals/%s/rooms%s.bak2",
@@ -3578,11 +3578,11 @@ void TPerson::doRsave(const char *argument)
     return;
   }
 
-  if (!tString.empty() && atoi(tString.c_str()) == 2)
+  if (!tString.empty() && atoi_safe(tString.c_str()) == 2)
     useSecond = true;
 
-  start = atoi(stRoom.c_str());
-  end   = atoi(enRoom.c_str());
+  start = atoi_safe(stRoom.c_str());
+  end   = atoi_safe(enRoom.c_str());
 
   if ((start <= end) && (start != -1) && (end != -2)) {
     sprintf(tBuffer, "mv immortals/%s/rooms%s immortals/%s/rooms%s.bak",
