@@ -1955,16 +1955,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     
     if(!strcmp(buf, "info")){ /////////////////////////////////////////
       tso.showInfo();
-    } else if(!strcmp(buf, "set")){ //////////////////////////////////
-      arg = one_argument(arg, buf);
-      
-      if(!strcmp(buf, "profit_buy")){
-	tso.setProfitBuy(arg);
-      } else if(!strcmp(buf, "profit_sell")){ 
-	tso.setProfitSell(arg);
-      } else {
-	myself->doTell(ch->getName(), "Sorry, I don't understand.  You can set either my profit_buy or profit_sell values.");
-      }
+    } else if(!strcmp(buf, "setrates")){ //////////////////////////////////
+      tso.setRates(arg);
     } else if(!strcmp(buf, "buy")){ /////////////////////////////////
       tso.buyShop();
     } else if(!strcmp(buf, "sell")){ //////////////////////////////////
@@ -1976,7 +1968,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     } else if(!strcmp(buf, "logs")){ /////////////////////////////////////////
       tso.doLogs(arg);
     } else {
-      myself->doTell("Read 'help shop owner' for assistance.");
+      myself->doTell(ch->getName(), "Read 'help shop owner' for assistance.");
     }
 
 

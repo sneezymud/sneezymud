@@ -11,7 +11,7 @@
 
 const unsigned int SHOPACCESS_OWNER   = (1<<0);
 const unsigned int SHOPACCESS_INFO    = (1<<1);
-const unsigned int SHOPACCESS_PROFITS = (1<<2);
+const unsigned int SHOPACCESS_RATES   = (1<<2);
 const unsigned int SHOPACCESS_GIVE    = (1<<3);
 const unsigned int SHOPACCESS_SELL    = (1<<4);
 const unsigned int SHOPACCESS_ACCESS  = (1<<5);

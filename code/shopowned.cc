@@ -136,113 +136,91 @@ void TShopOwned::showInfo()
 }
 
 
-int TShopOwned::setProfitBuy(const char *arg)
+int TShopOwned::setRates(string arg)
 {
   TDatabase db("sneezy");
-  char buf[256];
+  string buf;
+  float profit_buy, profit_sell;
+  int max_num, argc=0;
 
-  if(!hasAccess(SHOPACCESS_PROFITS)){
-    keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
-    return FALSE;
-  }
-
-  arg = one_argument(arg, buf);  
-
-  if(!*buf){
-    db.query("select obj_nr, profit_buy, profit_sell from shopownedratios where shop_nr=%i", shop_nr);
-    
-    while(db.fetchRow()){
-      keeper->doTell(ch->getName(), "%f %f %s", atof_safe(db.getColumn(1)), 
-		     atof_safe(db.getColumn(2)), obj_index[real_object(atoi_safe(db.getColumn(0)))].short_desc);
-    }
-    
-    return TRUE;
-  } else if(!strcmp(buf, "clear")){
-    db.query("delete from shopownedratios where shop_nr=%i", shop_nr);
-    keeper->doTell(ch->getName(), "Ok, I cleared all of the individual profit ratios.");
-    return TRUE;
-  }
-  
-  if(atof_safe(buf)>5){
-    keeper->doTell(ch->getName(), "Because of fraud regulations, I can't set the profit_buy higher than 5!");
-    return FALSE;
-  }
-  
-  
-  if(*arg){
-    // find item in inventory matching keywords in arg
-    // get vnum, then store in db
-    TThing *tt = searchLinkedListVis(ch, arg, keeper->getStuff());
-    
-    if(!tt){
-      keeper->doTell(ch->getName(), "I don't have that item.");
-      return FALSE;
-    }
-    
-    TObj *o=dynamic_cast<TObj *>(tt);
-    
-    // create the entry if it doesn't exist, use default profit buy/sell
-    db.query("select 1 from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, o->objVnum());
-    
-    if(!db.fetchRow()){
-      // get the default profit buy/sell
-      db.query("select profit_buy, profit_sell from shop where shop_nr=%i", shop_nr);
-      db.fetchRow();
-      db.query("insert into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof_safe(buf), atof_safe(db.getColumn(1)));
-    } else {
-      db.query("update shopownedratios set profit_buy=%f where shop_nr=%i and obj_nr=%i", atof_safe(buf), shop_nr, o->objVnum());
-    }
-    
-    keeper->doTell(ch->getName(), "Ok, my profit_buy is now %f for %s.", 
-		   atof_safe(buf), o->getName());
-  } else { //////////////////////////////
-    shop_index[shop_nr].profit_buy=atof_safe(buf);
-    
-    db.query("update shopowned set profit_buy=%f where shop_nr=%i", shop_index[shop_nr].profit_buy, shop_nr);
-    
-    keeper->doTell(ch->getName(), "Ok, my profit_buy is now %f", 
-		   shop_index[shop_nr].profit_buy);
-  }
-
-  return TRUE;
-}
-
-
-
-
-int TShopOwned::setProfitSell(const char *arg)
-{
-  TDatabase db("sneezy");
-  char buf[256];
-
-  if(!hasAccess(SHOPACCESS_PROFITS)){
+  if(!hasAccess(SHOPACCESS_RATES)){
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
     return FALSE;
   }
 
   arg = one_argument(arg, buf);
+  profit_buy = atof_safe(buf.c_str());
+  if(buf != "")
+    argc++;
+
+  arg = one_argument(arg, buf);
+  profit_sell = atof_safe(buf.c_str());
+  if(buf != "")
+    argc++;
+
+  arg = one_argument(arg, buf);
+  max_num = atoi_safe(buf.c_str());
+  if(buf != "")
+    argc++;
   
-  if(!*buf){
-    db.query("select obj_nr, profit_buy, profit_sell from shopownedratios where shop_nr=%i", shop_nr);
+  arg = one_argument(arg, buf);
+  if(buf != "")
+    argc++;
+  
+  if(argc==0){
+    db.query("select obj_nr, profit_buy, profit_sell, max_num from shopownedratios where shop_nr=%i", shop_nr);
     
     while(db.fetchRow()){
-      keeper->doTell(ch->getName(), "%f %f %s", atof_safe(db.getColumn(1)), 
-		     atof_safe(db.getColumn(2)), 
-		     obj_index[real_object(atoi_safe(db.getColumn(0)))].short_desc);
+      keeper->doTell(ch->getName(), "%f %f %i %s", atof_safe(db.getColumn(1)), 
+		     atof_safe(db.getColumn(2)), atoi_safe(db.getColumn(3)),
+	       obj_index[real_object(atoi_safe(db.getColumn(0)))].short_desc);
     }
+
+    db.query("select match, profit_buy, profit_sell, max_num from shopownedmatch where shop_nr=%i", shop_nr);
     
+    while(db.fetchRow()){
+      keeper->doTell(ch->getName(), "%f %f %i %s", atof_safe(db.getColumn(1)), 
+		     atof_safe(db.getColumn(2)), atoi_safe(db.getColumn(3)),
+		     db.getColumn(0));
+    }    
     return TRUE;
-  } else if(!strcmp(buf, "clear")){
-    db.query("delete from shop ownedratios where shop_nr=%i", shop_nr);
-    
-    keeper->doTell(ch->getName(), "Ok, I cleared all of the individual profit ratios.");
-    return TRUE;
+  } else if(argc<4){
+    keeper->doTell(ch->getName(), "I don't understand.");
+    return FALSE;
   }
   
-  if(*arg){
+  if(buf == "default"){ ///////////////////////////////////////////////////
+    shop_index[shop_nr].profit_buy=profit_buy;
+    shop_index[shop_nr].profit_sell=profit_sell;
+    
+    db.query("update shopowned set profit_buy=%f, profit_sell=%f, max_num=%i where shop_nr=%i", shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell, max_num, shop_nr);
+    
+    keeper->doTell(ch->getName(), "Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i.", shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell, max_num);
+  } else if(buf == "match"){ /////////////////////////////////////////////
+    arg = one_argument(arg, buf);
+
+    db.query("select 1 from shopownedmatch where shop_nr=%i and match='%s'",
+	     shop_nr, buf.c_str());
+    
+    if(!db.fetchRow()){
+      db.query("insert into shopownedmatch values (%i, '%s', %f, %f, %i)",
+	       shop_nr, buf.c_str(), profit_buy, profit_sell, max_num);
+    } else {
+      db.query("update shopownedmatch set profit_buy=%f, profit_sell=%f, max_num=%i where shop_nr=%i and match='%s'", profit_buy, profit_sell, max_num, shop_nr, buf.c_str());
+    }
+    
+    keeper->doTell(ch->getName(), "Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is now %i, all for keyword %s.", profit_buy, profit_sell, max_num, buf.c_str());    
+  } else if(buf == "clear"){ /////////////////////////////////////////////
+    arg = one_argument(arg, buf);
+    if(buf == "all"){
+      db.query("delete from shopownedratios where shop_nr=%i", shop_nr);
+      keeper->doTell(ch->getName(), "Ok, I cleared all of the individual profit ratios.");
+    } else {
+    }
+  } else { ////////////////////////////////////////////////////////////////
     // find item in inventory matching keywords in arg
     // get vnum, then store in db
-    TThing *tt = searchLinkedListVis(ch, arg, keeper->getStuff());
+    TThing *tt = searchLinkedListVis(ch, buf.c_str(), keeper->getStuff());
     
     if(!tt){
       keeper->doTell(ch->getName(), "I don't have that item.");
@@ -251,29 +229,19 @@ int TShopOwned::setProfitSell(const char *arg)
     
     TObj *o=dynamic_cast<TObj *>(tt);
     
-    // create the entry if it doesn't exist, use default profit buy/sell
-    db.query("select 1 from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, o->objVnum());
+    db.query("select 1 from shopownedratios where shop_nr=%i and obj_nr=%i",
+	     shop_nr, o->objVnum());
     
     if(!db.fetchRow()){
-      // get the default profit buy/sell
-      db.query("select profit_buy, profit_sell from shop where shop_nr=%i", shop_nr);
-      db.fetchRow();
-      
-      db.query("insert into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof_safe(db.getColumn(0)), atof_safe(buf));
+      db.query("insert into shopownedratios values (%i, %i, %f, %f, %i)",
+	       shop_nr, o->objVnum(), profit_buy, profit_sell, max_num);
     } else {
-      db.query("update shopownedratios set profit_sell=%f where shop_nr=%i and obj_nr=%i", atof_safe(buf), shop_nr, o->objVnum());
+      db.query("update shopownedratios set profit_buy=%f, profit_sell=%f, max_num=%i where shop_nr=%i and obj_nr=%i", profit_buy, profit_sell, max_num, shop_nr, o->objVnum());
     }
     
-    keeper->doTell(ch->getName(), "Ok, my profit_sell is now %f for %s.",
-		   atof_safe(buf), o->getName());
-  } else {
-    shop_index[shop_nr].profit_sell=atof_safe(buf);
-    
-    db.query("update shopowned set profit_sell=%f where shop_nr=%i", shop_index[shop_nr].profit_sell, shop_nr);
-    
-    keeper->doTell(ch->getName(), "Ok, my profit_sell is now %f", 
-		   shop_index[shop_nr].profit_sell);
+    keeper->doTell(ch->getName(), "Ok, my profit_buy is now %f, my profit_sell is now %f and my max_num is %i, all for %s.", profit_buy, profit_sell, max_num, o->getName());
   }
+  
   return TRUE;
 }
 
@@ -432,9 +400,9 @@ int TShopOwned::setAccess(const char *arg)
 	access-=SHOPACCESS_GIVE;
 	sprintf(buf2+strlen(buf2), " give");
       }
-      if(access>=SHOPACCESS_PROFITS){
-	access-=SHOPACCESS_PROFITS;
-	sprintf(buf2+strlen(buf2), " set");
+      if(access>=SHOPACCESS_RATES){
+	access-=SHOPACCESS_RATES;
+	sprintf(buf2+strlen(buf2), " rates");
       }
       if(access>=SHOPACCESS_INFO){
 	access-=SHOPACCESS_INFO;

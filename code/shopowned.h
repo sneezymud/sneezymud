@@ -14,8 +14,7 @@ class TShopOwned {
   int getPurchasePrice(int, int);
 
   void showInfo();
-  int setProfitBuy(const char *);
-  int setProfitSell(const char *);
+  int setRates(string);
   int buyShop();
   int sellShop();
   int giveMoney(const char *);
