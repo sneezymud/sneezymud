@@ -596,6 +596,11 @@ void generic_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr)
     ch->sendTo("That's a prototype, no selling that!\n\r");
     return;
   }
+  if (shopOwned(shop_nr) && obj->isObjStat(ITEM_NORENT)){
+    ch->sendTo("This shop is privately owned and we don't purchase non-rentable items.\n\r");
+    return;
+  }
+
   if (!trade_with(obj, shop_nr)) {
     char buf[256];
     sprintf(buf, shop_index[shop_nr].do_not_buy, ch->getName());

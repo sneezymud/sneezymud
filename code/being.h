@@ -1856,7 +1856,6 @@ class TBeing : public TThing {
     void doMindthrust(const char *);
     void doPsycrush(const char *);
     void doKwave(const char *);
-    void doTelekinesis(const char *);
 
 
     // Monk Skills

@@ -1142,6 +1142,12 @@ int TBeing::updateHalfTickStuff()
       // the following 3 conditions we Always want that check to occure.
       if (!roomp->isRoomFlag(ROOM_NO_HEAL) && (drunk < 15) && has_healthy_body(this)) {
         int mana_bump = manaGain(), mana_max = manaLimit(), mana_cur = getMana();
+
+	if (affectedBySpell(SKILL_MIND_FOCUS)) {
+	  mana_bump = (int)((float) mana_bump * 
+		      (1.0+((float)getSkillValue(SKILL_MIND_FOCUS)/100.0)));
+	}  
+
         if (foodReject || (drunk > 15)) {
           mana_bump = ::number(1,3);
           if (!foodReject || (0 >= getLifeforce())) {

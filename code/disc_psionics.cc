@@ -501,6 +501,27 @@ void TBeing::doTelevision(const char *arg)
 }
 
 void TBeing::doMindfocus(const char *){
+  if (affectedBySpell(SKILL_MIND_FOCUS)) {
+    sendTo("You are already focusing your mind.\n\r");
+    return;
+  }
+
+  int bKnown=getSkillValue(SKILL_MIND_FOCUS);
+  affectedData aff;
+
+  if (bSuccess(this, bKnown, SKILL_MIND_FOCUS)){
+    act("You begin to focus your mind on regenerating your psionic powers.", TRUE, this, NULL, NULL, TO_CHAR);
+
+    aff.type      = SKILL_MIND_FOCUS;
+    aff.level     = bKnown;
+    aff.duration  = (3 + (bKnown / 2)) * UPDATES_PER_MUDHOUR;
+    aff.location  = APPLY_NONE;
+    affectTo(&aff, -1);
+  } else {
+    act("You try to focus your mind, but you can't concentrate.",
+	TRUE, this, NULL, NULL, TO_CHAR);
+  }
+
   return;
 }
 
@@ -517,10 +538,6 @@ void TBeing::doPsycrush(const char *){
 }
 
 void TBeing::doKwave(const char *){
-  return;
-}
-
-void TBeing::doTelekinesis(const char *){
   return;
 }
 

@@ -1687,9 +1687,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
 	case CMD_KWAVE:
 	  doKwave(newarg);
 	  break;
-	case CMD_TELELKINESIS:
-	  doTelekinesis(newarg);
-	  break;
         case MAX_CMD_LIST:
         case CMD_RESP_TOGGLE:
         case CMD_RESP_UNTOGGLE:
@@ -2868,6 +2865,7 @@ void buildCommandArray(void)
   commandArray[CMD_PTELL] = new commandInfo("ptell", POSITION_RESTING, 0);
   commandArray[CMD_PSHOUT] = new commandInfo("pshout", POSITION_RESTING, 0);
   commandArray[CMD_TELEVISION] = new commandInfo("television", POSITION_RESTING, 0);
+  commandArray[CMD_MINDFOCUS] = new commandInfo("mindfocus", POSITION_RESTING, 0);
 }
 
 bool _parse_name(const char *arg, char *name)

@@ -1493,6 +1493,15 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
         // no display
         break;
 
+      case SKILL_MIND_FOCUS:
+	if(show){
+	  sprintf(buf, "Affected: mind focus.  Approx, duration : %s\n\r",
+		  describeDuration(this, aff->duration).c_str());
+	  str += buf;
+	}
+	break;
+
+
       // cases beyond here are considered BOGUs
       case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:
@@ -1596,7 +1605,6 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_PSITELEPATHY:
       case SKILL_TELE_SIGHT:
       case SKILL_TELE_VISION:
-      case SKILL_MIND_FOCUS:
       case SKILL_PSI_BLAST:
       case SKILL_MIND_THRUST:
       case SKILL_PSYCHIC_CRUSH:

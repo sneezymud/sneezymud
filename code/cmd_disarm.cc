@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: cmd_disarm.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -47,6 +39,10 @@ bool TBeing::canDisarm(TBeing *victim, silentTypeT silent)
     case BODY_AMPHIBEAN:
     case BODY_FROG:
     case BODY_MIMIC:
+    case BODY_WYVELIN:
+    case BODY_FISH:
+    case BODY_TREE:
+    case BODY_SLIME:
       if (!silent)
         sendTo("You have the wrong bodyform for grappling.\n\r");
       return FALSE;
@@ -111,6 +107,36 @@ bool TBeing::canDisarm(TBeing *victim, silentTypeT silent)
   return TRUE;
 }
 
+
+// uses the psionic skill telekinesis to automatically retrieve a disarmed wep
+// victim is the disarmee, ie the one with the telekinesis skill
+bool trytelekinesis(TBeing *caster, TBeing *victim, TObj *obj){
+  if(!victim->doesKnowSkill(SKILL_TELEKINESIS)){
+    return FALSE;
+  }
+
+  if(!bSuccess(victim, victim->getSkillValue(SKILL_TELEKINESIS), 
+	       SKILL_TELEKINESIS)){
+    act("You try to retrieve your $p using telekinesis, but it is too difficult.", 
+	FALSE, caster, obj, victim, TO_VICT, ANSI_CYAN);
+    act("$N furrows $s brow for a moment, but nothing happens.",
+	FALSE, caster, obj, victim, TO_NOTVICT, ANSI_NORMAL);
+    act("$N furrows $s brow for a moment, but nothing happens.",
+	FALSE, caster, obj, victim, TO_CHAR, ANSI_NORMAL);
+  } else {
+    act("You catch your $p in mid-air with the powers of your mind and return it to your grasp!",
+	FALSE, caster, obj, victim, TO_VICT, ANSI_CYAN);
+    act("$N's $p stops in mid-air, then flies back to his hand!",
+	FALSE, caster, obj, victim, TO_NOTVICT, ANSI_CYAN);
+    act("$N's $p stops in mid-air, then flies back to his hand!",
+	FALSE, caster, obj, victim, TO_CHAR, ANSI_CYAN);
+    return TRUE;
+  }
+
+  // shouldn't get here
+  return FALSE;
+}
+
 static int disarm(TBeing * caster, TBeing * victim, spellNumT skill) 
 {
   int percent;
@@ -127,9 +153,12 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
   caster->addToMove(-disarm_move);
 
   level = caster->getSkillLevel(skill);
-  int bKnown = caster->getSkillValue(skill);
 
-  if (caster->isNotPowerful(victim, level, skill, SILENT_YES)) {
+  int bKnown = caster->getSkillValue(skill);
+  int level2  = victim->getSkillLevel(skill);
+
+  if (caster->isNotPowerful(victim, level, skill, SILENT_YES) ||
+      !victim->isNotPowerful(caster, level2, skill, SILENT_YES)) {
     act("You try to disarm $N, but fail miserably.",
            TRUE, caster, 0, victim, TO_CHAR);
     if (caster->isHumanoid())
@@ -166,13 +195,11 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
   if (i && bKnown >= 0 && i != GUARANTEED_FAILURE &&
       bSuccess(caster, bKnown + percent, skill)) {
     TObj * obj = NULL;
-    if (victim->heldInPrimHand()) {
-      TThing *tt = victim->unequip(victim->getPrimaryHold());
-      obj = dynamic_cast<TObj *>(tt);;
-    } 
-    if (!obj) {
-      TThing *tt = victim->unequip(victim->getSecondaryHold());
-      obj = dynamic_cast<TObj *>(tt);;
+    bool isobjprim=TRUE; // is the disarmed object the primary hand object?
+
+    if (!(obj=dynamic_cast<TObj *>(victim->heldInPrimHand()))){
+      obj = dynamic_cast<TObj *>(victim->heldInSecHand());
+      isobjprim=FALSE;
     }
     if (obj) {
       act("You attempt to disarm $N.", TRUE, caster, 0, victim, TO_CHAR);
@@ -187,8 +214,16 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
       act("You send $p flying from $N's grasp.", FALSE, caster, obj, victim, TO_CHAR);
       act("$p flies from your grasp.", FALSE, caster, obj, victim, TO_VICT, ANSI_RED);
       act("$p flies from $N's grasp.", FALSE, caster, obj, victim, TO_NOTVICT);
-      *victim->roomp += *obj;
-      victim->logItem(obj, CMD_DISARM);
+      if(!trytelekinesis(caster, victim, obj)){
+	if(isobjprim){
+	  victim->unequip(victim->getPrimaryHold());
+	} else {
+	  victim->unequip(victim->getSecondaryHold());
+	}
+
+	*victim->roomp += *obj;
+	victim->logItem(obj, CMD_DISARM);
+      }      
     } else {
       act("You try to disarm $N, but $E doesn't have a weapon.", TRUE, caster, 0, victim, TO_CHAR);
       act("$n makes an impressive fighting move, but does little more.", TRUE, caster, 0, 0, TO_ROOM);
@@ -251,7 +286,7 @@ int TBeing::doDisarm(const char *argument, TThing *v)
     sendTo("You know nothing about how to disarm someone.\n\r");
     return FALSE;
   }
-  if (!sameRoom(victim)) {
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
@@ -259,7 +294,7 @@ int TBeing::doDisarm(const char *argument, TThing *v)
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   if (rc)
-    addSkillLag(skill);
+    addSkillLag(skill, rc);
 
   return TRUE;
 }

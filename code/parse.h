@@ -557,13 +557,12 @@ enum cmdTypeT {
      CMD_PTELL,
      CMD_PSAY,
      CMD_PSHOUT,
-     CMD_TELEVISION,
      CMD_MINDFOCUS,
      CMD_PSIBLAST,
      CMD_MINDTHRUST,
      CMD_PSYCRUSH,
      CMD_KWAVE,
-     CMD_TELELKINESIS,
+     CMD_TELEVISION,
      CMD_PLANT,
     MAX_CMD_LIST,  // Keep this as last command in regular list
 
