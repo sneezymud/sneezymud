@@ -4271,14 +4271,32 @@ int berserkerWeap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
   TBeing *ch;
   int rc, dam;
-  affectedData af;
+  affectedData af,aff;
 
-
-  ch = genericWeaponProcCheck(vict, cmd, o, 8);
+  ch = genericWeaponProcCheck(vict, cmd, o, 5);
   if (!ch)
     return FALSE;
   if(ch->hasClass(CLASS_WARRIOR) && ch->doesKnowSkill(SKILL_BERSERK)) {
     if(ch->isCombatMode(ATTACK_BERSERK) || !ch->isPc()) {
+      
+      if(!::number(0,3) && !ch->affectedBySpell(SPELL_HASTE)) {
+	act("$p<1> glows with a <c>soft blue light<1>, and lends new energy to your attacks!",TRUE,ch,o,vict,TO_CHAR,NULL);
+	act("$p<1> glows with a <c>soft blue light<1>, and lends new energy to $n's attacks!",TRUE,ch,o,vict,TO_ROOM,NULL);
+	aff.type = SPELL_HASTE;
+	aff.level = 45;
+	aff.duration = ONE_SECOND * 12; // seconds are weird so this is a 1 min cast of haste
+	aff.modifier = 0;
+	aff.location = APPLY_NONE;
+	aff.bitvector = 0;
+	ch->affectTo(&af, -1);
+	act("$N has gained a bounce in $S step!",
+	    FALSE, ch, NULL, NULL, TO_ROOM);
+	act("You seem to be able to move with the greatest of ease!",
+	    FALSE, ch, NULL, NULL, TO_CHAR);
+
+	return TRUE;
+      }	
+      
       act("<o>Your blood boils and you feel your wrath being amplified by $p.<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
       dam = ch->getSkillValue(SKILL_BERSERK) / 5 + 2;
       if (ch->getRace() == RACE_OGRE)
@@ -4299,7 +4317,7 @@ int berserkerWeap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
       return TRUE;
 
 
-    } else if (ch->isPc() && !::number(1,15)) {
+    } else if (ch->isPc() && !::number(0,10)) {
      
       ch->setCombatMode(ATTACK_BERSERK);
      
@@ -4336,27 +4354,62 @@ int berserkerWeap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 }
 
 
-
 int travelGear(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
+  // this is a custom proc for the Wanderlust/Cloak of the Traveler combo - Dash
+
+
   TBeing *ch;
   TObj *cloak;
+  TObj *hammer = NULL;
+  affectedData aff;
+
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
-  if (cmd != CMD_GENERIC_QUICK_PULSE)
+  if (obj_index[o->getItemIndex()].virt == 9583) {
+    
+    if (cmd != CMD_GENERIC_QUICK_PULSE)
+      return FALSE;
+    
+    if(!(cloak = dynamic_cast<TObj *>(ch->equipment[WEAR_BACK]))) 
+      return FALSE;
+    if (obj_index[cloak->getItemIndex()].virt != 9582)
+      return FALSE;
+    
+    // ok... so he's wielding the hammer, wearing the cloak....
+    
+    if (!::number(0,1) && (ch->getMaxMove() > 4*ch->getMove())) {
+      ch->addToMove(ch->getMaxMove()/(::number(2,5)));
+      act("<k>$p<Y> glows softly<1>, and you feel renewed strength flow into your legs.<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+      act("<k>$p<Y> glows softly<1>, and $n seems to look more refreshed.<1>",TRUE,ch,o,vict,TO_ROOM,NULL);
+      return TRUE;
+    }
     return FALSE;
+  } else if (obj_index[o->getItemIndex()].virt == 9582) {
+    if (cmd != CMD_OBJ_BEEN_HIT)
+      return FALSE;
+    if (!((hammer = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])) && obj_index[hammer->getItemIndex()].virt == 9583)
+	||((hammer = dynamic_cast<TObj *>(ch->equipment[HOLD_LEFT])) && obj_index[hammer->getItemIndex()].virt == 9583))
+      // no hammer
+      return FALSE;
+    if (ch->affectedBySpell(SPELL_SORCERERS_GLOBE))
+      return FALSE;
+    
+    
+    act("<1>$p<Y> glows brightly<1> as it is struck!",TRUE,ch,o,vict,TO_CHAR,NULL);
+    act("<1>$p<Y> glows brightly<1> as it is struck!",TRUE,ch,o,vict,TO_ROOM,NULL);
+    act("Your $o emits an audible hum and suddenly <W>a shield of force<1> slams into being around you!",
+	TRUE,ch,o,vict,TO_CHAR,NULL);
+    act("$n's $o emits an audible hum and suddenly <W>a shield of force<1> slams into being around $m!",
+	TRUE,ch,o,vict,TO_ROOM,NULL);
 
-  if(!(cloak = dynamic_cast<TObj *>(ch->equipment[WEAR_BACK]))) 
-    return FALSE;
-  if (obj_index[cloak->getItemIndex()].virt != 9582)
-    return FALSE;
-
-  // ok... so he's wielding the hammer, wearing the cloak....
-  
-  if (!::number(0,1) && (ch->getMaxMove() > 4*ch->getMove())) {
-    ch->addToMove(ch->getMaxMove()/(::number(2,6)));
-    act("<k>$p<k> glows softly, and you feel renewed strength flow into your legs.<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
-    act("<k>$p<k> glows softly, and $n seems to look more refreshed.<1>",TRUE,ch,o,vict,TO_ROOM,NULL);
+    aff.type = SPELL_SORCERERS_GLOBE;
+    aff.level = 37;
+    aff.duration = ONE_SECOND * 2;
+    aff.location = APPLY_ARMOR;
+    aff.modifier = -100;
+    aff.bitvector = 0;
+    ch->affectTo(&aff, -1);
     return TRUE;
   }
   return FALSE;
