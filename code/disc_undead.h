@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_undead.h,v $
+// Revision 5.1.1.2  2001/01/28 22:56:57  jesus
+// no longer needed...
+//
 // Revision 5.1.1.1  1999/10/16 04:32:20  batopr
 // new branch
 //
@@ -18,6 +21,7 @@
 
 #ifndef __DISC_UNDEAD_H
 #define __DISC_UNDEAD_H
+
 
 // This is the SHAMAN UNDEAD discipline.
 
