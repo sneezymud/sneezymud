@@ -176,7 +176,9 @@ int TScroll::suggestedPrice() const
       value *= getSpellCasttime(curspell);
 
       // since it's from an obj, arbitrarily double it
-      value *= 30;
+      value *= 2;
+      // scrolls are underpriced too
+      value *= 60;
     }
 
 

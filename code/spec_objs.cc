@@ -4336,6 +4336,35 @@ int berserkerWeap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 }
 
 
+
+int travelGear(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  TBeing *ch;
+  TObj *cloak;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+  if (cmd != CMD_GENERIC_QUICK_PULSE)
+    return FALSE;
+
+  if(!(cloak = dynamic_cast<TObj *>(ch->equipment[WEAR_BACK]))) 
+    return FALSE;
+  if (obj_index[cloak->getItemIndex()].virt != 9582)
+    return FALSE;
+
+  // ok... so he's wielding the hammer, wearing the cloak....
+  
+  if (!::number(0,1) && (ch->getMaxMove() > 4*ch->getMove())) {
+    ch->addToMove(ch->getMaxMove()/(::number(2,6)));
+    act("<k>$p<k> glows softly, and you feel renewed strength flow into your legs.<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+    act("<k>$p<k> glows softly, and $n seems to look more refreshed.<1>",TRUE,ch,o,vict,TO_ROOM,NULL);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+
+
+
 //MARKER: END OF SPEC PROCS
 
 
@@ -4419,8 +4448,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Mine Cart", minecart},
   {FALSE, "Switchtrack", switchtrack},
   {FALSE, "vorpal", vorpal},
-  {TRUE, "Berserker Weapon", berserkerWeap}// 70
-
+  {TRUE, "Berserker Weapon", berserkerWeap},// 70
+  {FALSE, "Travel Gear", travelGear}
 };
 
 

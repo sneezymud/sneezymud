@@ -208,7 +208,9 @@ int TPotion::suggestedPrice() const
       value *= getSpellCasttime(curspell);
 
       // since it's from an obj, arbitrarily double it
-      value *= 30;
+      value *= 2;
+      // potions are really cheap for some reason
+      value *= 60;
     }
 
     tot += value;

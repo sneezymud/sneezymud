@@ -197,6 +197,8 @@ int TWand::suggestedPrice() const
 
     // since it's from an obj, arbitrarily double it
     value *= 2;
+    // staves are pretty cheap too
+    value *= 60;
   }
   return value;
 }
