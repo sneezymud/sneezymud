@@ -153,8 +153,6 @@ void TBeing::doGload(const char *arg)
     }
 
     if(nargs==1){
-      vlogf(LOG_PEEL, "ammo type: %i, %s",
-	    gun->getAmmoType(), getAmmoKeyword(gun->getAmmoType()));
       strcpy(arg2, getAmmoKeyword(gun->getAmmoType()));
     } 
 
@@ -354,5 +352,40 @@ void TAmmo::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x3 = 0;
   *x4 = 0;
 }
- 
+
+void TAmmo::setRounds(int r) { 
+  if(r<=0){
+    char buf[256];
+    sprintf(buf, "%s empty", name);
+    delete [] name;
+    name=mud_str_dup(buf);
+  }
+
+  rounds=r; 
+}
+
+
+string TAmmo::showModifier(showModeT tMode, const TBeing *tBeing) const
+{
+  // recurse if necessary
+  string tString = TObj::showModifier(tMode, tBeing);
+
+  if (getRounds()<=0) {
+    tString += " (empty)";                                          
+  }                                                           
+                                                              
+  return tString;                                             
+}
+
+string TGun::showModifier(showModeT tMode, const TBeing *tBeing) const
+{
+  // recurse if necessary
+  string tString = TObj::showModifier(tMode, tBeing);
+
+  if (!getAmmo() || getAmmo()->getRounds()<=0) {
+    tString += " (empty)";                                          
+  }                                                           
+                                                              
+  return tString;                                             
+}
 

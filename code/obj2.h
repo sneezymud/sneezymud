@@ -737,7 +737,7 @@ class TAmmo : public TObj {
   public:
     void setAmmoType(int a) { ammotype=a; }
     int getAmmoType() const { return ammotype; }
-    void setRounds(int r) { rounds=r; }
+    void setRounds(int);
     int getRounds() const { return rounds; }
 
     virtual itemTypeT itemType() const { return ITEM_AMMO; }
@@ -745,7 +745,7 @@ class TAmmo : public TObj {
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual string statObjInfo() const;
     virtual void describeObjectSpecifics(const TBeing *) const;
-
+    virtual string showModifier(showModeT , const TBeing *) const;
 
     TAmmo();
     TAmmo(const TAmmo &a);
@@ -776,7 +776,7 @@ class TGun : public TGenWeapon {
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual void TGun::changeBaseWeaponValue1(TBeing *, const char *, editorEnterTypeT);
     virtual void describeObjectSpecifics(const TBeing *) const;
-
+    virtual string showModifier(showModeT , const TBeing *) const;
     virtual string statObjInfo() const;
     TGun();
     TGun(const TGun &a);

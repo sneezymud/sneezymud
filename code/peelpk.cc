@@ -3,6 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: peelpk.cc,v $
+// Revision 5.5  2001/08/02 01:05:05  peel
+// drop all guns and ammo when die in peelpk
+// show (empty) for empty guns and ammo
+// add empty keyword to empty ammo
+//
 // Revision 5.4  2001/07/21 19:27:13  peel
 // modified peelpk a bit so it shows room and zone names as well as numbers
 // added the peelpk addzone command
@@ -353,6 +358,28 @@ void TBeing::doPeelPk(const char *argument)
   } 
 } 
 
+void dropAllGunsAndAmmo(TBeing *ch, TThing *stuff){
+  TThing *tt;
+
+  if(!stuff || !ch)
+    return;
+
+  for(tt=stuff;tt;tt=tt->nextThing){
+    if(tt->stuff)
+      dropAllGunsAndAmmo(ch, tt->stuff);
+
+    if(dynamic_cast<TGun *>(tt) ||
+       dynamic_cast<TAmmo *>(tt)){
+      // found one, so drop it
+      (*tt)--;
+      *ch->roomp += *tt;
+
+      dropAllGunsAndAmmo(ch, ch->stuff);
+      break;
+    }
+  }
+}
+
 // returns DELETE_THIS
 int TBeing::peelPkRespawn(TBeing *killer, spellNumT dmg_type)
 {
@@ -467,6 +494,10 @@ int TBeing::peelPkRespawn(TBeing *killer, spellNumT dmg_type)
 
   deathCry();
   makeCorpse(dmg_type);
+
+  dropAllGunsAndAmmo(this, stuff);
+
+
 
   
   --(*this);
