@@ -16,6 +16,7 @@
 #include "obj_table.h"
 #include "obj_money.h"
 #include "obj_seethru.h"
+#include "cmd_trophy.h"
 
 TBeing::TBeing() :
   TThing(),

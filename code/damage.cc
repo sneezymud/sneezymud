@@ -11,6 +11,7 @@
 #include "statistics.h"
 #include "obj_base_corpse.h"
 #include "database.h"
+#include "cmd_trophy.h"
 
 // there is another one of these defines in combat.cc
 #define DAMAGE_DEFINE 0
