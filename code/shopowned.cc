@@ -354,7 +354,13 @@ int TShopOwned::giveMoney(const char *arg){
   
   arg = one_argument(arg, buf);
   int amount=atoi_safe(buf);
-  
+
+  if(amount<=0){
+    keeper->doAction(ch->getName(), CMD_SLAP);
+    keeper->doTell(ch->getName(), "Don't be an idiot.");
+    return FALSE;
+  }  
+
   if(keeper->getMoney()>=amount){
     keeper->setMoney(keeper->getMoney()-amount);
     keeper->saveChar(ROOM_AUTO_RENT);
