@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: periodic.cc,v $
+// Revision 1.7  1999/09/29 07:46:14  lapsos
+// Added code for the Mobile Strings stuff.
+//
 // Revision 1.6  1999/09/26 17:04:13  lapsos
 // Fixed problem with elementals not draining mana from enthral.
 //
@@ -812,9 +815,11 @@ int TBeing::updateHalfTickStuff()
             vlogf(5, "%s has oldRoom equal to %d", getName(), loadRoom);
           }
           if (!loadRoom || (loadRoom == ROOM_NOWHERE)) {
+            vlogf(0, "%s was without loadRoom or was in room NOWHERE.", getName());
             return DELETE_THIS;
           }
           if (!(room = real_roomp(loadRoom))) {
+            vlogf(0, "%s was in a room that no longer exists.", getName());
             return DELETE_THIS;
           }
           --(*this);
@@ -822,6 +827,10 @@ int TBeing::updateHalfTickStuff()
           if (vnum == MOB_FREEZING_MIST) {
             act("$n forms in the surrounding air.",
                TRUE, this, 0, 0, TO_ROOM);
+#if 1
+          } else if (ex_description && ex_description->findExtraDesc("bamfin")) {
+            act(ex_description->findExtraDesc("bamfin"), TRUE, this, 0, 0, TO_ROOM);
+#endif
           } else if (IS_SET(specials.act, ACT_GHOST)) {
             act("$n shimmers into existence.",
                    TRUE, this, 0, 0, TO_ROOM);
@@ -833,15 +842,16 @@ int TBeing::updateHalfTickStuff()
 
              sprintf(tString, "$n %s to begin work.", race->moveIn());
              act(tString, TRUE, this, 0, 0, TO_ROOM);
-	     //act("$n yawns as $e returns to The World.",
-             //      TRUE, this, 0, 0, TO_ROOM);
           }
         }
-      } else if (!is_daytime() &&
-                    ((vnum == MOB_FREEZING_MIST) || !specials.hunting)) {
+      } else if (!is_daytime() && ((vnum == MOB_FREEZING_MIST) || !specials.hunting)) {
         if (vnum == MOB_FREEZING_MIST) {
           act("$n is dispersed by the coming of morning.", 
               TRUE, this, 0, 0, TO_ROOM);
+#if 1
+        } else if (ex_description && ex_description->findExtraDesc("bamfout")) {
+          act(ex_description->findExtraDesc("bamfout"), TRUE, this, 0, 0, TO_ROOM);
+#endif
         } else if (IS_SET(specials.act, ACT_GHOST)) {
           act("$n shimmers out of existence.",
                  TRUE, this, 0, 0, TO_ROOM);
@@ -887,6 +897,10 @@ int TBeing::updateHalfTickStuff()
          if (vnum == MOB_FREEZING_MIST) {
            act("$n forms in the surrounding air.", 
                TRUE, this, 0, 0, TO_ROOM);
+#if 1
+          } else if (ex_description && ex_description->findExtraDesc("bamfin")) {
+            act(ex_description->findExtraDesc("bamfin"), TRUE, this, 0, 0, TO_ROOM);
+#endif
           } else if (IS_SET(specials.act, ACT_GHOST)) {
             act("$n shimmers into existence.",
                 TRUE, this, 0, 0, TO_ROOM);
@@ -898,8 +912,6 @@ int TBeing::updateHalfTickStuff()
 
             sprintf(tString, "$n %s to begin work.", race->moveIn());
             act(tString, TRUE, this, 0, 0, TO_ROOM);
-            //act("$n yawns as $e returns to The World.",
-            //    TRUE, this, 0, 0, TO_ROOM);
           }
         }
       } else if (!is_nighttime() && 
@@ -907,6 +919,10 @@ int TBeing::updateHalfTickStuff()
         if (vnum == MOB_FREEZING_MIST) {
           act("$n is dispersed by the coming of morning.", 
               TRUE, this, 0, 0, TO_ROOM);
+#if 1
+        } else if (ex_description && ex_description->findExtraDesc("bamfout")) {
+          act(ex_description->findExtraDesc("bamfout"), TRUE, this, 0, 0, TO_ROOM);
+#endif
         } else if (IS_SET(specials.act, ACT_GHOST)) {
           act("$n shimmers out of existence.",
                  TRUE, this, 0, 0, TO_ROOM);
@@ -1625,7 +1641,7 @@ void sendAutoTips()
     TBeing *ch = d->character;
     if (!ch)
       continue;
-    if (!IS_SET(d->autobits, AUTO_TIPS))
+    if (!IS_SET(d->autobits, AUTO_TIPS) || ch->isImmortal())
       continue;
     ch->sendTo(COLOR_BASIC, "<y>%s Tip :<z> %s\n\r", MUD_NAME, buf);
   }

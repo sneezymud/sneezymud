@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: movement.cc,v $
+// Revision 1.4  1999/09/29 07:46:14  lapsos
+// Added code for the Mobile Strings stuff.
+//
 // Revision 1.3  1999/09/29 01:13:46  lapsos
 // Modified to allow for mounted opening of doors.
 //
@@ -1271,8 +1274,14 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
       if (isImmortal())
         act(msgVariables(MSG_MOVE_IN, (TThing *)NULL, dirs[dir]).c_str(),
             FALSE, this, riding, ch, TO_VICT);
-      else
+      else {
+#if 1
+        if (ex_description && ex_description->findExtraDesc("moveout"))
+          strcpy(tmp, ex_description->findExtraDesc("moveout"));
+#endif
+
         act(tmp, FALSE, this, riding, ch, TO_VICT);
+      }
     }
   }
 
@@ -1352,8 +1361,14 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total)
 
         act(msgVariables(MSG_MOVE_OUT, (TThing *)NULL, dirText).c_str(),
             FALSE, this, riding, tbt, TO_VICT);
-      } else
+      } else {
+#if 1
+        if (ex_description && ex_description->findExtraDesc("movein"))
+          strcpy(tmp, ex_description->findExtraDesc("movein"));
+#endif
+
         act(tmp, FALSE, this, riding, tbt, TO_VICT);
+      }
     }
   }
 

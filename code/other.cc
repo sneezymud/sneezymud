@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: other.cc,v $
+// Revision 1.8  1999/09/29 07:46:14  lapsos
+// Added code for the Mobile Strings stuff.
+//
 // Revision 1.7  1999/09/27 01:03:53  lapsos
 // *** empty log message ***
 //
@@ -3090,8 +3093,9 @@ void TBeing::doAuto(const char *buf)
       if (!isImmortal() && ((unsigned int) (1<<i) == AUTO_SUCCESS))
         continue;
       if (*auto_name[i]) {
-        sendTo("%-35s : %s\n\r", auto_name[i], 
-          ((IS_SET(desc->autobits, (unsigned) (1<<i))) ? "on" : "off"));
+        sendTo("%-35s : %s\n\r",
+               ((i == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]),
+               ((IS_SET(desc->autobits, (unsigned) (1<<i))) ? "on" : "off"));
       }
     }
     return;
