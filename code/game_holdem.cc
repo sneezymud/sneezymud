@@ -437,6 +437,11 @@ int HoldemGame::exitGame(const TBeing *ch)
 
 bool HoldemGame::enter(const TBeing *ch)
 {
+  if(getPlayer(ch->name)){
+    ch->sendTo("Someone of that name is already playing.");
+    return false;
+  }
+
   for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){
     if(players[i]==NULL){
       players[i]=new HoldemPlayer(ch);

@@ -72,11 +72,28 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
       me->act_ptr = NULL;
     } else if(arg.find("name ", 0)!=sstring::npos){
       arg=one_argument(arg, buf);
+
+      buf=me->name;
+      if(buf.find(hpi->name)!=sstring::npos){
+	buf.replace(buf.find(hpi->name), hpi->name.length(), arg);
+      } else {
+	buf += " ";
+	buf += arg;
+      }
+
+      me->swapToStrung();
+      delete me->name;
+      me->name=mud_str_dup(buf);
+
+
       hpi->name=arg;
       me->doSay("Gambler2000 will now bust a dope rhyme.");
       me->doSay("My name is... huh?");
       me->doSay("My name is... what?");
       me->doSay("My name is %s.", hpi->name.c_str());
+      
+
+      
     } else if(arg.find("chip ", 0)!=sstring::npos){
       arg=one_argument(arg, buf);
       if(convertTo<int>(arg)==0)
@@ -126,6 +143,7 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
     gHoldem.enter(me);
     return false;
   }
+
 
   HoldemPlayer *hp=gHoldem.getPlayer(me->name);
 
