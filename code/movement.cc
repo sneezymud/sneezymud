@@ -875,10 +875,8 @@ int TBeing::rawMove(dirTypeT dir)
   
   foodNDrink(from_here->getSectorType(),1);
 
-#if 0
-  // disabled.  do this through combat  - bat 8-21-96
+
   wearNTear();
-#endif
 
   if (!isImmortal() || riding) {
     if (doesKnowSkill(SKILL_HIKING) &&

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.13  2002/07/04 19:38:48  dash
+// repair cost changes, reenabled wearntear, lengthened repai times
+//
 // Revision 5.12  2002/07/04 18:34:11  dash
 // added new repair skills
 //
@@ -1573,7 +1576,9 @@ int task_mend_hide(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 int task_mend(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
   return TRUE;
-
+  ch->sendTo("This skill is not yet implemented.\n\r");
+  ch->stopTask();
+  return TRUE;
 }
 
 // repair spiritual: ghostly (72), foodstuff (7)

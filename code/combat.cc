@@ -1154,6 +1154,11 @@ int TBeing::damageItem(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *
   if (item->getStructPoints() < 0)
     return FALSE;
 
+  if (::number(0,99) >= 75) 
+    return FALSE;
+  // this is an arbitrary reduction in equipment damage from combat - dash 2002
+
+
   if (slashType(wtype)) {
     if (checkCut(ch, part_hit, wtype, weapon, dam))
       return TRUE;
@@ -1177,6 +1182,11 @@ int TBeing::damageWeapon(TBeing *v, wearSlotT part_hit, TThing **weapon)
 {
   if (v->roomp && v->roomp->isRoomFlag(ROOM_ARENA))
     return FALSE;
+
+  if (::number(0,99) >= 75)
+    return FALSE;
+  // this is an arbitrary reduction in equipment damage from combat - dash 2002
+
 
   if (!*weapon) {
     damageHand(v, part_hit);

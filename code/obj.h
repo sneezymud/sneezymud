@@ -445,7 +445,8 @@ class TObj : public TThing {
       obj_flags.max_struct_points += num;
     }
     byte getDepreciation() const {
-      return obj_flags.depreciation;
+      return 0;
+      //      return obj_flags.depreciation;
     }
     void setDepreciation(byte num) {
       obj_flags.depreciation = num;

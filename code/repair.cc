@@ -51,6 +51,8 @@ int TObj::repairPrice(const TBeing *repair, const TBeing *buyer, depreciationTyp
   // arbitrary maximum
   price = min(price, 5 * gsp / 2);
 
+  price = (price * 75) / 100;
+
   return (price);
 }
 
@@ -60,7 +62,7 @@ static int repair_time(const TObj *o)
   int structs;
   double percDam;
   double iTime;
-  int MINS_AT_60TH = 40; // maximum (full repair) for 60th level eq
+  int MINS_AT_60TH = 60; // maximum (full repair) for 60th level eq
 
   if (!(structs = (o->getMaxStructPoints() - o->getStructPoints())))
     return (0);
