@@ -770,10 +770,11 @@ void gain_exp(TBeing *ch, double gain, int dam)
     ch->addToExp(gain);
     if (ch->getExp() < 0)
       ch->setExp(0);
-
     return;
   }
 
+  if(TestCode1)
+    gain *= 2;
   
   gain /= ch->howManyClasses();
 

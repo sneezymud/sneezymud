@@ -952,10 +952,10 @@ void TBeing::doToggle(const char *arg2)
     vlogf(LOG_MISC,fmt("%s has %s game loop timing.") % getName() %
 	  (gameLoopTiming ? "enabled" : "disabled"));    
   } else if (is_abbrev(arg, "testcode1") && hasWizPower(POWER_TOGGLE)) {
-#if 0
+#if 1
     // if you are using testcode, change this so we don't collide usages
-    if (strcmp(name, "Batopr")) {
-      sendTo("Sorry, this is only for Batopr's use in testing.\n\r");
+    if (strcmp(name, "Peel")) {
+      sendTo("Sorry, this is only for Peel's use in testing.\n\r");
       return;
     }
 #endif
