@@ -473,7 +473,7 @@ objs/actions.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/actions.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/actions.o: colorstring.h obj_pool.h obj_base_cup.h obj_plant.h
 objs/actions.o: obj_expandable_container.h obj_open_container.h
-objs/actions.o: obj_base_container.h
+objs/actions.o: obj_base_container.h disc_sorcery.h
 objs/ai_assignskills.o: stdsneezy.h /usr/include/g++/cstdio
 objs/ai_assignskills.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/ai_assignskills.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -758,6 +758,24 @@ objs/alignment_deity.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/alignment_deity.o: person.h monster.h account.h extern.h handler.h
 objs/alignment_deity.o: obj_money.h rent.h spec_mobs.h materials.h
 objs/alignment_deity.o: colorstring.h
+objs/amap.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/amap.o: /usr/include/machine/ansi.h /usr/include/stdlib.h
+objs/amap.o: /usr/include/math.h /usr/include/string.h /usr/include/g++/map
+objs/amap.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_algobase.h
+objs/amap.o: /usr/include/g++/stl_pair.h /usr/include/g++/type_traits.h
+objs/amap.o: /usr/include/limits.h /usr/include/sys/_posix.h
+objs/amap.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
+objs/amap.o: /usr/include/stddef.h /usr/include/g++/new.h
+objs/amap.o: /usr/include/g++/new /usr/include/g++/exception
+objs/amap.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/amap.o: /usr/include/g++/libio.h /usr/include/g++/_G_config.h
+objs/amap.o: /usr/include/stdarg.h /usr/include/g++/stl_alloc.h
+objs/amap.o: /usr/include/assert.h /usr/include/g++/stl_construct.h
+objs/amap.o: /usr/include/g++/stl_function.h /usr/include/g++/stl_map.h
+objs/amap.o: /usr/include/g++/stl_multimap.h /usr/include/g++/vector
+objs/amap.o: /usr/include/g++/stl_uninitialized.h
+objs/amap.o: /usr/include/g++/stl_vector.h /usr/include/g++/stl_bvector.h
+objs/amap.o: /usr/include/ctype.h /usr/include/runetype.h lowtools.h
 objs/ansi.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/ansi.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/ansi.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -9111,7 +9129,7 @@ objs/obj_casino_chip.o: weather.h sound.h create.h thing.h room.h obj.h
 objs/obj_casino_chip.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/obj_casino_chip.o: person.h monster.h account.h extern.h handler.h
 objs/obj_casino_chip.o: obj_money.h rent.h spec_mobs.h materials.h
-objs/obj_casino_chip.o: colorstring.h obj_casino_chip.h
+objs/obj_casino_chip.o: colorstring.h obj_casino_chip.h shop.h
 objs/obj_chest.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_chest.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_chest.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -12287,7 +12305,74 @@ objs/shop.o: /usr/local/include/postgres_ext.h obj_spellbag.h
 objs/shop.o: obj_expandable_container.h obj_open_container.h
 objs/shop.o: obj_base_container.h obj_symbol.h obj_general_weapon.h
 objs/shop.o: obj_base_weapon.h obj_base_clothing.h obj_magic_item.h
-objs/shop.o: shopowned.h
+objs/shop.o: shopowned.h obj_casino_chip.h
+objs/shoplog.cgi.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
+objs/shoplog.cgi.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
+objs/shoplog.cgi.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/shoplog.cgi.o: /usr/include/g++/ctime /usr/include/time.h
+objs/shoplog.cgi.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/shoplog.cgi.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
+objs/shoplog.cgi.o: /usr/include/machine/endian.h /usr/include/g++/cctype
+objs/shoplog.cgi.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/shoplog.cgi.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/shoplog.cgi.o: /usr/include/g++/cstring /usr/include/string.h
+objs/shoplog.cgi.o: /usr/include/stdarg.h /usr/include/g++/cerrno
+objs/shoplog.cgi.o: /usr/include/errno.h /usr/include/g++/string
+objs/shoplog.cgi.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
+objs/shoplog.cgi.o: /usr/include/stddef.h /usr/include/g++/std/straits.h
+objs/shoplog.cgi.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
+objs/shoplog.cgi.o: /usr/include/g++/stl_alloc.h /usr/include/g++/iostream.h
+objs/shoplog.cgi.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
+objs/shoplog.cgi.o: /usr/include/g++/_G_config.h /usr/include/g++/iterator
+objs/shoplog.cgi.o: /usr/include/g++/stl_relops.h
+objs/shoplog.cgi.o: /usr/include/g++/stl_iterator.h
+objs/shoplog.cgi.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
+objs/shoplog.cgi.o: /usr/include/g++/stl_algobase.h
+objs/shoplog.cgi.o: /usr/include/g++/stl_pair.h
+objs/shoplog.cgi.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/shoplog.cgi.o: /usr/include/machine/limits.h
+objs/shoplog.cgi.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/shoplog.cgi.o: /usr/include/g++/new /usr/include/g++/exception
+objs/shoplog.cgi.o: /usr/include/g++/stl_construct.h
+objs/shoplog.cgi.o: /usr/include/g++/stl_uninitialized.h
+objs/shoplog.cgi.o: /usr/include/g++/stl_vector.h
+objs/shoplog.cgi.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/shoplog.cgi.o: /usr/include/g++/stl_tree.h
+objs/shoplog.cgi.o: /usr/include/g++/stl_function.h
+objs/shoplog.cgi.o: /usr/include/g++/stl_map.h
+objs/shoplog.cgi.o: /usr/include/g++/stl_multimap.h /usr/include/g++/iostream
+objs/shoplog.cgi.o: /usr/include/g++/sstream low.h enum.h spells.h structs.h
+objs/shoplog.cgi.o: parse.h immunity.h discipline.h spell2.h argument.h db.h
+objs/shoplog.cgi.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/shoplog.cgi.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/shoplog.cgi.o: body.h race.h skills.h disease.h trap.h task.h weather.h
+objs/shoplog.cgi.o: sound.h create.h thing.h room.h obj.h spec_objs.h
+objs/shoplog.cgi.o: connect.h obj_drug.h charfile.h being.h person.h
+objs/shoplog.cgi.o: monster.h account.h extern.h handler.h obj_money.h rent.h
+objs/shoplog.cgi.o: spec_mobs.h materials.h colorstring.h database.h
+objs/shoplog.cgi.o: /usr/local/include/libpq-fe.h
+objs/shoplog.cgi.o: /usr/local/include/postgres_ext.h shop.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/Cgicc.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/CgiDefs.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/FormEntry.h
+objs/shoplog.cgi.o: /usr/include/g++/climits /usr/include/g++/cfloat
+objs/shoplog.cgi.o: /usr/include/float.h /usr/local/include/cgicc/CgiUtils.h
+objs/shoplog.cgi.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/FormFile.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/CgiInput.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/CgiEnvironment.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/HTTPCookie.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/MStreamable.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/HTTPHTMLHeader.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/HTTPContentHeader.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/HTTPHeader.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLClasses.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLAtomicElement.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLElement.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLAttributeList.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLAttribute.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLBooleanElement.h
+objs/shoplog.cgi.o: /usr/local/include/cgicc/HTMLDoctype.h
 objs/shopowned.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/shopowned.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/shopowned.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -12568,6 +12653,7 @@ objs/socket.o: colorstring.h statistics.h database.h
 objs/socket.o: /usr/local/include/libpq-fe.h
 objs/socket.o: /usr/local/include/postgres_ext.h spelltask.h systemtask.h
 objs/socket.o: socket.h obj_smoke.h obj_vehicle.h obj_portal.h obj_seethru.h
+objs/socket.o: timing.h
 objs/sound.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sound.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/sound.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
