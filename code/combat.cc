@@ -3081,7 +3081,7 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
   }
 
   // 6-1-2004 - If they hit, let them have a chance of learning the appropriate 'Know' skill.
-  if (dam && (GetMaxLevel() <= MAX_MORT)) {
+  if (dam && isPc() && (GetMaxLevel() <= MAX_MORT)) {
     if (getDiscipline(DISC_ADVENTURING)) {
       spellNumT sknum = TYPE_UNDEFINED;
       int roll = 0;
