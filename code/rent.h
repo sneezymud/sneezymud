@@ -88,6 +88,7 @@ class ItemLoad {
   rentHeader st;
 
   bool openFile(const sstring &);
+  bool fileExists(const sstring &);
   void setFile(FILE *);
   void setVersion(unsigned char);
   

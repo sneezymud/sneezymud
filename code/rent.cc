@@ -544,6 +544,18 @@ bool ItemLoad::openFile(const sstring &filepath)
   return true;
 }
 
+bool ItemLoad::fileExists(const sstring &filepath)
+{
+  int ret;
+
+  ret=stat(filepath.c_str(), NULL);
+
+  if(ret==-1 and errno==ENOENT)
+    return false;
+  else
+    return true;
+}
+
 
 bool ItemSave::raw_write_item(TObj *o)
 {
@@ -1503,7 +1515,7 @@ void emailStorageBag(sstring tStMessage, sstring tStSender, TThing * tStuff)
     return;
 
   tStMail += "Subject: [Storage] " + tStSender + " " + tStMessage + "\n\r";
-  tStMail += "This is an autmoated message sent my sneezy.\n\r";
+  tStMail += "This is an automated message sent by sneezy.\n\r";
 
   fprintf(tFile, "%s", tStMail.c_str());
 
@@ -1518,6 +1530,10 @@ void TRoom::loadItems()
   ItemLoad il;
 
   filepath = fmt("%s/%d") % ROOM_SAVE_PATH % number;
+
+  if(!il.fileExists(filepath))
+    return;
+
   if(!il.openFile(filepath)) {
     vlogf(LOG_FILE, fmt("Failed to open file '%s' in TRoom::loadItems() call.") % filepath);
     return;
