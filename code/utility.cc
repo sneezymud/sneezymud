@@ -43,7 +43,7 @@ extern long random(void);
 #include "mail.h"
 #include "database.h"
 #include "obj_seethru.h"
-
+#include "corporation.h"
 
 bool TBeing::canSeeWho(const TBeing *o) const
 {
@@ -1620,7 +1620,10 @@ void TBeing::addToMoney(int money, moneyTypeT type)
           gold_statistics[GOLD_INCOME][(lev-1)] -= amount;
           gold_positive[GOLD_INCOME][(lev-1)] -= max(amount, 0);
 
-          FactionInfo[getFaction()].faction_wealth += amount;
+          FactionInfo[getFaction()].addToMoney(amount);
+	  TCorporation corp(FactionInfo[getFaction()].corp_id);
+	  corp.corpLog(getName(), "tithe", -amount);
+
           gold_statistics[GOLD_TITHE][(lev-1)] += amount;
           gold_positive[GOLD_TITHE][(lev-1)] += max(amount, 0);
           reconcileHelp(NULL, amount * TITHE_FACTOR);

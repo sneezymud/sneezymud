@@ -14,6 +14,7 @@ extern "C" {
 
 #include "stdsneezy.h"
 #include "database.h"
+#include "corporation.h"
 
 TFactionInfo FactionInfo[MAX_FACTIONS];
 
@@ -22,6 +23,25 @@ spellNumT your_deity_val = TYPE_UNDEFINED;
 
 // start new faction stuff
 vector<TFaction *>faction_table(0);
+
+
+int TFactionInfo::getMoney() const {
+  TCorporation corp(corp_id);
+
+  return corp.getMoney();
+}
+
+void TFactionInfo::setMoney(int money){
+  TCorporation corp(corp_id);
+  
+  corp.setMoney(money);
+}
+
+void TFactionInfo::addToMoney(int money){
+  TCorporation corp(corp_id);
+  
+  corp.setMoney(corp.getMoney() + money);
+}
 
 
 // open recruitment factions in the office are taken care of by the registrar
@@ -67,6 +87,7 @@ void TBeing::doJoin(const char * args) {
   saveFactionStats();
   return;
 }
+
 
 void TBeing::doDefect(const char * args) {
   if(!TestCode5) {
@@ -1433,7 +1454,7 @@ int load_factions()
         fclose(fp);
         return FALSE;
       }
-      FactionInfo[i].faction_wealth = ln;
+      FactionInfo[i].corp_id=ln;
       FactionInfo[i].faction_tithe = (double) num1;
 
       if (fscanf(fp, "%d %d %d %d\n", &inum1, &inum2, &inum3, &inum4) != 4) {
@@ -1522,7 +1543,7 @@ void save_factions()
             (float) FactionInfo[i].faction_array[j][1]);
     }
     fprintf(fp, "%.4f\n", (float) FactionInfo[i].faction_power);
-    fprintf(fp, "%ld %.4f\n", FactionInfo[i].faction_wealth, FactionInfo[i].faction_tithe);
+    fprintf(fp, "%d %.4f\n", FactionInfo[i].corp_id, FactionInfo[i].faction_tithe);
     fprintf(fp, "%d %d %d %d\n", FactionInfo[i].caravan_interval, 
              FactionInfo[i].caravan_counter,
              FactionInfo[i].caravan_value,
@@ -2082,7 +2103,7 @@ void TBeing::doFactions(const sstring &arg)
 
 #endif
     buf = fmt("Your faction has %ld talens of wealth, and a tithe percentage of %.2f%c.\n\r") %
-	     FactionInfo[which].faction_wealth %
+	     FactionInfo[which].getMoney() %
 	     FactionInfo[which].faction_tithe % '%';
     sbuf+=buf;
   }

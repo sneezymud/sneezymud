@@ -2969,10 +2969,10 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     }
     FactionInfo[faction].caravan_attempts++;
 
-    amount = min((long) FactionInfo[faction].caravan_value,
-                  FactionInfo[faction].faction_wealth);
+    amount = min(FactionInfo[faction].caravan_value,
+                  FactionInfo[faction].getMoney());
     job->wealth = amount;
-    FactionInfo[faction].faction_wealth -= amount;
+    FactionInfo[faction].addToMoney(-amount);
 
     // construct caravan
     if (!(obj = read_object(OBJ_CARAVAN, VIRTUAL))) {
@@ -3005,8 +3005,8 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     // end of path
     act("The caravan has arrived successfully!", 0, myself, 0, 0, TO_ROOM);
     FactionInfo[faction].caravan_successes++;
-    FactionInfo[faction].faction_wealth += (200 * job->wealth / 100);
-    FactionInfo[job->dest_fact].faction_wealth += (100 * job->wealth / 100);
+    FactionInfo[faction].addToMoney((200 * job->wealth / 100));
+    FactionInfo[job->dest_fact].addToMoney((100 * job->wealth / 100));
     
     if (faction != FACT_NONE) {
       sprintf(buf, "A caravan has arrived successfully in %s.", CaravanDestination(-faction - 1));

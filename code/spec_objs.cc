@@ -4386,7 +4386,7 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
 
 
     // faction bank account
-    score=(int)(FactionInfo[factionNumber(factnames[i])].faction_wealth/100000.0);
+    score=(int)(FactionInfo[factionNumber(factnames[i])].getMoney()/100000.0);
     ch->sendTo(COLOR_BASIC, fmt("<g>[<1>%3i<g>]<1> faction wealth\n\r") % score);
     totalscore+=score;
 

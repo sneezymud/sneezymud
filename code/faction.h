@@ -175,7 +175,7 @@ class TFactionInfo {
   char * faction_password;
   double faction_array[MAX_FACTIONS][2];
   double faction_power;
-  long faction_wealth;
+  int corp_id;
   double faction_tithe;
   int caravan_interval;
   int caravan_counter;
@@ -184,6 +184,10 @@ class TFactionInfo {
   int caravan_defense;
   int caravan_attempts;
   int caravan_successes;
+
+  int getMoney() const;
+  void addToMoney(int);
+  void setMoney(int);
 
   TFactionInfo() {
     int i;

@@ -401,10 +401,10 @@ void TPerson::doShow(const char *argument)
     sb += "Faction                   Power    Wealth   Tithe\n\r";
     factionTypeT i;
     for (i = MIN_FACTION; i < MAX_FACTIONS; i++) {
-      sprintf(buf, "%-25.25s %7.2f %-7ld %5.2f\n\r",
+      sprintf(buf, "%-25.25s %7.2f %-7i %5.2f\n\r",
           FactionInfo[i].faction_name,
           FactionInfo[i].faction_power,
-          FactionInfo[i].faction_wealth,
+          FactionInfo[i].getMoney(),
           FactionInfo[i].faction_tithe);
       sb += buf;
       sprintf(buf, "      %s%-15.15s%s %-15.15s %-15.15s %-15.15s\n\r",
