@@ -106,7 +106,7 @@ void TMonster::createWealth(void)
       tool = 2347;
       tool2 = 2349;
     } 
-  } else if(GetMaxLevel() > 20) {
+  } else if(GetMaxLevel() > 15) {
     if(hasClass(CLASS_MAGIC_USER)) {
       tool = 575;
       tool2 = 579;
@@ -146,13 +146,13 @@ void TMonster::createWealth(void)
     }
   }
 
-  if (tool && !::number(0,49) && (obj = read_object(tool,VIRTUAL)))
+  if (tool && !::number(0,19) && (obj = read_object(tool,VIRTUAL)))
     *this += *obj;
-  if (tool2 && !::number(0,49) && (obj = read_object(tool2,VIRTUAL)))
+  if (tool2 && !::number(0,19) && (obj = read_object(tool2,VIRTUAL)))
     *this += *obj;
-  if (tool3 && !::number(0,49) && (obj = read_object(tool3,VIRTUAL)))
+  if (tool3 && !::number(0,19) && (obj = read_object(tool3,VIRTUAL)))
     *this += *obj;
-  if (tool4 && !::number(0,49) && (obj = read_object(tool4,VIRTUAL)))
+  if (tool4 && !::number(0,19) && (obj = read_object(tool4,VIRTUAL)))
     *this += *obj;
 
 
