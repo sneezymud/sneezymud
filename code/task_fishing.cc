@@ -178,8 +178,8 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
           ch->task->timeLeft--;
           break;
 	case 0:
-	  baitchance=(int)(((float)((float)(bait->rentCost()*2)/(float)baitmax))*40);
-	  polechance=(int)(((float)((float)(pole->rentCost()*2)/(float)polemax))*40);
+	  baitchance=(int)(((float)((float)(bait->rentCost()*2)/(float)baitmax))*25);
+	  polechance=(int)(((float)((float)(pole->rentCost()*2)/(float)polemax))*25);
 	  catchchance=::number(1,100);
 	  
 
