@@ -1194,6 +1194,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
        return TRUE;
       }
       return FALSE;
+    case SPELL_ENLIVEN:
     case SPELL_CLARITY: // shaman
     case SPELL_SILENCE:
     case SPELL_SLUMBER:
@@ -2228,6 +2229,9 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
           castVoodoo(this, o);
         } else
           vlogf(LOG_BUG, "SPELL_VOODOO called with null obj");
+        break;
+      case SPELL_ENLIVEN:
+        castEnliven(this, victim);
         break;
       case SPELL_DANCING_BONES:
 	if (o) { // !o

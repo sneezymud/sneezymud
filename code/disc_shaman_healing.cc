@@ -137,3 +137,75 @@ int castHealingGrasp(TBeing *caster, TBeing *victim)
   }
   return ret;
 }
+
+
+int enliven(TBeing *caster, TBeing *victim, int level, byte bKnown)
+{
+  affectedData aff;
+
+  caster->reconcileHelp(victim, discArray[SPELL_ENLIVEN]->alignMod);
+
+  if (bSuccess(caster, bKnown, SPELL_ENLIVEN)) {
+    aff.type = SPELL_ENLIVEN;
+    aff.level = level;
+    aff.duration = (aff.level / 3) * UPDATES_PER_MUDHOUR;
+    aff.modifier = 0;
+    aff.location = APPLY_NONE;
+    aff.bitvector = 0;
+    switch (critSuccess(caster, SPELL_ENLIVEN)) {
+      case CRIT_S_KILL:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_DOUBLE:
+        CS(SPELL_ENLIVEN);
+        aff.duration *= 2;
+        break;
+      case CRIT_S_NONE:
+        break;
+    }
+    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
+      caster->nothingHappens();
+      return SPELL_FALSE;
+    }
+
+    act("$N has become enlivened!",
+           FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("You have become enlivened!",
+           FALSE, victim, NULL, NULL, TO_CHAR);
+    if (caster != victim)
+      act("&n's loa has given $N enlivenment!",
+           FALSE, caster, NULL, victim, TO_CHAR);
+    return SPELL_SUCCESS;
+  } else {
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+
+void enliven(TBeing *caster, TBeing *victim, TMagicItem * obj)
+{
+  enliven(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
+}
+
+int enliven(TBeing *caster, TBeing *victim)
+{
+  if (!bPassShamanChecks(caster, SPELL_ENLIVEN, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_ENLIVEN]->lag;
+  taskDiffT diff = discArray[SPELL_ENLIVEN]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_ENLIVEN, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+  return TRUE;
+}
+
+int castEnliven(TBeing *caster, TBeing *victim)
+{
+  int level = caster->getSkillLevel(SPELL_ENLIVEN);
+  int bKnown = caster->getSkillValue(SPELL_ENLIVEN);
+
+  int ret=enliven(caster,victim,level,bKnown);
+  if (ret == SPELL_SUCCESS) {
+  } else {
+  }
+  return TRUE;
+}

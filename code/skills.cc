@@ -1049,6 +1049,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
     case SPELL_HEALING_GRASP:
       return &((CDShamanHealing *) cd)->skHealingGrasp;
+    case SPELL_ENLIVEN:
+      return &((CDShamanHealing *) cd)->skEnliven;
 
       // ritualism
 

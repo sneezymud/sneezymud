@@ -529,6 +529,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_POLYMORPH:
     case SPELL_ACCELERATE:
     case SPELL_CELERITE:
+    case SPELL_ENLIVEN:
     case SPELL_CHEVAL: // shaman
     case SPELL_HASTE:
     case SPELL_FAERIE_FOG:

@@ -559,11 +559,11 @@ int fireballWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 
   chance = ::number(4,10);
   if (chance < 8) {
-    act("Your $p glows fire red.", 0, ch, o, 0, TO_ROOM, ANSI_RED);
-    act("$n's $p glows fire red.", 0, ch, o, 0, TO_CHAR, ANSI_RED);
+    act("$n's $p glows fire red.", 0, ch, o, 0, TO_ROOM, ANSI_RED);
+    act("Your $p glows fire red.", 0, ch, o, 0, TO_CHAR, ANSI_RED);
   } else {
-    act("$p glows fire red and launches a fireball at $n.", 0, vict, o, 0, TO_ROOM, ANSI_RED_BOLD);
-    act("$p glows fire red and launches a fireball at you.", 0, vict, o, 0, TO_CHAR, ANSI_RED_BOLD);
+    act("$n's $p glows fire red and channels energy into $n's hands.", 0, ch, o, 0, TO_ROOM, ANSI_RED_BOLD);
+    act("Your $p glows fire red and channels energy into your hands.", 0, ch, o, 0, TO_CHAR, ANSI_RED_BOLD);
     fireball(ch, 100, 100, 100);
   }
   return TRUE;

@@ -425,6 +425,7 @@ enum spellNumT {
      // start of shaman
      SKILL_RITUALISM,
      SPELL_FLATULENCE,
+     SPELL_ENLIVEN,
      SPELL_BLOOD_BOIL,
      SPELL_STUPIDITY,
      SPELL_CELERITE,

@@ -2063,6 +2063,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       case SPELL_SHADOW_WALK:
 	rc = shadowWalk(this, ch);
 	break;
+      case SPELL_ENLIVEN:
+        enliven(this, ch);
+        break;
       case SPELL_CHRISM:
         chrism(this, n); 
 	break;

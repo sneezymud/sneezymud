@@ -283,7 +283,8 @@ int TMonster::manaGain()
 
   if (!getCond(FULL) || !getCond(THIRST))
     gain >>= 2;
-
+  if (affectedBySpell(SPELL_ENLIVEN))
+    gain *= 2;
   return (gain);
 }
 
@@ -312,6 +313,8 @@ int TPerson::manaGain()
 
   if (!getCond(FULL) || !getCond(THIRST))
     gain >>= 2;
+  if (affectedBySpell(SPELL_ENLIVEN))
+    gain *= 2;
 
   stats.mana_gained_attempts++;
   stats.mana_gained += gain;
@@ -368,6 +371,8 @@ int TMonster::hitGain()
 
   if (getCond(DRUNK) > 0)
     gain += 1 + (getCond(DRUNK) / 3);
+  if (affectedBySpell(SPELL_ENLIVEN))
+    gain *= 2;
 
   if (roomp && roomp->isRoomFlag(ROOM_HOSPITAL))
     gain *= 2;
@@ -426,6 +431,8 @@ int TPerson::hitGain()
   if ((num = inCamp())) {
     gain += (gain * num / 100);
   }
+  if (affectedBySpell(SPELL_ENLIVEN))
+    gain *= 2;
 
   stats.hit_gained_attempts++;
   stats.hit_gained += gain;
@@ -456,6 +463,8 @@ int TBeing::moveGain()
   if ((num = inCamp())) {
     gain += (gain * num / 100);
   }
+  if (affectedBySpell(SPELL_ENLIVEN))
+    gain *= 2;
 
   if (roomp && roomp->isRoomFlag(ROOM_NO_HEAL))
     gain /= 3;

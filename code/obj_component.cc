@@ -1783,6 +1783,14 @@ void buildComponentArray()
     "$n put a few drops of $p in $s eyes.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_ENLIVEN,
+    "You squeeze $p at $N.",
+    "$n squeezes $p at $N.",
+    "$n squeezes $p at you.",                       
+    "You squeeze $p at yourself.",
+    "$n squeezes $p at $mself.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_SHADOW_WALK,
     "",
     "",

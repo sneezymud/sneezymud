@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_shaman_healing.h,v $
+// Revision 5.3  2002/11/21 02:48:56  jesus
+// added enliven spell and updated the fireball weapon proc a little
+//
 // Revision 5.2  2002/02/20 23:02:19  jesus
 // healing grasp spell for shaman
 // in the new healing disc for shaman
@@ -30,19 +33,23 @@ class CDShamanHealing : public CDiscipline
 public:
 
     CSkill skHealingGrasp;
+    CSkill skEnliven;
 
     CDShamanHealing()
       : CDiscipline(),
-      skHealingGrasp() {
+      skHealingGrasp(),
+      skEnliven() {
     }
     CDShamanHealing(const CDShamanHealing &a)
       : CDiscipline(a),
-      skHealingGrasp(a.skHealingGrasp) {
+      skHealingGrasp(a.skHealingGrasp),
+      skEnliven(a.skEnliven) {
     }
     CDShamanHealing & operator=(const CDShamanHealing &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
       skHealingGrasp = a.skHealingGrasp;
+      skEnliven = a.skEnliven;
       return *this;
     }
     virtual ~CDShamanHealing() {}
@@ -55,4 +62,8 @@ private:
    void healingGrasp(TBeing *, TBeing *, TMagicItem *, spellNumT);
    int healingGrasp(TBeing *, TBeing *, int, byte, spellNumT);
 
+   int enliven(TBeing *, TBeing *, int, byte);
+   void enliven(TBeing *, TBeing *, TMagicItem *);
+   int enliven(TBeing *, TBeing *);
+   int castEnliven(TBeing *, TBeing *);
 #endif

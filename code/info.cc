@@ -1103,6 +1103,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_HYPNOSIS:
       case SPELL_SHADOW_WALK:
       case SPELL_SHIELD_OF_MISTS:
+      case SPELL_ENLIVEN:
       case SKILL_RESCUE:
       case SKILL_SMYTHE:
       case SKILL_REPAIR_MAGE:
