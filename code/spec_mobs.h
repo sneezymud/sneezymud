@@ -163,7 +163,8 @@ const int SPEC_HOLDEM_PLAYER      =178;
 const int SPEC_POSTMAN            =179;
 const int SPEC_POISON_BITE        =180;
 const int SPEC_RIDDLING_TREE      =181;
-const int NUM_MOB_SPECIALS        =181;
+const int SPEC_FIREMAN            =182;
+const int NUM_MOB_SPECIALS        =182;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 

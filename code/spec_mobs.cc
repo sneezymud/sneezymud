@@ -7498,7 +7498,7 @@ int shopWhisper(TBeing *ch, TMonster *myself, int shop_nr, const char *arg)
 
 
 
-
+extern int fireman(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int corporateAssistant(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int postman(TBeing *, cmdTypeT , const char *, TMonster *, TObj *);
 extern int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *, TObj *);
@@ -7697,6 +7697,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "postman", postman},
   {TRUE, "poison bite", poisonBite}, // 180
   {FALSE, "riddling tree", riddlingTree},
+  {FALSE, "fireman", fireman},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
