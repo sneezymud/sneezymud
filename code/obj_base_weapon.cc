@@ -1385,7 +1385,7 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
   int range;
 
   if (dynamic_cast<TArrow *>(this)){
-    if(objVnum() == 31864)
+    if(objVnum() == 31864 || objVnum() == 31869)
       damtype = TYPE_SHOOT;
     else
       damtype = DAMAGE_ARROWS;
