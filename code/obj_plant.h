@@ -28,6 +28,7 @@ class TPlant : public TExpandableContainer {
     void setAge(int t){ plantage=t; }
     int getAge() const { return plantage; }
 
+    void peeOnMe(const TBeing *);
 
     TPlant();
     TPlant(const TPlant &a);

@@ -8,6 +8,7 @@
 
 #include "stdsneezy.h"
 #include "obj_pool.h"
+#include "obj_plant.h"
 
 class socialMessg {
   public:
@@ -555,6 +556,14 @@ void TPool::peeMe(const TBeing *ch)
     setDrinkType(LIQ_RED_WINE);
   } else 
     fillMe(ch, LIQ_LEMONADE);
+}
+
+void TPlant::peeOnMe(const TBeing *ch)
+{
+  act("$n smiles happily as $e pisses all over $p.", TRUE, ch, this, NULL, TO_ROOM);
+  act("You smile happily as you piss all over $p.",  TRUE, ch, this, NULL, TO_CHAR); 
+  
+  updateAge();
 }
 
 void TBeing::doPee(string argument)
