@@ -644,11 +644,10 @@ void TBeing::doPee(const sstring &argument)
       if(is_abbrev(arg, stripColorCodes(DrinkInfo[liquid]->name)))
 	break;
     }
-    if(liquid==MAX_DRINK_TYPES)
-      liquid=LIQ_LEMONADE;
   }
-
+  
   if (!arg.empty() && liquid == MAX_DRINK_TYPES) {
+    liquid=LIQ_LEMONADE;
     if(arg.substr(0,2) == "in" && isspace(arg[2])){
       arg.erase(0,3); // remove "in "
 
@@ -868,8 +867,10 @@ int TBeing::doBite(const sstring &arg)
 
     reconcileDamage(b, 0, DAMAGE_DRAIN);
     
-    if(((b->hitLimit() < hitLimit()) && (GetMaxLevel() > b->GetMaxLevel()+10)) &&
-       hits(b, attackRound(b) - b->defendRound(this))){
+    if((((b->hitLimit() < hitLimit()) && 
+	(GetMaxLevel()>b->GetMaxLevel()+10)) &&
+	hits(b, attackRound(b) - b->defendRound(this))) ||
+       isImmortal()){
       act("You sink your fangs deep into $N's neck and suck $S <r>blood<1>!",
 	  FALSE, this, NULL, b, TO_CHAR);
       act("$n sinks $s fangs deep into $N's neck and sucks $S <r>blood<1>!",
