@@ -1691,39 +1691,6 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     return TYPE_UNDEFINED;
 
   // PANIC spells
-  // two varieties of teleport:
-  spell = SPELL_DEATH_MIST;
-  if (ch.doesKnowSkill(spell) && 
-      (ch.getSkillValue(spell) > 33)) {
-    // tree walk myself as a "flee"
-    if (!::number(0,30) &&
-        !ch.pissed() && 
-        (ch.getHit() < ch.hitLimit()/8) &&
-        // don't let test fight mobs teleport
-        !ch.affectedBySpell(AFFECT_TEST_FIGHT_MOB)) {
-      act("$n utters the invokation, 'CHOWE KONDIZ!'",
-            FALSE, &ch, 0, 0, TO_ROOM);
-      on_me = TRUE;
-      return spell;
-    }
-  }
-#ifdef JEEZ
-  spell = SPELL_TREE_WALK;
-  if (ch.doesKnowSkill(spell) && 
-      (ch.getSkillValue(spell) > 33)) {
-    // tree walk myself as a "flee"
-    if (!::number(0,30) &&
-        !ch.pissed() && 
-        (ch.getHit() < ch.hitLimit()/8) &&
-        // don't let test fight mobs teleport
-        !ch.affectedBySpell(AFFECT_TEST_FIGHT_MOB)) {
-      act("$n utters the invokation, 'Phaqdiz Imowdy!'",
-            FALSE, &ch, 0, 0, TO_ROOM);
-      on_me = TRUE;
-      return spell;
-    }
-  }
-#endif
   int cutoff = min((int) ch.GetMaxLevel(), 50);
 
   if (best_disc == DISC_SHAMAN) {
@@ -1732,23 +1699,23 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
 
     // STANDARD OFFENSE
-    spell = SPELL_LIFE_LEECH;
-    if (!::number(0, 1) && 
-           (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell)) {
-      act("$n utters the invokation, 'Shrivel and Die!'",
-               TRUE, &ch, 0, 0, TO_ROOM);
-      return spell;
-    }
     spell = SPELL_VAMPIRIC_TOUCH;
-    if (!::number(0, 1) && 
+    if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell)) {
-      act("$n utters the invokation, 'I Vaant your BLUUD!'",
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the words, 'Ahh!! The BLUUD!!!!!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
 
+    spell = SPELL_LIFE_LEECH;
+    if (!::number(0, 1) && 
+           (cutoff < discArray[spell]->start) &&
+        ch.doesKnowSkill(spell)) {
+      act("$n utters the words, 'I'm gonna suck you dry!!!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
     // hit um with the long-term effect ones first
 
     // just plain damage spells here on
@@ -1768,35 +1735,42 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
 
   } else if (best_disc == DISC_SHAMAN_FROG) {
     spell = SPELL_AQUATIC_BLAST;
-    if (!::number(0, 1) && 
+    if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell)) {
-      act("$n utters the invokation, 'River run DEEP!'",
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the words, 'River run DEEEEEEEEEEP!!!!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
   } else if (best_disc == DISC_SHAMAN_SKUNK) {
     // AREA AFFECT
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
-      spell = SPELL_DEATH_MIST;
-      if (!::number(0, 1) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell)) {
-	act("$n utters the invokation, 'CHOKE ON THIS!!!'",
-	    TRUE, &ch, 0, 0, TO_ROOM);
-	return spell;
-      }
     }
     // REGULAR
     spell = SPELL_LICH_TOUCH;
-    if (!::number(0, 1) && 
+    if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell)) {
-      act("$n utters the invokation, 'River run DEEP!'",
+         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the words, 'Lich me, SUCKAH!!!'",
                TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
+    spell = SPELL_DEATH_MIST;
+    if ((cutoff < discArray[spell]->start) &&
+         ch.doesKnowSkill(spell)) {
+      act("$n utters the words, 'Chowe Kondizz Bub!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
+
   } else if (best_disc == DISC_SHAMAN_ARMADILLO) {
+    // area affect
+    if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
+    }
   } else if (best_disc == DISC_TOTEM) {
+    // area affect
+    if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
+    }
   } else if (best_disc == DISC_SHAMAN_CONTROL) {
     // area affect
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {

@@ -228,6 +228,8 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_DUST_BREATH:
       bit = IMMUNE_AIR;
       break;
+    case SPELL_VAMPIRIC_TOUCH:
+    case SPELL_LIFE_LEECH:
     case SPELL_LICH_TOUCH:
     case SPELL_ENERGY_DRAIN:
     case DAMAGE_DRAIN:
@@ -514,8 +516,6 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_CLARITY:
     case SPELL_GARMULS_TAIL:
     case SPELL_ETHER_GATE:
-    case SPELL_VAMPIRIC_TOUCH:
-    case SPELL_LIFE_LEECH:
     case SPELL_SHADOW_WALK:
     case SKILL_SKIN:
     case SKILL_WHITTLE:
@@ -706,4 +706,5 @@ immuneTypeT getTypeImmunity(spellNumT type)
   }
   return bit;
 }
+
 
