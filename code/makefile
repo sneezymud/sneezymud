@@ -195,7 +195,7 @@ OBJ2 = gin.o handler.o hearts.o help.o hospital.o immortal.o immunity.o \
 	window.o wiz_data.o wiz_powers.o worn.o \
 	spec_mobs_doppleganger.o spec_mobs_earthquake_digger.o \
         spec_mobs_goring.o spec_objs_lightning_rod.o \
-        spec_rooms_sleeptag.o
+        spec_rooms_sleeptag.o spellstore.o
 
 #	rewrite_obj_file.o \
 
