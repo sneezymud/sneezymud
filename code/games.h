@@ -46,7 +46,7 @@ const int GAMBLER_BLACKJACK_BET = 4;
 
 TObj *find_chip(TBeing *, const int &);
 TObj *find_chip(TBeing *, const sstring &);
-void payout(TBeing *, int);
+void payout(TBeing *, int, int chip_vnum=0);
 void observerReaction(TBeing *, int);
 
 int cardnumComparAscend(const void *, const void *);

@@ -2,7 +2,7 @@
 #include "games.h"
 #include "obj_casino_chip.h"
 
-void payout(TBeing *ch, int talens)
+void payout(TBeing *ch, int talens, int chip_vnum=0)
 {
   TObj *chip;
   sstring buf;
@@ -10,31 +10,41 @@ void payout(TBeing *ch, int talens)
   map <sstring, int>::iterator iter;
 
   while(talens>0){
-    if(talens >= 1000000){
-      chip=read_object(CHIP_1000000, VIRTUAL);
-    } else if(talens >= 500000){
-      chip=read_object(CHIP_500000, VIRTUAL);
-    } else if(talens >= 100000){
-      chip=read_object(CHIP_100000, VIRTUAL);
-    } else if(talens >= 50000){
-      chip=read_object(CHIP_50000, VIRTUAL);
-    } else if(talens >= 10000){
-      chip=read_object(CHIP_10000, VIRTUAL);
-    } else if(talens >= 5000){
-      chip=read_object(CHIP_5000, VIRTUAL);
-    } else if(talens >= 1000){
-      chip=read_object(CHIP_1000, VIRTUAL);
-    } else if(talens >= 500){
-      chip=read_object(CHIP_500, VIRTUAL);
-    } else if(talens >= 100){
-      chip=read_object(CHIP_100, VIRTUAL);
+    if(!chip_vnum){
+      if(talens >= 1000000){
+	chip=read_object(CHIP_1000000, VIRTUAL);
+      } else if(talens >= 500000){
+	chip=read_object(CHIP_500000, VIRTUAL);
+      } else if(talens >= 100000){
+	chip=read_object(CHIP_100000, VIRTUAL);
+      } else if(talens >= 50000){
+	chip=read_object(CHIP_50000, VIRTUAL);
+      } else if(talens >= 10000){
+	chip=read_object(CHIP_10000, VIRTUAL);
+      } else if(talens >= 5000){
+	chip=read_object(CHIP_5000, VIRTUAL);
+      } else if(talens >= 1000){
+	chip=read_object(CHIP_1000, VIRTUAL);
+      } else if(talens >= 500){
+	chip=read_object(CHIP_500, VIRTUAL);
+      } else if(talens >= 100){
+	chip=read_object(CHIP_100, VIRTUAL);
+      } else {
+	ssprintf(buf, "You receive %i talens.", talens);
+	act(buf, TRUE, ch, 0, 0, TO_CHAR);
+	ssprintf(buf, "$n receives %i talens.", talens);
+	act(buf, TRUE, ch, 0, 0, TO_ROOM);
+	ch->addToMoney(talens, GOLD_GAMBLE);
+	return;
+      }
     } else {
-      ssprintf(buf, "You receive %i talens.", talens);
-      act(buf, TRUE, ch, 0, 0, TO_CHAR);
-      ssprintf(buf, "$n receives %i talens.", talens);
-      act(buf, TRUE, ch, 0, 0, TO_ROOM);
-      ch->addToMoney(talens, GOLD_GAMBLE);
-      return;
+      chip=read_object(chip_vnum, VIRTUAL);
+
+      if((talens-chip->obj_flags.cost) < 0){
+	delete chip;
+	chip_vnum=0;
+	continue;
+      }
     }
 
     if(!chip){

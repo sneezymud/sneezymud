@@ -153,7 +153,7 @@ void HoldemGame::showdown(TBeing *ch)
   if(playerHandCount() < 2){
     act("$n wins by default.", FALSE, ch, 0, 0, TO_ROOM);
     act("You win by default.", FALSE, ch, 0, 0, TO_CHAR);
-    payout(ch, bet);
+    payout(ch, bet, last_bet);
   } else {
     for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
       hands[i]=-1;
@@ -220,7 +220,7 @@ void HoldemGame::showdown(TBeing *ch)
       ssprintf(buf, "You %s with %s!", 
 	       winners.size()>1?"tie":"win", msg.c_str());
       act(buf, FALSE, players[winners[p]]->ch, 0, 0, TO_CHAR);
-      payout(players[winners[p]]->ch, (int)(bet/winners.size()));
+      payout(players[winners[p]]->ch, (int)(bet/winners.size()), last_bet);
     }
   }
 
