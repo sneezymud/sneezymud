@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.4  2001/09/25 12:44:43  jesus
+// smythe fix
+//
 // Revision 5.3  2001/09/07 07:07:35  peel
 // changed TThing->stuff to getStuff() and setStuff()
 //
@@ -145,7 +148,7 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
     else
       o->addToStructPoints(-1);
 
-    if (o->getStructPoints() <= 0) {
+    if (o->getStructPoints() <= 1) {
       act("$n screws up repairing $p and utterly destroys it.", FALSE, ch, o, forge, TO_ROOM);
       act("You screw up repairing $p and utterly destroy it.", FALSE, ch, o, forge, TO_CHAR);
       makeScraps();
