@@ -5000,8 +5000,8 @@ int permaDeathMonument(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj
 
   ch->sendTo("You examine the plaque:\n\r");
   ch->sendTo("------------------------------------------------------------\n\r");
-  ch->sendTo("- This monument commemorates the bravest of heroes         -\n\r");
-  ch->sendTo("- slain on the battlefield, permanently dead for all time. -\n\r");
+  ch->sendTo("-     This monument commemorates the bravest of heroes     -\n\r");
+  ch->sendTo("-                 who risk permanent death.                -\n\r");
   ch->sendTo("------------------------------------------------------------\n\r");
 
   int i=1;
