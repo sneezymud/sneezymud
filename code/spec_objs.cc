@@ -5391,7 +5391,7 @@ int trophyBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
   //  db.query("select name, count(*) from trophy group by name order by count(*) desc limit 10");
   //  db.query("select name, count from trophyplayer order by count desc limit 25");
   db.query("select p.name, t.count from player p, trophyplayer t where t.player_id=p.id order by count desc limit 25");
-  db2.query("select p.name, t.total from player p, trophyplayer t where t.player_id=p.id order by t.total desc limit 25");
+  db2.query("select p.name, t.total from player p, trophyplayer t where t.player_id=p.id and t.total is not null order by t.total desc limit 25");
 
   if(!db.isResults() || !db2.isResults()){
     ch->sendTo("The board is empty.\n\r");
