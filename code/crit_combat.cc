@@ -983,7 +983,7 @@ buf=fmt("$n's %s shatters one of $N's ribs!") %
 	if(doesKnowSkill(SKILL_CRIT_HIT) && !v->equipment[WEAR_BODY] &&
 	   v->hasPart(WEAR_BODY) && !weapon && 
        	   bSuccess(this, getSkillValue(SKILL_CRIT_HIT), SKILL_CRIT_HIT) &&
-	   ::number(0,1)){
+	   !::number(0,4)){
 	  // rip out heart instead of head crush whee fancy
 	  buf=fmt("With your %s, you reach into $N's chest and rip out $S heart!") %
 	    limbStr;
