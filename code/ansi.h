@@ -163,6 +163,7 @@ const unsigned int CHANGED_MUD    = (1<<9);
 const unsigned int CHANGED_PIETY  = (1<<10);
 const unsigned int CHANGED_COND   = (1<<11);
 const unsigned int CHANGED_POS    = (1<<12);
+const unsigned int CHANGED_LIFEFORCE    = (1<<13);
 
 enum setColorFieldT {
   SET_COL_FIELD_HIT,
@@ -174,7 +175,8 @@ enum setColorFieldT {
   SET_COL_FIELD_ROOM,
   SET_COL_FIELD_TANK,
   SET_COL_FIELD_TANK_OTHER,
-  SET_COL_FIELD_PIETY
+  SET_COL_FIELD_PIETY,
+  SET_COL_FIELD_LIFEFORCE
 };
 
 enum setColorKolorT {
