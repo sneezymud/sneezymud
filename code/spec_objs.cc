@@ -7518,6 +7518,84 @@ int lycanthropyCure(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 }
 
 
+// proc to join keys for vella island quest
+// joins the two held keys
+// star 27561 + sphere 27707 => doesn't do anything
+// star 27561 + pyramidal 27706 => star pyramidal 27706
+// pyramidal + sphere => sphere pyramidal 27705
+// sphere-pyr + star => final key 27704
+// star-pyr + sphere => final key
+
+int vellaKeyJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
+  // joins the two held keys
+  sstring buf;
+  if (!(cmd == CMD_COMBINE)) 
+    return FALSE;
+  argument_parser(arg, buf);
+  if (!(buf == "keys"))
+    return FALSE;
+ 
+  if (!o || !ch || !(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+    
+  TObj *key1 = NULL;
+  TObj *key2 = NULL;
+  TObj *linked_key = NULL;
+
+  map <int, short int> vnumToVec;
+  map <short int, int> vecToVnum;
+  
+  vnumToVec[27561] = 1;
+  vnumToVec[27705] = 6;
+  vnumToVec[27706] = 5;
+  vnumToVec[27707] = 2;
+  vnumToVec[27708] = 4;
+  vnumToVec[27704] = 7;
+  vecToVnum[1] = 27561;
+  vecToVnum[6] = 27705;
+  vecToVnum[5] = 27706;
+  vecToVnum[2] = 27707;
+  vecToVnum[4] = 27708;
+  vecToVnum[7] = 27704;
+
+  if (!(key1 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])) ||
+      vnumToVec.find(obj_index[key1->getItemIndex()].virt) == vnumToVec.end() ||
+      !(key2 = dynamic_cast<TObj *>(ch->equipment[HOLD_LEFT])) ||
+      vnumToVec.find(obj_index[key2->getItemIndex()].virt) == vnumToVec.end())
+  {
+    act("You must hold keys that fit each other, one in each hand.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+    return TRUE;
+  }
+  //return quietly if the proc is firing from both hands
+  if (o == ch->equipment[HOLD_LEFT])
+    return TRUE;
+
+// have a key in each hand, now do something if they match
+
+  act("$n fiddles with some keys.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+  act("You fiddle with the keys.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+  short int keycombo;
+  keycombo = vnumToVec[obj_index[key1->getItemIndex()].virt] +
+      vnumToVec[obj_index[key2->getItemIndex()].virt];
+      
+  if (vecToVnum.find(keycombo) != vecToVnum.end())
+    linked_key = read_object(vecToVnum[keycombo], VIRTUAL);
+  else {
+     act("You can't seem to fit these keys together.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+     return TRUE;
+  }
+
+  act("Click! $n fits two keys together to make one.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+  act("Click! You fit the two keys together.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+
+  delete key1;
+  delete key2;
+  ch->equipChar(linked_key, ch->getPrimaryHold(), SILENT_YES);
+
+  return TRUE;
+}
+
 //MARKER: END OF SPEC PROCS
 
 
@@ -7668,5 +7746,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "stim pack", stimPack},
   {FALSE, "lottery ticket", lotteryTicket},
   {FALSE, "lycanthropy cure", lycanthropyCure}, // 130
+  {FALSE, "vella key join", vellaKeyJoin},
   {FALSE, "last proc", bogusObjProc}
 };

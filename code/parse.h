@@ -558,6 +558,7 @@ enum cmdTypeT {
      CMD_DRIVE,
      CMD_PSIDRAIN,
      CMD_POOP,
+     CMD_COMBINE,
      CMD_CALL,
      CMD_FOLD,
      MAX_CMD_LIST,  // Keep this as last command in regular list

@@ -568,6 +568,11 @@ void TPlant::peeOnMe(const TBeing *ch)
     updateAge();
 }
 
+void TBeing::doCombine(const sstring &arg)
+{
+  sendTo("You don't even know where to being with that.\n\r");
+}
+
 void TBeing::doPoop(void)
 {
   TObj *obj=NULL;

@@ -1452,6 +1452,7 @@ class TBeing : public TThing {
     void doTranceOfBlades(const char *);
     void doAttune(const char *);
     void doSharpen(const char *);
+    void doCombine(const sstring &);
     void doAdjust(const char *);
     void doDull(const char *);
     void doRepair(const char *);
