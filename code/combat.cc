@@ -3079,6 +3079,50 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
     if (snd != MIN_SOUND_NUM)
       v->playsound(snd, SOUND_TYPE_COMBAT, 100, 20, 1);
   }
+
+  // 6-1-2004 - If they hit, let them have a chance of learning the appropriate 'Know' skill.
+  if (dam && (GetMaxLevel() <= MAX_MORT)) {
+    if (getDiscipline(DISC_ADVENTURING)) {
+      spellNumT sknum = TYPE_UNDEFINED;
+      int roll = 0;
+
+      if (v->isAnimal() && doesKnowSkill(SKILL_CONS_ANIMAL)) {
+	sknum = SKILL_CONS_ANIMAL;
+	roll  = 1000;
+      } else
+      if (v->isVeggie() && doesKnowSkill(SKILL_CONS_VEGGIE)) {
+        sknum = SKILL_CONS_VEGGIE;
+        roll  = 1000;
+      } else
+      if (v->isDiabolic() && doesKnowSkill(SKILL_CONS_DEMON)) {
+        sknum = SKILL_CONS_DEMON;
+        roll  = 1000;
+      } else
+      if (v->isReptile() && doesKnowSkill(SKILL_CONS_REPTILE)) {
+        sknum = SKILL_CONS_REPTILE;
+        roll  = 2000;
+      } else
+      if (v->isUndead() && doesKnowSkill(SKILL_CONS_UNDEAD)) {
+      	sknum = SKILL_CONS_UNDEAD;
+      	roll  = 2000;
+      } else
+      if (v->isGiantish() && doesKnowSkill(SKILL_CONS_GIANT)) {
+        sknum = SKILL_CONS_GIANT;
+        roll  = 1000;
+      } else
+      if (v->isPeople() && doesKnowSkill(SKILL_CONS_PEOPLE)) {
+        sknum = SKILL_CONS_PEOPLE;
+        roll  = 2000;
+      } else
+      if (v->isOther() && doesKnowSkill(SKILL_CONS_OTHER)) {
+        sknum = SKILL_CONS_OTHER;
+        roll  = 1000;
+      }
+
+      if ((sknum != TYPE_UNDEFINED) && !::number(0,roll))
+	learnFromDoing(sknum, SILENT_NO, 0);
+    }
+  }
 }
 
 void TBeing::combatFatigue(TThing *o)
