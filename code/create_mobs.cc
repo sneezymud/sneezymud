@@ -2016,7 +2016,7 @@ int mapPosToFile(positionTypeT pos)
 int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
 {
   long tmp, tmp2;
-  int tmp3;
+  int tmp3, calc_level;
   float att;
   int rc;
   char letter;
@@ -2111,14 +2111,9 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
           vlogf(LOG_EDIT, "Unable to self-correct old style mob (rc=%d)", rc);
       }
     }
-
-#if 1
-    tmp = (int)((getHPLevel() + getACLevel() + getDamLevel())/3);
-    fixLevels(tmp);
     
-//    reallvl = tmp;
-#endif
-
+    calc_level = (int) (getHPLevel() + getACLevel() + getDamLevel())/3;
+    
     setMana(10);
     setMaxMana(10);
     setLifeforce(9000);
@@ -2127,8 +2122,12 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
 
     fscanf(fp, " %ld ", &tmp);
     if (tmp > 10) {
-      vlogf(LOG_EDIT, "Old style mob (%s) for money constant.  Please reset money.", getName());
-      tmp = tmp * 10 / 4 / GetMaxLevel() / GetMaxLevel();
+      vlogf(LOG_EDIT, "Old style mob (%s) for mone y constant.  Please reset money.", getName());
+      // using calc_level here isn't ideal, because it won't end up
+      // being the final level for guildmasters and such folks,
+      // but it's fine for now and better than using the level set
+      // in the mobfile, which is pretty off in most cases
+      tmp = tmp * 10 / 4 / calc_level / calc_level;
       tmp = min(max(1, (int) tmp), 10);
     }
     moneyConst = (ubyte) tmp;
@@ -2181,6 +2180,15 @@ int TMonster::readMobFromFile(FILE *fp, bool should_alloc)
 
     fscanf(fp, " %ld ", &tmp);
     spec = tmp;
+
+    if (!UtilProcs(spec) && !GuildProcs(spec) && !isTestmob()) 
+//    if !(is_abbrev(name, "trainer") || is_abbrev(name, "guildmaster"))
+    {
+      tmp = (int)((getHPLevel() + getACLevel() + getDamLevel())/3);
+      fixLevels(tmp);
+    
+//    reallvl = tmp;
+    }
 
     // don't set the xp until here, since a lot of things factor in
     // gold isn't calculated until here either...
