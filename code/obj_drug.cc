@@ -274,7 +274,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
   potency=drugTypes[drug].potency;
   if(consumed>potency) consumed=potency;
 
-  duration1hit=drugTypes[drug].duration * UPDATES_PER_MUDHOUR;
+  duration1hit=drugTypes[drug].duration * UPDATES_PER_MUDHOUR / 2;
 
   switch(drug){
     case DRUG_PIPEWEED:
@@ -319,7 +319,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 	}
       }
 
-      aff.modifier = consumed/2;
+      aff.modifier = consumed;
       aff.duration = duration1hit * consumed;
 
       if(!(affptr=findDrugAffect(ch, DRUG_PIPEWEED, APPLY_SPE))){
@@ -337,7 +337,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
       }
 
-      aff.modifier = -(consumed/2);
+      aff.modifier = -(consumed);
       aff.duration = duration1hit * consumed;
 
       if(!(affptr=findDrugAffect(ch, DRUG_PIPEWEED, APPLY_CHA))){
@@ -371,8 +371,10 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
 
   switch(drug){
     case DRUG_PIPEWEED:
+      // severity is average amount of drug in body since first use
       // roughly, we say a cigarette is 5 drug units, so a pack a day
       // is 20*5=100 units, divided by 24 hours = about 4
+
       if(severity<4){
 	ch->sendTo("You could use some %s right now.\n\r", drugTypes[drug].name);
       } else if(severity<8){
@@ -425,8 +427,8 @@ int TBeing::doSmoke(const char *argument)
   char arg[256], buf[256];
   affectedData aff;
 
-  sendTo("Smoking is bad for your health.\n\r");
-  return FALSE;
+  //  sendTo("Smoking is bad for your health.\n\r");
+  //  return FALSE;
   
 
   only_argument(argument, arg);

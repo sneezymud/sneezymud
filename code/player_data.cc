@@ -1670,6 +1670,24 @@ void TBeing::loadDrugStats()
   if (!isPc() || !desc)
     return;
 
+  for(i=0;i<MAX_DRUG;++i){
+    desc->drugs[i].first_use.seconds=0;
+    desc->drugs[i].first_use.minutes=0;
+    desc->drugs[i].first_use.hours=0;
+    desc->drugs[i].first_use.day=0;
+    desc->drugs[i].first_use.month=0;
+    desc->drugs[i].first_use.year=0;
+    desc->drugs[i].last_use.seconds=0;
+    desc->drugs[i].last_use.minutes=0;
+    desc->drugs[i].last_use.hours=0;
+    desc->drugs[i].last_use.day=0;
+    desc->drugs[i].last_use.month=0;
+    desc->drugs[i].last_use.year=0;
+    desc->drugs[i].total_consumed=0;
+    desc->drugs[i].current_consumed=0;
+  }
+
+
   sprintf(buf, "player/%c/%s.drugs", LOWER(name[0]), lower(name).c_str());
 
 
@@ -1719,7 +1737,7 @@ void TBeing::loadDrugStats()
       return;
     }
     desc->drugs[i].total_consumed=num1;
-    desc->drugs[i].current_consumed=num1;
+    desc->drugs[i].current_consumed=num2;
   }
   
 
