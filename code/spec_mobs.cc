@@ -7489,6 +7489,8 @@ int shopWhisper(TBeing *ch, TMonster *myself, int shop_nr, const char *arg)
     tso.setAccess(arg);
   } else if(!strcmp(buf, "logs")){ /////////////////////////////////////////
     tso.doLogs(arg);
+  } else if(!strcmp(buf, "string")){
+    tso.setString(arg);
   } else {
     myself->doTell(ch->getName(), "Read 'help shop owner' for assistance.");
   }

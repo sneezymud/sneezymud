@@ -2123,7 +2123,7 @@ void bootTheShops()
 
   /****** owned ******/
   TDatabase owned_db(DB_SNEEZY);
-  owned_db.query("select shop_nr, profit_buy, profit_sell from shopowned order by shop_nr");
+  owned_db.query("select shop_nr, profit_buy, profit_sell, no_such_item1, no_such_item2, do_not_buy, missing_cash1, missing_cash2, message_buy, message_sell from shopowned order by shop_nr");
   owned_db.fetchRow();
 
 
@@ -2142,13 +2142,43 @@ void bootTheShops()
 
     shop_nr=convertTo<int>(db["shop_nr"]);
     sd.shop_nr=shop_nr;
-    sd.no_such_item1 = mud_str_dup(db["no_such_item1"]);
-    sd.no_such_item2 = mud_str_dup(db["no_such_item2"]);
-    sd.do_not_buy = mud_str_dup(db["do_not_buy"]);
-    sd.missing_cash1 = mud_str_dup(db["missing_cash1"]);
-    sd.missing_cash2 = mud_str_dup(db["missing_cash2"]);
-    sd.message_buy = mud_str_dup(db["message_buy"]);
-    sd.message_sell = mud_str_dup(db["message_sell"]);
+
+    if(!owned_db["no_such_item1"].empty())
+      sd.no_such_item1 = mud_str_dup(owned_db["no_such_item1"]);
+    else
+      sd.no_such_item1 = mud_str_dup(db["no_such_item1"]);
+
+    if(!owned_db["no_such_item2"].empty())
+      sd.no_such_item2 = mud_str_dup(owned_db["no_such_item2"]);
+    else
+      sd.no_such_item2 = mud_str_dup(db["no_such_item2"]);
+
+    if(!owned_db["do_not_buy"].empty())
+      sd.do_not_buy = mud_str_dup(owned_db["do_not_buy"]);
+    else
+      sd.do_not_buy = mud_str_dup(db["do_not_buy"]);
+
+    if(!owned_db["missing_cash1"].empty())
+      sd.missing_cash1 = mud_str_dup(owned_db["missing_cash1"]);
+    else
+      sd.missing_cash1 = mud_str_dup(db["missing_cash1"]);
+
+    if(!owned_db["missing_cash2"].empty())
+      sd.missing_cash2 = mud_str_dup(owned_db["missing_cash2"]);
+    else
+      sd.missing_cash2 = mud_str_dup(db["missing_cash2"]);
+
+    if(!owned_db["message_buy"].empty())
+      sd.message_buy = mud_str_dup(owned_db["message_buy"]);
+    else
+      sd.message_buy = mud_str_dup(db["message_buy"]);
+
+    if(!owned_db["message_sell"].empty())
+      sd.message_sell = mud_str_dup(owned_db["message_sell"]);
+    else
+      sd.message_sell = mud_str_dup(db["message_sell"]);
+
+
     sd.temper1=convertTo<int>(db["temper1"]);
     sd.temper2=convertTo<int>(db["temper2"]);
     sd.keeper=real_mobile(convertTo<int>(db["keeper"]));

@@ -701,6 +701,73 @@ int TShopOwned::buyShop(sstring arg){
 }
   
 
+int TShopOwned::setString(sstring arg)
+{
+  sstring which, s;
+
+  s=one_argument(arg, which);
+  
+  if(!hasAccess(SHOPACCESS_OWNER)){
+    keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
+    return FALSE;
+  }
+
+
+  if(which.empty() && s.empty()){
+    keeper->doTell(ch->getName(), fmt("no_such_item1: %s") %
+		   shop_index[shop_nr].no_such_item1);
+    keeper->doTell(ch->getName(), fmt("no_such_item2: %s") %
+		   shop_index[shop_nr].no_such_item2);
+    keeper->doTell(ch->getName(), fmt("do_not_buy: %s") %
+		   shop_index[shop_nr].do_not_buy);
+    keeper->doTell(ch->getName(), fmt("missing_cash1: %s") %
+		   shop_index[shop_nr].missing_cash1);
+    keeper->doTell(ch->getName(), fmt("missing_cash2: %s") %
+		   shop_index[shop_nr].missing_cash2);
+    keeper->doTell(ch->getName(), fmt("message_buy: %s") %
+		   shop_index[shop_nr].message_buy);
+    keeper->doTell(ch->getName(), fmt("message_sell: %s") %
+		   shop_index[shop_nr].message_sell);
+    return TRUE;
+  } 
+  
+
+  if(which=="no_such_item1"){
+    delete [] shop_index[shop_nr].no_such_item1;
+    shop_index[shop_nr].no_such_item1=mud_str_dup(s);
+  } else if(which=="no_such_item2"){
+    delete [] shop_index[shop_nr].no_such_item2;
+    shop_index[shop_nr].no_such_item2=mud_str_dup(s);
+  } else if(which=="do_not_buy"){
+    delete [] shop_index[shop_nr].do_not_buy;
+    shop_index[shop_nr].do_not_buy=mud_str_dup(s);
+  } else if(which=="missing_cash1"){
+    delete [] shop_index[shop_nr].missing_cash1;
+    shop_index[shop_nr].missing_cash1=mud_str_dup(s);
+  } else if(which=="missing_cash2"){
+    delete [] shop_index[shop_nr].missing_cash2;
+    shop_index[shop_nr].missing_cash2=mud_str_dup(s);
+  } else if(which=="message_buy"){
+    delete [] shop_index[shop_nr].message_buy;
+    shop_index[shop_nr].message_buy=mud_str_dup(s);
+  } else if(which=="message_sell"){
+    delete [] shop_index[shop_nr].message_sell;
+    shop_index[shop_nr].message_sell=mud_str_dup(s);
+  } else {
+    keeper->doTell(ch->getName(), "You need to specify a string to change.");
+    return FALSE;
+  }
+
+
+  TDatabase db(DB_SNEEZY);
+
+  db.query("update shopowned set %s='%s' where shop_nr=%i", 
+	   which.c_str(), s.c_str(), shop_nr);
+
+  keeper->doTell(ch->getName(), "Alright, I changed that response.");
+  
+  return TRUE;
+}
 
 
 int TShopOwned::sellShop(){

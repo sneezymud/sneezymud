@@ -37,6 +37,7 @@ class TShopOwned {
   int giveMoney(sstring);
   int setAccess(sstring);
   int doLogs(sstring);
+  int setString(sstring);
 
   TShopOwned(int, TMonster *, TBeing *);
   ~TShopOwned();
