@@ -1008,7 +1008,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 		     "$n reaches into your chest and rips out your heart!",
 		     limbStr.c_str());
 	    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	    ssprintf(buf, "$n reaches into $N's heart and rips out $S heart!",
+	    ssprintf(buf, "$n reaches into $N's chest and rips out $S heart!",
 		     limbStr.c_str());
 	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
