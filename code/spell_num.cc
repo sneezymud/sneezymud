@@ -920,6 +920,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 686;
     case SPELL_HEALING_GRASP:
       return 687;
+    case SKILL_MANA:
+      return 688;
 
     case AFFECT_DISEASE:
       return 2500;
@@ -1889,6 +1891,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_THROATSLIT;
     case 687:
       return SPELL_HEALING_GRASP;
+    case 688:
+      return SKILL_MANA;
 
     case 2500:
       return AFFECT_DISEASE;

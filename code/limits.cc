@@ -144,9 +144,11 @@ short int TPerson::manaLimit() const
 {
   int iMax = 100;
 
-  if (hasClass(CLASS_MAGIC_USER))
-    iMax += getLevel(MAGE_LEVEL_IND) * 6;
-  else if (hasClass(CLASS_RANGER))
+  if (hasClass(CLASS_MAGIC_USER)){
+    iMax += getSkillValue(SKILL_MANA) * 3;
+
+    //    iMax += getLevel(MAGE_LEVEL_IND) * 6;
+  } else if (hasClass(CLASS_RANGER))
     iMax += GetMaxLevel() * 3;
   else if (hasClass(CLASS_MONK))
     iMax += GetMaxLevel() * 3;

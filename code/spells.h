@@ -513,7 +513,7 @@ enum spellNumT {
      SKILL_ALCOHOLISM,
      SKILL_FISHING,
      SKILL_ADVANCED_DEFENSE,
-
+     SKILL_MANA,
      // end of generic
 
      // keep this as the last of the true skills

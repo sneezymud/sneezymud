@@ -856,6 +856,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SKILL_MIND_THRUST:
       case SKILL_MIND_PRESERVATION:
       case SKILL_TELEKINESIS:
+      case SKILL_MANA:
         break;
     }
   }

@@ -1522,7 +1522,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_KINETIC_WAVE:
       case SKILL_MIND_PRESERVATION:
       case SKILL_TELEKINESIS:
-
+      case SKILL_MANA:
 #if 1
       case SPELL_EARTHMAW:
       case SPELL_CREEPING_DOOM:

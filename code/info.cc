@@ -1266,6 +1266,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_DULL:
       case SKILL_ATTUNE:
       case SKILL_STAVECHARGE:
+      case SKILL_MANA:
 
 #if 1
       case SPELL_EARTHMAW:

@@ -3,6 +3,14 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_meditate.cc,v $
+// Revision 5.2  2002/04/25 22:14:17  peel
+// added mana skill
+//
+// mana for mages based on skill
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -64,6 +72,8 @@ int task_meditate(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
             if (::number(0,1))
               ch->sendTo("Your meditation has slightly increased your sense of well being!\n\r");
           }
+	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_MANA, 20);
+
           // get this regardless...
           ch->addToHit(1);
           if (ch->getMove() < ch->moveLimit())

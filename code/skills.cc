@@ -1068,6 +1068,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 // disc_lore
     case SKILL_MEDITATE: // 961
       return &((CDLore *) cd)->skMeditate;
+    case SKILL_MANA: // 962
+      return &((CDLore *) cd)->skMana;
 
   // disc_faith
     case SKILL_DEVOTION: // 1000
