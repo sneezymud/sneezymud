@@ -292,7 +292,8 @@ int aquaticBlast(TBeing * caster, TBeing * victim, TMagicItem * obj)
 // END AQUATIC BLAST
 // SHAPESHIFT
 
-static struct PolyType ShapeShiftList[] =
+static const int LAST_SHAPED_MOB = 10;
+struct PolyType ShapeShiftList[LAST_SHAPED_MOB] =
 {
   {"chicken"   , 30,   1, 1213, DISC_SHAMAN_FROG, RACE_NORACE},
   {"horsefly"     , 31,   1, 15420, DISC_SHAMAN_FROG, RACE_NORACE},
@@ -332,7 +333,34 @@ int shapeShift(TBeing *caster, int level, byte bKnown)
     if ((caster->getDiscipline(das)->getLearnedness() >= ShapeShiftList[i].learning) && (level > 25))
       break;
   }
+#if 1
+  for (i = 0; (i < LAST_SHAPED_MOB); i++) {
+    if ((signed) ShapeShiftList[i].tRace != RACE_NORACE &&
+	!caster->isImmortal() &&
+	caster->getRace() != (signed) ShapeShiftList[i].tRace)
+      continue;
 
+    if (ShapeShiftList[i].level > caster->GetMaxLevel())
+      continue;
+
+    if (ShapeShiftList[i].learning > caster->getSkillValue(SPELL_SHAPESHIFT))
+      continue;
+
+    if (!isname(buffer, ShapeShiftList[i].name))
+      continue;               
+
+    break;
+  }
+#else
+  for (i = 0;
+       ((i < LAST_SHAPED_MOB) && (!is_abbrev(buffer,ShapeShiftList[i].name)));
+       i++);
+#endif
+
+  if (i >= LAST_SHAPED_MOB) {
+    caster->sendTo("You havn't a clue where to start on that one.\n\r");
+    return SPELL_FAIL;
+  } 
   if (*ShapeShiftList[i].name == '\n') {
     if (nameFound) {
       caster->sendTo("You are not powerful enough yet to change into such a creature.\n\r");
@@ -355,6 +383,7 @@ int shapeShift(TBeing *caster, int level, byte bKnown)
     mob = NULL;
     return SPELL_FAIL;
   }
+
   if (caster->desc->original) {
     // implies they are switched, while already switched (as x switch)
     caster->sendTo("You already seem to be switched.\n\r");

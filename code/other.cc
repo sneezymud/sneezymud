@@ -1195,6 +1195,9 @@ bool skillSorter::operator() (const skillSorter &x, const skillSorter &y) const
 extern struct PolyType DisguiseList[];
 static const int MaxDisguiseType = 10; // Non-Race Specific Ones
 
+extern struct PolyType ShapeShiftList[];
+static const int MaxShapeShiftType = 10;
+
 void TBeing::sendSkillsList(discNumT which)
 {
   char buf[MAX_STRING_LENGTH * 2], buffer[MAX_STRING_LENGTH * 2];
@@ -1368,6 +1371,32 @@ void TBeing::sendSkillsList(discNumT which)
 
         if (strlen(how_long) != 3)
           strcat(how_long, ", ");
+
+        strcat(how_long, tStRes.c_str());
+      }
+
+      if (strlen(how_long) == 3)
+        strcpy(how_long, " ");
+    } else if (i == SPELL_SHAPESHIFT) {
+      int tSL = getDiscipline(getDisciplineNumber(SPELL_SHAPESHIFT, FALSE))->getLearnedness();
+
+      strcpy(how_long, "\n\r\t");
+      strcpy(how_long, "\n\r\tYou may ShapeShift into the following creatures:\n\r\t");
+      for (int tCount = 0; tCount < MaxShapeShiftType; tCount++) {
+        if (ShapeShiftList[tCount].learning > tSL ||
+            ShapeShiftList[tCount].level    > GetMaxLevel())
+          continue;
+
+        if ((signed) ShapeShiftList[tCount].tRace != RACE_NORACE)
+          continue;
+
+        string tStArg(ShapeShiftList[tCount].name),
+               tStRes("");
+
+        one_argument(tStArg, tStRes);
+
+        if (strlen(how_long) != 3)
+          strcat(how_long, " - ");
 
         strcat(how_long, tStRes.c_str());
       }

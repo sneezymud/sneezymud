@@ -1669,6 +1669,9 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
 extern struct PolyType DisguiseList[];
 static const int MaxDisguiseType = 18; // Non-Race Specific Ones
 
+extern struct PolyType ShapeShiftList[];
+static const int MaxShapeShiftType = 18; // Non-Race Specific Ones
+
 int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset, int pracs) const
 {
   int j;
@@ -1678,6 +1681,7 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
   int final, initial;
   int value;
   int tOldSL = ch->getDiscipline(getDisciplineNumber(SKILL_DISGUISE, FALSE))->getLearnedness();
+  int tOldSL2 = ch->getDiscipline(getDisciplineNumber(SPELL_SHAPESHIFT, FALSE))->getLearnedness();
 
   if (pracs <= 0) {
     vlogf(LOG_BUG, "Bogus pracs used %s (%d)", ch->getName(), ch->in_room);
@@ -1903,6 +1907,39 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
         one_argument(tStArg, tStRes);
 
         sprintf(tString, "%s you can now use the '%s' disguise.",
+                ch->getNameNOC(ch).c_str(), tStRes.c_str());
+        me->doWhisper(tString);
+      }
+    }
+  }
+
+  if (TrainerInfo[offset].disc == DISC_SHAMAN_FROG) {
+    if (ch->doesKnowSkill(SPELL_SHAPESHIFT)) {
+      int tNewSL2 = ch->getDiscipline(getDisciplineNumber(SPELL_SHAPESHIFT, FALSE))->getLearnedness();
+
+      for (int tType = 0; tType < MaxShapeShiftType; tType++) {
+        // Can not use right now, regardless.
+        if (ShapeShiftList[tType].learning > tNewSL2 ||
+            ShapeShiftList[tType].level    > ch->GetMaxLevel())
+          continue;
+
+        // Already been told, so skip it.
+        if (ShapeShiftList[tType].learning < tOldSL2 &&
+            ShapeShiftList[tType].level    < (ch->GetMaxLevel() - 1))
+          continue;
+
+        // Shouldn't happen, but you never know.
+        // Thing is here we ONLY express the general disguises.
+        if ((signed) ShapeShiftList[tType].tRace != RACE_NORACE)
+          continue;
+
+        char tString[256];
+        string tStArg(ShapeShiftList[tType].name),
+               tStRes("");
+
+        one_argument(tStArg, tStRes);
+
+        sprintf(tString, "%s you can now shapeshift into a %s.",
                 ch->getNameNOC(ch).c_str(), tStRes.c_str());
         me->doWhisper(tString);
       }
