@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_sorcery.cc,v $
+// Revision 1.3  1999/10/09 05:23:15  batopr
+// Fixed "0 missiles" problem in mystic darts
+//
 // Revision 1.2  1999/09/18 06:03:56  brutius
 // Fixed typo in energy drain
 //
@@ -34,6 +37,7 @@ int mysticDarts(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_
   int dam = caster->getSkillDam(victim, SPELL_MYSTIC_DARTS, level, adv_learn);
   // Lets make the missiles at least partly dependant on damage.
   int missiles = (dam / 3) + ::number(0, (caster->GetMaxLevel() / 10));
+  missiles = max(missiles, 1);
 
   caster->reconcileHurt(victim, discArray[SPELL_MYSTIC_DARTS]->alignMod);
 
