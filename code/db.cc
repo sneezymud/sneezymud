@@ -18,6 +18,15 @@
 #include "loadset.h"
 #include "sys_loot.h"
 #include "shop.h"
+#include "obj_spellbag.h"
+#include "obj_player_corpse.h"
+#include "obj_open_container.h"
+#include "obj_corpse.h"
+#include "obj_quiver.h"
+#include "obj_keyring.h"
+#include "obj_chest.h"
+#include "obj_bag.h"
+#include "obj_base_container.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 

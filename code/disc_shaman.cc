@@ -3,6 +3,7 @@
 #include "combat.h"
 #include "disc_shaman.h"
 #include "spelltask.h"
+#include "obj_base_corpse.h"
 
 // returns VICTIM_DEAD if corpse should be fried
 int voodoo(TBeing *caster, TObj *obj, int level, byte bKnown)

@@ -14,6 +14,7 @@
 #include "components.h"
 #include "cmd_dissect.h"
 #include "disc_alchemy.h"
+#include "obj_open_container.h"
 
 static void print_room(int rnum, TRoom *rp, string &sb, struct show_room_zone_struct *)
 {

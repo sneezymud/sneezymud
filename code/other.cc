@@ -22,6 +22,9 @@ extern "C" {
 #include "obj_drug.h"
 #include "skillsort.h"
 #include "board.h"
+#include "obj_spellbag.h"
+#include "obj_base_corpse.h"
+#include "obj_player_corpse.h"
 
 #include "disc_air.h"
 #include "disc_alchemy.h"

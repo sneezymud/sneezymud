@@ -8,6 +8,9 @@
 
 #include "stdsneezy.h"
 #include "games.h"
+#include "obj_player_corpse.h"
+#include "obj_base_corpse.h"
+#include "obj_base_container.h"
 
 void TThing::getMeFrom(TBeing *ch, TThing *t)
 {

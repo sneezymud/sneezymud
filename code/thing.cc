@@ -2,24 +2,13 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: thing.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/09/16 22:14:37  peel
-// Disable immortal check for lighting things with flint and steel
-// ./
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
 // thing.h
 
 #include "stdsneezy.h"
+#include "obj_base_container.h"
 
 const char * TThing::objs(const TThing *t) const
 {
@@ -51,9 +40,9 @@ const string TThing::persfname(const TThing *t) const
   return (canSee(t) ? fname(t->name) : "someone");
 }
 
-bool TThing::sameRoom(const TThing *ch) const
+bool TThing::sameRoom(const TThing &ch) const
 {
-  return (inRoom() == ch->inRoom());
+  return (inRoom() == ch.inRoom());
 }
 
 bool TThing::inImperia() const
@@ -67,6 +56,26 @@ bool TThing::inGrimhaven() const
           (inRoom() >= 25400 && inRoom() <= 25499));
 }
 
+bool TThing::inAmber() const
+{
+  return ((inRoom() >= 2850 && inRoom() <= 3014) ||
+	  (inRoom() >= 8700 && inRoom() <= 8899) ||
+	  (inRoom() >= 16200 && inRoom() <= 16249) ||
+	  (inRoom() >= 27800 && inRoom() <= 27899));
+}
+
+bool TThing::inLogrus() const
+{
+  return ((inRoom() >= 3700 && inRoom() <= 3899) ||
+	  (inRoom() >= 26650 && inRoom() <= 26699));
+}
+
+bool TThing::inBrightmoon() const
+{ 
+  return ((inRoom() >= 1200 && inRoom() <= 1399) ||
+	  (inRoom() >= 16450 && inRoom() <= 16499));
+}
+
 bool TThing::inLethargica() const
 {
   return (inRoom() >= 23400 && inRoom() <= 23599);
@@ -74,7 +83,9 @@ bool TThing::inLethargica() const
 
 bool TThing::isSpiked() const
 {
-  return (isname("spiked", name));
+  if (isname("spiked", name))
+    return TRUE;
+  return FALSE;
 }
 
 int TThing::swungObjectDamage(const TBeing *, const TBeing *) const
@@ -181,8 +192,8 @@ int TThing::getReducedVolume(const TThing *o) const
 
   int num = getTotalVolume();
 
-  if ((o && dynamic_cast<const TContainer *>(o)) ||
-      (parent && dynamic_cast<const TContainer *>(parent))) {
+  if ((o && dynamic_cast<const TBaseContainer *>(o)) ||
+      (parent && dynamic_cast<const TBaseContainer *>(parent))) {
     // do material type reduction
     num /= material_nums[getMaterial()].vol_mult;
 
@@ -216,8 +227,14 @@ void TThing::peeOnMe(const TBeing *ch)
 
 void TThing::lightMe(TBeing *ch, silentTypeT)
 {
+  TObj *tObj;
+
   if(!material_nums[getMaterial()].flammability){
     act("You can't light $p, it's not flammable!", FALSE, ch, this, 0, TO_CHAR);
+    return;
+  } else if ((tObj = dynamic_cast<TObj *>(this)) && tObj->isObjStat(ITEM_MAGIC)) {
+    act("$p resists your attempt at burning it...",
+        FALSE, ch, this, NULL, TO_CHAR);
     return;
   } else {
     TThing *t;
@@ -234,3 +251,18 @@ void TThing::lightMe(TBeing *ch, silentTypeT)
   }
 }
 
+int TThing::chiMe(TBeing *tLunatic)
+{
+  int tMana = ::number(10, 30);
+
+  if (tLunatic->getMana() <= tMana) {
+    tLunatic->sendTo("You don't have the mana to do that!\n\r");
+    return RET_STOP_PARSING;
+  }
+
+  act("$p resists your attempts to chi it!",
+      FALSE, tLunatic, this, NULL, TO_CHAR);
+  tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
+
+  return true;
+}

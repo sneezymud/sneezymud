@@ -3,6 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_quiver.cc,v $
+// Revision 5.2  2002/01/08 21:05:12  peel
+// removed the TBaseContainer hierarchy from obj2.h
+// added header files for those objects
+// inserted appropriate includes
+//
 // Revision 5.1  2001/07/13 05:32:20  peel
 // renamed a bunch of source files
 //
@@ -26,6 +31,7 @@
 
 #include "stdsneezy.h"
 #include "disc_looting.h"
+#include "obj_quiver.h"
 
 TQuiver::TQuiver() :
   TExpandableContainer()

@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "obj_base_container.h"
 
 int GetItemClassRestrictions(const TObj *obj)
 {

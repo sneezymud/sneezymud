@@ -9,6 +9,9 @@
 #include "stdsneezy.h"
 #include "combat.h"
 #include "components.h"
+#include "obj_base_corpse.h"
+#include "obj_player_corpse.h"
+#include "obj_corpse.h"
 
 TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
 {

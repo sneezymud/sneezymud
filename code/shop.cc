@@ -6,6 +6,7 @@
 #include "shop.h"
 #include "statistics.h"
 #include "obj_drug.h"
+#include "obj_spellbag.h"
 
 vector<shopData>shop_index(0);
 

@@ -9,6 +9,7 @@
 #include "stdsneezy.h"
 #include "combat.h"
 #include "statistics.h"
+#include "obj_base_corpse.h"
 
 // there is another one of these defines in combat.cc
 #define DAMAGE_DEFINE 0

@@ -216,7 +216,7 @@ OBJ2 = game_gin.o handler.o game_hearts.o hospital.o immortal.o immunity.o \
 	obj_wand.o obj_window.o obj_worn.o \
 	offense.o oldlimbs.o oldrace.o \
 	obj_opal.o opinion.o organic.o other.o other_obj.o parse.o peelpk.o \
-	obj_pen.o periodic.o pets.o physics.o player_corpse.o player_data.o \
+	obj_pen.o periodic.o pets.o physics.o obj_player_corpse.o player_data.o \
 	game_poker.o obj_pool.o obj_portal.o spec_mobs_posse.o obj_potion.o obj_quiver.o race.o range.o \
 	rent.o repair.o response.o riding.o room.o \
 	shop.o show.o signals.o skill_dam.o skills.o \
@@ -453,7 +453,13 @@ $(OBJDIR)obj_base_weapon.o: combat.h statistics.h shop.h
 $(OBJDIR)obj_bed.o: $(CASINO_HEADS)
 $(OBJDIR)obj_board.o: board.h
 $(OBJDIR)obj_bow.o: range.h
-$(OBJDIR)obj_open_container.o: disc_looting.h
+$(OBJDIR)obj_open_container.o: obj_open_container.h disc_looting.h
+$(OBJDIR)obj_exandable_container.o: obj_expandable_container.h
+$(OBJDIR)obj_bag.o: obj_bag.h
+$(OBJDIR)obj_spellbag.o: obj_spellbag.h
+$(OBJDIR)obj_corpse.o: obj_corpse.h
+$(OBJDIR)obj_base_corpse.o: obj_base_corpse.h
+$(OBJDIR)obj_player_corpse.o: obj_player_corpse.h
 $(OBJDIR)obj_symbol.o: shop.h
 $(OBJDIR)offense.o: $(CASINO_HEADS) combat.h
 $(OBJDIR)organic.o: shop.h

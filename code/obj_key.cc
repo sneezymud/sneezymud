@@ -1,6 +1,8 @@
 // key.cc
 
 #include "stdsneezy.h"
+#include "obj_open_container.h"
+#include "obj_keyring.h"
 
 TKey::TKey() :
   TObj()

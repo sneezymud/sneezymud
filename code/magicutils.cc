@@ -3,6 +3,7 @@
 #include "stdsneezy.h"
 #include "disease.h"
 #include "components.h"
+#include "obj_open_container.h"
 
 void TMonster::balanceMakeNPCLikePC()
 {

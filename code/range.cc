@@ -13,6 +13,7 @@
 #include "stdsneezy.h"
 #include "range.h"
 #include "combat.h"
+#include "obj_quiver.h"
 
 #define RANGE_DEBUG 0
 

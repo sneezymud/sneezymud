@@ -2,6 +2,7 @@
 
 #include "stdsneezy.h"
 #include "create_engine.h"
+#include "obj_expandable_container.h"
 
 TASubstance::TASubstance() :
   TObj(),

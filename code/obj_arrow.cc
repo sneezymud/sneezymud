@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "obj_open_container.h"
 
 TArrow::TArrow() :
   TBaseWeapon(),

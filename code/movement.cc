@@ -23,6 +23,8 @@
 #include "client.h"
 #include "disc_looting.h"
 #include "room.h"
+#include "obj_base_corpse.h"
+#include "obj_keyring.h"
 
 void TBeing::goThroughPortalMsg(const TPortal *o) const
 {

@@ -8,6 +8,7 @@
 
 #include "stdsneezy.h"
 #include "games.h"
+#include "obj_base_corpse.h"
 
 void TBaseCup::lookObj(TBeing *ch, int) const
 {

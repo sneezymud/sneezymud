@@ -1,4 +1,5 @@
 #include "stdsneezy.h"
+#include "obj_base_corpse.h"
 
 // returns DELETE_THIS
 int goToMorgue(TBeing *myself)

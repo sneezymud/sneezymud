@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "obj_open_container.h"
 
 // returns DELETE_THIS for ch
 // returns true if guard disrupts trap pulse

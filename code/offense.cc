@@ -9,7 +9,8 @@
 #include "stdsneezy.h"
 #include "games.h"
 #include "combat.h"
-
+#include "obj_spellbag.h"
+#include "obj_open_container.h"
 
 // DELETE_THIS implies this needs to be deleted
 int TBeing::doHit(const char *argument, TBeing *vict)

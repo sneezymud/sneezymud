@@ -13,6 +13,9 @@
 #include "components.h"
 #include "shop.h"
 #include "being.h"
+#include "obj_spellbag.h"
+#include "obj_base_corpse.h"
+#include "obj_player_corpse.h"
 
 // returns DELETE_THIS if this has to be deleted
 int TMonster::mobileGuardian()

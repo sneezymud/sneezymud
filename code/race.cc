@@ -2,21 +2,14 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: race.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
+// race.cc
 //
 //////////////////////////////////////////////////////////////////////////
 
-
-// race.cc
-
 #include "stdsneezy.h"
 #include "race.h"
+#include "obj_player_corpse.h"
+#include "obj_corpse.h"
 
 #include <iostream.h>
 #include <fstream.h>
@@ -32,8 +25,8 @@ const char * RaceNames[MAX_RACIAL_TYPES] = {
   "RACE_GIANT", "RACE_BIRDMAN", "RACE_PARASITE","RACE_SLIME", "RACE_DEMON",
   "RACE_SNAKE", "RACE_HIPPOPOTAMUS", "RACE_TREE", "RACE_VEGGIE", "RACE_ELEMENT",
   "RACE_ANT", "RACE_DEVIL", "RACE_FROGMAN", "RACE_GOBLIN", "RACE_TROLL",
-  "RACE_VEGMAN", "RACE_MFLAYER", "RACE_PRIMATE", "RACE_FAERIE", "RACE_DROW",
-  "RACE_GOLEM", "RACE_MYTHIC", "RACE_PANTATH", "RACE_MERMAID", "RACE_RODENT",
+  "RACE_ANGEL", "RACE_MFLAYER", "RACE_PRIMATE", "RACE_FAERIE", "RACE_DROW",
+  "RACE_GOLEM", "RACE_BANSHEE", "RACE_PANTATH", "RACE_MERMAID", "RACE_RODENT",
   "RACE_FISHMAN", "RACE_TYTAN", "RACE_WOODELF", "RACE_FELINE", "RACE_CANINE",
   "RACE_HORSE", "RACE_AMPHIB", "RACE_MAMMAL", "RACE_REPTILE", "RACE_UNCERT",
   "RACE_UNIDENT", "RACE_OCTOPUS", "RACE_CRUSTACEAN", "RACE_MOSS", "RACE_BOVINE",
@@ -51,6 +44,7 @@ const char * RaceNames[MAX_RACIAL_TYPES] = {
   "RACE_SAHUAGIN", "RACE_BAT", "RACE_PYGMY", "RACE_WYVERN", "RACE_KUOTOA",
   "RACE_BAANTA", "RACE_GNOLL", "RACE_HOBGOBLIN", "RACE_MIMIC", "RACE_MEDUSA",
   "RACE_PENGUIN", "RACE_OSTRICH", "RACE_TROG", "RACE_COATL", "RACE_SIMAL",
+  "RACE_WYVELIN",
 };
 
 const char * const Lores[MAX_LORES] =
@@ -90,7 +84,7 @@ void listRaces(TBeing *caller)
     sprintf(buf + strlen(buf), "%3d %-15s%s", race, RaceNames[race], (race%3 ? "\t" : "\n\r"));
 
   }
-  caller->desc->page_string(buf, 0);
+  caller->desc->page_string(buf);
 }
 
 // Constructors.  A race can be initialized either with no argument or with
@@ -280,6 +274,7 @@ void Race::initRace(const char *whichRace)
   FILE * raceFile;
 
   sprintf(aFilename, "races/%s", whichRace);
+  vlogf(LOG_FILE, "initRace races/%s", whichRace);
 
   raceFile = fopen(aFilename, "r");
   if (!raceFile) {
@@ -290,13 +285,17 @@ void Race::initRace(const char *whichRace)
 
   // Basically we just start looking for keywords and then assign values
   // into the appropriate data member.
+  // COSMO STRING
+  string buf_string;
+  const char *buf2;
+  
   while (fgets(buf, 256, raceFile)) {
-    const char * buf2 = one_argument(buf, keyword);
+    buf2 = one_argument(buf, keyword);
     strcpy(buf, buf2);
     if (!keyword || !*keyword || *keyword == '#')
       continue;
 
-    string buf_string = buf;
+    buf_string = buf;
     size_t end_whitespace = buf_string.find_last_of("\n");
     if (end_whitespace != string::npos)
       buf_string.erase(end_whitespace);
@@ -331,7 +330,7 @@ void Race::initRace(const char *whichRace)
       else if (!strcasecmp(value, "other"))
 	Kingdom = LORE_OTHER;
       else {
-        vlogf(LOW_ERROR, "Bad lore %s, defined for %s", value, whichRace);
+        vlogf(LOG_LOW, "Bad lore %s, defined for %s", value, whichRace);
         Kingdom = LORE_PEOPLE;
       }
     }
@@ -347,36 +346,36 @@ void Race::initRace(const char *whichRace)
     else if (!strcasecmp(keyword,  "age")) {
       if (sscanf(buf, " %d+%dd%d",
          &baseAge, &ageNumDice, &ageDieSize) != 3) {
-        vlogf(LOW_ERROR, "Bad format for age on %s", whichRace);
+        vlogf(LOG_LOW, "Bad format for age on %s", whichRace);
       }
     }
     else if (!strcasecmp(keyword,  "maleht")) {
       if (sscanf(buf, " %d+%dd%d",
          &baseMaleHeight, &maleHtNumDice, &maleHtDieSize) != 3) {
-        vlogf(LOW_ERROR, "Bad format for male height on %s", whichRace);
+        vlogf(LOG_LOW, "Bad format for male height on %s", whichRace);
       }
     }
     else if (!strcasecmp(keyword,  "femaleht")) {
       if (sscanf(buf, " %d+%dd%d",
          &baseFemaleHeight, &femaleHtNumDice, &femaleHtDieSize) != 3) {
-        vlogf(LOW_ERROR, "Bad format for female height on %s", whichRace);
+        vlogf(LOG_LOW, "Bad format for female height on %s", whichRace);
       }
     }
     else if (!strcasecmp(keyword,  "malewt")) {
       if (sscanf(buf, " %d+%dd%d",
          &baseMaleWeight, &maleWtNumDice, &maleWtDieSize) != 3) {
-        vlogf(LOW_ERROR, "Bad format for male weight on %s", whichRace);
+        vlogf(LOG_LOW, "Bad format for male weight on %s", whichRace);
       }
     }
     else if (!strcasecmp(keyword,  "femalewt")) {
       if (sscanf(buf, " %d+%dd%d",
          &baseFemaleWeight, &femaleWtNumDice, &femaleWtDieSize) != 3) {
-        vlogf(LOW_ERROR, "Bad format for male weight on %s", whichRace);
+        vlogf(LOG_LOW, "Bad format for male weight on %s", whichRace);
       }
     }
     else if (!strcasecmp(keyword,  "corpse")) {
       if (sscanf(buf, " %f", &corpse_const) != 1) {
-        vlogf(LOW_ERROR, "Bad format for corpse const on %s", whichRace);
+        vlogf(LOG_LOW, "Bad format for corpse const on %s", whichRace);
       }
     }
 
@@ -509,6 +508,8 @@ void Race::initRace(const char *whichRace)
         bodyType = BODY_LION;
       else if (!strcasecmp(value, "feline"))
         bodyType = BODY_FELINE;
+      else if (!strcasecmp(value, "wyvelin"))
+        bodyType = BODY_WYVELIN;
       else if (!strcasecmp(value, "fourlegs"))
         bodyType = BODY_FOUR_LEG;
       else if (!strcasecmp(value, "reptile"))
@@ -544,7 +545,7 @@ void Race::initRace(const char *whichRace)
       else if (!strcasecmp(value, "ant"))
         bodyType = BODY_ANT;
       else {
-        vlogf(LOW_ERROR, "Unknown body on %s", whichRace);
+        vlogf(LOG_LOW, "Unknown body on %s", whichRace);
         bodyType = BODY_HUMANOID;
       }
     }
@@ -604,8 +605,11 @@ void Race::initRace(const char *whichRace)
         tDissectItem[1].message_to_others = buf_string;
     }
   }
-
+// COSMO STRING
+//  delete buf_string;
   fclose(raceFile);
+  vlogf(LOG_FILE, "Racefile fclose.");
+
 }
 
 // showTo() is called by immortal.cc's doShow command.  It takes a single
@@ -714,7 +718,7 @@ void Race::showTo(TBeing *caller)
 
   str += baseStats.showStats(caller);
 
-  caller->desc->page_string(str.c_str(), 0);
+  caller->desc->page_string(str.c_str());
   return;
 }
 
@@ -787,7 +791,7 @@ TPCorpse *Race::makePCorpse() const
 #endif
   } else {
     corpse = NULL;
-    vlogf(5,"Problem in making corpses in makePCorpse");
+    vlogf(LOG_BUG,"Problem in making corpses in makePCorpse");
   }
   return corpse;
 }
@@ -843,6 +847,7 @@ const string Race::getBodyLimbBlunt() const
     case BODY_BIRD:
     case BODY_BAT:
     case BODY_WYVERN:
+    case BODY_WYVELIN:
       return "wing";
     case BODY_SLIME:
     case BODY_PARASITE:
@@ -913,6 +918,7 @@ const string Race::getBodyLimbPierce() const
     case BODY_DEMON:
     case BODY_REPTILE:
       return "claw";
+    case BODY_WYVELIN:
     case BODY_FELINE:
       return "claws";
     case BODY_SPIDER:
@@ -991,6 +997,7 @@ const string Race::getBodyLimbSlash() const
     case BODY_OCTOPUS:
       return "suckers";
     case BODY_FELINE:
+    case BODY_WYVELIN:
       return "claws";
     case BODY_MOSS:
       return "appendage";

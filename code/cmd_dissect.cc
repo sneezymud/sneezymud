@@ -13,6 +13,7 @@
 #include "components.h"
 #include "disc_adventuring.h"
 #include "cmd_dissect.h"
+#include "obj_base_corpse.h"
 
 map<unsigned short int, dissectInfo>dissect_array;
 

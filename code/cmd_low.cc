@@ -10,6 +10,7 @@
 #include "stdsneezy.h"
 #include "statistics.h"
 #include "combat.h"
+#include "obj_player_corpse.h"
 
 double balanceCorrectionForLevel(double level)
 {

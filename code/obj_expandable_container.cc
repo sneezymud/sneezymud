@@ -8,6 +8,8 @@
 
 
 #include "stdsneezy.h"
+#include "obj_expandable_container.h"
+#include "obj_open_container.h"
 
 TExpandableContainer::TExpandableContainer() :
   TOpenContainer()

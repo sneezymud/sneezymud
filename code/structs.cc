@@ -12,6 +12,7 @@
 #include "board.h"
 #include "statistics.h"
 #include "games.h"
+#include "obj_base_corpse.h"
 
 TBeing::TBeing() :
   TThing(),

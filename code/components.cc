@@ -9,6 +9,8 @@
 #include "stdsneezy.h"
 #include "components.h"
 #include "shop.h"
+#include "obj_spellbag.h"
+#include "obj_open_container.h"
 
 vector<compPlace>component_placement(0);
 vector<compInfo>CompInfo(0);

@@ -9,6 +9,8 @@
 #include "combat.h"
 #include "disc_shaman.h"
 #include "spelltask.h"
+#include "obj_base_corpse.h"
+#include "obj_player_corpse.h"
 
 int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
 {

@@ -17,6 +17,8 @@ extern "C" {
 #include "range.h"
 #include "connect.h"
 #include "shop.h"
+#include "obj_spellbag.h"
+#include "obj_bag.h"
 
 // fname will look for the first non-alpha character
 // I added - and ' as valid fname chars since this allows us to do better things

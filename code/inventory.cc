@@ -11,6 +11,13 @@
 #include "statistics.h"
 #include "disc_looting.h"
 #include "shop.h"
+#include "obj_spellbag.h"
+#include "obj_keyring.h"
+#include "obj_base_corpse.h"
+#include "obj_player_corpse.h"
+#include "obj_open_container.h"
+#include "obj_quiver.h"
+#include "obj_base_container.h"
 
 // watches rent in, rent out, dropped, etc
 #define VERBOSE_LOGS   1

@@ -9,6 +9,8 @@
 
 #include "stdsneezy.h"
 #include "disc_looting.h"
+#include "obj_open_container.h"
+#include "obj_open_container.h"
 
 TOpenContainer::TOpenContainer() :
   TBaseContainer(),

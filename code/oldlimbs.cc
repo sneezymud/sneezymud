@@ -7,6 +7,7 @@
 
 #include "stdsneezy.h"
 #include "combat.h"
+#include "obj_corpse.h"
 
 void TBeing::setCurLimbHealth(wearSlotT slot, ubyte num)
 {

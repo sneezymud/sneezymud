@@ -6,6 +6,7 @@ extern "C" {
 #include "stdsneezy.h"
 #include "statistics.h"
 #include "games.h"
+#include "obj_base_container.h"
 
 #if 0
 static const string ClassTitles(const TBeing *ch)

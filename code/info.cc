@@ -18,6 +18,8 @@
 #include "statistics.h"
 #include "components.h"
 #include "skillsort.h"
+#include "obj_open_container.h"
+#include "obj_corpse.h"
 
 string describeDuration(const TBeing *ch, int dur)
 {

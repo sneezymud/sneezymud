@@ -9,6 +9,7 @@
 //
 
 #include "stdsneezy.h"
+#include "obj_spellbag.h"
 
 TSpellBag::TSpellBag() :
   TExpandableContainer()

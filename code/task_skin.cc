@@ -2,25 +2,12 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: task_skin.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////
-//
-//      SneezyMUD 4.0 - All rights reserved, SneezyMUD Coding Team
-//      "task.cc" - All functions related to tasks that keep mobs/PCs busy
+//      "task_skinning.cc" - The skinning task
 //
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "obj_base_corpse.h"
 
 void stop_skin(TBeing *ch)
 {
@@ -173,7 +160,7 @@ int TThing::skinPulse(TBeing *ch, TBaseCorpse *corpse)
   if (num == -1 || !(item = read_object(num, VIRTUAL))) {
     // no item, this should not happen (checked previously)
     ch->sendTo("Problem.  tell a god.\n\r");
-    vlogf(5, "Problem in skinning (%s)", ch->getName());
+    vlogf(LOG_BUG, "Problem in skinning (%s)", ch->getName());
     return FALSE;
   }
 
@@ -187,16 +174,27 @@ int TThing::skinPulse(TBeing *ch, TBaseCorpse *corpse)
   //                ox:  69 Units   786  Talens/11.4  Per Unit
   // deer-white-tailed:   6 Units    60  Talens/19    Per Unit
   //         shracknir: 209 Units    40K Talens/191.9 Per Unit
-  item->setWeight(min((int) corpse->getWeight(), max(1, (int) ((corpse->getWeight()*.02)
-    *(totalUnits/maxUnitsP)))));
-  item->setVolume(min((int) corpse->getVolume(), max(1, (int) ((corpse->getVolume()*.02)
-    *(totalUnits/maxUnitsP)))));
-  item->obj_flags.cost = max(1, (int) (corpse->getCorpseLevel()
-    *((double).9 + (learning/100)))*(totalUnits/3));
-  TOrganic *tOrg = dynamic_cast<TOrganic *>(item);
-  if (tOrg) {
-    tOrg->setUnits(totalUnits);
-    tOrg->setOLevel(corpse->getCorpseLevel());
+
+  TComponent * tcomp = dynamic_cast<TComponent *>(item);
+  if (!tcomp) {
+
+    item->setWeight(min((int) corpse->getWeight(), max(1, (int) ((corpse->getWeight()*.02) *(totalUnits/maxUnitsP)))));
+    item->setVolume(min((int) corpse->getVolume(), max(1, (int) ((corpse->getVolume()*.02) *(totalUnits/maxUnitsP)))));
+    item->obj_flags.cost = max(1, (int) (corpse->getCorpseLevel() *((double).9 + (learning/100)))*(totalUnits/3));
+
+    TOrganic *tOrg = dynamic_cast<TOrganic *>(item);
+    if (tOrg) {
+      tOrg->setUnits(totalUnits);
+      tOrg->setOLevel(corpse->getCorpseLevel());
+    }
+  } else {
+    // item skinned is a component, leave weight/vol/price alone
+    // since these are from balance stuff
+
+    // But set the corpse to no skin, this prevents the 2 for one deal.
+
+    if (!corpse->isCorpseFlag(CORPSE_NO_SKIN))
+      corpse->addCorpseFlag(CORPSE_NO_SKIN);
   }
 
   // Tell the people we got the hide.
@@ -276,7 +274,7 @@ int TTool::skinPulse(TBeing *ch, TBaseCorpse *corpse)
     if (num == -1 || !(item = read_object(num, VIRTUAL))) {
       // no item, this should not happen (checked previously)
       ch->sendTo("Problem.  tell a god.\n\r");
-      vlogf(5, "Problem in skinning (%s)", ch->getName());
+      vlogf(LOG_BUG, "Problem in skinning (%s)", ch->getName());
       return FALSE;
     }
 
@@ -310,7 +308,7 @@ int task_skinning(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
       ch->nobrainerTaskCommand(cmd))
     return FALSE;
 
-  if (!obj || !ch->sameRoom(obj) ||
+  if (!obj || !ch->sameRoom(*obj) ||
       !(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
     act("Hey, where'd that corpse go?", FALSE, ch, 0, 0, TO_CHAR);
     stop_skin(ch);

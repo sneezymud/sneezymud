@@ -10,6 +10,8 @@
 #include "statistics.h"
 #include "mail.h"
 #include "shop.h"
+#include "obj_player_corpse.h"
+#include "obj_bag.h"
 
 static const char ROOM_SAVE_PATH[] = "roomdata/saved";
 static const int NORMAL_SLOT   = -1;
