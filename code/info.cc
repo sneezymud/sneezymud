@@ -870,6 +870,10 @@ const sstring TBeing::addColorRoom(TRoom * rp, int title) const
       buf2="<y>";
       buf3="<R>";
       break;
+    case SECT_DEAD_WOODS:
+      buf2="<k>";
+      buf3="<k>";
+      break;
     case SECT_TEMPERATE_BEACH:
     case SECT_TEMPERATE_BUILDING:
     case SECT_MAKE_FLY:

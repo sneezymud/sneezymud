@@ -698,6 +698,8 @@ sectorTypeT mapFileToSector(int num)
       return SECT_FIRE_ATMOSPHERE;
     case 65:
       return SECT_MAKE_FLY;
+    case 66:
+      return SECT_DEAD_WOODS;
     default:
       vlogf(LOG_BUG, fmt("Bad num (%d) in file to sector") %  num);
       return SECT_ASTRAL_ETHREAL;
@@ -827,6 +829,8 @@ int mapSectorToFile(sectorTypeT sec)
       return 64;
     case SECT_MAKE_FLY:
       return 65;
+    case SECT_DEAD_WOODS:
+      return 66;
     case MAX_SECTOR_TYPES:
       break;
   }

@@ -150,6 +150,7 @@ void assignTerrainInfo()
   TerrainInfo[SECT_INSIDE_MOB] = new TTerrainInfo(6,8,3,3,3, 90, 0, "Inside Mob");
   TerrainInfo[SECT_FIRE_ATMOSPHERE] = new TTerrainInfo(0,0,2,6,2, 500, -10, "Fire Atmosphere");
   TerrainInfo[SECT_MAKE_FLY] = new TTerrainInfo(9,2,2,3,2, 85, 2, "Flying Sector");
+  TerrainInfo[SECT_DEAD_WOODS] = new TTerrainInfo(4,8,3,2,2, 50,  3, "Dead Woods");
 }
 
 const char * const exits[] =

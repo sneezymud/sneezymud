@@ -150,6 +150,7 @@ bool TRoom::isForestSector() const
     case SECT_ARCTIC_FOREST_ROAD:
     case SECT_TEMPERATE_FOREST_ROAD:
     case SECT_RAINFOREST_ROAD:
+    case SECT_DEAD_WOODS:
       return TRUE;
     default:
       return FALSE;

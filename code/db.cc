@@ -888,6 +888,10 @@ void TRoom::colorRoom(int title, int full)
       buf2 = "<y>";
       buf3 = "<R>";
       break;
+    case SECT_DEAD_WOODS:
+      buf2 = "<k>";
+      buf3 = "<k>";
+      break;
     case MAX_SECTOR_TYPES:
     case SECT_TEMPERATE_BEACH:
     case SECT_TEMPERATE_BUILDING:

@@ -136,6 +136,7 @@ enum sectorTypeT {
      SECT_INSIDE_MOB,
      SECT_FIRE_ATMOSPHERE,
      SECT_MAKE_FLY,
+     SECT_DEAD_WOODS,
      MAX_SECTOR_TYPES
 };
 const sectorTypeT MIN_SECTOR_TYPE = sectorTypeT(0);
