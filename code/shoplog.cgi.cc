@@ -40,14 +40,14 @@ int main(int argc, char **argv){
     cout << "<form method=post action=\"/shoplog.cgi\">" << endl;
     cout << "Select a shop: <select name=shop_nr>" << endl;
 
-    db.query("select soa.shop_nr as shop_nr from shopownedaccess soa, shopowned so where lower(name) = lower('%s') and soa.shop_nr=so.shop_nr and so.password='%s'", (**name).c_str(), (**pw).c_str());
+    db.query("select soa.shop_nr as shop_nr from shopownedaccess soa, shopowned so where lower(name) = lower('%s') and soa.shop_nr=so.shop_nr and so.password='%s' and so.password is not null and so.password != ''", (**name).c_str(), (**pw).c_str());
     
     while(db.fetchRow()){
       cout << "<option value=" << db["shop_nr"];
       cout << "> " << db["shop_nr"] << endl;
     }
 
-    db.query("select so.shop_nr as shop_nr from corpaccess ca, shopowned so where lower(name)=lower('%s') and so.corp_id=ca.corp_id and so.password='%s'", (**name).c_str(), (**pw).c_str());
+    db.query("select so.shop_nr as shop_nr from corpaccess ca, shopowned so where lower(name)=lower('%s') and so.corp_id=ca.corp_id and so.password='%s' and so.password is not null and so.password != ''", (**name).c_str(), (**pw).c_str());
 
     while(db.fetchRow()){
       cout << "<option value=" << db["shop_nr"];
@@ -61,7 +61,7 @@ int main(int argc, char **argv){
     cout << "<input type=submit>" << endl;
     cout << body() << html();
   } else {
-    db.query("select sl.shop_nr, sl.name, sl.action, sl.item, sl.talens, sl.shoptalens, sl.shopvalue, sl.logtime, sl.itemcount from shoplog sl, shopowned so where sl.shop_nr=so.shop_nr and so.password='%s' and sl.shop_nr=%i order by sl.logtime", (**pw).c_str(), convertTo<int>(**shop_nr));
+    db.query("select sl.shop_nr, sl.name, sl.action, sl.item, sl.talens, sl.shoptalens, sl.shopvalue, sl.logtime, sl.itemcount from shoplog sl, shopowned so where sl.shop_nr=so.shop_nr and so.password='%s' and so.password is not null and so.password != '' and sl.shop_nr=%i order by sl.logtime", (**pw).c_str(), convertTo<int>(**shop_nr));
     cout << "Content-type: text/plain\n\n";
     cout << "shop_nr, name, action, item, talens, shoptalens, shopvalue, logtime, itemcount\n";
 
