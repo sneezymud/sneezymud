@@ -8240,6 +8240,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "prison janitor", prisonJanitor},
   {TRUE, "cat", cat},
   {FALSE, "taxman", taxman}, // 195
+  {FALSE,"Trainer: advanced adventuring", CDGenericTrainer},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

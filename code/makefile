@@ -243,7 +243,7 @@ LIBDISC=disc_adventuring.o  	disc_murder.o		\
 	disc_hand_of_god.o  	disc_smythe.o		\
 	disc_hth.o		disc_sorcery.o		\
 	disc_leverage.o	 	disc_spirit.o		\
-	disc_looting.o	 	disc_survival.o		\
+	disc_looting.o	 	disc_adv_adventuring.o	\
 	disc_mage.o		disc_theology.o		\
 	disc_meditation.o	disc_thief.o		\
 	disc_mindbody.o	 	disc_warrior.o		\
@@ -4092,6 +4092,77 @@ objs/db.o: obj_other_obj.h obj_potion.h obj_scroll.h obj_staff.h
 objs/db.o: obj_appliedsub.h obj_worn.h obj_plant.h obj_cookware.h
 objs/db.o: obj_vehicle.h obj_casino_chip.h obj_poison.h obj_handgonne.h
 objs/db.o: obj_egg.h obj_cannon.h
+objs/disc_adv_adventuring.o: stdsneezy.h /usr/include/g++/cstdio
+objs/disc_adv_adventuring.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/disc_adv_adventuring.o: /usr/include/machine/ansi.h
+objs/disc_adv_adventuring.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/disc_adv_adventuring.o: /usr/include/g++/ctime /usr/include/time.h
+objs/disc_adv_adventuring.o: /usr/include/sys/_posix.h
+objs/disc_adv_adventuring.o: /usr/include/sys/types.h
+objs/disc_adv_adventuring.o: /usr/include/sys/inttypes.h
+objs/disc_adv_adventuring.o: /usr/include/machine/types.h
+objs/disc_adv_adventuring.o: /usr/include/machine/endian.h
+objs/disc_adv_adventuring.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/disc_adv_adventuring.o: /usr/include/runetype.h /usr/include/g++/cassert
+objs/disc_adv_adventuring.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/disc_adv_adventuring.o: /usr/include/string.h /usr/include/stdarg.h
+objs/disc_adv_adventuring.o: /usr/include/g++/cmath
+objs/disc_adv_adventuring.o: /usr/include/g++/_G_config.h
+objs/disc_adv_adventuring.o: /usr/include/stddef.h /usr/include/math.h
+objs/disc_adv_adventuring.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/disc_adv_adventuring.o: /usr/include/g++/string
+objs/disc_adv_adventuring.o: /usr/include/g++/std/bastring.h
+objs/disc_adv_adventuring.o: /usr/include/g++/cstddef
+objs/disc_adv_adventuring.o: /usr/include/g++/std/straits.h
+objs/disc_adv_adventuring.o: /usr/include/g++/alloc.h
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_config.h
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_alloc.h
+objs/disc_adv_adventuring.o: /usr/include/g++/iostream.h
+objs/disc_adv_adventuring.o: /usr/include/g++/streambuf.h
+objs/disc_adv_adventuring.o: /usr/include/g++/libio.h
+objs/disc_adv_adventuring.o: /usr/include/g++/iterator
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_relops.h
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_iterator.h
+objs/disc_adv_adventuring.o: /usr/include/g++/std/bastring.cc
+objs/disc_adv_adventuring.o: /usr/include/g++/vector
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_algobase.h
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_pair.h
+objs/disc_adv_adventuring.o: /usr/include/g++/type_traits.h
+objs/disc_adv_adventuring.o: /usr/include/limits.h
+objs/disc_adv_adventuring.o: /usr/include/machine/limits.h
+objs/disc_adv_adventuring.o: /usr/include/sys/syslimits.h
+objs/disc_adv_adventuring.o: /usr/include/g++/new.h /usr/include/g++/new
+objs/disc_adv_adventuring.o: /usr/include/g++/exception
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_construct.h
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_uninitialized.h
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_vector.h
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_bvector.h
+objs/disc_adv_adventuring.o: /usr/include/g++/map /usr/include/g++/stl_tree.h
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_function.h
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_map.h
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_multimap.h
+objs/disc_adv_adventuring.o: /usr/include/g++/list
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_list.h
+objs/disc_adv_adventuring.o: /usr/include/g++/iostream
+objs/disc_adv_adventuring.o: /usr/include/g++/sstream
+objs/disc_adv_adventuring.o: /usr/include/g++/fstream
+objs/disc_adv_adventuring.o: /usr/include/g++/fstream.h sstring.h low.h
+objs/disc_adv_adventuring.o: enum.h spells.h structs.h parse.h immunity.h
+objs/disc_adv_adventuring.o: discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/disc_adv_adventuring.o: client.h response.h faction.h comm.h toggle.h
+objs/disc_adv_adventuring.o: wiz_powers.h cmd_message.h stats.h limbs.h
+objs/disc_adv_adventuring.o: body.h race.h skills.h disease.h trap.h task.h
+objs/disc_adv_adventuring.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/disc_adv_adventuring.o: spec_objs.h connect.h obj_drug.h charfile.h
+objs/disc_adv_adventuring.o: being.h person.h monster.h account.h extern.h
+objs/disc_adv_adventuring.o: handler.h obj_money.h spec_mobs.h materials.h
+objs/disc_adv_adventuring.o: colorstring.h format.h disc_adv_adventuring.h
+objs/disc_adv_adventuring.o: combat.h disc_survival.h obj_component.h
+objs/disc_adv_adventuring.o: obj_base_corpse.h obj_base_container.h
+objs/disc_adv_adventuring.o: obj_tool.h obj_portal.h obj_seethru.h
+objs/disc_adv_adventuring.o: obj_drinkcon.h obj_base_cup.h pathfinder.h
+objs/disc_adv_adventuring.o: /usr/include/g++/deque
+objs/disc_adv_adventuring.o: /usr/include/g++/stl_deque.h
 objs/disc_adventuring.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_adventuring.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_adventuring.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -4147,7 +4218,12 @@ objs/disc_adventuring.o: weather.h sound.h create.h thing.h room.h obj.h
 objs/disc_adventuring.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/disc_adventuring.o: person.h monster.h account.h extern.h handler.h
 objs/disc_adventuring.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/disc_adventuring.o: format.h combat.h disc_adventuring.h
+objs/disc_adventuring.o: format.h combat.h disc_adventuring.h disc_survival.h
+objs/disc_adventuring.o: obj_component.h obj_base_corpse.h
+objs/disc_adventuring.o: obj_base_container.h obj_tool.h obj_portal.h
+objs/disc_adventuring.o: obj_seethru.h obj_drinkcon.h obj_base_cup.h
+objs/disc_adventuring.o: pathfinder.h /usr/include/g++/deque
+objs/disc_adventuring.o: /usr/include/g++/stl_deque.h
 objs/disc_aegis.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disc_aegis.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disc_aegis.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -6335,60 +6411,6 @@ objs/disc_stealth.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
 objs/disc_stealth.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/disc_stealth.o: game_crazyeights.h game_drawpoker.h combat.h
 objs/disc_stealth.o: disc_thief.h obj_tool.h disc_stealth.h
-objs/disc_survival.o: stdsneezy.h /usr/include/g++/cstdio
-objs/disc_survival.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
-objs/disc_survival.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
-objs/disc_survival.o: /usr/include/stdlib.h /usr/include/g++/ctime
-objs/disc_survival.o: /usr/include/time.h /usr/include/sys/_posix.h
-objs/disc_survival.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
-objs/disc_survival.o: /usr/include/machine/types.h
-objs/disc_survival.o: /usr/include/machine/endian.h /usr/include/g++/cctype
-objs/disc_survival.o: /usr/include/ctype.h /usr/include/runetype.h
-objs/disc_survival.o: /usr/include/g++/cassert /usr/include/assert.h
-objs/disc_survival.o: /usr/include/g++/cstring /usr/include/string.h
-objs/disc_survival.o: /usr/include/stdarg.h /usr/include/g++/cmath
-objs/disc_survival.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
-objs/disc_survival.o: /usr/include/math.h /usr/include/g++/cerrno
-objs/disc_survival.o: /usr/include/errno.h /usr/include/g++/string
-objs/disc_survival.o: /usr/include/g++/std/bastring.h
-objs/disc_survival.o: /usr/include/g++/cstddef /usr/include/g++/std/straits.h
-objs/disc_survival.o: /usr/include/g++/alloc.h /usr/include/g++/stl_config.h
-objs/disc_survival.o: /usr/include/g++/stl_alloc.h
-objs/disc_survival.o: /usr/include/g++/iostream.h
-objs/disc_survival.o: /usr/include/g++/streambuf.h /usr/include/g++/libio.h
-objs/disc_survival.o: /usr/include/g++/iterator /usr/include/g++/stl_relops.h
-objs/disc_survival.o: /usr/include/g++/stl_iterator.h
-objs/disc_survival.o: /usr/include/g++/std/bastring.cc
-objs/disc_survival.o: /usr/include/g++/vector /usr/include/g++/stl_algobase.h
-objs/disc_survival.o: /usr/include/g++/stl_pair.h
-objs/disc_survival.o: /usr/include/g++/type_traits.h /usr/include/limits.h
-objs/disc_survival.o: /usr/include/machine/limits.h
-objs/disc_survival.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
-objs/disc_survival.o: /usr/include/g++/new /usr/include/g++/exception
-objs/disc_survival.o: /usr/include/g++/stl_construct.h
-objs/disc_survival.o: /usr/include/g++/stl_uninitialized.h
-objs/disc_survival.o: /usr/include/g++/stl_vector.h
-objs/disc_survival.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
-objs/disc_survival.o: /usr/include/g++/stl_tree.h
-objs/disc_survival.o: /usr/include/g++/stl_function.h
-objs/disc_survival.o: /usr/include/g++/stl_map.h
-objs/disc_survival.o: /usr/include/g++/stl_multimap.h /usr/include/g++/list
-objs/disc_survival.o: /usr/include/g++/stl_list.h /usr/include/g++/iostream
-objs/disc_survival.o: /usr/include/g++/sstream /usr/include/g++/fstream
-objs/disc_survival.o: /usr/include/g++/fstream.h sstring.h low.h enum.h
-objs/disc_survival.o: spells.h structs.h parse.h immunity.h discipline.h
-objs/disc_survival.o: spell2.h db.h ansi.h cmd_dissect.h client.h response.h
-objs/disc_survival.o: faction.h comm.h toggle.h wiz_powers.h cmd_message.h
-objs/disc_survival.o: stats.h limbs.h body.h race.h skills.h disease.h trap.h
-objs/disc_survival.o: task.h weather.h sound.h create.h thing.h room.h obj.h
-objs/disc_survival.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
-objs/disc_survival.o: person.h monster.h account.h extern.h handler.h
-objs/disc_survival.o: obj_money.h spec_mobs.h materials.h colorstring.h
-objs/disc_survival.o: format.h combat.h disc_survival.h obj_component.h
-objs/disc_survival.o: obj_base_corpse.h obj_base_container.h obj_tool.h
-objs/disc_survival.o: obj_portal.h obj_seethru.h obj_drinkcon.h
-objs/disc_survival.o: obj_base_cup.h pathfinder.h /usr/include/g++/deque
-objs/disc_survival.o: /usr/include/g++/stl_deque.h
 objs/disc_theology.o: stdsneezy.h /usr/include/g++/cstdio
 objs/disc_theology.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/disc_theology.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -6695,8 +6717,8 @@ objs/discipline.o: disc_warrior.h disc_brawling.h disc_adventuring.h
 objs/discipline.o: disc_combat.h disc_wizardry.h disc_lore.h disc_theology.h
 objs/discipline.o: disc_faith.h disc_slash.h disc_blunt.h disc_pierce.h
 objs/discipline.o: disc_ranged.h disc_barehand.h disc_survival.h
-objs/discipline.o: disc_animal.h disc_nature.h disc_psionics.h spelltask.h
-objs/discipline.o: obj_symbol.h
+objs/discipline.o: disc_animal.h disc_nature.h disc_psionics.h
+objs/discipline.o: disc_adv_adventuring.h spelltask.h obj_symbol.h
 objs/disease.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/disease.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/disease.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -13792,11 +13814,11 @@ objs/skills.o: disc_fire.h disc_sorcery.h disc_spirit.h disc_water.h
 objs/skills.o: disc_wrath.h disc_aegis.h disc_shaman.h disc_afflictions.h
 objs/skills.o: disc_cures.h disc_hand_of_god.h disc_deikhan.h disc_ranger.h
 objs/skills.o: disc_looting.h disc_murder.h disc_hth.h disc_combat.h
-objs/skills.o: disc_adventuring.h disc_wizardry.h disc_lore.h disc_theology.h
-objs/skills.o: disc_faith.h disc_slash.h disc_blunt.h disc_pierce.h
-objs/skills.o: disc_ranged.h disc_barehand.h disc_brawling.h disc_warrior.h
-objs/skills.o: disc_survival.h disc_animal.h disc_shaman_armadillo.h
-objs/skills.o: disc_nature.h disc_psionics.h
+objs/skills.o: disc_adventuring.h disc_adv_adventuring.h disc_wizardry.h
+objs/skills.o: disc_lore.h disc_theology.h disc_faith.h disc_slash.h
+objs/skills.o: disc_blunt.h disc_pierce.h disc_ranged.h disc_barehand.h
+objs/skills.o: disc_brawling.h disc_warrior.h disc_survival.h disc_animal.h
+objs/skills.o: disc_shaman_armadillo.h disc_nature.h disc_psionics.h
 objs/socket.o: /usr/include/g++/csignal /usr/include/signal.h
 objs/socket.o: /usr/include/sys/cdefs.h /usr/include/sys/_posix.h
 objs/socket.o: /usr/include/machine/ansi.h /usr/include/sys/signal.h

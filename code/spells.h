@@ -366,17 +366,13 @@ enum spellNumT {
      // end of cleric
      
      // start of ranger
-     SKILL_HIKING,
      SKILL_KICK_RANGER,
-     SKILL_FORAGE,
-     SKILL_SEEKWATER,
      SKILL_TRANSFORM_LIMB,
      SKILL_BEAST_SOOTHER,
      SKILL_BASH_RANGER,
      SKILL_RESCUE_RANGER,
      SKILL_BEFRIEND_BEAST,
      SKILL_TRANSFIX,
-     SKILL_SKIN,
      SKILL_BUTCHER,
      SKILL_DUAL_WIELD,
      SKILL_BEAST_SUMMON,
@@ -385,8 +381,6 @@ enum spellNumT {
      SKILL_RETREAT_RANGER,
      SKILL_BEAST_CHARM,
      SKILL_APPLY_HERBS,
-     SKILL_DIVINATION,
-     SKILL_ENCAMP,
   SKILL_REPAIR_RANGER,
   SKILL_POISON_ARROW,
      // end of ranger
@@ -562,7 +556,13 @@ enum spellNumT {
      SKILL_FISHING,
      SKILL_ADVANCED_DEFENSE,
      SKILL_MANA,
-  SKILL_MEND,
+     SKILL_MEND,
+     SKILL_FORAGE,
+     SKILL_SEEKWATER,
+     SKILL_SKIN,
+     SKILL_DIVINATION,
+     SKILL_ENCAMP,
+     SKILL_HIKING,
      // end of generic
 
      // keep this as the last of the true skills

@@ -65,6 +65,7 @@
 #include "disc_hth.h"
 #include "disc_combat.h"
 #include "disc_adventuring.h"
+#include "disc_adv_adventuring.h"
 #if 0
 #include "disc_jumando.h"
 #include "disc_kararki.h"
@@ -550,14 +551,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // CLASS RANGER
 
-    case SKILL_HIKING: //                      331
-      return &((CDRanger *) cd)->skHiking;
     case SKILL_KICK_RANGER:  //                334
       return &((CDRanger *) cd)->skKickRanger;
-    case SKILL_FORAGE:  //                     335
-      return &((CDRanger *) cd)->skForage;
-    case SKILL_SEEKWATER:  //                  336
-      return &((CDRanger *) cd)->skSeekWater;
     case SKILL_TRANSFORM_LIMB:  //             337
       return &((CDRanger *) cd)->skTransformLimb;
     case SKILL_BEAST_SOOTHER:  //              338
@@ -570,16 +565,12 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDRanger *) cd)->skBefriendBeast;
     case SKILL_TRANSFIX:  //                   345
       return &((CDRanger *) cd)->skTransfix;
-    case SKILL_SKIN:  //                       346
-      return &((CDRanger *) cd)->skSkin;
     case SKILL_DUAL_WIELD:  //                 347
       return &((CDRanger *) cd)->skDualWield;
     case SKILL_BEAST_SUMMON:  //               349
       return &((CDRanger *) cd)->skBeastSummon;
     case SKILL_BARKSKIN:  //                   350
       return &((CDRanger *) cd)->skBarkskin;
-    case SKILL_BUTCHER:
-      return &((CDRanger *) cd)->skButcher;
     case SKILL_REPAIR_RANGER:
       return &((CDRanger *) cd)->skRepairRanger;
 
@@ -615,10 +606,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 #endif
 // disc_survival
 
-    case SKILL_DIVINATION:  //                391
-      return &((CDSurvival *) cd)->skDivination;
-    case SKILL_ENCAMP:  //                    393
-      return &((CDSurvival *) cd)->skEncamp;
     case SKILL_POISON_ARROW:
       return &((CDSurvival *) cd)->skPoisonArrows;
 
@@ -1072,6 +1059,22 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // GENERAL DISCIPLINES
 
+// advanced adventuring
+    case SKILL_HIKING: //                      331
+      return &((CDAdvAdventuring *) cd)->skHiking;
+    case SKILL_FORAGE:  //                     335
+      return &((CDAdvAdventuring *) cd)->skForage;
+    case SKILL_SEEKWATER:  //                  336
+      return &((CDAdvAdventuring *) cd)->skSeekWater;
+    case SKILL_SKIN:  //                       346
+      return &((CDAdvAdventuring *) cd)->skSkin;
+    case SKILL_DIVINATION:  //                391
+      return &((CDAdvAdventuring *) cd)->skDivination;
+    case SKILL_ENCAMP:  //                    393
+      return &((CDAdvAdventuring *) cd)->skEncamp;
+
+      
+      // adventuring
     case SKILL_ALCOHOLISM:// 668
       return &((CDAdventuring *) cd)->skAlcoholism;
     case SKILL_FISHING: // 669
@@ -1120,6 +1123,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDAdventuring *) cd)->skWhittle;
     case SKILL_MEND:
       return &((CDAdventuring *) cd)->skMend;
+    case SKILL_BUTCHER:
+      return &((CDAdventuring *) cd)->skButcher;
 
   // disc_wizardry
     case SKILL_WIZARDRY: // 960

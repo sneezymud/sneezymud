@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_ranger.h,v $
+// Revision 5.7  2004/08/25 00:10:21  peel
+// added advanced adventuring discipline
+//
 // Revision 5.6  2004/08/24 19:48:15  peel
 // move track to thief discipline
 //
@@ -43,15 +46,11 @@ class CDRanger : public CDiscipline
 {
 public:
 // Level 1
-    CSkill skHiking;
-    CSkill skButcher;
 
 // Level 3
     CSkill skKickRanger;
 
 // Level 7
-    CSkill skForage;
-    CSkill skSeekWater;
 
 // Level 8
     CSkill skTransformLimb;
@@ -70,7 +69,6 @@ public:
     CSkill skTransfix;
 
 // Level 17
-    CSkill skSkin;
 
 // Level 18
     CSkill skSwitchRanger;
@@ -90,18 +88,13 @@ public:
 
     CDRanger()
       : CDiscipline(),
-      skHiking(),
-      skButcher(),
       skKickRanger(),
-      skForage(),
-      skSeekWater(),
       skTransformLimb(),
       skBeastSoother(),
       skBashRanger(),
       skRescueRanger(),
       skBefriendBeast(),
       skTransfix(),
-      skSkin(),
       skSwitchRanger(),
       skDualWield(),
       skBeastSummon(),
@@ -110,18 +103,13 @@ public:
     }
     CDRanger(const CDRanger &a)
       : CDiscipline(a),
-      skHiking(a.skHiking),
-      skButcher(a.skButcher),
       skKickRanger(a.skKickRanger),
-      skForage(a.skForage),
-      skSeekWater(a.skSeekWater),
       skTransformLimb(a.skTransformLimb),
       skBeastSoother(a.skBeastSoother),
       skBashRanger(a.skBashRanger),
       skRescueRanger(a.skRescueRanger),
       skBefriendBeast(a.skBefriendBeast),
       skTransfix(a.skTransfix),
-      skSkin(a.skSkin),
       skSwitchRanger(a.skSwitchRanger),
       skDualWield(a.skDualWield),
       skBeastSummon(a.skBeastSummon),
@@ -131,18 +119,13 @@ public:
     CDRanger & operator=(const CDRanger &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skHiking = a.skHiking;
-      skButcher = a.skButcher;
       skKickRanger = a.skKickRanger;
-      skForage = a.skForage;
-      skSeekWater = a.skSeekWater;
       skTransformLimb = a.skTransformLimb;
       skBeastSoother = a.skBeastSoother;
       skBashRanger = a.skBashRanger;
       skRescueRanger = a.skRescueRanger;
       skBefriendBeast = a.skBefriendBeast;
       skTransfix = a.skTransfix;
-      skSkin = a.skSkin;
       skSwitchRanger = a.skSwitchRanger;
       skDualWield = a.skDualWield;
       skBeastSummon = a.skBeastSummon;

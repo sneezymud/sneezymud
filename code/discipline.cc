@@ -71,6 +71,7 @@
 #include "disc_animal.h"
 #include "disc_nature.h"
 #include "disc_psionics.h"
+#include "disc_adv_adventuring.h"
 #include "spelltask.h"
 #include "obj_symbol.h"
 
@@ -2634,6 +2635,7 @@ void TBeing::assignDisciplinesClass()
 
     discs->disc[DISC_COMBAT] = new CDCombat();
     discs->disc[DISC_ADVENTURING] = new CDAdventuring();
+    discs->disc[DISC_ADVANCED_ADVENTURING] = new CDAdvAdventuring();
     discs->disc[DISC_DEFENSE] = new CDDefense();
  
     discs->disc[DISC_PSIONICS] = new CDPsionics();
@@ -2645,12 +2647,21 @@ void TBeing::assignDisciplinesClass()
   // assign these to every class
   if (!isPc()) {
     discs->disc[DISC_ADVENTURING] = new CDAdventuring();
+    discs->disc[DISC_ADVANCED_ADVENTURING] = new CDAdvAdventuring();
     discs->disc[DISC_COMBAT] = new CDCombat();
+    discs->disc[DISC_BLUNT] = new CDBash();
+    discs->disc[DISC_SLASH] = new CDSlash();
+    discs->disc[DISC_PIERCE] = new CDPierce();
+    discs->disc[DISC_RANGED] = new CDRanged();
   }
 
   getDiscipline(DISC_ADVENTURING)->ok_for_class = (1<<MAX_CLASSES) - 1;
   getDiscipline(DISC_COMBAT)->ok_for_class = (1<<MAX_CLASSES) - 1;
-
+  getDiscipline(DISC_ADVANCED_ADVENTURING)->ok_for_class = (1<<MAX_CLASSES)- 1;
+  getDiscipline(DISC_BLUNT)->ok_for_class = (1<<MAX_CLASSES) - 1;
+  getDiscipline(DISC_SLASH)->ok_for_class = (1<<MAX_CLASSES) - 1;
+  getDiscipline(DISC_PIERCE)->ok_for_class = (1<<MAX_CLASSES) - 1;
+  getDiscipline(DISC_RANGED)->ok_for_class = (1<<MAX_CLASSES) - 1;
     
   if (!player.Class) {
     vlogf(LOG_BUG,fmt("call to assignDisciplinesClass without a valid Class (%s)") %  getName());
@@ -2669,11 +2680,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_WATER] = new CDWater();
       discs->disc[DISC_WIZARDRY] = new CDWizardry();
       discs->disc[DISC_LORE] = new CDLore();
-
-      discs->disc[DISC_BLUNT] = new CDBash();
-      discs->disc[DISC_SLASH] = new CDSlash();
-      discs->disc[DISC_PIERCE] = new CDPierce();
-      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -2687,11 +2693,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_HAND_OF_GOD] = new CDHand();
       discs->disc[DISC_FAITH] = new CDFaith();
       discs->disc[DISC_THEOLOGY] = new CDTheology();
-
-      discs->disc[DISC_BLUNT] = new CDBash();
-      discs->disc[DISC_SLASH] = new CDSlash();
-      discs->disc[DISC_PIERCE] = new CDPierce();
-      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -2703,11 +2704,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_PHYSICAL] = new CDPhysical();
       discs->disc[DISC_SMYTHE] = new CDSmythe();
       discs->disc[DISC_DEFENSE] = new CDDefense();
-
-      discs->disc[DISC_BLUNT] = new CDBash();
-      discs->disc[DISC_SLASH] = new CDSlash();
-      discs->disc[DISC_PIERCE] = new CDPierce();
-      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -2720,11 +2716,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_SURVIVAL] = new CDSurvival();
       discs->disc[DISC_NATURE] = new CDNature();
       discs->disc[DISC_DEFENSE] = new CDDefense();
-
-      discs->disc[DISC_BLUNT] = new CDBash();
-      discs->disc[DISC_SLASH] = new CDSlash();
-      discs->disc[DISC_PIERCE] = new CDPierce();
-      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -2739,11 +2730,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_FAITH] = new CDFaith();
       discs->disc[DISC_THEOLOGY] = new CDTheology();
       discs->disc[DISC_DEFENSE] = new CDDefense();
-
-      discs->disc[DISC_BLUNT] = new CDBash();
-      discs->disc[DISC_SLASH] = new CDSlash();
-      discs->disc[DISC_PIERCE] = new CDPierce();
-      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -2757,11 +2743,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_BAREHAND] = new CDBarehand();
       discs->disc[DISC_DEFENSE] = new CDDefense();
       discs->disc[DISC_IRON_BODY] = new CDIronBody();
-
-      discs->disc[DISC_BLUNT] = new CDBash();
-      discs->disc[DISC_SLASH] = new CDSlash();
-      discs->disc[DISC_PIERCE] = new CDPierce();
-      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -2774,11 +2755,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_POISONS] = new CDPoisons();
       discs->disc[DISC_STEALTH] = new CDStealth();
       discs->disc[DISC_TRAPS] = new CDTraps();
-
-      discs->disc[DISC_BLUNT] = new CDBash();
-      discs->disc[DISC_SLASH] = new CDSlash();
-      discs->disc[DISC_PIERCE] = new CDPierce();
-      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -2793,11 +2769,6 @@ void TBeing::assignDisciplinesClass()
       discs->disc[DISC_SHAMAN_FROG] = new CDShamanFrog();
       discs->disc[DISC_SHAMAN_SKUNK] = new CDShamanSkunk();
       discs->disc[DISC_SHAMAN_SPIDER] = new CDShamanSpider();
-
-      discs->disc[DISC_BLUNT] = new CDBash();
-      discs->disc[DISC_SLASH] = new CDSlash();
-      discs->disc[DISC_PIERCE] = new CDPierce();
-      discs->disc[DISC_RANGED] = new CDRanged();
     }
   }
 
@@ -3164,6 +3135,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
       }
       break;
     case DISC_ADVENTURING:
+    case DISC_ADVANCED_ADVENTURING:
     case DISC_COMBAT:
     case DISC_SLASH:
     case DISC_BLUNT:

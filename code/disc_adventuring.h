@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_adventuring.h,v $
+// Revision 5.5  2004/08/25 00:10:21  peel
+// added advanced adventuring discipline
+//
 // Revision 5.4  2002/11/12 01:33:55  peel
 // added isAutomatic() for automatic discs like adventuring, faith etc
 //
@@ -74,6 +77,7 @@ class CDAdventuring : public CDiscipline
     CSkill skGenWeapons;
     CSkill skWhittle;
     CSkill skMend;
+    CSkill skButcher;
 
     CDAdventuring()
       : CDiscipline(),
@@ -88,7 +92,8 @@ class CDAdventuring : public CDiscipline
 //        skDull(),
         skDissect(), skOffense(), skDefense(), 
         skGenWeapons(), skWhittle(),
-      skMend() {
+      skMend(),
+      skButcher(){
     }
     CDAdventuring(const CDAdventuring &a)
       : CDiscipline(a),
@@ -106,7 +111,8 @@ class CDAdventuring : public CDiscipline
         skDissect(a.skDissect), skOffense(a.skOffense),
         skDefense(a.skDefense), skGenWeapons(a.skGenWeapons),
         skWhittle(a.skWhittle),
-      skMend(a.skMend) {
+      skMend(a.skMend),
+      skButcher(a.skButcher) {
     }
     CDAdventuring & operator=(const CDAdventuring &a) {
       if (this == &a) return *this;
@@ -142,6 +148,8 @@ class CDAdventuring : public CDiscipline
       skGenWeapons = a.skGenWeapons;
       skWhittle = a.skWhittle;
       skMend = a.skMend;
+      skButcher = a.skButcher;
+
       return *this;
     }
     virtual ~CDAdventuring() {};

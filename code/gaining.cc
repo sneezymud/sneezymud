@@ -1001,6 +1001,7 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_PSIONICS, "psionics", "about psionics", DISC_PSIONICS, CLASS_WARRIOR | CLASS_RANGER | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_THIEF | CLASS_SHAMAN},
   {SPEC_TRAINER_SHAMAN_HEALING, "healing", "about healing abilities for shaman", DISC_SHAMAN_HEALING, CLASS_SHAMAN},
   {SPEC_TRAINER_IRON_BODY, "iron body", "about iron body techniques", DISC_IRON_BODY, CLASS_MONK},
+  {SPEC_TRAINER_ADV_ADVENTURING, "advanced adventuring", "about advanced adventuring", DISC_ADVANCED_ADVENTURING, CLASS_WARRIOR | CLASS_RANGER | CLASS_DEIKHAN | CLASS_MONK | CLASS_CLERIC | CLASS_MAGE | CLASS_THIEF | CLASS_SHAMAN},
   {-1}          /* required terminator */
 };
 
@@ -1253,7 +1254,8 @@ int TBeing::getTrainerPracs(const TBeing *ch, const TMonster *me, classIndT accc
   } else if (((discipline == DISC_SLASH) || (discipline == DISC_PIERCE) ||
               (discipline == DISC_BLUNT) || (discipline == DISC_RANGED) ||
 	      (discipline == DISC_BAREHAND)|| (discipline == DISC_DEFENSE) ||
-	      (discipline == DISC_PSIONICS)) &&
+	      (discipline == DISC_PSIONICS) ||
+	      (discipline == DISC_ADVANCED_ADVENTURING)) &&
               (ch->getDiscipline(DISC_COMBAT)->getNatLearnedness() < MAX_DISC_LEARNEDNESS)) {
     if (trainLevel == discLearn) 
       bakpracs = 0;
@@ -1325,6 +1327,12 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
       return TRUE;
     }
   }
+  if (discipline == DISC_ADVANCED_ADVENTURING) {
+    if (ch->getDiscipline(DISC_ADVENTURING)->getNatLearnedness() < WEAPON_GAIN_LEARNEDNESS) {
+      me->doTell(fname(ch->name), "You aren't proficient enough yet.");
+      return TRUE;
+    }
+  }
   if (discipline == DISC_PSIONICS) {
     if (!ch->hasQuestBit(TOG_PSIONICIST)){
       me->doTell(fname(ch->name), "You do not have the ability to learn psionics.");
@@ -1367,6 +1375,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
                   discipline == DISC_BAREHAND ||
                   discipline == DISC_DEFENSE ||
                   discipline == DISC_ADVENTURING ||
+                  discipline == DISC_ADVANCED_ADVENTURING ||
                   discipline == DISC_PSIONICS) {
     // No restrictions on these disciplines if prof maxxed see first checks
     return FALSE;
