@@ -2486,7 +2486,7 @@ static const string numbered_person(const TBeing *ch, const TThing *person)
   char buf[256];
 
   if (dynamic_cast<const TMonster *>(person) && ch->isImmortal())
-    sprintf(buf, "%d.%s", whichNumberMobile(person), fname(person->getName()).c_str());
+    sprintf(buf, "%d.%s", whichNumberMobile(person), fname(person->name).c_str());
   else
     strcpy(buf, ch->pers(person));
 
@@ -2634,6 +2634,8 @@ void TBeing::doWhere(const char *argument)
   string tStString(argument),
          tStName(""),
          tStArg("");
+  map <int,bool> vnums_notmatch;
+  bool found=false;
 
   if (powerCheck(POWER_WHERE))
     return;
@@ -2770,12 +2772,18 @@ void TBeing::doWhere(const char *argument)
       }
     }
   }
+  int skipped=0, cached=0, searched=0;
+
   if (GetMaxLevel() > MAX_MORT) {
     for (k = object_list; k; k = k->next) {
+      if (vnums_notmatch[k->objVnum()])
+	continue;
+
       if (!k->getName()) {
         vlogf(LOG_BUG, "Item without a name in object_list (doWhere) looking for %s", namebuf);
         continue;
       }
+
       if (isname(namebuf, k->getName()) && canSee(k)) {
         if (!iNum || !(--count)) {
           if (!iNum) {
@@ -2786,14 +2794,21 @@ void TBeing::doWhere(const char *argument)
             sb += "Too many objects found.\n\r";
             break;
           }
+	  found=true;
           do_where_thing(this, k, iNum != 0, sb);
           *buf = 1;
           if (iNum != 0)
             break;
         }
       }
+
+      if(!found)
+	vnums_notmatch[k->objVnum()]=true;
+      else
+	found=false;
     }
   }
+
   if (sb.empty())
     sendTo("Couldn't find any such thing.\n\r");
   else {
