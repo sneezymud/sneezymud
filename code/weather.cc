@@ -762,24 +762,27 @@ void doGlobalRoomStuff(void)
       continue;
     
     // trash pile creation
-    count=0;
-    for(TThing *t=rp->getStuff();t;t=t->nextThing){
-      if((o=dynamic_cast<TObj *>(t)) && o->isTrash())
-	count++;
-
-      if(dynamic_cast<TTrashPile *>(t)){
-	count=0;
-	break;
+    // this is kind of cpu intensive, so let's spread it out
+    if(!::number(0,9)){
+      count=0;
+      for(TThing *t=rp->getStuff();t;t=t->nextThing){
+	if((o=dynamic_cast<TObj *>(t)) && o->isTrash())
+	  count++;
+	
+	if(dynamic_cast<TTrashPile *>(t)){
+	  count=0;
+	  break;
+	}
       }
-    }
-
-    if(count >= 9){
-      o=read_object(GENERIC_TRASH_PILE, VIRTUAL);
-      if(!(pile=dynamic_cast<TTrashPile *>(o))){
-	vlogf(LOG_BUG, "generic trash pile wasn't a trash pile!");
-	delete o;
-      } else {
-	*rp += *pile;
+      
+      if(count >= 9){
+	o=read_object(GENERIC_TRASH_PILE, VIRTUAL);
+	if(!(pile=dynamic_cast<TTrashPile *>(o))){
+	  vlogf(LOG_BUG, "generic trash pile wasn't a trash pile!");
+	  delete o;
+	} else {
+	  *rp += *pile;
+	}
       }
     }
 
