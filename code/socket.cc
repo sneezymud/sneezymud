@@ -605,7 +605,8 @@ int TSocket::gameLoop()
         if (!combat) {
 
 	  if (tmp_ch->isPc() && tmp_ch->desc && tmp_ch->GetMaxLevel() > MAX_MORT &&
-	      !tmp_ch->limitPowerCheck(CMD_GOTO, tmp_ch->roomp->number)) {
+	      !tmp_ch->limitPowerCheck(CMD_GOTO, tmp_ch->roomp->number)
+	      && !tmp_ch->affectedBySpell(SPELL_POLYMORPH)) {
 	    char tmpbuf[256];
 	    strcpy(tmpbuf, "");
 	    tmp_ch->sendTo("An incredibly powerful force pulls you back into Imperia.\n\r");
