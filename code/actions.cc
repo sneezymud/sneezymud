@@ -807,7 +807,7 @@ int TBeing::doBite(const sstring &arg)
 
     reconcileDamage(b, 0, DAMAGE_DRAIN);
     
-    if(((b->hitLimit() < hitLimit()) || (GetMaxLevel() > b->GetMaxLevel())) &&
+    if(((b->hitLimit() < hitLimit()) && (GetMaxLevel() > b->GetMaxLevel()+10)) &&
        hits(b, attackRound(b) - b->defendRound(this))){
       act("You sink your fangs deep into $N's neck and suck $S <r>blood<1>!",
 	  FALSE, this, NULL, b, TO_CHAR);
@@ -817,6 +817,7 @@ int TBeing::doBite(const sstring &arg)
 	  FALSE, this, NULL, b, TO_VICT);
 
       rc = reconcileDamage(b, b->getHit()+5, DAMAGE_DRAIN);
+      b->setHit(-5); // sometimes the above doesn't set to -5 properly
 
       gainCondition(FULL, 15);
       gainCondition(THIRST, 15);
