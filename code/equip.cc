@@ -144,39 +144,6 @@ bool TBeing::canUseEquipment(const TObj *o, silentTypeT silent, wearKeyT key=WEA
       return FALSE;
     }
 
-#if 0
-    // OK, this is dumb and cheesy, but we need to insure AC for various
-    // classes is predictable for the balance stuff to work out.  Hopefully
-    // this can be replaced at a later point in time...
-    // YES IT'S NECESSARY, DON'T DISABLE THIS
-    const TBaseClothing *tbc = dynamic_cast<const TBaseClothing *>(o);
-    if (tbc && !isPc()) {
-      double al = tbc->armorLevel(ARMOR_LEV_REAL);
-      double mod = 0;
-      if (hasClass(CLASS_MAGE))
-        mod = max(mod, 10.0);
-      if (hasClass(CLASS_CLERIC))
-        mod = max(mod, 20.0/3);
-      if (hasClass(CLASS_SHAMAN))
-        mod = max(mod, 10.0);
-      if (hasClass(CLASS_WARRIOR))
-        mod = max(mod, 0.0);
-      if (hasClass(CLASS_THIEF))
-        mod = max(mod, 5.0);
-      if (hasClass(CLASS_DEIKHAN))
-        mod = max(mod, 20.0/3);
-      if (hasClass(CLASS_MONK))
-        mod = max(mod, 10.0);
-      if (hasClass(CLASS_RANGER))
-        mod = max(mod, 20.0/3);
-      
-      if (al + mod > GetMaxLevel()) {
-        if (!silent)
-          act("You are not advanced enough to wear $p.", false, this, o, NULL, TO_CHAR);
-        return FALSE;
-      }
-    }
-#endif
   }
   return TRUE;
 }
