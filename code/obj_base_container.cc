@@ -276,7 +276,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
 int TBaseContainer::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
 {
   if(getStuff()){
-    act("Cookware can't hold other containers unless they're empty.", FALSE, ch, cont,this, TO_CHAR);
+    act("Containers can't hold other containers unless they're empty.", FALSE, ch, cont,this, TO_CHAR);
     return FALSE;
   }
 
