@@ -2504,6 +2504,10 @@ void zoneData::resetZone(bool bootTime)
                     REMOVE_BIT(exitp->condition, EX_LOCKED);
                     break;
                   case 2:
+                    if (exitp->key < 0) 
+                      vlogf(LOG_LOW, 
+                        fmt("Door with key < 0 set to lock in room %d.")
+                        % rp->number);
                     if (!IS_SET(exitp->condition, EX_CLOSED))
                       sendrpf(rp, "The %s closes.\n\r",
 			      exitp->getName().uncap().c_str());
