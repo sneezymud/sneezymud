@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: low.h,v $
+// Revision 1.2  1999/09/15 22:22:37  peel
+// Set vnum for GENERIC_SMOKE to smoke dummy object.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -151,7 +154,7 @@ const short int ITEM_RAINBOW_BRIDGE1 = 10041;
 const short int ITEM_RAINBOW_BRIDGE2 = 10042;
 const short int OBJ_HERALD          = 10543;
 const short int GENERIC_POOL        = 10559;
-const short int GENERIC_SMOKE       = 10559; // 10560 eventually
+const short int GENERIC_SMOKE       = 10560;
 const short int OBJ_INERT_STICK     = 10561;
 const short int OBJ_MONK_QUEST_DOG_COLLAR = 12468;
 const short int OBJ_FLAMING_PORTAL  = 16157;
