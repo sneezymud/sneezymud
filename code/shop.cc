@@ -412,6 +412,7 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
       temp1->purchaseMe(ch, keeper, cost, shop_nr);
       // for unlimited items, charge the shopkeeper for production
+      shoplog(shop_nr, ch, keeper, temp1->getName(), obj_flags.cost, "producing");
       keeper->addToMoney(-obj_flags.cost, GOLD_SHOP);
 
       ch->logItem(temp1, CMD_BUY);
