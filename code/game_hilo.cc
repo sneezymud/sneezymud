@@ -3,8 +3,7 @@
 
 HiLoGame gHiLo;
 
-const float WIN_INIT=0.10;
-
+const float WIN_INIT=0.05;
 bool HiLoGame::enter(const TBeing *ch)
 {
   if(inuse){
@@ -89,6 +88,12 @@ void HiLoGame::stay(TBeing *ch)
   ch->sendTo("You give up and cash out your winnings.\n\r");
   act("$n gives up and cashes out $s winnings.",
       TRUE, ch, 0, 0, TO_ROOM);
+
+  int next_card=deck[deck_inx++];
+  sstring buf;
+  ch->sendTo(COLOR_BASIC, "The next card was the %s.\n\r", pretty_card_printout(ch, next_card).c_str());
+  ssprintf(buf, "The next card was the %s.", pretty_card_printout(ch, next_card).c_str());
+  act(buf.c_str(), TRUE, ch, 0, 0, TO_ROOM);
 
   payout(ch, (int)((double)bet * (1.0 + win_perc)));
   bet = 0;
