@@ -19,6 +19,7 @@
 #include "obj_note.h"
 #include "obj_magic_item.h"
 #include "obj_wand.h"
+#include "obj_general_weapon.h"
 
 static const char ROOM_SAVE_PATH[] = "roomdata/saved";
 static const int NORMAL_SLOT   = -1;
@@ -614,12 +615,18 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
 #endif
 
 
-    if(version<8 && dynamic_cast<TComponent *>(o)){
+    if(version<8 && dynamic_cast<TGenWeapon *>(o)){
       int x;
+
+      vlogf(LOG_PEEL, "version less than 8");
       
+      vlogf(LOG_PEEL, "value 1=%i, value 2=%i", item.value[1], item.value[2]);
+
       // damage level and deviation are now merged
       SET_BITS(x, 7, 8, item.value[1]);
       SET_BITS(x, 15, 8, item.value[2]);
+
+      vlogf(LOG_PEEL, "x=%i", x);
 
       o->assignFourValues(item.value[0],x,item.value[3],0);
     } else {
