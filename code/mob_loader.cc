@@ -27,6 +27,69 @@ static void treasureCreate(int prob, int cost, int &wealth, int vnum, const char
   }
 }
 
+
+void potionLoader(TMonster *tmons)
+{
+  vector<int>potions;
+  int pot=0;
+  
+  potions.push_back(800); // remove poison
+  potions.push_back(809); // refresh
+  potions.push_back(810); // second wind
+  potions.push_back(801); // heal light
+  potions.push_back(802); // heal crit
+  potions.push_back(803); // heal
+  potions.push_back(804); // sanc
+  potions.push_back(805); // flight
+  potions.push_back(823); // heal full
+
+  if(::number(0,9))
+    return;
+
+  if(tmons->GetMaxLevel() < 10)
+    return;
+
+  if(tmons->GetMaxLevel() < 20)
+    pot=1; // refresh
+  else if(tmons->GetMaxLevel() < 35)
+    pot=3; // heal light
+  else if(tmons->GetMaxLevel() < 50)
+    pot=5; // heal
+  else
+    pot=7; // flight
+  
+  // equal distribution among the 3 potions in our area
+  pot+=::number(-1,1);
+  
+  // crits
+  switch(::number(0,99)){
+    case 0:
+      pot=max(0, pot-::number(1,3));
+      break;
+    case 99:
+      pot=min(8, pot+::number(1,3));
+      break;
+  }
+
+  // safety check
+  pot=min(pot, (int)potions.size());
+  pot=max(pot, 0);
+  
+
+  TObj *obj;
+  TPotion *tpot;
+
+  obj=read_object(potions[pot], VIRTUAL);
+  
+  if((tpot=dynamic_cast<TPotion *>(obj))){
+    tpot->setMaxDrinkUnits(1);
+    tpot->setDrinkUnits(1);
+    *tmons += *obj;
+    tmons->logItem(obj, CMD_LOAD);
+  }
+}
+
+
 void loadRepairItems(TMonster *tmons)
 {
   int tool = 0;
@@ -207,6 +270,7 @@ void TMonster::createWealth(void)
   loadRepairItems(this);
   buffMobLoader();
   genericMobLoader(&bag);
+  potionLoader(this);
 
   // convert some money into commoditys
   int wealth = getMoney();
