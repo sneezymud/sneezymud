@@ -302,8 +302,6 @@ int TOpenContainer::openMe(TBeing *ch)
       }
     }
 
-    act("You open $p.", TRUE, ch, this, NULL, TO_CHAR);
-    act("$n opens $p.", TRUE, ch, this, 0, TO_ROOM);
     remContainerFlag(CONT_CLOSED);
     remContainerFlag(CONT_GHOSTTRAP);
     addContainerFlag(CONT_EMPTYTRAP);
@@ -322,6 +320,8 @@ int TOpenContainer::openMe(TBeing *ch)
 	return res;
     }
 
+    act("You open $p.", TRUE, ch, this, NULL, TO_CHAR);
+    act("$n opens $p.", TRUE, ch, this, 0, TO_ROOM);
 
 
 
