@@ -3256,12 +3256,6 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
     return FALSE;
   }
 
-  if (!ch->hasClass(CLASS_MAGIC_USER) && !ch->hasClass(CLASS_CLERIC) && !ch->hasClass(CLASS_SHAMAN)) {
-    if (!bSuccess(ch, ch->getSkillValue(SKILL_READ_MAGIC), SKILL_READ_MAGIC)) {
-      ch->sendTo("You can't understand this...\n\r");
-      return FALSE;
-    }
-  }
   bits = generic_find(argument, FIND_CHAR_ROOM | FIND_OBJ_INV | FIND_OBJ_ROOM | FIND_OBJ_EQUIP, ch, &victim, &obj);
 
   if (!bits) {
@@ -3278,6 +3272,15 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
   act("You recite $p which is consumed by the powers it unleashes.",
        FALSE, ch, this, 0, TO_CHAR);
 
+
+  int skill=ch->getSkillValue(SKILL_READ_MAGIC);
+  if(ch->hasClass(CLASS_MAGE))
+    skill=max(skill+50, 100);
+
+  if (!bSuccess(ch, ch->getSkillValue(SKILL_READ_MAGIC), SKILL_READ_MAGIC)) {
+    ch->sendTo("You flub the words and the spell does not fire.\n\r");
+    return DELETE_THIS;
+  }
   
   lag_t max_lag=LAG_0;
 

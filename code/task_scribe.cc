@@ -17,6 +17,7 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
   int how_many;
   char buf[256];
   int knowledge = ch->getSkillValue(SKILL_SCRIBE);
+  int readmagic = ch->getSkillValue(SKILL_READ_MAGIC);
   int factor1 = (ch->getSkillValue(SKILL_SCRIBE) * 6);
   int factor2 = (ch->getSkillValue(SKILL_SCRIBE) * 4);
   int resulting = ((factor1 + factor2) / 15);
@@ -70,7 +71,8 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 	  scroll_obj->setSpell(2, TYPE_UNDEFINED);
           scroll_obj->setMagicLevel(ch->getClassLevel(CLASS_MAGE));
 
-          if (bSuccess(ch, knowledge, SKILL_SCRIBE)) {
+          if (bSuccess(ch, knowledge, SKILL_SCRIBE) ||
+	      bSuccess(ch, readmagic, SKILL_READ_MAGIC)) {
             ch->sendTo("You have successfully scribed your scroll%s.\n\r",
 		       (how_many == 1 ? "" : "s"));
 	    if (ch->getSkillValue(which) > 0) {
