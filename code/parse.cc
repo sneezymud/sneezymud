@@ -2034,6 +2034,13 @@ sstring one_argument(sstring argument, sstring & first_arg)
     }
   } while (fill_word(first_arg.c_str()));
 
+
+  // strip leading whitespace from argument
+  if((bgin = argument.find_first_not_of(whitespace))!= string::npos){
+    a2 = argument.substr(bgin);
+    argument = a2;
+  }
+
   return argument;
 }
 
