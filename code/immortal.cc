@@ -301,7 +301,7 @@ void TPerson::doToggle(const char *arg)
   } else if (is_abbrev(arg, "lapspeak")) {
     Lapspeak = ! Lapspeak;
     sendTo("Lapspeak is now %s.\n\r", Lapspeak ? "on" : "off");
-    vlogf(LOG_MISC,"%s has turned Lapspeak %s for immortals.",getName(),Lapspeak ? "on" : "off");
+    vlogf(LOG_MISC,"%s has turned Lapspeak %s.",getName(),Lapspeak ? "on" : "off");
   } else if (is_abbrev(arg, "invis")) {
     if (!isImmortal() || !hasWizPower(POWER_TOGGLE_INVISIBILITY)) {
       sendTo("Invisibility use has been restricted due to overuse.\n\r");
