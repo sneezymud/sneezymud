@@ -1034,10 +1034,6 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
   if (gamePort != PROD_GAMEPORT)
     gen_corpse->setupDissectionObjects();
 
-  TPerson * tPerson = dynamic_cast<TPerson *>(tKiller);
-
-  if (tPerson && !isPc() && tPerson->isPc() && !tPerson->isImmortal())
-    gen_corpse->checkOwnersList(tPerson);
 
   return gen_corpse;
 }

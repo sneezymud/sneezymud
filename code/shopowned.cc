@@ -45,12 +45,14 @@ int getShopAccess(int shop_nr, TBeing *ch){
   
   if(db.fetchRow())
     access=convertTo<int>(db["access"]);
-  
+
+#if 0  
   if(sameAccount(ch->getName(), shop_nr) && !ch->isImmortal() && access){
     ch->sendTo("Another character in your account has permissions at this shop, so this character can not use the ownership functions.\n\r");
     access=0;
   }
-  
+#endif  
+
   if(ch->isImmortal())
     access=SHOPACCESS_OWNER;
   

@@ -301,10 +301,6 @@ int TBeing::doDrop(const sstring &argument, TThing *tng, bool forcedDrop)
       vlogf(LOG_BUG, "Problem creating money");
       return FALSE;
     }
-    TPerson *tP;
-
-    if ((tP = dynamic_cast<TPerson *>(this)))
-      money->checkOwnersList(tP);
 
     *roomp += *money;
     addToMoney(-amount, GOLD_INCOME);

@@ -648,10 +648,6 @@ TThing& TPerson::operator += (TThing& t)
   // make recursive
   TBeing::operator += (t);
 
-  TObj *obj = dynamic_cast<TObj *>(&t);
-  if (obj)
-    obj->checkOwnersList(this);
-
   return *this;
 }
 
@@ -672,13 +668,6 @@ TThing& TBeing::operator += (TThing& t)
   setStuff(&t);
   t.parent = this;
 
-  if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
-    TObj *obj = dynamic_cast<TObj *>(&t);
-    TPerson *tP;
-
-    if (obj && (tP = dynamic_cast<TPerson *>(master)))
-      obj->checkOwnersList(tP);
-  }
 
   return *this;
 }

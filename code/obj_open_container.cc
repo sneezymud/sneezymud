@@ -255,11 +255,6 @@ void TOpenContainer::putMoneyInto(TBeing *ch, int amount)
   money  = create_money(amount);
   *this += *money;
 
-  TPerson * tP;
-
-  if ((tP = dynamic_cast<TPerson *>(this)))
-    money->checkOwnersList(tP);
-
   ch->addToMoney(-amount, GOLD_INCOME);
   if (ch->fight())
     ch->addToWait(combatRound(1 + amount/5000));

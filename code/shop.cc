@@ -743,13 +743,6 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     ch->doSplit(buf.c_str(), false);
   }
 
-  // exception to the eq-sharing log, if person sells item to shop as char#1
-  // permit them to buy it as char#2
-  // this means the "owners" log should be reset on sell
-  delete [] owners;
-  owners = NULL;
-
-
 #if NO_DAMAGED_ITEMS_SHOP
   else if (getStructPoints() != getMaxStructPoints()) {
     // delete it as its "scrap"

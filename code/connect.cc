@@ -971,7 +971,7 @@ int Descriptor::nanny(const char *arg)
           writeToQ("\a\n\r");
           writeToQ("*************************************************************************\n\r");
           writeToQ("*  The characters within an account MUST NOT interact with each other,  *\n\r");
-          writeToQ("*  that means: No sharing of talens or equipment.  It is prohibited to  *\n\r");
+          writeToQ("*  aside from sharing equipment and money.  It is prohibited to         *\n\r");
           writeToQ("*  use a character in your account to act as an agent in the retrieval  *\n\r");
           writeToQ("*  of the corpse of another of your characters, or to reduce or         *\n\r");
           writeToQ("*  eliminate a dangerous situation faced by another character in your   *\n\r");

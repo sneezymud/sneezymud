@@ -3199,12 +3199,6 @@ void TComponent::sellMe(TBeing *ch, TMonster *tKeeper, int tShop, int num)
   }
 
   if (num == getComponentCharges()) {
-    // exception to the eq-sharing log, if person sells item to shop as char#1
-    // permit them to buy it as char#2
-    // this means the "owners" log should be reset on sell
-    delete [] owners;
-    owners = NULL;
-
     --(*this);
 
     if (shop_index[tShop].isProducing(this)) {
