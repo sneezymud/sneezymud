@@ -979,7 +979,7 @@ TRAININFO TrainerInfo[] =
   {SPEC_TRAINER_SHAMAN_ARMADILLO, "armadillo", "about the Abilities of the Armadillo", DISC_SHAMAN_ARMADILLO, CLASS_SHAMAN},
   {SPEC_TRAINER_ANIMAL, "animal", "Animal Magic", DISC_ANIMAL, CLASS_RANGER},
   {SPEC_TRAINER_AEGIS, "aegis", "the Aegis of the Deities", DISC_AEGIS, CLASS_CLERIC},
-  {SPEC_TRAINER_SHAMAN, "shaman", "The Ways of the Shaman", DISC_AEGIS, CLASS_SHAMAN},
+  {SPEC_TRAINER_SHAMAN, "shaman", "The Ways of the Shaman", DISC_SHAMAN, CLASS_SHAMAN},
   {SPEC_TRAINER_MAGE, "mage", "the arts of Magic", DISC_MAGE, CLASS_MAGE},
   {SPEC_TRAINER_MONK, "monk", "the ways of the Monk", DISC_MONK, CLASS_MONK},
   {SPEC_TRAINER_CLERIC, "cleric", "the Ways of the Cleric", DISC_CLERIC, CLASS_CLERIC},
@@ -1215,32 +1215,26 @@ int TBeing::checkDoneBasic(TBeing *ch, classIndT accclass, int guild, int amount
       combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
       bas = ch->getDiscipline(DISC_SHAMAN)->getNatLearnedness();
       break;
-
     case RANGER_LEVEL_IND:
       combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
       bas = ch->getDiscipline(DISC_RANGER)->getNatLearnedness();
       break;
-
    case CLERIC_LEVEL_IND:
       combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness() + ch->getDiscipline(DISC_THEOLOGY)->getNatLearnedness();
       bas = ch->getDiscipline(DISC_CLERIC)->getNatLearnedness();
       break;
-
     case DEIKHAN_LEVEL_IND:
       combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness() + ch->getDiscipline(DISC_THEOLOGY)->getNatLearnedness();
       bas = ch->getDiscipline(DISC_DEIKHAN)->getNatLearnedness();
       break;
-
     case WARRIOR_LEVEL_IND:
       combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
       bas = ch->getDiscipline(DISC_WARRIOR)->getNatLearnedness();
       break;
-
     case MONK_LEVEL_IND:
       combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
       bas = ch->getDiscipline(DISC_MONK)->getNatLearnedness();
       break;
-
     case THIEF_LEVEL_IND:
       combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
       bas = ch->getDiscipline(DISC_THIEF)->getNatLearnedness();
@@ -1313,8 +1307,7 @@ int TBeing::checkTrainDeny(const TBeing *ch, TMonster *me, discNumT discipline, 
     me->doTell(buf);
     return TRUE;
   }
-  if ((ch->getDiscipline(discipline))->getNatLearnedness() + pracs
- > MAX_DISC_LEARNEDNESS) {
+  if ((ch->getDiscipline(discipline))->getNatLearnedness() + pracs > MAX_DISC_LEARNEDNESS) {
     ch->sendTo("You cannot practice that many times!\n\r");
     return TRUE;
   }
@@ -1329,7 +1322,7 @@ int TBeing::checkForPreReqs(const TBeing *ch, TMonster *me, discNumT discipline,
   int combat = 0;
   bool combatLearn = FALSE;
   int WEAPON_GAIN_LEARNEDNESS = 92;
- pracs = 1;
+  pracs = 1;
 
  if (discipline == DISC_BAREHAND) {
    if (ch->getRawNatSkillValue(SKILL_BAREHAND_PROF) < WEAPON_GAIN_LEARNEDNESS) {

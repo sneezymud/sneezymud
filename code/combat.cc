@@ -1195,10 +1195,6 @@ void TBeing::checkForQuestTog(TBeing *vict)
       if (hasQuestBit(bitnum = TOG_AVENGER_HUNTING))
         found = TRUE;
       break;
-    case MOB_JUJU_TETRARCH:
-      if (hasQuestBit(bitnum = TOG_GET_BEADS))
-	found = TRUE;
-      break;
     case MOB_CAPTAIN_RYOKEN:
       if (hasQuestBit(bitnum = TOG_VINDICATOR_HUNTING_1))
         found = TRUE;
@@ -1299,16 +1295,6 @@ void TBeing::sendCheatMessage(char *cheater)
     case MOB_ORC_MAGI:
       sendTo("<c>You realize you did not follow the guidelines of your quest, so this fight will be for naught.<1>\n\r");
       setQuestBit(TOG_FAILED_TO_KILL_MAGI);
-      break;
-    case MOB_JUJU_TETRARCH:
-      sendTo("<c>You realize you did not follow the guidelines of your quest, sorry.<1>\n\r");
-      sendTo("<c>You may not retake this quest. You may appeal to Jesus if you wish but you must have a DAMN good reason.<1>\n\r");
-      setQuestBit(TOG_DONE_JUJU);
-      remQuestBit(TOG_ELIGABLE_JUJU);
-      remQuestBit(TOG_GET_THONG);
-      remQuestBit(TOG_MARE_HIDE);
-      remQuestBit(TOG_GET_SINEW);
-      remQuestBit(TOG_GET_BEADS);
       break;
     case MOB_CLERIC_VOLCANO:
       sprintf(buf, "%s You have failed to defeat me in single combat.", nameBuf);

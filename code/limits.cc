@@ -548,7 +548,6 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
       break;
     case THIEF_LEVEL_IND:
       if (!doneCombat || (getDiscipline(DISC_THIEF)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
-
         preReqs = TRUE;
         fMin =5.0;
         fMax =8.0;
@@ -565,7 +564,6 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
       break;
     case MONK_LEVEL_IND:
       if (!doneCombat || (getDiscipline(DISC_MONK)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
-
         preReqs = TRUE;
         fMin =5.0;
         fMax =8.0;
@@ -574,7 +572,6 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
       break;
     case RANGER_LEVEL_IND:
       if (!doneCombat || (getDiscipline(DISC_RANGER)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
-
         preReqs = TRUE;
         fMin =5.0;
         fMax =8.0;
@@ -583,7 +580,6 @@ sh_int TBeing::calcNewPracs(classIndT Class, bool forceBasic)
       break;
     case SHAMAN_LEVEL_IND:
       if (!doneCombat || (getDiscipline(DISC_SHAMAN)->getLearnedness() < MAX_DISC_LEARNEDNESS) || forceBasic == 1) {
-
         preReqs = TRUE;
         fMin =5.0;
         fMax =8.0;
