@@ -750,22 +750,16 @@ int TBeing::updateHalfTickStuff()
 	setLifeforce(0);
 	updatePos();
 	if ((0 > getHit()) && (getHit() > -3)) {
-	  vlogf(LOG_JESUS, "%s is stunned at %s (%d)",
-		getName(), roomp ? roomp->getName() : "nowhere", inRoom());
 	  updatePos();
 	} 
 	if ((-3 > getHit()) && (getHit() > -6)) {
-	  vlogf(LOG_JESUS, "%s is incapacitated at %s (%d)",
-		getName(), roomp ? roomp->getName() : "nowhere", inRoom());
 	  updatePos();
 	}
 	if ((-6 > getHit()) && (getHit() > -10)) {
-	  vlogf(LOG_JESUS, "%s is mortally wounded at %s (%d)",
-		getName(), roomp ? roomp->getName() : "nowhere", inRoom());
 	  updatePos();
 	}
 	if (-10 > getHit()) {
-	  vlogf(LOG_JESUS, "%s autokilled by excessive lifeforce drain at %s (%d)",
+	  vlogf(LOG_MISC, "%s autokilled by excessive lifeforce drain at %s (%d)",
 		getName(), roomp ? roomp->getName() : "nowhere", inRoom());
 	  if (reconcileDamage(this, 1,DAMAGE_DRAIN) == -1)
 	    die(DAMAGE_DRAIN);

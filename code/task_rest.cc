@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_rest.cc,v $
+// Revision 5.3  2001/06/09 07:35:45  jesus
+// minor updates for shaman
+//
 // Revision 5.2  2001/06/03 07:58:14  jesus
 // temporary fix to an annoying -hp bug with shaman
 //
@@ -47,8 +50,16 @@ int task_rest(TBeing *ch, cmdTypeT cmd, const char *arg, int pulse, TRoom *, TOb
         if (!ch->roomp->isRoomFlag(ROOM_NO_HEAL)) {
           ch->addToMana(1);
           ch->addToPiety(.10);
-          ch->addToLifeforce(-4);
-          ch->addToHit(1);
+	  if (ch->hasClass(CLASS_SHAMAN)) {
+	    if (1 > ch->getLifeforce()) {
+	      ch->updateHalfTickStuff();
+	    } else {
+	      ch->addToLifeforce(-1);
+	      ch->sendTo("Your lack of activity drains your precious lifeforce.\n\r");
+	    }
+	  } else {
+	    ch->addToHit(1);
+	  }
           if (ch->getMove() < ch->moveLimit())
             ch->addToMove(1);
           if (ch->desc && ch->ansi()) {
