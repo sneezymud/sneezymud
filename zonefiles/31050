@@ -41,7 +41,7 @@ O 0 31087 2 31092 	bench
 
 O 0 31082 1 31090 	rowan tree - Posthouse yard
 O 0 31083 4 31090 	yew logs
-B 0 31083 9999 31090	feed the log pile
+B 0 31083 3 31090	feed the log pile
 O 0 31090 1 31090 	water trough
 
 O 0 31080 1 31091 	bed of alfalfa - Posthouse stable
