@@ -8,6 +8,7 @@
 #include "stdsneezy.h"
 #include "shop.h"
 #include "statistics.h"
+#include "timing.h"
 
 static TBeing *char_with_name(char *name)
 {
@@ -47,14 +48,21 @@ static TObj * findHuntedItem(const TBeing *ch, const char *arg, const TObj *stop
 static TObj * findHuntedItem(const TBeing *ch, const char *arg, const TObj *stopper)
 {
   TObj *obj, *last;
-  //  vlogf(LOG_DASH, "findHuntedItem(ch = %s, char = %s, targ = %s)", ch->getName(), arg, "none");
+  unsigned int i;
+  map<int,int>vnums;
 
+  // scan the object index and make a list of vnums that match our keyword
+  for (i = 0;i < obj_index.size();i++) {
+    if(isname(arg, obj_index[i].name)){
+      vnums[obj_index[i].virt]=1;
+    }
+  }
+
+  // now search for the vnums we cached
   for (obj = object_list, last = NULL; obj; obj = obj->next) {
-    if (isname(arg, obj->name)) {
+    if (vnums[obj->objVnum()]==1) {
       if (ch->canSee(obj))
-	
 	last = obj;
-   
     }
     if (obj == stopper)  // we need not go further
       break;
