@@ -773,7 +773,7 @@ int TBeing::doBite(const sstring &arg)
     // vampire bite!
     if (!(b = get_char_room_vis(this, arg.c_str()))) {
       if (!(b = fight())) {
-	sendTo("Who's blood do you wish to suck?\n\r");
+	sendTo("Whose blood do you wish to suck?\n\r");
 	return FALSE;
       }
     }
