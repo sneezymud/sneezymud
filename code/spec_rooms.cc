@@ -1766,7 +1766,6 @@ void assign_rooms(void)
 {
   struct room_special_proc_entry specials[] =
   {
-    {410, bank},
     {416, healing_room},
     {418, emergency_room},
 #if 0
