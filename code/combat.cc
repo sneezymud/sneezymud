@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: combat.cc,v $
+// Revision 1.6  1999/10/14 03:49:57  cosmo
+// Made Fix so that any magic weapon is considered a magic weapon.
+//
 // Revision 1.5  1999/10/12 00:35:25  lapsos
 // Added vlogf for shopkeeper kills and invenotry nuking.
 //
@@ -3991,7 +3994,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
 
 int TBeing::weaponCheck(TBeing *v, TThing *o, spellNumT type, int dam)
 {
-  int total;
+  int total = 0;
   immuneTypeT imm_type = getTypeImmunity(type);
   int voplat_learn, imm_num;
 
@@ -4004,7 +4007,11 @@ int TBeing::weaponCheck(TBeing *v, TThing *o, spellNumT type, int dam)
 
   TObj *tobj = dynamic_cast<TObj *>(o);
   total = (tobj ? tobj->itemHitroll() : 0);  
-
+  if (tobj) {
+    total = tobj->itemHitroll();
+    if (!total & tobj->isObjStat(ITEM_MAGIC))
+      total = 1;
+  }
   if(doesKnowSkill(SKILL_VOPLAT) && !o){
     voplat_learn=getSkillValue(SKILL_VOPLAT);
     total=(voplat_learn-1)/25;
