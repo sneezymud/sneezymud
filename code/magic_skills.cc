@@ -44,14 +44,6 @@ int TBeing::doTurn(const char *argument, TBeing *vict)
     sendTo("Now that would be quite pointless...\n\r");
     return FALSE;
   }
-  if (attackers > 2) {
-    sendTo("You're too busy fighting to perform such a ritual!\n\r");
-    return FALSE;
-  }
-  if (victim->attackers >= 3) {
-    sendTo("There are too many people in the way!\n\r");
-    return FALSE;
-  }
   if (!(victim->isUndead() || victim->isDiabolic())) {
     sendTo("They are not a minion of the darkness!\n\r");
     return FALSE;

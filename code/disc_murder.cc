@@ -1247,11 +1247,6 @@ int cudgel(TBeing *thief, TBeing *victim)
     return FALSE;
   }
 
-  if (victim->attackers > 3) {
-    thief->sendTo("There's not enough room for you to knock them senseless!\n\r");
-    return FALSE;
-  }
-
   if (victim->equipment[WEAR_HEAD]) {
     act("$N's $o prevents you from cudgeling $M.",
         FALSE, thief, victim->equipment[WEAR_HEAD], victim, TO_CHAR);

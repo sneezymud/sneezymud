@@ -44,10 +44,6 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
     caster->sendTo("How can you rescue someone you are trying to kill?\n\r");
     return FALSE;
   }
-  if (victim->attackers > 3) {
-    caster->sendTo("You can't get close enough to them to rescue!\n\r");
-    return FALSE;
-  }
 #if 0
   if (!caster->inGroup(*victim)) {
     act("You need to be a part of $S group to rescue $N.", 

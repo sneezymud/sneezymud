@@ -87,16 +87,6 @@ bool TBeing::canDisarm(TBeing *victim, silentTypeT silent)
     }
   }
 
-  if (victim->attackers > 3) {
-    if (!silent)
-      act("There is no room around $N to disarm $M.", FALSE, this, 0, victim, TO_CHAR);
-    return FALSE;
-  }
-  if (attackers > 3) {
-    if (!silent)
-      sendTo("There is no room to disarm!\n\r");
-    return FALSE;
-  }
 #if 0
   if (!equipment[getPrimaryHold()]) {
     sendTo("Your primary hand must be FREE in order to attempt a disarm!\n\r");

@@ -216,18 +216,6 @@ int springleap(TBeing * caster, TBeing * victim, bool should_lag)
     return FALSE;
   }
 
-  // auto springleap always works
-  if (should_lag){
-    if (caster->attackers > 3) {
-      caster->sendTo("There's no room to springleap!\n\r");
-      return FALSE;
-    }
-    if (victim->attackers >= 3) {
-      caster->sendTo("You can't get close enough.\n\r");
-      return FALSE;
-    }
-  }
-
   percent =  0;
   int bKnown = caster->getSkillValue(SKILL_SPRINGLEAP);
 

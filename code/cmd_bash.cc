@@ -120,19 +120,9 @@ bool TBeing::canBash(TBeing *victim, silentTypeT silent)
       sendTo(fmt("How can you bash someone already on the %s?!?\n\r") % roomp->describeGround());
     return FALSE;
   }    
-  if (attackers > 4) {
-    if (!silent)
-      sendTo("There's no room to bash!\n\r");
-    return FALSE;
-  }
   if (getMove() < 5) {
     if (!silent)
       sendTo("You don't have the vitality to bash anyone!\n\r");
-    return FALSE;
-  }
-  if (victim->attackers >= 6) {
-    if (!silent)
-      sendTo("You can't get close enough to them to bash!\n\r");
     return FALSE;
   }
   if (!victim->hasLegs()) {

@@ -339,11 +339,6 @@ static int stab(TBeing *thief, TBeing * victim)
     return FALSE;
   }
 
-  if (victim->attackers > 3) {
-    thief->sendTo("There's not enough room for you to stab!\n\r");
-    return FALSE;
-  }
-
   if (thief->getMove() < STAB_MOVE) {
     thief->sendTo("You are too tired to stab.\n\r");
     return FALSE;

@@ -262,11 +262,6 @@ int smite(TBeing *ch, TBeing *v)
   if (ch->checkPeaceful("This room is too peaceful to contemplate violence in.\n\r"))
     return FALSE;
 
-  if (v->attackers > 4) {
-    ch->sendTo("There is no room to smite that person.\n\r");
-    return FALSE;
-  }
-
   if (!(weap = ch->heldInPrimHand())) {
     ch->sendTo("Perhaps you'd like to smite with something next time...?\n\r");
     return FALSE;

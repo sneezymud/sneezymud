@@ -1214,15 +1214,7 @@ int TBeing::parseTarget(spellNumT which, char *n, TThing **ret)
         if ((discArray[which]->targets & TAR_VIOLENT) && noHarmCheck(ch)) 
           return FALSE;
           
-        if (ch==this || ch==fight() || ch->attackers < 6 || ch->fight()==this)
-          ok = TRUE;
-        else {
-          if (!cast)
-            sendTo("You seem unable to invoke your prayer due to the immense crowd in the room.\n\r");
-          else
-            sendTo("You seem unable to cast your spell due to the immense crowd in the room.\n\r");
-          ok = FALSE;
-        }
+	ok = TRUE;
       }
     }
     if (!ok && (discArray[which]->targets & TAR_CHAR_VIS_WORLD) || (discArray[which]->targets & TAR_CHAR_WORLD)) {

@@ -65,16 +65,6 @@ bool TBeing::canHeadbutt(TBeing *victim, silentTypeT silent)
     return FALSE;
   }
 
-  if (attackers > 4) {
-    if (!silent)
-      sendTo("There's no room to headbutt!\n\r");
-    return FALSE;
-  }
-  if (victim->attackers > 4) {
-    if (!silent)
-      sendTo("You can't get close enough to them to headbutt!\n\r");
-    return FALSE;
-  }
   if ((int) (getPosHeight() * 0.9) > victim->getPosHeight()) {
     if (victim->getPosition() < POSITION_STANDING) {
       if (!silent)

@@ -86,16 +86,6 @@ bool TBeing::canKick(TBeing *victim, silentTypeT silent)
       sendTo("You can't kick while mounted!\n\r");
     return FALSE;
   }
-  if (attackers > 4) {
-    if (!silent)
-      sendTo("There's no room to kick!\n\r");
-    return FALSE;
-  }
-  if (victim->attackers > 4) {
-    if (!silent)
-      sendTo("You can't get close enough to them to kick!\n\r");
-    return FALSE;
-  }
   if (isSwimming()) {
     if (!silent)
       sendTo("It's near impossible to kick while swimming.\n\r");

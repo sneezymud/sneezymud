@@ -30,14 +30,6 @@ static int deathstroke(TBeing *caster, TBeing *victim)
   if (caster->noHarmCheck(victim))
     return FALSE;
   /* to prevent from misuse in groups ... */
-  if (caster->attackers > 3) {
-    caster->sendTo("You can't get a clear shot at your opponents vitals!\n\r");
-    return FALSE;
-  }
-  if (victim->attackers > 3) {
-    caster->sendTo("You are too busy fending off other attackers!\n\r");
-    return FALSE;
-  }
   if (caster->riding) {
     caster->sendTo("You can't deathstroke while mounted!\n\r");
     return FALSE;

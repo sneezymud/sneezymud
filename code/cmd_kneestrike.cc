@@ -10,8 +10,6 @@
 
 bool TBeing::canKneestrike(TBeing *victim, silentTypeT silent)
 {
-  int adv=getAdvLearning(SKILL_KNEESTRIKE);
-
   if (checkBusy()) {
     return FALSE;
   }
@@ -95,16 +93,6 @@ bool TBeing::canKneestrike(TBeing *victim, silentTypeT silent)
     return FALSE;
   }   
 
-  if (attackers > (4+adv/25)) {
-    if (!silent)
-      sendTo("There's no room to knee strike!\n\r");
-    return FALSE;
-  }
-  if (victim->attackers > (4+adv/25)) {
-    if (!silent)
-      sendTo("You can't get close enough to them to knee strike!\n\r");
-    return FALSE;
-  }
 
   return true;
 }

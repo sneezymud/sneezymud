@@ -61,17 +61,6 @@ bool TBeing::canBodyslam(TBeing *victim, silentTypeT silent)
       sendTo("You can't bodyslam while mounted!\n\r");
     return FALSE;
   }
-  // to prevent from misuse in groups ... 
-  if (attackers > 3) {
-    if (!silent)
-      sendTo("Too many people in the way!\n\r");
-    return FALSE;
-  }
-  if (victim->attackers > 3) {
-    if (!silent)
-      sendTo("You are too busy fending off other attackers!\n\r");
-    return FALSE;
-  }
   if (!canUseArm(HAND_PRIMARY) || !canUseArm(HAND_SECONDARY)) {
     if (!silent)
       sendTo("You need two working arms to bodyslam someone.\n\r");

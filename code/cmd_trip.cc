@@ -115,11 +115,6 @@ bool TBeing::canTrip(TBeing *victim, silentTypeT silent)
       sendTo("You don't have the vitality to trip anyone!\n\r");
     return FALSE;
   }
-  if (victim->attackers >= 6) {
-    if (!silent)
-      sendTo("You can't get in just the right position to trip them.\n\rMust be too crowded in here.\n\r");
-    return FALSE;
-  }
   if (!victim->hasLegs()) {
     if (!silent)
       sendTo("You can't trip someone who has no legs.\n\r");

@@ -1464,18 +1464,7 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
       return FALSE;
     }
 
-    if (victim==this || victim==fight() || victim->attackers < 6 || victim->fight()==this) 
-      ok = TRUE;
-    else {
-      if (styp == SPELL_PRAYER) 
-        sendTo("You seem unable to finish your prayer due to the immense crowd in the room.\n\r");
-      else if (styp == SPELL_CASTER) 
-        sendTo("You seem unable to finish your spell due to the immense crowd in the room.\n\r");
-      else if (styp == SPELL_DANCER) 
-        sendTo("You seem unable to finish the ritual due to the immense crowd in the room.\n\r");
-      stopCast(STOP_CAST_GENERIC);
-      return FALSE;  
-    }
+    ok = TRUE;
   }
   if (!ok && (spelltask->target == 1) && (discArray[which]->targets & TAR_CHAR_WORLD)) {
     if (!victim) {

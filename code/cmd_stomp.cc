@@ -66,16 +66,6 @@ bool TBeing::canStomp(TBeing *victim, silentTypeT silent)
     return FALSE;
   }
 
-  if (attackers > 4) {
-    if (!silent)
-      sendTo("There's no room to stomp!\n\r");
-    return FALSE;
-  }
-  if (victim->attackers > 4) {
-    if (!silent)
-      sendTo("You can't get close enough to them to stomp!\n\r");
-    return FALSE;
-  }
   if (isSwimming()) {
     if (!silent)
       sendTo("You can't stomp while swimming.\n\r");
