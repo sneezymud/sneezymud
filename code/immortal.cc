@@ -313,8 +313,22 @@ void TPerson::doToggle(const char *arg2)
     
 
 
+    sendTo(COLOR_BASIC, "\n\r<c>Immortal Toggles<1>\n\r");
+    sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
+    
+    if(getInvisLevel())
+      sendTo(COLOR_BASIC, "Invisibility      : <G>%-4i<1>   |    ", getInvisLevel());
+    else
+      sendTo(COLOR_BASIC, "Invisibility      : <R>off <1>   |    ");
+    
+    sendTo(COLOR_BASIC, "Auto Success      : %s\n\r", on_or_off(IS_SET(desc->autobits, AUTO_SUCCESS)));
+    
+    sendTo(COLOR_BASIC, "Stealth Mode      : %s\n\r", on_or_off(isPlayerAction(PLR_STEALTH)));
+
+
+
     if (hasWizPower(POWER_TOGGLE)){
-      sendTo(COLOR_BASIC, "\n\r<c>Immortal Toggles<1>\n\r");
+      sendTo(COLOR_BASIC, "\n\r<c>Global Toggles<1>\n\r");
       sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
 
       sendTo(COLOR_BASIC, "Shouting          : %s    |    ", on_or_off(!Silence));
@@ -329,19 +343,10 @@ void TPerson::doToggle(const char *arg2)
       sendTo(COLOR_BASIC, "Time DB Queries   : %s\n\r",on_or_off(timeQueries));
       sendTo(COLOR_BASIC, "Twinky Combat     : %s    |    ", on_or_off(Twink));
       sendTo(COLOR_BASIC, "Lapsos Speech     : %s\n\r",on_or_off(Lapspeak));
-      if(getInvisLevel())
-	sendTo(COLOR_BASIC, "Invisibility      : <G>%-4i<1>   |    ", getInvisLevel());
-      else
-	sendTo(COLOR_BASIC, "Invisibility      : <R>off <1>   |    ");
-
-      sendTo(COLOR_BASIC, "Auto Success      : %s\n\r", on_or_off(IS_SET(desc->autobits, AUTO_SUCCESS)));
-
-      sendTo(COLOR_BASIC, "Stealth Mode      : %s\n\r", on_or_off(isPlayerAction(PLR_STEALTH)));
-
 
       sendTo(COLOR_BASIC, "\n\r<c>Test Code Toggles<1>\n\r");
       sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
-
+      
       sendTo(COLOR_BASIC, "Test code #1      : %s    |    ",on_or_off(TestCode1));
       sendTo(COLOR_BASIC, "Test code #5      : %s\n\r", on_or_off(TestCode5));
       sendTo(COLOR_BASIC, "Test code #2      : %s    |    ", on_or_off(TestCode2));
@@ -350,10 +355,9 @@ void TPerson::doToggle(const char *arg2)
       sendTo(COLOR_BASIC, "Quest code        : %s\n\r", on_or_off(QuestCode));
       sendTo(COLOR_BASIC, "Test code #4      : %s    |    ", on_or_off(TestCode4));
       sendTo(COLOR_BASIC, "Quest code 2      : %s\n\r", on_or_off(QuestCode2));
-    }
+    }      
+
     return;
-
-
   } else if(is_abbrev(arg, "stealth")){
     if (isPlayerAction(PLR_STEALTH)) {
       sendTo("STEALTH mode OFF.\n\r");
