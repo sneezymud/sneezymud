@@ -2945,7 +2945,7 @@ TThing & TComponent::operator -- ()
   return *this;
 }
 
-const sstring TComponent::shopList(const TBeing *ch, const char *tArg,
+const sstring TComponent::shopList(const TBeing *ch, const sstring &tArg,
                                   int iMin, int iMax, int num,
                                   int shop_nr, int k, unsigned long int FitT) const
 {
@@ -3017,7 +3017,7 @@ const sstring TComponent::shopList(const TBeing *ch, const char *tArg,
           tCharges, tStSpell);
 
   if (((FitT & (1 << 0)) == 0 || fitInShop("", ch)) &&
-      (!*tArg || isname(tArg, name)) &&
+      (tArg.empty() || isname(tArg, name)) &&
       (iMin == 999999 || (tCost >= iMin && tCost <= iMax)))
     return tString;
 

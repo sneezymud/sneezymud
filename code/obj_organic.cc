@@ -483,7 +483,7 @@ void TOrganic::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
 }
 
 // Used by the list command
-const sstring TOrganic::shopList(const TBeing *ch, const char *arg,
+const sstring TOrganic::shopList(const TBeing *ch, const sstring &arg,
                                 int min_amt, int max_amt, int num,
                                 int shop_nr, int k, unsigned long int) const
 {
@@ -524,7 +524,7 @@ const sstring TOrganic::shopList(const TBeing *ch, const char *arg,
     sprintf(Buf[0], "[%2d] %-31s  <Z>:             %5d talen%c [%s]\n\r",
             k + 1, Buf[1], cost, (usePlural ? 's' : ' '),tString);
 
-  if (!*arg && min_amt == 999999)     // everything
+  if (arg.empty() && min_amt == 999999)     // everything
     // specific item
     return Buf[0];
   else if (isname(arg, name) && min_amt == 999999)
@@ -532,7 +532,7 @@ const sstring TOrganic::shopList(const TBeing *ch, const char *arg,
   // specific item and specific cost
   else if (isname(arg, name) && cost >= min_amt && cost <= max_amt)
     return Buf[0];
-  else if (!*arg && cost >= min_amt && cost <= max_amt)   // specific cost
+  else if (arg.empty() && cost >= min_amt && cost <= max_amt)   // specific cost
     return Buf[0];
 
   return "";

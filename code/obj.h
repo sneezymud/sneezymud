@@ -642,7 +642,7 @@ class TObj : public TThing {
     virtual int buyMe(TBeing *, TMonster *, int, int);
     virtual void sellMe(TBeing *, TMonster *, int);
     virtual void valueMe(TBeing *, TMonster *, int);
-    virtual const sstring shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
+    virtual const sstring shopList(const TBeing *, const sstring &, int, int, int, int, int, unsigned long int) const;
     virtual void makeScraps();
     virtual int shopPrice(int, int, float, int *) const;
     virtual int sellPrice(int, float, int *);

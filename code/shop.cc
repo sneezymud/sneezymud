@@ -1222,7 +1222,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
   return;
 }
 
-const sstring TObj::shopList(const TBeing *ch, const char *arg, int iMin, int iMax, int num, int shop_nr, int k, unsigned long int FitT) const
+const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int iMax, int num, int shop_nr, int k, unsigned long int FitT) const
 {
   int cost, found = FALSE;
   char buf[256];
@@ -1407,7 +1407,7 @@ const sstring TObj::shopList(const TBeing *ch, const char *arg, int iMin, int iM
   }
 
   // This is for quick listing, fast and simple.
-  if (!*arg && iMin == 999999 && FitT == 0)
+  if (arg.empty() && iMin == 999999 && FitT == 0)
     return buf;
 
   // This is designed to be a large list of checks.  All the checks but
@@ -1420,7 +1420,7 @@ const sstring TObj::shopList(const TBeing *ch, const char *arg, int iMin, int iM
   // has hard-leather in the name And fits the current lister.
 
   if (((FitT & (1 << 0)) == 0 || fitInShop(buf3, ch)) &&
-      (!*arg || isname(arg, name)) &&
+      (arg.empty() || isname(arg, name)) &&
       (iMin == 999999 || (cost >= iMin && cost <= iMax)) &&
       ((FitT & (1 << 15)) == 0 || isObjStat(ITEM_GLOW)) &&
       ((FitT & (1 << 16)) == 0 || isObjStat(ITEM_SHADOWY)) &&
@@ -1448,22 +1448,18 @@ const sstring TObj::shopList(const TBeing *ch, const char *arg, int iMin, int iM
     return "";
 }
 
-void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_nr)
+void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
 {
   vector<TObj *>cond_obj_vec;
   vector<int>cond_tot_vec;
-
   TObj *i = NULL;
   unsigned int k;
   unsigned long int FitT = 0;
-  bool found = FALSE;
   int iMin = 999999, iMax = 0;
-  sstring buf2;
-  char stString[256] = "\0";
-  int found_obj;
-  int counter;
-  sstring sb;
-  int rc;
+  int found_obj, counter, rc;
+  bool found = FALSE;
+  vector <sstring> args;
+  sstring buf, sb, arg;
   bool hasComponents = false;
   bool owned=shop_index[shop_nr].isOwned();
 
@@ -1480,10 +1476,6 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
   if (!ch->desc)
     return;
 
-  char arg[256];
-  strcpy(arg, argument);
-  cleanCharBuf(arg);
-
   // Here we rip apart what they might have passed.  We do it
   // this way to allow them to form it in any fashion they want.
   // For numbers.  First number found is givin to iMax.  Second
@@ -1491,67 +1483,66 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
   // value.  So:
   //   1 number : No floor value, value is considered max.
   //   2 numbers: First is floor, 2nd is max.
-  *arg = '\000';
-  for (; isspace(*argument); argument++);
-  argument = one_argument(argument, stString);
-  for (; ; argument = one_argument(argument, stString)) {
-         if (is_abbrev(stString, "fit")    ) FitT |= (1 <<  0);
-    else if (is_abbrev(stString, "slash")  ) FitT |= (1 <<  1);
-    else if (is_abbrev(stString, "pierce") ) FitT |= (1 <<  2);
-    else if (is_abbrev(stString, "blunt")  ) FitT |= (1 <<  3);
-    else if (is_abbrev(stString, "body")   ) FitT |= (1 <<  4);
-    else if (is_abbrev(stString, "finger") ) FitT |= (1 <<  5);
-    else if (is_abbrev(stString, "wrist")  ) FitT |= (1 <<  6);
-    else if (is_abbrev(stString, "legs")   ) FitT |= (1 <<  7);
-    else if (is_abbrev(stString, "arms")   ) FitT |= (1 <<  8);
-    else if (is_abbrev(stString, "neck")   ) FitT |= (1 <<  9);
-    else if (is_abbrev(stString, "feet")   ) FitT |= (1 << 10);
-    else if (is_abbrev(stString, "hands")  ) FitT |= (1 << 11);
-    else if (is_abbrev(stString, "head")   ) FitT |= (1 << 12);
-    else if (is_abbrev(stString, "back")   ) FitT |= (1 << 13);
-    else if (is_abbrev(stString, "waist")  ) FitT |= (1 << 14);
-    else if (is_abbrev(stString, "glowing")) FitT |= (1 << 15);
-    else if (is_abbrev(stString, "shadowy")) FitT |= (1 << 16);
-    else if (is_abbrev(stString, "paired") ) FitT |= (1 << 17);
-    else if (is_abbrev(stString, "stab")) {
+  argument_parser(argument, args);
+  for(unsigned int i=0;i<args.size();++i){
+         if (is_abbrev(args[i], "fit")    ) FitT |= (1 <<  0);
+    else if (is_abbrev(args[i], "slash")  ) FitT |= (1 <<  1);
+    else if (is_abbrev(args[i], "pierce") ) FitT |= (1 <<  2);
+    else if (is_abbrev(args[i], "blunt")  ) FitT |= (1 <<  3);
+    else if (is_abbrev(args[i], "body")   ) FitT |= (1 <<  4);
+    else if (is_abbrev(args[i], "finger") ) FitT |= (1 <<  5);
+    else if (is_abbrev(args[i], "wrist")  ) FitT |= (1 <<  6);
+    else if (is_abbrev(args[i], "legs")   ) FitT |= (1 <<  7);
+    else if (is_abbrev(args[i], "arms")   ) FitT |= (1 <<  8);
+    else if (is_abbrev(args[i], "neck")   ) FitT |= (1 <<  9);
+    else if (is_abbrev(args[i], "feet")   ) FitT |= (1 << 10);
+    else if (is_abbrev(args[i], "hands")  ) FitT |= (1 << 11);
+    else if (is_abbrev(args[i], "head")   ) FitT |= (1 << 12);
+    else if (is_abbrev(args[i], "back")   ) FitT |= (1 << 13);
+    else if (is_abbrev(args[i], "waist")  ) FitT |= (1 << 14);
+    else if (is_abbrev(args[i], "glowing")) FitT |= (1 << 15);
+    else if (is_abbrev(args[i], "shadowy")) FitT |= (1 << 16);
+    else if (is_abbrev(args[i], "paired") ) FitT |= (1 << 17);
+    else if (is_abbrev(args[i], "stab")) {
       if ((ch->hasClass(CLASS_THIEF) && ch->doesKnowSkill(SKILL_STABBING)) || ch->isImmortal()) {
         FitT |= (1 << 18);
         FitT |= (1 <<  2);
       }
-    } else if (is_abbrev(stString, "cudgel")) {
+    } else if (is_abbrev(args[i], "cudgel")) {
       if ((ch->hasClass(CLASS_THIEF) && ch->doesKnowSkill(SKILL_CUDGEL)) || ch->isImmortal()) {
         FitT |= (1 << 19);
         FitT |= (1 <<  3);
       }
-    } else if (is_abbrev(stString, "backstab")) {
+    } else if (is_abbrev(args[i], "backstab")) {
       if ((ch->hasClass(CLASS_THIEF) && ch->doesKnowSkill(SKILL_BACKSTAB)) || ch->isImmortal()) {
         FitT |= (1 << 20);
         FitT |= (1 <<  2);
       }
-    } else if (is_abbrev(stString, "slit")) {
+    } else if (is_abbrev(args[i], "slit")) {
       if ((ch->hasClass(CLASS_THIEF) && ch->doesKnowSkill(SKILL_THROATSLIT)) || ch->isImmortal()) {
         FitT |= (1 << 20);
         FitT |= (1 <<  2);
       }
-    } else if (is_number(stString)) {
+    } else if (is_number(args[i])) {
       if (iMin == 999999) {
         iMin = 0;
-        iMax = convertTo<int>(stString);
+        iMax = convertTo<int>(args[i]);
       } else if (iMin == 0) {
         iMin = iMax;
-        iMax = convertTo<int>(stString);
+        iMax = convertTo<int>(args[i]);
       }
-    } else if (*stString) {
-      strcpy(arg, stString);
+    } else if (!args[i].empty()) {
+      arg=args[i];
     }
-    if (!*argument) break;
+    if (argument.empty())
+      break;
   }
 
   int max_trade=0;
   max_trade=shop_index[shop_nr].type.size()-1;
 
-  ssprintf(buf2, "%s You can buy:", ch->getName());
-  keeper->doTell(buf2);
+  ssprintf(buf, "%s You can buy:", ch->getName());
+  keeper->doTell(buf);
   for (counter = 0; counter < max_trade; counter++) {
     if (shop_index[shop_nr].type[counter] == ITEM_COMPONENT)
       hasComponents = true;
@@ -1642,15 +1633,15 @@ void shopping_list(const char *argument, TBeing *ch, TMonster *keeper, int shop_
       sb += cond_obj_vec[k]->shopList(ch, arg, iMin, iMax, cond_tot_vec[k], shop_nr, k, FitT);
   }
   if (!found_obj) {
-    buf2 = "Nothing!\n\r";
-    sb += buf2;
+    buf = "Nothing!\n\r";
+    sb += buf;
 
     if (ch->desc)
       ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
 
     keeper->autoCreateShop(shop_nr);
-    ssprintf(buf2, "%s/%d", SHOPFILE_PATH, shop_nr);
-    keeper->saveItems(buf2);
+    ssprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
+    keeper->saveItems(buf);
     return;
   }
   if (ch->desc) {

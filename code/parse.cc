@@ -1964,15 +1964,15 @@ void argument_interpreter(sstring argument, sstring &first_arg, sstring &second_
   one_argument(st, second_arg);
 }
 
-bool is_number(const char *str)
+bool is_number(const sstring &str)
 {
   int look_at;
 
-  if (!*str)
+  if (str.empty())
     return (0);
 
-  for (look_at = 0; *(str + look_at) != '\0'; look_at++) {
-    if ((*(str + look_at) < '0') || (*(str + look_at) > '9'))
+  for (look_at = 0; *(str.c_str() + look_at) != '\0'; look_at++) {
+    if ((*(str.c_str() + look_at) < '0') || (*(str.c_str() + look_at) > '9'))
       return (0);
   }
   return (1);

@@ -24,7 +24,7 @@ class TCommodity : public TObj {
     virtual void sellMe(TBeing *, TMonster *, int);
     virtual int sellCommod(TBeing *, TMonster *, int, TThing *);
     virtual void valueMe(TBeing *, TMonster *, int);
-    virtual const sstring shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
+    virtual const sstring shopList(const TBeing *, const sstring &, int, int, int, int, int, unsigned long int) const;
     virtual int shopPrice(int, int, float, int *) const;
     virtual int sellPrice(int, float, int *);
 

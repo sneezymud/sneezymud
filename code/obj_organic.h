@@ -32,7 +32,7 @@ class TOrganic : public TObj {
     virtual int buyMe(TBeing *, TMonster *, int, int);
     virtual void sellMe(TBeing *ch, TMonster *, int);
     virtual void valueMe(TBeing *, TMonster *, int);
-    virtual const sstring shopList(const TBeing *, const char *, int, int, int, int, int, unsigned long int) const;
+    virtual const sstring shopList(const TBeing *, const sstring &, int, int, int, int, int, unsigned long int) const;
     virtual int sellHidenSkin(TBeing *, TMonster *, int, TThing *);
     void setOType(organicTypeT);
     organicTypeT getOType() const;

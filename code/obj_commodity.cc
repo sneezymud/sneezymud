@@ -298,7 +298,7 @@ void TCommodity::valueMe(TBeing *ch, TMonster *keeper, int shop_nr)
   return;
 }
 
-const sstring TCommodity::shopList(const TBeing *ch, const char *arg, int min_amt, int max_amt, int, int, int k, unsigned long int) const
+const sstring TCommodity::shopList(const TBeing *ch, const sstring &arg, int min_amt, int max_amt, int, int, int k, unsigned long int) const
 {
   char buf[256];
   int cost = pricePerUnit();
@@ -306,7 +306,7 @@ const sstring TCommodity::shopList(const TBeing *ch, const char *arg, int min_am
   sprintf(buf, "[%2d] COMMODITY: %-20.20s  : %5d units    %5d talens (per unit)\n\r",
             k + 1, fname(name).c_str(),
             (int) (numUnits()), (int) cost);
-  if (!*arg && min_amt == 999999)     /* everything */
+  if (arg.empty() && min_amt == 999999)     /* everything */
   /* specific item */
     return buf;
   else if (isname(arg, name) && min_amt == 999999)
@@ -314,7 +314,7 @@ const sstring TCommodity::shopList(const TBeing *ch, const char *arg, int min_am
   /* specific item and specific cost */
   else if (isname(arg, name) && cost >= min_amt && cost <= max_amt)
     return buf;
-  else if (!*arg && cost >= min_amt && cost <= max_amt)   /* specific cost */
+  else if (arg.empty() && cost >= min_amt && cost <= max_amt)   /* specific cost */
     return buf;
   else
     return "";
