@@ -4704,7 +4704,7 @@ void TBeing::doInfo(const char *arg)
     return;
 
   arg = one_argument(arg, arg1);
-  string str = "Information available to you : Commands, Disciplines, MobSkills, ImmSkills, Numbers, Piety, Gold, Skills, Deaths, Objects";
+  string str = "Information available to you : Commands, Disciplines, MobSkills, ImmSkills, Numbers, Piety, Gold, Skills, Deaths, Objects, Unlinked";
   str += ".\n\r";
 
   if (!*arg1) {
@@ -4747,6 +4747,33 @@ void TBeing::doInfo(const char *arg)
 	count[li]=-1;
       }
 
+
+      desc->page_string(buf.c_str());
+    }
+    else if(is_abbrev(arg1, "unlinked")){
+      TObj *obj;
+      int i=1;
+      string tbuf;
+
+      for(obj=object_list;obj;obj=obj->next){
+	if(obj->in_room == ROOM_NOWHERE && !obj->parent &&
+	   !obj->equippedBy && !obj->stuckIn && !obj->riding){
+	  ssprintf(tbuf,"[%6i] %-17s\n\r",
+		   i++, obj->getNameNOC(this).c_str());
+	  buf+=tbuf;
+	}
+      }
+      
+      TBeing *tb;
+
+      for(tb=character_list;tb;tb=tb->next){
+	if(tb->in_room == ROOM_NOWHERE && !tb->parent &&
+	   !tb->equippedBy && !tb->stuckIn && !tb->riding){
+	  ssprintf(tbuf,"[%6i] %-17s\n\r",
+		   i++, tb->getNameNOC(this).c_str());
+	  buf+=tbuf;
+	}	
+      }
 
       desc->page_string(buf.c_str());
     }
