@@ -2621,7 +2621,6 @@ void assign_rooms(void)
     {28800, moonGateRoom},
     {31751, bank},
     {31756, bank},
-    {31759, bank},
     {31764, BankMainEntrance},
     {31774, BankVault},
     {31775, BankVault},
