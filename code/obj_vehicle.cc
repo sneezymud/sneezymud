@@ -114,11 +114,11 @@ void TVehicle::driveDir(TBeing *ch, dirTypeT dir)
 
 void TVehicle::driveExit(TBeing *ch)
 {
-  --(*ch);
-  *roomp+=*ch;
-
   act("$n exits $p.", 0, ch, this, 0, TO_ROOM);
   act("You exit $p.", 0, ch, this, 0, TO_CHAR);
+
+  --(*ch);
+  *roomp+=*ch;
 }
 
 void TVehicle::driveLook(TBeing *ch, bool silent=false)
@@ -145,19 +145,41 @@ void TVehicle::vehiclePulse(int pulse)
   if(!troom)
     return;
 
-  // this is where we regulate speed
   if(getSpeed()==0)
     return;
   
-  if(pulse % (ONE_SECOND/getSpeed()))
+  // this is where we regulate speed
+  if(pulse % ((ONE_SECOND-2)/getSpeed()))
     return;
 
-  // should stop car and send message
-  if(getDir() == DIR_NONE || !troom->dir_option[getDir()])
+  if(getDir() == DIR_NONE)
     return;
 
   strcpy(shortdescr, shortDescr);
   cap(shortdescr);
+
+  if(!troom->dir_option[getDir()]){
+    // first count how many valid exits we have
+    int dcount=0;
+    for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){
+      if(troom->dir_option[dir] && dir != rev_dir[getDir()])
+	++dcount;
+    }
+    
+    // if there's only one that isn't the way we came, change direction
+    if(dcount == 1){
+      for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){
+	if(troom->dir_option[dir] && dir != rev_dir[getDir()]){
+	  setDir(dir);
+
+	  sendrpf(COLOR_OBJECTS, roomp, "%s changes direction to the %s and keeps moving.\n\r", shortdescr, dirs[getDir()]);
+
+	  break;
+	}
+      }
+    } else
+      return; // otherwise just stop
+  }
 
   // send message to people in old room here
   if(vehicle_speed[getSpeed()] == "fast"){
