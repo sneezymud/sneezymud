@@ -2345,7 +2345,7 @@ const path_struct head_guard_path[3][19]={
 };
 
 
-const path_struct money_train_path[8][100]={
+const path_struct money_train_path[8][200]={
   // bank to cs
   {
     {DIR_NONE, 31758},
