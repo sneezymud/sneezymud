@@ -14,10 +14,48 @@ const int OPT_USEC = 100000;
 
 extern char hostlist[MAX_BAN_HOSTS][40];
 
+class TPulseList {
+public:  
+  int pulse;
+  bool teleport, combat, drowning, special_procs, update_stuff;
+  bool pulse_mudhour, mobstuff, pulse_tick, wayslowpulse;
+
+  void init(int pulse){
+    teleport = (pulse % PULSE_TELEPORT);
+    combat = (pulse % PULSE_COMBAT);
+    drowning = (pulse % PULSE_DROWNING);
+    special_procs = (pulse % PULSE_SPEC_PROCS);
+    update_stuff = (pulse % PULSE_NOISES);
+    pulse_mudhour = (pulse % PULSE_MUDHOUR);
+    mobstuff = (pulse % PULSE_MOBACT);
+    pulse_tick = (pulse % PULSE_UPDATE);
+    wayslowpulse = (pulse % 2400);
+  }
+
+  TPulseList & operator=(const TPulseList &a){
+    if (this == &a) return *this;    
+    pulse=a.pulse;
+    teleport=a.teleport;
+    combat=a.combat;
+    drowning=a.drowning;
+    special_procs=a.special_procs;
+    update_stuff=a.update_stuff;
+    pulse_mudhour=a.pulse_mudhour;
+    mobstuff=a.mobstuff;
+    pulse_tick=a.pulse_tick;
+    wayslowpulse=a.wayslowpulse;
+    return *this;
+  }
+};
+
+
 class TMainSocket {
  private:
   vector <int> m_sock;
-  
+  TBeing *tmp_ch;
+  TObj *obj;
+  int vehiclepulse;
+
   struct timeval handleTimeAndSockets();
   bool handleShutdown();
   TSocket *newConnection(int);
@@ -28,6 +66,8 @@ class TMainSocket {
   void closeAllSockets();
   void initSocket(int);
   int gameLoop();
+  void objectPulse(TPulseList &);
+  void characterPulse(TPulseList &);
 
   TMainSocket();
   ~TMainSocket();
