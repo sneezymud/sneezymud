@@ -1116,10 +1116,6 @@ void TBeing::doBoot(const sstring &arg)
   TObj *obj;
   bool found=true;
 
-  if (!hasWizPower(POWER_RESET)) {
-    sendTo("You lack the power to reset.\n\r");
-    return;
-  }
 
   if(arg.word(0)=="zone")
     z=convertTo<int>(arg.word(1));
@@ -1128,6 +1124,25 @@ void TBeing::doBoot(const sstring &arg)
     sendTo("Usage: boot zone <zone_nr>\n\r");
     return;
   }
+
+  // reset allows global use
+  if(!hasWizPower(POWER_RESET)){
+    // otherwise they need zonefile power and to be resetting their zone
+    if (!hasWizPower(POWER_ZONEFILE_UTILITY)) {
+      sendTo("You have not been given this power yet.\n\r");
+      return;
+    }
+
+    // ok, check if they're resetting their zone
+    if((desc->blockastart != zone_table[z].bottom ||
+	desc->blockaend != zone_table[z].top) &&
+       (desc->blockbstart != zone_table[z].bottom ||
+	desc->blockbend != zone_table[z].top)){
+      sendTo("You can only boot your own zones.\n\r");
+      return;      
+    }
+  }
+
 
   sendTo(fmt("Rebooting zone %s (%i) (rooms %i-%i)\n\r") %
 	 zone_table[z].name % z % zone_table[z].bottom % zone_table[z].top);
