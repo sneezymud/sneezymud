@@ -1985,7 +1985,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
 	      corpse = new TCorpse();
 	      corpse->name = mud_str_dup("tooth");
 	      
-	      sprintf(buf, "<W>a <1><r>bloody<1><W> tooth from %s<1>", v->getName());
+	      sprintf(buf, "<W>a <1><r>bloody<1><W> of %s<1>", v->getName());
 	      corpse->shortDescr = mud_str_dup(buf);
 	      
 	      sprintf(buf, "<W>A <1><r>bloody<1><W> tooth lies here, having been knocked out of %s's mouth.<1>", v->getName());
