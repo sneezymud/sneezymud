@@ -1607,7 +1607,7 @@ int replicant(TBeing *ch, cmdTypeT cmd, const char *, TMonster *, TObj *)
   return FALSE;
 }
 
-static bool okForJanitor(TMonster *myself, TObj *obj)
+bool okForJanitor(TMonster *myself, TObj *obj)
 {
   // only things that can be taken, and that are not pools
   if (!obj->canWear(ITEM_TAKE) && !dynamic_cast<TPool *>(obj))
@@ -6576,9 +6576,16 @@ int bankGuard(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
   return TRUE;
 }
 
+
+
+
+
+
 extern int factionRegistrar(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int realEstateAgent(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int grimhavenPosse(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+extern int coroner(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
+
 
 // Fields: display_under_medit, name_of_special, name_of_function_to_call
 TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
@@ -6740,6 +6747,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE,"Fish Tracker", fishTracker},
   {FALSE, "Bank Guard", bankGuard},               // 155
   {FALSE, "Real Estate Agent", realEstateAgent},
+  {FALSE, "Coroner", coroner},
   {FALSE, "Faction Registrar", factionRegistrar},
 // replace non-zero, bogus_mob_procs above before adding
 };

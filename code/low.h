@@ -21,6 +21,7 @@ const short int ROOM_CORPSE_STORAGE    = 73;
 const short int ROOM_NOCTURNAL_STORAGE = 74;
 const short int ROOM_Q_STORAGE         = 76;
 const short int ROOM_CS                = 100;
+const short int ROOM_MORGUE            = 433;
 const short int ROOM_GREEN_DRAGON_INN  = 553;
 const short int ROOM_KINDRED_INN       = 556;
 const short int ROOM_DONATION          = 563;

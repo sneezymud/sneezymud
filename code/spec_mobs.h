@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.5  2001/07/04 00:31:39  peel
+// added coroner proc
+//
 // Revision 5.4  2001/07/03 08:57:25  jesus
 // added ritualismLevelT
 // removed totemism disc
@@ -174,7 +177,9 @@ const int SPEC_TUSKGORE        =153;
 const int SPEC_FISHTRACKER     =154;
 const int SPEC_BANK_GUARD      =155;
 const int SPEC_REAL_ESTATE_AGENT=156;
-const int NUM_MOB_SPECIALS     =157;
+const int SPEC_CORONER         =157;
+const int SPEC_FACTON_REGISTRAR=158;
+const int NUM_MOB_SPECIALS     =159;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
@@ -190,6 +195,7 @@ extern bool GuildMobProc(TBeing *);
 extern TMonster *pawnman;
 extern void CallForGuard(TBeing *ch, TBeing *vict, int lev);
 extern TMonster *FindMobInRoomWithProcNum(int room, int num);
+extern bool okForJanitor(TMonster *, TObj *);
 
 extern int meeting_organizer(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int fighter(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
