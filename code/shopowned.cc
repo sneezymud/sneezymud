@@ -108,15 +108,15 @@ void TShopOwned::showInfo()
 		   fmt("I have %i talens and %i items worth %i talens and selling for approximately %i talens.") %
 		   keeper->getMoney() % count % value %
 		   (int)(value * shop_index[shop_nr].profit_buy));
-    keeper->doTell(ch->getName(), "My inventory takes up %i cubic inches of space.", volume);
+    keeper->doTell(ch->getName(), fmt("My inventory takes up %i cubic inches of space.") % volume);
     
-    keeper->doTell(ch->getName(), "That puts my total value at %i talens.",
-		   keeper->getMoney()+value);
+    keeper->doTell(ch->getName(), fmt("That puts my total value at %i talens.") %
+		   (keeper->getMoney()+value));
     
     if(!owned){
       keeper->doTell(ch->getName(), "This shop is for sale, however the King charges a sales tax and an ownership fee.");
       
-      keeper->doTell(ch->getName(), "That puts the sale price at %i.",
+      keeper->doTell(ch->getName(), fmt("That puts the sale price at %i.") %
 		     getPurchasePrice(keeper->getMoney(), value));
     } 
   }
@@ -126,7 +126,7 @@ void TShopOwned::showInfo()
 		 fmt("My profit_buy is %f and my profit_sell is %f.") %
 		 shop_index[shop_nr].profit_buy %
 		 shop_index[shop_nr].profit_sell);
-  keeper->doTell(ch->getName(),"My maximum inventory per item is %i.",
+  keeper->doTell(ch->getName(),fmt("My maximum inventory per item is %i.") %
 		 getMaxNum(NULL));
 
 
@@ -324,7 +324,7 @@ int TShopOwned::buyShop(){
   value=getPurchasePrice(keeper->getMoney(), value);
   
   if(ch->getMoney()<value){
-    keeper->doTell(ch->getName(), "Sorry, you can't afford this shop.  The price is %i.", value);
+    keeper->doTell(ch->getName(), fmt("Sorry, you can't afford this shop.  The price is %i.") % value);
     return TRUE;
   }
   ch->setMoney(ch->getMoney()-value);
@@ -410,7 +410,7 @@ int TShopOwned::giveMoney(sstring arg){
     act("$n gives some money to $N.", 1, keeper, 0, ch, TO_NOTVICT);
   } else {
     keeper->doTell(ch->getName(), "I don't have that many talens.");
-    keeper->doTell(ch->getName(), "I have %i talens.",keeper->getMoney());
+    keeper->doTell(ch->getName(), fmt("I have %i talens.") % keeper->getMoney());
   }
 
   return TRUE;
