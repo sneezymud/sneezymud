@@ -177,72 +177,6 @@ objIndexData::~objIndexData()
   }
 }
 
-#if !USE_SQL
-// generate index table for object
-void generate_obj_index()
-{
-  int bc;
-  char buf[256];
-  objIndexData *tmpi = NULL;
-
-  // to prevent constant resizing (slows boot), declare an appropriate initial
-  // size.  Should be smallest power of 2 that will hold everything
-  obj_index.reserve(8192);
-
-  rewind(obj_f);
-
-  for (;;) {
-    if (fgets(buf, sizeof(buf)-1, obj_f) != NULL) {
-      if (*buf == '#') {
-        if (tmpi) {
-          // push the previous one into the stack
-
-          obj_index.push_back(*tmpi);
-          delete tmpi;
-        }
-
-        tmpi = new objIndexData();
-        if (!tmpi) {
-          perror("indexData");
-          exit(0);
-        }
-
-        sscanf(buf, "#%d", &bc);
-        tmpi->virt = bc;
-        tmpi->pos = ftell(obj_f);
-        tmpi->name = (tmpi->virt < 99999) ? fread_string(obj_f) : 
-              mud_str_dup("omega");
-        tmpi->short_desc = (tmpi->virt < 99999) ? fread_string(obj_f) :
-              mud_str_dup("omega");
-        tmpi->long_desc = (tmpi->virt < 99999) ? fread_string(obj_f) :
-              mud_str_dup("omega");
-        tmpi->description = (tmpi->virt < 99999) ? fread_string(obj_f) :
-              mud_str_dup("omega");
-
-      } else if (*buf == '$') {
-        // End of File
-        // #99999  -> caused one before to be added
-        // $~  -> now here
-        delete tmpi;
-        break;
-      } else if (*buf == 'E') {
-        extraDescription *new_descr;
-
-        new_descr = new extraDescription();
-        new_descr->keyword = fread_string(obj_f);
-        new_descr->description = fread_string(obj_f);
-        new_descr->next = tmpi->ex_description;
-        tmpi->ex_description = new_descr;
-      }
-    } else {
-      vlogf(LOG_BUG, "generate indices (last bc: %d)", bc);
-      exit(0);
-    }
-  }
-
-  return;
-}
-#else
 // generate index table for object
 void generate_obj_index()
 {
@@ -334,7 +268,6 @@ void generate_obj_index()
 
   return;
 }
-#endif
 
 
 

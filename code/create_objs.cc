@@ -149,134 +149,6 @@ void TBeing::doOEdit(const char *)
   sendTo("Mobs may not edit.\n\r");
 }
 
-#if !USE_SQL
-void ObjLoad(TBeing *ch, int vnum)
-{
-  TObj *o;
-  TBaseClothing *tbc;
-  FILE *obj_f;
-  char buf[256], chk[50];
-  int tmp, tmp2, tmp3, tmp4, i, num, rc;
-  float tmpf;
-  extraDescription *new_descr;
-
-  char *n, *sd, *d, *a;
-
-  sprintf(buf, "immortals/%s/objects/%d", ch->name, vnum);
-  if (!(obj_f = fopen(buf, "r"))) {
-    ch->sendTo("Couldn't open that file.\n\r");
-    return;
-  }
-  // This was ripped from read_object in db.c - Russ
-
-  fscanf(obj_f, "#%d\n", &num);
-  ch->sendTo("Loading saved object number %d\n\r", num);
-  n = fread_string(obj_f);
-  sd = fread_string(obj_f);
-  d = fread_string(obj_f);
-  a = fread_string(obj_f);
-
-  fscanf(obj_f, " %d ", &tmp);
-
-  o = makeNewObj(mapFileToItemType(tmp));
-
-  o->snum   = num;
-  o->number = -1;
-
-  o->name = n;
-  o->shortDescr = sd;
-  o->setDescr(d);
-  o->action_description = a;
-
-  fscanf(obj_f, " %d ", &tmp);
-  o->setObjStat(tmp);
-  fscanf(obj_f, " %d ", &tmp);
-  o->obj_flags.wear_flags = tmp;
-
-  fscanf(obj_f, " %d %d %d %d ", &tmp, &tmp2, &tmp3, &tmp4);
-  o->assignFourValues(tmp, tmp2, tmp3, tmp4);
-
-  fscanf(obj_f, " %f ", &tmpf);
-  o->setWeight(tmpf);
-  fscanf(obj_f, " %d ", &tmp);
-  o->obj_flags.cost = tmp;
-  fscanf(obj_f, " %d ", &tmp);
-  o->canBeSeen = tmp;
-  fscanf(obj_f, " %d ", &tmp);
-  o->spec = tmp;
-  fscanf(obj_f, " %d ", &tmp);
-  o->max_exist = tmp;
-  fscanf(obj_f, " %d ", &tmp);
-  o->obj_flags.struct_points = tmp;
-  fscanf(obj_f, " %d ", &tmp);
-  o->obj_flags.max_struct_points = tmp;
-  fscanf(obj_f, " %d ", &tmp);
-  o->obj_flags.decay_time = tmp;
-  fscanf(obj_f, " %d ", &tmp);
-  o->setVolume(tmp);
-  fscanf(obj_f, " %d ", &tmp);
-  o->setMaterial(tmp);
-
-
-  o->ex_description = 0;
-
-  // These had to be changed to check for EOF since each object is *
-  // stored in seperate files  - Russ                              
-
-  while (((rc = fscanf(obj_f, "%s\n", chk)) == 1) && (*chk == 'E')) {
-    new_descr = new extraDescription();
-    new_descr->keyword = fread_string(obj_f);
-    new_descr->description = fread_string(obj_f);
-    new_descr->next = o->ex_description;
-    o->ex_description = new_descr;
-  }
-  o->setLight(0);
-  for (i = 0; (i < MAX_OBJ_AFFECT) && (rc == 1) && (*chk == 'A'); i++) {
-    fscanf(obj_f, "%d %d %d\n", &tmp, &tmp2, &tmp3);
-    o->affected[i].location = mapFileToApply(tmp);
-
-    if (applyTypeShouldBeSpellnum(o->affected[i].location))
-      o->affected[i].modifier = mapFileToSpellnum(tmp2);
-    else
-      o->affected[i].modifier = tmp2;
- 
-    o->affected[i].modifier2 = tmp3;
-
-    if (o->affected[i].location == APPLY_LIGHT)
-      o->addToLight(o->affected[i].modifier);
-    o->affected[i].type = TYPE_UNDEFINED;
-    o->affected[i].level = 0;
-    o->affected[i].bitvector = 0;
-
-    rc = fscanf(obj_f, "%s\n", chk);
-
-    o->affected[i].checkForBadness(o);
-  }
-  for (i++; (i < MAX_OBJ_AFFECT); i++) {
-    o->affected[i].location = APPLY_NONE;
-    o->affected[i].modifier = 0;
-    o->affected[i].modifier2 = 0;
-    o->affected[i].type = TYPE_UNDEFINED;
-    o->affected[i].level = 0;
-    o->affected[i].bitvector = 0;
-  }
-  fclose(obj_f);
-
-  o->addObjStat(ITEM_STRUNG);
-  if (!ch->hasWizPower(POWER_OEDIT_NOPROTOS))
-    o->addObjStat(ITEM_PROTOTYPE);
-
-  if(o->obj_flags.cost == -1){
-    if((tbc=dynamic_cast<TBaseClothing *>(o))){
-      o->obj_flags.cost = tbc->suggestedPrice();
-    }
-  }
-  act("You just loaded $p.", TRUE, ch, o, 0, TO_CHAR);
-  act(ch->msgVariables(MSG_OEDIT, o).c_str(), TRUE, ch, 0, 0, TO_ROOM);
-
-  *ch += *o;
-}
-#else
 void ObjLoad(TBeing *ch, int vnum)
 {
   TObj *o;
@@ -384,38 +256,6 @@ void ObjLoad(TBeing *ch, int vnum)
 
   *ch += *o;
 }
-#endif
-
-#if !USE_SQL
-static void ObjSave(TBeing *ch, TObj *o, int vnum)
-{
-  FILE *fp;
-  char buf[255];
-
-  // make sure they have an object directory 
-  sprintf(buf, "immortals/%s/objects", ch->getName());
-  if (!(fp = fopen(buf, "r"))) {
-    if (mkdir(buf, 0770)) {
-      ch->sendTo("Unable to create a object directory for you.  Bug Brutius.\n\r");
-      return;
-    } else
-      ch->sendTo("Object directory created...\n\r");
-  }
-  if (fp)
-    fclose(fp);
-
-  sprintf(buf, "immortals/%s/objects/%d", ch->name, vnum);
-  if (!(fp = fopen(buf, "w"))) {
-    ch->sendTo("Problem writing to disk. Maybe try again later.\n\r");
-    return;
-  }
-
-  ch->sendTo("Saving.\n\r");
-
-  raw_write_out_object(o, fp, vnum);
-  fclose(fp);
-}
-#else
 static void ObjSave(TBeing *ch, TObj *o, int vnum)
 {
   ch->sendTo("Saving.\n\r");
@@ -485,7 +325,6 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
   }
 
 }
-#endif
 
 static void osave(TBeing *ch, const char *argument)
 {
@@ -514,43 +353,6 @@ static void osave(TBeing *ch, const char *argument)
   }
 }
 
-#if !USE_SQL
-static void olist(TPerson *ch)
-{
-  char buf[256];
-  FILE *fp = NULL;
-
-  // remove old temporary file, if any 
-  sprintf(buf, "tmp/%s.tempfile", ch->getName());
-  unlink(buf);
-
-  // make sure they have an object directory 
-  sprintf(buf, "immortals/%s/objects", ch->getName());
-  if (!(fp = fopen(buf, "r"))) {
-    if (mkdir(buf, 0770)) {
-      ch->sendTo("Unable to create a object directory for you.  Bug Brutius.\n\r");
-      return;
-    } else
-      ch->sendTo("Object directory created...\n\r");
-  }
-  if (fp)
-    fclose(fp);
-
-  // create the listing 
-  if (!safe_to_be_in_system(ch->getName()))
-    return;
-
-#if 0
-  sprintf(buf, "(cd immortals/%s/objects;ls -C * > ../../../tmp/%s.tempfile)", ch->getName(), ch->getName());
-  vsystem(buf);
-
-  sprintf(buf, "tmp/%s.tempfile", ch->getName());
-  ch->desc->start_page_file(buf, "No objects found!\n\r");
-#else
-  generic_dirlist(buf, ch);
-#endif
-}
-#else
 static void olist(TPerson *ch, bool zone=false)
 {
   string longstr;
@@ -578,7 +380,7 @@ static void olist(TPerson *ch, bool zone=false)
 
   ch->desc->page_string(longstr.c_str(), SHOWNOW_NO, ALLOWREP_YES);
 }
-#endif
+
 
 static void ocreate(TBeing *ch)
 {
@@ -646,7 +448,6 @@ static void oedit(TBeing *ch, const char *arg)
 
 void oremove(TBeing *ch, int vnum)
 {
-#if USE_SQL
   TDatabase db("immortal");
   
   db.query("select * from obj where vnum=%i and owner='%s'", vnum, ch->name);
@@ -663,15 +464,6 @@ void oremove(TBeing *ch, int vnum)
     return;
   } else
     ch->sendTo("Removed.\n\r");
-#else
-  char buf[256];
-
-  sprintf(buf, "immortals/%s/objects/%d", ch->getName(), vnum);
-  if (unlink(buf))
-    ch->sendTo("Unable to remove that object.  Sure you got the # right?\n\r");
-  else
-    ch->sendTo("Successfully removed object #%d.\n\r", vnum);
-#endif
 }
 
 // This is the main function that controls all the object stuff - Russ 

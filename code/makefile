@@ -96,9 +96,6 @@ endif
 # CFLAGS +=-Wredundant-decls  # declaration done more than once
 # **** the STL map header file has a non-inlinable function or two
 # CFLAGS +=-Winline           # looks for non-inlineable inlines
-# postgresql header files
-#CFLAGS +=-I/usr/include/postgresql
-CFLAGS +=-DUSE_SQL=1
 
 # for dynamic libraries
 CFLAGS +=-fPIC
@@ -144,9 +141,6 @@ endif
 #LDFLAGS +=-lpq++
 LDFLAGS +=-lpq
 
-# mysql database lib
-#LDFLAGS +=-L/home/oldspasm/usr/lib
-#LDFLAGS +=-lmysqlclient
 
 ###############################################################################
 ##                        Actual Compiling Starts Here                       ##
@@ -462,7 +456,9 @@ objs/actions.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
 objs/actions.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/actions.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/actions.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
-objs/actions.o: colorstring.h obj_pool.h obj_base_cup.h
+objs/actions.o: colorstring.h obj_pool.h obj_base_cup.h obj_plant.h
+objs/actions.o: obj_expandable_container.h obj_open_container.h
+objs/actions.o: obj_base_container.h
 objs/ai_assignskills.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/ai_assignskills.o: /usr/include/stdio.h /usr/include/features.h
 objs/ai_assignskills.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -1790,7 +1786,8 @@ objs/cmd_egotrip.o: sound.h create.h thing.h room.h obj.h spec_objs.h
 objs/cmd_egotrip.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/cmd_egotrip.o: monster.h account.h extern.h handler.h obj_money.h rent.h
 objs/cmd_egotrip.o: spec_mobs.h materials.h colorstring.h disc_shaman.h
-objs/cmd_egotrip.o: disc_fire.h disc_wrath.h disc_aegis.h
+objs/cmd_egotrip.o: disc_shaman_healing.h disc_fire.h disc_wrath.h
+objs/cmd_egotrip.o: disc_aegis.h
 objs/cmd_feigndeath.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_feigndeath.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_feigndeath.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -5896,7 +5893,7 @@ objs/disc_murder.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/disc_murder.o: monster.h account.h extern.h handler.h obj_money.h rent.h
 objs/disc_murder.o: spec_mobs.h materials.h colorstring.h combat.h
 objs/disc_murder.o: spelltask.h disc_murder.h obj_tool.h obj_general_weapon.h
-objs/disc_murder.o: obj_base_weapon.h
+objs/disc_murder.o: obj_base_weapon.h obj_base_cup.h obj_arrow.h
 objs/disc_nature.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_nature.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_nature.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -13586,10 +13583,11 @@ objs/other.o: disc_wrath.h disc_shaman.h disc_aegis.h disc_afflictions.h
 objs/other.o: disc_hand_of_god.h disc_cures.h disc_nature.h
 objs/other.o: disc_shaman_armadillo.h disc_shaman_frog.h
 objs/other.o: disc_shaman_healing.h disc_shaman_skunk.h disc_shaman_spider.h
-objs/other.o: disc_shaman_control.h obj_trap.h obj_light.h obj_base_light.h
-objs/other.o: obj_armor.h obj_base_clothing.h obj_armor_wand.h obj_wand.h
-objs/other.o: obj_magic_item.h spelltask.h obj_potion.h obj_base_cup.h
-objs/other.o: obj_scroll.h database.h /usr/include/postgresql/libpq-fe.h
+objs/other.o: disc_shaman_control.h disc_murder.h obj_trap.h obj_light.h
+objs/other.o: obj_base_light.h obj_armor.h obj_base_clothing.h
+objs/other.o: obj_armor_wand.h obj_wand.h obj_magic_item.h spelltask.h
+objs/other.o: obj_potion.h obj_base_cup.h obj_scroll.h database.h
+objs/other.o: /usr/include/postgresql/libpq-fe.h
 objs/other.o: /usr/include/postgresql/postgres_ext.h
 objs/parse.o: /usr/include/unistd.h /usr/include/features.h
 objs/parse.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h

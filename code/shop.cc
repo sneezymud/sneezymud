@@ -2006,77 +2006,6 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
 
 }
 
-
-#if !USE_SQL
- void bootTheShops()
-{
-  char *buf=0;
-  int temp;
-  FILE *shop_f;
-
-  if (!(shop_f = fopen(SHOP_FILE, "r"))) {
-    perror("Error in boot shop.\n");
-    exit(0);
-  }
-
-  for (;;) {
-    buf = fread_string(shop_f);
-    if (*buf == '#') {          /* a new shop */
-
-      shopData sd;
-      fscanf(shop_f, "%d \n", &temp);
-      while(temp>=0){
-	sd.producing.push_back(real_object(temp));
-	fscanf(shop_f, "%d \n", &temp);
-      }
-      sd.producing.push_back(-1);
-      fscanf(shop_f, "%f \n", &sd.profit_buy);
-      fscanf(shop_f, "%f \n", &sd.profit_sell);
-
-      fscanf(shop_f, "%d \n", &temp);
-      while(temp>=0){
-	sd.type.push_back(temp);
-	fscanf(shop_f, "%d \n", &temp);
-      }      
-      sd.type.push_back(-1);
-      fscanf(shop_f, "%d \n", &temp);
-      while(temp>=0){
-	sd.mat_type.push_back(temp);
-	fscanf(shop_f, "%d \n", &temp);
-      }      
-      sd.mat_type.push_back(MAX_OBJ_TYPES);
-      sd.no_such_item1 = fread_string(shop_f);
-      sd.no_such_item2 = fread_string(shop_f);
-      sd.do_not_buy = fread_string(shop_f);
-      sd.missing_cash1 = fread_string(shop_f);
-      sd.missing_cash2 = fread_string(shop_f);
-      sd.message_buy = fread_string(shop_f);
-      sd.message_sell = fread_string(shop_f);
-      fscanf(shop_f, "%d \n", &sd.temper1);
-      fscanf(shop_f, "%d \n", &sd.temper2);
-      fscanf(shop_f, "%d \n", &sd.keeper);
-
-      sd.keeper = real_mobile(sd.keeper);
-
-      fscanf(shop_f, "%u \n", &sd.flags);
-      fscanf(shop_f, "%d \n", &sd.in_room);
-      fscanf(shop_f, "%d \n", &sd.open1);
-      fscanf(shop_f, "%d \n", &sd.close1);
-      fscanf(shop_f, "%d \n", &sd.open2);
-      fscanf(shop_f, "%d \n", &sd.close2);
-
-      shop_index.push_back(sd);
-    } else if (*buf == '$') {
-      /* EOF */
-      delete [] buf;
-      break;
-    }
-
-    delete [] buf;
-  }
-  fclose(shop_f);
-}
-#else
 void bootTheShops()
 {
   int shop_nr;
@@ -2158,7 +2087,6 @@ void bootTheShops()
   }  
 }
 
-#endif
 
 bool safe_to_save_shop_stuff(TMonster *ch)
 {
