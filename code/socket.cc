@@ -665,6 +665,16 @@ int TSocket::gameLoop()
             continue;
           }
 
+	  // this was in hit(), makes more sense here I think
+	  if (tmp_ch->getMyRace()->hasTalent(TALENT_FAST_REGEN) &&
+	      (tmp_ch->getHit() < tmp_ch->hitLimit()) &&
+	      !::number(0, 10)){
+	    // mostly for trolls
+	    act("You regenerate slightly.", TRUE, tmp_ch, 0, 0, TO_CHAR);
+	    act("$n regenerates slightly.", TRUE, tmp_ch, 0, 0, TO_ROOM);
+	    tmp_ch->addToHit(::number(1,6));
+	  }
+
           // soak up attack if not in combat
           if ((tmp_ch->cantHit > 0) && !tmp_ch->fight())
             tmp_ch->cantHit--;

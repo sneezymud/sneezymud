@@ -293,8 +293,7 @@ TGun & TGun::operator=(const TGun &a)
 
 TGun::~TGun()
 {
-  if(ammo)
-    delete ammo;
+  delete ammo;
 }
 
 

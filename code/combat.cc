@@ -1761,45 +1761,12 @@ int TBeing::hit(TBeing *target, int pulse)
     return FALSE;
   }
 
+  // this is once-per round stuff
   if (pulse >= 0 && !(pulse % len_rnd)) {
-    // this is once-per round stuff
     if (desc)
       desc->session.rounds[getCombatMode()]++;
     if (target->desc)
       target->desc->session.rounds_received[target->getCombatMode()]++;
-
-    if (getMyRace()->hasTalent(TALENT_FAST_REGEN)) {
-      // mostly for trolls
-      if (getHit() < hitLimit()) {
-        act("You regenerate slightly.", TRUE, this, 0, 0, TO_CHAR);
-        act("$n regenerates slightly.", TRUE, this, 0, 0, TO_ROOM);
-        addToHit(::number(1,3));
-      }
-    }
-
-    // we do this later now - dash (4/14/01)
-#if 0
-    if (!isPc()) {
-      TMonster *tmons = dynamic_cast<TMonster *>(this);
-      if (!tmons->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
-        tmons->developHatred(target);
-
-        // if we are fighting an NPC pet, develop hatred toward the master
-        // however, only do this is the pet was the aggressor (PC ordere pet
-        // to attack), to avoid guards "get thee back to.." from hating
-        // elemental's owner.  Only hate if the pet was the aggressor, or
-        // if the pet's owner is also fighting
-        if (!target->isPc() && target->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
-          if (target->master && (target->master->isPc() || target->master->desc)) {
-            if (target->isAffected(AFF_AGGRESSOR) ||
-                target->master->fight() == tmons) {
-              tmons->developHatred(target->master);
-            }
-          }
-        }
-      }
-    } 
-#endif
   } 
 
 
@@ -1914,6 +1881,7 @@ int TBeing::hit(TBeing *target, int pulse)
     reconcileMana(TYPE_UNDEFINED, 0, 25);
   }
     
+
   // This unequipping stuff should go into a specialized version of this method
   // for mobs.
   if (heldInPrimHand() && !dynamic_cast<TBaseWeapon *>(heldInPrimHand())) {
@@ -1958,11 +1926,14 @@ int TBeing::hit(TBeing *target, int pulse)
   // running through usable limbs and then calling speed functions within.
 
   // Build up attack and defense bonuses for this round.
+  
+  int mod = attackRound(target) - target->defendRound(this);
+  int tarLevel = target->GetMaxLevel();
+
+#if DAMAGE_DEBUG
   int offense = attackRound(target);
   int defense = target->defendRound(this);
-  int mod = offense - defense;
-  int tarLevel = target->GetMaxLevel();
-#if DAMAGE_DEBUG
+
   int myLevel = GetMaxLevel();
   if ((desc || target->desc) && isImmortal())
     vlogf(LOG_COMBAT, "hitter = %s (level %d) targ = %s (level = %d) mod = %d, offense = %d, defense = %d", getName(), myLevel, target->getName(), tarLevel, mod, offense, defense);
@@ -2008,6 +1979,7 @@ int TBeing::hit(TBeing *target, int pulse)
     }
   }
   /////
+
 
   while (fx > 0.999) {
     checkLearnFromHit(this, tarLevel, o, true, w_type);
@@ -4564,35 +4536,31 @@ void perform_violence(int pulse)
         vlogf(LOG_COMBAT, "%s is not fighting in perform_violence!  *BUG BRUTIUS*", ch->getName());
         continue;
       }
-      if (!ch->roomp) {
+      if (!ch->roomp || ch == vict) {
         ch->stopFighting();
         continue;
       }
-      if (ch == vict) 
-        ch->stopFighting();
-      else {
-        if (ch->awake() && ch->sameRoom(*vict)) {
-          vict = ch->fight();
-          if (vict) {
-            rc = ch->hit(vict, pulse + tmp_pulse);
-            if (IS_SET_DELETE(rc, DELETE_VICT)) {
-              vict->reformGroup();
-              delete vict;
-              vict = NULL;
-              continue;
-            } else if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              ch->reformGroup();
-              delete ch;
-              ch = NULL;
-              break;
-            }
-          } else {
-            vlogf(LOG_COMBAT, "do we ever get here");
-          }
-        } else { 
-          // Not in same room or not awake 
-          ch->stopFighting();
-        }
+      if (ch->awake() && ch->sameRoom(*vict)) {
+	vict = ch->fight();
+	if (vict) {
+	  rc = ch->hit(vict, pulse + tmp_pulse);
+	  if (IS_SET_DELETE(rc, DELETE_VICT)) {
+	    vict->reformGroup();
+	    delete vict;
+	    vict = NULL;
+	    continue;
+	  } else if (IS_SET_DELETE(rc, DELETE_THIS)) {
+	    ch->reformGroup();
+	    delete ch;
+	    ch = NULL;
+	    break;
+	  }
+	} else {
+	  vlogf(LOG_COMBAT, "do we ever get here");
+	}
+      } else { 
+	// Not in same room or not awake 
+	ch->stopFighting();
       }
     }
   }
