@@ -570,6 +570,26 @@ int main(int argc, char **argv){
     parse_num_args(argc-1, argv+1, roomrange_t);
   }
 
+  if(!tiny){
+    printf("Unable to open tiny file.\n");
+    printf("Syntax: amap <tinyfile> <room range>\n");
+    printf("<tinyfile> - any room file will work\n");
+    printf("  the default is to use /mud/code/lib/tinyworld.wld.\n");
+    printf("<room range> - a list of room numbers to map, in the same\n");
+    printf("  format as the other tools.\n\n");
+    printf("You may attempt to map multiple zones if they are connected, by\n");
+    printf("specifying both of their room ranges, ex: 2350-2374 600-649\n");
+    printf("will attempt to map both the casino and twilight square.\n");
+    printf("The mapping program needs to have a base room to use as the\n");
+    printf("0,0,0 coordinate.  With a full world map, this room is center\n");
+    printf("square.  With a custom room range, the first room specified in\n");
+    printf("the room range will be used.  You may specify a room number\n");
+    printf("multiple times with no ill effects. ex: 13701 13700-13899\n");
+    printf("will attempt to map dark dwarves, using 13701 as the base room\n");
+    printf("rather than 13700.\n");
+    exit(0);
+  }
+
   if(roomrange_t.size()>0)
     use_range=true;
 
