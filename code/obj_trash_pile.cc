@@ -273,6 +273,22 @@ void TTrashPile::attractVermin()
   
 }
 
+void TTrashPile::doDecay()
+{
+  TObj *o;
+  TThing *t2;
+
+  for(TThing *t=getStuff();t;t=t2){
+    t2=t->nextThing;
+    if((o=dynamic_cast<TObj *>(t)) && !::number(0,3599)){
+      o->addToStructPoints(-1);
+
+      if(o->getStructPoints() < 1)
+	delete o;
+    }
+  }
+}
+
 
 void TTrashPile::doMerge()
 {
@@ -296,10 +312,5 @@ void TTrashPile::doMerge()
       --(*pile);
       delete pile;
     }
-
   }
-
-
-
-
 }

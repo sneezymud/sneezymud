@@ -993,6 +993,7 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	  pile->doMerge();
 	  pile->overFlow();
 	  pile->updateDesc();
+	  pile->doDecay();
 	}
       }
 
