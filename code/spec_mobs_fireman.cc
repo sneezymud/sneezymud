@@ -79,9 +79,6 @@ int fireman(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
 
-  if (::number(0,3))
-    return FALSE;
-  
   if(myself->inRoom() != room){
     for (t = myself->roomp->getStuff(); t; t = t2) {
       t2 = t->nextThing;
