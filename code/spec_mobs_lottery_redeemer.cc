@@ -22,6 +22,7 @@ int lotteryRedeemer(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     vlogf(LOG_PEEL, "prize=%s, o=%s", prizes[i].name.c_str(), o->name);
     if(isname(prizes[i].name, o->name)){
       *ch += *(read_object(prizes[i].vnum, VIRTUAL));
+      delete o;
       myself->doSay("Ah yes, here you are.");
       ssprintf(buf, "gives you %s.",
 	       obj_index[real_object(prizes[i].vnum)].short_desc);
