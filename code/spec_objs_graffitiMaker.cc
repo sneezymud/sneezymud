@@ -55,7 +55,12 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   
   act("$n scrawls some graffiti with $s $p.", TRUE, ch, o, NULL, TO_ROOM);
   act("You make your mark.", TRUE, ch, o, NULL, TO_CHAR);
-  tool->addToToolUses(-1);
   *ch->roomp += *gfti;
+  tool->addToToolUses(-1);
+  if (tool->getToolUses() <= 0) {
+    act("Your $p is all used up.", FALSE, ch, o, NULL, TO_CHAR);
+    act("$n uses up the last of $s $p.", FALSE, ch, 0, NULL, TO_ROOM);
+    tool->makeScraps();
+  }
   return TRUE;
 }
