@@ -657,6 +657,21 @@ extern char *cap(char *s);
 extern char *fread_string(FILE *);
 extern void trimString(string &);
 
+template<class T> T convertTo(const char *stmp)
+{
+  T x;
+
+  if(stmp == NULL)
+    return 0;
+
+  const string s=stmp;
+  istringstream is(s);
+  if(!(is >> x)) // let failure convert to 0 with no warning.  we relied on
+    x=0;         // this (undefined) behavior with atoi, so we need it now
+
+  return x;
+}
+
 template<class T> T convertTo(const string s)
 {
   T x;
