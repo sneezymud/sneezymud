@@ -183,7 +183,7 @@ int TBeing::doAction(const string & argument, cmdTypeT cmd) return rc(0)
   char buf[MAX_INPUT_LENGTH];
   TBeing *vict;
   TMonster *tmp = NULL;
-  TThing *t, *t2;
+  TThing *t, *t2, *tvict=NULL;
 
   if (fight() || riding) {
     switch(cmd) {
@@ -392,15 +392,18 @@ int TBeing::doAction(const string & argument, cmdTypeT cmd) return rc(0)
     return FALSE;
   }
 
-  if ((vict = get_char_room_vis(this, buf, NULL, EXACT_YES))) {
-  } else if ((vict = get_char_room_vis(this, buf))) {
-  } else {
-    sendTo(action.not_found);
-    sendTo("\n\r");
-    return FALSE;
+  if (!(vict = get_char_room_vis(this, buf, NULL, EXACT_YES))) {
+    if (!(vict = get_char_room_vis(this, buf))) {
+      if (!(tvict = get_obj_vis_accessible(this, buf))) {
+	sendTo(action.not_found);
+	sendTo("\n\r");
+	return FALSE;
+      }
+    }
   }
+	  
 
-  if (vict == this) {
+  if (vict && vict == this) {
     sendTo(action.char_auto);
     sendTo("\n\r");
     act(action.others_auto, action.hide, this, 0, 0, TO_ROOM);
@@ -422,7 +425,7 @@ int TBeing::doAction(const string & argument, cmdTypeT cmd) return rc(0)
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return DELETE_THIS;
     }
-  } else {
+  } else if(vict){
     if (vict->getPosition() < action.minPos)
       act("$N is not in a proper position for that.", FALSE, this, 0, vict, TO_CHAR);
     else {
@@ -453,8 +456,11 @@ int TBeing::doAction(const string & argument, cmdTypeT cmd) return rc(0)
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_THIS;
       }
-    } 
-  }
+    }
+  } else if(tvict){
+    act(action.char_found, 0, this, 0, tvict, TO_CHAR);
+    act(action.others_found, action.hide, this, 0, tvict, TO_NOTVICT);
+  }    
 
   return FALSE;
 }
