@@ -724,11 +724,12 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   owners = NULL;
 
 
-  if (shop_index[shop_nr].isProducing(this) &&
-      !dynamic_cast<TCasinoChip *>(this)) {
+  if (shop_index[shop_nr].isProducing(this)){
     // unlimited item, so we just get the value of the item in talens
-    keeper->addToMoney(this->obj_flags.cost, GOLD_SHOP);
-    shoplog(shop_nr, ch, keeper, getName(), this->obj_flags.cost, "wholesale");
+    if(!dynamic_cast<TCasinoChip *>(this)){
+      keeper->addToMoney(this->obj_flags.cost, GOLD_SHOP);
+      shoplog(shop_nr, ch, keeper, getName(), this->obj_flags.cost, "wholesale");
+    }
     delete this;
   }
 #if NO_DAMAGED_ITEMS_SHOP
