@@ -661,7 +661,7 @@ void TBeing::statBeing(TBeing *k)
     sprintf(buf + strlen(buf), "Prim attacks: %.2f, Off attacks: %.2f\n\r",
           fx, fy);
   }
-  if (TestCode5) {
+  if (TestCode5 && k->newfaction()) {
     sprintf(buf + strlen(buf), "%sFaction :%s %s%s,   %sRank :%s %s%s\n\r",
 	    cyan(), norm(), k->newfaction()->getName(), norm(),
 	    cyan(), norm(), k->rank(), norm());

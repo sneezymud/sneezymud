@@ -56,6 +56,7 @@ const int PULSE_TICK        =1;
 // so we still have a factor of 5/3 to account for
 // see statistics.cc for the remaining compensation in exp/damage rates
 
+/*
 const int ONE_SECOND        =10;
 const int PULSE_MOBACT      =ONE_SECOND * 2;
 const int PULSE_TELEPORT    =ONE_SECOND * 2;
@@ -63,8 +64,8 @@ const int PULSE_COMBAT      =ONE_SECOND * 2;
 const int PULSE_DROWNING    =ONE_SECOND * 6;
 const int PULSE_SPEC_PROCS  =ONE_SECOND * 6;
 const int PULSE_NOISES      =ONE_SECOND * 8;
+*/
 
-/*
 const int ONE_SECOND        =4;
 const int PULSE_MOBACT      =ONE_SECOND * 3;
 const int PULSE_TELEPORT    =ONE_SECOND * 3;
@@ -72,7 +73,7 @@ const int PULSE_COMBAT      =ONE_SECOND * 3;
 const int PULSE_DROWNING    =ONE_SECOND * 9;
 const int PULSE_SPEC_PROCS  =ONE_SECOND * 9;
 const int PULSE_NOISES      =ONE_SECOND * 12;
-*/
+
 // Altering PULSE_UPDATES will speed up ticks, but also causes "mud time"
 // to totally recalculate (making it shorter will age people).
 // use caution!

@@ -74,8 +74,8 @@ int init_game_stats(void)
   // july 2001 - these stands need to be adjusted for speed changes...
   // rounds are slower now, so we need to eat up a 5/3 adjustment
   // see comm.h for the first part of the compensation
-  //stats.xp_modif = 0.65;   // people had is too easy in 5.0-5.1
-  stats.xp_modif = 0.86;
+  stats.xp_modif = 0.65;   // people had is too easy in 5.0-5.1
+  //stats.xp_modif = 0.86;
 
   // this affects damage applied.
   // it should be used to slow down or speed up fights
@@ -86,8 +86,8 @@ int init_game_stats(void)
   // 5.0-5.1 was too easy and too fast
   // people could level to 50 in 2-6 play days
   // this should be better for 5.2
-  //  stats.damage_modifier = 0.65;
-  stats.damage_modifier = 0.86;
+  stats.damage_modifier = 0.65;
+  //stats.damage_modifier = 0.86;
 
   // Enabling this makes game look at player activity to decide
   // if deleting should occur.  This MUST be true for ANY form of
