@@ -5,6 +5,15 @@
 // create table poll_option (option_id int, poll_id int, descr varchar(127), primary key (option_id, poll_id));
 // create table poll_vote (account varchar(80), poll_id int, option_id int, primary key (account, poll_id, option_id));
 
+bool voteAdmin(TBeing *ch)
+{
+  if(ch->isImmortal())
+    return true;
+  if(!strcmp(ch->getName(), "Ragamuffin"))
+    return true;
+  return false;
+}
+
 int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
 {
   TDatabase db(DB_SNEEZY);
@@ -80,7 +89,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
     arg=one_argument(arg, tmp);
 
     if(tmp.empty()){
-      if(!ch->isImmortal()){
+      if(!voteAdmin(ch)){
 	ch->sendTo(fmt("%s\n\r") % usage);
       } else {
 	ch->sendTo("Usage:\n\r");
@@ -89,12 +98,12 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
 	ch->sendTo("vote <poll_id> remove <option_id>\n\r");
 	ch->sendTo("vote add <poll_id> <descr>\n\r");
 	ch->sendTo("vote close <poll_id>\n\r");
-	ch->sendTo("vote open <poll_id>\n\r");
+	//	ch->sendTo("vote open <poll_id>\n\r");
       }
       return true;
     } if(tmp == "add"){
       // vote add <poll_id> <descr>
-      if(!ch->isImmortal()){
+      if(!voteAdmin(ch)){
 	ch->sendTo(fmt("%s\n\r") % usage);
 	return true;
       }
@@ -106,7 +115,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
       ch->sendTo("Done.\n\r");
     } else if(tmp == "close"){
       // vote close <poll_id>
-      if(!ch->isImmortal()){
+      if(!voteAdmin(ch)){
 	ch->sendTo(fmt("%s\n\r") % usage);
 	return true;
       }
@@ -115,9 +124,10 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
       db.query("update poll set status='closed' where poll_id=%i",
 	       convertTo<int>(tmp));
       ch->sendTo("Done.\n\r");
+#if 0
     } else if(tmp == "open"){
       // vote open <poll_id>
-      if(!ch->isImmortal()){
+      if(!voteAdmin(ch)){
 	ch->sendTo(fmt("%s\n\r") % usage);
 	return true;
       }
@@ -126,13 +136,14 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
       db.query("update poll set status='open' where poll_id=%i",
 	       convertTo<int>(tmp));
       ch->sendTo("Done.\n\r");
+#endif
     } else {
       poll_id=convertTo<int>(tmp);
       arg=one_argument(arg, tmp);
       
       if(tmp == "add"){
 	// vote <poll_id> add <option_id> <descr>
-	if(!ch->isImmortal()){
+	if(!voteAdmin(ch)){
 	  ch->sendTo(fmt("%s\n\r") % usage);
 	  return true;
 	}
@@ -144,7 +155,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
 	ch->sendTo("Done.\n\r");
       } else if(tmp == "remove"){
 	// vote <poll_id> remove <option_id>
-	if(!ch->isImmortal()){
+	if(!voteAdmin(ch)){
 	  ch->sendTo(fmt("%s\n\r") % usage);
 	  return true;
 	}
