@@ -546,7 +546,7 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   return cost;
 }
 
-bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int)
+bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
 {
   sstring buf;
 
@@ -576,6 +576,12 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int)
     keeper->doTell(buf);
     return TRUE;
   }
+
+  if (shop_index[shop_nr].isOwned() && temp1->isObjStat(ITEM_NORENT)){
+    keeper->doTell("This shop is privately owned and we don't purchase non-rentable items.");
+    return TRUE;
+  }
+
 
   return FALSE;
 }
@@ -629,11 +635,6 @@ void generic_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr)
     ch->sendTo("That's a prototype, no selling that!\n\r");
     return;
   }
-  if (shop_index[shop_nr].isOwned() && obj->isObjStat(ITEM_NORENT)){
-    ch->sendTo("This shop is privately owned and we don't purchase non-rentable items.\n\r");
-    return;
-  }
-
   if (!shop_index[shop_nr].willBuy(obj)) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
     return;
