@@ -3265,16 +3265,15 @@ string nextToken(char delim, unsigned int maxSize, char *str)
 // crash if we pass a NULL
 char *mud_str_dup(const char *buf)
 {
-  // call string version, pass "" if buf is NULL
-  return mud_str_dup((string) (buf?buf:""));
+  if (!buf)
+    return NULL;
+
+  return mud_str_dup((string) buf);
 }
 
-// we use to restrict this to MAX_STRIN_LENGTH in size, we no longer do...
 char * mud_str_dup(const string buf)
 {
   char *tmp = NULL;
-  if (buf.empty())
-    return NULL;
 
   try {
     tmp = new char[buf.length() + 1];
