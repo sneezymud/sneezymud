@@ -1,3 +1,12 @@
+01-06-00 - bat
+- We have a ton of places in code where we pass in a pointer to a class
+  and immediately check for NULL.  In C++, it is generally preferred to pass 
+  a reference to the class as it is essentially the same and is impossible
+  to pass a NULL reference.  I'm starting to migrate some of our functions
+  that should never have NULLS being passed in to use references.
+    -e.g.:   sameRoom(TThing &), inGroup(TBeing &), etc.
+  - this will be an ongoing project
+
 01-05-00 - Peel
 - 3% discount for renting with an innkeeper of the same faction and not unaff
 
