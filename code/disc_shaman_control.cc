@@ -23,12 +23,12 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (caster->getMoney() < 25000) {
-    caster->sendTo("You don't have enough talens to make the resurrection sacrifice.\n\r");
+  if (caster->getMoney() < 2500) {
+    caster->sendTo("You need 2500 talens to make the resurrection sacrifice.\n\r");
     act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
-  caster->addToMoney(-25000, GOLD_HOSPITAL);
+  caster->addToMoney(-2500, GOLD_HOSPITAL);
 
   if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_RESURRECTION)) {
     victim = read_mobile(corpse->getCorpseVnum(), VIRTUAL);
@@ -41,8 +41,9 @@ int resurrection(TBeing * caster, TObj * obj, int level, byte bKnown)
       
     if (victim->isImmune(IMMUNE_CHARM, level)) {
       victim->setPosition(POSITION_STANDING);
-      victim->doSay("Thank you");
       delete corpse;
+      victim->doSay("Thank you soooooooo very much!");
+      victim->doSay("How could I ever repay you for your deed?!");
       return SPELL_FALSE;
     } else if (caster->tooManyFollowers(victim, FOL_ZOMBIE)) {
       act("$N refuses to enter a group the size of yours!", TRUE, caster, NULL, victim, TO_CHAR);
