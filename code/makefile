@@ -3,6 +3,9 @@
 ## SneezyMUD - All rights reserved, SneezyMUD Coding Team
 ##
 ## $Log: makefile,v $
+## Revision 1.3  1999/09/30 17:37:43  batopr
+## added statistics.h for repair.o
+##
 ## Revision 1.2  1999/09/13 15:38:44  batopr
 ## removed rewrite file from make
 ##
@@ -423,6 +426,7 @@ $(OBJDIR)profession.o: prof_ma_wa.h prof_wa_th.h
 $(OBJDIR)quiver.o: disc_looting.h
 $(OBJDIR)range.o: combat.h range.h
 $(OBJDIR)rent.o: ansi.h statistics.h components.h
+$(OBJDIR)repair.o: statistics.h
 $(OBJDIR)riding.o: combat.h
 $(OBJDIR)shop.o: shop.h statistics.h
 $(OBJDIR)show.o: disc_looting.h combat.h components.h
