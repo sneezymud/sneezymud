@@ -59,7 +59,11 @@ int lotteryTicket(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 	     obj_index[real_object(prizes[which].vnum)].short_desc);
   }
 
-  ch->sendTo("You scratch off the ticket.\n\r");
+  act("$n scratches off $p.",
+      TRUE,ch,o,0,TO_ROOM);
+  act("You scratch off $p.",
+      TRUE,ch,o,0,TO_CHAR);
+
   ch->sendTo(COLOR_BASIC, buf.c_str());
 
   ssprintf(buf, "%s\n\r%s", o->ex_description->description, buf.c_str());
