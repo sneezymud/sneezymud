@@ -227,6 +227,54 @@ int TObj::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
   return (int) cost;
 }
 
+int TPotion::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
+{
+  float profit_sell=shop_index[shop_nr].profit_sell;
+
+  // if the shop is player owned, we check custom pricing
+  if(shop_index[shop_nr].isOwned()){
+    TDatabase db(DB_SNEEZY);
+
+    db.query("select profit_sell from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
+
+    if(db.fetchRow())
+      profit_sell=convertTo<float>(db["profit_sell"]);
+    else {
+      // ok, shop is owned and there is no ratio set for this specific object
+      // so check keywords
+      db.query("select match, profit_sell from shopownedmatch where shop_nr=%i", shop_nr);
+
+      while(db.fetchRow()){
+	if(isname(db["match"], name)){
+	  profit_sell=convertTo<float>(db["profit_sell"]);
+	  break;
+	}
+      }
+    }
+
+    db.query("select profit_sell from shopownedplayer where shop_nr=%i and lower(player)=lower('%s')", shop_nr, ch->name);
+    
+    if(db.fetchRow())
+      profit_sell = convertTo<float>(db["profit_sell"]);
+
+  }
+
+  // adjust cost based on structure
+  double cost = getValue();
+
+  // adjust cost based on shop pricing
+  cost *= profit_sell;
+
+  // adjust for charisma/swindle modifier
+  if (chr != -1 && chr!=0)
+    cost /= chr;
+
+  // make sure we don't have a negative cost
+  cost = max(1.0, cost);
+
+  return (int) cost;
+}
+
 
 int TPotion::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
 {

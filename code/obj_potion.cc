@@ -59,23 +59,6 @@ bool TPotion::isSimilar(const TThing *t) const
   return true;
 }
 
-int TPotion::sellPrice(int, int shop_nr, float, const TBeing *)
-{
-//  int cost_per;
-  int price;
-
-//  cost_per = DrinkInfo[getDrinkType()]->price;
-//  price = (int) (getDrinkUnits() * cost_per * shop_index[shop_nr].profit_sell);
-  price = (int) (getValue() * shop_index[shop_nr].profit_sell);
-  
-  if (obj_flags.cost <= 1) {
-    price = max(0, price);
-  } else {
-    price = max(1, price);
-  }
-
-  return price;
-}
 
 int TPotion::getValue() const
 {
