@@ -3001,39 +3001,6 @@ int sonicBlast(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   return TRUE;
 }
 
-int slipInOffal(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
-{
-  dirTypeT dir;
-  char buf[256];
-  int dum = (int) arg;
-
-  if (cmd == CMD_OBJ_MOVEMENT) {
-    dir = dirTypeT(dum);
-    if (dir < MIN_DIR || dir >= MAX_DIR) {
-      vlogf(LOG_PROC, "Problematic direction in CMD_OBJ_MOVEMENT for Offal");
-      return FALSE;
-    }
-    if (ch->isFlying() || ch->riding) {
-      return FALSE;
-    }
-    if (::number(0,99) == 0) {
-      act("$n steps in $p and slips.", TRUE, ch, me, 0, TO_ROOM);
-      act("You step in $p and slip.", TRUE, ch, me, 0, TO_CHAR);
-      sprintf(buf, "As you moved %sward, you fell down.", dirs[dir]);
-      act(buf, TRUE, ch, me, 0, TO_CHAR);
-      sprintf(buf, "$n trips and falls as $e moves in from a %sward direction.", dirs[dir]);
-      act(buf, TRUE, ch, me, 0, TO_ROOM);
-      ch->setPosition(POSITION_SITTING);
-      delete me;
-      return TRUE;
-    } else {
-      return FALSE;
-    }
-  }
-  return FALSE;
-}
-
-
 int vorpal(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
   TThing *weap=dynamic_cast<TThing *>(o);
   int dam, rc=0;
@@ -7495,7 +7462,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Energy Shield: shield", energyShield},
   {FALSE, "potion of learning", learningPotion},
   {FALSE, "mystery potion", mysteryPotion},
-  {FALSE, "Offal slip proc", slipInOffal},
+  {FALSE, "BOGUS", bogusObjProc},
   {TRUE, "Fireball Weapon", fireballWeapon}, //125
   {FALSE, "Fire Shield", fireArmor},
   {FALSE, "last proc", bogusObjProc}
