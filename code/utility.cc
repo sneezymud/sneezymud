@@ -1916,3 +1916,18 @@ sstring secsToString(time_t num)
   }
   return timesstring;
 }
+
+sstring talenDisplay(int talens)
+{
+  float t;
+
+  if(talens>1000000){
+    t=(int)(talens/100000);
+    return fmt("%.1fM") % (t/10.0);
+  } else if(talens > 10000){
+    t=(int)(talens/1000);
+    return fmt("%ik") % (int)t;
+  }
+
+  return fmt("%i") % talens;
+}
