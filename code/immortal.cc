@@ -1633,6 +1633,17 @@ static bool isSpammyRoom(int tRoom)
   return FALSE;
 }
 
+bool isInt(const string &s)
+{
+  int x;
+  istringstream is(s);
+  if(!(is >> x)){
+    return false;
+  } else {
+    return true;
+  }
+}
+
 
 // returns DELETE_THIS if this dies
 int TPerson::doAt(const char *argument, bool isFarlook)
@@ -1651,7 +1662,7 @@ int TPerson::doAt(const char *argument, bool isFarlook)
     sendTo("You must supply a room number or a name.\n\r");
     return FALSE;
   }
-  if ((convertTo<int>(loc) && !strchr(loc, '.')) ||
+  if ((isInt(loc) && !strchr(loc, '.')) ||
       *loc == '0') {
     // this latter case is for "at 0 look"
     loc_nr = convertTo<int>(loc);
