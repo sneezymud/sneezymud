@@ -4523,6 +4523,9 @@ void TBeing::doClone(const sstring &arg)
     }
     i = i->nextThing;
   }
+
+  // this bit makes the mob TRUE for isPc, and prevents the look responses, etc
+  SET_BIT(mob->specials.act, ACT_POLYSELF);  
   
   sendTo("Your clone appears before you.\n\r");
   return;
