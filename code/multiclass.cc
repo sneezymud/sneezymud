@@ -280,7 +280,7 @@ void TPerson::startLevels()
   // do pwipes or setup new muds very often (or ever, really)
   // it just ends up causing problems
 
-  if (!strcmp(name, "Peel")){ ||
+  if (!strcmp(name, "Peel")){
     setLevel(MAGE_LEVEL_IND, MAX_IMMORT);
     setLevel(CLERIC_LEVEL_IND, MAX_IMMORT);
     setLevel(THIEF_LEVEL_IND, MAX_IMMORT);
