@@ -814,7 +814,10 @@ int repairman(TBeing *buyer, cmdTypeT cmd, const char *arg, TMonster *repair, TO
       return FALSE;
     case CMD_LIST:
       if(buyer->isImmortal()){
-	buyer->sendTo(COLOR_BASIC, repairList(repair));
+	if(buyer->desc)
+	  buyer->desc->page_string(repairList(repair));
+	else
+	  buyer->sendTo(COLOR_BASIC, repairList(repair));
 	return TRUE;
       }
       return FALSE;
