@@ -18,11 +18,20 @@ void calcBankInterest()
       shop_nr=convertTo<int>(db["shop_nr"]);
       profit_sell=shop_index[shop_nr].profit_sell;
 
+      if(profit_sell==1.0)
+	continue;
+
       in.query("select sum(talens) as talens from shopownedbank where shop_nr=%i",
 	       shop_nr);
       if(in.fetchRow())
 	pretalens=convertTo<int>(in["talens"]);
 	
+
+      in.query("select sum(talens) as talens from shopownedcorpbank where shop_nr=%i",
+	       shop_nr);
+      if(in.fetchRow())
+	pretalens+=convertTo<int>(in["talens"]);
+
       
       in.query("update shopownedbank set talens=talens * %f where shop_nr=%i", 
 	       1.0+(profit_sell/365.0), shop_nr);
@@ -38,8 +47,6 @@ void calcBankInterest()
 	       shop_nr);
       if(in.fetchRow())
 	posttalens+=convertTo<int>(in["talens"]);
-
-
 
       if((posttalens-pretalens) !=0)
 	in.query("insert into shoplog values (%i, 'unknown', 'paying interest', 'all', %i, 0, 0, now(), 0)", shop_nr, posttalens-pretalens);
