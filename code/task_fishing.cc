@@ -110,23 +110,20 @@ TObj *catch_a_fish(TRoom *rp){
 
 
 TThing *findBait(TThing *stuff){
-  TThing *tt, *ret;
+  TThing *tt;
   TTool *bait;
+  TThing *ret;
 
   if(!stuff) 
     return NULL;
 
   for(tt=stuff;tt;tt=tt->nextThing){
-    if(!tt)
-      return NULL;
-
-    if(tt->getStuff() && (ret=findBait(tt->getStuff())))
-      return ret;
-
-    bait=dynamic_cast<TTool *>(tt);
-
-    if(bait && bait->getToolType() == TOOL_FISHINGBAIT)
+    if(tt && (bait=dynamic_cast<TTool *>(tt)) &&
+       (bait->getToolType() == TOOL_FISHINGBAIT))
       return tt;
+
+    if(tt && tt->getStuff() && (ret=findBait(tt->getStuff())))
+      return ret;
   }
 
   return NULL;
