@@ -1213,6 +1213,67 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         return TRUE;
       }
       break;
+    case 13111:
+      if (cmd != CMD_PUSH)
+	return FALSE;
+      if(!strcasecmp(buf, "kelp")) {
+	ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_DEF,
+			   "",
+			   "",
+			   "You push aside the kelp and try to clear a path.",
+			   "$n pushes aside some kelp, trying to clear a path.",
+			   "A path through the kelp has been opened.",
+			   "You push the kelp strands back into place.",
+			   "$n pushes some kelp strands back into place.",
+			   "A path through the help has been closed."
+			   );
+	return TRUE;
+      }
+      break;
+    case 9626:
+      if (cmd != CMD_PUSH)
+	return FALSE;
+      if(!strcasecmp(buf, "kelp")) {
+	ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_DEF,
+			   "",
+			   "",
+			   "You push aside the kelp and try to clear a path.",
+			   "$n pushes aside some kelp, trying to clear a path.",
+			   "A path through the kelp has been opened.",
+			   "You push the kelp strands back into place.",
+			   "$n pushes some kelp strands back into place.",
+			   "A path through the help has been closed."
+			   );
+	return TRUE;
+      }
+      break;
+    case 9625:
+      if(cmd!=CMD_PUSH)
+	return FALSE;
+      if(!strcasecmp(buf, "kelp")) {
+	ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_DEF,
+			   "",
+			   "",
+			   "You push aside the kelp and try to clear a path.",
+			   "$n pushes aside some kelp, trying to clear a path.",
+			   "A path through the kelp has been opened.",
+			   "You push the kelp strands back into place.",
+			   "$n pushes some kelp strands back into place.",
+			   "A path through the help has been closed."
+			   );
+	ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_DEF,
+			   "",
+			   "",
+			   "",
+			   "",
+			   "",
+			   "",
+			   "",
+			   ""
+			   );
+	return TRUE;
+      }
+      break;
     case 10111:
       if ((cmd != CMD_PULL) && (cmd != CMD_PRESS) && (cmd != CMD_PUSH))
         return FALSE;

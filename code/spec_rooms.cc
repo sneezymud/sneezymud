@@ -2023,6 +2023,8 @@ void assign_rooms(void)
     {9391, SecretDoors},
     {9581, SecretDoors},      // bandit camp doors
     {9582, SecretDoors},
+    {9625, SecretDoors},
+    {9626, SecretDoors},
     {10020, monkQuestProcLand},
     {10111, SecretDoors},     // Batopr-elf doors
     {10144, SecretDoors},
@@ -2051,6 +2053,7 @@ void assign_rooms(void)
 //    {11353, slide},   air room, not needed
     {11423, slide},
     {12781, Whirlpool},
+    {13111, SecretDoors},
     {13480, belimusThroat},
     {13481, belimusThroat},
     {13482, belimusThroat},
