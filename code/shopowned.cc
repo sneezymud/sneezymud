@@ -354,7 +354,8 @@ void TShopOwned::showInfo()
   }
 
   // repair stuff
-  if(getQuality() >=0)
+  if((getQuality() >= 0 && getQuality() != 1) ||
+     (getSpeed() >= 0 && getSpeed() != 1))
     keeper->doTell(ch->getName(), fmt("My quality percentage is %f and my speed modifier is %f.") % getQuality() % getSpeed());
 
 
