@@ -340,6 +340,12 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
       sendTo(COLOR_MOBS, fmt("The maximum number of riders are already riding %s.\n\r") % horse->getName());
       return FALSE;
     }
+
+    if (!isPc() && horse->master) {
+      sendTo("They are currently following someone else, my dear, and will not follow you right now.");
+      return FALSE;
+    }
+
     // weight > free horse carry weight
     if (compareWeights(getTotalWeight(TRUE),
                  (horse->carryWeightLimit() - horse->getCarriedWeight())) == -1) {
