@@ -136,7 +136,7 @@ void TShopOwned::doReserve()
     corp.corpLog(keeper->getName(), "reserve", -amt);
 
     keeper->addToMoney(amt, GOLD_SHOP);
-    shoplog(shop_nr, ch, keeper, "talens", amt, "reserve");
+    shoplog(shop_nr, keeper, keeper, "talens", amt, "reserve");
   } else if(money > max){
     amt=money-even;
 
@@ -144,7 +144,7 @@ void TShopOwned::doReserve()
     corp.corpLog(keeper->getName(), "reserve", amt);
 
     keeper->addToMoney(-amt, GOLD_SHOP);
-    shoplog(shop_nr, ch, keeper, "talens", -amt, "reserve");
+    shoplog(shop_nr, keeper, keeper, "talens", -amt, "reserve");
   }
 }
 
