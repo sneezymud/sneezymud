@@ -3793,7 +3793,7 @@ void TMagicItem::evaluateMe(TBeing *ch) const
     learn /= 200;
   } else if (ch->hasClass(CLASS_SHAMAN)) {
     learn *= ch->getClassLevel(CLASS_SHAMAN);
-    learn /= 200;
+    learn /= 50;
   } else {
     learn *= ch->getSkillValue(SPELL_IDENTIFY);
     learn /= 100;
@@ -4675,7 +4675,8 @@ void TBeing::describeBowRange(const TBow *obj, int learn)
 void TBeing::describeMagicLevel(const TMagicItem *obj, int learn) const
 {
   if (!hasClass(CLASS_MAGE) && !hasClass(CLASS_CLERIC) &&
-      !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN))
+      !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN) &&
+      !hasClass(CLASS_SHAMAN) )
     return;
 
   int level = GetApprox(obj->getMagicLevel(), learn);
@@ -4708,7 +4709,8 @@ const sstring numberAsString(int num)
 void TBeing::describeMagicLearnedness(const TMagicItem *obj, int learn) const
 {
   if (!hasClass(CLASS_MAGE) && !hasClass(CLASS_CLERIC) &&
-      !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN))
+      !hasClass(CLASS_RANGER)  && !hasClass(CLASS_DEIKHAN) && 
+      !hasClass(CLASS_SHAMAN))
     return;
 
   int level = GetApprox(obj->getMagicLearnedness(), learn);

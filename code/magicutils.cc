@@ -644,7 +644,10 @@ TComponent *TBeing::findComponent(spellNumT spell) const
 static void missingComponent(const TBeing * ch)
 {
   if (ch->hasClass(CLASS_RANGER)) {
-    ch->sendTo("You seem to lack the proper materials to complete this magic skill.\n\r");
+    if (ch->fight()) {
+      ch->sendTo("You are unable to concentrate on casting while fighting without your components in hand.\n\r");
+    } else
+      ch->sendTo("You seem to lack the proper materials to complete this magic skill.\n\r");
   } else {
     ch->sendTo("You seem to lack the proper materials to complete your task.\n\r");
     act("$n kicks $mself as $e realizes $e just screwed up.",

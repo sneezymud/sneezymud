@@ -276,7 +276,7 @@ int factionFaery(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
     }
     return FALSE;
 
-  } else if (cmd == CMD_SAY) {
+  } else if (cmd == CMD_SAY || cmd == CMD_SAY2) {
     one_argument(arg, buf);
 
     if (strcmp(buf, "help"))
@@ -7321,13 +7321,14 @@ int konastisGuard(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
 int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj *)
 {
   
-  if (cmd != CMD_SAY && cmd != CMD_TELL && cmd != CMD_OPEN)
+  if (cmd != CMD_SAY && cmd != CMD_SAY2 && cmd != CMD_TELL && cmd != CMD_OPEN)
     return FALSE;
     
   sstring sarg = arg;
   if ( (cmd == CMD_TELL && sarg.find(" ") > 0 && 
          !isname(sarg.substr(0,(int) sarg.find(" ")), tree->name)) ||
-       (cmd == CMD_SAY && sarg.lower().find("clue") == sstring::npos ))
+       ((cmd == CMD_SAY || cmd == CMD_SAY2) 
+          && sarg.lower().find("clue") == sstring::npos ))
   {
     return FALSE;
   }
@@ -7419,7 +7420,8 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
       ""
     );
   }
-  else if ( chancesLeft > 0 && (cmd == CMD_TELL || cmd == CMD_SAY) && 
+  else if ( chancesLeft > 0 && (cmd == CMD_TELL || cmd == CMD_SAY 
+        || cmd == CMD_SAY2) && 
       sarg.lower().find("clue") != sstring::npos) 
   {
     act("<c>$n says,<z> \"A clue, hmm, a clue... ah, hmm, yes, if you answer this I'll know that my friend you have found:\"", 
@@ -7498,7 +7500,7 @@ int shopWhisper(TBeing *ch, TMonster *myself, int shop_nr, const char *arg)
 
 int mimic(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mimic, TObj *)
 {
-  if (cmd != CMD_SAY && cmd != CMD_SHOUT && cmd != CMD_WHISPER)
+  if (cmd != CMD_SAY && cmd != CMD_SAY2 && cmd != CMD_SHOUT && cmd != CMD_WHISPER)
     return FALSE;
 
   sstring sarg = arg;
@@ -7529,7 +7531,7 @@ int mimic(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mimic, TObj *)
     return TRUE;
   }
 
-  if (cmd == CMD_SAY) {
+  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
     ch->doSay(arg);
     if (snicker) {
       mimic->doAction("", CMD_SNICKER);

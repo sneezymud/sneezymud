@@ -588,6 +588,20 @@ TObj *raw_read_item(FILE *fp, unsigned char version)
     item.decay_time = 0;
   }
 
+  // update these items - maror, 12-29-03
+  if ((item.item_number >= 1120 && item.item_number <= 1131) || //admantium
+      (item.item_number >= 8837 && item.item_number <= 8850) || //dark grey
+      (item.item_number >= 9600 && item.item_number <= 9611) || //whale
+      (item.item_number == 9624) || // whale hood
+      (item.item_number >= 10490 && item.item_number <= 10062) || //emerald
+      (item.item_number >= 10600 && item.item_number <= 10611) || //sylvanplate
+      (item.item_number >= 10620 && item.item_number <= 10631) || //sylvansilk
+      (item.item_number >= 23214 && item.item_number <= 23233)){  //dark blue
+    version = 6;
+  }
+
+      
+
   if (!(o = read_object(item.item_number, VIRTUAL))) {
     vlogf(LOG_BUG, "Unable to load object Vnum = %d from rent.", item.item_number);
     return NULL;
