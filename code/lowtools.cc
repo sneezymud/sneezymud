@@ -56,7 +56,9 @@ map <sstring,sstring> parse_data_file(const sstring &file, int num)
   map <sstring,sstring> values;
   unsigned int loc;
 
+  // this is a crappy kluge
   values["vnum"]="EOM";
+  values["shop_nr"]="EOM";
       
   while(num--){
     while(getline(ifile, buf)){

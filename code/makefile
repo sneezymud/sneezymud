@@ -386,6 +386,11 @@ sqledwld: $(LIBS) objs/sqledwld.o objs/lowtools.o
 	@$(CC) -o sqledwld objs/sqledwld.o objs/lowtools.o $(LIBS) $(LDFLAGS)
 	@/usr/bin/strip sqledwld
 
+sqledshop: $(LIBS) objs/sqledshop.o objs/lowtools.o
+	@echo \*\*\* Making Final Link: sqledshop
+	@$(CC) -o sqledshop objs/sqledshop.o objs/lowtools.o $(LIBS) $(LDFLAGS)
+	@/usr/bin/strip sqledshop
+
 amap:	$(LIBS) objs/amap.o objs/lowtools.o
 	@echo \*\*\* Making Final Link: amap
 	@$(CC) -o amap objs/amap.o objs/lowtools.o $(LIBS) $(LDFLAGS)
@@ -402,8 +407,8 @@ sqledobj_builder: $(LIBS) objs/sqledobj_builder.o objs/lowtools.o
 	@/usr/bin/strip sqledobj_builder
 
 # make all low tools
-lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledobj_builder sqladdobjs_builder
-	@/bin/cp -f sqladdobjs sqledobj sqledimmobj sqladdobjs_builder sqledobj_builder /mud/low/bin
+lowtools: sqladdobjs sqledobj sqledimmobj amap sqledwld sqledobj_builder sqladdobjs_builder sqledshop
+	@/bin/cp -f sqladdobjs sqledobj sqledimmobj sqladdobjs_builder sqledobj_builder sqledshop /mud/low/bin
 	@echo Finished making lowtools
 
 # this links against prod libs for cgi execution
@@ -17513,6 +17518,52 @@ objs/sqledobj_builder.o: colorstring.h format.h database.h
 objs/sqledobj_builder.o: /usr/local/include/libpq-fe.h
 objs/sqledobj_builder.o: /usr/local/include/postgres_ext.h lowtools.h
 objs/sqledobj_builder.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+objs/sqledshop.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
+objs/sqledshop.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
+objs/sqledshop.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
+objs/sqledshop.o: /usr/include/g++/ctime /usr/include/time.h
+objs/sqledshop.o: /usr/include/sys/_posix.h /usr/include/sys/types.h
+objs/sqledshop.o: /usr/include/sys/inttypes.h /usr/include/machine/types.h
+objs/sqledshop.o: /usr/include/machine/endian.h /usr/include/g++/cctype
+objs/sqledshop.o: /usr/include/ctype.h /usr/include/runetype.h
+objs/sqledshop.o: /usr/include/g++/cassert /usr/include/assert.h
+objs/sqledshop.o: /usr/include/g++/cstring /usr/include/string.h
+objs/sqledshop.o: /usr/include/stdarg.h /usr/include/g++/cmath
+objs/sqledshop.o: /usr/include/g++/_G_config.h /usr/include/stddef.h
+objs/sqledshop.o: /usr/include/math.h /usr/include/g++/cerrno
+objs/sqledshop.o: /usr/include/errno.h /usr/include/g++/string
+objs/sqledshop.o: /usr/include/g++/std/bastring.h /usr/include/g++/cstddef
+objs/sqledshop.o: /usr/include/g++/std/straits.h /usr/include/g++/alloc.h
+objs/sqledshop.o: /usr/include/g++/stl_config.h /usr/include/g++/stl_alloc.h
+objs/sqledshop.o: /usr/include/g++/iostream.h /usr/include/g++/streambuf.h
+objs/sqledshop.o: /usr/include/g++/libio.h /usr/include/g++/iterator
+objs/sqledshop.o: /usr/include/g++/stl_relops.h
+objs/sqledshop.o: /usr/include/g++/stl_iterator.h
+objs/sqledshop.o: /usr/include/g++/std/bastring.cc /usr/include/g++/vector
+objs/sqledshop.o: /usr/include/g++/stl_algobase.h /usr/include/g++/stl_pair.h
+objs/sqledshop.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/sqledshop.o: /usr/include/machine/limits.h /usr/include/sys/syslimits.h
+objs/sqledshop.o: /usr/include/g++/new.h /usr/include/g++/new
+objs/sqledshop.o: /usr/include/g++/exception /usr/include/g++/stl_construct.h
+objs/sqledshop.o: /usr/include/g++/stl_uninitialized.h
+objs/sqledshop.o: /usr/include/g++/stl_vector.h
+objs/sqledshop.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/sqledshop.o: /usr/include/g++/stl_tree.h /usr/include/g++/stl_function.h
+objs/sqledshop.o: /usr/include/g++/stl_map.h /usr/include/g++/stl_multimap.h
+objs/sqledshop.o: /usr/include/g++/list /usr/include/g++/stl_list.h
+objs/sqledshop.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/sqledshop.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
+objs/sqledshop.o: sstring.h low.h enum.h spells.h structs.h parse.h
+objs/sqledshop.o: immunity.h discipline.h spell2.h db.h ansi.h cmd_dissect.h
+objs/sqledshop.o: client.h response.h faction.h comm.h toggle.h wiz_powers.h
+objs/sqledshop.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
+objs/sqledshop.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
+objs/sqledshop.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
+objs/sqledshop.o: being.h person.h monster.h paths.h account.h extern.h
+objs/sqledshop.o: handler.h obj_money.h spec_mobs.h materials.h colorstring.h
+objs/sqledshop.o: format.h database.h /usr/local/include/libpq-fe.h
+objs/sqledshop.o: /usr/local/include/postgres_ext.h lowtools.h
+objs/sqledshop.o: /usr/include/unistd.h /usr/include/sys/unistd.h
 objs/sqledwld.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/sqledwld.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/sqledwld.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
