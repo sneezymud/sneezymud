@@ -13,7 +13,8 @@
 
 class TGenWeapon : public TBaseWeapon {
   private:
-    weaponT weapon_type;
+    weaponT weapon_type[3];
+    int wtype_frequency[3];
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
@@ -26,8 +27,10 @@ class TGenWeapon : public TBaseWeapon {
     virtual void lowCheck();
     virtual bool sellMeCheck(const TBeing *, TMonster *) const;
   
-    virtual weaponT getWeaponType() const;
-    virtual void setWeaponType(weaponT n);
+    virtual weaponT getWeaponType(int which=-1) const;
+    virtual void setWeaponType(weaponT n, int which=0);
+    int getWeaponFreq(int which) const;
+    void setWeaponFreq(int n, int which=0);
 
     bool canCudgel() const;
     bool canBackstab() const;
