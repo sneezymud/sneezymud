@@ -8,7 +8,6 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   TMonster *guard;
   TTool *totem=NULL;
   int found=0;
-  //  TBeing *dummy;
   int learning = ch->getSkillValue(SKILL_SACRIFICE);
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
   int clev = ch->GetMaxLevel();
@@ -189,6 +188,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       break;
   default:
       if (cmd < MAX_CMD_LIST)
+	ch->addToLifeforce(-factor * 2);
         warn_busy(ch);
       break;
   }

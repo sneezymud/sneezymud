@@ -276,6 +276,9 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL, float e
       case SPELL_COLOR_SPRAY:
        sprintf(buf, "Eldritch magic has coursed through %s's corpse here.",getName());
         break;
+      case SPELL_STORMY_SKIES:
+       sprintf(buf, "The weather eroded corpse of %s is here, charred and dripping wet.",getName());
+        break;
       case SPELL_SAND_BLAST:
         sprintf(buf, "%s's corpse has thousands of tiny pinprick wounds on the exposed skin.", namebuf);
         break;
