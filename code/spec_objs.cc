@@ -6332,11 +6332,12 @@ int starfiresheath(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
 	if (sword->equippedBy) {
 	  if (sword->eq_pos > WEAR_NOWHERE) {
+	    ch2 = dynamic_cast<TBeing *>(sword->equippedBy);
+
 	    act("<W>$p <W>suddenly turns incredibly hot in your hands, and you drop it!<1>",TRUE,ch2,sword,NULL,TO_CHAR,NULL);
 
 	    act("<W>$p <W>suddenly turns incredibly hot in $N's hands, and $e drops it!<1>",TRUE,ch2,sword,NULL,TO_ROOM,NULL);
 
-	    ch2 = dynamic_cast<TBeing *>(sword->equippedBy);
 	    *ch2->roomp += *ch2->unequip(sword->eq_pos);
 	  } else {
 	    vlogf(LOG_BUG, "starfire proc trying to unequip %s in slot -1 on %s", sword->getName(),
