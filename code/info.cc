@@ -3645,8 +3645,8 @@ void TMagicItem::evaluateMe(TBeing *ch) const
     learn *= ch->getClassLevel(CLASS_RANGER);
     learn /= 200;
   } else if (ch->hasClass(CLASS_SHAMAN)) {
-    learn *= ch->getSkillValue(SKILL_RITUALISM);
-    learn /= 100;
+    learn *= ch->getClassLevel(CLASS_SHAMAN);
+    learn /= 200;
   } else {
     learn *= ch->getSkillValue(SPELL_IDENTIFY);
     learn /= 100;
