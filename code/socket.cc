@@ -544,6 +544,15 @@ int TSocket::gameLoop()
             tmp_ch = NULL;
             continue;
           }
+
+	  TMonster *tmon = dynamic_cast<TMonster *>(tmp_ch);
+	  if(tmon){
+	    tmon->checkResponses((tmon->opinion.random ? tmon->opinion.random : 
+			    (tmon->targ() ? tmon->targ() : tmon)),
+			   NULL, NULL, CMD_RESP_PULSE);
+
+	  }
+
         }
 
 	if (!mobstuff) {

@@ -371,8 +371,10 @@ void TMonster::makeNoise()
       MakeRoomNoise(this, in_room, sounds, distantSnds);
   }
 
+#if 0
   checkResponses((opinion.random ? opinion.random : (targ() ? targ() : this)),
                  NULL, NULL, CMD_RESP_PULSE);
+#endif
 }
 
 // return DELETE_THIS if this should die
