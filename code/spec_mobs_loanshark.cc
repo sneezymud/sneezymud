@@ -16,7 +16,6 @@
 // setrates <X> <Y> <term> loanrate
 // X * (lvl ** Y)
 
-
 double getPenalty(unsigned int shop_nr, const sstring &name)
 {
   TDatabase db(DB_SNEEZY);
@@ -111,6 +110,7 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   unsigned int shop_nr;
   TDatabase db(DB_SNEEZY);
   time_info_data due;
+  sstring buf;
 
   if(cmd != CMD_WHISPER && cmd != CMD_LIST && cmd != CMD_BUY &&
      cmd != CMD_MOB_GIVEN_COINS)
@@ -158,37 +158,48 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 		   month_name[due.month] %
 		   due.year);
       }
-      return true;
-    }
-    
-    /////////////////////////////
-    db.query("select amt, granted_time, term, rate, default_charge from shopownedloans where player_id=%i", ch->getPlayerID());
-
-    if(db.fetchRow()){
-      amt=convertTo<int>(db["amt"]);
-      due=whenDue(convertTo<int>(db["granted_time"]), convertTo<int>(db["term"]));
-
-      me->doTell(ch->getName(), fmt("You have a loan for %i talens, due on the %s day of %s, Year %d P.S.") %
-		amt %
-		numberAsString(due.day) % 
-		month_name[due.month] %
-		due.year);
-
-      amt=calcInterest(amt, convertTo<int>(db["granted_time"]),
-		  convertTo<int>(db["term"]), convertTo<float>(db["rate"]),
-		  convertTo<float>(db["default_charge"]));
-	
-      
-      me->doTell(ch->getName(), fmt("With interest, you owe %i talens.") % amt);
+    } else if(sstring(arg)=="repo" && tso.hasAccess(SHOPACCESS_INFO)){
+      me->doTell(ch->getName(), 
+		 "I have the following options for collecting on loans.");
+      me->doTell(ch->getName(), fmt("1.[1%c]) I can do a direct transfer from the debtors bank account.") % '%');
+      me->doTell(ch->getName(), fmt("2.[1%c]) I can do a direct transfer from the debtors corporate account.") % '%');
+      me->doTell(ch->getName(), fmt("3.[3%c]) I can do a direct transfer from the debtors shops.") % '%');
+      me->doTell(ch->getName(), fmt("4.[5%c]) I can repossess items from the debtors shops and give them to you.") % '%');
+      me->doTell(ch->getName(), fmt("5.[7%c]) I can repossess entire shops if need be.") % '%');
+      me->doTell(ch->getName(), fmt("6.[9%c]) I can send out a collection agent to collect the debt by force.") % '%');
+      me->doTell(ch->getName(), "The cost of the collection method is a percent of the debt, as listed.");
+      me->doTell(ch->getName(), "You will be charged even if the collection isn't successful.");
+      me->doTell(ch->getName(), "Shops won't be repossessed unless the debt exceeds the value of the shop.");
+      me->doTell(ch->getName(), "To use one of these collection methods, do 'buy repo <number> <playername>");
     } else {
-      me->doTell(ch->getName(), fmt("I can extend you a loan for %i talens.") % amt);
-      me->doTell(ch->getName(), fmt("A yearly cumulative interest rate of %.2f%c will apply.") % 
-		(getRate(shop_nr, ch->getName()) * 100) % '%');
-      me->doTell(ch->getName(), fmt("The term length I can offer is %i years.") % term);
-      me->doTell(ch->getName(), "One mud year is about 2 weeks in real time.");
-      me->doTell(ch->getName(), fmt("If you default on the loan, you will be charged an additional %.2f%c.") %
-		(getPenalty(shop_nr, ch->getName()) * 100) % '%');
-      me->doTell(ch->getName(), "Do \"buy loan <amt>\" to take out the loan.");
+      db.query("select amt, granted_time, term, rate, default_charge from shopownedloans where player_id=%i", ch->getPlayerID());
+      
+      if(db.fetchRow()){
+	amt=convertTo<int>(db["amt"]);
+	due=whenDue(convertTo<int>(db["granted_time"]), convertTo<int>(db["term"]));
+	
+	me->doTell(ch->getName(), fmt("You have a loan for %i talens, due on the %s day of %s, Year %d P.S.") %
+		   amt %
+		   numberAsString(due.day) % 
+		   month_name[due.month] %
+		   due.year);
+	
+	amt=calcInterest(amt, convertTo<int>(db["granted_time"]),
+			 convertTo<int>(db["term"]), convertTo<float>(db["rate"]),
+			 convertTo<float>(db["default_charge"]));
+	
+	
+	me->doTell(ch->getName(), fmt("With interest, you owe %i talens.") % amt);
+      } else {
+	me->doTell(ch->getName(), fmt("I can extend you a loan for %i talens.") % amt);
+	me->doTell(ch->getName(), fmt("A yearly cumulative interest rate of %.2f%c will apply.") % 
+		   (getRate(shop_nr, ch->getName()) * 100) % '%');
+	me->doTell(ch->getName(), fmt("The term length I can offer is %i years.") % term);
+	me->doTell(ch->getName(), "One mud year is about 2 weeks in real time.");
+	me->doTell(ch->getName(), fmt("If you default on the loan, you will be charged an additional %.2f%c.") %
+		   (getPenalty(shop_nr, ch->getName()) * 100) % '%');
+	me->doTell(ch->getName(), "Do \"buy loan <amt>\" to take out the loan.");
+      }
     }
     return true;
   }
@@ -197,47 +208,61 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
 
   ////////////////////////////
   if(cmd==CMD_BUY){
-    if(sstring(arg).word(0) != "loan"){
+    if(sstring(arg).word(0) == "repo" && tso.hasAccess(SHOPACCESS_OWNER)){
+      db.query("select amt, granted_time, term, rate, default_charge from shopownedloans, player where player_id=id and lower(name)=lower('%s')", sstring(arg).word(2).c_str());
+      
+      if(!db.fetchRow()){
+	me->doTell(ch->getName(), "I can't find a loan for that player.");
+	return true;
+      }
+
+      // repo stuff here
+
+
+
+    } else if(sstring(arg).word(0) == "loan"){    
+      db.query("select 1 from shopownedloans where player_id=%i", 
+	       ch->getPlayerID());
+      if(db.fetchRow()){
+	me->doTell(ch->getName(), "You already have a loan!");
+	return true;
+      }
+
+      int loanamt=convertTo<int>(sstring(arg).word(1));
+    
+      if(loanamt > amt){
+	me->doTell(ch->getName(), fmt("You can't take out a loan for that much.  The most I can give you is %i.") % amt);
+	return true;
+      }
+
+      if(loanamt > 0 && loanamt <= amt)
+	amt=loanamt;
+
+      if(amt > me->getMoney()){
+	me->doTell(ch->getName(), "At the moment, I don't have the necessary capital to extend a loan to you.");
+	return true;
+      }
+
+      db.query("insert into shopownedloans values (%i, %i, %i, %i, %i, %f, %f)",
+	       shop_nr, ch->getPlayerID(), amt, time(NULL),
+	       term, getRate(shop_nr, ch->getName()), 
+	       getPenalty(shop_nr, ch->getName()));
+
+
+      me->addToMoney(-amt, GOLD_SHOP);
+      ch->addToMoney(amt, GOLD_SHOP);
+      buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
+      me->saveItems(buf);
+
+
+      me->doTell(ch->getName(), fmt("There you go.  Remember, I need the money back, plus interest, within %i years.") % term);
+      me->doTell(ch->getName(), "Do 'list' again at anytime to see how much you owe with interest included.");
+      me->doTell(ch->getName(), "You can give me talens at any time to make a payment on your loan.");
+    
+      shoplog(shop_nr, ch, me, "talens", -amt, "loaning");
+    } else {
       me->doTell(ch->getName(), "If you want to take out the loan, do \"buy loan <amount>\".");
-      return true;
     }
-    
-    db.query("select 1 from shopownedloans where player_id=%i", 
-	     ch->getPlayerID());
-    if(db.fetchRow()){
-      me->doTell(ch->getName(), "You already have a loan!");
-      return true;
-    }
-
-    int loanamt=convertTo<int>(sstring(arg).word(1));
-    
-    if(loanamt > amt){
-      me->doTell(ch->getName(), fmt("You can't take out a loan for that much.  The most I can give you is %i.") % amt);
-      return true;
-    }
-
-    if(loanamt > 0 && loanamt <= amt)
-      amt=loanamt;
-
-    if(amt > me->getMoney()){
-      me->doTell(ch->getName(), "At the moment, I don't have the necessary capital to extend a loan to you.");
-      return true;
-    }
-
-    db.query("insert into shopownedloans values (%i, %i, %i, %i, %i, %f, %f)",
-    	     shop_nr, ch->getPlayerID(), amt, time(NULL),
-	     term, getRate(shop_nr, ch->getName()), 
-	     getPenalty(shop_nr, ch->getName()));
-
-
-    me->addToMoney(-amt, GOLD_SHOP);
-    ch->addToMoney(amt, GOLD_SHOP);
-
-    me->doTell(ch->getName(), fmt("There you go.  Remember, I need the money back, plus interest, within %i years.") % term);
-    me->doTell(ch->getName(), "Do 'list' again at anytime to see how much you owe with interest included.");
-    me->doTell(ch->getName(), "You can give me talens at any time to make a payment on your loan.");
-    
-    shoplog(shop_nr, ch, me, "talens", -amt, "loaning");
   }
 
 
@@ -274,6 +299,10 @@ int loanShark(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       me->doTell(ch->getName(), "Uhh... thanks!");
     }
   }
+
+
+  buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
+  me->saveItems(buf);
 
   return false;
 }
