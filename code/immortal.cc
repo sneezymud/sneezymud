@@ -4282,7 +4282,7 @@ void TBeing::doAccess(const char *)
 
 void TPerson::doAccess(const char *arg)
 {
-  sstring arg1, arg2, buf, tmpbuf;
+  sstring arg1, arg2, arg3, buf, tmpbuf;
   char npasswd[128], pass[20];
   char filebuf[MAX_STRING_LENGTH];
   char *birth, *tmstr, birth_buf[40];
@@ -4314,7 +4314,7 @@ void TPerson::doAccess(const char *arg)
   if (!isImmortal())
     return;
 
-  argument_parser(arg, arg1, arg2);
+  argument_parser(arg, arg1, arg2, arg3);
 
   if(arg1.empty()){
     sendTo("Syntax: access <player> (<changes>)\n\r");
@@ -4348,10 +4348,11 @@ void TPerson::doAccess(const char *arg)
     }
     switch (which) {
       case 1:
-        if (sscanf(arg, "%s", npasswd) != 1) {
+        if (arg3.empty()) {
           sendTo("Syntax : access <player> passwd <newpasswd>\n\r");
           return;
         }
+	strcpy(npasswd, arg3.c_str());
         if (!*npasswd || strlen(npasswd) > 10) {
           sendTo("Password must be <= 10 characters.\n\r");
           return;
