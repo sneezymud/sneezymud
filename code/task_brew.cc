@@ -144,5 +144,4 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
       break;                    // eat the command
   }
   return TRUE;
-#endif
 }
