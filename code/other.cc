@@ -141,6 +141,63 @@ static void junkBeing(TBeing *ch, TThing *o, race_t ract)
   }
 }
 
+int TBeing::doNoJunk(const char *argument, TObj *obj)
+{
+  char arg[100], newarg[100];
+  TObj *o;
+  int num, p, count;
+
+
+  only_argument(argument, arg);
+  if (!*arg && !obj) {
+    sendTo("Set the nojunk flag on what?\n\r");
+    return FALSE;
+  }
+  if (!obj) {
+    if (getall(arg, newarg)) {
+      num = -1;
+      strcpy(arg, newarg);
+    } else if ((p = getabunch(arg, newarg))) {
+      num = p;
+      strcpy(arg, newarg);
+    } else
+      num = 1;
+  } else
+    num = 1;
+
+  count = 0;
+  while (num != 0) {
+    o = obj;
+    TThing *t_o = NULL;
+    if (!o) {
+      t_o = searchLinkedListVis(this, arg, stuff);
+      o = dynamic_cast<TObj *>(t_o);
+    }
+    if (o) {
+      if(o->isObjStat(ITEM_NOJUNK_PLAYER)) {
+	o->remObjStat(ITEM_NOJUNK_PLAYER);
+	act("You remove the no-junk flag from $p.", TRUE, this, o, NULL, TO_CHAR);
+      } else {
+	o->addObjStat(ITEM_NOJUNK_PLAYER);
+	act("You set the no-junk flag on $p.", TRUE, this, o, NULL, TO_CHAR);
+      }
+      count++;
+      if (num > 0)
+	num--;
+
+    } else 
+      break;
+  }
+  if (count)
+    return TRUE;
+
+  sendTo("No-Junk what?\n\r");
+  return FALSE;
+}
+
+
+
+
 int TBeing::doJunk(const char *argument, TObj *obj)
 {
   char arg[100], newarg[100];
@@ -174,6 +231,10 @@ int TBeing::doJunk(const char *argument, TObj *obj)
       o = dynamic_cast<TObj *>(t_o);
     }
     if (o) {
+      if (o->isObjStat(ITEM_NOJUNK_PLAYER)) {
+	sendTo("You can't junk that, someone has set a no-junk flag on it!  HELP NOJUNK\n\r");
+        return FALSE;
+      }
       if (o->isObjStat(ITEM_NODROP)) {
         sendTo("You can't let go of it, it must be CURSED!\n\r");
         return FALSE;

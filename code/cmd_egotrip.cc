@@ -98,7 +98,7 @@ void TBeing::doEgoTrip(const char *arg)
     }
 
     if (ch->isImmortal()) {
-      sentTo("Do this to an immortal??? Bad god, no bone!\n\r");
+      sendTo("Do this to an immortal??? Bad god, no bone!\n\r");
       return;
     }
     string whichcrit;
@@ -120,7 +120,7 @@ void TBeing::doEgoTrip(const char *arg)
     aff.modifier2 = crit;
     ch->affectTo(&aff);
     sendTo("It looks like some bad luck will befall %s before too long. Heh, heh, heh.\n\r",ch->getName());
-    vlogf(LOG_MISC, "%s egotrip critted %s with crit #%d", getName(), ch->getName(), crit)
+    vlogf(LOG_MISC, "%s egotrip critted %s with crit #%d", getName(), ch->getName(), crit);
     return;
   } else if (is_abbrev(argument, "blast")) {
     string target;
