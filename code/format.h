@@ -2,107 +2,65 @@
 #define __FORMAT_H
 
 class fmt : public sstring {
- public:
-  fmt() : sstring(){}
-  fmt(const char *str) : sstring(str) {}
-  fmt(const string &str) : sstring(str) {}
+  unsigned int last;
 
-  sstring doFormat(const sstring &, const int &);
-  sstring doFormat(const sstring &, const double &);
-  sstring doFormat(const sstring &, const char &);
+ public:
+  fmt() : sstring(){ last=0; }
+  fmt(const char *str) : sstring(str) { last=0; }
+  fmt(const string &str) : sstring(str) { last=0; }
+
+  template <class T> sstring doFormat(const sstring &, const T &);
   sstring doFormat(const sstring &, const sstring &);
 
   template <class T> fmt & operator%(const T &s);
 };
 
 
-sstring fmt::doFormat(const sstring &fmt, const int &x)
+template <class T> sstring fmt::doFormat(const sstring &fmt, const T &x)
 {
   sstring buf;
 
-  if(fmt.find("diouXx")==sstring::npos){
-    ssprintf(buf, "bad format specifier used for int");
-    vlogf(LOG_BUG, buf.c_str());
-  } else {
-    ssprintf(buf, fmt.c_str(), x);
-  }
+  ssprintf(buf, fmt.c_str(), x);
 
   return buf;
 }
 
-
-sstring fmt::doFormat(const sstring &fmt, const double &x)
-{
-  sstring buf;
-
-  if(fmt.find("feEgG")==sstring::npos){
-    ssprintf(buf, "bad format specifier used for double");
-    vlogf(LOG_BUG, buf.c_str());
-  } else {
-    ssprintf(buf, fmt.c_str(), x);
-  }
-
-  return buf;
-}
-
-sstring fmt::doFormat(const sstring &fmt, const char &x)
-{
-  sstring buf;
-
-  if(fmt.find("c")==sstring::npos){
-    ssprintf(buf, "bad format specifier used for char");
-    vlogf(LOG_BUG, buf.c_str());
-  } else {
-    ssprintf(buf, fmt.c_str(), x);
-  }
-
-  return buf;
-}
-
-sstring fmt::doFormat(const sstring &fmt, const sstring &x)
-{
-  sstring buf;
-
-  if(fmt.find("s")==sstring::npos){
-    ssprintf(buf, "bad format specifier used for sstring");
-    vlogf(LOG_BUG, buf.c_str());
-  } else {
-    ssprintf(buf, fmt.c_str(), x.c_str());
-  }
-
-  return buf;
-}
 
 
 template <class T> fmt & fmt::operator %(const T &x)
 {
-  sstring buf, sbuf, output;
+  sstring buf, output;
+  bool found=false;
+  
+  output=substr(0, last);
 
-  for(unsigned int i=0;i<size();++i){
+  for(unsigned int i=last;i<size();++i){
     if((*this)[i]=='%'){
       // first grab the format specifier
-      for(buf="";i<size() && !isalpha((*this)[i]);++i){
+      for(buf="%",++i;i<size() && (*this)[i]!='%';++i){
 	buf += (*this)[i];
       }
-      
-      if(i<size())
-	buf += (*this)[i];
 
       // now do the print
       output += doFormat(buf, x);
+      last = output.size();
 
       // we're just doing one format specifier for this arg, so copy
       // the rest of the source string and exit
-      for(++i;i<size();++i)
+      for(;i<size();++i)
 	output += (*this)[i];
+
+      found=true;
+
       break;
     }
     
     output += (*this)[i];
   }
 
-  vlogf(LOG_BUG, "format passed argument with no format specifier, output=%s",
-	output.c_str());
+  if(!found)
+    vlogf(LOG_BUG,"format passed argument with no format specifier, output=%s",
+	  output.c_str());
 
   this->assign(output);
 
