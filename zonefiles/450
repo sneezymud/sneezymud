@@ -67,8 +67,7 @@ V 1 0 454			Change window to look into 454
 O 0 454 1 461 
 O 0 455 1 455 	Kitchen Dumbwaiter
 O 0 456 1 455 	Pastry Oven
-O 0 457	9999 455	Kitchen Cabinets
-O 0 457	9999 455
+O 0 457	2 455	Kitchen Cabinets
 O 0 458 1 452 	Skylight
 O 0 458 1 453 	
 O 0 458 1 456 

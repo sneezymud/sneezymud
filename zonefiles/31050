@@ -48,7 +48,7 @@ O 0 31080 1 31091 	bed of alfalfa - Posthouse stable
 O 0 31091 5 31091 	bales of alfalfa
 
 A 0 31057 31072		Drossway Road, mid-section
-O 0 31050 9999 -99	broken down cart
+O 0 31050 1 -99	broken down cart
 
 
 
