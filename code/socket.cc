@@ -81,7 +81,10 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
     null_time.tv_sec = 0;
     null_time.tv_usec = 0;
 
-    maxdesc = m_sock;
+    maxdesc=0;
+    for(unsigned int i=0;i<m_sock.size();++i)
+      maxdesc = max(maxdesc, m_sock[i]);
+
     avail_descs = 150;
 
 #ifndef SOLARIS
@@ -100,7 +103,10 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
   FD_ZERO(&input_set);
   FD_ZERO(&output_set);
   FD_ZERO(&exc_set);
-  FD_SET(m_sock, &input_set);
+
+  for(unsigned int i=0;i<m_sock.size();++i)
+    FD_SET(m_sock[i], &input_set);
+
   for (point = descriptor_list; point; point = point->next) {
     FD_SET(point->socket->m_sock, &input_set);
     FD_SET(point->socket->m_sock, &exc_set);
@@ -127,13 +133,15 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
 #endif
 
   // establish any new connections 
-  if (FD_ISSET(m_sock, &input_set)) {
-    int tFd;
-
-    if ((tFd = newDescriptor()) < 0)
-      perror("New connection");
-    else if (!tStString.empty() && tFd)
-      descriptor_list->writeToQ(tStString);
+  for(unsigned int i=0;i<m_sock.size();++i){
+    if (FD_ISSET(m_sock[i], &input_set)) {
+      int tFd;
+      
+      if ((tFd = newDescriptor(m_sock[i])) < 0)
+	perror("New connection");
+      else if (!tStString.empty() && tFd)
+	descriptor_list->writeToQ(tStString);
+    }
   }
   // close any connections with an exceptional condition pending 
   for (point = descriptor_list; point; point = next_to_process) {
@@ -361,7 +369,10 @@ struct timeval TMainSocket::handleTimeAndSockets()
   FD_ZERO(&input_set);
   FD_ZERO(&output_set);
   FD_ZERO(&exc_set);
-  FD_SET(m_sock, &input_set);
+
+  for(unsigned int i=0;i<m_sock.size();++i)
+    FD_SET(m_sock[i], &input_set);
+
   for (point = descriptor_list; point; point = point->next) {
     FD_SET(point->socket->m_sock, &input_set);
     FD_SET(point->socket->m_sock, &exc_set);
@@ -408,15 +419,17 @@ struct timeval TMainSocket::handleTimeAndSockets()
   ////////////////////////////////////////////
   // establish any new connections 
   ////////////////////////////////////////////
-  if (FD_ISSET(m_sock, &input_set)) {
-    int rc = newDescriptor();
-    if (rc < 0)
-      perror("New connection");
-    else if (rc) {
-      // we created a new descriptor
-      // so send the login to the first desc in list
-      if (!descriptor_list->m_bIsClient)
-	descriptor_list->sendLogin("1");
+  for(unsigned int i=0;i<m_sock.size();++i){
+    if (FD_ISSET(m_sock[i], &input_set)) {
+      int rc = newDescriptor(m_sock[i]);
+      if (rc < 0)
+	perror("New connection");
+      else if (rc) {
+	// we created a new descriptor
+	// so send the login to the first desc in list
+	if (!descriptor_list->m_bIsClient)
+	  descriptor_list->sendLogin("1");
+      }
     }
   }
   ////////////////////////////////////////////
@@ -1186,7 +1199,7 @@ int TMainSocket::gameLoop()
 }
 
 
-TSocket *TMainSocket::newConnection()
+TSocket *TMainSocket::newConnection(int t_sock)
 {
   struct sockaddr_in isa;
 #if defined(LINUX)
@@ -1197,12 +1210,12 @@ TSocket *TMainSocket::newConnection()
   TSocket *s;
 
   i = sizeof(isa);
-  if (getsockname(m_sock, (struct sockaddr *) &isa, &i)) {
+  if (getsockname(t_sock, (struct sockaddr *) &isa, &i)) {
     perror("getsockname");
     return NULL;
   }
   s = new TSocket();
-  if ((s->m_sock = accept(m_sock, (struct sockaddr *) (&isa), &i)) < 0) {
+  if ((s->m_sock = accept(t_sock, (struct sockaddr *) (&isa), &i)) < 0) {
     perror("Accept");
     return NULL;
   }
@@ -1232,7 +1245,7 @@ static const sstring IP_String(sockaddr_in &_a)
 
 void sig_alrm(int){return;}
 
-int TMainSocket::newDescriptor()
+int TMainSocket::newDescriptor(int t_sock)
 {
   int a;
 #if defined(LINUX)
@@ -1246,7 +1259,7 @@ int TMainSocket::newDescriptor()
   char temphostaddr[255];
   TSocket *s = NULL;
 
-  if (!(s = newConnection())) 
+  if (!(s = newConnection(t_sock))) 
     return 0;
 
   if ((maxdesc + 1) >= avail_descs) {
@@ -1360,7 +1373,8 @@ void TMainSocket::closeAllSockets()
   while (descriptor_list)
     delete descriptor_list;
 
-  close(m_sock);
+  for(unsigned int i=0;i<m_sock.size();++i)
+    close(m_sock[i]);
 }
 
 
@@ -1372,13 +1386,14 @@ void TSocket::nonBlock()
   }
 }
 
-void TMainSocket::initSocket()
+void TMainSocket::initSocket(int m_port)
 {
   const char *opt = "1";
   char hostname[MAXHOSTNAMELEN];
   struct sockaddr_in sa;
   struct hostent *hp;
   struct linger ld;
+  int t_sock;
 
 #if defined(SUN)
   bzero((char *) &sa, sizeof(struct sockaddr_in));
@@ -1398,31 +1413,33 @@ void TMainSocket::initSocket()
   }
   sa.sin_family = hp->h_addrtype;
   sa.sin_port = htons(m_port);
-  if ((m_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+  if ((t_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
     perror("Init-socket");
     exit(1);
   }
-  if (setsockopt(m_sock, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, sizeof(opt)) < 0) {
+  if (setsockopt(t_sock, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, sizeof(opt)) < 0) {
     perror("setsockopt REUSEADDR");
     exit(1);
   }
   ld.l_linger = 1000;
   ld.l_onoff = 0;
 #ifdef OSF
-  if (setsockopt(m_sock, SOL_SOCKET, SO_LINGER, &ld, sizeof(ld)) < 0) {
+  if (setsockopt(t_sock, SOL_SOCKET, SO_LINGER, &ld, sizeof(ld)) < 0) {
 #else
-  if (setsockopt(m_sock, SOL_SOCKET, SO_LINGER, (char *) &ld, sizeof(ld)) < 0) {
+  if (setsockopt(t_sock, SOL_SOCKET, SO_LINGER, (char *) &ld, sizeof(ld)) < 0) {
 #endif
     perror("setsockopt LINGER");
     exit(1);
   }
-  if (bind(m_sock, (struct sockaddr *) &sa, sizeof(sa)) < 0) {
+  if (bind(t_sock, (struct sockaddr *) &sa, sizeof(sa)) < 0) {
     perror("bind");
     vlogf(LOG_BUG, fmt("initSocket: bind: errno=%d") %  errno);
-    close(m_sock);
+    close(t_sock);
     exit(0);
   }
-  listen(m_sock, 3);
+  listen(t_sock, 3);
+
+  m_sock.push_back(t_sock);
 }
 
 TSocket::TSocket()
@@ -1433,9 +1450,7 @@ TSocket::~TSocket()
 {
 }
 
-TMainSocket::TMainSocket(int p) :
-  m_sock(0),
-  m_port(p)
+TMainSocket::TMainSocket()
 {
 }
 

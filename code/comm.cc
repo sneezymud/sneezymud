@@ -59,8 +59,11 @@ int run_the_game()
   signalSetup();
 
   vlogf(LOG_MISC, "Opening mother connection.");
-  gSocket = new TMainSocket(gamePort);
-  gSocket->initSocket();
+  gSocket = new TMainSocket();
+  gSocket->initSocket(gamePort);
+
+  if(gamePort == PROD_GAMEPORT)
+    gSocket->initSocket(23); // listen on telnet port too
 
   bootDb();
 

@@ -12,38 +12,36 @@ extern int maxdesc, avail_descs;
 
 const int OPT_USEC = 100000; 
 
-extern void close_sockets(int);
-extern int init_socket(int);
 extern char hostlist[MAX_BAN_HOSTS][40];
 
 class TMainSocket {
- public:
-  int m_sock;
-  int m_port;
-
-  int gameLoop();
+ private:
+  vector <int> m_sock;
+  
   struct timeval handleTimeAndSockets();
-  void addNewDescriptorsDuringBoot(sstring);
-  void initSocket();
   bool handleShutdown();
+  TSocket *newConnection(int);
+  int newDescriptor(int);
+
+ public:
+  void addNewDescriptorsDuringBoot(sstring);
   void closeAllSockets();
-  TSocket *newConnection();
-  int newDescriptor();
+  void initSocket(int);
+  int gameLoop();
 
-  TMainSocket(int p);
+  TMainSocket();
   ~TMainSocket();
-
-  private:
-    TMainSocket() {}  // prevent default ctor being used
-
 };
 
 class TSocket {
+  friend class TMainSocket;
+
+ private:
+  void nonBlock();
+
  public:
   int m_sock;
-    
   int writeToSocket(const char *);
-  void nonBlock();
 
   TSocket();
   ~TSocket();
