@@ -254,6 +254,35 @@ void TBeing::doWho(const char *argument)
           desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
         return;
       }
+
+      if(strchr(arg, 'c') && isImmortal()){
+	db.query("select title, port, name from wholist order by port");
+	
+	ssprintf(buf, "%s\n\r", buf.c_str());
+	
+	while(db.fetchRow()){
+	  stmp=db.getColumn(0);
+	  
+	  if((pos=stmp.find("<n>")) != string::npos)
+	    stmp.replace(pos,3,db.getColumn(2));
+
+	  if((pos=stmp.find("<N>")) != string::npos)
+	    stmp.replace(pos,3,db.getColumn(2));
+
+	  
+	  ssprintf(buf, "%s[%s] %s<1>\n\r", buf.c_str(),
+		   db.getColumn(1), stmp.c_str());
+	}
+
+	sb += buf;
+	
+        if (desc)
+          desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
+
+	return;
+      }
+      
+
       bool level, statsx, iPoints, quest, idle, align, group;
       for (p = character_list; p; p = p->next) {
         align = level = statsx = idle = iPoints = quest = group = FALSE;
@@ -265,7 +294,6 @@ void TBeing::doWho(const char *argument)
           if ((canSeeWho(p) &&
               (!strchr(arg, 'g') || (p->GetMaxLevel() >= GOD_LEVEL1)) &&
               (!strchr(arg, 'b') || (p->GetMaxLevel() >= GOD_LEVEL1)) &&
-              (!strchr(arg, 'c') || (p->GetMaxLevel() >= GOD_LEVEL1)) &&
               (!strchr(arg, 'q') || (p->inQuest())) &&
               (!strchr(arg, 'o') || (p->GetMaxLevel() <= MAX_MORT)) &&
               (!strchr(arg, 'z') || (p->isPlayerAction(PLR_SEEKSGROUP))) &&
@@ -333,22 +361,6 @@ void TBeing::doWho(const char *argument)
                   }
                   idle = TRUE;
                   break;
-		case 'c':
-		  db.query("select title, port, name from wholist order by port");
-		  
-		  ssprintf(buf, "%s\n\r", buf.c_str());
-		  
-		  while(db.fetchRow()){
-		    stmp=db.getColumn(0);
-		    
-		    if((pos=stmp.find("<n>")) != string::npos)
-		      stmp.replace(pos,3,db.getColumn(2));
-
-		    ssprintf(buf, "%s[%s] %s<1>\n\r", buf.c_str(),
-			     db.getColumn(1), stmp.c_str());
-		  }
-		  
-		  break;
                 case 'l':
                 case 'y':
                   if (!level) {
