@@ -34,14 +34,19 @@ void TBeing::doScore()
 
   tString = displayExp().comify();
 
-  sendTo(fmt("You have %s%s%s exp, and have %s%d%s talens plus %s%d%s talens in the bank.\n\r") %         cyan() % tString % norm() %
+  sendTo(fmt("You have %s%s%s exp, and have %s%d%s talens plus %s%d%s talens in the bank.\n\r") % cyan() % tString % norm() %
          purple() % getMoney() % norm() %
          purple() % getBank() % norm());
 
   if (desc) {
     tString = (fmt("%.2f") % desc->session.xp).comify();
 
-    sendTo(fmt("You have earned %s%s%s exp this session.\n\r") %         cyan() % tString % norm());
+    sendTo(fmt("You have earned %s%s%s exp this session.\n\r") % cyan() % tString % norm());
+
+    if (getExp() < getMaxExp()) {
+      tString = (fmt("%.2f") % getMaxExp()).comify();
+      sendTo(fmt("Your most exp since your last death was: %s%s%s\n\r") % cyan() % tString % norm());
+    }
 
     realTimePassed((time(0) - desc->session.connect), 0, &playing_time);
     if (playing_time.day)
