@@ -5,8 +5,6 @@
   "spec_mobs_goring.cc"
   All functions and routines related to the Boar/Tusk Goring code.
 
-  Created 10/20/99 - Lapsos(William A. Perrotto III)
-
 ******************************************************************************/
 
 #include "stdsneezy.h"
@@ -19,7 +17,7 @@ int tuskGoring(TBeing *ch, cmdTypeT tCmd, const char *tArg, TMonster *tMyself, T
       !tMyself->awake() || tMyself->spelltask ||
       !tVictim || tVictim->riding ||
       tVictim->getPosition() > POSITION_STANDING ||
-      !tMyself->sameRoom(tVictim) || ::number(0, 7) ||
+      !tMyself->sameRoom(*tVictim) || ::number(0, 7) ||
       tMyself->getPosition() < POSITION_STANDING)
     return FALSE;
 
