@@ -41,8 +41,8 @@ int TBeing::backstabHit(TBeing *victim, TThing *obj)
     "Blood spurts from $N's mouth as you plunge $p in $S back, killing $M.",
     "Blood spurts from $N's mouth as $n plunges $p in $S back, killing $M.",
 
-    "$N enters convulsions as you slip $p into $S spine, killing $M.",
-    "$N enters convulsions as $n slips $p into $S spine, killing $M.",
+    "$N enters into convulsions as you slip $p into $S spine, killing $M.",
+    "$N enters into convulsions as $n slips $p into $S spine, killing $M.",
 
     "$N coughs up some blood, and then falls dead, as you place $p in $S back.",
     "$n sticks $p in $N's back; $N coughs up some blood, and then falls dead.",
@@ -67,8 +67,8 @@ int TBeing::backstabHit(TBeing *victim, TThing *obj)
     "Blood spurts from $N's mouth as you plunge $p in $S back.",
     "Blood spurts from $N's mouth as $n plunges $p in $S back.",
 
-    "$N enters convulsions as you slip $p into $S spine.",
-    "$N enters convulsions as $n slips $p into $S spine.",
+    "$N enters into convulsions as you slip $p into $S spine.",
+    "$N enters into convulsions as $n slips $p into $S spine.",
 
     "$N coughs up some blood, as you place $p in $S back.",
     "$n places $p in the back of $N, resulting in some strange noises and blood.",
