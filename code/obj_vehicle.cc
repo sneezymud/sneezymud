@@ -393,3 +393,16 @@ void TVehicle::driveStatus(TBeing *ch)
 }
 
 
+sstring TVehicle::statObjInfo() const
+{
+  sstring buf, sbuf;
+
+  TPortal::statObjInfo();
+
+  buf = fmt("It is pointing to the %s.\n\r") % dirs[getDir()];
+  sbuf+=buf;
+  buf = fmt("It is traveling at %i speed.\n\r") % getSpeed();
+  sbuf+=buf;
+
+  return sbuf;
+}

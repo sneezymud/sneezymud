@@ -31,6 +31,7 @@ class TVehicle : public TPortal {
   int getType() const { return type; }
   void setDir(dirTypeT d) { dir=d; }
   dirTypeT getDir() const { return dir; };
+  virtual sstring statObjInfo() const;
 
   bool isAllowedPath(int rnum);
   virtual void assignFourValues(int, int, int, int);

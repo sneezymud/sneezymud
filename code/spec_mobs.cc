@@ -7095,7 +7095,7 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
   if(vehicle->getDir() != i)
     myself->doDrive(dirs[i]);
 
-  myself->doDrive("medium");
+  myself->doDrive("fast");
 
   return TRUE;
 }
