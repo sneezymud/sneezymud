@@ -271,7 +271,7 @@ int divinationObj(TBeing *caster, const TObj *obj, int, byte bKnown)
     caster->sendTo(buf);
     found = FALSE;
     for (i = 0; i < MAX_OBJ_AFFECT; i++) {
-      if ((obj->affected[i].location != APPLY_NONE) && obj->affected[i].modifier) {
+      if ((obj->affected[i].location != APPLY_NONE) && (obj->affected[i].modifier || obj->affected[i].modifier2)) {
         if (!found) {
           caster->sendTo("Can affect you as :\n\r");
           found = TRUE;
