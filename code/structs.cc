@@ -490,7 +490,7 @@ TRoom::~TRoom()
   unsigned int tri;
   for (tri = 0; tri < roomspec_db.size(); tri++) {
     if (roomspec_db[tri] == this) {
-      roomspec_db.erase(&roomspec_db[tri]);
+      roomspec_db.erase(roomspec_db.begin() + tri);
       tri--; // backup so we don't skip any
     }
   }
