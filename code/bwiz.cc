@@ -63,6 +63,9 @@ void mudSendMessage(int mtype, int ctype, const char *arg)
   struct mud_msgbuf qbuf;
   int ret;
   
+  // this is locking is up
+  return;
+  
   if (openQueue()<0)
     return;
 
