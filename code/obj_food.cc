@@ -1004,6 +1004,7 @@ void TFood::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
     
     if(tso.getDividend()){
       int div=(int)((double)cost * tso.getDividend());
+      div=min(div,cost);
       
       keeper->addToMoney(-div, GOLD_SHOP_FOOD);
       shoplog(shop_nr, ch, keeper, getName(), -div, "dividend");
