@@ -321,17 +321,21 @@ bool TThing::listThingRoomMe(const TBeing *ch) const
 
 void list_thing_in_room(const TThing *list, TBeing *ch)
 {
-  const TThing *t, *cond_ptr[50];
-  int k, cond_top = 0, cond_tot[50];
+  const TThing *t;
+  unsigned int k;
+  vector <const TThing *> cond_ptr;
+  vector <int> cond_tot;
 
   for (t = list; t; t = t->nextThing) {
     if (t->listThingRoomMe(ch))
       continue;
-    if (cond_top < 50 && !t->riding) {
+    if(t->riding){
+      t->listMeExcessive(ch);
+    } else {
       bool found = FALSE;
-      for (k = 0; (k < cond_top && !found); k++) {
-        if (dynamic_cast<const TObj *>(t) || dynamic_cast<const TMonster *>(t)) {
-          if (cond_top > 0) {
+      for (k = 0; (k < cond_ptr.size() && !found); k++) {
+	if(dynamic_cast<const TObj *>(t) || dynamic_cast<const TMonster *>(t)){
+          if (cond_ptr.size() > 0) {
             if (t->isSimilar(cond_ptr[k])) {
               cond_tot[k] += 1;
               found = TRUE;
@@ -340,17 +344,13 @@ void list_thing_in_room(const TThing *list, TBeing *ch)
         }
       }
       if (!found) {
-        cond_ptr[cond_top] = t;
-        cond_tot[cond_top] = 1;
-        cond_top += 1;
+	cond_ptr.push_back(t);
+	cond_tot.push_back(1);
       }
-// these handle overflow
-    } else {
-      t->listMeExcessive(ch);
     }
   }
-  if (cond_top) {
-    for (k = 0; k < cond_top; k++) {
+  if (cond_ptr.size()>0) {
+    for (k = 0; k < cond_ptr.size(); k++) {
       cond_ptr[k]->listMe(ch, cond_tot[k]);
     }
   }
