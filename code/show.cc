@@ -1089,13 +1089,11 @@ void TBeing::show_me_to_char(TBeing *ch, showModeT mode) const
             ch->sendTo(fmt("%s\n\r") % buf);
           }
         }
-        if (equipment[ij]) {
-          if (ch->canSee(equipment[ij])) {
-            if (!equipment[ij]->shouldntBeShown(ij)) {
-              sprintf(buf, "<%s>", describeEquipmentSlot(ij).c_str());
-              ch->sendTo(fmt("%-26s") % buf);
-              ch->showTo(equipment[ij], SHOW_MODE_SHORT_PLUS);
-            }
+        if (equipment[ij] && ch->canSee(equipment[ij])) {
+          if (!equipment[ij]->shouldntBeShown(ij)) {
+            sprintf(buf, "<%s>", describeEquipmentSlot(ij).c_str());
+            ch->sendTo(fmt("%-26s") % buf);
+            ch->showTo(equipment[ij], SHOW_MODE_SHORT_PLUS);
           }
         } else if(tattoos[ij]!=""){
 	  sstring slot = describeEquipmentSlot(ij);

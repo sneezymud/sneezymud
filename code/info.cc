@@ -2413,17 +2413,15 @@ void TBeing::doEquipment(const sstring &arg)
 	   (int)equipment.getWeight());
     found = FALSE;
     for (j = MIN_WEAR; j < MAX_WEAR; j++) {
-      if (equipment[j]) {
-        if (!equipment[j]->shouldntBeShown(j)) {
-          buf=fmt("<%s>") % describeEquipmentSlot(j);
-          sendTo(fmt("%s%-26s%s") % cyan() % buf % norm());
-          if (canSee(equipment[j])) {
-            showTo(equipment[j], SHOW_MODE_SHORT_PLUS);
-            found = TRUE;
-          } else {
-            sendTo("Something.\n\r");
-            found = TRUE;
-          }
+      if (equipment[j] && !equipment[j]->shouldntBeShown(j)) {
+        buf=fmt("<%s>") % describeEquipmentSlot(j);
+        sendTo(fmt("%s%-26s%s") % cyan() % buf % norm());
+        if (canSee(equipment[j])) {
+          showTo(equipment[j], SHOW_MODE_SHORT_PLUS);
+          found = TRUE;
+        } else {
+          sendTo("Something.\n\r");
+          found = TRUE;
         }
       } else if(tattoos[j]!=""){
 	sstring slot = describeEquipmentSlot(j);
@@ -2451,17 +2449,15 @@ void TBeing::doEquipment(const sstring &arg)
       act("$N is using.", FALSE, this, 0, victim, TO_CHAR);
       found = FALSE;
       for (j = MIN_WEAR; j < MAX_WEAR; j++) {
-        if (victim->equipment[j]) {
-          if (!victim->equipment[j]->shouldntBeShown(j)) {
-            buf=fmt("<%s>") % victim->describeEquipmentSlot(j);
-            sendTo(fmt("%s%-26s%s") % cyan() % buf % norm());
-            if (canSee(victim->equipment[j])) {
-              showTo(victim->equipment[j], SHOW_MODE_SHORT_PLUS);
-              found = TRUE;
-            } else {
-              sendTo("Something.\n\r");
-              found = TRUE;
-            }
+        if (victim->equipment[j] && !victim->equipment[j]->shouldntBeShown(j)) {
+          buf=fmt("<%s>") % victim->describeEquipmentSlot(j);
+          sendTo(fmt("%s%-26s%s") % cyan() % buf % norm());
+          if (canSee(victim->equipment[j])) {
+            showTo(victim->equipment[j], SHOW_MODE_SHORT_PLUS);
+            found = TRUE;
+          } else {
+            sendTo("Something.\n\r");
+            found = TRUE;
           }
         } else if(tattoos[j]!=""){
 	  sstring slot = describeEquipmentSlot(j);
