@@ -48,6 +48,7 @@ extern bool TestCode3;
 extern bool TestCode4;
 extern bool TestCode5;
 extern bool TestCode6;  
+extern bool timeQueries;
 extern bool Silence;
 extern bool WizBuild;
 extern bool Gravity;

@@ -1,5 +1,7 @@
 #include "stdsneezy.h"
 #include "database.h"
+#include "timing.h"
+
 
 static TDatabaseConnection database_connection;
 
@@ -65,15 +67,21 @@ char *TDatabase::getColumn(int i){
   }
 }
 
+
+
+
 // execute a query
-bool TDatabase::query(const char *query,...){
+bool TDatabase::query(const char *query,...)
+{
   va_list ap;
   string buf;
-  int fromlen=0, tolen=(512*2)+1, numlen=32;
-  char *from=NULL, *fromptr, to[tolen], *toptr, numbuf[numlen];
   const char *qsave=query;
+  char *from=NULL;
   PGresult *restmp;
-  
+  TTiming t;
+
+  t.start();
+
   // no db set yet
   if(!db)
     return FALSE;
@@ -86,41 +94,20 @@ bool TDatabase::query(const char *query,...){
 	case 's':
 	  from=va_arg(ap, char *);
 	  
-	  if(!from){
-	    vlogf(LOG_DB, "null argument for format specifier 's'");
-	    vlogf(LOG_DB, "%s", qsave);	    
-	  }
-
-	  fromlen=strlen(from);
-
-	  // escaping the string needs a buffer that is 
-	  // (string * 2) + 1 in size to avoid overruns
-	  if(((fromlen*2)+1) > tolen){
-	    vlogf(LOG_DB, "query - buffer overrun on %s", from);
-	    vlogf(LOG_DB, "%s", qsave);
-	    return FALSE;
-	  }
-	  
 	  // escape ' and %
-	  toptr=to;
-	  fromptr=from;
-	  while(*fromptr){
-	    if(*fromptr == '\'' || *fromptr == '%'){
-	      *toptr++='\\';
+	  while(*from){
+	    if(*from == '\'' || *from == '%'){
+	      buf += "\\";
 	    }
-	    *toptr++=*fromptr++;
+	    buf += *from++;
 	  }
-	  *toptr='\0';
 
-	  buf += to;
 	  break;
 	case 'i':
-	  snprintf(numbuf, numlen-1, "%i", va_arg(ap, int));
-	  buf += numbuf;
+	  ssprintf(buf, "%s%i", buf.c_str(), va_arg(ap, int));
 	  break;
 	case 'f':
-	  snprintf(numbuf, numlen-1, "%f", va_arg(ap, double));
-	  buf += numbuf;
+	  ssprintf(buf, "%s%f", buf.c_str(), va_arg(ap, double));
 	  break;
 	case '%':
 	  buf += "%";
@@ -150,10 +137,33 @@ bool TDatabase::query(const char *query,...){
   // then don't do anything with the results, they might still be used
   if(restmp){
     if(res)
-      PQclear(res);
-    res=restmp;
-    row=-1;
+      PQclear(res); // free the old results
+    res=restmp;     // assign the new results
+    row=-1;         // "rewind" the row count
   }
+
+  t.end();
+
+  // this saves the queries (without args) and the execution time
+  // it slows things down pretty significantly though
+  if(timeQueries){
+    query=qsave;
+    buf="";
+
+    // escape ' and %
+    while(*query){
+      if(*query == '\'' || *query == '%'){
+	buf += "\\";
+      }
+      buf += *query++;
+    }
+
+    ssprintf(buf, "insert into querytimes values ('%s', %f)",
+	     buf.c_str(), t.getElapsed());
+    
+    PQexec(db, buf.c_str());
+  }
+
 
   //  if(res)
   //    vlogf(LOG_DB, "New query results stored.");

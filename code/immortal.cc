@@ -64,6 +64,7 @@ bool WizGoto = FALSE;
 bool AllowPcMobs = TRUE;    // PCs with same name as mob allowed?
 bool TurboMode = FALSE;      // bumps pulse-actions at 2x speed
 bool Lapspeak = FALSE; // Heh. 
+bool timeQueries = false; // store db query speeds THIS IS SLOW
 
 int QuestVar1 = 0; // varibles for changing constants in the code in-game
 int QuestVar2 = 0;
@@ -275,6 +276,7 @@ void TPerson::doToggle(const char *arg)
     sendTo("Test code #6      : %s\n\r", TestCode6 ? "in-use" : "deactivated");
     sendTo("Quest code        : %s\n\r", QuestCode ? "active" : "deactivated");
     sendTo("Quest code 2      : %s\n\r", QuestCode2 ? "active" : "deactivated");
+    sendTo("Time DB Queries   : %s\n\r", timeQueries ? "active" : "deactivated");
     return;
   } else if (is_abbrev(arg, "silence")) {
     Silence = !Silence;
@@ -392,6 +394,10 @@ void TPerson::doToggle(const char *arg)
     QuestCode2 = !QuestCode2;
     sendTo("Questcode 2 is now %s.\n\r", QuestCode2 ? "in use" : "off");
     vlogf(LOG_MISC,"%s has %s questcode 2.",getName(),QuestCode2 ? "enabled" : "disabled");
+  } else if(is_abbrev(arg, "timequeries")){
+    timeQueries = !timeQueries;
+    sendTo("DB query timing is now %s.\n\r", timeQueries ? "activated" : "deactivated");
+    vlogf(LOG_MISC,"%s has %s DB query timing.",getName(),timeQueries ? "enabled" : "disabled");
   } else if (is_abbrev(arg, "pcmobs")) {
     AllowPcMobs = !AllowPcMobs;
     sendTo("You have now %s mob-named pcs.\n\r",
