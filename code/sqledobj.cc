@@ -74,6 +74,11 @@ int main(int argc, char **argv)
   printf("Fetching objextra data.\n");
   ssprintf(buf, pgcmd, "objextra", db.c_str(), grep.c_str(), immortal.c_str(), file);
   system(buf.c_str());
+
+  ssprintf(buf, "/bin/cp -f %s %s.`whoami`", file, file);
+  system(buf.c_str());
+  ssprintf(buf, "/bin/chmod a+rw %s.`whoami`", file);
+  system(buf.c_str());
   
   printf("Opening editor.\n");
   ssprintf(buf, "$EDITOR %s", file);
@@ -98,7 +103,11 @@ int main(int argc, char **argv)
 
   unlink(file);
 
-  printf("Done.\n");
+  printf("Done. Your backup file is: ");
+  fflush(stdout);
+  ssprintf(buf, "/bin/ls %s*", file);
+  system(buf.c_str());
+  printf("\n");
 }
 
 
