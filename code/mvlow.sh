@@ -8,7 +8,13 @@ umask 0002
 # copy the latest tiny files
 echo Copying tinyworld.mob
 cp $BUILD_MUD_ROOT/lib/tinyworld.mob $PROD_MUD_ROOT/lib/tinyworld.mob
-#echo Copying zonefiles directory
+
+echo Updating zonefiles data
+(
+cd $PROD_MUD_ROOT/lib/zonefiles
+svn update
+)
+
 #cp $BUILD_MUD_ROOT/lib/zonefiles/* $PROD_MUD_ROOT/lib/zonefiles
 #cd $PROD_MUD_ROOT/lib/zonefiles
 #cvs update
