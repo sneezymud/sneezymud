@@ -267,3 +267,34 @@ void TTrashPile::attractVermin()
 	  sstring(mob->getName()).cap().c_str(), getName());
   
 }
+
+
+void TTrashPile::doMerge()
+{
+  TTrashPile *pile;
+  TThing *t, *t2;
+  TThing *pt, *pt2;
+
+  if(!roomp)
+    return;
+
+  for(t=roomp->getStuff();t;t=t2){
+    t2=t->nextThing;
+
+    if((pile=dynamic_cast<TTrashPile *>(t)) && pile!=this){
+      for(pt=pile->getStuff();pt;pt=pt2){
+	pt2=pt->nextThing;
+	--(*pt);
+	*this += *pt;
+      }
+
+      --(*pile);
+      delete pile;
+    }
+
+  }
+
+
+
+
+}

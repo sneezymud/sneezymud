@@ -10,6 +10,7 @@ class TTrashPile : public TExpandableContainer {
     void overFlow();
     void attractVermin();
     int getSizeIndex();
+    void doMerge();
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual sstring statObjInfo() const;

@@ -953,6 +953,7 @@ int TMainSocket::objectPulse(TPulseList &pl, int realpulse)
 	  obj = NULL;
 	  continue;
 	} else {
+	  pile->doMerge();
 	  pile->overFlow();
 	  pile->attractVermin();
 	  pile->updateDesc();
