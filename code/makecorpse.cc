@@ -988,14 +988,13 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
   }
 
   if (roomp) {
-    *roomp += *gen_corpse;
+//    *roomp += *gen_corpse;
     rp = roomp;
   } else {
-    vlogf(LOG_BUG, fmt("%s had NULL roomp pointer, moved to room %d.") % 
-          getName() % ROOM_STORAGE);
+    vlogf(LOG_BUG, fmt("%s had NULL roomp pointer, moved to room %d.") %  getName() % ROOM_STORAGE);
 
     rp = real_roomp(ROOM_STORAGE);
-    *rp += *gen_corpse;
+//    *rp += *gen_corpse;
   }
 
   // make sure we don't have any "corpses in a corpse" 
@@ -1014,6 +1013,9 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       }
     }
   }
+
+  // Add the corpse to the room here, in case we dumped another corpse above.
+  *rp += *gen_corpse;
 
   if (pcorpse && (GetMaxLevel() <= MAX_MORT)) {
     pcorpse->setRoomNum(in_room);
