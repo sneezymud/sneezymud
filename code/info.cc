@@ -4985,9 +4985,6 @@ void TBeing::describeTrapDamType(const TTrap *obj, int) const
 
 void TBeing::doSpells(const char *argument)
 {
-  doPrayers(argument);
-  return;
-#if 0
   char buf[MAX_STRING_LENGTH * 2], buffer[MAX_STRING_LENGTH * 2];
   char learnbuf[64];
   spellNumT i;
@@ -5222,7 +5219,6 @@ void TBeing::doSpells(const char *argument)
   }
   d->page_string(buffer);
   return;
-#endif
 }
 
 void TBeing::doRituals(const char *argument)
