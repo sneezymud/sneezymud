@@ -1108,24 +1108,27 @@ int TMonster::monkMove(TBeing &vict)
       return doDisarm("", &vict);
     //else if (num <= 11 && (4 * getHit() < 3 * hitLimit()))
       //return doFeignDeath();
-    } else if ((num <= 12) &&
+    } else if ((num <= 11) &&
 	      (getPosition() == POSITION_STANDING)) {
       return doChi("", &vict);
-    } else if ((num <= 13) &&
+    } else if ((num <= 12) &&
 	       (this->attackers > 2) &&
                (getPosition() == POSITION_STANDING)) {
-      int i;
+      if (doesKnowSkill(SKILL_HURL) && (getSkillValue(SKILL_HURL) > 66)) {
+        int i;
 
-      if (!doesKnowSkill(SKILL_HURL))
-	setSkillValue(SKILL_HURL,min(100, 10 + GetMaxLevel() * 2));
+        for (i = 0; i < 20; i++) {
+          dirTypeT hurlDir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
 
-      for (i = 0; i < 20; i++) {
-	dirTypeT hurlDir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
-
-	if (this->canGo(hurlDir)) {
-          vlogf(LOG_ANGUS, "monkMove: %s hurling %s, dir= %i", name, vict.name, hurlDir);
-	  return aiHurl(hurlDir, &vict);
-	}
+          if (this->canGo(hurlDir)) {
+            vlogf(LOG_ANGUS, "monkMove: %s hurling %s, dir= %i", name,
+                  vict.name, hurlDir);
+            return aiHurl(hurlDir, &vict);
+          }
+        }
+        return doChi("", &vict);
+      } else {
+        return doChi("", &vict);
       }
     } else 
       return doChop("", &vict);
