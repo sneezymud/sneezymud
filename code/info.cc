@@ -174,21 +174,10 @@ void TBeing::listExits(const TRoom *rp) const
         } else /*if (canSeeThruDoor(exitdata))*/ {
           TRoom *exitp = real_roomp(exitdata->to_room);
 
-#if 0
-          if (exitdata->door_type != DOOR_NONE && !IS_SET(exitdata->condition, EX_CLOSED)) 
-            sendTo(" %s%s%s", blue(), exDirs[door], norm());
-          else 
-            sendTo(" %s%s%s", purple(), exDirs[door], norm());
-#else
-
           if (exitp) {
-#if 1
             if (exitdata->door_type != DOOR_NONE &&
                 ((tCS && !IS_SET(exitdata->condition, EX_SECRET)) ||
                  !IS_SET(exitdata->condition, EX_CLOSED))) {
-#else
-            if (exitdata->door_type != DOOR_NONE && !IS_SET(exitdata->condition, EX_CLOSED)) {
-#endif
               if (IS_SET(exitdata->condition, EX_CLOSED))
                 sendTo(" %s*%s%s",
                        (exitp->getSectorType() == SECT_FIRE ? red() :
@@ -209,7 +198,6 @@ void TBeing::listExits(const TRoom *rp) const
                      exDirs[door], norm());
           } else
             vlogf(LOG_LOW, "Problem with door in room %d", inRoom());
-#endif
         }
       }
     }

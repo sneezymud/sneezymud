@@ -2247,8 +2247,7 @@ int statPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
   act("$n imbibes $p.", TRUE, ch, pot, 0, TO_ROOM);
   act("You imbibe $p.", TRUE, ch, pot, 0, TO_CHAR);
 
-  int lev = pot->getMagicLevel();
-  statTypeT whichStat = statTypeT(lev);
+  statTypeT whichStat = statTypeT(number(0, MAX_STATS - 1));
 
   ch->addToStat(STAT_CHOSEN, whichStat, 1);
 

@@ -2248,14 +2248,6 @@ int TBeing::doQuaff(const char *argument)
 
   only_argument(argument, buf);
 
-#if 0
-  // why is this needed? - bat
-  if (roomp && roomp->isRoomFlag(ROOM_NO_HEAL)) {
-    sendTo("You can no longer quaff potions in noheal rooms.\n\r");
-    return FALSE;
-  }
-#endif
-
   if (!(t = searchLinkedListVis(this, buf, getStuff()))) {
     t = equipment[HOLD_RIGHT];
     if (!t || !isname(buf, t->name)) {
@@ -2270,9 +2262,8 @@ int TBeing::doQuaff(const char *argument)
     delete t;
     t = NULL;
   }
-  if (IS_SET_DELETE(rc, DELETE_VICT)) {
+  if (IS_SET_DELETE(rc, DELETE_VICT)) 
     return DELETE_THIS;
-  }
 
   // add some lag.  Prevents multiple quaffs per round
   addToWait(combatRound(1));
