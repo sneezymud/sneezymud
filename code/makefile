@@ -377,9 +377,15 @@ sqladdobjs: $(LIBS) objs/sqladdobjs.o objs/lowtools.o
 	@$(CC) -o sqladdobjs objs/sqladdobjs.o objs/lowtools.o $(LIBS) $(LDFLAGS)
 	@/usr/bin/strip sqladdobjs
 
+sqledobj: $(LIBS) objs/sqledobj.o objs/lowtools.o
+	@echo \*\*\* Making Final Link: sqledobj
+	@$(CC) -o sqledobj objs/sqledobj.o objs/lowtools.o $(LIBS) $(LDFLAGS)
+	@/usr/bin/strip sqledobj
+
+
 # make all low tools
-lowtools: sqladdobjs
-	@/bin/cp -f sqladdobjs /mud/low/bin
+lowtools: sqladdobjs sqledobj
+	@/bin/cp -f sqladdobjs sqledobj /mud/low/bin
 	@echo Finished making lowtools
 
 
@@ -16539,6 +16545,59 @@ objs/sqladdobjs.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/sqladdobjs.o: materials.h colorstring.h database.h
 objs/sqladdobjs.o: /usr/include/postgresql/libpq-fe.h
 objs/sqladdobjs.o: /usr/include/postgresql/postgres_ext.h lowtools.h
+objs/sqledobj.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/sqledobj.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/sqledobj.o: /usr/include/gnu/stubs.h
+objs/sqledobj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/sqledobj.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/sqledobj.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/sqledobj.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/sqledobj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/sqledobj.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
+objs/sqledobj.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/sqledobj.o: /usr/include/time.h /usr/include/bits/time.h
+objs/sqledobj.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
+objs/sqledobj.o: /usr/include/ctype.h /usr/include/endian.h
+objs/sqledobj.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
+objs/sqledobj.o: /usr/include/assert.h /usr/include/g++-3/cstring
+objs/sqledobj.o: /usr/include/string.h /usr/include/g++-3/cerrno
+objs/sqledobj.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/sqledobj.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/sqledobj.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
+objs/sqledobj.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
+objs/sqledobj.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
+objs/sqledobj.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iostream.h
+objs/sqledobj.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
+objs/sqledobj.o: /usr/include/g++-3/stl_relops.h
+objs/sqledobj.o: /usr/include/g++-3/stl_iterator.h
+objs/sqledobj.o: /usr/include/g++-3/std/bastring.cc /usr/include/g++-3/vector
+objs/sqledobj.o: /usr/include/g++-3/stl_algobase.h
+objs/sqledobj.o: /usr/include/g++-3/stl_pair.h
+objs/sqledobj.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/sqledobj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/sqledobj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/sqledobj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/sqledobj.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/sqledobj.o: /usr/include/g++-3/stl_construct.h
+objs/sqledobj.o: /usr/include/g++-3/stl_uninitialized.h
+objs/sqledobj.o: /usr/include/g++-3/stl_vector.h
+objs/sqledobj.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
+objs/sqledobj.o: /usr/include/g++-3/stl_tree.h
+objs/sqledobj.o: /usr/include/g++-3/stl_function.h
+objs/sqledobj.o: /usr/include/g++-3/stl_map.h
+objs/sqledobj.o: /usr/include/g++-3/stl_multimap.h low.h enum.h spells.h
+objs/sqledobj.o: structs.h immunity.h discipline.h spell2.h parse.h db.h
+objs/sqledobj.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/sqledobj.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/sqledobj.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
+objs/sqledobj.o: create.h thing.h room.h obj.h spec_objs.h connect.h
+objs/sqledobj.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/sqledobj.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/sqledobj.o: materials.h colorstring.h database.h
+objs/sqledobj.o: /usr/include/postgresql/libpq-fe.h
+objs/sqledobj.o: /usr/include/postgresql/postgres_ext.h lowtools.h
+objs/sqledobj.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+objs/sqledobj.o: /usr/include/bits/confname.h
 objs/statistics.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/statistics.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/statistics.o: /usr/include/gnu/stubs.h
