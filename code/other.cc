@@ -3362,6 +3362,8 @@ void TBeing::doExtinguish(const string & argument)
   bool heldOnly = is_abbrev(arg2, "held");
 
   if (POSITION_STANDING >= getPosition()) {
+    if (riding)
+      dismount(POSITION_STANDING);
     setPosition(POSITION_STANDING);
   }
   if (arg1.empty()) {
