@@ -2410,11 +2410,13 @@ void TBeing::doSit(const sstring & argument)
     sendTo("Why don't we land first...\n\r");
     return;
   }
+
   if (roomp->isWaterSector() ||
       roomp->isUnderwaterSector()) {
     sendTo("You can't sit down in the water.\n\r");
     return;
   }
+
   if (fight()) {
     sendTo("You can't sit and fight at the same time!!\n\r");
     return;
@@ -3500,8 +3502,6 @@ int TBeing::doMortalGoto(const sstring & argument)
       sendTo("Uhm, not for nothing, but I think you are already there...\n\r");
       return FALSE;
     }
-
-    vlogf(LOG_PEEL, fmt("in_room=%i, targ_rm=%i") % in_room % targ_rm);
 
     TPathFinder path;
     path.setNoMob(false);
