@@ -3449,7 +3449,8 @@ void TBeing::doAccess(const sstring &)
 void TPerson::doAccess(const sstring &arg)
 {
   sstring arg1, arg2, arg3, buf, tmpbuf;
-  char npasswd[128], pass[20];
+  sstring npasswd;
+  char pass[20];
   char filebuf[MAX_STRING_LENGTH];
   char *birth, *tmstr, birth_buf[40];
   charFile st;
@@ -3520,12 +3521,12 @@ void TPerson::doAccess(const sstring &arg)
           sendTo("Syntax : access <player> passwd <newpasswd>\n\r");
           return;
         }
-	strcpy(npasswd, arg3.c_str());
-        if (!*npasswd || strlen(npasswd) > 10) {
+	npasswd = arg3;
+        if (npasswd.length() > 10) {
           sendTo("Password must be <= 10 characters.\n\r");
           return;
         }
-        crypted = (char *) crypt(npasswd, st.aname);
+        crypted = (char *) crypt(npasswd.c_str(), st.aname);
         strncpy(pass, crypted, 10);
         *(pass + 10) = '\0';
         strcpy(st.pwd, pass);
@@ -3657,7 +3658,7 @@ void TPerson::doAccess(const sstring &arg)
       listAccount(afp.name, lStr);
       buf+=lStr;
     }
-    desc->page_string(buf);
+    desc->page_string(buf.toCRLF());
     return;
   }
 }
@@ -5657,7 +5658,14 @@ void TBeing::doAccount(const sstring &arg)
 
       // bat is mostly gone, and i need to remove the imm flag on a retired
       // account, so i'm adding myself. - dash
-      if (strcmp(getName(), "Batopr") && strcmp(getName(), "Lapsos") && strcmp(getName(), "Damescena") && strcmp(getName(), "Peel") && strcmp(getName(), "Dash")) {
+      sstring tmp_name = getName();
+
+      if ((tmp_name != "Batopr") &&
+          (tmp_name != "Lapsos") &&
+          (tmp_name != "Damescena") &&
+          (tmp_name != "Peel") &&
+          (tmp_name != "Dash") &&
+          (tmp_name != "Angus")) {
         sendTo("Sorry you suck too much to do this.\n\r");
         return;
       }
