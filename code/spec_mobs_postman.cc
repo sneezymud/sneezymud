@@ -102,7 +102,7 @@ int postman(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     return false;
 
   // wander around the world randomly
-  if(::number(0,9))
+  if(!::number(0,9))
      me->randomHunt();
 
   if(::number(0,24))
@@ -135,7 +135,13 @@ int postman(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     return false;
   tm=mobs[::number(0,mobs.size()-1)];
 
-  if(::number(0,1)){
+  int count=0;
+  for(TThing *tt=bag->getStuff();tt;tt=tt->nextThing){
+    if((obj=dynamic_cast<TObj *>(tt)) && obj->objVnum() == 124)
+      count++;
+  }
+
+  if(!::number(0,3) || count > 10){
     for(TThing *tt=bag->getStuff();tt;tt=tt->nextThing){
       if((obj=dynamic_cast<TObj *>(tt)) && obj->objVnum() == 124){
 	--(*obj);
