@@ -6,32 +6,24 @@
 class CDShamanArmadillo : public CDiscipline
 {
 public:
-    CSkill skSticksToSnakes;
-    CSkill skStormySkies;
-    CSkill skTreeWalk;
-    CSkill skShapeShift;
+    CSkill skAqualung;
+    CSkill skThornflesh;
 
     CDShamanArmadillo() 
       : CDiscipline(),
-      skSticksToSnakes(),
-      skStormySkies(),
-      skTreeWalk(),
-      skShapeShift() {
+      skAqualung(),
+      skThornflesh() {
     }
     CDShamanArmadillo(const CDShamanArmadillo &a) 
       : CDiscipline(a),
-      skSticksToSnakes(a.skSticksToSnakes),
-      skStormySkies(a.skStormySkies),
-      skTreeWalk(a.skTreeWalk),
-      skShapeShift(a.skShapeShift) {
+      skAqualung(a.skAqualung),
+      skThornflesh(a.skThornflesh) {
     }
     CDShamanArmadillo & operator=(const CDShamanArmadillo &a)  {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skSticksToSnakes = a.skSticksToSnakes;
-      skStormySkies = a.skStormySkies;
-      skTreeWalk = a.skTreeWalk;
-      skShapeShift = a.skShapeShift;
+      skAqualung = a.skAqualung;
+      skThornflesh = a.skThornflesh;
       return *this;
     }
     virtual ~CDShamanArmadillo() {}
@@ -39,25 +31,14 @@ public:
 private:
 };
 
-    int sticksToSnakes(TBeing *, TBeing *);
-    int sticksToSnakes(TBeing *, TBeing *, TMagicItem *);
-    int sticksToSnakes(TBeing *, TBeing *, int, byte);
+int thornflesh(TBeing *caster);
+int castThornflesh(TBeing *caster);
+int thornflesh(TBeing *caster, int level, byte bKnown);
 
-    void livingVines(TBeing *, TBeing *);
-    void livingVines(TBeing *, TBeing *, TMagicItem *);
-    int livingVines(TBeing *, TBeing *, int, byte);
-    
-    int stormySkies(TBeing *, TBeing *, int, byte);
-    int stormySkies(TBeing *, TBeing *, TMagicItem *);
-    int stormySkies(TBeing *, TBeing *);
-
-    int treeWalk(TBeing *, const char *, int, byte);
-    int treeWalk(TBeing *, const char *);
-
-    int shapeShift(TBeing *caster, int level, byte bKnown);
-    int shapeShift(TBeing *caster, const char * buffer);
-    int castShapeShift(TBeing *caster);
-
+int aqualung(TBeing * caster, TBeing * victim, int level, byte bKnown);
+void aqualung(TBeing * caster, TBeing * victim, TMagicItem * obj);
+int aqualung(TBeing * caster, TBeing * victim);
+int castAqualung(TBeing * caster, TBeing * victim);
 
 #endif
 
