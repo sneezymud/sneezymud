@@ -2039,6 +2039,16 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  }
 	  mysql_free_result(res);
 	  return TRUE;
+	} else if(!strcmp(buf, "clear")){
+	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopownedratios where shop_nr=%i", shop_nr))){
+	    if(rc){
+	      vlogf(LOG_BUG, "Database error in shop_keeper");
+	      return FALSE;
+	    }
+	  }
+	  sprintf(buf2, "%s Ok, I cleared all of the individual profit ratios.", ch->getName());
+	  myself->doTell(buf2);
+	  return TRUE;
 	}
 
 	if(atof(buf)>5){
@@ -2113,6 +2123,16 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  }
 	  mysql_free_result(res);
 	  
+	  return TRUE;
+	} else if(!strcmp(buf, "clear")){
+	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopownedratios where shop_nr=%i", shop_nr))){
+	    if(rc){
+	      vlogf(LOG_BUG, "Database error in shop_keeper");
+	      return FALSE;
+	    }
+	  }
+	  sprintf(buf2, "%s Ok, I cleared all of the individual profit ratios.", ch->getName());
+	  myself->doTell(buf2);
 	  return TRUE;
 	}
 
@@ -2242,6 +2262,13 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       }
 
       if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopownedaccess where shop_nr=%i", shop_nr))){
+	if(rc){
+	  vlogf(LOG_BUG, "Database error in shop_keeper");
+	  return FALSE;
+	}
+      }
+
+      if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopownedratios where shop_nr=%i", shop_nr))){
 	if(rc){
 	  vlogf(LOG_BUG, "Database error in shop_keeper");
 	  return FALSE;
