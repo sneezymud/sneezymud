@@ -526,11 +526,6 @@ void HoldemGame::call(TBeing *ch)
       act(buf, FALSE, ch, 0, 0, TO_CHAR);
       bet += chipl[0]->obj_flags.cost * chipl.size();
     }
-
-    if(betterCount() == 1){
-      return showdown(players[better]->ch);
-    }
-
   } else {
     ssprintf(buf, "$n calls with %s. [%i]", 
 	     chipl[0]->getName(), chipl.size());
