@@ -3875,7 +3875,23 @@ int lifeLeechGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   return FALSE;
 }
 
-int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+int manaBurnRobe(TBeing *vist, cmdType T cmd, const char *arg, TObj *o, TObj *) {
+  TBeing *ch;
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
+    char buf[256];
+    one_argument(arg, buf);
+    if(!strcmp(buf, "manifest")) {
+      int currentHit = ch->getHit();
+      int currentMana =ch-> getMana();
+      int maxMana = ch->getMaxMana();
+      int percent_burn = (int)ch->getMaxHit() * .2
+      int healthSteal = min((int)(ch->getMaxHit()- percent_burn),(int)(ch->getHit() - percent_burn));
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch;
   
