@@ -49,15 +49,15 @@ void TBeing::doFish(const char *direction){
 
 TObj *catch_a_fish(TRoom *rp){
   TObj *fish=NULL;
-  int nfresh=17, nmarine=24, nice=5;
+  int nfresh=18, nmarine=25, nice=5;
   int num=0;
   const int freshfishes[]={13800, 13801, 13802, 13803, 13804, 13805, 13806,
 			   13807, 13816, 13817, 13818, 13819, 13820, 13821,
-			   13822, 13823, 13824};
+			   13822, 13823, 13824, 13896};
   const int marinefishes[]={13808, 13809, 13810, 13811, 13812, 13813, 13814,
 			    13815, 13825, 13826, 13827, 13828, 13829, 13830,
 			    13831, 13832, 13833, 13834, 13835, 13836, 13837,
-			    13838, 13839, 13840};
+			    13838, 13839, 13840, 13897};
   const int icefishes[]={13875, 13876, 13877, 13878, 13879};
   float weightmod=(((float)(::number(0,100))-50.0)/100.0)+1.0;  // plus or minus 30%
 
