@@ -547,7 +547,7 @@ int summon(TBeing * caster, TBeing * victim, int level, byte bKnown)
   }
 
   if (caster->isNotPowerful(victim, level, SPELL_SUMMON, SILENT_YES)) {
-    caster->sendTo("Yeah whatever. Good one. Try something less powerful.\n\r");
+    caster->sendTo("That's a pretty big fish for you, small fry.  It might work if you try again.\n\r");
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
   }
