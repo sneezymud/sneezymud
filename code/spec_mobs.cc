@@ -7297,6 +7297,12 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
   int i;
   TVehicle *vehicle=NULL;
 
+  if (cmd == CMD_GENERIC_DESTROYED) {
+    delete static_cast<int *>(myself->act_ptr);
+    myself->act_ptr = NULL;
+    return FALSE;
+  }
+
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
