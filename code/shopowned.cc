@@ -118,7 +118,7 @@ void TShopOwned::showInfo()
   
   if(shop_index[shop_nr].type.size()<=1){
     keeper->doTell(ch->getName(), 
-		   "%s I only sell things, I do not buy anything.");
+		   "I only sell things, I do not buy anything.");
   } else {
     sprintf(buf, "%s I deal in", ch->getName());
     for(i=0;i<shop_index[shop_nr].type.size();++i){
