@@ -62,6 +62,7 @@
 #include "games.h"
 #include "corporation.h"
 #include "shopowned.h"
+#include "pathfinder.h"
 
 #include <fstream.h>
 
@@ -70,85 +71,7 @@ const int GET_MOB_SPE_INDEX(int d)
   return (((d > NUM_MOB_SPECIALS) || (d < 0)) ? 0 : d);
 }
 
-// used as a conditional to find_path
-int is_target_room_p(int room, void *tgt_room)
-{
-  return room == (long) tgt_room;
-}
 
-// used as a conditional to find_path
-int find_closest_obj_by_name(int room, void *arg)
-{
-  return named_object_on_ground(room, arg);
-}
-
-// used as a conditional to find_path
-int find_closest_mob_by_name(int room, void *arg)
-{
-  return named_mob_on_ground(room, arg);
-}
-
-// used as a conditional to find_path
-int find_closest_being_by_name(int room, void *arg)
-{
-  return named_being_on_ground(room, arg);
-}
-
-// used as a conditional to find_path
-int find_closest_water(int room, void *)
-{
-  TRoom *rp;
-  TThing *t;
-  rp = real_roomp(room);
-
-  if (rp->isRiverSector())
-    return TRUE;
-
-  for (t = rp->getStuff(); t; t = t->nextThing) {
-    if (t->spec == SPEC_FOUNTAIN)
-      return TRUE;
-    if (t->waterSource())
-      return TRUE;
-  }
-  return FALSE;
-}
-
-// used as a conditional to find_path
-int find_closest_police(int room, void *)
-{
-  TRoom *rp;
-  TThing *t;
-  rp = real_roomp(room);
-
-  for (t = rp->getStuff(); t; t = t->nextThing) {
-    TBeing *ch = dynamic_cast<TBeing *>(t);
-    if (!ch)
-      continue;
-    if (ch->isPc() && !ch->isImmortal())
-      return TRUE;
-    if (ch->isPolice())
-      return TRUE;
-  }
-  return FALSE;
-}
-
-// could be used by find_path
-int named_object_on_ground(int room, void *c_data)
-{
-  return (searchLinkedList((char *) c_data, real_roomp(room)->getStuff(), TYPEOBJ) != NULL);
-}
-
-// could be used by find_path
-int named_mob_on_ground(int room, void *c_data)
-{
-  return (searchLinkedList((char *) c_data, real_roomp(room)->getStuff(), TYPEMOB) != NULL);
-}
-
-// could be used by find_path
-int named_being_on_ground(int room, void *c_data)
-{
-  return (searchLinkedList((char *) c_data, real_roomp(room)->getStuff(), TYPEBEING) != NULL);
-}
 
 // returns DELETE_THIS for this
 // returns DELETE_VICT if the special kills t
@@ -843,10 +766,12 @@ int TMonster::randomHunt()
   } else {
     int room = hunted->in_room;
     dirTypeT dir;
+    TPathFinder path;
 
     if (in_room != room) {
-      dir = find_path(in_room, is_target_room_p, (void *) room, trackRange(), 0);
-      if (!exitDir(dir) || !real_roomp(exitDir(dir)->to_room) || dir < MIN_DIR) {
+      dir = path.findPath(in_room, findRoom(room));
+
+      if (!exitDir(dir) || !real_roomp(exitDir(dir)->to_room) || dir<MIN_DIR){
         // unable to find a path 
 	if(spec==SPEC_HORSE_FAMINE ||
 	   spec==SPEC_HORSE_WAR ||
@@ -886,6 +811,7 @@ int TMonster::findMyHorse()
   int horse_num;
   dirTypeT dir;
   int rc;
+  TPathFinder path;
 
   // this is here to prevent the endless horse create/fall to death scenario
   if(roomp && roomp->isFallSector())
@@ -921,8 +847,8 @@ int TMonster::findMyHorse()
     return TRUE;
   }
   if (!sameRoom(*horse)) {
-    if ((dir = find_path(in_room, is_target_room_p, (void *) horse->in_room, 
-              trackRange(), 0)) < 0) {
+
+    if((dir=path.findPath(in_room, findRoom(horse->in_room))) < 0){
       // unable to find a path 
       if (horse->in_room >= 0) {
         doSay("Bloody stupid horse!");
@@ -1717,34 +1643,14 @@ bool okForJanitor(TMonster *myself, TObj *obj)
   return true;
 }
 
-// used as a conditional to find_path
-static int find_closest_clutter(int room, void *myself)
-{
-  if (room == ROOM_DONATION)
-    return FALSE;
-
-  TRoom *rp = real_roomp(room);
-  if (!rp->inGrimhaven())
-    return FALSE;
-
-  TThing *t;
-  for (t = rp->getStuff(); t; t = t->nextThing) {
-    TObj * obj = dynamic_cast<TObj *>(t);
-    if (!obj)
-      continue;
-    if (!okForJanitor((TMonster *) myself, obj))
-      continue;
-    return TRUE;
-  }
-  return FALSE;
-}
 
 static int findSomeClutter(TMonster *myself)
 {
   dirTypeT dir;
   int rc;
+  TPathFinder path;
 
-  dir = find_path(myself->inRoom(), find_closest_clutter, (void *) myself, myself->trackRange(), 0);
+  dir=path.findPath(myself->inRoom(), findClutter(myself));
 
   if (dir >= MIN_DIR) {
     rc = myself->goDirection(dir);
@@ -1847,9 +1753,10 @@ int TBeing::doDonate()
   int room = ROOM_DONATION;
   dirTypeT dir;
   int rc;
+  TPathFinder path;
 
   if (in_room != room) {
-    if ((dir = find_path(in_room, is_target_room_p, (void *) room, trackRange(), 0)) < 0) {
+    if((dir=path.findPath(in_room, findRoom(room))) < 0){
       // unable to find a path 
       if (room >= 0) {
         doSay("Time for my coffee break");
@@ -2420,6 +2327,7 @@ int frostGiant(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   int rc;
   dirTypeT door;
   TBeing *mob;
+  TPathFinder path;
 
   class hunt_struct {
     public:
@@ -2488,7 +2396,9 @@ int frostGiant(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   }
 
   if (job->completed) {
-    if ((door = find_path(myself->inRoom(), find_closest_police, (void *) NULL, -2000, 0)) > DIR_NONE) {
+    path.setThruDoors(true);
+
+    if((door=path.findPath(myself->inRoom(), findPolice())) > DIR_NONE){
       rc = myself->goDirection(door);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
@@ -3239,6 +3149,7 @@ int horse(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 
   if (cmd == CMD_GENERIC_PULSE){
     if (!::number(0,500) && gamePort == PROD_GAMEPORT) {
+      me->setCond(POOP, 24);
       me->doPoop();
     }
   }
@@ -5819,6 +5730,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
   TThing *t=NULL;
   TMonster *tmons=NULL;
   sstring hookername, johnname, tmp;
+  TPathFinder path;
 
    enum hookerStateT {
     STATE_NONE,
@@ -6095,8 +6007,8 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
       //	break;
 
       if(myself->in_room != homes[job->cur_path]){
-	switch((dir=find_path(myself->in_room, is_target_room_p, 
-			 (void *) homes[job->cur_path], myself->trackRange(), 0))){
+	switch((dir=path.findPath(myself->in_room, 
+				  findRoom(homes[job->cur_path])))){
           case 0: case 1: case 2: case 3: case 4: 
           case 5: case 6: case 7: case 8: case 9:
 	    myself->goDirection(dir);
@@ -6907,6 +6819,9 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
   int i;
   TThing *tt;
   TVehicle *vehicle=NULL;
+  TPathFinder path;
+  path.setUsePortals(false);
+  path.setThruDoors(false);
 
   if(cmd != CMD_GENERIC_PULSE)
     return FALSE;
@@ -6985,7 +6900,7 @@ int fishingBoatCaptain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, T
     return TRUE;
   }
 
-  i=find_path(boat->in_room, is_target_room_p, (void *) *job, 5000, 0);
+  i=path.findPath(boat->in_room, findRoom(*job));
 
   if(i==DIR_NONE){
     vlogf(LOG_BUG, "fishing boat lost");
@@ -7030,6 +6945,9 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
   int *job=NULL;
   int i;
   TVehicle *vehicle=NULL;
+  TPathFinder path;
+  path.setUsePortals(false);
+  path.setThruDoors(false);
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<int *>(myself->act_ptr);
@@ -7085,7 +7003,7 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
     return TRUE;
   }
 
-  i=find_path(elevator->in_room, is_target_room_p, (void *) *job, 5000, 0);
+  i=path.findPath(elevator->in_room, findRoom(*job));
 
   if(i==DIR_NONE){
     if(elevator->in_room==2374)

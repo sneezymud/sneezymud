@@ -16,6 +16,7 @@
 #include "obj_tool.h"
 #include "obj_portal.h"
 #include "obj_drinkcon.h"
+#include "pathfinder.h"
 
 static const int FORAGE_BEGIN = 276;
 static const int FORAGE_END   = 281;
@@ -652,16 +653,19 @@ void TBeing::doSeekwater()
   hunt_dist = dist;
   specials.hunting = NULL;
   targrm = inRoom();
+  TPathFinder path(dist);
  
   // note: -dist will look THRU doors.
   // all subsequent calls use track() which does not go thru doors
   // this is intentional so they lose track after 1 step
-  if (lev < MIN_GLOB_TRACK_LEV)
-    code = find_path(in_room, find_closest_water, (void *) NULL,
-                      -dist, 1, &targrm);
-  else
-    code = find_path(in_room, find_closest_water, (void *) NULL,
-                      -dist, 0, &targrm);
+  if (lev < MIN_GLOB_TRACK_LEV){
+    path.setStayZone(true);
+    code=path.findPath(in_room, findWater());
+    targrm=path.getDest();
+  } else {
+    code=path.findPath(in_room, findWater());
+    targrm=path.getDest();
+  }
  
   if (code == -1) {
     addToWait(combatRound(1));

@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "obj_base_corpse.h"
+#include "pathfinder.h"
 
 // returns DELETE_THIS
 int goToMorgue(TBeing *myself)
@@ -7,10 +8,10 @@ int goToMorgue(TBeing *myself)
   int room = ROOM_MORGUE;
   dirTypeT dir;
   int rc;
+  TPathFinder path;
 
   if (myself->in_room != ROOM_MORGUE) {
-    if ((dir = find_path(myself->in_room, is_target_room_p, 
-			 (void *) room, myself->trackRange(), 0)) < 0){
+    if((dir=path.findPath(myself->in_room, findRoom(room))) < 0){
       // unable to find a path 
       if (room >= 0) {
         myself->doSay("Time for my coffee break");
@@ -46,34 +47,13 @@ int goToMorgue(TBeing *myself)
 }
 
 
-// used as a conditional to find_path
-static int find_closest_corpse(int room, void *myself)
-{
-  // don't track corpses in the morgue
-  if (room == ROOM_MORGUE)
-    return FALSE;
-  
-  TRoom *rp = real_roomp(room);
-
-  // don't leave gh
-  if (!rp->inGrimhaven())
-    return FALSE;
-
-  TThing *t;
-  for (t = rp->getStuff(); t; t = t->nextThing) {
-    if (!dynamic_cast<TBaseCorpse *>(t))
-      continue;
-    return TRUE;
-  }
-  return FALSE;
-}
-
 static int findACorpse(TMonster *myself)
 {
   dirTypeT dir;
   int rc;
+  TPathFinder path;
 
-  dir = find_path(myself->inRoom(), find_closest_corpse, (void *) myself, myself->trackRange(), 0);
+  dir=path.findPath(myself->inRoom(), findCorpse());
 
   if (dir >= MIN_DIR) {
     rc = myself->goDirection(dir);

@@ -777,7 +777,6 @@ class TBeing : public TThing {
 
     // tracking stuff
     int track(TBeing *);
-    int trackRange();
     dirTypeT dirTrack(TBeing *);
 
     int goDirection(dirTypeT); // for hunt?

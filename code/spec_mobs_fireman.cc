@@ -1,5 +1,6 @@
 #include "stdsneezy.h"
 #include "obj_base_corpse.h"
+#include "pathfinder.h"
 
 // returns DELETE_THIS
 int goToFirehouse(TBeing *myself)
@@ -7,10 +8,10 @@ int goToFirehouse(TBeing *myself)
   int room = 4673;
   dirTypeT dir;
   int rc;
+  TPathFinder path;
 
   if (myself->in_room != room) {
-    if ((dir = find_path(myself->in_room, is_target_room_p, 
-			 (void *) room, myself->trackRange(), 0)) < 0){
+    if((dir=path.findPath(myself->in_room, findRoom(room))) < 0){
       // unable to find a path 
       if (room >= 0) {
         myself->doSay("Time for my coffee break");
@@ -30,30 +31,14 @@ int goToFirehouse(TBeing *myself)
 }
 
 
-// used as a conditional to find_path
-static int find_closest_fire(int room, void *myself)
-{
-  TRoom *rp = real_roomp(room);
-  TObj *o;
-
-  // don't leave gh
-  if (!rp->inGrimhaven())
-    return FALSE;
-
-  TThing *t;
-  for (t = rp->getStuff(); t; t = t->nextThing) {
-    if((o=dynamic_cast<TObj *>(t)) && o->isObjStat(ITEM_BURNING))
-      return TRUE;
-  }
-  return FALSE;
-}
 
 static int findAFire(TMonster *myself)
 {
   dirTypeT dir;
   int rc;
+  TPathFinder path;
 
-  dir = find_path(myself->inRoom(), find_closest_fire, (void *) myself, myself->trackRange(), 0);
+  dir=path.findPath(myself->inRoom(), findFire());
 
   if (dir >= MIN_DIR) {
     rc = myself->goDirection(dir);

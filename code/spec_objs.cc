@@ -78,6 +78,7 @@
 #include "obj_wand.h"
 #include "disc_fire.h"
 #include "obj_note.h"
+#include "pathfinder.h"
 
 // CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye
@@ -1786,13 +1787,14 @@ int daggerOfHunting(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
              TRUE, me, 0, 0, TO_ROOM);
 
   while (!me->sameRoom(*target)) {
-    int answer;
-    dirTypeT dir = find_path(me->in_room, is_target_room_p, (void *) target->in_room, 5000, false, &answer);
+    TPathFinder path;
+    
+    dirTypeT dir = path.findPath(me->in_room, findRoom(target->in_room));
     if (dir < 0) {
       act("$n falls to the $g.", TRUE, me, 0, 0, TO_ROOM);
       act("$p fails to find its target.", FALSE, ch, me, 0, TO_CHAR);
       act("$p fails to find its target.", FALSE, ch, me, 0, TO_ROOM);
-       ch->sendTo(fmt("Unable to find path.  dir=%d, answer=%d\n\r") % dir % answer);
+       ch->sendTo(fmt("Unable to find path.  dir=%d\n\r") % dir);
       return TRUE;
     }
     buf = fmt("With blinding speed, $n streaks out of the room %s.") %

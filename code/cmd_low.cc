@@ -1254,8 +1254,7 @@ void TBeing::lowPath(const sstring &arg)
   TPathFinder path;
 
   // trace a path there and spit out room nums
-
-  while((dir=path.findPath(here, findTargetRoom(target))) >= 0){
+  while((dir=path.findPath(here, findRoom(target))) >= 0){
     if(lastdir==DIR_NONE)
       buf="NONE";
     else

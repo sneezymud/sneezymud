@@ -8,6 +8,7 @@
 #include "stdsneezy.h"
 #include "shop.h"
 #include "statistics.h"
+#include "pathfinder.h"
 
 static TBeing *char_with_name(char *name)
 {
@@ -171,6 +172,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
   int beam_in_room = 0;
   roomDirData *exitp;
   affectedData *aff = NULL;
+  TPathFinder path;
 
   bounty_hunt_struct *job = NULL;
   const char HUNTER_ID[] = "Hunter,";
@@ -667,7 +669,8 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
       }
       // path hashing is somewhat CPU intensive, keep max range short
       // or restrict number tracking
-      dir = find_path(myself->in_room, is_target_room_p, (void *) room, myself->trackRange(), 0);
+      dir=path.findPath(myself->in_room, findRoom(room));
+
       if (dir == DIR_NONE) {
         // unable to find a path 
         // look for a place nearby to pop into 
@@ -1015,7 +1018,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
           break;
       }
       return TRUE;
-    } else if ((dir = find_path(myself->in_room, is_target_room_p, (void *) targ->in_room, myself->trackRange(), 0)) > DIR_NONE) {
+    } else if ((dir=path.findPath(myself->in_room, findRoom(targ->in_room))) > DIR_NONE){
       rc = myself->goDirection(dir);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;

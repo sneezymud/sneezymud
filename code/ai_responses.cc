@@ -1,6 +1,7 @@
 #include "stdsneezy.h"
 #include "combat.h"
 #include "obj_symbol.h"
+#include "pathfinder.h"
 
 static char	responseFile[32];
 
@@ -50,6 +51,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
   sstring tStObj(""),
          tStSucker(""),
          tStArgument(arg);
+  TPathFinder path;
 
   if (!awake())
     return TRUE;
@@ -383,8 +385,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring &arg, TBeing *mob, c
       }
       if(!value) break;
 
-      switch((dir=find_path(in_room, is_target_room_p, 
-			    (void *) value, 5000, 0))){
+      switch((dir=path.findPath(in_room, findRoom(value)))){
 	case -1: // lost or arrived at destination
 	  break;
 	case 0: case 1: case 2: case 3: case 4: 

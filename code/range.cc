@@ -327,7 +327,7 @@ void pissOff(TMonster *irritated, TBeing *reason)
 
     SET_BIT(irritated->specials.act, ACT_HUNTING);
     irritated->specials.hunting = reason;
-    irritated->hunt_dist = -500;        // -500 means mobs will open doors! 
+    irritated->hunt_dist = 500;
     irritated->persist = PISSED_MOB_PERSIST;
     irritated->oldRoom = irritated->inRoom();
     irritated->addHated(reason);
@@ -1182,220 +1182,20 @@ int go_ok_smarter(roomDirData *exitp)
           (exitp->to_room != ROOM_NOWHERE));
 }
 
-// returns DIR_NONE1 indicating a problem or can't find a path
-// returns 0-9 indicating a direction to travel
-// returns 10+ indicating a portal to enter (10 = first in room, 11 = 2nd,...)
-dirTypeT find_path(int room, int (*pred) (int, void *), void *data, int depth, bool in_zone, int *answer, bool use_portals)
-{
-  // just to be dumb, check my own room first
-  if ((pred) (room, data)) {
-    if (answer)
-      *answer = room;
-    return DIR_NONE;
-  }
- 
-  bool thru_doors;
-  if (depth < 0) {
-    thru_doors = true;
-    depth = -depth;
-  } else
-    thru_doors = false;
- 
-  // create this room as a starting point
-  pathData *pd = new pathData();
-  pd->direct = DIR_NONE;
-  pd->source = -1;
-  pd->checked = false;
-
-  map<int, pathData *>path_map;
-  path_map[room] = pd;
-
-  for(;;) {
-    map<int, pathData *>::const_iterator CI;
-    map<int, pathData *>next_map;
-
-    if (path_map.size() > (unsigned int) depth) {
-      if (answer)
-        *answer = path_map.size();
-      
-      // clean up allocated memory
-      for (CI = path_map.begin(); CI != path_map.end(); ++CI) {
-        pd = CI->second;
-        delete pd;
-      }
-      for (CI = next_map.begin(); CI != next_map.end(); ++CI) {
-        pd = CI->second;
-        delete pd;
-      }
-
-      return DIR_NONE;
-    }
- 
-    for (CI = path_map.begin(); CI != path_map.end(); ++CI) {
-      // no need to do things twice
-      pd = CI->second;
-      if (pd->checked)
-        continue;
-
-      dirTypeT dir;
-      TRoom *rp = real_roomp(CI->first);
-      if (!rp) {
-        vlogf(LOG_BUG, "Problem iterating path map.");
-        continue;
-      }
-      if(!use_portals){
-	for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-	  roomDirData *exitp = rp->dir_option[dir];
-	  TRoom *hp = NULL;
-	  if (exitp && 
-	      (hp = real_roomp(exitp->to_room)) &&
-	      !(hp->isRoomFlag(ROOM_NO_MOB)) &&
-	      (thru_doors ? go_ok_smarter(exitp) : go_ok(exitp))) {
-	    // check in_zone criteria
-	    if (in_zone && (hp->getZoneNum() != rp->getZoneNum())) {
-	      continue;
-	    }
-
-	    // do we have this room already?
-	    map<int, pathData *>::const_iterator CT;
-	    CT = path_map.find(exitp->to_room);
-	    if (CT != path_map.end())
-	      continue;
-	    CT = next_map.find(exitp->to_room);
-	    if (CT != next_map.end())
-	      continue;
-
-	    // is this our target?
-	    if ((pred) (exitp->to_room, data)) {
-	      // found our target, walk our list backwards
-	      if (answer)
-		*answer = exitp->to_room;
-	      pd = CI->second;
-	      for (;;) {
-		if (pd->source == -1) {
-		  // clean up allocated memory
-		  for (CI = path_map.begin(); CI != path_map.end(); ++CI) {
-		    pathData *tpd = CI->second;
-		    delete tpd;
-		  }
-		  for (CI = next_map.begin(); CI != next_map.end(); ++CI) {
-		    pathData *tpd = CI->second;
-		    delete tpd;
-		  }
-
-		  return dir;
-		}
-		dir = pd->direct;
-		pd = path_map[pd->source];
-	      }
-	    }
-	    // it's not our target, and we don't have this room yet
-	    pd = new pathData();
-	    pd->source = CI->first; 
-	    pd->direct = dir; 
-	    pd->checked = false; 
-	    next_map[exitp->to_room] = pd;
-	  }
-	}
-      }
-      // check for portals that might lead to target
-      // return 10 if its the 1st portal in the room, 11 for 2nd, etc
-      // 0-9 are obviously real exits (see above)
-      if (thru_doors || use_portals) {
-        dir = dirTypeT(MAX_DIR-1);
-        TThing *t;
-        for (t = rp->getStuff(); t; t = t->nextThing) {
-          TPortal *tp = dynamic_cast<TPortal *>(t);
-          if (!tp) 
-            continue;
-          dir++;   // increment portal
-          if (tp->isPortalFlag(EX_LOCKED | EX_CLOSED))
-            continue;
-          int tmp_room = tp->getTarget();   // next room
-          TRoom *hp = real_roomp(tmp_room);
-          if (!hp) {
-            continue;
-          }
-
-          // check in_zone criteria
-          if (in_zone && (hp->getZoneNum() != rp->getZoneNum())) {
-            continue;
-          }
-
-          // do we have this room already?
-          map<int, pathData *>::const_iterator CT;
-          CT = path_map.find(tmp_room);
-          if (CT != path_map.end())
-            continue;
-          CT = next_map.find(tmp_room);
-          if (CT != next_map.end())
-            continue;
-
-          // is this our target?
-          if ((pred) (tmp_room, data)) {
-            // found our target, walk our list backwards
-            if (answer)
-              *answer = tmp_room;
-            pd = CI->second;
-            for (;;) {
-              if (pd->source == -1) {
-                // clean up allocated memory
-                for (CI = path_map.begin(); CI != path_map.end(); ++CI)
-                  delete CI->second;
-                for (CI = next_map.begin(); CI != next_map.end(); ++CI)
-                  delete CI->second;
-
-                return dir;
-              }
-              dir = pd->direct;
-              pd = path_map[pd->source];
-            }
-          }
-          // it's not our target, and we don't have this room yet
-          pd = new pathData();
-          pd->source = CI->first; 
-          pd->direct = dir; 
-          pd->checked = false; 
-          next_map[tmp_room] = pd;
-        }  // stuff in room
-      }
-      // end portal check
-
-      // we've checked all dirs for this room, so mark it checked
-      pd = CI->second;
-      pd->checked = true;
-    }
-
-    // if we failed to find any new rooms, abort, or be in an endless loop
-    if (next_map.size() == 0) {
-      if (answer)
-        *answer = ROOM_NOWHERE;
-
-      // clean up allocated memory
-      for (CI = path_map.begin(); CI != path_map.end(); ++CI)
-        delete CI->second;
-      for (CI = next_map.begin(); CI != next_map.end(); ++CI)
-        delete CI->second;
-
-      return DIR_NONE;
-    }
-
-    // we've looped over the entire map list, so move the next_map values in
-    for (CI = next_map.begin(); CI != next_map.end(); ++CI) {
-      path_map[CI->first] = CI->second;
-    }
-    next_map.clear();
-  }
-}
 
 dirTypeT choose_exit_global(int in_room, int tgt_room, int depth)
 {
-  return find_path(in_room, is_target_room_p, (void *) tgt_room, depth, 0);
+  TPathFinder path(depth);
+
+  return path.findPath(in_room, findRoom(tgt_room));
 }
  
 dirTypeT choose_exit_in_zone(int in_room, int tgt_room, int depth)
 {
-  return find_path(in_room, is_target_room_p, (void *) tgt_room, depth, 1);
+  TPathFinder path(depth);
+  path.setStayZone(true);
+
+  return path.findPath(in_room, findRoom(tgt_room));
 }
 
 int TBeing::doShoot(const char *arg)

@@ -7,7 +7,7 @@
 
 #include "stdsneezy.h"
 #include "obj_portal.h"
-
+#include "pathfinder.h"
 
 void stop_tracking(TBeing *ch)
 {
@@ -183,9 +183,12 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
         }
         // Are we seeking water?  Must be if we don't have a hunt target.
         if (!ch->specials.hunting) {
-          if (isSW)
-            code = find_path(ch->in_room, find_closest_water, NULL, ch->hunt_dist, 0, &targetRm);
-          else {
+          if (isSW){
+	    TPathFinder path(ch->hunt_dist);
+	    
+	    code=path.findPath(ch->in_room, findWater());
+	    targetRm=path.getDest();
+	  } else {
             vlogf(LOG_BUG, "problem in task_track()");
             stop_tracking(ch);
             return TRUE;
@@ -193,7 +196,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
         } else {
           // Guess we have a hunt target, lets find them.
           if (ch->isImmortal())
-            code = choose_exit_global(ch->in_room, ch->specials.hunting->in_room, -ch->hunt_dist);
+            code = choose_exit_global(ch->in_room, ch->specials.hunting->in_room, ch->hunt_dist);
           else if ((ch->GetMaxLevel() >= MIN_GLOB_TRACK_LEV) || ch->affectedBySpell(SPELL_TRAIL_SEEK)
 		   || !ch->isPc())
             code = choose_exit_global(ch->in_room, ch->specials.hunting->in_room, ch->hunt_dist);

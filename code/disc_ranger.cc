@@ -3,6 +3,7 @@
 #include "combat.h"
 #include "disc_ranger.h"
 #include "obj_portal.h"
+#include "pathfinder.h"
 
 void TBeing::doTrack(const char *argument)
 {
@@ -104,18 +105,25 @@ void TBeing::doTrack(const char *argument)
  
   hunt_dist = dist;
   specials.hunting = 0;
-  targrm = inRoom();
+  TPathFinder path(dist);
  
   // note: -dist will look THRU doors.
   // all subsequent calls use track() which does not go thru doors
   // this is intentional so they lose track after 1 step
   if ((level < MIN_GLOB_TRACK_LEV) ||
-      (affectedBySpell(SPELL_TRAIL_SEEK)))
-    code = find_path(in_room, find_closest_being_by_name, (void *) namebuf,
-                      -dist, 1, &targrm);
-  else
-    code = find_path(in_room, find_closest_being_by_name, (void *) namebuf,
-                      -dist, 0, &targrm);
+      (affectedBySpell(SPELL_TRAIL_SEEK))){
+    path.setStayZone(true);
+    path.setThruDoors(true);
+
+    code=path.findPath(in_room, findBeing(namebuf));
+    targrm=path.getDest();
+  } else {
+    path.setStayZone(false);
+    path.setThruDoors(true);
+    
+    code=path.findPath(in_room, findBeing(namebuf));
+    targrm=path.getDest();
+  }
 
   if (code == -1) {
     addToWait(combatRound(1));
@@ -209,6 +217,8 @@ int TBeing::track(TBeing *vict)
   int isSW = affectedBySpell(SKILL_SEEKWATER);
   char buf[256];
   char buf2[256];
+  TPathFinder path(hunt_dist);
+  path.setUsePortals(false);
 
   if (!vict && !isSW) {
     vlogf(LOG_BUG, fmt("Problem in track() %s") %  getName());
@@ -221,8 +231,10 @@ int TBeing::track(TBeing *vict)
     return TRUE;
   }
   if (!vict) {
-    if (isSW)
-      code = find_path(in_room, find_closest_water, NULL, hunt_dist, 0, &targetRm);
+    if (isSW){
+      code=path.findPath(in_room, findWater());
+      targetRm=path.getDest();
+    }
     else {
       vlogf(LOG_BUG, "problem in track()");
       stopTask();
@@ -230,7 +242,7 @@ int TBeing::track(TBeing *vict)
     }
   } else {
     if (isImmortal())  // look through doors
-      code = choose_exit_global(in_room, vict->in_room, -hunt_dist);
+      code = choose_exit_global(in_room, vict->in_room, hunt_dist);
     else if ((GetMaxLevel() < MIN_GLOB_TRACK_LEV) ||
            affectedBySpell(SPELL_TRAIL_SEEK))
       code = choose_exit_in_zone(in_room, vict->in_room, hunt_dist);
@@ -361,13 +373,6 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
   }
 }
  
-// returns max track range that should be used for NPC's in find_path calls
-int TBeing::trackRange()
-{
-  int range = -2000;
-  return range;
-}
-
 void TBeing::doConceal(sstring argument)
 {
   sstring name_buf;

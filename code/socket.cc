@@ -39,6 +39,7 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "weather.h"
 #include "obj_smoke.h"
 #include "obj_vehicle.h"
+#include "pathfinder.h"
 
 int maxdesc, avail_descs;  
 bool Shutdown = 0;               // clean shutdown
@@ -290,17 +291,6 @@ void updateAvgPlayers()
 	stats.num_users++;
     }
   }
-}
-
-// used as a conditional to find_path
-static int find_closest_outdoor(int room, void *myself)
-{
-  TRoom *rp = real_roomp(room);
-  
-  if(rp->isRoomFlag(ROOM_INDOORS))
-    return FALSE;
-
-  return TRUE;
 }
 
 int TSocket::gameLoop()
@@ -772,12 +762,16 @@ int TSocket::gameLoop()
 		  FALSE, smoke, 0, 0, TO_ROOM); 
 	    } else {
 	      dirTypeT dir;
+	      TPathFinder path;
+
 	      // check portals first
+	      path.setUsePortals(true);
+	      dir=path.findPath(smoke->inRoom(), findOutdoors());
 	      
-	      dir = find_path(smoke->inRoom(), find_closest_outdoor, (void *) smoke, 5000, 0, NULL, true);
-	      
-	      if(dir == -1)
-		dir = find_path(smoke->inRoom(), find_closest_outdoor, (void *) smoke, 5000, 0, NULL, false);
+	      if(dir == -1){
+		path.setUsePortals(false);
+		dir=path.findPath(smoke->inRoom(), findOutdoors());
+	      }
 
 	      if(dir >= MAX_DIR){
 		dir=dirTypeT(dir-MAX_DIR+1);
