@@ -2339,6 +2339,7 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SKILL_CRIT_HIT:
     case SKILL_FEIGN_DEATH:
     case SKILL_BLUR:
+    case SKILL_CHAIN_ATTACK:
     case SKILL_HURL:
     case SKILL_SHOULDER_THROW:
     case SKILL_SWINDLE:

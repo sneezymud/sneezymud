@@ -46,7 +46,8 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
           wohlin_learn = ch->getSkillValue(SKILL_WOHLIN);
 	  monk_level = ch->getLevel(MONK_LEVEL_IND);
 
-          if (bSuccess(ch, learn, SKILL_YOGINSA) && (::number(1,100)<70)) {
+          if (bSuccess(ch, learn, SKILL_YOGINSA) && 
+	      (::number(1,100) < (70+(wohlin_learn/4)))) {
 	    // this artifical roll to check for a success is so we can slowly
 	    // phase out the speed of hp recover without causing a ruckus.
 	    // lower the .85 lower down and raise the 80 above, keeping the

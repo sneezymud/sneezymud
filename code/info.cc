@@ -1195,6 +1195,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_CRIT_HIT:
       case SKILL_FEIGN_DEATH:
       case SKILL_BLUR:
+      case SKILL_CHAIN_ATTACK:
       case SKILL_HURL:
       case SKILL_SWINDLE:
       case SKILL_SNEAK:

@@ -798,6 +798,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDLeverage *) cd)->skShoulderThrow;
     case SKILL_HURL:
       return &((CDLeverage *) cd)->skHurl;
+    case SKILL_CHAIN_ATTACK:
+      return &((CDLeverage *) cd)->skChainAttack;
 
 // disc_Taedoki
 

@@ -380,6 +380,7 @@ enum spellNumT {
      SKILL_IRON_MUSCLES,
      SKILL_IRON_LEGS,
      SKILL_IRON_WILL,
+     SKILL_CHAIN_ATTACK,
 
      // end of monk
      // start of thief

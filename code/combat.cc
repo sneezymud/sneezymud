@@ -1537,9 +1537,11 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
     // in general, we ought to be adding 20 levs for max specialization
     // however, review the balance docs and realize we add a penalty
     // here (the 76% factor) in order to counter the effects of blur.
+#if 0
     double amt = ch->getAdvLearning(SKILL_KUBO);
     if (amt)
       value += (0.7676 * amt)/5.0;
+#endif
 
     // enforce range
     value = min(max(value, 0.0), 50.0);
@@ -1577,6 +1579,11 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
      !ch->equipment[WEAR_HAND_R] && !ch->equipment[WEAR_HAND_L]){
     // extra 0-4%
     statDam += (ch->getSkillLevel(SKILL_IRON_FIST)/2500);
+  }
+
+  if(ch->doesKnowSkill(SKILL_VOPLAT)){
+    // extra 0-5%
+    statDam += (ch->getSkillLevel(SKILL_VOPLAT)/2000);
   }
 
   int dam = (int) (wepDam * statDam);
@@ -1936,7 +1943,7 @@ int TBeing::hit(TBeing *target, int pulse)
   if (pulse >= 0 && !(pulse % len_rnd) &&
      !heldInPrimHand() && !heldInSecHand() &&
      doesKnowSkill(SKILL_BLUR) && 
-     ::number(0, 100) < 5 &&  // this makes it happen 5% of the time
+     ::number(0, 100) < 10 &&  // this makes it happen 10% of the time
      !isAffected(AFF_ENGAGER) && getMana()>=25 &&
      bSuccess(this, getSkillValue(SKILL_BLUR), SKILL_BLUR)) {
     // the number of extra swings use to be skill dependant too, but
@@ -2064,7 +2071,7 @@ int TBeing::hit(TBeing *target, int pulse)
 
   while (fx > 0.999) {
     checkLearnFromHit(this, tarLevel, o, true, w_type);
-    if ((rc = oneHit(target, HAND_PRIMARY, o,mod, fx))) {
+    if ((rc = oneHit(target, HAND_PRIMARY, o,mod, &fx))) {
       if (IS_SET_ONLY(rc, DELETE_ITEM)) {
         delete o;
         o = NULL;
@@ -2080,7 +2087,7 @@ int TBeing::hit(TBeing *target, int pulse)
     if (o && !dynamic_cast<TBaseWeapon *>(o))
       return FALSE;  // lose the partial attack
     checkLearnFromHit(this, tarLevel, o, true, w_type);
-    if ((rc = oneHit(target, HAND_PRIMARY, o,mod, fx))) {
+    if ((rc = oneHit(target, HAND_PRIMARY, o,mod, &fx))) {
       if (IS_SET_ONLY(rc, DELETE_ITEM)) {
         delete o;
         o = NULL;
@@ -2095,7 +2102,7 @@ int TBeing::hit(TBeing *target, int pulse)
 
   while (fy > 0.999) {
     checkLearnFromHit(this, tarLevel, o2, false, w_type);
-    if ((rc = oneHit(target, HAND_SECONDARY, o2,mod, fy))) {
+    if ((rc = oneHit(target, HAND_SECONDARY, o2,mod, &fy))) {
       if (IS_SET_ONLY(rc, DELETE_ITEM)) {
         delete o2;
         o2 = NULL;
@@ -2111,7 +2118,7 @@ int TBeing::hit(TBeing *target, int pulse)
       return FALSE;  // lose the partial attack
 
     checkLearnFromHit(this, tarLevel, o2, false, w_type);
-    if ((rc = oneHit(target, HAND_SECONDARY, o2,mod, fy))) {
+    if ((rc = oneHit(target, HAND_SECONDARY, o2,mod, &fy))) {
       if (IS_SET_ONLY(rc, DELETE_ITEM)) {
         delete o2;
         o2 = NULL;
@@ -3305,7 +3312,7 @@ static void critKillCheck(TBeing *ch, TBeing *vict, int mess_sent)
 // DELETE_ITEM : weapon is destroyed, delete   (this may be |= with the above)
 // return true if further hits should cease
 // otherwise, returns 0
-int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod, double f)
+int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod, float *f)
 {
   int dam = 0, result;
   wearSlotT part_hit;
@@ -3613,6 +3620,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 #if 0
     vlogf(LOG_COMBAT, "DAMAGE %d (%s) After getActualDamage and absorb.", dam, getName());  
 #endif
+
     if (!IS_SET_DELETE(mess_sent, ONEHIT_MESS_CRIT_S) &&
         vict->awake()) {
       if (monkDodge(vict, weapon, &dam, w_type, part_hit))
@@ -3625,7 +3633,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     loseSneak();
 
     if (mess_sent == 0){
-      if(hasClass(CLASS_MONK) && doesKnowSkill(SKILL_ADVANCED_KICKING) &&
+      if(doesKnowSkill(SKILL_ADVANCED_KICKING) &&
          !weapon && isPc()) {
         // switch some "hits" to "kicks"
         // this is strictly textual and doesn't impact damage at all
@@ -3635,13 +3643,31 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	iskick+=1.25;
 	iskick*=(isprimary?0.6:0.4);
 
-	if(f <= iskick)
+	if(*f <= iskick)
 	  normalHitMessage(vict, NULL, TYPE_KICK, dam, part_hit);
 	else 
 	  normalHitMessage(vict, NULL, w_type, dam, part_hit);
       } else
 	normalHitMessage(vict, weapon, w_type, dam, part_hit);
-
+      
+       
+     if(doesKnowSkill(SKILL_CHAIN_ATTACK) &&   // must know the skill
+	 !weapon &&                             // must be barehanded
+	 (::number(0,99) < 5) &&                // only 5% of the time
+	 getMana()>=10 &&                       // requires 10 mana
+	 bSuccess(this,getSkillValue(SKILL_CHAIN_ATTACK),SKILL_CHAIN_ATTACK)){
+	// successfully chain this attack
+	act("Lightning fast, you shift your balance and chain another strike.",
+	    FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
+	act("Lightning fast, $n shifts $s balance and chains another strike.", 
+	    FALSE, this, 0, vict, TO_VICT, ANSI_PURPLE);
+	act("Lighting fast, $n shifts $s balance and chains another strike.", 
+	    FALSE, this, 0, vict, TO_NOTVICT);
+	
+	*f += 1; // one extra attack
+	reconcileMana(TYPE_UNDEFINED, 0, 10);
+      }
+      
       // we've now hit, so do some post hit stuff
       // handle a weapon's spec_proc 
       if (weapon && weapon->spec) {

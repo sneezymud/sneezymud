@@ -1497,7 +1497,7 @@ class TBeing : public TThing {
     int weaponCheck(TBeing *v, TThing *o, spellNumT type, int dam);
     virtual void reconcileHelp(TBeing *, double) { return; }
     virtual void reconcileHurt(TBeing *, double) { return; }
-    int oneHit(TBeing *, primaryTypeT, TThing *, int, double);
+    int oneHit(TBeing *, primaryTypeT, TThing *, int, float *);
     bool isHitableAggr(TBeing *);
     void normalHitMessage(TBeing *, TThing *, spellNumT, int, wearSlotT);
     int monkDodge(TBeing *, TThing *, int *, int, wearSlotT);
