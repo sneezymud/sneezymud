@@ -61,10 +61,7 @@ void TBeing::doTrophy(const char *arg)
 
   for (; isspace(*arg); arg++);
 
-  vlogf(LOG_PEEL, "%s", arg);
-  
   if(!strncmp(arg, "zone", 4)){
-  vlogf(LOG_PEEL, "got here 1");
     if(arg[4]){
       for (; !isspace(*arg); arg++);
       zonesearch=-1;
@@ -72,11 +69,8 @@ void TBeing::doTrophy(const char *arg)
       zonesearch=roomp->getZoneNum();
     }
   } else if(!strncmp(arg, "summary", 7)){
-  vlogf(LOG_PEEL, "got here 2");
     summary=1;
   }
-
-  vlogf(LOG_PEEL, "got here 3");
 
   rc=dbquery(&res, "sneezy", "doTrophy", "select mobvnum, count from trophy where name='%s' order by mobvnum", getName());
 
