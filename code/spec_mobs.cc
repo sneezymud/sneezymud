@@ -3471,14 +3471,20 @@ int stable_man(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   return FALSE;
 }
 
-static int attunePrice(const TSymbol *obj)
+static int attunePrice(const TSymbol *obj, TBeing *ch, unsigned int shop_nr)
 {
+  double cost;
+
   if (!obj->getSymbolMaxStrength())
-    return max(1, obj->obj_flags.cost / 50);
+    cost=max(1, obj->obj_flags.cost / 50);
   else {
     float fract = (float) obj->getSymbolCurStrength() / obj->getSymbolMaxStrength();
-    return max(1, (int) (obj->obj_flags.cost * fract));
+    cost=max(1, (int) (obj->obj_flags.cost * fract));
   }
+
+  cost *= shop_index[shop_nr].getProfitBuy(obj, ch);
+
+  return (int) cost;
 }
 
 void attune_struct::clearAttuneData()
@@ -3536,7 +3542,7 @@ void TSymbol::attunerValue(TBeing *ch, TMonster *me)
     me->doTell(ch->getName(), fmt("%s has already been attuned!") % getName());
     return;
   }
-  cost = attunePrice(this);
+  cost = attunePrice(this, ch, find_shop_nr(me->number));
 
   me->doTell(ch->getName(), fmt("I will tithe you %d talens to attune your %s.") % cost % getName());
 }
@@ -3566,7 +3572,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
     me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
     return;
   }
-  cost = attunePrice(this);
+  cost = attunePrice(this, ch, find_shop_nr(me->number));
 
   if (ch->getMoney() < cost) {
     me->doTell(ch->getName(), "I only attune for a reasonable tithe. I am sorry, I do not make exceptions!");
@@ -4566,16 +4572,17 @@ int pestilence(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   return FALSE;
 }
 
-static int engraveCost(TObj *obj)
+static int engraveCost(TObj *obj, TBeing *ch, unsigned int shop_nr)
 {
-  const float REGISTRATION_FEE = 1.5;
-  int cost;
+  double cost;
 
-  cost = (int) (REGISTRATION_FEE * (obj->obj_flags.cost));
+  cost = obj->obj_flags.cost;
 
   cost *= max(1,obj->obj_flags.cost/10000);
 
-  return cost;
+  cost *= shop_index[shop_nr].getProfitBuy(obj, ch);
+
+  return (int) cost;
 }
 
 int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
@@ -4840,7 +4847,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         return TRUE;
       }
 
-      cost = engraveCost(valued);
+      cost = engraveCost(valued, ch, find_shop_nr(me->number));
 
       me->doTell(ch->getName(), fmt("It will cost %d talens to engrave your %s.") % cost % fname(valued->name));
       return TRUE;
@@ -4893,7 +4900,7 @@ int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         return TRUE;
       }
 
-      cost = engraveCost(item);
+      cost = engraveCost(item, ch, find_shop_nr(me->number));
 
       if (ch->getMoney() < cost) {
         me->doTell(ch->getName(), "I have to make a living! If you don't have the money, I don't do the work!");
