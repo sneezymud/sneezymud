@@ -7290,7 +7290,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
           break;
       }
 
-      
+      numsimilar = max(numsimilar, 1);// sometimes we get 0 instead of 1 if there is only one in the room
 
       add_bars(temp);
 

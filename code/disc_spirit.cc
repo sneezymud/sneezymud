@@ -1672,9 +1672,9 @@ int telepathy(TBeing *caster, int, byte bKnown)
               !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
 
 	  i->character->sendTo(COLOR_SPELLS, "Your mind is flooded with a telepathic message from %s.\n\r", caster->getName());
-	  if (!strcmp(caster->name, "Frobozz") || !strcmp(caster->name, "Belannaer"))
-	    i->character->sendTo(COLOR_SPELLS, "The message is, \"I abused telepath, and I'm a loser!%s\"\n\r", i->character->norm());
-	  else
+	  //	  if (!strcmp(caster->name, "Frobozz") || !strcmp(caster->name, "Belannaer"))
+	  //	    i->character->sendTo(COLOR_SPELLS, "The message is, \"I abused telepath, and I'm a loser!%s\"\n\r", i->character->norm());
+	  //	  else
 	    i->character->sendTo(COLOR_SPELLS, "The message is, \"%s%s\"\n\r", msg, i->character->norm());
         }
       }
