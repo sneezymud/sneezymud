@@ -7121,7 +7121,7 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   if(!ch || !o || cmd != CMD_OBJ_OPENED)
     return false;
 
-  vector <string> fortunes;
+  vector <TString> fortunes;
   fortunes.push_back("This paper is better than you in every way, because it can achieve Zen.  You, on the other hand, cannot.  And thus you must resume your misguided existence and continue on forever envious of this little bit of bleached wood pulp.\n\r");
   fortunes.push_back("The greatest danger could be your stupidity.\n\r");
   fortunes.push_back("Our first and last love is... self love.\n\r");
@@ -7192,7 +7192,7 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   fortunes.push_back("Be careful what you look for, you just might find it.\n\r");
   fortunes.push_back("Look deep and you might find, you like it when you cross the line.\n\r");
 
-  string buf=fortunes[::number(0,fortunes.size()-1)];
+  TString buf=fortunes[::number(0,fortunes.size()-1)];
 
   // create fortune
   TNote *fortune = createNote(mud_str_dup(buf));
@@ -7211,6 +7211,7 @@ int fortuneCookie(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   *cookie = *o;  // TObj assignment, copy values
   delete o; // remove old object
   cookie->assignFourValues(3,0,0,0); // 3 food value, no flags
+  cookie->swapToStrung();
 
   *ch += *cookie;
   *ch += *fortune;
