@@ -7346,7 +7346,7 @@ int casinoElevatorOperator(TBeing *, cmdTypeT cmd, const char *, TMonster *mysel
   if(i==DIR_NONE){
     if(elevator->in_room==2374)
       i=DIR_UP;
-    else if(elevator->in_room=2367)
+    else if(elevator->in_room==2367)
       i=DIR_DOWN;
     else {
       vlogf(LOG_BUG, "fishing elevator lost");
