@@ -50,6 +50,7 @@
 #include "obj_symbol.h"
 #include "obj_window.h"
 #include "obj_general_weapon.h"
+#include "obj_pool.h"
 
 #include <fstream.h>
 

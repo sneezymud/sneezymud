@@ -376,7 +376,8 @@ objs/actions.o: cmd_message.h stats.h limbs.h body.h race.h skills.h
 objs/actions.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
 objs/actions.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
 objs/actions.o: person.h monster.h account.h extern.h handler.h obj_money.h
-objs/actions.o: rent.h spec_mobs.h spec_rooms.h materials.h
+objs/actions.o: rent.h spec_mobs.h spec_rooms.h materials.h obj_pool.h
+objs/actions.o: obj_base_cup.h
 objs/ai_commands.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/ai_commands.o: /usr/include/stdio.h /usr/include/features.h
 objs/ai_commands.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -1315,7 +1316,7 @@ objs/cmd_compare.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
 objs/cmd_compare.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/cmd_compare.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/cmd_compare.o: materials.h shop.h obj_bow.h obj_symbol.h obj_food.h
-objs/cmd_compare.o: obj_opal.h
+objs/cmd_compare.o: obj_opal.h obj_arrow.h obj_base_weapon.h obj_base_light.h
 objs/cmd_consider.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/cmd_consider.o: /usr/include/bits/types.h /usr/include/features.h
 objs/cmd_consider.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -1438,7 +1439,7 @@ objs/cmd_deathstroke.o: trap.h task.h weather.h sound.h create.h thing.h
 objs/cmd_deathstroke.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/cmd_deathstroke.o: being.h person.h monster.h account.h extern.h
 objs/cmd_deathstroke.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/cmd_deathstroke.o: materials.h combat.h
+objs/cmd_deathstroke.o: materials.h combat.h obj_base_weapon.h
 objs/cmd_disarm.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_disarm.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/cmd_disarm.o: /usr/include/gnu/stubs.h
@@ -1790,6 +1791,7 @@ objs/cmd_get.o: person.h monster.h account.h extern.h handler.h obj_money.h
 objs/cmd_get.o: rent.h spec_mobs.h spec_rooms.h materials.h games.h
 objs/cmd_get.o: game_crazyeights.h game_drawpoker.h obj_player_corpse.h
 objs/cmd_get.o: obj_base_corpse.h obj_base_container.h obj_trap.h
+objs/cmd_get.o: obj_base_weapon.h
 objs/cmd_grapple.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_grapple.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_grapple.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -2187,7 +2189,7 @@ objs/cmd_look.o: being.h person.h monster.h account.h extern.h handler.h
 objs/cmd_look.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/cmd_look.o: games.h game_crazyeights.h game_drawpoker.h
 objs/cmd_look.o: obj_base_corpse.h obj_base_container.h obj_table.h
-objs/cmd_look.o: obj_book.h
+objs/cmd_look.o: obj_book.h obj_base_cup.h
 objs/cmd_low.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/cmd_low.o: /usr/include/bits/types.h /usr/include/features.h
 objs/cmd_low.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -2247,7 +2249,8 @@ objs/cmd_low.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
 objs/cmd_low.o: person.h monster.h account.h extern.h handler.h obj_money.h
 objs/cmd_low.o: rent.h spec_mobs.h spec_rooms.h materials.h statistics.h
 objs/cmd_low.o: combat.h obj_player_corpse.h obj_base_corpse.h
-objs/cmd_low.o: obj_base_container.h obj_smoke.h
+objs/cmd_low.o: obj_base_container.h obj_smoke.h obj_arrow.h
+objs/cmd_low.o: obj_base_weapon.h obj_pool.h obj_base_cup.h
 objs/cmd_mend_limb.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/cmd_mend_limb.o: /usr/include/stdio.h /usr/include/features.h
 objs/cmd_mend_limb.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -3034,7 +3037,7 @@ objs/cmd_stab.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/cmd_stab.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/cmd_stab.o: being.h person.h monster.h account.h extern.h handler.h
 objs/cmd_stab.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/cmd_stab.o: combat.h
+objs/cmd_stab.o: combat.h obj_general_weapon.h obj_base_weapon.h obj_gun.h
 objs/cmd_stat.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/cmd_stat.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/cmd_stat.o: /usr/include/gnu/stubs.h
@@ -3763,6 +3766,7 @@ objs/combat.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
 objs/combat.o: monster.h account.h extern.h handler.h obj_money.h rent.h
 objs/combat.o: spec_mobs.h spec_rooms.h materials.h range.h combat.h
 objs/combat.o: statistics.h mail.h shop.h cmd_trophy.h obj_trash.h
+objs/combat.o: obj_arrow.h obj_base_weapon.h obj_general_weapon.h obj_gun.h
 objs/comm.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/comm.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/comm.o: /usr/include/gnu/stubs.h
@@ -4150,7 +4154,9 @@ objs/create_objs.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/create_objs.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/create_objs.o: materials.h obj_component.h dirsort.h statistics.h
 objs/create_objs.o: obj_open_container.h obj_base_container.h obj_trash.h
-objs/create_objs.o: obj_book.h obj_trap.h
+objs/create_objs.o: obj_book.h obj_trap.h obj_portal.h obj_seethru.h
+objs/create_objs.o: obj_arrow.h obj_base_weapon.h obj_gun.h
+objs/create_objs.o: obj_general_weapon.h
 objs/create_rooms.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/create_rooms.o: /usr/include/stdio.h /usr/include/features.h
 objs/create_rooms.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -4210,6 +4216,7 @@ objs/create_rooms.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
 objs/create_rooms.o: connect.h charfile.h being.h person.h monster.h
 objs/create_rooms.o: account.h extern.h handler.h obj_money.h rent.h
 objs/create_rooms.o: spec_mobs.h spec_rooms.h materials.h obj_table.h
+objs/create_rooms.o: obj_seethru.h
 objs/crit_combat.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/crit_combat.o: /usr/include/stdio.h /usr/include/features.h
 objs/crit_combat.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -4269,7 +4276,8 @@ objs/crit_combat.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
 objs/crit_combat.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/crit_combat.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/crit_combat.o: materials.h combat.h statistics.h obj_corpse.h
-objs/crit_combat.o: obj_base_corpse.h obj_base_container.h
+objs/crit_combat.o: obj_base_corpse.h obj_base_container.h obj_gun.h
+objs/crit_combat.o: obj_general_weapon.h obj_base_weapon.h
 objs/damage.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/damage.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/damage.o: /usr/include/gnu/stubs.h
@@ -4378,7 +4386,10 @@ objs/db.o: obj_table.h obj_fuel.h obj_audio.h obj_boat.h obj_drug_container.h
 objs/db.o: obj_food.h obj_opal.h obj_organic.h obj_pen.h obj_smoke.h
 objs/db.o: obj_statue.h obj_trash.h obj_treasure.h obj_bandaid.h obj_bed.h
 objs/db.o: obj_board.h obj_book.h obj_gemstone.h obj_key.h obj_note.h
-objs/db.o: obj_tool.h obj_trap.h obj_tree.h
+objs/db.o: obj_tool.h obj_trap.h obj_tree.h obj_window.h obj_seethru.h
+objs/db.o: obj_portal.h obj_arrow.h obj_base_weapon.h obj_general_weapon.h
+objs/db.o: obj_flame.h obj_base_light.h obj_light.h obj_gun.h obj_vial.h
+objs/db.o: obj_base_cup.h obj_pool.h obj_drinkcon.h
 objs/disc_adventuring.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_adventuring.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_adventuring.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -5309,7 +5320,8 @@ objs/disc_fire.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/disc_fire.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/disc_fire.o: being.h person.h monster.h account.h extern.h handler.h
 objs/disc_fire.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/disc_fire.o: combat.h spelltask.h disc_fire.h
+objs/disc_fire.o: combat.h spelltask.h disc_fire.h obj_light.h
+objs/disc_fire.o: obj_base_light.h
 objs/disc_hand_of_god.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_hand_of_god.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_hand_of_god.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -5371,7 +5383,8 @@ objs/disc_hand_of_god.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/disc_hand_of_god.o: being.h person.h monster.h account.h extern.h
 objs/disc_hand_of_god.o: handler.h obj_money.h rent.h spec_mobs.h
 objs/disc_hand_of_god.o: spec_rooms.h materials.h spelltask.h combat.h
-objs/disc_hand_of_god.o: disc_hand_of_god.h obj_food.h
+objs/disc_hand_of_god.o: disc_hand_of_god.h obj_food.h obj_portal.h
+objs/disc_hand_of_god.o: obj_seethru.h obj_drinkcon.h obj_base_cup.h
 objs/disc_hth.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disc_hth.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disc_hth.o: /usr/include/gnu/stubs.h
@@ -5424,7 +5437,7 @@ objs/disc_hth.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/disc_hth.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/disc_hth.o: being.h person.h monster.h account.h extern.h handler.h
 objs/disc_hth.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/disc_hth.o: range.h combat.h disc_hth.h
+objs/disc_hth.o: range.h combat.h disc_hth.h obj_base_weapon.h
 objs/disc_leverage.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_leverage.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_leverage.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -5544,7 +5557,7 @@ objs/disc_looting.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
 objs/disc_looting.o: connect.h charfile.h being.h person.h monster.h
 objs/disc_looting.o: account.h extern.h handler.h obj_money.h rent.h
 objs/disc_looting.o: spec_mobs.h spec_rooms.h materials.h combat.h
-objs/disc_looting.o: disc_looting.h obj_trap.h
+objs/disc_looting.o: disc_looting.h obj_trap.h obj_portal.h obj_seethru.h
 objs/disc_mage.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disc_mage.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disc_mage.o: /usr/include/gnu/stubs.h
@@ -5773,7 +5786,8 @@ objs/disc_monk.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/disc_monk.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/disc_monk.o: being.h person.h monster.h account.h extern.h handler.h
 objs/disc_monk.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/disc_monk.o: combat.h disc_monk.h disc_cures.h disc_aegis.h
+objs/disc_monk.o: combat.h disc_monk.h disc_cures.h disc_aegis.h obj_light.h
+objs/disc_monk.o: obj_base_light.h
 objs/disc_mounted.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_mounted.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_mounted.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -5892,6 +5906,7 @@ objs/disc_murder.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
 objs/disc_murder.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_murder.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/disc_murder.o: materials.h combat.h spelltask.h disc_murder.h obj_tool.h
+objs/disc_murder.o: obj_general_weapon.h obj_base_weapon.h obj_gun.h
 objs/disc_nature.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_nature.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_nature.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -6247,7 +6262,8 @@ objs/disc_ranger.o: skills.h disease.h trap.h task.h weather.h sound.h
 objs/disc_ranger.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
 objs/disc_ranger.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_ranger.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/disc_ranger.o: materials.h combat.h disc_ranger.h
+objs/disc_ranger.o: materials.h combat.h disc_ranger.h obj_portal.h
+objs/disc_ranger.o: obj_seethru.h
 objs/disc_shaman.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_shaman.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_shaman.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -6999,7 +7015,8 @@ objs/disc_survival.o: obj_drug.h connect.h charfile.h being.h person.h
 objs/disc_survival.o: monster.h account.h extern.h handler.h obj_money.h
 objs/disc_survival.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
 objs/disc_survival.o: disc_survival.h obj_component.h obj_base_corpse.h
-objs/disc_survival.o: obj_base_container.h obj_tool.h
+objs/disc_survival.o: obj_base_container.h obj_tool.h obj_portal.h
+objs/disc_survival.o: obj_seethru.h obj_drinkcon.h obj_base_cup.h
 objs/disc_theology.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/disc_theology.o: /usr/include/stdio.h /usr/include/features.h
 objs/disc_theology.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -7059,7 +7076,7 @@ objs/disc_theology.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
 objs/disc_theology.o: obj_drug.h connect.h charfile.h being.h person.h
 objs/disc_theology.o: monster.h account.h extern.h handler.h obj_money.h
 objs/disc_theology.o: rent.h spec_mobs.h spec_rooms.h materials.h
-objs/disc_theology.o: disc_theology.h obj_symbol.h
+objs/disc_theology.o: disc_theology.h obj_vial.h obj_base_cup.h obj_symbol.h
 objs/disc_thief.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disc_thief.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disc_thief.o: /usr/include/gnu/stubs.h
@@ -7234,7 +7251,8 @@ objs/disc_water.o: skills.h disease.h trap.h task.h weather.h sound.h
 objs/disc_water.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
 objs/disc_water.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/disc_water.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/disc_water.o: materials.h combat.h spelltask.h disc_water.h
+objs/disc_water.o: materials.h combat.h spelltask.h disc_water.h obj_pool.h
+objs/disc_water.o: obj_base_cup.h
 objs/disc_wrath.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/disc_wrath.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/disc_wrath.o: /usr/include/gnu/stubs.h
@@ -7633,6 +7651,7 @@ objs/equip.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
 objs/equip.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
 objs/equip.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/equip.o: spec_rooms.h materials.h obj_base_container.h obj_bandaid.h
+objs/equip.o: obj_base_weapon.h
 objs/faction.o: /usr/include/unistd.h /usr/include/features.h
 objs/faction.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/faction.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -7690,56 +7709,6 @@ objs/faction.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
 objs/faction.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
 objs/faction.o: person.h monster.h account.h extern.h handler.h obj_money.h
 objs/faction.o: rent.h spec_mobs.h spec_rooms.h materials.h
-objs/flame.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
-objs/flame.o: /usr/include/features.h /usr/include/sys/cdefs.h
-objs/flame.o: /usr/include/gnu/stubs.h
-objs/flame.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
-objs/flame.o: /usr/include/bits/types.h /usr/include/libio.h
-objs/flame.o: /usr/include/_G_config.h /usr/include/wchar.h
-objs/flame.o: /usr/include/bits/wchar.h /usr/include/gconv.h
-objs/flame.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
-objs/flame.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
-objs/flame.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
-objs/flame.o: /usr/include/time.h /usr/include/bits/time.h
-objs/flame.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
-objs/flame.o: /usr/include/ctype.h /usr/include/endian.h
-objs/flame.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
-objs/flame.o: /usr/include/assert.h /usr/include/g++-3/cstring
-objs/flame.o: /usr/include/string.h /usr/include/g++-3/cerrno
-objs/flame.o: /usr/include/errno.h /usr/include/bits/errno.h
-objs/flame.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
-objs/flame.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
-objs/flame.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
-objs/flame.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
-objs/flame.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iostream.h
-objs/flame.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
-objs/flame.o: /usr/include/g++-3/stl_relops.h
-objs/flame.o: /usr/include/g++-3/stl_iterator.h
-objs/flame.o: /usr/include/g++-3/std/bastring.cc /usr/include/g++-3/vector
-objs/flame.o: /usr/include/g++-3/stl_algobase.h /usr/include/g++-3/stl_pair.h
-objs/flame.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
-objs/flame.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
-objs/flame.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
-objs/flame.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
-objs/flame.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
-objs/flame.o: /usr/include/g++-3/stl_construct.h
-objs/flame.o: /usr/include/g++-3/stl_uninitialized.h
-objs/flame.o: /usr/include/g++-3/stl_vector.h
-objs/flame.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
-objs/flame.o: /usr/include/g++-3/stl_tree.h /usr/include/g++-3/stl_function.h
-objs/flame.o: /usr/include/g++-3/stl_map.h /usr/include/g++-3/stl_multimap.h
-objs/flame.o: /home/oldspasm/usr/include/mysql/mysql.h
-objs/flame.o: /home/oldspasm/usr/include/mysql/mysql_com.h
-objs/flame.o: /home/oldspasm/usr/include/mysql/mysql_version.h low.h mobAI.h
-objs/flame.o: enum.h spells.h structs.h immunity.h discipline.h spell2.h
-objs/flame.o: parse.h db.h ansi.h cmd_dissect.h client.h response.h faction.h
-objs/flame.o: comm.h spec_objs.h toggle.h wiz_powers.h cmd_message.h stats.h
-objs/flame.o: limbs.h body.h race.h skills.h disease.h trap.h task.h
-objs/flame.o: weather.h sound.h create.h thing.h room.h obj.h obj2.h
-objs/flame.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
-objs/flame.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/flame.o: spec_rooms.h materials.h obj_fuel.h obj_organic.h obj_trash.h
-objs/flame.o: obj_tool.h
 objs/gaining.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/gaining.o: /usr/include/bits/types.h /usr/include/features.h
 objs/gaining.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -8320,7 +8289,7 @@ objs/handler.o: person.h monster.h account.h extern.h handler.h obj_money.h
 objs/handler.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h range.h
 objs/handler.o: shop.h obj_spellbag.h obj_expandable_container.h
 objs/handler.o: obj_open_container.h obj_base_container.h obj_bag.h
-objs/handler.o: obj_table.h obj_tool.h
+objs/handler.o: obj_table.h obj_tool.h obj_base_weapon.h
 objs/hospital.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/hospital.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/hospital.o: /usr/include/gnu/stubs.h
@@ -8443,7 +8412,7 @@ objs/immortal.o: /usr/include/sys/socket.h /usr/include/sys/uio.h
 objs/immortal.o: /usr/include/bits/uio.h statistics.h combat.h mail.h games.h
 objs/immortal.o: game_crazyeights.h game_drawpoker.h disc_nature.h
 objs/immortal.o: disc_shaman_armadillo.h systemtask.h socket.h shop.h
-objs/immortal.o: cmd_trophy.h obj_note.h
+objs/immortal.o: cmd_trophy.h obj_note.h obj_portal.h obj_seethru.h
 objs/immunity.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/immunity.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/immunity.o: /usr/include/gnu/stubs.h
@@ -8604,7 +8573,8 @@ objs/info.o: /usr/include/g++-3/stl_heap.h games.h game_crazyeights.h
 objs/info.o: game_drawpoker.h combat.h statistics.h obj_component.h
 objs/info.o: skillsort.h obj_open_container.h obj_base_container.h
 objs/info.o: obj_corpse.h obj_base_corpse.h obj_bow.h obj_symbol.h obj_food.h
-objs/info.o: obj_tool.h obj_trap.h
+objs/info.o: obj_tool.h obj_trap.h obj_arrow.h obj_base_weapon.h
+objs/info.o: obj_general_weapon.h obj_base_cup.h
 objs/inventory.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/inventory.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/inventory.o: /usr/include/gnu/stubs.h
@@ -8663,7 +8633,8 @@ objs/inventory.o: disc_looting.h shop.h obj_spellbag.h
 objs/inventory.o: obj_expandable_container.h obj_open_container.h
 objs/inventory.o: obj_base_container.h obj_keyring.h obj_base_corpse.h
 objs/inventory.o: obj_player_corpse.h obj_quiver.h obj_table.h obj_key.h
-objs/inventory.o: obj_trap.h
+objs/inventory.o: obj_trap.h obj_portal.h obj_seethru.h obj_arrow.h
+objs/inventory.o: obj_base_weapon.h
 objs/limbs.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/limbs.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/limbs.o: /usr/include/gnu/stubs.h
@@ -8771,7 +8742,7 @@ objs/limits.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
 objs/limits.o: monster.h account.h extern.h handler.h obj_money.h rent.h
 objs/limits.o: spec_mobs.h spec_rooms.h materials.h statistics.h games.h
 objs/limits.o: game_crazyeights.h game_drawpoker.h obj_base_container.h
-objs/limits.o: obj_food.h obj_bed.h
+objs/limits.o: obj_food.h obj_bed.h obj_drinkcon.h obj_base_cup.h
 objs/loadset.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/loadset.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/loadset.o: /usr/include/gnu/stubs.h
@@ -9260,7 +9231,7 @@ objs/materials.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/materials.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/materials.o: being.h person.h monster.h account.h extern.h handler.h
 objs/materials.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/materials.o: statistics.h
+objs/materials.o: statistics.h obj_base_weapon.h
 objs/meeting.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/meeting.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/meeting.o: /usr/include/gnu/stubs.h
@@ -9426,6 +9397,7 @@ objs/mobact.o: spec_mobs.h spec_rooms.h materials.h range.h statistics.h
 objs/mobact.o: shop.h obj_spellbag.h obj_expandable_container.h
 objs/mobact.o: obj_open_container.h obj_base_container.h obj_base_corpse.h
 objs/mobact.o: obj_player_corpse.h obj_bow.h obj_treasure.h obj_component.h
+objs/mobact.o: obj_arrow.h obj_base_weapon.h obj_general_weapon.h
 objs/monster.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/monster.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/monster.o: /usr/include/gnu/stubs.h
@@ -9534,7 +9506,7 @@ objs/movement.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/movement.o: combat.h games.h game_crazyeights.h game_drawpoker.h
 objs/movement.o: disc_looting.h obj_base_corpse.h obj_base_container.h
 objs/movement.o: obj_keyring.h obj_expandable_container.h
-objs/movement.o: obj_open_container.h obj_key.h
+objs/movement.o: obj_open_container.h obj_key.h obj_portal.h obj_seethru.h
 objs/multiclass.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/multiclass.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/multiclass.o: /usr/include/gnu/stubs.h
@@ -9752,7 +9724,8 @@ objs/obj_appliedsub.o: being.h person.h monster.h account.h extern.h
 objs/obj_appliedsub.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_appliedsub.o: materials.h create_engine.h obj_expandable_container.h
 objs/obj_appliedsub.o: obj_open_container.h obj_base_container.h
-objs/obj_appliedsub.o: obj_organic.h
+objs/obj_appliedsub.o: obj_organic.h obj_arrow.h obj_base_weapon.h
+objs/obj_appliedsub.o: obj_flame.h obj_base_light.h
 objs/obj_armor.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_armor.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_armor.o: /usr/include/gnu/stubs.h
@@ -9919,7 +9892,8 @@ objs/obj_arrow.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/obj_arrow.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/obj_arrow.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_arrow.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_arrow.o: obj_open_container.h obj_base_container.h
+objs/obj_arrow.o: obj_open_container.h obj_base_container.h obj_arrow.h
+objs/obj_arrow.o: obj_base_weapon.h
 objs/obj_audio.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_audio.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_audio.o: /usr/include/gnu/stubs.h
@@ -10399,7 +10373,7 @@ objs/obj_base_light.o: trap.h task.h weather.h sound.h create.h thing.h
 objs/obj_base_light.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/obj_base_light.o: being.h person.h monster.h account.h extern.h
 objs/obj_base_light.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/obj_base_light.o: materials.h
+objs/obj_base_light.o: materials.h obj_base_light.h
 objs/obj_base_weapon.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_base_weapon.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_base_weapon.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -10461,6 +10435,7 @@ objs/obj_base_weapon.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/obj_base_weapon.o: being.h person.h monster.h account.h extern.h
 objs/obj_base_weapon.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_base_weapon.o: materials.h combat.h statistics.h shop.h obj_tool.h
+objs/obj_base_weapon.o: obj_arrow.h obj_base_weapon.h obj_general_weapon.h
 objs/obj_base_weapontwo.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_base_weapontwo.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_base_weapontwo.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -10524,7 +10499,8 @@ objs/obj_base_weapontwo.o: room.h obj.h obj2.h obj_drug.h connect.h
 objs/obj_base_weapontwo.o: charfile.h being.h person.h monster.h account.h
 objs/obj_base_weapontwo.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/obj_base_weapontwo.o: spec_rooms.h materials.h combat.h statistics.h
-objs/obj_base_weapontwo.o: shop.h obj_tool.h
+objs/obj_base_weapontwo.o: shop.h obj_tool.h obj_arrow.h obj_base_weapon.h
+objs/obj_base_weapontwo.o: obj_general_weapon.h
 objs/obj_bed.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_bed.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_bed.o: /usr/include/gnu/stubs.h
@@ -10684,7 +10660,7 @@ objs/obj_boat.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/obj_boat.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/obj_boat.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_boat.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_boat.o: obj_boat.h
+objs/obj_boat.o: obj_boat.h obj_light.h obj_base_light.h
 objs/obj_book.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_book.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_book.o: /usr/include/gnu/stubs.h
@@ -10790,6 +10766,7 @@ objs/obj_bow.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
 objs/obj_bow.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
 objs/obj_bow.o: person.h monster.h account.h extern.h handler.h obj_money.h
 objs/obj_bow.o: rent.h spec_mobs.h spec_rooms.h materials.h range.h obj_bow.h
+objs/obj_bow.o: obj_arrow.h obj_base_weapon.h
 objs/obj_chest.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_chest.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_chest.o: /usr/include/gnu/stubs.h
@@ -11083,7 +11060,7 @@ objs/obj_drinkcon.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
 objs/obj_drinkcon.o: connect.h charfile.h being.h person.h monster.h
 objs/obj_drinkcon.o: account.h extern.h handler.h obj_money.h rent.h
 objs/obj_drinkcon.o: spec_mobs.h spec_rooms.h materials.h
-objs/obj_drinkcon.o: obj_base_container.h
+objs/obj_drinkcon.o: obj_base_container.h obj_drinkcon.h obj_base_cup.h
 objs/obj_drug.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_drug.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_drug.o: /usr/include/gnu/stubs.h
@@ -11277,6 +11254,61 @@ objs/obj_expandable_container.o: monster.h account.h extern.h handler.h
 objs/obj_expandable_container.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/obj_expandable_container.o: materials.h obj_expandable_container.h
 objs/obj_expandable_container.o: obj_open_container.h obj_base_container.h
+objs/obj_flame.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/obj_flame.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/obj_flame.o: /usr/include/gnu/stubs.h
+objs/obj_flame.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/obj_flame.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/obj_flame.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/obj_flame.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/obj_flame.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/obj_flame.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
+objs/obj_flame.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/obj_flame.o: /usr/include/time.h /usr/include/bits/time.h
+objs/obj_flame.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
+objs/obj_flame.o: /usr/include/ctype.h /usr/include/endian.h
+objs/obj_flame.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
+objs/obj_flame.o: /usr/include/assert.h /usr/include/g++-3/cstring
+objs/obj_flame.o: /usr/include/string.h /usr/include/g++-3/cerrno
+objs/obj_flame.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/obj_flame.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/obj_flame.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
+objs/obj_flame.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
+objs/obj_flame.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
+objs/obj_flame.o: /usr/include/g++-3/stl_alloc.h
+objs/obj_flame.o: /usr/include/g++-3/iostream.h
+objs/obj_flame.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
+objs/obj_flame.o: /usr/include/g++-3/stl_relops.h
+objs/obj_flame.o: /usr/include/g++-3/stl_iterator.h
+objs/obj_flame.o: /usr/include/g++-3/std/bastring.cc
+objs/obj_flame.o: /usr/include/g++-3/vector /usr/include/g++-3/stl_algobase.h
+objs/obj_flame.o: /usr/include/g++-3/stl_pair.h
+objs/obj_flame.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/obj_flame.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/obj_flame.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/obj_flame.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/obj_flame.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/obj_flame.o: /usr/include/g++-3/stl_construct.h
+objs/obj_flame.o: /usr/include/g++-3/stl_uninitialized.h
+objs/obj_flame.o: /usr/include/g++-3/stl_vector.h
+objs/obj_flame.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
+objs/obj_flame.o: /usr/include/g++-3/stl_tree.h
+objs/obj_flame.o: /usr/include/g++-3/stl_function.h
+objs/obj_flame.o: /usr/include/g++-3/stl_map.h
+objs/obj_flame.o: /usr/include/g++-3/stl_multimap.h
+objs/obj_flame.o: /home/oldspasm/usr/include/mysql/mysql.h
+objs/obj_flame.o: /home/oldspasm/usr/include/mysql/mysql_com.h
+objs/obj_flame.o: /home/oldspasm/usr/include/mysql/mysql_version.h low.h
+objs/obj_flame.o: mobAI.h enum.h spells.h structs.h immunity.h discipline.h
+objs/obj_flame.o: spell2.h parse.h db.h ansi.h cmd_dissect.h client.h
+objs/obj_flame.o: response.h faction.h comm.h spec_objs.h toggle.h
+objs/obj_flame.o: wiz_powers.h cmd_message.h stats.h limbs.h body.h race.h
+objs/obj_flame.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
+objs/obj_flame.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
+objs/obj_flame.o: being.h person.h monster.h account.h extern.h handler.h
+objs/obj_flame.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_flame.o: obj_fuel.h obj_organic.h obj_trash.h obj_tool.h obj_flame.h
+objs/obj_flame.o: obj_base_light.h obj_light.h obj_drinkcon.h obj_base_cup.h
 objs/obj_food.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/obj_food.o: /usr/include/bits/types.h /usr/include/features.h
 objs/obj_food.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -11332,7 +11364,7 @@ objs/obj_food.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/obj_food.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/obj_food.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_food.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_food.o: shop.h obj_food.h
+objs/obj_food.o: shop.h obj_food.h obj_base_cup.h
 objs/obj_fuel.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_fuel.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_fuel.o: /usr/include/gnu/stubs.h
@@ -11385,7 +11417,7 @@ objs/obj_fuel.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/obj_fuel.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/obj_fuel.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_fuel.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/obj_fuel.o: obj_fuel.h
+objs/obj_fuel.o: obj_fuel.h obj_light.h obj_base_light.h
 objs/obj_gemstone.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_gemstone.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_gemstone.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -11507,7 +11539,8 @@ objs/obj_general_weapon.o: trap.h task.h weather.h sound.h create.h thing.h
 objs/obj_general_weapon.o: room.h obj.h obj2.h obj_drug.h connect.h
 objs/obj_general_weapon.o: charfile.h being.h person.h monster.h account.h
 objs/obj_general_weapon.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
-objs/obj_general_weapon.o: spec_rooms.h materials.h
+objs/obj_general_weapon.o: spec_rooms.h materials.h obj_general_weapon.h
+objs/obj_general_weapon.o: obj_base_weapon.h obj_gun.h
 objs/obj_gun.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_gun.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_gun.o: /usr/include/gnu/stubs.h
@@ -11560,6 +11593,7 @@ objs/obj_gun.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
 objs/obj_gun.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h being.h
 objs/obj_gun.o: person.h monster.h account.h extern.h handler.h obj_money.h
 objs/obj_gun.o: rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_gun.o: obj_general_weapon.h obj_base_weapon.h obj_gun.h
 objs/obj_jewelry.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/obj_jewelry.o: /usr/include/stdio.h /usr/include/features.h
 objs/obj_jewelry.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -11786,6 +11820,7 @@ objs/obj_light.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/obj_light.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/obj_light.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_light.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_light.o: obj_light.h obj_base_light.h
 objs/obj_money.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_money.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_money.o: /usr/include/gnu/stubs.h
@@ -12070,7 +12105,8 @@ objs/obj_organic.o: skills.h disease.h trap.h task.h weather.h sound.h
 objs/obj_organic.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
 objs/obj_organic.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_organic.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/obj_organic.o: materials.h shop.h obj_organic.h
+objs/obj_organic.o: materials.h shop.h obj_organic.h obj_flame.h
+objs/obj_organic.o: obj_base_light.h
 objs/obj_pen.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_pen.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_pen.o: /usr/include/gnu/stubs.h
@@ -12239,6 +12275,7 @@ objs/obj_pool.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/obj_pool.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/obj_pool.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_pool.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_pool.o: obj_pool.h obj_base_cup.h
 objs/obj_portal.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_portal.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_portal.o: /usr/include/gnu/stubs.h
@@ -12295,7 +12332,7 @@ objs/obj_portal.o: skills.h disease.h trap.h task.h weather.h sound.h
 objs/obj_portal.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
 objs/obj_portal.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_portal.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/obj_portal.o: materials.h
+objs/obj_portal.o: materials.h obj_portal.h obj_seethru.h
 objs/obj_potion.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_potion.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_potion.o: /usr/include/gnu/stubs.h
@@ -12527,7 +12564,7 @@ objs/obj_seethru.o: skills.h disease.h trap.h task.h weather.h sound.h
 objs/obj_seethru.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
 objs/obj_seethru.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_seethru.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/obj_seethru.o: materials.h
+objs/obj_seethru.o: materials.h obj_seethru.h obj_window.h
 objs/obj_smoke.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_smoke.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_smoke.o: /usr/include/gnu/stubs.h
@@ -13188,6 +13225,7 @@ objs/obj_vial.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/obj_vial.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/obj_vial.o: being.h person.h monster.h account.h extern.h handler.h
 objs/obj_vial.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
+objs/obj_vial.o: obj_vial.h obj_base_cup.h
 objs/obj_wand.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_wand.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_wand.o: /usr/include/gnu/stubs.h
@@ -13296,7 +13334,7 @@ objs/obj_window.o: skills.h disease.h trap.h task.h weather.h sound.h
 objs/obj_window.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
 objs/obj_window.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/obj_window.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/obj_window.o: materials.h
+objs/obj_window.o: materials.h obj_window.h obj_seethru.h
 objs/obj_worn.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/obj_worn.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/obj_worn.o: /usr/include/gnu/stubs.h
@@ -13403,7 +13441,8 @@ objs/offense.o: person.h monster.h account.h extern.h handler.h obj_money.h
 objs/offense.o: rent.h spec_mobs.h spec_rooms.h materials.h games.h
 objs/offense.o: game_crazyeights.h game_drawpoker.h combat.h obj_spellbag.h
 objs/offense.o: obj_expandable_container.h obj_open_container.h
-objs/offense.o: obj_base_container.h
+objs/offense.o: obj_base_container.h obj_base_weapon.h obj_gun.h
+objs/offense.o: obj_general_weapon.h obj_base_cup.h
 objs/oldlimbs.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/oldlimbs.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/oldlimbs.o: /usr/include/gnu/stubs.h
@@ -13626,7 +13665,7 @@ objs/other.o: disc_wrath.h disc_shaman.h disc_aegis.h disc_afflictions.h
 objs/other.o: disc_hand_of_god.h disc_cures.h disc_nature.h
 objs/other.o: disc_shaman_armadillo.h disc_shaman_frog.h disc_shaman_skunk.h
 objs/other.o: disc_shaman_spider.h disc_shaman_control.h obj_trap.h
-objs/other.o: spelltask.h
+objs/other.o: obj_light.h obj_base_light.h spelltask.h
 objs/other_obj.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/other_obj.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/other_obj.o: /usr/include/gnu/stubs.h
@@ -13781,7 +13820,8 @@ objs/peelpk.o: cmd_message.h stats.h limbs.h body.h race.h skills.h disease.h
 objs/peelpk.o: trap.h task.h weather.h sound.h create.h thing.h room.h obj.h
 objs/peelpk.o: obj2.h obj_drug.h connect.h charfile.h being.h person.h
 objs/peelpk.o: monster.h account.h extern.h handler.h obj_money.h rent.h
-objs/peelpk.o: spec_mobs.h spec_rooms.h materials.h
+objs/peelpk.o: spec_mobs.h spec_rooms.h materials.h obj_gun.h
+objs/peelpk.o: obj_general_weapon.h obj_base_weapon.h
 objs/periodic.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/periodic.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/periodic.o: /usr/include/gnu/stubs.h
@@ -13836,7 +13876,7 @@ objs/periodic.o: being.h person.h monster.h account.h extern.h handler.h
 objs/periodic.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/periodic.o: combat.h mail.h disc_monk.h obj_component.h
 objs/periodic.o: obj_player_corpse.h obj_base_corpse.h obj_base_container.h
-objs/periodic.o: obj_opal.h
+objs/periodic.o: obj_opal.h obj_seethru.h
 objs/pets.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/pets.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/pets.o: /usr/include/gnu/stubs.h
@@ -14104,7 +14144,8 @@ objs/range.o: obj_drug.h connect.h charfile.h being.h person.h monster.h
 objs/range.o: account.h extern.h handler.h obj_money.h rent.h spec_mobs.h
 objs/range.o: spec_rooms.h materials.h range.h combat.h obj_quiver.h
 objs/range.o: obj_expandable_container.h obj_open_container.h
-objs/range.o: obj_base_container.h obj_bow.h
+objs/range.o: obj_base_container.h obj_bow.h obj_portal.h obj_seethru.h
+objs/range.o: obj_arrow.h obj_base_weapon.h obj_gun.h obj_general_weapon.h
 objs/rent.o: /usr/include/unistd.h /usr/include/features.h
 objs/rent.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/rent.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
@@ -14325,7 +14366,8 @@ objs/rewrite_obj_file.o: trap.h task.h weather.h sound.h create.h thing.h
 objs/rewrite_obj_file.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/rewrite_obj_file.o: being.h person.h monster.h account.h extern.h
 objs/rewrite_obj_file.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/rewrite_obj_file.o: spec_rooms.h materials.h
+objs/rewrite_obj_file.o: spec_rooms.h materials.h obj_base_weapon.h
+objs/rewrite_obj_file.o: obj_base_cup.h
 objs/riding.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/riding.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/riding.o: /usr/include/gnu/stubs.h
@@ -14484,7 +14526,8 @@ objs/shop.o: connect.h charfile.h being.h person.h monster.h account.h
 objs/shop.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/shop.o: materials.h shop.h statistics.h obj_spellbag.h
 objs/shop.o: obj_expandable_container.h obj_open_container.h
-objs/shop.o: obj_base_container.h obj_symbol.h
+objs/shop.o: obj_base_container.h obj_symbol.h obj_general_weapon.h
+objs/shop.o: obj_base_weapon.h
 objs/show.o: /usr/include/dirent.h /usr/include/features.h
 objs/show.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
 objs/show.o: /usr/include/bits/types.h
@@ -14535,7 +14578,8 @@ objs/show.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
 objs/show.o: connect.h charfile.h being.h person.h monster.h account.h
 objs/show.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/show.o: materials.h disc_looting.h combat.h obj_component.h
-objs/show.o: disc_alchemy.h obj_table.h obj_note.h obj_trap.h
+objs/show.o: disc_alchemy.h obj_table.h obj_note.h obj_trap.h obj_window.h
+objs/show.o: obj_seethru.h
 objs/signals.o: /usr/include/g++-3/csignal /usr/include/signal.h
 objs/signals.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/signals.o: /usr/include/gnu/stubs.h /usr/include/bits/sigset.h
@@ -14892,6 +14936,8 @@ objs/spec_mobs.o: combat.h disc_sorcery.h disc_afflictions.h disc_aegis.h
 objs/spec_mobs.o: disc_earth.h disc_water.h disc_wrath.h disc_alchemy.h
 objs/spec_mobs.o: obj_component.h paths.h obj_base_corpse.h
 objs/spec_mobs.o: obj_base_container.h obj_player_corpse.h obj_symbol.h
+objs/spec_mobs.o: obj_window.h obj_seethru.h obj_general_weapon.h
+objs/spec_mobs.o: obj_base_weapon.h obj_pool.h obj_base_cup.h
 objs/spec_mobs.o: /usr/include/g++-3/fstream.h
 objs/spec_mobs_bounty_hunter.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_mobs_bounty_hunter.o: /usr/include/stdio.h /usr/include/features.h
@@ -15424,7 +15470,8 @@ objs/spec_objs.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/spec_objs.o: being.h person.h monster.h account.h extern.h handler.h
 objs/spec_objs.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/spec_objs.o: obj_base_corpse.h obj_base_container.h obj_open_container.h
-objs/spec_objs.o: obj_trap.h
+objs/spec_objs.o: obj_trap.h obj_portal.h obj_seethru.h obj_general_weapon.h
+objs/spec_objs.o: obj_base_weapon.h obj_drinkcon.h obj_base_cup.h
 objs/spec_objs_blind.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_objs_blind.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_objs_blind.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -15485,7 +15532,7 @@ objs/spec_objs_blind.o: trap.h task.h weather.h sound.h create.h thing.h
 objs/spec_objs_blind.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/spec_objs_blind.o: being.h person.h monster.h account.h extern.h
 objs/spec_objs_blind.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/spec_objs_blind.o: materials.h
+objs/spec_objs_blind.o: materials.h obj_base_weapon.h
 objs/spec_objs_jambiya.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_objs_jambiya.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_objs_jambiya.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -15548,7 +15595,7 @@ objs/spec_objs_jambiya.o: trap.h task.h weather.h sound.h create.h thing.h
 objs/spec_objs_jambiya.o: room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/spec_objs_jambiya.o: being.h person.h monster.h account.h extern.h
 objs/spec_objs_jambiya.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/spec_objs_jambiya.o: spec_rooms.h materials.h
+objs/spec_objs_jambiya.o: spec_rooms.h materials.h obj_base_weapon.h
 objs/spec_objs_lightning_rod.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_objs_lightning_rod.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_objs_lightning_rod.o: /usr/include/sys/cdefs.h
@@ -15623,6 +15670,7 @@ objs/spec_objs_lightning_rod.o: room.h obj.h obj2.h obj_drug.h connect.h
 objs/spec_objs_lightning_rod.o: charfile.h being.h person.h monster.h
 objs/spec_objs_lightning_rod.o: account.h extern.h handler.h obj_money.h
 objs/spec_objs_lightning_rod.o: rent.h spec_mobs.h spec_rooms.h materials.h
+objs/spec_objs_lightning_rod.o: obj_base_weapon.h
 objs/spec_objs_manadrain.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_objs_manadrain.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_objs_manadrain.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -15687,7 +15735,7 @@ objs/spec_objs_manadrain.o: sound.h create.h thing.h room.h obj.h obj2.h
 objs/spec_objs_manadrain.o: obj_drug.h connect.h charfile.h being.h person.h
 objs/spec_objs_manadrain.o: monster.h account.h extern.h handler.h
 objs/spec_objs_manadrain.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/spec_objs_manadrain.o: materials.h
+objs/spec_objs_manadrain.o: materials.h obj_base_weapon.h
 objs/spec_rooms.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/spec_rooms.o: /usr/include/bits/types.h /usr/include/features.h
 objs/spec_rooms.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -15748,6 +15796,7 @@ objs/spec_rooms.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
 objs/spec_rooms.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/spec_rooms.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
 objs/spec_rooms.o: materials.h statistics.h obj_food.h obj_note.h
+objs/spec_rooms.o: obj_portal.h obj_seethru.h
 objs/spec_rooms_sleeptag.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_rooms_sleeptag.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_rooms_sleeptag.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -16271,7 +16320,7 @@ objs/structs.o: person.h monster.h account.h extern.h handler.h obj_money.h
 objs/structs.o: rent.h spec_mobs.h spec_rooms.h materials.h combat.h
 objs/structs.o: obj_board.h statistics.h games.h game_crazyeights.h
 objs/structs.o: game_drawpoker.h obj_base_corpse.h obj_base_container.h
-objs/structs.o: obj_table.h
+objs/structs.o: obj_table.h obj_seethru.h
 objs/sys_loot.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/sys_loot.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/sys_loot.o: /usr/include/gnu/stubs.h
@@ -16546,7 +16595,7 @@ objs/task_attune.o: skills.h disease.h trap.h task.h weather.h sound.h
 objs/task_attune.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
 objs/task_attune.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/task_attune.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/task_attune.o: materials.h obj_symbol.h
+objs/task_attune.o: materials.h obj_symbol.h obj_vial.h obj_base_cup.h
 objs/task_brew.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/task_brew.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/task_brew.o: /usr/include/gnu/stubs.h
@@ -16659,7 +16708,8 @@ objs/task_butcher.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
 objs/task_butcher.o: connect.h charfile.h being.h person.h monster.h
 objs/task_butcher.o: account.h extern.h handler.h obj_money.h rent.h
 objs/task_butcher.o: spec_mobs.h spec_rooms.h materials.h obj_base_corpse.h
-objs/task_butcher.o: obj_base_container.h obj_tool.h
+objs/task_butcher.o: obj_base_container.h obj_tool.h obj_base_weapon.h
+objs/task_butcher.o: obj_player_corpse.h
 objs/task_charge.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/task_charge.o: /usr/include/stdio.h /usr/include/features.h
 objs/task_charge.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -17650,7 +17700,7 @@ objs/task_skin.o: thing.h room.h obj.h obj2.h obj_drug.h connect.h charfile.h
 objs/task_skin.o: being.h person.h monster.h account.h extern.h handler.h
 objs/task_skin.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
 objs/task_skin.o: obj_base_corpse.h obj_base_container.h obj_organic.h
-objs/task_skin.o: obj_component.h obj_tool.h
+objs/task_skin.o: obj_component.h obj_tool.h obj_base_weapon.h
 objs/task_sleep.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/task_sleep.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/task_sleep.o: /usr/include/gnu/stubs.h
@@ -17947,7 +17997,7 @@ objs/task_track.o: skills.h disease.h trap.h task.h weather.h sound.h
 objs/task_track.o: create.h thing.h room.h obj.h obj2.h obj_drug.h connect.h
 objs/task_track.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/task_track.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/task_track.o: materials.h
+objs/task_track.o: materials.h obj_portal.h obj_seethru.h
 objs/task_trance_of_blades.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/task_trance_of_blades.o: /usr/include/stdio.h /usr/include/features.h
 objs/task_trance_of_blades.o: /usr/include/sys/cdefs.h
@@ -18016,7 +18066,7 @@ objs/task_trance_of_blades.o: weather.h sound.h create.h thing.h room.h obj.h
 objs/task_trance_of_blades.o: obj2.h obj_drug.h connect.h charfile.h being.h
 objs/task_trance_of_blades.o: person.h monster.h account.h extern.h handler.h
 objs/task_trance_of_blades.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/task_trance_of_blades.o: materials.h
+objs/task_trance_of_blades.o: materials.h obj_base_weapon.h
 objs/task_trap.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/task_trap.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/task_trap.o: /usr/include/gnu/stubs.h
@@ -18130,7 +18180,8 @@ objs/task_whittle.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
 objs/task_whittle.o: connect.h charfile.h being.h person.h monster.h
 objs/task_whittle.o: account.h extern.h handler.h obj_money.h rent.h
 objs/task_whittle.o: spec_mobs.h spec_rooms.h materials.h task_whittle.h
-objs/task_whittle.o: obj_bow.h obj_organic.h
+objs/task_whittle.o: obj_bow.h obj_organic.h obj_arrow.h obj_base_weapon.h
+objs/task_whittle.o: obj_general_weapon.h
 objs/thing.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/thing.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/thing.o: /usr/include/gnu/stubs.h
@@ -18280,8 +18331,8 @@ objs/trap.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
 objs/trap.o: sound.h create.h thing.h room.h obj.h obj2.h obj_drug.h
 objs/trap.o: connect.h charfile.h being.h person.h monster.h account.h
 objs/trap.o: extern.h handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/trap.o: materials.h disc_looting.h obj_trap.h obj_open_container.h
-objs/trap.o: obj_base_container.h
+objs/trap.o: materials.h disc_looting.h obj_trap.h obj_portal.h obj_seethru.h
+objs/trap.o: obj_open_container.h obj_base_container.h
 objs/utility.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/utility.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/utility.o: /usr/include/gnu/stubs.h
@@ -18358,7 +18409,7 @@ objs/utility.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
 objs/utility.o: /usr/include/dirent.h /usr/include/bits/dirent.h
 objs/utility.o: /usr/include/sys/stat.h /usr/include/bits/stat.h shop.h
 objs/utility.o: combat.h statistics.h socket.h games.h game_crazyeights.h
-objs/utility.o: game_drawpoker.h mail.h
+objs/utility.o: game_drawpoker.h mail.h obj_seethru.h
 objs/weather.o: /usr/include/g++-3/cmath /usr/include/_G_config.h
 objs/weather.o: /usr/include/bits/types.h /usr/include/features.h
 objs/weather.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h

@@ -3,6 +3,10 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_drinkcon.cc,v $
+// Revision 5.3  2002/01/11 00:16:47  peel
+// splitting obj2.h etc
+// almost done
+//
 // Revision 5.2  2002/01/08 21:05:12  peel
 // removed the TBaseContainer hierarchy from obj2.h
 // added header files for those objects
@@ -37,6 +41,7 @@
 
 #include "stdsneezy.h"
 #include "obj_base_container.h"
+#include "obj_drinkcon.h"
 
 drinkInfo * DrinkInfo[MAX_DRINK_TYPES];
 

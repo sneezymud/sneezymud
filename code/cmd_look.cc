@@ -11,6 +11,7 @@
 #include "obj_base_corpse.h"
 #include "obj_table.h"
 #include "obj_book.h"
+#include "obj_base_cup.h"
 
 void TBaseCup::lookObj(TBeing *ch, int) const
 {

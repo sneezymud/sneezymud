@@ -14,7 +14,7 @@
 #include "obj_tool.h"
 #include "obj_flame.h"
 #include "obj_light.h"
-
+#include "obj_drinkcon.h"
 
 TFFlame::TFFlame() :
   TBaseLight(),

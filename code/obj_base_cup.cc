@@ -2,14 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: obj_base_cup.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -17,6 +9,7 @@
 // An abstract class to model drink containers, pools, vials, etc upon
 
 #include "stdsneezy.h"
+#include "obj_base_cup.h"
 
 TBaseCup::TBaseCup() :
   TObj(),
@@ -175,10 +168,10 @@ void TBaseCup::pourMeOut(TBeing *ch)
 void TBaseCup::lowCheck()
 {
   if (getMaxDrinkUnits() < getDrinkUnits())
-    vlogf(LOW_ERROR,"drinkcon %s  maxdrinks < current drinks.",
+    vlogf(LOG_LOW, "drinkcon %s  maxdrinks < current drinks.",
          getName());
   if (isDrinkConFlag(DRINK_PERM) && canWear(ITEM_TAKE))
-    vlogf(LOW_ERROR,"drinkcon %s  takeable and permanent container.",
+    vlogf(LOG_LOW, "drinkcon %s  takeable and permanent container.",
          getName());
 
   TObj::lowCheck();
@@ -201,7 +194,7 @@ void TBaseCup::assignFourValues(int x1, int x2, int x3, int x4)
   setDrinkConFlags((unsigned) x4);
 
   if (x3 < MIN_DRINK_TYPES || x3 >= MAX_DRINK_TYPES) {
-    vlogf(5, "Bad parm (%d) for drink type on %s", x3, getName());
+    vlogf(LOG_OBJ, "Bad parm (%d) for drink type on %s", x3, getName());
     x3 = MIN_DRINK_TYPES;
   }
   setDrinkType(liqTypeT(x3));
@@ -279,15 +272,17 @@ void TBaseCup::nukeFood()
   genericEmpty();
 }
 
-void TBaseCup::evaporate(TBeing *ch)
+void TBaseCup::evaporate(TBeing *ch, silentTypeT tSilent)
 {
   if (!isDrinkConFlag(DRINK_PERM)) {
     if (getDrinkUnits() > 0) {   // has liquid
       int amount = 1 + (getDrinkUnits()/2);
       weightChangeObject(-amount * SIP_WEIGHT);
       addToDrinkUnits(-amount);
-      ch->sendTo(COLOR_OBJECTS, "The desert heat causes some of your %s to evaporate.\n\r",
-          DrinkInfo[getDrinkType()]->name);
+
+      if (!tSilent)
+        ch->sendTo(COLOR_OBJECTS, "The desert heat causes some of your %s to evaporate.\n\r",
+            DrinkInfo[getDrinkType()]->name);
     }
   }
 }
@@ -327,4 +322,33 @@ void TBaseCup::pourMeIntoDrink1(TBeing *ch, TObj *to_obj)
 int TBaseCup::getReducedVolume(const TThing *) const
 {
   return getTotalVolume();
+}
+
+int TBaseCup::chiMe(TBeing *tLunatic)
+{
+  int tMana  = ::number(10, 30),
+      bKnown = tLunatic->getSkillLevel(SKILL_CHI);
+
+  if (tLunatic->getMana() < tMana) {
+    tLunatic->sendTo("You lack the chi to do this.\n\r");
+    return RET_STOP_PARSING;
+  } else
+    tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
+
+  if (!bSuccess(tLunatic, bKnown, SKILL_CHI) ||
+      getDrinkUnits() <= 0 || isDrinkConFlag(DRINK_PERM)) {
+    act("You fail to affect $p in any way.",
+        FALSE, tLunatic, this, NULL, TO_CHAR);
+    return true;
+  }
+
+  act("You focus your chi, causing $p to become lighter!",
+      FALSE, tLunatic, this, NULL, TO_CHAR);
+  act("$n stares at $p, causing it to become lighter",
+      TRUE, tLunatic, this, NULL, TO_ROOM);
+
+  evaporate(tLunatic, SILENT_YES);
+
+  return true;
+
 }

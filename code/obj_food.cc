@@ -13,6 +13,7 @@
 #include "disease.h"
 #include "shop.h"
 #include "obj_food.h"
+#include "obj_base_cup.h"
 
 #define DRINK_DEBUG 0
 

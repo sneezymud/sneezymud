@@ -29,6 +29,7 @@
 #include "obj_arrow.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
+#include "obj_base_cup.h"
 
 string describeDuration(const TBeing *ch, int dur)
 {

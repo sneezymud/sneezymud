@@ -6,6 +6,7 @@
 #include "being.h"
 #include "obj_food.h"
 #include "obj_portal.h"
+#include "obj_drinkcon.h"
 
 static void moveLoss(TBeing &ch)
 { 

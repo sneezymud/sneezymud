@@ -9,6 +9,7 @@ extern "C" {
 #include "obj_base_container.h"
 #include "obj_food.h"
 #include "obj_bed.h"
+#include "obj_drinkcon.h"
 
 #if 0
 static const string ClassTitles(const TBeing *ch)

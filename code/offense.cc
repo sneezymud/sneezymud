@@ -13,7 +13,7 @@
 #include "obj_open_container.h"
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
-
+#include "obj_base_cup.h"
 
 // DELETE_THIS implies this needs to be deleted
 int TBeing::doHit(const char *argument, TBeing *vict)

@@ -15,6 +15,7 @@
 #include "obj_base_corpse.h"
 #include "obj_tool.h"
 #include "obj_portal.h"
+#include "obj_drinkcon.h"
 
 static const int FORAGE_BEGIN = 276;
 static const int FORAGE_END   = 281;

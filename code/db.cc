@@ -61,6 +61,10 @@
 #include "obj_flame.h"
 #include "obj_light.h"
 #include "obj_gun.h"
+#include "obj_vial.h"
+#include "obj_pool.h"
+#include "obj_base_cup.h"
+#include "obj_drinkcon.h"
 
 
 int top_of_world = 0;         // ref to the top element of world 

@@ -1,21 +1,7 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_vial.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 // vial.cc
 
 #include "stdsneezy.h"
+#include "obj_vial.h"
 
 TVial::TVial() :
   TBaseCup()
@@ -103,7 +89,7 @@ void TVial::lowCheck()
 {
   int ap = suggestedPrice();
   if (ap != obj_flags.cost && ap) {
-    vlogf(LOW_ERROR, "vial (%s:%d) has a bad price (%d).  should be (%d)",
+    vlogf(LOG_LOW, "vial (%s:%d) has a bad price (%d).  should be (%d)",
          getName(), objVnum(), obj_flags.cost, ap);
     obj_flags.cost = ap;
   }

@@ -68,7 +68,7 @@
 #include "obj_portal.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
-
+#include "obj_drinkcon.h"
 
 // CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye

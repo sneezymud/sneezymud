@@ -7,6 +7,7 @@
 
 #include "stdsneezy.h"
 #include "obj_symbol.h"
+#include "obj_vial.h"
 
 static void stop_attune(TBeing *ch, silentTypeT silent_char, silentTypeT silent_room)
 {

@@ -6,6 +6,7 @@
 
 
 #include "stdsneezy.h"
+#include "obj_pool.h"
 
 void TPool::setDrinkUnits(int n)
 {

@@ -10,6 +10,34 @@
 
 #include "obj_general_weapon.h"
 
+class TAmmo : public TObj {
+  private:
+    int ammotype;
+    int rounds;
+
+  public:
+    void setAmmoType(int a) { ammotype=a; }
+    int getAmmoType() const { return ammotype; }
+    void setRounds(int);
+    int getRounds() const { return rounds; }
+
+    virtual itemTypeT itemType() const { return ITEM_AMMO; }
+    virtual void assignFourValues(int, int, int, int);
+    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual string statObjInfo() const;
+    virtual void describeObjectSpecifics(const TBeing *) const;
+    virtual string showModifier(showModeT , const TBeing *) const;
+
+    TAmmo();
+    TAmmo(const TAmmo &a);
+    TAmmo & operator=(const TAmmo &a);
+    virtual ~TAmmo();
+};
+
+
+
+
+
 class TGun : public TGenWeapon {
   private:
     int rof;

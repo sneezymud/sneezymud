@@ -10,6 +10,7 @@
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_water.h"
+#include "obj_pool.h"
 
 int faerieFog(TBeing * caster, int, byte bKnown)
 {
