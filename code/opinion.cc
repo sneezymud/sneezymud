@@ -73,7 +73,7 @@ bool TMonster::addHated(TBeing *hatee)
     SET_BIT(hatefield, HATE_CHAR);
 
     if (hatee->isImmortal())
-      hatee->sendTo("---Someone hates you.\n\r");
+      hatee->sendTo(COLOR_MOBS, fmt("--- %s hates you.\n\r") % sstring(getName()).cap());
   }
   return ((hatee) ? TRUE : FALSE);
 }
