@@ -117,32 +117,33 @@ void zoneData::nukeMobs()
   }
 }
 
-void TBeing::sendTo(colorTypeT lev, const char *msg,...) const
+void TBeing::sendTo(colorTypeT lev, const sstring &msg,...) const
 {
-  if (!desc || !msg)
+  if (!desc)
     return;
   if (desc->connected == CON_WRITING)
     return;
 
-  char buf[2 * MAX_STRING_LENGTH];
+  char *buf;
   va_list ap;
 
-  va_start(ap, msg);
-  vsprintf(buf, msg, ap);
+  va_start(ap, &msg);
+  vasprintf(&buf, msg.c_str(), ap);
   va_end(ap);
 
   sstring messageBuffer = colorString(this, desc, buf, NULL, lev, FALSE);
   desc->output.putInQ(messageBuffer);
+  delete buf;
 }
 
-void TRoom::sendTo(colorTypeT lev, const char *text, ...) const
+void TRoom::sendTo(colorTypeT lev, const sstring &text, ...) const
 {
-  char buf[2 * MAX_STRING_LENGTH];
+  char *buf;
   va_list ap;
   TThing *i;
 
-  va_start(ap, text);
-  vsprintf(buf, text, ap);
+  va_start(ap, &text);
+  vasprintf(&buf, text.c_str(), ap);
   va_end(ap);
 
   for (i = getStuff(); i; i = i->nextThing) {
@@ -155,27 +156,30 @@ void TRoom::sendTo(colorTypeT lev, const char *text, ...) const
       }
     }
   }
+  delete buf;
 }
 
-void TThing::sendTo(colorTypeT, const char *, ...) const
+void TThing::sendTo(colorTypeT, const sstring &msg, ...) const
 {
 }
 
-void TBeing::sendTo(const char *msg,...) const
+
+void TBeing::sendTo(const sstring &msg,...) const
 {
-  if (!msg || !desc)
+  if (msg.empty() || !desc)
     return;
 
   if (desc->connected == CON_WRITING)
     return;
 
-  char messageBuffer[2 * MAX_STRING_LENGTH];
+  char *messageBuffer;
   va_list ap;
 
-  va_start(ap, msg);
-  vsprintf(messageBuffer, msg, ap);
+  va_start(ap, &msg);
+  vasprintf(&messageBuffer, msg.c_str(), ap);
   va_end(ap);
   desc->output.putInQ(messageBuffer);
+  delete messageBuffer;
 }
 
 void save_all()
@@ -349,23 +353,24 @@ void sendrp_exceptf(TRoom *rp, TBeing *ch, const char *msg,...)
   }
 }
 
-void TRoom::sendTo(const char *text, ...) const
+void TRoom::sendTo(const sstring &text, ...) const
 {
-  char messageBuffer[MAX_STRING_LENGTH];
+  char *messageBuffer;
   va_list ap;
   TThing *i;
 
-  va_start(ap, text);
-  vsprintf(messageBuffer, text, ap);
+  va_start(ap, &text);
+  vasprintf(&messageBuffer, text.c_str(), ap);
   va_end(ap);
 
   for (i = getStuff(); i; i = i->nextThing) {
     if (i->desc && !i->desc->connected)
       i->desc->output.putInQ(messageBuffer);
   }
+  delete messageBuffer;
 }
 
-void TThing::sendTo(const char *, ...) const
+void TThing::sendTo(const sstring &, ...) const
 {
 }
 

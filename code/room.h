@@ -217,8 +217,8 @@ class TRoom : public TThing {
 
     virtual int chiMe(TBeing *);
     int checkPointroll();
-    virtual void sendTo(colorTypeT, const char *, ...) const;
-    virtual void sendTo(const char *, ...) const;
+    virtual void sendTo(colorTypeT, const sstring &, ...) const;
+    virtual void sendTo(const sstring &, ...) const;
     void clientf(const char *,...);
     void loadOne(FILE *, bool);
     void colorRoom(int, int);
