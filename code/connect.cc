@@ -1915,7 +1915,7 @@ int Descriptor::nanny(const char *arg)
             }
             break;
 #endif
-          case 'Z':
+          case '*':
             if (canChooseClass(CLASS_SHAMAN)) {
               character->setClass(CLASS_SHAMAN);
               go2next = TRUE;
