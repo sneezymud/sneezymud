@@ -2830,7 +2830,7 @@ void buildCommandArray(void)
   commandArray[CMD_CAMP] = new commandInfo("camp", POSITION_CRAWLING, 0);
   commandArray[CMD_YOGINSA] = new commandInfo("yoginsa", POSITION_RESTING, 0);
   commandArray[CMD_FLY] = new commandInfo("fly", POSITION_FIGHTING, 0);
-  commandArray[CMD_LAND] = new commandInfo("land", POSITION_FLYING, 0);
+  commandArray[CMD_LAND] = new commandInfo("land", POSITION_FIGHTING, 0);
   commandArray[CMD_ATTUNE] = new commandInfo("attune", POSITION_RESTING, 0);
   commandArray[CMD_AFK] = new commandInfo("afk", POSITION_DEAD, 0);
   commandArray[CMD_CONTINUE] = new commandInfo("continue", POSITION_DEAD, 0);
