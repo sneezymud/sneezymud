@@ -132,7 +132,7 @@ class itemInfo
     itemInfo(const char * const n, const char * const cn, const char * const v0, int v0x, int v0n, const char * const v1, int v1x, int v1n, const char * const v2, int v2x, int v2n, const char * const v3, int v3x, int v3n);
     ~itemInfo();
   private:
-    itemInfo() {} // prevent use
+    //    itemInfo() {} // prevent use
 };
 
 extern itemInfo *ItemInfo[MAX_OBJ_TYPES];

@@ -154,7 +154,7 @@ class TTerrainInfo {
   TTerrainInfo(int, int, int, int, int, int, int, const char *);
   ~TTerrainInfo();
   private:
-    TTerrainInfo() {} // prevent use
+  //    TTerrainInfo() {} // prevent use
 };
 
 extern TTerrainInfo *TerrainInfo[MAX_SECTOR_TYPES];
