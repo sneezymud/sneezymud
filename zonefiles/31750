@@ -19,6 +19,8 @@ D 0 31786 3 2        Talen Vault -> Hallway
 M 0 92 1 31758          corporate registry assistant
 O 0 15316 9999 31758   info sign
 
+O 0 15349 9999 31757   stock board
+
 
 O 0 104 1 31751      teller window
 V 1 0 31752
