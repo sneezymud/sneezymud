@@ -1,4 +1,4 @@
-12-24-99 / 12-26-99 / 12-27-99 / 1-1-00 - Lapsos
+12-24-99 / 12-26-99 / 12-27-99 / 1-1-00 / 1-4-00 - Lapsos
 - Modified the 'damage output' on evaluate <weapon> and the AC output on
   evaluate <armor> to display according to PC lvl VS obj level.  Figured if
   we are going to be harsh in this area we really do need to give them an
@@ -21,6 +21,7 @@
 - Changed 'oedit default_ac_str' to 'oedit average' and added 'medit average'
   which allows 'averge leveling' of weapons, armor and mobiles now.
 - Removed 'save zonefile' and moved it to a new command 'zonefile'.
+- Added the advanced menus to redit.
 
 12-21-99 - Peel
 - I've been working on some mage stuff, 'store' and 'trigger' commands,
