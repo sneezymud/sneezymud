@@ -9,6 +9,7 @@ void calcBankInterest()
   TDatabase db(DB_SNEEZY), in(DB_SNEEZY);
   float profit_sell;
   unsigned int shop_nr;
+  int pretalens=0, posttalens=0;
 
   db.query("select shop_nr, keeper from shop");
   
@@ -16,11 +17,25 @@ void calcBankInterest()
     if(mob_index[real_mobile(convertTo<int>(db["keeper"]))].spec==SPEC_BANKER){
       shop_nr=convertTo<int>(db["shop_nr"]);
       profit_sell=shop_index[shop_nr].profit_sell;
+
+      in.query("select sum(talens) as talens from shopownedbank where shop_nr=%i",
+	       shop_nr);
+      if(in.fetchRow())
+	pretalens=convertTo<int>(in["talens"]);
+	
       
       in.query("update shopownedbank set talens=talens * %f where shop_nr=%i", 
 	       1.0+(profit_sell/365.0), shop_nr);
       in.query("update shopownedcorpbank set talens=talens * %f where shop_nr=%i", 
 	       1.0+(profit_sell/365.0), shop_nr);
+
+      in.query("select sum(talens) as talens from shopownedbank where shop_nr=%i",
+	       shop_nr);
+      if(in.fetchRow())
+	posttalens=convertTo<int>(in["talens"]);
+      
+      in.query("insert into shoplog values (%i, 'unknown', 'paying interest', 'all', %i, 0, 0, now(), 0)", shop_nr, posttalens-pretalens);
+
     }
   }
 }
