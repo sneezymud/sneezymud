@@ -2559,7 +2559,7 @@ void buildCommandArray(void)
   commandArray[CMD_EMOTE2] = new commandInfo(":", POSITION_RESTING, 0);
   commandArray[CMD_EXTINGUISH]=new commandInfo("extinguish",POSITION_RESTING,0);
   commandArray[CMD_SLAY] = new commandInfo("slay", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_JUNK] = new commandInfo("junk", POSITION_RESTING, 0);
+  commandArray[CMD_JUNK] = new commandInfo("junk", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_NOJUNK] = new commandInfo("nojunk", POSITION_RESTING, 0);
   commandArray[CMD_DEPOSIT] = new commandInfo("deposit", POSITION_RESTING, 0);
   commandArray[CMD_WITHDRAW] = new commandInfo("withdraw", POSITION_RESTING, 0);
