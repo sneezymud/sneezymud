@@ -1124,6 +1124,14 @@ void buildComponentArray()
     "$n waves $p at $mself.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_LICH_TOUCH,
+    "You fling $p at $N.",
+    "$n flings $p at $N.",
+    "$n flings $p at you.",                       
+    "You fling $p at yourself.",
+    "$n flings $p at $mself.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_ATOMIZE,
     "You blow $p at $N.",
     "$n blow $p at $N.",

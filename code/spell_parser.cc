@@ -1943,6 +1943,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
       case SPELL_CLARITY:
         clarity(this, ch);
         break;
+      case SPELL_LICH_TOUCH:
+        rc = lichTouch(this, ch);
+        break;
       case SPELL_THORNFLESH:
         rc = thornflesh(this);
 	break;

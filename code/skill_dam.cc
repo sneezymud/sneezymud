@@ -2,26 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: skill_dam.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.5  1999/10/16 02:50:23  batopr
-// Added bonus for spells needing special weather-conditions
-//
-// Revision 1.4  1999/10/09 05:39:50  batopr
-// typo
-//
-// Revision 1.3  1999/10/09 05:38:21  batopr
-// Added OUTDOOR_ONLY elsewhere it was needed
-//
-// Revision 1.2  1999/10/09 05:31:44  batopr
-// Added OUTDOOR_ONLY trigger for meteorswarm
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -54,7 +34,13 @@ double getSkillDiffModifier(spellNumT skill)
       amt = 25;
       break;
   }
+#if 1
+  // for time being, make everything "easy".
+  // too much complaining about skill failure, so screw it  - bat 2/3/00
+  return 100;
+#else
   return amt;
+#endif
 }
 
 void getSkillLevelRange(spellNumT skill, int &min_lev, int &max_lev, int adv_learn)
@@ -264,8 +250,8 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
   // multiplier for spells that need weather condition
   // since these mostly have the outdoor-only too, don't make these obscene
   const double NEED_RAIN_SNOW_LIGHTNING = 1.05;
-  const double NEED_RAIN = 1.10;
-  const double NEED_NORAIN = 1.05;
+  //const double NEED_RAIN = 1.10;
+  //const double NEED_NORAIN = 1.05;
   const double NEED_RAIN_LIGHTNING = 1.075;
 
   switch (skill) {
@@ -274,6 +260,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SKILL_KNEESTRIKE:
     case SKILL_STOMP:
     case SKILL_BODYSLAM:
+    case SKILL_SPIN:
     // other: bash lag is handled based on this is bash
       dam = genericDam(victim, skill, DISC_WARRIOR, level, adv_learn, 0.20, REDUCE_NO, !isPc(), TRIM_NO);
       break;
@@ -350,6 +337,9 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       dam = genericDam(victim, skill, DISC_CLERIC, level, adv_learn, 1.667 * HAS_SAVING_THROW * OUTDOOR_ONLY * NEED_RAIN_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
       // additionally, do faction percent modification for clerics
       dam = (int) (dam * percModifier());
+      break;
+    case SPELL_AQUATIC_BLAST:
+      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.05 * HAS_SAVING_THROW * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_HARM_LIGHT:
     case SPELL_HARM_SERIOUS:
@@ -450,7 +440,10 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       break;
     case SPELL_STORMY_SKIES:
       // 4/3 factor added here due to save cutting into avg damage
-      dam =  genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529 * HAS_SAVING_THROW * OUTDOOR_ONLY * RAIN_SNOW_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
+      dam =  genericDam(victim, skill, DISC_RANGER, level, adv_learn, 0.529 * HAS_SAVING_THROW * OUTDOOR_ONLY * NEED_RAIN_SNOW_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
+      break;
+    case SPELL_LICH_TOUCH:
+      dam = genericDam(victim, skill, DISC_SHAMAN, level, adv_learn, 2.05 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SKILL_KICK_MONK:
     case SKILL_CHOP:
@@ -463,7 +456,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       dam = genericDam(victim, skill, DISC_MONK, level, adv_learn, 0.233, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     default:
-      vlogf(5, "Unknown skill %d in call to getSkillDam", skill);
+      vlogf(LOG_BUG, "Unknown skill %d in call to getSkillDam", skill);
       dam = 0;
   }
 

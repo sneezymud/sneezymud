@@ -159,22 +159,135 @@ int castDeathMist(TBeing * caster)
   return rc;
 }
 
+// END DEADTH MIST
+// LICH TOUCH
 
+int lichTouch(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+{
+  if (victim->isImmortal()) {
+    act("You can't touch a god in that manner!",
+             FALSE, caster, NULL, victim, TO_CHAR);
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
 
+  int dam = caster->getSkillDam(victim, SPELL_LICH_TOUCH, level, adv_learn);
+  caster->reconcileHurt(victim, discArray[SPELL_LICH_TOUCH]->alignMod);
+  bool save = victim->isLucky(caster->spellLuckModifier(SPELL_LICH_TOUCH));
+  int vit = dice(number(1,level),4);
+  int lfmod = dice(number(1,level),4);
 
+  if (bSuccess(caster, bKnown,SPELL_LICH_TOUCH)) {
+    act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("You groan in pain as life is drawn from your body!", FALSE, caster, NULL, victim, TO_VICT);
+    caster->addToLifeforce(lfmod);
+    TPerson *pers;
+    switch (critSuccess(caster, SPELL_LICH_TOUCH)) {
+      case CRIT_S_DOUBLE:
+      case CRIT_S_TRIPLE:
+        CS(SPELL_LICH_TOUCH);
+        dam *=2;
+        vit *=2;
+        lfmod *= 2;
+        break;
+      case CRIT_S_KILL:
+        CS(SPELL_LICH_TOUCH);
+        // I am basing this on energy drain
+        // Russ had this nasty sucker below for supah crit...i left it
+        pers = dynamic_cast<TPerson *>(victim);
+        if (pers && !save) {
+          pers->dropLevel(pers->bestClass());
+          pers->setTitle(false);
+          vlogf(LOG_MISC, "%s just lost a level from a critical lich touch!", pers->getName());
+        }
+        break;
+      case CRIT_S_NONE:
+        break;
+    }
+    if (save) {
+      SV(SPELL_LICH_TOUCH);
+      dam /= 2;
+      vit /= 2;
+      lfmod /= 2;
+    }
+    if (!victim->isImmortal())
+      victim->addToMove(-vit);
+    if (caster->reconcileDamage(victim, dam, SPELL_LICH_TOUCH) == -1)
+      return SPELL_SUCCESS + VICTIM_DEAD;
+    return SPELL_SUCCESS;
+  } else {
+    switch (critFail(caster, SPELL_LICH_TOUCH)) {
+      case CRIT_F_HITSELF:
+      case CRIT_F_HITOTHER:
+        CF(SPELL_LICH_TOUCH);
+        act("$n's body glows a dark, evil-looking red!", 
+               FALSE, caster, NULL, NULL, TO_ROOM);
+        act("You sang the invokation incorrectly! The ancestors are EXTREMELY pissed!", 
+               FALSE, caster, NULL, NULL, TO_CHAR);
+        caster->addToMove(-vit);
+        caster->addToLifeforce(0);
+        dam /= 3;
+        if (caster->reconcileDamage(caster, dam, SPELL_LICH_TOUCH) == -1)
+          return SPELL_CRIT_FAIL + CASTER_DEAD;
+        return SPELL_CRIT_FAIL;
+      case CRIT_F_NONE:
+        break;
+    }
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
 
+int lichTouch(TBeing *caster, TBeing *victim)
+{
+  if (!bPassShamanChecks(caster, SPELL_LICH_TOUCH, victim))
+    return FALSE;
 
+  lag_t rounds = discArray[SPELL_LICH_TOUCH]->lag;
+  taskDiffT diff = discArray[SPELL_LICH_TOUCH]->task;
 
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_LICH_TOUCH, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 
+0);
 
+  return TRUE; 
+}
 
+int castLichTouch(TBeing *caster, TBeing *victim)
+{
+  int ret,level;
+  int rc = 0;
 
+  level = caster->getSkillLevel(SPELL_LICH_TOUCH);
+  int bKnown = caster->getSkillValue(SPELL_LICH_TOUCH);
 
+  ret=lichTouch(caster,victim,level,bKnown, caster->getAdvLearning(SPELL_LICH_TOUCH));
+  if (ret == SPELL_SUCCESS) {
+  } else {
+    if (ret==SPELL_CRIT_FAIL) {
+    } else {
+    }
+  }
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
 
+int lichTouch(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
+{
+  int tRc = FALSE,
+      tReturn;
 
+  tReturn = lichTouch(tMaster, tSucker, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), 0);
 
+  if (IS_SET(tReturn, VICTIM_DEAD))
+    ADD_DELETE(tRc, DELETE_VICT);
 
+  if (IS_SET(tReturn, CASTER_DEAD))
+    ADD_DELETE(tRc, DELETE_THIS);
 
-
-
-
-
+  return tRc;
+}
+// END LICH TOUCH

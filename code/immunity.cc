@@ -228,6 +228,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_DUST_BREATH:
       bit = IMMUNE_AIR;
       break;
+    case SPELL_LICH_TOUCH:
     case SPELL_ENERGY_DRAIN:
     case DAMAGE_DRAIN:
     case SPELL_HARM_DEIKHAN:

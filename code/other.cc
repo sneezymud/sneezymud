@@ -40,6 +40,7 @@ extern "C" {
 #include "disc_nature.h"
 #include "disc_shaman_armadillo.h"
 #include "disc_shaman_frog.h"
+#include "disc_shaman_skunk.h"
 #include "disc_shaman_spider.h"
 #include "disc_shaman_control.h"
 
@@ -2527,6 +2528,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       break;
     case SPELL_STICKS_TO_SNAKES:
       sticksToSnakes(caster,victim,obj);
+      break;
+    case SPELL_LICH_TOUCH:
+      rc = lichTouch(caster,victim,obj);
       break;
     case SPELL_CLARITY:
       clarity(caster,victim,obj);

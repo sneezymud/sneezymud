@@ -271,6 +271,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
         sprintf(buf, "It appears %s was punched incredibly hard by someone.", getName());
         break;
       case SPELL_ENERGY_DRAIN:
+      case SPELL_LICH_TOUCH:
       case SPELL_SYNOSTODWEOMER:
       case DAMAGE_DRAIN:
       case SPELL_HARM_DEIKHAN:

@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.6  2001/05/05 16:50:11  jesus
+// added lich touch spell for shaman
+//
 // Revision 5.5  2001/04/30 04:42:29  jesus
 // added death mist shaman spell
 //
@@ -151,6 +154,7 @@ const int COMP_AQUATIC_BLAST      =31307;
 const int COMP_CLARITY            =31309;
 const int COMP_SHADOW_WALK        =31310;
 const int COMP_DEATH_MIST         =31311;
+const int COMP_LICH_TOUCH         =31312;
 
 class compPlace
 {

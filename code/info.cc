@@ -922,6 +922,7 @@ string TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_SLING_SHOT:
       case SPELL_GRANITE_FISTS:
       case SPELL_ENERGY_DRAIN:
+      case SPELL_LICH_TOUCH: // shaman
       case SPELL_SYNOSTODWEOMER:
       case SPELL_HARM_DEIKHAN:
       case SPELL_HARM:
