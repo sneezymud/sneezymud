@@ -3875,23 +3875,32 @@ int lifeLeechGlove(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   return FALSE;
 }
 
-int manaBurnRobe(TBeing *vist, cmdType T cmd, const char *arg, TObj *o, TObj *) {
-  TBeing *ch;
+//int manaBurnRobe(TBeing *vist, cmdType T cmd, const char *arg, TObj *o, TObj *) {
+//  TBeing *ch;
+//
+//  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+//    return FALSE;
+//
+//  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
+//    char buf[256];
+//    one_argument(arg, buf);
+//    if(!strcmp(buf, "manifest")) {
+//      int currentHit = ch->getHit();
+//      int currentMana =ch-> getMana();
+//      int maxMana = ch->getMaxMana();
+//      int percentBurn = (int)ch->getMaxHit() * .2;
+//      int healthSteal = min((int)(ch->getMaxHit()- percentBurn),(int)(ch->getHit() - percentBurn));                  
+//      int manaGain = healthSteal * .8;
+//      ch->setMana(currentMana + manaGain);
+//      act ("Your robe begins to glow with an eerie blue light, thin tendrils of light thrash wildly and then burrow into your skin, you scream as they rip the lifeforce from you.",TRUE,ch,NULL,NULL,TO_CHAR,NULL);
+//      act ("&n screams in agony as thin blue tendrils emerge from his robe and burrow into his skin!",TRUE,ch,NULL,NULL,TO_ROOM,NULL);
+//      return TRUE;
+//    }
+//  }
+//  return FALSE;
+//} // end manaBurnRobe
 
-  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
-    return FALSE;
-
-  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
-    char buf[256];
-    one_argument(arg, buf);
-    if(!strcmp(buf, "manifest")) {
-      int currentHit = ch->getHit();
-      int currentMana =ch-> getMana();
-      int maxMana = ch->getMaxMana();
-      int percent_burn = (int)ch->getMaxHit() * .2
-      int healthSteal = min((int)(ch->getMaxHit()- percent_burn),(int)(ch->getHit() - percent_burn));
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+int sunCircleAmulet(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
   TBeing *ch;
   
@@ -4702,6 +4711,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Randomizer", randomizer},
   {FALSE, "Blunt/Pierce", bluntPierce},
   {TRUE, "Dual Style Weapon", dualStyleWeapon} //75
+  {FALSE, "Mana Burn Robe", manaBurnRobe}
 };
 
 
