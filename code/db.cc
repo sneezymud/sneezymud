@@ -1240,7 +1240,7 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
 
 
   if(cache && cache_object(nr)!=-1){
-    vlogf(LOG_PEEL, "using cached object - %s", obj_index[nr].short_desc);
+    //    vlogf(LOG_PEEL, "using cached object - %s", obj_index[nr].short_desc);
     obj = makeNewObj(mapFileToItemType(atoi_safe(obj_cache[cache_object(nr)]->s[0].c_str())));
     obj->number=nr;
     obj->name = obj_index[nr].name;
@@ -1329,7 +1329,7 @@ TObj *read_object(int nr, readFileTypeT type, bool cache=false)
   obj->checkObjStats();
 
   if(cache && cache_object(nr)==-1){
-    vlogf(LOG_PEEL, "caching object - %s", obj->shortDescr);
+    //    vlogf(LOG_PEEL, "caching object - %s", obj->shortDescr);
     cached_object *c=new cached_object;
     
     c->number=nr;
