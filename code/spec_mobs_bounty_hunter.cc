@@ -519,7 +519,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 	      (job->last_targ ? job->last_targ : "NULL"), 
 	      (targ->getName() ? targ->getName() : "NULL"));
 	//	strcpy(job->last_targ, targ->getName());
-	job->hunted_victim = mud_str_dup(targ->getName());
+	job->last_targ = mud_str_dup(targ->getName());
 	
         if (job->num_chances < -99 || job->num_chances > -96)
           job->num_chances = 27;
