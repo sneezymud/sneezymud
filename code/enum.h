@@ -2,17 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: enum.h,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/10/07 15:26:38  batopr
-// Added GOLD_DUMP
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -24,6 +13,16 @@
 
 #ifndef __ENUM_H
 #define __ENUM_H
+
+enum getTypeT {
+  GETNULL,
+  GETALL,
+  GETOBJ,
+  GETALLALL,
+  GETALLOBJ,
+  GETOBJALL,
+  GETOBJOBJ
+};
 
 enum dirTypeT {
      DIR_BOGUS = -2,
@@ -199,6 +198,7 @@ enum wizardryLevelT {
   WIZ_LEV_NO_GESTURES,
   WIZ_LEV_NO_MANTRA,
   WIZ_LEV_COMP_BELT,
+  WIZ_LEV_COMP_NECK,
   WIZ_LEV_MAXED
 };
 
@@ -323,6 +323,8 @@ enum territoryT {
   HOME_TER_HOBBIT_WOODLAND,     HOME_TER_HOBBIT_MARITIME,
   MAX_HOME_TERS
 };
+extern territoryT & operator++(territoryT &c, int);
+
 
 enum moneyTypeT {
      GOLD_XFER,
@@ -410,6 +412,21 @@ enum checkImmunityT {
   CHECK_IMMUNITY_YES = true
 };
 
+enum concatT {
+  CONCAT_NO = false,
+  CONCAT_YES = true
+};
+
+enum allowReplaceT {
+  ALLOWREP_NO = false,
+  ALLOWREP_YES = true
+};
+
+enum showNowT {
+  SHOWNOW_NO = false,
+  SHOWNOW_YES = true
+};
+
 enum showMeT {
   DONT_SHOW_ME = false,
   SHOW_ME = true
@@ -433,6 +450,13 @@ enum castTypeT {
 enum primaryTypeT {
   HAND_SECONDARY = false,
   HAND_PRIMARY = true,
+};
+
+enum primLegT {
+  LEG_SECONDARY = 0,
+  LEG_PRIMARY = 1,
+  LEG_SECONDARY_BACK = 2,
+  LEG_PRIMARY_BACK = 3
 };
 
 enum checkOnlyT {
@@ -481,6 +505,47 @@ enum tObjectManipT
   OBJMAN_NOFIT, // drop all.nofit
   OBJMAN_TYPE,  // drop all.<type[type == 'component'/'light']>
   OBJMAN_MAX
+};
+
+enum logTypeT
+{
+  LOG_SILENT  = -2, // Log is recoreded but not echoed to immortals (anti-spam)
+  LOG_NONE    = -1, // Empty
+  LOG_MISC    =  0, // Anything not yet defined below
+  LOG_LOW     =  1, // LOW Errors
+  LOG_FILE    =  2, // File io Errors
+  LOG_BUG     =  3, // 'Bugs' and other such reports
+  LOG_PROC    =  4, // Errors regarding mob/obj/room procs
+  LOG_PIO     =  5, // Player Login/Logout reports
+  LOG_IIO     =  6, // Immortal Login/Logout 'additives'
+  LOG_CLIENT  =  7, // Various errors associated with the SneezyMUD Client.
+  LOG_COMBAT  =  8, // Various errors associated with the combat code.
+  LOG_CHEAT   =  9, // Various logs associated with the cheating code.
+  LOG_FACT    = 10, // Various Faction Stuff
+
+  LOG_MOB     = 15, // Errors in Mobiles not yet defined below
+  LOG_MOB_AI  = 16, // Errors in Mobile Logic
+  LOG_MOB_RS  = 17, // Errors in Mobile Response Scripts
+
+  LOG_OBJ     = 18, // Errors in Objects not yet defined below
+
+  LOG_EDIT    = 21, // Various 'edit' errors
+
+  LOG_MAX     = 24, // This is here to prevent unwarrented use of the belows.
+
+  LOG_BATOPR  = 24, // Batopr only logs
+  LOG_BRUTIUS = 25, // Brutius only logs
+  LOG_COSMO   = 26, // Cosmo only logs
+  LOG_LAPSOS  = 27, // Lapsos only logs
+  LOG_PEEL    = 28,  // Peel only logs
+  LOG_JESUS   = 29,  // Jesus only
+  LOG_DASH    = 30  // Dash only
+};
+
+enum checkFallingT
+{
+  CHECK_FALL_NO = 0,
+  CHECK_FALL_YES
 };
 
 #endif  // __ENUM_H inclusion sandwich

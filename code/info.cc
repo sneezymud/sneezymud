@@ -4934,7 +4934,7 @@ void TBeing::doSpells(const char *argument)
       {secondary, WIZ_LEV_COMP_EITHER         },
       {stuff    , WIZ_LEV_COMP_INV            },
       {belt     , WIZ_LEV_COMP_BELT           },
-      {juju     , WIZ_LEV_COMP_BELT }
+      {juju     , WIZ_LEV_COMP_NECK           }
   };
 
   if (!(d = desc))
@@ -5157,7 +5157,7 @@ void TBeing::doPrayers(const char *argument)
   struct {
     TThing *where;
     wizardryLevelT wizlevel;
-  } search[]={{primary, WIZ_LEV_COMP_PRIM_OTHER_FREE}, {secondary, WIZ_LEV_COMP_EITHER}, {stuff, WIZ_LEV_COMP_INV}, {belt, WIZ_LEV_COMP_BELT}, {juju, WIZ_LEV_COMP_BELT}};
+  } search[]={{primary, WIZ_LEV_COMP_PRIM_OTHER_FREE}, {secondary, WIZ_LEV_COMP_EITHER}, {stuff, WIZ_LEV_COMP_INV}, {belt, WIZ_LEV_COMP_BELT}, {juju, WIZ_LEV_COMP_NECK}};
 
   if (!(d = desc))
     return;

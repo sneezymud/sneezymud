@@ -1732,6 +1732,8 @@ int TBeing::doTraining(TBeing *ch, TMonster *me, classIndT accclass, int offset,
     wizardryLevelT wiz = ch->getWizardryLevel();
     if (wiz >= WIZ_LEV_COMP_BELT)
         ch->sendTo("It is ok to have components contained on your belt.\n\r");
+    else if (wiz == WIZ_LEV_COMP_NECK)
+        ch->sendTo("It is ok to have components contained in a neck pouch.\n\r");
     else if (wiz == WIZ_LEV_NO_MANTRA)
         ch->sendTo("You no longer need to speak the incantation.\n\r");
     else if (wiz == WIZ_LEV_NO_GESTURES)
@@ -2015,6 +2017,8 @@ wizardryLevelT TBeing::getWizardryLevel() const
     return WIZ_LEV_NO_GESTURES;
   else if (skill < 75)
     return WIZ_LEV_NO_MANTRA;
+  else if (skill < MAX_SKILL_LEARNEDNESS)
+    return WIZ_LEV_COMP_NECK;
   else if (skill < MAX_SKILL_LEARNEDNESS)
     return WIZ_LEV_COMP_BELT;
   else

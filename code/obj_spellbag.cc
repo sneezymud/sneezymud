@@ -122,3 +122,4 @@ void TSpellBag::getObjFromMeText(TBeing *tBeing, TThing *tThing, getTypeT tType,
   }
 #endif
 }
+
