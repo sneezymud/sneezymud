@@ -77,7 +77,7 @@ bool TBeing::canTrip(TBeing *victim, silentTypeT silent)
     return FALSE;
   }
 
-  if (victim->riding && !dynamic_cast<TBeing *>(victim->riding)) {
+  if (victim->riding) {
     if (!silent)
       sendTo(COLOR_MOBS, "You are unable to trip %s off of %s!\n\r", victim->getName(), victim->riding->getName());
     return FALSE;
@@ -154,9 +154,6 @@ static int trip(TBeing *c, TBeing *victim, spellNumT skill)
   // some modifications to account for dexterity, and level 
   percent = 0;
   percent += ((int) c->getWeight() - (int) victim->getWeight())/20;
-
-  if (victim->riding) 
-    percent -= 33;
 
   // Make a level based adjustment - Brutius
   int level = c->getSkillLevel(skill);
