@@ -3,6 +3,9 @@
 ## SneezyMUD - All rights reserved, SneezyMUD Coding Team
 ##
 ## $Log: makefile,v $
+## Revision 1.2  1999/09/13 15:38:44  batopr
+## removed rewrite file from make
+##
 ## Revision 1.1  1999/09/12 17:26:35  sneezy
 ## Initial revision
 ##
@@ -192,8 +195,9 @@ OBJ2 = gin.o handler.o hearts.o help.o hospital.o immortal.o immunity.o \
 	task_spell_friends.o task_get.o task_rest.o task_sit.o task_track.o \
 	task_whittle.o task_stavecharge.o thing.o toggle.o tool.o trap.o \
 	trash.o treasure.o tree.o utility.o vial.o wand.o weather.o \
-	rewrite_obj_file.o \
 	window.o wiz_data.o wiz_powers.o worn.o
+
+#	rewrite_obj_file.o \
 
 OBJ := $(sort $(addprefix $(OBJDIR), $(OBJ)))
 OBJ2 := $(sort $(addprefix $(OBJDIR), $(OBJ2)))
