@@ -3252,6 +3252,13 @@ float old_ac_lev = mob->getACLevel();
     mob->setExp(tmp);
 
     if (fscanf(fp, " %d ", &tmp) != 1) {
+      vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (14)") %  arg % num);
+      deleteDuringRead(mob);
+      break;
+    }
+    mob->setMaxExp(tmp);
+
+    if (fscanf(fp, " %d ", &tmp) != 1) {
       vlogf(LOG_BUG, fmt("Error reading follower data (%s mobs %d) (15)") %  arg % num);
       deleteDuringRead(mob);
       break;
@@ -3902,8 +3909,8 @@ bool TBeing::saveFollowers(bool rent_time)
             mob->points.maxHit,
             mob->getDamLevel(),
             mob->getDamPrecision());
-    fprintf(fp, "%d %d %d %d %d\n",
-            mob->getMoney(), (int) mob->getExp(), mob->getRace(), (int) mob->getWeight(), mob->getHeight());
+    fprintf(fp, "%d %d %d %d %d %d\n",
+            mob->getMoney(), (int) mob->getExp(), (int) mob->getMaxExp(), mob->getRace(), (int) mob->getWeight(), mob->getHeight());
 
     for(statTypeT iStat=STAT_STR;iStat<MAX_STATS_USED;iStat++)
       fprintf(fp, "%d ", mob->chosenStats.get(iStat));
