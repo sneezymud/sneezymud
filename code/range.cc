@@ -555,6 +555,7 @@ int hit_obstacle_in_room(TRoom *rp, TThing *thing, TBeing *ch)
         act("$n smacks into $N, and falls to the $g.",
              TRUE, thing, 0, obj, TO_ROOM);
         act("$p smacked into $N.", FALSE, ch, thing, obj, TO_CHAR); 
+	if (thing->spec) thing->checkSpec(NULL, CMD_ARROW_HIT_OBJ, "", obj);
         return TRUE;
       }
     }
@@ -675,6 +676,7 @@ static void barrier(TRoom *rp, dirTypeT dir, TThing *t)
         sprintf(buf, "$n flies through the air a ways before dropping to the $g.");
   }
   act(buf, TRUE, t, 0, 0, TO_ROOM);
+  if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
 }
 
 // max_dist is the maximum distance that "o" can be thrown. 
@@ -694,6 +696,10 @@ int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int m
     if (iDist) {
       sprintf(capbuf, "$n %s into the room %s.", (dir == 5 ? "drops" : "flies"), directions[dir][1]);
       act(capbuf, TRUE, t, 0, 0, TO_ROOM);
+      if (t->spec) t->checkSpec(NULL, CMD_ARROW_INTO_ROOM, "", NULL);
+
+    } else {
+      if (t->spec) t->checkSpec(NULL, CMD_ARROW_SHOT, "", NULL);
     }
 
     if (hit_obstacle_in_room(rp, t, ch))
@@ -715,11 +721,13 @@ int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int m
 
       if (dir != DIR_DOWN)
         act("$p ran out of momentum and fell.", FALSE, ch, t, 0, TO_CHAR); 
-
+      if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
       return FALSE;
     } else if (!clearpath(from, dir) || rp->isUnderwaterSector()) {
       barrier(rp, dir,t);
       act("$p hit an obstacle and dropped to the $g.", FALSE, ch, t, 0, TO_CHAR); 
+      
+      if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
       return FALSE;
     }
     // No need to check for a NULL newrp, clearpath() does that. - Russ 
@@ -728,6 +736,9 @@ int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int m
       act("Strangely, $n hits a magical barrier and falls to the $g.", 
              FALSE, t, 0, 0, TO_ROOM);
       act("$p hit a magic barrier and dropped to the $g.", FALSE, ch, t, 0, TO_CHAR); 
+
+      if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
+
       return FALSE;
     }
 
@@ -735,6 +746,9 @@ int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int m
       act("Strangely, $n hits a magical barrier and falls to the $g.",
 	  FALSE, t, 0, 0, TO_ROOM);
       act("$p hit a magic barrier and dropped to the $g.", FALSE, ch, t, 0, TO_CHAR);
+
+      if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
+
       return FALSE;
     }
 

@@ -1749,7 +1749,15 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_OBJ_SATON:
         case CMD_OBJ_EXPELLED:
         case CMD_OBJ_START_TO_FALL:
-        case CMD_MOB_GIVEN_ITEM:
+	case CMD_ARROW_GLANCE:
+	case CMD_ARROW_MISSED:
+	case CMD_ARROW_EMBED:
+	case CMD_ARROW_RIPPED:
+	case CMD_ARROW_DODGED:
+	case CMD_ARROW_HIT_OBJ:
+	case CMD_ARROW_INTO_ROOM:
+	case CMD_ARROW_SHOT:
+	case CMD_MOB_GIVEN_ITEM:
         case CMD_MOB_GIVEN_COINS:
         case CMD_MOB_ALIGN_PULSE:
         case CMD_MOB_KILLED_NEARBY:
@@ -1758,6 +1766,7 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_MOB_COMBAT:
         case CMD_TASK_FIGHTING:
         case CMD_TASK_CONTINUE:
+
           incorrectCommand();
           return FALSE;
       }

@@ -1156,9 +1156,11 @@ TThing *TBeing::pulloutObj(wearSlotT numx, bool safe, int *res)
   o->stuckIn = NULL;
   o->eq_pos = WEAR_NOWHERE;
   o->eq_stuck = WEAR_NOWHERE;
+  if (o->spec) checkSpec(this, CMD_ARROW_RIPPED, "", NULL);
 
   TBaseWeapon *tbw = dynamic_cast<TBaseWeapon *>(o); 
   if (tbw && !safe) {
+
     dam = (int) (1.0 * tbw->baseDamage());
     if (reconcileDamage(this, dam,tbw->getWtype()) == -1) {
       *res = -1;

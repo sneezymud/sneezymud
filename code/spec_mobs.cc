@@ -7191,7 +7191,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 
 
   if (!bow->getStuff()) {
-    vlogf(LOG_DASH, "archer loading an arrow");
+    //    vlogf(LOG_DASH, "archer loading an arrow");
 
     if (!(arrow = read_object(arrownum, VIRTUAL))) {
       vlogf(LOG_PROC, "Archer couldn't load his arrow %d.  DASH!!!", arrownum);
@@ -7204,7 +7204,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   }
 
   if (bow->isBowFlag(BOW_STRING_BROKE)) {
-    vlogf(LOG_DASH, "archer fixing a bowstring");
+    //    vlogf(LOG_DASH, "archer fixing a bowstring");
 
     
     act("You quickly restring $p.", FALSE, ch, bow, 0, TO_CHAR);
@@ -7215,23 +7215,26 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   }
 
   char buf[256], buf2[256];
-  int count;
+  int count, numsimilar;
   int which;
   int Hi = 0, Hf = 0; //hp initial, hp final
   dirTypeT i;
   TBeing *tbt = NULL;
+  TBeing *tbt2 = NULL;
 
   for (i = MIN_DIR; i <= (MAX_DIR - 1); i++) {
     rm = ch->in_room;
     if (clearpath(rm, i)) {
       
       new_rm = real_roomp(rm)->dir_option[i]->to_room;
-      if (new_rm == rm)
-	break;
+      if (new_rm == rm || (real_roomp(rm)->isRoomFlag(ROOM_PEACEFUL)))
+	continue;
       else
 	rm = new_rm;
       count = 0;
+
       
+
       for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
 	tbt = dynamic_cast<TBeing *>(t);
 	if (!tbt)
@@ -7265,33 +7268,74 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 	  break;
       }
 	
-      Hi = tbt->getHit();
-
-
-      sprintf(buf, "From up on the %s tower, $N aims a $o down at you.", directions[i][1]);
-      act(buf,FALSE, tbt, bow, ch, TO_CHAR);
-      sprintf(buf, "From up on the %s tower, $N aims a $o down at $n.", directions[i][1]);
-      act(buf,FALSE, tbt, bow, ch, TO_ROOM);
-      sprintf(buf, "You aim a $o down through the %s arrow slit at $N", directions[i][0]);
-      act(buf,FALSE, ch, bow, tbt, TO_CHAR);
-      sprintf(buf, "$n aims a $o down through the %s arrow slit at $N", directions[i][0]);
-      act(buf,FALSE, ch, bow, tbt, TO_ROOM);
+      // ok now we have to do a bit of trickery - there could be multiple identical mobs
+      // in the same room, ie, 3 orc guards, and even if we pick the third one our code
+      // will only aim at the first one.  So we have to figure out which we're aiming at
+      // before we can lob one off and hope to hit him.
 
       strcpy(temp, tbt->name);
+      count =0;
+      numsimilar = 0;
+      for (t = real_roomp(rm)->getStuff(); t; t = t->nextThing) {
+        tbt2 = dynamic_cast<TBeing *>(t);
+        if (!tbt2)
+          continue;
+        if (!ch->canSee(tbt2))
+          continue;
+	if (tbt->isCult())
+	  count++;
+	if (!strcmp(temp, tbt2->name)) // this mob has the same name as our target, so count him
+	  numsimilar++;
+	if (count == which)
+          break;
+      }
+
+      
+
       add_bars(temp);
-      sprintf(buf, "%s %s 1", directions[i][0], temp);
-      vlogf(LOG_DASH, "archer doing this: shoot %s", buf);
+
+
+      Hi = tbt->getHit();
+
+      if(ch->in_room == 15344) {
+	
+	sprintf(buf, "From inside the trolley, $N aims a $o at you.");
+	act(buf,FALSE, tbt, bow, ch, TO_CHAR);
+	sprintf(buf, "From inside the trolley, $N aims a $o at $n.");
+	act(buf,FALSE, tbt, bow, ch, TO_ROOM);
+	sprintf(buf, "You aim a $o out the trolley at $N.");
+	act(buf,FALSE, ch, bow, tbt, TO_CHAR);
+	sprintf(buf, "$n aims a $o out the trolley at $N.");
+	act(buf,FALSE, ch, bow, tbt, TO_ROOM);
+      } else {
+	
+	sprintf(buf, "From up on the %s tower, $N aims a $o down at you.", directions[i][1]);
+	act(buf,FALSE, tbt, bow, ch, TO_CHAR);
+	sprintf(buf, "From up on the %s tower, $N aims a $o down at $n.", directions[i][1]);
+	act(buf,FALSE, tbt, bow, ch, TO_ROOM);
+	sprintf(buf, "You aim a $o down through the %s arrow slit at $N.", directions[i][0]);
+	act(buf,FALSE, ch, bow, tbt, TO_CHAR);
+	sprintf(buf, "$n aims a $o down through the %s arrow slit at $N.", directions[i][0]);
+	act(buf,FALSE, ch, bow, tbt, TO_ROOM);
+      }
+
+      sprintf(buf, "%s %d.%s 1", directions[i][0], numsimilar, temp);
+      vlogf(LOG_DASH, "Brightmoon Defense: %s shooting at %s (%d.%s)", ch->getName(), tbt->getName(), numsimilar, temp);
 
       strcpy(temp, tbt->getName());
 
-      int rc = ch->doShoot(buf);
-      vlogf(LOG_DASH, "archer shooting at a target");
-
+      ch->doShoot(buf);
+      //      vlogf(LOG_DASH, "archer shooting at a target");
       Hf = tbt->getHit();
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+
+#if 1
+      vlogf(LOG_DASH, "archer debug: %d->%d, temp/name: (%s)/(%s), tbt?: %s",
+	    Hi, Hf, temp, (tbt->getName() ? tbt->getName() : "(NULL)"), (tbt ? "exists" : "(NULL)"));
+#endif
+      if (!tbt->getName()) {
         switch(::number(1,7)) {
           case 1:
-            ch->doShout("Woo Woo!  I got a confirmed kill, yeah!");
+            ch->doShout("Woo woo!  I got a confirmed kill, yeah!");
             break;
           case 2:
             ch->doShout("How's that for Brightmoon hospitality, you Logrite bastards!");
@@ -7315,80 +7359,51 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
             ch->doShout(buf);
             break;
         }
-        delete tbt;
         return TRUE;
       } else if (Hi > Hf) {
-	if (!tbt || Hf < -9 || strcmp(tbt->getName(), temp)) {
-	  switch(::number(1,7)) {
-	    case 1:
-	      ch->doShout("Woo Hoo!  I got a confirmed kill, yeah!");
-	      break;
-	    case 2:
-	      ch->doShout("How's that for Brightmoon hospitality, you Logrite bastards!");
-	      break;
-	    case 3:
-	      ch->doShout("And another one gone, another one gone, another one bites the dust, yeah!");
-	      break;
-	    case 4:
-	      ch->doShout("Who's yo daddy!");
-	      break;
-	    case 5:
-	      sprintf(buf, "Cleanup on aisle 9 - we got %s splattered all over the place!", temp);
-	      ch->doShout(buf);
-	      break;
-	    case 6:
-	      sprintf(buf, "I hope you brought your recall scrolls with you, %s, because... oops, too late.", temp);
-	      ch->doShout(buf);
-	      break;
-	    case 7:
-	      sprintf(buf, "Good luck getting your corpse, %s - you'll need it!", temp);
-	      ch->doShout(buf);
-	      break;
-	  }
-	} else {
-	  // we hit them, so lets shout some catcalls down
-	  switch (::number(1,7)) {
-	    case 1:
-	      sprintf(buf2, "How 'bout DEM apples!");
-	      break;
-	    case 2:
-	      sprintf(buf2, "Why don't you go on a diet you fat bastard, I couldn't miss you if I tried!");
-	      break;
-	    case 3:
-	      sprintf(buf2, "U-G-L-Y, you ain't got no ALIBI, you UGLY!");
-	      break;
-	    case 4:
-	      sprintf(buf2, "Hey, I didn't know Logrus was enlisting pincusions!");
-	      break;
-	    case 5:
-	      sprintf(buf2, "Why don't you go home, you dirty whores!");
-	      break;
-	    case 6:
-	      sprintf(buf2, "You like it this way?  UNGH!  You like that??  UNGH!  UNGH!  Take that!  UNGH!");
-	      break;
-	    case 7:
-	      sprintf(buf2, "Eat some of that!");
-	      break;
-	    case 8:
-	      sprintf(buf2, "Straight from my heart to yours!");
-	      break;
-	    case 9:
-	      sprintf(buf2, "Wa-hey, bitch!");
-	      break;
-	  }
-	  
-	  
-	  sprintf(buf, "<c>$N yells,<1> \"%s\"", buf2);
-	  act(buf,FALSE, tbt, bow, ch, TO_CHAR);
-	  sprintf(buf, "<c>$N yells,<1> \"%s\"", buf2);
-	  act(buf,FALSE, tbt, bow, ch, TO_ROOM);
-	  sprintf(buf, "<c>You yell,<1> \"%s\"", buf2);
-	  act(buf,FALSE, ch, bow, tbt, TO_CHAR);
-	  sprintf(buf, "<c>$n yells,<1> \"%s\"", buf2);
-	  act(buf,FALSE, ch, bow, tbt, TO_ROOM);
+	// we hit them, so lets shout some catcalls down
+	switch (::number(1,9)) {
+	  case 1:
+	    sprintf(buf2, "How 'bout DEM apples!");
+	    break;
+	  case 2:
+	    sprintf(buf2, "Why don't you go on a diet you fat bastard, I couldn't miss you if I tried!");
+	    break;
+	  case 3:
+	    sprintf(buf2, "U-G-L-Y, you ain't got no ALIBI, you UGLY!");
+	    break;
+	  case 4:
+	    sprintf(buf2, "Hey, I didn't know Logrus was enlisting pincushions!");
+	    break;
+	  case 5:
+	    sprintf(buf2, "Why don't you go home, you dirty whores!");
+	    break;
+	  case 6:
+	    sprintf(buf2, "You like it this way?  UNGH!  You like that??  UNGH!  UNGH!  Take that!  UNGH!");
+	    break;
+	  case 7:
+	    sprintf(buf2, "Eat some of that!");
+	    break;
+	  case 8:
+	    sprintf(buf2, "Straight from my heart to yours!");
+	    break;
+	  case 9:
+	    sprintf(buf2, "Wa-hey, bitch!");
+	    break;
 	}
-	return TRUE;
+	
+	
+	sprintf(buf, "<c>$N yells,<1> \"%s\"", buf2);
+	act(buf,FALSE, tbt, bow, ch, TO_CHAR);
+	sprintf(buf, "<c>$N yells,<1> \"%s\"", buf2);
+	act(buf,FALSE, tbt, bow, ch, TO_ROOM);
+	sprintf(buf, "<c>You yell,<1> \"%s\"", buf2);
+	act(buf,FALSE, ch, bow, tbt, TO_CHAR);
+	sprintf(buf, "<c>$n yells,<1> \"%s\"", buf2);
+	act(buf,FALSE, ch, bow, tbt, TO_ROOM);
       }
+      return TRUE;
+     
     }
   }
   return TRUE;

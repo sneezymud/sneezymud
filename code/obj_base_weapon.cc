@@ -1317,6 +1317,7 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
         if (!ch->sameRoom(*tb))
           act("In the distance, $N dodges out of the way of $p.",
                  TRUE,ch,this,tb,TO_CHAR);
+	if (spec) checkSpec(tb, CMD_ARROW_DODGED, "", NULL);
         resCode = FALSE;
         if (!tb->isPc())
           pissOff(dynamic_cast<TMonster *>(tb), ch);
@@ -1341,9 +1342,13 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
             if (!ch->sameRoom(*tb))
               act("In the distance, $p embeds itself in $N.",
                    TRUE,ch,this,tb,TO_CHAR);
+	    if (spec) checkSpec(ch, CMD_ARROW_EMBED, "", NULL);
           } else {
             if (!ch->sameRoom(*tb))
               act("In the distance, $N is hit by $p.",TRUE,ch,this,tb,TO_CHAR);
+	    if (spec) {
+	      checkSpec(tb, CMD_ARROW_GLANCE, "", NULL);
+	    }
           }
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             if (true_targ)

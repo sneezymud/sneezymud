@@ -5731,6 +5731,44 @@ int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj 
   return TRUE;
 }
 
+
+int fragileArrow(TBeing *v, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+
+
+  
+  switch (cmd) {
+    case CMD_ARROW_GLANCE:
+    case CMD_ARROW_MISSED:
+    case CMD_ARROW_DODGED:
+    case CMD_ARROW_HIT_OBJ:
+    case CMD_OBJ_EXPELLED:
+      vlogf(LOG_DASH,"fragile arrow proc called case 1");
+      act("$n<1> strikes the $g at an odd angle and snaps in two.", FALSE, o,0,0,TO_ROOM,NULL);
+      delete o;
+      break;
+    case CMD_REMOVE:
+    case CMD_ARROW_RIPPED:
+      vlogf(LOG_DASH,"fragile arrow proc called case 2");
+      act("$n accidentally snaps $p in two as $e rips it out.", FALSE, v,o,0,TO_ROOM,NULL);
+      act("You accidentally snap $p in two as you rip it out.", FALSE, v,o,0,TO_CHAR,NULL);
+      delete o;
+      break;
+    case CMD_OBJ_GOTTEN:
+      act("$n accidentally snaps $p in two as $e picks it up.", FALSE, v,o,0,TO_ROOM,NULL);
+      act("You accidentally snap $p in two as you pick it up.", FALSE, v,o,0,TO_CHAR,NULL);
+      delete o;
+      break;
+    default:
+      return FALSE;
+  }
+
+  return TRUE;
+}
+
+
+
+
 //MARKER: END OF SPEC PROCS
 
 
@@ -5842,6 +5880,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Sonic Blast", sonicBlast},  // 95
   {FALSE, "highrollers board", highrollersBoard},
   {FALSE, "faction score board", factionScoreBoard},
+  {FALSE, "fragile arrow", fragileArrow},
   {FALSE, "last proc", bogusObjProc}
 };
 
