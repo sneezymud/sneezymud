@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: immortal.cc,v $
+// Revision 1.2  1999/09/16 20:59:29  batopr
+// added drain info to rent economy log
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -4207,7 +4210,7 @@ void TBeing::doInfo(const char *arg)
 
       sprintf(buf2, "COMMODITY ECONOMY: pos %u, net gold = %d\n\r", tot_gold_comm, net_gold_comm);
       buf += buf2;
-      sprintf(buf2, "RENT ECONOMY:      pos %u, net gold = %d\n\r", tot_gold_rent, net_gold_rent);
+      sprintf(buf2, "RENT ECONOMY:      pos %u, net gold = %d (bad drain: %d : %.2f%%)\n\r", tot_gold_rent, net_gold_rent, tot_gold_rent - net_gold_rent, 100.0 * ((int) tot_gold_rent - net_gold_rent) / (int) tot_drain);
       buf += buf2;
       sprintf(buf2, "REPAIR ECONOMY:    pos %u, net gold = %d (drain: %d : %.2f%%)\n\r", tot_gold_repair, net_gold_repair, tot_gold_repair - net_gold_repair, 100.0 * (tot_gold_repair - net_gold_repair) / tot_drain);
       buf += buf2;
