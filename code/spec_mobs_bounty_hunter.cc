@@ -516,7 +516,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 
         cleanUpHunter(myself);
 	if (job->singletarg) {
-	  vlogf(LOG_DASH, "hunter %s mission complete.");
+	  vlogf(LOG_DASH, "hunter %s mission complete.", myself->getName());
 	  job->missionaccomplished = true;
 	}
         return TRUE;
