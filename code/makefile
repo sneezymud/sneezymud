@@ -308,7 +308,8 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_objs_graffitiMaker.o	spec_mobs_loanshark.o		\
 	spec_objs_weapons.o             spec_mobs_signmaker.o		\
 	spec_mobs_banker.o		spec_mobs_taxman.o		\
-	spec_objs_ballot_box.o		spec_objs_casting.o
+	spec_objs_ballot_box.o		spec_objs_casting.o		\
+	spec_mobs_property_clerk.o
 
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
@@ -14129,7 +14130,7 @@ objs/spec_mobs.o: obj_base_clothing.h obj_bow.h obj_trap.h obj_table.h
 objs/spec_mobs.o: obj_drinkcon.h obj_base_cup.h corporation.h shopowned.h
 objs/spec_mobs.o: pathfinder.h /usr/include/g++/deque
 objs/spec_mobs.o: /usr/include/g++/stl_deque.h shop.h obj_base_corpse.h
-objs/spec_mobs.o: obj_base_container.h obj_player_corpse.h
+objs/spec_mobs.o: obj_base_container.h obj_player_corpse.h obj_tool.h
 objs/spec_mobs_archer.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_archer.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_archer.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
@@ -15502,6 +15503,79 @@ objs/spec_mobs_postman.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
 objs/spec_mobs_postman.o: person.h monster.h paths.h account.h extern.h
 objs/spec_mobs_postman.o: handler.h obj_money.h spec_mobs.h materials.h
 objs/spec_mobs_postman.o: colorstring.h format.h
+objs/spec_mobs_property_clerk.o: stdsneezy.h /usr/include/g++/cstdio
+objs/spec_mobs_property_clerk.o: /usr/include/stdio.h
+objs/spec_mobs_property_clerk.o: /usr/include/sys/cdefs.h
+objs/spec_mobs_property_clerk.o: /usr/include/machine/ansi.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/cstdlib
+objs/spec_mobs_property_clerk.o: /usr/include/stdlib.h /usr/include/g++/ctime
+objs/spec_mobs_property_clerk.o: /usr/include/time.h
+objs/spec_mobs_property_clerk.o: /usr/include/sys/_posix.h
+objs/spec_mobs_property_clerk.o: /usr/include/sys/types.h
+objs/spec_mobs_property_clerk.o: /usr/include/sys/inttypes.h
+objs/spec_mobs_property_clerk.o: /usr/include/machine/types.h
+objs/spec_mobs_property_clerk.o: /usr/include/machine/endian.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/spec_mobs_property_clerk.o: /usr/include/runetype.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/cassert
+objs/spec_mobs_property_clerk.o: /usr/include/assert.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/cstring
+objs/spec_mobs_property_clerk.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/cmath
+objs/spec_mobs_property_clerk.o: /usr/include/g++/_G_config.h
+objs/spec_mobs_property_clerk.o: /usr/include/stddef.h /usr/include/math.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/string
+objs/spec_mobs_property_clerk.o: /usr/include/g++/std/bastring.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/cstddef
+objs/spec_mobs_property_clerk.o: /usr/include/g++/std/straits.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/alloc.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_config.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_alloc.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/iostream.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/streambuf.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/libio.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/iterator
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_relops.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_iterator.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/std/bastring.cc
+objs/spec_mobs_property_clerk.o: /usr/include/g++/vector
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_algobase.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_pair.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/type_traits.h
+objs/spec_mobs_property_clerk.o: /usr/include/limits.h
+objs/spec_mobs_property_clerk.o: /usr/include/machine/limits.h
+objs/spec_mobs_property_clerk.o: /usr/include/sys/syslimits.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/new.h /usr/include/g++/new
+objs/spec_mobs_property_clerk.o: /usr/include/g++/exception
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_construct.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_uninitialized.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_vector.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_bvector.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/map
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_tree.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_function.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_map.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_multimap.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/list
+objs/spec_mobs_property_clerk.o: /usr/include/g++/stl_list.h
+objs/spec_mobs_property_clerk.o: /usr/include/g++/iostream
+objs/spec_mobs_property_clerk.o: /usr/include/g++/sstream
+objs/spec_mobs_property_clerk.o: /usr/include/g++/fstream
+objs/spec_mobs_property_clerk.o: /usr/include/g++/fstream.h sstring.h low.h
+objs/spec_mobs_property_clerk.o: enum.h spells.h structs.h parse.h immunity.h
+objs/spec_mobs_property_clerk.o: discipline.h spell2.h db.h ansi.h
+objs/spec_mobs_property_clerk.o: cmd_dissect.h client.h response.h faction.h
+objs/spec_mobs_property_clerk.o: comm.h toggle.h wiz_powers.h cmd_message.h
+objs/spec_mobs_property_clerk.o: stats.h limbs.h body.h race.h skills.h
+objs/spec_mobs_property_clerk.o: disease.h trap.h task.h weather.h sound.h
+objs/spec_mobs_property_clerk.o: create.h thing.h room.h obj.h spec_objs.h
+objs/spec_mobs_property_clerk.o: connect.h obj_drug.h charfile.h being.h
+objs/spec_mobs_property_clerk.o: person.h monster.h paths.h account.h
+objs/spec_mobs_property_clerk.o: extern.h handler.h obj_money.h spec_mobs.h
+objs/spec_mobs_property_clerk.o: materials.h colorstring.h format.h
+objs/spec_mobs_property_clerk.o: database.h /usr/local/include/libpq-fe.h
+objs/spec_mobs_property_clerk.o: /usr/local/include/postgres_ext.h
 objs/spec_mobs_signmaker.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_signmaker.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_signmaker.o: /usr/include/machine/ansi.h
