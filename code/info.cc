@@ -2327,6 +2327,11 @@ void TBeing::doEquipment(const char *argument)
       }
     }
   } else if (!*argument || !isImmortal()) {
+    TDatabase db("sneezy");
+
+    db.query("select location, tattoo from tattoos where name='%s' order by location",getName());
+    db.fetchRow();
+
     sendTo("You are using:\n\r");
     found = FALSE;
     for (j = MIN_WEAR; j < MAX_WEAR; j++) {
@@ -2342,6 +2347,13 @@ void TBeing::doEquipment(const char *argument)
             found = TRUE;
           }
         }
+      } else {
+	if((wearSlotT)(atoi_safe(db.getColumn(0))) == j){
+          sprintf(buf, "<%s>", describeEquipmentSlot(j).c_str());
+          sendTo("%s%-25s%s", cyan(), buf, norm());
+	  sendTo(COLOR_BASIC, db.getColumn(1));
+	  sendTo("\n\r");
+	}
       }
     }
   } else {
