@@ -243,7 +243,7 @@ int bank(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *)
   money = atoi(arg);
 
   if (cmd == CMD_DEPOSIT) {
-    if (!ch->isPc()) {
+    if (!ch->isPc() || dynamic_cast<TMonster *>(ch)) {
       ch->sendTo("Stupid monster can't bank here!\n\r");
       return TRUE;
     }
@@ -1687,7 +1687,7 @@ int BankMainEntrance(TBeing *, cmdTypeT cmd, const char *, TRoom *roomp)
     return FALSE;
 
   ++pulse;
-  if(pulse%60)
+  if(pulse%180)
     return FALSE;
 
   //  vlogf(LOG_PEEL, "Bank: closing/locking main entrance");
@@ -1718,7 +1718,7 @@ int BankTeleporter(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     return FALSE;
 
   ++pulse;
-  if(pulse%75)
+  if(pulse%150)
     return FALSE;
 
   for (d = descriptor_list; d ; d = d->next){
