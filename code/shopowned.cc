@@ -531,7 +531,7 @@ int TShopOwned::doLogs(const char *arg)
     sb += "\n\r";
     int profit=0, loss=0;
 
-    ssprintf(buf, "%s<r>Balance Sheet<1>\n\r");
+    ssprintf(buf, "<r>Balance Sheet<1>\n\r");
     sb += buf;
     
     db.query("select sum(talens) from shoplog where shop_nr=%i and talens > 0",
@@ -539,7 +539,7 @@ int TShopOwned::doLogs(const char *arg)
     if(db.fetchRow())
       profit=atoi_safe(db.getColumn(0));
     
-    ssprintf(buf, "%s%-15.15s %i\n\r", "Gross Profit", profit);
+    ssprintf(buf, "%-15.15s %i\n\r", "Gross Profit", profit);
     sb += buf;
 
     db.query("select sum(talens) from shoplog where shop_nr=%i and talens < 0",
