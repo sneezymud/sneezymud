@@ -830,6 +830,12 @@ void TThing::sacrificeMe(TBeing *ch, const char *arg)
           FALSE, ch, corpse, 0, TO_CHAR);    
     return;
   }
+  if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
+    // a body part or something
+    act("Someone must be sacrificing $p currently.",
+          FALSE, ch, corpse, 0, TO_CHAR);    
+    return;
+  }
   ch->sendTo("You start sacrificing a corpse.\n\r");
   act("$n begins to chant over a corpse.", FALSE, ch, NULL, 0, TO_ROOM);
 }
