@@ -113,10 +113,21 @@ void TBeing::doRepair(const char *arg)
     return;
   }
 
+  for(obj=getStuff();obj;obj=obj->nextThing){
+    if(isname(v_name, obj->name))
+      break;
+  }
+  if(!obj){
+    sendTo("You'll have to have that item in your inventory to repair it.\n\r");
+    return;
+  }
+
+#if 0
   if (!(obj = heldInSecHand()) || !isname(v_name, obj->name)) {
     sendTo("You'll have to be holding that in your secondary hand to repair it.\n\r");
     return;
   }
+#endif
 
   if (!doesKnowSkill(SKILL_SMYTHE)) {
     sendTo("You know nothing about repairing items.\n\r");

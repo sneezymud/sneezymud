@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: task_smythe.cc,v $
+// Revision 5.10  2002/06/13 05:38:53  peel
+// fixed up smything a bit
+//
 // Revision 5.9  2002/06/13 04:39:20  peel
 // depreciation code was buggy, so I just removed it
 // probably ok for players to repair to brand new anyway, gies them an
@@ -188,11 +191,16 @@ void TTool::smythePulse(TBeing *ch, TObj *o)
   }
 }
 
-int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
+int task_smythe(TBeing *ch, cmdTypeT cmd, const char *v_name, int pulse, TRoom *, TObj *)
 {
-  TThing *w = NULL;
+  TThing *w = NULL, *t;
   TObj *o = dynamic_cast<TObj *>(ch->heldInSecHand());
   int learning;
+
+  for(t=ch->getStuff();t;t=t->nextThing){
+    if((o=dynamic_cast<TObj *>(t)) && isname(v_name, o->name))
+      break;
+  }
 
   // sanity check
   if (ch->isLinkdead() || (ch->in_room < 0) ||
@@ -201,8 +209,9 @@ int task_smythe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
     smythe_stop(ch);
     return FALSE;  // returning FALSE lets command be interpreted
   }
-  if (ch->utilityTaskCommand(cmd))
+  if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
+
   switch (cmd) {
   case CMD_TASK_CONTINUE:
     if (!(w = ch->heldInPrimHand())) {
