@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_drinkcon.cc,v $
+// Revision 5.6  2002/11/29 20:04:03  peel
+// added a few more potion liquids
+//
 // Revision 5.5  2002/11/29 00:11:47  peel
 // added framework for true liquid potions
 //
@@ -196,7 +199,15 @@ void assign_drink_types()
   DrinkInfo[LIQ_STRAWBERRY_DAIQUIRI]  = new drinkInfo(-1, 2, 5, false, "<r>pink, frothy<1>", "<r>strawberry daiquiri<1>");
   DrinkInfo[LIQ_BANANA_DAIQUIRI]      = new drinkInfo(-1, 2, 5, false, "<Y>yellow, frothy<1>", "<Y>banana daiquiri<1>");
   DrinkInfo[LIQ_PINA_COLADA]          = new drinkInfo(-1, 2, 5, false, "<W>frothy, white<1>", "<W>pina colada<1>");
-  DrinkInfo[LIQ_TEQUILA_SUNRISE]      = new drinkInfo(-1, 2, 5, false, "<o>smooth, yellow<1>", "<o>teqiula sunrise<1>");
+  DrinkInfo[LIQ_TEQUILA_SUNRISE]      = new drinkInfo(-1, 2, 5, false, "<o>smooth, yellow<1>", "<o>tequila sunrise<1>");
   DrinkInfo[LIQ_ISLA_VERDE]           = new drinkInfo(-1, 2, 5, false, "<g>green, frothy<1>", "<g>isla verde<1>");
-  DrinkInfo[LIQ_POT_SANCTUARY]        = new drinkInfo(-1, -1, 1, true, "<c>glowing platinum<1>", "<c>glowing platinum liquid<1>");
+  DrinkInfo[LIQ_POT_CURE_POISON]      = new drinkInfo(-1, -1, 1, true, "<W>white<1>", "<W>white potion<1>");
+  DrinkInfo[LIQ_POT_HEAL_LIGHT]       = new drinkInfo(-1, -1, 1, true, "<W>silver<1>", "<W>silver potion<1>");
+  DrinkInfo[LIQ_POT_HEAL_CRIT]        = new drinkInfo(-1, -1, 1, true, "<Y>golden<1>", "<Y>golden potion<1>");
+  DrinkInfo[LIQ_POT_HEAL]             = new drinkInfo(-1, -1, 1, true, "<b>blue<1>", "<b>blue potion<1>");
+  DrinkInfo[LIQ_POT_SANCTUARY]        = new drinkInfo(-1, -1, 1, true, "<c>platinum<1>", "<c>platinum potion<1>");
+  DrinkInfo[LIQ_POT_FLIGHT]           = new drinkInfo(-1, -1, 1, true, "<c>cyan<1>", "<c>cyan potion<1>");
 }
+
+
+

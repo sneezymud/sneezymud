@@ -250,7 +250,12 @@ enum liqTypeT {
      LIQ_PINA_COLADA,
      LIQ_TEQUILA_SUNRISE,
      LIQ_ISLA_VERDE,
+     LIQ_POT_CURE_POISON,
+     LIQ_POT_HEAL_LIGHT,
+     LIQ_POT_HEAL_CRIT,
+     LIQ_POT_HEAL,
      LIQ_POT_SANCTUARY,
+     LIQ_POT_FLIGHT,
      MAX_DRINK_TYPES     // move and change
 };
 extern liqTypeT & operator++(liqTypeT &, int);

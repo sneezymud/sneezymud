@@ -58,6 +58,7 @@ extern "C" {
 #include "obj_potion.h"
 #include "obj_scroll.h"
 #include "database.h"
+#include "disc_cures.h"
 
 void TBeing::doGuard(const char *argument)
 {
@@ -2369,10 +2370,47 @@ int doLiqSpell(TBeing *ch, liqTypeT liq, int amt)
 {
   int rc=0;
   int level=30, learn=max(100, amt*20);
+  affectedData aff;
 
   switch(liq){
+    case LIQ_POT_CURE_POISON:
+      curePoison(ch,ch,level,learn,SPELL_CURE_POISON);
+      break;
+    case LIQ_POT_HEAL_LIGHT:
+      healLight(ch,ch,level,learn,SPELL_HEAL_LIGHT,0);
+      break;
+    case LIQ_POT_HEAL_CRIT:
+      healCritical(ch,ch,level,learn,SPELL_HEAL_CRITICAL,0);
+      break;
+    case LIQ_POT_HEAL:
+      heal(ch,ch,level,learn,SPELL_HEAL,0);
+      break;
     case LIQ_POT_SANCTUARY:
-      rc = sanctuary(ch,ch,level,learn);
+      sanctuary(ch,ch,level,learn);
+      break;
+    case LIQ_POT_FLIGHT:
+      aff.type = SPELL_FLY;
+      aff.level = level;
+      aff.duration = 1 * UPDATES_PER_MUDHOUR * level;
+      aff.modifier = 0;
+      aff.location = APPLY_NONE;
+      aff.bitvector = AFF_FLYING;
+      
+      // correct for weight
+      weightCorrectDuration(ch, &aff);
+      
+      rc = fly(ch,ch,level,&aff,learn);
+      if (IS_SET(rc, SPELL_SUCCESS)) {
+	if (ch == ch) {
+	  ch->sendTo("You feel much \"lighter\"!\n\r");
+	  act("$n seems lighter on $s feet!", FALSE, ch, NULL, 0, TO_ROOM);
+	} else {
+	  ch->sendTo("You feel much \"lighter\"!\n\r");
+	  act("$n seems lighter on $s feet!", FALSE, ch, NULL, 0, TO_ROOM);
+	}
+      } else {
+	ch->nothingHappens();
+      }
       break;
     default:
       rc=0;
