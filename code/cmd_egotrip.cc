@@ -96,6 +96,11 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Syntax: egotrip crit <target> <crit>\n\r");
       return;
     }
+
+    if (ch->isImmortal()) {
+      sentTo("Do this to an immortal??? Bad god, no bone!\n\r");
+      return;
+    }
     string whichcrit;
     one_argument(restarg, whichcrit);
     if (whichcrit.empty()) {
