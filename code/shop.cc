@@ -386,6 +386,7 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       count++;
       temp1->recalcShopData(TRUE, cost);
     }
+    keeper->saveItems(buf);
   } else {
     tmp = number_objects_in_list(this, (TObj *) keeper->stuff);
     if (num > tmp) {
