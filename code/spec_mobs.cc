@@ -7045,19 +7045,8 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         me->doTell(buf);
         return TRUE;
       }
-
-      if (valued->obj_flags.cost <=  500) {
-        sprintf(buf, "%s This item is too cheap to be engraved.", ch->getName());
-        me->doTell(buf);
-        return TRUE;
-      }
-      if (valued->action_description) {
-        sprintf(buf, "%s This item has already been engraved!", ch->getName());
-        me->doTell(buf);
-        return TRUE;
-      }
       if (valued->obj_flags.decay_time >= 0) {
-        sprintf(buf, "%s Sorry, but this item won't last long!", ch->getName());
+        sprintf(buf, "%s Sorry, but this item won't last long and isn't worth the money spent.", ch->getName());
         me->doTell(buf);
         return TRUE;
       }
@@ -7071,7 +7060,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     case CMD_MOB_GIVEN_ITEM:
       // prohibit polys and charms from engraving 
       if (dynamic_cast<TMonster *>(ch)) {
-        sprintf(buf, "%s, I don't engrave for beasts.", fname(ch->name).c_str());
+        sprintf(buf, "%s, I don't identify for beasts.", fname(ch->name).c_str());
         me->doTell(buf);
         return TRUE;
       }
