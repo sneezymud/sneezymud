@@ -195,23 +195,29 @@ int TMonster::charmeeStuff()
             stopFollower(TRUE);
             return TRUE;
           }
-          if (!isDumbAnimal())
-            act("$n hollers, \"I'll save you master!\"",FALSE,this,0,0,TO_ROOM);
-          else
-            aiGrowl(tmp);
-          if (!::number(0,2)) {
-            act("$n has rescued you!",FALSE,this,0,master,TO_VICT);
-            act("$n has rescued $N.",TRUE,this,0,master,TO_NOTVICT);
-            stopFighting();
-            tmp->stopFighting();
-            master->stopFighting();
-            setCharFighting(tmp);
-	    tmp->setCharFighting(this);
-            tmp->addToWait(combatRound(1));
-          } else {
-            act("$n tries to rescue you but fails.",FALSE,this,0,master,TO_VICT);
-          }
-          addSkillLag(getSkillNum(SKILL_RESCUE), 0);
+	  
+	  if(!master->isPc() || IS_SET(specials.act, ACT_GUARDIAN)){
+	    if (!isDumbAnimal())
+	      act("$n hollers, \"I'll save you master!\"",
+		  FALSE,this,0,0,TO_ROOM);
+	    else
+	      aiGrowl(tmp);
+
+	    if (!::number(0,2)) {
+	      act("$n has rescued you!",FALSE,this,0,master,TO_VICT);
+	      act("$n has rescued $N.",TRUE,this,0,master,TO_NOTVICT);
+	      stopFighting();
+	      tmp->stopFighting();
+	      master->stopFighting();
+	      setCharFighting(tmp);
+	      tmp->setCharFighting(this);
+	      tmp->addToWait(combatRound(1));
+	    } else {
+	      act("$n tries to rescue you but fails.",
+		  FALSE,this,0,master,TO_VICT);
+	    }
+	    addSkillLag(getSkillNum(SKILL_RESCUE), 0);
+	  }
         }
       }
     } else {
