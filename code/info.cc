@@ -468,7 +468,7 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
     llen_diff += word.length() - swlen;
 
     // if the word is too long to fit on the current line
-    if ((line.length() + 1) + (word.length() + 1) >= (80 + llen_diff)) {
+    if ((line.length() + 1) + (word.length() + 1) >= (79 + llen_diff)) {
 
       if (iter!=words.end()) {
         line += "\n\r";
