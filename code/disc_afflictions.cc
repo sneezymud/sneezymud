@@ -2095,19 +2095,28 @@ int disease(TBeing * caster, TBeing * victim, int level, byte bKnown)
     return SPELL_FAIL;
   }
 
-  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_DISEASE)) {
+  if (bSuccess(caster, bKnown, caster->getPerc(), SPELL_DISEASE)){
     caster->reconcileHurt(victim, discArray[SPELL_DISEASE]->alignMod);
 
-    act("$d brings forth diseased vermin to impair $N.",
-        FALSE, caster, 0, victim, TO_CHAR);
-    act("$d brings forth diseased vermin to impair you.",
-        FALSE, caster, 0, victim, TO_VICT);
-    act("$d brings forth diseased vermin to impair $N.",
-        FALSE, caster, 0, victim, TO_NOTVICT);
+    if(!genericDisease(victim, level)){
+      act("$d refuses to disease $N any more.",
+	  FALSE, caster, 0, victim, TO_CHAR);
+      act("$d refuses to disease you any more.",
+	  FALSE, caster, 0, victim, TO_VICT);
+      act("$d refuses to disease $N any more.",
+	  FALSE, caster, 0, victim, TO_NOTVICT);
 
-    genericDisease(victim, level);
+      return SPELL_FAIL;
+    } else {
+      act("$d brings forth diseased vermin to impair $N.",
+	  FALSE, caster, 0, victim, TO_CHAR);
+      act("$d brings forth diseased vermin to impair you.",
+	  FALSE, caster, 0, victim, TO_VICT);
+      act("$d brings forth diseased vermin to impair $N.",
+	  FALSE, caster, 0, victim, TO_NOTVICT);
 
-    return SPELL_SUCCESS;
+      return SPELL_SUCCESS;
+    }
   } else {
     caster->deityIgnore();
     return SPELL_FAIL;

@@ -393,7 +393,7 @@ extern void generate_mob_index();
 extern void generic_cleanup();
 extern int listAccount(string, string &);
 extern bool genericBless(TBeing *, TBeing *, int, bool);
-extern void genericDisease(TBeing *, int);
+extern bool genericDisease(TBeing *, int);
 extern void genericCurse(TBeing *, TBeing *, int, spellNumT);
 extern string displayDifficulty(spellNumT skill);
 extern void generic_dirlist(const char *, const TBeing *);

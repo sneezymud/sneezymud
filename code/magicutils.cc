@@ -1799,7 +1799,7 @@ bool genericBless(TBeing *c, TBeing *v, int level, bool crit)
   return success;
 }
 
-void genericDisease(TBeing *vict, int level)
+bool genericDisease(TBeing *vict, int level)
 {
   // assumes check for isImmune already made
   affectedData aff;
@@ -1808,25 +1808,24 @@ void genericDisease(TBeing *vict, int level)
   aff.level = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
+  aff.duration = level * UPDATES_PER_MUDHOUR / 3;
 
-  if (level < 30) {
-    if (50 + level < ::number(0,99)) {
-      aff.duration = level * UPDATES_PER_MUDHOUR / 3;
-      aff.modifier = DISEASE_FLU;
-    } else {
-      aff.modifier = DISEASE_COLD;
-      aff.duration = level * UPDATES_PER_MUDHOUR / 3;
-    }
-  } else {
-    if (20 + level < ::number(0,99)) {
-      aff.duration = level * UPDATES_PER_MUDHOUR / 3;
-      aff.modifier = DISEASE_LEPROSY;
-    } else {
-      aff.modifier = DISEASE_FLU;
-      aff.duration = level * UPDATES_PER_MUDHOUR / 3;
-    }
-  }
+  vector <diseaseTypeT> diseases;
 
+  if(!vict->hasDisease(DISEASE_COLD))
+    diseases.push_back(DISEASE_COLD);
+
+  if(!vict->hasDisease(DISEASE_FLU) && level >=15)
+    diseases.push_back(DISEASE_FLU);
+
+  if(!vict->hasDisease(DISEASE_LEPROSY) && level >= 30)
+    diseases.push_back(DISEASE_LEPROSY);
+  
+  if(!diseases.size())
+    return false;
+
+  aff.modifier = diseases[::number(0,diseases.size()-1)];
+  
   // we've already applied a raw immunity check to prevent entirely
   // however, let immunities also decrease duration
   aff.duration *= (100 - vict->getImmunity(IMMUNE_DISEASE));
@@ -1834,6 +1833,8 @@ void genericDisease(TBeing *vict, int level)
 
   vict->affectTo(&aff);
   disease_start(vict, &aff);
+
+  return true;
 }
 
 void genericCurse(TBeing *c, TBeing *v, int level, spellNumT spell)
