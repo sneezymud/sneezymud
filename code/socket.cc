@@ -959,6 +959,14 @@ void pingData()
   fflush(p);
 }
 
+void pulseLog(sstring name, TTiming timer, int pulse)
+{
+  if(!gameLoopTiming)
+    return;
+
+  vlogf(LOG_MISC, fmt("%i %i) %s: %i") % 
+	pulse % (pulse%12) % name % (int)(timer.getElapsedReset()*1000000));
+}
 
 int TMainSocket::gameLoop()
 {
@@ -987,8 +995,8 @@ int TMainSocket::gameLoop()
     
     if(gameLoopTiming){
       count=((timespent.tv_sec*1000000)+timespent.tv_usec);
-
-      vlogf(LOG_MISC, fmt("%i %i) gameLoop2: %i (sleep = %i)") %
+      
+      vlogf(LOG_MISC, fmt("%i %i) handleTimeAndSockets: %i (sleep = %i)") %
 	    pulse % (pulse%12) % 
 	    (int)((t.getElapsedReset()*1000000)-count) % count);
     }
@@ -999,35 +1007,40 @@ int TMainSocket::gameLoop()
 
     // interport communication
     mudRecvMessage();
+    pulseLog("mudRecvMessage", t, pulse);
 
     if(pl.wayslowpulse){
       checkForRepo();
       do_check_mail();
     }
 
-    if(gameLoopTiming){
-      vlogf(LOG_MISC, fmt("%i %i) gameLoop3: %i") % 
-	    pulse % (pulse%12) % (int)(t.getElapsedReset()*1000000));
-    }
-
+    pulseLog("wayslowpulse", t, pulse);
 
     if (pl.pulse_tick) {
       // these are done per tick (15 mud minutes)
       doGlobalRoomStuff();
+      pulseLog("doGlobalRoomStuff", t, pulse);
+
       deityCheck(FALSE);
+      pulseLog("deityCheck", t, pulse);
+
       apocCheck();
+      pulseLog("apocCheck", t, pulse);
+
       save_factions();
+      pulseLog("save_factions", t, pulse);
+
       save_newfactions();
+      pulseLog("save_newfactions", t, pulse);
+
       weatherAndTime(1);
+      pulseLog("weatherAndTime", t, pulse);
 
       count=updateWholist();
+      pulseLog("updateWholist", t, pulse);
+
       updateUsagelogs(count);
-    }
-
-
-    if(gameLoopTiming){
-      vlogf(LOG_MISC, fmt("%i %i) gameLoop4: %i") % 
-	    pulse % (pulse%12) % (int)(t.getElapsedReset()*1000000));
+      pulseLog("updateUsagelogs", t, pulse);
     }
 
 
@@ -1043,39 +1056,46 @@ int TMainSocket::gameLoop()
 
     if (pl.combat){
       perform_violence(pulse);
+      pulseLog("perform_violence", t, pulse);
     }
-
-
-    if(gameLoopTiming){
-      vlogf(LOG_MISC, fmt("%i %i) gameLoop5: %i") % 
-	    pulse % (pulse%12) % (int)(t.getElapsedReset()*1000000));
-    }
-
 
     if (pl.pulse_mudhour) {
       // these are done per mud hour
       recalcFactionPower();
+      pulseLog("recalcFactionPower", t, pulse);
 
       // adjust zones for nuking
-      if (nuke_inactive_mobs)
+      if (nuke_inactive_mobs){
 	nukeInactiveMobs();
+	pulseLog("nukeInactiveMobs", t, pulse);
+      }
 
       // weather and time stuff
-      if (time_info.hours == 1)
+      if (time_info.hours == 1){
 	update_time();
+	pulseLog("update_time", t, pulse);
+      }
 
       zone_update();
-      do_components(-1);
-      launch_caravans();
-      updateAvgPlayers();
-      checkGoldStats();
-      sendAutoTips();
-      pingData();
-    }
+      pulseLog("zone_update", t, pulse);
 
-    if(gameLoopTiming){
-      vlogf(LOG_MISC, fmt("%i %i) gameLoop6: %i") % 
-	    pulse % (pulse%12) % (int)(t.getElapsedReset()*1000000));
+      do_components(-1);
+      pulseLog("do_components", t, pulse);
+
+      launch_caravans();
+      pulseLog("launch_caravans", t, pulse);
+
+      updateAvgPlayers();
+      pulseLog("updateAvgPlayers", t, pulse);
+
+      checkGoldStats();
+      pulseLog("checkGoldStats", t, pulse);
+
+      sendAutoTips();
+      pulseLog("sendAutoTips", t, pulse);
+
+      pingData();
+      pulseLog("pingData", t, pulse);
     }
 
 
@@ -1085,7 +1105,7 @@ int TMainSocket::gameLoop()
 
     // room procs
     call_room_specials();
-
+    pulseLog("call_room_specials", t, pulse);
 
 
     if(gameLoopTiming)
@@ -1106,8 +1126,7 @@ int TMainSocket::gameLoop()
       vlogf(LOG_MISC, fmt("%i %i) split pulses: %s") % 
 	    oldpulse % (oldpulse%12) % pl.showPulses());
 
-      vlogf(LOG_MISC, fmt("%i %i) gameLoop1: %i") % 
-	    oldpulse % (oldpulse%12) % (int)(t.getElapsedReset()*1000000));
+      pulseLog("gameLoop1", t, oldpulse);
     }
 
     // handle pulse stuff for objects
@@ -1154,10 +1173,11 @@ int TMainSocket::gameLoop()
       //  an argument - peel 04/20/04)
       pulse = 0;
     }
-
+    pulseLog("lag_info", t, pulse);
 
     systask->CheckTask();
     tics++;			// tics since last checkpoint signal 
+    pulseLog("CheckTask", t, pulse);
   }
   return TRUE;
 }
