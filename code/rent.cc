@@ -2785,24 +2785,30 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
   if (cmd == CMD_GENERIC_PULSE){
     TThing *t;
     TBeing *tbt;
-    
+
     // Toss out idlers
-    for (t = recep->roomp->getStuff(); t; t = t->nextThing) {
-      if ((tbt = dynamic_cast<TBeing *>(t)) &&
-	  tbt->getTimer() > 1 && 
-          !tbt->isImmortal()) {
-        if ((tbt->master) && tbt->master->inRoom() == tbt->inRoom()) {
-	  // vlogf(LOG_DASH, fmt("saving %s from loitering code, master is %s, room is (%d == %d)") % tbt->getName() %
-	  //	tbt->master->getName() % tbt->inRoom() % tbt->master->inRoom());
-	  continue;
-        }
-	recep->doSay("Hey, no loitering!  Make room for the other customers.");
-	for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-	  if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
-	    act("$n throws you from the inn.", FALSE, recep, 0, tbt, TO_VICT);
-	    act("$n throws $N from the inn.", FALSE, recep, 0, tbt, TO_NOTVICT);
-	    recep->throwChar(tbt, dir, FALSE, SILENT_NO, true);
-	    return TRUE;
+    if(recep->spec==SPEC_RECEPTIONIST){
+      // we check the proc, because we have a butler proc for player homes
+      // obviously we don't want to toss out people in their homes
+      for (t = recep->roomp->getStuff(); t; t = t->nextThing) {
+	if ((tbt = dynamic_cast<TBeing *>(t)) &&
+	    tbt->getTimer() > 1 && 
+	    !tbt->isImmortal()) {
+	  if ((tbt->master) && tbt->master->inRoom() == tbt->inRoom()) {
+	    // vlogf(LOG_DASH, fmt("saving %s from loitering code, master is %s, room is (%d == %d)") % tbt->getName() %
+	    //	tbt->master->getName() % tbt->inRoom() % tbt->master->inRoom());
+	    continue;
+	  }
+	  recep->doSay("Hey, no loitering!  Make room for the other customers.");
+	  for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
+	    if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
+	      act("$n throws you from the inn.",
+		  FALSE, recep, 0, tbt, TO_VICT);
+	      act("$n throws $N from the inn.",
+		  FALSE, recep, 0, tbt, TO_NOTVICT);
+	      recep->throwChar(tbt, dir, FALSE, SILENT_NO, true);
+	      return TRUE;
+	    }
 	  }
 	}
       }

@@ -6745,6 +6745,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "brightmoon janitor", brightmoonJanitor},
   {FALSE, "garbage convoy", garbageConvoy},
   {FALSE, "signmaker", signMaker},
+  {TRUE, "butler", receptionist},
 // replace non-zero, bogus_mob_procs above before adding
 };
 
