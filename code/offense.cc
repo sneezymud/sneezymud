@@ -14,6 +14,7 @@
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
 #include "obj_base_cup.h"
+#include "obj_drinkcon.h"
 #include "obj_base_clothing.h"
 #include "obj_bag.h"
 
@@ -1499,12 +1500,12 @@ int TBaseCup::freezeObject(TBeing *ch, int perc)
     char buf [256];
     if (ch) {
       sprintf(buf, "The chill causes the %s in your $o to freeze.",
-           DrinkInfo[getDrinkType()]->name);
+           liquidInfo[getDrinkType()]->name);
       act(buf,TRUE,ch, this,0,TO_CHAR, ANSI_BLUE);
       act("$p is damaged serverely by the expanding ice!",TRUE,ch, this,0,TO_CHAR, ANSI_BLUE);
     } else {
       sprintf(buf, "The chill causes the %s in $n to freeze.",
-           DrinkInfo[getDrinkType()]->name);
+           liquidInfo[getDrinkType()]->name);
       act(buf,TRUE,this,0,0,TO_ROOM);
       act("$n is damaged serverely by the expanding ice!",TRUE,this,0,0,TO_ROOM);
     }

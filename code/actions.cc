@@ -10,6 +10,7 @@
 #include "obj_pool.h"
 #include "obj_plant.h"
 #include "disc_sorcery.h"
+#include "liquids.h"
 
 class socialMessg {
   public:
@@ -675,7 +676,7 @@ void TBeing::doPee(const sstring &argument)
     }
   } else {
     for(liquid=MIN_DRINK_TYPES;liquid<MAX_DRINK_TYPES;liquid++){
-      if(is_abbrev(arg, stripColorCodes(DrinkInfo[liquid]->name)))
+      if(is_abbrev(arg, stripColorCodes(liquidInfo[liquid]->name)))
 	break;
     }
     if(liquid==MAX_DRINK_TYPES)

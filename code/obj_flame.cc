@@ -14,6 +14,7 @@
 #include "obj_tool.h"
 #include "obj_flame.h"
 #include "obj_light.h"
+#include "liquids.h"
 #include "obj_drinkcon.h"
 
 TFFlame::TFFlame() :
@@ -135,7 +136,8 @@ int TFFlame::pourWaterOnMe(TBeing *ch, TObj *sObj)
   TDrinkCon *dContainer = NULL;
   TFuel *fContainer = NULL;
   char Buf[2][256];
-  int drunk=0, type=0;
+  int drunk=0;
+  liqTypeT type=LIQ_WATER;
 
   if (!(dContainer = dynamic_cast<TDrinkCon *>(sObj)) &&
       !(fContainer = dynamic_cast<TFuel *>(sObj))) {
@@ -151,10 +153,10 @@ int TFFlame::pourWaterOnMe(TBeing *ch, TObj *sObj)
   // substance is most likely liquor, so we flare up and add to the decay
   // instead of removing from it.
   // Also.  Are we adding lantern fuel to this?  If so, *3 the strength.
-  if (fContainer || (drunk = DrinkInfo[(type = dContainer->getDrinkType())]->drunk) > 0) {
+  if (fContainer || (drunk = liquidInfo[(type = dContainer->getDrinkType())]->drunk) > 0) {
     char lName[256] = "<r>lantern fuel<z>";
     if (dContainer) {
-      strcpy(lName, DrinkInfo[type]->name);
+      strcpy(lName, liquidInfo[type]->name);
       dContainer->setDrinkUnits(0);
     } else {
       drunk = fContainer->getCurFuel()*3;
@@ -193,9 +195,9 @@ int TFFlame::pourWaterOnMe(TBeing *ch, TObj *sObj)
     // If object is left, then we 'crack and pop'
     if (obj_flags.decay_time > 0) {
       ch->sendTo(COLOR_OBJECTS, fmt("%s lets off a large crack and pop as you pour some %s on it.\n\r") %
-                 sstring(shortDescr).cap() % DrinkInfo[dContainer->getDrinkType()]->name);
+                 sstring(shortDescr).cap() % liquidInfo[dContainer->getDrinkType()]->name);
       sprintf(Buf[0], "%s dies down a little as $n pours %s over it.",
-              sstring(shortDescr).cap().c_str(), DrinkInfo[dContainer->getDrinkType()]->name);
+              sstring(shortDescr).cap().c_str(), liquidInfo[dContainer->getDrinkType()]->name);
       act(Buf[0], TRUE, ch, NULL, NULL, TO_ROOM);
       decayMe();
     } else {
@@ -606,8 +608,8 @@ void TBeing::igniteObject(const char *argument, TThing *fObj)
 // Non-Class partly related functions:
 int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
 {
-  int  type  = 0,
-       drunk = 0,
+  liqTypeT  type  = LIQ_WATER;
+  int  drunk = 0,
        size  = 0,
        rc    = 1;
   char Buf[256];
@@ -631,16 +633,16 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
     return true;
   }
 
-  drunk = DrinkInfo[(type = dContainer->getDrinkType())]->drunk;
+  drunk = liquidInfo[(type = dContainer->getDrinkType())]->drunk;
 
   if(getPosition() <= POSITION_STUNNED){
     // unconscious person, let's pour it in their mouth instead
     sprintf(Buf, "You carefully pour %s into $N's mouth!", 
-	    DrinkInfo[type]->name);
+	    liquidInfo[type]->name);
     act(Buf, TRUE, ch, 0, this, TO_CHAR);
-    sprintf(Buf, "$n just poured %s into your mouth.", DrinkInfo[type]->name);
+    sprintf(Buf, "$n just poured %s into your mouth.", liquidInfo[type]->name);
     act(Buf, TRUE, ch, 0, this, TO_VICT);
-    sprintf(Buf, "$n just poured %s into $N's mouth.", DrinkInfo[type]->name);
+    sprintf(Buf, "$n just poured %s into $N's mouth.", liquidInfo[type]->name);
     act(Buf, TRUE, ch, 0, this, TO_NOTVICT);
     
     setQuaffUse(TRUE);
@@ -650,11 +652,11 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
     return true;
   }
 
-  sprintf(Buf, "You pour %s all over $N!", DrinkInfo[type]->name);
+  sprintf(Buf, "You pour %s all over $N!", liquidInfo[type]->name);
   act(Buf, TRUE, ch, 0, this, TO_CHAR);
-  sprintf(Buf, "$n just poured %s all over you!", DrinkInfo[type]->name);
+  sprintf(Buf, "$n just poured %s all over you!", liquidInfo[type]->name);
   act(Buf, TRUE, ch, 0, this, TO_VICT);
-  sprintf(Buf, "$n just poured %s all over $N!", DrinkInfo[type]->name);
+  sprintf(Buf, "$n just poured %s all over $N!", liquidInfo[type]->name);
   act(Buf, TRUE, ch, 0, this, TO_NOTVICT);
 
   // prevent people from using this at real low level to gain xp then suicide or something.
@@ -669,7 +671,7 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
 
   if (getMaterial() == MAT_FIRE) {
     int drunk;
-    if ((drunk = DrinkInfo[type]->drunk) > 0) {
+    if ((drunk = liquidInfo[type]->drunk) > 0) {
       act("$N suddenly flares up, but $E doesn't really look happy now.",
         TRUE, ch, 0, this, TO_CHAR);
       act("Yow!  You suddenly flare up, but that wasn't nice of them...",

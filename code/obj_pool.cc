@@ -7,6 +7,7 @@
 
 #include "stdsneezy.h"
 #include "obj_pool.h"
+#include "liquids.h"
 
 void TPool::setDrinkUnits(int n)
 {
@@ -78,7 +79,7 @@ void TPool::updateDesc()
 {
   int drinkindex=getDrinkIndex();
   char buf[256];
-  const char *liqname=DrinkInfo[getDrinkType()]->name;
+  const char *liqname=liquidInfo[getDrinkType()]->name;
   
   const char *poolname [] =
   {
@@ -220,8 +221,8 @@ void TPool::initPool(int amt, liqTypeT liq)
   setMaterial(MAT_WATER);
 
   buf = fmt("pool puddle %s %s") %
-    stripColorCodes(DrinkInfo[liq]->name) %
-    stripColorCodes(DrinkInfo[liq]->color);
+    stripColorCodes(liquidInfo[liq]->name) %
+    stripColorCodes(liquidInfo[liq]->color);
   delete [] name;
   name = mud_str_dup(buf);
   

@@ -11,6 +11,7 @@
 #include "obj_potion.h"
 #include "shop.h"
 #include "database.h"
+#include "liquids.h"
 
 TPotion::TPotion() :
   TBaseCup()
@@ -63,7 +64,7 @@ bool TPotion::isSimilar(const TThing *t) const
 int TPotion::getValue() const
 {
   int cost_per, value;
-  cost_per = DrinkInfo[getDrinkType()]->price;
+  cost_per = liquidInfo[getDrinkType()]->price;
   value = (int) (getDrinkUnits() * cost_per);
   
   if (obj_flags.cost <= 1) {
@@ -79,7 +80,7 @@ int TPotion::objectSell(TBeing *ch, TMonster *keeper)
 {
   sstring buf;
 
-  if(!DrinkInfo[getDrinkType()]->potion){
+  if(!liquidInfo[getDrinkType()]->potion){
     keeper->doTell(ch->getName(), "Hey, that's not a potion!.");
     return TRUE;
   }

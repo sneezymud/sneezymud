@@ -90,6 +90,7 @@
 #include "obj_cannon.h"
 #include "obj_tooth_necklace.h"
 #include "obj_trash_pile.h"
+#include "liquids.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -102,6 +103,8 @@ TMonster *pawnman = NULL;
 TPCorpse *pc_corpse_list = NULL;
 // table of reset data 
 vector<zoneData>zone_table(0);
+
+liqInfoT liquidInfo;
 
 int top_of_script = 0;
 
@@ -258,8 +261,6 @@ void bootDb(void)
   bootZones();
 
   // must be done before loading objects
-  bootPulse("Loading drink-type information.");
-  assign_drink_types();
   bootPulse("Loading drug-type information.");
   assign_drug_info();
 

@@ -52,6 +52,7 @@ class TTable;
 class TBaseContainer;
 class TOpenContainer;
 class boardStruct;
+class liqInfoT;
 
 const int MAX_BUF_LENGTH              = 240;
 
@@ -156,25 +157,6 @@ struct show_room_zone_struct {
   int startblank, lastblank;
   int bottom, top;
   sstring sb;
-};
-
-class drinkInfo {
-  public:
-  int drunk;
-  int hunger;
-  int thirst;
-  bool potion;
-  bool poison;
-  const char * color;
-  const char * name;
-  int price;
-
-  drinkInfo(int, int, int, bool, bool, const char *, const char *, int);
-  drinkInfo & operator=(const drinkInfo &a);
-  ~drinkInfo();
-
-  private:
-  drinkInfo();  // deny usage in this format
 };
 
 class snoopData {

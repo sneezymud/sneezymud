@@ -4,7 +4,7 @@
 #include "obj_gun.h"
 #include "shop.h"
 #include "shopowned.h"
-
+#include "liquids.h"
 
 TGenWeapon::TGenWeapon() :
   TBaseWeapon()
@@ -147,7 +147,7 @@ sstring TGenWeapon::statObjInfo() const
 
   if(isPoisoned()){
     sprintf(buf, "Poisoned : %s (%i)",
-	    DrinkInfo[getPoison()]->name, (int)getPoison());
+	    liquidInfo[getPoison()]->name, (int)getPoison());
     a += buf;
   }
 

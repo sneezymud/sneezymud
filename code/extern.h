@@ -73,7 +73,6 @@ extern bool getall(const char *, char *);
 extern int getabunch(const char *, char *);
 extern bool is_number(const sstring &);
 extern void bisect_arg(const char *, int *, char *, const char * const array[]);
-
   extern const char * heraldcolors[];
   extern const char * heraldcodes[];
 extern const char * const card_names[14];
@@ -414,7 +413,6 @@ extern bool checkAttuneUsage(TBeing *, int *, int *, TVial **, TSymbol *);
 extern const sstring getWizPowerName(wizPowerT); 
 extern void setWizPowers(const TBeing *, TBeing *, const sstring &);
 extern void remWizPowers(const TBeing *, TBeing *, const char *);
-extern void assign_drink_types();
 extern void assign_drug_info();
 extern drugTypeT mapFileToDrug(int);
 extern int mapDrugToFile(drugTypeT);

@@ -12,6 +12,7 @@
 #include "obj_table.h"
 #include "obj_book.h"
 #include "obj_base_cup.h"
+#include "obj_drinkcon.h"
 
 void TBaseCup::lookObj(TBeing *ch, int) const
 {
@@ -35,7 +36,7 @@ void TBaseCup::lookObj(TBeing *ch, int) const
   else {
     temp = ((getDrinkUnits() * 3) / getMaxDrinkUnits());
     ch->sendTo(COLOR_OBJECTS, fmt("It's %sfull of a %s liquid.\n\r") %
-          fullness[temp] % DrinkInfo[getDrinkType()]->color);
+          fullness[temp] % liquidInfo[getDrinkType()]->color);
   }
 }
 

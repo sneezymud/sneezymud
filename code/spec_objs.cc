@@ -79,6 +79,7 @@
 #include "disc_fire.h"
 #include "obj_note.h"
 #include "pathfinder.h"
+#include "liquids.h"
 
 // CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye
@@ -2217,7 +2218,7 @@ int squirtGun(TBeing *vict, cmdTypeT cmd, const char *Parg, TObj *o, TObj *)
       ch->sendTo("You don't see them here.\n\r");
       return TRUE;
     } else {
-      const sstring liqname =DrinkInfo[gun->getDrinkType()]->name;
+      const sstring liqname =liquidInfo[gun->getDrinkType()]->name;
       int shot = (::number(1,min(5,gun->getDrinkUnits())));
       gun->addToDrinkUnits(-shot);
       ch->dropPool(shot, gun->getDrinkType());

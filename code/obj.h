@@ -34,6 +34,8 @@ extern TObjList object_list;
 
 extern TObj *read_object(int nr, readFileTypeT type);
 
+extern liqInfoT liquidInfo;
+
 
 // weight of 1 sip/unit of drink
 // 128 fl.oz = 1 gallon = 8.337 lb. (for water)
@@ -374,8 +376,6 @@ enum liqTypeT {
 };
 extern liqTypeT & operator++(liqTypeT &, int);
 const liqTypeT MIN_DRINK_TYPES = liqTypeT(0);
-
-extern drinkInfo * DrinkInfo[MAX_DRINK_TYPES];
 
 /* special addition for drinks */
 const unsigned int DRINK_POISON  = (1<<0);

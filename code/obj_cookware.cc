@@ -11,6 +11,7 @@
 #include "obj_cookware.h"
 #include "obj_open_container.h"
 #include "obj_pool.h"
+#include "liquids.h"
 
 TCookware::TCookware() :
   TOpenContainer()
@@ -99,11 +100,11 @@ void TCookware::pourMeIntoDrink2(TBeing *ch, TBaseCup *from)
   // let them know
   sstring buf;
   buf = fmt("You pour %s into %s.\n\r") %
-    DrinkInfo[from->getDrinkType()]->name % ch->objs(this);
+    liquidInfo[from->getDrinkType()]->name % ch->objs(this);
   act(buf, FALSE, ch, 0, 0, TO_CHAR);
 
   buf = fmt("$n pours %s into %s.\n\r") %
-    DrinkInfo[from->getDrinkType()]->name % ch->objs(this);
+    liquidInfo[from->getDrinkType()]->name % ch->objs(this);
   act(buf, TRUE, ch, 0, 0, TO_ROOM);
 
   

@@ -10,6 +10,7 @@
 
 #include "stdsneezy.h"
 #include "obj_base_cup.h"
+#include "obj_drinkcon.h"
 
 TBaseCup::TBaseCup() :
   TObj(),
@@ -121,17 +122,17 @@ void TBaseCup::setDrinkType(liqTypeT n)
 
 int TBaseCup::getLiqDrunk() const
 {
-  return DrinkInfo[liquidType]->drunk;
+  return liquidInfo[liquidType]->drunk;
 }
 
 int TBaseCup::getLiqHunger() const
 {
-  return DrinkInfo[liquidType]->hunger;
+  return liquidInfo[liquidType]->hunger;
 }
 
 int TBaseCup::getLiqThirst() const
 {
-  return DrinkInfo[liquidType]->thirst;
+  return liquidInfo[liquidType]->thirst;
 }
 
 
@@ -156,7 +157,7 @@ void TBaseCup::fillMe(const TBeing *ch, liqTypeT liq)
     sstring mesg;
 
     mesg = fmt("$p is filled with %s, but quickly dilutes.") %
-      DrinkInfo[liq]->name;
+      liquidInfo[liq]->name;
 
     act(mesg, FALSE, ch, this, 0, TO_ROOM);
     act(mesg, FALSE, ch, this, 0, TO_CHAR);
@@ -262,7 +263,7 @@ sstring TBaseCup::statObjInfo() const
           (isDrinkConFlag(DRINK_POISON) ? "true" : "false"),
           (isDrinkConFlag(DRINK_PERM) ? "true" : "false"),
           (isDrinkConFlag(DRINK_SPILL) ? "true" : "false"),
-          DrinkInfo[getDrinkType()]->name, getDrinkType());
+          liquidInfo[getDrinkType()]->name, getDrinkType());
 
   sstring a(buf);
   return a;
@@ -298,7 +299,7 @@ bool TBaseCup::waterSource()
 
 void TBaseCup::nukeFood()
 {
-  if(DrinkInfo[getDrinkType()]->potion)
+  if(liquidInfo[getDrinkType()]->potion)
     return;
 
   genericEmpty();
@@ -314,7 +315,7 @@ void TBaseCup::evaporate(TBeing *ch, silentTypeT tSilent)
 
       if (!tSilent)
         ch->sendTo(COLOR_OBJECTS, fmt("The desert heat causes some of your %s to evaporate.\n\r") %
-            DrinkInfo[getDrinkType()]->name);
+            liquidInfo[getDrinkType()]->name);
     }
   }
 }
@@ -402,7 +403,7 @@ void TBaseCup::updateDesc()
   if(getDrinkUnits()<=0){
     liquid="empty";
   } else {
-    liquid=DrinkInfo[getDrinkType()]->color;
+    liquid=liquidInfo[getDrinkType()]->color;
   }
 
   while (newname.find("$$l") != sstring::npos){
@@ -433,7 +434,7 @@ void TBaseCup::updateDesc()
   if(getDrinkUnits()<=0){
     liquid="an empty";
   } else {
-    liquid = fmt("a %s") % DrinkInfo[getDrinkType()]->color;
+    liquid = fmt("a %s") % liquidInfo[getDrinkType()]->color;
   }
 
   while (newname.find("$$al") != sstring::npos){
@@ -465,7 +466,7 @@ void TBaseCup::updateDesc()
   if(getDrinkUnits()<=0){
     liquid="nothing";
   } else {
-    liquid = fmt("%s") % DrinkInfo[getDrinkType()]->name;
+    liquid = fmt("%s") % liquidInfo[getDrinkType()]->name;
   }
 
   while (newname.find("$$nl") != sstring::npos){

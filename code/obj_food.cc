@@ -14,6 +14,7 @@
 #include "shop.h"
 #include "obj_food.h"
 #include "obj_base_cup.h"
+#include "liquids.h"
 #include "obj_pool.h"
 #include "disc_aegis.h"
 #include "disc_shaman_armadillo.h"
@@ -150,16 +151,16 @@ int TBaseCup::drinkMe(TBeing *ch)
     act("Your stomach can't contain anymore!", FALSE, ch, 0, 0, TO_CHAR);
     return FALSE;
   }
-  sprintf(buf, "$n drinks %s from $p.", DrinkInfo[getDrinkType()]->name);
+  sprintf(buf, "$n drinks %s from $p.", liquidInfo[getDrinkType()]->name);
   act(buf, TRUE, ch, this, 0, TO_ROOM);
-  ch->sendTo(COLOR_OBJECTS, fmt("You drink the %s.\n\r") % DrinkInfo[getDrinkType()]->name);
+  ch->sendTo(COLOR_OBJECTS, fmt("You drink the %s.\n\r") % liquidInfo[getDrinkType()]->name);
 
   // a single drink "should" average about 8 oz.
   // this means have to drink 3-4 to get unthirsty so go with unreal value.
   if (getLiqDrunk() > 0) {
     amount = 10 * (25 - ch->getCond(THIRST)) / getLiqDrunk();
     amount = min(15, amount);
-  } else if(DrinkInfo[liquidType]->potion){
+  } else if(liquidInfo[liquidType]->potion){
     amount = 5;
   } else
     amount = ::number(6, 20);
@@ -257,7 +258,7 @@ int TBaseCup::drinkMe(TBeing *ch)
   }
 
   
-  if(DrinkInfo[liquidType]->potion)
+  if(liquidInfo[liquidType]->potion)
     doLiqSpell(ch, ch, getDrinkType(), amount);
   
 
@@ -484,7 +485,7 @@ void TBaseCup::pourMeIntoDrink2(TBeing *ch, TBaseCup *from_obj)
     return;
   }
   ch->sendTo(COLOR_OBJECTS, fmt("You pour %s into %s.\n\r") % 
-          DrinkInfo[from_obj->getDrinkType()]->name % ch->objs(this));
+          liquidInfo[from_obj->getDrinkType()]->name % ch->objs(this));
 
   // set liquid type
   setDrinkType(from_obj->getDrinkType());
@@ -583,7 +584,7 @@ void TBaseCup::sipMe(TBeing *ch)
   }
   act("You sip from the $o.", FALSE, ch, this, NULL, TO_CHAR);
   act("$n sips from the $o.", TRUE, ch, this, 0, TO_ROOM);
-  ch->sendTo(COLOR_OBJECTS, fmt("It tastes like %s.\n\r") % DrinkInfo[getDrinkType()]->name);
+  ch->sendTo(COLOR_OBJECTS, fmt("It tastes like %s.\n\r") % liquidInfo[getDrinkType()]->name);
 
   if(ch->isVampire()){
     ch->sendTo("You drink the mortal food, but it has no affect on you.\n\r");
@@ -632,7 +633,7 @@ void TBaseCup::sipMe(TBeing *ch)
     }
   }
 
-  if(DrinkInfo[liquidType]->potion)
+  if(liquidInfo[liquidType]->potion)
     doLiqSpell(ch, ch, getDrinkType(), 1);
 
   if (!isDrinkConFlag(DRINK_PERM))

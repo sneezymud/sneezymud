@@ -156,7 +156,8 @@ LIBMISC=actions.o		ai_commands.o 		ai_reactions.o     \
 	talk.o 			task.o 			thing.o            \
 	toggle.o 		trap.o  		utility.o          \
 	weather.o 		sys_loot.o 		wiz_data.o         \
-	wiz_powers.o 		shopowned.o		corporation.o
+	wiz_powers.o 		shopowned.o		corporation.o	   \
+	liquids.o
 
 LIBMISC := $(sort $(addprefix $(OBJDIR), $(LIBMISC)))
 

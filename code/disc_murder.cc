@@ -7,6 +7,7 @@
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_base_cup.h"
+#include "obj_drinkcon.h"
 #include "obj_arrow.h"
 
 
@@ -936,9 +937,9 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
 
     weapon->setPoison(getDrinkType());
     
-    s = fmt("You coat $p with %s.") % DrinkInfo[getDrinkType()]->name;
+    s = fmt("You coat $p with %s.") % liquidInfo[getDrinkType()]->name;
     act(s, FALSE, ch, weapon, NULL, TO_CHAR);
-    s = fmt("$n coats $p with %s.") % DrinkInfo[getDrinkType()]->name;
+    s = fmt("$n coats $p with %s.") % liquidInfo[getDrinkType()]->name;
     act(s, FALSE, ch, weapon, NULL, TO_ROOM);
   } else {
     if(critFail(ch, skill) != CRIT_F_NONE){
@@ -959,9 +960,9 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
     } else {
       weapon->setPoison(LIQ_WATER);
       
-      s = fmt("You coat $p with %s.") % DrinkInfo[getDrinkType()]->name;
+      s = fmt("You coat $p with %s.") % liquidInfo[getDrinkType()]->name;
       act(s, FALSE, ch, weapon, NULL, TO_CHAR);
-      s = fmt("$n coats $p with %s.") % DrinkInfo[getDrinkType()]->name;
+      s = fmt("$n coats $p with %s.") % liquidInfo[getDrinkType()]->name;
       act(s, FALSE, ch, weapon, NULL, TO_ROOM);
     }
   }

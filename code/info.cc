@@ -34,6 +34,7 @@
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
 #include "obj_base_cup.h"
+#include "obj_drinkcon.h"
 #include "obj_base_clothing.h"
 #include "obj_magic_item.h"
 #include "obj_potion.h"
@@ -3921,7 +3922,7 @@ void TThing::describeContains(const TBeing *ch) const
 void TBaseCup::describeContains(const TBeing *ch) const
 {
   if (getDrinkUnits())
-    ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have some %s liquid in it...\n\r") % sstring(getName()).cap() % DrinkInfo[getDrinkType()]->color);
+    ch->sendTo(COLOR_OBJECTS, fmt("%s seems to have some %s liquid in it...\n\r") % sstring(getName()).cap() % liquidInfo[getDrinkType()]->color);
 }
 
 void TFood::describeCondition(const TBeing *ch) const
