@@ -166,6 +166,21 @@ bool TBeing::validMove(dirTypeT cmd)
     return FALSE;
   } 
   if (IS_SET(exitp->condition, EX_CLOSED)) {
+  // jesus
+    if (isAffected(AFF_SHADOW_WALK) && !riding) {
+      int perc = getSkillValue(SPELL_SHADOW_WALK);
+      int diff = exitp->lock_difficulty;
+      if (perc > diff) {
+	act( "$n's transparent body passes through the barrier!",
+	     TRUE, this, 0, NULL, TO_ROOM, NULL, (isPlayerAction(PLR_STEALTH) ? MAX_MORT : 0));
+	sendTo("You walk directly through the barrier!\n\r");
+	return TRUE;
+      } else {
+	sendTo("You attempt to walk through a solid barrier and fail.\n\r");
+        notLegalMove();
+        return FALSE;
+      }
+    }
     if (isImmortal() || IS_SET(specials.act, ACT_GHOST)) {
       act( "$n's body splits into a cloud of atoms before your eyes!",
           TRUE, this, 0, NULL, TO_ROOM, NULL, (isPlayerAction(PLR_STEALTH) ? MAX_MORT : 0));
@@ -260,21 +275,6 @@ bool TBeing::validMove(dirTypeT cmd)
     if (isCombatMode(ATTACK_BERSERK)) {
       act("You can't go into that place of tranquility while berserking.",TRUE,this,0,0,TO_CHAR);
       return FALSE;
-    }
-  }
-  if (IS_SET(exitp->condition, EX_CLOSED)) {
-    if (isAffected(AFF_SHADOW_WALK) && !riding) {
-      int chnum = ::number(0,3);
-      if (chnum == 1) {
-      act( "$n's transparent body passes through the barrier!",
-          TRUE, this, 0, NULL, TO_ROOM, NULL, (isPlayerAction(PLR_STEALTH) ? MAX_MORT : 0));
-      sendTo("You walk directly through the barrier!\n\r");
-      return TRUE;
-      } else {
-	sendTo("You attempt to walk through a solid barrier and fail.\n\r");
-        notLegalMove();
-        return FALSE;
-      }
     }
   }
   return TRUE;
