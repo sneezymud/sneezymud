@@ -60,10 +60,13 @@ bool TChest::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
 
 void TChest::lowCheck()
 {
+#if 0
+  // this is retarded
   if (canWear(ITEM_TAKE)) {
     vlogf(LOG_LOW, "Chest (%s:%d) set takeable.  Removing take flag.",
            getName(), objVnum());                             
     remObjStat(ITEM_TAKE);
   }                                                           
+#endif
   TOpenContainer::lowCheck();                                     
 }
