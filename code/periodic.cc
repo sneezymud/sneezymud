@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: periodic.cc,v $
+// Revision 1.4  1999/09/17 06:36:23  peel
+// changed burn message frequency
+//
 // Revision 1.3  1999/09/17 06:23:35  peel
 // tidied up soome of the burning code
 //
@@ -1204,7 +1207,7 @@ int TObj::objectTickUpdate(int pulse)
 
     dropSmoke(::number(1,6));
 
-    switch(::number(0, 4)){
+    switch(::number(0, 3)){
       case 0:
 	if(ch){
 	  act("Your $o crackles merrily as it <r>burns<1> down.",
