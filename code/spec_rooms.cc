@@ -1716,7 +1716,7 @@ int BankTeleporter(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
     return FALSE;
 
   ++pulse;
-  if(pulse%150)
+  if(pulse%75)
     return FALSE;
   
   if(!rp->getZone()->isEmpty()){

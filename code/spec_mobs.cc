@@ -6531,6 +6531,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 }
 
 
+// this proc is kind of ugly, but it works
 int bankGuard(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *o)
 {
   Descriptor *i;
@@ -6538,7 +6539,8 @@ int bankGuard(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
   TBeing *victims[10], *vict;
   int saferooms[7]={31750, 31751, 31756, 31757, 31758, 31759, 31764};  
 
-  if(cmd != CMD_GENERIC_PULSE)
+  // only on pulse and only if we're not already hunting someone
+  if(cmd != CMD_GENERIC_PULSE || IS_SET(myself->specials.act, ACT_HUNTING))
     return FALSE;
 
   for (i = descriptor_list; i && v<=9; i = i->next){
@@ -6559,23 +6561,19 @@ int bankGuard(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
   if(!v)
     return FALSE;
 
-  if (!IS_SET(myself->specials.act, ACT_HUNTING)) {
-    vict=victims[::number(0,v-1)];
-    vlogf(LOG_PEEL, "bank guard hunting %s", vict->getName());
-    myself->setHunting(vict);
-    myself->addHated(vict);
-
-    for (followData *f = myself->followers; f; f = f->next) {
-      if(myself->inGroup(*f->follower)){
-	f->follower->addHated(vict);
-      }
+  vict=victims[::number(0,v-1)];
+  vlogf(LOG_PEEL, "bank guard hunting %s", vict->getName());
+  myself->setHunting(vict);
+  myself->addHated(vict);
+  
+  // set my followers to hate them too
+  for (followData *f = myself->followers; f; f = f->next) {
+    if(myself->inGroup(*f->follower)){
+      f->follower->addHated(vict);
     }
-
-
-    return TRUE;
   }
 
-  return FALSE;
+  return TRUE;
 }
 
 extern int grimhavenPosse(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
