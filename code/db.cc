@@ -538,18 +538,70 @@ void bootWorld(void)
   fclose(room_f);
 }
 
+
+#define FLIP_EASTWEST   (1<<0)
+#define FLIP_NORTHSOUTH (1<<1)
+#define FLIP_UPDOWN     (1<<2)
+#define FLIP_ALL        FLIP_EASTWEST+FLIP_NORTHSOUTH+FLIP_UPDOWN
+
+dirTypeT flip_dir(dirTypeT dir, int flip){
+  dirTypeT dir_outside=dir;
+
+  if(flip & FLIP_UPDOWN){
+    flip-=FLIP_UPDOWN;
+    
+    switch(dir){
+      case DIR_UP: dir_outside=DIR_DOWN; break;
+      case DIR_DOWN: dir_outside=DIR_UP; break;
+      default: break;
+    }
+  }
+
+  if(flip & FLIP_NORTHSOUTH){
+    flip-=FLIP_NORTHSOUTH;
+    
+    switch(dir){
+      case DIR_NORTH: dir_outside=DIR_SOUTH; break;
+      case DIR_SOUTH: dir_outside=DIR_NORTH; break;
+      case DIR_NORTHEAST: dir_outside=DIR_SOUTHEAST; break;
+      case DIR_NORTHWEST: dir_outside=DIR_SOUTHWEST; break;
+      case DIR_SOUTHEAST: dir_outside=DIR_NORTHEAST; break;
+      case DIR_SOUTHWEST: dir_outside=DIR_NORTHWEST; break;
+      default: break;
+    }
+  }
+  
+  if(flip & FLIP_EASTWEST){
+    flip-=FLIP_EASTWEST;
+
+    switch(dir){
+      case DIR_EAST: dir_outside=DIR_WEST; break;
+      case DIR_WEST: dir_outside=DIR_EAST; break;
+      case DIR_NORTHEAST: dir_outside=DIR_NORTHWEST; break;
+      case DIR_NORTHWEST: dir_outside=DIR_NORTHEAST; break;
+      case DIR_SOUTHEAST: dir_outside=DIR_SOUTHWEST; break;
+      case DIR_SOUTHWEST: dir_outside=DIR_SOUTHEAST; break;
+      default: break;
+    }
+  }
+
+  return dir_outside;
+}
+
 void bootHomes(void)
 {
   return;
   int template_start=0, template_end=0, template_i=0;
   int plot_start=0, plot_end=0, plot_i=0, plan_i=0, keynum=0;
   TRoom *src, *dest;
-  int rc;
+  int rc, flip;
   MYSQL_RES *res, *res2;
   MYSQL_ROW row, row2;
 
+  // not ready yet
+  return;
   
-  if((rc=dbquery(&res, "sneezy", "bootHomes(1)", "select plan, plot_start, plot_end, keynum from homeplots where homeowner is not null"))){
+  if((rc=dbquery(&res, "sneezy", "bootHomes(1)", "select plan, plot_start, plot_end, keynum, flip from homeplots where homeowner is not null"))){
     if(rc==-1)
       vlogf(LOG_BUG, "Database error in bootHomes");
     return;
@@ -560,7 +612,8 @@ void bootHomes(void)
     plot_start=atoi(row[1]);
     plot_end=atoi(row[2]);
     keynum=atoi(row[3]);
-    
+    flip=atoi(row[4]);    
+
     if((rc=dbquery(&res2, "sneezy", "bootHomes(2)", "select template_start, template_end from homeplans where plan=%i", plan_i))){
       if(rc==-1)
 	vlogf(LOG_BUG, "Database error in bootHomes");
@@ -592,44 +645,41 @@ void bootHomes(void)
       dest->setSectorType(src->getSectorType());
       dest->setRoomHeight(src->getRoomHeight());
       dest->setMoblim(src->getMoblim());
+
+      dirTypeT realdir;
       
       // copy exits now
       for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){
-	if(src->dir_option[dir]){
-	  dest->dir_option[dir]->door_type =
-	    src->dir_option[dir]->door_type;
-	  dest->dir_option[dir]->condition =
-	    src->dir_option[dir]->condition;
-	  dest->dir_option[dir]->lock_difficulty =
-	    src->dir_option[dir]->lock_difficulty;
-	  dest->dir_option[dir]->weight =
-	    src->dir_option[dir]->weight;
-	  dest->dir_option[dir]->key =
-	    src->dir_option[dir]->key;
-	} else if(dest->dir_option[dir]){
-	  if(dest->dir_option[dir]->to_room >= plot_start &&
-	     dest->dir_option[dir]->to_room <= plot_end){
-	    dest->dir_option[dir]=NULL;
-	    //	delete [] dest->dir_option[dir];
-	  } else {
-	    // external exit, make a door and lock it
-	    TRoom *outside=real_roomp(dest->dir_option[dir]->to_room);
-	    
-	    dirTypeT dir_outside=DIR_NORTH;
 
-	    switch(dir){
-	      case DIR_NORTH: dir_outside=DIR_SOUTH; break;
-	      case DIR_EAST: dir_outside=DIR_WEST; break;
-	      case DIR_SOUTH: dir_outside=DIR_NORTH; break;
-	      case DIR_WEST: dir_outside=DIR_EAST; break;
-	      case DIR_UP: dir_outside=DIR_DOWN; break;
-	      case DIR_DOWN: dir_outside=DIR_UP; break;
-	      case DIR_NORTHEAST: dir_outside=DIR_SOUTHWEST; break;
-	      case DIR_NORTHWEST: dir_outside=DIR_SOUTHEAST; break;
-	      case DIR_SOUTHEAST: dir_outside=DIR_NORTHWEST; break;
-	      case DIR_SOUTHWEST: dir_outside=DIR_NORTHEAST; break;
-	      default: break;
-	    }
+	realdir=flip_dir(dir, flip);
+
+	if(src->dir_option[dir]){ // if the template has this exit, copy it
+	  vlogf(LOG_PEEL, "src dir %i, dest dir %i",
+		dir, realdir);
+	  
+	  dest->dir_option[realdir]->door_type =
+	    src->dir_option[dir]->door_type;
+	  dest->dir_option[realdir]->condition =
+	    src->dir_option[dir]->condition;
+	  dest->dir_option[realdir]->lock_difficulty =
+	    src->dir_option[dir]->lock_difficulty;
+	  dest->dir_option[realdir]->weight =
+	    src->dir_option[dir]->weight;
+	  dest->dir_option[realdir]->key =
+	    src->dir_option[dir]->key;
+	} else if(dest->dir_option[realdir]){
+	  // if the template doesn't have the exit, then remove it from dest
+	  if(dest->dir_option[realdir]->to_room >= plot_start &&
+	     dest->dir_option[realdir]->to_room <= plot_end){
+	    vlogf(LOG_PEEL, "removing %i (%i) in %i", realdir, dir, dest->number);
+
+	    dest->dir_option[realdir]=NULL;
+	    //	delete dest->dir_option[realdir];
+	  } else { // unless it goes outside, in which case make a door
+	    // external exit, make a door and lock it
+	    TRoom *outside=real_roomp(dest->dir_option[realdir]->to_room);
+	    
+	    dirTypeT dir_outside=flip_dir(realdir, FLIP_ALL);
 
 	    // do outside room
 	    outside->dir_option[dir_outside]->door_type=DOOR_DOOR;
@@ -643,15 +693,15 @@ void bootHomes(void)
 	    outside->dir_option[dir_outside]->keyword=mud_str_dup("door");
 
 	    // do inside room
-	    dest->dir_option[dir]->door_type=DOOR_DOOR;
-	    dest->dir_option[dir]->condition=EX_CLOSED + EX_LOCKED;
-	    dest->dir_option[dir]->lock_difficulty=100;
-	    dest->dir_option[dir]->weight=5;
-	    dest->dir_option[dir]->key=keynum;
+	    dest->dir_option[realdir]->door_type=DOOR_DOOR;
+	    dest->dir_option[realdir]->condition=EX_CLOSED + EX_LOCKED;
+	    dest->dir_option[realdir]->lock_difficulty=100;
+	    dest->dir_option[realdir]->weight=5;
+	    dest->dir_option[realdir]->key=keynum;
 	    
-	    if(dest->dir_option[dir]->keyword)
-	      delete [] dest->dir_option[dir]->keyword;
-	    dest->dir_option[dir]->keyword=mud_str_dup("door");
+	    if(dest->dir_option[realdir]->keyword)
+	      delete [] dest->dir_option[realdir]->keyword;
+	    dest->dir_option[realdir]->keyword=mud_str_dup("door");
 
 	  }
 	}
