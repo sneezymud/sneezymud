@@ -3,6 +3,12 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_cures.h,v $
+// Revision 5.2  2002/11/28 22:43:17  peel
+// fixed a bad a prototype
+//
+// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
+// new branch
+//
 // Revision 5.1  1999/10/16 04:31:17  batopr
 // new branch
 //
@@ -82,7 +88,7 @@ private:
     void healFull(TBeing *, TBeing *);       
     int castHealFull(TBeing *, TBeing *);      
     void healFull(TBeing *, TBeing *, TMagicItem *);
-    int healFull(TBeing *, TBeing *, int, byte);
+    int healFull(TBeing *, TBeing *, int, byte, int);
 
     void healCritSpray(TBeing *);
     int castHealCritSpray(TBeing *, TBeing *);      
