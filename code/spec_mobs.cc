@@ -6914,6 +6914,283 @@ int stockBroker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   return FALSE;
 }
 
+static int divCost(TObj *obj)
+{
+  const float REGISTRATION_FEE = 1.1;
+  int cost;
+
+  cost = (int) (REGISTRATION_FEE * (obj->obj_flags.cost));
+
+  return cost;
+}
+
+int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
+{
+  char buf[256]; //,buf2[256];
+  TObj *item;
+  int cost;
+  dirTypeT dir = DIR_NONE;
+  roomDirData *exitp;
+  int i;
+  TBeing *tbt = NULL;
+  TThing *ttt;
+  TBaseWeapon *tobj;
+
+  class div_struct {
+    public:
+    int wait;
+    int cost;
+    char *char_name;
+    char *obj_name;
+    div_struct() :
+      wait(0),
+      cost(0),
+      char_name(NULL),
+      obj_name(NULL)
+    {
+    }
+    ~div_struct() {
+      delete [] char_name;
+      char_name = NULL;
+      delete [] obj_name;
+      obj_name = NULL;
+    }
+  };
+  static div_struct *job;
+
+  switch (cmd) {
+    case CMD_GENERIC_DESTROYED:
+      delete (div_struct *) me->act_ptr;
+      me->act_ptr = NULL;
+      return FALSE;
+    case CMD_GENERIC_CREATED:
+      if (!(me->act_ptr = new div_struct())) {
+        perror("failed new of engraver.");
+        exit(0);
+      }
+      return FALSE;
+    case CMD_MOB_MOVED_INTO_ROOM:
+      if (dynamic_cast<TBeing *>(ch->riding)) {
+        sprintf(buf, "Hey, get that damn %s out of my shop!",
+            fname(ch->riding->name).c_str());
+        me->doSay(buf);
+        act("You throw $N out.", FALSE, me, 0, ch, TO_CHAR);
+        act("$n throws you out of $s shop.", FALSE, me, 0, ch, TO_VICT);
+        act("$n throws $N out of $s shop.", FALSE, me, 0, ch, TO_NOTVICT);
+        --(*ch->riding);
+        thing_to_room(ch->riding, (int) o);
+        --(*ch);
+        thing_to_room(ch, (int) o);
+        return TRUE;
+      } else if (dynamic_cast<TBeing *>(ch->rider)) {
+        --(*ch->rider);
+        thing_to_room(ch->rider, (int) o);
+        --(*ch);
+        thing_to_room(ch, (int) o);
+        return TRUE;
+      }
+      return FALSE;
+    case CMD_MOB_VIOLENCE_PEACEFUL:
+      ttt = o;
+      tbt = dynamic_cast<TBeing *>(ttt);
+      me->doSay("Hey!  Take it outside.");
+      for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
+        if (exit_ok(exitp = me->exitDir(dir), NULL)) {
+          act("$n throws you from $s shop.",
+                 FALSE, me, 0, ch, TO_VICT);
+          act("$n throws $N from $s shop.",
+                 FALSE, me, 0, ch, TO_NOTVICT);
+          me->throwChar(ch, dir, FALSE, SILENT_NO, true);
+          act("$n throws you from $s shop.",
+                 FALSE, me, 0, tbt, TO_VICT);
+          act("$n throws $N from $s shop.",
+                 FALSE, me, 0, tbt, TO_NOTVICT);
+          me->throwChar(tbt, dir, FALSE, SILENT_NO, true);
+          return TRUE;
+        }
+      }
+      return TRUE;
+    case CMD_GENERIC_PULSE:
+      break;
+    case CMD_NORTH:
+    case CMD_SOUTH:
+    case CMD_WEST:
+    case CMD_EAST:
+    case CMD_UP:
+    case CMD_DOWN:
+    case CMD_NE:
+    case CMD_SW:
+    case CMD_SE:
+    case CMD_NW:
+      if (!(job = (div_struct *) me->act_ptr)) {
+        return FALSE;
+      }
+      if (!job->char_name) {
+        return FALSE;
+      }
+      if (!strcmp(job->char_name, ch->getName())) {
+        sprintf(buf, "%s! Don't leave until I finish with this %s!", ch->getName(), job->obj_name);
+        me->doSay(buf);
+        return TRUE;
+      } else
+        return FALSE;
+      break;
+    case CMD_VALUE: {
+      for(; *arg && isspace(*arg);arg++);
+      TThing *ts = NULL;
+      TObj *valued = NULL;
+      if (!(ts = searchLinkedListVis(ch, arg, ch->getStuff())) ||
+          !(valued = dynamic_cast<TObj *>(ts))) {
+        sprintf(buf, "%s You don't have that item.", ch->getName());
+        me->doTell(buf);
+        return TRUE;
+      }
+
+      if (valued->obj_flags.cost <=  500) {
+        sprintf(buf, "%s This item is too cheap to be engraved.", ch->getName());
+        me->doTell(buf);
+        return TRUE;
+      }
+      if (valued->action_description) {
+        sprintf(buf, "%s This item has already been engraved!", ch->getName());
+        me->doTell(buf);
+        return TRUE;
+      }
+      if (valued->obj_flags.decay_time >= 0) {
+        sprintf(buf, "%s Sorry, but this item won't last long!", ch->getName());
+        me->doTell(buf);
+        return TRUE;
+      }
+
+      cost = divCost(valued);
+
+      sprintf(buf, "%s It will cost %d talens to identify your %s.", ch->getName(), cost, fname(valued->name).c_str());
+      me->doTell(buf);
+      return TRUE;
+      }
+    case CMD_MOB_GIVEN_ITEM:
+      // prohibit polys and charms from engraving 
+      if (dynamic_cast<TMonster *>(ch)) {
+        sprintf(buf, "%s, I don't engrave for beasts.", fname(ch->name).c_str());
+        me->doTell(buf);
+        return TRUE;
+      }
+      if (!(item = o)) {
+        sprintf(buf, "%s, You don't have that item!", ch->getName());
+        me->doTell(buf);
+        return TRUE;
+      }
+      me->logItem(item, CMD_EAST);  // log the receipt of the item
+      cost = divCost(item);
+      if (ch->getMoney() < cost) {
+        sprintf(buf, "%s, I have to make a living! If you don't have the money, I don't do the work!", ch->getName());
+        me->doTell(buf);
+        me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
+        return TRUE;
+      }
+      sprintf(buf, "Thanks for your business, I'll take your %d talens payment in advance!", cost);
+      me->doSay(buf);
+      ch->addToMoney(-cost, GOLD_HOSPITAL);
+      sprintf(buf, "I will now divinate %s.", item->shortDescr);
+      me->doSay(buf);
+      sprintf(buf, "It has a volume of %d.", item->getVolume());
+      me->doSay(buf);
+      sprintf(buf, "It weighs %.1f", item->getWeight());
+      me->doSay(buf);
+      sprintf(buf, "It has a value of %d talens.", item->obj_flags.cost);
+      me->doSay(buf);
+      me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
+      sprintf(buf, "It has %s as a special proceedure.", item->spec ? objSpecials[GET_OBJ_SPE_INDEX(item->spec)].name : "nothing");
+      me->doSay(buf);
+      for (i = 0; i < MAX_OBJ_AFFECT; i++) {
+	if (item->affected[i].location == APPLY_SPELL) {
+	  if (discArray[item->affected[i].modifier]) {
+	    sprintf(buf, "   Affects:  %s: %s by %ld ",
+		    apply_types[item->affected[i].location].name,
+		    discArray[item->affected[i].modifier]->name,
+		    item->affected[i].modifier2);
+	    me->doSay(buf);;
+	  } else
+	    vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", item->affected[i].modifier,
+		  item->getName());
+	} else if (item->affected[i].location == APPLY_DISCIPLINE) {
+	  if (discNames[item->affected[i].modifier].disc_num) {
+	    sprintf(buf, "   Affects:  %s: %s by %ld ",
+		    apply_types[item->affected[i].location].name,
+		    discNames[item->affected[i].modifier].practice,
+		    item->affected[i].modifier2);
+	    me->doSay(buf);
+	  } else
+	    vlogf(LOG_BUG, "BOGUS AFFECT (%d) on %s", item->affected[i].modifier,
+		  item->getName());
+	} else if (item->affected[i].location == APPLY_IMMUNITY) {
+	  sprintf(buf, "   Affects:  %s: %s by %ld ",apply_types[item->affected[i].location].name,
+		  immunity_names[item->affected[i].modifier], item->affected[i].modifier2);
+	  me->doSay(buf);
+	} else if (item->affected[i].location != APPLY_NONE) {
+	  sprintf(buf, "   Affects:  %s by %ld ",apply_types[item->affected[i].location].name,
+		  item->affected[i].modifier);
+	  me->doSay(buf);
+	}
+      }                               
+      for (i = 0; i < MAX_SWING_AFFECT; i++) {
+	if (item->oneSwing[i].type != TYPE_UNDEFINED) {
+	  sprintf(buf, "   One-Swing Affect: %s ",
+		  affected_bits[item->oneSwing[i].bitvector]);
+	  me->doSay(buf);
+	  sprintf(buf, "        Effects: %s by %ld ",
+		  apply_types[item->oneSwing[i].location].name,
+		  item->oneSwing[i].modifier);
+	  me->doSay(buf);
+	}
+      }     
+      if (item->isBluntWeapon() || item->isPierceWeapon() || item->isSlashWeapon()) {
+	tobj = dynamic_cast<TBaseWeapon *>(item);
+	sprintf(buf, "It's maximum %s is %d", ((tobj->isBluntWeapon() ? "bluntness" : (tobj->isPierceWeapon() ? "pointiness" : "sharpness"))), tobj->getMaxSharp());
+	me->doSay(buf);
+	sprintf(buf, "It's current %s is %d", ((tobj->isBluntWeapon() ? "bluntness" : (tobj->isPierceWeapon() ? "pointiness" : "sharpness"))), tobj->getCurSharp()); 
+	me->doSay(buf);
+	sprintf(buf, "It has a Damage Level of %.2f", tobj->getWeapDamLvl() / 4.0);
+	me->doSay(buf);
+	sprintf(buf, "It has a Damage Deviation of %d", tobj->getWeapDamDev());
+	me->doSay(buf);
+	double base = tobj->baseDamage();
+	double flux = base * tobj->getWeapDamDev() / 10;
+	sprintf(buf, "It's damage when swung will be between %d and %d",
+		(int) (base - (int) flux),
+		(int) (base + (int) flux));
+	me->doSay(buf);
+	sprintf(buf, "It's average damage is about %d", (int) tobj->baseDamage());
+	me->doSay(buf);
+	sprintf(buf, "This weapon is of the %s type.",
+		attack_hit_text[(tobj->getWtype() - TYPE_MIN_HIT)].singular);
+	me->doSay(buf);
+      } else {
+	// skip and move on
+      }
+      for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
+	if(obj_index[item->getItemIndex()].virt <= zone_table[zone].top){
+	  sprintf(buf, "%s came from %s.", item->shortDescr, zone_table[zone].name);
+	  me->doSay(buf);
+          break;
+	}
+      }
+      // xxxxxxx
+      sprintf(buf, "Thank you for your business, Come again!");
+      me->doSay(buf);
+      strcpy(buf, item->name);
+      add_bars(buf);
+      sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
+      me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
+      return TRUE;
+    default:
+      return FALSE;
+  }
+  return FALSE;
+}
+
+
+
 extern int factionRegistrar(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int realEstateAgent(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
 extern int grimhavenPosse(TBeing *, cmdTypeT, const char *, TMonster *, TObj *);
@@ -7086,6 +7363,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Scared Kid", scaredKid},
   {FALSE, "stock broker", stockBroker},
   {FALSE,"Trainer: psionics", CDGenericTrainer},
+  {TRUE, "Divination Man", divman},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

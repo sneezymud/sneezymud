@@ -3,6 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: spec_mobs.h,v $
+// Revision 5.10  2001/10/29 00:59:43  jesus
+// added a divination shop
+// not really a shop and not kept in the database
+// mob proceedure and response script
+//
 // Revision 5.9  2001/10/15 22:51:11  peel
 // Added psionics
 // not finished yet
@@ -149,58 +154,60 @@ const int SPEC_TRAINER_UNUSED5   =105;
 const int SPEC_TRAINER_MEDITATION_MONK    =106;
 const int SPEC_TRAINER_SURVIVAL=107;
 const int SPEC_TRAINER_SHAMAN_ARMADILLO  =108;
-const int SPEC_TRAINER_ANIMAL  =109;
-const int SPEC_TRAINER_AEGIS   =110;
-const int SPEC_TRAINER_SHAMAN  =111;
-const int SPEC_RUMORMONGER     =114;
-const int SPEC_TRAINER_MAGE    =115;
-const int SPEC_TRAINER_MONK    =116;
-const int SPEC_TRAINER_CLERIC  =117;
-const int SPEC_TRAINER_THIEF   =118;
-const int SPEC_TRAINER_PLANTS  =119;
-const int SPEC_TRAINER_PHYSICAL=120;
-const int SPEC_TRAINER_SMYTHE   =121;
-const int SPEC_TRAINER_DEIKHAN_FIGHT=122;
-const int SPEC_TRAINER_MOUNTED =123;
-const int SPEC_TRAINER_DEIKHAN_AEGIS =124;
-const int SPEC_TRAINER_DEIKHAN_CURES =125;
-const int SPEC_TRAINER_DEIKHAN_WRATH =126;
-const int SPEC_TRAINER_LEVERAGE=127;
-const int SPEC_TRAINER_MINDBODY=128;
-const int SPEC_TRAINER_UNUSED6=129;
-const int SPEC_TRAINER_UNUSED7=130;
+const int SPEC_TRAINER_ANIMAL         =109;
+const int SPEC_TRAINER_AEGIS          =110;
+const int SPEC_TRAINER_SHAMAN         =111;
+const int SPEC_RUMORMONGER            =114;
+const int SPEC_TRAINER_MAGE           =115;
+const int SPEC_TRAINER_MONK           =116;
+const int SPEC_TRAINER_CLERIC         =117;
+const int SPEC_TRAINER_THIEF          =118;
+const int SPEC_TRAINER_PLANTS         =119;
+const int SPEC_TRAINER_PHYSICAL       =120;
+const int SPEC_TRAINER_SMYTHE         =121;
+const int SPEC_TRAINER_DEIKHAN_FIGHT  =122;
+const int SPEC_TRAINER_MOUNTED        =123;
+const int SPEC_TRAINER_DEIKHAN_AEGIS  =124;
+const int SPEC_TRAINER_DEIKHAN_CURES  =125;
+const int SPEC_TRAINER_DEIKHAN_WRATH  =126;
+const int SPEC_TRAINER_LEVERAGE       =127;
+const int SPEC_TRAINER_MINDBODY       =128;
+const int SPEC_TRAINER_UNUSED6        =129;
+const int SPEC_TRAINER_UNUSED7        =130;
 const int SPEC_TRAINER_FOCUSED_ATTACKS=131;
-const int SPEC_TRAINER_UNUSED8=132;
-const int SPEC_TRAINER_BAREHAND=133;
-const int SPEC_TRAINER_THIEF_FIGHT =134;
-const int SPEC_TRAINER_POISONS =135;
-const int SPEC_TRAINER_SHAMAN_FROG =136;
-const int SPEC_TRAINER_SHAMAN_ALCHEMY=137;
-const int SPEC_TRAINER_SHAMAN_SKUNK =138;
-const int SPEC_TRAINER_SHAMAN_SPIDER=139;
-const int SPEC_TRAINER_SHAMAN_CONTROL=140;
-const int SPEC_TRAINER_RITUALISM=141;
-const int SPEC_TRAINER_RANGER_FIGHT=142;
-const int SPEC_GM_SHAMAN         =143;
-const int SPEC_TRAINER_COMBAT  =144;
-const int SPEC_TRAINER_STEALTH  =145;
-const int SPEC_TRAINER_TRAPS     =146;
-const int SPEC_NEWBIE_EQUIPPER   =147;
-const int SPEC_TRAINER_LORE   =148;
-const int SPEC_TRAINER_THEOLOGY  =149;
-const int SPEC_ATTUNER  =150;
-const int SPEC_DOPPLEGANGER    =152;
-const int SPEC_TUSKGORE        =153;
-const int SPEC_FISHTRACKER     =154;
-const int SPEC_BANK_GUARD      =155;
-const int SPEC_REAL_ESTATE_AGENT=156;
-const int SPEC_CORONER         =157;
-const int SPEC_FACTON_REGISTRAR=158;
-const int SPEC_TRAINER_DEFENSE=159;
-const int SPEC_SCARED_KID=160;
-const int SPEC_STOCK_BROKER=161;
-const int SPEC_TRAINER_PSIONICS =162;
-const int NUM_MOB_SPECIALS     =163;
+const int SPEC_TRAINER_UNUSED8        =132;
+const int SPEC_TRAINER_BAREHAND       =133;
+const int SPEC_TRAINER_THIEF_FIGHT    =134;
+const int SPEC_TRAINER_POISONS        =135;
+const int SPEC_TRAINER_SHAMAN_FROG    =136;
+const int SPEC_TRAINER_SHAMAN_ALCHEMY =137;
+const int SPEC_TRAINER_SHAMAN_SKUNK   =138;
+const int SPEC_TRAINER_SHAMAN_SPIDER  =139;
+const int SPEC_TRAINER_SHAMAN_CONTROL =140;
+const int SPEC_TRAINER_RITUALISM      =141;
+const int SPEC_TRAINER_RANGER_FIGHT   =142;
+const int SPEC_GM_SHAMAN              =143;
+const int SPEC_TRAINER_COMBAT         =144;
+const int SPEC_TRAINER_STEALTH        =145;
+const int SPEC_TRAINER_TRAPS      =146;
+const int SPEC_NEWBIE_EQUIPPER    =147;
+const int SPEC_TRAINER_LORE       =148;
+const int SPEC_TRAINER_THEOLOGY   =149;
+const int SPEC_ATTUNER            =150;
+const int SPEC_DOPPLEGANGER       =152;
+const int SPEC_TUSKGORE           =153;
+const int SPEC_FISHTRACKER        =154;
+const int SPEC_BANK_GUARD         =155;
+const int SPEC_REAL_ESTATE_AGENT  =156;
+const int SPEC_CORONER            =157;
+const int SPEC_FACTON_REGISTRAR   =158;
+const int SPEC_TRAINER_DEFENSE    =159;
+const int SPEC_SCARED_KID         =160;
+const int SPEC_STOCK_BROKER       =161;
+const int SPEC_TRAINER_PSIONICS   =162;
+const int SPEC_DIVMAN             =163;
+
+const int NUM_MOB_SPECIALS        =164;
 
 extern const int GET_MOB_SPE_INDEX(int d);
 
