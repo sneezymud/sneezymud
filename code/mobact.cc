@@ -3406,14 +3406,16 @@ int TMonster::mobileActivity(int pulse)
       return FALSE;
     }
     
-    if(0 && shopOwned(shop_nr)){
+    if(shopOwned(shop_nr)){
       MYSQL_RES *res;
       int rc;
 
+#if 0
       setMoney(getMoney()-100);
       saveGovMoney("shop tick tax", 100);
       
       shoplog(shop_nr, this, this, "talens", 100, "paying tax");
+#endif
 
       if(getMoney()<0){
 
@@ -3434,7 +3436,8 @@ int TMonster::mobileActivity(int pulse)
 	mysql_free_result(res);
 	vlogf(LOG_PEEL, "shop_nr %i, ran out of money and was reclaimed", shop_nr);
 
-	setMoney(1000000);
+	if(getMoney()<0)
+	  setMoney(0);
       }
 
     }
