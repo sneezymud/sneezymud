@@ -863,6 +863,9 @@ void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
       for (i = character_list; i; i = i->next) {
 	if (i->GetMaxLevel() <= maxlev && i->GetMaxLevel() >= minlev && !::number(0, nummobs)
 	    && (mob = dynamic_cast<TMonster *>(i))) {
+	  if (!i->roomp->isRoomFlag(ROOM_NO_HEAL)) {
+	    continue;
+	  }
 	  // code to set up the repo mob here
 	  char buf[160],buf2[160];
 	  strcpy(buf,obj->name);
@@ -872,7 +875,7 @@ void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
 		i->getName(), buf, ch->getName(), ch->GetMaxLevel(), objectLevel);
 	  i->spec = SPEC_BOUNTY_HUNTER;
 	  bounty_hunter(NULL, CMD_SAY, buf2, mob, NULL);
-
+	  break;
 	} else {
 	  continue;
 	}
