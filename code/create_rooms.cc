@@ -3694,7 +3694,7 @@ void TPerson::doRsave(const char *argument)
   else {
     bool bHasRooms = false;
 
-    for (int iRunner = tStart; iRunner != tEnd; iRunner++)
+    for (int iRunner = tStart; iRunner != (tEnd + 1); iRunner++)
       if (real_roomp(iRunner)) {
         bHasRooms = true;
         break;
