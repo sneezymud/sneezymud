@@ -216,23 +216,40 @@ int updateWholist()
   TBeing *p;
   TPerson *p2;
   int count = 0;
+  static int last_count;
+  static sstring wholist_last;
+  sstring wholist = "";
 
-
-  // every 10 RL seconds
-  TDatabase db("sneezy");
-
-
-  db.query("delete from wholist where port=%i", gamePort);
-  
-  //  vlogf(LOG_DASH, "Updating who table for port %d", gamePort);
   for (p = character_list; p; p = p->next) {
     if (p->isPc() && !p->isLinkdead() && p->polyed == POLY_TYPE_NONE) {
       if ((p2 = dynamic_cast<TPerson *>(p))) {
-	db.query("insert into wholist (name, title, port, invis) VALUES('%s', '%s', %i, %i)", p2->getName(), p2->title,  gamePort, (p->getInvisLevel() >MAX_MORT)?1:0);
-	count++;
+	wholist += p2->getName();
       }
     }
   }
+
+
+  if (wholist != wholist_last) {
+    // every 10 RL seconds
+    TDatabase db("sneezy");
+    
+    
+    db.query("delete from wholist where port=%i", gamePort);
+    
+    //  vlogf(LOG_DASH, "Updating who table for port %d", gamePort);
+    for (p = character_list; p; p = p->next) {
+      if (p->isPc() && !p->isLinkdead() && p->polyed == POLY_TYPE_NONE) {
+	if ((p2 = dynamic_cast<TPerson *>(p))) {
+	  db.query("insert into wholist (name, title, port, invis) VALUES('%s', '%s', %i, %i)", p2->getName(), p2->title,  gamePort, (p->getInvisLevel() >MAX_MORT)?1:0);
+	  count++;
+	}
+      }
+    }
+  } else {
+    return last_count;
+  }
+  wholist_last = wholist;
+  last_count = count;
   return count;
 }
 
@@ -547,7 +564,7 @@ int TSocket::gameLoop()
 
     int count;
     // update statistics in the database
-    if(!(pulse % (ONE_SECOND*5))) {
+    if(!(pulse % (ONE_SECOND*30))) {
       count=updateWholist();
       updateUsagelogs(count);
     }
