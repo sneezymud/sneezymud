@@ -245,6 +245,9 @@ void bootDb(void)
   bootPulse("Generating index tables for object file.");
   generate_obj_index();
 
+  bootPulse("Building suitset information.");
+  suitSets.SetupLoadSetSuits();
+
   bootPulse("Building help tables.");
   buildHelpIndex();
 
@@ -261,9 +264,6 @@ void bootDb(void)
   bootPulse("Loading rooms:", false);
   bootWorld();
   bootPulse(NULL, true);
-
-  bootPulse("Building suitset information.");
-  suitSets.SetupLoadSetSuits();
 
   vlogf(LOG_MISC, "Assigning function pointers:");
   vlogf(LOG_MISC, "   Shopkeepers.");
