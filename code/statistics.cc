@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: statistics.cc,v $
+// Revision 1.7  1999/10/12 01:12:45  batopr
+// Corrected shop stuff to exclude pets
+//
 // Revision 1.6  1999/10/07 17:39:38  batopr
 // typo fix
 //
@@ -540,6 +543,8 @@ unsigned int getPosGoldGlobal()
   return pos_gold;
 }
 
+// we exclude the shop_pet value in this since it's off-budget, and the
+// shop modifier doesn't factor into that price anyways
 int getNetGoldShops()
 {
   int net_gold = 0;
@@ -551,7 +556,6 @@ int getNetGoldShops()
                 gold_statistics[GOLD_SHOP_ARMOR][i] +
                 gold_statistics[GOLD_SHOP_WEAPON][i] +
                 gold_statistics[GOLD_SHOP_RESPONSES][i] +
-                gold_statistics[GOLD_SHOP_PET][i] +
                 gold_statistics[GOLD_SHOP][i];
 
   return net_gold;
@@ -567,7 +571,6 @@ unsigned int getPosGoldShops()
                 gold_positive[GOLD_SHOP_SYMBOL][i] +
                 gold_positive[GOLD_SHOP_ARMOR][i] +
                 gold_positive[GOLD_SHOP_WEAPON][i] +
-                gold_positive[GOLD_SHOP_PET][i] +
                 gold_positive[GOLD_SHOP_RESPONSES][i] +
                 gold_positive[GOLD_SHOP][i];
 
