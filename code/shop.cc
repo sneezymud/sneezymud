@@ -5,6 +5,7 @@
 #include "stdsneezy.h"
 #include "shop.h"
 #include "statistics.h"
+#include "database.h"
 #include "obj_drug.h"
 #include "obj_spellbag.h"
 #include "obj_symbol.h"
@@ -42,19 +43,15 @@ vector<shop_pricing>ShopPriceIndex(0);
 
 bool shopOwned(int shop_nr){
   bool owned;
-  int rc;
-  MYSQL_RES *res;
-  MYSQL_ROW row;
+  TDatabase db("sneezy");
   
-  if((rc=dbquery(TRUE, &res, "sneezy", "shopOwned", "select * from shopownedaccess where shop_nr=%i", shop_nr))==-1){
-    vlogf(LOG_BUG, "Database error in shop_keeper");
-    return FALSE;
-  }
-  if(!(row=mysql_fetch_row(res)))
+  db.query("select * from shopownedaccess where shop_nr=%i", shop_nr);
+
+  if(!db.fetchRow())
     owned=false;
   else
     owned=true;
-  mysql_free_result(res);
+
   return owned;
 }
 
@@ -64,24 +61,20 @@ bool shopOwned(int shop_nr){
 // behavior or not, so if it stops working, you need to put a timestamp value
 // into the table and sort by that
 bool sameAccount(const char *buf, int shop_nr){
-  MYSQL_RES *res;
-  MYSQL_ROW row;
-  int rc;
   charFile st, stthis;
 
   load_char(buf, &stthis);
 
-  if((rc=dbquery(TRUE, &res, "sneezy", "sameAccount", "select name from shopownedaccess where shop_nr=%i", shop_nr))==-1){
-    vlogf(LOG_BUG, "Database error in shop_keeper");
-    return FALSE;
-  }
-  
-  while((row=mysql_fetch_row(res))){
-    if (!load_char(row[0], &st))
+  TDatabase db("sneezy");
+
+  db.query("select name from shopownedaccess where shop_nr=%i", shop_nr);
+
+  while(db.fetchRow()){
+    if (!load_char(db.getColumn(0), &st))
       continue;
 
     if(!strcmp(stthis.aname, st.aname)){
-      if(!strcmp(lower(buf).c_str(), lower(row[0]).c_str()))
+      if(!strcmp(lower(buf).c_str(), lower(db.getColumn(0)).c_str()))
 	return FALSE;
       else
 	return TRUE;
@@ -95,19 +88,16 @@ bool sameAccount(const char *buf, int shop_nr){
 // this is the price the shop will buy an item for
 int TObj::sellPrice(int shop_nr, int chr, int *discount)
 {
-  int cost, rc;
   float profit_sell=shop_index[shop_nr].profit_sell;
-  MYSQL_RES *res;
-  MYSQL_ROW row;
+  int cost;
 
   if(shopOwned(shop_nr)){
-    if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select profit_sell from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum()))==-1){
-      vlogf(LOG_BUG, "Database error in shop_keeper");
-      return FALSE;
-    }
-    if((row=mysql_fetch_row(res)))
-      profit_sell=atof(row[0]);
-    mysql_free_result(res);
+    TDatabase db("sneezy");
+
+    db.query("select profit_sell from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
+
+    if(db.fetchRow())
+      profit_sell=atof(db.getColumn(0));
   }
 
   if (chr != -1)
@@ -131,19 +121,16 @@ int TObj::sellPrice(int shop_nr, int chr, int *discount)
 // this is price shop will sell it at
 int TObj::shopPrice(int num, int shop_nr, int chr, int *discount) const
 {
-  int cost, rc;
-  MYSQL_RES *res;
-  MYSQL_ROW row;
+  int cost;
   float profit_buy=shop_index[shop_nr].profit_buy;
   
   if(shopOwned(shop_nr)){
-    if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum()))==-1){
-      vlogf(LOG_BUG, "Database error in shop_keeper");
-      return FALSE;
-    }
-    if((row=mysql_fetch_row(res)))
-      profit_buy=atof(row[0]);
-    mysql_free_result(res);
+    TDatabase db("sneezy");
+
+    db.query("select profit_buy from shopownedratios where shop_nr=%i and obj_nr=%i", shop_nr, objVnum());
+
+    if(db.fetchRow())
+      profit_buy=atof(db.getColumn(0));
   }
 
 
@@ -1998,13 +1985,12 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
   if(cmd == CMD_WHISPER /*&& ch->isImmortal()*/ ){
     char buf[256], buf2[256];
     TThing *tt;
-    int count=0, value=0, price=0, discount=100, rc, tax=0;
+    int count=0, value=0, price=0, discount=100, tax=0;
     unsigned int access=0;
     bool owned=shopOwned(shop_nr);
     unsigned int i, tmp;
     TObj *o;
-    MYSQL_RES *res;
-    MYSQL_ROW row;
+    TDatabase db("sneezy");
 
     arg = one_argument(arg, buf);
     if(!isname(buf, myself->name))
@@ -2014,14 +2000,12 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     //      return FALSE;
 
 
-    if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select access from shopownedaccess where shop_nr=%i and name='%s'", shop_nr, ch->getName()))==-1){
-      vlogf(LOG_BUG, "Database error in shop_keeper");
-      return FALSE;
+    db.query("select access from shopownedaccess where shop_nr=%i and name='%s'", shop_nr, ch->getName());
+
+    if(db.fetchRow()){
+      access=atoi(db.getColumn(0));
     }
-    if((row=mysql_fetch_row(res))){
-      access=atoi(row[0]);
-    }
-    mysql_free_result(res);
+    
 
     if(sameAccount(ch->getName(), shop_nr) && !ch->isImmortal() && access){
       ch->sendTo("Another character in your account has permissions at this shop, so this character can not use the ownership functions.\n\r");
@@ -2101,25 +2085,18 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	arg = one_argument(arg, buf);
 
 	if(!*buf){
-	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select obj_nr, profit_buy, profit_sell from shopownedratios where shop_nr=%i", shop_nr))==-1){
-	    vlogf(LOG_BUG, "Database error in shop_keeper");
-	    return FALSE;
-	  }
-	  while((row=mysql_fetch_row(res))){
-	    sprintf(buf2, "%s %f %f %s", ch->getName(), atof(row[1]), 
-		    atof(row[2]), obj_index[real_object(atoi(row[0]))].short_desc);
+	  db.query("select obj_nr, profit_buy, profit_sell from shopownedratios where shop_nr=%i", shop_nr);
+
+	  while(db.fetchRow()){
+	    sprintf(buf2, "%s %f %f %s", ch->getName(), atof(db.getColumn(1)), 
+		    atof(db.getColumn(2)), obj_index[real_object(atoi(db.getColumn(0)))].short_desc);
 	    myself->doTell(buf2);
 	  }
-	  mysql_free_result(res);
+	  
 	  return TRUE;
 	} else if(!strcmp(buf, "clear")){
-	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopownedratios where shop_nr=%i", shop_nr))){
-	    if(rc){
-	      vlogf(LOG_BUG, "Database error in shop_keeper");
-	      return FALSE;
-	    }
-	  }
-	  mysql_free_result(res);
+	  db.query("delete from shopownedratios where shop_nr=%i", shop_nr);
+	  
 	  sprintf(buf2, "%s Ok, I cleared all of the individual profit ratios.", ch->getName());
 	  myself->doTell(buf2);
 	  return TRUE;
@@ -2146,40 +2123,21 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  TObj *o=dynamic_cast<TObj *>(tt);
 
 	  // get the default profit buy/sell
-	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select profit_buy, profit_sell from shop where shop_nr=%i", shop_nr))==-1){
-	    vlogf(LOG_BUG, "Database error in shop_keeper");
-	    return FALSE;
-	  }
-	  row=mysql_fetch_row(res);
-	  
-	  mysql_free_result(res);
+	  db.query("select profit_buy, profit_sell from shop where shop_nr=%i", shop_nr);
+	  db.fetchRow();
 
 	  // create the entry if it doesn't exist, use default profit buy/sell
-	  dbquery(TRUE, &res, "sneezy", "shop_keeper", "insert ignore into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(row[0]), atof(row[1]));
+	  db.query("insert ignore into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(db.getColumn(0)), atof(db.getColumn(1)));
 
-	  mysql_free_result(res);
+	  db.query("update shopownedratios set profit_buy=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum());
 
-	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "update shopownedratios set profit_buy=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum()))){
-	    if(rc==-1){
-	      vlogf(LOG_BUG, "Database error in shop_keeper");
-	      return FALSE;
-	    }
-	  }
-	  mysql_free_result(res);
-	  
 	  sprintf(buf2, "%s Ok, my profit_buy is now %f for %s.", 
 		  ch->getName(), atof(buf), o->getName());
 	  myself->doTell(buf2);
 	} else { //////////////////////////////
-	shop_index[shop_nr].profit_buy=atof(buf);
-
-	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "update shopowned set profit_buy=%f where shop_nr=%i", shop_index[shop_nr].profit_buy, shop_nr))){
-	    if(rc==-1){
-	      vlogf(LOG_BUG, "Database error in shop_keeper");
-	      return FALSE;
-	    }
-	  }
-	  mysql_free_result(res);
+	  shop_index[shop_nr].profit_buy=atof(buf);
+	  
+	  db.query("update shopowned set profit_buy=%f where shop_nr=%i", shop_index[shop_nr].profit_buy, shop_nr);
 	  
 	  sprintf(buf2, "%s Ok, my profit_buy is now %f", 
 		  ch->getName(), shop_index[shop_nr].profit_buy);
@@ -2190,33 +2148,23 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	arg = one_argument(arg, buf);
 
 	if(!*buf){
-	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select obj_nr, profit_buy, profit_sell from shopownedratios where shop_nr=%i", shop_nr))==-1){
-	    vlogf(LOG_BUG, "Database error in shop_keeper");
-	    return FALSE;
-	  }
-	  while((row=mysql_fetch_row(res))){
-	    sprintf(buf2, "%s %f %f %s", ch->getName(), atof(row[1]), 
-		    atof(row[2]), obj_index[real_object(atoi(row[0]))].short_desc);
+	  db.query("select obj_nr, profit_buy, profit_sell from shopownedratios where shop_nr=%i", shop_nr);
+
+	  while(db.fetchRow()){
+	    sprintf(buf2, "%s %f %f %s", ch->getName(), atof(db.getColumn(1)), 
+		    atof(db.getColumn(2)), obj_index[real_object(atoi(db.getColumn(0)))].short_desc);
 	    myself->doTell(buf2);
 	  }
-	  mysql_free_result(res);
+	  
 	  
 	  return TRUE;
 	} else if(!strcmp(buf, "clear")){
-	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopownedratios where shop_nr=%i", shop_nr))){
-	    if(rc){
-	      vlogf(LOG_BUG, "Database error in shop_keeper");
-	      return FALSE;
-	    }
-	  }
-	  mysql_free_result(res);
+	  db.query("delete from shop ownedratios where shop_nr=%i", shop_nr);
+	  
 	  sprintf(buf2, "%s Ok, I cleared all of the individual profit ratios.", ch->getName());
 	  myself->doTell(buf2);
 	  return TRUE;
 	}
-
-
-
 
 	if(*arg){
 	  // find item in inventory matching keywords in arg
@@ -2232,24 +2180,13 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  TObj *o=dynamic_cast<TObj *>(tt);
 
 	  // get the default profit buy/sell
-	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select profit_buy, profit_sell from shop where shop_nr=%i", shop_nr))==-1){
-	    vlogf(LOG_BUG, "Database error in shop_keeper");
-	    return FALSE;
-	  }
-	  row=mysql_fetch_row(res);
+	  db.query("select profit_buy, profit_sell from shop where shop_nr=%i", shop_nr);
+	  db.fetchRow();
 	  
 	  // create the entry if it doesn't exist, use default profit buy/sell
-	  dbquery(TRUE, &res, "sneezy", "shop_keeper", "insert ignore into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(row[0]), atof(row[1]));
-
-	  mysql_free_result(res);
-
-	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "update shopownedratios set profit_sell=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum()))){
-	    if(rc==-1){
-	      vlogf(LOG_BUG, "Database error in shop_keeper");
-	      return FALSE;
-	    }
-	  }
-	  mysql_free_result(res);
+	  db.query("insert ignore into shopownedratios values (%i, %i, %f, %f)", shop_nr, o->objVnum(), atof(db.getColumn(0)), atof(db.getColumn(1)));
+	  
+	  db.query("update shopownedratios set profit_sell=%f where shop_nr=%i and obj_nr=%i", atof(buf), shop_nr, o->objVnum());
 	  
 	  sprintf(buf2, "%s Ok, my profit_sell is now %f for %s.", 
 		  ch->getName(), atof(buf), o->getName());
@@ -2259,13 +2196,8 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	} else {
 	  shop_index[shop_nr].profit_sell=atof(buf);
 
-	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "update shopowned set profit_sell=%f where shop_nr=%i", shop_index[shop_nr].profit_sell, shop_nr))){
-	    if(rc==-1){
-	      vlogf(LOG_BUG, "Database error in shop_keeper");
-	      return FALSE;
-	    }
-	  }
-	  mysql_free_result(res);	  
+	  db.query("update shopowned set profit_sell=%f where shop_nr=%i", shop_index[shop_nr].profit_sell, shop_nr);
+	  	  
 	  sprintf(buf, "%s Ok, my profit_sell is now %f", 
 		  ch->getName(), shop_index[shop_nr].profit_sell);
 	  myself->doTell(buf);
@@ -2308,18 +2240,9 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       // non-player owned shops
       saveGovMoney("shop purchase", value);
       
+      db.query("insert into shopowned (shop_nr, profit_buy, profit_sell) values (%i, %f, %f)", shop_nr, shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell);
 
-      if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "insert into shopowned (shop_nr, profit_buy, profit_sell) values (%i, %f, %f)", shop_nr, shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell))){
-	if(rc==-1)
-	  vlogf(LOG_BUG, "Database error in shop_keeper");
-	return FALSE;
-      }
-
-      if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, ch->getName(), SHOPACCESS_OWNER))){
-	if(rc==-1)
-	  vlogf(LOG_BUG, "Database error in shop_keeper");
-	return FALSE;
-      }
+      db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, ch->getName(),  SHOPACCESS_OWNER);
 
       myself->saveItems(buf);
             
@@ -2338,26 +2261,11 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	return FALSE;
       }
 
-      if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopowned where shop_nr=%i", shop_nr))){
-	if(rc){
-	  vlogf(LOG_BUG, "Database error in shop_keeper");
-	  return FALSE;
-	}
-      }
+      db.query("delete from shopowned where shop_nr=%i", shop_nr);
 
-      if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopownedaccess where shop_nr=%i", shop_nr))){
-	if(rc){
-	  vlogf(LOG_BUG, "Database error in shop_keeper");
-	  return FALSE;
-	}
-      }
-
-      if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopownedratios where shop_nr=%i", shop_nr))){
-	if(rc){
-	  vlogf(LOG_BUG, "Database error in shop_keeper");
-	  return FALSE;
-	}
-      }
+      db.query("delete from shopownedaccess where shop_nr=%i", shop_nr);
+      
+      db.query("delete from shopownedratios where shop_nr=%i", shop_nr);
 
 #if 0
       for(tt=myself->getStuff();tt;tt=tt->nextThing){
@@ -2416,35 +2324,22 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       arg = one_argument(arg, buf2);
 
       if(*buf2){ // set value
-	if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "delete from shopownedaccess where shop_nr=%i and name='%s'", shop_nr, buf))){
-	  if(rc==-1)
-	    vlogf(LOG_BUG, "Database error in shop_keeper");
-	  return FALSE;
-	}
-	if(atoi(buf2) != 0){
-	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf, atoi(buf2)))){
-	    if(rc==-1)
-	      vlogf(LOG_BUG, "Database error in shop_keeper");
-	    return FALSE;
-	  }
-	}
+	db.query("delete from shopownedaccess where shop_nr=%i and name='%s'", shop_nr, buf);
+
+	if(atoi(buf2) != 0)
+	  db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, buf, atoi(buf2));
+
       } else {
 	if(*buf){
-	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select name, access from shopownedaccess where shop_nr=%i and name='%s'", shop_nr, buf))==-1){
-	    vlogf(LOG_BUG, "Database error in shop_keeper");
-	    return FALSE;
-	  }
+	  db.query("select name, access from shopownedaccess where shop_nr=%i and name='%s'", shop_nr, buf);
 	} else {
-	  if((rc=dbquery(TRUE, &res, "sneezy", "shop_keeper", "select name, access from shopownedaccess where shop_nr=%i order by access", shop_nr))==-1){
-	    vlogf(LOG_BUG, "Database error in shop_keeper");
-	    return FALSE;
-	  }
+	  db.query("select name, access from shopownedaccess where shop_nr=%i order by access", shop_nr);
 	}
-	while((row=mysql_fetch_row(res))){
-	  access=atoi(row[1]);
+	while(db.fetchRow()){
+	  access=atoi(db.getColumn(1));
 
 	  sprintf(buf2, "%s Access for %s is set to %i, commands/abilities:", ch->getName(),
-		  row[0], access);
+		  db.getColumn(0), access);
 
           if(access>=SHOPACCESS_LOGS){
 	    access-=SHOPACCESS_LOGS;
@@ -2478,7 +2373,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
 	  myself->doTell(buf2);
 	}
-	mysql_free_result(res);
+	
       }
     } else if(!strcmp(buf, "logs")){ /////////////////////////////////////////
       if(!(access & SHOPACCESS_OWNER) && !(access & SHOPACCESS_LOGS)){
@@ -2486,67 +2381,64 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	myself->doTell(buf);
 	return FALSE;
       }
-      MYSQL_ROW row;
-      MYSQL_RES *res;
-      int rc;
       string sb;
 
       if(!strcmp(arg, " clear")){
-	dbquery(TRUE, NULL, "sneezy", "shop_keeper logs clear", "delete from shoplog where shop_nr=%i", shop_nr);
+	db.query("delete from shoplog where shop_nr=%i", shop_nr);
 	ch->sendTo("Done.\n\r");
       } else if(!strcmp(arg, " summaries")){
-	rc=dbquery(TRUE, &res, "sneezy", "shop_keeper logs summaries", "select name, action, sum(talens) tsum from shoplog where shop_nr=%i group by name, action order by tsum desc", shop_nr);
+	db.query("select name, action, sum(talens) tsum from shoplog where shop_nr=%i group by name, action order by tsum desc", shop_nr);
 
-	while((row=mysql_fetch_row(res))){
+	while(db.fetchRow()){
 	  sprintf(buf, "%-12.12s %-10.10s %8i\n\r", 
-		  row[0], row[1], atoi(row[2]));
+		  db.getColumn(0), db.getColumn(1), atoi(db.getColumn(2)));
 	  sb += buf;
 	}
-	mysql_free_result(res);
+	
 
 	//////////
 	sb += "\n\r";
 
-	rc=dbquery(TRUE, &res, "sneezy", "shop_keeper logs summaries", "select item, action, sum(talens) tsum from shoplog where shop_nr=%i group by item, action order by tsum desc", shop_nr);
+	db.query("select item, action, sum(talens) tsum from shoplog where shop_nr=%i group by item, action order by tsum desc", shop_nr);
 
-	while((row=mysql_fetch_row(res))){
+	while(db.fetchRow()){
 	  sprintf(buf, "%-32.32s %-10.10s %8i\n\r", 
-		  row[0], row[1], atoi(row[2]));
+		  db.getColumn(0), db.getColumn(1), atoi(db.getColumn(2)));
 	  sb += buf;
 	}
-	mysql_free_result(res);
+	
 
 	/////////
 	sb += "\n\r";
 
-	rc=dbquery(TRUE, &res, "sneezy", "shop_keeper logs summaries", "select action, sum(talens) tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
+	db.query("select action, sum(talens) tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
 
-	while((row=mysql_fetch_row(res))){
+	while(db.fetchRow()){
 	  sprintf(buf, "%-12.12s %8i\n\r", 
-		  row[0], atoi(row[1]));
+		  db.getColumn(0), atoi(db.getColumn(1)));
 	  sb += buf;
 	}
 
 	if (ch->desc)
 	  ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
 
-	mysql_free_result(res);
-      } else {
-	rc=dbquery(TRUE, &res, "sneezy", "shop_keeper logs", "select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' order by logtime desc, shoptalens+shopvalue desc", shop_nr);
 	
-	while((row=mysql_fetch_row(res))){
-	  sprintf(buf, "%s  Talens: %8i  Value: %8i  Total: %8i\n\r", row[6], atoi(row[4]), atoi(row[5]), atoi(row[4])+atoi(row[5]));
+      } else {
+	db.query("select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i and action!='paying tax' order by logtime desc, shoptalens+shopvalue desc", shop_nr);
+	
+	while(db.fetchRow()){
+	  sprintf(buf, "%s  Talens: %8i  Value: %8i  Total: %8i\n\r", db.getColumn(6), atoi(db.getColumn(4)), atoi(db.getColumn(5)), atoi(db.getColumn(4))+atoi(db.getColumn(5)));
 	  sb += buf;
 	  
 	  sprintf(buf, "%-12.12s %-10.10s %-32.32s for %8i talens.\n\r\n\r",
-		  row[0], row[1], row[2], atoi(row[3]));
+		  db.getColumn(0), db.getColumn(1), db.getColumn(2), atoi(db.getColumn(3)));
 	  sb += buf;
 	}
 	
 	if (ch->desc)
 	  ch->desc->page_string(sb.c_str(), SHOWNOW_NO, ALLOWREP_YES);
 	
-	mysql_free_result(res);
+	
       }
     } else {
       myself->doTell("Read 'help shop owner' for assistance.");
@@ -2560,8 +2452,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 }
 
 void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int cost, const char *action){
-  int rc, value=0, count=0;
-  MYSQL_RES *res;
+  int value=0, count=0;
   TThing *tt;
   TObj *o;  
 
@@ -2574,23 +2465,15 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
     o=dynamic_cast<TObj *>(tt);
     value+=o->obj_flags.cost;
   }
+  
+  TDatabase db("sneezy");
 
-
-  if((rc=dbquery(TRUE, &res, "sneezy", "shoplog", "insert ignore into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch->getName(), action, name, cost, keeper->getMoney(), value, count))){
-    if(rc==-1){
-      vlogf(LOG_BUG, "Database error in shoplog");
-    }
-  }
-  mysql_free_result(res);      
+  db.query("insert ignore into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch->getName(), action, name, cost, keeper->getMoney(), value, count);
 
   if(!strcmp(action, "buying")){
-    if((dbquery(TRUE, &res, "sneezy", "shop_keeper", "update stockinfo set talens=talens+%i where shop_nr=%i", (int)((float)cost*0.05), shop_nr))){
-      vlogf(LOG_BUG, "Database error in shop_keeper");
-    }
+    db.query("update stockinfo set talens=talens+%i where shop_nr=%i", (int)((float)cost*0.05), shop_nr);
   } else if(!strcmp(action, "selling")){
-    if((dbquery(TRUE, &res, "sneezy", "shop_keeper", "update stockinfo set talens=talens-%i where shop_nr=%i", (int)((float)cost*0.05), shop_nr))){
-      vlogf(LOG_BUG, "Database error in shop_keeper");
-    }
+    db.query("update stockinfo set talens=talens-%i where shop_nr=%i", (int)((float)cost*0.05), shop_nr);
   }
 
 }
@@ -2669,133 +2552,81 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
 void bootTheShops()
 {
   int shop_nr;
-  MYSQL_RES *res, *producing_res, *type_res, *material_res, *owned_res;
-  MYSQL_ROW row, producing_row, type_row, material_row, owned_row;
-  MYSQL *producing_db, *type_db, *material_db, *owned_db;
 
   /****** producing ******/
-  producing_db=mysql_init(NULL);
-  if(!mysql_real_connect(producing_db, NULL, "sneezy", NULL, 
-	  (gamePort!=PROD_GAMEPORT ? "sneezybeta" : "sneezy"), 0, NULL, 0)){
-    vlogf(LOG_BUG, "Could not connect (1) to database 'sneezy'.");
-    exit(0);
-  }
-
-  if(mysql_query(producing_db, "select shop_nr, producing from shopproducing order by shop_nr")){
-    vlogf(LOG_BUG, "Database query failed: %s\n", mysql_error(producing_db));
-    exit(0);
-  }
-  producing_res=mysql_use_result(producing_db);
-  producing_row=mysql_fetch_row(producing_res);
+  TDatabase producing_db("sneezy");
+  producing_db.query("select shop_nr, producing from shopproducing order by shop_nr");
+  producing_db.fetchRow();
 
   /****** type ******/
-  type_db=mysql_init(NULL);
-  if(!mysql_real_connect(type_db, NULL, "sneezy", NULL, 
-	  (gamePort!=PROD_GAMEPORT ? "sneezybeta" : "sneezy"), 0, NULL, 0)){
-    vlogf(LOG_BUG, "Could not connect (1) to database 'sneezy'.");
-    exit(0);
-  }
-
-  if(mysql_query(type_db, "select shop_nr, type from shoptype order by shop_nr")){
-    vlogf(LOG_BUG, "Database query failed: %s\n", mysql_error(type_db));
-    exit(0);
-  }
-  type_res=mysql_use_result(type_db);
-  type_row=mysql_fetch_row(type_res);
+  TDatabase type_db("sneezy");
+  type_db.query("select shop_nr, type from shoptype order by shop_nr");
+  type_db.fetchRow();
 
   /****** material ******/
-  material_db=mysql_init(NULL);
-  if(!mysql_real_connect(material_db, NULL, "sneezy", NULL, 
-	  (gamePort!=PROD_GAMEPORT ? "sneezybeta" : "sneezy"), 0, NULL, 0)){
-    vlogf(LOG_BUG, "Could not connect (1) to database 'sneezy'.");
-    exit(0);
-  }
-
-  if(mysql_query(material_db, "select shop_nr, mat_type from shopmaterial order by shop_nr")){
-    vlogf(LOG_BUG, "Database query failed: %s\n", mysql_error(material_db));
-    exit(0);
-  }
-  material_res=mysql_use_result(material_db);
-  material_row=mysql_fetch_row(material_res);
+  TDatabase material_db("sneezy");
+  material_db.query("select shop_nr, mat_type from shopmaterial order by shop_nr");
+  material_db.fetchRow();
 
   /****** owned ******/
-  owned_db=mysql_init(NULL);
-  if(!mysql_real_connect(owned_db, NULL, "sneezy", NULL, 
-	  (gamePort!=PROD_GAMEPORT ? "sneezybeta" : "sneezy"), 0, NULL, 0)){
-    vlogf(LOG_BUG, "Could not connect (1) to database 'sneezy'.");
-    exit(0);
-  }
+  TDatabase owned_db("sneezy");
+  owned_db.query("select shop_nr, profit_buy, profit_sell from shopowned order by shop_nr");
+  owned_db.fetchRow();
+  
+  TDatabase db("sneezy");
 
-  if(mysql_query(owned_db, "select shop_nr, profit_buy, profit_sell from shopowned order by shop_nr")){
-    vlogf(LOG_BUG, "Database query failed: %s\n", mysql_error(owned_db));
-    exit(0);
-  }
-  owned_res=mysql_use_result(owned_db);
-  owned_row=mysql_fetch_row(owned_res);
+  db.query("select shop_nr, no_such_item1, no_such_item2, do_not_buy, missing_cash1, missing_cash2, message_buy, message_sell, temper1, temper2, keeper, flags, in_room, open1, close1, open2, close2, profit_buy, profit_sell from shop order by shop_nr");
 
-  if(dbquery(TRUE, &res, "sneezy", "bootTheShops", "select shop_nr, no_such_item1, no_such_item2, do_not_buy, missing_cash1, missing_cash2, message_buy, message_sell, temper1, temper2, keeper, flags, in_room, open1, close1, open2, close2, profit_buy, profit_sell from shop order by shop_nr")){
-    vlogf(LOG_BUG, "Database error: bootTheShops");
-    exit(0);
-  }
-
-  while((row=mysql_fetch_row(res))){
+  while(db.fetchRow()){
     shopData sd;
 
-    shop_nr=atoi(row[0]);
-    sd.no_such_item1 = mud_str_dup(row[1]);
-    sd.no_such_item2 = mud_str_dup(row[2]);
-    sd.do_not_buy = mud_str_dup(row[3]);
-    sd.missing_cash1 = mud_str_dup(row[4]);
-    sd.missing_cash2 = mud_str_dup(row[5]);
-    sd.message_buy = mud_str_dup(row[6]);
-    sd.message_sell = mud_str_dup(row[7]);
-    sd.temper1=atoi(row[8]);
-    sd.temper2=atoi(row[9]);
-    sd.keeper=real_mobile(atoi(row[10]));
-    sd.flags=atoi(row[11]);
-    sd.in_room=atoi(row[12]);
-    sd.open1=atoi(row[13]);
-    sd.close1=atoi(row[14]);
-    sd.open2=atoi(row[15]);
-    sd.close2=atoi(row[16]);
+    shop_nr=atoi(db.getColumn(0));
+    sd.no_such_item1 = mud_str_dup(db.getColumn(1));
+    sd.no_such_item2 = mud_str_dup(db.getColumn(2));
+    sd.do_not_buy = mud_str_dup(db.getColumn(3));
+    sd.missing_cash1 = mud_str_dup(db.getColumn(4));
+    sd.missing_cash2 = mud_str_dup(db.getColumn(5));
+    sd.message_buy = mud_str_dup(db.getColumn(6));
+    sd.message_sell = mud_str_dup(db.getColumn(7));
+    sd.temper1=atoi(db.getColumn(8));
+    sd.temper2=atoi(db.getColumn(9));
+    sd.keeper=real_mobile(atoi(db.getColumn(10)));
+    sd.flags=atoi(db.getColumn(11));
+    sd.in_room=atoi(db.getColumn(12));
+    sd.open1=atoi(db.getColumn(13));
+    sd.close1=atoi(db.getColumn(14));
+    sd.open2=atoi(db.getColumn(15));
+    sd.close2=atoi(db.getColumn(16));
 
-    if(owned_row && (atoi(owned_row[0]))==shop_nr){
-      sd.profit_buy=atof(owned_row[1]);
-      sd.profit_sell=atof(owned_row[2]);
-      owned_row=mysql_fetch_row(owned_res);
+    if(owned_db.getColumn(0) && (atoi(owned_db.getColumn(0)))==shop_nr){
+      sd.profit_buy=atof(owned_db.getColumn(1));
+      sd.profit_sell=atof(owned_db.getColumn(2));
+      owned_db.fetchRow();
     } else {
-      sd.profit_buy=atof(row[17]);
-      sd.profit_sell=atof(row[18]);
+      sd.profit_buy=atof(db.getColumn(17));
+      sd.profit_sell=atof(db.getColumn(18));
     }
 
-    while(type_row && atoi(type_row[0])==shop_nr){
-      sd.type.push_back(atoi(type_row[1]));
-      type_row=mysql_fetch_row(type_res);
+    while(type_db.getColumn(0) && atoi(type_db.getColumn(0))==shop_nr){
+      sd.type.push_back(atoi(type_db.getColumn(1)));
+      type_db.fetchRow();
     }
     sd.type.push_back(MAX_OBJ_TYPES);
     
-    while(producing_row && atoi(producing_row[0])==shop_nr){
-      sd.producing.push_back(real_object(atoi(producing_row[1])));
-      producing_row=mysql_fetch_row(producing_res);
+    while(producing_db.getColumn(0) && atoi(producing_db.getColumn(0))==shop_nr){
+      sd.producing.push_back(real_object(atoi(producing_db.getColumn(1))));
+      producing_db.fetchRow();
     }
     sd.producing.push_back(-1);
     
-    while(material_row && atoi(material_row[0])==shop_nr){
-      sd.mat_type.push_back(atoi(material_row[1]));
-      material_row=mysql_fetch_row(material_res);
+    while(material_db.getColumn(0) && atoi(material_db.getColumn(0))==shop_nr){
+      sd.mat_type.push_back(atoi(material_db.getColumn(1)));
+      material_db.fetchRow();
     }
     sd.mat_type.push_back(MAX_OBJ_TYPES);
 
     shop_index.push_back(sd);
   }  
-
-  mysql_free_result(res);
-  mysql_free_result(producing_res);
-  mysql_close(producing_db);
-  mysql_free_result(type_res);
-  mysql_close(type_db);
-  mysql_free_result(material_res);
-  mysql_close(material_db);
 }
 
 #endif

@@ -18,12 +18,12 @@ TDatabase::TDatabase(string tdb) :
   db(NULL)
 {
   setDB(tdb);
-  //  vlogf(LOG_DB, "constructor setDB");
+    vlogf(LOG_DB, "constructor setDB");
 }
 
 TDatabase::~TDatabase(){
   mysql_free_result(res);
-  //  vlogf(LOG_DB, "query results freed");
+    vlogf(LOG_DB, "query results freed");
 }
 
 void TDatabase::setDB(string tdb){
@@ -50,6 +50,9 @@ bool TDatabase::fetchRow(){
 
 // get one of the results from the current row of the current query
 char *TDatabase::getColumn(unsigned int i){
+  if(!res || !row)
+    return NULL;
+
   if(i > (mysql_num_fields(res)-1) || i < 0){
     return NULL;
   } else {
@@ -126,8 +129,8 @@ bool TDatabase::query(const char *query,...){
     res=restmp;
   }
 
-  //  if(res)
-  //    vlogf(LOG_DB, "New query results stored.");
+  if(res)
+    vlogf(LOG_DB, "New query results stored.");
   
   return TRUE;
 }

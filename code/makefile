@@ -14661,7 +14661,7 @@ objs/shop.o: limbs.h body.h race.h skills.h disease.h trap.h task.h weather.h
 objs/shop.o: sound.h create.h thing.h room.h obj.h connect.h obj_drug.h
 objs/shop.o: charfile.h being.h person.h monster.h account.h extern.h
 objs/shop.o: handler.h obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/shop.o: materials.h shop.h statistics.h obj_spellbag.h
+objs/shop.o: materials.h shop.h statistics.h database.h obj_spellbag.h
 objs/shop.o: obj_expandable_container.h obj_open_container.h
 objs/shop.o: obj_base_container.h obj_symbol.h obj_general_weapon.h
 objs/shop.o: obj_base_weapon.h obj_base_clothing.h obj_magic_item.h
@@ -15552,7 +15552,7 @@ objs/spec_mobs_realestate.o: weather.h sound.h create.h thing.h room.h obj.h
 objs/spec_mobs_realestate.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/spec_mobs_realestate.o: monster.h account.h extern.h handler.h
 objs/spec_mobs_realestate.o: obj_money.h rent.h spec_mobs.h spec_rooms.h
-objs/spec_mobs_realestate.o: materials.h
+objs/spec_mobs_realestate.o: materials.h database.h
 objs/spec_objs.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/spec_objs.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/spec_objs.o: /usr/include/gnu/stubs.h
@@ -15606,10 +15606,11 @@ objs/spec_objs.o: skills.h disease.h trap.h task.h weather.h sound.h create.h
 objs/spec_objs.o: thing.h room.h obj.h connect.h obj_drug.h charfile.h
 objs/spec_objs.o: being.h person.h monster.h account.h extern.h handler.h
 objs/spec_objs.o: obj_money.h rent.h spec_mobs.h spec_rooms.h materials.h
-objs/spec_objs.o: obj_base_corpse.h obj_base_container.h obj_open_container.h
-objs/spec_objs.o: obj_trap.h obj_portal.h obj_seethru.h obj_general_weapon.h
-objs/spec_objs.o: obj_base_weapon.h obj_drinkcon.h obj_base_cup.h
-objs/spec_objs.o: obj_potion.h obj_magic_item.h obj_staff.h obj_wand.h
+objs/spec_objs.o: database.h obj_base_corpse.h obj_base_container.h
+objs/spec_objs.o: obj_open_container.h obj_trap.h obj_portal.h obj_seethru.h
+objs/spec_objs.o: obj_general_weapon.h obj_base_weapon.h obj_drinkcon.h
+objs/spec_objs.o: obj_base_cup.h obj_potion.h obj_magic_item.h obj_staff.h
+objs/spec_objs.o: obj_wand.h
 objs/spec_objs_blind.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_objs_blind.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_objs_blind.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
