@@ -966,6 +966,12 @@ void TBeing::bodySpread(int chance_to_spread, affectedData * af)
   if (::number(1, 50000) > chance_to_spread)
     return;
 
+  if(isImmortal())
+    return;
+
+  if(roomp->isRoomFlag(ROOM_PEACEFUL))
+    return;
+
   if (part == WEAR_NOWHERE) {
 
     do {
