@@ -307,7 +307,7 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_mobs_goring.o		spec_objs_manadrain.o		\
 	spec_mobs_money_train.o	    	spec_objs_poison_cutlass.o	\
 	spec_mobs_posse.o		spec_objs_unholy_cutlass.o	\
-	spec_mobs_realestate.o	    	spec_rooms.o			\
+	spec_rooms.o			\
 	spec_mobs_tudy.o		spec_rooms_sleeptag.o           \
 	spec_mobs_tattoo_artist.o
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
