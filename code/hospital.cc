@@ -263,34 +263,32 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       affectedData *aff;
       for (aff = ch->affected; aff; aff = aff->next) {
         if (aff->type == AFFECT_DISEASE) {
-          if (!aff->level) {
-            if (ch->GetMaxLevel() < 12) {
-              sprintf(buf, "%s Hmm, you are just a newbie, guess I will have to take you at reduced rates.\n\r", ch->getName());
-              me->doTell(buf);
-            }
-            if (ch->GetMaxLevel() < 3) {
-              sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
+	  if (ch->GetMaxLevel() < 12) {
+	    sprintf(buf, "%s Hmm, you are just a newbie, guess I will have to take you at reduced rates.\n\r", ch->getName());
+	    me->doTell(buf);
+	  }
+	  if (ch->GetMaxLevel() < 3) {
+	    sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
                     ch->getName(), ++count,
                     DiseaseInfo[affToDisease(*aff)].name,
                     DISEASE_PRICE_3);
-            } else if (ch->GetMaxLevel() < 6) {
-              sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
+	  } else if (ch->GetMaxLevel() < 6) {
+	    sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
                     ch->getName(), ++count,
                     DiseaseInfo[affToDisease(*aff)].name,
                     DISEASE_PRICE_6);
-            } else if (ch->GetMaxLevel() < 12) {
-              sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
+	  } else if (ch->GetMaxLevel() < 12) {
+	    sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
                     ch->getName(), ++count,
                     DiseaseInfo[affToDisease(*aff)].name,
                     DISEASE_PRICE_12);
-            } else {
-              sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
+	  } else {
+	    sprintf(buf, "%s %d) You have %s (%d talens).\n\r",
                     ch->getName(), ++count, 
                     DiseaseInfo[affToDisease(*aff)].name,
                     DiseaseInfo[affToDisease(*aff)].cure_cost);
-            }
-            me->doTell(buf);
-          }
+	  }
+	  me->doTell(buf);
         } else if (aff->type == SPELL_BLINDNESS) {
           if (!aff->shouldGenerateText())
             continue;
@@ -299,7 +297,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
                     discArray[aff->type]->name,
                     spell_regen_price(ch, SPELL_BLINDNESS));
           me->doTell(buf);
-        }
+	}
       }  // affects loop
     }
     if (!count) {
@@ -490,48 +488,46 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       for (aff = ch->affected; aff; aff = aff2) {
         aff2 = aff->next;
         if (aff->type == AFFECT_DISEASE) {
-          if (!aff->level) {
-            if (++count == bought) {
-              if (ch->GetMaxLevel() < 3) 
-                cost = DISEASE_PRICE_3;
-              else if (ch->GetMaxLevel() < 6) 
-                cost = DISEASE_PRICE_6;
-              else if (ch->GetMaxLevel() < 12) 
-                cost = DISEASE_PRICE_12;
-              else 
-                cost = DiseaseInfo[affToDisease(*aff)].cure_cost;
-              
-              if ((ch->getMoney() + ch->getBank()) < cost) {
-                sprintf(buf, "%s You don't have enough money to cure %s!",
-                         fname(ch->name).c_str(),
-                         DiseaseInfo[affToDisease(*aff)].name);
-                me->doTell(buf);
-                return TRUE;
-              } else {
-                int cashCost = min(ch->getMoney(), cost);
-                ch->addToMoney(-cashCost, GOLD_HOSPITAL);
-
-                if (cashCost != cost) {
-                  cashCost = (ch->getBank() - (cost - cashCost));
-                  ch->setBank(cashCost);
-                }
-
-                act("$n waves $s hands, utters many magic phrases and touches $N!", TRUE, me, NULL, ch, TO_NOTVICT);
-                act("$n waves $s hands, utters many magic phrases and touches you!", TRUE, me, NULL, ch, TO_VICT);
-                if (aff->modifier == DISEASE_POISON) {
-                  ch->affectFrom(SPELL_POISON);
-                  ch->affectFrom(SPELL_POISON_DEIKHAN);
-                }
-                if (aff->modifier == DISEASE_SYPHILIS) {
-                  ch->affectFrom(SPELL_DEATH_MIST);
-                }
-                ch->diseaseStop(aff);
-                ch->affectRemove(aff);
-                ch->doSave(SILENT_YES);
-                return TRUE;
-              }
-            }
-          }
+	  if (++count == bought) {
+	    if (ch->GetMaxLevel() < 3) 
+	      cost = DISEASE_PRICE_3;
+	    else if (ch->GetMaxLevel() < 6) 
+	      cost = DISEASE_PRICE_6;
+	    else if (ch->GetMaxLevel() < 12) 
+	      cost = DISEASE_PRICE_12;
+	    else 
+	      cost = DiseaseInfo[affToDisease(*aff)].cure_cost;
+	    
+	    if ((ch->getMoney() + ch->getBank()) < cost) {
+	      sprintf(buf, "%s You don't have enough money to cure %s!",
+		      fname(ch->name).c_str(),
+		      DiseaseInfo[affToDisease(*aff)].name);
+	      me->doTell(buf);
+	      return TRUE;
+	    } else {
+	      int cashCost = min(ch->getMoney(), cost);
+	      ch->addToMoney(-cashCost, GOLD_HOSPITAL);
+	      
+	      if (cashCost != cost) {
+		cashCost = (ch->getBank() - (cost - cashCost));
+		ch->setBank(cashCost);
+	      }
+	      
+	      act("$n waves $s hands, utters many magic phrases and touches $N!", TRUE, me, NULL, ch, TO_NOTVICT);
+	      act("$n waves $s hands, utters many magic phrases and touches you!", TRUE, me, NULL, ch, TO_VICT);
+	      if (aff->modifier == DISEASE_POISON) {
+		ch->affectFrom(SPELL_POISON);
+		ch->affectFrom(SPELL_POISON_DEIKHAN);
+	      }
+	      if (aff->modifier == DISEASE_SYPHILIS) {
+		ch->affectFrom(SPELL_DEATH_MIST);
+	      }
+	      ch->diseaseStop(aff);
+	      ch->affectRemove(aff);
+	      ch->doSave(SILENT_YES);
+	      return TRUE;
+	    }
+	  }
         } else if (aff->type == SPELL_BLINDNESS) {
           if (++count == bought) {
             cost = spell_regen_price(ch, SPELL_BLINDNESS);
