@@ -2285,6 +2285,7 @@ void TBeing::doOutfit(const sstring &arg)
       
       --(*obj);
       *mob += *obj;
+      doSave(SILENT_YES);
       return;
     }
   } else {
@@ -2341,6 +2342,8 @@ void TBeing::doOutfit(const sstring &arg)
     obj = NULL;
   }
 
+  doSave(SILENT_YES);
+  mob->doSave(SILENT_YES);
   return;
 }
 
