@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: cmd_set.cc,v $
+// Revision 1.3  1999/10/07 21:11:07  batopr
+// added statistics.h
+//
 // Revision 1.2  1999/10/07 21:08:23  batopr
 // Added @set gold_modifier
 //
@@ -22,6 +25,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdsneezy.h"
+#include "statistics.h"
 
 void TBeing::doSet(const char *)
 {
