@@ -2256,7 +2256,7 @@ int mysteryPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 {
   int rc;
   int random = ::number(0,12);
-
+  affectedData aff, aff2, aff3;
   if (genericPotion(ch, me, cmd, arg, rc))
     return rc;
 
@@ -2265,7 +2265,31 @@ int mysteryPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
 
   switch (random) {
     case 1:
+      ch->genericRestore(RESTORE_FULL);
+      ch->sendTo("You have been healed.\n\r");
+      break;
     case 2:
+      aff.type = SPELL_STONE_SKIN;
+      aff.level = 30;
+      aff.duration = 8 * UPDATES_PER_MUDHOUR;
+      aff.location = APPLY_ARMOR;
+      aff.modifier = -75;
+      aff2.type = SPELL_STONE_SKIN;
+      aff2.level = 30;
+      aff2.duration = 8 * UPDATES_PER_MUDHOUR;
+      aff2.location = APPLY_IMMUNITY;
+      aff2.modifier = IMMUNE_PIERCE;
+      aff2.modifier2 = 15;
+      aff3.type = AFFECT_SKILL_ATTEMPT;
+      aff3.level = 0;
+      aff3.duration = 24 * UPDATES_PER_MUDHOUR;
+      aff3.location = APPLY_NONE;
+      aff3.modifier = SPELL_STONE_SKIN;
+      ch->sendTo("Your skin becomes as hard as stone!\n\r");
+      ch->affectTo(&aff);
+      ch->affectTo(&aff2);
+      if (!(ch->isImmortal())) ch->affectTo(&aff3);
+      break;
     case 10:
       ch->age_mod += 1;
       ch->sendTo("You feel a tiny bit older.\n\r");
@@ -2280,6 +2304,24 @@ int mysteryPotion(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
       ch->sendTo("You feel ready to learn more.\n\r");
       break;
     case 4:
+      aff.type = SPELL_POISON;
+      aff.level = 10;
+      aff.duration = (20) * UPDATES_PER_MUDHOUR;
+      aff.modifier = -20;
+      aff.location = APPLY_STR;
+      aff.bitvector = AFF_POISON;
+
+      aff2.type = AFFECT_DISEASE;
+      aff2.level = 0;
+      aff2.duration = aff.duration;
+      aff2.modifier = DISEASE_POISON;
+      aff2.location = APPLY_NONE;
+      aff2.bitvector = AFF_POISON;
+      ch->sendTo("You have been poisoned!\n\r");
+      ch->affectTo(&aff);
+      ch->affectTo(&aff2);
+      disease_start(ch, &aff2);
+      break;
     case 5:
     case 11:
       ch->age_mod -= 5;
@@ -2938,6 +2980,34 @@ int sonicBlast(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   return TRUE;
 }
 
+int slipInOffal(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
+{
+  dirTypeT dir;
+  char buf[256];
+  int dum = (int) arg;
+
+  if (cmd == CMD_OBJ_MOVEMENT) {
+    dir = dirTypeT(dum);
+    if (dir < MIN_DIR || dir >= MAX_DIR) {
+      vlogf(LOG_PROC, "Problematic direction in CMD_OBJ_MOVEMENT for Offal");
+      return FALSE;
+    }
+    if (::number(0,15) == 0) {
+      act("$n steps in $p and slips.", TRUE, ch, me, 0, TO_ROOM);
+      act("You step in $p and slip.", TRUE, ch, me, 0, TO_CHAR);
+      sprintf(buf, "As you moved %sward, you fell down.", dirs[dir]);
+      act(buf, TRUE, ch, me, 0, TO_CHAR);
+      sprintf(buf, "$n trips and falls as $e moves in from a %sward direction.", dirs[dir]);
+      act(buf, TRUE, ch, me, 0, TO_ROOM);
+      ch->setPosition(POSITION_SITTING);
+      delete me;
+      return TRUE;
+    } else {
+      return FALSE;
+    }
+  }
+  return FALSE;
+}
 
 
 int vorpal(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
@@ -7311,6 +7381,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Energy Shield: shield", energyShield},
   {FALSE, "potion of learning", learningPotion},
   {FALSE, "mystery potion", mysteryPotion},
+  {FALSE, "Offal slip proc", slipInOffal},
   {FALSE, "last proc", bogusObjProc}
 };
 
