@@ -95,6 +95,7 @@ endif
 # CFLAGS +=-Winline           # looks for non-inlineable inlines
 # postgresql header files
 CFLAGS +=-I/usr/include/postgresql
+CFLAGS +=-DUSE_SQL=0
 
 ###############################################################################
 #                                   LDFLAGS                                   #
