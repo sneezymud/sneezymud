@@ -289,6 +289,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Lycanthropy: hemlock", 6762},
   {"BlahBlah Shouts", MOB_NONE},
   {"Monk: Paid Tabuda", MOB_NONE},
+  {"Has Skill: Catleap", MOB_NONE},
   {"", MOB_NONE}, 
 };
 

@@ -1448,6 +1448,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_JIRIN:
       case SKILL_KUBO:
       case SKILL_CATFALL:
+      case SKILL_CATLEAP:
       case SKILL_WOHLIN:
       case SKILL_VOPLAT:
       case SKILL_BLINDFIGHTING:

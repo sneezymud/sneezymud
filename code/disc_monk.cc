@@ -13,6 +13,61 @@
 #include "obj_light.h"
 
 
+int TBeing::doLeap(const sstring &arg)
+{
+  int rc;
+
+  if (checkBusy()) {
+    return FALSE;
+  }
+  
+  if(fight()){
+    sendTo("You can't leap away while fighting!\n\r");
+    return FALSE;
+  }
+
+  if (!doesKnowSkill(SKILL_CATLEAP)) {
+    sendTo("You do not know the secrets of cat-like leaping.\n\r");
+    return FALSE;
+  }
+
+  if(roomp->isFallSector()){
+    sendTo("There's no ground beneath you to leap off of here!\n\r");
+    return FALSE;
+  }
+
+  dirTypeT dir=getDirFromChar(arg);
+  if(!exitDir(dir)){
+    sendTo("You can't go that way.\n\r");
+    return FALSE;
+  }
+
+
+  bool was_flying=IS_SET(specials.affectedBy, AFF_FLYING);
+
+  // make them fly
+  SET_BIT(specials.affectedBy, AFF_FLYING);
+  setPosition(POSITION_FLYING);
+
+  act("You leap into the air!", FALSE, this, 0, 0, TO_CHAR);
+  act("$n takes a great leap into the air!.", FALSE, this, 0, 0, TO_ROOM);
+  addToMove(-15);
+
+  if(!bSuccess(this, getSkillValue(SKILL_CATLEAP), SKILL_CATLEAP)){
+    sendTo("You don't make it very far.\n\r");
+    act("You don't make it very far.", FALSE, this, 0, 0, TO_CHAR);
+    act("$n doesn't make it very far.", FALSE, this, 0, 0, TO_ROOM);
+    rc=crashLanding(POSITION_SITTING);
+  } else {
+    rc=doMove(getDirFromChar(arg));
+  }
+
+
+  if(!was_flying)
+    REMOVE_BIT(specials.affectedBy, AFF_FLYING);
+  return rc;
+}
+
 
 int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
 {
@@ -470,273 +525,3 @@ int TBeing::doChi(const char *tString, TThing *tSucker)
   return tRc;
 }
 
-/*
-int TBeing::doChi(const char *argument, TThing *target)
-{
-  int rc = 0, bits = 0;
-  TObj *obj;
-  TBeing *victim;
-  char name_buf[256];
-  
-  if (checkBusy()) {
-    return FALSE;
-  }
-  if (!doesKnowSkill(SKILL_CHI)) {
-    sendTo("You know nothing about chi.\n\r");
-    return FALSE;
-  }
-  if (getMana() <= 0) {
-    sendTo("You lack the chi.\n\r");
-    return FALSE;
-  }
-
-  strcpy(name_buf, argument);
-
-  if (!strcmp(argument, "all")) {
-    if (getDiscipline(DISC_MEDITATION_MONK)->getLearnedness() < 25) {
-      sendTo("You lack the ability to project chi on others at your current training.\n\r");
-      return FALSE;
-    }
-
-    rc = chiMe(this);
-
-    chiLag(this, tRc);
-
-    // DELETE_THIS will fall through
-  } else {
-    bits = generic_find(argument, FIND_CHAR_ROOM | FIND_OBJ_ROOM | FIND_OBJ_EQUIP, this, &victim, &obj);
-
-    if (!bits) {
-      if (!fight() || !sameRoom(*fight())) {
-	sendTo("Use your chi on what?\n\r");
-	return FALSE;
-      }
-      victim = fight();
-      bits = FIND_CHAR_ROOM;
-    }
-
-    if (this==victim) {
-      if (getSkillValue(SKILL_CHI) < 25) {
-        sendTo("You lack the ability to project chi on yourself at your current training.\n\r");
-	return FALSE;
-      }
-
-      rc = chiMe(this);
-      chiLag(this, tRc);
-      return TRUE;
-    }
-
-    switch (bits) {
-      case FIND_CHAR_ROOM:
-	if (getSkillValue(SKILL_CHI) < 50 ||
-	    getDiscipline(DISC_MEDITATION_MONK)->getLearnedness() < 10){
-          sendTo("You lack the ability to project chi on others at your current training.\n\r");
-	  break;
-	}
-
-	rc = victim->chiMe(this);
-        chiLag(this, tRc);
-	
-	if (IS_SET_DELETE(rc, DELETE_VICT)) {
-	  delete victim;
-	  victim = NULL;
-	  REM_DELETE(rc, DELETE_VICT);
-	} else if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
-
-	break;
-      case FIND_OBJ_ROOM:
-      case FIND_OBJ_EQUIP:
-	rc = obj->chiMe(this);
-        chiLag(this, tRc);
-	break;
-#if 0
-    // generic_find looks inv first, so if not goingto do anything with it, ignore it
-      case FIND_OBJ_INV:
-	act("$p must be worn, held or on the ground for this to work.",
-	    FALSE, this, obj, 0, TO_CHAR);
-	return FALSE;
-#endif
-      default:
-	return FALSE;
-    }
-  }
-
-  return rc;
-}
-
-int chi(TBeing *c, TObj *o)
-{
-  TLight *light = dynamic_cast<TLight *>(o);
-
-  if (!bSuccess(c, c->getSkillValue(SKILL_CHI), SKILL_CHI)){    
-    act("You are unable to focus your mind.", TRUE, c, NULL, NULL, TO_CHAR);
-    c->reconcileMana(TYPE_UNDEFINED, 0, 5);
-    return TRUE;
-  } else if (light) {
-    if(light->isLit()){
-      act("$n knits $s brow in concentration then claps twice causing $p to go out.", TRUE, c, light, NULL, TO_ROOM);
-      act("You concentrate hard on $p, then clap twice.  It goes out.", TRUE, c, light, NULL, TO_CHAR);
-      light->putLightOut();
-    } else {
-      if (c->roomp->isUnderwaterSector() || light->getCurBurn()<=0) {
-	c->sendTo("You seem unable to do anything to that.\n\r");
-	return FALSE;
-      }
-
-      act("$n furrows $s brow in concentration then claps twice.",
-          TRUE, c, light, NULL, TO_ROOM);
-      act("$p springs into light.", TRUE, c, light, NULL, TO_ROOM);
-      act("You furrow your brow in concentration then clap twice.",
-          TRUE, c, light, NULL, TO_CHAR);
-      act("$p springs into light.", TRUE, c, light, NULL, TO_CHAR);
-      light->lightMe(c, SILENT_YES);
-    }
-    c->reconcileMana(TYPE_UNDEFINED, 0, 5);
-    return TRUE;
-  }
-
-  c->sendTo("You seem unable to do anything to that with your chi.\n\r");
-  return FALSE;
-}
-
-int chiMe(TBeing *c)
-{
-  int bKnown=c->getSkillValue(SKILL_CHI);
-  int mana=100-::number(1, c->getSkillValue(SKILL_CHI)/2);
-  int level=c->getSkillLevel(SKILL_CHI);
-  affectedData aff;
-
-  if(c->affectedBySpell(SKILL_CHI)){
-    c->sendTo("You are already projecting your chi upon yourself.\n\r");
-    return false;
-  }
-
-  if (bSuccess(c, bKnown, SKILL_CHI)) {
-    c->reconcileMana(TYPE_UNDEFINED, 0, mana);
-    
-    act("You close your eyes and concentrate for a moment, then begin radiating an intense <R>heat<1> from your body.", TRUE, c, NULL, NULL, TO_CHAR);
-    act("$n closes $s eyes in concentration, then begins radiating an intense <R>heat<1> from $s body.", TRUE, c, NULL, NULL, TO_ROOM);
-    
-    aff.type = SKILL_CHI;
-    aff.level = level;
-    aff.duration = (3 + (level / 2)) * UPDATES_PER_MUDHOUR;
-    aff.location = APPLY_IMMUNITY;
-    aff.modifier = IMMUNE_COLD;
-    aff.modifier2 = ((level * 2) / 3);
-    aff.bitvector = 0;
-    c->affectTo(&aff, -1);
-  } else {
-    act("You are unable to focus your mind.", TRUE, c, NULL, NULL, TO_CHAR);
-    if(c->getMana()>=0)
-      c->reconcileMana(TYPE_UNDEFINED, 0, mana/2);
-  }
-  return true;
-}
-
-int chi(TBeing *c, TBeing *v)
-{
-  int dam=c->getSkillDam(v, SKILL_CHI, c->getSkillLevel(SKILL_CHI), c->getAdvLearning(SKILL_CHI));
-  int bKnown=c->getSkillValue(SKILL_CHI);
-
-  int mana=::number(dam/4, dam/2);
-  TThing *t, *tnext;
-  TBeing *tmp;
-
-  if (c->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
-    return FALSE;
-
-  // chi has no hits() check.  accounted for in getSkillDam
-  if (bSuccess(c, bKnown, SKILL_CHI)){    
-    if(!v){ // area affect
-      act("You focus your <c>mind<1> and unleash a <r>blast of chi<1> upon your foes!", TRUE, c, NULL, NULL, TO_CHAR);
-      act("$n suddenly <r>radiates with power<1> and brings harm to $s enemies.", TRUE, c, NULL, NULL, TO_ROOM);
-
-      dam/=2;
-
-      for(t = c->roomp->getStuff(); t; t=tnext){
-	tnext=t->nextThing;
-	tmp=dynamic_cast<TBeing *>(t);
-	if (tmp && c != tmp && !tmp->isImmortal() && !c->inGroup(*tmp)) {
-	  if(c->getMana()>0)
-	    c->reconcileMana(TYPE_UNDEFINED, 0, mana);
-	  else {
-	    act("You lack the chi to continue your attack.", 
-		TRUE, c, NULL, NULL, TO_CHAR);
-	    break;
-	  }
-
-	  if(tmp->affectedBySpell(SKILL_CHI)){
-	    act("You focus your <c>mind<1> and unleash your <r>chi<1> on $N.",
-		TRUE, c, NULL, tmp, TO_CHAR);
-	    act("A bright <W>aura<1> flares up around $N, deflecting your attack and then striking back!\n\rYour vision goes <r>red<1> as the pain overwhelms you!", TRUE, c, NULL, tmp, TO_CHAR);
-	    act("A bright <W>aura<1> flares up around $N, deflecting $n's chi attack and then striking back!", TRUE, c, NULL, tmp, TO_NOTVICT);
-	    act("A bright <W>aura<1> flares up around you, deflecting $n's chi attack and then striking back!", TRUE, c, NULL, tmp, TO_VICT);
-	    
-	    if (tmp->reconcileDamage(c, ::number(1, dam), SKILL_CHI) == -1){
-	      return DELETE_THIS;
-	    }
-	  } else {
-	    act("...$N screws up $s face in agony.", 
-		TRUE, c, NULL, tmp, TO_CHAR);
-	    act("$n exerts $s <r>chi force<1> on you, causing extreme pain.", 
-		TRUE, c, NULL, tmp, TO_VICT);
-	    act("$N screws up $s face in agony.", 
-		TRUE, c, NULL, tmp, TO_NOTVICT);
-
-	    if (c->reconcileDamage(tmp, dam, SKILL_CHI) == -1){
-	      delete tmp;
-	      tmp = NULL;
-	    }
-	  }
-	}
-      }
-    } else { // single victim
-      if (c->noHarmCheck(v))
-        return FALSE;
-
-      if(v->affectedBySpell(SKILL_CHI)){
-	act("You focus your <c>mind<1> and unleash your <r>chi<1> on $N",
-	    TRUE, c, NULL, v, TO_CHAR);
-	act("A bright <W>aura<1> flares up around $N, deflecting your attack and then striking back!\n\rYour vision goes <r>red<1> as the pain overwhelms you!", TRUE, c, NULL, v, TO_CHAR);
-	act("A bright <W>aura<1> flares up around $N, deflecting $n's chi attack and then striking back!", TRUE, c, NULL, v, TO_NOTVICT);
-	act("A bright <W>aura<1> flares up around you, deflecting $n's chi attack and then striking back!", TRUE, c, NULL, v, TO_VICT);
-
-	if (v->reconcileDamage(c, ::number(1, dam), SKILL_CHI) == -1)
-          return DELETE_THIS;
-      } else {
-	act("You focus your <c>mind<1> and unleash your <r>chi<1> on $N.", 
-	    TRUE, c, NULL, v, TO_CHAR);
-	act("$n exerts $s <r>chi force<1> on you, causing extreme pain.", 
-	    TRUE, c, NULL, v, TO_VICT);
-	act("$n unleashes a blast of focused <r>chi force<z> at $N, who gasps suddenly, as if in great pain.", 
-	    TRUE, c, NULL, v, TO_NOTVICT);
-	
-	if (c->reconcileDamage(v, dam, SKILL_CHI) == -1)
-	  return DELETE_VICT;
-      }
-      
-      if(c->getMana()>=0)
-	c->reconcileMana(TYPE_UNDEFINED, 0, mana);
-    }
-  } else {
-    if(!v){
-      act("You are unable to focus your mind.", TRUE, c, NULL, NULL, TO_CHAR);
-      if(c->getMana()>=0)
-	c->reconcileMana(TYPE_UNDEFINED, 0, mana/2);
-      return FALSE;
-    } else {
-      act("You are unable to focus your mind.", TRUE, c, NULL, v, TO_CHAR);
-      act("$n gazes at you intently for a moment, but nothing happens.", TRUE, c, NULL, v, TO_VICT);
-      act("$n gazes at $N intently for a moment, but nothing happens.", TRUE, c, NULL, v, TO_NOTVICT);
-
-      if(c->getMana()>=0)
-	c->reconcileMana(TYPE_UNDEFINED, 0, mana/2);
-      c->reconcileDamage(v, 0, SKILL_CHI);
-      return FALSE;
-    }
-  }
-
-  return TRUE;
-}
-*/

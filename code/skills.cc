@@ -788,6 +788,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDMonk *) cd)->skCatfall;
     case SKILL_REPAIR_MONK:
       return &((CDMonk *) cd)->skRepairMonk;
+    case SKILL_CATLEAP:
+      return &((CDMonk *) cd)->skCatleap;
 
 // disc_meditation_monk
     case SKILL_WOHLIN:

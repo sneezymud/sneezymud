@@ -32,6 +32,7 @@ public:
     CSkill skDisarmMonk;
     CSkill skCatfall;
     CSkill skRepairMonk;
+    CSkill skCatleap;
 
     CDMonk()
       : CDiscipline(),
@@ -54,7 +55,8 @@ public:
       skChi(),
       skDisarmMonk(),
       skCatfall(), 
-      skRepairMonk() {
+      skRepairMonk(),
+      skCatleap(){
     }
     CDMonk(const CDMonk &a)
       : CDiscipline(a),
@@ -77,7 +79,8 @@ public:
       skChi(a.skChi),
       skDisarmMonk(a.skDisarmMonk),
       skCatfall(a.skDisarmMonk),
-      skRepairMonk(a.skRepairMonk) {
+      skRepairMonk(a.skRepairMonk),
+      skCatleap(a.skCatleap){
     }
     CDMonk & operator=(const CDMonk &a) {
       if (this == &a) return *this;
@@ -102,6 +105,7 @@ public:
       skDisarmMonk = a.skDisarmMonk;
       skCatfall = a.skCatfall;
       skRepairMonk = a.skRepairMonk;
+      skCatleap = a.skCatleap;
       return *this;
     }
     virtual ~CDMonk() {}

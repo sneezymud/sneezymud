@@ -1398,6 +1398,9 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_CHI:
 	  rc = doChi(newarg, vict);
 	  break;
+        case CMD_LEAP:
+	  rc = doLeap(stringarg);
+	  break;
         case CMD_EVALUATE:
           doEvaluate(newarg);
           break;
@@ -2756,6 +2759,7 @@ void buildCommandArray(void)
   commandArray[CMD_CHOP] = new commandInfo("chop", POSITION_FIGHTING, 0);
   commandArray[CMD_HURL] = new commandInfo("hurl", POSITION_FIGHTING, 0);
   commandArray[CMD_CHI] = new commandInfo("chi", POSITION_FIGHTING, 0);
+  commandArray[CMD_LEAP] = new commandInfo("leap", POSITION_STANDING, 0);
   commandArray[CMD_DIVINE] = new commandInfo("divine", POSITION_STANDING, 0);
   commandArray[CMD_OUTFIT] = new commandInfo("outfit", POSITION_STANDING, 0);
   commandArray[CMD_CLIENTS] = new commandInfo("clients", POSITION_DEAD, GOD_LEVEL1);

@@ -383,7 +383,9 @@ const int TOG_BLAHBLAH                         = 275;
 
 const int TOG_MONK_PAID_TABUDA                 = 276;
 
-const int MAX_TOG_INDEX       = 277;  // move and change
+const int TOG_HAS_CATLEAP                      = 277;
+
+const int MAX_TOG_INDEX       = 278;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 

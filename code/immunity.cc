@@ -681,6 +681,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SKILL_SWITCH_MONK:
     case SKILL_JIRIN:
     case SKILL_KUBO:
+    case SKILL_CATLEAP:
     case SKILL_CATFALL:
     case SKILL_WOHLIN:
     case SKILL_VOPLAT:

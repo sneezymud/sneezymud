@@ -627,6 +627,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 412;
     case SKILL_CATFALL:
       return 413;
+    case SKILL_CATLEAP:
+      return 414;
     case SKILL_WOHLIN:
       return 423;
     case SKILL_VOPLAT:
@@ -1653,6 +1655,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_KUBO;
     case 413:
       return SKILL_CATFALL;
+    case 414:
+      return SKILL_CATLEAP;
     case 423:
       return SKILL_WOHLIN;
     case 424:
