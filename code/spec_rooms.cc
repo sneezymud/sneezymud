@@ -1722,7 +1722,7 @@ int BankTeleporter(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   if(!rp->getZone()->isEmpty()){
     vlogf(LOG_PEEL, "Bank: here comes the wrecking crew");
 
-    boss = read_mobile(31753, VIRTUAL);
+    boss = read_mobile(31759, VIRTUAL);
     *rp += *boss;
     SET_BIT(boss->specials.affectedBy, AFF_GROUP);
 
