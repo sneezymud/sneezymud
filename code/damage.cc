@@ -842,11 +842,11 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       // let masters loot the kills of a follower
       if (desc && (desc->autobits & AUTO_LOOT_MONEY) && 
           !(desc->autobits & AUTO_LOOT_NOTMONEY)) {
-        sprintf(buf, "get all.talen %s-autoloot", buf2);
+        sprintf(buf, "get all.talen %s-corpse-autoloot", buf2);
         addCommandToQue(buf);
       } else if ((dynamic_cast<TMonster *>(this) && !v->isPc())|| 
 		 (desc && (desc->autobits & AUTO_LOOT_NOTMONEY))) {
-        sprintf(buf, "get all %s-autoloot", buf2);
+        sprintf(buf, "get all %s-corpse-autoloot", buf2);
         addCommandToQue(buf);
       }
 
@@ -883,12 +883,14 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
         int comp, amt;
         TBaseCorpse *corpse = NULL;
 
-        if ((t2 = searchLinkedListVis(this, buf2, roomp->getStuff())) &&
+	sprintf(buf, "%s-corpse-autoloot", buf2);
+
+        if ((t2 = searchLinkedListVis(this, buf, roomp->getStuff())) &&
             (corpse = dynamic_cast<TBaseCorpse *>(t2))) {
           if (doesKnowSkill(SKILL_DISSECT)) {
             comp = determineDissectionItem(corpse, &amt, msg, gl, this);
             if (comp != -1) {
-              sprintf(buf, "dissect %s", buf2);
+              sprintf(buf, "dissect %s-corpse-autoloot", buf2);
               addCommandToQue(buf);
             }
           }
