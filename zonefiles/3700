@@ -326,8 +326,8 @@ D 0 3870 5 2         A Balcony Overlooking the City  -> Skull Duggory's
 D 0 3870 8 1         A Balcony Overlooking the City  -> Inside the Blood Red Tower
 D 0 3871 7 1         Inside the Blood Red Tower -> A Balcony Overlooking the City 
 D 0 3872 8 1         Inside the Spire -> A Balcony Overlooking the City
-M 0 594 1 3872       Butler
-M 0 594 1 3871       Butler
+M 0 3872 1 3872       Shaggy Butler
+M 0 3871 1 3871       Jay Butler
 
 O 0 8721 2 3866      Lights in Adrielz
 O 0 8721 2 3869      Lights in Skull Duggory's
