@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     db_immo.query("select vnum,name,short_desc,long_desc,action_desc,type,action_flag,wear_flag,val0,val1,val2,val3,weight,price,can_be_seen,spec_proc,max_exist,max_struct,cur_struct,decay,volume,material from obj where owner='%s' and vnum=%i", immortal.c_str(), vnums[t]);
     
     if(db_immo.fetchRow()){
-      printf("Adding %i\n", vnums[t]);
+      printf("Adding %i ('%s')\n", vnums[t], db_immo.getColumn("short_desc"));
       
       // fix strung and prototype bits
       action_flag=convertTo<int>(db_immo.getColumn(6));
