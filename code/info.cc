@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: info.cc,v $
+// Revision 1.2  1999/09/29 03:28:27  lapsos
+// Added who -y flag.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -1116,12 +1119,14 @@ void TBeing::doWho(const char *argument)
     if (*arg == '-') {
       if (strchr(arg, '?')) {
         if (isImmortal()) {
-          sb += "[-] [i]idle [l]levels [q]quests [h]hit/mana/move [z]seeks-group [p]group\n\r";
+          sb += "[-] [i]idle [l]levels [q]quests [h]hit/mana/move\n\r";
+          sb += "[-] [z]seeks-group [p]groups [y]currently-not-grouped\n\r";
           sb += "[-] [d]linkdead [g]God [b]Builders [o]Mort [s]stats [f]action\n\r";
           sb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
           sb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
         } else {
-          sb += "[-] [q]quests [g]god [b]builder [o]mort [z]seeks-group [p]groups [f]faction\n\r";
+          sb += "[-] [q]quests [g]god [b]builder [o]mort [f]faction\n\r";
+          sb += "[-] [z]seeks-group [p]groups [y]currently-not-grouped\n\r";
           sb += "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
 #if 1
           sb += "[-] [1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]Shaman\n\r";
@@ -1146,6 +1151,7 @@ void TBeing::doWho(const char *argument)
               (!strchr(arg, 'o') || (p->GetMaxLevel() <= MAX_MORT)) &&
               (!strchr(arg, 'z') || (p->isPlayerAction(PLR_SEEKSGROUP))) &&
               (!strchr(arg, 'p') || (p->isAffected(AFF_GROUP) && !p->master && p->followers)) &&
+              (!strchr(arg, 'y') || !p->isAffected(AFF_GROUP)) &&
               (!strchr(arg, '1') || (p->hasClass(CLASS_MAGIC_USER) && (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
               (!strchr(arg, '2') || (p->hasClass(CLASS_CLERIC) && (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
               (!strchr(arg, '3') || (p->hasClass(CLASS_WARRIOR) && (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
@@ -1208,6 +1214,7 @@ void TBeing::doWho(const char *argument)
                   idle = TRUE;
                   break;
                 case 'l':
+                case 'y':
                   if (!level) {
                     strcat(buf, getWhoLevel(this, p).c_str());
                     if (p->isPlayerAction(PLR_SEEKSGROUP))
