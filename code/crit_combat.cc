@@ -504,9 +504,17 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
       desc->career.crit_hits++;
     if (v->desc)
       v->desc->career.crit_hits_suff++;
-    
+
+    // if there is greater than 10 levels of different in either direction
+    // then either make the crits better, or worse
+    int level_mod=(GetMaxLevel() - v->GetMaxLevel());
+    if(level_mod > -10 && level_mod < 10)
+      level_mod = 0;
+
     // determine which crit to do, higher number = better crits
-    crit_num = ::number(1, 100);
+    crit_num = ::number(1, 100) + ::number(0, level_mod);
+    crit_num = max(1, crit_num);
+    crit_num = min(100, crit_num);
   } else {
     // specified crit
     crit_num = mod;
