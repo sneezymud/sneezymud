@@ -148,11 +148,11 @@ void TBeing::statRoom(TRoom *rmp)
 {
   sstring str;
   sstring tmp_str;
-  char buf2[256];
+  sstring buf2;
   char buf3[80], buf4[80];
   extraDescription *e;
   TThing *t;
-  int counter = 0;
+  int counter = 0, volume;
 
   if (!limitPowerCheck(CMD_EDIT, rmp->number)) {
     sendTo("You are not allowed to stat this room, sorry.\n\r");
@@ -160,21 +160,17 @@ void TBeing::statRoom(TRoom *rmp)
   }
 
 
-  sprintf(buf2,"Room name: %s, Of zone : %d. V-Number : %d, R-number : %d\n\r",
-        rmp->name, rmp->getZoneNum(), rmp->number, in_room);
-  str = buf2;
+  str = fmt("Room name: %s, Of zone : %d. V-Number : %d, R-number : %d\n\r") %
+    rmp->name % rmp->getZoneNum() % rmp->number % in_room;
 
-  sprintf(buf2, "Room Coords: %d, %d, %d\n\r",
-	  rmp->getXCoord(), rmp->getYCoord(), rmp->getZCoord());
-  str += buf2;
+  str += fmt("Room Coords: %d, %d, %d\n\r") %
+    rmp->getXCoord() % rmp->getYCoord() % rmp->getZCoord();
 
-  sprintf(buf2,"Sector type : %s ", TerrainInfo[rmp->getSectorType()]->name);
-  str += buf2;
+  str += fmt("Sector type : %s ") % TerrainInfo[rmp->getSectorType()]->name;
 
   str += "Special procedure : ";
 
-  sprintf(buf2, "%s", (rmp->funct) ? "Exists\n\r" : "No\n\r");
-  str += buf2;
+  str += fmt("%s") % ((rmp->funct) ? "Exists\n\r" : "No\n\r");
 
   str += "Room flags: ";
 
@@ -183,8 +179,7 @@ void TBeing::statRoom(TRoom *rmp)
 
   str += "Room flag bit vector: ";
 
-  sprintf(buf2, "%d\n\r", (unsigned int) rmp->getRoomFlags());
-  str += buf2;
+  str += fmt("%d\n\r") % ((unsigned int) rmp->getRoomFlags());
 
   str += "Description:\n\r";
   tmp_str = rmp->getDescr();
@@ -208,32 +203,28 @@ void TBeing::statRoom(TRoom *rmp)
 
   sprintf(buf3, "%d", rmp->getRoomHeight());
   sprintf(buf4, "%d", rmp->getMoblim());
-  sprintf(buf2,"Light : %d   Room Height : %s    Maximum capacity : %s\n\r", 
-                    rmp->getLight(),
-                    ((rmp->getRoomHeight() <= 0) ? "unlimited" : buf3),
-                    (rmp->getMoblim()) ? buf4 : "Infinite");
-  str += buf2;
+  str += fmt("Light : %d   Room Height : %s    Maximum capacity : %s\n\r") %
+    rmp->getLight() %
+    ((rmp->getRoomHeight() <= 0) ? "unlimited" : buf3) %
+    ((rmp->getMoblim()) ? buf4 : "Infinite");
 
   if (rmp->isWaterSector() || rmp->isUnderwaterSector()) {
-    sprintf(buf2, "River direction : %s", ((rmp->getRiverDir() < 0) ? 
-              "None" : dirs[rmp->getRiverDir()]));
-    str += buf2;
-    if (rmp->getRiverSpeed() >= 1)
-      sprintf(buf2,"   River speed : Every %d heartbeat%s\n\r",
-               rmp->getRiverSpeed(), ((rmp->getRiverSpeed() != 1) ? "s." : "."));
-    else
-      sprintf(buf2,"   River speed : no current.\n\r");
-    str += buf2;
+    str += fmt("River direction : %s") % 
+      ((rmp->getRiverDir() < 0) ? "None" : dirs[rmp->getRiverDir()]);
 
-    sprintf(buf2, "Fish caught : %i\n\r", rmp->getFished());
-    str += buf2;
+    if (rmp->getRiverSpeed() >= 1)
+      str += fmt("   River speed : Every %d heartbeat%s\n\r") %
+	rmp->getRiverSpeed() % ((rmp->getRiverSpeed() != 1) ? "s." : ".");
+    else
+      str += fmt("   River speed : no current.\n\r");
+
+    str += fmt("Fish caught : %i\n\r") % rmp->getFished();
 
   }
   if ((rmp->getTeleTarg() > 0) && (rmp->getTeleTime() > 0)) {
-    sprintf(buf2,"Teleport speed : Every %d heartbeats. To room : %d. Look? %s.\n\r",
-       rmp->getTeleTime(), rmp->getTeleTarg(), 
-           (rmp->getTeleLook() ? "yes" : "no"));
-    str += buf2;
+    str += fmt("Teleport speed : Every %d heartbeats. To room : %d. Look? %s.\n\r") %
+      rmp->getTeleTime() % rmp->getTeleTarg() %
+      (rmp->getTeleLook() ? "yes" : "no");
   }
   str += "------- Chars present -------\n\r";
   counter = 0;
@@ -245,9 +236,9 @@ void TBeing::statRoom(TRoom *rmp)
          str += "Too Many In Room to Stat More\n\r";
          break;
       } else {
-        sprintf(buf2, "%s%s   (%s)\n\r", 
-           t->getName(), (dynamic_cast<TPerson *>(t) ? "(PC)" : "(NPC)"), t->name);
-        str += buf2;
+        str += fmt("%s%s   (%s)\n\r") %
+	  t->getName() % (dynamic_cast<TPerson *>(t) ? "(PC)" : "(NPC)") %
+	  t->name;
       }
     }
   }
@@ -263,49 +254,52 @@ void TBeing::statRoom(TRoom *rmp)
         str += "Too Many Creators Born In Room To Show More\n\r";
         break;
       } else {
-        sprintf(buf2, "[%6d] %s\n\r", tMonster->mobVnum(), tMonster->getName());
-        str += buf2;
+        str += fmt("[%6d] %s\n\r") % tMonster->mobVnum() % tMonster->getName();
       }
     }
   }
   str += "--------- Contents ---------\n\r";
   counter = 0;
+  volume = 0;
+  buf2="";
   for (t = rmp->getStuff(); t; t = t->nextThing) {
+    volume += t->getVolume();
     if (!dynamic_cast<TBeing *>(t)) {
       counter++;
       if (counter > 20) {
-        str += "Too Many In Room to Stat More\n\r";
+        buf2 += "Too Many In Room to Stat More\n\r";
         break;
       } else {
-        sprintf(buf2, "%s   (%s)\n\r", t->getName(), t->name);
-        str += buf2;
+        buf2 += fmt("%s   (%s)\n\r") % t->getName() % t->name;
       }
     }
   }
+  str += fmt("Total Volume: %s\n\r") % volumeDisplay(volume);
+  str += buf2;
+
   str += "------- Exits defined -------\n\r";
   dirTypeT dir;
   for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
     if (!rmp->dir_option[dir])
       continue;
     else {
-      sprintf(buf2,"Direction : %-10s    Door Type : %-12s     To-Room : %d\n\r",
-         dirs[dir],door_types[rmp->dir_option[dir]->door_type],
-         rmp->dir_option[dir]->to_room);
-      str += buf2;
+      str+=fmt("Direction : %-10s    Door Type : %-12s     To-Room : %d\n\r") %
+	dirs[dir] % door_types[rmp->dir_option[dir]->door_type] %
+	rmp->dir_option[dir]->to_room;
       if (rmp->dir_option[dir]->door_type != DOOR_NONE) {
-        sprintf(buf2, "Weight : %d      Exit Flags : %s\n\rKeywords : %s\n\r",
-              rmp->dir_option[dir]->weight, sprintbit(rmp->dir_option[dir]->condition, exit_bits).c_str(), rmp->dir_option[dir]->keyword);
-        str += buf2;
+        str += fmt("Weight : %d      Exit Flags : %s\n\rKeywords : %s\n\r") %
+              rmp->dir_option[dir]->weight % 
+	  sprintbit(rmp->dir_option[dir]->condition, exit_bits) %
+	  rmp->dir_option[dir]->keyword;
         if ((rmp->dir_option[dir]->key > 0) || 
              (rmp->dir_option[dir]->lock_difficulty >= 0)) {
-          sprintf(buf2,"Key Number : %d     Lock Difficulty: %d\n\r",
-               rmp->dir_option[dir]->key, rmp->dir_option[dir]->lock_difficulty);
-          str += buf2;
+          str += fmt("Key Number : %d     Lock Difficulty: %d\n\r") %
+	    rmp->dir_option[dir]->key % rmp->dir_option[dir]->lock_difficulty;
         }
         if (IS_SET(rmp->dir_option[dir]->condition, EX_TRAPPED)) {
           sprinttype(rmp->dir_option[dir]->trap_info, trap_types, buf3);
-          sprintf(buf2, "Trap type : %s,  Trap damage : %d (d8)\n\r", buf3, rmp->dir_option[dir]->trap_dam);
-          str += buf2;
+          str += fmt("Trap type : %s,  Trap damage : %d (d8)\n\r") % 
+	    buf3 % rmp->dir_option[dir]->trap_dam;
         }
       } else if (IS_SET(rmp->dir_option[dir]->condition, EX_SLOPED_UP)) {
         str += "Sloped: Up\n\r";
