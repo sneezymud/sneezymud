@@ -3,6 +3,11 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: disc_water.cc,v $
+// Revision 1.3  1999/09/16 04:48:23  peel
+// Tsunami will create pools of water now.
+// Conjure water elemental requires water to be in the room (either water
+// sector or a pool of water >= 100 units large)
+//
 // Revision 1.2  1999/09/15 21:41:52  peel
 // Gusher now creates pools of water after casting.
 //
@@ -613,6 +618,7 @@ int tsunami(TBeing * caster, int level, byte bKnown, int adv_learn)
          FALSE, caster, NULL, NULL, TO_ROOM, ANSI_BLUE);
     act("You beckon forth a tidal wave!", 
          FALSE, caster, NULL, NULL, TO_CHAR, ANSI_BLUE);
+    caster->dropPool(100, LIQ_WATER);
     for (t = caster->roomp->stuff; t; t = t2) {
       t2 = t->nextThing;
       tmp_victim = dynamic_cast<TBeing *>(t);
@@ -796,6 +802,10 @@ int conjureElemWater(TBeing * caster, int level, byte bKnown)
 
 int conjureElemWater(TBeing * caster)
 {
+  TThing *t;
+  int found=0;
+  TPool *tp;
+
   if (real_mobile(WATER_ELEMENTAL) < 0) {
     caster->sendTo("There are no elementals of that type available.\n\r");
     return FALSE;
@@ -803,6 +813,26 @@ int conjureElemWater(TBeing * caster)
 
   if (!bPassMageChecks(caster, SPELL_CONJURE_WATER, NULL))
     return FALSE;
+
+  if(caster->roomp->isWaterSector()){
+    found=1;
+  } else {
+    for(t=caster->roomp->stuff;t;t=t->nextThing){
+      if((tp=dynamic_cast<TPool *>(t)) && tp->getDrinkUnits()>=100 &&
+	 (tp->getDrinkType()==LIQ_WATER ||
+	  tp->getDrinkType()==LIQ_SALTWATER ||
+	  tp->getDrinkType()==LIQ_HOLYWATER)){
+	tp->setDrinkUnit(-100);
+	found=1;
+	break;
+      }
+    }
+  }
+  if(!found){
+    caster->sendTo("There doesn't seem to be enough water around to conjure a water elemental.\n\r"); 
+    return FALSE;
+  }
+
 
   lag_t rounds = discArray[SPELL_CONJURE_WATER]->lag;
   taskDiffT diff = discArray[SPELL_CONJURE_WATER]->task;
