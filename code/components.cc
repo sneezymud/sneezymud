@@ -1156,6 +1156,14 @@ void buildComponentArray()
     "$n flings $p at $mself.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_CARDIAC_STRESS,
+    "You chew up $p and then kiss $N deeply on the mouth.",
+    "$n chews up $p and then kisses $N deeply on the mouth.",
+    "$n chews up $p and then kisses you deeply on the mouth.",                       
+    "You chew up $p and accidentally swallow the poisonous juice.",
+    "$n chews up $p and accidentally swallows it.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_VAMPIRIC_TOUCH,
     "You consume $p and spit it on $N.",
     "$n consumes $p and spits it on $N.",

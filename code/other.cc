@@ -2385,6 +2385,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_AQUATIC_BLAST:
       rc = aquaticBlast(caster,victim,obj);
       break;
+    case SPELL_CARDIAC_STRESS:
+      rc = cardiacStress(caster,victim,obj);
+      break;
     case SPELL_ARCTIC_BLAST:
       rc = arcticBlast(caster,obj);
       break;

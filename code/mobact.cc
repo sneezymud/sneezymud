@@ -1290,14 +1290,6 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
 
     // just plain damage spells here on
-    spell = SPELL_AQUATIC_BLAST;
-    if (!::number(0, 3) && 
-           (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) ) {
-      act("$n utters the words, 'Gargle This!'",
-               TRUE, &ch, 0, 0, TO_ROOM);
-      return spell;
-    }
     spell = SPELL_STUNNING_ARROW;
     if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
@@ -1723,6 +1715,14 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     // STANDARD OFFENSE
     // hit um with the long-term effect ones first
     // just plain damage spells here on
+    spell = SPELL_LIFE_LEECH;
+    if (!::number(0, 3) && 
+           (cutoff < discArray[spell]->start) &&
+        ch.doesKnowSkill(spell)) {
+      act("$n utters the invokation, 'I'm gonna suck you dry!!!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
     spell = SPELL_VAMPIRIC_TOUCH;
     if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
@@ -1832,6 +1832,14 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
     }
     // REGULAR
+    spell = SPELL_CARDIAC_STRESS;
+    if (!::number(0, 3) && 
+           (cutoff < discArray[spell]->start) &&
+        ch.doesKnowSkill(spell) ) {
+      act("$n utters the invokation, 'Don't go breakin' my heart!'",
+               TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
     spell = SPELL_LICH_TOUCH;
     if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&

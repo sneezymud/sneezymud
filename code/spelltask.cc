@@ -1273,6 +1273,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_SORCERERS_GLOBE:
     case SPELL_AQUATIC_BLAST:
     case SPELL_AQUALUNG:
+    case SPELL_CARDIAC_STRESS:
     case SPELL_LICH_TOUCH: // shaman
     case SPELL_VAMPIRIC_TOUCH: // shaman
     case SPELL_SHIELD_OF_MISTS: // shaman
@@ -1815,6 +1816,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
 	  rc = castAquaticBlast(this, victim);
 	} else
 	  vlogf(LOG_BUG, "SPELL_AQUATIC_BLAST called with NULL obj");
+        break;
+      case SPELL_CARDIAC_STRESS:
+	if (!o) {
+	  rc = castCardiacStress(this, victim);
+	} else
+	  vlogf(LOG_BUG, "SPELL_CARDIAC_STRESS [coronary] called with NULL obj");
         break;
     case SPELL_PROTECTION_FROM_EARTH:
         if (!o) {

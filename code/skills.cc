@@ -570,42 +570,6 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDRangerFight *) cd)->skRetreatRanger;
 
 // disc_armadillo
-    case SPELL_RAZE: 
-      return &((CDShamanSpider *) cd)->skRaze;
-    case SPELL_INTIMIDATE:
-      return &((CDShaman *) cd)->skIntimidate;
-    case SPELL_DJALLA:
-      return &((CDShaman *) cd)->skDjallasProtection;
-    case SPELL_LEGBA:
-      return &((CDShaman *) cd)->skLegbasGuidance;
-    case SPELL_SENSE_LIFE_SHAMAN:
-      return &((CDShaman *) cd)->skSenseLifeShaman;
-    case SPELL_DETECT_SHADOW:
-      return &((CDShaman *) cd)->skDetectShadow;
-    case SPELL_ROMBLER:
-      return &((CDShaman *) cd)->skRombler;
-    case SPELL_CHEVAL:
-      return &((CDShaman *) cd)->skCheval;
-    case SPELL_CHRISM:
-      return &((CDShaman *) cd)->skChrism;
-    case SPELL_LICH_TOUCH: // 543
-      return &((CDShamanSkunk *) cd)->skLichTouch;
-    case SPELL_DEATH_MIST: // 544
-      return &((CDShamanSkunk *) cd)->skDeathMist;
-    case SPELL_STICKS_TO_SNAKES:  //           361
-      return &((CDShamanSpider *) cd)->skSticksToSnakes;
-    case SPELL_STORMY_SKIES:  //               362
-      return &((CDShamanFrog *) cd)->skStormySkies;
-    case SPELL_TREE_WALK:
-      return &((CDNature *) cd)->skTreeWalk;
-    case SPELL_SHAPESHIFT:  //                 372
-      return &((CDShamanFrog *) cd)->skShapeShift;
-    case SPELL_CLARITY:  // 546
-      return &((CDShamanSpider *) cd)->skClarity;
-    case SPELL_SHADOW_WALK:  // 545
-      return &((CDShamanArmadillo *) cd)->skShadowWalk;
-    case SPELL_HYPNOSIS:
-      return &((CDShamanSpider *) cd)->skHypnosis;
 
 // disc_animal
 
@@ -899,18 +863,36 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SKILL_SET_TRAP_GREN:
       return &((CDTraps *) cd)->skSetTrapsGren;
 
+    case SPELL_TREE_WALK:
+      return &((CDNature *) cd)->skTreeWalk;
 
     case SPELL_ROOT_CONTROL:  //               340
       return &((CDNature *) cd)->skRootControl;
     case SPELL_LIVING_VINES:  //               348
       return &((CDNature *) cd)->skLivingVines;
 
-// SHAMAN CLASS
+      // SHAMAN **********************************************************
 
+      // basic shaman----------------------
 
-
-// disc_shaman
-
+    case SPELL_LIFE_LEECH:
+      return &((CDShaman *) cd)->skLifeLeech;
+    case SPELL_INTIMIDATE:
+      return &((CDShaman *) cd)->skIntimidate;
+    case SPELL_DJALLA:
+      return &((CDShaman *) cd)->skDjallasProtection;
+    case SPELL_LEGBA:
+      return &((CDShaman *) cd)->skLegbasGuidance;
+    case SPELL_SENSE_LIFE_SHAMAN:
+      return &((CDShaman *) cd)->skSenseLifeShaman;
+    case SPELL_DETECT_SHADOW:
+      return &((CDShaman *) cd)->skDetectShadow;
+    case SPELL_ROMBLER:
+      return &((CDShaman *) cd)->skRombler;
+    case SPELL_CHEVAL:
+      return &((CDShaman *) cd)->skCheval;
+    case SPELL_CHRISM:
+      return &((CDShaman *) cd)->skChrism;
     case SPELL_VAMPIRIC_TOUCH: // 480
       return &((CDShaman *) cd)->skVampiricTouch;
     case SPELL_SHIELD_OF_MISTS: 
@@ -921,54 +903,72 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDShaman *) cd)->skEnthrallSpectre;
     case SPELL_ENTHRALL_GHAST:
       return &((CDShaman *) cd)->skEnthrallGhast;
+    case SPELL_DANCING_BONES: // 402
+      return &((CDShaman *) cd)->skDancingBones;
+    case SPELL_VOODOO: // 405
+      return &((CDShaman *) cd)->skVoodoo;
+
+      // spider abilities----------------------
+
+    case SPELL_RAZE: 
+      return &((CDShamanSpider *) cd)->skRaze;
+    case SPELL_STICKS_TO_SNAKES:  //           361
+      return &((CDShamanSpider *) cd)->skSticksToSnakes;
+    case SPELL_CLARITY:  // 546
+      return &((CDShamanSpider *) cd)->skClarity;
+    case SPELL_HYPNOSIS:
+      return &((CDShamanSpider *) cd)->skHypnosis;
+    case SPELL_CONTROL_UNDEAD: // 403
+      return &((CDShamanSpider *) cd)->skControlUndead;
+
+      // skunk abilities------------------------
+
+    case SPELL_LICH_TOUCH: // 543
+      return &((CDShamanSkunk *) cd)->skLichTouch;
+    case SPELL_DEATH_MIST: // 544
+      return &((CDShamanSkunk *) cd)->skDeathMist;
+    case SKILL_TURN:
+      return &((CDShamanSkunk *) cd)->skTurnSkill;
+    case SPELL_CARDIAC_STRESS:
+      return &((CDShamanSkunk *) cd)->skCardiacStress;
+
+      // frog abilities--------------------------
+
+    case SPELL_STORMY_SKIES:  //               362
+      return &((CDShamanFrog *) cd)->skStormySkies;
+    case SPELL_SHAPESHIFT:  //                 372
+      return &((CDShamanFrog *) cd)->skShapeShift;
     case SPELL_AQUATIC_BLAST: 
       return &((CDShamanFrog *) cd)->skAquaticBlast;
+
+      // armadillo abilities----------------------
+
+    case SPELL_SHADOW_WALK:  // 545
+      return &((CDShamanArmadillo *) cd)->skShadowWalk;
     case SPELL_AQUALUNG: 
       return &((CDShamanArmadillo *) cd)->skAqualung;
+    case SPELL_THORNFLESH:
+      return &((CDShamanArmadillo *) cd)->skThornflesh;
+
+      // control abilities--------------------------
+
     case SPELL_ENTHRALL_GHOUL:
       return &((CDShamanControl *) cd)->skEnthrallGhoul;
     case SPELL_ENTHRALL_DEMON:
       return &((CDShamanControl *) cd)->skEnthrallDemon;
     case SPELL_CACAODEMON: // 400
       return &((CDShamanControl *) cd)->skCacaodemon;
-    case SPELL_DANCING_BONES: // 402
-      return &((CDShaman *) cd)->skDancingBones;
-    case SPELL_CONTROL_UNDEAD: // 403
-      return &((CDShamanSpider *) cd)->skControlUndead;
     case SPELL_RESURRECTION: // 404
       return &((CDShamanControl *) cd)->skResurrection;
-    case SPELL_VOODOO: // 405
-      return &((CDShaman *) cd)->skVoodoo;
-    case SPELL_THORNFLESH:
-      return &((CDShamanArmadillo *) cd)->skThornflesh;
-
-// disc_shaman_frog
-
-      case SKILL_TURN:
-        return &((CDShamanSkunk *) cd)->skTurnSkill;
-
-
-
-// disc_undead
-
     case SPELL_CREATE_GOLEM: // 401
       return &((CDShamanControl *) cd)->skCreateGolem;
 
-// disc_shaman_alchemy
+      // shaman alchemy------------------------------
 
     case SKILL_BREW: // 405
       return &((CDShamanAlchemy *) cd)->skBrew;
 
-
-// disc_undead
-// disc_alchemy_shaman
-// disc_draining
-
-      case SPELL_LIFE_LEECH: // 481
-        return &((CDShaman *) cd)->skLifeLeech;
-
-// disc_totemism
-// disc_healing
+      // SHAMAN END *****************************************************
 
 // GENERAL DISCIPLINES
 

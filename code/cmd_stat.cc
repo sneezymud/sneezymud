@@ -982,6 +982,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_GUSHER:
       case SPELL_AQUALUNG:
       case SPELL_AQUATIC_BLAST:
+      case SPELL_CARDIAC_STRESS:
       case SPELL_ICY_GRIP:
       case SPELL_ARCTIC_BLAST:
       case SPELL_ICE_STORM:

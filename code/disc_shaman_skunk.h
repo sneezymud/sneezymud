@@ -9,18 +9,21 @@ class CDShamanSkunk : public CDiscipline
 public:
     CSkill skTurnSkill;
     CSkill skDeathMist;
+    CSkill skCardiacStress;
     CSkill skLichTouch;
 
     CDShamanSkunk()
       : CDiscipline(),
       skTurnSkill(),
       skDeathMist(),
+      skCardiacStress(),
       skLichTouch() {
     }
     CDShamanSkunk(const CDShamanSkunk &a)
       : CDiscipline(a),
       skTurnSkill(a.skTurnSkill),
       skDeathMist(a.skDeathMist),
+      skCardiacStress(a.skCardiacStress),
       skLichTouch(a.skLichTouch) {
     }
     CDShamanSkunk & operator=(const CDShamanSkunk &a) {
@@ -28,6 +31,7 @@ public:
       CDiscipline::operator=(a);
       skTurnSkill = a.skTurnSkill;
       skDeathMist = a.skDeathMist;
+      skCardiacStress = a.skCardiacStress;
       skLichTouch = a.skLichTouch;
       return *this;
     }
@@ -36,14 +40,20 @@ public:
 
 private:
 };
-int deathMist(TBeing * caster, int level, byte bKnown, int adv_learn);
-int deathMist(TBeing * caster);
-int castDeathMist(TBeing * caster);
+    int deathMist(TBeing * caster, int level, byte bKnown, int adv_learn);
+    int deathMist(TBeing * caster);
+    int castDeathMist(TBeing * caster);
 
-int lichTouch(TBeing *, TBeing *);
-int castLichTouch(TBeing *, TBeing *);
-int lichTouch(TBeing *, TBeing *, int, byte, int);
-int lichTouch(TBeing *, TBeing *, TMagicItem *);
+    int lichTouch(TBeing *, TBeing *);
+    int castLichTouch(TBeing *, TBeing *);
+    int lichTouch(TBeing *, TBeing *, int, byte, int);
+    int lichTouch(TBeing *, TBeing *, TMagicItem *);
+
+    int cardiacStress(TBeing *, TBeing *);
+    int castCardiacStress(TBeing *, TBeing *);
+    int cardiacStress(TBeing *, TBeing *, TMagicItem *);
+    int cardiacStress(TBeing *, TBeing *, int, byte, int);
+
 
 #endif
 

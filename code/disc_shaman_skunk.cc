@@ -228,3 +228,122 @@ int lichTouch(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
   return tRc;
 }
 // END LICH TOUCH
+
+int cardiacStress(TBeing * caster, TBeing * victim, int level, byte bKnown, int adv_learn)
+{
+  int rc;
+  TThing *t;
+
+  level = min(level, 10);
+
+  int dam = caster->getSkillDam(victim, SPELL_CARDIAC_STRESS, level, adv_learn);
+
+  if (bSuccess(caster, bKnown, SPELL_CARDIAC_STRESS)) {
+    caster->reconcileHurt(victim,discArray[SPELL_CARDIAC_STRESS]->alignMod);
+    if ((critSuccess(caster, SPELL_CARDIAC_STRESS) ||
+        !caster->isNotPowerful(victim, level, SPELL_CARDIAC_STRESS, SILENT_YES))) {
+      CS(SPELL_CARDIAC_STRESS);
+      dam *= 2;
+      act("$N clutches $S chest and keels over in EXTREME pain!",
+          FALSE, caster, NULL, victim, TO_CHAR, ANSI_RED_BOLD);
+      act("The stress on your heart is INTENSE!! You fall down from the pain!",
+          FALSE, caster, NULL, victim, TO_VICT, ANSI_RED_BOLD);
+      act("$n spits on $N as $E clutches at $S chest keels over in EXTREME pain!",
+          FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_RED_BOLD);
+      if (victim->riding)
+        victim->dismount(POSITION_STANDING);
+      while ((t = victim->rider)) {
+        rc = t->fallOffMount(victim, POSITION_STANDING);
+        if (IS_SET_DELETE(rc, DELETE_THIS)) {
+          delete t;
+          t = NULL;
+        }
+      }
+      victim->setPosition(POSITION_SITTING);
+      victim->addToWait(combatRound(1));
+    } else if (victim->isLucky(caster->spellLuckModifier(SPELL_CARDIAC_STRESS))) {
+
+      act("$N holds $S chest in discomfort.",
+          FALSE, caster, NULL, victim, TO_CHAR, ANSI_RED);
+      act("Your chest throbs in pain. Wonder what's wrong...",
+          FALSE, caster, NULL, victim, TO_VICT, ANSI_RED);
+      act("$N holds $S chest in discomfort.",
+          FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_RED);
+
+      SV(SPELL_CARDIAC_STRESS);
+      dam /= 2;
+    } else {
+      act("$N clutches $S chest in pain!",
+          FALSE, caster, NULL, victim, TO_CHAR, ANSI_RED);
+      act("You clutch your chest in pain!",
+          FALSE, caster, NULL, victim, TO_VICT, ANSI_RED);
+      act("$N clutches $S chest in pain!",
+          FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_RED);
+    }
+    if (caster->reconcileDamage(victim, dam, SPELL_CARDIAC_STRESS) == -1)
+      return SPELL_SUCCESS + VICTIM_DEAD;
+    return SPELL_SUCCESS;
+  } else {
+    caster->setCharFighting(victim);
+    caster->setVictFighting(victim);
+    act("$n just tried to attack you.", FALSE, caster, 0, victim, TO_VICT, ANSI_BLUE);
+    if (critFail(caster, SPELL_CARDIAC_STRESS) == CRIT_F_HITSELF) {
+      CF(SPELL_CARDIAC_STRESS);
+      act("You screwed up the ritual and the loa make you pay for your mistake!",
+           FALSE, caster, NULL, 0, TO_CHAR, ANSI_RED_BOLD);
+      act("$n clutches $s chest in EXTREME agony!",
+           FALSE, caster, NULL, 0, TO_ROOM, ANSI_RED_BOLD);
+      if (caster->reconcileDamage(caster, dam, SPELL_CARDIAC_STRESS) == -1)
+        return SPELL_CRIT_FAIL + CASTER_DEAD;
+      return SPELL_CRIT_FAIL;
+    }
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+
+int cardiacStress(TBeing * caster, TBeing * victim)
+{
+  taskDiffT diff;
+
+   if (!bPassShamanChecks(caster, SPELL_CARDIAC_STRESS, victim))
+      return FALSE;
+
+    lag_t rounds = discArray[SPELL_CARDIAC_STRESS]->lag;
+    diff = discArray[SPELL_CARDIAC_STRESS]->task;
+
+    start_cast(caster, victim, NULL, caster->roomp, SPELL_CARDIAC_STRESS, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+
+      return TRUE;
+}
+
+int castCardiacStress(TBeing * caster, TBeing * victim)
+{
+  int ret,level;
+  int rc = 0;
+
+  level = caster->getSkillLevel(SPELL_CARDIAC_STRESS);
+  int bKnown = caster->getSkillValue(SPELL_CARDIAC_STRESS);
+
+  ret=cardiacStress(caster,victim,level,bKnown, caster->getAdvLearning(SPELL_CARDIAC_STRESS));
+
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
+int cardiacStress(TBeing * caster, TBeing * victim, TMagicItem * obj)
+{
+  int ret = 0;
+  int rc = 0;
+
+  ret=cardiacStress(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), 0);
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
