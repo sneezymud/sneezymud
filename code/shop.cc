@@ -430,6 +430,14 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
     while (num-- > 0) {
       TObj *temp1;
+
+      if(keeper->getMoney() < obj_flags.cost){
+	keeper->doTell(ch->name, shop_index[shop_nr].missing_cash1);
+	break;
+      }
+
+
+
       temp1 = read_object(number, REAL);
 
       if ((ch->getMoney() < cost) && !ch->hasWizPower(POWER_GOD)) {
@@ -2119,7 +2127,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     } else if(!strcmp(buf, "setrates")){ //////////////////////////////////
       tso.setRates(arg);
     } else if(!strcmp(buf, "buy")){ /////////////////////////////////
-      tso.buyShop();
+      tso.buyShop(arg);
     } else if(!strcmp(buf, "sell")){ //////////////////////////////////
       tso.sellShop();
     } else if(!strcmp(buf, "give")){ /////////////////////////////
@@ -2195,7 +2203,7 @@ void bootTheShops()
 
   /****** is owned ******/
   TDatabase isowned_db(DB_SNEEZY);
-  isowned_db.query("select distinct shop_nr from shopownedaccess where (access & 1)!=0 order by shop_nr");
+  isowned_db.query("select distinct shop_nr from shopowned");
   isowned_db.fetchRow();
 
   
