@@ -3692,10 +3692,22 @@ void TPerson::doRsave(const char *argument)
   if (tStart > tEnd)
     sendTo("Your room block is messed up.  Talk with Head Low immediatly!\n\r");
   else {
-    sprintf(tString, "mv immortals/%s/rooms%s immortals/%s/rooms%s.bak",
-            getName(), (tSec ? "_2" : ""), getName(), (tSec ? "_2" : ""));
-    vsystem(tString);
-    RoomSave(this, tStart, tEnd, tSec);
+    bool bHasRooms = false;
+
+    for (int iRunner = tStart; iRunner != tEnd; iRunner++)
+      if (real_roomp(iRunner)) {
+        bHasRooms = true;
+        break;
+      }
+
+    if (!bHasRooms) {
+      sendTo("No rooms within that range currently exist in the world, aborting rsave.\n\r");
+    } else {
+      sprintf(tString, "mv immortals/%s/rooms%s immortals/%s/rooms%s.bak",
+              getName(), (tSec ? "_2" : ""), getName(), (tSec ? "_2" : ""));
+      vsystem(tString);
+      RoomSave(this, tStart, tEnd, tSec);
+    }
   }
 #else
   sstring stRoom(""),
