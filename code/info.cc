@@ -2818,7 +2818,7 @@ void TBeing::doWhere(const char *argument)
         continue;
       }
 
-      if (isname(namebuf, k->getName()) && canSee(k)) {
+      if (isname(namebuf, k->name) && canSee(k)) {
         if (!iNum || !(--count)) {
           if (!iNum) {
             sprintf(buf, "[%2d] ", ++count);
