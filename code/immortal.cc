@@ -268,13 +268,21 @@ void TPerson::doToggle(const char *arg2)
 
   if (!*arg) {
     sendTo(COLOR_BASIC, "\n\r<c>Player Toggles<1>\n\r");
-    sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
+    sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
     
     for (int i = 0;i < MAX_AUTO;i++) {
       if (((unsigned int) (1<<i) == AUTO_SUCCESS))
 	++i;
       if (i<MAX_AUTO && *auto_name[i]) {
-        sendTo(COLOR_BASIC, "%-17s : %s    |    ",
+        sendTo(COLOR_BASIC, "%-17s : %s  | ",
+               (((unsigned int) (1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]),
+               on_or_off(IS_SET(desc->autobits, (unsigned) (1<<i))));
+      }
+      ++i;
+      if (((unsigned int) (1<<i) == AUTO_SUCCESS))
+	++i;
+      if (i<MAX_AUTO && *auto_name[i]) {
+        sendTo(COLOR_BASIC, "%-17s : %s  | ",
                (((unsigned int) (1 << i) == AUTO_TIPS && isImmortal()) ? "Advanced Menus" : auto_name[i]),
                on_or_off(IS_SET(desc->autobits, (unsigned) (1<<i))));
       }
@@ -290,44 +298,43 @@ void TPerson::doToggle(const char *arg2)
     
 
     if(wimpy)
-      sendTo(COLOR_BASIC, "Wimpy             : <G>%-4i<1>   |    ", wimpy);
+      sendTo(COLOR_BASIC, "Wimpy             : <G>%-4i<1>\n\r", wimpy);
     else
-      sendTo(COLOR_BASIC, "Wimpy             : <R>off <1>   |    ");
+      sendTo(COLOR_BASIC, "Wimpy             : <R>off <1>\n\r");
 
-    sendTo(COLOR_BASIC, "Newbie Helper     : %s\n\r", on_or_off(isPlayerAction(PLR_NEWBIEHELP)));
+    sendTo(COLOR_BASIC, "Newbie Helper     : %s  | ", on_or_off(isPlayerAction(PLR_NEWBIEHELP)));
 
     sendTo(COLOR_BASIC, "Anonymous         : %s\n\r", on_or_off(isPlayerAction(PLR_ANONYMOUS)));
 
-
     sendTo(COLOR_BASIC, "\n\r<c>Terminal Toggles<1>\n\r");
-    sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
-    sendTo(COLOR_BASIC, "Screensize        : <G>%-3i<1>    |    ", desc->screen_size);
-    sendTo(COLOR_BASIC, "Terminal          : <G>%-5s<1>\n\r",
+    sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
+    sendTo(COLOR_BASIC, "Screensize        : <G>%-3i<1>  | ", desc->screen_size);
+    sendTo(COLOR_BASIC, "Terminal          : <G>%-5s<1>| ",
 	   ansi()?"ansi":(vt100()?"vt100":"none"));
-    sendTo(COLOR_BASIC, "Boss Mode         : %s    |    ", on_or_off(IS_SET(desc->account->flags, ACCOUNT_BOSS)));
-    sendTo(COLOR_BASIC, "MSP Sound         : %s\n\r", on_or_off(IS_SET(desc->account->flags, ACCOUNT_MSP)));
-    sendTo(COLOR_BASIC, "Account Terminal  : <G>%-5s<1>  |    ", 
+    sendTo(COLOR_BASIC, "Boss Mode         : %s\n\r", on_or_off(IS_SET(desc->account->flags, ACCOUNT_BOSS)));
+    sendTo(COLOR_BASIC, "MSP Sound         : %s  | ", on_or_off(IS_SET(desc->account->flags, ACCOUNT_MSP)));
+    sendTo(COLOR_BASIC, "Account Terminal  : <G>%-5s<1>| ", 
 	   (desc->account->term == TERM_ANSI)?"ansi ":
 	   ((desc->account->term == TERM_VT100)?"vt100":"none "));
     sendTo(COLOR_BASIC, "Allow Pinging     : %s\n\r", on_or_off(isPlayerAction(PLR_PING)));
-
-
+    sendTo(COLOR_BASIC, "Brief             : %s  | ", on_or_off(isPlayerAction(PLR_BRIEF)));
+    sendTo(COLOR_BASIC, "Compact           : %s\n\r", on_or_off(isPlayerAction(PLR_COMPACT)));
 
     
     if(isImmortal() || GetMaxLevel() >= GOD_LEVEL1){
       sendTo(COLOR_BASIC, "\n\r<c>Immortal Toggles<1>\n\r");
-      sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
+      sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
       
       if(getInvisLevel())
-	sendTo(COLOR_BASIC, "Invisibility      : <G>%-4i<1>   |    ", getInvisLevel());
+	sendTo(COLOR_BASIC, "Invisibility      : <G>%-4i<1> | ", getInvisLevel());
       else
-	sendTo(COLOR_BASIC, "Invisibility      : <R>off <1>   |    ");
+	sendTo(COLOR_BASIC, "Invisibility      : <R>off <1> | ");
       
-      sendTo(COLOR_BASIC, "Auto Success      : %s\n\r", on_or_off(IS_SET(desc->autobits, AUTO_SUCCESS)));
+      sendTo(COLOR_BASIC, "Auto Success      : %s  | ", on_or_off(IS_SET(desc->autobits, AUTO_SUCCESS)));
       
-      sendTo(COLOR_BASIC, "Stealth Mode      : %s    |    ", on_or_off(isPlayerAction(PLR_STEALTH)));
+      sendTo(COLOR_BASIC, "Stealth Mode      : %s\n\r", on_or_off(isPlayerAction(PLR_STEALTH)));
       
-      sendTo(COLOR_BASIC, "No Hassle         : %s\n\r", on_or_off(isPlayerAction(PLR_NOHASSLE)));
+      sendTo(COLOR_BASIC, "No Hassle         : %s  | ", on_or_off(isPlayerAction(PLR_NOHASSLE)));
       
       sendTo(COLOR_BASIC, "Immortality       : %s\n\r", on_or_off(isPlayerAction(PLR_IMMORTAL)));
     }
@@ -336,36 +343,52 @@ void TPerson::doToggle(const char *arg2)
 
     if (hasWizPower(POWER_TOGGLE)){
       sendTo(COLOR_BASIC, "\n\r<c>Global Toggles<1>\n\r");
-      sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
+      sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
 
-      sendTo(COLOR_BASIC, "Shouting          : %s    |    ", on_or_off(!Silence));
-      sendTo(COLOR_BASIC, "Clients           : %s\n\r", on_or_off(Clients));
-      sendTo(COLOR_BASIC, "PCs w/mob names   : %s    |    ",on_or_off(AllowPcMobs));
-      sendTo(COLOR_BASIC, "Sleep offensive   : %s\n\r", on_or_off(Sleep));
-      sendTo(COLOR_BASIC, "Turbo mode        : %s    |    ", on_or_off(TurboMode));
+      sendTo(COLOR_BASIC, "Shouting          : %s  | ", on_or_off(!Silence));
+      sendTo(COLOR_BASIC, "Clients           : %s  | ", on_or_off(Clients));
+      sendTo(COLOR_BASIC, "PCs w/mob names   : %s\n\r",on_or_off(AllowPcMobs));
+      sendTo(COLOR_BASIC, "Sleep offensive   : %s  | ", on_or_off(Sleep));
+      sendTo(COLOR_BASIC, "Turbo mode        : %s  | ", on_or_off(TurboMode));
       sendTo(COLOR_BASIC, "Gravity           : %s\n\r", on_or_off(Gravity));
-      sendTo(COLOR_BASIC, "Allow Wiz-Invis   : %s    |    ", on_or_off(WizInvis));
-      sendTo(COLOR_BASIC, "Nuke Inactive     : %s\n\r", on_or_off(nuke_inactive_mobs));
-      sendTo(COLOR_BASIC, "NewbiePK          : %s    |    ", on_or_off(NewbiePK));
-      sendTo(COLOR_BASIC, "Time DB Queries   : %s\n\r",on_or_off(timeQueries));
-      sendTo(COLOR_BASIC, "Twinky Combat     : %s    |    ", on_or_off(Twink));
+      sendTo(COLOR_BASIC, "Allow Wiz-Invis   : %s  | ", on_or_off(WizInvis));
+      sendTo(COLOR_BASIC, "Nuke Inactive     : %s  | ", on_or_off(nuke_inactive_mobs));
+      sendTo(COLOR_BASIC, "NewbiePK          : %s\n\r", on_or_off(NewbiePK));
+      sendTo(COLOR_BASIC, "Time DB Queries   : %s  | ",on_or_off(timeQueries));
+      sendTo(COLOR_BASIC, "Twinky Combat     : %s  | ", on_or_off(Twink));
       sendTo(COLOR_BASIC, "Lapsos Speech     : %s\n\r",on_or_off(Lapspeak));
 
       sendTo(COLOR_BASIC, "\n\r<c>Test Code Toggles<1>\n\r");
-      sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------<1>\n\r");
+      sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
       
-      sendTo(COLOR_BASIC, "Test code #1      : %s    |    ",on_or_off(TestCode1));
-      sendTo(COLOR_BASIC, "Test code #5      : %s\n\r", on_or_off(TestCode5));
-      sendTo(COLOR_BASIC, "Test code #2      : %s    |    ", on_or_off(TestCode2));
-      sendTo(COLOR_BASIC, "Test code #6      : %s\n\r", on_or_off(TestCode6));
-      sendTo(COLOR_BASIC, "Test code #3      : %s    |    ", on_or_off(TestCode3));
+      sendTo(COLOR_BASIC, "Test code #1      : %s  | ",on_or_off(TestCode1));
+      sendTo(COLOR_BASIC, "Test code #5      : %s  | ", on_or_off(TestCode5));
+      sendTo(COLOR_BASIC, "Test code #2      : %s\n\r", on_or_off(TestCode2));
+      sendTo(COLOR_BASIC, "Test code #6      : %s  | ", on_or_off(TestCode6));
+      sendTo(COLOR_BASIC, "Test code #3      : %s  | ", on_or_off(TestCode3));
       sendTo(COLOR_BASIC, "Quest code        : %s\n\r", on_or_off(QuestCode));
-      sendTo(COLOR_BASIC, "Test code #4      : %s    |    ", on_or_off(TestCode4));
+      sendTo(COLOR_BASIC, "Test code #4      : %s  | ", on_or_off(TestCode4));
       sendTo(COLOR_BASIC, "Quest code 2      : %s\n\r", on_or_off(QuestCode2));
     }      
 
     return;
 
+  } else if(is_abbrev(arg, "compact")){
+    if (isPlayerAction(PLR_COMPACT)) {
+      sendTo("You are now in the uncompacted mode.\n\r");
+      remPlayerAction(PLR_COMPACT);
+    } else {
+      sendTo("You are now in compact mode.\n\r");
+      addPlayerAction(PLR_COMPACT);
+    }
+  } else if(is_abbrev(arg, "brief")){
+    if (isPlayerAction(PLR_BRIEF)) {
+      sendTo("Brief mode disabled.\n\r");
+      remPlayerAction(PLR_BRIEF);
+    } else {
+      sendTo("Brief mode enabled.\n\r");
+      addPlayerAction(PLR_BRIEF);
+    }
   } else if(is_abbrev(arg, "ping")){
     if (isPlayerAction(PLR_PING)){
       remPlayerAction(PLR_PING);

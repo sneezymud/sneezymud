@@ -524,17 +524,6 @@ void TBeing::doCls(bool tell)
     cls();
 }
 
-void TBeing::doBrief()
-{
-  if (isPlayerAction(PLR_BRIEF)) {
-    sendTo("Brief mode disabled.\n\r");
-    remPlayerAction(PLR_BRIEF);
-  } else {
-    sendTo("Brief mode enabled.\n\r");
-    addPlayerAction(PLR_BRIEF);
-  }
-}
-
 void TBeing::doColor(const char *)
 {
   sendTo("Mobs can't have color.\n\r");
@@ -1153,16 +1142,5 @@ void TPerson::doColor(const char *buf)
     sendTo("You have to pick one or more supported color level(s).\n\r");
     sendTo("Syntax: color <enabled | disabled>\n\r");
     sendTo("Syntax: color <all | none | communicate | objects | mobiles | rooms\n\r               shouts | spells | substitute | replace | test>\n\r");
-  }
-}
-
-void TBeing::doCompact()
-{
-  if (isPlayerAction(PLR_COMPACT)) {
-    sendTo("You are now in the uncompacted mode.\n\r");
-    remPlayerAction(PLR_COMPACT);
-  } else {
-    sendTo("You are now in compact mode.\n\r");
-    addPlayerAction(PLR_COMPACT);
   }
 }

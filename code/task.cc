@@ -277,7 +277,6 @@ bool TBeing::utilityTaskCommand(cmdTypeT cmd)
     case CMD_PRACTICE:
     case CMD_NOSHOUT:
     case CMD_DESCRIPTION:
-    case CMD_BRIEF:
     case CMD_LIST:  // for list faction
     case CMD_ATTACK:
     case CMD_GROUP:

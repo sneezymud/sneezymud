@@ -357,7 +357,7 @@ int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       act(buf3, TRUE, ch, 0, 0, TO_ROOM);
     }
    
-    if (ch->fight()) {
+    if (ch->fight() && ch->roomp) {
       for (t1 = ch->roomp->getStuff(); t1; t1 = t2) {
         t2 = t1->nextThing;
         TBeing *tbt = dynamic_cast<TBeing *>(t1);

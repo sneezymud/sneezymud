@@ -121,11 +121,9 @@ bool willBreakHide(cmdTypeT tCmd, bool isPre)
     case CMD_SNEAK:
     case CMD_QUEST:
     case CMD_LEVELS:
-    case CMD_BRIEF:
     case CMD_WIZLIST:
     case CMD_CONSIDER:
     case CMD_CREDITS:
-    case CMD_COMPACT:
     case CMD_TITLE:
     case CMD_ATTRIBUTE:
     case CMD_WORLD:
@@ -1406,12 +1404,6 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         case CMD_SNOOP:
           doSnoop(newarg);
           break;
-        case CMD_BRIEF:
-          doBrief();
-          break;
-        case CMD_COMPACT:
-          doCompact();
-          break;
         case CMD_QUIVPALM:
           rc = doQuiveringPalm(newarg, dynamic_cast<TBeing *>(vict));
           break;
@@ -2551,7 +2543,6 @@ void buildCommandArray(void)
   commandArray[CMD_WHINE] = new commandInfo("whine", POSITION_RESTING, 0);
   commandArray[CMD_WORSHIP] = new commandInfo("worship", POSITION_RESTING, 0);
   commandArray[CMD_YODEL] = new commandInfo("yodel", POSITION_RESTING, 0);
-  commandArray[CMD_BRIEF] = new commandInfo("brief", POSITION_DEAD, 0);
   commandArray[CMD_WIZLIST] = new commandInfo("wizlist", POSITION_DEAD, 0);
   commandArray[CMD_CONSIDER] = new commandInfo("consider", POSITION_RESTING, 0);
   commandArray[CMD_GIGGLE] = new commandInfo("giggle", POSITION_RESTING, 0);
@@ -2565,7 +2556,6 @@ void buildCommandArray(void)
   commandArray[CMD_NOSHOUT] = new commandInfo("noshout", POSITION_SLEEPING, 2);
   commandArray[CMD_WIZHELP] = new commandInfo("wizhelp", POSITION_SLEEPING, GOD_LEVEL1);
   commandArray[CMD_CREDITS] = new commandInfo("credits", POSITION_DEAD, 0);
-  commandArray[CMD_COMPACT] = new commandInfo("compact", POSITION_DEAD, 0);
   commandArray[CMD_EMOTE2] = new commandInfo(":", POSITION_RESTING, 0);
   commandArray[CMD_EXTINGUISH]=new commandInfo("extinguish",POSITION_RESTING,0);
   commandArray[CMD_SLAY] = new commandInfo("slay", POSITION_DEAD, GOD_LEVEL1);

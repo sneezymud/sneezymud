@@ -235,7 +235,6 @@ enum cmdTypeT {
      CMD_WHINE,
      CMD_WORSHIP,
      CMD_YODEL,
-     CMD_BRIEF,
      CMD_WIZLIST,
      CMD_CONSIDER,
      CMD_GIGGLE,
@@ -249,7 +248,6 @@ enum cmdTypeT {
      CMD_NOSHOUT,
      CMD_WIZHELP,
      CMD_CREDITS,
-     CMD_COMPACT,
      CMD_EMOTE2,// :
      CMD_EXTINGUISH,
      CMD_SLAY,
