@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: statistics.cc,v $
+// Revision 1.13  1999/10/14 03:04:51  batopr
+// Added self-adjustment of the global equipment load factor
+//
 // Revision 1.12  1999/10/14 02:28:46  batopr
 // *** empty log message ***
 //
@@ -754,6 +757,21 @@ void checkGoldStats()
     // repair is too large a drain
     gold_modifier[GOLD_REPAIR] -= 0.01;
 //    vlogf(5, "ECONOMY: repair modifier lowered. %d %d %.2f", good_drain, total_drain, gold_modifier[GOLD_REPAIR]);
+    should_reset = true;
+  }
+
+  // desire money from eq be no more than 25% of total
+  // that is, most money comes from raw loads on mobs (commods, gold, etc)
+  const double target_eq = 0.25;
+  double eq_factor = (double) (pos_gold_shop_arm + pos_gold_shop_weap) /
+                     pos_gold;
+  if (eq_factor < (target_eq - 0.05)) {
+    // too little money from EQ
+    stats.equip += 0.01;
+    should_reset = true;
+  } else if (eq_factor > (target_eq + 0.05)) {
+    // too much money from EQ
+    stats.equip -= 0.01;
     should_reset = true;
   }
 
