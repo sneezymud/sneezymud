@@ -928,7 +928,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
 
 	  // loop through this levels exp, stepping by the delta_exp, ie
 	  // the amount needed for each practice.
-	  for(t_exp=t_curr;t_exp<=new_exp && t_exp<=t_peak;t_exp+=delta_exp){
+	  for(t_exp=t_curr+delta_exp;t_exp<=new_exp && t_exp<=t_peak;t_exp+=delta_exp){
 	    // if this exp step is past our max exp and is under the exp
 	    // we've gained, then get a prac
 	    if(t_exp > exp && t_exp <= new_exp){
