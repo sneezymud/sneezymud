@@ -515,6 +515,13 @@ void TBeing::doTelevision(const char *arg)
     }
   }
 
+  if (vict->isImmortal()) {
+    nothingHappens(SILENT_YES);
+    act("Look through the eyes of an immortal?  I think not!",
+        false, this, 0, 0, TO_CHAR);
+    return ;
+  }
+
 
   target = vict->roomp->number;
 
