@@ -14,6 +14,8 @@ void updateStocks()
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("update stockinfo set price=price + ((floor(random() * volatility * 2) - volatility) / 100)");
+  db.query("update stockinfo set price=price + (((random() * volatility * 2) - volatility) / 100)");
+
+
 
 }
