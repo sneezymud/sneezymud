@@ -4867,7 +4867,7 @@ int berserkerWeap(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 	aff.modifier = 0;
 	aff.location = APPLY_NONE;
 	aff.bitvector = 0;
-	ch->affectTo(&af, -1);
+	ch->affectTo(&aff, -1);
 	act("$N has gained a bounce in $S step!",
 	    FALSE, ch, NULL, NULL, TO_ROOM);
 	act("You seem to be able to move with the greatest of ease!",
