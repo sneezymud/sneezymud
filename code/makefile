@@ -287,6 +287,7 @@ LIBTASK=task_attune.o	       	task_sacrifice.o	\
 LIBTASK := $(sort $(addprefix $(OBJDIR), $(LIBTASK)))
 
 LIBSPEC=spec_mobs.o		    	spec_objs.o			\
+	spec_mobs_combat.o		spec_mobs_garbage_convoy.o	\
 	spec_mobs_bounty_hunter.o	spec_objs_black_sun.o		\
 	spec_mobs_cityguard.o	    	spec_objs_blind.o		\
 	spec_mobs_coroner.o	    	spec_objs_deikhan_sword.o	\
@@ -306,8 +307,7 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_objs_graffitiMaker.o	spec_mobs_loanshark.o		\
 	spec_objs_weapons.o             spec_mobs_stockbroker.o		\
 	spec_mobs_banker.o		spec_mobs_taxman.o		\
-	spec_objs_ballot_box.o		spec_objs_casting.o		\
-	spec_mobs_garbage_convoy.o
+	spec_objs_ballot_box.o		spec_objs_casting.o
 
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
@@ -9716,6 +9716,7 @@ objs/obj_bed.o: /usr/include/g++/algorithm /usr/include/g++/stl_tempbuf.h
 objs/obj_bed.o: /usr/include/g++/stl_algo.h /usr/include/g++/stl_heap.h
 objs/obj_bed.o: /usr/include/g++/deque /usr/include/g++/stl_deque.h
 objs/obj_bed.o: game_crazyeights.h game_drawpoker.h obj_bed.h
+objs/obj_bed.o: obj_base_corpse.h obj_base_container.h
 objs/obj_board.o: stdsneezy.h /usr/include/g++/cstdio /usr/include/stdio.h
 objs/obj_board.o: /usr/include/sys/cdefs.h /usr/include/machine/ansi.h
 objs/obj_board.o: /usr/include/g++/cstdlib /usr/include/stdlib.h
@@ -14059,10 +14060,8 @@ objs/spec_mobs.o: disease.h trap.h task.h weather.h sound.h create.h thing.h
 objs/spec_mobs.o: room.h obj.h spec_objs.h connect.h obj_drug.h charfile.h
 objs/spec_mobs.o: being.h person.h monster.h paths.h account.h extern.h
 objs/spec_mobs.o: handler.h obj_money.h spec_mobs.h materials.h colorstring.h
-objs/spec_mobs.o: format.h combat.h disc_sorcery.h disc_afflictions.h
-objs/spec_mobs.o: disc_aegis.h disc_earth.h disc_water.h disc_wrath.h
-objs/spec_mobs.o: disc_alchemy.h obj_component.h database.h
-objs/spec_mobs.o: /usr/local/include/libpq-fe.h
+objs/spec_mobs.o: format.h combat.h disc_aegis.h disc_wrath.h disc_alchemy.h
+objs/spec_mobs.o: database.h /usr/local/include/libpq-fe.h
 objs/spec_mobs.o: /usr/local/include/postgres_ext.h obj_base_corpse.h
 objs/spec_mobs.o: obj_base_container.h obj_player_corpse.h obj_symbol.h
 objs/spec_mobs.o: obj_window.h obj_seethru.h obj_general_weapon.h
@@ -14326,6 +14325,64 @@ objs/spec_mobs_cityguard.o: connect.h obj_drug.h charfile.h being.h person.h
 objs/spec_mobs_cityguard.o: monster.h paths.h account.h extern.h handler.h
 objs/spec_mobs_cityguard.o: obj_money.h spec_mobs.h materials.h colorstring.h
 objs/spec_mobs_cityguard.o: format.h obj_trap.h
+objs/spec_mobs_combat.o: stdsneezy.h /usr/include/g++/cstdio
+objs/spec_mobs_combat.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
+objs/spec_mobs_combat.o: /usr/include/machine/ansi.h /usr/include/g++/cstdlib
+objs/spec_mobs_combat.o: /usr/include/stdlib.h /usr/include/g++/ctime
+objs/spec_mobs_combat.o: /usr/include/time.h /usr/include/sys/_posix.h
+objs/spec_mobs_combat.o: /usr/include/sys/types.h /usr/include/sys/inttypes.h
+objs/spec_mobs_combat.o: /usr/include/machine/types.h
+objs/spec_mobs_combat.o: /usr/include/machine/endian.h
+objs/spec_mobs_combat.o: /usr/include/g++/cctype /usr/include/ctype.h
+objs/spec_mobs_combat.o: /usr/include/runetype.h /usr/include/g++/cassert
+objs/spec_mobs_combat.o: /usr/include/assert.h /usr/include/g++/cstring
+objs/spec_mobs_combat.o: /usr/include/string.h /usr/include/stdarg.h
+objs/spec_mobs_combat.o: /usr/include/g++/cmath /usr/include/g++/_G_config.h
+objs/spec_mobs_combat.o: /usr/include/stddef.h /usr/include/math.h
+objs/spec_mobs_combat.o: /usr/include/g++/cerrno /usr/include/errno.h
+objs/spec_mobs_combat.o: /usr/include/g++/string
+objs/spec_mobs_combat.o: /usr/include/g++/std/bastring.h
+objs/spec_mobs_combat.o: /usr/include/g++/cstddef
+objs/spec_mobs_combat.o: /usr/include/g++/std/straits.h
+objs/spec_mobs_combat.o: /usr/include/g++/alloc.h
+objs/spec_mobs_combat.o: /usr/include/g++/stl_config.h
+objs/spec_mobs_combat.o: /usr/include/g++/stl_alloc.h
+objs/spec_mobs_combat.o: /usr/include/g++/iostream.h
+objs/spec_mobs_combat.o: /usr/include/g++/streambuf.h
+objs/spec_mobs_combat.o: /usr/include/g++/libio.h /usr/include/g++/iterator
+objs/spec_mobs_combat.o: /usr/include/g++/stl_relops.h
+objs/spec_mobs_combat.o: /usr/include/g++/stl_iterator.h
+objs/spec_mobs_combat.o: /usr/include/g++/std/bastring.cc
+objs/spec_mobs_combat.o: /usr/include/g++/vector
+objs/spec_mobs_combat.o: /usr/include/g++/stl_algobase.h
+objs/spec_mobs_combat.o: /usr/include/g++/stl_pair.h
+objs/spec_mobs_combat.o: /usr/include/g++/type_traits.h /usr/include/limits.h
+objs/spec_mobs_combat.o: /usr/include/machine/limits.h
+objs/spec_mobs_combat.o: /usr/include/sys/syslimits.h /usr/include/g++/new.h
+objs/spec_mobs_combat.o: /usr/include/g++/new /usr/include/g++/exception
+objs/spec_mobs_combat.o: /usr/include/g++/stl_construct.h
+objs/spec_mobs_combat.o: /usr/include/g++/stl_uninitialized.h
+objs/spec_mobs_combat.o: /usr/include/g++/stl_vector.h
+objs/spec_mobs_combat.o: /usr/include/g++/stl_bvector.h /usr/include/g++/map
+objs/spec_mobs_combat.o: /usr/include/g++/stl_tree.h
+objs/spec_mobs_combat.o: /usr/include/g++/stl_function.h
+objs/spec_mobs_combat.o: /usr/include/g++/stl_map.h
+objs/spec_mobs_combat.o: /usr/include/g++/stl_multimap.h
+objs/spec_mobs_combat.o: /usr/include/g++/list /usr/include/g++/stl_list.h
+objs/spec_mobs_combat.o: /usr/include/g++/iostream /usr/include/g++/sstream
+objs/spec_mobs_combat.o: /usr/include/g++/fstream /usr/include/g++/fstream.h
+objs/spec_mobs_combat.o: sstring.h low.h enum.h spells.h structs.h parse.h
+objs/spec_mobs_combat.o: immunity.h discipline.h spell2.h db.h ansi.h
+objs/spec_mobs_combat.o: cmd_dissect.h client.h response.h faction.h comm.h
+objs/spec_mobs_combat.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h
+objs/spec_mobs_combat.o: body.h race.h skills.h disease.h trap.h task.h
+objs/spec_mobs_combat.o: weather.h sound.h create.h thing.h room.h obj.h
+objs/spec_mobs_combat.o: spec_objs.h connect.h obj_drug.h charfile.h being.h
+objs/spec_mobs_combat.o: person.h monster.h paths.h account.h extern.h
+objs/spec_mobs_combat.o: handler.h obj_money.h spec_mobs.h materials.h
+objs/spec_mobs_combat.o: colorstring.h format.h obj_component.h
+objs/spec_mobs_combat.o: disc_sorcery.h disc_earth.h disc_water.h
+objs/spec_mobs_combat.o: disc_afflictions.h
 objs/spec_mobs_coroner.o: stdsneezy.h /usr/include/g++/cstdio
 objs/spec_mobs_coroner.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 objs/spec_mobs_coroner.o: /usr/include/machine/ansi.h
