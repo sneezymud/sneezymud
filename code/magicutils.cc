@@ -796,7 +796,7 @@ int TBeing::useComponentObj(TComponent *o, TObj *targ, checkOnlyT checkOnly)
   return 1;
 }
 
-TOpal *find_biggest_charged_powerstone(TBeing *ch)
+TOpal *find_biggest_charged_powerstone(const TBeing *ch)
 {
   TOpal *stone = NULL;
   TThing *t;

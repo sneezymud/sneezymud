@@ -211,7 +211,7 @@ extern void argument_split_2(const char *, char *, char *);
 extern int RecCompObjNum(const TObj *o, int obj_num);
 extern char * dsearch(const char *);
 extern TOpal *find_biggest_powerstone(TBeing *);
-extern TOpal *find_biggest_charged_powerstone(TBeing *ch);
+extern TOpal *find_biggest_charged_powerstone(const TBeing *ch);
 extern void wipeCorpseFile(const char *);
 extern void wipeRentFile(const char *);
 extern void wipeFollowersFile(const char *);
