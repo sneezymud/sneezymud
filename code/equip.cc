@@ -1921,7 +1921,8 @@ void TBeing::wearNTear(void)
           act("Maybe you should be wearing something on your foot?",TRUE,this,NULL,0,TO_CHAR);
         }
 	setPosition(POSITION_SITTING);
-	hurtLimb(getMaxLimbHealth((wearSlotT)i)/2, (wearSlotT)i);
+	//	hurtLimb(getMaxLimbHealth((wearSlotT)i)/2, (wearSlotT)i);
+	// commented out due to the mass player complaints about this bit.
 	return;
       }
     }
