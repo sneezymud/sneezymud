@@ -1132,8 +1132,7 @@ void TBeing::doWizlock(const char *argument)
 int TBeing::doEmote(const char *argument)
 {
   int i;
-  char buf[256];
-  char tmpbuf[256];
+  string buf, tmpbuf;
   TThing *t, *t2;
 
   if (checkSoundproof())
@@ -1156,9 +1155,9 @@ int TBeing::doEmote(const char *argument)
   if (!*(argument + i))
     sendTo("Yes.. But what?\n\r");
   else {
-    sprintf(buf, "$n %s<z>", argument + i);
-    sprintf(tmpbuf, "%s", nameColorString(this, desc, buf, NULL, COLOR_BASIC, FALSE).c_str());
-    act(tmpbuf, TRUE, this, 0, 0, TO_CHAR);
+    ssprintf(buf, "$n %s<z>", argument + i);
+    ssprintf(tmpbuf, "%s", nameColorString(this, desc, buf.c_str(), NULL, COLOR_BASIC, FALSE).c_str());
+    act(tmpbuf.c_str(), TRUE, this, 0, 0, TO_CHAR);
     for (t = roomp->getStuff(); t ; t = t2) {
       t2 = t->nextThing;
       TBeing *ch = dynamic_cast<TBeing *>(t);
@@ -1168,8 +1167,8 @@ int TBeing::doEmote(const char *argument)
                       (ch->canSee(this)) && ch->awake() && 
                       (ch->desc->connected <= 20) && 
                       !(ch->isPlayerAction(PLR_MAILING | PLR_BUGGING))) {
-        sprintf(tmpbuf, "%s", nameColorString(ch, ch->desc, buf, NULL, COLOR_COMM, FALSE).c_str());
-        act(tmpbuf, TRUE, this, 0, ch, TO_VICT);
+        ssprintf(tmpbuf, "%s", nameColorString(ch, ch->desc, buf.c_str(), NULL, COLOR_COMM, FALSE).c_str());
+        act(tmpbuf.c_str(), TRUE, this, 0, ch, TO_VICT);
       }
 #if 0
 // Commented out..cosmo..we dont break it for say we shouldnt for emote
