@@ -465,7 +465,11 @@ sstring TBeing::autoFormatDesc(const sstring &regStr, bool indent) const
   } else {
     garbled = garble(regStr, getCond(DRUNK));
   }
-
+  
+  if ( (garbled.find("   ")) != sstring::npos) {
+    return garbled;
+  }
+  
   // indent the first line, if needed
   if (indent) {
     line = "  "; // intial extra space
