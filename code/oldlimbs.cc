@@ -1,18 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: oldlimbs.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
-
 /*************************************************************************
 
       SneezyMUD - All rights reserved, SneezyMUD Coding Team
@@ -117,24 +102,24 @@ bool TBeing::canUseLimb(wearSlotT slot) const
 bool TBeing::bothLegsHurt() const
 {
   if (!isFourLegged())
-    return (!canUseLeg(TRUE) && !canUseLeg(FALSE));
+    return (!canUseLeg(LEG_PRIMARY) && !canUseLeg(LEG_SECONDARY));
   else
-    return (!canUseLeg(TRUE) && !canUseLeg(FALSE) &&
-            !canUseLeg(3) && !canUseLeg(4));
+    return (!canUseLeg(LEG_PRIMARY) && !canUseLeg(LEG_SECONDARY) &&
+            !canUseLeg(LEG_PRIMARY_BACK) && !canUseLeg(LEG_SECONDARY_BACK));
 }
 
 bool TBeing::eitherLegHurt() const
 {
   if (!isFourLegged())
-    return (!canUseLeg(TRUE) || !canUseLeg(FALSE));
+    return (!canUseLeg(LEG_PRIMARY) || !canUseLeg(LEG_SECONDARY));
   else
-    return (!canUseLeg(TRUE) || !canUseLeg(FALSE) || 
-            !canUseLeg(3) || !canUseLeg(4));
+    return (!canUseLeg(LEG_PRIMARY) || !canUseLeg(LEG_SECONDARY) || 
+            !canUseLeg(LEG_PRIMARY_BACK) || !canUseLeg(LEG_SECONDARY_BACK));
 }
 
 bool TBeing::eitherArmHurt() const
 {
-  return (!canUseArm(TRUE) || !canUseArm(FALSE));
+  return (!canUseArm(HAND_PRIMARY) || !canUseArm(HAND_SECONDARY));
 }
 
 bool TBeing::eitherHandHurt() const
@@ -142,29 +127,30 @@ bool TBeing::eitherHandHurt() const
   return (!canUseHand(TRUE) || !canUseHand(FALSE));
 }
 
-bool TBeing::canUseLeg(int primary) const
+bool TBeing::canUseLeg(primLegT primary) const
 {
-  if (primary == TRUE) 
-    return (canUseLimb(getPrimaryLeg()) && 
-            canUseLimb(getPrimaryFoot()) && 
-            (canUseLimb(WEAR_WAISTE) || isFourLegged()));
-  else if (primary == FALSE)
-    return (canUseLimb(getSecondaryLeg()) &&
-            canUseLimb(getSecondaryFoot()) &&
-            (canUseLimb(WEAR_WAISTE) || isFourLegged()));
-  else if (primary == 3)
-    return (canUseLimb(WEAR_EX_LEG_R) &&
-            canUseLimb(WEAR_EX_FOOT_R) &&
-            (canUseLimb(WEAR_WAISTE) || isFourLegged()));
-  else if (primary == 4)
-    return (canUseLimb(WEAR_EX_LEG_L) &&
-            canUseLimb(WEAR_EX_FOOT_L) &&
-            (canUseLimb(WEAR_WAISTE) || isFourLegged()));
-
+  switch (primary) {
+    case LEG_SECONDARY:
+      return (canUseLimb(getSecondaryLeg()) &&
+              canUseLimb(getSecondaryFoot()) &&
+              (canUseLimb(WEAR_WAISTE) || isFourLegged()));
+    case LEG_PRIMARY:
+      return (canUseLimb(getPrimaryLeg()) && 
+              canUseLimb(getPrimaryFoot()) && 
+              (canUseLimb(WEAR_WAISTE) || isFourLegged()));
+    case LEG_SECONDARY_BACK:
+      return (canUseLimb(WEAR_EX_LEG_R) &&
+              canUseLimb(WEAR_EX_FOOT_R) &&
+              (canUseLimb(WEAR_WAISTE) || isFourLegged()));
+    case LEG_PRIMARY_BACK:
+      return (canUseLimb(WEAR_EX_LEG_L) &&
+              canUseLimb(WEAR_EX_FOOT_L) &&
+              (canUseLimb(WEAR_WAISTE) || isFourLegged()));
+  }
   return TRUE;
 }
 
-bool TBeing::canUseArm(bool primary) const
+bool TBeing::canUseArm(primaryTypeT primary) const
 {
   if (primary) 
     return (canUseLimb(getPrimaryArm()) &&
@@ -182,7 +168,7 @@ bool TBeing::canUseArm(bool primary) const
 
 bool TBeing::bothArmsHurt() const
 {
-  return (!canUseArm(TRUE) && !canUseArm(FALSE));
+  return (!canUseArm(HAND_PRIMARY) && !canUseArm(HAND_SECONDARY));
 }
 
 bool TBeing::canUseHand(bool primary) const
@@ -282,7 +268,7 @@ void TBeing::makeBodyPart(wearSlotT pos)
 
   corpse = new TCorpse();
   sprintf(buf, "%s", describeBodySlot(pos).c_str());
-  corpse->name = mud_str_dup(buf);
+  corpse->setName(mud_str_dup(buf));
   
   if (getMaterial() > MAT_GEN_MINERAL) {
     // made of mineral or metal
@@ -323,7 +309,7 @@ void TBeing::makeOtherPart(const char *single, const char *part)
   char buf[128];
 
   corpse = new TCorpse();
-  corpse->name = mud_str_dup(single ? single : part);
+  corpse->setName(mud_str_dup(single ? single : part));
   sprintf(buf, "%s's bloody %s", getName(),single ? single : part);
   corpse->shortDescr = mud_str_dup(buf);
 
@@ -348,7 +334,7 @@ void TBeing::makeDiseasedPart(wearSlotT pos)
  
   corpse = new TCorpse();
   sprintf(buf, "%s", describeBodySlot(pos).c_str());
-  corpse->name = mud_str_dup(buf);
+  corpse->setName(mud_str_dup(buf));
   sprintf(buf, "the diseased %s of %s", describeBodySlot(pos).c_str(), getName())
 ;
   corpse->shortDescr = mud_str_dup(buf);
@@ -370,9 +356,16 @@ void TBeing::makeDiseasedPart(wearSlotT pos)
        TRUE,this,corpse,0,TO_ROOM);
   *roomp += *corpse;
 
-  if (!isPc())
+  if (!isPc()) {
     // leprosy causing parts to go missing = cheap, easy kills
-    setExp(getExp() / 2);
+    double tExp = (getExp() / 2.0);
+
+    // Make sure this mob is no longer deralict.
+    if (!canUseArm(HAND_PRIMARY) && !canUseArm(HAND_SECONDARY))
+      tExp = 0.0;
+
+    setExp(tExp);
+  }
 }
 
 bool TBeing::banished() const
@@ -482,7 +475,7 @@ bool TBeing::isTransformableLimb(wearSlotT limb, int paired)
     } 
     return TRUE; 
   } else {
-    vlogf(5, "isTransformable called unpaired.");
+    vlogf(LOG_BUG, "isTransformable called unpaired.");
     return FALSE;
   }
 }
@@ -509,9 +502,14 @@ bool TBeing::hasHands() const
       isLimbFlags(WEAR_HAND_L, PART_TRANSFORMED))
     return false;
 
-  return (isHumanoid() || isUndead() || isLycanthrope() || isDiabolic() ||
-          getRace() == RACE_CENTAUR ||
-          getRace() == RACE_SIMAL) ;
+  body_t bod = getMyRace()->getBodyType();
+  return (isHumanoid() ||
+          isUndead() ||
+          isLycanthrope() ||
+          isDiabolic() ||
+          bod == BODY_FROGMAN ||
+          bod == BODY_CENTAUR ||
+          bod == BODY_SIMAL) ;
 }
 
 const string TBeing::describeTransBodySlot(wearSlotT i) const
@@ -520,7 +518,7 @@ const string TBeing::describeTransBodySlot(wearSlotT i) const
          "Bad limb slot, %s %d", getName(), i);
 
   if (!slotChance(i)) {
-    vlogf(10, "There is a race problem in describeTransBodySlot");
+    vlogf(LOG_BUG, "There is a race problem in describeTransBodySlot");
     return "bogus body part";
   }
   switch (i) {
@@ -532,7 +530,7 @@ const string TBeing::describeTransBodySlot(wearSlotT i) const
           return "right paw";
         }
       } else {
-        vlogf(10, "There is a bad case 1 in describeTransBodySlot, %s", getName());
+        vlogf(LOG_BUG, "There is a bad case 1 in describeTransBodySlot, %s", getName());
         return "bogus transformed body part";
       } 
     case WEAR_FINGER_L:
@@ -543,7 +541,7 @@ const string TBeing::describeTransBodySlot(wearSlotT i) const
           return "left paw";
         }
       } else {
-        vlogf(10, "There is a bad case 2 in describeTransBodySlot, %s", getName());
+        vlogf(LOG_BUG, "There is a bad case 2 in describeTransBodySlot, %s", getName());
 
         return "bogus transformed body part";
       }
@@ -554,7 +552,7 @@ const string TBeing::describeTransBodySlot(wearSlotT i) const
         return "gills";
       }
     case WEAR_BODY:
-        vlogf(10, "There is a bad case 3 in describeTransBodySlot, %s", getName());
+        vlogf(LOG_BUG, "There is a bad case 3 in describeTransBodySlot, %s", getName());
 
       return "bogus transformed body part";
     case WEAR_HEAD:
@@ -581,11 +579,11 @@ const string TBeing::describeTransBodySlot(wearSlotT i) const
     case WEAR_ARM_L:
       return "left wing";
     case WEAR_BACK:
-        vlogf(10, "There is a bad case 4 in describeTransBodySlot, %s", getName());
+        vlogf(LOG_BUG, "There is a bad case 4 in describeTransBodySlot, %s", getName());
 
       return "bogus transformed body part";
     case WEAR_WAISTE:
-        vlogf(10, "There is a bad case 5 in describeTransBodySlot, %s", getName());
+        vlogf(LOG_BUG, "There is a bad case 5 in describeTransBodySlot, %s", getName());
 
       return "bogus transformed body part";
     case WEAR_WRIST_R:
@@ -596,7 +594,7 @@ const string TBeing::describeTransBodySlot(wearSlotT i) const
           return "right paw";
         }
       } else {
-        vlogf(10, "There is a bad case 6 in describeTransBodySlot, %s", getName());
+        vlogf(LOG_BUG, "There is a bad case 6 in describeTransBodySlot, %s", getName());
 
         return "bogus transformed body part";
       }
@@ -608,7 +606,7 @@ const string TBeing::describeTransBodySlot(wearSlotT i) const
           return "left paw";
         }
       } else {
-        vlogf(10, "There is a bad case 7 in describeTransBodySlot, %s", getName());
+        vlogf(LOG_BUG, "There is a bad case 7 in describeTransBodySlot, %s", getName());
 
         return "bogus transformed body part";
       }
@@ -635,21 +633,21 @@ const string TBeing::describeTransBodySlot(wearSlotT i) const
         return "bogus transformed body part";
       }
     case WEAR_EX_LEG_R:
-        vlogf(10, "There is a bad case 10 in describeTransBodySlot, %s", getName());
+        vlogf(LOG_BUG, "There is a bad case 10 in describeTransBodySlot, %s", getName());
 
       return "bogus transformed body part";
     case WEAR_EX_LEG_L:
-        vlogf(10, "There is a bad case 11 in describeTransBodySlot, %s", getName());
+        vlogf(LOG_BUG, "There is a bad case 11 in describeTransBodySlot, %s", getName());
       return "bogus transformed body part";
     case WEAR_EX_FOOT_R:
-        vlogf(10, "There is a bad case 12 in describeTransBodySlot, %s", getName());
+        vlogf(LOG_BUG, "There is a bad case 12 in describeTransBodySlot, %s", getName());
 
       return "bogus transformed body part";
     case WEAR_EX_FOOT_L:
-        vlogf(10, "There is a bad case 13 in describeTransBodySlot, %s", getName());
+        vlogf(LOG_BUG, "There is a bad case 13 in describeTransBodySlot, %s", getName());
       return "bogus transformed body part";
     default:
-        vlogf(10, "There is a bad case 14 in describeTransBodySlot, %s", getName());
+        vlogf(LOG_BUG, "There is a bad case 14 in describeTransBodySlot, %s", getName());
       return "bogus transformed body slot-part";
   }
 }
@@ -691,7 +689,7 @@ int TBeing::shouldDescTransLimb(wearSlotT i) const
      }
       return TRUE;
     default:
-      vlogf(10, "There is a bad case in shouldDescTransLimb");
+      vlogf(LOG_BUG, "There is a bad case in shouldDescTransLimb");
       return FALSE;
   }
 }
@@ -699,7 +697,7 @@ int TBeing::shouldDescTransLimb(wearSlotT i) const
 const string TBeing::describeTransLimb(wearSlotT i) const
 {
   if (!slotChance(i)) {
-    vlogf(10, "There is a race problem in describeTransLimb");
+    vlogf(LOG_BUG, "There is a race problem in describeTransLimb");
     return "worn on bogus racial transformed body slot";
   }
   switch (i) {
@@ -744,7 +742,7 @@ const string TBeing::describeTransLimb(wearSlotT i) const
     case WEAR_ARM_L:
      return "In place of an arm, you see a wing";
     default:
-      vlogf(10, "There is a bad case in describeTransLimb");
+      vlogf(LOG_BUG, "There is a bad case in describeTransLimb");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
   }
 }
@@ -752,15 +750,15 @@ const string TBeing::describeTransLimb(wearSlotT i) const
 const string TBeing::describeTransEquipSlot(wearSlotT i) const
 {
   if (!slotChance(i)) {
-    vlogf(10, "There is a race problem in describeTransEquipSlot");
+    vlogf(LOG_BUG, "There is a race problem in describeTransEquipSlot");
     return "worn on bogus racial transformed body slot";
   }
   switch (i) {
     case WEAR_FINGER_R:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case WEAR_FINGER_L:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case WEAR_NECK:
       if (isLimbFlags(WEAR_HEAD, PART_TRANSFORMED)) {
@@ -770,24 +768,24 @@ const string TBeing::describeTransEquipSlot(wearSlotT i) const
     case WEAR_HEAD:
         return "Sitting on the neck is an eagle's head.";
     case WEAR_BODY:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case WEAR_LEGS_R:
         return "In place of a legs, you see the tail fins of a dolphin";
     case WEAR_LEGS_L:
     case WEAR_FOOT_R:
     case WEAR_FOOT_L:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case WEAR_HAND_R:
      if (isLimbFlags(WEAR_ARM_R, PART_TRANSFORMED)) {
-      vlogf(10, "There is a bad case in hand in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in hand in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
      }
      return "In place of a hand, you see a bear's paw"; 
     case WEAR_HAND_L:
      if (isLimbFlags(WEAR_ARM_L, PART_TRANSFORMED)) {
-      vlogf(10, "There is a bad case in hand in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in hand in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
      }
      return "In place of a hand, you see a bear's paw";     
@@ -796,37 +794,37 @@ const string TBeing::describeTransEquipSlot(wearSlotT i) const
     case WEAR_ARM_L:
      return "In place of an arm, you see a wing"; 
     case WEAR_BACK:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case WEAR_WAISTE:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case WEAR_WRIST_R:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case WEAR_WRIST_L:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case HOLD_RIGHT:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case HOLD_LEFT:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case WEAR_EX_LEG_R:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case WEAR_EX_LEG_L:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case WEAR_EX_FOOT_R:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     case WEAR_EX_FOOT_L:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
     default:
-      vlogf(10, "There is a bad case in describeTransEquipSlot");
+      vlogf(LOG_BUG, "There is a bad case in describeTransEquipSlot");
       return "Worn on BOGUS Transformed slot -- bug Cosmo";
   }
 
@@ -909,7 +907,7 @@ wearSlotT TBeing::getPartHit(TBeing *hitter, bool allowHold)
     if (d <= (ct += real_slot_chance[i])) 
       return i;
   }
-  vlogf(10, "Warning!  get_part_hit error on %s.", getName());
+  vlogf(LOG_BUG, "Warning!  get_part_hit error on %s.", getName());
   return WEAR_BODY;
 }
 
@@ -970,7 +968,7 @@ int TBeing::getPartMinHeight(int part) const
       case ITEM_WEAR_FEET:
         return max(0, midline - (50 * hgt/100));
       default:
-        vlogf(7, "Bogus part %d in getPartMinHeight()", part);
+        vlogf(LOG_BUG, "Bogus part %d in getPartMinHeight()", part);
         return 0;
     }
   } else {
@@ -991,7 +989,7 @@ int TBeing::getPartMinHeight(int part) const
       case ITEM_WEAR_FEET:
         return 0;
       default:
-        vlogf(7, "Bogus part %d in getPartMinHeight()", part);
+        vlogf(LOG_BUG, "Bogus part %d in getPartMinHeight()", part);
         return 0;
     }
   }

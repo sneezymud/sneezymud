@@ -2,19 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: money.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/10/04 03:02:53  batopr
-// Added onObjLoad function
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
-
 
 #include "stdsneezy.h"
 #include "statistics.h"
@@ -75,6 +63,7 @@ TMoney *create_money(int amount)
 
   obj = read_object(GENERIC_TALEN, VIRTUAL);
   money = dynamic_cast<TMoney *>(obj);
+  mud_assert(money != NULL, "create_money created something that was not TMoney.  obj was: %s", obj ? obj->getName() : "NO OBJECT");
 
   extraDescription *new_descr;
   char buf[80];
@@ -93,7 +82,7 @@ TMoney *create_money(int amount)
   delete [] money->shortDescr;
   delete [] money->getDescr();
   if (amount == 1) {
-    money->name = mud_str_dup("talens money");
+    money->setName(mud_str_dup("talens money"));
     money->shortDescr = mud_str_dup("a talen");
     money->setDescr(mud_str_dup("One miserable talen lies here."));
 
@@ -101,7 +90,7 @@ TMoney *create_money(int amount)
     new_descr->description = mud_str_dup("One miserable talen.\n\r");
 
   } else {
-    money->name = mud_str_dup("talens money");
+    money->setName(mud_str_dup("talens money"));
     money->shortDescr = mud_str_dup("some talens");
     if (amount > 100000)
       sprintf(buf, "A tremendously HUGE pile of talens lies here.");
@@ -179,9 +168,13 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
   TThing *t;
   char buf[256];
   bool isMyCorpse = false;
+  TPerson *tP;
 
-  if (sub && isname(ch->name, sub->name) && dynamic_cast<TPCorpse*>(sub))
+  if (sub && isname(ch->getName(), sub->getName()) && dynamic_cast<TPCorpse*>(sub))
     isMyCorpse = true;
+
+  if ((tP = dynamic_cast<TPerson *>(ch)))
+    checkOwnersList(tP);
 
   (*this)--;
   amount = getMoney();
@@ -199,7 +192,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
   }
 
   if (ch->getMoney() > 500000 && (amount > 100000))
-    vlogf(10, "%s just got %d talens", ch->getName(), amount);
+    vlogf(LOG_MISC, "%s just got %d talens", ch->getName(), amount);
 
   for (t = ch->roomp->stuff; t; t = t->nextThing) {
     TBeing *tb = dynamic_cast<TBeing *>(t);
@@ -214,7 +207,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
         tmons->UA(1);
     }
   }
-  if (sub && isname("slot", sub->name))
+  if (sub && isname("slot", sub->getName()))
     ch->addToMoney(amount, GOLD_GAMBLE);
   else if (isMyCorpse) {
     ch->addToMoney(amount, GOLD_INCOME);
@@ -230,7 +223,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
     ch->addToMoney(amount, GOLD_INCOME);
 
   // don't split coins from my own corpse
-  if (!sub || !isname(fname(ch->name).c_str(), sub->name)) {
+  if (!sub || !isname(fname(ch->getName()).c_str(), sub->getName())) {
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
         IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
         (ch->master || ch->followers)){
@@ -251,6 +244,14 @@ void TMoney::onObjLoad()
 {
   // adjust the money based on the global modifiers
   int x = getMoney();
-  x = (int) (x * gold_modifier[GOLD_INCOME]);
+  x = (int) (x * gold_modifier[GOLD_INCOME].getVal());
   setMoney(x);
+}
+
+string TMoney::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
+{
+  char buf2[256];
+  sprintf(buf2, "%s [%d talens]", useName ? name : (useColor ? getName() : getNameNOC(ch).c_str()), 
+      getMoney());
+  return buf2;
 }

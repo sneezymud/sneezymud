@@ -649,7 +649,7 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
         item = NULL;
       } else {
         if (weapon)
-          strcpy(buf3, fname(weapon->name).c_str());
+          strcpy(buf3, fname(weapon->getName()).c_str());
         sprintf(buf, "Your %s$o%s $q %ssmashed%s by $N's %s!",
                 blue(), norm(),
                 purple(), norm(),
@@ -726,7 +726,7 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
         item = NULL;
       } else {
         if (weapon)
-          strcpy(buf3, fname(weapon->name).c_str());
+          strcpy(buf3, fname(weapon->getName()).c_str());
         sprintf(buf, "Your %s$o%s $q %spierced%s by $N's %s!",
                 blue(), norm(),
                 purple(), norm(),
@@ -912,13 +912,13 @@ int TBeing::damageHand(TBeing *v, wearSlotT part_hit)
     if (!::number(0, getCurLimbHealth(getPrimaryHold()))) {
       if (affectedBySpell(AFFECT_TRANSFORMED_HANDS))
         sendTo(COLOR_MOBS, "You damage your claw on %s's %s.\n\r", pers(v), 
-              (item ? fname(item->name).c_str() : (v->isHumanoid() ? "body" : "hide")));
+              (item ? fname(item->getName()).c_str() : (v->isHumanoid() ? "body" : "hide")));
       else if (affectedBySpell(AFFECT_TRANSFORMED_ARMS))
         sendTo(COLOR_MOBS, "You damage your wing on %s's %s.\n\r", pers(v),
-              (item ? fname(item->name).c_str() : (v->isHumanoid() ? "body" : "hide")));
+              (item ? fname(item->getName()).c_str() : (v->isHumanoid() ? "body" : "hide")));
       else
         sendTo(COLOR_MOBS, "You damage your hand on %s's %s.\n\r", pers(v),
-              (item ? fname(item->name).c_str() : (v->isHumanoid() ? "body" : "hide")));
+              (item ? fname(item->getName()).c_str() : (v->isHumanoid() ? "body" : "hide")));
       return TRUE;
     }
   }
@@ -993,12 +993,12 @@ void TObj::makeScraps()
   o = new TTrash();
 
   if (isMineral()) {
-    o->name = mud_str_dup("shattered pile");
+    o->setName(mud_str_dup("shattered pile"));
     o->shortDescr = mud_str_dup("something shattered");
     sprintf(buf, "What used to be %s lies here, shattered.", getName());
     o->setDescr(mud_str_dup(buf));
   } else {
-    o->name = mud_str_dup("scraps pile");
+    o->setName(mud_str_dup("scraps pile"));
     o->shortDescr = mud_str_dup("a pile of scraps");
     sprintf(buf, "What used to be %s lies here, scrapped.", shortDescr);
     o->setDescr(mud_str_dup(buf));
@@ -1356,7 +1356,7 @@ void TBeing::stopFighting()
       // ie, mob fled, got paralyzed, teleported, etc.
       if (awake()) {
         vlogf(LOG_COMBAT, "Removing Solo Combat Affect from: %s", getName());
-        sprintf(nameBuf, "%s", fname(af->be->name).c_str());
+        sprintf(nameBuf, "%s", fname(af->be->getName()).c_str());
         sendCheatMessage(nameBuf);
         affectRemove(af);
       }
@@ -2905,7 +2905,7 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
           colorBuf, v->describeBodySlot(part_hit).c_str(), v->norm(),
           describe_dam(dam, REALNUM(v, part_hit), w_type),
                  ((weapon) ? " with $s " : ""),
-          ((weapon) ? fname(weapon->name).c_str() : ""));
+          ((weapon) ? fname(weapon->getName()).c_str() : ""));
     act(buf, FALSE, this, 0, v, TO_VICT);
     if (snd != MIN_SOUND_NUM)
       v->playsound(snd, SOUND_TYPE_COMBAT, 100, 20, 1);
@@ -4156,14 +4156,14 @@ void TBeing::catchLostLink(TBeing *vict)
     delete [] note->action_description;
     note->action_description = mud_str_dup(buf);
     delete [] note->name;
-    note->name = mud_str_dup("note check link lost");
+    note->setName(mud_str_dup("note check link lost"));
 
     sprintf(buf, "A linkbag containing %s's belongings sits here.", vict->getName());
     delete [] bag->getDescr();
     bag->setDescr(mud_str_dup(buf));
     sprintf(buf, "linkbag %s", lower(vict->getName()).c_str());
     delete [] bag->name;
-    bag->name = mud_str_dup(buf);
+    bag->setName(mud_str_dup(buf));
 
     while ((o = vict->stuff)) {
       (*o)--;
@@ -4468,7 +4468,7 @@ int TBeing::objDamage(spellNumT damtype, int amnt, TThing *t)
   informMess();
 
   if (getPosition() == POSITION_DEAD) {
-    if ((dynamic_cast<TPerson *>(this) || (desc && desc->original)) && roomp && roomp->name) {
+    if ((dynamic_cast<TPerson *>(this) || (desc && desc->original)) && roomp && roomp->getName()) {
       if (desc && desc->original && desc->original != this) {
         vlogf(LOG_COMBAT, "%s killed by %s at %s (polyed as a %s)", desc->original->getName(), (t ? t->getName() : "a door"), roomp->getName(), getName());
       } else {

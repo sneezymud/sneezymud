@@ -505,8 +505,8 @@ bool raw_write_item(FILE * fp, TObj *o, unsigned char /* version */)
     return FALSE;
   }
   if (IS_SET(item.extra_flags, ITEM_STRUNG)) {
-    if (o->name) {
-      if (fwrite(o->name, strlen(o->name) + 1, 1, fp) != 1) {
+    if (o->getName()) {
+      if (fwrite(o->getName(), strlen(o->getName()) + 1, 1, fp) != 1) {
         vlogf(LOG_BUG, "Error writing object name to rent.");
         return FALSE;
       }
@@ -641,7 +641,7 @@ if (version >= 7 ||
     if (name)
       o->name = name;
     else
-      o->name = mud_str_dup(obj_index[o->getItemIndex()].name);
+      o->setName(mud_str_dup(obj_index[o->getItemIndex()].name));
 
     if (shortDescr)
       o->shortDescr = shortDescr;
@@ -1376,14 +1376,14 @@ void TRoom::loadItems()
 
       // Remove various things.
       if (!(tContainer = dynamic_cast<TBag *>(tThing))) {
-        vlogf(LOG_LOW, "Storage: Moving Junk: %s", tThing->name);
+        vlogf(LOG_LOW, "Storage: Moving Junk: %s", tThing->getName());
         --(*tThing);
         *tBag += *tThing;
         continue;
       }
 
       // Remove old junk bags.
-      if (sscanf(tThing->name, "linkbag %[A-Za-z]", tString) != 1) {
+      if (sscanf(tThing->getName(), "linkbag %[A-Za-z]", tString) != 1) {
         vlogf(LOG_LOW, "Storage: Moving Old Junk Bag");
         while ((tThing->stuff)) {
           TThing * tTemp = tThing->stuff;
@@ -1565,7 +1565,7 @@ void TRoom::loadItems()
       tStString = "A bag containing various junk.";
       tBag->setDescr(mud_str_dup(tStString.c_str()));
       tStString = "bag junk various [wizard]";
-      tBag->name = mud_str_dup(tStString.c_str());
+      tBag->setName(mud_str_dup(tStString.c_str()));
 
       *this += *tBag;
     }
@@ -1804,7 +1804,7 @@ void TBeing::assignCorpsesToRooms()
     if (!corpse) {
       continue;
     }
-    if (isname(name, corpse->name)) {
+    if (isname(name, corpse->getName())) {
       corpse->setOwner(lower(name).c_str());
       corpse->obj_flags.decay_time = max(corpse->obj_flags.decay_time, (short int) 60);
 //      corpse->obj_flags.decay_time = max(corpse->obj_flags.decay_time, MAX_PC_CORPSE_EQUIPPED_TIME);
@@ -2730,7 +2730,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
   if ((hatesMe[0] ? hatesMe[1] : autoHates)) {
     char tString[256];
 
-    recep->doAction(fname(ch->name), CMD_GROWL);
+    recep->doAction(fname(ch->getName()), CMD_GROWL);
 
     if (!tStString.empty())
       sprintf(tString, "%s %s", ch->getNameNOC(ch).c_str(), tStString.c_str());
@@ -3454,7 +3454,7 @@ float old_ac_lev = mob->getACLevel();
             (aff->type == AFFECT_CHARM) ||
             (aff->type == AFFECT_THRALL) ||
             (aff->type == AFFECT_ORPHAN_PET)) {
-          char * tmp = mud_str_dup(ch->name);
+          char * tmp = mud_str_dup(ch->getName());
           aff->be = (TThing *) tmp;
         }
       }

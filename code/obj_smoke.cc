@@ -1,20 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: obj_smoke.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.2  1999/09/19 20:33:48  peel
-// Many changes.  Smoke actually works now.
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
 #include "stdsneezy.h"
 
 /* todo
@@ -179,12 +162,27 @@ int TThing::dropSmoke(int amt)
 
   if (!smoke) {
     // create new smoke
-    if (!(obj = read_object(GENERIC_SMOKE, VIRTUAL))) {
-      vlogf(LOW_ERROR, "Error, No GENERIC_SMOKE  (%d)", GENERIC_SMOKE);
+#if 1
+// builder port uses stripped down database which was causing problems
+// hence this setup instead.
+    int robj = real_object(GENERIC_SMOKE);
+    if (robj < 0 || robj >= (signed int) obj_index.size()) {
+      vlogf(LOG_BUG, "dropSmoke(): No object (%d) in database!", GENERIC_SMOKE);
+      return false;
+    }
+
+    if (!(obj = read_object(robj, REAL))) {
+      vlogf(LOG_LOW, "Error, No GENERIC_SMOKE  (%d)", GENERIC_SMOKE);
       return FALSE;
     }
+#else
+    if (!(obj = read_object(GENERIC_SMOKE, VIRTUAL))) {
+      vlogf(LOG_LOW, "Error, No GENERIC_SMOKE  (%d)", GENERIC_SMOKE);
+      return FALSE;
+    }
+#endif
     if (!(smoke = dynamic_cast<TSmoke *>(obj))) {
-      vlogf(5, "Error, unable to cast object to smoke: smoke.cc:TThing::dropSmoke");
+      vlogf(LOG_BUG, "Error, unable to cast object to smoke: smoke.cc:TThing::dropSmoke");
       return FALSE;
     }
     smoke->swapToStrung();
@@ -194,7 +192,7 @@ int TThing::dropSmoke(int amt)
 
     sprintf(buf, "smoke cloud");
     delete [] smoke->name;
-    smoke->name = mud_str_dup(buf);
+    smoke->setName(mud_str_dup(buf));
 
     *roomp += *smoke;
   }
@@ -206,16 +204,23 @@ int TThing::dropSmoke(int amt)
 
 void TSmoke::decayMe()
 {
-  int volume=getVolume();
+  int volume = getVolume();
 
-  if(volume<=0)
+  if (!roomp) {
+    vlogf(LOG_BUG, "TSmoke::decayMe() called while TSmoke not in room!");
     setVolume(0);
-  else if(volume<25)
+    return;
+  }
+
+  if (volume <= 0)
+    setVolume(0);
+  else if (volume < 25)
     addToVolume((roomp->isIndoorSector() ? -1 : -3));
   else // large smokes evaporate faster
     addToVolume((roomp->isIndoorSector() ? -(volume/25) : -(volume/15))); 
 
-  if(getVolume()<0) setVolume(0);
+  if (getVolume() < 0)
+    setVolume(0);
 }
 
 string TSmoke::statObjInfo() const

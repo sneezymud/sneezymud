@@ -1532,7 +1532,7 @@ void TPerson::doSnoop(const char *argument)
       if (desc->snoop.snooping->desc)
     desc->snoop.snooping->desc->snoop.snoop_by = 0;
       else
-    vlogf(LOG_MISC, "Caught %s snooping %s who didn't have a descriptor!", name, desc->snoop.snooping->name);
+    vlogf(LOG_MISC, "Caught %s snooping %s who didn't have a descriptor!", name, desc->snoop.snooping->getName());
 
       desc->snoop.snooping = 0;
     }
@@ -2462,7 +2462,7 @@ void TPerson::doCutlink(const char *argument)
 
   if (!*name_buf) {
     for (d = descriptor_list; d; d = d->next) {
-      if (!d->character || !d->character->name) {
+      if (!d->character || !d->character->getName()) {
         sendTo("You cut a link from host %s\n\r",
                d->host ? d->host : "Host Unknown");
 
@@ -2472,7 +2472,7 @@ void TPerson::doCutlink(const char *argument)
   } else {
     for (d = descriptor_list; d; d = d->next) {
       if (d->character) {
-        if (d->character->name && !(lower(d->character->name)).compare(name_buf)) {
+        if (d->character->getName() && !(lower(d->character->getName())).compare(name_buf)) {
           if (d->character == this) {
             sendTo("You can't cut your own link, sorry.\n\r");
             return;
@@ -2615,7 +2615,7 @@ void genericPurgeLdead(TBeing *ch)
   // also do a cutlink
   for (d = descriptor_list; d; d = d2) {
     d2 = d->next;
-    if (!d->character || !d->character->name) {
+    if (!d->character || !d->character->getName()) {
       delete d;
     }
   }
@@ -2880,7 +2880,7 @@ static void welcomeNewPlayer(const TPerson *ch)
   struct dirent *dp;
   unsigned int count = 0;
 
-  sprintf(buf, "account/%c/%s", LOWER(ch->name[0]), lower(ch->name).c_str());
+  sprintf(buf, "account/%c/%s", LOWER(ch->getName()[0]), lower(ch->getName()).c_str());
   if (!(dfd = opendir(buf))) {
     return;
   }
@@ -3638,10 +3638,10 @@ int TBeing::doExits(const char *argument, cmdTypeT cmd)
               }
             } else {
               if (isImmortal()) {
-                sendTo(COLOR_ROOM_NAME, "%s - %s%s%s (%d)%s\n\r", exits[door], addColorRoom(rp, 1).c_str(), rp->name, norm(), rp->number, slopedData);
+                sendTo(COLOR_ROOM_NAME, "%s - %s%s%s (%d)%s\n\r", exits[door], addColorRoom(rp, 1).c_str(), rp->getName(), norm(), rp->number, slopedData);
                 found = TRUE;
               } else {
-                sendTo(COLOR_ROOM_NAME, "%s - %s%s%s%s\n\r", exits[door], addColorRoom(rp, 1).c_str(), rp->name, norm(), slopedData);
+                sendTo(COLOR_ROOM_NAME, "%s - %s%s%s%s\n\r", exits[door], addColorRoom(rp, 1).c_str(), rp->getName(), norm(), slopedData);
                 found = TRUE;
               }        
             }
@@ -5746,9 +5746,9 @@ void TBeing::doResize(const char *arg)
 
   //  Remake the obj name.  
   if(obj->objVnum() != -1){
-    sprintf(buf, "%s [resized]", obj->name);
+    sprintf(buf, "%s [resized]", obj->getName());
     delete [] obj->name;
-    obj->name = mud_str_dup(buf);
+    obj->setName(mud_str_dup(buf));
   }
 
 #if 0

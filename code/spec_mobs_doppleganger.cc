@@ -172,7 +172,7 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
             tMyself->swapToStrung();
 
             delete [] tMyself->name;
-            tMyself->name = mud_str_dup(tSucker->name);
+            tMyself->setName(mud_str_dup(tSucker->name));
 
             delete [] tMyself->shortDescr;
             tMyself->shortDescr = mud_str_dup(tSucker->shortDescr);

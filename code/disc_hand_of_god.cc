@@ -178,17 +178,17 @@ int createFood(TBeing *c, int level, byte bKnown, spellNumT spell)
     fill_amt = 4 + (level/3);
 
     if (level < 15) {
-      o->name = mud_str_dup("wafer food holy small");
+      o->setName(mud_str_dup("wafer food holy small"));
       o->shortDescr = mud_str_dup("a small holy wafer");
       o->setDescr(mud_str_dup("A small holy wafer lies here."));
       o->setWeight(.1);
     } else if (level < 35) {
-      o->name = mud_str_dup("wafer food holy medium");
+      o->setName(mud_str_dup("wafer food holy medium"));
       o->shortDescr = mud_str_dup("a medium holy wafer");
       o->setDescr(mud_str_dup("A medium holy wafer lies here."));
       o->setWeight(.2);
     } else {
-      o->name = mud_str_dup("wafer food holy large");
+      o->setName(mud_str_dup("wafer food holy large"));
       o->shortDescr = mud_str_dup("a large holy wafer");
       o->setDescr(mud_str_dup("A large holy wafer lies here."));
       o->setWeight(.4);
@@ -244,7 +244,7 @@ int castCreateWater(TBeing *caster, TObj *obj)
   if (ret == SPELL_SUCCESS) {
     if ((drink = dynamic_cast<TDrinkCon *>(obj))) {
       if (!(drink->getMaxDrinkUnits() - drink->getDrinkUnits())) {
-        caster->sendTo(COLOR_SPELLS, "<p>Your %s is completely full so you stop your prayer.<z>\n\r", fname(drink->name).c_str());
+        caster->sendTo(COLOR_SPELLS, "<p>Your %s is completely full so you stop your prayer.<z>\n\r", fname(drink->getName()).c_str());
         act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
         caster->stopCast(STOP_CAST_NONE);
       }
@@ -826,9 +826,9 @@ int portal(TBeing * caster, const char * portalroom, int level, byte bKnown)
   if (bSuccess(caster,bKnown,caster->getPerc(),SPELL_PORTAL)) {
     TPortal * tmp_obj = new TPortal();
 
-    tmp_obj->name = mud_str_dup("portal");
+    tmp_obj->setName(mud_str_dup("portal"));
     tmp_obj->shortDescr = mud_str_dup("a magic portal");
-    sprintf(buf, "A portal going to %s is in the room.", rp->name);
+    sprintf(buf, "A portal going to %s is in the room.", rp->getName());
     tmp_obj->setDescr(mud_str_dup(buf));
     tmp_obj->obj_flags.wear_flags = 0;
     tmp_obj->obj_flags.decay_time = 5;
@@ -850,9 +850,9 @@ int portal(TBeing * caster, const char * portalroom, int level, byte bKnown)
     caster->roomp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
 
     TPortal * next_tmp_obj = new TPortal();
-    next_tmp_obj->name = mud_str_dup("portal");
+    next_tmp_obj->setName(mud_str_dup("portal"));
     next_tmp_obj->shortDescr = mud_str_dup("a magic portal");
-    sprintf(buf, "A portal going to %s is in the room.", caster->roomp->name);
+    sprintf(buf, "A portal going to %s is in the room.", caster->roomp->getName());
     next_tmp_obj->setDescr(mud_str_dup(buf));
     next_tmp_obj->obj_flags.wear_flags = 0;
     next_tmp_obj->obj_flags.decay_time =  tmp_obj->obj_flags.decay_time;

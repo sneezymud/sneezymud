@@ -2,13 +2,6 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: disc_thief.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -61,7 +54,7 @@ int TBeing::doSneak(const char *argument)
   }
   rc = sneak(this, skill);
   if (rc)
-    addSkillLag(skill);
+    addSkillLag(skill, rc);
 
   return rc;
 }
@@ -138,7 +131,7 @@ int TBeing::doHide()
   }
   int rc = hide(this, skill);
   if (rc)
-    addSkillLag(skill);
+    addSkillLag(skill, rc);
 
   return rc;
 }
@@ -186,7 +179,7 @@ int TBeing::doSubterfuge(const char *arg)
   }
   rc = subterfuge(this, victim);
   if (rc)
-    addSkillLag(SKILL_SUBTERFUGE);
+    addSkillLag(SKILL_SUBTERFUGE, rc);
 
   return rc;
 }
@@ -236,11 +229,9 @@ int subterfuge(TBeing *thief, TBeing *victim)
       return TRUE;
     }
     thief->sendTo("You have totally confused the monster!\n\r");
-    if (IS_SET(victim->specials.act, ACT_HUNTING))
-      REMOVE_BIT(victim->specials.act, ACT_HUNTING);
 
-    if (IS_SET(victim->specials.act, ACT_HATEFUL))
-      REMOVE_BIT(victim->specials.act, ACT_HATEFUL);
+    REMOVE_BIT(victim->specials.act, ACT_HUNTING);
+    REMOVE_BIT(victim->specials.act, ACT_HATEFUL);
 
     return TRUE;
   } else {
@@ -383,7 +374,7 @@ int spy(TBeing *thief)
   // not set the AFF_SCRYING bit so check for isAff(scry) in code to
   // see if spying
   aff.type = SKILL_SPY;
-  aff.duration = (((int) bKnown/ 10) + 1) * UPDATES_PER_TICK;
+  aff.duration = (((int) bKnown/ 10) + 1) * UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
 
@@ -406,6 +397,10 @@ int TBeing::doDisguise(const char *arg)
     sendTo("You know nothing about disguising yourself.\n\r");
     return FALSE;
   }
+  if (isCombatMode(ATTACK_BERSERK)){
+    sendTo("You can't disguise yourself while going berserk.\n\r");
+    return FALSE;
+  }
   one_argument(arg, name_buf);
 
   if (!*name_buf){
@@ -414,18 +409,58 @@ int TBeing::doDisguise(const char *arg)
   }
   rc = disguise(this, name_buf);
   if (rc)
-    addSkillLag(SKILL_DISGUISE);
+    addSkillLag(SKILL_DISGUISE, rc);
 
   return rc;
 }
 
-static const int LAST_DISGUISE_MOB = 4;
+static const int LAST_DISGUISE_MOB = 28;
 struct PolyType DisguiseList[LAST_DISGUISE_MOB] =
 {
-  {"citizen male", 1, 1, 108, DISC_STEALTH},
-  {"citizen female", 1, 1, 109, DISC_STEALTH},
-  {"peasant", 1, 10, 110, DISC_STEALTH},
-  {"cityguard", 25, 50, 101, DISC_STEALTH},
+  /*
+  Use RACE_NORACE when anything can use it.  Race will be subbed
+  later, not name/desc tho, for the thiefs race.
+
+  All grabbed, so far, from zones: 0-4
+
+  If you add any between the first one and up to the Racial Specific,
+  or remove one either, then please address the stuff in gaining.cc
+  also.  Thanks  --Lapsos
+   */
+
+  {"citizen male"       ,  1 , 1, 108, DISC_STEALTH, RACE_NORACE},
+  {"citizen female"     ,  1 , 1, 109, DISC_STEALTH, RACE_NORACE},
+  {"bar-hopper male"    ,  5, 10,  52, DISC_STEALTH, RACE_NORACE},
+  {"bar-hopper female"  ,  5, 10,  53, DISC_STEALTH, RACE_NORACE},
+  {"church male"        , 10, 20,  50, DISC_STEALTH, RACE_NORACE},
+  {"church female"      , 10, 20,  51, DISC_STEALTH, RACE_NORACE},
+  {"old-man male"       , 15, 30, 174, DISC_STEALTH, RACE_NORACE},
+  {"old-woman female"   , 15, 30, 175, DISC_STEALTH, RACE_NORACE},
+  {"patrol male"        , 20, 40, 300, DISC_STEALTH, RACE_NORACE},
+  {"patrol female"      , 20, 40, 301, DISC_STEALTH, RACE_NORACE},
+
+  {"peasant"            , 10, 20, 110, DISC_STEALTH, RACE_NORACE},
+  {"bard"               , 25, 50, 188, DISC_STEALTH, RACE_NORACE},
+  {"pilgrim"            , 30, 60, 186, DISC_STEALTH, RACE_NORACE},
+
+  /** Gender Specific (Meaning not a set) **/
+  {"drunk male"         , 15, 30, 106, DISC_STEALTH, RACE_NORACE},
+  {"evening-lady female", 15, 30, 130, DISC_STEALTH, RACE_NORACE},
+  {"deputy male"        , 20, 40, 121, DISC_STEALTH, RACE_NORACE},
+  {"gypsy male"         , 20, 40, 191, DISC_STEALTH, RACE_NORACE},
+  {"cityguard male"     , 25, 50, 101, DISC_STEALTH, RACE_NORACE},
+
+  /** Race Specfic **/
+  {"merchant dwarf"     , 20, 40, 197, DISC_STEALTH, RACE_DWARF},
+  {"ambassador male"    , 40, 80, 125, DISC_STEALTH, RACE_DWARF},
+  {"young-male gnome"   , 20, 40, 124, DISC_STEALTH, RACE_GNOME},
+  {"missionary male"    , 40, 80, 126, DISC_STEALTH, RACE_GNOME},
+  {"outcast ogre"       , 20, 40, 196, DISC_STEALTH, RACE_OGRE}, 
+  {"vigilante male"     , 40, 80, 127, DISC_STEALTH, RACE_OGRE},
+  {"trader hobbit"      , 20, 40, 198, DISC_STEALTH, RACE_HOBBIT},
+  {"emissary male"      , 40, 80, 128, DISC_STEALTH, RACE_HOBBIT}, //***
+  {"tradeswoman female" , 20, 40, 138, DISC_STEALTH, RACE_ELVEN},
+  {"traveler elf"       , 40, 80, 195, DISC_STEALTH, RACE_ELVEN},
 };
 
 int disguise(TBeing *caster, char * buffer)
@@ -443,20 +478,49 @@ int disguise(TBeing *caster, char * buffer)
     return SPELL_FAIL;
   }
 
+#if 1
+  // Find not only the first match but the first match that
+  // also works out in comparision to the thief.
+  for (i = 0; (i < LAST_DISGUISE_MOB); i++) {
+    if (((isname("male"  , DisguiseList[i].name) &&
+          caster->getSex() != SEX_MALE  ) ||
+         (isname("female", DisguiseList[i].name) &&
+          caster->getSex() != SEX_FEMALE)) && !caster->isImmortal())
+      continue;
+
+    if ((signed) DisguiseList[i].tRace != RACE_NORACE &&
+        !caster->isImmortal() &&
+        caster->getRace() != (signed) DisguiseList[i].tRace)
+      continue;
+
+    if (DisguiseList[i].level > caster->GetMaxLevel())
+      continue;
+
+    if (DisguiseList[i].learning > caster->getSkillValue(SKILL_DISGUISE))
+      continue;
+
+    if (!isname(buffer, DisguiseList[i].name))
+      continue;
+
+    break;
+  }
+#else
   for (i = 0; 
         ((i < LAST_DISGUISE_MOB) && (!is_abbrev(buffer,DisguiseList[i].name)));
         i++);
+#endif
 
   if (i >= LAST_DISGUISE_MOB) {
-    caster->sendTo("You lack the training to don that disguise.\n\r");
+    caster->sendTo("You havn't a clue where to start on that one.\n\r");
     return FALSE;
-  } 
+  }
+
   int level = caster->getSkillLevel(SKILL_DISGUISE);
   int bKnown = caster->getSkillValue(SKILL_DISGUISE);
 
   discNumT das = getDisciplineNumber(SKILL_DISGUISE, FALSE);
   if (das == DISC_NONE) {
-    vlogf(5, "bad disc for SKILL_DISGUISE");
+    vlogf(LOG_BUG, "bad disc for SKILL_DISGUISE");
     return FALSE;
   }
   if ((caster->getDiscipline(das)->getLearnedness() < DisguiseList[i].learning) && (level < DisguiseList[i].level)) {
@@ -468,6 +532,7 @@ int disguise(TBeing *caster, char * buffer)
     return FALSE;
   }
   thing_to_room(mob,ROOM_VOID);
+  mob->swapToStrung();
 
   // Check to make sure that there is no snooping going on. 
   if (!caster->desc || caster->desc->snoop.snooping) {
@@ -484,7 +549,7 @@ int disguise(TBeing *caster, char * buffer)
 
   aff.type = AFFECT_SKILL_ATTEMPT;
   aff.location = APPLY_NONE;
-  aff.duration = (2 + (level/5)) * UPDATES_PER_TICK;
+  aff.duration = (2 + (level/5)) * UPDATES_PER_MUDHOUR;
   aff.bitvector = 0;
   aff.modifier = SKILL_DISGUISE;
 
@@ -496,27 +561,30 @@ int disguise(TBeing *caster, char * buffer)
     return TRUE;
   }
 
+  int awesom = TRUE;
 
-  int awesom= FALSE;
+  if ((critFail(caster, SKILL_DISGUISE) != CRIT_F_NONE))
+    awesom = FALSE;
+
   switch (critSuccess(caster, SKILL_DISGUISE)) {
     case CRIT_S_KILL:
       CS(SKILL_DISGUISE);
-      awesom= TRUE;
-      duration = 20 * UPDATES_PER_TICK;
+      duration = 20 * UPDATES_PER_MUDHOUR;
+      break;
     case CRIT_S_TRIPLE:
-      if (caster->getSkillLevel(SKILL_DISGUISE) > 20) {
-        awesom= TRUE;
+      if (caster->getSkillLevel(SKILL_DISGUISE) > 20)
         CS(SKILL_DISGUISE);
-      }
-      duration = 15 * UPDATES_PER_TICK;
+
+      duration = 15 * UPDATES_PER_MUDHOUR;
+      break;
     case CRIT_S_DOUBLE:
-      if (caster->getSkillLevel(SKILL_DISGUISE) > 40) {
-        awesom= TRUE;
+      if (caster->getSkillLevel(SKILL_DISGUISE) > 40)
         CS(SKILL_DISGUISE);
-      }
-      duration = 15 * UPDATES_PER_TICK;
+
+      duration = 15 * UPDATES_PER_MUDHOUR;
+      break;
     default:
-      duration = 10 * UPDATES_PER_TICK;
+      duration = 10 * UPDATES_PER_MUDHOUR;
       break;
   }
   act("You apply your skills and make yourself look like $N.", 
@@ -525,12 +593,12 @@ int disguise(TBeing *caster, char * buffer)
        TRUE, caster, NULL, mob, TO_ROOM);
 
 // first add the attempt -- used to regulate attempts
-  aff.duration = duration + ((2 + (level/5)) * UPDATES_PER_TICK);
+  aff.duration = duration + ((2 + (level/5)) * UPDATES_PER_MUDHOUR);
   caster->affectTo(&aff, -1);
 
   aff3.type = AFFECT_SKILL_ATTEMPT;
   aff3.location = APPLY_NONE;
-  aff3.duration = duration + ((2 + (level/5)) * UPDATES_PER_TICK);
+  aff3.duration = duration + ((2 + (level/5)) * UPDATES_PER_MUDHOUR);
   aff3.bitvector = 0;
   aff3.modifier = SKILL_DISGUISE;
   mob->affectTo(&aff3, -1);
@@ -577,14 +645,9 @@ int disguise(TBeing *caster, char * buffer)
   REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
 
   if (!awesom) {
-#if 1
-    // remake some of the strings on the player 
-    // disassociate the mob from global memory 
-    mob->swapToStrung();
-    
-    if (caster->name) {
+    if (caster->getName()) {
       delete [] mob->name;
-      mob->name = mud_str_dup(caster->name);
+      mob->setName(mud_str_dup(caster->name));
     }
 
     delete [] mob->shortDescr;
@@ -592,20 +655,45 @@ int disguise(TBeing *caster, char * buffer)
       mob->shortDescr = mud_str_dup(caster->shortDescr);
     } else {
       // always true for caster = PC
-      mob->shortDescr = mud_str_dup(caster->name);
+      mob->shortDescr = mud_str_dup(caster->getName());
     }
 
     delete [] mob->player.longDescr;
-    if (caster->player.longDescr) {
-      mob->player.longDescr = mud_str_dup(caster->player.longDescr);
+    if (caster->getLongDesc()) {
+      mob->player.longDescr = mud_str_dup(caster->getLongDesc());
     } else {
       // always true for caster = PC
-      sprintf(buf, "%s is here.", caster->name);
+      sprintf(buf, "%s is here.", caster->getName());
       mob->player.longDescr = mud_str_dup(cap(buf));
     }
+  } else if (caster->getName()) {
+    // Consider this immortal use.
 
-#endif
+    string tStNewNameList(mob->getName());
+
+    tStNewNameList += " [";
+    tStNewNameList += caster->getNameNOC(caster);
+    tStNewNameList += "]";
+
+    delete [] mob->name;
+    mob->setName(mud_str_dup(tStNewNameList.c_str()));
   }
+
+  /*
+  It is critical to remember that some diguises are race/sex independent
+  so they Must be set here else it'll not always fit.
+   */
+  mob->setRace(caster->getRace());
+  mob->setSex(caster->getSex());
+  mob->setHeight(caster->getHeight());
+  mob->setWeight(caster->getWeight());
+
+  for (statTypeT tStat = MIN_STAT; tStat < MAX_STATS; tStat++) {
+    //    mob->setStat(STAT_CHOSEN , tStat, caster->getStat(STAT_CHOSEN , tStat));
+    //    mob->setStat(STAT_NATURAL, tStat, caster->getStat(STAT_NATURAL, tStat));
+    mob->setStat(STAT_CURRENT, tStat, caster->getStat(STAT_CURRENT, tStat));
+  }
+
   return TRUE;
 }
 
@@ -614,38 +702,49 @@ void TObj::pickMe(TBeing *thief)
   act("$p: That's not a container.", false, thief, this, 0, TO_CHAR);
 }
 
-void TRealContainer::pickMe(TBeing *thief)
+
+
+int TBeing::thiefDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlotT part_hit)
 {
-  if (!isContainerFlag( CONT_CLOSED)) {
-    act("$p: Silly - it ain't even closed!", false, thief, this, 0, TO_CHAR);
-    return;
-  }
-  if (getKeyNum() < 0) {
-    thief->sendTo("Odd - you can't seem to find a keyhole.\n\r");
-    return;
-  }
-  if (!isContainerFlag( CONT_LOCKED)) {
-    thief->sendTo("Oho! This thing is NOT locked!\n\r");
-    return;
-  }
-  if (isContainerFlag( CONT_PICKPROOF)) {
-    thief->sendTo("It resists your attempts at picking it.\n\r");
-    return;
-  }
+  char buf[256], type[16];
 
-  int bKnown = thief->getSkillValue(SKILL_PICK_LOCK);
+  // presumes thief is in appropriate position for dodging already
 
-  if (bSuccess(thief, bKnown, SKILL_PICK_LOCK)) {
-    remContainerFlag( CONT_LOCKED);
-    thief->sendTo("*Click*\n\r");
-    act("$n fiddles with $p.", FALSE, thief, this, 0, TO_ROOM);
-  } else {
-    if (critFail(thief, SKILL_PICK_LOCK)) {
-      act("Uhoh.  $n seems to have jammed the lock!", TRUE, thief, 0, 0, TO_ROOM);
-      thief->sendTo("Uhoh.  You seemed to have jammed the lock!\n\r");
-      addContainerFlag(CONT_PICKPROOF);
-    } else {
-      thief->sendTo("You fail to pick the lock.\n\r");
-    }
+  if (!v->doesKnowSkill(SKILL_DODGE_THIEF) && hasClass(CLASS_THIEF))
+    return FALSE;
+
+  w_type -= TYPE_HIT;
+
+  // base amount, modified for difficulty
+  // the higher amt is, the more things get blocked
+  int amt = (int) (45 * 100 / getSkillDiffModifier(SKILL_DODGE_THIEF));
+
+  if (::number(0, 999) >= amt)
+    return FALSE;
+
+  // check bSuccess after above check, so that we limit how often we
+  // call the learnFrom stuff
+  if (bSuccess(v, v->getSkillValue(SKILL_DODGE_THIEF), SKILL_DODGE_THIEF)) {
+    *dam = 0;
+
+    strcpy(type, "dodge");
+
+    sprintf(buf, "You %s $n's %s at your %s.", type,
+	    attack_hit_text[w_type].singular,
+	    v->describeBodySlot(part_hit).c_str());
+    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_CYAN);
+    
+    sprintf(buf, "$N %ss your %s at $S %s.", type,
+	    attack_hit_text[w_type].singular,
+	    v->describeBodySlot(part_hit).c_str());
+    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_CYAN);
+    
+    sprintf(buf, "$N %ss $n's %s at $S %s.", type,
+	    attack_hit_text[w_type].singular,
+	    v->describeBodySlot(part_hit).c_str());
+    act(buf, TRUE, this, 0, v, TO_NOTVICT);
+
+    return TRUE;
   }
+  return FALSE;
 }

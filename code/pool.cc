@@ -2,20 +2,10 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// $Log: pool.cc,v $
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
 //////////////////////////////////////////////////////////////////////////
 
 
 #include "stdsneezy.h"
-
-// this is Peel's code
 
 void TPool::setDrinkUnits(int n)
 {
@@ -176,8 +166,22 @@ int TBeing::dropPool(int amt, liqTypeT liq)
 
   if(!pool){
     // create new pool
+#if 1
+// builder port uses stripped down database which was causing problems
+// hence this setup instead.
+    int robj = real_object(GENERIC_POOL);
+    if (robj < 0 || robj >= (signed int) obj_index.size()) {
+      vlogf(LOG_BUG, "dropPool(): No object (%d) in database!", GENERIC_POOL);
+      return false;
+    }
+
+    obj = read_object(robj, REAL);
+#else
     obj = read_object(GENERIC_POOL, VIRTUAL);
+#endif
     pool = dynamic_cast<TPool *>(obj);
+    if (!pool)
+      return false;
     pool->swapToStrung();
     pool->remObjStat(ITEM_TAKE);
     pool->setDrinkType(liq);
@@ -189,7 +193,7 @@ int TBeing::dropPool(int amt, liqTypeT liq)
     sprintf(buf+strlen(buf), " %s", 
         colorString(this, desc, DrinkInfo[liq]->color, NULL, COLOR_NONE, TRUE).c_str());
     delete [] pool->name;
-    pool->name = mud_str_dup(buf);
+    pool->setName(mud_str_dup(buf));
 
     *roomp += *pool;
   }

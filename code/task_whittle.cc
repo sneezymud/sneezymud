@@ -302,7 +302,7 @@ void task_whittleSetupObject(TBeing *ch, TObj *tObj, TOrganic *tWood, int tIndex
     sprintf(tString, "%s %s %s",
             tStObject.c_str(), tStWood.c_str(), whittleItems[tIndex].getName(false).c_str());
     delete [] tObj->name;
-    tObj->name = mud_str_dup(tString);
+    tObj->setName(mud_str_dup(tString));
 
     sprintf(tString, "%s %s %s %s<z>\n\r",
             good_cap(tStPost.c_str()).c_str(), tStWood.c_str(),

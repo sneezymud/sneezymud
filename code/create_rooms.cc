@@ -131,7 +131,7 @@ static void update_room_menu(const TBeing *ch)
 
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(VT_CURSPOS, 1, 1);
-  ch->sendTo("Room Name: %s", ch->roomp->name);
+  ch->sendTo("Room Name: %s", ch->roomp->getName());
   ch->sendTo(VT_CURSPOS, 2, 1);
   ch->sendTo("Number: %d", ch->roomp->number);
   ch->sendTo(VT_CURSPOS, 3, 1);
@@ -162,7 +162,7 @@ static void update_room_menu(const TBeing *ch)
     }
 
     ch->sendTo(edit_menu_advanced,
-               ch->cyan(), ch->norm(), ch->roomp->name,
+               ch->cyan(), ch->norm(), ch->roomp->getName(),
                ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
                ch->cyan(), ch->norm(), ch->purple(), ch->norm(),
                ch->cyan(), ch->norm(), TerrainInfo[ch->roomp->getSectorType()]->name,
@@ -904,7 +904,7 @@ void TPerson::doEdit(const char *arg)
       if (!tStString.empty()) {
         delete [] roomp->name;
         sendTo("New Room Title: %s\n\r", tStString.c_str());
-        roomp->name = mud_str_dup(tStString.c_str());
+        roomp->setName(mud_str_dup(tStString.c_str()));
 
         return;
       }
@@ -1003,7 +1003,7 @@ void TPerson::doEdit(const char *arg)
         return;
       }
       // 2 == Name, do we have one?
-      if ((field == 2) && !roomp->name) {
+      if ((field == 2) && !roomp->getName()) {
         sendTo("No name on this room, nothing to copy!\n\r");
         return;
       }
@@ -1047,10 +1047,10 @@ void TPerson::doEdit(const char *arg)
               delete [] newrp->descr;
             newrp->descr = mud_str_dup(roomp->getDescr());
           }
-          if (field == 2 || (field == 8 && roomp->name)) { // Name
-            if (newrp->name)
+          if (field == 2 || (field == 8 && roomp->getName())) { // Name
+            if (newrp->getName())
               delete [] newrp->name;
-            newrp->name = mud_str_dup(roomp->name);
+            newrp->setName(mud_str_dup(roomp->name));
           }
           if (field == 3 || (field == 8 && roomp->ex_description)) { // Extra Descriptions
             extraDescription *teDesc = NULL;
@@ -1570,14 +1570,14 @@ static void ChangeRoomName(TRoom *rp, TBeing *ch, const char *arg, editorEnterTy
       return;
     }
     delete [] rp->name;
-    rp->name = mud_str_dup(arg);
+    rp->setName(mud_str_dup(arg));
     ch->specials.edit = MAIN_MENU;
     update_room_menu(ch);
     return;
   }
   ch->sendTo(VT_HOMECLR);
 
-  ch->sendTo("Current Room Name: %s", rp->name);
+  ch->sendTo("Current Room Name: %s", rp->getName());
   ch->sendTo("\n\r\n\rNew Room Name: ");
 
   return;
@@ -2668,7 +2668,7 @@ static void ChangeExitDir(TRoom *rp, TBeing *ch, const char *arg, editorEnterTyp
     return;
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo("Room Name: %s", rp->name);
+  ch->sendTo("Room Name: %s", rp->getName());
   ch->sendTo(VT_CURSPOS, 1, 40);
   ch->sendTo("Room Number: %d", rp->number);
   ch->sendTo(VT_CURSPOS, 4, 1);
@@ -2810,7 +2810,7 @@ static void RoomSave(TBeing *ch, int start, int end, bool useSecond)
   roomDirData *rdd;
   char *newline;
 
-  sprintf(buf, "immortals/%s/rooms%s", ch->name, (useSecond ? "_2" : ""));
+  sprintf(buf, "immortals/%s/rooms%s", ch->getName(), (useSecond ? "_2" : ""));
 
   if (!(fp = fopen(buf, "w"))) {
     ch->sendTo("Can't write to disk now..try later.\n\r");
@@ -2847,7 +2847,7 @@ static void RoomSave(TBeing *ch, int start, int end, bool useSecond)
     }
     temp[x] = '\0';
 
-    fprintf(fp, "#%d\n%s~\n%s~\n", rp->number, rp->name,
+    fprintf(fp, "#%d\n%s~\n%s~\n", rp->number, rp->getName(),
 	    temp);
     if (!rp->getTeleTarg())
       fprintf(fp, "%d %d %d", rp->getZoneNum(), rp->getRoomFlags(),
@@ -2930,7 +2930,7 @@ void RoomLoad(TBeing *ch, int start, int end, bool useSecond)
          *rp2;
   TThing *t;
 
-  sprintf(buf, "immortals/%s/rooms%s", ch->name, (useSecond ? "_2" : ""));
+  sprintf(buf, "immortals/%s/rooms%s", ch->getName(), (useSecond ? "_2" : ""));
 
   if (!(fp = fopen(buf, "r"))) {
     ch->sendTo("You don't appear to have an area...\n\r");
@@ -3023,7 +3023,7 @@ void CreateOneRoom(int loc_nr)
     rp->setZoneNum(z);
   }
   sprintf(buf, "%d", loc_nr);
-  rp->name = mud_str_dup(buf);
+  rp->setName(mud_str_dup(buf));
   rp->setDescr(-1, mud_str_dup("Empty\n"));
 
   rp->initLight();
