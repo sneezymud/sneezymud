@@ -288,13 +288,13 @@ int TBeing::doCommand(cmdTypeT cmd, const char *argument, TThing *vict, bool typ
         TPerson * tPerson = dynamic_cast<TPerson *>(ch);
 
         if (ch == this) {
-          vlogf(LOG_SILENT, "%s:%s %s", name, commandArray[cmd]->name, newarg);
+          vlogf(LOG_SILENT, "%s (%i):%s %s", name, in_room, commandArray[cmd]->name, newarg);
 
           if (tPerson)
             tPerson->logf("%s:%s %s", name, commandArray[cmd]->name, newarg);
         } else {
-          vlogf(LOG_SILENT, "%s (%s):%s %s", name, desc->original->name, 
-                commandArray[cmd]->name, newarg);
+          vlogf(LOG_SILENT, "%s (%s) (%i):%s %s", name, desc->original->name, 
+                in_room, commandArray[cmd]->name, newarg);
 
           if (tPerson)
             tPerson->logf("%s:%s %s", name,
