@@ -328,12 +328,13 @@ int TShopOwned::setRates(sstring arg)
 }
 
 
-int TShopOwned::buyShop(){
+int TShopOwned::buyShop(sstring arg){
   int value=0;
   TDatabase db(DB_SNEEZY);
   sstring buf;
   TThing *tt;
   TObj *o;
+  int corp_id=0;
 
   if(isOwned()){
     keeper->doTell(ch->getName(), "Sorry, this shop isn't for sale.");
@@ -345,6 +346,37 @@ int TShopOwned::buyShop(){
     value+=o->obj_flags.cost;
   }
   value=getPurchasePrice(keeper->getMoney(), value);
+
+  db.query("select corp_id from corpaccess where lower(name)='%s'",
+	   sstring(ch->getName()).lower().c_str());
+
+  if(arg.empty()){
+    if(db.fetchRow())
+      corp_id=convertTo<int>(db["corp_id"]);
+
+    if(db.fetchRow()){
+      keeper->doTell(ch->getName(), "You must specify the ID of the corporation you wish to buy this shop for.");
+      return TRUE;
+    }
+  } else {
+    if(convertTo<int>(arg) == 0){
+      keeper->doTell(ch->getName(), "You must specify the ID of the corporation you wish to buy this shop for.");
+      return TRUE;
+    }
+
+    while(db.fetchRow()){
+      if(convertTo<int>(db["corp_id"]) == convertTo<int>(arg)){
+	corp_id=convertTo<int>(arg);
+	break;
+      }
+    }
+  }
+
+  if(!corp_id){
+      keeper->doTell(ch->getName(), "You must specify the ID of the corporation you wish to buy this shop for.");
+      return TRUE;
+  }
+
   
   if(ch->getMoney()<value){
     keeper->doTell(ch->getName(), fmt("Sorry, you can't afford this shop.  The price is %i.") % value);
@@ -353,9 +385,7 @@ int TShopOwned::buyShop(){
   ch->setMoney(ch->getMoney()-value);
   
   
-  db.query("insert into shopowned (shop_nr, profit_buy, profit_sell) values (%i, %f, %f)", shop_nr, shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell);
-  
-  db.query("insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', %i)", shop_nr, ch->getName(),  SHOPACCESS_OWNER);
+  db.query("insert into shopowned (shop_nr, profit_buy, profit_sell, corp_id) values (%i, %f, %f, %i)", shop_nr, shop_index[shop_nr].profit_buy, shop_index[shop_nr].profit_sell, corp_id);
   
   buf = fmt("%s/%d") % SHOPFILE_PATH % shop_nr;
   keeper->saveItems(buf);

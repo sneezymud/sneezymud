@@ -17,7 +17,7 @@ class TShopOwned {
   int getMaxNum(const TObj *);
   void showInfo();
   int setRates(sstring);
-  int buyShop();
+  int buyShop(sstring);
   int sellShop();
   int giveMoney(sstring);
   int setAccess(sstring);
