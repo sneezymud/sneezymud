@@ -5,6 +5,105 @@
 #include "obj_general_weapon.h"
 #include "disc_fire.h"
 
+int ghostlyShiv(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+  TBeing *ch;
+
+  if(!(ch=genericWeaponProcCheck(vict, cmd, o, 3)))
+    return FALSE;
+  
+  act("<k>Ghosts of $n's former enemies announce their presence with a shriek.<1>",
+      0, ch, o, vict, TO_ROOM);
+  
+  act("<k>The ghosts of your former enemies assail $N with with frightening shrieks.<1>", 
+      0, ch, o, vict, TO_CHAR);
+  
+  vict->doFlee("");
+
+  return TRUE;
+}
+
+int iceStaff(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
+{
+
+  TBeing *ch;
+
+  int rc, dam;
+
+  ch = genericWeaponProcCheck(vict, cmd, o, 3);
+  if (ch) {
+
+
+    dam = ::number(4,10);
+    if (dam < 8) {
+      act("$p becomes covered with ice and freezes $n.",
+          0, vict, o, 0, TO_ROOM, ANSI_CYAN);
+      act("$p becomes covered with ice and freezes you.",
+          0, vict, o, 0, TO_CHAR, ANSI_CYAN);
+    } else {
+      act("$p becomes covered with ice and sends a violent chill through $n.",
+          0, vict, o, 0, TO_ROOM, ANSI_BLUE);
+      act("$p becomes covered with ice and sends a violent chill through you.",
+          0, vict, o, 0, TO_CHAR, ANSI_BLUE);
+    }
+
+    rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
+    return TRUE;
+
+  }
+
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;
+
+  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
+    sstring buf, buf2;
+    TBeing *vict = NULL;
+    buf=sstring(arg).word(0);
+    buf2=sstring(arg).word(1);
+
+    if(buf=="chill" && buf2=="out"){
+      if(ch->checkObjUsed(o)) {
+        act("You cannot use $p's powers again this soon.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return FALSE;
+      }
+
+      if(!(vict = ch->fight())) {
+        act("You cannot use $p's powers unless you are fighting.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+        return FALSE;
+      }
+
+      ch->addObjUsed(o, UPDATES_PER_MUDHOUR);
+
+      act("$n's $o glows <b>a cold blue<1> as $e growls a <p>word of power<1>.",TRUE,ch,o,NULL,TO_ROOM,NULL);
+      act("$n steps back and points $p at $N!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+      act("<b>An incredibly cold ray erupts from $n's <c>$o<b>, and strikes $N full on!<1>",TRUE,ch,o,vict,TO_NOTVICT,NULL);
+      act("$n steps back and points $p at you!  Uh oh!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+      act("<b>An incredibly cold ray erupts from $n's <c>$o<b>, and strikes you full on!<1>",TRUE,ch,o,vict,TO_VICT,NULL);
+      act("Your $o glows <b>a cold blue<1> as you growl, '<p>chill out<1>'.",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      act("You step back and point $p at $N!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+      act("<b>An incredibly cold ray erupts from your <c>$o<b>, and strikes $N full on!<1>",TRUE,ch,o,vict,TO_CHAR,NULL);
+
+
+      int dam = ::number(10,60);
+      rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+	vict->reformGroup();
+	delete vict;
+	vict = NULL;
+      }
+
+
+      
+      return TRUE;
+    }
+
+  }
+  return FALSE;
+
+}
+
 int nightBlade(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
   // it used to do magic-missile every round
