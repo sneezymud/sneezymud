@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: obj_bow.cc,v $
+// Revision 1.2  1999/09/27 10:27:34  lapsos
+// message change in fast load.
+//
 // Revision 1.1  1999/09/12 17:24:04  sneezy
 // Initial revision
 //
@@ -360,7 +363,8 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     if (bSuccess(ch, ch->getSkillValue(SKILL_FAST_LOAD), SKILL_FAST_LOAD)) {
       ch->doBload(buf);
     } else {
-      ch->sendTo("Oops!  You miscock your %s, and screw up your rhythm.\n\r", buf);
+      ch->sendTo("You fumble your %s which hampers your reload attempt.\n\r", buf);
+      //      ch->sendTo("Oops!  You miscock your %s, and screw up your rhythm.\n\r", buf);
     }
   }
   return FALSE;
