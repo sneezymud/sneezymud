@@ -54,17 +54,17 @@ void payout(TBeing *ch, int talens)
     if((*iter).second > 1){
       ssprintf(buf, "You receive %s. [%i]",
 	       (*iter).first.c_str(), (*iter).second);
-      act(buf, TRUE, ch, 0, 0, TO_CHAR);
+      act(buf, FALSE, ch, 0, 0, TO_CHAR);
       ssprintf(buf, "$n receives %s. [%i]", 
 	       (*iter).first.c_str(), (*iter).second);
-      act(buf, TRUE, ch, 0, 0, TO_ROOM);
+      act(buf, FALSE, ch, 0, 0, TO_ROOM);
     } else {
       ssprintf(buf, "You receive %s.",
 	       (*iter).first.c_str());
-      act(buf, TRUE, ch, 0, 0, TO_CHAR);
+      act(buf, FALSE, ch, 0, 0, TO_CHAR);
       ssprintf(buf, "$n receives %s.", 
 	       (*iter).first.c_str());
-      act(buf, TRUE, ch, 0, 0, TO_ROOM);
+      act(buf, FALSE, ch, 0, 0, TO_ROOM);
     }
   }
 }
