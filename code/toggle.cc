@@ -280,15 +280,16 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Vampire", MOB_NONE},
   {"Lycanthrope", MOB_NONE},
   {"Transformed Lycanthrope", MOB_NONE},
+  {"Lycanthropy: virgin flask", 23291},
+  {"Lycanthropy: terfefly", 6762},
+  {"Lycanthropy: ingredients", 6762},
+  {"Lycanthropy: urine", 6762},
+  {"Lycanthropy: wolvesbane", 6762},
+  {"Lycanthropy: silver", 6762},
+  {"Lycanthropy: hemlock", 6762},
+
   {"", MOB_NONE}, 
 };
-
-
-
-
-
-
-
 
 
 

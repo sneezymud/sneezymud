@@ -365,12 +365,21 @@ const int TOG_DRAGON_ARMOR_THREAD_ELEMENT      = 260;
 const int TOG_DRAGON_ARMOR_TALENS              = 261;
 const int TOG_DRAGON_ARMOR_WARHAMMER           = 262;
 const int TOG_DRAGON_ARMOR_GAVE_SCALES         = 263;
+
 const int TOG_BITTEN_BY_VAMPIRE                = 264;
 const int TOG_VAMPIRE                          = 265;
+
 const int TOG_LYCANTHROPE                      = 266;
 const int TOG_TRANSFORMED_LYCANTHROPE          = 267;
+const int TOG_LYCANTHROPE_VIRGIN_FLASK         = 268;
+const int TOG_LYCANTHROPE_YYRN_TERFEFLY        = 269;
+const int TOG_LYCANTHROPE_YURNO_INGREDIENTS    = 270;
+const int TOG_LYCANTHROPE_YURNO_URINE          = 271;
+const int TOG_LYCANTHROPE_YURNO_WOLVESBANE     = 272;
+const int TOG_LYCANTHROPE_YURNO_SILVER         = 273;
+const int TOG_LYCANTHROPE_YURNO_HEMLOCK        = 274;
 
-const int MAX_TOG_INDEX       = 268;  // move and change
+const int MAX_TOG_INDEX       = 275;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 
