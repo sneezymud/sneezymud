@@ -103,6 +103,14 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
     }
     specialCorpse = TRUE;
+  } else if (dmg_type == SPELL_RAZE) {
+    sprintf(buf, "green powder pile strange %s",name);
+    gen_corpse->name = mud_str_dup(buf);
+    gen_corpse->setDescr(mud_str_dup("A strange looking pile of green powder lies here."));
+    gen_corpse->shortDescr = mud_str_dup("a pile of strange green powder");
+    gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
+    gen_corpse->setMaterial(MAT_POWDER);
+    specialCorpse = TRUE;
   } else if (isUndead() || (dmg_type == SKILL_TURN)) {
     sprintf(buf, "dust pile %s",name);
     gen_corpse->name = mud_str_dup(buf);
@@ -558,6 +566,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller = NULL)
       case SPELL_BREATH_OF_SARAHAGE:
       case SPELL_PLASMA_MIRROR:
       case SPELL_THORNFLESH:
+      case SPELL_RAZE:
       case SPELL_ETHER_GATE:
       case SPELL_CLARITY:
       case SPELL_HEAL_LIGHT:

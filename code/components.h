@@ -3,6 +3,9 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 // $Log: components.h,v $
+// Revision 5.16  2001/06/13 03:50:03  jesus
+// raze spell and mob ai fix for shaman
+//
 // Revision 5.15  2001/06/13 00:18:35  jesus
 // lifeforce cost restructures and shaman intimidate spell
 //
@@ -192,6 +195,7 @@ const int COMP_HYPNOSIS           =31324;
 const int COMP_CHEVAL             =31325;
 const int COMP_ROMBLER            =31326;
 const int COMP_INTIMIDATE         =31327;
+const int COMP_RAZE               =31328;
 
 class compPlace
 {

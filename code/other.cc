@@ -2668,6 +2668,9 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SKILL_BARKSKIN:
       barkskin(caster,victim,obj);
       break;
+    case SPELL_RAZE:
+      rc = raze(caster,victim,obj);
+      break;
     case SPELL_STICKS_TO_SNAKES:
       sticksToSnakes(caster,victim,obj);
       break;

@@ -1756,6 +1756,9 @@ int TBeing::doDiscipline(spellNumT which, const char *n)
     case SPELL_ROMBLER:
       rombler(this, n);
       break;
+    case SPELL_RAZE:
+      rc = raze(this, ch);
+      break;
     case SPELL_TRUE_SIGHT:
       trueSight(this, ch);
       break;

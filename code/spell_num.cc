@@ -699,6 +699,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 507;
     case SKILL_SET_TRAP_GREN:
       return 508;
+    case SPELL_RAZE:
+      return 537;
     case SPELL_INTIMIDATE:
       return 538;
     case SPELL_ROMBLER:
@@ -1594,6 +1596,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_SET_TRAP_MINE;
     case 508:
       return SKILL_SET_TRAP_GREN;
+    case 537:
+      return SPELL_RAZE;
     case 538:
       return SPELL_INTIMIDATE;
     case 539:

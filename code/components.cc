@@ -1350,6 +1350,14 @@ void buildComponentArray()
     "$n stretches out $p.",
     "",
     ""));
+  CompInfo.push_back(compInfo(SPELL_RAZE,
+    "You toss $p at $N.",
+    "$n tosses $p at $N.",
+    "$n tosses $p at you.",                       
+    "You toss $p to the ground.",
+    "$n tosses $p to the ground.",
+    "",
+    ""));
   CompInfo.push_back(compInfo(SPELL_TRUE_SIGHT,
     "You nibble on $p and spit it upon $N.",
     "$n nibbles on $p and spits it at $N.",

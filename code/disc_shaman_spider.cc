@@ -638,3 +638,111 @@ ANSI_RED_BOLD);
   }
   return TRUE;
 }
+
+int raze(TBeing *caster, TBeing *victim, int level, byte bKnown, int adv_learn)
+{
+  if (victim->isImmortal()) {
+    act("You can't do that to an immortal being.", FALSE, caster, NULL, victim, TO_CHAR);
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
+
+  level = min((level+5), 85);
+
+  int dam = caster->getSkillDam(victim, SPELL_RAZE, level, adv_learn);
+
+  caster->reconcileHurt(victim, discArray[SPELL_RAZE]->alignMod);
+
+  if (bSuccess(caster,bKnown,SPELL_RAZE)) {
+    act("$n calls the spirits to erase $N's existance!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("You call upon the loa to erase any memory of $N!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$n calls upon the spirits to erase your existance!", FALSE, caster, NULL, victim, TO_VICT);
+    switch(critSuccess(caster, SPELL_RAZE)) {
+      case CRIT_S_DOUBLE:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_KILL:
+        CS(SPELL_RAZE);
+        dam <<= 1;
+        break;
+      case CRIT_S_NONE:
+        if (victim->isLucky(caster->spellLuckModifier(SPELL_RAZE))) {
+          SV(SPELL_RAZE);
+          dam /= 2;
+        }
+    }
+    if (caster->reconcileDamage(victim, dam, SPELL_RAZE) == -1)
+      return SPELL_SUCCESS + VICTIM_DEAD;
+    return SPELL_SUCCESS;
+  } else {
+    switch (critFail(caster, SPELL_RAZE)) {
+      case CRIT_F_HITSELF:
+      case CRIT_F_HITOTHER:
+        act("$n nearly erases!", FALSE, caster, NULL, NULL, TO_ROOM);
+        caster->sendTo("ACK!  The loa are extremely angry with you!\n\r");
+        act("$n fails in $s ritual!", FALSE, caster, NULL, victim, TO_VICT);
+        if (caster->isLucky(caster->spellLuckModifier(SPELL_RAZE))) {
+          SV(SPELL_RAZE);
+          dam /= 2;
+        }
+        if (caster->reconcileDamage(caster, dam/3, SPELL_RAZE) == -1)
+          return SPELL_CRIT_FAIL + CASTER_DEAD;
+        act("Oops! You nearly disintegrated yourself on that one!", 
+            FALSE, caster, NULL, victim, TO_CHAR);
+        return SPELL_CRIT_FAIL;
+      case CRIT_F_NONE:
+        break;
+    }
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+
+int raze(TBeing *caster, TBeing *victim)
+{
+  if (!bPassShamanChecks(caster, SPELL_RAZE, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_RAZE]->lag;
+  taskDiffT diff = discArray[SPELL_RAZE]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_RAZE, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+
+  return TRUE;
+}
+
+int castRaze(TBeing *caster, TBeing *victim)
+{
+  int rc = 0;
+
+  int level = caster->getSkillLevel(SPELL_RAZE);
+  int bKnown = caster->getSkillValue(SPELL_RAZE);
+
+  int ret=raze(caster,victim,level,bKnown, caster->getAdvLearning(SPELL_RAZE));
+  if (IS_SET(ret, SPELL_SUCCESS)) {
+  } else {
+  }
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
+int raze(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
+{
+  int tRc = FALSE,
+      tReturn;
+
+  tReturn = raze(tMaster, tSucker, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), 0);
+
+  if (IS_SET(tReturn, VICTIM_DEAD))
+    ADD_DELETE(tRc, DELETE_VICT);
+
+  if (IS_SET(tReturn, CASTER_DEAD))
+    ADD_DELETE(tRc, DELETE_THIS);
+
+  return tRc;
+}
+ 
+
+

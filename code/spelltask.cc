@@ -1276,6 +1276,7 @@ Clap or something.", FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
     case SPELL_VOODOO: // shaman
     case SPELL_RESURRECTION: // shaman
     case SPELL_DANCING_BONES: // shaman
+    case SPELL_RAZE: // shaman
     case SPELL_ANIMATE:
     case SPELL_BIND:
     case SPELL_TELEPORT:
@@ -2090,6 +2091,12 @@ int TBeing::doSpellCast(TBeing *caster, TBeing*victim, TObj *o, TRoom *room, spe
           castDancingBones(this, o);
         } else
           vlogf(LOG_BUG, "SPELL_DANCING_BONES called with null obj");
+        break;
+      case SPELL_RAZE:
+        if (!o) {
+          rc = castRaze(this, victim);
+        } else
+          vlogf(LOG_BUG, "SPELL_RAZE called with null obj");
         break;
       case SPELL_RESURRECTION:
 	if (o) { // !o

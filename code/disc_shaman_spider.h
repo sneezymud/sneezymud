@@ -8,6 +8,7 @@ public:
     CSkill skSticksToSnakes;
     CSkill skControlUndead;
     CSkill skHypnosis;
+    CSkill skRaze;
     CSkill skClarity;
 
     CDShamanSpider()
@@ -15,6 +16,7 @@ public:
       skSticksToSnakes(),
       skControlUndead(),
       skHypnosis(),
+      skRaze(),
       skClarity() { 
     }
     CDShamanSpider(const CDShamanSpider &a)
@@ -22,6 +24,7 @@ public:
       skSticksToSnakes(a.skSticksToSnakes),
       skControlUndead(a.skControlUndead),
       skHypnosis(a.skHypnosis),
+      skRaze(a.skRaze),
       skClarity(a.skClarity) {
     }
     CDShamanSpider & operator=(const CDShamanSpider &a) {
@@ -30,6 +33,7 @@ public:
       skSticksToSnakes = a.skSticksToSnakes;
       skControlUndead = a.skControlUndead;
       skHypnosis = a.skHypnosis;
+      skRaze = a.skRaze;
       skClarity = a.skClarity;
       return *this;
     }
@@ -55,6 +59,11 @@ private:
     int castHypnosis(TBeing *, TBeing *);
     void hypnosis(TBeing *, TBeing *, TMagicItem *);
     int hypnosis(TBeing *, TBeing *, int, byte);
+
+    int raze(TBeing *, TBeing *);
+    int castRaze(TBeing *, TBeing *);
+    int raze(TBeing *, TBeing *, int, byte, int);
+    int raze(TBeing *, TBeing *, TMagicItem *);
 
 #endif
 

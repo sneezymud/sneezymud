@@ -203,6 +203,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_COLOR_SPRAY:
     case SPELL_BLAST_OF_FURY:
     case SPELL_ATOMIZE:
+    case SPELL_RAZE:
     case DAMAGE_TRAP_ENERGY:
       bit = IMMUNE_ENERGY;
       break;
