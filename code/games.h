@@ -386,6 +386,7 @@ class HoldemGame : public CardGame {
   int last_bet;
   int nraises;
   int nraises_round;
+  sstring button;
  public:
   HoldemGame(){
     state=STATE_NONE;

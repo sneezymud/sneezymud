@@ -253,11 +253,7 @@ void HoldemGame::showdown(TBeing *ch)
 	}
       }
       
-      vlogf(LOG_PEEL, "got here2=%i", tcount);
-
       ssprintf(buf, "$n has %i chips left.", tcount);
-      vlogf(LOG_PEEL, buf.c_str());
-
       act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
       ssprintf(buf, "You have %i chips left.", tcount);
       act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_CHAR);
@@ -266,8 +262,9 @@ void HoldemGame::showdown(TBeing *ch)
   }
 
 
-  for(i=1;i<MAX_HOLDEM_PLAYERS;++i){
-    if(players[i] && players[i]->ch && players[i]->ch->isPc()){
+  for(i=0;i<MAX_HOLDEM_PLAYERS;++i){
+    if(players[i] && players[i]->ch && 
+       players[i]->ch->isPc() && players[i]->ch->name == button){
       act("The button moves to $n.",
 	  FALSE, players[i]->ch, 0, 0, TO_ROOM);
       act("The button moves to you.",
@@ -315,7 +312,7 @@ void HoldemGame::linkPlayers()
       if(players[i] && players[j] && players[i]->name == players[j]->name){
 	if((++count) > 1){
 	  // this entry is in here more than once!
-	  vlogf(LOG_PEEL, "duplicate entry, removing player %s", players[i]->name.c_str());
+	  //	  vlogf(LOG_PEEL, "duplicate entry, removing player %s", players[i]->name.c_str());
 	  delete players[i];
 
 	}
@@ -971,6 +968,7 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
   players[0]=players[i];
   players[i]=tmp;
   better=0;
+  button=players[1]->ch->name;
   
   // deal cards to everyone
   for(int i=0;i<MAX_HOLDEM_PLAYERS;++i){    
