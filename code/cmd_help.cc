@@ -70,7 +70,9 @@ void TBeing::displayHelpFile(char *helppath, char *namebuf){
 
   // find the last modified time on the file
   if (stat(helppath, &timestat)) {
-    vlogf(LOG_BUG,"bad call to help function %s", namebuf);
+    vlogf(LOG_BUG,"bad call to help function %s, rebuilding indices", namebuf);
+    buildHelpIndex();
+    sendTo("There was an error, try again.\n\r");
     return;
   }
   strcpy(timebuf, ctime(&(timestat.st_mtime)));
@@ -179,8 +181,10 @@ void TBeing::doHelp(const char *arg)
         namebuf[j] = UPPER(namebuf[j]);
 
       if (stat(helppath, &timestat)) {
-        vlogf(LOG_BUG,"bad call to help function %s", namebuf);
-        return;
+	vlogf(LOG_BUG,"bad call to help function %s, rebuilding indices", namebuf);
+	buildHelpIndex();
+	sendTo("There was an error, try again.\n\r");
+	return;
       }
       strcpy(timebuf, ctime(&(timestat.st_mtime)));
       timebuf[strlen(timebuf) - 1] = '\0';
@@ -219,8 +223,10 @@ void TBeing::doHelp(const char *arg)
       for (j = 0;namebuf[j] != '\0';j++)
         namebuf[j] = UPPER(namebuf[j]);
       if (stat(helppath, &timestat)) {
-        vlogf(LOG_BUG,"bad call to help function %s", namebuf);
-        return;
+	vlogf(LOG_BUG,"bad call to help function %s, rebuilding indices", namebuf);
+	buildHelpIndex();
+	sendTo("There was an error, try again.\n\r");
+	return;
       }
       strcpy(timebuf, ctime(&(timestat.st_mtime)));
       timebuf[strlen(timebuf) - 1] = '\0';
@@ -291,7 +297,9 @@ void TBeing::doHelp(const char *arg)
     for (j = 0;namebuf[j] != '\0';j++)
       namebuf[j] = UPPER(namebuf[j]);
     if (stat(helppath, &timestat)) {
-      vlogf(LOG_BUG,"bad call to help function %s", namebuf);
+      vlogf(LOG_BUG,"bad call to help function %s, rebuilding indices", namebuf);
+      buildHelpIndex();
+      sendTo("There was an error, try again.\n\r");
       return;
     }
     strcpy(timebuf, ctime(&(timestat.st_mtime)));
@@ -579,7 +587,9 @@ void TBeing::doHelp(const char *arg)
       namebuf[j] = UPPER(namebuf[j]);
 
     if (stat(helppath, &timestat)) {
-      vlogf(LOG_BUG,"bad call to help function %s", namebuf);
+      vlogf(LOG_BUG,"bad call to help function %s, rebuilding indices", namebuf);
+      buildHelpIndex();
+      sendTo("There was an error, try again.\n\r");
       return;
     }
     strcpy(timebuf, ctime(&(timestat.st_mtime)));
@@ -712,6 +722,7 @@ void buildHelpIndex()
   struct dirent *dp;
 
   // set a reasonable initial size
+  immortalIndex.clear();
   immortalIndex.reserve(128);
   if (!(dfd = opendir(IMMORTAL_HELP_PATH))) {
     vlogf(LOG_FILE, "Can't open immortal help directory for indexing!");
@@ -729,6 +740,7 @@ void buildHelpIndex()
   closedir(dfd);
 
   // set a reasonable initial size
+  builderIndex.clear();
   builderIndex.reserve(64);
   if (!(dfd = opendir(BUILDER_HELP_PATH))) {
     vlogf(LOG_FILE, "Can't open builder help directory for indexing!");
@@ -746,6 +758,7 @@ void buildHelpIndex()
   closedir(dfd);
 
   // set a reasonable initial size
+  helpIndex.clear();
   helpIndex.reserve(512);
   if (!(dfd = opendir(HELP_PATH))) {
     vlogf(LOG_FILE, "Can't open help directory for indexing!");
@@ -766,6 +779,7 @@ void buildHelpIndex()
   closedir(dfd);
 
   // set a reasonable initial size
+  skillIndex.clear();
   skillIndex.reserve(256);
   if (!(dfd = opendir(SKILL_HELP_PATH))) {
     vlogf(LOG_FILE, "Can't open skill help directory for indexing!");
@@ -783,6 +797,7 @@ void buildHelpIndex()
   closedir(dfd);
 
   // set a reasonable initial size
+  spellIndex.clear();
   spellIndex.reserve(256);
   if (!(dfd = opendir(SPELL_HELP_PATH))) {
     vlogf(LOG_FILE, "Can't open spell help directory for indexing!");
