@@ -854,19 +854,29 @@ int TMonster::randomHunt()
   } else {
     int room = hunted->in_room;
     dirTypeT dir;
+
     if (in_room != room) {
       dir = find_path(in_room, is_target_room_p, (void *) room, trackRange(), 0);
       if (dir < MIN_DIR) {
         // unable to find a path 
-        moveHorseman(this);
+	if(spec==SPEC_HORSE_FAMINE ||
+	   spec==SPEC_HORSE_WAR ||
+	   spec==SPEC_HORSE_DEATH ||
+	   spec==SPEC_HORSE_PESTILENCE)
+	  moveHorseman(this);
+	else
+	  opinion.random = NULL;
 
         return FALSE;
       }
       // This if statement prevents mounted from being stuck
       if (dir < MAX_DIR &&
-          real_roomp(exitDir(dir)->to_room)->isRoomFlag(ROOM_INDOORS)) {
-        moveHorseman(this);
-       
+	  real_roomp(exitDir(dir)->to_room)->isRoomFlag(ROOM_INDOORS) &&
+	  (spec==SPEC_HORSE_FAMINE ||
+	   spec==SPEC_HORSE_WAR ||
+	   spec==SPEC_HORSE_DEATH ||
+	   spec==SPEC_HORSE_PESTILENCE)){
+	moveHorseman(this);
       } else {
         rc = goDirection(dir);
         if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -7582,6 +7592,7 @@ int konastisGuard(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
 }
 
 
+extern int postman(TBeing *, cmdTypeT , const char *, TMonster *, TObj *);
 extern int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *, TObj *);
 extern int cityguard(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
 extern int tudy(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *);
@@ -7774,6 +7785,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "lottery redeemer", lotteryRedeemer},
   {FALSE, "konastis's guard", konastisGuard},
   {FALSE, "hold'em player", holdemPlayer},
+  {FALSE, "postman", postman},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

@@ -318,7 +318,7 @@ LIBSPEC=spec_mobs.o		    	spec_objs.o			\
 	spec_mobs_tudy.o		spec_rooms_sleeptag.o           \
 	spec_mobs_tattoo_artist.o	spec_rooms.o			\
 	spec_objs_lottery_ticket.o	spec_mobs_lottery_redeemer.o	\
-	spec_mobs_holdem_player.o
+	spec_mobs_holdem_player.o	spec_mobs_postman.o
 LIBSPEC := $(sort $(addprefix $(OBJDIR), $(LIBSPEC)))
 
 # list of our local shared libs
