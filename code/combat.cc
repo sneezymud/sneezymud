@@ -436,12 +436,10 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
   if (tmpdesc) {
   }
   */
-  vlogf(LOG_MAROR, "1, getName %s", getName());
   if(hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE) ||
     (specials.act & ACT_POLYSELF) || 
     (desc && desc->original && desc->original->polyed == POLY_TYPE_SWITCH)) 
   {
-  vlogf(LOG_MAROR, "2");
     per = desc->original;
 
     if (per->polyed == POLY_TYPE_SWITCH) {  // switch
@@ -449,7 +447,6 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
       doReturn("", WEAR_NOWHERE, CMD_RETURN, FALSE);
       return rawKill(dmg_type, tKiller);
     }
-  vlogf(LOG_MAROR, "3");
     remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
     doReturn("", WEAR_NOWHERE, CMD_RETURN);
     
@@ -461,7 +458,6 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
     return DELETE_THIS;
   }
 
-  vlogf(LOG_MAROR, "4");
   if (fight())  {
     followData *f;
     for (f = fight()->followers;f;f = f->next) {
@@ -473,7 +469,6 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
     stopFighting();
   }
 
-  vlogf(LOG_MAROR, "5");
   if (isCombatMode(ATTACK_BERSERK))
     setCombatMode(ATTACK_NORMAL);
 
@@ -510,7 +505,6 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
   deathCry();
   genericKillFix();
 
-  vlogf(LOG_MAROR, "6");
   if (isPc()) {
     reformGroup();
 
@@ -539,7 +533,6 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost=0)
       waste_shop_file(shop_nr);
     }
   }
-  vlogf(LOG_MAROR, "9");
   return DELETE_THIS;
 }
 
