@@ -8,6 +8,7 @@
 
 #include "stdsneezy.h"
 #include "disc_shaman.h"
+#include "disc_shaman_healing.h"
 #include "disc_fire.h"
 #include "disc_wrath.h"
 #include "disc_aegis.h"
