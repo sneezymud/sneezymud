@@ -1005,6 +1005,12 @@ int TMainSocket::gameLoop()
       do_check_mail();
     }
 
+    if(gameLoopTiming){
+      vlogf(LOG_MISC, fmt("%i %i) gameLoop3: %i") % 
+	    pulse % (pulse%12) % (int)(t.getElapsedReset()*1000000));
+    }
+
+
     if (pl.pulse_tick) {
       // these are done per tick (15 mud minutes)
       doGlobalRoomStuff();
@@ -1016,6 +1022,12 @@ int TMainSocket::gameLoop()
 
       count=updateWholist();
       updateUsagelogs(count);
+    }
+
+
+    if(gameLoopTiming){
+      vlogf(LOG_MISC, fmt("%i %i) gameLoop4: %i") % 
+	    pulse % (pulse%12) % (int)(t.getElapsedReset()*1000000));
     }
 
 
@@ -1031,6 +1043,12 @@ int TMainSocket::gameLoop()
 
     if (pl.combat){
       perform_violence(pulse);
+    }
+
+
+    if(gameLoopTiming){
+      vlogf(LOG_MISC, fmt("%i %i) gameLoop5: %i") % 
+	    pulse % (pulse%12) % (int)(t.getElapsedReset()*1000000));
     }
 
 
@@ -1055,12 +1073,20 @@ int TMainSocket::gameLoop()
       pingData();
     }
 
+    if(gameLoopTiming){
+      vlogf(LOG_MISC, fmt("%i %i) gameLoop6: %i") % 
+	    pulse % (pulse%12) % (int)(t.getElapsedReset()*1000000));
+    }
+
+
     // set zone emptiness flags
     for (unsigned int i = 0; i < zone_table.size(); i++)
       zone_table[i].zone_value=zone_table[i].isEmpty()?1:-1;
 
     // room procs
     call_room_specials();
+
+
 
     if(gameLoopTiming)
       vlogf(LOG_MISC, fmt("%i %i) normal pulses: %s") % 
