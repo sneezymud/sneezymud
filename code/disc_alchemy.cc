@@ -2207,6 +2207,10 @@ void TBeing::doScribe(const char *arg)
     comp_spell = NULL;
   }
 
+  if(task){
+    stopTask();
+  }
+
   start_task(this, NULL, NULL, TASK_SCRIBING, "", 0, in_room, how_many, which, 0);
 
   return;
