@@ -743,6 +743,8 @@ int TBeing::updateHalfTickStuff()
   TBeing *trider=NULL;
   unsigned int i, hours_first, hours_last, severity;
 
+  updatePos();
+
   if (hasClass(CLASS_SHAMAN) && !affectedBySpell(SPELL_SHAPESHIFT)) {
     if ((isPc()) && (GetMaxLevel() < 51)) {
       if (0 >= getLifeforce()) {

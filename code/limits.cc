@@ -126,7 +126,7 @@ double TBeing::pietyGain(double modif)
     // at 30.0 : Average piety regen           : 12.90 (attempts : 2091)
     // at L50, cleric has 100 piety, think we desire regen of 5
     // since this makes it REAL slow at low level, go with 10 or so instead
-    gain *= 25.0;  // arbitrary
+    gain *= 20.0;  // arbitrary
   }
 
   // lower this to make faction power drain quicker
@@ -853,11 +853,8 @@ void gain_exp(TBeing *ch, double gain, int dam)
   double newgain = 0;
   double oldcap = 0;
   bool been_here = false;
-#if 0
+
   if (!ch->isPc() && ch->isAffected(AFF_CHARM)) {
-#else
-  if (!ch->isPc() && gain > 0) {
-#endif
     // do_nothing so they get no extra exp
     return;
   } else if (ch->roomp && ch->roomp->isRoomFlag(ROOM_ARENA)) {
@@ -873,47 +870,33 @@ void gain_exp(TBeing *ch, double gain, int dam)
           double curr = getExpClassLevel(i,ch->getLevel(i));
 	  double gainmod = ((1.15*ch->getLevel(i)) ); // removed +1
           if (ch->getLevel(i)) {
-	    
-
             if (!been_here && gain > ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000))+2.0 && dam > 0) {
               been_here = TRUE; // don't show multiple logs for multiclasses
               // the 100 turns dam into a %
               newgain = ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000)) + 1.0;
-	      
 	      // 05/24/01 - adding a 'soft' cap here
-
 	      oldcap = newgain;
-
-	      double softmod = (1.0 - pow( 1.1 , -1.0*(gain/newgain))) + 1.0;     // this gives us a range of 1-2
-	      
+	      double softmod = (1.0 - pow( 1.1 , -1.0*(gain/newgain))) + 1.0;     
+	      // this gives us a range of 1-2
 	      newgain *= softmod;
-
 	      //newgain = (newgain*0.95) +  (((float)::number(0,100))*newgain)/1000.0;
 	      // don't need this anymore since no hard cap - dash
-
 	      if (gain < newgain)
 		newgain = gain;
-
-              vlogf(LOG_DASH, "%s(L%d) vs %s(L%d)    (%5.2f soft <- %5.2f hard)",
+	      vlogf(LOG_DASH, "%s(L%d) vs %s(L%d)    (%5.2f soft <- %5.2f hard)",
                     ch->getName(), ch->getLevel(i),(ch->specials.fighting) ?  ch->specials.fighting->getName() : "n/a",
                     (ch->specials.fighting)?ch->specials.fighting->GetMaxLevel() : -1, (gain/newgain), (gain/oldcap));
 	      vlogf(LOG_DASH, "   gain: %6.2f   oldc: %6.2f   newc: %6.2f   softm: %6.2f",
 		    gain, oldcap, softmod, newgain);
 	      gain = newgain;
-
-
             }
-
-
             // intentionally avoid having L50's get this message
             if ((ch->getExp() >= peak2) && (ch->GetMaxLevel() < MAX_MORT)) {
               ch->sendTo(COLOR_BASIC, "<R>You must gain at a guild or your exp will max 1 short of next level.<1>\n\r");
               ch->setExp(peak2);
               return;
-
             } else if (ch->getExp() >= peak) {
               // do nothing..this rules! Tell Brutius Hey, I didnt get any exp? 
-
             } else if ((ch->getExp() + gain >= peak) && (ch->GetMaxLevel() < MAX_MORT)) {
               ch->sendTo(COLOR_BASIC, "<G>You have gained enough to be a Level %d %s.<1>\n\r", 
 			 ch->getLevel(i)+1, classNames[i].capName);
@@ -923,26 +906,20 @@ void gain_exp(TBeing *ch, double gain, int dam)
                 return;
               }
 	    }
-
 	    // if(gain > ((peak - curr) / gainmod)) {
 #if 0
 	    if (!been_here && gain > ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000))+2.0 && dam > 0) { 
 	      been_here = TRUE; // don't show multiple logs for multiclasses
 	      // the 100 turns dam into a %
 	      newgain = ((double)(dam)*(peak-curr))/(gainmod*(double)(ch->howManyClasses()*10000)) + 2.0;
-
-
-
 	      vlogf(LOG_DASH, "%s(L%d) vs %s(L%d) cap: D: %d, E: %f, C: %f (%fx), MK: %f, %d classes",
 		    ch->getName(), ch->getLevel(i), (ch->specials.fighting) ?  ch->specials.fighting->getName() : "n/a", 
 		    (ch->specials.fighting) ?  ch->specials.fighting->GetMaxLevel() : -1, dam/100 + 1, gain,	
 		    newgain, (gain/newgain), gainmod, ch->howManyClasses());
-
 	    }  
 #endif
 	  }
 	}
-	
       }
 #if 0
       // Theoretically, a players peak - curr / gainmod is extremely reasonable
@@ -979,8 +956,7 @@ void gain_exp(TBeing *ch, double gain, int dam)
         ch->setExp(0);
     }
   }
-  }
-  // whats this shit above?
+}
 
 void TFood::findSomeFood(TFood **last_good, TBaseContainer **last_cont, TBaseContainer *cont) 
 {
