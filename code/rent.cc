@@ -1490,10 +1490,12 @@ void TRoom::saveItems(const sstring &)
   sstring filepath;
   ItemSave is;
 
-  if(!getStuff())
-    return;
-
   filepath = fmt("%s/%d") % ROOM_SAVE_PATH % number;
+
+  if(!getStuff()){
+    unlink(filepath.c_str());
+    return;
+  }
 
   if(!is.openFile(filepath)){
     vlogf(LOG_BUG, fmt("Error saving room [%d] items.") %  number);
