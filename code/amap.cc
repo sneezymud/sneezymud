@@ -140,10 +140,14 @@ NODE *find_node(int num){
   return(nodes[num]);
 }
 
+
 bool isEnabled(int num)
 {
   bool enabled=false;
   map<int,bool>::iterator iter;
+
+  if(zone_enabled.size()==0)
+    return true;
   
   for(iter=zone_enabled.begin();iter!=zone_enabled.end();++iter){
     if((*iter).first>=num){
@@ -166,20 +170,26 @@ NODE *read_room(FILE *tiny){
     return NULL;
   }
 
-  if(!tmp) 
+  if(!tmp) {
+    fprintf(stderr, "read_room(): unable to allocate new NODE (tmp==NULL)\n");
     return NULL;
+  }
 
   do {
     // read until we get to a new room ('#')
     while((tch=fgetc(tiny))){
       if(tch=='#')
 	break;
-      if(tch==EOF)
+      if(tch==EOF){
+	fprintf(stderr, "read_room(): couldn't find a room\n");
 	return NULL;
+      }
     }
     
     fscanf(tiny, "%i", &tmp->num);
   } while(!isEnabled(tmp->num));
+
+  
 
   fscanf(tiny, "%[^~]~", tmp->name); // name
   while(fgetc(tiny)!='~'); // descr
@@ -546,6 +556,9 @@ int main(int argc, char **argv){
     printf("Using '/mud/code/lib/tinyworld.wld' as room file.\n");
     tiny=fopen("/mud/code/lib/tinyworld.wld", "rt");
     parse_num_args(argc-1, argv+1, roomrange_t);
+
+    printf("Making zone list.");
+    makezonelist(zone);
   }
 
   if(!tiny){
@@ -568,6 +581,7 @@ int main(int argc, char **argv){
     exit(0);
   }
 
+
   if(roomrange_t.size()>0)
     use_range=true;
 
@@ -575,13 +589,11 @@ int main(int argc, char **argv){
     roomrange[roomrange_t[i]]=true;
   }
 
-
-  printf("Making zone list.");
-  makezonelist(zone);
-
   i=0;
   head=read_room(tiny);
+
   nodes[head->num]=head;
+
   while(!feof(tiny)){
     if(!(t=read_room(tiny)))
       break;
