@@ -809,7 +809,7 @@ race_t TBeing::getRaceIndex(const char *ccName) const
 
 race_t TBeing::getRace() const
 {
-  if (is_disguised == TRUE) 
+  if (is_disguised == TRUE && disguise_race) 
     return disguise_race->getRace();
   return race->getRace();
 }
