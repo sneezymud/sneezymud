@@ -6140,7 +6140,6 @@ int blizzardRing(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 }
 
 
-
 int factionScoreBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
 {
   int found=0;
@@ -7696,6 +7695,7 @@ int statueArmTwist(TBeing *me, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 //MARKER: END OF SPEC PROCS
 
 
+extern int stockBoard(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int board(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int weaponBlinder(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
 extern int weaponManaDrainer(TBeing *, cmdTypeT, const char *, TObj *, TObj *);
@@ -7854,5 +7854,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "graffiti maker", graffitiMaker}, // 135
   {FALSE, "graffiti object", graffitiObject},
   {FALSE, "statue arm twist", statueArmTwist},
+  {FALSE, "stock board", stockBoard},
   {FALSE, "last proc", bogusObjProc}
 };

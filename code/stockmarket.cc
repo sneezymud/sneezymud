@@ -63,3 +63,53 @@ void updateStocks()
 
 
 }
+
+int stockBoard(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o1, TObj *o2)
+{
+  int found=0;
+  TThing *o;
+  TObj *to;
+  TDatabase db(DB_SNEEZY);
+
+  if(cmd != CMD_LOOK)
+    return FALSE;
+
+  for (o = ch->roomp->getStuff(); o; o = o->nextThing) {
+    to = dynamic_cast<TObj *>(o);
+    if (to && to->spec == SPEC_STOCK_BOARD &&
+	isname(arg, to->name)){
+      found=1;
+      break;
+    }
+  }
+
+  if(!found)
+    return FALSE;
+
+  ch->sendTo("You examine the board:\n\r");
+  ch->sendTo("------------------------------------------------------------\n\r");
+  ch->sendTo("Ticker   Bid   Ask  Market Cap                                \n\r");
+  ch->sendTo("------------------------------------------------------------\n\r");
+
+  db.query("select ticker, price, shares from stockinfo order by ticker");
+
+  float price;
+  int shares;
+  while(db.fetchRow()){
+    price=convertTo<float>(db["price"]);
+    shares=convertTo<int>(db["shares"]);
+
+    ch->sendTo(fmt("%6s  %.2f  %.2f  %s\n\r") %
+	       db["ticker"] % (price*0.97) % (price * 1.03) %
+	       talenDisplay((int)(price*(float)shares)));
+    
+    
+  }
+
+  ch->sendTo("------------------------------------------------------------\n\r");
+
+  return TRUE;
+}
+
+
+
