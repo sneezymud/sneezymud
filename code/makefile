@@ -8368,6 +8368,56 @@ objs/loadset.o: create.h thing.h room.h obj.h spec_objs.h connect.h
 objs/loadset.o: obj_drug.h charfile.h being.h person.h monster.h account.h
 objs/loadset.o: extern.h handler.h obj_money.h rent.h spec_mobs.h materials.h
 objs/loadset.o: loadset.h obj_armor.h obj_base_clothing.h
+objs/lowtools.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/lowtools.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/lowtools.o: /usr/include/gnu/stubs.h
+objs/lowtools.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/lowtools.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/lowtools.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/lowtools.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/lowtools.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/lowtools.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
+objs/lowtools.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/lowtools.o: /usr/include/time.h /usr/include/bits/time.h
+objs/lowtools.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
+objs/lowtools.o: /usr/include/ctype.h /usr/include/endian.h
+objs/lowtools.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
+objs/lowtools.o: /usr/include/assert.h /usr/include/g++-3/cstring
+objs/lowtools.o: /usr/include/string.h /usr/include/g++-3/cerrno
+objs/lowtools.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/lowtools.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/lowtools.o: /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h
+objs/lowtools.o: /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h
+objs/lowtools.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
+objs/lowtools.o: /usr/include/g++-3/stl_alloc.h /usr/include/g++-3/iostream.h
+objs/lowtools.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
+objs/lowtools.o: /usr/include/g++-3/stl_relops.h
+objs/lowtools.o: /usr/include/g++-3/stl_iterator.h
+objs/lowtools.o: /usr/include/g++-3/std/bastring.cc /usr/include/g++-3/vector
+objs/lowtools.o: /usr/include/g++-3/stl_algobase.h
+objs/lowtools.o: /usr/include/g++-3/stl_pair.h
+objs/lowtools.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/lowtools.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/lowtools.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/lowtools.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/lowtools.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/lowtools.o: /usr/include/g++-3/stl_construct.h
+objs/lowtools.o: /usr/include/g++-3/stl_uninitialized.h
+objs/lowtools.o: /usr/include/g++-3/stl_vector.h
+objs/lowtools.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
+objs/lowtools.o: /usr/include/g++-3/stl_tree.h
+objs/lowtools.o: /usr/include/g++-3/stl_function.h
+objs/lowtools.o: /usr/include/g++-3/stl_map.h
+objs/lowtools.o: /usr/include/g++-3/stl_multimap.h low.h enum.h spells.h
+objs/lowtools.o: structs.h immunity.h discipline.h spell2.h parse.h db.h
+objs/lowtools.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/lowtools.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/lowtools.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
+objs/lowtools.o: create.h thing.h room.h obj.h spec_objs.h connect.h
+objs/lowtools.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/lowtools.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/lowtools.o: materials.h database.h /usr/include/postgresql/libpq-fe.h
+objs/lowtools.o: /usr/include/postgresql/postgres_ext.h
 objs/luck.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/luck.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/luck.o: /usr/include/gnu/stubs.h
@@ -14295,7 +14345,8 @@ objs/spec_mobs.o: /usr/include/postgresql/postgres_ext.h obj_base_corpse.h
 objs/spec_mobs.o: obj_base_container.h obj_player_corpse.h obj_symbol.h
 objs/spec_mobs.o: obj_window.h obj_seethru.h obj_general_weapon.h
 objs/spec_mobs.o: obj_base_weapon.h obj_pool.h obj_base_cup.h
-objs/spec_mobs.o: obj_base_clothing.h obj_bow.h /usr/include/g++-3/fstream.h
+objs/spec_mobs.o: obj_base_clothing.h obj_bow.h obj_trap.h
+objs/spec_mobs.o: /usr/include/g++-3/fstream.h
 objs/spec_mobs_bounty_hunter.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_mobs_bounty_hunter.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_mobs_bounty_hunter.o: /usr/include/sys/cdefs.h
@@ -14366,7 +14417,11 @@ objs/spec_mobs_bounty_hunter.o: create.h thing.h room.h obj.h spec_objs.h
 objs/spec_mobs_bounty_hunter.o: connect.h obj_drug.h charfile.h being.h
 objs/spec_mobs_bounty_hunter.o: person.h monster.h account.h extern.h
 objs/spec_mobs_bounty_hunter.o: handler.h obj_money.h rent.h spec_mobs.h
-objs/spec_mobs_bounty_hunter.o: materials.h shop.h statistics.h
+objs/spec_mobs_bounty_hunter.o: materials.h shop.h statistics.h timing.h
+objs/spec_mobs_bounty_hunter.o: /usr/include/sys/time.h
+objs/spec_mobs_bounty_hunter.o: /usr/include/sys/select.h
+objs/spec_mobs_bounty_hunter.o: /usr/include/bits/select.h
+objs/spec_mobs_bounty_hunter.o: /usr/include/bits/sigset.h
 objs/spec_mobs_coroner.o: stdsneezy.h /usr/include/g++-3/cstdio
 objs/spec_mobs_coroner.o: /usr/include/stdio.h /usr/include/features.h
 objs/spec_mobs_coroner.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
@@ -15447,6 +15502,60 @@ objs/spelltask.o: disc_spirit.h disc_water.h disc_aegis.h disc_wrath.h
 objs/spelltask.o: disc_shaman.h disc_afflictions.h disc_hand_of_god.h
 objs/spelltask.o: disc_deikhan.h disc_ranger.h disc_survival.h disc_animal.h
 objs/spelltask.o: disc_leverage.h disc_ranged.h combat.h obj_symbol.h
+objs/sqladdobjs.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
+objs/sqladdobjs.o: /usr/include/features.h /usr/include/sys/cdefs.h
+objs/sqladdobjs.o: /usr/include/gnu/stubs.h
+objs/sqladdobjs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stddef.h
+objs/sqladdobjs.o: /usr/include/bits/types.h /usr/include/libio.h
+objs/sqladdobjs.o: /usr/include/_G_config.h /usr/include/wchar.h
+objs/sqladdobjs.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+objs/sqladdobjs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/stdarg.h
+objs/sqladdobjs.o: /usr/include/bits/stdio_lim.h /usr/include/g++-3/cstdlib
+objs/sqladdobjs.o: /usr/include/stdlib.h /usr/include/g++-3/ctime
+objs/sqladdobjs.o: /usr/include/time.h /usr/include/bits/time.h
+objs/sqladdobjs.o: /usr/include/sys/types.h /usr/include/g++-3/cctype
+objs/sqladdobjs.o: /usr/include/ctype.h /usr/include/endian.h
+objs/sqladdobjs.o: /usr/include/bits/endian.h /usr/include/g++-3/cassert
+objs/sqladdobjs.o: /usr/include/assert.h /usr/include/g++-3/cstring
+objs/sqladdobjs.o: /usr/include/string.h /usr/include/g++-3/cerrno
+objs/sqladdobjs.o: /usr/include/errno.h /usr/include/bits/errno.h
+objs/sqladdobjs.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+objs/sqladdobjs.o: /usr/include/g++-3/string
+objs/sqladdobjs.o: /usr/include/g++-3/std/bastring.h
+objs/sqladdobjs.o: /usr/include/g++-3/cstddef
+objs/sqladdobjs.o: /usr/include/g++-3/std/straits.h
+objs/sqladdobjs.o: /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h
+objs/sqladdobjs.o: /usr/include/g++-3/stl_alloc.h
+objs/sqladdobjs.o: /usr/include/g++-3/iostream.h
+objs/sqladdobjs.o: /usr/include/g++-3/streambuf.h /usr/include/g++-3/iterator
+objs/sqladdobjs.o: /usr/include/g++-3/stl_relops.h
+objs/sqladdobjs.o: /usr/include/g++-3/stl_iterator.h
+objs/sqladdobjs.o: /usr/include/g++-3/std/bastring.cc
+objs/sqladdobjs.o: /usr/include/g++-3/vector
+objs/sqladdobjs.o: /usr/include/g++-3/stl_algobase.h
+objs/sqladdobjs.o: /usr/include/g++-3/stl_pair.h
+objs/sqladdobjs.o: /usr/include/g++-3/type_traits.h /usr/include/limits.h
+objs/sqladdobjs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/limits.h
+objs/sqladdobjs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new.h
+objs/sqladdobjs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/new
+objs/sqladdobjs.o: /usr/lib/gcc-lib/i386-linux/2.95.4/include/exception
+objs/sqladdobjs.o: /usr/include/g++-3/stl_construct.h
+objs/sqladdobjs.o: /usr/include/g++-3/stl_uninitialized.h
+objs/sqladdobjs.o: /usr/include/g++-3/stl_vector.h
+objs/sqladdobjs.o: /usr/include/g++-3/stl_bvector.h /usr/include/g++-3/map
+objs/sqladdobjs.o: /usr/include/g++-3/stl_tree.h
+objs/sqladdobjs.o: /usr/include/g++-3/stl_function.h
+objs/sqladdobjs.o: /usr/include/g++-3/stl_map.h
+objs/sqladdobjs.o: /usr/include/g++-3/stl_multimap.h low.h enum.h spells.h
+objs/sqladdobjs.o: structs.h immunity.h discipline.h spell2.h parse.h db.h
+objs/sqladdobjs.o: ansi.h cmd_dissect.h client.h response.h faction.h comm.h
+objs/sqladdobjs.o: toggle.h wiz_powers.h cmd_message.h stats.h limbs.h body.h
+objs/sqladdobjs.o: race.h skills.h disease.h trap.h task.h weather.h sound.h
+objs/sqladdobjs.o: create.h thing.h room.h obj.h spec_objs.h connect.h
+objs/sqladdobjs.o: obj_drug.h charfile.h being.h person.h monster.h account.h
+objs/sqladdobjs.o: extern.h handler.h obj_money.h rent.h spec_mobs.h
+objs/sqladdobjs.o: materials.h database.h /usr/include/postgresql/libpq-fe.h
+objs/sqladdobjs.o: /usr/include/postgresql/postgres_ext.h lowtools.h
 objs/statistics.o: stdsneezy.h /usr/include/g++-3/cstdio /usr/include/stdio.h
 objs/statistics.o: /usr/include/features.h /usr/include/sys/cdefs.h
 objs/statistics.o: /usr/include/gnu/stubs.h
