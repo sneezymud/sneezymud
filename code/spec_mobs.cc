@@ -7644,7 +7644,7 @@ int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
       break;
     case STATE_DEAL:
       if(handval > 15 && ::number(0,1)){
-	gHoldem.raise(me);
+	gHoldem.raise(me, "");
 	return true;
       } else if((hp->hand[0]->getValAceHi() >= 10) &&
 		(hp->hand[1]->getValAceHi() >= 10)){
@@ -7652,7 +7652,7 @@ int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 	  me->doStay();
 	  return true;
 	} else {
-	  gHoldem.raise(me);
+	  gHoldem.raise(me, "");
 	  return true;
 	}
       } else if(::number(0,2)){
@@ -7662,7 +7662,7 @@ int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
       break;
     case STATE_FLOP:
       if(handval > 30 && ::number(0,1)){
-	gHoldem.raise(me);
+	gHoldem.raise(me, "");
 	return true;
       } else if(handval > 15 || !::number(0,4)){
 	gHoldem.call(me);
@@ -7672,9 +7672,11 @@ int holdemPlayer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     case STATE_TURN:
     case STATE_RIVER:
       if(handval > 45 && ::number(0,1))
-	gHoldem.raise(me);
+	gHoldem.raise(me, "");
       else if(handval > 15 || !::number(0,4))
 	gHoldem.call(me);
+      else
+	gHoldem.fold(me);
       deleteChips(me);
       return true;
       break;

@@ -390,6 +390,7 @@ class HoldemGame : public CardGame {
     state=STATE_NONE;
   }
 
+  sstring handValToStr(int);
   HoldemPlayer *getBetter(){return players[better];}
   int getNRaises(){ return nraises;}
   int getLastBet(){return last_bet;}
@@ -411,7 +412,7 @@ class HoldemGame : public CardGame {
   void Bet(TBeing *ch, const sstring &arg);
   void allIn(TBeing *ch);
   void call(TBeing *ch);
-  void raise(TBeing *ch);
+  void raise(TBeing *ch, const sstring &arg);
   void fold(TBeing *ch);
   void flop(TBeing *ch);
   void river(TBeing *ch);

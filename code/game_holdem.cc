@@ -62,24 +62,37 @@ int HoldemGame::handValue(HoldemPlayer *hp){
     if(community[i])
       rank[community[i]->getSuit()][community[i]->getValAceHi()]=1;
   }
+
+  for(i=0;i<15;++i)
+    for(int j=0;j<4;++j)
+      vlogf(LOG_PEEL, "rank[%i][%i]=%i", j, i, rank[j][i]);
+  
   
   for(i=0;i<15;++i){
+    vlogf(LOG_PEEL, "loop i: %i", i);
+
     if(!rank[0][i] && !rank[1][i] && !rank[2][i] && !rank[3][i]){
       straight=0;
+      vlogf(LOG_PEEL, "no cards, skipping loop");
       continue;
     }
-
+    
 
     for(int j=0;j<4;++j){
       // get highcard
-      if(rank[j][i])
+      if(rank[j][i]){
+	vlogf(LOG_PEEL, "setting highcard to %i", i);
 	score[0]=i;
+      }
 
       // check for flush
       if((flush[j]+=rank[j][i]) >= 5){
+	vlogf(LOG_PEEL, "setting flush to %i", i);
 	score[5]=i;
 	// flush
       }
+      vlogf(LOG_PEEL, "flush[%i]=%i", j, flush[j]);
+
     }
 
     tmp=rank[0][i]+rank[1][i]+rank[2][i]+rank[3][i];
@@ -112,8 +125,8 @@ int HoldemGame::handValue(HoldemPlayer *hp){
     }
     
 
-
-    if(++straight == 5){
+    
+    if((++straight) >= 5){
       // straight
       score[4]=i;
       
@@ -129,6 +142,13 @@ int HoldemGame::handValue(HoldemPlayer *hp){
 	}
       }
     }
+
+    vlogf(LOG_PEEL, "straight=%i", straight);
+
+
+    for(int j=9;j>=0;--j){
+      vlogf(LOG_PEEL, "score[%i]=%i", j, score[j]);
+    }
   }
 
   for(i=9;i>=0;--i){
@@ -137,6 +157,46 @@ int HoldemGame::handValue(HoldemPlayer *hp){
   }
   
   return 0;
+}
+
+sstring HoldemGame::handValToStr(int val){
+  sstring msg;
+  
+  switch((int)((float)val/15.0)){
+    case 0:
+      msg="the high card";
+      break;
+    case 1:
+      msg="a pair";
+      break;
+    case 2:
+      msg="two pair";
+      break;
+    case 3:
+      msg="three of a kind";
+      break;
+    case 4:
+      msg="a straight";
+      break;
+    case 5:
+      msg="a flush";
+      break;
+    case 6:
+      msg="a full house";
+      break;
+    case 7:
+      msg="four of a kind";
+      break;
+    case 8:
+      msg="a straight flush";
+      break;
+    case 9:
+      msg="a royal flush";
+      break;
+    default:
+      ssprintf(msg, "unknown: %i", val);
+  }
+  return msg;
 }
 
 
@@ -163,8 +223,13 @@ void HoldemGame::showdown(TBeing *ch)
 	act("$n's hand was:", FALSE, players[i]->ch, 0, 0, TO_ROOM);
 	ssprintf(buf, "%s", players[i]->hand[0]->getName());
 	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
-	ssprintf(buf, "%s\n\r", players[i]->hand[1]->getName());
+	ssprintf(buf, "%s", players[i]->hand[1]->getName());
 	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
+	ssprintf(buf, "$n has %s (%i).\n\r", handValToStr(hands[i]).c_str(), hands[i]);
+	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_ROOM);
+
+	ssprintf(buf, "You have %s (%i).\n\r", handValToStr(hands[i]).c_str(), hands[i]);
+	act(buf.c_str(), FALSE, players[i]->ch, 0, 0, TO_CHAR);
 
 	players[i]->allin=false;
       }
@@ -178,40 +243,7 @@ void HoldemGame::showdown(TBeing *ch)
 	winners.push_back(i);
     }
 
-    switch((int)(hands[highest]/15)){
-      case 0:
-	msg="high card";
-	break;
-      case 1:
-	msg="a pair";
-	break;
-      case 2:
-	msg="two pair";
-	break;
-      case 3:
-	msg="three of a kind";
-	break;
-      case 4:
-	msg="a straight";
-	break;
-      case 5:
-	msg="a flush";
-	break;
-      case 6:
-	msg="full house";
-	break;
-      case 7:
-	msg="four of a kind";
-	break;
-      case 8:
-	msg="a straight flush";
-	break;
-      case 9:
-	msg="royal flush";
-	break;
-      default:
-	ssprintf(msg, "unknown: %i", hands[highest]);
-    }
+    msg=handValToStr(hands[highest]);
     
     for(unsigned int p=0;p<winners.size();++p){
       ssprintf(buf, "$n %s with %s!", 
@@ -498,7 +530,7 @@ void HoldemGame::call(TBeing *ch)
   }
 }
 
-void HoldemGame::raise(TBeing *ch)
+void HoldemGame::raise(TBeing *ch, const sstring &arg)
 {
   sstring buf;
   TObj *chip;
@@ -526,7 +558,17 @@ void HoldemGame::raise(TBeing *ch)
     return;
   }
 
-  nraises++;
+  if(!arg.empty()){
+    int amt=convertTo<int>(arg);
+    if(amt>5 || amt<1){
+      ch->sendTo("Usage: raise <optional amount, 1-5>\n\r");
+      return;
+    } else {
+      nraises+=amt;
+    }
+  } else {
+    nraises++;
+  }
 
   for(int i=0;i<nraises;++i){
     if(!(chip=find_chip(ch, last_bet))){
@@ -764,6 +806,21 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
   TObj *chip;
   int i;
 
+  if(ch->isImmortal() && arg=="reset"){
+    for(i=0;i<MAX_HOLDEM_PLAYERS;++i)
+      delete players[i];
+    for(i=0;i<5;++i)
+      community[i]=0;
+    better=0;
+    bet=0;
+    last_bet=0;
+    state=STATE_NONE;
+    act("$n resets the game.", FALSE, ch, 0, 0, TO_ROOM);
+    act("You reset the game.", FALSE, ch, 0, 0, TO_CHAR);
+    return;
+  }
+
+
   if (!ch->checkHoldem())
     return;
 
@@ -834,7 +891,7 @@ void HoldemGame::Bet(TBeing *ch, const sstring &arg)
       continue;
 
     players[i]->ch->sendTo(COLOR_BASIC, "You are dealt:\n\r");
-    act("$n is dealt two cards facedown.\n\r", 
+    act("$n is dealt two cards facedown.", 
 	FALSE, players[i]->ch, 0, 0, TO_ROOM);
     
     card=deck.draw();

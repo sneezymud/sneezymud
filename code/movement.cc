@@ -1751,7 +1751,7 @@ int TBeing::doRaise(const char *argument, cmdTypeT cmd)
   argument_interpreter(argument, type, dir);
 
   if (checkHoldem()) {
-    gHoldem.raise(this);
+    gHoldem.raise(this, argument);
     return true;
   }
  
