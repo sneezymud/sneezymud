@@ -43,7 +43,7 @@ TObj *catch_a_fish(TRoom *rp){
 			    13838, 13839, 13840};
   float weightmod=(((float)(::number(0,100))-50.0)/100.0)+1.0;  // plus or minus 30%
 
-  vlogf(LOG_PEEL, "weightmod=%f", weightmod);
+  //  vlogf(LOG_PEEL, "weightmod=%f", weightmod);
 
   if(!::number(0,100)){
     weightmod=3;  // big one
@@ -183,9 +183,11 @@ int task_fishing(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
 	  catchchance=::number(1,100);
 	  
 
+#if 0
 	  vlogf(LOG_PEEL, "fishing: baitcost=%i, bait=%i, pole=%i, catch=%i",
 		bait->rentCost(), baitchance, polechance, catchchance);
-	  
+#endif	
+  
 	  if(bSuccess(ch, ch->getSkillValue(SKILL_FISHING), SKILL_FISHING) &&
 	     (catchchance<(baitchance+polechance)) &&
 	     (fish=catch_a_fish(rp))){
