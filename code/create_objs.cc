@@ -19,6 +19,7 @@ extern "C" {
 #include "obj_component.h"
 #include "dirsort.h"
 #include "statistics.h"
+#include "database.h"
 #include "obj_open_container.h"
 #include "obj_trash.h"
 #include "obj_book.h"
@@ -280,85 +281,75 @@ void ObjLoad(TBeing *ch, int vnum)
 {
   TObj *o;
   TBaseClothing *tbc;
-  int i, rc;
+  int i;
   extraDescription *new_descr;
-  MYSQL_ROW row;
-  MYSQL_RES *res;
+  TDatabase db("immortal");
 
-  if((rc=dbquery(TRUE, &res, "immortal", "ObjLoad(1)", "select type, name, short_desc, long_desc, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist, action_desc from obj where vnum=%i and owner='%s'", vnum, ch->name))){
-    if(rc==1)
-      ch->sendTo("Object not found\n\r");
-    else if(rc==-1)
-      ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+  db.query("select type, name, short_desc, long_desc, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist, action_desc from obj where vnum=%i and owner='%s'", vnum, ch->name);
+
+  if(!db.isResults()){
+    ch->sendTo("Object not found\n\r");
     return;
   }
-  if(!(row=mysql_fetch_row(res)))
+
+  if(!db.fetchRow())
     return;
 
   ch->sendTo("Loading saved object number %d\n\r", vnum);
 
-  o = makeNewObj(mapFileToItemType(atoi(row[0])));
+  o = makeNewObj(mapFileToItemType(atoi(db.getColumn(0))));
   o->snum   = vnum;
   o->number = -1;
 
-  o->name = mud_str_dup(row[1]);
-  o->shortDescr = mud_str_dup(row[2]);
-  o->setDescr(mud_str_dup(row[3]));
+  o->name = mud_str_dup(db.getColumn(1));
+  o->shortDescr = mud_str_dup(db.getColumn(2));
+  o->setDescr(mud_str_dup(db.getColumn(3)));
 
-  o->setObjStat(atoi(row[4]));
-  o->obj_flags.wear_flags = atoi(row[5]);
+  o->setObjStat(atoi(db.getColumn(4)));
+  o->obj_flags.wear_flags = atoi(db.getColumn(5));
 
-  o->assignFourValues(atoi(row[6]), atoi(row[7]), atoi(row[8]), atoi(row[9]));
+  o->assignFourValues(atoi(db.getColumn(6)), atoi(db.getColumn(7)), atoi(db.getColumn(8)), atoi(db.getColumn(9)));
 
-  o->setWeight(atof(row[10]));
-  o->obj_flags.cost = atoi(row[11]);
-  o->canBeSeen = atoi(row[12]);
-  o->spec = atoi(row[13]);
-  o->obj_flags.max_struct_points = atoi(row[14]);
-  o->obj_flags.struct_points = atoi(row[15]);
-  o->obj_flags.decay_time = atoi(row[16]);
-  o->setVolume(atoi(row[17]));
-  o->setMaterial(atoi(row[18]));
-  o->max_exist = atoi(row[19]);
-  if(strcmp(row[20], "")) o->action_description=mud_str_dup(row[20]);
+  o->setWeight(atof(db.getColumn(10)));
+  o->obj_flags.cost = atoi(db.getColumn(11));
+  o->canBeSeen = atoi(db.getColumn(12));
+  o->spec = atoi(db.getColumn(13));
+  o->obj_flags.max_struct_points = atoi(db.getColumn(14));
+  o->obj_flags.struct_points = atoi(db.getColumn(15));
+  o->obj_flags.decay_time = atoi(db.getColumn(16));
+  o->setVolume(atoi(db.getColumn(17)));
+  o->setMaterial(atoi(db.getColumn(18)));
+  o->max_exist = atoi(db.getColumn(19));
+  if(strcmp(db.getColumn(20), "")) o->action_description=mud_str_dup(db.getColumn(20));
   else o->action_description=NULL;
 
   o->ex_description = NULL;
 
-  mysql_free_result(res);
 
-
-  if((dbquery(TRUE, &res, "immortal", "ObjLoad(2)", "select name, description from objextra where vnum=%i and owner='%s'", vnum, ch->name)==-1)){
-    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
-    return;
-  }
+  db.query("select name, description from objextra where vnum=%i and owner='%s'", vnum, ch->name);
   
-  while((row=mysql_fetch_row(res))){
+  while(db.fetchRow()){
     new_descr = new extraDescription();
-    new_descr->keyword = mud_str_dup(row[0]);
-    new_descr->description = mud_str_dup(row[1]);
+    new_descr->keyword = mud_str_dup(db.getColumn(0));
+    new_descr->description = mud_str_dup(db.getColumn(1));
     new_descr->next = o->ex_description;
     o->ex_description = new_descr;
   }
-  mysql_free_result(res);
 
   o->setLight(0);
   i=0;
 
+  db.query("select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum, ch->name);
 
-  if((dbquery(TRUE, &res, "immortal", "ObjLoad(3)", "select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum, ch->name)==-1)){
-    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
-    return;
-  }
-  while((row=mysql_fetch_row(res))){
-    o->affected[i].location = mapFileToApply(atoi(row[0]));
+  while(db.fetchRow()){
+    o->affected[i].location = mapFileToApply(atoi(db.getColumn(0)));
 
     if (applyTypeShouldBeSpellnum(o->affected[i].location))
-      o->affected[i].modifier = mapFileToSpellnum(atoi(row[1]));
+      o->affected[i].modifier = mapFileToSpellnum(atoi(db.getColumn(1)));
     else
-      o->affected[i].modifier = atoi(row[1]);
+      o->affected[i].modifier = atoi(db.getColumn(1));
  
-    o->affected[i].modifier2 = atoi(row[2]);
+    o->affected[i].modifier2 = atoi(db.getColumn(2));
 
     if (o->affected[i].location == APPLY_LIGHT)
       o->addToLight(o->affected[i].modifier);
@@ -369,7 +360,7 @@ void ObjLoad(TBeing *ch, int vnum)
     o->affected[i].checkForBadness(o);
     i++;
   }
-  mysql_free_result(res);
+
   for (i++; (i < MAX_OBJ_AFFECT); i++) {
     o->affected[i].location = APPLY_NONE;
     o->affected[i].modifier = 0;
@@ -432,23 +423,21 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
   int tmp1, tmp2, tmp3, tmp4;
   o->getFourValues(&tmp1, &tmp2, &tmp3, &tmp4);
 
-  if(dbquery(TRUE, NULL, "immortal", "ObjSave(1)", "replace obj set vnum=%i, name='%s', short_desc='%s', long_desc='%s', type=%i, action_flag=%i, wear_flag=%i, val0=%i, val1=%i, val2=%i, val3=%i, weight=%f, price=%i, can_be_seen=%i, spec_proc=%i, max_exist=%i, cur_struct=%i, max_struct=%i, decay=%i, volume=%i, material=%i, owner='%s', action_desc='%s'", 
+  TDatabase db("immortal");
+
+  if(!db.query("replace obj set vnum=%i, name='%s', short_desc='%s', long_desc='%s', type=%i, action_flag=%i, wear_flag=%i, val0=%i, val1=%i, val2=%i, val3=%i, weight=%f, price=%i, can_be_seen=%i, spec_proc=%i, max_exist=%i, cur_struct=%i, max_struct=%i, decay=%i, volume=%i, material=%i, owner='%s', action_desc='%s'", 
 	  vnum, o->name, o->shortDescr, o->getDescr(),o->itemType(), 
 	  o->getObjStat(), o->obj_flags.wear_flags, tmp1, tmp2, tmp3, tmp4, 
 	  o->getWeight(), o->obj_flags.cost, o->canBeSeen, o->spec, 
 	  o->max_exist, o->obj_flags.struct_points, 
 	  o->obj_flags.max_struct_points, o->obj_flags.decay_time, 
 		 o->getVolume(), o->getMaterial(), ch->name, 
-	  o->action_description?o->action_description:"")){
+	       o->action_description?o->action_description:"")){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
 
-  if(dbquery(TRUE, NULL, "immortal", "ObjSave(2)", "delete from objextra where vnum=%i and owner='%s'", vnum, ch->name)){
-    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
-    return;
-  }
-
+  db.query("delete from objextra where vnum=%i and owner='%s'", vnum, ch->name);
 
   int i, j, k;
   char temp[2048];
@@ -462,19 +451,19 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
       }
       temp[j] = '\0';
 
-      if(dbquery(TRUE, NULL, "immortal", "ObjSave(3)", "replace objextra set name='%s', description='%s', owner='%s', vnum=%i", exdes->keyword, temp, ch->name, vnum)){
+      if(!db.query("replace objextra set name='%s', description='%s', owner='%s', vnum=%i", exdes->keyword, temp, ch->name, vnum)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return;
       }           
     } else {
-      if(dbquery(TRUE, NULL, "immortal", "ObjSave(4)", "replace objextra set name='%s', description='', owner='%s'", exdes->keyword, ch->name)){
+      if(!db.query("replace objextra set name='%s', description='', owner='%s'", exdes->keyword, ch->name)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return;
       }
     }
   }
 
-  if(dbquery(TRUE, NULL, "immortal", "ObjSave(5)", "delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name)){
+  if(!db.query("delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name)){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
@@ -484,7 +473,7 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
       continue;
     
     if (o->affected[i].location != APPLY_NONE) {
-      if(dbquery(TRUE, NULL, "immortal", "ObjSave(6)", "replace objaffect set type=%i, mod1=%ld, mod2=%ld, owner='%s', vnum=%i",
+      if(!db.query("replace objaffect set type=%i, mod1=%ld, mod2=%ld, owner='%s', vnum=%i",
 		 mapApplyToFile(o->affected[i].location), 
 		 applyTypeShouldBeSpellnum(o->affected[i].location) ? mapSpellnumToFile(spellNumT(o->affected[i].modifier)) : o->affected[i].modifier,
 		 o->affected[i].modifier2, ch->name, vnum)){
@@ -564,26 +553,23 @@ static void olist(TPerson *ch)
 static void olist(TPerson *ch)
 {
   string longstr;
-  MYSQL_ROW row;
-  MYSQL_RES *res;
-  int rc;
+  TDatabase db("immortal");
 
-  if((rc=dbquery(TRUE, &res, "immortal", "olist", "select vnum, name from obj where owner='%s' order by vnum", ch->name))){
-    if(rc==-1)
-      ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
-    else if(rc==1)
-      ch->sendTo("No objects saved.\n\r");
+  db.query("select vnum, name from obj where owner='%s' order by vnum", ch->name);
+
+
+  if(!db.isResults()){
+    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
     
 
-  while((row=mysql_fetch_row(res))){
-    longstr += row[0];
+  while(db.fetchRow()){
+    longstr += db.getColumn(0);
     longstr += " ";
-    longstr += row[1];
+    longstr += db.getColumn(1);
     longstr += "\n\r";
   }
-  mysql_free_result(res);
 
   ch->desc->page_string(longstr.c_str(), SHOWNOW_NO, ALLOWREP_YES);
 }
@@ -656,16 +642,18 @@ static void oedit(TBeing *ch, const char *arg)
 void oremove(TBeing *ch, int vnum)
 {
 #if USE_SQL
-  MYSQL_RES *res;
-  if(dbquery(TRUE, &res, "immortal", "oremove(0)", "select * from obj where vnum=%i and owner='%s'", vnum, ch->name)==1){
+  TDatabase db("immortal");
+  
+  db.query("select * from obj where vnum=%i and owner='%s'", vnum, ch->name);
+
+  if(!db.isResults()){
     ch->sendTo("Object not found.\n\r");
-    mysql_free_result(res);
     return;
   }
-    
-  if(dbquery(TRUE, NULL, "immortal", "oremove(1)", "delete from obj where vnum=%i and owner='%s'", vnum, ch->name) ||
-     dbquery(TRUE, NULL, "immortal", "oremove(2)", "delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name) ||
-     dbquery(TRUE, NULL, "immortal", "oremove(3)", "delete from objextra where vnum=%i and owner='%s'", vnum, ch->name)){
+
+  if(!db.query("delete from obj where vnum=%i and owner='%s'", vnum, ch->name) ||
+     !db.query("delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name) ||
+     !db.query("delete from objextra where vnum=%i and owner='%s'", vnum, ch->name)){
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   } else
@@ -794,24 +782,18 @@ void TPerson::doOEdit(const char *argument)
     case 2:			// load 
       if (sscanf(string, "%d", &vnum) != 1) {
 	// assume that string is an object name
-	MYSQL_RES *res;
-	MYSQL_ROW row;
-	int rc;
+	TDatabase db("immortal");
 
-	if((rc=dbquery(TRUE, &res, "immortal", "oed load", "select vnum, name from obj where owner='%s'", getName()))){
-	  if(rc==-1)
-	    vlogf(LOG_BUG, "Database error in oed load");
-	  return;
-	}
+	db.query("select vnum, name from obj where owner='%s'", getName());
   
 	vnum=-1;
-	while((row=mysql_fetch_row(res))){
-	  if(isname(string, row[1])){
-	    vnum=atoi(row[0]);
+	while(db.fetchRow()){
+	  if(isname(string, db.getColumn(1))){
+	    vnum=atoi(db.getColumn(0));
 	    break;
 	  }
 	}
-	mysql_free_result(res);
+
 	if(vnum==-1){
 	  sendTo("Syntax : oed load <vnum>\n\r");
 	  return;
