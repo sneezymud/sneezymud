@@ -239,20 +239,22 @@ void TBeing::updatePos()
 {
   positionTypeT newPos = POSITION_DEAD;
 
-  if (hasClass(CLASS_SHAMAN) && (-11 >= getHit())) {
-    act("$n is dead! R.I.P.", TRUE, this, 0, 0, TO_ROOM);
-    sendTo(COLOR_BASIC, "<R>You are dead!  Sorry...<z>\n\r");
+  if (isPc()) {
+    if (hasClass(CLASS_SHAMAN) && (-11 >= getHit())) {
+      act("$n is dead! R.I.P.", TRUE, this, 0, 0, TO_ROOM);
+      sendTo(COLOR_BASIC, "<R>You are dead!  Sorry...<z>\n\r");
     //    deathCry();
-    setPosition(POSITION_DEAD);
-    die(DAMAGE_NORMAL);
-    doLook("", CMD_LOOK);
-    setHit(25);
-    setLifeforce(25);
-    sendTo(COLOR_BASIC, "\n\r<R>You have just died!<z>\n\r");
-    sendTo(COLOR_BASIC, "<B>The Loa have rejected your spirit and toss it into your worldly form!<z>\n\r");
-    sendTo(COLOR_BASIC, "<G>The shock on your body has caused you to panic!<z>\n\r");
-    doFlee("");
-    genericKillFix();
+      setPosition(POSITION_DEAD);
+      die(DAMAGE_NORMAL);
+      doLook("", CMD_LOOK);
+      setHit(25);
+      setLifeforce(25);
+      sendTo(COLOR_BASIC, "\n\r<R>You have just died!<z>\n\r");
+      sendTo(COLOR_BASIC, "<B>The Loa have rejected your spirit and toss it into your worldly form!<z>\n\r");
+      sendTo(COLOR_BASIC, "<G>The shock on your body has caused you to panic!<z>\n\r");
+      doFlee("");
+      genericKillFix();
+    }
     return;
   }
   // XXXXXX
