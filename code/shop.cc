@@ -374,12 +374,13 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
         temp1 = NULL;
         break;
       }
+      *ch += *temp1;
+
       temp1->purchaseMe(ch, keeper, cost, shop_nr);
       // for unlimited items, charge the shopkeeper for production
       keeper->addToMoney(-obj_flags.cost, GOLD_SHOP);
       
 
-      *ch += *temp1;
       ch->logItem(temp1, CMD_BUY);
       count++;
       temp1->recalcShopData(TRUE, cost);
@@ -449,10 +450,11 @@ void TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
         // PC can't afford item, so just leave it on the keeper
         break;
       }
-      temp1->purchaseMe(ch, keeper, cost, shop_nr);
-
       --(*temp1);
       *ch += *temp1;
+
+      temp1->purchaseMe(ch, keeper, cost, shop_nr);
+
       ch->logItem(temp1, CMD_BUY);
       count++;
       temp1->recalcShopData(TRUE, cost);
@@ -610,6 +612,12 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   ch->sendTo(COLOR_OBJECTS, "The shopkeeper now has %s.\n\r", good_uncap(getName()).c_str());
   ch->logItem(this, CMD_SELL);
 
+  --(*this);
+  if (!shop_producing(this, shop_nr)) {
+    *keeper += *this;
+  }
+
+
   sellMeMoney(ch, keeper, cost, shop_nr);
   recalcShopData(FALSE, cost);
 
@@ -626,16 +634,17 @@ void TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr)
   delete [] owners;
   owners = NULL;
 
-  --(*this);
+
   if (shop_producing(this, shop_nr)) {
     delete this;
+  }
 #if NO_DAMAGED_ITEMS_SHOP
-  } else if (getStructPoints() != getMaxStructPoints()) {
+  else if (getStructPoints() != getMaxStructPoints()) {
     // delete it as its "scrap"
     delete this;
+  }
 #endif
-  } else
-    *keeper += *this;
+
 
   sprintf(buf, "%s/%d", SHOPFILE_PATH, shop_nr);
   keeper->saveItems(buf);
@@ -2200,10 +2209,10 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       string sb;
       char buf[256];
 
-      rc=dbquery(&res, "sneezy", "shop_keeper logs", "select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i order by logtime", shop_nr);
+      rc=dbquery(&res, "sneezy", "shop_keeper logs", "select name, action, item, talens, shoptalens, shopvalue, logtime from shoplog where shop_nr=%i order by logtime desc", shop_nr);
       
       while((row=mysql_fetch_row(res))){
-	sprintf(buf, "%s\tTalens: %10i\tValue: %10i\n\r", row[6], atoi(row[4]), atoi(row[5]));
+	sprintf(buf, "%s  Talens: %8i  Value: %8i  Total: %8i\n\r", row[6], atoi(row[4]), atoi(row[5]), atoi(row[4])+atoi(row[5]));
 	sb += buf;
 
 	sprintf(buf, "%-12.12s %-10.10s %-32.32s for %8i talens.\n\r\n\r",
@@ -2231,6 +2240,10 @@ void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const char *name, int co
   MYSQL_RES *res;
   TThing *tt;
   TObj *o;  
+
+  if(!shopOwned(shop_nr)){
+    return;
+  }
 
   for(tt=keeper->stuff;tt;tt=tt->nextThing){
     o=dynamic_cast<TObj *>(tt);
