@@ -104,20 +104,10 @@ void recvTextHandler(const char *str)
     och = d->original ? d->original : d->character;
     if (!och)
       continue;
-    if (och->hasWizPower(POWER_WIZNET)) {
-      if (!och->desc) {
-	return;
-      } else if (och->desc->connected) {
-	return;
-      } else if (!och->desc->connected && och->isPlayerAction(PLR_MAILING)) {
-	return;
-      } else if (!och->desc->connected && och->isPlayerAction(PLR_BUGGING)) { 
-	return;
-      } else if (och->checkSoundproof()) {
-	return;
-      } else {
-	och->sendTo(buf);
-      }
+    if (och->hasWizPower(POWER_WIZNET) || (och->desc->connected == CON_EDITTING)) {
+      och->sendTo("It works!");
+    } else {
+      och->sendTo(buf);
     }
   }
 }
