@@ -40,7 +40,7 @@ void corpListing(TBeing *ch, TMonster *me)
   multimap <int, sstring, std::greater<int> > m;
   multimap <int, sstring, std::greater<int> >::iterator it;
 
-  db.query("select c.corp_id, c.name, sum(s.gold) as gold, b.talens as bankgold, count(so.shop_nr) as shopcount, sob.corp_id as bankowner from shopowned sob, shopowned so, shop s, corporation c left outer join shopownedcorpbank b on (b.corp_id=c.corp_id) where sob.shop_nr=c.bank and c.bank=b.shop_nr and c.corp_id=so.corp_id and so.shop_nr=s.shop_nr group by c.corp_id, c.name, b.talens, sob.corp_id order by gold desc");
+  db.query("select c.corp_id, c.name, sum(s.gold) as gold, b.talens as bankgold, count(so.shop_nr) as shopcount, sob.corp_id as bankowner from shopowned sob, shopowned so, shop s, corporation c left outer join shopownedcorpbank b on (b.corp_id=c.corp_id) where sob.shop_nr=c.bank and c.bank=b.shop_nr and c.corp_id=so.corp_id and so.shop_nr=s.shop_nr group by c.corp_id, c.name, b.talens, sob.corp_id order by sum(s.gold)+b.talens desc");
   
   while(db.fetchRow()){
     corp_id=convertTo<int>(db["corp_id"]);
