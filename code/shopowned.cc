@@ -89,16 +89,19 @@ void TShopOwned::showInfo()
   int count=0, value=0, price=0, discount=100, tmp=0;
   unsigned int i=0;
   char buf[256];
+  int volume=0;
 
   // if not owned, or owned and has "owner" or "info"
   if(!isOwned() || hasAccess(SHOPACCESS_INFO)){
     for(tt=keeper->getStuff();tt;tt=tt->nextThing){
       o=dynamic_cast<TObj *>(tt);
       ++count;
+      volume+=o->getVolume();
       value+=o->obj_flags.cost;
       price+=o->shopPrice(1, shop_nr, -1, &discount);
     }
     keeper->doTell(ch->getName(), "I have %i talens and %i items worth %i talens and selling for %i talens.", keeper->getMoney(), count, value, price);
+    keeper->doTell(ch->getName(), "My inventory takes up %i cubic inches of space.", volume);
     
     keeper->doTell(ch->getName(), "That puts my total value at %i talens.",
 		   keeper->getMoney()+value);
@@ -502,7 +505,7 @@ int TShopOwned::doLogs(const char *arg)
     
     db.query("select action, sum(talens) as tsum from shoplog where shop_nr=%i group by action order by tsum desc", shop_nr);
     
-    ssprintf(buf, "%s<r>%-12.12s %s<1>\n\r",
+    ssprintf(buf, "<r>%-12.12s %s<1>\n\r",
 	     "Action", "Total Talens");
     sb += buf;
 
