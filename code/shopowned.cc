@@ -422,7 +422,7 @@ void TShopOwned::showInfo()
     db.query("select a.talens+b.talens as talens from (select sum(talens) as talens from shopownedbank) a, (select sum(talens) as talens from shopownedcorpbank) b");
     if(db.fetchRow()){
       keeper->doTell(ch->getName(), fmt("My equity value is %i talens.") %
-		     convertTo<int>(db["talens"]));
+		     (keeper->getMoney()-convertTo<int>(db["talens"])));
     }
     
 
